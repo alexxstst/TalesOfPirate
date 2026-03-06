@@ -3,7 +3,7 @@ print("[**] NPC Files [**]")
 print("-- [Loading] NPC Script [01]")
 
 ------------------------------------------------------------
--- 白银之城:服装店尼萨婆婆
+-- :
 ------------------------------------------------------------
 
 function BT_NpcSale001()
@@ -60,7 +60,7 @@ end
 
 -------------------------------------------------------------------
 --								--
---		白银城（比特）		--
+--				--
 --		219533,270323				--
 -------------------------------------------------------------------
 
@@ -105,11 +105,11 @@ end
 
 -------------------------------------------------------------------
 --								--
---		白银城（铁匠——小金金）		--
+--				--
 --		219533,270323				--
 -------------------------------------------------------------------
 function r_trade01 ()
-	--买卖东西对话
+	--
 	Talk(1, "Goldie: Hi, I sell all sorts of weapons! Take a look!")
 	Text(1, "Trade", BuyPage)
 	Text(1, "Combine", OpenUnite)
@@ -205,7 +205,7 @@ function r_trade01 ()
 	--Text(4, "Deathsoul Mask", JumpPage,7)
 
 
-	--InitTrigger() --兑换鬼怪面具
+	--InitTrigger() --
 	--TriggerCondition(1, HasItem, 4358, 30)
 	--TriggerCondition(1, HasItem, 3909, 2)
 	--TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -217,7 +217,7 @@ function r_trade01 ()
 	--Talk(5, "Goldie: Snowdoll Mask requires 30 Blue Snowballs to mold.")
 	--Text(5, "Confirm to make",MultiTrigger, GetMultiTrigger(), 1) 
 
-	--InitTrigger() --兑换面具
+	--InitTrigger() --
 	--TriggerCondition(1, HasItem, 4809, 30)
 	--TriggerCondition(1, HasItem, 3909, 2)
 	--TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -229,7 +229,7 @@ function r_trade01 ()
 	--Talk(6, "Goldie: Pumpkin Mask requires 30 Pumpkin Heads")
 	--Text(6, "Confirm to make",MultiTrigger, GetMultiTrigger(), 1) 
 	
-	--InitTrigger() --兑换面具
+	--InitTrigger() --
 	--TriggerCondition(1, HasItem, 2419, 20)
 	--TriggerCondition(1, HasItem, 3909, 2)
 	--TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -255,7 +255,7 @@ function r_trade01 ()
 
 
 end
------------------------------------------------------------------小金金铁匠结束----------------------------------------------------------------------------------------------
+---------------------------------------------------------------------------------------------------------------------------------------------------------------
 
 
 
@@ -263,7 +263,7 @@ end
 ------------------------------------------------------------------
 --								--
 --								--
-------------------------白银城秘书斯克特---------------------------
+---------------------------------------------------
 --			221925,274925				--
 --								--
 ------------------------------------------------------------------
@@ -314,7 +314,7 @@ function r_talk01 ()
 
 	Start(GetMultiTrigger(), 1)
 
-----------------注册任务
+----------------
 
 	AddNpcMission (203)
 	AddNpcMission (204)
@@ -340,15 +340,15 @@ function r_talk01 ()
 
 	MisListPage(8)
 end 
----------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<NPC 《斯克特》结束了!
+---------------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<NPC !
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[老奶奶]				--
+--		[]				--
 --							--
 --		227725,276925				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk02 ()
 
 	
@@ -357,8 +357,8 @@ function r_talk02 ()
 	--Text(1, "Redeem 10 Seeds of Love", JumpPage, 3)
 	--Text(1, "Redeem 100 Seeds of Love", JumpPage, 4)
 	--Text(1, "Redeem 1000 Seeds of Love", JumpPage, 5)
---	Text(1, "使用"蟹苗"和"超级蟹用激素"兑换蟹王", JumpPage, 6)
---	Text(1, "使用耐久值为"0"的蟹苗兑换蟹王", JumpPage, 7)
+--	Text(1, """""", JumpPage, 6)
+--	Text(1, ""0"", JumpPage, 7)
 	Text(1, "Exchange Lantern", JumpPage, 7)
 	Text(1, "Leave", CloseTalk)
 	
@@ -375,19 +375,19 @@ function r_talk02 ()
 	Talk(5, "Granny: 1000 Seeds of Love can be used to exchange for 1 Pass to Abandon 4")
 	Text(5,"Confirm to exchange",  GetChaName_24, 1)
 	
-	Talk(6,"老奶奶：饕餮盛宴之蟹王大餐，需要您手里的1个“蟹苗”和商城中购买的1个“超级蟹用激素”。当年享誉整个海盗界的大海盗王罗森，曾因品过此菜而经验彪增。亲爱的朋友！让我们共同期待奇迹的降临！")	
-	InitTrigger()                                                   --------1个蟹王
-	TriggerCondition(1, HasItem, 0058, 1)               ---------蟹苗
-	TriggerCondition(1, HasItem, 0060, 1)               ---------蟹绳
+	Talk(6,"11")	
+	InitTrigger()                                                   --------1
+	TriggerCondition(1, HasItem, 0058, 1)               ---------
+	TriggerCondition(1, HasItem, 0060, 1)               ---------
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
 	TriggerAction(1, TakeItem, 0058, 1)
 	TriggerAction(1, TakeItem, 0060, 1)
-	TriggerAction(1, GiveItem, 0059, 1, 4)              ----------蟹王
+	TriggerAction(1, GiveItem, 0059, 1, 4)              ----------
 	TriggerFailure(1, JumpPage, 8)
-	Text(6,"享用蟹王大餐", MultiTrigger, GetMultiTrigger(), 1) 
+	Text(6,"", MultiTrigger, GetMultiTrigger(), 1) 
 
-InitTrigger() --对换灯笼
+InitTrigger() --
 	TriggerCondition(1, HasItem, 3904, 15)
 	TriggerCondition(1, HasItem, 3911, 15)
 	TriggerCondition(1, HasItem, 4450, 1)
@@ -401,18 +401,18 @@ InitTrigger() --对换灯笼
 	Talk(7, "Bingo: Give me 15 pieces of Red Paper, 15 sticks of Bamboo Stick and 1 Strange Candle to exchange for a Lantern.")
 	Text(7, "Confirm trade",MultiTrigger, GetMultiTrigger(), 1) 
 
---[[	Talk(7,"老奶奶：持之以恒的耐力是成功的关键！请把在您背包栏第2格培育了5天的蟹苗给我吧！当蟹苗的耐久值化整为0，享誉整个加纳大陆的蟹王名肴便横空出世了！让我们一起等待这未知的惊喜！")
-	InitTrigger()                                                   --------1个蟹王
-	TriggerCondition(1, HasItem, 0058, 1)               ---------蟹苗 
+--[[	Talk(7,"250")
+	InitTrigger()                                                   --------1
+	TriggerCondition(1, HasItem, 0058, 1)               --------- 
 	TriggerCondition(1, crablife)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
 	TriggerAction(1, TakeItem, 0058, 1)
-	TriggerAction(1, GiveItem, 0059, 1, 4)              ----------蟹王
+	TriggerAction(1, GiveItem, 0059, 1, 4)              ----------
 	TriggerFailure(1, JumpPage, 9)
-	Text(7, "享用蟹王大餐", MultiTrigger, GetMultiTrigger(), 1) ]]--
+	Text(7, "", MultiTrigger, GetMultiTrigger(), 1) ]]--
 
-	Talk(8, "请确保您身上有蟹苗和商城里购买的“超级蟹用激素”喔！")
+	Talk(8, "")
 
 	Talk(9, "Bingo: You do not seem to have enough of Red Paper, Bamboo Stick or Strange Candle!")
 		
@@ -431,11 +431,11 @@ InitTrigger() --对换灯笼
 	AddNpcMission(388)
 	--AddNpcMission(906)
 
------------------老奶奶·贝蒂---------金牛
+--------------------------
 	AddNpcMission	(5631)
 	AddNpcMission	(5632)
 
--------------------老奶奶·贝蒂---------金秋十月国庆活动
+----------------------------
 --	AddNpcMission  (5865)
 --	AddNpcMission  (5866)
 --	AddNpcMission  (5867)
@@ -443,7 +443,7 @@ InitTrigger() --对换灯笼
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<老奶奶结束
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
@@ -451,7 +451,7 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[药草商人——帝姆]			--
+--		[]			--
 --							--
 --		224575,277025				--
 ----------------------------------------------------------
@@ -468,7 +468,7 @@ function r_talk03 ()
 	--Text(4, "Sell items!", SalePage)
 	Text(4, "Decoct Recovery Potion", JumpPage, 5)
 
----------------制作甘草药水
+---------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1779, 1)
 	TriggerCondition(1, HasItem, 3129, 10)
@@ -481,7 +481,7 @@ function r_talk03 ()
 	TriggerFailure(1, JumpPage, 7)
 	Talk(5, "Ditto: You need to have medicine when you are sick! What do you need?")
 	Text(5, "Decoct Liquorice Potion", MultiTrigger, GetMultiTrigger(), 1)
-	--------------炮制醒神花茶
+	--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1779, 1)
 	TriggerCondition(1, HasItem, 3130, 10)
@@ -493,7 +493,7 @@ function r_talk03 ()
 	TriggerAction(1, JumpPage, 6)
 	TriggerFailure(1, JumpPage, 8)
 	Text(5, "Brew Energetic Tea", MultiTrigger, GetMultiTrigger(), 1)
-	-------------------合成秘制奇异膏
+	-------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1779, 1)
 	TriggerCondition(1, HasItem, 3131, 10)
@@ -505,7 +505,7 @@ function r_talk03 ()
 	TriggerAction(1, JumpPage, 6)
 	TriggerFailure(1, JumpPage, 9)
 	Text(5, "Decoct Special Ointment", MultiTrigger, GetMultiTrigger(), 1)
-	-------------------蒸烤冰芽酥
+	-------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1779, 1)
 	TriggerCondition(1, HasItem, 3132, 10)
@@ -542,10 +542,10 @@ function r_talk03 ()
 	Other(1768)
 
 
---这里写任务的检测
+--
 
 
------------超过9级告诉玩家可以转职
+-----------9
 	--InitTrigger()
 	--TriggerCondition(1, LvCheck, ">", 8)
 	--TriggerCondition(1, LvCheck, "<", 10)
@@ -554,7 +554,7 @@ function r_talk03 ()
 
 	--Start(GetMultiTrigger(), 1)
 
----------------------注册任务
+---------------------
 	MisListPage(1)
 
 	AddNpcMission (707)
@@ -585,22 +585,22 @@ function r_talk03 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<药草商人——嫡母结束
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[护士小姐——岚岚]			--
+--		[]			--
 --							--
 --		224575,277025				--
 ----------------------------------------------------------
 
----------------加血恢复的判定
+---------------
 
 
-----------------普通对话开始
+----------------
 function r_talk04 ()
 	InitTrigger()
 	TriggerCondition(1, LvCheck, "<", 6)
@@ -626,9 +626,9 @@ function r_talk04 ()
 	Text(1, "Heal", MultiTrigger,GetMultiTrigger(),2)
 	--Text(1, "Build Ship", JumpPage, 10)
 
-	Talk(2, "Gina: Sorry, healing requires 200G. You do not have enough…")
+	Talk(2, "Gina: Sorry, healing requires 200G. You do not have enough")
 
-	Talk(3, "Gina: Sorry! Healing requires 50G…You do not have enough…")
+	Talk(3, "Gina: Sorry! Healing requires 50GYou do not have enough")
 
 	Talk(4, "I do not have any letter. I guess you got the wrong person")
 
@@ -680,25 +680,25 @@ function r_talk04 ()
 	AddNpcMission(6120)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<护士小姐——岚岚         结束咯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<         
 
 
 
 ----------------------------------------------------------
 ----							--
 --							--
---		白银城[酒吧女 - 蒂娜]			--
+--		[ - ]			--
 --							--
 --		225325,278875				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk05 ()
 
 	Talk(1, "Donna: Hi, I am Donna. Are you a sailor? Have you been to the legendary Galley Isle? Tell me the stories if you have.")
 	Text(1, "Buy Wine", BuyPage)
 	Text(1, "Regarding fame",JumpPage,4)
 	--Text(1, "Royal Pirate Reputation Redemption",JumpPage,7)
-	--Text(1, "好名胜=好回报", JumpPage, 9)
+	--Text(1, "=", JumpPage, 9)
 
 	InitTrade()
 	Other(3916)
@@ -811,7 +811,7 @@ function r_talk05 ()
 
 	Talk(8,"Welcome to the Royal Pirates! Work harder to achieve your aim!")
 
---	Talk(9, "您好，我们这里只向有名望的人开放。只有您有足够的名声，您可以在这里换到所有您想要的东西，不过同时我们也会扣除您的一部分精灵硬币作为手续费哦。")
+--	Talk(9, "")
 --	
 --	InitTrigger()
 --	TriggerCondition(1, HasCredit,5)
@@ -823,7 +823,7 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 1024,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(9,"高级充电电池: 需要名声5，精灵硬币5个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(9,": 55" ,MultiTrigger,GetMultiTrigger(),1)
 --
 --	InitTrigger()
 --	TriggerCondition(1, HasCredit,10)
@@ -835,7 +835,7 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 0456,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(9,"强化晶石: 需要名声10，精灵硬币10个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(9,": 1010" ,MultiTrigger,GetMultiTrigger(),1)
 --
 --	InitTrigger()
 --	TriggerCondition(1, HasCredit,20)
@@ -847,7 +847,7 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 0455,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(9,"强化卷轴: 需要名声20，精灵硬币20个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(9,": 2020" ,MultiTrigger,GetMultiTrigger(),1)
 --
 --	InitTrigger()
 --	TriggerCondition(1, HasCredit,30)
@@ -859,7 +859,7 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 0453,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(9,"熔合卷轴: 需要名声30，精灵硬币30个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(9,": 3030" ,MultiTrigger,GetMultiTrigger(),1)
 --
 
 --
@@ -873,7 +873,7 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 3336,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(12,"神算草: 需要名声300，精灵硬币300个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(12,": 300300" ,MultiTrigger,GetMultiTrigger(),1)
 --
 --	InitTrigger()
 --	TriggerCondition(1, HasCredit,1000)
@@ -885,7 +885,7 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 3088,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(12,"28格背包: 需要名声1000，精灵硬币1000个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(12,"28: 10001000" ,MultiTrigger,GetMultiTrigger(),1)
 --
 --	InitTrigger()
 --	TriggerCondition(1, HasCredit,4700)
@@ -897,13 +897,13 @@ function r_talk05 ()
 --	TriggerAction(1, GiveItem, 1028,1,4)
 --	TriggerAction(1, JumpPage,10)
 --	TriggerFailure(1, JumpPage, 11)
---	Text(12,"摩力符石: 需要名声4700，精灵硬币4700个" ,MultiTrigger,GetMultiTrigger(),1)
+--	Text(12,": 47004700" ,MultiTrigger,GetMultiTrigger(),1)
 --
 --	Text(12, "Go back a page", JumpPage , 9)
 --
---	Talk(10, "谢谢惠顾，欢迎再次光临")
+--	Talk(10, "")
 --
---	Talk(11, "请保证您的背包留有空格,同时处于未锁定的状态,要不就是您的声望不够或者精灵硬币不够多哦.....",CloseTalk)
+--	Talk(11, ",,.....",CloseTalk)
 
 	InitTrigger()
 	TriggerCondition(1, HasRecord, 255)
@@ -926,18 +926,18 @@ function r_talk05 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<酒吧女 - 蒂娜结束
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< - 
 
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[小山车]				--
+--		[]				--
 --							--
 --		219350,273050				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk06 ()
 	Talk(1, "Little Daniel: Youg adventurers should not be afraid to explore the world. There are many beatiful things waiting to be discovered. Have you been to the great shrine in the desert? How about the Lone Tower in the deep Sacred Forest?")
 	Text(1, "Ancient Generator", JumpPage, 2)
@@ -993,7 +993,7 @@ function r_talk06 ()
 	MisListPage(2)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<小山车结束
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
@@ -1003,11 +1003,11 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[杂货商人 - 吉普立]			--
+--		[ - ]			--
 --							--
 --		225075,277025				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk07()
 	Talk(1, "Jimberry: Hi, welcome! How can I help you?")
 	Text(1, "Trade", BuyPage)
@@ -1161,17 +1161,17 @@ function r_talk07()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<杂货商人 - 吉普立结束
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<< - 
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[居民·玛格丽特]			--
+--		[]			--
 --							--
 --		227459,277722				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk08 ()
 
 	Talk(1, "Margaret: You...Hahaha...Hello. Yesterday on television...Hahaha...Did you watch it. Hohoho...Its so funny! Hahaha...")
@@ -1246,18 +1246,18 @@ function r_talk08 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<居民·玛格丽特
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
 
-	--白银城[旅店老板·玛拉依兰]		--
+	--[]		--
 --							--
 --		221150,278125				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk09 ()
 	
 	
@@ -1268,7 +1268,7 @@ function r_talk09 ()
 	--Text(1, "Cook Christmas meal", JumpPage, 13)
 	
 	
----------------------烹调美味的火鸡肉
+---------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 2886, 10)
 	TriggerCondition(1, HasMoney, 10000)
@@ -1287,7 +1287,7 @@ function r_talk09 ()
 	Text(13, "Cook Christmas Meal the First Time",  JumpPage, 15)
 	Text(13, "Cook Christmas Meal the Second time",  JumpPage, 16)
 	Text(13, "Cook Christmas Meal the Third time", JumpPage, 17)
-	---------------------烹调圣诞大餐
+	---------------------
 	InitTrigger()
 	TriggerCondition(1, NoRecord, 815)
 	TriggerCondition(1, HasItem, 2895, 10)
@@ -1301,12 +1301,12 @@ function r_talk09 ()
 	TriggerAction(1, SetRecord, 815)
 	TriggerAction(1, JumpPage, 11)
 	TriggerFailure(1, JumpPage, 14)
-	Talk(15, "It’s not easy to cook Christmas meal, I need 10 pieces of turkey meat , a Christmas Rose,and 10000 coins. A Christmas Rose can be found in the Item Mall and I will only cook the meal for each person 3 times at most.")
+	Talk(15, "Its not easy to cook Christmas meal, I need 10 pieces of turkey meat , a Christmas Rose,and 10000 coins. A Christmas Rose can be found in the Item Mall and I will only cook the meal for each person 3 times at most.")
 	Text(15, "Confirm and Cook",  MultiTrigger, GetMultiTrigger(), 1)
 
 	
 
-	---------------------烹调圣诞大餐
+	---------------------
 	InitTrigger()
 	TriggerCondition(1, HasRecord, 815)
 	TriggerCondition(1, NoRecord, 816)
@@ -1324,7 +1324,7 @@ function r_talk09 ()
 	Talk(16, "Want me to cook again? I need 10 pieces of turkey meat, a Christmas Rose and 1,000,000 coin.  A Christmas Rose can be found in the Item Mall and I will only cook the meal for each person 3 times at most.")
 	Text(16, "Confirm and Cook",  MultiTrigger, GetMultiTrigger(), 1)
 
-	---------------------烹调圣诞大餐
+	---------------------
 	InitTrigger()
 	TriggerCondition(1, HasRecord, 816)
 	TriggerCondition(1, NoRecord, 817)
@@ -1341,11 +1341,11 @@ function r_talk09 ()
 	TriggerFailure(1, JumpPage,19)
 	Talk(17, "Want me to cook again? I need 10 pieces of turkey meat, a Christmas Rose and 10,000,000 coin.  A Christmas Rose can be found in the Item Mall and I will only cook the meal for each person 3 times at most.")
 	Text(17, "Confirm and Cook",  MultiTrigger, GetMultiTrigger(), 1)
-	Talk(14, "Marriam: It seems you don’t have enough items and money. You also need to make sure there is one available slot in your backpack. Is this your first time to let me cook Christmas meal? I will only do it 3 times. ")
-	Talk(18, "Marriam: It seems you don’t have enough items and money. You also need to make sure there is one available slot in your backpack. Is this your second time to let me cook Christmas meal? I will only do it 3 times. ")
-	Talk(19, " It seems you don’t have enough items and money. You also need to make sure there is one available slot in your backpack. Is this your third time to let me cook Christmas meal? I will only do it 3 times. ")
-	Talk(12, " It seems you don’t have enough items and money. You also need to make sure there is one available slot in your backpack.")
-------------------调配红色染发剂
+	Talk(14, "Marriam: It seems you dont have enough items and money. You also need to make sure there is one available slot in your backpack. Is this your first time to let me cook Christmas meal? I will only do it 3 times. ")
+	Talk(18, "Marriam: It seems you dont have enough items and money. You also need to make sure there is one available slot in your backpack. Is this your second time to let me cook Christmas meal? I will only do it 3 times. ")
+	Talk(19, " It seems you dont have enough items and money. You also need to make sure there is one available slot in your backpack. Is this your third time to let me cook Christmas meal? I will only do it 3 times. ")
+	Talk(12, " It seems you dont have enough items and money. You also need to make sure there is one available slot in your backpack.")
+------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1787, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -1360,7 +1360,7 @@ function r_talk09 ()
 	TriggerFailure(1, JumpPage, 4)
 	Talk(2, "Marriam: Keeping the same color of hairdo will make you a boring person. I can decoct colored hair dyes for you if you wish.")
 	Text(2, "Decoct Red Colorant", MultiTrigger, GetMultiTrigger(), 1)
----------------------调配橙色染发剂
+---------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1788, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -1374,7 +1374,7 @@ function r_talk09 ()
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 5)
 	Text(2, "Decoct Orange Colorant", MultiTrigger, GetMultiTrigger(), 1)
----------------------调配黑色染发剂
+---------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 4606, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -1388,7 +1388,7 @@ function r_talk09 ()
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 8)
 	Text(2, "Decoct Black Colorant", MultiTrigger, GetMultiTrigger(), 1)
----------------------调配褐色染发剂
+---------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 4608, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -1423,15 +1423,15 @@ function r_talk09 ()
 
 	AddNpcMission	(1029)
 	AddNpcMission	(1192)
-	------------二月-----------情为何物-----------倾城之恋------------幸运猪猪----------七猪开泰
-	--AddNpcMission	(5505)   		--7猪开泰
-	--AddNpcMission	(5506)		--幸运猪猪
-	--AddNpcMission	(5508)			--倾城之恋
-	--AddNpcMission	(5509)			--倾城之恋
-	AddNpcMission	(5536)		--倾城之恋
+	--------------------------------------------------------
+	--AddNpcMission	(5505)   		--7
+	--AddNpcMission	(5506)		--
+	--AddNpcMission	(5508)			--
+	--AddNpcMission	(5509)			--
+	AddNpcMission	(5536)		--
 
 end 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<旅店老板·玛拉依兰
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
@@ -1439,31 +1439,31 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[佛姆]				--
+--		[]				--
 --							--
 --		222629,272668				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk11()
-	Talk(1, "Forbei: I have a riddle for you, what is 1 plus 1? Hoho, its 2! Isn't it funny? No? Let me change another…Wait! Don't go!")
+	Talk(1, "Forbei: I have a riddle for you, what is 1 plus 1? Hoho, its 2! Isn't it funny? No? Let me change anotherWait! Don't go!")
 	AddNpcMission(1009)
 	AddNpcMission(1173)
 	AddNpcMission(6123)
 	AddNpcMission(6124)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<佛姆
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[水手·海云]			--
+--		[]			--
 --							--
 --		235013,284694				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk12()
 	Talk(1, "Coddy: Hi, I am Sailor Coddy.")
 
@@ -1489,8 +1489,8 @@ function r_talk12()
 	Text(2, "Not happy",MultiTrigger, GetMultiTrigger(), 1)
 	
 	Talk(3, "Who are you? I do not know you!")
-	Talk(4, "Good? Let’s continue.")
-	Talk(5, "No satisfied? Let’s change another for you to kill")
+	Talk(4, "Good? Lets continue.")
+	Talk(5, "No satisfied? Lets change another for you to kill")
 
 	AddNpcMission(1039)
 	AddNpcMission(1202)
@@ -1508,17 +1508,17 @@ function r_talk12()
 	AddNpcMission(6068)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<水手·海云
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[银行出纳·摩妮雅]			--
+--		[]			--
 --							--
 --		222050,270400				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk13 ()
 	Talk(1,"Monica: Hi, I am in charge of the Bank here, rest assure, nothing will go wrong with me around.")
 	InitTrigger()
@@ -1534,79 +1534,79 @@ function r_talk13 ()
 	AddNpcMission(6092)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<银行出纳·摩妮雅
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[海军少将·威尔斯]			--
+--		[]			--
 --							--
 --		230228,270157				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk14 ()
 	
 	
 	Talk(1, "William: Hi, I am General William. The highest authority around here.")
-	--Text(1, "兑换军帽", JumpPage, 3)
+	--Text(1, "", JumpPage, 3)
 	Text(1, "Nothing...",CloseTalk)
 
-	Talk(3, "威尔斯:我这里可以用军衔证明换得非常稀有的军帽哦.")
-	Text(3, "兑换少校军帽", JumpPage, 4)
-	Text(3, "兑换中校军帽", JumpPage, 5)
-	Text(3, "兑换上校军帽", JumpPage, 6)
-	Text(3, "兑换将军军帽", JumpPage, 7)
-	Text(3, "兑换元帅军帽", JumpPage, 8)
+	Talk(3, ":.")
+	Text(3, "", JumpPage, 4)
+	Text(3, "", JumpPage, 5)
+	Text(3, "", JumpPage, 6)
+	Text(3, "", JumpPage, 7)
+	Text(3, "", JumpPage, 8)
 	
-	Talk(4, "威尔斯:想要兑换少校之首,你必须给我1张少校军衔证明才行.")
-	--------------兑换少校之首
+	Talk(4, ":,1.")
+	--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 68, 1)
 	TriggerAction(1, TakeItem, 68, 1)
 	TriggerAction(1, GiveItem, 90, 1 , 4)
 	TriggerFailure(1, JumpPage, 10)
-	Text(4, "我要兑换", MultiTrigger, GetMultiTrigger(), 1)
-	Text(4, "从",CloseTalk)
+	Text(4, "", MultiTrigger, GetMultiTrigger(), 1)
+	Text(4, "",CloseTalk)
 
-	Talk(5, "威尔斯:想要兑换少校之首,你必须给我1张中校军衔证明才行.")
-	--------------兑换中校之首
+	Talk(5, ":,1.")
+	--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 69, 1)
 	TriggerAction(1, TakeItem, 69, 1)
 	TriggerAction(1, GiveItem, 91, 1 , 4)
 	TriggerFailure(1, JumpPage, 10)
-	Text(5, "我要兑换", MultiTrigger, GetMultiTrigger(), 1)
-	Text(5, "从",CloseTalk)
+	Text(5, "", MultiTrigger, GetMultiTrigger(), 1)
+	Text(5, "",CloseTalk)
 
-	Talk(6, "威尔斯:想要兑换上校之首,你必须给我1张中校军衔证明才行.")
-	--------------兑换上校之首
+	Talk(6, ":,1.")
+	--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 70, 1)
 	TriggerAction(1, TakeItem, 70, 1)
 	TriggerAction(1, GiveItem, 92, 1 , 4)
 	TriggerFailure(1, JumpPage, 10)
-	Text(6, "我要兑换", MultiTrigger, GetMultiTrigger(), 1)
-	Text(6, "从",CloseTalk)
+	Text(6, "", MultiTrigger, GetMultiTrigger(), 1)
+	Text(6, "",CloseTalk)
 
-	Talk(7, "威尔斯:想要兑换将军之首,你必须给我1张中校军衔证明才行.")
-	--------------兑换将军之首
+	Talk(7, ":,1.")
+	--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 71, 1)
 	TriggerAction(1, TakeItem, 71, 1)
 	TriggerAction(1, GiveItem, 93, 1 , 4)
 	TriggerFailure(1, JumpPage, 10)
-	Text(7, "我要兑换", MultiTrigger, GetMultiTrigger(), 1)
-	Text(7, "从",CloseTalk)
+	Text(7, "", MultiTrigger, GetMultiTrigger(), 1)
+	Text(7, "",CloseTalk)
 
-	Talk(8, "威尔斯:想要兑换元帅之首,你必须给我1张中校军衔证明才行.")
-	--------------兑换元帅之首
+	Talk(8, ":,1.")
+	--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 72, 1)
 	TriggerAction(1, TakeItem, 72, 1)
 	TriggerAction(1, GiveItem, 94, 1 , 4)
 	TriggerFailure(1, JumpPage, 10)
-	Text(8, "我要兑换", MultiTrigger, GetMultiTrigger(), 1)
-	Text(8, "从",CloseTalk)
+	Text(8, "", MultiTrigger, GetMultiTrigger(), 1)
+	Text(8, "",CloseTalk)
 
 	InitTrigger()
 	TriggerCondition(1, HasMoney, 20000)
@@ -1621,7 +1621,7 @@ function r_talk14 ()
 	Text(2, "Regarding Evanescence set items", JumpPage, 5)
 	Text(2, "Regarding Enigma set items", JumpPage, 6)
 
-	Talk(10, "威尔斯:请确保您身上有对应的军衔证明.")
+	Talk(10, ":.")
 
 	InitTrigger()
 	TriggerCondition(1, HasMission, 248)
@@ -1662,41 +1662,41 @@ function r_talk14 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<海军少将·威尔斯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[沙岚城大使·席巴]			--
+--		[]			--
 --							--
 --		225648,270640				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk15 ()
 	
 	
-	Talk(1, "Xiba: Although I am an Ambassador, I need some time for myself too…Life cannot be just about work. You need to play to balance it too!")
+	Talk(1, "Xiba: Although I am an Ambassador, I need some time for myself tooLife cannot be just about work. You need to play to balance it too!")
 
 	AddNpcMission	(1032)
 	AddNpcMission	(1195)
-----------------秋岛开发
+----------------
 	--AddNpcMission	(6177)
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<沙岚城大使·席巴
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[白银城商会会长·劳伦迪马斯]		--
+--		[]		--
 --							--
 --		224207,274850				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk16 ()
 	
 	
@@ -1720,16 +1720,16 @@ function r_talk16 ()
 	AddNpcMission (5147)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<白银城商会会长·劳伦迪马斯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[老者·糊涂山人]			--
+--		[]			--
 --							--
 --		227208,270036				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk17 ()
 	
 	
@@ -1745,13 +1745,13 @@ function r_talk17 ()
 	AddNpcMission (554)
 	AddNpcMission (555)
 	AddNpcMission (901)
-	---------------白羊
+	---------------
 	AddNpcMission	(5557)
 	AddNpcMission	(5558)
 	--AddNpcMission (6094)
-		--------------猪光宝气--------马来西亚
+		----------------------
 	--AddNpcMission (6126)
-	---------------勇者试炼
+	---------------
 	--AddNpcMission(6167)
 	AddNpcMission(6168)
 	AddNpcMission(6169)
@@ -1760,36 +1760,36 @@ function r_talk17 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<老者·糊涂山人
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[会长助理·罗伊]			--
+--		[]			--
 --							--
 --		224075,275275				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk18 ()
 	
 	
-	Talk(1, "Rouri: Hmm…I am wandering what secret does our chairman has? I am really interested to find out…")
+	Talk(1, "Rouri: HmmI am wandering what secret does our chairman has? I am really interested to find out")
 	
 	AddNpcMission (76)
 	AddNpcMission (77)
 	AddNpcMission (78)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<会长助理·罗伊
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[路人·甲]				--
+--		[]				--
 --							--
 --		221588,282819				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk19 ()
 	
 	
@@ -1801,16 +1801,16 @@ function r_talk19 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·甲
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[酒鬼·芬德内]			--
+--		[]			--
 --							--
 --		236002,281965				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk20 ()
 	
 	
@@ -1824,16 +1824,16 @@ function r_talk20 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<酒鬼·芬德内
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[少年·唐德]			--
+--		[]			--
 --							--
 --		196225,269425				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk21 ()
 	
 	
@@ -1846,16 +1846,16 @@ function r_talk21 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<少年·唐德
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[制造师·德萨克]			--
+--		[]			--
 --							--
 --		173269,278261				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk22 ()
 	
 	
@@ -1866,17 +1866,17 @@ function r_talk22 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<制造师·德萨克
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[D版商·走私兔]			--
+--		[D]			--
 --							--
 --		2298,2520				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk23 ()
 	
 	
@@ -1884,23 +1884,23 @@ function r_talk23 ()
 	
 	AddNpcMission	(1000)
 	AddNpcMission	(1164)
-			--------愚人节
+			--------
 	--AddNpcMission	(5601)
 	--AddNpcMission	(5602)
 	--AddNpcMission	(5603)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<D版商·走私兔
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<D
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[海军司令官·德斯塔罗]		--
+--		[]		--
 --							--
 --		71350,141619				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk24 ()
 
 	Talk(1, "Dessaro: Hi, I am the highest in command in Thundoria. Do you wish to join us?")
@@ -1921,17 +1921,17 @@ function r_talk24 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<海军司令官·德斯塔罗
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[酒吧服务员·米娜]			--
+--		[]			--
 --							--
 --		99053,133465				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk25 ()
 	
 	
@@ -1944,29 +1944,29 @@ function r_talk25 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<酒吧服务员·米娜
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[水手·迪奥]			--
+--		[]			--
 --							--
 --		108330,128563				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk26 ()
 	
 	
-	Talk(1, "Hi! I am Sailor Dio. Becareful when you are out in the open sea. There are many ferocious monsters out there, especially those sharks. They are demons…and they will bite off your leg! Just like mine! Oh no!...My leg!")
+	Talk(1, "Hi! I am Sailor Dio. Becareful when you are out in the open sea. There are many ferocious monsters out there, especially those sharks. They are demonsand they will bite off your leg! Just like mine! Oh no!...My leg!")
 	AddNpcMission	(1038)
 	AddNpcMission	(1092)
 	AddNpcMission	(1150)
 	AddNpcMission	(1201)
-----------------吉尼斯---水手·迪奥--01
+---------------------01
 	AddNpcMission (5535)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<水手·迪奥
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
@@ -1976,11 +1976,11 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[军医·玛沙]			--
+--		[]			--
 --							--
 --		77300,154900				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk28 ()
 	
 	
@@ -2005,16 +2005,16 @@ function r_talk28 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<军医·玛沙
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[银行出纳·玛卡多]			--
+--		[]			--
 --							--
 --		74300,153400				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk29 ()
 	Talk(1, "Macurdo: Hi, welcome to Thundoria Bank.")
 	InitTrigger()
@@ -2042,17 +2042,17 @@ function r_talk29 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<银行出纳·玛卡多
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[铁匠·佛朗哥]			--
+--		[]			--
 --							--
 --		76662,144769				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk30 ()
 	
 	
@@ -2061,7 +2061,7 @@ function r_talk30 ()
 	Text(1, "Nothing...",CloseTalk)
 
 
-----------------炼制水晶砂碎片
+----------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1784, 10)
 	TriggerCondition(1, HasMoney, 200)
@@ -2070,7 +2070,7 @@ function r_talk30 ()
 	TriggerAction(1, GiveItem, 1785, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	Talk(2, "Furlington: Forge…forge…forge…All I do all day long is forge items…zzZZz")
+	Talk(2, "Furlington: ForgeforgeforgeAll I do all day long is forge itemszzZZz")
 	Text(2, "Refine Clarion Fragment",MultiTrigger, GetMultiTrigger(), 1)
 	
 	Talk(3, "Furlington: This Clarion Crystal is made from the fragments. Keep it well. Look for me again.")
@@ -2084,15 +2084,15 @@ function r_talk30 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<铁匠·佛朗哥
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[少女·辛蒂]			--
+--		[]			--
 --							--
 --		74026,145143				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk31 ()
 	
 	
@@ -2244,7 +2244,7 @@ function r_talk31 ()
 	TriggerFailure(1, JumpPage, 4)
 	Talk(2, "Cindy: Want to have the same hair color as me? Let me help you mix the hair colourant.")
 	Text(2, "Decoct Yellow Colorant",MultiTrigger, GetMultiTrigger(), 1)
----------------调配绿色染发剂
+---------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1790, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -2268,7 +2268,7 @@ function r_talk31 ()
 	AddNpcMission	(1199)
 	AddNpcMission	(867)
 	AddNpcMission	(863)
-	------------------------------------------白羊
+	------------------------------------------
 	AddNpcMission	(5536)
 	AddNpcMission	(5537)
 	AddNpcMission	(5538)
@@ -2295,17 +2295,17 @@ function r_talk31 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<少女·辛蒂
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[沙岚驻雷霆堡大使·埃德加]		--
+--		[]		--
 --							--
 --		71220,150827				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk32 ()
 	
 	
@@ -2317,16 +2317,16 @@ function r_talk32 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<沙岚驻雷霆堡大使·埃德加
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[道具商人·休布李维斯]		--
+--		[]		--
 --							--
 --		74100,156300				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk33 ()
 	
 	
@@ -2343,16 +2343,16 @@ function r_talk33 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<道具商人·休布李维斯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[旅馆老板·玛雅婆婆]		--
+--		[]		--
 --							--
 --		69761,154269				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk34 ()
 	
 	
@@ -2364,16 +2364,16 @@ function r_talk34 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<旅馆老板·玛雅婆婆
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[服装店主·迪乐]			--
+--		[]			--
 --							--
 --		75450,151200				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk35 ()
 	
 	
@@ -2387,16 +2387,16 @@ function r_talk35 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<服装店主·迪乐
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[白银城驻雷霆堡大使·伊塔多]		--
+--		[]		--
 --							--
 --		74171,155325				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk36 ()
 	
 	
@@ -2411,16 +2411,16 @@ function r_talk36 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<白银城驻雷霆堡大使·伊塔多
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[护卫长·迦略克]			--
+--		[]			--
 --							--
 --		79600,148800				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk37 ()
 	
 	
@@ -2462,7 +2462,7 @@ function r_talk37 ()
 	
 		
 
-	----------转职成为剑盾士
+	----------
 	--TriggerCondition(1, LvCheck, ">", 39)
 	--TriggerCondition(1, IsCategory, 1)
 	--TriggerCondition(1, PfEqual, 1)
@@ -2473,7 +2473,7 @@ function r_talk37 ()
 	--TriggerCondition(2, PfEqual, 1)
 	--TriggerAction(2, JumpPage, 2)
 
--------------------转狙击手判断
+-------------------
 
 	AddNpcMission	(1019)
 	AddNpcMission	(1074)
@@ -2488,16 +2488,16 @@ function r_talk37 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<护卫长·迦略克
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[杂货商人·咕嘟]			--
+--		[]			--
 --							--
 --		72500,155100				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk38 ()
 	
 	
@@ -2512,16 +2512,16 @@ function r_talk38 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<杂货商人·咕嘟
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[少女·罗莉]			--
+--		[]			--
 --							--
 --		101653,128642				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk39 ()
 	
 	
@@ -2533,43 +2533,43 @@ function r_talk39 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<少女·罗莉
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[海军总部指挥官·基.埃斯西准将]	--
+--		[.]	--
 --							--
 --		80800,152100				--
 ---------------------2005-3-8-------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk40 ()
 	
 	
-	Talk(1, "General Ken: I sense that Maxi will come looking for my trouble one day. Even I sent himto guard other outpost, I am sure that he will make some trouble there too. He is always landing me in trouble…")
+	Talk(1, "General Ken: I sense that Maxi will come looking for my trouble one day. Even I sent himto guard other outpost, I am sure that he will make some trouble there too. He is always landing me in trouble")
 	AddNpcMission	(1017)
 	AddNpcMission	(1071)
 	AddNpcMission	(1127)
 	AddNpcMission	(1180)
----------------白羊
+---------------
 	AddNpcMission	(5575)
 	AddNpcMission	(5576)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<海军总部指挥官·基.埃斯西准将
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<.
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[海军总部参谋长·玛亚兹少校]		--
+--		[]		--
 --							--
 --		65323,150512				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk41 ()
 	
 	
-	Talk(1, "Colonel Maxi: Hi, I am Colonel Maxi. General Ken delegates me to take care of this place. Hehe! I love to make trouble for him…Hehe!")
+	Talk(1, "Colonel Maxi: Hi, I am Colonel Maxi. General Ken delegates me to take care of this place. Hehe! I love to make trouble for himHehe!")
 	
 	AddNpcMission	(849)
 	AddNpcMission	(856)
@@ -2579,16 +2579,16 @@ function r_talk41 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<海军总部参谋长·玛亚兹少校
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[摩尔克人后裔·菲儿]		--
+--		[]		--
 --							--
 --		65146,158595				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk42 ()
 	
 	
@@ -2603,16 +2603,16 @@ function r_talk42 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<摩尔克人后裔·菲儿
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[护卫·尼松]			--
+--		[]			--
 --							--
 --		71187,141438				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk43 ()
 	
 	
@@ -2620,21 +2620,21 @@ function r_talk43 ()
 
 	AddNpcMission	(859)
 	AddNpcMission	(857)
-	-------------护卫·尼松-------双子
+	--------------------
 	AddNpcMission	(5690)
 	AddNpcMission	(5691)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<护卫·尼松
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[护卫·松尼]			--
+--		[]			--
 --							--
 --		71536,141462				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk44 ()
 	
 	
@@ -2644,16 +2644,16 @@ function r_talk44 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<护卫·松尼
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[路人·丙]				--
+--		[]				--
 --							--
 --		66976,155428				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk45 ()
 	
 	
@@ -2661,24 +2661,24 @@ function r_talk45 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·丙
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[路人·巴比]				--
+--		[]				--
 --							--
 --		99475,123473				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk46 ()
 	
 	
 	Talk(1, "Barbi: Hi, are you an ex-pirate? There are just too much Navy men in Thundoria. The pirates dare not approach!")
 	Text(1, "Refine", JumpPage, 2)
 
---------------炼造地金
+--------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1782, 10)
 	TriggerCondition(1, HasMoney, 2000)
@@ -2695,16 +2695,16 @@ function r_talk46 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·巴比
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[大神官·甘地维拉]			--
+--		[]			--
 --							--
 --		86299,350092				--
  
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk47()
 	Talk(1, "Gannon: Hello, my friend. May the Goddess Kara bless you. I'm High Priest Gannon of Shaitan City.")
 	Text(1, "Research Runestone", JumpPage, 2)
@@ -3074,17 +3074,17 @@ function r_talk47()
 	AddNpcMission(5064)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<大神官·甘地维拉
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[氏族长·阿布多罗.李]		--
+--		[.]		--
 --							--
 --		90374,364023				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk48 ()
 	
 	
@@ -3107,7 +3107,7 @@ function r_talk48 ()
 	Text(1, "Reselect path of rebirth",MultiTrigger, GetMultiTrigger(), 1)
 	
 		
-	Text(1, "There's something wrong with my Rebirth Quest", JumpPage, 9)  --针对北美转生任务无法接到后续的补充选项
+	Text(1, "There's something wrong with my Rebirth Quest", JumpPage, 9)  --
 	Text(1, "Nothing", CloseTalk)
 	
 	
@@ -3202,7 +3202,7 @@ function r_talk48 ()
 	Text(11, "No", CloseTalk)
 	
 	Talk(12, "Congratulations! Reset successful. Return to Passerby - Tink and continue your quest.")
-	Talk(13, "What’s the matter?")
+	Talk(13, "Whats the matter?")
 	
 
 	AddNpcMission (231)
@@ -3224,17 +3224,17 @@ function r_talk48 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<氏族长·阿布多罗.李
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<.
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[道具店主·欧翟]			--
+--		[]			--
 --							--
 --		86214,359121				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk49 ()
 	
 	
@@ -3276,12 +3276,12 @@ function r_talk49 ()
 	TriggerFailure(1, JumpPage, 8)
 	Text(2, "Brew Energetic Tea", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "Ouya: Money first…This is the Energetic Tea you needed. Keep it well.")
-	Talk(4, "Ouya: Oh…It requires 10 Medicated Grass and 1 Bottle to make 1 Liquorice Potion. Also, it needs a fee of 50G.")
+	Talk(3, "Ouya: Money firstThis is the Energetic Tea you needed. Keep it well.")
+	Talk(4, "Ouya: OhIt requires 10 Medicated Grass and 1 Bottle to make 1 Liquorice Potion. Also, it needs a fee of 50G.")
 	Talk(5, "Ouya: This Elven Fruit Juice was made from your Elven Fruit. Keep it well.")
 	Talk(6, "Ouya: Sorry, you do not have the required items. Elven Fruit Juice requires 10 Elven Fruits and 1 Glass to make.")
 	Talk(7, "Ouya: Money first...This is the Energetic Tea you needed. Keep it well.")
-	Talk(8, "Ouya: Oh…It requires 10 Fancy Petal and 1 Bottle to make 1 Energetic Tea. Needs a fee of 50G too.")
+	Talk(8, "Ouya: OhIt requires 10 Fancy Petal and 1 Bottle to make 1 Energetic Tea. Needs a fee of 50G too.")
 
 	AddNpcMission(1007)
 	AddNpcMission(1117)
@@ -3294,17 +3294,17 @@ function r_talk49 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<道具店主·欧翟
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[服装店主·莫亚]			--
+--		[]			--
 --							--
 --		89463,360213				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk50 ()
 	
 	
@@ -3411,16 +3411,16 @@ function r_talk50 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<服装店主·莫亚
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[银行出纳·朱迪斯]			--
+--		[]			--
 --							--
 --		90637,353900				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk51 ()
 	Talk(1, "Judis: Hi! Welcome to the bank of Shaitan! How can I help you?")
 	InitTrigger()
@@ -3439,16 +3439,16 @@ function r_talk51 ()
 	AddNpcMission(5012)	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<银行出纳·朱迪斯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[港卫队成员·鹧鸪草]		--
+--		[]		--
 --							--
 --		86734,366071				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk52 ()
 	
 	
@@ -3456,7 +3456,7 @@ function r_talk52 ()
 	Text(1, "Nothing...",CloseTalk)
 	
 	
-	----------------转职成为训兽师
+	----------------
 	InitTrigger()
 	TriggerCondition(1, LvCheck, ">", 39)
 	TriggerCondition(1, IsCategory, 1)
@@ -3478,7 +3478,7 @@ function r_talk52 ()
 	TriggerAction(2, JumpPage, 6)
 	TriggerFailure(2, JumpPage, 7)
 
-	Talk(5, "Sigh…it's a pity that you are not a Beast Tamer. I believed that you have the ability to become one. Let me teach you how!")
+	Talk(5, "Sighit's a pity that you are not a Beast Tamer. I believed that you have the ability to become one. Let me teach you how!")
 	Text(5, "Ok, I will become a Beast Tamer", MultiTrigger, GetMultiTrigger(), 2)
 	Text(5, "No, it is good enough for now.", CloseTalk)
 
@@ -3518,16 +3518,16 @@ function r_talk52 ()
 	MisListPage(5)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<港卫队成员·鹧鸪草
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[铁匠·铜铜鼓]			--
+--		[]			--
 --							--
 --		90424,349871				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk53 ()
 	
 	
@@ -3601,12 +3601,12 @@ function r_talk53 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<铁匠·铜铜鼓
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 
---------------------------------------------------------------铁匠的徒弟 
+-------------------------------------------------------------- 
 function mmm_talk04 ()
 	Talk(1, "Blacksmith's apprentice: If only I have my teacher's skills.")
 	Text(1, "Regarding Item Forging", JumpPage, 2)
@@ -3635,18 +3635,18 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[莉娜]				--
+--		[]				--
 --							--
 --		88307,352019				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk54 ()
 	
 	
 	Talk(1, "Lena: Hi! I am the wife of Smithy.")
 	Text(1, "Decoct Hair Colorant", JumpPage, 2)
 
-----------------调配青色染发剂
+----------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1791, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -3739,16 +3739,16 @@ function r_talk55()
 	AddNpcMission	(154)
 	--AddNpcMission	(5500)
 end 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<杂货商人·艾墨
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[旅店老板·哈根]			--
+--		[]			--
 --							--
 --		81035,349813				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk56 ()
 	
 	
@@ -3756,7 +3756,7 @@ function r_talk56 ()
 	Text(1, "Make nice desert", JumpPage, 2)
 
 
---------------------调配五彩琉璃汁
+--------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1778, 1)
 	TriggerCondition(1, HasItem, 3121, 4)
@@ -3770,7 +3770,7 @@ function r_talk56 ()
 	Talk(2, "Harken: It's a good year for the business. All my items are sold out due to overwhelming demands.")
 	Text(2, "Mix Rainbow Fruit Juice",MultiTrigger, GetMultiTrigger(), 1)
 
-----------------调配综合果汁
+----------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1778, 1)
 	TriggerCondition(1, HasItem, 3122, 1)
@@ -3797,16 +3797,16 @@ function r_talk56 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<旅店老板·哈根
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[护士小姐·兰兰]			--
+--		[]			--
 --							--
 --		87954,356282				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk57 ()
 	InitTrigger()
 	TriggerCondition( 1, LvCheck, "<", 6 )
@@ -3835,31 +3835,31 @@ function r_talk57 ()
 	AddNpcMission(1129)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<护士小姐·兰兰
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 --------------------------------------------------
 --							--
 --							--
---		沙岚城[海盗·德克]			--
+--		[]			--
 --							--
 --		794,3669				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk58 ()
 	
 	
 	Talk(1, "Decky: Hey! I am the werewolf pirates leader Decky! I am currently ranked 7th on the Navy bounty list. Why I telling you this? It is because I am not afraid of the Navy! Hehe!")
 	
 
---	Text(1, "梦幻双子宫(终极12宫专用任务)", JumpPage,2)
+--	Text(1, "(12)", JumpPage,2)
 
-	Talk(2, "海盗·德克:请选择你要闯关的难度,从水手到船长难度依次加大,当然了难度越高奖励越丰厚.你想好了吗?只能选择一次,不可以后悔哦")
+	Talk(2, ":,,.?,")
 
 	InitTrigger()
 	TriggerCondition(1, NoRecord,1204)
 	TriggerCondition(1, NoRecord,1161)
-	TriggerCondition(1, HasItem, 3027, 1)---------双子门票
-	TriggerAction(1, TakeItem, 3027, 1)----------双子门票
+	TriggerCondition(1, HasItem, 3027, 1)---------
+	TriggerAction(1, TakeItem, 3027, 1)----------
 	TriggerAction(1, SetRecord, 1159)
 	TriggerAction(1, SetRecord, 1162)
 	TriggerAction(1, JumpPage, 3)
@@ -3869,8 +3869,8 @@ function r_talk58 ()
 	InitTrigger()
 	TriggerCondition(1, NoRecord,1159)
 	TriggerCondition(1, NoRecord,1161)
-	TriggerCondition(1, HasItem, 3027, 1)---------双子门票
-	TriggerAction(1, TakeItem, 3027, 1)----------双子门票
+	TriggerCondition(1, HasItem, 3027, 1)---------
+	TriggerAction(1, TakeItem, 3027, 1)----------
 	TriggerAction(1, SetRecord, 1204)
 	TriggerAction(1, SetRecord, 1162)
 	TriggerAction(1, JumpPage, 3)
@@ -3880,21 +3880,21 @@ function r_talk58 ()
 	InitTrigger()
 	TriggerCondition(1, NoRecord,1159)
 	TriggerCondition(1, NoRecord,1204)
-	TriggerCondition(1, HasItem, 3027, 1)--------双子门票
-	TriggerAction(1, TakeItem, 3027, 1)----------双子门票
+	TriggerCondition(1, HasItem, 3027, 1)--------
+	TriggerAction(1, TakeItem, 3027, 1)----------
 	TriggerAction(1, SetRecord, 1161)
 	TriggerAction(1, SetRecord, 1162)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
 	Text(2, "Captain",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "海盗·德克:我祈祷你在自己选择的道路上不会一命呜呼.哇哈哈哈...")
-	Talk(4, "海盗·德克:挑战双子宫的时候,难度只能选择一次.并确保您的背包里有双子宫门票.")
+	Talk(3, ":....")
+	Talk(4, ":,..")
 	
 	AddNpcMission	(1125)
 
----------------------海盗·德克
-	---------------双子
+---------------------
+	---------------
 	AddNpcMission	(5673)
 	AddNpcMission	(5674)
 	AddNpcMission	(5741)-------(5675)
@@ -3924,16 +3924,16 @@ function r_talk58 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<海盗·德克
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[新手指导·拉丝碧]			--
+--		[]			--
 --							--
 --		87614,357250				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk59 ()
 	Talk(1, "Resline: 'Hi, I am Resline. I love to chat and poke my nose into all troubles. Look for me if you have any troubles.'")
 	Text(1, "Star of Unity", JumpPage, 31)
@@ -4110,7 +4110,7 @@ function r_talk59 ()
 	Talk(6, "Resline: Sorry, you do not meet the requirements to redeem.")
 	
 	--InitTrigger()
-	---------------------玩家超过6级完成过瑟安的战斗训练任务
+	---------------------6
 	--TriggerCondition(1, LvCheck, ">", 4)
 	--TriggerCondition(1, LvCheck, "<", 9)
 	---TriggerCondition(1, HasRecord, 710)
@@ -4144,17 +4144,17 @@ function r_talk59 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<新手指导·拉丝碧
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[海军办事处官员·艾微尔少校]		--
+--		[]		--
 --							--
 --		86507,364804				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk61 ()
 	
 	
@@ -4167,16 +4167,16 @@ function r_talk61 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<海军办事处官员·艾微尔少校
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[沙岚城商会会长·古利击]		--
+--		[]		--
 --							--
 --		87362,354566				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk62()
 	Talk(1, "Guile: I love collecting strange items, buy low price items and sell them off at a higher price. I can be considered the most resourceful trader. Is there any matter?")
 	Text(1, "Nothing...",CloseTalk)
@@ -4185,16 +4185,16 @@ function r_talk62()
 	AddNpcMission(6116)	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<沙岚城商会会长·古利击
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[路人·珊瑚虫]		--
+--		[]		--
 --							--
 --		84634,349945				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk63 ()
 	
 	
@@ -4207,7 +4207,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3000, 1 , 4)
 	TriggerAction(1, JumpPage, 2)
 	TriggerFailure(1, JumpPage, 4)
-	--Text(1, "99个金属碎片兑换1个宝藏密钥", MultiTrigger, GetMultiTrigger(), 1)
+	--Text(1, "991", MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerCondition(1, HasItem, 3000, 1)
@@ -4217,7 +4217,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3017, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	--Text(1, "1个宝藏密钥兑换1个天使宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	--Text(1, "11", MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerCondition(1, HasItem, 3000, 8)
@@ -4227,7 +4227,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3018, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	--Text(1, "8个宝藏密钥兑换1个黄金圣斗士宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	--Text(1, "81", MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerCondition(1, HasItem, 3000, 18)
@@ -4237,7 +4237,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3019, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	--Text(1, "18个宝藏密钥兑换1个神龙宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	--Text(1, "181", MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerCondition(1, HasItem, 3000, 88)
@@ -4247,7 +4247,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3020, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	--Text(1, "88个宝藏密钥兑换1个极速宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	--Text(1, "881", MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerCondition(1, HasItem, 3000, 198)
@@ -4256,7 +4256,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3021, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	--Text(1, "198个宝藏密钥兑换1个恶魔宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	--Text(1, "1981", MultiTrigger, GetMultiTrigger(), 1)
 
 	--Text(1, "Next Page", JumpPage, 5)
 	
@@ -4285,7 +4285,7 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3022, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	Text(5, "498个宝藏密钥兑换1个死神宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	Text(5, "4981", MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerCondition(1, HasItem, 3000, 3888)
@@ -4294,11 +4294,11 @@ function r_talk63 ()
 	TriggerAction(1, GiveItem, 3023, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	Text(5, "3888个宝藏密钥兑换1个年兽宝藏", MultiTrigger, GetMultiTrigger(), 1)
+	Text(5, "38881", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(2, "这可是传说中能带来无数财富的钥匙啊，这次兑换真是便宜你了。")
-	Talk(3, "换到你想要的宝箱了吗？祝你好运开出好东东哦。")
-	Talk(4, "您没有足够的兑换所需要的道具，也有可能您的背包已经锁定或者背包空间不够.")
+	Talk(2, "")
+	Talk(3, "")
+	Talk(4, ".")
 	Talk(20, "You can take the challenge of Hexathlon again now!")
 	Talk(21, "you can do the challenge now.please don't joke with me.i'm busy now.")
 
@@ -4306,52 +4306,52 @@ function r_talk63 ()
 	AddNpcMission (6029)
 	AddNpcMission (6054)
 	AddNpcMission (6055)
-	-----铁人六项
+	-----
 	-- AddNpcMission (6114)
 
 end 
 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·珊瑚虫
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[小羊·威利]			--
+--		[]			--
 --							--
 --		89875,368331				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk64 ()
 	
 	
 	Talk(1, "Welly: Hi! I am the world only talking lamb! Baa!")
 
 	AddNpcMission (233)
-	---------------白羊
+	---------------
 	AddNpcMission	(5565)
 	AddNpcMission	(5566)
 
-		----------------秋岛开发
+		----------------
 	--AddNpcMission	(6184)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<小羊·威利
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[会长助理·提司面包]		--
+--		[]		--
 --							--
 --		87171,354774				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk65 ()
 	
 	
 	Talk(1, "Tintin: We always talk but never take any action.")
 --	AddNpcMission (905)
-	----------------周岁包
+	----------------
 --	AddNpcMission (5604)
 --	AddNpcMission (5605)
 --	AddNpcMission (5606)
@@ -4359,16 +4359,16 @@ function r_talk65 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<会长助理·提司面包
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[路人·乙]				--
+--		[]				--
 --							--
 --		79792,355469				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk66 ()
 	
 	
@@ -4376,20 +4376,20 @@ function r_talk66 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·乙
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[沙匪·闪光侠八世]			--
+--		[]			--
 --							--
 --		108242,310135				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk67 ()
 	
 	
-	Talk(1, "Supermun: I am the great descendent of Superman! I will rule the desert with my super powers! (Oh god he is dreaming again…)")
+	Talk(1, "Supermun: I am the great descendent of Superman! I will rule the desert with my super powers! (Oh god he is dreaming again)")
 	
 	AddNpcMission (237)
 	AddNpcMission (238)
@@ -4401,21 +4401,21 @@ function r_talk67 ()
 	AddNpcMission (5011)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<沙匪·闪光侠八世
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[人鱼王子·哈沙特]			--
+--		[]			--
 --							--
 --		125471,349171				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk68 ()
 	
 	
-	Talk(1, "Hassan: Hmm…I smell something nice the other day and the smell has lingered for very long. I wish to find out what is it exactly.")
+	Talk(1, "Hassan: HmmI smell something nice the other day and the smell has lingered for very long. I wish to find out what is it exactly.")
 	Text(1, "Combine", JumpPage, 2)
 
 	InitTrigger()
@@ -4436,42 +4436,42 @@ function r_talk68 ()
 	AddNpcMission (5014)
 	AddNpcMission (5033)
 	AddNpcMission (5034)
-	---------------白羊
+	---------------
 	AddNpcMission	(5553)
 	AddNpcMission	(5554)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<人鱼王子·哈沙特
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[乐器专家·沙梅洱]			--
+--		[]			--
 --							--
 --		66465,609367				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk69 ()
 	
 	
 	Talk(1, "Shamel: Hi! I am a musician that bring melody to this place.")
----------------白羊
+---------------
 	AddNpcMission	(5559)
 	AddNpcMission	(5560)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<乐器专家·沙梅洱
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[圣女·艾达]			--
+--		[]			--
 --							--
 --		86248,330381				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk70 ()
 	
 	
@@ -4488,22 +4488,22 @@ function r_talk70 ()
 	AddNpcMission (552)
 	AddNpcMission (553)
 	AddNpcMission (556)
------------------圣女·艾达---------金牛
+--------------------------
 	AddNpcMission	(5627)
 	AddNpcMission	(5628)
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<圣女·艾达
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[路人·法利尔]			--
+--		[]			--
 --							--
 --		93176,352977				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk71 ()
 	
 	
@@ -4511,16 +4511,16 @@ function r_talk71 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·法利尔
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[工会会长·佛瑞]			--
+--		[]			--
 --							--
 --		83171,354853				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk72 ()
 	
 	Talk(1, "Forlan: Unity is strength! Want to challenge the Top 3 Guilds? Want to rule this world? Guild leader may apply for guild challenge with me. Your guild might make it to the Top 3 too!")
@@ -4528,16 +4528,16 @@ function r_talk72 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<工会会长·佛瑞
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[铁匠·暴冰]			--
+--		[]			--
 --							--
 --		134423,52988				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk73 ()
 	
 	Talk(1, "Bash: Welcome! I sell all sorts of weapon! Satisfaction guarantee!")
@@ -4593,16 +4593,16 @@ function r_talk73 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<铁匠·暴冰
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[杂货商人·伯鲁]			--
+--		[]			--
 --							--
 --		135671,48320				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk74()
 	Talk(1, "Palpin: Hi, I am the Grocer in Icicle City. I love to collect items. After you are Lv 10, look for me to get some item scollection quest. I pay well for the items I needed. How can I help you?")
 	Text(1, "Trade", BuyPage)
@@ -4670,16 +4670,16 @@ function r_talk74()
 
 
 end 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<杂货商人·伯鲁
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[药店老板·达赫]			--
+--		[]			--
 --							--
 --		135298,49926				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk75 ()
 	
 	
@@ -4708,7 +4708,7 @@ function r_talk75 ()
 	Other(4057)
 	Other(1768)
 
-	---------------------玩家超过9级
+	---------------------9
 	--InitTrigger()
 	--TriggerCondition(1, LvCheck, ">", 8)
 	--TriggerCondition(1, LvCheck, "<", 10)
@@ -4735,17 +4735,17 @@ function r_talk75 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<药店老板·达赫
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[护士小姐·安妮]			--
+--		[]			--
 --							--
 --		131725,50169				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk76 ()
 	InitTrigger()
 	TriggerCondition( 1, LvCheck, "<", 6 )
@@ -4778,16 +4778,16 @@ function r_talk76 ()
 	AddNpcMission(1236)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<护士小姐·安妮
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[新手指导·安琪露亚]		--
+--		[]		--
 --							--
 --		131577,50700				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk77 ()
 	
 	
@@ -4942,7 +4942,7 @@ function r_talk77 ()
 	Text(28, "Regarding Classes and Attributes", JumpPage, 11)
 	Text(28, "I have understood all",  CloseTalk)
 
-	Talk(29, "Angela: Very good! Now it is time for you to select your class. To become a Swordsman, go to Peter in Argent City (2192, 2767), Herbalist go to Shaitan City look for High Priest - Gannon at (862, 3500), Hunter look for Swordsman - Ray in Icicle City at (1365, 570). The path is long…Choose well.")
+	Talk(29, "Angela: Very good! Now it is time for you to select your class. To become a Swordsman, go to Peter in Argent City (2192, 2767), Herbalist go to Shaitan City look for High Priest - Gannon at (862, 3500), Hunter look for Swordsman - Ray in Icicle City at (1365, 570). The path is longChoose well.")
 	Text(29, "I would like to ask about something", JumpPage, 4)
 	Text(29, "Regarding Classes and Attributes", JumpPage, 11)
 	Text(29, "I have understood all",  CloseTalk)
@@ -4971,7 +4971,7 @@ function r_talk77 ()
 	Talk(6, "Angela: Sorry, you do not meet the requirements to redeem.")
 
 	--InitTrigger()
-	---------------------玩家超过6级完成过瑟安的战斗训练任务
+	---------------------6
 	--TriggerCondition(1, LvCheck, ">", 4)
 	--TriggerCondition(1, LvCheck, "<", 9)
 	--TriggerCondition(1, HasRecord, 716)
@@ -5006,17 +5006,17 @@ function r_talk77 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<新手指导·安琪露亚
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[冰狼堡剑士·雷欧]		--
+--		[]		--
 --							--
 --		136573,57078				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk78 ()
 	
 	Talk(1, "Ray: I am a bounty hunter. I love to hunt for the undead. If you are interested in becoming a hunter, find me once you have reached level 10.")
@@ -5052,27 +5052,27 @@ function r_talk78 ()
 
 	MisListPage(2)
 
------铁人六项
+-----
 	AddNpcMission(6125)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<冰狼堡剑士·雷欧
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[冰狼堡商会会长·艾立克]		--
+--		[]		--
 --							--
 --		129486,49842				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk79 ()
 	
 	
 	Talk(1, "Reyno: Wherever there are money to be earned, I will be there. Hi! I am Icicle Chairman - Reyno. The richest man in the city.")
 	Text(1, "Decoct Recovery Potion", JumpPage, 5)
 
-	--------------------炮制提神剂
+	--------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1779, 1)
 	TriggerCondition(1, HasItem, 3138, 2)
@@ -5088,7 +5088,7 @@ function r_talk79 ()
 	Talk(5, "Reyno: Those herbs sold by physicians are just common herbs. Only I possess rare herbs that do miracles.")
 	Text(5, "Make Agrypnotic",MultiTrigger, GetMultiTrigger(), 1)
 
-	----------------合成魔幻药水
+	----------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1779, 1)
 	TriggerCondition(1, HasItem, 3133, 1)
@@ -5135,16 +5135,16 @@ function r_talk79 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<商会会长·艾立克
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[冰狼堡贵族·马尔修斯]		--
+--		[]		--
 --							--
 --		134652,45141				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk80 ()
 	
 	
@@ -5187,16 +5187,16 @@ function r_talk80 ()
 
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<冰狼堡贵族·马尔修斯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[银行出纳·布丽娜]		--
+--		[]		--
 --							--
 --		136058,51931				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk81 ()
 	Talk(1, "Belinda: Welcome to Icicle Bank. How may I help you?")
 	InitTrigger()
@@ -5216,16 +5216,16 @@ function r_talk81 ()
 	AddNpcMission (6093)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<银行出纳·布丽娜
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 -----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[酒吧服务员·芭芭拉]		--
+--		[]		--
 --							--
 --		131083,53031				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk82 ()
 	
 	
@@ -5244,8 +5244,8 @@ function r_talk82 ()
 	InitTrigger()
 	TriggerCondition(1, NoRecord,1112)
 	TriggerCondition(1, NoRecord,1113)
-	TriggerCondition(1, HasItem, 2943, 1)---------金牛门票
-	TriggerAction(1, TakeItem, 2943, 1)----------金牛门票
+	TriggerCondition(1, HasItem, 2943, 1)---------
+	TriggerAction(1, TakeItem, 2943, 1)----------
 	TriggerAction(1, SetRecord, 1111)
 	TriggerAction(1, SetRecord, 1152)
 	TriggerAction(1, JumpPage, 10)
@@ -5255,8 +5255,8 @@ function r_talk82 ()
 	InitTrigger()
 	TriggerCondition(1, NoRecord,1111)
 	TriggerCondition(1, NoRecord,1113)
-	TriggerCondition(1, HasItem, 2943, 1)---------金牛门票
-	TriggerAction(1, TakeItem, 2943, 1)----------金牛门票
+	TriggerCondition(1, HasItem, 2943, 1)---------
+	TriggerAction(1, TakeItem, 2943, 1)----------
 	TriggerAction(1, SetRecord, 1112)
 	TriggerAction(1, SetRecord, 1152)
 	TriggerAction(1, JumpPage, 10)
@@ -5266,8 +5266,8 @@ function r_talk82 ()
 	InitTrigger()
 	TriggerCondition(1, NoRecord,1111)
 	TriggerCondition(1, NoRecord,1112)
-	TriggerCondition(1, HasItem, 2943, 1)---------金牛门票
-	TriggerAction(1, TakeItem, 2943, 1)----------金牛门票
+	TriggerCondition(1, HasItem, 2943, 1)---------
+	TriggerAction(1, TakeItem, 2943, 1)----------
 	TriggerAction(1, SetRecord, 1113)
 	TriggerAction(1, SetRecord, 1152)
 	TriggerAction(1, JumpPage, 10)
@@ -5369,7 +5369,7 @@ function r_talk82 ()
 --	Talk(15, "Babara: Next Palace is Gemini Palace, and please continue your effort!")
 
 
------------调配蓝色染发剂
+-----------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1792, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -5384,7 +5384,7 @@ function r_talk82 ()
 	TriggerFailure(1, JumpPage, 4)
 	Talk(2, "Babara: Hi! Have you encounter anything interesting? Tell me!")
 	Text(2, "Decoct Blue Colorant", MultiTrigger, GetMultiTrigger(), 1)
--------------------------调配紫色染发剂
+-------------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1793, 5)
 	TriggerCondition(1, HasItem, 1657, 1)
@@ -5419,8 +5419,8 @@ function r_talk82 ()
 	Talk(8, "Babara: Sorry! You do not have the required items. You need to have 10 Elven Fruits and 1 Glass to mix the drink.")
 	AddNpcMission	(1078)
 	AddNpcMission	(389)
----------------------芭芭拉
-	---------------金牛
+---------------------
+	---------------
 	AddNpcMission	(5608)
 	AddNpcMission	(5609)
 	AddNpcMission	(5610)
@@ -5451,16 +5451,16 @@ function r_talk82 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<酒吧服务员·芭芭拉
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[服装店主·翰娜]		--
+--		[]		--
 --							--
 --		134926,53992				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk83 ()
 	
 	
@@ -5510,43 +5510,43 @@ function r_talk83 ()
 	AddNpcMission	(172)
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<服装店主·翰娜
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[旅店老板·约瑟夫]		--
+--		[]		--
 --							--
 --		129074,54098				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk84()
 	Talk(1, "Yaskey: Welcome to the Inn of Icicle City. I am the owner Yaskey.")
 	AddNpcMission(1085)
 	AddNpcMission(184)
 	AddNpcMission(185)
 	AddNpcMission(186)
-	---------------秋岛开发
+	---------------
 	--AddNpcMission	(6179)
 	--AddNpcMission	(6180)
 end
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<旅店老板·约瑟夫
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ----------------------------------------------------------
 --							--
 --							--
---		冰狼堡[路人·丁]		--
+--		[]		--
 --							--
 --		133550,46900				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk85 ()
 	
 	
 	Talk(1, "Tink: Have you seen my three brothers? They live in Shaitan, Argent and Thundoria respectively.")
 	Text(1, "Refine", JumpPage, 2)
--------------------炼造地金矿石
+-------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 1781, 10)
 	TriggerCondition(1, HasMoney, 200)
@@ -5569,20 +5569,20 @@ function r_talk85 ()
 	AddNpcMission (6022)
 	AddNpcMission (6023)
 	AddNpcMission (6024)
-	-------------------路人·丁  -------------------------巨蟹
+	-------------------  -------------------------
 	AddNpcMission (5859)
 	AddNpcMission (5860)
 
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<路人·丁
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 
 ------------------------------------------------------------
--- 白银之城:历史任务:新手指导任务
+-- ::
 ------------------------------------------------------------
 
 function BT_NewUser001()
@@ -5787,7 +5787,7 @@ end
 
 
 ------------------------------------------------------------
--- 通用竞技场脚本
+-- 
 ------------------------------------------------------------
 
 function r_talk87 ()
@@ -5880,17 +5880,17 @@ end
 
 
 ------------------------------------------------------------
--- 白银城——巡逻兵·马尔斯
+-- 
 ------------------------------------------------------------
 
 function r_talk88 ()
 
-	Talk(1, "Marcusa: Hi, I am new around here. My name is Marcusa. Wonder why so many squids appear outside of Argent. My captain sends me to clear up the mess they did with their ink…sob…sob. New man always gets bullied…")
+	Talk(1, "Marcusa: Hi, I am new around here. My name is Marcusa. Wonder why so many squids appear outside of Argent. My captain sends me to clear up the mess they did with their inksobsob. New man always gets bullied")
 
 	Talk(2, "Marcusa: Very well! You have progressed to Lv 9. You can choose your class at Lv 10. Go now to the related NPC to start your trial for the class you wish to become. Swordsman look for Peter in Argent City at (2192, 2767). Herbalist look for High Priest - Gannon in Shaitan City at (862, 3500). Hunter look for Swordsman - Ray in Icicle Castle at (1365, 570). Explorer look for Little Daniel at (2193, 2730). You can reach Icicle or Shaitan by using the teleporter.")
 
 
-	---------------------玩家超过9级
+	---------------------9
 	InitTrigger()
 	TriggerCondition(1, LvCheck, ">", 8)
 	TriggerCondition(1, LvCheck, "<", 10)
@@ -5905,7 +5905,7 @@ function r_talk88 ()
 	AddNpcMission (52)
 	AddNpcMission (53)
 	AddNpcMission (54)
-----------巡逻兵·马尔斯-------双子
+-----------------
 	AddNpcMission	(5696)
 	AddNpcMission	(5697)
 	MisListPage(2)
@@ -5913,16 +5913,16 @@ function r_talk88 ()
 end
 
 ------------------------------------------------------------
--- 沙岚城——巡逻兵·迈克
+-- 
 ------------------------------------------------------------
 
 function r_talk89 ()
 
-	Talk(1, "Michael: Hi, I am suppose to patrol around here.. You better be careful as the scorpions here are dangerous. Its so boring…")
+	Talk(1, "Michael: Hi, I am suppose to patrol around here.. You better be careful as the scorpions here are dangerous. Its so boring")
 	
 	Talk(2, "Michael: Very well! You have progressed to Lv 9. You can choose your class at Lv 10. Go now to the related NPC to start your trial for the class you wish to become. Swordsman look for Peter in Argent City at (2192, 2767). Herbalist look for High Priest - Gannon in Shaitan City at (862, 3500). Hunter look for Swordsman - Ray in Icicle Castle at (1365, 570). You can reach Icicle or Argent by using the teleporter.")
 
-	---------------------玩家超过9级
+	---------------------9
 	InitTrigger()
 	TriggerCondition(1, LvCheck, ">", 8)
 	TriggerCondition(1, LvCheck, "<", 10)
@@ -5944,7 +5944,7 @@ function r_talk89 ()
 	AddNpcMission 	(922)--------------------------------------------
 	AddNpcMission 	(923)
 	AddNpcMission 	(924)------------
-----------巡逻兵·迈克-------双子
+-----------------
 	AddNpcMission	(5692)
 	AddNpcMission	(5693)
 
@@ -5953,16 +5953,16 @@ function r_talk89 ()
 end
 
 ------------------------------------------------------------
--- 冰狼堡——巡逻兵·小莫
+-- 
 ------------------------------------------------------------
 
 function r_talk90 ()
 
-	Talk(1, "Little Mo: I am supposed to patrol around this area all day long. It is so boring and cold around here. Do you have something for me to eat? I am so hungry. There are no good foods around here…")
+	Talk(1, "Little Mo: I am supposed to patrol around this area all day long. It is so boring and cold around here. Do you have something for me to eat? I am so hungry. There are no good foods around here")
 
 	Talk(2, "Little Mo: Very well! You have progressed to Lv 9. You can choose your class at Lv 10. Go now to the related NPC to start your trial for the class you wish to become. Swordsman look for Peter in Argent City at (2192, 2767). Herbalist look for High Priest - Gannon in Shaitan City at (862, 3500). Hunter look for Swordsman - Ray in Icicle Castle at (1365, 570). You can reach Icicle or Shaitan by using the teleporter.")
 
-	---------------------玩家超过9级
+	---------------------9
 	InitTrigger()
 	TriggerCondition(1, LvCheck, ">", 8)
 	TriggerCondition(1, LvCheck, "<", 10)
@@ -5989,7 +5989,7 @@ function r_talk90 ()
 end
 
 ------------------------------------------------------------
--- 沙岚城——药材商人·沙拉拉
+-- 
 ------------------------------------------------------------
 
 function r_talk91 ()
@@ -6020,7 +6020,7 @@ function r_talk91 ()
 	Other(1768)
 
 
-	---------------------玩家超过9级
+	---------------------9
 	--InitTrigger()
 	--TriggerCondition(1, LvCheck, ">", 8)
 	--TriggerCondition(1, LvCheck, "<", 10)
@@ -6038,7 +6038,7 @@ function r_talk91 ()
 end 
 
 ------------------------------------------------------------
---卡尔加德雪原    旅行医生·瓦罗温妮
+--    
 ------------------------------------------------------------
 
 function r_talk92 ()
@@ -6059,7 +6059,7 @@ function r_talk92 ()
 end
 
 ------------------------------------------------------------
--- 赖安森林——旅行医生·米奈希尔
+-- 
 ------------------------------------------------------------
 
 function r_talk93 ()
@@ -6076,7 +6076,7 @@ function r_talk93 ()
 	AddNpcMission(1442)
 	AddNpcMission (1900)
 
-	---------------白羊
+	---------------
 	AddNpcMission	(5567)
 	AddNpcMission	(5568)
 	AddNpcMission (6052)
@@ -6088,7 +6088,7 @@ function r_talk93 ()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----福克
+-- -----
 ------------------------------------------------------------
 
 function r_talk94 ()
@@ -6098,12 +6098,12 @@ function r_talk94 ()
 end
 
 ------------------------------------------------------------
--- 冰极补给站-----法迪尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk95 ()
 
-	Talk(1, "Fardey: My dumb friend is thinking to bring winter clothings to sell in the hot and dry Shaitan City…What can I do to deter him….")
+	Talk(1, "Fardey: My dumb friend is thinking to bring winter clothings to sell in the hot and dry Shaitan CityWhat can I do to deter him.")
 	Text(1, "Trade", BuyPage)
 	Text(1, "Nothing...",CloseTalk)
 
@@ -6124,7 +6124,7 @@ function r_talk95 ()
 	AddNpcMission (1927)
 	AddNpcMission (1948)
 
-	------------------二月
+	------------------
 	--AddNpcMission (5504)
 
 
@@ -6132,7 +6132,7 @@ function r_talk95 ()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----席特
+-- -----
 ------------------------------------------------------------
 
 function r_talk96 ()
@@ -6142,7 +6142,7 @@ function r_talk96 ()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----严罗塔
+-- -----
 ------------------------------------------------------------
 
 function r_talk97 ()
@@ -6170,7 +6170,7 @@ function r_talk97 ()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----布布
+-- -----
 ------------------------------------------------------------
 
 function r_talk98 ()
@@ -6180,7 +6180,7 @@ function r_talk98 ()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----鲁鲁
+-- -----
 ------------------------------------------------------------
 
 function r_talk99 ()
@@ -6191,7 +6191,7 @@ function r_talk99 ()
 	AddNpcMission (1925)
 	AddNpcMission (1946)
 
-	---------------白羊
+	---------------
 	AddNpcMission	(5561)
 	AddNpcMission	(5562)
 	AddNpcMission (6040)
@@ -6202,7 +6202,7 @@ function r_talk99 ()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----奥迪斯.闪光
+-- -----.
 ------------------------------------------------------------
 
 function r_talk100()
@@ -6228,7 +6228,7 @@ function r_talk100()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----梅尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk101()
@@ -6238,7 +6238,7 @@ function r_talk101()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----古博拉
+-- -----
 ------------------------------------------------------------
 
 function r_talk102()
@@ -6250,39 +6250,39 @@ function r_talk102()
 	AddNpcMission 	(613)
 	AddNpcMission 	(615)
 	AddNpcMission 	(618)
-----------古博拉-------双子
+-----------------
 	AddNpcMission	(5702)
 	AddNpcMission	(5703)
 
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----小库尔森
+-- -----
 ------------------------------------------------------------
 
 function r_talk103()
 
-	Talk(1, "Little Cuwen: Mum say I should not talk to stranger…Can I have a sweet?")
+	Talk(1, "Little Cuwen: Mum say I should not talk to strangerCan I have a sweet?")
 
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----玛姬婶婶
+-- -----
 ------------------------------------------------------------
 
 function r_talk104()
 
-	Talk(1, "Aunt Mary: I love to eat Black Forest Cake, baked with a thick layer of chocolates on top. Yummy…It makes me drool.")
+	Talk(1, "Aunt Mary: I love to eat Black Forest Cake, baked with a thick layer of chocolates on top. YummyIt makes me drool.")
 
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----瓦萨法尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk105()
 
-	Talk(1, "Waala: Tell you a secret…Recently, my friends and I made a new card game. It requires 4 person and 108 cards. Each of us sit in a circle and….")
+	Talk(1, "Waala: Tell you a secretRecently, my friends and I made a new card game. It requires 4 person and 108 cards. Each of us sit in a circle and.")
 
 	AddNpcMission 	(451)
 	AddNpcMission 	(457)
@@ -6292,7 +6292,7 @@ function r_talk105()
 	AddNpcMission (1902)
 	AddNpcMission (1940)
 
-	----------瓦萨法尔-------双子
+	-----------------
 	AddNpcMission	(5708)
 	AddNpcMission	(5709)
 
@@ -6302,7 +6302,7 @@ function r_talk105()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----朱丽布玛
+-- -----
 ------------------------------------------------------------
 
 function r_talk106()
@@ -6321,7 +6321,7 @@ function r_talk106()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----阿里克斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk107()
@@ -6344,7 +6344,7 @@ function r_talk107()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----老库尔森
+-- -----
 ------------------------------------------------------------
 
 function r_talk108()
@@ -6356,7 +6356,7 @@ function r_talk108()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----海军列兵
+-- -----
 ------------------------------------------------------------
 
 function r_talk109()
@@ -6366,7 +6366,7 @@ function r_talk109()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----吉尔尼尼斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk110()
@@ -6385,7 +6385,7 @@ function r_talk110()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----米尔米莉
+-- -----
 ------------------------------------------------------------
 
 function r_talk111()
@@ -6416,13 +6416,13 @@ function r_talk111()
 	AddNpcMission (5113)
 	AddNpcMission (6032)
 	AddNpcMission (6033)
-----------米尔米莉-------双子
+-----------------
 	AddNpcMission	(5722)
 	AddNpcMission	(5723)
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----奥格森
+-- -----
 ------------------------------------------------------------
 
 function r_talk112()
@@ -6435,7 +6435,7 @@ function r_talk112()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----加西亚·破帆
+-- -----
 ------------------------------------------------------------
 
 function r_talk113()
@@ -6446,7 +6446,7 @@ function r_talk113()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----迪迪马修
+-- -----
 ------------------------------------------------------------
 
 function r_talk114()
@@ -6473,21 +6473,21 @@ function r_talk114()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----俄克琉西斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk115()
 
 	Talk(1, "Ruben Actus: I want to earn a lot of gold. If that cannot be done, I need a party mate that is able to supply me with lots of gold.")
 	AddNpcMission	(1120)
-----------俄克琉西斯-------双子
+-----------------
 	AddNpcMission	(5698)
 	AddNpcMission	(5699)
 
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----梅利西亚·猫眼
+-- -----
 ------------------------------------------------------------
 
 function r_talk116()
@@ -6504,7 +6504,7 @@ function r_talk116()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----古得塔克·灰墙
+-- -----
 ------------------------------------------------------------
 
 function r_talk117()
@@ -6514,12 +6514,12 @@ function r_talk117()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----奎赛斯·狂沙
+-- -----
 ------------------------------------------------------------
 
 function r_talk118()
 
-	Talk(1, "Gasardis: It doesn't pay to be kind…")
+	Talk(1, "Gasardis: It doesn't pay to be kind")
 	
 	AddNpcMission (257)
 	AddNpcMission (258)
@@ -6536,12 +6536,12 @@ function r_talk118()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----通灵者·月光眼
+-- -----
 ------------------------------------------------------------
 
 function r_talk119()
 
-	Talk(1, "Oracle Moonlight: I can see what others cannot see…like the shadow behind you…")
+	Talk(1, "Oracle Moonlight: I can see what others cannot seelike the shadow behind you")
 
 	AddNpcMission 	(804)
 	AddNpcMission 	(808)
@@ -6551,7 +6551,7 @@ function r_talk119()
 	AddNpcMission (1920)
 
 	
----------------白羊
+---------------
 	AddNpcMission	(5585)
 	AddNpcMission	(5586)
 
@@ -6560,7 +6560,7 @@ function r_talk119()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----卡尔苏斯·泥巴
+-- -----
 ------------------------------------------------------------
 
 function r_talk120()
@@ -6580,12 +6580,12 @@ function r_talk120()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----尼里艾亚·长发
+-- -----
 ------------------------------------------------------------
 
 function r_talk121()
 
-	Talk(1, "Neila: Ya, you…me….that…oh….Sorry! Did I say anthing?")
+	Talk(1, "Neila: Ya, youme.thatoh.Sorry! Did I say anthing?")
 
 	
 	AddNpcMission	(870)
@@ -6607,7 +6607,7 @@ function r_talk121()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----克莉莉雅
+-- -----
 ------------------------------------------------------------
 
 function r_talk122()
@@ -6623,7 +6623,7 @@ function r_talk122()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----贝克
+-- -----
 ------------------------------------------------------------
 
 function r_talk123()
@@ -6633,34 +6633,34 @@ function r_talk123()
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----汉姆
+-- -----
 ------------------------------------------------------------
 
 function r_talk124()
 
 	Talk(1, "Ham: I have a brother by the name of Beck. But I am the better half.")
------------------汉姆---------金牛
+--------------------------
 	AddNpcMission	(5645)
 	AddNpcMission	(5646)
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----爱尔尤利·微风
+-- -----
 ------------------------------------------------------------
 
 function r_talk125()
 
-	Talk(1, "Love Yuri: Sigh…Love is so near yet so far…Sigh…")
+	Talk(1, "Love Yuri: SighLove is so near yet so farSigh")
 
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----薇莉尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk126()
 
-	Talk(1, "Willi: First! Never say that I am fat! Second! Never say that I am plump! Third! Don't tell me that I look like a pig! Ok…you can speak now.")
+	Talk(1, "Willi: First! Never say that I am fat! Second! Never say that I am plump! Third! Don't tell me that I look like a pig! Okyou can speak now.")
 
 	AddNpcMission 	(685)
 	AddNpcMission 	(688)
@@ -6672,10 +6672,10 @@ function r_talk126()
 
 end
 ------------------------------------------------------------
--- 帕克荒漠-----冬达米婆婆
+-- -----
 ------------------------------------------------------------
 function r_talk127()
-Talk(1, "Granny Dong: Young fellow…explore while you are still young.")
+Talk(1, "Granny Dong: Young fellowexplore while you are still young.")
 	
 	InitTrigger()
 	TriggerCondition(1, HasRecord, 1557)
@@ -6766,17 +6766,17 @@ Talk(1, "Granny Dong: Young fellow…explore while you are still young.")
 	end
 
 ------------------------------------------------------------
--- 帕克荒漠-----罗宾斯·背包
+-- -----
 ------------------------------------------------------------
 
 function r_talk128()
 
-	Talk(1, "Robin: When I was small, my father would put me in his backpack and roam the world. I wanted to do the same too…")
+	Talk(1, "Robin: When I was small, my father would put me in his backpack and roam the world. I wanted to do the same too")
 
 end
 
 ------------------------------------------------------------
--- 帕克荒漠-----瑞得·皮戈
+-- -----
 ------------------------------------------------------------
 
 function r_talk129()
@@ -6792,7 +6792,7 @@ function r_talk129()
 	AddNpcMission (1905)
 	AddNpcMission (1941)
 
-	---------------白羊
+	---------------
 	AddNpcMission	(5583)
 	AddNpcMission	(5584)
 
@@ -6801,31 +6801,31 @@ function r_talk129()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----温莉·冰泉
+-- -----
 ------------------------------------------------------------
 
 function r_talk130()
 
 	Talk(1, "Wynne: My home is in Icicle Castle. Have you visited my house?")
----------------白羊
+---------------
 	AddNpcMission	(5581)
 	AddNpcMission	(5582)
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----雷斯·小虫
+-- -----
 ------------------------------------------------------------
 
 function r_talk131()
 
-	Talk(1, "Lessie: People always refer to me as a little worm…But I will not stay this small forever…")
------------------雷斯·小虫---------金牛
+	Talk(1, "Lessie: People always refer to me as a little wormBut I will not stay this small forever")
+--------------------------
 	AddNpcMission	(5653)
 	AddNpcMission	(5654)
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----达米尔·嘟嘟
+-- -----
 ------------------------------------------------------------
 
 function r_talk132()
@@ -6841,7 +6841,7 @@ function r_talk132()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----索拉姆·萨加
+-- -----
 ------------------------------------------------------------
 
 function r_talk133()
@@ -6861,7 +6861,7 @@ function r_talk133()
 	AddNpcMission (1913)
 
 
------------------索拉姆·萨加---------金牛
+--------------------------
 	AddNpcMission	(5657)
 	AddNpcMission	(5658)
 
@@ -6870,30 +6870,30 @@ function r_talk133()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----狼牙拉姆
+-- -----
 ------------------------------------------------------------
 
 function r_talk134()
 
-	Talk(1, "Lamut: I cannot see any city after three days of walking….Am I lost again?")
+	Talk(1, "Lamut: I cannot see any city after three days of walking.Am I lost again?")
 	AddNpcMission	(1083)
 
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----狼牙拉姆
+-- -----
 ------------------------------------------------------------
 
 function r_talk135()
 
-	Talk(1, "Irisis: If you never bring me a letter by the 'Legendary Prince Charming', don't talk to me…")
+	Talk(1, "Irisis: If you never bring me a letter by the 'Legendary Prince Charming', don't talk to me")
 	AddNpcMission	(1098)
 
 end
 
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----艾伦娜
+-- -----
 ------------------------------------------------------------
 
 function r_talk136()
@@ -6910,7 +6910,7 @@ function r_talk136()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----赫尔达达
+-- -----
 ------------------------------------------------------------
 
 function r_talk137()
@@ -6921,7 +6921,7 @@ function r_talk137()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----约瑟夫·乔
+-- -----
 ------------------------------------------------------------
 
 function r_talk138()
@@ -6932,22 +6932,22 @@ function r_talk138()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----草莓优优
+-- -----
 ------------------------------------------------------------
 
 function r_talk139()
 
 	Talk(1, "Strawberry: Have you seen those pinkish piglets? They are the tastiest around here.")
----------------白羊
+---------------
 	AddNpcMission	(5555)
 	AddNpcMission	(5556)
-	----------草莓优优-------双子
+	-----------------
 	AddNpcMission	(5706)
 	AddNpcMission	(5707)
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----伊文
+-- -----
 ------------------------------------------------------------
 
 function r_talk140()
@@ -6957,7 +6957,7 @@ function r_talk140()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----苏珊娜
+-- -----
 ------------------------------------------------------------
 
 function r_talk141()
@@ -6967,7 +6967,7 @@ function r_talk141()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----卡诺林
+-- -----
 ------------------------------------------------------------
 
 function r_talk142()
@@ -6977,17 +6977,17 @@ function r_talk142()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----詹姆斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk143()
 
-	Talk(1, "Jameson: Rumored that there is a talking lamb in this world…")
+	Talk(1, "Jameson: Rumored that there is a talking lamb in this world")
 
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----露西丽丽雅
+-- -----
 ------------------------------------------------------------
 
 function r_talk144()
@@ -6997,17 +6997,17 @@ function r_talk144()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----尤兰达克
+-- -----
 ------------------------------------------------------------
 
 function r_talk145()
 
-	Talk(1, "Yulandor: I always try to earn more money by killing monsters. However, I discover that they have very small purse recently…")
+	Talk(1, "Yulandor: I always try to earn more money by killing monsters. However, I discover that they have very small purse recently")
 
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----博尔芬尼
+-- -----
 ------------------------------------------------------------
 
 function r_talk146()
@@ -7034,12 +7034,12 @@ function r_talk146()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----淘淘
+-- -----
 ------------------------------------------------------------
 
 function r_talk147()
 
-	Talk(1, "Berry: This sky is so blue... Blue… Ocean… Blue… Blue… Oh my… mood also… Blue… Blue!")
+	Talk(1, "Berry: This sky is so blue... Blue Ocean Blue Blue Oh my mood also Blue Blue!")
 
 	AddNpcMission (401)
 	AddNpcMission 	(810)
@@ -7049,7 +7049,7 @@ function r_talk147()
 	AddNpcMission (1909)
 
 	
----------------白羊
+---------------
 	AddNpcMission	(5579)
 	AddNpcMission	(5580)
 
@@ -7060,7 +7060,7 @@ function r_talk147()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----科瑞其
+-- -----
 ------------------------------------------------------------
 
 function r_talk148()
@@ -7070,18 +7070,18 @@ function r_talk148()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯冰原-----米歇尔梅林芬
+-- -----
 ------------------------------------------------------------
 
 function r_talk149()
 
 	Talk(1, "Missy Elene: ..............(I don't have anything to say to you...)")
--------------秋岛开发
+-------------
 	--AddNpcMission 	(6182)
 end
 
 ------------------------------------------------------------
--- 冰狼堡-----水手·埃迪加
+-- -----
 ------------------------------------------------------------
 
 function r_talk156()
@@ -7091,7 +7091,7 @@ function r_talk156()
 end
 
 ------------------------------------------------------------
--- 古里咯利补给站-----榴莲
+-- -----
 ------------------------------------------------------------
 
 function r_talk157()
@@ -7111,7 +7111,7 @@ function r_talk157()
 	AddNpcMission(1434)
 	AddNpcMission (1903)
 
-	---------------白羊
+	---------------
 	AddNpcMission	(5587)
 	AddNpcMission	(5588)
 
@@ -7122,7 +7122,7 @@ function r_talk157()
 end
 
 ------------------------------------------------------------
--- 古里咯利补给站-----莲娜姨
+-- -----
 ------------------------------------------------------------
 
 function r_talk158()
@@ -7154,7 +7154,7 @@ function r_talk158()
 end
 
 ------------------------------------------------------------
--- 瓦尔诺补给站-----古奈斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk159()
@@ -7189,12 +7189,12 @@ function r_talk159()
 end
 
 ------------------------------------------------------------
--- 废矿补给站-----里卡尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk160()
 
-	Talk(1, "Kal: Hi! I am Security - Kal! This place is dangerous…")
+	Talk(1, "Kal: Hi! I am Security - Kal! This place is dangerous")
 
 	AddNpcMission (223)
 	AddNpcMission (224)
@@ -7217,23 +7217,23 @@ function r_talk160()
 end
 
 ------------------------------------------------------------
--- 废矿补给站-----矿工大肚腩
+-- -----
 ------------------------------------------------------------
 
 function r_talk161()
 
-	Talk(1, "Drunky: Groan…I am so hungry…I lost my lunchbox…Sigh…")
+	Talk(1, "Drunky: GroanI am so hungryI lost my lunchboxSigh")
 
 	AddNpcMission (284)
 	AddNpcMission (285)
 	AddNpcMission (311)
-	-----------------矿工大肚腩---------金牛
+	--------------------------
 	AddNpcMission	(5663)
 	AddNpcMission	(5664)
 end
 
 ------------------------------------------------------------
--- 废矿补给站-----古灵精
+-- -----
 ------------------------------------------------------------
 
 function r_talk162()
@@ -7258,12 +7258,12 @@ function r_talk162()
 end
 
 ------------------------------------------------------------
--- 温拿补给站-----琳达
+-- -----
 ------------------------------------------------------------
 
 function r_talk163()
 
-	Talk(1, "Linda: I don't want to work OT! But my boss force me to OT everyday…I want a pay rise!")
+	Talk(1, "Linda: I don't want to work OT! But my boss force me to OT everydayI want a pay rise!")
 	AddNpcMission	(1027)
 	AddNpcMission	(1190)
 ----------------1.7
@@ -7276,7 +7276,7 @@ function r_talk163()
 end
 
 ------------------------------------------------------------
--- 温拿补给站-----达达迈亚
+-- -----
 ------------------------------------------------------------
 
 function r_talk164()
@@ -7286,7 +7286,7 @@ function r_talk164()
 end
 
 ------------------------------------------------------------
--- 温拿补给站-----古力果
+-- -----
 ------------------------------------------------------------
 
 function r_talk165()
@@ -7299,13 +7299,13 @@ function r_talk165()
 	Other(1847)
 	Other(1848)
 	Other(1849)
-	---------------白羊
+	---------------
 	AddNpcMission	(5563)
 	AddNpcMission	(5564)
 end
 
 ------------------------------------------------------------
--- 巴布补给站-----蘑蘑
+-- -----
 ------------------------------------------------------------
 
 function r_talk166()
@@ -7327,7 +7327,7 @@ function r_talk166()
 	AddNpcMission(1585)
 	AddNpcMission (1915)
 
-	---------------白羊
+	---------------
 	AddNpcMission	(5577)
 	AddNpcMission	(5578)
 
@@ -7337,7 +7337,7 @@ function r_talk166()
 end
 
 ------------------------------------------------------------
--- 沙泉补给站-----维娜
+-- -----
 ------------------------------------------------------------
 
 function r_talk167()
@@ -7354,7 +7354,7 @@ end
 
 
 ------------------------------------------------------------
--- 沙泉补给站-----菲菲
+-- -----
 ------------------------------------------------------------
 
 function r_talk168()
@@ -7368,10 +7368,10 @@ function r_talk168()
 	AddNpcMission(1439)
 	AddNpcMission (1916)
 
-	---------------二月
+	---------------
 	--AddNpcMission (5503)
 
----------------白羊
+---------------
 	AddNpcMission	(5569)
 	AddNpcMission	(5572)
 
@@ -7379,7 +7379,7 @@ function r_talk168()
 end
 
 ------------------------------------------------------------
--- 沙泉补给站-----马洛
+-- -----
 ------------------------------------------------------------
 
 function r_talk169()
@@ -7411,7 +7411,7 @@ function r_talk169()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯补给站-----朱比
+-- -----
 ------------------------------------------------------------
 
 function r_talk170()
@@ -7430,13 +7430,13 @@ function r_talk170()
 	AddNpcMission (5136)
 	AddNpcMission (5137)
 	AddNpcMission (5138)
------------------朱比---------金牛
+--------------------------
 	AddNpcMission	(5647)
 	AddNpcMission	(5648)
 end
 
 ------------------------------------------------------------
--- 沙泉补给站-----尤塔里尼
+-- -----
 ------------------------------------------------------------
 
 function r_talk171()
@@ -7462,7 +7462,7 @@ function r_talk171()
 	AddNpcMission (1919)
 	AddNpcMission (1955)
 
-	----------尤塔里尼-------双子
+	-----------------
 	AddNpcMission	(5718)
 	AddNpcMission	(5719)
 
@@ -7472,7 +7472,7 @@ function r_talk171()
 end
 
 ------------------------------------------------------------
--- 骷髅营地补给站-----修司
+-- -----
 ------------------------------------------------------------
 
 function r_talk172()
@@ -7492,7 +7492,7 @@ function r_talk172()
 	AddNpcMission (6046)
 	AddNpcMission (6047)
 
-	----------修司-------双子
+	-----------------
 	AddNpcMission	(5694)
 	AddNpcMission	(5695)
 
@@ -7500,7 +7500,7 @@ function r_talk172()
 end
 
 ------------------------------------------------------------
--- 骷髅营地补给站-----嘻嘻哈哈
+-- -----
 ------------------------------------------------------------
 
 function r_talk173()
@@ -7529,7 +7529,7 @@ function r_talk173()
 end
 
 ------------------------------------------------------------
--- 冰极补给站-----米开朗费罗
+-- -----
 ------------------------------------------------------------
 
 function r_talk174()
@@ -7554,12 +7554,12 @@ function r_talk174()
 end
 
 ------------------------------------------------------------
--- 冰都补给站-----奈奈
+-- -----
 ------------------------------------------------------------
 
 function r_talk175()
 
-	Talk(1, "Nana: I guess I am stupid…being lost just outside of the city. If only I have a automated guide.")
+	Talk(1, "Nana: I guess I am stupidbeing lost just outside of the city. If only I have a automated guide.")
 
 	AddNpcMission 	(405)
 	AddNpcMission 	(432)
@@ -7570,13 +7570,13 @@ function r_talk175()
 	AddNpcMission	(1087)
 	AddNpcMission(1429)
 	AddNpcMission (1928)
----------------白羊
+---------------
 	AddNpcMission	(5589)
 	AddNpcMission	(5590)
 	AddNpcMission (6050)
 	AddNpcMission (6051)
 	
-----------奈奈-------双子
+-----------------
 	AddNpcMission	(5700)
 	AddNpcMission	(5701)
 
@@ -7585,7 +7585,7 @@ function r_talk175()
 end
 
 ------------------------------------------------------------
--- 冰都补给站-----怪叟爷爷
+-- -----
 ------------------------------------------------------------
 
 function r_talk176()
@@ -7628,7 +7628,7 @@ end
 
 
 ------------------------------------------------------------
--- 骷髅营地补给站-----阿泰
+-- -----
 ------------------------------------------------------------
 
 function r_talk177()
@@ -7641,7 +7641,7 @@ function r_talk177()
 	AddNpcMission (1934)
 	AddNpcMission (1949)
 
-	-----------------阿泰---------金牛
+	--------------------------
 	AddNpcMission	(5629)
 	AddNpcMission	(5630)
 
@@ -7652,7 +7652,7 @@ function r_talk177()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----贝壳商人·拉姆
+-- -----
 ------------------------------------------------------------
 
 function r_talk221()
@@ -7687,7 +7687,7 @@ function r_talk221()
 	Other(821)
 	Other(871)
 	Other(876)
------------------贝壳商人·拉姆---------金牛
+--------------------------
 	AddNpcMission	(5637)
 	AddNpcMission	(5638)
 
@@ -7698,7 +7698,7 @@ end
 
 
 ------------------------------------------------------------
--- 白银城-----服装店助理◎蓓蓓
+-- -----
 ------------------------------------------------------------
 function r_talk222()
 
@@ -7774,7 +7774,7 @@ function r_talk222()
 
 end
 ------------------------------------------------------------
--- 秋之岛-----莱娜
+-- -----
 ------------------------------------------------------------
 function r_talk223()
 
@@ -7786,7 +7786,7 @@ end
 
 
 ------------------------------------------------------------
--- 冰雪岛-----海盗杰里米
+-- -----
 ------------------------------------------------------------
 function r_talk224()
 
@@ -7796,13 +7796,13 @@ function r_talk224()
 	AddNpcMission (306)
 	AddNpcMission (307)
 	AddNpcMission (308)
------------------海盗杰里米---------金牛
+--------------------------
 	AddNpcMission	(5651)
 	AddNpcMission	(5652)
 end
 
 ------------------------------------------------------------
--- 鸣沙岛-----杰克船长
+-- -----
 ------------------------------------------------------------
 function r_talk225()
 
@@ -7823,21 +7823,21 @@ function r_talk225()
 	AddNpcMission (483)
 	AddNpcMission (484)
 
-	-----------------杰克船长---------金牛
+	--------------------------
 	AddNpcMission	(5639)
 	AddNpcMission	(5640)
 end
 
 
 ------------------------------------------------------------
--- 冰狼堡下城-----鲁格兰
+-- -----
 ------------------------------------------------------------
 function r_talk226()
 
 
-	Talk(1, "Luke: My brother loves to create trouble for me…always expecting me to clear the mess. Sigh…")
+	Talk(1, "Luke: My brother loves to create trouble for mealways expecting me to clear the mess. Sigh")
 	
-	Talk(2, "Luke: My brother loves to create trouble for me…always expecting me to clear the mess. Sigh…")
+	Talk(2, "Luke: My brother loves to create trouble for mealways expecting me to clear the mess. Sigh")
 	Text(2, "I lost the ring you gave me", JumpPage, 3)
 
 	InitTrigger()
@@ -7855,7 +7855,7 @@ function r_talk226()
 	Talk(5, "Luke: You don't seems to have enough gold...Its 50000G...")
 
 	InitTrigger()
-	-----------检测任务拿了鱼鳞戒指,但是丢了不见了
+	-----------,
 	TriggerCondition(1, HasRecord, 260)
 	TriggerCondition(1, NoRecord, 262)
 	TriggerCondition(1, NoItem, 4144, 1)
@@ -7874,7 +7874,7 @@ end
 
 
 ------------------------------------------------------------
--- 骷髅营地补给站-----克拉拉大师
+-- -----
 ------------------------------------------------------------
 function r_talk227()
 
@@ -7891,11 +7891,11 @@ function r_talk227()
 end
 
 ------------------------------------------------------------
--- 卡尔加德补给站-----萨南·格力德
+-- -----
 ------------------------------------------------------------
 function r_talk228()
 
-	Talk(1, "Simon Gilter: Sigh…When can I become an officier in the Navy? Am I not charming?")
+	Talk(1, "Simon Gilter: SighWhen can I become an officier in the Navy? Am I not charming?")
 	
 	AddNpcMission (837)
 	AddNpcMission (838)
@@ -7904,14 +7904,14 @@ function r_talk228()
 end
 
 ------------------------------------------------------------
--- 卡尔加德补给站-----海蓝·微风
+-- -----
 ------------------------------------------------------------
 function r_talk229()
 
 	Talk(1, "Azur Breeze: Please remember to keep any nice looking branch for me.")
 
 	AddNpcMission (840)
----------------白羊
+---------------
 	AddNpcMission	(5591)
 	AddNpcMission	(5592)
 	AddNpcMission (6048)
@@ -7920,7 +7920,7 @@ function r_talk229()
 end
 
 ------------------------------------------------------------
--- 卡尔加德补给站-----賽·魔力
+-- -----
 ------------------------------------------------------------
 function r_talk230()
 
@@ -7930,13 +7930,13 @@ function r_talk230()
 	AddNpcMission (841)
 	AddNpcMission (842)
 	AddNpcMission (843)
------------------賽·魔力---------金牛
+--------------------------
 	AddNpcMission	(5625)
 	AddNpcMission	(5626)
 end
 
 ------------------------------------------------------------
--- 卡尔加德补给站-----卡休·碎石
+-- -----
 ------------------------------------------------------------
 function r_talk231()
 
@@ -7946,13 +7946,13 @@ function r_talk231()
 	AddNpcMission (846)
 	AddNpcMission (847)
 	AddNpcMission (848)
-----------卡休·碎石-------双子
+-----------------
 	AddNpcMission	(5714)
 	AddNpcMission	(5715)
 end
 
 ------------------------------------------------------------
--- 冰极补给站-----塞维·朱尔
+-- -----
 ------------------------------------------------------------
 function r_talk232()
 
@@ -7966,17 +7966,17 @@ function r_talk232()
 end
 
 ------------------------------------------------------------
--- 冰极补给站-----凯文·狼
+-- -----
 ------------------------------------------------------------
 function r_talk233()
 
-	Talk(1, "Kevin Wolf: I am a wolf wandering in the lonely desert….")
+	Talk(1, "Kevin Wolf: I am a wolf wandering in the lonely desert.")
 
 	AddNpcMission (881)
 end
 
 ------------------------------------------------------------
--- 白银城-----潮流发型师·卡特
+-- -----
 ------------------------------------------------------------
 function r_talk234()
 	Talk(1, "Cartel: Hi! Want a change of hairstyle? Be hip and keep up with the trend!" )
@@ -7986,7 +7986,7 @@ function r_talk234()
 end
 
 ------------------------------------------------------------
--- 废矿补给站-----饰品商人·布卡
+-- -----
 ------------------------------------------------------------
 function r_talk235()
 
@@ -8008,7 +8008,7 @@ function r_talk235()
 end
 
 ------------------------------------------------------------
--- 赖安森林补给站-----饰品商人·里克
+-- -----
 ------------------------------------------------------------
 function r_talk236()
 
@@ -8027,13 +8027,13 @@ function r_talk236()
 	Defence(4634)
 	Defence(4635)
 
-	-----------------饰品商人·里克---------金牛
+	--------------------------
 	AddNpcMission	(5649)
 	AddNpcMission	(5650)
 end
 
 ------------------------------------------------------------
--- 瓦尔诺补给站-----饰品商人·费拉里
+-- -----
 ------------------------------------------------------------
 function r_talk237()
 
@@ -8055,7 +8055,7 @@ function r_talk237()
 end
 
 ------------------------------------------------------------
--- 雷霆堡-----饰品商人·维克多
+-- -----
 ------------------------------------------------------------
 function r_talk238()
 
@@ -8086,7 +8086,7 @@ function r_talk238()
 end
 
 ------------------------------------------------------------
--- 卡尔加德补给站-----饰品商人·艾尔
+-- -----
 ------------------------------------------------------------
 function r_talk239()
 
@@ -8108,7 +8108,7 @@ function r_talk239()
 end
 
 ------------------------------------------------------------
--- 巴布补给站-----饰品商人·艾伦
+-- -----
 ------------------------------------------------------------
 function r_talk240()
 
@@ -8138,7 +8138,7 @@ function r_talk240()
 end
 
 ------------------------------------------------------------
--- 冰极补给站-----饰品商人·瑞恩
+-- -----
 ------------------------------------------------------------
 function r_talk241()
 
@@ -8164,14 +8164,14 @@ function r_talk241()
 	Defence(4703)
 	Defence(4704)
 	Defence(4705)
-----------饰品商人·瑞恩-------双子
+-----------------
 	AddNpcMission	(5712)
 	AddNpcMission	(5713)
 end
 
 
 ------------------------------------------------------------
--- 白银城-----清洗机
+-- -----
 ------------------------------------------------------------
 function r_talk252()
 	
@@ -8282,7 +8282,7 @@ end
 
 
 ------------------------------------------------------------
--- 考古队长-----考古学家
+-- -----
 ------------------------------------------------------------
 function r_talk253()
 	
@@ -8679,7 +8679,7 @@ function r_talk253()
 end
 
 ------------------------------------------------------------
--- 白银城-----槟果
+-- -----
 ------------------------------------------------------------
 function r_talk242()
 
@@ -8710,7 +8710,7 @@ function r_talk242()
 
 	Talk(17, "Bingo: Do you have Pirate Vouchers?")
 	
-	InitTrigger()--兑换"IPOD"兑换券
+	InitTrigger()--"IPOD"
 	TriggerCondition(1, HasItem, 2238, 1)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -8724,7 +8724,7 @@ function r_talk242()
 	Talk(19,"Do you wish to exchange?")
 	Text(19, "Confirm to exchange",GetChaName_5, 1)
 
-	InitTrigger()--兑换精灵硬币99个
+	InitTrigger()--99
 	TriggerCondition(1, HasItem, 2237, 1)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -8733,7 +8733,7 @@ function r_talk242()
 	TriggerFailure(1, JumpPage, 18)
 	Text(17, "I have Pirate Voucher 9",MultiTrigger, GetMultiTrigger(), 1)
 
-	InitTrigger()-- 兑换铸造图纸"Encrypted Blueprint"１张
+	InitTrigger()-- "Encrypted Blueprint"
 	TriggerCondition(1, HasItem, 2239, 1)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -8742,7 +8742,7 @@ function r_talk242()
 	TriggerFailure(1, JumpPage, 18)
 	Text(17, "I have Pirate Voucher 7",MultiTrigger, GetMultiTrigger(), 1)
 
-	InitTrigger()--兑换加速成长果1个
+	InitTrigger()--1
 	TriggerCondition(1, HasItem, 2241, 1)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -8754,7 +8754,7 @@ function r_talk242()
 
 	Talk(18, "Bingo: You do not seem to have the suitable Pirate Voucher. Please check to see if your inventory is binded and that theres a least 1 empty slot.")
 
- 	InitTrigger() --合成许愿石
+ 	InitTrigger() --
 	TriggerCondition(1, HasItem, 3905, 5)
 	TriggerCondition(1, HasItem, 3907, 1)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -8768,7 +8768,7 @@ function r_talk242()
  	
 	Talk(8, "Bingo: You seems to lack Wishing Stones and Welding Catalyst! Please make sure that your inventory is not binded and has at least 1 empty slot.")
 
-	InitTrigger() --兑换三月精灵
+	InitTrigger() --
 	TriggerCondition(1, HasItem, 3342, 2)
 	TriggerCondition(1, HasItem, 3337, 1)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -8785,7 +8785,7 @@ function r_talk242()
 
 	Talk(13, "Bingo: You do not seem to have any Unique Gem Voucher. Please make sure that your inventory is not binded and has at least 3 empty inventory slots.")
 	Talk(20, "Bingo: Do you have many moon cakes? You can exchange much great stuff from me.")
-	InitTrigger() --99个：迷之锁10个
+	InitTrigger() --9910
 	TriggerCondition(1, HasItem,3915, 99)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -8794,7 +8794,7 @@ function r_talk242()
 	TriggerFailure(1, JumpPage, 21)
 	Text(20, "Exchange 10 Locks of Mystic",MultiTrigger, GetMultiTrigger(), 1) 
 
-	InitTrigger() --200个：藏宝图1个
+	InitTrigger() --2001
 	TriggerCondition(1, HasItem,3915, 200)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -8824,7 +8824,7 @@ function mmm_talk01()
 	-- AddNpcMission(6114)		
 end 
 ------------------------------------------------------------
--- 白银城-----屈原
+-- -----
 ------------------------------------------------------------
 function mmm_talk02()
 	Talk(1, "Qu Yuan: A long journey home...Sigh...")
@@ -8868,9 +8868,9 @@ function e_talk01 ()
 	AddNpcMission (5149)
 end 
 
-------------------------------寻找遗失的爱情
+------------------------------
 function el_talk01()
-	Talk(1, "Little Fish: Be back fast! I can't handle it alone…..")	
+	Talk(1, "Little Fish: Be back fast! I can't handle it alone..")	
 	AddNpcMission (907)
 	AddNpcMission (911)
 	AddNpcMission (912)
@@ -8883,11 +8883,11 @@ function el_talk02()
 	AddNpcMission (910)
 end
 -----------------------------------------------------------
----白银---神秘婆婆
+------
 -----------------------------------------------------------
--------------------------------------爱情重生
+-------------------------------------
 function el_talk03()
-	Talk(1, "Mysterious Granny: I do not understand what is so mysterious about me…")	
+	Talk(1, "Mysterious Granny: I do not understand what is so mysterious about me")	
 	AddNpcMission (918)
 --------eleven
 	AddNpcMission (5018)
@@ -8896,7 +8896,7 @@ function el_talk03()
 	AddNpcMission (5022)
 end
 -----------------------------------------------------------
----春风镇---神秘的炉子
+------
 -----------------------------------------------------------
 function star_talk02 ()
 	Talk(1, "Furnace: What are you looking at! Never seen such a beautiful furnace?")
@@ -8918,7 +8918,7 @@ function star_talk02 ()
 	Talk(7, "Furnace of Immortality: Taking a 3 sockets Wyrm Sword as an example, first socket forged with Lv3 Gem of Rage, second socket forged with Lv2 Furious Gem and third socket forged with Lv1 Eye of Black Dragon. During extraction, only Lv3 Gem of Rage will be extracted, and first socket will be reduced to Lv2 Gem of Rage. The other 2 sockets will not be affected. Note: Extraction starts from first socket in descending order.")
 end 
 -----------------------------------------------------------
----白银---碰碰乐
+------
 -----------------------------------------------------------
 function star_talk03 ()
 	Talk(1, "Lucky Chance: Hi, I advised you to leave some empty slots in your inventory before playing. You might win something great!")
@@ -8926,15 +8926,15 @@ function star_talk03 ()
 	Text(1, "Try your luck, play a round!", OpenTiger)
 	Talk(2, "Lucky Chance: Each try requires 5 Fairy Coins. You can try multiple times. The more you try, the higher your chance of winning!")
 end 
---------------------------------------血腥的高跟鞋
+--------------------------------------
 function el_talk04 ()
 	
-	Talk(1, "Skinny Worker: Sigh...Sigh...Oh god, who can take revenge for me…")-------------(2249,2705)
+	Talk(1, "Skinny Worker: Sigh...Sigh...Oh god, who can take revenge for me")-------------(2249,2705)
 	AddNpcMission (919)
 end
 
 -----------------------------------------------------------
----印第安纳·琼斯
+---
 -----------------------------------------------------------
 function llleo_talk01()
 	Talk(1, "Indianna Jones: Through the Crescent Canyon till the Shrine, immortality in the name of the Goddess...I have found a secret of Demonic World. Do you wish to know?")
@@ -9108,7 +9108,7 @@ function llleo_talk01()
 
 end
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<乱斗管理员
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 function kk_talk01 ()
 	
 	Talk(1, "Chaos Administrator: Only the strongest can survive in combat and only the strongest will be respected.")
@@ -9138,7 +9138,7 @@ function kk_talk01 ()
 	Text(7,"Redeem Guide",SendExchangeXData)
 	Text(7,"Redeem Symbol of Honor",JumpPage ,12)
 
-	--兑换所需物品 ID,数量,兑换所得物品数量,赋予的值
+	-- ID,,,
 	InitExchangeX()
 
 	ExchangeDataX(2608	,	100	,	2682	,	1	,	1)
@@ -9226,7 +9226,7 @@ function leo_talkaa()
 	Text(1, "Have a look at your item.", SendExchangeXData)
 
 	
-	--兑换所需物品 ID,数量,兑换所得物品数量,赋予的值
+	-- ID,,,
 	InitExchangeX()
 
 	ExchangeDataX(3989	,	99	,	3999	,	20	,	1)
@@ -9247,7 +9247,7 @@ function leo_talkbb()
 	Text(1, "I only have money.", SendExchangeXData)
 
 	
-	--兑换所需物品 ID,数量,兑换所得物品数量,赋予的值
+	-- ID,,,
 	InitExchangeX()
 
 	ExchangeDataX(4029	,	99	,	4039	,	20	,	1)
@@ -9276,7 +9276,7 @@ end
 function leo_talkcc()
 	Talk(1, "Never buy anything from the Black Market Merchant beside me, he will scam you of your money. Take a look at my things instead.")
 	Text(1, "Let me take a look at your item.", SendExchangeXData)
-	--Text(1, "99个精灵硬币=1个宝石兑换券", JumpPage, 2)
+	--Text(1, "99=1", JumpPage, 2)
 	
 	InitExchangeX()
 	ExchangeDataX(855	,	60	,	2617	,	1	,	1)
@@ -9331,15 +9331,15 @@ function leo_talkcc()
 	TriggerAction(1, GiveItem, 3886, 1, 4)
 	TriggerAction(1, JumpPage, 4)
 	TriggerFailure(1, JumpPage, 3)
-	Talk(2, "黑市商人:年轻人,我在研制新产品。需要大量精灵硬币,你可以帮我收集吗?我用珍藏的宝贝跟你换。")
+	Talk(2, ":,,?")
 	Text(2, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "黑市商人:收齐东西后再来找我吧,还有你要保证你的背包至少有一个空格.且处在未锁定的状态")
-	Talk(4, "黑市商人:谢谢你,勇士!这是给你的报酬!")
+	Talk(3, ":,.")
+	Talk(4, ":,!!")
 
 end
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<合成介绍员
------介绍员-蓝
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+------
 function max_talka1()
 	Talk(1, "Assistant - Blue: Hi, I am Assistant - Blue. I can help you with any problem encountered while using Substance Analyzation Tool. How may I help you?")
 	Text(1, "What is Substance Analyzation Tool?", JumpPage ,2)
@@ -9384,14 +9384,14 @@ function max_talka1()
 
 end
 
------篝火婆婆
+-----
 function max_talka2()
 	Talk(1, "Matchstick Granny: Hello young man, I'm matchstick Granny. When I was young, I was the most famous chef! Haha! What can I do for you?")
 	Text(1, "I would like to know where I can cook", JumpPage ,2)
 	Text(1, "Can I learn cooking?", JumpPage ,3)
 	Text(1, "Can you teach me how to cook?", JumpPage ,4)
 	Text(1, "Are the things made that special?", JumpPage ,5)
-	Text(1, "I am only passing by…", JumpPage ,6)
+	Text(1, "I am only passing by", JumpPage ,6)
 
 	Talk(2, "Matchstick Granny: We should treasure the world limited resource - Fire. It can allow us to cook tasty dishes.")
 	Text(2, "Enquire about other questions", JumpPage ,1)
@@ -9419,7 +9419,7 @@ function max_talka2()
 
 end
 
------熔炉技师·梅克
+-----
 function max_talka3()
 	Talk(1, "Furnace Artificer - Mel: Hi! Looking for me?")
 	Text(1, "Tell me what can the Furnace do", JumpPage ,2)
@@ -9445,11 +9445,11 @@ function max_talka3()
 	Text(7, "So this is it. I understand now.", CloseTalk)
 
 	Talk(5, "Furnace Artificer - Mel: ...Are you Wolf? Passing by here?")
-	Text(5, "I am only passing by…", CloseTalk)
+	Text(5, "I am only passing by", CloseTalk)
 
 end
 
------研究生
+-----
 function max_talka4()
 	Talk(1, "Graduate: Hi, is there anything I can do for you?")
 	Text(1, "What is it above you", JumpPage ,2)
@@ -9476,55 +9476,55 @@ function max_talka4()
 	Text(5, "I would like to enquire about other questions", JumpPage ,1)
 	Text(5, "So this is it. I understand now.", CloseTalk)
 
-	Talk(6, "Graduate: Looks like you are…")
-	Text(6, "I am really only passing by…", CloseTalk)
+	Talk(6, "Graduate: Looks like you are")
+	Text(6, "I am really only passing by", CloseTalk)
 
 	Talk(7, "Graduate: As we are not the Almighty, what we create are not perfect. To distinguish the quality of the product we have seperate it accordingly in ascending order:                  Thank you     Abysmal                            Terrible                           Bad                                  Poor                            Mediocre                          Fair                              Good                                Great                              Superb                            Perfect .")
 	Text(7, "I would like to enquire about other questions", JumpPage ,1)
 	Text(7, "So this is it. I understand now.", CloseTalk)
 end
 
----------------------圣诞村的圣诞树
+---------------------
 function el_talk05 ()
 	
 	Talk(1, "Christmas Tree: Merry Christmas to you! Each blessing that comes from the heart will hold true")
 	Text(1, "Select blessing",JumpPage, 2)
 	
 	Talk (2, "Christmas Tree: Do you want to dedicate your blessing? Every dedication requires a Christmas Card and 1000G.")
-	Text(2, "第一条祝福",JumpPage, 3)
-	Text(2, "第二条祝福",JumpPage, 4)
-	Text(2, "第三条祝福",JumpPage, 5)
-	Text(2, "第四条祝福",JumpPage, 6)
-	Text(2, "第五条祝福",JumpPage, 7)
-	Text(2, "第六条祝福",JumpPage, 8)
-	Text(2, "第七条祝福",JumpPage, 9)
+	Text(2, "",JumpPage, 3)
+	Text(2, "",JumpPage, 4)
+	Text(2, "",JumpPage, 5)
+	Text(2, "",JumpPage, 6)
+	Text(2, "",JumpPage, 7)
+	Text(2, "",JumpPage, 8)
+	Text(2, "",JumpPage, 9)
 
 	
-	Talk(3, "白雪飘飘,鹿铃霄霄,甜蜜的平安夜又来到,小手摆摆,舞姿曼曼,快乐的圣诞节日多美好.")
+	Talk(3, ",,,,,.")
 	Text(3,"Confirm to broadcast this blessing",  GetChaName_0, 1)
 	Text(3, "Return",JumpPage, 2)
 
-	Talk(4, "每一朵雪花飘下,每一个烟火燃起,每一秒时间流动,每一份思念传送,都代表着我想要送你的每一个祝福,圣诞快乐!")
+	Talk(4, ",,,,,!")
 	Text(4,"Confirm to broadcast this blessing",  GetChaName_1, 1)
 	Text(4, "Return",JumpPage, 2)
 
-	Talk(5, "我有一个美丽的愿望:以前的圣诞节,总是认为圣诞老人不会将最好的礼物降临给我,但今年的圣诞节不同,有你的到来,让我永远记住今天.")
+	Talk(5, ":,,,,.")
 	Text(5,"Confirm to broadcast this blessing",  GetChaName_2, 1)
 	Text(5, "Return",JumpPage, 2)
 
-	Talk(6, "圣诞节到了,向支持我的朋友和我所爱的朋友说声感谢,感谢你走进我的生活,我会尽我最大的努力给你无限的快乐!")
+	Talk(6, ",,,!")
 	Text(6,"Confirm to broadcast this blessing",  GetChaName_3, 1)
 	Text(6, "Return",JumpPage, 2)
 
-	Talk(7, "圣诞节都到了,能不能在下个圣诞节之前别再让我当乱斗之王,工会战不要次次都赢,上天,赐予我一个强劲的对手吧,阿门……")
+	Talk(7, ",,,,,")
 	Text(7,"Confirm to broadcast this blessing",  GetChaName_26, 1)
 	Text(7, "Return",JumpPage, 2)
 
-	Talk(8, "哈里路亚,妈妈咪呀,主啊……赐我一个妞吧")
+	Talk(8, ",,")
 	Text(8,"Confirm to broadcast this blessing",  GetChaName_27, 1)
 	Text(8, "Return",JumpPage, 2)
 
-	Talk(9, "圣诞节到了,祝福自己好运天天交，生活步步高，彩票期期中，打牌次次赢，口味顿顿好，若敢把我忘，小心挨棍棒 ")
+	Talk(9, ", ")
 	Text(9,"Confirm to broadcast this blessing",  GetChaName_28, 1)
 	Text(9, "Return",JumpPage, 2)
 ---------------------------------------------------------------------------------------------------------------	
@@ -9532,8 +9532,8 @@ end
 
 
 
-----------------------------------------霍金斯-------------------------
---------------------------------寂寞之塔6层(51300,26900)
+-----------------------------------------------------------------
+--------------------------------6(51300,26900)
 --------------------------------------eleven------------------------------------------
 function el_talk07 ()
 
@@ -9711,7 +9711,7 @@ function el_talk07 ()
 	Text(19, "I chose wrongly just now.",JumpPage, 20)
 	Text(19, "I need to consider",JumpPage, 32)
 
-	Talk(20, "Huckinson: Please be steady…")
+	Talk(20, "Huckinson: Please be steady")
 	Text(20, "Next",JumpPage, 3)
 
 	Talk(21, "Huckinson: Confidence is important to a pirate!")
@@ -9764,18 +9764,18 @@ function el_talk07 ()
 	AddNpcMission	(6001)
 	AddNpcMission	(6002)
 
-	-------------霍金斯-------巨蟹
+	--------------------
 	AddNpcMission	(5823)
 	AddNpcMission	(5824)
 	
 		
 end 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<霍金斯
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
-----------------------------------------托马斯·图图-------------------------
---------------------------------魔方世界二层(26600,25900)
+-----------------------------------------------------------------
+--------------------------------(26600,25900)
 --------------------------------------eleven------------------------------------------
 
 function el_talk08 ()
@@ -9846,9 +9846,9 @@ function el_talk08 ()
 	AddNpcMission	(6014)
 
 	end
-	-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<托马斯·图图
+	-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	
-	--神使
+	--
 	
 function Leo_talkQ()
 	Talk(1,"Representative of order, protector of love and justice! I am the Online GM, maning my post to help those in need...")
@@ -9900,14 +9900,14 @@ end
 ------------------------------------------------------------
 ----							--
 ----							--
-----		沙岚城[教堂修女.梅拉达]			--
+----		[.]			--
 ----							--
 ----		82271,353453				--
 ------------------------------------------------------------
--------------------------------------------------------------这里开始P话聊天
+-------------------------------------------------------------P
 --function el_talk09 ()
 --	
---	Talk(1, "梅拉达:神爱世人,我以主的名义邀请你去圣地.")
+--	Talk(1, ":,.")
 --	Text(1, "Church bidding", ListAuction)
 --	Text(1, "Buy Church Visit Ticket", JumpPage,2)
 --	Text(1, "Buy invitiations", JumpPage, 5)
@@ -9933,9 +9933,9 @@ end
 --	
 --end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<梅拉达
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 	
------------------------------怨念草
+-----------------------------
 function ync_talk ()
 	Talk(1, "What are you looking at? Stare longer and I will hit you")
 
@@ -9951,7 +9951,7 @@ function ync_talk ()
 	InitTrigger()
 	TriggerAction(1, SetRecord, 1404)
 	TriggerAction(1, SetRecord, 1405)
-	Talk(2, "Why…Why must always kill us shrub family…Do you know how many people in total in this world kills us shrubs and steal our items for their quest?")
+	Talk(2, "WhyWhy must always kill us shrub familyDo you know how many people in total in this world kills us shrubs and steal our items for their quest?")
 	Text(2, "quantity 11",MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
@@ -9980,7 +9980,7 @@ function ync_talk ()
 
 end
 
---------------------------------------重伤的无名战士
+--------------------------------------
 
 function Zs_Soldier ()
 	Talk(1, "Becareful friend, and don't wake that big lizard.")
@@ -9992,11 +9992,11 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		地狱7层[拉瑞]			--
+--		7[]			--
 --							--
 --		190, 181				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function el_talk11 ()
 	
 	Talk(1, "Lurie: Welcome to Abaddon Level 5! Although Abaddon is scary, but is filled with opportunities. Abaddon is heaven for brave adventurers.")
@@ -10020,16 +10020,16 @@ function el_talk11 ()
 --	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<罗拉
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ---------------------------------------------------------
 --							--
 --							--
---		地狱15层[希尔塔]			--
+--		15[]			--
 --							--
 --		314, 303				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function el_talk12 ()
 	
 	Talk(1, "Abaddon level 15 have give many people a haunting nightmare, only the real champion will obtain honour.")
@@ -10116,12 +10116,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		春风镇[月老]			--
+--		[]			--
 --							--
 --		3228,2508				--
 ----------------------------------------------------------
 function amon_talk1 ()
-	Talk(1, "月老: 一根红线,两处情缘.道不完人间情事.")
+	Talk(1, ": ,..")
 
 
 	--AddNpcMission (5736)
@@ -10131,12 +10131,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		夏岛[牛郎]			--
+--		[]			--
 --							--
 --		3670,2636			--
 ----------------------------------------------------------
 function amon_talk2 ()
-	Talk(1, "牛郎: 相聚短,银河长.悠悠鹊桥路,来人路,离人路.")
+	Talk(1, ": ,.,,.")
 
 
 	--AddNpcMission (5738)
@@ -10146,12 +10146,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		天堂[织女]			--
+--		[]			--
 --							--
 --		1599,909			--
 ----------------------------------------------------------
 function amon_talk3 ()
-	Talk(1, "织女: 相聚短,思念长.悠悠鹊桥路,离人路,来人路.")
+	Talk(1, ": ,.,,.")
 
 
 	--AddNpcMission (5740)
@@ -10160,12 +10160,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		白银[校长雷诺]			--
+--		[]			--
 --							--
 --		2232,2781			--
 ----------------------------------------------------------
 function dina_talk01 ()
-	Talk(1, "校长雷诺: 暑假已经过去，两个月的长假之后，迎来了新的学期。")
+	Talk(1, ": ")
 
 	AddNpcMission (6127)
 	AddNpcMission (6128)
@@ -10178,12 +10178,12 @@ end
 -----------------------------------------------------------
 ----							--
 ----							--
-----		沙岚[昂莉娜老师]			--
+----		[]			--
 ----							--
 ----		871,3581			--
 ------------------------------------------------------------
 function dina_talk02 ()
-	Talk(1, "昂莉娜老师: 新学期，新开始，学无止境~")
+	Talk(1, ": ~")
 	
 	InitTrigger()
 	TriggerCondition(1, HasMission, 1458)
@@ -10193,21 +10193,21 @@ function dina_talk02 ()
 	TriggerAction(1, JumpPage, 2)
 	TriggerAction(1, SetTestTime)
 	TriggerFailure(1, JumpPage, 20)
-	Text(1, "参加入学考试",MultiTrigger, GetMultiTrigger(), 1)
+	Text(1, "",MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(2, "问题一:假期欢乐杂志是否可交易?")
+	Talk(2, ":?")
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
 	TriggerAction(1, JumpPage, 3)
-	Text(2, "可交易",MultiTrigger, GetMultiTrigger(), 1)
+	Text(2, "",MultiTrigger, GetMultiTrigger(), 1)
 	
 	InitTrigger()
 	TriggerAction(1, RenewTestTime1)
 	TriggerAction(1, JumpPage, 3)
-	Text(2, "不可交易",MultiTrigger, GetMultiTrigger(), 1)
+	Text(2, "",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "问题二:NPC克拉拉大师在那个补给站?")
+	Talk(3, ":NPC?")
 
 	InitTrigger()
 	TriggerAction(1, JumpPage, 4)
@@ -10219,43 +10219,43 @@ function dina_talk02 ()
 	TriggerAction(1, JumpPage, 4)
 	Text(3, "Icespire Haven",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(4, "问题三:雷贝与项链能不能同时装备?")
+	Talk(4, ":?")
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime1)
 	TriggerAction(1, JumpPage, 5)
-	Text(4, "可以",MultiTrigger, GetMultiTrigger(), 1)
+	Text(4, "",MultiTrigger, GetMultiTrigger(), 1)
 	
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
 	TriggerAction(1, JumpPage, 5)
-	Text(4, "不可以",MultiTrigger, GetMultiTrigger(), 1)
+	Text(4, "",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "问题四:幻影三城每天开放几次?")
+	Talk(5, ":?")
 	
 	InitTrigger()
 	TriggerAction(1, RenewTestTime1)
 	TriggerAction(1, JumpPage, 6)
-	Text(5, "2次",MultiTrigger, GetMultiTrigger(), 1)
+	Text(5, "2",MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
 	TriggerAction(1, JumpPage, 6)
-	Text(5, "4次",MultiTrigger, GetMultiTrigger(), 1)
+	Text(5, "4",MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(6, "问题五:圣光石可以镶嵌在鞋子上吗?")
+	Talk(6, ":?")
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime1)
 	TriggerAction(1, JumpPage, 7)
-	Text(6, "可以",MultiTrigger, GetMultiTrigger(), 1)
+	Text(6, "",MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
 	TriggerAction(1, JumpPage, 7)
-	Text(6, "不可以",MultiTrigger, GetMultiTrigger(), 1)
+	Text(6, "",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "问题六:100级的猎鹰护卫舰的航速是多少?")
+	Talk(7, ":100?")
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
@@ -10267,31 +10267,31 @@ function dina_talk02 ()
 	TriggerAction(1, JumpPage, 8)
 	Text(7, "632",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "问题七:海盗王的职业技能中有几种技能是需要消耗道具才能施展的?")
+	Talk(8, ":?")
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime1)
 	TriggerAction(1, JumpPage, 9)
-	Text(8, "3种",MultiTrigger, GetMultiTrigger(), 1)
+	Text(8, "3",MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
 	TriggerAction(1, JumpPage, 9)
-	Text(8, "4种",MultiTrigger, GetMultiTrigger(), 1)
+	Text(8, "4",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "问题八:冰狼堡一共有几只冰雕的狼?")
+	Talk(9, ":?")
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime1)
 	TriggerAction(1, JumpPage, 12)
-	Text(9, "9只",MultiTrigger, GetMultiTrigger(), 1)
+	Text(9, "9",MultiTrigger, GetMultiTrigger(), 1)
 
 	InitTrigger()
 	TriggerAction(1, RenewTestTime2)
 	TriggerAction(1, JumpPage, 12)
-	Text(9, "10只",MultiTrigger, GetMultiTrigger(), 1)
+	Text(9, "10",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "你确定你就这样回答这些问题吗?")
+	Talk(12, "?")
 
 	TriggerAction(1, SetRecord, 1461)
 	TriggerAction(1, JumpPage, 13)
@@ -10299,10 +10299,10 @@ function dina_talk02 ()
 
 	Text(12, "Let me think again", CloseTalk)
 	
-	Talk(13, "回答完了就可以找我还任务了哦,别忘了.")
+	Talk(13, ",.")
 	Text(13, "Ok", CloseTalk)
 
-	Talk(20, "想参加入学考试吗?你有入学证书吗?没的话自己去找雷诺校长办一张吧")
+	Talk(20, "??")
 
 	AddNpcMission (6132)
 	AddNpcMission (6133)
@@ -10315,33 +10315,33 @@ end
 -----------------------------------------------------------
 ----							--
 ----							--
---		冰极[库拉托斯1]			--
+--		[1]			--
 --							--
 --		2646,671			--
 ----------------------------------------------------------
 function dina_talk03 ()
-	Talk(1, "库拉托斯:嘻嘻,猜猜那个才是真正的我!猜错了可是要被我赶回白银城的哦.")
+	Talk(1, ":,!.")
 
 	InitTrigger()
 	TriggerCondition(1, HasMission, 1464)
 	TriggerCondition(1, NoRecord, 1465)
 	TriggerAction(1, JumpPage, 2)
 	TriggerFailure(1, JumpPage, 3)
-	Text(1, "我找你有事",MultiTrigger, GetMultiTrigger(), 1)
+	Text(1, "",MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(2, "原来是想找真正的库拉托斯啊,那你认为我是真正的库拉托斯吗?")
+	Talk(2, ",?")
 	
 	InitTrigger()
 	TriggerCondition(1, CheckRealNpc, 1)
 	TriggerAction(1, SetRecord, 1465)
 	TriggerAction(1, JumpPage, 4)
 	TriggerFailure(1, GoTo, 2298, 2704, "garner")
-	Text(2, "我猜你就是真正的库拉托斯",MultiTrigger, GetMultiTrigger(), 1)	
+	Text(2, "",MultiTrigger, GetMultiTrigger(), 1)	
 	Text(2, "Let me think again", CloseTalk)
 
-	Talk(3, "你是谁?我又不认识你.")
+	Talk(3, "?.")
 
-	Talk(4, "哎呀,被你抓住了,好吧好吧,把昂莉娜的信给我吧")
+	Talk(4, ",,,")
 
 	AddNpcMission (6137)
 
@@ -10350,33 +10350,33 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		冰极[库拉托斯2]			--
+--		[2]			--
 --							--
 --		2718,586			--
 ----------------------------------------------------------
 function dina_talk04 ()
-	Talk(1, "库拉托斯:嘻嘻,猜猜那个才是真正的我!猜错了可是要被我赶回白银城的哦.")
+	Talk(1, ":,!.")
 
 	InitTrigger()
 	TriggerCondition(1, HasMission, 1464)
 	TriggerCondition(1, NoRecord, 1465)
 	TriggerAction(1, JumpPage, 2)
 	TriggerFailure(1, JumpPage, 3)
-	Text(1, "我找你有事",MultiTrigger, GetMultiTrigger(), 1)
+	Text(1, "",MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(2, "原来是想找真正的库拉托斯啊,那你认为我是真正的库拉托斯吗?")
+	Talk(2, ",?")
 	
 	InitTrigger()
 	TriggerCondition(1, CheckRealNpc, 2)
 	TriggerAction(1, SetRecord, 1465)
 	TriggerAction(1, JumpPage, 4)
 	TriggerFailure(1, GoTo, 2298, 2704, "garner")
-	Text(2, "我猜你就是真正的库拉托斯",MultiTrigger, GetMultiTrigger(), 1)	
+	Text(2, "",MultiTrigger, GetMultiTrigger(), 1)	
 	Text(2, "Let me think again", CloseTalk)
 
-	Talk(3, "你是谁?我又不认识你.")
+	Talk(3, "?.")
 
-	Talk(4, "哎呀,被你抓住了,好吧好吧,把昂莉娜的信给我吧")
+	Talk(4, ",,,")
 
 	AddNpcMission (6137)
 
@@ -10385,33 +10385,33 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		冰极[库拉托斯3]			--
+--		[3]			--
 --							--
 --		2714,699			--
 ----------------------------------------------------------
 function dina_talk05 ()
-	Talk(1, "库拉托斯:嘻嘻,猜猜那个才是真正的我!猜错了可是要被我赶回白银城的哦.")
+	Talk(1, ":,!.")
 
 	InitTrigger()
 	TriggerCondition(1, HasMission, 1464)
 	TriggerCondition(1, NoRecord, 1465)
 	TriggerAction(1, JumpPage, 2)
 	TriggerFailure(1, JumpPage, 3)
-	Text(1, "我找你有事",MultiTrigger, GetMultiTrigger(), 1)
+	Text(1, "",MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(2, "原来是想找真正的库拉托斯啊,那你认为我是真正的库拉托斯吗?")
+	Talk(2, ",?")
 	
 	InitTrigger()
 	TriggerCondition(1, CheckRealNpc, 3)
 	TriggerAction(1, SetRecord, 1465)
 	TriggerAction(1, JumpPage, 4)
 	TriggerFailure(1, GoTo, 2298, 2704, "garner")
-	Text(2, "我猜你就是真正的库拉托斯",MultiTrigger, GetMultiTrigger(), 1)	
+	Text(2, "",MultiTrigger, GetMultiTrigger(), 1)	
 	Text(2, "Let me think again", CloseTalk)
 
-	Talk(3, "你是谁?我又不认识你.")
+	Talk(3, "?.")
 
-	Talk(4, "哎呀,被你抓住了,好吧好吧,把昂莉娜的信给我吧")
+	Talk(4, ",,,")
 
 	AddNpcMission (6137)
 end
@@ -10419,38 +10419,38 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		冰极[库拉托斯4]			--
+--		[4]			--
 --							--
 --		2609,607			--
 ----------------------------------------------------------
 function dina_talk06 ()
-	Talk(1, "库拉托斯:嘻嘻,猜猜那个才是真正的我!猜错了可是要被我赶回白银城的哦.")
+	Talk(1, ":,!.")
 
 	InitTrigger()
 	TriggerCondition(1, HasMission, 1464)
 	TriggerCondition(1, NoRecord, 1465)
 	TriggerAction(1, JumpPage, 2)
 	TriggerFailure(1, JumpPage, 3)
-	Text(1, "我找你有事",MultiTrigger, GetMultiTrigger(), 1)
+	Text(1, "",MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(2, "原来是想找真正的库拉托斯啊,那你认为我是真正的库拉托斯吗?")
+	Talk(2, ",?")
 	
 	InitTrigger()
 	TriggerCondition(1, CheckRealNpc, 0)
 	TriggerAction(1, SetRecord, 1465)
 	TriggerAction(1, JumpPage, 4)
 	TriggerFailure(1, GoTo, 2298, 2704, "garner")
-	Text(2, "我猜你就是真正的库拉托斯",MultiTrigger, GetMultiTrigger(), 1)	
+	Text(2, "",MultiTrigger, GetMultiTrigger(), 1)	
 	Text(2, "Let me think again", CloseTalk)
 
-	Talk(3, "你是谁?我又不认识你.")
+	Talk(3, "?.")
 
-	Talk(4, "哎呀,被你抓住了,好吧好吧,把昂莉娜的信给我吧")
+	Talk(4, ",,,")
 	AddNpcMission (6137)
 
 end
 
------------------------读书系统
+-----------------------
 function reading_talk01 ()
 	Talk(1 , "Tester: I am the tester in Argent City. I will assist you when taking your tests. Put your Student card in your bag before starting the tests.")
 	
@@ -10513,7 +10513,7 @@ function reading_talk02 ()
 
 	Talk(3, "Promotion Examination Officer: You must have one test paper and one answer sheet to get your report card.")
 
-	Talk(4, "Promotion Examination Officer: You don’t have a report card.")
+	Talk(4, "Promotion Examination Officer: You dont have a report card.")
 
 	Talk(5, "Promotion Examination Officer: Requirements for taking the Promotion Exam are strict. You must have one student card in your bag with full academic credits. Besides, you are not allowed to own any test papers, answer sheets or report cards.")
 
@@ -10527,19 +10527,19 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[教堂修女.梅拉达]			--
+--		[.]			--
 --							--
 --		82271,353453				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function el_talk09 ()
 	
-	Talk(1, "梅拉达:神爱世人,我以主的名义邀请你去圣地.")
-	Text(1, "关于教堂", JumpPage, 17)	
+	Talk(1, ":,.")
+	Text(1, "", JumpPage, 17)	
 
-	Talk(17, "梅拉达:你要租借教堂吗？今天正好有打折活动哦.")
+	Talk(17, ":.")
 
-	Text(17, "征用教堂简介", JumpPage, 6)
+	Text(17, "", JumpPage, 6)
 	Text(17, "Church bidding", ListAuction)
 	Text(17, "Buy Church Visit Ticket", JumpPage,2)
 	Text(17, "Buy invitiations", JumpPage, 5)
@@ -10555,34 +10555,34 @@ function el_talk09 ()
 	TriggerAction(1, GiveItem, 3024, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	Talk(2, "梅拉达:神圣典雅的教堂是幸福开始的地方,是爱情庄严的见证.每周一晚17:00~17:10欢迎持票参观,每张参观门票只需5000游戏币")
+	Talk(2, ":,.17:00~17:10,5000")
 	Text(2, "confirm buying",  MultiTrigger, GetMultiTrigger(), 1)
 
 	Talk(3, "Mulida: Welcome you to take a tour on time anytime")
-	Talk(4, "梅拉达:您身上似乎没有足够的金币啊!或者您的背包已锁定,请保证背包内留有一个空格")
+	Talk(4, ":!,")
 	
-	Talk(5, "梅拉达:用教堂使用证书就可以购买对应教堂的请柬,每10枚请柬为1组,每组5万游戏币.邀请您的朋友参加聚会吧!")
+	Talk(5, ":,101,5.!")
 	Text(5, "confirm buying", ChangeItem, 1)
 	
-	Talk(6, "梅拉达:你想了解那一部分?")
-	Text(6, "关于参观", JumpPage, 7)
-	Text(6, "关于教堂竞拍", JumpPage, 8)
-	Text(6, "关于教堂使用权", JumpPage, 9)
-	Text(6, "关于教堂使用证书", JumpPage, 10)
+	Talk(6, ":?")
+	Text(6, "", JumpPage, 7)
+	Text(6, "", JumpPage, 8)
+	Text(6, "", JumpPage, 9)
+	Text(6, "", JumpPage, 10)
 
-	Talk(7, "梅拉达:购买参观门票的朋友于每周一晚17:00~17:10参观教堂.")
+	Talk(7, ":17:00~17:10.")
 	Text(7, "Comfirm", CloseTalk)
 	Text(7, "Return", JumpPage, 6)
 
-	Talk(8, "梅拉达:竞拍时间:于每周一晚上18:00~20:30之间在我这里进行教堂竞拍.竞拍条件:携带教堂竞标卡1份.竞拍场次:教堂每星期出租两日,可承办四场典礼.星期六两场,礼拜天两场.每场2个小时,场次由竞拍时段决定.")
+	Talk(8, "::18:00~20:30.:1.:,.,.2,.")
 	Text(8, "Comfirm", CloseTalk)
 	Text(8, "Return", JumpPage, 6)
 
-	Talk(9, "梅拉达:共分4个时段竞拍,对应时段内出价最高的朋友将获得教堂使用权,为竞标成功者颁发教堂使用证书,还将赠送10枚请柬.")
+	Talk(9, ":4,,,10.")
 	Text(9, "Comfirm", CloseTalk)
 	Text(9, "Return", JumpPage, 6)
 
-	Talk(10, "梅拉达:证书作用:凭该证书方可购买请柬;典礼时段内双击该证书进入教堂.在教堂使用证书上标示的时间后两小时,自动将所有在场人员传送回沙岚城.")
+	Talk(10, "::;.,.")
 	Text(10, "Comfirm", CloseTalk)
 	Text(10, "Return", JumpPage, 6)
 end 
@@ -10590,55 +10590,55 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		魔方1层兑换员[爱德华]			--
+--		1[]			--
 --							--
 --		26600,23000			--
 ----------------------------------------------------------
 function el_talk13 ()
-	Talk(1, "爱德华:千年的历史被岁月尘埃所埋葬,曾经团结而富饶的加纳大陆已不复存在.谁还记得卡拉女神万年前为她爱人所留下的点点冰泪!")
-	Text(1, "兑换神泣宝箱", JumpPage, 2)
+	Talk(1, ":,.!")
+	Text(1, "", JumpPage, 2)
 	
-	Talk(2, "爱德华:千年冰泪是守卫爱人的寸寸相思,朋友!如若你有心窥探女神丰富的精神世界,请带上1个情之殇和1个纳卡符石来兑换这迷失的神泣宝藏吧!")	
+	Talk(2, ":,!,11!")	
 	InitTrigger()
-	TriggerCondition(1, HasItem, 3827, 1)              -------------情之殇
-	TriggerCondition(1, HasItem, 3457, 1)              --------------纳卡符石
+	TriggerCondition(1, HasItem, 3827, 1)              -------------
+	TriggerCondition(1, HasItem, 3457, 1)              --------------
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
 	TriggerAction(1, TakeItem, 3827, 1)
 	TriggerAction(1, TakeItem, 3457, 1)
-	TriggerAction(1, GiveItem, 0145, 1, 4)              ----------神泣宝箱
+	TriggerAction(1, GiveItem, 0145, 1, 4)              ----------
 	TriggerFailure(1, JumpPage, 3)
 	Text(2,"Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1) 	
 
-	Talk(3, "朋友,神灵不容亵渎,如若你身上还未有情之殇和纳卡符石或是你的背包格已满,请安静的离开.")
+	Talk(3, ",,,.")
 
 end
 
 ----------------------------------------------------------
 --							--
 --							--
---		魔方2层兑换员[德鲁克]			--
+--		2[]			--
 --							--
 --		26600,23000			--
 ----------------------------------------------------------
 function el_talk14 ()
-	Talk(1, "德鲁克:嘿嘿,近来探寻大海盗王罗森遗留宝藏的人趋之若鹜,却不知魔方二层隐藏着一个惊天的秘密!这里的巨人首领身上流淌着摩尔克族人的血液,那些野蛮的家伙在分裂土地时,不知从王宫里盗了多少稀珍异宝!")
+	Talk(1, ":,,!,,!")
 	
-	Text(1, "兑换霸王宝箱", JumpPage, 2)
+	Text(1, "", JumpPage, 2)
 
-	Talk(2, "德鲁克:朋友,朋友!凶猛的魔尔克人没把你吓坏吧?什么?你说你有信心把他杀死?!真是佩服佩服!我妹妹最近在研制一柄火焰神器,急需这头巨人身上的1个巨人首领项链和1个纳卡符石做原料!如果你能把这两样东西找来,我将赠与你:我妹妹亲手锤炼的霸王宝箱,嘿嘿,里边的宝贝可是妹妹毕生收录的精华!!")	
+	Talk(2, ":,!???!!,11!,:,,!!")	
 	InitTrigger()
-	TriggerCondition(1, HasItem, 3826, 1)             ------------巨人首领项链
-	TriggerCondition(1, HasItem, 3457, 1)             ------------纳卡符石
+	TriggerCondition(1, HasItem, 3826, 1)             ------------
+	TriggerCondition(1, HasItem, 3457, 1)             ------------
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0)
 	TriggerAction(1, TakeItem, 3826, 1)
 	TriggerAction(1, TakeItem, 3457, 1)
-	TriggerAction(1, GiveItem, 0146, 1, 4)              ----------霸王宝箱
+	TriggerAction(1, GiveItem, 0146, 1, 4)              ----------
 	TriggerFailure(1, JumpPage, 3)
 	Text(2,"Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1) 	
 
-	Talk(3, "哎呀哎呀,你竟然还没收集到巨人首领项链和纳卡符石或是你背包太满了!那赶紧逃吧!!!摩尔克族巨人发起火来可是十分凶悍喔!")
+	Talk(3, ",!!!!!")
 
 end
 
@@ -10646,12 +10646,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		白银[魔法师夏天]			--
+--		[]			--
 --							--
 --		2229,2782			--
 ----------------------------------------------------------
 function el_talk15 ()
-	Talk(1, "魔法师夏天: 我的朋友裴梦被魔王洛克残忍的杀害了。勇敢的战士,如果你能够为我找回代表我朋友灵魂的七个字母P-E-I-M-E-N-G。我将会把我收藏多年的魔法盒送给你。")
+	Talk(1, ": ,P-E-I-M-E-N-G")
 
 	AddNpcMission (6139)
 	AddNpcMission (6161)
@@ -10663,24 +10663,24 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		加纳圣林[洛克家的守门人]			--
+--		[]			--
 --							--
---		271，1775			--
+--		2711775			--
 ----------------------------------------------------------
 function el_talk16 ()
 	
-	Talk(1, "洛克家的守门人: 我是洛克大人的忠实家仆,虽然他很残忍,但是这并不妨碍我欣赏他的能力和身材.")
-	Text(1, "我要去寂寞之塔1层！", JumpPage, 2)
+	Talk(1, ": ,,.")
+	Text(1, "1", JumpPage, 2)
 
 	InitTrigger()
 	TriggerCondition(1, HasMission,1213)
 	TriggerAction(1, GoTo, 352, 378, "lonetower")
 	TriggerFailure(1, JumpPage, 3)
-	Talk(2, "洛克家的守门人:寂寞之塔之所以寂寞是因为没有几个活人")
+	Talk(2, ":")
 	Text(2, "Teleport",MultiTrigger, GetMultiTrigger(), 1)
 
 
-	Talk(3, "洛克家的守门人:朋友你还没接 守门人透露的信息 这个任务吧?")
+	Talk(3, ":  ?")
 	AddNpcMission (6140)
 	
 end
@@ -10688,17 +10688,17 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		寂寞之塔1层[洛克家的男佣]			--
+--		1[]			--
 --							--
 --		260,257			--
 ----------------------------------------------------------
 function el_talk17 ()
-	Talk(1, " 洛克家的男佣: 众所周知,一目了然,我比洛克帅,为什么他的情人们不这样想......")
-	Text(1, "我要去圣林！", JumpPage, 2)
+	Talk(1, " : ,,,......")
+	Text(1, "", JumpPage, 2)
 
 	InitTrigger()
 	TriggerAction(1, GoTo, 275, 1775, "garner")
-	Talk(2, "洛克家的男佣:有空常来玩,孤独的时候、快乐的时候和不知道是否快乐的时候...")
+	Talk(2, ":,...")
 	Text(2, "Teleport",MultiTrigger, GetMultiTrigger(), 1)
 
 	AddNpcMission (6141)
@@ -10710,12 +10710,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		寂寞之塔2层[洛克家的女佣]			--
+--		2[]			--
 --							--
---		151，134			--
+--		151134			--
 ----------------------------------------------------------
 function el_talk18 ()
-	Talk(1, "洛克家的女佣: 作为一个女佣不能不关注自己主人的私生活,否则日子会更加无聊.")
+	Talk(1, ": ,.")
 
 
 	AddNpcMission (6144)
@@ -10727,12 +10727,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		寂寞之塔3层[洛克家的小秘]			--
+--		3[]			--
 --							--
---		63，311			--
+--		63311			--
 ----------------------------------------------------------
 function el_talk19 ()
-	Talk(1, " 洛克家的小秘: 我知道我漂亮,不要垂涎我.")
+	Talk(1, " : ,.")
 
 
 	AddNpcMission (6147)
@@ -10744,12 +10744,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		寂寞之塔4层[洛克家的守护者]			--
+--		4[]			--
 --							--
---		261，70			--
+--		26170			--
 ----------------------------------------------------------
 function el_talk20 ()
-	Talk(1, "洛克家的守护者: 守护者是用来尊敬的.洛克什么时候才能明白这个道理呢")
+	Talk(1, ": .")
 
 
 	AddNpcMission (6150)
@@ -10761,12 +10761,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		寂寞之塔5层[洛克家的管家]			--
+--		5[]			--
 --							--
---		542，54			--
+--		54254			--
 ----------------------------------------------------------
 function el_talk21 ()
-	Talk(1, "洛克家的管家: 管家管家,主人不管就是我的家.")
+	Talk(1, ": ,.")
 
 
 	AddNpcMission (6153)
@@ -10777,12 +10777,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		寂寞之塔6层[魔王洛克的情人]			--
+--		6[]			--
 --							--
---		541，268			--
+--		541268			--
 ----------------------------------------------------------
 function el_talk22 ()
-	Talk(1, "魔王洛克的情人: 我可能不是Rock最美丽的情人,但一定是最花心的一个.")
+	Talk(1, ": Rock,.")
 
 
 	AddNpcMission (6156)
@@ -10794,12 +10794,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		地狱4层[洛克家的旺财]			--
+--		4[]			--
 --							--
 --		154,912			--
 ----------------------------------------------------------
 function el_talk23 ()
-	Talk(1, "洛克家的旺财: 汪汪汪汪汪汪汪...你汪,我汪,大家汪!")
+	Talk(1, ": ...,,!")
 
 
 	AddNpcMission (6159)
@@ -10810,12 +10810,12 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		秋岛[秋岛导游小姐]			--
+--		[]			--
 --							--
 --		2423,3186			--
 ----------------------------------------------------------
 function el_talk24 ()
-	Talk(1, "秋岛导游小姐: 金秋组团游!欢迎来到秋岛,今天是我第一次导游,祝愿你在这里度过一段温馨美好的时光.谢谢!")
+	Talk(1, ": !,,.!")
 
 
 	AddNpcMission (6162)
@@ -10828,38 +10828,38 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		冰狼[礼品派送专员]			--
+--		[]			--
 --							--
 --		1307,500			--
 ----------------------------------------------------------
 function pre_talk()
-	Talk(1, "你好,我是礼品派送专员,专门负责派送礼品给大家的,希望你们能喜欢.")
+	Talk(1, ",,,.")
 	InitTrigger()
 	TriggerCondition(1, HasNoItem,  1872)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerAction(1, GiveItem, 1872, 1, 4)
 	TriggerFailure(1, JumpPage, 2)
-	Text(1, "领取精灵硬币宝箱", MultiTrigger, GetMultiTrigger(), 1) 
+	Text(1, "", MultiTrigger, GetMultiTrigger(), 1) 
 
 	InitTrigger()
 	TriggerCondition(1, HasNoItem,  1570)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerAction(1, GiveItem, 1570, 1, 4)
 	TriggerFailure(1, JumpPage, 2)
-	Text(1, "领取精灵辉印宝箱", MultiTrigger, GetMultiTrigger(), 1) 
+	Text(1, "", MultiTrigger, GetMultiTrigger(), 1) 
 
 	InitTrigger()
 	TriggerCondition(1, HasNoItem,  1571)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerAction(1, GiveItem, 1571, 1, 4)
 	TriggerFailure(1, JumpPage, 2)
-	Text(1, "领取精灵王辉印宝箱", MultiTrigger, GetMultiTrigger(), 1) 
+	Text(1, "", MultiTrigger, GetMultiTrigger(), 1) 
 
-	Talk(2, "你背包内已经有该种类型的宝箱了,不需要再领取,也有可能你的背包没空格了.")
+	Talk(2, ",,.")
 end
 
 -----------------------------------------------------------------------------
--- 白银城-----四艘小尖刀号、珊瑚号、巨鲸号（配合程序修改的船舱非法道具问题）
+-- -----
 -----------------------------------------------------------------------------
 
 function k_talk001()
@@ -10872,14 +10872,14 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		夏岛[西门庆]			--
+--		[]			--
 --							--
---		3734，2661			--
+--		37342661			--
 ----------------------------------------------------------
 function el_talk25 ()
-	Talk(1, "西门庆: 西门我其实是个正经人,爱一个人有什么错?如果有来生,我希望在所有男人之前遇到她.")
+	Talk(1, ": ,?,.")
 
----------------------秋岛开发
+---------------------
 	AddNpcMission (6176)
 	AddNpcMission (6178)
 	AddNpcMission (6181)
@@ -10890,43 +10890,43 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		夏岛传送使·艾蒙			--
+--					--
 --							--
---		3714，2664			--
+--		37142664			--
 ----------------------------------------------------------
 function el_talk26 ()
-	Talk(1, " 夏岛传送使·艾蒙: 因为我爱上旅行,所以我做了传送使,送别人去旅行.")
-	Text(1, "我要去秋岛!", JumpPage, 2)
+	Talk(1, " : ,,.")
+	Text(1, "!", JumpPage, 2)
 
 	InitTrigger()
 	TriggerCondition(1, HasMoney, 500)
 	TriggerAction(1, TakeMoney, 500)
 	TriggerAction(1, GoTo, 2414,3174, "darkblue")
 	TriggerFailure(1, JumpPage, 3)
-	Talk(2, "夏岛传送使·艾蒙:时刻享受人生的美景...")
+	Talk(2, ":...")
 	Text(2, "Teleport",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "夏岛传送使·艾蒙:朋友,你好歹也带500块出门啊!否则别人会认为你没面子")
+	Talk(3, ":,500!")
 end
 
 ----------------------------------------------------------
 
-	--圣诞村[斐谢特]		
+	--[]		
 
 --		221150,278125				
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function el_talk29 ()
 	
 	
-	Talk(1, "斐谢特:圣诞快乐!华丽温馨的圣诞节怎么可以没有美味的圣诞宴呢?")		
+	Talk(1, ":!?")		
 
 	
 	Text(1, "Cooking delicious turkey meat", JumpPage, 2)
 	Text(1, "Cook Christmas Dinner", JumpPage, 5)
 	
 	
----------------------烹调美味的火鸡肉
+---------------------
 	InitTrigger()
 	TriggerCondition(1, HasItem, 2886, 10)
 	TriggerCondition(1, HasMoney, 10000)
@@ -10937,16 +10937,16 @@ function el_talk29 ()
 	TriggerAction(1, GiveItem, 2895, 1 , 4)
 	TriggerAction(1, JumpPage, 3)
 	TriggerFailure(1, JumpPage, 4)
-	Talk(2, "斐谢特:我需要原材料10个火鸡肉,当然你还要支付给我10000海盗币的辛苦费")
+	Talk(2, ":10,10000")
 	Text(2, "Confirm to cook",  MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "斐谢特:这是我精心烹调的美味火鸡肉,赶快尝尝,味道怎么样?")
+	Talk(3, ":,,?")
 
-	Talk(5, "斐谢特:做圣诞大餐喽,每人只限三次哦!")
+	Talk(5, ":,!")
 	Text(5, "The first Christmas Cooking Contest",  JumpPage, 6)
 	Text(5, "Second Set of Christmas Dinner",  JumpPage, 7)
 	Text(5, "Third time making Christmas Dinner", JumpPage, 8)
-	---------------------烹调圣诞大餐
+	---------------------
 	InitTrigger()
 	TriggerCondition(1, NoRecord, 815)
 	TriggerCondition(1, HasItem, 2895, 10)
@@ -10966,7 +10966,7 @@ function el_talk29 ()
 
 	
 
-	---------------------烹调圣诞大餐
+	---------------------
 	InitTrigger()
 	TriggerCondition(1, HasRecord, 815)
 	TriggerCondition(1, NoRecord, 816)
@@ -10985,7 +10985,7 @@ function el_talk29 ()
 	Talk(7, "Making Christmas Dinner again? I required 10 slices of Tasty Turkey Meat and 1 Christmas Rose. Christmas Rose seems to be found in the Item Mall. Beside paying me 1000000G for the troublle, you can only make the Christmas Dinner 3 times.")
 	Text(7, "Confirm to cook",  MultiTrigger, GetMultiTrigger(), 1)
 
-	---------------------烹调圣诞大餐
+	---------------------
 	InitTrigger()
 	TriggerCondition(1, HasRecord, 816)
 	TriggerCondition(1, NoRecord, 817)
@@ -11003,16 +11003,16 @@ function el_talk29 ()
 	TriggerFailure(1, JumpPage,11)
 	Talk(8, "Making Christmas Dinner again? I required 10 slices of Tasty Turkey Meat and 1 Christmas Rose. Christmas Rose seems to be found in the Item Mall. Besides paying me 10000G for the troublle, you can only make the Christmas Dinner 3 times.")
 	Text(8, "Confirm to cook",  MultiTrigger, GetMultiTrigger(), 1)
-	Talk(9, "斐谢特:您身上似乎没有足够用来烹制的物品或金钱啊!您的背包至少要有一个空格哦.你确定是第一次做圣诞大餐吗?只能做3次.")
-	Talk(10, "斐谢特:您身上似乎没有足够用来烹制的物品或金钱啊!您的背包至少要有一个空格哦.你确定是第二次做圣诞大餐吗?只能做3次哦.")
-	Talk(11, "斐谢特:您身上似乎没有足够用来烹制的物品或金钱啊!您的背包至少要有一个空格哦.你确定是第三次做圣诞大餐吗?只能做3次哦.")
-	Talk(4, "斐谢特:您身上似乎没有足够用来烹制的物品或金钱啊!请确保您的背包未锁定,并且至少要有一个空格哦.")
-	Talk(12, "斐谢特:这是我精心烹调的圣诞大餐,赶快尝尝,味道怎么样?")
+	Talk(9, ":!.?3.")
+	Talk(10, ":!.?3.")
+	Talk(11, ":!.?3.")
+	Talk(4, ":!,.")
+	Talk(12, ":,,?")
 	AddNpcMission (6191)
 end 
 
 ------------------------------------------------------------
--- 圣诞村-----圣诞老人的洗衣机
+-- -----
 ------------------------------------------------------------
 function el_talk30()
 	
@@ -11101,7 +11101,7 @@ function el_talk30()
 	TriggerAction(1, TakeItem, 3927, 1)
 	TriggerAction(1, RandFunction, GetFuncList(), GetNumFunc())
 	TriggerFailure(1, JumpPage, 2)
-	Talk(1, "圣诞快乐!这是一台古老的清洗机,在这里可以洗涤你的一切,你需要清洗么?每次200G.")
+	Talk(1, "!,,?200G.")
 	Text(1, "Cleanse Mud", MultiTrigger, GetMultiTrigger(), 1)
 	Text(1, "Cleanse Christmas Box", JumpPage, 3)
 
@@ -11126,13 +11126,13 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		冰狼堡[圣诞老人麦瑞]			--
+--		[]			--
 --							--
---		（1216，550）			--
+--		1216550			--
 ----------------------------------------------------------
 function el_talk27 ()
-	Talk(1, "麦瑞: 圣诞快乐!愿你得到世上最真挚美好的祝福.想要拿到最诱人的圣诞礼物吗?去商城买一张圣诞护送资格证你就可以在我这里接取护送圣诞老人的任务了.")
-	--------------护送圣诞老人
+	Talk(1, ": !.?.")
+	--------------
 	--AddNpcMission	(6185)
 end
 
@@ -11140,24 +11140,24 @@ end
 ---------------------------------------------------------
 --							--
 --							--
---		冰极补给站[圣诞老人克瑞斯莫斯]		--
+--		[]		--
 --							--
---		（2111，557）			--
+--		2111557			--
 ----------------------------------------------------------
 function el_talk28 ()
-	Talk(1, "克瑞斯莫斯: 圣诞快乐!你听说过圣诞村吗?那是一个充满快乐的天堂.")
-	--------------护送圣诞老人
+	Talk(1, ": !?.")
+	--------------
 	--AddNpcMission	(6186)
 
 end
 
----------------------------------圣诞商人行会会长
+---------------------------------
 function Xmas_talk01 ()
-	Talk(1, "圣诞商人行会会长:Merry Christmas~我为这个美丽的圣诞节准备了很多的货物哦,你有兴趣想看一下吗?")
-	Text(1, "让我看看你这有什么好东西吧." , JumpPage , 2)
-	Text(1, "算了，我没空看", CloseTalk)
+	Talk(1, ":Merry Christmas~,?")
+	Text(1, "." , JumpPage , 2)
+	Text(1, "", CloseTalk)
 
-	Talk(2, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(2, ",.")
 	Text(2, "Power of Frost", JumpPage , 3)
 	Text(2, "Power of Thunder", JumpPage , 4)
 	Text(2, "Power of Wind", JumpPage , 5)
@@ -11167,7 +11167,7 @@ function Xmas_talk01 ()
 	Text(2, "Potion of Monkey", JumpPage , 9)
 	Text(2, "Next Page", JumpPage , 10)
 
-	Talk(10, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(10, ",.")
 	Text(10, "Go back a page", JumpPage , 2)
 	Text(10, "Potion of Bull", JumpPage, 11)
 	Text(10, "Potion of Soul", JumpPage, 12)
@@ -11177,13 +11177,13 @@ function Xmas_talk01 ()
 	Text(10, "Voodoo Puppet", JumpPage, 16)
 	Text(10, "Next Page", JumpPage , 17)
 
-	Talk(17, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(17, ",.")
 	Text(17, "Go back a page", JumpPage , 10)
 	Text(17, "Novice Self Destruct", JumpPage, 18)
 	Text(17, "Fruit of Growth", JumpPage, 19)
-	Text(17, "圣诞老人的馈赠", JumpPage, 20)
+	Text(17, "", JumpPage, 20)
 
-	Talk(3, "兑换冰之力的话总共需要面额250W的圣诞硬币哦")
+	Talk(3, "250W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 250)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11194,7 +11194,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(4, "兑换雷之力的话总共需要面额250W的圣诞硬币哦")
+	Talk(4, "250W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 250)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11205,7 +11205,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "兑换风之力的话总共需要面额250W的圣诞硬币哦")
+	Talk(5, "250W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 250)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11216,7 +11216,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(5, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(6, "兑换炎之力的话总共需要面额250W的圣诞硬币哦")
+	Talk(6, "250W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 250)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11227,7 +11227,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(6, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "兑换雄狮药剂的话总共需要面额50W的圣诞硬币哦")
+	Talk(7, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11238,7 +11238,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(7, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "兑换鹰眼药剂的话总共需要面额50W的圣诞硬币哦")
+	Talk(8, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11249,7 +11249,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(8, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "兑换灵猴药剂的话总共需要面额50W的圣诞硬币哦")
+	Talk(9, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11260,7 +11260,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(9, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(11, "兑换蛮牛药剂的话总共需要面额50W的圣诞硬币哦")
+	Talk(11, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11271,7 +11271,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(11, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "兑换圣灵药剂的话总共需要面额50W的圣诞硬币哦")
+	Talk(12, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11282,7 +11282,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(12, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(13, "兑换28格背包的话总共需要面额1000W的圣诞硬币哦")
+	Talk(13, "281000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 1000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11293,7 +11293,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(13, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(14, "兑换摩豆小子的话总共需要面额1000W的圣诞硬币哦")
+	Talk(14, "1000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 1000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11304,7 +11304,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(14, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(15, "兑换组队经验果的话总共需要面额80W的圣诞硬币哦")
+	Talk(15, "80W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 80)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11315,7 +11315,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(15, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(16, "兑换替身宝宝的话总共需要面额55W的圣诞硬币哦")
+	Talk(16, "55W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 55)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11326,7 +11326,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(16, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(18, "兑换初级精灵自爆的话总共需要面额500W的圣诞硬币哦")
+	Talk(18, "500W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 500)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11337,7 +11337,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(18, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 	
-	Talk(19, "兑换加速成长果的话总共需要面额20W的圣诞硬币哦")
+	Talk(19, "20W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 20)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11348,7 +11348,7 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(19, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(20, "兑换圣诞老人的馈赠的话总共需要面额2000W的圣诞硬币哦")
+	Talk(20, "2000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 2000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11359,38 +11359,38 @@ function Xmas_talk01 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(20, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(25, "谢谢你的光顾,祝你圣诞愉快!")
+	Talk(25, ",!")
 
-	Talk(26, "你背包内好象没有足够的圣诞硬币哦,也有可能你的背包没空格或背包已锁.")
+	Talk(26, ",.")
 end
 
--------------------------------------------------------------------圣诞杂货商A
+-------------------------------------------------------------------A
 function Xmas_talk02 ()
-	Talk(1, "圣诞杂货商:圣诞节到拉~我为这个温馨的圣诞准备了很多货物,有兴趣看一下吗?你肯定会喜欢的!")
-	Text(1, "让我看看你这有什么好东西吧." , JumpPage , 2)
-	Text(1, "算了，我没空看", CloseTalk)
+	Talk(1, ":~,?!")
+	Text(1, "." , JumpPage , 2)
+	Text(1, "", CloseTalk)
 
-	Talk(2, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(2, ",.")
 	Text(2, "Gold Axe", JumpPage , 3)
 	Text(2, "Gold Pickaxe", JumpPage , 4)
 	Text(2, "Unique Necklace Voucher", JumpPage , 5)
 	Text(2, "Unique Coral Voucher", JumpPage , 6)
 	Text(2, "Lock of Mystic", JumpPage , 7)
 	Text(2, "Super Rechargeable Battery", JumpPage , 8)
-	Text(2, "气球游戏券", JumpPage , 9)
+	Text(2, "", JumpPage , 9)
 	Text(2, "Next Page", JumpPage , 10)
 
-	Talk(10, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(10, ",.")
 	Text(10, "Go back a page", JumpPage , 2)
-	Text(10, "豪华礼花", JumpPage, 11)
-	Text(10, "菊型礼花", JumpPage, 12)
-	Text(10, "花球", JumpPage, 13)
+	Text(10, "", JumpPage, 11)
+	Text(10, "", JumpPage, 12)
+	Text(10, "", JumpPage, 13)
 	Text(10, "Golden Apple", JumpPage, 14)
 	Text(10, "Intelligence fruit", JumpPage, 15)
 	Text(10, "Mystic Clover", JumpPage, 16)
-	Text(10, "邪恶土著酋长召唤券", JumpPage , 17)
+	Text(10, "", JumpPage , 17)
 
-	Talk(3, "兑换高级伐木斧的话总共需要面额50W的圣诞硬币哦")
+	Talk(3, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11401,7 +11401,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(4, "兑换高级矿镐的话总共需要面额50W的圣诞硬币哦")
+	Talk(4, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11412,7 +11412,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "兑换高级项链兑换券的话总共需要面额1000W的圣诞硬币哦")
+	Talk(5, "1000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 1000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11423,7 +11423,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(5, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(6, "兑换高级贝壳兑换券的话总共需要面额1000W的圣诞硬币哦")
+	Talk(6, "1000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 1000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11434,7 +11434,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(6, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "兑换迷之锁的话总共需要面额15W的圣诞硬币哦")
+	Talk(7, "15W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 15)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11445,7 +11445,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(7, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "兑换高级充电电池的话总共需要面额10W的圣诞硬币哦")
+	Talk(8, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11456,7 +11456,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(8, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "兑换气球游戏券的话总共需要面额10W的圣诞硬币哦")
+	Talk(9, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11467,7 +11467,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(9, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(11, "兑换豪华礼花的话总共需要面额9W的圣诞硬币哦")
+	Talk(11, "9W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 9)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11478,7 +11478,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(11, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "兑换菊型礼花的话总共需要面额9W的圣诞硬币哦")
+	Talk(12, "9W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 9)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11489,7 +11489,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(12, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(13, "兑换花球的话总共需要面额15W的圣诞硬币哦")
+	Talk(13, "15W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 15)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11500,7 +11500,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(13, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(14, "兑换金苹果的话总共需要面额50W的圣诞硬币哦")
+	Talk(14, "50W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 50)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11511,7 +11511,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(14, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(15, "兑换智慧果的话总共需要面额20W的圣诞硬币哦")
+	Talk(15, "20W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 20)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11522,7 +11522,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(15, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(16, "兑换神算草的话总共需要面额100W的圣诞硬币哦")
+	Talk(16, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11533,7 +11533,7 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(16, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(17, "兑换邪恶的土著酋长召唤券的话总共需要面额2000W的圣诞硬币哦")
+	Talk(17, "2000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 2000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11544,19 +11544,19 @@ function Xmas_talk02 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(17, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(25, "谢谢你的光顾,祝你圣诞愉快!")
+	Talk(25, ",!")
 
-	Talk(26, "你背包内好象没有足够的圣诞硬币哦,也有可能你的背包没空格或背包已锁.")
+	Talk(26, ",.")
 	AddNpcMission (6197)
 end
 
--------------------------------------------------------------------圣诞杂货商B
+-------------------------------------------------------------------B
 function Xmas_talk03 ()
-	Talk(1, "圣诞礼品商:Merry Christmas~我为这个美丽的圣诞节准备了很多的货物哦,你有兴趣想看一下吗?")
-	Text(1, "让我看看你这有什么好东西吧." , JumpPage , 2)
-	Text(1, "算了，我没空看", CloseTalk)
+	Talk(1, ":Merry Christmas~,?")
+	Text(1, "." , JumpPage , 2)
+	Text(1, "", CloseTalk)
 
-	Talk(2, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(2, ",.")
 	Text(2, "Pirate Captain 008 Summoning Scroll", JumpPage , 3)
 	Text(2, "Lizardman Warrior Commander Summon Scroll", JumpPage , 4)
 	Text(2, "Party EXP Fruit", JumpPage , 5)
@@ -11566,7 +11566,7 @@ function Xmas_talk03 ()
 	Text(2, "Novice Monster Covenant", JumpPage , 9)
 	Text(2, "Next Page", JumpPage , 10)
 
-	Talk(10, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(10, ",.")
 	Text(10, "Go back a page", JumpPage , 2)
 	Text(10, "Stone Catalyst", JumpPage, 11)
 	Text(10, "Liquid Catalyst", JumpPage, 12)
@@ -11576,7 +11576,7 @@ function Xmas_talk03 ()
 	Text(10, "Plant Catalyst", JumpPage, 16)
 	Text(10, "Fur Catalyst", JumpPage , 17)
 
-	Talk(3, "兑换海盗船长零零发召唤券的话总共需要面额2000W的圣诞硬币哦")
+	Talk(3, "2000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 2000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11587,7 +11587,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(4, "兑换蜥蜴战士统领召唤券的话总共需要面额2000W的圣诞硬币哦")
+	Talk(4, "2000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 2000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11598,7 +11598,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "兑换组队经验果的话总共需要面额80W的圣诞硬币哦")
+	Talk(5, "80W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 80)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11609,7 +11609,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(5, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(6, "兑换替身宝宝的话总共需要面额55W的圣诞硬币哦")
+	Talk(6, "55W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 55)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11620,7 +11620,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(6, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "兑换高级怪物契约的话总共需要面额100W的圣诞硬币哦")
+	Talk(7, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11631,7 +11631,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(7, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "兑换中级怪物契约的话总共需要面额200W的圣诞硬币哦")
+	Talk(8, "200W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 200)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11642,7 +11642,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(8, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "兑换初级怪物契约的话总共需要面额60W的圣诞硬币哦")
+	Talk(9, "60W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 60)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11653,7 +11653,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(9, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(11, "兑换石材催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(11, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11664,7 +11664,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(11, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "兑换液体催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(12, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11675,7 +11675,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(12, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(13, "兑换食材催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(13, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11686,7 +11686,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(13, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(14, "兑换特殊催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(14, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11697,7 +11697,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(14, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(15, "兑换骨头催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(15, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11708,7 +11708,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(15, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(16, "兑换植物催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(16, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11719,7 +11719,7 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(16, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(17, "兑换毛皮催化剂的话总共需要面额10W的圣诞硬币哦")
+	Talk(17, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11730,34 +11730,34 @@ function Xmas_talk03 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(17, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(25, "谢谢你的光顾,祝你圣诞愉快!")
+	Talk(25, ",!")
 
-	Talk(26, "你背包内好象没有足够的圣诞硬币哦,也有可能你的背包没空格或背包已锁.")
+	Talk(26, ",.")
 end
--------------------------------------------------------------------圣诞商人·我行我酷
+-------------------------------------------------------------------
 function Xmas_talk04 ()
-	Talk(1, "圣诞商人·我行我酷:来来来,买了我的东西今年的圣诞节你将无比幸福,不要犹豫啦,来看下吧~")
-	Text(1, "让我看看你这有什么好东西吧." , JumpPage , 2)
-	Text(1, "算了，我没空看", CloseTalk)
+	Talk(1, ":,,,~")
+	Text(1, "." , JumpPage , 2)
+	Text(1, "", CloseTalk)
 
-	Talk(2, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
-	Text(2, "圣诞情人烟花", JumpPage , 3)
-	Text(2, "圣诞狂欢烟花", JumpPage , 4)
+	Talk(2, ",.")
+	Text(2, "", JumpPage , 3)
+	Text(2, "", JumpPage , 4)
 	Text(2, "Heart Shape I", JumpPage , 5)
 	Text(2, "Heart Shape LOVE", JumpPage , 6)
 	Text(2, "Heart Shape U", JumpPage , 7)
-	Text(2, "Heart Shape 我", JumpPage , 8)
-	Text(2, "Heart Shape 爱", JumpPage , 9)
+	Text(2, "Heart Shape ", JumpPage , 8)
+	Text(2, "Heart Shape ", JumpPage , 9)
 	Text(2, "Next Page", JumpPage , 10)
 
-	Talk(10, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(10, ",.")
 	Text(10, "Go back a page", JumpPage , 2)
-	Text(10, "Heart Shape 你", JumpPage, 11)
+	Text(10, "Heart Shape ", JumpPage, 11)
 	Text(10, "Rose", JumpPage, 12)
 	Text(10, "Devil Wings", JumpPage, 13)
 	Text(10, "Honey Chocolate", JumpPage, 14)
 
-	Talk(3, "兑换圣诞情人烟花的话总共需要面额180W的圣诞硬币哦")
+	Talk(3, "180W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 180)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11768,7 +11768,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(4, "兑换圣诞狂欢烟花的话总共需要面额1000W的圣诞硬币哦")
+	Talk(4, "1000W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 1000)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11779,7 +11779,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "兑换心型I的话总共需要面额10W的圣诞硬币哦")
+	Talk(5, "I10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11790,7 +11790,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(5, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(6, "兑换心型LOVE的话总共需要面额10W的圣诞硬币哦")
+	Talk(6, "LOVE10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11801,7 +11801,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(6, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "兑换心型U的话总共需要面额10W的圣诞硬币哦")
+	Talk(7, "U10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11812,7 +11812,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(7, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "兑换心型我的话总共需要面额10W的圣诞硬币哦")
+	Talk(8, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11823,7 +11823,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(8, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "兑换心型爱的话总共需要面额10W的圣诞硬币哦")
+	Talk(9, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11834,7 +11834,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(9, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(11, "兑换心型你的话总共需要面额10W的圣诞硬币哦")
+	Talk(11, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11845,7 +11845,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(11, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "兑换玫瑰花的话总共需要面额20W的圣诞硬币哦")
+	Talk(12, "20W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 20)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11856,7 +11856,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(12, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(13, "兑换黑魔翅膀的话总共需要面额100W的圣诞硬币哦")
+	Talk(13, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11867,7 +11867,7 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(13, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(14, "兑换甜蜜巧克力的话总共需要面额10W的圣诞硬币哦")
+	Talk(14, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11878,36 +11878,36 @@ function Xmas_talk04 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(14, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(25, "谢谢你的光顾,祝你圣诞愉快!")
+	Talk(25, ",!")
 
-	Talk(26, "你背包内好象没有足够的圣诞硬币哦,也有可能你的背包没空格或背包已锁.")
+	Talk(26, ",.")
 	AddNpcMission (6199)
 end
 
--------------------------------------------------------------------圣诞商人·我酷我行
+-------------------------------------------------------------------
 function Xmas_talk05 ()
-	Talk(1, "圣诞商人·我酷我行:你好呀,圣诞快乐!我很酷是吧,我的东西比我更酷,来看下吧~")
-	Text(1, "让我看看你这有什么好东西吧." , JumpPage , 2)
-	Text(1, "算了，我没空看", CloseTalk)
+	Talk(1, ":,!,,~")
+	Text(1, "." , JumpPage , 2)
+	Text(1, "", CloseTalk)
 
-	Talk(2, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(2, ",.")
 	Text(2, "Vampiric Wings", JumpPage , 3)
 	Text(2, "Elven Wings", JumpPage , 4)
 	Text(2, "Dragon Wings", JumpPage , 5)
-	Text(2, "<技·白痴>技能书", JumpPage , 6)
-	Text(2, "<技·鄙视>技能书", JumpPage , 7)
-	Text(2, "<技·大便>技能书", JumpPage , 8)
-	Text(2, "<技·金钱雨>技能书", JumpPage , 9)
+	Text(2, "<>", JumpPage , 6)
+	Text(2, "<>", JumpPage , 7)
+	Text(2, "<>", JumpPage , 8)
+	Text(2, "<>", JumpPage , 9)
 	Text(2, "Next Page", JumpPage , 10)
 
-	Talk(10, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(10, ",.")
 	Text(10, "Go back a page", JumpPage , 2)
-	Text(10, "<技·内裤>技能书", JumpPage, 11)
-	Text(10, "<技·骗子>技能书", JumpPage, 12)
-	Text(10, "<技·傻子>技能书", JumpPage, 13)
-	Text(10, "<技·胸罩>技能书", JumpPage, 14)
+	Text(10, "<>", JumpPage, 11)
+	Text(10, "<>", JumpPage, 12)
+	Text(10, "<>", JumpPage, 13)
+	Text(10, "<>", JumpPage, 14)
 
-	Talk(3, "兑换青蝠翅膀的话总共需要面额10W的圣诞硬币哦")
+	Talk(3, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11918,7 +11918,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(4, "兑换精灵之翼的话总共需要面额10W的圣诞硬币哦")
+	Talk(4, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11929,7 +11929,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "兑换红龙翅膀的话总共需要面额10W的圣诞硬币哦")
+	Talk(5, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11940,7 +11940,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(5, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(6, "兑换<技·白痴>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(6, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11951,7 +11951,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(6, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "兑换<技·鄙视>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(7, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11962,7 +11962,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(7, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "兑换<技·大便>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(8, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11973,7 +11973,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(8, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "兑换<技·金钱雨>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(9, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11984,7 +11984,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(9, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(11, "兑换<技·内裤>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(11, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -11995,7 +11995,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(11, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "兑换<技·骗子>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(12, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12006,7 +12006,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(12, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(13, "兑换<技·傻子>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(13, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12017,7 +12017,7 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(13, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(14, "兑换<技·胸罩>技能书的话总共需要面额10W的圣诞硬币哦")
+	Talk(14, "<>10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12028,18 +12028,18 @@ function Xmas_talk05 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(14, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(25, "谢谢你的光顾,祝你圣诞愉快!")
+	Talk(25, ",!")
 
-	Talk(26, "你背包内好象没有足够的圣诞硬币哦,也有可能你的背包没空格或背包已锁.")
+	Talk(26, ",.")
 end
 
--------------------------------------------------------------------圣诞商人·学者
+-------------------------------------------------------------------
 function Xmas_talk06 ()
-	Talk(1, "圣诞商人·学者:Merry Christmas~我为这个美丽的圣诞节准备了很多的货物哦,你有兴趣想看一下吗?")
-	Text(1, "让我看看你这有什么好东西吧." , JumpPage , 2)
-	Text(1, "算了，我没空看", CloseTalk)
+	Talk(1, ":Merry Christmas~,?")
+	Text(1, "." , JumpPage , 2)
+	Text(1, "", CloseTalk)
 
-	Talk(2, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(2, ",.")
 	Text(2, "Expert Voyager Study Book", JumpPage , 3)
 	Text(2, "Expert SealMaster Study book", JumpPage , 4)
 	Text(2, "Expert Cleric study book", JumpPage , 5)
@@ -12049,7 +12049,7 @@ function Xmas_talk06 ()
 	Text(2, "Standard Voyager study book", JumpPage , 9)
 	Text(2, "Next Page", JumpPage , 10)
 
-	Talk(10, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(10, ",.")
 	Text(10, "Go back a page", JumpPage , 2)
 	Text(10, "Standard SealMaster study book", JumpPage, 11)
 	Text(10, "Standard Cleric study book", JumpPage, 12)
@@ -12059,7 +12059,7 @@ function Xmas_talk06 ()
 	Text(10, "Intense Magic", JumpPage, 16)
 	Text(10, "Next Page", JumpPage , 17)
 
-	Talk(17, "我这里的规矩和别的地方可不一样哦,只可以使用圣诞硬币来购买.")
+	Talk(17, ",.")
 	Text(17, "Go back a page", JumpPage , 10)
 	Text(17, "Sea Weed Killer", JumpPage, 18)
 	Text(17, "Icy Crystal", JumpPage, 19)
@@ -12067,7 +12067,7 @@ function Xmas_talk06 ()
 	Text(17, "Crystalline Blessing", JumpPage, 21)
 	Text(17, "Magical Clover", JumpPage, 22)
 
-	Talk(3, "兑换航海士高级读物的话总共需要面额120W的圣诞硬币哦")
+	Talk(3, "120W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 120)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12078,7 +12078,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(4, "兑换封印师高级读物的话总共需要面额120W的圣诞硬币哦")
+	Talk(4, "120W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 120)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12089,7 +12089,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(5, "兑换圣职者高级读物的话总共需要面额120W的圣诞硬币哦")
+	Talk(5, "120W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 120)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12100,7 +12100,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(5, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(6, "兑换狙击手高级读物的话总共需要面额120W的圣诞硬币哦")
+	Talk(6, "120W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 120)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12111,7 +12111,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(6, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(7, "兑换巨剑士高级读物的话总共需要面额120W的圣诞硬币哦")
+	Talk(7, "120W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 120)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12122,7 +12122,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(7, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(8, "兑换双剑士高级读物的话总共需要面额120W的圣诞硬币哦")
+	Talk(8, "120W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 120)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12133,7 +12133,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(8, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(9, "兑换航海士中级读物的话总共需要面额100W的圣诞硬币哦")
+	Talk(9, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12144,7 +12144,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(9, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(11, "兑换封印师中级读物的话总共需要面额100W的圣诞硬币哦")
+	Talk(11, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12155,7 +12155,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(11, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(12, "兑换圣职者中级读物的话总共需要面额100W的圣诞硬币哦")
+	Talk(12, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12166,7 +12166,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(12, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(13, "兑换狙击手中级读物的话总共需要面额100W的圣诞硬币哦")
+	Talk(13, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12177,7 +12177,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(13, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(14, "兑换巨剑士中级读物的话总共需要面额100W的圣诞硬币哦")
+	Talk(14, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12188,7 +12188,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(14, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(15, "兑换双剑士中级读物的话总共需要面额100W的圣诞硬币哦")
+	Talk(15, "100W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 100)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12199,7 +12199,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(15, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(16, "兑换魔力催化的话总共需要面额10W的圣诞硬币哦")
+	Talk(16, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12210,7 +12210,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(16, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(18, "兑换海草清除剂的话总共需要面额25W的圣诞硬币哦")
+	Talk(18, "25W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 25)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12221,7 +12221,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(18, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(19, "兑换寒冰水晶的话总共需要面额10W的圣诞硬币哦")
+	Talk(19, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12232,7 +12232,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(19, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(20, "兑换动力帆的话总共需要面额10W的圣诞硬币哦")
+	Talk(20, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12243,7 +12243,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(20, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(21, "兑换冰灵护佑的话总共需要面额10W的圣诞硬币哦")
+	Talk(21, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12254,7 +12254,7 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(21, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(22, "兑换魔法草的话总共需要面额10W的圣诞硬币哦")
+	Talk(22, "10W")
 	InitTrigger()
 	TriggerCondition(1, HasXmasYB, 10)
 	TriggerCondition(1, HasLeaveBagGrid, 2)
@@ -12265,21 +12265,21 @@ function Xmas_talk06 ()
 	TriggerFailure(1, JumpPage, 26)
 	Text(22, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(25, "谢谢你的光顾,祝你圣诞愉快!")
+	Talk(25, ",!")
 
-	Talk(26, "你背包内好象没有足够的圣诞硬币哦,也有可能你的背包没空格或背包已锁.")
+	Talk(26, ",.")
 end
 
-----------------------------------------------------圣诞村科恩
+----------------------------------------------------
 function Xmas_talk07 ()
-	Talk (1, "我讨厌这圣洁雪白的冬天.朋友，为什么不抛弃这些无聊的庆祝活动出去杀戮一番呢?白银,冰狼和沙岚城外有许多的火鸡,麋鹿和雪人,去干掉他们,然后把证据带回来，我不会亏待你的.")
---	Text (1, "我带来了一百个火鸡的羽毛", JumpPage, 2)
---	Text (1, "我带来了一百个麋鹿的尖角", JumpPage, 3)
---	Text (1, "我带来了一百个雪人的眼球", JumpPage, 4)
-	Text (1, "我想去圣诞竞技场", JumpPage, 5)
-	Text (1, "为什么我们要杀戮这些可怜的怪物呢?", JumpPage, 10)
+	Talk (1, ".?,,,,.")
+--	Text (1, "", JumpPage, 2)
+--	Text (1, "", JumpPage, 3)
+--	Text (1, "", JumpPage, 4)
+	Text (1, "", JumpPage, 5)
+	Text (1, "?", JumpPage, 10)
 
---	Talk (2, "你确定要用这一百个火鸡的羽毛跟我换一个圣诞礼盒吗?")
+--	Talk (2, "?")
 --	InitTrigger()
 --	TriggerCondition(1, HasItem, 2879, 100)
 --	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -12291,7 +12291,7 @@ function Xmas_talk07 ()
 --	TriggerFailure(1, JumpPage, 7)
 --	Text (2, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 --
---	Talk (3, "你确定要用这一百个麋鹿的尖角跟我换一个圣诞礼盒吗?")
+--	Talk (3, "?")
 --	InitTrigger()
 --	TriggerCondition(1, HasItem, 2881, 100)
 --	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -12303,7 +12303,7 @@ function Xmas_talk07 ()
 --	TriggerFailure(1, JumpPage, 7)
 --	Text (3, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 --
---	Talk (4, "你确定要用这一百个雪人的眼球我换一个圣诞礼盒吗?")
+--	Talk (4, "?")
 --	InitTrigger()
 --	TriggerCondition(1, HasItem, 2880, 100)
 --	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -12315,18 +12315,18 @@ function Xmas_talk07 ()
 --	TriggerFailure(1, JumpPage, 7)
 --	Text (4, "Confirm to exchange", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk (5, "我们一共有5个竞技场,你想去哪一个呢?")
-	Text (5, "圣诞竞技场A", GoTosdBoss, 1)
-	Text (5, "圣诞竞技场B", GoTosdBoss, 2)
-	Text (5, "圣诞竞技场C", GoTosdBoss, 3)
-	Text (5, "圣诞竞技场D", GoTosdBoss, 4)
-	Text (5, "圣诞竞技场E", GoTosdBoss, 5)
+	Talk (5, "5,?")
+	Text (5, "A", GoTosdBoss, 1)
+	Text (5, "B", GoTosdBoss, 2)
+	Text (5, "C", GoTosdBoss, 3)
+	Text (5, "D", GoTosdBoss, 4)
+	Text (5, "E", GoTosdBoss, 5)
 
-	Talk (6, "祝你有个快乐的圣诞")
+	Talk (6, "")
 
-	Talk (7, "你背包内好象没有足够的道具哦,也有可能你的背包已锁或者背包内没有空格.")
+	Talk (7, ",.")
 
-	Talk (10, "告诉你个秘密,如果你们能上缴足够数量的供品给我,那么我就能在圣诞竞技场中召唤出极其强大的黑暗BOSS,不过怎么才能击败它们就是你们该考虑的事啦!")
+	Talk (10, ",,BOSS,!")
 
 	AddNpcMission (6187)
 	AddNpcMission (6188)
@@ -12335,17 +12335,17 @@ function Xmas_talk07 ()
 	AddNpcMission (6204)
 end
 
-----------------------------------------------------圣诞村圣诞老人
+----------------------------------------------------
 function Xmas_talk08 ()
-	Talk (1, "圣诞老人:呵呵~圣诞快乐~~我这里可以为大家兑换圣诞村专用的购物硬币,如果你想在这个圣诞村里Shopping的话那就找我好了.")
+	Talk (1, ":~~~,Shopping.")
 
-	Text (1, "我想兑换圣诞万元硬币", JumpPage, 2)
-	Text (1, "我想兑换圣诞百万元硬币", JumpPage, 3)
-	Text (1, "我想把圣诞万元硬币兑换回海盗币", JumpPage, 4)
-	Text (1, "我想把圣诞百万元硬币兑换回海盗币", JumpPage, 5)
-	Text (1, "我想回冰狼堡", JumpPage, 6)
+	Text (1, "", JumpPage, 2)
+	Text (1, "", JumpPage, 3)
+	Text (1, "", JumpPage, 4)
+	Text (1, "", JumpPage, 5)
+	Text (1, "", JumpPage, 6)
 
-	Talk (2, "兑换一个圣诞万元硬币需要10000的海盗币,你确认要兑换吗?")
+	Talk (2, "10000,?")
 	InitTrigger()
 	TriggerCondition(1, HasMoney, 10000)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -12356,7 +12356,7 @@ function Xmas_talk08 ()
 	TriggerFailure(1, JumpPage, 10)
 	Text (2, "Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk (3, "兑换一个圣诞百万元硬币需要100W的海盗币,你确认要兑换吗?")
+	Talk (3, "100W,?")
 	InitTrigger()
 	TriggerCondition(1, HasMoney, 1000000)
 	TriggerCondition(1, HasLeaveBagGrid, 1)
@@ -12367,7 +12367,7 @@ function Xmas_talk08 ()
 	TriggerFailure(1, JumpPage, 10)
 	Text (3, "Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk (4, "你确定要把圣诞万元硬币换成10000海盗币吗?")
+	Talk (4, "10000?")
 	InitTrigger()
 	TriggerCondition(1, HasItem, 2962, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -12376,7 +12376,7 @@ function Xmas_talk08 ()
 	TriggerFailure(1, JumpPage, 11)
 	Text (4, "Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk (5, "你确定要把圣诞百万元硬币换成100W海盗币吗?")
+	Talk (5, "100W?")
 	InitTrigger()
 	TriggerCondition(1, HasItem, 2963, 1)
 	TriggerCondition(1, KitbagLock, 0)
@@ -12387,21 +12387,21 @@ function Xmas_talk08 ()
 
 	InitTrigger()
 	TriggerAction(1, GoTo, 1318,510, "darkblue")
-	Talk(6, "你确定要离开这里回到冰狼堡吗?")
+	Talk(6, "?")
 	Text(6, "Teleport",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk (9, "祝你有个快乐的圣诞节~")
-	Talk (10, "你的钱不够哦,也有可能你的背包已锁定或者没有足够的空格.")
-	Talk (11, "你没有此道具,也有可能你的背包已锁定.")
+	Talk (9, "~")
+	Talk (10, ",.")
+	Talk (11, ",.")
 	AddNpcMission (6201)
 	AddNpcMission (6202)
 end
 
------------------------------------------冰狼堡圣诞村传送使
+-----------------------------------------
 function movexmas_talk()
-	Talk (1, "圣诞村传送使:Merry Christmas~想去圣诞村吗？想去你就说啊,你不说我怎么知道呢?不可能说你不想去我偏偏送你去,也不可能你想去我偏偏不送你的!")
-	Text (1, "我想去圣诞村", JumpPage, 2)
-	Text (1, "这人好罗嗦,我还是走了", CloseTalk)
+	Talk (1, ":Merry Christmas~,?,!")
+	Text (1, "", JumpPage, 2)
+	Text (1, ",", CloseTalk)
 
 
 	InitTrigger()
@@ -12411,10 +12411,10 @@ function movexmas_talk()
 	TriggerAction(2, TakeMoney, 500)
 	TriggerAction(2, GoTo, 144,136, "07xmas")
 	TriggerFailure(2, JumpPage, 3)
-	Talk(2, "美丽的圣诞村现在正在开放期间,只要支付区区500海盗币我就可以送你过去,如果你是10级以下的新手的话我可以免费为你服务哦.")
+	Talk(2, ",500,10.")
 	Text(2, "Teleport",MultiTrigger, GetMultiTrigger(), 2)
 
-	Talk(3, "圣诞村传送使:没钱吗?那很抱歉不能为你服务了哦.")
+	Talk(3, ":?.")
 	AddNpcMission (6190)
 	AddNpcMission (6192)
 	AddNpcMission (6194)
@@ -12423,419 +12423,419 @@ function movexmas_talk()
 	AddNpcMission (6200)
 end
 
----------------------------------------圣诞竞技场传送使
+---------------------------------------
 function movexmas_talk01 ()
-	Talk (1, "圣诞快乐~你想回到圣诞村吗?不再多玩会了吗?那好,我这里的服务可是全免费的哦!")
-	Text (1, "我想回圣诞村", JumpPage, 2)
+	Talk (1, "~??,!")
+	Text (1, "", JumpPage, 2)
 
 
 	InitTrigger()
 	TriggerAction(1, GoTo, 144,136, "07xmas")
-	Talk(2, "准备好了吗?.")
+	Talk(2, "?.")
 	Text(2, "Teleport",MultiTrigger, GetMultiTrigger(), 1)
 end
 
--------------------------------------以下为土著狂欢者--------bragi
+---------------------------------------------bragi
 function Xmas_talk09 ()
-	Talk (1, "圣诞篝火在欢快的跳动着~")
+	Talk (1, "~")
 	AddNpcMission (6203)
 end
 
 function Xmas_talk10 ()
-	Talk (1, "土著狂欢者:为了这美丽欢乐的节日,来和我们一起围着篝火跳舞吧!")
+	Talk (1, ":,!")
 end
 
 function Xmas_talk11 ()
-	Talk (1, "土著狂欢者:雪花...舞蹈...篝火...火鸡...雪人...圣诞树...礼物...还有比这更完美的圣诞节吗?")
+	Talk (1, ":.....................?")
 end
 
 function Xmas_talk12 ()
-	Talk (1, "土著狂欢者:还是围着篝火比较暖和啊!朋友，要不要来一起烤会火,跳个舞呢?")
+	Talk (1, ":!,?")
 end
 
 function Xmas_talk13 ()
-	Talk (1, "土著狂欢者:我还是觉得我的舞姿才是最棒的，你不这样认为吗?")
+	Talk (1, ":?")
 end
 
 function Xmas_talk14 ()
-	Talk (1, "土著狂欢者:今天的晚餐是什么呢?会有香喷喷的火鸡吗?好想念妈妈的手艺啊.")
+	Talk (1, ":??.")
 end
 
 function Xmas_talk15 ()
-	Talk (1, "土著狂欢者:虽然不太喜欢这寒冷的天气,不过圣诞节的氛围真好啊!好开心啊!")
+	Talk (1, ":,!!")
 end
 
--------------------------------------以下为小动物群------bragi
+-------------------------------------------bragi
 function Xmas_talk16 ()
-	Talk (1, "小鹿斑比:没来过圣诞村么?你真落伍,告诉你哈,圣诞村中间有棵很大的圣诞树,传说对这圣诞树许愿是很灵验的.快去试试吧~~~!哈哈,祝你圣诞快乐!")
+	Talk (1, ":?,,,.~~~!,!")
 end
 
 function Xmas_talk17 ()
-	Talk (1, "冰龙萨菲拉:别挤我啊!小心我发火揍你们哦!")
+	Talk (1, ":!!")
 end
 
 function Xmas_talk18 ()
-	Talk (1, "小吉米:喂喂,别挡住我嘛,我也想要一份礼物!就一份,可以吗?")
+	Talk (1, ":,,!,?")
 end
 
 function Xmas_talk19 ()
-	Talk (1, "快乐的雪娃娃:波尔先生!你的口袋里都装了些什么啊?有甜甜的糖果吗?有漂亮的玩具吗?")
+	Talk (1, ":!???")
 end
 
 function Xmas_talk20 ()
-	Talk (1, "小猫辛丝:叮叮当,叮叮当,铃儿响叮当~~~!哈哈.今年一定是个快乐的圣诞节,告诉你个秘密哦.据说圣诞节当天午夜12点的时候,神秘的逆转圣诞村入口会出现在村里.别忘了去看看哦~~记得多穿点.")
+	Talk (1, ":,,~~~!.,.12,.~~.")
 end
 
 function Xmas_talk21 ()
-	Talk (1, "飞熊猫派达:有巧克力味道的竹笋吗?给我一些!!")
+	Talk (1, ":?!!")
 end
 
 function Xmas_talk22 ()
-	Talk (1, "小路易丝:圣诞节咯!!你们看,这是我妈妈帮我新买的海军帽子,很漂亮吧!")
+	Talk (1, ":!!,,!")
 end
 
 function Xmas_talk23 ()
-	Talk (1, "波尔先生:好的好的孩子们,我这准备了很多礼物,每个人都会有的,不要挤哦!")
+	Talk (1, ":,,,!")
 end
 
 function Xmas_talk24 ()
-	Talk (1, "小汤姆:有谁愿意和我一起去打雪仗的吗?不过先说好,我要做将军!!!终有一天我会超过科恩的,带着火鸡羽毛去找他证明我的实力,就是在圣诞村中下方喷泉上面的那个家伙.")
+	Talk (1, ":?,!!!,,.")
 	AddNpcMission (6205)
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[呆呆的呆呆]			--
+--		[]			--
 --							--
 --		3901, 4301			--
 ----------------------------------------------------------
 function peter_talk01 ()
-	Talk(1, "呆呆的呆呆: 别看我叫呆呆，其实我一点也不呆，我的智商可是高达180哦！")
+	Talk(1, ": 180")
 
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[游客·伊玛]			--
+--		[]			--
 --							--
 --		10802, 5602             		--
 ----------------------------------------------------------
 function peter_talk02 ()
-	Talk(1, "游客·伊玛:过节的时候,放下所有的纷扰,来这里和大家一起过圣诞,是我一年中最轻松的事,嘘,不要告诉别人我是谁,一会我还要去扮成圣诞老人发奖品呢,到时候看你能不能认出我来,哈哈哈。")
+	Talk(1, ":,,,,,,,,")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[西林的爸爸]		--
+--		[]		--
 --							--
 --		11803, 6103			        --
 ----------------------------------------------------------
 function peter_talk03 ()
-	Talk(1, "西林的爸爸:告诉你的爸爸,就说我说的,圣诞节该给孩子们零花钱,因为你总买不全所有他们爱吃的糖果,当然,还有一句,看好自己的孩子,瞧,我的西林就跟丢了。")
+	Talk(1, ":,,,,,,,,")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[游客·温努]			--
+--		[]			--
 --							--
 --		5904, 4704			--
 ----------------------------------------------------------
 function peter_talk04 ()
-	Talk(1, "游客·温努: 嗨!圣诞快乐,你一定和我一样是来这里过圣诞的吧?哈哈,快去找圣诞商人,他们有好多很炫的东西呢!")
+	Talk(1, ": !,?,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[哈根大叔]			--
+--		[]			--
 --							--
---		3001 ，11701			--
+--		3001 11701			--
 ----------------------------------------------------------
 function peter_talk05 ()
-	Talk(1, "哈根大叔: 哈哈!哈哈!圣诞节啊。哈哈,我一开心就只会`哈哈`哈哈哈。")
+	Talk(1, ": !!,``")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[嘻哈小子]			--
+--		[]			--
 --							--
 --		7031, 4902			--
 ----------------------------------------------------------
 function peter_talk06 ()
-	Talk(1, "嘻哈小子: come on!圣诞你该怎么炫?戴起墨镜来装酷?不不不,让我告诉你,穿一套圣诞老人的衣服才酷。")
+	Talk(1, ": come on!??,,")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[卡利米船长]			--
+--		[]			--
 --							--
 --		3101, 11901			--
 ----------------------------------------------------------
 function peter_talk07 ()
-	Talk(1, "卡利米船长: 你怀疑海上的孩子们收不到圣诞礼物?放心,圣诞老人会让孩子都满意的!")
+	Talk(1, ": ?,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[船员艾尼]			--
+--		[]			--
 --							--
 --		4401, 8401			--
 ----------------------------------------------------------
 function peter_talk08 ()
-	Talk(1, "船员艾尼: 船长真是大发慈悲了,往年的圣诞节我只能漂啊漂啊,这次终于带我来这里参加圣诞聚会了!太高兴了。")
+	Talk(1, ": ,,!")
 end
 
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[上尉卡里]			--
+--		[]			--
 --							--
 --		25801, 23101			--
 ----------------------------------------------------------
 function peter_talk09 ()
-	Talk(1, "上尉卡里: 这里的节日气氛会让你忘记了冬天的存在,真想和孩子们一起玩啊,可是身为军人,我有自己的职责,祝你玩得开心!")
+	Talk(1, ": ,,,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[海军士兵]			--
+--		[]			--
 --							--
 --		19401, 3901			--
 ----------------------------------------------------------
 function peter_talk10 ()
-	Talk(1, "海军士兵: 我敢保证,大家在这里都可以尽情的享受圣诞的快乐,绝对不会有不开心的事发生,你问为什么?没看见我手里的警棍么!")
+	Talk(1, ": ,,,?!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[游客·罗琳斯]			--
+--		[]			--
 --							--
 --		7301, 23601			        --
 ----------------------------------------------------------
 function peter_talk11 ()
-	Talk(1, "游客·罗琳斯: 我喜欢圣诞节,我喜欢在这里玩,好多可爱的东东喔,你想买一件圣诞礼物送给我么?")
+	Talk(1, ": ,,,?")
 end
 
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[小摊贩朱迪]			--
+--		[]			--
 --							--
 --		13901, 6101			--
 ----------------------------------------------------------
 function peter_talk12 ()
-	Talk(1, "小摊贩朱迪: 如果游玩能够赚到钱,我也不用摆摊了,呵呵,但是我摆看到顾客买到称心的东西时开心的样子,我就觉得值。")
+	Talk(1, ": ,,,,")
 end
 
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[小摊贩切尔]			--
+--		[]			--
 --							--
 --		3301, 21601			        --
 ----------------------------------------------------------
 function peter_talk13 ()
-	Talk(1, "小摊贩切尔:你去过真爱岛么?如果你没去过,那一定要买买这个纪念品,你说你去过了?那就更该买这个做圣诞纪念品了啊!")
+	Talk(1, ":?,,?!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛小摊贩罗门			--
+--					--
 --							--
 --		8701, 20401			         --
 ----------------------------------------------------------
 function peter_talk14 ()
-	Talk(1, "圣诞岛小摊贩罗门: 冬天的时候,只有节日礼品是所有人肯花钱的。")
+	Talk(1, ": ,")
 end
  
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛小摊贩耶亚			--
+--					--
 --							--
 --		25501, 12401    			--
 ----------------------------------------------------------
 function peter_talk15 ()
-	Talk(1, "圣诞岛小摊贩耶亚: 嗨!圣诞快乐!瞧我穿的这身衣服好看么?")
+	Talk(1, ": !!?")
 end
 
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[篝火老人]			--
+--		[]			--
 --							--
 --		24801, 9801			        --
 ----------------------------------------------------------
 function peter_talk16 ()
-	Talk(1, "篝火老人: 看那红红的火焰吧,整个圣诞的夜空将被它照亮,每当这时候我就想起了年轻时围着篝火跳舞的情景。要珍惜现在啊。")
+	Talk(1, ": ,,")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[白胡子鲁特]			--
+--		[]			--
 --							--
 --		13001,23601			--
 ----------------------------------------------------------
 function peter_talk17 ()
-	Talk(1, "白胡子鲁特:你觉得我有多大?在圣诞老人面前我们都是孩子嘛,我可真是孩子哦,不信我们来打雪仗。")
+	Talk(1, ":?,,")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[老太太克拉]			--
+--		[]			--
 --							--
 --		23901, 22701	         		--
 ----------------------------------------------------------
 function peter_talk18 ()
-	Talk(1, "老太太克拉: 嗨!嗨!该积极的帮助来过圣诞节的人们啊!我可是个热心肠,哪里的路你要是不知道就找我!")
+	Talk(1, ": !!!,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[红胡子雷顿]			--
+--		[]			--
 --							--
 --		24601, 19701			--
 ----------------------------------------------------------
 function peter_talk19 ()
-	Talk(1, "红胡子雷顿: 呃?你要和我说话?唔,我很久没和人交谈了,上次和人说话是什么时候?……唔?你是谁?你要和我说话?…呃…我想问你什么来着…")
+	Talk(1, ": ??,,????")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[小摊贩尤卡丹]			--
+--		[]			--
 --							--
 --		23201, 20001			--
 ----------------------------------------------------------
 function peter_talk20 ()
-	Talk(1, "小摊贩尤卡丹: HOoooo,圣诞节快乐!看你这么喜欢圣诞节,为什么不拿个气球呢?听说圣诞老人先给拿气球的孩子发礼物哦!")
+	Talk(1, ": HOoooo,!,?!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[小淘气西林]			--
+--		[]			--
 --							--
 --		22801, 5401			--
 ----------------------------------------------------------
 function peter_talk21 ()
-	Talk(1, "小淘气西林:呜…我要爸爸…我领到了圣诞老人的蛋糕,可是却找不到爸爸了…")
+	Talk(1, ":,")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[短尾巴卡斯]			--
+--		[]			--
 --							--
 --		25601, 4301			--
 ----------------------------------------------------------
 function peter_talk22 ()
-	Talk(1, "短尾巴卡斯:以前圣诞节就是收礼物,这回我要自己去找礼物,圣诞老人送的礼物总是和爸爸前两天偷偷买回家的一样,我都知道,厉害吧?")
+	Talk(1, ":,,,,?")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[小女孩西尔文]			--
+--		[]			--
 --							--
 --		21501, 4101			--
 ----------------------------------------------------------
 function peter_talk23 ()
-	Talk(1, "小女孩西尔文:哟~~圣诞快乐!一起开心的过节吧!什么?你没烟花?嘿嘿,告诉你哦,可以去圣诞村中央下方的市场去购买~~~还有很多其他打折商品.记得去看看哦.")
+	Talk(1, ":~~!!??,,~~~..")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[欧米]			--
+--		[]			--
 --							--
 --		20601, 7601			--
 ----------------------------------------------------------
 function peter_talk24 ()
-	Talk(1, "欧米:在古老的东方有一句名言,书中自有黄金屋,书中自有颜如玉.快点去学个读书技能试试吧!")
+	Talk(1, ":,,.!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[佐姆]			--
+--		[]			--
 --							--
 --		19401, 23501			--
 ----------------------------------------------------------
 function peter_talk25 ()
-	Talk(1, "佐姆: 告诉你个秘密,快去那边,对,一堆气球的地方,那边有很多好东西卖呢!")
+	Talk(1, ": ,,,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[马克]			--
+--		[]			--
 --							--
 --		19401, 20101			--
 ----------------------------------------------------------
 function peter_talk26 ()
-	Talk(1, "马克:看见游客我就会主动对他们说~嗨~~我是马克~。")
+	Talk(1, ":~~~~")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[林克]			        --
+--		[]			        --
 --							--
 --		17301, 23501		         	--
 ----------------------------------------------------------
 function peter_talk27 ()
-	Talk(1, "林克: 有人说我不该从厨房里跑出来…我想这是圣诞老人的点子,看着大家在我周围笑的肚子痛,我也笑的直不起腰了,圣诞快乐!记住啊,今年的圣诞,你看见过矮冬瓜林克在街上!")
+	Talk(1, ": ,,,!,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[文娜]			--
+--		[]			--
 --							--
 --		15701, 23401			--
 ----------------------------------------------------------
 function peter_talk28 ()
-	Talk(1, "文娜: 我长的矮么?我是圣诞老人最好的助手呢!")
+	Talk(1, ": ?!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[圣诞雪人雷格林]			--
+--		[]			--
 --							--
 --		15101, 25901			        --
 ----------------------------------------------------------
 function peter_talk29 ()
-	Talk(1, "圣诞雪人雷格林: 我不该说话,但是,还是祝你圣诞快乐!")
+	Talk(1, ": ,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[圣诞雪人卡格林]			--
+--		[]			--
 --						 	--
 --		6601, 8301			        --
 ----------------------------------------------------------
 function peter_talk30 ()
-	Talk(1, "圣诞雪人卡格林: HELLO!!圣诞快乐,你知道曾经有个船长被石头跟踪的故事么?哈哈,还没听过啊?那今晚你可要抓着圣诞老人给你讲,晚上你会笑醒的!!")
+	Talk(1, ": HELLO!!,?,?,!!")
 end
 
 
@@ -12844,211 +12844,211 @@ end
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[圣诞村指导员]		--
+--		[]		--
 --						 	--
 --		                         	        --
 ----------------------------------------------------------
 function Xmas_talk25 ()
-	Talk(1, "圣诞快乐!欢迎来到美丽的圣诞村,我可是这里的万事通,有什么不知道的尽管问我吧")
-	Text(1, "圣诞村的活动",JumpPage, 2)
-	Text(1, "圣诞村可以买到什么",JumpPage, 3)
-	Text(1, "圣诞竞技场",JumpPage, 4)
+	Talk(1, "!,,")
+	Text(1, "",JumpPage, 2)
+	Text(1, "",JumpPage, 3)
+	Text(1, "",JumpPage, 4)
 
-	Talk(2, "你的圣诞礼盒脏了吗?找清洗机(83,39)吧......你想吃火鸡大餐吗?找斐谢特(220,40)吧......你想点播祝福吗?请找圣诞树(144,158)吧......都了解了吗?快点返回吧....")
+	Talk(2, "?(83,39)......?(220,40)......?(144,158)......?....")
 	Text(2, "Return",JumpPage, 1)
 
-	Talk(3, "你可以到(132,246)附近,那里有一个很大的集市,可以买到很多传说中的东东哦。不过你先要到圣诞老人(146,171)把海盗币换成圣诞硬币，我们的营业员可是不能直接收钱的……快去抢购吧")
+	Talk(3, "(132,246),,(146,171)")
 	Text(3, "Return",JumpPage, 1)
 
-	Talk(4, "据说圣诞竞技场里有极其恐怖的BOSS,不过好象还没有足够的供品来召唤它们,你可以到(146,252)找科恩问问!")
+	Talk(4, "BOSS,,(146,252)!")
 	Text(4, "Return",JumpPage, 1)
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[小乐尼]			--
+--		[]			--
 --						 	--
 --		9801, 23501			        --
 ----------------------------------------------------------
 function peter_talk31 ()
-	Talk(1, "小乐尼:你有想过晚上在圣诞老人送礼物的时候把他抓住养在家里么?我就试过,可惜失败了,不过今晚我想的办法绝对能抓住他,想知道什么办法?到了明天才能告诉你! ")
+	Talk(1, ":?,,,?! ")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[拿铁小子]			--
+--		[]			--
 --						 	--
 --		14501, 26802			        --
 ----------------------------------------------------------
 function peter_talk32 ()
-	Talk(1, "拿铁小子:哦吼~圣诞老人给我带来了一大桶我最爱的拿铁,整个冬天我都是最幸福的啦!圣诞节万岁~")
+	Talk(1, ":~,!~")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[笨蛋约翰]			--
+--		[]			--
 --						 	--
 --		18101, 23903			        --
 ----------------------------------------------------------
 function peter_talk33 ()
-	Talk(1, "笨蛋约翰:嗨~圣诞快乐~别人都叫我约翰,你可能也知道我的外号,但是我不笨的,我都知道小乐尼今晚有办法抓住圣诞老人的事呢!")
+	Talk(1, ":~~,,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[说笑话的麋鹿]			--
+--		[]			--
 --						 	--
 --		22201, 22804			        --
 ----------------------------------------------------------
 function peter_talk34 ()
-	Talk(1, "说笑话的麋鹿:你听说了吗?我有一个同伴,它十分擅长奔跑,有一次它越跑越快,结果就变成了高速公路!")
+	Talk(1, ":?,,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[米奇亚外婆]			--
+--		[]			--
 --						 	--
 --		24801, 8105			        --
 ----------------------------------------------------------
 function peter_talk35 ()
-	Talk(1, "米奇亚外婆:圣诞节的晚上,你可一定要记得把袜子挂在圣诞树上哦,圣诞老人会给你送来礼物的.")
+	Talk(1, ":,,.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[伊鲁森教士]			--
+--		[]			--
 --						 	--
 --		5501, 19506			        --
 ----------------------------------------------------------
 function peter_talk36 ()
-	Talk(1, "伊鲁森教士:有一个真心朋友就足够了,有十个真正的朋友,你就天下无敌.耶酥保佑你,我的朋友.")
+	Talk(1, ":,,.,.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[卡鲁]			--
+--		[]			--
 --						 	--
 --		11301, 23907			        --
 ----------------------------------------------------------
 function peter_talk37 ()
-	Talk(1, "卡鲁: 每天晚上别抱着电视消磨时间啦~今晚换点花样,和朋友们一起聚会吧!一个人的圣诞节总是闹不起来,我就在尝试着改变呢.")
+	Talk(1, ": ~,!,.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[布奇]			--
+--		[]			--
 --						 	--
 --		26301, 17308			        --
 ----------------------------------------------------------
 function peter_talk38 ()
-	Talk(1, "布奇: 你知道吗?据说有一种叫做万能宝石的东西,据说可以让使用者变的更强大,具体的情况你可以找冰狼的麦瑞问下!")
+	Talk(1, ": ?,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[里纳多]			--
+--		[]			--
 --						 	--
 --		17401, 6009			        --
 ----------------------------------------------------------
 function peter_talk39 ()
-	Talk(1, "里纳多:看着人们都在点播祝福,我也很想点播一句心里话：我要加公资!我要带薪放假!我要拿奖金!…还有,别让老板知道是我说的.")
+	Talk(1, ":,!!!,.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[克莱尔]			--
+--		[]			--
 --						 	--
 --		3401, 20011			        --
 ----------------------------------------------------------
 function peter_talk40 ()
-	Talk(1, "克莱尔: 节日虽然快乐~但是也要注意安全哦!我可不想一大早就在医院里看到有病人在! ")
+	Talk(1, ": ~!! ")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[迪可斯]			--
+--		[]			--
 --						 	--
 --		7401, 20511			        --
 ----------------------------------------------------------
 function peter_talk41 ()
-	Talk(1, "迪可斯:好多的雪啊,难道这么大的地方都要我来扫吗?我希望这个圣诞节我能得到的礼物是一台除雪机!")
+	Talk(1, ":,?!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[普罗]			--
+--		[]			--
 --						 	--
 --		20901, 21912			        --
 ----------------------------------------------------------
 function peter_talk42 ()
-	Talk(1, "普罗: 从海上无尽的漂泊到现在站在你的面前,我懂得了生活要珍惜现在,能站在陆地上过圣诞节,实在是件值得庆祝的事,我会对每个人大声的祝福!享受现在的生活吧!圣诞快乐!")
+	Talk(1, ": ,,,,!!!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[温尼丽]			--
+--		[]			--
 --						 	--
 --		26401, 13813			        --
 ----------------------------------------------------------
 function peter_talk43 ()
-	Talk(1, "温尼丽: 我一直想当一名航海家!我要让我的船开的比圣诞老人飞起来还要快!将来圣诞老人还要拜托我帮他运送礼物呢.")
+	Talk(1, ": !!.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[加菲]			--
+--		[]			--
 --						 	--
 --		24801, 8114			        --
 ----------------------------------------------------------
 function peter_talk44 ()
-	Talk(1, "加菲: 知道圣诞节该怎么过吗?我觉得坐在软软的沙发上,看电视,吃意大利千层面才是最棒的!")
+	Talk(1, ": ?,,!")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[问题小多多]			--
+--		[]			--
 --						 	--
 --		26101, 8915			        --
 ----------------------------------------------------------
 function peter_talk45 ()
-	Talk(1, "问题小多多: 我从哪里来的?冬天的玫瑰花怎么来的?小雪人和小麋鹿宠物是怎么来的?唔,这些我都知道,我只是想听听你知不知道.")
+	Talk(1, ": ???,,.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[奥斯卡]			--
+--		[]			--
 --						 	--
 --		19301, 4016			        --
 ----------------------------------------------------------
 function peter_talk46 ()
-	Talk(1, "奥斯卡: 圣诞节到了,就算是作为最伟大的冒险家的我也应该停下来和孩子们打打雪仗,好好享受一下美味的火鸡了吧.")
+	Talk(1, ": ,,.")
 end
 
 --------------------------------------------------------
 --							--
 --							--
---		圣诞岛[彩颐]			--
+--		[]			--
 --						 	--
 --		19101, 8417			        --
 ----------------------------------------------------------
 function peter_talk47 ()
-	Talk(1, "彩颐: 这就是圣诞节吗?我还是第一次过这个节日呢~不过那个圣诞老人胖乎乎的真可爱,还有那棵大大的圣诞树也好漂亮哦,你去看了吗?")
+	Talk(1, ": ?~,,?")
 end
 function JackpotMachine()
 	Talk(1, "Jackpot Machine: Hi, I advised you to leave some empty slots in your inventory before playing. You might win something great!")

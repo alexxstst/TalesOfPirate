@@ -1,0 +1,1140 @@
+Name	Value
+AS_ACCOUNTSERVER2_CPP_00001	connected
+AS_ACCOUNTSERVER2_CPP_00002	unable to connect to database, reconnecting in 5 seconds! 
+AS_ACCOUNTSERVER2_CPP_00003	user=(%s] is verifying at Tom......
+AS_ACCOUNTSERVER2_CPP_00004	failed...
+AS_ACCOUNTSERVER2_CPP_00005	UserRequestProcessor#%d connected to Auth database successfully
+AS_ACCOUNTSERVER2_CPP_00006	Loading thread pool thread exit function, please wait
+AS_MAIN_CPP_00002	Please do not directly close this operating system! Version time:
+AS_MAIN_CPP_00003	Connection to database failed, the process terminated! 
+AS_MAIN_CPP_00004	Failed to create Billsystem, the process terminated!
+AS_MAIN_CPP_00005	Tomsystem initialize failed, the process terminated!
+AS_MAIN_CPP_00006	Unknown error occurred during the system initialization, please notify developer.
+AS_MAIN_CPP_00007	Notify Logout to AccountServer...
+AS_MAIN_CPP_00008	AccountServer
+AS_MAIN_CPP_00009	The thread
+AS_MAIN_CPP_00010	Run Label
+AS_MAIN_CPP_00011	Last/Max Consume (ms)
+AS_MAIN_CPP_00012	Name
+AS_MAIN_CPP_00013	Group IP
+AS_MAIN_CPP_00014	Status
+AS_MAIN_CPP_00015	BTS
+AS_MAIN_CPP_00016	Server IP
+AS_MAIN_CPP_00017	Bill/Disconn Count
+AS_MAIN_CPP_00018	Verification
+AS_MAIN_CPP_00019	Party packet: 0
+AS_MAIN_CPP_00020	Concurrent number: 0
+AS_MAIN_CPP_00021	GroupServer
+AS_MAIN_CPP_00022	Fee
+AS_MAIN_CPP_00023	Exit
+AS_MAIN_CPP_00024	Party packet: %d
+AS_MAIN_CPP_00025	concurrent number: %d
+CL_LANGUAGE_MATCH_0	English
+CO_COMMFUNC_CPP_00001	Newbie
+CO_COMMFUNC_CPP_00002	Swordsman
+CO_COMMFUNC_CPP_00003	Hunter
+CO_COMMFUNC_CPP_00004	Sailor
+CO_COMMFUNC_CPP_00005	Explorer
+CO_COMMFUNC_CPP_00006	Herbalist
+CO_COMMFUNC_CPP_00007	Engineer
+CO_COMMFUNC_CPP_00008	Merchant
+CO_COMMFUNC_CPP_00009	Champion
+CO_COMMFUNC_CPP_00010	Crusader
+CO_COMMFUNC_CPP_00011	White Knight
+CO_COMMFUNC_CPP_00012	Animal tamer
+CO_COMMFUNC_CPP_00013	Sharpshooter
+CO_COMMFUNC_CPP_00014	Cleric
+CO_COMMFUNC_CPP_00015	Seal master
+CO_COMMFUNC_CPP_00016	Captain
+CO_COMMFUNC_CPP_00017	Voyager
+CO_COMMFUNC_CPP_00018	Upstart
+CO_COMMFUNC_CPP_00019	Engineer
+CO_COMMFUNC_CPP_00020	Argent City
+CO_COMMFUNC_CPP_00021	Thundoria Castle
+CO_COMMFUNC_CPP_00022	Shaitan City
+CO_COMMFUNC_CPP_00023	Icicle Castle
+CO_COMMFUNC_CPP_00024	Land/Ocean
+CO_COMMFUNC_CPP_00025	Non-battle zone
+CO_COMMFUNC_CPP_00026	Non PK zone
+CO_COMMFUNC_CPP_00027	Bridge
+CO_COMMFUNC_CPP_00028	No monster zone
+CO_COMMFUNC_CPP_00029	Mining Area
+CO_COMMFUNC_CPP_00030	Unknown
+CO_COMMFUNC_H_00001	Strength increase
+CO_COMMFUNC_H_00002	Agility increase 
+CO_COMMFUNC_H_00003	Accuracy increase 
+CO_COMMFUNC_H_00004	Constitution increase
+CO_COMMFUNC_H_00005	Spirit increase
+CO_COMMFUNC_H_00006	Luck increase 
+CO_COMMFUNC_H_00007	Attack increase
+CO_COMMFUNC_H_00008	Attack range increase
+CO_COMMFUNC_H_00009	Min Attack increase
+CO_COMMFUNC_H_00010	Max Attack increase
+CO_COMMFUNC_H_00011	Defense increase
+CO_COMMFUNC_H_00012	Max HP increase
+CO_COMMFUNC_H_00013	Max SP increase
+CO_COMMFUNC_H_00014	Dodge rate increase
+CO_COMMFUNC_H_00015	Hit rate increase
+CO_COMMFUNC_H_00016	Critical hitrate increase
+CO_COMMFUNC_H_00017	Drop rate increase
+CO_COMMFUNC_H_00018	HP recover increase
+CO_COMMFUNC_H_00019	SP recover increase
+CO_COMMFUNC_H_00020	Move speed increase
+CO_COMMFUNC_H_00021	Material Mining increase
+CO_COMMFUNC_H_00022	Physical resist increase
+CO_COMMFUNC_H_00023	Max durability
+CO_COMMFUNC_H_00024	Max energy
+CO_COMMFUNC_H_00025	Unknown item attribute
+CO_COMMFUNC_H_00026	Invalid Account
+CO_COMMFUNC_H_00027	Password Error
+CO_COMMFUNC_H_00028	Account Activation Error
+CO_COMMFUNC_H_00029	Saving Account, try login later
+CO_COMMFUNC_H_00030	Account already login
+CO_COMMFUNC_H_00031	Account suspended
+CO_COMMFUNC_H_00032	GroupServer already login
+CO_COMMFUNC_H_00033	GroupServer Verification failed
+CO_COMMFUNC_H_00034	Saving your character, try after 15 seconds
+CO_COMMFUNC_H_00035	Account double login other place
+CO_COMMFUNC_H_00036	Account already online
+CO_COMMFUNC_H_00037	GroupServer disconnected
+CO_COMMFUNC_H_00038	Unknown agreement, ignored
+CO_COMMFUNC_H_00039	Local saving error
+CO_COMMFUNC_H_00040	Account overdue, please top-up
+CO_COMMFUNC_H_00041	GateServer connect GroupServer error
+CO_COMMFUNC_H_00042	GateServer dup name with connected GateServer
+CO_COMMFUNC_H_00043	Invalid Data Format
+CO_COMMFUNC_H_00044	Server link operation integraty error 
+CO_COMMFUNC_H_00045	Account server malfunction
+CO_COMMFUNC_H_00046	Database server malfunction
+CO_COMMFUNC_H_00047	No requested character in this account
+CO_COMMFUNC_H_00048	Max number of Characters reached
+CO_COMMFUNC_H_00049	Dup Character Name
+CO_COMMFUNC_H_00050	Illegal respawn place
+CO_COMMFUNC_H_00051	Character name too long
+CO_COMMFUNC_H_00052	No guild leader, disband guild then delete character
+CO_COMMFUNC_H_00053	Illegal character name
+CO_COMMFUNC_H_00054	System busy, try later
+CO_COMMFUNC_H_00055	Illegal length for 2nd password
+CO_COMMFUNC_H_00056	No 2nd password
+CO_COMMFUNC_H_00057	Bad behavior reported, don't do it again
+CO_COMMFUNC_H_00058	Network abnormal in GateServer
+CO_COMMFUNC_H_00059	Not in the phase of choosing character
+CO_COMMFUNC_H_00060	Not in gaming status, Can not send ENDPLAY command
+CO_COMMFUNC_H_00061	Target map can not reach
+CO_COMMFUNC_H_00062	Server full, please choose other servers
+CO_COMMFUNC_H_00063	You do not login
+CO_COMMFUNC_H_00064	Client version error, server refuse connection!
+CO_COMMFUNC_H_00065	Map enter failed
+CO_COMMFUNC_H_00066	Map position illegal. Send back to birth place
+CO_COMMFUNC_H_00067	Gameserver name duplicate
+CO_COMMFUNC_H_00068	GameServer Map Name duplicate
+CO_COMMFUNC_H_00069	GameServer map syntax error
+CO_COMMFUNC_H_00070	Jack too BT
+CO_COMMFUNC_H_00071	(GameServer/GateServer->Client error code 1 500)
+CO_COMMFUNC_H_00072	(GroupServer->GateServer return error code range 501 1000)
+CO_COMMFUNC_H_00073	(AccountServer->GroupServe return error code 1001 1500)
+CO_COMMFUNC_H_00074	(GameServer->GateServer return error code range 1501 2000)
+CO_COMMFUNC_H_00075	Jack too BT
+CO_COMMFUNC_H_00076	Item operation succeed
+CO_COMMFUNC_H_00077	Item not exist
+CO_COMMFUNC_H_00078	Inventory full
+CO_COMMFUNC_H_00079	Item usage failed
+CO_COMMFUNC_H_00080	Item can not be picked
+CO_COMMFUNC_H_00081	Item can not be discarded
+CO_COMMFUNC_H_00082	Item can not be destroyed
+CO_COMMFUNC_H_00083	Inventory is locked
+CO_COMMFUNC_H_00084	Distance is too far
+CO_COMMFUNC_H_00085	Equipment level not satisfied
+CO_COMMFUNC_H_00086	Equipemnt profession not satisfied
+CO_COMMFUNC_H_00087	Can not use item in this status
+CO_COMMFUNC_H_00088	Item secured
+CO_COMMFUNC_H_00089	Different type of area
+CO_COMMFUNC_H_00090	Size not matched
+CO_COMMFUNC_H_00091	Can not save this item
+CO_COMMFUNC_H_00092	Invalid item
+CO_COMMFUNC_H_00093	Exceed inventory capacity
+CO_COMMFUNC_H_00094	Unkown Item operation erro code
+CO_COMMFUNC_H_00095	Skill use succeed
+CO_COMMFUNC_H_00096	Target is NPC
+CO_COMMFUNC_H_00097	target can not be attacked
+CO_COMMFUNC_H_00098	Target in safe zone
+CO_COMMFUNC_H_00099	Not land skill
+CO_COMMFUNC_H_00100	Not ocean skill
+CO_COMMFUNC_H_00101	Skill can only be used to youself
+CO_COMMFUNC_H_00102	Skill can only be used to player corpse
+CO_COMMFUNC_H_00103	Skill can not use to friends
+CO_COMMFUNC_H_00104	Skill can only be used to friends
+CO_COMMFUNC_H_00105	Skill can only be used to players
+CO_COMMFUNC_H_00106	Skill can only be used to monsters
+CO_COMMFUNC_H_00107	Unknown skill failed code
+CO_COMMFUNC_H_00108	CO_COMMFUNC_H_00108
+GM_ACTION_CPP_00001	In buffer motion management object structure process assigning memory failed
+GM_AUCTIONITEM_CPP_00001	Inventory locked, can not auction
+GM_AUCTIONITEM_CPP_00002	Studying mode, can not auction
+GM_AUCTIONITEM_CPP_00003	Not enough gold
+GM_AUCTIONITEM_CPP_00004	System
+GM_AUCTIONITEM_CPP_00005	Bid too low
+GM_AUCTION_CPP_00001	StartAuction: duplicated name. ID = %d, name = %s!
+GM_AUCTION_CPP_00002	StartAuction: memory not enough. ID = %d, name = %s!
+GM_AUCTION_CPP_00003	EndAuction: Non-existed ID: %d!
+GM_AUCTION_CPP_00004	Auction ended!
+GM_BIRTHPLACE_H_00001	Argent City
+GM_CHARACTERCMD_CPP_00001	Item consumption, name %s [%u], number %u
+GM_CHARACTERCMD_CPP_00002	Throw item (to the ground), name %s [%u], number %u.
+GM_CHARACTERCMD_CPP_00003	Boat Carry is full, can not pick item [%s]!
+GM_CHARACTERCMD_CPP_00004	Get captain verification, add boat failed! ID [0x%X]
+GM_CHARACTERCMD_CPP_00005	Picked up item, name %s [%u], number %u.
+GM_CHARACTERCMD_CPP_00006	Party member %s pick %d %s
+GM_CHARACTERCMD_CPP_00007	Inventory is full!
+GM_CHARACTERCMD_CPP_00008	Throw [%s] failed, you are using it!
+GM_CHARACTERCMD_CPP_00009	Throw item, name %s [%u], number %u.
+GM_CHARACTERCMD_CPP_00010	Destroy [%s] failed, you are using it!
+GM_CHARACTERCMD_CPP_00011	Delete item, name %s[%u], number %u.
+GM_CHARACTERCMD_CPP_00012	Bank operation [%s:%s], name %s [%u], number %u.
+GM_CHARACTERCMD_CPP_00013	Inventory
+GM_CHARACTERCMD_CPP_00014	Bank
+GM_CHARACTERCMD_CPP_00015	Redistribute attribute quantity error 
+GM_CHARACTERCMD_CPP_00016	Map does not process PK request, or relative map not initiated 
+GM_CHARACTERCMD_CPP_00017	Invalid Target !
+GM_CHARACTERCMD_CPP_00018	Dead status, can no operate
+GM_CHARACTERCMD_CPP_00019	Please invite in designated range
+GM_CHARACTERCMD_CPP_00020	Target not in the invited range!
+GM_CHARACTERCMD_CPP_00021	NPC!
+GM_CHARACTERCMD_CPP_00022	Exceed invited range!
+GM_CHARACTERCMD_CPP_00023	Already have other invitations
+GM_CHARACTERCMD_CPP_00024	Target already has other invitation
+GM_CHARACTERCMD_CPP_00025	Not in party mode
+GM_CHARACTERCMD_CPP_00026	Target not in party mode
+GM_CHARACTERCMD_CPP_00027	No single PK in the same party
+GM_CHARACTERCMD_CPP_00028	Refuse the invitation
+GM_CHARACTERCMD_CPP_00029	Not in the range, can not accept invitation
+GM_CHARACTERCMD_CPP_00030	No invitation
+GM_CHARACTERCMD_CPP_00031	Invitation no longer exist
+GM_CHARACTERCMD_CPP_00032	Not within invitation
+GM_CHARACTERCMD_CPP_00033	Cancel PK request
+GM_CHARACTERCMD_CPP_00034	Map does not process PK request, or relative map not initiated 
+GM_CHARACTERCMD_CPP_00035	No free space, try later
+GM_CHARACTERCMD_CPP_00036	Space request full, try later
+GM_CHARACTERCMD_CPP_00037	Dead status, can not PK
+GM_CHARACTERCMD_CPP_00038	Not in the range of PK, can not PK
+GM_CHARACTERCMD_CPP_00039	You are not in the previous party, not eligible for PK
+GM_CHARACTERCMD_CPP_00040	You are not in the previous invitation, not eligible for PK
+GM_CHARACTERCMD_CPP_00041	No one from the opposition can enter PK!
+GM_CHARACTERCMD_CPP_00042	Transcription serial number
+GM_CHARACTERCMD_CPP_00043	Number of players entered:
+GM_CHARACTERCMD_CPP_00044	Repairing!
+GM_CHARACTERCMD_CPP_00045	Too far!
+GM_CHARACTERCMD_CPP_00046	Effectless item!
+GM_CHARACTERCMD_CPP_00047	Unknown cost for repairing!
+GM_CHARACTERCMD_CPP_00048	No repair done!
+GM_CHARACTERCMD_CPP_00049	Item moved, unable to repair!
+GM_CHARACTERCMD_CPP_00050	Item lock
+GM_CHARACTERCMD_CPP_00051	Reading, unable to forge!
+GM_CHARACTERCMD_CPP_00052	Previous request not done
+GM_CHARACTERCMD_CPP_00053	Request failed!
+GM_CHARACTERCMD_CPP_00054	This is not the requested item, request rejected!
+GM_CHARACTERCMD_CPP_00055	Operation type error! %d
+GM_CHARACTERCMD_CPP_00056	Operation failed, request rejected!
+GM_CHARACTERCMD_CPP_00057	Inventory locked, operation failed.
+GM_CHARACTERCMD_CPP_00058	Reading, operation failed.
+GM_CHARACTERCMD_CPP_00059	No request!
+GM_CHARACTERCMD_CPP_00060	Operation failed!
+GM_CHARACTERCMD_CPP_00061	Sorry, You do not have the Medal of Valor, please go to the Chaos Administrator to get one.
+GM_CHARACTERPRL_CPP_00001	Don't chat too often
+GM_CHARACTERPRL_CPP_00002	No permisison
+GM_CHARACTERPRL_CPP_00003	Your boat not in the ocean!
+GM_CHARACTERPRL_CPP_00004	Can not studying on the boat!
+GM_CHARACTERPRL_CPP_00005	Can not end studying on the boat!
+GM_CHARACTERPRL_CPP_00006	Illegal character in Guild name!
+GM_CHARACTERPRL_CPP_00007	Can not quit guild in this map
+GM_CHARACTERPRL_CPP_00008	Can not item mall when studying
+GM_CHARACTERPRL_CPP_00009	Item mall busy, try later
+GM_CHARACTERPRL_CPP_00010	incorrect 2nd password
+GM_CHARACTERPRL_CPP_00011	You become platinum member!
+GM_CHARACTERPRL_CPP_00012	%s left !
+GM_CHARACTERPRL_CPP_00013	Can not party yourself
+GM_CHARACTERPRL_CPP_00014	Sorry, not in the same map
+GM_CHARACTERPRL_CPP_00015	Can not party in this map
+GM_CHARACTERPRL_CPP_00016	Patient for the response of your invitation
+GM_CHARACTERPRL_CPP_00017	Target level not enough
+GM_CHARACTERPRL_CPP_00018	%s refuse to party!
+GM_CHARACTERPRL_CPP_00019	Can not mentor on the ship
+GM_CHARACTERPRL_CPP_00020	Lv too high
+GM_CHARACTERPRL_CPP_00021	You already have mentor
+GM_CHARACTERPRL_CPP_00022	Target accepting others invitation
+GM_CHARACTERPRL_CPP_00023	Can not disciple on ship
+GM_CHARACTERPRL_CPP_00024	Lv not enough
+GM_CHARACTERPRL_CPP_00025	Target lv too high
+GM_CHARACTERPRL_CPP_00026	%s refuse to be your mentor.
+GM_CHARACTERPRL_CPP_00027	You are professional now 
+GM_CHARACTERPRL_CPP_00028	Not enough gold
+GM_CHARACTERPRL_CPP_00029	Reputation decrease
+GM_CHARACTERPRL_CPP_00030	%s refuse you to be the master
+GM_CHARACTERPRL_CPP_00031	Not join the guild
+GM_CHARACTERPRL_CPP_00032	Channel can be used only in holy war map
+GM_CHARACTERPRL_CPP_00033	illegal length of mail
+GM_CHARACTERPRL_CPP_00034	invalid NPCID: %d 
+GM_CHARACTERPRL_CPP_00035	illegal movement request (previous movement has not ended) 
+GM_CHARACTERPRL_CPP_00036	Move route error, no move sequence point 
+GM_CHARACTERPRL_CPP_00037	Move route error ( detour: %d, max detour: %d )
+GM_CHARACTERPRL_CPP_00038	Inventory locked, use skill failed ! 
+GM_CHARACTERPRL_CPP_00039	Close bank first ! 
+GM_CHARACTERPRL_CPP_00040	The skill is not exist(nomer skill: %d)
+GM_CHARACTERPRL_CPP_00041	Abandant type of action ( direct use skill )
+GM_CHARACTERPRL_CPP_00042	Request Hair style change failed, inventory locked
+GM_CHARACTERPRL_CPP_00043	Request Hair style change failed, invalid hair ID = %d
+GM_CHARACTERPRL_CPP_00044	Request Hair style change fialed, no needed item
+GM_CHARACTERPRL_CPP_00045	Hair stylest
+GM_CHARACTERPRL_CPP_00046	Request Hair style change fialed, not enough gold
+GM_CHARACTERPRL_CPP_00047	Request Hair style change fialed, item in-exist or quantity not enough
+GM_CHARACTERPRL_CPP_00048	Bad luck, hairstyle screwed
+GM_CHARACTERRUN_CPP_00001	New character[%s] initialization error! ID[0x%X]
+GM_CHARACTERSUPERCMD_CPP_00001	Not enough access!
+GM_CHARACTERSUPERCMD_CPP_00002	NPC coversation and quest lua scripts upgrade success!
+GM_CHARACTERSUPERCMD_CPP_00003	Set quest history mark Success! ID [%d]
+GM_CHARACTERSUPERCMD_CPP_00004	Clear quest history mark Success! ID [%d]
+GM_CHARACTERSUPERCMD_CPP_00005	Clear quest history mark failed! ID [%d]
+GM_CHARACTERSUPERCMD_CPP_00006	Set quest mark success! ID [%d], FLAG [%d]
+GM_CHARACTERSUPERCMD_CPP_00007	Set quest mark failed! ID [%d], FLAG [%d]
+GM_CHARACTERSUPERCMD_CPP_00008	Clear quest mark success! ID [%d], FLAG [%d]
+GM_CHARACTERSUPERCMD_CPP_00009	Clear quest mark failed! ID [%d], FLAG [%d]
+GM_CHARACTERSUPERCMD_CPP_00010	Add quest success! MID [%d], DIS [%d]
+GM_CHARACTERSUPERCMD_CPP_00011	Add quest failed! MID [%d], DIS [%d]
+GM_CHARACTERSUPERCMD_CPP_00012	Clear quest success! MID [%d]
+GM_CHARACTERSUPERCMD_CPP_00013	Clear quest failed! MID [%d]
+GM_CHARACTERSUPERCMD_CPP_00014	Delete quest success! MID [%d]
+GM_CHARACTERSUPERCMD_CPP_00015	Delete quest failed! MID [%d]
+GM_CHARACTERSUPERCMD_CPP_00016	Clear character quest notice and trigger message success!
+GM_CHARACTERSUPERCMD_CPP_00017	Obstruction
+GM_CHARACTERSUPERCMD_CPP_00018	Non-obstruction
+GM_CHARACTERSUPERCMD_CPP_00019	Summon pet failed!
+GM_CHARACTERSUPERCMD_CPP_00020	Summon monster failed!
+GM_CHARACTERSUPERCMD_CPP_00021	Create character failed!
+GM_CHARACTERSUPERCMD_CPP_00022	Delete monster amount: %u.!
+GM_CHARACTERSUPERCMD_CPP_00023	System
+GM_CHARACTERSUPERCMD_CPP_00024	System give you %ld life exp!
+GM_CHARACTERSUPERCMD_CPP_00025	System give you %ld reborn exp!
+GM_CHARACTERSUPERCMD_CPP_00026	Add %ld tax!
+GM_CHARACTERSUPERCMD_CPP_00027	Set trade level %ld!
+GM_CHARACTERSUPERCMD_CPP_00028	Target invalid
+GM_CHARACTERSUPERCMD_CPP_00029	Target [%s] attribute %d value %d!
+GM_CHARACTERSUPERCMD_CPP_00030	Learn skill failed (Please check requirement level, class and pre-requisite skills) :  %d, %d!
+GM_CHARACTERSUPERCMD_CPP_00031	Delete item fail
+GM_CHARACTERSUPERCMD_CPP_00032	Parameter mistake
+GM_CHARACTERSUPERCMD_CPP_00033	ping: %d
+GM_CHARACTERSUPERCMD_CPP_00034	Upgrade inventory failed. Couldn't find character!
+GM_CHARACTERSUPERCMD_CPP_00035	Upgrade %s inventory failed, invalid capacity!
+GM_CHARACTERSUPERCMD_CPP_00036	Upgrade inventory successful, capacity: %d
+GM_CHARACTERSUPERCMD_CPP_00037	Upgrade %s inventory successful, capacity: %d
+GM_CHARACTERSUPERCMD_CPP_00038	Wrong format!
+GM_CHARACTERSUPERCMD_CPP_00039	Upgrade Bag pack failed!
+GM_CHARACTERSUPERCMD_CPP_00040	What would you like to inquire about?
+GM_CHARACTERSUPERCMD_CPP_00041	Anyone around can answer this question?
+GM_CHARACTERSUPERCMD_CPP_00042	Inquires related '%s':
+GM_CHARACTERSUPERCMD_CPP_00043	New age explosion head expert
+GM_CHARACTERSUPERCMD_CPP_00044	Oh no, looked like I'm getting old, you stumped me!
+GM_CHARACTERSUPERCMD_CPP_00045	Know-it-all
+GM_CHARACTERSUPERCMD_CPP_00046	Sorry, No money no talk!
+GM_CHARACTERSUPERCMD_CPP_00047	GM Jurisdiction non-open date
+GM_CHARACTER_CPP_00001	transaction... Can not stop quest
+GM_CHARACTER_CPP_00002	Inventory locked
+GM_CHARACTER_CPP_00003	Studying, can not trade
+GM_CHARACTER_CPP_00004	Item inventory slot index error! ID = %d
+GM_CHARACTER_CPP_00005	Item ID error, can not find item info ! ID = %d
+GM_CHARACTER_CPP_00006	Item [%s] can not trade !
+GM_CHARACTER_CPP_00007	can not find itemid [%d] info!
+GM_CHARACTER_CPP_00008	item [%s] quantity not enough [%d], total: %d
+GM_CHARACTER_CPP_00009	Ship price info reading failed!
+GM_CHARACTER_CPP_00010	[%s] sold failed! You are using the ship!
+GM_CHARACTER_CPP_00011	Sold %d [%s] item, received %d gold, total: %d
+GM_CHARACTER_CPP_00012	System
+GM_CHARACTER_CPP_00013	You don't trade needed item!
+GM_CHARACTER_CPP_00014	Data error,trade failed!
+GM_CHARACTER_CPP_00015	Data error, purchase failed!
+GM_CHARACTER_CPP_00016	Inventory index (%d) invalid!
+GM_CHARACTER_CPP_00017	Item [%s] can not be stacked!
+GM_CHARACTER_CPP_00018	Gold [%d] not enough to buy %d [%s]! unit (%d)
+GM_CHARACTER_CPP_00019	Inventory full, can not buy items!
+GM_CHARACTER_CPP_00020	Purchase %d [%s], spend %d gold! remain: %d
+GM_CHARACTER_CPP_00021	quest item [%s] can not trade !
+GM_CHARACTER_CPP_00022	Retrieve %s sell failed!
+GM_CHARACTER_CPP_00023	%s gives you %d gold, total: %d!
+GM_CHARACTER_CPP_00024	%s takes %d gold, remain: %d
+GM_CHARACTER_CPP_00025	PembuatanItem: wrong data item type!ID =%d
+GM_CHARACTER_CPP_00026	%s gives %d [%s] item!
+GM_CHARACTER_CPP_00027	GiveItem: wrong item data type! ID = %d
+GM_CHARACTER_CPP_00028	GiveItem2KitbagTemp: wrong item data type!ID =%d
+GM_CHARACTER_CPP_00029	AddItem: wrong item data type!ID = %d
+GM_CHARACTER_CPP_00030	%s gives you %d item [%s], operation failed
+GM_CHARACTER_CPP_00031	Unknown
+GM_CHARACTER_CPP_00032	AddItem2KitbagTemp: wrong item data type! ID =%d
+GM_CHARACTER_CPP_00033	Buy %d [%s] item!
+GM_CHARACTER_CPP_00034	Buy %d [%s],operation failed!
+GM_CHARACTER_CPP_00035	TakeItem: Wrong type data item!ID =%d
+GM_CHARACTER_CPP_00036	Need %d [%s] item, not enough (%d) quantity!
+GM_CHARACTER_CPP_00037	%s can not take your %d [%s] item. GridID = %d, NumItem = %d
+GM_CHARACTER_CPP_00038	%s takes your %d [%s] item!
+GM_CHARACTER_CPP_00039	TakeRandItem: Get ramdom quest item info failed! RoleID = %d, NpcID = %d
+GM_CHARACTER_CPP_00040	TakeRandItem: %s take random quest item failed! sItemID = %d
+GM_CHARACTER_CPP_00041	HasItem: wrong item data type! ID = %d
+GM_CHARACTER_CPP_00042	HasItemBagTemp: wrong item data type! ID = %d
+GM_CHARACTER_CPP_00043	HasItemBagTemp: no temporary bag!
+GM_CHARACTER_CPP_00044	Skill not exist
+GM_CHARACTER_CPP_00045	learning skill level [%d] error
+GM_CHARACTER_CPP_00046	Skill already exist, level higher than leaning value
+GM_CHARACTER_CPP_00047	Life skill point not enough: you have %d, needed %d.
+GM_CHARACTER_CPP_00048	skill point not enough: you have %d, needed %d.
+GM_CHARACTER_CPP_00049	Skill package added failed
+GM_CHARACTER_CPP_00050	Class error, or learning level exceed requirement
+GM_CHARACTER_CPP_00051	Level not enough: your level %d, needed %d. 
+GM_CHARACTER_CPP_00052	Prerequisite skill mismatch
+GM_CHARACTER_CPP_00053	Restore %d HP, current: %d HP.
+GM_CHARACTER_CPP_00054	Restore %d SP, current: %d SP.
+GM_CHARACTER_CPP_00055	Restore all HP, current: %d HP.
+GM_CHARACTER_CPP_00056	Restore all SP, current: %d SP.
+GM_CHARACTER_CPP_00057	Copy not exist
+GM_CHARACTER_CPP_00058	Max number reached
+GM_CHARACTER_CPP_00059	Boat %s damaged, can not repair!
+GM_CHARACTER_CPP_00060	BoatDie: destroyed failed! ID [0x%X]
+GM_CHARACTER_CPP_00061	BoatDie: destroyed boat %s failed ID [%d]
+GM_CHARACTER_CPP_00062	Boat %s destroyed and sunk, please find NPC to rescue!
+GM_CHARACTER_CPP_00063	BoatSelected:No parking boat
+GM_CHARACTER_CPP_00064	BoatSelected:Boat repair ID [%d] error
+GM_CHARACTER_CPP_00065	Can not find your boat
+GM_CHARACTER_CPP_00066	Boat enter map failed
+GM_CHARACTER_CPP_00067	Your boat already sets sail
+GM_CHARACTER_CPP_00068	Boat %s sunk, please rescure first!
+GM_CHARACTER_CPP_00069	Boat demaged, must repair then set sail
+GM_CHARACTER_CPP_00070	Boat enter map failed
+GM_CHARACTER_CPP_00071	Can not boat when inventory locked
+GM_CHARACTER_CPP_00072	No boat parking in the harbor
+GM_CHARACTER_CPP_00073	BoatSelLuance: Select the boat ID[%d] error!
+GM_CHARACTER_CPP_00074	Fast repair failed, boat can not set sail
+GM_CHARACTER_CPP_00075	Boat %s good, no need repair.
+GM_CHARACTER_CPP_00076	Need %s gold (%d) repair, not enough gold (%d).
+GM_CHARACTER_CPP_00077	Boat %s repaired, recover endurance %d points!
+GM_CHARACTER_CPP_00078	Fast supply failed, can not set sail
+GM_CHARACTER_CPP_00079	Boat %s fully supplied!
+GM_CHARACTER_CPP_00080	Boad need %s gold (%d) to supply, not enough (%d) gold.
+GM_CHARACTER_CPP_00081	Boat %s supplied, recover %d!
+GM_CHARACTER_CPP_00082	Can not talk to NPC when trade with others
+GM_CHARACTER_CPP_00083	BoatSelected:No repairing Boat parking in the harbor!
+GM_CHARACTER_CPP_00084	BoatSelected:Repair boat ID[%d] indicator error!
+GM_CHARACTER_CPP_00085	BoatSelected:No sunk boat in the harbor!
+GM_CHARACTER_CPP_00086	BoatSelected:Rescue sunk boat ID[%d] error!
+GM_CHARACTER_CPP_00087	BoatSelected:Rescue sunk boat ID[%d] indicator error!
+GM_CHARACTER_CPP_00088	Rescue sunk boat %s need (%d)G, your (%d)G not enough.
+GM_CHARACTER_CPP_00089	BoatSelected:Rescue sunk boat database operation failed!
+GM_CHARACTER_CPP_00090	Boat %s rescue succeed !
+GM_CHARACTER_CPP_00091	BoatSelected:You don't have supply boat in the harbor!
+GM_CHARACTER_CPP_00092	BoatSelected:Supply Boat selection ID[%d]error!
+GM_CHARACTER_CPP_00093	BoatSelected:Supply Boat selection ID[%d] index error!
+GM_CHARACTER_CPP_00094	role[%s]script boat upgrade to deal with function[BoatLevelUp]pengembalian gagal!
+GM_CHARACTER_CPP_00095	role[%s]script boat upgrade to deal with function[BoatLevelUp]pengembalian gagal!
+GM_CHARACTER_CPP_00096	BoatSelected:Wrong type selected[%d]
+GM_CHARACTER_CPP_00097	Cargo boat %s full!
+GM_CHARACTER_CPP_00098	Item quantity not enough to pack!
+GM_CHARACTER_CPP_00099	Error: pack selected item failed!
+GM_CHARACTER_CPP_00100	Error: system %d pack item failed! ID[%d]
+GM_CHARACTER_CPP_00101	Character [%s] script load manage function [PackBagGoods] transfer failed!
+GM_CHARACTER_CPP_00102	character [%s]script load manage function [PackBagGoods]return failed!
+GM_CHARACTER_CPP_00103	No boat parked in the harbor can pack items!
+GM_CHARACTER_CPP_00104	BoatPackBag:Boat selection ID[%d]error!
+GM_CHARACTER_CPP_00105	Selected Boat is full, please choose other boats!
+GM_CHARACTER_CPP_00106	ViewItemInfo::wrong itemID, unable to find the item information!ID =%d, grid =%d
+GM_CHARACTER_CPP_00107	MelihatItemInfo: item ID error, can not find the item info! Index =%d, ID =%d
+GM_CHARACTER_CPP_00108	viewiteminfo:item with no boat info Index[%d], ID[%d] 
+GM_CHARACTER_CPP_00109	Initializaition
+GM_CHARACTER_CPP_00110	Trade
+GM_CHARACTER_CPP_00111	Bank
+GM_CHARACTER_CPP_00112	Pick
+GM_CHARACTER_CPP_00113	Throw
+GM_CHARACTER_CPP_00114	Delete
+GM_CHARACTER_CPP_00115	No answer, you still have %d chances
+GM_CHARACTER_CPP_00116	Wrong answer, you still have %d chances
+GM_CHARACTER_CPP_00133	Kitbag is unlocked
+GM_CHARACTER_CPP_00134	Kitbag is locked
+GM_CHARACTER_CPP_00135	Volunteer is add
+GM_CHARACTER_CPP_00136	Volunteer is not add
+GM_CHARACTER_CPP_00137	Volunteer is del
+GM_CHARACTER_CPP_00138	Volunteer is not del
+GM_CHARBOAT_CPP_00001	Uninstalled fire gun
+GM_CHARBOAT_CPP_00002	Uninstalled tools
+GM_CHARBOAT_CPP_00003	You have cancelled boat building!
+GM_CHARBOAT_CPP_00004	Sea region status,unable to build boat!
+GM_CHARBOAT_CPP_00005	Trade status,unable to build boat!
+GM_CHARBOAT_CPP_00006	Set stall in progress, unable to build boat!
+GM_CHARBOAT_CPP_00007	Inventory locked, unable to build boat!
+GM_CHARBOAT_CPP_00008	Inventory security lock, unable to build boat!
+GM_CHARBOAT_CPP_00009	Loading, unable to build boat!
+GM_CHARBOAT_CPP_00010	Create boat failed,invalid boat ID [%d]!
+GM_CHARBOAT_CPP_00011	Boat limit reached. Unable to build more boat!
+GM_CHARBOAT_CPP_00012	Inventory slot full, build boat failed!
+GM_CHARBOAT_CPP_00013	Build boat failed, boat assign data failed! ID[%d]
+GM_CHARBOAT_CPP_00014	Delete boat no. message!
+GM_CHARBOAT_CPP_00015	Unable to allocate boat info! ID[0x%X]
+GM_CHARBOAT_CPP_00016	Update:You have not build a boat! Please build boat!
+GM_CHARBOAT_CPP_00017	MakeBoat:You have not build a boat! Please build boat!
+GM_CHARBOAT_CPP_00018	Error, unable to detect player's building data!
+GM_CHARBOAT_CPP_00019	Boat limit reached. Unable to build more boat!
+GM_CHARBOAT_CPP_00020	Boat's name length is to keep between %d-%d characters!
+GM_CHARBOAT_CPP_00021	Boat name %s illegal!
+GM_CHARBOAT_CPP_00022	Character %s contain illegal character!
+GM_CHARBOAT_CPP_00023	The boat construct computation module attribute bonus error!
+GM_CHARBOAT_CPP_00024	To build boat %s requires %d gold, please make sure you have sufficient gold!
+GM_CHARBOAT_CPP_00025	Build boat database encounter error!
+GM_CHARBOAT_CPP_00026	Item locked, build boat failed!
+GM_CHARBOAT_CPP_00027	Item not found, build boat failed!
+GM_CHARBOAT_CPP_00028	Unable to receive boat attribute message! ID[%d]
+GM_CHARBOAT_CPP_00029	Build boat failed, set boat appearance data failed! ID[%d]
+GM_CHARBOAT_CPP_00030	Set boat attribute failed!
+GM_CHARBOAT_CPP_00031	Character %s boat %s temporarily database storing failed!
+GM_CHARBOAT_CPP_00032	Adding boat database to player failed!
+GM_CHARBOAT_CPP_00033	Unable to find character %s parcel %d item message ID[%d]!
+GM_CHARBOAT_CPP_00034	Character online failed to assign boat!
+GM_CHARBOAT_CPP_00035	Obtained character %s boatID [%d] database data failed!
+GM_CHARBOAT_CPP_00036	Adding boat %s ID[%d]to character %splayer data message failed!
+GM_CHARBOAT_CPP_00037	Successfully board no. %d boat %s 
+GM_CHARBOAT_CPP_00038	Build boat failed, Boat body information error ID[%d]!
+GM_CHARBOAT_CPP_00039	Build boat failed, Boat bow information error ID[%d]!
+GM_CHARBOAT_CPP_00040	Build boat failed, Boat engine information error ID[%d]!
+GM_CHARBOAT_CPP_00041	Build boat failed, Boat cannon information error ID[%d]!
+GM_CHARBOAT_CPP_00042	Obtain boat message failed, invalid boat ID[%d]!
+GM_CHARBOAT_CPP_00043	Requirement level not met %d 
+GM_CHARBOAT_CPP_00044	Requirement class not met  
+GM_CHARFORGE_CPP_00001	Inventory locked, unable to forge item!
+GM_CHARFORGE_CPP_00002	Inventory security locked, unable to forge item!
+GM_CHARFORGE_CPP_00003	Loading, unable to forge item!
+GM_CHARFORGE_CPP_00004	ForgeItem: Incorrect inventory index! ID = %d
+GM_CHARFORGE_CPP_00005	ForgeItem: Incorrect item index! ID = %d
+GM_CHARFORGE_CPP_00006	Item %s unable to forge!
+GM_CHARFORGE_CPP_00007	Your item %s has already forged to the maximum level!
+GM_CHARFORGE_CPP_00008	ForgeItem: Forge level requirement not met! Level = %d
+GM_CHARFORGE_CPP_00009	Insufficient gold to forge this item, forging failed!
+GM_CHARFORGE_CPP_00010	Unknown
+GM_CHARFORGE_CPP_00011	Lack of forging material %s , total %d, forging failed!
+GM_CHARFORGE_CPP_00012	Delete forge item %s , total %d failed!
+GM_CHARFORGE_CPP_00013	Error: Forging successful, set item %s forge level (%d) failed!
+GM_CHARFORGE_CPP_00014	Forge item %s success, proceed forge level (%d)!
+GM_CHARFORGE_CPP_00015	Forge item %s failed, equipment damaged!
+GM_CHARFORGE_CPP_00016	Forging fail, set item %s forge level (%d) failed!
+GM_CHARFORGE_CPP_00017	Forge item %s failed, reset forge level back to (%d)!
+GM_CHARSCRIPT_CPP_00001	System
+GM_CHARSCRIPT_CPP_00002	Unknown
+GM_CHARSCRIPT_CPP_00003	Where did you learn the [%s] skill %s?
+GM_CHARSCRIPT_CPP_00004	%s You have obtained %d Rebirth EXP!
+GM_CHARSCRIPT_CPP_00005	%s You have obtained %d Life EXP Points!
+GM_CHARSCRIPT_CPP_00006	%s You have obtained %d EXP!
+GM_CHARSCRIPT_CPP_00007	Experience type error!Name[%s], Type[%d], Exp[%d]
+GM_CHARSCRIPT_CPP_00008	%s You have obtained %d Gold!
+GM_CHARSCRIPT_CPP_00009	%s Taken from you %d Gold!
+GM_CHARSCRIPT_CPP_00010	%s Revive point %s saved successful!
+GM_CHARSCRIPT_CPP_00011	Character[%s]is trading in progress, unable to process trade!
+GM_CHARSCRIPT_CPP_00012	Sorry,you do not have medal of valor. Please proceed to chaos administrator to obtain one.
+GM_CHARSCRIPT_CPP_00013	Inventory locked, unable to access.
+GM_CHARSCRIPT_CPP_00014	Operation in progress, unable to process.
+GM_CHARSCRIPT_CPP_00015	Skill Reset
+GM_CHARSTALL_CPP_00001	Unable to vend while in boat!
+GM_CHARSTALL_CPP_00002	Unable to vend while in trade!
+GM_CHARSTALL_CPP_00003	Unable to vend while crafting boat!
+GM_CHARSTALL_CPP_00004	Inventory locked, unable to vend!
+GM_CHARSTALL_CPP_00005	Inventory security locked, unable to vend!
+GM_CHARSTALL_CPP_00006	Loading.. Unable to vend!
+GM_CHARSTALL_CPP_00007	Stay away or get shot!
+GM_CHARSTALL_CPP_00008	Illegal stall name, please input again!
+GM_CHARSTALL_CPP_00009	Stall message space insufficient!
+GM_CHARSTALL_CPP_00010	Stall map info error!
+GM_CHARSTALL_CPP_00011	Unable to vend in this map!
+GM_CHARSTALL_CPP_00012	Stay away or get shot by the NPC!
+GM_CHARSTALL_CPP_00013	Start vending message name "%s" 
+GM_CHARSTALL_CPP_00014	Start vending character %s Input item data amount out of range! [%d]
+GM_CHARSTALL_CPP_00015	, item amount %d , item message 
+GM_CHARSTALL_CPP_00016	Stall setting character %s Input item data index amount out of rage! GRID[%d]
+GM_CHARSTALL_CPP_00017	Set Stall failed, Item price exceed range!
+GM_CHARSTALL_CPP_00018	Stall setting character %s Stall input data invalid! ID[%d]
+GM_CHARSTALL_CPP_00019	Stall setting ItemID incorrect, unable to allocate item message! ID = %d
+GM_CHARSTALL_CPP_00020	Stall setting Item %s unable to vend!
+GM_CHARSTALL_CPP_00021	Stall setting character %s Item input amount incorrect! ID[%d]
+GM_CHARSTALL_CPP_00022	Stall setting character %s Item input data index duplicate! ID[%d]
+GM_CHARSTALL_CPP_00023	Stall setting Captain's verification message not found in trade! ID[0x%X]
+GM_CHARSTALL_CPP_00024	, %d boat %s , ID[0x%X]
+GM_CHARSTALL_CPP_00025	, %d per item %s cost %u 
+GM_CHARSTALL_CPP_00026	Set stall successful!
+GM_CHARSTALL_CPP_00027	Close stall successful!
+GM_CHARSTALL_CPP_00028	Boat crafting in progress, unable to purchase vend item!
+GM_CHARSTALL_CPP_00029	Trading in progress, unable to purchase vend item!
+GM_CHARSTALL_CPP_00030	Sailing in progress, unable to purchase vend item!
+GM_CHARSTALL_CPP_00031	Character %s not in Set Stall condition!
+GM_CHARSTALL_CPP_00032	Item locked, unable to purchase vend item!
+GM_CHARSTALL_CPP_00033	Loading.. Unable to purchase vend item!
+GM_CHARSTALL_CPP_00034	Inventory full! Unable to purchase item!
+GM_CHARSTALL_CPP_00035	Item has been sold to someone else!
+GM_CHARSTALL_CPP_00036	Purchase item failed, item price not tally!
+GM_CHARSTALL_CPP_00037	You have insufficient gold to purchase this item!
+GM_CHARSTALL_CPP_00038	Error: Item not found! ID[%d]
+GM_CHARSTALL_CPP_00039	Internal Error Incorrect item! ID[%d]
+GM_CHARSTALL_CPP_00040	Internal Error Inventory itemID and Stall messageID does not match! ID0[%d], ID1[%d]
+GM_CHARSTALL_CPP_00041	ItemID Error, unable to find item message! ID = %d
+GM_CHARSTALL_CPP_00042	Boat limit reached. Unable to build more boat!
+GM_CHARSTALL_CPP_00043	Inventory full! Purchase item failed!
+GM_CHARSTALL_CPP_00044	From character %s inventory to stall vending failed! ID[%d]
+GM_CHARSTALL_CPP_00045	Internal Error Item input failed!
+GM_CHARSTALL_CPP_00046	Stall setting Captain's verification message not found in trade! ID[0x%X]
+GM_CHARSTALL_CPP_00047	Stall item message Unknown boat character"%s", ID[0x%X], 
+GM_CHARSTALL_CPP_00048	Stall item message boat %s , ID[0x%X], 
+GM_CHARSTALL_CPP_00049	BuyGoods: Boat data storing failed! Boat %s ID[0x%X] 
+GM_CHARSTALL_CPP_00050	Set stall remove character %s possessed boat failed! ID[0x%X]
+GM_CHARSTALL_CPP_00051	Stall item message: %s 
+GM_CHARSTALL_CPP_00052	 {0} purchased {1} item {2} , obtained {3} gold! Unit price {4} , Total amount {5}  
+GM_CHARSTALL_CPP_00053	Set stall Adding to character %s Purchased boat failed! ID[0xX]
+GM_CHARSTALL_CPP_00054	You have bought from {0} an item {1} in quantity {2} ,spent {3} gold! Unit price ({4}), left {5} .
+GM_CHARSTALL_CPP_00055	%s, Unit price %d   quantity %d = amount %d , Seller Total gold %d , Buyer Total gold %d .
+GM_CHARSTALL_CPP_00056	ItemID error, unable to find item message! ID = %d, Index = %d
+GM_CHARSTALL_CPP_00057	Appointed goods column goods instance information 0! ID[%d]
+GM_CHARTRADE_CPP_00001	Unable to trade!
+GM_CHARTRADE_CPP_00002	Boat building in progress, unable to trade!
+GM_CHARTRADE_CPP_00003	Vending in progress, unable to trade!
+GM_CHARTRADE_CPP_00004	Loading.. Unable to trade!
+GM_CHARTRADE_CPP_00005	Inventory locked, unable to trade!
+GM_CHARTRADE_CPP_00006	Inventory security locked, unable to trade!
+GM_CHARTRADE_CPP_00007	Invited player has left the game!
+GM_CHARTRADE_CPP_00008	Target intacted to bank, please try again later!
+GM_CHARTRADE_CPP_00009	Error: player %s has cancelled trade!
+GM_CHARTRADE_CPP_00010	Trading character not found!
+GM_CHARTRADE_CPP_00011	Level too low,unable to trade!
+GM_CHARTRADE_CPP_00012	Character %s is crafting boat, unable to trade!
+GM_CHARTRADE_CPP_00013	Character %s is on vend mode, unable to trade!
+GM_CHARTRADE_CPP_00014	Character %s is still loading.. Unable to trade!
+GM_CHARTRADE_CPP_00015	Character %s inventory is locked, unable to trade!
+GM_CHARTRADE_CPP_00016	Character %s inventory is security locked, unable to trade!
+GM_CHARTRADE_CPP_00017	Trading character type not match!
+GM_CHARTRADE_CPP_00018	Trade request is restricted in sailing mode!
+GM_CHARTRADE_CPP_00019	You cannot accept another trade at the moment!
+GM_CHARTRADE_CPP_00020	%s is trading in progress!
+GM_CHARTRADE_CPP_00021	Unable to self trade!
+GM_CHARTRADE_CPP_00022	Notified character has left!
+GM_CHARTRADE_CPP_00023	You are intacted to bank, unable to trade!
+GM_CHARTRADE_CPP_00024	Sailing mode in progress, unable to trade!
+GM_CHARTRADE_CPP_00025	Request trade party is dead, unable to trade!
+GM_CHARTRADE_CPP_00026	You are dead! Die peacefully!
+GM_CHARTRADE_CPP_00027	While intact to bank, trading is not allowed!
+GM_CHARTRADE_CPP_00028	Trade type error! type [%d]
+GM_CHARTRADE_CPP_00029	Target in sailing mode, you are not allowed to request trade!
+GM_CHARTRADE_CPP_00030	You are unable to request another trade at the moment.
+GM_CHARTRADE_CPP_00031	Distribution of trade data failed!
+GM_CHARTRADE_CPP_00032	Cancel: Character %s not in trading mode!
+GM_CHARTRADE_CPP_00033	Verification error, unable to cancel similar trade ID!
+GM_CHARTRADE_CPP_00034	Client request trade target error! ID = 0x%x
+GM_CHARTRADE_CPP_00035	AddMoney: Character %s not in trading mode!
+GM_CHARTRADE_CPP_00036	Trade target message error!
+GM_CHARTRADE_CPP_00037	Character item trade button confirmed, unable to make anymore changes!
+GM_CHARTRADE_CPP_00038	Character not in trade!
+GM_CHARTRADE_CPP_00039	Drag gold operation type error!
+GM_CHARTRADE_CPP_00040	AddItem: character %s not in trade!
+GM_CHARTRADE_CPP_00041	Info report error, unable to add item to trade with similar ID!
+GM_CHARTRADE_CPP_00042	Character item trade button confirmed, unable to input any more item!
+GM_CHARTRADE_CPP_00043	Unknown trade index message!
+GM_CHARTRADE_CPP_00044	Unknown item index message!
+GM_CHARTRADE_CPP_00045	Item dragged by character not found!
+GM_CHARTRADE_CPP_00046	System item trade error, please inform the developer, thank you! ID1 = %d, ID2 = %d
+GM_CHARTRADE_CPP_00047	This item column is forbidden to drag!
+GM_CHARTRADE_CPP_00048	This slot is occupied, please choose another slot!
+GM_CHARTRADE_CPP_00049	Item [%s] unable to trade!
+GM_CHARTRADE_CPP_00050	You are currently intact to boat, you may not trade this boat without captain approval!
+GM_CHARTRADE_CPP_00051	Opposite party has had the maximum amount of boats, unable to receive more boat!
+GM_CHARTRADE_CPP_00052	Boat data error, unable to trade! ID [0x%X]
+GM_CHARTRADE_CPP_00053	AddItem: Storing boat data failed! Boat %s ID [0x%X]
+GM_CHARTRADE_CPP_00054	Unknown item move command type!
+GM_CHARTRADE_CPP_00055	ValidateItemData: This character %s unable to trade!
+GM_CHARTRADE_CPP_00056	Transaction party information internal error
+GM_CHARTRADE_CPP_00057	ValidateTrade: character %s is not in trade!
+GM_CHARTRADE_CPP_00058	Character [%s] transaction gold date incorrect, transaction unable to continue!
+GM_CHARTRADE_CPP_00059	Receiver [%s] transaction data: {
+GM_CHARTRADE_CPP_00060	Target inventory space insufficient, trade failed!
+GM_CHARTRADE_CPP_00061	Insufficient inventory space, trade failed!
+GM_CHARTRADE_CPP_00062	From trade, the receiver [%s] extraction of item [%d] item failed! ID = %d 
+GM_CHARTRADE_CPP_00063	%d boat %s ID [0x%X], 
+GM_CHARTRADE_CPP_00064	%d boat unknown boat data ID [0x%X], 
+GM_CHARTRADE_CPP_00065	Deleted %s Possession of captain's verification failed! ID [0x%X]
+GM_CHARTRADE_CPP_00066	}, Requester %s transaction data: { 
+GM_CHARTRADE_CPP_00067	From trade, the Requester [%s] trades the extraction item [%d] item failed! ID = %d 
+GM_CHARTRADE_CPP_00068	Deleted %s vessel deed boat failed ID [0x%X]
+GM_CHARTRADE_CPP_00069	Item ID error, unable to find item message! Cannot give you this item, ID = %d
+GM_CHARTRADE_CPP_00070	During transaction %s item which cannot fill in the inventory %s will drop on ground failed! Transacted item discard! ID [%d], Num [%d]
+GM_CHARTRADE_CPP_00071	During transaction %s input %s inventory fail! Transacted item discard! ID [%d], Num [%d]
+GM_CHARTRADE_CPP_00072	Adding %s boat in vessel deed failed! ID [0x%X]
+GM_CHARTRADE_CPP_00073	The receiver trades the money: %d, the requester trades the money: %d 
+GM_CHARTRADE_CPP_00074	Transaction failed, data storing error!
+GM_CHARTRADE_CPP_00075	%s boat [%s]
+GM_CHARTRADE_CPP_00076	You obtained %s from %d the gold! 
+GM_CHARTRADE_CPP_00077	Your previous order has yet to complete!
+GM_CHARTRADE_CPP_00078	This product is unavailable!
+GM_CHARTRADE_CPP_00079	Platinum member
+GM_CHARTRADE_CPP_00080	This commodities can only platinum member buy!
+GM_CHARTRADE_CPP_00081	Request: Incorrect item data type! ID = %d
+GM_CHARTRADE_CPP_00082	Your temporarily inventory bag insufficient space!
+GM_CHARTRADE_CPP_00083	Item mall activation failed, order number repeated!
+GM_CHARTRADE_CPP_00084	Item mall transaction failed!
+GM_CHARTRADE_CPP_00085	Character [%s][ID:%ld] purchased item [ID:%ld], Increase item status successful!
+GM_CHARTRADE_CPP_00086	Purchase platinum membership successful!
+GM_CHARTRADE_CPP_00087	Purchase platinum membership failed!
+GM_CHARTRADE_CPP_00088	Unable to find your account,Open item mall failed!
+GM_CHARTRADE_CPP_00089	Mail operation failed, order number repeated!
+GM_CHARTRADE_CPP_00090	GM mail send failed, if you have sent a mail, please wait for GM reply!
+GM_CHARTRADE_CPP_00091	GM mail send success, [ProblemID: %ld]!
+GM_CHARTRADE_CPP_00092	GM mail receive failed!
+GM_CHARTRADE_CPP_00093	GM mail reply: [Question ID: %ld]!
+GM_CHARTRADE_CPP_00094	Ingame item mall has not open, opening item mall website!
+GM_CHARTRADE_CPP_00095	Item mall time out, canceled!
+GM_CHARTRADE_CPP_00096	%d of %s,
+GM_ENTITYSCRIPT_CPP_00001	Lua entity script error
+GM_ENTITYSPAWN_CPP_00001	Monster spawn area number error
+GM_ENTITYSPAWN_CPP_00002	Monster spawn structure memory error
+GM_ENTITYSPAWN_CPP_00003	Monster spawn structure memory error
+GM_ENTITYSPAWN_CPP_00004	Character birth error
+GM_ENTITYSPAWN_CPP_00005	Record number error
+GM_ENTITYSPAWN_CPP_00006	Map changing record memory error
+GM_ENTITYSPAWN_CPP_00007	Load NPC info (%s) quantity (%d) error !
+GM_ENTITYSPAWN_CPP_00008	NPC record structure memory error
+GM_ENTITYSPAWN_CPP_00009	Load map npc file[%s]...
+GM_ENTITYSPAWN_CPP_00010	Map initialize error: can not find specific ID attribute! ID=%d 
+GM_ENTITYSPAWN_CPP_00011	Load map npc file [%s] success !
+GM_EVENTENTITY_CPP_00001	Unknown item
+GM_EVENTENTITY_CPP_00002	Gathering resources: wrong item type! ID = %d
+GM_EVENTENTITY_CPP_00003	You gather %d of <<%s>>!
+GM_EVENTENTITY_CPP_00004	You gather %d of <<%s>>, oeration failed!
+GM_EVENTENTITY_CPP_00005	Error: You do not meet the condition to trigger this event entity
+GM_EXPAND_H_00005	Delete Character%s, %d ID attirbute point! value %d
+GM_EXPAND_H_00007	Relive is true
+GM_EXPAND_H_00008	Success! But request value is greater thean the max value Set value %d, Value %d 
+GM_EXPAND_H_00009	Success! Set value %d, Current value %d 
+GM_EXPAND_H_00010	Create Character %s ,no. %d attribute %s
+GM_EXPAND_H_00012	Character %s type successful. Point %d
+GM_EXPAND_H_00102	Pirate Boardcast
+GM_EXPAND_H_00111	Target map, format error!
+GM_EXPAND_H_00144	Remove character %s, Select Character %u Success! Point %d
+GM_EXPAND_H_00145	Accept character %s, Select Character %u Success! 
+GM_EXPAND_H_00147	Remove Character %s, from Guild %u Success! Point %d
+GM_EXPAND_H_00149	Remove character %s, from Party %u Success! Point %d
+GM_EXPAND_H_00151	Check character PK mode, success! 
+GM_EXPAND_H_00152	Set character %s, motto %s Success! 
+GM_EXPAND_H_00155	Set Party challenge map name %s Success! 
+GM_EXPAND_H_00160	lua error record file error!
+GM_FIGHTABLE_CPP_00001	Inconsistance attribute statistics
+GM_FIGHTABLE_CPP_00002	Error!
+GM_FIGHTABLE_CPP_00003	instantiation
+GM_FIGHTABLE_CPP_00004	Calculate skill manage target structuring process assign saving failed
+GM_FIGHTALBE_CPP_00001	The two statistical values of the number of attribute changes do not match
+GM_FIGHTALBE_CPP_00002	Error
+GM_FIGHTALBE_CPP_00004	Failed to allocate memory during construction of timing skill management object
+GM_GAMEAPPNET_CPP_00001	Total online time over %d hours.
+GM_GAMEAPPNET_CPP_00002	Online over 3 hours, please take a rest
+GM_GAMEAPPNET_CPP_00003	Enter tire mode, please take a rest
+GM_GAMEAPPNET_CPP_00004	Trade channel chat, cost %ld gold
+GM_GAMEAPPNET_CPP_00005	Not enough gold, can not trade channel chat
+GM_GAMEAPPNET_CPP_00006	World channel chat, cost %ld gold
+GM_GAMEAPPNET_CPP_00007	You do not have enough gold, you can't speak in world!
+GM_GAMEAPPNET_CPP_00008	You have played over the adequate amount of playing time. Please take a rest for the better of your health.
+GM_GAMEAPPNET_CPP_00009	Your bid for guild war with <<%s>> was out bid by <<%s>>, your bid(%u) was returned to you!
+GM_GAMEAPPNET_CPP_00010	Congratulation, the guild <<%s>> have won in the guild war! Received rewards (%u)!
+GM_GAMEAPPNET_CPP_00011	You are unable to form party in this map, you are being kick out of this map!
+GM_GAMEAPPNET_CPP_00012	Guild motto have changed!
+GM_GAMEAPPNET_CPP_00013	The guild leader disbanded the guild!
+GM_GAMEAPPNET_CPP_00014	You are being kick out of guild [%s]
+GM_GAMEAPPNET_CPP_00015	Your application for guild [%s] was accepted
+GM_GAMEAPPNET_CPP_00016	Your application for guild [%s] was rejected
+GM_GAMEAPPNET_CPP_00017	System
+GM_GAMEAPPNET_H_00001	GameServer name conflict
+GM_GAMEAPPNET_H_00002	GameServer map name conflict
+GM_GAMEAPPNET_H_00003	GameServer map configuration language error
+GM_GAMEAPPNET_H_00004	Unknow error
+GM_GAMEAPP_CPP_00001	Reload NPC[%s]Initialization information script function [%s] failed!
+GM_GAMEAPP_CPP_00002	Game server %s will restart in %u, Players in %s please prepare to logout
+GM_GAMEAPP_CPP_00003	msg Read form [%s]failed
+GM_GAMEAPP_CPP_00004	msg Initialization loading writing filtration information file failed!
+GM_GAMEAPP_CPP_00005	msg assign player space error!, exit!
+GM_GAMEAPP_CPP_00006	msg Read forging data message failed!
+GM_GAMEAPP_CPP_00007	msg Read boat data message failed!
+GM_GAMEAPP_CPP_00008	msg set transcription number %d Surpass maximum value %d!
+GM_GAMEAPP_CPP_00009	msg Entrance script %s/entry.lua line length surpasses the preinstall length  %u , This possibly causes the failure of crafting, cancel creation window. script %s
+GM_GAMEAPP_CPP_00010	msg Request character internal memory, please increase character internal memory!!!
+GM_GAMEAPP_CPP_00011	msg Request item internal memory, please increase item internal memory!!!
+GM_GAMEAPP_CPP_00012	msg request NPC dialogue error, pls increse NPC dialogue memory!!!
+GM_GAMEAPP_CPP_00013	msg request unknow event creation type! Type[%d]
+GM_GAMEAPP_CPP_00014	msg request event memory error!!! Type[%d]
+GM_GAMEAPP_CPP_00015	msg request player memory error,pls increase player memory!!!
+GM_GAMEAPP_CPP_00016	msg create monster amount greater than set amount, ended.
+GM_GAMEAPP_CPP_00017	msg distribution of character space error!, log out! 
+GM_GAMEAPP_CPP_00018	System
+GM_GAMEDB_CPP_00001	database (%s) initialization error, please check
+GM_GAMEDB_CPP_00002	Error!
+GM_GAMEDB_CPP_00009	quest record data initialization error 
+GM_GAMEDB_CPP_00010	quest history record data initialization error
+GM_GAMEDB_CPP_00011	quest trigger data initialization error
+GM_GAMEDB_CPP_00012	Random quest counter data initialization error
+GM_GAMEDB_CPP_00013	SavingCharacterTimeConsumption
+GM_GAMEDB_CPP_00014	log\savingcharactertimeconsumption.log
+GM_GAMEDB_CPP_00015	character quest saving message data read error! ID =%d
+GM_GAMEDB_CPP_00016	target character save quest info trigger data read error!ID =%d
+GM_GAMEDB_CPP_00017	Target random quest count info data reading error! ID = %d
+GM_GAMEDB_CPP_00018	SaveMissionData: quest saved data reading error! ID =%d
+GM_GAMEDB_CPP_00019	SaveMissionData: quest saved trigger data read error!ID =%d
+GM_GAMEDB_CPP_00020	Ship [%s] data status failed, please inform technical staff!
+GM_GAMEDB_CPP_00021	Gold: %u Item: %d@
+GM_GAMEDB_CPP_00022	Temporary Bag: %d@
+GM_GAMEDB_CPP_00023	Bank ID(%d):
+GM_GAMEDB_CPP_00024	Equipment: %d@
+GM_GAMEDB_CPP_00025	Character not matched, database saving failed
+GM_GAMEDB_CPP_00026	Gold: %u Inventory: %d@
+GM_GAMEDB_CPP_00027	guild creation failed
+GM_GAMEDB_CPP_00028	Navy
+GM_GAMEDB_CPP_00029	Pirate
+GM_GAMEDB_CPP_00030	Max Number of guilds reached 
+GM_GAMEDB_CPP_00031	Pirate guild name exists
+GM_GAMEDB_CPP_00032	Already in guild [%s],can not apply!
+GM_GAMEDB_CPP_00033	Can not re-apply guild [%s]!
+GM_GAMEDB_CPP_00034	Guild application failed
+GM_GAMEDB_CPP_00035	No guild leader
+GM_GAMEDB_CPP_00036	Guild not exist
+GM_GAMEDB_CPP_00037	You are member of [%s], can not apply other guild
+GM_GAMEDB_CPP_00038	You are member of [%s], can not apply again!
+GM_GAMEDB_CPP_00039	Guild application data error
+GM_GAMEDB_CPP_00040	Guild applicatoin error. Probably reached max number, try later
+GM_GAMEDB_CPP_00041	Drop out guild faild, try later
+GM_GAMEDB_CPP_00042	Congratulations! Apply into guild [%s] succeed.
+GM_GAMEDB_CPP_00043	Guild application permission failed
+GM_GAMEDB_CPP_00044	No guild management authority
+GM_GAMEDB_CPP_00045	Guild data permission operation failure
+GM_GAMEDB_CPP_00046	Guild operaton failed, try later
+GM_GAMEDB_CPP_00047	Guild Application rejection failed
+GM_GAMEDB_CPP_00048	No access to guild management
+GM_GAMEDB_CPP_00049	Guild application failed, make sure cancelled or not
+GM_GAMEDB_CPP_00050	kick operation failed
+GM_GAMEDB_CPP_00051	Guild leader can not kick yourself
+GM_GAMEDB_CPP_00052	Expel guild member failed
+GM_GAMEDB_CPP_00053	Expel guild member failed
+GM_GAMEDB_CPP_00054	Leaving guild data error
+GM_GAMEDB_CPP_00055	Leaving current guild failed, try later
+GM_GAMEDB_CPP_00056	alredy left guild
+GM_GAMEDB_CPP_00057	One of member of Guild Wars, can not leave !
+GM_GAMEDB_CPP_00058	Guild war information reading error
+GM_GAMEDB_CPP_00059	Attend Guild Wars, can not leave !
+GM_GAMEDB_CPP_00060	Guild War ranking reading failed !
+GM_GAMEDB_CPP_00061	Disband guild operation failed
+GM_GAMEDB_CPP_00062	Disband guild operation failed, try later
+GM_GAMEDB_CPP_00063	Motto Change failed, try later
+GM_GAMEDB_CPP_00064	Only guild leader can change guild's motto
+GM_GAMEDB_CPP_00065	Bid for guild leader must greater than 0
+GM_GAMEDB_CPP_00066	inquiry guild informaion failed, try later
+GM_GAMEDB_CPP_00067	Challenge a guild a time, you are already [%s] challenger!
+GM_GAMEDB_CPP_00068	Challenge guild operation failed
+GM_GAMEDB_CPP_00069	Guild [%s] rank %d !
+GM_GAMEDB_CPP_00070	Ranking guild %d!
+GM_GAMEDB_CPP_00071	rank %d guild, need gold (%uG)!
+GM_GAMEDB_CPP_00072	guild data operation failed, try later !
+GM_GAMEDB_CPP_00073	Sistem
+GM_GAMEDB_CPP_00074	Congradulation, your guild [%s] rank %d !
+GM_GAMEDB_CPP_00075	Bid for guild  must greater than 0
+GM_GAMEDB_CPP_00077	Rank %d guild need gold(%uG)!
+GM_GAMEDB_CPP_00078	inquiry guild ranking info failed!
+GM_GAMEDB_CPP_00079	Guild ranking error! GID = %d, Level = %d
+GM_GAMEDB_CPP_00080	Can not challenge lower level guild
+GM_GAMEDB_CPP_00081	You are already challenger for guild war
+GM_GAMEDB_CPP_00082	Can not challenge your own guild
+GM_GAMEDB_CPP_00083	Not enough gold (%u)
+GM_GAMEDB_CPP_00084	Bid failed. Not enough Gold! (%u) gold
+GM_GAMEDB_CPP_00085	Guild challenge failed, try later !
+GM_GAMESMAIN_CPP_00001	Please close all windows when service ends, closing the console directly will result in informations not being saved!
+GM_GUILD_CPP_00001	Inventory locked, can not create guild
+GM_GUILD_CPP_00002	Studying mode, can not create guild
+GM_GUILD_CPP_00003	Guild Name too short
+GM_GUILD_CPP_00004	Guild Name too long
+GM_GUILD_CPP_00005	Guild motto too long
+GM_GUILD_CPP_00006	Guild creation succeed
+GM_GUILD_CPP_00007	Sory! Navy HQ doesn't accept any member
+GM_GUILD_CPP_00008	Guild application illegal!
+GM_GUILD_CPP_00009	Inventory locked,can not challenge guild
+GM_GUILD_CPP_00010	Studying mode, can not challenge guild
+GM_HARMREC_H_00001	target list:
+GM_LUA_GAMECTRL_CPP_00001	People
+GM_LUA_GAMECTRL_CPP_00002	Throw
+GM_LUA_GAMECTRL_CPP_00003	Pick
+GM_LUA_GAMECTRL_CPP_00004	Shop Buy
+GM_LUA_GAMECTRL_CPP_00005	Sell
+GM_LUA_GAMECTRL_CPP_00006	Quest give
+GM_LUA_GAMECTRL_CPP_00007	Quest collect
+GM_LUA_GAMECTRL_CPP_00008	Buy item
+GM_LUA_GAMECTRL_CPP_00009	Sell item
+GM_LUA_GAMECTRL_CPP_00010	Enter game
+GM_LUA_GAMECTRL_CPP_00011	Exit game
+GM_LUA_GAMECTRL_CPP_00012	Player store
+GM_LUA_GAMECTRL_CPP_00013	Consume
+GM_LUA_GAMECTRL_CPP_00014	Delete
+GM_LUA_GAMECTRL_CPP_00015	Bank
+GM_LUA_GAMECTRL_CPP_00016	Equip
+GM_LUA_GAMECTRL_CPP_00017	Monster
+GM_LUA_GAMECTRL_CPP_00018	New monster
+GM_LUA_GAMECTRL_CPP_00019	Near local sea region %d, %d detect new life-form!
+GM_LUA_GAMECTRL_H_00001	lua function does not specify file output or specification error!
+GM_LUA_GAMECTRL_H_00002	Stealth has been broken!
+GM_LUA_GAMECTRL_H_00003	[Invalid move(
+GM_LUA_GAMECTRL_H_00004	msg discover registered lua same name function [%s]
+GM_MAPRES_CPP_00001	SubMap::LoadNpc: Obtain Map [%s] ID fail!
+GM_MAPRES_CPP_00002	Error!
+GM_MAPRES_CPP_00003	Load map monster info error!
+GM_MAPRES_CPP_00004	Load map jump point info error!
+GM_MAPRES_CPP_00005	Load map monster NPC infor error!
+GM_MAPRES_CPP_00006	Map layout initialization error!
+GM_MAPRES_CPP_00007	MapCopyTargetSetupOperationMemoryAssignFailure
+GM_MAPRES_CPP_00008	Map service timeout, will close in %lld seconds.
+GM_MISSION_CPP_00001	CCharMission::KillWare: Mission Processing Function[TriggerProc]Transfer returns failed!
+GM_MISSION_CPP_00002	CCharMission::GetItem:Mission Processing Function[TriggerProc]Transfer failed!
+GM_MISSION_CPP_00003	CCharMission::TimeOut:Mission Processing Function[TriggerProc]Transfer failed!
+GM_MISSION_CPP_00004	CCharMission::GetItem:Mission Processing Function[TriggerProc]Transfer returns failed!
+GM_MISSION_CPP_00005	Unknown time trigger time intervak type! TID = %d, Type = %d
+GM_MISSION_CPP_00006	CCharMission::GotoMap:Mission Processing Function[TriggerProc]Transfer failed!
+GM_MISSION_CPP_00007	CCharMission::GotoMap:Mission Processing Function[TriggerProc]Transfer returns failed!
+GM_MISSION_CPP_00008	CCharMission::LevelUp:Mission Processing Function[TriggerProc]Transfer failed!
+GM_MISSION_CPP_00009	CCharMission::LevelUp:Mission Processing Function[TriggerProc]Transfer returns failed!
+GM_MISSION_CPP_00010	CCharMission::CharBorn:Mission Processing Function[TriggerProc]Transfer failed!
+GM_MISSION_CPP_00011	CCharMission::CharBorn:Mission Processing Function[TriggerProc]Transfer returns failed!
+GM_MISSION_CPP_00012	CCharMission::EquipItem:Mission Processing Function[TriggerProc]Transfer failed!
+GM_MISSION_CPP_00013	CCharMission::EquipItem:Mission Processing Function[TriggerProc]Transfer returns failed!
+GM_MISSION_CPP_00014	GetMissionInfo: Unknown NPC Message!
+GM_MISSION_CPP_00015	GetMissionInfo:Incorrect inquiry NPC carries the mission record index type information!
+GM_MISSION_CPP_00016	GetMissionInfo:Unknown NPC Message! dwNpcID = %d
+GM_MISSION_CPP_00017	CCharMission::MisGetMisLogInfo:Mission log processing function [MissionLog]Transfer failed!
+GM_MISSION_CPP_00018	CCharMission::CancelRole:cancel mission function[CancelMission]Transfer failed!
+GM_MISSION_CPP_00019	Delete mission failed ID[%d], SID[%d]
+GM_MISSION_CPP_00020	MisCancelRole:Unfound specific quest ID[%d]
+GM_MISSION_CPP_00021	MisClearRole:Unfound specific quest ID[%d]
+GM_MISSION_CPP_00022	MisIsFollowNpc:Summons the NPC data index incorrect! byInex = %d
+GM_MISSION_CPP_00023	MisAddFollowNpc:Unfound Mission ID=%d
+GM_MISSION_CPP_00024	MisClearFollowNpc:Unfound Mission ID=%d
+GM_MISSION_CPP_00025	MisClearFollowNpc:Summons the NPC data index incorrect! byInex = %d
+GM_MISSION_CPP_00026	MisHasFollowNpc:Summons the NPC data index incorrect! byInex = %d
+GM_MISSION_CPP_00027	MisHasFollowNpc:Unfound Mission ID=%d
+GM_MISSION_CPP_00028	MisIsFollowNpc:Unfound Mission ID=%d
+GM_MISSION_CPP_00029	SetRandMissionData:Unfound Random Mission ID=%d
+GM_MISSION_CPP_00030	GetRandMission:Unfound Random Mission ID=%d, or Mission is not random data type!
+GM_MISSION_CPP_00031	GetRandMissionData:Unfound Random Mission ID=%d, or Mission is not random data type!
+GM_MISSION_CPP_00032	SetRandMissionNpcItemFlag:Unfound Random Mission ID=%d, or Mission is not random data type!
+GM_MISSION_CPP_00033	GetRandMissionNpcItem:Unfound Random Mission ID=%d, or Mission is not random data type!
+GM_MISSION_CPP_00034	HasRandMissionNpc:Unfound Random Mission ID=%d, or Mission is not random data type!
+GM_MISSION_CPP_00035	Character offline
+GM_MISSION_CPP_00036	Character online
+GM_MISSION_CPP_00037	Unknown
+GM_MISSION_CPP_00038	Enter map [%s] Coordinate x = %d, y = %d.
+GM_MISSION_CPP_00039	Summon your Mission to escort quest NPC failed, please inform the developer, thank you! 	MID(%d),NID(%d)
+GM_MISSION_CPP_00040	Exit map [%s] Coordinate x = %d, y = %d.
+GM_NPCSCRIPT_CPP_00001	Unknown
+GM_NPCSCRIPT_CPP_00002	Unknown area
+GM_NPC_CPP_00001	npc script [%s] initialization processing function [ResetNpcInfo] failed! 
+GM_NPC_CPP_00002	npc script [%s] message handling function [%s] failed! 
+GM_NPC_CPP_00003	npc script [%s] initialization processing function [GetNpcInfo] failed! 
+GM_NPC_CPP_00004	You are trading, unable to talk to NPC now!
+GM_NPC_CPP_00005	You are in a boat, unable to talk to NPC now!
+GM_NPC_CPP_00006	You have set a stall, unable to talk to NPC now!
+GM_NPC_CPP_00007	Unable to talk to NPC now!
+GM_NPC_CPP_00008	Your inventory is locked, unable to talk to NPC now!
+GM_NPC_CPP_00009	npc script [%s] quest processing function [NpcProc] failed 
+GM_NPC_CPP_00010	npc script [%s] quest processing function [NpcState] failed 
+GM_NPC_CPP_00011	npc Quest status processing function [NpcState] failed 
+GM_NPC_CPP_00012	CTalkNpc::TimeOut: Task processing function [TriggerProc] failed 
+GM_NPC_CPP_00013	CTalkNpc::Unknown time trigger time-gap type Trigger ID = %d
+GM_PLAYER_CPP_00001	  [Status Sunken]
+GM_PLAYER_CPP_00002	  [Status Worst]
+GM_PLAYER_CPP_00003	  [Status Bad]
+GM_PLAYER_CPP_00004	  [Status Good]
+GM_PLAYER_CPP_00005	Previous request not done
+GM_PLAYER_CPP_00006	Current character cannot alternate bank
+GM_PLAYER_CPP_00007	Bank is opened
+GM_PLAYER_CPP_00008	Bank NPC not available
+GM_PLAYER_CPP_00009	Trading
+GM_PLAYER_CPP_00010	Distance too far
+GM_PLAYER_CPP_00011	Set trade data failed
+GM_PLAYER_CPP_00012	Requesting bank data failed
+GM_PLAYER_CPP_00013	BankHasItem: error with item data type ID = %d
+GM_PLAYER_CPP_00014	Invite time out!
+GM_SUBMAP_CPP_00001	Status Memory arrangement failure
+GM_SUBMAP_CPP_00002	View Memory arrangement failure
+GM_SUBMAP_CPP_00003	Map NPC birth info error!
+GM_SUBMAP_CPP_00004	Area search exceed preset requirements
+GM_SUBMAP_CPP_00005	Error!
+GM_SUBMAP_CPP_00006	Region status manage target structuring process assign saving failed
+GM_SYSTEMDIALOG_CPP_00001	ID player count
+GM_SYSTEMDIALOG_CPP_00002	Pirate King Online Gameserver
+GM_SYSTEMDIALOG_CPP_00003	Character Log
+GM_SYSTEMDIALOG_CPP_00004	Refresh
+GM_SYSTEMDIALOG_CPP_00005	Functioning status
+GM_SYSTEMDIALOG_CPP_00006	Gate list
+GM_SYSTEMDIALOG_CPP_00007	Map List
+GM_SYSTEMDIALOG_CPP_00008	Functioning icon:
+GM_SYSTEMDIALOG_CPP_00009	Active target:
+GM_SYSTEMDIALOG_CPP_00010	Player:
+GM_SYSTEMDIALOG_CPP_00011	Other:
+GM_SYSTEMDIALOG_CPP_00012	Activated unit:
+GM_SYSTEMDIALOG_CPP_00013	Config file:
+GM_SYSTEMDIALOG_CPP_00014	Resource folder:
+GM_SYSTEMDIALOG_CPP_00015	Log folder:
+GM_SYSTEMDIALOG_CPP_00016	DB Log continual write:
+GM_SYSTEMDIALOG_CPP_00017	Every 50ms write unit:
+GM_SYSTEMDIALOG_CPP_00018	Input command
+GM_SYSTEMDIALOG_CPP_00019	Current PK:
+GM_SYSTEMDIALOG_CPP_00020	Execute
+GM_SYSTEMDIALOG_CPP_00021	Clear
+GM_WEATHER_CPP_00001	Weather: Current sea (%s,%s) nearby will occur %s
+GM_WORLDEUDEMON_CPP_00001	npc script [%s] initialization processing function [ResetNpcInfo] failed! 
+GM_WORLDEUDEMON_CPP_00002	npc script [%s] message handling function [%s] failed! 
+GM_WORLDEUDEMON_CPP_00003	npc script [%s] initialization processing function [GetNpcInfo] failed! 
+GM_WORLDEUDEMON_CPP_00004	npc script [%s] message handling function [NpcPorc] failed!
+GP_DBCONNECT_CPP_00001	(none]
+GP_FRIEND_H_00001	Friends
+GP_GROUPSERVERAPPCHAT_CPP_00001	Access too low
+GP_GROUPSERVERAPPCHAT_CPP_00002	You have been muted, pleasae try again later!
+GP_GROUPSERVERAPPCHAT_CPP_00003	Please do not spam
+GP_GROUPSERVERAPPCHAT_CPP_00004	(%s]is currently not online
+GP_GROUPSERVERAPPCHAT_CPP_00005	Cannot send whisper to self.
+GP_GROUPSERVERAPPCHAT_CPP_00006	Player (%s] currently in reject PM mode
+GP_GROUPSERVERAPPCHAT_CPP_00007	Your number of chat windows opened has already reached the system maximum.
+GP_GROUPSERVERAPPCHAT_CPP_00008	Chat window exceeded player limit.
+GP_GROUPSERVERAPPCHAT_CPP_00009	Player (%s] currently is not online.
+GP_GROUPSERVERAPPCHAT_CPP_00010	Player (%s] talk function has been disabled.
+GP_GROUPSERVERAPPCHAT_CPP_00011	Player (%s] chat window has already reached the system maximum.
+GP_GROUPSERVERAPPCHAT_CPP_00012	already has a chat with that player.
+GP_GROUPSERVERAPPCHAT_CPP_00013	Player (%s] is already inside your chat window.
+GP_GROUPSERVERAPPCHAT_CPP_00014	The chat has reached the maximum number of players set by the system, unable to add more!
+GP_GROUPSERVERAPPFRND_CPP_00001	Your friend list has reached the maximum of friends it can store, friend request has been cancelled.
+GP_GROUPSERVERAPPFRND_CPP_00002	The user (%s] you've invited is currently not online.
+GP_GROUPSERVERAPPFRND_CPP_00003	You currently (%s] has a pending add friend request, please wait.
+GP_GROUPSERVERAPPFRND_CPP_00005	(%s] Someone has send you a friend invite, please accept.
+GP_GROUPSERVERAPPFRND_CPP_00006	Player (%s] whom you have invited has already reach the maximum number of friends in the friend list.
+GP_GROUPSERVERAPPFRND_CPP_00007	player and you (%s] already are friends.
+GP_GROUPSERVERAPPFRND_CPP_00009	Your invitation to friend (%s] has been cancelled by the system due to too many invitations to your friend.
+GP_GROUPSERVERAPPFRND_CPP_00010	Player (%s] rejected your friend request.
+GP_GROUPSERVERAPPFRND_CPP_00011	Your friend list has reached the maximum number that the system allows.
+GP_GROUPSERVERAPPFRND_CPP_00012	Invitation (%s] number of friends has reached the maximum limit.
+GP_GROUPSERVERAPPFRND_CPP_00018	The cha which you want to delete is not in your friend list, please contact customer service.
+GP_GROUPSERVERAPPFRND_CPP_00021	Your friend's classification has reached system limit!
+GP_GROUPSERVERAPPFRND_CPP_00022	The invitation you sent to %s for adding friend has already exceeded %d seconds with no response, system has cancelled your invitation automatically.
+GP_GROUPSERVERAPPFRND_CPP_00023	friend online:
+GP_GROUPSERVERAPPINIT_CPP_00001	Initialize mentor-disciple list failed!
+GP_GROUPSERVERAPPINIT_CPP_00002	%s,%d open failed! Please check if your port %d has been occupied or GroupServer.cfg Listen_IP parameter setting is correct.
+GP_GROUPSERVERAPPINIT_CPP_00003	trigger initialize failed
+GP_GROUPSERVERAPPINIT_CPP_00004	Guild list has not yet start the process of sql initializaton sentence
+GP_GROUPSERVERAPPINIT_CPP_00005	Failed to connect to AccountServer:(%s,%d), reconnecting in 5 sec...
+GP_GROUPSERVERAPPINIT_CPP_00006	on AccountServer:(%s,%d)login timeout, reconnect and login in 5 secs...
+GP_GROUPSERVERAPPINIT_CPP_00007	on AccountServer:(%s,%d)login failed, reconnection and login will restart in 5 sec...
+GP_GROUPSERVERAPPINIT_CPP_00030	Init group db connection
+GP_GROUPSERVERAPPMASTER_CPP_00001	You are not of Mentor/Disciple relationship! %s
+GP_GROUPSERVERAPPMASTER_CPP_00003	Target already has a mentor!
+GP_GROUPSERVERAPPMASTER_CPP_00004	You already have a Mentor!
+GP_GROUPSERVERAPPMASTER_CPP_00005	You've reached the maximum number of disciples you can have!
+GP_GROUPSERVERAPPMASTER_CPP_00006	User's disciple has already reached the maximum number!
+GP_GROUPSERVERAPPMASTER_CPP_00007	Player (%s] is currently not online.
+GP_GROUPSERVERAPPMASTER_CPP_00008	You currently has a pending mentor request sent to (%s], please wait.
+GP_GROUPSERVERAPPMASTER_CPP_00009	(%s]has an existing request to be your disciple, please accept it.
+GP_GROUPSERVERAPPMASTER_CPP_00011	You two are already of mentor/disciple relationship!
+GP_GROUPSERVERAPPMASTER_CPP_00012	Player (%s] is currently busy!
+GP_GROUPSERVERAPPMASTER_CPP_00013	(%salready has a mentor!
+GP_GROUPSERVERAPPMASTER_CPP_00014	Congratulations on having a disciple!
+GP_GROUPSERVERAPPMASTER_CPP_00015	Congratulations! You've a mentor now!
+GP_GROUPSERVERAPPMASTER_CPP_00016	The request you sent to %s to be your mentor has already exceeded %d seconds with no response, system has cancelled your invitation automatically.
+GP_GROUPSERVERAPPMASTER_CPP_00017	Disciple
+GP_GROUPSERVERAPPMASTER_CPP_00018	Mentor
+GP_GROUPSERVERAPPPRSN_CPP_00001	Personality icon value illegal
+GP_GROUPSERVERAPPPRSN_CPP_00002	Motto is in an illegal format
+GP_GROUPSERVERAPPPRSN_CPP_00003	You two are not friends!
+GP_GROUPSERVERAPPSERV_CPP_00001	Server to Player (%s]Ping value is:%lmSec
+GP_GROUPSERVERAPPSERV_CPP_00002	(report critic] has found a BT kid (account:%s,character:%s].
+GP_GROUPSERVERAPPSERV_CPP_00026	Player is already free
+GP_GROUPSERVERAPPTEAM_CPP_00001	Only party leader can send out party invitations.
+GP_GROUPSERVERAPPTEAM_CPP_00002	Your number of party member has reached the system's maximum limit.
+GP_GROUPSERVERAPPTEAM_CPP_00003	The user (%s] you have invited is currently offline.
+GP_GROUPSERVERAPPTEAM_CPP_00004	The player (%s] which you have invited already has a team.
+GP_GROUPSERVERAPPTEAM_CPP_00005	You currently has a pending party request sent to (%s], please wait. 
+GP_GROUPSERVERAPPTEAM_CPP_00007	The player (%s] your invite is currently under multiple invitiations and is busy, your invitation to the player has been cancelled by the system.
+GP_GROUPSERVERAPPTEAM_CPP_00008	Player (%s] has rejected your party invitation.
+GP_GROUPSERVERAPPTEAM_CPP_00010	You're not leader!
+GP_GROUPSERVERAPPTEAM_CPP_00011	The opposite character is not the leader!
+GP_GROUPSERVERAPPTEAM_CPP_00012	Target's party members has already reached maximum!
+GP_GROUPSERVERAPPTEAM_CPP_00014	Player (%s] is currently offline!
+GP_GROUPSERVERAPPTEAM_CPP_00015	Player (%s] is currently in party mode.
+GP_GROUPSERVERAPPTEAM_CPP_00016	Player (%s] is currently busy, your invitation to the player has been cancelled by the system.
+GP_GROUPSERVERAPPTEAM_CPP_00017	The party has already reached the maximum number of members allowed.
+GP_GROUPSERVERAPPTEAM_CPP_00028	The player (%s] you trying to invite has joined another party, your invitation has been cancelled!
+GP_GROUPSERVERAPPTEAM_CPP_00029	Your invitation to %s to party has exceeded %d sec without an answer, system has cancelled your request.
+GP_GROUPSERVERAPP_CPP_00001	Argent City
+GP_GROUPSERVERAPP_CPP_00002	Shaitan City
+GP_GROUPSERVERAPP_CPP_00003	Icicle Castle
+GP_GROUPSMAIN_CPP_00001	Please enter a command (exit or ctrl+c to exit):
+GP_GROUPSMAIN_CPP_00002	start log out...
+GP_GROUPSMAIN_CPP_00003	Unsupported Command!
+GP_GUILD_CPP_00001	The guild you belong will be on %d within minute because[%s] and disband.
+GP_GUILD_CPP_00002	guild fee insufficient
+GP_GUILD_CPP_00003	Member amount not enough
+GP_GUILD_CPP_00004	Leader has insufficient reputation
+GP_MAIN_CPP_00001	Enter 'exit' for stop server
+GP_MAIN_CPP_00002	Exit server...
+GP_MAIN_CPP_00003	Unknown command
+GP_PARSER_H_CPP_00004	Lua function is not found: 
+GP_PLAYER_CPP_00001	Last login IP:%s; reason / time for last time disconnection:%s/%s
+GP_PLAYER_CPP_00002	Player [%s] Currently not online
+GP_PLAYER_CPP_00003	[%s] Last logged in IP:%s; reason / time for last time disconnection:%s/%s
+GP_PLAYER_CPP_00004	Current login/number of players: %d/%d
+GP_PLAYER_CPP_00005	Player [%s] Currently not online
+GP_PLAYER_CPP_00006	bbs format: @@ bbs [Cooldown x 10secs],[Count],[Content]
+GP_PLAYER_CPP_00007	Time interval >1
+GP_PLAYER_CPP_00008	number of times must > 1
+GP_PLAYER_CPP_00009	1783: content length must be > 0
+GP_PLAYER_CPP_00010	Insufficient Access.
+GP_PLAYER_CPP_00011	You do not have access!
+GP_PLAYER_CPP_00012	Muting format: @@ estop (the character name to be mute],(time to be muted (in minutes) ]
+GP_PLAYER_CPP_00013	unmute sequence: @@ delestop (muted character]
+GP_PLAYER_CPP_00014	shield character account format: @@ disable (screened character name]
+GP_PLAYER_CPP_00015	command is not supported.
+GP_PLAYER_CPP_00016	mute has been lifted!
+GP_PLAYER_CPP_00017	You've been muted by the system!
+GP_PLAYER_CPP_00018	The character (%s) to unmute does not exist!
+GP_PLAYER_CPP_00019	Cancel character (%s) muted status successful!
+GP_PLAYER_CPP_00020	Your mute has been lifted by GM (%s]!
+GP_PLAYER_CPP_00022	]remove mute plyname:(
+GP_PLAYER_CPP_00023	Muted character (%s) does not exist!
+GP_PLAYER_CPP_00024	Mute character %s %d minutes operation successful!
+GP_PLAYER_CPP_00025	You've been muted by GM (%s) by %d minutes!
+GP_PLAYER_CPP_00028	Shield character (%s) account operation successful!
+GP_PLAYER_CPP_00031	Shield character (%s) does not exist!
+GP_PLAYER_CPP_00032	Shield character (%s) account operation successful!
+GS_GATESERVER_CPP_00001	Please enter a command (exit or ctrl+c to exit):
+GS_GATESERVER_CPP_00002	start log out...
+GS_GATESERVER_CPP_00003	client number: 
+GS_GATESERVER_CPP_00004	[Send]{pkt/s:
+GS_GATESERVER_CPP_00005	[Receive]{pkt/s:
+GS_GATESERVER_CPP_00006	[Max send]{pkt/s:
+GS_GATESERVER_CPP_00007	[Max receive]{pkt/s:
+GS_GATESERVER_CPP_00008	Maximum number of allowed connections currently:
+GS_GATESERVER_CPP_00009	Maximum number of connection cannot exceed 1500, current number of connections has been set to 1500.
+GS_GATESERVER_CPP_00010	setup successful, max connections:
+GS_GATESERVER_CPP_00011	setshowrange parameter 1, parameter 2
+GS_GATESERVER_CPP_00012	Unsupported Command!
+GS_GATESERVER_CPP_00013	InitReference warning: %s repeat enter connection message!
+GS_GATESERVER_CPP_00014	InitReference warning: %s repeat enter connection message!Exception
+GS_GATESERVER_CPP_00015	create monitor quantity function failed
+GS_GATESERVER_CPP_00016	GateSerever had an unknown error during initialization, please notify the developer!
+GS_GATESERVER_CPP_00017	Launched GateServer successfully!
+GS_GATESERVER_CPP_00018	GateServer disconnect succesfully!
+GS_TOCLIENT_CPP_00001	The initial permission maximum is %d client connect, please use setmaxcon [number] command to change, but maximum is until 1500
+GS_TOCLIENT_CPP_00002	client:%d [Send]{pkt/s:%d}{pkt:%lld}{KB/s:%d}{KB:%lld}[Receive]{pkt/s:%d}{pkt:%lld}{KB/s:%d}{KB:%lld}
+GS_TOCLIENT_CPP_00011	GroupServer has requested to kick this person.
+GS_TOCLIENT_CPP_00012	GameServer request to kick this player.
+GS_TOCLIENT_CPP_00013	Player kicked due to target map not available.
+GS_TOCLIENT_CPP_00014	Player at GroupServer information confirm have problem and GroupServer requests to kick that player.
+GS_TOCLIENT_CPP_00015	user has logged out.
+GS_TOCLIENT_CPP_00016	GameServer malfunction, all logged on players have been kicked.
+GS_TOCLIENT_CPP_00017	user login error.
+GS_TOCLIENT_CPP_00018	You've been muted by the system!
+GS_TOCLIENT_CPP_00031	Map server malfunction, please try again later...
+GS_TOGROUPSERVER_CPP_00001	Conencting to GroupServer...
+GS_TOGROUPSERVER_CPP_00002	Connecting to GroupServer failed, reconnecting in 5 secs...
+GS_TOGROUPSERVER_CPP_00003	Login to GroupServer failed, maybe is GateServer handle amount too large, wait for 5 seconds and it'll auto connect...
+GS_TOGROUPSERVER_CPP_00004	Successfully logged into GroupServer!

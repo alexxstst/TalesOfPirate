@@ -1051,7 +1051,7 @@ do
     end
 end
 
---------------------属性编号
+--------------------
 STAR_ATTR_Num = 47
 STAR_ATTR={}
 STAR_ATTR[1]				= "Strength modulus bonus"
@@ -1140,11 +1140,11 @@ UnNormalMonster_ID[11] = 743
 UnNormalMonster_ID[12] = 744
 UnNormalMonster_ID[13] = 745
 
---PK岛关闭计数-----------
+--PK-----------
 PK_Win_CountNum		=	60
 
 ----------------------------------------------------------------------------------------------------
---PK岛需要删除的道具
+--PK
 PK_BagItemDelCheckNum = 6
 PK_BagItemDelCheck_ID = { }
 PK_BagItemDelCheck_ID [0] = 1854
@@ -1158,7 +1158,7 @@ PK_BagItemDelCheck_ID [6] = 1860
 
 
 
---圣战关闭-----------
+-------------
 SZ_Win_CountNum		=	60
 SZ_Win_CountNum2	=	60
 GUILDNOTICE = 6
@@ -1184,22 +1184,22 @@ GUILDWARCLOSETIME2 = 10800
 
 
 
---退出圣战地图会删除的道具
+--
 SZ_BagItemDelCheckNum = 4
 SZ_BagItemDelCheck_ID = { }
 SZ_BagItemDelCheck_ID [0] = 4661
 SZ_BagItemDelCheck_ID [1] = 2964
 SZ_BagItemDelCheck_ID [2] = 3001
-SZ_BagItemDelCheck_ID [3] = 2381 ---守护神召唤券
+SZ_BagItemDelCheck_ID [3] = 2381 ---
 
 
 
 
---死神攻略中要删除的道具--死神专属部分开始
+----
 SS_BagItemDelCheckNum = 2
 SS_BagItemDelCheck_ID = { }
-SS_BagItemDelCheck_ID [1] = 1855		--进入永恒地狱的门票
-SS_BagItemDelCheck_ID [2] = 1856		--杀死神必须使用的道具
+SS_BagItemDelCheck_ID [1] = 1855		--
+SS_BagItemDelCheck_ID [2] = 1856		--
 
 CRY = {}
 CRY[5]=0
@@ -1263,22 +1263,22 @@ NOTICETIME[15] = 3
 NOTICETIME[16] = 2
 NOTICETIME[17] = 1
 
---死神专属部分
+--
 
 
---道具实例化事件类型
-NPC_SALE				=	0	--npc买卖
-MONSTER_BAOLIAO		=	1	--怪物暴料
-PLAYER_HECHENG		=	2	--玩家合成
-QUEST_AWARD_1		=	3	--任务获取1
-QUEST_AWARD_2		=	4	--任务获取2
-QUEST_AWARD_3		=	5	--任务获取3
-QUEST_AWARD_4		=	6	--任务获取4
-QUEST_AWARD_5		=	7	--任务获取5
-QUEST_AWARD_6		=	8	--任务获取6
-QUEST_AWARD_7		=	9	--任务获取7
-QUEST_AWARD_8		=	10	--任务获取8
-PLAYER_XSBOX			=	11	--新手宝箱
+--
+NPC_SALE				=	0	--npc
+MONSTER_BAOLIAO		=	1	--
+PLAYER_HECHENG		=	2	--
+QUEST_AWARD_1		=	3	--1
+QUEST_AWARD_2		=	4	--2
+QUEST_AWARD_3		=	5	--3
+QUEST_AWARD_4		=	6	--4
+QUEST_AWARD_5		=	7	--5
+QUEST_AWARD_6		=	8	--6
+QUEST_AWARD_7		=	9	--7
+QUEST_AWARD_8		=	10	--8
+PLAYER_XSBOX			=	11	--
 
 PLAYER_CCFSBOXA		=	12
 PLAYER_CCFSBOXB		=	13
@@ -1289,29 +1289,29 @@ PLAYER_CCFSBOXF 		=	17
 PLAYER_CCFSBOXG		=	18
 PLAYER_CCFSBOXH		=	19
 PLAYER_CCFSBOXI		=	20
-PLAYER_ZSITEM			=	22	--紫色装备
-PLAYER_HSSR			=	23	--黑市商人
-PLAYER_HSSRA			=	24	--黑市商人A
+PLAYER_ZSITEM			=	22	--
+PLAYER_HSSR			=	23	--
+PLAYER_HSSRA			=	24	--A
 
-QUEST_AWARD_GODBOX	=	94	--效果等同商城箱子但开出物品无槽 --------------kokora
-QUEST_AWARD_SCBOX	=	95	--商城箱子
-QUEST_AWARD_SDJ		=	96	--圣诞换取礼品
-QUEST_AWARD_RYZ		=	97	--荣誉证获得
-QUEST_AWARD_WZX		=	98	--职业任务宝箱
-QUEST_AWARD_RAND		=	99	--随机职业任务
-
-
+QUEST_AWARD_GODBOX	=	94	-- --------------kokora
+QUEST_AWARD_SCBOX	=	95	--
+QUEST_AWARD_SDJ		=	96	--
+QUEST_AWARD_RYZ		=	97	--
+QUEST_AWARD_WZX		=	98	--
+QUEST_AWARD_RAND		=	99	--
 
 
---附加属性套装名称对应————————————————————————————————————
 
-ITEMSERIES_DRAGON		= 1							--巨龙套装（力量）
-ITEMSERIES_TAITAN = 2							--泰坦套装（体质）
-ITEMSERIES_HUNTER = 3							--猎手套装（专注）
-ITEMSERIES_DELIVER = 4							--信使套装（敏捷）
-ITEMSERIES_HOLY = 5							--神圣套装（精神）
 
---附加属性概率—————————————————————————————————————————
+--
+
+ITEMSERIES_DRAGON		= 1							--
+ITEMSERIES_TAITAN = 2							--
+ITEMSERIES_HUNTER = 3							--
+ITEMSERIES_DELIVER = 4							--
+ITEMSERIES_HOLY = 5							--
+
+--
 
 Itemattr_Baoliao = {}
 
@@ -1319,26 +1319,26 @@ Itemattr_Baoliao = {}
 
 
 
---道具品质随机概率——————————————————————————————————————————————————————————
+--
 
-Item_Baoliao = { }									--怪物暴料 --从最高级品质开始随机，高级物品优先，相邻等级的数值差值为实际概率
+Item_Baoliao = { }									-- --
 Item_Baoliao [0]		=		0						--
 Item_Baoliao [1]		=		0						--
 Item_Baoliao [2]		=		0						--
 Item_Baoliao [3]		=		0						--
 Item_Baoliao [4]		=		0						--
-Item_Baoliao [5]		=		1						--神喻之...
-Item_Baoliao [6]		=		5						--王者之...
-Item_Baoliao [7]		=		10						--统帅之...
-Item_Baoliao [8]		=		40						--卓越之...
-Item_Baoliao [9]		=		80						--普通型...
+Item_Baoliao [5]		=		1						--...
+Item_Baoliao [6]		=		5						--...
+Item_Baoliao [7]		=		10						--...
+Item_Baoliao [8]		=		40						--...
+Item_Baoliao [9]		=		80						--...
 
 Item_Attr_0 = { }
-Item_Attr_0 [0]		=		0						--5个附加属性
-Item_Attr_0 [1]		=		0						--4个附加属性
-Item_Attr_0 [2]		=		1						--3个附加属性
-Item_Attr_0 [3]		=		4						--2个附加属性
-Item_Attr_0 [4]		=		50						--1个附加属性
+Item_Attr_0 [0]		=		0						--5
+Item_Attr_0 [1]		=		0						--4
+Item_Attr_0 [2]		=		1						--3
+Item_Attr_0 [3]		=		4						--2
+Item_Attr_0 [4]		=		50						--1
 
 
 Item_Mission_1 = { }
@@ -1347,18 +1347,18 @@ Item_Mission_1 [1]		=		0						--
 Item_Mission_1 [2]		=		0						--
 Item_Mission_1 [3]		=		0						--
 Item_Mission_1 [4]		=		0						--
-Item_Mission_1 [5]		=		0						--神喻之...
-Item_Mission_1 [6]		=		0						--王者之...
-Item_Mission_1 [7]		=		1						--统帅之...
-Item_Mission_1 [8]		=		10						--卓越之...
-Item_Mission_1 [9]		=		50						--普通型...
+Item_Mission_1 [5]		=		0						--...
+Item_Mission_1 [6]		=		0						--...
+Item_Mission_1 [7]		=		1						--...
+Item_Mission_1 [8]		=		10						--...
+Item_Mission_1 [9]		=		50						--...
 
 Item_Attr_1 = { }
-Item_Attr_1 [0]		=		0						--5个附加属性
-Item_Attr_1 [1]		=		0						--4个附加属性
-Item_Attr_1 [2]		=		0						--3个附加属性
-Item_Attr_1 [3]		=		0						--2个附加属性
-Item_Attr_1 [4]		=		0						--1个附加属性
+Item_Attr_1 [0]		=		0						--5
+Item_Attr_1 [1]		=		0						--4
+Item_Attr_1 [2]		=		0						--3
+Item_Attr_1 [3]		=		0						--2
+Item_Attr_1 [4]		=		0						--1
 
 
 
@@ -1370,18 +1370,18 @@ Item_Mission_2 [1]		=		0						--
 Item_Mission_2 [2]		=		0						--
 Item_Mission_2 [3]		=		0						--
 Item_Mission_2 [4]		=		0						--
-Item_Mission_2 [5]		=		0						--神喻之...
-Item_Mission_2 [6]		=		1						--王者之...
-Item_Mission_2 [7]		=		5						--统帅之...
-Item_Mission_2 [8]		=		20						--卓越之...
-Item_Mission_2 [9]		=		80						--普通型...
+Item_Mission_2 [5]		=		0						--...
+Item_Mission_2 [6]		=		1						--...
+Item_Mission_2 [7]		=		5						--...
+Item_Mission_2 [8]		=		20						--...
+Item_Mission_2 [9]		=		80						--...
 
 Item_Attr_2 = { }
-Item_Attr_2 [0]		=		0						--5个附加属性
-Item_Attr_2 [1]		=		0						--4个附加属性
-Item_Attr_2 [2]		=		0						--3个附加属性
-Item_Attr_2 [3]		=		10						--2个附加属性
-Item_Attr_2 [4]		=		30						--1个附加属性
+Item_Attr_2 [0]		=		0						--5
+Item_Attr_2 [1]		=		0						--4
+Item_Attr_2 [2]		=		0						--3
+Item_Attr_2 [3]		=		10						--2
+Item_Attr_2 [4]		=		30						--1
 
 
 
@@ -1391,18 +1391,18 @@ Item_Mission_3 [1]		=		0						--
 Item_Mission_3 [2]		=		0						--
 Item_Mission_3 [3]		=		0						--
 Item_Mission_3 [4]		=		0						--
-Item_Mission_3 [5]		=		0						--神喻之...
-Item_Mission_3 [6]		=		1						--王者之...
-Item_Mission_3 [7]		=		5						--统帅之...
-Item_Mission_3 [8]		=		50						--卓越之...
-Item_Mission_3 [9]		=		100						--普通型...
+Item_Mission_3 [5]		=		0						--...
+Item_Mission_3 [6]		=		1						--...
+Item_Mission_3 [7]		=		5						--...
+Item_Mission_3 [8]		=		50						--...
+Item_Mission_3 [9]		=		100						--...
 
 Item_Attr_3 = { }
-Item_Attr_3 [0]		=		0						--5个附加属性
-Item_Attr_3 [1]		=		0						--4个附加属性
-Item_Attr_3 [2]		=		0						--3个附加属性
-Item_Attr_3 [3]		=		10						--2个附加属性
-Item_Attr_3 [4]		=		60						--1个附加属性
+Item_Attr_3 [0]		=		0						--5
+Item_Attr_3 [1]		=		0						--4
+Item_Attr_3 [2]		=		0						--3
+Item_Attr_3 [3]		=		10						--2
+Item_Attr_3 [4]		=		60						--1
 
 
 
@@ -1414,18 +1414,18 @@ Item_Mission_4 [1]		=		0						--
 Item_Mission_4 [2]		=		0						--
 Item_Mission_4 [3]		=		0						--
 Item_Mission_4 [4]		=		0						--
-Item_Mission_4 [5]		=		1						--神喻之...
-Item_Mission_4 [6]		=		5						--王者之...
-Item_Mission_4 [7]		=		15						--统帅之...
-Item_Mission_4 [8]		=		90						--卓越之...
-Item_Mission_4 [9]		=		100						--普通型...
+Item_Mission_4 [5]		=		1						--...
+Item_Mission_4 [6]		=		5						--...
+Item_Mission_4 [7]		=		15						--...
+Item_Mission_4 [8]		=		90						--...
+Item_Mission_4 [9]		=		100						--...
 
 Item_Attr_4 = { }
-Item_Attr_4 [0]		=		0						--5个附加属性
-Item_Attr_4 [1]		=		0						--4个附加属性
-Item_Attr_4 [2]		=		1						--3个附加属性
-Item_Attr_4 [3]		=		20						--2个附加属性
-Item_Attr_4 [4]		=		100						--1个附加属性
+Item_Attr_4 [0]		=		0						--5
+Item_Attr_4 [1]		=		0						--4
+Item_Attr_4 [2]		=		1						--3
+Item_Attr_4 [3]		=		20						--2
+Item_Attr_4 [4]		=		100						--1
 
 
 Item_Mission_5 = { }
@@ -1434,18 +1434,18 @@ Item_Mission_5 [1]		=		0						--
 Item_Mission_5 [2]		=		0						--
 Item_Mission_5 [3]		=		0						--
 Item_Mission_5 [4]		=		0						--
-Item_Mission_5 [5]		=		1						--神喻之...
-Item_Mission_5 [6]		=		15						--王者之...
-Item_Mission_5 [7]		=		100						--统帅之...
-Item_Mission_5 [8]		=		100						--卓越之...
-Item_Mission_5 [9]		=		100						--普通型...
+Item_Mission_5 [5]		=		1						--...
+Item_Mission_5 [6]		=		15						--...
+Item_Mission_5 [7]		=		100						--...
+Item_Mission_5 [8]		=		100						--...
+Item_Mission_5 [9]		=		100						--...
 
 Item_Attr_5 = { }
-Item_Attr_5 [0]		=		0						--5个附加属性
-Item_Attr_5 [1]		=		0						--4个附加属性
-Item_Attr_5 [2]		=		1						--3个附加属性
-Item_Attr_5 [3]		=		5						--2个附加属性
-Item_Attr_5 [4]		=		100						--1个附加属性
+Item_Attr_5 [0]		=		0						--5
+Item_Attr_5 [1]		=		0						--4
+Item_Attr_5 [2]		=		1						--3
+Item_Attr_5 [3]		=		5						--2
+Item_Attr_5 [4]		=		100						--1
 
 Item_Mission_94 = { }					 -----------------kokora
 Item_Mission_94 [0]		=		0						--
@@ -1453,18 +1453,18 @@ Item_Mission_94 [1]		=		0						--
 Item_Mission_94 [2]		=		0						--
 Item_Mission_94 [3]		=		0						--
 Item_Mission_94 [4]		=		0						--
-Item_Mission_94 [5]		=		0						--神喻之...
-Item_Mission_94 [6]		=		1						--王者之...
-Item_Mission_94 [7]		=		100						--统帅之...
-Item_Mission_94 [8]		=		100						--卓越之...
-Item_Mission_94 [9]		=		100						--普通型...
+Item_Mission_94 [5]		=		0						--...
+Item_Mission_94 [6]		=		1						--...
+Item_Mission_94 [7]		=		100						--...
+Item_Mission_94 [8]		=		100						--...
+Item_Mission_94 [9]		=		100						--...
 
 Item_Attr_94 = { }
-Item_Attr_94 [0]		=		0						--5个附加属性
-Item_Attr_94 [1]		=		0						--4个附加属性
-Item_Attr_94 [2]		=		1						--3个附加属性
-Item_Attr_94 [3]		=		20						--2个附加属性
-Item_Attr_94 [4]		=		90						--1个附加属性
+Item_Attr_94 [0]		=		0						--5
+Item_Attr_94 [1]		=		0						--4
+Item_Attr_94 [2]		=		1						--3
+Item_Attr_94 [3]		=		20						--2
+Item_Attr_94 [4]		=		90						--1
 
 Item_Mission_95 = { }
 Item_Mission_95 [0]		=		0						--
@@ -1472,18 +1472,18 @@ Item_Mission_95 [1]		=		0						--
 Item_Mission_95 [2]		=		0						--
 Item_Mission_95 [3]		=		0						--
 Item_Mission_95 [4]		=		0						--
-Item_Mission_95 [5]		=		0						--神喻之...
-Item_Mission_95 [6]		=		0						--王者之...
-Item_Mission_95 [7]		=		100						--统帅之...
-Item_Mission_95 [8]		=		100						--卓越之...
-Item_Mission_95 [9]		=		100						--普通型...
+Item_Mission_95 [5]		=		0						--...
+Item_Mission_95 [6]		=		0						--...
+Item_Mission_95 [7]		=		100						--...
+Item_Mission_95 [8]		=		100						--...
+Item_Mission_95 [9]		=		100						--...
 
 Item_Attr_95 = { }
-Item_Attr_95 [0]		=		0						--5个附加属性
-Item_Attr_95 [1]		=		0						--4个附加属性
-Item_Attr_95 [2]		=		1						--3个附加属性
-Item_Attr_95 [3]		=		4						--2个附加属性
-Item_Attr_95 [4]		=		50						--1个附加属性
+Item_Attr_95 [0]		=		0						--5
+Item_Attr_95 [1]		=		0						--4
+Item_Attr_95 [2]		=		1						--3
+Item_Attr_95 [3]		=		4						--2
+Item_Attr_95 [4]		=		50						--1
 
 Item_Mission_96 = { }
 Item_Mission_96 [0]		=		0						--
@@ -1491,18 +1491,18 @@ Item_Mission_96 [1]		=		0						--
 Item_Mission_96 [2]		=		0						--
 Item_Mission_96 [3]		=		0						--
 Item_Mission_96 [4]		=		0						--
-Item_Mission_96 [5]		=		10						--神喻之...
-Item_Mission_96 [6]		=		20						--王者之...
-Item_Mission_96 [7]		=		50						--统帅之...
-Item_Mission_96 [8]		=		90						--卓越之...
-Item_Mission_96 [9]		=		100						--普通型...
+Item_Mission_96 [5]		=		10						--...
+Item_Mission_96 [6]		=		20						--...
+Item_Mission_96 [7]		=		50						--...
+Item_Mission_96 [8]		=		90						--...
+Item_Mission_96 [9]		=		100						--...
 
 Item_Attr_96 = { }
-Item_Attr_96 [0]		=		0						--5个附加属性
-Item_Attr_96 [1]		=		0						--4个附加属性
-Item_Attr_96 [2]		=		2						--3个附加属性
-Item_Attr_96 [3]		=		20						--2个附加属性
-Item_Attr_96 [4]		=		100						--1个附加属性
+Item_Attr_96 [0]		=		0						--5
+Item_Attr_96 [1]		=		0						--4
+Item_Attr_96 [2]		=		2						--3
+Item_Attr_96 [3]		=		20						--2
+Item_Attr_96 [4]		=		100						--1
 
 
 Item_Mission_97 = { }
@@ -1511,18 +1511,18 @@ Item_Mission_97 [1]		=		0						--
 Item_Mission_97 [2]		=		0						--
 Item_Mission_97 [3]		=		0						--
 Item_Mission_97 [4]		=		0						--
-Item_Mission_97 [5]		=		0						--神喻之...
-Item_Mission_97 [6]		=		0						--王者之...
-Item_Mission_97 [7]		=		0						--统帅之...
-Item_Mission_97 [8]		=		0						--卓越之...
-Item_Mission_97 [9]		=		100						--普通型...
+Item_Mission_97 [5]		=		0						--...
+Item_Mission_97 [6]		=		0						--...
+Item_Mission_97 [7]		=		0						--...
+Item_Mission_97 [8]		=		0						--...
+Item_Mission_97 [9]		=		100						--...
 
 Item_Attr_97 = { }
-Item_Attr_97 [0]		=		100						--5个附加属性
-Item_Attr_97 [1]		=		100						--4个附加属性
-Item_Attr_97 [2]		=		100						--3个附加属性
-Item_Attr_97 [3]		=		100						--2个附加属性
-Item_Attr_97 [4]		=		100						--1个附加属性
+Item_Attr_97 [0]		=		100						--5
+Item_Attr_97 [1]		=		100						--4
+Item_Attr_97 [2]		=		100						--3
+Item_Attr_97 [3]		=		100						--2
+Item_Attr_97 [4]		=		100						--1
 
 
 Item_Mission_98 = { }
@@ -1531,18 +1531,18 @@ Item_Mission_98 [1]		=		0						--
 Item_Mission_98 [2]		=		0						--
 Item_Mission_98 [3]		=		0						--
 Item_Mission_98 [4]		=		0						--
-Item_Mission_98 [5]		=		10						--神喻之...
-Item_Mission_98 [6]		=		20						--王者之...
-Item_Mission_98 [7]		=		50						--统帅之...
-Item_Mission_98 [8]		=		90						--卓越之...
-Item_Mission_98 [9]		=		100						--普通型...
+Item_Mission_98 [5]		=		10						--...
+Item_Mission_98 [6]		=		20						--...
+Item_Mission_98 [7]		=		50						--...
+Item_Mission_98 [8]		=		90						--...
+Item_Mission_98 [9]		=		100						--...
 
 Item_Attr_98 = { }
-Item_Attr_98 [0]		=		0						--5个附加属性
-Item_Attr_98 [1]		=		0						--4个附加属性
-Item_Attr_98 [2]		=		2						--3个附加属性
-Item_Attr_98 [3]		=		20						--2个附加属性
-Item_Attr_98 [4]		=		100						--1个附加属性
+Item_Attr_98 [0]		=		0						--5
+Item_Attr_98 [1]		=		0						--4
+Item_Attr_98 [2]		=		2						--3
+Item_Attr_98 [3]		=		20						--2
+Item_Attr_98 [4]		=		100						--1
 
 
 
@@ -1552,18 +1552,18 @@ Item_Mission_99 [1]		=		0						--
 Item_Mission_99 [2]		=		0						--
 Item_Mission_99 [3]		=		0						--
 Item_Mission_99 [4]		=		0						--
-Item_Mission_99 [5]		=		1						--神喻之...
-Item_Mission_99 [6]		=		5						--王者之...
-Item_Mission_99 [7]		=		20						--统帅之...
-Item_Mission_99 [8]		=		50						--卓越之...
-Item_Mission_99 [9]		=		100						--普通型...
+Item_Mission_99 [5]		=		1						--...
+Item_Mission_99 [6]		=		5						--...
+Item_Mission_99 [7]		=		20						--...
+Item_Mission_99 [8]		=		50						--...
+Item_Mission_99 [9]		=		100						--...
 
 Item_Attr_99 = { }
-Item_Attr_99 [0]		=		0						--5个附加属性
-Item_Attr_99 [1]		=		0						--4个附加属性
-Item_Attr_99 [2]		=		2						--3个附加属性
-Item_Attr_99 [3]		=		20						--2个附加属性
-Item_Attr_99 [4]		=		100						--1个附加属性
+Item_Attr_99 [0]		=		0						--5
+Item_Attr_99 [1]		=		0						--4
+Item_Attr_99 [2]		=		2						--3
+Item_Attr_99 [3]		=		20						--2
+Item_Attr_99 [4]		=		100						--1
 
 Item_Mission_11 = { }
 Item_Mission_11 [0]		=		0						--
@@ -1571,18 +1571,18 @@ Item_Mission_11 [1]		=		0						--
 Item_Mission_11 [2]		=		0						--
 Item_Mission_11 [3]		=		0						--
 Item_Mission_11 [4]		=		0						--
-Item_Mission_11 [5]		=		0						--神喻之...
-Item_Mission_11 [6]		=		0						--王者之...
-Item_Mission_11 [7]		=		100						--统帅之...
-Item_Mission_11 [8]		=		100						--卓越之...
-Item_Mission_11 [9]		=		100						--普通型...
+Item_Mission_11 [5]		=		0						--...
+Item_Mission_11 [6]		=		0						--...
+Item_Mission_11 [7]		=		100						--...
+Item_Mission_11 [8]		=		100						--...
+Item_Mission_11 [9]		=		100						--...
 
 Item_Attr_11 = { }
-Item_Attr_11 [0]		=		0						--5个附加属性
-Item_Attr_11 [1]		=		0						--4个附加属性
-Item_Attr_11 [2]		=		1						--3个附加属性
-Item_Attr_11 [3]		=		4						--2个附加属性
-Item_Attr_11 [4]		=		50						--1个附加属性
+Item_Attr_11 [0]		=		0						--5
+Item_Attr_11 [1]		=		0						--4
+Item_Attr_11 [2]		=		1						--3
+Item_Attr_11 [3]		=		4						--2
+Item_Attr_11 [4]		=		50						--1
 
 
 
@@ -1592,18 +1592,18 @@ Item_Mission_12 [1]		=		0						--
 Item_Mission_12 [2]		=		0						--
 Item_Mission_12 [3]		=		0						--
 Item_Mission_12 [4]		=		0						--
-Item_Mission_12 [5]		=		0						--神喻之...
-Item_Mission_12 [6]		=		0						--王者之...
-Item_Mission_12 [7]		=		0						--统帅之...
-Item_Mission_12 [8]		=		0						--卓越之...
-Item_Mission_12 [9]		=		100						--普通型...
+Item_Mission_12 [5]		=		0						--...
+Item_Mission_12 [6]		=		0						--...
+Item_Mission_12 [7]		=		0						--...
+Item_Mission_12 [8]		=		0						--...
+Item_Mission_12 [9]		=		100						--...
 
 Item_Attr_12 = { }
-Item_Attr_12 [0]		=		0						--5个附加属性
-Item_Attr_12 [1]		=		0						--4个附加属性
-Item_Attr_12 [2]		=		0						--3个附加属性
-Item_Attr_12 [3]		=		0						--2个附加属性
-Item_Attr_12 [4]		=		0						--1个附加属性
+Item_Attr_12 [0]		=		0						--5
+Item_Attr_12 [1]		=		0						--4
+Item_Attr_12 [2]		=		0						--3
+Item_Attr_12 [3]		=		0						--2
+Item_Attr_12 [4]		=		0						--1
 
 
 
@@ -1614,18 +1614,18 @@ Item_Mission_13 [1]		=		0						--
 Item_Mission_13 [2]		=		0						--
 Item_Mission_13 [3]		=		0						--
 Item_Mission_13 [4]		=		0						--
-Item_Mission_13 [5]		=		0						--神喻之...
-Item_Mission_13 [6]		=		0						--王者之...
-Item_Mission_13 [7]		=		0						--统帅之...
-Item_Mission_13 [8]		=		100						--卓越之...
-Item_Mission_13 [9]		=		100						--普通型...
+Item_Mission_13 [5]		=		0						--...
+Item_Mission_13 [6]		=		0						--...
+Item_Mission_13 [7]		=		0						--...
+Item_Mission_13 [8]		=		100						--...
+Item_Mission_13 [9]		=		100						--...
 
 Item_Attr_13 = { }
-Item_Attr_13 [0]		=		0						--5个附加属性
-Item_Attr_13 [1]		=		0						--4个附加属性
-Item_Attr_13 [2]		=		0						--3个附加属性
-Item_Attr_13 [3]		=		0						--2个附加属性
-Item_Attr_13 [4]		=		0						--1个附加属性
+Item_Attr_13 [0]		=		0						--5
+Item_Attr_13 [1]		=		0						--4
+Item_Attr_13 [2]		=		0						--3
+Item_Attr_13 [3]		=		0						--2
+Item_Attr_13 [4]		=		0						--1
 
 
 Item_Mission_14 = { }
@@ -1634,18 +1634,18 @@ Item_Mission_14 [1]		=		0						--
 Item_Mission_14 [2]		=		0						--
 Item_Mission_14 [3]		=		0						--
 Item_Mission_14 [4]		=		0						--
-Item_Mission_14 [5]		=		0						--神喻之...
-Item_Mission_14 [6]		=		0						--王者之...
-Item_Mission_14 [7]		=		100						--统帅之...
-Item_Mission_14 [8]		=		100						--卓越之...
-Item_Mission_14 [9]		=		100						--普通型...
+Item_Mission_14 [5]		=		0						--...
+Item_Mission_14 [6]		=		0						--...
+Item_Mission_14 [7]		=		100						--...
+Item_Mission_14 [8]		=		100						--...
+Item_Mission_14 [9]		=		100						--...
 
 Item_Attr_14 = { }
-Item_Attr_14 [0]		=		0						--5个附加属性
-Item_Attr_14 [1]		=		0						--4个附加属性
-Item_Attr_14 [2]		=		0							--3个附加属性
-Item_Attr_14 [3]		=		0							--2个附加属性
-Item_Attr_14 [4]		=		0						--1个附加属性
+Item_Attr_14 [0]		=		0						--5
+Item_Attr_14 [1]		=		0						--4
+Item_Attr_14 [2]		=		0							--3
+Item_Attr_14 [3]		=		0							--2
+Item_Attr_14 [4]		=		0						--1
 
 
 Item_Mission_15 = { }
@@ -1654,18 +1654,18 @@ Item_Mission_15 [1]		=		0						--
 Item_Mission_15 [2]		=		0						--
 Item_Mission_15 [3]		=		0						--
 Item_Mission_15 [4]		=		0						--
-Item_Mission_15 [5]		=		0						--神喻之...
-Item_Mission_15 [6]		=		100						--王者之...
-Item_Mission_15 [7]		=		100						--统帅之...
-Item_Mission_15 [8]		=		100						--卓越之...
-Item_Mission_15 [9]		=		100						--普通型...
+Item_Mission_15 [5]		=		0						--...
+Item_Mission_15 [6]		=		100						--...
+Item_Mission_15 [7]		=		100						--...
+Item_Mission_15 [8]		=		100						--...
+Item_Mission_15 [9]		=		100						--...
 
 Item_Attr_15 = { }
-Item_Attr_15 [0]		=		0						--5个附加属性
-Item_Attr_15 [1]		=		0						--4个附加属性
-Item_Attr_15 [2]		=		0						--3个附加属性
-Item_Attr_15 [3]		=		0						--2个附加属性
-Item_Attr_15 [4]		=		0						--1个附加属性
+Item_Attr_15 [0]		=		0						--5
+Item_Attr_15 [1]		=		0						--4
+Item_Attr_15 [2]		=		0						--3
+Item_Attr_15 [3]		=		0						--2
+Item_Attr_15 [4]		=		0						--1
 
 
 Item_Mission_16 = { }
@@ -1674,18 +1674,18 @@ Item_Mission_16 [1]		=		0						--
 Item_Mission_16 [2]		=		0						--
 Item_Mission_16 [3]		=		0						--
 Item_Mission_16 [4]		=		0						--
-Item_Mission_16 [5]		=		100						--神喻之...
-Item_Mission_16 [6]		=		100						--王者之...
-Item_Mission_16 [7]		=		100						--统帅之...
-Item_Mission_16 [8]		=		100						--卓越之...
-Item_Mission_16 [9]		=		100						--普通型...
+Item_Mission_16 [5]		=		100						--...
+Item_Mission_16 [6]		=		100						--...
+Item_Mission_16 [7]		=		100						--...
+Item_Mission_16 [8]		=		100						--...
+Item_Mission_16 [9]		=		100						--...
 
 Item_Attr_16 = { }
-Item_Attr_16 [0]		=		0					--5个附加属性
-Item_Attr_16 [1]		=		0					--4个附加属性
-Item_Attr_16 [2]		=		0					--3个附加属性
-Item_Attr_16 [3]		=		0					--2个附加属性
-Item_Attr_16 [4]		=		0						--1个附加属性
+Item_Attr_16 [0]		=		0					--5
+Item_Attr_16 [1]		=		0					--4
+Item_Attr_16 [2]		=		0					--3
+Item_Attr_16 [3]		=		0					--2
+Item_Attr_16 [4]		=		0						--1
 
 Item_Mission_17 = { }
 Item_Mission_17 [0]		=		0						--
@@ -1693,18 +1693,18 @@ Item_Mission_17 [1]		=		0						--
 Item_Mission_17 [2]		=		0						--
 Item_Mission_17 [3]		=		0						--
 Item_Mission_17 [4]		=		100						--
-Item_Mission_17 [5]		=		100						--神喻之...
-Item_Mission_17 [6]		=		100						--王者之...
-Item_Mission_17 [7]		=		100						--统帅之...
-Item_Mission_17 [8]		=		100						--卓越之...
-Item_Mission_17 [9]		=		100						--普通型...
+Item_Mission_17 [5]		=		100						--...
+Item_Mission_17 [6]		=		100						--...
+Item_Mission_17 [7]		=		100						--...
+Item_Mission_17 [8]		=		100						--...
+Item_Mission_17 [9]		=		100						--...
 
 Item_Attr_17 = { }
-Item_Attr_17 [0]		=		0					--5个附加属性
-Item_Attr_17 [1]		=		0					--4个附加属性
-Item_Attr_17 [2]		=		0					--3个附加属性
-Item_Attr_17 [3]		=		0					--2个附加属性
-Item_Attr_17 [4]		=		0						--1个附加属性
+Item_Attr_17 [0]		=		0					--5
+Item_Attr_17 [1]		=		0					--4
+Item_Attr_17 [2]		=		0					--3
+Item_Attr_17 [3]		=		0					--2
+Item_Attr_17 [4]		=		0						--1
 
 
 Item_Mission_18 = { }
@@ -1713,18 +1713,18 @@ Item_Mission_18 [1]		=		0						--
 Item_Mission_18 [2]		=		0						--
 Item_Mission_18 [3]		=		100						--
 Item_Mission_18 [4]		=		100						--
-Item_Mission_18 [5]		=		100						--神喻之...
-Item_Mission_18 [6]		=		100						--王者之...
-Item_Mission_18 [7]		=		100						--统帅之...
-Item_Mission_18 [8]		=		100						--卓越之...
-Item_Mission_18 [9]		=		100						--普通型...
+Item_Mission_18 [5]		=		100						--...
+Item_Mission_18 [6]		=		100						--...
+Item_Mission_18 [7]		=		100						--...
+Item_Mission_18 [8]		=		100						--...
+Item_Mission_18 [9]		=		100						--...
 
 Item_Attr_18 = { }
-Item_Attr_18 [0]		=		0					--5个附加属性
-Item_Attr_18 [1]		=		0					--4个附加属性
-Item_Attr_18 [2]		=		0					--3个附加属性
-Item_Attr_18 [3]		=		0					--2个附加属性
-Item_Attr_18 [4]		=		0						--1个附加属性
+Item_Attr_18 [0]		=		0					--5
+Item_Attr_18 [1]		=		0					--4
+Item_Attr_18 [2]		=		0					--3
+Item_Attr_18 [3]		=		0					--2
+Item_Attr_18 [4]		=		0						--1
 
 Item_Mission_19 = { }
 Item_Mission_19 [0]		=		0						--
@@ -1732,18 +1732,18 @@ Item_Mission_19 [1]		=		0						--
 Item_Mission_19 [2]		=		100						--
 Item_Mission_19 [3]		=		100						--
 Item_Mission_19 [4]		=		100						--
-Item_Mission_19 [5]		=		100						--神喻之...
-Item_Mission_19 [6]		=		100						--王者之...
-Item_Mission_19 [7]		=		100						--统帅之...
-Item_Mission_19 [8]		=		100						--卓越之...
-Item_Mission_19 [9]		=		100						--普通型...
+Item_Mission_19 [5]		=		100						--...
+Item_Mission_19 [6]		=		100						--...
+Item_Mission_19 [7]		=		100						--...
+Item_Mission_19 [8]		=		100						--...
+Item_Mission_19 [9]		=		100						--...
 
 Item_Attr_19 = { }
-Item_Attr_19 [0]		=		0					--5个附加属性
-Item_Attr_19 [1]		=		0					--4个附加属性
-Item_Attr_19 [2]		=		0					--3个附加属性
-Item_Attr_19 [3]		=		0					--2个附加属性
-Item_Attr_19 [4]		=		0						--1个附加属性
+Item_Attr_19 [0]		=		0					--5
+Item_Attr_19 [1]		=		0					--4
+Item_Attr_19 [2]		=		0					--3
+Item_Attr_19 [3]		=		0					--2
+Item_Attr_19 [4]		=		0						--1
 
 
 Item_Mission_20 = { }
@@ -1752,18 +1752,18 @@ Item_Mission_20 [1]		=		100						--
 Item_Mission_20 [2]		=		100						--
 Item_Mission_20 [3]		=		100						--
 Item_Mission_20 [4]		=		100						--
-Item_Mission_20 [5]		=		100						--神喻之...
-Item_Mission_20 [6]		=		100						--王者之...
-Item_Mission_20 [7]		=		100						--统帅之...
-Item_Mission_20 [8]		=		100						--卓越之...
-Item_Mission_20 [9]		=		100						--普通型...
+Item_Mission_20 [5]		=		100						--...
+Item_Mission_20 [6]		=		100						--...
+Item_Mission_20 [7]		=		100						--...
+Item_Mission_20 [8]		=		100						--...
+Item_Mission_20 [9]		=		100						--...
 
 Item_Attr_20 = { }
-Item_Attr_20 [0]		=		0						--5个附加属性
-Item_Attr_20 [1]		=		0						--4个附加属性
-Item_Attr_20 [2]		=		0						--3个附加属性
-Item_Attr_20 [3]		=		0						--2个附加属性
-Item_Attr_20 [4]		=		0						--1个附加属性
+Item_Attr_20 [0]		=		0						--5
+Item_Attr_20 [1]		=		0						--4
+Item_Attr_20 [2]		=		0						--3
+Item_Attr_20 [3]		=		0						--2
+Item_Attr_20 [4]		=		0						--1
 
 Item_Mission_22 = { }
 Item_Mission_22 [0]		=		0						--
@@ -1771,18 +1771,18 @@ Item_Mission_22 [1]		=		0						--
 Item_Mission_22 [2]		=		0						--
 Item_Mission_22 [3]		=		0						--
 Item_Mission_22 [4]		=		100						--
-Item_Mission_22 [5]		=		100						--神喻之...
-Item_Mission_22 [6]		=		100						--王者之...
-Item_Mission_22 [7]		=		100						--统帅之...
-Item_Mission_22 [8]		=		100						--卓越之...
-Item_Mission_22 [9]		=		100						--普通型...
+Item_Mission_22 [5]		=		100						--...
+Item_Mission_22 [6]		=		100						--...
+Item_Mission_22 [7]		=		100						--...
+Item_Mission_22 [8]		=		100						--...
+Item_Mission_22 [9]		=		100						--...
 
 Item_Attr_22 = { }
-Item_Attr_22 [0]		=		0							--5个附加属性
-Item_Attr_22 [1]		=		0							--4个附加属性
-Item_Attr_22 [2]		=		1							--3个附加属性
-Item_Attr_22 [3]		=		4							--2个附加属性
-Item_Attr_22 [4]		=		50							--1个附加属性
+Item_Attr_22 [0]		=		0							--5
+Item_Attr_22 [1]		=		0							--4
+Item_Attr_22 [2]		=		1							--3
+Item_Attr_22 [3]		=		4							--2
+Item_Attr_22 [4]		=		50							--1
 
 Item_Mission_23 = { }
 Item_Mission_23 [0]		=		0							--
@@ -1790,18 +1790,18 @@ Item_Mission_23 [1]		=		0							--
 Item_Mission_23 [2]		=		0							--
 Item_Mission_23 [3]		=		0							--
 Item_Mission_23 [4]		=		3							--
-Item_Mission_23 [5]		=		6							--神喻之...
-Item_Mission_23 [6]		=		25							--王者之...
-Item_Mission_23 [7]		=		50							--统帅之...
-Item_Mission_23 [8]		=		70							--卓越之...
-Item_Mission_23 [9]		=		100							--普通型...
+Item_Mission_23 [5]		=		6							--...
+Item_Mission_23 [6]		=		25							--...
+Item_Mission_23 [7]		=		50							--...
+Item_Mission_23 [8]		=		70							--...
+Item_Mission_23 [9]		=		100							--...
 
 Item_Attr_23 = { }
-Item_Attr_23 [0]		=		0							--5个附加属性
-Item_Attr_23 [1]		=		0							--4个附加属性
-Item_Attr_23 [2]		=		1							--3个附加属性
-Item_Attr_23 [3]		=		5							--2个附加属性
-Item_Attr_23 [4]		=		60							--1个附加属性
+Item_Attr_23 [0]		=		0							--5
+Item_Attr_23 [1]		=		0							--4
+Item_Attr_23 [2]		=		1							--3
+Item_Attr_23 [3]		=		5							--2
+Item_Attr_23 [4]		=		60							--1
 
 Item_Mission_24 = { }
 Item_Mission_24 [0]		=		0							--
@@ -1809,44 +1809,44 @@ Item_Mission_24 [1]		=		0							--
 Item_Mission_24 [2]		=		0							--
 Item_Mission_24 [3]		=		0							--
 Item_Mission_24 [4]		=		0							--
-Item_Mission_24 [5]		=		1							--神喻之...
-Item_Mission_24 [6]		=		5							--王者之...
-Item_Mission_24 [7]		=		20							--统帅之...
-Item_Mission_24 [8]		=		65							--卓越之...
-Item_Mission_24 [9]		=		99							--普通型...
+Item_Mission_24 [5]		=		1							--...
+Item_Mission_24 [6]		=		5							--...
+Item_Mission_24 [7]		=		20							--...
+Item_Mission_24 [8]		=		65							--...
+Item_Mission_24 [9]		=		99							--...
 
 Item_Attr_24 = { }
-Item_Attr_24 [0]		=		0							--5个附加属性
-Item_Attr_24 [1]		=		0							--4个附加属性
-Item_Attr_24 [2]		=		1							--3个附加属性
-Item_Attr_24 [3]		=		4							--2个附加属性
-Item_Attr_24 [4]		=		50							--1个附加属性
+Item_Attr_24 [0]		=		0							--5
+Item_Attr_24 [1]		=		0							--4
+Item_Attr_24 [2]		=		1							--3
+Item_Attr_24 [3]		=		4							--2
+Item_Attr_24 [4]		=		50							--1
 
---设置装备获得孔数的概率
+--
 
 Item_HoleNum_Monster = { }
-Item_HoleNum_Monster [0]		=		75						--0个洞
-Item_HoleNum_Monster [1]		=		99						--1个洞
-Item_HoleNum_Monster [2]		=		100				--2个洞
-Item_HoleNum_Monster [3]		=		100						--3个洞
+Item_HoleNum_Monster [0]		=		75						--0
+Item_HoleNum_Monster [1]		=		99						--1
+Item_HoleNum_Monster [2]		=		100				--2
+Item_HoleNum_Monster [3]		=		100						--3
 
 Item_HoleNum_Hecheng = { }
-Item_HoleNum_Hecheng [0]		=		25						--0个洞
-Item_HoleNum_Hecheng [1]		=		75						--1个洞
-Item_HoleNum_Hecheng [2]		=		100						--2个洞
-Item_HoleNum_Hecheng [3]		=		100						--3个洞
+Item_HoleNum_Hecheng [0]		=		25						--0
+Item_HoleNum_Hecheng [1]		=		75						--1
+Item_HoleNum_Hecheng [2]		=		100						--2
+Item_HoleNum_Hecheng [3]		=		100						--3
 
 Item_HoleNum_Mission_1 = { }
-Item_HoleNum_Mission_1 [0]		=		25						--0个洞
-Item_HoleNum_Mission_1 [1]		=		75						--1个洞
-Item_HoleNum_Mission_1 [2]		=		100						--2个洞
-Item_HoleNum_Mission_1 [3]		=		100						--3个洞
+Item_HoleNum_Mission_1 [0]		=		25						--0
+Item_HoleNum_Mission_1 [1]		=		75						--1
+Item_HoleNum_Mission_1 [2]		=		100						--2
+Item_HoleNum_Mission_1 [3]		=		100						--3
 
 
 
 
---航海技能消耗航海经验——————————————————————————————————————————————————————————————————
---技能甲板加固————————————————————————————————
+--
+--
 sk_jbjg = { }
 sk_jbjg [1]				=		625
 sk_jbjg [2]				=		3439
@@ -1859,7 +1859,7 @@ sk_jbjg [8]				=		246559
 sk_jbjg [9]				=		352529
 sk_jbjg [10]			=		485199
 
---技能火炮熟练————————————————————————————————
+--
 sk_hpsl = { }
 sk_hpsl [1]				=		671
 sk_hpsl [2]				=		4641
@@ -1872,7 +1872,7 @@ sk_hpsl [8]				=		265761
 sk_hpsl [9]				=		376831
 sk_hpsl [10]			=		515201
 
---技能船体强化————————————————————————————————
+--
 sk_ctqh = { }
 sk_ctqh [1]			=		1105
 sk_ctqh [2]			=		6095
@@ -1885,7 +1885,7 @@ sk_ctqh [8]			=		285935
 sk_ctqh [9]			=		402225
 sk_ctqh [10]			=		546415
 
---技能操帆术————————————————————————————————
+--
 sk_cfs = { }
 sk_cfs [1]				=		1695
 sk_cfs [2]				=		7825
@@ -1899,7 +1899,7 @@ sk_cfs [9]				=		428735
 sk_cfs [10]				=		578865
 
 
---技能补给扩容————————————————————————————————
+--
 sk_bjkr = { }
 sk_bjkr [1]				=		2465
 sk_bjkr [2]				=		9855
@@ -1912,7 +1912,7 @@ sk_bjkr [8]				=		329295
 sk_bjkr [9]				=		456385
 sk_bjkr [10]			=		612575
 
---创建海军工会所需物品
+--
 Guild_ItemMax = 1
 Guild_item = {}
 Guild_count = {}
@@ -1924,9 +1924,9 @@ Guild_item[3] =	-1		Guild_count[3]	=	-1
 Guild_item[4] =	-1		Guild_count[4]	=	-1
 Guild_item[5] =	-1		Guild_count[5]	=	-1
 
-----加入海军工会所需条件
-JOINGUILD_NAVY_FAME	=	0			--加入海军名声
-JOINGUILD_PIRATE_FAME	=	0			--加入海盗名声
+----
+JOINGUILD_NAVY_FAME	=	0			--
+JOINGUILD_PIRATE_FAME	=	0			--
 
 enumItemTypeSword 		= 1	-- sword
 enumItemTypeGlave 		= 2	-- greatsword
@@ -2391,36 +2391,36 @@ STATE_XZK12			= 251	-- Capricorn
 STATE_NSTX			= 252	-- Goddess
 STATE_HAIDAOQI		= 253	-- Pirate Banner
 
-dmg = 0					--伤害
-sus = 1					--攻击状态
-hpdmg = 0					--hp伤害
-dmgsa = 1					--伤害倍数
-dis = 0					--距离
-dis_eff = 0					--距离效果
-sklv = 0					--技能等级
+dmg = 0					--
+sus = 1					--
+hpdmg = 0					--hp
+dmgsa = 1					--
+dis = 0					--
+dis_eff = 0					--
+sklv = 0					--
 
 ItemAttr_Rad	=	 { }
-ItemAttr_Rad	[	0	]	=	0	--	-1	无特殊属性加成
-ItemAttr_Rad	[	1	]	=	10	--	蛮力之	+str
-ItemAttr_Rad	[	2	]	=	10	--	必中之	+dex
-ItemAttr_Rad	[	3	]	=	10	--	强体之	+con
-ItemAttr_Rad	[	4	]	=	5	--	疾风之	+agi
-ItemAttr_Rad	[	5	]	=	10	--	圣贤之	+sta
+ItemAttr_Rad	[	0	]	=	0	--	-1	
+ItemAttr_Rad	[	1	]	=	10	--		+str
+ItemAttr_Rad	[	2	]	=	10	--		+dex
+ItemAttr_Rad	[	3	]	=	10	--		+con
+ItemAttr_Rad	[	4	]	=	5	--		+agi
+ItemAttr_Rad	[	5	]	=	10	--		+sta
 ItemAttr_Rad	[	6	]	=	0	--	-1	0
 ItemAttr_Rad	[	7	]	=	0	--	-1	0
 ItemAttr_Rad	[	8	]	=	0	--	-1	0
 ItemAttr_Rad	[	9	]	=	0	--	-1	0
 ItemAttr_Rad	[	10	]	=	0	--	-1	0
-ItemAttr_Rad	[	11	]	=	10	--	黑龙之	+str +dex
-ItemAttr_Rad	[	12	]	=	10	--	红龙之	+str +con
-ItemAttr_Rad	[	13	]	=	5	--	蓝龙之	+str +agi
-ItemAttr_Rad	[	14	]	=	10	--	银龙之	+str +sta
-ItemAttr_Rad	[	15	]	=	10	--	百龙之	+dex +con
-ItemAttr_Rad	[	16	]	=	5	--	绿龙之	+dex +agi
-ItemAttr_Rad	[	17	]	=	10	--	黄龙之	+dex +sta
-ItemAttr_Rad	[	18	]	=	5	--	金龙之	+con +agi
-ItemAttr_Rad	[	19	]	=	10	--	圣龙之	+con +sta
-ItemAttr_Rad	[	20	]	=	5	--	魔龙之	+agi +sta
+ItemAttr_Rad	[	11	]	=	10	--		+str +dex
+ItemAttr_Rad	[	12	]	=	10	--		+str +con
+ItemAttr_Rad	[	13	]	=	5	--		+str +agi
+ItemAttr_Rad	[	14	]	=	10	--		+str +sta
+ItemAttr_Rad	[	15	]	=	10	--		+dex +con
+ItemAttr_Rad	[	16	]	=	5	--		+dex +agi
+ItemAttr_Rad	[	17	]	=	10	--		+dex +sta
+ItemAttr_Rad	[	18	]	=	5	--		+con +agi
+ItemAttr_Rad	[	19	]	=	10	--		+con +sta
+ItemAttr_Rad	[	20	]	=	5	--		+agi +sta
 ItemAttr_Rad	[	21	]	=	0	--	-1	0
 ItemAttr_Rad	[	22	]	=	0	--	-1	0
 ItemAttr_Rad	[	23	]	=	0	--	-1	0
@@ -2450,16 +2450,16 @@ ItemAttr_Rad	[	46	]	=	0	--	-1	0
 ItemAttr_Rad	[	47	]	=	0	--	-1	0
 ItemAttr_Rad	[	48	]	=	0	--	-1	0
 ItemAttr_Rad	[	49	]	=	0	--	-1	0
-ItemAttr_Rad	[	50	]	=	10	--	卡拉之	+str +dex +con
-ItemAttr_Rad	[	51	]	=	5	--	卡拉之	+str +dex +agi
-ItemAttr_Rad	[	52	]	=	10	--	卡拉之	+str +dex +sta
-ItemAttr_Rad	[	53	]	=	5	--	卡拉之	+str +con +agi
-ItemAttr_Rad	[	54	]	=	10	--	卡拉之	+str +con +sta
-ItemAttr_Rad	[	55	]	=	5	--	卡拉之	+str +agi +sta
-ItemAttr_Rad	[	56	]	=	5	--	卡拉之	+dex +con +agi
-ItemAttr_Rad	[	57	]	=	10	--	卡拉之	+dex +con +sta
-ItemAttr_Rad	[	58	]	=	5	--	卡拉之	+dex +agi +sta
-ItemAttr_Rad	[	59	]	=	5	--	卡拉之	+con +agi +sta
+ItemAttr_Rad	[	50	]	=	10	--		+str +dex +con
+ItemAttr_Rad	[	51	]	=	5	--		+str +dex +agi
+ItemAttr_Rad	[	52	]	=	10	--		+str +dex +sta
+ItemAttr_Rad	[	53	]	=	5	--		+str +con +agi
+ItemAttr_Rad	[	54	]	=	10	--		+str +con +sta
+ItemAttr_Rad	[	55	]	=	5	--		+str +agi +sta
+ItemAttr_Rad	[	56	]	=	5	--		+dex +con +agi
+ItemAttr_Rad	[	57	]	=	10	--		+dex +con +sta
+ItemAttr_Rad	[	58	]	=	5	--		+dex +agi +sta
+ItemAttr_Rad	[	59	]	=	5	--		+con +agi +sta
 ItemAttr_Rad	[	60	]	=	0	--	-1	0
 ItemAttr_Rad	[	61	]	=	0	--	-1	0
 ItemAttr_Rad	[	62	]	=	0	--	-1	0
@@ -2490,11 +2490,11 @@ ItemAttr_Rad	[	86	]	=	0	--	-1	0
 ItemAttr_Rad	[	87	]	=	0	--	-1	0
 ItemAttr_Rad	[	88	]	=	0	--	-1	0
 ItemAttr_Rad	[	89	]	=	0	--	-1	0
-ItemAttr_Rad	[	90	]	=	10	--	维尔之	 +str +dex +con +agi
-ItemAttr_Rad	[	91	]	=	10	--	维尔之	 +str +dex +con +sta
-ItemAttr_Rad	[	92	]	=	10	--	维尔之	 +str +dex +agi +sta
-ItemAttr_Rad	[	93	]	=	10	--	维尔之	 +str +con +agi +sta
-ItemAttr_Rad	[	94	]	=	10	--	维尔之	 +dex +con +agi +sta
+ItemAttr_Rad	[	90	]	=	10	--		 +str +dex +con +agi
+ItemAttr_Rad	[	91	]	=	10	--		 +str +dex +con +sta
+ItemAttr_Rad	[	92	]	=	10	--		 +str +dex +agi +sta
+ItemAttr_Rad	[	93	]	=	10	--		 +str +con +agi +sta
+ItemAttr_Rad	[	94	]	=	10	--		 +dex +con +agi +sta
 ItemAttr_Rad	[	95	]	=	0	--	-1	0
 ItemAttr_Rad	[	96	]	=	0	--	-1	0
 ItemAttr_Rad	[	97	]	=	0	--	-1	0

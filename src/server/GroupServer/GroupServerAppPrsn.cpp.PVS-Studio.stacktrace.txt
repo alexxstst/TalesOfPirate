@@ -1,0 +1,30 @@
+This file was created because PVS-Studio encountered an unexpected error.
+Reason: bad allocation. Peak working set was 344 MB.
+A bad allocation error usually means that the allocation failed because there wasn't enough memory available.
+
+It is recommended that you have at least one Gbyte of memory for each analyzer's thread.
+If necessary, you may restrict the number of the analyzer's threads in the PVS-Studio settings.
+
+For plugin PVS-Studio in Microsoft Visual Studio:
+Extensions -> PVS-Studio -> Options -> Common Analyzer Settings -> Thread Count
+
+If you are using a command line utility (on any platform), you can run the analysis with the -j[N] flag which specifies the number of threads.
+E.g. for Linux:
+~$ pvs-studio-analyzer analyze -j8 -o /path/to/PVS-Studio.log -e /path/to/exclude-path
+
+Also, you can customize 'ThreadCount' tag in the global Settings.xml file (apart from pvs-studio-analyzer\CompileCommandsAnalyzer).
+Example: <ThreadCount>8</ThreadCount>
+
+By default, global Settings.xml configuration file located:
+on Windows: '%APPDATA%\PVS-Studio\Settings.xml'
+on Linux, macOS: '~/.config/PVS-Studio/Settings.xml'
+
+This file was created because PVS-Studio encountered an unexpected error.
+It contains a list of addresses in the analyzer process that will allow us to trace the problem.
+Please send this file to our support so that we can fix it.
+
+PVS-Studio version: 7.34.87804.1491
+Platform: X64
+OS: Windows
+Utility: pvs-studio
+Base address: 00007FF6CDD50000

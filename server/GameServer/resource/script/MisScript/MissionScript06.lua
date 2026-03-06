@@ -8,7 +8,7 @@ print("-- [Loading] Mission Script [06].")
 
 --------------------------------------------
 function DuplicateMission001()
------------------------------------酒鬼的秘密
+-----------------------------------
 	DefineMission( 500, "Drunkyard Secrets", 500 )
 	
 	MisBeginTalk( "I have not taste any wine for a long time...Young fellow, wine is like oxygen to me! I cannot live without it! <n><t>Can you buy a bottle of good wine for me from the bar in Argent? I will tell you a secret if you do it.")
@@ -23,7 +23,7 @@ function DuplicateMission001()
 	MisNeed(MIS_NEED_ITEM, 3916, 1, 10, 1)
 		
 	MisHelpTalk("What? That girl is not willing to sell wine to you? Or you have not visited her? Go now! Don't make me angry. I will forget what you want to find out.")
-	MisResultTalk("Hmm… This is indeed a good wine! It's been a long time since I have tasted such quality! Do you want some? Ah… ZZzzzZZZzzz.")
+	MisResultTalk("Hmm This is indeed a good wine! It's been a long time since I have tasted such quality! Do you want some? Ah ZZzzzZZZzzz.")
 	MisResultCondition(NoRecord, 500)
 	MisResultCondition(HasMission, 500)
 	MisResultCondition(HasItem, 3916, 1)
@@ -38,7 +38,7 @@ function DuplicateMission001()
 	TriggerAction( 1, AddNextFlag, 500, 10, 1 )
 	RegCurTrigger( 5001 )
 
------------------------------------再来一杯
+-----------------------------------
 	DefineMission( 501, "Another Cup Please!", 501 )
 	
 	MisBeginTalk( "<t>Oh my...The last drop of my wine is gone! But I am still thirsty for more...<n><t>Young adventurer, get me the famous \"Drunkern Dream\" from Argent bar. Faster!<n><t>Some Sashimi too will be nice...")
@@ -54,8 +54,8 @@ function DuplicateMission001()
 	MisNeed(MIS_NEED_ITEM, 3926, 1, 10, 1)
 	MisNeed(MIS_NEED_ITEM, 1478, 20, 20, 20)
 		
-	MisHelpTalk("zZZZzzzZZZ…I want more wine!")
-	MisResultTalk(" Ah…Good wine! I will tell you the secret now.<n><t>When I was young around your age, I gathered a group of enthusiastic adventurers like you and me. We went on a sea expedition once and salvage an ancient looking compass. We sail towards the direction it was pointing and suddenly, a hugh whirlpool appears in front of our ship and suck us into the portal.<n><t>Through the portal is a small island with a forsaken city in the middle of it. Piles of treasures litters the street of the city!<n><t>However, none of us are able to leave with any treasures. Anyone who tried to take any treasure from the city was killed by undead souls and skeletons that appeared out of nowhere! It is so scary! Only me and Little Daniel escaped that calamity.<n><t>You want me to bring you there? NO! I will never set foot on that cursed place ever again! Look for Little Daniel, he knows the way to get to the Forsaken City. Leave me with my wine...zZzz...")
+	MisHelpTalk("zZZZzzzZZZI want more wine!")
+	MisResultTalk(" AhGood wine! I will tell you the secret now.<n><t>When I was young around your age, I gathered a group of enthusiastic adventurers like you and me. We went on a sea expedition once and salvage an ancient looking compass. We sail towards the direction it was pointing and suddenly, a hugh whirlpool appears in front of our ship and suck us into the portal.<n><t>Through the portal is a small island with a forsaken city in the middle of it. Piles of treasures litters the street of the city!<n><t>However, none of us are able to leave with any treasures. Anyone who tried to take any treasure from the city was killed by undead souls and skeletons that appeared out of nowhere! It is so scary! Only me and Little Daniel escaped that calamity.<n><t>You want me to bring you there? NO! I will never set foot on that cursed place ever again! Look for Little Daniel, he knows the way to get to the Forsaken City. Leave me with my wine...zZzz...")
 	MisResultCondition(NoRecord, 501)
 	MisResultCondition(HasMission, 501)
 	MisResultCondition(HasItem, 3926, 1)
@@ -76,7 +76,7 @@ function DuplicateMission001()
 	TriggerAction( 1, AddNextFlag, 501, 20, 20 )
 	RegCurTrigger( 5012 )
 
------------------------------------醉生梦死
+-----------------------------------
 	DefineMission( 502, "Drunken Dreams", 502 )
 	
 	MisBeginTalk( "<t>Oh...Drunken Dreams? It must be that drunkyard who told you about it.<n><t>It requires special brewing ingredients that consist of Stramonium Flower, Rainbow Fruit and Strange Fruit. Get me these and I will brew one for you. However, it needed to be contained in a Snowy Trumpet Shell to make it tasty. Get me Snowy Trumpet Shell too.<n><t>And also a fee of 2000G for my effort.")
@@ -99,7 +99,7 @@ function DuplicateMission001()
 	MisPrize(MIS_PRIZE_ITEM, 3926, 1, 4)
 	MisPrizeSelAll()
 		
-	MisHelpTalk("Brewing of \"Drunken Dreams\"…All ingredients must be prepared….")
+	MisHelpTalk("Brewing of \"Drunken Dreams\"All ingredients must be prepared.")
 	MisResultTalk("Yes! These are the stuff. Looks like you are really determine. Take this wine that the Drunkyard wanted.")
 	MisResultCondition(NoRecord, 502)
 	MisResultCondition(HasMission, 502)
@@ -135,7 +135,7 @@ function DuplicateMission001()
 	TriggerAction( 1, AddNextFlag, 502, 20, 20 )
 	RegCurTrigger( 5024 )
 
------------------------------------废灵武士骸骨
+-----------------------------------
 	DefineMission( 503, "Skeleton of Sorrow Warrior", 503 )
 	
 	MisBeginTalk( "<t>Since the drunkyard send you here, I will help you. I have been there before. You will need an Ancient Generator to enter. Bring me 10 Robot Core and I will make it for you.<n><t>By the way, can you collect some bones for my research while you are there.")
@@ -155,7 +155,7 @@ function DuplicateMission001()
 	MisNeed(MIS_NEED_ITEM, 3436, 10, 30, 10)
 	MisNeed(MIS_NEED_ITEM, 3437, 10, 40, 10)
 		
-	MisHelpTalk("Hmm…This is a dangerous and meaningful quest. Maybe you should consider to take it up….")
+	MisHelpTalk("HmmThis is a dangerous and meaningful quest. Maybe you should consider to take it up.")
 	MisResultTalk("So these are the carcass of those undead.<n><t>I can feel them calling out to me! I wonder what is this mysterious force behind this. I will need to do an indepth research.<n><t>Maybe I might discover some secret!")
 	MisResultCondition(NoRecord, 503)
 	MisResultCondition(HasMission, 503)
@@ -222,7 +222,7 @@ function DuplicateMission001()
 	
 	MisBeginCondition(AlwaysFailure)
 
-	MisResultTalk("<t>Did Mark sent you to me?<n><t>I know...I love him too...Always do...！.")
+	MisResultTalk("<t>Did Mark sent you to me?<n><t>I know...I love him too...Always do....")
 	MisResultCondition(HasMission, 504)
 	MisBeginCondition(NoRecord, 504)
 	
@@ -464,7 +464,7 @@ function DuplicateMission001()
 	
 	MisBeginCondition(AlwaysFailure)
 	
-	MisResultTalk("<t>General Wellington...Its not worth it….")
+	MisResultTalk("<t>General Wellington...Its not worth it.")
 	MisResultCondition(HasMission, 511)
 	MisResultCondition(NoRecord, 511)
 	MisResultCondition(HasItem, 2416, 1)
@@ -570,7 +570,7 @@ function DuplicateMission001()
 	MisResultAction(ClearMission, 514)
 	MisResultAction(SetRecord, 514)
 
--- 杰克史派罗 >> 真真的船长
+--  >> 
 	DefineMission(585,"The Real Captain",515)
 	
 	MisBeginTalk("<t>Battle draws near! Wait for me Baborosa! Let us settle this once and for all!<n><t>My friend, if you can get back the Captain's Token from Baborosa, I will reward you greatly!<n><t>Let him know who is the real captain of the Black Jewel!")

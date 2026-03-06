@@ -138,8 +138,8 @@ function EudemonMission()
 
     DefineWorldMission(11, "Blood of Pirate", 11)
 
-    MisBeginTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? Hmm��I better run fast. Time to meet up with <bIcicle Royal - Mas>.")
-    MisHelpTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? Hmm��I better run fast. Time to meet up with <bIcicle Royal - Mas>.")
+    MisBeginTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? HmmI better run fast. Time to meet up with <bIcicle Royal - Mas>.")
+    MisHelpTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? HmmI better run fast. Time to meet up with <bIcicle Royal - Mas>.")
     MisBeginAction(AddMission, 11)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -149,8 +149,8 @@ function EudemonMission()
 
     DefineWorldMission(12, "Soul of Navy", 12)
 
-    MisBeginTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? Hmm��I better run fast. Time to meet up with <bGeneral - William>.")
-    MisHelpTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? Hmm��I better run fast. Time to meet up with <bGeneral - William>.")
+    MisBeginTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? HmmI better run fast. Time to meet up with <bGeneral - William>.")
+    MisHelpTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his henchmen? HmmI better run fast. Time to meet up with <bGeneral - William>.")
     MisBeginAction(AddMission, 12)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -160,8 +160,8 @@ function EudemonMission()
 
     DefineWorldMission(13, "Nameless One", 13)
 
-    MisBeginTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his underlings? Hmm��I better run fast. Time to meet up with <bArgent Secretary - Salvier>.")
-    MisHelpTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his underlings? Hmm��I better run fast. Time to meet up with <bArgent Secretary - Salvier>.")
+    MisBeginTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his underlings? HmmI better run fast. Time to meet up with <bArgent Secretary - Salvier>.")
+    MisHelpTalk("<t>I feel that Jack knows the solution but he would not tell me. Is it because I killed too many of his underlings? HmmI better run fast. Time to meet up with <bArgent Secretary - Salvier>.")
     MisBeginAction(AddMission, 13)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -182,8 +182,8 @@ function EudemonMission()
 
     DefineWorldMission(15, "Thundoria Bank", 15)
 
-    MisBeginTalk("<t>I examined the keys in my hand closely. It looks exquisite and beautiful. Although it is worn out, it still bare the logo of Thundoria bank. Looks like I have to head towards Thundoria��")
-    MisHelpTalk("<t>I examined the keys in my hand closely. It looks exquisite and beautiful. Although it is worn out, it still bare the logo of Thundoria bank. Looks like I have to head towards Thundoria��")
+    MisBeginTalk("<t>I examined the keys in my hand closely. It looks exquisite and beautiful. Although it is worn out, it still bare the logo of Thundoria bank. Looks like I have to head towards Thundoria")
+    MisHelpTalk("<t>I examined the keys in my hand closely. It looks exquisite and beautiful. Although it is worn out, it still bare the logo of Thundoria bank. Looks like I have to head towards Thundoria")
     MisBeginAction(AddMission, 15)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -193,8 +193,8 @@ function EudemonMission()
 
     DefineWorldMission(16, "Will of Andrew", 16)
 
-    MisBeginTalk("<t>' I am a little bird that longed for the freedom of the skies��' Please do not look at me this way, I will get shy.<n><t> What is this? Am I dreaming? Is this a genuine copy of Andrew's Will? I need <bJack's> verification to prove this.")
-    MisHelpTalk("<t>' I am a little bird that longed for the freedom of the skies��' Please do not look at me this way, I will get shy.<n><t> What is this? Am I dreaming? Is this a genuine copy of Andrew's Will? I need <bJack's> verification to prove this.")
+    MisBeginTalk("<t>' I am a little bird that longed for the freedom of the skies' Please do not look at me this way, I will get shy.<n><t> What is this? Am I dreaming? Is this a genuine copy of Andrew's Will? I need <bJack's> verification to prove this.")
+    MisHelpTalk("<t>' I am a little bird that longed for the freedom of the skies' Please do not look at me this way, I will get shy.<n><t> What is this? Am I dreaming? Is this a genuine copy of Andrew's Will? I need <bJack's> verification to prove this.")
     MisBeginAction(AddMission, 16)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -204,8 +204,8 @@ function EudemonMission()
 
     DefineWorldMission(17, "Love Entanglement", 17)
 
-    MisBeginTalk("<t>Seems like the vengeance between Little Daniel and Captain Jack will have to depend on this pumpkin head��Hope that it will bring back some sweet memories for Little Daniel.")
-    MisHelpTalk("<t>Seems like the vengeance between Little Daniel and Captain Jack will have to depend on this pumpkin head��Hope that it will bring back some sweet memories for Little Daniel.")
+    MisBeginTalk("<t>Seems like the vengeance between Little Daniel and Captain Jack will have to depend on this pumpkin headHope that it will bring back some sweet memories for Little Daniel.")
+    MisHelpTalk("<t>Seems like the vengeance between Little Daniel and Captain Jack will have to depend on this pumpkin headHope that it will bring back some sweet memories for Little Daniel.")
     MisBeginAction(AddMission, 17)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -257,8 +257,8 @@ function EudemonMission()
 
     DefineWorldMission(21, "Mystery Town", 21)
 
-    MisBeginTalk("<t>'I have been in this mystical little town for one week already and I am still unable to confirm if I am dreaming. This town filled my eyes with mystical happenings that I was unable to think, its forever spring in this uniquely mystical little town, you can hardly sense any worries here, with laughter filling every corner of the town. <n><t>I wish I could stay in this town forever, enjoying the life here. However, it seems like the detestable Navy does not think so, when dawn approaches, a warship appears on the horizon. I should leave now, otherwise this little town will suffer the same as my hometown��<n><t>If one should see this diary I hope they could share this memory with me and remember this town as 'Spring Town' '<n><t>(Hmm��this seems to be a joke��I better look for Holy Priestess to confirm this)")
-    MisHelpTalk("<t>'I have been in this mystical little town for one week already and I am still unable to confirm if I am dreaming. This town filled my eyes with mystical happenings that I was unable to think, its forever spring in this uniquely mystical little town, you can hardly sense any worries here, with laughter filling every corner of the town. <n><t>I wish I could stay in this town forever, enjoying the life here. However, it seems like the detestable Navy does not think so, when dawn approaches, a warship appears on the horizon. I should leave now, otherwise this little town will suffer the same as my hometown��<n><t>If one should see this diary I hope they could share this memory with me and remember this town as 'Spring Town' '<n><t>(Hmm��this seems to be a joke��I better look for Holy Priestess to confirm this)")
+    MisBeginTalk("<t>'I have been in this mystical little town for one week already and I am still unable to confirm if I am dreaming. This town filled my eyes with mystical happenings that I was unable to think, its forever spring in this uniquely mystical little town, you can hardly sense any worries here, with laughter filling every corner of the town. <n><t>I wish I could stay in this town forever, enjoying the life here. However, it seems like the detestable Navy does not think so, when dawn approaches, a warship appears on the horizon. I should leave now, otherwise this little town will suffer the same as my hometown<n><t>If one should see this diary I hope they could share this memory with me and remember this town as 'Spring Town' '<n><t>(Hmmthis seems to be a jokeI better look for Holy Priestess to confirm this)")
+    MisHelpTalk("<t>'I have been in this mystical little town for one week already and I am still unable to confirm if I am dreaming. This town filled my eyes with mystical happenings that I was unable to think, its forever spring in this uniquely mystical little town, you can hardly sense any worries here, with laughter filling every corner of the town. <n><t>I wish I could stay in this town forever, enjoying the life here. However, it seems like the detestable Navy does not think so, when dawn approaches, a warship appears on the horizon. I should leave now, otherwise this little town will suffer the same as my hometown<n><t>If one should see this diary I hope they could share this memory with me and remember this town as 'Spring Town' '<n><t>(Hmmthis seems to be a jokeI better look for Holy Priestess to confirm this)")
     MisBeginAction(AddMission, 21)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
 
@@ -313,8 +313,8 @@ function EudemonMission()
 
     DefineWorldMission(27, "Love Letter of Zhou", 27)
 
-    MisBeginTalk("<t>Although it is illegal to open letters belonging to others, I was still very curious about what this dreadful man has written. Hence, I opened the letter carefully ensuring that it could be sealed to its original look. Immediately, I regretted after reading the first sentence, it's a love letter, and a well-written love letter.<n><t> I quickly and cautiously sealed the letter up, my heart was pumping heavily as if I am running 1000 meters. I wonder if Wang Mo would notice it��")
-    MisHelpTalk("<t>Although it is illegal to open letters belonging to others, I was still very curious about what this dreadful man has written. Hence, I opened the letter carefully ensuring that it could be sealed to its original look. Immediately, I regretted after reading the first sentence, it's a love letter, and a well-written love letter.<n><t> I quickly and cautiously sealed the letter up, my heart was pumping heavily as if I am running 1000 meters. I wonder if Wang Mo would notice it��")
+    MisBeginTalk("<t>Although it is illegal to open letters belonging to others, I was still very curious about what this dreadful man has written. Hence, I opened the letter carefully ensuring that it could be sealed to its original look. Immediately, I regretted after reading the first sentence, it's a love letter, and a well-written love letter.<n><t> I quickly and cautiously sealed the letter up, my heart was pumping heavily as if I am running 1000 meters. I wonder if Wang Mo would notice it")
+    MisHelpTalk("<t>Although it is illegal to open letters belonging to others, I was still very curious about what this dreadful man has written. Hence, I opened the letter carefully ensuring that it could be sealed to its original look. Immediately, I regretted after reading the first sentence, it's a love letter, and a well-written love letter.<n><t> I quickly and cautiously sealed the letter up, my heart was pumping heavily as if I am running 1000 meters. I wonder if Wang Mo would notice it")
     MisBeginAction(AddMission, 27)
     MisCancelAction(SystemNotice, "This quest cannot be abandoned")
     MisNeed(MIS_NEED_DESP, "Send the <rPink Letter> to <b Wang Mo> at (3290, 2512)")

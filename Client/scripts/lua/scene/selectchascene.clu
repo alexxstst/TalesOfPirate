@@ -1,6 +1,0 @@
--- 创建选人场景
-nScene = SN_CreateScene( enumSelectChaScene, "选择人物", "", FORM_SELECT, 100, 2, 2000, 300 )	
-GP_GotoScene( nScene )
-
-SN_SetIsShowMinimap( FALSE )
-SN_SetIsShow3DCursor( FALSE )

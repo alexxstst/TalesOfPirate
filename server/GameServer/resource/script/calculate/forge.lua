@@ -949,7 +949,7 @@ function GetChaName_26(role, npc)
     local Money_Have = GetChaAttr(role, ATTR_GD)
     local item_num = CheckBagItem(role, 2887)
     if Money_Need > Money_Have or item_num <= 0 then
-        SystemNotice(role, "����û��ʥ�������Ǯ����")
+        SystemNotice(role, "")
     else
     end
     if Money_Have >= Money_Need and item_num > 0 then
@@ -957,7 +957,7 @@ function GetChaName_26(role, npc)
         TakeItem(role, 0, 2887, 1)
         PlayEffect(npc, 361)
         Notice(
-            "" .. cha_name .. "���쳤̾���ܲ������¸�ʥ����֮ǰ�������ҵ��Ҷ�֮��,����ս��Ҫ�δζ�Ӯ,����,������һ��ǿ���Ķ��ְ�,���š���"
+            "" .. cha_name .. ",,,,"
         )
     else
     end
@@ -969,14 +969,14 @@ function GetChaName_27(role, npc)
     local Money_Have = GetChaAttr(role, ATTR_GD)
     local item_num = CheckBagItem(role, 2887)
     if Money_Need > Money_Have or item_num <= 0 then
-        SystemNotice(role, "����û��ʥ�������Ǯ����")
+        SystemNotice(role, "")
     else
     end
     if Money_Have >= Money_Need and item_num > 0 then
         TakeMoney(role, nil, Money_Need)
         TakeItem(role, 0, 2887, 1)
         PlayEffect(npc, 361)
-        Notice("" .. cha_name .. "������:����·��,������ѽ,������������һ��椰�")
+        Notice("" .. cha_name .. ":,,")
     else
     end
 end
@@ -987,14 +987,14 @@ function GetChaName_28(role, npc)
     local Money_Have = GetChaAttr(role, ATTR_GD)
     local item_num = CheckBagItem(role, 2887)
     if Money_Need > Money_Have or item_num <= 0 then
-        SystemNotice(role, "����û��ʥ�������Ǯ����")
+        SystemNotice(role, "")
     else
     end
     if Money_Have >= Money_Need and item_num > 0 then
         TakeMoney(role, nil, Money_Need)
         TakeItem(role, 0, 2887, 1)
         PlayEffect(npc, 361)
-        Notice("" .. cha_name .. "ף���Լ��������콻��������ߣ���Ʊ�����У����ƴδ�Ӯ����ζ�ٶٺã����Ұ�������С�İ�����")
+        Notice("" .. cha_name .. "")
     else
     end
 end
@@ -4273,7 +4273,7 @@ function GetChaName5_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4311,7 +4311,7 @@ function GetChaName6_guildwar(role)
         SetChaSideID(Monster3, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4349,7 +4349,7 @@ function GetChaName7_guildwar(role)
         SetChaSideID(Monster3, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4389,7 +4389,7 @@ function GetChaName8_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4429,7 +4429,7 @@ function GetChaName9_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4469,7 +4469,7 @@ function GetChaName10_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4537,7 +4537,7 @@ function GetChaName11_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4605,7 +4605,7 @@ function GetChaName12_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4673,7 +4673,7 @@ function GetChaName13_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4741,7 +4741,7 @@ function GetChaName14_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4809,7 +4809,7 @@ function GetChaName15_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4877,7 +4877,7 @@ function GetChaName16_guildwar(role)
 
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -4957,7 +4957,7 @@ function GetChaName17_guildwar(role)
         SetChaSideID(Monster11, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -5047,7 +5047,7 @@ function GetChaName18_guildwar(role)
         SetChaSideID(Monster11, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -5137,7 +5137,7 @@ function GetChaName19_guildwar(role)
         SetChaSideID(Monster11, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -5227,7 +5227,7 @@ function GetChaName20_guildwar(role)
         SetChaSideID(Monster11, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -5317,7 +5317,7 @@ function GetChaName21_guildwar(role)
         SetChaSideID(Monster11, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -5407,7 +5407,7 @@ function GetChaName22_guildwar(role)
         SetChaSideID(Monster11, 1)
         SystemNotice(role, "Succuessfully launched ambush!")
     else
-        SystemNotice(role, "You do not have enough [Navy Token] ��")
+        SystemNotice(role, "You do not have enough [Navy Token] ")
     end
 end
 
@@ -6879,13 +6879,13 @@ function ChangeItem(character, npc)
 
     local am1 = CheckBagItem(character, 3066)
     if am1 < 1 then
-        SystemNotice(character, "������û�д�����ʹ��֤����Ŷ")
+        SystemNotice(character, "")
         return 0
     end
     local Money_Need = 50000
     local Money_Have = GetChaAttr(character, ATTR_GD)
     if Money_Need > Money_Have then
-        SystemNotice(character, "���Ľ�Ǯ���㣬���ܹ������")
+        SystemNotice(character, "")
         return 0
     else
         TakeMoney(character, nil, Money_Need)

@@ -1,0 +1,1233 @@
+CL_HMATTACK_CPP_00001	Rebirth Level %I64d
+CL_LANGUAGE_MATCH_0	English
+CL_LANGUAGE_MATCH_1	msg unable to create item effect ID = %d"
+CL_LANGUAGE_MATCH_10	Sailor
+CL_LANGUAGE_MATCH_100	Testing equipment and character size match system, if armor can be equipped on target character size but does not show any effect, open file iteminfoerror...
+CL_LANGUAGE_MATCH_1000	Exist, only one at a time.
+CL_LANGUAGE_MATCH_1001	Failed!
+CL_LANGUAGE_MATCH_1002	Gold not enough!
+CL_LANGUAGE_MATCH_1003	You have successfully purchased %d crystal, spend %d.
+CL_LANGUAGE_MATCH_1004	Success, waiting for seller!
+CL_LANGUAGE_MATCH_1005	You have successfully sold %d crystal, obtain %d.
+CL_LANGUAGE_MATCH_1006	Success, waiting for buyer!
+CL_LANGUAGE_MATCH_1007	Canceled success!
+CL_LANGUAGE_MATCH_1008	Canceled failed!
+CL_LANGUAGE_MATCH_1009	Success!
+CL_LANGUAGE_MATCH_101	Add ID As: %d Scene object will occur error , do you want to delete .obj files 
+CL_LANGUAGE_MATCH_1010	Success!
+CL_LANGUAGE_MATCH_1011	Too frequent, try again in 30 secs!
+CL_LANGUAGE_MATCH_1012	No item!
+CL_LANGUAGE_MATCH_1013	Wrong slot!
+CL_LANGUAGE_MATCH_1014	Wrong type!
+CL_LANGUAGE_MATCH_1015	The platform will be reset.
+CL_LANGUAGE_MATCH_1016	Buying %d, current %d, need %d, spent %d
+CL_LANGUAGE_MATCH_1017	Times up, refund %d
+CL_LANGUAGE_MATCH_1018	Selling %d, current %d, balance %d, recieved %d
+CL_LANGUAGE_MATCH_1019	Times up, refund %d
+CL_LANGUAGE_MATCH_102	Entering function key mode
+CL_LANGUAGE_MATCH_1020	Not enough, cannot trade!
+CL_LANGUAGE_MATCH_1021	Married
+CL_LANGUAGE_MATCH_1022	Sweet words
+CL_LANGUAGE_MATCH_1023	Attached heart
+CL_LANGUAGE_MATCH_1024	Forever and ever with you
+CL_LANGUAGE_MATCH_1025	Love as deep as sea
+CL_LANGUAGE_MATCH_1026	Soul attached to dream
+CL_LANGUAGE_MATCH_1027	Love stronger then gold
+CL_LANGUAGE_MATCH_1028	Love points
+CL_LANGUAGE_MATCH_1029	Operation refresh success!
+CL_LANGUAGE_MATCH_103	Exit function key mode
+CL_LANGUAGE_MATCH_1030	Cannot be deleted!
+CL_LANGUAGE_MATCH_1031	Invitation status busy
+CL_LANGUAGE_MATCH_1032	Invitation timed out
+CL_LANGUAGE_MATCH_1033	Offline
+CL_LANGUAGE_MATCH_1034	Guild have reach max number of member
+CL_LANGUAGE_MATCH_1035	Invitation canceled
+CL_LANGUAGE_MATCH_1036	Invitation for you to join the guild!
+CL_LANGUAGE_MATCH_1037	The one time sale of crystal cannot be over 20 billion!
+CL_LANGUAGE_MATCH_1038	You have no access!
+CL_LANGUAGE_MATCH_1039	You can't lock your inventory if you have time-base item!
+CL_LANGUAGE_MATCH_104	Start to change display setting width = %d, height = %d, window = %d"
+CL_LANGUAGE_MATCH_1040	Amount cannot be 0!
+CL_LANGUAGE_MATCH_1041	(Equipped)
+CL_LANGUAGE_MATCH_1042	Please fill in the amount of crystal you are buying!
+CL_LANGUAGE_MATCH_1043	Not available, please refresh!
+CL_LANGUAGE_MATCH_1044	Bullhorn channel activated
+CL_LANGUAGE_MATCH_1045	Supply of Call of Mordo depleting soon.
+CL_LANGUAGE_MATCH_1046	Call of Mordo Depleted
+CL_LANGUAGE_MATCH_1047	Necessary item for using Bullhorn Channel
+CL_LANGUAGE_MATCH_1048	Call of Mordo
+CL_LANGUAGE_MATCH_1049	Bullhorn
+CL_LANGUAGE_MATCH_105	Successful Toggle Screen!"
+CL_LANGUAGE_MATCH_1050	DreamIsland
+CL_LANGUAGE_MATCH_1051	Kick
+CL_LANGUAGE_MATCH_1052	Ban
+CL_LANGUAGE_MATCH_1053	Are you sure you\n\n want to ban %
+CL_LANGUAGE_MATCH_1054	Ignored
+CL_LANGUAGE_MATCH_1055	Remove
+CL_LANGUAGE_MATCH_1056	Ignore
+CL_LANGUAGE_MATCH_1057	Are you sure you want\n\n to ignore %
+CL_LANGUAGE_MATCH_1058	Are you sure you want\n\n to bet %s gol
+CL_LANGUAGE_MATCH_1059	Are you sure you want\n\n to fight without melee and skill
+CL_LANGUAGE_MATCH_106	Entering camera follow mode
+CL_LANGUAGE_MATCH_107	Cancel camera follow mode
+CL_LANGUAGE_MATCH_108	Show hidden player route
+CL_LANGUAGE_MATCH_109	Show hidden center display hint
+CL_LANGUAGE_MATCH_11	Oarsman
+CL_LANGUAGE_MATCH_110	lack of parameter
+CL_LANGUAGE_MATCH_111	cannot locate designated monster file
+CL_LANGUAGE_MATCH_112	release monster
+CL_LANGUAGE_MATCH_113	Monster release error, Character ID = %d"
+CL_LANGUAGE_MATCH_114	read monster successful
+CL_LANGUAGE_MATCH_115	Saving monster file successful!
+CL_LANGUAGE_MATCH_116	Designation execution completed!
+CL_LANGUAGE_MATCH_117	%d,%s, effect [%d] does not exist"
+CL_LANGUAGE_MATCH_118	Persists
+CL_LANGUAGE_MATCH_119	%d,%s,effect [%d] as Persists effect"
+CL_LANGUAGE_MATCH_12	Captain
+CL_LANGUAGE_MATCH_120	execution successful
+CL_LANGUAGE_MATCH_121	     Tales of Pirates Online Thanks list 
+CL_LANGUAGE_MATCH_122	 Zankza, kLabMouse, GameMaker 
+CL_LANGUAGE_MATCH_123	and others.
+CL_LANGUAGE_MATCH_124	No internet connection!
+CL_LANGUAGE_MATCH_125	Effect: %d Character: %d object: %d
+CL_LANGUAGE_MATCH_126	msg cannot target non main character [%s] forging ID:%d
+CL_LANGUAGE_MATCH_127	msg non existent forging effect ID:%d
+CL_LANGUAGE_MATCH_128	Test Forging
+CL_LANGUAGE_MATCH_129	read-in[%s], row[%d]
+CL_LANGUAGE_MATCH_13	Pirate
+CL_LANGUAGE_MATCH_130	Start autotest
+CL_LANGUAGE_MATCH_131	Start test ended
+CL_LANGUAGE_MATCH_132	Start auto test effect [%d-%d], test count: %d
+CL_LANGUAGE_MATCH_133	Start auto test skill effect[%d-%d], test count:%d
+CL_LANGUAGE_MATCH_134	Network disconnected!
+CL_LANGUAGE_MATCH_135	Connection timed out:0x%X
+CL_LANGUAGE_MATCH_136	You are disconnecting from server. Press confirm to get back to login interface\nReason: %s[%d
+CL_LANGUAGE_MATCH_137	Please take note, you are connected else where!
+CL_LANGUAGE_MATCH_138	Disconnected with server. Confirm to go back to login screen!
+CL_LANGUAGE_MATCH_139	Disconnecting from server. Press confirm to return to login screen\nReason: [%d
+CL_LANGUAGE_MATCH_14	Overlord of 7 Seas
+CL_LANGUAGE_MATCH_140	Warning: You have been caught using illegal program tools\nYour account has been recorded, please do not use it agai
+CL_LANGUAGE_MATCH_141	Server Movement Prediction On
+CL_LANGUAGE_MATCH_142	Server Movement Prediction Off
+CL_LANGUAGE_MATCH_143	Pirate Angel
+CL_LANGUAGE_MATCH_144	Proficiency Increase: %s
+CL_LANGUAGE_MATCH_145	EXP Gained: %s
+CL_LANGUAGE_MATCH_146	Level %I64d now
+CL_LANGUAGE_MATCH_147	msgShowHitEffect, Unable to allocate effect space!"
+CL_LANGUAGE_MATCH_148	DelState() false, SynchroNum[%d], Head[%d], Tail[%d], ID[%d] not same\n
+CL_LANGUAGE_MATCH_149	[%s] cannot be used
+CL_LANGUAGE_MATCH_15	Riches can match a country
+CL_LANGUAGE_MATCH_150	Insufficient energy to cast [%s]
+CL_LANGUAGE_MATCH_151	Cannot use normal attack
+CL_LANGUAGE_MATCH_152	Unable to use skill
+CL_LANGUAGE_MATCH_153	SP insufficient to cast [%s]
+CL_LANGUAGE_MATCH_154	[%s] can only be casted on self
+CL_LANGUAGE_MATCH_155	[%s] can only be used for fising
+CL_LANGUAGE_MATCH_156	[%s] can only be used to salvage sunken ship
+CL_LANGUAGE_MATCH_157	Skill [%s] can only be used to chop wood
+CL_LANGUAGE_MATCH_158	[%s] can only be used for mining
+CL_LANGUAGE_MATCH_159	[%s] can only be cast on party member
+CL_LANGUAGE_MATCH_16	msg read character data failed!
+CL_LANGUAGE_MATCH_160	[%s] can only be casted on dead player
+CL_LANGUAGE_MATCH_161	[%s] casted on wrong target
+CL_LANGUAGE_MATCH_162	Beneficial skill [%s] cannot be casted on monster
+CL_LANGUAGE_MATCH_163	Harmful skill [%s] cannot be used on self
+CL_LANGUAGE_MATCH_164	Harmful skill [%s] cannot be casted on party member
+CL_LANGUAGE_MATCH_165	[%s] cannot be used on dead target
+CL_LANGUAGE_MATCH_166	Not in PK region. Unable to cast [%s] on players
+CL_LANGUAGE_MATCH_167	Target cannot be repaired [%s]
+CL_LANGUAGE_MATCH_168	Initialization failed!
+CL_LANGUAGE_MATCH_169	Connection failed
+CL_LANGUAGE_MATCH_17	switch skill failed:%s, does not have this skill
+CL_LANGUAGE_MATCH_170	%s\n Server is under maintenance \n Please choose another serv
+CL_LANGUAGE_MATCH_171	%s\nServer status norma
+CL_LANGUAGE_MATCH_172	%s\nThe server is bus
+CL_LANGUAGE_MATCH_173	%s\n Server is full\n Please join other serve
+CL_LANGUAGE_MATCH_174	Account name as null
+CL_LANGUAGE_MATCH_175	Password cannot be shorter than 4 letters
+CL_LANGUAGE_MATCH_176	PAI:
+CL_LANGUAGE_MATCH_177	PAI: ...
+CL_LANGUAGE_MATCH_178	PAI: 123
+CL_LANGUAGE_MATCH_179	Select %d Region, server %d Server group"
+CL_LANGUAGE_MATCH_18	During switching of skill, skill cannot be used: %s,
+CL_LANGUAGE_MATCH_180	msg%d Region %d Group, Empty Server IP, Unable to connect"
+CL_LANGUAGE_MATCH_181	Game version error. Please press Confirm\n to activate autopatch or press Cancel\n to download the patch manually at our websit
+CL_LANGUAGE_MATCH_182	activate script game platform!
+CL_LANGUAGE_MATCH_183	msglua extend function[%s] parameter unit or type error!
+CL_LANGUAGE_MATCH_184	msglua extend function[%s] current Scene as null
+CL_LANGUAGE_MATCH_185	Abnormal
+CL_LANGUAGE_MATCH_186	unknown abnormality
+CL_LANGUAGE_MATCH_187	Please install DirectX8.1 or higher, Run the game afterwards!
+CL_LANGUAGE_MATCH_188	msg mini-map [%s] loading successful!
+CL_LANGUAGE_MATCH_189	msg mini-map [%s] loading failed!
+CL_LANGUAGE_MATCH_19	Switch skill: %s
+CL_LANGUAGE_MATCH_190	msg program as game program, Unable to run directly, Please launch the game correctly!
+CL_LANGUAGE_MATCH_191	msg Game failed to initialize (GameApp), Exit!
+CL_LANGUAGE_MATCH_192	Input
+CL_LANGUAGE_MATCH_193	generate binary system list file ok!
+CL_LANGUAGE_MATCH_194	Nameless map
+CL_LANGUAGE_MATCH_195	Obtained [%d] item(s)
+CL_LANGUAGE_MATCH_196	Only area of effect skill can be used to target ground surface
+CL_LANGUAGE_MATCH_197	simple tour
+CL_LANGUAGE_MATCH_198	Entering editor mode
+CL_LANGUAGE_MATCH_199	Close editor mode
+CL_LANGUAGE_MATCH_2	Unknown
+CL_LANGUAGE_MATCH_20	Set ship appearance notice, incorrect ship notice ID[%d]!
+CL_LANGUAGE_MATCH_200	FPS %d-%d   Romance Hour %d  FrameMove time %d  Internet delay : %d  Peak Value %d  Lowest %d
+CL_LANGUAGE_MATCH_201	character quantity %d   number of surface %d    Romance Hour %d   total effect count %d
+CL_LANGUAGE_MATCH_202	Effective scene count %d  Showtime count %d  number of surface %d   Romance Hour %d  Culling count %d
+CL_LANGUAGE_MATCH_203	Surface showtime  %d  seawater %d  Total %d  UI showtime %d Scene whole showtime %d
+CL_LANGUAGE_MATCH_204	Total memory space %d   Current set %d %d %d   Peak Value %d
+CL_LANGUAGE_MATCH_205	Revive: %d
+CL_LANGUAGE_MATCH_206	Total : %d
+CL_LANGUAGE_MATCH_207	cancel object conceal!
+CL_LANGUAGE_MATCH_208	open object altitude obstruction displayed
+CL_LANGUAGE_MATCH_209	Close object altitude obstruction display
+CL_LANGUAGE_MATCH_21	Set ship appearance notice, incorrect ship notice ID [%d]!
+CL_LANGUAGE_MATCH_210	Bind selected object
+CL_LANGUAGE_MATCH_211	Cancel bind
+CL_LANGUAGE_MATCH_212	Show radius automatic generated terrain attribute
+CL_LANGUAGE_MATCH_213	selected object create obstruction and altitude attribute
+CL_LANGUAGE_MATCH_214	Hide current selected object [%s]
+CL_LANGUAGE_MATCH_215	Open interchange object display
+CL_LANGUAGE_MATCH_216	close interchange object display
+CL_LANGUAGE_MATCH_217	effect creation failed.
+CL_LANGUAGE_MATCH_218	[%s] was kicked by party leader
+CL_LANGUAGE_MATCH_219	Party has been created. Leader is [%s]
+CL_LANGUAGE_MATCH_22	Set ship appearance notice, incorrect ship notice ID[%d]!
+CL_LANGUAGE_MATCH_220	Party is disbanded
+CL_LANGUAGE_MATCH_221	Current party adds [%s] as member
+CL_LANGUAGE_MATCH_222	[%s] has left the party
+CL_LANGUAGE_MATCH_223	Received party invitation :%s,%d"
+CL_LANGUAGE_MATCH_224	Received party cancel:%d, reason:%d"
+CL_LANGUAGE_MATCH_225	Self invitation list busy, new invitation overwrite previous invitation
+CL_LANGUAGE_MATCH_226	Invitation timed out
+CL_LANGUAGE_MATCH_227	Target has gone offline
+CL_LANGUAGE_MATCH_228	Party is full
+CL_LANGUAGE_MATCH_229	target joined other/create party or target joined other party and cancel invitation
+CL_LANGUAGE_MATCH_23	Set ship appearance notice , incorrect ship mobility notice ID[%d]!
+CL_LANGUAGE_MATCH_230	Received a friend's invitation: %s,%d"
+CL_LANGUAGE_MATCH_231	Friend request rejected: %d, reason:%d"
+CL_LANGUAGE_MATCH_232	Self invitation list busy
+CL_LANGUAGE_MATCH_233	Target's friend list is full
+CL_LANGUAGE_MATCH_234	Friend list is full
+CL_LANGUAGE_MATCH_235	Invitation cancelled
+CL_LANGUAGE_MATCH_236	Friend has come online:%d, reason:%d"
+CL_LANGUAGE_MATCH_237	Friend: %s Online
+CL_LANGUAGE_MATCH_238	Friend has gone offline: %d. Reason:%d"
+CL_LANGUAGE_MATCH_239	Friend: %s Offline
+CL_LANGUAGE_MATCH_24	Please update .\scripts\txt\CharacterAction.tx
+CL_LANGUAGE_MATCH_240	Delete friend: %d. Reason: %d"
+CL_LANGUAGE_MATCH_241	Add Friend: %s,%d"
+CL_LANGUAGE_MATCH_242	Obtain friend list (%d):%s,%d"
+CL_LANGUAGE_MATCH_243	Refresh friend list:char_id=%d, motto=%s, icon=%d, degree=%d, job=%s\n
+CL_LANGUAGE_MATCH_244	msgNetMC_GUILD_INFO does not have scene\n
+CL_LANGUAGE_MATCH_245	msgNetMC_GUILD_INFO has no lead\n
+CL_LANGUAGE_MATCH_246	msgNetMC_GUILD_INFO does not locate character [%u]\n
+CL_LANGUAGE_MATCH_247	msg[%u], cannot find ID:%s\n
+CL_LANGUAGE_MATCH_248	    Name: %s, Class: %s, Lv: %d, Apperance: %d, %d,%d,%d,%d,%d\n
+CL_LANGUAGE_MATCH_249	msgNetLoginSuccess, does not have Login scene\n
+CL_LANGUAGE_MATCH_25	Error
+CL_LANGUAGE_MATCH_250	msgNetLoginFailure, does not have Login scene\n
+CL_LANGUAGE_MATCH_251	You have entered too many password, program will exit by itself 
+CL_LANGUAGE_MATCH_252	Your account has been suspended! Please login website to resolve! 
+CL_LANGUAGE_MATCH_253	Username invalid! 
+CL_LANGUAGE_MATCH_254	msgNetBeginPlay, does not have Login scene\n
+CL_LANGUAGE_MATCH_255	Scene Login 
+CL_LANGUAGE_MATCH_256	msgNetNewCha, does not have Login scene\n
+CL_LANGUAGE_MATCH_257	msgNetDelCha, does not have Login scene\n
+CL_LANGUAGE_MATCH_258	msgNetActorMove error occurs, lead has movement status\n
+CL_LANGUAGE_MATCH_259	msgNetActorMove occurs an error, unable to locate player [%u], point [%u], first coordinate [%d,%d]\n
+CL_LANGUAGE_MATCH_26	msg Character creation failed (LoadCha), TypeID = %d, Name = %s"
+CL_LANGUAGE_MATCH_260	msgNetActorMove AddState return false,state:%d, Log name: [%s], point [%u], status [%u], next point: [%d,%d]	Tick:[%u]\n
+CL_LANGUAGE_MATCH_261	msg lost server movement notice once, Log name:[%s], value [%u], status [%u], next point: [%d,%d]	Tick:[%u]\n
+CL_LANGUAGE_MATCH_262	msg server movement notice unit abnormal, Log name:[%s], point[%u], status[%u], next point:[%d,%d]	Tick:[%u]\n
+CL_LANGUAGE_MATCH_263	msg server switch lead, lead has not been created\n
+CL_LANGUAGE_MATCH_264	msg server create a duplicate character [%s],WoldID[%u],OldLogName[%s]\n
+CL_LANGUAGE_MATCH_265	msg server hide lead, lead has not been created\n
+CL_LANGUAGE_MATCH_266	NetSynSkillState ID [%u] not found\n
+CL_LANGUAGE_MATCH_267	msgNetActorSkillRep error occurs, skill display [%u], does not locate player [%u]\n
+CL_LANGUAGE_MATCH_268	msgNetActorSkillRep produce an error, lead must be in attack status\n
+CL_LANGUAGE_MATCH_269	msgNetActorSkillEff Error, add skill damage, skill ID[%u]illegal \n
+CL_LANGUAGE_MATCH_27	msg Character action failed to load (LoadPose), TypeID = %d, Name = %s"
+CL_LANGUAGE_MATCH_270	msgNetActorLean leaning, cannot locate ID:%d\n
+CL_LANGUAGE_MATCH_271	Saving character, please wait... 
+CL_LANGUAGE_MATCH_272	Illegal player chat,ID:[%d],Name:[%s],LogName:[%s],say:%s\n
+CL_LANGUAGE_MATCH_273	msg Server need to create a repeated item: WorldID [%u], OldName[%s]\n
+CL_LANGUAGE_MATCH_274	msg failed to create item, Item ID = %d\n
+CL_LANGUAGE_MATCH_275	Recieve[change energy: Link,Energy]\n
+CL_LANGUAGE_MATCH_276	Recieve[revive box],ID[%u]	Tick:[%u]\n"
+CL_LANGUAGE_MATCH_277	No World Map available for this area! 
+CL_LANGUAGE_MATCH_278	Recieve[switch lead]:	Tick:%u\n
+CL_LANGUAGE_MATCH_279	msgNetSynAttr, cannot locate ID [%u]\n
+CL_LANGUAGE_MATCH_28	msg invalid action ID [%d]"
+CL_LANGUAGE_MATCH_280	msg while adding item, slot count [%d] exceeded total slot [%d]\n
+CL_LANGUAGE_MATCH_281	msg while adding item[%d], item does not exist\n
+CL_LANGUAGE_MATCH_282	msg add item [%s], form exceed area [%d]\n
+CL_LANGUAGE_MATCH_283	Obtain [%s × %d]! 
+CL_LANGUAGE_MATCH_284	System adds [%s × %d]! 
+CL_LANGUAGE_MATCH_285	Trade received [%s × %d]! 
+CL_LANGUAGE_MATCH_286	Forging successful [%s × %d]! 
+CL_LANGUAGE_MATCH_287	Forging failed [%s × %d]! 
+CL_LANGUAGE_MATCH_288	msgdelete item fail, exceed list [%d] or current slot does not have item \n
+CL_LANGUAGE_MATCH_289	Obtain [%s] %d / %d! 
+CL_LANGUAGE_MATCH_29	Delete skill effect: %d, Pointer:%u"
+CL_LANGUAGE_MATCH_290	Unknown trigger: param1 = %d, param2 = %d, param3 = %d 
+CL_LANGUAGE_MATCH_291	msgNetFailedAction does not has lead\n
+CL_LANGUAGE_MATCH_292	Recieve[lead switch default skill]:	Tick:[%u]\n
+CL_LANGUAGE_MATCH_293	msg set default skill failed %d, does not have this skill\n
+CL_LANGUAGE_MATCH_294	Target address: %s\n
+CL_LANGUAGE_MATCH_295	Current map 
+CL_LANGUAGE_MATCH_296	Ground status synchronize, area position [%d, %d]	Status Count%d\n"
+CL_LANGUAGE_MATCH_297	Monster emote:%d\n
+CL_LANGUAGE_MATCH_298	repelled, new location: [%d,%d].\n
+CL_LANGUAGE_MATCH_299	Party
+CL_LANGUAGE_MATCH_3	killed [%s] %d / %d!
+CL_LANGUAGE_MATCH_30	 Synchronize skill status (decrease): ID:%d, Name:%s, Effect ID:%u"
+CL_LANGUAGE_MATCH_300	Synchronize party ID : Leader %d, Self %d.\n
+CL_LANGUAGE_MATCH_301	Accept trade Type = %d , Index = %d , Count = %d , ItemID = %d , Money = %d\n
+CL_LANGUAGE_MATCH_302	end trade acception result\n
+CL_LANGUAGE_MATCH_303	Server send unknown trade object drag type! 
+CL_LANGUAGE_MATCH_304	unknown quest log type! 
+CL_LANGUAGE_MATCH_305	Challenge Notice 
+CL_LANGUAGE_MATCH_306	First party %d members. Second party %d members.\n
+CL_LANGUAGE_MATCH_307		Name: %s. Level: %d. Class: %s.\n
+CL_LANGUAGE_MATCH_308	Character Name: %s, ID: %u, Location[%s, %d, %d] 
+CL_LANGUAGE_MATCH_309	Map name: %s, PING: %u 
+CL_LANGUAGE_MATCH_31	Delete already got effect:  %d, Pointer:%u"
+CL_LANGUAGE_MATCH_310		ID	Status	Level	SP consumption	Redischarge cooldown[secs]	Skill range notice \n
+CL_LANGUAGE_MATCH_311		Status ID	Level\n
+CL_LANGUAGE_MATCH_312		Attribute ID	Attribute Value\n
+CL_LANGUAGE_MATCH_313		inventory location: %d	 item ID: %d\n
+CL_LANGUAGE_MATCH_314		Item quantity: %d	Durability: %d\%d	Energy: %d\%d\n
+CL_LANGUAGE_MATCH_315	Item ID in inventory is invalid [%d], Game going to exit!' 
+CL_LANGUAGE_MATCH_316		Forge Count: %d\n
+CL_LANGUAGE_MATCH_317		Attribute ID: %d	Attribute Value: %d\n
+CL_LANGUAGE_MATCH_318	Inventory error 
+CL_LANGUAGE_MATCH_319	effective item count %d, exceeded maximum item count\n
+CL_LANGUAGE_MATCH_32	Synchronize skill status (add): ID:%d, Name:%s, Effect ID:%u"
+CL_LANGUAGE_MATCH_320		Slot count: %d\n
+CL_LANGUAGE_MATCH_321		Type: %d	Inventory position: %d\n
+CL_LANGUAGE_MATCH_322		GridID: %d, %d\n
+CL_LANGUAGE_MATCH_323		GridID: %d\n
+CL_LANGUAGE_MATCH_324		Type:%d, GridID: %d\n
+CL_LANGUAGE_MATCH_325	Please assign your stat points 
+CL_LANGUAGE_MATCH_326	Attribute %d, Increment %d.\n
+CL_LANGUAGE_MATCH_327	Skill Level Up 
+CL_LANGUAGE_MATCH_328	Skill ID: %d, Raise %d level\n
+CL_LANGUAGE_MATCH_329	Open object display pic reduction 
+CL_LANGUAGE_MATCH_33	Create skill effect: ID:%d, Dummy:%d, Pointer:%u"
+CL_LANGUAGE_MATCH_330	Close object display pic reduction 
+CL_LANGUAGE_MATCH_331	Open debug notice display 
+CL_LANGUAGE_MATCH_332	Close debug notice display 
+CL_LANGUAGE_MATCH_333	Reset camera parameter 
+CL_LANGUAGE_MATCH_334	show object Terrain 
+CL_LANGUAGE_MATCH_335	close object Terrain display 
+CL_LANGUAGE_MATCH_336	Open all object display 
+CL_LANGUAGE_MATCH_337	close all object display 
+CL_LANGUAGE_MATCH_338	Show hidden seek route 
+CL_LANGUAGE_MATCH_339	cannot open with read only mode! 
+CL_LANGUAGE_MATCH_34	Connecting to server: %s"
+CL_LANGUAGE_MATCH_340	Incorrect version! 
+CL_LANGUAGE_MATCH_341	msg unable to create new ship, Unable to create character !\n
+CL_LANGUAGE_MATCH_342	msg Unable to create character, Unable to create character !\n
+CL_LANGUAGE_MATCH_343	msg invalid scene object ScriptID = %d, Unable to add new things!\n
+CL_LANGUAGE_MATCH_344	Serious warning, Item in current scene reach max [%d]! 
+CL_LANGUAGE_MATCH_345	Serious warning, Items on screen has already reached [%d]! 
+CL_LANGUAGE_MATCH_346	msg item on screen already reach limit [%d], Unable to add new objects! 
+CL_LANGUAGE_MATCH_347	effectquantity reach limit, Unable to add new effect! 
+CL_LANGUAGE_MATCH_348	msg limit has been reached, Unable to add new objects! 
+CL_LANGUAGE_MATCH_349	msg invalid SceneItem Type ID = %d, Unable to create!\n
+CL_LANGUAGE_MATCH_35	A Mysterious Race - Lance. Top notch pirate wanted by the Navy. Well versed in using swords, bows and fireguns. Vast knowledge of the sea make him suitable to become an Explorer, Warrior or Hunter.                                                                                                
+CL_LANGUAGE_MATCH_350	msg create SceneItem %d[%s] Reading document [%s] failed\n
+CL_LANGUAGE_MATCH_351	Nameless object 
+CL_LANGUAGE_MATCH_352	msg repeatedly add object type index, object type = %d, ArrayID = %d\n
+CL_LANGUAGE_MATCH_353	msg delete non existing document from index, object type = %d, ArrayID = %d\n
+CL_LANGUAGE_MATCH_354	msg create object type ID invalid : ScriptID = %d\n
+CL_LANGUAGE_MATCH_355	Create file 
+CL_LANGUAGE_MATCH_356	Failed! 
+CL_LANGUAGE_MATCH_357	Have been destroyed! 
+CL_LANGUAGE_MATCH_358	Does not exist! 
+CL_LANGUAGE_MATCH_359	cannot open in affix mode! 
+CL_LANGUAGE_MATCH_36	Demi Demon - Carsise. Don't be fooled by appearances, under these fully developed muscles lies a kind heart.. The only moment Carsise chooses to show traces of his devilish bloodline is when his close companions are in grave danger.                                                                 
+CL_LANGUAGE_MATCH_360	%s Going to switch to new version, Required seconds 
+CL_LANGUAGE_MATCH_361	Information 
+CL_LANGUAGE_MATCH_362	%s Already successfully switch to new version, Source file saved as: %s 
+CL_LANGUAGE_MATCH_363	Success 
+CL_LANGUAGE_MATCH_364	msgincorrect object ID\n
+CL_LANGUAGE_MATCH_365	Object file has been damaged! 
+CL_LANGUAGE_MATCH_366	Started to arrange directory %s Down .obj Document, Backup current file 
+CL_LANGUAGE_MATCH_367	Started to arrange directory %s Down .obj Document, Do not distribute source file 
+CL_LANGUAGE_MATCH_368	*.obj Tidy up log files %s\n
+CL_LANGUAGE_MATCH_369	Completed succesfully!\n
+CL_LANGUAGE_MATCH_37	A follower of the Goddess - Phyllis. The Navy fears her. She can be found at any place as long as there are treasures. Agile and of royal bloodline. She can become a Hunter, Explorer or Herbalist.                                                                
+CL_LANGUAGE_MATCH_370	establish temporary file failed\n
+CL_LANGUAGE_MATCH_371	File rename failed\n
+CL_LANGUAGE_MATCH_372	Open file failed\n
+CL_LANGUAGE_MATCH_373	source file is damaged or version error\n
+CL_LANGUAGE_MATCH_374	consist of distribution error\n
+CL_LANGUAGE_MATCH_375	Unknown Error 
+CL_LANGUAGE_MATCH_376	msg game sound error, Invalid Sound ID = [%d]\n
+CL_LANGUAGE_MATCH_377	msg create attack circle error 
+CL_LANGUAGE_MATCH_378	msg create attack circle error 
+CL_LANGUAGE_MATCH_379	msg create movement aura error 
+CL_LANGUAGE_MATCH_38	Mysterious Being - Ami. Untainted by the hands of time, she will not grow up nor grow old. Ami holds a close relationship with nature and its surroundings thus granting her the ability to raise the dead or tamper with the weather.                                                                 
+CL_LANGUAGE_MATCH_380	transferfunction[%s,%s] floating point is incorrect! 
+CL_LANGUAGE_MATCH_381	GetStoneHint,transferfunction[%s,%d] , floating point incorrect! 
+CL_LANGUAGE_MATCH_382	not function name 
+CL_LANGUAGE_MATCH_383	msgtransfer script, return value type does not match! 
+CL_LANGUAGE_MATCH_384	Do you wish to delete \ncharacter?
+CL_LANGUAGE_MATCH_385	Newbie 
+CL_LANGUAGE_MATCH_386	Server group [%s], Product code [%s]\n
+CL_LANGUAGE_MATCH_387	error, The number of servers inside this region is %d, invalid group number = %d\n
+CL_LANGUAGE_MATCH_388	msg Server GateIP as 0, Unable to select Gate!\n
+CL_LANGUAGE_MATCH_389	Select random server [%s] Gate[%d], ip = %s, group got  %d IP to choose\n
+CL_LANGUAGE_MATCH_39	Argent City
+CL_LANGUAGE_MATCH_390	Please input name of ship 
+CL_LANGUAGE_MATCH_391	Ship must be %d - %d In-between words 
+CL_LANGUAGE_MATCH_392	Trading in progress, Please end trade before opening. 
+CL_LANGUAGE_MATCH_393	Please select one of the following ships: 
+CL_LANGUAGE_MATCH_394	Center: %u, %u\n
+CL_LANGUAGE_MATCH_395	msg icon load error %s 
+CL_LANGUAGE_MATCH_396	Eastern Goaf 
+CL_LANGUAGE_MATCH_397	Lone Tower 
+CL_LANGUAGE_MATCH_398	Attack, form does not have set skill attribute 
+CL_LANGUAGE_MATCH_399	msg character [%s]Discharge skill [%s], current Pose [%d] no keyframe\n
+CL_LANGUAGE_MATCH_4	Auto attack [%s]
+CL_LANGUAGE_MATCH_40	Shaitan City
+CL_LANGUAGE_MATCH_400	msg skill level[%d] higher than class max skill level [%d]!\n
+CL_LANGUAGE_MATCH_401	msg while attacking, attack speed as zero\n
+CL_LANGUAGE_MATCH_402	status ended\n
+CL_LANGUAGE_MATCH_403	Start status, count: %d, Speed: %f Action: 
+CL_LANGUAGE_MATCH_404	Recent: %d/%d/%d Total: %d/%.2f/%d FPS:%d/%.2f/%d\n
+CL_LANGUAGE_MATCH_405	Recent: %d/%d/%d Total: %d/%.2f/%d 
+CL_LANGUAGE_MATCH_406	You are unable to move currently 
+CL_LANGUAGE_MATCH_407	Distance is too far: %d 
+CL_LANGUAGE_MATCH_408	Moving time:%u, Area [%u, %u], Distance: %02f\n
+CL_LANGUAGE_MATCH_409	msg status [%s], CActionState::SetServerID[%d] is error\n
+CL_LANGUAGE_MATCH_41	Icicle Castle
+CL_LANGUAGE_MATCH_410	does not have defined interface frmRemind! 
+CL_LANGUAGE_MATCH_411	chat.clu interface [%s] cannot locate control [%s] 
+CL_LANGUAGE_MATCH_412	does not have defined interface frmChat! 
+CL_LANGUAGE_MATCH_413	does not have defined interface frmChatMd! 
+CL_LANGUAGE_MATCH_414	does not have defined interface frmChatMin! 
+CL_LANGUAGE_MATCH_415	with  
+CL_LANGUAGE_MATCH_416	 Dialogue 
+CL_LANGUAGE_MATCH_417	Currently with %d Player conversation 
+CL_LANGUAGE_MATCH_418	Chat [%d Members]: 
+CL_LANGUAGE_MATCH_419	[%d players] 
+CL_LANGUAGE_MATCH_42	You must select Argent City \n as starting town
+CL_LANGUAGE_MATCH_420	invites you to join party! 
+CL_LANGUAGE_MATCH_421	zero 
+CL_LANGUAGE_MATCH_422	negative 
+CL_LANGUAGE_MATCH_423	1
+CL_LANGUAGE_MATCH_424	2
+CL_LANGUAGE_MATCH_425	3
+CL_LANGUAGE_MATCH_426	4
+CL_LANGUAGE_MATCH_427	5
+CL_LANGUAGE_MATCH_428	6
+CL_LANGUAGE_MATCH_429	7
+CL_LANGUAGE_MATCH_43	You must select Shaitan City \n as starting town
+CL_LANGUAGE_MATCH_430	8
+CL_LANGUAGE_MATCH_431	9
+CL_LANGUAGE_MATCH_432	10 
+CL_LANGUAGE_MATCH_433	100 
+CL_LANGUAGE_MATCH_434	1000 
+CL_LANGUAGE_MATCH_435	10000 
+CL_LANGUAGE_MATCH_436	111111111
+CL_LANGUAGE_MATCH_437	11 
+CL_LANGUAGE_MATCH_438	NPC.clu does not have defined interface frmNPCstorage 
+CL_LANGUAGE_MATCH_439	NPC.clu interface [%s] cannot locate file [%s] 
+CL_LANGUAGE_MATCH_44	You must select Icicle Castle \n as starting town
+CL_LANGUAGE_MATCH_440	Only 
+CL_LANGUAGE_MATCH_441	Please Input Quantity 
+CL_LANGUAGE_MATCH_442	Please select quantity of item to withdraw 
+CL_LANGUAGE_MATCH_443	while initializing cargo, unable to locate cargo control\n
+CL_LANGUAGE_MATCH_444	msgCBoatMgr::ChangeMainCha[%d] switch lead, target lead cannot be created \n
+CL_LANGUAGE_MATCH_445	NPC.clu does not have defined interface frmBooth 
+CL_LANGUAGE_MATCH_446	traderoom.clu interface [%s] cannot locate control [%s] 
+CL_LANGUAGE_MATCH_447	Please enter Stall title 
+CL_LANGUAGE_MATCH_448	Illegal stall name. Please input again 
+CL_LANGUAGE_MATCH_449	Quantity cannot be less than 1 
+CL_LANGUAGE_MATCH_45	msgui.clu interface(%s) cannot locate control (%s)
+CL_LANGUAGE_MATCH_450	Please input unit price 
+CL_LANGUAGE_MATCH_451	Price cannot be lower than 0 
+CL_LANGUAGE_MATCH_452	Total amount of gold cannot exceed 1 Billion 
+CL_LANGUAGE_MATCH_453	Item is bought by other player 
+CL_LANGUAGE_MATCH_454	Please Input Quantity 
+CL_LANGUAGE_MATCH_455	Do you wish to spend [%s]\n[%s]\n to purchase [%s
+CL_LANGUAGE_MATCH_456	NPC.clu does not have defined interface frmPlayertrade 
+CL_LANGUAGE_MATCH_457	Your cargo is full 
+CL_LANGUAGE_MATCH_458	Item is sold out 
+CL_LANGUAGE_MATCH_459	Insufficient gold! 
+CL_LANGUAGE_MATCH_46	select.clu interface (%s) cannot locate control (%s)
+CL_LANGUAGE_MATCH_460	Do you wish to buy: \n\n[%s]
+CL_LANGUAGE_MATCH_461	Do you wish to set a price of [%s]\n\n to sell [%s]
+CL_LANGUAGE_MATCH_462	item exceeded\n
+CL_LANGUAGE_MATCH_463	You do not have a Commerce Permit or the level of the permit is too low to access this item 
+CL_LANGUAGE_MATCH_464	msgui.clu does not have defined interface %s\n
+CL_LANGUAGE_MATCH_465	Chat
+CL_LANGUAGE_MATCH_466	Friend
+CL_LANGUAGE_MATCH_467	Party
+CL_LANGUAGE_MATCH_468	Guild
+CL_LANGUAGE_MATCH_469	Passer-by
+CL_LANGUAGE_MATCH_47	msg change hairdo data incorrect:[%d]
+CL_LANGUAGE_MATCH_470	No defined interface _frmAddFriend!
+CL_LANGUAGE_MATCH_471	No fixed UI frmEdit!
+CL_LANGUAGE_MATCH_472	No fixed UI frmdetails! 
+CL_LANGUAGE_MATCH_473	main.clu interface [%s] cannot locate control [%s] 
+CL_LANGUAGE_MATCH_474	Target player [%s] is out of range 
+CL_LANGUAGE_MATCH_475	Kick
+CL_LANGUAGE_MATCH_476	Selected player [%s] is not in chat panel 
+CL_LANGUAGE_MATCH_477	Detailed Info
+CL_LANGUAGE_MATCH_478	Send message 
+CL_LANGUAGE_MATCH_479	Delete Friend
+CL_LANGUAGE_MATCH_48	msg change of face data incorrect: [%d]
+CL_LANGUAGE_MATCH_480	Do you wish to delete friend:\n"
+CL_LANGUAGE_MATCH_481	PM
+CL_LANGUAGE_MATCH_482	Add Friend
+CL_LANGUAGE_MATCH_483	Leave Party
+CL_LANGUAGE_MATCH_484	Party Invite
+CL_LANGUAGE_MATCH_485	Exit
+CL_LANGUAGE_MATCH_486	Show Name
+CL_LANGUAGE_MATCH_487	Display proverb
+CL_LANGUAGE_MATCH_488	Player has already been added
+CL_LANGUAGE_MATCH_489	Good
+CL_LANGUAGE_MATCH_49	Please input Please input name
+CL_LANGUAGE_MATCH_490	msgJerry Li say: Why do you need so many message window, please check list name [%s],list number :[%d]!\n
+CL_LANGUAGE_MATCH_491	msgJerry LI say why do you open so many chat window, list name [%s], list number:[%d]!\n
+CL_LANGUAGE_MATCH_492	Shortcut: F%d 
+CL_LANGUAGE_MATCH_493	All
+CL_LANGUAGE_MATCH_494	Local
+CL_LANGUAGE_MATCH_495	PM
+CL_LANGUAGE_MATCH_496	World
+CL_LANGUAGE_MATCH_497	Trade
+CL_LANGUAGE_MATCH_498	System
+CL_LANGUAGE_MATCH_499	Notice
+CL_LANGUAGE_MATCH_5	Auto Attack [%d,%d]
+CL_LANGUAGE_MATCH_50	No spacing for character name
+CL_LANGUAGE_MATCH_500	notice receive channel activated 
+CL_LANGUAGE_MATCH_501	notice acception channel closed 
+CL_LANGUAGE_MATCH_502	[None] 
+CL_LANGUAGE_MATCH_503	system notice acception window is opened 
+CL_LANGUAGE_MATCH_504	system notice acception window close 
+CL_LANGUAGE_MATCH_505	[
+CL_LANGUAGE_MATCH_506	] has closed whisper channel, unable to receive your message temporary 
+CL_LANGUAGE_MATCH_507	[System] 
+CL_LANGUAGE_MATCH_508	Please do not flood! 
+CL_LANGUAGE_MATCH_509	Players below Lv 10 will not be able to use World channel! 
+CL_LANGUAGE_MATCH_51	Please input legal alphabet or numbers!
+CL_LANGUAGE_MATCH_510	Flood control. Unable to use World channel within 1 minute of logging in! 
+CL_LANGUAGE_MATCH_511	Players below Lv 10 are not allowed to use Trade channel! 
+CL_LANGUAGE_MATCH_512	Flood control: Players login within 1 minute will not be able to use Trade channel! 
+CL_LANGUAGE_MATCH_513	Message sending failure: You do not have a party! 
+CL_LANGUAGE_MATCH_514	notice sending failed: use undefined channel to send notice! 
+CL_LANGUAGE_MATCH_515	Delete all name list 
+CL_LANGUAGE_MATCH_516	coze.clu interface [%s] cannot locate file [%s] 
+CL_LANGUAGE_MATCH_517	Sending failed: You are not in a party 
+CL_LANGUAGE_MATCH_518	Please do not flood the channel! 
+CL_LANGUAGE_MATCH_519	Party Member 
+CL_LANGUAGE_MATCH_52	Character name can only consist of alphabets or numbers
+CL_LANGUAGE_MATCH_520	[All] 
+CL_LANGUAGE_MATCH_521	[Party] 
+CL_LANGUAGE_MATCH_522	[Guild] 
+CL_LANGUAGE_MATCH_523	[Trade] 
+CL_LANGUAGE_MATCH_524	[World] 
+CL_LANGUAGE_MATCH_525	[PM] 
+CL_LANGUAGE_MATCH_526	[System] 
+CL_LANGUAGE_MATCH_527	msgui.clu does not consist of defined object editor interface frmEditor 
+CL_LANGUAGE_MATCH_528	Character 
+CL_LANGUAGE_MATCH_529	Effect 
+CL_LANGUAGE_MATCH_53	Illegal character name. Please input again
+CL_LANGUAGE_MATCH_530	Region attribute 
+CL_LANGUAGE_MATCH_531	Island ID 
+CL_LANGUAGE_MATCH_532	Map List 
+CL_LANGUAGE_MATCH_533	Character Action 
+CL_LANGUAGE_MATCH_534	Mouse Shape 
+CL_LANGUAGE_MATCH_535	Character Effect 
+CL_LANGUAGE_MATCH_536	Birth 
+CL_LANGUAGE_MATCH_537	Dead 
+CL_LANGUAGE_MATCH_538	Character Image 
+CL_LANGUAGE_MATCH_539	earth surface 
+CL_LANGUAGE_MATCH_54	Illegal data mode
+CL_LANGUAGE_MATCH_540	Building 
+CL_LANGUAGE_MATCH_541	Moving in progress, please wait... 
+CL_LANGUAGE_MATCH_542	Please input X, Y coordinates of destination: [no., no.] 
+CL_LANGUAGE_MATCH_543	Please input 4 parameter, such as: 0,0,10,10 
+CL_LANGUAGE_MATCH_544	Capturing mini-map: %d, %d, %d, %d 
+CL_LANGUAGE_MATCH_545	Please input altitude value 
+CL_LANGUAGE_MATCH_546	brush height has been changed 
+CL_LANGUAGE_MATCH_547	msgNetSynSkillBag lead ID error, does not exist on lead 
+CL_LANGUAGE_MATCH_548	msgNetSynSkillBag skill ID [%d] error 
+CL_LANGUAGE_MATCH_549	msgNetSynSkillBag add skill ID[%d] error 
+CL_LANGUAGE_MATCH_55	msg binding effect [%d] cannot find character dummy [%d], character :%s"
+CL_LANGUAGE_MATCH_550	msgNetSynSkillBag edit skill ID [%d] error 
+CL_LANGUAGE_MATCH_551	msgNetSynSkillBag delete skill ID[%d] error, this skill does not exist 
+CL_LANGUAGE_MATCH_552	msgNetSynSkillBag type [%d] error 
+CL_LANGUAGE_MATCH_553	[%s] cannot be placed on shortcut bar 
+CL_LANGUAGE_MATCH_554	msg update appearance data [%d], server ID[%d], occurs error 
+CL_LANGUAGE_MATCH_555	msg update UI item [%d], item does not exist 
+CL_LANGUAGE_MATCH_556	Item will vanished if you delete it\n\nDo you wish to delete
+CL_LANGUAGE_MATCH_557	Can only manage cargo of ship that has set sail! 
+CL_LANGUAGE_MATCH_558	Do you wish to drop Vessel\nDeed? Ship experience and \nlevel will be reduced greatl
+CL_LANGUAGE_MATCH_559	Item: %s\nFee: %dG\nDo you wish to repair
+CL_LANGUAGE_MATCH_56	Ascaron
+CL_LANGUAGE_MATCH_560	NPC.clu does not have defined interface frmNPCforge 
+CL_LANGUAGE_MATCH_561	NPC.clu interface [%s] cannot locate file [%s] 
+CL_LANGUAGE_MATCH_562	Item Fusion 
+CL_LANGUAGE_MATCH_563	Stabilizer 
+CL_LANGUAGE_MATCH_564	Catalyst 
+CL_LANGUAGE_MATCH_565	Forge item 
+CL_LANGUAGE_MATCH_566	Attribute Gem 
+CL_LANGUAGE_MATCH_567	Refining Gem 
+CL_LANGUAGE_MATCH_568	Requires: %dG\n Confirm?
+CL_LANGUAGE_MATCH_569	You did not insert a weapon. Please reselect 
+CL_LANGUAGE_MATCH_57	Magical Ocean
+CL_LANGUAGE_MATCH_570	You did not insert a stabilizer. Please reselect 
+CL_LANGUAGE_MATCH_571	You did not insert a gem. Please reselect 
+CL_LANGUAGE_MATCH_572	You did not insert a Catalyst. Please reselect 
+CL_LANGUAGE_MATCH_573	You did not insert a Refining Gem. Please reselect 
+CL_LANGUAGE_MATCH_574	msg interface name [%s] duplicate\n
+CL_LANGUAGE_MATCH_575	Window ID       Window name                 Coordinates           Display  Allow  Menu   Lv   Control count  Hotkey   Romance Hour 
+CL_LANGUAGE_MATCH_576	Board Stats [Total: %d Count: %d current board ID:%d]  Stats Window [Count: %d Current board: [Window number: %d Display: %d Mode: %d]] Timer count :%d Romance time: %d ms 
+CL_LANGUAGE_MATCH_577	Document :[%s] no Form table: %s 
+CL_LANGUAGE_MATCH_578	file:[%s] cannot locate control belonging to [%s]:%s 
+CL_LANGUAGE_MATCH_579	HQ Allocation 
+CL_LANGUAGE_MATCH_58	Deep Blue
+CL_LANGUAGE_MATCH_580	Password mismatch! Please enter again 
+CL_LANGUAGE_MATCH_581	Please input password 
+CL_LANGUAGE_MATCH_582	Please input Guild name 
+CL_LANGUAGE_MATCH_583	Do you wish to spend [%s]? 
+CL_LANGUAGE_MATCH_584	Bid has ended. 
+CL_LANGUAGE_MATCH_585	You are already a defending champion. 
+CL_LANGUAGE_MATCH_586	You cannot challenge yourself. 
+CL_LANGUAGE_MATCH_587	You cannot challenge low level defending champion 
+CL_LANGUAGE_MATCH_588	You are already a challenger 
+CL_LANGUAGE_MATCH_589	Please bid. Lowest bid is 
+CL_LANGUAGE_MATCH_59	Unnamed Effect
+CL_LANGUAGE_MATCH_590	Your bid is too low 
+CL_LANGUAGE_MATCH_591	Each bid must be raised by 50000G 
+CL_LANGUAGE_MATCH_592	Total amount cannot exceeds 20 Billions 
+CL_LANGUAGE_MATCH_593	do you want to replace existing guild application:\n\n   
+CL_LANGUAGE_MATCH_594	Only guild leader may edit guild motto 
+CL_LANGUAGE_MATCH_595	Do you wish to disband guild? 
+CL_LANGUAGE_MATCH_596	Do you wish to leave the guild? 
+CL_LANGUAGE_MATCH_597	Please select player who have made an application 
+CL_LANGUAGE_MATCH_598	Sorry, you do not have access. Please contact your guild leader 
+CL_LANGUAGE_MATCH_599	Sorry, you do not have access. Please contact your guild leader 
+CL_LANGUAGE_MATCH_6	Follow [%s]
+CL_LANGUAGE_MATCH_60	Nameless shadow
+CL_LANGUAGE_MATCH_600	Please select member to remove from guild 
+CL_LANGUAGE_MATCH_601	Do you wish to kick member \n\n
+CL_LANGUAGE_MATCH_602	]? 
+CL_LANGUAGE_MATCH_603	Sorry, you do not have the access to kick members. Please contact your guild leader. 
+CL_LANGUAGE_MATCH_604	Navy Guild 
+CL_LANGUAGE_MATCH_605	Pirate Guild 
+CL_LANGUAGE_MATCH_606	Status: Normal 
+CL_LANGUAGE_MATCH_607	Lack: 
+CL_LANGUAGE_MATCH_608	G  
+CL_LANGUAGE_MATCH_609	Reputation  
+CL_LANGUAGE_MATCH_61	msg You are standing on road cannot be walk, Self (%u, %u], Target(%u, %u], ChaPos(%u, %u]"
+CL_LANGUAGE_MATCH_610	Member 
+CL_LANGUAGE_MATCH_611	Disband Countdown %d day[s] 
+CL_LANGUAGE_MATCH_612	Disband Countdown: %d hour[s] 
+CL_LANGUAGE_MATCH_613	Disband Countdown%d minute[s] 
+CL_LANGUAGE_MATCH_614	Operation Error: Target has been deleted or has quit the guild 
+CL_LANGUAGE_MATCH_615	player.clu does not have defined interface frmHaircut 
+CL_LANGUAGE_MATCH_616	player.clu interface [%s] cannot locate control [%s] 
+CL_LANGUAGE_MATCH_617	msgCHaircutMgr::ShowHaircutForm cannot locate lead\n
+CL_LANGUAGE_MATCH_618	Character cannot change hairdo 
+CL_LANGUAGE_MATCH_619	msgCHaircutMgr::ShowHaircutForm create 3D character failed 
+CL_LANGUAGE_MATCH_62	Player: %s
+CL_LANGUAGE_MATCH_620	msgCHaircutMgr::Refresh HairNameas null 
+CL_LANGUAGE_MATCH_621	msgCHaircutMgr::Refresh Hair color small than 
+CL_LANGUAGE_MATCH_622	[English] 
+CL_LANGUAGE_MATCH_623	middle 
+CL_LANGUAGE_MATCH_624	[Two-handed] 
+CL_LANGUAGE_MATCH_625	Attack [%d/%d] 
+CL_LANGUAGE_MATCH_626	Durability [%d/%d] 
+CL_LANGUAGE_MATCH_627	Effectiveness [%d%%] 
+CL_LANGUAGE_MATCH_628	Level Requirement: %d 
+CL_LANGUAGE_MATCH_629	Defense [%+d] 
+CL_LANGUAGE_MATCH_63	requested to add as friend!
+CL_LANGUAGE_MATCH_630	Physical Resist [%+d] 
+CL_LANGUAGE_MATCH_631	Hit Rate [%+d] 
+CL_LANGUAGE_MATCH_632	Dodge [%+d] 
+CL_LANGUAGE_MATCH_633	Qty: %d 
+CL_LANGUAGE_MATCH_634	Lv: %I64d 
+CL_LANGUAGE_MATCH_635	EXP: %s 
+CL_LANGUAGE_MATCH_636	Durability [%I64d/%I64d] 
+CL_LANGUAGE_MATCH_637	Fuel [%I64d/%I64d] 
+CL_LANGUAGE_MATCH_638	Attack [%I64d/%I64d] 
+CL_LANGUAGE_MATCH_639	Defense: %I64d 
+CL_LANGUAGE_MATCH_64	Read object [%d], %d %d"
+CL_LANGUAGE_MATCH_640	Speed: %I64d 
+CL_LANGUAGE_MATCH_641	Firing Rate: %I64d 
+CL_LANGUAGE_MATCH_642	Cargo [%d/%d] 
+CL_LANGUAGE_MATCH_643	Price [%s] 
+CL_LANGUAGE_MATCH_644	Energy [%d/%d] 
+CL_LANGUAGE_MATCH_645	Tax Rate: %.2f%% 
+CL_LANGUAGE_MATCH_646	Class Requirement: 
+CL_LANGUAGE_MATCH_647	\n　　　　 
+CL_LANGUAGE_MATCH_648	Learning Level: %d 
+CL_LANGUAGE_MATCH_649	Prerequisite: %s Lv:%d 
+CL_LANGUAGE_MATCH_65	msg sound initialize failed!"
+CL_LANGUAGE_MATCH_650	Honor 
+CL_LANGUAGE_MATCH_651	Kill 
+CL_LANGUAGE_MATCH_652	Death 
+CL_LANGUAGE_MATCH_653	Battle 
+CL_LANGUAGE_MATCH_654	Victory 
+CL_LANGUAGE_MATCH_655	Party Contribution: %d 
+CL_LANGUAGE_MATCH_656	Lv %s %s
+CL_LANGUAGE_MATCH_657	Strength: %d 
+CL_LANGUAGE_MATCH_658	Agility: %d 
+CL_LANGUAGE_MATCH_659	Constitution: %d 
+CL_LANGUAGE_MATCH_66	Times New Roman
+CL_LANGUAGE_MATCH_660	Accuracy: %d 
+CL_LANGUAGE_MATCH_661	Spirit: %d 
+CL_LANGUAGE_MATCH_662	Constitution [%d/%d] 
+CL_LANGUAGE_MATCH_663	Growth [%d/%d] 
+CL_LANGUAGE_MATCH_664	Seal of Wind: %d 
+CL_LANGUAGE_MATCH_665	Seal of Flame: %d 
+CL_LANGUAGE_MATCH_666	Seal of Thunder: %d 
+CL_LANGUAGE_MATCH_667	Seal of Frost: %d 
+CL_LANGUAGE_MATCH_668	Sacrificial Item: Heart of Black Dragon 
+CL_LANGUAGE_MATCH_669	Sacrificial Item: Soul of Black Dragon 
+CL_LANGUAGE_MATCH_67	New Times Roman
+CL_LANGUAGE_MATCH_670	Sacrificial Item: Eye of Black Dragon 
+CL_LANGUAGE_MATCH_671	Sacrificial Item: 
+CL_LANGUAGE_MATCH_672	Cursed Point: %d 
+CL_LANGUAGE_MATCH_673	Socket[s]: %d 
+CL_LANGUAGE_MATCH_674	Trade Value: %s 
+CL_LANGUAGE_MATCH_675	Unable to repair %s! 
+CL_LANGUAGE_MATCH_676	Please select pet to feed! 
+CL_LANGUAGE_MATCH_677	Please select Black Dragon Altar! 
+CL_LANGUAGE_MATCH_678	Unable to use item 
+CL_LANGUAGE_MATCH_679	Class Requirement: %s 
+CL_LANGUAGE_MATCH_68	msg script initializefailed!
+CL_LANGUAGE_MATCH_680	Character Requirement: 
+CL_LANGUAGE_MATCH_681	Lance  
+CL_LANGUAGE_MATCH_682	Carsise  
+CL_LANGUAGE_MATCH_683	Phyllis  
+CL_LANGUAGE_MATCH_684	Ami  
+CL_LANGUAGE_MATCH_685	NPC.clu does not have defined interface frmMakeEquip 
+CL_LANGUAGE_MATCH_686	You did not insert an apparel. Please reselect 
+CL_LANGUAGE_MATCH_687	Please insert apparels 
+CL_LANGUAGE_MATCH_688	Please select equipments matching with Apparel type 
+CL_LANGUAGE_MATCH_689	You did not insert a Fusion Catalyst. Please reselect 
+CL_LANGUAGE_MATCH_69	msgUI system initialize failed!
+CL_LANGUAGE_MATCH_690	You did not insert a Fusion equipment. Please reselect 
+CL_LANGUAGE_MATCH_691	You did not insert a Strengthening Crystal. Please reselect 
+CL_LANGUAGE_MATCH_692	This is not a Gem. Please reselect 
+CL_LANGUAGE_MATCH_693	The gem you insert must be similar. Please reselect 
+CL_LANGUAGE_MATCH_694	If no Catalyst is included, \nall forging effect will be lost. Do you wish to continue fusion?
+CL_LANGUAGE_MATCH_695	You did not insert a Combining Scroll. Please reselect 
+CL_LANGUAGE_MATCH_696	You did not insert a Fusion Scroll. Please reselect 
+CL_LANGUAGE_MATCH_697	You did not insert a Strengthening Scroll. Please reselect 
+CL_LANGUAGE_MATCH_698	You did not insert a Demonic Fruit. Please reselect 
+CL_LANGUAGE_MATCH_699	Please insert the scroll at the slot on the top 
+CL_LANGUAGE_MATCH_7	Seaman
+CL_LANGUAGE_MATCH_70	msg load luascript failed!
+CL_LANGUAGE_MATCH_700	Please place Demonic Fruit at the slot on the top 
+CL_LANGUAGE_MATCH_701	Please insert scroll 
+CL_LANGUAGE_MATCH_702	The fairy you inserted is less than Lv 20. Please reselect 
+CL_LANGUAGE_MATCH_703	Please put a fairy or a new fairy.  
+CL_LANGUAGE_MATCH_704	Quest Objective 
+CL_LANGUAGE_MATCH_705	Obtained 
+CL_LANGUAGE_MATCH_706	<rUnknown ID[ 
+CL_LANGUAGE_MATCH_707	<r' 
+CL_LANGUAGE_MATCH_708	> 
+CL_LANGUAGE_MATCH_709	Hunt 
+CL_LANGUAGE_MATCH_71	GotoScene, index as null
+CL_LANGUAGE_MATCH_710	unknown quest log data type! 
+CL_LANGUAGE_MATCH_711	Quest Rewards 
+CL_LANGUAGE_MATCH_712	[Select one] 
+CL_LANGUAGE_MATCH_713	Unknown Item ID[%d] 
+CL_LANGUAGE_MATCH_714	%d [%s] 
+CL_LANGUAGE_MATCH_715	%dG 
+CL_LANGUAGE_MATCH_716	%d Reputation points 
+CL_LANGUAGE_MATCH_717	%d Commerce points 
+CL_LANGUAGE_MATCH_718	Unknown quest reward message type! Type [%d], Param1[%d], Param2[%d]! 
+CL_LANGUAGE_MATCH_719	minimap.clu interface[%s] cannot locate control [%s] 
+CL_LANGUAGE_MATCH_72	while switching to next scene, clear recourse failed
+CL_LANGUAGE_MATCH_720	Please input proper coordinates! 
+CL_LANGUAGE_MATCH_721	main.clu unable to locate frmMission 
+CL_LANGUAGE_MATCH_722	unknown quest name ID[%d] 
+CL_LANGUAGE_MATCH_723	Do you wish to abandon \nquest: [%s]?
+CL_LANGUAGE_MATCH_724	<r[><gIncomplete><r]> 
+CL_LANGUAGE_MATCH_725	<r[Completed]> 
+CL_LANGUAGE_MATCH_726	<r[><bFailed><r]> 
+CL_LANGUAGE_MATCH_727	<r[><pUnknown><r]> 
+CL_LANGUAGE_MATCH_728	Normal Quest 
+CL_LANGUAGE_MATCH_729	Story Quest 
+CL_LANGUAGE_MATCH_73	while switching to other scene, scene initialize failed
+CL_LANGUAGE_MATCH_730	Guild Quest 
+CL_LANGUAGE_MATCH_731	Invalid Type 
+CL_LANGUAGE_MATCH_732	MisClear: cannot locate designated quest node, delete failed!ID[%d] 
+CL_LANGUAGE_MATCH_733	MisClear: Get target quest message failed!ID[%d], NodeID[%d] 
+CL_LANGUAGE_MATCH_734	MisLogState: Get target quest message failed!ID[%d], NodeID[%d] 
+CL_LANGUAGE_MATCH_735	MisLogState: have not locate target quest node!ID[%d] 
+CL_LANGUAGE_MATCH_736	[In progress] 
+CL_LANGUAGE_MATCH_737	[Completed] 
+CL_LANGUAGE_MATCH_738	[Failed] 
+CL_LANGUAGE_MATCH_739	[Unknown] 
+CL_LANGUAGE_MATCH_74	Mini-map has all been generated.
+CL_LANGUAGE_MATCH_740	msgNPC.clu does not have defined interface frmNPCMission 
+CL_LANGUAGE_MATCH_741	You must select a quest reward! 
+CL_LANGUAGE_MATCH_742	Do you wish to buy: \n\n[%s %s$]
+CL_LANGUAGE_MATCH_743	Do you wish to sell: \n\n[%s %s$]
+CL_LANGUAGE_MATCH_744	player.clu does not have defined interface frmfrmTeamPk 
+CL_LANGUAGE_MATCH_745	Please select a file 
+CL_LANGUAGE_MATCH_746	msg cursor [%d] loading failed\n
+CL_LANGUAGE_MATCH_747	msg font does not initialize! 
+CL_LANGUAGE_MATCH_748	Unable to use skill! 
+CL_LANGUAGE_MATCH_749	Skill: [%s] is not ready! 
+CL_LANGUAGE_MATCH_75	Current chat log has been saved as %s
+CL_LANGUAGE_MATCH_750	Skill [%s] encounter an error! 
+CL_LANGUAGE_MATCH_751	Type: Lifeskill [Land] 
+CL_LANGUAGE_MATCH_752	Type: Land Battle 
+CL_LANGUAGE_MATCH_753	Type: Sea Battle 
+CL_LANGUAGE_MATCH_754	Type: Passive 
+CL_LANGUAGE_MATCH_755	Type: Fairy Skill 
+CL_LANGUAGE_MATCH_756	Type: Lifeskill [Sea] 
+CL_LANGUAGE_MATCH_757	Description 
+CL_LANGUAGE_MATCH_758	Effect 
+CL_LANGUAGE_MATCH_759	Consumption 
+CL_LANGUAGE_MATCH_76	Test Scene
+CL_LANGUAGE_MATCH_760	Skill has been activated\nClick again to deactivat
+CL_LANGUAGE_MATCH_761	You will be sent back to the Spawn point. \nPlease salvage your sunken ship from the Harbor Operator
+CL_LANGUAGE_MATCH_762	Revive in town?
+CL_LANGUAGE_MATCH_763	Refresh experience screen current EXP = %d, Current Lv EXP = %d, next level EXP = %d, Percentage = %.1f"
+CL_LANGUAGE_MATCH_764	Trade
+CL_LANGUAGE_MATCH_765	Both party must be in character or ship mode in order to trade
+CL_LANGUAGE_MATCH_766	Cargo Trade
+CL_LANGUAGE_MATCH_767	Cargo trade requires both party to be in their ship
+CL_LANGUAGE_MATCH_768	View Stall
+CL_LANGUAGE_MATCH_769	M vs M
+CL_LANGUAGE_MATCH_77	Pirate King Online
+CL_LANGUAGE_MATCH_770	PVP
+CL_LANGUAGE_MATCH_771	You can click on Help and select the \n'Interface' button to open tooltip
+CL_LANGUAGE_MATCH_772	Party operation has been banned
+CL_LANGUAGE_MATCH_773	This version cannot be relogin!
+CL_LANGUAGE_MATCH_774	Calculating, unable to operate
+CL_LANGUAGE_MATCH_775	Countdown:%d sec(s)
+CL_LANGUAGE_MATCH_776	Starts to countdown: %d sec(s)
+CL_LANGUAGE_MATCH_777	Cancel timer operation
+CL_LANGUAGE_MATCH_778	Unknown motto - Arcol
+CL_LANGUAGE_MATCH_779	%s\n\n requested to tra
+CL_LANGUAGE_MATCH_78	Scene: %s,[%s]
+CL_LANGUAGE_MATCH_780	%s\n\n request a cargo tra
+CL_LANGUAGE_MATCH_781	Please input amount
+CL_LANGUAGE_MATCH_782	Trading of Vessel Deed will result in \na decrease of ship level \n and E
+CL_LANGUAGE_MATCH_783	You do not have enough inventory slot. Items might drop on the ground
+CL_LANGUAGE_MATCH_784	Trade Successful
+CL_LANGUAGE_MATCH_785	Inventory is full. Trade is cancelled
+CL_LANGUAGE_MATCH_786	You have cancelled the trade
+CL_LANGUAGE_MATCH_787	Target cancelled the trade
+CL_LANGUAGE_MATCH_788	Entered Battle Zone
+CL_LANGUAGE_MATCH_789	Entered Safe Zone
+CL_LANGUAGE_MATCH_79	Scene [%s], current scene as null
+CL_LANGUAGE_MATCH_790	Region
+CL_LANGUAGE_MATCH_791	msg switch target character, ship cannot use equipment, please use interface of switching ship
+CL_LANGUAGE_MATCH_792	Item Auto-Grab: On
+CL_LANGUAGE_MATCH_793	Item Auto-Grab: Off
+CL_LANGUAGE_MATCH_794	Hide player model: Off
+CL_LANGUAGE_MATCH_795	Hide player model: On
+CL_LANGUAGE_MATCH_796	SetMainCha(scene switch lead):	Tick:[%u]\n
+CL_LANGUAGE_MATCH_797	Security code can only have 0 - 9 Make up of numbers, please re-enter
+CL_LANGUAGE_MATCH_798	Invalid length for Security Code 6 - 12, please re-enter
+CL_LANGUAGE_MATCH_799	Two passwords does not match. Please try again
+CL_LANGUAGE_MATCH_8	Officer
+CL_LANGUAGE_MATCH_80	Testing all effect
+CL_LANGUAGE_MATCH_800	Account do not have Security Code\n\nCreate no
+CL_LANGUAGE_MATCH_801	Failed to edit Security Code!
+CL_LANGUAGE_MATCH_802	Security code error
+CL_LANGUAGE_MATCH_803	Warrior: After a few thousand years of massive training on the land, Swordsmen have become experts at using swords and shields.                                                                                                             
+CL_LANGUAGE_MATCH_804	Recommended Stat: Constitution and Strength, which raise defense and attack respectively. Recommended Skill: Sword Mastery - Increases attack power when using swords. Illusion Slash - Use energy of sword to damage enemy at a distance.                                                                                                            
+CL_LANGUAGE_MATCH_805	
+CL_LANGUAGE_MATCH_806	Crusader: Good at wielding two single-handed swords simultaneously. Crusaders are able to attack faster and they fare better than other class at fending off attacks.                                                                                                                                                                                                                        
+CL_LANGUAGE_MATCH_807	Recommended Stat: Agility and Strength, which increases dodge rate and attack power respectively. Recommended Skill: Stealth - Make character invisible to other unit. Deftness - Increase dodge rate of character. Dual Sword Mastery - Increase attack                                                                                                             
+CL_LANGUAGE_MATCH_808	Champion: In order to pursue greater strength, the Champion has given up the use of shields to wield two-handed weapons. This increases his offensive striking powers greatly.
+CL_LANGUAGE_MATCH_809	Recommended Stat: Constitution and Strength, which raise defense and attack respectively. Recommended Skill: Howl - skill with area of effect damage.                                                                                                            
+CL_LANGUAGE_MATCH_81	Error, Effect cannot be created:%d
+CL_LANGUAGE_MATCH_810	Herbalist: Their art originated from Ascaron. The Herbalists excel at all kinds of cures and use their gift to empower and aid others.                                                                                                            
+CL_LANGUAGE_MATCH_811	Recommended Stat: Spirit, which increases magical damage and Max SP value. Recommended Skill: Heal - Restore target's HP. Spiritual Bolt - Attack enemy with spiritual energy, ignoring defense. Revival - Revive a dead character.                                                                                                            
+CL_LANGUAGE_MATCH_812	Cleric: They are herbalists who concentrate solely on their healing skills and excel greatly in medical skills and support spells.
+CL_LANGUAGE_MATCH_813	Recommended Stat: Spirit, which increases magical damage and Max SP value. Recommended Skill: Angelic Shield - Increase defense of friendly targets. Healing Spring - Create an area that heals friendly unit continuously.                                                                                                            
+CL_LANGUAGE_MATCH_814	Seal Master: From the research of herbs, they are able to use it curse and weaken enemy instead.
+CL_LANGUAGE_MATCH_815	Recommended Stat: Spirit, which increases magical damage and Max SP value. Recommended Skill: Shadow Insignia - Prevent enemy from using normal attack. Seal of Elder - Prevent enemy from using skill. Abyss Mire - Decrease speed of enemy in an area.                                                                                                            
+CL_LANGUAGE_MATCH_816	Explorer: In order to explore uncharted waters, they brave thunderstorms and raging waves in search of unknown territory and make use of Energy Corals to channel their energy.
+CL_LANGUAGE_MATCH_817	Recommended Stat: Spirit, which increases magical damage and Max SP value. Recommended Skill: Lightning Bolt - Strike enemy with lightning. Tornado - Twirl enemy up in the air. Alga Entanglement - Use seaweed to bind and damage enemy.                                                                                                            
+CL_LANGUAGE_MATCH_818	Voyager: Making a name for themselves by traveling pass oceans and uncharted waters. Their passion for exploration will not be deterred by any dangers that lie before them.
+CL_LANGUAGE_MATCH_819	Recommended Stat: Spirit, which increases magical damage and Max SP value. Recommended Skill: Lightning Curtain - Create a thunderstorm in the sea that damage enemies in an area. Tail Wind - Increases movement speed of ships in an area.                                                                                                             
+CL_LANGUAGE_MATCH_82	Testing character, checking character and movement...
+CL_LANGUAGE_MATCH_820	Hunter: The Hunters can survive in the toughest conditions. They are efficient with their long distance attacks but is extremely weak when it comes to melee attacks.                                                                                                            
+CL_LANGUAGE_MATCH_821	Recommended Stat: Accuracy which increases damage and hit rate over long distance. Recommended Skill: Range Mastery - prerequisite for all range skill                                                                                                            
+CL_LANGUAGE_MATCH_822	Sharpshooter: Although bow has a longer range, firegun has more powerful damage to make up for the limitation in range.                                                                                                            
+CL_LANGUAGE_MATCH_823	Recommended Stat: Accuracy, which increases hit rate and range attack power. Recommended Skill: Cripple - Decreases movement speed and dodge rate of enemy. Enfeeble - Prevent enemy from using skill. Headshot - Ignore target's defense and deal maximum dama                                                                                                            
+CL_LANGUAGE_MATCH_824	Confirm to bind inventory?
+CL_LANGUAGE_MATCH_825	Inventory has no security code lock
+CL_LANGUAGE_MATCH_826	Please insert a Demonic Fruit
+CL_LANGUAGE_MATCH_827	You did not insert a fairy or your fairy is below Lv20. Please reselect.
+CL_LANGUAGE_MATCH_828	Please insert main equipment
+CL_LANGUAGE_MATCH_829	Equipment to purify do not match main quipment. Please reselect
+CL_LANGUAGE_MATCH_83	Error, Failed to create character [%d]
+CL_LANGUAGE_MATCH_830	Level of equipment to purify cannot be lower than main quipment 5 Lv, please reselect
+CL_LANGUAGE_MATCH_831	Main equipment mismatch. Please reselect
+CL_LANGUAGE_MATCH_832	Confirm to redeem?
+CL_LANGUAGE_MATCH_833	Redemption successful!
+CL_LANGUAGE_MATCH_834	Redemption conditions not met. Failed to redeem!
+CL_LANGUAGE_MATCH_835	Socket 1  
+CL_LANGUAGE_MATCH_836	None"
+CL_LANGUAGE_MATCH_837	Lv  
+CL_LANGUAGE_MATCH_838	Socket 2  
+CL_LANGUAGE_MATCH_839	Socket 3  
+CL_LANGUAGE_MATCH_84	Testing hairdo list...
+CL_LANGUAGE_MATCH_840	Forging Bonus  
+CL_LANGUAGE_MATCH_841	Additional Bonus  --
+CL_LANGUAGE_MATCH_842	Gem Effect  
+CL_LANGUAGE_MATCH_843	%d %s
+CL_LANGUAGE_MATCH_844	Please place a bet!
+CL_LANGUAGE_MATCH_845	Products
+CL_LANGUAGE_MATCH_846	Price
+CL_LANGUAGE_MATCH_847	Remark
+CL_LANGUAGE_MATCH_848	Chaos points
+CL_LANGUAGE_MATCH_849	Please insert Chaos Manual
+CL_LANGUAGE_MATCH_85	Error, Hairstyle changed failed: Script ID: %d, Character ID: %d, Model ID: %d
+CL_LANGUAGE_MATCH_850	Mentor
+CL_LANGUAGE_MATCH_851	Disciple
+CL_LANGUAGE_MATCH_852	You did not insert a coral. Please reselect
+CL_LANGUAGE_MATCH_853	Please insert Coral
+CL_LANGUAGE_MATCH_854	Remove relationship
+CL_LANGUAGE_MATCH_855	Mentor
+CL_LANGUAGE_MATCH_856	Remove Disciple %s You will deduct your\nreputation points: %I64d\nConfir
+CL_LANGUAGE_MATCH_857	Confirm to purchase: "
+CL_LANGUAGE_MATCH_858	Do you wish to visit the Item Mall?\nIf you are in a battle zone,\nyou might be attacked anytim
+CL_LANGUAGE_MATCH_859	Disciple
+CL_LANGUAGE_MATCH_86	Error, Hairstyle changed failed: Script ID: %d, Character ID: %d, Fail ID type: %d
+CL_LANGUAGE_MATCH_860	Player %s\n wishes to be your discipl
+CL_LANGUAGE_MATCH_861	Player %s\n wish to take you in as a discipl
+CL_LANGUAGE_MATCH_862	Exp [%d/%d] 
+CL_LANGUAGE_MATCH_863	Player %s\nHope to form a party with yo
+CL_LANGUAGE_MATCH_864	Characters below Lv 6 are not allowed to request for trade
+CL_LANGUAGE_MATCH_865	Characters below Lv 7 are not allowed to add friend into list
+CL_LANGUAGE_MATCH_866	Characters below Lv 8 are not allowed to send party invitation
+CL_LANGUAGE_MATCH_867	Target character is below Lv 8 and is not allowed to accept party invitation
+CL_LANGUAGE_MATCH_868	Characters below Lv 9 are not allowed to use Private Message channel
+CL_LANGUAGE_MATCH_869	Lv: %i
+CL_LANGUAGE_MATCH_87	Testing all items...
+CL_LANGUAGE_MATCH_870	Product: %s
+CL_LANGUAGE_MATCH_871	Quality: %i
+CL_LANGUAGE_MATCH_872	Ingredient 1: %s x %i
+CL_LANGUAGE_MATCH_873	Ingredient 2: %s x %i
+CL_LANGUAGE_MATCH_874	Material 3: %s x %i
+CL_LANGUAGE_MATCH_875	Blueprint usage count: %i
+CL_LANGUAGE_MATCH_876	Base success rate: %i%%
+CL_LANGUAGE_MATCH_877	Fairy Coin(s) required: %i
+CL_LANGUAGE_MATCH_878	Durability: %i
+CL_LANGUAGE_MATCH_879	Skill cannot be use in the sea!
+CL_LANGUAGE_MATCH_88	Error, Item (%d/%s], Ground model [%s] does not exist
+CL_LANGUAGE_MATCH_880	Current skill cannot be used on land!
+CL_LANGUAGE_MATCH_881	Do not have sufficient fairy coins. Please reselect
+CL_LANGUAGE_MATCH_882	Current character cannot wear this item
+CL_LANGUAGE_MATCH_883	Party invitation cooldown shorter than %d Seconds. Remaining %d sec(s)
+CL_LANGUAGE_MATCH_884	Mentor: %s Online
+CL_LANGUAGE_MATCH_885	Mentor: %s Offline
+CL_LANGUAGE_MATCH_886	Your disciple: %s Online
+CL_LANGUAGE_MATCH_887	Your disciple: %s Offline
+CL_LANGUAGE_MATCH_888	It is dangerous to try at sea. Land first before trying again
+CL_LANGUAGE_MATCH_889	Remove Mentor %s Your gold will be deducted\nTotal: %I64d\nConfir
+CL_LANGUAGE_MATCH_89	Error, Item (%d/%s], Character [%d] model [%s] does not exist
+CL_LANGUAGE_MATCH_890	Inventory do not have %d slots, please make some space
+CL_LANGUAGE_MATCH_891	You did not insert a Lifeskill tool. Please reselect
+CL_LANGUAGE_MATCH_892	Please insert lifeskill tool
+CL_LANGUAGE_MATCH_893	You did not insert a repair tool. Please reselect
+CL_LANGUAGE_MATCH_894	Item is binded, Please try again
+CL_LANGUAGE_MATCH_895	Item Mall is currently busy, please try again later!
+CL_LANGUAGE_MATCH_896	Please insert blueprint!
+CL_LANGUAGE_MATCH_897	Tool experience: %i
+CL_LANGUAGE_MATCH_898	Item in cooldown mode, remaining time is %d sec(s)
+CL_LANGUAGE_MATCH_899	The fairy you inserted is not right, please put in a new fairy
+CL_LANGUAGE_MATCH_9	Colonel
+CL_LANGUAGE_MATCH_90	Error, item (%d/%s], ICON [%s] does not exist
+CL_LANGUAGE_MATCH_900	Chaos Argent No Blind
+CL_LANGUAGE_MATCH_901	You cannot send any message while in Chaos Argent
+CL_LANGUAGE_MATCH_902	VIP Member
+CL_LANGUAGE_MATCH_903	Ordinary Member
+CL_LANGUAGE_MATCH_904	Please input redemption quantity
+CL_LANGUAGE_MATCH_905	Confirm to redeem Rum: %d
+CL_LANGUAGE_MATCH_906	Personal Management
+CL_LANGUAGE_MATCH_907	Purchase of item failed!\nPlease check if you have enough Rum
+CL_LANGUAGE_MATCH_908	Rum exchange failed!
+CL_LANGUAGE_MATCH_909	Love Number: %d
+CL_LANGUAGE_MATCH_91	Error, Item (%d/%s] wielding effect [%d] not available
+CL_LANGUAGE_MATCH_910	%d
+CL_LANGUAGE_MATCH_911	%d hours
+CL_LANGUAGE_MATCH_912	No limit
+CL_LANGUAGE_MATCH_913	Platinum area are limited to platinum members only!
+CL_LANGUAGE_MATCH_914	You cannot type less than 16 alphabet in the mail!
+CL_LANGUAGE_MATCH_915	Confirm to become a platinium member?
+CL_LANGUAGE_MATCH_916	month
+CL_LANGUAGE_MATCH_917	Day
+CL_LANGUAGE_MATCH_918	hour(s)
+CL_LANGUAGE_MATCH_919	min(s)
+CL_LANGUAGE_MATCH_92	Error, Item (%d/%s] weapon binding effect [%d] not found
+CL_LANGUAGE_MATCH_920	sec(s)
+CL_LANGUAGE_MATCH_921	Help Center
+CL_LANGUAGE_MATCH_922	Scout
+CL_LANGUAGE_MATCH_923	Special Operative Private
+CL_LANGUAGE_MATCH_924	Junior Deputy
+CL_LANGUAGE_MATCH_925	Senior Deputy
+CL_LANGUAGE_MATCH_926	Chief Officer
+CL_LANGUAGE_MATCH_927	Taka Centurion
+CL_LANGUAGE_MATCH_928	Argent Major
+CL_LANGUAGE_MATCH_929	Trump Captain
+CL_LANGUAGE_MATCH_93	Error, Item (%d/%s] display effect [%d] does not exist
+CL_LANGUAGE_MATCH_930	Golden Major General
+CL_LANGUAGE_MATCH_931	God Slayer Admiral
+CL_LANGUAGE_MATCH_932	Camp
+CL_LANGUAGE_MATCH_933	Death Count
+CL_LANGUAGE_MATCH_934	Sacred War
+CL_LANGUAGE_MATCH_935	Mini Sacred War
+CL_LANGUAGE_MATCH_936	Please enter bid value
+CL_LANGUAGE_MATCH_937	Cannot be lower than the lowest value %d
+CL_LANGUAGE_MATCH_938	https://pirateking.online/forum/rum/purchase
+CL_LANGUAGE_MATCH_939	https://pirateking.online/forum/rum/purchase
+CL_LANGUAGE_MATCH_94	Error, Item (%d/%s] ground type effect [%d] not found
+CL_LANGUAGE_MATCH_940	Confirm bid value %d
+CL_LANGUAGE_MATCH_941	Please equip the Student Card and books first
+CL_LANGUAGE_MATCH_942	Are you sure you want to study?
+CL_LANGUAGE_MATCH_943	Press 'confirm' to stop studying
+CL_LANGUAGE_MATCH_944	Kindergarten
+CL_LANGUAGE_MATCH_945	Primary School
+CL_LANGUAGE_MATCH_946	Junior Middle School
+CL_LANGUAGE_MATCH_947	Senior high school
+CL_LANGUAGE_MATCH_948	University
+CL_LANGUAGE_MATCH_949	school record:%s
+CL_LANGUAGE_MATCH_95	Error, Cannot create ground item:%d/%s
+CL_LANGUAGE_MATCH_950	academic credit(%d/%d)
+CL_LANGUAGE_MATCH_951	EXP(%d/%d)
+CL_LANGUAGE_MATCH_952	Nill
+CL_LANGUAGE_MATCH_953	A little
+CL_LANGUAGE_MATCH_954	Medium
+CL_LANGUAGE_MATCH_955	a large quantity of
+CL_LANGUAGE_MATCH_956	Full
+CL_LANGUAGE_MATCH_957	Accumulated Credits:%s
+CL_LANGUAGE_MATCH_958	This item can't be stalled in bank!
+CL_LANGUAGE_MATCH_959	Inventory exist item that can't be lock
+CL_LANGUAGE_MATCH_96	Testing forging index list...
+CL_LANGUAGE_MATCH_960	Locked
+CL_LANGUAGE_MATCH_961	Lock
+CL_LANGUAGE_MATCH_962	Lock item success!
+CL_LANGUAGE_MATCH_963	This item can't be lock!
+CL_LANGUAGE_MATCH_964	Unlock failed!
+CL_LANGUAGE_MATCH_965	Item unlocked!
+CL_LANGUAGE_MATCH_966	Male
+CL_LANGUAGE_MATCH_967	Female
+CL_LANGUAGE_MATCH_968	Gender must be: Male or Female!
+CL_LANGUAGE_MATCH_969	[None]
+CL_LANGUAGE_MATCH_97	Forging list number (%d/%s] related effect [%d] does not exist
+CL_LANGUAGE_MATCH_970	Group existed!
+CL_LANGUAGE_MATCH_971	No changes to the name!
+CL_LANGUAGE_MATCH_972	Save to :[
+CL_LANGUAGE_MATCH_973	].
+CL_LANGUAGE_MATCH_974	Save file failed (file is empty or harddisk full)
+CL_LANGUAGE_MATCH_975	Ownself
+CL_LANGUAGE_MATCH_976	Main mission
+CL_LANGUAGE_MATCH_977	Have to have fairy for it to hatch!
+CL_LANGUAGE_MATCH_978	Have to have fuhuaye for it to hatch!
+CL_LANGUAGE_MATCH_979	Hatch failed!
+CL_LANGUAGE_MATCH_98	Testing forging effect list...
+CL_LANGUAGE_MATCH_980	Life [%d/%d]
+CL_LANGUAGE_MATCH_981	Insert refined item!
+CL_LANGUAGE_MATCH_982	Insert equipment!
+CL_LANGUAGE_MATCH_983	Insert equipment!
+CL_LANGUAGE_MATCH_984	Failed!
+CL_LANGUAGE_MATCH_985	Fairy ineligible!
+CL_LANGUAGE_MATCH_986	Equipment ineligible!
+CL_LANGUAGE_MATCH_987	Gem ineligible!
+CL_LANGUAGE_MATCH_988	Failed!
+CL_LANGUAGE_MATCH_989	Only weapons, armor, boots, gloves, hats, shields and tatoo can be upgraded!
+CL_LANGUAGE_MATCH_99	Error, Forging list (%d/%s] effect [%d] not available
+CL_LANGUAGE_MATCH_990	Confirm upgrade to %d level %s?
+CL_LANGUAGE_MATCH_991	Gem can't be used!
+CL_LANGUAGE_MATCH_992	Confirm to sell \n\n [damage %s%s$
+CL_LANGUAGE_MATCH_993	Buy
+CL_LANGUAGE_MATCH_994	Sell
+CL_LANGUAGE_MATCH_995	Please select to delete.
+CL_LANGUAGE_MATCH_996	Confirm to delete?
+CL_LANGUAGE_MATCH_997	Pirate gold not enough.
+CL_LANGUAGE_MATCH_998	Crystal not enough.
+CL_LANGUAGE_MATCH_999	Limit of 20billion. Please trade in batch.
+CL_LOADING_TIP_00001	Abandon mine is a vast place, has three levels ( lvl 1, lvl2, lvl3), is separated based on the level of monsters. This spot is recommended to new players for levelling.
+CL_LOADING_TIP_00002	Choose your birth city wisely, as each class have their class advancement NPC, Skill Books, Weapons in Shaitan, Argent and Icicle city respectively.
+CL_LOADING_TIP_00003	Winter Island and Celtic Heartland is filled with furious monsters, awesome equipments, fearsome bosses, mazes and gems. Very dangerous place and yet rewarding island.
+CL_LOADING_TIP_00004	You will need to haver completed Language Barrier quest and have 3 keys (Timeless Machine, Sigil of Anubis, Mask of Mummy King) to be able to go Lair2.
+CL_LOADING_TIP_NUM	4
+CL_MPRENDER_CPP_00001	msg please choose low resolution to start the game
+CL_NETPROTOCOL_CPP_00001	Your account was suspended by pass card!
+CL_UICHAINFO_CPP_00001	Female
+CL_UICHAINFO_CPP_00002	Yes
+CL_UIEQUIPFORM_CPP_00001	Throw away?
+CL_UIGUIDAPPLY_CPP_00001	Guild Name is Illegal!
+CL_UIITEMCOMMAND_CPP_00001	The sentences on the remaining charges: %d
+CL_UIITEMCOMMAND_CPP_00002	Arena Pts.
+CL_UIITEMCOMMAND_CPP_00003	Won.
+CL_UIITEMCOMMAND_CPP_00004	Lost.
+CL_UIITEMCOMMAND_CPP_00005	Quarter No.
+CL_UIITEMCOMMAND_CPP_00006	Issue No.:%03d
+CL_UIITEMCOMMAND_CPP_00007	Filling date:%02d %02d
+CL_UIITEMCOMMAND_CPP_00008	Keno Ball:%c %c %c %c %c %c
+CL_UIITEMCOMMAND_CPP_00009	still not finish to fill in
+CL_UIITEMCOMMAND_CPP_00010	Storage time : %d
+CL_UIITEMCOMMAND_CPP_00011	Item locked cannot be trade, discard or forge.
+CL_UIITEMCOMMAND_CPP_00012	Upstart
+CL_UIITEMCOMMAND_CPP_00013	Sealed Equipments
+CL_UIITEMCOMMAND_CPP_00014	Exp: %d
+CL_UIMISLOGFORM_CPP_00001	Winter Isle Archipelago
+CL_UIMISLOGFORM_CPP_00002	Pirate's Base
+CL_UIMISLOGFORM_CPP_00003	No routing on sea
+CL_UIMISLOGFORM_CPP_00004	Not on the same map
+CL_UISTARTFORM_CPP_00001	Info
+CL_UISTARTFORM_CPP_00002	You are not in a guild!
+CL_UI_CHAT_CPP_00001	Make sure all your teamates are ready for entering arena
+CL_WORLDSCENE_CPP_00001	Open throw item hint
+CL_WORLDSCENE_CPP_00002	Close throw item hint
+CO_COMMFUNC_CPP_00001	Newbie
+CO_COMMFUNC_CPP_00002	Swordsman
+CO_COMMFUNC_CPP_00003	Hunter
+CO_COMMFUNC_CPP_00004	Sailor
+CO_COMMFUNC_CPP_00005	Explorer
+CO_COMMFUNC_CPP_00006	Herbalist
+CO_COMMFUNC_CPP_00007	Engineer
+CO_COMMFUNC_CPP_00008	Merchant
+CO_COMMFUNC_CPP_00009	Champion
+CO_COMMFUNC_CPP_00010	Crusader
+CO_COMMFUNC_CPP_00011	White Knight
+CO_COMMFUNC_CPP_00012	Animal tamer
+CO_COMMFUNC_CPP_00013	Sharpshooter
+CO_COMMFUNC_CPP_00014	Cleric
+CO_COMMFUNC_CPP_00015	Seal master
+CO_COMMFUNC_CPP_00016	Captain
+CO_COMMFUNC_CPP_00017	Voyager
+CO_COMMFUNC_CPP_00018	Upstart
+CO_COMMFUNC_CPP_00019	Engineer
+CO_COMMFUNC_CPP_00020	Argent City
+CO_COMMFUNC_CPP_00021	Thundoria Castle
+CO_COMMFUNC_CPP_00022	Shaitan City
+CO_COMMFUNC_CPP_00023	Icicle Castle
+CO_COMMFUNC_CPP_00024	Land / Sea
+CO_COMMFUNC_CPP_00025	Safe zone
+CO_COMMFUNC_CPP_00026	Non PK zone
+CO_COMMFUNC_CPP_00027	Bridge
+CO_COMMFUNC_CPP_00028	No monster zone
+CO_COMMFUNC_CPP_00029	Mining Area
+CO_COMMFUNC_CPP_00030	Unknown
+CO_COMMFUNC_H_00001	Strength
+CO_COMMFUNC_H_00002	Agility
+CO_COMMFUNC_H_00003	Accuracy
+CO_COMMFUNC_H_00004	Constitution
+CO_COMMFUNC_H_00005	Spirit
+CO_COMMFUNC_H_00006	Luck
+CO_COMMFUNC_H_00007	Attack Speed
+CO_COMMFUNC_H_00008	Attack range
+CO_COMMFUNC_H_00009	Minimum Attack
+CO_COMMFUNC_H_00010	Maximum Attack
+CO_COMMFUNC_H_00011	Defense
+CO_COMMFUNC_H_00012	Maximum HP
+CO_COMMFUNC_H_00013	Maximum SP
+CO_COMMFUNC_H_00014	Dodge Rate
+CO_COMMFUNC_H_00015	Hit Rate
+CO_COMMFUNC_H_00016	Critical Rate
+CO_COMMFUNC_H_00017	Drop Rate
+CO_COMMFUNC_H_00018	HP Recovery Rate
+CO_COMMFUNC_H_00019	SP Recovery Rate
+CO_COMMFUNC_H_00020	Movement Speed
+CO_COMMFUNC_H_00021	Material Mining Speed
+CO_COMMFUNC_H_00022	Physical Resist
+CO_COMMFUNC_H_00023	Max Durability
+CO_COMMFUNC_H_00024	Max Energy
+CO_COMMFUNC_H_00025	Unknown tools characteristics
+CO_COMMFUNC_H_00026	Invalid Account
+CO_COMMFUNC_H_00027	Password incorrect
+CO_COMMFUNC_H_00028	Account activation failed
+CO_COMMFUNC_H_00029	Your cha is currently in logout save mode, please try logging in again later.
+CO_COMMFUNC_H_00030	This account is already online
+CO_COMMFUNC_H_00031	Account has been banned
+CO_COMMFUNC_H_00032	This GroupServer has login
+CO_COMMFUNC_H_00033	This GroupServer Verification failed
+CO_COMMFUNC_H_00034	Saving the character, try again in 15 seconds... 
+CO_COMMFUNC_H_00035	Your account is logged on far away
+CO_COMMFUNC_H_00036	Your account is already online
+CO_COMMFUNC_H_00037	GroupServer disconnected
+CO_COMMFUNC_H_00038	unknown agreement, don't deal with
+CO_COMMFUNC_H_00039	local saving error
+CO_COMMFUNC_H_00040	This account has expired, please topup!
+CO_COMMFUNC_H_00041	GateServer to GroupServer login failed
+CO_COMMFUNC_H_00042	GateServer and login GateServer have similar name
+CO_COMMFUNC_H_00043	Ineffective data model
+CO_COMMFUNC_H_00044	server link operation integrality error
+CO_COMMFUNC_H_00045	Account server has encountered a malfunction
+CO_COMMFUNC_H_00046	database server malfunction
+CO_COMMFUNC_H_00047	Current account does not have a request (Select/Delete) to character
+CO_COMMFUNC_H_00048	reached the maximum number of characters you can create
+CO_COMMFUNC_H_00049	Character name already exist
+CO_COMMFUNC_H_00050	illegal birth place
+CO_COMMFUNC_H_00051	Character name is too long
+CO_COMMFUNC_H_00052	Guild must have a leader, please disband your guild first then delete your character
+CO_COMMFUNC_H_00053	Illegal character name
+CO_COMMFUNC_H_00054	System is busy, please try again later
+CO_COMMFUNC_H_00055	second code length illegal
+CO_COMMFUNC_H_00056	Cha second password not created
+CO_COMMFUNC_H_00057	My child, you are very bold. You have been reported to the authority. Please do not commit the offense again!
+CO_COMMFUNC_H_00058	Discovered exceptional line error on GateServer
+CO_COMMFUNC_H_00059	current not yet handled character state
+CO_COMMFUNC_H_00060	Currently not in gameplay, unable to send ENDPLAY command
+CO_COMMFUNC_H_00061	target map cannot be reached
+CO_COMMFUNC_H_00062	This server is currently full, please select another server!
+CO_COMMFUNC_H_00063	You have not logged in
+CO_COMMFUNC_H_00064	Client version error, server refused connection!
+CO_COMMFUNC_H_00065	failed to enter map!
+CO_COMMFUNC_H_00066	Map position illegal, you'll be sent back to your birth city, please relog!
+CO_COMMFUNC_H_00067	GameServer name repeated
+CO_COMMFUNC_H_00068	GameServerMapNameRepeated
+CO_COMMFUNC_H_00069	GameServer map assign language error
+CO_COMMFUNC_H_00070	Error Success
+CO_COMMFUNC_H_00071	(GameServer/GateServer->Client return error code space 1-500)
+CO_COMMFUNC_H_00072	(GroupServer->GateServer return error code range 501-1000)
+CO_COMMFUNC_H_00073	(AccountServer->GroupServe return error code from 1001-1500)
+CO_COMMFUNC_H_00074	(GameServer->GateServer return error code range 1501-2000)
+CO_COMMFUNC_H_00075	(Jack is too insane, he made a mistake that I don't even know.)
+CO_COMMFUNC_H_00076	Item operation succesful
+CO_COMMFUNC_H_00077	Equipment does not exist
+CO_COMMFUNC_H_00078	Inventory is full
+CO_COMMFUNC_H_00079	Failed to use item
+CO_COMMFUNC_H_00080	Item can not be picked up
+CO_COMMFUNC_H_00081	Item cannot be thrown
+CO_COMMFUNC_H_00082	Item cannot be destroyed
+CO_COMMFUNC_H_00083	inventory is currently locked
+CO_COMMFUNC_H_00084	Distance too far
+CO_COMMFUNC_H_00085	equipment level mismatch
+CO_COMMFUNC_H_00086	Does not meet the class requirement for the equipment
+CO_COMMFUNC_H_00087	Unable to operate items under the current condition
+CO_COMMFUNC_H_00088	Item is being protected
+CO_COMMFUNC_H_00089	different region type
+CO_COMMFUNC_H_00090	type of build does not match
+CO_COMMFUNC_H_00091	Unable to store this item
+CO_COMMFUNC_H_00092	Item not in used
+CO_COMMFUNC_H_00093	out of inventory range
+CO_COMMFUNC_H_00094	Unknown item usage failure code
+CO_COMMFUNC_H_00095	Use skill successful
+CO_COMMFUNC_H_00096	target is NPC
+CO_COMMFUNC_H_00097	target cannot be attacked
+CO_COMMFUNC_H_00098	Target is at safe area
+CO_COMMFUNC_H_00099	Not land skill
+CO_COMMFUNC_H_00100	Not sea skill
+CO_COMMFUNC_H_00101	Skill can only be used on ownself
+CO_COMMFUNC_H_00102	Skill can only be used on player's corpse
+CO_COMMFUNC_H_00103	Unable to use this skill on a friendly target
+CO_COMMFUNC_H_00104	Skill can only be used on friendly targets
+CO_COMMFUNC_H_00105	Skill can only be cast on player
+CO_COMMFUNC_H_00106	Skill can only be used on monster
+CO_COMMFUNC_H_00107	unknown skill usage failure code
+CO_COMMFUNC_H_00109	Item locked

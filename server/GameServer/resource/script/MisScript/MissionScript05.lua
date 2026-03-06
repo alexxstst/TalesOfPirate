@@ -3,14 +3,14 @@ print("-- [Loading] Mission Script [05]")
 ----------------------------------------------------------
 --							--
 --							--
---		区域任务	 				--
+--			 				--
 --							--
 --							--
 ----------------------------------------------------------
-	-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>主线任务开始
+	-->>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 function AreaMission001()
 
------------------------------------盗取蜂巢
+-----------------------------------
 	DefineMission( 600, "Honey Combs Heist", 600 )
 	
 	MisBeginTalk( "<t>As the saying goes, nab the leader and you will get the rest. Killing those <rBarbaric Bee> will not help much but it's better than not doing anything about them at all.<n><t>Can you go to their lair and steal 5 <yBeehives>?")
@@ -40,7 +40,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 600, 10, 5 )
 	RegCurTrigger( 6001 )
 
------------------------------------歼灭野蛮蜂
+-----------------------------------
 	DefineMission( 601, "Bee Eradication", 601 )
 	
 	MisBeginTalk( "<t>Oh my...These <rBarbaric Bees> are becoming wilder. I only passed by the flowerbed where they have been collecting their nectar when they started attacking me.<n><t>Now my face is swollen badly, it simply peeves me!<n><t>Can you please destroy 10 <rBarbaric Bees>? Teach these wild bees a lesson!<n><t>They can be found around <j(1623, 3139)>!")
@@ -70,7 +70,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 601, 10, 10 )
 	RegCurTrigger( 6011 )
 
------------------------------------扰人清梦
+-----------------------------------
 	DefineMission( 602, "Unsettling Dream", 602 )
 	
 	MisBeginTalk( "<t>Ah, I am just about to look for you! For the past 2 days, I have been unable to sleep because of the sounds made by <rOwlie>. Every time I lie down on bed I would hear the \"Hoot\" of the <rOwlie>.<n><t>I am old and I needs sleep. This can't go on, please help me get rid of 10 <rOwlies>. They can be found at <j(1384, 3065)>.")
@@ -101,7 +101,7 @@ function AreaMission001()
 	RegCurTrigger( 6021 )
 
 
------------------------------------学者猫头鹰
+-----------------------------------
 	DefineMission( 603, "Scholar Owlie", 603 )
 	
 	MisBeginTalk( "<t>My eyes are must be seeing things...Yesterday I actually saw an <rOwlie> holding a book with its claw! It can't be that its reading the book? This is all too weird!<n><ts>orry to bother, but could you obtain 5 <yOwlie's Claws> and return  here? I wish to observe this strange occurence!<n><t>Usually, these <Owlies> appear around <j(1384, 3065)>.")
@@ -115,7 +115,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4432, 5, 10, 5)
 	
 	MisHelpTalk("<t>Please bring me 5 <yOwl Talons> for research..")
-	MisResultTalk("<t>Hmm…? This talon is similar to talons of other owls. Strange…am I going nuts?")
+	MisResultTalk("<t>Hmm? This talon is similar to talons of other owls. Strangeam I going nuts?")
 	MisResultCondition(NoRecord, 603)
 	MisResultCondition(HasMission, 603)
 	MisResultCondition(HasItem, 4432, 5)
@@ -131,7 +131,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 603, 10, 5 )
 	RegCurTrigger( 6031 )
 
------------------------------------奸诈的猫头鹰
+-----------------------------------
 	DefineMission( 604, "Cunning Owl", 604 )
 	
 	MisBeginTalk( "<ts>orry, can you help me? I was reading a book two days back when an <rOwlie> flew pass and tore out a few pages of my book. I need these <yLost Pages> urgently.<n><t>Can you retrieve them back for me?<n><t>It should be lying around their nest itself.")
@@ -161,7 +161,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 604, 10, 5 )
 	RegCurTrigger( 6041 )
 
------------------------------------烤猪尾的诱惑
+-----------------------------------
 	DefineMission( 605, "Temptation of BBQ Tails", 605 )
 	
 	MisBeginTalk( "<t>This is the biggest favour I have ever asked! You must promise me!<n><t>Really? You agreed? Then get me 5 <yShort Boar Tail>! I have been drooling over the notion of eating some <yShort Boar Tail> for a very long time!<n><t><rTusk Battle Boar> can be found at <j(1384, 3065)>.")
@@ -191,7 +191,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 605, 10, 5 )
 	RegCurTrigger( 6051 )
 
------------------------------------箭豪猪的反抗
+-----------------------------------
 	DefineMission( 606, "Tusk Boar's Resistance", 606 )
 	
 	MisBeginTalk( "<t>I had a shock this morning when I opened the window, there were many <rTusk Battle Boar> running around my yard!<n><t>Look at these big sized beasts, running around in packs and spoiling everything in my yard! I can't take this lying down!<n><t>Please help me kill 10 <rTusk Battle Boars>! They can be found at <j(1384, 3065)>.")
@@ -222,7 +222,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 606, 10, 10 )
 	RegCurTrigger( 6061 )
 
------------------------------------除臭行动
+-----------------------------------
 	DefineMission( 607, "No More Odour!", 607 )
 	
 	MisBeginTalk( "<t>Hey friend! There is a weird scent around here, can you smell it? Oh, it must the scent of those <rAir Porky> nearby.<n><t>These pigs have become strange lately, they no longer emanate fragrant smell but instead gives off a weird odour, I think its best that we get rid of them now.<n><t>Can you please hunt and kill 10 <rAir Porky> for me? They can be found at <j(1414, 2896)>.")
@@ -252,7 +252,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 607, 10, 10 )
 	RegCurTrigger( 6071 )
 
------------------------------------奇特香囊
+-----------------------------------
 	DefineMission( 608, "Unusual Satchet", 608 )
 	
 	MisBeginTalk( "<t>I believe that the incidents where the <rTusk Battle Boar> became aggressive and the weird odour of the <rAir Porky> are closely related.<n><t>I still require more evidence to prove it. Help me collect 5 <yUnusual Satchets> from the <rAir Porky> so I can study it. <rAir Porky> can only be found at <j(1414, 2896)>.")
@@ -282,7 +282,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 608, 10, 5 )
 	RegCurTrigger( 6081 )
 
------------------------------------丢失的金币
+-----------------------------------
 	DefineMission( 609, "Missing Gold Coin", 609 )
 	
 	MisBeginTalk( "<t>My friend, you should know me! I am always a honest merchant! However, <rBandits> have rob me of my <yGold Coin Pouch>!<n><t>I am no match for them! Could you help me get back my <yGold Coin Pouch> from their hideout?<n><t>I guess its hidden within one of their treasure chest.")
@@ -313,7 +313,7 @@ function AreaMission001()
 	RegCurTrigger( 6091 )
 
 
------------------------------------可恶的山贼
+-----------------------------------
 	DefineMission( 610, "The Terrible Bandits", 610 )
 	
 	MisBeginTalk( "<t>Hey friend! Its time for you to show your skills! A group of menacing <rBandits> encrouches in the area nearby, robbing everyone of their money and goods!<n><t>Quickly capture 10 <rBandits> and bring them here to claim your reward!<n><t>Those outlaws can be found at <j(1043, 3066)>.")
@@ -343,7 +343,7 @@ function AreaMission001()
 	RegCurTrigger( 6101 )
 
 
------------------------------------妖娆曼陀罗
+-----------------------------------
 	DefineMission( 611, "Burning of Stramonium", 611 )
 	
 	MisBeginTalk( "<t>Rumor has it that <rStramonium> is a kind of flower that possess intelligence. They sway and dance in tune with the music played.<n><t>I don't believe such things exist as I never seen it before.<n><t>Can you please obtain 2 <yStramonium Sharp Spike> so that I can conduct my research on it. These weird plants are rumored to be found at <j(1414, 2896)>.")
@@ -373,7 +373,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 611, 10, 2 )
 	RegCurTrigger( 6111 )
 
------------------------------------铲除妖花
+-----------------------------------
 	DefineMission( 612, "Eradicate Stramonium", 612 )
 	
 	MisBeginTalk( "<t>The people of the Shepherd Plains regard the <rStramonium> as a demonic flower. Its branches are filled with thorns and it is able to move freely, quite an eerie sight.<n><t>I hope you are willing to destroy 20 <rStramoniums> so as to let the people here live in peace. It is rumored that these weird flowers are found at <j(1414, 2896)>.")
@@ -403,7 +403,7 @@ function AreaMission001()
 	RegCurTrigger( 6121 )
 
 
------------------------------------比武大赛
+-----------------------------------
 	DefineMission( 613, "The Contest", 613 )
 	
 	MisBeginTalk( "<t>Hey friend! You came at the right time! A new exciting competition is being held here!<n><t>You only need to defeat 10 <rRookie Boxeroos> to win prizes!<n><t>Now that we are short of manpower, can you proceed to the location alone? The competition  location is at <j(1117, 2923)>.")
@@ -433,7 +433,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 613, 10, 10 )
 	RegCurTrigger( 6131 )
 
------------------------------------拳击手套
+-----------------------------------
 	DefineMission( 614, "Boxing Gloves", 614 )
 	
 	MisBeginTalk( "<t>Friend, can you lend me a hand?  Its my brother's birthday in the next few days and he wishes to have a <yBoxing Gloves> as a birthday present.<n><t>But I can't get it in such a rural place. There's no other choice, can you please snatch 1 <yBoxing Gloves> from <rRookie Boxeroo>.<n><t>Can you help me please? I heard these <rRookie Boxeroo> are having a boxing competition at <j(1117, 2923)>! This is a golden opportunity!")
@@ -463,7 +463,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 614, 10, 1 )
 	RegCurTrigger( 6141 )
 
------------------------------------草原龟的灾难
+-----------------------------------
 	DefineMission( 615, "Grass Tortoise's Tradegy", 615 )
 	
 	MisBeginTalk( "<t>I hate the <rMature Grass Tortoise>! Every time I see these slow lumbering creatures, I get very irritated.<n><t>They are generally a waste of time!<n><t>I would if I could help them walk faster! Woah, these creatures shouldn't even exist!<n><t>Go kill 10 <rMature Grass Tortoise> now! Those creatures have been crawling around for half a century already but are still at <j(1198, 3116)>!")
@@ -492,7 +492,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 615, 10, 10 )
 	RegCurTrigger( 6151 )
 
------------------------------------偷窃龟卵
+-----------------------------------
 	DefineMission( 616, "Stealing Tortoise Eggs", 616 )
 	
 	MisBeginTalk( "<t>Hey friend, let me tell you a secret! The price of <rMature Grass Tortoise> is very high in the current market now!<n><t>However, I can't handle these large monsters myself.<n><t>Can you please go to where <rMature Grass Tortoise> lay their eggs and steal 10 <yTortoise Egg>.<n><t>When the money arrives, I will share half of it with you, how about it? It is said they can be found at <j(1198, 3116)>.<n><t>(Search carefully when you are at the area of the mature grass tortoise, you should be able to find their nest within those bushes, the eggs are inside the nest.)")
@@ -522,7 +522,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 616, 10, 10 )
 	RegCurTrigger( 6161 )
 
------------------------------------走私龟甲
+-----------------------------------
 	DefineMission( 617, "Smuggle Tortoise Shells", 617 )
 	
 	MisBeginTalk( "<t>For the past few days, I been using <yTortoise Egg> from the <rMature Grass Tortoise> to raise many grass tortoise and then selling them for a high price.<n><t>Now, turtle shells are becoming the market hottest commodity.<n><t>Can you please collect 5 <yWell-Formed Tortoise Shells> for me? I will prepare to smuggle them to <pIcicle City>.<n><t>These guys move really slow and I think they can be found at <j(1198, 3116)>.")
@@ -553,7 +553,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 617, 10, 5 )
 	RegCurTrigger( 6171 )
 
------------------------------------邪恶的诅咒
+-----------------------------------
 	DefineMission( 618, "A Terrible Curse", 618 )
 	
 	MisBeginTalk( "<t>Hehe, my friend, let me tell you a secret. Recently I have learnt a new kind of curse and I am going to use it on my enemy <bKentaro>.<n><t>However, I am still lacking some <yRazor Sharp Tusks>. Can you get 10 <yRazor Sharp Tusks> from the <rMad Boar> for me so that I can finish this curse!<n><t>These <rMad Boar> can be found at <j(910, 2971)>.")
@@ -583,7 +583,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 618, 10, 10 )
 	RegCurTrigger( 6181 )
 
------------------------------------野猪独立日
+-----------------------------------
 	DefineMission( 619, "Boar Independence Day", 619 )
 	
 	MisBeginTalk( "<t>Ah! I simply hate these <rMad Boars>! These boars are organising some independence day activity! <n><t>To commerate their escape from the slaugterhouse, groups of them have been marching around in the streets!<n><t>Can you please go kill 10 <rMad Boar> so we can have some peace around here!<t>They are gathering at <j(910,2971)> at this very moment!")
@@ -614,7 +614,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 619, 10, 10 )
 	RegCurTrigger( 6191 )
 
------------------------------------挑战野猪
+-----------------------------------
 	DefineMission( 620, "Boar Challenge", 620 )
 	
 	MisBeginTalk( "<t>Hi, have you just arrived here? Don't you wish to display your strength to the people here?<n><t>I have a way for you to prove your valor to the villagers.<n><t>Kill 5 <rMad Boars> at <j(911, 2973)> that has been plaguing our village.")
@@ -644,7 +644,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 620, 10, 5 )
 	RegCurTrigger( 6201 )
 
------------------------------------珍贵的药草
+-----------------------------------
 	DefineMission( 621, "Expensive Herbs", 621 )
 	
 	MisBeginTalk( "<t>Hey, my friend, I lost several expensive herbs while on the way here.<n><t>These herbs were meant to replace the shortages in the warehouse.<n><t>But now I have nothing to show for!<n><t>Please take a pity on me and go to the plains where <rGrassland Elk> resides and pick 6 <yPrecious Herbs> for me. Wheres the plains?...I remembered!<n><t>It is just nearby at <j(1360, 2683)>.")
@@ -674,7 +674,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 621, 10, 6 )
 	RegCurTrigger( 6211 )
 
------------------------------------草原鹿的秘密
+-----------------------------------
 	DefineMission( 622, "Secret of the Grassland Elk", 622 )
 	
 	MisBeginTalk( "<t>I don't get it, why does the <rGrassland Elk> here run so fast and their reaction is so agile?<n><t>Please go and collect 5 <yRigid Deer Hoofs> for me as I wish to see whats the difference between it and the other elks. These springly animals seems to be living at <j(1360, 2683)>.")
@@ -688,7 +688,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4372, 5, 10, 5)
 	
 	MisHelpTalk("<t>I need 5 <yRigid Deer Hoofs>! Where are they?")
-	MisResultTalk("<t>I cannot see any differences. They look just like any other hoofs…")
+	MisResultTalk("<t>I cannot see any differences. They look just like any other hoofs")
 	MisResultCondition(NoRecord, 622)
 	MisResultCondition(HasMission, 622)
 	MisResultCondition(HasItem, 4372, 5)
@@ -704,7 +704,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 622, 10, 5 )
 	RegCurTrigger( 6221 )
 
------------------------------------鹿皮大衣
+-----------------------------------
 	DefineMission( 623, "Deer Skin Coat", 623 )
 	
 	MisBeginTalk( "<t>Hey friend, to be honest, I was once a pirate before. I only escaped here because I was defeated by the <rJack Black>'s pirate crew!<n><t>I wish to wear a suit made of <yTop Grade Deer Skin> so I believe you will help me get 5 <yTop Grade Deer Skin>.<n><t>Why not? Because if you refuse to, I am going to give you a lesson you will never forget!<n><t>Go now to <j(1360, 2683)> and get the deer skin from <rGrassland Elk>.")
@@ -734,7 +734,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 623, 10, 5 )
 	RegCurTrigger( 6231 )
 
------------------------------------雪白猫头鹰
+-----------------------------------
 	DefineMission( 624, "White Owlie", 624 )
 	
 	MisBeginTalk( "<t>I hate those <rWhite Owlies>! They are making loads of noise during the day, giving me a big headache!<n><t>I will go crazy if this continues! If you don't mind, help me kill 5 <rWhite Owlies> and let me have a quiet time for a few days. Those evil creatures can be found near <j(1360, 2683)>.")
@@ -763,7 +763,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 624, 10, 5 )
 	RegCurTrigger( 6241 )
 
------------------------------------报复行为
+-----------------------------------
 	DefineMission( 625, "Revenge", 625 )
 	
 	MisBeginTalk( "<t>Hey, I am glad you came, I have a favour to ask of you! I lost a batch of expensive herbs but do you know why? It because of those <rWhite Owlies> who using their <ySharp Beak> to tear open the luggages, taking the medicine back to their nest!<n><t>To exact revenge on these <rWhite Owlie>, please kill them for me and remove their <ySharp Beak> and return it to me!<n><t>Their nest seems to be at <j(1360, 2683)>.")
@@ -794,7 +794,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 625, 10, 5 )
 	RegCurTrigger( 6251 )
 
------------------------------------驱逐草原狼
+-----------------------------------
 	DefineMission( 626, "Pursue of the Wolf", 626 )
 	
 	MisBeginTalk( "<t><rGrassland Wolf> are fearsome animals, I have never seen anything more threatening to the safety of human than them!<n><t>I am requesting you to kill 5 <rGrassland Wolves> so as to drive away the wolves packs and make this a safe place!<n><t>It seems that the wolve packs are gathered at <j(1143, 2705)>.<n><t>Remember, don't not get surrounded by them as these wolves attack in packs.")
@@ -824,7 +824,7 @@ function AreaMission001()
 	RegCurTrigger( 6261 )
 
 
------------------------------------残忍的屠杀
+-----------------------------------
 	DefineMission( 627, "Cruel Massacre", 627 )
 	
 	MisBeginTalk( "<t>I told you before I was a evil pirate! Now im still as cruel as before.<n><t>I have taken a dislike to <rGrassland Wolf>. I want you to kill these wolves and retrieve 5 <ySwift Wolve Claws> for me to decorate my room, haha!<n><t>It is said that these wolves pack can be found at <j(1143, 2705)>.")
@@ -839,7 +839,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4469, 5, 10, 5)
 	
 	MisHelpTalk("<t>I need 5 <ySwift Wolf Claws>! Get it fast!")
-	MisResultTalk("<t>Hmm…This fits nicely into my room! Heh!")
+	MisResultTalk("<t>HmmThis fits nicely into my room! Heh!")
 	MisResultCondition(NoRecord, 627)
 	MisResultCondition(HasMission, 627)
 	MisResultCondition(HasItem, 4469, 5)
@@ -855,7 +855,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 627, 10, 5 )
 	RegCurTrigger( 6271 )
 
------------------------------------惹事生非的袋鼠
+-----------------------------------
 	DefineMission( 628, "Boxing Trouble", 628 )
 	
 	MisBeginTalk( "<t>Wait a moment! Can you help me? While I was walking home from work last night, I was attacked by a bunch of <rBerserk Boxeroos>!<n><t>They will attack anybody aimlessly. Please put a stop to them by hunting 5 <rBerserk Boxeroos> at <j(1161, 2639)> please.")
@@ -884,7 +884,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 628, 10, 5 )
 	RegCurTrigger( 6281 )
 
------------------------------------祈运魔法石
+-----------------------------------
 	DefineMission( 629, "Lucky Magical Stone", 629 )
 	
 	MisBeginTalk( "<tss>hh, this is a secret between me and you, I don't wish for a third party to know!<n><t>Where the <rBerserk Boxeroo> resides lies a miraculous <yLucky Magical Stone>, it is said to be a very powerful talisman capable of protecting the wearer.<n><t>Go quietly and retrieve 3 <yLucky Magical Stones> and pass it to me. I think the stones can be found at <j(1161, 2639)>. Search carefully among the bushes.")
@@ -914,7 +914,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 629, 10, 3 )
 	RegCurTrigger( 6291 )
 
------------------------------------探究迟钝蜗牛
+-----------------------------------
 	DefineMission( 630, "Investigation of Slowpoke Snail", 630 )
 	
 	MisBeginTalk( "<t>I am surprised that even though <rSlowpoke Snails> move very slowly, they are still able to avoid danger all the time.<n><t>Do they have radar on their body or some kind of sensor? Could you collect 5 <yShort Snail Feelers> from <j(1227, 2742)> for me to investigate?")
@@ -944,7 +944,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 630, 10, 5 )
 	RegCurTrigger( 6301 )
 
------------------------------------慢吞吞的迟钝蜗牛
+-----------------------------------
 	DefineMission( 631, "The Slowpoke Snails", 631 )
 	
 	MisBeginTalk( "<t>I hate <rSlowpoke Snails>!<n><t>They are so SLOW! Time is so precious for a busy merchant like me yet they are practically wasting precious time!<n><t>They should not exist in this world!<n><t>Kill 10 <rSlowpoke Snails> at <j(1227, 2742)> for me and I will reward you greatly!")
@@ -974,7 +974,7 @@ function AreaMission001()
 	RegCurTrigger( 6311 )
 
 
------------------------------------堕落之道
+-----------------------------------
 	DefineMission( 632, "Fallen", 632 )
 	
 	MisBeginTalk( "<t>Everything in this world is a gift from Goddess Kara. But, these people have turned their back on her teachings, ignoring the spritual energies and focusing only on technology.<n><t>I have decided to use the power of curse to punish those who have sinned against the Goddess's ideals even though this will lead me to fall away from the path.<n><t>Friend, please obtain 5 <yStrange Candles> from the Mud Monster to help me finish the last rites. These weird monsters can be found at <j(934, 2747)>.")
@@ -1004,7 +1004,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 632, 10, 5 )
 	RegCurTrigger( 6321 )
 
------------------------------------刺刃翠鸟的挽歌
+-----------------------------------
 	DefineMission( 633, "Song of the Stinging Beak", 633 )
 	
 	MisBeginTalk( "<t>Hey friend, listen up, I have a cruel but rewarding job for you.<n><t>An unamed person from a rich and powerful owns a <rStinging Beak>. He does not wish to see any <rStinging Beak> other than the one in his cage so he ordered the destruction of the others.<n><t>You only need to kill 10 of them and you will be rewarded greatly. <rStinging Beaks> can be found at <j(935, 2687)>!<n><t>How about it, are you willing to take this job?")
@@ -1033,7 +1033,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 633, 10, 10 )
 	RegCurTrigger( 6331 )
 
------------------------------------突发奇想的斗篷
+-----------------------------------
 	DefineMission( 634, "Mysterious Cape", 634 )
 	
 	MisBeginTalk( "<t>I wish to make a mantle out of pure feathers! Hey, this idea ain't too bad after all!<n><t>I was once a pirate and everything that I need was done by my followers, so I won't have to go and collect these feathers myself.<n><t>Although you might be clumsy, I will let it pass so go and collect for me 5 <yGlossy Feathers>.<n><t>You can start looking for it at <j(935, 2687)>.")
@@ -1063,7 +1063,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 634, 10, 5 )
 	RegCurTrigger( 6341 )
 
------------------------------------贩卖假化石
+-----------------------------------
 	DefineMission( 635, "Trading Fake Gems", 635 )
 	
 	MisBeginTalk( "<t>Frankly speaking, most merchants are not honest and neither am I.<n><t>Recently someone tried to order some crystallized egg from the boars.<n><t>However, I do not have the means to obtain such an item.<n><t>Can you please get me 3 <yFearsome Tortoise Egg Shell>.<n><t>I will add some finishing touches to them and sell these fakes to the ignorant customer, haha! <n><t>These tortoise can be found at <j(969, 2587)>.")
@@ -1093,7 +1093,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 635, 10, 3 )
 	RegCurTrigger( 6351 )
 
------------------------------------碧绿苔藓
+-----------------------------------
 	DefineMission( 636, "Emerald Fog", 636 )
 	
 	MisBeginTalk( "<t>The weather is too hot for me and ulcers are growing all over in my mouth. I can't even eat properly, its really irritating.<n><t>Please obtain 5 <yGreen Moss> from the <rThickskin Lizard>, from which I will apply on the ulcers for relief. They can found at <j(732, 2697)>.")
@@ -1124,7 +1124,7 @@ function AreaMission001()
 	RegCurTrigger( 6361 )
 
 
------------------------------------寻找光滑的石头
+-----------------------------------
 	DefineMission( 637, "Search for Velvet Stone", 637 )
 	
 	MisBeginTalk( "<t>My friend <bMas> is a very cultured person, recently he has been trying to renovate his suite at <pIcicle City>.<n><t>However, the temperature at <pIcicle City> is chilling and he is unable to find what he needs.<n><t>I think the <ySlippery Rock> from the <rRock Golem> may suit his needs so can you get for me 5 <ySlippery Rocks> from the <rRock Golems>? It is said that these fearsome creatures appear at <j(682, 2592)>.")
@@ -1156,7 +1156,7 @@ function AreaMission001()
 
 
 
------------------------------------古怪的收藏家
+-----------------------------------
 	DefineMission( 638, "Weird Collector", 638 )
 	
 	MisBeginTalk( "<t>This world is filled up all kinds of people.<n><t>I know a guy named <bChang> who is a collector of body parts.<n><t>He likes to collect all kinds of body parts.<n><t>This time round, he wants me to find 5 <yLong Lizard Tongue>.<n><t>Where can I find it! My friend, can you go instead and help me get 5 <yLong Lizard Tongue>? I heard from others that these tongues can be found at <j(892, 3273)>.")
@@ -1186,7 +1186,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 638, 10, 5 )
 	RegCurTrigger( 6381 )
 
------------------------------------捣鬼的跳跳蜥
+-----------------------------------
 	DefineMission( 639, "Playful Lizard", 639 )
 	
 	MisBeginTalk( "My friend! I can no longer stand those <rHopping Lizards>. They are urinating all over the desert and making the place stink!<n><t>Can you kill 10 <rHopping Lizards> for me? Those dirty creatures can be found near <j(892, 3273)>.")
@@ -1216,7 +1216,7 @@ function AreaMission001()
 	RegCurTrigger( 6391 )
 
 
------------------------------------跳跳蜥的分泌物
+-----------------------------------
 	DefineMission( 640, "Hopping Lizard Secretion", 640 )
 	
 	MisBeginTalk( "<t>I discovered that the weird smells from the desert are from the <rHopping Lizard>. However it is not their droppings that emitted the odour.<n><t>Currently as of now, I still do not understand the entire issue, can you please go to where the <rHopping Lizard> appears and get me 5 bottles of <yHopping Lizard Secretion> so that I can study it.<n><t>They can be found at <j(892,3273)>.")
@@ -1247,7 +1247,7 @@ function AreaMission001()
 	RegCurTrigger( 6401 )
 
 
------------------------------------驱逐小狼
+-----------------------------------
 	DefineMission( 641, "Expel the Wolves", 641 )
 	
 	MisBeginTalk( "<t>I am terrified of <rWolf Cubs>, they often appear in packs in the desert and that leaves me shivering with fear.<n><t>Can you please think of a way to reduce the <rWolf Cubs> population? Try killing 10 <rWolf Cubs>.<n><t>Heh, lets just do it this way, so will you help me hunt 10 <rWolf Cubs>! They usually appear at <j(687, 3093)>.")
@@ -1276,7 +1276,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 641, 10, 10 )
 	RegCurTrigger( 6411 )
 
------------------------------------屠杀小狼
+-----------------------------------
 	DefineMission( 642, "Wolves Massacre", 642 )
 	
 	MisBeginTalk( "<t>Ah, I have a friend <bChang> who is willing to spend large amounts of money to collect weird body parts. He self proclaims as a living arts collector, something which I don't agree with.<n><t>This time round he is paying a high price for 5 <yWolf Cub Claws> from <rWolf Cub>. What a cruel job!<n><t>I can't bring myself to do this. However, he is paying a very high price for it so if you are interested, I will hand over the job to you.<n><t>These pitiful animals can be found at <j(687, 3093)>.")
@@ -1307,7 +1307,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 642, 10, 5 )
 	RegCurTrigger( 6421 )
 
------------------------------------铲除杀手仙人掌
+-----------------------------------
 	DefineMission( 643, "Clearance of Killer Cactus", 643 )
 	
 	MisBeginTalk( "<t>Abomination! This is definitely an abomination.<n><t>As a merchant I travel a lot, when I first arrived here I saw so many walking <rKiller Cactus>.<n><t>This is too weird! I can't believe that plants can actually walk! Oh my god, please kill 10 <rKiller Cactus> so that I can have a peace of mind.<n><t>They can be found at <j(884, 3156)>.")
@@ -1338,7 +1338,7 @@ function AreaMission001()
 
 
 
------------------------------------良药苦口
+-----------------------------------
 	DefineMission( 644, "Bitter Medication", 644 )
 	
 	MisBeginTalk( "<t>The dry air of the desert makes people uncomfortable. I do have a secret recipe that when used, it can make travellers feel a tad bit better.<n><t>However this remedy requires <yLarge Cactus Tuber> from <rKiller Cactus>.<n><t>I don't have the capability to defeat these monsters so can you please obtain 5 <yLarge Cactus Tubers> for me? These monsters are often found at <j(884, 3156)> frolicking under the sun.")
@@ -1369,7 +1369,7 @@ function AreaMission001()
 	RegCurTrigger( 6441 )
 
 
------------------------------------仙人掌的水囊
+-----------------------------------
 	DefineMission( 645, "Cactus Water Pouch", 645 )
 	
 	MisBeginTalk( "<t>Hey, look what I discovered! The secret of <rKiller Cactus>'s ability to survive in the desert without drinking for long periods of time!<n><t>It because they have a <yCactus Water Pouch> which has very good elastcity to contain water which helps the <rKiller Cactus> through the periods of dry spells.<n><t>However i don't fully understand the materials which the bag is made of, can you help me get 5 <yCactus Water Pouch> back? <rKiller Cactus> can be found at <j(884,3156)>.")
@@ -1400,7 +1400,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 645, 10, 5 )
 	RegCurTrigger( 6451 )
 
-----------------------------------翻滚大仙人球
+----------------------------------
 	DefineMission( 646, "Rolling Melons", 646 )
 	
 	MisBeginTalk( "<t>I wonder who planted so many <rGigantic Melons>. Now hat they are overrunning the desert, what a sight for sore eyes.<n><t>Can you please get rid of 10 <rGigantic Melons> at <j(687, 3093)>?")
@@ -1429,7 +1429,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 646, 10, 10 )
 	RegCurTrigger( 6461 )
 
------------------------------------苦味多汁果
+-----------------------------------
 	DefineMission( 647, "Bitter Fruit", 647 )
 	
 	MisBeginTalk( "<t>The <yBitter Fruit> from <rGigantic Melons> is bitter and extremely juicy.<n><t>Recently, using bitter fruit as a beverage seems to be the current trend for youngsters.<n><t> Everything I put up is sold immediately and I have run out of stock. Can you please get me 5 <yBitter Fruits>?<n><t>You can get them from the <rGigantic Melons> at <j(687, 3093)>.")
@@ -1459,7 +1459,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 647, 10, 5 )
 	RegCurTrigger( 6471 )
 
-----------------------------------鬼怪树传说
+----------------------------------
 	DefineMission( 648, "Legend of Phantom Tree", 648 )
 	
 	MisBeginTalk( "<t>Rumor has it that <rPhantom Tree> symbolizes impending doom.<n><t>Although it might not be true, these <rPhantom Trees> still reek of evil. Please chop down 10 <rPhantom Trees> at <j(885, 3027)> and put the villagers to ease.")
@@ -1489,7 +1489,7 @@ function AreaMission001()
 	RegCurTrigger( 6481 )
 
 
------------------------------------枯木逢春
+-----------------------------------
 	DefineMission( 649, "Treant Holiday", 649 )
 	
 	MisBeginTalk( "<t>When the roots of the <rPhantom Tree> is near a water source, it will expand and absorb all of the water it can hold, so the tree can survive in the desert. I am curious about this ability.<n><t>Can you find 5 <yPhantom Tree Roots> for my research? They normally grow at <j(885, 3027)>.")
@@ -1519,10 +1519,10 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 649, 10, 5 )
 	RegCurTrigger( 6491 )
 
------------------------------------穷凶极恶
+-----------------------------------
 	DefineMission( 650, "Unparallel Evil", 650 )
 	
-	MisBeginTalk( "<ts>ob…sob…I am only a helpless woman. Yet <rSand Brigands> robbed me of my family treasure.<n><t>That <yJade Bangle> is a gift from my deceased grandma. Please get it back for me! It's very important to me! They have an encampment at <j(716, 3290)>.<n><t>It might be hidden inside one of their barrel.")
+	MisBeginTalk( "<ts>obsobI am only a helpless woman. Yet <rSand Brigands> robbed me of my family treasure.<n><t>That <yJade Bangle> is a gift from my deceased grandma. Please get it back for me! It's very important to me! They have an encampment at <j(716, 3290)>.<n><t>It might be hidden inside one of their barrel.")
 	MisBeginCondition(LvCheck, ">", 17 )
 	MisBeginCondition(NoMission, 650)
 	MisBeginCondition(NoRecord, 650)
@@ -1532,7 +1532,7 @@ function AreaMission001()
 
 	MisNeed(MIS_NEED_ITEM, 4099, 1, 10, 1)
 	
-	MisHelpTalk("<ts>ob..sob…Have you found my <yJade Bangle>?")
+	MisHelpTalk("<ts>ob..sobHave you found my <yJade Bangle>?")
 	MisResultTalk("<t>Oh dear! I don't know how I can ever repay you!")
 	MisResultCondition(NoRecord, 650)
 	MisResultCondition(HasMission, 650)
@@ -1550,7 +1550,7 @@ function AreaMission001()
 	RegCurTrigger( 6501 )
 
 
-----------------------------------围剿窃贼
+----------------------------------
 	DefineMission( 651, "Flush out the Bandits", 651 )
 	
 	MisBeginTalk( "<t><rSand Brigands> are getting out of hand nowadays. Not only did they rob merchants, they also robbed helpless women and children.<n><t>The villagers have come up with a reward to get rid of them. Will you help us to hunt down 10 <rSand Brigands> at <j(716, 3290)>?")
@@ -1579,7 +1579,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 651, 10, 10 )
 	RegCurTrigger( 6511 )
 
-----------------------------------凶狠饿狼
+----------------------------------
 	DefineMission( 652, "Vicious Hungry Wolves", 652 )
 	
 	MisBeginTalk( "<t>I am recruiting warriors to fight against <rStarving Wolves>.<n><t>They are keeping travelers away!<n><t>If you can kill 10 <rStarving Wolves> at <j(718, 2938)>, I will reward you accordingly.")
@@ -1608,7 +1608,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 652, 10, 10 )
 	RegCurTrigger( 6521 )
 
-----------------------------------沙地龟之乱
+----------------------------------
 	DefineMission( 653, "Rebellion of Sandy Tortoise", 653 )
 	
 	MisBeginTalk( "<t>I don't know what happened to the <rSandy Tortoises>, they are on a rampage and are attacking anything they see!<n><t>Can you help me kill 10 <rSandy Tortoises> at <j(1197, 3270)>?")
@@ -1637,7 +1637,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 653, 10, 10 )
 	RegCurTrigger( 6531 )
 
------------------------------------移动花圃
+-----------------------------------
 	DefineMission( 654, "Moving Garden", 654 )
 	
 	MisBeginTalk( "<t><rSandy Tortoise> is a slow but huge creature. Their hard shells provide a shelter for many plants in this desert.<n><t>I need a type of seed that can be found in the shell. Can you collect 5 <yDesert Seeds> from <j(1197, 3270)> for me?")
@@ -1667,7 +1667,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 654, 10, 5 )
 	RegCurTrigger( 6541 )
 
-----------------------------------未雨绸缪
+----------------------------------
 	DefineMission( 655, "Preparation", 655 )
 	
 	MisBeginTalk( "<t>I am preparing to send a caravan to <pArgent City> for trade.<n><t>However, I have to get pass a Sand Bandit camp midway. I am afraid that they might rob me.<n><t>Can you get rid of 10 <rSand Bandits> at <j(1339, 3300)> for me?")
@@ -1696,7 +1696,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 655, 10, 10 )
 	RegCurTrigger( 6551 )
 
------------------------------------蘑菇浓汤
+-----------------------------------
 	DefineMission( 656, "Mushroom Soup", 656 )
 	
 	MisBeginTalk( "<t>Ah...Everytime I see these <rSandy Shrooms> jumping around, my mind will instinctively conjure up an image of boiling mushroom soup!<n><t>I love that thick sweet smelling aroma of that soup! Please go and obtain 5 <yUmbrella Mushrooms> from the <rSandy Shrooms> and let me have a taste!<n><t><rSandy Shrooms> can be found at <j(1334, 3438)>.")
@@ -1726,7 +1726,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 656, 10, 5 )
 	RegCurTrigger( 6561 )
 
------------------------------------逃跑的沙地菇
+-----------------------------------
 	DefineMission( 657, "The Runaway Shroom", 657 )
 	
 	MisBeginTalk( "<t>I love doing my own gardening.<n><t>For the past 2 days, while I was strolling in my gardens, I felt that something was missing.<n><t>Then I realised it was my <rSandy Shrooms>! I have no idea where they ran to but I can't have my garden without any Sandy Shrooms!<n><t>Can you please go to where the <rSandy Shrooms> are and get me 5 <yDesert Spore>? These <rSandy Shrooms> are usually found at <j(1334, 3438)>.<n><t>These spores are rather easy to find. Look for the white patches within the bushes.")
@@ -1756,7 +1756,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 657, 10, 5 )
 	RegCurTrigger( 6571 )
 
------------------------------------泥浆的妙用
+-----------------------------------
 	DefineMission( 658, "Magical Usage for Mud", 658 )
 	
 	MisBeginTalk( "<t>Hey, my friend, you come at the right time! The desert's yearly mud slinging contest is about to start, please help me aquire 5 <yPolluted Mud> from the <rMudman> at <j(1438, 3414)>.The result of the mud contest means a lot to me for this is most important event in the desert!<n><t>I will definitely prepare enough mud for battle.")
@@ -1786,7 +1786,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 658, 10, 5 )
 	RegCurTrigger( 6581 )
 
-----------------------------------贪婪的泥人
+----------------------------------
 	DefineMission( 659, "Mudman Sleepy Head", 659 )
 	
 	MisBeginTalk( "<t>Grr, my whole body is full of mud, all because of <rMudman>'s range attacks!<n><t>These despicable <rMudman> not only occupied the limited water sources in the desert, they also abuse their status and power, attacking anyone who comes close to the water source.<n><ts>uch corrupted beings! Will you go and teach these Mudman a lesson? Hunt 10 <rMudman> at <j(1438, 3413)>.")
@@ -1815,7 +1815,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 659, 10, 10 )
 	RegCurTrigger( 6591 )
 
-----------------------------------危险沙骑士
+----------------------------------
 	DefineMission( 660, "Dangerous Raiders", 660 )
 	
 	MisBeginTalk( "<t>The <rSand Raiders> have ruled the desert for many years and have yet to meet someone of their match.<n><t>I plead with you, my brave warrior! Remove this threat for us! Defeat 10 <rSand Raiders> at <j(1027, 3011)> please!")
@@ -1844,7 +1844,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 660, 10, 10 )
 	RegCurTrigger( 6601 )
 
-----------------------------------铲除食人蜘蛛
+----------------------------------
 	DefineMission( 661, "Spider Clearance", 661 )
 	
 	MisBeginTalk( "<t>Oh no! While I was playing along the beach just now, a huge <rMan Eating Spider> came crawling towards me!<n><t>Please save me from them and defeat 10 <rMan Eating Spiders> at <j(1093, 2948)>!")
@@ -1873,7 +1873,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 661, 10, 10 )
 	RegCurTrigger( 6611 )
 
------------------------------------直立行走的狼
+-----------------------------------
 	DefineMission( 662, "Walking Wolf", 662 )
 	
 	MisBeginTalk( "<t>I am curious why the <rFeral Wolf> at <j(1473, 3295)> can move on two legs like a human. Also, their fur is red.<n><t>I believed they are an evolved species. Can you help me find <y5 Huge Wolf Claws> for my research?")
@@ -1887,7 +1887,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4439, 5, 10, 5)
 	
 	MisHelpTalk("<t>I need 5 <yHuge Wolf Claws> for research.")
-	MisResultTalk("<t>Ah…I still cannot find the reason behind the change!")
+	MisResultTalk("<t>AhI still cannot find the reason behind the change!")
 	MisResultCondition(NoRecord, 662)
 	MisResultCondition(HasMission, 662)
 	MisResultCondition(HasItem, 4439, 5)
@@ -1903,7 +1903,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 662, 10, 5 )
 	RegCurTrigger( 6621 )
 
------------------------------------金币蜘蛛
+-----------------------------------
 	DefineMission( 663, "Golden Spider", 663 )
 	
 	MisBeginTalk( "<t>Dear friend! You've come at the right moment! <rMan Eating Spiders> snatched away my <yGold Pouch>!<n><t>It seems that they have a love for gold. Please help me retrieve my <yGold Pouch> from them!<n><t>They must have hide the pouch in the money box near <j(1093, 2948)>.")
@@ -1933,7 +1933,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 663, 10, 1 )
 	RegCurTrigger( 6631 )
 
------------------------------------万能钥匙
+-----------------------------------
 	DefineMission( 664, "Master Key", 664 )
 	
 	MisBeginTalk( "<ts>hh! Please be quiet about this.<n><t>My friend is going to elope with Nana due to her parents disapproval of their marriage.<n><t>I wish to give them my blessings with a gift. I believe that some Master Keys will be handy in their escape. Please help me find 2 <yMaster Keys> from <rCavalier> at <j(1255, 2974)>!")
@@ -1963,7 +1963,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 664, 10, 2 )
 	RegCurTrigger( 6641 )
 
-----------------------------------擒贼擒王
+----------------------------------
 	DefineMission( 665, "Capture the Head", 665 )
 	
 	MisBeginTalk( "<t>As the saying goes, nab the leader and you will get the rest.<n><t>Arresting those <rSand Bandits> will not help much. However, if you nab the <rSand Bandit Leader> at <j(1170, 3026)>, it will throw the rest of them into confusion disarray!")
@@ -1992,7 +1992,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 665, 10, 1 )
 	RegCurTrigger( 6651 )
 
-----------------------------------挑战盾骑士
+----------------------------------
 	DefineMission( 666, "Challenge Cavalier", 666 )
 	
 	MisBeginTalk( "<ts>and Raiders are feared in the desert. However, <rCavaliers> are much more ferocious than them.<n><t>Prove your valor by defeating 10 <rCavaliers> at <j(1255, 2974)>!")
@@ -2021,7 +2021,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 666, 10, 10 )
 	RegCurTrigger( 6661 )
 
------------------------------------蜥蜴皇冠
+-----------------------------------
 	DefineMission( 667, "Lizard Crown", 667 )
 	
 	MisBeginTalk( "<t>Although I hate people who wear clothes made from the skin of <rLizard King>, I need to find myself 10 <yLizard Crowns> as the market has a demand for them now. Will you help me?<n><t>Those lizards can be found at <j(1507, 2970)>. However the drop rate are quite low so you might need more patient.")
@@ -2051,7 +2051,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 667, 10, 10 )
 	RegCurTrigger( 6671 )
 
------------------------------------水兵帽
+-----------------------------------
 	DefineMission( 668, "Sailer Cap", 668 )
 	
 	MisBeginTalk( "<t>Hey! Hold on for a moment! Can you lend me hand? Yesterday I saw a cute and cuddly <rSailor Penguin> nearby. I fell in love with its <ySailor Penguin Cap> and I have been thinking about it ever since!<n><t>Can you please get me 2 <ySailor Penguin Caps> from <rSailor Penguins> at <j(995, 365)>. I really love that cap!")
@@ -2081,7 +2081,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 668, 10, 2 )
 	RegCurTrigger( 6681 )
 
------------------------------------精灵之心
+-----------------------------------
 	DefineMission( 669, "Heart of Naiad", 669 )
 	
 	MisBeginTalk( "<t><rNaiad> is a peaceful creature. It does not disturb travelers nor like to be disturbed.<n><t>The <yHeart of Naiad> can bring serenity to anyone who possesses it. Can you bring 2 <yHearts of Naiad> to me?<n><t>Naiad often resides near <j(1079, 518)>.")
@@ -2111,7 +2111,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 669, 10, 2 )
 	RegCurTrigger( 6691 )
 
------------------------------------完美水晶
+-----------------------------------
 	DefineMission( 670, "Perfect Crystal", 670 )
 	
 	MisBeginTalk( "<t>Crystal dug from mine often have flaws on them. However, <rNaiad> is able to form a <yFlawless Crystal>. These <yFlawless Crystals> are high in demand in the black market.<n><t>Can you get 5 <yFlawless Crystals> for me? I pay dearly for them!<n><t><rNaiad> can be found near <j(1079, 518)>.")
@@ -2141,7 +2141,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 670, 10, 5 )
 	RegCurTrigger( 6701 )
 
-----------------------------------麋鹿哀鸣
+----------------------------------
 	DefineMission( 671, "Suffering of Elk", 671 )
 	
 	MisBeginTalk( "<t>I have a strange habit. I love to listen to the groans of <rElk> in suffering. The more they groan, the happier I will be.<n><t>I will reward you greatly to kill 10 <rElks> at <j(885, 333)>.")
@@ -2170,7 +2170,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 671, 10, 10 )
 	RegCurTrigger( 6711 )
 
-----------------------------------肥胖的小东西
+----------------------------------
 	DefineMission( 672, "Overweight", 672 )
 	
 	MisBeginTalk( "<t>I will not let you hurt those Horned Penguins if I can help it.<n><t>But they have been a pest to the villagers around here. They always sneak into kitchens and steal the food there.<n><t>Please kill 10 Horned Penguins at <j(885, 333)> as a warning to them.")
@@ -2199,7 +2199,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 672, 10, 10 )
 	RegCurTrigger( 6721 )
 
------------------------------------相思成灾
+-----------------------------------
 	DefineMission( 673, "Think Too Much", 673 )
 	
 	MisBeginTalk( "<t>There is a legend on this frozen land which speaks of hanging 2 <ySquirt Handkerchiefs> by the window and within 2 years, the person you missed most will return to your side.<n><t>Due to objections by my family, I have not met my love for a long time.<n><t>Can you help me get 2 <ySquirt Handkerchiefs> so that I can wait for the day that my love returns to me? You can search for them at <j(738, 426)>.")
@@ -2230,7 +2230,7 @@ function AreaMission001()
 	RegCurTrigger( 6731 )
 
 
-----------------------------------麻烦的雪蝙蝠
+----------------------------------
 	DefineMission( 674, "Troublesome Bat", 674 )
 	
 	MisBeginTalk( "<t><rSnowy Bats> nearby have been emitting a ultrasonic sound wave. These sound waves make lots noises causing the nearby <rSnowmen> to go berserk. For the safety of the village, we have to get rid of 10 <rSnowy Bats>.")
@@ -2259,7 +2259,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 674, 10, 10 )
 	RegCurTrigger( 6741 )
 
------------------------------------幻术材料
+-----------------------------------
 	DefineMission( 675, "Witchcraft Ingredient", 675 )
 	
 	MisBeginTalk( "<t>I have been trying to master a spell that allow me to see the future.<n><t>However, I still lack of ingredients. Can you get 5 <yBat Fangs> at <j(743, 358)> for me?")
@@ -2290,7 +2290,7 @@ function AreaMission001()
 	RegCurTrigger( 6751 )
 
 
-----------------------------------帕帕的污染
+----------------------------------
 	DefineMission( 676, "Polution of Squity", 676 )
 	
 	MisBeginTalk( "<t>The <rSailor Squidys> are getting out of hand! They keep polluting our water supply with their ink! How are we supposed to drink from the lake when the water has turned black with their ink!<n><t>Can you get rid of 10 <rSailor Squidy> at <j(657, 411)> please?")
@@ -2319,7 +2319,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 676, 10, 10 )
 	RegCurTrigger( 6761 )
 
------------------------------------帕帕帽子
+-----------------------------------
 	DefineMission( 677, "Squidy Cap", 677 )
 	
 	MisBeginTalk( "<t>You can say that I am a greedy person. I still want <ySquidy Caps> even after you have given me those <ySailor Penguin Caps>.<n><t>They just look so cute! Please help me again by finding 2 more <ySquidy Caps> at <j(657, 411)>.")
@@ -2350,7 +2350,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 677, 10, 2 )
 	RegCurTrigger( 6771 )
 
-----------------------------------铲除雪地菇
+----------------------------------
 	DefineMission( 678, "Clearance of Shrooms", 678 )
 	
 	MisBeginTalk( "<t>I hate all type of Shrooms! I will cook all of them if given the chance!<n><t>There is a bunch of these pesky Shrooms nearby at <j(952, 550)>. Can you get rid of 10 <rSnowy Shrooms> for me please?")
@@ -2379,7 +2379,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 678, 10, 10 )
 	RegCurTrigger( 6781 )
 
------------------------------------雪地蘑菇
+-----------------------------------
 	DefineMission( 679, "Snowy Mushroom", 679 )
 	
 	MisBeginTalk( "<t>My appetite is not so good as I am getting old. Therefore, I am unable to take anything oily or I'll fall ill.<n><t>Can you get 5 <ySnowy Mushrooms> at <j(952, 550)> for me to cook a nutritious meal?")
@@ -2410,7 +2410,7 @@ function AreaMission001()
 	RegCurTrigger( 6791 )
 
 
-----------------------------------迟钝的雪地蜗牛
+----------------------------------
 	DefineMission( 680, "Slow Slow Snail!", 680 )
 	
 	MisBeginTalk( "<t><rSnowy Snails> are so slow yet they always like to move infront of me. They almost make an old person like me tripped for a few occasion.<n><t>Can you kill 10 <rSnowy Snails> at <j(657, 334)> for me please?")
@@ -2439,7 +2439,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 680, 10, 10 )
 	RegCurTrigger( 6801 )
 
------------------------------------花语石
+-----------------------------------
 	DefineMission( 681, "Flowery Stone", 681 )
 	
 	MisBeginTalk( "<t>Beneath the shell of <rSnowy Snail> lies a very rare <yFlowery Stone>.<n><t>It is a magical stone that Goddess Kara created to allow human to understand the language of flowers.<n><t>Can you get 5 <yFlowery Stones> for my research? Those snails appears near <j(657, 334)>.")
@@ -2469,7 +2469,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 681, 10, 5 )
 	RegCurTrigger( 6811 )
 
------------------------------------蜗牛触角
+-----------------------------------
 	DefineMission( 682, "Snail Feeler", 682 )
 	
 	MisBeginTalk( "<t>The deep forest is so big, yet the weird collector, <bChang>, requested me to look for <yFrozen Snail Feelers>.<n><t>It's like looking for a needle in a haystack! Can you help me look for 5 <yFrozen Snail Feelers>?<n><t>The snails might appear near <j(657, 334)>.")
@@ -2499,7 +2499,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 682, 10, 5 )
 	RegCurTrigger( 6821 )
 
------------------------------------寻找冰雪之心
+-----------------------------------
 	DefineMission( 683, "Search for Snowy Heart", 683 )
 	
 	MisBeginTalk( "<t>Wait please! My nephew has contracted a strange illness recently and is dying. Only the <yGlacier Heart> from a <rNaive Snow Doll> at <j(1055, 738)> can save him.<n><t>Please be so kind and get me 5 <yGlacier Hearts>!")
@@ -2530,7 +2530,7 @@ function AreaMission001()
 	RegCurTrigger( 6831 )
 
 
-----------------------------------纯情雪娃娃
+----------------------------------
 	DefineMission( 684, "Naive Snow Doll", 684 )
 	
 	MisBeginTalk( "<t>It is rumored that <rNaive Snow Doll> can summon the evil <rSnow Lady> to bring disaster.<n><t>Even though there is no truth to this, it is better to be safe.<n><t>Can you kill 10 <rNaive Snow Dolls> around this village at <j(1055, 738)>?")
@@ -2559,7 +2559,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 684, 10, 10 )
 	RegCurTrigger( 6841 )
 
-----------------------------------幼熊出洞
+----------------------------------
 	DefineMission( 685, "Cavern Little Bears", 685 )
 	
 	MisBeginTalk( "<ts>cientifically speaking, animals like bears usually hibernate during extreme cold temperature. However, as <rSnowy Bear Cub> has been living in such cold temperature for many years, they have slowly evolved to the point where by they don't need to hibernate anymore.<n><t>This evolution have brought much problems to those who are placed in charge to look after the forest such as us. We were attacked by these agressive <rSnowy Bear Cub> whenever we patrol the forest.<n><t>Can you help us solve the problem by killing 10 <rSnowy Bear Cub> at <j(958, 661)>?")
@@ -2588,7 +2588,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 685, 10, 10 )
 	RegCurTrigger( 6851 )
 
------------------------------------雪之泪
+-----------------------------------
 	DefineMission( 686, "Snow Tears", 686 )
 	
 	MisBeginTalk( "<t>I came from the desert looking for the <rSnow Lady>. It is said that they look like the Goddess Kara. I wish to see one but I can't find any trails leading to them.<n><t>Can you find me 5 <yPerfect Snowflakes> to prove that they existed?<n><t>It is rumored that they appeared near <j(873, 646)>.")
@@ -2619,7 +2619,7 @@ function AreaMission001()
 	RegCurTrigger( 6861 )
 
 
------------------------------------冰雪晶石
+-----------------------------------
 	DefineMission( 687, "Snow Crystal", 687 )
 	
 	MisBeginTalk( "<t>Hey friend, have you heard the latest news? Now the most profitable item on the black market is <ySnowy Crystal> used by <rSnow Lady>to create snowstorms! I know stealing from <rSnow Lady> isn't a good thing. However, money matters more than anything else!<n><t>I am offering a high price for you to go <j(873, 646)> to steal 5 <ySnowy Crystals> from the <rSnow Lady>. Are you willing to go? (The crystals are within the forest where the snow lady appears, pick it up immediately if you see one!)")
@@ -2649,7 +2649,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 687, 10, 5 )
 	RegCurTrigger( 6871 )
 
-----------------------------------幽怨雪女
+----------------------------------
 	DefineMission( 688, "Wailing Snow Lady", 688 )
 	
 	MisBeginTalk( "<t>Its good that you are here! Have you seen the <rSnow Ladies> nearby? They are so dangerous!<n><t>When they gets angry, they may even summon a snow storm upon this land!<n><t>Please get rid of these menace by killing 10 <ySnow Ladies>! They are near <j(873, 646)>.")
@@ -2678,7 +2678,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 688, 10, 10 )
 	RegCurTrigger( 6881 )
 
-----------------------------------惩治雪地狼
+----------------------------------
 	DefineMission( 689, "Punish the Wolves", 689 )
 	
 	MisBeginTalk( "<t>Help! I have been chased by a pack of <rSnowy Wolves>! This is so scary!<n><t>Please save me by killing 10 <rSnowy Wolves> at <j(965, 775)>!")
@@ -2691,7 +2691,7 @@ function AreaMission001()
 
 	MisNeed(MIS_NEED_KILL, 137, 10, 10, 10)
 	
-	MisHelpTalk("<t>？Have you killed the 10 <rSnowy Wolves>?")
+	MisHelpTalk("<t>Have you killed the 10 <rSnowy Wolves>?")
 	MisResultTalk("<t>Oh, thank you! You are my saviour!")
 	MisResultCondition(NoRecord, 689)
 	MisResultCondition(HasMission, 689)
@@ -2707,7 +2707,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 689, 10, 10 )
 	RegCurTrigger( 6891 )
 
------------------------------------营养龟苓膏
+-----------------------------------
 	DefineMission( 690, "Nutritious Tortoise", 690 )
 	
 	MisBeginTalk( "<t>You've come at the right time my friend!<n><t>I feel like eating Herbal Jelly recently but they can only be found on Battle Tortoises at <j(891, 750)>.<n><t>I am no match for them anyway. Can you help me get 5 Herbal Jelly back?")
@@ -2737,7 +2737,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 690, 10, 5 )
 	RegCurTrigger( 6901 )
 
-----------------------------------长鼻子乌龟
+----------------------------------
 	DefineMission( 691, "Long Nose Tortoise", 691 )
 	
 	MisBeginTalk( "<t>My friend! I have just seen a fearsome creature loitering around here.<n><t>They look like tortoises yet have a elephant tusk on their back. I heard from the native here that they are called <rBattle Tortoises>.<n><t>Can you kill 10 Battle Tortoises at <j(891, 75)> to curb my fear?")
@@ -2766,7 +2766,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 691, 10, 10 )
 	RegCurTrigger( 6911 )
 
-----------------------------------野蛮硬甲蟹
+----------------------------------
 	DefineMission( 692, "Brute Crabby", 692 )
 	
 	MisBeginTalk( "<t>Oh my god! A bunch of wild <rArmored Crabs> have robbed me of my goods!<n><t>How dare they! Can you help me teach them a lesson?<n><t>Kill 10 <rArmored Crabs> at <j(994, 857)> as a warning to them please!")
@@ -2795,7 +2795,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 692, 10, 10 )
 	RegCurTrigger( 6921 )
 
------------------------------------自制蟹卵酱
+-----------------------------------
 	DefineMission( 693, "Crab Egg Sauce", 693 )
 	
 	MisBeginTalk( "<t> When I moved to this chilling place, I was hoping to eat some fantastic egg sauce.<n><t>I heard that <yArmored Crab Eggs> make a great sauce. Please get 5 <yArmored Crab Eggs> for me. Their lair is at <j(994, 857)>.")
@@ -2825,7 +2825,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 693, 10, 5 )
 	RegCurTrigger( 6931 )
 
------------------------------------美食专家
+-----------------------------------
 	DefineMission( 694, "Gourmet Critic", 694 )
 	
 	MisBeginTalk( "<t>As the <rNorthern Snail> stay on this iceland, when it die the meat will be frozen forming into <yFrozen Conch Meat>. It is actually a very delicious dish that I wish to eat. <n><t>Can you get 5 pieces of <yFrozen Conch Meat> near <j(802, 750)> for me?")
@@ -2855,7 +2855,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 694, 10, 5 )
 	RegCurTrigger( 6941 )
 
------------------------------------采集纯净之灵
+-----------------------------------
 	DefineMission( 695, "Collect Heart of Purity", 695 )
 	
 	MisBeginTalk( "<t>Hey friend, can I have some of your time? My friend is becoming interested with mythical beings, he asked me to collect 5 Heart of Purity from the Snow Spirit. Can you go and help me collect 5 of it?<n><t>You can find the Heart of Purity from the <rSnow Spirit> at <j(1060, 805)>.")
@@ -2885,7 +2885,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 695, 10, 5 )
 	RegCurTrigger( 6951 )
 
-----------------------------------恼人的雪娃娃
+----------------------------------
 	DefineMission( 696, "Buggy Snow Doll", 696 )
 	
 	MisBeginTalk( "<t><rFragile Snow Dolls> are constantly posing a threat to the villagers.<n><t>Can you kill 10 <rFragile Snow Dolls> at <j(908, 842)> for us?")
@@ -2914,7 +2914,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 696, 10, 10 )
 	RegCurTrigger( 6961 )
 
-----------------------------------原始雪人
+----------------------------------
 	DefineMission( 697, "Primal Snowman", 697 )
 	
 	MisBeginTalk( "<t>Hi! Want to prove your valor? Now there is a chance! Villagers are terrified of the huge <rYetis> nearby.<n><t>Kill 10 <rYetis> at <j(1495, 667)> to prove your courage!")
@@ -2943,7 +2943,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 697, 10, 10 )
 	RegCurTrigger( 6971 )
 
------------------------------------失踪事件
+-----------------------------------
 	DefineMission( 698, "Lost Mystery", 698 )
 	
 	MisBeginTalk( "<t>There have been a lot of missing cases near <pIcicle City> and I suspect that it has something to do with the <rYetis> at <j(1495, 667)>.<n><t>Can you help me collect 5 <rYeti Nails> for my investigation?")
@@ -2957,7 +2957,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4446, 5, 10, 5)
 	
 	MisHelpTalk("<t>You have not completed such a simple task?")
-	MisResultTalk("<ts>trange…these bloodstains does not belong to a human…")
+	MisResultTalk("<ts>trangethese bloodstains does not belong to a human")
 	MisResultCondition(NoRecord, 698)
 	MisResultCondition(HasMission, 698)
 	MisResultCondition(HasItem, 4446, 5)
@@ -2973,7 +2973,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 698, 10, 5 )
 	RegCurTrigger( 6981 )
 
-----------------------------------争强好胜的猪
+----------------------------------
 	DefineMission( 699, "Win Win Pig!", 699 )
 	
 	MisBeginTalk( "<t>Ouch!Ouch! Those cuts on my face are caused by <rCombat Piglets>.<n><t>They get aggressive over anybody with a weapon. Please put a stop to these by killing 10 <rCombat Piglets> at <j(1453, 560)>!")
@@ -3002,7 +3002,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 699, 10, 10 )
 	RegCurTrigger( 6991 )
 
-----------------------------------捣鬼的雪娃娃
+----------------------------------
 	DefineMission( 800, "Playful Snow Doll", 800 )
 	
 	MisBeginTalk( "<t>I am the chairman of <pIcicle city> and have to take responsibility for the safety of travelers.<n><t>Recently, <rPlayful Snow Dolls> have been attacking anybody they see.<n><t>Please kill 10 <rPlayful Snow Dolls> at <j(1746, 530)> to make our road safe once more!")
@@ -3031,7 +3031,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 800, 10, 10 )
 	RegCurTrigger( 8001 )
 
------------------------------------灵魂宝石
+-----------------------------------
 	DefineMission( 801, "Soul Gem", 801 )
 	
 	MisBeginTalk( "<t>The amount missing cases is increasing! We need to do something! People seems to disappear near places where <rPlayful Snow Dolls> appeared.<n><t>Can you get 5 <ySoul Gems> from the <rPlayful Snow Dolls> at <j(1746, 530)> for my investigation?")
@@ -3061,7 +3061,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 801, 10, 5 )
 	RegCurTrigger( 8011 )
 
-----------------------------------滥杀无辜
+----------------------------------
 	DefineMission( 802, "Slaughter of Innocent", 802 )
 	
 	MisBeginTalk( "<t>I want you to kill 10 <rBattle Tortoises> for me! No special reasons! I just don't like the looks of them.<n><t>I will reward you greatly.")
@@ -3090,7 +3090,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 802, 10, 10 )
 	RegCurTrigger( 8021 )
 
------------------------------------难以愈合的伤口
+-----------------------------------
 	DefineMission( 803, "Unhealing Wound", 803 )
 	
 	MisBeginTalk( "<t>I have been attacked by <rSkeletal Warriors> recently. Even though my wounds are not deep, it hurts greatly in this chilling place.<n><t>I heard that <yHeated Tortoise Shell> from <rSnowy Tortoise> at <j(2165, 462)> is effective in curing this kind of wounds. Please get 5 <yHeated Tortoise Shells> for me please!")
@@ -3120,7 +3120,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 803, 10, 5 )
 	RegCurTrigger( 8031 )
 
-----------------------------------堕落之羊
+----------------------------------
 	DefineMission( 804, "Fallen Lamb", 804 )
 	
 	MisBeginTalk( "<t>Hey, have you seen those <rCrazy Sheeps>? I heard that they were mutated animals totally different from that created by the female goddess Kara!<n><t>They can be taken as the embodiment of evil.<n><t>My friend, if you believe in Goddess Kara, please help to destroy 10 <rCrazy sheeps>, they can be found at <j(226, 590)>.")
@@ -3149,7 +3149,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 804, 10, 10 )
 	RegCurTrigger( 8041 )
 
------------------------------------猛蝎之毒
+-----------------------------------
 	DefineMission( 805, "Scorpion Poison", 805 )
 	
 	MisBeginTalk( "<t>Hi! You have come at the right time! My girlfriend, <bNana> has fallen into a coma after getting stung by a <rFerocious Scorpion> at <j(2370, 548)>.<n><t>I need 5 vials of <yScorpion Blood> to revive her but I cannot leave as I need to look after her. Can you help me?")
@@ -3179,7 +3179,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 805, 10, 5 )
 	RegCurTrigger( 8051 )
 
-----------------------------------开路先锋
+----------------------------------
 	DefineMission( 806, "Pioneer", 806 )
 	
 	MisBeginTalk( "<t>Hi! You have come at the right time!<n><t>I plan to bring my girlfriend, <bNana> to <pIcicle City> for a holiday. However, our route has been blocked by a bunch of ferocious <rPolar Bears>.<n><t>Can you kill 10 <rPolar Bears> at <j(1981, 530)> for us? 189=<t>You must kill 10 <rPlayful Snow Dolls>.")
@@ -3208,7 +3208,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 806, 10, 10 )
 	RegCurTrigger( 8061 )
 
------------------------------------雪影剑
+-----------------------------------
 	DefineMission( 807, "Phantom Sword", 807 )
 	
 	MisBeginTalk( "<t> Hi! Do you know why these <rSnowy Tusk Boars> are always roaming around <j(2269, 590)>? It is because they are the guardians of a legendary weapon, the <yPhantom Sword>.<n><t>I am very interested in this sword. Please get it for me!<n><t>It should be stuck inside a rock.")
@@ -3238,7 +3238,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 807, 10, 1 )
 	RegCurTrigger( 8071 )
 
-----------------------------------武士亡魂
+----------------------------------
 	DefineMission( 808, "Warrior Soul", 808 )
 	
 	MisBeginTalk( "<t>Maybe its because I can see things that normal people can't, I often hear wails from the spirits of the <rUndead Warriors>.<n><t>Thsee sound of suffering comes from the souls trapped in the body of those <rSkeletal Warriors>.<n><t>By destroying their skeletal body forms, we will be able to free their souls.<n><t>My friend, are you willing to help me? Kill 10 <rSkeletal Warriors> at <j(2269 ,470)> to save their souls.")
@@ -3267,7 +3267,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 808, 10, 10 )
 	RegCurTrigger( 8081 )
 
-----------------------------------吸血的怪物
+----------------------------------
 	DefineMission( 809, "Vampiric Monster", 809 )
 	
 	MisBeginTalk( "<t>In the <pSilver Mine>, there is a creature that lives off blood of human. They are the <rVampire Bats>.<n><t>The miners are terrified of them. Can you do us a favor by killing 10 <rVampire Bats> in Silver Mine 2 so that we could mine in peace?")
@@ -3296,7 +3296,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 809, 10, 10 )
 	RegCurTrigger( 8091 )
 
------------------------------------鼹鼠的安全帽
+-----------------------------------
 	DefineMission( 810, "Miner Mole Safety Helmet", 810 )
 	
 	MisBeginTalk( "<t><bLulu> and me want to go to the <pSilver Mine> to have fun.<n><t>However, both of us do not have any safety helmets so the worker refused to let us in.<n><t>Can you please go to Silver Mine 2 and get us 2 <yMiner Mole Safety Helmets> from those <rMiner Moles>? Help us please, we really want to go inside <pSilver Mine> to play!")
@@ -3327,7 +3327,7 @@ function AreaMission001()
 	RegCurTrigger( 8101 )
 
 
------------------------------------奇异的泥浆
+-----------------------------------
 	DefineMission( 811, "Weird Mud", 811 )
 	
 	MisBeginTalk( "<t>It was such a shock! I was attacked by a mould of mud as I was entering <pAbandoned Mine>. My God, I never knew even mud has a life of their own!<n><t>Can you please collect 5 <ySticky Mud Cakes> from them as I wish to study it. These weird creatures can be found at <j(934, 2747)>.")
@@ -3357,7 +3357,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 811, 10, 5 )
 	RegCurTrigger( 8111 )
 
-----------------------------------报复泥浆怪
+----------------------------------
 	DefineMission( 812, "Revenge of the Mud", 812 )
 	
 	MisBeginTalk( "<t>I went to <pSilver Mine> to dig for stones.<n><t>Out of nowhere, a <rMud Monster> appeared and flung mud on my new shirt.<n><t>Argh, I can't take it! Can you kill 10 <rMud Monsters> at <j(934, 2747)> as a revenge for me?")
@@ -3370,7 +3370,7 @@ function AreaMission001()
 
 	MisNeed(MIS_NEED_KILL, 253, 10, 10, 10)
 	
-	MisHelpTalk("<t>You have not killed 10 <rMud Monsters>? I am waiting…")
+	MisHelpTalk("<t>You have not killed 10 <rMud Monsters>? I am waiting")
 	MisResultTalk("<t>Thank you! Thank you!")
 	MisResultCondition(NoRecord, 812)
 	MisResultCondition(HasMission, 812)
@@ -3387,7 +3387,7 @@ function AreaMission001()
 	RegCurTrigger( 8121 )
 
 
-----------------------------------铁爪鼹鼠
+----------------------------------
 	DefineMission( 813, "Miner Mole", 813 )
 	
 	MisBeginTalk( "<t>When I am exploring <pAbandoned Mine>, some <rMiner Moles> attacked me suddenly! Their razor sharp claws wounded me deeply.<n><t>Can you take a revenge for me by getting rid of those <rMiner Moles>? Please kill 10 <rMiner Moles>!")
@@ -3416,7 +3416,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 813, 10, 10 )
 	RegCurTrigger( 8131 )
 
------------------------------------忍者手里剑
+-----------------------------------
 	DefineMission( 814, "Ninja Sword", 814 )
 	
 	MisBeginTalk( "<t><rNinja Mole> uses a very unique weapon. They called it the <yNinja Sword>.<n><t>It is a highly accurate and damaging weapon which I am very interested in.<n><t>Can you go to <pAbandoned Mine 2> and get 10 <yNinja Swords> for me?")
@@ -3446,7 +3446,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 814, 10, 10 )
 	RegCurTrigger( 8141 )
 
------------------------------------考验
+-----------------------------------
 	DefineMission( 837, "Test", 837 )
 	
 	MisBeginTalk( "<ts>ince this is your first time to Chaldea, I am sure that you are looking around for a challenge.<n><t>Why don't you kill 5 <rTribal Warriors> to prove your valor? They are at the southeast of this Haven.")
@@ -3477,7 +3477,7 @@ function AreaMission001()
 	RegCurTrigger( 8371 )
 
 
------------------------------------考验
+-----------------------------------
 	DefineMission( 838, "Test", 838 )
 	
 	MisBeginTalk( "<t>Killing 5 <rTribal Warriors> is easy. Can you kill 30 <rTribal Warriors>?<n><t>You can reject if you are afraid.")
@@ -3509,7 +3509,7 @@ function AreaMission001()
 	RegCurTrigger( 8381 )
 
 
------------------------------------真正的目的
+-----------------------------------
 	DefineMission( 839, "Hidden Agenda", 839 )
 	
 	MisBeginTalk( "<t>Good! Good! I can see your potiential from the previous tasks that I've entrust you to. I believe that you have also collected some <yTribal Shields> as well.<n><t>Are you willing to give me 12 <yTribal Shields> for my collection?")
@@ -3543,7 +3543,7 @@ function AreaMission001()
 
 
 
------------------------------------根雕爱好者
+-----------------------------------
 	DefineMission( 840, "Enthusiast", 840 )
 	
 	MisBeginTalk( "<t>Hi! I am a artist who carve figurines out of old roots. However, the forest nearby is full of monster and I cannot find any suitable roots for my art!<n><t>Please help me collect 5 <yWithered Roots>!")
@@ -3575,7 +3575,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 840, 10, 5 )
 	RegCurTrigger( 8401 )
 
------------------------------------采样
+-----------------------------------
 	DefineMission( 841, "Sampling", 841 )
 	
 	MisBeginTalk( "<t>Do you know how to make a candle of unending flame? It is made from a special root that can only be found in the forest east of this haven. However, there are many monsters along the way.<n><t>Could you kindly collect 1 <yWithered Root> and kill 5 <rTreants> please?")
@@ -3614,7 +3614,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 841, 10, 5 )
 	RegCurTrigger( 8412 )
 
------------------------------------不灭的蜡烛
+-----------------------------------
 	DefineMission( 842, "Never Dying Candle", 842 )
 	
 	MisBeginTalk( "<t>I have just completed the research of making a candle of unending flame. I am prepared to start mass producing these candles.<n><t>Can you get me 15 <yWithered Roots>? I promise to share the profits with you.")
@@ -3646,7 +3646,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 842, 10, 15 )
 	RegCurTrigger( 8421 )
 
------------------------------------黑色怪兽
+-----------------------------------
 	DefineMission( 843, "Black Monster", 843 )
 	
 	MisBeginTalk( "<t>Recently, I saw a lot of dark monsters with candles on their head. Is it a new form of cult for the monster? I believe this isn't any good news. However, I am more interested in their candles.<n><t>Can you kill some <rDark Mud Monsters> and get me their <yUsed Candle>?")
@@ -3685,7 +3685,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 843, 10, 5 )
 	RegCurTrigger( 8432 )
 
------------------------------------蜡烛研究
+-----------------------------------
 	DefineMission( 844, "Candle Research", 844 )
 	
 	MisBeginTalk( "<t>Hey! You're still around! Thanks for your help the last time. I have finished up the <yUsed Candle> for research.<n><t>Can you get 10 more <yUsed Candles>?")
@@ -3718,7 +3718,7 @@ function AreaMission001()
 	RegCurTrigger( 8441 )
 
 
------------------------------------岩石怪
+-----------------------------------
 	DefineMission( 845, "Rock Golem", 845 )
 	
 	MisBeginTalk( "<t>Recently, <rSturdy Rock Golems> are attacking everybody they encounter and many villagers have been hurt.<n><t>Dear adventurer! Please help me dismantle some <rSturdy Rock Golems> and collect some sample back for investigation!")
@@ -3757,7 +3757,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 845, 10, 5 )
 	RegCurTrigger( 8452 )
 
------------------------------------微光石头的研究
+-----------------------------------
 	DefineMission( 846, "Velvet Stone Research", 846 )
 	
 	MisBeginTalk( "<ts>orry, I was too to notice you! Regarding the <yShimmering Rock Fragments> you brought back the other time, I accidentally lost it as it is too small.<n><t>Can you get me another 6 <yShimmering Rock Fragments>?")
@@ -3773,7 +3773,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4825, 6, 10, 6)
 	
 	MisHelpTalk("Have you found 6 <yShimmering Rock Fragments>?")
-	MisResultTalk("I am sure I have seen these <yShimmering Rock Fragments> somewhere…")
+	MisResultTalk("I am sure I have seen these <yShimmering Rock Fragments> somewhere")
 	MisResultCondition(NoRecord, 846)
 	MisResultCondition(HasMission, 846)
 	MisResultCondition(HasItem, 4825, 6)
@@ -3790,7 +3790,7 @@ function AreaMission001()
 	RegCurTrigger( 8461 )
 
 
------------------------------------验证
+-----------------------------------
 	DefineMission( 847, "Validity", 847 )
 	
 	MisBeginTalk( "<t>I believed that I have found some evidence regarding the strange behavior of <rSturdy Rock Golems>.<n><t>However, I cannot confirm this and I need a <yUnyielding Helmet> from <rUndead Warrior>. Can you collect 1 <yUnyielding Helmet> and kill 5 <rUndead Warriors> for me?")
@@ -3830,7 +3830,7 @@ function AreaMission001()
 	RegCurTrigger( 8472 )
 
 
------------------------------------不灭头盔
+-----------------------------------
 	DefineMission( 848, "Unyielding Helmet", 848 )
 	
 	MisBeginTalk( "<t>You've come at the right time! Look at this helmet!<n><t>I bet you cannot recognize it. It is the <yUnyielding Helmet> you bought me the other time. I have done some enhancements with the <yShimmering Rock Fragment> and this is the final product! Get me 10 more <yUnyielding Helmets> and I can start producing more!")
@@ -3862,7 +3862,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 848, 10, 10 )
 	RegCurTrigger( 8481 )
 
------------------------------------瓦解
+-----------------------------------
 	DefineMission( 849, "Disintegration", 849 )
 	
 	MisBeginTalk( "<t>Are you here for visiting? If yes, you have come at the wrong time. Thundoria is under seige from monsters, especially those <rElite <rWerewolf Warriors>>.<n><t>If possible, can you help us kill 20 <rElite <rWerewolf Warriors>> to reduce their strength?")
@@ -3892,7 +3892,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 849, 10, 20 )
 	RegCurTrigger( 8491 )
 
------------------------------------血腥的锤子
+-----------------------------------
 	DefineMission( 850, "Bloodied Hammer", 850 )
 	
 	MisBeginTalk( "<t>I am a weapon collector who only collects high quality weapons.<n><t>Recently, I saw <rElite <rWerewolf Warriors>> wielding <yBloodied Hammers> as weapons. I wish to have them for my collection.<n><t>Please collect 10 <yBloodied Hammers> for me!")
@@ -3926,7 +3926,7 @@ function AreaMission001()
 	RegCurTrigger( 8501 )
 
 
------------------------------------第一种原料
+-----------------------------------
 	DefineMission( 851, "First Ingredient", 851 )
 	
 	MisBeginTalk( "<t>If you have no business here please leave. Do not disrupt my experiment! The people who share the same passion me have already died. But never mind, I just need a few important ingredients for my experiment to be a success!<n><t>Go get me 8 <yMummy Nails> for the first type of ingredients for the experiment now!")
@@ -3958,7 +3958,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 851, 10, 8 )
 	RegCurTrigger( 8511 )
 
------------------------------------复仇
+-----------------------------------
 	DefineMission( 852, "Vengence", 852 )
 	
 	MisBeginTalk( "Damn those <rIron Mummies>! They killed my wife and turned her into one of themselves! Because of this, I cannot bear to kill them as I do not know wish to harm what was formerly wife!<n><t>Please help me release her soul! Kill 15 <rIron Mummies> please!")
@@ -3988,7 +3988,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 852, 10, 15 )
 	RegCurTrigger( 8521 )
 
------------------------------------第三种原料
+-----------------------------------
 	DefineMission( 853, "Third Ingredient", 853 )
 	
 	MisBeginTalk( "<t>This is not the first time we're talking to each other so I'll spare you the formalities.<n><t>I need the third type of ingredients now. Get me 10 <yStramonium Thorn> now. If you don't know where to find, go north-west of the city and search.")
@@ -4020,7 +4020,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 853, 10, 10 )
 	RegCurTrigger( 8531 )
 
------------------------------------第二种原料
+-----------------------------------
 	DefineMission( 854, "Second Ingredient", 854 )
 	
 	MisBeginTalk( "<t>Just like what I've said before. I need a few ingredients for my experiment. <yMummy Nails> are just one of them.<n><t>I need the second type of ingredients now. Go get me 10 strands of <yMummy Hair>.<n><t>Remember! Only those from <rSteel Mummies>.")
@@ -4052,7 +4052,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 854, 10, 10 )
 	RegCurTrigger( 8541 )
 
------------------------------------抵御亡灵
+-----------------------------------
 	DefineMission( 855, "Repel Spirit", 855 )
 	
 	MisBeginTalk( "<t>My anger has ceased as I only wished for my wife to find peace in heaven. However, as long as those mummies exist, the villagers will never have a peaceful day.<n><t>Please kill 15 <rSteel Mummies>!")
@@ -4083,7 +4083,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 855, 10, 15 )
 	RegCurTrigger( 8551 )
 
------------------------------------土著围城
+-----------------------------------
 	DefineMission( 856, "Tribal Invasion", 856 )
 	
 	MisBeginTalk( "<t><rElite <rWerewolf Warriors>> have steered clear of our city for now. However, the <rtribesmen> are still lurking around and disrupting our peace!<n><t>Help us by killing 5 <rTribal Shamans> and 15 <rAgile Tribal Villagers>.")
@@ -4100,7 +4100,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_KILL, 515, 15, 10, 15)
 	MisNeed(MIS_NEED_KILL, 38, 5, 30, 5)
 
-	MisHelpTalk("Those <rtribesmen> are still taunting the city, what are you doing here?？")
+	MisHelpTalk("Those <rtribesmen> are still taunting the city, what are you doing here?")
 	MisResultTalk("Haha! Lets see what those <rtribesmen> do can now!")
 	MisResultCondition(NoRecord, 856)
 	MisResultCondition(HasMission, 856)
@@ -4121,7 +4121,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 856, 30, 5 )
 	RegCurTrigger( 8562 )
 
------------------------------------战争的奖励
+-----------------------------------
 	DefineMission( 857, "Battle Reward", 857 )
 	
 	MisBeginTalk( "<t>You tell me that you are the hero that defeated those <rElite <rWerewolf Warriors>> and <rtribesmen>?<n><t>Don't make me laugh! Show me proof then! Bring me 5 <yTribal Masks> and 5 <yMysterious Bones> as evident!")
@@ -4161,7 +4161,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 857, 20, 5 )
 	RegCurTrigger( 8572 )
 
------------------------------------新的武器
+-----------------------------------
 	DefineMission( 858, "New Weapon", 858 )
 	
 	MisBeginTalk( "<t>As the war with the monsters continues, we need to invent new weapons to deal with them effectively. We need 1 <yBroken Angel Wand> and 1 <yDented Sacred Bow> for the research.<n><t>Can you get them from the <rGuardian Angels> and <rForest Hunters>?")
@@ -4201,7 +4201,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 858, 20, 1 )
 	RegCurTrigger( 8582 )
 
------------------------------------堕落天使
+-----------------------------------
 	DefineMission( 859, "Fallen Angel", 859 )
 	
 	MisBeginTalk( "<t>Have you seen the <rGuardian Angels> outside our city?<n><t>Do you think that they are even fit to be called angels? Please put these fallen angels to rest.")
@@ -4231,7 +4231,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 859, 10, 12 )
 	RegCurTrigger( 8591 )
 
------------------------------------远征
+-----------------------------------
 	DefineMission( 860, "Expedition", 860 )
 	
 	MisBeginTalk( "<t>The monsters outside the city have been defeated. However, enemies hiding in the <bSacred Snow Mountain> are still on the move. We will organise another war expedition! Are there any brave man who are willing to join?<n><t>Our targets this time round are the <rUndead Warrior> and <rSkeletal Archer>.")
@@ -4269,7 +4269,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 860, 30, 8 )
 	RegCurTrigger( 8602 )
 
------------------------------------堕落的头盔
+-----------------------------------
 	DefineMission( 861, "Fallen Helmet", 861 )
 	
 	MisBeginTalk( "<t>Did you participate in the war expedition recently?<n><t>The <rVicious Undead Warriors> that were killed drop <yFallen Helmets> which is just what I've been looking for. Can you get me 5 <yFallen Helmets>?")
@@ -4302,7 +4302,7 @@ function AreaMission001()
 	RegCurTrigger( 8611 )
 
 
------------------------------------第四种原料
+-----------------------------------
 	DefineMission( 862, "Fourth Ingredient", 862 )
 	
 	MisBeginTalk( "<t>The fourth type of ingredient is a <yComplete Rib>. It can only be found off <rDeadly Skeletal Archers>.<n><t>Not a single person has returned from their lair. Are you brave enough to bring me their <yComplete Ribs>?")
@@ -4317,7 +4317,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_DESP,"<bMorpheus - Freya> at <j(651, 1585)> requires a new ingredient now. Get her 8 <yComplete Ribs>...")
 	MisNeed(MIS_NEED_ITEM, 4858, 8, 10, 8)
 	
-	MisHelpTalk("You dare return empty handed? Maybe your ribs will do as well…")
+	MisHelpTalk("You dare return empty handed? Maybe your ribs will do as well")
 	MisResultTalk("I am impressed with your capability. Good!")
 	MisResultCondition(NoRecord, 862)
 	MisResultCondition(HasMission, 862)
@@ -4334,7 +4334,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 862, 10, 8 )
 	RegCurTrigger( 8621 )
 
------------------------------------圣林考验
+-----------------------------------
 	DefineMission( 863, "Test of the Sacred Forest", 863 )
 	
 	MisBeginTalk( "<t>There is a challenge waiting for you. Are you brave enough to defeat 10 <rForest Hunters>? May the goddess be with you!")
@@ -4366,7 +4366,7 @@ function AreaMission001()
 	RegCurTrigger( 8631 )
 
 
------------------------------------最后一种原料
+-----------------------------------
 	DefineMission( 864, "Last Ingredient", 864 )
 	
 	MisBeginTalk( "<t>You can't give up now! It's already too late! I will kill you if you dare! However, if you help me, I will share the secret of immortality with you.<n><t>I need the last type of ingredient now! Get me 10 <ySkeleton Bone Fragments> from <rCursed Corpse>!")
@@ -4398,7 +4398,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 864, 10, 10 )
 	RegCurTrigger( 8641 )
 
------------------------------------幕后的阴影
+-----------------------------------
 	DefineMission( 865, "Hidden Shadow", 865 )
 	
 	MisBeginTalk( "<t>I have been investigating the case about those mummies and have found out that the <rCursed Corpses> have been manipulating them all along.<n><t>Please put a stop to this evil and defeat those <rCursed Corpses>!")
@@ -4429,7 +4429,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 865, 10, 10 )
 	RegCurTrigger( 8651 )
 
------------------------------------最后的敌人
+-----------------------------------
 	DefineMission( 866, "Last Enemy", 866 )
 	
 	MisBeginTalk( "<t>The war expedition has been a success. Now the enemies have gathered near the western shores. However, we are unable to break through their defense.<n><t>Maybe you can give it a try by killing 10 <rSkeletal Warrior Leaders>.")
@@ -4468,7 +4468,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 866, 20, 1 )
 	RegCurTrigger( 8662 )
 
------------------------------------暗血考验
+-----------------------------------
 	DefineMission( 867, "Phantom Blood Test", 867 )
 	
 	MisBeginTalk( "<t>Forsake the light and dwell into the darkness of your soul! Nobody possesses the power that you have within. Embrace darkness and release the power now! Defeat 15 <rBloodthirsty Hunters> to prove that you deserve the power!")
@@ -4499,7 +4499,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 867, 10, 15 )
 	RegCurTrigger( 8671 )
 
------------------------------------暗之弓
+-----------------------------------
 	DefineMission( 868, "Dark Bow", 868 )
 	
 	MisBeginTalk( "<t><yBloodied Hammer>, <yFallen Helmet> and others are only rubbish. If you ask me, the only treasure will be a <yDark Bow>.<n><t>If you can help me obtain 5 <yDark Bows>, I will reward you greatly!")
@@ -4515,7 +4515,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4922, 5, 10, 5)
 	
 	MisHelpTalk("I ask for nothing else but <yDark Bow>. Please get me 5")
-	MisResultTalk("This mysterious darkness is a form of beauty…")
+	MisResultTalk("This mysterious darkness is a form of beauty")
 	MisResultCondition(NoRecord, 868)
 	MisResultCondition(HasMission, 868)
 	MisResultCondition(HasItem, 4922, 5)
@@ -4532,7 +4532,7 @@ function AreaMission001()
 	RegCurTrigger( 8681 )
 
 
------------------------------------抵抗雪巨人
+-----------------------------------
 	DefineMission( 869, "Repel Snowman", 869 )
 	
 	MisBeginTalk( "<t>There was a recent attack by the snowman. Although there were similar incidents in the past, this attack was well organised for some unknown reason. Will you help us defend against these snowman?<n><t>Of course, we will let you handle weaker ones first. The <rcumbersome snowman> appears at <j(2471, 502)>. So, are you willing to take up the job?")
@@ -4563,7 +4563,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 869, 10, 15 )
 	RegCurTrigger( 8691 )
 
------------------------------------狼人入侵
+-----------------------------------
 	DefineMission( 870, "Werewolves Invasion", 870 )
 	
 	MisBeginTalk( "<t>It seems to be season of the werewolves again. Children will not be safe with them around. Please help us get ird of these <rWerewolf Warriors>!<n><t>They can be found near <j(2580, 553)>.")
@@ -4594,7 +4594,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 870, 10, 15 )
 	RegCurTrigger( 8701 )
 
------------------------------------收破烂
+-----------------------------------
 	DefineMission( 871, "Rubbish Collection", 871 )
 	
 	MisBeginTalk( "<t>Don't belittle this pile of junk for they are worth quite a bit of money. I will give you a reward if you bring me 5 <yRusty Broadswords>, <yBroken Hammers> and <ySlipshod Wooden Sticks> each.<n><t>You can get them from the <rWerewolves> at <j(2580, 553)>, the <rCumbersome Yeti> at <j(2811, 565)> and the <rHorrific Snowman> at <j(2471, 502)>.")
@@ -4643,7 +4643,7 @@ function AreaMission001()
 	RegCurTrigger( 8713 )
 
 
------------------------------------升级的战争
+-----------------------------------
 	DefineMission( 872, "Upgrade Battle", 872 )
 	
 	MisBeginTalk( "<t>The war has escalated to another level! Now we are facing attacks from ferocious <rSnowmen>!<n><t>Would you accept the task to kill 15 <rSnowmen>?<n><t>They are camping at <j(2587, 455)>.")
@@ -4674,7 +4674,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 872, 10, 15 )
 	RegCurTrigger( 8721 )
 
------------------------------------巨人大刀
+-----------------------------------
 	DefineMission( 873, "Giant Broadsword", 873 )
 	
 	MisBeginTalk( "<t>Remember me? Now I need 5 <yGiant Broadswords>. Get them for me and I shall reward you.<n><t>They can be found on the <rSnowmen> at <j(2587, 455)>.")
@@ -4706,7 +4706,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 873, 10, 5 )
 	RegCurTrigger(8731)
 
------------------------------------抵抗雪魔人
+-----------------------------------
 	DefineMission( 874, "Repel Yeti", 874 )
 	
 	MisBeginTalk( "<t>You might have defeated those <rSnowmen>. However, these <rCumbersome Yetis> are far more formidable compare to them.<n><t>We are training new recruits to kill these <rCumbersome Yetis>. Show off your skill by killing 12 <rCumbersome Yetis> at <j(2811, 565)>.")
@@ -4737,7 +4737,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 874, 10, 12 )
 	RegCurTrigger( 8741 )
 
------------------------------------捕猎蜗牛
+-----------------------------------
 	DefineMission( 875, "Snail Hunting", 875 )
 	
 	MisBeginTalk( "<t>The supplies we have here come from hunting. However, it is not as easy as you think.<n><t>Do you want to join us? Hunt down 20 <rSteel-Shell Snails> at <j(2733, 651)>.")
@@ -4776,7 +4776,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 875, 40, 6 )
 	RegCurTrigger( 8752 )
 
------------------------------------新的侵略者
+-----------------------------------
 	DefineMission( 876, "New Invader", 876 )
 	
 	MisBeginTalk( "<t>Just after the <rWerewolf Warriors> attacks died down, the <rUndead Archers> started a new wave of attack! Is this the curse of <pIcespire Haven>?<n><t>Help us again! Please defeat those invader at <j(2746, 451)>!")
@@ -4807,7 +4807,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 876, 10, 12 )
 	RegCurTrigger( 8761 )
 
------------------------------------骷髅装饰品
+-----------------------------------
 	DefineMission( 877, "Skeleton Accessory", 877 )
 	
 	MisBeginTalk( "<t>The arrows of <rUndead Archers> at <j(2746, 451)> seems to be decorated with some beautiful bones.<n><t>Can you get me 10 <yDeath Arrows> for collection?")
@@ -4839,7 +4839,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 877, 10, 10 )
 	RegCurTrigger(8771)
 
------------------------------------继续深入
+-----------------------------------
 	DefineMission( 878, "Deep Venture", 878 )
 	
 	MisBeginTalk( "<t>The training of the recruits are over. We are now going to real battle. We will venture deeper to destroy the <rSnow Yetis>.<n><t>Are you with us? You will have to kill <rSnow Yetis> at <j(2855, 451)>.")
@@ -4870,7 +4870,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 878, 10, 12 )
 	RegCurTrigger( 8781 )
 
------------------------------------巨人木棒
+-----------------------------------
 	DefineMission( 879, "Giant Wooden Stick", 879 )
 	
 	MisBeginTalk( "<t>I heard that you are going to attack those <rSnow Yetis>. Can you bring 10 <yGiant Wooden Sticks> back for me? They usually appear at <j(2855, 451)>.")
@@ -4902,7 +4902,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 879, 10, 10 )
 	RegCurTrigger(8791)
 
------------------------------------敌后
+-----------------------------------
 	DefineMission( 880, "Enemy's Rear", 880 )
 	
 	MisBeginTalk( "<t>You have been of great help to us all! We don't wish to trouble you anymore. However, we do not have the strength to fight anymore and <rElite Skeletal Archers> are camping nearby waiting to attack us. Can you kill those <rElite Skeletal Archers> for us again?")
@@ -4933,7 +4933,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 880, 10, 12 )
 	RegCurTrigger( 8801 )
 
------------------------------------昔日辉煌
+-----------------------------------
 	DefineMission( 881, "Glory of the Past", 881 )
 	
 	MisBeginTalk( "<t>Have you seen the <rElite Skeletal Archers>?<n><t>In the past, they used to be no match for me. But now, I am just a fragile old man. Can you do me a favor and get me some of their <yRuptured Ribs> as a memento?")
@@ -4965,7 +4965,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 881, 10, 8 )
 	RegCurTrigger(8811)
 
-----------------------------------捕猎冰龙幼崽
+----------------------------------
 	DefineMission( 882, "Hunt for Infant Dragon", 882 )
 	
 	MisBeginTalk( "<t>You have done well on the last trip. This time we are going to hunt <rInfant Icy Dragons>. You have to be very careful if not you will become the hunted instead. Kill 10 <rInfant Icy Dragons> and get 1 <yHeart of Ice Crystal Fragment>.")
@@ -5004,7 +5004,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 882, 20, 1 )
 	RegCurTrigger( 8822 )
 
------------------------------------冰晶之谜
+-----------------------------------
 	DefineMission( 883, "Puzzle of the Crystalline", 883 )
 	
 	MisBeginTalk( "<t>I heard that you participated in the hunt for <rInfant Icy Dragons>. I believed that you have seen the <yHeart of Ice Crystal Fragment>.<n><t>If its possible, can you collect 5 <yHeart of Ice Crystal Fragments> for me?")
@@ -5020,7 +5020,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4850, 5, 10, 5)
 	
 	MisHelpTalk("Have you get me what you have promised?")
-	MisResultTalk("The <yHeart of Ice Crystal Fragments> look so pure and beautiful…")
+	MisResultTalk("The <yHeart of Ice Crystal Fragments> look so pure and beautiful")
 	MisResultCondition(NoRecord, 883)
 	MisResultCondition(HasMission, 883)
 	MisResultCondition(HasItem, 4850, 5)
@@ -5037,7 +5037,7 @@ function AreaMission001()
 	RegCurTrigger(8831)
 
 
------------------------------------水晶心
+-----------------------------------
 	DefineMission( 884, "Crystal Heart", 884 )
 	
 	MisBeginTalk( "<t>As stated in the legends, combiningg the <yHeart of Ice Crystal Fragment> with a <yPure Crystal> yields a <yCrystalline Heart>. The <yCrystalline Heart> is a symbol of eternal purity.<n><t>Can you get 5 <yPure Crystals> from the <rWater Fairies>?")
@@ -5069,7 +5069,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 884, 10, 5 )
 	RegCurTrigger(8841)
 
------------------------------------捕猎极地熊
+-----------------------------------
 	DefineMission( 885, "Hunt for Polar Bear", 885 )
 	
 	MisBeginTalk( "<t>Listen to me! In the past, many have perished while hunting ferocious <rGreat Polar Bears>. Those who are change their mind may withdraw now! If not, go forth and hunt these beast down!")
@@ -5108,7 +5108,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 885, 20, 3 )
 	RegCurTrigger( 8852 )
 
------------------------------------巨人首领
+-----------------------------------
 	DefineMission( 886, "Snowman Warlord", 886 )
 	
 	MisBeginTalk( "<t>Although the battle with <rSnowmen> is still fresh in our mind. This time, we will have to deal with <rHorrific Snowmen>.<n><t>Let us set forth and end this once and for all! Kill 16 <rHorrific Snowmans>!")
@@ -5139,7 +5139,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 886, 10, 16 )
 	RegCurTrigger( 8861 )
 
------------------------------------恐怖巨人大刀
+-----------------------------------
 	DefineMission( 887, "Fearsome Sword of Giant", 887 )
 	
 	MisBeginTalk( "<t>Hoho! Its you again!<n><ts>ince you have fought with those <rHorrific Snowmen>, can you get me 5 <yFearsome Sword of Giant>?")
@@ -5155,7 +5155,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4910, 5, 10, 5)
 	
 	MisHelpTalk("Bring me 5 <yFearsome Sword of Giant> and I will pay you.")
-	MisResultTalk("So... This is the legendary <yFearsome Sword of Giant> they used…")
+	MisResultTalk("So... This is the legendary <yFearsome Sword of Giant> they used")
 	MisResultCondition(NoRecord, 887)
 	MisResultCondition(HasMission, 887)
 	MisResultCondition(HasItem, 4910, 5)
@@ -5171,7 +5171,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 887, 10, 5 )
 	RegCurTrigger(8871)
 
------------------------------------狼人弓箭手
+-----------------------------------
 	DefineMission( 888, "Werewolf Archer", 888 )
 	
 	MisBeginTalk( "<t>There is a cluster of <rWerewolf Archers> gathering near the outside of our village. Whatever their motives are, it can't be good.<n><t>Please bring along your weapon and teach them a lesson!")
@@ -5210,7 +5210,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 888, 40, 5 )
 	RegCurTrigger( 8882 )
 
------------------------------------最终魔人
+-----------------------------------
 	DefineMission( 889, "Last Yeti", 889 )
 	
 	MisBeginTalk( "<t>We are now facing the greatest enemy of all time, the <rHorrific Yetis>. Nobody has survived an attack from it before.<n><t>Will you be the first? Bring your weapon and go forth!")
@@ -5241,7 +5241,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 889, 10, 15 )
 	RegCurTrigger( 8891 )
 
------------------------------------恐怖巨人木棒
+-----------------------------------
 	DefineMission( 890, "Fearsome Staff of Giant", 890 )
 	
 	MisBeginTalk( "<t>I'm surprised that you are still alive. Have you brought back 5 <yFearsome Staff of Giant>? I will buy them from you.")
@@ -5257,7 +5257,7 @@ function AreaMission001()
 	MisNeed(MIS_NEED_ITEM, 4912, 5, 10, 5)
 	
 	MisHelpTalk("I can't wait! Please hurry!")
-	MisResultTalk("The best weapons of the Yetis…")
+	MisResultTalk("The best weapons of the Yetis")
 	MisResultCondition(NoRecord, 890)
 	MisResultCondition(HasMission, 890)
 	MisResultCondition(HasItem, 4912, 5)
@@ -5273,7 +5273,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 890, 10, 5 )
 	RegCurTrigger(8901)
 
------------------------------------为了荣誉而战
+-----------------------------------
 	DefineMission( 891, "For Honour", 891 )
 	
 	MisBeginTalk( "<ts>ome people go to war for peace, others for honor. To prove yourself worthy, defeat those <rElite Skeletal Warriors>.<n><t>For honor and glory!")
@@ -5313,7 +5313,7 @@ function AreaMission001()
 	RegCurTrigger( 8912 )
 
 
------------------------------------捕猎蜥蜴人
+-----------------------------------
 	DefineMission( 892, "Hunt for Lizardman", 892 )
 	
 	MisBeginTalk( "<t>Our hunt should have ended with the <rGreat Polar Bears>. However, a group of <rLizardmen> have been causing havoc and robbing any traveler they see.<n><t>Put a stop to this! There will be a great reward for them!")
@@ -5344,7 +5344,7 @@ function AreaMission001()
 	TriggerAction( 1, AddNextFlag, 892, 10, 15 )
 	RegCurTrigger( 8921 )
 
------------------------------------蜥蜴人战斧
+-----------------------------------
 	DefineMission( 893, "Lizard Man Axe", 893 )
 	
 	MisBeginTalk( "<t>I am low in supply for <yLizardman Axes>. Can you bring me 5 <yLizardman Axes>?<n><t>I promise to pay you well.")
@@ -5412,7 +5412,7 @@ function AreaMission001()
 	RegCurTrigger(8941)
 		
 
---杰克史派罗 >> 最强的海盗
+-- >> 
 
 	DefineMission(895, "Peerless Pirate", 895)
 	MisBeginTalk("<t> I have heard from the <bBlacksmith> that you have destroyed the <rDeathsoul>'s sentry tower.<n><t>I can imagine how furious <rBaborosa> is right now haha!<n><t>However, their might is still not to be underestimated. Can you help us get rid of 30 <rDeathsoul Soldiers> and 15 <rDeathsoul Officers>?<n><t>This will cripple their army greatly.")
@@ -5458,7 +5458,7 @@ function AreaMission001()
 	RegCurTrigger(8952)
 	
 	
--- 杰克史派罗 >> 将军的首级
+--  >> 
 
 	DefineMission(896, "Commander's Head", 896)
 	MisBeginTalk("<t>Have you prepared? The time for battle draws near! I want you to kill <rDeathsoul Commander> and bring me his head!<n><t>I know you have the capability so please accept this task! Of course, I will reward you well.")
@@ -5510,11 +5510,11 @@ function AreaMission001()
 
 ----------------------------------------
 --                                    --
---              海军任务              --
+--                            --
 --                                    --
 ----------------------------------------
 
--- 灵顿将军 >> 海盗的食物
+--  >> 
 	DefineMission(897, "Pirate's Food", 897)
 
 	MisBeginTalk("<t><rDeathsouls> of the <pSkeletar Isle> are getting arrogant. It is rumored that they got their energy from <yBeer> and <yBBQ Meat>.<n><t>I command you to bring back 5 <yJugs of Beer of Pirate> and 5 <ySlices of BBQ Meat of Pirate>. I want to see if there is anything magical in those food!")
@@ -5559,7 +5559,7 @@ function AreaMission001()
 	TriggerAction(1,AddNextFlag, 897, 20, 5)
 	RegCurTrigger(8972)
 	
--- 灵顿将军 >>  剿灭海盗
+--  >>  
 	DefineMission(898, "Pirate's Annihilation", 898)
 
 	MisBeginTalk("<t>Hey, soldier! I have a new task for you!<n><t>I need you to collect 15 pieces of <yPirate's Bone>. Don't question me about it, this is top secret! Just carry out your orders!")
@@ -5597,7 +5597,7 @@ function AreaMission001()
 	RegCurTrigger(8981)
 
 
--- 灵顿将军 >> 被诅咒的黑珍珠号
+--  >> 
 	DefineMission(899, "Cursed Black Jewel", 899)
 
 	MisBeginTalk("<t>Are you prepared? Listen in details regarding the next task!<n><t>We have found out that those <rDeathsouls> come under direct command from the \"Black Jewel\". It should be destroyed as soon as possible.<n><t>At the same time, bring back their <yCaptain's Token>. This way they will have no proper leadership and will fall into disarray.<n><t>Remember, it is not as simple as it seems, take extra precaution!")

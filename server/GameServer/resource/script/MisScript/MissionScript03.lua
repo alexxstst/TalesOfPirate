@@ -1,6 +1,6 @@
 print("-- [Loading] Mission Script [03]")
 
--- 白银城比特的猎杀随机任务
+-- 
 function RandMission01 ()
 
 	DefineRandMission( 100, "A Swordsman's Life", 100, 99, "Peter", "Argent City")
@@ -2584,9 +2584,9 @@ function RandMission01 ()
 
 
 	InitTalkList()
-	AddRandMissionBeginTalk( "Looks like you have not exercise for a long while. It is important to keep healthy. Hmm…I have a ", ", can you make a trip there. I will reward you accordingly.")
-	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you…", "") 
-	AddRandMissionHelpTalk( "<t>Looks like you have not exercise for a long while. It is important to keep healthy. Hmm…I have a ", ", can you make a trip there. I will reward you accordingly.")
+	AddRandMissionBeginTalk( "Looks like you have not exercise for a long while. It is important to keep healthy. HmmI have a ", ", can you make a trip there. I will reward you accordingly.")
+	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you", "") 
+	AddRandMissionHelpTalk( "<t>Looks like you have not exercise for a long while. It is important to keep healthy. HmmI have a ", ", can you make a trip there. I will reward you accordingly.")
 	AddRandMissionType( MIS_RAND_SEND, 15, GetRandMissionTalk(), 0, 1, 1009, 1010, 1011, 1012 )
 	AddRandSendInfo(	10	,	1	,	4028	,	4000	)
 	AddRandSendInfo(	10	,	2	,	4028	,	4000	)
@@ -5476,14 +5476,14 @@ AddRandPrizeItem(	80	,	2592	,	300	)
 
 
 	SetRandPrizeOdds( 1, 100, 10 )
-	--（轮数，几率，任务数）
+	--
 	
 end
 RandMission01 ()
 
 
 
---冰狼堡猎人职业随机任务
+--
 function RandMission02 ()
 
 	DefineRandMission( 101, "A Hunter's Life", 101, 99, "Ray", "Icicle Castle")
@@ -8061,9 +8061,9 @@ function RandMission02 ()
 
 
 	InitTalkList()
-	AddRandMissionBeginTalk( "Looks like you have not exercise for a long while. It is important to keep healthy. Hmm…I have a ", ", can you make a trip there. I will reward you accordingly.")
-	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you…", "") 
-	AddRandMissionHelpTalk( "<t>Looks like you have not exercise for a long while. It is important to keep healthy. Hmm…I have a ", ", can you make a trip there. I will reward you accordingly.")
+	AddRandMissionBeginTalk( "Looks like you have not exercise for a long while. It is important to keep healthy. HmmI have a ", ", can you make a trip there. I will reward you accordingly.")
+	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you", "") 
+	AddRandMissionHelpTalk( "<t>Looks like you have not exercise for a long while. It is important to keep healthy. HmmI have a ", ", can you make a trip there. I will reward you accordingly.")
 	AddRandMissionType( MIS_RAND_SEND, 15, GetRandMissionTalk(), 0, 1, 1021, 1022, 1023, 1024 )
 
 
@@ -13038,7 +13038,7 @@ function RandMission03 ()
 
 	InitTalkList()
 	AddRandMissionBeginTalk( "A doctor must be able to handle emergency. That requires a lot of willpower. I have here with me ", ", I need you to make a trip. Take it as part of training too.")
-	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you…", "") 
+	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you", "") 
 	AddRandMissionHelpTalk( "A doctor must be able to handle emergency. That requires a lot of willpower. I have here with me ", ", I need you to make a trip. Take it as part of training too.")
 	AddRandMissionType( MIS_RAND_SEND, 15, GetRandMissionTalk(), 0, 1, 1033, 1034, 1035, 1036)
 
@@ -19964,9 +19964,9 @@ function RandMission04 ()
 
 
 	InitTalkList()
-	AddRandMissionBeginTalk( "Looks like you have not exercise for a long while. It is important to keep healthy. Hmm…I have a ", ", can you make a trip there. I will reward you accordingly.")
-	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you…", "") 
-	AddRandMissionHelpTalk( "<t>Looks like you have not exercise for a long while. It is important to keep healthy. Hmm…I have a ", ", can you make a trip there. I will reward you accordingly.")
+	AddRandMissionBeginTalk( "Looks like you have not exercise for a long while. It is important to keep healthy. HmmI have a ", ", can you make a trip there. I will reward you accordingly.")
+	AddRandMissionResultTalk( "Look at your perspiration! Seems that you lack exercise. I need to give you more quest to train you", "") 
+	AddRandMissionHelpTalk( "<t>Looks like you have not exercise for a long while. It is important to keep healthy. HmmI have a ", ", can you make a trip there. I will reward you accordingly.")
 	AddRandMissionType( MIS_RAND_SEND, 15, GetRandMissionTalk(), 0, 1, 1045, 1046, 1047, 1048 )
 
 	AddRandSendInfo(	10	,	1	,	4028	,	4000	)
@@ -23367,7 +23367,7 @@ function RandMission04 ()
 end
 RandMission04 ()
 
---------------DefAcceptItem收信的任务
+--------------DefAcceptItem
 function RandMission05 ()
 
 	DefSendItemMission(	1000	,"A Swordsman's Life",	100	,	24	,	3	,	100	)
@@ -24813,7 +24813,7 @@ function RandMission06 ()
 
 
 	InitTalkList()
-	AddRandMissionBeginTalk( "Oh no! Oh no…I am in urgent need of", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
+	AddRandMissionBeginTalk( "Oh no! Oh noI am in urgent need of", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
 	AddRandMissionResultTalk( "Hoho! I have earned a lot of profits this time round! Thanks for your help. By the way, this is your share.", "") 
 	AddRandMissionHelpTalk( "<t>Oh no! Oh no...I am in need of ", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
 	AddRandMissionType( MIS_RAND_GET, 50, GetRandMissionTalk(), 0, 1, 1053, 1054, 1055, 1056 )
@@ -27005,7 +27005,7 @@ function RandMission07 ()
 
 
 	InitTalkList()
-	AddRandMissionBeginTalk( "Oh no! Oh no…I am in urgent need of", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
+	AddRandMissionBeginTalk( "Oh no! Oh noI am in urgent need of", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
 	AddRandMissionResultTalk( "Hoho! I have earned a lot of profits this time round! Thanks for your help. By the way, this is your share.", "") 
 	AddRandMissionHelpTalk( "<t>Oh no! Oh no...I am in need of ", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
 	AddRandMissionType( MIS_RAND_GET, 60, GetRandMissionTalk(), 0, 1, 1065, 1066, 1067, 1068 )
@@ -28492,7 +28492,7 @@ AddRandPrizeItem(	80	,	2613	,	810	)
 
 
 	InitTalkList()
-	AddRandMissionBeginTalk( "Oh no! Oh no…I am in urgent need of", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
+	AddRandMissionBeginTalk( "Oh no! Oh noI am in urgent need of", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
 	AddRandMissionResultTalk( "Hoho! I have earned a lot of profits this time round! Thanks for your help. By the way, this is your share.", "") 
 	AddRandMissionHelpTalk( "<t>Oh no! Oh no...I am in need of ", "You must help me get it. I will reward you when it is done and also lower your tax rate as a bonus.")
 	AddRandMissionType( MIS_RAND_GET, 60, GetRandMissionTalk(), 0, 1, 1077, 1078, 1079, 1080 )

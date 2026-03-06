@@ -7,14 +7,14 @@
 --------------------------------------------------------------------------
 print( "loading mission.lua" )
 
---lua函数返回值定义
+--lua
 LUA_FALSE					= 0
 LUA_TRUE					= 1
 
-MIS_TREENODE_INVALID	= 0	-- 无效类型
-MIS_TREENODE_NOMAL		= 1	-- 普通任务
-MIS_TREENODE_HISTORY	= 2	-- 历史任务
-MIS_TREENODE_GUILD		= 3	-- 工会任务
+MIS_TREENODE_INVALID	= 0	-- 
+MIS_TREENODE_NOMAL		= 1	-- 
+MIS_TREENODE_HISTORY	= 2	-- 
+MIS_TREENODE_GUILD		= 3	-- 
 		
 MisData = {}
 

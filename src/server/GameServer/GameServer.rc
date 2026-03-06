@@ -1,0 +1,168 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "Include\resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "winres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Chinese (P.R.C.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_CHS)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DLG_MAIN DIALOGEX 0, 0, 236, 343
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_MINIMIZEBOX | 
+    WS_MAXIMIZEBOX | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "������Online  GameServer"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "x = 0 y = 0",IDC_MAPXY,47,198,39,8
+    LTEXT           "x = 0 y = 0",IDC_MOUSEXY,161,198,46,8
+    PUSHBUTTON      "+",IDC_BUT_ZOOM1,124,196,12,11
+    PUSHBUTTON      "-",IDC_BUT_ZOOM2,137,196,12,11
+    PUSHBUTTON      "ViewLog",IDC_VIEWLOG,1,237,37,13
+    CONTROL         "ˢ��",IDC_CHECK_VIEW,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,89,196,28,11
+    CONTROL         "��ɫLog",IDC_CHECK_CHA_LOG,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,1,224,40,10
+END
+
+IDD_REPORT_VIEW DIALOGEX 0, 0, 242, 212
+STYLE DS_SETFONT | WS_CHILD
+FONT 9, "����", 0, 0, 0x0
+BEGIN
+    GROUPBOX        "����״��",IDC_STATIC_GROUP1,2,2,235,136
+    LTEXT           "FPS:",IDC_STATIC,8,13,15,9
+    LTEXT           "FPS",IDC_FPS,28,13,17,9
+    EDITTEXT        IDC_EDIT1,8,154,127,37,ES_MULTILINE | ES_AUTOVSCROLL | 
+                    ES_AUTOHSCROLL | NOT WS_BORDER,WS_EX_STATICEDGE
+    PUSHBUTTON      "ִ��",IDC_EXEC,7,194,36,12
+    LISTBOX         IDC_MAP_LIST,123,54,110,28,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "ָ������",IDC_STATIC_GROUP2,2,142,137,68
+    LTEXT           "Gate�б�",IDC_STATIC_LBL1,123,9,34,8
+    LISTBOX         IDC_GATE_LIST,123,19,110,23,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "GameDB:",IDC_STATIC,8,26,29,9
+    LTEXT           "0",IDC_GAMEDB,39,26,10,9
+    PUSHBUTTON      "���",IDC_CLEAR,47,194,36,12
+    LTEXT           "�����:",IDC_STATIC_LBL4,7,39,36,10
+    LTEXT           "���:",IDC_STATIC_LBL5,8,52,21,10
+    LTEXT           "����:",IDC_STATIC_LBL6,61,52,20,10
+    LTEXT           "0",IDC_ACTIVEOBJ,44,39,22,10
+    LTEXT           "0",IDC_PLAYER,31,52,25,9
+    LTEXT           "0",IDC_OTHER,85,52,16,10
+    LTEXT           "LOOP:",IDC_STATIC,52,13,20,9
+    LTEXT           "0",IDC_LOOP,77,13,37,9
+    LTEXT           "���Ԫ:",IDC_STATIC_LBL7,7,65,36,10
+    LTEXT           "0",IDC_ACTIVEOUNIT,47,65,25,10
+    LTEXT           "���б��:",IDC_STATIC_LBL3,51,26,36,8
+    LTEXT           "0",IDC_RUNFLAG,90,26,26,9
+    LTEXT           "��ͼ�б�",IDC_STATIC_LBL2,123,44,32,10
+    LTEXT           "",IDC_RES_DIR,55,88,154,8
+    LTEXT           "��ԴĿ¼:",IDC_STATIC_LBL9,7,101,42,9
+    LTEXT           "�����ļ�:",IDC_STATIC_LBL8,7,89,38,9
+    LTEXT           "",IDC_RES_DIR2,55,113,160,8
+    LTEXT           "LogĿ¼:",IDC_STATIC_LBL10,7,113,43,9
+    LTEXT           "",IDC_RES_DIR3,56,100,167,8
+    LTEXT           "��ǰPK:",IDC_STATIC_LBL13,145,143,28,10
+    LTEXT           "Count",IDC_PK_CNT,182,143,37,9
+    LISTBOX         IDC_PK_LIST,144,156,90,51,LBS_SORT | 
+                    LBS_NOINTEGRALHEIGHT | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "PID:",IDC_STATIC,7,77,20,9
+    LTEXT           "0",IDC_PID,34,77,16,10
+    LTEXT           "DB LOG ��д:",IDC_STATIC_LBL11,7,125,50,9
+    LTEXT           "ÿ50msд�����:",IDC_STATIC_LBL12,97,125,60,9
+    LTEXT           "0",IDC_DBLOG_LEFT,61,125,30,8
+    LTEXT           "0",IDC_PERLOGCNT,162,125,22,8
+END
+
+IDD_MAP_VIEW DIALOGEX 0, 0, 172, 141
+STYLE DS_SETFONT | WS_CHILD | WS_BORDER
+FONT 9, "����", 400, 0, 0x86
+BEGIN
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DLG_MAIN, DIALOG
+    BEGIN
+        RIGHTMARGIN, 235
+        TOPMARGIN, 1
+        BOTTOMMARGIN, 342
+    END
+
+    IDD_REPORT_VIEW, DIALOG
+    BEGIN
+        RIGHTMARGIN, 239
+        BOTTOMMARGIN, 211
+    END
+
+    IDD_MAP_VIEW, DIALOG
+    BEGIN
+        RIGHTMARGIN, 170
+        BOTTOMMARGIN, 139
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+#endif    // Chinese (P.R.C.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

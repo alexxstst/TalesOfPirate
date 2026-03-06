@@ -156,7 +156,7 @@ MisNeed(MIS_NEED_ITEM, 1779, 10, 10, 10)
 MisNeed(MIS_NEED_ITEM, 1584, 20, 20, 20)
 MisNeed(MIS_NEED_ITEM, 1650, 10, 40, 10)
 
-MisHelpTalk("<t>Sigh… These river creatures…")
+MisHelpTalk("<t>Sigh These river creatures")
 MisResultTalk("<t>They shouldn't dare to try anything funny this time.")
 MisResultCondition(HasMission, 903)
 MisResultCondition(NoRecord,903)
@@ -187,7 +187,7 @@ RegCurTrigger( 9033 )
 -------------------------------------------------- Eating Zongzi during the Dragon Boat Festival
 DefineMission( 904, "Fight Evil, Eat Dumplings!", 904)
 
-MisBeginTalk("<t>Sigh… To appease those river monsters, I spent so much effort, resulting in me getting seriously ill. Although I know what can cure my illness, I am unable to get them on my own. Can you get those items back for me to make a cure?")
+MisBeginTalk("<t>Sigh To appease those river monsters, I spent so much effort, resulting in me getting seriously ill. Although I know what can cure my illness, I am unable to get them on my own. Can you get those items back for me to make a cure?")
 
 MisBeginCondition(NoMission,904)
 MisBeginCondition(NoRecord,904)
@@ -201,7 +201,7 @@ MisNeed(MIS_NEED_DESP,"Help Qu Yuan collect 5 Medicated Grass and 5 Tears.")
 MisNeed(MIS_NEED_ITEM, 3129, 5, 10, 5)
 MisNeed(MIS_NEED_ITEM, 1681, 5, 20, 5)
 
-MisHelpTalk("<t>Sigh… I have so much illness…")
+MisHelpTalk("<t>Sigh I have so much illness")
 MisResultTalk("<t>Thank you for helping me. Please take these as rewards.")
 MisResultCondition(HasMission, 904)
 MisResultCondition(NoRecord,904)
@@ -533,7 +533,7 @@ RegCurTrigger( 9141 )
 -----------------------------------------------------------------------bloody heels
 DefineMission( 919, "Bloodied High Heels", 915)
 
-MisBeginTalk( "<t>Ouch…I got hit on the head by a high heel shoe thrown by my boss... Look at the wound… What?! You don't believe me? I still have the medical report I got from <bNurse - Gina> in Argent City at <j(2244, 2770)>. The dressing is done by her. Check it out. Ouch...Ouch...")
+MisBeginTalk( "<t>OuchI got hit on the head by a high heel shoe thrown by my boss... Look at the wound What?! You don't believe me? I still have the medical report I got from <bNurse - Gina> in Argent City at <j(2244, 2770)>. The dressing is done by her. Check it out. Ouch...Ouch...")
 MisBeginCondition(NoRecord, 915 )
 MisBeginCondition(NoMission, 915 )
 MisBeginAction(AddMission, 915 )
@@ -627,7 +627,7 @@ MisBeginBagNeed(1)
 MisHelpTalk("<t>Theres justice in the world.")
 
 MisResultCondition(AlwaysFailure )
--------------------------------------------------------------------艰难任务1
+-------------------------------------------------------------------1
 
 DefineMission( 6000, "Phoenix Rebirth", 1300 )
 MisBeginTalk("<t>Mortal, have you heard of Phoenix Rebirth? A Phoenix will be reborn every 500 years. All aspiring pirates also wish to be reborn. However, since the last Sacred War, the Rebirth Stone is broken up into pieces and lost in the mortal world. These fragments are being guarded by some people. If you can collect these fragments, I will help you attain rebirth. There is a <rTower in Ascaron> which seems suspicious. You might want to start from there.")
@@ -852,7 +852,7 @@ MisPrize(MIS_PRIZE_ITEM, 2228, 1, 4)
 MisPrizeSelAll()
   
   MisHelpTalk("<t>Kill them.")  
-  MisResultTalk("<t>You have good skills. Learn from me from now on. This fragment represents Wisdom. Take it to fulfill your dream. Rumored that rebirth allows you to reselect class…")
+  MisResultTalk("<t>You have good skills. Learn from me from now on. This fragment represents Wisdom. Take it to fulfill your dream. Rumored that rebirth allows you to reselect class")
   MisResultCondition(HasMission,1302 )
   MisResultCondition(NoRecord,1302)
   MisResultCondition(HasFlag, 1302, 24)
@@ -1057,8 +1057,8 @@ MisCancelAction(ClearMission, 1008)
 
 MisNeed(MIS_NEED_ITEM, 1089, 15, 10, 15)
 
-MisResultTalk("<t>I have not tasted Tiger Bone Tonic in a long time…")
-MisHelpTalk("<t>Young man, its not good to drink too much,it might hinder you…")
+MisResultTalk("<t>I have not tasted Tiger Bone Tonic in a long time")
+MisHelpTalk("<t>Young man, its not good to drink too much,it might hinder you")
 MisResultCondition(HasMission, 1008)
 MisResultCondition(HasItem, 1089, 15 )
 MisResultAction(TakeItem, 1089, 15 )
@@ -1193,7 +1193,7 @@ RegCurTrigger( 10121 )
 ------------------------------------------------------who is the guardian
 DefineMission( 6014, "Who is the Guardian", 1013 )
 
-MisBeginTalk( "<t>My friend, seek it out fast, rebirth will allow you to soar above the rest! I vaguely remembered that Icicle City do have a guardian…")
+MisBeginTalk( "<t>My friend, seek it out fast, rebirth will allow you to soar above the rest! I vaguely remembered that Icicle City do have a guardian")
 MisBeginCondition(NoRecord,   1013)
 MisBeginCondition(HasRecord, 1012)
 MisBeginCondition(NoMission,  1013)
@@ -1839,7 +1839,7 @@ DefineMission(5527,"Challenge Genesis 9",751,COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>Buni always like to waste time! I hate this type of person. Don't be wishy washy like him! Okay... I shall say no more…")
+MisResultTalk("<t>Buni always like to waste time! I hate this type of person. Don't be wishy washy like him! Okay... I shall say no more")
 MisResultCondition(HasMission, 751)
 MisResultCondition(NoRecord,751)
 MisResultCondition(CheckBag, 2911,0,1)
@@ -2004,7 +2004,7 @@ MisResultBagNeed(1)
 -------------------------------------------------Hero of Fame----------Girl Xindi
 DefineMission (5537, "Vampiric Aries Renown Hero", 1061)
 
-MisBeginTalk("<t>How to do a challenge without 500 reputation points?! I believe you will have a way to gain reputation points, such as getting a disciple…")
+MisBeginTalk("<t>How to do a challenge without 500 reputation points?! I believe you will have a way to gain reputation points, such as getting a disciple")
 
 MisBeginCondition(NoMission,1061)
 MisBeginCondition(HasRecord,833)
@@ -2060,7 +2060,7 @@ MisBeginAction(AddMission,1063)
 MisCancelAction(ClearMission, 1063)
 
 MisHelpTalk("<t>I have a love letter to read. Remember to come back with Honor.")
-MisResultTalk("<t>How should I reward you… How about a kiss?")
+MisResultTalk("<t>How should I reward you How about a kiss?")
 
 MisResultCondition(HasMission, 1063)
 MisResultCondition(NoRecord,1063)
@@ -2151,7 +2151,7 @@ TriggerAction( 1, AddNextFlag, 1064, 67, 50 )
 RegCurTrigger( 10646 )
 
 ----------------------------------------------------------Sleeping Aries----------Girl Xindi
-DefineMission( 5541, "Vampiric Aries – Sleeping Aries", 1065 )
+DefineMission( 5541, "Vampiric Aries C Sleeping Aries", 1065 )
 MisBeginTalk("<t>There is a bad guy in shiny Aries armor nearby. Please help the villagers of <pCupid Isle> to get rid of him.")
 			
 MisBeginCondition(NoMission, 1065)
@@ -2260,7 +2260,7 @@ MisBeginAction(AddMission,1069)
 MisCancelAction(ClearMission, 1069)
 
 MisHelpTalk("<t>I have a love letter to read. Remember to come back with Honor.")
-MisResultTalk("<t>How should I reward you…How about a kiss?")
+MisResultTalk("<t>How should I reward youHow about a kiss?")
 
 MisResultCondition(HasMission, 1069)
 MisResultCondition(NoRecord,1069)
@@ -2385,7 +2385,7 @@ MisResultBagNeed(1)
 -------------------------------------------------Hero of Fame----------Girl Xindi
 DefineMission (5548, "Vampiric Aries Renown Hero", 1072)
 
-MisBeginTalk("<t>How can a hero challenge with less than 3,000 reputation points? I believe that you will have a way to gain those reputation, such as getting a disciple…")
+MisBeginTalk("<t>How can a hero challenge with less than 3,000 reputation points? I believe that you will have a way to gain those reputation, such as getting a disciple")
 
 MisBeginCondition(NoMission,1072)
 MisBeginCondition(HasRecord,835)
@@ -2440,7 +2440,7 @@ MisBeginAction(AddMission,1074)
 MisCancelAction(ClearMission, 1074)
 
 MisHelpTalk("<t>I have a love letter to read. Remember to come back with Honor.")
-MisResultTalk("<t>How should I reward you…How about a kiss?")
+MisResultTalk("<t>How should I reward youHow about a kiss?")
 
 MisResultCondition(HasMission, 1074)
 MisResultCondition(NoRecord,1074)
@@ -2574,7 +2574,7 @@ MisResultAction(SetRecord, 1076)
 
 ----------------------------------------------------------Social Ambassador 1----------The Mermaid Prince Hashat
 DefineMission( 5554, "TOP Ambassador 2", 1077 )
-MisBeginTalk("<t>I prayed to the gods to turn me into a tree that she will pass by and rest upon daily. Indeed she do pass by that tree daily, but I have been turned into a fish…")
+MisBeginTalk("<t>I prayed to the gods to turn me into a tree that she will pass by and rest upon daily. Indeed she do pass by that tree daily, but I have been turned into a fish")
 			
 MisBeginCondition(NoMission, 1077)
 MisBeginCondition(NoRecord,1077)
@@ -2584,7 +2584,7 @@ MisCancelAction(ClearMission, 1077)
 
 MisNeed(MIS_NEED_DESP,"Look for <bStrawberry> in Icicle at <j(1010, 350)>.")
 
-MisHelpTalk("<t>I am only a little fish… Air in the water…")
+MisHelpTalk("<t>I am only a little fish Air in the water")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------Social Ambassador 1------------- Strawberry Youyou
 DefineMission(5555, "TOP Ambassador 2", 1077, COMPLETE_SHOW )
@@ -2616,13 +2616,13 @@ DefineMission(5557, "TOP Ambassador 3", 1078, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>A simple person can always find happiness…")
+MisResultTalk("<t>A simple person can always find happiness")
 MisResultCondition(NoRecord, 1078)
 MisResultCondition(HasMission,1078)
 MisResultAction(ClearMission,1078)
 MisResultAction(SetRecord, 1078)
 
-----------------------------------------------------------Social Ambassador 3----------Old Man · Confused Mountain Man
+----------------------------------------------------------Social Ambassador 3----------Old Man  Confused Mountain Man
 DefineMission( 5558, "TOP Ambassador 4", 1079 )
 MisBeginTalk("<t>Jealous of me? The wise are often inspired by music. Visit <bMusician - Shamel>. He is wiser than me.")
 			
@@ -2648,7 +2648,7 @@ MisResultAction(ClearMission,1079)
 MisResultAction(SetRecord, 1079)
 
 
-----------------------------------------------------------Social Ambassador 4----------Musical Instrument Expert·Sha Mei'er
+----------------------------------------------------------Social Ambassador 4----------Musical Instrument ExpertSha Mei'er
 DefineMission( 5560, "TOP Ambassador 5", 1080 )
 MisBeginTalk("<t>My dream is to create a paradise on earth with music. Do you have a dream as well? Is it the same as <bLulu's>?")
 			
@@ -2660,21 +2660,21 @@ MisCancelAction(ClearMission, 1080)
 
 MisNeed(MIS_NEED_DESP,"Look for <bLulu> in Icicle at <j(2668, 634)>.")
 
-MisHelpTalk("<t>Dream is a shadow of reality…")
+MisHelpTalk("<t>Dream is a shadow of reality")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------Social Ambassador 4-------Lulu
 DefineMission(5561, "TOP Ambassador 5", 1080, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>I wish to have lollipops daily…")
+MisResultTalk("<t>I wish to have lollipops daily")
 MisResultCondition(NoRecord, 1080)
 MisResultCondition(HasMission,1080)
 MisResultAction(ClearMission,1080)
 MisResultAction(SetRecord, 1080)
 ----------------------------------------------------------Social Ambassador 5------------Lulu
 DefineMission( 5562, "TOP Ambassador 6", 1081 )
-MisBeginTalk("<t>If only I have lollipops to eat daily and the beautiful sister next door to accompany me to Ascaron to visit a friend whom I have never meet…")
+MisBeginTalk("<t>If only I have lollipops to eat daily and the beautiful sister next door to accompany me to Ascaron to visit a friend whom I have never meet")
 			
 MisBeginCondition(NoMission, 1081)
 MisBeginCondition(NoRecord,1081)
@@ -2709,7 +2709,7 @@ MisCancelAction(ClearMission, 1082)
 
 MisNeed(MIS_NEED_DESP,"Look for <bLamb Welly> in Shaitan at <j(898, 3683)>.")
 
-MisHelpTalk("<t>How I wish Welly is a great knight…")
+MisHelpTalk("<t>How I wish Welly is a great knight")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------Social Ambassador 6-------Lamb Welly
 DefineMission(5565, "TOP Ambassador 7", 1082, COMPLETE_SHOW )
@@ -2765,7 +2765,7 @@ DefineMission(5569, "TOP Ambassador 9", 1084, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t><bDoctor – Minoseva> is a quiet but nice person.")
+MisResultTalk("<t><bDoctor C Minoseva> is a quiet but nice person.")
 MisResultCondition(NoRecord, 1084)
 MisResultCondition(HasMission,1084)
 MisResultAction(ClearMission,1084)
@@ -2783,7 +2783,7 @@ MisCancelAction(ClearMission, 1086)
 
 MisNeed(MIS_NEED_DESP,"Look for <bElizabeth> in the <pTreasure Gulf> at <j(616, 965)>.")
 
-MisHelpTalk("<t>Romantic dance…")
+MisHelpTalk("<t>Romantic dance")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------Social Ambassador 10-------Elizabeth
 DefineMission(5573, "TOP Ambassador 10", 1086, COMPLETE_SHOW )
@@ -2808,14 +2808,14 @@ MisCancelAction(ClearMission, 1087)
 
 MisNeed(MIS_NEED_DESP,"Look for Thundoria Castle's <bNavy HQ - General Ken> at <j(808, 1521)>.")
 
-MisHelpTalk("<t>I want to get to know those girls…")
+MisHelpTalk("<t>I want to get to know those girls")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------Social Ambassador 11------- Admiral Key Essie, Commander of the Admiralty
 DefineMission(5575, "TOP Ambassador 11", 1087, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>I never reject invitation from a beautiful lady, hehe…")
+MisResultTalk("<t>I never reject invitation from a beautiful lady, hehe")
 MisResultCondition(NoRecord, 1087)
 MisResultCondition(HasMission,1087)
 MisResultAction(ClearMission,1087)
@@ -2833,7 +2833,7 @@ MisCancelAction(ClearMission, 1088)
 
 MisNeed(MIS_NEED_DESP,"Look for <bMomo> in Shaitan City at <j(1209, 3196)>.")
 
-MisHelpTalk("<t>A romantic dance will give me a perfect chance to woo her. Oh…my lovely <bElizabeth>…")
+MisHelpTalk("<t>A romantic dance will give me a perfect chance to woo her. Ohmy lovely <bElizabeth>")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------Social Ambassador 12---------Mushroom
 DefineMission(5577, "TOP Ambassador 12", 1088, COMPLETE_SHOW )
@@ -2922,7 +2922,7 @@ MisResultAction(SetRecord, 1091)
 
 ----------------------------------------------------------Social Ambassador 16----------Red Pig
 DefineMission( 5584, "TOP Ambassador 16", 1092 )
-MisBeginTalk("<t>Actually I haven already forgiven her. However, I have been so busy that I forgot to write to her. Please help me inform <bOracle – Moonlight> that I will look for her soon.")
+MisBeginTalk("<t>Actually I haven already forgiven her. However, I have been so busy that I forgot to write to her. Please help me inform <bOracle C Moonlight> that I will look for her soon.")
 			
 MisBeginCondition(NoMission, 1092)
 MisBeginCondition(NoRecord,1092)
@@ -3015,7 +3015,7 @@ DefineMission(5591, "TOP Ambassador 19", 1095, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>Ah…Wrinkles! Ah…")
+MisResultTalk("<t>AhWrinkles! Ah")
 MisResultCondition(NoRecord, 1095)
 MisResultCondition(HasMission,1095)
 MisResultAction(ClearMission,1095)
@@ -3023,7 +3023,7 @@ MisResultAction(SetRecord, 1095)
 
 	----------------------------------------------------------Social Ambassador 20----------Sea Blue Breeze
 DefineMission( 5592, "TOP Ambassador 20", 1096 )
-MisBeginTalk("<t>If I am so wise, I would have knew how did that sea monster find our ship during that time. And I would not have request the help of that person…Please help me tell him that I have not forgotten about him.")
+MisBeginTalk("<t>If I am so wise, I would have knew how did that sea monster find our ship during that time. And I would not have request the help of that personPlease help me tell him that I have not forgotten about him.")
 			
 MisBeginCondition(NoMission, 1096)
 MisBeginCondition(NoRecord,1096)
@@ -3048,7 +3048,7 @@ MisResultAction(SetRecord, 1096)
 
 ----------------------------------------------------------Social Ambassador 21---------- Heaven Teleporter
 DefineMission( 5594, "TOP Ambassador 21", 1097 )
-MisBeginTalk("<t>Want to do me a favor? Hmm…I miss the Heaven Teleporter… And also the money he stole from me. Please remind him so.")
+MisBeginTalk("<t>Want to do me a favor? HmmI miss the Heaven Teleporter And also the money he stole from me. Please remind him so.")
 			
 MisBeginCondition(NoMission, 1097)
 MisBeginCondition(NoRecord,1097)
@@ -3099,7 +3099,7 @@ MisResultAction(GiveItem, 2949, 1, 4)
 MisResultBagNeed(1)
 
 -------------------------------------------------Special missions
-DefineMission (5600, "Special Operation – Vampiric Aries", 1101)
+DefineMission (5600, "Special Operation C Vampiric Aries", 1101)
 
 MisBeginTalk("<t>This quest is specially for <pAries Palace>. You can choose not to participate but there will be no prizes for you. Kill 99 <rMystic Shrubs> in 15 minutes is not an easy task.>.")
 
@@ -3142,7 +3142,7 @@ RegCurTrigger( 11011 )
 ----------------------------------------------------------april fool's fruit
 DefineMission( 5601, "Fruit of April's Fool", 1102)
 
-MisBeginTalk( "<t>Today is April’s Fool day! I love to make a fool out of others. Do you dare to take up my challenge? I got some surprising rewards to be claimed. Ok, the first task: Collect 100 <yElven Fruits>!")
+MisBeginTalk( "<t>Today is Aprils Fool day! I love to make a fool out of others. Do you dare to take up my challenge? I got some surprising rewards to be claimed. Ok, the first task: Collect 100 <yElven Fruits>!")
 MisBeginCondition(NoRecord, 1102)
 MisBeginCondition(NoMission, 1102)
 MisBeginCondition(LvCheck, ">", 10 )
@@ -3152,8 +3152,8 @@ MisCancelAction(ClearMission, 1102)
 
 MisNeed(MIS_NEED_ITEM, 3116, 100, 10, 100)
 
-MisResultTalk("<t>You are quite honest. I shall give you an April’s Fool Gift.")
-MisHelpTalk("<t>What use does 100 <yCute Fruit of April’s Fool> have? I am also unsure…")
+MisResultTalk("<t>You are quite honest. I shall give you an Aprils Fool Gift.")
+MisHelpTalk("<t>What use does 100 <yCute Fruit of Aprils Fool> have? I am also unsure")
 MisResultCondition(HasMission, 1102)
 MisResultCondition(HasItem, 3116, 100 )
 MisResultAction(TakeItem, 3116, 100 )
@@ -3168,7 +3168,7 @@ TriggerAction( 1, AddNextFlag, 1102, 10, 100 )
 RegCurTrigger( 11021 )
 
 ------------------------------------------------------generosity for april fools
-DefineMission( 5602, "April’s Fool Bounty", 1103)
+DefineMission( 5602, "Aprils Fool Bounty", 1103)
 
 MisBeginTalk( "<t>I would like to borrow some gold from you, please do not reject me! My bunny baby is going to school soon and I need 1,000,000 gold! Lend me please!")
 MisBeginCondition(NoRecord, 1103)
@@ -3186,7 +3186,7 @@ MisResultAction(ClearMission, 1103)
 MisResultAction(SetRecord, 1103 )
 
 ------------------------------------------------------death of april fools
-DefineMission( 5603, "Death of April’s Fool", 1104)
+DefineMission( 5603, "Death of Aprils Fool", 1104)
 
 MisBeginTalk( "<t>How can you be so naive to believe this? Haha! Want me to return the money? No possible, unless you die 41 times again and I will reconsider.")
 MisBeginCondition(NoRecord, 1104)
@@ -3198,7 +3198,7 @@ MisBeginAction(GiveItem, 2954, 1, 4)------------Proof of Death
 MisCancelAction(ClearMission, 1104)
 MisBeginBagNeed(1)
 
-MisResultTalk("<t>You are indeed the most blur and adorable person in Pirate King Online. Never mind…I will tell give you some consolation.")
+MisResultTalk("<t>You are indeed the most blur and adorable person in Pirate King Online. Never mindI will tell give you some consolation.")
 MisHelpTalk("<t>What is Death? Is there no fear?")
 MisResultCondition(HasMission, 1104)
 MisResultCondition(CheckPoint, 2954 )
@@ -3208,7 +3208,7 @@ MisResultAction(ClearMission, 1104)
 MisResultAction(SetRecord, 1104 )
 MisResultBagNeed(1)
 
---------------------------------------------------谁是守护者--------路人·丁
+----------------------------------------------------------
 DefineMission( 6015, "Who is the Guardian", 1013, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -3219,7 +3219,7 @@ MisResultCondition(HasMission, 1013)
 MisResultAction(SetRecord, 1013)
 MisResultAction(ClearMission, 1013)
 
---------------------------------------------------难？还是烦？-------路人·丁
+---------------------------------------------------------
 DefineMission( 6016, "Tough? Or troublesome?", 1014)
 MisBeginTalk("<t>Path to rebirth is never simple. Go and inquire from <bClan Chief Albuda>.")
 MisBeginCondition(NoRecord, 1014)
@@ -3236,7 +3236,7 @@ MisResultCondition(AlwaysFailure)
 
 
 
----------------------------------------------------难？还是烦？----------氏族长·阿布多罗.李
+-------------------------------------------------------------.
 DefineMission( 6017, "Tough? Or irritating?", 1014, COMPLETE_SHOW )
 MisBeginCondition(AlwaysFailure )
 MisResultTalk("<t>Have you made your decision? If you wish to change your decision in the future, look for me again but there will be a price to pay.")
@@ -3247,7 +3247,7 @@ MisResultAction(ClearMission, 1014)
 MisResultAction(SetRecord, 1014)
 
 
----------------------------------------------------继续转生之路-----------氏族长·阿布多罗.李
+--------------------------------------------------------------.
 DefineMission( 6018, "Continue the path of rebirth", 1017)
 MisBeginTalk("<t>You have chosen your own path. Now look for Tink. He will guide you.")
 MisBeginCondition(NoRecord, 1017)
@@ -3261,7 +3261,7 @@ MisHelpTalk("<t>Look for Tink now.")
 
 MisResultCondition(AlwaysFailure)
 
---------------------------------------------------继续转生之路---------------路人·丁
+-----------------------------------------------------------------
 DefineMission( 6019, "Continue the path of rebirth", 1017, COMPLETE_SHOW )
 MisBeginCondition(AlwaysFailure)
 MisResultTalk("<t>Have you selected your path? Let us continue!")
@@ -3270,7 +3270,7 @@ MisResultCondition(HasMission, 1017)
 MisResultAction(ClearMission, 1017)
 MisResultAction(SetRecord, 1017)
 
----------------------------------------------------艰巨的任务---------路人·丁
+------------------------------------------------------------
 DefineMission( 6020, "Arduous Quest", 1018)
 MisBeginTalk("<t>Since you have selected the tough difficulty, I will give you a pointer or two. However, help me teach some guys a lesson first.")
 MisBeginCondition(NoRecord,1000)
@@ -3328,7 +3328,7 @@ TriggerCondition( 1, IsMonster, 789 )
 TriggerAction( 1, AddNextFlag, 1018, 30, 1 )
 RegCurTrigger( 10183 )
 
-----------------------------------------------限时的挑战---------路人·丁
+-------------------------------------------------------
 DefineMission( 6021, "Time based Challenge", 1019)
 MisBeginTalk("<t>You selected the troublesome path? Ok, have you heard about the Genesis Challenge? You will have to complete it in 30 minutes.")
 MisBeginCondition( NoRecord, 1000)
@@ -3342,7 +3342,7 @@ MisCancelAction(ClearMission,1019)
 MisNeed(MIS_NEED_DESP,"Complete Genesis challenge in 30 minutes.")
 
 MisHelpTalk("<t>If the timing recorded on the <yBawcock Letter> is less than 1800 secs, I will consider you to be through. Please note to bring only 1 <yBawcock Letter>!")
-MisResultTalk("<t>It’s so fun.")
+MisResultTalk("<t>Its so fun.")
 MisResultCondition( HasItem, 2912, 1)
 MisResultCondition( LessTime, 1800)
 MisResultCondition( NoRecord, 1019)
@@ -3351,7 +3351,7 @@ MisResultAction( SetRecord, 1019)
 MisResultAction( ClearMission, 1019)
 
 
---------------------------------------------限时的挑战-------------路人·丁
+---------------------------------------------------------
 DefineMission( 6022, "Time based Challenge", 1020)
 MisBeginTalk("<t>Go for another round. However, please take your time to do it. Try to finish it between 7 hours to 8 hours.")
 MisBeginCondition( NoRecord, 1020)
@@ -3374,7 +3374,7 @@ MisResultAction( ClearMission, 1020)
 
 
 
------------------------------------------------限时的挑战------------路人·丁
+-----------------------------------------------------------
 DefineMission( 6023, "Time based Challenge", 1021)
 MisBeginTalk("<t>Do the run once more. You will need to complete the journey between 5 hours to 5.5 hours.")
 MisBeginCondition( NoRecord, 1021)
@@ -3396,7 +3396,7 @@ MisResultCondition( HasMission, 1021)
 MisResultAction( SetRecord, 1021)
 MisResultAction( ClearMission, 1021)
 
----------------------------------------------寻访雷霆守护者------路人·丁
+---------------------------------------------------
 DefineMission( 6024, "Visit the guardian of Thundoria", 1022)
 MisBeginTalk("<t>Next guardian is at Thundoria Castle. Look for him there.")
 MisBeginCondition( NoRecord, 1022)
@@ -3411,7 +3411,7 @@ MisHelpTalk("<t>Look for him in Thundoria Castle.")
 
 MisResultCondition(AlwaysFailure)
 
------------------------------------------------寻访雷霆守护者--------白银城驻雷霆堡大使·伊塔多
+-------------------------------------------------------
 DefineMission( 6025, "Visit the guardian of Thundoria", 1022,COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure )
@@ -3422,7 +3422,7 @@ MisResultCondition( HasMission, 1022)
 MisResultAction( SetRecord, 1022)
 MisResultAction( ClearMission, 1022)
 
--------------------------------------------------白羊宫的战斗---------------白银城驻雷霆堡大使·伊塔多
+----------------------------------------------------------------
 DefineMission( 6026, "Battle of Aries Palace", 1023)
 MisBeginTalk("<t>The wheel of fate has started to turn! Enter the gate of the <pHoroscope Palace> now and seek the <ySeal of Aries> in <pAries Palace>.")
 MisBeginCondition( NoRecord, 1023)
@@ -3433,7 +3433,7 @@ MisBeginAction( AddMission, 1023)
 MisBeginAction(AddTrigger, 10231, TE_GETITEM, 2942, 1 )
 MisCancelAction( ClearMission, 1023)
 
-MisNeed(MIS_NEED_DESP,"Wear a full set of <yAries apparel> and bring the <ySeal of Aries> to <bArgent Ambassador – Yata> in Thundoria.")
+MisNeed(MIS_NEED_DESP,"Wear a full set of <yAries apparel> and bring the <ySeal of Aries> to <bArgent Ambassador C Yata> in Thundoria.")
 MisNeed(MIS_NEED_ITEM, 2942, 1, 10 ,1)
 
 MisHelpTalk("<t>Wear the apparel set of Aries Palace to welcome me.")
@@ -3448,7 +3448,7 @@ TriggerCondition( 1, IsItem, 2942)
 TriggerAction( 1, AddNextFlag, 1023, 10, 1 )
 RegCurTrigger( 10231 )
 
---------------------------------------------------寻访沙岚守护者--------------------白银城驻雷霆堡大使·伊塔多
+----------------------------------------------------------------------
 DefineMission( 6027, "Visit guardian of Shaitan", 1024)
 MisBeginTalk("<t>Look for the next guardian at a sandy town.")
 MisBeginCondition( NoRecord, 1024)
@@ -3463,7 +3463,7 @@ MisHelpTalk("<t>Go to a sandy city.")
 
 MisResultCondition(AlwaysFailure)
 
------------------------------------------------------寻访沙岚守护者--------------------路人·珊瑚虫
+-------------------------------------------------------------------------
 DefineMission( 6028, "Visit guardian of Shaitan", 1024, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
@@ -3474,7 +3474,7 @@ MisResultCondition( HasMission, 1024)
 MisResultAction( SetRecord, 1024)
 MisResultAction( ClearMission, 1024)
 
--------------------------------------------------------环球旅行--------------------路人·珊瑚虫
+---------------------------------------------------------------------------
 DefineMission( 6029, "World Tour", 1025)
 MisBeginTalk("<t>Are you familiar with the world of Pirate King Online? Let me bring you on a world tour. There are many interesting people to meet along the way and they will take a portion of your reputation points for their help. First stop is <pAbandoned Mine Haven>. Look for <bKentaro>.")
 MisBeginCondition( NoMission, 1025)
@@ -3489,7 +3489,7 @@ MisHelpTalk("<t><bKentaro> is at <pAbandon Mine Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
--------------------------------------------------------环球旅行-----------------严罗塔
+------------------------------------------------------------------------
 DefineMission( 6030, "World Tour", 1025, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
@@ -3502,7 +3502,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1025)
 MisResultAction( ClearMission, 1025)
 
---------------------------------------------------------环球旅行------------------严罗塔
+--------------------------------------------------------------------------
 DefineMission( 6031, "World Tour", 1026)
 MisBeginTalk("<t>Next stop is <pBabul Haven>. Look for <bMinelli>.")
 MisBeginCondition( NoMission, 1026)
@@ -3517,7 +3517,7 @@ MisHelpTalk("<t><bMinelli> is at <pBabul Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
----------------------------------------------------------环球旅行----------------米尔米莉
+-------------------------------------------------------------------------
 DefineMission( 6032, "World Tour", 1026, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
@@ -3530,7 +3530,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1026)
 MisResultAction( ClearMission, 1026)
 
-----------------------------------------------------------环球旅行-----------------米尔米莉
+---------------------------------------------------------------------------
 DefineMission( 6033, "World Tour", 1027)
 MisBeginTalk("<t>Next stop is <pAtlantis Haven>. Look for <bWilli>.")
 MisBeginCondition( NoMission, 1027)
@@ -3545,12 +3545,12 @@ MisHelpTalk("<t>You cannot take it anymore? Look for Clan Chief Albuda to resele
 
 MisResultCondition(AlwaysFailure)
 
----------------------------------------------------------环球旅行-------------------薇莉尔
+----------------------------------------------------------------------------
 DefineMission( 6034, "World Tour", 1027, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1027)
 MisResultCondition( HasMission, 1027)
 MisResultCondition( HasCredit, 500)
@@ -3558,7 +3558,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1027)
 MisResultAction( ClearMission, 1027)
 
------------------------------------------------------------环球旅行------------------薇莉尔
+-----------------------------------------------------------------------------
 DefineMission( 6035, "World Tour", 1028)
 MisBeginTalk("<t>Next stop is <pValhalla Haven>. Look for <bProfessor Fenny>.")
 MisBeginCondition( NoMission, 1028)
@@ -3573,12 +3573,12 @@ MisHelpTalk("<t><bProfessor Fenny> is at <pValhalla Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
-------------------------------------------------------------环球旅行---------------博尔芬尼
+---------------------------------------------------------------------------
 DefineMission( 6036, "World Tour", 1028, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1028)
 MisResultCondition( HasMission, 1028)
 MisResultCondition( HasCredit, 500)
@@ -3586,7 +3586,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1028)
 MisResultAction( ClearMission, 1028)
 
----------------------------------------------------------------环球旅行------------博尔芬尼
+---------------------------------------------------------------------------
 DefineMission( 6037, "World Tour", 1029)
 MisBeginTalk("<t>Next stop is <pOasis Haven>. Look for <bDitaro>.")
 MisBeginCondition( NoMission, 1029)
@@ -3601,12 +3601,12 @@ MisHelpTalk("<t>Ditaro is at Oasis Haven.")
 
 MisResultCondition(AlwaysFailure)
 
---------------------------------------------------------------环球旅行-----------迪迪马修
+-------------------------------------------------------------------------
 DefineMission( 6038, "World Tour", 1029, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1029)
 MisResultCondition( HasMission, 1029)
 MisResultCondition( HasCredit, 500)
@@ -3614,7 +3614,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1029)
 MisResultAction( ClearMission, 1029)
 
---------------------------------------------------------------环球旅行-----------迪迪马修
+-------------------------------------------------------------------------
 DefineMission( 6039, "World Tour", 1030)
 MisBeginTalk("<t>Next stop is <pIcespire Haven>. Look for <bLulu>.")
 MisBeginCondition( NoMission, 1030)
@@ -3629,12 +3629,12 @@ MisHelpTalk("<t>Lulu is at Icespire Haven.")
 
 MisResultCondition(AlwaysFailure)
 
---------------------------------------------------------------环球旅行-----------鲁鲁
+-------------------------------------------------------------------------
 DefineMission( 6040, "World Tour", 1030, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1030)
 MisResultCondition( HasMission, 1030)
 MisResultCondition( HasCredit, 500)
@@ -3642,7 +3642,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1030)
 MisResultAction( ClearMission, 1030)
 
---------------------------------------------------------------环球旅行-----------鲁鲁
+-------------------------------------------------------------------------
 DefineMission( 6041, "World Tour", 1031)
 MisBeginTalk("<t>Next stop is <pRockery Haven>. Look for <bDurian>.")
 MisBeginCondition( NoMission, 1031)
@@ -3657,12 +3657,12 @@ MisHelpTalk("<t><bDurian> is at <pRockery Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
---------------------------------------------------------------环球旅行-------------榴莲
+---------------------------------------------------------------------------
 DefineMission( 6042, "World Tour", 1031, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1031)
 MisResultCondition( HasMission, 1031)
 MisResultCondition( HasCredit, 500)
@@ -3670,7 +3670,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1031)
 MisResultAction( ClearMission, 1031)
 
---------------------------------------------------------------环球旅行-------------榴莲
+---------------------------------------------------------------------------
 DefineMission( 6043, "World Tour", 1032)
 MisBeginTalk("<t>Next stop is <pSolace Haven>. Look for <bLinda>.")
 MisBeginCondition( NoMission, 1032)
@@ -3685,12 +3685,12 @@ MisHelpTalk("<t><bLinda> is at <pSolace Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
----------------------------------------------------------------环球旅行--------------琳达
+-----------------------------------------------------------------------------
 DefineMission( 6044, "World Tour", 1032, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1032)
 MisResultCondition( HasMission, 1032)
 MisResultCondition( HasCredit, 500)
@@ -3701,7 +3701,7 @@ MisResultAction( ClearMission, 1032)
 MisResultBagNeed(1)
 
 
----------------------------------------------------------------环球旅行--------------琳达
+-----------------------------------------------------------------------------
 DefineMission( 6045, "World Tour", 1033)
 MisBeginTalk("<t>Next stop is at <pSkeletar Haven>. Look for <bXeus>.")
 MisBeginCondition( NoMission, 1033)
@@ -3716,12 +3716,12 @@ MisHelpTalk("<t><bXeus> is at <pSkeletar Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
-----------------------------------------------------------------环球旅行--------------修司
+------------------------------------------------------------------------------
 DefineMission( 6046, "World Tour", 1033, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1033)
 MisResultCondition( HasMission, 1033)
 MisResultCondition( HasCredit, 500)
@@ -3729,7 +3729,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1033)
 MisResultAction( ClearMission, 1033)
 
-----------------------------------------------------------------环球旅行--------------修司
+------------------------------------------------------------------------------
 DefineMission( 6047, "World Tour", 1034)
 MisBeginTalk("<t>Next stop is at <pChaldea Haven>. Look for <bLove Yuri>.")
 MisBeginCondition( NoMission, 1034)
@@ -3744,12 +3744,12 @@ MisHelpTalk("<t><bLove Yuri> is at <pChaldea Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
------------------------------------------------------------------环球旅行-------------海蓝·微风
+------------------------------------------------------------------------------
 DefineMission( 6048, "World Tour", 1034, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1034)
 MisResultCondition( HasMission, 1034)
 MisResultCondition( HasCredit, 500)
@@ -3757,7 +3757,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1034)
 MisResultAction( ClearMission, 1034)
 
------------------------------------------------------------------环球旅行-------------海蓝·微风
+------------------------------------------------------------------------------
 DefineMission( 6049, "World Tour", 1035)
 MisBeginTalk("<t>Next stop is <bNana> at <pIcicle Haven>.")
 MisBeginCondition( NoMission, 1035)
@@ -3772,12 +3772,12 @@ MisHelpTalk("<t><bNana> is at <pIcicle Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
-----------------------------------------------------------------环球旅行---------------奈奈
+-------------------------------------------------------------------------------
 DefineMission( 6050, "World Tour", 1035, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1035)
 MisResultCondition( HasMission, 1035)
 MisResultCondition( HasCredit, 500)
@@ -3785,7 +3785,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1035)
 MisResultAction( ClearMission, 1035)
 
-----------------------------------------------------------------环球旅行---------------奈奈
+-------------------------------------------------------------------------------
 DefineMission( 6051, "World Tour", 1036)
 MisBeginTalk("<t>Next stop is at <pAndes Forest Haven>. Look for <bDoctor Minoseva>.")
 MisBeginCondition( NoMission, 1036)
@@ -3800,12 +3800,12 @@ MisHelpTalk("<t><bMinoseva> is at <pAndes Forest Haven>.")
 
 MisResultCondition(AlwaysFailure)
 
-----------------------------------------------------------------环球旅行---------------米奈希尔
+-------------------------------------------------------------------------------
 DefineMission( 6052, "World Tour", 1036, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>旅行者吗？注意休息哦！")
+MisResultTalk("<t>")
 MisResultCondition( NoRecord, 1036)
 MisResultCondition( HasMission, 1036)
 MisResultCondition( HasCredit, 500)
@@ -3816,7 +3816,7 @@ MisResultAction( ClearMission, 1036)
 MisResultBagNeed(1)
 
 
-----------------------------------------------------------------环球旅行-------------------米奈希尔
+-----------------------------------------------------------------------------------
 DefineMission( 6053, "World Tour", 1037)
 MisBeginTalk("<t>The tour has ended. Go back and look for <bPasserby Wowo>.")
 MisBeginCondition( NoMission, 1037)
@@ -3831,7 +3831,7 @@ MisHelpTalk("<t>Look for <bWowo>.")
 
 MisResultCondition(AlwaysFailure)
 
----------------------------------------------------------------环球旅行--------------------路人·珊瑚虫
+-----------------------------------------------------------------------------------
 DefineMission( 6054, "World Tour", 1037, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
@@ -3844,7 +3844,7 @@ MisResultAction( DelRoleCredit, 500)
 MisResultAction( SetRecord, 1037)
 MisResultAction( ClearMission, 1037)
 
---------------------------------------------------------------寻访天堂守护者--------------路人·珊瑚虫
+----------------------------------------------------------------------------
 DefineMission( 6055, "Visit the Guardian of Heaven", 1038)
 MisBeginTalk("<t>Look for the next guardian at the entrance of <pHeaven>.")
 MisBeginCondition( NoMission, 1038)
@@ -3859,7 +3859,7 @@ MisHelpTalk("<t>Next guardian is at the entrance to <pHeaven>.")
 
 MisResultCondition(AlwaysFailure)
 
--------------------------------------------------------------寻访天堂守护者--------------天堂传送使
+---------------------------------------------------------------------------
 DefineMission( 6056, "Visit the Guardian of Heaven", 1038, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
@@ -3870,7 +3870,7 @@ MisResultCondition( HasMission, 1038)
 MisResultAction( SetRecord, 1038)
 MisResultAction( ClearMission, 1038)
 
-------------------------------------------------------------虔诚的证明-------------------天堂传送使
+-------------------------------------------------------------------------------
 DefineMission( 6057, "Testament of the Piety", 1039)
 MisBeginTalk("<t>Want to gain my recognition? No problem, but you have to show me your faithfulness to the <bGoddess>. There are 9 <ySacred Candles>. Light them up!")
 MisBeginCondition( NoRecord, 1039)
@@ -3900,7 +3900,7 @@ TriggerAction( 1, AddNextFlag, 1039, 10, 9 )
 RegCurTrigger( 10391 )
 
 
-------------------------------------------------------------虔诚的证明-------------------天堂传送使
+-------------------------------------------------------------------------------
 DefineMission( 6058, "Testament of the Piety", 1040)
 MisBeginTalk("<t>Since you are so determined, light these 99 candles for me.")
 MisBeginCondition( NoRecord, 1040)
@@ -3929,7 +3929,7 @@ TriggerCondition( 1, IsItem, 3007)
 TriggerAction( 1, AddNextFlag, 1040, 10, 99 )
 RegCurTrigger( 10401 )
 
-------------------------------------------------------------虔诚的证明-------------------天堂传送使
+-------------------------------------------------------------------------------
 DefineMission( 6059, "Testament of the Piety", 1041)
 MisBeginTalk("<t>This is the last test. Here is a Goddess Statue. You will infuse 1 point of energy everytime you use it. Come back to me when you maximise the energy. Note that I only accept 1 Goddess Statue!")
 MisBeginCondition( NoRecord, 1041)
@@ -3958,7 +3958,7 @@ TriggerCondition( 1, IsItem, 3010)
 TriggerAction( 1, AddNextFlag, 1041, 10, 1 )
 RegCurTrigger( 10411 )
 
-----------------------------------------------------------寻访白银守护者--------------天堂传送使
+------------------------------------------------------------------------
 DefineMission( 6060, "Visit the guardian of Argent", 1042)
 MisBeginTalk("<t> Look for the next guardian in Argent City. He is not someone to mess with.")
 MisBeginCondition( NoRecord, 1042)
@@ -3973,7 +3973,7 @@ MisHelpTalk("<t>Visit the next guardian in Argent City.")
 
 MisResultCondition(AlwaysFailure)
 
------------------------------------------------------------寻访白银守护者--------------水手·海云
+-------------------------------------------------------------------------
 DefineMission( 6061, "Visit the guardian of Argent", 1042, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure)
@@ -3984,9 +3984,9 @@ MisResultCondition( HasMission, 1042)
 MisResultAction( SetRecord, 1042)
 MisResultAction( ClearMission, 1042)
 
-------------------------------------------------------------疯狂的游戏-----------------水手·海云
+-----------------------------------------------------------------------------
 DefineMission( 6062, "Game of Madness", 1043)
-MisBeginTalk("<t>Let’s play a little game. Kill 110x <rMystic Shrubs> and return to answer my question.")
+MisBeginTalk("<t>Lets play a little game. Kill 110x <rMystic Shrubs> and return to answer my question.")
 MisBeginCondition( NoRecord, 1043)
 MisBeginCondition( NoMission, 1043)
 MisBeginCondition( HasRecord, 1042)
@@ -4012,7 +4012,7 @@ TriggerCondition( 1, IsMonster, 75 )
 TriggerAction( 1, AddNextFlag, 1043, 10, 110 )
 RegCurTrigger( 10431 )
 
-------------------------------------------------------------疯狂的游戏-----------------水手·海云
+-----------------------------------------------------------------------------
 DefineMission( 6063, "Game of Madness", 1046)
 MisBeginTalk("<t>Kill 110x <rDry Mystic Shrubs>!")
 MisBeginCondition( NoRecord, 1046)
@@ -4042,7 +4042,7 @@ TriggerCondition( 1, IsMonster, 218 )
 TriggerAction( 1, AddNextFlag, 1046, 10, 110 )
 RegCurTrigger( 10461 )
 
----------------------------------------------------------------疯狂的游戏------------------水手·海云
+---------------------------------------------------------------------------------
 DefineMission( 6064, "Game of Madness", 1047)
 MisBeginTalk("<t>Kill 110x <rSnowy Mystic Shrubs>!")
 MisBeginCondition( NoRecord, 1047)
@@ -4072,7 +4072,7 @@ TriggerCondition( 1, IsMonster, 216 )
 TriggerAction( 1, AddNextFlag, 1047, 10, 110 )
 RegCurTrigger( 10471 )
 
----------------------------------------------------------------疯狂的游戏------------------水手·海云
+---------------------------------------------------------------------------------
 DefineMission( 6065, "Game of Madness", 1048)
 MisBeginTalk("<t>Next target is <rSailor Squidy>. Kill 110x of them too.")
 MisBeginCondition( NoRecord, 1048)
@@ -4099,7 +4099,7 @@ TriggerCondition( 1, IsMonster, 233)
 TriggerAction( 1, AddNextFlag, 1048, 10, 110 )
 RegCurTrigger( 10481 )
 --Stopped for now -Phai --
----------------------------------------------------------------疯狂的游戏------------------水手·海云
+---------------------------------------------------------------------------------
 DefineMission( 6066, "Game of Madness", 1049)
 MisBeginTalk("<t>Next target is Snow Squidy, kill 110 of them.")
 MisBeginCondition( NoRecord, 1049)
@@ -4126,7 +4126,7 @@ TriggerCondition( 1, IsMonster, 235)
 TriggerAction( 1, AddNextFlag, 1049, 10, 110 )
 RegCurTrigger( 10491 )
 
----------------------------------------------------------------疯狂的游戏------------------水手·海云
+---------------------------------------------------------------------------------
 DefineMission( 6067, "Game of Madness", 1050)
 MisBeginTalk("<t>Next target is Sailor Squirt. Kill 110 of them.")
 MisBeginCondition( NoRecord, 1050)
@@ -4153,7 +4153,7 @@ TriggerCondition( 1, IsMonster, 232)
 TriggerAction( 1, AddNextFlag, 1050, 10, 110 )
 RegCurTrigger( 10501 )
 
----------------------------------------------------------------疯狂的游戏------------------水手·海云
+---------------------------------------------------------------------------------
 DefineMission( 6068, "Game of Madness", 1051)
 MisBeginTalk("<t>The last target is Snow Squirt. Kill 110 of them.")
 MisBeginCondition( NoRecord, 1051)
@@ -4164,7 +4164,7 @@ MisBeginAction( AddMission, 1051)
 MisBeginAction( AddTrigger, 10511, TE_KILL, 234, 110)
 MisCancelAction( ClearMission, 1051)
 
-MisNeed(MIS_NEED_DESP,"Kill 110个Snow Squirt.")
+MisNeed(MIS_NEED_DESP,"Kill 110Snow Squirt.")
 MisNeed(MIS_NEED_KILL, 234, 110, 10, 110)
 
 MisResultTalk("<t>Is the game over? What a pity. Your determination has moved me. This is the reward you deserved.")
@@ -4187,7 +4187,7 @@ TriggerCondition( 1, IsMonster, 234)
 TriggerAction( 1, AddNextFlag, 1051, 10, 110 )
 RegCurTrigger( 10511 )
 
--------------------------------------------------做寿司的原料----------提司面包	
+-----------------------------------------------------------	
 DefineMission (5604, "Ingredient to make sushi", 1107)
 
 MisBeginTalk("<t>Dear friend, do you wish to have some sushi? You will never taste anything as good as these! Get me some ingredients if you wish to have it! ")
@@ -4195,9 +4195,9 @@ MisBeginTalk("<t>Dear friend, do you wish to have some sushi? You will never tas
 MisBeginCondition(NoMission,1107)
 MisBeginCondition(NoRecord,1107)
 MisBeginAction(AddMission,1107)
-MisBeginAction(AddTrigger, 11071, TE_GETITEM, 1649, 1 )---------------1个纯净的水
-MisBeginAction(AddTrigger, 11072, TE_GETITEM, 1690, 1 )---------------1个蜗牛触角
-MisBeginAction(AddTrigger, 11073, TE_GETITEM, 3116, 1 )-------------1个精灵果
+MisBeginAction(AddTrigger, 11071, TE_GETITEM, 1649, 1 )---------------1
+MisBeginAction(AddTrigger, 11072, TE_GETITEM, 1690, 1 )---------------1
+MisBeginAction(AddTrigger, 11073, TE_GETITEM, 3116, 1 )-------------1
 MisCancelAction( ClearMission, 1107)
 
 MisNeed(MIS_NEED_ITEM, 1649, 1, 10, 1 )
@@ -4237,7 +4237,7 @@ TriggerAction( 1, AddNextFlag, 1107, 30, 1 )
 RegCurTrigger( 11073 )
 
 
--------------------------------------------------超级寿司----------提司面包	
+-----------------------------------------------------------	
 DefineMission (5605, "Super Sushi", 1108)
 
 MisBeginTalk("<t>Bring 2 Cake Sampling Voucher if you wish to taste it! ")
@@ -4246,19 +4246,19 @@ MisBeginCondition(NoMission,1108)
 MisBeginCondition(HasRecord,1107)
 MisBeginCondition(NoRecord,1108)
 MisBeginAction(AddMission,1108)
-MisBeginAction(AddTrigger, 11081, TE_GETITEM, 1097, 2 )---------------2个蛋糕品尝券
+MisBeginAction(AddTrigger, 11081, TE_GETITEM, 1097, 2 )---------------2
 MisCancelAction( ClearMission, 1108)
 
 MisNeed(MIS_NEED_ITEM, 1097, 2, 10, 2 )
 
 MisHelpTalk("<t>Faster, if not it will get cold.")
-MisResultTalk("<t>Do not praise me! I am sick of such words…")
+MisResultTalk("<t>Do not praise me! I am sick of such words")
 
 MisResultCondition(HasMission, 1108)
 MisResultCondition(NoRecord,1108)
 MisResultCondition(HasItem, 1097, 2 )
 MisResultAction(TakeItem, 1097, 2 )
-MisResultAction(GiveItem, 2989,1,4)-------超级寿司
+MisResultAction(GiveItem, 2989,1,4)-------
 MisResultAction(ClearMission, 1108)
 MisResultAction(SetRecord,  1108 )
 MisResultAction(ClearRecord, 1107)---------------can be repeated
@@ -4269,7 +4269,7 @@ TriggerCondition( 1, IsItem, 1097)
 TriggerAction( 1, AddNextFlag, 1108, 10, 2 )
 RegCurTrigger( 11081 )
 
--------------------------------------------------蛋糕勇士----------提司面包	
+-----------------------------------------------------------	
 DefineMission (5606, "Cake Warrior", 1109)
 
 MisBeginTalk("<t>Dear friend, my deserts are the most delicious in the market! Others will envy you should you ever taste my cakes. In order to sample it, you will have to obtain a Medal of Honor from the Arena Administrator! ")
@@ -4277,13 +4277,13 @@ MisBeginTalk("<t>Dear friend, my deserts are the most delicious in the market! O
 MisBeginCondition(NoMission,1109)
 MisBeginCondition(NoRecord,1109)
 MisBeginAction(AddMission,1109)
-MisBeginAction(AddTrigger, 11091, TE_GETITEM, 3849, 1 )---------------1个勇者之证
+MisBeginAction(AddTrigger, 11091, TE_GETITEM, 3849, 1 )---------------1
 MisCancelAction( ClearMission, 1109)
 
 MisNeed(MIS_NEED_ITEM, 3849, 1, 10, 1 )
 
 MisHelpTalk("<t>Faster, if not it will get cold.")
-MisResultTalk("<t>Do not praise me! I am sick of such words…")
+MisResultTalk("<t>Do not praise me! I am sick of such words")
 
 MisResultCondition(HasMission, 1109)
 MisResultCondition(NoRecord,1109)
@@ -4297,7 +4297,7 @@ TriggerAction( 1, AddNextFlag, 1109, 10, 1 )
 RegCurTrigger( 11091 )
 
 
--------------------------------------------------品牌蛋糕----------提司面包	
+-----------------------------------------------------------	
 DefineMission (5607, "Famous Cake", 1110)
 
 MisBeginTalk("<t>You need to have a Cake Sampling Voucher as well! ")
@@ -4306,7 +4306,7 @@ MisBeginCondition(NoMission,1110)
 MisBeginCondition(HasRecord,1109)
 MisBeginCondition(NoRecord,1110)
 MisBeginAction(AddMission,1110)
-MisBeginAction(AddTrigger, 11101, TE_GETITEM, 1097, 1 )---------------1个蛋糕品尝券
+MisBeginAction(AddTrigger, 11101, TE_GETITEM, 1097, 1 )---------------1
 MisCancelAction( ClearMission, 1110)
 
 MisNeed(MIS_NEED_ITEM, 1097, 1, 10, 1 )
@@ -4318,7 +4318,7 @@ MisResultCondition(HasMission, 1110)
 MisResultCondition(NoRecord,1110)
 MisResultCondition(HasItem, 1097, 1 )
 MisResultAction(TakeItem, 1097, 1 )
-MisResultAction(GiveItem, 2988,1,4)------品牌蛋糕
+MisResultAction(GiveItem, 2988,1,4)------
 MisResultAction(ClearMission, 1110)
 MisResultAction(SetRecord,  1110 )
 MisResultAction(ClearRecord, 1109)---------------can be repeated
@@ -4330,7 +4330,7 @@ TriggerAction( 1, AddNextFlag, 1110, 10, 1 )
 RegCurTrigger( 11101 )
 
 
---	-----------------------------------------------------马来西亚开服献礼
+--	-----------------------------------------------------
 --	DefineMission( 6069, "Server opening ceremony", 1400)
 --
 --	MisBeginTalk( "<t>Feeling shy lately? If you help me do a small flavour, I'll give you a rich reward in return ")
@@ -4395,7 +4395,7 @@ RegCurTrigger( 11101 )
 --	RegCurTrigger( 14005 )
 --
 --
---	----------------------------------------------------------马来西亚幸运大宝箱
+--	----------------------------------------------------------
 --	DefineMission ( 6070 , "Golden Chest" , 1401 )
 --	MisBeginTalk("<t>Want to obtain Big Lucky chest? If you want one help me kill the following monsters: 30 Bandit, 20 Miner mole, 10 Tribal warrior, 5 Bandit Leader - Adder, 5 Ruby dolphin, 5 Fish bone, 20 Sluggish Squid, and Man Eating Sea Jelly.")
 --	MisBeginCondition( NoMission, 1401)
@@ -4420,7 +4420,7 @@ RegCurTrigger( 11101 )
 --	MisNeed(MIS_NEED_KILL, 578, 20, 70, 20)
 --	MisNeed(MIS_NEED_KILL, 596, 20, 80, 20)
 --
---	MisResultTalk("<t>祝你好运哦~")
+--	MisResultTalk("<t>~")
 --	MisHelpTalk("<t>The monsters on the sea must be defeated on a ship.")
 --	MisResultCondition( HasMission, 1401)
 --	MisResultCondition( NoRecord, 1401)
@@ -4471,7 +4471,7 @@ RegCurTrigger( 11101 )
 --	RegCurTrigger( 14018 )
 
 
-------------------------------------------------------------------新的磨练---转生天使
+---------------------------------------------------------------------
 DefineMission( 6071, "New challenge", 1402)
 MisBeginTalk("<t>You still need more training. Lately around Argent City the Mystic Shrub has been causing trouble, please go investigate!")
 MisBeginCondition( CheckZS )
@@ -4485,19 +4485,19 @@ MisHelpTalk("<t>Go around Argent City and see if anything special is happening."
 
 MisResultCondition( AlwaysFailure )
 
--------------------------------------------------------------------新的磨练---怨念草
+----------------------------------------------------------------------
 DefineMission( 6072, "New challenge", 1402, COMPLETE_SHOW)
 
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk("<t>Hatred, hatred…")
+MisResultTalk("<t>Hatred, hatred")
 MisResultCondition( HasMission, 1402)
 MisResultCondition( NoRecord, 1402)
 MisResultAction( AddSailExp , 10, 10)
 MisResultAction( SetRecord, 1402)
 MisResultAction( ClearMission, 1402)
 
------------------------------------------------------------------精灵草的怨念----怨念草
+---------------------------------------------------------------------
 DefineMission( 6073, "Mystic Shrub hatred", 1403)
 
 MisBeginTalk("<t>Answer me one question!")
@@ -4518,7 +4518,7 @@ MisResultAction( SetRecord, 1403)
 MisResultAction( ClearMission, 1403)
 MisResultAction( AddSailExp, 10, 10)
 
----------------------------------------------------------------怨念草的要求------怨念草
+---------------------------------------------------------------------
 DefineMission( 6074, "Hatred Shrub request", 1408)
 
 MisBeginTalk("<t>I will not accept this, so I'll create a quest too, you go and kill people for me!! After you slain them, help me get 20 Blood Contracts!")
@@ -4549,7 +4549,7 @@ TriggerCondition( 1, IsItem, 2383)
 TriggerAction( 1, AddNextFlag, 1408, 10, 20 )
 RegCurTrigger( 14081 )
 
--------------------------------------------------------------怨念草的要求------怨念草
+-------------------------------------------------------------------
 DefineMission( 6075, "Hatred Shrub request", 1410)
 
 MisBeginTalk( "<t>You don't even care about us, hmph, I am too lazy to answer you too! (Looks like he's angry, maybe some water will help him cool down).")
@@ -4579,7 +4579,7 @@ TriggerCondition( 1, IsItem, 1649)
 TriggerAction( 1, AddNextFlag, 1410, 10, 10 )
 RegCurTrigger( 14101 )
 
--------------------------------------------------------怨念草的要求
+-------------------------------------------------------
 DefineMission( 6076, "Hatred Shrub request", 1411)
 MisBeginTalk( "<t>Grrr, you must have killed a lot of my grasslings too. Give me 1, 000, 000 as compensation or I won't let you off!")
 MisBeginCondition( NoRecord, 1411)
@@ -4603,7 +4603,7 @@ MisResultAction( SetRecord, 1411)
 MisResultAction( SetRecord, 1409)
 MisResultAction( ClearMission, 1411)
 
----------------------------------------------------------汇报情况-------怨念草
+----------------------------------------------------------------
 DefineMission( 6077, "Report situation", 1412)
 MisBeginTalk( "<t>Since you know whom you're dealing with, I'll forgive you today, but you better be more careful next time!")
 MisBeginCondition( NoRecord, 1412)
@@ -4618,7 +4618,7 @@ MisHelpTalk( "<t>Hurry up and go away, don't walk back and forth infront of me!"
 
 MisResultCondition( AlwaysFailure )
 
----------------------------------------------------------汇报情况------城堡护卫·比特
+---------------------------------------------------------------
 DefineMission( 6078, "Report situation", 1412, COMPLETE_SHOW)
 
 MisBeginCondition( AlwaysFailure)
@@ -4630,7 +4630,7 @@ MisResultAction( SetRecord, 1412)
 MisResultAction( ClearMission, 1412)
 MisResultAction( AddSailExp, 5, 5)
 
----------------------------------------------------------收集羽毛-------城堡护卫·比特
+----------------------------------------------------------------
 DefineMission( 6079, "Gather feathers", 1413)
 MisBeginTalk( "<t>Now I'll give you a severe quest: Lately we are running out of feathers to make the rebirth wings, please help me find 100 Snowy White Plume, and 100 Black Feather.")
 MisBeginCondition( NoMission, 1413)
@@ -4667,7 +4667,7 @@ TriggerCondition( 1, IsItem, 4347)
 TriggerAction( 1, AddNextFlag, 1413, 20, 100 )
 RegCurTrigger( 14132 )
 
---------------------------------------------------------帮助他人--------城堡护卫·比特
+----------------------------------------------------------------
 DefineMission( 6080, "Help other people", 1414)
 MisBeginTalk("0")
 MisBeginCondition( HasRecord, 1413)
@@ -4692,7 +4692,7 @@ MisResultAction( AddSailExp, 10,10)
 MisResultAction( SetRecord, 1414)
 MisResultAction( ClearMission, 1414)
 
----------------------------------------------------------玫瑰的魅力----酒吧女·蒂娜
+-------------------------------------------------------------
 DefineMission( 6081, "Charm of the rose", 1415)
 MisBeginTalk("<t>I've been a young boy holding a rose in his mouth, that look is totally handsome ( Her eyes is full of stars), why don't you try it and let me see?")
 MisBeginCondition( NoChaType, 3)
@@ -4717,7 +4717,7 @@ MisResultAction( SetRecord, 1428)
 MisResultAction( ClearMission, 1415)
 
 
----------------------------------------------------------玫瑰的魅力----酒鬼·芬德内
+-------------------------------------------------------------
 DefineMission( 6082, "Charm of the rose", 1416)
 MisBeginTalk( "<t>I've seen a beautiful women once with a rose holding in her mouth, it was so sexy ( He seems to have something shiny below his lips), why don't you try it and let me see?")
 MisBeginCondition( HasMission, 1414)
@@ -4740,7 +4740,7 @@ MisResultAction( SetRecord, 1416)
 MisResultAction( SetRecord, 1428)
 MisResultAction( AddSailExp, 20, 20)
 MisResultAction( ClearMission, 1416)
----------------------------------------------------------倒霉的模特----潮流发型师·卡特
+-------------------------------------------------------------
 DefineMission( 6085, "Unlucky Model", 1417)
 MisBeginTalk( "<t>Lately I've thought of a new hairstyle, but I don't have enough combs and scissors, please go help me find some!")
 MisBeginCondition( NoMission, 1417)
@@ -4777,7 +4777,7 @@ TriggerAction( 1, AddNextFlag, 1417, 20, 5 )
 RegCurTrigger( 14172 )
 
 
-----------------------------------------------------------跑龙套的梦想----路人·甲
+--------------------------------------------------------------
 DefineMission( 6086, "The Dream for Loric Dragon Set", 1418)
 MisBeginTalk( "<t>I don't want to be an utility man, I also want to be the main character, please help me talk to Navy Commander - Dessaro about I want to be a navy!")
 MisBeginCondition( NoMission, 1418)
@@ -4791,7 +4791,7 @@ MisNeed( MIS_NEED_DESP, "Go find Navy Commander - Dessaro and tell him the dream
 
 MisResultCondition( AlwaysFailure )
 
-------------------------------------------------------------跑龙套的梦想----海军司令官·德斯塔罗
+----------------------------------------------------------------
 DefineMission( 6087, "The Dream for Loric Dragon Set", 1418, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
@@ -4802,7 +4802,7 @@ MisResultAction( SetRecord, 1418)
 MisResultAction( AddSailExp, 5, 5)
 MisResultAction( ClearMission, 1418)
 
--------------------------------------------------------------跑龙套的梦想----海军司令官·德斯塔罗
+-----------------------------------------------------------------
 DefineMission( 6088, "The Dream for Loric Dragon Set", 1419)
 MisBeginTalk( "<t>Tell Passerby - Ja if he wants to be in the Navy, go defeat 5 Beardy Pirate Support Ship and 5 Beardy Pirate Warship.")
 MisBeginCondition( NoMission, 1419)
@@ -4818,7 +4818,7 @@ MisNeed( MIS_NEED_DESP, "Tell Passerby - Ja the request from Navy Commander - De
 MisResultCondition( AlwaysFailure )
 
 
---------------------------------------------------------------跑龙套的梦想----路人·甲
+------------------------------------------------------------------
 DefineMission( 6089, "The Dream for Loric Dragon Set", 1419, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
@@ -4829,7 +4829,7 @@ MisResultAction( AddSailExp, 5, 5)
 MisResultAction( SetRecord, 1419)
 MisResultAction( ClearMission, 1419)
 
--------------------------------------------------------------跑龙套的梦想----路人·甲
+-----------------------------------------------------------------
 DefineMission( 6090, "The Dream for Loric Dragon Set", 1420)
 MisBeginTalk( "<t>This is too hard for me, why don't you help until the end and eliminate them!")
 MisBeginCondition( NoMission, 1420)
@@ -4866,7 +4866,7 @@ TriggerAction( 1, AddNextFlag, 1420, 20, 5 )
 RegCurTrigger( 14202 )
 
 
----------------------------------------------------------------紧急快递-----------银行出纳·摩妮雅
+--------------------------------------------------------------------------
 DefineMission( 6091, "Express delivery", 1421)
 MisBeginTalk( "<t>I have a package here for Banker - Belinda at Icicle city, but I need a person who's fast, can you help me?")
 MisBeginCondition( NoMission, 1421)
@@ -4887,7 +4887,7 @@ MisResultAction( SetRecord, 1421)
 MisResultAction( AddSailExp, 20, 20)
 MisResultAction( ClearMission, 1421)
 
----------------------------------------------------------------紧急快递-----------银行出纳·摩妮雅
+--------------------------------------------------------------------------
 DefineMission( 6092, "Express delivery", 1422)
 MisBeginTalk( "<t>I believe in your speed, please help me deliever this package to Banker - Belinda at Icicle City.")
 MisBeginCondition( NoMission, 1422)
@@ -4902,7 +4902,7 @@ MisHelpTalk( "<t>Banker - Belinda is at Icicle city.")
 
 MisResultCondition( AlwaysFailure )
 
-------------------------------------------------------------紧急快递--------------银行出纳·布丽娜
+--------------------------------------------------------------------------
 DefineMission( 6093, "Express delivery", 1422, COMPLETE)
 MisBeginCondition( AlwaysFailure )
 
@@ -4915,7 +4915,7 @@ MisResultAction( SetRecord, 1422)
 MisResultAction( ClearMission, 1422)
 MisResultAction( AddSailExp, 5, 5)
 
-----------------------------------------------------------开卷有益----------------老者·糊涂山人
+--------------------------------------------------------------------------
 DefineMission( 6094, "opening scroll is good for you", 1423)
 MisBeginTalk( "<t>You should read more books. I got a book here, I'll lend it to you. Please help me deliever the book to Tomas Tutu when you're done reading.")
 MisBeginCondition( NoRecord, 1423)
@@ -4931,7 +4931,7 @@ MisHelpTalk( "<t>Remember to look at the book yourself first.")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------开卷有益-----------------托马斯·图图
+----------------------------------------------------------------------------
 DefineMission( 6095, "opening scroll is good for you", 1423)
 MisBeginCondition( AlwaysFailure )
 
@@ -4944,7 +4944,7 @@ MisResultAction( AddSailExp, 5, 5)
 MisResultAction( SetRecord, 1423)
 MisResultAction( ClearMission, 1423)
 
------------------------------------------------------------开卷有益-----------------托马斯·图图
+----------------------------------------------------------------------------
 DefineMission( 6096, "opening scroll is good for you", 1424)
 MisBeginTalk( "<t>Since you said you finished reading the book, let me test you with some questions.")
 MisBeginCondition( NoMission, 1424)
@@ -4964,7 +4964,7 @@ MisResultAction( AddSailExp, 5, 5)
 MisResultAction( SetRecord, 1424)
 MisResultAction( ClearMission, 1424)
 
------------------------------------------------------------刺探军情--------------城堡护卫·比特
+-------------------------------------------------------------------------
 DefineMission( 6097, "Spy for army information", 1425)
 MisBeginTalk( "<t>After my observation, you're a person that can be rely on. Now, I will give you an important mission. We've sent a a group of soldier to the Black Dragon lair to investigate military situation, but they haven't come back since, can you help me look for them?")
 MisBeginCondition( NoMission, 1425)
@@ -4979,18 +4979,18 @@ MisHelpTalk( "<t>Hurry and go, please becareful!")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------刺探军情--------------重伤的无名战士
+-------------------------------------------------------------------------
 DefineMission( 6098, "Spy for army information", 1425, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>We…got attacked by massive spawns of baby dragons, and everyone…died…")
+MisResultTalk( "<t>Wegot attacked by massive spawns of baby dragons, and everyonedied")
 MisResultCondition( HasMission, 1425)
 MisResultCondition( NoRecord, 1425)
 MisResultAction( SetRecord, 1425)
 MisResultAction( AddSailExp, 10, 10)
 MisResultAction( ClearMission, 1425)
 
------------------------------------------------------------刺探军情---------------重伤的无名战士
+--------------------------------------------------------------------------
 DefineMission( 6099, "Spy for army information", 1426)
 MisBeginCondition( NoMission, 1426)
 MisBeginCondition( NoRecord, 1426)
@@ -5004,7 +5004,7 @@ MisHelpTalk( "<t>I'm counting on you!")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------刺探军情--------------城堡护卫·比特
+-------------------------------------------------------------------------
 DefineMission( 6100, "Spy for army information", 1426, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
@@ -5017,7 +5017,7 @@ MisResultAction( AddSailExp, 10, 10)
 MisResultAction( SetRecord, 1426)
 MisResultAction( ClearMission, 1426)
 
------------------------------------------------------------比特的复仇-----------城堡护卫·比特
+----------------------------------------------------------------------
 DefineMission( 6101, "Peter's Revenge", 1427)
 MisBeginTalk( "<t>I have to kill those winged big lizards, go, go help them revenge. Go and prove your bravery!")
 MisBeginCondition( NoMission, 1427)
@@ -5060,7 +5060,7 @@ TriggerAction( 1, AddNextFlag, 1427, 50, 1 )
 RegCurTrigger( 14273 )
 
 
-----------------------------------------------------挑战·黑龙----------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6102, "Challenge Black Dragon", 1430)
 MisBeginTalk( "<t>Black Dragon is located at Black Dragon Lair 2, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1430)
@@ -5086,7 +5086,7 @@ TriggerCondition( 1, IsMonster, 789 )
 TriggerAction( 1, AddNextFlag, 1430, 10, 1 )
 RegCurTrigger( 14301 )
 
-------------------------------------------------------挑战·雪殇灵--------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6103, "Challenge Wandering Soul", 1432)
 MisBeginTalk( "<t>Wandering Soul is located at Demonic World Level 1, and is one of the strong bosses in the game, you sure you want to challenge her?")
 MisBeginCondition( NoMission, 1432)
@@ -5112,7 +5112,7 @@ TriggerCondition( 1, IsMonster, 679 )
 TriggerAction( 1, AddNextFlag, 1432, 10, 1 )
 RegCurTrigger( 14321 )
 
-------------------------------------------------------挑战·巨人首领--------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6104, "Challenge Snowman Warlord", 1433)
 MisBeginTalk( "<t>Snowman Warlord is located at Demonic World Level 2, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1433)
@@ -5138,7 +5138,7 @@ TriggerCondition( 1, IsMonster, 678 )
 TriggerAction( 1, AddNextFlag, 1433, 10, 1 )
 RegCurTrigger( 14331 )
 
--------------------------------------------------------挑战·巴伯萨--------BOSS挑战登记员
+---------------------------------------------------------------BOSS
 DefineMission( 6105, "Challenge Snowman Warlord", 1434)
 MisBeginTalk( "<t>Barborosa is located at Skeletar Isle, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1434)
@@ -5164,7 +5164,7 @@ TriggerCondition( 1, IsMonster, 805 )
 TriggerAction( 1, AddNextFlag, 1434, 10, 1 )
 RegCurTrigger( 14341 )
 
--------------------------------------------------------挑战·亡灵司令--------BOSS挑战登记员
+---------------------------------------------------------------BOSS
 DefineMission( 6106, "Challenge Deathsoul Commander", 1435)
 MisBeginTalk( "<t>Deathsoul Commander is located at Research Shelter, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1435)
@@ -5190,7 +5190,7 @@ TriggerCondition( 1, IsMonster, 807 )
 TriggerAction( 1, AddNextFlag, 1435, 10, 1 )
 RegCurTrigger( 14351 )
 
--------------------------------------------------------挑战·大章鱼--------BOSS挑战登记员
+---------------------------------------------------------------BOSS
 DefineMission( 6107, "Challenge Kraken", 1436)
 MisBeginTalk( "<t>Kraken is located at Skeletar Isle, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1436)
@@ -5216,7 +5216,7 @@ TriggerCondition( 1, IsMonster, 795 )
 TriggerAction( 1, AddNextFlag, 1436, 10, 1 )
 RegCurTrigger( 14361 )
 
--------------------------------------------------------挑战·黑珍珠--------BOSS挑战登记员
+---------------------------------------------------------------BOSS
 DefineMission( 6108, "Challenge Black Jewel", 1437)
 MisBeginTalk( "<t>Black Jewel is located at Caribbean Sea, and is one of the strong bosses in the game, you sure you want to challenge?")
 MisBeginCondition( NoMission, 1437)
@@ -5242,7 +5242,7 @@ TriggerCondition( 1, IsMonster, 815 )
 TriggerAction( 1, AddNextFlag, 1437, 10, 1 )
 RegCurTrigger( 14371 )
 
--------------------------------------------------------挑战·绝望骑士-塞拉------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6109, "Challenge Despair Knight - Saro", 1438)
 MisBeginTalk( "<t>Despair Knight - Saro is located at Abaddon Level 5, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1438)
@@ -5268,7 +5268,7 @@ TriggerCondition( 1, IsMonster, 974 )
 TriggerAction( 1, AddNextFlag, 1438, 10, 1 )
 RegCurTrigger( 14381 )
 
--------------------------------------------------------挑战·冥泥怪-卡普顿------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6110, "Challenge Abyss Mudmonster - Karu", 1439)
 MisBeginTalk( "<t>Abyss Mudmonster - Karu is located at Abaddon Level 6, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1439)
@@ -5294,7 +5294,7 @@ TriggerCondition( 1, IsMonster, 975 )
 TriggerAction( 1, AddNextFlag, 1439, 10, 1 )
 RegCurTrigger( 14391 )
 
--------------------------------------------------------挑战·冥囚-阿尔提斯------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6111, "Challenge Abyss Prisoner - Aruthur", 1440)
 MisBeginTalk( "<t>Abyss Prisoner - Aruthur is located at Abaddon Level 7, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1440)
@@ -5320,7 +5320,7 @@ TriggerCondition( 1, IsMonster, 976 )
 TriggerAction( 1, AddNextFlag, 1440, 10, 1 )
 RegCurTrigger( 14401 )
 
--------------------------------------------------------挑战·冥妖-萨库西斯------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6112, "Challenge Abyss Demon - Sacrois", 1441)
 MisBeginTalk( "<t>Abyss Demon - Sacrois is located at Abaddon Level 8, and is one of the strong bosses in the game, you sure you want to challenge him?")
 MisBeginCondition( NoMission, 1441)
@@ -5346,7 +5346,7 @@ TriggerCondition( 1, IsMonster, 977 )
 TriggerAction( 1, AddNextFlag, 1441, 10, 1 )
 RegCurTrigger( 14411 )
 
--------------------------------------------------------挑战·冥界兽-咕咕------BOSS挑战登记员
+--------------------------------------------------------------BOSS
 DefineMission( 6113, "Challenge Abyss Beast - Kuroo", 1442)
 MisBeginTalk( "0")
 MisBeginCondition( NoMission, 1442)
@@ -5372,7 +5372,7 @@ TriggerCondition( 1, IsMonster, 978 )
 TriggerAction( 1, AddNextFlag, 1442, 10, 1 )
 RegCurTrigger( 14412 )
 
--------------------------------------------------乱斗英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5608, "Blood Shed Taurus Hero of Chaos", 1114)
 
 MisBeginTalk("<t>Taurus always have represent luck, why don't you go to the Chaos arena to try your luck.")
@@ -5396,7 +5396,7 @@ MisResultAction(SetRecord,  1114 )
 MisResultAction(GiveItem, 3028, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5609, "Bloody Taurus - Reputed Hero", 1115)
 
 MisBeginTalk("<t>To pass Taurus Palace, raising your reputation is very important.")
@@ -5421,7 +5421,7 @@ MisResultAction(GiveItem, 3029, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5610, "Blood Shed Taurus Level Hero", 1116)
 
 MisBeginTalk("All the warriors participating for Taurus Palace must be above level 55. Although you give off a special aura, I cannot give you an exception.")
@@ -5433,7 +5433,7 @@ MisBeginAction(AddMission,1116)
 MisCancelAction(ClearMission, 1116)
 
 MisNeed(MIS_NEED_DESP,"Level reached 55")
-MisHelpTalk("<t>Level 55 could be hard for some people….")
+MisHelpTalk("<t>Level 55 could be hard for some people.")
 MisResultTalk("<t>Now I gift this emblem to you. You're worthy of this emblem.")
 
 MisResultCondition(HasMission, 1116)
@@ -5445,7 +5445,7 @@ MisResultAction(GiveItem, 3030, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5611, "Blood Shed Taurus Hero of Honor", 1117)
 
 MisBeginTalk("<t>300 honor points is the minimum I require for heros challenging Taurus Palace. A talented warrior like you should also know the importance on honor points.")
@@ -5469,7 +5469,7 @@ MisResultAction(SetRecord,  1117 )
 MisResultAction(GiveItem, 3031, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------采集大使----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5612, "Blood Shed Taurus Gathering ambassador", 1118)
 
 MisBeginTalk("<t>Gathering can test a warrior's patience. Patience is very important for success you know. If you're willing to work hard and not slack, I'll keep that gathering emblem for you.")
@@ -5478,14 +5478,14 @@ MisBeginCondition(NoMission,1118)
 MisBeginCondition(HasRecord,1111)
 MisBeginCondition(NoRecord,1118)
 MisBeginAction(AddMission,1118)
-MisBeginAction(AddTrigger, 11181, TE_GETITEM, 4804, 10 )---------------带刺的曼陀罗花10
-MisBeginAction(AddTrigger, 11182, TE_GETITEM, 4720, 10 )---------------巨大的熊掌10
-MisBeginAction(AddTrigger, 11183, TE_GETITEM, 3129, 10 )-------------药用草叶10
-MisBeginAction(AddTrigger, 11184, TE_GETITEM, 2588, 5 )--------------精灵辉印5张
-MisBeginAction(AddTrigger, 11185, TE_GETITEM, 4494, 1 )--------------巨大的蟹钳1个
-MisBeginAction(AddTrigger, 11186, TE_GETITEM, 1682, 50 )-------------犬齿50个
-MisBeginAction(AddTrigger, 11187, TE_GETITEM, 1138, 10 )--------------幽灵探测器LV1  10个
-MisBeginAction(AddTrigger, 11188, TE_GETITEM, 0227, 1 )-------------守护精灵饲料1个
+MisBeginAction(AddTrigger, 11181, TE_GETITEM, 4804, 10 )---------------10
+MisBeginAction(AddTrigger, 11182, TE_GETITEM, 4720, 10 )---------------10
+MisBeginAction(AddTrigger, 11183, TE_GETITEM, 3129, 10 )-------------10
+MisBeginAction(AddTrigger, 11184, TE_GETITEM, 2588, 5 )--------------5
+MisBeginAction(AddTrigger, 11185, TE_GETITEM, 4494, 1 )--------------1
+MisBeginAction(AddTrigger, 11186, TE_GETITEM, 1682, 50 )-------------50
+MisBeginAction(AddTrigger, 11187, TE_GETITEM, 1138, 10 )--------------LV1  10
+MisBeginAction(AddTrigger, 11188, TE_GETITEM, 0227, 1 )-------------1
 MisCancelAction(ClearMission, 1118)
 
 
@@ -5567,7 +5567,7 @@ TriggerAction( 1, AddNextFlag, 1118, 97, 1 )
 RegCurTrigger( 11188 )
 
 
-----------------------------------------------------------金牛末日----------芭芭拉
+--------------------------------------------------------------------
 DefineMission( 5613, "Bloody Taurus - Taurus Doomsday", 1119 )
 MisBeginTalk("<t>Seems like every item that lure people has something to do with beasts. Boss Emblem is a good example for that.")
 			
@@ -5575,7 +5575,7 @@ MisBeginCondition(NoMission, 1119)
 MisBeginCondition(HasRecord,1152)
 MisBeginCondition(NoRecord,1119)
 MisBeginAction(AddMission,1119)
-MisBeginAction(AddTrigger, 11191, TE_KILL, 1038, 1)---金牛守护者
+MisBeginAction(AddTrigger, 11191, TE_KILL, 1038, 1)---
 
 MisCancelAction(ClearMission, 1119)
 
@@ -5603,7 +5603,7 @@ RegCurTrigger( 11191 )
 
 
 
--------------------------------------------------乱斗英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5614, "Blood Shed Taurus Hero of Chaos", 1120)
 
 MisBeginTalk("<t>Taurus always have represent luck, why don't you go to the Chaos arena to try your luck.")
@@ -5627,7 +5627,7 @@ MisResultAction(SetRecord,  1120 )
 MisResultAction(GiveItem, 3028, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5615, "Bloody Taurus - Reputed Hero", 1121)
 
 MisBeginTalk("<t>To pass Taurus Palace, raising reputation is very important.")
@@ -5652,7 +5652,7 @@ MisResultAction(GiveItem, 3029, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5616, "Blood Shed Taurus Level Hero", 1122)
 
 MisBeginTalk("All the warriors participating for Taurus Palace must be above level 60. Although you give off a special aura, I cannot give you an exception.")
@@ -5664,7 +5664,7 @@ MisBeginAction(AddMission,1122)
 MisCancelAction(ClearMission, 1122)
 
 MisNeed(MIS_NEED_DESP,"Level reached 60")
-MisHelpTalk("<t>Level 60 to other players may be a bit hard…")
+MisHelpTalk("<t>Level 60 to other players may be a bit hard")
 MisResultTalk("<t>Now I gift this emblem to you. You're worthy of this emblem.")
 
 MisResultCondition(HasMission, 1122)
@@ -5676,7 +5676,7 @@ MisResultAction(GiveItem, 3030, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5617, "Blood Shed Taurus Hero of Honor", 1123)
 
 MisBeginTalk("<t>500 Honor points is the minimum requirement for a hero challenging Taurus Palace in my rules. I think a skilled warrior like you would look heavily on your honor points too.")
@@ -5700,7 +5700,7 @@ MisResultAction(SetRecord,  1123 )
 MisResultAction(GiveItem, 3031, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------采集大使----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5618, "Blood Shed Taurus Gathering ambassador", 1124)
 
 MisBeginTalk("<t>Gathering can test a warrior patience. Patience is very important to succeeding you know. If you're willing to work hard and not slack, I'll keep that gathering emblem for you.")
@@ -5709,14 +5709,14 @@ MisBeginCondition(NoMission,1124)
 MisBeginCondition(HasRecord,1112)
 MisBeginCondition(NoRecord,1124)
 MisBeginAction(AddMission,1124)
-MisBeginAction(AddTrigger, 11241, TE_GETITEM, 4804, 15 )-------------------带刺的曼陀罗花15    
-MisBeginAction(AddTrigger, 11242, TE_GETITEM, 4720, 15 )-------------------巨大的熊掌15          
-MisBeginAction(AddTrigger, 11243, TE_GETITEM, 3129, 15 )-----------------药用草叶15               
-MisBeginAction(AddTrigger, 11244, TE_GETITEM, 2588, 10 )----------------精灵辉印10张               
-MisBeginAction(AddTrigger, 11245, TE_GETITEM, 4494, 1 )------------------巨大的蟹钳1个            
-MisBeginAction(AddTrigger, 11246, TE_GETITEM, 1682, 40 )-----------------犬齿40个                  
-MisBeginAction(AddTrigger, 11247, TE_GETITEM, 1138, 20 )------------------幽灵探测器LV1  20个 
-MisBeginAction(AddTrigger, 11248, TE_GETITEM, 0227, 3 )---------------守护精灵饲料3个          
+MisBeginAction(AddTrigger, 11241, TE_GETITEM, 4804, 15 )-------------------15    
+MisBeginAction(AddTrigger, 11242, TE_GETITEM, 4720, 15 )-------------------15          
+MisBeginAction(AddTrigger, 11243, TE_GETITEM, 3129, 15 )-----------------15               
+MisBeginAction(AddTrigger, 11244, TE_GETITEM, 2588, 10 )----------------10               
+MisBeginAction(AddTrigger, 11245, TE_GETITEM, 4494, 1 )------------------1            
+MisBeginAction(AddTrigger, 11246, TE_GETITEM, 1682, 40 )-----------------40                  
+MisBeginAction(AddTrigger, 11247, TE_GETITEM, 1138, 20 )------------------LV1  20 
+MisBeginAction(AddTrigger, 11248, TE_GETITEM, 0227, 3 )---------------3          
 MisCancelAction(ClearMission, 1124)
 
 
@@ -5801,10 +5801,10 @@ RegCurTrigger( 11248 )
 
 
 
--------------------------------------------------乱斗英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5619, "Blood Shed Taurus Hero of Chaos", 1125)
 
-MisBeginTalk("<t>金牛座一向是幸运的象征,不如你去乱斗场里碰碰运气 ")
+MisBeginTalk("<t>, ")
 
 MisBeginCondition(NoMission,1125)
 MisBeginCondition(HasRecord,1113)
@@ -5825,10 +5825,10 @@ MisResultAction(SetRecord,  1125 )
 MisResultAction(GiveItem, 3028, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5620, "Bloody Taurus - Reputed Hero", 1126)
 
-MisBeginTalk("<t>要闯过金牛宫,提高名声是很重要的.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1126)
 MisBeginCondition(HasRecord,1113)
@@ -5850,7 +5850,7 @@ MisResultAction(GiveItem, 3029, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5621, "Blood Shed Taurus Level Hero", 1127)
 
 MisBeginTalk("All the warriors participating for Taurus Palace must be above level 65. Although you give off a special aura, I cannot give you an exception.")
@@ -5862,7 +5862,7 @@ MisBeginAction(AddMission,1127)
 MisCancelAction(ClearMission, 1127)
 
 MisNeed(MIS_NEED_DESP,"Reached Level 65")
-MisHelpTalk("<t>Level 65 may be a bit hard for someone else…")
+MisHelpTalk("<t>Level 65 may be a bit hard for someone else")
 MisResultTalk("<t>Now I gift this emblem to you. You're worthy of this emblem.")
 
 MisResultCondition(HasMission, 1127)
@@ -5874,7 +5874,7 @@ MisResultAction(GiveItem, 3030, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5622, "Blood Shed Taurus Hero of Honor", 1128)
 
 MisBeginTalk("<t>800 honor points is the lowest I'll accept for a hero challenging the Taurus Palace. For a talented warrior like you, honor points should be very important to you.")
@@ -5898,7 +5898,7 @@ MisResultAction(SetRecord,  1128 )
 MisResultAction(GiveItem, 3031, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------采集大使----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5623, "Blood Shed Taurus Gathering ambassador", 1129)
 
 MisBeginTalk("<t>Gathering can test a warrior patience. Patience is very important to succeeding you know. If you're willing to work hard and not slack, I'll keep that gathering emblem for you.")
@@ -5907,14 +5907,14 @@ MisBeginCondition(NoMission,1129)
 MisBeginCondition(HasRecord,1113)
 MisBeginCondition(NoRecord,1129)
 MisBeginAction(AddMission,1129)
-MisBeginAction(AddTrigger, 11291, TE_GETITEM, 4804, 10 )---------------------带刺的曼陀罗花10    
-MisBeginAction(AddTrigger, 11292, TE_GETITEM, 4720, 10 )---------------------巨大的熊掌10          
-MisBeginAction(AddTrigger, 11293, TE_GETITEM, 3129, 10 )-------------------药用草叶10               
-MisBeginAction(AddTrigger, 11294, TE_GETITEM, 2588, 15 )------------------精灵辉印15张             
-MisBeginAction(AddTrigger, 11295, TE_GETITEM, 4494, 5 )--------------------巨大的蟹钳5个             
-MisBeginAction(AddTrigger, 11296, TE_GETITEM, 1682, 40 )-------------------犬齿40个                  
-MisBeginAction(AddTrigger, 11297, TE_GETITEM, 1138, 25 )--------------------幽灵探测器LV1  25个 
-MisBeginAction(AddTrigger, 11298, TE_GETITEM, 0227, 5 )----------------------守护精灵饲料5个            
+MisBeginAction(AddTrigger, 11291, TE_GETITEM, 4804, 10 )---------------------10    
+MisBeginAction(AddTrigger, 11292, TE_GETITEM, 4720, 10 )---------------------10          
+MisBeginAction(AddTrigger, 11293, TE_GETITEM, 3129, 10 )-------------------10               
+MisBeginAction(AddTrigger, 11294, TE_GETITEM, 2588, 15 )------------------15             
+MisBeginAction(AddTrigger, 11295, TE_GETITEM, 4494, 5 )--------------------5             
+MisBeginAction(AddTrigger, 11296, TE_GETITEM, 1682, 40 )-------------------40                  
+MisBeginAction(AddTrigger, 11297, TE_GETITEM, 1138, 25 )--------------------LV1  25 
+MisBeginAction(AddTrigger, 11298, TE_GETITEM, 0227, 5 )----------------------5            
 MisCancelAction(ClearMission, 1129)						                                     
 
 
@@ -5998,13 +5998,13 @@ RegCurTrigger( 11298 )
 
 
 
-----------------------------------------------------------社交大使----------芭芭拉
+--------------------------------------------------------------------
 DefineMission( 5624, "Blood Shed Taurus Public Relations Ambassador", 1130 )
 MisBeginTalk("<t>The bar isn't doing too well lately, we need to advertise but we don't have the money. Can you please help us advertise a bit while making new friends outside town?")
 			
 MisBeginCondition(NoMission, 1130)
 MisBeginCondition(NoRecord,1130)
-MisBeginCondition(HasRecord, 1152)-------------------新的id,最后的id
+MisBeginCondition(HasRecord, 1152)-------------------id,id
 MisBeginAction(AddMission,1130)
 MisCancelAction(ClearMission, 1130)
 
@@ -6012,7 +6012,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Sa Mori (628, 2095) in Region Ascaron.")
 
 MisHelpTalk("<t>When she was young, she's our frequent customer.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使-----------------賽·魔力
+----------------------------------------------------------
 
 DefineMission(5625, "TOP Ambassador", 1130, COMPLETE_SHOW )
 
@@ -6024,7 +6024,7 @@ MisResultCondition(HasMission,1130)
 MisResultAction(ClearMission,1130)
 MisResultAction(SetRecord, 1130)
 
-----------------------------------------------------------社交大使2----------賽·魔力
+----------------------------------------------------------2----------
 DefineMission( 5626, "TOP Ambassador 2", 1131 )
 MisBeginTalk("<t>Thank you for you help. I'm not sure if you'll be passing by Shaitan, but I'm very worried about my friend Ada, she's always staying in a place full of beasts and pray for them to turn good. She wants the beast to eat vegetable not meat, hope she'll succeed.")
 			
@@ -6034,22 +6034,22 @@ MisBeginCondition(HasRecord, 1130)
 MisBeginAction(AddMission,1131)
 MisCancelAction(ClearMission, 1131)
 
-MisNeed(MIS_NEED_DESP,"Find Shaitan's Holy Priestess· Ada(862, 3303) for a chat.")
+MisNeed(MIS_NEED_DESP,"Find Shaitan's Holy Priestess Ada(862, 3303) for a chat.")
 
 MisHelpTalk("<t>Holy people are just too na?ve, how can they compare to us drunker freedom?...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使2-------------圣女·艾达
+-----------------------------------------2-------------
 DefineMission(5627, "TOP Ambassador 2", 1131, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>Hi! May Kara bless you! May the world best things be blessed upon you. May happiness be always around you…..")
+MisResultTalk("<t>Hi! May Kara bless you! May the world best things be blessed upon you. May happiness be always around you..")
 MisResultCondition(NoRecord, 1131)
 MisResultCondition(HasMission,1131)
 MisResultAction(ClearMission,1131)
 MisResultAction(SetRecord, 1131)
 
-----------------------------------------------------------社交大使3----------圣女·艾达
+----------------------------------------------------------3----------
 DefineMission( 5628, "TOP Ambassador 3", 1132 )
 MisBeginTalk("<t>All thanks to the Goddess's blessing that allows me to live in harmony with these wild animals. I'm not a expert on drinking, why don't you ask Tae.")
 			
@@ -6063,12 +6063,12 @@ MisNeed(MIS_NEED_DESP,"Head to Skeleton Haven and talk to Tae (2128, 540).")
 
 MisHelpTalk("<t>His Dreams is full of rich poetic ideas, but it'll be hard to archieve.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使3--------阿泰
+-----------------------------------------3--------
 DefineMission(5629, "TOP Ambassador 3", 1132, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>The dream where I want to change into a sea creature has no chance to come true at all, is kind of regretful. I'm a fish, the air in the water….. Swimming back and forth…..")
+MisResultTalk("<t>The dream where I want to change into a sea creature has no chance to come true at all, is kind of regretful. I'm a fish, the air in the water.. Swimming back and forth..")
 MisResultCondition(NoRecord, 1132)
 MisResultCondition(HasMission,1132)
 MisResultAction(ClearMission,1132)
@@ -6076,7 +6076,7 @@ MisResultAction(SetRecord, 1132)
 
 
 
-----------------------------------------------------------社交大使4----------阿泰
+----------------------------------------------------------4----------
 DefineMission( 5630, "TOP Ambassador 4", 1133 )
 MisBeginTalk("<t>Use wine to get rid of my problems? NO! This does not fit my sunshine boy image. If Granny - Beldi knows about this, she'll no longer send me any cakes. For that tasty cake, I hold my grudge.")
 			
@@ -6090,7 +6090,7 @@ MisNeed(MIS_NEED_DESP,"Help Tae to visit Granny - Beldi (2277, 2769).")
 
 MisHelpTalk("<t>Talking about cakes makes me want to drool..")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使4--------老奶奶·贝蒂
+-----------------------------------------4--------
 DefineMission(5631, "TOP Ambassador 4", 1133, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6102,7 +6102,7 @@ MisResultAction(ClearMission,1133)
 MisResultAction(SetRecord, 1133)
 
 
-----------------------------------------------------------社交大使5----------老奶奶·贝蒂
+----------------------------------------------------------5----------
 DefineMission( 5632, "TOP Ambassador 5", 1134 )
 MisBeginTalk("<t>I'll hurry and bake some cakes for Tae, but when it comes to bar, is not my age anymore. Thank you for asking though, maybe Trader - Yuka would be interested.")
 			
@@ -6116,7 +6116,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Trader - Yuka (2519, 2397) at Cupid Isle ")
 
 MisHelpTalk("<t>Thinking of tae drooling makes me want to rush baking my cake more.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使5--------交易员·尤卡
+-----------------------------------------5--------
 DefineMission(5633, "TOP Ambassador 5", 1134, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6128,7 +6128,7 @@ MisResultAction(ClearMission,1134)
 MisResultAction(SetRecord, 1134)
 
 
-----------------------------------------------------------社交大使6----------交易员·尤卡
+----------------------------------------------------------6----------
 DefineMission( 5634, "TOP Ambassador 6", 1135 )
 MisBeginTalk("<t>Once I'm finished with moving these goodies I'll be going to the bar, hope my drinking friend Harbor Operator - Odie also can come.")
 			
@@ -6142,7 +6142,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Harbor Operator - Odie (738, 3803) at Karmas Have
 
 MisHelpTalk("<t>Not sure if Babara is more beautiful.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使6--------海港指挥·奥登
+-----------------------------------------6--------
 DefineMission(5635, "TOP Ambassador 6", 1135, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6155,7 +6155,7 @@ MisResultAction(SetRecord, 1135)
 
 
 
-----------------------------------------------------------社交大使7----------海港指挥·奥登
+----------------------------------------------------------7----------
 DefineMission( 5636, "TOP Ambassador 7", 1136 )
 MisBeginTalk("<t>What are you laughing at?Humph! Help me inform the Conch Merchant . Lamon to come and collect his Conch, I need to go to the bar now.")
 			
@@ -6169,7 +6169,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Coral Vendor - Lamon (2061, 2543) at Region Ascar
 
 MisHelpTalk("<t>I always help those cute merchants, if not how to have money to stay in bar?")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使7--------贝壳商人·拉姆
+-----------------------------------------7--------
 DefineMission(5637, "TOP Ambassador 7", 1136, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6181,7 +6181,7 @@ MisResultAction(ClearMission,1136)
 MisResultAction(SetRecord, 1136)
 
 
-----------------------------------------------------------社交大使8----------贝壳商人·拉姆
+----------------------------------------------------------8----------
 DefineMission( 5638, "TOP Ambassador 8", 1137 )
 MisBeginTalk("<t>Why do you look at me like that? We merchants all look like this.")
 			
@@ -6195,7 +6195,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Captain Jack (1672, 3777) on Canary Isle.")
 
 MisHelpTalk("<t>Don't say I didn't remind you, its not safe there, be careful!")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使8--------杰克船长
+-----------------------------------------8--------
 DefineMission(5639, "TOP Ambassador 8", 1137, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6207,7 +6207,7 @@ MisResultAction(ClearMission,1137)
 MisResultAction(SetRecord, 1137)
 
 
-----------------------------------------------------------社交大使9----------杰克船长
+----------------------------------------------------------9----------
 DefineMission( 5640, "TOP Ambassador 9", 1138 )
 MisBeginTalk("<t>Scar is a man badge, beer is a pirate's partner, I will not miss out on any beer. I wonder if my friend Northern Pirate - Yakamoto will join, although not a lot of people can understand him when he talks.")
 			
@@ -6221,18 +6221,18 @@ MisNeed(MIS_NEED_DESP,"Head to Autumn Island and talk toNorthern Pirate - Yakamo
 
 MisHelpTalk("<t>Northern Pirate - Yakamoto has always want to exchange experience with other pirates.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使9--------东方海盗·铃佐田山
+-----------------------------------------9--------
 DefineMission(5641, "TOP Ambassador 9", 1138, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>I am a pirate from a faraway land who just learnt your language.##@@#$, I love this beautiful island.&*&%, Hmm…but being a pirate is often misleading. I had some issue with Captain Jack when I first came here.")
+MisResultTalk("<t>I am a pirate from a faraway land who just learnt your language.##@@#$, I love this beautiful island.&*&%, Hmmbut being a pirate is often misleading. I had some issue with Captain Jack when I first came here.")
 MisResultCondition(NoRecord, 1138)
 MisResultCondition(HasMission,1138)
 MisResultAction(ClearMission,1138)
 MisResultAction(SetRecord, 1138)
 
-----------------------------------------------------------社交大使10----------东方海盗·铃佐田山
+----------------------------------------------------------10----------
 DefineMission( 5642, "TOP Ambassador 10", 1139 )
 MisBeginTalk("<t>Jack is going also? Please let me think about it then. I think I'll just go fishing with my friend Trader - Sacenis.")
 			
@@ -6246,7 +6246,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Trader - Sacenis (2279, 1112) at Glacier Isle.")
 
 MisHelpTalk("<t>Think I'll just wait for the date with Sacenis.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使10--------交易员·赛瑟尼
+-----------------------------------------10--------
 DefineMission(5643, "TOP Ambassador 10", 1139, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6257,7 +6257,7 @@ MisResultCondition(HasMission,1139)
 MisResultAction(ClearMission,1139)
 MisResultAction(SetRecord, 1139)
 
-----------------------------------------------------------社交大使11----------交易员·赛瑟尼
+----------------------------------------------------------11----------
 DefineMission( 5644, "TOP Ambassador 11", 1140 )
 MisBeginTalk("<t>If Jack likes going to the bar, then I'll go to the sea side with Northern Pirate - Yakamoto. Enemies should meet less. Yes, I think that boy Ham will be interested in going to the bar.")
 			
@@ -6269,20 +6269,20 @@ MisCancelAction(ClearMission, 1140)
 
 MisNeed(MIS_NEED_DESP,"Talk to ham (826, 3347) at Old Shaitan City.")
 
-MisHelpTalk("<t>Please don't teach the bad things to kids. We're mainly scared they'll come for the excitement…")
+MisHelpTalk("<t>Please don't teach the bad things to kids. We're mainly scared they'll come for the excitement")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使11--------汉姆
+-----------------------------------------11--------
 DefineMission(5645, "TOP Ambassador 11", 1140, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>Kids shouldn't be going to the bar, but…handsome boys are an expection! I will go for sure, thank you for the good news.")
+MisResultTalk("<t>Kids shouldn't be going to the bar, buthandsome boys are an expection! I will go for sure, thank you for the good news.")
 MisResultCondition(NoRecord, 1140)
 MisResultCondition(HasMission,1140)
 MisResultAction(ClearMission,1140)
 MisResultAction(SetRecord, 1140)
 
-----------------------------------------------------------社交大使12----------汉姆
+----------------------------------------------------------12----------
 DefineMission( 5646, "TOP Ambassador 12", 1141 )
 MisBeginTalk("<t>Gentlemen will not enjoy the wine himself, and that's my rule. I am going to call my friend Zurbi.")
 			
@@ -6296,7 +6296,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Zurbi (1037, 671) in Atlantis Haven.")
 
 MisHelpTalk("<t>I have never went to the bar before, do I need to bring ID card? If I get drunk will there be people sending me home?")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使12--------朱比
+-----------------------------------------12--------
 DefineMission(5647, "TOP Ambassador 12", 1141, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6308,7 +6308,7 @@ MisResultAction(ClearMission,1141)
 MisResultAction(SetRecord, 1141)
 
 
-----------------------------------------------------------社交大使13----------朱比
+----------------------------------------------------------13----------
 DefineMission( 5648, "TOP Ambassador 13", 1142 )
 MisBeginTalk("<t>Although I've sworn to never listen to his suggestions again, but going to the bar is my goal and sign to become mature, so..hehe, if you pass by Andes Forest Haven please help me ask Accessory - Rikka if he has any beautiful buttons. This will be my first time going to the bar, I cannot dress too poorly.")
 			
@@ -6322,7 +6322,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Accessory - Rikka (996, 2969) in Andes Forest Hav
 
 MisHelpTalk("<t>Accessory - Rikka has a sharp eye for looking at jewelry. When I was small, my mother always brought me there to buy jewelry. Then, he'll say my mother is very beautiful each time and gives me candy.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使13--------饰品商人·里克
+-----------------------------------------13--------
 DefineMission(5649, "TOP Ambassador 13", 1142, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6333,7 +6333,7 @@ MisResultCondition(HasMission,1142)
 MisResultAction(ClearMission,1142)
 MisResultAction(SetRecord, 1142)
 
-----------------------------------------------------------社交大使14----------饰品商人·里克
+----------------------------------------------------------14----------
 DefineMission( 5650, "TOP Ambassador 14", 1143 )
 MisBeginTalk("<t>Remembering back when I was young I met Pirate Jeremy, and our friendship is very good. My Jewlery business is so successful thanks to his help. If you're free to go Isle of Chill, please help me give my greetings to him.")
 			
@@ -6347,7 +6347,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Pirate Jeremy (2362, 657) on Isle of Chill.")
 
 MisHelpTalk("Isle of Chill is located at Region Magical Ocean.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使14--------海盗杰里米        
+-----------------------------------------14--------        
 DefineMission(5651, "TOP Ambassador 14", 1143, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6358,7 +6358,7 @@ MisResultCondition(HasMission,1143)
 MisResultAction(ClearMission,1143)
 MisResultAction(SetRecord, 1143)
 
-----------------------------------------------------------社交大使15----------海盗杰里米
+----------------------------------------------------------15----------
 DefineMission( 5652, "TOP Ambassador 15", 1144 )
 MisBeginTalk("<t>This reminds me I want to join the pirate group Lessie, but too bad he's too tiny. If you want to travel out to the sea, you have to drink beer to become more brave.")
 			
@@ -6372,7 +6372,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Lessie (1379, 612) at Icicle City.")
 
 MisHelpTalk("<t>I beg of you, I love him dearly.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使15-------- 雷斯·小虫
+-----------------------------------------15-------- 
 DefineMission(5653, "TOP Ambassador 15", 1144, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6384,7 +6384,7 @@ MisResultAction(ClearMission,1144)
 MisResultAction(SetRecord, 1144)
 
 
-----------------------------------------------------------社交大使16----------雷斯·小虫
+----------------------------------------------------------16----------
 DefineMission( 5654, "TOP Ambassador 16", 1145 )
 MisBeginTalk("<t>To achieve my dreams, I think I should start learning to swim, sword skills, and operate a boat. I think Harbor Operator - Whitcombe can help me learn how to operate a boat.")
 			
@@ -6398,7 +6398,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Harbor Operator - Whitcombe (2041, 1355) in <yHaf
 
 MisHelpTalk("<t>I'm a very stubborn person, for recovering the peaceful sea for trading I'm willing to be a good willed pirate.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使16-------- 海港指挥·瓦雷米
+-----------------------------------------16-------- 
 DefineMission(5655, "TOP Ambassador 16", 1145, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6410,7 +6410,7 @@ MisResultAction(ClearMission,1145)
 MisResultAction(SetRecord, 1145)
 
 
-----------------------------------------------------------社交大使17----------海港指挥·瓦雷米
+----------------------------------------------------------17----------
 DefineMission( 5656, "TOP Ambassador 17", 1146 )
 MisBeginTalk("<t>I don't go to the bar anymore. There seem to be a growing of dark aura around here, If I don't help the ships that came from afar, I don't know how many people will become shark's buffet. Maybe you can go ask Solaru, I remember he said he was going to go for a vacation, maybe he can intro me a place or two.")
 			
@@ -6424,7 +6424,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Solaru (1202, 3179) in Babu Haven.")
 
 MisHelpTalk("<t>Solaru is a youngster full of passion, go and talk to him.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使17-------- 索拉姆·萨加
+-----------------------------------------17-------- 
 DefineMission(5657, "TOP Ambassador 17", 1146, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6435,7 +6435,7 @@ MisResultCondition(HasMission,1146)
 MisResultAction(ClearMission,1146)
 MisResultAction(SetRecord, 1146)
 
-----------------------------------------------------------社交大使18----------索拉姆·萨加
+----------------------------------------------------------18----------
 DefineMission( 5658, "TOP Ambassador 18", 1147 )
 MisBeginTalk("<t>I'm about to go out, if you have anything to say please hurry. Bar? That's a good place to meet people, I think I am going to change my plan now. Please help me tell Ramus that this haven came a lot of traders lately and he should look over his port as well, thank you very much.")
 			
@@ -6449,7 +6449,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Harbor Operator - Ramus (2297, 3723) at Muse Have
 
 MisHelpTalk("<t>Compared to sleeping, young people should spent time noticing their growth. Why are you looking at me like that? I'm a youth with great passion in other people eyes.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使18-------- 海港指挥·拉米修
+-----------------------------------------18-------- 
 DefineMission(5659, "TOP Ambassador 18", 1147, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6460,7 +6460,7 @@ MisResultCondition(HasMission,1147)
 MisResultAction(ClearMission,1147)
 MisResultAction(SetRecord, 1147)
 
-----------------------------------------------------------社交大使19----------海港指挥·拉米修
+----------------------------------------------------------19----------
 DefineMission( 5660, "TOP Ambassador 19", 1148 )
 MisBeginTalk("<t>Habour Operator is a high rank and busy job. Speaking of busy I haven't seen cute Elizabeth for awhile, I wonder if her style is still the same.")
 			
@@ -6474,7 +6474,7 @@ MisNeed(MIS_NEED_DESP,"Look for Elizabeth in the Treasure Gulf at (616, 965).")
 
 MisHelpTalk("<t>When elizabeth was small, she was pretty like a mess.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使19-------- 伊丽莎白
+-----------------------------------------19-------- 
 DefineMission(5661, "TOP Ambassador 19", 1148, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6486,7 +6486,7 @@ MisResultAction(ClearMission,1148)
 MisResultAction(SetRecord, 1148)
 
 
-	----------------------------------------------------------社交大使20----------伊丽莎白
+	----------------------------------------------------------20----------
 DefineMission( 5662, "TOP Ambassador 20", 1149 )
 MisBeginTalk("<t>I always relay on some strange shining jewlery to waste time, but Miner Drunky told me he dugged up one Ancient Emerald, and I'm in need of money, I must make him stay and sell it to me. Strange though, how can digging dug up an emerald?")
 			
@@ -6498,9 +6498,9 @@ MisCancelAction(ClearMission, 1149)
 
 MisNeed(MIS_NEED_DESP,"Talk to Miner Drunky (296, 57) down at Silver Mine B2")
 
-MisHelpTalk("<t>谢谢你年轻人．去吧")
+MisHelpTalk("<t>")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使20-------- 矿工大肚腩
+-----------------------------------------20-------- 
 DefineMission(5663, "TOP Ambassador 20", 1149, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6511,7 +6511,7 @@ MisResultCondition(HasMission,1149)
 MisResultAction(ClearMission,1149)
 MisResultAction(SetRecord, 1149)
 
-	----------------------------------------------------------社交大使21----------矿工大肚腩
+	----------------------------------------------------------21----------
 DefineMission( 5664, "TOP Ambassador 21", 1150 )
 MisBeginTalk("<t>Congratlations for completing this super long Community quest, think now you will know more people around the world, this will help in your exploring a lot. I also heard the beautiful Bar Waitress - <bBabara> is looking for you.")
 			
@@ -6525,7 +6525,7 @@ MisNeed(MIS_NEED_DESP,"Talk to Babara (1310, 530).")
 
 MisHelpTalk("<t>Babara has a present for you.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交英雄21------- 芭芭拉
+-----------------------------------------21------- 
 DefineMission(5667, "Community Hero 21", 1150, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
@@ -6538,7 +6538,7 @@ MisResultAction(SetRecord, 1150)
 MisResultAction(GiveItem, 3033, 1, 4)
 MisResultBagNeed(1)
 
---	-------------------------------------------------特别任务	--------芭芭拉
+--	-------------------------------------------------	--------
 --	DefineMission (5668, "Blood Shed Taurus Special Operation", 1153)
 --	
 --	MisBeginTalk("<t>This quest is Taurus Special Operation, you don't have to participate if you don't want to, but you don't get the prize. Sail to <b Aerase Haven and talk to Harbor Operator - Buni (2042, 6351) in 10 minutes>.")
@@ -6554,7 +6554,7 @@ MisResultBagNeed(1)
 --	MisBeginCondition(HasRecord,1150)
 --	MisBeginCondition(HasRecord,1119)
 --	MisBeginAction(AddMission,1153)
---	MisBeginAction(AddChaItem3, 2952)---------金牛特别行动卡
+--	MisBeginAction(AddChaItem3, 2952)---------
 --	MisCancelAction(ClearMission, 1153)
 --	MisBeginBagNeed(1)
 --	
@@ -6563,7 +6563,7 @@ MisResultBagNeed(1)
 --
 --	MisResultCondition(AlwaysFailure)	
 --
---	--------------------------------------特别任务----海港指挥·布纽
+--	------------------------------------------
 --
 --	DefineMission(5669, "Blood Shed Taurus Special Operation", 1153, COMPLETE_SHOW )
 --	
@@ -6572,13 +6572,13 @@ MisResultBagNeed(1)
 --	MisResultTalk("<t>Not too bad, you will not regret it.")
 --	MisResultCondition(HasMission, 1153)
 --	MisResultCondition(NoRecord,1153)
---	MisResultAction(AddChaItem5, 2952)----特别行动卡
+--	MisResultAction(AddChaItem5, 2952)----
 --	MisResultAction(ClearMission, 1153)
 --	MisResultAction(SetRecord,  1153 )
---	MisResultAction(GiveItem, 3035, 1, 4)------------金牛船长酷装宝箱
+--	MisResultAction(GiveItem, 3035, 1, 4)------------
 --	MisResultBagNeed(1)
 
----------------------------------------------------特别任务	--------芭芭拉
+---------------------------------------------------	--------
 --	DefineMission (5673, "Blood Shed Taurus Special Operation", 1159)
 --	
 --	MisBeginTalk("<t>This quest is Taurus Special Operation, you don't have to participate if you don't want to, but you don't get the prize. Sail to <b Aerase Haven and talk to Harbor Operator - Buni (2042, 6351) in 10 minutes>.")
@@ -6594,7 +6594,7 @@ MisResultBagNeed(1)
 --	MisBeginCondition(HasRecord,1150)
 --	MisBeginCondition(HasRecord,1119)
 --	MisBeginAction(AddMission,1159)
---	MisBeginAction(AddChaItem3, 2952)---------金牛特别行动卡
+--	MisBeginAction(AddChaItem3, 2952)---------
 --	MisCancelAction(ClearMission, 1159)
 --	MisBeginBagNeed(1)
 --	
@@ -6603,7 +6603,7 @@ MisResultBagNeed(1)
 --
 --	MisResultCondition(AlwaysFailure)	
 --
---	--------------------------------------特别任务----海港指挥·布纽
+--	------------------------------------------
 --
 --	DefineMission(5674, "Blood Shed Taurus Special Operation", 1159, COMPLETE_SHOW )
 --	
@@ -6612,13 +6612,13 @@ MisResultBagNeed(1)
 --	MisResultTalk("<t>Not too bad, you will not regret it.")
 --	MisResultCondition(HasMission, 1159)
 --	MisResultCondition(NoRecord,1159)
---	MisResultAction(AddChaItem5, 2952)----特别行动卡
+--	MisResultAction(AddChaItem5, 2952)----
 --	MisResultAction(ClearMission, 1159)
 --	MisResultAction(SetRecord,  1159 )
---	MisResultAction(GiveItem, 3035, 1, 4)------------金牛船长酷装宝箱
+--	MisResultAction(GiveItem, 3035, 1, 4)------------
 --	MisResultBagNeed(1)
 --	
--------------------------------------------------特别任务	--------芭芭拉
+-------------------------------------------------	--------
 DefineMission (5675, "Blood Shed Taurus Special Operation", 1160)
 
 MisBeginTalk("<t>This quest is a Taurus Palace special event. You don't have to play the quest, but of course you don't get a present. Test your knowledge now, Talk to <b Jack Arrow (230, 579) at Skeletar Isle within 7 minutes>.")
@@ -6634,7 +6634,7 @@ MisBeginCondition(HasRecord,1129)
 MisBeginCondition(HasRecord,1150)
 MisBeginCondition(HasRecord,1119)
 MisBeginAction(AddMission,1160)
-MisBeginAction(AddChaItem3, 2952)---------金牛特别行动卡
+MisBeginAction(AddChaItem3, 2952)---------
 MisCancelAction(ClearMission, 1160)
 MisBeginBagNeed(1)
 
@@ -6643,7 +6643,7 @@ MisHelpTalk("<t>Hurry up and go, you only have 7 minutes.")
 
 MisResultCondition(AlwaysFailure)	
 
---------------------------------------特别任务----杰克史派罗
+------------------------------------------
 
 DefineMission(5676, "Blood Shed Taurus Special Operation", 1160, COMPLETE_SHOW )
 
@@ -6652,15 +6652,15 @@ MisBeginCondition(AlwaysFailure )
 MisResultTalk("<t>You dare to challenge Skeletar Isle? You got guts! However, I hate people like you who have guts, only give me nothing but trouble and making me busy for nothing.")
 MisResultCondition(HasMission, 1160)
 MisResultCondition(NoRecord,1160)
-MisResultAction(AddChaItem5, 2952)----特别行动卡
+MisResultAction(AddChaItem5, 2952)----
 MisResultAction(ClearMission, 1160)
 MisResultAction(SetRecord,  1160 )
-MisResultAction(GiveItem, 3035, 1, 4)------------金牛船长酷装宝箱
+MisResultAction(GiveItem, 3035, 1, 4)------------
 MisResultBagNeed(1)
 
 
 
--------------------------------------------------金牛之水手过关奖励----------芭芭拉	
+-----------------------------------------------------------	
 DefineMission (5670, "Prize for completing Sailor of Taurus", 1156)
 
 MisBeginTalk("<t>Collect all 7 Taurus Emblem to exchange with me for Taurus Protector Seal and Gemini Gate Ticket. There are also more prizes available.")
@@ -6757,7 +6757,7 @@ InitTrigger()
 TriggerCondition( 1, IsItem, 3034)	
 TriggerAction( 1, AddNextFlag, 1156, 70, 1 )
 RegCurTrigger( 11567 )
-----------------------------------------------金牛之海盗过关奖励----------芭芭拉	
+--------------------------------------------------------	
 DefineMission (5671, "Prize of completing Pirate of Taurus", 1157)
 
 MisBeginTalk("<t>Collect all 7 Taurus Emblem to exchange with me for Taurus Protector Seal and Gemini Gate Ticket. There are also more prizes available.")
@@ -6855,7 +6855,7 @@ TriggerCondition( 1, IsItem, 3034)
 TriggerAction( 1, AddNextFlag, 1157, 70, 1 )
 RegCurTrigger( 11577 )
 
----------------------------------------------金牛之船长过关奖励----------芭芭拉	
+-------------------------------------------------------	
 DefineMission (5672, "Prize for completing Captain of Taurus", 1158)
 
 MisBeginTalk("<t>Collect all 7 Taurus Emblem to exchange with me for Taurus Protector Seal and Gemini Gate Ticket. There are also more prizes available.")
@@ -6953,11 +6953,11 @@ TriggerCondition( 1, IsItem, 3034)
 TriggerAction( 1, AddNextFlag, 1158, 70, 1 )
 RegCurTrigger( 11587 )
 
---	-----------------------------------------------------猪光宝气-----------马来西亚
+--	----------------------------------------------------------------
 --
---       DefineMission(6126,"猪光宝气",1452)
+--       DefineMission(6126,"",1452)
 --
---	MisBeginTalk("<t>最近我再研究一道新菜色需要些特别的材料,我猜你一定愿意帮忙,因为回报够好哦.")
+--	MisBeginTalk("<t>,,.")
 --	MisBeginCondition(NoMission, 1452)
 --	MisBeginCondition(NoRecord,1452)
 --	MisBeginAction(AddMission,1452)
@@ -6971,7 +6971,7 @@ RegCurTrigger( 11587 )
 --
 --	MisCancelAction(ClearMission, 1452)
 --
---	MisNeed(MIS_NEED_DESP,"收集到雪白猪尾 5个(深蓝1179,371),粉红猪尾 5个(加纳1950,2563),豪猪短尾 5个(加纳1384,3065),粗糙的猪尾 5个(加纳910,2971),变异猪蹄 40 深蓝1455,560)及 强壮猪蹄 40(深蓝2266,590).")
+--	MisNeed(MIS_NEED_DESP," 5(1179,371), 5(1950,2563), 5(1384,3065), 5(910,2971), 40 1455,560)  40(2266,590).")
 --	MisNeed(MIS_NEED_ITEM, 4325, 5, 10, 5)
 --	MisNeed(MIS_NEED_ITEM, 1680, 5, 15, 5)
 --	MisNeed(MIS_NEED_ITEM, 4433, 5, 20, 5)
@@ -6981,8 +6981,8 @@ RegCurTrigger( 11587 )
 --
 --	
 --	
---	MisHelpTalk("<t>及早回来复命,我会给您最好的犒赏")
---	MisResultTalk("<t>这个神秘的幸运猪宝箱就是我要送给你的奖赏了,我有很多事需要帮忙,你可以经常过来找我.")
+--	MisHelpTalk("<t>,")
+--	MisResultTalk("<t>,,.")
 --
 --	MisResultCondition(HasMission, 1452)
 --	MisResultCondition(NoRecord,1452)
@@ -7004,7 +7004,7 @@ RegCurTrigger( 11587 )
 --
 --	
 --	
---	MisResultAction(GiveItem, 2909,1,4)------------给幸运猪宝箱
+--	MisResultAction(GiveItem, 2909,1,4)------------
 --	MisResultAction(ClearMission, 1452)
 --	MisResultAction(SetRecord, 1452)
 --	MisResultAction(ClearRecord, 1452)---------------can be repeated
@@ -7042,10 +7042,10 @@ RegCurTrigger( 11587 )
 --	TriggerAction( 1, AddNextFlag, 1452, 70, 40 )
 --	RegCurTrigger( 14526 )
 
--------------------------------------------------乱斗英雄----------海盗·德克	--------水手
-DefineMission (5673, "梦幻双子之乱斗英雄", 1163)
+-----------------------------------------------------------	--------
+DefineMission (5673, "", 1163)
 
-MisBeginTalk("<t>双子座的人,手艺十分灵巧,在各方面也都能表现出自己的才能.这是属于你的梦幻星座吗? ")
+MisBeginTalk("<t>,,.? ")
 
 MisBeginCondition(NoMission,1163)
 MisBeginCondition(HasRecord,1159)
@@ -7053,9 +7053,9 @@ MisBeginCondition(NoRecord,1163)
 MisBeginAction(AddMission,1163)
 MisCancelAction(ClearMission, 1163)
 
-MisNeed(MIS_NEED_DESP,"获得5点乱斗点数")
-MisHelpTalk("<t>乱斗点数可以从乱斗白银获得!")
-MisResultTalk("<t>看得出你注定是一个为战斗而生的人.")
+MisNeed(MIS_NEED_DESP,"5")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1163)
 MisResultCondition(NoRecord,1163)
@@ -7066,10 +7066,10 @@ MisResultAction(SetRecord,  1163 )
 MisResultAction(GiveItem, 1874, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------海盗·德克	--------水手
-DefineMission (5674, "梦幻双子之名声英雄", 1164)
+-----------------------------------------------------------	--------
+DefineMission (5674, "", 1164)
 
-MisBeginTalk("<t>朋友你好,我想让你知道我是一个对自己有要求的人．所以梦幻双子宫对你的要求也更高一些.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1164)
 MisBeginCondition(HasRecord,1159)
@@ -7077,9 +7077,9 @@ MisBeginCondition(NoRecord,1164)
 MisBeginAction(AddMission,1164)
 MisCancelAction(ClearMission, 1164)
 
-MisNeed(MIS_NEED_DESP,"获得2000点名声点数")
-MisHelpTalk("<t>看什么看,还不走?你以为2000点名声很好混吗?")
-MisResultTalk("<t>这枚名声勋章是用来见证英雄的.")
+MisNeed(MIS_NEED_DESP,"2000")
+MisHelpTalk("<t>,?2000?")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1164)
 MisResultCondition(NoRecord,1164)
@@ -7091,10 +7091,10 @@ MisResultAction(GiveItem, 1875, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------海盗·德克	---------水手
-DefineMission (5741, "梦幻双子之等级英雄", 1165)
+-----------------------------------------------------------	---------
+DefineMission (5741, "", 1165)
 
-MisBeginTalk("<t>勇敢的朋友,让我看到你非凡的能力吧,向我证明你只比我差一点,哈哈...")
+MisBeginTalk("<t>,,,...")
 
 MisBeginCondition(NoMission,1165)
 MisBeginCondition(HasRecord,1159)
@@ -7103,8 +7103,8 @@ MisBeginAction(AddMission,1165)
 MisCancelAction(ClearMission, 1165)
 
 MisNeed(MIS_NEED_DESP,"Level reached 60")
-MisHelpTalk("<t>当然,60级对我来说不成问题.")
-MisResultTalk("<t>不得不承认,你的确只比我略差一筹而已,这枚等级勋章是你的了.")
+MisHelpTalk("<t>,60.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1165)
 MisResultCondition(NoRecord,1165)
@@ -7115,10 +7115,10 @@ MisResultAction(GiveItem, 1876, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------海盗·德克	----------水手
-DefineMission (5742, "梦幻双子之荣誉英雄", 1166)
+-----------------------------------------------------------	----------
+DefineMission (5742, "", 1166)
 
-MisBeginTalk("<t>传说中海盗世界最伟大的荣誉之子就是我..我的祖先,我因此受到广大海盗同行的尊敬,你要以我为榜样啊.")
+MisBeginTalk("<t>..,,.")
 
 MisBeginCondition(NoMission,1166)
 MisBeginCondition(HasRecord,1159)
@@ -7127,8 +7127,8 @@ MisBeginAction(AddMission,1166)
 MisCancelAction(ClearMission, 1166)
 
 MisNeed(MIS_NEED_DESP,"Gained 500 honor points.")
-MisHelpTalk("<t>去为荣誉而战吧!")
-MisResultTalk("<t>你是个很不错的荣誉之子.")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1166)
 MisResultCondition(NoRecord,1166)
@@ -7139,22 +7139,22 @@ MisResultAction(SetRecord,  1166 )
 MisResultAction(GiveItem, 1877, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------采集大使----------海盗·德克	------------水手
-DefineMission (5677, "梦幻双子之采集大使", 1167)
+-----------------------------------------------------------	------------
+DefineMission (5677, "", 1167)
 
-MisBeginTalk("<t>采集勋章是赠与那些洞察力很强的人的礼物,有信心的话就去试试吧.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1167)
 MisBeginCondition(HasRecord,1159)
 MisBeginCondition(NoRecord,1167)
 MisBeginAction(AddMission,1167)
-MisBeginAction(AddTrigger, 11671, TE_GETITEM, 1346, 10 )---------------血腥的蝌蚪血10
-MisBeginAction(AddTrigger, 11672, TE_GETITEM, 4526, 10 )--------------- 生锈的长矛10
-MisBeginAction(AddTrigger, 11673, TE_GETITEM, 1608, 10 )-------------动物皮毛10--------
-MisBeginAction(AddTrigger, 11674, TE_GETITEM, 4495, 1 )--------------山贼腰带1个
-MisBeginAction(AddTrigger, 11675, TE_GETITEM, 1612, 20 )--------------锋利的角20个
-MisBeginAction(AddTrigger, 11676, TE_GETITEM, 1140, 20 )-------------船只喷射器LV1 20个
-MisBeginAction(AddTrigger, 11677, TE_GETITEM, 3094, 5 )--------------努力增幅器5个
+MisBeginAction(AddTrigger, 11671, TE_GETITEM, 1346, 10 )---------------10
+MisBeginAction(AddTrigger, 11672, TE_GETITEM, 4526, 10 )--------------- 10
+MisBeginAction(AddTrigger, 11673, TE_GETITEM, 1608, 10 )-------------10--------
+MisBeginAction(AddTrigger, 11674, TE_GETITEM, 4495, 1 )--------------1
+MisBeginAction(AddTrigger, 11675, TE_GETITEM, 1612, 20 )--------------20
+MisBeginAction(AddTrigger, 11676, TE_GETITEM, 1140, 20 )-------------LV1 20
+MisBeginAction(AddTrigger, 11677, TE_GETITEM, 3094, 5 )--------------5
 MisCancelAction(ClearMission, 1167)
 
 
@@ -7167,8 +7167,8 @@ MisNeed(MIS_NEED_ITEM, 1140, 20, 52, 20 )
 MisNeed(MIS_NEED_ITEM, 3094, 5, 72, 5 )
 
 
-MisHelpTalk("<t>不要以为很容易,快去吧")
-MisResultTalk("<t>这些东西让你很伤脑筋吧,记住,这世界上所有的东西都有自己的价值,不要总是急需的时候才想起来去留意.")
+MisHelpTalk("<t>,")
+MisResultTalk("<t>,,,.")
 
 MisResultCondition(HasMission, 1167)
 MisResultCondition(NoRecord,1167)
@@ -7231,24 +7231,24 @@ TriggerAction( 1, AddNextFlag, 1167, 87, 5 )
 RegCurTrigger( 11677 )
 
 
-----------------------------------------------------------双子末日----------海盗·德克
-DefineMission( 5678, "梦幻双子之双子末日", 1168 )
-MisBeginTalk("<t>BOSS勋章是最具英雄主义意味的奖章,你要的话就去杀掉可怕的双子守护者.")
+--------------------------------------------------------------------
+DefineMission( 5678, "", 1168 )
+MisBeginTalk("<t>BOSS,.")
 			
 MisBeginCondition(NoMission, 1168)
 MisBeginCondition(HasRecord,1162)
 MisBeginCondition(NoRecord,1168)
 MisBeginAction(AddMission,1168)
-MisBeginAction(AddTrigger, 11681, TE_KILL, 1039, 1)---双子守护者
+MisBeginAction(AddTrigger, 11681, TE_KILL, 1039, 1)---
 
 MisCancelAction(ClearMission, 1168)
 
-MisNeed(MIS_NEED_DESP,"捕杀双子守护者魔女之海(2527, 2467)!")
+MisNeed(MIS_NEED_DESP,"(2527, 2467)!")
 MisNeed(MIS_NEED_KILL, 1039,1, 10, 1)
 
 
-MisResultTalk("<t>双头四臂的怪物是上神不小心的杰作.你永远都无法真正的杀死它们!")
-MisHelpTalk("<t>听说是只双头怪,不同以往,你要小心.")
+MisResultTalk("<t>.!")
+MisHelpTalk("<t>,,.")
 MisResultCondition(HasMission,  1168)
 MisResultCondition(HasFlag, 1168, 10)
 MisResultCondition(NoRecord , 1168)
@@ -7262,10 +7262,10 @@ TriggerCondition( 1, IsMonster, 1039)
 TriggerAction( 1, AddNextFlag, 1168, 10, 1 )
 RegCurTrigger( 11681 )
 
--------------------------------------------------乱斗英雄----------海盗·德克	
-DefineMission (5679, "梦幻双子之乱斗英雄", 1169)
+-----------------------------------------------------------	
+DefineMission (5679, "", 1169)
 
-MisBeginTalk("<t>双子座的人,手艺十分灵巧,在各方面也都能表现出自己的才能.这是属于你的梦幻星座吗? ")
+MisBeginTalk("<t>,,.? ")
 
 MisBeginCondition(NoMission,1169)
 MisBeginCondition(HasRecord,1204)
@@ -7273,9 +7273,9 @@ MisBeginCondition(NoRecord,1169)
 MisBeginAction(AddMission,1169)
 MisCancelAction(ClearMission, 1169)
 
-MisNeed(MIS_NEED_DESP,"获得10点乱斗点数")
-MisHelpTalk("<t>乱斗点数可以从乱斗白银获得!")
-MisResultTalk("<t>看得出你注定是一个为战斗而生的人.")
+MisNeed(MIS_NEED_DESP,"10")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1169)
 MisResultCondition(NoRecord,1169)
@@ -7286,10 +7286,10 @@ MisResultAction(SetRecord,  1169 )
 MisResultAction(GiveItem, 1874, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------海盗·德克	
-DefineMission (5680, "梦幻双子之名声英雄", 1170)
+-----------------------------------------------------------	
+DefineMission (5680, "", 1170)
 
-MisBeginTalk("<t>朋友你好,我想让你知道我是一个对自己有要求的人．所以梦幻双子宫对你的要求也更高一些.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1170)
 MisBeginCondition(HasRecord,1204)
@@ -7298,8 +7298,8 @@ MisBeginAction(AddMission,1170)
 MisCancelAction(ClearMission, 1170)
 
 MisNeed(MIS_NEED_DESP,"Obtained 5000 points of reputation.")
-MisHelpTalk("<t>看什么看,还不走?你以为5000点名声很好混吗?")
-MisResultTalk("<t>这枚名声勋章是用来见证英雄的.")
+MisHelpTalk("<t>,?5000?")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1170)
 MisResultCondition(NoRecord,1170)
@@ -7311,10 +7311,10 @@ MisResultAction(GiveItem, 1875, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------海盗·德克	
-DefineMission (5681, "梦幻双子之等级英雄", 1171)
+-----------------------------------------------------------	
+DefineMission (5681, "", 1171)
 
-MisBeginTalk("<t>勇敢的朋友,让我看到你非凡的能力吧,向我证明你只比我差一点,哈哈...")
+MisBeginTalk("<t>,,,...")
 
 MisBeginCondition(NoMission,1171)
 MisBeginCondition(HasRecord,1204)
@@ -7323,8 +7323,8 @@ MisBeginAction(AddMission,1171)
 MisCancelAction(ClearMission, 1171)
 
 MisNeed(MIS_NEED_DESP,"Reached Level 65")
-MisHelpTalk("<t>当然,65级对我来说不成问题.")
-MisResultTalk("<t>不得不承认,你的确只比我略差一筹而已,这枚等级勋章是你的了.")
+MisHelpTalk("<t>,65.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1171)
 MisResultCondition(NoRecord,1171)
@@ -7335,10 +7335,10 @@ MisResultAction(GiveItem, 1876, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------海盗·德克	
-DefineMission (5682, "梦幻双子之荣誉英雄", 1172)
+-----------------------------------------------------------	
+DefineMission (5682, "", 1172)
 
-MisBeginTalk("<t>传说中海盗世界最伟大的荣誉之子就是我..我的祖先,我因此受到广大海盗同行的尊敬,你要以我为榜样啊.")
+MisBeginTalk("<t>..,,.")
 
 MisBeginCondition(NoMission,1172)
 MisBeginCondition(HasRecord,1204)
@@ -7346,9 +7346,9 @@ MisBeginCondition(NoRecord,1172)
 MisBeginAction(AddMission,1172)
 MisCancelAction(ClearMission, 1172)
 
-MisNeed(MIS_NEED_DESP,"获得700点荣誉点数")
-MisHelpTalk("<t>去为荣誉而战吧!")
-MisResultTalk("<t>你是个很不错的荣誉之子.")
+MisNeed(MIS_NEED_DESP,"700")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1172)
 MisResultCondition(NoRecord,1172)
@@ -7359,22 +7359,22 @@ MisResultAction(SetRecord,  1172 )
 MisResultAction(GiveItem, 1877, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------采集大使----------海盗·德克	
-DefineMission (5683, "梦幻双子之采集大使", 1173)
+-----------------------------------------------------------	
+DefineMission (5683, "", 1173)
 
-MisBeginTalk("<t>采集勋章是赠与那些洞察力很强的人的礼物,有信心的话就去试试吧.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1173)
 MisBeginCondition(HasRecord,1204)
 MisBeginCondition(NoRecord,1173)
 MisBeginAction(AddMission,1173)
-MisBeginAction(AddTrigger, 11731, TE_GETITEM, 1346, 15 )-------------------血腥的蝌蚪血15
-MisBeginAction(AddTrigger, 11732, TE_GETITEM, 4526, 15 )-------------------生锈的长矛15          
-MisBeginAction(AddTrigger, 11733, TE_GETITEM, 1608, 15 )-----------------动物皮毛15               
-MisBeginAction(AddTrigger, 11734, TE_GETITEM, 4495, 2 )----------------山贼腰带2个               
-MisBeginAction(AddTrigger, 11735, TE_GETITEM, 1612, 30)------------------锋利的角30个            
-MisBeginAction(AddTrigger, 11736, TE_GETITEM, 2724, 20 )-----------------船只喷射器LV2 20个                  
-MisBeginAction(AddTrigger, 11737, TE_GETITEM, 3094, 10 )------------------努力增幅器10个          
+MisBeginAction(AddTrigger, 11731, TE_GETITEM, 1346, 15 )-------------------15
+MisBeginAction(AddTrigger, 11732, TE_GETITEM, 4526, 15 )-------------------15          
+MisBeginAction(AddTrigger, 11733, TE_GETITEM, 1608, 15 )-----------------15               
+MisBeginAction(AddTrigger, 11734, TE_GETITEM, 4495, 2 )----------------2               
+MisBeginAction(AddTrigger, 11735, TE_GETITEM, 1612, 30)------------------30            
+MisBeginAction(AddTrigger, 11736, TE_GETITEM, 2724, 20 )-----------------LV2 20                  
+MisBeginAction(AddTrigger, 11737, TE_GETITEM, 3094, 10 )------------------10          
 MisCancelAction(ClearMission, 1173)
 
 
@@ -7387,8 +7387,8 @@ MisNeed(MIS_NEED_ITEM, 2724, 20, 78, 20 )
 MisNeed(MIS_NEED_ITEM, 3094, 10, 98, 10 )
 
 
-MisHelpTalk("<t>不要以为很容易,快去吧")
-MisResultTalk("<t>这些东西让你很伤脑筋吧,记住,这世界上所有的东西都有自己的价值,不要总是急需的时候才想起来去留意..")
+MisHelpTalk("<t>,")
+MisResultTalk("<t>,,,..")
 
 MisResultCondition(HasMission, 1173)
 MisResultCondition(NoRecord,1173)
@@ -7451,10 +7451,10 @@ TriggerAction( 1, AddNextFlag, 1173, 98, 10 )
 RegCurTrigger( 11737 )
 
 
--------------------------------------------------乱斗英雄----------海盗·德克	
-DefineMission (5684, "梦幻双子之乱斗英雄", 1174)
+-----------------------------------------------------------	
+DefineMission (5684, "", 1174)
 
-MisBeginTalk("<t>双子座的人,手艺十分灵巧,在各方面也都能表现出自己的才能.这是属于你的梦幻星座吗? ")
+MisBeginTalk("<t>,,.? ")
 
 MisBeginCondition(NoMission,1174)
 MisBeginCondition(HasRecord,1161)
@@ -7462,9 +7462,9 @@ MisBeginCondition(NoRecord,1174)
 MisBeginAction(AddMission,1174)
 MisCancelAction(ClearMission, 1174)
 
-MisNeed(MIS_NEED_DESP,"获得15点乱斗点数")
-MisHelpTalk("<t>乱斗点数可以从乱斗白银获得!")
-MisResultTalk("<t>看得出你注定是一个为战斗而生的人.")
+MisNeed(MIS_NEED_DESP,"15")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1174)
 MisResultCondition(NoRecord,1174)
@@ -7475,10 +7475,10 @@ MisResultAction(SetRecord,  1174 )
 MisResultAction(GiveItem, 1874, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------海盗·德克	
-DefineMission (5685, "梦幻双子之名声英雄", 1175)
+-----------------------------------------------------------	
+DefineMission (5685, "", 1175)
 
-MisBeginTalk("<t>朋友你好,我想让你知道我是一个对自己有要求的人．所以梦幻双子宫对你的要求也更高一些.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1175)
 MisBeginCondition(HasRecord,1161)
@@ -7486,9 +7486,9 @@ MisBeginCondition(NoRecord,1175)
 MisBeginAction(AddMission,1175)
 MisCancelAction(ClearMission, 1175)
 
-MisNeed(MIS_NEED_DESP,"获得8000点名声点数")
-MisHelpTalk("<t>看什么看,还不走?你以为8000点名声很好混吗?")
-MisResultTalk("<t>这枚名声勋章是用来见证英雄的.")
+MisNeed(MIS_NEED_DESP,"8000")
+MisHelpTalk("<t>,?8000?")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1175)
 MisResultCondition(NoRecord,1175)
@@ -7500,10 +7500,10 @@ MisResultAction(GiveItem, 1875, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------海盗·德克	
-DefineMission (5686, "梦幻双子之等级英雄", 1176)
+-----------------------------------------------------------	
+DefineMission (5686, "", 1176)
 
-MisBeginTalk("<t>勇敢的朋友,让我看到你非凡的能力吧,向我证明你只比我差一点,哈哈....")
+MisBeginTalk("<t>,,,....")
 
 MisBeginCondition(NoMission,1176)
 MisBeginCondition(HasRecord,1161)
@@ -7511,9 +7511,9 @@ MisBeginCondition(NoRecord,1176)
 MisBeginAction(AddMission,1176)
 MisCancelAction(ClearMission, 1176)
 
-MisNeed(MIS_NEED_DESP,"等级达到70级")
-MisHelpTalk("<t>当然,70级对我来说不成问题.")
-MisResultTalk("<t>不得不承认,你的确只比我略差一筹而已,这枚等级勋章是你的了.")
+MisNeed(MIS_NEED_DESP,"70")
+MisHelpTalk("<t>,70.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1176)
 MisResultCondition(NoRecord,1176)
@@ -7524,10 +7524,10 @@ MisResultAction(GiveItem, 1876, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------海盗·德克	
-DefineMission (5687, "梦幻双子之荣誉英雄", 1177)
+-----------------------------------------------------------	
+DefineMission (5687, "", 1177)
 
-MisBeginTalk("<t>传说中海盗世界最伟大的荣誉之子就是我..我的祖先,我因此受到广大海盗同行的尊敬,你要以我为榜样啊.")
+MisBeginTalk("<t>..,,.")
 
 MisBeginCondition(NoMission,1177)
 MisBeginCondition(HasRecord,1161)
@@ -7535,9 +7535,9 @@ MisBeginCondition(NoRecord,1177)
 MisBeginAction(AddMission,1177)
 MisCancelAction(ClearMission, 1177)
 
-MisNeed(MIS_NEED_DESP,"获得1000点荣誉点数")
-MisHelpTalk("<t>去为荣誉而战吧!")
-MisResultTalk("<t>你是个很不错的荣誉之子.")
+MisNeed(MIS_NEED_DESP,"1000")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1177)
 MisResultCondition(NoRecord,1177)
@@ -7548,21 +7548,21 @@ MisResultAction(SetRecord,  1177 )
 MisResultAction(GiveItem, 1877, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------采集大使----------海盗·德克	
-DefineMission (5688, "梦幻双子之采集大使", 1178)
+-----------------------------------------------------------	
+DefineMission (5688, "", 1178)
 
-MisBeginTalk("<t>采集勋章是赠与那些洞察力很强的人的礼物,有信心的话就去试试吧.")
+MisBeginTalk("<t>,.")
 
 MisBeginCondition(NoMission,1178)
 MisBeginCondition(HasRecord,1161)
 MisBeginCondition(NoRecord,1178)
 MisBeginAction(AddMission,1178)
-MisBeginAction(AddTrigger, 11781, TE_GETITEM, 1346, 20 )---------------------血腥的蝌蚪血20 
-MisBeginAction(AddTrigger, 11782, TE_GETITEM, 3433, 1 )---------------------费诺符石1个          
-MisBeginAction(AddTrigger, 11783, TE_GETITEM, 4495, 3 )-------------------山贼腰带3个               
-MisBeginAction(AddTrigger, 11784, TE_GETITEM, 1612, 30 )------------------锋利的角30个             
-MisBeginAction(AddTrigger, 11785, TE_GETITEM, 2724, 30 )--------------------船只喷射器LV2 30个             
-MisBeginAction(AddTrigger, 11786, TE_GETITEM, 3094, 30 )-------------------努力增幅器30个                              
+MisBeginAction(AddTrigger, 11781, TE_GETITEM, 1346, 20 )---------------------20 
+MisBeginAction(AddTrigger, 11782, TE_GETITEM, 3433, 1 )---------------------1          
+MisBeginAction(AddTrigger, 11783, TE_GETITEM, 4495, 3 )-------------------3               
+MisBeginAction(AddTrigger, 11784, TE_GETITEM, 1612, 30 )------------------30             
+MisBeginAction(AddTrigger, 11785, TE_GETITEM, 2724, 30 )--------------------LV2 30             
+MisBeginAction(AddTrigger, 11786, TE_GETITEM, 3094, 30 )-------------------30                              
 MisCancelAction(ClearMission, 1178)						                                     
 
 
@@ -7574,8 +7574,8 @@ MisNeed(MIS_NEED_ITEM, 2724, 30, 55, 30)
 MisNeed(MIS_NEED_ITEM, 3094, 30, 85, 30 )
 
 
-MisHelpTalk("<t>不要以为很容易,快去吧")
-MisResultTalk("<t>这些东西让你很伤脑筋吧,记住,这世界上所有的东西都有自己的价值,不要总是急需的时候才想起来去留意.")
+MisHelpTalk("<t>,")
+MisResultTalk("<t>,,,.")
 
 MisResultCondition(HasMission, 1178)
 MisResultCondition(NoRecord,1178)
@@ -7630,35 +7630,35 @@ TriggerCondition( 1, IsItem, 3094)
 TriggerAction( 1, AddNextFlag, 1178, 85, 30 )
 RegCurTrigger( 11786 )
 
-----------------------------------------------------------社交大使----------海盗·德克
-DefineMission( 5689, "梦幻双子之社交大使", 1179 )
-MisBeginTalk("<t>有人说我喜欢吹牛,难道这是我的错吗?有几个男人不是这样?其实我还是很有名望的,那些崇拜我的朋友们可以作证.正好我要在圣诞节举办派对,如果你想要探索勋章就帮我去邀请他们吧.")
+--------------------------------------------------------------------
+DefineMission( 5689, "", 1179 )
+MisBeginTalk("<t>,??,.,.")
 			
 MisBeginCondition(NoMission, 1179)
 MisBeginCondition(NoRecord,1179)
-MisBeginCondition(HasRecord, 1162)-------------------新的id,最后的id
+MisBeginCondition(HasRecord, 1162)-------------------id,id
 MisBeginAction(AddMission,1179)
 MisCancelAction(ClearMission, 1179)
 
-MisNeed(MIS_NEED_DESP,"找雷霆堡的护卫·尼松(711,1414)聊聊")
+MisNeed(MIS_NEED_DESP,"(711,1414)")
 
-MisHelpTalk("<t>快去吧,时间总是比想象的过得快.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使-----------------护卫·尼松
+----------------------------------------------------------
 
 DefineMission(5690, "TOP Ambassador", 1179, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>海盗·德克?我认识他,他吹牛的本事我是早有耳闻的.")
+MisResultTalk("<t>?,.")
 MisResultCondition(NoRecord, 1179)
 MisResultCondition(HasMission,1179)
 MisResultAction(ClearMission,1179)
 MisResultAction(SetRecord, 1179)
 
-----------------------------------------------------------社交大使2----------护卫·尼松
+----------------------------------------------------------2----------
 DefineMission( 5691, "TOP Ambassador 2", 1180 )
-MisBeginTalk("<t>我刚刚18岁的时候很向往海盗生活,后来认识了德克就放弃了这个梦想...他的派对我能不能参加还要看有没有假期,我可没有迈克那么悠闲")
+MisBeginTalk("<t>18,...,")
 			
 MisBeginCondition(NoMission, 1180)
 MisBeginCondition(NoRecord,1180)
@@ -7666,24 +7666,24 @@ MisBeginCondition(HasRecord, 1179)
 MisBeginAction(AddMission,1180)
 MisCancelAction(ClearMission, 1180)
 
-MisNeed(MIS_NEED_DESP,"找沙岚的巡逻兵·迈克(958,3549)聊聊")
+MisNeed(MIS_NEED_DESP,"(958,3549)")
 
-MisHelpTalk("<t>在长官眼皮底下当差就是不那么悠闲.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使2-------------巡逻兵·迈克
+-----------------------------------------2-------------
 DefineMission(5692, "TOP Ambassador 2", 1180, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你好!我队长不在,你是找我吗?")
+MisResultTalk("<t>!,?")
 MisResultCondition(NoRecord, 1180)
 MisResultCondition(HasMission,1180)
 MisResultAction(ClearMission,1180)
 MisResultAction(SetRecord, 1180)
 
-----------------------------------------------------------社交大使3----------巡逻兵·迈克
+----------------------------------------------------------3----------
 DefineMission( 5693, "TOP Ambassador 3", 1181 )
-MisBeginTalk("<t>德克的圣诞派对?很不错,我已经度过了很多个孤独无聊的圣诞节了.不过我已经约过修司了,不如你帮我问一下修司的意见")
+MisBeginTalk("<t>?,.,")
 			
 MisBeginCondition(NoMission, 1181)
 MisBeginCondition(NoRecord,1181)
@@ -7691,16 +7691,16 @@ MisBeginCondition(HasRecord, 1180)
 MisBeginAction(AddMission,1181)
 MisCancelAction(ClearMission, 1181)
 
-MisNeed(MIS_NEED_DESP,"找骷髅营地补给站的修司(2138,545)聊聊")
+MisNeed(MIS_NEED_DESP,"(2138,545)")
 
-MisHelpTalk("<t>说实话我对德克已经没什么印象了,呵呵..")
+MisHelpTalk("<t>,..")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使3--------修司
+-----------------------------------------3--------
 DefineMission(5694, "TOP Ambassador 3", 1181, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>参加德克的圣诞派对是个极好的主意,虽然我不喜欢德克,但是我喜欢派对上的姑娘.")
+MisResultTalk("<t>,,.")
 MisResultCondition(NoRecord, 1181)
 MisResultCondition(HasMission,1181)
 MisResultAction(ClearMission,1181)
@@ -7708,9 +7708,9 @@ MisResultAction(SetRecord, 1181)
 
 
 
-----------------------------------------------------------社交大使4----------修司
+----------------------------------------------------------4----------
 DefineMission( 5695, "TOP Ambassador 4", 1182 )
-MisBeginTalk("<t>如果你会去德尔维平原请帮忙告诉可怜的马尔斯,我知道一种植物可以有效的驱除章鱼汁.")
+MisBeginTalk("<t>,.")
 			
 MisBeginCondition(NoMission, 1182)
 MisBeginCondition(NoRecord,1182)
@@ -7718,25 +7718,25 @@ MisBeginCondition(HasRecord, 1181)
 MisBeginAction(AddMission,1182)
 MisCancelAction(ClearMission, 1182)
 
-MisNeed(MIS_NEED_DESP,"找德尔维平原的巡逻兵·马尔斯(2065,2732)聊聊")
+MisNeed(MIS_NEED_DESP,"(2065,2732)")
 
-MisHelpTalk("<t>他对这个消息会很感兴趣的.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使4--------巡逻兵·马尔斯
+-----------------------------------------4--------
 DefineMission(5696, "TOP Ambassador 4", 1182, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>是吗?有这种植物,那他为什么不让你带一些给我,看来是有交换条件的.这个家伙真是小气啊.")
+MisResultTalk("<t>?,,..")
 MisResultCondition(NoRecord, 1182)
 MisResultCondition(HasMission,1182)
 MisResultAction(ClearMission,1182)
 MisResultAction(SetRecord, 1182)
 
 
-----------------------------------------------------------社交大使5----------巡逻兵·马尔斯
+----------------------------------------------------------5----------
 DefineMission( 5697, "TOP Ambassador 5", 1183 )
-MisBeginTalk("<t>你说德克?我与德克相识多年了,他是一个很不错的朋友,虽然爱吹牛,却是一个很真诚的朋友.我一定会去参加他的派对.我想你会愿意帮我通知俄克琉西斯,他的真诚意识太差,我要带他去接受一点教育.")
+MisBeginTalk("<t>?,,,..,,.")
 			
 MisBeginCondition(NoMission, 1183)
 MisBeginCondition(NoRecord,1183)
@@ -7744,25 +7744,25 @@ MisBeginCondition(HasRecord, 1182)
 MisBeginAction(AddMission,1183)
 MisCancelAction(ClearMission, 1183)
 
-MisNeed(MIS_NEED_DESP,"找南部沙漠的俄克琉西斯(1131,3153)聊聊")
+MisNeed(MIS_NEED_DESP,"(1131,3153)")
 
-MisHelpTalk("<t>俄克琉西斯是个视财如命的小孩,应该向德克学习.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使5--------俄克琉西斯
+-----------------------------------------5--------
 DefineMission(5698, "TOP Ambassador 5", 1183, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我视财如命?你问他不发军饷给他他会同意吗?")
+MisResultTalk("<t>??")
 MisResultCondition(NoRecord, 1183)
 MisResultCondition(HasMission,1183)
 MisResultAction(ClearMission,1183)
 MisResultAction(SetRecord, 1183)
 
 
-----------------------------------------------------------社交大使6----------俄克琉西斯
+----------------------------------------------------------6----------
 DefineMission( 5699, "TOP Ambassador 6", 1184 )
-MisBeginTalk("<t>其实我这样爱钱也有我的原因,追求梦中情人是不能只靠语言的,奈奈是个可爱的女孩,我不要她受苦.不知道她有没有想我.")
+MisBeginTalk("<t>,,,..")
 			
 MisBeginCondition(NoMission, 1184)
 MisBeginCondition(NoRecord,1184)
@@ -7770,25 +7770,25 @@ MisBeginCondition(HasRecord, 1183)
 MisBeginAction(AddMission,1184)
 MisCancelAction(ClearMission, 1184)
 
-MisNeed(MIS_NEED_DESP,"找奈奈(798,369)聊聊")
+MisNeed(MIS_NEED_DESP,"(798,369)")
 
-MisHelpTalk("<t>奈奈是一个气质优雅的美丽姑娘.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使6--------奈奈
+-----------------------------------------6--------
 DefineMission(5700, "TOP Ambassador 6", 1184, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>虽然男人应该有宽广的胸怀和雄厚的资本,但关心我才是最重要的.")
+MisResultTalk("<t>,.")
 MisResultCondition(NoRecord, 1184)
 MisResultCondition(HasMission,1184)
 MisResultAction(ClearMission,1184)
 MisResultAction(SetRecord, 1184)
 
 
-----------------------------------------------------------社交大使7----------奈奈
+----------------------------------------------------------7----------
 DefineMission( 5701, "TOP Ambassador 7", 1185 )
-MisBeginTalk("<t>我是清纯不懂爱情的小女生,所有关于爱情的理想的和现实的观念我都是通过古博拉的书了解到的.")
+MisBeginTalk("<t>,.")
 			
 MisBeginCondition(NoMission, 1185)
 MisBeginCondition(NoRecord,1185)
@@ -7796,25 +7796,25 @@ MisBeginCondition(HasRecord, 1184)
 MisBeginAction(AddMission,1185)
 MisCancelAction(ClearMission, 1185)
 
-MisNeed(MIS_NEED_DESP,"找加纳的古博拉(1507,3105)聊聊")
+MisNeed(MIS_NEED_DESP,"(1507,3105)")
 
-MisHelpTalk("<t>我从没见过这位文学大师,但是我猜想他一定是一位成熟稳重的优雅男子.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使7--------古博拉
+-----------------------------------------7--------
 DefineMission(5702, "TOP Ambassador 7", 1185, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我的忠实读者奈奈?我的读者太多了.不过她有这个欣赏水准让我对这个世界重燃信心了.")
+MisResultTalk("<t>?..")
 MisResultCondition(NoRecord, 1185)
 MisResultCondition(HasMission,1185)
 MisResultAction(ClearMission,1185)
 MisResultAction(SetRecord, 1185)
 
 
-----------------------------------------------------------社交大使8----------古博拉
+----------------------------------------------------------8----------
 DefineMission( 5703, "TOP Ambassador 8", 1186 )
-MisBeginTalk("<t>其实我原本是奈奈想象的那种男子,是那次海难后飘到海岛上造成的,我和德克被莫名其妙的互换了外貌.不知道这个家伙懂不懂得保养,我那俊美的脸啊,是该去看一下了.你不信?波尔可以作证的.")
+MisBeginTalk("<t>,,.,,.?.")
 			
 MisBeginCondition(NoMission, 1186)
 MisBeginCondition(NoRecord,1186)
@@ -7822,25 +7822,25 @@ MisBeginCondition(HasRecord, 1185)
 MisBeginAction(AddMission,1186)
 MisCancelAction(ClearMission, 1186)
 
-MisNeed(MIS_NEED_DESP,"找冰雪岛海港指挥·波尔(2372,737)聊聊")
+MisNeed(MIS_NEED_DESP,"(2372,737)")
 
-MisHelpTalk("<t>我好怀念我的脸啊!")
+MisHelpTalk("<t>!")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使8--------海港指挥·波尔
+-----------------------------------------8--------
 DefineMission(5704, "TOP Ambassador 8", 1186, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>古博拉和德克换脸?不记得了,每天经过这里的人都很多.说实话他们的脸换不换都看不出什么美感,也就谈不上谁受益.呵呵")
+MisResultTalk("<t>?,.,.")
 MisResultCondition(NoRecord, 1186)
 MisResultCondition(HasMission,1186)
 MisResultAction(ClearMission,1186)
 MisResultAction(SetRecord, 1186)
 
 
-----------------------------------------------------------社交大使9----------海港指挥·波尔
+----------------------------------------------------------9----------
 DefineMission( 5705, "TOP Ambassador 9", 1187 )
-MisBeginTalk("<t>疤痕是男人的徽章,酒精是海盗的伙伴,有酒我是不会错过的.不知道我的外国友人东方海盗·铃佐田山会不会参加,虽然他讲话很少有人能听懂.哪像可爱的优优...")
+MisBeginTalk("<t>,,.,....")
 			
 MisBeginCondition(NoMission, 1187)
 MisBeginCondition(NoRecord,1187)
@@ -7848,24 +7848,24 @@ MisBeginCondition(HasRecord, 1186)
 MisBeginAction(AddMission,1187)
 MisCancelAction(ClearMission, 1187)
 
-MisNeed(MIS_NEED_DESP,"找阿兰比斯冰原的草莓优优(1010,350)聊聊")
+MisNeed(MIS_NEED_DESP,"(1010,350)")
 
-MisHelpTalk("<t>优优简直是冰雪中盛开的玫瑰.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使9--------草莓优优
+-----------------------------------------9--------
 DefineMission(5706, "TOP Ambassador 9", 1187, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我哪有波尔爷爷说得那么可爱呢?是因为他喜欢我才越发觉得我可爱.")
+MisResultTalk("<t>?.")
 MisResultCondition(NoRecord, 1187)
 MisResultCondition(HasMission,1187)
 MisResultAction(ClearMission,1187)
 MisResultAction(SetRecord, 1187)
 
-----------------------------------------------------------社交大使10----------草莓优优
+----------------------------------------------------------10----------
 DefineMission( 5707, "TOP Ambassador 10", 1188 )
-MisBeginTalk("<t>德克是有名的海盗吗?他也邀请了我?那我要为他准备礼物了...送什么给他呢?有办法了,不如你帮我问问瓦萨法尔,他那有很有趣的纸牌.我想海盗都会喜欢纸牌游戏的.")
+MisBeginTalk("<t>??...?,,..")
 			
 MisBeginCondition(NoMission, 1188)
 MisBeginCondition(NoRecord,1188)
@@ -7873,24 +7873,24 @@ MisBeginCondition(HasRecord, 1187)
 MisBeginAction(AddMission,1188)
 MisCancelAction(ClearMission, 1188)
 
-MisNeed(MIS_NEED_DESP,"找贝比平原的瓦萨法尔(1136,2778)聊聊")
+MisNeed(MIS_NEED_DESP,"(1136,2778)")
 
-MisHelpTalk("<t>不知道瓦萨法尔肯不肯把纸牌送给我呢...")
+MisHelpTalk("<t>...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使10--------瓦萨法尔
+-----------------------------------------10--------
 DefineMission(5708, "TOP Ambassador 10", 1188, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>优优也注意到我的才华了?好有成就感啊!")
+MisResultTalk("<t>?!")
 MisResultCondition(NoRecord, 1188)
 MisResultCondition(HasMission,1188)
 MisResultAction(ClearMission,1188)
 MisResultAction(SetRecord, 1188)
 
-----------------------------------------------------------社交大使11----------瓦萨法尔
+----------------------------------------------------------11----------
 DefineMission( 5709, "TOP Ambassador 11", 1189 )
-MisBeginTalk("<t>我不能让优优这样的小女孩一个人去参加海盗的Party,我会带着礼物陪她一起去的.说到圣诞节使我想起一件事,由于原料紧缺,年底要交给交易员·米索亚斯的货物可能不会按时送到了,如果你路过鸣沙岛代我说明一下好吗?我相信你.")
+MisBeginTalk("<t>Party,.,,,?.")
 			
 MisBeginCondition(NoMission, 1189)
 MisBeginCondition(NoRecord,1189)
@@ -7898,24 +7898,24 @@ MisBeginCondition(HasRecord, 1188)
 MisBeginAction(AddMission,1189)
 MisCancelAction(ClearMission, 1189)
 
-MisNeed(MIS_NEED_DESP,"找鸣沙岛的交易员·米索亚斯(1739,3748)聊聊")
+MisNeed(MIS_NEED_DESP,"(1739,3748)")
 
-MisHelpTalk("<t>你的样子看起来就很值得托付.交易员·米索亚斯在鸣沙岛.")
+MisHelpTalk("<t>..")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使11--------交易员·米索亚斯
+-----------------------------------------11--------
 DefineMission(5710, "TOP Ambassador 11", 1189, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>又要延时!瓦萨法尔为了可爱的女孩什么都可以放弃,甚至是我这个好朋友的嘱托...")
+MisResultTalk("<t>!,...")
 MisResultCondition(NoRecord, 1189)
 MisResultCondition(HasMission,1189)
 MisResultAction(ClearMission,1189)
 MisResultAction(SetRecord, 1189)
 
-----------------------------------------------------------社交大使12----------交易员·米索亚斯
+----------------------------------------------------------12----------
 DefineMission( 5711, "TOP Ambassador 12", 1190 )
-MisBeginTalk("<t>这样看来年底我也没有太多事可以做了.我会去参加德克的宴会的,很久没去拜访过朋友了.古博拉也去吗?太好了,如果饰品商人·瑞恩也能参加,那将是一个完美的圣诞节.")
+MisBeginTalk("<t>.,.?,,.")
 			
 MisBeginCondition(NoMission, 1190)
 MisBeginCondition(NoRecord,1190)
@@ -7923,25 +7923,25 @@ MisBeginCondition(HasRecord, 1189)
 MisBeginAction(AddMission,1190)
 MisCancelAction(ClearMission, 1190)
 
-MisNeed(MIS_NEED_DESP,"找冰极补给站的饰品商人·瑞恩(2673,657)聊聊")
+MisNeed(MIS_NEED_DESP,"(2673,657)")
 
-MisHelpTalk("<t>如果瑞恩不去的话我会觉得遗憾的,希望你可以帮我.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使12--------饰品商人·瑞恩
+-----------------------------------------12--------
 DefineMission(5712, "TOP Ambassador 12", 1190, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>哈哈哈,米索亚斯这个家伙总是说这些让人感动的话.讨厌拉.")
+MisResultTalk("<t>,..")
 MisResultCondition(NoRecord, 1190)
 MisResultCondition(HasMission,1190)
 MisResultAction(ClearMission,1190)
 MisResultAction(SetRecord, 1190)
 
 
-----------------------------------------------------------社交大使13----------饰品商人·瑞恩
+----------------------------------------------------------13----------
 DefineMission( 5713, "TOP Ambassador 13", 1191 )
-MisBeginTalk("<t>可能是多年经营珠宝饰品使我的性格也女性化了.为了让自己始终保持男子的阳刚,多年来我始终与男人味十足的卡休·碎石保持联络.")
+MisBeginTalk("<t>.,.")
 			
 MisBeginCondition(NoMission, 1191)
 MisBeginCondition(NoRecord,1191)
@@ -7949,24 +7949,24 @@ MisBeginCondition(HasRecord, 1190)
 MisBeginAction(AddMission,1191)
 MisCancelAction(ClearMission, 1191)
 
-MisNeed(MIS_NEED_DESP,"找卡尔加德补给站的卡休·碎石(626,2100)聊聊")
+MisNeed(MIS_NEED_DESP,"(626,2100)")
 
-MisHelpTalk("<t>你可以顺便到卡尔加德补给站转转,那里的树会走路的.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使13--------卡休·碎石
+-----------------------------------------13--------
 DefineMission(5714, "TOP Ambassador 13", 1191, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>这里不是一个适合人类居住的地方,尤其是当你不喜欢你的邻居时,这种感觉就更强烈.")
+MisResultTalk("<t>,,.")
 MisResultCondition(NoRecord, 1191)
 MisResultCondition(HasMission,1191)
 MisResultAction(ClearMission,1191)
 MisResultAction(SetRecord, 1191)
 
-----------------------------------------------------------社交大使14----------卡休·碎石
+----------------------------------------------------------14----------
 DefineMission( 5715, "TOP Ambassador 14", 1192 )
-MisBeginTalk("<t>有聚会可以参加?虽然还有很久才到圣诞节,但是听到这个消息仍然让我觉得很振奋,至少可以远离某个人.我想交易员·尤卡也想解脱的,不如你去问下他.")
+MisBeginTalk("<t>?,,.,.")
 			
 MisBeginCondition(NoMission, 1192)
 MisBeginCondition(NoRecord,1192)
@@ -7976,22 +7976,22 @@ MisCancelAction(ClearMission, 1192)
 
 MisNeed(MIS_NEED_DESP,"Talk to Trader - Yuka (2519, 2397) at Cupid Isle ")
 
-MisHelpTalk("<t>真爱岛的地形是心形的,你知道吗?")
+MisHelpTalk("<t>,?")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使14--------交易员·尤卡        
+-----------------------------------------14--------        
 DefineMission(5716, "TOP Ambassador 14", 1192, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你和卡休·碎石真是我的救星啊．我在躲我的债主,我承认我不是一个成功的交易员,总是做赔本的生意.最害怕过圣诞节有人逼债了.")
+MisResultTalk("<t>,,..")
 MisResultCondition(NoRecord, 1192)
 MisResultCondition(HasMission,1192)
 MisResultAction(ClearMission,1192)
 MisResultAction(SetRecord, 1192)
 
-----------------------------------------------------------社交大使15----------交易员·尤卡
+----------------------------------------------------------15----------
 DefineMission( 5717, "TOP Ambassador 15", 1193 )
-MisBeginTalk("<t>开私人聚会没有像样的点心可不行,为了那个美好的晚上,我认为你应该帮我们邀请会作美味点心的尤塔里尼.")
+MisBeginTalk("<t>,,.")
 			
 MisBeginCondition(NoMission, 1193)
 MisBeginCondition(NoRecord,1193)
@@ -7999,25 +7999,25 @@ MisBeginCondition(HasRecord, 1192)
 MisBeginAction(AddMission,1193)
 MisCancelAction(ClearMission, 1193)
 
-MisNeed(MIS_NEED_DESP,"找阿兰比斯补给站的尤塔里尼(1059,661)聊聊")
+MisNeed(MIS_NEED_DESP,"(1059,661)")
 
-MisHelpTalk("<t>拜托你了,为了美味的点心.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使15-------- 尤塔里尼
+-----------------------------------------15-------- 
 DefineMission(5718, "TOP Ambassador 15", 1193, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>那些年轻的聚会邀请我应该是因为美味的点心.")
+MisResultTalk("<t>.")
 MisResultCondition(NoRecord, 1193)
 MisResultCondition(HasMission,1193)
 MisResultAction(ClearMission,1193)
 MisResultAction(SetRecord, 1193)
 
 
-----------------------------------------------------------社交大使16----------尤塔里尼
+----------------------------------------------------------16----------
 DefineMission( 5719, "TOP Ambassador 16", 1194 )
-MisBeginTalk("<t>看见我佝偻的腰杆了吗?我已经不做点心了,废矿补给站的打包人·乎勒达是我的学徒,你去拜托他吧.")
+MisBeginTalk("<t>?,,.")
 			
 MisBeginCondition(NoMission, 1194)
 MisBeginCondition(NoRecord,1194)
@@ -8025,25 +8025,25 @@ MisBeginCondition(HasRecord, 1193)
 MisBeginAction(AddMission,1194)
 MisCancelAction(ClearMission, 1194)
 
-MisNeed(MIS_NEED_DESP,"找废矿补给站的打包人·乎勒达(1907,2798)聊聊")
+MisNeed(MIS_NEED_DESP,"(1907,2798)")
 
-MisHelpTalk("<t>也该是锻炼他的时候了.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使16-------- 打包人·乎勒达
+-----------------------------------------16-------- 
 DefineMission(5720, "TOP Ambassador 16", 1194, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我的确继承了我老师的精湛技艺,放心吧,包在我身上.")
+MisResultTalk("<t>,,.")
 MisResultCondition(NoRecord, 1194)
 MisResultCondition(HasMission,1194)
 MisResultAction(ClearMission,1194)
 MisResultAction(SetRecord, 1194)
 
 
-----------------------------------------------------------社交大使17----------打包人·乎勒达
+----------------------------------------------------------17----------
 DefineMission( 5721, "TOP Ambassador 17", 1195 )
-MisBeginTalk("<t>不过我需要一个温柔的助手帮忙.如果米尔米莉不忙的话,他应该是最佳人选.")
+MisBeginTalk("<t>.,.")
 			
 MisBeginCondition(NoMission, 1195)
 MisBeginCondition(NoRecord,1195)
@@ -8051,24 +8051,24 @@ MisBeginCondition(HasRecord, 1194)
 MisBeginAction(AddMission,1195)
 MisCancelAction(ClearMission, 1195)
 
-MisNeed(MIS_NEED_DESP,"找南部沙漠的米尔米莉(1244,3186)聊聊")
+MisNeed(MIS_NEED_DESP,"(1244,3186)")
 
-MisHelpTalk("<t>米尔米莉是一个很细心并且很有耐心的女孩.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使17-------- 米尔米莉
+-----------------------------------------17-------- 
 DefineMission(5722, "TOP Ambassador 17", 1195, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你好!欢迎你朋友.我接受乎勒达的赞扬,因为我对工作和生活都是这样认真的.")
+MisResultTalk("<t>!.,.")
 MisResultCondition(NoRecord, 1195)
 MisResultCondition(HasMission,1195)
 MisResultAction(ClearMission,1195)
 MisResultAction(SetRecord, 1195)
 
-----------------------------------------------------------社交大使18----------米尔米莉
+----------------------------------------------------------18----------
 DefineMission( 5723, "TOP Ambassador 18", 1196 )
-MisBeginTalk("<t>今天是我来到这片梦幻的南部沙漠一周年的纪念日,要怎么庆祝呢?我想最重要的是要感谢海港指挥·拉米修,是他指引我来到这里的.可是我实在走不开,我现在是职业老师的专职秘书呢.你能体谅我吧.")
+MisBeginTalk("<t>,?,.,..")
 			
 MisBeginCondition(NoMission, 1196)
 MisBeginCondition(NoRecord,1196)
@@ -8078,22 +8078,22 @@ MisCancelAction(ClearMission, 1196)
 
 MisNeed(MIS_NEED_DESP,"Talk to Harbor Operator - Ramus (2297, 3723) at Muse Haven.")
 
-MisHelpTalk("<t>我热爱我的工作和生活,感谢这片美丽的土地.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使18-------- 海港指挥·拉米修
+-----------------------------------------18-------- 
 DefineMission(5724, "TOP Ambassador 18", 1196, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>时间过得好快啊.转眼已经一年了,那个小女孩居然还记得我.呵呵....")
+MisResultTalk("<t>.,.....")
 MisResultCondition(NoRecord, 1196)
 MisResultCondition(HasMission,1196)
 MisResultAction(ClearMission,1196)
 MisResultAction(SetRecord, 1196)
 
-----------------------------------------------------------社交大使19----------海港指挥·拉米修
+----------------------------------------------------------19----------
 DefineMission( 5725, "TOP Ambassador 19", 1197 )
-MisBeginTalk("<t>时光飞逝,我刚到这里的时候还是一个小伙子.很怀念从前的老朋友.不知道天堂传送使现在过得怎么样了.")
+MisBeginTalk("<t>,...")
 			
 MisBeginCondition(NoMission, 1197)
 MisBeginCondition(NoRecord,1197)
@@ -8103,23 +8103,23 @@ MisCancelAction(ClearMission, 1197)
 
 MisNeed(MIS_NEED_DESP,"Look for Heaven Teleporter at (474, 1054).")
 
-MisHelpTalk("<t>他的职位是一个很重要的位置.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使19-------- 天堂传送使
+-----------------------------------------19-------- 
 DefineMission(5726, "TOP Ambassador 19", 1197, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>不知道天堂上的时光是否也如此流逝无影.")
+MisResultTalk("<t>.")
 MisResultCondition(NoRecord, 1197)
 MisResultCondition(HasMission,1197)
 MisResultAction(ClearMission,1197)
 MisResultAction(SetRecord, 1197)
 
 
-	----------------------------------------------------------社交大使20----------天堂传送使
+	----------------------------------------------------------20----------
 DefineMission( 5727, "TOP Ambassador 20", 1198 )
-MisBeginTalk("<t>我想今年的圣诞节一定会很美,桑吉还答应送给我一些华丽的烟花呢,不知道他还记不记得了.")
+MisBeginTalk("<t>,,.")
 			
 MisBeginCondition(NoMission, 1198)
 MisBeginCondition(NoRecord,1198)
@@ -8127,24 +8127,24 @@ MisBeginCondition(HasRecord, 1197)
 MisBeginAction(AddMission,1198)
 MisCancelAction(ClearMission, 1198)
 
-MisNeed(MIS_NEED_DESP,"找交易员·桑吉(1003,1306)聊聊")
+MisNeed(MIS_NEED_DESP,"(1003,1306)")
 
 MisHelpTalk("<t>Thank you, go now.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使20-------- 交易员·桑吉
+-----------------------------------------20-------- 
 DefineMission(5728, "TOP Ambassador 20", 1198, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我怎么会忘记呢?他总是帮助别人,我不会让他失望的.")
+MisResultTalk("<t>?,.")
 MisResultCondition(NoRecord, 1198)
 MisResultCondition(HasMission,1198)
 MisResultAction(ClearMission,1198)
 MisResultAction(SetRecord, 1198)
 
-	----------------------------------------------------------社交大使21----------交易员·桑吉
+	----------------------------------------------------------21----------
 DefineMission( 5729, "TOP Ambassador 21", 1199 )
-MisBeginTalk("<t>恭喜你完成了漫长的社交任务．感恩是每一个热爱生活的人特有的能力,因为拥有它,人们会觉得幸福.不耽误你的时间了,德克在等你了.")
+MisBeginTalk("<t>,,.,.")
 			
 MisBeginCondition(NoMission, 1199)
 MisBeginCondition(NoRecord,1199)
@@ -8152,16 +8152,16 @@ MisBeginCondition(HasRecord, 1198)
 MisBeginAction(AddMission,1199)
 MisCancelAction(ClearMission, 1199)
 
-MisNeed(MIS_NEED_DESP,"找沙岚城海盗·德克(794,3669)聊聊")
+MisNeed(MIS_NEED_DESP,"(794,3669)")
 
-MisHelpTalk("<t>德克有礼物给你.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交英雄21------- 海盗·德克
+-----------------------------------------21------- 
 DefineMission(5730, "Community Hero 21", 1199, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你是我见过的最出色的社交大使,这枚勋章你受之无愧.")
+MisResultTalk("<t>,.")
 MisResultCondition(NoRecord, 1199)
 MisResultCondition(HasMission,1199)
 MisResultAction(ClearMission,1199)
@@ -8170,10 +8170,10 @@ MisResultAction(GiveItem, 1879, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------特别任务	--------海盗·德克
-DefineMission (5731, "梦幻双子之特别行动", 1200)
+-------------------------------------------------	--------
+DefineMission (5731, "", 1200)
 
-MisBeginTalk("<t>这个任务是金牛宫特别行动,你可以不参加,当然不参加的没有礼物拿.你知道<b百万大钞>这种东西吗?我急需一张,你一定愿意帮我的是吧.")
+MisBeginTalk("<t>,,.<b>?,.")
 
 MisBeginCondition(NoMission,1200)
 MisBeginCondition(NoRecord,1200)
@@ -8186,14 +8186,14 @@ MisBeginCondition(HasRecord,1178)
 MisBeginCondition(HasRecord,1199)
 MisBeginCondition(HasRecord,1168)
 MisBeginAction(AddMission,1200)
-MisBeginAction(AddTrigger, 12001, TE_GETITEM, 0854, 1 )---------------------百万大钞 
+MisBeginAction(AddTrigger, 12001, TE_GETITEM, 0854, 1 )--------------------- 
 MisCancelAction(ClearMission, 1200)
 
 
 MisNeed(MIS_NEED_ITEM, 0854, 1, 1, 1 )
-MisHelpTalk("<t>我不是一个爱钱的人,但是喜欢收藏钞票...")
+MisHelpTalk("<t>,...")
 
-MisResultTalk("<t>我最欣赏你这种大方的人,也只有大方的人配穿这套双子酷装.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1200)
 MisResultCondition(NoRecord,1200)
@@ -8211,10 +8211,10 @@ RegCurTrigger( 12001 )
 
 
 
--------------------------------------------------双子之水手过关奖励----------海盗·德克	
-DefineMission (5733, "双子之水手过关奖励", 1201)
+-----------------------------------------------------------	
+DefineMission (5733, "", 1201)
 
-MisBeginTalk("<t>集齐7枚勋章就可以在我这里兑换到双子宫守印和巨蟹宫的门票了.还有很多奖励哦 ")
+MisBeginTalk("<t>7. ")
 
 MisBeginCondition(NoMission,1201)
 MisBeginCondition(HasRecord,1159)
@@ -8245,7 +8245,7 @@ MisNeed(MIS_NEED_ITEM, 1879, 1, 60, 1 )
 MisNeed(MIS_NEED_ITEM, 1880, 1, 70, 1 )
 
 MisHelpTalk("<t>What are you still waiting for? Come now to exchange for prizes.")
-MisResultTalk("<t>下一宫是巨蟹宫,有更诱人的奖励和更刺激的挑战在等你.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1201)
 MisResultCondition(NoRecord,1201)
@@ -8308,10 +8308,10 @@ InitTrigger()
 TriggerCondition( 1, IsItem, 1880)	
 TriggerAction( 1, AddNextFlag, 1201, 70, 1 )
 RegCurTrigger( 12017 )
-----------------------------------------------双子之海盗过关奖励----------海盗·德克	
-DefineMission (5734, "双子之海盗过关奖励", 1202)
+--------------------------------------------------------	
+DefineMission (5734, "", 1202)
 
-MisBeginTalk("<t>集齐7枚勋章就可以在我这里兑换到双子宫守印和巨蟹宫的门票了.还有很多奖励哦 ")
+MisBeginTalk("<t>7. ")
 
 MisBeginCondition(NoMission,1202)
 MisBeginCondition(HasRecord,1204)
@@ -8342,7 +8342,7 @@ MisNeed(MIS_NEED_ITEM, 1879, 1, 60, 1 )
 MisNeed(MIS_NEED_ITEM, 1880, 1, 70, 1 )
 
 MisHelpTalk("<t>What are you still waiting for? Come now to exchange for prizes.")
-MisResultTalk("<t>下一宫是巨蟹宫,有更诱人的奖励和更刺激的挑战在等你.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1202)
 MisResultCondition(NoRecord,1202)
@@ -8406,10 +8406,10 @@ TriggerCondition( 1, IsItem, 1880)
 TriggerAction( 1, AddNextFlag, 1202, 70, 1 )
 RegCurTrigger( 12027 )
 
---------------------------------------------双子之船长过关奖励----------海盗·德克	
-DefineMission (5735, "双子之船长过关奖励", 1203)
+------------------------------------------------------	
+DefineMission (5735, "", 1203)
 
-MisBeginTalk("<t>集齐7枚勋章就可以在我这里兑换到双子宫守印和巨蟹宫的门票了.还有很多奖励哦 ")
+MisBeginTalk("<t>7. ")
 
 MisBeginCondition(NoMission,1203)
 MisBeginCondition(HasRecord,1161)
@@ -8440,7 +8440,7 @@ MisNeed(MIS_NEED_ITEM, 1879, 1, 60, 1 )
 MisNeed(MIS_NEED_ITEM, 1880, 1, 70, 1 )
 
 MisHelpTalk("<t>What are you still waiting for? Come now to exchange for prizes.")
-MisResultTalk("<t>下一宫是巨蟹宫,有更诱人的奖励和更刺激的挑战在等你.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1203)
 MisResultCondition(NoRecord,1203)
@@ -8504,10 +8504,10 @@ TriggerCondition( 1, IsItem, 1880)
 TriggerAction( 1, AddNextFlag, 1203, 70, 1 )
 RegCurTrigger( 12037 )
 
-----------------------------------天仙配传奇--------月老
-DefineMission ( 5736, "天仙配传奇", 1205)
+------------------------------------------
+DefineMission ( 5736, "", 1205)
 
-MisBeginTalk("<t>七夕将至,苦等一年的牛郎织女即将相会,真是令人感慨啊.你想要听牛郎与织女的天仙配传奇故事吗?用10个精灵之心来交换吧.")
+MisBeginTalk("<t>,,.?10.")
 
 MisBeginCondition(NoMission,1205)
 MisBeginCondition(NoRecord,1205)
@@ -8516,11 +8516,11 @@ MisBeginAction(AddTrigger, 12051, TE_GETITEM, 4418, 10)
 MisCancelAction(ClearMission, 1205)
 
 
-MisNeed(MIS_NEED_DESP,"去找到10个精灵之心与月老交换动人的爱情故事")
+MisNeed(MIS_NEED_DESP,"10")
 MisNeed(MIS_NEED_ITEM, 4418, 10, 10, 10)
 
-MisHelpTalk("<t>要10个精灵之心")
-MisResultTalk("<t>我编织过无数的凄美故事,但我发誓这件事与我无关.我可是一个善良的老头.") 
+MisHelpTalk("<t>10")
+MisResultTalk("<t>,..") 
 
 MisResultCondition(HasMission, 1205)
 MisResultCondition(NoRecord,1205)
@@ -8535,61 +8535,61 @@ TriggerCondition( 1, IsItem, 4418)
 TriggerAction( 1, AddNextFlag, 1205, 10, 10 )
 RegCurTrigger( 12051 )
 
--------------------------------鹊桥情事--------月老
-DefineMission( 5737, "鹊桥情事", 1206)
+---------------------------------------
+DefineMission( 5737, "", 1206)
 
-MisBeginTalk( "<t>在很久很久以前......这是一个以情贯穿的故事.人的情、神的情、牲灵的情、人和神的情、正义的情、邪恶的情、生怨的情、凄美的情、生死相依的情......<n><t>去寻找故事的主人公牛郎吧!据说他在夏岛附近.")
+MisBeginTalk( "<t>.............<n><t>!.")
 MisBeginCondition(HasRecord, 1205 )
 MisBeginCondition(NoRecord, 1206 )
 MisBeginCondition(NoMission, 1206 )
 MisBeginAction(AddMission, 1206 )
 MisCancelAction(ClearMission, 1206)
 
-MisNeed(MIS_NEED_DESP,"找到夏岛牛郎(3670,2636).")
-MisHelpTalk("<t>去夏岛要用机票哦.")
+MisNeed(MIS_NEED_DESP,"(3670,2636).")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure )
 
----------------------------------------鹊桥情事-------牛郎
+----------------------------------------------
 
-DefineMission(5738,"鹊桥情事",1206,COMPLETE_SHOW )
+DefineMission(5738,"",1206,COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>我即将与我的爱人见面,真是期待啊!遥想当年,我们历尽千辛万苦,终于换来这一年一次的相聚.虽然短暂,但也值得.")
+MisResultTalk("<t>,!,,.,.")
 MisResultCondition(HasMission, 1206)
 MisBeginCondition(NoRecord, 1206)
 MisResultAction(ClearMission, 1206)
 MisResultAction(SetRecord, 1206)
 
 
--------------------------------千里传书------牛郎
-DefineMission( 5739, "千里传书", 1207)
+-------------------------------------
+DefineMission( 5739, "", 1207)
 
-MisBeginTalk( "<t>马上就要见面,有千言万语要说,已经迫不及待了.您能否将这封信交到织女手中?她在天堂!辛苦你了!")
+MisBeginTalk( "<t>,,.?!!")
 MisBeginCondition(HasRecord, 1206 )
 MisBeginCondition(NoRecord, 1207 )
 MisBeginCondition(NoMission, 1207 )
 MisBeginAction(AddMission, 1207 )
-MisBeginAction(GiveItem, 2669, 1, 4)----------牛郎的情书
+MisBeginAction(GiveItem, 2669, 1, 4)----------
 MisCancelAction(ClearMission, 1207)
 MisBeginBagNeed(1)
 
-MisNeed(MIS_NEED_DESP,"帮牛郎送信给天堂的织女(1599,909).")
-MisHelpTalk("<t>一年一度的相聚,多亏了那些喜鹊.")
+MisNeed(MIS_NEED_DESP,"(1599,909).")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure )
 
----------------------------------------千里传书----织女
+-------------------------------------------
 
-DefineMission(5740,"千里传书",1207,COMPLETE_SHOW )
+DefineMission(5740,"",1207,COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure)
 
-MisResultTalk("<t>这是牛郎给我的书信?太好了,实在感谢您.作为回报,我将用天梭为你编织世界上最美丽的衣服.也祝愿您能找到您的挚爱.穿上我给你做的衣服,一定可以捕获他(她)的心.<n><t>如果您想了解更多关于我和牛郎的故事,尽请关注即将为我们筹拍的电视剧《牛郎织女》.")
+MisResultTalk("<t>?,.,..,().<n><t>,.")
 MisResultCondition(HasMission, 1207)
 MisBeginCondition(NoRecord, 1207)
-MisResultCondition(HasItem,2669,1)---------牛郎的情书
+MisResultCondition(HasItem,2669,1)---------
 MisResultAction(TakeItem, 2669,1)
-MisResultAction(GiveItem, 2670, 1, 4)----------天衣宝箱
+MisResultAction(GiveItem, 2670, 1, 4)----------
 MisResultAction(ClearMission, 1207)
 MisResultAction(SetRecord, 1207)
 MisResultAction(ClearRecord, 1205 )
@@ -8597,20 +8597,20 @@ MisResultAction(ClearRecord, 1206 )
 MisResultAction(ClearRecord, 1207 )
 MisResultBagNeed(1)
 
--------------------------------------------------------昂贵的学费----------雷诺校长
-DefineMission( 6127, "昂贵的学费", 1453)
-MisBeginTalk( "<t>又一个学年开始咯,小朋友你想体验上学的乐趣吗?那么~~嘿嘿,先付点学费吧,也不贵,只要2亿海盗币就行了.什么?你没钱?算啦算啦,只要你帮我老人家去找99个食神水饺过来吧,学费就免了吧.")
+-----------------------------------------------------------------
+DefineMission( 6127, "", 1453)
+MisBeginTalk( "<t>,?~~,,,2.??,99,.")
 MisBeginCondition( NoMission, 1453)
 MisBeginCondition( NoRecord, 1453)
 MisBeginAction( AddMission, 1453)
 MisBeginAction(AddTrigger, 14531, TE_GETITEM, 3909, 99)
 MisCancelAction( ClearMission, 1453)
 
-MisNeed( MIS_NEED_DESP, "找99个食神水饺来给雷诺校长(2232,2781).")
+MisNeed( MIS_NEED_DESP, "99(2232,2781).")
 MisNeed( MIS_NEED_ITEM, 3909, 99, 10, 99)
 
-MisHelpTalk( "<t>食神水饺的话据说有个神秘的商城有卖，不过记得把背包留出足够的空格")
-MisResultTalk( "<t>水饺真好吃,小朋友真不错啊!")
+MisHelpTalk( "<t>")
+MisResultTalk( "<t>,!")
 MisResultCondition( HasMission, 1453)
 MisResultCondition( NoRecord, 1453)
 MisResultCondition( HasItem, 3909, 99)
@@ -8623,29 +8623,29 @@ TriggerCondition( 1, IsItem, 3909)
 TriggerAction( 1, AddNextFlag, 1453, 10, 99 )
 RegCurTrigger( 14531 )
 
--------------------------------------------------------更多的朋友----------雷诺校长
-DefineMission( 6128, "更多的朋友", 1454)
-MisBeginTalk( "<t>入了学你还要多认识新伙伴啊,这样吧,去认识4个朋友,然后带他们来见我.")
+-----------------------------------------------------------------
+DefineMission( 6128, "", 1454)
+MisBeginTalk( "<t>,,4,.")
 MisBeginCondition( NoMission, 1454)
 MisBeginCondition( NoRecord, 1454)
 MisBeginCondition( HasRecord, 1453)
 MisBeginAction( AddMission, 1454)
 MisCancelAction( ClearMission, 1454)
 
-MisNeed( MIS_NEED_DESP, "组4个队友然后回去找雷诺校长(2232,2781)谈谈")
+MisNeed( MIS_NEED_DESP, "4(2232,2781)")
 
-MisHelpTalk( "<t>去组4个队友吧!")
-MisResultTalk( "<t>恩，还是年轻好,多有活力啊,去多多认识些朋友吧.")
+MisHelpTalk( "<t>4!")
+MisResultTalk( "<t>,,.")
 MisResultCondition( HasMission, 1454)
 MisResultCondition( NoRecord, 1454)
-MisResultCondition( CheckTeam1, 5)					------检测有几个队友
+MisResultCondition( CheckTeam1, 5)					------
 MisResultAction( ClearMission, 1454)
 MisResultAction( SetRecord, 1454)
 
--------------------------------------------------------体育锻炼----------雷诺校长
+-----------------------------------------------------------------
 
-DefineMission( 6129, "体育锻炼", 1455)
-MisBeginTalk( "<t>当一个好学生身体也要健健康康,去锻炼下消灭10棵精灵草.")
+DefineMission( 6129, "", 1455)
+MisBeginTalk( "<t>,10.")
 MisBeginCondition( NoMission, 1455)
 MisBeginCondition( NoRecord, 1455)
 MisBeginCondition( HasRecord, 1454)
@@ -8653,11 +8653,11 @@ MisBeginAction( AddMission, 1455)
 MisBeginAction(AddTrigger, 14551, TE_KILL, 75, 10 )
 MisCancelAction( ClearMission, 1455)
 
-MisNeed( MIS_NEED_DESP, "去消灭10棵精灵草(2118,2638)后回来找雷诺校长.")
+MisNeed( MIS_NEED_DESP, "10(2118,2638).")
 MisNeed( MIS_NEED_KILL, 75, 10, 10, 10)
 
-MisHelpTalk( "<t>精灵草白银城门口就有很多.")
-MisResultTalk( "<t>看来你真的很健壮.")
+MisHelpTalk( "<t>.")
+MisResultTalk( "<t>.")
 MisResultCondition( HasMission, 1455)
 MisResultCondition( NoRecord, 1455)
 MisResultCondition( HasFlag, 1455, 19)
@@ -8669,9 +8669,9 @@ TriggerCondition( 1, IsMonster, 75 )
 TriggerAction( 1, AddNextFlag, 1455, 10, 10 )
 RegCurTrigger(14551)
 
--------------------------------------------------------入学证书----------雷诺校长
-DefineMission( 6130, "入学证书", 1456)
-MisBeginTalk( "<t>既然学费也交过了,朋友也认识了,那这张入学证书就给你吧,不过证书也要制作费的嘛,算你便宜点,给我张百万大钞就行了.")
+-----------------------------------------------------------------
+DefineMission( 6130, "", 1456)
+MisBeginTalk( "<t>,,,,,.")
 MisBeginCondition( NoMission, 1456)
 MisBeginCondition( NoRecord, 1456)
 MisBeginCondition( HasRecord, 1455)
@@ -8679,11 +8679,11 @@ MisBeginAction( AddMission, 1456)
 MisBeginAction(AddTrigger, 14561, TE_GETITEM, 854, 1)
 MisCancelAction( ClearMission, 1456)
 
-MisNeed( MIS_NEED_DESP, "找张百万大钞给雷诺校长(2232,2781).")
+MisNeed( MIS_NEED_DESP, "(2232,2781).")
 MisNeed( MIS_NEED_ITEM, 854, 1, 10, 1)
 
-MisHelpTalk( "<t>给我一张百万大钞,我就给你入学证书,嘿嘿")
-MisResultTalk( "<t>钱拿来了?那入学证书给你吧.")
+MisHelpTalk( "<t>,,")
+MisResultTalk( "<t>?.")
 MisResultCondition( HasMission, 1456)
 MisResultCondition( NoRecord, 1456)
 MisResultCondition( HasItem, 854, 1)
@@ -8698,51 +8698,51 @@ TriggerCondition( 1, IsItem, 854)
 TriggerAction( 1, AddNextFlag, 1456, 10, 1 )
 RegCurTrigger( 14561 )
 
--------------------------------------------------------开学报到----------雷诺校长
-DefineMission( 6131, "开学报到", 1457)
-MisBeginTalk( "<t>既然学费也交过了，朋友也认识了，那就带着这张入学证书去找昂莉娜老师(871,3582)报到吧，不过她可能会考下你哦！")
+-----------------------------------------------------------------
+DefineMission( 6131, "", 1457)
+MisBeginTalk( "<t>(871,3582)")
 MisBeginCondition( NoMission, 1457)
 MisBeginCondition( NoRecord, 1457)
 MisBeginCondition( HasRecord, 1456)
 MisBeginAction( AddMission, 1457)
 MisCancelAction( ClearMission, 1457)
 
-MisNeed( MIS_NEED_DESP, "带着入学证书去找昂莉娜老师(871,3582)报到")
-MisHelpTalk( "<t>昂莉娜老师就在沙岚(871,3582),别忘记带入学证书过去哦.")
+MisNeed( MIS_NEED_DESP, "(871,3582)")
+MisHelpTalk( "<t>(871,3582),.")
 MisResultCondition( AlwaysFailure )
 
--------------------------------------------------------开学报到----------昂莉娜老师
-DefineMission( 6132, "开学报到", 1457, COMPLETE_SHOW)
+-----------------------------------------------------------------
+DefineMission( 6132, "", 1457, COMPLETE_SHOW)
 
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>知道吗？有些神秘的文具据说可以当做武器使用哦.")
+MisResultTalk( "<t>.")
 MisResultCondition( HasMission, 1457)
 MisResultCondition( NoRecord, 1457)
 MisResultCondition( HasItem, 579, 1)
 MisResultAction( ClearMission, 1457)
 MisResultAction( SetRecord, 1457)
 
--------------------------------------------------------入学考试----------昂莉娜老师
-DefineMission( 6133, "入学考试", 1458)
-MisBeginTalk( "<t>要想入学的话要接受我的考试吗?那可是很难的哦,每道题你只有30秒的思考时间,未答或者晚答都算答错.")
+-----------------------------------------------------------------
+DefineMission( 6133, "", 1458)
+MisBeginTalk( "<t>?,30,.")
 MisBeginCondition( NoMission, 1458)
 MisBeginCondition( NoRecord, 1458)
 MisBeginCondition( HasRecord, 1457)
 MisBeginAction( AddMission, 1458)
 MisCancelAction( ClearMission, 1458)
 
-MisNeed( MIS_NEED_DESP, "回答完昂莉娜老师的入学考试问题")
+MisNeed( MIS_NEED_DESP, "")
 
-MisHelpTalk( "<t>要想回答对我的问题的话,你可要做好充分的准备哦,只有对我们海盗王的世界有一定了解的人才能回答出来.")
+MisHelpTalk( "<t>,,.")
 MisResultCondition( AlwaysFailure )
 
--------------------------------------------------------入学考试----------昂莉娜老师
-DefineMission( 6134, "入学考试", 1458, COMPLETE_SHOW)
+-----------------------------------------------------------------
+DefineMission( 6134, "", 1458, COMPLETE_SHOW)
 
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>恭喜你,你真的很聪明,我相信你一定会成为一个好学生的,作为奖励,给你一个大礼包吧.")
+MisResultTalk( "<t>,,,,.")
 MisResultCondition( HasMission, 1458)
 MisResultCondition( NoRecord, 1463)
 MisResultCondition( HasRecord, 1461)
@@ -8754,12 +8754,12 @@ MisResultAction( GiveItem, 47, 1, 4)
 MisResultAction( ClearMission, 1458)
 MisResultBagNeed(1)
 
--------------------------------------------------------入学考试----------昂莉娜老师
-DefineMission( 6135, "入学考试", 1458, COMPLETE_SHOW)
+-----------------------------------------------------------------
+DefineMission( 6135, "", 1458, COMPLETE_SHOW)
 
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>不及格哦,不过没关系,我还有另外的一项任务交给你.")
+MisResultTalk( "<t>,,.")
 MisResultCondition( HasMission, 1458)
 MisResultCondition( NoRecord, 1463)
 MisResultCondition( HasRecord, 1461)
@@ -8770,9 +8770,9 @@ MisResultAction( SetRecord, 1460)
 MisResultAction( TakeItem, 579, 1)
 MisResultAction( ClearMission, 1458)
 
--------------------------------------------------------真假友人----------昂莉娜老师
-DefineMission( 6136, "真假友人", 1464)
-MisBeginTalk( "<t>我这里有封信需要你去帮我送给住在冰极的库拉托斯.他是个很喜欢开玩笑的人,经常和3个跟他自己一模一样的傀儡在一起,你如果去的话一定要分清楚哪个是真的,不然会有很可怕的事情发生的!!还有,顺便去找10张圣雪山直航票给库拉托斯")
+-----------------------------------------------------------------
+DefineMission( 6136, "", 1464)
+MisBeginTalk( "<t>.,3,,!!,10")
 MisBeginCondition( NoMission, 1464)
 MisBeginCondition( NoRecord, 1464)
 MisBeginCondition( HasRecord, 1460)
@@ -8782,16 +8782,16 @@ MisBeginAction( GiveItem, 500, 1, 4)
 MisCancelAction( ClearMission, 1464)
 MisBeginBagNeed(1)
 
-MisNeed( MIS_NEED_DESP, "把昂莉娜的信,还有10张圣雪山机票送去给真正的库拉托斯,他就在冰极补给站附近")
-MisHelpTalk( "<t>库拉托斯就在冰极附近,不过你要判断准他是不是真的库拉托斯")
+MisNeed( MIS_NEED_DESP, ",10,")
+MisHelpTalk( "<t>,")
 
 MisResultCondition( AlwaysFailure )
 
--------------------------------------------------------真假友人----------库拉托斯
-DefineMission( 6137, "真假友人", 1464, COMPLETE_SHOW)
+-----------------------------------------------------------------
+DefineMission( 6137, "", 1464, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>居然能发现我的真身,看来你拥有很敏锐的观察能力和不折不挠的毅力啊,这是值得奖励的,我相信你也一定会是个好学生.")
+MisResultTalk( "<t>,,,.")
 MisResultCondition( HasMission, 1464)
 MisResultCondition( NoRecord, 1464)
 MisResultCondition( HasRecord, 1465)
@@ -8809,10 +8809,10 @@ TriggerCondition( 1, IsItem, 3050)
 TriggerAction( 1, AddNextFlag, 1464, 10, 10 )
 RegCurTrigger( 14641 )
 
------------------------------------------乱斗英雄----------海事所助理·罗拉娜--------水手
-DefineMission (5800, "温情巨蟹之乱斗英雄", 1470)
+-----------------------------------------------------------
+DefineMission (5800, "", 1470)
 
-MisBeginTalk("<t>巨蟹座的人,温情顾家,在事业方面也都能表现出自己的才能.这是属于你的梦幻星座吗?")
+MisBeginTalk("<t>,,.?")
 
 MisBeginCondition(NoMission,1470)
 MisBeginCondition(HasRecord,1466)
@@ -8820,9 +8820,9 @@ MisBeginCondition(NoRecord,1470)
 MisBeginAction(AddMission,1470)
 MisCancelAction(ClearMission, 1470)
 
-MisNeed(MIS_NEED_DESP,"获得80点乱斗点数")
-MisHelpTalk("<t>乱斗点数可以从乱斗白银获得!")
-MisResultTalk("<t>成为英雄的道路上必定会有种种阻碍,战斗的勇气片刻都不能丢失哦.投入全力去战斗吧!")
+MisNeed(MIS_NEED_DESP,"80")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>,.!")
 
 MisResultCondition(HasMission, 1470)
 MisResultCondition(NoRecord,1470)
@@ -8834,10 +8834,10 @@ MisResultAction(GiveItem, 2568, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------名声英雄----------海事所助理·罗拉娜	--------水手
-DefineMission (5801, "温情巨蟹之名声英雄", 1471)
+-----------------------------------------------------------	--------
+DefineMission (5801, "", 1471)
 
-MisBeginTalk("<t>有目标才有追求,有追求才有成就.所以温情巨蟹宫对你的要求也更高一些.")
+MisBeginTalk("<t>,..")
 
 MisBeginCondition(NoMission,1471)
 MisBeginCondition(HasRecord,1466)
@@ -8846,8 +8846,8 @@ MisBeginAction(AddMission,1471)
 MisCancelAction(ClearMission, 1471)
 
 MisNeed(MIS_NEED_DESP,"Obtain 3000 points of reputation.")
-MisHelpTalk("<t>看来你得到的名声还不够哦,我想3000点名声对你来说应该不是问题吧? ")
-MisResultTalk("<t>这枚名声勋章是用来见证英雄的.")
+MisHelpTalk("<t>,3000? ")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1471)
 MisResultCondition(NoRecord,1471)
@@ -8858,10 +8858,10 @@ MisResultAction(SetRecord,  1471 )
 MisResultAction(GiveItem, 2569, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------等级英雄----------海事所助理·罗拉娜	---------水手
-DefineMission (5802, "温情巨蟹之等级英雄", 1472)
+-----------------------------------------------------------	---------
+DefineMission (5802, "", 1472)
 
-MisBeginTalk("<t>成长的道路是漫长和艰辛的,但是付出一定会有回报哦,让我看看你收获了什么吧...")
+MisBeginTalk("<t>,,...")
 
 MisBeginCondition(NoMission,1472)
 MisBeginCondition(HasRecord,1466)
@@ -8870,8 +8870,8 @@ MisBeginAction(AddMission,1472)
 MisCancelAction(ClearMission, 1472)
 
 MisNeed(MIS_NEED_DESP,"Reached Level 65")
-MisHelpTalk("<t>当然,65级对我来说不成问题.")
-MisResultTalk("<t>看来你已经经历了成长的磨练,收获不少哦,这枚等级勋章是你的了.")
+MisHelpTalk("<t>,65.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1472)
 MisResultCondition(NoRecord,1472)
@@ -8882,10 +8882,10 @@ MisResultAction(GiveItem, 2570, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------荣誉英雄----------海事所助理·罗拉娜	----------水手
-DefineMission (5803, "温情巨蟹之荣誉英雄", 1473)
+-----------------------------------------------------------	----------
+DefineMission (5803, "", 1473)
 
-MisBeginTalk("<t>亲爱的朋友,有一点你必须要知道,海盗世界最重要的就是荣誉!祖先为此付出一切赢得尊敬,你一定要继承下去.")
+MisBeginTalk("<t>,,!,.")
 
 MisBeginCondition(NoMission,1473)
 MisBeginCondition(HasRecord,1466)
@@ -8893,9 +8893,9 @@ MisBeginCondition(NoRecord,1473)
 MisBeginAction(AddMission,1473)
 MisCancelAction(ClearMission, 1473)
 
-MisNeed(MIS_NEED_DESP,"获得600点荣誉点数")
-MisHelpTalk("<t>去为荣誉而战吧!")
-MisResultTalk("<t>你是个很不错的荣誉之子.")
+MisNeed(MIS_NEED_DESP,"600")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1473)
 MisResultCondition(NoRecord,1473)
@@ -8906,21 +8906,21 @@ MisResultAction(SetRecord,  1473 )
 MisResultAction(GiveItem, 2571, 1, 4)
 MisResultBagNeed(1)	
 
--------------------------------------------------采集大使----------海事所助理·罗拉娜	----------水手	
-DefineMission (5804, "温情巨蟹之采集大使", 1474)
+-----------------------------------------------------------	----------	
+DefineMission (5804, "", 1474)
 
-MisBeginTalk("<t>成功是需要平时的积累的哦!洞察力也是关键.现在我需要你去收集一些东西...")
+MisBeginTalk("<t>!....")
 
 MisBeginCondition(NoMission,1474)
 MisBeginCondition(HasRecord,1466)
 MisBeginCondition(NoRecord,1474)
 MisBeginAction(AddMission,1474)
-MisBeginAction(AddTrigger, 14741, TE_GETITEM, 1693, 10 )-------------------蝎甲10个
-MisBeginAction(AddTrigger, 14742, TE_GETITEM, 2677, 10 )-------------------链弹LV1 10          
-MisBeginAction(AddTrigger, 14743, TE_GETITEM, 3909, 1 )-----------------食神水饺1               
-MisBeginAction(AddTrigger, 14744, TE_GETITEM, 2589, 5 )----------------精灵王辉印5               
-MisBeginAction(AddTrigger, 14745, TE_GETITEM, 3094, 5)------------------努力增幅器5            
-MisBeginAction(AddTrigger, 14746, TE_GETITEM, 3827, 1 )-----------------情之殇1             
+MisBeginAction(AddTrigger, 14741, TE_GETITEM, 1693, 10 )-------------------10
+MisBeginAction(AddTrigger, 14742, TE_GETITEM, 2677, 10 )-------------------LV1 10          
+MisBeginAction(AddTrigger, 14743, TE_GETITEM, 3909, 1 )-----------------1               
+MisBeginAction(AddTrigger, 14744, TE_GETITEM, 2589, 5 )----------------5               
+MisBeginAction(AddTrigger, 14745, TE_GETITEM, 3094, 5)------------------5            
+MisBeginAction(AddTrigger, 14746, TE_GETITEM, 3827, 1 )-----------------1             
 MisCancelAction(ClearMission, 1474)
 
 
@@ -8932,8 +8932,8 @@ MisNeed(MIS_NEED_ITEM, 3094, 5,  27, 5 )
 MisNeed(MIS_NEED_ITEM, 3827, 1,  32, 1 )
 
 
-MisHelpTalk("<t>需要的东西不是很多,但是也不是那么容易哦.")
-MisResultTalk("<t>物到用时方恨少吧,积累的过程虽然比较麻烦,但是如果要做个大人物,细心积累和观察都是不可缺少的哦,当然,还有超强的耐心和毅力!")
+MisHelpTalk("<t>,.")
+MisResultTalk("<t>,,,,,!")
 
 MisResultCondition(HasMission, 1474)
 MisResultCondition(NoRecord,1474)
@@ -8988,24 +8988,24 @@ TriggerCondition( 1, IsItem, 3827)
 TriggerAction( 1, AddNextFlag, 1474,32, 1 )
 RegCurTrigger( 14746 )
 
-----------------------------------------------------------巨蟹末日----------海事所助理·罗拉娜
-DefineMission( 5805, "温情巨蟹之巨蟹末日", 1475 )
-MisBeginTalk("<t>BOSS勋章是最具英雄主义意味的奖章,你要的话就去杀掉可怕的巨蟹宫守护神.")
+--------------------------------------------------------------------
+DefineMission( 5805, "", 1475 )
+MisBeginTalk("<t>BOSS,.")
 			
 MisBeginCondition(NoMission, 1475)
 MisBeginCondition(HasRecord,1469)
 MisBeginCondition(NoRecord,1475)
 MisBeginAction(AddMission,1475)
-MisBeginAction(AddTrigger, 14751, TE_KILL, 1040, 1)---巨蟹守护者
+MisBeginAction(AddTrigger, 14751, TE_KILL, 1040, 1)---
 
 MisCancelAction(ClearMission, 1475)
 
-MisNeed(MIS_NEED_DESP,"捕杀巨蟹宫守护神,魔女之海(1637,3751)!")
+MisNeed(MIS_NEED_DESP,",(1637,3751)!")
 MisNeed(MIS_NEED_KILL, 1040,1, 10, 1)
 
 
-MisResultTalk("<t>当人和螃蟹结合将是可怕的造物.他的野心犹如外表一样丑陋!")
-MisHelpTalk("<t>那怪物拥有强有力的大钳和恶心的唾沫哦,你要小心.")
+MisResultTalk("<t>.!")
+MisHelpTalk("<t>,.")
 MisResultCondition(HasMission,  1475)
 MisResultCondition(HasFlag, 1475, 10)
 MisResultCondition(NoRecord , 1475)
@@ -9020,10 +9020,10 @@ TriggerAction( 1, AddNextFlag, 1475, 10, 1 )
 RegCurTrigger( 14751 )
 
 
------------------------------------------乱斗英雄----------海事所助理·罗拉娜--------海盗
-DefineMission (5806, "温情巨蟹之乱斗英雄", 1476)
+-----------------------------------------------------------
+DefineMission (5806, "", 1476)
 
-MisBeginTalk("<t>巨蟹座的人,温情顾家,在事业方面也都能表现出自己的才能.这是属于你的梦幻星座吗?")
+MisBeginTalk("<t>,,.?")
 
 MisBeginCondition(NoMission,1476)
 MisBeginCondition(HasRecord,1467)
@@ -9031,9 +9031,9 @@ MisBeginCondition(NoRecord,1476)
 MisBeginAction(AddMission,1476)
 MisCancelAction(ClearMission, 1476)
 
-MisNeed(MIS_NEED_DESP,"获得150点乱斗点数")
-MisHelpTalk("<t>乱斗点数可以从乱斗白银获得!")
-MisResultTalk("<t>成为英雄的道路上必定会有种种阻碍,战斗的勇气片刻都不能丢失哦.投入全力去战斗吧!")
+MisNeed(MIS_NEED_DESP,"150")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>,.!")
 
 MisResultCondition(HasMission, 1476)
 MisResultCondition(NoRecord,1476)
@@ -9045,10 +9045,10 @@ MisResultAction(GiveItem, 2568, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------名声英雄----------海事所助理·罗拉娜	--------海盗
-DefineMission (5807, "温情巨蟹之名声英雄", 1477)
+-----------------------------------------------------------	--------
+DefineMission (5807, "", 1477)
 
-MisBeginTalk("<t>有目标才有追求,有追求才有成就.所以温情巨蟹宫对你的要求也更高一些.")
+MisBeginTalk("<t>,..")
 
 MisBeginCondition(NoMission,1477)
 MisBeginCondition(HasRecord,1467)
@@ -9056,9 +9056,9 @@ MisBeginCondition(NoRecord,1477)
 MisBeginAction(AddMission,1477)
 MisCancelAction(ClearMission, 1477)
 
-MisNeed(MIS_NEED_DESP,"获得6000点名声点数")
-MisHelpTalk("<t>看来你得到的名声还不够哦,我想6000点名声对你来说应该不是问题吧? ")
-MisResultTalk("<t>这枚名声勋章是用来见证英雄的.")
+MisNeed(MIS_NEED_DESP,"6000")
+MisHelpTalk("<t>,6000? ")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1477)
 MisResultCondition(NoRecord,1477)
@@ -9070,10 +9070,10 @@ MisResultAction(GiveItem, 2569, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------海事所助理·罗拉娜	---------海盗
-DefineMission (5808, "温情巨蟹之等级英雄", 1600)
+-----------------------------------------------------------	---------
+DefineMission (5808, "", 1600)
 
-MisBeginTalk("<t>成长的道路是漫长和艰辛的,但是付出一定会有回报哦,让我看看你收获了什么吧...")
+MisBeginTalk("<t>,,...")
 
 MisBeginCondition(NoMission,1600)
 MisBeginCondition(HasRecord,1467)
@@ -9081,9 +9081,9 @@ MisBeginCondition(NoRecord,1600)
 MisBeginAction(AddMission,1600)
 MisCancelAction(ClearMission, 1600)
 
-MisNeed(MIS_NEED_DESP,"等级达到70级")
-MisHelpTalk("<t>当然,70级对我来说不成问题.")
-MisResultTalk("<t>看来你已经经历了成长的磨练,收获不少哦,这枚等级勋章是你的了.")
+MisNeed(MIS_NEED_DESP,"70")
+MisHelpTalk("<t>,70.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1600)
 MisResultCondition(NoRecord,1600)
@@ -9093,10 +9093,10 @@ MisResultAction(SetRecord,  1600 )
 MisResultAction(GiveItem, 2570, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------荣誉英雄----------海事所助理·罗拉娜	----------海盗
-DefineMission (5809, "温情巨蟹之荣誉英雄", 1479)
+-----------------------------------------------------------	----------
+DefineMission (5809, "", 1479)
 
-MisBeginTalk("<t>亲爱的朋友,有一点你必须要知道,海盗世界最重要的就是荣誉!祖先为此付出一切赢得尊敬,你一定要继承下去.")
+MisBeginTalk("<t>,,!,.")
 
 MisBeginCondition(NoMission,1479)
 MisBeginCondition(HasRecord,1467)
@@ -9104,9 +9104,9 @@ MisBeginCondition(NoRecord,1479)
 MisBeginAction(AddMission,1479)
 MisCancelAction(ClearMission, 1479)
 
-MisNeed(MIS_NEED_DESP,"获得900点荣誉点数")
-MisHelpTalk("<t>去为荣誉而战吧!")
-MisResultTalk("<t>你是个很不错的荣誉之子.")
+MisNeed(MIS_NEED_DESP,"900")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1479)
 MisResultCondition(NoRecord,1479)
@@ -9117,22 +9117,22 @@ MisResultAction(SetRecord,  1479 )
 MisResultAction(GiveItem, 2571, 1, 4)
 MisResultBagNeed(1)	
 
--------------------------------------------------采集大使----------海事所助理·罗拉娜	----------海盗	
-DefineMission (5810, "温情巨蟹之采集大使", 1480)
+-----------------------------------------------------------	----------	
+DefineMission (5810, "", 1480)
 
-MisBeginTalk("<t>成功是需要平时的积累的哦!洞察力也是关键.现在我需要你去收集一些东西...")
+MisBeginTalk("<t>!....")
 
 MisBeginCondition(NoMission,1480)
 MisBeginCondition(HasRecord,1467)
 MisBeginCondition(NoRecord,1480)
 MisBeginAction(AddMission,1480)
-MisBeginAction(AddTrigger, 14801, TE_GETITEM, 1693, 20 )-------------------蝎甲20个
-MisBeginAction(AddTrigger, 14802, TE_GETITEM, 2677, 20 )-------------------链弹LV1 20个          
-MisBeginAction(AddTrigger, 14803, TE_GETITEM, 3909, 5 )-----------------食神水饺5个               
-MisBeginAction(AddTrigger, 14804, TE_GETITEM, 2589, 5 )----------------精灵王辉印5               
-MisBeginAction(AddTrigger, 14805, TE_GETITEM, 3094, 10)------------------努力增幅器10个         
-MisBeginAction(AddTrigger, 14806, TE_GETITEM, 3827, 1 )-----------------情之殇1     
-MisBeginAction(AddTrigger, 14807, TE_GETITEM, 0271, 1 )-----------------天使骰子1个         
+MisBeginAction(AddTrigger, 14801, TE_GETITEM, 1693, 20 )-------------------20
+MisBeginAction(AddTrigger, 14802, TE_GETITEM, 2677, 20 )-------------------LV1 20          
+MisBeginAction(AddTrigger, 14803, TE_GETITEM, 3909, 5 )-----------------5               
+MisBeginAction(AddTrigger, 14804, TE_GETITEM, 2589, 5 )----------------5               
+MisBeginAction(AddTrigger, 14805, TE_GETITEM, 3094, 10)------------------10         
+MisBeginAction(AddTrigger, 14806, TE_GETITEM, 3827, 1 )-----------------1     
+MisBeginAction(AddTrigger, 14807, TE_GETITEM, 0271, 1 )-----------------1         
 MisCancelAction(ClearMission, 1480)
 
 
@@ -9144,8 +9144,8 @@ MisNeed(MIS_NEED_ITEM, 3094, 10, 51, 10 )
 MisNeed(MIS_NEED_ITEM, 3827, 1,  61, 1 )
 MisNeed(MIS_NEED_ITEM, 0271, 1,  62, 1 )
 
-MisHelpTalk("<t>需要的东西不是很多,但是也不是那么容易哦.")
-MisResultTalk("<t>物到用时方恨少吧,积累的过程虽然比较麻烦,但是如果要做个大人物,细心积累和观察都是不可缺少的哦,当然,还有超强的耐心和毅力!")
+MisHelpTalk("<t>,.")
+MisResultTalk("<t>,,,,,!")
 
 MisResultCondition(HasMission, 1480)
 MisResultCondition(NoRecord,1480)
@@ -9207,10 +9207,10 @@ TriggerAction( 1, AddNextFlag, 1480,62, 1 )
 RegCurTrigger( 14807 )
 
 
------------------------------------------乱斗英雄----------海事所助理·罗拉娜--------船长
-DefineMission (5811, "温情巨蟹之乱斗英雄", 1481)
+-----------------------------------------------------------
+DefineMission (5811, "", 1481)
 
-MisBeginTalk("<t>巨蟹座的人,温情顾家,在事业方面也都能表现出自己的才能.这是属于你的梦幻星座吗?")
+MisBeginTalk("<t>,,.?")
 
 MisBeginCondition(NoMission,1481)
 MisBeginCondition(HasRecord,1468)
@@ -9218,9 +9218,9 @@ MisBeginCondition(NoRecord,1481)
 MisBeginAction(AddMission,1481)
 MisCancelAction(ClearMission, 1481)
 
-MisNeed(MIS_NEED_DESP,"获得200点乱斗点数")
-MisHelpTalk("<t>乱斗点数可以从乱斗白银获得!")
-MisResultTalk("<t>成为英雄的道路上必定会有种种阻碍,战斗的勇气片刻都不能丢失哦.投入全力去战斗吧!")
+MisNeed(MIS_NEED_DESP,"200")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>,.!")
 
 MisResultCondition(HasMission, 1481)
 MisResultCondition(NoRecord,1481)
@@ -9231,10 +9231,10 @@ MisResultAction(SetRecord,  1481 )
 MisResultAction(GiveItem, 2568, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------名声英雄----------海事所助理·罗拉娜	--------船长
-DefineMission (5812, "温情巨蟹之名声英雄", 1482)
+-----------------------------------------------------------	--------
+DefineMission (5812, "", 1482)
 
-MisBeginTalk("<t>有目标才有追求,有追求才有成就.所以温情巨蟹宫对你的要求也更高一些.")
+MisBeginTalk("<t>,..")
 
 MisBeginCondition(NoMission,1482)
 MisBeginCondition(HasRecord,1468)
@@ -9242,9 +9242,9 @@ MisBeginCondition(NoRecord,1482)
 MisBeginAction(AddMission,1482)
 MisCancelAction(ClearMission, 1482)
 
-MisNeed(MIS_NEED_DESP,"获得10000点名声点数")
-MisHelpTalk("<t>看来你得到的名声还不够哦,我想10000点名声对你来说应该不是问题吧? ")
-MisResultTalk("<t>这枚名声勋章是用来见证英雄的.")
+MisNeed(MIS_NEED_DESP,"10000")
+MisHelpTalk("<t>,10000? ")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1482)
 MisResultCondition(NoRecord,1482)
@@ -9256,10 +9256,10 @@ MisResultAction(GiveItem, 2569, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------等级英雄----------海事所助理·罗拉娜	---------船长
-DefineMission (5813, "温情巨蟹之等级英雄", 1483)
+-----------------------------------------------------------	---------
+DefineMission (5813, "", 1483)
 
-MisBeginTalk("<t>成长的道路是漫长和艰辛的,但是付出一定会有回报哦,让我看看你收获了什么吧...")
+MisBeginTalk("<t>,,...")
 
 MisBeginCondition(NoMission,1483)
 MisBeginCondition(HasRecord,1468)
@@ -9267,9 +9267,9 @@ MisBeginCondition(NoRecord,1483)
 MisBeginAction(AddMission,1483)
 MisCancelAction(ClearMission, 1483)
 
-MisNeed(MIS_NEED_DESP,"等级达到75级")
-MisHelpTalk("<t>当然,75级对我来说不成问题.")
-MisResultTalk("<t>看来你已经经历了成长的磨练,收获不少哦,这枚等级勋章是你的了.")
+MisNeed(MIS_NEED_DESP,"75")
+MisHelpTalk("<t>,75.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1483)
 MisResultCondition(NoRecord,1483)
@@ -9279,10 +9279,10 @@ MisResultAction(SetRecord,  1483 )
 MisResultAction(GiveItem, 2570, 1, 4)
 MisResultBagNeed(1)
 
--------------------------------------------------荣誉英雄----------海事所助理·罗拉娜	----------船长
-DefineMission (5814, "温情巨蟹之荣誉英雄", 1484)
+-----------------------------------------------------------	----------
+DefineMission (5814, "", 1484)
 
-MisBeginTalk("<t>亲爱的朋友,有一点你必须要知道,海盗世界最重要的就是荣誉!祖先为此付出一切赢得尊敬,你一定要继承下去.")
+MisBeginTalk("<t>,,!,.")
 
 MisBeginCondition(NoMission,1484)
 MisBeginCondition(HasRecord,1468)
@@ -9290,9 +9290,9 @@ MisBeginCondition(NoRecord,1484)
 MisBeginAction(AddMission,1484)
 MisCancelAction(ClearMission, 1484)
 
-MisNeed(MIS_NEED_DESP,"获得1200点荣誉点数")
-MisHelpTalk("<t>去为荣誉而战吧!")
-MisResultTalk("<t>你是个很不错的荣誉之子.")
+MisNeed(MIS_NEED_DESP,"1200")
+MisHelpTalk("<t>!")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1484)
 MisResultCondition(NoRecord,1484)
@@ -9304,22 +9304,22 @@ MisResultAction(GiveItem, 2571, 1, 4)
 MisResultBagNeed(1)	
 
 
--------------------------------------------------采集大使----------海事所助理·罗拉娜	----------船长	
-DefineMission (5815, "温情巨蟹之采集大使", 1485)
+-----------------------------------------------------------	----------	
+DefineMission (5815, "", 1485)
 
-MisBeginTalk("<t>成功是需要平时的积累的哦!洞察力也是关键.现在我需要你去收集一些东西...")
+MisBeginTalk("<t>!....")
 
 MisBeginCondition(NoMission,1485)
 MisBeginCondition(HasRecord,1468)
 MisBeginCondition(NoRecord,1485)
 MisBeginAction(AddMission,1485)
-MisBeginAction(AddTrigger, 14851, TE_GETITEM, 1693, 30 )-------------------蝎甲30个
-MisBeginAction(AddTrigger, 14852, TE_GETITEM, 2677, 30 )-------------------链弹LV1 30个          
-MisBeginAction(AddTrigger, 14853, TE_GETITEM, 3909, 10 )-----------------食神水饺10个               
-MisBeginAction(AddTrigger, 14854, TE_GETITEM, 2589, 10 )----------------精灵王辉印10               
-MisBeginAction(AddTrigger, 14855, TE_GETITEM, 3094, 20)------------------努力增幅器20个         
-MisBeginAction(AddTrigger, 14856, TE_GETITEM, 3827, 1 )-----------------情之殇1     
-MisBeginAction(AddTrigger, 14857, TE_GETITEM, 0271, 2 )-----------------天使骰子2个         
+MisBeginAction(AddTrigger, 14851, TE_GETITEM, 1693, 30 )-------------------30
+MisBeginAction(AddTrigger, 14852, TE_GETITEM, 2677, 30 )-------------------LV1 30          
+MisBeginAction(AddTrigger, 14853, TE_GETITEM, 3909, 10 )-----------------10               
+MisBeginAction(AddTrigger, 14854, TE_GETITEM, 2589, 10 )----------------10               
+MisBeginAction(AddTrigger, 14855, TE_GETITEM, 3094, 20)------------------20         
+MisBeginAction(AddTrigger, 14856, TE_GETITEM, 3827, 1 )-----------------1     
+MisBeginAction(AddTrigger, 14857, TE_GETITEM, 0271, 2 )-----------------2         
 MisCancelAction(ClearMission, 1485)
 
 
@@ -9331,8 +9331,8 @@ MisNeed(MIS_NEED_ITEM, 3094, 20, 81, 20 )
 MisNeed(MIS_NEED_ITEM, 3827, 1,  101, 1 )
 MisNeed(MIS_NEED_ITEM, 0271, 2,  102, 2 )
 
-MisHelpTalk("<t>需要的东西不是很多,但是也不是那么容易哦.")
-MisResultTalk("<t>物到用时方恨少吧,积累的过程虽然比较麻烦,但是如果要做个大人物,细心积累和观察都是不可缺少的哦,当然,还有超强的耐心和毅力!")
+MisHelpTalk("<t>,.")
+MisResultTalk("<t>,,,,,!")
 
 MisResultCondition(HasMission, 1485)
 MisResultCondition(NoRecord,1485)
@@ -9394,9 +9394,9 @@ TriggerAction( 1, AddNextFlag, 1485,102, 2 )
 RegCurTrigger( 14857 )
 
 
-----------------------------------------------------------社交大使----------海事所助理·罗拉娜
-DefineMission( 5816, "社交大使1", 1486 )
-MisBeginTalk("<t>成功的人还需要有出色的社交能力哦,就像我,朋友遍及各个城镇,但是由于海事公务的繁忙,我都好久没有问候他们了,如果你想要探索勋章就替我问候他们吧.")
+--------------------------------------------------------------------
+DefineMission( 5816, "1", 1486 )
+MisBeginTalk("<t>,,,,,.")
 			
 MisBeginCondition(NoMission, 1486)
 MisBeginCondition(NoRecord,1486)
@@ -9404,25 +9404,25 @@ MisBeginCondition(HasRecord, 1469)
 MisBeginAction(AddMission,1486)
 MisCancelAction(ClearMission, 1486)
 
-MisNeed(MIS_NEED_DESP,"找春风镇的铁匠·武鑫(3316,2516)聊聊")
+MisNeed(MIS_NEED_DESP,"(3316,2516)")
 
-MisHelpTalk("<t>快去吧,我迫不及待告诉他们我很想念他们.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使-----------------铁匠·武鑫
+----------------------------------------------------------
 
-DefineMission(5817, "社交大使1", 1486, COMPLETE_SHOW )
+DefineMission(5817, "1", 1486, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>海事所助理·罗拉娜?天呢,真的好久都没有见面了呢,她一定还记得我出色的手艺吧.")
+MisResultTalk("<t>?,,.")
 MisResultCondition(NoRecord, 1486)
 MisResultCondition(HasMission,1486)
 MisResultAction(ClearMission,1486)
 MisResultAction(SetRecord, 1486)
 
-----------------------------------------------------------社交大使2----------铁匠·武鑫
+----------------------------------------------------------2----------
 DefineMission( 5818, "TOP Ambassador 2", 1487 )
-MisBeginTalk("<t>我一直非常欣赏罗拉娜,她从来不会因为自己的地位而自满,所以她的朋友很多哦,龙女和我当初是一起有幸结识这位可爱的女士的.")
+MisBeginTalk("<t>,,,.")
 			
 MisBeginCondition(NoMission, 1487)
 MisBeginCondition(NoRecord,1487)
@@ -9430,24 +9430,24 @@ MisBeginCondition(HasRecord, 1486)
 MisBeginAction(AddMission,1487)
 MisCancelAction(ClearMission, 1487)
 
-MisNeed(MIS_NEED_DESP,"找春风镇的客栈老板·龙女(3302,2501)聊聊")
+MisNeed(MIS_NEED_DESP,"(3302,2501)")
 
-MisHelpTalk("<t>随时欢迎你和罗拉娜来我这里打造极品装备哦.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使2-------------客栈老板·龙女
+-----------------------------------------2-------------
 DefineMission(5819, "TOP Ambassador 2", 1487, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你好,年轻人,需要住店吗?")
+MisResultTalk("<t>,,?")
 MisResultCondition(NoRecord, 1487)
 MisResultCondition(HasMission,1487)
 MisResultAction(ClearMission,1487)
 MisResultAction(SetRecord, 1487)
 
-----------------------------------------------------------社交大使3----------客栈老板·龙女
+----------------------------------------------------------3----------
 DefineMission( 5820, "TOP Ambassador 3", 1488 )
-MisBeginTalk("<t>你认识罗拉娜?太好了,她是我的朋友!还记得她当初偶然来到我的客栈时的情景呢,她豪爽的性格让我们很快成为了朋友.我们还经常手牵手去杂货商人·鲁娜儿那里购物呢!")
+MisBeginTalk("<t>?,!,.!")
 			
 MisBeginCondition(NoMission, 1488)
 MisBeginCondition(NoRecord,1488)
@@ -9455,24 +9455,24 @@ MisBeginCondition(HasRecord, 1487)
 MisBeginAction(AddMission,1488)
 MisCancelAction(ClearMission, 1488)
 
-MisNeed(MIS_NEED_DESP,"找春风镇的杂货商人·鲁娜儿(3279,2501)聊聊")
+MisNeed(MIS_NEED_DESP,"(3279,2501)")
 
-MisHelpTalk("<t>鲁娜儿是一个精明的商人,但不吝啬,呵呵..")
+MisHelpTalk("<t>,,..")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使3--------杂货商人·鲁娜儿
+-----------------------------------------3--------
 DefineMission(5821, "TOP Ambassador 3", 1488, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>龙女经常来我这里购物,可惜很久没有看到她和罗拉娜一起来了哦,我很想念她呢,如果她再次光临,我一定给她最大的折扣.")
+MisResultTalk("<t>,,,,.")
 MisResultCondition(NoRecord, 1488)
 MisResultCondition(HasMission,1488)
 MisResultAction(ClearMission,1488)
 MisResultAction(SetRecord, 1488)
 
-----------------------------------------------------------社交大使4----------杂货商人·鲁娜儿
+----------------------------------------------------------4----------
 DefineMission( 5822, "TOP Ambassador 4", 1489 )
-MisBeginTalk("<t>那次我在野外跑商,结果碰到了可怕的海盗霍金斯,我以为我就这样完了!是罗拉娜救了我!后来竟然连霍金斯都害怕罗拉娜,不敢到镇里来捣乱了.")
+MisBeginTalk("<t>,,!!,.")
 			
 MisBeginCondition(NoMission, 1489)
 MisBeginCondition(NoRecord,  1489)
@@ -9480,25 +9480,25 @@ MisBeginCondition(HasRecord, 1488)
 MisBeginAction(AddMission, 1489)
 MisCancelAction(ClearMission, 1489)
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔的霍金斯(513,269)聊聊")
+MisNeed(MIS_NEED_DESP,"(513,269)")
 
-MisHelpTalk("<t>面对这样的海盗你要小心哦,如果有危险就说你是罗拉娜的朋友!")
+MisHelpTalk("<t>,!")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使4--------霍金斯
+-----------------------------------------4--------
 DefineMission(5823, "TOP Ambassador 4", 1489, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>哼哼,小样哪里来的啊?要想过此路,留下所有钱!额...你是罗拉娜的朋友啊.最近我都没干什么坏事,我几乎已经要结束我的海盗生活了.")
+MisResultTalk("<t>,?,!....,.")
 MisResultCondition(NoRecord, 1489)
 MisResultCondition(HasMission,1489)
 MisResultAction(ClearMission,1489)
 MisResultAction(SetRecord, 1489)
 
 
-----------------------------------------------------------社交大使5----------霍金斯
+----------------------------------------------------------5----------
 DefineMission( 5824, "TOP Ambassador 5", 1490 )
-MisBeginTalk("<t>虽然身为海盗,但是我不得不钦佩罗拉娜的胆识和智慧,为了朋友她可以面对一切危险,我们身为海盗最看重的就是义气了!嘿嘿.当时的情况?你可以去问那个贸易商人.")
+MisBeginTalk("<t>,,,!.?.")
 			
 MisBeginCondition(NoMission, 1490)
 MisBeginCondition(NoRecord,  1490)
@@ -9506,25 +9506,25 @@ MisBeginCondition(HasRecord, 1489)
 MisBeginAction(AddMission,1490)
 MisCancelAction(ClearMission, 1490)
 
-MisNeed(MIS_NEED_DESP,"找春风镇的贸易商人·油李(3195,2506)聊聊")
+MisNeed(MIS_NEED_DESP,"(3195,2506)")
 
-MisHelpTalk("<t>贸易商人·油李是个喜欢耍小聪明的商人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使5--------贸易商人·油李
+-----------------------------------------5--------
 DefineMission(5825, "TOP Ambassador 5", 1490, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>咳咳,像我这样的商人要和各种人物打交道,特别是像海盗这样的角色,当然要头脑灵活啦,那个不算耍小聪明吧?")
+MisResultTalk("<t>,,,,?")
 MisResultCondition(NoRecord, 1490)
 MisResultCondition(HasMission,1490)
 MisResultAction(ClearMission,1490)
 MisResultAction(SetRecord, 1490)
 
 
-----------------------------------------------------------社交大使6----------贸易商人·油李
+----------------------------------------------------------6----------
 DefineMission( 5826, "TOP Ambassador 6", 1491)
-MisBeginTalk("<t>说起那次经历,真是可怕!幸运的是我也得到了罗拉娜的帮助,才摆脱了海盗的纠缠,否则我所有的家当都被抢了!当时他们可都拿着锋利的武器啊!罗拉娜救了我,还让传送使·春莉送我到了安全的地方,自己独自面对那么多坏蛋.")
+MisBeginTalk("<t>,!,,!!,,.")
 			
 MisBeginCondition(NoMission, 1491)
 MisBeginCondition(NoRecord,1491)
@@ -9532,25 +9532,25 @@ MisBeginCondition(HasRecord, 1490)
 MisBeginAction(AddMission,1491)
 MisCancelAction(ClearMission, 1491)
 
-MisNeed(MIS_NEED_DESP,"找传送使·春莉(3326,2511)聊聊")
+MisNeed(MIS_NEED_DESP,"(3326,2511)")
 
-MisHelpTalk("<t>春莉也是罗拉娜的朋友呢.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使6--------传送使·春莉
+-----------------------------------------6--------
 DefineMission(5827, "TOP Ambassador 6", 1491, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你好,帮助人会使自己也变得快乐哦.")
+MisResultTalk("<t>,.")
 MisResultCondition(NoRecord, 1491)
 MisResultCondition(HasMission,1491)
 MisResultAction(ClearMission,1491)
 MisResultAction(SetRecord, 1491)
 
 
-----------------------------------------------------------社交大使7----------传送使·春莉
+----------------------------------------------------------7----------
 DefineMission( 5828, "TOP Ambassador 7", 1492 )
-MisBeginTalk("<t>那次送油李回来的的确是我.我从罗拉娜那里学会了助人为乐,帮助别人真的是件很快乐的事情呢,有机会我还要从她身上学到更多东西!听说算命先生·算破天也和罗拉娜接触过.")
+MisBeginTalk("<t>.,,!.")
 			
 MisBeginCondition(NoMission, 1492)
 MisBeginCondition(NoRecord,1492)
@@ -9558,25 +9558,25 @@ MisBeginCondition(HasRecord, 1491)
 MisBeginAction(AddMission,1492)
 MisCancelAction(ClearMission, 1492)
 
-MisNeed(MIS_NEED_DESP,"找春风镇的算命先生·算破天(3262,2502)聊聊")
+MisNeed(MIS_NEED_DESP,"(3262,2502)")
 
-MisHelpTalk("<t>算命先生·算破天以前是个只相信命运的人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使7--------算命先生·算破天
+-----------------------------------------7--------
 DefineMission(5829, "TOP Ambassador 7", 1492, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我以前的确是个只相信命运的人,但是罗拉娜使我明白了命运是可以靠自己改变的,我现在给人算命是为了让大家防范于未然,创造自己更好的未来.")
+MisResultTalk("<t>,,,.")
 MisResultCondition(NoRecord, 1492)
 MisResultCondition(HasMission,1492)
 MisResultAction(ClearMission,1492)
 MisResultAction(SetRecord, 1492)
 
 
-----------------------------------------------------------社交大使8----------算命先生·算破天
+----------------------------------------------------------8----------
 DefineMission( 5830, "TOP Ambassador 8", 1493 )
-MisBeginTalk("<t>上次给酒店老板·裴蒂算命的时候,我告诉他将有贵人相助,没想到后来他告诉我他的贵人就是罗拉娜!呵呵.")
+MisBeginTalk("<t>,,!.")
 			
 MisBeginCondition(NoMission, 1493)
 MisBeginCondition(NoRecord,  1493)
@@ -9584,26 +9584,26 @@ MisBeginCondition(HasRecord, 1492)
 MisBeginAction(AddMission,1493)
 MisCancelAction(ClearMission, 1493)
 
-MisNeed(MIS_NEED_DESP,"找酒店老板·裴蒂(3287,2501)聊聊")
+MisNeed(MIS_NEED_DESP,"(3287,2501)")
 
-MisHelpTalk("<t>带我向罗拉娜问好!")
+MisHelpTalk("<t>!")
 MisResultCondition(AlwaysFailure)
 
------------------------------------------社交大使8--------酒店老板·裴蒂
+-----------------------------------------8--------
 DefineMission(5831, "TOP Ambassador 8", 1493, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>罗拉娜真是我的贵人,当时我们酒店的生意并不怎么样,你知道,这里只是一个小镇,后来是罗拉娜介绍了很多旅行的人来光顾我.")
+MisResultTalk("<t>,,,,.")
 MisResultCondition(NoRecord, 1493)
 MisResultCondition(HasMission,1493)
 MisResultAction(ClearMission,1493)
 MisResultAction(SetRecord, 1493)
 
 
-----------------------------------------------------------社交大使9----------酒店老板·裴蒂
+----------------------------------------------------------9----------
 DefineMission( 5832, "TOP Ambassador 9", 1494 )
-MisBeginTalk("<t>那次罗拉娜是来找港口指挥·霜奇谈公事的....")
+MisBeginTalk("<t>....")
 			
 MisBeginCondition(NoMission, 1494)
 MisBeginCondition(NoRecord,  1494)
@@ -9611,24 +9611,24 @@ MisBeginCondition(HasRecord, 1493)
 MisBeginAction(AddMission,1494)
 MisCancelAction(ClearMission, 1494)
 
-MisNeed(MIS_NEED_DESP,"找港口指挥·霜奇(3409,2560)聊聊")
+MisNeed(MIS_NEED_DESP,"(3409,2560)")
 
-MisHelpTalk("<t>港口指挥·霜奇是个敬公职守的人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使9--------港口指挥·霜奇
+-----------------------------------------9--------
 DefineMission(5833, "TOP Ambassador 9", 1494, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>欢迎你来到春风镇,这里虽然是小镇,但是这里的人都很好客哦!罗拉娜上次过来是来视察这里的工作的.")
+MisResultTalk("<t>,,!.")
 MisResultCondition(NoRecord, 1494)
 MisResultCondition(HasMission,1494)
 MisResultAction(ClearMission,1494)
 MisResultAction(SetRecord, 1494)
 
-----------------------------------------------------------社交大使10----------港口指挥·霜奇
+----------------------------------------------------------10----------
 DefineMission( 5834, "TOP Ambassador 10", 1495 )
-MisBeginTalk("<t>罗拉娜真是一个好人,一点都没有高高在上的架子,她对我的工作给予了肯定,太令人高兴了.而且她还很关心下属呢,后来她还去慰问了卫兵·赵钱孙.")
+MisBeginTalk("<t>,,,.,.")
 			
 MisBeginCondition(NoMission, 1495)
 MisBeginCondition(NoRecord, 1495)
@@ -9636,24 +9636,24 @@ MisBeginCondition(HasRecord, 1494)
 MisBeginAction(AddMission, 1495)
 MisCancelAction(ClearMission, 1495)
 
-MisNeed(MIS_NEED_DESP,"找卫兵·赵钱孙(3303,2533)聊聊")
+MisNeed(MIS_NEED_DESP,"(3303,2533)")
 
-MisHelpTalk("<t>我想上级的慰问对于下属是很好的鼓舞吧...")
+MisHelpTalk("<t>...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使10--------卫兵·赵钱孙
+-----------------------------------------10--------
 DefineMission(5835, "TOP Ambassador 10", 1495, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你好，你是远道而来的旅客吧.你认识罗拉娜?哈哈,罗拉娜小姐亲自来看过我哦!太幸福了!")
+MisResultTalk("<t>.?,!!")
 MisResultCondition(NoRecord, 1495)
 MisResultCondition(HasMission,1495)
 MisResultAction(ClearMission,1495)
 MisResultAction(SetRecord, 1495)
 
-----------------------------------------------------------社交大使11----------卫兵·赵钱孙
+----------------------------------------------------------11----------
 DefineMission( 5836, "TOP Ambassador 11", 1496 )
-MisBeginTalk("<t>罗拉娜是个温柔体贴的人,那天她特地来慰问了我和周吴郑.")
+MisBeginTalk("<t>,.")
 			
 MisBeginCondition(NoMission, 1496)
 MisBeginCondition(NoRecord,1496)
@@ -9661,24 +9661,24 @@ MisBeginCondition(HasRecord, 1495)
 MisBeginAction(AddMission,1496)
 MisCancelAction(ClearMission, 1496)
 
-MisNeed(MIS_NEED_DESP,"找卫兵·周吴郑(3298,2534)聊聊")
+MisNeed(MIS_NEED_DESP,"(3298,2534)")
 
-MisHelpTalk("<t>周吴郑和我像亲兄弟一样,下班后我们无所不谈.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使11--------卫兵·周吴郑
+-----------------------------------------11--------
 DefineMission(5837, "TOP Ambassador 11", 1496, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>哇哈哈,见到你很高兴罗拉娜的朋友.你从赵钱孙那里过来的?他没有偷懒吧.")
+MisResultTalk("<t>,.?.")
 MisResultCondition(NoRecord, 1496)
 MisResultCondition(HasMission,1496)
 MisResultAction(ClearMission,1496)
 MisResultAction(SetRecord, 1496)
 
-----------------------------------------------------------社交大使12----------卫兵·周吴郑
+----------------------------------------------------------12----------
 DefineMission( 5838, "TOP Ambassador 12", 1497 )
-MisBeginTalk("<t>别看我只是小小的卫兵,我的交际可是很广的呢,银行总管·王墨也是我的朋友.上次罗拉娜小姐来慰问我,闲聊到她有一些东西需要找地方寄放,这样才能专心视察工作,我引荐王墨给罗拉娜小姐认识了.")
+MisBeginTalk("<t>,,.,,,.")
 			
 MisBeginCondition(NoMission, 1497)
 MisBeginCondition(NoRecord,1497)
@@ -9686,25 +9686,25 @@ MisBeginCondition(HasRecord, 1496)
 MisBeginAction(AddMission,1497)
 MisCancelAction(ClearMission, 1497)
 
-MisNeed(MIS_NEED_DESP,"找银行总管·王墨(3290,2512)聊聊")
+MisNeed(MIS_NEED_DESP,"(3290,2512)")
 
-MisHelpTalk("<t>银行总管·王墨是行事谨慎的人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使12--------银行总管·王墨
+-----------------------------------------12--------
 DefineMission(5839, "TOP Ambassador 12", 1497, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>罗拉娜一定觉得我是值得信任的人,所以将她贵重的物品寄放在我这里,不过你千万不要告诉别人哦,罗拉娜小姐下次来一定会十分满意我们的服务的.")
+MisResultTalk("<t>,,,.")
 MisResultCondition(NoRecord, 1497)
 MisResultCondition(HasMission,1497)
 MisResultAction(ClearMission,1497)
 MisResultAction(SetRecord, 1497)
 
 
-----------------------------------------------------------社交大使13----------银行总管·王墨
+----------------------------------------------------------13----------
 DefineMission( 5840, "TOP Ambassador 13", 1498 )
-MisBeginTalk("<t>虽然罗拉娜是来视察的,但是既然来到了我们美丽的小镇,自然要好好体验和享受一下这里的风土人情啦,我让流云陪罗拉娜小姐到处逛逛.")
+MisBeginTalk("<t>,,,.")
 			
 MisBeginCondition(NoMission, 1498)
 MisBeginCondition(NoRecord,1498)
@@ -9712,24 +9712,24 @@ MisBeginCondition(HasRecord, 1497)
 MisBeginAction(AddMission,1498)
 MisCancelAction(ClearMission, 1498)
 
-MisNeed(MIS_NEED_DESP,"找青年男子·流云(3275,2467)聊聊")
+MisNeed(MIS_NEED_DESP,"(3275,2467)")
 
-MisHelpTalk("<t>青年男子·流云是个充满活力的小伙子.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使13--------青年男子·流云
+-----------------------------------------13--------
 DefineMission(5841, "TOP Ambassador 13", 1498, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>嘿,朋友!有什么可以帮助你的吗?我号称是春风镇的导游哦.")
+MisResultTalk("<t>,!?.")
 MisResultCondition(NoRecord, 1498)
 MisResultCondition(HasMission,1498)
 MisResultAction(ClearMission,1498)
 MisResultAction(SetRecord, 1498)
 
-----------------------------------------------------------社交大使14----------青年男子·流云
+----------------------------------------------------------14----------
 DefineMission( 5842, "TOP Ambassador 14", 1499 )
-MisBeginTalk("<t>是哦,上次罗拉娜来我们春风镇就是我和水雾带她到处游玩的呢!话说回来,她也是一个开朗的人,和我们一起玩的很投机.")
+MisBeginTalk("<t>,!,,.")
 			
 MisBeginCondition(NoMission, 1499)
 MisBeginCondition(NoRecord,1499)
@@ -9737,24 +9737,24 @@ MisBeginCondition(HasRecord, 1498)
 MisBeginAction(AddMission,1499)
 MisCancelAction(ClearMission, 1499)
 
-MisNeed(MIS_NEED_DESP,"找青年女子·水雾(3241,2533)聊聊")
+MisNeed(MIS_NEED_DESP,"(3241,2533)")
 
-MisHelpTalk("<t>其实...每天能够和水雾在一起是我一直以来的愿望...")
+MisHelpTalk("<t>......")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使14--------青年女子·水雾        
+-----------------------------------------14--------        
 DefineMission(5843, "TOP Ambassador 14", 1499, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>是流云让你来找我的吗?他...他是个好人.其实如果他能够在事业上有所成就并且温柔体贴些,那该多好.我只对罗拉娜说过心里的想法...")
+MisResultTalk("<t>?....,....")
 MisResultCondition(NoRecord, 1499)
 MisResultCondition(HasMission,1499)
 MisResultAction(ClearMission,1499)
 MisResultAction(SetRecord, 1499)
 
-----------------------------------------------------------社交大使15----------青年女子·水雾
+----------------------------------------------------------15----------
 DefineMission( 5844, "TOP Ambassador 15", 1601 )
-MisBeginTalk("<t>对我来说,罗拉娜就像一个大姐姐一样,我什么话都愿意对她说.我好想她哦,我有好多话想和她说呢.现在只有王蓉阿姨能够陪我说说话.")
+MisBeginTalk("<t>,,.,..")
 			
 MisBeginCondition(NoMission, 1601)
 MisBeginCondition(NoRecord,1601)
@@ -9762,25 +9762,25 @@ MisBeginCondition(HasRecord, 1499)
 MisBeginAction(AddMission,1601)
 MisCancelAction(ClearMission, 1601)
 
-MisNeed(MIS_NEED_DESP,"找中年女子·王蓉(3265,2547)聊聊")
+MisNeed(MIS_NEED_DESP,"(3265,2547)")
 
-MisHelpTalk("<t>黄蓉,是个中年女子.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使15-------- 中年女子·王蓉
+-----------------------------------------15-------- 
 DefineMission(5845, "TOP Ambassador 15", 1601, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>水雾这小丫头是很多愁善感的女孩,她倒是一直念叨着罗拉娜呢,她很希望自己能有这样一个姐姐.我是很喜欢这个小丫头,所以经常陪她聊天.")
+MisResultTalk("<t>,,.,.")
 MisResultCondition(NoRecord, 1601)
 MisResultCondition(HasMission,1601)
 MisResultAction(ClearMission,1601)
 MisResultAction(SetRecord, 1601)
 
 
-----------------------------------------------------------社交大使16----------中年女子·王蓉
+----------------------------------------------------------16----------
 DefineMission( 5846, "TOP Ambassador 16", 1602 )
-MisBeginTalk("<t>哈,你是专程来替罗拉娜问候大家的吗?罗拉娜真是有心啊,谢谢你.对了,比盖也是罗拉娜的朋友.")
+MisBeginTalk("<t>,?,.,.")
 			
 MisBeginCondition(NoMission, 1602)
 MisBeginCondition(NoRecord,1602)
@@ -9788,25 +9788,25 @@ MisBeginCondition(HasRecord, 1601)
 MisBeginAction(AddMission,1602)
 MisCancelAction(ClearMission, 1602)
 
-MisNeed(MIS_NEED_DESP,"找中年男子·比盖(3235,2550)聊聊")
+MisNeed(MIS_NEED_DESP,"(3235,2550)")
 
-MisHelpTalk("<t>比盖是个风趣的男人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使16-------- 中年男子·比盖
+-----------------------------------------16-------- 
 DefineMission(5847, "TOP Ambassador 16", 1602, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>罗拉娜最近可好?罗拉娜的微笑就像天上的太阳一样灿烂,在她的周围总是会有一群朋友,如果有选秀活动,我敢打赌罗拉娜的短信支持率一定最高!")
+MisResultTalk("<t>?,,,!")
 MisResultCondition(NoRecord, 1602)
 MisResultCondition(HasMission,1602)
 MisResultAction(ClearMission,1602)
 MisResultAction(SetRecord, 1602)
 
 
-----------------------------------------------------------社交大使17----------中年男子·比盖
+----------------------------------------------------------17----------
 DefineMission( 5848, "TOP Ambassador 17", 1502 )
-MisBeginTalk("<t>什么?你问我为什么?如果我告诉你连东方海盗·铃佐田山都是罗拉娜的朋友的话,你应该没有疑问了吧.")
+MisBeginTalk("<t>??,.")
 			
 MisBeginCondition(NoMission, 1502)
 MisBeginCondition(NoRecord,1502)
@@ -9814,24 +9814,24 @@ MisBeginCondition(HasRecord, 1602)
 MisBeginAction(AddMission,1502)
 MisCancelAction(ClearMission, 1502)
 
-MisNeed(MIS_NEED_DESP,"找东方海盗·铃佐田山(2219,3286)聊聊")
+MisNeed(MIS_NEED_DESP,"(2219,3286)")
 
-MisHelpTalk("<t>东方海盗·铃佐田山是有名的海盗,曾经驰骋东方海域.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使17-------- 东方海盗·铃佐田山
+-----------------------------------------17-------- 
 DefineMission(5849, "TOP Ambassador 17", 1502, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>空尼齐哇，没想到你是罗拉娜的朋友,说起来连我都不敢相信竟然能够和海事助理成为朋友,并且我们达成了协议,我不会袭击罗拉娜管辖范围的船只.")
+MisResultTalk("<t>,,,.")
 MisResultCondition(NoRecord, 1502)
 MisResultCondition(HasMission,1502)
 MisResultAction(ClearMission,1502)
 MisResultAction(SetRecord, 1502)
 
-----------------------------------------------------------社交大使18----------东方海盗·铃佐田山
+----------------------------------------------------------18----------
 DefineMission( 5850, "TOP Ambassador 18", 1603 )
-MisBeginTalk("<t>春风镇真是好地方啊,在这里我都几乎忘记了海上的风风雨雨.这里的服饰和发型都和我家乡不一样哦,上次罗拉娜带我去潮流理发师那里设计了一个莫西干发型,哇塞,酷弊了!虽然我是海盗,但是我也是需要包装的嘛,何况我是那么有名的海盗啊,哈哈哈.")
+MisBeginTalk("<t>,.,,,!,,,.")
 			
 MisBeginCondition(NoMission, 1603)
 MisBeginCondition(NoRecord,1603)
@@ -9839,24 +9839,24 @@ MisBeginCondition(HasRecord, 1502)
 MisBeginAction(AddMission,1603)
 MisCancelAction(ClearMission, 1603)
 
-MisNeed(MIS_NEED_DESP,"找潮流理发师(3300,2513)聊聊")
+MisNeed(MIS_NEED_DESP,"(3300,2513)")
 
-MisHelpTalk("<t>潮流理发师是思想前卫,设计出众的发型设计师.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使18-------- 潮流理发师
+-----------------------------------------18-------- 
 DefineMission(5851, "TOP Ambassador 18", 1603, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>哈哈,你说的是上次罗拉娜带来的那个奇怪的海盗吧,他对我给他设计的发型很满意吧!")
+MisResultTalk("<t>,,!")
 MisResultCondition(NoRecord, 1603)
 MisResultCondition(HasMission,1603)
 MisResultAction(ClearMission,1603)
 MisResultAction(SetRecord, 1603)
 
-----------------------------------------------------------社交大使19----------潮流理发师
+----------------------------------------------------------19----------
 DefineMission( 5852, "TOP Ambassador 19", 1604 )
-MisBeginTalk("<t>啊,原来你是专程替罗拉娜来问候她的朋友的啊,你去过港口指挥·霜奇那里了?那有没有去过海港指挥·夏青那里呢?对了,记得向我替罗拉娜问好,顺便告诉她我为她专门设计了一个发型,绝对适合她的气质!")
+MisBeginTalk("<t>,,??,,,!")
 			
 MisBeginCondition(NoMission, 1604)
 MisBeginCondition(NoRecord,1604)
@@ -9864,25 +9864,25 @@ MisBeginCondition(HasRecord, 1603)
 MisBeginAction(AddMission,1604)
 MisCancelAction(ClearMission, 1604)
 
-MisNeed(MIS_NEED_DESP,"找海港指挥·夏青(3685,2652)聊聊")
+MisNeed(MIS_NEED_DESP,"(3685,2652)")
 
-MisHelpTalk("<t>海港指挥·夏青是一个喜欢幻想的人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使19-------- 海港指挥·夏青
+-----------------------------------------19-------- 
 DefineMission(5853, "TOP Ambassador 19", 1604, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>哈喽,看看这大海,多迷人啊!我每天都会和它聊天,额...你会觉得我有什么不妥吗?那天罗拉娜看到我在和大海说话都没有觉得奇怪,她真是一个特别的人,好像能够看透我的心.")
+MisResultTalk("<t>,,!,...?,,.")
 MisResultCondition(NoRecord, 1604)
 MisResultCondition(HasMission,1604)
 MisResultAction(ClearMission,1604)
 MisResultAction(SetRecord, 1604)
 
 
-----------------------------------------------------------社交大使20----------海港指挥·夏青
+----------------------------------------------------------20----------
 DefineMission( 5854, "TOP Ambassador 20", 1605 )
-MisBeginTalk("<t>我一直以为除了海港指挥·夏云以外,没有人能够理解我为什么对大海说话呢.对了,说起夏云,他也觉得罗拉娜是个特别的人,甚至整天在我耳边提起罗拉娜呢,嘿嘿.")
+MisBeginTalk("<t>,.,,,,.")
 			
 MisBeginCondition(NoMission, 1605)
 MisBeginCondition(NoRecord,1605)
@@ -9890,24 +9890,24 @@ MisBeginCondition(HasRecord, 1604)
 MisBeginAction(AddMission,1605)
 MisCancelAction(ClearMission, 1605)
 
-MisNeed(MIS_NEED_DESP,"找海港指挥·夏云(3337,3523)聊聊")
+MisNeed(MIS_NEED_DESP,"(3337,3523)")
 
-MisHelpTalk("<t>夏青是个拥有远大理想和抱负的海港指挥,可是没有人认为他的愿望能够实现.")
+MisHelpTalk("<t>,.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交大使20-------- 海港指挥·夏云
+-----------------------------------------20-------- 
 DefineMission(5855, "TOP Ambassador 20", 1605, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你见过夏青了啊.什么,他告诉你我一直提起罗拉娜了?呵呵,说实话,罗拉娜是能够给人留下深刻印象的人哦.做这个小镇的海港指挥那么多年了,第一次有人认同我的理想...因为我想有一天能够自己拥有一支舰队去对付所有的海盗.")
+MisResultTalk("<t>.,?,,.,....")
 MisResultCondition(NoRecord, 1605)
 MisResultCondition(HasMission,1605)
 MisResultAction(ClearMission,1605)
 MisResultAction(SetRecord, 1605)
 
-----------------------------------------------------------社交大使21----------海港指挥·夏云
+----------------------------------------------------------21----------
 DefineMission( 5856, "TOP Ambassador 21", 1606 )
-MisBeginTalk("<t>你已经问候了所有这里罗拉娜的朋友了?我欣赏你的责任心.千万不要忘记把我的祝福带给罗拉娜哦,如果她能够尽快来看我们,我一定第一时间迎接她.我们都很想念她!对了,请代表春风镇的朋友将这个礼物带给罗拉娜,看到它要想到我们哦.")
+MisBeginTalk("<t>?.,,.!,,.")
 			
 MisBeginCondition(NoMission, 1606)
 MisBeginCondition(NoRecord,1606)
@@ -9915,16 +9915,16 @@ MisBeginCondition(HasRecord, 1605)
 MisBeginAction(AddMission,1606)
 MisCancelAction(ClearMission, 1606)
 
-MisNeed(MIS_NEED_DESP,"找白银城海事所助理·罗拉娜(2247,2858)聊聊")
+MisNeed(MIS_NEED_DESP,"(2247,2858)")
 
-MisHelpTalk("<t>麻烦你将我们的礼物带给罗拉娜.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------社交英雄21------- 海事所助理·罗拉娜
+-----------------------------------------21------- 
 DefineMission(5857, "Community Hero 21", 1606, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你真的帮我问候了春风镇所有的朋友了,太感谢你了,竟然还带来了礼物!啊,真不知道如何感谢你,这枚勋章你受之无愧.")
+MisResultTalk("<t>,,!,,.")
 MisResultCondition(NoRecord, 1606)
 MisResultCondition(HasMission,1606)
 MisResultAction(ClearMission,1606)
@@ -9933,10 +9933,10 @@ MisResultAction(GiveItem, 2573, 1, 4)
 MisResultBagNeed(1)
 
 
--------------------------------------------------特别任务一--------海事所助理·罗拉娜
-DefineMission (5858, "巨蟹之特别行动一", 1607)
+---------------------------------------------------------
+DefineMission (5858, "", 1607)
 
-MisBeginTalk("<t>嘿,就这样满足于你的成绩了吗?呵呵,如果你还有足够的信心的话,去冰狼堡找路人·丁吧,他将给你特别的考验.")
+MisBeginTalk("<t>,?,,,.")
 
 MisBeginCondition(NoMission,1607)
 MisBeginCondition(NoRecord,1607)
@@ -9952,62 +9952,62 @@ MisBeginAction(AddMission,1607)
 MisCancelAction(ClearMission, 1607)
 MisBeginBagNeed(1)
 
-MisNeed(MIS_NEED_DESP,"找冰狼堡的路人·丁(1335,469)聊聊")
-MisHelpTalk("<t>要想知道有什么特别任务等待着你，就赶快去找路人·丁吧.")
+MisNeed(MIS_NEED_DESP,"(1335,469)")
+MisHelpTalk("<t>.")
 
 MisResultCondition(AlwaysFailure)	
 
 
--------------------------------------------------特别任务一--------冰狼堡的路人·丁
-DefineMission (5859, "巨蟹之特别行动一", 1607, COMPLETE_SHOW)
+---------------------------------------------------------
+DefineMission (5859, "", 1607, COMPLETE_SHOW)
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你已经通过罗拉娜给你的任务了吗?真了不起,别看我看上去是个不起眼的路人,其实我是隐藏级别的人物哦!哼哼!连我的名字都隐藏的那么巧妙,很酷吧!那么来看看你是否有能力完成我给你的特别任务吧..")	
+MisResultTalk("<t>?,,!!,!..")	
 MisResultCondition(NoRecord, 1607)
 MisResultCondition(HasMission,1607)
 MisResultAction(ClearMission,1607)
 MisResultAction(SetRecord, 1607)
 
 
---------------------------------------特别任务二----冰狼堡的路人·丁
+------------------------------------------
 
-DefineMission(5860, "巨蟹之特别行动二", 1608 )	
+DefineMission(5860, "", 1608 )	
 
-MisBeginTalk("<t>这个任务是巨蟹宫特别行动,你可以不参加,但是就没有特别的礼物哦.如果你真的拥有实力和勇气,那么就接受挑战吧.我这里有十分重要的东西需要你尽快送到海港指挥·瓦雷米那里.<b15分钟内赶到哈尔补给站找海港指挥·瓦雷米(2041,1355)>聊聊.")
+MisBeginTalk("<t>,,.,..<b15(2041,1355)>.")
 
 MisBeginCondition(NoMission,1608)
 MisBeginCondition(NoRecord,1608)
 MisBeginCondition(HasRecord,1607)
 MisBeginAction(AddMission,1608)
-MisBeginAction(AddChaItem3, 2952)---------巨蟹特别行动卡
+MisBeginAction(AddChaItem3, 2952)---------
 MisCancelAction(ClearMission, 1608)
 MisBeginBagNeed(1)
 
-MisNeed(MIS_NEED_DESP,"找海港指挥·瓦雷米(2041,1355)聊聊")
+MisNeed(MIS_NEED_DESP,"(2041,1355)")
 MisHelpTalk("<t>Go now! You only have 15 minutes.")
 
 MisResultCondition(AlwaysFailure)	
 
---------------------------------------特别任务二----海港指挥·瓦雷米
+------------------------------------------
 
-DefineMission(5861, "巨蟹之特别行动二", 1608, COMPLETE_SHOW )
+DefineMission(5861, "", 1608, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>哈哈，非常感谢你.我等这个东西好久啦.恩...他们带信告诉我你是一个拥有强大潜力的可造之才.来,送你一份礼物,希望能够帮助你尽快强大起来.")
+MisResultTalk("<t>......,,.")
 MisResultCondition(HasMission, 1608)
 MisResultCondition(NoRecord,1608)
-MisResultAction(AddChaItem4, 2952)----特别行动卡
+MisResultAction(AddChaItem4, 2952)----
 MisResultAction(ClearMission, 1608)
 MisResultAction(SetRecord,  1608 )
-MisResultAction(GiveItem, 2575, 1, 4)------------巨蟹船长酷装宝箱
+MisResultAction(GiveItem, 2575, 1, 4)------------
 MisResultBagNeed(1)
 
--------------------------------------------------巨蟹之水手过关奖励----------海事所助理·罗拉娜
-DefineMission (5862, "巨蟹之水手过关奖励", 1609)
+-----------------------------------------------------------
+DefineMission (5862, "", 1609)
 
-MisBeginTalk("<t>集齐7枚勋章就可以在我这里兑换到巨蟹宫守印和狮子宫的门票了.还有很多奖励哦 ")
+MisBeginTalk("<t>7. ")
 
 MisBeginCondition(NoMission,1609)
 MisBeginCondition(HasRecord,1466)
@@ -10038,7 +10038,7 @@ MisNeed(MIS_NEED_ITEM, 2573, 1, 60, 1 )
 MisNeed(MIS_NEED_ITEM, 2574, 1, 70, 1 )
 
 MisHelpTalk("<t>What are you still waiting for? Come now to exchange for prizes.")
-MisResultTalk("<t>下一宫是狮子宫,有更诱人的奖励和更刺激的挑战在等你.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1609)
 MisResultCondition(NoRecord,1609)
@@ -10101,10 +10101,10 @@ InitTrigger()
 TriggerCondition( 1, IsItem, 1880)	
 TriggerAction( 1, AddNextFlag, 1609, 70, 1 )
 RegCurTrigger( 16097 )
-----------------------------------------------巨蟹之海盗过关奖励----------海事所助理·罗拉娜	
-DefineMission (5863, "巨蟹之海盗过关奖励", 1610)
+--------------------------------------------------------	
+DefineMission (5863, "", 1610)
 
-MisBeginTalk("<t>集齐7枚勋章就可以在我这里兑换到巨蟹宫守印和狮子宫的门票了.还有很多奖励哦 ")
+MisBeginTalk("<t>7. ")
 
 MisBeginCondition(NoMission,1610)
 MisBeginCondition(HasRecord,1467)
@@ -10135,7 +10135,7 @@ MisNeed(MIS_NEED_ITEM, 2573, 1, 60, 1 )
 MisNeed(MIS_NEED_ITEM, 2574, 1, 70, 1 )
 
 MisHelpTalk("<t>What are you still waiting for? Come now to exchange for prizes.")
-MisResultTalk("<t>下一宫是狮子宫,有更诱人的奖励和更刺激的挑战在等你.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1610)
 MisResultCondition(NoRecord,1610)
@@ -10199,10 +10199,10 @@ TriggerCondition( 1, IsItem, 2574)
 TriggerAction( 1, AddNextFlag, 1610, 70, 1 )
 RegCurTrigger( 16107 )
 
---------------------------------------------巨蟹之船长过关奖励----------海事所助理·罗拉娜	
-DefineMission (5864, "巨蟹之船长过关奖励", 1611)
+------------------------------------------------------	
+DefineMission (5864, "", 1611)
 
-MisBeginTalk("<t>集齐7枚勋章就可以在我这里兑换到巨蟹宫守印和狮子宫的门票了.还有很多奖励哦 ")
+MisBeginTalk("<t>7. ")
 
 MisBeginCondition(NoMission,1611)
 MisBeginCondition(HasRecord,1468)
@@ -10233,7 +10233,7 @@ MisNeed(MIS_NEED_ITEM, 2573, 1, 60, 1 )
 MisNeed(MIS_NEED_ITEM, 2574, 1, 70, 1 )
 
 MisHelpTalk("<t>What are you still waiting for? Come now to exchange for prizes.")
-MisResultTalk("<t>下一宫是狮子宫,有更诱人的奖励和更刺激的挑战在等你.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1611)
 MisResultCondition(NoRecord,1611)
@@ -10298,11 +10298,11 @@ TriggerAction( 1, AddNextFlag, 1611, 70, 1 )
 RegCurTrigger( 16117 )
 
 
-----------------------------------------金秋十月大闸蟹活动（一）---------白银城老奶奶·贝蒂（2277,2769）
+-------------------------------------------------2277,2769
 
-DefineMission(5865,"金秋十月缤纷假期吃毛蟹",1208)
+DefineMission(5865,"",1208)
 
-MisBeginTalk("<t>金秋十月，正是吃蟹的黄金佳季！<n><t>近来我在春风镇寻得一本烹蟹秘方，据说由此方烹煮的毛蟹，有意想不到的效果，不知您可感兴趣？")
+MisBeginTalk("<t><n><t>")
 
 MisBeginCondition(NoMission, 1208)
 MisBeginCondition(NoRecord, 1208)
@@ -10311,15 +10311,15 @@ MisBeginAction(AddTrigger, 12081, TE_GETITEM, 4490, 1)
 MisBeginAction(AddTrigger, 12082, TE_GETITEM, 4426, 2)
 MisBeginAction(AddTrigger, 12083, TE_GETITEM, 4393, 8)
 
-MisCancelAction(ClearMission,1208)                         ---------可以取消此任务
+MisCancelAction(ClearMission,1208)                         ---------
 
-MisNeed(MIS_NEED_DESP,"<t>我虽精通烹饪，但原材料还需你的帮助。铁甲蟹(加纳1773,2517)身上1份<y蟹壳>是美味高汤的低料，卫兵蟹(加纳1783,2507)身上2个<y锋利的蟹钳>能把蟹肉切割得更为均匀，而8份硬甲蟹(深蓝994,857)身上<y无法食用的蟹脚>则是烹煮此菜的关键！")
-MisNeed(MIS_NEED_ITEM, 4490, 1, 10, 1)               ---------蟹壳
-MisNeed(MIS_NEED_ITEM, 4426, 2, 20, 2)               ---------锋利的蟹钳
-MisNeed(MIS_NEED_ITEM, 4393, 8, 30, 8)               ---------无法食用的蟹脚
+MisNeed(MIS_NEED_DESP,"<t>(1773,2517)1<y>(1783,2507)2<y>8(994,857)<y>")
+MisNeed(MIS_NEED_ITEM, 4490, 1, 10, 1)               ---------
+MisNeed(MIS_NEED_ITEM, 4426, 2, 20, 2)               ---------
+MisNeed(MIS_NEED_ITEM, 4393, 8, 30, 8)               ---------
 
-MisHelpTalk("<t>仔细找到这些原材料，我的厨艺一定不会让你失望！")
-MisResultTalk("<t>赶紧尝尝鲜美的毛蟹盛宴，一定得留意它的效果哦！国庆14天，真情为您烹饪蟹肉大餐，欢迎再次品尝！")
+MisHelpTalk("<t>")
+MisResultTalk("<t>14")
 
 MisResultCondition(HasMission, 1208)
 MisResultCondition(NoRecord, 1208)
@@ -10331,10 +10331,10 @@ MisResultAction(TakeItem, 4490, 1)
 MisResultAction(TakeItem, 4426, 2)
 MisResultAction(TakeItem, 4393, 8)
 
-MisResultAction(GiveItem, 0048, 1, 4)                          ---------毛蟹
+MisResultAction(GiveItem, 0048, 1, 4)                          ---------
 MisResultAction(ClearMission, 1208)                        
 MisResultAction(SetRecord, 1208)
-MisResultAction(ClearRecord, 1208)                          ----------任务can be repeated
+MisResultAction(ClearRecord, 1208)                          ----------can be repeated
 MisResultBagNeed(1)
 
 
@@ -10356,11 +10356,11 @@ TriggerAction(1, AddNextFlag, 1208, 30, 8)
 RegCurTrigger(12083)
 
 
-----------------------------------------金秋十月大闸蟹活动（二）---------白银城老奶奶·贝蒂（2277,2769）
+-------------------------------------------------2277,2769
 
-DefineMission(5866,"金秋十月唇齿留香大闸蟹",1209)
+DefineMission(5866,"",1209)
 
-MisBeginTalk("<t>大闸蟹历来享有蟹中之王的美誉，由我熬煮的大闸蟹更是具备鲜、香、嫩、爽的特点，吃后让你神清气爽，与怪物战斗经验飞增！不知您是否有兴趣品尝？")
+MisBeginTalk("<t>")
 
 
 MisBeginCondition(NoMission, 1209)
@@ -10374,16 +10374,16 @@ MisBeginAction(AddTrigger, 12094, TE_GETITEM, 0057, 1)
 
 MisCancelAction(ClearMission, 1209)
 
-MisNeed(MIS_NEED_DESP,"<t>烹制此蟹所需的原料亦非常考究，除了卫兵蟹(加纳1783,2507)身上1个<y坚硬的蟹壳>，长绒蟹(海底隧道349, 376)身上2个<y长绒蟹钳>，铁甲蟹王(加纳1783,2507)身上1个<y猩红的蟹壳>，还需商城里出售的1根<y蟹绳>，此绳能捆蟹之精华，制蟹之精品。")
+MisNeed(MIS_NEED_DESP,"<t>(1783,2507)1<y>(349, 376)2<y>(1783,2507)1<y>1<y>")
    
 
-MisNeed(MIS_NEED_ITEM, 4342, 1, 10, 1)                       ---------坚硬的蟹壳
-MisNeed(MIS_NEED_ITEM, 4793, 2, 20, 2)                       ---------长绒蟹钳
-MisNeed(MIS_NEED_ITEM, 4500, 1, 30, 1)                       ---------猩红的蟹壳
-MisNeed(MIS_NEED_ITEM, 0057, 1, 40, 1)                       ---------蟹绳
+MisNeed(MIS_NEED_ITEM, 4342, 1, 10, 1)                       ---------
+MisNeed(MIS_NEED_ITEM, 4793, 2, 20, 2)                       ---------
+MisNeed(MIS_NEED_ITEM, 4500, 1, 30, 1)                       ---------
+MisNeed(MIS_NEED_ITEM, 0057, 1, 40, 1)                       ---------
 
-MisHelpTalk("<t>纵然原材料的收集是一件非常辛苦的事，但相信品尝过美味的大闸蟹后，你会为自己的努力而感到自豪！")
-MisResultTalk("<t>鲜香大闸蟹出炉，记得珍惜食用之后20倍经验的超值效果喔！国庆长假，与您分享秘制美味烹蟹大餐，欢迎再此品尝！")
+MisHelpTalk("<t>")
+MisResultTalk("<t>20")
 
 MisResultCondition(HasMission, 1209)
 MisResultCondition(NoRecord, 1209)
@@ -10397,10 +10397,10 @@ MisResultAction(TakeItem, 4793, 2)
 MisResultAction(TakeItem, 4500, 1)
 MisResultAction(TakeItem, 0057, 1)
 
-MisResultAction(GiveItem, 0056, 1, 4)                                   ---------大闸蟹
+MisResultAction(GiveItem, 0056, 1, 4)                                   ---------
 MisResultAction(ClearMission, 1209)
 MisResultAction(SetRecord, 1209)
-MisResultAction(ClearRecord, 1209)                                   ----------任务can be repeated
+MisResultAction(ClearRecord, 1209)                                   ----------can be repeated
 MisResultBagNeed(1)
 
 
@@ -10426,11 +10426,11 @@ TriggerAction(1, AddNextFlag, 1209, 40, 1)
 RegCurTrigger(12094)
 
 
-----------------------------------------金秋十月大闸蟹活动（三）---------白银城老奶奶·贝蒂（2277,2769）
+-------------------------------------------------2277,2769
 
-DefineMission(5867, "金秋十月满怀期待育蟹苗", 1210)
+DefineMission(5867, "", 1210)
 
-MisBeginTalk("<t>根据这本烹饪秘方上的记载，由精良蟹苗培育而出的蟹王可是具备无以伦比的升级功效！是为勇士之精品！而这蟹苗本身亦拥有神奇效果，不知您可感兴趣？")
+MisBeginTalk("<t>")
 
 MisBeginCondition(NoMission, 1210)
 MisBeginCondition(NoRecord, 1210)
@@ -10443,16 +10443,16 @@ MisBeginAction(AddTrigger, 12104, TE_GETITEM, 4890, 5)
 
 MisCancelAction(ClearMission, 1210)
 
-MisNeed(MIS_NEED_DESP,"<t>养育蟹苗可是件棘手的事儿，这几日我被长绒蟹、沙蟹搅得无法集中精神，您可否为我解决后顾之忧呢？消灭位于(海底隧道349, 376)的10只<y长绒蟹>和位于(魔女之海1341,3010)的10只<y沙蟹>，并顺带把它们藏匿的5份<y火绒>和5份<y有沙子的蟹肉>带回来！")
-MisNeed(MIS_NEED_KILL, 273, 10, 10, 10)                  ----------长绒蟹
-MisNeed(MIS_NEED_KILL, 186, 10, 20, 10)                  ----------沙蟹
-MisNeed(MIS_NEED_ITEM, 4259, 5, 30, 5)                  -----------火绒
-MisNeed(MIS_NEED_ITEM, 4890, 5, 40, 5)                  -----------有沙子的蟹肉
+MisNeed(MIS_NEED_DESP,"<t>(349, 376)10<y>(1341,3010)10<y>5<y>5<y>")
+MisNeed(MIS_NEED_KILL, 273, 10, 10, 10)                  ----------
+MisNeed(MIS_NEED_KILL, 186, 10, 20, 10)                  ----------
+MisNeed(MIS_NEED_ITEM, 4259, 5, 30, 5)                  -----------
+MisNeed(MIS_NEED_ITEM, 4890, 5, 40, 5)                  -----------
 
 
 
-MisHelpTalk("<t>你可要小心应对那些狡猾的长绒蟹和沙蟹，我会赠与你1份<y蟹苗>作为回报喔！")
-MisResultTalk("<t>这份柔嫩的蟹苗需要你放置在<y背包第2栏>(放置精灵的位置)，<y5天>(7200分钟)的精心呵护，方能到我这烹饪为饕餮大餐！不过，据说商城里会出售一种能更快刺激蟹苗成长的<y超级蟹用激素>，你若有此物可直接来找我！养育蟹苗真是不简单呐，如果觉得这些事都很劳神烦心，那么直接食用这份蟹苗，则会给你带来提升1000点经验的惊喜！")
+MisHelpTalk("<t>1<y>")
+MisResultTalk("<t><y2>()<y5>(7200)<y>1000")
 
 MisResultCondition(HasMission, 1210)
 MisResultCondition(NoRecord, 1210)
@@ -10467,8 +10467,8 @@ MisResultAction(TakeItem, 4890, 5)
 
 MisResultAction(ClearMission, 1210)
 MisResultAction(SetRecord, 1210)
-MisResultAction(ClearRecord, 1210)                                   ----------任务can be repeated
-MisResultAction(Givecrab, 0058)                                   ---------蟹苗
+MisResultAction(ClearRecord, 1210)                                   ----------can be repeated
+MisResultAction(Givecrab, 0058)                                   ---------
 MisResultBagNeed(1)
 
 
@@ -10497,10 +10497,10 @@ RegCurTrigger(12104)
 -----------------------------kokora---------------------------------------
 -------------------------------------------------------------------------------
 
--------------------------------------------升级考试1	
-DefineMission( 6138, "升级考试任务", 1211)
-MisBeginTalk( "<t>学了这么久，你终于可以提升学历了哦！这次的考试任务很简单，去找30个精灵果来就行了")
-MisBeginCondition( CheckXSZCh,2 )				------检测学生证中储存的学分是否达到上限
+-------------------------------------------1	
+DefineMission( 6138, "", 1211)
+MisBeginTalk( "<t>30")
+MisBeginCondition( CheckXSZCh,2 )				------
 MisBeginCondition( HasItem , 3280,1 )
 MisBeginCondition( HasNoItem, 3282)
 MisBeginCondition( NoMission ,1211)
@@ -10509,9 +10509,9 @@ MisBeginAction(AddTrigger, 12111, TE_GETITEM, 3116, 30 )
 MisCancelAction( ClearMission, 1211)
 
 MisNeed(MIS_NEED_ITEM, 3116, 30, 10, 30 )
-MisHelpTalk( "<t>快点去吧，时间不等人哦")
+MisHelpTalk( "<t>")
 
-MisResultTalk( "<t>祈祷自己有个好成绩吧！")
+MisResultTalk( "<t>")
 MisResultCondition( HasMission, 1211)
 MisResultCondition( HasItem, 3116, 30)
 MisResultAction( TakeItem, 3116, 30)
@@ -10524,10 +10524,10 @@ TriggerAction( 1, AddNextFlag, 1211, 10, 30 )
 RegCurTrigger( 12111 )
 
 
---------------------------------------------------------------------拯救剑客裴梦
+--------------------------------------------------------------------
 
-DefineMission( 6139, "拯救剑客裴梦", 1212 )
-MisBeginTalk("<t>我的朋友裴梦被魔王洛克残忍的杀害了.勇敢的战士,如果你能够为我找回代表我朋友灵魂的<b七个字母P-E-I-M-E-N-G>.我将会把我收藏多年的魔法盒送给你.你可以去找一下在<b寂寞之塔附近的洛克的守门人(271,1775)>询问一下具体的情况")
+DefineMission( 6139, "", 1212 )
+MisBeginTalk("<t>.,<bP-E-I-M-E-N-G>..<b(271,1775)>")
 MisBeginCondition(NoMission, 1212)
 MisBeginCondition(NoRecord,1212)
 MisBeginAction(AddMission,1212)
@@ -10540,7 +10540,7 @@ MisBeginAction(AddTrigger, 12126, TE_GETITEM, 3856, 1)
 
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找回代表夏天朋友灵魂的<b七个字母P-E-I-M-E-N-G>.去找一下在<b寂寞之塔附近的洛克的守门人(271,1775)>询问一下具体的情况.记得回来找白银城的魔法师夏天(2229,2782)交差")
+MisNeed(MIS_NEED_DESP,"<bP-E-I-M-E-N-G>.<b(271,1775)>.(2229,2782)")
 MisNeed(MIS_NEED_ITEM, 3854, 2, 10, 2)
 MisNeed(MIS_NEED_ITEM, 3858, 1, 20, 1)
 MisNeed(MIS_NEED_ITEM, 3863, 1, 30, 1)
@@ -10548,8 +10548,8 @@ MisNeed(MIS_NEED_ITEM, 3865, 1, 40, 1)
 MisNeed(MIS_NEED_ITEM, 3862, 1, 50, 1)
 MisNeed(MIS_NEED_ITEM, 3856, 1, 60, 1)
 
-MisHelpTalk("<t>我等着你的归来.")
-MisResultTalk("<t>你是真正的勇士!作为报答,这个我收藏了多年的魔法盒,现在是你的了.")
+MisHelpTalk("<t>.")
+MisResultTalk("<t>!,,.")
 
 MisResultCondition(HasMission, 1212)
 MisResultCondition(NoRecord,1212)
@@ -10568,7 +10568,7 @@ MisResultAction(TakeItem, 3862, 1 )
 MisResultAction(TakeItem, 3856, 1 )
 
 
-MisResultAction(GiveItem, 3673,1,4)------------夏天的魔法盒
+MisResultAction(GiveItem, 3673,1,4)------------
 MisResultAction(ClearMission, 1212)
 --MisResultAction(ZSSTOP)
 MisResultAction(SetRecord, 1212)
@@ -10606,9 +10606,9 @@ TriggerCondition( 1, IsItem, 3856)
 TriggerAction( 1, AddNextFlag, 1212, 60, 1 )
 RegCurTrigger( 12126 )
 
-----------------------------------------------------------守门人透漏的信息----------洛克家的守门人
-DefineMission( 6140, "守门人透漏的信息", 1213 )
-MisBeginTalk("<t>我不能出卖洛克大人,但我也很尊敬你这样舍身挽救朋友的人.这样吧,我告诉你一个信息：第一张字母在寂寞之塔1(263,260)我们家男佣的手里")
+--------------------------------------------------------------------
+DefineMission( 6140, "", 1213 )
+MisBeginTalk("<t>,.,1(263,260)")
 			
 MisBeginCondition(NoMission, 1213)
 MisBeginCondition(NoRecord,1213)
@@ -10617,26 +10617,26 @@ MisBeginCondition(NoRecord, 1212)
 MisBeginAction(AddMission,1213)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔1层(263,260)洛克家的男佣聊聊")
+MisNeed(MIS_NEED_DESP,"1(263,260)")
 
-MisHelpTalk("<t>我并没有出卖我的主人哦,有谁看到我送出了字母卡?")
+MisHelpTalk("<t>,?")
 MisResultCondition(AlwaysFailure)	
------------------------------------------守门人透漏的信息--------洛克家的男佣
-DefineMission(6141, "守门人透漏的信息", 1213, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6141, "", 1213, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我的主人的确交给过我一张字母卡片.但我凭什么给你?")
+MisResultTalk("<t>.?")
 MisResultCondition(NoRecord, 1213)
 MisResultCondition(HasMission,1213)
 MisResultAction(ClearMission,1213)
 MisResultAction(SetRecord, 1213)
 
 
----------------------------------------------男佣的不满---------洛克家的男佣
-DefineMission(6142,"男佣的不满",1214)
+------------------------------------------------------
+DefineMission(6142,"",1214)
 
-  MisBeginTalk("<t> 其实这个字母卡对我来说也没什么用,我也是偶然得到的.看到旁边那些讨厌的怪物了吗?每当我要约会的时候它们总是不合时宜的前来打扰,要给它们点颜色看看.你做得令我满意,我会把那张字母卡送给你.")
+  MisBeginTalk("<t> ,.?,.,.")
 
   MisBeginCondition(NoRecord,1214)
   MisBeginCondition(NoMission,1214)
@@ -10648,14 +10648,14 @@ DefineMission(6142,"男佣的不满",1214)
   MisBeginAction(AddTrigger, 12144, TE_GETITEM, 1486, 25 )               
   MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-  MisNeed(MIS_NEED_DESP,"尖锐的土著长矛、坚固的蜥蜴人腰带、敏捷的圣林之心、损坏的白色灵猫翅膀各25个!")
+  MisNeed(MIS_NEED_DESP,"25!")
   MisNeed(MIS_NEED_ITEM, 4739, 25,  1, 25 )
   MisNeed(MIS_NEED_ITEM, 4740, 25, 26, 25 )
   MisNeed(MIS_NEED_ITEM, 4741, 25,  51, 25 )
   MisNeed(MIS_NEED_ITEM, 1486, 25,  76, 25 )
 
-  MisHelpTalk("<t>不帮我教训它们,一切免谈.")  
-  MisResultTalk("<t>勇士,既然你已经收集齐了我要的东西.那么作为报酬,这张字母P你拿去吧.")
+  MisHelpTalk("<t>,.")  
+  MisResultTalk("<t>,.,P.")
   MisResultCondition(HasMission,1214 )
   MisResultCondition(NoRecord,1214)
   MisResultCondition(HasItem, 4739, 25 )
@@ -10693,9 +10693,9 @@ TriggerCondition( 1, IsItem, 1486)
 TriggerAction( 1, AddNextFlag, 1214, 76, 25 )
 RegCurTrigger( 12144 )
 
-----------------------------------------------------------奇怪的女佣----------洛克家的男佣
-DefineMission( 6143, "奇怪的女佣", 1215 )
-MisBeginTalk("<t>据我所知,寂寞之塔2层(151,134)的我家的女佣那里也有一张字母卡.祝您好运.")
+--------------------------------------------------------------------
+DefineMission( 6143, "", 1215 )
+MisBeginTalk("<t>,2(151,134)..")
 			
 MisBeginCondition(NoMission, 1215)
 MisBeginCondition(NoRecord,1215)
@@ -10703,25 +10703,25 @@ MisBeginCondition(HasRecord, 1214)
 MisBeginAction(AddMission,1215)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔2层(151,134)的洛克家的女佣聊聊")
+MisNeed(MIS_NEED_DESP,"2(151,134)")
 
-MisHelpTalk("<t>她是一位奇怪的女性.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------奇怪的女佣--------洛克家的女佣
-DefineMission(6144, "奇怪的女佣", 1215, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6144, "", 1215, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我的确像传说中的那样有个性,但我发誓我绝不是奇怪的人.")
+MisResultTalk("<t>,.")
 MisResultCondition(NoRecord, 1215)
 MisResultCondition(HasMission,1215)
 MisResultAction(ClearMission,1215)
 MisResultAction(SetRecord, 1215)
 
----------------------------------------------治疗多嘴的秘方---------洛克家的女佣
-DefineMission(6145,"治疗多嘴的秘方",1216)
+------------------------------------------------------
+DefineMission(6145,"",1216)
 
-  MisBeginTalk("<t> 如果一定要说我有什么不足的地方就是我有点爱管闲事,就是人们常说的多嘴.我刚刚得到一个秘方可以治疗这个毛病,就是用铁镐和战斧不停的击碎骷髅,坚持七七四十九天.我想我会因此变得讨人喜欢的.")
+  MisBeginTalk("<t> ,.,,..")
 
   MisBeginCondition(NoRecord,1216)
   MisBeginCondition(NoMission,1216)
@@ -10732,13 +10732,13 @@ DefineMission(6145,"治疗多嘴的秘方",1216)
   MisBeginAction(AddTrigger, 12163, TE_GETITEM, 4745, 35 )                           
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-  MisNeed(MIS_NEED_DESP,"收集暗血骷髅、地精铁镐、沉重的地精战斧各35个!")
+  MisNeed(MIS_NEED_DESP,"35!")
   MisNeed(MIS_NEED_ITEM, 4742, 35,  1, 35 )
   MisNeed(MIS_NEED_ITEM, 4743, 35, 36, 35 )
   MisNeed(MIS_NEED_ITEM, 4745, 35,  71, 35 )
 
-  MisHelpTalk("<t>我知道这听起来有点匪夷所思.")  
-  MisResultTalk("<t>真希望我的瑕疵可以祛除.这个字母是我给你的回报.")
+  MisHelpTalk("<t>.")  
+  MisResultTalk("<t>..")
   MisResultCondition(HasMission,1216 )
   MisResultCondition(NoRecord,1216)
   MisResultCondition(HasItem, 4742, 35 )
@@ -10769,9 +10769,9 @@ InitTrigger()
 TriggerCondition( 1, IsItem, 4745)	
 TriggerAction( 1, AddNextFlag, 1216, 71, 35 )
 RegCurTrigger(12163 )
-----------------------------------------------------------洛克家的小秘----------洛克家的女佣
-DefineMission( 6146, "洛克家的小秘", 1217 )
-MisBeginTalk("<t>你知道吗,寂寞之塔3层(63,311)的女人是洛克大人的小秘.说不定她那里也有一张字母卡,哎呦,我又多嘴了,看来要赶快治疗,不奉陪了.")
+--------------------------------------------------------------------
+DefineMission( 6146, "", 1217 )
+MisBeginTalk("<t>,3(63,311).,,,,.")
 			
 MisBeginCondition(NoMission, 1217)
 MisBeginCondition(NoRecord,1217)
@@ -10779,25 +10779,25 @@ MisBeginCondition(HasRecord, 1216)
 MisBeginAction(AddMission,1217)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔3层(63,311)的洛克家的小秘聊聊")
+MisNeed(MIS_NEED_DESP,"3(63,311)")
 
-MisHelpTalk("<t>我最不喜欢那种搔首弄姿的女人.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------洛克家的小秘--------洛克家的小秘
-DefineMission(6147, "洛克家的小秘", 1217, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6147, "", 1217, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>谁说我和洛克大人关系暧昧了,造谣嘛.")
+MisResultTalk("<t>,.")
 MisResultCondition(NoRecord, 1217)
 MisResultCondition(HasMission,1217)
 MisResultAction(ClearMission,1217)
 MisResultAction(SetRecord, 1217)
 
---------------------------------------------------------------------小秘的梦想------洛克家的小秘
+--------------------------------------------------------------------------
 
-DefineMission( 6148, "小秘的梦想", 1218 )
-MisBeginTalk("<t>我有一个美丽的梦想,要背上翅膀翱翔远方.但是我需要原料和工具.")
+DefineMission( 6148, "", 1218 )
+MisBeginTalk("<t>,..")
 MisBeginCondition(NoMission, 1218)
 MisBeginCondition(NoRecord,1218)
 MisBeginCondition(HasRecord, 1217)
@@ -10810,7 +10810,7 @@ MisBeginAction(AddTrigger, 12185, TE_GETITEM, 4725, 20)
 MisBeginAction(AddTrigger, 12186, TE_GETITEM, 4747, 20)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集破损的黑色猫铃铛、损坏的黑色灵猫翅膀、破裂的地精耳环、大号地精扳手、破旧的猎手之弓、白色灵猫翅膀各20个.")
+MisNeed(MIS_NEED_DESP,"20.")
 MisNeed(MIS_NEED_ITEM, 1501, 20, 1, 20)
 MisNeed(MIS_NEED_ITEM, 1490, 20, 21, 20)
 MisNeed(MIS_NEED_ITEM, 4748, 20, 41, 20)
@@ -10818,8 +10818,8 @@ MisNeed(MIS_NEED_ITEM, 4749, 20, 61, 20)
 MisNeed(MIS_NEED_ITEM, 4725, 20, 81, 20)
 MisNeed(MIS_NEED_ITEM, 4747, 20, 101, 20)
 
-MisHelpTalk("<t>我仿佛已经触摸到了白云的衣角.")
-MisResultTalk("<t>谢谢你帮助我实现美丽的梦想,梦想可能不会实现,但是人是不能没有梦想的.")
+MisHelpTalk("<t>.")
+MisResultTalk("<t>,,.")
 
 MisResultCondition(HasMission, 1218)
 MisResultCondition(NoRecord,1218)
@@ -10875,9 +10875,9 @@ TriggerCondition( 1, IsItem, 4747)
 TriggerAction( 1, AddNextFlag, 1218, 101, 20 )
 RegCurTrigger( 12186 )
 
-----------------------------------------------------------严肃的守护者----------洛克家的小秘
-DefineMission( 6149, "严肃的守护者", 1219 )
-MisBeginTalk("<t>寂寞之塔4(261,70)层的守护者是一个很严肃的人,祈祷你能顺利拿到一张卡片.")
+--------------------------------------------------------------------
+DefineMission( 6149, "", 1219 )
+MisBeginTalk("<t>4(261,70),.")
 			
 MisBeginCondition(NoMission, 1219)
 MisBeginCondition(NoRecord,1219)
@@ -10885,25 +10885,25 @@ MisBeginCondition(HasRecord, 1218)
 MisBeginAction(AddMission,1219)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔4(261,70)层的洛克家的守护者聊聊")
+MisNeed(MIS_NEED_DESP,"4(261,70)")
 
-MisHelpTalk("<t>上一层很危险哦.")
+MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
------------------------------------------严肃的守护者--------洛克家的守护者
-DefineMission(6150, "严肃的守护者", 1219, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6150, "", 1219, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>不管是什么地位的什么人,都应该学会尊重别人,否则永远不会得到别人真正的尊重.")
+MisResultTalk("<t>,,.")
 MisResultCondition(NoRecord, 1219)
 MisResultCondition(HasMission,1219)
 MisResultAction(ClearMission,1219)
 MisResultAction(SetRecord, 1219)
 
---------------------------------------------------------------------一个人情又一个人情------洛克家的守护者
+--------------------------------------------------------------------------
 
-DefineMission( 6151, "一份人情又一份人情", 1220 )
-MisBeginTalk("<t>我为什么会一直作魔王的守护者?!是因为我欠他一份人情.当初我落魄的时候,他给了我黑色灵猫翅膀、被污染的天使光环各10个,卖掉买稀饭吃.事到如今我对他的恩情已经报答得差不多了,你再帮我个忙我就可以摆脱洛克了.")
+DefineMission( 6151, "", 1220 )
+MisBeginTalk("<t>?!.,10,.,.")
 MisBeginCondition(NoMission, 1220)
 MisBeginCondition(NoRecord,1220)
 MisBeginCondition(HasRecord, 1219)
@@ -10912,13 +10912,13 @@ MisBeginAction(AddTrigger, 12201, TE_GETITEM, 4750,50)
 MisBeginAction(AddTrigger, 12202, TE_GETITEM, 4763, 50)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集黑色灵猫翅膀、被污染的天使光环各50个.")
+MisNeed(MIS_NEED_DESP,"50.")
 MisNeed(MIS_NEED_ITEM, 4750, 50, 1, 50)
 MisNeed(MIS_NEED_ITEM, 4763, 50, 51, 50)
 
 
-MisHelpTalk("<t>我能否获得自由就靠你了.")
-MisResultTalk("<t>终于可以还洛克这份人情,但我又欠了你一份人情,我只有把字母卡给你作为回报了,也算替洛克做一件好事.")
+MisHelpTalk("<t>.")
+MisResultTalk("<t>,,,.")
 
 MisResultCondition(HasMission, 1220)
 MisResultCondition(NoRecord,1220)
@@ -10942,9 +10942,9 @@ TriggerCondition( 1, IsItem, 4763)
 TriggerAction( 1, AddNextFlag, 1220, 21, 50 )
 RegCurTrigger( 12202 )
 
-----------------------------------------------------------还是一份人情----------洛克家的守护者
-DefineMission( 6152, "还是一份人情", 1221 )
-MisBeginTalk("<t>我突然有一个好主意,这辈子我一直在还别人的情,或许这次我可以让你欠我一份情.<n><t>寂寞之塔5层(542,54)的管家那有一张字母卡片")
+--------------------------------------------------------------------
+DefineMission( 6152, "", 1221 )
+MisBeginTalk("<t>,,.<n><t>5(542,54)")
 			
 MisBeginCondition(NoMission, 1221)
 MisBeginCondition(NoRecord,1221)
@@ -10952,26 +10952,26 @@ MisBeginCondition(HasRecord, 1220)
 MisBeginAction(AddMission,1221)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔5层(542,54)的洛克家的管家聊聊")
+MisNeed(MIS_NEED_DESP,"5(542,54)")
 
-MisHelpTalk("<t>不用谢我,我很享受这种感觉,虽然好像有点自私.哈哈...")
+MisHelpTalk("<t>,,....")
 MisResultCondition(AlwaysFailure)	
------------------------------------------还是一份人情--------洛克家的管家
-DefineMission(6153, "还是一份人情", 1221, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6153, "", 1221, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>这个不苟言笑的家伙倒是开心的送人情给别人,我怎么办?")
+MisResultTalk("<t>,?")
 MisResultCondition(NoRecord, 1221)
 MisResultCondition(HasMission,1221)
 MisResultAction(ClearMission,1221)
 MisResultAction(SetRecord, 1221)
 
 
---------------------------------------------------------------------管家的烦恼------洛克家的管家
+--------------------------------------------------------------------------
 
-DefineMission( 6154, "管家的烦恼", 1222 )
-MisBeginTalk("<t>做人不可以太贪婪知道吗?不要像我.上次我的亲友来拜望我,我看洛克大人不是很注意家里的财物状况就私自拿家里的东西送给我的亲戚.不知道为什么洛克大人有了察觉,现在我很着急,如果你可以帮我收集齐这些东西,我不介意把大人的字母卡送给你")
+DefineMission( 6154, "", 1222 )
+MisBeginTalk("<t>?.,.,,,")
 MisBeginCondition(NoMission, 1222)
 MisBeginCondition(NoRecord,1222)
 MisBeginCondition(HasRecord, 1221)
@@ -10981,13 +10981,13 @@ MisBeginAction(AddTrigger, 12222, TE_GETITEM, 4766, 35)
 MisBeginAction(AddTrigger, 12223, TE_GETITEM, 4772, 35)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集被诅咒的白色灵猫翅膀、 黑暗的圣林之心、被诅咒的黑色灵猫翅膀各35个.")
+MisNeed(MIS_NEED_DESP," 35.")
 MisNeed(MIS_NEED_ITEM, 4770, 35, 1, 35)
 MisNeed(MIS_NEED_ITEM, 4766, 35, 36, 35)
 MisNeed(MIS_NEED_ITEM, 4772, 35, 71, 35)
 
-MisHelpTalk("<t>要快,否则让洛克大人知道了,做什么都没有用了.")
-MisResultTalk("<t>总是这样拆东墙补西墙我真担心有一天我再没有退路了.")
+MisHelpTalk("<t>,,.")
+MisResultTalk("<t>.")
 
 MisResultCondition(HasMission, 1222)
 MisResultCondition(NoRecord,1222)
@@ -11019,9 +11019,9 @@ TriggerCondition( 1, IsItem, 4772)
 TriggerAction( 1, AddNextFlag, 1222, 71, 35 )
 RegCurTrigger( 12223 )
 
----------------------------------------------------------管家的报复----------洛克家的管家
-DefineMission( 6155, "管家的报复", 1223 )
-MisBeginTalk("<t>哦~~我终于明白为什么一向信任我的洛克大人突然对我产生了怀疑,一定是他情人搞的鬼,因为我曾经看见她与一个陌生男子约会,她要陷害我...别说我不帮你,那个女人身上有一张卡片,你一定要拿到那张卡片.这样一来,如果我暴露了她也跑不了,哈哈哈,我太坏了~~")
+-------------------------------------------------------------------
+DefineMission( 6155, "", 1223 )
+MisBeginTalk("<t>~~,,,...,,.,,,~~")
 			
 MisBeginCondition(NoMission, 1223)
 MisBeginCondition(NoRecord,1223)
@@ -11029,24 +11029,24 @@ MisBeginCondition(HasRecord, 1222)
 MisBeginAction(AddMission,1223)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找寂寞之塔6层(541,268)的洛克的情人聊聊")
+MisNeed(MIS_NEED_DESP,"6(541,268)")
 
-MisHelpTalk("<t>怪不得从小妈妈就教育我不要和坏孩子玩呢,自从跟随了魔王洛克大人,我真的变坏了,呜...")
+MisHelpTalk("<t>,,,...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------管家的报复--------洛克的情人
-DefineMission(6156, "管家的报复", 1223, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6156, "", 1223, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>你怎么知道我有卡片的?")
+MisResultTalk("<t>?")
 MisResultCondition(NoRecord, 1223)
 MisResultCondition(HasMission,1223)
 MisResultAction(ClearMission,1223)
 MisResultAction(SetRecord, 1223)
---------------------------------------------------------------------美女的奇特爱好------洛克的情人
+--------------------------------------------------------------------------
 
-DefineMission( 6157, "美女的奇特爱好", 1224 )
-MisBeginTalk("<t>我最近突然对金属饰品特别感兴趣,已经痴迷到疯狂的程度.你一定不明白我为什么开始喜欢上金属烟囱,其实我也不明白.但我对自己喜欢的东西总是一定要得到,不惜任何代价,即使是魔王洛克的东西.")
+DefineMission( 6157, "", 1224 )
+MisBeginTalk("<t>,.,.,,.")
 MisBeginCondition(NoMission, 1224)
 MisBeginCondition(NoRecord,1224)
 MisBeginCondition(HasRecord, 1223)
@@ -11054,11 +11054,11 @@ MisBeginAction(AddMission,1224)
 MisBeginAction(AddTrigger, 12241, TE_GETITEM, 1503, 110)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集金属烟囱110个.")
+MisNeed(MIS_NEED_DESP,"110.")
 MisNeed(MIS_NEED_ITEM, 1503, 110, 1, 110)
 
-MisHelpTalk("<t>别跟我解释,我只要金属烟囱.")
-MisResultTalk("<t>看来我们真的是两个世界的人,像你不明白我一样,我永远不明白你要这个破字母有什么用,给你吧.")
+MisHelpTalk("<t>,.")
+MisResultTalk("<t>,,,.")
 
 MisResultCondition(HasMission, 1224)
 MisResultCondition(NoRecord,1224)
@@ -11075,9 +11075,9 @@ TriggerCondition( 1, IsItem, 1503)
 TriggerAction( 1, AddNextFlag, 1224, 1, 110 )
 RegCurTrigger( 12241 )
 
-------------------------------------------------------赌气的旺财----------洛克的情人
-DefineMission( 6158, "赌气的旺财", 1225 )
-MisBeginTalk("<t>下一张字母在我家男人的宠物旺财身上.那是一只很通人性的狗哦,只是有点小气.有一次我生气没给他骨头吃,他逃到地狱四层藏起来了.总的来说我还是很喜欢它的.")
+----------------------------------------------------------------
+DefineMission( 6158, "", 1225 )
+MisBeginTalk("<t>.,.,..")
 			
 MisBeginCondition(NoMission, 1225)
 MisBeginCondition(NoRecord,1225)
@@ -11085,26 +11085,26 @@ MisBeginCondition(HasRecord, 1224)
 MisBeginAction(AddMission,1225)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找地狱四层(154,912)的洛克家的旺财要字母卡片")
+MisNeed(MIS_NEED_DESP,"(154,912)")
 
-MisHelpTalk("<t>美丽的烟囱啊...")
+MisHelpTalk("<t>...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------赌气的旺财--------洛克家的旺财
-DefineMission(6159, "赌气的旺财", 1225, COMPLETE_SHOW )
+-------------------------------------------------
+DefineMission(6159, "", 1225, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>汪汪!我逃到这你都发现我了?是洛克情人要你来请我回去的吗?她怕疼爱我的洛克找不到我怪罪她吧?")
+MisResultTalk("<t>!???")
 MisResultCondition(NoRecord, 1225)
 MisResultCondition(HasMission,1225)
 MisResultAction(ClearMission,1225)
 MisResultAction(SetRecord, 1225)
 
 
---------------------------------------------------------------------旺财也不是好惹的------洛克家的旺财
+--------------------------------------------------------------------------
 
-DefineMission( 6160, "旺财也不是好惹的!", 1226 )
-MisBeginTalk("<t>地狱三层的僵尸一直欺负可怜的我,如果你帮我去把他的头发拔几根下来,这张无聊的卡片就是你的了.一定要让他们知道旺财也不是好惹的.")
+DefineMission( 6160, "!", 1226 )
+MisBeginTalk("<t>,,..")
 MisBeginCondition(NoMission, 1226)
 MisBeginCondition(NoRecord,1226)
 MisBeginCondition(HasRecord, 1225)
@@ -11112,11 +11112,11 @@ MisBeginAction(AddMission,1226)
 MisBeginAction(AddTrigger, 12261, TE_GETITEM, 4884, 99)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集僵尸头发99个.")
+MisNeed(MIS_NEED_DESP,"99.")
 MisNeed(MIS_NEED_ITEM, 4884, 99, 1, 99)
 
-MisHelpTalk("<t>今天你汪汪了没有?")
-MisResultTalk("<t>你可以回去<b找白银城的魔法师夏天(2229,2782)交差>了.")
+MisHelpTalk("<t>?")
+MisResultTalk("<t><b(2229,2782)>.")
 
 MisResultCondition(HasMission, 1226)
 MisResultCondition(NoRecord,1226)
@@ -11134,9 +11134,9 @@ TriggerAction( 1, AddNextFlag, 1226, 1, 99 )
 RegCurTrigger( 12261 )
 
 
------------------------------------------------------哦!没钥匙----------魔法师夏天
-DefineMission( 6161, "哦!没钥匙", 1227 )
-MisBeginTalk("<t>哦!没钥匙.我在去秋岛旅游的时候把开启魔法盒的钥匙掉在美丽的导游小姐(2423,3186)那了,只要你去找她要回,就可以打开魔法盒了")
+-----------------------------------------------------!----------
+DefineMission( 6161, "!", 1227 )
+MisBeginTalk("<t>!.(2423,3186),,")
 			
 MisBeginCondition(NoMission, 1227)
 MisBeginCondition(NoRecord,1227)
@@ -11144,16 +11144,16 @@ MisBeginCondition(HasRecord, 1212)
 MisBeginAction(AddMission,1227)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找秋岛导游小姐(2423,3186)要回开启魔法盒的钥匙。")
+MisNeed(MIS_NEED_DESP,"(2423,3186)")
 
-MisHelpTalk("<t>哦!怎么忘记带回钥匙了...")
+MisHelpTalk("<t>!...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------哦!没钥匙--------秋岛导游小姐
-DefineMission(6162, "哦!没钥匙", 1227, COMPLETE_SHOW )
+-----------------------------------------!--------
+DefineMission(6162, "!", 1227, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>一定是魔法师夏天叫你来的吧?他是有把钥匙丢在我这了")
+MisResultTalk("<t>?")
 MisResultCondition(NoRecord, 1227)
 MisResultCondition(HasMission,1227)
 MisResultAction(ClearMission,1227)
@@ -11161,10 +11161,10 @@ MisResultAction(SetRecord, 1227)
 
 
 
---------------------------------------------------------------------导游小姐的请求------秋岛导游小姐
+--------------------------------------------------------------------------
 
-DefineMission( 6163, "导游小姐的请求", 1228 )
-MisBeginTalk("<t>我帮你们保存了这么久,总该有点报答吧.秋岛经常有凶悍的土匪打劫游客,你就帮我除除害吧")
+DefineMission( 6163, "", 1228 )
+MisBeginTalk("<t>,.,")
 MisBeginCondition(NoMission, 1228)
 MisBeginCondition(NoRecord,1228)
 MisBeginCondition(HasRecord, 1227)
@@ -11174,13 +11174,13 @@ MisBeginAction(AddTrigger, 12282, TE_GETITEM, 0156, 20)
 MisBeginAction(AddTrigger, 12283, TE_GETITEM, 0158, 20)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集东方海盗水手徽记、东方海盗战斗员徽记、东方海盗突击手徽记各20个.")
+MisNeed(MIS_NEED_DESP,"20.")
 MisNeed(MIS_NEED_ITEM, 0154, 20, 1, 20)
 MisNeed(MIS_NEED_ITEM, 0156, 20, 21, 20)
 MisNeed(MIS_NEED_ITEM, 0158, 20, 41, 20)
 
-MisHelpTalk("<t>你快去吧,我这里最近生意萧条得很呢.")
-MisResultTalk("<t>你还真是一个好手呢,谢谢.")
+MisHelpTalk("<t>,.")
+MisResultTalk("<t>,.")
 
 MisResultCondition(HasMission, 1228)
 MisResultCondition(NoRecord,1228)
@@ -11212,10 +11212,10 @@ TriggerAction( 1, AddNextFlag, 1228, 71, 20 )
 RegCurTrigger( 12283 )
 
 
-	--------------------------------------------------------------------告慰亡灵------秋岛导游小姐
+	--------------------------------------------------------------------------
 
-DefineMission( 6164, "告慰亡灵", 1229 )
-MisBeginTalk("<t>秋岛上有很多的亡魂,能否继续为我找回去泣灵武士骸骨和废灵武士骸骨,让秋岛的亡灵得到安息.")
+DefineMission( 6164, "", 1229 )
+MisBeginTalk("<t>,,.")
 MisBeginCondition(NoMission, 1229)
 MisBeginCondition(NoRecord,1229)
 MisBeginCondition(HasRecord, 1228)
@@ -11224,13 +11224,13 @@ MisBeginAction(AddTrigger, 12291, TE_GETITEM, 3436, 50)
 MisBeginAction(AddTrigger, 12292, TE_GETITEM, 3434, 50)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"收集泣灵武士骸骨、废灵武士骸骨各50个.")
+MisNeed(MIS_NEED_DESP,"50.")
 MisNeed(MIS_NEED_ITEM, 3436, 50, 1, 50)
 MisNeed(MIS_NEED_ITEM, 3434, 50, 51, 50)
 
 
-MisHelpTalk("<t>实在拜托你了.")
-MisResultTalk("<t>你真是好人,太感谢你啦.钥匙拿去吧.")
+MisHelpTalk("<t>.")
+MisResultTalk("<t>,..")
 
 MisResultCondition(HasMission, 1229)
 MisResultCondition(NoRecord,1229)
@@ -11240,7 +11240,7 @@ MisResultCondition(HasItem, 3434, 50)
 MisResultAction(TakeItem, 3436, 50 )
 MisResultAction(TakeItem, 3434, 50 )
 
-MisResultAction(GiveItem, 3674,1,4)----------钥匙
+MisResultAction(GiveItem, 3674,1,4)----------
 MisResultAction(ClearMission, 1229)
 MisResultAction(SetRecord, 1229)
 MisResultBagNeed(1)
@@ -11255,9 +11255,9 @@ TriggerCondition( 1, IsItem, 3434)
 TriggerAction( 1, AddNextFlag, 1229, 51, 50 )
 RegCurTrigger( 12292 )
 
-----------------------------------------------------一把钥匙开一把锁---------秋岛导游小姐
-DefineMission( 6165, "一把钥匙开一把锁", 1230 )
-MisBeginTalk("<t>赶快找魔法师夏天打开魔法盒吧.")
+-------------------------------------------------------------
+DefineMission( 6165, "", 1230 )
+MisBeginTalk("<t>.")
 			
 MisBeginCondition(NoMission, 1230)
 MisBeginCondition(NoRecord,1230)
@@ -11265,23 +11265,23 @@ MisBeginCondition(HasRecord, 1229)
 MisBeginAction(AddMission,1230)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed(MIS_NEED_DESP,"找白银城魔法师夏天(2229,2782)打开魔法盒.")
+MisNeed(MIS_NEED_DESP,"(2229,2782).")
 
-MisHelpTalk("<t>记得带钥匙和魔法盒一起去...")
+MisHelpTalk("<t>...")
 MisResultCondition(AlwaysFailure)	
------------------------------------------一把钥匙开一把锁---------魔法师夏天
-DefineMission(6166, "一把钥匙开一把锁", 1230, COMPLETE_SHOW )
+--------------------------------------------------
+DefineMission(6166, "", 1230, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
-MisResultTalk("<t>我的主啊,世间竟有如此毅力的孩子,难能可贵啊.我帮你打开盒子吧.哇,居然盒子里面有个黑匣子.拿去看看,是什么东东?")
+MisResultTalk("<t>,,..,.,?")
 MisResultCondition(NoRecord, 1230)
 MisResultCondition(HasMission,1230)
 MisResultCondition(HasItem, 3673, 1)
 MisResultCondition(HasItem, 3674, 1)
 MisResultAction(TakeItem, 3673, 1 )
 MisResultAction(TakeItem, 3674, 1 )
-MisResultAction(GiveItem, 3672,1,4)----------黑匣子
+MisResultAction(GiveItem, 3672,1,4)----------
 MisResultAction(ClearMission,1230)
 MisResultAction(SetRecord, 1230)
 MisResultBagNeed(1)
@@ -11307,9 +11307,9 @@ MisResultAction(ClearRecord, 1229)---------------can be repeated
 MisResultAction(ClearRecord, 1230)---------------can be repeated
 
 
---------------------------------------------------------勇者的足迹	
-DefineMission( 6167, "The Hero’s Relic", 1231)
-MisBeginTalk( "<t> You are not a kid anymore, it’s time to leave this place...<n><t> Here is the treasured relic of a brave fighter, do you want it? <n><t>You want it? If you want it, just tell me. I can see your eyes are filled with desire. I am serious, you really need to tell me if you want it… I ask you again, do you really want it? Ok, here you are.")
+--------------------------------------------------------	
+DefineMission( 6167, "The Heros Relic", 1231)
+MisBeginTalk( "<t> You are not a kid anymore, its time to leave this place...<n><t> Here is the treasured relic of a brave fighter, do you want it? <n><t>You want it? If you want it, just tell me. I can see your eyes are filled with desire. I am serious, you really need to tell me if you want it I ask you again, do you really want it? Ok, here you are.")
 MisBeginCondition( LvCheck, ">", 44)
 MisBeginCondition( LvCheck, "<", 66)
 MisBeginCondition( NoMission, 1231)
@@ -11320,8 +11320,8 @@ MisCancelAction(ClearMission, 1231)
 
 MisNeed(MIS_NEED_KILL, 514, 30, 10, 30)
 
-MisResultTalk("<t>Muwahhaha….you killed so many monsters. I told you the wrong number before, actually, 10 are enough. But you have already killed 30 monsters, which is ok too. <n><t>Well, I guess I’m too old. Why do you stand here?<n><t>Oh, I almost forgot, I haven’t give you the rewards.")
-MisHelpTalk("<t>Why don’t you get a move on? The Huge Spiky Stramonium is in Ascaron (440,1320).")
+MisResultTalk("<t>Muwahhaha.you killed so many monsters. I told you the wrong number before, actually, 10 are enough. But you have already killed 30 monsters, which is ok too. <n><t>Well, I guess Im too old. Why do you stand here?<n><t>Oh, I almost forgot, I havent give you the rewards.")
+MisHelpTalk("<t>Why dont you get a move on? The Huge Spiky Stramonium is in Ascaron (440,1320).")
 MisResultCondition( HasFlag, 1231, 39 )
 MisResultCondition( HasMission, 1231)
 MisResultCondition( NoRecord, 1231)
@@ -11336,7 +11336,7 @@ TriggerAction( 1, AddNextFlag, 1231, 10, 30 )
 RegCurTrigger(12311)
 
 ----------------------------------------
-DefineMission( 6168, "The Hero’s Relic", 1232)
+DefineMission( 6168, "The Heros Relic", 1232)
 MisBeginTalk( "<t>You are a very brave gambler. High risk, high return<n><t>But I must warn you, if you go adventuring without abilities, all your efforts will be in vain. <n><t> This is your next test, and I will be waiting for you to return.")
 MisBeginCondition( NoMission, 1232)
 MisBeginCondition( NoRecord, 1232)
@@ -11347,7 +11347,7 @@ MisCancelAction( ClearMission, 1232)
 
 MisNeed( MIS_NEED_KILL, 284, 50, 10, 50)
 
-MisResultTalk( "<t>Welcome back! Your performance has been recognized. But I want to tell you that all these tasks were designed by me to test you.<n><t>Don’t be mad at me! I knew the location of the treasure, but the lock keeping the treasure from being stolen had rusted, and I heard that only Terra Gold Ore can be used to open the lock. You must go and find some for me. <n><t>I know I shouldn’t have lied to you, ok, I promise, once you give me the Terra Gold Ore, I will give you all the treasure.")
+MisResultTalk( "<t>Welcome back! Your performance has been recognized. But I want to tell you that all these tasks were designed by me to test you.<n><t>Dont be mad at me! I knew the location of the treasure, but the lock keeping the treasure from being stolen had rusted, and I heard that only Terra Gold Ore can be used to open the lock. You must go and find some for me. <n><t>I know I shouldnt have lied to you, ok, I promise, once you give me the Terra Gold Ore, I will give you all the treasure.")
 MisHelpTalk( "<t> The Guardian Angel usually walk around Ascaron (904,1280).")
 MisResultCondition( HasMission, 1232)
 MisResultCondition( NoRecord, 1232)
@@ -11363,7 +11363,7 @@ TriggerAction( 1, AddNextFlag, 1232, 10, 50 )
 RegCurTrigger(12321)
 
 ----------------------------------------
-DefineMission( 6169, "The Hero’s Relic", 1233)
+DefineMission( 6169, "The Heros Relic", 1233)
 MisBeginTalk( "<t>Young man, you are very kind! God bless you, this is the location of Terra Gold Ore (Magical Ocean 1381,3134), here you are, I think it will be helpful.")
 MisBeginCondition( NoMission, 1233)
 MisBeginCondition( NoRecord, 1233)
@@ -11376,7 +11376,7 @@ MisCancelAction( ClearMission, 1233)
 MisNeed( MIS_NEED_KILL, 65, 10, 10, 10)
 MisNeed( MIS_NEED_ITEM, 1783, 50, 20, 50)
 
-MisResultTalk( "<t>I have finally found the legendary treasure! <n><t> What the hell is this? I don’t get it! <n><t> Damn it! Why do I only get this crap after I’ve made such an effort? <n><t> The treasure is useless to me so you can have it.")
+MisResultTalk( "<t>I have finally found the legendary treasure! <n><t> What the hell is this? I dont get it! <n><t> Damn it! Why do I only get this crap after Ive made such an effort? <n><t> The treasure is useless to me so you can have it.")
 MisHelpTalk( "<t>Go go go!!")
 MisResultCondition( HasMission, 1233)
 MisResultCondition( NoRecord, 1233)
@@ -11401,7 +11401,7 @@ RegCurTrigger(12332)
 
 ----------------------------------------------
 DefineMission( 6170, "The Brave Love", 1234)
-MisBeginTalk( "<t> Afterwards, I found out that the so-called treasure was the love letter of a hero.<n><t> Since then many loathsome monsters had been bothering our village, and the hero had to hide his love for the girl as he fought against those monsters.<n><t> After many years, we were able to lead a peaceful life again. We all respect this hero, because to save our village he gave up that girl. <n><t> Can you deliver this love letter to that girl? <n><t> It has been said that the girl lives on a small island in the Treasure Gulf.<n><t> Hey, don’t be so impatient, I haven’t finished talking… A gift prepared by the hero was stolen by monsters, you should get it back and give it to his girl.")
+MisBeginTalk( "<t> Afterwards, I found out that the so-called treasure was the love letter of a hero.<n><t> Since then many loathsome monsters had been bothering our village, and the hero had to hide his love for the girl as he fought against those monsters.<n><t> After many years, we were able to lead a peaceful life again. We all respect this hero, because to save our village he gave up that girl. <n><t> Can you deliver this love letter to that girl? <n><t> It has been said that the girl lives on a small island in the Treasure Gulf.<n><t> Hey, dont be so impatient, I havent finished talking A gift prepared by the hero was stolen by monsters, you should get it back and give it to his girl.")
 MisBeginCondition( NoMission, 1234)
 MisBeginCondition( NoRecord, 1234)
 MisBeginCondition( HasRecord, 1233)
@@ -11414,7 +11414,7 @@ MisCancelAction( ClearMission, 1234)
 MisBeginBagNeed(1)
 
 MisHelpTalk( "<t>Now go!")
-MisNeed( MIS_NEED_DESP, " Give the hero’s relic,89 pearls and 1 Crown to Elizabeth in the Treasure Gulf.")
+MisNeed( MIS_NEED_DESP, " Give the heros relic,89 pearls and 1 Crown to Elizabeth in the Treasure Gulf.")
 MisNeed( MIS_NEED_ITEM, 2671, 1, 10, 1)
 MisNeed( MIS_NEED_ITEM, 4503, 1, 20, 1)
 MisNeed( MIS_NEED_ITEM, 3361, 89, 30, 89)
@@ -11424,7 +11424,7 @@ MisResultCondition( AlwaysFailure )
 DefineMission( 6171, "The Brave Love", 1234, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>Thank you so much, so many years have passed… to finally hear from him… <n><t>Please accept this reward for bringing me so much joy.")
+MisResultTalk( "<t>Thank you so much, so many years have passed to finally hear from him <n><t>Please accept this reward for bringing me so much joy.")
 MisResultCondition( HasItem, 2671, 1)
 MisResultCondition( HasItem, 4503, 1)
 MisResultCondition( HasItem, 3361, 89)
@@ -11437,7 +11437,7 @@ MisResultAction( ClearMission, 1234)
 MisResultAction( SetRecord, 1234)
 MisResultAction( AddExpPer, 2)
 MisResultAction( AddMoney, 300000)
-MisResultAction( AddReadingBook )                       ------给予本职业的初级读物
+MisResultAction( AddReadingBook )                       ------
 
 InitTrigger()
 TriggerCondition(1, IsItem, 2671)
@@ -11457,7 +11457,7 @@ RegCurTrigger(12343)
 
 -------------------------------------------------------
 DefineMission( 6172, "The Brave Love", 1235)
-MisBeginTalk( "<t> There is still much room for improvement. You’d better visit Blurry, he will teach you a lot.")
+MisBeginTalk( "<t> There is still much room for improvement. Youd better visit Blurry, he will teach you a lot.")
 MisBeginCondition( NoMission, 1235)
 MisBeginCondition( NoRecord, 1235)
 MisBeginCondition( HasRecord, 1234)
@@ -11485,9 +11485,9 @@ MisResultAction(ClearRecord, 1233)---------------can be repeated
 MisResultAction(ClearRecord, 1234)---------------can be repeated
 MisResultAction(ClearRecord, 1235)---------------can be repeated
 
--------------------------------四季发财----------客栈老板·龙女
-DefineMission( 6174, "四季发财", 1236)
-MisBeginTalk( "<t>春夏秋冬4张牌都在秋香(秋岛2722,3137)这个臭丫头身上,帮我找回来吧,我会重重酬谢你的.")
+-----------------------------------------
+DefineMission( 6174, "", 1236)
+MisBeginTalk( "<t>4(2722,3137),,.")
 MisBeginCondition( NoMission, 1236)
 MisBeginCondition( NoRecord, 1236)
 MisBeginCondition( LvCheck, "<", 80)
@@ -11498,14 +11498,14 @@ MisBeginAction( AddTrigger, 12363, TE_GETITEM, 2971, 1)
 MisBeginAction( AddTrigger, 12364, TE_GETITEM, 2972, 1)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "从秋香那里夺回麻将牌(春),麻将牌(夏),麻将牌(秋),麻将牌(冬)给龙女(春岛3302,2501),秋香就在秋岛(2722,3137).")
+MisNeed( MIS_NEED_DESP, "(),(),(),()(3302,2501),(2722,3137).")
 MisNeed( MIS_NEED_ITEM, 2969, 1, 10, 1)
 MisNeed( MIS_NEED_ITEM, 2970, 1, 20, 1)
 MisNeed( MIS_NEED_ITEM, 2971, 1, 30, 1)
 MisNeed( MIS_NEED_ITEM, 2972, 1, 40, 1)
 
-MisResultTalk( "<t>哇!就是这4张牌,太好了!成为牌界第一人的宿愿今天得到实现.")
-MisHelpTalk( "<t>一定要帮我找回那四张牌啊,我成为牌界第一人的梦想就靠你了!")
+MisResultTalk( "<t>!4,!.")
+MisHelpTalk( "<t>,!")
 MisResultCondition( HasMission, 1236)
 MisResultCondition( NoRecord, 1236)
 MisResultCondition( HasItem, 2969, 1)
@@ -11537,9 +11537,9 @@ TriggerCondition( 1, IsItem, 2972)
 TriggerAction( 1, AddNextFlag, 1236, 40, 1 )
 RegCurTrigger( 12364 )
 
----------------------------------八方进宝------------客栈老板·龙女
-DefineMission( 6175, "八方进宝", 1237)
-MisBeginTalk( "<t>春夏秋冬4张牌都在秋香(秋岛2722,3137)这个臭丫头身上,其中梅,兰,竹,菊在夏岛的西门庆(3734,2661)的身上,快点帮我找回来吧,我会重重酬谢你的!")
+---------------------------------------------
+DefineMission( 6175, "", 1237)
+MisBeginTalk( "<t>4(2722,3137),,,,(3734,2661),,!")
 MisBeginCondition( NoMission, 1237)
 MisBeginCondition( NoRecord, 1237)
 MisBeginCondition( LvCheck, "<", 90)
@@ -11554,7 +11554,7 @@ MisBeginAction( AddTrigger, 12377, TE_GETITEM, 2975, 1)
 MisBeginAction( AddTrigger, 12378, TE_GETITEM, 2976, 1)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "在夏岛的西门庆(3734,2661)的身上,找齐春夏秋冬梅兰竹菊8张麻将牌给龙女(春岛3302,2501).")
+MisNeed( MIS_NEED_DESP, "(3734,2661),8(3302,2501).")
 MisNeed( MIS_NEED_ITEM, 2969, 1, 10, 1)
 MisNeed( MIS_NEED_ITEM, 2970, 1, 20, 1)
 MisNeed( MIS_NEED_ITEM, 2971, 1, 30, 1)
@@ -11564,8 +11564,8 @@ MisNeed( MIS_NEED_ITEM, 2974, 1, 60, 1)
 MisNeed( MIS_NEED_ITEM, 2975, 1, 70, 1)
 MisNeed( MIS_NEED_ITEM, 2976, 1, 80, 1)
 
-MisResultTalk( "<t>你太完美了,我要嫁给你!让你知道我雀王之王的魅力!")
-MisHelpTalk( "<t>快点去吧,如果你帮我找回了这8张牌,我是不会亏待你的.")
+MisResultTalk( "<t>,!!")
+MisHelpTalk( "<t>,8,.")
 MisResultCondition( HasMission, 1237)
 MisResultCondition( NoRecord, 1237)
 MisResultCondition( HasItem, 2969, 1)
@@ -11632,9 +11632,9 @@ TriggerCondition( 1, IsItem, 2976)
 TriggerAction( 1, AddNextFlag, 1237,80, 1 )
 RegCurTrigger( 12378 )
 
-----------------------------------心之锁----------西门庆
-DefineMission( 6176, "心之锁", 1238)
-MisBeginTalk( "<t>金莲姑娘是我今生的唯一,我需要如意钥匙打开她心灵的枷锁,你可以去找海盗的情圣沙岚城大使·席巴(加纳2256,2707)他可以给你提示.")
+--------------------------------------------
+DefineMission( 6176, "", 1238)
+MisBeginTalk( "<t>,,(2256,2707).")
 MisBeginCondition( NoMission, 1238)
 MisBeginCondition( NoRecord, 1238)
 MisBeginCondition( HasMission, 1237)
@@ -11642,11 +11642,11 @@ MisBeginAction( AddMission, 1238)
 MisBeginAction( AddTrigger, 12381, TE_GETITEM, 2965, 1)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP,"去找沙岚城大使·席巴(加纳2256,2707)拿如意钥匙,并带回给夏岛西门庆(3734,2661).")
+MisNeed( MIS_NEED_DESP,"(2256,2707),(3734,2661).")
 MisNeed( MIS_NEED_ITEM, 2965, 1, 10, 1)
 
-MisResultTalk( "<t>Oh,baby!就是这把如意钥匙,今晚我就拿这把去开启金莲的心门.")
-MisHelpTalk( "<t>席巴一定知道如意钥匙的下落，去问问他吧")
+MisResultTalk( "<t>Oh,baby!,.")
+MisHelpTalk( "<t>")
 MisResultCondition( HasMission, 1238)
 MisResultCondition( NoRecord, 1238)
 MisResultCondition( HasItem, 2965, 1)
@@ -11662,9 +11662,9 @@ TriggerCondition( 1, IsItem, 2965)
 TriggerAction( 1, AddNextFlag, 1238, 10, 1 )
 RegCurTrigger( 12381 )
 
-----------------------------------心之锁----------沙岚城大使·席巴
-DefineMission( 6177, "心之锁", 1239)
-MisBeginTalk( "<t>黑珍珠是世界上人人追求的宝贝,我的孙女很要拥有2个黑珍珠来镶嵌她白金的手镯上,据说可以在春岛的狐妖,狐道士身上找到,如果你能找来2个给我的话,我就把我珍藏多年的如意钥匙送给你!!")
+--------------------------------------------
+DefineMission( 6177, "", 1239)
+MisBeginTalk( "<t>,2,,,2,!!")
 MisBeginCondition( HasMission, 1238)
 MisBeginCondition( NoRecord, 1239)
 MisBeginCondition( NoMission, 1239)
@@ -11672,11 +11672,11 @@ MisBeginAction( AddMission, 1239)
 MisBeginAction( AddTrigger, 12391, TE_GETITEM, 3362, 2)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "在春岛的那些狐狸身上找2个黑珍珠给席巴")
+MisNeed( MIS_NEED_DESP, "2")
 MisNeed( MIS_NEED_ITEM, 3362, 2, 10, 2)
 
-MisResultTalk( "<t>黑珍珠是多好的宝物,我已经拥有了它,我的孙女一定会很高兴.")
-MisHelpTalk( "<t>黑珍珠春岛的那些狐狸身上就有.")
+MisResultTalk( "<t>,,.")
+MisHelpTalk( "<t>.")
 MisResultCondition( HasMission, 1239)
 MisResultCondition( NoRecord, 1239)
 MisResultCondition( HasItem, 3362, 2)
@@ -11691,9 +11691,9 @@ TriggerCondition( 1, IsItem, 3362)
 TriggerAction( 1, AddNextFlag, 1239, 10, 2 )
 RegCurTrigger( 12391 )
 
----------------------------------陈年的红酒-----------西门庆
-DefineMission( 6178, "陈年的红酒", 1240)
-MisBeginTalk( "<t>浪漫的夜晚怎么能缺少美味的红酒,我在冰狼的旅店老板·约瑟夫(1291,541)那定了1瓶陈年的红酒,你可以去帮我取回来吗?")
+--------------------------------------------
+DefineMission( 6178, "", 1240)
+MisBeginTalk( "<t>,(1291,541)1,?")
 MisBeginCondition( NoMission, 1240)
 MisBeginCondition( NoRecord, 1240)
 MisBeginCondition( HasMission, 1237)
@@ -11702,11 +11702,11 @@ MisBeginAction( AddMission, 1240)
 MisBeginAction( AddTrigger, 12401, TE_GETITEM, 2977, 1)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "在冰狼的旅店老板·约瑟夫(1291,541)那帮西门庆(3734,2661)取来一瓶陈年的红酒")
+MisNeed( MIS_NEED_DESP, "(1291,541)(3734,2661)")
 MisNeed( MIS_NEED_ITEM, 2977, 1, 10, 1)
 
-MisResultTalk( "<t>这将是一个令人期待的夜晚,我要和金莲姑娘一醉方休.")
-MisHelpTalk( "<t>快点去吧")
+MisResultTalk( "<t>,.")
+MisHelpTalk( "<t>")
 MisResultCondition( HasMission, 1240)
 MisResultCondition( NoRecord, 1240)
 MisResultCondition( HasItem, 2977, 1)
@@ -11721,9 +11721,9 @@ TriggerCondition( 1, IsItem, 2977)
 TriggerAction( 1, AddNextFlag, 1240, 10, 1 )
 RegCurTrigger( 12401 )
 
----------------------------------陈年的红酒------------旅店老板·约瑟夫
-DefineMission( 6179, "陈年的红酒", 1241)
-MisBeginTalk( "<t>我这有特制的世界最美味的红酒,你想买吗?有钱也不卖你!除非你有我想要的!<n><t>请拿麻将牌杠3个,麻将牌碰3个,麻将牌胡3个,椰果酒70个来和我换.")
+---------------------------------------------
+DefineMission( 6179, "", 1241)
+MisBeginTalk( "<t>,?!!<n><t>3,3,3,70.")
 MisBeginCondition( NoMission, 1241)
 MisBeginCondition( NoRecord, 1241)
 MisBeginCondition( HasMission, 1240)
@@ -11735,15 +11735,15 @@ MisBeginAction( AddTrigger, 12413, TE_GETITEM, 0174, 3)
 MisBeginAction( AddTrigger, 12414, TE_GETITEM, 3916, 70)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "找来约瑟夫需要的道具,那些麻将牌在下水道的僵尸身上有,椰果酒在白银城有卖哦")
+MisNeed( MIS_NEED_DESP, ",,")
 
 MisNeed( MIS_NEED_ITEM, 0172, 3, 5, 3)
 MisNeed( MIS_NEED_ITEM, 0173, 3, 10, 3)
 MisNeed( MIS_NEED_ITEM, 0174, 3, 15, 3)
 MisNeed( MIS_NEED_ITEM, 3916, 70, 20, 70)
 
-MisResultTalk( "<t>真的是我要的东西,实在太感谢你了.")
-MisHelpTalk( "<t>我这里的红酒可是世界闻名的哦.")
+MisResultTalk( "<t>,.")
+MisHelpTalk( "<t>.")
 MisResultCondition( HasMission, 1241)
 MisResultCondition( NoRecord, 1241)
 MisResultCondition( HasItem, 3916, 70)
@@ -11778,22 +11778,22 @@ TriggerAction( 1, AddNextFlag, 1241, 20, 70 )
 RegCurTrigger( 12414 )
 
 
---------------------------------陈年的红酒------------旅店老板·约瑟夫
-DefineMission( 6180, "陈年的红酒", 1242)
-MisBeginTalk( "<t>太不巧了,我这里现在没有陈年的红酒,这样吧,这瓶红酒你帮我保管一下,明天再还给我!")
+--------------------------------------------
+DefineMission( 6180, "", 1242)
+MisBeginTalk( "<t>,,,,!")
 MisBeginCondition( NoMission, 1242)
 MisBeginCondition( NoRecord, 1242)
 MisBeginCondition( HasRecord, 1241)
 MisBeginAction( AddMission, 1242)
-MisBeginAction( AddChaHJ )--------耐久为1440
+MisBeginAction( AddChaHJ )--------1440
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 MisBeginBagNeed(1)
 
-MisNeed( MIS_NEED_DESP, "将约瑟夫给的红酒放在背包第二格,等耐久没了以后再去还给约瑟夫.")
+MisNeed( MIS_NEED_DESP, ",.")
 
-MisResultTalk( "<t>红酒啊红酒,放的时间越长越珍贵.")
-MisHelpTalk( "<t>把红酒放在背包第二格就行了.")
-MisResultCondition( CheckHJ )-----1分钟扣1点,扣到0
+MisResultTalk( "<t>,.")
+MisHelpTalk( "<t>.")
+MisResultCondition( CheckHJ )-----11,0
 MisResultCondition( NoRecord, 1242)
 MisResultCondition( HasMission, 1242)
 MisResultAction( ClearMission, 1242)
@@ -11802,9 +11802,9 @@ MisResultAction( TakeItem, 2967, 1)
 MisResultAction( GiveItem, 2977, 1, 4)
 MisResultBagNeed(1)
 
-----------------------------------找回玫瑰花瓣-------------西门庆
-DefineMission( 6181, "找回玫瑰花瓣", 1243)
-MisBeginTalk( "<t>玫瑰花瓣爱情的象征,我记得冰狼的米歇尔梅林芬(1280,478)那有玫瑰花瓣,可以帮我去取一些吗?")
+-----------------------------------------------
+DefineMission( 6181, "", 1243)
+MisBeginTalk( "<t>,(1280,478),?")
 MisBeginCondition( NoMission, 1243)
 MisBeginCondition( NoRecord, 1243)
 MisBeginCondition( HasMission, 1237)
@@ -11814,11 +11814,11 @@ MisBeginAction( AddMission, 1243)
 MisBeginAction( AddTrigger, 12431, TE_GETITEM, 2968, 1)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "去帮西门庆从冰狼的米歇尔梅林芬(1280,478)那里取来玫瑰花瓣")
+MisNeed( MIS_NEED_DESP, "(1280,478)")
 MisNeed( MIS_NEED_ITEM, 2968, 1, 10, 1)
 
-MisResultTalk( "<t>噢!我的神那!居然有这么美丽的花瓣!你太令我惊奇了,今晚我一定要成功!")
-MisHelpTalk( "<t>美丽的玫瑰花瓣一定能打动金莲的!")
+MisResultTalk( "<t>!!!,!")
+MisHelpTalk( "<t>!")
 MisResultCondition( HasMission, 1243)
 MisResultCondition( NoRecord, 1243)
 MisResultCondition( HasItem, 2968, 1)
@@ -11833,9 +11833,9 @@ TriggerCondition( 1, IsItem, 2968)
 TriggerAction( 1, AddNextFlag, 1243, 10, 1 )
 RegCurTrigger( 12431 )
 
-----------------------------------找回玫瑰花瓣-------------米歇尔梅林芬
-DefineMission( 6182, "找回玫瑰花瓣", 1244)
-MisBeginTalk( "<t>传闻海底隧道的长绒蟹,小冰龙,被诅咒的水仙子经常骚扰路人.我需要你带回火绒3个,龙鳞3个,生命晶石3个,来证明你的实力.如果完成任务就可以到我这里换取玫瑰花瓣作为奖励.")
+-----------------------------------------------
+DefineMission( 6182, "", 1244)
+MisBeginTalk( "<t>,,.3,3,3,..")
 MisBeginCondition( NoMission, 1244)
 MisBeginCondition( NoRecord, 1244)
 MisBeginCondition( HasMission, 1243)
@@ -11845,13 +11845,13 @@ MisBeginAction( AddTrigger, 12442, TE_GETITEM, 1774, 3)
 MisBeginAction( AddTrigger, 12443, TE_GETITEM, 1632, 3)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "带3个火绒,3个龙鳞,3个生命晶石给米歇尔梅林芬")
+MisNeed( MIS_NEED_DESP, "3,3,3")
 MisNeed( MIS_NEED_ITEM, 4259, 3, 10, 3)
 MisNeed( MIS_NEED_ITEM, 1774, 3, 20, 3)
 MisNeed( MIS_NEED_ITEM, 1632, 3, 30, 3)
 
-MisResultTalk( "<t>你才识真正的勇者,这是给你的奖励.")
-MisHelpTalk( "<t>火绒,龙鳞和生命晶石的话打海底隧道的长绒蟹,小冰龙,被诅咒的水仙子就有了.")
+MisResultTalk( "<t>,.")
+MisHelpTalk( "<t>,,,.")
 MisResultCondition( HasMission, 1244)
 MisResultCondition( NoRecord, 1244)
 MisResultCondition( HasItem, 4259, 3)
@@ -11880,9 +11880,9 @@ TriggerCondition( 1, IsItem, 1632)
 TriggerAction( 1, AddNextFlag, 1244, 10, 1 )
 RegCurTrigger( 12443 )
 
----------------------------------找回精美的蜡烛-----------西门庆
-DefineMission( 6183, "找回精美的蜡烛", 1245)
-MisBeginTalk( "<t>今晚将是个难忘的夜晚,我需要些蜡烛来温暖年轻人的心扉,可以帮我去沙岚的小羊·威力(897,3683)那找些精美的蜡烛吗?")
+--------------------------------------------
+DefineMission( 6183, "", 1245)
+MisBeginTalk( "<t>,,(897,3683)?")
 MisBeginCondition( NoMission, 1245)
 MisBeginCondition( NoRecord, 1245)
 MisBeginCondition( HasMission, 1237)
@@ -11893,11 +11893,11 @@ MisBeginAction( AddMission, 1245)
 MisBeginAction( AddTrigger, 12451, TE_GETITEM, 2966, 1)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "找小羊·威力(魔女897,3683)拿来精美的蜡烛给夏岛的西门庆(3734,2661).")
+MisNeed( MIS_NEED_DESP, "(897,3683)(3734,2661).")
 MisNeed( MIS_NEED_ITEM, 2966, 1, 10, 1)
 
-MisResultTalk( "<t>蜡烛一根根的点亮,你有这耐心吗?今晚又是个不眠之夜~")
-MisHelpTalk( "<t>浪漫的夜晚怎么能没有烛光呢?")
+MisResultTalk( "<t>,?~")
+MisHelpTalk( "<t>?")
 MisResultCondition( HasMission, 1245)
 MisResultCondition( NoRecord, 1245)
 MisResultCondition( HasItem, 2966, 1)
@@ -11912,9 +11912,9 @@ TriggerCondition( 1, IsItem, 2966)
 TriggerAction( 1, AddNextFlag, 1245, 10, 1 )
 RegCurTrigger( 12451 )
 
-----------------------------------找回精美的蜡烛------------小羊·威力
-DefineMission( 6184, "找回精美的蜡烛", 1246)
-MisBeginTalk( "<t>我想要做一根非常美丽的项链,不过现在还少2个黄色水晶,2个玛那石结晶,如果你能去危险的夏岛去挑战蜥蜴战士和疯狂的蜥蜴人的话,应该可以找到我想要的东西.")
+----------------------------------------------
+DefineMission( 6184, "", 1246)
+MisBeginTalk( "<t>,2,2,,.")
 MisBeginCondition( NoMission, 1246)
 MisBeginCondition( NoRecord, 1246)
 MisBeginCondition( HasMission, 1245)
@@ -11923,12 +11923,12 @@ MisBeginAction( AddTrigger, 12461, TE_GETITEM, 3367,2)
 MisBeginAction( AddTrigger, 12462, TE_GETITEM, 3380,2)
 MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-MisNeed( MIS_NEED_DESP, "帮小羊·威力(魔女897,3683)在夏岛的蜥蜴战士和疯狂的蜥蜴人身上找到2个黄色水晶,2个玛那石结晶.<r记得回去找西门庆(3734,2661)>.")
+MisNeed( MIS_NEED_DESP, "(897,3683)2,2.<r(3734,2661)>.")
 MisNeed( MIS_NEED_ITEM, 3367, 2, 10, 2)
 MisNeed( MIS_NEED_ITEM, 3380, 2, 20, 2)
 
-MisResultTalk( "<t>你好慢啊!我头上都等出蜘蛛网了~")
-MisHelpTalk( "<t>水晶啊水晶..")
+MisResultTalk( "<t>!~")
+MisHelpTalk( "<t>..")
 MisResultCondition( HasMission, 1246)
 MisResultCondition( NoRecord, 1246)
 MisResultCondition( HasItem, 3367, 2)
@@ -11951,9 +11951,9 @@ TriggerCondition( 1, IsItem, 3380)
 TriggerAction( 1, AddNextFlag, 1246, 20, 2 )
 RegCurTrigger( 12462 )
 
-------------------------护送圣诞老人------------ 	冰狼堡NPC圣诞老人（1216，550）
-DefineMission( 6185, "护送圣诞小老人", 1247)
-MisBeginTalk( "<t>每年有那么多小朋友在等我放圣诞礼物在他们的臭袜子里,不会分身术怎么能行?我用一根胡须变出一只圣诞老人替身.由于烟囱的口径大小不一,所以圣诞老人一律统一规格,采用小型号.虽说每年才过一次圣诞,但仍然导致我胡子稀疏了.我的兄弟克瑞斯莫斯的胡子已经拔光带假的了,或许你愿意帮我跑一趟.借给他一个小老人.")
+------------------------------------ 	NPC1216550
+DefineMission( 6185, "", 1247)
+MisBeginTalk( "<t>,?.,,.,.,..")
 MisBeginCondition( NoMission, 1247)
 MisBeginCondition( NoRecord, 1247)
 MisBeginCondition( HasItem, 2878, 1)
@@ -11962,17 +11962,17 @@ MisBeginAction( AddMission, 1247)
 MisBeginAction( CreatBBBB, 929)
 MisCancelAction( ClearMission, 1247)
 
-MisHelpTalk( "<t>请在<r一小时内将圣诞小老人送到卡特尔>那,记得要<r徒步>走到冰极骷髅营地补给站(2111,557),任何<r跳转地图、使用机票、离开被护送的NPC视野范围>等行为都将造成圣诞小老人的丢失.切记!")
-MisNeed( MIS_NEED_DESP, "请在<r一小时内将圣诞小老人送到克瑞斯莫斯>那,记得要<r徒步>走到冰极骷髅营地补给站(2111,557).为了圣诞老人的安全,请不要<r跳转地图、使用机票、下线、离开被护送的NPC视野范围>等.<b该任务只能接取一次,中断会造成护送资格证的损失,要谨慎哦>.")
+MisHelpTalk( "<t><r>,<r>(2111,557),<rNPC>.!")
+MisNeed( MIS_NEED_DESP, "<r>,<r>(2111,557).,<rNPC>.<b,,>.")
 
 MisResultCondition( AlwaysFailure )
 
 
---------------------------------------------------------护送圣诞老人--------冰极骷髅营地补给站(2111,557)
-DefineMission( 6186, "护送圣诞小老人", 1247, COMPLETE_SHOW)
+----------------------------------------------------------------(2111,557)
+DefineMission( 6186, "", 1247, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>谢谢你.我的假胡子还很逼真吧.呵呵")
+MisResultTalk( "<t>..")
 MisResultCondition( HasMission, 1247)
 MisResultCondition( NoRecord, 1247)
 MisResultAction( CheckBBBB)
@@ -11983,9 +11983,9 @@ MisResultAction( GiveItem, 2889, 1, 4)
 MisResultAction( GiveItem, 3240, 1, 4)
 MisResultBagNeed(3)
 
-------------------------------火鸡大猎捕	
-DefineMission( 6187, "火鸡大猎捕", 1248)
-MisBeginTalk( "<t>我讨厌这圣洁雪白的冬天.朋友，为什么不抛弃这些无聊的庆祝活动出去杀戮一番呢?也许城外那些到处乱跑的火鸡是个不错的目标,去给我杀掉一些,然后把它们掉落的火鸡的羽毛带过来给我,数量嘛就100个吧.")
+------------------------------	
+DefineMission( 6187, "", 1248)
+MisBeginTalk( "<t>.?,,,100.")
 MisBeginCondition( NoMission, 1248)
 MisBeginCondition( NoRecord, 1248)
 MisBeginAction( AddMission, 1248)
@@ -11993,9 +11993,9 @@ MisBeginAction(AddTrigger, 12481, TE_GETITEM, 2879, 100 )
 MisCancelAction( ClearMission, 1248)
 
 MisNeed(MIS_NEED_ITEM, 2879, 100, 10, 100 )
-MisHelpTalk( "<t>火鸡在白银城,冰狼堡和沙岚城城外到处都是")
+MisHelpTalk( "<t>,")
 
-MisResultTalk( "<t>干的好,你不觉得鲜血也是这个洁白圣诞节的点缀之一吗?")
+MisResultTalk( "<t>,?")
 MisResultCondition( HasMission, 1248)
 MisResultCondition( NoRecord, 1248)
 MisResultCondition( HasItem, 2879, 100)
@@ -12012,9 +12012,9 @@ TriggerCondition( 1, IsItem, 2879)
 TriggerAction( 1, AddNextFlag, 1248, 10, 100 )
 RegCurTrigger( 12481 )
 
-------------------------------麋鹿大猎捕	
-DefineMission( 6188, "麋鹿大猎捕", 1249)
-MisBeginTalk( "<t>我讨厌这圣洁雪白的冬天.朋友，为什么不抛弃这些无聊的庆祝活动出去杀戮一番呢?也许城外那些到处乱跑的邪恶麋鹿是个不错的目标,去给我杀掉一些,然后把它们掉落的麋鹿的尖角带过来给我,数量嘛就100个吧.")
+------------------------------	
+DefineMission( 6188, "", 1249)
+MisBeginTalk( "<t>.?,,,100.")
 MisBeginCondition( NoMission, 1249)
 MisBeginCondition( NoRecord, 1249)
 MisBeginAction( AddMission, 1249)
@@ -12022,9 +12022,9 @@ MisBeginAction(AddTrigger, 12491, TE_GETITEM, 2881, 100 )
 MisCancelAction( ClearMission, 1249)
 
 MisNeed(MIS_NEED_ITEM, 2881, 100, 10, 100 )
-MisHelpTalk( "<t>邪恶麋鹿在白银城,冰狼堡和沙岚城城外到处都是")
+MisHelpTalk( "<t>,")
 
-MisResultTalk( "<t>干的好,你不觉得鲜血也是这个洁白圣诞节的点缀之一吗?")
+MisResultTalk( "<t>,?")
 MisResultCondition( HasMission, 1249)
 MisResultCondition( NoRecord, 1249)
 MisResultCondition( HasItem, 2881, 100)
@@ -12041,9 +12041,9 @@ TriggerCondition( 1, IsItem, 2881)
 TriggerAction( 1, AddNextFlag, 1249, 10, 100 )
 RegCurTrigger( 12491 )
 
-------------------------------雪人大猎捕	
-DefineMission( 6189, "雪人大猎捕", 1250)
-MisBeginTalk( "<t>我讨厌这圣洁雪白的冬天.朋友，为什么不抛弃这些无聊的庆祝活动出去杀戮一番呢?也许城外那些到处乱跑的圣诞雪人是个不错的目标,去给我杀掉一些,然后把它们掉落的雪人的眼球带过来给我,数量嘛就100个吧.")
+------------------------------	
+DefineMission( 6189, "", 1250)
+MisBeginTalk( "<t>.?,,,100.")
 MisBeginCondition( NoMission, 1250)
 MisBeginCondition( NoRecord, 1250)
 MisBeginAction( AddMission, 1250)
@@ -12051,9 +12051,9 @@ MisBeginAction(AddTrigger, 12501, TE_GETITEM, 2880, 100 )
 MisCancelAction( ClearMission, 1250)
 
 MisNeed(MIS_NEED_ITEM, 2880, 100, 10, 100 )
-MisHelpTalk( "<t>圣诞雪人在白银城,冰狼堡和沙岚城城外到处都是")
+MisHelpTalk( "<t>,")
 
-MisResultTalk( "<t>干的好,你不觉得鲜血也是这个洁白圣诞节的点缀之一吗?")
+MisResultTalk( "<t>,?")
 MisResultCondition( HasMission, 1250)
 MisResultCondition( NoRecord, 1250)
 MisResultCondition( HasItem, 2880, 100)
@@ -12071,24 +12071,24 @@ TriggerAction( 1, AddNextFlag, 1250, 10, 100 )
 RegCurTrigger( 12501 )
 
 
-----------------------------------------------------------不忍错过的圣诞任务(一)--------------圣诞村传送使
-DefineMission( 6190, "不忍错过的圣诞任务(一)", 1251)
-MisBeginTalk( "<t>没有火鸡的圣诞节是不完整的,我介绍圣诞村的斐谢特给你认识吧,在制做圣诞大餐这方面他很在行哦.")
+----------------------------------------------------------()--------------
+DefineMission( 6190, "()", 1251)
+MisBeginTalk( "<t>,,.")
 MisBeginCondition( NoMission, 1251)
 MisBeginCondition( NoRecord, 1251)
 MisBeginAction( AddMission, 1251)
 MisCancelAction( ClearMission, 1251)
 
-MisNeed( MIS_NEED_DESP, "去找斐谢特(220,41)聊聊.")
-MisHelpTalk( "<t>圣诞节很快就过去了,你要加快速度了.")
+MisNeed( MIS_NEED_DESP, "(220,41).")
+MisHelpTalk( "<t>,.")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------不忍错过的圣诞任务(一)--------------斐谢特(220,41)
-DefineMission( 6191, "不忍错过的圣诞任务(一)", 1251, COMPLETE_SHOW)
+-----------------------------------------------------------()--------------(220,41)
+DefineMission( 6191, "()", 1251, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>你好朋友,圣诞快乐!也许你早就听说了,我这里专门负责烹饪美味的火鸡肉和圣诞大餐,欢迎来品尝.")
+MisResultTalk( "<t>,!,,.")
 MisResultCondition( HasMission, 1251)
 MisResultCondition( NoRecord, 1251)
 MisResultAction( SetRecord, 1251)
@@ -12097,24 +12097,24 @@ MisResultAction( ClearMission, 1251)
 MisResultBagNeed(1)
 
 
---------------------------------------------------------不忍错过的圣诞任务(二)-----------------圣诞村传送使
-DefineMission( 6192, "不忍错过的圣诞任务(二)", 1252)
-MisBeginTalk( "<t>不可否认科恩是个性感的名字,他有收购鸡毛、鹿角、雪人眼球的癖好.如果你想去圣诞竞技场,就不得不去认识他一下.")
+--------------------------------------------------------()-----------------
+DefineMission( 6192, "()", 1252)
+MisBeginTalk( "<t>,.,.")
 MisBeginCondition( NoMission, 1252)
 MisBeginCondition( NoRecord, 1252)
 MisBeginAction( AddMission, 1252)
 MisCancelAction( ClearMission, 1252)
 
-MisNeed( MIS_NEED_DESP, "去找圣诞村的科恩(144,252)聊聊.")
-MisHelpTalk( "<t>你已经认识过他了?")
+MisNeed( MIS_NEED_DESP, "(144,252).")
+MisHelpTalk( "<t>?")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------不忍错过的圣诞任务(二)--------------科恩(144,252)
-DefineMission( 6193, "不忍错过的圣诞任务(二)", 1252, COMPLETE_SHOW)
+-----------------------------------------------------------()--------------(144,252)
+DefineMission( 6193, "()", 1252, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>圣诞快乐!想去圣诞竞技场吗?想要用鸡毛、鹿角、雪人眼球这些垃圾换点有用的东西吗?想知道杀死火鸡、麋鹿、雪人会发生什么可怕后果吗?")
+MisResultTalk( "<t>!???")
 MisResultCondition( HasMission, 1252)
 MisResultCondition( NoRecord, 1252)
 MisResultAction( SetRecord, 1252)
@@ -12122,24 +12122,24 @@ MisResultAction( GiveItem, 2883, 2, 4)
 MisResultAction( ClearMission, 1252)
 MisResultBagNeed(1)
 
---------------------------------------------------------不忍错过的圣诞任务(三)--------------圣诞村传送使
-DefineMission( 6194, "不忍错过的圣诞任务(三)", 1253)
-MisBeginTalk( "<t>它可不是一个普通的洗衣机啊.如果你有污浊的圣诞礼盒,又正愁没有地方清洗,那就去找它吧.")
+--------------------------------------------------------()--------------
+DefineMission( 6194, "()", 1253)
+MisBeginTalk( "<t>.,,.")
 MisBeginCondition( NoMission, 1253)
 MisBeginCondition( NoRecord, 1253)
 MisBeginAction( AddMission, 1253)
 MisCancelAction( ClearMission, 1253)
 
-MisNeed( MIS_NEED_DESP, "去找圣诞村的圣诞老人的洗衣机(84,37).")
-MisHelpTalk( "<t>洗刷刷~洗刷刷......")
+MisNeed( MIS_NEED_DESP, "(84,37).")
+MisHelpTalk( "<t>~......")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------不忍错过的圣诞任务(三)--------------圣诞老人的洗衣机(84,37)
-DefineMission( 6195, "不忍错过的圣诞任务(三)", 1253, COMPLETE_SHOW)
+-----------------------------------------------------------()--------------(84,37)
+DefineMission( 6195, "()", 1253, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>朋友,你有什么要洗的吗?臭袜子免谈.")
+MisResultTalk( "<t>,?.")
 MisResultCondition( HasMission, 1253)
 MisResultCondition( NoRecord, 1253)
 MisResultAction( SetRecord, 1253)
@@ -12147,24 +12147,24 @@ MisResultAction( GiveItem, 2883, 2, 4)
 MisResultAction( ClearMission, 1253)
 MisResultBagNeed(1)
 
---------------------------------------------------------不忍错过的圣诞任务(四)--------------圣诞村传送使
-DefineMission( 6196, "不忍错过的圣诞任务(四)", 1254)
-MisBeginTalk( "<t>哪里有买高级货的地方?当然是圣诞杂货商那里了,出门在外,多跟他打交道没有害处.")
+--------------------------------------------------------()--------------
+DefineMission( 6196, "()", 1254)
+MisBeginTalk( "<t>?,,.")
 MisBeginCondition( NoMission, 1254)
 MisBeginCondition( NoRecord, 1254)
 MisBeginAction( AddMission, 1254)
 MisCancelAction( ClearMission, 1254)
 
-MisNeed( MIS_NEED_DESP, "去找圣诞村的圣诞杂货商(197,251).")
-MisHelpTalk( "<t>不如去认识一下圣诞杂货商.")
+MisNeed( MIS_NEED_DESP, "(197,251).")
+MisHelpTalk( "<t>.")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------不忍错过的圣诞任务(四)--------------圣诞杂货商(197,251)
-DefineMission( 6197, "不忍错过的圣诞任务(四)", 1254, COMPLETE_SHOW)
+-----------------------------------------------------------()--------------(197,251)
+DefineMission( 6197, "()", 1254, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>圣诞狂欢大抢购!数量有限,先到先得.")
+MisResultTalk( "<t>!,.")
 MisResultCondition( HasMission, 1254)
 MisResultCondition( NoRecord, 1254)
 MisResultAction( SetRecord, 1254)
@@ -12173,24 +12173,24 @@ MisResultAction( ClearMission, 1254)
 MisResultBagNeed(1)
 
 
---------------------------------------------------------不忍错过的圣诞任务(五)--------------圣诞村传送使
-DefineMission( 6198, "不忍错过的圣诞任务(五)", 1255)
-MisBeginTalk( "<t>这个浪漫的圣诞不要错过向爱人表达爱意的机会哦.")
+--------------------------------------------------------()--------------
+DefineMission( 6198, "()", 1255)
+MisBeginTalk( "<t>.")
 MisBeginCondition( NoMission, 1255)
 MisBeginCondition( NoRecord, 1255)
 MisBeginAction( AddMission, 1255)
 MisCancelAction( ClearMission, 1255)
 
-MisNeed( MIS_NEED_DESP, "去找圣诞村的圣诞商人·我行我酷(125,253).")
-MisHelpTalk( "<t>我行我酷!")
+MisNeed( MIS_NEED_DESP, "(125,253).")
+MisHelpTalk( "<t>!")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------不忍错过的圣诞任务(五)--------------圣诞商人·我行我酷(125,253)
-DefineMission( 6199, "不忍错过的圣诞任务(五)", 1255, COMPLETE_SHOW)
+-----------------------------------------------------------()--------------(125,253)
+DefineMission( 6199, "()", 1255, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>我行我酷!认识我的那个同事吗,我酷我行,是一个秀自己,娱乐别人的行家呢.")
+MisResultTalk( "<t>!,,,.")
 MisResultCondition( HasMission, 1255)
 MisResultCondition( NoRecord, 1255)
 MisResultAction( SetRecord, 1255)
@@ -12199,24 +12199,24 @@ MisResultAction( ClearMission, 1255)
 MisResultBagNeed(1)
 
 
---------------------------------------------------------不忍错过的圣诞任务(六)--------------圣诞村传送使
-DefineMission( 6200, "不忍错过的圣诞任务(六)", 1256)
-MisBeginTalk( "<t>圣诞节的最重要人物是谁?是你!对,当然,还有一个人,就是圣诞老人哦.")
+--------------------------------------------------------()--------------
+DefineMission( 6200, "()", 1256)
+MisBeginTalk( "<t>?!,,,.")
 MisBeginCondition( NoMission, 1256)
 MisBeginCondition( NoRecord, 1256)
 MisBeginAction( AddMission, 1256)
 MisCancelAction( ClearMission, 1256)
 
-MisNeed( MIS_NEED_DESP, "去找圣诞村的圣诞老人(144,166)聊聊.")
+MisNeed( MIS_NEED_DESP, "(144,166).")
 MisHelpTalk( "<t>merry christmas!")
 
 MisResultCondition( AlwaysFailure )
 
------------------------------------------------------------不忍错过的圣诞任务(六)-------------圣诞老人(144,166)
-DefineMission( 6201, "不忍错过的圣诞任务(六)", 1256, COMPLETE_SHOW)
+-----------------------------------------------------------()-------------(144,166)
+DefineMission( 6201, "()", 1256, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
-MisResultTalk( "<t>merry christmas!准备好你的袜子了吗?哈哈,我身后的圣诞树可以送祝福给你在乎的人哦.")
+MisResultTalk( "<t>merry christmas!?,.")
 MisResultCondition( HasMission, 1256)
 MisResultCondition( NoRecord, 1256)
 MisResultAction( SetRecord, 1256)
@@ -12224,10 +12224,10 @@ MisResultAction( GiveItem, 2883, 2, 4)
 MisResultAction( ClearMission, 1256)
 MisResultBagNeed(1)
 
------------------------------------------------------------幻觉任务------------不可能接到
-DefineMission( 6202, "幻觉", 1257)		------------圣诞老人
+-----------------------------------------------------------------------
+DefineMission( 6202, "", 1257)		------------
 
-MisBeginTalk( "<t>当你看到这个任务的时候，你一定是产生幻觉了，相信我，你没看到.")
+MisBeginTalk( "<t>.")
 MisBeginCondition( XmasNotice, 1 )
 MisBeginCondition( AlwaysFailure )
 MisBeginAction( AddMission, 1257)
@@ -12235,9 +12235,9 @@ MisCancelAction( ClearMission, 1257)
 
 MisResultCondition( AlwaysFailure )
 
-DefineMission( 6203, "幻觉", 1258)		------------圣诞篝火
+DefineMission( 6203, "", 1258)		------------
 
-MisBeginTalk( "<t>当你看到这个任务的时候，你一定是产生幻觉了，相信我，你没看到.")
+MisBeginTalk( "<t>.")
 MisBeginCondition( XmasNotice, 2 )
 MisBeginCondition( AlwaysFailure )
 MisBeginAction( AddMission, 1258)
@@ -12245,9 +12245,9 @@ MisCancelAction( ClearMission, 1258)
 
 MisResultCondition( AlwaysFailure )
 
-DefineMission( 6204, "幻觉", 1259)		------------科恩
+DefineMission( 6204, "", 1259)		------------
 
-MisBeginTalk( "<t>当你看到这个任务的时候，你一定是产生幻觉了，相信我，你没看到.")
+MisBeginTalk( "<t>.")
 MisBeginCondition( XmasNotice, 3 )
 MisBeginCondition( AlwaysFailure )
 MisBeginAction( AddMission, 1259)
@@ -12255,9 +12255,9 @@ MisCancelAction( ClearMission, 1259)
 
 MisResultCondition( AlwaysFailure )
 
-DefineMission( 6205, "幻觉", 1260)		------------小汤姆
+DefineMission( 6205, "", 1260)		------------
 
-MisBeginTalk( "<t>当你看到这个任务的时候，你一定是产生幻觉了，相信我，你没看到.")
+MisBeginTalk( "<t>.")
 MisBeginCondition( XmasNotice, 4 )
 MisBeginCondition( AlwaysFailure )
 MisBeginAction( AddMission, 1260)
@@ -13994,7 +13994,7 @@ MisResultCondition( AlwaysFailure )
  MisResultAction (SetRecord, 1304) 
  MisResultBagNeed (1) 
 
- ------------------------------------奧運活動 之 失蹤的聖火------------  聖火傳遞大使
+ ------------------------------------W\  }------------  }f
 	DefineMission( 6250, "Missing Sacred Flame", 1306 )
 	MisBeginTalk("<t>I guess the Sacred Flame must have been robbed by the<r Sand Bandit (1065,3137)>, who are outside the Shaitan City, hurry and investigate.")
 	MisBeginCondition(NoMission, 1306)
@@ -14037,7 +14037,7 @@ MisResultCondition( AlwaysFailure )
 	RegCurTrigger( 13061 )
 	
 	
-	----------------------------------奧運活動 之 重鑄聖火火炬------------ 鐵匠暴冰
+	----------------------------------W\  T}------------ F
 	DefineMission( 6251, "Make a new Torch",1307 )
 	MisBeginTalk("<t>Well done, we have finally found the Tinder which was missing for several long years, but to make a new Torch, I need more stuff, can you collect them for me?")
 	MisBeginCondition(NoMission, 1307)
@@ -14086,7 +14086,7 @@ MisResultCondition( AlwaysFailure )
 	TriggerAction( 1, AddNextFlag, 1307, 20, 10)
 	RegCurTrigger( 13072 )
 	
-	----------------------------------奧運活動 之 鐵匠的要求------------  鐵匠暴冰
+	----------------------------------W\  F------------  F
 	DefineMission( 6252, "Make a new Torch",1308 )
 	MisBeginTalk("<t>The stuff is enough, you see, I'm getting old, I'm hurry and thirsty now, can you find 10 Red Dates and 10 Snowy Soft Bud for me? After eating, I can work.")
 	MisBeginCondition(NoMission, 1308)
@@ -14132,7 +14132,7 @@ MisResultCondition( AlwaysFailure )
 	TriggerAction( 1, AddNextFlag, 1308, 20, 10)
 	RegCurTrigger( 13082 )
 	
-----------------------------------奧運活動 之 點燃聖火------------鐵匠暴冰（開始）
+----------------------------------W\  c}------------F_
 	DefineMission( 6253, "Ignite Sacred Flame",1309 )
 	MisBeginTalk( "<t>The new Sacred Torch is almost ready, now look back Relay Officer (871,3580) at Shaitan.")
 	MisBeginCondition(NoRecord, 1309 )
@@ -14145,7 +14145,7 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>The new Sacred Torch is almost ready, now look back Relay Officer (871,3580) at Shaitan.")
 	MisResultCondition( AlwaysFailure )
 	
-----------------------------------奧運活動 之 點燃聖火------------聖火傳遞大使（結束）
+----------------------------------W\  c}------------}fY
 	DefineMission( 6254, "Ignite Sacred Flame",1309, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>Hey! Nice job, you finally made the Sacred Flame.")
@@ -14156,7 +14156,7 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( SetRecord, 1309)
 	MisResultAction( AddMoney , 5000)
 
-----------------------------------奧運活動 之 仁愛之心------------聖火傳遞大使	（開始）
+----------------------------------W\  ------------}f	_
 	DefineMission( 6255, "Loving Heart",1310 )
 	MisBeginTalk( "<t>Ok, we are almost complete, now go to Thundoria Harbor and look for Tourist - Barbi (994,1234).")
 	MisBeginCondition(NoRecord, 1310 )
@@ -14169,7 +14169,7 @@ MisResultCondition( AlwaysFailure )
 	MisNeed(MIS_NEED_DESP,"Ok, we are almost complete, now go to Thundoria Harbor and look for Tourist - Barbi (994,1234).")
 	MisHelpTalk("<t>Go talk Tourist - Barbi(994,1234) at Thundoria Harbor.")
 	MisResultCondition( AlwaysFailure )
-----------------------------------奧運活動 之 仁愛之心------------路人?巴比	（結束）
+----------------------------------W\  ------------?	Y
 	DefineMission( 6256, "Loving Heart",1310, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>Finally, you are here!")
@@ -14179,7 +14179,7 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( ClearMission, 1310)
 	MisResultAction( SetRecord, 1310)
 	MisResultAction( AddMoney , 5000)
-----------------------------------奧運活動 之 仁愛之心2------------路人?巴比	（開始）
+----------------------------------W\  2------------?	_
 	DefineMission( 6257, "Loving Heart 2",1311 )
 	MisBeginTalk( "<t>I have another mission for you!")
 	MisBeginCondition(NoRecord, 1311 )
@@ -14192,7 +14192,7 @@ MisResultCondition( AlwaysFailure )
 	MisNeed(MIS_NEED_DESP,"Go search the Merman Prince - Hassan at 1254,3491.")
 	MisHelpTalk("<t>Talk with the Merman Prince - Hassan at 1254,3491.")
 	MisResultCondition( AlwaysFailure )
-----------------------------------奧運活動 之 仁愛之心2------------人魚王子?哈沙特	（結束）
+----------------------------------W\  2------------~?	Y
     DefineMission( 6258, "Loving Heart 2",1311, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>Hello i am the Merman Prince - Hassan, seems that Barbi has sent you.")
@@ -14202,7 +14202,7 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( ClearMission, 1311)
 	MisResultAction( SetRecord, 1311)
 	MisResultAction( AddMoney , 5000)
-----------------------------------奧運活動 之 仁愛之心3------------人魚王子?哈沙特	（開始）
+----------------------------------W\  3------------~?	_
     DefineMission( 6259, "Loving Heart 3",1312 )
 	MisBeginTalk( "<t>I know somebody that can help you, Harbor Operator - Gregory.")
 	MisBeginCondition(NoRecord, 1312 )
@@ -14215,18 +14215,18 @@ MisResultCondition( AlwaysFailure )
 	MisNeed(MIS_NEED_DESP,"Search for Harbor Operator - Gregory at 194,1715.")
 	MisHelpTalk("<t>Search for Harbor Operator - Gregory at 194,1715.")
 	MisResultCondition( AlwaysFailure )
-----------------------------------奧運活動 之 仁愛之心3------------海港指揮?喬爾喬尼	（結束）
+----------------------------------W\  3------------]?	Y
 	DefineMission( 6260, "Loving Heart 3",1312, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
-	MisResultTalk( "<t>Wow! ! ! ! You do look at my？")
+	MisResultTalk( "<t>Wow! ! ! ! You do look at my")
 	MisResultCondition( HasMission, 1312)
 	MisResultCondition( NoRecord, 1312)
 	MisResultCondition( HasItem, 5842, 1)
 	MisResultAction( ClearMission, 1312)
 	MisResultAction( SetRecord, 1312)
 	MisResultAction( AddMoney , 5000)
-----------------------------------奧運活動 之 仁愛之心4------------海港指揮?喬爾喬尼	（開始）
-	DefineMission( 6261, "仁愛之心四",1313 )
+----------------------------------W\  4------------]?	_
+	DefineMission( 6261, "",1313 )
 	MisBeginTalk( "<t>In spring than in the town there is a call to build a middle-aged men, all day long kept muttering, Oh, may need help.")
 	MisBeginCondition(NoRecord, 1313 )
 	MisBeginCondition(NoMission, 1313)
@@ -14238,8 +14238,8 @@ MisResultCondition( AlwaysFailure )
 	MisNeed(MIS_NEED_DESP,"Spring to the town of middle-aged man looking for more than covered - (3235,2550), are you concerned about!")
 	MisHelpTalk("<t>This is also how you, go to town to find the spring than the middle-aged man covered - (3235,2550) it!")
 	MisResultCondition( AlwaysFailure )
-----------------------------------奧運活動 之 仁愛之心4------------中年男子?比蓋	 （結束）
-	DefineMission( 6262, "仁愛之心四",1313, COMPLETE_SHOW )
+----------------------------------W\  4------------?w	 Y
+	DefineMission( 6262, "",1313, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>I also thought it was really good, there with, oh.")
 	MisResultCondition( HasMission, 1313)
@@ -14248,8 +14248,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( ClearMission, 1313)
 	MisResultAction( SetRecord, 1313)
 	MisResultAction( AddMoney , 5000)
-----------------------------------奧運活動 之 仁愛之心5------------中年男子?比蓋	 （開始）
-	DefineMission( 6263, "仁愛之心五",1314 )
+----------------------------------W\  5------------?w	 _
+	DefineMission( 6263, "",1314 )
 	MisBeginTalk( "<t>Oh, I understand, if you want to prove that they have a caring heart, you still have to find a hell sent to make.")
 	MisBeginCondition(NoRecord, 1314 )
 	MisBeginCondition(NoMission, 1314)
@@ -14261,9 +14261,9 @@ MisResultCondition( AlwaysFailure )
 	MisNeed(MIS_NEED_DESP,"Go find the Caribbean sent to hell to make (690,1043) it!")
 	MisHelpTalk("<t>Let the children pay close attention to time, send hell to make the Caribbean(690,1043)!")
 	MisResultCondition( AlwaysFailure )
-----------------------------------奧運活動 之 仁愛之心5------------地獄傳送使	 （結束）
+----------------------------------W\  5------------z	 Y
 	
-	DefineMission( 6264, "仁愛之心五",1314, COMPLETE_SHOW )
+	DefineMission( 6264, "",1314, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>Haha, seen here every day Many brave to risk finally met today, but also a caring person.")
 	MisResultCondition( HasMission, 1314)
@@ -14272,8 +14272,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( ClearMission, 1314)
 	MisResultAction( SetRecord, 1314)
 	MisResultAction( AddMoney , 5000)
-----------------------------------奧運活動 之 仁愛之心6-----------地獄傳送使	 （開始）
-	DefineMission( 6265, "仁愛之心終",1315 )
+----------------------------------W\  6-----------z	 _
+	DefineMission( 6265, "K",1315 )
 	MisBeginTalk( "<t>It seems that you have fully proved that you love, but having a caring heart is not enough, fast return big torch relay. So there, perhaps he will give you further inspiration!")
 	MisBeginCondition(NoRecord, 1315 )
 	MisBeginCondition(NoMission, 1315)
@@ -14286,9 +14286,9 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>Ambassador torch relay in (871,3580), where you speed up the pace, hastened to leave it!")
 	MisResultCondition( AlwaysFailure )
 
-----------------------------------奧運活動 之 仁愛之心6------------聖火傳遞大使	 （結束）
+----------------------------------W\  6------------}f	 Y
 	
-	DefineMission( 6266, "仁愛之心終",1315, COMPLETE_SHOW )
+	DefineMission( 6266, "K",1315, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>Whether the game or life, I hope that you can treat themselves, love others, and seriously every day! There are more tests in the waiting for you, hope you can adhere to in the end!")
 	MisResultCondition( HasMission, 1315)
@@ -14303,8 +14303,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( AddMoney , 5000)
 
 	
-	----------------------------------奧運活動  之 無謂之心------------聖火傳遞大使	 （開始）
-	DefineMission( 6267, "新的考驗",1316 )
+	----------------------------------W\   o^------------}f	 _
+	DefineMission( 6267, "",1316 )
 	MisBeginTalk( "<t>To prove yourself, let me see how brave you are in the end!")
 	MisBeginCondition(NoRecord, 1316)
 	MisBeginCondition(NoMission, 1316)
@@ -14317,8 +14317,8 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>Ice before you go to the rough-and-tumble Manager (1374,529) you complete the test to return to me.")
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------奧運活動 之 無謂之心------------亂斗管理員	 （結束）	
-	DefineMission( 6268, "新的考驗",1316, COMPLETE_SHOW )
+	---------------------------------W\  o^------------yT	 Y	
+	DefineMission( 6268, "",1316, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk( "<t>If I guess right, you are also recommended to the Ambassador of the torch relay of it! Then we begin.")
 	MisResultCondition( HasMission, 1316)
@@ -14329,8 +14329,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( SetRecord, 1316)
 	MisResultAction( AddMoney , 5000)
 	
-	----------------------------------奧運活動  之 無謂之心一------------亂斗管理員	 （開始）
-	DefineMission( 6269, "無畏之心一",1317 )
+	----------------------------------W\   o^------------yT	 _
+	DefineMission( 6269, "o",1317 )
 	MisBeginTalk( "<t>The test is to see if you brave enough. I will give you evidence of a fearless, it will record your war Bucket Information, do you have to do is successful enemy 10 times, and then the card with fearless ambassador went to see the torch relay (871,3580). You ready?")
 	MisResultBagNeed(1)
 	MisBeginCondition(NoRecord, 1317)
@@ -14346,8 +14346,8 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>Fearless only when the card number over the murder in order to complete the task of 10:00 Oh, you must be with the other torch.")
 	MisBeginBagNeed(1)
 	
-	---------------------------------奧運活動 之 無謂之心一------------聖火傳遞大使	 （結束）
-	DefineMission( 6270, "無畏之心一",1317)
+	---------------------------------W\  o^------------}f	 Y
+	DefineMission( 6270, "o",1317)
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk("<t>Good good! Did not expect so soon you will be able to complete the test is really good! Continue to the next test it.")	
 	
@@ -14367,8 +14367,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( AddMoney , 5000)
 	MisResultBagNeed(1)
 	
-	---------------------------------奧運活動 之 奉獻之心------------聖火傳遞大使	 （開始）
-	DefineMission( 6271, "奉獻之心",1318 )
+	---------------------------------W\  I------------}f	 _
+	DefineMission( 6271, "I",1318 )
 	MisBeginTalk( "<t>The world's greatest selfless dedication is ...")
 	MisBeginCondition(NoRecord, 1318)
 	MisBeginCondition(NoMission, 1318)
@@ -14380,8 +14380,8 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>Before you go to the second floor of the silver miners (296,57) it completed a test to return to me.")
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------奧運活動 之 奉獻之心------------礦工大肚腩	 （結束）
-	DefineMission( 6272, "奉獻之心",1318, COMPLETE_SHOW )
+	---------------------------------W\  I------------V	 Y
+	DefineMission( 6272, "I",1318, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk("<t>How do you come so late, the moon was nearly down the...")	
 	MisResultCondition(HasMission, 1318)
@@ -14392,8 +14392,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(SetRecord, 1318) 
 	MisResultAction( AddMoney , 5000)
 	
-	---------------------------------奧運活動 之 奉獻之心一------------礦工大肚腩	
-	DefineMission( 6273, "奉獻之心一",1319 )
+	---------------------------------W\  I------------V	
+	DefineMission( 6273, "I",1319 )
 	MisBeginTalk( "<t>The test is to you for the torch relay activities point to donate supplies, you can not hope to get something valuable to muddle through! I need five sacred Indian Wizard fai!")
 	MisBeginCondition(NoRecord, 1319)
 	MisBeginCondition(NoMission, 1319)
@@ -14417,8 +14417,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( AddMoney , 5000)
 
 
-	---------------------------------奧運活動 之 奉獻之心二------------礦工大肚腩	 （開始）
-	DefineMission( 6274, "奉獻之心二",1320 )
+	---------------------------------W\  I------------V	 _
+	DefineMission( 6274, "I",1320 )
 	MisBeginTalk( "<t>Torch relay to go back quickly to find you, Ambassador, do you already know the performance of his, and he was looking forward to meeting you again!")
 	MisBeginCondition(NoRecord, 1320)
 	MisBeginCondition(NoMission, 1320)
@@ -14430,8 +14430,8 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>Ambassador torch relay in the sand on the city-lan (871,3580).")
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------奧運活動 之 奉獻之心二------------聖火傳遞大使	 （結束）
-	DefineMission( 6275, "奉獻之心二",1320, COMPLETE_SHOW )
+	---------------------------------W\  I------------}f	 Y
+	DefineMission( 6275, "I",1320, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk("<t>We have also met, the performance of you I have heard, I am glad you have such a rare dedication, hope Can you build a good performance!")	
 	MisResultCondition(HasMission, 1320)
@@ -14446,8 +14446,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction( AddMoney , 5000)
 
 	
-	---------------------------------奧運活動 之 智慧之心-----------聖火傳遞大使 （開始）
-	DefineMission( 6276, "智慧之心",1321 )
+	---------------------------------W\  -----------}f _
+	DefineMission( 6276, "",1321 )
 	MisBeginTalk( "<t>Pirate King in the world with great wisdom, a wise man, and she is to live in paradise (1755,908) of the goddess, I have mentioned you and her, she would also like to see you. Go fast, not everyone has the opportunity to see and goddess Surface.")
 	MisBeginCondition(NoRecord, 1321)
 	MisBeginCondition(NoMission, 1321)
@@ -14456,11 +14456,11 @@ MisResultCondition( AlwaysFailure )
     MisBeginAction(AddMission, 1321)
 	MisCancelAction(ClearMission, 1321)
 	MisNeed(MIS_NEED_DESP,"To heaven (1755,908) to find her talk about it, she wants to see you.")
-	MisHelpTalk("<t>女神就在天堂(1755,908)處，趕快出發吧")
+	MisHelpTalk("<t>(1755,908)sl")
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------奧運活動 之 智慧之心------------女神	 （結束）
-	DefineMission( 6277, "智慧之心",1321, COMPLETE_SHOW )
+	---------------------------------W\  ------------	 Y
+	DefineMission( 6277, "",1321, COMPLETE_SHOW )
 	MisBeginCondition(AlwaysFailure )
 	MisResultTalk("<t>Ambassador you are referred to the young people? Am glad to see you...")	
 	MisResultCondition(HasMission, 1321)
@@ -14471,8 +14471,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(SetRecord, 1321) 
 	MisResultAction( AddMoney , 5000)
 	
-	---------------------------------奧運活動 之 智慧之心一------------女神	 （開始）
-	DefineMission( 6278, "智慧之心一",1322 )
+	---------------------------------W\  ------------	 _
+	DefineMission( 6278, "",1322 )
 	MisBeginTalk( "<t>Ambassador torch you ask me to be responsible for the test, you'll prepare Oh! I need you to help me with some of the East West to come back ... a <legend can be used to treat difficult to heal the wounds have a good effect of> items and a <Fist Essential goods hit fans> items. Even if this were thought to show that you can also stupid than it Jiugui.")
 	MisBeginCondition(NoRecord, 1322)
 	MisBeginCondition(NoMission, 1322)
@@ -14481,7 +14481,7 @@ MisResultCondition( AlwaysFailure )
     MisBeginAction(AddMission, 1322)
 	MisCancelAction(ClearMission, 1322)
 	
-	MisHelpTalk("<t>Goddess (1755,908) of the items need and items, in the end not think of what it? Are you also more than Jiugui ？")
+	MisHelpTalk("<t>Goddess (1755,908) of the items need and items, in the end not think of what it? Are you also more than Jiugui ")
 	MisNeed(MIS_NEED_DESP,"Goddess need for a goods and a <r Fist Essential goods hit fans> articles.")
 	MisBeginAction(AddTrigger, 13221, TE_GETITEM, 4435, 1)          
 	MisBeginAction(AddTrigger, 13222, TE_GETITEM, 4468, 1)	
@@ -14510,11 +14510,11 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(ClearMission, 1322)
 	MisResultAction( AddMoney , 5000)
 	MisResultAction(ClearRecord, 1321)
-	MisResultAction(SetRecord, 1322)  ----在NPC對話處會用到此record  用來觸發接下去的對話
+	MisResultAction(SetRecord, 1322)  ----NPCrecord  |l
 	
 	
-	---------------------------------奧運活動 之 聖火台------------聖火傳遞大使	 （開始）
-	DefineMission( 6279, "聖火台",1323 )	
+	---------------------------------W\  }------------}f	 _
+	DefineMission( 6279, "}",1323 )	
 	MisBeginTalk( "<t>You have completed the test in front of four, and I here there is a strong heart, he can only insist on the completion of the previous Four tests, and take it, young man! With five hearts and find the flame torch to torch lit Taiwan it! Flame Taiwan. Should be on the lan port in the sand near the.")
 	
 	MisResultBagNeed(1)
@@ -14530,17 +14530,17 @@ MisResultCondition( AlwaysFailure )
 	MisHelpTalk("<t>Must not lose heart, as well as a lesson to any torch, otherwise you will fall short of the.")
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------奧運活動 之 聖火台------------聖火台	 （結束）
-	DefineMission( 6280, "聖火台",1323, COMPLETE_SHOW )	
+	---------------------------------W\  }------------}	 Y
+	DefineMission( 6280, "}",1323, COMPLETE_SHOW )	
 	MisBeginCondition( AlwaysFailure )
 	MisResultTalk("<t>Congratulations! You have successfully passed the test of five hearts!")	
 	MisResultCondition(HasMission, 1323)		
-	MisResultCondition(HasItem, 5842, 1)   --玩家老火炬
-	MisResultCondition(HasItem, 5797, 1)   --仁愛之心 
-	MisResultCondition(HasItem, 5798, 1)   --無畏之心
-	MisResultCondition(HasItem, 5799, 1)   --堅定之心
-	MisResultCondition(HasItem, 5800, 1)   --奉獻之心
-	MisResultCondition(HasItem, 5801, 1)   --智慧之心
+	MisResultCondition(HasItem, 5842, 1)   --
+	MisResultCondition(HasItem, 5797, 1)   -- 
+	MisResultCondition(HasItem, 5798, 1)   --o
+	MisResultCondition(HasItem, 5799, 1)   --
+	MisResultCondition(HasItem, 5800, 1)   --I
+	MisResultCondition(HasItem, 5801, 1)   --
 	
 	
 	MisResultAction(ClearMission, 1323)	
@@ -14548,8 +14548,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(ClearRecord, 1323)	
 	MisResultAction( AddMoney , 5000)
 	
-	---------------------------------新年活動------------瑪格麗特	 （開始）
-	DefineMission (6628, "美食王的盛宴", 1860)
+	---------------------------------------------	 _
+	DefineMission (6628, "", 1860)
 	MisBeginTalk( "<t>Read Ascaron Food King TV right? The reason why the legendary master chef has been on everybody's lips is because he has a Magic skills can be a kind of cooking is called Feast of Ascaron, the dessert that can enhance the properties of permanent!")
 	MisBeginCondition(NoRecord, 1860)
 	MisBeginCondition(NoRecord, 1863)
@@ -14560,16 +14560,16 @@ MisResultCondition( AlwaysFailure )
 	MisCancelAction(ClearMission, 1860)
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------新年活動------------芬德內	 （結束）
-	DefineMission( 6623, "美食王的盛宴",1860, COMPLETE_SHOW )	
+	---------------------------------------------	 Y
+	DefineMission( 6623, "",1860, COMPLETE_SHOW )	
 	MisBeginCondition( AlwaysFailure )
 	MisResultTalk("<t>Do you want to know the news of the legendary master chef? I first meet the requirements of a small bar!")	
 	MisResultCondition(HasMission, 1860)
 	MisResultAction(SetRecord, 1860)
 	MisResultAction(ClearMission, 1860)
 	
-	---------------------------------新年活動2------------芬德內
-	DefineMission (6624, "加納美食王的蹤跡", 1861)
+	---------------------------------2------------
+	DefineMission (6624, "{E", 1861)
 	MisBeginTalk( "<t>I do not know, the drink, I may have more than enough, if you help me in the bar girl - Tina where to buy bottles of red wine. So, I might think of it, of course, if I Louis XVI, I may be able to think faster.")
 	MisBeginCondition(HasRecord, 1860)
 	MisBeginCondition(NoRecord, 1861)
@@ -14584,8 +14584,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(Jiu_Action)
 	MisCancelAction(ClearMission, 1861)
 	
-	-------------------------------新年活動3-----------芬德內 （開始）
-	DefineMission (6625, "加納美食王的秘籍", 1862)
+	-------------------------------3----------- _
+	DefineMission (6625, "{", 1862)
 	MisBeginTalk( "<t>Young people, Ascaron Food, Wang has been a sea adventure to the east, go left over the next before the age of the paintings of strange ingredients in small volumes. Son, perhaps the only residents - Margaret (2279,2746) in order to understand it.")
 	MisBeginCondition(NoRecord, 1862)	
 	MisBeginCondition(HasRecord, 1861)
@@ -14597,16 +14597,16 @@ MisResultCondition( AlwaysFailure )
 
 	MisResultCondition( AlwaysFailure )
 	
-	---------------------------------新年活動3------------瑪格麗特	 （結束）
-	DefineMission( 6626, "加納美食王的秘籍",1862, COMPLETE_SHOW )	
+	---------------------------------3------------	 Y
+	DefineMission( 6626, "{",1862, COMPLETE_SHOW )	
 	MisBeginCondition( AlwaysFailure )
 	MisResultTalk("<t>King of Ascaron food tips! Alas, alas, the production of desserts, Feast of Ascaron, a detailed record of the need for flour, salt, Special spices, deep-sea shark ... .... Light of the purchase cost of materials is very alarming!")	
 	MisResultCondition(HasMission, 1862)
 	MisResultAction(SetRecord, 1862)
 	MisResultAction(ClearMission, 1862)	
 
-	---------------------------------新年活動4-----------瑪格麗特
-	DefineMission (6627, "神的甜點“加納盛宴”", 1863)
+	---------------------------------4-----------
+	DefineMission (6627, "c{", 1863)
 	MisBeginTalk( "<t>I have a rough calculation, it is necessary to spend in order to successfully produce 1,888,888 dessert Feast of Ascaron.")
 	MisBeginCondition(HasRecord, 1862)
 	MisBeginCondition(NoRecord, 1863)
@@ -14625,8 +14625,8 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(ClearMission, 1863)
 	MisCancelAction(ClearMission, 1863)	
 		
-		---------------------------------偽造的單身證明------------好人四維
-	DefineMission( 6629, "偽造的單身證明", 1920 )
+		---------------------------------C------------S
+	DefineMission( 6629, "C", 1920 )
 	
 	MisBeginTalk( "<t>Young people want a single proof of forgery is very simple, as long as six kinds of treasures ready to use the material as a forgery, and then branch. Some fees can be paid manually. False statements to help you fake But I am a great risk to Tam, TU. . . Close your pirate 1,000,000. Currency is not too much, just look at the acquaintance's sake to make a 9.9 fold you, only you 990,000.")
 	MisBeginCondition(NoMission, 1920)
@@ -14649,7 +14649,7 @@ MisResultCondition( AlwaysFailure )
 	MisNeed(MIS_NEED_ITEM, 3362, 20, 80, 20)
 	MisNeed(MIS_NEED_ITEM, 3360, 1, 100, 1)
 		
-	MisHelpTalk("<t>還沒湊夠材料嗎？偽造單身證明也不是件容易的事情!")
+	MisHelpTalk("<t>]C!")
 	MisResultTalk("<t>So many materials you have been a homogeneous collection.")
 	MisResultCondition(NoRecord, 1920)
 	MisResultCondition(HasMission, 1920)
@@ -14667,7 +14667,7 @@ MisResultCondition( AlwaysFailure )
 	MisResultAction(TakeItem, 1644, 20)
 	MisResultAction(TakeItem, 3362, 20)
 	MisResultAction(TakeMoney, 990000)
-	MisResultAction(GiveItem, 6703, 1,4)    --道具暫時沒有製作   先給個短劍測試一下
+	MisResultAction(GiveItem, 6703, 1,4)    --r]u   oy
 	MisResultAction(ClearMission, 1920)
 	MisResultAction(SetRecord, 1920)
 	--MisResultAction(AddExp, 800, 800)
@@ -14699,4 +14699,4 @@ MisResultCondition( AlwaysFailure )
 	TriggerCondition( 1, IsItem, 3360 )	
 	TriggerAction( 1, AddNextFlag, 1920, 110, 1 )
 	RegCurTrigger( 19206 )
-----2009.2.3 北美特殊需求 絲綢之路任務 任務ID從6629開始 record編號從1920開始  任務製作期間大陸若需製作任務請聯繫戴曉瑋確定任務編號
+----2009.2.3  zI ID6629_ record1920_  uguM|_

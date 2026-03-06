@@ -19,7 +19,8 @@ temp/
 objs/
 
 .vs/
-
+*.exe
+*.dll
 *.dat
 *.zip
 # User-specific files

@@ -1,0 +1,219 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\ChaAttr.cpp" />
+    <ClCompile Include="Source\ChaMask.cpp" />
+    <ClCompile Include="Source\CharacterRecord.cpp" />
+    <ClCompile Include="Source\CommFunc.cpp" />
+    <ClCompile Include="Source\EventRecord.cpp" />
+    <ClCompile Include="Source\ForgeRecord.cpp" />
+    <ClCompile Include="Source\HairRecord.cpp" />
+    <ClCompile Include="Source\ItemAttr.cpp" />
+    <ClCompile Include="Source\ItemContent.cpp" />
+    <ClCompile Include="Source\ItemRecord.cpp" />
+    <ClCompile Include="Source\JobInitEquip.cpp" />
+    <ClCompile Include="Source\Kitbag.cpp" />
+    <ClCompile Include="Source\LevelRecord.cpp" />
+    <ClCompile Include="Source\LifeLvRecord.cpp" />
+    <ClCompile Include="Source\LogFile.cpp" />
+    <ClCompile Include="Source\MonRefRecord.cpp" />
+    <ClCompile Include="Source\MountRecord.cpp" />
+    <ClCompile Include="Source\NpcRecord.cpp" />
+    <ClCompile Include="Source\SailLvRecord.cpp" />
+    <ClCompile Include="Source\ShipSet.cpp" />
+    <ClCompile Include="Source\SkillRecord.cpp" />
+    <ClCompile Include="Source\SkillStateRecord.cpp" />
+    <ClCompile Include="Source\StringLib.cpp" />
+    <ClCompile Include="Source\SwitchMapRecord.cpp" />
+    <ClCompile Include="Source\TableData.cpp" />
+    <ClCompile Include="Source\TerrainAttrib.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\AreaRecord.h" />
+    <ClInclude Include="Include\ChaAction.h" />
+    <ClInclude Include="Include\ChaAttr.h" />
+    <ClInclude Include="Include\ChaAttrType.h" />
+    <ClInclude Include="Include\ChaMask.h" />
+    <ClInclude Include="Include\CharacterRecord.h" />
+    <ClInclude Include="Include\CommFunc.h" />
+    <ClInclude Include="Include\CompCommand.h" />
+    <ClInclude Include="Include\discord_register.h" />
+    <ClInclude Include="Include\discord_rpc.h" />
+    <ClInclude Include="Include\EventRecord.h" />
+    <ClInclude Include="Include\ForgeRecord.h" />
+    <ClInclude Include="Include\GameCommon.h" />
+    <ClInclude Include="Include\HairRecord.h" />
+    <ClInclude Include="Include\ItemAttr.h" />
+    <ClInclude Include="Include\ItemAttrType.h" />
+    <ClInclude Include="Include\ItemContent.h" />
+    <ClInclude Include="Include\ItemRecord.h" />
+    <ClInclude Include="Include\JobInitEquip.h" />
+    <ClInclude Include="Include\JobType.h" />
+    <ClInclude Include="Include\Kitbag.h" />
+    <ClInclude Include="Include\KitbagEnCode.h" />
+    <ClInclude Include="Include\LevelRecord.h" />
+    <ClInclude Include="Include\LifeLvRecord.h" />
+    <ClInclude Include="Include\LogFile.h" />
+    <ClInclude Include="Include\MonRefRecord.h" />
+    <ClInclude Include="Include\MountRecord.h" />
+    <ClInclude Include="Include\NetCommand.h" />
+    <ClInclude Include="Include\NetRetCode.h" />
+    <ClInclude Include="Include\RoleCommon.h" />
+    <ClInclude Include="Include\SailLvRecord.h" />
+    <ClInclude Include="Include\ShipSet.h" />
+    <ClInclude Include="Include\SkillBag.h" />
+    <ClInclude Include="Include\SkillRecord.h" />
+    <ClInclude Include="Include\SkillStateRecord.h" />
+    <ClInclude Include="Include\SkillStateType.h" />
+    <ClInclude Include="Include\StringLib.h" />
+    <ClInclude Include="Include\SwitchMapRecord.h" />
+    <ClInclude Include="Include\TableData.h" />
+    <ClInclude Include="Include\TerrainAttrib.h" />
+    <ClInclude Include="Include\ToolClass.h" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{e6907a2e-a584-4d28-ba4e-b1cf4701147f}</ProjectGuid>
+    <RootNamespace>Common</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)Libs\$(Configuration)\</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include;$(SolutionDir)Common\Utils\Include;$(SolutionDir)Common\Localization\Include;$(SolutionDir)Common\CryptoLib\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>
+      </SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

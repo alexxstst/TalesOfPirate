@@ -1,0 +1,370 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="Source\Blk.cpp" />
+    <ClCompile Include="Source\d3dutil.cpp" />
+    <ClCompile Include="Source\dxutil.cpp" />
+    <ClCompile Include="Source\EffectFile.cpp" />
+    <ClCompile Include="Source\I_Effect.cpp" />
+    <ClCompile Include="Source\lwAnimCtrl.cpp" />
+    <ClCompile Include="Source\lwAnimCtrlObj.cpp" />
+    <ClCompile Include="Source\lwAnimKeySetPRS.cpp" />
+    <ClCompile Include="Source\lwBitmap.cpp" />
+    <ClCompile Include="Source\lwCamera.cpp" />
+    <ClCompile Include="Source\lwConsole.cpp" />
+    <ClCompile Include="Source\lwCoordinateSys.cpp" />
+    <ClCompile Include="Source\lwD3DSettings.cpp" />
+    <ClCompile Include="Source\lwDDSFile.cpp" />
+    <ClCompile Include="Source\lwDeviceObject.cpp" />
+    <ClCompile Include="Source\lwDirectoryBrowser.cpp" />
+    <ClCompile Include="Source\lwEfxTrack.cpp" />
+    <ClCompile Include="Source\lwExpObj.cpp" />
+    <ClCompile Include="Source\lwFile.cpp" />
+    <ClCompile Include="Source\lwFileEncode.cpp" />
+    <ClCompile Include="Source\lwFileStream.cpp" />
+    <ClCompile Include="Source\lwFileutil.cpp" />
+    <ClCompile Include="Source\lwgraphicsutil.cpp" />
+    <ClCompile Include="Source\lwGuidObj.cpp" />
+    <ClCompile Include="Source\lwHeap.cpp" />
+    <ClCompile Include="Source\lwHelperGeometry.cpp" />
+    <ClCompile Include="Source\lwIFunc.cpp" />
+    <ClCompile Include="Source\lwInterface.cpp" />
+    <ClCompile Include="Source\lwItem.cpp" />
+    <ClCompile Include="Source\lwIUtil.cpp" />
+    <ClCompile Include="Source\lwmath.cpp" />
+    <ClCompile Include="Source\lwMisc.cpp" />
+    <ClCompile Include="Source\lwModel.cpp" />
+    <ClCompile Include="Source\lwNodeObject.cpp" />
+    <ClCompile Include="Source\lwObjectMethod.cpp" />
+    <ClCompile Include="Source\lwObjectPool.cpp" />
+    <ClCompile Include="Source\lwPathInfo.cpp" />
+    <ClCompile Include="Source\lwPhysique.cpp" />
+    <ClCompile Include="Source\lwPoseCtrl.cpp" />
+    <ClCompile Include="Source\lwPrimitive.cpp" />
+    <ClCompile Include="Source\lwPrimitiveHelper.cpp" />
+    <ClCompile Include="Source\lwRenderCtrlEmb.cpp" />
+    <ClCompile Include="Source\lwRenderImp.cpp" />
+    <ClCompile Include="Source\lwResourceMgr.cpp" />
+    <ClCompile Include="Source\lwSceneMgr.cpp" />
+    <ClCompile Include="Source\lwShaderDeclMgr.cpp" />
+    <ClCompile Include="Source\lwShaderMgr.cpp" />
+    <ClCompile Include="Source\lwStreamObj.cpp" />
+    <ClCompile Include="Source\lwSysCharacter.cpp" />
+    <ClCompile Include="Source\lwSysGraphics.cpp" />
+    <ClCompile Include="Source\lwSystem.cpp" />
+    <ClCompile Include="Source\lwSystemInfo.cpp" />
+    <ClCompile Include="Source\lwThreadPool.cpp" />
+    <ClCompile Include="Source\lwTimer.cpp" />
+    <ClCompile Include="Source\lwTreeNode.cpp" />
+    <ClCompile Include="Source\lwViewFrustum.cpp" />
+    <ClCompile Include="Source\lwxRenderCtrVS.cpp" />
+    <ClCompile Include="Source\MPCamera.cpp" />
+    <ClCompile Include="Source\MPCharacter.cpp" />
+    <ClCompile Include="Source\MPColorValue.cpp" />
+    <ClCompile Include="Source\MPConsole.cpp" />
+    <ClCompile Include="Source\MPDataStream.cpp" />
+    <ClCompile Include="Source\MPEffectCtrl.cpp" />
+    <ClCompile Include="Source\MPEffectMath.cpp" />
+    <ClCompile Include="Source\MPEffQuaternion.cpp" />
+    <ClCompile Include="Source\MPEffVector3.cpp" />
+    <ClCompile Include="Source\MPFont.cpp" />
+    <ClCompile Include="Source\MPGameApp.cpp" />
+    <ClCompile Include="Source\MPMap.cpp" />
+    <ClCompile Include="Source\MPMapData.cpp" />
+    <ClCompile Include="Source\MPMath.cpp" />
+    <ClCompile Include="Source\MPModelEff.cpp" />
+    <ClCompile Include="Source\MPParticleCtrl.cpp" />
+    <ClCompile Include="Source\MPParticleSys.cpp" />
+    <ClCompile Include="Source\MPRender.cpp" />
+    <ClCompile Include="Source\MPResManger.cpp" />
+    <ClCompile Include="Source\MPSceneItem.cpp" />
+    <ClCompile Include="Source\MPSceneObject.cpp" />
+    <ClCompile Include="Source\MPShadeMap.cpp" />
+    <ClCompile Include="Source\MPStringUtil.cpp" />
+    <ClCompile Include="Source\MPTexSet.cpp" />
+    <ClCompile Include="Source\MPTile.cpp" />
+    <ClCompile Include="Source\mygraph.cpp" />
+    <ClCompile Include="Source\ShaderLoad.cpp" />
+    <ClCompile Include="Source\Singleton.cpp" />
+    <ClCompile Include="Source\stdafx.cpp" />
+    <ClCompile Include="Source\TgaCore.cpp" />
+    <ClCompile Include="Source\ZRBlock.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Include\Blk.h" />
+    <ClInclude Include="Include\d3dutil.h" />
+    <ClInclude Include="Include\dxutil.h" />
+    <ClInclude Include="Include\EffectFile.h" />
+    <ClInclude Include="Include\GlobalInc.h" />
+    <ClInclude Include="Include\I_Effect.h" />
+    <ClInclude Include="Include\lwAnimCtrl.h" />
+    <ClInclude Include="Include\lwAnimCtrlObj.h" />
+    <ClInclude Include="Include\lwAnimKeySetPRS.h" />
+    <ClInclude Include="Include\lwBitmap.h" />
+    <ClInclude Include="Include\lwCamera.h" />
+    <ClInclude Include="Include\lwClassDecl.h" />
+    <ClInclude Include="Include\lwConsole.h" />
+    <ClInclude Include="Include\lwCoordinateSys.h" />
+    <ClInclude Include="Include\lwD3D.h" />
+    <ClInclude Include="Include\lwD3DSettings.h" />
+    <ClInclude Include="Include\lwDDS.h" />
+    <ClInclude Include="Include\lwDDSFile.h" />
+    <ClInclude Include="Include\lwDeviceObject.h" />
+    <ClInclude Include="Include\lwDirectoryBrowser.h" />
+    <ClInclude Include="Include\lwDirectX.h" />
+    <ClInclude Include="Include\lwEfxTrack.h" />
+    <ClInclude Include="Include\lwErrorCode.h" />
+    <ClInclude Include="Include\lwExpObj.h" />
+    <ClInclude Include="Include\lwFile.h" />
+    <ClInclude Include="Include\lwFileEncode.h" />
+    <ClInclude Include="Include\lwFileStream.h" />
+    <ClInclude Include="Include\lwFileutil.h" />
+    <ClInclude Include="Include\lwFrontAPI.h" />
+    <ClInclude Include="Include\lwgraphics.h" />
+    <ClInclude Include="Include\lwgraphicsutil.h" />
+    <ClInclude Include="Include\lwGuidObj.h" />
+    <ClInclude Include="Include\lwHeader.h" />
+    <ClInclude Include="Include\lwHeap.h" />
+    <ClInclude Include="Include\lwHelperGeometry.h" />
+    <ClInclude Include="Include\lwIFunc.h" />
+    <ClInclude Include="Include\lwInterface.h" />
+    <ClInclude Include="Include\lwInterfaceExt.h" />
+    <ClInclude Include="Include\lwItem.h" />
+    <ClInclude Include="Include\lwITypes.h" />
+    <ClInclude Include="Include\lwITypes2.h" />
+    <ClInclude Include="Include\lwIUtil.h" />
+    <ClInclude Include="Include\lwLinkCtrl.h" />
+    <ClInclude Include="Include\lwMath.h" />
+    <ClInclude Include="Include\lwMisc.h" />
+    <ClInclude Include="Include\lwModel.h" />
+    <ClInclude Include="Include\lwNodeObject.h" />
+    <ClInclude Include="Include\lwObjectMethod.h" />
+    <ClInclude Include="Include\lwObjectPool.h" />
+    <ClInclude Include="Include\lwPathInfo.h" />
+    <ClInclude Include="Include\lwPhysique.h" />
+    <ClInclude Include="Include\lwPoseCtrl.h" />
+    <ClInclude Include="Include\lwPreDefinition.h" />
+    <ClInclude Include="Include\lwPrimitive.h" />
+    <ClInclude Include="Include\lwPrimitiveHelper.h" />
+    <ClInclude Include="Include\lwRenderCtrlEmb.h" />
+    <ClInclude Include="Include\lwRenderImp.h" />
+    <ClInclude Include="Include\lwResourceMgr.h" />
+    <ClInclude Include="Include\lwSceneMgr.h" />
+    <ClInclude Include="Include\lwShaderDeclMgr.h" />
+    <ClInclude Include="Include\lwShaderMgr.h" />
+    <ClInclude Include="Include\lwShaderTypes.h" />
+    <ClInclude Include="Include\lwStdInc.h" />
+    <ClInclude Include="Include\lwStreamObj.h" />
+    <ClInclude Include="Include\lwSyncObj.h" />
+    <ClInclude Include="Include\lwSysCharacter.h" />
+    <ClInclude Include="Include\lwSysGraphics.h" />
+    <ClInclude Include="Include\lwSystem.h" />
+    <ClInclude Include="Include\lwSystemInfo.h" />
+    <ClInclude Include="Include\lwThreadPool.h" />
+    <ClInclude Include="Include\lwTimer.h" />
+    <ClInclude Include="Include\lwTreeNode.h" />
+    <ClInclude Include="Include\lwutilsexp.h" />
+    <ClInclude Include="Include\lwViewFrustum.h" />
+    <ClInclude Include="Include\lwxRenderCtrlVS.h" />
+    <ClInclude Include="Include\MindPower.h" />
+    <ClInclude Include="Include\MindPowerAPI.h" />
+    <ClInclude Include="Include\MPCamera.h" />
+    <ClInclude Include="Include\MPCharacter.h" />
+    <ClInclude Include="Include\MPColorValue.h" />
+    <ClInclude Include="Include\MPConsole.h" />
+    <ClInclude Include="Include\MPDataStream.h" />
+    <ClInclude Include="Include\MPEffectAsmMath.h" />
+    <ClInclude Include="Include\MPEffectCtrl.h" />
+    <ClInclude Include="Include\MPEffectMath.h" />
+    <ClInclude Include="Include\MPEffPrerequisites.h" />
+    <ClInclude Include="Include\MPEffQuaternion.h" />
+    <ClInclude Include="Include\MPEffVector3.h" />
+    <ClInclude Include="Include\MPFactoryObj.h" />
+    <ClInclude Include="Include\MPFont.h" />
+    <ClInclude Include="Include\MPGameApp.h" />
+    <ClInclude Include="Include\MPInterface.h" />
+    <ClInclude Include="Include\MPIteratorWrappers.h" />
+    <ClInclude Include="Include\MPMap.h" />
+    <ClInclude Include="Include\MPMath.h" />
+    <ClInclude Include="Include\MPModelEff.h" />
+    <ClInclude Include="Include\MPParameterInterface.h" />
+    <ClInclude Include="Include\MPParticleAffector.h" />
+    <ClInclude Include="Include\MPParticleAffectorFactory.h" />
+    <ClInclude Include="Include\MPParticleCtrl.h" />
+    <ClInclude Include="Include\MPParticleEmitterFactory.h" />
+    <ClInclude Include="Include\MPParticleSys.h" />
+    <ClInclude Include="Include\MPRender.h" />
+    <ClInclude Include="Include\MPResData.h" />
+    <ClInclude Include="Include\MPResManger.h" />
+    <ClInclude Include="Include\MPResourceSet.h" />
+    <ClInclude Include="Include\MPSceneItem.h" />
+    <ClInclude Include="Include\MPSceneObject.h" />
+    <ClInclude Include="Include\MPScriptLoader.h" />
+    <ClInclude Include="Include\MPShadeMap.h" />
+    <ClInclude Include="Include\MPSharedPtr.h" />
+    <ClInclude Include="Include\MPSingleton.h" />
+    <ClInclude Include="Include\MPStringUtil.h" />
+    <ClInclude Include="Include\MPStringVector.h" />
+    <ClInclude Include="Include\MPTerrainSet.h" />
+    <ClInclude Include="Include\MPTextureSet.h" />
+    <ClInclude Include="Include\MPTile.h" />
+    <ClInclude Include="Include\mygraph.h" />
+    <ClInclude Include="Include\ShaderLoad.h" />
+    <ClInclude Include="Include\Singleton.h" />
+    <ClInclude Include="Include\stdafx.h" />
+    <ClInclude Include="Include\STLprerequisite.h" />
+    <ClInclude Include="Include\TgaCore.h" />
+    <ClInclude Include="Include\ZRBlock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Include\lwMath.inl" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{9718bc63-a2a2-4f1b-a5ae-1cb9b5fa0e2d}</ProjectGuid>
+    <RootNamespace>MindPower3D</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(SolutionDir)..\client\system</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>LW_USE_DX9;USE_DX_VERSION;_WINSOCK_DEPRECATED_NO_WARNINGS;_CRT_SECURE_NO_WARNINGS;_UNLOADRES;WIN32;NDEBUG;_WINDOWS;USE_MINDPOWER;MINDPOWER_USE_DLL;MINDPOWER_EXPORTS;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <PrecompiledHeaderFile>
+      </PrecompiledHeaderFile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <AdditionalIncludeDirectories>$(ProjectDir)Include;$(SolutionDir)Client\DirectX\DX9\Include;$(SolutionDir)Common\Utils\Include;$(SolutionDir)Client\VimD3DLib\include;$(SolutionDir)Common\Localization\Include;$(SolutionDir)Common\Common\Include;$(SolutionDir)Common\CryptoLib\Include</AdditionalIncludeDirectories>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration)\;$(SolutionDir)Client\DirectX\DX9\lib</AdditionalLibraryDirectories>
+      <AdditionalDependencies>legacy_stdio_definitions.lib;Common.lib;CryptoLib.lib;Localization.lib;Network.lib;Utils.lib;Ws2_32.lib;Winmm.lib;Iphlpapi.lib;VimD3DLib.lib;d3d9.lib;d3dx9.lib;dinput8.lib;dxguid.lib;Version.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>LIBCI.lib;LIBC.lib;LIBCMT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;MINDPOWER3D_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;MINDPOWER3D_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;MINDPOWER3D_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableUAC>false</EnableUAC>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

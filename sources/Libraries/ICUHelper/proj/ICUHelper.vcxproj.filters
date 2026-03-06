@@ -27,8 +27,5 @@
     <ClInclude Include="..\inc\pi_Memory.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\inc\ResourceBundleManage.h">
-      <Filter>Include</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

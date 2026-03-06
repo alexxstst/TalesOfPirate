@@ -1,0 +1,113 @@
+﻿#pragma once
+#include "SkillRecord.h"
+
+#define ACTION_BEGIN_HIT	-1
+#define ACTION_END_HIT		-2
+
+class CCharacter;
+class CEffectObj;
+class CActor;
+class CSkillRecord;
+class CServerHarm;
+
+// ,,,
+class CHitRepresent 
+{
+public:
+	CHitRepresent() : _pTarget(NULL), _pSkill(NULL), _nAttackX(0), _nAttackY(0), _pAttack(NULL) {}
+
+	void	SetAttack( CCharacter*	p )		{ _pAttack=p;				}
+	void	SetTarget( CCharacter*	p )		{ _pTarget=p;				}
+	void	SetSkill( CSkillRecord* p )		{ _pSkill=p;				}
+	void	SetAttackPoint( int x, int y )	{ _nAttackX=x; _nAttackY=y;	}
+
+	void	ActionExec( CServerHarm* pHarm, int nActionKey );
+	void    EffectExec( CServerHarm* pHarm );
+
+private:
+	CSkillRecord*	_pSkill;
+	CCharacter*		_pTarget;				// 
+	int				_nAttackX,  _nAttackY;	// 
+	CCharacter*		_pAttack;				// , ,
+
+private:
+	void	Exec( CServerHarm* pHarm );
+
+};
+
+// ,,
+class CEffDelay
+{
+public:
+    enum ePlayStyle
+    {
+        enumNone,       //  
+        enumPos,        // 
+        enumHitEffect,  // 
+    };
+
+public:
+    CEffDelay(CEffectObj* pOwn);
+    ~CEffDelay();
+
+    void Reset()        { _eStyle=enumNone; }
+    void Exec();
+
+    void SetPosEffect( int nEffID, const D3DXVECTOR3& pos );
+    void SetServerHarm( CHitRepresent& Hit, CServerHarm* pHarm );
+
+private:
+    CEffectObj* _pOwn;
+    ePlayStyle  _eStyle;
+    int         _nEffectID;
+
+    // enumPos
+    D3DXVECTOR3 _Pos;
+
+    // enumActor
+	CHitRepresent	_cHit;
+    CServerHarm*    _pHarm;
+
+};
+
+// 
+inline void CHitRepresent::EffectExec( CServerHarm* pHarm )
+{
+	if( !_pSkill->IsEffectHarm() ) return;
+
+	Exec( pHarm );
+}
+
+inline void CHitRepresent::ActionExec( CServerHarm* pHarm, int nActionKey )
+{
+	if( !_pSkill->IsActKeyHarm() ) return;
+
+	if( _pSkill->chTargetEffectTime!=nActionKey ) return;
+
+	Exec( pHarm );
+}
+
+inline void CEffDelay::SetServerHarm( CHitRepresent& Hit, CServerHarm* pHarm )
+{
+    if( _eStyle!=enumNone ) 
+    {
+        LG( "CEffDelay", "msgCEffDelay::SetServerHarm() Style[%d] is Valid", _eStyle );
+    }
+
+    _eStyle = enumHitEffect;
+
+	_cHit = Hit;
+	_pHarm = pHarm;
+}
+
+inline void CEffDelay::SetPosEffect( int nEffID, const D3DXVECTOR3& pos )
+{
+    if( _eStyle!=enumNone ) 
+    {
+        LG( "CEffDelay", "msgCEffDelay::SetPosEffect(nEffID[%d],pos[%f,%f,%f]) Style[%d] is Valid", nEffID, pos.x, pos.y, pos.z, _eStyle );
+    }
+    _eStyle = enumPos;
+
+    _nEffectID = nEffID;
+    _Pos = pos;
+}
