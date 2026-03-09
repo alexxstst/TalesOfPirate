@@ -154,7 +154,7 @@ void MPMap::Render()
 
 	        if(FAILED(hr)) 
 	        {
-                LG("error", "msg MPMap::Render() Land Terrain Vertex Buffer!\n");
+                ToLogService("error", "msg MPMap::Render() Land Terrain Vertex Buffer!");
                 _pLandVB = NULL;
             }
         }
@@ -172,7 +172,7 @@ void MPMap::Render()
 
 	        if(FAILED(hr)) 
 	        {
-                LG("error", "msg MPMap::Render() Sea Vertex Buffer!\n");
+                ToLogService("error", "msg MPMap::Render() Sea Vertex Buffer!");
                 _pVB = NULL;
             }
         }
@@ -719,7 +719,7 @@ void MPMap::RenderSea()
 		_pVB->Unlock();
 		g_Render.SetStreamSource(0, _pVB, 0, sizeof(MPSeaTileVertex));
 		if(FAILED(g_Render.DrawPrimitive(D3DPT_TRIANGLELIST, 0, nTriCnt)))
-			LG("error","msg render sea");
+			ToLogService("error", "msg render sea");
 //#endif
 	}
 	else
@@ -759,7 +759,7 @@ void MPMap::RenderSea()
                 lwIDynamicStreamMgr* dsm = imgr->res_mgr->GetDynamicStreamMgr();
                 dsm->BindDataVB(0, &SVertex, sizeof(MPSeaTileVertex) * 4, sizeof(MPSeaTileVertex));
 				if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, 2)))
-					LG("error","msg render sea");
+					ToLogService("error", "msg render sea");
 #else
 				g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, 2, &SVertex, sizeof(MPSeaTileVertex));
 #endif
@@ -1059,12 +1059,12 @@ BOOL MPMap::_AddRenderGroup(BYTE btLayer, int nTexNo, MPTile *pTile, short sTile
 
    if(nTexNo>=MAX_RENDER_GROUP) 
    {
-		LG("error", "msgAddRenderGroup%d", MAX_RENDER_GROUP);
+		ToLogService("error", "msgAddRenderGroup{}", MAX_RENDER_GROUP);
 		return FALSE;
    }
    if(btLayer>=4)
    {
-		LG("error", "msgAddRenderGroup%d", 3);
+		ToLogService("error", "msgAddRenderGroup{}", 3);
 		return FALSE;
    }
    
@@ -1211,7 +1211,7 @@ void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 	}
 groupend:
 
-    if(bFull) LG("error", "msg(>%d)", MAX_RENDER_TILE * 2);
+    if(bFull) ToLogService("error", "msg(>{})", MAX_RENDER_TILE * 2);
 
     nLockVertex = 0;
 
@@ -1243,7 +1243,7 @@ void MPMap::_FillVB()
     HRESULT hr = _pLandVB->Lock(0, nLockVertex * sizeof(MPTileVertex), (void**)&pCurVertex, 0 );
 	if(FAILED(hr)) 
     {
-        LG("terrain", "Terrain Land VB Lock Fail!\n");
+        ToLogService("terrain", "Terrain Land VB Lock Fail!");
         return;
     }
 
@@ -1262,7 +1262,7 @@ void MPMap::_FillVB()
             MPTile *pTile = pInfo->pTile;
 			if( !pTile ) 
 			{
-				LG("render", "msgTerrain _FillVB pTile = null!, %d\n", pGroup->sTile[i]);
+				ToLogService("render", "msgTerrain _FillVB pTile = null!, {}", pGroup->sTile[i]);
 				continue;
 			}
             int nX = pInfo->sx;
@@ -1614,7 +1614,7 @@ void MPMap::CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool h
 		lwIDynamicStreamMgr* dsm = g_Render.GetInterfaceMgr()->res_mgr->GetDynamicStreamMgr();
 		dsm->BindDataVB(0, m_pSkyDoomVB, sizeof(MPSkyDoomVertex)*VertNum, sizeof(MPSkyDoomVertex));
 		if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLELIST, 0, VertNum/3)))
-			LG("error","msg render sky box");
+			ToLogService("error", "msg render sky box");
 
 		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
 		dev->SetPixelShader(0);
@@ -1623,13 +1623,13 @@ void MPMap::CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool h
 	{
 		g_Render.ResetWorldTransform();
 		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
-		g_Render.SetTexture(0, GetTextureByID(GetTextureID(txPath))); /*"texture/terrain/xingkong01.bmp"*/ 
+		g_Render.SetTexture(0, GetTextureByID(GetTextureID(txPath))); /*"texture/terrain/xingkong01.bmp"*/
 		//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
 		//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
 		g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
 		g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
 		//
-		//render 
+		//render
 		// i remark these code for close the shader
 		g_Render.SetVertexShader(NULL);
 		g_Render.SetFVF(FVF_SKYDOOM);
@@ -1638,7 +1638,7 @@ void MPMap::CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool h
 		lwIDynamicStreamMgr* dsm = g_Render.GetInterfaceMgr()->res_mgr->GetDynamicStreamMgr();
 		dsm->BindDataVB(0, m_pSkyDoomVB, sizeof(MPSkyDoomVertex)*VertNum, sizeof(MPSkyDoomVertex));
 		if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLELIST, 0, VertNum/3)))
-			LG("error","msg render sky box");
+			ToLogService("error", "msg render sky box");
 
 		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
 	}

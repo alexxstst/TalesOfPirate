@@ -33,8 +33,7 @@ public:
     virtual void    FrameMove( DWORD dwTime );
 	virtual bool	IsFrameMove()					{ return true;					}
 
-public:
-	void			SetUnitSize(int w, int h);
+void			SetUnitSize(int w, int h);
 	int				GetUnitWidth()	                { return _nUnitWidth;	        }
 	int				GetUnitHeight()                 { return _nUnitHeight;	        }
     void			SetSpace( int x, int y );
@@ -46,11 +45,9 @@ public:
 	CGraph*			GetGraph( unsigned int v ){	return (v<_memory.size())?_memory[v]:NULL;}
 
 
-public:
-	virtual bool	OnKeyDown( int key );
+virtual bool	OnKeyDown( int key );
 
-public:
-	CGuiPic*		GetImage()		{ return _pImage;		}
+CGuiPic*		GetImage()		{ return _pImage;		}
 	CImage*			GetSelectImage(){ return _pSelectImage; }
 	CTextButton*	GetNext()		{ return _pNextPage;	}
 	CTextButton*	GetPrior()		{ return _pPriorPage;	}
@@ -58,8 +55,7 @@ public:
 	CGraph*			GetSelect()		{ return _pSelect;		}
     int             GetSelectIndex(){ return _nSelectIndex; }
 
-public:
-	GuiEvent		evtSelectChange;				// 
+GuiEvent		evtSelectChange;				// 
 
 protected:
 	void			_SetSelf();
@@ -91,8 +87,7 @@ protected:
 	}
 	void			_RefreshSize();
 
-protected:
-	CGuiPic*		_pImage;
+CGuiPic*		_pImage;
 	CImage*			_pSelectImage;		// 
 
 	CDragTitle*		_pSizeImg;

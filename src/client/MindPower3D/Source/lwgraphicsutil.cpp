@@ -185,7 +185,7 @@ DWORD lwGetD3DFormatStride(DWORD format)
         stride = sizeof(DWORD);
         break;
     default:
-        LG_MSGBOX("undefined D3DFORMAT type, call jack");
+        ToLogService("default", "msgundefined D3DFORMAT type, call jack");
         stride = 0;
     }
 
@@ -312,7 +312,7 @@ LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format,
 
     if(lwLoadColorValue(&img_buf, (int*)&img_width, (int*)&img_height, file, colorkey_type, colorkey) == 0)
     {
-        LG_MSGBOX("invalid texture file: %s when called lwLoadTexDataInfo", file);
+        ToLogService("default", "msginvalid texture file: {} when called lwLoadTexDataInfo", file);
         return LW_RET_FAILED;
     }
 

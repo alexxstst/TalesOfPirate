@@ -8,7 +8,7 @@ _DBC_USING
 
 bool Connection::Connect(dbc::cChar *hostname,dbc::uShort port,dbc::uLong timeout)
 {
-    LG( "connect", "Connect: %s, %d\n", hostname, port );
+    ToLogService("connect", "Connect: {}, {}", hostname, port);
 
 	if(m_datasock)
 	{
@@ -40,7 +40,7 @@ bool Connection::Connect(dbc::cChar *hostname,dbc::uShort port,dbc::uLong timeou
 }
 void Connection::Disconnect(int reason)
 {
-    LG( "connect", "Disconnect\n" );
+    ToLogService("connect", "Disconnect");
 
 	m_netif->Disconnect(m_datasock,0,reason);
 }
@@ -54,11 +54,11 @@ long Connection::Process()
 {
 	if(m_timeout)
 	{
-		LG( "connect", g_oLangRec.GetString(34), m_hostname );
+		ToLogService("connect", "{} {}", g_oLangRec.GetString(34), m_hostname);
 		m_datasock	=m_netif->Connect(m_hostname,m_port,&m_sock);
 	}else
 	{
-		LG( "connect", g_oLangRec.GetString(34), m_hostname );
+		ToLogService("connect", "{} {}", g_oLangRec.GetString(34), m_hostname);
         m_datasock	=m_netif->Connect(m_hostname,m_port);
 	}
 	auto const l_lock = std::lock_guard{m_mtx};

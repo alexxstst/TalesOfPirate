@@ -9,7 +9,6 @@ class CEffectObj;
 
 class CSceneObj : public MPSceneObject, public CSceneNode, public SceneLight
 {
-private:
 	BOOL			_Create(int nObjTypeID,int nType);
 
 public:
@@ -44,8 +43,7 @@ public:
 	void			setChaType(int iType)				{ _iOwerType = iType; }
 	int 			getChaType()						{ return _iOwerType ; }
 
-public:
-	bool			IsBoxVisible(  lwVector3 vecMin, lwVector3 vecMax,DWORD &index);
+bool			IsBoxVisible(  lwVector3 vecMin, lwVector3 vecMax,DWORD &index);
 	bool			IsBoxVisible_LineWithPlane( lwVector3  vecMin, lwVector3 vecMax , DWORD &index ); 
     void            SetMaterial(const D3DMATERIALX* mtl);
     void            SetCullingFlag(DWORD flag) { _dwCullingFlag = flag; }

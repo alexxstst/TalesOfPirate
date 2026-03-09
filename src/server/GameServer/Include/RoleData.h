@@ -8,7 +8,7 @@
 
 #include "GameAppNet.h"
 #include "GameCommon.h"
-#include "TryUtil.h"
+
 //---------------------------------------------------------
 
 namespace mission
@@ -229,33 +229,33 @@ namespace mission
 		}
 
 		BOOL Load( LPBYTE pBuf, DWORD dwSize )
-		{T_B
+		{
 			if( dwSize >= ROLE_MAXNUM_RECORDSIZE<<3 ) return FALSE;
 			memcpy( szID, pBuf, dwSize );
 			return TRUE;
-		T_E}
+		}
 
 		void Clear()
-		{T_B
+		{
 			memset( szID, 0, ROLE_MAXNUM_RECORDSIZE*sizeof(char) );
-		T_E}
+		}
 
 		BOOL IsValid( DWORD dwID )
-		{T_B
+		{
 			return dwID < ROLE_MAXNUM_RECORDSIZE<<3;
-		T_E}
+		}
 
 		BOOL IsSet( DWORD dwID )
-		{T_B
+		{
 			if( dwID >= ROLE_MAXNUM_RECORDSIZE<<3 ) return FALSE;
 			DWORD dwIndex = dwID>>3; // dwID/ROLE_MAXNUM_INDEXSIZE;
 			char szTag = 1<<(dwID%ROLE_MAXNUM_INDEXSIZE);
 			return szID[dwIndex] & szTag;
-		T_E}
+		}
 
 		// 
 		BOOL SetID( DWORD dwID, BOOL bValid )
-		{T_B
+		{
 			if( dwID >= ROLE_MAXNUM_RECORDSIZE<<3 ) return FALSE;
 			DWORD dwIndex = dwID>>3; // dwID/ROLE_MAXNUM_INDEXSIZE;
 			char szTag = 1<<(dwID%ROLE_MAXNUM_INDEXSIZE);
@@ -269,7 +269,7 @@ namespace mission
 			}
 
 			return TRUE;
-		T_E}
+		}
 
 	} ROLE_RECORDINFO, *PROLE_RECORDINFO;
 

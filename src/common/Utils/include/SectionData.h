@@ -1,146 +1,169 @@
 ﻿#pragma once
 
+#include <cstdint>
 #include "Util.h"
 
-// MapData 
+struct SDataSection {
+	void* pData; //
+	std::uint32_t dwDataOffset; //  = 0,
+	std::uint32_t dwActiveTime; //
+	std::uint32_t dwParam; //
 
-// , 
-
-// , 
-
-// , , 
-
-
-struct SDataSection
-{
-    void*		pData;				// 
-    DWORD		dwDataOffset;		//  = 0, 
-	DWORD		dwActiveTime;		// 
-    DWORD       dwParam;            // 
-	
 	SDataSection()
-    :pData(NULL),dwActiveTime(0),dwDataOffset(0),dwParam(0)
-	{
+		: pData(nullptr), dwDataOffset(0), dwActiveTime(0), dwParam(0) {
 	}
 };
 
 
 class CSectionDataMgr;
-typedef long (CALLBACK* MAP_LOADING_PROC)(int nFlag, int nSectionX, 
-								  int nSectionY, unsigned long dwParam, CSectionDataMgr* pMapData);
+typedef long (CALLBACK*MAP_LOADING_PROC)(int nFlag, int nSectionX,
+										 int nSectionY, unsigned long dwParam, CSectionDataMgr* pMapData);
 
-class CSectionDataMgr
-{
+class CSectionDataMgr {
 public:
+	virtual ~CSectionDataMgr();
 
-    ~CSectionDataMgr();
-    
-    // , 
-    BOOL    CreateFromFile(const char *pszMapName, BOOL bEdit = FALSE);
-    
-    // , 
-    BOOL    Create(int nSectionCntX, int nSectionCntY, const char *pszMapName);
-	
-    // , , 
-    void	Load(BOOL bFull, DWORD dwTimeParam = 0);
-    
-    // Section
-    void	SetLoadSectionCallback(MAP_LOADING_PROC pfn)	{	_pfnProc = pfn;				        }
-    
-    // Section
-    void    CopySectionData(SDataSection* pDest, SDataSection *pSrc);
-    
-    // Section
-    void    SaveSectionData(int nSectionX, int nSectionY);
+	// ,
+	BOOL CreateFromFile(const char* pszMapName, BOOL bEdit = FALSE);
 
-    // Section, 
-    void    ClearSectionData(int nSectionX, int nSectionY);
+	// ,
+	BOOL Create(int nSectionCntX, int nSectionCntY, const char* pszMapName);
 
-    // Section, 
-    SDataSection* GetSectionData(int nSectionX, int nSectionY);
-    
-    // Section
-    SDataSection* LoadSectionData(int nSectionX, int nSectionY);
+	// , ,
+	void Load(BOOL bFull, std::uint32_t dwTimeParam = 0);
 
-	
+	// Section
+	void SetLoadSectionCallback(MAP_LOADING_PROC pfn) {
+		_pfnProc = pfn;
+	}
+
+	// Section
+	void CopySectionData(SDataSection* pDest, SDataSection* pSrc);
+
+	// Section
+	void SaveSectionData(int nSectionX, int nSectionY);
+
+	// Section,
+	void ClearSectionData(int nSectionX, int nSectionY);
+
+	// Section,
+	SDataSection* GetSectionData(int nSectionX, int nSectionY) const;
+
+	// Section
+	SDataSection* LoadSectionData(int nSectionX, int nSectionY);
+
+
 	// map
-	int		GetSectionCntX()						        { return _nSectionCntX;			        }
-	int		GetSectionCntY()						        { return _nSectionCntY;			        }
-    int     GetSectionCnt()                                 { return _nSectionCntX * _nSectionCntY; }
-    char*   GetFileName()                                   { return _szFileName;                   }
-    char*   GetDataName()                                   { return _szDataName;                    }
-    void    SetDataName(const char *pszName)                { strcpy(_szDataName, pszName);          }   
+	int GetSectionCntX() const {
+		return _nSectionCntX;
+	}
 
-    // 
-    // int     CalValidSectionCnt();
-    
-    // 
-    void	SetLoadSize(int nWidth, int nHeight)	{ _nLoadWidth  = nWidth;_nLoadHeight = nHeight; }
-	int		GetLoadWidth()							{ return _nLoadWidth;					        }
-	int		GetLoadHeight()							{ return _nLoadHeight;					        }
-	void	SetLoadCenter(int nX, int nY)		    { _nLoadCenterX = nX; _nLoadCenterY = nY;       }
-	int 	GetLoadCenterX()						{ return _nLoadCenterX;					        }
-	int 	GetLoadCenterY()						{ return _nLoadCenterY;					        }
-	BOOL    IsValidLocation(int nX, int nY);        
-	int		GetSectionDataSize()					{ return _GetSectionDataSize();					}
+	int GetSectionCntY() const {
+		return _nSectionCntY;
+	}
+
+	int GetSectionCnt() const {
+		return _nSectionCntX * _nSectionCntY;
+	}
+
+	const std::string& GetFileName() {
+		return _szFileName;
+	}
+
+	const std::string& GetDataName() {
+		return _szDataName;
+	}
+
+	void SetDataName(const std::string& pszName) {
+		_szDataName = pszName;
+	}
+
+	//
+	// int     CalValidSectionCnt();
+
+	//
+	void SetLoadSize(int nWidth, int nHeight) {
+		_nLoadWidth = nWidth;
+		_nLoadHeight = nHeight;
+	}
+
+	int GetLoadWidth() const {
+		return _nLoadWidth;
+	}
+
+	int GetLoadHeight() const {
+		return _nLoadHeight;
+	}
+
+	void SetLoadCenter(int nX, int nY) {
+		_nLoadCenterX = nX;
+		_nLoadCenterY = nY;
+	}
+
+	int GetLoadCenterX() const {
+		return _nLoadCenterX;
+	}
+
+	int GetLoadCenterY() const {
+		return _nLoadCenterY;
+	}
+
+	BOOL IsValidLocation(int nX, int nY) const;
+
+	int GetSectionDataSize() {
+		return _GetSectionDataSize();
+	}
 
 protected:
+	CSectionDataMgr();
 
-    CSectionDataMgr();
+	virtual int _GetSectionDataSize() = 0;
+	virtual BOOL _ReadFileHeader() = 0;
+	virtual void _WriteFileHeader() = 0;
+	virtual std::uint32_t _ReadSectionIdx(std::uint32_t dwSectionNo) = 0;
+	virtual void _WriteSectionIdx(std::uint32_t dwSectionNo, std::uint32_t dwDataOffset) = 0;
 
-    virtual int     _GetSectionDataSize()   = 0;
-    virtual BOOL    _ReadFileHeader()       = 0;
-    virtual void    _WriteFileHeader()      = 0;
-    virtual DWORD   _ReadSectionIdx(DWORD dwSectionNo) = 0;
-    virtual void    _WriteSectionIdx(DWORD dwSectionNo, DWORD dwDataOffset) = 0;
-    virtual void    _AfterReadSectionData(SDataSection *pSection, int nSectionX, int nSectionY) {}
-    
-protected:
+	virtual void _AfterReadSectionData(SDataSection* pSection, int nSectionX, int nSectionY) {
+	}
 
-    SDataSection*   _GetDataSection(DWORD dwSectionNo)
-    {
-        return *(_SectionArray + dwSectionNo);
-    }
+	SDataSection* _GetDataSection(std::uint32_t dwSectionNo) const {
+		return *(_SectionArray + dwSectionNo);
+	}
 
-	char                _szFileName[255];   // 
-    char                _szDataName[32];     // 
-	int					_nSectionCntX;		// Section
-	int					_nSectionCntY;		// Section
-	int					_nLoadCenterX;		// 
-	int 				_nLoadCenterY;
-	int					_nLoadWidth;		// 
-	int					_nLoadHeight;
-	
-    int					_nSectionStartX;
-	int					_nSectionStartY;
-    
-	MAP_LOADING_PROC	_pfnProc;			// 
-	
-	FILE*				_fp;				// 
-	BOOL				_bEdit;				// 
-    BOOL                _bDebug;
-	
-    std::list<SDataSection*>	_SectionList;
-	SDataSection**       	    _SectionArray;
+	std::string _szFileName{}; //
+	std::string _szDataName{}; //
+	int _nSectionCntX; // Section
+	int _nSectionCntY; // Section
+	int _nLoadCenterX; //
+	int _nLoadCenterY;
+	int _nLoadWidth; //
+	int _nLoadHeight;
+
+	int _nSectionStartX;
+	int _nSectionStartY;
+
+	MAP_LOADING_PROC _pfnProc; //
+
+	FILE* _fp; //
+	BOOL _bEdit; //
+	BOOL _bDebug;
+
+	std::list<SDataSection*> _SectionList;
+	SDataSection** _SectionArray;
 };
 
-inline SDataSection* CSectionDataMgr::GetSectionData(int nSectionX, int nSectionY)
-{
-    if(!IsValidLocation(nSectionX, nSectionY))
-    {
-        return NULL;
-    }
+inline SDataSection* CSectionDataMgr::GetSectionData(int nSectionX, int nSectionY) const {
+	if (!IsValidLocation(nSectionX, nSectionY)) {
+		return nullptr;
+	}
 
-    DWORD dwLoc = (nSectionY * _nSectionCntX + nSectionX);
-    return (SDataSection*)(*(_SectionArray + dwLoc));
+	std::uint32_t dwLoc = (nSectionY * _nSectionCntX + nSectionX);
+	return *(_SectionArray + dwLoc);
 }
 
-inline BOOL CSectionDataMgr::IsValidLocation(int nX, int nY)
-{
-    if(nX < 0 || nX >= _nSectionCntX || nY < 0 || nY >= _nSectionCntY)
-    {
-        return FALSE;
-    }
-    return TRUE;
+inline BOOL CSectionDataMgr::IsValidLocation(int nX, int nY) const {
+	if (nX < 0 || nX >= _nSectionCntX || nY < 0 || nY >= _nSectionCntY) {
+		return FALSE;
+	}
+	return TRUE;
 }
-

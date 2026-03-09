@@ -32,7 +32,7 @@ namespace GUI
 		frmMakeEquip = mgr.Find("frmMakeEquip");
 		if ( !frmMakeEquip)
 		{
-			LG("gui", g_oLangRec.GetString(685));
+			ToLogService("gui", "{}", g_oLangRec.GetString(685));
 			return false;
 		}
 		frmMakeEquip->evtEntrustMouseEvent = _MainMouseEvent;

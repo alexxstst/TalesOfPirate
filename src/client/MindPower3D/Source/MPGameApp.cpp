@@ -106,8 +106,6 @@ BOOL MPGameApp::Init(HINSTANCE hInst,const char *pszClassName, int nScrWidth, in
     _nWindowHeight = rc.bottom - rc.top;
     _bFullScreen   = bFullScreen;
     
-    CLogMgr::Instance()->SetMessageWnd(_hWnd);
-
 	int dev_width;
     int dev_height;
 
@@ -338,7 +336,7 @@ BOOL MPGameApp::_InitInput()
 										    (VOID**)&_pDI,
 										    NULL)))
 	{
-		LG("init", "Create DirectInput 8 Error!\n");
+		ToLogService("init", "Create DirectInput 8 Error!");
 		return FALSE;
 	}
 
@@ -347,7 +345,7 @@ BOOL MPGameApp::_InitInput()
 	if(FAILED(_pDI->CreateDevice(GUID_SysKeyboard, &_pDIKeyboard, NULL)))
 	{
 		if(_pDI) SAFE_RELEASE(_pDI);
-		LG("init", "Create Keyboard Device Error\n");
+		ToLogService("init", "Create Keyboard Device Error");
 		return FALSE;
 	}
 
@@ -466,7 +464,7 @@ void MPGameApp::_ReadKeyboardInput()
 	// Don't read the keyboard if the devices are invalid
 	if (!_pDIKeyboard || !_pDI)
 	{
-		LG("error", "Keyboard interface is NULL!\n");
+		ToLogService("error", "Keyboard interface is NULL!");
 		return;
 	}
 
@@ -744,19 +742,10 @@ void MPGameApp::End()
 
     g_Render.End();
 
-   	LG("end", "exit game appliaction successful!\n");
+   	ToLogService("end", "exit game appliaction successful!");
 }
 
 void MPGameApp::LG_Config(const LGInfo& info)
 {
-    if(info.bCloseAll)
-    {
-        ::LG_CloseAll();
-    }
-    ::LG_SetEraseMode(info.bEraseMode);
-    ::LG_SetDir(info.dir);
-    ::LG_EnableAll(info.bEnableAll);
-    ::LG_EnableMsgBox(info.bMsgBox);
-
     _lgInfo = info;
 }

@@ -73,7 +73,7 @@ void CWaitMoveState::SetPreMoveTime( long time )
 	nTotalFPS += g_Render.GetFPS();
 	nTotalFPSCnt++;
 	fFPSAverage = (float)nTotalFPS / (float)nTotalFPSCnt;
-	LG( "ping", g_oLangRec.GetString(404), LastPingShow[0], LastPingShow[1], LastPingShow[2], MaxPing, fAveragePing, MinPing, nMaxFPS, fFPSAverage, nMinFPS );
+	ToLogService("ping", "{} {} {} {} {} {} {} {} {} {}", g_oLangRec.GetString(404), LastPingShow[0], LastPingShow[1], LastPingShow[2], MaxPing, fAveragePing, MinPing, nMaxFPS, fFPSAverage, nMinFPS);
 }
 
 void CWaitMoveState::RenderPing()
@@ -250,7 +250,7 @@ bool CMoveState::_Start()
 	
 
 #ifdef _STATE_DEBUG
-    LG( "movestate", "start SelfPos:%d, %d, Target: %d, %d Tick - %d\n", GetActor()->GetCha()->GetCurX(), GetActor()->GetCha()->GetCurY(), _nTargetX, _nTargetY, GetTickCount() );
+    ToLogService( "movestate", "start SelfPos:{}, {}, Target: {}, {} Tick - {}", GetActor()->GetCha()->GetCurX(), GetActor()->GetCha()->GetCurY(), _nTargetX, _nTargetY, GetTickCount() );
 #endif
 
     if( _IsSend )    
@@ -282,12 +282,12 @@ void CMoveState::WriteInfo( S_BVECTOR<D3DXVECTOR3>& path, stNetMoveInfo& info )
         info.pos_buf[i].x = (long)(path[i]->x * 100.0f) / 50 * 50 + 25;
         info.pos_buf[i].y = (long)(path[i]->y * 100.0f) / 50 * 50 + 25;
 
-		LG( "move_path", "%d, %d\n", info.pos_buf[i].x, info.pos_buf[i].y );
+		ToLogService( "move_path", "{}, {}", info.pos_buf[i].x, info.pos_buf[i].y );
     }
 
     info.pos_num = n;
 
-	LG( "move_path", "\n\n" );
+	ToLogService( "move_path", "\n" );
 }
 
 void CMoveState::PushPoint( int x, int y )	
@@ -510,7 +510,7 @@ void CServerMoveState::_End()
 	_dwLastEndTime = CGameApp::GetCurTick();
 
 	DWORD dwSpace = _dwLastEndTime - _dwLastMoveTime;
-	LG( this->GetActor()->GetCha()->getLogName(), g_oLangRec.GetString(408), dwSpace, _dwLastMoveTime, _dwLastEndTime, (float)dwSpace * (float)GetActor()->GetCha()->getMoveSpeed() / 1000.0f );
+	ToLogService(this->GetActor()->GetCha()->getLogName(), "{} {} {} {} {}", g_oLangRec.GetString(408), dwSpace, _dwLastMoveTime, _dwLastEndTime, (float)dwSpace * (float)GetActor()->GetCha()->getMoveSpeed() / 1000.0f);
 }
 
 void CServerMoveState::MoveEnd(int x, int y, int nState)
@@ -602,7 +602,7 @@ bool COneMoveState::ContinueMove( int nTargetX, int nTargetY, bool isWalkLine, b
 		}
 	}
 
-	LG( "main_move", "ContinueMove( %d, %d, %d )\n", nTargetX, nTargetY, isWalkLine );
+	ToLogService( "main_move", "ContinueMove( {}, {}, {} )", nTargetX, nTargetY, isWalkLine );
 
 	bool rv = true;
 
@@ -647,7 +647,7 @@ bool COneMoveState::ContinueMove( int nTargetX, int nTargetY, bool isWalkLine, b
 
 bool COneMoveState::AddPath( int x, int y, bool IsWalkLine )
 {
-	LG( "main_move", "AddPath( %d, %d, %d )\n", x, y, IsWalkLine );
+	ToLogService( "main_move", "AddPath( {}, {}, {} )", x, y, IsWalkLine );
 
 	_cNeedList.push_back( NeedPath( x, y, IsWalkLine ) );
 	return true;
@@ -663,7 +663,7 @@ bool COneMoveState::SendInfo()
 
 	ChaRun();
 
-	LG( "main_move", "SendInfo: ServerPos[%d, %d], Target[%d, %d]\n", _pCha->GetServerX(), _pCha->GetServerY(), _nTargetX, _nTargetY );
+	ToLogService( "main_move", "SendInfo: ServerPos[{}, {}], Target[{}, {}]", _pCha->GetServerX(), _pCha->GetServerY(), _nTargetX, _nTargetY );
 	_nSendCount++;
 
 	stNetMoveInfo   stPathInfo;
@@ -709,7 +709,7 @@ bool COneMoveState::SendInfo()
 	}
 
 	_fRate = RefreshRate( nLocal, _nServerDis );
-	LG( "moverate", "SendInfo:%f\n", _fRate );
+	ToLogService( "moverate", "SendInfo:{}", _fRate );
 	return true;
 }
 
@@ -806,7 +806,7 @@ void COneMoveState::PushPoint(int x, int y) {
 			}
 		}
 	}
-	LG("moverate", "PushPoint:%f\n", _fRate);
+	ToLogService("moverate", "PushPoint:{}", _fRate);
 }
 
 
@@ -819,7 +819,7 @@ bool COneMoveState::StartMove( int nTargetX, int nTargetY, bool isWalkLine )
 	if( !g_cFindPath.Find( _pCha->GetScene(), _pCha, _pCha->GetCurX(), _pCha->GetCurY(), nTargetX, nTargetY, isWalkLine ) )
 		return false;
 
-	LG( "main_move", "StartMove Target[%d, %d], StartCount:%d, SendCount:%d, EndCount:%d\n", _nTargetX, _nTargetY, _nStartCount, _nSendCount, _nEndCount );
+	ToLogService( "main_move", "StartMove Target[{}, {}], StartCount:{}, SendCount:{}, EndCount:{}", _nTargetX, _nTargetY, _nStartCount, _nSendCount, _nEndCount );
 	_nMoveCount++;
 	if( _nStartCount==_nSendCount )
 	{
@@ -856,7 +856,7 @@ bool COneMoveState::StartMove( int nTargetX, int nTargetY, bool isWalkLine )
 	{
 		_fRate = RefreshRate( _nLocalDis, g_cFindPath.GetLength() );
 	}
-	LG( "moverate", "StartMove:%f\n", _fRate );
+	ToLogService( "moverate", "StartMove:{}", _fRate );
 	return true;
 }
 
@@ -865,7 +865,7 @@ float COneMoveState::RefreshRate( int nLocalLen, int nServerLen )
 	float fRate = (float)nLocalLen / (float)(nServerLen) / 0.95f;
 	if( fRate > 10.30f ) fRate = 10.30f;
 	if( fRate < 0.85f ) fRate = 0.85f;
-	LG( "moverate", "RefreshRate(%d, %d) Rate:%f\n", nLocalLen, nServerLen, _fRate );	
+	ToLogService( "moverate", "RefreshRate({}, {}) Rate:{}", nLocalLen, nServerLen, _fRate );
 	return fRate;
 }
 
@@ -890,7 +890,7 @@ bool COneMoveState::_Start()
 
 void COneMoveState::_End()
 {
-	LG( "main_move", "COneMoveState::_End\n" );
+	ToLogService( "main_move", "COneMoveState::_End" );
 }
 
 void COneMoveState::SynchroPos( int x, int y )
@@ -906,7 +906,7 @@ void COneMoveState::SynchroPos( int x, int y )
 void COneMoveState::MoveEnd(int x, int y, int nState)
 {
 	// End of server move
-	LG( "main_move", "MoveEnd( %d, %d, %d )\n", x, y, nState );
+	ToLogService( "main_move", "MoveEnd( {}, {}, {} )", x, y, nState );
 	_nEndCount++;
 
 	_IsSendCancel = false;
@@ -935,7 +935,7 @@ void COneMoveState::Cancel()
 	// Cancel when not moving
 	if( _IsSendCancel )
 	{
-		LG( "main_move", "Canlce\n" );
+		ToLogService( "main_move", "Canlce" );
 		CS_EndAction( this );
 		_cNeedList.clear();
 
@@ -954,12 +954,12 @@ void COneMoveState::WriteInfo( S_BVECTOR<D3DXVECTOR3>& path, stNetMoveInfo& info
     {
         info.pos_buf[i].x = (long)(path[i]->x * 100.0f) / 50 * 50 + 25;
         info.pos_buf[i].y = (long)(path[i]->y * 100.0f) / 50 * 50 + 25;
-		LG( "m_path", "Path:[%d, %d]\n", info.pos_buf[i].x, info.pos_buf[i].y );
+		ToLogService( "m_path", "Path:[{}, {}]", info.pos_buf[i].x, info.pos_buf[i].y );
 		if( info.pos_buf[i].x!=(long)(path[i]->x * 100.0f) || info.pos_buf[i].y!=(long)(path[i]->y * 100.0f) )
-			LG( "m_path", "###########FindPath:[%d, %d]\n", (long)(path[i]->x * 100.0f), (long)(path[i]->y * 100.0f) );
+			ToLogService( "m_path", "###########FindPath:[{}, {}]", (long)(path[i]->x * 100.0f), (long)(path[i]->y * 100.0f) );
     }
     info.pos_num = n;
-	LG( "m_path", "Count:%d\n", info.pos_num );
+	ToLogService( "m_path", "Count:{}", info.pos_num );
 }
 
 bool COneMoveState::IsSameServerPos( int x, int y )

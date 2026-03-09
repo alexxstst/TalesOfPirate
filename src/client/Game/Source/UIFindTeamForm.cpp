@@ -35,7 +35,7 @@ namespace GUI
 		frmFindTeam = CFormMgr::s_Mgr.Find("frmFindTeam");
 		if(! frmFindTeam)
 		{
-			LG("gui", "frmFindTeam not found.");
+			ToLogService("gui", "frmFindTeam not found.");
 			return false;
 		}
 		frmFindTeam->evtEntrustMouseEvent = _evtFindTeamMouseButton;
@@ -43,21 +43,21 @@ namespace GUI
 		labListPage = dynamic_cast<CLabelEx*>(frmFindTeam->Find("labListPage"));
 		if(! labListPage)
 		{
-			LG("gui", "frmFindTeam:labListPage not found.");
+			ToLogService("gui", "frmFindTeam:labListPage not found.");
 			return false;
 		}
 
 		btnAddme = dynamic_cast<CTextButton*>(frmFindTeam->Find("btnAddme"));
 		if(! btnAddme)
 		{
-			LG("gui", "frmFindTeam:btnAddme not found.");
+			ToLogService("gui", "frmFindTeam:btnAddme not found.");
 			return false;
 		}
 
 		btnDelme = dynamic_cast<CTextButton*>(frmFindTeam->Find("btnDelme"));
 		if(! btnDelme)
 		{
-			LG("gui", "frmFindTeam:btnDelme not found.");
+			ToLogService("gui", "frmFindTeam:btnDelme not found.");
 			return false;
 		}
 
@@ -68,7 +68,7 @@ namespace GUI
 			labName[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labName[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("gui", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -76,7 +76,7 @@ namespace GUI
 			labLevel[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labLevel[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("gui", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -84,7 +84,7 @@ namespace GUI
 			labJob[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labJob[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("gui", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -92,7 +92,7 @@ namespace GUI
 			labPlace[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labPlace[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("gui", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -100,7 +100,7 @@ namespace GUI
 			btnSubmit[i] = dynamic_cast<CTextButton*>(frmFindTeam->Find(szName));
 			if(! btnSubmit[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("gui", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 		}

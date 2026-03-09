@@ -6,7 +6,6 @@
 
 class RenderStateMgr
 {
-private:
     MPIDeviceObject* _dev_obj;
     MPIRenderStateAtomSet* _rsa_scene;
     MPIRenderStateAtomSet* _rsa_cha;

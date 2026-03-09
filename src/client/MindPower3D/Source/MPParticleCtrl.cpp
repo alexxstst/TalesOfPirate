@@ -500,7 +500,7 @@ void	CMPPartCtrl::CopyPartCtrl(CMPPartCtrl* pPart)
 		sprintf(psID,"%d",pModel->GetID());
 		if(!m_vecModel[n]->LoadScript(psID))
 		{
-			LG("error","msgLoadScript %s",psID);
+			ToLogService("error", "msgLoadScript {}", psID);
 		}
 		m_vecModel[n]->SetVel(pModel->GetVel());
 		m_vecModel[n]->SetPlayType(pModel->GetPlayType());
@@ -627,7 +627,7 @@ bool	CMPPartCtrl::SaveToFile(char* pszName)
 	t_pFile = fopen(pszName, "wb");
 	if(!t_pFile)
 	{
-		LG("error","msg %s,",pszName);
+		ToLogService("error", "msg {},", pszName);
 		return false;
 	}
 
@@ -667,7 +667,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	;
 	if ((t_pFile = fopen(pszName, "rb")) == NULL)
 	{
-		LG("error", "msg[%s] was not opened.(CMPPartCtrl::LoadFromFile)\n", pszName);
+		ToLogService("error", "msg[{}] was not opened.(CMPPartCtrl::LoadFromFile)", pszName);
 		return false;
 	}
 	if (strcmp(pszName, "no") == 0 || strcmp(pszName, "yes") == 0)
@@ -682,12 +682,12 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	fread(&t_dwVersion,sizeof(t_dwVersion),1,t_pFile);
 	if ( t_dwVersion > CMPPartCtrl::ParVersion)
 	{
-		LG("error", "msg[%s][%d][%d] (CMPPartCtrl::LoadFromFile)\n",pszName,t_dwVersion,CMPPartCtrl::ParVersion);
+		ToLogService("error", "msg[{}][{}][{}] (CMPPartCtrl::LoadFromFile)", pszName, t_dwVersion, CMPPartCtrl::ParVersion);
 		return false;
 	}
 	if(t_dwVersion < 2)
 	{
-		LG("error", "msg[%s][%d][%d] (CMPPartCtrl::LoadFromFile)\n",pszName,t_dwVersion,2);
+		ToLogService("error", "msg[{}][{}][{}] (CMPPartCtrl::LoadFromFile)", pszName, t_dwVersion, 2);
 		return false;
 	}
 
@@ -713,7 +713,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	{
 		if (!m_vecPartSys[n]->LoadFromFile(t_pFile,t_dwVersion))
 		{
-			LG("error", "msg[%s][%d].(CMPPartCtrl::LoadFromFile)\n", pszName, n);
+			ToLogService("error", "msg[{}][{}].(CMPPartCtrl::LoadFromFile)", pszName, n);
 			return false;
 		}
 		if(t_dwVersion < 6)
@@ -734,7 +734,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 		{
 			if (!m_pcStrip[n].LoadFromFile(t_pFile,t_dwVersion))
 			{
-				LG("error", "msg[%s][%d]Strip.(CMPPartCtrl::LoadFromFile)\n", pszName, n);
+				ToLogService("error", "msg[{}][{}]Strip.(CMPPartCtrl::LoadFromFile)", pszName, n);
 				delete m_pcStrip;
 				return false;
 			}
@@ -761,12 +761,12 @@ bool	CMPPartCtrl::LoadFromMemory(CMemoryBuf*	pbuf)
 	pbuf->mread(&t_dwVersion,sizeof(t_dwVersion),1);
 	if ( t_dwVersion > CMPPartCtrl::ParVersion)
 	{
-		LG("error", "msg[%d][%d] (CMPPartCtrl::LoadFromFile)\n",t_dwVersion,CMPPartCtrl::ParVersion);
+		ToLogService("error", "msg[{}][{}] (CMPPartCtrl::LoadFromFile)", t_dwVersion, CMPPartCtrl::ParVersion);
 		return false;
 	}
 	if(t_dwVersion < 2)
 	{
-		LG("error", "msg[%d][%d] (CMPPartCtrl::LoadFromFile)\n",t_dwVersion,2);
+		ToLogService("error", "msg[{}][{}] (CMPPartCtrl::LoadFromFile)", t_dwVersion, 2);
 		return false;
 	}
 

@@ -12,7 +12,7 @@
 // 
 void CCharacter::Run(DWORD dwCurTime)
 {
-	T_B
+
 		MPTimer	t;
 	Char	chCount = 0;
 
@@ -181,25 +181,25 @@ void CCharacter::Run(DWORD dwCurTime)
 	}
 	m_dwCellRunTime[chCount++] = t.End();
 
-	T_E
+
 }
 
 void CCharacter::RunEnd(DWORD dwCurTime)
 {
-	T_B
+
 		if (m_byExit == CHAEXIT_BEGIN && m_timerExit.IsOK(dwCurTime))
 		{
 			// 
 			Exit();
 		}
-	T_E
+
 }
 
 void CCharacter::StartExit()
 {
-	T_B
+
 		//LG( "", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
-		LG("time too long exit", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit);
+		ToLogService("time too long exit", "StartExit: Name = {},exitcode = {}", this->GetName(), m_byExit);
 	if (m_byExit != CHAEXIT_BEGIN)
 	{
 		DWORD dwExitTime = 20 * 1000;
@@ -211,14 +211,14 @@ void CCharacter::StartExit()
 		WRITE_LONG(l_wpk, dwExitTime);
 		ReflectINFof(this, l_wpk);
 	}
-	T_E
+
 }
 
 void CCharacter::CancelExit()
 {
-	T_B
+
 		//LG( "", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
-		LG("time too long exit", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit);
+		ToLogService("time too long exit", "CancelExit: Name = {},exitcode = {}", this->GetName(), m_byExit);
 	if (m_byExit == CHAEXIT_BEGIN)
 	{
 		m_byExit = CHAEXIT_NONE;
@@ -228,15 +228,15 @@ void CCharacter::CancelExit()
 		WRITE_CMD(l_wpk, CMD_MC_CANCELEXIT);
 		ReflectINFof(this, l_wpk);
 	}
-	T_E
+
 }
 
 void CCharacter::Exit()
 {
-	T_B
+
 		// 
 		//LG( "", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit );
-		LG("time too long exit", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit);
+		ToLogService("time too long exit", "Exit: Name = {}, exitcode = {}", this->GetName(), m_byExit);
 	WPACKET	l_wpk = GETWPACKET();
 	WRITE_CMD(l_wpk, CMD_MT_PALYEREXIT);
 	ReflectINFof(this, l_wpk);
@@ -244,7 +244,7 @@ void CCharacter::Exit()
 
 	m_byExit = CHAEXIT_NONE;
 	m_timerExit.Reset();
-	T_E
+
 }
 
 // 
@@ -254,22 +254,22 @@ void CCharacter::OnAreaCheck(DWORD dwCurTime)
 
 void CCharacter::OnDBUpdate(DWORD dwCurTime)
 {
-	T_B
+
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer)
 		return;
 	if (!pCPlayer->IsPlayer() || pCPlayer->GetMainCha() != this)
 		return;
 
-	LG("enter_map", "OnDBUpdate start!\n");
+	ToLogService("enter_map", "OnDBUpdate start!");
 	game_db.SavePlayer(pCPlayer, enumSAVE_TYPE_TIMER);
-	LG("enter_map", "OnDBUpdate end!\n");
-	T_E
+	ToLogService("enter_map", "OnDBUpdate end!");
+
 }
 
 BOOL CCharacter::SaveMissionData()
 {
-	T_B
+
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer) return FALSE;
 	if (!game_db.SaveMissionData(pCPlayer, pCPlayer->GetDBChaId()))
@@ -279,23 +279,23 @@ BOOL CCharacter::SaveMissionData()
 		return FALSE;
 	}
 	return TRUE;
-	T_E
+
 }
 
 void CCharacter::OnTeamNotice(DWORD dwCurTime)
 {
-	T_B
+
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer)	return;
 
 	pCPlayer->NoticeTeamMemberData();
-	T_E
+
 }
 
 // HP
 void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 {
-	T_B
+
 		if (!IsPlayerCha())
 			return;
 
@@ -324,5 +324,5 @@ void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 		if (IsPlayerCha())
 			SynKitbagNew(enumSYN_KITBAG_ATTR);
 	}
-	T_E
+
 }

@@ -29,12 +29,10 @@ namespace GUI
 		static void _enterChargeMoney(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 		static void _ChargeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	private:
 		void		ClearUI();
 		bool		IsValid(int iIndex, long lMoney);
 		int			GetChallengeMasterIndex(const char * szName);
 
-	private:
 		enum {
 			FIRST = 0,
 			SECOND = 1,

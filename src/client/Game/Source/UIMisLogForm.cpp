@@ -45,7 +45,7 @@ bool CMisLogForm::Init()
 	m_pForm = _FindForm( "frmMission" );
 	if( !m_pForm )
 	{
-		LG( "gui", g_oLangRec.GetString(721) );
+		ToLogService("gui", "{}", g_oLangRec.GetString(721));
 		return false;
 	}
 

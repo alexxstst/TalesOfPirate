@@ -1,269 +1,272 @@
-﻿//
-// logutil.cpp
-//
-//  created by claude fan at 2004-8-9
-//
+﻿#include <filesystem>
+#include <algorithm>
+#include <cctype>
+#include <string>
+#include <iostream>
+#include <chrono>
+#include <stacktrace>
+#include "logutil.h"
+#include "ConsoleColor.h"
+#include "ObjectPools.h"
+#include <cstdio>
+#include "CrushSystem.h"
 
-#include "pch.h"
-#include "log.h"
-#include "log2.h"
+#pragma comment(lib, "dbghelp.lib")
 
+namespace TalesOfPirate::Utils::Logs {
+	std::mutex _consoleLock{};
+	LogManager g_logManager{};
 
-#if 0
-// printf
-int myprintf(char const* fmt, ...)
-    {
-    char buf[8192];
+	Logger g_commonLogger{"common"};
 
-    va_list args;
-    va_start(args, fmt);
-    vsprintf(buf, fmt, args);
-    va_end(args);
+	LogStream::LogStream(const std::string& path, const std::string& logSystem) : _logSystem(logSystem) {
+		if (!std::filesystem::exists(path)) {
+			std::filesystem::create_directories(path);
+		}
 
-    LG2("printf", buf);
-    return 1;}
-
-// fprintf
-int myfprintf(FILE* fp, char const* fmt, ...)
-    {
-    char buf[8192];
-
-    va_list args;
-    va_start(args, fmt);
-    vsprintf(buf, fmt, args);
-    va_end(args);
-
-    if (fp == stdout) {LG2("printf", buf);}
-    else if (fp == stderr) {LG2("err", buf);}
-    else LG2("other", buf);
-    return 1;}
-
-// LOG
-static HWND LG_hwnd = NULL;
-void LG(char const* type, char const* format, ...)
-    {
-	// LOG
-	CLogMgr* logMgr = CLogMgr::Instance();
-	if (logMgr == NULL || !logMgr->IsEnable()) return;
-	CLog* log = logMgr->Add(type);
-	if (log == NULL || !log->IsEnable()) return;
-
-	char buf[8192] = {0};
-	int len;
-	va_list args;
-	va_start(args, format);
-	len = vsprintf(buf, format, args);
-	va_end(args);
-	if (len >= sizeof buf)
-        throw std::logic_error("buf overflow, length > 8K\n");
-
-    // 
-    SYSTEMTIME st; char tim[100];
-    ::GetLocalTime(&st);
-    sprintf(tim, "%02d-%02d %02d:%02d:%02d", st.wMonth, st.wDay, st.wHour,
-            st.wMinute, st.wSecond);
-
-
-	// total buffer
-	char buffer[8192];
-	
-
-
-    //////////////////////////////////////////////////////////////////////////
-	//
-	// LOG
-#if 0
-    string ctx;
-    if (strncmp(buf, "msg", 3) != 0)
-        {
-        ctx = "["; ctx += tim; ctx += "]"; ctx += buf;
-        fLG(type, ctx.c_str());}
-    else fLG(type, buf);
-#endif
-
-	if (strncmp(buf, "msg", 3) != 0)
-		{
-		len = sprintf(buffer, "[%s]%s", tim, buf);
-		if (len >= sizeof buffer)
-			throw std::logic_error("buffer overflow, length >= 2K\n");
-		fLG(type, buffer);}
-	else {
-		fLG(type, buf);}
-
-
-    //////////////////////////////////////////////////////////////////////////
-    //
-    // LogviewerLOG
-    if (LG_hwnd == NULL)
-        {LG_hwnd = FindWindow(NULL, "kIng Of pIrAtEs lOgvIEwEr");}
-
-    if (LG_hwnd == NULL) return;
-
-#if 0
-    ctx.clear();
-    ctx += "LOG!"; ctx += type;
-    ctx += "!"; ctx += tim;
-    ctx += "!"; ctx += buf;
-    ctx += "!";
-#endif
-
-	buffer[0] = '\0';
-	len = sprintf(buffer, "LOG!%s!%s!%s!", type, tim, buf);
-	if (len >= sizeof buffer) throw std::logic_error("buffer overflow, length >= 2K\n");
-
-    COPYDATASTRUCT cds;
-    cds.dwData = sizeof cds;
-//    cds.lpData = (PVOID)ctx.c_str();
-//    cds.cbData = (DWORD)ctx.length() + 1;
-    cds.lpData = (PVOID)buffer;
-    cds.cbData = (DWORD)len + 1;
-    if (FALSE == SendMessage(LG_hwnd, WM_COPYDATA,
-                             reinterpret_cast<WPARAM>(LG_hwnd),
-                             reinterpret_cast<LPARAM>(&cds)))
-        {LG_hwnd = NULL;}
-    }
-#endif
-
-#if 1
-// LOG
-static HWND GPL_hwnd = NULL;
-void GPL(char const* type, int x, int y, char const* format, ...)
-    {
-
-#if 0
-    //////////////////////////////////////////////////////////////////////////
-    //
-    // LogviewerGPL
-    if (GPL_hwnd == NULL)
-        {GPL_hwnd = FindWindow(NULL, "kIng Of pIrAtEs lOgvIEwEr");}
-
-    if (GPL_hwnd == NULL) return;
-
-    // LOG
-    char buf[1024] = {0};
-    va_list args;
-    va_start(args, format);
-    vsprintf(buf, format, args);
-    va_end(args);
-
-    char xy[20]; sprintf(xy, "xy=%d", x + y * GPL_CONSTANT);
-
-    string ctx;
-    ctx += "GPL!"; ctx += type;
-    ctx += "!"; ctx += xy;
-    ctx += "!"; ctx += buf;
-    ctx += "!";
-
-    COPYDATASTRUCT cds;
-    cds.dwData = sizeof cds;
-    cds.lpData = (PVOID)ctx.c_str();
-    cds.cbData = (DWORD)ctx.length() + 1;
-    if (FALSE == SendMessage(GPL_hwnd, WM_COPYDATA,
-                             reinterpret_cast<WPARAM>(GPL_hwnd),
-                             reinterpret_cast<LPARAM>(&cds)))
-        {GPL_hwnd = NULL;}
-#endif
-    }
-#endif
-
-
-#if 0
-
-// LG
-void EnableAllLG(bool enable /* = true */)
-{
-    CLogMgr::Instance()->Enable(enable);
-}
-
-// LG
-void EnableLG(char const* type, bool enable /* = true */)
-{
-    CLog* pLog = NULL;
-    if (pLog = CLogMgr::Instance()->Add(type), pLog != NULL)
-	{
-	    pLog->Enable(enable);
-	}	
-}
-#endif
-
-
-
-// new interface
-void LG_EnableAll(bool bEnable /* = true */)
-{
-    CLog2Mgr::Inst()->Enable(bEnable);
-}
-void LG_EnableMsgBox(bool bEnable /* = true */)
-{
-    CLog2Mgr::Inst()->EnableMsgBox(bEnable);
-}
-void LG_SetDir(char const* szDir)
-{
-    CLog2Mgr* pLogMgr = CLog2Mgr::Inst();
-    
-    pLogMgr->SetDirectory(szDir);
-    pLogMgr->LogMgrReopen();
-}
-void LG_GetDir(std::string& strDir)
-{
-    CLog2Mgr* pLogMgr = CLog2Mgr::Inst();
-
-	pLogMgr->GetDirectory(strDir);
-}
-void LG_CloseAll()
-{
-    CLog2Mgr::Inst()->CloseAll();
-}
-void LG_SetEraseMode(bool bEraseMode /* = true */)
-{
-    CLog2Mgr* pLogMgr = CLog2Mgr::Inst();
-
-    pLogMgr->bEraseMode = bEraseMode;
-}
-void LG2(char const* type, char const* format, ...)
-{
-    // LOG
-    CLog2Mgr* pLogMgr = CLog2Mgr::Inst();
-    if (pLogMgr == NULL || !pLogMgr->IsEnable()) return;
-
-    CLog2* pLog = pLogMgr->Add(type);
-    if (pLog == NULL || !pLog->IsEnable()) return;
-
-    char buf[8192] = {0};
-    int len;
-    va_list args;
-    va_start(args, format);
-    len = vsprintf(buf, format, args);
-    va_end(args);
-    if (len >= sizeof buf)
-    {
-        pLogMgr->Log("stack buffer overflow when LG [%s]\n", type);
-        return;
-    }
-
-    pLog->Log(buf);
-}
-
-void LG3(char const* type, char const* format, ...)
-{
-	// LOG
-	CLog2Mgr* pLogMgr = CLog2Mgr::Inst();
-	if (pLogMgr == NULL || !pLogMgr->IsEnable()) return;
-
-	CLog2* pLog = pLogMgr->Add(type);
-	if (pLog == NULL || !pLog->IsEnable()) return;
-
-	char buf[8192] = {0};
-	int len;
-	va_list args;
-	va_start(args, format);
-	len = vsprintf(buf, format, args);
-	va_end(args);
-	if (len >= sizeof buf)
-	{
-		pLogMgr->Log("stack buffer overflow when LG [%s]\n", type);
-		return;
+		_path = std::filesystem::canonical(path).string();
+		GetSystemTime(&_currentSystemTime);
 	}
 
-	pLog->Log3(buf);
+	LogStream::~LogStream() {
+		if (_logStream.is_open()) {
+			_logStream.flush();
+		}
+	}
+
+	void LogStream::Write(const LogUtilEntry& entry, const SYSTEMTIME& sysTime) {
+		if (sysTime.wYear > _currentSystemTime.wYear || sysTime.wMonth > _currentSystemTime.wMonth ||
+			sysTime.wDay > _currentSystemTime.wDay) {
+			if (_logStream.is_open()) {
+				_logStream.flush();
+				_logStream.close();
+			}
+
+			_currentSystemTime = sysTime;
+		}
+
+		if (!_logStream.is_open()) {
+			_logStream = std::ofstream(_path + '\\' + GenerateFileName(), std::ios_base::out | std::ios_base::app);
+			_logStream << "START NEW LOGGER SESSION" << '\n';
+		}
+
+		_logStream << entry.MessageTime << "|" << entry.LogLevel << " | " << entry.Message;
+		if (!entry.Message.empty() && entry.Message[entry.Message.size() - 1] != '\n') {
+			_logStream << '\n';
+		}
+	}
+
+	std::string LogStream::GenerateFileName() const {
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		auto data = std::format("{}_{}_{:02}_{:02}.log", _logSystem, st.wYear, st.wMonth, st.wDay);
+		std::transform(data.begin(), data.end(), data.begin(),
+					   [](unsigned char c) {
+						   return std::tolower(c);
+					   });
+		return data;
+	}
+
+	void LogStream::Flush() {
+		if (_logStream.is_open()) {
+			_logStream.flush();
+		}
+	}
+
+	LogUtilEntry::LogUtilEntry() {
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		*std::format_to(MessageTime, "{:04}{:02}.{:02} {:02}:{:02}:{:02}.{:03}", st.wYear, st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond, st.wMilliseconds) = '\0';
+	}
+
+	void LogManager::InternalLog(LogLevel logLevel, const std::string& logSystem,
+								 const std::string& value) {
+		LogUtilEntry logEntry{};
+		logEntry.LogLevel = logLevel;
+		logEntry.LogSystem = logSystem;
+		logEntry.Message = value;
+
+		InternalLog(logEntry);
+	}
+
+	bool LogManager::AddLogger(const std::string& loggerName) {
+		if (_channels.contains(loggerName)) {
+			return false;
+		}
+
+		_channels.emplace(std::pair(loggerName, std::make_shared<LogStream>(_filePath, loggerName)));
+		return true;
+	}
+
+	void LogManager::InitLogger(const std::string& filePath) {
+		if (!_channels.empty()) {
+			throw std::logic_error("Logger is already init!");
+		}
+
+		if (!std::filesystem::exists(filePath)) {
+			std::filesystem::create_directories(filePath);
+		}
+
+		_filePath = std::filesystem::canonical(filePath).string();
+
+		AddLogger("common");
+		AddLogger("db");
+		AddLogger("network");
+		AddLogger("datafile");
+		AddLogger("map");
+		AddLogger("terrain");
+		AddLogger("errors");
+		AddLogger("commands");
+		AddLogger("offline_system");
+		AddLogger("players");
+		AddLogger("connections");
+		AddLogger("guilds");
+
+		_logThread = std::thread([this]() {
+			Crush::SetPerThreadCRTExceptionBehavior();
+			::SetThreadName("logger");
+
+			std::int32_t _dumpCounter{};
+			while (!_stopped) {
+				LogUtilEntry lg{};
+				SYSTEMTIME lt{};
+				GetSystemTime(&lt);
+
+				{
+					std::scoped_lock lock(_queueMutex);
+					while (!_logsQueue.empty()) {
+						lg = _logsQueue.front();
+
+						std::erase_if(lg.LogSystem,
+									  [](auto const& c) -> bool {
+										  return !std::isalnum(c) && c != '_' && c != '-';
+									  });
+
+						auto it = _channels.find(lg.LogSystem);
+						if (it == _channels.cend()) {
+							AddLogger(lg.LogSystem);
+							continue;
+						}
+
+						it->second->Write(lg, lt);
+						_logsQueue.pop();
+					}
+				}
+
+				std::this_thread::sleep_for(std::chrono::milliseconds(100));
+				++_dumpCounter;
+				if (_dumpCounter % 100) {
+					for (auto& pair : _channels) {
+						pair.second->Flush();
+					}
+				}
+			}
+
+			std::cout << "Exit logger thread..." << '\n';
+		});
+	}
+
+	void LogManager::Shutdown() {
+		_stopped = true;
+		if (_logThread.joinable()) {
+			_logThread.join();
+		}
+
+		_channels.clear();
+	}
+
+	LogManager::LogManager() {
+	}
+
+	LogManager::~LogManager() {
+		Shutdown();
+	}
+
+	void LogManager::SetLevel(const std::string& logSystem, LogLevel logLevel) {
+		_channels.find(logSystem)->second->MinimumLogLevel = logLevel;
+	}
+
+	void LogManager::InternalLog(const LogUtilEntry& logEntry) {
+		if (logEntry.Message.empty()) {
+			return;
+		}
+
+		std::scoped_lock lock(_queueMutex);
+		_logsQueue.push(logEntry);
+	}
+
+	bool LogManager::IsLogLevel(const std::string& logSystem, LogLevel logLevel) {
+		const auto it = _channels.find(logSystem);
+		if (it == _channels.end()) {
+			return true;
+		}
+
+		return it->second->MinimumLogLevel >= logLevel;
+	}
+
+	void Logger::PrintConsoleMessage(const LogUtilEntry& logEntry) {
+		std::scoped_lock lock(_consoleLock);
+
+		const auto inputLine = std::format("{} |{}| {}", logEntry.LogLevel, logEntry.LogSystem, logEntry.Message);
+		switch (logEntry.LogLevel) {
+		case LogLevel::Trace:
+			std::cout << inputLine << '\n';
+			break;
+
+		case LogLevel::Debug:
+			std::cout << concolor::green(inputLine) << '\n';
+			break;
+
+		case LogLevel::Info:
+			std::cout << concolor::aqua(inputLine) << '\n';
+			break;
+
+		case LogLevel::Warning:
+			std::cout << concolor::light_yellow(inputLine) << '\n';
+			break;
+
+		case LogLevel::Error:
+			std::cout << concolor::light_red(inputLine) << '\n';
+			break;
+
+		case LogLevel::Fatal:
+			std::cout << concolor::red(inputLine) << '\n';
+			break;
+		}
+	}
+
+	void Logger::ToInternalLog(const LogUtilEntry& logEntry) {
+		if (_enableConsole) {
+			PrintConsoleMessage(logEntry);
+		}
+
+		g_logManager.InternalLog(logEntry);
+	}
+}
+
+std::ostream& operator<<(std::ostream& stream, const LogLevel& io) {
+	switch (io) {
+	case LogLevel::Trace:
+		stream << "Trace\t";
+		break;
+
+	case LogLevel::Debug:
+		stream << "Debug\t";
+		break;
+
+	case LogLevel::Info:
+		stream << "Info\t";
+		break;
+	case LogLevel::Warning:
+		stream << "Warning\t";
+		break;
+	case LogLevel::Error:
+		stream << "Error\t";
+		break;
+	case LogLevel::Fatal:
+		stream << "Fatal\t";
+		break;
+	}
+
+	return stream;
 }

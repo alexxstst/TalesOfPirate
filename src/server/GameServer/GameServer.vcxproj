@@ -138,8 +138,6 @@
     <ClCompile Include="Source\Auction.cpp" />
     <ClCompile Include="Source\AuctionItem.cpp" />
     <ClCompile Include="Source\Birthplace.cpp" />
-    <ClCompile Include="Source\cfl_iocp.cpp" />
-    <ClCompile Include="Source\cfl_lock.cpp" />
     <ClCompile Include="Source\Character.cpp" />
     <ClCompile Include="Source\CharacterAI.cpp" />
     <ClCompile Include="Source\CharacterAIState.cpp" />
@@ -203,10 +201,6 @@
     <ClInclude Include="Include\AuctionItem.h" />
     <ClInclude Include="Include\Birthplace.h" />
     <ClInclude Include="Include\CallStack.h" />
-    <ClInclude Include="Include\cfl_iocp.h" />
-    <ClInclude Include="Include\cfl_lock.h" />
-    <ClInclude Include="Include\cfl_mempool.h" />
-    <ClInclude Include="Include\cfl_pkt.h" />
     <ClInclude Include="Include\Character.h" />
     <ClInclude Include="Include\CharBoat.h" />
     <ClInclude Include="Include\CharForge.h" />

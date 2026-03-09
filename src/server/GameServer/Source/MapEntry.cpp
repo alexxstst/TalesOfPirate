@@ -24,11 +24,11 @@ void CMapEntryCopyCell::WriteParamPacket(WPACKET &pk)
 
 //=============================================================================
 void CDynMapEntryCell::SetCopyNum(dbc::Short sCopyNum)
-{T_B
+{
 	if (sCopyNum > defMAX_MAP_COPY_NUM)
 	{
 		//LG("", "msg %d  %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
-		LG("copy number error", RES_STRING(GM_GAMEAPP_CPP_00008), sCopyNum, defMAX_MAP_COPY_NUM);
+		ToLogService("copy number error", "{}", RES_STRING(GM_GAMEAPP_CPP_00008));
 		return;
 	}
 
@@ -39,10 +39,10 @@ void CDynMapEntryCell::SetCopyNum(dbc::Short sCopyNum)
 
 	m_sMapCopyNum = sCopyNum;
 	m_LCopyInfo.SetCapacity(m_sMapCopyNum);
-T_E}
+}
 
 void CDynMapEntryCell::SetEventName(dbc::cChar *cszEventName)
-{T_B
+{
 	m_CEvtObj.SetName(cszEventName);
 
 	if (m_pCEnt)
@@ -50,19 +50,19 @@ void CDynMapEntryCell::SetEventName(dbc::cChar *cszEventName)
 		m_pCEnt->m_CEvent.SetName(cszEventName);
 		m_pCEnt->SynEventInfo();
 	}
-T_E}
+}
 
 void CDynMapEntryCell::FreeEnti()
-{T_B
+{
 	if (m_pCEnt)
 	{
 		m_pCEnt->Free();
 		m_pCEnt = NULL;
 	}
-T_E}
+}
 
 void CDynMapEntryCell::SynCopyParam(dbc::Short sCopyID)
-{T_B
+{
 	CMapEntryCopyCell	*pCCopyCell = GetCopy(sCopyID);
 	if (!pCCopyCell)
 		return;
@@ -81,10 +81,10 @@ void CDynMapEntryCell::SynCopyParam(dbc::Short sCopyID)
 	{
 		pGateServer->SendData(wpk);
 	}
-T_E}
+}
 
 void CDynMapEntryCell::SynCopyRun(dbc::Short sCopyID, dbc::Char chCdtType, dbc::Long chCdtVal)
-{T_B
+{
 	CMapEntryCopyCell	*pCCopyCell = GetCopy(sCopyID);
 	if (!pCCopyCell)
 		return;
@@ -105,11 +105,11 @@ void CDynMapEntryCell::SynCopyRun(dbc::Short sCopyID, dbc::Char chCdtType, dbc::
 		pGateServer->SendData(wpk);
 		break;
 	}
-T_E}
+}
 
 //=============================================================================
 CDynMapEntryCell* CDynMapEntry::Add(CDynMapEntryCell *pCCell)
-{T_B
+{
 	CDynMapEntryCell	*pCObj;
 	pCObj = GetEntry(pCCell->GetTMapName());
 	if (!pCObj)
@@ -122,19 +122,19 @@ CDynMapEntryCell* CDynMapEntry::Add(CDynMapEntryCell *pCCell)
 	pCEvent->SetTableRec(pCObj);
 
 	return pCObj;
-T_E}
+}
 
 bool CDynMapEntry::Del(CDynMapEntryCell *pCCell)
-{T_B
+{
 	if (!pCCell)
 		return false;
 
 	pCCell->FreeEnti();
 	return m_LEntryList.Del(pCCell);
-T_E}
+}
 
 bool CDynMapEntry::Del(dbc::cChar *cszTMapName)
-{T_B
+{
 	if (!cszTMapName)
 		return false;
 
@@ -150,10 +150,10 @@ bool CDynMapEntry::Del(dbc::cChar *cszTMapName)
 	}
 
 	return false;
-T_E}
+}
 
 CDynMapEntryCell* CDynMapEntry::GetEntry(dbc::cChar *cszTMapName)
-{T_B
+{
 	CDynMapEntryCell	*pCCell;
 	m_LEntryList.BeginGet();
 	while (pCCell = m_LEntryList.GetNext())
@@ -163,10 +163,10 @@ CDynMapEntryCell* CDynMapEntry::GetEntry(dbc::cChar *cszTMapName)
 	}
 
 	return NULL;
-T_E}
+}
 
 void CDynMapEntry::AfterPlayerLogin(const char *cszName)
-{T_B
+{
 	if (!cszName)
 		return;
 
@@ -178,11 +178,11 @@ void CDynMapEntry::AfterPlayerLogin(const char *cszName)
 		strScript += pCCell->GetTMapName();
 		g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCell, enumSCRIPT_PARAM_STRING, 1, cszName, DOSTRING_PARAM_END);
 	}
-T_E}
+}
 
 //=============================================================================
 void	g_SetTeamFightMapName(const char *cszMapName)
-{T_B
+{
 	if (cszMapName)
 	{
 		strncpy(g_szTFightMapName, cszMapName, MAX_MAPNAME_LENGTH - 1);
@@ -192,4 +192,4 @@ void	g_SetTeamFightMapName(const char *cszMapName)
 	{
 		g_szTFightMapName[0] = '\0';
 	}
-T_E}
+}

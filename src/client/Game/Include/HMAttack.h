@@ -70,10 +70,7 @@ public:
 protected:
 	virtual void _Exec();
 
-protected:
-
-protected:
-	CAttackRepSynchro*	_pRepSynchro;	// 
+CAttackRepSynchro*	_pRepSynchro;	// 
 	CCharacter*     _pTarget;	// 
 	CCharacter*     _pAttack;	// 
     CSkillRecord*   _pSkill;
@@ -140,8 +137,7 @@ public:
 protected:
 	virtual void _Exec();
 
-protected:
-    CSizeArray<stEffect>  _Value;
+CSizeArray<stEffect>  _Value;
 	int				_nType;	
 	CCharacter*		_pCha;
 

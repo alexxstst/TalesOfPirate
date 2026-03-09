@@ -26,7 +26,7 @@ CCharacter* CGameScene::AddBoat( stNetChangeChaPart& part )
     CCharacter *pCha = _GetFirstInvalidCha(); // Cha	
 	if( !pCha ) 
 	{
-        LG("error", g_oLangRec.GetString(341));
+        ToLogService("error", "{}", g_oLangRec.GetString(341));
 		return NULL;
 	}
 
@@ -65,7 +65,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 	CChaRecord* pInfo = GetChaRecordInfo(nScriptID);
 	if (!pInfo)
 	{
-		LG("error", "msgCGameScene::AddCharacter() - GetChaRecordInfo(%d) return NULL\n", nScriptID);
+		ToLogService("error", "msgCGameScene::AddCharacter() - GetChaRecordInfo({}) return NULL", nScriptID);
 		pCha = NULL;
 		goto __ret;
 	}
@@ -73,7 +73,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 	pCha = _GetFirstInvalidCha(); // ????????????????????????Cha
 	if (pCha == NULL)
 	{
-		LG("error", g_oLangRec.GetString(342));
+		ToLogService("error", "{}", g_oLangRec.GetString(342));
 		pCha = NULL;
 		goto __ret;
 	}
@@ -99,7 +99,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadCha(pInfo->chModalType, pInfo->sModel, part_buf) == 0)
 		{
-			LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
+			ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 			pCha = NULL;
 			goto __ret;
 		}
@@ -116,7 +116,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadShip(pInfo->chModalType, pInfo->sModel, part_buf) == 0)
 		{
-			LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
+			ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 			pCha = NULL;
 			goto __ret;
 		}
@@ -134,7 +134,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadTower(pInfo->chModalType, part_buf) == 0)
 		{
-			LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
+			ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 			pCha = NULL;
 			goto __ret;
 		}
@@ -160,7 +160,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0)
 		{
-			LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
+			ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 			pCha = NULL;
 			goto __ret;
 		}
@@ -168,7 +168,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 	if (((CCharacterModel*)pCha)->LoadPose(pInfo->sActionID) == 0)
 	{
-		LG("error", g_oLangRec.GetString(27), nScriptID, pInfo->szDataName);
+		ToLogService("error", "{} {} {}", g_oLangRec.GetString(27), nScriptID, pInfo->szDataName);
 		pCha = NULL;
 		goto __ret;
 	}
@@ -213,7 +213,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 	CSceneObjInfo *pInfo = GetSceneObjInfo(nScriptID);
     if(pInfo==NULL)
     {
-        LG("error", g_oLangRec.GetString(343), nScriptID);
+        ToLogService("error", "{} {}", g_oLangRec.GetString(343), nScriptID);
         return NULL;
     }
 
@@ -221,11 +221,11 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 	{
 		if(m_dwValidSceneObjCnt>=290)
 		{
-			LG("sceneobj", g_oLangRec.GetString(344), 299);
+			ToLogService("sceneobj", "{} {}", g_oLangRec.GetString(344), 299);
 		}
 		if(m_dwSceneObjPolyCnt>=9000)
 		{
-			LG("sceneobj", g_oLangRec.GetString(345), 9000);
+			ToLogService("sceneobj", "{} {}", g_oLangRec.GetString(345), 9000);
 		}
 	}
 
@@ -243,7 +243,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
         }
         else
         {
-            LG("recreate", "Found Same Type Object [%d]\n", nScriptID);
+            ToLogService("recreate", "Found Same Type Object [{}]", nScriptID);
         }
 
         if(pInfo->nType == 3)
@@ -271,7 +271,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 	}
 	else
 	{
-		LG("sceneobj", g_oLangRec.GetString(346), _nSceneObjCnt);
+		ToLogService("sceneobj", "{} {}", g_oLangRec.GetString(346), _nSceneObjCnt);
 	}
 
     // 
@@ -338,7 +338,7 @@ CEffectObj* CGameScene::AddSceneEffect(int nEffectTypeID)
     }
 	else
 	{
-		LG("effect", g_oLangRec.GetString(347));
+		ToLogService("effect", "{}", g_oLangRec.GetString(347));
 	}
 	return pEff;
 }
@@ -366,7 +366,7 @@ CSceneItem* CGameScene::AddSceneItem(int nScriptID, int nType)
 	}
 	else
 	{
-		LG("sceneitem", g_oLangRec.GetString(348));
+		ToLogService("sceneitem", "{}", g_oLangRec.GetString(348));
 	}
 	return pObj;
 }
@@ -385,7 +385,7 @@ CSceneItem* CGameScene::AddSceneItem( const char* file )
 	}
 	else
 	{
-		LG("sceneitem", g_oLangRec.GetString(348));
+		ToLogService("sceneitem", "{}", g_oLangRec.GetString(348));
 	}
 	return pObj;
 

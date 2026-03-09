@@ -38,7 +38,6 @@ public:
 	friend class CFormMgr;
 	friend class CForm;
 	friend class CContainer;
-public:
 	CCompent(CForm& frmOwn);
 	CCompent(const CCompent& rhs);
 	CCompent& operator=( const CCompent& rhs );
@@ -68,8 +67,7 @@ public:
     virtual UseComandEvent  GetUseCommantEvent()            { return NULL;  }   // itemitem
     virtual eAccept	        SetCommand( CCommandObj* p, int x, int y )	{ return enumRefuse;    }   // command
 
-public:
-	virtual void	OnActive();		// 
+virtual void	OnActive();		// 
 	virtual void	OnLost() { if ( evtLost ) evtLost(this );	}		// 
 
 	virtual bool	OnKeyDown( int key )	{ return false;		}
@@ -90,8 +88,7 @@ public:
 
 	static CCompent* GetLastMouseCompent()					{ return _pLastMouseCompent;	}
 
-public:
-	GuiEvent		evtLost;		// 
+GuiEvent		evtLost;		// 
 	GuiEvent		evtActive;		// 
 
 protected:
@@ -104,8 +101,7 @@ private:
 protected:
 	static CCompent*	_pActive;	// 
 
-protected:
-	CForm			*_frmOwn;		// ,
+CForm			*_frmOwn;		// ,
 
 	bool			_IsFocus;		// 
 

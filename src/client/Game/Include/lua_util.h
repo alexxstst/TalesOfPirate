@@ -46,7 +46,7 @@ inline int lua_LG(lua_State *L)
     }
     
     str << std::ends;
-    LG( (char*)pszFile, str.str() );
+    g_logManager.InternalLog(LogLevel::Debug, pszFile, str.str());
     return 0;
 }
 

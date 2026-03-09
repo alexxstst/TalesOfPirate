@@ -31,7 +31,7 @@ namespace GUI
 		frmBank = mgr.Find("frmManage");// NPC 
 		if ( !frmBank)
 		{
-			LG("gui", g_oLangRec.GetString(438));
+			ToLogService("gui", "{}", g_oLangRec.GetString(438));
 			return false;
 		}
 

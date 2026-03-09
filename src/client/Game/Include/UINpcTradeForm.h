@@ -45,19 +45,16 @@ private:
 	CGoodsGrid*     GetNPCtradeEquipGrid()            { return grdNPCtradeEquip;    }
 	CGoodsGrid*     GetNPCtradeOtherGrid()            { return grdNPCtradeOther;    }
 
-private:
-	DWORD 		_dwNpcID;
+DWORD 		_dwNpcID;
 	bool		_IsShow;
 
-private:
-	CForm*		frmNPCtrade; 
+CForm*		frmNPCtrade; 
 
 	CGoodsGrid*	grdNPCtradeWeapon; //NPC
 	CGoodsGrid*	grdNPCtradeEquip;
 	CGoodsGrid*	grdNPCtradeOther;
 
-private:
-	struct stBuy
+struct stBuy
 	{
 		stBuy() : pBox(NULL), dwNpcID(0), nIndex(0), nDragIndex(0), nBuyGrid(0) {}
 

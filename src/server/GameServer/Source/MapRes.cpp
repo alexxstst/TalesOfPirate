@@ -28,7 +28,7 @@ CMapRes::CMapRes()
 ,m_csStateCellWidth(200),m_csStateCellHeight(200)
 ,m_csBlockUnitWidth(50),m_csBlockUnitHeight(50)
 ,m_byMapID(0),m_bCanStall(true),m_bCanGuild(true)
-{T_B
+{
 	m_bValid = false;
 	m_chState = enumMAP_STATE_CLOSE;
 
@@ -37,10 +37,10 @@ CMapRes::CMapRes()
 	m_timeMgr.Begin(5 * 1000);
 	m_timeRun.Begin(100);
 	m_pfEntryFile = 0;
-T_E}
+}
 
 CMapRes::~CMapRes()
-{T_B
+{
 	if (m_pCMonsterSpawn)
 	{
 		delete m_pCMonsterSpawn;
@@ -64,16 +64,16 @@ CMapRes::~CMapRes()
 		fclose(m_pfEntryFile);
 		m_pfEntryFile = 0;
 	}
-T_E}
+}
 
 bool CMapRes::Init()
-{T_B
+{
 	SetGuildWar(false);
 
 	if( !g_MapID.GetID( m_strMapName.c_str(), m_byMapID ) )
 	{
 		//LG("initmap", "%sID!", m_strMapName.c_str() );
-		LG("initmap", "configure map(%s)ID info error\n", m_strMapName.c_str() );
+		ToLogService("initmap", "configure map({})ID info error", m_strMapName.c_str() );
 		char szData[128];
 		//sprintf( szData, "SubMap::LoadNpc:%sID!", m_strMapName.c_str() );
 		sprintf( szData, RES_STRING(GM_MAPRES_CPP_00001), m_strMapName.c_str() );
@@ -84,14 +84,14 @@ bool CMapRes::Init()
 	else
 	{
 		//LG("initmap", "%sID = %d!", m_strMapName.c_str(), m_byMapID );
-		LG("initmap", "set makp (%s)ID = %d!\n", m_strMapName.c_str(), m_byMapID );
+		ToLogService("initmap", "set makp ({})ID = {}!", m_strMapName.c_str(), m_byMapID );
 	}
 	g_MapID.SetMap( m_byMapID, this );	
 
 	if (m_CBlock.Load(GetResPath(m_szObstacleFile)) == 0)
 	{
 		//LG("init", "[%s], !\n", m_szObstacleFile);
-		LG("init", " Loa object obstacle file[%s] error,continue!\n", m_szObstacleFile);
+		ToLogService("init", " Loa object obstacle file[{}] error,continue!", m_szObstacleFile);
 		return false;
 	}
 
@@ -103,16 +103,13 @@ bool CMapRes::Init()
 	//
 	if((m_SRange.width() % m_csEyeshotCellWidth) || (m_SRange.height() % m_csEyeshotCellHeight))
 	{
-		//LG("init", "[%s]\n", m_strMapName);
-		LG("init", "the map[%s]'s length or width isn't the multiple of manage cell\n", m_strMapName);
+		ToLogService("init", "the map[{}]'s length or width isn't the multiple of manage cell", m_strMapName);
 		return false;
 	}
 
 	if (m_CTerrain.Init((_TCHAR*)GetResPath(m_szSectionFile)) == 0)
 	{
-		//LG("init", "[%s]!", m_szSectionFile);
-		LG("init", "Load the map section file [%s]error !", m_szSectionFile);
-		//return false;
+		ToLogService("init", "Load the map section file [{}]error !", m_szSectionFile);
 	}
 
 	m_sStateCellCol = (nMapWidth * 100 + m_csStateCellWidth - 1) / m_csStateCellWidth;
@@ -144,20 +141,20 @@ bool CMapRes::Init()
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00006) );
 
 	//LG("init", " %s \n", m_strMapName.c_str());
-	LG("init", "map %s init resource succeed\n", m_strMapName.c_str());
+	ToLogService("init", "map {} init resource succeed", m_strMapName.c_str());
 
 	m_chCopyStartCdtType = enumMAPCOPY_START_CDT_UNKN;
 	m_bValid = true;
 	Open();
 	return true;
-T_E}
+}
 
 bool CMapRes::SetCopyNum(dbc::Short sCpyNum)
 {
 	if (m_pCMapCopy || sCpyNum < 1 || sCpyNum > defMAX_MAP_COPY_NUM)
 	{
 		//LG("", "msg %d  %d!\n", sCpyNum, defMAX_MAP_COPY_NUM);
-		LG("copy number error", RES_STRING(GM_GAMEAPP_CPP_00008), sCpyNum, defMAX_MAP_COPY_NUM);
+		ToLogService("copy number error", "{}", RES_STRING(GM_GAMEAPP_CPP_00008));
 		return false;
 	}
 	m_sMapCpyNum = sCpyNum;
@@ -172,13 +169,13 @@ SubMap* CMapRes::GetCopy(dbc::Short sCpyNO)
 }
 
 BOOL CMapRes::SummonNpc( USHORT sAreaID, const char szNpc[], USHORT sTime )
-{T_B
+{
 	return m_pNpcSpawn->SummonNpc( szNpc, sAreaID, sTime );
-T_E}
+}
 
 // 
 bool CMapRes::InitCtrl(void)
-{T_B
+{
 	if (g_IsFileExist(GetResPath(m_szCtrlFile)))
 		luaL_dofile(g_pLuaState, GetResPath(m_szCtrlFile));
 
@@ -216,11 +213,11 @@ bool CMapRes::InitCtrl(void)
 	m_pfEntryFile = fopen(GetResPath(m_szEntryFile), "rb");
 
 	return true;
-T_E}
+}
 
 // .
 bool CMapRes::CreateEntry(void)
-{T_B
+{
 	if(!m_pfEntryFile)
 		return false;
 	fseek(m_pfEntryFile, 0, SEEK_SET);
@@ -243,9 +240,9 @@ bool CMapRes::CreateEntry(void)
 	if (g_cchLogMapEntry)
 	{
 		//LG("", "\n");
-		LG("the map entrance flow ", "\n");
+		ToLogService("the map entrance flow ", "");
 		//LG("", " %s --> %s[%u, %u]\n", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
-		LG("the map entrance flow ", "ask for found entrance : position %s --> %s[%u, %u]\n", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
+		ToLogService("the map entrance flow ", "ask for found entrance : position {} --> {}[{}, {}]", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
 	}
 	WPACKET	wpk	=GETWPACKET();
 	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
@@ -264,7 +261,7 @@ bool CMapRes::CreateEntry(void)
 			if (!feof(m_pfEntryFile))
 			{
 				//LG("entry_error", "msg%s/entry.lua%u.%s\n", GetName(), csLineCharNum, szLine);
-				LG("entry_error", RES_STRING(GM_GAMEAPP_CPP_00009), GetName(), csLineCharNum, szLine);
+				ToLogService("entry_error", "{}", RES_STRING(GM_GAMEAPP_CPP_00009));
 				return false;
 			}
 		}
@@ -290,14 +287,14 @@ bool CMapRes::CreateEntry(void)
 	}
 
 	return true;
-T_E}
+}
 
 // 
 bool CMapRes::DestroyEntry(void)
-{T_B
+{
 	if (g_cchLogMapEntry)
 		//LG("", " %s --> %s\n", GetName(), m_szEntryMapName);
-		LG("map entrance flow", "ask for close entrance:position %s --> %s\n", GetName(), m_szEntryMapName);
+		ToLogService("map entrance flow", "ask for close entrance:position {} --> {}", GetName(), m_szEntryMapName);
 	WPACKET	wpk	=GETWPACKET();
 	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
 	WRITE_STRING(wpk, m_szEntryMapName);
@@ -313,11 +310,11 @@ bool CMapRes::DestroyEntry(void)
 	}
 
 	return true;
-T_E}
+}
 
 // 
 bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
-{T_B
+{
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
@@ -338,17 +335,17 @@ bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
 	}
 
 	return true;
-T_E}
+}
 
 // 
 bool CMapRes::SubEntryCopy(dbc::Short sCopyNO)
-{T_B
+{
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
 	if (g_cchLogMapEntry)
 		//LG("", "%s%d\n", GetName(), sCopyNO);
-		LG("map entrance flow", "ask for close copy map(%s%d)\n", GetName(), sCopyNO);
+		ToLogService("map entrance flow", "ask for close copy map({}{})", GetName(), sCopyNO);
 	WPACKET	wpk	=GETWPACKET();
 	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
 	WRITE_STRING(wpk, m_szEntryMapName);
@@ -365,34 +362,34 @@ bool CMapRes::SubEntryCopy(dbc::Short sCopyNO)
 	}
 
 	return true;
-T_E}
+}
 
 bool CMapRes::SetEntryMapName(const char *szMapName)
-{T_B
+{
 	if (!szMapName) return false;
 	strncpy(m_szEntryMapName, szMapName, MAX_MAPNAME_LENGTH - 1);
 	m_szEntryMapName[MAX_MAPNAME_LENGTH - 1] = '\0';
 
 	return true;
-T_E}
+}
 
 bool CMapRes::Open(void)
-{T_B
+{
 	if (m_chState == enumMAP_STATE_OPEN)
 		return true;
 
 	m_chState = enumMAP_STATE_OPEN;
 
 	return true;
-T_E}
+}
 
 bool CMapRes::Close(void)
-{T_B
+{
 	if (m_chState == enumMAP_STATE_CLOSE)
 	{
 		if (g_cchLogMapEntry)
 			//LG("", "%s\n", GetName());
-			LG("map entrance flow", "already close the map:%s\n", GetName());
+			ToLogService("map entrance flow", "already close the map:{}", GetName());
 		return true;
 	}
 
@@ -406,7 +403,7 @@ bool CMapRes::Close(void)
 
 		if (g_cchLogMapEntry)
 			//LG("", "%s\n", GetName());
-			LG("map entrance flow", "close map succeed :%s\n", GetName());
+			ToLogService("map entrance flow", "close map succeed :{}", GetName());
 		return true;
 	}
 
@@ -415,15 +412,15 @@ bool CMapRes::Close(void)
 		m_chState = enumMAP_STATE_ASK_CLOSE;
 		if (g_cchLogMapEntry)
 			//LG("", "%s\n", GetName());
-			LG("map entrance flow", "ask for close map:%s\n", GetName());
+			ToLogService("map entrance flow", "ask for close map:{}", GetName());
 	}
 
 	return false;
-T_E}
+}
 
 // 
 void CMapRes::Run(DWORD dwCurTime)
-{T_B
+{
 	if (!m_timeRun.IsOK(dwCurTime))
 		return;
 
@@ -496,11 +493,11 @@ void CMapRes::Run(DWORD dwCurTime)
 		CopyNotice(szInfo);
 	}
 
-T_E}
+}
 
 // 
 bool CMapRes::OpenEntry(void)
-{T_B
+{
 	if (m_chEntryState == enumMAPENTRY_STATE_OPEN)
 		return true;
 
@@ -519,11 +516,11 @@ bool CMapRes::OpenEntry(void)
 	m_chEntryState = enumMAPENTRY_STATE_ASK_OPEN;
 
 	return true;
-T_E}
+}
 
 // 
 bool CMapRes::CloseEntry(void)
-{T_B
+{
 	if (m_chEntryState == enumMAPENTRY_STATE_ASK_OPEN)
 		return false;
 
@@ -539,17 +536,17 @@ bool CMapRes::CloseEntry(void)
 	m_chEntryState = enumMAPENTRY_STATE_ASK_CLOSE;
 
 	return true;
-T_E}
+}
 
 // 
 bool CMapRes::CopyClose(dbc::Short sCopyNO)
-{T_B
+{
 	if (sCopyNO >= GetCopyNum())
 		return false;
 
 	if (g_cchLogMapEntry)
 		//LG("", "%s%d\n", GetName(), sCopyNO);
-		LG("map entrance flow", "close map copy %s%d\n", GetName(), sCopyNO);
+		ToLogService("map entrance flow", "close map copy {}{}", GetName(), sCopyNO);
 	if (sCopyNO < 0)
 	{
 		for (Short i = 0; i < m_sMapCpyNum; i++)
@@ -563,10 +560,10 @@ bool CMapRes::CopyClose(dbc::Short sCopyNO)
 	}
 
 	return true;
-T_E}
+}
 
 bool CMapRes::CopyNotice(const char *szString, dbc::Short sCopyNO)
-{T_B
+{
 	if (sCopyNO >= GetCopyNum())
 		return false;
 
@@ -577,16 +574,16 @@ bool CMapRes::CopyNotice(const char *szString, dbc::Short sCopyNO)
 		m_pCMapCopy[sCopyNO].Notice(szString);
 
 	return true;
-T_E}
+}
 
 // 
 bool CMapRes::ReleaseCopy(dbc::Short sCopyNO)
-{T_B
+{
 	return SubEntryCopy(sCopyNO);
-T_E}
+}
 
 void CMapRes::CheckEntryState(dbc::Char chState)
-{T_B
+{
 	if (chState == enumMAPENTRY_STATE_OPEN)
 	{
 		if (m_chEntryState == enumMAPENTRY_STATE_ASK_OPEN)
@@ -619,11 +616,11 @@ void CMapRes::CheckEntryState(dbc::Char chState)
 			Close();
 		}
 	}
-T_E}
+}
 
 // 
 SubMap* CMapRes::GetNextUsedCopy(void)
-{T_B
+{
 	if (!m_pCMapCopy)
 		return NULL;
 
@@ -640,26 +637,26 @@ SubMap* CMapRes::GetNextUsedCopy(void)
 	}
 
 	return NULL;
-T_E}
+}
 
 mission::CNpc* CMapRes::FindNpc( const char szName[] )
-{T_B
+{
 	if( szName )
 	{
 		return m_pNpcSpawn->FindNpc( szName );
 	}
 	return NULL;
-T_E}
+}
 
 //=============================================================================
 CAreaData::CAreaData()
-{T_B
+{
 	m_sUnitCountX = 0;
 	m_sUnitCountY = 0;
 	m_sUnitWidth = 100;
 	m_sUnitHeight = 100;
 	m_nID = -1;
-T_E}
+}
 
 CAreaData::~CAreaData()
 {
@@ -667,7 +664,7 @@ CAreaData::~CAreaData()
 }
 
 Long CAreaData::Init(_TCHAR *chFile)
-{T_B
+{
 	if ((m_nID = s_openAttribFile(chFile)) == -1)
 		return 0;
 
@@ -678,43 +675,43 @@ Long CAreaData::Init(_TCHAR *chFile)
 	m_sUnitCountY = (Short)nHeight;
 
 	return 1;
-T_E}
+}
 
 void CAreaData::Free()
 {
 }
 
 bool CAreaData::GetUnitSize(Short *psWidth, Short *psHeight)
-{T_B
+{
 	*psWidth = m_sUnitWidth;
 	*psHeight = m_sUnitHeight;
 
 	return true;
-T_E}
+}
 
 bool CAreaData::GetUnitAttr(Short sUnitX, Short sUnitY, uShort &usAttribute)
-{T_B
+{
 	if (m_nID == -1)
 		return false;
 	//if (!IsValidPos(sUnitX, sUnitY))
 	//	return false;
 	return s_getTileAttrib(m_nID, sUnitX, sUnitY, usAttribute);
-T_E}
+}
 
 bool CAreaData::GetUnitIsland(Short sUnitX, Short sUnitY, uChar &uchIsland)
-{T_B
+{
 	if (m_nID == -1)
 		return false;
 	//if (!IsValidPos(sUnitX, sUnitY))
 	//	return false;
 	return s_getTileIsland(m_nID, sUnitX, sUnitY, uchIsland);
-T_E}
+}
 
 //=============================================================================
 CMapID::CMapID()
-{T_B
+{
 	Clear();
-T_E}
+}
 
 CMapID::~CMapID()
 {
@@ -728,17 +725,17 @@ void CMapID::Clear()
 }
 
 BOOL CMapID::AddInfo( const char szMap[], BYTE byID )
-{T_B
+{
 	if( m_byNumMap >= MAX_MAP )
 		return FALSE;
 	strncpy( m_MapInfo[m_byNumMap].szMap, szMap, MAX_MAPNAME_LENGTH - 1 );
 	m_MapInfo[m_byNumMap].byID = byID;
 	m_byNumMap++;
 	return TRUE;
-T_E}
+}
 
 BOOL CMapID::GetID( const char szMap[], BYTE& byID )
-{T_B
+{
 	for( BYTE b = 0; b < m_byNumMap; b++ )
 	{
 		if( strcmp( m_MapInfo[b].szMap, szMap ) == 0 )
@@ -748,10 +745,10 @@ BOOL CMapID::GetID( const char szMap[], BYTE& byID )
 		}
 	}
 	return FALSE;
-T_E}
+}
 
 CMapRes* CMapID::GetMap( BYTE byID )
-{T_B
+{
 	for( BYTE b = 0; b < m_byNumMap; b++ )
 	{
 		if( byID == m_MapInfo[b].byID )
@@ -760,10 +757,10 @@ CMapRes* CMapID::GetMap( BYTE byID )
 		}
 	}
 	return NULL;
-T_E}
+}
 
 BOOL CMapID::SetMap( BYTE byID, CMapRes* pMap )
-{T_B
+{
 	for( BYTE b = 0; b < m_byNumMap; b++ )
 	{
 		if( byID == m_MapInfo[b].byID )
@@ -773,4 +770,4 @@ BOOL CMapID::SetMap( BYTE byID, CMapRes* pMap )
 		}
 	}
 	return FALSE;
-T_E}
+}

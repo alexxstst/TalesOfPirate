@@ -26,11 +26,9 @@ public:
 
 	CGuiPic*		GetImage() { return _pImage; }
 
-public:
-	GuiMouseEvent	evtMouseDown;		// 
+GuiMouseEvent	evtMouseDown;		// 
 
-public:
-	CGuiPic* _pImage;
+CGuiPic* _pImage;
 
 };
 
@@ -51,8 +49,7 @@ public:
 
 	CFramePic*		GetFrameImage() { return _pImage; }
 
-public:
-	GuiMouseEvent	evtMouseDown;		// 
+GuiMouseEvent	evtMouseDown;		// 
 
 protected:
 	CFramePic*		_pImage;

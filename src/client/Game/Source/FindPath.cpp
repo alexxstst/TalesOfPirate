@@ -507,10 +507,10 @@ bool	PointPointRange(int px1, int py1,int px2, int py2, int range)
 // nCurX,nCurY,nTargetX,nTargetY 
 BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSelfY, int nTargetX, int nTargetY, bool &IsWalkLine)
 { 
-    LG( "path_find", "Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY() );
+    ToLogService("path_find", "Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 	if(nSelfX < 0 || nSelfY < 0 || nTargetX < 0 || nTargetY < 0)
 	{
-		LG("path_find","msginput coordinate less than 0, Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY() );
+		ToLogService("path_find", "msginput coordinate less than 0, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 		return FALSE;
 	}
 	MPTerrain *pTerrain = pScene->GetTerrain();
@@ -535,12 +535,12 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 
 	if(!PointPointRange(nx, ny,showx, showy, m_iRange))
 	{
-		LG("path_find","input coordinate start is not in range, Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
+		ToLogService("path_find", "input coordinate start is not in range, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 		return FALSE;
 	}
 	if(!PointPointRange(ntx, nty,showx, showy, m_iRange))
 	{
-		LG("path_find","input coordinate target is not in range, Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
+		ToLogService("path_find", "input coordinate target is not in range, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 		return FALSE;
 	}
 	nCurX = nCurX/50;
@@ -612,7 +612,7 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 
 	if(pLink==NULL)  
 	{
-		LG("debug", "Path Not Found!\n");
+		ToLogService("debug", "Path Not Found!");
 		GetTempTerrain(pScene,pCha,nCurX,nCurY);
 
 		SetTargetPos((_nWidth / 2),(_nWidth / 2),_nTargetX, _nTargetY,false);
@@ -644,7 +644,7 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 		n++;
 		if(n>=MAX_PATH_STEP)
 		{
-			LG("debug", "Path Searth Step = %d Overmax \n", n);
+			ToLogService("debug", "Path Searth Step = {} Overmax ", n);
 			n = 0; // 0
 			break;
 		}
@@ -697,7 +697,7 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 			tvm.y = tvm.y - 0.5f;
 			break;
 		default:
-			LG("mag","msg:error");
+			ToLogService("mag", "msg:error");
 			break;
 		}
 		if(*_vecDirSave[m-1] != *_vecDirSave[m])
@@ -772,7 +772,7 @@ bool CFindPath::Find( CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSel
 				_vecPathPoint.pop_front();
 			}else
 			{
-				LG("msg","msgok\n");
+				ToLogService("msg", "msgok");
 			}
 		}
 
@@ -786,7 +786,7 @@ bool CFindPath::Find( CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSel
 			{
 				if( _vecPathPoint[i]->x == _vecPathPoint[i+1]->x && _vecPathPoint[i]->y == _vecPathPoint[i+1]->y)
 				{
-					LG("msg","msgfind path repeat!\n");
+					ToLogService("msg", "msgfind path repeat!");
 					return true;
 				}
 			}

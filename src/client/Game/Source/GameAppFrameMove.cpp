@@ -65,7 +65,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 			pObj->setHeightOff(pAdd->nHeightOff);
 			pObj->setPos(pAdd->nPosX, pAdd->nPosY);
 			pObj->setYaw(pAdd->nAngle);
-			LG("frameload", g_oLangRec.GetString(64), pAdd->nTypeID, pAdd->nPosX, pAdd->nPosY);
+			ToLogService("frameload", "{} {} {}", g_oLangRec.GetString(64), pAdd->nTypeID, pAdd->nPosX, pAdd->nPosY);
 		}
 		delete pAdd;
 	}
@@ -302,6 +302,6 @@ CAniClock* CGameApp::AddAniClock()
             return &_AniClock[i];
     }
 
-    LG("AddAniClock", "msgCGameScene::AddAniClock return NULL");
+    ToLogService("AddAniClock", "msgCGameScene::AddAniClock return NULL");
     return NULL;
 }

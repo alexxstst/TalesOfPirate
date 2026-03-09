@@ -14,16 +14,16 @@
 _DBC_USING
 
 CItem::CItem()
-{T_B
+{
 	chValid = 0;
 	m_pCItemRecord = 0;
 	m_SGridContent.sID = 0;
 	m_lFromEntityID = 0;
 	m_chSpawType = enumITEM_APPE_NATURAL;
-T_E}
+}
 
 void CItem::Initially()
-{T_B
+{
 	Entity::Initially();
 
 	chValid = 0;
@@ -36,17 +36,17 @@ void CItem::Initially()
 	m_ulProtID = 0;
 	m_ulProtHandle = 0;
 	m_chProtType = enumITEM_PROT_OWN;
-T_E}
+}
 
 void CItem::Finally()
-{T_B
+{
 	if (m_submap)
 		m_submap->GoOut(this);
 	Entity::Finally();
-T_E}
+}
 
 void CItem::OnBeginSeen(CCharacter *pCMainCha)
-{T_B
+{
 	WPACKET pk =GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_ITEMBEGINSEE);
 	// 
@@ -64,15 +64,15 @@ void CItem::OnBeginSeen(CCharacter *pCMainCha)
 	WriteEventInfo(pk);
 
 	pCMainCha->ReflectINFof(this,pk);//
-T_E}
+}
 
 void CItem::OnEndSeen(CCharacter *pCMainCha)
-{T_B
+{
 	WPACKET pk =GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_ITEMENDSEE);
 	WRITE_LONG(pk, m_ID);				//ID
 	pCMainCha->ReflectINFof(this,pk);	//
-T_E}
+}
 
 void CItem::Run(dbc::uLong ulCurTick)
 {
@@ -94,7 +94,7 @@ void CItem::Run(dbc::uLong ulCurTick)
 		}
 		if (!m_submap)
 			//LG("", " %s(ID %uHANDLE %u[%d %d]) \n", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
-			LG("Item disappear error", "item %s(ID %uHANDLE %uposition[%d %d]) when it disappear find the map is null\n", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
+			ToLogService("Item disappear error", "item {}(ID {}HANDLE {}position[{} {}]) when it disappear find the map is null", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
 		else
 		{
 			Free();

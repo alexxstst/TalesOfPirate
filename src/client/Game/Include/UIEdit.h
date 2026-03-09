@@ -31,7 +31,7 @@ public:
 	bool OnKeyDown( int key );		
 	bool OnChar( char c );
 
-public:	// Get,Set
+	// Get,Set
 	static MPTexRect* GetCursorImage()	{ return &_CursorImage;		}
 
 	CGuiPic*		GetImage() { return _pImage; }
@@ -70,14 +70,12 @@ public:	// Get,Set
 
 	void			SetEnterButton( CTextButton* pButton )	{ _pEnterButton=pButton;	}
 
-public:
-	GuiEvent			evtEnter;		// 
+GuiEvent			evtEnter;		// 
 	GuiKeyDownEvent		evtKeyDown;
 	GuiKeyCharEvent		evtKeyChar;
     GuiEvent            evtChange;      // caption
 
-public:
-	void			Render();
+void			Render();
 	static bool		InitCursor( const char* szFile );
 
 	static int		GetCursorX()	{ return _nCursorX;		}
@@ -108,8 +106,7 @@ private:
 	void        _GetCursorPos(int nCurPos);       
 	void		_Copy( const CEdit& rhs );
 
-private:
-	static MPTexRect	_CursorImage;	// 
+static MPTexRect	_CursorImage;	// 
 
 	static int			_nCursorFlashCount;
 	static bool			_bCursorIsShow;
@@ -139,11 +136,11 @@ protected:
 	bool		_bIsWrap;
 	int			_nOffset;
 
-protected:		// 	
+		// 	
 	int			_nFontHeight;		// 
 	int			_nMaxLineNum;		// 
 
-protected:		// 
+		// 
 	int			_nCursorRow;		// 
 	int			_nCursorCol;		// ,0length
 	int			_nCursorFirstCol;

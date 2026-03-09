@@ -24,8 +24,8 @@ protected:
 	void ExitThread() {m_bExitThrd = true;}
 
 private:
-	bool volatile m_bExitFlag;
-	bool volatile m_bExitThrd;
+	bool m_bExitFlag;
+	bool m_bExitThrd;
 	DWORD m_dwThreadId;
 	HANDLE m_hThread;
 };

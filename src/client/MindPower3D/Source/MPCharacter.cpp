@@ -294,7 +294,7 @@ LW_RESULT MPCharacter::LoadPart( DWORD part_id, DWORD file_id )
 
     if( LW_FAILED( ret = _physique->LoadPrimitive( part_id, path_mesh ) ) )
     {
-        LG_MSGBOX("Load MPCharacter %s error", path_mesh);
+        ToLogService("default", "msgLoad MPCharacter {} error", path_mesh);
         goto __ret;
     }
 
@@ -316,7 +316,7 @@ LW_RESULT MPCharacter::LoadPart( DWORD part_id, const char* file )
 
     if( LW_FAILED( ret = _physique->LoadPrimitive( part_id, file ) ) )
     {
-        LG_MSGBOX("Load MPCharacter %s error", file);
+        ToLogService("default", "msgLoad MPCharacter {} error", file);
         goto __ret;
     }
 

@@ -110,13 +110,13 @@ public:
 	}
 	//end for performance monitor.
 private:
-	cShort			volatile			m_thrdpos;
-	RunCtrlMgr<T>	*volatile	const	m_mgr;
+	cShort						m_thrdpos;
+	RunCtrlMgr<T>	*	const	m_mgr;
 	struct
 	{
 		mutable std::recursive_mutex m_mtxcpu;
-		long volatile m_count;
-		mutable uLong volatile m_cpusage;
+		long  m_count;
+		mutable uLong  m_cpusage;
 		mutable Timekeeper m_timer;
 	};
 };

@@ -3,7 +3,7 @@
 #include "SubMap.h"
 #include "NPC.h"
 #include "lua_gamectrl.h"
-#include "TryUtil.h"
+
 #include "HarmRec.h"
 
 //--------------------------------------------------------
@@ -17,7 +17,7 @@
 BOOL  g_bEnableAI  = TRUE;
 
 void CCharacter::OnAI(DWORD dwCurTime)
-{T_B
+{
 	
 	m_pHate->UpdateHarmRec(this); // 
 
@@ -60,7 +60,7 @@ void CCharacter::OnAI(DWORD dwCurTime)
 			lua_AIRun(this, dwResumeExecTime);
 	}
 
-T_E}
+}
 
 
 void CCharacter::ResetAIState()

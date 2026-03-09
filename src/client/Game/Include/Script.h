@@ -15,8 +15,7 @@ public:
 
 	DWORD GetScriptID() { return _dwScriptID; }
 
-public:
-	static CScript* GetScriptObj( DWORD id ) {
+static CScript* GetScriptObj( DWORD id ) {
 		if( id<_dwCount ) return _AllObj[id];
 		return NULL;
 	}
@@ -26,8 +25,7 @@ public:
 private:
 	DWORD		_dwScriptID;			// ID-
 
-private:
-	static CScript**		_AllObj;
+static CScript**		_AllObj;
 	static DWORD			_dwCount;
 	static DWORD			_dwFreeCount;
 	static DWORD			_dwLastFree;

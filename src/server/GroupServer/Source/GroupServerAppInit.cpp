@@ -21,21 +21,20 @@ void GroupServerApp::Initialize()
 	//Sleep(20000);
 
 	m_dwCheatCount = 0;
-	LogLine l_line(g_LogConnect);
 	//l_line<<newln<<""<<endln;
-	l_line<<newln<<"begin connect database"<<endln;
+	ToLogService("Connect", "begin connect database");
 	InitDBSvrConnect(*this);
 	m_tblguilds->InitAllGuilds(7);
 	const std::string l_acct = m_cfg["AccountServer"]["AcctEnable"];
 	if(l_acct	!="0")
 	{
 		//l_line<<newln<<"AccountServer"<<endln;
-		l_line<<newln<<"begin init AccountServer connect"<<endln;
+		ToLogService("Connect", "begin init AccountServer connect");
 		InitACTSvrConnect(*this);
 	}
 
 	//LG("init", "Lua Script...\n");
-	LG("init", "init Lua Script...\n");
+	ToLogService("init", "init Lua Script...");
 	if( !InitLuaScript() )
 	{
 		//THROW_EXCP(excp, "LUA");
@@ -44,7 +43,7 @@ void GroupServerApp::Initialize()
 
 	//GateServer/GameServer
 	//l_line<<newln<<"GroupServer.cfg"<<endln;
-	l_line<<newln<<"begin read GroupServer.cfg"<<endln;
+	ToLogService("Connect", "begin read GroupServer.cfg");
 	IniSection	&l_is	=m_cfg["Main"];
 	const std::string		l_ip = l_is["Listen_IP"];
 	uShort		l_port	= std::stoi(l_is["Listen_Port"]);
@@ -116,10 +115,10 @@ void GroupServerApp::Initialize()
 	}
 	
 	//l_line<<newln<<"ChaNameFilter.txt"<<endln;
-	l_line<<newln<<"begin load ChaNameFilter.txt"<<endln;
+	ToLogService("Connect", "begin load ChaNameFilter.txt");
 	CTextFilter::LoadFile("ChaNameFilter.txt");
 	//l_line<<newln<<":"<<l_port<<endln;
-	l_line<<newln<<"begin listen port:"<<l_port<<endln;
+	ToLogService("Connect", "begin listen port:{}", l_port);
 	if(OpenListenSocket(l_port,l_ip.c_str()))
 	{
 		//THROW_EXCP(excpSock,l_ip<<","<<l_port<<" "<<l_port<<"GroupServer.cfgListen_IP");
@@ -128,21 +127,21 @@ void GroupServerApp::Initialize()
 		THROW_EXCP(excpSock,l_content);
 	}
 	//l_line<<newln<<":"<<l_port<<""<<endln;
-	l_line<<newln<<"open listen port:"<<l_port<<"success, init is ok"<<endln;
+	ToLogService("Connect", "open listen port:{}success, init is ok", l_port);
 }
 
 void InitDBSvrConnect(GroupServerApp &gpapp)
 {
-	LG("group_sql", RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00030));
+	ToLogService("group_sql", "{}", RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00030));
 	string	l_errinfo;
 
 	const std::string	dsn = gpapp.m_cfg["Database"]["dsn"];
 	gpapp.m_cfg_db.enable_errinfo();
 
-	LG("group_sql", "begin connect database, ip = [%s]", dsn.c_str());
+	ToLogService("group_sql", "begin connect database, ip = [{}]", dsn.c_str());
 	if(!gpapp.m_cfg_db.connect(dsn,l_errinfo))
 	{
-		LG("group_sql", "connect database failed, error[%s]\n", l_errinfo.c_str());
+		ToLogService("group_sql", "connect database failed, error[{}]", l_errinfo.c_str());
 		THROW_EXCP(excpDB,l_errinfo.c_str());
 	} 
 	/*gpapp.m_tblsystem		=new TBLSystem(&(gpapp.m_cfg_db));
@@ -154,7 +153,7 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 		THROW_EXCP(excpDB,"GroupServer...");
 	}*/
 
-	LG("group_sql", "connect database ok, begin init datatable\n");
+	ToLogService("group_sql", "connect database ok, begin init datatable");
 
 	gpapp.m_tblaccounts		=new TBLAccounts(&(gpapp.m_cfg_db));
 	gpapp.m_tblcharaters	=new TBLCharacters(&(gpapp.m_cfg_db));
@@ -165,28 +164,28 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 	gpapp.m_tbLparam		=new TBLParam(&(gpapp.m_cfg_db));
 	
 	//LG("group_sql", " account \n");
-	LG("group_sql", "begin check table [account] \n");
+	ToLogService("group_sql", "begin check table [account]");
 	if(!gpapp.m_tblaccounts->IsReady())
 	{
 		//LG("group_sql", " account \n");
-		LG("group_sql", " check table [account] failed\n");
+		ToLogService("group_sql", " check table [account] failed");
 		//THROW_EXCP(excpDB,"");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00003));
 	}
 	
 	//LG("group_sql", "  \n");
-	LG("group_sql", "begin check table [guild]\n");
+	ToLogService("group_sql", "begin check table [guild]");
 	if(!gpapp.m_tblguilds->IsReady())
 	{
 		//LG("group_sql", "  \n");
-		LG("group_sql", " check table [guild] failed \n");
+		ToLogService("group_sql", " check table [guild] failed");
 		//THROW_EXCP(excpDB,"SQL");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00004));
 	}
 	gpapp.m_tblcharaters->ZeroAddr();
 
 	//LG("group_sql", " param \n");
-	LG("group_sql", "begin check table [param]\n");
+	ToLogService("group_sql", "begin check table [param]");
 
 	//if(!gpapp.m_tbLparam->IsReady())
 	//{
@@ -197,7 +196,7 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 
 	if(gpapp.m_tbLparam->InitParam())
 	//LG("group_sql", "\n");
-	LG("group_sql", "init database success\n");
+	ToLogService("group_sql", "init database success");
 }
 
 void InitACTSvrConnect(GroupServerApp &gpapp)

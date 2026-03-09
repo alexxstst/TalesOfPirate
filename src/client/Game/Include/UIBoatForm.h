@@ -28,8 +28,7 @@ private:
 	static void _evtHoldGridRMouse(CGuiData *pSender,CCommandObj* pItem,int nGridID);
 	static void _evtEscClose( CForm* pForm );	//  ESC   add by Philip.Wu  2006-06-22
 
-private:
-	int				_nIndex;
+int				_nIndex;
 
 	CCharacter*		_chtBoat;
 	CForm*			_frmShipRoom;
@@ -65,8 +64,7 @@ protected:
 private:
 	CBoat*		GetFreeBoat(); // 
 
-private:
-	CCharacter*	_pHuman;
+CCharacter*	_pHuman;
 	CBoat		_cBoats[defMaxBoat];        // 
 	CBoat		_cOther;					// 
 

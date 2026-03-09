@@ -24,8 +24,7 @@ public:
 private:
 	void	Reset( CSceneItem* pItem );
 
-private:
-	enum eStyle
+enum eStyle
 	{
 		enumNone,
 		enumAttack,

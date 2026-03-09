@@ -25,8 +25,7 @@ public:
 		tsEnd,
 	};
 
-public:
-	CPageItem(CForm& frmOwn);
+CPageItem(CForm& frmOwn);
 	CPageItem( const CPageItem& rhs );
 	CPageItem& operator=(const CPageItem& rhs);
 	virtual ~CPageItem(void);
@@ -39,8 +38,7 @@ public:
 
     virtual CCompent*   GetHintCompent( int x, int y );
 
-public:
-	void			RenderTitle()				{ _pTitle->Render();}
+void			RenderTitle()				{ _pTitle->Render();}
 
 	void			SetIndex( unsigned int n )	{ _nIndex = n;		}
 	unsigned int	GetIndex()					{ return _nIndex;	}
@@ -75,8 +73,7 @@ public:
 		bpEnd,
 	};
 
-public:
-	CPage(CForm& frmOwn);
+CPage(CForm& frmOwn);
 	CPage( const CPage& rhs );
 	CPage& operator=(const CPage& rhs);
 	virtual ~CPage(void);
@@ -93,8 +90,7 @@ public:
 	virtual CGuiPic*		GetImage()							{ return _pImage;				}
     virtual CCompent*       GetHitCommand( int x, int y );
 
-public:
-	void			SetIndex( unsigned int n );		// 
+void			SetIndex( unsigned int n );		// 
 	int				GetIndex()									{ return _nIndex;				}
 	CPageItem*		GetPage( unsigned int n );
 
@@ -104,8 +100,7 @@ public:
 	void			SetButtonPutStyle( eButtonPos style )		{ _eButtonPos=style;			}
 	void			SetButtonMargin( int n )					{ if(n>0) _nButtonMargin=n;		}
 
-public:
-	GuiEvent		evtSelectPage;			// 
+GuiEvent		evtSelectPage;			// 
 
 private:
 	void			_RefreshButtonPos();

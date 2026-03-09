@@ -286,7 +286,7 @@ void CAttackEffect::CreateEffect( int eType, const char* str, D3DXVECTOR3& start
     CEffectObj	*pEffect = CGameApp::GetCurScene()->GetFirstInvalidEffObj();
 	if(pEffect==NULL)
     {
-        LG("error", g_oLangRec.GetString(147));
+        ToLogService("error", "{}", g_oLangRec.GetString(147));
         return;
     }
 

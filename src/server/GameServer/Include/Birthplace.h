@@ -85,7 +85,7 @@ inline SBirthPoint* GetRandBirthPoint(const char *pszChaName, const char *pszLoc
 	if(pBirth==NULL)
 	{
 		//LG("birth_error", "[%s], Cha = [%s], \n", pszLocation, pszChaName);
-		LG("birth_error", "invalid birth place[%s], Cha = [%s],will force to silver city\n", pszLocation, pszChaName);
+		ToLogService("birth_error", "invalid birth place[{}], Cha = [{}],will force to silver city", pszLocation, pszChaName);
 		pBirth = g_BirthMgr.GetRandBirthPoint(RES_STRING(GM_BIRTHPLACE_H_00001));
 	}
 	return pBirth;

@@ -29,7 +29,7 @@ bool CSceneSign::Init( CGameScene* pScene )
 	}
     else
     {
-        LG( "init", g_oLangRec.GetString(377) );
+        ToLogService("init", "{}", g_oLangRec.GetString(377));
         return false;
     }
 
@@ -44,7 +44,7 @@ bool CSceneSign::Init( CGameScene* pScene )
 	}
     else
     {
-        LG( "init", g_oLangRec.GetString(378) );
+        ToLogService("init", "{}", g_oLangRec.GetString(378));
         return false;
     }
 
@@ -56,7 +56,7 @@ bool CSceneSign::Init( CGameScene* pScene )
     }
     else
     {
-        LG( "init", g_oLangRec.GetString(379) );
+        ToLogService("init", "{}", g_oLangRec.GetString(379));
         return false;
     }
 	return true;

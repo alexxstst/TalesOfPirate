@@ -15,13 +15,13 @@
 CEvent::CEvent( CGameScene* pScene ) 
 : _pScene(pScene)	
 { 
-	LG( "event", "new\n" );
+	ToLogService("event", "new");
 	Init();	
 }
 
 CEvent::~CEvent()
 {
-	LG( "event", "del\n" );
+	ToLogService("event", "del");
 }
 
 bool CEvent::DistanceTrigger( int x, int y )

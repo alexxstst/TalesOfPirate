@@ -18,8 +18,7 @@ public:
 	virtual void BeginAction( CCharacter* pCha, DWORD type, void* param, CActionState* pState )	{}
 	virtual void EndAction( CActionState* pState )		{}
 
-public:
-	bool Connect(const char *hostname,unsigned short port,unsigned long timeout);
+bool Connect(const char *hostname,unsigned short port,unsigned long timeout);
 	void Disconnect(int reason);
 
 	bool SendPrivateKey();

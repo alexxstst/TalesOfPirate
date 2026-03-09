@@ -20,7 +20,7 @@
 #define NETMSG_GATE_DISCONNECT  101
 #define NETMSG_PACKET           200
 
-#define EXCEPTION()	LG("EXCEPTION", "ExceptionFile %sLine %d\n", __FILE__, __LINE__)
+#define EXCEPTION()	ToLogService("EXCEPTION", "ExceptionFile {}Line {}", __FILE__, __LINE__)
 
 inline const char* g_GameGateConnError( int error_code )
 {

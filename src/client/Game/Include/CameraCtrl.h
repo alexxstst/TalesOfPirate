@@ -127,8 +127,7 @@ public:
 		m_iType = -1;
 	}
 
-public:
-	void	GetEyePos(D3DXVECTOR3& vpos,D3DXVECTOR3& vRefPos);
+void	GetEyePos(D3DXVECTOR3& vpos,D3DXVECTOR3& vRefPos);
 	bool	ScroolFB(float fStep);
 	void	ScroolLR(float fstep);
 	void	ScrollUD(float fStep);
@@ -139,7 +138,6 @@ public:
     void    SetCameraDither(BOOL flag);
 
 	//void	SetTerrainShow(bool bcull);
-public:
 	int			m_iType;
 	SCameraMode* m_pModel;
 
@@ -199,8 +197,7 @@ public:
 	float	MAX_SCALE;
 	float	MIN_SCALE;
 
-public:
-	//
+//
 	void	SetBufVel(DWORD	dwVel, int iCha)
 	{
 		//m_maxVel = ((float)dwVel ) / 100;
@@ -217,7 +214,6 @@ public:
 	void	Update();
 
 	void	SetViewTransform();
-public:
 	INT							m_iCha;
 	D3DXVECTOR3					m_vCurPos;
 

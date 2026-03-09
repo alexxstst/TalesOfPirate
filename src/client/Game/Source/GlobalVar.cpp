@@ -48,7 +48,7 @@ CLanguageRecord& CLanguageRecordInstance() {
 }
 
 
-bool	volatile	g_bLoadRes				  = FALSE;
+bool		g_bLoadRes				  = FALSE;
 CGameApp*	        g_pGameApp	              = NULL;
 
 CEffectSet*	        CEffectSet::_Instance     = NULL;

@@ -217,7 +217,7 @@ public:
 			D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0,
 			D3DPOOL_DEFAULT, &_pVB ) ) )
 		{
-			LG("ERROR","msgCSMCha::CreateVertexBuffer");
+			ToLogService("ERROR","msgCSMCha::CreateVertexBuffer");
 			return FALSE;
 		}
 
@@ -260,7 +260,7 @@ public:
 #ifdef MGR
 			if(FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A4R4G4B4)))
 			{
-				LG("ERROR","msg%s",pszName[n]);
+				ToLogService("ERROR","msg{}", pszName[n]);
 				return FALSE;
 			}
 #else
@@ -280,7 +280,7 @@ public:
 				&_pTex[n]);//
 			if(!_pTex[n])
 			{
-				LG("ERROR","msgCSMCha::no found file :texture\\minimap\\arraw.tga");
+				ToLogService("ERROR","msgCSMCha::no found file :texture\\minimap\\arraw.tga");
 				return FALSE;
 			}
 #endif
@@ -434,7 +434,6 @@ public:
 		g_Render.SetFVF(D3DFVF_M2DWA);
 		g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&_vWndVer,sizeof(M2D_AVER));
 	}
-public:
 	IDirect3DDeviceX*		m_pDev;
 
 	std::vector<MNPC_PARAM>		_vecNpc;
@@ -462,7 +461,6 @@ protected:
 	M2D_AVER					_vWndVer[4];
 
 
-private:
 };
 
 class CSMallMap2D: public CSMallWnd
@@ -642,7 +640,6 @@ public:
 	void	LoadCha(DWORD dwID, bool IsMonster = false);
 
 	bool	IsLoad(){ return _bLoad; }
-public:
 	bool					_bLoad;
 	D3DVIEWPORTX			_vp;
 	D3DXVECTOR3				_vPos;
@@ -746,7 +743,7 @@ public:
 		{
 			if(FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A4R4G4B4)))
 			{
-				LG("ERROR",g_oLangRec.GetString(395),pszName[n]);
+				ToLogService("ERROR", "{} {}", g_oLangRec.GetString(395), pszName[n]);
 				//return FALSE;
 				_pTex[n] = NULL;
 			}
@@ -966,8 +963,7 @@ public:
 	//		pData[potion] |= value;
 	//}
 
-public:
-	static CMaskData* g_MaskData;
+static CMaskData* g_MaskData;
 
 	long iLength;
 	int iNumX,iNumY;

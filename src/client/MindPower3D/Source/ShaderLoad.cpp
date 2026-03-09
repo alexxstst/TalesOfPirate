@@ -232,7 +232,7 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
             sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
             if (LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, 0, decl_tab[i], decl_size[i], 1)))
             {
-                LG_MSGBOX("Load Vertex Shader Error");
+                ToLogService("default", "msgLoad Vertex Shader Error");
                 return LW_RET_FAILED; // como no original
             }
         }
@@ -266,7 +266,7 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
 
 __ret:
     if (ret != LW_RET_OK)
-        LG_MSGBOX("LoadShader0 error");
+        ToLogService("default", "msgLoadShader0 error");
     return ret;
 }
 
@@ -471,7 +471,7 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
 
         if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, 0, decl_tab[i], decl_size[i], 1)))
         {
-            LG_MSGBOX("Load Vertex Shader Error\n%s", shader_file[i]);
+            ToLogService("default", "msgLoad Vertex Shader Error\n{}", shader_file[i]);
             goto __ret;
         }
     }
@@ -483,7 +483,7 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
 __ret:
     if(ret != LW_RET_OK)
     {
-        LG_MSGBOX("LoadShader1 error");
+        ToLogService("default", "msgLoadShader1 error");
     }
 
     return ret;

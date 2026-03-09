@@ -130,7 +130,7 @@ inline  void	Part_bind(CMagicEff* pEffCtrl)
 	skip:
 			if(pCha->GetObjDummyRunTimeMatrix(&tMat,pEffCtrl->_iDummy))
 			{
-				LG("error",g_oLangRec.GetString(55),pEffCtrl->_iIdxID ,pEffCtrl->_iDummy, pCha->GetDefaultChaInfo()->szName );
+				ToLogService("error", "{} {} {}", g_oLangRec.GetString(55), pEffCtrl->_iIdxID, pEffCtrl->_iDummy, pCha->GetDefaultChaInfo()->szName);
 				const auto v = D3DXVECTOR3(0, 0, 0);
 				pEffCtrl->MoveTo(&v);
 				return;
@@ -853,7 +853,7 @@ BOOL	CMagicEff::Create(Eff_Property* pProperty,CMPResManger	*pCResMagr)
 	int id = pCResMagr->GetPartCtrlID(pProperty->m_strName);
 	if(id < 0)
 	{
-		LG("error" ,"msgCan't find eff file [%s]",pProperty->m_strName.c_str());
+		ToLogService("error", "msgCan't find eff file [{}]", pProperty->m_strName.c_str());
 		return FALSE;
 	}
 
@@ -1435,7 +1435,7 @@ void	CMagicEff::SetInvalidByTime(DWORD dwDailTime)
 	if (dwDailTime - _dwStartTime > time )
 	{
 		SetValid(false);
-		LG( "effect", "SetInvalidByTime _iIdxID:%d\n", _iIdxID );
+		ToLogService("effect", "SetInvalidByTime _iIdxID:{}", _iIdxID);
 	}
 	return;
 }

@@ -1,0 +1,172 @@
+﻿╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 10.03.2026 1:19:13.
+
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer;GateServer;GroupServer).
+     1>ValidateSolutionConfiguration:
+         ╨б╨╛╨╖╨┤╨░╨╜╨╕╨╡ ╨║╨╛╨╜╤Д╨╕╨│╤Г╤А╨░╤Ж╨╕╨╕ ╤А╨╡╤И╨╡╨╜╨╕╤П "Debug|x64".
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj" (12) ╨▓ ╤Г╨╖╨╗╨╡ 3 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    12>D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    12>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj" (13) ╨▓ ╤Г╨╖╨╗╨╡ 2 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    13>D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    13>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (11) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    11>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (11) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj" (12:2) ╨▓ ╤Г╨╖╨╗╨╡ 3 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    12>D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    11>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (11) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:2) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    11>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (11) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj" (13:2) ╨▓ ╤Г╨╖╨╗╨╡ 2 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    13>D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+    13>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+    12>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\client\MindPower3D\MindPower3D.vcxproj.metaproj" (10) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    10>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\client\MindPower3D\MindPower3D.vcxproj.metaproj" (10) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:3) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\server\GameServer\GameServer.vcxproj.metaproj" (9) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     9>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\server\GameServer\GameServer.vcxproj.metaproj" (9) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:4) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj.metaproj" (8) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     8>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj.metaproj" (8) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:5) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj.metaproj" (7) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     7>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj.metaproj" (7) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:6) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\server\AccountServer\AccountServer.vcxproj.metaproj" (6) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     6>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\server\AccountServer\AccountServer.vcxproj.metaproj" (6) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:7) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Common\Common.vcxproj.metaproj" (5) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     5>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\common\Common\Common.vcxproj.metaproj" (5) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:8) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\CryptoLib\CryptoLib.vcxproj.metaproj" (4) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     4>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\common\CryptoLib\CryptoLib.vcxproj.metaproj" (4) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:9) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Network\Network.vcxproj.metaproj" (3) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     3>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\common\Network\Network.vcxproj.metaproj" (3) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:10) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     4>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\CryptoLib\CryptoLib.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     3>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Network\Network.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Localization\Localization.vcxproj.metaproj" (2) ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+     2>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\common\Localization\Localization.vcxproj.metaproj" (2) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (14:11) ╨▓ ╤Г╨╖╨╗╨╡ 5 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    14>D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    14>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     2>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Localization\Localization.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+    10>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\client\MindPower3D\MindPower3D.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     9>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\server\GameServer\GameServer.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     5>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\Common\Common.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+    11>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     8>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     7>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     6>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\server\AccountServer\AccountServer.vcxproj.metaproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (1) ╨▓╤Л╨┐╨╛╨╗╨╜╤П╨╡╤В ╤Б╨▒╨╛╤А╨║╤Г "D:\Projects\MMORPG\TalesOfPirate\src\common\FileCleaner\FileCleaner.fsproj" (15) ╨▓ ╤Г╨╖╨╗╨╡ 4 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer).
+    15>D:\Projects\MMORPG\TalesOfPirate\src\common\FileCleaner\FileCleaner.fsproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+    15>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\common\FileCleaner\FileCleaner.fsproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+     1>╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л AccountServer;GateServer;GroupServer) ╤Б ╨╛╤И╨╕╨▒╨║╨╛╨╣.
+
+╨Ю╤И╨╕╨▒╨║╨░ ╤Б╨▒╨╛╤А╨║╨╕.
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (12) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (13) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (11) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (12:2) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\client\VimD3DLib\VimD3DLib.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (11) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:2) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\Game\Game.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (11) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (13:2) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\client\AudioSDL\AudioSDL.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\client\MindPower3D\MindPower3D.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (10) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:3) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\server\GameServer\GameServer.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (9) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:4) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (8) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:5) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (7) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:6) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\server\AccountServer\AccountServer.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (6) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:7) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Common\Common.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (5) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:8) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\CryptoLib\CryptoLib.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (4) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:9) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Network\Network.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (3) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:10) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Localization\Localization.vcxproj.metaproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (2) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (14:11) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\Utils\Utils.vcxproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+
+       "D:\Projects\MMORPG\TalesOfPirate\src\TalesOfPirate.sln" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer;GateServer;GroupServer ) (1) ->
+       "D:\Projects\MMORPG\TalesOfPirate\src\common\FileCleaner\FileCleaner.fsproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В AccountServer ) (15) ->
+         D:\Projects\MMORPG\TalesOfPirate\src\common\FileCleaner\FileCleaner.fsproj : error MSB4057: ╨▓ ╨┐╤А╨╛╨╡╨║╤В╨╡ ╨╜╨╡╤В ╤Ж╨╡╨╗╨╡╨▓╨╛╨│╨╛ ╨╛╨▒╤К╨╡╨║╤В╨░ "AccountServer".
+
+    ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 0
+    ╨Ю╤И╨╕╨▒╨╛╨║: 16
+
+╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:01.40

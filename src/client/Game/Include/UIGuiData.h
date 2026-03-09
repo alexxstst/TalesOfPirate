@@ -92,7 +92,6 @@ namespace GUI {
 			stEnd,
 		};
 
-	public:
 		CDrag();
 
 		void SetYare(unsigned int n) {
@@ -186,7 +185,6 @@ namespace GUI {
 			return _crDrag;
 		}
 
-	public:
 		GuiMouseEvent evtMouseDragBegin; //
 		GuiMouseEvent evtMouseDragMove; //
 		GuiMouseEvent evtMouseDragEnd; //
@@ -347,16 +345,15 @@ public:							\
 		virtual void Reset() {
 		}; // ,
 
-	public:
 		static HWND GetHWND(); // windows handle
 		static CGuiData* GetGui(std::uint32_t dwID) {
 			//
 			if (dwID == 0) {
-				LG("gui", "NULL GUI\n");
+				ToLogService("gui", "NULL GUI");
 				return NULL;
 			}
 			if (dwID > _AllGui.size()) {
-				LG("gui", "BIG[%d] GUI\n", dwID);
+				ToLogService("gui", "BIG[{}] GUI", dwID);
 				return NULL;
 			}
 			return _AllGui[dwID - 1];
@@ -371,7 +368,6 @@ public:							\
 			return _pHintItem;
 		}
 
-	public:
 		DWORD GetID() {
 			return _dwID;
 		}
@@ -479,7 +475,6 @@ public:							\
 
 		int nTag;
 
-	public:
 		bool InRect(int x, int y) {
 			return _IsMouseIn = (x >= _nX1 && x <= _nX2 && y >= _nY1 && y <= _nY2);
 		}
@@ -520,7 +515,6 @@ public:							\
 		virtual void _AddForm() {
 		} // Form
 
-	protected:
 		typedef std::vector<CGuiData*> vcs;
 		static vcs _AllGui; //
 
@@ -543,7 +537,6 @@ public:							\
 
 		void* _pVoid;
 
-	protected:
 		int _ScreenX(int x) {
 			return (int)(((float)(x)) / _fScreenX);
 		}
@@ -612,7 +605,7 @@ public:							\
 			}
 		}
 
-	public: // event
+		// event
 		GuiTimerEvent evtTime;
 
 	private:
@@ -628,7 +621,6 @@ public:							\
 
 		bool _IsRelease;
 
-	private:
 		CGuiTime(DWORD dwInterval = 0, GuiTimerEvent evt = NULL);
 		~CGuiTime();
 		void OnTime(DWORD dwTime);

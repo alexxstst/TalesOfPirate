@@ -181,7 +181,6 @@ namespace GUI
 		static void _evtDragItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 		static void _MoveItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	private:
 		// 
 		CForm*			frmStore;			// 
 		CTreeView*		trvStore;			// 
@@ -244,8 +243,6 @@ namespace GUI
 		static void	_evtStoreListMouseRClick(CGuiData *pSender, int x, int y, DWORD key);
 		static void	_evtStoreListMouseDBClick(CGuiData *pSender, int x, int y, DWORD key);
 
-	private:
-
 		// 
 		CForm*			frmStoreLoad;
 		CProgressBar*	proStoreLoad;
@@ -254,8 +251,6 @@ namespace GUI
 		DWORD			_dwDarkScene;
 
 		static const int STORE_OPEN_TIMEOUT = 15;	// 
-
-	private:
 
 		// 
 		static const int STORE_ITEM_COUNT = 6;	// 
@@ -266,8 +261,6 @@ namespace GUI
 
 		static void _evtStoreViewAllMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 		static void _evtStoreViewAllLostEvent(CGuiData *pSender);
-
-	private:
 
 		// (Avata)
 		CForm*			frmTryon;		// 

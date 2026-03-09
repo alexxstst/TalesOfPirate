@@ -41,7 +41,7 @@ bool CForgeMgr::Init()
 	frmNPCforge  = mgr.Find("frmNPCforge" );
 	if ( !frmNPCforge )
 	{	
-		LG("gui", g_oLangRec.GetString(560));
+		ToLogService("gui", "{}", g_oLangRec.GetString(560));
 		return false;
 	}
 	

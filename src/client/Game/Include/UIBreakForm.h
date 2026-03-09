@@ -46,8 +46,7 @@ namespace GUI
         static void _evtDragItemBase3(CGuiData *pSender,CCommandObj* pItem,bool& isAccept);
         static void _evtDragItemBase4(CGuiData *pSender,CCommandObj* pItem,bool& isAccept);
 
-    private:
-        CForm*          frmBreak;
+		CForm*          frmBreak;
         COneCommand*    cmdBreak[BREAK_COUNT];
         int             iBreakPos[BREAK_COUNT];
         CTextButton*	btnForgeYes;

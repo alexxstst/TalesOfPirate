@@ -6,8 +6,7 @@ public:
 	CDrawPointList();
 	~CDrawPointList();
 
-public:
-	void Clear()					{ points.clear();		}
+void Clear()					{ points.clear();		}
 	void Add( D3DXVECTOR3 p, DWORD c=0xff00ffff, float h=0.0 );
 	void Add( int x, int y, DWORD c=0xff00ffff, float h=0.0 );
 	void Reader();

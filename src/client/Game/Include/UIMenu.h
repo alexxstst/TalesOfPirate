@@ -99,7 +99,7 @@ public:
 	CFramePic*			GetBkgImage()				{ return _pImage;		}
 	CMenuItem*			GetSelectMenu()				{ return _pSelectMenu;	}
 
-public:	// 
+	// 
 	GuiEvent			evtSelectChange;			// 
 	GuiMouseEvent		evtListMouseDown;			// 
 
@@ -122,8 +122,7 @@ private:
 	void				_Copy( const CMenu& rhs );
 	void				_MenusClear();
 
-private:
-	CMenuItem*			_pSelectMenu;	// 
+CMenuItem*			_pSelectMenu;	// 
 
 	int		_nStartX, _nStartX2;
 	int		_nStartY, _nStartY2;

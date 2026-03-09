@@ -67,7 +67,7 @@ bool CBourseMgr::Init()
 		frmSeaTrade = mgr.Find("frmSeaTrade", enumMainForm);
 		if ( !frmSeaTrade)
 		{
-			LG("gui", g_oLangRec.GetString(456));
+			ToLogService("gui", "{}", g_oLangRec.GetString(456));
 			return false;
 		}
 		frmSeaTrade->evtEntrustMouseEvent = _MainMouseSeaTradeEvent ;
@@ -464,7 +464,7 @@ void CBourseMgr::SetItems()
 	BYTE byTradeLevel = GetTradeLevel();
 	if (byTradeLevel == ERR_TRADE_LEVEL)
 	{
-		LG("Error", "No GoodGrid.");
+		ToLogService("Error", "No GoodGrid.");
 	}
 
 	//
@@ -483,9 +483,9 @@ void CBourseMgr::SetItems()
 		}
 		if (!grdItemBuy->SetItem(iIndex, pItem))
 		{
-			LG("Error", g_oLangRec.GetString(462));
+			ToLogService("Error", "{}", g_oLangRec.GetString(462));
 		}
-	} //end of for 
+	} //end of for
 
 	//
 	iIndex = 0;
@@ -499,7 +499,7 @@ void CBourseMgr::SetItems()
 		pItem->GetData().sNum = m_SaleList[iIndex]->wNum;
 		if (!grdItemSale->SetItem(iIndex, pItem))
 		{
-			LG ("Error", g_oLangRec.GetString(462));
+			ToLogService("Error", "{}", g_oLangRec.GetString(462));
 		}
 	}
 }
@@ -779,21 +779,21 @@ bool CBlackTradeMgr::Init()
 	frmBlackTrade = mgr.Find("frmBlackTrade");
 	if(! frmBlackTrade)
 	{
-		LG("gui", "frmBlackTrade not Found.\n");
+		ToLogService("gui", "frmBlackTrade not Found.");
 		return false;
 	}
 
 	grdItemSale = dynamic_cast<CGoodsGrid*>(frmBlackTrade->Find("grdItemSale"));
 	if(! grdItemSale)
 	{
-		LG("gui", "frmBlackTrade:grdItemSale not Found.\n");
+		ToLogService("gui", "frmBlackTrade:grdItemSale not Found.");
 		return false;
 	}
 
 	grdItemBuy = dynamic_cast<CGoodsGrid*>(frmBlackTrade->Find("grdItemBuy"));
 	if(! grdItemBuy)
 	{
-		LG("gui", "frmBlackTrade:grdItemBuy not Found.\n");
+		ToLogService("gui", "frmBlackTrade:grdItemBuy not Found.");
 		return false;
 	}
 

@@ -36,7 +36,7 @@ bool CBoat::Init( int n, CForm* ship, GuiDragInGridEvent evt )  //
 	_grdHold = dynamic_cast<CGoodsGrid*>(_frmShipRoom->Find("grdRoom"));
 	if( !_grdHold ) 
 	{
-		LG("gui", g_oLangRec.GetString(443) );
+		ToLogService("gui", "{}", g_oLangRec.GetString(443));
 		return false;
 	}
 
@@ -207,7 +207,7 @@ CCharacter* CBoatMgr::ChangeMainCha( unsigned int ulWorldID ) //
 	}
 	else
 	{
-		LG( "error", g_oLangRec.GetString(444), ulWorldID );
+		ToLogService("error", "{} {}", g_oLangRec.GetString(444), ulWorldID);
 	}
 	return pCha;
 }

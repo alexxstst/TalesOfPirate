@@ -27,7 +27,6 @@ struct LitInfo
 
 class LitMgr
 {
-private:
     LitInfo* _lit_seq;
     DWORD _lit_num;
 

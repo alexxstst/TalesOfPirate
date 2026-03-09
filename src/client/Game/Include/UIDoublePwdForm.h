@@ -119,8 +119,6 @@ namespace GUI
 
 		int lockGridID; //TODO: No default value
 
-	private:
-
 		// 
 		static void _evtCreateFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 

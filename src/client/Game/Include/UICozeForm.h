@@ -68,12 +68,7 @@ public:
 	sTextInfo		GetMsgInfo();
 
 
-private:
-
-
-private:
-
-	static const WORD			m_wTotalChannelsCount = 12;	//  10 -> 11
+static const WORD			m_wTotalChannelsCount = 12;	//  10 -> 11
 	static const DWORD			m_dwChannelBufferSize = 100;
 	static sChannelInfo			m_sChannelInfo[m_wTotalChannelsCount];
 	static lstTextInfoType		m_lstMsgLink;
@@ -184,8 +179,7 @@ protected:
 
 	CCharMsg::eChannel	GetCmdFromMsg(std::string strMsg);
 
-protected:
-	static void EventPublishShowForm(CForm* pForm, bool& IsShow);
+static void EventPublishShowForm(CForm* pForm, bool& IsShow);
 	static void EventPublishSendMsg(CGuiData *pSender);
 	static bool EventGlobalKeyDownHandle(int& key);
 	static void EventSendMsg(CGuiData *pSender);

@@ -76,11 +76,11 @@ static auto split2 = [](const std::string& line, char delim)
 
 
 bool CGameConfig::Load(char* pszFileName) {
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("init", "Load Game Config File(Text Mode) [{}]", pszFileName);
 
 	ifstream in(pszFileName);
 	if (in.is_open() == 0) {
-		LG("init", "msgLoad Game Config File(Text Mode) [%s] error! \n", pszFileName);
+		ToLogService("init", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
 		return false;
 	}
 	string strPair[2];
@@ -107,7 +107,7 @@ bool CGameConfig::Load(char* pszFileName) {
 		}
 
 		if (trimLine[0] == '[') {
-			Log("\n%s\n", trimLine.c_str());
+			ToLog("{}", trimLine);
 			continue;
 		}
 
@@ -227,10 +227,6 @@ bool CGameConfig::Load(char* pszFileName) {
 		else if (strKey == "res_dir") {
 			strcpy(m_szResDir, strValue.c_str());
 		}
-		else if (strKey == "log_dir") {
-			strcpy(m_szLogDir, strValue.c_str());
-			LG_SetDir(m_szLogDir);
-		}
 		else if (strKey == "db_mapmask") {
 			m_chMapMask = Str2Int(strValue);
 		}
@@ -274,11 +270,11 @@ bool CGameConfig::Load(char* pszFileName) {
 }
 
 bool CGameConfig::Reload(char* pszFileName) {
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("init", "Load Game Config File(Text Mode) [{}]", pszFileName);
 
 	ifstream in(pszFileName);
 	if (in.is_open() == 0) {
-		LG("init", "msgLoad Game Config File(Text Mode) [%s] error! \n", pszFileName);
+		ToLogService("init", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
 		return false;
 	}
 	string strPair[2];
@@ -298,9 +294,9 @@ bool CGameConfig::Reload(char* pszFileName) {
 			strComment = "";
 		}
 		Util_TrimString(strLine);
-		if (strLine.size() == 0) continue;
+		if (strLine.empty()) continue;
 		if (strLine[0] == '[') {
-			Log("\n%s\n", strLine.c_str());
+			ToLog("{}", strLine);
 			continue;
 		}
 
@@ -371,17 +367,17 @@ void CGameCommand::SetDefault() {
 	strcpy(m_cDistance, "distance");
 }
 
-bool CGameCommand::Load(const char* pszFileName) {
+bool CGameCommand::Load(const std::string& pszFileName) {
 	//printf("Loading %s ", pszFileName);
 
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("init", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	ifstream in(pszFileName);
 	if (in.is_open() == 0) {
-		LG("init", "msgLoad Game Config File(Text Mode) [%s] error! \n", pszFileName);
+		ToLogService("init", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
 		return false;
 	}
 	string strPair[2];
-	string strComment;
+	//string strComment;
 	string strLine;
 	char szLine[255];
 	while (!in.eof()) {
@@ -390,17 +386,18 @@ bool CGameCommand::Load(const char* pszFileName) {
 		auto p = strLine.find("//");
 		if (p != std::string::npos) {
 			string strLeft = strLine.substr(0, p);
-			strComment = strLine.substr(p + 2, strLine.size() - p - 2);
+			// strComment = strLine.substr(p + 2, strLine.size() - p - 2);
 			strLine = strLeft;
 		}
-		else {
-			strComment = "";
-		}
+		// else {
+		// 	strComment = "";
+		// }
+
 		Util_TrimString(strLine);
-		if (strLine.size() == 0)
+		if (strLine.empty())
 			continue;
 		if (strLine[0] == '[') {
-			Log("\n%s\n", strLine.c_str());
+			ToLog("{}", strLine);
 			continue;
 		}
 		int n = Util_ResolveTextLine(strLine.c_str(), strPair, 2, '=');

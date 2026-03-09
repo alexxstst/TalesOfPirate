@@ -26,7 +26,6 @@ public:
 		CONST D3DXVECTOR2* pTranslation, D3DCOLOR Color);
 	void			Begin(){}
 	void			End();
-public:
 	IDirect3DDeviceX*		m_pDev;
 protected:
 	IDirect3DVertexBufferX* _lpVB;
@@ -63,7 +62,7 @@ public:
 	void SetClipRect( int x, int y, int w, int h );
 	void Reset();
 
-public:	// GUI
+	// GUI
 	void SetScreen( int w, int h, bool isFull );			// 
 
 	// GUI
@@ -126,8 +125,7 @@ private:
 	int				_nGuiWidth, _nGuiHeight;		// GUI,
 	bool			_IsFullScreen;
 
-private:
-	//LPTEXTURE		_pTex;				// 
+//LPTEXTURE		_pTex;				// 
     int             _nTex;				// 
 	int             _nOutLine ;         // 
 	RECT			_rtFrame;			// 

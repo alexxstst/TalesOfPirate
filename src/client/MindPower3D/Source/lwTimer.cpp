@@ -2,10 +2,10 @@
 #include "stdafx.h"
 #include "lwTimer.h"
 
+#include "CrushSystem.h"
+
 LW_BEGIN
-
-
-//////////////
+	//////////////
 // lwTimer
 LW_STD_IMPLEMENTATION(lwTimer)
 
@@ -228,6 +228,8 @@ DWORD lwTimer::GetTickCount()
 // lwTimerThread
 DWORD WINAPI lwTimerThreadInfo::__thread_proc(void* param)
 {
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+
     lwTimerThreadInfo* info = (lwTimerThreadInfo*)param;
 
     while(info->thread_state == lwTimerThreadInfo::STATE_RUN)

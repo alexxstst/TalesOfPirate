@@ -42,7 +42,7 @@ bool CEditor::Init()
     frmEditor = mgr.Find("frmEditor");
     if( !frmEditor ) 
     {
-        LG("gui", g_oLangRec.GetString(527));
+        ToLogService("gui", "{}", g_oLangRec.GetString(527));
         return false;
     }
     frmEditor->evtShow = _ShowEditor;

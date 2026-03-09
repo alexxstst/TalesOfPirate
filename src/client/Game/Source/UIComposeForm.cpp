@@ -185,21 +185,21 @@ namespace GUI
         frmCompose = mgr.Find("frmCompose");
         if(!frmCompose)
         {
-            LG("gui", "frmCompose not found.\n");
+            ToLogService("gui", "frmCompose not found.");
             return false;
         }
 
         labInput = dynamic_cast<CLabelEx*>(frmCompose->Find("labCharOutput"));
         if(!labInput)
         {
-            LG("gui", "frmCompose::labCharOutput not found.\n");
+            ToLogService("gui", "frmCompose::labCharOutput not found.");
             return false;
         }
 
         edtNumInput = dynamic_cast<CEdit*>(frmCompose->Find("edtNumInput"));
         if(!edtNumInput)
         {
-            LG("gui", "frmCompose::edtNumInput not found.\n");
+            ToLogService("gui", "frmCompose::edtNumInput not found.");
             return false;
         }
         edtNumInput->SetCaption("1");
@@ -207,7 +207,7 @@ namespace GUI
         proCompose = dynamic_cast<CProgressBar*>(frmCompose->Find("proCompose"));
         if(!proCompose)
         {
-            LG("gui", "frmCompose::proCompose not found.\n");
+            ToLogService("gui", "frmCompose::proCompose not found.");
             return false;
         }
         proCompose->evtTimeArrive = _ProTimeArriveEvt;
@@ -215,7 +215,7 @@ namespace GUI
         btnForgeYes = dynamic_cast<CTextButton*>(frmCompose->Find("btnForgeYes"));
         if(!btnForgeYes)
         {
-            LG("gui", "frmCompose::btnForgeYes not found.\n");
+            ToLogService("gui", "frmCompose::btnForgeYes not found.");
             return false;
         }
         btnForgeYes->SetIsEnabled(false);
@@ -223,7 +223,7 @@ namespace GUI
         btnForgeNo = dynamic_cast<CTextButton*>(frmCompose->Find("btnForgeNo"));
         if(!btnForgeNo)
         {
-            LG("gui", "frmCompose::btnForgeNo not found.\n");
+            ToLogService("gui", "frmCompose::btnForgeNo not found.");
             return false;
         }
         btnForgeNo->SetIsEnabled(false);
@@ -235,7 +235,7 @@ namespace GUI
             cmdCompose[i] = dynamic_cast<COneCommand*>(frmCompose->Find(buff));
             if(!cmdCompose[i])
             {
-                LG("gui", "frmCompose::%s not found.\n", buff);
+                ToLogService("gui", "frmCompose::{} not found.", buff);
                 return false;
             }
             iComposePos[i] = NO_USE;

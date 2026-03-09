@@ -274,12 +274,12 @@ void CStartMgr::UpdateBackDrop()
    CCompent* teamBackDrops[4]{};
    if (!imgBackDropPlayer)
    {
-	   LG("updatebackdrop", "imgBackDropPlayer null not found \n");
+	   ToLogService("updatebackdrop", "imgBackDropPlayer null not found");
 	   return;
    }
    if ( !imgBackDropTarget)
    {
-	   LG("updatebackdrop", "imgBackDropTarget null not found \n");
+	   ToLogService("updatebackdrop", "imgBackDropTarget null not found");
 	   return;
    }
     for (int i = 0; i < 4; i++) {
@@ -290,7 +290,7 @@ void CStartMgr::UpdateBackDrop()
         teamBackDrops[i] = dynamic_cast<CCompent*>(g_stUIStart._FindForm(formName)->Find(imgName));
 		if (!teamBackDrops[i])
 		{
-			LG("updatebackdrop", "teamBackDrops null not found %s\n", imgName);
+			ToLogService("updatebackdrop", "teamBackDrops null not found {}", imgName);
 			return;
 		}
     }
@@ -1240,7 +1240,9 @@ void CStartMgr::RefreshMainLifeNum( long num, long max )
 
 void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 {
-	LG("exp", g_oLangRec.GetString(763), num, curlev, nextlev, 100.0f * (float)(num - curlev) / (float)(nextlev - curlev));
+	{
+		ToLogService("exp", "{} {} {} {} {}", g_oLangRec.GetString(763), num, curlev, nextlev, 100.0f * (float)(num - curlev) / (float)(nextlev - curlev));
+	}
 	
 	//// EXP
 	//long max = nextlev - curlev;

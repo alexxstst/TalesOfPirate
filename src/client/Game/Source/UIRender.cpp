@@ -443,13 +443,13 @@ HRESULT  UI_OnResetDevice()
 void	UIRender::OnLostDevice()
 {
     if(FAILED(_p2DSprite->OnLostDevice()))
-        LG("error","msglost");
+        ToLogService("error", "msglost");
 }
 
 void	UIRender::OnResetDevice()
 {
     if(FAILED(_p2DSprite->OnResetDevice()))
-        LG("error","msgreset");
+        ToLogService("error", "msgreset");
 }
 
 void	UIRender::RegisterFunc()
@@ -667,8 +667,7 @@ void UIRender::SetScreen( int w, int h, bool isFull )
     _fDrawScaleX = 1.0f;
     _fDrawScaleY = 1.0f;
 
-    LG( "setscreen", "Screen:%f, %f Draw:%f, %f ScreenSize: %d, %d  ClientSize: %d, %d  IsFull: %d\n"
-        , _fScreenScaleX, _fScreenScaleY, _fDrawScaleX, _fDrawScaleY, w, h, sw, sh, isFull );
+    ToLogService("setscreen", "Screen:{}, {} Draw:{}, {} ScreenSize: {}, {}  ClientSize: {}, {}  IsFull: {}", _fScreenScaleX, _fScreenScaleY, _fDrawScaleX, _fDrawScaleY, w, h, sw, sh, isFull);
 
 	_fOldScreenScaleX = _fScreenScaleX;
 	_fOldScreenScaleY = _fScreenScaleY;
@@ -1032,7 +1031,7 @@ void CGuiFont::SetScreen( int nScrWidth, int nScrHeight )
 			p =  new CMPFont;
 #ifdef USE_RENDER
 			if(!p->CreateFont(&g_Render, (char*)it->strFont.c_str(), it->size800, FONTLEVEN, it->dwStyle ))
-				LG("ERROR","msgCreateFont");
+				ToLogService("ERROR", "msgCreateFont");
 #else
 			p->CreateFont(g_Render.GetDevice(), (char*)it->strFont.c_str(), it->size800, FONTLEVEN, it->dwStyle );
 #endif
@@ -1050,7 +1049,7 @@ void CGuiFont::SetScreen( int nScrWidth, int nScrHeight )
 			p =  new CMPFont;
 #ifdef USE_RENDER
 			if(!p->CreateFont(&g_Render, (char*)it->strFont.c_str(), it->size1024, FONTLEVEN, it->dwStyle ))
-				LG("ERROR","msgCreateFont2");
+				ToLogService("ERROR", "msgCreateFont2");
 
 #else
 			p->CreateFont(g_Render.GetDevice(), (char*)it->strFont.c_str(), it->size1024, FONTLEVEN, it->dwStyle );
@@ -1353,7 +1352,7 @@ void CCursor::Init()
     {
         if( !_hCursor[i] )
         {
-            LG( "error", g_oLangRec.GetString(746), i );
+            ToLogService("error", "{} {}", g_oLangRec.GetString(746), i);
         }
     }
     
@@ -1409,7 +1408,7 @@ bool CFormMgr::Init(HWND hWnd)
 		luaL_dofile(L, "scripts/lua/font.lua");
 		if( !CGuiFont::s_Font.Init() ) 
 		{
-			LG( "ui", g_oLangRec.GetString(747) );
+			ToLogService("ui", "{}", g_oLangRec.GetString(747));
 			return false;
 		}
 
@@ -1520,10 +1519,10 @@ inline void UIRender::RenderSprite(LPTEXTURE tex, RECT* rc, VECTOR2* vscale, VEC
 		_p2DSprite->SetTransform(&m);
 		switch (_p2DSprite->Draw(tex, rc, NULL, NULL, dwColor)) {
 		case D3DERR_INVALIDCALL:
-			LG("ERROR", "drawing texture failed - invalid call");
+			ToLogService("ERROR", "drawing texture failed - invalid call");
 			break;
 		case D3DXERR_INVALIDDATA:
-			LG("ERROR", "drawing texture failed - invalid data");
+			ToLogService("ERROR", "drawing texture failed - invalid data");
 			break;
 		case S_OK:
 			break;

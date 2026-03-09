@@ -51,11 +51,11 @@ void MPRender::End()
     ResMgr.ReleaseTotalRes();
 
 
-    LG("end", "begin release mesh lib\n");
+    ToLogService("end", "begin release mesh lib");
 
     lwReleaseMeshLibSystem();
 
-    LG("end", "end release mesh lib\n");
+    ToLogService("end", "end release mesh lib");
 
     // by lsh has been released in mesh lib
 	//SAFE_RELEASE(_pD3DDevice);
@@ -149,7 +149,7 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
             _tcscpy(err_str, "Create DirectX error");
             break;
         case INIT_ERR_CREATE_DEVICE:
-            LG("init","msg");
+            ToLogService("init", "msg");
             _tcscpy(err_str, "Create DirectX Device error");
             break;
         case INIT_ERR_DX_VERSION:
@@ -159,7 +159,7 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
             _tcscpy(err_str, "Unknown Internal Error");
 
         }
-        LG("init", "msg%s", err_str);
+        ToLogService("init", "msg{}", err_str);
         return FALSE;
     }
 
@@ -219,7 +219,7 @@ BOOL MPRender::InitResource()
 	if(!ResMgr.InitRes(_pD3DDevice,&GetWorldViewMatrix(),&GetViewProjMatrix()))
 #endif
 	{
-		LG("error","msgResMgr,!");
+		ToLogService("error", "msgResMgr,!");
 		return FALSE;
 	}
 	return TRUE;
@@ -229,7 +229,7 @@ BOOL MPRender::InitRes2()
 {
 	if(!ResMgr.InitRes2())
 	{
-		LG("error","msgResMgr 2,!");
+		ToLogService("error", "msgResMgr 2,!");
 		return FALSE;
 	}
 	return TRUE;
@@ -239,7 +239,7 @@ BOOL MPRender::InitRes3()
 {
 	if(!ResMgr.InitRes3())
 	{
-		LG("error","msgResMgr 3,!");
+		ToLogService("error", "msgResMgr 3,!");
 		return FALSE;
 	}
 	return TRUE;
@@ -294,13 +294,13 @@ int MPRender::ToggleFullScreen(int width, int height, D3DFORMAT depth_fmt, BOOL 
 
     if(LW_FAILED(lwAdjustD3DCreateParam(dev, &d3dcp, &_d3dCPAdjustInfo)))
     {
-		LG("error", "msgToggleFullScreen error");
+		ToLogService("error", "msgToggleFullScreen error");
         return 0;
     }
 
     if(ToggleFullScreen(&d3dcp.present_param, &wnd_info) == 0)
 	{
-		LG("error", "msgToggleFullScreen error");
+		ToLogService("error", "msgToggleFullScreen error");
 		return 0;
 	}
 
@@ -388,7 +388,7 @@ void MPRender::SetViewport(int nStartX, int nStartY, int nWidth, int nHeight)
     HRESULT hr = _pD3DDevice->SetViewport(&_view);
 	if (FAILED(hr))
 	{
-		LG("render", "Error when SetViewport(), [%d].\n", hr);
+		ToLogService("render", "Error when SetViewport(), [{}].", hr);
 	}
     // LG("render", "Set View Port [x = %d, y = %d , w = %d, h = %d\n", nStartX, nStartY, nWidth, nHeight);
 }
@@ -706,7 +706,7 @@ BOOL MPRender::BeginRender(bool clear)//vim
 	{
 		if(FAILED( _pD3DDevice->Clear( 0L, NULL, _dwClearFlag, _dwBackgroundColor, 1.0f, 0L ) ) )
 		{
-			LG("error", "D3D Device Clear Failed!\n");
+			ToLogService("error", "D3D Device Clear Failed!");
 			return false;
 		}
 	}
@@ -722,7 +722,7 @@ BOOL MPRender::BeginRender(bool clear)//vim
 void MPRender::EndRender(const bool present) // vim
 {
 	if (FAILED(_pD3DDevice->EndScene())) {
-		LG("error", "D3D End Scene Fail!\n");
+		ToLogService("error", "D3D End Scene Fail!");
 		return;
 	}
 
@@ -945,14 +945,14 @@ bool SurfaceToBMP(IDirect3DSurfaceX* pSurface, const char* strName) {
 	D3DSURFACE_DESC Desc;
 	D3DLOCKED_RECT Rect;
 	if (!pSurface) {
-		LG("ScreenShotError", "Invalid surface pointer\n");
+		ToLogService("ScreenShotError", "Invalid surface pointer");
 		return false;
 	}
 	pSurface->GetDesc(&Desc);
 
 	const int nPitch = (Desc.Width * 3 + 3) & ~0x3;
 	if (pSurface->LockRect(&Rect, nullptr, D3DLOCK_READONLY) != D3D_OK) {
-		LG("ScreenShotError", "Failed to lock surface rect\n");
+		ToLogService("ScreenShotError", "Failed to lock surface rect");
 		return false;
 	}
 	//somehow we need wider buffer if screen reso is 2k so we add buffer *4
@@ -964,7 +964,7 @@ bool SurfaceToBMP(IDirect3DSurfaceX* pSurface, const char* strName) {
 
 	std::ofstream file(strName, std::ios::binary);
 	if (!file) {
-		LG("ScreenShotError", "Failed to open file\n");
+		ToLogService("ScreenShotError", "Failed to open file");
 		pSurface->UnlockRect();
 		return false;
 	}
@@ -998,7 +998,7 @@ bool SurfaceToBMP(IDirect3DSurfaceX* pSurface, const char* strName) {
 			const BYTE* pPixel = pSrc + y * Rect.Pitch + x * 4;
 			const int dstIndex = (Desc.Height - 1 - y) * nPitch + x * 3;
 			if (dstIndex + 2 >= sizeof(BITMAPFILEHEADER) + sizeof(BITMAPINFOHEADER) + nPitch * Desc.Height * 4) {
-				LG("ScreenShotError", "Out of bounds write detected at y= %d x=%d\n", y, x);
+				ToLogService("ScreenShotError", "Out of bounds write detected at y= {} x={}", y, x);
 				pSurface->UnlockRect();
 				file.close();
 				return false;

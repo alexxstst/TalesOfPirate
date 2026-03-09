@@ -35,42 +35,42 @@ namespace GUI
 		frmSpiritMarry = CFormMgr::s_Mgr.Find("frmSpiritMarry");
 		if(! frmSpiritMarry)
 		{
-			LG("gui", "main.clu   frmSpiritMarry not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry not found.");
 			return false;
 		}
 
 		labMoneyShow = dynamic_cast<CLabel*>(frmSpiritMarry->Find("labMoneyShow"));
 		if(! labMoneyShow)
 		{
-			LG("gui", "main.clu   frmSpiritMarry:labMoneyShow not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:labMoneyShow not found.");
 			return false;
 		}
 
 		btnForgeYes = dynamic_cast<CTextButton*>(frmSpiritMarry->Find("btnForgeYes"));
 		if(! btnForgeYes)
 		{
-			LG("gui", "main.clu   frmSpiritMarry:btnForgeYes not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:btnForgeYes not found.");
 			return false;
 		}
 
 		cmdSpiritMarry[SPIRIT_MARRY_ITEM] = dynamic_cast<COneCommand*>(frmSpiritMarry->Find("cmdSpiritItem"));
 		if(! cmdSpiritMarry[SPIRIT_MARRY_ITEM])
 		{
-			LG("gui", "main.clu   frmSpiritMarry:cmdSpiritItem not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:cmdSpiritItem not found.");
 			return false;
 		}
 
 		cmdSpiritMarry[SPIRIT_MARRY_ONE] = dynamic_cast<COneCommand*>(frmSpiritMarry->Find("cmdSpiritOne"));
 		if(! cmdSpiritMarry[SPIRIT_MARRY_ONE])
 		{
-			LG("gui", "main.clu   frmSpiritMarry:cmdSpiritOne not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:cmdSpiritOne not found.");
 			return false;
 		}
 
 		cmdSpiritMarry[SPIRIT_MARRY_TWO] = dynamic_cast<COneCommand*>(frmSpiritMarry->Find("cmdSpiritTwo"));
 		if(! cmdSpiritMarry[SPIRIT_MARRY_TWO])
 		{
-			LG("gui", "main.clu   frmSpiritMarry:cmdSpiritTwo not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:cmdSpiritTwo not found.");
 			return false;
 		}
 
@@ -87,7 +87,7 @@ namespace GUI
 		frmSpiritErnie = CFormMgr::s_Mgr.Find("frmSpiritErnie");
 		if(! frmSpiritErnie)
 		{
-			LG("gui", "main.clu   frmSpiritErnie not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritErnie not found.");
 			return false;
 		}
 		frmSpiritErnie->SetIsEscClose(false);
@@ -97,7 +97,7 @@ namespace GUI
 		btnStart = dynamic_cast<CTextButton*>(frmSpiritErnie->Find("btnStart"));
 		if(! btnStart)
 		{
-			LG("gui", "main.clu   frmSpiritErnie:btnStart not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritErnie:btnStart not found.");
 			return false;
 		}
 
@@ -112,7 +112,7 @@ namespace GUI
 
 				if(! imgLine[i][j])
 				{
-					LG("gui", "main.clu   frmSpiritErnie:%s not found.\n", szName);
+					ToLogService("gui", "main.clu   frmSpiritErnie:{} not found.", szName);
 					return false;
 				}
 				imgLine[i][j]->SetIsShow(false);
@@ -129,7 +129,7 @@ namespace GUI
 				cmdItem[nSeq] = dynamic_cast<COneCommand*>(frmSpiritErnie->Find(szName));
 				if(! cmdItem[nSeq])
 				{
-					LG("gui", "main.clu   frmSpiritErnie:%s not found.\n", szName);
+					ToLogService("gui", "main.clu   frmSpiritErnie:{} not found.", szName);
 					return false;
 				}
 				//cmdItem[nSeq]->SetIsShow(false);
@@ -141,7 +141,7 @@ namespace GUI
 			chkSetmoney[i] = dynamic_cast<CCheckBox*>(frmSpiritErnie->Find(szName));
 			if(! chkSetmoney[i])
 			{
-				LG("gui", "main.clu   frmSpiritErnie:%s not found.\n", szName);
+				ToLogService("gui", "main.clu   frmSpiritErnie:{} not found.", szName);
 				return false;
 			}
 
@@ -150,7 +150,7 @@ namespace GUI
 			labUsemoney[i] = dynamic_cast<CLabelEx*>(frmSpiritErnie->Find(szName));
 			if(! labUsemoney[i])
 			{
-				LG("gui", "main.clu   frmSpiritErnie:%s not found.\n", szName);
+				ToLogService("gui", "main.clu   frmSpiritErnie:{} not found.", szName);
 				return false;
 			}
 
@@ -159,7 +159,7 @@ namespace GUI
 			btnStop[i] = dynamic_cast<CTextButton*>(frmSpiritErnie->Find(szName));
 			if(! btnStop[i])
 			{
-				LG("gui", "main.clu   frmSpiritErnie:%s not found.\n", szName);
+				ToLogService("gui", "main.clu   frmSpiritErnie:{} not found.", szName);
 				return false;
 			}
 		}
@@ -167,14 +167,14 @@ namespace GUI
 		labLastshow1 = dynamic_cast<CLabelEx*>(frmSpiritErnie->Find("labLastshow1"));
 		if(! labLastshow1)
 		{
-			LG("gui", "main.clu   frmSpiritMarry:labLastshow1 not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:labLastshow1 not found.");
 			return false;
 		}
 
 		labLastshow2 = dynamic_cast<CLabelEx*>(frmSpiritErnie->Find("labLastshow2"));
 		if(! labLastshow2)
 		{
-			LG("gui", "main.clu   frmSpiritMarry:labLastshow2 not found.\n");
+			ToLogService("gui", "main.clu   frmSpiritMarry:labLastshow2 not found.");
 			return false;
 		}
 

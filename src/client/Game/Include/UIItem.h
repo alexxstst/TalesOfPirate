@@ -61,7 +61,6 @@ namespace GUI {
 			return &_NullObj;
 		}
 
-	private:
 		static CItemObj _NullObj;
 
 		CItemObj** _items;
@@ -224,7 +223,6 @@ namespace GUI {
 			_nHeight = n;
 		}
 
-	public:
 		int GetWidth();
 
 		int GetHeight() {

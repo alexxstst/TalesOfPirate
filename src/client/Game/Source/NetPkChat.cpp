@@ -359,7 +359,7 @@ BOOL	PC_TEAM_REFRESH(LPRPACKET pk)
 	l_pcteam.kind	=pk.ReadChar();
 	l_pcteam.count	=pk.ReadChar();  
 
-    LG("Team", "Kind:[%u], Count[%u]\n", l_pcteam.kind, l_pcteam.count );
+    ToLogService("Team", "Kind:[{}], Count[{}]", l_pcteam.kind, l_pcteam.count);
 	for(unsigned char i=0;i<l_pcteam.count;i++)
 	{
 		l_pcteam.cha_dbid[i]	=pk.ReadLong();
@@ -367,7 +367,7 @@ BOOL	PC_TEAM_REFRESH(LPRPACKET pk)
 		strcpy( l_pcteam.motto[i], pk.ReadString() );
 		l_pcteam.cha_icon[i]		=pk.ReadShort();
 
-        LG("Team", "    DB_ID:[%u], Name[%s]\n", l_pcteam.cha_dbid[i], l_pcteam.cha_name[i] );
+        ToLogService("Team", "    DB_ID:[{}], Name[{}]", l_pcteam.cha_dbid[i], l_pcteam.cha_name[i]);
 	}    
 
 	NetPCTeam(l_pcteam);

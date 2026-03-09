@@ -222,7 +222,7 @@ protected:
 		pInfo->LightID = Str2Int(ParamList[8].c_str());
 		pInfo->fBaseSize = Str2Float(ParamList[9].c_str());
 
-		LG("Magic", "Read Magic Info Name = [%s]\n", pInfo->szName);
+		ToLogService("Magic", "Read Magic Info Name = [{}]", pInfo->szName);
 		return TRUE;
 	}
 
@@ -357,7 +357,7 @@ protected:
 		pInfo->nType   = Str2Int(ParamList[11].c_str());
 
 
-		LG("shade", "Read shade Info Name = [%s]\n", pInfo->szName);
+		ToLogService("shade", "Read shade Info Name = [{}]", pInfo->szName);
 		return TRUE;
 	}
 };

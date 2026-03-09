@@ -158,11 +158,11 @@ private:
 };
 
 inline void CActStateCell::Add(CStateCell *pObj)
-{T_B
+{
 	if (pObj->m_pCLast || pObj->m_pCNext)
 	{
 		//LG("", " [%d,%d] ", pObj->m_sPosX, pObj->m_sPosY);
-		LG("state cell operator error", "when add entity[%d,%d] to state cellfind it is not break away foregone manage cell", pObj->m_sPosX, pObj->m_sPosY);
+		ToLogService("state cell operator error", "when add entity[{},{}] to state cellfind it is not break away foregone manage cell", pObj->m_sPosX, pObj->m_sPosY);
 		return;
 	}
 
@@ -172,10 +172,10 @@ inline void CActStateCell::Add(CStateCell *pObj)
 	m_pHead = pObj;
 
 	m_lCount++;
-T_E}
+}
 
 inline void CActStateCell::Del(CStateCell *pObj)
-{T_B
+{
 	if (!pObj)
 		return;
 	if (m_pCur == pObj)
@@ -192,22 +192,22 @@ inline void CActStateCell::Del(CStateCell *pObj)
 	pObj->m_pCLast = 0;
 
 	m_lCount--;
-T_E}
+}
 
 inline void CActStateCell::BeginGet()
-{T_B
+{
 	m_pCur = m_pHead;
-T_E}
+}
 
 inline CStateCell* CActStateCell::GetNext()
-{T_B
+{
 	CStateCell	*pRet = m_pCur;
 
 	if (m_pCur)
 		m_pCur = m_pCur->m_pCNext;
 
 	return pRet;
-T_E}
+}
 
 class CStateCellNode : public dbc::PreAllocStru
 {

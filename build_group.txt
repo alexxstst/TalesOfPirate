@@ -1,0 +1,81 @@
+﻿╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 10.03.2026 1:35:03.
+
+╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(524,5): warning MSB8004: ╨║╨░╤В╨░╨╗╨╛╨│ Output ╨╖╨░╨║╨░╨╜╤З╨╕╨▓╨░╨╡╤В╤Б╤П ╨╜╨╡ ╨║╨╛╤Б╨╛╨╣ ╤З╨╡╤А╤В╨╛╨╣.  ╨н╤В╨╛╤В ╤Н╨║╨╖╨╡╨╝╨┐╨╗╤П╤А ╤Б╨▒╨╛╤А╨║╨╕ ╨┤╨╛╨▒╨░╨▓╨╕╤В ╨║╨╛╤Б╤Г╤О ╤З╨╡╤А╤В╤Г, ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨╛╨╜╨░ ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨░ ╨┤╨╗╤П ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛╨│╨╛ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨░ Output. [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨▓╤Л╨▓╨╛╨┤ ╨▓╨║╨╗╤О╤З╨╡╨╜. ╨д╨╛╤А╨╝╨░╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╕╨░╨│╨╜╨╛╤Б╤В╨╕╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А╨░ ╨▒╤Г╨┤╨╡╤В ╨╛╤В╤А╨░╨╢╨░╤В╤М ╨╕╨╡╤А╨░╤А╤Е╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╡╨╡ ╤Б╨╝. https://aka.ms/cpp/structured-output.
+InitializeBuildStatus:
+  ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "Debug\GroupServer.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  ╨з╤В╨╡╨╜╨╕╨╡ ╤Д╨░╨╣╨╗╨░ ╨╝╨░╨╜╨╕╤Д╨╡╤Б╤В╨░ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\modules.json", ╨║╨╛╤В╨╛╤А╤Л╨╣ ╨┐╤А╨╡╨┤╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╤В ╨┤╨░╨╜╨╜╤Л╨╡ ╨┤╨╗╤П ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "microsoft/STL".
+  ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╕╤Б╤В╨╛╤З╨╜╨╕╨║╨░ ╨╝╨╛╨┤╤Г╨╗╤П "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\std.ixx" ╨╕╨╖ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "microsoft/STL" ╨┤╨╗╤П ╤Б╨▒╨╛╤А╨║╨╕ ╤Б ╤Н╤В╨╕╨╝ ╨┐╤А╨╛╨╡╨║╤В╨╛╨╝.
+  ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╕╤Б╤В╨╛╤З╨╜╨╕╨║╨░ ╨╝╨╛╨┤╤Г╨╗╤П "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\std.compat.ixx" ╨╕╨╖ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "microsoft/STL" ╨┤╨╗╤П ╤Б╨▒╨╛╤А╨║╨╕ ╤Б ╤Н╤В╨╕╨╝ ╨┐╤А╨╛╨╡╨║╤В╨╛╨╝.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\bin\HostX86\x86\CL.exe /c /ID:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Utils\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Localization\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\CryptoLib\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Network\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Common\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\LuaJIT\src /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /MP /Od /Oy- /D _WINSOCK_DEPRECATED_NO_WARNINGS /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D _DEBUG /D _CONSOLE /D _SILENCE_CXX17_STRSTREAM_DEPRECATION_WARNING /D _SILENCE_ALL_CXX17_DEPRECATION_WARNINGS /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++latest /permissive- /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /FC /errorReport:queue Source\GroupServerAppServ.cpp
+  GroupServerAppServ.cpp
+D:\Projects\MMORPG\TalesOfPirate\src\Common\Common\Include\ItemContent.h(115,32): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  (╨║╨╛╨╝╨┐╨╕╨╗╤П╤Ж╨╕╤П ╨╕╤Б╤Е╨╛╨┤╨╜╨╛╨│╨╛ ╤Д╨░╨╣╨╗╨░ "Source/GroupServerAppServ.cpp")
+  
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(152,31): warning C4018: >: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(710,22): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(855,7): warning C4101: l_chanum: ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╨░╤П ╨╗╨╛╨║╨░╨╗╤М╨╜╨░╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(1073,9): warning C4101: l_keylen: ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╨░╤П ╨╗╨╛╨║╨░╨╗╤М╨╜╨░╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(1073,19): warning C4101: l_textlen: ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╨░╤П ╨╗╨╛╨║╨░╨╗╤М╨╜╨░╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(1966,140): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "unsigned short"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(2000,55): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "unsigned short"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(2000,59): warning C4390: ";": ╨╛╨▒╨╜╨░╤А╤Г╨╢╨╡╨╜ ╨┐╤Г╤Б╤В╨╛╨╣ ╨║╨╛╨╜╤В╤А╨╛╨╗╨╕╤А╤Г╨╡╨╝╤Л╨╣ ╨╛╨┐╨╡╤А╨░╤В╨╛╤А; ╤Н╤В╨╛ ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛? [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(847): warning C4715: GroupServerApp::CanCreateBonusChar: ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В╤Б╤П ╨╜╨╡ ╨┐╤А╨╕ ╨▓╤Б╨╡╤Е ╨┐╤Г╤В╤П╤Е ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+Link:
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\MMORPG\TalesOfPirate\src\..\server\GroupServer\GroupServer.exe" /INCREMENTAL /ILK:"Debug\GroupServer.ilk" /NOLOGO /LIBPATH:D:\Projects\MMORPG\TalesOfPirate\src\Libs\Debug\ /LIBPATH:D:\Projects\MMORPG\TalesOfPirate\src\Common\LuaJIT\src lua51.lib Common.lib CryptoLib.lib Localization.lib Network.lib Utils.lib Ws2_32.lib Winmm.lib Iphlpapi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Projects\MMORPG\TalesOfPirate\src\..\server\GroupServer\GroupServer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Projects\MMORPG\TalesOfPirate\src\..\server\GroupServer\GroupServer.lib" /MACHINE:X86 Debug\DBConnect.obj
+  Debug\Friend.obj
+  Debug\GroupServerApp.obj
+  Debug\GroupServerAppChat.obj
+  Debug\GroupServerAppFrnd.obj
+  Debug\GroupServerAppGuld.obj
+  Debug\GroupServerAppInit.obj
+  Debug\GroupServerAppMaster.obj
+  Debug\GroupServerAppPrsn.obj
+  Debug\GroupServerAppServ.obj
+  Debug\GroupServerAppTeam.obj
+  Debug\GroupSMain.obj
+  Debug\Guild.obj
+  Debug\GuildMember.obj
+  Debug\Invitation.obj
+  Debug\LuaFunc.obj
+  Debug\Master.obj
+  Debug\Parser.obj
+  Debug\Player.obj
+  Debug\Script.obj
+  Debug\SessionChat.obj
+  Debug\stdafx.obj
+  Debug\Team.obj
+  Debug\TeamMember.obj
+  GroupServer.vcxproj -> D:\Projects\MMORPG\TalesOfPirate\server\GroupServer\GroupServer.exe
+FinalizeBuildStatus:
+  ╨д╨░╨╣╨╗ "Debug\GroupServer.tlog\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
+  ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "Debug\GroupServer.tlog\GroupServer.lastbuildstate".
+╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+
+╨б╨▒╨╛╤А╨║╨░ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░.
+
+"D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О) (1) ->
+(╨ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В PrepareForBuild) -> 
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(524,5): warning MSB8004: ╨║╨░╤В╨░╨╗╨╛╨│ Output ╨╖╨░╨║╨░╨╜╤З╨╕╨▓╨░╨╡╤В╤Б╤П ╨╜╨╡ ╨║╨╛╤Б╨╛╨╣ ╤З╨╡╤А╤В╨╛╨╣.  ╨н╤В╨╛╤В ╤Н╨║╨╖╨╡╨╝╨┐╨╗╤П╤А ╤Б╨▒╨╛╤А╨║╨╕ ╨┤╨╛╨▒╨░╨▓╨╕╤В ╨║╨╛╤Б╤Г╤О ╤З╨╡╤А╤В╤Г, ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨╛╨╜╨░ ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨░ ╨┤╨╗╤П ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛╨│╨╛ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨░ Output. [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+
+
+"D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О) (1) ->
+(╨ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В ClCompile) -> 
+  D:\Projects\MMORPG\TalesOfPirate\src\Common\Common\Include\ItemContent.h(115,32): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(152,31): warning C4018: >: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(710,22): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(855,7): warning C4101: l_chanum: ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╨░╤П ╨╗╨╛╨║╨░╨╗╤М╨╜╨░╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(1073,9): warning C4101: l_keylen: ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╨░╤П ╨╗╨╛╨║╨░╨╗╤М╨╜╨░╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(1073,19): warning C4101: l_textlen: ╨╜╨╡╨╕╤Б╨┐╨╛╨╗╤М╨╖╨╛╨▓╨░╨╜╨╜╨░╤П ╨╗╨╛╨║╨░╨╗╤М╨╜╨░╤П ╨┐╨╡╤А╨╡╨╝╨╡╨╜╨╜╨░╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(1966,140): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "unsigned short"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(2000,55): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "unsigned short"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(2000,59): warning C4390: ";": ╨╛╨▒╨╜╨░╤А╤Г╨╢╨╡╨╜ ╨┐╤Г╤Б╤В╨╛╨╣ ╨║╨╛╨╜╤В╤А╨╛╨╗╨╕╤А╤Г╨╡╨╝╤Л╨╣ ╨╛╨┐╨╡╤А╨░╤В╨╛╤А; ╤Н╤В╨╛ ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛? [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\Source\GroupServerAppServ.cpp(847): warning C4715: GroupServerApp::CanCreateBonusChar: ╨╖╨╜╨░╤З╨╡╨╜╨╕╨╡ ╨▓╨╛╨╖╨▓╤А╨░╤Й╨░╨╡╤В╤Б╤П ╨╜╨╡ ╨┐╤А╨╕ ╨▓╤Б╨╡╤Е ╨┐╤Г╤В╤П╤Е ╨▓╤Л╨┐╨╛╨╗╨╜╨╡╨╜╨╕╤П [D:\Projects\MMORPG\TalesOfPirate\src\server\GroupServer\GroupServer.vcxproj]
+
+    ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 11
+    ╨Ю╤И╨╕╨▒╨╛╨║: 0
+
+╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:02.93

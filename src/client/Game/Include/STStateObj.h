@@ -185,6 +185,6 @@ inline void CActionState::SetServerID(int n) {
 		_nServerID = n;
 	}
 	else {
-		LG("state", g_oLangRec.GetString(409), GetExplain(), n);
+		ToLogService("state", "{} {} {}", g_oLangRec.GetString(409), GetExplain(), n);
 	}
 }

@@ -39,15 +39,13 @@ public:
     void            SetPointer( void * p )  { _pPointer = p;    }
     void*           GetPointer()            { return _pPointer; }
 
-public:
-	GuiMouseEvent	evtMouseDown;		// 
+GuiMouseEvent	evtMouseDown;		// 
 	GuiMouseEvent   evtMouseLDDown ;    //
 
 protected:
 	void			_Copy( const C3DCompent& rhs );
 
-protected:
-	GUIRenderEvent		_pRenderEvent;
+GUIRenderEvent		_pRenderEvent;
 	int					_nCenterX, _nCenterY;
 
     void*            _pPointer;

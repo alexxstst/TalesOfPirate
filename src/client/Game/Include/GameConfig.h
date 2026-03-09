@@ -17,8 +17,6 @@ public:
 	void	Load(const char *pszFileName); // 
 	void	SetDefault();  //
 	void	SetMoveClient( bool v ); //
-	
-public:
 
 	// , , string,
 	// 

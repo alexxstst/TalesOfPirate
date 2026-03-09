@@ -33,19 +33,19 @@ static void updateDiscordPresence(const char *details, const char *state)
 
 static void handleDiscordReady(const DiscordUser* connectedUser)
 {
-	LG("Discord", "Discord: connected to user %s#%s - %s\n",
+	ToLogService("Discord", "Discord: connected to user {}#{} - {}",
 		connectedUser->username,
-        connectedUser->discriminator);
+        connectedUser->discriminator, "");
 }
 
 static void handleDiscordDisconnected(int errcode, const char* message)
 {
-	LG("Discord", "Discord: disconnected (%d: %s)\n", errcode, message);
+	ToLogService("Discord", "Discord: disconnected ({}: {})", errcode, message);
 }
 
 static void handleDiscordError(int errcode, const char* message)
 {
-	LG("Discord", "Discord: error (%d: %s)\n", errcode, message);
+	ToLogService("Discord", "Discord: error ({}: {})", errcode, message);
 }
 
 static void discordInit()

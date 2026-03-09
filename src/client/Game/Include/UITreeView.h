@@ -44,7 +44,7 @@ private:
 	CTreeNodeObj*	_pParent;
 	CItemObj*		_pItem;
 
-private:    // 
+    // 
     CTreeSelectItem( const CTreeSelectItem& rhs );
 	CTreeSelectItem& operator=(const CTreeSelectItem& rhs);
 
@@ -81,8 +81,7 @@ public:
 	int					GetChildCount()						{ return (int)_ndChilds.size();		}
 	CTreeNodeObj*		GetChildNode( unsigned int v )		{ if(v<_ndChilds.size()) return _ndChilds[v]; return NULL;	}
 
-public:
-	void				Render();
+void				Render();
 	void				Refresh(int x, int& y, int colwidth, int rowheight);
 	bool				MouseRun( int x, int y, DWORD key );
 	int					GetTreeHeight( int& height, int rowheight );
@@ -109,7 +108,7 @@ public:
 	void				SetTag( DWORD v )					{ _dwTag = v;					}
 	DWORD				GetTag()							{ return _dwTag;				}
 
-public:	// 
+	// 
 	int							GetID()						{ return (int)_nodes.size() - 1;}
 	static CTreeNodeObj*		GetNode( unsigned int id )  { 
 		if( id < _nodes.size() ) return _nodes[id];
@@ -120,11 +119,9 @@ protected:
 	virtual bool		_HasPage()							{ return !_ndChilds.empty();	}
     virtual CItemObj*   _GetSelfHitItem( int x, int y )     { return NULL;                  }
 
-protected:
-	void			_RenderTree();
+void			_RenderTree();
 
-protected:
-	int					_nX, _nY, _nX2, _nY2;
+int					_nX, _nY, _nX2, _nY2;
 	bool				_IsExpand;		// 
 	TreeNodes			_ndChilds;
 
@@ -177,8 +174,7 @@ public:
 protected:
     virtual CItemObj*   _GetSelfHitItem( int x, int y ) { return _pItem;                        }
 
-protected:
-	CItemObj*		_pItem;
+CItemObj*		_pItem;
 
 private:    // 
     CTreeNode( const CTreeNode& rhs );
@@ -233,8 +229,7 @@ protected:
 	virtual bool	    _HasPage()					    { return true;						}
     virtual CItemObj*   _GetSelfHitItem( int x, int y );
 
-protected:
-	CItemObj*		_pItem;					        // ,
+CItemObj*		_pItem;					        // ,
 
 	typedef std::vector<CItemObj*> vitems;
 	vitems			_items;
@@ -246,13 +241,12 @@ protected:
 private:
 	void			_CaclRowNum();
 
-private:
-	CGuiPic	_imgUp,  _imgDown;
+CGuiPic	_imgUp,  _imgDown;
 	int		_nFocusX1,  _nFocusX2,  _nFocusY1,   _nFocusY2;
 	int		_nFocusCol,	_nFocusRow;
 	bool		_IsShowFocus;
 
-private:    // 
+    // 
     CTreeGridNode( const CTreeGridNode& rhs );
 	CTreeGridNode& operator=(const CTreeGridNode& rhs);
 
@@ -285,12 +279,10 @@ public:
     virtual CCompent*   GetHintCompent( int x, int y );                       // 
 	virtual void		DragRender();
 
-public:
-	bool				ClearAllNode()				{ return _pRoot->ClearAllChild();		}
+bool				ClearAllNode()				{ return _pRoot->ClearAllChild();		}
 	bool				DelNode( CTreeNodeObj* p )	{ return _pRoot->DelNode( p );	}
 
-public:
-	CItemObj*			GetHitItem( int x, int y )	{ return _pRoot->GetHitItem(x, y);	}
+CItemObj*			GetHitItem( int x, int y )	{ return _pRoot->GetHitItem(x, y);	}
 	CTreeNodeObj*		GetHitNode( int x, int y )	{ return _pRoot->GetHitNode(x, y);	}
 	void				SetColSpace( int n )		{ if(n>0) _nColSpace=n;			}
 	void				SetRowSpace( int n )		{ if(n>0) _nRowSpace=n;			}	
@@ -321,8 +313,7 @@ public:
 	void				SetSelectColor( DWORD v )	{ _dwSelectColor = v;			}
 	DWORD				GetSelectColor()			{ return _dwSelectColor;		}
 
-public:
-	GuiEvent			evtSelectChange;		// 
+GuiEvent			evtSelectChange;		// 
 	GuiEvent			evtSelectLost;			// 
 	GuiEvent			evtItemLost;			// Item
 	GuiEvent			evtItemChange;			// Item
@@ -336,8 +327,7 @@ protected:
 	}
 	void				_OnScrollChange();
 
-protected:
-    static	void	_DragEnd(CGuiData *pSender, int x, int y, DWORD key)	{
+static	void	_DragEnd(CGuiData *pSender, int x, int y, DWORD key)	{
         ((CTreeView*)(pSender))->_DragEnd( x, y, key );
     }
     void			_DragEnd( int x, int y, DWORD key );

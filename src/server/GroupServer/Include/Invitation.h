@@ -14,8 +14,8 @@ struct PtInviter
 	PtInviter(Player *ply=0,uLong chaid=0):m_ply(ply),m_chaid(chaid){}
 	operator bool(){return m_ply!=0;}
 	Player *operator ->(){return m_ply;}
-	Player	*volatile	m_ply;
-	uLong	 volatile	m_chaid;
+	Player	*	m_ply;
+	uLong	 	m_chaid;
 };
 class Invited: public PreAllocStru, public RunBiDirectItem<::Invited>
 {
@@ -28,7 +28,7 @@ private:
 	virtual void Finally()	{RunBiDirectItem<::Invited>::Finally();	 m_ptinviter.m_ply =0;m_ptinviter.m_chaid =0;m_tick=0;}
 public:
 	PtInviter			m_ptinviter;
-	uLong	 volatile	m_tick;
+	uLong	 	m_tick;
 };
 //-------------------------------------
 class Invitation: public RunCtrlObj<Invitation>, public RunBiDirectChain<Invited>

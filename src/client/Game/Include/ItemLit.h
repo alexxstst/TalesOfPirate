@@ -61,11 +61,9 @@ class lwItemLit
 {
     typedef std::vector<lwItemLitInfo*> _ItemBuf;
     typedef _ItemBuf::iterator _ItemBuf_It;
-private:
     _ItemBuf _item;
 
-private:
-    _ItemBuf_It _FindItemWithId(DWORD id);
+_ItemBuf_It _FindItemWithId(DWORD id);
 public:
     lwItemLit();
     ~lwItemLit();

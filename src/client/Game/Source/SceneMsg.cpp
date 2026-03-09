@@ -36,7 +36,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
             {
                 if(find(pList->begin(), pList->end(), nParam3)!=pList->end())
                 {
-                    LG("error", g_oLangRec.GetString(352), nParam2, nParam3);
+                    ToLogService("error", "{} {} {}", g_oLangRec.GetString(352), nParam2, nParam3);
                     break;
                 }
                 _SceneObjIdx[nParam2].push_back(nParam3);
@@ -56,7 +56,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
             {
                 if(find(pList->begin(), pList->end(), nParam3)==pList->end())
                 {
-                    LG("error", g_oLangRec.GetString(353), nParam2, nParam3);
+                    ToLogService("error", "{} {} {}", g_oLangRec.GetString(353), nParam2, nParam3);
                     break;
                 }
                 _SceneObjIdx[nParam2].remove(nParam3);
@@ -84,7 +84,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 					pEffect = GetFirstInvalidEffObj();
 					if( !pEffect || !pEffect->Create( pInfo->sFeffID[n] ) )
 					{
-						LG("ERROR","create cha`s effect fail,ID %d", pInfo->sFeffID[n]);
+						ToLogService("ERROR", "create cha`s effect fail,ID {}", pInfo->sFeffID[n]);
 						return;
 					}
 					if(pCha->IsBoat() && 

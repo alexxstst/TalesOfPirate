@@ -46,7 +46,7 @@ LW_RESULT MPSceneItem::Load( const char* file, int arbitrary_flag )
     LW_RESULT ret;
     if( LW_FAILED( ret = _obj->Load( file, arbitrary_flag ) ) )
     {
-        LG_MSGBOX("Load MPSceneItem %s error", file);
+        ToLogService("default", "msgLoad MPSceneItem {} error", file);
     }
 
     return ret;

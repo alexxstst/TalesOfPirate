@@ -115,7 +115,7 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 	if(g_bLogHarmRec)
 	{
 		//LG("harm", ", [%s], %d\n", pAtk->GetName(), sHarm);
-		LG("harm", "begin to add harm, attacker[%s], harm%d\n", pAtk->GetName(), sHarm);
+		ToLogService("harm", "begin to add harm, attacker[{}], harm{}", pAtk->GetName(), sHarm);
 	}
 	// 
 	for(int i = 0; i < MAX_HARM_REC; i++)
@@ -131,7 +131,7 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 				if(g_bLogHarmRec)
 				{
 					//LG("harm", "[%s], =%dvalid=%d\n", pAtk->GetName(), pHarm->sHarm, pHarm->btValid);
-					LG("harm", "attacker[%s], accunulative harm=%dvalid=%d\n", pAtk->GetName(), pHarm->sHarm, pHarm->btValid);
+					ToLogService("harm", "attacker[{}], accunulative harm={}valid={}", pAtk->GetName(), pHarm->sHarm, pHarm->btValid);
 				}
 			}
 			return;
@@ -153,7 +153,7 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 			if(g_bLogHarmRec)
 			{
 				//LG("harm", "[%s],  = %d\n", pAtk->GetName(), pHarm->sHarm);
-				LG("harm", "add new attacker[%s], harm = %d\n", pAtk->GetName(), pHarm->sHarm);
+				ToLogService("harm", "add new attacker[{}], harm = {}", pAtk->GetName(), pHarm->sHarm);
 			}
 			break;
 		}
@@ -285,7 +285,7 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 				if(g_bLogHarmRec)
 				{
 					//LG("harm", "[%s]valid--, valid = %d\n", pHarm->pAtk->GetName(), pHarm->btValid);
-					LG("harm", "attacker[%s]valid--, valid = %d\n", pHarm->pAtk->GetName(), pHarm->btValid);
+					ToLogService("harm", "attacker[{}]valid--, valid = {}", pHarm->pAtk->GetName(), pHarm->btValid);
 				}
 			}
 		}
@@ -315,7 +315,7 @@ inline void CHateMgr::DebugNotice(CCharacter *pSelf)
 
 	if(bSend)
 	{
-		LG("harm", "Notice = [%s]\n", strNotice.c_str());
+		ToLogService("harm", "Notice = [{}]", strNotice.c_str());
 		g_pGameApp->WorldNotice((char*)(strNotice.c_str()));
 	}
 }

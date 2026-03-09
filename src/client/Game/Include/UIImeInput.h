@@ -17,7 +17,7 @@ class CImeInput
 		MAX_CHAR = 256,
 	};
 
-private:	// ,,
+	// ,,
 	CImeInput& operator=(const CImeInput& rhs);
 	CImeInput(const CImeInput& rhs);
 
@@ -48,21 +48,18 @@ private:
 	bool		_GetCandidateList();
     bool        _GetConversion();
 
-private:
-	CGuiPic*	_pImage;
+CGuiPic*	_pImage;
 	DWORD		_ImmNameColor;
 	int			_nShowX;
 	int			_nShowY;
 	bool		_bIsShow;
 
-private:
-	bool		_bIsFull;
+bool		_bIsFull;
 	int			_nScreenWidth;
 	int			_nScreenHeight;
     unsigned long _lConversion;
 
-private:
-	char		_strImmName[7];
+char		_strImmName[7];
 	char		_strComposition[MAX_CHAR];
 	char		_strCandidate[MAX_CHAR];
     char        _strInput[5];

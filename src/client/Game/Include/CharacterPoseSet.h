@@ -73,7 +73,7 @@ protected:
         pInfo->sRealPoseID[5] = (short)Str2Int(ParamList[5]);
         pInfo->sRealPoseID[6] = (short)Str2Int(ParamList[6]);
         
-        LG("poseset", "Read Pose List [%d][%s]\n", pInfo->nID, pInfo->szDataName);
+        ToLogService("poseset", "Read Pose List [{}][{}]", pInfo->nID, pInfo->szDataName);
             
         return TRUE;
     }

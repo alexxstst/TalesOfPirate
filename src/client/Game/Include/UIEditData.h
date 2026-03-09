@@ -44,8 +44,7 @@ public:
 	virtual void		AddCaption( const char* ){}
 	virtual void		Parse( CEditStrategy* pParse );
 
-public:
-	void		SetFont( DWORD dwFont )			{ _dwFont=dwFont;			}
+void		SetFont( DWORD dwFont )			{ _dwFont=dwFont;			}
 	DWORD		GetFont()						{ return _dwFont;			}
 
 	void		SetColor( DWORD dwColor )		{ _dwColor=dwColor;			}
@@ -148,19 +147,17 @@ public:
 	void	SetColor( DWORD dwColor )		{ _dwFontColor=dwColor;		}
 	DWORD	GetColor()						{ return _dwFontColor;		}
 
-public:		// 
+		// 
 	void	OnKeyDown( int key, bool IsShiftPress );
 	void	DelSelect();
 
 private:
 	void	RefreshText();
 
-private:
-	void	_ToSelectMode();
+void	_ToSelectMode();
 	bool	_AddObj( CEditObj* pObj );
 
-private:
-	enum eRunType
+enum eRunType
 	{
 		enumNormal,							// 
 		enumSelect,							// 

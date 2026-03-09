@@ -35,14 +35,14 @@ BOOL CSceneObj::_Create(int nScriptID,int nType)
 	CSceneObjInfo *pInfo = GetSceneObjInfo(nScriptID);
     if(pInfo==NULL)
     {
-        LG("scene", g_oLangRec.GetString(354), nScriptID);
+        ToLogService("scene", "{} {}", g_oLangRec.GetString(354), nScriptID);
         return FALSE;
     }
 
     ///*
 	if(S_OK!=Load(pInfo->szDataName, nScriptID))
     {
-        LG("scene", "msgID : TypeID = %d\n", nScriptID);
+        ToLogService("scene", "msgID : TypeID = {}", nScriptID);
         return FALSE;
     }
     //*/

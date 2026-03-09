@@ -33,8 +33,7 @@ protected:
     void	    UnLock()	{ _bblock = false;	}
     BOOL	    FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSelfY, int nTargetX, int nTargetY, bool &IsWalkLine);
 
-protected:
-	D3DXVECTOR3	_vStart;
+D3DXVECTOR3	_vStart;
 
 	int			_nCurX,_nCurY;
 
@@ -76,8 +75,7 @@ public:
 	void	Move(); //jze
 private:
 	void	CalculateGuideStraight();
-	void	CalculateGuideBypass();  
-private:
+	void	CalculateGuideBypass();
 	int		m_iCurX;
 	int		m_iCurY;
 

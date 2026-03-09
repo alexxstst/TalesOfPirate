@@ -51,7 +51,7 @@ DWORD WINAPI myiocpclt::conn_thrd(LPVOID conn_thrd_ctx)
                 {
                    // LG("iocp_conn", " Gate %s:%d \n", that->gtarray[i].GetIP().c_str(),
                      //   that->gtarray[i].GetPort());
-					 LG("iocp_conn", "connect Gate %s:%d failed\n", that->gtarray[i].GetIP().c_str(),
+					 ToLogService("iocp_conn", "connect Gate {}:{} failed", that->gtarray[i].GetIP().c_str(),
 						 that->gtarray[i].GetPort());
                 }
                 else
@@ -66,7 +66,7 @@ DWORD WINAPI myiocpclt::conn_thrd(LPVOID conn_thrd_ctx)
         Sleep(1000);
     }
 
-    LG("iocp_conn", "conn_thrd thread exit\n");
+    ToLogService("iocp_conn", "conn_thrd thread exit");
     return 0;
 }
 
@@ -395,7 +395,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, GatePlayer* playerlist)
         if (tmp->GetGate() == NULL)
         {      
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
+            ToLogService("SendToClient", "WARNING! pGate = NULL, atorID={}, gt_addr={:x}",
                 tmp->GetDBChaId(), tmp->GetGateAddr());
 #endif
         }
@@ -479,7 +479,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
         if (uplayer_array[i].pGate == NULL)
         {
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
+            ToLogService("SendToClient", "WARNING! pGate = NULL, atorID={}, gt_addr={:x}",
                 uplayer_array[i].m_dwDBChaId, uplayer_array[i].m_ulGateAddr);
 #endif
             continue;

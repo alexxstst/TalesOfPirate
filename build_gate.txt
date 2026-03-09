@@ -1,0 +1,52 @@
+﻿╨б╨▒╨╛╤А╨║╨░ ╨╜╨░╤З╨░╤В╨░ 10.03.2026 1:26:51.
+
+╨Я╤А╨╛╨╡╨║╤В "D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj" ╨▓ ╤Г╨╖╨╗╨╡ 1 (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(524,5): warning MSB8004: ╨║╨░╤В╨░╨╗╨╛╨│ Output ╨╖╨░╨║╨░╨╜╤З╨╕╨▓╨░╨╡╤В╤Б╤П ╨╜╨╡ ╨║╨╛╤Б╨╛╨╣ ╤З╨╡╤А╤В╨╛╨╣.  ╨н╤В╨╛╤В ╤Н╨║╨╖╨╡╨╝╨┐╨╗╤П╤А ╤Б╨▒╨╛╤А╨║╨╕ ╨┤╨╛╨▒╨░╨▓╨╕╤В ╨║╨╛╤Б╤Г╤О ╤З╨╡╤А╤В╤Г, ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨╛╨╜╨░ ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨░ ╨┤╨╗╤П ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛╨│╨╛ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨░ Output. [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+  ╨б╤В╤А╤Г╨║╤В╤Г╤А╨╕╤А╨╛╨▓╨░╨╜╨╜╤Л╨╣ ╨▓╤Л╨▓╨╛╨┤ ╨▓╨║╨╗╤О╤З╨╡╨╜. ╨д╨╛╤А╨╝╨░╤В╨╕╤А╨╛╨▓╨░╨╜╨╕╨╡ ╨┤╨╕╨░╨│╨╜╨╛╤Б╤В╨╕╨║╨╕ ╨║╨╛╨╝╨┐╨╕╨╗╤П╤В╨╛╤А╨░ ╨▒╤Г╨┤╨╡╤В ╨╛╤В╤А╨░╨╢╨░╤В╤М ╨╕╨╡╤А╨░╤А╤Е╨╕╤О ╨╛╤И╨╕╨▒╨╛╨║. ╨Я╨╛╨┤╤А╨╛╨▒╨╜╨╡╨╡ ╤Б╨╝. https://aka.ms/cpp/structured-output.
+InitializeBuildStatus:
+  ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "Debug\GateServer.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  ╨з╤В╨╡╨╜╨╕╨╡ ╤Д╨░╨╣╨╗╨░ ╨╝╨░╨╜╨╕╤Д╨╡╤Б╤В╨░ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\modules.json", ╨║╨╛╤В╨╛╤А╤Л╨╣ ╨┐╤А╨╡╨┤╨╛╤Б╤В╨░╨▓╨╗╤П╨╡╤В ╨┤╨░╨╜╨╜╤Л╨╡ ╨┤╨╗╤П ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "microsoft/STL".
+  ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╕╤Б╤В╨╛╤З╨╜╨╕╨║╨░ ╨╝╨╛╨┤╤Г╨╗╤П "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\std.ixx" ╨╕╨╖ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "microsoft/STL" ╨┤╨╗╤П ╤Б╨▒╨╛╤А╨║╨╕ ╤Б ╤Н╤В╨╕╨╝ ╨┐╤А╨╛╨╡╨║╤В╨╛╨╝.
+  ╨Ф╨╛╨▒╨░╨▓╨╗╨╡╨╜╨╕╨╡ ╨╕╤Б╤В╨╛╤З╨╜╨╕╨║╨░ ╨╝╨╛╨┤╤Г╨╗╤П "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\std.compat.ixx" ╨╕╨╖ ╨▒╨╕╨▒╨╗╨╕╨╛╤В╨╡╨║╨╕ "microsoft/STL" ╨┤╨╗╤П ╤Б╨▒╨╛╤А╨║╨╕ ╤Б ╤Н╤В╨╕╨╝ ╨┐╤А╨╛╨╡╨║╤В╨╛╨╝.
+ClCompile:
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\bin\HostX86\x86\CL.exe /c /ID:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Utils\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Localization\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\CryptoLib\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Network\Include /ID:\Projects\MMORPG\TalesOfPirate\src\Common\Common\Include /ZI /JMC /nologo /W3 /WX- /diagnostics:column /sdl /MP /Od /Oy- /D _WINSOCK_DEPRECATED_NO_WARNINGS /D _CRT_SECURE_NO_WARNINGS /D WIN32 /D _DEBUG /D _CONSOLE /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /std:c++latest /permissive- /Fo"Debug\\" /Fd"Debug\vc143.pdb" /external:W3 /Gd /TP /analyze- /FC /errorReport:queue Source\ToClient.cpp
+  ToClient.cpp
+D:\Projects\MMORPG\TalesOfPirate\src\Common\Common\Include\ItemContent.h(115,32): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+  (╨║╨╛╨╝╨┐╨╕╨╗╤П╤Ж╨╕╤П ╨╕╤Б╤Е╨╛╨┤╨╜╨╛╨│╨╛ ╤Д╨░╨╣╨╗╨░ "Source/ToClient.cpp")
+  
+D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(10,24): warning C4242: =: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ "int" ╨▓ "dbc::uShort", ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(233,35): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "dbc::uShort"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(234,87): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "dbc::uShort"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(352,39): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+Link:
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\bin\HostX86\x86\link.exe /ERRORREPORT:QUEUE /OUT:"D:\Projects\MMORPG\TalesOfPirate\src\..\server\GateServer\GateServer.exe" /INCREMENTAL /ILK:"Debug\GateServer.ilk" /NOLOGO /LIBPATH:D:\Projects\MMORPG\TalesOfPirate\src\Libs\Debug\ Common.lib CryptoLib.lib Localization.lib Network.lib Utils.lib Ws2_32.lib Winmm.lib Iphlpapi.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /DEBUG /PDB:"D:\Projects\MMORPG\TalesOfPirate\src\..\server\GateServer\GateServer.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:"D:\Projects\MMORPG\TalesOfPirate\src\..\server\GateServer\GateServer.lib" /MACHINE:X86 Debug\GateServer.obj
+  Debug\main.obj
+  Debug\ToClient.obj
+  Debug\ToGameServer.obj
+  Debug\ToGroupServer.obj
+  GateServer.vcxproj -> D:\Projects\MMORPG\TalesOfPirate\server\GateServer\GateServer.exe
+FinalizeBuildStatus:
+  ╨д╨░╨╣╨╗ "Debug\GateServer.tlog\unsuccessfulbuild" ╤Г╨┤╨░╨╗╤П╨╡╤В╤Б╤П.
+  ╨Ю╨▒╤А╨░╤Й╨╡╨╜╨╕╨╡ ╨║ "Debug\GateServer.tlog\GateServer.lastbuildstate".
+╨б╨▒╨╛╤А╨║╨░ ╨┐╤А╨╛╨╡╨║╤В╨░ "D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj" ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░ (╤Ж╨╡╨╗╨╡╨▓╤Л╨╡ ╨╛╨▒╤К╨╡╨║╤В╤Л ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О).
+
+╨б╨▒╨╛╤А╨║╨░ ╤Г╤Б╨┐╨╡╤И╨╜╨╛ ╨╖╨░╨▓╨╡╤А╤И╨╡╨╜╨░.
+
+"D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О) (1) ->
+(╨ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В PrepareForBuild) -> 
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\MSBuild\Microsoft\VC\v170\Microsoft.CppBuild.targets(524,5): warning MSB8004: ╨║╨░╤В╨░╨╗╨╛╨│ Output ╨╖╨░╨║╨░╨╜╤З╨╕╨▓╨░╨╡╤В╤Б╤П ╨╜╨╡ ╨║╨╛╤Б╨╛╨╣ ╤З╨╡╤А╤В╨╛╨╣.  ╨н╤В╨╛╤В ╤Н╨║╨╖╨╡╨╝╨┐╨╗╤П╤А ╤Б╨▒╨╛╤А╨║╨╕ ╨┤╨╛╨▒╨░╨▓╨╕╤В ╨║╨╛╤Б╤Г╤О ╤З╨╡╤А╤В╤Г, ╨┐╨╛╤Б╨║╨╛╨╗╤М╨║╤Г ╨╛╨╜╨░ ╨╜╨╡╨╛╨▒╤Е╨╛╨┤╨╕╨╝╨░ ╨┤╨╗╤П ╨┐╤А╨░╨▓╨╕╨╗╤М╨╜╨╛╨│╨╛ ╨╛╨┐╤А╨╡╨┤╨╡╨╗╨╡╨╜╨╕╤П ╨║╨░╤В╨░╨╗╨╛╨│╨░ Output. [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+
+
+"D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj" (╤Ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В ╨┐╨╛ ╤Г╨╝╨╛╨╗╤З╨░╨╜╨╕╤О) (1) ->
+(╨ж╨╡╨╗╨╡╨▓╨╛╨╣ ╨╛╨▒╤К╨╡╨║╤В ClCompile) -> 
+  D:\Projects\MMORPG\TalesOfPirate\src\Common\Common\Include\ItemContent.h(115,32): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(10,24): warning C4242: =: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ "int" ╨▓ "dbc::uShort", ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(233,35): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "dbc::uShort"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(234,87): warning C4267: ╨░╤А╨│╤Г╨╝╨╡╨╜╤В: ╨┐╤А╨╡╨╛╨▒╤А╨░╨╖╨╛╨▓╨░╨╜╨╕╨╡ ╨╕╨╖ "size_t" ╨▓ "dbc::uShort"; ╨▓╨╛╨╖╨╝╨╛╨╢╨╜╨░ ╨┐╨╛╤В╨╡╤А╤П ╨┤╨░╨╜╨╜╤Л╤Е [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+  D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\Source\ToClient.cpp(352,39): warning C4018: <: ╨╜╨╡╤Б╨╛╨╛╤В╨▓╨╡╤В╤Б╤В╨▓╨╕╨╡ ╤В╨╕╨┐╨╛╨▓ ╤Б╨╛ ╨╖╨╜╨░╨║╨╛╨╝ ╨╕ ╨▒╨╡╨╖ ╨╖╨╜╨░╨║╨░ [D:\Projects\MMORPG\TalesOfPirate\src\server\GateServer\GateServer.vcxproj]
+
+    ╨Я╤А╨╡╨┤╤Г╨┐╤А╨╡╨╢╨┤╨╡╨╜╨╕╨╣: 6
+    ╨Ю╤И╨╕╨▒╨╛╨║: 0
+
+╨Я╤А╨╛╤И╨╗╨╛ ╨▓╤А╨╡╨╝╨╡╨╜╨╕ 00:00:03.80

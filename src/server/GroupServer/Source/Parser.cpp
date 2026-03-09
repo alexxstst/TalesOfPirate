@@ -28,7 +28,7 @@ void lua_callalert(lua_State* L, int status)
 		}
 		else
 		{ // no _ALERT function; print it on stderr
-			LG("lua_err", "%s\n", lua_tostring(L, -2));
+			ToLogService("lua_err", "{}", lua_tostring(L, -2));
 			lua_pop(L, 2);
 		}
 	}
@@ -56,14 +56,14 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			return 1;
 		}
 		//LG("lua_err", "DoString(%s)\n", csString);
-		LG("lua_err", "no define DoString(%s)\n", csString);
+		ToLogService("lua_err", "no define DoString({})", csString);
 		return 0;
 	}
 
 	if (nRetNum > DOSTRING_RETURN_NUM)
 	{
 		//LG("lua_err", "msgDoString(%s) \n", csString);
-		LG("lua_err", "msgDoString(%s) return wrong num !!!\n", csString);
+		ToLogService("lua_err", "msgDoString({}) return wrong num !!!", csString);
 
 		lua_settop(m_pSLua, 0);
 		return 0;
@@ -108,7 +108,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			break;
 		default:
 			//LG("lua_err", "msgDoString(%s) \n", csString);
-			LG("lua_err", "msgDoString(%s) parameter type is wrong!!!\n", csString);
+			ToLogService("lua_err", "msgDoString({}) parameter type is wrong!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
 			break;
@@ -119,7 +119,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	int nState = lua_pcall(m_pSLua, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", csString);
+		ToLogService("lua_err", "DoString {}", csString);
 		lua_callalert(m_pSLua, nState);
 
 		lua_settop(m_pSLua, 0);
@@ -135,7 +135,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			if (!lua_isnumber(m_pSLua, -1 - i))
 			{
 				//LG("lua", " %s%d%d \n", csString, nParamNum, nRetNum);
-				LG("lua return", "call %s(parameter %d return %d), return type can't matched!\n", csString, nParamNum, nRetNum);
+					ToLogService("lua return", "call {}(parameter {} return {}), return type can't matched!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
 			}
@@ -146,7 +146,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			if (!lua_isstring(m_pSLua, -1 - i))
 			{
 				//LG("lua", " %s%d%d \n", csString, nParamNum, nRetNum);
-				LG("lua return", "call %s(parameter %d return %d), return type can't matched!\n", csString, nParamNum, nRetNum);
+					ToLogService("lua return", "call {}(parameter {} return {}), return type can't matched!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
 			}
@@ -155,7 +155,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		else
 		{
 			//LG("lua_err", "msgDoString(%s) \n", csString);
-			LG("lua_err", "msgDoString(%s) eturn type is wrong!!!\n", csString);
+			ToLogService("lua_err", "msgDoString({}) eturn type is wrong!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
 		}
@@ -167,7 +167,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	if(dwEndTime > 20)
 	{
 		//LG("script_time", "[%s] time = %d\n", csString, dwEndTime);
-		LG("script_time", "script [%s] too long time = %d\n", csString, dwEndTime);
+		ToLogService("script_time", "script [{}] too long time = {}", csString, dwEndTime);
 	}
 	return nRet;
 }

@@ -8,21 +8,21 @@
 #include "Action.h"
 #include "GameCommon.h"
 #include "MoveAble.h"
-#include "TryUtil.h"
+
 #include "Character.h"
 
 _DBC_USING;
 
 CAction::CAction(Entity *pCEntity)
-{T_B
+{
 	m_pCEntity = pCEntity;
 	memset(m_SAction, 0, sizeof(m_SAction));
 	m_sActionNum = 0;
 	m_sCurAction = -1;
-T_E}
+}
 
 bool CAction::Add(dbc::Short sActionType, void *pActionData)
-{T_B
+{
 	if (m_sCurAction != -1 || m_sActionNum >= defMAX_ACTION_NUM)
 	{
 		return false;
@@ -54,14 +54,14 @@ bool CAction::Add(dbc::Short sActionType, void *pActionData)
 	}
 
 	return true;
-T_E}
+}
 
 //=============================================================================
 // sActionType .0
 // sActionState 
 //=============================================================================
 bool CAction::DoNext(Short sActionType, Short sActionState)
-{T_B
+{
 	if (m_sActionNum == 0 || m_pCEntity == NULL)
 	{
 		return false;
@@ -121,10 +121,10 @@ bool CAction::DoNext(Short sActionType, Short sActionState)
 	}
 
 	return true;
-T_E}
+}
 
 void CAction::End()
-{T_B
+{
 	if (m_sActionNum == 0 || m_sCurAction == -1 || m_pCEntity == NULL)
 	{
 		return;
@@ -162,15 +162,15 @@ void CAction::End()
 	m_sActionNum = 0;
 
 	return;
-T_E}
+}
 
 void CAction::Interrupt()
-{T_B
+{
 	m_sCurAction = -1;
 	m_sActionNum = 0;
 
 	return;
-T_E}
+}
 
 bool CAction::Has(Short sActionType, void *pActionData)
 {
@@ -219,7 +219,7 @@ CActionCache::~CActionCache()
 }
 
 void CActionCache::AddCommand(Short sCommand)
-{T_B
+{
 	SAction	*pSCarrier = NULL;
 
 	if (m_pSFreeQueue)
@@ -242,19 +242,19 @@ void CActionCache::AddCommand(Short sCommand)
 
 	pSCarrier->pSNext = m_pSExecQueue;
 	m_pSExecQueue = pSCarrier;
-T_E}
+}
 
 void CActionCache::PushParam(void *pParam, Char chSize)
-{T_B
+{
 	if (m_pSExecQueue && (m_pSExecQueue->chParamPos + chSize <= defMAX_CACHE_ACTION_PARAM_LEN))
 	{
 		memcpy(m_pSExecQueue->szParam + m_pSExecQueue->chParamPos, pParam, chSize);
 		m_pSExecQueue->chParamPos += chSize;
 	}
-T_E}
+}
 
 void CActionCache::Run()
-{T_B
+{
 	SAction	*pSCarrier, *pSLastCarrier;
 	pSCarrier = pSLastCarrier = m_pSExecQueue;
 	while (pSCarrier)
@@ -281,10 +281,10 @@ void CActionCache::Run()
 			pSCarrier = pSLastCarrier->pSNext;
 		}
 	}
-T_E}
+}
 
 void CActionCache::ExecAction(SAction *pSCarrier)
-{T_B
+{
 	Char	chCurParamPos = 0;
 	switch (pSCarrier->sCommand)
 	{
@@ -329,4 +329,4 @@ void CActionCache::ExecAction(SAction *pSCarrier)
 		}
 		break;
 	}
-T_E}
+}

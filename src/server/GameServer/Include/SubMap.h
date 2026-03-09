@@ -245,7 +245,7 @@ public:
 			{
 				m_pCEyeshotCell[lCellY][lCellX].m_lActNum++;
 				//LG("", "!!![%d,%d]\n", lCellX, lCellY);
-				LG("eyeshot activation error", "when eyeshot cell[%d,%d] stop activation ,find the character player who has eyeshot ability.\n", lCellX, lCellY);
+				ToLogService("eyeshot activation error", "when eyeshot cell[{},{}] stop activation ,find the character player who has eyeshot ability.", lCellX, lCellY);
 			}
 			else
 				m_CEyeshotCellL.Del(&m_pCEyeshotCell[lCellY][lCellX]);

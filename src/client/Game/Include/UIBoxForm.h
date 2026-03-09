@@ -109,8 +109,7 @@ private:
 
 	CForm*		_FindForm(const char * frmName);
 
-private:
-	// :,
+// :,
 	static CHideForm	_cTrade;	
 
 	// ,

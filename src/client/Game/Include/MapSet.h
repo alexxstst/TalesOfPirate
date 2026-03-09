@@ -90,7 +90,7 @@ protected:
             pInfo->nInitY = Str2Int(strList[1]);
         }
         
-        LG("map", "Read Map List [%d][%s]\n", pInfo->nID, pInfo->szDataName);
+        ToLogService("map", "Read Map List [{}][{}]", pInfo->nID, pInfo->szDataName);
             
         return TRUE;
     }

@@ -62,8 +62,7 @@ public:
 	void MasterAsk(const char* szName, DWORD dwCharID);
 	void PrenticeAsk(const char* szName, DWORD dwCharID);
 
-public:
-	CForm*			GetQQFrom()		{ return _frmQQ;		}
+CForm*			GetQQFrom()		{ return _frmQQ;		}
     CTreeView*      GetTeamView()   { return m_pQQTreeView;   }
 	CTreeGridNode*  GetSessionNode(){ return _pSessionNode;	}
 	CTreeGridNode*  GetGuildNode(){ return _pGuildNode;	}
@@ -77,8 +76,7 @@ public:
 	static CMember* _curSelectMember;
 
 
-public:
-	CForm*          frmChatManage;          // Chat
+CForm*          frmChatManage;          // Chat
 	//static CForm*	_frmDetails;
 	CForm*       GetDetailsForm()    { return _frmDetails;    }
 	//
@@ -95,14 +93,12 @@ public:
 
 private:
 	static bool _Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
-		LG("gui", strInfo, strFormName, strCompentName );
+		ToLogService("gui", "{} {} {}", strInfo, strFormName, strCompentName);
 		return false;
 	}
 
     static void _RenderEvent(C3DCompent *pSender, int x, int y);
 	static void _MemberMouseDownEvent(CGuiData *pSender, int x, int y, DWORD key);
-
-private:
 
 	static CForm*          _frmQQ;			 // QQ
 

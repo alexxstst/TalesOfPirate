@@ -5,7 +5,6 @@
 #ifndef GATESERVER_H
 #define GATESERVER_H
 
-#include "dstring.h"
 #include "DataSocket.h"
 
 _DBC_USING
@@ -49,7 +48,7 @@ public:
 	// End
 
 private:
-	dstring			m_name;
+	std::string			m_name;
 	DataSocket	*	m_datasock;
 	// Add by lark.li 20081119 begin
 	bool		m_bSync;		// GateServerGroupServer
@@ -88,7 +87,7 @@ public:
 		return m_datasock;
 	}
 private:
-	dstring			m_name;
+	std::string			m_name;
 	DataSocket	*	m_datasock;
 };
 // End

@@ -144,8 +144,7 @@ public:
 	DWORD m_dwBoatID;		//ID--Michael Chen(2005-05-26)
 	eState m_state;
 
-public:
-	static void	__ButtonYesNo(CGuiData *pSender, int x, int y, DWORD dwKey);
+static void	__ButtonYesNo(CGuiData *pSender, int x, int y, DWORD dwKey);
 	static void __ProcBtnItem(CGuiData *sender, int x, int y, DWORD key);
 	static void __ProcBtnView3d(CGuiData *sender, int x, int y, DWORD key);
 	static void __Proc3DView(C3DCompent *pSender, int x, int y);
@@ -221,8 +220,7 @@ public:
 	} eFlag;
 
 
-public:
-    static void __ProcSelectChange(CGuiData *pSender);
+static void __ProcSelectChange(CGuiData *pSender);
     static void	__ButtonClose(CGuiData *pSender, int x, int y, DWORD dwKey);
 
     xShipLaunchList();
@@ -254,8 +252,7 @@ public:
     xShipFactory* _factory;
     xShipLaunchList* _launch_list;
 
-public:
-    xShipMgr();
+xShipMgr();
     ~xShipMgr();
 
     BOOL Init(CGameScene* s);

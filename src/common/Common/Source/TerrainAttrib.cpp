@@ -737,7 +737,7 @@ public:
         {
         if ((id >= 0) && (id < _ta_cnt)) return true;
         else {
-            LG("Common", "Fault: [id=%d], wrong map index\n", id);
+            ToLogService("Common", "Fault: [id={}], wrong map index", id);
             return false;}
         }
 
@@ -792,10 +792,10 @@ int tamem_mgr::load_map(char const* fname)
         try {tmp = new terrain_attr_mem(fname);}
         catch (...)
             {
-            LG("Common", "Load attrib file: [%s] failed\n", fname);
+            ToLogService("Common", "Load attrib file: [{}] failed", fname);
             return INVALID_INDEX;}
 
-        LG("Common", "Attrib file: [id=%d] -> [%s]\n", _ta_cnt, fname);
+        ToLogService("Common", "Attrib file: [id={}] -> [{}]", _ta_cnt, fname);
         _ta[_ta_cnt] = tmp;
         _ta_map[fname] = _ta_cnt;
         id = _ta_cnt;

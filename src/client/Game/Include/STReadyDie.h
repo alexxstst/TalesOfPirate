@@ -28,8 +28,7 @@ protected:
 private:
     void    _Died();
 
-private:
-    enum eDieState
+enum eDieState
     {
         enumInit,
         enumDie,

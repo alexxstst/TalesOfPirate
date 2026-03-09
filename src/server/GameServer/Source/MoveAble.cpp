@@ -9,7 +9,7 @@
 #include "SubMap.h"
 #include "GameAppNet.h"
 #include "CommFunc.h"
-#include "TryUtil.h"
+
 #include "GameApp.h"
 
 _DBC_USING
@@ -18,7 +18,7 @@ unsigned long	g_ulElapse;
 unsigned long	g_ulDist;
 
 CMoveAble::CMoveAble()
-{T_B
+{
 	m_usHeartbeatFreq = 0;
 
 	m_SMoveInit.STargetInfo.chType = 0;
@@ -35,10 +35,10 @@ CMoveAble::CMoveAble()
 
 	m_bOnMove = false;
 	m_timeRun.Begin(1 * 300);
-T_E}
+}
 
 void CMoveAble::Initially()
-{T_B
+{
 	CFightAble::Initially();
 
 	m_SMoveInit.STargetInfo.chType = 0;
@@ -56,22 +56,22 @@ void CMoveAble::Initially()
 	m_lSetPing = -1;
 
 	m_bOnMove = false;
-T_E}
+}
 
 void CMoveAble::Finally()
-{T_B
+{
 	CFightAble::Finally();
-T_E}
+}
 
 void CMoveAble::WritePK(WPACKET& wpk)
-{T_B
+{
 	CFightAble::WritePK(wpk);
 	//ToDo:
 
-T_E}
+}
 
 void CMoveAble::ReadPK(RPACKET& rpk)
-{T_B
+{
 	CFightAble::ReadPK(rpk);
 
 	m_SMoveInit.STargetInfo.chType = 0;
@@ -87,10 +87,10 @@ void CMoveAble::ReadPK(RPACKET& rpk)
 	m_SMoveRedu.ulStartTick = 0;
 
 	m_bOnMove = false;
-T_E}
+}
 
 void CMoveAble::ResetMove()
-{T_B
+{
 	m_SMoveProc.sState = enumMSTATE_ARRIVE;
 	m_SMoveProc.chRequestState = 0;
 	m_SMoveProc.chLagMove = 0;
@@ -103,7 +103,7 @@ void CMoveAble::ResetMove()
 	m_SMoveRedu.ulStartTick = 0;
 
 	m_bOnMove = false;
-T_E}
+}
 
 //bool CMoveAble::AreaOverlap(long &xdist, long &ydist)
 //{
@@ -358,7 +358,7 @@ bool CMoveAble::AreaOverlap(long &xdist, long &ydist)
 }
 
 bool CMoveAble::overlap(long &xdist, long &ydist)
-{T_B
+{
 	bool	b_retval	= false;
 
 	if (Entity::overlap(xdist, ydist))
@@ -367,10 +367,10 @@ bool CMoveAble::overlap(long &xdist, long &ydist)
 		b_retval = true;
 
 	return b_retval;
-T_E}
+}
 
 bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
-{T_B
+{
 	if (m_usHeartbeatFreq == 0)
 	{
 		if (IsCharacter()->IsPlayerCha())
@@ -388,8 +388,6 @@ bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
 
 	if (ulNowTick >= m_SMoveRedu.ulStartTick)
 	{
-		//m_CLog.Log("\t %u %u %u %u\n", ulNowTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulNowTick - m_SMoveRedu.ulStartTick);
-		m_CLog.Log("request move\t currently time %uremain time %upasses time %upasses time %u\n", ulNowTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulNowTick - m_SMoveRedu.ulStartTick);
 		SetExistState(enumEXISTS_MOVING);
 		if (ulNowTick - m_SMoveRedu.ulStartTick >= m_SMoveRedu.ulLeftTime)
 		{
@@ -407,25 +405,18 @@ bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
 			m_SMoveProc.chLagMove = 1;
 			memcpy(&m_SMoveInitCache, pSMoveInit, sizeof(SMoveInit));
 			OnMoveBegin();
-			m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-			//m_CLog.Log("DesireMoveBegin \tLeftTime: %u\tPing: %u\n\n",
-				//m_SMoveRedu.ulLeftTime - (ulNowTick - m_SMoveRedu.ulStartTick), m_SMoveInit.usPing);
-			m_CLog.Log("DesireMoveBegin memory move request\tLeftTime: %u\tPing: %u\n\n",
-				m_SMoveRedu.ulLeftTime - (ulNowTick - m_SMoveRedu.ulStartTick), m_SMoveInit.usPing);
 		}
 	}
 	else
 	{
-		//m_CLog.Log("Move Redundance Start Tick:%u, \n", m_SMoveRedu.ulStartTick);
-		m_CLog.Log("Move Redundance Start Tick:%u, this state should not appearance\n", m_SMoveRedu.ulStartTick);
 		return false;
 	}
 
 	return true;
-T_E}
+}
 
 void CMoveAble::BeginMove(uLong ulElapse)
-{T_B
+{
 	if (GetPos() != m_SMoveInit.SInflexionInfo.SList[0]
 	&& IsCharacter()->IsRangePoint2(m_SMoveInit.SInflexionInfo.SList[0], 25 * 25 * 2)) // 
 	{
@@ -439,15 +430,6 @@ void CMoveAble::BeginMove(uLong ulElapse)
 			m_SMoveInit.SInflexionInfo.sNum += 1;
 		}
 	}
-
-	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("===Recieve(Move):\tTick %u\n", GetTickCount());
-	m_CLog.Log("Point:\t%3d\n", m_SMoveInit.SInflexionInfo.sNum);
-	for (Short i = 0; i < m_SMoveInit.SInflexionInfo.sNum; i++)
-		m_CLog.Log("\t%d, \t%d\n", m_SMoveInit.SInflexionInfo.SList[i].x, m_SMoveInit.SInflexionInfo.SList[i].y);
-	m_CLog.Log("\n");
-	//
 
 	g_ulElapse = 0;
 	g_ulDist = 0;
@@ -532,19 +514,15 @@ void CMoveAble::BeginMove(uLong ulElapse)
 		NotiSelfMov();
 		SubsequenceMove();
 	}
-T_E}
+}
 
 void CMoveAble::EndMove()
-{T_B
+{
 	m_SMoveProc.chRequestState = 1;
-	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("===Recieve(Stop Move):\tTick %u\n", GetTickCount());
-	//
-T_E}
+}
 
 void CMoveAble::OnMove(uLong dwCurTime)
-{T_B
+{
 	if (!m_bOnMove || !m_submap)
 		return;
 	if (!IsCharacter()->IsPlayerCha() && !m_timeRun.IsOK(dwCurTime))
@@ -556,8 +534,6 @@ void CMoveAble::OnMove(uLong dwCurTime)
 
 	if (!IsCharacter()->GetActControl(enumACTCONTROL_MOVE) && m_SMoveProc.sState == enumMSTATE_ON)
 	{
-		//m_CLog.Log("[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("irregular move requestexist didn't move state[PacketID: %u]\n", m_ulPacketID);
 		EndMove();
 	}
 
@@ -613,15 +589,9 @@ void CMoveAble::OnMove(uLong dwCurTime)
 
 	if (m_SMoveProc.chLagMove == 1 && m_SMoveProc.sState != enumMSTATE_ON)
 	{
-		//LG("", "\t %u %u %u\n", ulNowTick, m_SMoveRedu.ulLeftTime, ulNowTick - m_SMoveRedu.ulStartTick);
-		//m_CLog.Log("\t %u %u %u %u\n", ulCurTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulCurTick - m_SMoveRedu.ulStartTick);
-		m_CLog.Log("execute memory move\t currently time %uremain time %upasses time %upasses time %u\n", ulCurTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulCurTick - m_SMoveRedu.ulStartTick);
 		Long	lBal = Long(ulCurTick - m_SMoveRedu.ulStartTick) - (Long)m_SMoveRedu.ulLeftTime;
 		if (ulCurTick > m_SMoveRedu.ulStartTick && lBal >= 0)
 		{
-			//m_CLog.Log("[Packet: %u]\n", m_ulPacketID);
-			m_CLog.Log("execute memory move request[Packet: %u]\n", m_ulPacketID);
-
 			m_SMoveProc.chLagMove = 0;
 			m_SMoveRedu.ulLeftTime = 0;
 			m_SMoveRedu.ulStartTick = 0xffffffff;
@@ -667,21 +637,19 @@ void CMoveAble::OnMove(uLong dwCurTime)
 	if (m_SMoveProc.sState != enumMSTATE_ON && m_SMoveProc.chLagMove == 0)
 	{
 		OnMoveEnd();
-		//m_CLog.Log("OnMove[State:%d]\n", m_SMoveProc.sState);
-		m_CLog.Log("cease execute OnMove[State:%d]\n", m_SMoveProc.sState);
 	}
 
 	if (bAttemptMove)
 		AfterStepMove(); // 
 
-T_E}
+}
 
 //=============================================================================
 // distance
 // SMoveProc.sState
 //=============================================================================
 Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
-{T_B
+{
 	Char	chRet = enumMSTATE_ON;
 	double	dLeftDist = dPreMoveDist;
 	uLong	ulElapse = 0;
@@ -795,17 +763,12 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 
 	if (dwMoveTime + dwEyeMoveTime >= 60 )
 		//LG("map_time", "\t\t[%s] time = %u%u%u\n", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
-		LG("map_time", "\t\troll[%s]move cost time too long, time = %uthereinto position cost%ueye shot cost%u\n", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
+		ToLogService("map_time", "\t\troll[{}]move cost time too long, time = {}thereinto position cost{}eye shot cost{}", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
 
 	g_ulElapse += m_SMoveProc.ulElapse;
 	g_ulDist += lMoveDist;
-	/*m_CLog.Log("\t %u %u %u\t %u  %u\n",
-		GetTickCount(), lMoveDist, m_SMoveProc.ulElapse, g_ulDist, g_ulElapse);*/
-	m_CLog.Log("move stat\tcurrently time %umove distance %ucost time %u\taccumulative distance %utaccumulative cost time %u\n",
-		GetTickCount(), lMoveDist, m_SMoveProc.ulElapse, g_ulDist, g_ulElapse);
-
 	return chRet;
-T_E}
+}
 
 //=============================================================================
 // STardistance*ulElapse
@@ -813,7 +776,7 @@ T_E}
 //        -1-2
 //=============================================================================
 Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
-{T_B
+{
 	uLong	ulMoveSpd = (long)m_CChaAttr.GetAttr(ATTR_MSPD);
 	if (ulMoveSpd == 0)
 	{
@@ -903,10 +866,10 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 	*ulElapse = l_elapse;
 
 	return l_retval;
-T_E}
+}
 
 void CMoveAble::NotiMovToEyeshot()
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//2
 	WRITE_LONG(pk, m_ID);	  				//ID
@@ -919,29 +882,18 @@ void CMoveAble::NotiMovToEyeshot()
 
 	NotiChgToEyeshot(pk);//
 
-	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("###Send(Move):\tTick %u\n", GetTickCount());
-	m_CLog.Log("Point:\t%3d\n", m_SMoveProc.SNoticePoint.sNum);
 	long lDist = 0;
 	SPointList *pSPoint = &m_SMoveProc.SNoticePoint;
 	for (int i = 0; i < m_SMoveProc.SNoticePoint.sNum; i++)
 	{
-		m_CLog.Log("\t%d, \t%d\n", m_SMoveProc.SNoticePoint.SList[i].x, m_SMoveProc.SNoticePoint.SList[i].y);
 		if (i > 0)
 			lDist += (pSPoint->SList[i].x - pSPoint->SList[i - 1].x) * (pSPoint->SList[i].x - pSPoint->SList[i - 1].x)
 			+ (pSPoint->SList[i].y - pSPoint->SList[i - 1].y) * (pSPoint->SList[i].y - pSPoint->SList[i - 1].y);
 	}
-	m_CLog.Log("Elapse: %u\n", m_SMoveProc.ulElapse);
-	m_CLog.Log("Distance: %d\n", (long)sqrt(double(lDist)));
-	if (m_SMoveProc.sState)
-		m_CLog.Log("@@@End Move\tState:%d\n", m_SMoveProc.sState);
-	m_CLog.Log("\n");
-	//
-T_E}
+}
 
 void CMoveAble::NotiSelfMov()
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//2
 	WRITE_LONG(pk, m_ID);	  				//ID
@@ -954,29 +906,18 @@ void CMoveAble::NotiSelfMov()
 
 	ReflectINFof(this,pk);//
 
-	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("###Send(Move):\tTick %u\n", GetTickCount());
-	m_CLog.Log("Point:\t%3d\n", m_SMoveProc.SNoticePoint.sNum);
 	long lDist = 0;
 	SPointList *pSPoint = &m_SMoveProc.SNoticePoint;
 	for (int i = 0; i < m_SMoveProc.SNoticePoint.sNum; i++)
 	{
-		m_CLog.Log("\t%d, \t%d\n", m_SMoveProc.SNoticePoint.SList[i].x, m_SMoveProc.SNoticePoint.SList[i].y);
 		if (i > 0)
 			lDist += (pSPoint->SList[i].x - pSPoint->SList[i - 1].x) * (pSPoint->SList[i].x - pSPoint->SList[i - 1].x)
 			+ (pSPoint->SList[i].y - pSPoint->SList[i - 1].y) * (pSPoint->SList[i].y - pSPoint->SList[i - 1].y);
 	}
-	m_CLog.Log("Elapse: %u\n", m_SMoveProc.ulElapse);
-	m_CLog.Log("Distance: %d\n", (long)sqrt(double(lDist)));
-	if (m_SMoveProc.sState)
-		m_CLog.Log("@@@End Move\tState:%d\n", m_SMoveProc.sState);
-	m_CLog.Log("\n");
-	//
-T_E}
+}
 
 bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)
-{T_B
+{
 	if (m_SMoveInit.STargetInfo.chType == 1) // 
 	{
 		Entity	*pTarObj = g_pGameApp->IsMapEntity(m_SMoveInit.STargetInfo.lInfo1, m_SMoveInit.STargetInfo.lInfo2);
@@ -998,7 +939,7 @@ bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)
 	}
 
 	return true;
-T_E}
+}
 
 bool CMoveAble::SetMoveOnInfo(SMoveInit* pSMoveI)
 {
@@ -1022,7 +963,7 @@ bool CMoveAble::SetMoveOnInfo(SMoveInit* pSMoveI)
 // pSPort1pSPort2pSReference
 //=============================================================================
 Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *pSPort2, const Point *pSReference)
-{T_B
+{
 	Point	SNearlyPoint;
 	Long	lMaxX, lMinX, lMaxY, lMinY;
 
@@ -1078,7 +1019,7 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 	}
 
 	return SNearlyPoint;
-T_E}
+}
 
 //=============================================================================
 // pSPort1pSPort2pSCircle

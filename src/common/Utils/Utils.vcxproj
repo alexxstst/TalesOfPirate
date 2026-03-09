@@ -19,32 +19,33 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Network\Source\Point.cpp" />
+    <ClCompile Include="include\CrushSystem.cpp" />
     <ClCompile Include="source\algo.cpp" />
     <ClCompile Include="source\Big5.cpp" />
+    <ClCompile Include="source\ConsoleColor.cpp" />
     <ClCompile Include="source\d3des.cpp" />
     <ClCompile Include="source\db.cpp" />
     <ClCompile Include="source\db3.cpp" />
     <ClCompile Include="source\enclib.cpp" />
     <ClCompile Include="source\English.cpp" />
     <ClCompile Include="source\GB2312.cpp" />
-    <ClCompile Include="source\log.cpp" />
-    <ClCompile Include="source\log2.cpp" />
     <ClCompile Include="source\logutil.cpp" />
     <ClCompile Include="source\MapDataVer.cpp" />
     <ClCompile Include="source\MapUtil.cpp" />
     <ClCompile Include="source\md5c.c" />
+    <ClCompile Include="source\ObjectPools.cpp" />
+    <ClCompile Include="source\Point.cpp" />
     <ClCompile Include="source\SectionData.cpp" />
     <ClCompile Include="source\Strings.cpp" />
     <ClCompile Include="source\StringsUtil.cpp" />
     <ClCompile Include="source\util2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\corsairs-online-public\source\Common\Utils\Include\StringsUtil.h" />
     <ClInclude Include="include\algo.h" />
-    <ClInclude Include="include\AtlAux2.h" />
     <ClInclude Include="include\AttribData.h" />
     <ClInclude Include="include\Big5.h" />
+    <ClInclude Include="include\ConsoleColor.h" />
+    <ClInclude Include="include\CrushSystem.h" />
     <ClInclude Include="include\d3des.h" />
     <ClInclude Include="include\db.h" />
     <ClInclude Include="include\db3.h" />
@@ -52,31 +53,24 @@
     <ClInclude Include="include\enclib.h" />
     <ClInclude Include="include\English.h" />
     <ClInclude Include="include\exception2.h" />
-    <ClInclude Include="include\exception_trap.h" />
     <ClInclude Include="include\fifo.h" />
     <ClInclude Include="include\GB2312.h" />
     <ClInclude Include="include\kbase.h" />
-    <ClInclude Include="include\log.h" />
-    <ClInclude Include="include\log2.h" />
+    <ClInclude Include="include\logutil.h" />
     <ClInclude Include="include\LuaBridge.h" />
     <ClInclude Include="include\MapUtil.h" />
     <ClInclude Include="include\matrix_stuff.h" />
     <ClInclude Include="include\md5.h" />
     <ClInclude Include="include\MPMapDef.h" />
     <ClInclude Include="include\ObjectData.h" />
-    <ClInclude Include="include\pch.h" />
-    <ClInclude Include="include\playsound.h" />
+    <ClInclude Include="include\ObjectPools.h" />
     <ClInclude Include="include\Point.h" />
     <ClInclude Include="include\ReturnValues.h" />
     <ClInclude Include="include\SectionData.h" />
-    <ClInclude Include="include\se_translator.h" />
     <ClInclude Include="include\singleton.h" />
     <ClInclude Include="include\Strings.h" />
     <ClInclude Include="include\StringsUtil.h" />
-    <ClInclude Include="include\sym_engine.h" />
     <ClInclude Include="include\TerrainData.h" />
-    <ClInclude Include="include\TryUtil.h" />
-    <ClInclude Include="include\unhandled_report.h" />
     <ClInclude Include="include\util.h" />
     <ClInclude Include="include\util2.h" />
   </ItemGroup>

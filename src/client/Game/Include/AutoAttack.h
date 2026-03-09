@@ -34,8 +34,7 @@ public:
 private:
 	void			_CaleDist();
 
-private:
-	enum eStyle
+enum eStyle
 	{
 		eNone,
 		eFollow,

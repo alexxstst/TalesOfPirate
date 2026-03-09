@@ -50,7 +50,7 @@ private:
 	CEventRecord*   _pEvent;
     CSceneNode*     _pNode;              // Node
 
-private: // run time
+ // run time
     bool            _IsActive;           // 
 	DWORD			_dwLastTime;		 // 
 
@@ -70,10 +70,7 @@ public:
 
 	CEvent*		Search(long	lEntityID);
 
-private:
-
-private:
-	CGameScene* _pScene;
+CGameScene* _pScene;
 
 	typedef std::vector<CEvent*>	events;
 	events		_events;

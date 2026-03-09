@@ -23,7 +23,7 @@ namespace mission
 	}
 
 	BOOL CWorldEudemon::InitScript( const char szFunc[], const char szName[] )
-	{T_B
+	{
 		if( szFunc[0] == '0' ) return TRUE;
 
 		// NPC
@@ -31,7 +31,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "ResetNpcInfo" );
+			ToLogService( "lua_invalidfunc", "ResetNpcInfo" );
 			return FALSE;
 		}
 
@@ -42,7 +42,7 @@ namespace mission
 		if( nStatus )
 		{
 			//LG( "NpcInit", "npc[%s][ResetNpcInfo]!", szName );
-			LG( "NpcInit", "npc[%s]'s script init dispose function[ResetNpcInfo]transfer error!", szName );
+			ToLogService( "NpcInit", "npc[{}]'s script init dispose function[ResetNpcInfo]transfer error!", szName );
 			//printf( "npc[%s][ResetNpcInfo]!\n", szName );
 			printf( RES_STRING(GM_WORLDEUDEMON_CPP_00001), szName );
 			lua_callalert( g_pLuaState, nStatus );
@@ -56,7 +56,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", szFunc );
+			ToLogService( "lua_invalidfunc", "{}", szFunc );
 			return FALSE;
 		}
 
@@ -64,7 +64,7 @@ namespace mission
 		if( nStatus )
 		{
 			//LG( "NpcInit", "npc[%s][%s]!", szName, szFunc );
-			LG( "NpcInit", "npc[%s]'s script data dispose function[%s]transfer failed!", szName, szFunc );
+			ToLogService( "NpcInit", "npc[{}]'s script data dispose function[{}]transfer failed!", szName, szFunc );
 			//printf( "npc[%s][%s]!\n", szName, szFunc );
 			printf( RES_STRING(GM_WORLDEUDEMON_CPP_00002), szName, szFunc );
 			lua_callalert( g_pLuaState, nStatus );
@@ -78,7 +78,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "GetNpcInfo" );
+			ToLogService( "lua_invalidfunc", "GetNpcInfo" );
 			return FALSE;
 		}
 
@@ -89,7 +89,7 @@ namespace mission
 		if( nStatus )
 		{
 			//LG( "NpcInit", "npc[%s][GetNpcInfo]!", szName );
-			LG( "NpcInit", "npc[%s]'s script init dispose fuction[GetNpcInfo]transfer failed!", szName );
+			ToLogService( "NpcInit", "npc[{}]'s script init dispose fuction[GetNpcInfo]transfer failed!", szName );
 			//printf( "npc[%s][GetNpcInfo]!\n", szName );
 			printf( RES_STRING(GM_WORLDEUDEMON_CPP_00003), szName );
 			lua_callalert( g_pLuaState, nStatus );
@@ -99,7 +99,7 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CWorldEudemon::Load( const char szMsgProc[], const char szName[], dbc::uLong ulID )
 	{
@@ -116,9 +116,6 @@ namespace mission
 		strncpy( m_szMsgProc, szMsgProc, ROLE_MAXSIZE_MSGPROC - 1 );
 
 		m_ID = ulID;
-		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
-		m_CLog.SetLogName(szLogName);
 
 		// 
 		m_pCChaRecord = (CChaRecord*)GetChaRecordInfo( 1 );
@@ -137,7 +134,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "NpcProc" );
+			ToLogService( "lua_invalidfunc", "NpcProc" );
 			return FALSE;
 		}
 

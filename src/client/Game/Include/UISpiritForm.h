@@ -78,8 +78,6 @@ namespace GUI
 		static void _evtMainMouseButton(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);// 
 		static void _evtCloseMarryForm(CForm* pForm, bool& IsClose);	// 
 
-	private:
-
 		//
 		//  
 		//

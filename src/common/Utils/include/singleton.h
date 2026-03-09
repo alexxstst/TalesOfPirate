@@ -22,13 +22,10 @@ public:
     cfl_nil_mutex() {}
     virtual ~cfl_nil_mutex() {}
 
-public:
-    virtual bool lock();
+virtual bool lock();
     virtual bool unlock();
 
-protected:
-private:
-    };
+};
 
 inline bool cfl_nil_mutex::lock() {return true;}
 inline bool cfl_nil_mutex::unlock() {return true;}
@@ -42,8 +39,7 @@ public:
     cfl_mt_mutex();
     ~cfl_mt_mutex();
 
-public:
-    bool lock();
+bool lock();
     bool unlock();
 
 protected:
@@ -57,7 +53,7 @@ protected:
 inline cfl_mt_mutex::cfl_mt_mutex()
     {
 #if defined(WIN32)
-    _mtx = CreateEvent(0, TRUE, TRUE, 0);
+    _mtx = CreateEvent(nullptr, TRUE, TRUE, nullptr);
 #elif defined(FREEBSD)
     pthread_mutex_init(&_mtx, NULL);
 #endif
@@ -104,11 +100,11 @@ protected:
 public:
 	static T* instance()
 	{
-		if (_instance == 0)
+		if (_instance == nullptr)
 		{
 			static CFL_LOCK locker;
 			locker.lock();
-			if (_instance == 0) _instance = new T;
+			if (_instance == nullptr) _instance = new T;
 			locker.unlock();
 		}
 		return _instance;
@@ -120,7 +116,7 @@ public:
 };
 
 template<class T, class CFL_LOCK>
-T* cfl_singleton<T, CFL_LOCK> ::_instance = 0;
+T* cfl_singleton<T, CFL_LOCK> ::_instance = nullptr;
 
 // cfl singleton with auto_ptr
 template<class T, class CFL_LOCK = cfl_nil_mutex>

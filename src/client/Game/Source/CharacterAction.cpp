@@ -40,7 +40,7 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 	fFile = _tfopen(ptcsFileName, _TEXT("rb"));
 	if (fFile == NULL)
 	{
-		LG("error", "msgLoad Raw Data Info Txt File [%s] Fail!\n", ptcsFileName);
+		ToLogService("error", "msgLoad Raw Data Info Txt File [{}] Fail!", ptcsFileName);
 		bRet = false;
 		goto end;
 	}

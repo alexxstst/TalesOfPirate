@@ -72,9 +72,8 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &
 
 	if(!pPrentice || !pMaster)
 	{
-		LogLine l_line(g_LogMaster);
 		//l_line<<newln<<"MP_MASTER_CREATE()!";
-		l_line<<newln<<"MP_MASTER_CREATE() member is offline!";
+		ToLogService("Master", "MP_MASTER_CREATE() member is offline!");
 		return;
 	}
 
@@ -164,15 +163,12 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &
 				pMaster->SendSysInfo(l_buf);
 			}else
 			{
-				LogLine	l_line(g_LogMaster);
 				/*
 				l_line<<newln<<""<<pMaster->m_chaname[pMaster->m_currcha]<<"("<<pMaster->m_chaid[pMaster->m_currcha]
 				<<")"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")!"
 					<<endln;
 				*/
-				l_line<<newln<<"player"<<pMaster->m_chaname[pMaster->m_currcha]<<"("<<pMaster->m_chaid[pMaster->m_currcha]
-				<<")and player"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")become Master!"
-					<<endln;
+				ToLogService("Master", "player{}({})and player{}({})become Master!", pMaster->m_chaname[pMaster->m_currcha], pMaster->m_chaid[pMaster->m_currcha], l_inviter->m_chaname[l_inviter->m_currcha], l_inviter_chaid);
 				m_tblmaster->AddMaster(l_prentice_chaid, l_master_chaid);
 				AddMaster(l_prentice_chaid, l_master_chaid);
 				//pMaster->SendSysInfo("!");
@@ -201,9 +197,8 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &
 	}
 	else
 	{
-		LogLine l_line(g_LogMaster);
 		//l_line<<newln<<"MP_MASTER_CREATE()";
-		l_line<<newln<<"MP_MASTER_CREATE() invite failed";
+		ToLogService("Master", "MP_MASTER_CREATE() invite failed");
 	}
 }
 
@@ -248,13 +243,11 @@ void GroupServerApp::MP_MASTER_DEL(Player *ply,DataSocket *datasock,RPacket &pk)
 
 		m_tblmaster->DelMaster(l_prentice_chaid,l_master_chaid);
 		DelMaster(l_prentice_chaid,l_master_chaid);
-		LogLine	l_line(g_LogMaster);
 		/*
 		l_line<<newln<<""<<szMasterName<<"("<<l_master_chaid
 		<<")<<szPrenticeName<<("<<l_prentice_chaid<<")";
 		*/
-		l_line<<newln<<"player"<<szMasterName<<"("<<l_master_chaid
-		<<")and <<szPrenticeName<<("<<l_prentice_chaid<<"free master relation";
+		ToLogService("Master", "player{}({})and <<szPrenticeName<<({}free master relation", szMasterName, l_master_chaid, l_prentice_chaid);
 	}
 }
 
@@ -384,9 +377,8 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 		}
 	}
 	SendToClient(ply,l_toSelf1);
-	LogLine	l_line1(g_LogMaster);
 	//l_line1<<newln<<""<<l_plynum1<<endln;
-	l_line1<<newln<<"online notice apprentice num:"<<l_plynum1<<endln;
+	ToLogService("Master", "online notice apprentice num:{}", l_plynum1);
 	SendToClient(l_plylst1.data(),l_plynum1,l_toPrentice);
 
 	//
@@ -450,9 +442,8 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 		}
 	}
 	SendToClient(ply,l_toSelf2);
-	LogLine	l_line2(g_LogMaster);
 	//l_line2<<newln<<""<<l_plynum2<<endln;
-	l_line2<<newln<<"online notice master num:"<<l_plynum2<<endln;
+	ToLogService("Master", "online notice master num:{}", l_plynum2);
 	SendToClient(l_plylst2.data(), l_plynum2, l_toMaster);
 }
 

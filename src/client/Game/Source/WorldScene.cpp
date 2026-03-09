@@ -84,7 +84,7 @@ bool		CWorldScene::_IsShowCameraInfo	= false;
 CWorldScene::CWorldScene(stSceneInitParam& param)
 : CGameScene(param), _pAnimLightSeq(0), _dwAnimLightNum(0), _nOldMainChaInArea(-1),_IsShowSideLife(false)
 {
-	LG( "scene memory", "CWorldScene Create\n" );
+	ToLogService( "scene memory", "CWorldScene Create" );
 
     _pShipMgr = new xShipMgr();
     _pShipMgr->Init(this);
@@ -94,7 +94,7 @@ CWorldScene::CWorldScene(stSceneInitParam& param)
 
 CWorldScene::~CWorldScene()
 {
-	LG( "scene memory", "CWorldScene Destroy\n" );
+	ToLogService( "scene memory", "CWorldScene Destroy" );
 
     delete _pShipMgr;
 
@@ -235,7 +235,7 @@ bool CWorldScene::_Init()
 
 	g_stUIChat.GetTeamMgr()->SceneSwitch();
 
-	LG("init", "World Scene Init Use Time = %d\n", tInit.End());
+	ToLogService("init", "World Scene Init Use Time = {}", tInit.End());
     return true;
 }
 
@@ -1116,7 +1116,7 @@ void CWorldScene::_KeyDownEvent( int key )
 
 			if( GetMainCha()->IsBoat() )
 			{
-				LG( "info", g_oLangRec.GetString(791) );
+				ToLogService( "info", "{}", g_oLangRec.GetString(791) );
 				return;
 			}
 	#if 0
@@ -1451,7 +1451,9 @@ void CWorldScene::SetMainCha(int nChaID)
 	}
 
 	char* szLogName = pCha->getLogName();
-	LG(szLogName, g_oLangRec.GetString(796), GetTickCount());
+	{
+		ToLogService(szLogName, "{} {}", g_oLangRec.GetString(796), GetTickCount());
+	}
 	
 	_pMainCha = pCha;
     pCha->EnableAI(FALSE);

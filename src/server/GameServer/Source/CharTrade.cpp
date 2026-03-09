@@ -20,31 +20,31 @@ namespace mission
 
 	CTradeData::CTradeData(dbc::uLong lSize)
 	: PreAllocStru(1)
-	{T_B
+	{
 
-	T_E}
+	}
 
 	CTradeData::~CTradeData()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	//----------------------------------------------------
 	// CTradeSystem implemented
 
 	CTradeSystem::CTradeSystem()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	CTradeSystem::~CTradeSystem()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	// 
 	BOOL CTradeSystem::Request( BYTE byType, CCharacter& character, DWORD dwAcceptID )
-	{T_B
+	{
 		if(character.GetPlyMainCha()->IsStoreEnable())
 		{
 			//character.SystemNotice("!");
@@ -226,19 +226,19 @@ namespace mission
 
 		pChar->ReflectINFof( pChar, packet );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::IsTradeDist( CCharacter& Char1, CCharacter& Char2, DWORD dwDist )
-	{T_B
+	{
 		DWORD dwxDist = (Char1.GetShape().centre.x - Char2.GetShape().centre.x) * 
 			(Char1.GetShape().centre.x - Char2.GetShape().centre.x);
 		DWORD dwyDist = (Char1.GetShape().centre.y - Char2.GetShape().centre.y) * 
 			(Char1.GetShape().centre.y - Char2.GetShape().centre.y);
 		return ( dwxDist + dwyDist < dwDist * 100 );
-	T_E}
+	}
 
 	BOOL CTradeSystem::Accept( BYTE byType, CCharacter& character, DWORD dwRequestID )
-	{T_B
+	{
 		if( character.GetBoat() )
 		{
 			//character.SystemNotice( "" );
@@ -478,10 +478,10 @@ namespace mission
 		pChar->ReflectINFof( pMain, packet );
 		pMain->ReflectINFof( pMain, packet );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::Cancel( BYTE byType, CCharacter& character, DWORD dwCharID )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -509,7 +509,7 @@ namespace mission
 			char szData[128];
 			//sprintf( szData, "Cancel:%s!\n", pMain->GetName() );
 			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00032), pMain->GetName() );
-			LG( "trade_error", szData );
+			ToLogService( "trade_error", "{}", szData );
 			return FALSE;
 		}
 
@@ -569,10 +569,10 @@ namespace mission
 		pTradeData1->Free();
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::Clear( BYTE byType, CCharacter& character )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -634,17 +634,17 @@ namespace mission
 		else
 		{
 			//LG( "Trade", "()"  );
-			LG( "Trade", "when delete characterit find error while clear trade information,the error is:(unsuited charcter pointer)"  );
+			ToLogService( "Trade", "{}", "when delete characterit find error while clear trade information,the error is:(unsuited charcter pointer)" );
 			return FALSE;
 		}
 
 		pTradeData->Free();
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::AddIMP(BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, DWORD dwMoney)
 	{
-		T_B
+
 			CCharacter* pMain = &character;
 		if (!pMain->GetPlyMainCha()){
 			pMain->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00010));
@@ -664,7 +664,7 @@ namespace mission
 		{
 			char szData[128];
 			sprintf(szData, RES_STRING(GM_CHARTRADE_CPP_00035), pMain->GetName());
-			LG("trade_error", szData);
+			ToLogService("trade_error", "{}", szData);
 			return FALSE;
 		}
 
@@ -727,11 +727,11 @@ namespace mission
 		pTradeData->pAccept->ReflectINFof(pMain, packet);
 		pTradeData->pRequest->ReflectINFof(pMain, packet);
 		return TRUE;
-		T_E
+
 	}
 
 	BOOL CTradeSystem::AddMoney( BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, DWORD dwMoney )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() ){
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
@@ -750,7 +750,7 @@ namespace mission
 		{
 			char szData[128];
 			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00035), pMain->GetName() );
-			LG( "trade_error", szData );
+			ToLogService( "trade_error", "{}", szData );
 			return FALSE;
 		}
 
@@ -809,11 +809,11 @@ namespace mission
 		pTradeData->pAccept->ReflectINFof( pMain, packet );
 		pTradeData->pRequest->ReflectINFof( pMain, packet );
 		return TRUE;
-	T_E}
+	}
 
 	// 
 	BOOL CTradeSystem::AddItem( BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, BYTE byIndex, BYTE byItemIndex, BYTE byCount )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( pMain->GetPlayer() == NULL )
 		{		
@@ -850,7 +850,7 @@ namespace mission
 			char szData[128];
 			//sprintf( szData, "AddItem:%s!", pMain->GetName() );
 			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00040), pMain->GetName() );
-			LG( "trade_error", szData );
+			ToLogService( "trade_error", "{}", szData );
 			return FALSE;
 		}
 
@@ -1057,8 +1057,7 @@ namespace mission
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );*/
 					pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00052), 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
-					LG( "trade_error", "The data error of this boatcannot tradeID[0x%X]", 
-						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
+					ToLogService( "trade_error", "The data error of this boatcannot tradeID[{:x}]", Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
 					return FALSE;
 				}
 				if( !game_db.SaveBoat( *pBoat, enumSAVE_TYPE_OFFLINE ) )
@@ -1069,8 +1068,7 @@ namespace mission
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );*/
 					pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00053), pBoat->GetName(), 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
-					LG( "trade_error", "AddItem:it failed to save boat databoat%sID[0x%X]", pBoat->GetName(), 
-						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
+					ToLogService( "trade_error", "AddItem:it failed to save boat databoat{}ID[{:x}]", pBoat->GetName(), Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
 					return FALSE;
 				}
 			}
@@ -1187,10 +1185,10 @@ namespace mission
 		}
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::ValidateItemData( BYTE byType, CCharacter& character, DWORD dwCharID )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -1218,7 +1216,7 @@ namespace mission
 			char szData[128];
 			//sprintf( szData, "ValidateItemData:%s!", pMain->GetName() );
 			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00055), pMain->GetName() );
-			LG( "trade_error", szData );
+			ToLogService( "trade_error", "{}", szData );
 			return FALSE;
 		}
 
@@ -1256,7 +1254,7 @@ namespace mission
 			/*pMain->SystemNotice( "" );
 			LG( "trade_error", "" );*/
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00056) );
-			LG( "trade_error", "information of trade object  inside error" );
+			ToLogService( "trade_error", "{}", "information of trade object  inside error" );
 			return FALSE;
 		}
 	
@@ -1274,10 +1272,10 @@ namespace mission
 			pTradeData->pRequest->ReflectINFof( pMain, packet );
 		}	
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::ValidateTrade( BYTE byType, CCharacter& character, DWORD dwCharID )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -1305,7 +1303,7 @@ namespace mission
 			char szData[128];
 			//sprintf( szData, "ValidateTrade:%s!", pMain->GetName() );
 			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00057), pMain->GetName() );
-			LG( "trade_error", szData );
+			ToLogService( "trade_error", "{}", szData );
 			return FALSE;
 		}
 
@@ -1487,7 +1485,7 @@ namespace mission
 						/*pMain->SystemNotice( "IDID = %d", pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						LG( "trade_error", "IDID = %d", pTradeData->AcpTradeData.ItemArray[i].sItemID );*/
 						pMain->SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00041), pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						LG( "trade_error", "res ID errorit cannot find this res informationID = %d", pTradeData->AcpTradeData.ItemArray[i].sItemID );
+						ToLogService( "trade_error", "res ID errorit cannot find this res informationID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						return FALSE;
 					}
 					else
@@ -1505,8 +1503,7 @@ namespace mission
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00062), 
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
-							LG( "trade_error", "it failed to get trade res d% from trade asker d%ID = %d", 
-								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
+							ToLogService( "trade_error", "it failed to get trade res d% from trade asker d%ID = {}", pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							return FALSE;
 						}
 
@@ -1541,8 +1538,7 @@ namespace mission
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00065), 
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								LG( "trade_error", "it failed to delete captain confirm boat that %s have DBID[0x%X]", 
-									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+								ToLogService( "trade_error", "it failed to delete captain confirm boat that {} have DBID[{:x}]", pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
 						else
@@ -1568,7 +1564,7 @@ namespace mission
 						/*pMain->SystemNotice( "IDID = %d", pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						LG( "trade_error", "IDID = %d", pTradeData->ReqTradeData.ItemArray[i].sItemID );*/
 						pMain->SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00041), pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						LG( "trade_error", "res ID errorit cannot find this res informationID = %d", pTradeData->ReqTradeData.ItemArray[i].sItemID );
+						ToLogService( "trade_error", "res ID errorit cannot find this res informationID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						return FALSE;
 					}
 					else
@@ -1586,8 +1582,7 @@ namespace mission
 								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00067), 
 								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
-							LG( "trade_error", "it failed get res %d from trade asker%sID = %d", 
-								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
+							ToLogService( "trade_error", "it failed get res %d from trade asker{}ID = {}", pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
 							return FALSE;
 						}
 
@@ -1623,8 +1618,7 @@ namespace mission
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								LG( "trade_error", "it failed to delete boat that captain confirm of %s haveDBID[0x%X]", 
-									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+								ToLogService( "trade_error", "it failed to delete boat that captain confirm of {} haveDBID[{:x}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
 						else
@@ -1654,8 +1648,7 @@ namespace mission
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						LG( "trade_error", "res ID errorit cannot find res informationit cannot give you this resID = %d", 
-							pTradeData->AcpTradeData.ItemArray[i].sItemID );
+						ToLogService( "trade_error", "res ID errorit cannot find res informationit cannot give you this resID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						continue;
 					}
 
@@ -1684,8 +1677,7 @@ namespace mission
 								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
 								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
-							LG( "trade_error", "Error code[%d],when trading,%s bag is full,%sfailed to put on floortrade res failedID[%d], Num[%d]", 
-								sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+							ToLogService( "trade_error", "Error code[{}],when trading,{} bag is full,{}failed to put on floortrade res failedID[{}], Num[{}]", sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
 						}
 					}
 					else if( sPushRet != enumKBACT_SUCCESS )
@@ -1700,8 +1692,7 @@ namespace mission
 							AcpGrid[i].sID, ReqGrid[i].sNum );
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
-						LG( "trade_error", "Error code[%d],it failed to put res in %s bag when trading res %strade res failedID[%d], Num[%d]", sPushRet, pItem->szName, pRequest->GetName(), 
-							AcpGrid[i].sID, ReqGrid[i].sNum );
+						ToLogService( "trade_error", "Error code[{}],it failed to put res in {} bag when trading res {}trade res failedID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), AcpGrid[i].sID, ReqGrid[i].sNum );
 					}
 					else
 					{
@@ -1722,8 +1713,7 @@ namespace mission
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							LG( "trade_error", "add to %scaptain confirm it hold boat failedDBID[0x%X]", 
-								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+							ToLogService( "trade_error", "add to {}captain confirm it hold boat failedDBID[{:x}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 						}
 					}
 				}
@@ -1744,8 +1734,7 @@ namespace mission
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						LG( "trade_error", "res ID errorcannot find this res informationthis res cannot give youID = %d", 
-							pTradeData->ReqTradeData.ItemArray[i].sItemID );
+						ToLogService( "trade_error", "res ID errorcannot find this res informationthis res cannot give youID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						continue;
 					}
 
@@ -1774,8 +1763,7 @@ namespace mission
 								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
 								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
-							LG( "trade_error", "Error code[%d],when trading,%s bag is full,%sfailed to put on floortrade res failedID[%d], Num[%d]", 
-								sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+							ToLogService( "trade_error", "Error code[{}],when trading,{} bag is full,{}failed to put on floortrade res failedID[{}], Num[{}]", sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
 						}
 					}
 					else if( sPushRet != enumKBACT_SUCCESS )
@@ -1790,8 +1778,7 @@ namespace mission
 							ReqGrid[i].sID, ReqGrid[i].sNum );
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
-						LG( "trade_error", "Error code[%d],it failed to put res in %s bag when trading res %strade res failedID[%d], Num[%d]", sPushRet, pItem->szName, pRequest->GetName(), 
-							AcpGrid[i].sID, ReqGrid[i].sNum );
+						ToLogService( "trade_error", "Error code[{}],it failed to put res in {} bag when trading res {}trade res failedID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), AcpGrid[i].sID, ReqGrid[i].sNum );
 					}
 					else 
 					{
@@ -1812,8 +1799,7 @@ namespace mission
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							LG( "trade_error", "add to %scaptain confirm it hold boat failedDBID[0x%X]", 
-								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+							ToLogService( "trade_error", "add to {}captain confirm it hold boat failedDBID[{:x}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 						}
 					}
 				}
@@ -1885,8 +1871,7 @@ namespace mission
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						LG( "trade_error", "res ID errorit cannot find res informationit cannot give you this resID = %d", 
-							pTradeData->AcpTradeData.ItemArray[i].sItemID );
+						ToLogService( "trade_error", "res ID errorit cannot find res informationit cannot give you this resID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							continue;
 						}
 
@@ -1906,8 +1891,7 @@ namespace mission
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								LG( "trade_error", "it failed to delete boat that captain confirm of %s haveDBID[0x%X]", 
-									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+								ToLogService( "trade_error", "it failed to delete boat that captain confirm of {} haveDBID[{:x}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 
 							if( !pAccept->BoatAdd( AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
@@ -1922,8 +1906,7 @@ namespace mission
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							LG( "trade_error", "add to %scaptain confirm it hold boat failedDBID[0x%X]", 
-								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+							ToLogService( "trade_error", "add to {}captain confirm it hold boat failedDBID[{:x}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
 					}
@@ -1944,8 +1927,7 @@ namespace mission
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						LG( "trade_error", "res ID errorit cannot find res informationit cannot give you this resID = %d", 
-							pTradeData->AcpTradeData.ItemArray[i].sItemID );
+						ToLogService( "trade_error", "res ID errorit cannot find res informationit cannot give you this resID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							continue;
 						}
 
@@ -1965,8 +1947,7 @@ namespace mission
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								LG( "trade_error", "it failed to delete boat that captain confirm of %s haveDBID[0x%X]", 
-									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+								ToLogService( "trade_error", "it failed to delete boat that captain confirm of {} haveDBID[{:x}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 
 							if( !pRequest->BoatAdd( ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
@@ -1981,8 +1962,7 @@ namespace mission
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							LG( "trade_error", "add to %scaptain confirm it hold boat failedDBID[0x%X]", 
-								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
+							ToLogService( "trade_error", "add to {}captain confirm it hold boat failedDBID[{:x}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
 					}
@@ -1995,8 +1975,7 @@ namespace mission
 					pRequest->GetName(), pRequest->GetPlayer()->GetDBChaId(), pAccept->GetName(), pAccept->GetPlayer()->GetDBChaId() );*/
 				pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00074) );
 				pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00074) );
-				LG( "trade_error", "the trade data failed to memory in DBtrade data resume completetraderequest one%sID[0x%X]accept one%sID[0x%X]",
-					pRequest->GetName(), pRequest->GetPlayer()->GetDBChaId(), pAccept->GetName(), pAccept->GetPlayer()->GetDBChaId() );
+				ToLogService( "trade_error", "the trade data failed to memory in DBtrade data resume completetraderequest one{}ID[{:x}]accept one{}ID[{:x}]", pRequest->GetName(), pRequest->GetPlayer()->GetDBChaId(), pAccept->GetName(), pAccept->GetPlayer()->GetDBChaId() );
 
 				// 
 				pAccept->TradeAction( FALSE );
@@ -2140,10 +2119,10 @@ namespace mission
 		}
 
 		return TRUE;
-	T_E}
+	}
 
 	void CTradeSystem::ResetItemState( CCharacter& character, CTradeData& TradeData )
-	{T_B
+	{
 		int nCapacity = character.m_CKitbag.GetCapacity();
 		CKitbag& Bag = character.m_CKitbag;
 		TRADE_DATA* pItemData;
@@ -2163,6 +2142,6 @@ namespace mission
 				Bag.Enable( pItemData->ItemArray[i].byIndex );
 			}				
 		}
-	T_E}
+	}
 
 }

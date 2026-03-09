@@ -326,7 +326,7 @@ CServerHarm* CActor::CreateHarmMgr()
 
     CServerHarm* tmp = new CServerHarm( this );
     _fights.push_back( tmp );
-	LG( _pCha->getLogName(), "CServerHarm CreateHarmMgr, Size[%d]\n", _fights.size() );
+	ToLogService(_pCha->getLogName(), "CServerHarm CreateHarmMgr, Size[{}]", _fights.size());
     return tmp;
 }
 
@@ -405,7 +405,7 @@ void CMonsterItem::Exec()
 
     if( !pEffect->Create( nEffectID ) )
     {
-		LG("protocol", g_oLangRec.GetString(1), nEffectID );
+		ToLogService("protocol", "{} {}", g_oLangRec.GetString(1), nEffectID);
         return;
     }
 	pEffect->setFollowObj((CSceneNode*)_pItem, NODE_ITEM);

@@ -641,7 +641,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
     CCharacter * pCha = g_stUIBoat.GetHuman();
 	if( !pCha || pCha->getAttachID()!=dwCharID) 
 	{
-        LG( "protocol", g_oLangRec.GetString(547) );
+        ToLogService("protocol", "{}", g_oLangRec.GetString(547));
         return;
 	}
 
@@ -665,7 +665,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
                 pInfo = GetSkillRecordInfo( pSBag[i].sID );
                 if( !pInfo )
                 {
-                    LG( "protocol", g_oLangRec.GetString(548), pSBag[i].sID );
+                    ToLogService("protocol", "{} {}", g_oLangRec.GetString(548), pSBag[i].sID);
                     continue;
                 }
                 pInfo->GetSkillGrid() = pSBag[i];
@@ -688,7 +688,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
                 pInfo = GetSkillRecordInfo( pSBag[i].sID );
                 if( !pInfo )
                 {
-                    LG( "protocol", g_oLangRec.GetString(549), pSBag[i].sID );
+                    ToLogService("protocol", "{} {}", g_oLangRec.GetString(549), pSBag[i].sID);
                     continue;
                 }
                 pInfo->GetSkillGrid() = pSBag[i];
@@ -711,7 +711,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
                 pInfo = GetSkillRecordInfo( pSBag[i].sID );
                 if( !pInfo )
                 {
-                    LG( "protocol", g_oLangRec.GetString(550), pSBag[i].sID );
+                    ToLogService("protocol", "{} {}", g_oLangRec.GetString(550), pSBag[i].sID);
                     continue;
                 }
                 pInfo->GetSkillGrid() = pSBag[i];
@@ -720,14 +720,14 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
 
                 if( pSBag[i].chLv==0 && !GetSkillList( pInfo->chFightType )->DelSkill( pSBag[i].sID ) )
                 {
-                    LG( "protocol", g_oLangRec.GetString(551), pSBag[i].sID );
+                    ToLogService("protocol", "{} {}", g_oLangRec.GetString(551), pSBag[i].sID);
                     continue;
                 }
             }        
         }
         break;
     default:
-        LG( "protocol", g_oLangRec.GetString(552), pSSkillBag->chType );
+        ToLogService("protocol", "{} {}", g_oLangRec.GetString(552), pSSkillBag->chType);
         return;
     }
 
@@ -817,7 +817,7 @@ void CEquipMgr::UpdataEquipData( const stNetChangeChaPart& SPart, CCharacter* pC
         }
 		else
 		{
-			LG( "error", g_oLangRec.GetString(554),( pItem ? pItem->GetItemInfo()->lID : 0), SPart.SLink[i].sID );
+			ToLogService("error", "{} {} {}", g_oLangRec.GetString(554), ( pItem ? pItem->GetItemInfo()->lID : 0), SPart.SLink[i].sID);
 		}
 	}
 }
@@ -1064,7 +1064,7 @@ bool CEquipMgr::_UpdataEquip( SItemGrid& Item, int nLink )
         CItemRecord* pInfo = GetItemRecordInfo( nItemID );
         if( !pInfo )
         {
-            LG( "UpdataEquip", g_oLangRec.GetString(555), nItemID );
+            ToLogService("UpdataEquip", "{} {}", g_oLangRec.GetString(555), nItemID);
             return false;
         }
 
@@ -1153,11 +1153,11 @@ int CEquipMgr::RefreshServerShortCut()
 			CS_BeginAction( g_stUIBoat.GetHuman(), enumACTION_SHORTCUT, (void*)&param );
 			nCount++;
 
-			LG( "shortcut", "Index:%d, Type:%d, GridID:%d\n", param.chIndex, param.chType, param.shyGrid );
+			ToLogService("shortcut", "Index:{}, Type:{}, GridID:{}", param.chIndex, param.chType, param.shyGrid);
 		}
 	}
 	memcpy( &_stShortCut, &tmp, sizeof(tmp) );
-	LG( "shortcut", "Total:%d\n\n", nCount );
+	ToLogService("shortcut", "Total:{}\n", nCount);
 	return nCount;
 }
 

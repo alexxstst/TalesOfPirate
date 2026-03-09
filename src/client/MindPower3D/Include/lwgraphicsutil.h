@@ -77,28 +77,6 @@ inline void lwMeshDataInfo_Destruct(lwMeshDataInfo* obj)
 #ifndef USE_MINDPOWER
 LW_FRONT_API void lwMessageBox( const char* fmt, ... );
 #define LG_MSGBOX lwMessageBox
-#else
-#ifndef USE_LG_MSGBOX
-#define USE_LG_MSGBOX
-inline void __cdecl LGX(const char* format, ...)
-{
-    char buf[512];
-    buf[0] = 'm';
-    buf[1] = 's';
-    buf[2] = 'g';
-    buf[3] = 0;
-    
-    va_list args;
-    va_start( args, format );
-    _vsntprintf( &buf[3], 512, format, args );
-    va_end( args );
-
-    LG("default", buf);
-}
-
-#define LG_MSGBOX LGX
-#endif
-
 #endif
 
 LW_FRONT_API float lwGetFPS();

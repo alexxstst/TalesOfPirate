@@ -182,7 +182,7 @@ bool	CMPModelEff::SaveToFile(char* pszFileName)
 	t_pFile = fopen(pszFileName, "wb");
 	if(!t_pFile)
 	{
-		LG("error","msg %s,",pszFileName);
+		ToLogService("error", "msg {},", pszFileName);
 		return false;
 	}
 	//!

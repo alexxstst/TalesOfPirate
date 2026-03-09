@@ -124,8 +124,7 @@ public:
 
 		lwLoadTex(pTex,g_Render.GetInterfaceMgr()->res_mgr, &texInfo);
 	}
-public:
-	s_string	strMapName;
+	s_string strMapName;
 	lwTexInfo	texInfo;
 
 protected:

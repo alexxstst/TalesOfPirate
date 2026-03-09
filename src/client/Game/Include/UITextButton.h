@@ -23,8 +23,7 @@ public:
 		csEnd,
 	};
 
-public:
-	CTextButton(CForm& frmOwn);
+CTextButton(CForm& frmOwn);
 	CTextButton(const CTextButton& rhs);
 	CTextButton& operator=(const CTextButton& rhs);
 	~CTextButton(void);
@@ -62,7 +61,7 @@ public:
 	void				SetFlashCycle( DWORD dwCycle = 1000 )	{ _dwFlashCycle = dwCycle;  }
 	DWORD				GetFlashCycle()			{ return _dwFlashCycle;		}
 
-public:	// 
+	// 
 	GuiMouseEvent		evtMouseClick;			// 
 	GuiMouseEvent		evtMouseRClick;			//   add by Philip.Wu 2006/01/23
 	GuiMouseEvent		evtMouseDBClick;		//   add by Philip.Wu 2006/01/23
@@ -72,8 +71,7 @@ protected:
 	void				_SetState( eButtonState v );
 	void				_ClearOldState();
 
-protected:
-	std::string				_strCaption;	// 
+std::string				_strCaption;	// 
 	DWORD				_textColor;		// 
 
 	CGuiPic*			_pImage;		// ,bsNormal,bsHover,bsDown,bsDisable

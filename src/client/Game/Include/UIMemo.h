@@ -51,7 +51,6 @@ namespace GUI
 		void	AddIcon(int index ,CGraph *pGraph);
 		bool	MouseScroll( int nScroll ) ;
 
-	public:
 		GuiEvent	evtSelectChange;				// 
 		void	SetMaxNumPerRow(int n) { _nMaxNum = n; }
 		int		GetMaxNumPerRow() {  return _nMaxNum; } 
@@ -79,7 +78,6 @@ namespace GUI
 		}
 		void	_OnScrollChange();
 
-	protected:
 		void	_SetScrollRange();
 		void	_Copy( const CMemo& rhs );
 		void	_SetSelf();

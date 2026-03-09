@@ -1,14 +1,6 @@
 ﻿#pragma once
 
 
-//---------------------------
-//
-//  
-//  by Jampe
-//  2007/03/28
-//
-//---------------------------
-
 #if !defined __AUDIO_RESOURCE_H__
 #define __AUDIO_RESOURCE_H__
 
@@ -18,47 +10,45 @@
 #include <map>
 
 
-
-typedef struct tagAudioInfo
-{
-    int                 type;
-    ulong               code;
-    time_t              stamp;
-    SDL_Audio_Base*     audio;
-}AudioInfo;
+typedef struct tagAudioInfo {
+	int type;
+	ulong code;
+	time_t stamp;
+	SDL_Audio_Base* audio;
+} AudioInfo;
 
 
-class AudioRes : public _singleton<AudioRes>
-{
-    SINGLETON_OBJECT(AudioRes);
-    typedef std::map<ulong, AudioInfo*> AudioQueue;
-    typedef std::pair<ulong, AudioInfo*> AudioObj;
+class AudioRes : public _singleton<AudioRes> {
+	SINGLETON_OBJECT(AudioRes);
+	typedef std::map<ulong, AudioInfo*> AudioQueue;
+	typedef std::pair<ulong, AudioInfo*> AudioObj;
+
 public:
-    ~AudioRes()
-    {
-        release();
-    }
+	~AudioRes() {
+		release();
+	}
 
-    ulong get_resID(const char* resource, int type);
-    AudioInfo* get_res(ulong id);
-    AudioInfo* get_res(const char* resource);
+	ulong get_resID(const char* resource, int type);
+	AudioInfo* get_res(ulong id);
+	AudioInfo* get_res(const char* resource);
 
-    void close(const char* resource);
-    void close(ulong id);
-    void release();
+	void close(const char* resource);
+	void close(ulong id);
+	void release();
 
-    void checkResValid(ulong timeout = 300);     //  (),5
-
-protected:
-    AudioInfo* _addRes(const char* resource, int type);
-    ulong _hashCode(const char* resource);
-    AudioRes(){}
+	void checkResValid(ulong timeout = 300); //  (),5
 
 protected:
-    AudioQueue      m_queue;
-    Lock            m_lock;
+	AudioInfo* _addRes(const char* resource, int type);
+	ulong _hashCode(const char* resource);
+
+	AudioRes() {
+	}
+
+protected:
+	AudioQueue m_queue;
+	Lock m_lock;
 };
-
 
 
 #endif

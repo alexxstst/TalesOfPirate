@@ -130,7 +130,7 @@ protected:
         case 6: // 
 			strcpy(pInfo->szEnvSound, strList1[0].c_str());
 			pInfo->nEnvSoundDis = Str2Int( strList2[0] );
-            LG("sceneobj", "Read Enviroment Sound [%s]\n", pInfo->szEnvSound);
+            ToLogService("sceneobj", "Read Enviroment Sound [{}]", pInfo->szEnvSound);
             break;
         case 0:
             {
@@ -166,7 +166,7 @@ protected:
 		CSceneObjInfo *pInfo = (CSceneObjInfo*)pRawDataInfo;
 		char szPhoto[72]; sprintf(szPhoto, "texture/photo/sceneobj/%s.bmp", pInfo->szName);
 		pInfo->nPhotoTexID       = GetTextureID(szPhoto);
-		LG("sceneobj", "Read SceneObjInfo Model = [%s], Name = [%s], Type = %d, nStype = %d, nFlag = %d\n", pInfo->szDataName, pInfo->szName, pInfo->nType, pInfo->nStyle, pInfo->nFlag );
+		ToLogService("sceneobj", "Read SceneObjInfo Model = [{}], Name = [{}], Type = {}, nStype = {}, nFlag = {}", pInfo->szDataName, pInfo->szName, pInfo->nType, pInfo->nStyle, pInfo->nFlag );
     }
 };
 

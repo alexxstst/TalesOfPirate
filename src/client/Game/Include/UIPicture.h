@@ -101,8 +101,7 @@ public:
 
 	// 
 
-public:
-	CFramePic( CGuiData *pOwn );
+CFramePic( CGuiData *pOwn );
 	CFramePic( const CFramePic& rhs );
 	CFramePic& operator=( const CFramePic& rhs );
 
@@ -133,8 +132,7 @@ public:
 private:
 	void			_ClientShow( int x, int y, DWORD color);	// 
 
-private:
-	MPTexRect*		_pImage;
+MPTexRect*		_pImage;
 	CGuiData*		_pOwn;
 	int				_nX[ppEnd], _nY[ppEnd];
 	bool			_bIsTitle;			// ppClient

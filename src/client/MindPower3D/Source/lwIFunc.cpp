@@ -621,7 +621,7 @@ LW_RESULT LoadResBuf(lwIResourceMgr* res_mgr, const char* file)
 
         if(LW_FAILED(buf_mgr->RegisterModelObjInfo(&handle, path)))
         {
-            LG_MSGBOX("cannot find model file: %s", path);
+            ToLogService("default", "msgcannot find model file: {}", path);
             continue;
 
             //goto __ret;
@@ -649,7 +649,7 @@ LW_RESULT LoadResBuf(lwIResourceMgr* res_mgr, const char* file)
 
                 if(LW_FAILED(buf_mgr->RegisterSysMemTex(&handle, &smti)))
                 {
-                    LG_MSGBOX("cannot find texture file: %s in model file: path", smti.file_name, path);
+                    ToLogService("default", "msgcannot find texture file: {} in model file: path", smti.file_name, path);
                     continue;
                     //goto __ret;
                 }
@@ -687,7 +687,7 @@ LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, const char* file)
 
         if(LW_FAILED(buf_mgr->RegisterModelObjInfo(handle, path)))
         {
-            LG_MSGBOX("cannot find model file: %s", path);
+            ToLogService("default", "msgcannot find model file: {}", path);
             continue;
         }
     }

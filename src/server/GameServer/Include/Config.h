@@ -10,7 +10,7 @@ class CGameCommand
 {
 public:
 	CGameCommand();
-	bool	Load(const  char *pszFileName);
+	bool	Load(const  std::string& pszFileName);
 	void	SetDefault();
 
 	// commands

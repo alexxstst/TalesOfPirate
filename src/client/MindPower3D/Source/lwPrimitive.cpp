@@ -189,7 +189,7 @@ LW_RESULT lwPrimitive::Load( lwIGeomObjInfo* geom_info, const char* tex_path, co
         _res_mgr->CreateHelperObject(&_helper_object);
         if(LW_FAILED(_helper_object->LoadHelperInfo(&info->helper_data, create_helper_primitive)))
         {
-            LG_MSGBOX("LoadHelperInfo");
+            ToLogService("default", "msgLoadHelperInfo");
         }
     }
 

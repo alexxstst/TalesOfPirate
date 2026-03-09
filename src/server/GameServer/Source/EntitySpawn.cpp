@@ -66,7 +66,7 @@ bool CChaSpawn::Init(char *szSpawnTable, long lRegionNum)
 }
 
 long CChaSpawn::Load(SubMap *pCMap)
-{T_B
+{
 	m_pCMap = pCMap;
 
 	long	lRet = 1;
@@ -134,27 +134,27 @@ long CChaSpawn::Load(SubMap *pCMap)
 					if(m_lCount >= g_Config.m_nMaxCha)
 					{
 						//LG(szMap, "msg\n");
-						LG(szMap, RES_STRING(GM_GAMEAPP_CPP_00016));
+						ToLogService(szMap, "{}", RES_STRING(GM_GAMEAPP_CPP_00016));
 						return 1;
 					}
 				}
 				else
 					//LG(szSpawnError, " %s[%d, %d] %d %d[%d, %d]\n", pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
-					LG(szSpawnError, "character born errorborn informationmap %s[%d, %d]character hatch list number %dcharacter list number %dborn position[%d, %d]\n",
+					ToLogService(szSpawnError, "character born errorborn informationmap {}[{}, {}]character hatch list number {}character list number {}born position[{}, {}]",
 							pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
 			}
 		}
 		//LG(szMap, " %d \t%d\n", i + 1, lNum);
-		LG(szMap, "entry %d character number:\t%d\n", i + 1, lNum);
+		ToLogService(szMap, "entry {} character number:\t{}", i + 1, lNum);
 	}
 	return lRet;
-T_E}
+}
 
 long CChaSpawn::Reload()
-{T_B
+{
 	// 
 	return 0;
-T_E}
+}
 
 //=============================================================================
 CMapSwitchEntitySpawn::CMapSwitchEntitySpawn()
@@ -305,7 +305,7 @@ long CNpcSpawn::Load( SubMap& submap )
 			//printf( RES_STRING(GM_ENTITYSPAWN_CPP_00010), pNpcRecord->sCharID );
 			C_PRINT("\nerror: NPC %d model %d unfound!", i, pNpcRecord->sCharID );
 			//LG( "npcinit_error", "IDID = %d", pNpcRecord->sCharID );
-			LG( "npcinit_error", "initialization map errornot find appoint ID roll attribute informationID = %d", pNpcRecord->sCharID );
+			ToLogService( "npcinit_error", "initialization map errornot find appoint ID roll attribute informationID = {}", pNpcRecord->sCharID );
 			continue;
 		}
 		

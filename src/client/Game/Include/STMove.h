@@ -35,8 +35,7 @@ protected:
 
 	bool		IsAllowMove();
 
-protected:
-	CMoveList	_cMoveList;
+CMoveList	_cMoveList;
 	CCharacter*	_pCha;
 
 	static float			_fMoveRate;
@@ -82,12 +81,10 @@ protected:
 	virtual void _End();
     virtual bool _IsAllowCancel();
 
-protected:
-    void     WriteInfo( S_BVECTOR<D3DXVECTOR3>& path, stNetMoveInfo& info );
+void     WriteInfo( S_BVECTOR<D3DXVECTOR3>& path, stNetMoveInfo& info );
     void     _SynchroServer();
 
-protected:
-	int			_nTargetX,		_nTargetY;
+int			_nTargetX,		_nTargetY;
 
     stNetMoveInfo   _stPathInfo;    // 
 	bool	        _IsWalkLine;	// 
@@ -195,8 +192,7 @@ private:
 
 	float		_fRate;
 
-private:
-	struct NeedPath
+struct NeedPath
 	{
 		NeedPath( int nX, int nY, bool bLine ) : x(nX), y(nY), IsLine(bLine) {}
 

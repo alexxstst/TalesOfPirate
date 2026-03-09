@@ -1,8 +1,19 @@
 ﻿#pragma once
 
 
-#define FORM_LOADING_CHECK(a,b,c) a=CFormMgr::s_Mgr.Find(c); if (!a) {::Error(g_oLangRec.GetString(577),b,c); return false;}
-#define FORM_CONTROL_LOADING_CHECK(a,b,c,d,e) a=dynamic_cast<c*>(b->Find(e)); if (!a) {::Error(g_oLangRec.GetString(578),d,b->GetName(),e); return false;}
+#define FORM_LOADING_CHECK(a,b,c) \
+	a=CFormMgr::s_Mgr.Find(c); \
+	if (!a) { \
+		::ToLogService("error", "{}, {}, {}", g_oLangRec.GetString(577),b,c); \
+		return false;\
+	}
+
+#define FORM_CONTROL_LOADING_CHECK(a,b,c,d,e) \
+	a=dynamic_cast<c*>(b->Find(e)); \
+	if (!a) { \
+		::ToLogService("error","{}, {}, {}, {}", g_oLangRec.GetString(578),d,b->GetName(),e); \
+		return false; \
+	}
 
 
 // FLAGSetEnableHotKey
@@ -135,8 +146,7 @@ protected:
 
     static void		_evtDragToGoodsEvent(CGuiData *pSender, CCommandObj* pItem, int nGridID, bool& isAccept);  // 
 
-protected:
-	bool Error(const char* strInfo, const char* strFormName, const char* strCompentName);
+bool Error(const char* strInfo, const char* strFormName, const char* strCompentName);
 	static CForm* _FindForm(const char * frmName);
 
 private:

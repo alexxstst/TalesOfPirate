@@ -392,7 +392,7 @@ void CGameScene::_Render()
 				}
 				catch(...)
 				{
-					LG("error", "pObj->Render()\n");
+					ToLogService("error", "pObj->Render()");
 				}
 
                 if(transp_flag)
@@ -810,7 +810,7 @@ void CGameScene::_Render()
 		}
 		catch(...)
 		{
-			LG("error", "RenderEffectMap\n");
+			ToLogService("error", "RenderEffectMap");
 		}
 
 		//lemon add@2005.2.17

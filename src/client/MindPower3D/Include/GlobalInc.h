@@ -33,23 +33,4 @@ struct MPTexRect
 		  fScaleX(1.0f), fScaleY(1.0f), nTextureNo(-1), dwColor(0xFFFFFFFF) {}
 };
 
-inline void __cdecl LGX(const char* format, ...)
-{
-    char buf[512];
-    buf[0] = 'm';
-    buf[1] = 's';
-    buf[2] = 'g';
-    buf[3] = 0;
-    
-    va_list args;
-    va_start( args, format );
-    _vsntprintf( &buf[3], 512, format, args );
-    va_end( args );
 
-    LG("default", buf);
-}
-
-#ifndef USE_LG_MSGBOX
-#define USE_LG_MSGBOX
-#define LG_MSGBOX LGX
-#endif

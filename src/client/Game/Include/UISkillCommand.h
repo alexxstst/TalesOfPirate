@@ -49,12 +49,10 @@ protected:
     virtual void    Error();
     virtual void    AddHint( int x, int y );
 
-protected:
-    int     _GetSkillTime();
+int     _GetSkillTime();
 	bool	_WriteNeed( int nType, int nValue, const char* szStr );
 
-protected:
-    CGuiPic*	    _pImage;
+CGuiPic*	    _pImage;
     CAniClock*      _pAniClock;
     CSkillRecord*   _pSkill;    
 

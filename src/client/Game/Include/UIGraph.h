@@ -57,8 +57,7 @@ public:
     virtual bool    HasHint()           { return !_strHint.empty();     }
     virtual void    RenderHint( int x, int y );
 
-public:
-    void    SetHint( const char* str )  { _strHint = str;               }
+void    SetHint( const char* str )  { _strHint = str;               }
 
 protected:
     std::string  _strHint;

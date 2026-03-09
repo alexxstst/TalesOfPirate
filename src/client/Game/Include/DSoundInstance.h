@@ -27,8 +27,7 @@ protected:
 
 	DWORD					mDefaultFrequency;
 
-protected:
-	void					RehupVolume();
+void					RehupVolume();
 	void					RehupPan();
 
 public:

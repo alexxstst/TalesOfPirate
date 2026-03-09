@@ -14,8 +14,7 @@ public:
 protected:
 	virtual bool _Start();
 
-protected:
-    CCharacter*	_pNpc;
+CCharacter*	_pNpc;
 
 };
 
@@ -31,8 +30,7 @@ public:
 protected:
 	virtual bool _Start();
 
-protected:
-    CCharacter*	_pShop;
+CCharacter*	_pShop;
 
 };
 
@@ -49,8 +47,7 @@ public:
 protected:
 	virtual bool _Start();
 
-protected:
-    CSceneItem*     _pItem;
+CSceneItem*     _pItem;
 	
 };
 

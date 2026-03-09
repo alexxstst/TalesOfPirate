@@ -99,13 +99,13 @@ CScript::CScript()
 		}
 	}
 
-	LG( "error", "msgCScript::CScript Error, dwCount: %d, dwFreeCount: %d, dwLastFree: %d", _dwCount, _dwFreeCount, _dwLastFree );
+	ToLogService("error", "msgCScript::CScript Error, dwCount: {}, dwFreeCount: {}, dwLastFree: {}", _dwCount, _dwFreeCount, _dwLastFree);
 }
 
 CScript::~CScript()
 {
 	if( _dwScriptID>_dwCount ) 
-		LG( "error", "msgCScript::~CScript Error, dwCount: %d, dwFreeCount: %d, dwLastFree: %d", _dwCount, _dwFreeCount, _dwLastFree );
+		ToLogService("error", "msgCScript::~CScript Error, dwCount: {}, dwFreeCount: {}, dwLastFree: {}", _dwCount, _dwFreeCount, _dwLastFree);
 
 	_AllObj[_dwScriptID] = NULL;
 
@@ -189,14 +189,14 @@ bool CScriptMgr::Clear()
 
 bool CScriptMgr::DoFile( const char* szLuaFile )
 {
-	LG( "lua", "DoFile(%s)\n", szLuaFile );
+	ToLogService("lua", "DoFile({})", szLuaFile);
 	luaL_dofile(_pLuaState, szLuaFile);
 	return true;
 }
 
 bool CScriptMgr::DoString( const char* szLuaString )
 {
-	LG( "lua", "DoString(%s)\n", szLuaString );
+	ToLogService("lua", "DoString({})", szLuaString);
 	FILE *fp = fopen("luaexec.txt", "wt");
 	if(fp==NULL) return false;
 	fwrite(szLuaString, strlen(szLuaString), 1, fp); 
@@ -212,7 +212,7 @@ bool CScriptMgr::DoString( const char* szFunc, const char* szFormat, ... )
 	if( dd!=value ) 
 	{
 		_control87( _CW_DEFAULT, 0xfffff );
-		LG( "float", g_oLangRec.GetString(380), szFunc, szFormat );
+		ToLogService("float", "{} {} {}", g_oLangRec.GetString(380), szFunc, szFormat);
 	}
 
 	int narg, nres;		// 
@@ -223,7 +223,7 @@ bool CScriptMgr::DoString( const char* szFunc, const char* szFormat, ... )
 	if (!lua_isfunction(_pLuaState, -1)) // 
 	{
 		lua_settop(_pLuaState, 0);
-		LG( "luaerror", "Func is Error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+		ToLogService("luaerror", "Func is Error, Func:{}, Fromat:{}", szFunc, szFormat);
 		return false;
 	}
 
@@ -248,7 +248,7 @@ bool CScriptMgr::DoString( const char* szFunc, const char* szFormat, ... )
 			goto endwhile;
 		default: 			
 			lua_settop(_pLuaState, 0);
-			LG( "luaerror", "Param Error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+			ToLogService("luaerror", "Param Error, Func:{}, Fromat:{}", szFunc, szFormat);
 			return false;
 		}
 		narg++;
@@ -261,7 +261,7 @@ endwhile:
 	if( lua_pcall( _pLuaState, narg, nres, 0 )!=0 )
 	{
 		lua_settop(_pLuaState, 0);
-		LG( "luaerror", "Func call is error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+		ToLogService("luaerror", "Func call is error, Func:{}, Fromat:{}", szFunc, szFormat);
 		return false;
 	}
 
@@ -274,7 +274,7 @@ endwhile:
 			if( !lua_isnumber( _pLuaState, nres ) )
 			{
 				lua_settop(_pLuaState, 0);
-				LG( "luaerror", "return value(f) is error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+				ToLogService("luaerror", "return value(f) is error, Func:{}, Fromat:{}", szFunc, szFormat);
 				return false;		
 			}
 
@@ -284,7 +284,7 @@ endwhile:
 			if( !lua_isnumber( _pLuaState, nres ) )
 			{
 				lua_settop(_pLuaState, 0);
-				LG( "luaerror", "return value(d) is error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+				ToLogService("luaerror", "return value(d) is error, Func:{}, Fromat:{}", szFunc, szFormat);
 				return false;		
 			}
 
@@ -294,7 +294,7 @@ endwhile:
 			if( !lua_isnumber( _pLuaState, nres ) )
 			{
 				lua_settop(_pLuaState, 0);
-				LG( "luaerror", "return value(u) is error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+				ToLogService("luaerror", "return value(u) is error, Func:{}, Fromat:{}", szFunc, szFormat);
 				return false;		
 			}
 
@@ -304,7 +304,7 @@ endwhile:
 			if( !lua_isstring( _pLuaState, nres ) )
 			{
 				lua_settop(_pLuaState, 0);
-				LG( "luaerror", "return value(s) is error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+				ToLogService("luaerror", "return value(s) is error, Func:{}, Fromat:{}", szFunc, szFormat);
 				return false;		
 			}
 	
@@ -312,7 +312,7 @@ endwhile:
 			break;
 		default:
 			lua_settop(_pLuaState, 0);
-			LG( "luaerror", "return value(?) is error, Func:%s, Fromat:%s\n", szFunc, szFormat );
+			ToLogService("luaerror", "return value(?) is error, Func:{}, Fromat:{}", szFunc, szFormat);
 			return false;		
 		}
 		nres++;
@@ -329,7 +329,7 @@ string	CScriptMgr::GetStoneHint( const char* szHintFun, int Lv )
 	if( dd!=value ) 
 	{
 		_control87( _CW_DEFAULT, 0xfffff );
-		LG( "float", g_oLangRec.GetString(381), szHintFun, Lv );
+		ToLogService("float", "{} {} {}", g_oLangRec.GetString(381), szHintFun, Lv);
 	}
 
 	lua_getglobal(_pLuaState, szHintFun);
@@ -345,7 +345,7 @@ string	CScriptMgr::GetStoneHint( const char* szHintFun, int Lv )
 	int nState = lua_pcall(_pLuaState, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", szHintFun);
+		ToLogService("lua_err", "DoString {}", szHintFun);
 		lua_pop( _pLuaState, 2 );
 		return "lua_pcall error";
 	}
@@ -354,7 +354,7 @@ string	CScriptMgr::GetStoneHint( const char* szHintFun, int Lv )
 	int nRetNum = 1;
 	if (!lua_isstring(_pLuaState, -1))
 	{
-		LG("error", g_oLangRec.GetString(383));
+		ToLogService("error", "{}", g_oLangRec.GetString(383));
 	}
 	else
 	{

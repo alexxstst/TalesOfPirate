@@ -60,7 +60,6 @@ namespace GUI
 		static void	_cha_render_event( C3DCompent *pSender, int x, int y);
 
 
-	private:
 		//UI
 		CForm			* frmHaircut;
 		COneCommand		* cmdProp[defHAIR_MAX_ITEM];

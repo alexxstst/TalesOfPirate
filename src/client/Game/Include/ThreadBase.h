@@ -29,8 +29,7 @@ public:
     virtual bool Terminate();
     virtual unsigned int Run() = 0;
 
-public:
-    HANDLE          m_thread;
+HANDLE          m_thread;
     unsigned int    m_threadid;
 
 };

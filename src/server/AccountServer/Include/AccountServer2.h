@@ -49,7 +49,7 @@ protected:
     virtual void OnDisconnect(DataSocket* datasock, int reason);
 
 private:
-	static volatile long m_nMembersCount;
+	static std::atomic<int32_t> m_nMembersCount;
 
     // GroupServer 
     void Gs_Init();
@@ -205,10 +205,10 @@ public:
     void WaitForExit();
 
     enum {AT_MAXNUM = 10};
-	static int volatile RunLabel[AT_MAXNUM];
-	static DWORD volatile RunLast[AT_MAXNUM];
-	static DWORD volatile RunConsume[AT_MAXNUM];
-	static unsigned int volatile uiAuthCount;
+	static int RunLabel[AT_MAXNUM];
+	static std::uint32_t RunLast[AT_MAXNUM];
+	static std::uint32_t RunConsume[AT_MAXNUM];
+	static std::atomic<uint32_t> uiAuthCount;
 	static void IncAuthCount();
 	static unsigned int GetAuthCount();
 

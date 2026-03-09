@@ -6,8 +6,8 @@
 
 struct fifo_elem
     {
-    fifo_elem() {prev = next = NULL;}
-    ~fifo_elem() {prev = next = NULL;}
+    fifo_elem() {prev = next = nullptr;}
+    ~fifo_elem() {prev = next = nullptr;}
 
     fifo_elem* prev;
     fifo_elem* next;};
@@ -21,8 +21,8 @@ public:
 
     void push(T* t)
         { // 
-        if (t == NULL) return;
-        if (_head == NULL)
+        if (t == nullptr) return;
+        if (_head == nullptr)
             { // fifo
             _head = t;
             _head->prev = NULL;
@@ -39,7 +39,7 @@ public:
         T* tmp;
         if (_head == _tail)
             {
-            if (_head == NULL) return NULL; // fifo
+            if (_head == nullptr) return nullptr; // fifo
             else{ // fifo
                 tmp = _head;
                 _head = _tail = NULL;
@@ -54,7 +54,7 @@ public:
         { // fifo
         int sz = 0;
         T* curr = _head;
-        if (curr == NULL) return sz; // fifo
+        if (curr == nullptr) return sz; // fifo
         while (curr != _tail)
             { // fifo
             ++ sz; curr = (T *)curr->next;}

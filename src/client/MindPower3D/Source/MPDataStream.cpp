@@ -2,7 +2,7 @@
 #include "MPDataStream.h"
 
 #include "MPStringUtil.h"
-#include "log.h"
+#include "logutil.h"
 
 //=============================================================================
 // MPDataStream
@@ -277,12 +277,12 @@ size_t MPFileStreamDataStream::readLine(char* buf, size_t maxCount, const String
 {
 	if (delim.empty())
 	{
-		LG("No delimiter provided","FileStreamDataStream::readLine");
+		ToLogService("No delimiter provided", "FileStreamDataStream::readLine");
 		assert(0);
 	}
 	if (delim.size() > 1)
 	{
-		LG("WARNING: FileStreamDataStream::readLine","using only first delimeter");
+		ToLogService("WARNING: FileStreamDataStream::readLine", "using only first delimeter");
 	}
 	// UnixWindows
 	bool trimCR = false;
@@ -315,7 +315,7 @@ size_t MPFileStreamDataStream::readLine(char* buf, size_t maxCount, const String
 		}
 		else
 		{
-			LG("Streaming error occurred", "FileStreamDataStream::readLine");
+			ToLogService("Streaming error occurred", "FileStreamDataStream::readLine");
 			assert(0);
 		}
 	}

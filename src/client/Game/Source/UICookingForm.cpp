@@ -144,14 +144,14 @@ namespace GUI
         frmCooking = mgr.Find("frmCooking");
         if(!frmCooking)
         {
-            LG("gui", "frmCooking not found.\n");
+            ToLogService("gui", "frmCooking not found.");
             return false;
         }
 
         proCooking = dynamic_cast<CProgressBar*>(frmCooking->Find("proCooking"));
         if(!proCooking)
         {
-            LG("gui", "frmCooking::proCooking not found.\n");
+            ToLogService("gui", "frmCooking::proCooking not found.");
             return false;
         }
         proCooking->evtTimeArrive = _ProTimeArriveEvt;
@@ -159,7 +159,7 @@ namespace GUI
         btnForgeYes = dynamic_cast<CTextButton*>(frmCooking->Find("btnForgeYes"));
         if(!btnForgeYes)
         {
-            LG("gui", "frmCooking::btnForgeYes not found.\n");
+            ToLogService("gui", "frmCooking::btnForgeYes not found.");
             return false;
         }
         btnForgeYes->SetIsEnabled(false);
@@ -167,7 +167,7 @@ namespace GUI
         btnForgeNo = dynamic_cast<CTextButton*>(frmCooking->Find("btnForgeNo"));
         if(!btnForgeNo)
         {
-            LG("gui", "frmCooking::btnForgeNo not found.\n");
+            ToLogService("gui", "frmCooking::btnForgeNo not found.");
             return false;
         }
         btnForgeNo->SetIsEnabled(false);
@@ -179,7 +179,7 @@ namespace GUI
             cmdCooking[i] = dynamic_cast<COneCommand*>(frmCooking->Find(buff));
             if(!cmdCooking[i])
             {
-                LG("gui", "frmCooking::%s not found.\n", buff);
+                ToLogService("gui", "frmCooking::{} not found.", buff);
                 return false;
             }
             iCookingPos[i] = NO_USE;

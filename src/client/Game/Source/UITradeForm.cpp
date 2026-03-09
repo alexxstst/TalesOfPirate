@@ -39,7 +39,7 @@ bool CTradeMgr::Init()
 	frmPlayertrade =  mgr.Find("frmPlayertrade");
 	if ( !frmPlayertrade)
 	{
-		LG("gui", g_oLangRec.GetString(456));
+		ToLogService("gui", "{}", g_oLangRec.GetString(456));
 		return false;
 	}
 	frmPlayertrade->evtEntrustMouseEvent = _MainMousePlayerTradeEvent ;
@@ -365,7 +365,7 @@ void CTradeMgr::DragTradeToItem( DWORD dwCharID, BYTE byIndex, BYTE byItemIndex 
 
 void  CTradeMgr::DragItemToTrade(DWORD dwCharID,USHORT sItemID,BYTE byIndex,BYTE byCount,BYTE byItemIndex, SItemGrid* pGrid, const NET_CHARTRADE_BOATDATA* const pBoat )
 {
-	LG( "Trade", "DragItemToTrade( CharID:%u, ItemID:%d, Index:%d, Count:%d, ItemIndex:%d ) - MainID:%d\n", dwCharID, sItemID, byIndex, byCount, byItemIndex, g_stUITrade.m_dwMainID );
+	ToLogService( "Trade", "DragItemToTrade( CharID:{}, ItemID:{}, Index:{}, Count:{}, ItemIndex:{} ) - MainID:{}", dwCharID, sItemID, byIndex, byCount, byItemIndex, g_stUITrade.m_dwMainID );
 
 	CGoodsGrid* tradeGrd;
 	if ( m_dwMainID==dwCharID )
@@ -387,14 +387,14 @@ void  CTradeMgr::DragItemToTrade(DWORD dwCharID,USHORT sItemID,BYTE byIndex,BYTE
 	CItemRecord *pItem = GetItemRecordInfo( sItemID );
 	if( !pItem )
 	{
-		LG( "protocol", "GetItemRecordInfo return NULL" );
+		ToLogService( "protocol", "GetItemRecordInfo return NULL" );
 		return;
 	}
 	
 	CCommandObj* pObj  = tradeGrd->GetItem( byIndex );	
 	if ( pObj )
 	{
-		LG( "Trade", "msgTrade Error\n" );
+		ToLogService( "Trade", "msgTrade Error" );
 	}
 	else
 	{
@@ -403,7 +403,7 @@ void  CTradeMgr::DragItemToTrade(DWORD dwCharID,USHORT sItemID,BYTE byIndex,BYTE
 		pObj->SetBoatHint( pBoat );
 		if( !tradeGrd->SetItem( byIndex, pObj ) )
 		{
-			LG( "protocol", "SetItem return false" );
+			ToLogService( "protocol", "SetItem return false" );
 			return;
 		}
 	}

@@ -23,7 +23,7 @@ public:
     bool Init();			// 
 
     bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
-        LG("error", strInfo, strFormName, strCompentName );
+        ToLogService("error", "{} {} {}", strInfo, strFormName, strCompentName);
         return false;
     }
     void SetEnabled( bool v );
@@ -57,8 +57,7 @@ public:
     CLabel      *lblEraseAttrib;
     CLabel      *lblShotMiniMap;
 
-public:
-    bool GetIsShowCompass();
+bool GetIsShowCompass();
 
 private:
     static void _TreeMouseDown(CGuiData *pSender, int x, int y, DWORD key);
@@ -85,8 +84,7 @@ private:
     static bool _evtSetIslandIndex(CGuiData *pSender, char& key);
     static void _EraseAttribCheckChange(CGuiData* pSender);
 
-private:
-    void _TreeEvent(CTreeView* tree, bool press );
+void _TreeEvent(CTreeView* tree, bool press );
     void _ClearCheckState( CCheckBox* pCheckBox );
 
 };

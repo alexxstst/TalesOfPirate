@@ -47,8 +47,7 @@ protected:
 
 	void Clear();
 
-protected:
-	static void _evtSelectYesNoEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+static void _evtSelectYesNoEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
     static void _evtThrowItemEvent(CGuiData *pSender,int id,bool& isThrow);     // 
 
 	static void _evtIMPFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
@@ -61,8 +60,7 @@ private:
 	CGoodsGrid* GetPlayertradeBuyGrid()     { return  grdBuy;	}
 	static void _evtLocalSaleEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-private:
-	CForm*		frmPlayertrade;
+CForm*		frmPlayertrade;
 	CForm*		frmRequest;				//()
 	CGoodsGrid* grdRequest;
 	CGoodsGrid*	grdBuy;
@@ -87,8 +85,7 @@ private:
 
 	DWORD			m_dwMainID;
 
-private:
-	struct stSale
+struct stSale
 	{
 		stSale() : dwSaleID(0), nGridID(0), nDragID(0) {}
 

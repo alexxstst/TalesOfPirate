@@ -4,6 +4,7 @@
 #include <time.h>
 #include <audiosdl.h>
 
+#include "CrushSystem.h"
 
 
 BOOL GThreadLoopEnd = FALSE;
@@ -36,6 +37,7 @@ private:
 
 DWORD WINAPI ThreadStartRoutine( LPVOID lpThreadParameter )
 {
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 	return ( ( CMusicThread* ) lpThreadParameter )->Run();
 }
 

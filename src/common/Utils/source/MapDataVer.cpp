@@ -14,8 +14,8 @@ using namespace std;
 #define LW_RGB565_G(rgb) (BYTE)( ( rgb & 0x7e0) >> 3 )
 #define LW_RGB565_B(rgb) (BYTE)( ( rgb & 0x1f) << 3 )
 
-#define LW_RGB555TODWORD(rgb) (DWORD)( LW_RGB555_R(rgb) | (LW_RGB555_G(rgb)<<8) | (LW_RGB555_B(rgb)<<16) )
-#define LW_RGB565TODWORD(rgb) (DWORD)( LW_RGB565_R(rgb) | (LW_RGB565_G(rgb)<<8) | (LW_RGB565_B(rgb)<<16) )
+#define LW_RGB555TODWORD(rgb) (std::uint32_t)( LW_RGB555_R(rgb) | (LW_RGB555_G(rgb)<<8) | (LW_RGB555_B(rgb)<<16) )
+#define LW_RGB565TODWORD(rgb) (std::uint32_t)( LW_RGB565_R(rgb) | (LW_RGB565_G(rgb)<<8) | (LW_RGB565_B(rgb)<<16) )
 
 #define LW_RGBDWORDTO555(color) (WORD)( ((color&0xf8)<<7) | ((color & 0xf800)>>6) | ((color & 0xf80000)>>19) )
 #define LW_RGBDWORDTO565(color) (WORD)( ((color&0xf8)<<8) | ((color & 0xfC00)>>5) | ((color & 0xf80000)>>19) )
@@ -24,10 +24,9 @@ using namespace std;
 void CheckMapFileVersion(const char *pszMapName)
 {
     FILE *fp = fopen(pszMapName, "rb");
-    if(fp==NULL)
+    if(fp== nullptr)
     {
-        //LG("error", "[%s]\n", pszMapName);
-		LG("error", "can't open map [%s]\n", pszMapName);
+		ToLog("error: can't open map [{}]", pszMapName);
         return;
     }
 
@@ -38,14 +37,12 @@ void CheckMapFileVersion(const char *pszMapName)
     fclose(fp);
     if(header.nMapFlag==780624)
     {
-        //LG("map_version", "msg!");
-		LG("map_version", "msg this version file is deprecated!");
+		ToLog("map_version: msg this version file is deprecated!");
         return;
     }
     else if(header.nMapFlag==LAST_VERSION_NO)
     {
-        //LG("map_version", "msg, !");
-		LG("map_version", "msg old version file, now update the version");
+		ToLog("map_version: msg old version file, now update the version");
     }
     else
     {
@@ -62,10 +59,10 @@ void CheckMapFileVersion(const char *pszMapName)
     fwrite(&header, sizeof(header), 1, fp);
     
     int nTotal = map.GetSectionCntY() * map.GetSectionCntX();
-    DWORD *dwOffsetArray = new DWORD[nTotal];
-    memset(dwOffsetArray, 0, sizeof(DWORD) * nTotal);
+    std::uint32_t *dwOffsetArray = new std::uint32_t[nTotal];
+    memset(dwOffsetArray, 0, sizeof(std::uint32_t) * nTotal);
 
-    fseek(fp, sizeof(header) + sizeof(DWORD) * nTotal, SEEK_SET);
+    fseek(fp, sizeof(header) + sizeof(std::uint32_t) * nTotal, SEEK_SET);
 
     for(int y = 0; y < map.GetSectionCntY(); y++)
     {
@@ -75,7 +72,7 @@ void CheckMapFileVersion(const char *pszMapName)
             if(pSection && pSection->dwDataOffset)
             {
                 // LG("map", "Write Section [%d %d]\n", x, y);
-                DWORD dwOffset = ftell(fp);
+                std::uint32_t dwOffset = ftell(fp);
                 *(dwOffsetArray + y * map.GetSectionCntX() + x) = dwOffset;
                 SFileTile *pTileData = (SFileTile*)pSection->pData;
                 SNewFileTile tile;
@@ -97,14 +94,14 @@ void CheckMapFileVersion(const char *pszMapName)
     }
 
     fseek(fp, sizeof(header), SEEK_SET);
-    fwrite(dwOffsetArray, sizeof(DWORD), nTotal, fp);
+    fwrite(dwOffsetArray, sizeof(std::uint32_t), nTotal, fp);
     fclose(fp);
 
     string strOld = pszMapName;
     strOld+=".old";
     CopyFile(pszMapName, strOld.c_str(), FALSE);
     //MessageBox(NULL, ", .old!", strOld.c_str(), 0);
-	MessageBox(NULL, "Map format convert ok, ole file backed OK(.old)!", strOld.c_str(), 0);
+	MessageBox(nullptr, "Map format convert ok, ole file backed OK(.old)!", strOld.c_str(), 0);
     CopyFile("map/temp.map", pszMapName, FALSE);
 }
 

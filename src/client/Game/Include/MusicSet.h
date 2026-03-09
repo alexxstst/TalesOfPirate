@@ -70,7 +70,7 @@ BT_		delete[] (CMusicInfo*)_RawDataArray;
 
         pInfo->nType = Str2Int(ParamList[0]);
 		
-        LG("music", "Read Music List [%d][%s]\n", pInfo->nID, pInfo->szDataName);
+        ToLogService("music", "Read Music List [{}][{}]", pInfo->nID, pInfo->szDataName);
             
         return TRUE;
     }

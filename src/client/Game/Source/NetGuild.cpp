@@ -279,17 +279,17 @@ void NetMC_GUILD_MOTTO(cChar *motto)
 void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[], const char szGuildMotto[],uLong chGuildPermission)
 {
 	const char* pszLogName = g_LogName.GetLogName( dwCharID );
-	LG( pszLogName, "Guild Info:%u, Name:%s, Motto:%s\n", dwGuildID, szGuildName, szGuildMotto  );
+	ToLogService(pszLogName, "Guild Info:{}, Name:{}, Motto:{}", dwGuildID, szGuildName, szGuildMotto);
 
 	if( !CGameApp::GetCurScene() )
 	{
-		LG( "error", g_oLangRec.GetString(244) );
+		ToLogService("error", "{}", g_oLangRec.GetString(244));
 		return;
 	}
 
 	if( !CGameScene::GetMainCha() ) 
 	{
-		LG( "error", g_oLangRec.GetString(245) );
+		ToLogService("error", "{}", g_oLangRec.GetString(245));
 		return;
 	}
 
@@ -299,7 +299,7 @@ void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[]
 		CGuildData::SetGuildMottoName(szGuildMotto);
 		CUIGuildMgr::RefreshAttribute();
 
-		LG( pszLogName, "Guild - Main Cha:%u, %s\n", pCha->getAttachID(), pCha->getLogName() );
+		ToLogService(pszLogName, "Guild - Main Cha:{}, {}", pCha->getAttachID(), pCha->getLogName());
 
 		CCharacter* pAll[defMaxBoat+1] = { 0 };
 		for( int i=0;i<defMaxBoat; i++ )
@@ -310,7 +310,7 @@ void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[]
 		{
 			if( pAll[i] )
 			{
-				LG( pszLogName, "Guild:%u, %s\n", pAll[i]->getAttachID(), pAll[i]->getLogName() );
+				ToLogService(pszLogName, "Guild:{}, {}", pAll[i]->getAttachID(), pAll[i]->getLogName());
 				pAll[i]->setGuildID( dwGuildID );
 				pAll[i]->setGuildName( szGuildName );
 				pAll[i]->setGuildMotto( szGuildMotto );
@@ -324,7 +324,7 @@ void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[]
 
 		if( !pCha )
 		{
-			LG( "error", g_oLangRec.GetString(246), dwCharID );
+			ToLogService("error", "{} {}", g_oLangRec.GetString(246), dwCharID);
 			return;
 		}
 

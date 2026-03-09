@@ -474,7 +474,7 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
         _res_mgr->CreateHelperObject(&h);
         if(LW_FAILED(h->LoadHelperInfo(&info->helper_data, create_helper_primitive)))
         {
-            LG_MSGBOX("LoadHelperInfo error");
+            ToLogService("default", "msgLoadHelperInfo error");
         }
         imp->SetHelperObject(h);
     }
@@ -661,7 +661,7 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
         _res_mgr->CreateHelperObject(&h);
         if(LW_FAILED(h->LoadHelperInfo(&pInfo->helper_data, create_helper_primitive)))
         {
-            LG_MSGBOX("LoadHelperInfo error");
+            ToLogService("default", "msgLoadHelperInfo error");
         }
         imp->SetHelperObject(h);
     }
@@ -717,7 +717,7 @@ LW_RESULT lwPhysique::Update()
 
             if(pri_ctrl == 0)
             {
-                LG_MSGBOX("crash!!!, call jack");
+                ToLogService("default", "msgcrash!!!, call jack");
                 __asm int 3;
             }
 

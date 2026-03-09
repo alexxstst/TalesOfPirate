@@ -35,8 +35,7 @@ public:
 
 	void		SetList( CList* pList ) { _pList = pList;			}
 
-public:
-	CItemRow*	GetItem()				{ return _pItem;			}
+CItemRow*	GetItem()				{ return _pItem;			}
 	void		SetIsEnabled( bool v )	{ _isEnabled=v;				}
 	bool		GetIsEnabled()			{ return _isEnabled;		}
 	CGuiPic*	GetImage()				{ return _pImage;			}
@@ -44,15 +43,13 @@ public:
 private:
 	void		_Copy( const CSelectItem& rhs );
 
-private:	
-	CItemRow*	_pItem;				// Item
+CItemRow*	_pItem;				// Item
 	bool		_isEnabled;			// 
 	bool		_isSelect;
 	int			_nIndex;			// -1
 	CGuiPic*	_pImage;
 
-private:
-	CList*		_pList;
+CList*		_pList;
 
 };
 
@@ -67,8 +64,7 @@ public:
 	virtual ~CListItems();
 	virtual bool		Clone( CListItems* rhs );
 
-public:
-	bool				MouseRun( int x, int y, DWORD key );
+bool				MouseRun( int x, int y, DWORD key );
 	void				Refresh();
 	virtual void		Render();
 	virtual void		Clear();
@@ -102,7 +98,7 @@ public:
 	void				SetItemMargin( int left, int top );
 	void				SetImageMargin( int left, int top );
 
-public:		// 	
+		// 	
 	void				SelectPrior();			// 	
 	void				SelectNext();			// 
 	void				SelectFirst();			// 
@@ -143,8 +139,7 @@ protected:
 	int					_nPicX;
 	bool				_IsMouseFollow;		// 
 
-protected:
-	static int			_nTmpY;
+static int			_nTmpY;
 
 };
 
@@ -161,8 +156,7 @@ public:
 	virtual void		SetRect( int x1, int y1, int x2, int y2, int rowheight );
 	virtual void		Render();
 
-public:
-	virtual CItemRow*	Add( const char* str, DWORD c );
+virtual CItemRow*	Add( const char* str, DWORD c );
 	virtual bool		SetColumnWidth( unsigned int nCol, unsigned int width );
 	virtual unsigned int GetColumn() { return _nCol; }
 
@@ -198,15 +192,14 @@ public:
 	virtual bool		IsHandleMouse()				{ return true;	}
 	virtual void		SetAlpha( BYTE alpha );
 
-public:		// 
+		// 
 	virtual void		OnActive();
 	virtual void		OnLost();
 	virtual bool		OnKeyDown( int key );
 
 	virtual bool		SetShowRow( int n );			// ,List
 
-public:
-	CItemRow*			GetSelectItem()						{ return  _pItems->GetSelect()->GetItem();	}
+CItemRow*			GetSelectItem()						{ return  _pItems->GetSelect()->GetItem();	}
 
 	CScroll*			GetScroll()							{ return _pScroll;							}
 	CGuiPic*			GetImage()							{ return _pImage;							}
@@ -223,8 +216,7 @@ public:
 
 	void                ResetScrollChange();
 
-public:
-	CItemRow*			Add( const char* str );
+CItemRow*			Add( const char* str );
 	bool				Del( CItemRow* item );
 	void				Clear();
 	CItemRow*			NewItem();
@@ -237,9 +229,8 @@ public:
 
 	void				SetIsChangeColor( bool v )	{ _IsChangeColor = v;		}
 	bool				GetIsChangeColor()			{ return _IsChangeColor;	}
-	
-public:
-	GuiEvent			evtSelectChange;			// 
+
+GuiEvent			evtSelectChange;			// 
 	GuiMouseEvent		evtListMouseDown;			// 
 	GuiMouseEvent		evtListMouseDB;
 
@@ -250,13 +241,11 @@ protected:
 	void				_OnScrollChange();
 	void				_ResetPageNum();
 
-protected:
-	void				_SetScrollRange();
+void				_SetScrollRange();
 	void				_SetSelf();
 	void				_Copy( const CList& rhs );
 
-protected:
-	CScroll*			_pScroll;	
+CScroll*			_pScroll;	
 	CListItems*			_pItems;
 	CGuiPic*			_pImage;		// 
 	CGuiPic*			_pItemImage;	

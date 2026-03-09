@@ -23,8 +23,7 @@ protected:
 	virtual bool _Start();
 	virtual bool _IsAllowCancel()		{ return false;				}
 
-protected:
-	int			_nPose;
+int			_nPose;
     bool        _isKeepPose;
 
 };
@@ -45,8 +44,7 @@ public:
 protected:
 	virtual bool _Start();
 
-protected:
-	enum eAngle
+enum eAngle
 	{
 		enumInit,
 		enumAngle,

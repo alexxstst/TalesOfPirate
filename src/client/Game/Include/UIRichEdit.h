@@ -31,9 +31,8 @@ public:
 private:
 	void	_SetSelf();
 	void	_Copy( const CRichEdit& rhs );
-	
-private:
-	char		_szEnter[16];	// buf
+
+char		_szEnter[16];	// buf
 	int			_nEnterPos;
 
 	CEditArticle	_cArticle;

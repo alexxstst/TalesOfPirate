@@ -27,8 +27,7 @@ public:
 
     void            SetIsShowDrag( bool v ) { _IsShowDrag = v;  }
 
-public:
-    CGuiPic*		GetImage()              { return _pImage;   }
+CGuiPic*		GetImage()              { return _pImage;   }
 
 private:
     void			_SetSelf( const CDragTitle& rhs );

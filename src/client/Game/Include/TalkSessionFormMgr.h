@@ -200,8 +200,7 @@ public:
 	//static void GetFormRect(DWORD sessionID,RECT &rect);
 	//static void GetTitleRect(DWORD sessionID,RECT &rect);
 
-protected:
-	//static RECT INFORM_FORM;
+//static RECT INFORM_FORM;
 	//static RECT INFORM_TITLE;
 	//static int INFORM_TABLE_W;
 	//static int INFORM_TABLE_H;

@@ -38,7 +38,7 @@ public:
 	void				SetRowHeight( int v )		{ if( v>0 ) _nRowHeight = v;	}
 	void				SetRowSpace( int v )		{ if( v>=0 ) _nRowSpace = v;	}
 
-public:	// 
+	// 
 	GuiEvent			evtSelectChange;				// 
 	GuiMouseEvent		evtListMouseDown;			// 
 

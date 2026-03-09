@@ -39,7 +39,6 @@ namespace GUI
 		static void _evtBankToBank(CGuiData *pSender,int nFirst, int nSecond, bool& isSwap);  //
 		static void _evtOnClose( CForm* pForm, bool& IsClose );//
 
-	private:
 		stNumBox*		m_pkNumberBox; // 
 		stNetBank		m_kNetBank;
 

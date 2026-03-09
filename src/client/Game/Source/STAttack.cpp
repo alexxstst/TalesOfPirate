@@ -73,7 +73,7 @@ void CWaitAttackState::SetSkill( CSkillRecord* p )
 { 
 	if( !p )
 	{
-		LG( "state", g_oLangRec.GetString(398) );
+		ToLogService("state", "{}", g_oLangRec.GetString(398));
 	}
 	
 	_pSkillInfo = p; 
@@ -197,7 +197,7 @@ void CWaitAttackState::_UseSkill()
     _nKeyFrameNum = _pSelf->GetCurPoseKeyFrameNum();
 	if( _nKeyFrameNum<=0 && _pSkillInfo->sActionKeyFrme!=-1 )
     {
-        LG( "error", g_oLangRec.GetString(399), _pSelf->getLogName(), _pSkillInfo->szName, _nSkillPoseID );
+        ToLogService("error", "{} {} {} {}", g_oLangRec.GetString(399), _pSelf->getLogName(), _pSkillInfo->szName, _nSkillPoseID);
     }
 
 	// If there are additional special effects operations, such as: boarding and disembarking, etc., a special effect should be played
@@ -353,7 +353,7 @@ void CWaitAttackState::ActionEnd( DWORD pose_id )
 		_nActionEnd++;
 		if( _pSkillInfo->IsPlayCyc() || _nActionEnd==1 )
 		{
-			if( _pSelf->IsMainCha() ) LG( _pSelf->getLogName(), "ActionEnd: %d\n", pose_id );
+			if( _pSelf->IsMainCha() ) ToLogService(_pSelf->getLogName(), "ActionEnd: {}", pose_id);
 			_cHit.ActionExec( _pHarm, ACTION_END_HIT );
 		}
 	}
@@ -492,7 +492,7 @@ bool CAttackState::_Start()
 	{
 		if( _pSkillInfo->GetLevel()>_pSkillInfo->GetJobMax( _pSelf->getGameAttr()->get(ATTR_JOB) ) )
 		{
-			LG( "error", g_oLangRec.GetString(400), _pSkillInfo->GetLevel(), _pSkillInfo->GetJobMax( _pSelf->getGameAttr()->get(ATTR_JOB) ) );
+			ToLogService("error", "{} {} {}", g_oLangRec.GetString(400), _pSkillInfo->GetLevel(), _pSkillInfo->GetJobMax( _pSelf->getGameAttr()->get(ATTR_JOB) ));
 			return false;
 		}
 
@@ -549,7 +549,7 @@ bool CAttackState::_Start()
 
 	if( _nSkillSpeed==0 )
 	{
-		LG( "CAttackState", g_oLangRec.GetString(401) );
+		ToLogService("CAttackState", "{}", g_oLangRec.GetString(401));
 	}
 
 	stNetSkillInfo param;
@@ -635,7 +635,7 @@ bool CAttackState::_Start()
 	SetAttackPoint( _nAttackX, _nAttackY );
 	CS_BeginAction( _pSelf, enumACTION_SKILL, (void*)&param, this );
 
-	LG( _pSelf->getLogName(), "FireSpeed:%d\n", _nSkillSpeed );
+	ToLogService(_pSelf->getLogName(), "FireSpeed:{}", _nSkillSpeed);
 	_pSkillInfo->SetAttackTime( CGameApp::GetCurTick() + _nSkillSpeed );	// 
 	CalcSkillSpeed();
 
@@ -709,7 +709,7 @@ void CAttackState::FrameMove()
 		{
 			if( _pSkillInfo->IsEffectHarm() || _dwEndTime<=CGameApp::GetCurTick() )
 			{
-				LG( _pSelf->getLogName(), "change pose velocity:%f, actionkeycount:%d\n", _pSelf->GetPoseVelocity(), _nActionKeyCount );
+				ToLogService(_pSelf->getLogName(), "change pose velocity:{}, actionkeycount:{}", _pSelf->GetPoseVelocity(), _nActionKeyCount);
 
 				_pSelf->SetPoseVelocity( _pSelf->GetPoseVelocity() * 100.0f );
 				//_pSelf->SetPoseVelocity( 100.0f );
@@ -754,7 +754,7 @@ void CAttackState::PushPoint( int x, int y )
 
 void CAttackState::ActionBegin( DWORD pose_id )
 {
-	LG( _pSelf->getLogName(), "ActionBegin: %d\n", pose_id );
+	ToLogService(_pSelf->getLogName(), "ActionBegin: {}", pose_id);
 	CWaitAttackState::ActionBegin( pose_id );
 }
 
@@ -774,7 +774,7 @@ void CAttackState::ActionEnd( DWORD pose_id )
 
 void CAttackState::ActionFrame( DWORD pose_id, int key_frame )
 {
-	LG( _pSelf->getLogName(), "ActionFrame:%d, keyframe:%d, pose velocity:%f\n", pose_id, key_frame, _pSelf->GetPoseVelocity() );
+	ToLogService(_pSelf->getLogName(), "ActionFrame:{}, keyframe:{}, pose velocity:{}", pose_id, key_frame, _pSelf->GetPoseVelocity());
 
 	if( _eUseSkill!=enumUseSkill )
 		return;
@@ -821,7 +821,7 @@ bool CAttackState::IsAllowUse()
 bool CAttackState::_IsAllowCancel()	
 { 
 	bool rv = _AllowCancel();
-	LG( _pSelf->getLogName(), "Attack Cancel- AllowCancel:%d, IsWait:%d, IsCancle:%d, IsOver:%d, FightID:%d, Skill:%s\n", rv, GetIsWait(), GetIsCancel(), GetIsOver(), GetServerID(), _pSkillInfo->szName );
+	ToLogService(_pSelf->getLogName(), "Attack Cancel- AllowCancel:{}, IsWait:{}, IsCancle:{}, IsOver:{}, FightID:{}, Skill:{}", rv, GetIsWait(), GetIsCancel(), GetIsOver(), GetServerID(), _pSkillInfo->szName);
 	return rv;
 }
 

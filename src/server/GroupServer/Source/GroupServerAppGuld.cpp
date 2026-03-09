@@ -17,9 +17,8 @@ void GroupServerApp::PC_GULD_INIT(Player *ply)
 			}
 		}else
 		{
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<"["<<ply->m_chaname[ply->m_currcha]<<"],ID:"<<ply->m_guild[ply->m_currcha]<<endln;
-			l_line<<newln<<"player ["<<ply->m_chaname[ply->m_currcha]<<"] can't get guild struct ,guild ID:"<<ply->m_guild[ply->m_currcha]<<endln;
+			//l_line<<newln<<...;
+			ToLogService("Guild", "player [{}] can't get guild struct ,guild ID:{}", ply->m_chaname[ply->m_currcha], ply->m_guild[ply->m_currcha]);
 		}
 	}
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
@@ -65,9 +64,8 @@ void GroupServerApp::MP_GUILD_APPROVE(Player *ply,DataSocket *datasock,RPacket &
 	Player	*l_ply	=FindPlayerByChaID(l_chaid);
 	if(!ply->GetGuild())
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer...";
-		l_line<<newln<<"GroupServer guild data exception, please contact developer...";
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, please contact developer...");
 		return;
 	}
 	if(l_ply)
@@ -85,9 +83,8 @@ void GroupServerApp::MP_GUILD_KICK(Player *ply,DataSocket *datasock,RPacket &pk)
 	Guild	*l_guild	=ply->GetGuild();
 	if(!l_guild)
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer...";
-		l_line<<newln<<"GroupServer guild data exception, please contact developer...";
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, please contact developer...");
 		return;
 	}
 	Player	*l_ply	=l_guild->FindGuildMemByChaID(l_chaid);
@@ -126,9 +123,8 @@ void GroupServerApp::MP_GUILD_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk
 	Guild	*l_guild	=ply->GetGuild();
 	if(!l_guild)
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer...";
-		l_line<<newln<<"GroupServer guild data exception, please contact developer...";
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, please contact developer...");
 		return;
 	}
 	{
@@ -163,9 +159,8 @@ void GroupServerApp::MP_GUILD_DISBAND(Player *ply,DataSocket *datasock,RPacket &
 	Guild	*l_guild	=ply->GetGuild();
 	if(!l_guild)
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer...";
-		l_line<<newln<<"GroupServer guild data exception, please contact developer...";
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, please contact developer...");
 		return;
 	}
 	l_guild->m_leader	= nullptr;
@@ -197,9 +192,8 @@ void GroupServerApp::MP_GUILD_MOTTO(Player *ply,DataSocket *datasock,RPacket &pk
 	Guild	*l_guild	=ply->GetGuild();
 	if(!l_guild)
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer...";
-		l_line<<newln<<"GroupServer guild data exception, please contact developer...";
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, please contact developer...");
 		return;
 	}
 	strcpy(l_guild->m_motto,pk.ReadString());
@@ -212,9 +206,8 @@ void GroupServerApp::MP_GUILD_CHALLMONEY(Player *ply,DataSocket *datasock,RPacke
 	Guild* pGuild = FindGuildByGldID( dwChallID );
 	if( !pGuild || pGuild->m_leaderID == 0 )
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer,guildid = "<<dwChallID<<"money = "<<dwMoney;
-		l_line<<newln<<"GroupServer guild data exception, find guild nothing, or guild has no leader! withdrawal challenging money! guildid = "<<dwChallID<<"money = "<<dwMoney;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, find guild nothing, or guild has no leader! withdrawal challenging money! guildid = {}money = {}", dwChallID, dwMoney);
 		return;
 	}
 
@@ -225,24 +218,19 @@ void GroupServerApp::MP_GUILD_CHALLMONEY(Player *ply,DataSocket *datasock,RPacke
 	if( !l_ply || l_ply->m_currcha == -1 || pGuild->m_leaderID != l_ply->m_chaid[l_ply->m_currcha] )
 	{
 		// ,
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<""<<pszGuild1<<"chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
-		l_line<<newln<<"player is offline, withdrawal challenging"<<pszGuild1<<"money!chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
+		ToLogService("Guild", "player is offline, withdrawal challenging{}money!chaid = {}money = {}", pszGuild1, pGuild->m_leaderID, dwMoney);
 
 		auto const l_lockDB = std::lock_guard{g_gpsvr->m_mtxDB};
 		if( !g_gpsvr->m_tblcharaters->AddMoney( pGuild->m_leaderID, dwMoney ) )
 		{
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<""<<pszGuild1<<"chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
-			l_line<<newln<<"challenge guild, withdrawal challenging"<<pszGuild1<<"money failed!chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
+			//l_line<<newln<<...;
+			ToLogService("Guild", "challenge guild, withdrawal challenging{}money failed!chaid = {}money = {}", pszGuild1, pGuild->m_leaderID, dwMoney);
 		}
 	}
 	else
 	{
 		// 
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<""<<pszGuild1<<"chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
-		l_line<<newln<<"online guild, withdrawal challenging"<<pszGuild1<<"money!chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
+		ToLogService("Guild", "online guild, withdrawal challenging{}money!chaid = {}money = {}", pszGuild1, pGuild->m_leaderID, dwMoney);
 
 		WPacket	l_wpk = GetWPacket();
 		l_wpk.WriteCmd(CMD_PM_GUILD_CHALLMONEY);
@@ -262,9 +250,8 @@ void GroupServerApp::MP_GUILD_CHALL_PRIZEMONEY(Player *ply,DataSocket *datasock,
 	Guild* pGuild = FindGuildByGldID( dwChallID );
 	if( !pGuild || pGuild->m_leaderID == 0 )
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"GroupServer,guildid = "<<dwChallID<<"money = "<<dwMoney;
-		l_line<<newln<<"GroupServer guild data exception, can't find leader, or has no leader! withdrawal challenging money failed!guildid = "<<dwChallID<<"money = "<<dwMoney;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "GroupServer guild data exception, can't find leader, or has no leader! withdrawal challenging money failed!guildid = {}money = {}", dwChallID, dwMoney);
 		return;
 	}
 
@@ -272,23 +259,18 @@ void GroupServerApp::MP_GUILD_CHALL_PRIZEMONEY(Player *ply,DataSocket *datasock,
 	if( !l_ply || l_ply->m_currcha == -1 || pGuild->m_leaderID != l_ply->m_chaid[l_ply->m_currcha] )
 	{
 		// ,
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<""<<pGuild->m_name<<"chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
-		l_line<<newln<<"player is offline, withdrawal challenging guild"<<pGuild->m_name<<"money! chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
+		ToLogService("Guild", "player is offline, withdrawal challenging guild{}money! chaid = {}money = {}", pGuild->m_name, pGuild->m_leaderID, dwMoney);
 
 		auto const l_lockDB = std::lock_guard{g_gpsvr->m_mtxDB};
 		if( !g_gpsvr->m_tblcharaters->AddMoney( pGuild->m_leaderID, dwMoney ) )
 		{
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<""<<pGuild->m_name<<"chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
-			l_line<<newln<<"challenging guild, withdrawal challenging guild"<<pGuild->m_name<<"money failed! chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
+			//l_line<<newln<<...;
+			ToLogService("Guild", "challenging guild, withdrawal challenging guild{}money failed! chaid = {}money = {}", pGuild->m_name, pGuild->m_leaderID, dwMoney);
 		}
 	}
 	else
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<""<<pGuild->m_name<<"chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
-		l_line<<newln<<"online challenging guild, withdrawal challenging guild"<<pGuild->m_name<<"moeny!chaid = "<<pGuild->m_leaderID<<"money = "<<dwMoney;
+		ToLogService("Guild", "online challenging guild, withdrawal challenging guild{}moeny!chaid = {}money = {}", pGuild->m_name, pGuild->m_leaderID, dwMoney);
 
 		// 
 		WPacket	l_wpk = GetWPacket();

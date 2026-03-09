@@ -188,7 +188,6 @@ public:
 		g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);  
 		g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
 	}
-public:
 	void	ReleaseBox()
 	{
 		SAFE_RELEASE(_lpIB); SAFE_RELEASE(_lpVB);SAFE_RELEASE(_lpIBLine);
@@ -264,13 +263,11 @@ inline  void	Part_sequence(CMagicEff* pEffCtrl,D3DXVECTOR3* pStart,D3DXVECTOR3* 
 
 class CMagicEff : /*public CMagicCtrl ,*/ public CSceneNode
 {
-private:
 	virtual		BOOL	_Create(int iIdxID,int nType) { return TRUE;}
 
 public:
 	CMagicEff();
 	~CMagicEff();
-public:
 	BOOL			Create(int iIdxID);
 	BOOL			CreateMagic(int iIdxID);
 	BOOL			CreateGroupMagic(int iIdxID);
@@ -311,9 +308,7 @@ public:
 	void				(*GroupEmission)(CMagicEff* pEffCtrl,D3DXVECTOR3* pStart,D3DXVECTOR3* pEnd);
 
 
-public:
-
-	void			setIdxID(int iIdx)	 { _iIdxID = iIdx;}
+void			setIdxID(int iIdx)	 { _iIdxID = iIdx;}
 	int				getIdxID()			 { return _iIdxID;}
 
 
@@ -445,8 +440,7 @@ protected:
 
     virtual void	_UpdateScale(float fx,float fy,float fz);
 
-protected:
-	Effect_Type			_eType;
+Effect_Type			_eType;
     CEffDelay*          _pEffDelay;
 	CSceneNode*			_pObj;//
 
@@ -481,7 +475,6 @@ protected:
 	float			_fFanAngle;
 
 	float			_fBaseSize;
-protected:
 	D3DXVECTOR3			_vMapTarget;
 	float				_fHei;
 
@@ -534,8 +527,6 @@ public:
 	void			FrameMove(DWORD dwDailTime);
 	void			Render();
 
-public:
-
     void			setIdxID(int iIdx)	 { _iIdxID = iIdx;}
 	int				getIdxID()			 { return _iIdxID;}
 
@@ -558,8 +549,6 @@ protected:
 	virtual void    _UpdatePos()	{}
 	virtual void    _UpdateHeight()	{}
 
-protected:
-	
     //CGameScene*		_pScene;
 	MPTerrain*      _pTerrain;
 	int				_iChaID;//ID
@@ -642,7 +631,6 @@ public:
 	{
 		SAFE_DELETE(_pShadeEff);
 	}
-public:
 	static	CNavigationBar	g_cNaviBar;
 protected:
 

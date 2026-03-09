@@ -12,68 +12,68 @@
 char g_szEntiAlloc[256] = "EntityAlloc";
 
 CEntityAlloc::CEntityAlloc(long lChaNum, long lItemNum, long lTNpcNum)
-{T_B
+{
 	// 
 	m_ChaAlloc.create( lChaNum, defENTI_ALLOC_TYPE_CHA );
 	m_ItemAlloc.create( lItemNum, defENTI_ALLOC_TYPE_ITEM );
 	m_TalkNpcAlloc.create( lTNpcNum, defENTI_ALLOC_TYPE_TNPC );
 	m_BerthAlloc.create( 1000, defENTI_ALLOC_TYPE_ENTBERTH );
 	m_ResourceAlloc.create( 1000, defENTI_ALLOC_TYPE_ENTRESOURCE );
-T_E}
+}
 
 CEntityAlloc::~CEntityAlloc()
-{T_B
+{
 	m_ChaAlloc.clear();
 	m_ItemAlloc.clear();
 	m_TalkNpcAlloc.clear();
 	m_BerthAlloc.clear();
 	m_ResourceAlloc.clear();
-T_E}
+}
 
 //=============================================================================
 // 
 //=============================================================================
 CCharacter* CEntityAlloc::GetNewCha()
-{T_B
+{
 	CCharacter* pChar = m_ChaAlloc.alloc();
 	if( !pChar )
 	{		
 		//LG(g_szEntiAlloc, "msg,");
-		LG(g_szEntiAlloc, RES_STRING(GM_GAMEAPP_CPP_00010));
+		ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00010));
 		return NULL;
 	}
 	return pChar;
-T_E}
+}
 
 //=============================================================================
 // 
 //=============================================================================
 CItem* CEntityAlloc::GetNewItem()
-{T_B
+{
 	CItem* pItem = m_ItemAlloc.alloc();
 	if( !pItem )
 	{
 		//LG( g_szEntiAlloc, "msg,");
-		LG( g_szEntiAlloc, RES_STRING(GM_GAMEAPP_CPP_00011));
+		ToLogService( g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00011));
 		return NULL;
 	}
 	return pItem;
-T_E}
+}
 
 //=============================================================================
 // NPC
 //=============================================================================
 mission::CTalkNpc* CEntityAlloc::GetNewTNpc()
-{T_B
+{
 	mission::CTalkNpc* pNpc = m_TalkNpcAlloc.alloc();
 	if( !pNpc )
 	{
 		//LG(g_szEntiAlloc, "msgNPC,NPC");
-		LG(g_szEntiAlloc, RES_STRING(GM_GAMEAPP_CPP_00012));
+		ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00012));
 		return NULL;
 	}
 	return pNpc;
-T_E}
+}
 
 //=============================================================================
 // 
@@ -106,13 +106,13 @@ mission::CEventEntity* CEntityAlloc::GetEventEntity( BYTE byType )
 	default:
 		{
 			//LG(g_szEntiAlloc, "msgType[%d]", byType);
-			LG(g_szEntiAlloc, RES_STRING(GM_GAMEAPP_CPP_00013), byType);
+			ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00013));
 			return NULL;
 		}
 		break;
 	}
 	//LG(g_szEntiAlloc, "msgType[%d]", byType);
-	LG(g_szEntiAlloc, RES_STRING(GM_GAMEAPP_CPP_00014), byType);
+	ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00014));
 	return NULL;
 }
 
@@ -120,7 +120,7 @@ mission::CEventEntity* CEntityAlloc::GetEventEntity( BYTE byType )
 // 
 //=============================================================================
 Entity* CEntityAlloc::GetEntity(long lID)
-{T_B
+{
 	long	lType = lID & 0xff000000;
 	long	lEntiID = lID & 0x00ffffff;
 
@@ -146,13 +146,13 @@ Entity* CEntityAlloc::GetEntity(long lID)
 	}
 	else
 		return 0;
-T_E}
+}
 
 //=============================================================================
 // 
 //=============================================================================
 void CEntityAlloc::ReturnEntity(long lID)
-{T_B
+{
 	long	lType = lID & 0xff000000;
 	long	lEntiID = lID & 0x00ffffff;
 
@@ -176,7 +176,7 @@ void CEntityAlloc::ReturnEntity(long lID)
 	{
 		return m_ResourceAlloc.destroy( lEntiID );
 	}
-T_E}
+}
 
 //=============================================================================
 //=============================================================================
@@ -185,13 +185,13 @@ T_E}
 // 
 //=============================================================================
 CPlayer* CPlayerAlloc::GetNewPly()
-{T_B
+{
 	CPlayer* pCPly = m_PlyAlloc.alloc();
 	if( !pCPly )
 	{		
 		//LG(g_szEntiAlloc, "msg,");
-		LG(g_szEntiAlloc, RES_STRING(GM_GAMEAPP_CPP_00015));
+		ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00015));
 		return NULL;
 	}
 	return pCPly;
-T_E}
+}

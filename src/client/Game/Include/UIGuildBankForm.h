@@ -44,7 +44,6 @@ namespace GUI
 		static void _OnClickGoldTake(CGuiData *pSender, int x, int y, DWORD key);
 		static void _OnClickGoldPut(CGuiData *pSender, int x, int y, DWORD key);
 
-	private:
 		stNumBox*		m_pkNumberBox; // 
 		stNetBank		m_kNetBank;
 

@@ -155,7 +155,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 			if (bObjChange)
 				g_ObjFile.WriteSectionObjInfo(nSectionNO, infoex, nSectionObjCnt);
 
-            LG("load", "Total: %d, Scene: %d\n", nSectionObjCnt, nSceneObj);
+            ToLogService("load", "Total: {}, Scene: {}", nSectionObjCnt, nSceneObj);
         }
 
 		MPTile	*SMPTile;
@@ -392,7 +392,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 
 void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool bWindowed )
 {
-	LG("video", g_oLangRec.GetString(104), width, height, bWindowed);
+	ToLogService("video", "{} {} {} {}", g_oLangRec.GetString(104), width, height, bWindowed);
 
 	//MPInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
 	//MPIResourceMgr* res_mgr = imgr->res_mgr;
@@ -467,18 +467,18 @@ void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool b
 	
 	if(g_Render.ToggleFullScreen(width, height, format, bWindowed) == 0)
     {
-		LG("video", "msgToggleFullScreen error");
+		ToLogService("video", "msgToggleFullScreen error");
 		return;
     }
 
-	LG("video", g_oLangRec.GetString(105));
+	ToLogService("video", "{}", g_oLangRec.GetString(105));
 
 	//SetIsFullScreen( !bWindowed);
 
 	g_pGameApp->_nWindowWidth = width ;		
 	g_pGameApp->_nWindowHeight = height ;
 	
-	LG("video", "GetRender SetScreen w = %d, h = %d\n", width, height);
+	ToLogService("video", "GetRender SetScreen w = {}, h = {}", width, height);
     
 	GetRender().SetScreen( g_Render.GetScrWidth(), g_Render.GetScrHeight(), !bWindowed );
 
@@ -968,7 +968,7 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 				GetConsole()->OnKeyDownEvent(dwParam1);
 			}
 			//g_InputBox.HandleWindowMsg(dwMsg, dwParam1, dwParam2);
-			LG( "key", "keydown:%d, %d\n", dwParam1, dwParam2 );
+			ToLogService( "key", "keydown:{}, {}", dwParam1, dwParam2 );
 			
 			CFormMgr::s_Mgr.OnKeyDown((int)dwParam1);
 
@@ -989,7 +989,7 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 				if( GetConsole()->OnCharEvent((TCHAR)dwParam1, dwParam2) ) return false;
 			}
 			//g_InputBox.HandleWindowMsg(dwMsg, dwParam1, dwParam2);
-			LG( "key", "keychar:%d, %d\n", dwParam1, dwParam2 );
+			ToLogService( "key", "keychar:{}, {}", dwParam1, dwParam2 );
 			
 			if( CFormMgr::s_Mgr.OnKeyChar((char)dwParam1) ) return false;
 
@@ -1103,7 +1103,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			}
 			else
 			{
-				LG(g_oLangRec.GetString(112), g_oLangRec.GetString(113), nChaID);
+				ToLogService(g_oLangRec.GetString(112), "{} {}", g_oLangRec.GetString(113), nChaID);
 			}
 		}
 		in.close();
@@ -1220,14 +1220,14 @@ void CheckSkillEffect( CSkillRecord* pSkill, int nEffectID )
 
 	if( name.empty() )
 	{
-		LG( "skillinfoerror", g_oLangRec.GetString(117), pSkill->nID, pSkill->szName, nEffectID );
+		ToLogService("skillinfoerror", "{} {} {} {}", g_oLangRec.GetString(117), pSkill->nID, pSkill->szName, nEffectID);
 		return;
 	}
 
 	int n = (int)name.find( g_oLangRec.GetString(118) );
 	if( n >= 0 )
 	{
-		LG( "skillinfoerror", g_oLangRec.GetString(119), pSkill->nID, pSkill->szName, nEffectID );
+		ToLogService("skillinfoerror", "{} {} {} {}", g_oLangRec.GetString(119), pSkill->nID, pSkill->szName, nEffectID);
 	}
 }
 
@@ -1256,7 +1256,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		""
 	};
 	static bool UI_DEBUG_FLAG_ARCOL=false;
-T_B
+
 	if(strCmd=="?")
 	{
 		int n = 0;
@@ -1454,12 +1454,6 @@ T_B
 		extern long	g_nCurrentLogNo;
 		g_pGameApp->SysInfo( "LogNo:%d", g_nCurrentLogNo );
 	}
-	else if( strCmd=="checkfile" )
-	{
-		g_pGameApp->HasLogFile( "gui" );
-		g_pGameApp->HasLogFile( "roadsay" );
-		g_pGameApp->HasLogFile( "iteminfoerror" );
-	}
 	else if( strCmd=="lg" )
 	{
 		LGInfo* pInfo = g_pGameApp->GetLGConfig();
@@ -1471,10 +1465,6 @@ T_B
 		LGInfo* pInfo = g_pGameApp->GetLGConfig();
 		pInfo->bMsgBox = Str2Int( p1 )!=0;
 		g_pGameApp->LG_Config( *pInfo );
-	}
-	else if( strCmd=="lgclear" )
-	{
-		::LG_CloseAll();
 	}
 	else if( strCmd=="gate" )
 	{
@@ -1489,7 +1479,7 @@ T_B
 	}
 	else if( strCmd=="teamleaderid" )
 	{
-		LG( "teamleaderid", "msg%u\n", CTeamMgr::GetTeamLeaderID() );
+		ToLogService( "teamleaderid", "msg{}", CTeamMgr::GetTeamLeaderID() );
 	}
 	else if( strCmd=="state" )
 	{
@@ -1540,14 +1530,14 @@ T_B
 				int nCharID = pMain->getTypeID() - 1;
 				if( nCharID<0 || nCharID>3 )
 				{
-					LG( "error", g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName, RefineID );
+					ToLogService("error", "{} {} {}", g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName, RefineID);
 					return strRes.c_str();
 				}
 
 				CItemRefineEffectInfo* pInfo = GetItemRefineEffectInfo( RefineID );
 				if( !pInfo )
 				{
-					LG( "error", g_oLangRec.GetString(127), RefineID );
+					ToLogService("error", "{} {}", g_oLangRec.GetString(127), RefineID);
 					return strRes.c_str();
 				}
 
@@ -1581,17 +1571,17 @@ T_B
 					// dummy
 					if( !pEffect->Create( nEffectID ) )
 					{
-						LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+						ToLogService("ERROR", "msgcreate cha`s effect fail,ID {}", nEffectID );
 						return strRes.c_str();
 					}
 					pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);
 					pEffect->SetScale( EffectScale, EffectScale, EffectScale );
 					pEffect->SetAlpha( SItemForge::GetAlpha( Level ) );
-					pEffect->Emission( -1, NULL, NULL);    
+					pEffect->Emission( -1, NULL, NULL);
 					pEffect->SetValid(TRUE);
 					pItem->AddEffect(pEffect->getID());
 
-					LG( g_oLangRec.GetString(128), "ID:%d, Dummy:%d\n", nEffectID, pInfo->chDummy[i] );
+					ToLogService(g_oLangRec.GetString(128), "ID:{}, Dummy:{}", nEffectID, pInfo->chDummy[i]);
 				}
 			}
 		}
@@ -1825,8 +1815,6 @@ T_B
 				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sWaterEffectID );
 				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sTargetEffectID );												
 			}
-
-			g_pGameApp->HasLogFile( "skillinfoerror" );
 		}
 
 		// 
@@ -1962,7 +1950,7 @@ T_B
 		// dummy
 		if( !pEffect->Create( nEffectID ) )
 		{
-			LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+			ToLogService("ERROR", "msgcreate cha`s effect fail,ID {}", nEffectID );
 			return strRes.c_str();
 		}
 		pEffect->setFollowObj( (CSceneNode*)pMain, NODE_CHA, nDummy );
@@ -2044,17 +2032,17 @@ T_B
 								// dummy
 								if( !pEffect->Create( nEffectID ) )
 								{
-									LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+									ToLogService("ERROR", "msgcreate cha`s effect fail,ID {}", nEffectID );
 									return strRes.c_str();
 								}
 								pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);
 								static float fScale[4] = { 1.0f, 1.2f, 1.0f, 0.7f };
 								pEffect->SetScale( fScale[nCharID], fScale[nCharID], fScale[nCharID] );
-								pEffect->Emission( -1, NULL, NULL);    
+								pEffect->Emission( -1, NULL, NULL);
 								pEffect->SetValid(TRUE);
 								pItem->AddEffect(pEffect->getID());
 
-								LG( g_oLangRec.GetString(128), "ID:%d, Dummy:%d\n", nEffectID, pInfo->chDummy[i] );
+								ToLogService(g_oLangRec.GetString(128), "ID:{}, Dummy:{}", nEffectID, pInfo->chDummy[i]);
 							}
 						}
 					}
@@ -2101,17 +2089,17 @@ T_B
 								// dummy
 								if( !pEffect->Create( nEffectID ) )
 								{
-									LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+									ToLogService("ERROR", "msgcreate cha`s effect fail,ID {}", nEffectID );
 									return strRes.c_str();
 								}
 								pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);
 								static float fScale[4] = { 1.0f, 1.2f, 1.0f, 0.7f };
 								pEffect->SetScale( fScale[nCharID], fScale[nCharID], fScale[nCharID] );
-								pEffect->Emission( -1, NULL, NULL);    
+								pEffect->Emission( -1, NULL, NULL);
 								pEffect->SetValid(TRUE);
 								pItem->AddEffect(pEffect->getID());
 
-								LG( g_oLangRec.GetString(128), "ID:%d, Dummy:%d\n", nEffectID, pInfo->chDummy[i] );
+								ToLogService(g_oLangRec.GetString(128), "ID:{}, Dummy:{}", nEffectID, pInfo->chDummy[i]);
 							}
 						}
 					}
@@ -2262,7 +2250,7 @@ T_B
 
 				if( ((CCharacterModel*)pCha)->LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 					continue;
 				}
 			}
@@ -2277,7 +2265,7 @@ T_B
 
 				if( ((CCharacterModel*)pCha)->LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 					continue;
 				}
 			}
@@ -2293,7 +2281,7 @@ T_B
 
 				if( ((CCharacterModel*)pCha)->LoadTower( pInfo->chModalType, part_buf ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 					continue;
 				}
 			}
@@ -2315,13 +2303,13 @@ T_B
 
 				if( ((CCharacterModel*)pCha)->LoadCha( &load_info ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					ToLogService("error", "{} {} {}", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);
 					continue;
 				}  
 			}
 			if( ((CCharacterModel*)pCha)->LoadPose( pInfo->sActionID ) == 0 )
 			{
-				LG("error", g_oLangRec.GetString(27), nScriptID, pInfo->szDataName);  
+				ToLogService("error", "{} {} {}", g_oLangRec.GetString(27), nScriptID, pInfo->szDataName);
 					continue;
 			} 
 		    pCha->SetValid(TRUE); 
@@ -2354,7 +2342,7 @@ T_B
 	{
 		return HandleMonsterCommand(strCmd, p1, p2);
 	}
-T_REPORT
+
     return strRes.c_str();
 }
 

@@ -50,7 +50,7 @@ BOOL CSceneItem::_Create(int nObjTypeID,int nType)
     _pItemInfo = GetItemRecordInfo( nObjTypeID );
 	if( _pItemInfo==NULL ) 
     {
-        LG("error", g_oLangRec.GetString(349), nObjTypeID);
+        ToLogService("error", "{} {}", g_oLangRec.GetString(349), nObjTypeID);
         return FALSE;
     }
 
@@ -59,7 +59,7 @@ BOOL CSceneItem::_Create(int nObjTypeID,int nType)
 	
     if(Load( str ) == 0)
     {
-		LG("error",g_oLangRec.GetString(350), nObjTypeID, _pItemInfo->szName, str);
+		ToLogService("error", "{} {} {} {}", g_oLangRec.GetString(350), nObjTypeID, _pItemInfo->szName, str);
 		return FALSE;
     }
 
@@ -477,14 +477,14 @@ void CSceneItem::SetForgeEffect( DWORD value, int nCharID )
 
 		if( !pEffect )
 		{
-			LG("ERROR","msgSceneItem SetForgeEffect effect fail,ID[%d]", nEffectID );
+			ToLogService("ERROR", "msgSceneItem SetForgeEffect effect fail,ID[{}]", nEffectID);
 			continue;
 		}
 
 		// dummy
 		if( !pEffect->Create( nEffectID ) )
 		{
-			LG("ERROR","msgSceneItem SetForgeEffect effect fail,ID %d", nEffectID );
+			ToLogService("ERROR", "msgSceneItem SetForgeEffect effect fail,ID {}", nEffectID);
 			continue;
 		}
 		pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);

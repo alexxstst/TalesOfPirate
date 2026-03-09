@@ -335,18 +335,18 @@ private:
 };
 
 inline CMapRes* CGameApp::GetMap(int no)
-{T_B 
+{
 	return m_MapList[no]; 
-T_E}
+}
 	
 inline void CGameApp::AddPlayerIdx(DWORD dwDBID, CPlayer* pPlayer)
-{T_B
+{
 	_PlayerIdx[dwDBID] = pPlayer;
 	//LG("player_idx", "DB ID = %dPlayer\n", dwDBID);
-T_E}
+}
 
 inline void	CGameApp::DelPlayerIdx(DWORD dwDBID)
-{T_B
+{
 	//LG("player_idx", "DB ID = %dPlayer\n", dwDBID);
 	std::map<DWORD, CPlayer*>::iterator it = _PlayerIdx.find(dwDBID);
 	if(it!=_PlayerIdx.end())
@@ -356,18 +356,18 @@ inline void	CGameApp::DelPlayerIdx(DWORD dwDBID)
 	else
 	{
 		//LG("player_idx", "PlayerIdx, DB ID = %d \n", dwDBID); 
-		LG("player_idx", "when delete PlayerIdx it appear error, DB ID = %d no find index\n", dwDBID); 
+		ToLogService("player_idx", "when delete PlayerIdx it appear error, DB ID = {} no find index", dwDBID);
 	}
 	//LG("player_idx", "Idx Size = %d\n\n", _PlayerIdx.size());
-T_E}
+}
 
 inline CPlayer* CGameApp::GetPlayerByDBID(DWORD dwDBID)
-{T_B
+{
 	return _PlayerIdx[dwDBID];
-T_E}
+}
 
 inline	CPlayer*	CGameApp::GetPlayerByMainChaName(	const	char*	sMainChaName	)
-{T_B
+{
 	if(	!sMainChaName	)
 	{
 		return	NULL;
@@ -388,7 +388,7 @@ inline	CPlayer*	CGameApp::GetPlayerByMainChaName(	const	char*	sMainChaName	)
 		++it;
 	};
 	return	NULL;
-T_E};
+};
 
 // 
 inline CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv)
@@ -512,13 +512,13 @@ inline CCharacter* CGameApp::FindPlayerChaByName(const char* cszChaName)
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
 				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				LG("player chain list error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
+				ToLogService("player chain list error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
 				break;
 			}
 			pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetName(), cszChaName)) // 
+			if (!strcmp(pCha->GetName(), cszChaName)) //
 				return pCha;
 		}
 	}
@@ -542,14 +542,14 @@ inline CCharacter* CGameApp::FindPlayerChaByNameLua(const char* cszChaName)
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
 				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				LG("player chain list error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
+				ToLogService("player chain list error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
 				break;
 			}
 			pCha = pCPlayer->GetCtrlCha();
 
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName)) // 
+			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName)) //
 				return pCha;
 		}
 	}
@@ -577,14 +577,14 @@ inline int CGameApp::FindPlayerChaByActNameLua(const char* cszChaName, CCharacte
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
 				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				LG("player chain list error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
+				ToLogService("player chain list error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
 				break;
 			}
 			pCha = pCPlayer->GetCtrlCha();
 
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetPlayer()->GetActName(), cszChaName)) // 
+			if (!strcmp(pCha->GetPlayer()->GetActName(), cszChaName)) //
 				chas[count++] = pCha;
 		}
 	}
@@ -603,7 +603,7 @@ inline bool CGameApp::DealAllInGuild(int guildID, const char* luaFunc, const cha
 		while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer))
 		{
 			if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-				LG("player chain list error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "DealAllInGuild");
+				ToLogService("player chain list error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "DealAllInGuild");
 				break;
 			}
 			pCha = pCPlayer->GetCtrlCha();
@@ -642,7 +642,7 @@ inline CCharacter* CGameApp::FindPlayerChaByID(unsigned long ulChaID)
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
 				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				LG("player chain error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
+				ToLogService("player chain error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
 				break;
 			}
 			pCha = pCPlayer->GetCtrlCha();
@@ -672,7 +672,7 @@ inline CPlayer* CGameApp::FindPlayerByDBChaID(unsigned long ulDBChaID)
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
 				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				LG("player chain error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
+				ToLogService("player chain error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
 				break;
 			}
 			if (pCPlayer->GetDBChaId() == ulDBChaID) // 
@@ -700,7 +700,7 @@ inline CCharacter* CGameApp::FindMainPlayerChaByID(unsigned long ulChaID)
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
 				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				LG("player chain error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
+				ToLogService("player chain error", "player number:{} {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
 				break;
 			}
 			pCha = pCPlayer->GetMainCha();

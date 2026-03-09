@@ -18,7 +18,7 @@ BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
 		lua_pop( g_pLuaState, 1 );
-		LG( "lua_invalidfunc", "GetOnlineCount" );
+		ToLogService("lua_invalidfunc", "GetOnlineCount");
 		return FALSE;
 	}
 
@@ -57,7 +57,7 @@ BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 
 // Add by lark.li 20080306 begin
 inline int lua_GetResString( lua_State *L )
-{T_B
+{
 	BOOL bValid = lua_gettop( L ) == 1 && lua_isstring( L, 1 );
 	if( !bValid )
 	{
@@ -77,7 +77,7 @@ inline int lua_GetResString( lua_State *L )
 	lua_pushstring(L, text);
 
 	return 1;
-T_E}
+}
 // End
 
 inline int lua_LG(lua_State *L)
@@ -150,7 +150,7 @@ inline int lua_LG(lua_State *L)
 	str << "\n";
 	str << ends;
 
-    LG( (char*)pszFile, str.str() );
+    ToLogService((char*)pszFile, "{}", str.str());
     return 0;
 }
 
@@ -236,7 +236,7 @@ inline int lua_EXLG(lua_State *L)
 	str << "\r\n";
 	str << '\0';
 	
-	LG( (char*)pszFile, str.str() );
+	ToLogService((char*)pszFile, "{}", str.str());
 	return 0;
 }
 

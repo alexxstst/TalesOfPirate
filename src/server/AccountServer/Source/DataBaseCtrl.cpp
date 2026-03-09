@@ -64,13 +64,13 @@ bool CDataBaseCtrl::CreateObject()
 	}
 	catch (CSQLException* se)
 	{
-		LG("DBExcp", "Check data field failure! SQL Exception in CDataBaseCtrl::CreateObject(): %s\n", se->m_strError.c_str());
+		ToLogService("DBExcp", "Check data field failure! SQL Exception in CDataBaseCtrl::CreateObject(): {}", se->m_strError.c_str());
 		printf("Check data field failure! SQL Exception in CDataBaseCtrl::CreateObject(): %s\r\n", se->m_strError.c_str());
 		return false;
 	}
 	catch (...)
 	{
-		LG("DBExcp", "Check data field failure! unknown exception raised from CDataBaseCtrl::CreateObject()\n");
+		ToLogService("DBExcp", "Check data field failure! unknown exception raised from CDataBaseCtrl::CreateObject()");
 		printf("Check data field failure! unknown exception raised from CDataBaseCtrl::CreateObject()\n");
 		return false;
 	}
@@ -94,14 +94,14 @@ bool CDataBaseCtrl::InsertUser(std::string username, std::string password, std::
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::InsertUser: %s\n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::InsertUser: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "unknown exception raised from CDataBaseCtrl::InsertUser\n");
+			ToLogService("DBExcp", "unknown exception raised from CDataBaseCtrl::InsertUser");
 		}
 	}
-	LG("AccountServer", "CDataBaseCtrl::InsertUser: A record of user login cannot be saved! UserName=%s \n\n", username.c_str());
+	ToLogService("AccountServer", "CDataBaseCtrl::InsertUser: A record of user login cannot be saved! UserName={}", username.c_str());
 
 	Disconnect();
 }
@@ -123,11 +123,11 @@ bool CDataBaseCtrl::UpdatePassword(string user, string pass)
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::UpdatePassword: %s\n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::UpdatePassword: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "unknown exception raised from CDataBaseCtrl::UpdatePassword\n");
+			ToLogService("DBExcp", "unknown exception raised from CDataBaseCtrl::UpdatePassword");
 		}
 	}
 	Disconnect();
@@ -150,13 +150,13 @@ bool CDataBaseCtrl::Connect()
 	}
 	catch (std::bad_alloc& e)
 	{
-		LG("DBExcp", "CDataBaseCtrl::CreateObject() new failed: %s\n", e.what());
+		ToLogService("DBExcp", "CDataBaseCtrl::CreateObject() new failed: {}", e.what());
 		m_pDataBase=NULL;
 		return false;
 	}
 	catch (...)
 	{
-		LG("DBExcp", "CDataBaseCtrl::CreateObject() unknown exception\n");
+		ToLogService("DBExcp", "CDataBaseCtrl::CreateObject() unknown exception");
 		m_pDataBase=NULL;
 		return false;
 	}
@@ -186,7 +186,7 @@ void CDataBaseCtrl::Disconnect()
 		}
 		catch (...)
 		{
-			LG("DBExcp", "Exception raised when CDataBaseCtrl::Disconnect()\n");
+			ToLogService("DBExcp", "Exception raised when CDataBaseCtrl::Disconnect()");
 		}
 		SAFE_DELETE(m_pDataBase);
 	}
@@ -196,7 +196,7 @@ bool CDataBaseCtrl::UserLogin(int nUserID, string strUserName, string strIP)
 {
 	if (!strUserName.c_str() || strUserName=="")
 	{
-		LG("AccountServer", "CDataBaseCtrl::UserLogin: parameter strUserName is empty or null\n");
+		ToLogService("AccountServer", "CDataBaseCtrl::UserLogin: parameter strUserName is empty or null");
 		return false;
 	}
 	//LG("AccountServer", "CDataBaseCtrl::UserLogin: UserName=[%s] \n", strUserName.c_str());
@@ -217,14 +217,14 @@ bool CDataBaseCtrl::UserLogin(int nUserID, string strUserName, string strIP)
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::UserLogin: %s\n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::UserLogin: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "unknown exception raised from CDataBaseCtrl::UserLogin\n");
+			ToLogService("DBExcp", "unknown exception raised from CDataBaseCtrl::UserLogin");
 		}
 	}
-	LG("AccountServer", "CDataBaseCtrl::UserLogin: A record of user login cannot be saved! UserID=%d UserName=%s IP=%s\n\n", nUserID, strUserName.c_str(), strIP.c_str());
+	ToLogService("AccountServer", "CDataBaseCtrl::UserLogin: A record of user login cannot be saved! UserID={} UserName={} IP={}", nUserID, strUserName.c_str(), strIP.c_str());
 
 	Disconnect();
 	return false;
@@ -247,14 +247,14 @@ bool CDataBaseCtrl::UserLogout(int nUserID)
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::UserLogout: %s\n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::UserLogout: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "unknown exception raised from CDataBaseCtrl::UserLogout\n");
+			ToLogService("DBExcp", "unknown exception raised from CDataBaseCtrl::UserLogout");
 		}
 	}
-	LG("AccountServer", "CDataBaseCtrl::UserLogout: A record of user logout cannot be saved! UserID=%d \n", nUserID);
+	ToLogService("AccountServer", "CDataBaseCtrl::UserLogout: A record of user logout cannot be saved! UserID={}", nUserID);
 
 	Disconnect();
 	return false;
@@ -264,7 +264,7 @@ bool CDataBaseCtrl::KickUser(std::string strUserName)
 {
 	if (!strUserName.c_str() || strUserName=="")
 	{
-		LG("AccountServer", "CDataBaseCtrl::KickUser: parameter strUserName is empty or null\n");
+		ToLogService("AccountServer", "CDataBaseCtrl::KickUser: parameter strUserName is empty or null");
 		return false;
 	}
 	//LG("AccountServer", "CDataBaseCtrl::KickUser: UserName=[%s] \n", strUserName.c_str());
@@ -303,39 +303,39 @@ bool CDataBaseCtrl::KickUser(std::string strUserName)
 						}
 						else
 						{
-							LG("AccountServer", "CDataBaseCtrl::KickUser pGs=NULL, groupname = %s error!UserName=%s\r\n", strGroupServerName.c_str(), strUserName.c_str());
+							ToLogService("AccountServer", "CDataBaseCtrl::KickUser pGs=NULL, groupname = {} error!UserName={}", strGroupServerName.c_str(), strUserName.c_str());
 						}
 					}
 					else
 					{
-						LG("AccountServer", "CDataBaseCtrl::KickUser a_As2 error!UserName=%s\r\n", strUserName.c_str());
+						ToLogService("AccountServer", "CDataBaseCtrl::KickUser a_As2 error!UserName={}", strUserName.c_str());
 					}
 				}
 				else
 				{
-					LG("AccountServer", "CDataBaseCtrl::KickUser groupname error!UserName=%s\r\n", strUserName.c_str());
+					ToLogService("AccountServer", "CDataBaseCtrl::KickUser groupname error!UserName={}", strUserName.c_str());
 				}
 			}
 			else
 			{
-				LG("AccountServer", "CDataBaseCtrl::KickUser db error!UserName=%s\r\n", strUserName.c_str());
+				ToLogService("AccountServer", "CDataBaseCtrl::KickUser db error!UserName={}", strUserName.c_str());
 			}
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::KickUser: %s \n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::KickUser: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "Unknown exception raised from CDataBaseCtrl::KickUser\n");
+			ToLogService("DBExcp", "Unknown exception raised from CDataBaseCtrl::KickUser");
 		}
 	}
 	else
 	{
-		LG("DBExcp", "Unknown exception raised from CDataBaseCtrl::KickUser Valid connect db, Username=%s\n", strUserName.c_str());
+		ToLogService("DBExcp", "Unknown exception raised from CDataBaseCtrl::KickUser Valid connect db, Username={}", strUserName.c_str());
 	}
 
-	LG("AccountServer", "CDataBaseCtrl::KickUser: Kick user failed! Username=%s, group_name = %s, last_leave = %s \n", strUserName.c_str(), strGroupServerName.c_str(), strUserLeave.c_str() );
+	ToLogService("AccountServer", "CDataBaseCtrl::KickUser: Kick user failed! Username={}, group_name = {}, last_leave = {}", strUserName.c_str(), strGroupServerName.c_str(), strUserLeave.c_str());
 
 	Disconnect();
 	return false;
@@ -345,7 +345,7 @@ void CDataBaseCtrl::SetExpScale(std::string strUserName, long time)
 {
     if (!strUserName.c_str() || strUserName=="")
 	{
-		LG("AccountServer", "CDataBaseCtrl::SetExpScale: parameter strUserName is empty or null\n");
+		ToLogService("AccountServer", "CDataBaseCtrl::SetExpScale: parameter strUserName is empty or null");
 		return;
 	}
 
@@ -382,39 +382,39 @@ void CDataBaseCtrl::SetExpScale(std::string strUserName, long time)
 						}
 						else
 						{
-							LG("AccountServer", "CDataBaseCtrl::SetExpScale pGs=NULL, groupname = %s error!UserName=%s\r\n", strGroupServerName.c_str(), strUserName.c_str());
+							ToLogService("AccountServer", "CDataBaseCtrl::SetExpScale pGs=NULL, groupname = {} error!UserName={}", strGroupServerName.c_str(), strUserName.c_str());
 						}
 					}
 					else
 					{
-						LG("AccountServer", "CDataBaseCtrl::SetExpScale a_As2 error!UserName=%s\r\n", strUserName.c_str());
+						ToLogService("AccountServer", "CDataBaseCtrl::SetExpScale a_As2 error!UserName={}", strUserName.c_str());
 					}
 				}
 				else
 				{
-					LG("AccountServer", "CDataBaseCtrl::SetExpScale groupname error!UserName=%s\r\n", strUserName.c_str());
+					ToLogService("AccountServer", "CDataBaseCtrl::SetExpScale groupname error!UserName={}", strUserName.c_str());
 				}
 			}
 			else
 			{
-				LG("AccountServer", "CDataBaseCtrl::SetExpScale db error!UserName=%s\r\n", strUserName.c_str());
+				ToLogService("AccountServer", "CDataBaseCtrl::SetExpScale db error!UserName={}", strUserName.c_str());
 			}
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::SetExpScale: %s \n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::SetExpScale: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "Unknown exception raised from CDataBaseCtrl::SetExpScale\n");
+			ToLogService("DBExcp", "Unknown exception raised from CDataBaseCtrl::SetExpScale");
 		}
 	}
 	else
 	{
-		LG("DBExcp", "Unknown exception raised from CDataBaseCtrl::SetExpScale Valid connect db, Username=%s\n", strUserName.c_str());
+		ToLogService("DBExcp", "Unknown exception raised from CDataBaseCtrl::SetExpScale Valid connect db, Username={}", strUserName.c_str());
 	}
 
-	LG("AccountServer", "CDataBaseCtrl::SetExpScale: Set user Exp Scale failed! Username=%s, group_name = %s, last_leave = %s \n", strUserName.c_str(), strGroupServerName.c_str(), strUserLeave.c_str() );
+	ToLogService("AccountServer", "CDataBaseCtrl::SetExpScale: Set user Exp Scale failed! Username={}, group_name = {}, last_leave = {}", strUserName.c_str(), strGroupServerName.c_str(), strUserLeave.c_str());
 
 	Disconnect();
 }
@@ -423,7 +423,7 @@ bool CDataBaseCtrl::UserLoginMap(std::string strUserName, std::string strPasspor
 {
 	if (!strUserName.c_str() || strUserName=="")
 	{
-		LG("AccountServer", "CDataBaseCtrl::UserLoginMap: parameter strUserName is empty or null\n");
+		ToLogService("AccountServer", "CDataBaseCtrl::UserLoginMap: parameter strUserName is empty or null");
 		return false;
 	}
 
@@ -437,14 +437,14 @@ bool CDataBaseCtrl::UserLogoutMap(std::string strUserName)
 {
 	if (!strUserName.c_str() || strUserName=="")
 	{
-		LG("AccountServer", "CDataBaseCtrl::UserLogoutMap: parameter strUserName is empty or null\n");
+		ToLogService("AccountServer", "CDataBaseCtrl::UserLogoutMap: parameter strUserName is empty or null");
 		return false;
 	}
 
 	StringMap::const_iterator iter=m_mapUsers.find(strUserName.c_str());
 	if (iter==m_mapUsers.end())
 	{
-		LG("AccountServer", "CDataBaseCtrl::UserLogoutMap : User [%s] not found in map, unable update the live time when logout\n", strUserName.c_str());
+		ToLogService("AccountServer", "CDataBaseCtrl::UserLogoutMap : User [{}] not found in map, unable update the live time when logout", strUserName.c_str());
 		return false;
 	}
 
@@ -455,7 +455,6 @@ bool CDataBaseCtrl::UserLogoutMap(std::string strUserName)
 	CTimeSpan ctSpan=CTime::GetCurrentTime() - sData.ctLoginTime;
 	if (ctSpan > CTimeSpan(5) && ctSpan < CTimeSpan(30, 0, 0, 0))	//530
 	{
-		char buf[1024];
 		__int64 i64Span = ctSpan.GetTotalSeconds();
 		return true;
 	}
@@ -469,7 +468,7 @@ bool CDataBaseCtrl::OperAccountBan(std::string strActName, int iban  )//Add by s
 {
 	if(!strActName.c_str() || strActName=="")
 	{
-		LG("AccountServer", "CDataBaseCtrl::OperAccountBan: parameter strActName is empty or null\n");
+		ToLogService("AccountServer", "CDataBaseCtrl::OperAccountBan: parameter strActName is empty or null");
 		return false;
 	}
 	char buf[1024];
@@ -485,14 +484,14 @@ bool CDataBaseCtrl::OperAccountBan(std::string strActName, int iban  )//Add by s
 		}
 		catch (CSQLException* se)
 		{
-			LG("DBExcp", "SQL Exception in CDataBaseCtrl::OperAccountBan: %s\n", se->m_strError.c_str());
+			ToLogService("DBExcp", "SQL Exception in CDataBaseCtrl::OperAccountBan: {}", se->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("DBExcp", "unknown exception raised from CDataBaseCtrl::OperAccountBan\n");
+			ToLogService("DBExcp", "unknown exception raised from CDataBaseCtrl::OperAccountBan");
 		}
 	}
-	LG("AccountServer", "CDataBaseCtrl::OperAccountBan: A record of user account cannot be ban! accName[%s]\n", strActName.c_str());
+	ToLogService("AccountServer", "CDataBaseCtrl::OperAccountBan: A record of user account cannot be ban! accName[{}]", strActName.c_str());
 
 	Disconnect();
 	return false;

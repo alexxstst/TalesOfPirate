@@ -67,9 +67,7 @@ void CSynchroManage::FrameMove(std::uint32_t dwTime) {
 				if (pCha && find(noexec.begin(), noexec.end(), pCha) != noexec.end())
 					continue;
 
-				LG("CSynchroManage", "Del (%s ID:%d, Exec:%d), Num[%d], Head[%d], Tail[%d], Time[%d]\n",
-				   p->GetClassName(), p->_nID, p->_isExec, _nSynchroNum, _dwHead, _dwTail,
-				   DELAY_TIME - (p->_dwCreateTime - dwTime));
+				ToLogService("CSynchroManage", "Del ({} ID:{}, Exec:{}), Num[{}], Head[{}], Tail[{}], Time[{}]", p->GetClassName(), p->_nID, p->_isExec, _nSynchroNum, _dwHead, _dwTail, DELAY_TIME - (p->_dwCreateTime - dwTime));
 				p->_Exec();
 				delete p;
 
@@ -98,8 +96,7 @@ void CSynchroManage::FrameMove(std::uint32_t dwTime) {
 
 int CSynchroManage::_AddState(CStateSynchro* pState) {
 	if (_nSynchroNum >= MAX_SIZE) {
-		LG("CSynchroManage", "msgAddState() false, SynchroNum[%d], Head[%d], Tail[%d]\n", _nSynchroNum, _dwHead,
-		   _dwTail);
+		ToLogService("CSynchroManage", "msgAddState() false, SynchroNum[{}], Head[{}], Tail[{}]", _nSynchroNum, _dwHead, _dwTail);
 		return ERROR_ID;
 	}
 
@@ -108,8 +105,7 @@ int CSynchroManage::_AddState(CStateSynchro* pState) {
 	}
 
 	if (_All[_dwTail]) {
-		LG("CSynchroManage", "msgAddState() false, Has Value SynchroNum[%d], Head[%d], Tail[%d], ID[%d]\n",
-		   _nSynchroNum, _dwHead, _dwTail + 1, _dwTail);
+		ToLogService("CSynchroManage", "msgAddState() false, Has Value SynchroNum[{}], Head[{}], Tail[{}], ID[{}]", _nSynchroNum, _dwHead, _dwTail + 1, _dwTail);
 		return ERROR_ID;
 	}
 
@@ -117,15 +113,14 @@ int CSynchroManage::_AddState(CStateSynchro* pState) {
 	pState->_nID = _dwTail;
 	++_nSynchroNum;
 
-	LG("CSynchroManage", "Add(%s), Num[%d], Head[%d], Tail[%d], ID[%d]\n", pState->GetClassName(), _nSynchroNum,
-	   _dwHead, _dwTail + 1, _dwTail);
+	ToLogService("CSynchroManage", "Add({}), Num[{}], Head[{}], Tail[{}], ID[{}]", pState->GetClassName(), _nSynchroNum, _dwHead, _dwTail + 1, _dwTail);
 	return _dwTail++;
 }
 
 bool CSynchroManage::_DelState(CStateSynchro* pState) {
 	int nID = pState->_nID;
 	if (nID == ERROR_ID) {
-		LG("CSynchroManage", "DelState() false, SynchroNum[%d], Head[%d], Tail[%d]\n", _nSynchroNum, _dwHead, _dwTail);
+		ToLogService("CSynchroManage", "DelState() false, SynchroNum[{}], Head[{}], Tail[{}]", _nSynchroNum, _dwHead, _dwTail);
 		return false;
 	}
 
@@ -137,11 +132,10 @@ bool CSynchroManage::_DelState(CStateSynchro* pState) {
 			_dwTail = 0;
 			_dwHead = 0;
 		}
-		LG("CSynchroManage", "DelState(), SynchroNum[%d], Head[%d], Tail[%d], ID[%d]\n", _nSynchroNum, _dwHead, _dwTail,
-		   nID);
+		ToLogService("CSynchroManage", "DelState(), SynchroNum[{}], Head[{}], Tail[{}], ID[{}]", _nSynchroNum, _dwHead, _dwTail, nID);
 		return true;
 	}
-	LG("CSynchroManage", g_oLangRec.GetString(148), _nSynchroNum, _dwHead, _dwTail, nID);
+	ToLogService("CSynchroManage", "{} {} {} {} {}", g_oLangRec.GetString(148), _nSynchroNum, _dwHead, _dwTail, nID);
 	return false;
 }
 

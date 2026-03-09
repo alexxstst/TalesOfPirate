@@ -90,7 +90,6 @@ namespace GUI
 		//
 		void CloseBoothUI();
 
-	private:
 		static void _MainMouseBoothEvent(CCompent *pSender, int nMsgType, 
 										 int x, int y, DWORD dwKey);
 		static void _MainBoothOnCloseEvent(CForm* pForm, bool& IsClose);
@@ -108,7 +107,6 @@ namespace GUI
 		static void _BuyGoodsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 		static void _BuyAGoodEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	private:
 		//
 		CForm			* frmBooth;
 		CLabel			* lblOwnerName;

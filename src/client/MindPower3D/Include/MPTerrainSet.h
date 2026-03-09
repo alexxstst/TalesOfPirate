@@ -124,7 +124,7 @@ protected:
 		MPTerrainInfo *pTerrainInfo = (MPTerrainInfo*)pRawDataInfo;
 		pTerrainInfo->nTextureID = GetTextureID(pTerrainInfo->szDataName);
 	
-		LG("terrain", "Load Terrain [%s], ID = %d, Type = %d, Texture ID = %d\n", pTerrainInfo->szDataName, pTerrainInfo->nID, pTerrainInfo->btType, pTerrainInfo->nTextureID);
+		ToLogService("terrain", "Load Terrain [{}], ID = {}, Type = {}, Texture ID = {}", pTerrainInfo->szDataName, pTerrainInfo->nID, pTerrainInfo->btType, pTerrainInfo->nTextureID);
     }
 
 protected:

@@ -23,8 +23,7 @@ public:
 		btVertical,     //       
 	};
 
-public:
-	CScroll(CForm& frmOwn);
+CScroll(CForm& frmOwn);
 	CScroll( const CScroll& rhs );
 	CScroll& operator=( const CScroll& rhs );
 	virtual ~CScroll(void);
@@ -67,16 +66,14 @@ public:
 	bool			StepMove(int val);
 	// End
 
-public:
-	GuiEvent		evtChange;		// 
+GuiEvent		evtChange;		// 
 
 protected:
 	void			_RefreshMidst();
 	void			_SetSelf();
 	void			_Copy( const CScroll& rhs );
 
-protected:
-	static	void	_UpClick(CGuiData *pSender, int x, int y, DWORD key) {
+static	void	_UpClick(CGuiData *pSender, int x, int y, DWORD key) {
 		((CScroll*)(pSender->GetParent()))->_UpClick();
 	}
 	void _UpClick();
@@ -98,8 +95,7 @@ protected:
 
 	void			_UpdataStep( int v );
 
-protected:
-	CGuiPic*		_pImage;		// 
+CGuiPic*		_pImage;		// 
 
 	CTextButton*	_up;
 	CTextButton*	_down;

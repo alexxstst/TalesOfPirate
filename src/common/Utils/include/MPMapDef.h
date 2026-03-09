@@ -1,7 +1,8 @@
 ﻿#pragma once
 
+#include <cstdint>
 
-// 
+//
 //  map 780625 -> 780626
 //                obj 600    -> 700
 // mapobj
@@ -29,7 +30,7 @@ struct MPMapFileHeader
 
 struct SNewFileTile // 15
 {
-	DWORD	dwTileInfo;	// 3layertex noalpha no
+	std::uint32_t	dwTileInfo;	// 3layertex noalpha no
 	BYTE	btTileInfo; // tex no
 	short	sColor;		// 32bit565
 	char	cHeight;	// 10cm
@@ -50,7 +51,7 @@ struct SFileTile
 {
     BYTE  t[8];
     short sHeight;    // 
-    DWORD dwColor;
+    std::uint32_t dwColor;
     short sRegion;
     BYTE  btIsland;
     BYTE  btBlock[4]; // 4 x 1
@@ -71,21 +72,21 @@ struct SFileTile
 // 8Tile, 5
 // 6,  1 ~ 63, 63, 0
 // Alpha4, 0 ~ 15, 16
-inline void TileInfo_8To5(BYTE *pbtTile, DWORD &dwNew, BYTE &btNew)
+inline void TileInfo_8To5(BYTE *pbtTile, std::uint32_t &dwNew, BYTE &btNew)
 {
-	DWORD dwTex1   = *(pbtTile + 2);
-	DWORD dwTex2   = *(pbtTile + 4);
-	DWORD dwTex3   = *(pbtTile + 6);
-	DWORD dwAlpha1 = *(pbtTile + 3);
-	DWORD dwAlpha2 = *(pbtTile + 5);
-	DWORD dwAlpha3 = *(pbtTile + 7);
+	std::uint32_t dwTex1   = *(pbtTile + 2);
+	std::uint32_t dwTex2   = *(pbtTile + 4);
+	std::uint32_t dwTex3   = *(pbtTile + 6);
+	std::uint32_t dwAlpha1 = *(pbtTile + 3);
+	std::uint32_t dwAlpha2 = *(pbtTile + 5);
+	std::uint32_t dwAlpha3 = *(pbtTile + 7);
 
 	dwNew = dwTex1<<26 | dwAlpha1<<22 | dwTex2<<16 | dwAlpha2<<12 | dwTex3<<6 | dwAlpha3<<2;
 	btNew = *(pbtTile + 0);
 }
 
 // 58
-inline void TileInfo_5To8(DWORD dwNew, BYTE btNew, BYTE *pbtTile)
+inline void TileInfo_5To8(std::uint32_t dwNew, BYTE btNew, BYTE *pbtTile)
 {
 	*(pbtTile + 0) = btNew;
 	*(pbtTile + 1) = 15;

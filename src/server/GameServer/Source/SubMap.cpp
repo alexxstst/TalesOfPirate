@@ -43,7 +43,7 @@ SubMap::~SubMap()
 }
 
 bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
-{T_B
+{
 	m_pCMapRes = pCMapRes;
 	m_pCBaseRange = 0;
 
@@ -109,7 +109,7 @@ bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
 	memset(m_lInfoParam, 0, sizeof(dbc::Long) * defMAPCOPY_INFO_PARAM_NUM);
 
 	return true;
-T_E}
+}
 
 //=============================================================================
 // lFromEntityID 
@@ -120,7 +120,7 @@ T_E}
 CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Char chSpawnType,
 						 Long lFromEntityID, Long lProtChaID, Long lProtChaHandle, Long lProtTime, Long lOnTick,
 						 CEvent	*pCEvent)
-{T_B
+{
 	CItem *pCItem;
 	CItemRecord *pCItemRec;
 
@@ -163,21 +163,16 @@ CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Cha
 		pCItem->SetOnTick(0);
 	if (lOnTick > 0)
 		pCItem->SetOnTick(lOnTick);
-
-
-	Char szLogName[defLOG_NAME_LEN] = "";
-	sprintf(szLogName, "%s+%u", pCItem->GetName(), pCItem->GetID());
-	pCItem->m_CLog.SetLogName(szLogName);
-	pCItem->m_CLog.SetEnable(g_bLogEntity);
+	;
 
 	return pCItem;
-T_E}
+}
 
 //=============================================================================
 // chCtrlType CompCommand.h EChaCtrlType
 //=============================================================================
 CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Point *pSPos, bool bEyeshotAbility, dbc::cChar *cszChaName, const long clSearchRadius)
-{T_B
+{
 	CCharacter	*pCCha;
 	CChaRecord	*pCChaRecord;
 
@@ -219,19 +214,14 @@ CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Poi
 	// 
 	pCCha->EnrichSkillBag();
 
-	Char szLogName[defLOG_NAME_LEN] = "";
-	sprintf(szLogName, "Cha-%s+%u", pCCha->GetName(), pCCha->GetID());
-	pCCha->m_CLog.SetLogName(szLogName);
-	pCCha->m_CLog.SetEnable(g_bLogEntity);
-
 	// pCCha->ResetLifeTime(5000);
 	
 	return pCCha;
-T_E}
+}
 
 // 
 void SubMap::Notice(const char *szString)
-{T_B
+{
 	WPACKET WtPk  = GETWPACKET();
 	WRITE_CMD(WtPk, CMD_MC_SYSINFO);
 	WRITE_STRING(WtPk, szString);
@@ -251,7 +241,7 @@ void SubMap::Notice(const char *szString)
 			if (++lChaCount > lChaNum)
 			{
 				//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
-				LG("eyeshot activation error", "eyeshot cell[%d,%d]fact entity nubmer%d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
+				ToLogService("eyeshot activation error", "eyeshot cell[{},{}]fact entity nubmer{}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				break;
 			}
 
@@ -270,7 +260,7 @@ void SubMap::Notice(const char *szString)
 
 				if (!pCCha->GetSubMap())
 					//LG("", " %s(%s)[%d,%d] \n",
-					LG("eyeshot activation error", "in the wind map notify character %s(%s)[%d,%d] 's map is empty\n",
+					ToLogService("eyeshot activation error", "in the wind map notify character {}({})[{},{}] 's map is empty",
 						pCCha->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName(), pCCha->GetPos().x, pCCha->GetPos().y);
 			}
 
@@ -284,10 +274,10 @@ void SubMap::Notice(const char *szString)
 	if (pLastPlayer)
 		pLastPlayer->GetNextPlayer() = NULL;
 	SENDTOCLIENT(WtPk, pHeadPlayer);
-T_E}
+}
 
 dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
-{T_B
+{
 	Long	lActNum = 0;
 
 	CCharacter		*pCCha;
@@ -299,7 +289,7 @@ dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
 		if (++lChaCount > lChaNum)
 		{
 			//LG("", "[%d,%d] %d\n", lCellX, lCellY, lChaNum);
-			LG("eyeshot activation error", "account eyeshot cell [%d,%d]'s activation character numberpractice character number%d\n", lCellX, lCellY, lChaNum);
+			ToLogService("eyeshot activation error", "account eyeshot cell [{},{}]'s activation character numberpractice character number{}", lCellX, lCellY, lChaNum);
 			break;
 		}
 
@@ -316,28 +306,28 @@ dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
 	}
 
 	return lActNum;
-T_E}
+}
 
 // 
 bool SubMap::IsMoveAble(Entity *pCEnt, Long lPosX, Long lPosY)
-{T_B
+{
 	CFightAble	*pCCha = 0;
 	if (!pCEnt || !(pCCha = pCEnt->IsFightAble()))
 		return false;
 	return g_IsMoveAble((char)pCCha->m_CChaAttr.GetAttr(ATTR_CHATYPE), pCCha->m_pCChaRecord->chTerritory, pCEnt->GetAreaAttr()); //
-T_E}
+}
 
 BOOL SubMap::LoadEventEntity()
-{T_B
+{
 	g_pScriptMap = this;
 	char szMapEntity[256];
 	sprintf( szMapEntity, "%s\\%s%s", GetName(), GetName(), "entity.lua" );
 	ReloadEntity( GetResPath(szMapEntity) );
 	return TRUE;
-T_E}
+}
 
 BOOL SubMap::LoadNpc()
-{T_B
+{
 	if( m_pCMapRes->m_pNpcSpawn->Load( *this ) == -1 )
 	{
 		//THROW_EXCP( excpMem, "NPC!" );
@@ -346,7 +336,7 @@ BOOL SubMap::LoadNpc()
 	}
 
 	return TRUE;
-T_E}
+}
 
 CNpcRecord* SubMap::GetNpcInfo( USHORT sNpcID )
 {
@@ -359,7 +349,7 @@ CNpcRecord* SubMap::GetNpcInfo( USHORT sNpcID )
 
 // 
 void SubMap::Add(Entity* pCEnt)
-{T_B
+{
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	CItem		*pCItem;
 	Point		l_pt = pCEnt->GetPos();
@@ -368,7 +358,7 @@ void SubMap::Add(Entity* pCEnt)
 	if (pCEnt->m_pCEyeshotHost)
 	{
 		//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
-		LG("map character operator error", "(switch) map %s to eyeshot cell [%d, %d]add entity %s find it is not break away foregone manage cell[%d, %d]\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
+		ToLogService("map character operator error", "(switch) map {} to eyeshot cell [{}, {}]add entity {} find it is not break away foregone manage cell[{}, {}]", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 		return;
 	}
 	pCEnt->m_pCEyeshotHost = &m_pCEyeshotCell[l_pt.y][l_pt.x];
@@ -417,10 +407,10 @@ void SubMap::Add(Entity* pCEnt)
 	{
 		pCCha->EntryMapUnit( GetMapID(), WORD(l_pt.x), WORD(l_pt.y) );
 	}
-T_E}
+}
 
 void SubMap::Delete(Entity* pCEnt)
-{T_B
+{
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	Point		l_pt = pCEnt->GetPos();
 	//const Rect	&m_area = GetRange();
@@ -434,13 +424,13 @@ void SubMap::Delete(Entity* pCEnt)
 	if (!pCEnt->m_pCEyeshotHost)
 	{
 		//LG("", " %s [%d, %d] %s \n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName());
-		LG("map character operator error", "(switch)map %s from eyeshot[%d, %d] delete entity %s find it isn't in eyeshot cell.\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName());
+		ToLogService("map character operator error", "(switch)map {} from eyeshot[{}, {}] delete entity {} find it isn't in eyeshot cell.", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName());
 		return;
 	}
 	if (pCEnt->m_pCEyeshotHost != &m_pCEyeshotCell[l_pt.y][l_pt.x])
 	{
 		//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
-		LG("map character operatot error", "(switch)map %s from eyeshot[%d, %d]delete entity %sfind it isn't agree with log eyeshot cell[%d, %d].\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
+		ToLogService("map character operatot error", "(switch)map {} from eyeshot[{}, {}]delete entity {}find it isn't agree with log eyeshot cell[{}, {}].", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 		return;
 	}
 	pCEnt->m_pCEyeshotHost = 0;
@@ -468,11 +458,11 @@ void SubMap::Delete(Entity* pCEnt)
 			pCNode = pCNode->m_pCNext;
 		}
 	}
-T_E}
+}
 
 // 
 void SubMap::MoveInStateCell(CCharacter* pCCha, const Point &SSrcPos, const Point &STarPos)
-{T_B
+{
 	Point	l_src = SSrcPos;
 	Point	l_dst = STarPos;
 	Long	lRadius = pCCha->GetRadius();
@@ -506,10 +496,10 @@ void SubMap::MoveInStateCell(CCharacter* pCCha, const Point &SSrcPos, const Poin
 				StateCellAddCha(x, y, pCCha, true); // 
 		}
 	}
-T_E}
+}
 
 void SubMap::MoveInMapMask(CCharacter* pCCha, const Point &SSrcPos, const Point &STarPos)
-{T_B
+{
 	if (!pCCha->IsPlayerCha())
 		return;
 	Point	l_src, l_dst;
@@ -521,7 +511,7 @@ void SubMap::MoveInMapMask(CCharacter* pCCha, const Point &SSrcPos, const Point 
 	l_dst.y = STarPos.y / lStep;
 	if (l_src != l_dst)
 		pCCha->GetPlayer()->RefreshMapMask(GetName(), STarPos.x / 100, STarPos.y / 100);
-T_E}
+}
 
 //void SubMap::Move(Entity* pCEnt, Point STarPos, Char chStep)
 //{
@@ -693,7 +683,7 @@ T_E}
 // bActiveMgr 
 //=============================================================================
 bool SubMap::Enter(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
-{T_B
+{
 	ent->SetInitShape(*pSEntShape);
 
 	const	Point l_pt = pSEntShape->centre;
@@ -777,11 +767,11 @@ bool SubMap::Enter(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
 
 
 	return l_retval;
-T_E}
+}
 
 // Enter
 bool SubMap::EnsurePos(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
-{T_B
+{
 	ent->SetInitShape(*pSEntShape);
 
 	const	Point l_pt = pSEntShape->centre;
@@ -842,14 +832,14 @@ bool SubMap::EnsurePos(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
 
 
 	return l_retval;
-T_E}
+}
 
 //=============================================================================
 // 
 // bActiveMgr 
 //=============================================================================
 void SubMap::GoOut(Entity * ent)
-{T_B
+{
 	Point l_pt =ent->GetShape().centre;
 	Rect l_rect =GetEyeshot(l_pt);
 	//
@@ -870,7 +860,7 @@ void SubMap::GoOut(Entity * ent)
 	}
 
 	ent->m_submap =0;
-T_E}
+}
 
 // 
 void SubMap::RefreshEyeshot(Entity *pCEnt, bool bEyeshot, bool bHide, bool bShow)
@@ -888,7 +878,7 @@ void SubMap::RefreshEyeshot(Entity *pCEnt, bool bEyeshot, bool bHide, bool bShow
 }
 
 Rect SubMap::GetEyeshot(Point &pt)const
-{T_B
+{
 	const Rect	&m_area = GetRange();
 	Rect l_rect;
 	pt.x	=(pt.x - m_area.ltop.x)/GetEyeshotCellWidth();
@@ -898,10 +888,10 @@ Rect SubMap::GetEyeshot(Point &pt)const
 	l_rect.rbtm.x	=min(pt.x +GetEyeshotWidth(),GetEyeshotCellCol() -1);
 	l_rect.rbtm.y	=min(pt.y +GetEyeshotWidth(),GetEyeshotCellLin() -1);
 	return l_rect;
-T_E}
+}
 
 Rect SubMap::GetEyeshot(short sMgrUnitX, short sMgrUnitY)const
-{T_B
+{
 	Rect	l_rect;
 
 	l_rect.ltop.x = max(sMgrUnitX - GetEyeshotWidth(), 0);
@@ -910,17 +900,17 @@ Rect SubMap::GetEyeshot(short sMgrUnitX, short sMgrUnitY)const
 	l_rect.rbtm.y = min(sMgrUnitY + GetEyeshotWidth(), GetEyeshotCellLin() -1);
 
 	return l_rect;
-T_E}
+}
 
 void SubMap::GetEyeshotCenter(Point &pt)
-{T_B
+{
 	const Rect	&m_area = GetRange();
 	pt.x	=(pt.x - m_area.ltop.x) / GetEyeshotCellWidth();
 	pt.y	=(pt.y - m_area.ltop.y) / GetEyeshotCellHeight();
-T_E}
+}
 
 Rect SubMap::GetHoldStateCell(Point &pt, Long lRadius) const 
-{T_B
+{
 	const Rect	&m_area = GetRange();
 	Rect l_rect;
 	if (lRadius > 0)
@@ -946,7 +936,7 @@ Rect SubMap::GetHoldStateCell(Point &pt, Long lRadius) const
 	pt.y = (pt.y - m_area.ltop.y) / GetStateCellHeight();
 
 	return l_rect;
-T_E}
+}
 
 void SubMap::GetHoldStateCellCenter(Point &pt)
 {
@@ -957,7 +947,7 @@ void SubMap::GetHoldStateCellCenter(Point &pt)
 
 //===============Search===================================================================================
 CCharacter*	SubMap::FindCharacter( dbc::uLong ulID, const Point& point )
-{T_B
+{
 	CCharacter* pCha = NULL;
 	Long	lRangeB[] = {point.x, point.y, 0};
 	Long	lRangeE[] = {enumRANGE_TYPE_CIRCLE, 10 * 100};
@@ -969,7 +959,7 @@ CCharacter*	SubMap::FindCharacter( dbc::uLong ulID, const Point& point )
 	}
 
 	return pCha;
-T_E}
+}
 
 //=============================================================================
 // plRangeBParam  defSKILL_RANGE_BASEP_NUM  
@@ -977,7 +967,7 @@ T_E}
 // bIncludeHideEnti 
 //=============================================================================
 void SubMap::BeginSearchInRange(Long *plRangeBParam, Long *plRangeEParam, bool bIncludeHideEnti)
-{T_B
+{
     m_sRangeCurMgrUnit = -1;
 	m_pRangeCurEntiNode = 0;
 	m_bIncludeHideEnti = bIncludeHideEnti;
@@ -1079,10 +1069,10 @@ void SubMap::BeginSearchInRange(Long *plRangeBParam, Long *plRangeEParam, bool b
 				}
 			}
 		}
-T_E}
+}
 
 CCharacter* SubMap::GetNextCharacterInRange(void)
-{T_B
+{
 	if (!m_pCBaseRange)
 		return 0;
 
@@ -1114,14 +1104,14 @@ Research:
 	}
 	else
 		return 0;
-T_E}
+}
 
 //=============================================================================
 // BeginSearchInRange
 //=============================================================================
 bool SubMap::RangeAddState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle,
 						   Char chObjType, Char chObjHabitat, Char chEffType, Short *sStateParam)
-{T_B
+{
 	if (sStateParam[0] > AREA_STATE_MAXID || sStateParam[1] > SKILL_STATE_LEVEL)
 		return false;
 
@@ -1156,11 +1146,11 @@ bool SubMap::RangeAddState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle
 	}
 
 	return true;
-T_E}
+}
 
 bool SubMap::RangeAddState(Rect *pSRange, uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle,
 						   Char chObjType, Char chObjHabitat, Char chEffType, Short *sStateParam)
-{T_B
+{
 	if (sStateParam[0] > AREA_STATE_MAXID || sStateParam[1] > SKILL_STATE_LEVEL)
 		return false;
 
@@ -1205,10 +1195,10 @@ bool SubMap::RangeAddState(Rect *pSRange, uChar uchFightID, uLong ulSrcWorldID, 
 		}
 
 	return true;
-T_E}
+}
 
 void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
-{T_B
+{
 	if (!m_pCStateCell[sCellY][sCellX])
 		return;
 
@@ -1250,22 +1240,22 @@ void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
 	if (pLastPlayer)
 		pLastPlayer->GetNextPlayer() = NULL;
 	SENDTOCLIENT(pk, pHeadPlayer);
-T_E}
+}
 
 //=============================================================================
 // 
 //=============================================================================
 void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
-{T_B
+{
 	if (pCEnt->GetPos() != pCEnt->m_lastpos)
 	{
 		Char	szMess[512];
 		//sprintf(szMess, " %s [%d, %d][%d, %d][%d, %d]",
 		sprintf(szMess, "character %s move originality coordinate errorlast time position[%d, %d]current position[%d, %d]aim position[%d, %d]",
-			pCEnt->m_CLog.GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
+			pCEnt->GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
 		//::MessageBox(0,szMess,"!",MB_OK);
 		//LG("", "%s\n", szMess);
-		LG("move error", "%s\n", szMess);
+		ToLogService("move error", "{}", szMess);
 		pCEnt->SetPos(pCEnt->m_lastpos);
 	}
 	Point	l_src = pCEnt->GetPos();
@@ -1289,13 +1279,13 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 		if (!pCEnt->m_pCEyeshotHost)
 		{
 			//LG("", " %s [%d, %d] %s \n", GetName(), l_src.x, l_src.y, pCEnt->GetLogName());
-			LG("map character operator error", "(move)map  %s from eyeshot cell[%d, %d]delete entity %s find it isn't in the eyeshot cell.\n", GetName(), l_src.x, l_src.y, pCEnt->GetLogName());
+			ToLogService("map character operator error", "(move)map  {} from eyeshot cell[{}, {}]delete entity {} find it isn't in the eyeshot cell.", GetName(), l_src.x, l_src.y, pCEnt->GetLogName());
 			return;
 		}
 		if (pCEnt->m_pCEyeshotHost != &m_pCEyeshotCell[l_src.y][l_src.x])
 		{
 			//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_src.x, l_src.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
-			LG("map character operator error", "(move)map %s from eyeshot cell[%d, %d]delete entity %s ,find it isn't agree with log eyeshot cell[%d, %d].\n", GetName(), l_src.x, l_src.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
+			ToLogService("map character operator error", "(move)map {} from eyeshot cell[{}, {}]delete entity {} ,find it isn't agree with log eyeshot cell[{}, {}].", GetName(), l_src.x, l_src.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 			return;
 		}
 		pCEnt->m_pCEyeshotHost = 0;
@@ -1468,7 +1458,7 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 		if (pCEnt->m_pCEyeshotHost)
 		{
 			//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_dst.x, l_dst.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
-			LG("map character operator error", "(move)map %s from eyeshot cell[%d, %d] add entity %s find it is not break away foregone manage cell[%d, %d]\n", GetName(), l_dst.x, l_dst.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
+			ToLogService("map character operator error", "(move)map {} from eyeshot cell[{}, {}] add entity {} find it is not break away foregone manage cell[{}, {}]", GetName(), l_dst.x, l_dst.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 			return;
 		}
 		pCEnt->m_pCEyeshotHost = &m_pCEyeshotCell[l_dst.y][l_dst.x];
@@ -1484,28 +1474,28 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 	DWORD	dwAllTime = tMoveState.GetTimeCount() + tMoveMMask.GetTimeCount() + tMoveEyeshot.GetTimeCount() + tMoveArea.GetTimeCount();
 	if (dwAllTime >= 50)
 		//LG("map_time", "\t\t[%s] time = %u%u%u%u%u\n",
-		LG("map_time", "\t\tcharacter[%s] eyeshot move spend overabundance time time = %uthereinto state spend %uexplore spend %ueyeshot spend %uarea spend %u\n",
+		ToLogService("map_time", "\t\tcharacter[{}] eyeshot move spend overabundance time time = {}thereinto state spend {}explore spend {}eyeshot spend {}area spend {}",
 			pCEnt->GetLogName(), dwAllTime, tMoveState.GetTimeCount(), tMoveMMask.GetTimeCount(), tMoveEyeshot.GetTimeCount(), tMoveArea.GetTimeCount());
-T_E}
+}
 
 void SubMap::LoadMonsterInfo(void)
-{T_B
-T_E}
+{
+}
 
 // 
 void SubMap::ClearSurfaceState(void)
-{T_B
+{
 	CStateCell		*pCStateCell;
 	m_CStateCellL.BeginGet();
 	while (pCStateCell = m_CStateCellL.GetNext())
 	{
 		pCStateCell->DropState(this);
 	}
-T_E}
+}
 
 // 
 void SubMap::ResetNotPlyCha()
-{T_B
+{
 	CCharacter	*pCCha;
 	Long		lChaCount, lChaNum;
 	CEyeshotCell	*pCEyeCell;
@@ -1523,7 +1513,7 @@ void SubMap::ResetNotPlyCha()
 				if (++lChaCount > lChaNum)
 				{
 					//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
-					LG("eyeshot activation error", "eyeshot cell[%d,%d] practice entity numbers%d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
+					ToLogService("eyeshot activation error", "eyeshot cell[{},{}] practice entity numbers{}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					break;
 				}
 
@@ -1537,16 +1527,16 @@ void SubMap::ResetNotPlyCha()
 			}
 		}
 	}
-T_E}
+}
 
 // 
 void SubMap::ClearPlayerCha()
-{T_B
+{
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha, *pCProcCha;
 	long			lChaCount, lChaNum;
 	//LG("enter_map", " %s %d!\n", GetName(), GetCopyNO());
-	LG("enter_map", "map %s(copyID %d),start delete all character!\n", GetName(), GetCopyNO());
+	ToLogService("enter_map", "map {}(copyID {}),start delete all character!", GetName(), GetCopyNO());
 	m_CEyeshotCellL.BeginGet();
 	while (pCEyeCell = m_CEyeshotCellL.GetNext())
 	{
@@ -1558,7 +1548,7 @@ void SubMap::ClearPlayerCha()
 			if (++lChaCount > lChaNum)
 			{
 				//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
-				LG("eyeshot activation error", "eyeshot cell[%d,%d]practice entity numbers %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
+				ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity numbers {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				break;
 			}
 
@@ -1572,11 +1562,11 @@ void SubMap::ClearPlayerCha()
 			{
 				if (!pCProcCha->GetSubMap())
 					//LG("", " %s(%s)[%d,%d] \n",
-					LG("eyeshot activation error", "in the wind map notify character %s(%s)[%d,%d] 's map is empty\n",
+					ToLogService("eyeshot activation error", "in the wind map notify character {}({})[{},{}] 's map is empty",
 						pCProcCha->GetLogName(), pCProcCha->GetPlyCtrlCha()->GetLogName(), pCProcCha->GetPos().x, pCProcCha->GetPos().y);
 
 				//LG("enter_map", " %s  %s[%s]!\n", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
-				LG("enter_map", "map %s closeclean out %s[%s]!\n", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
+				ToLogService("enter_map", "map {} closeclean out {}[{}]!", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				if (!pCProcCha->IsLiveing())
 				{
 					g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCProcCha, DOSTRING_PARAM_END);
@@ -1592,11 +1582,11 @@ void SubMap::ClearPlayerCha()
 	}
 	m_COutMapCha.Drop();
 	//LG("enter_map", " %s %d !\n", GetName(), GetCopyNO());
-	LG("enter_map", "map %s( copyID %d)clean out character succeed!\n", GetName(), GetCopyNO());
-T_E}
+	ToLogService("enter_map", "map {}( copyID {})clean out character succeed!", GetName(), GetCopyNO());
+}
 
 void SubMap::ClearAllMonster(void)
-{T_B
+{
 	CCharacter	*pCCha;
 	Long		lChaCount, lChaNum;
 	CEyeshotCell	*pCEyeCell;
@@ -1614,7 +1604,7 @@ void SubMap::ClearAllMonster(void)
 				if (++lChaCount > lChaNum)
 				{
 					//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
-					LG("eyeshot activation error", "eyeshot cell[%d,%d]practice entity number %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
+					ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity number {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					break;
 				}
 
@@ -1628,10 +1618,10 @@ void SubMap::ClearAllMonster(void)
 			}
 		}
 	}
-T_E}
+}
 
 void SubMap::ClearAllMonsterByName(const char* szMonsName)
-{T_B
+{
 	CCharacter	*pCCha;
 	Long		lChaCount, lChaNum;
 	CEyeshotCell	*pCEyeCell;
@@ -1649,7 +1639,7 @@ void SubMap::ClearAllMonsterByName(const char* szMonsName)
 				if (++lChaCount > lChaNum)
 				{
 					//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
-					LG("eyeshot activation error", "eyeshot cell[%d,%d]practice entity number %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
+					ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity number {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					break;
 				}
 
@@ -1666,15 +1656,15 @@ void SubMap::ClearAllMonsterByName(const char* szMonsName)
 			}
 		}
 	}
-T_E}
+}
 
 void SubMap::ClearAllCha()
-{T_B
+{
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha, *pCProcCha;
 	long			lChaCount, lChaNum;
 	//LG("enter_map", " %s %d!\n", GetName(), GetCopyNO());
-	LG("enter_map", "map %s(copyID %d)start clean out all monsters\n", GetName(), GetCopyNO());
+	ToLogService("enter_map", "map {}(copyID {})start clean out all monsters", GetName(), GetCopyNO());
 	m_CEyeshotCellL.BeginGet();
 	while (pCEyeCell = m_CEyeshotCellL.GetNext())
 	{
@@ -1686,7 +1676,7 @@ void SubMap::ClearAllCha()
 			if (++lChaCount > lChaNum)
 			{
 				//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
-				LG("eyeshot activation error", "eyeshot cell[%d,%d]practice entity numbers %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
+				ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity numbers {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				break;
 			}
 
@@ -1704,11 +1694,11 @@ void SubMap::ClearAllCha()
 			{
 				if (!pCProcCha->GetSubMap())
 					//LG("", " %s(%s)[%d,%d] \n",
-					LG("eyeshot activation error", "in the wind map notify character %s(%s)[%d,%d] 's map is empty\n",
+					ToLogService("eyeshot activation error", "in the wind map notify character {}({})[{},{}] 's map is empty",
 					pCProcCha->GetLogName(), pCProcCha->GetPlyCtrlCha()->GetLogName(), pCProcCha->GetPos().x, pCProcCha->GetPos().y);
 
 				//LG("enter_map", " %s  %s[%s]!\n", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
-				LG("enter_map", "map %s close,clean out character %s[%s]!\n", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
+				ToLogService("enter_map", "map {} close,clean out character {}[{}]!", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				if (!pCProcCha->IsLiveing())
 				{
 					g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCProcCha, DOSTRING_PARAM_END);
@@ -1724,28 +1714,28 @@ void SubMap::ClearAllCha()
 		pCEyeCell->m_pCChaL = NULL;
 	}
 	//LG("enter_map", " %s %d !\n", GetName(), GetCopyNO());
-	LG("enter_map", "map %s(copyID %d)clean out monster succeed!\n", GetName(), GetCopyNO());
-T_E}
+	ToLogService("enter_map", "map {}(copyID {})clean out monster succeed!", GetName(), GetCopyNO());
+}
 
 void SubMap::EntryOpen()
-{T_B
+{
 	Open();
-T_E}
+}
 
 void SubMap::EntryClose()
-{T_B
-T_E}
+{
+}
 
 void SubMap::Open()
-{T_B
+{
 	if (m_bIsRun)
 		return;
 
 	m_bIsRun = true;
-T_E}
+}
 
 void SubMap::Run(DWORD dwCurTime)
-{T_B
+{
 	if (!m_bIsRun)
 		return;
 
@@ -1766,10 +1756,10 @@ void SubMap::Run(DWORD dwCurTime)
 
 	}
 
-T_E}
+}
 
 void SubMap::Close()
-{T_B
+{
 	if (!m_bIsRun)
 		return;
 	string	strScript = "map_copy_before_close_";
@@ -1787,34 +1777,34 @@ void SubMap::Close()
 	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 
 	m_bIsRun = false;
-T_E}
+}
 
 void SubMap::BeforePlyOutMap(CCharacter *pCCha)
-{T_B
+{
 	m_pCMapRes->SubEntryPlayer(GetCopyNO());
 
 	string	strScript = "before_leave_";
 	strScript += GetName();
 	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha, this, DOSTRING_PARAM_END);
-T_E}
+}
 
 void SubMap::AfterPlyEnterMap(CCharacter *pCCha)
-{T_B
+{
 	string	strScript = "after_enter_";
 	strScript += GetName();
 	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha, this, DOSTRING_PARAM_END);
-T_E}
+}
 
 void SubMap::BeginGetPlyCha(void)
-{T_B
+{
 	m_CEyeshotCellL.BeginGet();
 	CEyeshotCell	*pCEyeCell = m_CEyeshotCellL.GetCurrent();
 	if (pCEyeCell)
 		pCEyeCell->BeginGetCha();
-T_E}
+}
 
 CCharacter* SubMap::GetNextPlyCha(void)
-{T_B
+{
 	CCharacter	*pCCha = 0;
 
 Research:
@@ -1837,10 +1827,10 @@ Research:
 			goto Research;
 
 	return pCCha;
-T_E}
+}
 
 bool SubMap::CheckRun(void)
-{T_B
+{
 	if (IsRun())
 		return true;
 	if (!m_pCMapRes)
@@ -1864,10 +1854,10 @@ bool SubMap::CheckRun(void)
 	}
 
 	return false;
-T_E}
+}
 
 void SubMap::DealActivePlayer(string& function)
-{T_B
+{
 	CCharacter * pCha;
 	BeginGetPlyCha();
 
@@ -1880,10 +1870,10 @@ void SubMap::DealActivePlayer(string& function)
 	}
 	
 
-T_E}
+}
 
 void SubMap::DealPlayer(string& function)
-{T_B
+{
 	CCharacter * pCha = NULL;
 	BeginGetPlyCha();
 
@@ -1894,17 +1884,17 @@ void SubMap::DealPlayer(string& function)
 			g_CParser.DoString(function.c_str(),enumSCRIPT_RETURN_NONE, 0,enumSCRIPT_PARAM_LIGHTUSERDATA, 1,pCha,DOSTRING_PARAM_END);
 		}
 	}
-T_E}
+}
 
 //=============================================================================
 COutMapCha::COutMapCha(unsigned short usFreq)
-{T_B
+{
 	m_ulTick = GetTickCount();
 	m_usFreq = usFreq;
-T_E}
+}
 
 COutMapCha::~COutMapCha()
-{T_B
+{
 	/*
 	SMgrUnit	*pSCarrier;
 	pSCarrier = m_pSExecQueue;
@@ -1925,10 +1915,10 @@ COutMapCha::~COutMapCha()
 
 	*/
 	spawnQueue.clear();
-T_E}
+}
 
 void COutMapCha::Add(CCharacter *pCObj, dbc::uLong	ulChaID, SSwitchMapInfo *pSwitchInfo, Char chAction, Long lLeftTick1, Long lLeftTick2)
-{T_B
+{
 	if (!pCObj)
 		return;
 
@@ -1945,10 +1935,10 @@ void COutMapCha::Add(CCharacter *pCObj, dbc::uLong	ulChaID, SSwitchMapInfo *pSwi
 	
 	// Spawn queue recoded - Mdr September 2020
 
-T_E}
+}
 
 void COutMapCha::Run(unsigned long ulCurTick)
-{T_B
+{
 	
 	long	lTickDist = ulCurTick - m_ulTick;
 
@@ -2037,11 +2027,11 @@ void COutMapCha::Run(unsigned long ulCurTick)
 	//	n++;
 	//}
 	//
-T_E}
+}
 
 void COutMapCha::Drop()
 {
-T_B
+
 
 	for (const auto& pSCarrier : spawnQueue)
 	{
@@ -2053,10 +2043,10 @@ T_B
 	}
 	spawnQueue.clear();
 
-T_E}
+}
 
 void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
-{T_B
+{
 	if (pChaInfo->chStep == 1)
 	{
 		pChaInfo->SwitchInfo.pSrcMap->GoOut(pChaInfo->pCCha);
@@ -2073,7 +2063,7 @@ void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
 				if (pCCha->IsPlayerCha()) // 
 				{
 					//LG("", " %s %s(%s)\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName());
-					LG("monster renascence errror", "monster name %scharacter player name %s(%s)\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName());
+					ToLogService("monster renascence errror", "monster name {}character player name {}({})", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName());
 					break;
 				}
 				
@@ -2105,5 +2095,5 @@ void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
 		}
 		pChaInfo->chStep++;
 	}
-T_E}
+}
 

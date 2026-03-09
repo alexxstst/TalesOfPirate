@@ -8,7 +8,7 @@
 #include "GameCommon.h"
 #include "SubMap.h"
 #include "GameApp.h"
-#include "TryUtil.h"
+
 
 _DBC_USING
 //,!
@@ -21,7 +21,7 @@ extern BOOL	g_bGameEnd; // GameServer
 
 //  GateServer 
 long ConnectGateServer::Process()
-{T_B
+{
     DWORD	dwTick, dwCurTick;
     DWORD	dwInterval = 5000;
     DWORD	dwConnectTick = 0;
@@ -52,15 +52,15 @@ long ConnectGateServer::Process()
         }
 
     return 0;
-T_E}
+}
 
 
 // 
 GameServerApp::GameServerApp(ThreadPool *proc,ThreadPool *comm)
     :TcpClientApp(this,proc,comm), RPCMGR(this), m_count(0), PKQueue(false)
-{T_B
+{
 	//LG("init", "ServerApp\n");	
-	LG("init", "start init ServerApp\n");	
+	ToLogService("init", "start init ServerApp");
 
 	// 
 	srand( (unsigned)time( NULL ) );
@@ -82,30 +82,30 @@ GameServerApp::GameServerApp(ThreadPool *proc,ThreadPool *comm)
     BeginWork(g_Config.m_lSocketAlive);
 
 	//LG("init", "ServerApp\n");
-	LG("init", "ServerApp init over\n");
-T_E}
+	ToLogService("init", "ServerApp init over");
+}
 
 GameServerApp::~GameServerApp()
-{T_B
+{
 
 
 	ShutDown(2*1000);
-T_E}
+}
 
 //:true-,false-
 bool GameServerApp::OnConnect(DataSocket *datasock)
-{T_B
+{
     datasock->SetRecvBuf(64*1024); 
     datasock->SetSendBuf(64*1024);
 
-    LG("Connect", "GateServer Connected! IP = [%s] port = %d\n",  datasock->GetPeerIP() , datasock->GetPeerPort());
+    ToLogService("Connect", "GateServer Connected! IP = [{}] port = {}", datasock->GetPeerIP(), datasock->GetPeerPort());
    return true;
-T_E}
+}
 
 //reason:0--3--1-Socket;-5-.
 void GameServerApp::OnDisconnect(DataSocket *datasock,int reason)
-{T_B
-    LG("Connect", "GateServer Disconnect! IP = [%s] port = %d, reason = [%s]\n",  datasock->GetPeerIP() , datasock->GetPeerPort(), GetDisconnectErrText(reason).c_str());
+{
+    ToLogService("Connect", "GateServer Disconnect! IP = [{}] port = {}, reason = [{}]", datasock->GetPeerIP(), datasock->GetPeerPort(), GetDisconnectErrText(reason).c_str());
 
     GateServer* gt = (GateServer *)datasock->GetPointer();
     if (gt == NULL) return;
@@ -133,15 +133,15 @@ void GameServerApp::OnDisconnect(DataSocket *datasock,int reason)
     } while (false);
     m_mutdisconn.unlock();
 
-T_E}
+}
 
 void GameServerApp::OnProcessData(DataSocket *datasock,RPacket &pk)
-{T_B
+{
     AddPK(datasock, pk);
-T_E}
+}
 
 void GameServerApp::ProcessData(DataSocket* datasock, RPacket& pk)
-{T_B
+{
     if (datasock == NULL) return;
     GateServer* gt = (GateServer *)datasock->GetPointer();
     if (gt == NULL) return;
@@ -151,7 +151,7 @@ void GameServerApp::ProcessData(DataSocket* datasock, RPacket& pk)
     switch (cmd)
         {
         case CMD_MM_GATE_CONNECT:
-		    LG("Connect", "ProcessData Gate_Connect\n");
+		    ToLogService("Connect", "ProcessData Gate_Connect");
             msg_id = NETMSG_GATE_CONNECTED;
             break;
 
@@ -165,10 +165,10 @@ void GameServerApp::ProcessData(DataSocket* datasock, RPacket& pk)
         }
 
     g_pGameApp->ProcessNetMsg(msg_id, gt, pk);
-T_E}
+}
 
 WPacket	GameServerApp::OnServeCall(DataSocket *datasock, RPacket &pk)
-{T_B
+{
 	uShort l_cmd = pk.ReadCmd();
 	switch (l_cmd)
 	{
@@ -176,7 +176,7 @@ WPacket	GameServerApp::OnServeCall(DataSocket *datasock, RPacket &pk)
 		case CMD_TM_OFFLINE_MODE: return TM_OFFLINE_MODE(datasock, pk);
 	}
 	return 0;
-T_E}
+}
 
 WPacket	GameServerApp::TM_KICKCHA(DataSocket *datasock, RPacket &pkt)
 {
@@ -280,14 +280,14 @@ dbc::WPacket GameServerApp::TM_OFFLINE_MODE(dbc::DataSocket* datasock, RPacket& 
 
 //  GateServer
 void GameServerApp::ConnectGate(GateServer* pGate)
-{T_B
+{
     if (pGate->IsValid()) return;
 
     DataSocket* datasock = Connect(pGate->GetIP().c_str(), pGate->GetPort());
     if (datasock == NULL)
     {
 		//LG("Connect", " GateServer , ip = %s, port = %d.\n", pGate->GetIP().c_str(), pGate->GetPort() ); 
-		LG("Connect", "connect to  GateServer failed, ip = %s, port = %d.\n", pGate->GetIP().c_str(), pGate->GetPort() ); 
+		ToLogService("Connect", "connect to  GateServer failed, ip = {}, port = {}.", pGate->GetIP().c_str(), pGate->GetPort());
 	}
     else 
 	{
@@ -300,17 +300,17 @@ void GameServerApp::ConnectGate(GateServer* pGate)
         auto rpkt = RPacket(wpkt);
 		AddPK(datasock, rpkt);
 	}
-T_E}
+}
 
 bool GameServerApp::IsValidGate(int i)
-{T_B
+{
     if (i < 0 || i > m_gtnum) throw std::logic_error("gate index out of range!");
 
     return m_gtarray[i].IsValid();
-T_E}
+}
 
 GateServer* GameServerApp::FindGate(char const* gt_name)
-{T_B
+{
     for (int i = 0; i < m_gtnum; ++ i)
     {
         if (m_gtarray[i].IsValid())
@@ -321,18 +321,18 @@ GateServer* GameServerApp::FindGate(char const* gt_name)
     }
 
     return NULL;
-T_E}
+}
 
 
 // Player 
 bool GameServerApp::AddPlayer(GatePlayer* gtplayer, GateServer* gt, uLong gtaddr)
-{T_B
+{
     if (gt == NULL || gtplayer == NULL) return false;
     if (!gt->IsValid()) return false;
 	if (gtplayer->Next || gtplayer->Prev)
 	{
 		//LG("", "dbid %u\n", gtplayer->GetDBChaId());
-		LG("character list error ", "when insert characterdbid %uto character ,find it connect pointer is not empty!\n", gtplayer->GetDBChaId());
+		ToLogService("character list error ", "when insert characterdbid {}to character ,find it connect pointer is not empty!", gtplayer->GetDBChaId());
 		return false;
 	}
 
@@ -352,10 +352,10 @@ bool GameServerApp::AddPlayer(GatePlayer* gtplayer, GateServer* gt, uLong gtaddr
 
 	gt->AddPlayerCount();    
     return true;
-T_E}
+}
 
 bool GameServerApp::DelPlayer(GatePlayer* gtplayer)
-{T_B
+{
     if (gtplayer == NULL) return false;
 
     GateServer* gt = gtplayer->GetGate();
@@ -398,19 +398,19 @@ bool GameServerApp::DelPlayer(GatePlayer* gtplayer)
 
 	gt->DecPlayerCount();
 	return true;
-T_E}
+}
 
 bool GameServerApp::KickPlayer(GatePlayer* gtplayer, long lTimeSec)
-{T_B
+{
     //WPacket pkt = GetWPacket();
     //pkt.WriteCmd(CMD_MT_KICKUSER);
 	//pkt.WriteLong(lTimeSec);
     //return SendToClient(pkt, gtplayer);
 	return KickPlayer2(gtplayer);
-T_E}
+}
 
 bool GameServerApp::KickPlayer2(GatePlayer *gtplayer)
-{T_B
+{
 	WPacket pkt = GETWPACKET();
 	pkt.WriteCmd(CMD_MT_KICKUSER);
 	pkt.WriteLong(gtplayer->GetDBChaId());
@@ -418,7 +418,7 @@ bool GameServerApp::KickPlayer2(GatePlayer *gtplayer)
 	pkt.WriteShort(1);
 	gtplayer->GetGate()->SendData(pkt);
 	return true;
-T_E}
+}
 
 bool GameServerApp::SendToGroup(WPacket& chginf)
 {
@@ -441,7 +441,7 @@ bool GameServerApp::SendToGroup(WPacket& chginf)
 
 // 
 bool GameServerApp::SendToWorld(WPacket& chginf)
-{T_B
+{
     WPacket		CChginf;
     Short		sCount;
 
@@ -475,10 +475,10 @@ bool GameServerApp::SendToWorld(WPacket& chginf)
         }
 
     return true;
-T_E}
+}
 
 bool GameServerApp::SendToClient(GatePlayer* player, WPacket& pkt)
-{T_B
+{
     if (player == NULL) return false;
 
     GateServer* pGate = player->GetGate();
@@ -491,10 +491,10 @@ bool GameServerApp::SendToClient(GatePlayer* player, WPacket& pkt)
     {
         return false;
     }
-T_E}
+}
 
 bool GameServerApp::SendToClient(WPacket& pkt, GatePlayer* playerlist)
-{T_B
+{
     if (playerlist == NULL) return false;
 
     //  Gate
@@ -520,8 +520,7 @@ bool GameServerApp::SendToClient(WPacket& pkt, GatePlayer* playerlist)
         if (tmp->GetGate() == NULL)
         {      
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
-                tmp->GetDBChaId(), tmp->GetGateAddr());
+            ToLogService("SendToClient", "WARNING! pGate = NULL, atorID={}, gt_addr=0x{:x}", tmp->GetDBChaId(), tmp->GetGateAddr());
 #endif
         }
         else
@@ -552,10 +551,10 @@ bool GameServerApp::SendToClient(WPacket& pkt, GatePlayer* playerlist)
         }
 
     return true;
-T_E}
+}
 
 bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_array)
-{T_B
+{
     if (uplayer_array == NULL) return false;
 
 #ifdef defCOMMU_LOG
@@ -595,8 +594,7 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
         if (uplayer_array[i].pGate == NULL)
         {
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
-                uplayer_array[i].m_dwDBChaId, uplayer_array[i].m_ulGateAddr);
+            ToLogService("SendToClient", "WARNING! pGate = NULL, atorID={}, gt_addr=0x{:x}", uplayer_array[i].m_dwDBChaId, uplayer_array[i].m_ulGateAddr);
 #endif
             continue;
         }
@@ -627,12 +625,12 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
     }
 
     return true;
-T_E}
+}
 
 bool GameServerApp::SendToGame(WPacket& pkt, uplayer* uplyr)
-{T_B
+{
     return (uplyr->pGate->SendData(pkt) > 0) ? true : false;
-T_E}
+}
 
 
 

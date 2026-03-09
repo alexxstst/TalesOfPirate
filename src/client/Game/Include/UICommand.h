@@ -67,8 +67,7 @@ public:
 
 	static CTextHint& GetHints()	{ return  _hints;}
 
-public:
-    void		SetIsFast( bool v );                    // 
+void		SetIsFast( bool v );                    // 
     bool        GetIsFast()             { return _nFast>0;  }
 
     void        SetIndex( int nIndex )  { _nIndex = nIndex; }
@@ -83,14 +82,12 @@ protected:
 
     virtual void    AddHint( int x, int y ) {}
 
-protected:
-    static CCommandObj*     _pCommand;      // 
+static CCommandObj*     _pCommand;      // 
 
 private:
     bool    _Exec();
 
-private:
-	int	        _nFast;	    // ,,
+int	        _nFast;	    // ,,
     CCompent*   _pParent;   // 
 	bool        _bTrade;
     int         _nIndex;

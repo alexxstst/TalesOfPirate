@@ -72,17 +72,17 @@ public:
 		bool				m_estop[emMaxCharacters];	//Chat to be banned
 		unsigned long 				m_guildPermission[emMaxCharacters];
 		unsigned int		m_chatColour[emMaxCharacters];
-		bool volatile		m_bWG;						//Whether a plug-in is used
+		bool 		m_bWG;						//Whether a plug-in is used
 		bool				m_bRefreshFlag;				// Refresh flag
 	};
 	struct
 	{
 		InterLockedLong			m_chatnum;				//Number of current session chat windows		
-		bool		 volatile	m_refuse_tome{ false };
-		bool		 volatile	m_refuse_sess{ false };
+		bool		 	m_refuse_tome{ false };
+		bool		 	m_refuse_sess{ false };
 		std::recursive_mutex	m_mtxChat;
-		uLong		 volatile	m_chatarranum;
-		Chat_Player	*volatile	m_chat[emMaxSessChat];
+		uLong		 	m_chatarranum;
+		Chat_Player	*	m_chat[emMaxSessChat];
 	};
 	struct
 	{

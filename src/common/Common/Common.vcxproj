@@ -33,7 +33,6 @@
     <ClCompile Include="Source\Kitbag.cpp" />
     <ClCompile Include="Source\LevelRecord.cpp" />
     <ClCompile Include="Source\LifeLvRecord.cpp" />
-    <ClCompile Include="Source\LogFile.cpp" />
     <ClCompile Include="Source\MonRefRecord.cpp" />
     <ClCompile Include="Source\MountRecord.cpp" />
     <ClCompile Include="Source\NpcRecord.cpp" />
@@ -71,7 +70,6 @@
     <ClInclude Include="Include\KitbagEnCode.h" />
     <ClInclude Include="Include\LevelRecord.h" />
     <ClInclude Include="Include\LifeLvRecord.h" />
-    <ClInclude Include="Include\LogFile.h" />
     <ClInclude Include="Include\MonRefRecord.h" />
     <ClInclude Include="Include\MountRecord.h" />
     <ClInclude Include="Include\NetCommand.h" />

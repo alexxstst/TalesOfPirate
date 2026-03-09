@@ -125,15 +125,12 @@ void GroupServerApp::CP_FRND_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk
 			ply->SendSysInfo(l_buf);
 		}else
 		{
-			LogLine	l_line(g_LogFriend);
 			/*
 			l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
 				<<")"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")"
 				<<endln;
 			*/
-			l_line<<newln<<"player"<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
-				<<")and player"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<") make friends"
-				<<endln;
+			ToLogService("Friend", "player{}({})and player{}({}) make friends", ply->m_chaname[ply->m_currcha], ply->m_chaid[ply->m_currcha], l_inviter->m_chaname[l_inviter->m_currcha], l_inviter_chaid);
 
 			m_tblfriends->AddFriend(ply->m_chaid[ply->m_currcha],l_inviter.m_chaid);
 			WPacket	l_wpk =GetWPacket();
@@ -190,13 +187,11 @@ void GroupServerApp::CP_FRND_DELETE(Player *ply,DataSocket *datasock,RPacket &pk
 			--(ply->m_CurrFriendNum);
 		}
 		m_tblfriends->DelFriend(ply->m_chaid[ply->m_currcha],l_deleted_chaid);
-		LogLine	l_line(g_LogFriend);
 		/*
 		l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
 			<<")("<<l_deleted_chaid<<")";
 	   */
-		l_line<<newln<<"player"<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
-			<<")and("<<l_deleted_chaid<<")free friends";
+		ToLogService("Friend", "player{}({})and({})free friends", ply->m_chaname[ply->m_currcha], ply->m_chaid[ply->m_currcha], l_deleted_chaid);
 	}
 }
 
@@ -429,7 +424,6 @@ void GroupServerApp::PC_FRND_INIT(Player *ply)
 		}
 	}
 	SendToClient(ply,l_toSelf);
-	LogLine	l_line(g_LogFriend);
-	l_line<<newln<<"online friends num: "<<l_plynum<<endln;
+	ToLogService("Friend", "online friends num: {}", l_plynum);
 	SendToClient(l_plylst.data(), l_plynum, l_toFrnd);
 }

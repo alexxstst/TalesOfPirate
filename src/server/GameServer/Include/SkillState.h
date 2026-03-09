@@ -86,7 +86,7 @@ private:
 };
 
 inline void CSkillState::Init(unsigned char uchMaxState)
-{T_B
+{
 	if (uchMaxState > SKILL_STATE_MAXID)
 		uchMaxState = SKILL_STATE_MAXID;
 	m_uchMaxState = uchMaxState;
@@ -96,7 +96,7 @@ inline void CSkillState::Init(unsigned char uchMaxState)
 		m_SState[i].uchStateID = i;
 		m_SState[i].uchStateLv = 0;
 	}
-T_E}
+}
 
 inline void CSkillState::Reset(void)
 {
@@ -108,7 +108,7 @@ inline void CSkillState::Reset(void)
 
 inline bool CSkillState::Add(unsigned char uchFightID, unsigned long ulSrcWorldID, long lSrcHandle, char chObjType, char chObjHabitat, char chEffType,
 							 unsigned char uchStateID, unsigned char uchStateLv, unsigned long ulStartTick, long lOnTick, char chType, char chWithCenter)
-{T_B
+{
 	if (uchStateID < 1 || uchStateID > m_uchMaxState)
 		return false;
 	if (uchStateLv <= 0)
@@ -196,10 +196,10 @@ inline bool CSkillState::Add(unsigned char uchFightID, unsigned long ulSrcWorldI
 	}
 
 	return true;
-T_E}
+}
 
 inline bool CSkillState::Del(unsigned char uchStateID)
-{T_B
+{
 	if (uchStateID < 1 || uchStateID > m_uchMaxState || m_uchStateNum < 1)
 		return false;
 
@@ -216,10 +216,10 @@ inline bool CSkillState::Del(unsigned char uchStateID)
 	}
 
 	return true;
-T_E}
+}
 
 inline SSkillStateUnit* CSkillState::GetSStateByID(unsigned char uchStateID)
-{T_B
+{
 	if (uchStateID < 1 || uchStateID > m_uchMaxState)
 		return 0;
 
@@ -227,10 +227,10 @@ inline SSkillStateUnit* CSkillState::GetSStateByID(unsigned char uchStateID)
 		return m_SState + uchStateID;
 	else
 		return 0;
-T_E}
+}
 
 inline SSkillStateUnit* CSkillState::GetSStateByNum(unsigned char uchNum)
-{T_B
+{
 	if (uchNum < 0 || uchNum >= m_uchStateNum)
 		return 0;
 
@@ -241,7 +241,7 @@ inline SSkillStateUnit* CSkillState::GetSStateByNum(unsigned char uchNum)
 		//LG("", "msg!");
 		return 0;
 	}
-T_E}
+}
 
 inline unsigned char CSkillState::GetReverseID(unsigned char uchStateID)
 {
@@ -291,19 +291,19 @@ inline bool CSkillState::HasState(unsigned char uchStateID)
 }
 
 inline void CSkillState::SetChangeFlag()
-{T_B
+{
 	memset(m_szChangeFlag, 0xff, SSTATE_SIGN_BYTE_NUM);
 	m_uchChangeNum = SKILL_STATE_MAXID;
-T_E}
+}
 
 inline void CSkillState::ResetChangeFlag()
-{T_B
+{
 	memset(m_szChangeFlag, 0, SSTATE_SIGN_BYTE_NUM);
 	m_uchChangeNum = 0;
-T_E}
+}
 
 inline void CSkillState::SetChangeBitFlag(long lBit)
-{T_B
+{
 	if (lBit > m_uchMaxState)
 		return;
 
@@ -317,10 +317,10 @@ inline void CSkillState::SetChangeBitFlag(long lBit)
 		m_uchChangeNum++;
 
 	m_szChangeFlag[sByteNO] |= chSetFlag;
-T_E}
+}
 
 inline bool	CSkillState::GetChangeBitFlag(long lBit)
-{T_B
+{
 	if (lBit > m_uchMaxState)
 		return false;
 
@@ -329,7 +329,7 @@ inline bool	CSkillState::GetChangeBitFlag(long lBit)
 	sBitNO = short(lBit % 8);
 
 	return m_szChangeFlag[sByteNO] & (0x01 << sBitNO) ? true : false;
-T_E}
+}
 
 inline SSkillStateUnit* CSkillState::GetNextState(void)
 {

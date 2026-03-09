@@ -35,7 +35,7 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "GetExp_New" );
+			ToLogService( "lua_invalidfunc", "GetExp_New" );
 			return;
 		}
 
@@ -45,7 +45,7 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 		if(r!=0) // 
 		{
 			//LG("lua_err", "GetExp_New, ()[%s], [%s]!\n", pAtk->GetName(), pDead->GetName());
-			LG("lua_err", "GetExp_New transact error, attacker(bugbear)[%s], people was bring down[%s]!\n", pAtk->GetName(), pDead->GetName());
+			ToLogService("lua_err", "GetExp_New transact error, attacker(bugbear)[{}], people was bring down[{}]!", pAtk->GetName(), pDead->GetName());
 			lua_callalert(g_pLuaState, r); 	
 		}
 		lua_settop(g_pLuaState, 0);
@@ -55,7 +55,7 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 		if(dwEndTime > 10)
 		{
 			//LG("script_time", ", ! time = %d\n", dwEndTime);
-			LG("script_time", "when player dead transfer experience assign script,account time too long! time = %d\n", dwEndTime);
+			ToLogService("script_time", "when player dead transfer experience assign script,account time too long! time = {}", dwEndTime);
 		}
 		return; // , 
 	}
@@ -85,7 +85,7 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 			if(pPlayer==NULL)
 			{
 				//LG("team_error", ", player!, [%s]\n", pHarm->pAtk->GetName());
-				LG("team_error", "it appear especially error when check teammate experience assign, player finger is null!, character name[%s]\n", pHarm->pAtk->GetName());
+				ToLogService("team_error", "it appear especially error when check teammate experience assign, player finger is null!, character name[{}]", pHarm->pAtk->GetName());
 				break;
 			}
 			
@@ -129,7 +129,7 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
 		lua_pop( g_pLuaState, 1 );
-		LG( "lua_invalidfunc", "GetExp_New" );
+		ToLogService( "lua_invalidfunc", "GetExp_New" );
 		return;
 	}
 
@@ -140,7 +140,7 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 	if(r!=0) // 
 	{
 		//LG("lua_err", "GetExp_New, [%s], [%s]!\n", pAtk->GetName(), pDead->GetName());
-		LG("lua_err", "GetExp_New transact error, attacker[%s], bugbear wsa bring down [%s]!\n", pAtk->GetName(), pDead->GetName());
+		ToLogService("lua_err", "GetExp_New transact error, attacker[{}], bugbear wsa bring down [{}]!", pAtk->GetName(), pDead->GetName());
 		lua_callalert(g_pLuaState, r); 	
 	}
 	lua_settop(g_pLuaState, 0);
@@ -176,6 +176,6 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 	if(dwEndTime > 10)
 	{
 		//LG("script_time", ", , time = %d, exp = %d, upgrade = %d, item = %d!\n", dwEndTime, tLua.GetTimeCount(), tMission.GetTimeCount(), tItem.GetTimeCount());
-		LG("script_time", "the flow of assign experience when bugbear dead, calculate time too long, time = %d, exp = %d, upgrade = %d, item = %d!\n", dwEndTime, tLua.GetTimeCount(), tMission.GetTimeCount(), tItem.GetTimeCount());
+		ToLogService("script_time", "the flow of assign experience when bugbear dead, calculate time too long, time = {}, exp = {}, upgrade = {}, item = {}!", dwEndTime, tLua.GetTimeCount(), tMission.GetTimeCount(), tItem.GetTimeCount());
 	}
 }

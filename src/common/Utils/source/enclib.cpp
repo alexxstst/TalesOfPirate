@@ -7,6 +7,8 @@
 #include "d3des.h"
 #include "../include/enclib.h"
 
+#include <format>
+
 
 __byte g_key[8] = {0};
 
@@ -59,7 +61,7 @@ int str2bin(__byte* buf, int len, const __byte* str, int slen)
 int SetEncKey(const __byte* key)
 {
     memcpy(g_key, key, 8);
-    srand((unsigned)time( NULL ));
+    srand((unsigned)time(nullptr));
     return 1;
 }
 /* -------------------------------------------- */
@@ -122,7 +124,7 @@ int Encrypt(__byte* buf, int len, const __byte* pwd, int plen)
     apd = (int)(size / 2);
     for(int j = 0; j < apd; j++)
     {
-        sprintf((char*)ptr, "%02x", buf[j]);
+        std::format_to((char*)ptr, "{:02x}", buf[j]);
         ptr += 2;
     }
     memcpy(buf, tmp, size);

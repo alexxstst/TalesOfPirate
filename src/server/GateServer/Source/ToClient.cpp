@@ -102,8 +102,7 @@ bool ToClient::DoCommand(DataSocket* datasock, cChar *cmdline)
 bool ToClient::OnConnect(DataSocket* datasock)
 {
 	if (!g_gtsvr->gp_conn->IsReady()) {
-		LogLine l_line(g_gatelog);
-		l_line << newln << "client: " << datasock->GetPeerIP() << "	come, groupserver is't ready, force disconnect...";
+		ToLogService("GateServer", "client: {}	come, groupserver is't ready, force disconnect...", datasock->GetPeerIP());
 		Disconnect(datasock, 0, DS_DISCONN);
 		return false;
 	}
@@ -132,8 +131,7 @@ bool ToClient::OnConnect(DataSocket* datasock)
 				printf("[%s] DoS suspected... ", datasock->GetPeerIP());
 				C_PRINT("disconnected!\n");
 				this->Disconnect(datasock, 0, -31);
-				LogLine l_line(g_gatelog);
-				l_line << newln << "client: " << datasock->GetPeerIP() << "is suspect of DoS'ing, disconnected" << endln;
+				ToLogService("GateServer", "client: {}is suspect of DoS'ing, disconnected", datasock->GetPeerIP());
 				blacklistedIP.push_back(datasock->GetPeerIP());
 				
 			};
@@ -175,15 +173,13 @@ bool ToClient::OnConnect(DataSocket* datasock)
 	{
 		
 		datasock->SetRecvBuf(64 * 1024); datasock->SetSendBuf(64 * 1024);
-		LogLine l_line(g_gatelog);
-		l_line<<newln<<"client: "<<datasock->GetPeerIP()<<"	come...Socket num: "<<GetSockTotal() + 1;
+		ToLogService("GateServer", "client: {}	come...Socket num: {}", datasock->GetPeerIP(), GetSockTotal() + 1);
 		return true;
 	}
 	else
 	{
 		
-		LogLine l_line(g_gatelog);
-		l_line<<newln<<"client: "<<datasock->GetPeerIP()<<"	come, greater than "<<m_maxcon<<" player, force disconnect...";
+		ToLogService("GateServer", "client: {}	come, greater than {} player, force disconnect...", datasock->GetPeerIP(), m_maxcon);
 		return false;
 	}
 }
@@ -242,7 +238,7 @@ void ToClient::OnConnected(DataSocket* datasock)
 		}
 		catch (std::exception const& e)
 		{
-			LG("ToClientOnConnected", "%s\n", e.what());
+			ToLogService("ToClientOnConnected", "{}", e.what());
 			Disconnect(datasock);
 		}
 		return;
@@ -250,9 +246,7 @@ void ToClient::OnConnected(DataSocket* datasock)
 }
 void ToClient::OnDisconnect(DataSocket* datasock, int reason)
 {
-	LogLine l_line(g_gatelog);
-	l_line << newln << "client: " << datasock->GetPeerIP() << " gone...Socket num: " << GetSockTotal() << " ,reason=" << GetDisconnectErrText(reason).c_str();
-	l_line << endln;
+	ToLogService("GateServer", "client: {} gone...Socket num: {} ,reason={}", datasock->GetPeerIP(), GetSockTotal(), GetDisconnectErrText(reason).c_str());
 
 	RPacket l_rpk = 0;
 	CM_LOGOUT(datasock,l_rpk);
@@ -320,13 +314,13 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 
 			if (recvbuf.GetDataLen() < 4)
 			{
-				LG("DATA_LEN", "Packet sent from %s smaller than 4", datasock->m_peerip);
+				ToLogService("DATA_LEN", "Packet sent from {} smaller than 4", datasock->m_peerip);
 				return;
 			}
 
 			if (recvbuf.GetPktLen() < 4)
 			{
-				LG("PKT_LEN", "Packet sent from %s smaller than 4", datasock->m_peerip);
+				ToLogService("PKT_LEN", "Packet sent from {} smaller than 4", datasock->m_peerip);
 				return;
 			}
 	
@@ -397,7 +391,7 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 			//}
 		}
 
-		LG("ToClientOnProcessData", "cmd: %d\n", l_cmd);
+		ToLogService("ToClientOnProcessData", "cmd: {}", l_cmd);
 
 		switch (l_cmd)
 		{
@@ -427,7 +421,7 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 			}
 			catch (std::exception const& e)
 			{
-				LG("SEND_PRIVATE_KEY", "%s\n", e.what());
+				ToLogService("SEND_PRIVATE_KEY", "{}", e.what());
 				Disconnect(datasock);
 				return;
 			}
@@ -489,8 +483,7 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 			{
 				// The packet can't be coming from an actual player,
 				// lets not process it further
-				LogLine line(g_gateerr);
-				line << newln << "CMD_CM_SAY: invalid player." << endln;
+				ToLogService("ErrServer", "CMD_CM_SAY: invalid player.");
 				break;
 			}
 
@@ -580,8 +573,7 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 				}
 				catch (...)
 				{
-					LogLine l_line(g_gatelog);
-					l_line << newln << "Error offline mode!";
+					ToLogService("GateServer", "Error offline mode!");
 				}
 
 				// Free in the end, or we invalidate data we need in player
@@ -598,8 +590,7 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 			default:
 			{
 				player->SendSysInfo("Something went wrong trying to use offline mode.");
-				LogLine line(g_gateerr);
-				line << newln << "Offline stall failed for a player, return code: " << static_cast<int>(return_code) << endln;
+				ToLogService("ErrServer", "Offline stall failed for a player, return code: {}", static_cast<int>(return_code));
 			}
 			break;
 			}
@@ -654,8 +645,7 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 			{
 				l_last	=l_tick;
 				std::cout<<"["<<datasock->GetPeerIP()<<"] sending big packet (>5K/s) attack server,please deal with!\n";
-				LogLine l_line(g_chkattack);
-				l_line<<newln<<"["<<datasock->GetPeerIP()<<"] sending big packet (>5K/s) attack server,please deal with!\n";
+				ToLogService("AttackMonitor", "[{}] sending big packet (>5K/s) attack server,please deal with!", datasock->GetPeerIP());
 			}
 		}
 	}
@@ -669,19 +659,17 @@ void ToClient::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	}
 	catch(...)
 	{
-		LG("ToClientError", "l_cmd = %d\n", l_cmd);
+		ToLogService("ToClientError", "l_cmd = {}", l_cmd);
 	}
-	LG("ToClient", "<--l_cmd = %d\n", l_cmd);
+	ToLogService("ToClient", "<--l_cmd = {}", l_cmd);
 	return;
 }
 long TransmitCall::Process()
 {
-	LogLine l_line(g_gatelog);
-	
 	if(!g_gtsvr->gp_conn->IsReady())
 	{
 		g_gtsvr->cli_conn->Disconnect(m_datasock,50,-27);
-		l_line<<newln<<"IsReady = false";
+		ToLogService("GateServer", "IsReady = false");
 		return 0;
 	}
 
@@ -727,8 +715,8 @@ long TransmitCall::Process()
 		}
 	}
 	catch (std::exception& e) {
-		l_line << newln << "exception: " << e.what();
-		l_line << newln << "IsReady = false exception:" << l_cmd;
+		ToLogService("GateServer", "exception: {}", e.what());
+		ToLogService("GateServer", "IsReady = false exception:{}", l_cmd);
 	}
 	catch(...)
 	{
@@ -740,7 +728,7 @@ long TransmitCall::Process()
 		{
 
 		}
-		l_line<<newln<<"IsReady = false exception:" <<l_cmd;
+		ToLogService("GateServer", "IsReady = false exception:{}", l_cmd);
 	}
 
 	--(g_gtsvr->cli_conn->m_calltotal);
@@ -774,9 +762,7 @@ void ToClient::CM_LOGIN(DataSocket* datasock, RPacket& recvbuf)
 				l_wpk.WriteCmd(CMD_MC_LOGIN);
 				l_wpk.WriteShort(ERR_MC_VER_ERROR); //
 				SendData(datasock, l_wpk);			// 
-				LogLine l_line(g_gatelog);
-				//l_line<<newln<<": "<<datasock->GetPeerIP()<<"	!";
-				l_line << newln << "client: " << datasock->GetPeerIP() << "	login error: client and server can't match!";
+				ToLogService("GateServer", "client: {}	login error: client and server can't match!", datasock->GetPeerIP());
 				Disconnect(datasock, 100, -31);
 				return;
 			}
@@ -824,9 +810,7 @@ void ToClient::CM_LOGIN(DataSocket* datasock, RPacket& recvbuf)
 				l_wpk.WriteCmd(CMD_MC_LOGIN);
 				l_wpk.WriteShort(ERR_MC_NETEXCP); //
 				SendData(datasock, l_wpk); // 
-				LogLine l_line(g_gatelog);
-				//l_line<<newln<<": "<<datasock->GetPeerIP()<<"	GroupServer!"<<endln;
-				l_line << newln << "client: " << datasock->GetPeerIP() << "	login error: GroupServer is disresponse!" << endln;
+				ToLogService("GateServer", "client: {}	login error: GroupServer is disresponse!", datasock->GetPeerIP());
 				Disconnect(datasock, 100, -31);
 				return;
 			}
@@ -837,9 +821,7 @@ void ToClient::CM_LOGIN(DataSocket* datasock, RPacket& recvbuf)
 				l_wpk.WriteCmd(CMD_MC_LOGIN);
 				l_wpk.WriteShort(l_errno);
 				SendData(datasock, l_wpk);
-				LogLine l_line(g_gatelog);
-				//l_line<<newln<<": "<<datasock->GetPeerIP()<<"	"<<l_errno<<endln;
-				l_line << newln << "client: " << datasock->GetPeerIP() << "	login error, error:" << l_errno << endln;
+				ToLogService("GateServer", "client: {}	login error, error:{}", datasock->GetPeerIP(), l_errno);
 				Disconnect(datasock, 100, -31);
 				return;
 			}
@@ -859,9 +841,7 @@ void ToClient::CM_LOGIN(DataSocket* datasock, RPacket& recvbuf)
 			l_wpk.WriteChar(byPassword);
 			//l_wpk.WriteLong( 0x3214 );
 			SendData(datasock, l_wpk);
-			LogLine l_line(g_gatelog);
-			//l_line<<newln<<": "<<datasock->GetPeerIP()<<"	"<<endln;
-			l_line << newln << "client: " << datasock->GetPeerIP() << "	login ok." << endln;
+			ToLogService("GateServer", "client: {}	login ok.", datasock->GetPeerIP());
 
 			// 
 		}
@@ -871,16 +851,13 @@ void ToClient::CM_LOGIN(DataSocket* datasock, RPacket& recvbuf)
 			l_wpk.WriteCmd(CMD_MC_LOGIN);
 			l_wpk.WriteShort(ERR_MC_NETEXCP); //
 			SendData(datasock, l_wpk); // 
-			LogLine l_line(g_gatelog);
-			//l_line<<newln<<": "<<datasock->GetPeerIP()<<"	!"<<endln;
-			l_line << newln << "client: " << datasock->GetPeerIP() << "	login error: packet time out!" << endln;
+			ToLogService("GateServer", "client: {}	login error: packet time out!", datasock->GetPeerIP());
 			Disconnect(datasock, 100, -31);
 		}
 	}
 	catch (std::exception &e)
 	{
-		LogLine l_line(g_gatelog);
-		l_line << newln << "exception: " << e.what();
+		ToLogService("GateServer", "exception: {}", e.what());
 	}
 }
 
@@ -929,10 +906,7 @@ WPacket ToClient::CM_LOGOUT(DataSocket* datasock, RPacket& recvbuf)
 				GameServer	*l_game	=l_ply->game;
 				if((l_ply->m_status	== ClientConnection::Status::Playing) && l_ply->gm_addr && l_game && l_game->m_datasock)
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"client: "<<datasock->GetPeerIP()<<":"<<datasock->GetPeerPort()<<"	GoOut map,Gate to ["
-						<<l_game->m_datasock->GetPeerIP()<<"]send GoOutMap command,dbid:"<<l_ply->m_dbid
-						<< uppercase << hex << ",Gate address:" << ToAddress(l_ply) << ",Game address:" << l_ply->gm_addr << dec << nouppercase << endln;
+					ToLogService("GateServer", "client: {}:{}	GoOut map,Gate to [{}]send GoOutMap command,dbid:{},Gate address:{:X},Game address:{:X}", datasock->GetPeerIP(), datasock->GetPeerPort(), l_game->m_datasock->GetPeerIP(), l_ply->m_dbid, ToAddress(l_ply), (LONG)l_ply->gm_addr);
 
 					WPacket	l_wpk	=l_game->m_datasock->GetWPacket();
 					l_wpk.WriteCmd(CMD_TM_GOOUTMAP);
@@ -956,8 +930,7 @@ WPacket ToClient::CM_LOGOUT(DataSocket* datasock, RPacket& recvbuf)
 		}
 		catch(...)
 		{
-			LogLine l_line(g_gatelog);
-			l_line<<newln<<"Error exit!";
+			ToLogService("GateServer", "Error exit!");
 		}
 
 		l_ply->Free();
@@ -1050,10 +1023,7 @@ void ToClient::CM_BGNPLAY(DataSocket* datasock, RPacket& recvbuf)
 	l_ply->m_status = ClientConnection::Status::Playing;
 	l_game->m_plynum++;
 
-	LogLine l_line(g_gatelog);
-	l_line << newln << "client: " << datasock->GetPeerIP() << ":" << datasock->GetPeerPort() << "	BeginPlay entry map,Gate to["
-		<< l_game->m_datasock->GetPeerIP() << "]send EnterMap command,dbid:" << l_ply->m_dbid
-		<< uppercase << hex << ",Gate address:" << ToAddress(l_ply) << dec << nouppercase << endln;
+	ToLogService("GateServer", "client: {}:{}	BeginPlay entry map,Gate to[{}]send EnterMap command,dbid:{},Gate address:{:X}", datasock->GetPeerIP(), datasock->GetPeerPort(), l_game->m_datasock->GetPeerIP(), l_ply->m_dbid, ToAddress(l_ply));
 
 	l_game->EnterMap(l_ply, l_ply->m_loginID, l_ply->m_dbid, l_ply->m_worldid, l_map, -1, 0, 0, 0, l_ply->m_sGarnerWiner);
 }
@@ -1083,10 +1053,7 @@ void ToClient::CM_ENDPLAY(DataSocket* datasock, RPacket& recvbuf)
 				l_ply->m_status		= ClientConnection::Status::CharacterSelection;;						//
 				l_game->m_plynum	--;
 				
-				LogLine l_line(g_gatelog);
-				l_line<<newln<<"client: "<<datasock->GetPeerIP()<<":"<<datasock->GetPeerPort()<<"	GoOut map,Gate to["
-					<<l_game->m_datasock->GetPeerIP()<<"] send GoOutMap command,dbid:"<<l_ply->m_dbid
-					<< uppercase << hex << ",Gate address:" << ToAddress(l_ply) << ",Game address:" << l_ply->gm_addr << dec << nouppercase << endln;
+				ToLogService("GateServer", "client: {}:{}	GoOut map,Gate to[{}] send GoOutMap command,dbid:{},Gate address:{:X},Game address:{:X}", datasock->GetPeerIP(), datasock->GetPeerPort(), l_game->m_datasock->GetPeerIP(), l_ply->m_dbid, ToAddress(l_ply), (LONG)l_ply->gm_addr);
 
 				WPacket l_wpk	=WPacket(recvbuf).Duplicate();
 				l_wpk.WriteCmd(CMD_TM_GOOUTMAP);

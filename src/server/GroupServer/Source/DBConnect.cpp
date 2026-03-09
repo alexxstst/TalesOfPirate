@@ -12,22 +12,22 @@ using namespace std;
 SQLRETURN Exec_sql_direct(const char *pszSQL, cfl_rs *pTable)
 {
 	//LG("group_sql", "[%s], SQL[%s]\n", pTable->get_table(), pszSQL);
-	LG("group_sql", "Table [%s], begin execute SQL [%s]\n", pTable->get_table(), pszSQL);
+	ToLogService("group_sql", "Table [{}], begin execute SQL [{}]", pTable->get_table(), pszSQL);
 	SQLRETURN r = pTable->exec_sql_direct(pszSQL);
 	if(DBOK(r))
 	{
 		//LG("group_sql", "SQL!\n");
-		LG("group_sql", "execute SQL success!");
+		ToLogService("group_sql", "execute SQL success!");
 	}
 	else if(DBNODATA(r))
 	{
 		//LG("group_sql", "SQL, \n");
-		LG("group_sql", "execute SQL, no result \n");
+		ToLogService("group_sql", "execute SQL, no result");
 	}
 	else
 	{
 		//LG("group_sql", "SQL, !\n");
-		LG("group_sql", "execute SQL, failed!\n");
+		ToLogService("group_sql", "execute SQL, failed!");
 	}
 	return r;
 }
@@ -40,17 +40,15 @@ bool TBLAccounts::IsReady()
 	SQLRETURN l_ret =Exec_sql_direct(sql, this);
 	if(!DBOK(l_ret))
 	{
-		LogLine l_line(g_LogDB);
-		//l_line<<newln<<"SQL:"<<sql<<"";
-		l_line<<newln<<"SQL:"<<sql<<" execute failed !";
+			//l_line<<newln<<...;
+			ToLogService("Database", "SQL:{} execute failed !", sql);
 	}
 	strcpy(sql,"drop trigger [TR_I_Character]");
 	l_ret =Exec_sql_direct(sql, this);
 	if(!DBOK(l_ret))
 	{
-		LogLine l_line(g_LogDB);
-		//l_line<<newln<<"SQL:"<<sql<<"";
-		l_line<<newln<<"SQL:"<<sql<<" execute failed !";
+			//l_line<<newln<<...;
+			ToLogService("Database", "SQL:{} execute failed !", sql);
 	}
 	strcpy(sql,"CREATE TRIGGER TR_D_Character_Friends ON character \n\
 				FOR DELETE \n\
@@ -71,9 +69,8 @@ bool TBLAccounts::IsReady()
 	l_ret =Exec_sql_direct(sql, this);
 	if(!DBOK(l_ret))
 	{
-		LogLine l_line(g_LogDB);
-		//l_line<<newln<<"SQL:"<<sql<<"";
-		l_line<<newln<<"SQL:"<<sql<<" execute failed !";
+			//l_line<<newln<<...;
+			ToLogService("Database", "SQL:{} execute failed !", sql);
 		return false;
 	}
 	strcpy(sql,"CREATE TRIGGER TR_I_Character ON character\n\
@@ -88,8 +85,7 @@ bool TBLAccounts::IsReady()
 	l_ret =Exec_sql_direct(sql, this);
 	if(!DBOK(l_ret))
 	{
-		LogLine l_line(g_LogDB);
-		l_line<<newln<<"SQL:"<<sql<<" execute failed !";
+		ToLogService("Database", "SQL:{} execute failed !", sql);
 		return false;
 	}
 	return true;
@@ -410,7 +406,7 @@ int TBLCharacters::FetchChaIDByCharName(cChar* atorNome)
 	}
 	catch (...)
 	{
-		LG("group_sql", "TBLCharacters::FetchChaIDByCharName execute SQL, failed!,atorID =%s\n", atorNome);
+		ToLogService("group_sql", "TBLCharacters::FetchChaIDByCharName execute SQL, failed!,atorID ={}", atorNome);
 	}
 	return 0;
 }
@@ -431,7 +427,7 @@ int TBLCharacters::FetchActIDByCharName(cChar* atorNome)
 	}
 	catch (...)
 	{
-		LG("group_sql", "TBLCharacters::FetchActIDByCharName execute SQL, failed!,atorID =%s\n", atorNome);
+		ToLogService("group_sql", "TBLCharacters::FetchActIDByCharName execute SQL, failed!,atorID ={}", atorNome);
 	}
 	return 0;
 }
@@ -462,7 +458,7 @@ int TBLCharacters::FetchRowByChaID(int atorID)
 	}catch(...)
 	{
 		//LG("group_sql", "TBLCharacters::FetchRowByChaIDSQL, !,atorID =%d\n", atorID);
-		LG("group_sql", "TBLCharacters::FetchRowByChaID execute SQL, failed!,atorID =%d\n", atorID);
+		ToLogService("group_sql", "TBLCharacters::FetchRowByChaID execute SQL, failed!,atorID ={}", atorID);
 	}
 	_tbl_name	=l_tblname;
 	if(l_bret)
@@ -508,7 +504,7 @@ bool TBLCharacters::BackupRow(int atorID)
 				if( !DBOK(l_sqlret) )
 				{
 					//LG( "", "1>Reject:sql.ret = ", l_sqlret );
-					LG( "GuildSystem", "1>Reject:delete chaupdate guild count failed! database sql failed .ret = ", l_sqlret );
+		ToLogService("GuildSystem", "1>Reject:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 					return false;
 				}
 				else
@@ -516,7 +512,7 @@ bool TBLCharacters::BackupRow(int atorID)
 					if(get_affected_rows() !=1)
 					{
 						//LG( "", "2>Reject:sql.ret = ", l_sqlret );
-					LG( "GuildSystem", "2>Reject:delete chaupdate guild count failed! database sql failed .ret = ", l_sqlret );
+		ToLogService("GuildSystem", "2>Reject:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 						return false;
 
 					}
@@ -533,7 +529,7 @@ bool TBLCharacters::BackupRow(int atorID)
 				if( !DBOK(l_sqlret) )
 				{
 					//LG( "", "1>BackupRow:sql.ret = ", l_sqlret );
-					LG( "GuildSystem", "1>BackupRow:delete chaupdate guild count failed! database sql failed .ret = ", l_sqlret );
+		ToLogService("GuildSystem", "1>BackupRow:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 					return false;
 				}
 				else
@@ -541,7 +537,7 @@ bool TBLCharacters::BackupRow(int atorID)
 					if(get_affected_rows() !=1)
 					{
 						//LG( "", "2>BackupRow:sql.ret = ", l_sqlret );
-						LG( "GuildSystem", "2>BackupRow:delete chaupdate guild count failed! database sql failed .ret = ", l_sqlret );
+		ToLogService("GuildSystem", "2>BackupRow:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 						return false;
 					}
 					else
@@ -554,7 +550,7 @@ bool TBLCharacters::BackupRow(int atorID)
 	}else
 	{
 		//LG( "", "BackupRow:sql.atorID = ", atorID );
-		LG( "GuildSystem", "BackupRow:delete chaget guild info failed! database sql failed.atorID = ", atorID );
+		ToLogService("GuildSystem", "BackupRow:delete chaget guild info failed! database sql failed.atorID = {}", atorID);
 		return false;
 	}
 
@@ -818,8 +814,7 @@ bool TBLMaster::InitMasterRelation(map<uLong, uLong> &mapMasterRelation)
 	}
 	catch (...)
 	{
-		LogLine	l_line(g_LogMaster);
-		l_line<<newln<<"Unknown Exception raised when InitMasterRelation()";
+		ToLogService("Master", "Unknown Exception raised when InitMasterRelation()");
 	}
 
 	if (hstmt != SQL_NULL_HSTMT)
@@ -920,8 +915,7 @@ bool TBLMaster::GetMasterData(master_dat* farray, int& array_num, unsigned int a
 	}
 	catch (...)
 	{
-		LogLine	l_line(g_LogMaster);
-		l_line<<newln<<"Unknown Exception raised when GetMasterData()";
+		ToLogService("Master", "Unknown Exception raised when GetMasterData()");
 	}
 
 	if (hstmt != SQL_NULL_HSTMT)
@@ -1024,8 +1018,7 @@ bool TBLMaster::GetPrenticeData(master_dat* farray, int& array_num, unsigned int
 	}
 	catch (...)
 	{
-		LogLine	l_line(g_LogMaster);
-		l_line<<newln<<"Unknown Exception raised when GetPrenticeData()";
+		ToLogService("Master", "Unknown Exception raised when GetPrenticeData()");
 	}
 
 	if (hstmt != SQL_NULL_HSTMT)
@@ -1084,15 +1077,13 @@ bool TBLGuilds::Disband(uLong gldid)
 	{
 		if(DBNODATA(l_sqlret))
 		{
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<"SQL2ID:"<<gldid;
-			l_line<<newln<<"dismiss guild SQL failed2! guild ID:"<<gldid;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "dismiss guild SQL failed2! guild ID:{}", gldid);
 			return false;
 		}else
 		{
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<"SQL1ID:"<<gldid;
-			l_line<<newln<<"dismiss guild SQL failed1! guild ID:"<<gldid;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "dismiss guild SQL failed1! guild ID:{}", gldid);
 			return false;	//SQL
 		}
 	}
@@ -1102,9 +1093,8 @@ bool TBLGuilds::Disband(uLong gldid)
 	l_sqlret =Exec_sql_direct(sql, this);
 	if(!DBOK(l_sqlret))
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"SQL3ID:"<<gldid;
-		l_line<<newln<<"dismiss guild SQL failed3! guild ID:"<<gldid;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "dismiss guild SQL failed3! guild ID:{}", gldid);
 		return false;	//SQL
 	}
 
@@ -1193,13 +1183,11 @@ bool TBLGuilds::InitAllGuilds(char disband_days)
 		l_ret = true;
 	}catch(int&e)
 	{
-		LogLine	l_line(g_LogGuild);
-		//l_line<<newln<<"ODBC InitAllGuilds()"<<e;
-		l_line<<newln<<"init guild ODBC interface failed, InitAllGuilds() error:"<<e;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "init guild ODBC interface failed, InitAllGuilds() error:{}", e);
 	}catch (...)
 	{
-		LogLine	l_line(g_LogGuild);
-		l_line<<newln<<"Unknown Exception raised when InitAllGuilds()";
+		ToLogService("Guild", "Unknown Exception raised when InitAllGuilds()");
 	}
 
 	if (hstmt != SQL_NULL_HSTMT)
@@ -1377,24 +1365,19 @@ bool TBLGuilds::InitGuildMember(Player *ply,uLong chaid,uLong gldid,int mode)
 				l_toSelf.WriteChar((f_row -1)%20);
 				g_gpsvr->SendToClient(ply,l_toSelf);
 			}
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<""<<l_plynum<<endln;
-			l_line<<newln<<"online guild num:"<<l_plynum<<endln;
+	//l_line<<newln<<...;
+	ToLogService("Guild", "online guild num:{}", l_plynum);
 			g_gpsvr->SendToClient(l_plylst,l_plynum,l_toGuild);
 
 			SQLFreeStmt(hstmt, SQL_UNBIND);
 			l_ret = true;
 		}catch(int&e)
 		{
-			LogLine	l_line(g_LogGuild);
-			//l_line<<newln<<"ODBC InitGuildMember()"<<e;
-			l_line<<newln<<"init guild ODBC interface failed, InitGuildMember() error:"<<e;
-
-			l_line<<newln<<sql;
+		//l_line<<newln<<...;
+		ToLogService("Guild", "init guild ODBC interface failed, InitGuildMember() error:{} sql:{}", e, sql);
 		}catch (...)
 		{
-			LogLine	l_line(g_LogGuild);
-			l_line<<newln<<"Unknown Exception raised when InitGuildMember()";
+		ToLogService("Guild", "Unknown Exception raised when InitGuildMember()");
 		}
 
 		if (hstmt != SQL_NULL_HSTMT)
@@ -1464,13 +1447,11 @@ bool TBLParam::InitParam(void)
 		SQLFreeStmt(hstmt, SQL_UNBIND);	}
 	catch(int&e)
 	{
-		LogLine	l_line(g_LogGarner2);
-		//l_line<<newln<<"ODBC InitParam()"<<e;
-		l_line<<newln<<"init guild ODBC interface failed, InitParam() error:"<<e;
+		//l_line<<newln<<...;
+		ToLogService("Garner2", "init guild ODBC interface failed, InitParam() error:{}", e);
 	}catch (...)
 	{
-		LogLine	l_line(g_LogGarner2);
-		l_line<<newln<<"Unknown Exception raised when InitParam()";
+		ToLogService("Garner2", "Unknown Exception raised when InitParam()");
 	}
 
 	char buff[255];
@@ -1502,9 +1483,8 @@ bool TBLParam::InitParam(void)
 			{
 				if(sqlret == SQL_NO_DATA)
 				{
-					LogLine	l_line(g_LogGarner2);
-					//l_line<<newln<<"ID"<<m_nOrder[n].nid;
-					l_line<<newln<<"cha name query failed .cha ID"<<m_nOrder[n].nid;
+		//l_line<<newln<<...;
+		ToLogService("Garner2", "cha name query failed .cha ID{}", m_nOrder[n].nid);
 					continue;
 
 				}
@@ -1514,9 +1494,8 @@ bool TBLParam::InitParam(void)
 				}
 				if(buf_len[0] >20 )
 				{
-					LogLine	l_line(g_LogGarner2);
-					//l_line<<newln<<"";
-					l_line<<newln<<"cha name query failed.";
+		//l_line<<newln<<...;
+		ToLogService("Garner2", "cha name query failed.");
 					return false;
 				}
 				memcpy(m_nOrder[n].strname,_buf[0],buf_len[0]);
@@ -1532,13 +1511,11 @@ bool TBLParam::InitParam(void)
 	}
 	catch(int&e)
 	{
-		LogLine	l_line(g_LogGarner2);
-		//l_line<<newln<<"ODBC InitParam()"<<e;
-		l_line<<newln<<"init guild ODBC interface failed, InitParam() erro :"<<e;
+		//l_line<<newln<<...;
+		ToLogService("Garner2", "init guild ODBC interface failed, InitParam() erro :{}", e);
 	}catch (...)
 	{
-		LogLine	l_line(g_LogGarner2);
-		l_line<<newln<<"Unknown Exception raised when InitParam()";
+		ToLogService("Garner2", "Unknown Exception raised when InitParam()");
 	}
 	return true;
 }
@@ -1551,7 +1528,7 @@ bool TBLParam::SaveParam(void)
 	sqlret = _db->exec_sql_direct(buff);
 	if(sqlret != SQL_SUCCESS)
 	{
-		LG("ParamErr","Save Param Error SQL = %s",buff);
+		ToLogService("ParamErr", "Save Param Error SQL = {}", buff);
 	}
 	return true;
 }
@@ -1637,9 +1614,8 @@ void TBLParam::UpdateOrder(ORDERINFO &Order)
 					break;
 				}
 			}
-			LogLine	l_line(g_LogGarner2);			
-			//l_line<<newln<<"";
-			l_line<<newln<<"order chaned";
+		//l_line<<newln<<...;
+		ToLogService("Garner2", "order chaned");
 			break;
 		}
 	}

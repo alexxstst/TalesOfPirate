@@ -24,7 +24,7 @@ namespace GUI
 		frmQuestion = CFormMgr::s_Mgr.Find("frmQuestion");
 		if(! frmQuestion)
 		{
-			LG("gui", "main.clu   frmQuestion not found.\n");
+			ToLogService("gui", "main.clu   frmQuestion not found.");
 			return false;
 		}
 		frmQuestion->evtEntrustMouseEvent = _evtQuestionFormEvent;
@@ -32,7 +32,7 @@ namespace GUI
 		edtQuestionTitle = dynamic_cast<CEdit*>(frmQuestion->Find("edtQuestionTitle"));
 		if(! edtQuestionTitle)
 		{
-			LG("gui", "main.clu   frmQuestion:edtQuestionTitle not found.\n");
+			ToLogService("gui", "main.clu   frmQuestion:edtQuestionTitle not found.");
 			return false;
 		}
 		edtQuestionTitle->SetIsWrap(true);
@@ -40,7 +40,7 @@ namespace GUI
 		memCentent = dynamic_cast<CMemo*>(frmQuestion->Find("memCentent"));
 		if(! memCentent)
 		{
-			LG("gui", "main.clu   frmQuestion:memCentent not found.\n");
+			ToLogService("gui", "main.clu   frmQuestion:memCentent not found.");
 			return false;
 		}
 
@@ -48,14 +48,14 @@ namespace GUI
 		frmAnswer = CFormMgr::s_Mgr.Find("frmAnswer");
 		if(! frmAnswer)
 		{
-			LG("gui", "main.clu   frmAnswer not found.\n");
+			ToLogService("gui", "main.clu   frmAnswer not found.");
 			return false;
 		}
 
 		memMiss = dynamic_cast<CMemo*>(frmAnswer->Find("memMiss"));
 		if(! memMiss)
 		{
-			LG("gui", "main.clu   frmAnswer:memMiss not found.\n");
+			ToLogService("gui", "main.clu   frmAnswer:memMiss not found.");
 			return false;
 		}
 

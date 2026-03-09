@@ -1565,7 +1565,7 @@ bool CMPFont::Draw3DText(const std::string& szText,D3DXVECTOR3& vPos, D3DXCOLOR 
 		sx+=offset;
 #ifdef USE_RENDER
 		if(LW_FAILED(_pVB->DrawSubset(0)))
-			LG("error","msgCMPFont draw");
+			ToLogService("error", "msgCMPFont draw");
 #else
 		_pDev->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 );
 #endif

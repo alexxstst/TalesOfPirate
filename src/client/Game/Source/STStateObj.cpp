@@ -33,9 +33,9 @@ void CActionState::Cancel()
 		sprintf( buf, "state-%s", GetActor()->GetCha()->getName() );
 
 		if( _pParent )
-			LG( buf, "  \t%s-cancel, Tick:%d\n", GetExplain(), GetTickCount() );
-		else 
-			LG( buf, "  %s-cancel, Tick:%d\n", GetExplain(), GetTickCount() );
+			ToLogService(buf, "  \t{}-cancel, Tick:{}", GetExplain(), GetTickCount());
+		else
+			ToLogService(buf, "  {}-cancel, Tick:{}", GetExplain(), GetTickCount());
 	}
 #endif
 }
@@ -57,9 +57,9 @@ void CActionState::End()
 		sprintf( buf, "state-%s", GetActor()->GetCha()->getName() );
 
 		if( _pParent )
-			LG( buf, "\t%s-end, Tick:%d\n", GetExplain(), GetTickCount() );
-		else 
-			LG( buf, "%s-end, Tick:%d\n\n", GetExplain(), GetTickCount() );
+			ToLogService(buf, "\t{}-end, Tick:{}", GetExplain(), GetTickCount());
+		else
+			ToLogService(buf, "{}-end, Tick:{}\n", GetExplain(), GetTickCount());
 	}
 #endif
 }
@@ -82,9 +82,9 @@ void CActionState::Start()
     {
         sprintf( buf, "state-%s", GetActor()->GetCha()->getName() );
         if( _pParent )
-            LG( buf, "\t%s-start, Tick:%d\n", GetExplain(), GetTickCount() );
-        else 
-            LG( buf, "%s-start, Tick:%d\n", GetExplain(), GetTickCount() );
+            ToLogService(buf, "\t{}-start, Tick:{}", GetExplain(), GetTickCount());
+        else
+            ToLogService(buf, "{}-start, Tick:{}", GetExplain(), GetTickCount());
     }
 #endif
 
@@ -97,9 +97,9 @@ void CActionState::Start()
 		if( isMain )	
 		{
 			if( _pParent )
-				LG( buf, "\t%s-Not Start, Tick:%d\n", GetExplain(), GetTickCount() );
-			else 
-				LG( buf, "%s-Not Start, Tick:%d\n", GetExplain(), GetTickCount() );
+				ToLogService(buf, "\t{}-Not Start, Tick:{}", GetExplain(), GetTickCount());
+			else
+				ToLogService(buf, "{}-Not Start, Tick:{}", GetExplain(), GetTickCount());
 			return;
 		}
 	}

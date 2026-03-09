@@ -1,6 +1,6 @@
 ﻿#include "DataSocket.h"
 #include "PacketQueue.h"
-#include "LogStream.h"
+#include <logutil.h>
 
 _DBC_USING
 
@@ -79,15 +79,13 @@ WPacket	PKQueue::SyncPK(DataSocket *datasock,RPacket &in_para,uLong ulMillisecon
 		{
 			if(l_item->m_iscall !=2)
 			{
-				LogLine l_line(g_dbclog);
-				l_line<<newln<<"PKQueue::SyncPK:[volatile char	m_iscall]";
+				ToLogService("network", "PKQueue::SyncPK:[volatile char m_iscall]");
 			}
 			m_mut.unlock();
 			WPacket	l_retpk	=l_item->m_retpk;
 			if(l_retpk.HasData()==0)
 			{
-				LogLine l_line(g_dbclog);
-				l_line<<newln<<"PKQueue::SyncPK ";
+				ToLogService("network", "на PKQueue::SyncPK");
 			}
 			l_item->Free();
 			return l_retpk;
@@ -95,14 +93,12 @@ WPacket	PKQueue::SyncPK(DataSocket *datasock,RPacket &in_para,uLong ulMillisecon
 		{
 			l_item->m_iscall	=2;
 			m_mut.unlock();
-			LogLine l_line(g_dbclog);
-			l_line <<newln<<"PKQueue::SyncPK :"<<ulMilliseconds<<"ms";
+			ToLogService("network", "PKQueue::SyncPK :{}ms", ulMilliseconds);
 			return 0;
 		}
 	}else
 	{
-		LogLine l_line(g_dbclog);
-		l_line <<newln<<"PKQueue::SyncPK ():"<<l_tick<<"ms";
+		ToLogService("network", "PKQueue::SyncPK ():{}ms", l_tick);
 		return 0;
 	}
 }
@@ -190,9 +186,7 @@ void PKQueue::PeekPacket(uLong sleep)
 					l_item->m_retpk	=ServeCall(l_item->m_datasock,l_item->m_inpk);
 				}catch(...)
 				{
-					LogLine l_line(g_dbclog);
-					l_line<<newln<<"PKQueue::PeekPacket ";
-					l_line<<endln;
+					ToLogService("network", "PKQueue::PeekPacket");
 					auto const l = std::lock_guard{m_mut};
 					if(l_item->m_iscall	==1)
 					{

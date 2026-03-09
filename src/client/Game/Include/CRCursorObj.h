@@ -25,8 +25,6 @@ public:
 	virtual void SetRadius( unsigned int r ){}
 	virtual void SetIsShow(bool bShow){}
 
-private:
-
 };
 
 class CursorMgr

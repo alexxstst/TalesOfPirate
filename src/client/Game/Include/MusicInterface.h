@@ -5,36 +5,72 @@
 
 #include "SoundCommon.h"
 
-class MusicInterface
-{
-public:		
-
+class MusicInterface {
 public:
-	MusicInterface() {}
-	virtual ~MusicInterface() {}
+	MusicInterface() {
+	}
 
-	virtual bool	LoadMusic(int theSongId, const std::string& theFileName) { return false; }
-	virtual void	PlayMusic(int theSongId, int theOffset = 0, bool noLoop = false) {}
-	virtual void	StopMusic(int theSongId) {}
-	virtual void	PauseMusic(int theSongId) {}
-	virtual void	ResumeMusic(int theSongId) {}
-	virtual void	StopAllMusic(){}	
+	virtual ~MusicInterface() {
+	}
 
-	virtual void	UnloadMusic(int theSongId) {}
-	virtual void	UnloadAllMusic(){}
-	virtual void	PauseAllMusic() {}
-	virtual void	ResumeAllMusic(){}
-	
-	virtual void	FadeIn(int theSongId, int theOffset = -1, double theSpeed = 0.002, bool noLoop = false){}
-	virtual void	FadeOut(int theSongId, bool stopSong = true, double theSpeed = 0.004){}
-	virtual void	FadeOutAll(bool stopSong = true, double theSpeed = 0.004){}
-	virtual void	SetSongVolume(int theSongId, double theVolume){}
-	virtual void	SetSongMaxVolume(int theSongId, double theMaxVolume){}
-	virtual bool	IsPlaying(int theSongId){ return false; }
-	
-	virtual void	SetVolume(double theVolume){}
-	virtual void	SetMusicAmplify(int theSongId, double theAmp){}
-	virtual void	Update(){}
+	virtual bool LoadMusic(int theSongId, const std::string& theFileName) {
+		return false;
+	}
+
+	virtual void PlayMusic(int theSongId, int theOffset = 0, bool noLoop = false) {
+	}
+
+	virtual void StopMusic(int theSongId) {
+	}
+
+	virtual void PauseMusic(int theSongId) {
+	}
+
+	virtual void ResumeMusic(int theSongId) {
+	}
+
+	virtual void StopAllMusic() {
+	}
+
+	virtual void UnloadMusic(int theSongId) {
+	}
+
+	virtual void UnloadAllMusic() {
+	}
+
+	virtual void PauseAllMusic() {
+	}
+
+	virtual void ResumeAllMusic() {
+	}
+
+	virtual void FadeIn(int theSongId, int theOffset = -1, double theSpeed = 0.002, bool noLoop = false) {
+	}
+
+	virtual void FadeOut(int theSongId, bool stopSong = true, double theSpeed = 0.004) {
+	}
+
+	virtual void FadeOutAll(bool stopSong = true, double theSpeed = 0.004) {
+	}
+
+	virtual void SetSongVolume(int theSongId, double theVolume) {
+	}
+
+	virtual void SetSongMaxVolume(int theSongId, double theMaxVolume) {
+	}
+
+	virtual bool IsPlaying(int theSongId) {
+		return false;
+	}
+
+	virtual void SetVolume(double theVolume) {
+	}
+
+	virtual void SetMusicAmplify(int theSongId, double theAmp) {
+	}
+
+	virtual void Update() {
+	}
 };
 
 #endif //__MUSICINTERFACE_H__

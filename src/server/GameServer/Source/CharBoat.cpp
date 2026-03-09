@@ -14,24 +14,24 @@ mission::CCharBoat g_CharBoat;
 namespace mission
 {	
 	CCharBoat::CCharBoat()
-	{T_B
+	{
 		m_pShipSet = NULL;
 		m_pShipPartSet = NULL;
-	T_E}
+	}
 
 	CCharBoat::~CCharBoat()
-	{T_B
+	{
 		Clear();
-	T_E}
+	}
 	
 	void CCharBoat::Clear()
-	{T_B
+	{
 		SAFE_DELETE( m_pShipSet );
 		SAFE_DELETE( m_pShipPartSet );
-	T_E}
+	}
 
 	BOOL CCharBoat::Load( const char szBoat[], const char szPart[] )
-	{T_B
+	{
 		
 		extern BOOL LoadTable(CRawDataSet *pTable, const char*);
 		m_pShipSet = new xShipSet( 1, 400 );
@@ -49,21 +49,21 @@ namespace mission
 		}
 
 		return TRUE;
-	T_E}
+	}
 
 	void CCharBoat::UpdateBoat( const BOAT_DATA& Data )
-	{T_B
+	{
 		
-	T_E}
+	}
 
 	void CCharBoat::GetBerthName( USHORT sBerthID, char szBerth[], USHORT sLen )
-	{T_B
+	{
 		// NPC
 		lua_getglobal( g_pLuaState, "GetBerthData" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "GetBerthData" );
+			ToLogService( "lua_invalidfunc", "{}", "GetBerthData" );
 			return;
 		}
 
@@ -83,10 +83,10 @@ namespace mission
 		{
 			strncpy( szBerth, pszName, sLen );
 		}
-	T_E}
+	}
 
 	BOOL CCharBoat::BoatLimit( CCharacter& owner, USHORT sBoatID )
-	{T_B
+	{
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
 		if( pInfo == NULL ) 
 		{
@@ -136,15 +136,15 @@ namespace mission
 		}
 
 		return bRet;
-	T_E}
+	}
 
 	BOOL CCharBoat::SetPartData( CCharacter& boat, USHORT sTypeID, const BOAT_DATA& AttrInfo )
-	{T_B
+	{
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoat );
 		if( pInfo == NULL ) 
 		{
 			//LG( "boat_error", "ID[%d]!", AttrInfo.sBoat );
-			LG( "boat_error", "set boat surface informationg,error information of boat  ID[%d]!", AttrInfo.sBoat );
+			ToLogService( "boat_error", "set boat surface informationg,error information of boat  ID[{}]!", AttrInfo.sBoat );
 			return FALSE;
 		}
 
@@ -153,7 +153,7 @@ namespace mission
 		if( pData == NULL ) 
 		{
 			//LG( "boat_error", "ID[%d]!", pInfo->sBody );
-			LG( "boat_error", "set boat surface informationg,error information of boat  ID[%d]!", pInfo->sBody );
+			ToLogService( "boat_error", "set boat surface informationg,error information of boat  ID[{}]!", pInfo->sBody );
 			return FALSE;
 		}
 
@@ -170,10 +170,10 @@ namespace mission
 		BoatPart.sTypeID = sTypeID;
 		boat.SetBoatLook( BoatPart );
 		return TRUE;		
-	T_E}
+	}
 
 	BOOL CCharBoat::SyncAttr( CCharacter& owner, DWORD dwBoatID, USHORT sCmd, USHORT sBerthID, const BOAT_SYNC_ATTR& AttrInfo )
-	{T_B
+	{
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoatID );
 		if( pInfo == NULL ) 
 		{
@@ -385,10 +385,10 @@ namespace mission
 
 		owner.ReflectINFof( &owner, packet );
 		return TRUE;
-	T_E}
+	}
 
 	void CCharBoat::Cancel( CCharacter& owner )
-	{T_B
+	{
 		CCharacter* pBoat = owner.GetBoat();
 		if( pBoat )
 		{
@@ -397,10 +397,10 @@ namespace mission
 			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00003) );
 		}
-	T_E}
+	}
 
 	BOOL CCharBoat::Create( CCharacter& owner, USHORT sBoatID, USHORT sBerthID )
-	{T_B
+	{
 		if( owner.GetPlayer()->IsLuanchOut() )
 		{
 			//owner.SystemNotice( "," );
@@ -510,7 +510,7 @@ namespace mission
 			return FALSE;
 		}
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharBoat::GetBoatInfo( CCharacter& owner, DWORD dwBoatID )
 	{
@@ -571,7 +571,7 @@ namespace mission
 	}
 
 	BOOL CCharBoat::Update( CCharacter& owner, RPACKET& packet )
-	{T_B
+	{
 		CCharacter* pBoat = owner.GetBoat();
 		if( !pBoat ) 
 		{
@@ -674,10 +674,10 @@ namespace mission
 		AttrInfo.sBoatID = sBoatID;
 
 		return SyncAttr( owner, 0, CMD_MC_UPDATEBOAT, sBerthID, AttrInfo );
-	T_E}
+	}
 
 	BOOL CCharBoat::MakeBoat( CCharacter& owner, RPACKET& packet )
-	{T_B
+	{
 		if( owner.GetPlayer()->IsLuanchOut() )
 		{
 			//owner.SystemNotice( "," );
@@ -792,7 +792,7 @@ namespace mission
 			//owner.SystemNotice( "%s", owner.GetName() );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00022), owner.GetName() );
 			//LG( "boat_error", "%s", owner.GetName() );
-			LG( "boat_error", "character%s pass unlawful character pointer", owner.GetName() );
+			ToLogService( "boat_error", "character{} pass unlawful character pointer", owner.GetName() );
 			return FALSE;			
 		}
 
@@ -1022,7 +1022,7 @@ namespace mission
 			//owner.SystemNotice( "%s%s", owner.GetName(), pBoat->GetName() );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00031), owner.GetName(), pBoat->GetName() );
 			//LG( "boat_error", "%s%s", owner.GetName(), pBoat->GetName() ); 
-			LG( "boat_error", "character%s boat %s temporary data memory failed", owner.GetName(), pBoat->GetName() ); 
+			ToLogService( "boat_error", "character{} boat {} temporary data memory failed", owner.GetName(), pBoat->GetName() ); 
 		}
 
 		if( !pPlayer->AddBoat( *pBoat ) )
@@ -1038,17 +1038,13 @@ namespace mission
 
 		// 
 		owner.SetBoat( NULL );
-		
-		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", pBoat->GetName(), pBoat->GetID());
-		pBoat->m_CLog.SetLogName(szLogName);
-		pBoat->m_CLog.SetEnable(g_bLogEntity);
+
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharBoat::SetBoatAttr( CCharacter& owner, CCharacter& boat, const xShipInfo& ShipInfo, const BOAT_DATA& Data, bool bFromFile, bool bLoadState )
-	{T_B
+	{
 		// 
 		xShipAttrInfo Info;
 		memset( &Info, 0, sizeof(xShipAttrInfo) );
@@ -1089,14 +1085,14 @@ namespace mission
 		if( boat.getAttr( ATTR_HP ) < 0 )
 		{
 			//LG( "boatattr_error", "SetBoatAttr:HPHP = %d", boat.getAttr( ATTR_HP ) );
-			LG( "boatattr_error", "SetBoatAttr: boat currently HP value errorautomatism resumeHP = %d", boat.getAttr( ATTR_HP ) );
+			ToLogService( "boatattr_error", "SetBoatAttr: boat currently HP value errorautomatism resumeHP = {}", boat.getAttr( ATTR_HP ) );
 			boat.setAttr( ATTR_HP, 1 );
 		}
 
 		if( boat.getAttr( ATTR_SP ) < 0 )
 		{
 			//LG( "boatattr_error", "SetBoatAttr:SPSP = %d", boat.getAttr( ATTR_SP ) );
-			LG( "boatattr_error", "SetBoatAttr: boat currently SP value errorautomatism resumeSP = %d", boat.getAttr( ATTR_SP ) );
+			ToLogService( "boatattr_error", "SetBoatAttr: boat currently SP value errorautomatism resumeSP = {}", boat.getAttr( ATTR_SP ) );
 			boat.setAttr( ATTR_SP, 1 );
 		}
 
@@ -1104,7 +1100,7 @@ namespace mission
 		{
 			/*LG( "boatattr_error", "SetBoatAttr:HPSPMXHP = %d, MXSP = %d", 
 				boat.getAttr( ATTR_BMXHP ), boat.getAttr( ATTR_BMXSP ) );*/
-			LG( "boatattr_error", "SetBoatAttr: boat max HP or SP value errorautomatismMXHP = %d, MXSP = %d", 
+			ToLogService( "boatattr_error", "SetBoatAttr: boat max HP or SP value errorautomatismMXHP = {}, MXSP = {}", 
 				boat.getAttr( ATTR_BMXHP ), boat.getAttr( ATTR_BMXSP ) );
 			boat.setAttr( ATTR_BMXSP, Info.dwMaxSupply );
 			boat.setAttr( ATTR_BMXHP, Info.dwMaxEndure );
@@ -1129,11 +1125,11 @@ namespace mission
 		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, &owner, &boat, DOSTRING_PARAM_END );
 
 		return TRUE;
-	T_E}
+	}
 
 	// chType01
 	BOOL CCharBoat::LoadBoat( CCharacter& owner, char chType )
-	{T_B
+	{
 		USHORT sNum = owner.m_CKitbag.GetUseGridNum();
 		SItemGrid	*pGridCont;
 		for( int i = 0; i < sNum; i++ )
@@ -1165,15 +1161,15 @@ namespace mission
 			}
 		}
 		return TRUE;
-	T_E}
+	}
 	
 	CCharacter* CCharBoat::SummonBoat( USHORT sBoatID )
-	{T_B
+	{
 		CCharacter* pBoat = g_pGameApp->GetNewCharacter();
 		if( pBoat == NULL )
 		{
 			//LG( "monsterboat_error", "!" );
-			LG( "monsterboat_error", "when character online,loading boat and assign memory failed " );
+			ToLogService( "monsterboat_error", "when character online,loading boat and assign memory failed " );
 			return FALSE;
 		}
 
@@ -1190,7 +1186,7 @@ namespace mission
 		if( pInfo == NULL ) 
 		{
 			//LG( "monsterboat_error", "ID[%d]!", Info.sBoat );
-			LG( "monsterboat_error", "craete boat failed , error information of boat ID[%d]!", Info.sBoat );
+			ToLogService( "monsterboat_error", "craete boat failed , error information of boat ID[{}]!", Info.sBoat );
 			return FALSE;
 		}
 		pBoat->SetName( pInfo->szName );
@@ -1229,14 +1225,14 @@ namespace mission
 		if( pRec == NULL )
 		{
 			//LG( "monsterboat_error", "ID[%d]", pInfo->sCharID );
-			LG( "monsterboat_error", "create boatcannot get efficiency attribute informationID[%d]", pInfo->sCharID );
+			ToLogService( "monsterboat_error", "create boatcannot get efficiency attribute informationID[{}]", pInfo->sCharID );
 			pBoat->Free();
 			return FALSE;
 		}
 		pBoat->m_pCChaRecord = pRec;		
 
 		//LG( "monsterboat_init", "%s", pBoat->GetName() );
-		LG( "monsterboat_init", "succeed loading boat%s", pBoat->GetName() );
+		ToLogService( "monsterboat_init", "succeed loading boat{}", pBoat->GetName() );
 
 		// 
 		xShipAttrInfo Data;
@@ -1284,18 +1280,18 @@ namespace mission
 		pBoat->setAttr( ATTR_BASPD, Data.dwAttackTime );
 	
 		return NULL;
-	T_E}
+	}
 
 	// chType012
 	BOOL CCharBoat::CreateBoat( CCharacter& owner, DWORD dwBoatID, char chType )
-	{T_B
+	{
 		CCharacter* pBoat = g_pGameApp->GetNewCharacter();
 		if( pBoat == NULL )
 		{
 			//owner.SystemNotice( "!" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00034) );
 			//LG( "boat_error", "%sID[%d]!", owner.GetName(), dwBoatID );
-			LG( "boat_error", "character %s go up loading boat and assign boatID[%d]memory failed!", owner.GetName(), dwBoatID );
+			ToLogService( "boat_error", "character {} go up loading boat and assign boatID[{}]memory failed!", owner.GetName(), dwBoatID );
 			return FALSE;
 		}
 		pBoat->setAttr( ATTR_BOAT_DBID, dwBoatID );
@@ -1307,7 +1303,7 @@ namespace mission
 			//owner.SystemNotice( "%sID[%d]", owner.GetName(), dwBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00035), owner.GetName(), dwBoatID );
 			//LG( "boat_error", "%sID[%d]\n", owner.GetName(), dwBoatID );
-			LG( "boat_error", "get character %s boat ID[%d]DB data failed\n", owner.GetName(), dwBoatID );
+			ToLogService( "boat_error", "get character {} boat ID[{}]DB data failed", owner.GetName(), dwBoatID );
 			return FALSE;
 		}
 
@@ -1329,7 +1325,7 @@ namespace mission
 			/*owner.SystemNotice( "ID[%d]!", Info.sBoat );
 			LG( "boat_error", "ID[%d]!", Info.sBoat );*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00010), Info.sBoat );
-			LG( "boat_error", "create boat failederror information of boat ID[%d]!", Info.sBoat );
+			ToLogService( "boat_error", "create boat failederror information of boat ID[{}]!", Info.sBoat );
 			return FALSE;
 		}
 
@@ -1342,7 +1338,7 @@ namespace mission
 			/*owner.SystemNotice( "ID[%d]", pInfo->sCharID );
 			LG( "boat_error", "ID[%d]", pInfo->sCharID );*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00028), pInfo->sCharID );
-			LG( "boat_error", "create boat,cannot get efficiency attribute informationID[%d]", pInfo->sCharID );
+			ToLogService( "boat_error", "create boat,cannot get efficiency attribute informationID[{}]", pInfo->sCharID );
 			return FALSE;
 		}
 		pBoat->m_pCChaRecord = pRec;
@@ -1359,7 +1355,7 @@ namespace mission
 			/*owner.SystemNotice( "!ID[%d]", Info.sBoat );
 			LG( "boat_error", "!ID[%d]", Info.sBoat );*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00029), Info.sBoat );
-			LG( "boat_error", "create boat failed,set boat surface data failed!ID[%d]", Info.sBoat );
+			ToLogService( "boat_error", "create boat failed,set boat surface data failed!ID[{}]", Info.sBoat );
 			return FALSE;
 		}
 
@@ -1375,7 +1371,7 @@ namespace mission
 			LG( "boat_error", "%s,%sID[%d]player", 
 				owner.GetName(), pBoat->GetName(), dwBoatID );*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00030) );
-			LG( "boat_error", "set character %s boat attribute failed,boat%sID[%d] to character player data information failed", 
+			ToLogService( "boat_error", "set character {} boat attribute failed,boat{}ID[{}] to character player data information failed", 
 				owner.GetName(), pBoat->GetName(), dwBoatID );
 			return FALSE;
 		}
@@ -1389,7 +1385,7 @@ namespace mission
 				pBoat->GetName(), dwBoatID, owner.GetName() );*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00036), 
 				pBoat->GetName(), dwBoatID, owner.GetName() );
-			LG( "boat_error", "add boat%sID[%d] to character %s player data information failed", 
+			ToLogService( "boat_error", "add boat{}ID[{}] to character {} player data information failed", 
 				pBoat->GetName(), dwBoatID, owner.GetName() );
 			return FALSE;
 		}
@@ -1399,13 +1395,9 @@ namespace mission
 		owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00037), owner.GetPlayer()->GetNumBoat(), 
 			pBoat->GetName() );
 
-		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", pBoat->GetName(), pBoat->GetID());
-		pBoat->m_CLog.SetLogName(szLogName);
-		pBoat->m_CLog.SetEnable(g_bLogEntity);
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharBoat::GetData( CCharacter& owner, BYTE byIsUpdate, const BOAT_DATA& Info, xShipAttrInfo& Data )
 	{
@@ -1416,7 +1408,7 @@ namespace mission
 			/*owner.SystemNotice( "ID[%d]!", Info.sBody );
 			LG( "boat_error", "ID[%d]!", Info.sBody );*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00038), Info.sBody );
-			LG( "boat_error", "create boat failederror information of hull ID[%d]!", Info.sBody );
+			ToLogService( "boat_error", "create boat failederror information of hull ID[{}]!", Info.sBody );
 		}
 		else
 		{
@@ -1449,7 +1441,7 @@ namespace mission
 				/*owner.SystemNotice( "ID[%d]!", Info.sHeader );
 				LG( "boat_error", "ID[%d]!", Info.sHeader );*/
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00039), Info.sHeader );
-				LG( "boat_error", "create boat failederror information of fore ID[%d]!", Info.sHeader );
+				ToLogService( "boat_error", "create boat failederror information of fore ID[{}]!", Info.sHeader );
 			}
 			else
 			{
@@ -1480,7 +1472,7 @@ namespace mission
 				/*owner.SystemNotice( "ID[%d]!", Info.sEngine );
 				LG( "boat_error", "ID[%d]!", Info.sEngine );*/
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00040), Info.sEngine );
-				LG( "boat_error", "create boat failederror information of boat drive ID[%d]!", Info.sEngine );
+				ToLogService( "boat_error", "create boat failederror information of boat drive ID[{}]!", Info.sEngine );
 			}
 			else
 			{
@@ -1541,7 +1533,7 @@ namespace mission
 				/*owner.SystemNotice( "ID[%d]!", Info.sCannon );
 				LG( "boat_error", "ID[%d]!", Info.sCannon );*/
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00041), Info.sCannon );
-				LG( "boat_error", "create boat failederror information of boat artillery ID[%d]!", Info.sCannon );
+				ToLogService( "boat_error", "create boat failederror information of boat artillery ID[{}]!", Info.sCannon );
 			}
 			else
 			{

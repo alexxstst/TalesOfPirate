@@ -554,7 +554,7 @@ void	NetIF::OnProcessData(dbc::DataSocket *datasock,dbc::RPacket& recvbuf){
 
 	if(sCmdType !=CMD_MC_PING)
 	{
-		LG("FromGateServer","%d\n",sCmdType);
+		ToLogService("FromGateServer", "{}", sCmdType);
 	}
 	
 	//LG("net_r", "Recv Packet Msg Type = [%d]\n", sCmdType);
@@ -614,7 +614,7 @@ void NetIF::SwitchNet(bool isConnected)
 //:true-,false-
 bool	NetIF::OnConnect(DataSocket *datasock)
 {
-    LG("connect","\tOnConnect\n");
+    ToLogService("connect", "\tOnConnect");
 
 	datasock->SetRecvBuf(64*1024);
 	datasock->SetSendBuf(64*1024);
@@ -623,7 +623,7 @@ bool	NetIF::OnConnect(DataSocket *datasock)
 //reason:0--1-Socket-3--5-
 void	NetIF::OnDisconnect(DataSocket *datasock,int reason)
 {
-	LG("connect","\tOnDisconnect, Reason:%d, Tick:%u,recvTime:%u  \n", reason, GetCurrentTick(),GetRecvTime(datasock) );
+	ToLogService("connect", "\tOnDisconnect, Reason:{}, Tick:{},recvTime:{}  ", reason, GetCurrentTick(), GetRecvTime(datasock));
 
     if( g_pGameApp )
     {
@@ -724,7 +724,7 @@ bool NetIF::OnDecrypt(dbc::DataSocket *datasock,char *ciphertext,unsigned long& 
 	}
     catch (...)
     {
-        LG("dec", "Exception raised from OnDecrypt()\n");
+        ToLogService("dec", "Exception raised from OnDecrypt()");
 	}
 
 	return false;
@@ -750,21 +750,21 @@ void NetIF::SendPacketMessage(LPWPACKET pk)
 	{
 		if ( !g_pGameApp->GetCurScene() )
 		{
-			LG("error", "msgg_pGameApp->GetCurScene() Is NULL, Can't Send Socket Message!\n");
+			ToLogService("error", "msgg_pGameApp->GetCurScene() Is NULL, Can't Send Socket Message!");
 			return;
 		}
 		if (!g_pGameApp->GetCurScene()->GetMainCha())
 		{
-			LG("error", "msgg_pGameApp->GetCurScene()->GetMainCha() Is NULL, Can't Send Socket Message!\n");
+			ToLogService("error", "msgg_pGameApp->GetCurScene()->GetMainCha() Is NULL, Can't Send Socket Message!");
 			return;
 		}
-		LG("error", "msgClientSocket Is NULL, Can't Send Socket Message!\n");
+		ToLogService("error", "msgClientSocket Is NULL, Can't Send Socket Message!");
 		return;
 	}
 
 	if( SendData(m_connect.GetDatasock(), pk)==-1 )
 	{
-		LG("net_error", "msgSendData Error!\n");
+		ToLogService("net_error", "msgSendData Error!");
 		
 	}
 }
@@ -784,15 +784,15 @@ dbc::RPacket NetIF::SyncSendPacketMessage(LPWPACKET pk,unsigned long timeout)
 	{
 		if ( !g_pGameApp->GetCurScene() )
 		{
-			LG("error", "msgg_pGameApp->GetCurScene() Is NULL, Can't Send Socket Message!\n");
+			ToLogService("error", "msgg_pGameApp->GetCurScene() Is NULL, Can't Send Socket Message!");
 			return 0;
 		}
 		if (!g_pGameApp->GetCurScene()->GetMainCha())
 		{
-			LG("error", "msgg_pGameApp->GetCurScene()->GetMainCha() Is NULL, Can't Send Socket Message!\n");
+			ToLogService("error", "msgg_pGameApp->GetCurScene()->GetMainCha() Is NULL, Can't Send Socket Message!");
 			return 0;
 		}
-		LG("error", "msgClientSocket Is NULL, Can't Send Socket Message!\n");
+		ToLogService("error", "msgClientSocket Is NULL, Can't Send Socket Message!");
 		return 0;
 	}
 

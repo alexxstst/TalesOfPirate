@@ -43,7 +43,7 @@ namespace GUI
 		frmHaircut = mgr.Find("frmHead", enumMainForm);
 		if ( !frmHaircut)
 		{
-			LG("gui", g_oLangRec.GetString(615));
+			ToLogService("gui", "{}", g_oLangRec.GetString(615));
 			return false;
 		}
 		frmHaircut->evtEntrustMouseEvent = _MainMouseHaircutEvent ;
@@ -161,7 +161,7 @@ namespace GUI
 		//if (!pCha) return;
 
 		CCharacter* pMainCha = g_stUIBoat.GetHuman();
-		if (!pMainCha){ LG( "haircut", g_oLangRec.GetString(617) ); return; }
+		if (!pMainCha){ ToLogService("haircut", "{}", g_oLangRec.GetString(617)); return; }
 
 		m_pHairTools->RefreshCha( pMainCha->GetDefaultChaInfo()->lID );
 		//
@@ -179,7 +179,7 @@ namespace GUI
 		frmHaircut->Show();
 
 		CCharacter* pCha = CGameApp::GetCurScene()->AddCharacter( pMainCha->getTypeID() );
-		if( !pCha ) { LG ("haircut", g_oLangRec.GetString(619)); return; }
+		if( !pCha ) { ToLogService("haircut", "{}", g_oLangRec.GetString(619)); return; }
 		pCha->GetActor()->SetSleep();
 		pCha->UpdataFace(pMainCha->GetPart());
 
@@ -197,14 +197,14 @@ namespace GUI
 		CHairName* pHairName = m_pHairTools->GetHair(m_dwHairTypeIndex);
 		if (!pHairName)
 		{
-			LG ("haircut", g_oLangRec.GetString(620));
+			ToLogService("haircut", "{}", g_oLangRec.GetString(620));
 			return;
 		}
 
 
 		if ( (m_dwHairColorMaxNum = pHairName->GetMax()) <= 0)
 		{
-			LG ("haircut", g_oLangRec.GetString(621));
+			ToLogService("haircut", "{}", g_oLangRec.GetString(621));
 			return;
 		}
 

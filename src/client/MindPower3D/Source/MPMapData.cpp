@@ -33,7 +33,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 	}
 	if(fp==NULL) 
 	{
-		LG("map", "msgLoad Map [%s] Error!\n", pszMapName);
+		ToLogService("map", "msgLoad Map [{}] Error!", pszMapName);
 		return FALSE;
 	}
 	
@@ -47,7 +47,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
     if(header.nMapFlag==MP_MAP_FLAG+1)
     {
 	    fclose(fp);
-		LG("map", "msg[%s], MapTool!", pszMapName);
+		ToLogService("map", "msg[{}], MapTool!", pszMapName);
 		return FALSE;
 	}
     
@@ -58,7 +58,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 #endif
 	{
 		fclose(fp);
-		LG("map", "msg[%s] MindPower Map File!\n", pszMapName);
+		ToLogService("map", "msg[{}] MindPower Map File!", pszMapName);
 		return FALSE;
 	}
 
@@ -387,7 +387,7 @@ void MPMap::DynamicLoading(DWORD dwTimeParam)
                 }
 			}
 		}
-        if(bDelFail) LG("map", "Section, Buffer, n = %d\n", n);
+        if(bDelFail) ToLogService("map", "Section, Buffer, n = {}", n);
 	
 		for(int i = 0; i < n; i++) // Section Tile Data
 		{

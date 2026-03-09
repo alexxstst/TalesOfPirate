@@ -142,7 +142,7 @@ bool CFormMgr::_AddMemory( CForm* form )
 	{
 		if( _stricmp( form->GetName(), (*it)->GetName() )==0 )
 		{
-			LG("gui", g_oLangRec.GetString(574), form->GetName() );
+			ToLogService("gui", "{} {}", g_oLangRec.GetString(574), form->GetName());
 			return false;
 		}
 	}
@@ -329,7 +329,7 @@ void CFormMgr::_ModalClose( CForm* form )
         return;
     }
 
-    LG( "gui", "msgCFormMgr::_ModalClose(%s) not find this form", form->GetName() );
+    ToLogService("gui", "msgCFormMgr::_ModalClose({}) not find this form", form->GetName());
 }
 
 void CFormMgr::_SetNewActiveForm()

@@ -17,7 +17,6 @@ BOOL ClearItemLit();
 
 class CSceneItem : public MPSceneItem, public CSceneNode
 {
-private:
 	virtual BOOL	_Create(int nObjTypeID,int nType);
 
 public:
@@ -39,8 +38,7 @@ public:
 
 	void			SetForgeEffect( DWORD value, int nCharID=1 );		// ,
 
-public:
-	void			setIsSystem( bool v )			{ _IsSystem = v; 			}
+void			setIsSystem( bool v )			{ _IsSystem = v; 			}
     bool            IsHitText( int x, int y );
     void			SetHide(BOOL bHide);
 
@@ -79,8 +77,7 @@ protected:
 
     DWORD           _nCharacterID;
 
-protected:
-	bool			_IsSystem;					// 
+bool			_IsSystem;					// 
 	bool			_IsShowName;
 	CItemRecord*	_pItemInfo;
     int             _nDrapID;

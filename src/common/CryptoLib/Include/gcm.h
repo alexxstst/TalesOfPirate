@@ -94,7 +94,7 @@ protected:
 
 	GCTR m_ctr;
 	static word16 s_reductionTable[256];
-	static volatile bool s_reductionTableInitialized;
+	static bool s_reductionTableInitialized;
 	enum {REQUIRED_BLOCKSIZE = 16, HASH_BLOCKSIZE = 16};
 };
 

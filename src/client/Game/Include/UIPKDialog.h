@@ -32,8 +32,6 @@ namespace GUI
 		void		ClearStartDialog();
 		void		ClearEndDialog();
 
-	private:
-
 		CForm*			frmTeamPkStart;
 		CForm*			frmTeamPkEnd;
 

@@ -22,9 +22,9 @@ public:
 
     CTableCha(cfl_db *pDB)
         :cfl_rs(pDB, "character", 100)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool ShowExpRank(CCharacter* pCha, int count);
 	bool Init(void);
@@ -63,9 +63,9 @@ public:
 
 	CTableMaster(cfl_db *pDB)
 		:cfl_rs(pDB, "master", 6)
-	{T_B
+	{
 
-	T_E}
+	}
 
 	bool Init(void);
 	unsigned long GetMasterDBID(CPlayer *pPlayer);
@@ -95,9 +95,9 @@ class CTableLotterySetting : public cfl_rs
 public:
     CTableLotterySetting(cfl_db *pDB)
         :cfl_rs(pDB, "LotterySetting", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool GetCurrentIssue(int& issue);
@@ -113,9 +113,9 @@ class CTableTicket : public cfl_rs
 public:
     CTableTicket(cfl_db *pDB)
         :cfl_rs(pDB, "Ticket", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool AddTicket(int atorID, int issue, char itemno[6][2]);
@@ -131,9 +131,9 @@ class CTableWinTicket : public cfl_rs
 public:
     CTableWinTicket(cfl_db *pDB)
         :cfl_rs(pDB, "WinTicket", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool GetTicket(int issue);
@@ -168,9 +168,9 @@ class CTableAmphitheaterSetting : public cfl_rs
 public:
     CTableAmphitheaterSetting(cfl_db *pDB)
         :cfl_rs(pDB, "AmphitheaterSetting", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool GetCurrentSeason(int& season, int& round);
@@ -185,9 +185,9 @@ class CTableAmphitheaterTeam : public cfl_rs
 public:
     CTableAmphitheaterTeam(cfl_db *pDB)
         :cfl_rs(pDB, "AmphitheaterTeam", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool GetTeamCount(int& count);
@@ -228,9 +228,9 @@ class CTablePersoninfo : public cfl_rs
 public:
     CTablePersoninfo(cfl_db *pDB)
         :cfl_rs(pDB, "personinfo", 10)
-	{T_B
+	{
 	
-	T_E}
+	}
 	bool Init(void);
 	bool GetPersonBirthday(int chaid , int &birthday);
 };
@@ -242,9 +242,9 @@ class CTableResource : public cfl_rs
 public:
     CTableResource(cfl_db *pDB)
         :cfl_rs(pDB, "resource", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool Create(long &lDBID, long lChaId, long lTypeId);
@@ -263,9 +263,9 @@ class CTableMapMask : public cfl_rs
 public:
     CTableMapMask(cfl_db *pDB)
         :cfl_rs(pDB, "map_mask", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool Create(long &lDBID, long lChaId);
@@ -295,9 +295,9 @@ public:
 
     CTableAct(cfl_db *pDB)
         :cfl_rs(pDB, "account", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	bool Init(void);
 	bool ReadAllData(CPlayer *pPlayer, DWORD ato_id);
@@ -310,9 +310,9 @@ class CTableBoat : public cfl_rs
 public:
 	CTableBoat( cfl_db* pDB )
 		:cfl_rs( pDB, "boat", 100 )
-	{T_B
+	{
 
-	T_E}
+	}
 
 	bool Init(void);
 	BOOL Create( DWORD& dwBoatID, const BOAT_DATA& Data );
@@ -333,9 +333,9 @@ class CTableGuild : public cfl_rs
 public:
 	CTableGuild(cfl_db *pDB)
         :cfl_rs(pDB, "guild", 100)
-	{T_B
+	{
 
-	T_E}
+	}
 
 
 	struct BankLog {
@@ -395,9 +395,9 @@ class CTableLog : public cfl_rs
 public:
     CTableLog(cfl_db *pDB)
         :cfl_rs(pDB, "gamelog", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 };
 
@@ -406,8 +406,8 @@ class	CTableItem	:	public	cfl_rs
 public:
 	CTableItem(	cfl_db*	pDB)
 		:	cfl_rs(pDB, "property",	10	)
-	{T_B
-	T_E}
+	{
+	}
 
 	bool	LockItem(	SItemGrid*	sig,	int	iChaId	);
 	bool	UnlockItem(	SItemGrid*	sig,	int	iChaId	);
@@ -420,7 +420,7 @@ public:
 	CGameDB() : _connect() {}
 
    ~CGameDB()
-    {T_B
+    {
        if (_tab_cha != NULL) {delete _tab_cha; _tab_cha = NULL;}
        if (_tab_act != NULL) {delete _tab_act; _tab_act = NULL;}
 	   if (_tab_gld != NULL) {delete _tab_gld; _tab_gld = NULL;}
@@ -429,7 +429,7 @@ public:
        SAFE_DELETE(_tab_log);
 	   SAFE_DELETE(_tab_item);
 	   _connect.disconn();
-    T_E}
+    }
     
     BOOL    Init();
 
@@ -464,7 +464,7 @@ public:
 		catch (...)
 		{
 			//LG("enter_map", "!\n");
-			LG("enter_map", "When save character item and money occured abnormity\n");
+			ToLogService("enter_map", "When save character item and money occured abnormity");
 			return false;
 		}
 
@@ -476,7 +476,7 @@ public:
 		try
 		{
 			//LG("enter_map", ".\n");
-			LG("enter_map", "Start save character assets.\n");
+			ToLogService("enter_map", "Start save character assets.");
 			if (!pCCha || !pCCha->GetPlayer())
 				return false;
 
@@ -496,14 +496,14 @@ public:
 			}
 
 			//LG("enter_map", " %s(%s) .\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
-			LG("enter_map", "Save character %s(%s)assets succeed.\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
+			ToLogService("enter_map", "Save character {}({})assets succeed.", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
 			//LG("", "%-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
-			LG("Save data waste time", "totalled %-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
+			ToLogService("Save data waste time", "totalled {}.[{} {}]", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
 		}
 		catch (...)
 		{
 			//LG("enter_map", "!\n");
-			LG("enter_map", "When save character assets occured abnormity\n");
+			ToLogService("enter_map", "When save character assets occured abnormity");
 			return false;
 		}
 
@@ -1080,23 +1080,23 @@ public:
 	}
 
 	BOOL	SaveMissionData( CPlayer *pPlayer, DWORD atorID ) // 
-	{T_B
+	{
 		return _tab_cha->SaveMissionData( pPlayer, atorID );
-	T_E}
+	}
 
 	// 
 	BOOL Create( DWORD& dwBoatID, const BOAT_DATA& Data )
-	{T_B
+	{
 		return _tab_boat->Create( dwBoatID, Data );
-	T_E}
+	}
 	BOOL GetBoat( CCharacter& Boat )
-	{T_B
+	{
 		return _tab_boat->GetBoat( Boat );
-	T_E}
+	}
 	BOOL SaveBoat( CCharacter& Boat, char chSaveType )
-	{T_B
+	{
 		return _tab_boat->SaveBoat( Boat, chSaveType );
-	T_E}
+	}
 	BOOL SaveBoatDelTag( DWORD dwBoatID, BYTE byIsDeleted = 0 )
 	{
 		return _tab_boat->SaveBoatDelTag( dwBoatID, byIsDeleted );
@@ -1264,7 +1264,7 @@ public:
 		if(!DBOK(l_sqlret))
 		{
 			//LG("gamelog", "log, sql = [%s]!\n", pszSQL);
-			LG("gamelog", "add log note failed, sql = [%s]!\n", pszSQL);
+			ToLogService("gamelog", "add log note failed, sql = [{}]!", pszSQL);
 		}
 	}
 	

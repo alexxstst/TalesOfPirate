@@ -30,8 +30,8 @@ protected:
     int     _GetSectionDataSize()   {   return 64 * sizeof(_Tile_Attrib);       }
     BOOL    _ReadFileHeader();
     void    _WriteFileHeader();
-    DWORD   _ReadSectionIdx(DWORD dwSectionNo);
-    void    _WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset);
+    std::uint32_t _ReadSectionIdx(std::uint32_t dwSectionNo);
+    void    _WriteSectionIdx(std::uint32_t dwSectionNo, std::uint32_t dwOffset);
 	void*	_GetHeaderPtr()		{ return &_header;			}
 	int		_GetHeaderSize()	{ return sizeof(_header);	}
 
@@ -56,25 +56,23 @@ inline void CAttribData::_WriteFileHeader()
     fwrite(&_header, sizeof(_header), 1, _fp);
 }
 
-inline DWORD CAttribData::_ReadSectionIdx(DWORD dwSectionNo)
+inline std::uint32_t CAttribData::_ReadSectionIdx(std::uint32_t dwSectionNo)
 {
-    fseek(_fp, sizeof(_header) + sizeof(DWORD) * dwSectionNo, SEEK_SET);
-    DWORD dwOffset = 0; fread(&dwOffset, sizeof(DWORD), 1, _fp);
+    fseek(_fp, sizeof(_header) + sizeof(std::uint32_t) * dwSectionNo, SEEK_SET);
+    std::uint32_t dwOffset = 0; fread(&dwOffset, sizeof(std::uint32_t), 1, _fp);
     if(_bDebug)
     {
-        //LG(GetDataName(), "[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
-		LG(GetDataName(), "read index data [%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+		ToLog("{}: read index data [{} {}], Offset = {}", GetDataName(), dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
     return dwOffset;
 }
 
-inline void CAttribData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
+inline void CAttribData::_WriteSectionIdx(std::uint32_t dwSectionNo, std::uint32_t dwOffset)
 {
-    fseek(_fp, sizeof(_header) + sizeof(DWORD) * dwSectionNo, SEEK_SET);
-    fwrite(&dwOffset, sizeof(DWORD), 1, _fp);
+    fseek(_fp, sizeof(_header) + sizeof(std::uint32_t) * dwSectionNo, SEEK_SET);
+    fwrite(&dwOffset, sizeof(std::uint32_t), 1, _fp);
     if(_bDebug)
     {
-        //LG(GetDataName(), "[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
-		LG(GetDataName(), "write index data [%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+		ToLog("{}: write index data [{} {}], Offset = {}", GetDataName(), dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
 }

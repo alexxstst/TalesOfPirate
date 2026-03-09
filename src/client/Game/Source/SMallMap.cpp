@@ -423,7 +423,7 @@ void	CSMallMap2D::InitScene()
 		D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0,
 		D3DPOOL_DEFAULT, &_pVB ) ) )
 	{
-		LG("ERROR","msgCSMallWnd::CreateVertexBuffer");
+		ToLogService("ERROR", "msgCSMallWnd::CreateVertexBuffer");
 		return;
 	}
 
@@ -440,7 +440,7 @@ void	CSMallMap2D::InitScene()
 		D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0,
 		D3DPOOL_DEFAULT, &_pVBWnd ) ) )
 	{
-		LG("DEBUG","msgERROR");
+		ToLogService("DEBUG", "msgERROR");
 		return;
 	}
 
@@ -495,11 +495,11 @@ void	CSMallMap2D::InitScene()
 	//MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 	if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A4R4G4B4)))
 	{
-		LG("ERROR","msgmapmask.bmp");
+		ToLogService("ERROR", "msgmapmask.bmp");
 	}
 	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\minimap\\mapsea.bmp", 0, D3DFMT_A4R4G4B4)))
 	{
-		LG("ERROR","msgmapsea.bmp");
+		ToLogService("ERROR", "msgmapsea.bmp");
 	}
 #else
 	if(FAILED(D3DXCreateTextureFromFileEx(m_pDev,
@@ -517,7 +517,7 @@ void	CSMallMap2D::InitScene()
 		NULL, //
 		&_pTexMask)))//
 	{
-		LG("ERROR","msgtexture\\minimap\\mapmask.bmp");
+		ToLogService("ERROR", "msgtexture\\minimap\\mapmask.bmp");
 	}
 
 	if(FAILED(D3DXCreateTextureFromFileEx(m_pDev,
@@ -535,7 +535,7 @@ void	CSMallMap2D::InitScene()
 		NULL, //
 		&_pTexDefault)))//
 	{
-		LG("ERROR","msgtexture\\minimap\\mapsea.bmp");
+		ToLogService("ERROR", "msgtexture\\minimap\\mapsea.bmp");
 	}
 #endif
 }
@@ -1254,7 +1254,7 @@ void	CAniWnd::InitScene()
 		D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0,
 		D3DPOOL_DEFAULT, &_pVBWnd ) ) )
 	{
-		LG("DEBUG","msgERRORCreateVertexBuffer");
+		ToLogService("DEBUG", "msgERRORCreateVertexBuffer");
 		return;
 	}
 
@@ -1924,7 +1924,7 @@ void	CMinimap::InitScene()
 	//}
 	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A4R4G4B4)))
 	{
-		LG("ERROR","msgmapsea.bmp");
+		ToLogService("ERROR", "msgmapsea.bmp");
 	}
 
 	RECT rc;
@@ -2438,7 +2438,7 @@ void	CLargerMap::InitScene()
 
 	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A4R4G4B4)))
 	{
-		LG("ERROR","msgmapsea.bmp");
+		ToLogService("ERROR", "msgmapsea.bmp");
 	}
 	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\ui\\minimap\\mask.tga", 0, D3DFMT_A4R4G4B4)))
 	//{

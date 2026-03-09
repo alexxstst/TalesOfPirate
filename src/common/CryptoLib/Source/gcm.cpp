@@ -49,7 +49,7 @@ NAMESPACE_BEGIN(CryptoPP)
 #define CONST_M128_CAST(x) ((const __m128i *)(const void *)(x))
 
 word16 GCM_Base::s_reductionTable[256];
-volatile bool GCM_Base::s_reductionTableInitialized = false;
+bool GCM_Base::s_reductionTableInitialized = false;
 
 void GCM_Base::GCTR::IncrementCounterBy256()
 {

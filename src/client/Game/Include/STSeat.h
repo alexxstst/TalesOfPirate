@@ -25,10 +25,9 @@ public:
 protected:
 	virtual bool _Start();
 	virtual void _End();
-    virtual bool _IsAllowCancel()		{ return true;				}							
+    virtual bool _IsAllowCancel()		{ return true;				}
 
-protected:
-	int			_nPose;
+int			_nPose;
 	int			_nAngle;
 	int			_nPosX,	_nPosY;
 	int			_nHeight;

@@ -187,8 +187,7 @@ private:
 	CSceneObj*	    pObj;
 	bool			IsLoad;
 
-private:
-	static void _evtEnter(CGuiData *pSender);	
+static void _evtEnter(CGuiData *pSender);	
 	static void _evtServerLDBDown(CGuiData *pSender, int x, int y, DWORD key);
 	static void _evtRegionLDBDown(CGuiData *pSender, int x, int y, DWORD key);
 	static void _evtServerFrmBeforeShow(CForm* pForm, bool& IsShow);

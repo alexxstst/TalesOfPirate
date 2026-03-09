@@ -34,7 +34,7 @@ bool CMissionMgr::Init() //
 	m_pMisForm = _FindForm("frmNPCMission" ); 
 	if( !m_pMisForm )
 	{	
-		LG("gui", g_oLangRec.GetString(740));
+		ToLogService("gui", "{}", g_oLangRec.GetString(740));
 		return false;
 	}
 	

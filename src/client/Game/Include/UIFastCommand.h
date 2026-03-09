@@ -44,8 +44,7 @@ public:
     void                AddCommand( CCommandObj* p );
     void                AddCommand2( CCommandObj* p );
 
-public:
-    GuiComEvent         evtChange;      // 
+GuiComEvent         evtChange;      // 
 
 protected:
     void				_SetSelf();
@@ -54,8 +53,7 @@ protected:
     }
     void				_DragEnd( int x, int y, DWORD key );
 
-protected:
-	CCommandObj*		_pCommand;
+CCommandObj*		_pCommand;
 	CCommandObj*		_pCommand2;
 
 	typedef std::vector<CFastCommand*> fasts;
@@ -96,7 +94,6 @@ public:
 	void				SetIsShowActive( bool v )		{ _IsShowActive = v;	}
 	void				SetShowStyle( eShowStyle v )	{ _eShowStyle=v;		}
 	CGuiPic*			GetActivePic()					{return _pActive;}
-public:
 	GuiComEvent			evtBeforeAccept;
     GuiComEvent         evtThrowItem;
 
@@ -110,8 +107,7 @@ protected:
 	}
 	void				_DragEnd( int x, int y, DWORD key );
 
-protected:
-	CCommandObj*		_pCommand;
+CCommandObj*		_pCommand;
 	eShowStyle			_eShowStyle;
 	bool				_IsShowActive;
 

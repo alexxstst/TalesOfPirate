@@ -13,7 +13,7 @@
 _DBC_USING
 
 Entity::Entity():m_cat(0),m_ID(0)
-{T_B
+{
 	m_pCStateCellHead	=0;
 	m_pCStateCellTail = 0;
 	m_submap	=0;
@@ -28,22 +28,15 @@ Entity::Entity():m_cat(0),m_ID(0)
 
 	m_bActiveEyeshot = true;
 	m_bValid = false;
-
-	m_CLog.SetEnable(g_bLogEntity);
-	//m_CLog.SetLogName("Log");
-	m_CLog.SetLogName("Unnamed Log");
-T_E}
+}
 
 void Entity::Free()
-{T_B
+{
 	g_pGameApp->m_pCEntSpace->ReturnEntity(m_lHandle);
-T_E}
+}
 
 void Entity::Initially()
-{T_B
-	m_CLog.SetEnable(g_bLogEntity);
-	//m_CLog.SetLogName("Log");
-m_CLog.SetLogName("Unnamed Log");
+{
 	m_bValid = true;
 	memset(&m_shape, 0, sizeof(Square));
 	memset(&m_STerritory, 0, sizeof(Circle));
@@ -70,19 +63,19 @@ m_CLog.SetLogName("Unnamed Log");
 
 	m_pCEyeshotHost = 0;
 
-T_E}
+}
 
 void Entity::Finally()
-{T_B
+{
 	m_cat		=0;
 	m_ID		=0;
 	m_SExistCtrl.sState = enumEXISTS_WITHERING;
 	m_bValid = false;
 	m_pCEyeshotHost = 0;
-T_E}
+}
 
 void Entity::WritePK(WPACKET& wpk)			//()
-{T_B
+{
 	//ToDo:
 	WRITE_LONG(wpk, m_cat);
 	WRITE_LONG(wpk, m_ID);
@@ -91,12 +84,12 @@ void Entity::WritePK(WPACKET& wpk)			//()
 	//WRITE_LONG(wpk, GetShape().radius);
 	WRITE_SEQ(wpk, m_name,uShort(strlen(m_name)+1));
 
-	Char *szLogName = m_CLog.GetLogName();
+	auto szLogName = GetLogName();
 	WRITE_SEQ(wpk, szLogName,uShort(strlen(szLogName)+1));
-T_E}
+}
 
 void Entity::ReadPK(RPACKET& rpk)			//()
-{T_B
+{
 	//ToDo:
 	m_cat	=(short)(READ_LONG(rpk));
 	m_ID	= READ_LONG(rpk);
@@ -110,11 +103,10 @@ void Entity::ReadPK(RPACKET& rpk)			//()
 
 	Char szLogName[1024];
 	strcpy(szLogName, READ_STRING(rpk));
-	m_CLog.SetLogName(szLogName);
-T_E}
+}
 
 Entity	*Entity::SearchByIDInEyeshot(cuLong culID)
-{T_B
+{
 	Point	l_pos = GetShape().centre;
 	Rect	l_rect = m_submap->GetEyeshot(l_pos);
 
@@ -145,10 +137,10 @@ Entity	*Entity::SearchByIDInEyeshot(cuLong culID)
 
 End:
 	return pCEnt;
-T_E}
+}
 
 void Entity::ActiveEyeshot(bool bActive)
-{T_B
+{
 	if (m_bActiveEyeshot == bActive)
 		return;
 	if (!m_submap)
@@ -171,10 +163,10 @@ void Entity::ActiveEyeshot(bool bActive)
 				m_submap->InactiveEyeshotCell(x, y);
 		}
 	}
-T_E}
+}
 
 void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
-{T_B
+{
 	SubMap		*pCMap = GetSubMap();
 	Entity		*pCTarEnt;
 	CCharacter	*pCTarCha;
@@ -192,7 +184,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 	if (!pCMap)
 	{
 		//LG("", " %s \n", GetLogName());
-		LG("eye shot activation error", "when entity %s is doing eye shot notifythe map is null\n", GetLogName());
+		ToLogService("eye shot activation error", "when entity {} is doing eye shot notifythe map is null", GetLogName());
 		return;
 	}
 
@@ -219,7 +211,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 					if (++lEntCount > lEntNum)
 					{
 						//LG("", "[%d,%d] %d\n", x, y, lEntNum);
-						LG("eye shot activation error", "eye shot cell [%d,%d] the fact entity number %d\n", x, y, lEntNum);
+						ToLogService("eye shot activation error", "eye shot cell [{},{}] the fact entity number {}", x, y, lEntNum);
 						break;
 					}
 
@@ -247,7 +239,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 
 							if (!pCTarCha->GetSubMap())
 								//LG("", " %s[%d,%d]  %s(%s)[%d,%d] \n",
-								LG("eye shot activation error", "when entity %s[%d,%d] is doing eye shot notify, the aim player %s(%s)[%d,%d] map is null\n",
+								ToLogService("eye shot activation error", "when entity {}[{},{}] is doing eye shot notify, the aim player {}({})[{},{}] map is null",
 									cszSrcLogName, l_pos1.x, l_pos1.y,
 									pCTarCha->GetLogName(), pCTarCha->GetPlyCtrlCha()->GetLogName(), pCTarCha->GetPos().x, pCTarCha->GetPos().y);
 						}
@@ -262,7 +254,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 	{
 		//LG("", " %s ([%d,%d][%d,%d;%d,%d])[%d,%d]\n", cszSrcLogName,
 		//	l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
-		LG("eye shot activation error", "entity %s eye shot notify error(coordnate [%d,%d]eye shot [%d,%d;%d,%d])currently eye shot cell[%d,%d]\n", cszSrcLogName,
+		ToLogService("eye shot activation error", "entity {} eye shot notify error(coordnate [{},{}]eye shot [{},{};{},{}])currently eye shot cell[{},{}]", cszSrcLogName,
 			l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
 		throw;
 	}
@@ -270,7 +262,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 	if (pLastPlayer)
 		pLastPlayer->GetNextPlayer() = NULL;
 	SENDTOCLIENT(chginf, pHeadPlayer);
-T_E}
+}
 
 bool Entity::overlap(long &xdist, long &ydist)
 {
@@ -290,7 +282,7 @@ bool Entity::overlap(long &xdist, long &ydist)
 }
 
 bool Entity::EdgeOverlap(long& xdist, long& ydist)
-{T_B
+{
 	bool	l_retval = false;
 
 	//
@@ -356,7 +348,7 @@ bool Entity::EdgeOverlap(long& xdist, long& ydist)
 	}
 
 	return l_retval;
-T_E}
+}
 
 //bool Entity::ObstacleOverlap(long &xdist, long &ydist)
 //{
@@ -587,7 +579,7 @@ bool Entity::ObstacleOverlap(long &xdist, long &ydist)
 }
 
 bool Entity::IsLiveing(void)
-{T_B
+{
 	CFightAble	*pCObj = IsFightAble();
 	if (!pCObj)
 		return true;
@@ -595,7 +587,7 @@ bool Entity::IsLiveing(void)
 		return true;
 
 	return false;
-T_E}
+}
 
 CStateCellNode* Entity::EnterStateCell(CStateCell *pStateCell, CChaListNode *pEntiNode, bool bIsIn)
 {
@@ -779,6 +771,6 @@ SubMap* Entity::GetSubMapFar(void)
 }
 
 void NotiPkToWorld(WPACKET chginf)
-{T_B
+{
     SENDTOWORLD(chginf);
-T_E}
+}

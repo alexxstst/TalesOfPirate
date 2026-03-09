@@ -50,18 +50,15 @@ protected:
 
 	void	CalcSkillSpeed();		// 
 
-protected:
-	virtual void    _UseSkill();
+virtual void    _UseSkill();
 	virtual void    _StartActor();
 
-protected:
-    bool    _IsPoseValid( DWORD pose_id );
+bool    _IsPoseValid( DWORD pose_id );
     int     _GetRand( int nMax )        { return  ( RAND_MAX * rand() + rand() ) % nMax;}
 	int		_GetPoseID();
     void    _PopThis();
 
-protected:
-	CCharacter		*_pTarget;				// 
+CCharacter		*_pTarget;				// 
 	CSkillRecord	*_pSkillInfo;			// 
 	int				_nAttackX,  _nAttackY;	// 
 	CCharacter		*_pSelf;				// ,
@@ -76,8 +73,7 @@ protected:
 	CHitRepresent	_cHit;
 	int				_nActionEnd;
 
-protected:
-	enum eUseSkill
+enum eUseSkill
 	{
 		enumInit,
 		enumStart,
@@ -134,14 +130,12 @@ protected:
     virtual bool _IsAllowCancel();
 	virtual void _End();
 
-protected:
-	virtual void    _UseSkill();
+virtual void    _UseSkill();
 
 	static stLastAttack  _sLastTarget;	// 
 	static DWORD		 _dwLastAttackTime;
 
-protected:
-	CServerMoveState*	_pMove;
+CServerMoveState*	_pMove;
     int					_nTotalDis;     // 
 	bool				_IsForce;
 
@@ -173,8 +167,7 @@ protected:
 
 	void	CheckTrace();
 
-protected:
-	bool		_IsTrace;
+bool		_IsTrace;
 	bool		_IsSuccess;		// 
 
 };

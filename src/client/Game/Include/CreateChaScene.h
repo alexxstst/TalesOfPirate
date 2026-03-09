@@ -216,8 +216,7 @@ private:
 	int				GetCityZone(int x, int y);
 	void			ShowCityZone(int index);
 
-private:
-    // 3D 
+// 3D 
     LoginScene_CreateCha m_LoginSceneCreateCha;
 
     // UI 
@@ -249,9 +248,7 @@ private:
     static int nSelFaceNum[MAX_CHA_NUM];
 
 
-private:
-
-    int m_nSelChaIndex;                     //()
+int m_nSelChaIndex;                     //()
     std::string m_sName;                         //
     int m_nCurHairIndex;                    //
     int m_nCurFaceIndex;                    //

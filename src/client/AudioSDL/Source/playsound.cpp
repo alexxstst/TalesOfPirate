@@ -1,4 +1,4 @@
-﻿
+#include "CrushSystem.h"
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -6,17 +6,8 @@
 #include "playsound.h"
 
 
-//
-// 1.0  by claude Fan at 2004-08-22
-//
-
-
-//
-// 2.0  by claude Fan at 2004-10-20
-//
-
 const int ERROR_TIME = 10000;
-const char *ERROR_FILE = "error_sound";
+const char* ERROR_FILE = "error_sound";
 
 #include <stdexcept>
 using namespace std;
@@ -62,43 +53,63 @@ HWND mus_hwnd = NULL;
 UINT mus_msg_id = 0;
 
 // share data about mix and background sound
-struct mus_dat
-    {
-    // for main thread write, child thread read
-    volatile bool used; // be in use or not
+struct mus_dat {
+	// for main thread write, child thread read
+	bool used; // be in use or not
 
-    int cmd; enum {CMD_NONE, CMD_PLAY, CMD_STOP, CMD_VOL};
-    int group; // channel group
-    int channel; // channel to play music
-    char* fname; // music file name
-    int vol; // volume
-    bool loop; // loop or not
-    bool mem_cache; // cache in memory or load from disk
-    bool mix; // mix or background music
+	int cmd;
 
-    // only for child thread write
-    Mix_Chunk* wave; // wave chunk
-    Mix_Music* music; // music
-    int wave_cache_id;
-    int errcode; enum {OP_SUCCESS, OP_FAILED, OP_FILE_NOT_FOUND};
+	enum { CMD_NONE, CMD_PLAY, CMD_STOP, CMD_VOL };
 
-    // for main thread read, child thread write
-    volatile int status; enum {PMT_PLAYING, PMT_FREE}; // current status of child thread
+	int group; // channel group
+	int channel; // channel to play music
+	char* fname; // music file name
+	int vol; // volume
+	bool loop; // loop or not
+	bool mem_cache; // cache in memory or load from disk
+	bool mix; // mix or background music
 
-    // process exit signal handle
-    HANDLE sig_exit;
+	// only for child thread write
+	Mix_Chunk* wave; // wave chunk
+	Mix_Music* music; // music
+	int wave_cache_id;
+	int errcode;
 
-    // constructor
-    mus_dat()
-        {
-        used = false; cmd = CMD_NONE; group = 0; channel = -1;
-        fname = new char[MAX_PATH + 1]; memset(fname, 0, sizeof fname);
-        vol = MIX_MAX_VOLUME; loop = true; mem_cache = false;
-        mix = true; wave = NULL; music = NULL;
-        wave_cache_id = -1; errcode = OP_SUCCESS; status = PMT_FREE;
-        sig_exit = NULL;}
-    ~mus_dat() {delete fname;}
-    };
+	enum { OP_SUCCESS, OP_FAILED, OP_FILE_NOT_FOUND };
+
+	// for main thread read, child thread write
+	int status;
+
+	enum { PMT_PLAYING, PMT_FREE }; // current status of child thread
+
+	// process exit signal handle
+	HANDLE sig_exit;
+
+	// constructor
+	mus_dat() {
+		used = false;
+		cmd = CMD_NONE;
+		group = 0;
+		channel = -1;
+		fname = new char[MAX_PATH + 1];
+		memset(fname, 0, sizeof fname);
+		vol = MIX_MAX_VOLUME;
+		loop = true;
+		mem_cache = false;
+		mix = true;
+		wave = NULL;
+		music = NULL;
+		wave_cache_id = -1;
+		errcode = OP_SUCCESS;
+		status = PMT_FREE;
+		sig_exit = NULL;
+	}
+
+	~mus_dat() {
+		delete fname;
+	}
+};
+
 mus_dat mus_dat_array[MUS_LEN];
 
 
@@ -111,53 +122,88 @@ mus_dat mus_dat_array[MUS_LEN];
 #define WAV_CACHE_NOT_FOUND (-1)
 
 static int cache_discard_id = -1; // the id prior to discard
-inline void wav_cache_set_discard(int id) {cache_discard_id = id;}
-inline int wav_cache_get_discard() {return cache_discard_id;}
+inline void wav_cache_set_discard(int id) {
+	cache_discard_id = id;
+}
+
+inline int wav_cache_get_discard() {
+	return cache_discard_id;
+}
 
 static bool cmn_snd_enable_flag = true;
-inline void cmn_snd_enable(bool enable) {cmn_snd_enable_flag = enable;}
-inline bool is_cmn_snd_enable() {return cmn_snd_enable_flag;}
+
+inline void cmn_snd_enable(bool enable) {
+	cmn_snd_enable_flag = enable;
+}
+
+inline bool is_cmn_snd_enable() {
+	return cmn_snd_enable_flag;
+}
+
 static bool env_snd_enable_flag = true;
-inline void env_snd_enable(bool enable) {env_snd_enable_flag = enable;}
-inline bool is_env_snd_enable() {return env_snd_enable_flag;}
 
-struct wave_cache_dat
-    {
-    bool used; // be in use or not
+inline void env_snd_enable(bool enable) {
+	env_snd_enable_flag = enable;
+}
 
-    char* fname; // filename
-    Uint8* buf; // start address of wave buffer
-    Uint32 buf_len; // length of wave buffer
-    DWORD time_stamp; // time stamp when loading
-    volatile int ref_cnt; // reference count
-    int vol; // volume
+inline bool is_env_snd_enable() {
+	return env_snd_enable_flag;
+}
 
-    // constructor
-    wave_cache_dat()
-        {
-        used = false; fname = new char[MAX_PATH + 1]; memset(fname, 0, sizeof fname);
-        buf = NULL, buf_len = 0; time_stamp = 0; vol = MIX_MAX_VOLUME;
-        ref_cnt = 0;}
-    ~wave_cache_dat()
-        {
-        delete fname; if (buf) {delete buf; buf = NULL;}
-        buf_len = 0; ref_cnt = 0; used = false;}
-    };
+struct wave_cache_dat {
+	bool used; // be in use or not
+
+	char* fname; // filename
+	Uint8* buf; // start address of wave buffer
+	Uint32 buf_len; // length of wave buffer
+	DWORD time_stamp; // time stamp when loading
+	int ref_cnt; // reference count
+	int vol; // volume
+
+	// constructor
+	wave_cache_dat() {
+		used = false;
+		fname = new char[MAX_PATH + 1];
+		memset(fname, 0, sizeof fname);
+		buf = NULL, buf_len = 0;
+		time_stamp = 0;
+		vol = MIX_MAX_VOLUME;
+		ref_cnt = 0;
+	}
+
+	~wave_cache_dat() {
+		delete fname;
+		if (buf) {
+			delete buf;
+			buf = NULL;
+		}
+		buf_len = 0;
+		ref_cnt = 0;
+		used = false;
+	}
+};
+
 wave_cache_dat wave_cache_dat_array[WAV_CACHE_LEN];
 
 
 // music customer interface
 inline void mus_init(int id, bool used, int cmd, int group, int channel,
-                     char const* fname, bool loop, bool mem_cache, bool mix)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->used = used; pdat->cmd = cmd; pdat->group = group;
-    pdat->channel = channel; pdat->loop = loop;
-    pdat->mem_cache = mem_cache; pdat->mix = mix;
-    if (fname != NULL)
-        {size_t len = min(MAX_PATH, strlen(fname));
-        memcpy(pdat->fname, fname, len); pdat->fname[len] = 0;}
-    return;}
+					 char const* fname, bool loop, bool mem_cache, bool mix) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->used = used;
+	pdat->cmd = cmd;
+	pdat->group = group;
+	pdat->channel = channel;
+	pdat->loop = loop;
+	pdat->mem_cache = mem_cache;
+	pdat->mix = mix;
+	if (fname != NULL) {
+		size_t len = min(MAX_PATH, strlen(fname));
+		memcpy(pdat->fname, fname, len);
+		pdat->fname[len] = 0;
+	}
+	return;
+}
 
 #define env_snd_init(id, used, cmd, group, channel) \
     mus_init(id, used, cmd, group, channel, NULL, true, false, true)
@@ -166,892 +212,867 @@ inline void mus_init(int id, bool used, int cmd, int group, int channel,
 #define bkg_snd_init(id, used, cmd) \
     mus_init(id, used, cmd, -1, -1, NULL, true, false, false)
 
-inline bool is_env_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    if ((pdat->loop == true) && (pdat->mem_cache == false)
-        && (pdat->mix == true)) return true;
-    else return false;}
+inline bool is_env_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	if ((pdat->loop == true) && (pdat->mem_cache == false)
+		&& (pdat->mix == true))
+		return true;
+	else return false;
+}
 
-inline bool is_cmn_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    if ((pdat->loop == false) && (pdat->mem_cache == true)
-        && (pdat->mix == true)) return true;
-    else return false;}
+inline bool is_cmn_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	if ((pdat->loop == false) && (pdat->mem_cache == true)
+		&& (pdat->mix == true))
+		return true;
+	else return false;
+}
 
-inline bool is_bkg_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    if ((pdat->mem_cache == false)
-        && (pdat->mix == false)) return true;
-    else return false;}
+inline bool is_bkg_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	if ((pdat->mem_cache == false)
+		&& (pdat->mix == false))
+		return true;
+	else return false;
+}
 
-inline bool is_free(int id)
-    {
-    return (mus_dat_array[id].status == mus_dat::PMT_FREE) ? true : false;}
+inline bool is_free(int id) {
+	return (mus_dat_array[id].status == mus_dat::PMT_FREE) ? true : false;
+}
 
-inline bool is_playing(int id) {return !is_free(id);}
+inline bool is_playing(int id) {
+	return !is_free(id);
+}
 
-inline void dump_mus_dat(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    LG("mus_err", "thread#%d [%s], cmd=%d, group=%d, channel=%d, fname=%s, vol=%d, \
-loop=%d, mem_cache=%d, mix=%d\n, wave=%p, music=%p, wave_cache_id=%d, status=%s\n",
-            id, (pdat->used) ? "used" : "not use", pdat->cmd, pdat->group,
-            pdat->channel, pdat->fname, pdat->vol, pdat->loop,
-            pdat->mem_cache, pdat->mix, pdat->wave, pdat->music,
-            pdat->wave_cache_id,
-            (pdat->status == mus_dat::PMT_PLAYING) ? "playing" : "free");}
+inline void dump_mus_dat(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	ToLogService("mus_err",
+		"thread#{} [{}], cmd={}, group={}, channel={}, fname={}, vol={}, loop={}, mem_cache={}, mix={}, wave={}, music={}, wave_cache_id={}, status={}",
+		id, (pdat->used) ? "used" : "not use", pdat->cmd, pdat->group,
+		pdat->channel, pdat->fname, pdat->vol, pdat->loop,
+		pdat->mem_cache, pdat->mix, static_cast<void*>(pdat->wave), static_cast<void*>(pdat->music),
+		pdat->wave_cache_id,
+		(pdat->status == mus_dat::PMT_PLAYING) ? "playing" : "free");
+}
 
-inline void dump_mus_dat()
-    {
-    for (int i = MUS_ID_START; i <= MUS_ID_END; ++ i) dump_mus_dat(i);
-    LG("mus_err", "\n");}
+inline void dump_mus_dat() {
+	for (int i = MUS_ID_START; i <= MUS_ID_END; ++i) dump_mus_dat(i);
+}
 
-bool play_env_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->used = true;
-    pdat->status = mus_dat::PMT_PLAYING; // block the following request
-    Mix_Chunk* wave = NULL;
-    int loops = (pdat->loop) ? -1 : 0;
+bool play_env_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->used = true;
+	pdat->status = mus_dat::PMT_PLAYING; // block the following request
+	Mix_Chunk* wave = NULL;
+	int loops = (pdat->loop) ? -1 : 0;
 
-    wave = Mix_LoadWAV(pdat->fname);
-    if (wave == NULL)
-        {
-        LG("mus_err", "thread#%d failed Mix_LoadWAV: %s: fname length=%d, %s\n",
-            id, pdat->fname, strlen(pdat->fname), SDL_GetError());
-        pdat->status = mus_dat::PMT_FREE;
-        pdat->used = false; return false;}
+	wave = Mix_LoadWAV(pdat->fname);
+	if (wave == NULL) {
+		ToLogService("mus_err", "thread#{} failed Mix_LoadWAV: {}: fname length={}, {}",
+			id, pdat->fname, strlen(pdat->fname), SDL_GetError());
+		pdat->status = mus_dat::PMT_FREE;
+		pdat->used = false;
+		return false;
+	}
 
-        /*
-    LG("mus", "thread#%d allocated=%d, abuf=%p, alen=%d, volume=%d\n",
-        id, wave->allocated, wave->abuf, wave->alen,wave->volume);*/
+	// set volume of channel and save
+	Mix_Volume(pdat->channel, pdat->vol);
 
-    // set volume of channel and save
-    Mix_Volume(pdat->channel, pdat->vol);
+	int channel = Mix_PlayChannel(pdat->channel, wave, loops);
+	if (channel == -1) {
+		ToLogService("mus_err", "thread#{} play channel error, dump...", id);
+		dump_mus_dat(id);
+		Mix_FreeChunk(wave);
+		pdat->status = mus_dat::PMT_FREE;
+		pdat->used = false;
+		return false;
+	}
+	else {
+		ToLogService("mus", "thread#{} pdat->channel={}, play channel={}", id, pdat->channel, channel);
+		if (pdat->loop) // continue blocking the following play request
+		{
+			pdat->channel = channel;
+			pdat->wave = wave;
+		}
+		else {
+			// wait it for playing end
+			ToLogService("mus", "thread#{} wait {} for playing end", id, pdat->fname);
 
-    int channel = Mix_PlayChannel(pdat->channel, wave, loops);
-    if (channel == -1)
-        { // some error occured
-        LG("mus_err", "thread#%d play channel error, dump...\n", id);
-        dump_mus_dat(id); Mix_FreeChunk(wave);
-        pdat->status = mus_dat::PMT_FREE;
-        pdat->used = false;
-        return false;}
-    else {
-        LG("mus", "thread#%d pdat->channel=%d, play channel=%d\n",
-                id, pdat->channel, channel);
-        if (pdat->loop) // continue blocking the following play request
-            {
-            pdat->channel = channel;
-            pdat->wave = wave;}
-        else {
-            // wait it for playing end
-            LG("mus", "thread#%d wait %s for playing end\n",
-                    id, pdat->fname);
+			DWORD ret; // tell whether to exit loop when playing
+			while (Mix_Playing(channel) == 1) {
+				SDL_Delay(1);
+				ret = WaitForSingleObject(pdat->sig_exit, 1);
+				if (ret == WAIT_OBJECT_0) {
+					ToLogService("mus", "thread#{} recv sig_exit when playing", id);
+					break;
+				}
+			}
 
-            DWORD ret; // tell whether to exit loop when playing
-            while (Mix_Playing(channel) == 1)
-                {
-                SDL_Delay(1);
-                ret = WaitForSingleObject(pdat->sig_exit, 1);
-                if (ret == WAIT_OBJECT_0)
-                    {
-                    LG("mus", "thread#%d recv sig_exit when playing\n", id);
-                    break;}
-                }
+			Mix_FreeChunk(wave);
+			pdat->status = mus_dat::PMT_FREE;
+			pdat->used = false;
+		}
+		return true;
+	}
+}
 
-            Mix_FreeChunk(wave); pdat->status = mus_dat::PMT_FREE;
-            pdat->used = false;}
-        return true;}
-    }
+bool play_cmn_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->used = true;
+	pdat->status = mus_dat::PMT_PLAYING; // block the following request
+	wave_cache_dat* pwcd = &wave_cache_dat_array[pdat->wave_cache_id];
+	Mix_Chunk* wave = NULL;
+	int loops = (pdat->loop) ? -1 : 0;
 
-bool play_cmn_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->used = true;
-    pdat->status = mus_dat::PMT_PLAYING; // block the following request
-    wave_cache_dat* pwcd = &wave_cache_dat_array[pdat->wave_cache_id]; 
-    Mix_Chunk* wave = NULL;
-    int loops = (pdat->loop) ? -1 : 0;
+	wave = Mix_LoadWAV_RW(SDL_RWFromConstMem((void const*)pwcd->buf,
+											 pwcd->buf_len), 0);
+	if (wave == NULL) {
+		ToLogService("mus_err", "thread#{} Couldn't load {}: {}", id, pdat->fname, SDL_GetError());
+		pdat->status = mus_dat::PMT_FREE;
+		pdat->used = false;
+		return false;
+	}
 
-    wave = Mix_LoadWAV_RW(SDL_RWFromConstMem((void const *)pwcd->buf,
-                          pwcd->buf_len), 0);
-    if (wave == NULL)
-        {
-        LG("mus_err", "thread#%d Couldn't load %s: %s\n", id,
-                pdat->fname, SDL_GetError());
-        pdat->status = mus_dat::PMT_FREE;
-        pdat->used = false;
-        return false;}
+	// set volume of channel and save
+	Mix_Volume(pdat->channel, pdat->vol);
 
-        /*
-    LG("mus", "thread#%d allocated=%d, abuf=%p, alen=%d, volume=%d\n",
-            id, wave->allocated, wave->abuf, wave->alen,wave->volume);*/
+	int channel = Mix_PlayChannel(pdat->channel, wave, loops);
+	if (channel == -1) {
+		ToLogService("mus_err", "thread#{} play channel error, dump...", id);
+		dump_mus_dat(id);
+		Mix_FreeChunk(wave);
+		pdat->status = mus_dat::PMT_FREE;
+		pdat->used = false;
+		return false;
+	}
+	else {
+		if (pdat->loop) // continue blocking the following play request
+		{
+			pdat->channel = channel;
+			pdat->wave = wave;
+		}
+		else {
+			// wait it for playing end
+			ToLogService("mus", "thread#{} wait {} for playing end", id, pdat->fname);
 
-    // set volume of channel and save
-    Mix_Volume(pdat->channel, pdat->vol);
+			DWORD ret; // tell whether to exit loop when playing
+			while (Mix_Playing(channel) == 1) {
+				SDL_Delay(1);
+				ret = WaitForSingleObject(pdat->sig_exit, 1);
+				if (ret == WAIT_OBJECT_0) {
+					ToLogService("mus", "thread#{} recv sig_exit when playing", id);
+					break;
+				}
+			}
 
-    int channel = Mix_PlayChannel(pdat->channel, wave, loops);
-    if (channel == -1)
-        {
-        // some error occured
-        LG("mus_err", "thread#%d play channel error, dump...\n", id);
-        dump_mus_dat(id);
-        Mix_FreeChunk(wave);
-        pdat->status = mus_dat::PMT_FREE;
-        pdat->used = false;
-        return false;}
-    else {
-        /*
-        LG("mus", "thread#%d pdat->channel=%d, play channel=%d\n",
-            id, pdat->channel, channel);*/
-        if (pdat->loop) // continue blocking the following play request
-            {
-            pdat->channel = channel;
-            pdat->wave = wave;}
-        else {
-            // wait it for playing end
-            LG("mus", "thread#%d wait %s for playing end\n",
-                    id, pdat->fname);
+			Mix_FreeChunk(wave);
+			pdat->status = mus_dat::PMT_FREE;
+			pdat->used = false;
+		}
 
-            DWORD ret; // tell whether to exit loop when playing
-            while (Mix_Playing(channel) == 1)
-                {
-                SDL_Delay(1);
-                ret = WaitForSingleObject(pdat->sig_exit, 1);
-                if (ret == WAIT_OBJECT_0)
-                    {
-                    LG("mus", "thread#%d recv sig_exit when playing\n", id);
-                    break;}
-                }
+		return true;
+	}
+}
 
-            Mix_FreeChunk(wave);
-            pdat->status = mus_dat::PMT_FREE;
-            pdat->used = false;}
+void bkg_snd_finished_callback() {
+	mus_dat_array[BKG_SND_ID_START].status = mus_dat::PMT_FREE;
+	mus_dat_array[BKG_SND_ID_START].used = false;
 
-        return true;}
-    }
+	if ((mus_hwnd != NULL) && (mus_msg_id != 0))
+		PostMessage(mus_hwnd, mus_msg_id, 0, 0);
 
-void bkg_snd_finished_callback()
-    {
-    mus_dat_array[BKG_SND_ID_START].status = mus_dat::PMT_FREE;
-    mus_dat_array[BKG_SND_ID_START].used = false;
+	ToLogService("mus", "background music finished");
+}
 
-    if ((mus_hwnd != NULL) && (mus_msg_id != 0))
-        PostMessage(mus_hwnd, mus_msg_id, 0, 0);
+bool play_bkg_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->used = true;
+	pdat->status = mus_dat::PMT_PLAYING; // block the following request
+	Mix_Music* music = NULL;
+	int loops = (pdat->loop) ? -1 : 0;
 
-    LG("mus", "background music finished\n");
-    }
+	// check...
+	if (Mix_PlayingMusic() || Mix_PausedMusic()) Mix_HaltMusic();
+	if (pdat->music) {
+		Mix_FreeMusic(pdat->music);
+		pdat->music = NULL;
+	}
 
-bool play_bkg_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->used = true;
-    pdat->status = mus_dat::PMT_PLAYING; // block the following request
-    Mix_Music* music = NULL;
-    int loops = (pdat->loop) ? -1 : 0;
+	// set the music volume
+	Mix_VolumeMusic(pdat->vol);
 
-    // check...
-    if (Mix_PlayingMusic() || Mix_PausedMusic()) Mix_HaltMusic();
-    if (pdat->music) {Mix_FreeMusic(pdat->music); pdat->music = NULL;}
+	// load the requested music file
+	music = Mix_LoadMUS(pdat->fname);
+	if (music == NULL) {
+		ToLogService("mus_err", "thread#{} Couldn't load {}: {}", id, pdat->fname, SDL_GetError());
+		pdat->status = mus_dat::PMT_FREE;
+		pdat->used = false;
+		pdat->errcode = mus_dat::OP_FILE_NOT_FOUND;
+		return false;
+	}
 
-    // set the music volume
-    Mix_VolumeMusic(pdat->vol);
+	ToLogService("mus", "thread#1 playing background music [{}]", pdat->fname);
+	Mix_HookMusicFinished(bkg_snd_finished_callback);
+	if (Mix_PlayMusic(music, loops) == -1) {
+		ToLogService("mus_err", "thread#{} play error, dump...", id);
+		dump_mus_dat(id);
+		Mix_FreeMusic(music);
+		pdat->status = mus_dat::PMT_FREE;
+		pdat->used = false;
+		pdat->errcode = mus_dat::OP_FAILED;
+		return false;
+	}
+	else {
+		pdat->music = music;
+		pdat->errcode = mus_dat::OP_SUCCESS;
+		return true;
+	}
 
-    // load the requested music file
-    music = Mix_LoadMUS(pdat->fname);
-    if (music == NULL)
-        {
-        LG("mus_err", "thread#%d Couldn't load %s: %s\n", id, pdat->fname,
-           SDL_GetError());
-        pdat->status = mus_dat::PMT_FREE;
-        pdat->used = false;
-        pdat->errcode = mus_dat::OP_FILE_NOT_FOUND;
-        return false;}
+	return true;
+}
 
-    LG("mus", "thread#1 playing background music [%s]\n", pdat->fname);
-    Mix_HookMusicFinished(bkg_snd_finished_callback);
-    if (Mix_PlayMusic(music, loops) == -1)
-        {
-        // some error occured
-        LG("mus_err", "thread#%d play [%s] error, dump...\n", id);
-        dump_mus_dat(id); Mix_FreeMusic(music);
-        pdat->status = mus_dat::PMT_FREE;
-        pdat->used = false;
-        pdat->errcode = mus_dat::OP_FAILED;
-        return false;}
-    else {
-        pdat->music = music;
-        pdat->errcode = mus_dat::OP_SUCCESS;
-        return true;}
+bool stop_env_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
 
-    return true;}
+	if (Mix_Playing(pdat->channel) == 1)
+		Mix_HaltChannel(pdat->channel);
 
-bool stop_env_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
+	if (pdat->wave) {
+		Mix_FreeChunk(pdat->wave);
+		pdat->wave = NULL;
+	}
 
-    if (Mix_Playing(pdat->channel) == 1)
-        Mix_HaltChannel(pdat->channel);
+	pdat->status = mus_dat::PMT_FREE;
+	pdat->used = false;
+	ToLogService("mus", "thread#{} has been stopped by caller [{}]", id, GetTickCount());
+	return true;
+}
 
-    if (pdat->wave)
-        {
-        Mix_FreeChunk(pdat->wave);
-        pdat->wave = NULL;}
+bool stop_cmn_snd(int id) {
+	return true;
+} // you can't stop a common sound
 
-    pdat->status = mus_dat::PMT_FREE;
-    pdat->used = false;
-    LG("mus", "thread#%d has been stopped by caller [%d]\n", id, GetTickCount());
-    return true;}
+bool stop_bkg_snd(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
 
-bool stop_cmn_snd(int id) {return true;} // you can't stop a common sound
+	if (Mix_PlayingMusic() || Mix_PausedMusic())
+		Mix_HaltMusic();
 
-bool stop_bkg_snd(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
+	if (pdat->music) {
+		Mix_FreeMusic(pdat->music);
+		pdat->music = NULL;
+	}
 
-    if (Mix_PlayingMusic() || Mix_PausedMusic())
-        Mix_HaltMusic();
-
-    if (pdat->music)
-        {
-        Mix_FreeMusic(pdat->music);
-        pdat->music = NULL;}
-
-    pdat->status = mus_dat::PMT_FREE;
-    pdat->used = false;
-    pdat->errcode = mus_dat::OP_SUCCESS;
-    return true;}
+	pdat->status = mus_dat::PMT_FREE;
+	pdat->used = false;
+	pdat->errcode = mus_dat::OP_SUCCESS;
+	return true;
+}
 
 bool vol_env_snd(int id) // called only when playing
-    {
-    mus_dat* pdat = &mus_dat_array[id];
+{
+	mus_dat* pdat = &mus_dat_array[id];
 
-    Mix_Volume(pdat->channel, pdat->vol);
-    return true;}
+	Mix_Volume(pdat->channel, pdat->vol);
+	return true;
+}
 
-bool vol_cmn_snd(int id) {return vol_env_snd(id);}
+bool vol_cmn_snd(int id) {
+	return vol_env_snd(id);
+}
 
-bool vol_bkg_snd(int id)
-    {
-    if (is_free(id)) return true;
+bool vol_bkg_snd(int id) {
+	if (is_free(id)) return true;
 
-    mus_dat* pdat = &mus_dat_array[id];
-    Mix_VolumeMusic(pdat->vol);
-    pdat->errcode = mus_dat::OP_SUCCESS;
-    return true;}
+	mus_dat* pdat = &mus_dat_array[id];
+	Mix_VolumeMusic(pdat->vol);
+	pdat->errcode = mus_dat::OP_SUCCESS;
+	return true;
+}
 
-void dispatch_cmd(int id)
-    {
-    if (is_free(id))
-        {
-        // free status, only deal with command "CMD_PLAY" and "CMD_VOL"
-        switch (mus_dat_array[id].cmd)
-            {
-            case mus_dat::CMD_PLAY:
-                if (is_env_snd(id)) play_env_snd(id);
-                else if (is_cmn_snd(id)) play_cmn_snd(id);
-                else if (is_bkg_snd(id)) play_bkg_snd(id);
-                else {
-                    LG("mus_err", "thread#%d unknown cmd_play, dump...\n", id);
-                    dump_mus_dat(id);}
-                break;
-#if 0
-            case mus_dat::CMD_VOL:
-                if (is_env_snd(id)) ;
-                else if (is_cmn_snd(id)) ;
-                else if (is_bkg_snd(id)) vol_bkg_snd(id);
-                else {
-                    LG("mus_err", "thread#%d unknown cmd_vol, dump...\n", id);
-                    dump_mus_dat(id);}
-                break;
-#endif
-            default:
-                break; // nothing to do
-            }
-        }
-    else
-        {
-        // playing status, only deal with command "CMD_STOP" and "CMD_VOL"
-        switch (mus_dat_array[id].cmd)
-            {
-            case mus_dat::CMD_STOP:
-                if (is_env_snd(id)) stop_env_snd(id);
-                else if (is_cmn_snd(id)) stop_cmn_snd(id);
-                else if (is_bkg_snd(id)) stop_bkg_snd(id);
-                else {
-                    LG("mus_err", "thread#%d unknown cmd_stop, dump...\n", id);
-                    dump_mus_dat(id);}
-                break;
+void dispatch_cmd(int id) {
+	if (is_free(id)) {
+		// free status, only deal with command "CMD_PLAY" and "CMD_VOL"
+		switch (mus_dat_array[id].cmd) {
+		case mus_dat::CMD_PLAY:
+			if (is_env_snd(id)) play_env_snd(id);
+			else if (is_cmn_snd(id)) play_cmn_snd(id);
+			else if (is_bkg_snd(id)) play_bkg_snd(id);
+			else {
+				ToLogService("mus_err", "thread#{} unknown cmd_play, dump...", id);
+				dump_mus_dat(id);
+			}
+			break;
+		default:
+			break; // nothing to do
+		}
+	}
+	else {
+		// playing status, only deal with command "CMD_STOP" and "CMD_VOL"
+		switch (mus_dat_array[id].cmd) {
+		case mus_dat::CMD_STOP:
+			if (is_env_snd(id)) stop_env_snd(id);
+			else if (is_cmn_snd(id)) stop_cmn_snd(id);
+			else if (is_bkg_snd(id)) stop_bkg_snd(id);
+			else {
+				ToLogService("mus_err", "thread#{} unknown cmd_stop, dump...", id);
+				dump_mus_dat(id);
+			}
+			break;
 
-            case mus_dat::CMD_VOL:
-                if (is_env_snd(id)) vol_env_snd(id);
-                else if (is_cmn_snd(id)) vol_cmn_snd(id);
-                else if (is_bkg_snd(id)) vol_bkg_snd(id);
-                else {
-                    LG("mus_err", "thread#%d unknown cmd_vol, dump...\n", id);
-                    dump_mus_dat(id);}
-                break;
+		case mus_dat::CMD_VOL:
+			if (is_env_snd(id)) vol_env_snd(id);
+			else if (is_cmn_snd(id)) vol_cmn_snd(id);
+			else if (is_bkg_snd(id)) vol_bkg_snd(id);
+			else {
+				ToLogService("mus_err", "thread#{} unknown cmd_vol, dump...", id);
+				dump_mus_dat(id);
+			}
+			break;
 
-            default:
-                break; // nothing to do
-            }
-        }    
-    return;}
+		default:
+			break; // nothing to do
+		}
+	}
+	return;
+}
 
-void dispatch_status(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
+void dispatch_status(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
 
-    if (pdat->status == mus_dat::PMT_FREE) {Sleep(5); return;}
-    if (pdat->status == mus_dat::PMT_PLAYING) {SDL_Delay(1); return;}
-    return;}
+	if (pdat->status == mus_dat::PMT_FREE) {
+		Sleep(5);
+		return;
+	}
+	if (pdat->status == mus_dat::PMT_PLAYING) {
+		SDL_Delay(1);
+		return;
+	}
+	return;
+}
 
-void dispatch_exit(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
+void dispatch_exit(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
 
-    if (Mix_Playing(pdat->channel) == 1)
-        Mix_HaltChannel(pdat->channel);
+	if (Mix_Playing(pdat->channel) == 1)
+		Mix_HaltChannel(pdat->channel);
 
-    if (pdat->wave)
-        Mix_FreeChunk(pdat->wave);
+	if (pdat->wave)
+		Mix_FreeChunk(pdat->wave);
 
-    if (Mix_PlayingMusic() || Mix_PausedMusic())
-        Mix_HaltMusic();
+	if (Mix_PlayingMusic() || Mix_PausedMusic())
+		Mix_HaltMusic();
 
-    if (pdat->music)
-        Mix_FreeMusic(pdat->music);
+	if (pdat->music)
+		Mix_FreeMusic(pdat->music);
 
-    pdat->used = false;
-    LG("mus", "thread#%d exit\n", id);
-    }
+	pdat->used = false;
+	ToLogService("mus", "thread#{} exit", id);
+}
 
-DWORD WINAPI play_mus_thread(LPVOID lpParameter)
-    {
-    DWORD ret;
-    int id = (int)lpParameter;
-    HANDLE sig_cmd = sig_cmd_array[id];
-    mus_dat_array[id].sig_exit = sig_exit;
+DWORD WINAPI play_mus_thread(LPVOID lpParameter) {
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 
-    while (1)
-        {
-        ret = WaitForSingleObject(sig_exit, 1); // wait 1ms
-        if (ret == WAIT_OBJECT_0) break;
-        if (ret == WAIT_ABANDONED)
-            {
-            LG("mus_err", "WAIT_ABANDONED!!!\n");
-            break;}
+	DWORD ret;
+	int id = (int)lpParameter;
+	HANDLE sig_cmd = sig_cmd_array[id];
+	mus_dat_array[id].sig_exit = sig_exit;
 
-        ret = WaitForSingleObject(sig_cmd, 2); // wait 2ms
-        if (ret == WAIT_OBJECT_0) dispatch_cmd(id);
-        else if (ret == WAIT_TIMEOUT) dispatch_status(id);
-        else Sleep(20);}
+	while (1) {
+		ret = WaitForSingleObject(sig_exit, 1); // wait 1ms
+		if (ret == WAIT_OBJECT_0) break;
+		if (ret == WAIT_ABANDONED) {
+			ToLogService("mus_err", "WAIT_ABANDONED!!!");
+			break;
+		}
 
-    dispatch_exit(id);
-    return 0;}
+		ret = WaitForSingleObject(sig_cmd, 2); // wait 2ms
+		if (ret == WAIT_OBJECT_0) dispatch_cmd(id);
+		else if (ret == WAIT_TIMEOUT) dispatch_status(id);
+		else Sleep(20);
+	}
+
+	dispatch_exit(id);
+	return 0;
+}
 
 
 // music producer interface
-inline bool is_used(int id)
-    {
-    return (mus_dat_array[id].used) ? true : false;}
+inline bool is_used(int id) {
+	return (mus_dat_array[id].used) ? true : false;
+}
 
-inline void signal(int id) {SetEvent(sig_cmd_array[id]);}
+inline void signal(int id) {
+	SetEvent(sig_cmd_array[id]);
+}
 
-inline void mus_cmd_add(int id, char const* fname, bool loop)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->used = true;
-    pdat->loop = loop;
-    size_t len = min(MAX_PATH, strlen(fname));
-    memcpy(pdat->fname, fname, len);
-    pdat->fname[len] = 0;}
+inline void mus_cmd_add(int id, char const* fname, bool loop) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->used = true;
+	pdat->loop = loop;
+	size_t len = min(MAX_PATH, strlen(fname));
+	memcpy(pdat->fname, fname, len);
+	pdat->fname[len] = 0;
+}
 
-inline void mus_cmd_stop(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->cmd = mus_dat::CMD_STOP;
-    signal(id);}
+inline void mus_cmd_stop(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->cmd = mus_dat::CMD_STOP;
+	signal(id);
+}
 
-inline void mus_cmd_vol(int id, int vol)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->cmd = mus_dat::CMD_VOL;
-    pdat->vol = vol;
-    signal(id);}
+inline void mus_cmd_vol(int id, int vol) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->cmd = mus_dat::CMD_VOL;
+	pdat->vol = vol;
+	signal(id);
+}
 
-inline void mus_cmd_play(int id)
-    {
-    mus_dat* pdat = &mus_dat_array[id];
-    pdat->cmd = mus_dat::CMD_PLAY;
-    signal(id);}
+inline void mus_cmd_play(int id) {
+	mus_dat* pdat = &mus_dat_array[id];
+	pdat->cmd = mus_dat::CMD_PLAY;
+	signal(id);
+}
 
 
+// the current version of wave cache is unsafe with multi-thread caller
+//  it's only designed for a single-thread caller
+inline void dump_cache_dat(int id) {
+	wave_cache_dat* p = &wave_cache_dat_array[id];
+	ToLogService("mus_err",
+		"cache#{} [{}], fname={}, buf={}, buf_len={}, time_stamp={}, ref_cnt={}",
+		id, (p->used) ? "used" : "not use", p->fname, static_cast<void*>(p->buf),
+		p->buf_len, p->time_stamp, p->ref_cnt);
+}
 
-    // the current version of wave cache is unsafe with multi-thread caller
-    //  it's only designed for a single-thread caller
-inline void dump_cache_dat(int id)
-    {
-    wave_cache_dat* p = &wave_cache_dat_array[id];
-    LG("mus_err", "cache#%d [%s], fname=%s, buf=%p, buf_len=%d, time_stamp=%d, \
-ref_cnt=%d\n", id, (p->used) ? "used" : "not use", p->fname, p->buf,
-            p->buf_len, p->time_stamp, p->ref_cnt);}
+inline void dump_cache_dat() {
+	for (int i = WAV_CACHE_ID_START; i <= WAV_CACHE_ID_END; ++i) dump_cache_dat(i);
+}
 
-inline void dump_cache_dat()
-    {
-    for (int i = WAV_CACHE_ID_START; i <= WAV_CACHE_ID_END; ++ i) dump_cache_dat(i);
+inline void wave_cache_set_used(wave_cache_dat* p, bool used = true) {
+	p->used = used;
+}
 
-    LG("mus_err", "\n");
-    }
+inline bool wave_cache_is_used(wave_cache_dat* p) {
+	return p->used;
+}
 
-inline void wave_cache_set_used(wave_cache_dat* p, bool used = true)
-    {p->used = used;}
+inline void wave_cache_record(wave_cache_dat* p) {
+	p->time_stamp = GetTickCount();
+}
 
-inline bool wave_cache_is_used(wave_cache_dat* p)
-    {return p->used;}
+inline void wave_cache_unload(wave_cache_dat* p) {
+	// free the wave file from heap
+	if (p->buf) {
+		delete p->buf;
+		p->buf = NULL;
+	}
 
-inline void wave_cache_record(wave_cache_dat* p)
-    {p->time_stamp = GetTickCount();}
+	p->buf_len = 0;
+	return;
+}
 
-inline void wave_cache_unload(wave_cache_dat* p)
-    {
-    // free the wave file from heap
-    if (p->buf)
-        {
-        delete p->buf;
-        p->buf = NULL;}
+bool wave_cache_load(wave_cache_dat* p) {
+	// read the wave file into heap
+	FILE* fp = NULL;
+	if (fp = fopen(p->fname, "rb"), fp == NULL) {
+		ToLogService("mus_err", "failed to open file {}", p->fname);
+		return false;
+	}
 
-    p->buf_len = 0;
-    return;}
+	fseek(fp, 0, SEEK_END);
+	long len = ftell(fp);
+	fseek(fp, 0, SEEK_SET);
+	Uint8* buf = NULL;
 
-bool wave_cache_load(wave_cache_dat* p)
-    {
-    // read the wave file into heap
-    FILE* fp = NULL;
-    if (fp = fopen(p->fname, "rb"), fp == NULL)
-        {
-        LG("mus_err", "failed to open file %s\n", p->fname);
-        return false;}
+	try {
+		buf = new Uint8[len];
+		len = (Uint32)fread(buf, sizeof Uint8, len, fp);
+	}
+	catch (bad_alloc& ba) {
+		ToLogService("mus_err", "'new' except: {} in wave_cache_load", ba.what());
+		fclose(fp);
+		return false;
+	}
+	catch (...) {
+		ToLogService("mus_err", "other except... in wave_cache_load");
+		if (buf) delete buf;
+		fclose(fp);
+		return false;
+	}
 
-    fseek(fp, 0, SEEK_END); long len = ftell(fp);
-    fseek(fp, 0, SEEK_SET); Uint8* buf = NULL;
-
-    try {
-        buf = new Uint8[len];
-        len = (Uint32)fread(buf, sizeof Uint8, len, fp);}
-    catch (bad_alloc& ba)
-        {
-        LG("mus_err", "'new' except: %s in wave_cache_load\n", ba.what());
-        fclose(fp);
-        return false;}
-    catch (...)
-        {
-        LG("mus_err", "other except... in wave_cache_load\n");
-        if (buf) delete buf;
-        fclose(fp);
-        return false;}
-    
-    p->buf = buf;
-    p->buf_len = len;
-    fclose(fp);
-    return true;}
+	p->buf = buf;
+	p->buf_len = len;
+	fclose(fp);
+	return true;
+}
 
 int wave_cache_find(char const* fname)
 // if find, return the index found
 // if not, and if cache is full, return WAV_CACHE_ID_FULL
 //         and if cache is not full, return the a free index
-    {
-    wave_cache_dat* p;
-    int id = WAV_CACHE_ID_START;
-    DWORD time_stamp = wave_cache_dat_array[id].time_stamp;
-    bool found = false;
-    int found_id;
+{
+	wave_cache_dat* p;
+	int id = WAV_CACHE_ID_START;
+	DWORD time_stamp = wave_cache_dat_array[id].time_stamp;
+	bool found = false;
+	int found_id;
 
-    int i = WAV_CACHE_ID_START;
-	for (; i <= WAV_CACHE_ID_END; ++i)
-        {
-        p = &wave_cache_dat_array[i];
-        if (!p->used) break;
+	int i = WAV_CACHE_ID_START;
+	for (; i <= WAV_CACHE_ID_END; ++i) {
+		p = &wave_cache_dat_array[i];
+		if (!p->used) break;
 
-        if (p->time_stamp < time_stamp)
-            {
-            time_stamp = p->time_stamp;
-            id = i;}
+		if (p->time_stamp < time_stamp) {
+			time_stamp = p->time_stamp;
+			id = i;
+		}
 
-        if (!found && (strcmp(p->fname, fname) == 0))
-            {
-            found = true;
-            found_id = i;}
-        }
+		if (!found && (strcmp(p->fname, fname) == 0)) {
+			found = true;
+			found_id = i;
+		}
+	}
 
-    wav_cache_set_discard(id); // refresh discard id
+	wav_cache_set_discard(id); // refresh discard id
 
-    if (found) return found_id;
-    else return (i > WAV_CACHE_ID_END) ? WAV_CACHE_IS_FULL : i;}
+	if (found) return found_id;
+	else return (i > WAV_CACHE_ID_END) ? WAV_CACHE_IS_FULL : i;
+}
 
-Uint8 const* wave_cache_new(wave_cache_dat* p, char const* fname)
-    {
-    size_t len = min(MAX_PATH, strlen(fname));
-    memcpy(p->fname, fname, len);
-    p->fname[len] = 0;
+Uint8 const* wave_cache_new(wave_cache_dat* p, char const* fname) {
+	size_t len = min(MAX_PATH, strlen(fname));
+	memcpy(p->fname, fname, len);
+	p->fname[len] = 0;
 
-    if (wave_cache_load(p))
-        {
-        wave_cache_record(p);
-        wave_cache_set_used(p);
-        return p->buf;}
-    else return NULL;}
+	if (wave_cache_load(p)) {
+		wave_cache_record(p);
+		wave_cache_set_used(p);
+		return p->buf;
+	}
+	else return NULL;
+}
 
-Uint8 const* wave_cache_replace(wave_cache_dat* p, char const* fname)
-    {
-    wave_cache_unload(p);
-    return wave_cache_new(p, fname);}
+Uint8 const* wave_cache_replace(wave_cache_dat* p, char const* fname) {
+	wave_cache_unload(p);
+	return wave_cache_new(p, fname);
+}
 
-int wave_cache_add(char const* fname)
-    { // add the file to cache, or replace the last-called (discard)
-    int id;
-    wave_cache_dat* p = NULL;
-    if (id = wave_cache_find(fname), id == WAV_CACHE_IS_FULL)
-        {
-        // replace a wave cache
-        id = wav_cache_get_discard();
-        LG("mus", "replace cache#%d with file %s\n", id, fname);
-        p = &wave_cache_dat_array[id];
-        wave_cache_replace(p, fname);
-        return id;}
-    else {
-        // find it or need to new one
-        p = &wave_cache_dat_array[id];
-        if (wave_cache_is_used(p))
-            {
-            wave_cache_record(p);
-            return id;}
-        else {
-            wave_cache_new(p, fname);
-            return id;}
-        }
-    }
+int wave_cache_add(char const* fname) {
+	// add the file to cache, or replace the last-called (discard)
+	int id;
+	wave_cache_dat* p = NULL;
+	if (id = wave_cache_find(fname), id == WAV_CACHE_IS_FULL) {
+		// replace a wave cache
+		id = wav_cache_get_discard();
+		ToLogService("mus", "replace cache#{} with file {}", id, fname);
+		p = &wave_cache_dat_array[id];
+		wave_cache_replace(p, fname);
+		return id;
+	}
+	else {
+		// find it or need to new one
+		p = &wave_cache_dat_array[id];
+		if (wave_cache_is_used(p)) {
+			wave_cache_record(p);
+			return id;
+		}
+		else {
+			wave_cache_new(p, fname);
+			return id;
+		}
+	}
+}
 
-void wave_cache_exit()
-    { // release all memory allocated
-    wave_cache_dat* p;
-    for (int i = WAV_CACHE_ID_START; i <= WAV_CACHE_ID_END; ++ i)
-        {
-        p = &wave_cache_dat_array[i];
-        if (!p->used) break;
+void wave_cache_exit() {
+	// release all memory allocated
+	wave_cache_dat* p;
+	for (int i = WAV_CACHE_ID_START; i <= WAV_CACHE_ID_END; ++i) {
+		p = &wave_cache_dat_array[i];
+		if (!p->used) break;
 
-        // release buffer        
-        p->buf_len = 0;
-        p->time_stamp = 0;
+		// release buffer
+		p->buf_len = 0;
+		p->time_stamp = 0;
 
-        if (p->buf) delete p->buf;
+		if (p->buf) delete p->buf;
 
-        p->buf = NULL;
-        p->fname[0] = 0;
-        p->used = false;}
-    }
+		p->buf = NULL;
+		p->fname[0] = 0;
+		p->used = false;
+	}
+}
 
 
 // music manager singleton
 
-bool mus_mgr_init(bool enable, DWORD_PTR dwValue)
-    {
-    if (SDL_Init(SDL_INIT_AUDIO) < 0)
-        {
-        LG("mus_err", "Couldn't initialize SDL: %s\n", SDL_GetError());
-        return false;}
+bool mus_mgr_init(bool enable, DWORD_PTR dwValue) {
+	if (SDL_Init(SDL_INIT_AUDIO) < 0) {
+		ToLogService("mus_err", "Couldn't initialize SDL: {}", SDL_GetError());
+		return false;
+	}
 
-    if (!enable) return false;
+	if (!enable) return false;
 
-    // init music
-    int i;
-    LG("mus", "mus_mgr_init\n");
+	// init music
+	int i;
+	ToLogService("mus", "mus_mgr_init");
 
-    // init the share data
-    for (i = ENV_SND_ID_START; i <= ENV_SND_ID_END; ++ i)
-        env_snd_init(i, false, mus_dat::CMD_NONE, 0, i);
-    for (i = CMN_SND_ID_START; i <= CMN_SND_ID_END; ++ i)
-        cmn_snd_init(i, false, mus_dat::CMD_NONE, 0, i);
-    for (i = BKG_SND_ID_START; i <= BKG_SND_ID_END; ++ i)
-        bkg_snd_init(i, false, mus_dat::CMD_NONE);
+	// init the share data
+	for (i = ENV_SND_ID_START; i <= ENV_SND_ID_END; ++i)
+		env_snd_init(i, false, mus_dat::CMD_NONE, 0, i);
+	for (i = CMN_SND_ID_START; i <= CMN_SND_ID_END; ++i)
+		cmn_snd_init(i, false, mus_dat::CMD_NONE, 0, i);
+	for (i = BKG_SND_ID_START; i <= BKG_SND_ID_END; ++i)
+		bkg_snd_init(i, false, mus_dat::CMD_NONE);
 
-    // open audio device
-    int audio_rate = MIX_DEFAULT_FREQUENCY;
-    Uint16 audio_format = MIX_DEFAULT_FORMAT;
-    int audio_channels = MIX_DEFAULT_CHANNELS;
-    if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, 4096) < 0)
-        {
-        LG("mus_err", "Couldn't open audio: %s\n", SDL_GetError());
-        return false;}
+	// open audio device
+	int audio_rate = MIX_DEFAULT_FREQUENCY;
+	Uint16 audio_format = MIX_DEFAULT_FORMAT;
+	int audio_channels = MIX_DEFAULT_CHANNELS;
+	if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, 4096) < 0) {
+		ToLogService("mus_err", "Couldn't open audio: {}", SDL_GetError());
+		return false;
+	}
 
-    Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-    /*
-    LG("mus", "Opened audio at %d Hz %d bit %s\n", audio_rate,
-        (audio_format & 0xFF), (audio_channels > 1) ? "stereo" : "mono");*/
+	Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
 
-    // create exit signal
-    sig_exit = CreateEvent(NULL, TRUE, FALSE, NULL);
-    if (sig_exit == NULL)
-        {
-        LG("mus_err", "create exit signal error\n");
-        return false;}
-    if ((sig_exit != NULL) && (GetLastError() == ERROR_ALREADY_EXISTS))
-        {
-        LG("mus_err", "exit signal already exist\n");
-        return false;}
+	// create exit signal
+	sig_exit = CreateEvent(NULL, TRUE, FALSE, NULL);
+	if (sig_exit == NULL) {
+		ToLogService("mus_err", "create exit signal error");
+		return false;
+	}
+	if ((sig_exit != NULL) && (GetLastError() == ERROR_ALREADY_EXISTS)) {
+		ToLogService("mus_err", "exit signal already exist");
+		return false;
+	}
 
-    sig_task = CreateEvent(NULL, FALSE, FALSE, NULL);
-    if (sig_task == NULL)
-        {
-        LG("mus_err", "create task signal error\n");
-        return false;}
-    if ((sig_task != NULL) && (GetLastError() == ERROR_ALREADY_EXISTS))
-        {
-        LG("mus_err", "task signal already exist\n");
-        return false;}
+	sig_task = CreateEvent(NULL, FALSE, FALSE, NULL);
+	if (sig_task == NULL) {
+		ToLogService("mus_err", "create task signal error");
+		return false;
+	}
+	if ((sig_task != NULL) && (GetLastError() == ERROR_ALREADY_EXISTS)) {
+		ToLogService("mus_err", "task signal already exist");
+		return false;
+	}
 
-    // create child thread and command signals
-    DWORD tid = 0;
-	for (i = MUS_ID_START; i <= MUS_ID_END; ++ i)
-	{
+	// create child thread and command signals
+	DWORD tid = 0;
+	for (i = MUS_ID_START; i <= MUS_ID_END; ++i) {
 		sig_cmd_array[i] = CreateEvent(NULL, FALSE, FALSE, NULL);
 		thrdpool[i] = CreateThread(NULL, 0, play_mus_thread, (LPVOID)i, 0, &tid);
-		if( dwValue && INVALID_HANDLE_VALUE != thrdpool[i] )
-		{
-			SetThreadAffinityMask( thrdpool[i], dwValue );
+		if (dwValue && INVALID_HANDLE_VALUE != thrdpool[i]) {
+			SetThreadAffinityMask(thrdpool[i], dwValue);
 		}
 	}
 
-    mus_init_flag = true;
+	mus_init_flag = true;
 
-    return true;}
+	return true;
+}
 
 void mus_mgr_reset(int op) // -1 clear all, 0 clear all except bkg_snd
-    {
-    if (!mus_init_flag) return;
+{
+	if (!mus_init_flag) return;
 
-    // reset music
-    int i;
-    LG("mus", "mus_mgr_reset\n");
+	// reset music
+	int i;
+	ToLogService("mus", "mus_mgr_reset");
 
-    for (i = ENV_SND_ID_START; i <= ENV_SND_ID_END; ++ i)
-        {
-        if (is_used(i)) mus_cmd_stop(i);}
-    for (i = CMN_SND_ID_START; i <= CMN_SND_ID_END; ++ i)
-        {
-        if (is_used(i)) mus_cmd_stop(i);}
+	for (i = ENV_SND_ID_START; i <= ENV_SND_ID_END; ++i) {
+		if (is_used(i)) mus_cmd_stop(i);
+	}
+	for (i = CMN_SND_ID_START; i <= CMN_SND_ID_END; ++i) {
+		if (is_used(i)) mus_cmd_stop(i);
+	}
 
-    if (op == -1) bkg_snd_stop();}
+	if (op == -1) bkg_snd_stop();
+}
 
-void mus_mgr_exit()
-    {
-    if (mus_init_flag)
-        {
-        LG("mus_err", "before post exit signal: [%d]\n",GetTickCount());
-        dump_mus_dat();
-        dump_cache_dat();
-        SetEvent(sig_exit);
-        
-        Sleep(3000); // wait 3 second
+void mus_mgr_exit() {
+	if (mus_init_flag) {
+		ToLogService("mus_err", "before post exit signal: [{}]", GetTickCount());
+		dump_mus_dat();
+		dump_cache_dat();
+		SetEvent(sig_exit);
 
-        DWORD exitcode;
-        for (int i = MUS_ID_START; i < MUS_ID_END; ++ i)
-            {
-            if (!GetExitCodeThread(thrdpool[i], &exitcode))
-                {
-                if (exitcode == STILL_ACTIVE)
-                    LG("mus_err", "thread#%d failed to exit, kill it!\n", i);
+		Sleep(3000); // wait 3 second
 
-                if (TerminateThread(thrdpool[i], 0))
-                    LG("mus_err", "thread#%d was killed successfully!\n", i);
-                else {
-                    LG("mus_err", "thread#%d can't be killed, err = %d!\n", i, GetLastError());}
-                }
-            else {
-                LG("mus_err", "thread#%d exit successfully!\n", i);
-                continue;}
-            }
+		DWORD exitcode;
+		for (int i = MUS_ID_START; i < MUS_ID_END; ++i) {
+			if (!GetExitCodeThread(thrdpool[i], &exitcode)) {
+				if (exitcode == STILL_ACTIVE)
+					ToLogService("mus_err", "thread#{} failed to exit, kill it!", i);
 
-        wave_cache_exit();
-        LG("mus_err", "after post exit signal:\n");
-        dump_mus_dat();
-        dump_cache_dat();
+				if (TerminateThread(thrdpool[i], 0))
+					ToLogService("mus_err", "thread#{} was killed successfully!", i);
+				else {
+					ToLogService("mus_err", "thread#{} can't be killed, err = {}!", i, GetLastError());
+				}
+			}
+			else {
+				ToLogService("mus_err", "thread#{} exit successfully!", i);
+				continue;
+			}
+		}
 
-        for (int i = MUS_ID_START; i <= MUS_ID_END; ++ i)
-            CloseHandle(sig_cmd_array[i]);
+		wave_cache_exit();
+		ToLogService("mus_err", "after post exit signal:");
+		dump_mus_dat();
+		dump_cache_dat();
 
-        CloseHandle(sig_task);
-        CloseHandle(sig_exit);
-        Mix_CloseAudio();}
-    
-    SDL_Quit();
-    LG("mus", "mus_mgr_exit\n");
-    }
+		for (int i = MUS_ID_START; i <= MUS_ID_END; ++i)
+			CloseHandle(sig_cmd_array[i]);
 
-#if 0
-struct mus_mgr
-    {
-    friend class cfl_singleton_ap<mus_mgr>;
-    friend class auto_ptr;
+		CloseHandle(sig_task);
+		CloseHandle(sig_exit);
+		Mix_CloseAudio();
+	}
 
-private:
-    mus_mgr() {::mus_mgr_init();}
-    ~mus_mgr() {::mus_mgr_exit();}
-    mus_mgr(mus_mgr const&) {}
-    mus_mgr& operator =(mus_mgr const&) {}
-
-public:
-    bool init() {return true;}
-    }; typedef cfl_singleton_ap<mus_mgr> MUS_MGR;
-
-// no use, just help music manager initialize and destroy :p
-bool no_use = MUS_MGR::instance()->init();
-#endif
+	SDL_Quit();
+	ToLogService("mus", "mus_mgr_exit");
+}
 
 
 // interface exported
-bool env_snd_is_full()
-    {
-    if (!is_env_snd_enable()) return true;
+bool env_snd_is_full() {
+	if (!is_env_snd_enable()) return true;
 
-    int i = ENV_SND_ID_START;
-	for (; i <= ENV_SND_ID_END; ++i)
-	{
+	int i = ENV_SND_ID_START;
+	for (; i <= ENV_SND_ID_END; ++i) {
 		if (!is_used(i)) break;
 	}
 
-    return (i > ENV_SND_ID_END) ? false : true;}
+	return (i > ENV_SND_ID_END) ? false : true;
+}
 
-int env_snd_add(char const* fname)
-    {
-    if (!is_env_snd_enable()) return -1;
+int env_snd_add(char const* fname) {
+	if (!is_env_snd_enable()) return -1;
 
 	int i = ENV_SND_ID_START;
-	for (; i <= ENV_SND_ID_END; ++i)
-	{
-		if (!is_used(i))
-		{
+	for (; i <= ENV_SND_ID_END; ++i) {
+		if (!is_used(i)) {
 			mus_cmd_add(i, fname, true);
 			break;
 		}
 	}
 
-    return (i > ENV_SND_ID_END) ? -1 : i;}
+	return (i > ENV_SND_ID_END) ? -1 : i;
+}
 
-bool env_snd_vol(int id, int vol)
-    {
-    if (vol < 0 || !is_env_snd_enable()) return false;
+bool env_snd_vol(int id, int vol) {
+	if (vol < 0 || !is_env_snd_enable()) return false;
 
-    if (id < ENV_SND_ID_START || id > ENV_SND_ID_END)
-        throw logic_error("out of index in env_snd_vol\n");
+	if (id < ENV_SND_ID_START || id > ENV_SND_ID_END)
+		throw logic_error("out of index in env_snd_vol\n");
 
-    if (vol == 0) mus_cmd_stop(id); // stop it
-    else mus_cmd_vol(id, vol);
-    return true;}
+	if (vol == 0) mus_cmd_stop(id); // stop it
+	else mus_cmd_vol(id, vol);
+	return true;
+}
 
-bool env_snd_play(int id)
-    {
-    if (!is_env_snd_enable()) return false;
+bool env_snd_play(int id) {
+	if (!is_env_snd_enable()) return false;
 
-    if (id < ENV_SND_ID_START || id > ENV_SND_ID_END)
-        throw logic_error("out of index in env_snd_play\n");
+	if (id < ENV_SND_ID_START || id > ENV_SND_ID_END)
+		throw logic_error("out of index in env_snd_play\n");
 
-    mus_cmd_play(id); return true;}
+	mus_cmd_play(id);
+	return true;
+}
 
-void cmn_snd_set_cache(int n /* = 20 */) {}
+void cmn_snd_set_cache(int n /* = 20 */) {
+}
 
-bool cmn_snd_play(char const* fname, int vol)
-    {
-    if (!is_cmn_snd_enable()) return false;
+bool cmn_snd_play(char const* fname, int vol) {
+	if (!is_cmn_snd_enable()) return false;
 
-    int i = CMN_SND_ID_START;
-    for (; i < CMN_SND_ID_END; ++ i)
-        {
-        if (!is_used(i)) break;}
-    if (i > CMN_SND_ID_END) return false;
+	int i = CMN_SND_ID_START;
+	for (; i < CMN_SND_ID_END; ++i) {
+		if (!is_used(i)) break;
+	}
+	if (i > CMN_SND_ID_END) return false;
 
-    // add the wave file to wave cache and music data array
-    if (vol <= 0) return false;
+	// add the wave file to wave cache and music data array
+	if (vol <= 0) return false;
 
-    int id = wave_cache_add(fname);
-    mus_cmd_add(i, fname, false);
-    mus_dat_array[i].wave_cache_id = id;
-    mus_dat_array[i].vol = vol;
+	int id = wave_cache_add(fname);
+	mus_cmd_add(i, fname, false);
+	mus_dat_array[i].wave_cache_id = id;
+	mus_dat_array[i].vol = vol;
 
-    // play it
-    mus_cmd_play(i);
-    return true;}
+	// play it
+	mus_cmd_play(i);
+	return true;
+}
 
-void snd_enable(bool enable /* = true */)
-    {
-    cmn_snd_enable(enable);
-    env_snd_enable(enable);}
+void snd_enable(bool enable /* = true */) {
+	cmn_snd_enable(enable);
+	env_snd_enable(enable);
+}
 
-void bkg_snd_set_notify(HWND hwnd, UINT msg_id)
-    {
-    mus_hwnd = hwnd; mus_msg_id = msg_id;}
+void bkg_snd_set_notify(HWND hwnd, UINT msg_id) {
+	mus_hwnd = hwnd;
+	mus_msg_id = msg_id;
+}
 
-bool bkg_snd_play(char const* fname, bool loop /* = false */)
-    {
-    if ((_access(fname, 00) == -1) || (_access(fname, 04) == -1))
-        {
-        LG("mus_err", "%s not found or can't be read\n", fname);
-        return false;}
-    if (is_used(BKG_SND_ID_START)) return false;
+bool bkg_snd_play(char const* fname, bool loop /* = false */) {
+	if ((_access(fname, 00) == -1) || (_access(fname, 04) == -1)) {
+		ToLogService("mus_err", "{} not found or can't be read", fname);
+		return false;
+	}
+	if (is_used(BKG_SND_ID_START)) return false;
 
-    mus_cmd_add(BKG_SND_ID_START, fname, loop);
-    mus_cmd_play(BKG_SND_ID_START);
+	mus_cmd_add(BKG_SND_ID_START, fname, loop);
+	mus_cmd_play(BKG_SND_ID_START);
 
-    mus_dat* pdat = &mus_dat_array[BKG_SND_ID_START];
+	mus_dat* pdat = &mus_dat_array[BKG_SND_ID_START];
 	int i = 0;
-    while (true)
-        {
-        if ((pdat->status == mus_dat::PMT_PLAYING)
-            && (pdat->used == true)) break;
-        else if ((pdat->errcode == mus_dat::OP_FAILED)
-                || (pdat->errcode == mus_dat::OP_FILE_NOT_FOUND)) break;
-        else Sleep(1);
-
-		if (++i > ERROR_TIME)
-			{
-			LG(ERROR_FILE, "msgbkg_snd_play time out!\n");
+	while (true) {
+		if ((pdat->status == mus_dat::PMT_PLAYING)
+			&& (pdat->used == true))
 			break;
-			}
+		else if ((pdat->errcode == mus_dat::OP_FAILED)
+			|| (pdat->errcode == mus_dat::OP_FILE_NOT_FOUND))
+			break;
+		else Sleep(1);
+
+		if (++i > ERROR_TIME) {
+			ToLogService(ERROR_FILE, "msgbkg_snd_play time out!");
+			break;
 		}
+	}
 
-    return true;}
+	return true;
+}
 
-void bkg_snd_vol(int vol)
-    {
-    if (vol < 0) return;
+void bkg_snd_vol(int vol) {
+	if (vol < 0) return;
 
-    mus_cmd_vol(BKG_SND_ID_START, vol);}
+	mus_cmd_vol(BKG_SND_ID_START, vol);
+}
 
-void bkg_snd_stop()
-    {
-    if (!is_used(BKG_SND_ID_START)) return;
+void bkg_snd_stop() {
+	if (!is_used(BKG_SND_ID_START)) return;
 
-    mus_cmd_stop(BKG_SND_ID_START);
+	mus_cmd_stop(BKG_SND_ID_START);
 
-    mus_dat* pdat = &mus_dat_array[BKG_SND_ID_START];
+	mus_dat* pdat = &mus_dat_array[BKG_SND_ID_START];
 
 	int i = 0;
-    while (true)
-        {
-        if ((pdat->status == mus_dat::PMT_FREE)
-            && (pdat->used == false)) break;
-        else Sleep(1);
-		
-		if (++i > ERROR_TIME)
-			{
-			LG(ERROR_FILE, "msgbkg_snd_stop time out!\n");
+	while (true) {
+		if ((pdat->status == mus_dat::PMT_FREE)
+			&& (pdat->used == false))
 			break;
-			}
-		}
+		else Sleep(1);
 
-    LG("mus", "stop bkg_snd success\n");
-    }
+		if (++i > ERROR_TIME) {
+			ToLogService(ERROR_FILE, "msgbkg_snd_stop time out!");
+			break;
+		}
+	}
+
+	ToLogService("mus", "stop bkg_snd success");
+}

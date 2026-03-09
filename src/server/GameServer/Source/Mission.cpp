@@ -1,4 +1,4 @@
-﻿// Mission.cpp Created by knight-gongjian 2004.12.13.
+// Mission.cpp Created by knight-gongjian 2004.12.13.
 //---------------------------------------------------------
 #include "stdafx.h"   //add by alfred.shi 20080312
 
@@ -19,16 +19,16 @@ namespace mission
 	//#define ROLE_DEBUG_INFO
 
 	CCharMission::CCharMission()
-	{T_B
-	T_E}
+	{
+	}
 
 	CCharMission::~CCharMission()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	void CCharMission::Initially()
-	{T_B
+	{
 		m_byNumTrigger = 0;
 		m_byNumMission = 0;
 		memset( m_Trigger, 0, sizeof(TRIGGER_DATA)*ROLE_MAXNUM_CHARTRIGGER );
@@ -45,10 +45,10 @@ namespace mission
 
 		// 
 		m_byOnline = 1;
-	T_E}
+	}
 
 	void CCharMission::Finally()
-	{T_B
+	{
 		// MisClear
 		/*
 		m_byNumTrigger = 0;
@@ -68,10 +68,10 @@ namespace mission
 		// 
 		m_byOnline = 1;
 		*/
-	T_E}
+	}
 
 	BOOL CCharMission::MisInit( char* pszBuf )
-	{T_B
+	{
 		int nEdition(-1), nData1(0), nData2(0), nData3(0), nData4(0), nData5(0), nData6(0), 
 			nData7(0), nData8(0), nData9(0), nData10(0), nData11(0);
 		char* pTemp = pszBuf;
@@ -198,10 +198,10 @@ namespace mission
 		printf( "\n" );
 #endif
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::MisGetData( char* pszBuf, DWORD dwSize )
-	{T_B
+	{
 		sprintf( pszBuf, "%d,", ROLE_MIS_MISINFO_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		printf( "\nCCharMission:GetData: MisInfo edition code = %d", ROLE_MIS_TRIGGER_EDITION );
@@ -283,10 +283,10 @@ namespace mission
 		pszBuf[strlen(pszBuf) + 1] = 0;
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::MisInitRecord( char* pszBuf )
-	{T_B
+	{
 		int nEdition(-1), nData1(0);
 		char* pTemp = pszBuf;
 		sscanf( pTemp, "%d,", &nEdition );
@@ -324,10 +324,10 @@ namespace mission
 		printf( "\n" );
 #endif
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::MisGetRecord( char* pszBuf, DWORD dwSize )
-	{T_B
+	{
 		sprintf( pszBuf, "%d,", ROLE_MIS_RECORD_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		printf( "\nCCharMission:MisGetRecord: MisInfo record edition code = %d", ROLE_MIS_RECORD_EDITION );
@@ -352,10 +352,10 @@ namespace mission
 		pszBuf[strlen(pszBuf) + 1] = 0;
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::MisInitTrigger( char* pszBuf )
-	{T_B
+	{
 		int nEdition(-1), nData1(0), nData2(0) , nData3(0), nData4(0), nData5(0), 
 			nData6(0), nData7(0), nData8(0), nData9(0);
 
@@ -428,10 +428,10 @@ namespace mission
 			}
 		}
 		return TRUE;		
-	T_E}
+	}
 
 	BOOL CCharMission::MisGetTrigger( char* pszBuf, DWORD dwSize )
-	{T_B
+	{
 		sprintf( pszBuf, "%d,", ROLE_MIS_TRIGGER_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		printf( "\nCCharMission:GetTrigger: Trigger edition code = %d", ROLE_MIS_TRIGGER_EDITION );
@@ -462,10 +462,10 @@ namespace mission
 		pszBuf[strlen(pszBuf) + 1] = 0;
 		return TRUE;
 		
-	T_E}
+	}
 
 	BOOL CCharMission::MisInitMissionCount( char* pszBuf )
-	{T_B
+	{
 		// 
 		//if( m_byOnline == 0 )
 		//	return TRUE;
@@ -523,10 +523,10 @@ namespace mission
 		printf( "\n" );
 #endif
 		return TRUE;		
-	T_E}
+	}
 
 	BOOL CCharMission::MisGetMissionCount( char* pszBuf, DWORD dwSize )
-	{T_B
+	{
 		// 
 		//if( m_byOnline == 0 )
 		//	return TRUE;
@@ -557,37 +557,37 @@ namespace mission
 
 		pszBuf[strlen(pszBuf) + 1] = 0;
 		return TRUE;		
-	T_E}
+	}
 
 	BOOL CCharMission::ConvertMissionRecord( const char* pszBuf, int nEdition )
-	{T_B
+	{
 		m_RoleRecord.Clear();
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::ConvertMissionInfo( const char* pszBuf, int nEdition )
-	{T_B
+	{
 		m_byNumMission = 0;
 		memset( m_Mission, 0, sizeof(MISSION_INFO)*ROLE_MAXNUM_MISSION );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::ConvertTriggerInfo( const char* pszBuf, int nEdition )
-	{T_B
+	{
 		m_byNumTrigger = 0;
 		memset( m_Trigger, 0, sizeof(TRIGGER_DATA)*ROLE_MAXNUM_CHARTRIGGER );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CCharMission::ConvertMisCountInfo( const char* pszBuf, int nEdition )
-	{T_B
+	{
 		m_byNumMisCount = 0;
 		memset( m_MissionCount, 0, sizeof(RAND_MISSION_COUNT)*ROLE_MAXNUM_MISSIONCOUNT );
 		return TRUE;
-	T_E}
+	}
 
 	void CCharMission::MisClear()
-	{T_B
+	{
 		m_byNumTrigger = 0;
 		memset( m_Trigger, 0, sizeof(TRIGGER_DATA)*ROLE_MAXNUM_CHARTRIGGER );
 
@@ -615,10 +615,10 @@ namespace mission
 
 		// 
 		m_byOnline = 1;
-	T_E}
+	}
 
 	void CCharMission::KillWare( USHORT sWareID )
-	{T_B
+	{
 		for( int i = 0; i < m_byNumTrigger; i++ )
 		{
 			if( m_Trigger[i].byType == TE_KILL )
@@ -631,7 +631,7 @@ namespace mission
 					if( !lua_isfunction( g_pLuaState, -1 ) )
 					{
 						lua_pop( g_pLuaState, 1 );
-						LG( "lua_invalidfunc", "TriggerProc" );
+						ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 						return;
 					}
 
@@ -685,7 +685,7 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	BOOL CCharMission::MisGetItemCount( WORD wRoleID, USHORT sItemID, USHORT& sCount )
 	{
@@ -744,7 +744,7 @@ namespace mission
 	}
 
 	void CCharMission::GetItem( USHORT sItemID, USHORT sCount )
-	{T_B
+	{
 		for( int i = 0; i < m_byNumTrigger; i++ )
 		{
 			if( m_Trigger[i].byType == TE_GET_ITEM )
@@ -765,7 +765,7 @@ namespace mission
 						if( !lua_isfunction( g_pLuaState, -1 ) )
 						{
 							lua_pop( g_pLuaState, 1 );
-							LG( "lua_invalidfunc", "TriggerProc" );
+							ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 							return;
 						}
 
@@ -826,10 +826,10 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	void CCharMission::TimeOut( USHORT sTime )
-	{T_B
+	{
 
 		//m_pRoleChar->SystemNotice( "Time Out!" );
 
@@ -846,7 +846,7 @@ namespace mission
 				if( !lua_isfunction( g_pLuaState, -1 ) )
 				{
 					lua_pop( g_pLuaState, 1 );
-					LG( "lua_invalidfunc", "TriggerProc" );
+					ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 					return;
 				}
 
@@ -901,7 +901,7 @@ namespace mission
 					default:
 						{
 							//LG( "trigger_error", "" );
-							LG( "trigger_error", "unknown time trigger time slot type" );
+							ToLogService( "trigger_error", "{}", "unknown time trigger time slot type" );
 							//m_pRoleChar->SystemNotice( "TID = %d, Type = %d", m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
 							m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00005), m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
 							ClearTrigger( i-- );
@@ -916,10 +916,10 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	void CCharMission::GotoMap( BYTE byMapID, WORD wxPos, WORD wyPos )
-	{T_B
+	{
 		for( int i = 0; i < m_byNumTrigger; i++ )
 		{
 			if( m_Trigger[i].byType == TE_GOTO_MAP )
@@ -945,7 +945,7 @@ namespace mission
 					if( !lua_isfunction( g_pLuaState, -1 ) )
 					{
 						lua_pop( g_pLuaState, 1 );
-						LG( "lua_invalidfunc", "TriggerProc" );
+						ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 						return;
 					}
 
@@ -1001,10 +1001,10 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	void CCharMission::LevelUp( USHORT sLevel )
-	{T_B
+	{
 		for( int i = 0; i < m_byNumTrigger; i++ )
 		{
 			if( m_Trigger[i].byType == TE_LEVEL_UP )
@@ -1017,7 +1017,7 @@ namespace mission
 				if( !lua_isfunction( g_pLuaState, -1 ) )
 				{
 					lua_pop( g_pLuaState, 1 );
-					LG( "lua_invalidfunc", "TriggerProc" );
+					ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 					return;
 				}
 
@@ -1065,16 +1065,16 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	void CCharMission::CharBorn()
-	{T_B
+	{
 		// lua
 		lua_getglobal( g_pLuaState, "TriggerProc" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "TriggerProc" );
+			ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 			return;
 		}
 
@@ -1110,16 +1110,16 @@ namespace mission
 			//m_pRoleChar->SystemNotice( "CCharMission::CharBorn:[TriggerProc]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00011) );
 		}
-	T_E}
+	}
 
 	void CCharMission::EquipItem( USHORT sItemID, USHORT sTriID )
-	{T_B
+	{
 		// lua
 		lua_getglobal( g_pLuaState, "TriggerProc" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "TriggerProc" );
+			ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 			return;
 		}
 
@@ -1155,7 +1155,7 @@ namespace mission
 			//m_pRoleChar->SystemNotice( "CCharMission::EquipItem:[TriggerProc]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00013) );
 		}
-	T_E}
+	}
 
 	// 
 	BOOL CCharMission::MisEventProc( TRIGGER_EVENT e, WPARAM wParam, LPARAM lParam )
@@ -1634,7 +1634,7 @@ namespace mission
 	}
 
 	void CCharMission::MisGetMisLogInfo( WORD wMisID )
-	{T_B
+	{
 		int nIndex = -1;
 		for( int i = 0; i < m_byNumMission; i++ )
 		{
@@ -1656,7 +1656,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "TriggerProc" );
+			ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 			return;
 		}
 
@@ -1671,7 +1671,7 @@ namespace mission
 			lua_callalert( g_pLuaState, nStatus );
 		}
 		lua_settop(g_pLuaState, 0);
-	T_E}
+	}
 
 	void CCharMission::MisLogClear( WORD wMisID )
 	{
@@ -1829,7 +1829,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "CancelMission" );
+			ToLogService( "lua_invalidfunc", "{}", "CancelMission" );
 			return FALSE;
 		}
 
@@ -2450,7 +2450,7 @@ namespace mission
 			if( m_byNumMisCount >= ROLE_MAXNUM_MISSIONCOUNT )
 			{
 				//LG( "randmission", "CCharMission::CompleteRandMission:" );
-				LG( "randmission", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task note of compelete number" );
+				ToLogService( "randmission", "{}", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task note of compelete number" );
 				return FALSE;
 			}
 			m_MissionCount[m_byNumMisCount].wRoleID = wRoleID;
@@ -2481,7 +2481,7 @@ namespace mission
 			if( m_byNumMisCount >= ROLE_MAXNUM_MISSIONCOUNT )
 			{
 				//LG( "randmission", "CCharMission::CompleteRandMission:" );
-				LG( "randmission", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task compelete note " );
+				ToLogService( "randmission", "{}", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task compelete note " );
 				return FALSE;
 			}
 			m_MissionCount[m_byNumMisCount].wRoleID = wRoleID;

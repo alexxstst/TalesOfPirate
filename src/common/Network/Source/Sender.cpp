@@ -3,8 +3,8 @@
 #include "Sender.h"
 #include "Packet.h"
 #include "Comm.h"
-#include "LogStream.h"
 #include <fstream>
+#include <logutil.h>
 _DBC_USING
 
 extern PreAllocHeap<rbuf>	__bufheap;
@@ -254,8 +254,7 @@ Sender& Sender::operator<<(WPacket& wpk)
 			}
 			catch (...)
 			{
-				LogLine l_line(g_dbclog);
-				l_line <<newln<<"Sender::operator<<(WPacket &wpk) exception,PeerIP:"<<m_datasock->GetPeerIP();
+				ToLogService("network", "Sender::operator<<(WPacket &wpk) exception,PeerIP:{}", m_datasock->GetPeerIP());
 			}
 			m_mtxcomb.lock();
 		}//if(m_tail && m_tail->HasSpace())
@@ -392,12 +391,8 @@ long Sender::Process()
 	}
 	catch (...)
 	{
-		LogLine l_line(g_dbclog);
-		l_line <<newln<<"Sender::Process() exception,PeerIP:"<<m_datasock->GetPeerIP()
-			<<"this=0x"<<this<<"m_datasock=0x"<<m_datasock
-			<<"m_send=0x"<<m_send<<"m_head=0x"<<m_head
-			<<"m_tail=0x"<<m_tail
-			<<"m_p="<<m_p<<"m_datasock->m_sendflag="<<m_datasock->m_sendflag;
+		ToLogService("network", "Sender::Process() exception,PeerIP:{} this={:p} m_datasock={:p} m_send={:p} m_head={:p} m_tail={:p} m_p={} m_datasock->m_sendflag={}",
+			m_datasock->GetPeerIP(), (void*)this, (void*)m_datasock, (void*)m_send, (void*)m_head, (void*)m_tail, (uLong)m_p, (LONG)m_datasock->m_sendflag);
 	}
 
 	m_datasock->m_sendflag--;

@@ -53,7 +53,7 @@ LW_RESULT MPSceneObject::Load( const char* file, DWORD model_id )
     LW_RESULT ret;
     if( LW_FAILED(ret = _model->Load(file, model_id)))
     {
-        LG_MSGBOX("Load MPSceneObject %s error", file);
+        ToLogService("default", "msgLoad MPSceneObject {} error", file);
     }
    return ret;
 }

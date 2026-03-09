@@ -99,8 +99,7 @@ class CCharacter : public CSceneNode, public CCharacterModel
 	friend class CHeadSay;
 	friend class CChaStateMgr;
 
-private:
-	virtual BOOL	_Create(int nCharTypeID, int nType);
+virtual BOOL	_Create(int nCharTypeID, int nType);
 
 
 public:	
@@ -120,7 +119,6 @@ public:
 
 	virtual bool    GetRunTimeMatrix(MPMatrix44* mat, DWORD dummy_id);
 	//stNetChangeChaPart look;
-public:	
 	void			InitState();						// 
 
     void            ForceMove(int nTargetX, int nTargetY);       // ?
@@ -155,7 +153,7 @@ public:
 	void			SetHide(BOOL bHide);
 
 	//void			SetHieght(float fhei);
-public: // ?
+ // ?
 	bool			ChangeReadySkill( int nSkillID );
 
 	static CSkillRecord*	GetReadySkillInfo()		{ return _pReadySkillInfo;		}
@@ -186,9 +184,8 @@ public: // ?
 
 	CBoolSet&		GetPK()					{ return _PK;					}
 	bool			GetIsPK()				{ return _PK.IsAny();			}
-	
-public:
-	void			ActionKeyFrame(DWORD key_id);
+
+void			ActionKeyFrame(DWORD key_id);
 
 	bool			ItemEffect(int nEffectID, int nItemDummy, int nAngle=999 );
 	CEffectObj*		SelfEffect(int nEffectID, int nDummy=-1, bool isLoop=false, int nSize=-1, int nAngle=999 );
@@ -267,9 +264,8 @@ private:		//
 	CSceneHeight*	_pSceneHeight;
 	
 	static			bool _IsShowName;
-    
-private:
-	static void	    _SetReadySkill( CSkillRecord* p );
+
+static void	    _SetReadySkill( CSkillRecord* p );
 
 	static CSkillRecord*    _pDefaultSkillInfo;
 
@@ -278,8 +274,7 @@ private:
 	CChaRecord*     _pDefaultChaInfo;
 	CActor*         _pActor;
 
-private:
-	int				_ulChaID;
+int				_ulChaID;
 
     char			_szName[33];		// 
 	char			_szHumanName[33];	// 
@@ -361,8 +356,7 @@ public:	//
 	void			setGMLv( char v )					{   _chGMLv = v;					}
 	char			getGMLv()							{   return _chGMLv;					}
 
-public:
-	CCharacter();
+CCharacter();
 	virtual ~CCharacter();
 	
     void            LoadingCall();
@@ -378,8 +372,7 @@ public:
 
 	bool			PlayPose( DWORD pose, DWORD type = PLAY_ONCE, int time=-1, int fps = 60, bool isBlend=false, bool IsGlitched = false );
 
-public:	    
-    void			setPos(int nX, int nY);
+void			setPos(int nX, int nY);
 	void			setPos(int nX, int nY, int nZ);
 	
     bool			IsBoat();
@@ -400,8 +393,7 @@ public:
 
     int             ReCreate( DWORD type_id );
 
-public:
-	GUI::CHeadSay*	GetHeadSay() { return _pHeadSay.get(); }
+GUI::CHeadSay*	GetHeadSay() { return _pHeadSay.get(); }
     void            DestroyLinkItem();
 
     int             LoadCha( const LoadChaInfo* info );
@@ -456,7 +448,7 @@ public:
 	//add by ALLEN 2007-10-16
 	bool			IsReadingBook();
 
-public: //     
+ //     
 	CChaStateMgr*	GetStateMgr()						{ return _pChaState;			}
 
     void            SynchroSkillState( stSkillState* pState, int nCount );
@@ -487,8 +479,7 @@ protected:
     virtual void    _UpdatePos();
 	virtual void    _UpdateValid(BOOL bValid);
 
-protected: 	
-    BOOL			_bEnableAI;
+BOOL			_bEnableAI;
 	DWORD			_dwAIInterval;
 	DWORD			_dwLastAITick;
 
@@ -557,8 +548,7 @@ private:
 	CEffectObj*		_pItemFaceEff[ITEM_FACE_MAX];
 	int				_ItemFace[ITEM_FACE_MAX];
 
-private:
-	bool			_IsMoveTimeType;	// false(),true
+bool			_IsMoveTimeType;	// false(),true
 	D3DXVECTOR2		_vMoveStart, _vMoveEnd, _vMoveDir;
 	DWORD 			_dwStartTime;
 	float			_fMoveLen;

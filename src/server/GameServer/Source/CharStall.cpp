@@ -228,7 +228,7 @@ namespace mission
 			//staller.SystemNotice( "%s[%d]", staller.GetName(), pData->m_byNum );
 			staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00014), staller.GetName(), pData->m_byNum );
 			//LG( "stall_error", "%s[%d]", staller.GetName(), pData->m_byNum );
-			LG( "stall_error", "start to stallcharacter%ssubmit goods data over range[%d]", staller.GetName(), pData->m_byNum );
+			ToLogService( "stall_error", "start to stallcharacter{}submit goods data over range[{}]", staller.GetName(), pData->m_byNum );
 			return;
 		}
 
@@ -272,7 +272,7 @@ namespace mission
 				//staller.SystemNotice( "%sGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00016), staller.GetName(), pData->m_Goods[i].byGrid );
 				//LG( "stall_error", "%sGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
-				LG( "stall_error", "start to stallcharacter%ssubmit goods data index over rangeGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
+				ToLogService( "stall_error", "start to stallcharacter{}submit goods data index over rangeGRID[{}]", staller.GetName(), pData->m_Goods[i].byGrid );
 				return;
 			}
 
@@ -296,7 +296,7 @@ namespace mission
 				LG( "stall_error", "%sID[%d]", staller.GetName(), pData->m_Goods[i].byIndex );
 				pData->Free();*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00018), staller.GetName(), pData->m_Goods[i].byIndex );
-				LG( "stall_error", "start to stallcharacter%ssubmit data inexistence of stall goodsID[%d]", staller.GetName(), pData->m_Goods[i].byIndex );
+				ToLogService( "stall_error", "start to stallcharacter{}submit data inexistence of stall goodsID[{}]", staller.GetName(), pData->m_Goods[i].byIndex );
 				pData->Free();
 				return;
 			}
@@ -309,7 +309,7 @@ namespace mission
 				/*staller.SystemNotice( "IDID = %d", pData->m_Goods[i].sItemID );
 				LG( "stall_error", "IDID = %d", pData->m_Goods[i].sItemID );*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00019), pData->m_Goods[i].sItemID );
-				LG( "stall_error", "start to stallres ID errorcannot find this res informationID = %d", pData->m_Goods[i].sItemID );
+				ToLogService( "stall_error", "start to stallres ID errorcannot find this res informationID = {}", pData->m_Goods[i].sItemID );
 				return;
 			}
 			::SItemGrid*	grid2	=	staller.m_CKitbag.GetGridContByID(	pData->m_Goods[i].byIndex	);
@@ -326,7 +326,7 @@ namespace mission
 				/*staller.SystemNotice( "%s", pItem->szName );
 				LG( "stall_error", "%s", pItem->szName );*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00020), pItem->szName );
-				LG( "stall_error", "start to stallres%scannot trade", pItem->szName );
+				ToLogService( "stall_error", "start to stallres{}cannot trade", pItem->szName );
 				return;
 			}
 
@@ -341,7 +341,7 @@ namespace mission
 				LG( "stall_error", "%sID[%d]", staller.GetName(), pData->m_Goods[i].byIndex );
 				pData->Free();*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00021), staller.GetName(), pData->m_Goods[i].byIndex );
-				LG( "stall_error", "start to stallcharacter%ssubmit res of staller number errorID[%d]", staller.GetName(), pData->m_Goods[i].byIndex );
+				ToLogService( "stall_error", "start to stallcharacter{}submit res of staller number errorID[{}]", staller.GetName(), pData->m_Goods[i].byIndex );
 				pData->Free();
 				return;
 			}
@@ -357,7 +357,7 @@ namespace mission
 					/*staller.SystemNotice( "%sID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
 					LG( "stall_error", "%sID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );*/
 					staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00022), staller.GetName(), pData->m_Goods[i].byGrid );
-					LG( "stall_error", "start to stallcharacter%srepeat submit res of staller data indexID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
+					ToLogService( "stall_error", "start to stallcharacter{}repeat submit res of staller data indexID[{}]", staller.GetName(), pData->m_Goods[i].byGrid );
 					return;
 				}
 			}
@@ -371,7 +371,7 @@ namespace mission
 					/*staller.SystemNotice( "ID[0x%X]", dwBoatID );
 					LG( "stall_error", "ID[0x%X]", dwBoatID );*/
 staller.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00023), dwBoatID);
-LG("stall_error", "start to stallit cannot find the information of the boat that captain to confirm in this tradeID[0x%X]", dwBoatID);
+ToLogService("stall_error", "start to stallit cannot find the information of the boat that captain to confirm in this tradeID[0x{:X}]", dwBoatID);
 pData->Free();
 return;
 				}
@@ -697,7 +697,7 @@ return;
 				/*character.SystemNotice( "ID[%d]", pData->m_Goods[byIndex].byIndex );
 				LG( "stall_error", "ID[%d]", pData->m_Goods[byIndex].byIndex );*/
 				character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00038), pData->m_Goods[byIndex].byIndex);
-				LG("stall_error", "errorthe res is inexistent that you want to buyID[%d]", pData->m_Goods[byIndex].byIndex);
+				ToLogService("stall_error", "errorthe res is inexistent that you want to buyID[{}]", pData->m_Goods[byIndex].byIndex);
 				return;
 			}
 
@@ -706,7 +706,7 @@ return;
 				/*character.SystemNotice( "ID[%d]", pData->m_Goods[byIndex].byIndex );
 				LG( "stall_error", "ID[%d]", pData->m_Goods[byIndex].byIndex );*/
 				character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00039), pData->m_Goods[byIndex].byIndex);
-				LG("stall_error", "inside errorthe res number error that you want to buyID[%d]", pData->m_Goods[byIndex].byIndex);
+				ToLogService("stall_error", "inside errorthe res number error that you want to buyID[{}]", pData->m_Goods[byIndex].byIndex);
 				return;
 			}
 
@@ -718,7 +718,7 @@ return;
 					Bag.GetID( pData->m_Goods[byIndex].byIndex ), pData->m_Goods[byIndex].sItemID );*/
 				character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00040),
 					Bag.GetID(pData->m_Goods[byIndex].byIndex), pData->m_Goods[byIndex].sItemID);
-				LG("stall_error", "inside errorthe res ID in backpack differ with stall information IDID0[%d], ID1[%d]",
+				ToLogService("stall_error", "inside errorthe res ID in backpack differ with stall information IDID0[{}], ID1[{}]",
 					Bag.GetID(pData->m_Goods[byIndex].byIndex), pData->m_Goods[byIndex].sItemID);
 				return;
 			}
@@ -765,7 +765,7 @@ return;
 				/*character.SystemNotice( "%sID[%d]", pStaller->GetName(), pData->m_Goods[byIndex].byIndex );
 				LG( "stall_error", "%sID[%d]", pStaller->GetName(), pData->m_Goods[byIndex].byIndex );*/
 				character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00044), pStaller->GetName(), pData->m_Goods[byIndex].byIndex);
-				LG("stall_error", "goods of stall trade fail that get from charcters%bagID[%d]", pStaller->GetName(), pData->m_Goods[byIndex].byIndex);
+				ToLogService("stall_error", "goods of stall trade fail that get from charcters{}bagID[{}]", pStaller->GetName(), pData->m_Goods[byIndex].byIndex);
 				return;
 			}
 
@@ -776,7 +776,7 @@ return;
 				/*character.SystemNotice( "" );
 				LG( "stall_error", "ID[%d]", pData->m_Goods[byIndex].sItemID );*/
 				character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00045));
-				LG("stall_error", "inside error:the res that you bought failed to put in bagID[%d]", pData->m_Goods[byIndex].sItemID);
+				ToLogService("stall_error", "inside error:the res that you bought failed to put in bagID[{}]", pData->m_Goods[byIndex].sItemID);
 				return;
 			}
 
@@ -797,7 +797,7 @@ return;
 					sprintf( szLog, "%sID[0x%X]", character.GetName(), (DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ) ); */
 					pStaller->SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00046), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00046), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
-					LG("stall_error", "Stall:it cannot find boat information that captain confirm in tradeID[0x%X]", (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
+					ToLogService("stall_error", "Stall:it cannot find boat information that captain confirm in tradeID[0x{:X}]", (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					sprintf(szLog, RES_STRING(GM_CHARSTALL_CPP_00047), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 				}
 				else
@@ -816,7 +816,7 @@ return;
 						(DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ) );*/
 					pStaller->SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00049), pBoat->GetName(),
 						(DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
-					LG("stall_error", "BuyGoods:boat data save failedboat%sID[0x%X]", pBoat->GetName(),
+					ToLogService("stall_error", "BuyGoods:boat data save failedboat{}ID[0x{:X}]", pBoat->GetName(),
 						(DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					return;
 				}
@@ -828,7 +828,7 @@ return;
 					LG( "stall_error", "%sID[0x%X]", pStaller->GetName(), (DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ) );*/
 					pStaller->SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00050), pStaller->GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00050), pStaller->GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
-					LG("stall_error", "stalldelete boat failed that charcter%shaveID[0x%X]", pStaller->GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
+					ToLogService("stall_error", "stalldelete boat failed that charcter{}haveID[0x{:X}]", pStaller->GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 				}
 			}
 			else
@@ -868,7 +868,7 @@ return;
 					LG( "stall_error", "%sID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ) );*/
 					pStaller->SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00053), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00053), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
-					LG("stall_error", "stalladd boat failed that charcter%sboughtID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
+					ToLogService("stall_error", "stalladd boat failed that charcter{}boughtID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 				}
 			}
 

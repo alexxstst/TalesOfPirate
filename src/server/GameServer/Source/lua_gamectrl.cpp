@@ -8,7 +8,7 @@ std::list<CCharacter*> g_HelpNPCList;
 
 // 
 int lua_AddBirthPoint(lua_State *L)
-{T_B
+{
 	// 
     BOOL bValid = (lua_gettop(L)==4 && lua_isstring(L, 1) && lua_isstring(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4));
 	if(!bValid) 
@@ -25,15 +25,15 @@ int lua_AddBirthPoint(lua_State *L)
 	g_BirthMgr.AddBirthPoint(pszLocation, pszMapName, x, y);
 	//LG("birth", "[%s] [%s] %d %d\n", pszLocation, pszMapName, x, y);
 	return 0;
-T_E}
+}
 
 // 
 int lua_ClearAllBirthPoint(lua_State *L)
-{T_B
+{
 	g_BirthMgr.ClearAll();
 	//LG("birth", "\n");
 	return 0;
-T_E}
+}
 
 extern const char* GetResPath(const char *pszRes);
 void ReloadAISdk()
@@ -105,7 +105,7 @@ void TL(int nType, const char *pszCha1, const char *pszCha2, const char *pszTrad
 			}
 		}
 
-		LG(strName.c_str(), "%7s [%17s] [%17s] [%s]\n", g_TradeName[nType], pszCha1, pszCha2, pszTrade); 
+		ToLogService(strName.c_str(), "{} [{}] [{}] [{}]", g_TradeName[nType], pszCha1, pszCha2, pszTrade);
 		g_pGameApp->Log(g_TradeName[nType], pszCha1, "", pszCha2, "", pszTrade); 
 		sInit = 0;
 	}
@@ -157,7 +157,7 @@ void AddHelpInfo(const char *pszKey, const char *pszInfo)
 	g_HelpList[pszKey] = pszInfo;
 
 	//LG("help", " = %d\n", g_HelpList.size());
-	LG("help", "now helplist amount = %d\n", g_HelpList.size());
+	ToLogService("help", "now helplist amount = {}", g_HelpList.size());
 }
 
 void AddMonsterHelp(int nScriptID, int x, int y)
@@ -174,7 +174,7 @@ void AddMonsterHelp(int nScriptID, int x, int y)
 void AddHelpNPC(CCharacter *pNPC)
 {
 	//LG("init", "NPC[%s]\n", pNPC->GetName());
-	LG("init", "Succeed add HelpNPC[%s]\n", pNPC->GetName());
+	ToLogService("init", "Succeed add HelpNPC[{}]", pNPC->GetName());
 	g_HelpNPCList.push_back(pNPC);
 }
 
@@ -226,13 +226,13 @@ int lua_TestDBLog(lua_State *L)
 	{
 		g_pGameApp->Log("newtest", "abcdefg", "1234567", "000000", "qqqppp", "abcdefghijklmnopqrstuvwxyz");
 	}
-	LG("dblog", "Add Time = %d\n", t.End());
+	ToLogService("dblog", "Add Time = {}", t.End());
 	
 	return 0;
 }
 
 int lua_GetMapDataByName(lua_State *L)
-{T_B
+{
 	BOOL bValid = (lua_gettop(L) == 1 && lua_isstring(L, 1));
 	if (!bValid)
 	{
@@ -252,10 +252,10 @@ int lua_GetMapDataByName(lua_State *L)
 	}
 	return 0;
 
-T_E}
+}
 
 void RegisterLuaAI(lua_State *L)
-{T_B
+{
 	
 	// 
 	REGFN(view);
@@ -356,7 +356,7 @@ void RegisterLuaAI(lua_State *L)
 	// 
 	REGFN(TestDBLog);
 	
-T_E}
+}
 
 
 /*

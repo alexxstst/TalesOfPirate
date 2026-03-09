@@ -35,8 +35,7 @@ private:
 	static void _evtMainShow(CGuiData *pSender);
 	static void MainMouseDown(CGuiData *pSender, int x, int y, DWORD key);
 
-private:
-	//frmState
+//frmState
 	CForm*			frmState;
 	CLabelEx*		labName;                    //
 	CLabelEx*		labGuildName;               //

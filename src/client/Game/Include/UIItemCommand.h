@@ -38,7 +38,7 @@ struct SItemForge
 
 	static float GetAlpha( int nTotalLevel );	// ,alpha
 
-public:		// 
+		// 
 	int						nStoneType[3];		// ,-1
 	CItemRefineInfo*		pRefineInfo;
 	CItemRefineEffectInfo*	pEffectInfo;
@@ -147,8 +147,7 @@ protected:
 	void	_ShowBody(CItemRecord* _pItem2 = NULL);										// 
 	void    _ShowFusionBody(CItemRecord* pEquipItem);			// 
 
-protected:
-	//void	_PushItemAttr( int attr, SItemGrid& item, DWORD color=COLOR_WHITE );
+//void	_PushItemAttr( int attr, SItemGrid& item, DWORD color=COLOR_WHITE );
 	void	_PushItemAttr( int attr, SItemHint& item, DWORD color=COLOR_WHITE );
 	void	_PushValue( const char* szFormat, int attr, SItemHint& item, DWORD color=COLOR_WHITE );
 
@@ -169,7 +168,6 @@ private:
     SItemGrid       _ItemData;
 	int				_nPrice;
 	bool 				_canDrag;
-private:
     DWORD           _dwColor;           // , 
 	NET_CHARTRADE_BOATDATA*		_pBoatHint;
 

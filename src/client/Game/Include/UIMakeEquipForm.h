@@ -69,7 +69,7 @@ namespace GUI
 		static void _evtConfirmCancelEvent(CForm* pForm);
 		static void _evtFusionNoCatalyzerConfirmEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	private:	/*Help Functions:*/
+		/*Help Functions:*/
 
 		void		ClearEquips();
 		void		ClearEquipList(int iIndex);
@@ -155,7 +155,6 @@ namespace GUI
 		bool        IsElfShiftItem(CItemCommand& rItem);	// 
 
 
-	private:
 		static const int STONE_ITEM_NUM = 2;	//
 		static const int ITEM_NUM = 4;			//
 		static const int FUSION_NUM = 3;		//Item

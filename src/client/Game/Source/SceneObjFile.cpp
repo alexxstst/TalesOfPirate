@@ -477,7 +477,7 @@ long CSceneObjFile::ReadSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj,
 	if ((*lSectionObjNum = m_SSectionIndex[nSectionNO].iObjNum) > 0)
 	{
 		fseek(m_fRdWr, m_SSectionIndex[nSectionNO].lObjInfoPos, SEEK_SET);
-        LG("readmap", "Seek Offset [%d %d] = %d\n", nSectionNO % m_SFileHead.iSectionCntX, nSectionNO / m_SFileHead.iSectionCntX, m_SSectionIndex[nSectionNO].lObjInfoPos);
+        ToLogService("readmap", "Seek Offset [{} {}] = {}", nSectionNO % m_SFileHead.iSectionCntX, nSectionNO / m_SFileHead.iSectionCntX, m_SSectionIndex[nSectionNO].lObjInfoPos);
         fread(SSceneObj, sizeof(SSceneObjInfo), m_SSectionIndex[nSectionNO].iObjNum, m_fRdWr);
 		// 
 		int nSectionX, nSectionY;
@@ -494,7 +494,7 @@ long CSceneObjFile::ReadSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj,
 			SSceneObjInfo *pObj = (SSceneObj + i);
 			if(pObj->GetID()==0)
 			{
-				LG("error", g_oLangRec.GetString(364));
+				ToLogService("error", "{}", g_oLangRec.GetString(364));
 			}
 			
 		}

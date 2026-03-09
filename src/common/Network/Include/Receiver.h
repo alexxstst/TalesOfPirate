@@ -48,12 +48,12 @@ private:	//data
 	uLong					HasSpace() const;
 	static PreAllocHeapPtr<OnProcessData> m_HeapProcData;
 
-	uLong			volatile		m_p{};
+	uLong					m_p{};
 	RPacket							m_rpk;
 
-	cuLong			volatile		_len_inc;
-	DataSocket	*	const volatile	m_datasock;
-	TcpCommApp* volatile	__tca;
+	cuLong					_len_inc;
+	DataSocket	*	const 	m_datasock;
+	TcpCommApp* 	__tca;
 };
 //================================================================================
 

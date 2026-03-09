@@ -18,15 +18,6 @@ using namespace std;
 uLong	NetBuffer[]		={100,10,0};
 bool	g_logautobak	=true;
 
-LogStream			g_LogErrServer("ErrorServer");
-LogStream			g_LogGrpServer("GroupServer");
-LogStream			g_LogGuild("Guild");
-LogStream			g_LogFriend("Friend");
-LogStream			g_LogMaster("Master");
-LogStream			g_LogTeam("Team");
-LogStream			g_LogConnect("Connect");
-LogStream			g_LogDB("Database");
-LogStream			g_LogGarner2("Garner2");
 
 GroupServerApp	*	g_gpsvr	=0;
 InterLockedLong		g_exit	=0;
@@ -57,7 +48,7 @@ private:
 			if(sStatCheatCount == 0)
 			{
 				//LG("group_cheat", "[%ld]\n", g_gpsvr->m_dwCheatCount);
-				LG("group_cheat", "current cheat count [%ld]\n", g_gpsvr->m_dwCheatCount);
+				ToLogService("group_cheat", "current cheat count [{}]", g_gpsvr->m_dwCheatCount);
 			}
 			sStatCheatCount = (sStatCheatCount + 1) % 60;
 
@@ -157,7 +148,7 @@ void GMBBS::Process()
 
 			if(!--(m_queue[i].m_times))
 			{
-				m_queue[i].m_word.SetSize(0);
+				m_queue[i].m_word = {};
 			}
 		}
 	}
@@ -235,8 +226,7 @@ GroupServerApp::GroupServerApp(ThreadPool *proc,ThreadPool *comm)
 	catch(excp &e)
 	{
 		std::cout<<e.what()<<std::endl;
-		LogLine l_line(g_LogConnect);
-		l_line<<newln<<e.what()<<endln;
+		ToLogService("Connect", "{}", e.what());
 		try{GroupServerApp::~GroupServerApp();}catch(...){}
 		throw e;
 	}

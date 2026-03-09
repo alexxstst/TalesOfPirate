@@ -11,9 +11,9 @@ class CTradeTableLog : public cfl_rs
 public:
     CTradeTableLog(cfl_db *pDB)
         :cfl_rs(pDB, "Trade_Log", 10)
-    {T_B
+    {
     
-	T_E}
+	}
 
 	void ExecLogSQL(char* time, const char* gameServerName, const char* action, const char *pszChaFrom, const char *pszChaTo, const char *pszTrade)
 	{
@@ -27,7 +27,7 @@ public:
 		if(!DBOK(l_sqlret))
 		{
 			//LG("gamelog", "log, sql = [%s]!\n", sql);
-			LG("gamelog", "add log note failed, sql = [%s]!\n", sql);
+			ToLogService("gamelog", "add log note failed, sql = [{}]!", sql);
 		}
 	}
 };
@@ -38,9 +38,9 @@ public:
 
     CTradeLogDB()
     : _connect(), _tab_log(NULL), m_bInitOK(FALSE)
-    {T_B
+    {
 
-    T_E}
+    }
 
     BOOL    Init();
 

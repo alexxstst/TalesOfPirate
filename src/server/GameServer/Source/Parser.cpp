@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 // FileName: Parser.cpp
 // Creater: ZhangXuedong
 // Date: 2004.11.22
@@ -12,16 +12,16 @@
 CParser	g_CParser;
 
 void CParser::Init(lua_State *pLS)
-{T_B
+{
 	m_pSLua = pLS;
-T_E}
+}
 
 void CParser::Free()
-{T_B
-T_E}
+{
+}
 
 int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
-{T_B
+{
 
 /* 	if (!csString || csString == "" || csString == "0")
 	{
@@ -39,7 +39,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			return 1;
 		}
 		//LG("lua_err", "DoString(%s)\n", csString);
-		LG("lua_err", "no define's DoString(%s)\n", csString);
+		ToLogService("lua_err", "no define's DoString({})", csString);
 		lua_settop(m_pSLua, 0);
 		return 0;
 	}
@@ -47,7 +47,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	if (nRetNum > DOSTRING_RETURN_NUM)
 	{
 		//LG("lua_err", "msgDoString(%s) !!!\n", csString);
-		LG("lua_err", "msgDoString(%s) return value number error!\n", csString);
+		ToLogService("lua_err", "msgDoString({}) return value number error!", csString);
 
 		lua_settop(m_pSLua, 0);
 		return 0;
@@ -98,7 +98,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			break;
 		default:
 			//LG("lua_err", "msgDoString(%s) !!!\n", csString);
-			LG("lua_err", "msgDoString(%s) param type error!\n", csString);
+			ToLogService("lua_err", "msgDoString({}) param type error!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
 			break;
@@ -109,7 +109,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	int nState = lua_pcall(m_pSLua, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", csString);
+		ToLogService("lua_err", "DoString {}", csString);
 		lua_callalert(m_pSLua, nState);
 
 		lua_settop(m_pSLua, 0);
@@ -125,7 +125,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			if (!lua_isnumber(m_pSLua, -1 - i))
 			{
 				//LG("lua", " %s%d%d !\n", csString, nParamNum, nRetNum);
-				LG("lua return value error", " when transfer script %sparam number%d return value number%d )It return value's type inconsistent!\n", csString, nParamNum, nRetNum);
+				ToLogService("lua return value error", " when transfer script {}param number{} return value number{} )It return value's type inconsistent!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
 			}
@@ -136,7 +136,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			if (!lua_isstring(m_pSLua, -1 - i))
 			{
 				//LG("lua", " %s%d%d !\n", csString, nParamNum, nRetNum);
-				LG("lua return value error", " when transfer script %sparam number%d return value number%d )It return value's type inconsistent!\n", csString, nParamNum, nRetNum);
+				ToLogService("lua return value error", " when transfer script {}param number{} return value number{} )It return value's type inconsistent!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
 			}
@@ -145,7 +145,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		else
 		{
 			//LG("lua_err", "msgDoString(%s) !!!\n", csString);
-			LG("lua_err", "msgDoString(%s) return value's type error!!!\n", csString);
+			ToLogService("lua_err", "msgDoString({}) return value's type error!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
 		}
@@ -157,7 +157,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	if(dwEndTime > 20)
 	{
 		//LG("script_time", "[%s] time = %d\n", csString, dwEndTime);
-		LG("script_time", "script[%s]cost time too long time = %d\n", csString, dwEndTime);
+		ToLogService("script_time", "script[{}]cost time too long time = {}", csString, dwEndTime);
 	}
 	return nRet;
-T_E}
+}

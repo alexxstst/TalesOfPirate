@@ -9,7 +9,7 @@ BOOL MU_LoadMapData(CSectionDataMgr *pData, const char *pszDataName)
 {
 	if(!pData->CreateFromFile(pszDataName, TRUE)) 
     {
-        LG("maputil", "msg%s!\n", pszDataName);
+        ToLog("maputil: msg {}!", pszDataName);
         return FALSE;
     }
     
@@ -41,23 +41,22 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 
 	if(oldmap.GetSectionCntX()!=newmap.GetSectionCntX() || oldmap.GetSectionCntY()!=newmap.GetSectionCntY())
 	{
-		//LG("mappatch", "msg, !\n");
-		LG("mappatch", "msg map size can't match, can't go on!\n");
+		ToLog("mappatch: msg map size can't match, can't go on!");
 		return FALSE;
 	}
 
 	string strOldName = pszOld;
 	strOldName = strOldName.substr(0, strOldName.size() - 4);
-	char szPatchName[255]; sprintf(szPatchName, "%s.pch", strOldName.c_str());
-	FILE *fp = fopen(szPatchName, "wb");
+	std::string szPatchName = std::format("{}.pch", strOldName);
+	FILE *fp = fopen(szPatchName.c_str(), "wb");
 	
 	SMapPatchHeader header;
-	strcpy(header.szMapName, oldmap.GetDataName());
+	strcpy_s(header.szMapName, oldmap.GetDataName().c_str());
 	header.sSectionCntX = oldmap.GetSectionCntX();
 	header.sSectionCntY = oldmap.GetSectionCntY();
 	
 	fwrite(&header, sizeof SMapPatchHeader, 1, fp);
-	DWORD dwCnt = 0;
+	std::uint32_t dwCnt = 0;
 	for(int y = 0; y < oldmap.GetSectionCntY(); y++)
 	{
 		for(int x = 0; x < newmap.GetSectionCntX(); x++)
@@ -65,17 +64,17 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 			SDataSection *pOld = oldmap.GetSectionData(x, y);
 			SDataSection *pNew = newmap.GetSectionData(x, y);
 			
-			if(pOld==NULL && pNew==NULL) continue;
+			if(pOld== nullptr && pNew== nullptr) continue;
 			
 			BYTE btType = 0; // 
 			
-			if(pNew==NULL && pOld!=NULL)
+			if(pNew== nullptr && pOld!= nullptr)
 			{
 				btType = 2;  // section
 			}
 			else
 			{
-				if(pOld==NULL || memcmp(pOld->pData, pNew->pData, oldmap.GetSectionDataSize())!=0)
+				if(pOld== nullptr || memcmp(pOld->pData, pNew->pData, oldmap.GetSectionDataSize())!=0)
 				{
 					btType = 1; // 
 				}
@@ -102,14 +101,12 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 
 	if(dwCnt==0)
 	{
-		//LG("mappatch", "msg, !\n");
-		LG("mappatch", "msg the two file is the same!\n");
-		DeleteFile(szPatchName);
+		ToLog("mappatch: msg the two file is the same!");
+		DeleteFile(szPatchName.c_str());
 	}
 	else
 	{
-		//LG("mappatch", "msg, %d, [%s]\n", dwCnt, szPatchName); 
-		LG("mappatch", "msg map patch create ok, totle update %d area, patch file is [%s]\n", dwCnt, szPatchName); 
+		ToLog("mappatch: msg map patch create ok, totle update {} area, patch file is [{}]", dwCnt, szPatchName);
 	}
 	return TRUE;
 }
@@ -119,35 +116,33 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 {
 	// 
 	FILE *fp = fopen(pszPatch, "rb");
-	if(fp==NULL)
+	if(fp== nullptr)
 	{
-		//LG("mappatch", "msg[%s]!\n", pszPatch);
-		LG("mappatch", "msg open patch map file [%s] failed!\n", pszPatch);
+		ToLog("mappatch: msg open patch map file [{}] failed!", pszPatch);
 		return FALSE;
 	}
 
 	SMapPatchHeader header;
 	fread(&header,sizeof SMapPatchHeader, 1, fp);
 
-	//LG("mappatch", "msg[%d]\n", header.dwUpdateCnt);
-	LG("mappatch", "msg totle update [%d] area\n", header.dwUpdateCnt);
+	ToLog("mappatch: msg totle update [{}] area", header.dwUpdateCnt);
 
 	MPTerrainData oldmap; MU_LoadMapData(&oldmap, pszMap);
 
-	DWORD dwDataSize = oldmap.GetSectionDataSize();
+	std::uint32_t dwDataSize = oldmap.GetSectionDataSize();
 	BYTE *pBuf = new BYTE[dwDataSize];
-	DWORD dwCnt = 0;
-	for(DWORD i = 0; i < header.dwUpdateCnt; i++)
+	std::uint32_t dwCnt = 0;
+	for(std::uint32_t i = 0; i < header.dwUpdateCnt; i++)
 	{
 		BYTE btType; fread(&btType, 1, 1, fp);
-		DWORD x, y;  fread(&x, 4, 1, fp);
+		std::uint32_t x, y;  fread(&x, 4, 1, fp);
 		fread(&y, 4, 1, fp);
 		
 		SDataSection *pSec = oldmap.GetSectionData(x, y);
 		if(btType==1) // 
 		{
 			fread(pBuf, dwDataSize, 1, fp);
-			if(pSec==NULL)
+			if(pSec== nullptr)
 			{
 				pSec = oldmap.LoadSectionData(x, y);
 			}
@@ -168,8 +163,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 	fclose(fp);
 	delete[] pBuf;
 
-	//LG("mappatch", "msg, [%d]\n", dwCnt);
-	LG("mappatch", "msg map patch create ok, totle update [%d] area\n", dwCnt);
+	ToLog("mappatch: msg map patch create ok, totle update [{}] area", dwCnt);
 	return TRUE;
 }
 

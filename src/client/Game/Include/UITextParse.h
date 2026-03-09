@@ -16,8 +16,7 @@ public :
 	    node    * next; //
 	};
 
-public:
-	CTextParse(void);
+CTextParse(void);
 	~CTextParse(void);
 
 	void Render( std::string _str, int x, int y, DWORD color, ALLIGN allign=eAlignTop, int height=0);
@@ -45,8 +44,7 @@ public:
 	int GetFaceCount()	{ return (int)_files.size();}
 
 private:
-	std::string   _str ;    
-private:
+	std::string   _str ;
 	struct stFaceIndex
 	{
 		std::uint32_t		nIndex;

@@ -24,8 +24,7 @@ protected:
 	double					mMasterVolume;
 	DWORD					mLastReleaseTick;
 
-protected:
-	int						FindFreeChannel();
+int						FindFreeChannel();
 	int						VolumeToDB(double theVolume);
 	bool					LoadOGGSound(unsigned int theSfxID, const std::string& theFilename);
 	bool					LoadWAVSound(unsigned int theSfxID, const std::string& theFilename);

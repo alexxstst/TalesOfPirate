@@ -340,7 +340,7 @@ int CCharacter::LoadCha( const LoadChaInfo* info )
     {
         if( FAILED( LoadBone( info->bone ) ) )
         {
-            LG("error", g_oLangRec.GetString(16) );
+            ToLogService("error", "{}", g_oLangRec.GetString(16) );
             return FALSE;
         }
     }
@@ -352,7 +352,7 @@ int CCharacter::LoadCha( const LoadChaInfo* info )
 
         if( FAILED( LoadPart( i, info->part[i] ) ) )
         {
-            LG("error", g_oLangRec.GetString(16) );
+            ToLogService("error", "{}", g_oLangRec.GetString(16) );
             return FALSE;
         }
 
@@ -367,7 +367,7 @@ int CCharacter::LoadCha( const LoadChaInfo* info )
 
         if( p == NULL )
         {
-            LG("error", "msgLoad Ship Power System error!\n");
+            ToLogService("error", "msgLoad Ship Power System error!");
             return FALSE;
         }
 				 p->PlayDefaultAnimation(!g_stUISystem.m_sysProp.m_gameOption.bFramerate);
@@ -740,9 +740,9 @@ void CCharacter::setPos(int nX, int nY)
 		static DWORD tick = 0;
 		int dis = GetDistance( nX, nY, _nCurX, _nCurY );
 		if( dis > 300.0f )
-			LG( "main_cha_pos", "\t\tpos:%d, %d, target:%d, %d, dis:%d, Tick:%d, FPS: %d\n", _nCurX, _nCurY, nX, nY, dis, GetTickCount() - tick, g_Render.GetFPS() );
+			ToLogService( "main_cha_pos", "\t\tpos:{}, {}, target:{}, {}, dis:{}, Tick:{}, FPS: {}", _nCurX, _nCurY, nX, nY, dis, GetTickCount() - tick, g_Render.GetFPS() );
 		else
-			LG( "main_cha_pos", "pos:%d, %d, target:%d, %d, dis:%d, Tick:%d, FPS: %d\n", _nCurX, _nCurY, nX, nY, dis, GetTickCount() - tick, g_Render.GetFPS() );
+			ToLogService( "main_cha_pos", "pos:{}, {}, target:{}, {}, dis:{}, Tick:{}, FPS: {}", _nCurX, _nCurY, nX, nY, dis, GetTickCount() - tick, g_Render.GetFPS() );
 		tick = GetTickCount();
 	}
 #endif
@@ -1284,11 +1284,11 @@ void CCharacter::setSideID( long v )
 
 	if( _lSideID!=0 && IsPlayer() )
 	{
-		LG( getLogName(), "Add SideID:%d\n", _lSideID );
+		ToLogService( getLogName(), "Add SideID:{}", _lSideID );
 		_pSideShade = _pScene->GetFirstInvalidShadeObj();
 		if( _pSideShade )
 		{
-			LG( getLogName(), "Add SideID:%d Successed\n", _lSideID );
+			ToLogService( getLogName(), "Add SideID:{} Successed", _lSideID );
 			_pSideShade->Create( IsBoat() ? 7 : 2 );
 			_pSideShade->setColor( _lSideID==1 ? 0xff00ff00 : 0xffff0000 );
 			_pSideShade->setChaID( getID() );
@@ -1392,7 +1392,7 @@ bool CCharacter::PlayPose( DWORD pose, DWORD type, int time, int fps, bool isBle
 	if(!g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = true;
 
 	fps = CGameApp::GetFrameFPS();
-	LG( getLogName(), "Pose:%d, type:%d, time:%d\n", pose, type, time, fps ); 
+	ToLogService( getLogName(), "Pose:{}, type:{}, time:{}", pose, type, time );
 	
     bool rv = GetCurPoseType()==pose;
 
@@ -1645,17 +1645,17 @@ void CCharacter::UpdataFace(const stNetChangeChaPart& stPart)
 xShipInfo* CCharacter::ConvertPartTo8DWORD( stNetChangeChaPart& stPart, DWORD* dwBuf )
 {
 	xShipInfo* pInfo = ::GetShipInfo( stPart.sBoatID );
-	if( !pInfo ) 
+	if( !pInfo )
 	{
-		LG( "boat_error", g_oLangRec.GetString(20), stPart.sBoatID );
+		ToLogService("boat_error", "{} {}", g_oLangRec.GetString(20), stPart.sBoatID);
 		return NULL;
 	}
 
 	// 
 	xShipPartInfo* pData = GetShipPartInfo( pInfo->sBody );
-	if( pData == NULL ) 
+	if( pData == NULL )
 	{
-		LG( "boat_error", g_oLangRec.GetString(21), pInfo->sBody );
+		ToLogService("boat_error", "{} {}", g_oLangRec.GetString(21), pInfo->sBody);
 		return NULL;
 	}
 		
@@ -1663,17 +1663,17 @@ xShipInfo* CCharacter::ConvertPartTo8DWORD( stNetChangeChaPart& stPart, DWORD* d
 	if( pInfo->byIsUpdate )
 	{
 		pData = GetShipPartInfo( stPart.sHeader );
-		if( pData == NULL ) 
+		if( pData == NULL )
 		{
-			LG( "boat_error", g_oLangRec.GetString(22), stPart.sHeader );
+			ToLogService("boat_error", "{} {}", g_oLangRec.GetString(22), stPart.sHeader);
 			return NULL;
 		}
 		dwBuf[1] = pData->dwModel;
 
 		pData = GetShipPartInfo( stPart.sEngine );
-		if( pData == NULL ) 
+		if( pData == NULL )
 		{
-			LG( "boat_error", g_oLangRec.GetString(23), stPart.sEngine );
+			ToLogService("boat_error", "{} {}", g_oLangRec.GetString(23), stPart.sEngine);
 			return NULL;
 		}
 		dwBuf[2] = pData->dwModel;
@@ -1939,7 +1939,7 @@ bool CCharacter::UpdataItem( int nItem, DWORD nLink )
 		}
 
 		if( CCharacterModel::ChangePart( nLink, nItem )==0) {
-			LG( getLogName(), "msgChangePart Error, Item[%d], Link[%d]\n\n", nItem, nLink );
+			ToLogService( getLogName(), "msgChangePart Error, Item[{}], Link[{}]", nItem, nLink );
 			return false;
 		}
 		return true;
@@ -1986,7 +1986,7 @@ bool CCharacter::UpdataItem( int nItem, DWORD nLink )
                 if (item) {
                     _pHandItem[nLink] = item;
                 } else {
-                    LG(getLogName(), "msgChangePart AddSceneItem Error, Item[%d], Link[%d]\n\n", nItem, nLink);
+                    ToLogService(getLogName(), "msgChangePart AddSceneItem Error, Item[{}], Link[{}]", nItem, nLink);
                     return false;
                 }
             }

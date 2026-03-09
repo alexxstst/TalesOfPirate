@@ -160,8 +160,6 @@ protected:
 
 	D3DXVECTOR3		_vPos;				// 
 
-protected:
-
     CGameScene	*_pScene;
 
 private:

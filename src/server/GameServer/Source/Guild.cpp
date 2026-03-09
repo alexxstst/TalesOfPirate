@@ -2,7 +2,6 @@
 #include "Guild.h"
 #include "GameDB.h"
 #include "util.h"
-#include "dstring.h"
 #include "parser.h"
 #include "GameCommon.h"
 #include "GameApp.h"

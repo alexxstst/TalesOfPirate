@@ -64,8 +64,7 @@ public:
 	// 
 	bool	GetSelectRect( DWORD dwStart, DWORD dwEnd, std::vector<POINT>& pt );
 
-public:	
-	// 
+// 
 	bool	InsertText( CEditTextObj* pText );
 	bool	InsertControl( CEditControl* pControl );
 	bool	InsertObj( CEditObj* pObj );
@@ -97,7 +96,7 @@ public:
 	void	Render();
 	void	RefreshPos( int x, int y );
 
-public:		// vistor
+		// vistor
 	void	ParseText( CEditTextObj* pText );
 	void	ParseControl( CEditControl* pControl );
 	void	ParseObj( CEditObj* pObj );
@@ -105,8 +104,7 @@ public:		// vistor
 private:
 	CEditRow*	_AppendToBackRow( CEditObj *pChar );
 
-private:
-	CEditArticle*	_pActicle;	
+CEditArticle*	_pActicle;	
 
 	typedef std::vector<CEditRow*> items;
 	items			_items;			// 

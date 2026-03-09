@@ -551,9 +551,8 @@ void Player::DelEstopPlayer( cChar* plyname )
 		l_wpk.WriteCmd(CMD_PT_DEL_ESTOPUSER);
 		g_gpsvr->SendToClient(ply,l_wpk);
 
-		LogLine l_line(g_LogGrpServer);
-		//l_line<<newln<<"???["<<m_chaname[m_currcha]<<"]?a3y????plyname:["<<ply->m_chaname[ply->m_currcha]<<"]"<<endln;
-		l_line<<newln<<"char["<<m_chaname[m_currcha]<<"]may speak plyname:["<<ply->m_chaname[ply->m_currcha]<<"]"<<endln;
+		//l_line<<newln<<...;
+		ToLogService("GroupServer", "char[{}]may speak plyname:[{}]", m_chaname[m_currcha], ply->m_chaname[ply->m_currcha]);
 	}
 }
 
@@ -598,8 +597,7 @@ void Player::EstopPlayer( cChar* plyname, uLong lTimes )
 		l_wpk.WriteCmd(CMD_PT_ESTOPUSER);
 		g_gpsvr->SendToClient(ply,l_wpk);
 
-		LogLine l_line(g_LogGrpServer);
-		l_line<<newln<<"char ["<<m_chaname[m_currcha]<<"] can't speack plyname:["<<ply->m_chaname[ply->m_currcha]<<"]"<<lTimes<<"minute"<<endln;
+		ToLogService("GroupServer", "char [{}] can't speack plyname:[{}]{}minute", m_chaname[m_currcha], ply->m_chaname[ply->m_currcha], lTimes);
 	}
 }
 
@@ -636,9 +634,8 @@ void Player::DisablePlayer( cChar* plyname, uLong lTimes )
 			SendSysInfo( szData );
 
 			//??31|
-			LogLine l_line(g_LogGrpServer);
-			//l_line<<newln<<"???acctid/acctname:["<<ply->m_acctid<<"]/["<<ply->m_acctname<<"],2?????????????!"<<endln;
-			l_line<<newln<<"screen acctid/acctname:["<<ply->m_acctid<<"]/["<<ply->m_acctname<<"],kill the player!"<<endln;
+			//l_line<<newln<<...;
+			ToLogService("GroupServer", "screen acctid/acctname:[{}]/[{}],kill the player!", ply->m_acctid, ply->m_acctname);
 		}
 		ply->Free();
 	}
@@ -668,9 +665,8 @@ void Player::DisablePlayer( cChar* plyname, uLong lTimes )
 			SendSysInfo( szData );
 
 			//??31|
-			LogLine l_line(g_LogGrpServer);
-			//l_line<<newln<<"????????acctid/plyname:["<<cha_accid<<"]/["<<plyname<<"]???!"<<endln;
-			l_line<<newln<<"recieve screen acctid/plyname:["<<cha_accid<<"]/["<<plyname<<"]command!"<<endln;
+			//l_line<<newln<<...;
+			ToLogService("GroupServer", "recieve screen acctid/plyname:[{}]/[{}]command!", cha_accid, plyname);
 		}
 	}	
 }

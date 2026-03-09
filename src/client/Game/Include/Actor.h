@@ -79,11 +79,10 @@ public:
 
 	bool			IsEmpty()					{ return _statelist.empty();	}
 
-public:
-    void            PlayPose( int poseid, bool isKeep=false, bool isSend=false );
+void            PlayPose( int poseid, bool isKeep=false, bool isSend=false );
 	void			SetSleep()					{ _nWaitingTime = -1;			}
 
-public:		// CActionState 
+		// CActionState 
 	bool	        SwitchState( CActionState* pState );						// ,,
 	bool	        InsertState( CActionState* pState, bool IsFront=false );	// ,
     bool            AddState( CActionState* pState );
@@ -102,7 +101,7 @@ public:		// CActionState
 
 	void			FailedAction();
 
-public:	// 
+	// 
     void	        ActionBegin( DWORD pose_id );
 	void			ActionKeyFrame( DWORD pose_id, int key_frame );
 	void			ActionEnd( DWORD pose_id );
@@ -124,8 +123,7 @@ protected:
     void            _ExecSynchro( synchro& s );
     void            _ClearSynchro( synchro& s );
 
-protected:
-	CActionState*	_pCurState;				// 
+CActionState*	_pCurState;				// 
 	typedef std::list<CActionState*> states;
 	states			_statelist;
 

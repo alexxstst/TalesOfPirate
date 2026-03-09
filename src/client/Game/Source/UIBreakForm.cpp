@@ -154,28 +154,28 @@ namespace GUI
         frmBreak = mgr.Find("frmBreak");
         if(!frmBreak)
         {
-            LG("gui", "frmBreak not found.\n");
+            ToLogService("gui", "frmBreak not found.");
             return false;
         }
 
         labNumInput = dynamic_cast<CLabelEx*>(frmBreak->Find("labNumOutputLeft"));
         if(!labNumInput)
         {
-            LG("gui", "frmCompose::labNumOutputLeft not found.\n");
+            ToLogService("gui", "frmCompose::labNumOutputLeft not found.");
             return false;
         }
 
         labUsrInput = dynamic_cast<CLabelEx*>(frmBreak->Find("labNumOutputRight"));
         if(!labUsrInput)
         {
-            LG("gui", "frmCompose::labNumOutputRight not found.\n");
+            ToLogService("gui", "frmCompose::labNumOutputRight not found.");
             return false;
         }
 
         proBreak = dynamic_cast<CProgressBar*>(frmBreak->Find("proBreak"));
         if(!proBreak)
         {
-            LG("gui", "frmBreak::proBreak not found.\n");
+            ToLogService("gui", "frmBreak::proBreak not found.");
             return false;
         }
         proBreak->evtTimeArrive = _ProTimeArriveEvt;
@@ -183,7 +183,7 @@ namespace GUI
         btnForgeYes = dynamic_cast<CTextButton*>(frmBreak->Find("btnForgeYes"));
         if(!btnForgeYes)
         {
-            LG("gui", "frmBreak::btnForgeYes not found.\n");
+            ToLogService("gui", "frmBreak::btnForgeYes not found.");
             return false;
         }
         btnForgeYes->SetIsEnabled(false);
@@ -191,7 +191,7 @@ namespace GUI
         btnForgeNo = dynamic_cast<CTextButton*>(frmBreak->Find("btnForgeNo"));
         if(!btnForgeNo)
         {
-            LG("gui", "frmBreak::btnForgeNo not found.\n");
+            ToLogService("gui", "frmBreak::btnForgeNo not found.");
             return false;
         }
         btnForgeNo->SetIsEnabled(false);
@@ -203,7 +203,7 @@ namespace GUI
             cmdBreak[i] = dynamic_cast<COneCommand*>(frmBreak->Find(buff));
             if(!cmdBreak[i])
             {
-                LG("gui", "frmBreak::%s not found.\n", buff);
+                ToLogService("gui", "frmBreak::{} not found.", buff);
                 return false;
             }
             iBreakPos[i] = NO_USE;

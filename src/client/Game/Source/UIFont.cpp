@@ -457,7 +457,7 @@ void CTextScrollHint::Render()
 			for(auto it = _hint.begin();it!=_hint.end();it++)
 			{
 				stHint* st= *it;
-				LG("sunny.txt", "hint error !%s\n", st->hint.c_str());
+				ToLogService("sunny.txt", "hint error !{}", st->hint.c_str());
 			}
 			_hint.clear();
 		}

@@ -35,14 +35,12 @@ public:
 	virtual void	SetAlpha( BYTE alpha );
 	virtual bool	IsHandleMouse() { return true;		}
 
-public:
-	virtual bool	OnKeyDown( BYTE key );
+virtual bool	OnKeyDown( BYTE key );
 	virtual bool	OnChar( BYTE c );
 	virtual void	OnActive();
 	virtual void	OnLost();
 
-public:
-	CEdit*			GetEdit()	{ return _pEdit;	}
+CEdit*			GetEdit()	{ return _pEdit;	}
 	CList*			GetList()	{ return _pList;	}
 	CTextButton*	GetButton() { return _pButton;	}
 
@@ -51,8 +49,7 @@ public:
 
 	const char*		GetText()				{ return _pEdit->GetCaption();	}
 
-public:
-	GuiEvent		evtSelectChange;	// 
+GuiEvent		evtSelectChange;	// 
 	GuiMouseEvent	evtMouseClick;		// 
 
 protected:
@@ -74,8 +71,7 @@ protected:
 	void			_RefreshList();
 	void			_SetSelf();
 
-protected:
-	CEdit*			_pEdit;
+CEdit*			_pEdit;
 	CList*			_pList;
 	CTextButton*	_pButton;
 

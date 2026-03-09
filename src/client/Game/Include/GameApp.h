@@ -136,9 +136,7 @@ public:
 
 	bool				IsInit()							{ return _IsInit;				}
 
-	bool				HasLogFile( const char* log_file, bool isOpen=true );
-
-	void				Loading( int nFrame=40 );				// 
+	void				Loading( int nFrame=40 );				//
     static void         Waiting( bool isWaiting=true );         // ,UI
 	static bool			IsMouseContinue(int nButton)		{ return _dwMouseDownTime[nButton]>12;	}
 
@@ -168,15 +166,14 @@ public:
 	void		CreateCharImg();
 
 	void		RefreshLoadingProgress();
-	
-public:	// 
+
+	// 
 	void		LoadScriptScene( eSceneType eType );
 	void		LoadScriptScene( const char* script_file );
 
 	bool		btest;
 
 	int			ihei;
-public:
 	static DWORD		GetCurTick() { return _dwCurTick; }
 	void				SetTickCount(DWORD dwTick)		{ _dwCurTick = dwTick;  }
 	void				SetFPSInterval( DWORD v );
@@ -225,8 +222,7 @@ public:
 	static void SetLoginTime(DWORD _dwLoginTime)		{ m_dwLoginTime=_dwLoginTime;		}
 	static DWORD GetLoginTime()							{ return m_dwLoginTime;				}
 
-public:    
-    std::list<SAddSceneObj*>  m_AddSceneObjList;
+std::list<SAddSceneObj*>  m_AddSceneObjList;
     DWORD                m_dwRenderUITime;
     DWORD                m_dwRenderSceneTime;
     DWORD                m_dwRenderScneObjTime;
@@ -260,8 +256,6 @@ protected:
     void                _RenderTipText();
     void                _ShowLoading(int percent);
 
-protected:
-	
     BOOL			    _bCameraFollow;
     BOOL                _bEnableSuperKey;
 	BOOL			    _bConnected;
@@ -327,9 +321,9 @@ private:		//
 	//void UpdateColourQueue();
 	void RenderColourQueue();
 
-    static bool         _IsMusicSystemValid; 
+    static bool         _IsMusicSystemValid;
 
-private:        // ,:1.,2.,,3.
+        // ,:1.,2.,,3.
     enum eBkgMusic { enumNoMusic, enumOldMusic, enumNewMusic, enumMusicPlay };
     eBkgMusic           _eSwitchMusic;
     int                 _nCurMusicSize;     // 
@@ -475,5 +469,5 @@ inline void CGameApp::ClearAllSkillClocks()
 #define Tip(t)            { g_pGameApp->AddTipText(t);}
 
 extern CGameApp* g_pGameApp;
-extern bool	volatile	g_bLoadRes;
+extern bool		g_bLoadRes;
 BOOL RenderHintFrame(const RECT* rc, DWORD color);

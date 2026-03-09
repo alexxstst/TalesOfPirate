@@ -23,29 +23,29 @@ namespace mission
 
 	CNpc::CNpc()
 	: CCharacter()
-	{T_B
+	{
 		SetType();
-	T_E}
+	}
 
 	CNpc::~CNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	void CNpc::Clear()
-	{T_B
+	{
 		m_sScriptID = INVALID_SCRIPT_NPCHANDLE;
 		m_bHasMission = FALSE;
 		m_sNpcID = 0;
 		m_byShowType = 0;
 		memset( m_szMsgProc, 0, ROLE_MAXSIZE_MSGPROC );
 		memset( m_szName, 0, 128 );
-	T_E}
+	}
 
 	BOOL CNpc::Load( const CNpcRecord& recNpc, const CChaRecord& recChar )
-	{T_B
+	{
 		return FALSE;
-	T_E}
+	}
 
 	BOOL CNpc::IsMapNpc( const char szMap[], USHORT sID )
 	{
@@ -53,15 +53,15 @@ namespace mission
 	}
 
 	HRESULT CNpc::MsgProc( CCharacter& character, RPACKET& pk )
-	{T_B
+	{
 		return EN_OK;
-	T_E}
+	}
 
 	BOOL CNpc::MissionProc( CCharacter& character, BYTE& byState )
-	{T_B
+	{
 		byState = 0;
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CNpc::AddNpcTrigger( WORD wID, mission::TRIGGER_EVENT e, WORD wParam1, WORD wParam2, WORD wParam3, WORD wParam4 )
 	{
@@ -78,24 +78,24 @@ namespace mission
 
 	CTalkNpc::CTalkNpc()
 	: CNpc()
-	{T_B
+	{
 		SetType();
 		Clear();
-	T_E}
+	}
 
 	CTalkNpc::~CTalkNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	void CTalkNpc::Clear()
-	{T_B
+	{
 		m_sTime = 0;
 		m_bSummoned = FALSE;		
-	T_E}
+	}
 
 	BOOL CTalkNpc::InitScript( const char szFunc[], const char szName[] )
-	{T_B
+	{
 		if( szFunc[0] == '0' ) return TRUE;
 
 		// NPC
@@ -103,7 +103,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "ResetNpcInfo" );
+			ToLogService( "lua_invalidfunc", "{}", "ResetNpcInfo" );
 			return FALSE;
 		}
 
@@ -114,7 +114,7 @@ namespace mission
 		if( nStatus )
 		{
 			//LG( "NpcInit", "npc[%s][ResetNpcInfo]!", szName );
-			LG( "NpcInit", "npc[%s]'s script init dispose function[ResetNpcInfo]transfer failed!", szName );
+			ToLogService( "NpcInit", "npc[{}]'s script init dispose function[ResetNpcInfo]transfer failed!", szName );
 			//printf( "npc[%s][ResetNpcInfo]!\n", szName );
 			printf( RES_STRING(GM_NPC_CPP_00001), szName );
 			lua_callalert( g_pLuaState, nStatus );
@@ -128,7 +128,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", szFunc );
+			ToLogService( "lua_invalidfunc", "{}", szFunc );
 			return FALSE;
 		}
 
@@ -136,7 +136,7 @@ namespace mission
 		if( nStatus )
 		{
 			//LG( "NpcInit", "npc[%s][%s]!", szName, szFunc );
-			LG( "NpcInit", "npc[%s]'s script data dispose function[%s]transfer failed!", szName, szFunc );
+			ToLogService( "NpcInit", "npc[{}]'s script data dispose function[{}]transfer failed!", szName, szFunc );
 			//printf( "npc[%s][%s]!\n", szName, szFunc );
 			printf( RES_STRING(GM_NPC_CPP_00002), szName, szFunc );
 			lua_callalert( g_pLuaState, nStatus );
@@ -150,7 +150,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "GetNpcInfo" );
+			ToLogService( "lua_invalidfunc", "{}", "GetNpcInfo" );
 			return FALSE;
 		}
 
@@ -161,7 +161,7 @@ namespace mission
 		if( nStatus )
 		{
 			//LG( "NpcInit", "npc[%s][GetNpcInfo]!", szName );
-			LG( "NpcInit", "npc[%s]'s script init dispose function[GetNpcInfo]transfer failed!", szName );
+			ToLogService( "NpcInit", "npc[{}]'s script init dispose function[GetNpcInfo]transfer failed!", szName );
 			//printf( "npc[%s][GetNpcInfo]!\n", szName );
 			printf(RES_STRING(GM_NPC_CPP_00003), szName );
 			lua_callalert( g_pLuaState, nStatus );
@@ -172,10 +172,10 @@ namespace mission
 
 		strcpy( m_szName, szName );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTalkNpc::Load( const CNpcRecord& recNpc, const CChaRecord& recChar )
-	{T_B
+	{
 		Clear();
 		// npc
 		SetEyeshotAbility( false );	
@@ -191,9 +191,6 @@ namespace mission
 		strncpy( m_szMsgProc, recNpc.szMsgProc, ROLE_MAXSIZE_MSGPROC - 1 );
 
 		m_ID = g_pGameApp->m_Ident.GetID();
-		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
-		m_CLog.SetLogName(szLogName);
 
 		m_pCChaRecord = (CChaRecord*)&recChar;
 		m_cat = (short)m_pCChaRecord->lID;
@@ -204,21 +201,21 @@ namespace mission
 		setAttr(ATTR_CHATYPE, enumCHACTRL_NPC);
 		
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTalkNpc::Load( const char szNpcScript[] )
-	{T_B		
+	{
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTalkNpc::IsMapNpc( const char szMap[], USHORT sID )
-	{T_B
+	{
 		assert( GetSubMap() != NULL );
 		return strcmp( szMap, GetSubMap()->GetName() ) == 0 && m_sNpcID == sID;
-	T_E}
+	}
 
 	HRESULT CTalkNpc::MsgProc( CCharacter& character, RPACKET& packet )
-	{T_B
+	{
 		//if( m_sScriptID == INVALID_SCRIPT_NPCHANDLE )
 		//	return EN_OK;
 		
@@ -271,7 +268,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "NpcProc" );
+			ToLogService( "lua_invalidfunc", "{}", "NpcProc" );
 			return FALSE;
 		}
 
@@ -292,10 +289,10 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 
 		return EN_OK;
-	T_E}
+	}
 
 	BOOL CTalkNpc::MissionProc( CCharacter& character, BYTE& byState )
-	{T_B
+	{
 		if( !m_bHasMission )
 			return TRUE;
 
@@ -303,7 +300,7 @@ namespace mission
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "NpcState" );
+			ToLogService( "lua_invalidfunc", "{}", "NpcState" );
 			return FALSE;
 		}
 
@@ -331,10 +328,10 @@ namespace mission
 		}
 
 		return character.GetMissionState( m_ID, byState );
-	T_E}
+	}
 
 	BOOL CTalkNpc::AddNpcTrigger( WORD wID, mission::TRIGGER_EVENT e, WORD wParam1, WORD wParam2, WORD wParam3, WORD wParam4 )
-	{T_B
+	{
 		if( m_byNumTrigger >= ROLE_MAXNUM_NPCTRIGGER )
 			return FALSE;
 
@@ -347,10 +344,10 @@ namespace mission
 		m_byNumTrigger++;
 
 		return TRUE;
-	T_E}
+	}
 
 	void CTalkNpc::ClearTrigger( WORD wIndex )
-	{T_B
+	{
 		if( wIndex >= m_byNumTrigger )
 			return;
 	
@@ -360,7 +357,7 @@ namespace mission
 		memcpy( m_Trigger, Info + wIndex, sizeof(NPC_TRIGGER_DATA)*wIndex );
 		memcpy( m_Trigger + wIndex, Info + wIndex + 1, sizeof(NPC_TRIGGER_DATA)*(m_byNumTrigger - wIndex - 1) );
 		m_byNumTrigger--;
-	T_E}
+	}
 
 	BOOL CTalkNpc::EventProc( TRIGGER_EVENT e, WPARAM wParam, LPARAM lParam )
 	{
@@ -386,7 +383,7 @@ namespace mission
 	}
 
 	void CTalkNpc::TimeOut( USHORT sTime )
-	{T_B
+	{
 		if( m_bSummoned )
 		{
 			if( m_sTime > 1 )
@@ -414,7 +411,7 @@ namespace mission
 				if( !lua_isfunction( g_pLuaState, -1 ) )
 				{
 					lua_pop( g_pLuaState, 1 );
-					LG( "lua_invalidfunc", "TriggerProc" );
+					ToLogService( "lua_invalidfunc", "{}", "TriggerProc" );
 					return;
 				}
 
@@ -431,7 +428,7 @@ namespace mission
 					printf( RES_STRING(GM_NPC_CPP_00012) );
 #endif
 					//LG( "trigger_error", "CTalkNpc::TimeOut:[TriggerProc]!" );
-					LG( "trigger_error", "CTalkNpc::TimeOut:task dispose fuction[TriggerProc]transfer failed!" );
+					ToLogService( "trigger_error", "CTalkNpc::TimeOut:task dispose fuction[TriggerProc]transfer failed!" );
 					lua_callalert( g_pLuaState, nStatus );
 					lua_settop(g_pLuaState, 0);
 					continue;
@@ -474,7 +471,7 @@ namespace mission
 					default:
 						{
 							//LG( "trigger_error", "!" );
-							LG( "trigger_error", "unknown time trigger distance taye!" );
+							ToLogService( "trigger_error", "unknown time trigger distance taye!" );
 							//printf( "CTalkNpc::!Trigger ID = %d", m_Trigger[i].wTID );
 							printf( RES_STRING(GM_NPC_CPP_00013), m_Trigger[i].wTID );
 							ClearTrigger( i-- );
@@ -490,10 +487,10 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	void CTalkNpc::Summoned( USHORT sTime )
-	{T_B
+	{
 		m_sTime = sTime;
 		
 		// 
@@ -502,45 +499,45 @@ namespace mission
 			m_bSummoned = TRUE;
 			Show();
 		}
-	T_E}
+	}
 
 	//-----------------------------------------------------
 	// class CTradeNpc implemented
 
 	CTradeNpc::CTradeNpc()
 	: CTalkNpc()
-	{T_B
+	{
 		SetType();
-	T_E}
+	}
 
 	CTradeNpc::~CTradeNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	BOOL CTradeNpc::Sale( CCharacter& character, RPACKET& packet )
-	{T_B
+	{
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeNpc::Buy( CCharacter& character, RPACKET& packet )
-	{T_B
+	{
 		return TRUE;
-	T_E}
+	}
 
 	//-----------------------------------------------------
 	// class CTradeNpc implemented
 
 	CRoleNpc::CRoleNpc()
 	: CTalkNpc()
-	{T_B
+	{
 		SetType();
-	T_E}
+	}
 
 	CRoleNpc::~CRoleNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 	
 }
 

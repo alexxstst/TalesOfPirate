@@ -44,16 +44,12 @@ public:
 
 	void 	HitRepresent( CSkillRecord* pSkill, int nAngle );
 
-public:
-    CSkillRecord*   GetSkill()      { return _pSkill;           }
+CSkillRecord*   GetSkill()      { return _pSkill;           }
 
     int     GetFightID()            { return _nFightID;         }
 	bool	GetIsExecEnd()		    { return _nFightID==ERROR_FIGHT_ID; }
 
-private:
-
-private:
-    int         _nFightID;
+int         _nFightID;
     CActor*     _pActor;            // Actor
 	CCharacter* _pCha;
 

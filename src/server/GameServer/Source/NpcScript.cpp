@@ -18,14 +18,14 @@ WPACKET g_WritePacket;
 
 // 
 inline int lua_GetPacket( lua_State *L )
-{T_B
+{
 	g_WritePacket = GETWPACKET();
 	lua_pushlightuserdata( L, &g_WritePacket );
 	return 1;
-T_E}
+}
 
 inline int lua_ReadByte( lua_State *L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid ) 
 	{
@@ -46,10 +46,10 @@ inline int lua_ReadByte( lua_State *L )
 	}
 	lua_pushnumber( L, byData );
 	return 1;
-T_E}
+}
 
 inline int lua_ReadWord( lua_State *L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid ) 
 	{
@@ -70,10 +70,10 @@ inline int lua_ReadWord( lua_State *L )
 	}
 	lua_pushnumber( L, wData );
 	return 1;
-T_E}
+}
 
 inline int lua_ReadDword( lua_State *L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid ) 
 	{
@@ -94,10 +94,10 @@ inline int lua_ReadDword( lua_State *L )
 	}
 	lua_pushnumber( L, dwData );
 	return 1;
-T_E}
+}
 
 inline int lua_ReadString( lua_State *L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid ) 
 	{
@@ -119,10 +119,10 @@ inline int lua_ReadString( lua_State *L )
 	//lua_pushstring( L, ( pszData ) ? pszData : "" );
 	lua_pushstring( L, ( pszData ) ? pszData : "Ineffective char pointer" );
 	return 1;
-T_E}
+}
 
 inline int lua_ReadCmd( lua_State *L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid ) 
 	{
@@ -143,10 +143,10 @@ inline int lua_ReadCmd( lua_State *L )
 	}
 	lua_pushnumber( L, wData );
 	return 1;
-T_E}
+}
 
 inline int lua_WriteByte( lua_State *L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid ) 
 	{
@@ -166,10 +166,10 @@ inline int lua_WriteByte( lua_State *L )
 		E_LUANULL;
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_WriteWord( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid )
 	{
@@ -189,10 +189,10 @@ inline int lua_WriteWord( lua_State* L )
 		E_LUANULL;
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_WriteDword( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid )
 	{
@@ -213,10 +213,10 @@ inline int lua_WriteDword( lua_State* L )
 
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_WriteString( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) );
 	if( !bValid )
 	{
@@ -236,10 +236,10 @@ inline int lua_WriteString( lua_State* L )
 		E_LUANULL;
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_WriteCmd( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid )
 	{
@@ -260,10 +260,10 @@ inline int lua_WriteCmd( lua_State* L )
 
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_SendPacket( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) );
 	if( !bValid )
 	{
@@ -280,7 +280,7 @@ inline int lua_SendPacket( lua_State* L )
 
 	pChar->ReflectINFof( pChar, *pPacket );
 	return 0;
-T_E}
+}
 
 inline int lua_SynPacket( lua_State* L )
 {
@@ -303,7 +303,7 @@ inline int lua_SynPacket( lua_State* L )
 }
 
 inline int lua_GetCharID( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid )
 	{
@@ -319,10 +319,10 @@ inline int lua_GetCharID( lua_State* L )
 	}
 	lua_pushnumber( L, pChar->GetID() );
 	return 1;
-T_E}
+}
 
 inline int lua_GetCharName( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid )
 	{
@@ -337,10 +337,10 @@ inline int lua_GetCharName( lua_State* L )
 	}
 	lua_pushstring( L, pChar->GetName() );
 	return 1;
-T_E}
+}
 
 inline int lua_GetMonsterName( lua_State* L )
-{T_B
+{
 	BOOL bValid = lua_gettop( L ) == 1 && lua_isnumber( L, 1 );
 	if( !bValid )
 	{
@@ -363,10 +363,10 @@ inline int lua_GetMonsterName( lua_State* L )
 	lua_pushstring( L, szName );
 
 	return 1;
-T_E}
+}
 
 inline int lua_GetItemName( lua_State* L )
-{T_B
+{
 	BOOL bValid = lua_gettop( L ) == 1 && lua_isnumber( L, 1 );
 	if( !bValid )
 	{
@@ -389,11 +389,11 @@ inline int lua_GetItemName( lua_State* L )
 	lua_pushstring( L, szItem );
 
 	return 1;
-T_E}
+}
 
 
 inline int lua_GetAreaName( lua_State* L )
-{T_B
+{
 	BOOL bValid = lua_gettop( L ) == 1 && lua_isnumber( L, 1 );
 	if( !bValid )
 	{
@@ -415,10 +415,10 @@ inline int lua_GetAreaName( lua_State* L )
 	lua_pushstring( L, szArea );
 
 	return 1;
-T_E}
+}
 
 inline int lua_GetMapName( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid )
 	{
@@ -442,10 +442,10 @@ inline int lua_GetMapName( lua_State* L )
 
 	lua_pushstring( L, pMap->GetName() );
 	return 1;
-T_E}
+}
 
 inline int lua_MoveTo( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L,  1 ) && lua_isnumber( L, 2 ) &&
 					lua_isnumber( L, 3 ) && lua_isstring( L, 4 ) );
 	if( !bValid )
@@ -471,10 +471,10 @@ inline int lua_MoveTo( lua_State* L )
 	lua_pushnumber( L, LUA_TRUE );
 
 	return 1;
-T_E}
+}
 
 inline int lua_MoveCity( lua_State* L )
-{T_B
+{
 	int	nParamNum = lua_gettop( L );
 	BOOL bValid = FALSE;
 	if (nParamNum == 2)
@@ -510,10 +510,10 @@ inline int lua_MoveCity( lua_State* L )
 	lua_pushnumber( L, LUA_TRUE );
 
 	return 1;
-T_E}
+}
 
 inline int lua_Rand( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_isnumber( L, 1 ) );
 	if( !bValid )
 	{
@@ -527,11 +527,11 @@ inline int lua_Rand( lua_State* L )
 	lua_pushnumber( L, dwRand );
 
 	return 1;
-T_E}
+}
 
 // 
 inline int lua_DebugInfo( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_isnumber( L, 1 ) );
 	if( !bValid )
 	{
@@ -540,7 +540,7 @@ inline int lua_DebugInfo( lua_State* L )
 	}
 	DWORD dwData = (BYTE)lua_tonumber( L, 1 );
 	return 0;
-T_E}
+}
 
 inline int lua_BickerNotice( lua_State* L )
 {
@@ -564,7 +564,7 @@ inline int lua_BickerNotice( lua_State* L )
 }
 
 inline int lua_SystemNotice( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L , 2 ) );
 	if( !bValid )
 	{
@@ -582,10 +582,10 @@ inline int lua_SystemNotice( lua_State* L )
 
 	pChar->SystemNotice( pszData );
 	return 0;
-T_E}
+}
 
 inline int lua_SynTigerString( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L , 2 ) );
 	if( !bValid )
 	{
@@ -603,10 +603,10 @@ inline int lua_SynTigerString( lua_State* L )
 
 	pChar->SynTigerString( pszData );
 	return 0;
-T_E}
+}
 
 inline int lua_SafeBuy( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
 					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
 	if( !bValid )
@@ -631,10 +631,10 @@ inline int lua_SafeBuy( lua_State* L )
 	lua_pushnumber( L, dwMoney );
 
 	return 2;
-T_E}
+}
 
 inline int lua_ExchangeReq( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 7 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) &&
 				lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && lua_isnumber( L, 6 )
 				&& lua_isnumber( L, 7 ) );
@@ -655,10 +655,10 @@ inline int lua_ExchangeReq( lua_State* L )
 	pChar->ExchangeReq(sSrcID, sSrcNum, sTarID, sTarNum);
 
 	return 1;
-T_E}
+}
 
 inline int lua_SafeSale( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
 					lua_isnumber( L, 3 ) );
 	if( !bValid )
@@ -684,7 +684,7 @@ inline int lua_SafeSale( lua_State* L )
 	lua_pushnumber( L, dwMoney );
 
 	return 3;
-T_E}
+}
 
 inline int lua_SafeSaleGoods( lua_State* L )
 {
@@ -778,7 +778,7 @@ inline int lua_GetSaleGoodsItem( lua_State* L )
 }
 
 inline int lua_SetNpcScriptID( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid )
 	{
@@ -796,10 +796,10 @@ inline int lua_SetNpcScriptID( lua_State* L )
 	USHORT sID = (USHORT)lua_tonumber( L, 2 );
 	pNpc->SetScriptID( sID );
 	return 0;
-T_E}
+}
 
 inline int lua_GetScriptID( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid )
 	{
@@ -818,10 +818,10 @@ inline int lua_GetScriptID( lua_State* L )
 	lua_pushnumber( L, ( sID != -1 ) ? LUA_TRUE : LUA_FALSE );
 	lua_pushnumber( L, sID );
 	return 2;
-T_E}
+}
 
 inline int lua_FindNpc( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_isstring( L, 1 ) );
 	if( !bValid )
 	{
@@ -832,7 +832,7 @@ inline int lua_FindNpc( lua_State* L )
 	const char* pszNpc = lua_tostring( L, 1 );
 	CNpc* pNpc = NULL;
 	try { pNpc = g_pGameApp->FindNpc( pszNpc ); }
-	catch(...) { LG( "find_npc", "findnpc errorexception!" ); }
+	catch(...) { ToLogService( "find_npc", "findnpc errorexception!" ); }
 
 	if( !pNpc )
 	{
@@ -844,20 +844,20 @@ inline int lua_FindNpc( lua_State* L )
 	lua_pushlightuserdata( L, pNpc );
 	lua_pushnumber( L, sID );
 	return 3;
-T_E}
+}
 
 inline int lua_ReloadNpcInfo( lua_State* L )
-{T_B
+{
 	//LoadScript();
 	//if( g_pGameApp->ReloadNpcInfo( *this ) )
 	//{
 	//	printf( "NPClua" );
 	//}
 	return 0;
-T_E}
+}
 
 inline int lua_SetNpcHasMission( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid )
 	{
@@ -875,10 +875,10 @@ inline int lua_SetNpcHasMission( lua_State* L )
 	BYTE byRet = (BYTE)lua_tonumber( L, 2 );
 	pNpc->SetNpcHasMission( byRet );
 	return 0;
-T_E}
+}
 
 inline int lua_GetNpcHasMission( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
 	if( !bValid )
 	{
@@ -895,10 +895,10 @@ inline int lua_GetNpcHasMission( lua_State* L )
 
 	lua_pushnumber( L, ( pNpc->GetNpcHasMission() ) ? LUA_TRUE : LUA_FALSE );
 	return 1;
-T_E}
+}
 
 inline int lua_IsInArea( lua_State* L )
-{T_B
+{
 	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
 	if( !bValid )
 	{
@@ -919,10 +919,10 @@ inline int lua_IsInArea( lua_State* L )
 	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
 
 	return 1;
-T_E}
+}
 
 inline int lua_IsInMap( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 6 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
 					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && lua_isnumber( L, 6 ));
 	if( !bValid )
@@ -953,10 +953,10 @@ inline int lua_IsInMap( lua_State* L )
 
 	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
 	return 1;
-T_E}
+}
 
 inline int lua_IsMapChar( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) );
 	if( !bValid )
 	{
@@ -974,10 +974,10 @@ inline int lua_IsMapChar( lua_State* L )
 
 	lua_pushnumber( L, ( strcmp( pszMap, pChar->GetSubMap()->GetName() ) == 0 ) ? LUA_TRUE : LUA_FALSE );
 	return 1;
-T_E}
+}
 
 inline int lua_IsMapNpc( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
 					lua_isnumber( L, 3 ) );
 	if( !bValid )
@@ -998,10 +998,10 @@ inline int lua_IsMapNpc( lua_State* L )
 
 	lua_pushnumber( L, ( pNpc->IsMapNpc( pszMap, sNpcID ) ) ? LUA_TRUE : LUA_FALSE );
 	return 1;
-T_E}
+}
 
 inline int lua_AddNpcTrigger( lua_State* L )
-{T_B
+{
 	BOOL bValid = ( lua_gettop( L ) == 7 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
 					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && 
 					lua_isnumber( L, 6 ) && lua_isnumber( L, 7 ) );
@@ -1030,7 +1030,7 @@ inline int lua_AddNpcTrigger( lua_State* L )
 	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
 
 	return 1;
-T_E}
+}
 
 inline int lua_SetActive( lua_State* L )
 {
@@ -1110,7 +1110,7 @@ BOOL lua_ChaPlayEffect(lua_State* L)
 }
 
 inline int RegisterNpcScript()
-{T_B
+{
 	lua_State* L = g_pLuaState;
 
 	REGFN(ReloadNpcInfo);
@@ -1169,7 +1169,7 @@ inline int RegisterNpcScript()
 	REGFN(BickerNotice);
 
 	return TRUE;
-T_E}
+}
 
 
 

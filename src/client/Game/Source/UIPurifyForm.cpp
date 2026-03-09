@@ -30,21 +30,21 @@ namespace GUI
 		frmEquipPurify = CFormMgr::s_Mgr.Find("frmEquipPurify");
 		if(! frmEquipPurify)
 		{
-			LG("gui", "main.clu   frmEquipPurify not found.\n");
+			ToLogService("gui", "main.clu   frmEquipPurify not found.");
 			return false;
 		}
 
 		labMoneyShow = dynamic_cast<CLabelEx*>(frmEquipPurify->Find("labMoneyShow"));
 		if(! labMoneyShow)
 		{
-			LG("gui", "main.clu   frmEquipPurify:labMoneyShow not found.\n");
+			ToLogService("gui", "main.clu   frmEquipPurify:labMoneyShow not found.");
 			return false;
 		}
 
 		btnForgeYes = dynamic_cast<CTextButton*>(frmEquipPurify->Find("btnForgeYes"));
 		if(! btnForgeYes)
 		{
-			LG("gui", "main.clu   frmEquipPurify:btnForgeYes not found.\n");
+			ToLogService("gui", "main.clu   frmEquipPurify:btnForgeYes not found.");
 			return false;
 		}
 
@@ -56,7 +56,7 @@ namespace GUI
 			labHintleft[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
 			if(! labHintleft[i])
 			{
-				LG("gui", "main.clu   frmEquipPurify:%s not found.\n", szName);
+				ToLogService("gui", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 
@@ -64,7 +64,7 @@ namespace GUI
 			labHintright[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
 			if(! labHintright[i])
 			{
-				LG("gui", "main.clu   frmEquipPurify:%s not found.\n", szName);
+				ToLogService("gui", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 
@@ -72,7 +72,7 @@ namespace GUI
 			labTitle[i] = dynamic_cast<CLabelEx*>(frmEquipPurify->Find(szName));
 			if(! labTitle[i])
 			{
-				LG("gui", "main.clu   frmEquipPurify:%s not found.\n", szName);
+				ToLogService("gui", "main.clu   frmEquipPurify:{} not found.", szName);
 				return false;
 			}
 		}
@@ -80,14 +80,14 @@ namespace GUI
 		cmdEquipPurify[PURIFY_ONE] = dynamic_cast<COneCommand*>(frmEquipPurify->Find("cmdEquipOne"));
 		if(! cmdEquipPurify[PURIFY_ONE])
 		{
-			LG("gui", "main.clu   frmEquipPurify:cmdEquipOne not found.\n");
+			ToLogService("gui", "main.clu   frmEquipPurify:cmdEquipOne not found.");
 			return false;
 		}
 
 		cmdEquipPurify[PURIFY_TWO] = dynamic_cast<COneCommand*>(frmEquipPurify->Find("cmdEquipTwo"));
 		if(! cmdEquipPurify[PURIFY_TWO])
 		{
-			LG("gui", "main.clu   frmEquipPurify:cmdEquipTwo not found.\n");
+			ToLogService("gui", "main.clu   frmEquipPurify:cmdEquipTwo not found.");
 			return false;
 		}
 

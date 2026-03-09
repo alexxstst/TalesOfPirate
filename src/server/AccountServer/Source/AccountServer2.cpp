@@ -23,7 +23,7 @@ LoginTmpList tmpLogin; //
 uLong NetBuffer[] = {100, 10, 0};
 bool g_logautobak = true;
 
-volatile long AccountServer2::m_nMembersCount = 0;
+std::atomic<int32_t> AccountServer2::m_nMembersCount{};
 
 int isValidMacAddress(const char* mac);
 
@@ -63,17 +63,17 @@ AccountServer2::~AccountServer2()
 
 void AccountServer2::IncreaseMembers(long nCount)
 {
-	InterlockedExchangeAdd(&m_nMembersCount, nCount);
+	m_nMembersCount += nCount;
 }
 
 void AccountServer2::DecreaseMembers(long nCount)
 {
-	InterlockedExchangeAdd(&m_nMembersCount, -nCount);
+	m_nMembersCount -= nCount;
 }
 
 void AccountServer2::ResetMembersCount()
 {
-	InterlockedExchange(&m_nMembersCount, 0);
+	m_nMembersCount = 0;
 }
 
 long AccountServer2::GetMembersCount()
@@ -132,8 +132,8 @@ void AccountServer2::OnProcessData(DataSocket* datasock, RPacket& rpkt)
 			pUserLog->strPassport = rpkt.ReadString();
 			if (!PostMessage(g_hMainWnd, WM_USER_LOG_MAP, 0, (LPARAM)pUserLog))
 			{
-				LG("AccountServer",
-				   "AccountServer2::OnProcessData, CMD_PA_USER_BILLBGN: PostMessage WM_USER_LOG_MAP failed!\n");
+				ToLogService("AccountServer",
+				   "AccountServer2::OnProcessData, CMD_PA_USER_BILLBGN: PostMessage WM_USER_LOG_MAP failed!");
 				delete pUserLog;
 			}
 
@@ -155,8 +155,8 @@ void AccountServer2::OnProcessData(DataSocket* datasock, RPacket& rpkt)
 			pUserLog->strUserName = rpkt.ReadString();
 			if (!PostMessage(g_hMainWnd, WM_USER_LOG_MAP, 0, (LPARAM)pUserLog))
 			{
-				LG("AccountServer",
-				   "AccountServer2::OnProcessData, CMD_PA_USER_BILLEND: PostMessage WM_USER_LOG_MAP failed!\n");
+				ToLogService("AccountServer",
+				   "AccountServer2::OnProcessData, CMD_PA_USER_BILLEND: PostMessage WM_USER_LOG_MAP failed!");
 				delete pUserLog;
 			}
 
@@ -195,7 +195,7 @@ void AccountServer2::OnProcessData(DataSocket* datasock, RPacket& rpkt)
 		}
 	// 
 	default:
-		LG("As2Excp", "Unknown usCmd=[%d]\n", usCmd);
+		ToLogService("As2Excp", "Unknown usCmd=[{}]", usCmd);
 	}
 }
 
@@ -215,7 +215,7 @@ WPacket AccountServer2::OnServeCall(DataSocket* datasock, RPacket& rpkt)
 
 	// 
 	default:
-		LG("As2Excp", "Unknown usCmd=[%d]\n", usCmd);
+		ToLogService("As2Excp", "Unknown usCmd=[{}]", usCmd);
 		return ProcessUnknownCmd(rpkt);
 	}
 }
@@ -356,7 +356,7 @@ WPacket AccountServer2::Gs_Login(DataSocket* datasock, RPacket& rpkt)
 				datasock->SetPointer(pGs);
 				wpkt.WriteShort(ERR_SUCCESS);
 				//cout << "[" << szGroupName << "] Add Successfully!" << endl;
-				LG("GroupServer", "[%s] Add Successfully!\n", szGroupName);
+				ToLogService("GroupServer", "[{}] Add Successfully!", szGroupName);
 			}
 			else
 			{
@@ -393,7 +393,7 @@ void AccountServer2::Gs_Logout(DataSocket* datasock)
 	if ((pGs == NULL) || (pGs->m_datasock != datasock)) return;
 
 	strGroupName = pGs->m_strName;
-	LG("GroupServer", "[%s] disconnected!\n", strGroupName.c_str());
+	ToLogService("GroupServer", "[{}] disconnected!", strGroupName.c_str());
 
 	if (DelGroup(datasock))
 	{
@@ -416,7 +416,7 @@ GroupServer2* AccountServer2::FindGroup(char const* szGroup)
 	}
 	catch (...)
 	{
-		LG("As2Excp", "Exception raised from KickAccount when find GroupServer: [%s]\n", szGroup);
+		ToLogService("As2Excp", "Exception raised from KickAccount when find GroupServer: [{}]", szGroup);
 	}
 	m_GsListLock.unlock();
 
@@ -442,7 +442,7 @@ bool AccountServer2::AddGroup(GroupServer2* pGs)
 	}
 	catch (...)
 	{
-		LG("As2Excp", "Exception raised from AddGroup() when add [%s]\n", pGs->m_strName.c_str());
+		ToLogService("As2Excp", "Exception raised from AddGroup() when add [{}]", pGs->m_strName.c_str());
 		bAlreadyLogin = true; // GroupServer
 	}
 	m_GsListLock.unlock();
@@ -470,7 +470,7 @@ bool AccountServer2::DelGroup(DataSocket* datasock)
 	}
 	catch (...)
 	{
-		LG("As2Excp", "Exception raised from AddGroup() when add [%s]\n", pGs->m_strName.c_str());
+		ToLogService("As2Excp", "Exception raised from AddGroup() when add [{}]", pGs->m_strName.c_str());
 	}
 	m_GsListLock.unlock();
 
@@ -532,21 +532,21 @@ void AuthQueue::ProcessData(DataSocket* datasock, RPacket& rpkt)
 				break;
 
 			default:
-				LG("AuthProcessData", "Unknown usCmd=[%d], Skipped...\n", usCmd);
+				ToLogService("AuthProcessData", "Unknown usCmd=[{}], Skipped...", usCmd);
 				break;
 			}
 			bRetry = false;
 		}
 		catch (CSQLException* se)
 		{
-			LG("AuthProcessDataExcp", "SQL Exception: %s\n", se->m_strError.c_str());
+			ToLogService("AuthProcessDataExcp", "SQL Exception: {}", se->m_strError.c_str());
 
 			// 
 			pThis->Reconnt();
 		}
 		catch (...)
 		{
-			LG("AuthProcessDataExcp", "unknown exception raised from AuthQueue::ProcessData()\n");
+			ToLogService("AuthProcessDataExcp", "unknown exception raised from AuthQueue::ProcessData()");
 			bRetry = false; // 
 		}
 	}
@@ -562,7 +562,7 @@ WPacket AuthQueue::ServeCall(DataSocket* datasock, RPacket& rpkt)
 	AuthThread* pThis = (AuthThread*)(g_TlsIndex.GetPointer());
 	if (pThis == NULL)
 	{
-		LG("AuthExcp", "pThis = NULL\n");
+		ToLogService("AuthExcp", "pThis = NULL");
 		wpkt.WriteShort(ERR_AP_TLSWRONG);
 		return wpkt;
 	}
@@ -580,7 +580,7 @@ WPacket AuthQueue::ServeCall(DataSocket* datasock, RPacket& rpkt)
 
 			default:
 				{
-					LG("AuthServeCall", "Unknown usCmd=[%d], Skipped...\n", usCmd);
+					ToLogService("AuthServeCall", "Unknown usCmd=[{}], Skipped...", usCmd);
 					wpkt.WriteShort(ERR_AP_UNKNOWNCMD);
 					return wpkt;
 				}
@@ -588,14 +588,14 @@ WPacket AuthQueue::ServeCall(DataSocket* datasock, RPacket& rpkt)
 		}
 		catch (CSQLException* se)
 		{
-			LG("AuthServeCallExcp", "SQL Exception: %s\n", se->m_strError.c_str());
+			ToLogService("AuthServeCallExcp", "SQL Exception: {}", se->m_strError.c_str());
 
 			// 
 			pThis->Reconnt();
 		}
 		catch (...)
 		{
-			LG("AuthServeCallExcp", "unknown exception raised from AuthQueue::ServerCall()\n");
+			ToLogService("AuthServeCallExcp", "unknown exception raised from AuthQueue::ServerCall()");
 			bRetry = false; // 
 		}
 	}
@@ -726,13 +726,13 @@ bool AuthThread::Connect()
 	}
 	catch (std::bad_alloc& ba)
 	{
-		LG("AuthDBExcp", "AuthThread::Connect() new failed : %s\n", ba.what());
+		ToLogService("AuthDBExcp", "AuthThread::Connect() new failed : {}", ba.what());
 		m_pAuth = NULL;
 		return false;
 	}
 	catch (...)
 	{
-		LG("AuthDBExcp", "AuthThread::Connect() unknown exception\n");
+		ToLogService("AuthDBExcp", "AuthThread::Connect() unknown exception");
 		m_pAuth = NULL;
 		return false;
 	}
@@ -763,7 +763,7 @@ void AuthThread::Disconn()
 		}
 		catch (...)
 		{
-			LG("AuthExcp", "Exception raised when AuthThread::Disconn()\n");
+			ToLogService("AuthExcp", "Exception raised when AuthThread::Disconn()");
 		}
 		m_pAuth = NULL;
 	}
@@ -774,7 +774,7 @@ void AuthThread::Reconnt()
 	Disconn();
 	while (!Connect())
 	{
-		LG("As2", RES_STRING(AS_ACCOUNTSERVER2_CPP_00002));
+		ToLogService("As2", "{}", RES_STRING(AS_ACCOUNTSERVER2_CPP_00002));
 		if (GetExitFlag()) return;
 
 		Sleep(5000);
@@ -811,7 +811,7 @@ void AuthThread::LogUserLogin(int nUserID, string strUserName, string strIP)
 	pUserLog->strLoginIP = strIP;
 	if (!PostMessage(g_hMainWnd, WM_USER_LOG, 0, (LPARAM)pUserLog))
 	{
-		LG("AccountServer", "AuthThread::LogUserLogin: PostMessage WM_USER_LOG failed!\n");
+		ToLogService("AccountServer", "AuthThread::LogUserLogin: PostMessage WM_USER_LOG failed!");
 		delete pUserLog;
 	}
 }
@@ -823,7 +823,7 @@ void AuthThread::LogUserLogout(int nUserID)
 	pUserLog->nUserID = nUserID;
 	if (!PostMessage(g_hMainWnd, WM_USER_LOG, 0, (LPARAM)pUserLog))
 	{
-		LG("AccountServer", "AuthThread::LogUserLogout: PostMessage WM_USER_LOG failed!\n");
+		ToLogService("AccountServer", "AuthThread::LogUserLogout: PostMessage WM_USER_LOG failed!");
 		delete pUserLog;
 	}
 }
@@ -839,10 +839,10 @@ void AuthThread::QueryAccount(RPacket rpkt)
 	pName = rpkt.ReadString(&usNameLen);
 	// 	
 
-	LG("PASSWD", "From GroupServer [%s] = [%d]\n", pName, strlen(pName));
+	ToLogService("PASSWD", "From GroupServer [{}] = [{}]", pName, strlen(pName));
 	if ((pName == NULL) || (!IsValidName(pName, usNameLen)))
 	{
-		LG("AuthExcp", "NULL or INVALID Name field\n");
+		ToLogService("AuthExcp", "NULL or INVALID Name field");
 		m_AcctInfo.bExist = false;
 		return;
 	}
@@ -893,7 +893,7 @@ void AuthThread::QueryAccount(RPacket rpkt)
 		if (!tmpLogin.Insert(m_AcctInfo.strName))
 		{
 			m_AcctInfo.nStatus = ACCOUNT_ONLINE;
-			LG("AuthExcp", "Account %s multilogin at same times.", m_AcctInfo.strName.c_str());
+			ToLogService("AuthExcp", "Account {} multilogin at same times.", m_AcctInfo.strName.c_str());
 		}
 	}
 	else
@@ -965,7 +965,7 @@ WPacket AuthThread::AccountLogin(DataSocket* datasock)
 	if (pFromGroupServer == NULL)
 	{
 		// GroupServer
-		LG("AuthExcp", "pFromGroupServer = NULL\n");
+		ToLogService("AuthExcp", "pFromGroupServer = NULL");
 		wpkt.WriteShort(ERR_AP_DISCONN);
 		return wpkt;
 	}
@@ -1009,7 +1009,7 @@ WPacket AuthThread::AccountLogin(DataSocket* datasock)
 	{
 		// 
 		wpkt.WriteShort(ERR_AP_INVALIDPWD);
-		LG("AccountAuth", "Thread#%d Auth [%s] (id=%d) failed: invalid password!\n", m_nIndex,
+		ToLogService("AccountAuth", "Thread#{} Auth [{}] (id={}) failed: invalid password!", m_nIndex,
 		   m_AcctInfo.strName.c_str(), m_AcctInfo.nId);
 		tmpLogin.Remove(m_AcctInfo.strName);
 		return wpkt;
@@ -1043,7 +1043,7 @@ WPacket AuthThread::AccountLogin(DataSocket* datasock)
 		else
 		{
 			wpkt.WriteShort(ERR_AP_UNKNOWN);
-			LG("AccountAuth", "Thread#%d Auth [%s] (id=%d) failed: update database error where normal login!\n",
+			ToLogService("AccountAuth", "Thread#{} Auth [{}] (id={}) failed: update database error where normal login!",
 			   m_nIndex, m_AcctInfo.strName.c_str(), m_AcctInfo.nId);
 			SetRunLabel(19);
 			goto login_over;
@@ -1092,7 +1092,7 @@ WPacket AuthThread::AccountLogin(DataSocket* datasock)
 		else
 		{
 			wpkt.WriteShort(ERR_AP_UNKNOWN);
-			LG("AccountAuth", "Thread#%d Auth [%s] (id=%d) failed: update database error when relogin!\n", m_nIndex,
+			ToLogService("AccountAuth", "Thread#{} Auth [{}] (id={}) failed: update database error when relogin!", m_nIndex,
 			   m_AcctInfo.strName.c_str(), m_AcctInfo.nId);
 			SetRunLabel(21);
 			goto login_over;
@@ -1128,8 +1128,8 @@ WPacket AuthThread::AccountLogin(DataSocket* datasock)
 			else
 			{
 				wpkt.WriteShort(ERR_AP_UNKNOWN);
-				LG("AccountAuth",
-				   "Thread#%d Auth [%s] (id=%d) failed: update database error when login without locked!\n", m_nIndex,
+				ToLogService("AccountAuth",
+				   "Thread#{} Auth [{}] (id={}) failed: update database error when login without locked!", m_nIndex,
 				   m_AcctInfo.strName.c_str(), m_AcctInfo.nId);
 				SetRunLabel(24);
 				goto login_over;
@@ -1140,7 +1140,7 @@ WPacket AuthThread::AccountLogin(DataSocket* datasock)
 	{
 		//
 		wpkt.WriteShort(ERR_AP_UNKNOWN);
-		LG("AccountAuth", "Thread#%d Auth [%s] (id=%d) failed: unknown last login status!\n", m_nIndex,
+		ToLogService("AccountAuth", "Thread#{} Auth [{}] (id={}) failed: unknown last login status!", m_nIndex,
 		   m_AcctInfo.strName.c_str(), m_AcctInfo.nId);
 		SetRunLabel(25);
 		goto login_over;
@@ -1552,16 +1552,16 @@ void AuthThread::ResetAccount()
 		{
 			m_pAuth->ExecuteSQL(s.GetStatement());
 			//LG("As2", "AuthThread#%dAuth\n", m_nIndex);
-			LG("As2", RES_STRING(AS_ACCOUNTSERVER2_CPP_00005), m_nIndex);
+			ToLogService("As2", "AuthThread#{} Auth", m_nIndex);
 		}
 		catch (CSQLException* pEx)
 		{
-			LG("AuthDBExcp", "AuthThread::ResetAccount() ExecuteSQL failed : %s\n",
+			ToLogService("AuthDBExcp", "AuthThread::ResetAccount() ExecuteSQL failed : {}",
 			   pEx->m_strError.c_str());
 		}
 		catch (...)
 		{
-			LG("AuthDBExcp", "Unknown exception raised from AuthThread::ResetAccount()\n");
+			ToLogService("AuthDBExcp", "Unknown exception raised from AuthThread::ResetAccount()");
 		}
 
 		// 
@@ -1572,7 +1572,7 @@ void AuthThread::ResetAccount()
 		// 
 		AuthThread::m_Sema.lock();
 		//LG("As2", "AuthThread#%dAuth\n", m_nIndex);
-		LG("As2", RES_STRING(AS_ACCOUNTSERVER2_CPP_00005), m_nIndex);
+		ToLogService("As2", "AuthThread#{} Auth", m_nIndex);
 
 		// 
 		AuthThread::m_Sema.unlock();
@@ -1611,10 +1611,10 @@ void AuthThread::SetRunLabel(int nRunLabel)
 }
 
 //
-int volatile AuthThreadPool::RunLabel[AT_MAXNUM] = {0};
-DWORD volatile AuthThreadPool::RunLast[AT_MAXNUM] = {0};
-DWORD volatile AuthThreadPool::RunConsume[AT_MAXNUM] = {0};
-unsigned int volatile AuthThreadPool::uiAuthCount = 0;
+int AuthThreadPool::RunLabel[AT_MAXNUM] = {0};
+std::uint32_t AuthThreadPool::RunLast[AT_MAXNUM] = {0};
+std::uint32_t AuthThreadPool::RunConsume[AT_MAXNUM] = {0};
+std::atomic<std::uint32_t> AuthThreadPool::uiAuthCount{};
 void AuthThreadPool::IncAuthCount() { ++uiAuthCount; }
 unsigned int AuthThreadPool::GetAuthCount() { return uiAuthCount; }
 

@@ -33,8 +33,7 @@ public:
 		stEnd,				// 
 	};
 
-public:
-	CCursor();
+CCursor();
 	~CCursor();
 
 	void	Init();
@@ -49,14 +48,12 @@ public:
 
     void    Render();
 
-public:
-	static	CCursor* I()		{ return &s_Cursor;				}
+static	CCursor* I()		{ return &s_Cursor;				}
 
 private:
 	void	_ShowCursor();
 
-private:
-	static CCursor	s_Cursor;
+static CCursor	s_Cursor;
 
 	bool		_IsInit;
     bool        _IsShowFrame;

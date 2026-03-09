@@ -60,11 +60,11 @@ void MPEditor::Init(int nMapID)
 			Tip(szTip);
 			}
 		else
-			LG("error", "msgread header of %s.map failed", pMapInfo->szName);
+			ToLogService("error", "read header of {}.map failed", pMapInfo->szName);
     }
     else
     {
-        LG("error", "msg MapID = %d\n", nMapID);
+        ToLogService("error", "MapID = {}", nMapID);
     }
     */
     
@@ -602,51 +602,6 @@ void MPEditor::SystemReport(DWORD dwTimeParam)
             ssmdi.ibs_size, ssmdi.ibs_used_size, ssmdi.ibs_free_size, ssmdi.ibs_locked_size);
 
         g_Render.Print(INFO_PERF, 200, 200, "%s", szInfo);
-
-        
-		GPL("perf", 10, 4, g_oLangRec.GetString(200), g_Render.GetFPS(), CGameApp::GetFrameFPS(),
-            g_pGameApp->GetRenderUseTime(),
-            g_pGameApp->GetFrameMoveUseTime(),
-            g_NetIF->m_curdelay,
-            g_NetIF->m_maxdelay,
-            g_NetIF->m_mindelay);
-        
-         GPL("perf", 10, 22, g_oLangRec.GetString(201), 
-                                                                    pScene->m_dwValidChaCnt, 
-                                                                    pScene->m_dwChaPolyCnt,
-                                                                    pScene->m_dwChaRenderTime,
-                                                                    pScene->m_dwValidEffCnt);
-                                              
-        
-         GPL("perf", 10, 40, g_oLangRec.GetString(202), pScene->m_dwValidSceneObjCnt,
-                                                                                        pScene->m_dwRenderSceneObjCnt,
-                                                                                        pScene->m_dwSceneObjPolyCnt,
-                                                                                        pScene->m_dwSceneObjRenderTime,
-                                                                                        pScene->m_dwCullingTime);
-            
-        if(pCurTerrain)
-        {
-            GPL("perf", 10, 58, g_oLangRec.GetString(203), pCurTerrain->m_dwTerrainRenderTime,
-                                                                               pCurTerrain->m_dwSeaRenderTime,
-                                                                               pCurTerrain->m_dwTerrainRenderTime + pCurTerrain->m_dwSeaRenderTime,
-                                                                               g_pGameApp->m_dwRenderUITime, g_pGameApp->m_dwRenderSceneTime); 
-        
-            GPL("perf", 10, 76, g_oLangRec.GetString(204), pCurTerrain->m_dwActiveSectionCnt, pCurTerrain->m_dwLoadingTime[0], pCurTerrain->m_dwLoadingTime[1], pCurTerrain->m_dwLoadingTime[2], pCurTerrain->m_dwMaxLoadingTime);
-        }
-
-#if 0
-        {
-            char buf[256];
-            lwWatchDevVideoMemInfo* info = g_Render.GetInterfaceMgr()->dev_obj->GetWatchVideoMemInfo();
-            sprintf(buf, "total: %d, tex: %d, vbib: %d\n",
-                info->alloc_tex_size + info->alloc_vb_size + info->alloc_ib_size,
-                info->alloc_tex_size,
-                info->alloc_vb_size + info->alloc_ib_size
-                );
-            LG("vdmem", buf);
-        }
-#endif
-
         g_dwLastReportTick = dwTimeParam;
     }
 
@@ -1922,7 +1877,7 @@ void MPEditor::SetEff( bool press, int num )
 		pEff = pScene->AddSceneEffect(m_nSelTypeID);
 		if (!pEff)
 		{
-			LG("error", g_oLangRec.GetString(217));
+			ToLogService("error", "{}", g_oLangRec.GetString(217));
 			return;
 		}
 		m_nSelID = pEff->getID();
@@ -2519,5 +2474,5 @@ void MPEditor::_UpdateObjHeightmap(CSceneObj *pObj)
     }
     
     DWORD dwUseTime = t.End();
-    LG("hmap", "time = %d\n", dwUseTime);
+    ToLogService("hmap", "time = {}", dwUseTime);
 }

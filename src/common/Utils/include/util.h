@@ -12,9 +12,8 @@
 #define UTIL_H_
 
 #include "./util2.h"
-#include "./TryUtil.h"
-#include "./log.h"
-#include "./log2.h"
+#include "./logutil.h"
+#include "./logutil.h"
 #include "./singleton.h"
 #include "./matrix_stuff.h"
 #include "./db.h"

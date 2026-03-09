@@ -55,7 +55,7 @@ int main(int argc, char* argv[])
 
 	DisableCloseButton();
 
-	T_B
+
 	if (argc >= 2)
 	{
 		strncpy(szConfigFileN, argv[1], defCONFIG_FILE_NAME_LEN - 1);
@@ -63,7 +63,7 @@ int main(int argc, char* argv[])
 	}
 	if (!g_Config.Load(szConfigFileN))
 	{
-		LG("init", "config init...Fail!\n");
+		ToLogService("init", "config init...Fail!");
 		return FALSE;		
 	}
 	if (!g_Command.Load("cmd.cfg"))
@@ -72,7 +72,7 @@ int main(int argc, char* argv[])
 	}
 
 #ifdef __CATCH	
-    LG("init", "Define __CATCH\n");
+    ToLogService("init", "Define __CATCH");
 #endif
 
 	atexit(AppExit);
@@ -104,8 +104,8 @@ int main(int argc, char* argv[])
 		}
 	}
 	GameServer_End();
-	LG("init", "game map server succeed to exit\n"); 
-	T_FINAL
+	ToLogService("init", "game map server succeed to exit");
+
 	return 0;
 }
  
@@ -124,17 +124,17 @@ ThreadPool	*l_comm = NULL;
 
 extern DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter);
 BOOL GameServer_Begin()
-{T_B
+{
 	_setmaxstdio(2048);
 
 	//LG("init", "[%s]...\n", g_Config.m_szName);
-LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
+ToLogService("init", "game map server [{}] startup...", g_Config.m_szName);
 
 	g_pGameApp = new CGameApp();
 	if(!g_pGameApp->Init())
 	{
 		//LG("init", "GameApp , !\n");
-		LG("init", "GameApp initialization failed, exit!\n");
+		ToLogService("init", "GameApp initialization failed, exit!");
 		return FALSE;
 	}
 	
@@ -153,7 +153,7 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
 
     //  GateServer 
    // LG("init", "Gate...\n");
-	 LG("init", "startup Gate server connect thread...\n");
+	 ToLogService("init", "startup Gate server connect thread...");
     l_comm->AddTask(new ConnectGateServer(g_gmsvr));
 #endif
 
@@ -162,30 +162,25 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
 	//LG("init", "startup information server connect thread...\n");
     //l_comm->AddTask(new ToInfoServer(g_gmsvr));
 	
-	// 
-	//LG("init", "...\n");
-	LG("init", "startup game thread...\n");
+	ToLogService("init", "startup game thread...");
 	DWORD	dwThreadID;
 	hGameT = CreateThread(NULL, 0, g_GameLogicProcess, 0, 0, &dwThreadID);
-	LG("init", "Game Thread ID = %d\n", dwThreadID);
-	//
+	ToLogService("init", "Game Thread ID = {}", dwThreadID);
 
-	//LG("init",  "Win32 \n");
-	LG("init",  "start create Win32 control dialog box\n");
+	ToLogService("init",  "start create Win32 control dialog box");
 	HINSTANCE hInst = GetModuleHandle(0);
 	CreateMainDialog(hInst, NULL);
 
-	//Log("", "GameServer", g_Config.m_szMapList[0], "", "", "");
-	Log("restart", "GameServer restart", g_Config.m_szMapList[0], "", "", "");
+	ToLogService("restart", "GameServer restart {}", g_Config.m_szMapList[0]);
 	
 	return TRUE;
-T_E}
+}
 
 
 void GameServer_End()
-{T_B
+{
 	//LG("init", "\n");
-	LG("init", "start to exit game map server\n");
+	ToLogService("init", "start to exit game map server");
 	CloseHandle(hGameT);
 
 	HWND hConsole = GetConsoleWindow();
@@ -216,7 +211,7 @@ void GameServer_End()
 	TcpCommApp::WSACleanup();
 #endif
 
-T_E}
+}
 
 typedef HWND (*LPGETCONSOLEWINDOW)(void);
 void DisableCloseButton()

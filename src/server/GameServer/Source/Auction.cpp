@@ -28,7 +28,7 @@ BOOL CAuctionSystem::StartAuction(short sItemID, const string& strName, short sC
 		//printf( "StartAuction:ID(%d), name = %s!", sItemID, strName.c_str() );
 		printf( RES_STRING(GM_AUCTION_CPP_00001), sItemID, strName.c_str() );
 		//LG( "Auction_error", "StartAuction:ID(%d), name = %s!", sItemID, strName.c_str() );
-		LG( "Auction_error", "StartAuction:exist repeat ID(%d), name = %s!", sItemID, strName.c_str() );
+		ToLogService( "Auction_error", "StartAuction:exist repeat ID({}), name = {}!", sItemID, strName.c_str() );
 		return false;
 	}
 
@@ -38,7 +38,7 @@ BOOL CAuctionSystem::StartAuction(short sItemID, const string& strName, short sC
 		//printf( "StartAuction:,ID(%d), name = %s!", sItemID, strName.c_str() );
 		printf( RES_STRING(GM_AUCTION_CPP_00002), sItemID, strName.c_str() );
 		//LG( "Auction_error", "StartAuction:,ID(%d), name = %s!", sItemID, strName.c_str() );
-		LG( "Auction_error", "StartAuction:memory allot not enough,ID(%d), name = %s!", sItemID, strName.c_str() );
+		ToLogService( "Auction_error", "StartAuction:memory allot not enough,ID({}), name = {}!", sItemID, strName.c_str() );
 		return false;
 	}
 
@@ -54,7 +54,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 		//printf( "EndAuction:ID(%d)!", sItemID );
 		printf( RES_STRING(GM_AUCTION_CPP_00003), sItemID );
 		//LG( "Auction_error", "EndAuction:ID(%d)!", sItemID );
-		LG( "Auction_error", "EndAuction:inexistent ID(%d)!", sItemID );
+		ToLogService( "Auction_error", "EndAuction:inexistent ID({})!", sItemID );
 		return false;
 	}
 
@@ -76,7 +76,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 			if(!bOnline)
 			{
 				//LG("Auction", "EndAuction:  %s , id = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
-				LG("Auction", "EndAuction: player %s not online, item id = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
+				ToLogService("Auction", "EndAuction: player {} not online, item id = {}, count = {}!", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
 			}
 			else
 			{
@@ -117,7 +117,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 	else
 	{
 		//LG("Auction", "EndAuction: , !\n");
-		LG("Auction", "EndAuction: contest finish, no player to bid!\n");
+		ToLogService("Auction", "EndAuction: contest finish, no player to bid!");
 	}
 	SAFE_DELETE(pAucItem);
 	m_mapItemList.erase(it);

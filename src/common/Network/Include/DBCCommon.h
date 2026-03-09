@@ -87,7 +87,7 @@ public:
 	LONG Assign(LONG newval);						//The return value is the initial value
 	LONG CompareAssign(LONG Comperand,LONG newval);	//,The return value is the initial value
 private:
-	LONG volatile	m_plVal;
+	LONG 	m_plVal;
 };
 #pragma pack(pop)
 struct RefArmor

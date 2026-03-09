@@ -19,7 +19,7 @@ CBig5 *CBig5::GetInstance()
 
 const char* CBig5::DoBig5(const char *lpszStr, const char *lpszFileName, int nLineNum)
 {
-	if (lpszStr==NULL || lpszStr[0]==0) return lpszStr;
+	if (lpszStr== nullptr || lpszStr[0]==0) return lpszStr;
 	mapSentencesType::const_iterator iter=m_mapSentencesTable.find(lpszStr);
 	if (iter!=m_mapSentencesTable.end())
 	{
@@ -39,7 +39,7 @@ const char* CBig5::DoBig5(const char *lpszStr, const char *lpszFileName, int nLi
 
 const char* CBig5::DoBig5_S(const char *lpszOrgStr, const char *lpszNowStr, const char *lpszFileName, int nLineNum)
 {
-	if (lpszOrgStr==NULL || lpszOrgStr[0]==0) return lpszNowStr;
+	if (lpszOrgStr== nullptr || lpszOrgStr[0]==0) return lpszNowStr;
 	mapSentencesType::const_iterator iter=m_mapSentencesTable.find(lpszOrgStr);
 	if (iter!=m_mapSentencesTable.end())
 	{
@@ -52,24 +52,24 @@ char* CBig5::ChangeCode(const char *lpszOrgStr)
 {
 	int nOrgStrLen=(int)strlen(lpszOrgStr);
 	DWORD dwLCID=MAKELCID(MAKELANGID(LANG_CHINESE, SUBLANG_CHINESE_SIMPLIFIED), SORT_CHINESE_PRC);
-	int nSize1=LCMapString(dwLCID, LCMAP_TRADITIONAL_CHINESE, lpszOrgStr, nOrgStrLen, NULL, 0);
-	if (nSize1==0) return NULL;
+	int nSize1=LCMapString(dwLCID, LCMAP_TRADITIONAL_CHINESE, lpszOrgStr, nOrgStrLen, nullptr, 0);
+	if (nSize1==0) return nullptr;
 
 	char *lpBuf1=new char[nSize1*2+2];
 	if (LCMapString(dwLCID, LCMAP_TRADITIONAL_CHINESE, lpszOrgStr, nOrgStrLen, lpBuf1, nSize1+2)!=nSize1)
 	{
 		delete lpBuf1;
-		return NULL;
+		return nullptr;
 	}
-    int nSize2=MultiByteToWideChar(936, 0, lpBuf1, nSize1, NULL, 0);
-	if (nSize2==0) return NULL;
+    int nSize2=MultiByteToWideChar(936, 0, lpBuf1, nSize1, nullptr, 0);
+	if (nSize2==0) return nullptr;
 
 	wchar_t *lpBuf2=new wchar_t[nSize2+2];
 	if (MultiByteToWideChar(936, 0, lpBuf1, nSize1, lpBuf2, nSize2+2)!=nSize2)
 	{
 		delete lpBuf1;
 		delete lpBuf2;
-		return NULL;
+		return nullptr;
 	}
 
 	BOOL bValue = false;
@@ -78,7 +78,7 @@ char* CBig5::ChangeCode(const char *lpszOrgStr)
 	{
 		delete lpBuf1;
 		delete lpBuf2;
-		return NULL;
+		return nullptr;
 	}
 
 	delete lpBuf2;

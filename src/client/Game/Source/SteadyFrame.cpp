@@ -17,7 +17,7 @@ bool CSteadyFrame::Init()
 
 	if( hThread != NULL )
 	{
-		LG( "threadid", "%d:%s\n", dwThread, "_SleepThreadProc" );
+		ToLogService("threadid", "{}:{}", dwThread, "_SleepThreadProc");
 		return true;
 	}
 	return false;
@@ -35,14 +35,14 @@ void CSteadyFrame::Exit()
 			{
 				if(TerminateThread(hThread, 0))
 				{
-					LG( "threadid", "_SleepThreadProc end\n");
+					ToLogService("threadid", "_SleepThreadProc end");
 					::CloseHandle(hThread);
 				}
 			}
 			else
 			{
 				DWORD error = ::GetLastError();
-				LG( "threadid", "_SleepThreadProc error %d\n", error);
+				ToLogService("threadid", "_SleepThreadProc error {}", error);
 			}
 		}
 	}
@@ -59,7 +59,7 @@ void CSteadyFrame::_Sleep()
 	{
 		Sleep( _dwTimeSpace );
 
-		LG( "_Sleep", "%d %d\n", dwTime, nCount);
+		ToLogService("_Sleep", "{} {}", dwTime, nCount);
 
 		InterlockedIncrement( &_lRun );
 

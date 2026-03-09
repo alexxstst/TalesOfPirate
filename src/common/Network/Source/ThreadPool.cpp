@@ -9,14 +9,17 @@
 
 #include <iostream>
 #include <ios>
-#include <LogStream.h>
 
 #include "ThreadPool.h"
 #include "Thread.h"
+#include <logutil.h>
 
 #include <typeinfo>
 
+#include "CrushSystem.h"
+
 _DBC_USING
+
 ThreadPool::ThreadPool(long idle,long max,long taskmaxnum,int nPriority)
 	:m_max((max<1)?1:max)
 	,m_idle((idle<1)?1:((idle>m_max)?m_max:idle))
@@ -173,16 +176,15 @@ inline void ThrdQue::DelThrd(Thread *th)
 //==============================================================================
 DWORD WINAPI Thread::ThreadProc(LPVOID lpParameter)//(ThreadExcute)
 {
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+
 	Thread		*l_myself =reinterpret_cast<Thread*>(lpParameter);
-	LogLine l_line(g_dbclog);
-	l_line<<newln<<"Thread:["<<l_myself->m_threadid<<"] Create!";
-	l_line<<endln;
+	ToLogService("network", "Thread:[{}] Create!", l_myself->m_threadid);
 	ThreadPool	*l_pool =l_myself->GetPool();
 	SetThreadPriority(GetCurrentThread(),l_pool->m_nPriority );
 	l_pool->ThreadExcute(l_myself);
 	SetThreadPriority(GetCurrentThread(),THREAD_PRIORITY_NORMAL);
-	l_line<<newln<<"Thread:["<<::GetCurrentThreadId()<<"] Exit!";
-	l_line<<endln;
+	ToLogService("network", "Thread:[{}] Exit!", ::GetCurrentThreadId());
 	return 0;
 };
 //==============================================================================

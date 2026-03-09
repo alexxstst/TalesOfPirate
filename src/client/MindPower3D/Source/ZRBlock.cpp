@@ -25,7 +25,7 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 		}());
 
 	if (!fs.is_open()) {
-		LG("map", "msgLoad Map [%s] Error!\n", pszMapName);
+		ToLogService("map", "msgLoad Map [{}] Error!", pszMapName);
 		return false;
 	}
 
@@ -34,7 +34,7 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 
 	if (header.nMapFlag == MP_MAP_FLAG + 1) {
 		fs.close();
-		LG("map", "msg[%s], MapTool!", pszMapName);
+		ToLogService("map", "msg[{}], MapTool!", pszMapName);
 		return FALSE;
 	}
 
@@ -45,7 +45,7 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 #endif
 	{
 		fs.close();
-		LG("map", "msg[%s] MindPower Map File!\n", pszMapName);
+		ToLogService("map", "msg[{}] MindPower Map File!", pszMapName);
 		return FALSE;
 	}
 

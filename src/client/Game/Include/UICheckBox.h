@@ -22,8 +22,7 @@ public:
 		stEnd,
 	};
 
-public:
-	CCheckBox(CForm& frmOwn);
+CCheckBox(CForm& frmOwn);
 	CCheckBox( const CCheckBox& rhs );
 	CCheckBox& operator=(const CCheckBox& rhs);
 	~CCheckBox() { SAFE_DELETE(_pImage); } // UI //delete _pImage; }
@@ -45,16 +44,14 @@ public:
 	const char*		GetCaption()				{ return _strCaption.c_str();	}
 	void			SetCaption( const char * str )	{ _strCaption = str;		}
 
-public:
-	GuiEvent		evtCheckChange;
+GuiEvent		evtCheckChange;
 
 	static int		s_nMarginLeft;		// 
 
 protected:
 	void			_SetSelf();
 
-protected:
-	DWORD			_TextColor;
+DWORD			_TextColor;
 	CGuiPic*		_pImage;			// ,bsChecked,bsUnChecked
 	std::string			_strCaption;
 
@@ -79,15 +76,13 @@ public:
 	virtual void	Init();
 	virtual bool	IsHandleMouse()		{ return true;		}
 
-public:
-	void			AddCheckBox( CCheckBox* p );
+void			AddCheckBox( CCheckBox* p );
 	CCheckBox*		GetActive()			{ return _pActive;	}
 	
 	void            SetActiveIndex(int n ) ;
 	int				GetActiveIndex()	{ return _nActive;	}
 
-public:
-	GuiEvent		evtSelectChange;
+GuiEvent		evtSelectChange;
 
 private:
 	void			_UpdataActive( CCheckBox* active );
@@ -98,12 +93,10 @@ private:
 
 	void			_SetSelf();
 
-private:	
-	int				_nSize;
+int				_nSize;
 	int				_nActive;
 
-private:
-	CCheckBox*		_pActive;
+CCheckBox*		_pActive;
 
 };
 

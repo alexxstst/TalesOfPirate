@@ -17,9 +17,9 @@
 #include "lua.hpp"
 
 //#define PARAM_ERROR        { LG("lua_ai", "lua[%s]!",__FUNCTION__ ); }
-#define PARAM_ERROR        { LG("lua_ai", "lua extend [%s] parameter type is wrong!",__FUNCTION__ ); }
+#define PARAM_ERROR        { ToLogService("lua_ai", "lua extend [{}] parameter type is wrong!", __FUNCTION__); }
 //#define MAP_NULL_ERROR     { LG("lua_ai", "lua[%s]", __FUNCTION__);          }
-#define MAP_NULL_ERROR     { LG("lua_ai", "lua extend [%s] map is null", __FUNCTION__);          }
+#define MAP_NULL_ERROR     { ToLogService("lua_ai", "lua extend [{}] map is null", __FUNCTION__); }
 #define CHECK_MAP          { if(g_pScriptMap==NULL) { MAP_NULL_ERROR return 0; }				    }
 //#define PARAM_LG_ERROR		 THROW_EXCP( excp, "lua!" );
 #define PARAM_LG_ERROR		 THROW_EXCP( excp, "lua has no filename!" );
@@ -28,7 +28,7 @@
 #define REGFN(fn)  { lua_pushstring(L, "" #fn ""); \
 	lua_pushcfunction(L, lua_##fn); \
 	lua_settable(L, LUA_GLOBALSINDEX); \
-    if(find(g_luaFNList.begin(), g_luaFNList.end(), ""#fn"")!=g_luaFNList.end()) LG("lua", RES_STRING(GP_PARSER_H_CPP_00004), ""#fn""); else \
+    if(find(g_luaFNList.begin(), g_luaFNList.end(), ""#fn"")!=g_luaFNList.end()) ToLogService("lua", "lua function {} is already registered", ""#fn""); else \
 	g_luaFNList.push_back(""#fn"");  }
 
 #define DOSTRING_PARAM_END	999999999

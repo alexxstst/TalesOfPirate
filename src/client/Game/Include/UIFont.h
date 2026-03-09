@@ -55,13 +55,11 @@ public:
 	void	Draw(const std::string& str, int x, int y, DWORD color );
 	void	End();
 
-public:
-	CMPFont*		GetFont( unsigned int index=0 );
+CMPFont*		GetFont( unsigned int index=0 );
 	void			Render( unsigned int nIndex, const std::string& str, int x, int y, DWORD color ,float size = 1.0f);
 	void			BRender( unsigned int nIndex, const std::string& str, int x, int y, DWORD color, DWORD shadow );	// 
 
-public:		
-	static CGuiFont	s_Font;
+static CGuiFont	s_Font;
 
 private:
 	typedef std::vector<CMPFont*> fonts;
@@ -79,8 +77,7 @@ private:
 	typedef std::vector<stFont>	stfont;
 	stfont		_stfonts;
 
-private:
-	SIZE		_size;
+SIZE		_size;
 
 };
 
@@ -104,8 +101,7 @@ public:
 
 	int		WriteText( const std::string& file );		// hint
 
-public:
-    struct stHint 
+struct stHint 
     {
         stHint( const std::string& str, DWORD c, int h, int f, bool sh, unsigned int sc)
 			: hint(str), color(c), height(h), offx(0), font(f), width(0), shadow(sh), scolor(sc) {}
@@ -147,8 +143,7 @@ private:
     hints    _hint;
 	hints	_hint_related[enumEQUIP_NUM];
 
-private:
-	enum eStyle
+enum eStyle
 	{
 		enumFontSize,
 		enumFixWidth,
@@ -178,7 +173,6 @@ public:
 	void	Render();
 
     void    PushHint( const std::string& str, DWORD color=COLOR_WHITE, int height=5, int font=0 ); // height:
-public:
     struct stHint 
     {
         stHint( const std::string& str, DWORD c, int h, int f ) : hint(str), color(c), height(h), offx(0), font(f), width(0) {}
@@ -205,7 +199,6 @@ private:
 	int		RenderScrollNum;
 	int		SetScrollNum;
 	int		m;
-private:
 	enum eStyle
 	{
 		enumFontSize,

@@ -5,10 +5,7 @@
 #ifndef GAMESERVER_H
 #define GAMESERVER_H
 #include "DBCCommon.h"
-
-#include "dstring.h"
 #include "DataSocket.h"
-#include <dstring.h>
 
 class GameServer
 {

@@ -8,20 +8,18 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 {
 	FILE *fp = fopen(strFileName , "rb");
 	if(fp==NULL)
-	{	
-		Log("Open File %s Error!(LoadTextureFromRawFile())\n" , strFileName);
+	{
+		ToLogService("default", "Open File {} Error!(LoadTextureFromRawFile())", strFileName);
 		return NULL;
 	}
-	
+
 	int w , h , d;
-  	
+
 	fread(&w , 4 , 1 , fp);
 	fread(&h , 4 , 1 , fp);
 	fread(&d , 4 , 1 , fp);
-    
-	Log("load raw file( w = %3d" , w); 
-	Log("  h = %3d" , h); 
-	Log("  d = %3d )\n" , d);
+
+	ToLogService("default", "load raw file( w = {:3}  h = {:3}  d = {:3} )", w, h, d);
 
 	int iImageSize = w * h * d;
 	LPBYTE pbImageBuf = new BYTE[iImageSize];
@@ -31,7 +29,7 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	IDirect3DTextureX* pTexture;
 	if(D3DXCreateTexture(g_pd3dDevice , w , h , D3DX_DEFAULT , 0 , D3DFMT_A8R8G8B8 ,  D3DPOOL_MANAGED , &pTexture)!=D3D_OK)                              
 	{
-		Log("ERR : %s\n" , "CreateTexture Failed");
+		ToLogService("default", "ERR : {}", "CreateTexture Failed");
 		delete[] pbImageBuf;
 		return NULL;
 	}
@@ -63,7 +61,7 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	}
 	else
 	{
-		Log("ERR : %s\n" , "Lock Texture Failed!");
+		ToLogService("default", "ERR : {}", "Lock Texture Failed!");
 		SAFE_RELEASE(pTexture);
 	}
 	

@@ -8,7 +8,7 @@ dbc::cuShort g_version =103;
 
 long ConnectGroupServer::Process()
 {
-	T_B
+
 	_tgps->m_calltotal++;
 
 	DataSocket* datasock = NULL;
@@ -78,13 +78,11 @@ long ConnectGroupServer::Process()
 		}else
 		{
 			// !
-			LogLine l_line(g_gateconnect);
-			l_line<<newln<<RES_STRING(GS_TOGROUPSERVER_CPP_00001)<<endln;
+			ToLogService("Connect", "{}", RES_STRING(GS_TOGROUPSERVER_CPP_00001));
 			datasock = _tgps->Connect(_tgps->_gs.ip.c_str(), _tgps->_gs.port);
 			if (datasock == NULL)
 			{
-				LogLine l_line(g_gateconnect);
-				l_line<<newln<<RES_STRING(GS_TOGROUPSERVER_CPP_00002)<<endln;
+				ToLogService("Connect", "{}", RES_STRING(GS_TOGROUPSERVER_CPP_00002));
 				Sleep(5000);
 				continue;
 			}else
@@ -99,15 +97,13 @@ long ConnectGroupServer::Process()
 				int err = retpk.ReadShort();
 				if (!retpk.HasData() || err == ERR_PT_LOGFAIL)
 				{
-					LogLine l_line(g_gateconnect);
-					l_line<<newln<<RES_STRING(GS_TOGROUPSERVER_CPP_00003)<<endln;
+					ToLogService("Connect", "{}", RES_STRING(GS_TOGROUPSERVER_CPP_00003));
 					datasock = NULL;
 					Sleep(5000);
 					_tgps->Disconnect(datasock);
 				}else
 				{
-					LogLine l_line(g_gateconnect);
-					l_line<<newln<<RES_STRING(GS_TOGROUPSERVER_CPP_00004)<<endln;
+					ToLogService("Connect", "{}", RES_STRING(GS_TOGROUPSERVER_CPP_00004));
 					_tgps->_gs.datasock = datasock;
 					_tgps->_connected = true;
 
@@ -119,7 +115,7 @@ long ConnectGroupServer::Process()
 		}
 	}
 
-	T_FINAL
+
 
 	return 0;
 }
@@ -162,17 +158,13 @@ bool ToGroupServer::OnConnect(DataSocket* datasock) //:true-,false-
 {
 	datasock->SetRecvBuf(64 * 1024);
 	datasock->SetSendBuf(64 * 1024);
-	LogLine l_line(g_gateconnect);
-	//l_line<<newln<<"GroupServer: "<<datasock->GetPeerIP()<<",Socket:"<<GetSockTotal()+1;
-	l_line<<newln<<"connect GroupServer: "<<datasock->GetPeerIP()<<",Socket num:"<<GetSockTotal()+1;
+	ToLogService("Connect", "connect GroupServer: {},Socket num:{}", datasock->GetPeerIP(), GetSockTotal()+1);
 	return true;
 }
 
 void ToGroupServer::OnDisconnect(DataSocket* datasock, int reason) //reason:0--3--1-Socket;-5-
 { //  ConnnectGroupServer 
-	LogLine l_line(g_gateconnect);
-	//l_line<<newln<<"GroupServer,Socket: "<<GetSockTotal()<<",reason ="<<GetDisconnectErrText(reason).c_str()<<"..."<<endln;
-	l_line<<newln<<"disconnection with GroupServer,Socket num: "<<GetSockTotal()<<",reason ="<<GetDisconnectErrText(reason).c_str()<<", reconnecting..."<<endln;
+	ToLogService("Connect", "disconnection with GroupServer,Socket num: {},reason ={}, reconnecting...", GetSockTotal(), GetDisconnectErrText(reason).c_str());
 
 	if (!g_appexit) {_connected = false;}
 }
@@ -180,7 +172,7 @@ void ToGroupServer::OnDisconnect(DataSocket* datasock, int reason) //reason:0--3
 WPacket ToGroupServer::OnServeCall(DataSocket* datasock, RPacket &in_para)
 {
 	uShort l_cmd = in_para.ReadCmd();
-	LG("ToGroupServer", "OnServeCall-->l_cmd = %d\n", l_cmd);
+	ToLogService("ToGroupServer", "OnServeCall-->l_cmd = {}", l_cmd);
 
 	WPacket retpk = GetWPacket();
 
@@ -226,7 +218,7 @@ WPacket ToGroupServer::OnServeCall(DataSocket* datasock, RPacket &in_para)
 void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 {
 	uShort	l_cmd	=recvbuf.ReadCmd();
-	LG("ToGroupServer", "OnProcessData-->l_cmd = %d\n", l_cmd);
+	ToLogService("ToGroupServer", "OnProcessData-->l_cmd = {}", l_cmd);
 	try
 	{
 		switch(l_cmd)
@@ -281,13 +273,11 @@ void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 				auto l_ply = ToPointer<ClientConnection>(recvbuf.ReverseReadLong());
 				if(l_ply && l_ply->gp_addr ==recvbuf.ReverseReadLong())
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"GroupServer kill person,l_ply->m_dbid ="<<l_ply->m_dbid<<endln;
+					ToLogService("GateServer", "GroupServer kill person,l_ply->m_dbid ={}", l_ply->m_dbid);
 					g_gtsvr->cli_conn->Disconnect(l_ply->m_datasock,0,-21);
 				}else if(l_ply)
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"GroupServer kick person, but can't kick person,l_ply->m_dbid ="<<l_ply->m_dbid<<endln;
+					ToLogService("GateServer", "GroupServer kick person, but can't kick person,l_ply->m_dbid ={}", l_ply->m_dbid);
 				}
 				break;
 			}
@@ -297,14 +287,12 @@ void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 				auto l_ply = ToPointer<ClientConnection>(recvbuf.ReverseReadLong());
 				if(l_ply && l_ply->gp_addr ==recvbuf.ReverseReadLong())
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"GroupServer del estop user,operator success,l_ply->m_dbid ="<<l_ply->m_dbid<<endln;
+					ToLogService("GateServer", "GroupServer del estop user,operator success,l_ply->m_dbid ={}", l_ply->m_dbid);
 					l_ply->m_estop = false;
 				}
 				else if(l_ply)
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"GroupServer del estop user, but can't operator success,l_ply->m_dbid ="<<l_ply->m_dbid<<endln;
+					ToLogService("GateServer", "GroupServer del estop user, but can't operator success,l_ply->m_dbid ={}", l_ply->m_dbid);
 				}
 			}
 			break;
@@ -315,14 +303,12 @@ void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 				auto l_ply = ToPointer<ClientConnection>(recvbuf.ReverseReadLong());
 				if(l_ply && l_ply->gp_addr ==recvbuf.ReverseReadLong())
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"GroupServer del estop user,operator success,l_ply->m_dbid ="<<l_ply->m_dbid<<endln;
+					ToLogService("GateServer", "GroupServer del estop user,operator success,l_ply->m_dbid ={}", l_ply->m_dbid);
 					l_ply->m_estop = true;
 				}
 				else if(l_ply)
 				{
-					LogLine l_line(g_gatelog);
-					l_line<<newln<<"GroupServer del estop user, but can't operator success,l_ply->m_dbid ="<<l_ply->m_dbid<<endln;
+					ToLogService("GateServer", "GroupServer del estop user, but can't operator success,l_ply->m_dbid ={}", l_ply->m_dbid);
 				}
 			}
 			break;
@@ -408,7 +394,7 @@ void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	}
 	catch(...)
 	{
-		LG("ToGroupServerError", "l_cmd = %d\n", l_cmd);
+		ToLogService("ToGroupServerError", "l_cmd = {}", l_cmd);
 	}
 	//LG("ToGroupServer", "<--l_cmd = %d\n", l_cmd);
 }

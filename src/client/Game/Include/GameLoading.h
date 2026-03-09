@@ -12,7 +12,6 @@ public:
     virtual void Create(std::string param);
     virtual void Close();
     bool Active();
-public:
 
     HWND        m_hLoading;
     HWND        m_hImage;

@@ -71,17 +71,13 @@ bool ToGameServer::OnConnect(DataSocket* datasock) // :true-,false-
 	datasock->SetPointer(0);
 	datasock->SetRecvBuf(64 * 1024);
 	datasock->SetSendBuf(64 * 1024);
-	LogLine l_line(g_gatelog);
-	//l_line<<newln<<"GameServer= ["<<datasock->GetPeerIP()<<"] ,Socket= "<<GetSockTotal()+1;
-	l_line<<newln<<"GameServer= ["<<datasock->GetPeerIP()<<"] come,Socket num= "<<GetSockTotal()+1;
+	ToLogService("GateServer", "GameServer= [{}] come,Socket num= {}", datasock->GetPeerIP(), GetSockTotal()+1);
 	return true;
 }
 
 void ToGameServer::OnDisconnect(DataSocket* datasock, int reason) // reason:0--3--1-Socket;-5-
 {
-	LogLine l_line(g_gatelog);
-	l_line<<newln<<"GameServer= ["<<datasock->GetPeerIP()<<"] gone,Socket num= "<<GetSockTotal()+1<<",reason= "<<GetDisconnectErrText(reason).c_str();
-	l_line<<endln;
+	ToLogService("GateServer", "GameServer= [{}] gone,Socket num= {},reason= {}", datasock->GetPeerIP(), GetSockTotal()+1, GetDisconnectErrText(reason).c_str());
 
 	if (reason == DS_SHUTDOWN || reason == DS_DISCONN)
 	{
@@ -104,11 +100,11 @@ void ToGameServer::OnDisconnect(DataSocket* datasock, int reason) // reason:0--3
 		l_game = static_cast<GameServer*>(datasock->GetPointer());
 		if (l_game)
 		{
-			l_line << newln << " delete [" << l_game->gamename.c_str() << "]" << endln;
+			ToLogService("GateServer", " delete [{}]", l_game->gamename.c_str());
 			_del_game(l_game);
 			for (int i = 0; i < l_game->mapcnt; ++i)
 			{
-				l_line << newln << "delete map [" << l_game->maplist[i].c_str() << "]" << endln;
+				ToLogService("GateServer", "delete map [{}]", l_game->maplist[i].c_str());
 				_map_game.erase(l_game->maplist[i]);
 			}
 			l_game->mapcnt = 0;
@@ -122,8 +118,7 @@ void ToGameServer::OnDisconnect(DataSocket* datasock, int reason) // reason:0--3
 	}
 	catch (...)
 	{
-		//l_line<<newln<<"Exception raised from OnDisconnect{ GameServer}"<<endln;
-		l_line<<newln<<"Exception raised from OnDisconnect{delete GameServer from list}"<<endln;
+		ToLogService("GateServer", "Exception raised from OnDisconnect{{delete GameServer from list}}");
 	}
 	_mut_game.unlock();
 
@@ -171,12 +166,12 @@ void ToGameServer::OnDisconnect(DataSocket* datasock, int reason) // reason:0--3
 	}
 
 	ply_cnt	-=l_notcount;
-	l_line << newln << "because GameServer trouble, notice " << ply_cnt << " user offline" << endln;
+	ToLogService("GateServer", "because GameServer trouble, notice {} user offline", ply_cnt);
 	for (int i = 0; i < ply_cnt; ++i)
 	{
 		try			//
 		{
-			l_line<<newln<<"because GameServer trouble, disconnect ["<<ply_array[i]->m_datasock->GetPeerIP()<<"] "<<endln;
+			ToLogService("GateServer", "because GameServer trouble, disconnect [{}] ", ply_array[i]->m_datasock->GetPeerIP());
 			g_gtsvr->cli_conn->Disconnect(ply_array[i]->m_datasock,100,-29);
 		}catch (...)
 		{
@@ -315,7 +310,7 @@ void ToGameServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	}
 	catch(...)
 	{
-		LG("ToGameServerError", "l_cmd = %d\n", l_cmd);
+		ToLogService("ToGameServerError", "l_cmd = {}", l_cmd);
 	}
 	//LG("ToGameServer", "<--l_cmd = %d\n", l_cmd);
 }
@@ -331,13 +326,10 @@ void ToGameServer::MT_LOGIN(DataSocket* datasock, RPacket& rpk)
 
 	retpk.WriteCmd(CMD_TM_LOGIN_ACK);
 	int cnt = Util_ResolveTextLine(map_list, gms->maplist, MAX_MAP, ';', 0);
-	LogLine l_line(g_gatelog);
-	//l_line<<newln<<"GameServer ["<<gms_name<<"] ["<<map_list<<"] ["<<cnt<<"]"<<endln;
-	l_line<<newln<<"recieve GameServer ["<<gms_name<<"] map string ["<<map_list<<"] total ["<<cnt<<"]"<<endln;
+	ToLogService("GateServer", "recieve GameServer [{}] map string [{}] total [{}]", gms_name, map_list, cnt);
 	if (cnt <= 0)
 	{ // MAP
-		//l_line<<newln<<" ["<<map_list<<"] ';'"<<endln;
-		l_line<<newln<<"map string ["<<map_list<<"] has syntax mistake, please use ';'compart"<<endln;
+		ToLogService("GateServer", "map string [{}] has syntax mistake, please use ';'compart", map_list);
 		retpk.WriteShort(ERR_TM_MAPERR);
 		datasock->SetPointer(NULL);
 		gms->Free();
@@ -353,8 +345,7 @@ void ToGameServer::MT_LOGIN(DataSocket* datasock, RPacket& rpk)
 			{ //  GameServer 
 				if (_exist_game(gms_name))
 				{
-					//l_line<<newln<<"GameServer: "<<gms_name<<endln;
-					l_line<<newln<<"the same name GameServer exsit: "<<gms_name<<endln;
+					ToLogService("GateServer", "the same name GameServer exsit: {}", gms_name);
 					retpk.WriteShort(ERR_TM_OVERNAME);
 					datasock->SetPointer(NULL);
 					valid = false; break;
@@ -365,8 +356,7 @@ void ToGameServer::MT_LOGIN(DataSocket* datasock, RPacket& rpk)
 				{
 					if (find(gms->maplist[i].c_str()) != NULL)
 					{
-						//l_line<<newln<<"MAP: "<<gms->maplist[i].c_str()<<endln;
-						l_line<<newln<<"the same name MAP exsit: "<<gms->maplist[i].c_str()<<endln;
+						ToLogService("GateServer", "the same name MAP exsit: {}", gms->maplist[i].c_str());
 						retpk.WriteShort(ERR_TM_OVERMAP);
 						datasock->SetPointer(NULL);
 						valid = false;
@@ -378,12 +368,10 @@ void ToGameServer::MT_LOGIN(DataSocket* datasock, RPacket& rpk)
 			if (valid)
 			{ //  GameServer 
 				_add_game(gms); // 
-				//l_line<<newln<<"GameServer ["<<gms_name<<"] "<<endln;
-				l_line<<newln<<"add GameServer ["<<gms_name<<"] ok"<<endln;
+				ToLogService("GateServer", "add GameServer [{}] ok", gms_name);
 				for (i = 0; i < cnt; ++ i) //  map 
 				{
-					//l_line<<newln<<" ["<<gms_name<<"]  ["<<gms->maplist[i].c_str()<<"] "<<endln;
-					l_line<<newln<<"add ["<<gms_name<<"]  ["<<gms->maplist[i].c_str()<<"] map ok"<<endln;
+					ToLogService("GateServer", "add [{}]  [{}] map ok", gms_name, gms->maplist[i].c_str());
 					_map_game[gms->maplist[i]] = gms;
 				}
 
@@ -399,8 +387,7 @@ void ToGameServer::MT_LOGIN(DataSocket* datasock, RPacket& rpk)
 		}
 		catch (...)
 		{
-			//l_line<<newln<<"Exception raised from MT_LOGIN{}"<<endln;
-			l_line<<newln<<"Exception raised from MT_LOGIN{add map}"<<endln;
+			ToLogService("GateServer", "Exception raised from MT_LOGIN{{add map}}");
 		}
 		_mut_game.unlock();
 
@@ -436,15 +423,12 @@ void ToGameServer::MT_SWITCHMAP(DataSocket* datasock, RPacket& recvbuf)
 	uLong	l_y = l_rpk.ReadLong();	//
 	GameServer* l_game = g_gtsvr->gm_conn->find(l_map);
 
-	LogLine l_line(g_gatelog);
 	if (l_game)
 	{
 		l_ply->game->m_plynum--;
 		l_ply->game = nullptr;
 		l_ply->gm_addr = 0;
-		l_line << newln << "clinet: " << l_ply->m_datasock->GetPeerIP() << ":" << l_ply->m_datasock->GetPeerPort()
-			<< "	Switch to map,to Gate[" << l_game->m_datasock->GetPeerIP() << "]send EnterMap command,dbid:" << l_ply->m_dbid
-			<< uppercase << hex << ",Gate address:" << ToAddress(l_ply) << dec << nouppercase << endln;
+		ToLogService("GateServer", "clinet: {}:{}	Switch to map,to Gate[{}]send EnterMap command,dbid:{},Gate address:{:X}", l_ply->m_datasock->GetPeerIP(), l_ply->m_datasock->GetPeerPort(), l_game->m_datasock->GetPeerIP(), l_ply->m_dbid, ToAddress(l_ply));
 		l_game->EnterMap(l_ply, l_ply->m_loginID, l_ply->m_dbid, l_ply->m_worldid, l_map, lMapCopyNO, l_x, l_y, 1, l_ply->m_sGarnerWiner);	
 		l_game->m_plynum++;
 	}
@@ -455,9 +439,7 @@ void ToGameServer::MT_SWITCHMAP(DataSocket* datasock, RPacket& recvbuf)
 		l_wpk.WriteString((std::string("[") + l_map + std::string("] can't reach, pealse retry later!")).c_str());
 		l_ply->m_datasock->SendData(l_wpk);
 
-		l_line << newln << "clinet: " << l_ply->m_datasock->GetPeerIP() << ":" << l_ply->m_datasock->GetPeerPort()
-			<< "	Switch back map,to Gate[" << l_ply->game->m_datasock->GetPeerIP() << "]send EnterMap command,dbid:" << l_ply->m_dbid
-			<< uppercase << hex << ",Gate address:" << ToAddress(l_ply) << dec << nouppercase << endln;
+		ToLogService("GateServer", "clinet: {}:{}	Switch back map,to Gate[{}]send EnterMap command,dbid:{},Gate address:{:X}", l_ply->m_datasock->GetPeerIP(), l_ply->m_datasock->GetPeerPort(), l_ply->game->m_datasock->GetPeerIP(), l_ply->m_dbid, ToAddress(l_ply));
 		l_ply->game->EnterMap(l_ply, l_ply->m_loginID, l_ply->m_dbid, l_ply->m_worldid, l_srcmap, lSrcMapCopyNO, l_srcx, l_srcy, 1, l_ply->m_sGarnerWiner);
 	}
 	else
@@ -495,16 +477,14 @@ void ToGameServer::MC_ENTERMAP(dbc::DataSocket* datasock, dbc::RPacket& recvbuf)
 	auto l_ply = ToPointer<ClientConnection>(l_rpk.ReverseReadLong());
 	if (!l_ply)
 	{
-		LG("Error", "l_ply nullptr in " __FUNCTION__ );
+		ToLogService("Error", "l_ply nullptr in " __FUNCTION__ );
 		return;
 	}
 
 	const auto	l_dbid = l_rpk.ReverseReadLong();
-	LogLine l_line(g_gatelog);
 	if (l_ply->m_dbid != l_dbid)					//chaid
 	{
-		l_line << newln << "recieve from [" << datasock->GetPeerIP() << "] EnterMap command ,can't match DBID:locale [" << l_ply->m_dbid << "],far[" << l_dbid << "]"
-			<< uppercase << hex << ",Gate address:" << ToAddress(l_ply) << endln;
+		ToLogService("GateServer", "recieve from [{}] EnterMap command ,can't match DBID:locale [{}],far[{}],Gate address:{:X}", datasock->GetPeerIP(), l_ply->m_dbid, l_dbid, ToAddress(l_ply));
 		return;
 	}
 
@@ -514,11 +494,7 @@ void ToGameServer::MC_ENTERMAP(dbc::DataSocket* datasock, dbc::RPacket& recvbuf)
 	{
 		l_ply->m_status = ClientConnection::Status::CharacterSelection;
 		--game->m_plynum;
-		//l_line<<newln<<": "<<l_ply->m_datasock->GetPeerIP()<<":"<<l_ply->m_datasock->GetPeerPort()
-		l_line << newln << "clinet: " << l_ply->m_datasock->GetPeerIP() << ":" << l_ply->m_datasock->GetPeerPort()
-			//<<"	Gate["<<datasock->GetPeerIP()<<"]EnterMap,:"
-			<< "	Gate recieve from [" << datasock->GetPeerIP() << "]failed EnterMap command ,Error:"
-			<< l_retcode << endln;
+		ToLogService("GateServer", "clinet: {}:{}	Gate recieve from [{}]failed EnterMap command ,Error:{}", l_ply->m_datasock->GetPeerIP(), l_ply->m_datasock->GetPeerPort(), datasock->GetPeerIP(), l_retcode);
 
 		recvbuf.DiscardLast(sizeof(uShort) + sizeof(uLong) * 2 * l_aimnum);
 		//g_gtsvr->cli_conn->SendData(l_ply->m_datasock,recvbuf);
@@ -531,9 +507,7 @@ void ToGameServer::MC_ENTERMAP(dbc::DataSocket* datasock, dbc::RPacket& recvbuf)
 	game->m_plynum = l_rpk.ReverseReadLong();
 	const auto l_isSwitch = l_rpk.ReverseReadChar();
 
-	l_line << newln << "clinet: " << l_ply->m_datasock->GetPeerIP() << ":" << l_ply->m_datasock->GetPeerPort()
-		<< "	recieve Gate  from [" << datasock->GetPeerIP() << "]success EnterMap command,Game address:"
-		<< uppercase << hex << l_ply->gm_addr << ",Gate address:" << ToAddress(l_ply) << dec << nouppercase << endln;
+	ToLogService("GateServer", "clinet: {}:{}	recieve Gate  from [{}]success EnterMap command,Game address:{:X},Gate address:{:X}", l_ply->m_datasock->GetPeerIP(), l_ply->m_datasock->GetPeerPort(), datasock->GetPeerIP(), (LONG)l_ply->gm_addr, ToAddress(l_ply));
 
 	recvbuf.DiscardLast(sizeof(uShort) + sizeof(uLong) * 2 * l_aimnum + sizeof(uLong) * 2 + sizeof(uChar));
 
@@ -665,9 +639,7 @@ GameServer* ToGameServer::find(cChar* mapname)
 	map<string, GameServer*>::iterator it = _map_game.find(mapname);
 	if (it == _map_game.end())
 	{
-		LogLine l_line(g_gatelog);
-		//l_line<<newln<<" ["<<mapname<<"] ";
-		l_line<<newln<<"not found ["<<mapname<<"] map!!!";
+		ToLogService("GateServer", "not found [{}] map!!!", mapname);
 		return NULL;
 	}else
 		return (*it).second;

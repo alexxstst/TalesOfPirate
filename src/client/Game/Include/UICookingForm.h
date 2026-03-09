@@ -47,8 +47,7 @@ namespace GUI
         static void _evtDragItemBase5(CGuiData *pSender,CCommandObj* pItem,bool& isAccept);
         static void _evtDragItemBase6(CGuiData *pSender,CCommandObj* pItem,bool& isAccept);
 
-    private:
-        CForm*          frmCooking;
+		CForm*          frmCooking;
         COneCommand*    cmdCooking[COOKING_COUNT];
         int             iCookingPos[COOKING_COUNT];
         CTextButton*	btnForgeYes;

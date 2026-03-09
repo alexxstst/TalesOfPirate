@@ -37,7 +37,7 @@ private:
 	std::recursive_mutex m_mtx;
 	NetIF			*const		m_netif;
 	dbc::InterLockedLong		m_status;
-	dbc::DataSocket	*volatile	m_datasock;
+	dbc::DataSocket	*	m_datasock;
 
 	dbc::uLong					m_timeout;
 	dbc::uLong					m_tick;

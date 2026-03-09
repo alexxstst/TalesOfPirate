@@ -31,8 +31,7 @@ public:
 
     virtual void    LoadingCall();          // loading,
 
-public:
-	CWorldScene(stSceneInitParam& param);
+CWorldScene(stSceneInitParam& param);
 	~CWorldScene();
 
     AnimCtrlLight*	GetAnimLight(DWORD id)   { return (id>=_dwAnimLightNum) ? 0 : &_pAnimLightSeq[id]; }
@@ -63,8 +62,7 @@ private:
     DWORD			_dwAnimLightNum;
 	CMPFont			_cFont;
 
-private:
-	static BYTE		_bAttackRed, _bAttackGreen, _bAttackBlue;
+static BYTE		_bAttackRed, _bAttackGreen, _bAttackBlue;
 
 	int             _nOldMainChaInArea;
 	CMouseDown		_cMouseDown;

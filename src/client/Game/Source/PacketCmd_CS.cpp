@@ -16,7 +16,7 @@ _DBC_USING
 bool CS_Connect(dbc::cChar *hostname,dbc::uShort port,dbc::uLong timeout)
 {
 	
-	LG( "connect", g_oLangRec.GetString(294), hostname );
+	ToLogService("connect", "{} {}", g_oLangRec.GetString(294), hostname);
     if( g_NetIF->m_pCProCir )
     {
         delete g_NetIF->m_pCProCir;
@@ -288,7 +288,7 @@ void CS_DieReturn(char chReliveType)
 	g_NetIF->SendPacketMessage(pk);
 
 	// log
-	LG(g_LogName.GetMainLogName(), "###Send(DieReturn):\tTick:[%d]\n", GetTickCount());
+	ToLogService(g_LogName.GetMainLogName(), "###Send(DieReturn):\tTick:[{}]", GetTickCount());
 	//
 }
 
@@ -318,7 +318,7 @@ void CS_MapMask(const char *szMapName)
 	g_NetIF->SendPacketMessage(pk);
 
 	// log
-	LG(g_LogName.GetMainLogName(), "###Send(MapMask):\tTick:[%d]\n", GetTickCount());
+	ToLogService(g_LogName.GetMainLogName(), "###Send(MapMask):\tTick:[{}]", GetTickCount());
 	//
 }
 
@@ -699,8 +699,8 @@ void CS_EntityEvent( DWORD dwEntityID )
 	g_NetIF->SendPacketMessage( packet );
 
 	const char* szLogName = g_LogName.GetMainLogName();
-	LG(szLogName, "###Send(Event-Entyty):\tTick:[%d]\n", GetTickCount());
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "###Send(Event-Entyty):\tTick:[{}]", GetTickCount());
+	ToLogService(szLogName, "");
 }
 
 void CS_StallInfo( const char szName[], mission::NET_STALL_ALLDATA& Data )

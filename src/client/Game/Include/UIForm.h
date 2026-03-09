@@ -73,12 +73,10 @@ public:
 
 	bool				MenuMouseRun( int x, int y, DWORD key );
 
-public:
-	void				ForEach( CompentFun pFun );		// FormCompentpFun
+void				ForEach( CompentFun pFun );		// FormCompentpFun
     void                FrameMove(int nCount);
 
-public:
-	void				Show();
+void				Show();
     void                ShowModal();
 	void				Hide();
 	void				Close();
@@ -117,8 +115,7 @@ public:
 
 	void				SetEnterButton( CTextButton* v )	{ _pEnterButton = v;	}
 
-public:
-	bool				OnChar( char key );
+bool				OnChar( char key );
 	bool				OnKeyDown( int key );
 	void                OnSetScreen();	
 
@@ -126,7 +123,7 @@ public:
 
 	int					ClearChild();	// ,
 
-public:		// 
+		// 
 	GuiEvent			evtShow;		// 
 	GuiEvent			evtHide;		// 
 	GuiEvent			evtActive;		// 
@@ -142,7 +139,7 @@ public:		//
 	GuiFormBeforeShowEvent	evtBeforeShow;
 	GuiFormCloseEvent		evtClose;		// 
 
-public:		// 
+		// 
 	FormMouseEvent			evtEntrustMouseEvent;
 
 protected:
@@ -153,8 +150,7 @@ protected:
 	void				_TempleteInit();	// 
 	void				_TempleteClear();	// 
 
-protected:
-    void*               _pPointer;
+void*               _pPointer;
 
 	typedef std::vector<CCompent*> vcs;	
 	vcs					_compents;			// ,
@@ -180,8 +176,7 @@ protected:
 	CFramePic*			_pImage;			// ,
 	CTextButton*		_pEnterButton;
 
-protected:
-	char				_cHotKey;			// 
+char				_cHotKey;			// 
 	CMenu*				_pPopMenu;			// 
 
 private:
@@ -189,8 +184,7 @@ private:
 	void				_CopyCompent( const CForm* rhs );
     void                _ActiveForm( DWORD key );
 
-private:
-	static void			_DragMouseEvent(CGuiData *pSender, int x, int y, DWORD key);
+static void			_DragMouseEvent(CGuiData *pSender, int x, int y, DWORD key);
 	static void			_DragMouseEventBegin(CGuiData *pSender, int x, int y, DWORD key);
 	static int			_nDragOffX,  _nDragOffY;
 	int					_nOffWidth;			//-Added by Arcol

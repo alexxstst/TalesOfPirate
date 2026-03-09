@@ -41,7 +41,7 @@ namespace GUI
 		frmGuildPK  = mgr.Find("frmGuildPK" );
 		if ( !frmGuildPK )
 		{	
-			LG("gui", g_oLangRec.GetString(560));
+			ToLogService("gui", "{}", g_oLangRec.GetString(560));
 			return false;
 		}
 

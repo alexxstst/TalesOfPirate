@@ -10,8 +10,8 @@
 #define LUA_TRUE			1 // 
 
 // 
-#define PARAM_ERROR        { LG("lua", g_oLangRec.GetString(183),__FUNCTION__ ); }
-#define SCENE_NULL_ERROR   { LG("lua", g_oLangRec.GetString(184), __FUNCTION__);         }
+#define PARAM_ERROR        { ToLogService("lua", "{}, {}", g_oLangRec.GetString(183),__FUNCTION__ ); }
+#define SCENE_NULL_ERROR   { ToLogService("lua", "{}, {}", g_oLangRec.GetString(184), __FUNCTION__);         }
 
 void print_error(lua_State* state);
 

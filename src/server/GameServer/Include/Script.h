@@ -35,9 +35,9 @@ extern void ReloadEntity( const char szFileName[] );
 //#define E_LUAPARAM		LG( "luamis_error", "lua[%s]!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
 //#define E_LUANULL		LG( "luamis_error", "lua[%s]!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
 //#define E_LUACOMPARE	LG( "luamis_error", "lua[%s]!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
-#define E_LUAPARAM		LG( "luamis_error", "lua function[%s]param number or type error!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param number or type error!", __FUNCTION__ );
-#define E_LUANULL		LG( "luamis_error", "lua function[%s]pass param pointer is null and error!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]pass param pointer is null and error!", __FUNCTION__ );
-#define E_LUACOMPARE	LG( "luamis_error", "lua function[%s]param error is unknown of compara character!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param error is unknow of compara character!", __FUNCTION__ );
+#define E_LUAPARAM		ToLogService( "luamis_error", "lua function[{}]param number or type error!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param number or type error!", __FUNCTION__ );
+#define E_LUANULL		ToLogService( "luamis_error", "lua function[{}]pass param pointer is null and error!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]pass param pointer is null and error!", __FUNCTION__ );
+#define E_LUACOMPARE	ToLogService( "luamis_error", "lua function[{}]param error is unknown of compara character!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param error is unknow of compara character!", __FUNCTION__ );
 
 
 #define LUA_TRUE		1	// 

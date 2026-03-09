@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "CrushSystem.h"
 #include "UISystemForm.h"
 // ,
 // :
@@ -45,14 +46,14 @@ public:
 
 private:
 	static DWORD WINAPI _SleepThreadProc( LPVOID lpParameter ){
+		TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 		((CSteadyFrame*)lpParameter)->_Sleep();
 		return 0;
 	}
 
 	void	_Sleep();
 
-private:
-	static DWORD	_dwFPS;			// FPS,
+static DWORD	_dwFPS;			// FPS,
 
 	long	_lRun;
 

@@ -36,8 +36,7 @@ private:
 	static void _DragBeforeEvt(CGuiData *pSender, int x, int y, DWORD key);
 
 
-private:
-	void		ClearUI();
+void		ClearUI();
 	void		ClearItem();
 
 	bool		IsEquip(CItemCommand& rItem);
@@ -55,8 +54,7 @@ private:
 	long		CalForgeMoney();
 	long		CalMillingMoney();
 
-private:
-	enum {
+enum {
 		EQUIP = 0,			// 
 		GEN_STONE = 1,		// 
 		FORGE_STONE = 2,	// 

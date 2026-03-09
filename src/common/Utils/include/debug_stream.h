@@ -83,7 +83,6 @@ template <class tChar, class tTraits = std::char_traits<tChar> >
 class basic_dostream : 
     public std::basic_ostream<tChar, tTraits>
 {
-private:
 
     basic_debugbuf<tChar, tTraits> m_debugbuf;
 

@@ -68,8 +68,6 @@ public:
     	}
 	}
 
-public:
-
 	int		m_nCurGroupList[MAX_REGION][MAX_REGION_GROUP]; // Group
 	int		m_nCurGroupCnt[MAX_REGION];
 
@@ -184,32 +182,32 @@ inline const char* GetCurRegionName(int nRegionNo)
 // , GateIP
 inline const char *SelectGroupIP(int nRegionNo, int nGroupNo)
 {
-	LG("connect", "Select Region %d Group %d\n", nRegionNo, nGroupNo);
-	if(nGroupNo>=GetCurServerGroupCnt(nRegionNo)) 
+	ToLogService("connect", "Select Region {} Group {}", nRegionNo, nGroupNo);
+	if(nGroupNo>=GetCurServerGroupCnt(nRegionNo))
 	{
-		LG("connect", g_oLangRec.GetString(387), GetCurServerGroupCnt(nRegionNo), nGroupNo);
+		ToLogService("connect", "{} {} {}", g_oLangRec.GetString(387), GetCurServerGroupCnt(nRegionNo), nGroupNo);
 		return 0;
 	}
 
 	int nNo = CServerSet::I()->m_nCurGroupList[nRegionNo][nGroupNo];
 	CServerGroupInfo *pGroup = GetServerGroupInfo(nNo);
-	if(!pGroup) 
+	if(!pGroup)
 	{
-		LG("connect", "Group Not Found!\n");
+		ToLogService("connect", "Group Not Found!");
 		return NULL;
 	}
 
-	if(pGroup->cValidGateCnt==0) 
+	if(pGroup->cValidGateCnt==0)
 	{
-		LG("connect", g_oLangRec.GetString(388));
+		ToLogService("connect", "{}", g_oLangRec.GetString(388));
 		return NULL;
 	}
 
 	srand(GetTickCount());
 
-	int nGateNo = rand()%(int)(pGroup->cValidGateCnt); 
+	int nGateNo = rand()%(int)(pGroup->cValidGateCnt);
 
-	LG("connect", g_oLangRec.GetString(389), pGroup->szDataName, nGateNo, pGroup->szGateIP[nGateNo], pGroup->cValidGateCnt);
+	ToLogService("connect", "{} {} {} {} {}", g_oLangRec.GetString(389), pGroup->szDataName, nGateNo, pGroup->szGateIP[nGateNo], pGroup->cValidGateCnt);
 
 	return pGroup->szGateIP[nGateNo];
 }

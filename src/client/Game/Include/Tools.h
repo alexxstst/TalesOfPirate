@@ -116,8 +116,7 @@ private:
         }
     }
 
-private:
-    T*              _pChange;
+T*              _pChange;
     unsigned int    _nCount;
 
 };

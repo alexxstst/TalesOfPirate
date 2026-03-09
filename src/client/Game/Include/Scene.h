@@ -95,13 +95,13 @@ class FreeArray
 public:
 	void ReSize( int n ) {
 		_list.clear();
-		LG( typeid(T).name(), " ReSize(%d) Capacity:%d Count:%d\n", n, _list.capacity(), _list.size() );
+		ToLogService(typeid(T).name(), " ReSize({}) Capacity:{} Count:{}", n, _list.capacity(), _list.size());
 	}
 	void Push( T* p ) {
-		if( p ) 
+		if( p )
 		{
 			_list.push_back(p);
-			LG( typeid(T).name(), " Push ID:%d Capacity:%d Count:%d\n", p->getID(), _list.capacity(), _list.size() );
+			ToLogService(typeid(T).name(), " Push ID:{} Capacity:{} Count:{}", p->getID(), _list.capacity(), _list.size());
 		}
 	}
 	T*	 Pop() {
@@ -112,7 +112,7 @@ public:
 			if( p && !p->IsValid() )
 			{
 				_list.pop_back();
-				LG( typeid(T).name(), " Pop ID:%d Capacity:%d Count:%d\n", p->getID(), _list.capacity(), _list.size() );
+				ToLogService(typeid(T).name(), " Pop ID:{} Capacity:{} Count:{}", p->getID(), _list.capacity(), _list.size());
 				return p;
 			}
 			else
@@ -121,7 +121,7 @@ public:
 			}
 		};
 
-		LG( typeid(T).name(), "#####Pop Error, Capacity:%d Count:%d\n", _list.capacity(), _list.size() );
+		ToLogService(typeid(T).name(), "#####Pop Error, Capacity:{} Count:{}", _list.capacity(), _list.size());
 		return NULL;
 	}
 
@@ -192,8 +192,7 @@ public:
 	void				RegisterFunc();
     const int			GetSceneTypeID() const		{ return _stInit.nTypeID;	}
 
-public:	
-    virtual void        LoadingCall();          // loading,
+virtual void        LoadingCall();          // loading,
 	virtual void		SetMainCha(int nChaID);
 	virtual void		SetScreen( int w, int h, bool IsFull ){}
 
@@ -206,8 +205,7 @@ public:
     }
 
 
-public:
-	CCharacter*			SearchByID(unsigned long id);
+CCharacter*			SearchByID(unsigned long id);
 	CCharacter*			SearchByHumanID(unsigned long id);
 	CCharacter*			SearchByName(const char* name);
 	CCharacter*			SearchByHumanName(const char* name);
@@ -228,8 +226,6 @@ public:
 
 	void			SetupVertexFog(MPIDeviceObject* dev_obj, float Start, float End, DWORD Color, DWORD Mode, BOOL UseRange, FLOAT Density);
 
-public:
-	
     bool            SwitchMap(int nMapID);
 	CMinimap *     GetSmallMap()   {return  _pSmallMap;       }
 	
@@ -363,13 +359,12 @@ public:
 
 	CMapInfo*		GetCurMapInfo()						{ return _pMapInfo;			}
 
-public:
-	//CCharacter2D*	GetTeamList(int idx){ return _pCha2D[idx]; }
+//CCharacter2D*	GetTeamList(int idx){ return _pCha2D[idx]; }
 
     void            AddAreaEff( CEffectObj* pEffectObj );
     bool            DelAreaEff( long nAreaID, int nEffectID=0 );    // nEffectID=0,
 
-public:				// 
+				// 
     DWORD           m_dwValidChaCnt;
     DWORD           m_dwChaPolyCnt;
     DWORD           m_dwChaRenderTime;
@@ -464,10 +459,9 @@ public:
 
 protected:	// 
 	stSceneInitParam	_stInit;
-	int					_nSceneTypeID;	
+	int					_nSceneTypeID;
 
-protected:
-	static CCharacter*	_pMainCha;
+static CCharacter*	_pMainCha;
 	static CBigMap*		_pBigMap;
 	//static CCharacter2D*	_pCha2D[4];
 
@@ -485,7 +479,7 @@ protected:
 	std::unique_ptr<CEventMgr> _pEventMgr;//std::make_unique<CEventMgr>(this)
 	CMapInfo*			_pMapInfo;
 
-protected:	// 
+	// 
 	D3DXVECTOR3			org, ray;
 
 	IDirect3DSurfaceX * windowRenderTarget;

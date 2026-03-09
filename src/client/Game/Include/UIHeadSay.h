@@ -85,14 +85,13 @@ public:
 private:
     static int		_nMaxShowTime;	// 
 
-private:
-    int				_nShowTime;		// 
+int				_nShowTime;		// 
     float           _fScale ;       //
     CItemEx *       _pObj;
     std::string          _str ;          //
     CCharacter*		_pOwn;
 
-private:	// 
+	// 
     static int			_nMaxShowLifeTime;	// 
 
     static CGuiPic*		_pImgLife;
@@ -166,7 +165,7 @@ private:	//
 		NAME_LENGTH = 64,
 	};
 
-private:	// 
+	// 
 	static CGuiPic	_ImgShop[3];	// 012
 	static CGuiPic	_ImgShop2[3];
 	static int		_nShopFrameWidth;

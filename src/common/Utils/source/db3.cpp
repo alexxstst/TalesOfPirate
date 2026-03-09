@@ -466,7 +466,7 @@ TDt& TDt::Set()  // Get today's date
 //     *also with dashes "-"
 TDt& TDt::Set( const char* a_p ) 
 {
-    if ( a_p == NULL || a_p[0] == 0 ) // null or zero string
+    if ( a_p == nullptr || a_p[0] == 0 ) // null or zero string
         return Set( 0L ); // default to null
 
     int len = (int)strlen( a_p );
@@ -509,7 +509,7 @@ TDt& TDt::Set( const char* a_p )
             return Set(); // default to today
 
         char* i = strchr( p, '/' );
-        if ( i == NULL )
+        if ( i == nullptr)
             return Set();
 
         int day = atoi( ++i );
@@ -520,7 +520,7 @@ TDt& TDt::Set( const char* a_p )
         }
 
         i = strchr( i, '/' );
-        if ( i == NULL )
+        if ( i == nullptr)
             return Set();
 
         int year = atoi( ++i );
@@ -1138,9 +1138,9 @@ CSQLDatabase::CSQLDatabase()
 :
 _isOpen( false ),
 _rc( SQL_SUCCESS ),
-_henv( 0 ),
-_hdbc( 0 ),
-_hstmt(0),
+_henv( nullptr ),
+_hdbc( nullptr ),
+_hstmt(nullptr),
 _autoCommit( true )
 {
     //[2003-09-06] remove connection code and move below
@@ -1206,11 +1206,11 @@ bool CSQLDatabase::Close()
         _rc = ::SQLDisconnect( _hdbc );
         if ( _rc == SQL_SUCCESS || _rc == SQL_SUCCESS_WITH_INFO ) 
             _rc = ::SQLFreeHandle( SQL_HANDLE_DBC, _hdbc );
-        _hdbc = NULL; //[2003-09-06]
+        _hdbc = nullptr; //[2003-09-06]
     }
     if ( _henv ) {
         _rc = ::SQLFreeHandle( SQL_HANDLE_ENV, _henv );
-        _henv = NULL; //[2003-09-06]
+        _henv = nullptr; //[2003-09-06]
     }
 
     _isOpen = false;
@@ -1227,8 +1227,8 @@ bool CSQLDatabase::SQLConnect( const char * a_szDSN,
     ////////////////// start former constructor code ////////////////// 
     _isOpen     = false;
     _rc         = SQL_SUCCESS;
-    _henv       = 0;
-    _hdbc       = 0;
+    _henv       = nullptr;
+    _hdbc       = nullptr;
     _autoCommit = true;
 
     // Allocate environment handle 
@@ -1259,8 +1259,8 @@ bool CSQLDatabase::SQLConnect(char const* conn_instr)
 
     _isOpen     = false;
     _rc         = SQL_SUCCESS;
-    _henv       = 0;
-    _hdbc       = 0;
+    _henv       = nullptr;
+    _hdbc       = nullptr;
     _autoCommit = true;
 
     // Allocate environment handle 
@@ -1279,7 +1279,7 @@ bool CSQLDatabase::SQLConnect(char const* conn_instr)
         return false;
 
     //////////////////// end former constructor code ////////////////// 
-    _rc = ::SQLDriverConnect(_hdbc, NULL, (SQLCHAR *)conn_instr, SQL_NTS,
+    _rc = ::SQLDriverConnect(_hdbc, nullptr, (SQLCHAR *)conn_instr, SQL_NTS,
         (SQLCHAR *)conn_outstr, SQL_NTS, &outstr_len, SQL_DRIVER_NOPROMPT);
     
     _isOpen = ( _rc == SQL_SUCCESS || _rc == SQL_SUCCESS_WITH_INFO );
@@ -1314,10 +1314,10 @@ bool CSQLDatabase::ExecuteSQL( const char* a_szStmt )
             ThrowError();
     }
 
-    if ( _hstmt != NULL )
+    if ( _hstmt != nullptr)
     {
         SQLRETURN rc = ::SQLFreeHandle( SQL_HANDLE_STMT, _hstmt );
-        _hstmt = NULL;
+        _hstmt = nullptr;
     }
 
     bool retVal = _rc == SQL_SUCCESS || _rc == SQL_SUCCESS_WITH_INFO;
@@ -1408,10 +1408,10 @@ void CSQLDatabase::ThrowError( SQLSMALLINT handleType )
     pException->m_strError = ( const char* )szErrorMsg;
     pException->m_strStateNativeOrigin = ( const char* )szSQLState;
 
-    if ( _hstmt != NULL )
+    if ( _hstmt != nullptr)
     {
         SQLRETURN rc = ::SQLFreeHandle( SQL_HANDLE_STMT, _hstmt );
-        _hstmt = NULL;
+        _hstmt = nullptr;
     }
 
     throw pException;
@@ -1420,7 +1420,7 @@ void CSQLDatabase::ThrowError( SQLSMALLINT handleType )
 bool CSQLDatabase::SupportsTransactions()    // supports ROLLBACK and COMMIT
 {
     SQLUINTEGER result;
-    SQLRETURN rc = ::SQLGetInfo( _hdbc, SQL_TXN_CAPABLE,( SQLPOINTER )&result, 0, 0 );
+    SQLRETURN rc = ::SQLGetInfo( _hdbc, SQL_TXN_CAPABLE,( SQLPOINTER )&result, 0, nullptr );
     return result != SQL_TC_NONE;
 }
 
@@ -1586,11 +1586,9 @@ void CSQLInsert::SetColumn( const char* columnName, double value )
     if ( value > 10000000000000.0 || value < -10000000000000.0 )
         value = 0.0;
 
-    char ach[32];
-    sprintf( ach, "%.2f", value );
     if ( _values != "" )
         _values += ", ";
-    _values += ach;
+    _values += std::format("{:.2f}", value);
 }
 
 void CSQLInsert::SetColumn( const char* columnName, int value )
@@ -1599,11 +1597,9 @@ void CSQLInsert::SetColumn( const char* columnName, int value )
         _columns += ", ";
     _columns += columnName;
 
-    char ach[32];
-    sprintf( ach, "%d", value );
     if ( _values != "" )
         _values += ", ";
-    _values += ach;
+    _values += std::format("{}", value);
 }
 
 /*
@@ -1654,11 +1650,9 @@ void CSQLInsert::SetColumn( const char* columnName, long value, char a_DataType 
 
     if ( a_DataType == LONG )
     {
-        char ach[32];
-        sprintf( ach, "%d", value );
         if ( _values != "" )
             _values += ", ";
-        _values += ach;
+        _values += std::format("{}", value);
     }
     else if ( a_DataType == ODBC_DATE
         || a_DataType == JULIAN_DATE )
@@ -1693,8 +1687,8 @@ void CSQLInsert::ResetContent()
 CSQLRecordset::CSQLRecordset()
 :CSQLBaseWhere(),
 _rc( SQL_SUCCESS ),
-_hdbc( NULL ),
-_hstmt( NULL )
+_hdbc(nullptr),
+_hstmt(nullptr)
 {
 }
 
@@ -1702,7 +1696,7 @@ CSQLRecordset::CSQLRecordset( SQLHDBC a_hdbc )
 :CSQLBaseWhere(),
 _rc( SQL_SUCCESS ),
 _hdbc( a_hdbc ),
-_hstmt( NULL )
+_hstmt(nullptr)
 {
     assert( a_hdbc != NULL );
 }
@@ -1716,7 +1710,7 @@ CSQLRecordset::CSQLRecordset( CSQLDatabase& db )
 :CSQLBaseWhere(),
 _rc( SQL_SUCCESS ),
 _hdbc( db._hdbc ),
-_hstmt( NULL )
+_hstmt(nullptr)
 {
 }
 
@@ -1738,7 +1732,7 @@ void CSQLRecordset::operator << ( const std::string& statement )
 
 bool CSQLRecordset::SQLAllocStmt()
 {
-    if ( _hdbc == NULL )
+    if ( _hdbc == nullptr)
         return false;
 
     SQLFreeStmt();
@@ -1817,11 +1811,11 @@ bool CSQLRecordset::SQLFetch()
 void CSQLRecordset::SQLFreeStmt( SQLUSMALLINT a_uType, bool throwOnError )
 {
     _rc = SQL_SUCCESS_WITH_INFO; // in case it's null
-    if ( _hstmt == NULL )
+    if ( _hstmt == nullptr)
         return;
 
     _rc = ::SQLFreeStmt( _hstmt, a_uType );
-    _hstmt = NULL;
+    _hstmt = nullptr;
     if ( _rc != SQL_SUCCESS && _rc != SQL_SUCCESS_WITH_INFO )
         if (throwOnError) // you don't want to throw from a destructor
             ThrowError();
@@ -1849,9 +1843,7 @@ std::string CSQLRecordset::SQLGetData( int a_uRow, int a_eDataType )
 
     if ( a_eDataType == DOUBLE )
     {
-        char ach1[32];
-        sprintf( ach1, "%.2f", atof( ach ) );
-        _result = ach1;
+        _result = std::format("{:.2f}", atof( ach ));
         return _result;
     }
     else if ( a_eDataType == ODBC_DATE )
@@ -2180,9 +2172,7 @@ void CSQLUpdate::SetColumn( const char* columnName, long a_lValue, char a_DataTy
     }
     else
     {
-        char ach[32];
-        sprintf( ach, "%ld", a_lValue );
-        _columns += ach;
+        _columns += std::format("{}", a_lValue);
     }
 }
 

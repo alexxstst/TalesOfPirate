@@ -73,7 +73,7 @@ inline int lua_GetTeamCha(lua_State *L)
 
 // 
 inline int lua_IsChaInRegion(lua_State *L)
-{T_B
+{
 	// 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
@@ -95,12 +95,12 @@ inline int lua_IsChaInRegion(lua_State *L)
 		lua_pushnumber(L, 0);
 	}
 	return 1; 
-T_E}
+}
 
 
 // 
 inline int lua_GetChaDefaultName(lua_State *L)
-{T_B
+{
 	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -116,25 +116,25 @@ inline int lua_GetChaDefaultName(lua_State *L)
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 extern int lua_GetChaAttr(lua_State *pLS);
 extern int lua_SetChaAttr(lua_State *pLS);
 // 
 inline int lua_GetChaAttrI(lua_State *L)
-{T_B
+{
 	return lua_GetChaAttr(L);
-T_E}
+}
 
 // 
 inline int lua_SetChaAttrI(lua_State *L)
-{T_B
+{
 	return lua_SetChaAttr(L);
-T_E}
+}
 
 // 
 inline int lua_IsPlayer(lua_State *L)
-{T_B
+{
 	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -153,11 +153,11 @@ inline int lua_IsPlayer(lua_State *L)
 		lua_pushnumber(L, 0);
 	}
 	return 1;
-T_E}
+}
 
 // , 
 inline int lua_SetChaAttrMax(lua_State *L)
-{T_B
+{
 
 	// 
     BOOL bValid = (lua_gettop(L)==2 && lua_isnumber(L, 1) && lua_isnumber(L, 2));
@@ -176,7 +176,7 @@ inline int lua_SetChaAttrMax(lua_State *L)
 		g_pGameApp->ChaAttrMaxValInit(true);
 	}
 	return 0;
-T_E}
+}
 
 // , , 
 inline int lua_AddWeatherRegion(lua_State *L)
@@ -213,7 +213,7 @@ inline int lua_AddWeatherRegion(lua_State *L)
 	g_pScriptMap->m_WeatherMgr.AddWeatherRange(pNew);
 
 	//LG("weather", "[%d],  = %d,  = %d, location = %d %d, %d %d\n", btType, dwFre, dwLastTime, sx, sy, w, h);
-	LG("weather", "add weather area[%d], occur time limit = %d, duration = %d, location = %d %d, %d %d\n", btType, dwFre, dwLastTime, sx, sy, w, h);
+	ToLogService("weather", "add weather area[{}], occur time limit = {}, duration = {}, location = {} {}, {} {}", btType, dwFre, dwLastTime, sx, sy, w, h);
 	return 0;
 }
 
@@ -225,7 +225,7 @@ inline int lua_ClearMapWeather(lua_State *L)
 
 	g_pScriptMap->m_WeatherMgr.ClearAll();
 	//LG("weather", "[%s]!\n", g_pScriptMap->GetName());
-	LG("weather", "weed out map[%s]upon all weather area!\n", g_pScriptMap->GetName());
+	ToLogService("weather", "weed out map[{}]upon all weather area!", g_pScriptMap->GetName());
 	return 0;
 }
 

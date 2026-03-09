@@ -11,8 +11,7 @@ public:
 	DWORD				GetMax()						{ return (DWORD)_hairs.size();	}
 	CHairRecord*		GetInfo( DWORD v )				{ return _hairs[v]; 			}
 
-public:
-	void				AddInfo( CHairRecord* pInfo )	{ _hairs.push_back( pInfo );	}
+void				AddInfo( CHairRecord* pInfo )	{ _hairs.push_back( pInfo );	}
 
 private:
 	typedef std::vector<CHairRecord*>	hairs;
@@ -35,8 +34,7 @@ private:
 	typedef std::vector<CHairName*> hairs;
 	hairs	_hairs;
 
-private:
-	void	_Clear();
+void	_Clear();
 	void	_AddInfo( CHairRecord* pInfo );
 	
 

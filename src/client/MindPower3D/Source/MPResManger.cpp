@@ -1,5 +1,5 @@
 ﻿#include "StdAfx.h"
-#include <log.h>
+#include <logutil.h>
 //#include "../../../proj/EffectEditer.h"
 //#include <mindpower.h>
 #include "GlobalInc.h"
@@ -333,7 +333,7 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 
 	if(!CScriptFile::m_ctScript.OpenFileRead("effect/model.txt"))
 	{
-		LG("ERROR","msg effect/model.txt");
+		ToLogService("ERROR", "msg effect/model.txt");
 		return false;
 	}
 
@@ -434,14 +434,14 @@ int		CMPResManger::GetTextureID(const s_string &sName)
 	
 #if RESOURCE_SCRIPT == 2
 	// 
-	LG("error","msg: CMPResManger::GetTextureID(),TextureName=%s", sName.c_str());
+	ToLogService("error", "msg: CMPResManger::GetTextureID(),TextureName={}", sName.c_str());
 #endif
 
 	// Failure
 	char szMsg[64];
 	sprintf(szMsg,"[%s]()",
 		sName.c_str());
-	LG("ERROR","msg%s",szMsg);
+	ToLogService("ERROR", "msg{}", szMsg);
 	return -1;
 }
 //-----------------------------------------------------------------------------
@@ -473,7 +473,7 @@ lwITex*		CMPResManger::GetTextureByIDlw( int iID)
 		{
 			char szMsg[64];
 			sprintf(szMsg, "[id=%d]", iID);
-			LG("ERROR","msg%s",szMsg);
+			ToLogService("ERROR", "msg{}", szMsg);
 			return 0;
 		}
 		//#endif
@@ -520,7 +520,7 @@ int		CMPResManger::GetMeshID(const s_string &sName)
 	//}
 
 #if RESOURCE_SCRIPT == 2
-	LG("error","msg: CMPResManger::GetMeshID(),MeshName=%s",sName.c_str());
+	ToLogService("error", "msg: CMPResManger::GetMeshID(),MeshName={}", sName.c_str());
 #endif
 
 	// Failure
@@ -556,12 +556,12 @@ CEffectModel* CMPResManger::GetMeshByID( int iID)
 
 				char szMsg[64];
 				sprintf(szMsg,"[id=%d]", iID);
-				LG("ERROR","msg%s",szMsg);
+				ToLogService("ERROR", "msg{}", szMsg);
 				return 0;
 			}
 			if(!_vecMeshList[iID]->GetObject() || !_vecMeshList[iID]->GetObject()->GetPrimitive())
 			{
-				LG("error","msg: effectmesh->GetObject(),effectmesh->GetPrimitive()__ID=%d",iID);
+				ToLogService("error", "msg: effectmesh->GetObject(),effectmesh->GetPrimitive()__ID={}", iID);
 			}else
 				_vecMeshList[iID]->GetObject()->GetPrimitive()->SetState(STATE_TRANSPARENT, 0);
 			path_info->SetPath( PATH_TYPE_MODEL_ITEM, szOldPath );
@@ -591,7 +591,7 @@ CEffectModel* CMPResManger::GetMeshByID( int iID)
 							SAFE_DELETE(_vecMeshList[n]);
 							char szMsg[64];
 							sprintf(szMsg,"[id=%d]", iID);
-							LG("ERROR","msg%s",szMsg);
+							ToLogService("ERROR", "msg{}", szMsg);
 							return 0;
 						}
 					}
@@ -601,7 +601,7 @@ CEffectModel* CMPResManger::GetMeshByID( int iID)
 				}
 				if(n >= MAXMESH_COUNT)
 				{
-					LG("Error","msg");
+					ToLogService("Error", "msg");
 					return 0;
 				}
 				pRetMesh =_vecMeshList[n];
@@ -694,7 +694,7 @@ int		CMPResManger::GetEffectID(const s_string &pszName)
 	//}
 	////SAFE_DELETE_ARRAY(pszDataName);
 #if RESOURCE_SCRIPT == 2
-	LG("error","msg: CMPResManger::GetEffectID(),EffectName=%s",pszName.c_str());
+	ToLogService("error", "msg: CMPResManger::GetEffectID(),EffectName={}", pszName.c_str());
 #endif
 
 
@@ -1970,7 +1970,7 @@ int		CMPResManger::GetEffPathID(const s_string& pszName)
 	//	return (int)(it - _vecPathName.begin());
 	//}
 #if RESOURCE_SCRIPT == 2
-	LG("error","msg: CMPResManger::GetEffPathID(),EffPathName=%s",pszName.c_str());
+	ToLogService("error", "msg: CMPResManger::GetEffPathID(),EffPathName={}", pszName.c_str());
 #endif
 
 	// Failure
@@ -2092,7 +2092,7 @@ int		CMPResManger::GetPartCtrlID(const s_string& pszName)
 	}
 	//SAFE_DELETE_ARRAY(pszDataName);
 #if RESOURCE_SCRIPT == 2
-	LG("error","msg: CMPResManger::GetPartCtrlID(),PartCtrlName=%s",pszName.c_str());
+	ToLogService("error", "msg: CMPResManger::GetPartCtrlID(),PartCtrlName={}", pszName.c_str());
 #endif
 	return -1;
 }
@@ -2120,12 +2120,12 @@ CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 	//	(*_vecPartCtrl[iID])->GetModelNum()<=0)
 	if(iID > MAXPART_COUNT)
 	{
-		LG("error", "msglemon");
+		ToLogService("error", "msglemon");
 		return NULL;
 	}
 	if(iID < 0)
 	{
-		LG("error","msgID[%d]",iID);
+		ToLogService("error", "msgID[{}]", iID);
 		return NULL;
 	}
 	if((*_vecPartCtrl[iID]) == NULL)
@@ -2137,7 +2137,7 @@ CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 		if(!(*_vecPartCtrl[iID])->LoadFromFile(t_Path))
 		{
 			//SAFE_DELETE( (*_vecPartCtrl[iID]) ); 
-			LG("error","msgLoad %s error",_vecPartName[iID].c_str());
+			ToLogService("error", "msgLoad {} error", _vecPartName[iID].c_str());
 			return NULL;
 		}
 		else
@@ -2192,7 +2192,7 @@ void	CMPResManger::LoadTotalPartCtrl()
 				if(!(*_vecPartCtrl[_iPartCtrlNum - 1])->LoadFromFile(t_FilePath))
 				{
 					SAFE_DELETE( (*_vecPartCtrl[_iPartCtrlNum - 1]) ); 
-					LG("error","msgLoad %s error",sFileName.c_str());
+					ToLogService("error", "msgLoad {} error", sFileName.c_str());
 				}
 			}
 

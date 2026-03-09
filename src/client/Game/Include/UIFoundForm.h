@@ -50,8 +50,7 @@ namespace GUI
         static void _evtDragItemBase5(CGuiData *pSender,CCommandObj* pItem,bool& isAccept);
         static void _evtDragItemBase6(CGuiData *pSender,CCommandObj* pItem,bool& isAccept);
 
-    private:
-        CForm*          frmFound;
+		CForm*          frmFound;
         COneCommand*    cmdFound[FOUND_COUNT];
         int             iFoundPos[FOUND_COUNT];
         CImage*         Dice1[6];

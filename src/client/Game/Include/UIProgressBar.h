@@ -33,8 +33,7 @@ public:
         hsHintPercent,
     };
 
-public:
-	CProgressBar(CForm& frmOwn, eStyle style=btHorizontal);
+CProgressBar(CForm& frmOwn, eStyle style=btHorizontal);
 	CProgressBar(const CProgressBar& rhs);
 	CProgressBar& operator=(const CProgressBar& rhs);
 	virtual ~CProgressBar();
@@ -58,14 +57,13 @@ public:
   
 	int                 GetFlashNum()               { return _nFlash;               }
 	void                SetFlashNum(int v)          {  _nFlash = v ;                }   
-	void                SetActiveMouse(bool v)      { _bActiveMouse = v ;   }       
-	 
-public:	// 
+	void                SetActiveMouse(bool v)      { _bActiveMouse = v ;   }
+
+	// 
 	GuiMouseEvent		evtMouseDown;
 	GuiEvent			evtTimeArrive;
 
-public:
-	void				StepIt()					{ _step.Add(); _RefreshPos();	}
+void				StepIt()					{ _step.Add(); _RefreshPos();	}
 	void				StepBy( float v )			{ _step.Add(v); _RefreshPos();	}
 	void				SetPosition( float v )		{ _step.SetPosition(v); _RefreshPos();	}
 	float				GetPosition()				{ return _step.GetPosition();	}
@@ -80,8 +78,7 @@ private:
 	void				_Copy(const CProgressBar& rhs);		
     void				_RefreshPos();
 
-private:
-	CStep				_step;
+CStep				_step;
 
 	eStyle				_style;
 
@@ -95,8 +92,7 @@ private:
 	DWORD				_dwEndTime;
 	DWORD				_dwStartTime;
 
-private:
-	::MPTexRect*		_pTex;
+::MPTexRect*		_pTex;
 	float				_fEnd;
 
 };

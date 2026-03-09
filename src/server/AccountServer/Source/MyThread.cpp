@@ -5,6 +5,8 @@
 
 #include "MyThread.h"
 
+#include "CrushSystem.h"
+
 
 MyThread::MyThread()
 {
@@ -54,6 +56,8 @@ int MyThread::WaitForExit(int ms)
 
 DWORD WINAPI MyThread::ThreadProc(LPVOID lpParameter)
 {
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+
 	MyThread* This = (MyThread *)lpParameter;
 	return (DWORD)This->Run();
 }

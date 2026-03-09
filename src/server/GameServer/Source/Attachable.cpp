@@ -14,10 +14,10 @@
 #include "io.h"
 #include <string>
 #include "windows.h"
-#include "TryUtil.h"
+
 
 CAttachable::CAttachable()
-{T_B
+{
 	m_pCConjureLast = 0;
 	m_pCConjureNext = 0;
 
@@ -27,10 +27,10 @@ CAttachable::CAttachable()
 	m_pCPlayer = 0;
 	m_pCShipMaster = 0;
 	m_pCShip = 0;
-T_E}
+}
 
 void CAttachable::Initially()
-{T_B
+{
 	Entity::Initially();
 
 	m_pCConjureLast = 0;
@@ -42,10 +42,10 @@ void CAttachable::Initially()
 	m_pCPlayer = 0;
 	m_pCShipMaster = 0;
 	m_pCShip = 0;
-T_E}
+}
 
 void CAttachable::Finally()
-{T_B
+{
 	Entity::Finally();
 	m_pCPlayer = 0;
-T_E}
+}

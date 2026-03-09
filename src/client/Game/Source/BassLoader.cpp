@@ -1,47 +1,44 @@
 ﻿#include "stdafx.h"
 #include "BassLoader.h"
 
-BASS_INSTANCE* gBass = NULL;
+BASS_INSTANCE* gBass = nullptr;
 static long gBassLoadCount = 0;
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-static void CheckBassFunction(unsigned int theFunc, const char *theName)
-{
-	if (theFunc==0)
-	{
+static void CheckBassFunction(unsigned int theFunc, const char* theName) {
+	if (theFunc == 0) {
 		char aBuf[1024];
-		sprintf(aBuf,"%s function not found in bass.dll",theName);
-		MessageBox(NULL,aBuf,"Error",MB_OK | MB_ICONERROR);
+		sprintf(aBuf, "%s function not found in bass.dll", theName);
+		MessageBox(nullptr, aBuf, "Error",MB_OK | MB_ICONERROR);
 		exit(0);
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
-{
+BASS_INSTANCE::BASS_INSTANCE(const char* dllName) {
 	mModule = LoadLibrary(dllName);
 	if (!mModule)
 		return;
 
-#define GETPROC(_x) CheckBassFunction(*((unsigned int *)&_x) = (unsigned int)GetProcAddress(mModule, #_x),#_x)    
+#define GETPROC(_x) CheckBassFunction(*((unsigned int *)&_x) = (unsigned int)GetProcAddress(mModule, #_x),#_x)
 
 	GETPROC(BASS_Init);
 	GETPROC(BASS_Free);
 	GETPROC(BASS_Stop);
 	GETPROC(BASS_Start);
 
-	*((unsigned int*) &BASS_SetGlobalVolumes) = (unsigned int) GetProcAddress(mModule, "BASS_SetGlobalVolumes");
-	*((unsigned int*) &BASS_SetVolume) = (unsigned int) GetProcAddress(mModule, "BASS_SetVolume");
+	*((unsigned int*)&BASS_SetGlobalVolumes) = (unsigned int)GetProcAddress(mModule, "BASS_SetGlobalVolumes");
+	*((unsigned int*)&BASS_SetVolume) = (unsigned int)GetProcAddress(mModule, "BASS_SetVolume");
 
-	if ((BASS_SetVolume == NULL) && (BASS_SetGlobalVolumes == NULL))
-	{
-		MessageBox(NULL,"Neither BASS_SetGlobalVolumes or BASS_SetVolume found in bass.dll","Error",MB_OK | MB_ICONERROR);
+	if ((BASS_SetVolume == nullptr) && (BASS_SetGlobalVolumes == nullptr)) {
+		MessageBox(nullptr, "Neither BASS_SetGlobalVolumes or BASS_SetVolume found in bass.dll", "Error",
+				   MB_OK | MB_ICONERROR);
 		exit(0);
-	}	
+	}
 
-	*((unsigned int*) &BASS_SetConfig) = (unsigned int) GetProcAddress(mModule, "BASS_SetConfig");
+	*((unsigned int*)&BASS_SetConfig) = (unsigned int)GetProcAddress(mModule, "BASS_SetConfig");
 
 	GETPROC(BASS_MusicSetAmplify);
 	GETPROC(BASS_ChannelStop);
@@ -60,15 +57,14 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 	GETPROC(BASS_StreamFree);
 	GETPROC(BASS_StreamPlay);
 
-	mVersion2 = BASS_SetConfig != NULL;
-	if (mVersion2)
-	{
+	mVersion2 = BASS_SetConfig != nullptr;
+	if (mVersion2) {
 		// Version 2 has different BASS_Init params
-		*((unsigned int*) &BASS_Init2) = (unsigned int) BASS_Init;
-		BASS_Init = NULL;
+		*((unsigned int*)&BASS_Init2) = (unsigned int)BASS_Init;
+		BASS_Init = nullptr;
 
-		*((unsigned int*) &BASS_MusicLoad2) = (unsigned int) BASS_MusicLoad;
-		BASS_MusicLoad = NULL;
+		*((unsigned int*)&BASS_MusicLoad2) = (unsigned int)BASS_MusicLoad;
+		BASS_MusicLoad = nullptr;
 	}
 
 #undef GETPROC
@@ -76,38 +72,32 @@ BASS_INSTANCE::BASS_INSTANCE(const char *dllName)
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-BASS_INSTANCE::~BASS_INSTANCE()
-{
+BASS_INSTANCE::~BASS_INSTANCE() {
 	if (mModule)
 		FreeLibrary(mModule);
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-void LoadBassDLL()
-{
+void LoadBassDLL() {
 	InterlockedIncrement(&gBassLoadCount);
-	if (gBass!=NULL)
+	if (gBass != nullptr)
 		return;
 
 	gBass = new BASS_INSTANCE("bass.dll");
-	if (gBass->mModule==NULL)
-	{
-		MessageBox(NULL,"Can't find bass.dll." ,"Error",MB_OK | MB_ICONERROR);
+	if (gBass->mModule == nullptr) {
+		MessageBox(nullptr, "Can't find bass.dll.", "Error",MB_OK | MB_ICONERROR);
 		exit(0);
 	}
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////
-void FreeBassDLL()
-{
-	if (gBass!=NULL)
-	{
-		if (InterlockedDecrement(&gBassLoadCount) <= 0)
-		{
+void FreeBassDLL() {
+	if (gBass != nullptr) {
+		if (InterlockedDecrement(&gBassLoadCount) <= 0) {
 			delete gBass;
-			gBass = NULL;
+			gBass = nullptr;
 		}
 	}
 }

@@ -45,7 +45,7 @@ int base64(char const* src, unsigned int src_len, char* dst,
     char* blah;
 
     olen = (src_len + 2) / 3 * 4;
-    if (dst_len != NULL) *dst_len = olen;
+    if (dst_len != nullptr) *dst_len = olen;
     if (dst_max_len < olen) return BUFOVER;
 
     blah = (char *) out;
@@ -75,7 +75,7 @@ int ibase64(char const* src, unsigned int src_len, char* dst, unsigned int* dst_
     unsigned len = 0, lup;
     int c1, c2, c3, c4;
 
-    if (dst == NULL) return FAIL;
+    if (dst == nullptr) return FAIL;
 
     if (src[0] == '+' && src[1] == ' ') src += 2;
     if (*src == '\r') return FAIL;
@@ -103,7 +103,7 @@ int ibase64(char const* src, unsigned int src_len, char* dst, unsigned int* dst_
                 ++ len;}}} // end for
 
     //*dst = 0;
-    if (dst_len != NULL) *dst_len = len;
+    if (dst_len != nullptr) *dst_len = len;
     return OK;}
 
 // SHA-1
@@ -441,7 +441,7 @@ bool encrypt_B(char* src, unsigned int src_len, char* key,
     { // 'B' encrypt/decrypt algorithm
     unsigned int loop = src_len / key_len;
     unsigned int rcnt = src_len % key_len;
-    char* p = NULL;
+    char* p = nullptr;
     unsigned int i, j;
 
     if (en)
@@ -720,11 +720,9 @@ void md5string(char const* msg, char str[33])
     unsigned char dig[16];
     md5(msg, dig);
 
-    char tmp[3];
-    str[0] = 0, str[32] = 0;
-    for (int i = 0; i < 16; ++ i)
-    {
-        sprintf(tmp, "%02X", dig[i]);
-        strcat(str, tmp);
-    }
+    str[32] = '\0';
+    char* _p = str;
+    for (int i = 0; i < 16; ++i)
+        _p = std::format_to(_p, "{:02X}", dig[i]);
+    *_p = '\0';
 }

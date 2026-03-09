@@ -183,7 +183,7 @@ LW_RESULT lwModel::Load(const char* file, DWORD model_id)
 
         if(LW_FAILED(model_info.Load(path)))
         {
-            LG_MSGBOX("invalid file name: %s when called lwModel::Load", path);
+            ToLogService("default", "msginvalid file name: {} when called lwModel::Load", path);
             return LW_RET_FAILED;
         }
 
@@ -214,7 +214,7 @@ __load_model:
                 _helper_object = LW_NEW(lwHelperObject((lwResourceMgr*)_res_mgr));
                 if(LW_FAILED(_helper_object->LoadHelperInfo(&model_info_ptr->helper_data, create_helper_primitive)))
                 {
-                    LG_MSGBOX("load helper object error with file:%s", path);
+                    ToLogService("default", "msgload helper object error with file:{}", path);
                     return LW_RET_FAILED;
                 }
             }

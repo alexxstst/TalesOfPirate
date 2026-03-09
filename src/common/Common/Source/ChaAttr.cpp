@@ -13,13 +13,13 @@ LONG32 g_lMaxChaAttr[ATTR_MAX_NUM];
 
 
 CChaAttr::CChaAttr()
-{T_B
+{
 	Clear();
-T_E}
+}
 
 CChaAttr::~CChaAttr()
-{T_B
-T_E}
+{
+}
 
 void CChaAttr::Clear()
 {	
@@ -27,7 +27,7 @@ void CChaAttr::Clear()
 }
 
 void CChaAttr::Init(long lID, bool bFromFile)
-{T_B
+{
 	ResetChangeFlag();
 
 	int i = 0;
@@ -119,4 +119,4 @@ void CChaAttr::Init(long lID, bool bFromFile)
 	m_lAttribute[ATTR_BMSPD] = (LONG32)pCChaRecord->lMSpd;
 	m_lAttribute[ATTR_BCOL] = (LONG32)pCChaRecord->lCol;
 	m_lAttribute[ATTR_BPDEF] = (LONG32)pCChaRecord->lPDef;
-T_E}
+}

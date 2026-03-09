@@ -15,7 +15,7 @@ list<string> g_luaFNList;
 
 void print_error(lua_State* state) {
     const char* message = lua_tostring(state, -1);
-    std::cout << message << std::endl;
+    ToLogService("error", "{}", message);
     lua_pop(state, 1);
 }
 
@@ -28,7 +28,7 @@ int lua_sysAddHelpString(lua_State *L)
 
 void InitLuaPlatform()
 {
-    LG("init", g_oLangRec.GetString(182));
+    ToLogService("init", "{}", g_oLangRec.GetString(182));
     
     L = lua_open ();
     luaL_openlibs(L);

@@ -31,10 +31,10 @@ class ThreadPool;
 struct selparm;
 struct BandwidthStat
 {
-	volatile uLong		m_tick;
-	volatile uLong		m_sendbyteps,m_recvbyteps,m_sendpktps,m_recvpktps;
-	volatile LLong		m_sendbytes,m_recvbytes;
-	volatile LLong		m_sendpkts,m_recvpkts;
+	 uLong		m_tick;
+	 uLong		m_sendbyteps,m_recvbyteps,m_sendpktps,m_recvpktps;
+	 LLong		m_sendbytes,m_recvbytes;
+	 LLong		m_sendpkts,m_recvpkts;
 };
 
 //=========================TcpCommApp=================================

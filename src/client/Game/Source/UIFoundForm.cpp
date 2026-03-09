@@ -169,14 +169,14 @@ namespace GUI
         frmFound = mgr.Find("frmFound");
         if(!frmFound)
         {
-            LG("gui", "frmFound not found.\n");
+            ToLogService("gui", "frmFound not found.");
             return false;
         }
 
         proFound = dynamic_cast<CProgressBar*>(frmFound->Find("proFound"));
         if(!proFound)
         {
-            LG("gui", "frmFound::proFound not found.\n");
+            ToLogService("gui", "frmFound::proFound not found.");
             return false;
         }
         proFound->evtTimeArrive = _ProTimeArriveEvt;
@@ -184,7 +184,7 @@ namespace GUI
         btnForgeYes = dynamic_cast<CTextButton*>(frmFound->Find("btnForgeYes"));
         if(!btnForgeYes)
         {
-            LG("gui", "frmFound::btnForgeYes not found.\n");
+            ToLogService("gui", "frmFound::btnForgeYes not found.");
             return false;
         }
         btnForgeYes->SetIsEnabled(false);
@@ -192,7 +192,7 @@ namespace GUI
         btnForgeBig = dynamic_cast<CTextButton*>(frmFound->Find("btnBigBig"));
         if(!btnForgeBig)
         {
-            LG("gui", "frmFound::btnBigBig not found.\n");
+            ToLogService("gui", "frmFound::btnBigBig not found.");
             return false;
         }
         btnForgeBig->SetIsEnabled(false);
@@ -200,7 +200,7 @@ namespace GUI
         btnForgeSmall = dynamic_cast<CTextButton*>(frmFound->Find("btnSmallSmall"));
         if(!btnForgeSmall)
         {
-            LG("gui", "frmFound::btnSmallSmall not found.\n");
+            ToLogService("gui", "frmFound::btnSmallSmall not found.");
             return false;
         }
         btnForgeSmall->SetIsEnabled(false);
@@ -212,7 +212,7 @@ namespace GUI
             cmdFound[i] = dynamic_cast<COneCommand*>(frmFound->Find(buff));
             if(!cmdFound[i])
             {
-                LG("gui", "frmFound::%s not found.\n", buff);
+                ToLogService("gui", "frmFound::{} not found.", buff);
                 return false;
             }
             iFoundPos[i] = NO_USE;
@@ -231,21 +231,21 @@ namespace GUI
             Dice1[i] = dynamic_cast<CImage*>(frmFound->Find(buff));
             if(!Dice1[i])
             {
-                LG("gui", "frmFound::%s not found.\n", buff);
+                ToLogService("gui", "frmFound::{} not found.", buff);
                 return false;
             }
             sprintf(buff, "imgShaiZi2_%i", (i+1));
             Dice2[i] = dynamic_cast<CImage*>(frmFound->Find(buff));
             if(!Dice2[i])
             {
-                LG("gui", "frmFound::%s not found.\n", buff);
+                ToLogService("gui", "frmFound::{} not found.", buff);
                 return false;
             }
             sprintf(buff, "imgShaiZi3_%i", (i+1));
             Dice3[i] = dynamic_cast<CImage*>(frmFound->Find(buff));
             if(!Dice3[i])
             {
-                LG("gui", "frmFound::%s not found.\n", buff);
+                ToLogService("gui", "frmFound::{} not found.", buff);
                 return false;
             }
         }

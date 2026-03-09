@@ -64,8 +64,7 @@ private:
 	 
 	static BOOL CALLBACK _EnumWindowsProc( HWND hWnd, LPARAM lParam );
 
-private:
-	CWorldScene*	_pScene;
+CWorldScene*	_pScene;
 
 	//
 	enum eLastType

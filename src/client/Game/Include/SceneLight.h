@@ -79,7 +79,6 @@ struct IndexDataSceneLight
 
 class AnimCtrlLight
 {
-private:
     IndexDataSceneLight* _data_seq;
     DWORD _data_num;
     lwIPoseCtrl* _pose_ctrl;

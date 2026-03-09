@@ -35,9 +35,8 @@ protected:
 private:
 	CForm*		frmNPCchat;
 	CMemo*		memCtrl;
-	
-private:
-	static BYTE		_byTalkStyle;		// 
+
+static BYTE		_byTalkStyle;		// 
 
 	bool		m_bIsNpcTalk;
 

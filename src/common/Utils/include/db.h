@@ -29,17 +29,16 @@ public:
     cfl_db();
     ~cfl_db();
 
-public:
-    void enable_errinfo(bool enable = true);
+void enable_errinfo(bool enable = true);
     bool is_errinfo_enable() const;
-    bool handle_err(SQLHANDLE h, SQLSMALLINT t, RETCODE r, char const* sql = NULL, bool reconn = false);
+    bool handle_err(SQLHANDLE h, SQLSMALLINT t, RETCODE r, const std::string& sql, bool reconn = false);
 
 	bool connect(const std::string& dsn, std::string& err_info);
     SQLHDBC get_dbc() const;
 	void add(cfl_rs* rs);
 	void disconn();
 
-    SQLRETURN exec_sql_direct(char const* sql, unsigned short timeout = 50);
+    SQLRETURN exec_sql_direct(const std::string& sql, unsigned short timeout = 50);
 
 	bool begin_tran();
 	bool commit_tran();
@@ -88,25 +87,25 @@ protected:
     virtual ~cfl_rs();
 
 	void attach_db(cfl_db* db);
-	bool handle_err(SQLHANDLE h, SQLSMALLINT t, RETCODE r, char const* sql = NULL, bool reconn = false);
+	bool handle_err(SQLHANDLE h, SQLSMALLINT t, RETCODE r, const std::string& sql = "", bool reconn = false);
 	//void stmt_err(SQLRETURN r, char const* sql = NULL, bool reconn = false);
     char const* const _get_table() const;
 
 public:
 
 	// 
-    SQLRETURN exec_sql_direct(char const* sql, unsigned short timeout = 50);
+    SQLRETURN exec_sql_direct(const std::string& sql, unsigned short timeout = 50);
 
-    SQLRETURN exec_sql(char const* sql, char const* pdata, int len, unsigned short timeout = 50);
+    SQLRETURN exec_sql(const std::string& sql, char const* pdata, int len, unsigned short timeout = 50);
 
 	// Add by lark.li 20080808 begin
-	SQLRETURN exec_param_sql(char const* sql, char const* pdata, int len, unsigned short timeout = 50);
+	SQLRETURN exec_param_sql(const std::string& sql, char const* pdata, int len, unsigned short timeout = 50);
 	// End
 
-    bool get(char const* sql, char const* pdata, int len, unsigned short timeout = 50);
+    bool get(const std::string& sql, char const* pdata, int len, unsigned short timeout = 50);
 
 	// Add by lark.li 20080808 negin
-	bool _get_bin_field(char* field_text, int& len, char* param, char* filter, int* affect_rows = NULL);
+	bool _get_bin_field(char* field_text, int& len, char* param, char* filter, int* affect_rows = nullptr);
 	// End
 
 	//@TableName	nvarchar(50),		-- 
@@ -123,16 +122,16 @@ public:
 	// End
 
 	bool _get_row(std::string field_text[], int field_max_cnt, const char* param,
-				  const char* filter, int* affect_rows = NULL);
+				  const char* filter, int* affect_rows = nullptr);
 	bool _get_row2(char const* sql, std::string field_text[], int field_max_cnt,
-				   int* rows_got = NULL);
+				   int* rows_got = nullptr);
     bool _get_row3(std::string field_text[], int field_max_cnt, const char* param,
-                   const char* filter, int* affect_rows = NULL);
+                   const char* filter, int* affect_rows = nullptr);
     bool _get_rowOderby(std::string field_text[], int field_max_cnt, const char* param,
-                   const char* filter, int* affect_rows = NULL);
+                   const char* filter, int* affect_rows = nullptr);
 
 	// Add by lark.li 20080528 begin
-	bool	getalldata(const char* sql, std::vector< std::vector< std::string > > &data, unsigned short timeout = 50);
+	bool	getalldata(const std::string& sql, std::vector< std::vector< std::string > > &data, unsigned short timeout = 50);
 	// End
 
 	// 
@@ -175,8 +174,8 @@ inline char const* const cfl_rs::get_table() const
 
 
 inline bool cfl_rs::handle_err(SQLHANDLE h, SQLSMALLINT t, RETCODE r,
-							   char const* sql /* = NULL */,
-							   bool reconn /* = false */)
+							   const std::string& sql,
+							   bool reconn)
 {
 	return _db->handle_err(h, t, r ,sql, reconn);
 }
@@ -215,8 +214,8 @@ public:
     friend_tbl(cfl_db* db) : cfl_rs(db, "friends", 10) {}
     virtual ~friend_tbl() {}
 
-    bool get_friend_dat(friend_dat* farray, int& array_num, unsigned int atorID, bool* drop = NULL);
-	bool get_gm_dat(friend_dat* farray, int& array_num, bool* drop = NULL);
+    bool get_friend_dat(friend_dat* farray, int& array_num, unsigned int atorID, bool* drop = nullptr);
+	bool get_gm_dat(friend_dat* farray, int& array_num, bool* drop = nullptr);
 };
 
 #endif //_DB_H_

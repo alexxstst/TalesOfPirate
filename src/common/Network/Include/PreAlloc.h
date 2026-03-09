@@ -52,16 +52,16 @@ public:
 private:
 	virtual void Initially(){}
 	virtual void Finally(){}
-	PreAllocHeap<PreAllocStru>		*	volatile __preAllocHeap;
-	PreAllocHeapPtr<PreAllocStru>	*	volatile __preAllocHeapPtr;
-	PreAllocStru					*	volatile __nextHeapItem;
+	PreAllocHeap<PreAllocStru>		*	 __preAllocHeap;
+	PreAllocHeapPtr<PreAllocStru>	*	 __preAllocHeapPtr;
+	PreAllocStru					*	 __nextHeapItem;
 };
 //==========PreAllocHeap====================================================================
 struct __FIFOQu_
 {
-	PreAllocStru	*	volatile head;
-	PreAllocStru	*	volatile tail;
-	uLong				volatile free;		//
+	PreAllocStru	*	 head;
+	PreAllocStru	*	 tail;
+	uLong				 free;		//
 };
 template <class T>
 class PreAllocHeap

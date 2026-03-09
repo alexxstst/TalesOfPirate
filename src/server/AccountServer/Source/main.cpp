@@ -12,6 +12,8 @@
 #include "AccountServer2.h"
 #include <signal.h>
 #include <CommCtrl.h>
+
+#include "CrushSystem.h"
 #include "GlobalVariable.h"
 
 #include "inifile.h"
@@ -99,7 +101,14 @@ int main(int argc, char* argv[])
 	C_TITLE("AccountServer.exe")
 	C_PRINT("Loading AccountServer.cfg...\n");
 
-	T_B
+	std::cout << "Loaded string: " << CLanguageRecordInstance().GetRecordCount() << std::endl;
+
+	::SetThreadName("main");
+	TalesOfPirate::Utils::Crush::SetGlobalCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetupDumpSetting("log\\account\\dumps");
+	g_logManager.InitLogger("log\\account");
+
 
     // 
 	_CrtSetDbgFlag ( _CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF );		//Add by Arcol (2005-12-2)
@@ -166,16 +175,16 @@ int main(int argc, char* argv[])
 	//g_BillThread.WaitForExit(-1);
 
     // 
-    LG("RunLabel", "\n");
+    ToLogService("RunLabel", "");
     for (char i = 0; i < AuthThreadPool::AT_MAXNUM; ++ i) {
-        LG("RunLabel", "%02d %04d\n", AuthThreadPool::RunLabel[i],
-            AuthThreadPool::RunConsume[i]);
+        ToLogService("RunLabel", "{:02} {:04}", (int)AuthThreadPool::RunLabel[i],
+            (DWORD)AuthThreadPool::RunConsume[i]);
     }
-    LG("RunLabel", "\n");
+    ToLogService("RunLabel", "");
 
 	g_MainDBHandle.ReleaseObject();
 
-	T_FINAL
+
 
     return 0;
 }

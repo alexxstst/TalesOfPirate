@@ -67,8 +67,7 @@ public:
 
     int             FindCommand( CSkillCommand* p );
 
-public:
-    GuiSkillListUpgrade     evtUpgrade;
+GuiSkillListUpgrade     evtUpgrade;
 
 private:
     void    _SetSelf();
@@ -76,15 +75,13 @@ private:
     void    _SetFirstShowRow( DWORD );
 	int		_GetHitSkill( int x, int y );
 
-private:
-    static void			_ScrollChange(CGuiData *pSender) {
+static void			_ScrollChange(CGuiData *pSender) {
         ((CSkillList*)(pSender->GetParent()))->_OnScrollChange();
     }
     void				_OnScrollChange();
     void	_ResetPageNum();
 
-private:
-    static	void	_DragEnd(CGuiData *pSender, int x, int y, DWORD key)	{
+static	void	_DragEnd(CGuiData *pSender, int x, int y, DWORD key)	{
         ((CSkillList*)(pSender))->_DragEnd( x, y, key );
     }
     void			_DragEnd( int x, int y, DWORD key );
@@ -127,8 +124,7 @@ private:
     int             _nRowSpace;     // 
     int             _nFontYOff;     // 
 
-private:
-    int             _nDragIndex;
+int             _nDragIndex;
     int             _nDragOffX, _nDragOffY;
     int             _nMouseUpgradeID;
 

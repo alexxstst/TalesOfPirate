@@ -32,7 +32,7 @@ namespace mission
 		if( pRec == NULL ) 
 		{
 			//LG( "entity_error", "CEventEntity::Create!!ID[%d]", sID );
-			LG( "entity_error", "CEventEntity::Create !establish failed!can't find character data info!ID[%d]", sID );
+			ToLogService( "entity_error", "CEventEntity::Create !establish failed!can't find character data info!ID[{}]", sID );
 			return FALSE;
 		}
 
@@ -48,10 +48,6 @@ namespace mission
 		}
 
 		m_ID = g_pGameApp->m_Ident.GetID();
-		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
-		m_CLog.SetLogName(szLogName);
-
 		m_pCChaRecord = pRec;
 		m_cat = (short)m_pCChaRecord->lID;
 		SetAngle( sDir );
@@ -63,7 +59,7 @@ namespace mission
 		if( !Submap.Enter( &SShape, this ) )
 		{
 			//LG( "entity_error", "CEventEntity::Create!" );
-			LG( "entity_error", "CEventEntity::Create entity enter map failed!" );
+			ToLogService( "entity_error", "CEventEntity::Create entity enter map failed!" );
 			return FALSE; 
 		}
 		m_sInfoID = sInfoID;

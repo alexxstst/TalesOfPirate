@@ -23,7 +23,7 @@ bool CPkDialog::Init()
 		frmTeamPkStart = mgr.Find("frmTeamPK");
 		if ( !frmTeamPkStart)
 		{
-			LG("gui", g_oLangRec.GetString(744));
+			ToLogService("gui", "{}", g_oLangRec.GetString(744));
 			return false;
 		}
 		frmTeamPkStart->evtEntrustMouseEvent = _MainMousePkStartEvent;

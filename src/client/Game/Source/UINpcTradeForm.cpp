@@ -69,7 +69,7 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 		pItem = GetItemRecordInfo( TradeInfo.TradePage[0].sItemID[j] );
 		if (!pItem)	
 		{
-			LG( "error", "msgCNpcTradeMgr::ShowTradePage item index[%d] out of range", TradeInfo.TradePage[0].sItemID[j] );
+			ToLogService( "error", "msgCNpcTradeMgr::ShowTradePage item index[{}] out of range", TradeInfo.TradePage[0].sItemID[j] );
 			continue;
 		}
 
@@ -77,10 +77,10 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 
 		_NpcItemRefresh( pObj );
 		if( !grdNPCtradeWeapon->SetItem( j, pObj ) )
-		{			
+		{
 			//delete pObj;
 			SAFE_DELETE(pObj); // UI
-			LG( "error", "msgShowTradePage grdNPCtradeWeapon out of range\n" );
+			ToLogService( "error", "msgShowTradePage grdNPCtradeWeapon out of range" );
 		}
 	}
 	grdNPCtradeWeapon->GetScroll()->Reset();
@@ -90,17 +90,17 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 		pItem = GetItemRecordInfo( TradeInfo.TradePage[1].sItemID[j]);
 		if ( !pItem) 
 		{
-			LG( "error", "msgCNpcTradeMgr::ShowTradePage item index[%d] out of range", TradeInfo.TradePage[1].sItemID[j] );
+			ToLogService( "error", "msgCNpcTradeMgr::ShowTradePage item index[{}] out of range", TradeInfo.TradePage[1].sItemID[j] );
 			continue;
 		}
 
 		CItemCommand* pObj = new CItemCommand( pItem );
 		_NpcItemRefresh( pObj );
 		if( !grdNPCtradeEquip->SetItem( j, pObj ) )
-		{				
+		{
 			//delete pObj;
 			SAFE_DELETE(pObj); // UI
-			LG( "error", "msgShowTradePage grdNPCtradeEquip out of range\n" );
+			ToLogService( "error", "msgShowTradePage grdNPCtradeEquip out of range" );
 		}
 	}
 	grdNPCtradeEquip->GetScroll()->Reset();
@@ -110,17 +110,17 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 		pItem = GetItemRecordInfo( TradeInfo.TradePage[2].sItemID[j]);
 		if (!pItem)
 		{
-			LG( "error", "msgCNpcTradeMgr::ShowTradePage item index[%d] out of range", TradeInfo.TradePage[2].sItemID[j] );
+			ToLogService( "error", "msgCNpcTradeMgr::ShowTradePage item index[{}] out of range", TradeInfo.TradePage[2].sItemID[j] );
 			continue;
 		}
 
 		CItemCommand* pObj = new CItemCommand( pItem );
 		_NpcItemRefresh( pObj );
 		if( !grdNPCtradeOther->SetItem( j, pObj ) )
-		{				
+		{
 			//delete pObj;
 			SAFE_DELETE(pObj); // UI
-			LG( "error", "msgShowTradePage grdNPCtradeEquip out of range\n" );
+			ToLogService( "error", "msgShowTradePage grdNPCtradeEquip out of range" );
 		}
 	}
 	grdNPCtradeOther->GetScroll()->Reset();

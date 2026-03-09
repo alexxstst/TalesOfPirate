@@ -111,14 +111,14 @@ namespace kbase_2001
 inline void MsgBox(char* sMsg, UINT uType = MB_OK) 
 {
    char title[MAX_PATH];
-   GetModuleFileNameA(0, title, DIM_OF(title));
+   GetModuleFileNameA(nullptr, title, DIM_OF(title));
    MessageBoxA(GetActiveWindow(), sMsg, title, uType);
 }
 
 inline void MsgBox(wchar_t* sMsg, UINT uType = MB_OK) 
 {
    wchar_t title[MAX_PATH];
-   GetModuleFileNameW(0, title, DIM_OF(title));
+   GetModuleFileNameW(nullptr, title, DIM_OF(title));
    MessageBoxW(GetActiveWindow(), sMsg, title, uType);
 }
 
@@ -130,7 +130,7 @@ inline int MsgBox (UINT uType, char* title, char* fmt, ...)
 	wvsprintfA(message, fmt, args);
 	va_end(args);
 	HWND hwnd = GetActiveWindow();
-	return MessageBoxA(0, message, title, uType | ((hwnd == NULL ) ? MB_SERVICE_NOTIFICATION : 0));
+	return MessageBoxA(nullptr, message, title, uType | ((hwnd == nullptr) ? MB_SERVICE_NOTIFICATION : 0));
 }
 
 inline int MsgBox (UINT uType, wchar_t* title, wchar_t* fmt, ...)
@@ -141,7 +141,7 @@ inline int MsgBox (UINT uType, wchar_t* title, wchar_t* fmt, ...)
 	wvsprintfW(message, fmt, args);
 	va_end(args);
 	HWND hwnd = GetActiveWindow();
-	return MessageBoxW(hwnd, message, title, uType | ((hwnd == NULL ) ? MB_SERVICE_NOTIFICATION : 0));
+	return MessageBoxW(hwnd, message, title, uType | ((hwnd == nullptr) ? MB_SERVICE_NOTIFICATION : 0));
 }
 
 /*
@@ -169,7 +169,7 @@ public:
    SystemInfo() {GetSystemInfo(this);}
 };
 
-struct OSVersionInfo : public OSVERSIONINFO
+struct OSVersionInfo : OSVERSIONINFO
 {
 	OSVersionInfo()
 	{

@@ -92,7 +92,7 @@ protected:
 		char szPhoto[72]; sprintf(szPhoto, "texture/photo/%s.bmp", pInfo->szName);
 		pInfo->nPhotoTexID = GetTextureID(szPhoto);
 
-        LG("sceneobj", "Read ItemInfo Model = [%s], Name = [%s],  Type = %d\n", pInfo->szDataName, pInfo->szName, pInfo->btWeaponType);
+        ToLogService("sceneobj", "Read ItemInfo Model = [{}], Name = [{}],  Type = {}", pInfo->szDataName, pInfo->szName, pInfo->btWeaponType);
         return TRUE;
     }
 };

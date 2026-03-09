@@ -149,8 +149,7 @@ private:
 	static const int HELP_PICTURE_COUNT = 68;	// 
 	static const int HELP_LV1_BEGIN     = 28;	// Level1
 
-private:
-	CForm*			frmMain800;
+CForm*			frmMain800;
 
 	CForm*			frmMainFun;
 	//CTextButton*	btnStart;
@@ -257,8 +256,7 @@ private:
 
 
 
-private:
-	// 
+// 
 	static CCharacter2D*	pMainCha;				
 	static CCharacter2D*	pTarget;
 	static CCharacter*		pLastTarget;

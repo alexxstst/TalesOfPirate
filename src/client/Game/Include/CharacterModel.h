@@ -76,7 +76,6 @@ struct ItemLinkInfo
 
 class MPDrunkCtrl
 {
-private:
     MPSceneItem* dummy_obj;
     MPCharacter* cha_obj;
     lwMatrix44 cha_mat_save;

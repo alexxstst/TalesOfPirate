@@ -18,38 +18,35 @@
 #include <windows.h>
 
 
-class Lock
-{
+class Lock {
 public:
-    Lock();
-    ~Lock();
-    void lock();
-    void unlock();
+	Lock();
+	~Lock();
+	void lock();
+	void unlock();
 
 protected:
-    CRITICAL_SECTION        m_cs;
+	CRITICAL_SECTION m_cs;
 };
 
 
-class AutoLockObj
-{
+class AutoLockObj {
 public:
-    inline AutoLockObj(Lock* lock)
-    {
-        m_lock = lock;
-        m_lock->lock();
-    }
-    inline ~AutoLockObj()
-    {
-        m_lock->unlock();
-    }
+	inline AutoLockObj(Lock* lock) {
+		m_lock = lock;
+		m_lock->lock();
+	}
+
+	inline ~AutoLockObj() {
+		m_lock->unlock();
+	}
+
 private:
-    Lock*   m_lock;
+	Lock* m_lock;
 };
 
 
 #define AutoLock(l)         AutoLockObj __lock_obj(l)
-
 
 
 #endif

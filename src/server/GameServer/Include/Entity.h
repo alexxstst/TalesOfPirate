@@ -6,7 +6,6 @@
 #define ENTITY_H
 
 #include "GameAppNet.h"
-#include "LogFile.h"
 #include "Event.h"
 #include "CompCommand.h"
 
@@ -78,10 +77,10 @@ public:
 	const Circle	&GetTerritory() {return m_STerritory;}
 	void			SetTerritory(Circle &STerritory) {m_STerritory = STerritory;}
 	void			NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn = true);
-	void			SetLogEnable(bool bEnable = true){m_CLog.SetEnable(bEnable);}
+	void			SetLogEnable(bool bEnable = true){ ;}
 	void			SetName(dbc::cChar *cszName) {strncpy(m_name, cszName, defENTITY_NAME_LEN - 1); m_name[defENTITY_NAME_LEN -1] = '\0';}
 	const char*     GetName() { return m_name; }
-	const char*     GetLogName() { return m_CLog.GetLogName(); }
+	const char*     GetLogName() { return m_name ? m_name : "NULL"; }
 	void			SetBirthCity(dbc::cChar *cszName) {strncpy(m_szBirthCity, cszName, MAX_MAPNAME_LENGTH - 1); m_szBirthCity[MAX_MAPNAME_LENGTH -1] = '\0';}
 	const char*     GetBirthCity() { return m_szBirthCity; }
 	void			SetBirthMap(dbc::cChar *cszName) {strncpy(m_szBirthMap, cszName, MAX_MAPNAME_LENGTH - 1); m_szBirthMap[MAX_MAPNAME_LENGTH -1] = '\0';}
@@ -138,7 +137,6 @@ public:
 	void	WriteEventInfo(WPACKET &pk);
 	void	SynEventInfo(void);
 
-	CLogFile		m_CLog;
 	dbc::uLong		m_ID;
 
 protected:

@@ -24,11 +24,9 @@ namespace GUI
 		virtual bool Init();
 		virtual void CloseForm();
 
-    private:
-        //static void _evtPKSilverSortBtn(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
+		//static void _evtPKSilverSortBtn(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-    private:
-        CForm*      frmPKSilver;
+		CForm*      frmPKSilver;
         CLabelEx*   labName[MAX_PKSILVER_PLAYER];
         CLabelEx*   labLevel[MAX_PKSILVER_PLAYER];
         CLabelEx*   labJob[MAX_PKSILVER_PLAYER];

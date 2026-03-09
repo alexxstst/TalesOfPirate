@@ -41,8 +41,7 @@ public:
 
 	bool			SwitchTemplete( int n );		// ,-1,
 
-public:
-	bool			Init(HWND hWnd);
+bool			Init(HWND hWnd);
 	void			Clear();
 
     void            FrameMove( int x, int y, DWORD dwMouseKey, DWORD dwTime );
@@ -71,8 +70,7 @@ public:
 	typedef void (*FormFun)(CForm* pSender);
 	void			ForEach( FormFun pFun );		// FormpFun
 
-public:
-	void			SetEnabled( bool v )			{ _bEnabled = v;	}
+void			SetEnabled( bool v )			{ _bEnabled = v;	}
 	bool			GetEnabled()					{ return _bEnabled; }
     void            ResetAllForm();
     void            SetScreen();
@@ -83,7 +81,7 @@ public:
 	static bool		IsMouseInGui()					{ return _eMouseAction==enumMA_Gui;	}
 	static eMouseAction	GetMouseAction()			{ return _eMouseAction;	}
 
-public:	// 
+	// 
 	bool			AddFormInit( FormMgrEvent pInitFun );	// ,
 
 	bool			AddKeyDownEvent( KeyDownEvent event );
@@ -101,8 +99,7 @@ public:	//
 	bool			AddHotKeyEvent( HotKeyEvent event );
 	bool			DelHotKeyEvent( HotKeyEvent event );
 
-public:
-	static CFormMgr	s_Mgr;
+static CFormMgr	s_Mgr;
 
 private:
 	bool			_AddMemory( CForm* form );
@@ -123,8 +120,7 @@ private:
 
     void            _ActiveCompent();
 
-private:
-	typedef std::list<CForm*> vfrm;
+typedef std::list<CForm*> vfrm;
 	vfrm			_allForms;
 	vfrm*			_forms;						// ,
 	vfrm			_modal;						// 
@@ -167,8 +163,7 @@ private:
 	static bool		_IsDrawFrameInDebugMode;	//  -added by Arcol
 	static bool		_IsDrawBackgroundInDebugMode;	//  -added by Arcol
 
-private:
-	void			_DelForm( vfrm& list, CForm* frm );
+void			_DelForm( vfrm& list, CForm* frm );
 
 };
 

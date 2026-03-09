@@ -8,7 +8,6 @@
 //=================================================================
 #pragma once
 
-#include "dstring.h"		//Packet.h
 #include "BaseBuf.h"
 
 _DBC_BEGIN
@@ -86,7 +85,7 @@ private:
 
 	TcpCommApp const* __tca;
 	uLong m_head;
-	volatile uLong m_offset, m_wpos, m_cpos;
+	uLong m_offset, m_wpos, m_cpos;
 	//volatile bool					m_appendant;
 };
 //==============================================================================================
@@ -157,7 +156,7 @@ public:
 
 	TcpCommApp const* __tca{};
 	uLong m_head{};
-	volatile uLong					m_offset{}, m_rpos{}, m_len{}, m_revrpos{}, m_tickcount{};
+	uLong					m_offset{}, m_rpos{}, m_len{}, m_revrpos{}, m_tickcount{};
 };
 
 #pragma pack(pop)

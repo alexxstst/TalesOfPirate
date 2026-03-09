@@ -133,7 +133,6 @@ private:
 	static void _ClickOpenApparel(CGuiData *pSender, int x, int y, DWORD key );
 	static void _ClickTempBag(CGuiData* pSender, int x, int y, DWORD key);
 	static void _OnDragStates(CGuiData* pSender, int x, int y, DWORD key);
-private:
 	static int				lIMP;
 	CForm*			frmSkill;
 

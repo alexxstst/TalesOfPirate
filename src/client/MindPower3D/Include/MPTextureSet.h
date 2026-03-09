@@ -93,7 +93,7 @@ public:
 		        _nLoadedRawDataCnt--;
 		        if(_nLoadedRawDataCnt < 0)
 		        {
-			        LG("error", "LoadedRawDataCnt = %d , < 0 ?\n", _nLoadedRawDataCnt);
+			        ToLogService("error", "LoadedRawDataCnt = {} , < 0 ?", _nLoadedRawDataCnt);
 		        }
                 GetRawData(pInfo->nID);
             }
@@ -139,7 +139,7 @@ protected:
 		DWORD dwMem = g_Render.GetRegisteredDevMemSize();
 		if(rand()%100 < 2)
 		{
-			LG("vmem", "vmem = %d k\n", dwMem / 1024);
+			ToLogService("vmem", "vmem = {} k", dwMem / 1024);
 		}
 		if(dwMem >= 64 * 1024 * 1024)
 		{
@@ -257,7 +257,7 @@ protected:
 			//return tex->GetTex();
 			pTexInfo->sWidth = (short)tex_info.width;
 			pTexInfo->sHeight = (short)tex_info.height;
-			LG("tex_release", "Load Texture [%s] size = %d %d, id = %d\n", pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight, pInfo->nID);
+			ToLogService("tex_release", "Load Texture [{}] size = {} {}, id = {}", pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight, pInfo->nID);
 			return tex;
 #else
 		MPTexInfo* pTexInfo = (MPTexInfo*)pInfo;
@@ -395,12 +395,12 @@ protected:
 			&pTexture)))				// texture
 		{
 			// texture
-			LG("error", "Create Texture From Data[%s] Failed!\n", pInfo->szDataName);
+			ToLogService("error", "Create Texture From Data[{}] Failed!", pInfo->szDataName);
 			pTexture = NULL;
 		}
 		else
 		{
-			LG("debug", "Load Texture Data [%s]\n", pInfo->szDataName);
+			ToLogService("debug", "Load Texture Data [{}]", pInfo->szDataName);
 			//D3DSURFACE_DESC desc;
 			//pTexture->GetLevelDesc(0, &desc);
 			//pTexInfo->nWidth  = desc.Width;
@@ -415,7 +415,7 @@ protected:
 	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
 	{
 		MPTexInfo *pTexInfo = (MPTexInfo*)pInfo;
-        LG("tex_release", "Release Texture Data [%s], size = %d %d\n", pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight);
+        ToLogService("tex_release", "Release Texture Data [{}], size = {} {}", pTexInfo->szDataName, pTexInfo->sWidth, pTexInfo->sHeight);
         // by lsh
         // __asm
         // {

@@ -25,18 +25,15 @@
     <ClInclude Include="Include\CommRPC.h" />
     <ClInclude Include="Include\DataSocket.h" />
     <ClInclude Include="Include\DBCCommon.h" />
-    <ClInclude Include="Include\dstring.h" />
     <ClInclude Include="Include\EventMsgRC.h" />
     <ClInclude Include="Include\excp.h" />
     <ClInclude Include="Include\IniFile.h" />
-    <ClInclude Include="Include\LogStream.h" />
     <ClInclude Include="Include\Packet.h" />
     <ClInclude Include="Include\PacketQueue.h" />
     <ClInclude Include="Include\PreAlloc.h" />
     <ClInclude Include="Include\Receiver.h" />
     <ClInclude Include="Include\robject.h" />
     <ClInclude Include="Include\RPCInfo.h" />
-    <ClInclude Include="Include\rstring.h" />
     <ClInclude Include="Include\RunBiDirectChain.h" />
     <ClInclude Include="Include\RunCtrlThrd.h" />
     <ClInclude Include="Include\RWMutex.h" />
@@ -53,7 +50,6 @@
     <ClCompile Include="Source\DataSocket.cpp" />
     <ClCompile Include="Source\DBCCommon.cpp" />
     <ClCompile Include="Source\IniFile.cpp" />
-    <ClCompile Include="Source\LogStream.cpp" />
     <ClCompile Include="Source\Packet.cpp" />
     <ClCompile Include="Source\PacketQueue.cpp" />
     <ClCompile Include="Source\Receiver.cpp" />

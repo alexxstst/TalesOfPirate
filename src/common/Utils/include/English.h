@@ -11,7 +11,6 @@ public:
 protected:
 	~CEnglish(void);
 
-private:
 };
 
 #define TO_ENGLISH(s)		CEnglish::GetInstance()->DoEnglish(#s, __FILE__, __LINE__)

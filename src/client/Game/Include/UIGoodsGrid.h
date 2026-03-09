@@ -60,8 +60,7 @@ public:
 
     void            Clear();
 
-public:
-	void			SetShowStyle( eShowStyle v )	{ _eShowStyle=v; 		}
+void			SetShowStyle( eShowStyle v )	{ _eShowStyle=v; 		}
  
 	bool			SetContent( int nRow, int nCol );
 	void			SetSpace( int x, int y );
@@ -84,8 +83,7 @@ public:
 	bool			SetItem( unsigned int nIndex, CCommandObj* pItem );
 	bool			SwapItem( unsigned int nFirst, unsigned int nSecond );
 
-public:
-	// HACK: Right click menu in inventory needs to be able to set drag index to sell item
+// HACK: Right click menu in inventory needs to be able to set drag index to sell item
 	// Initially a friend declaration was used in top-newera src, but here it didnt want to work
 	void			SetDragIndex(int index) { _nDragIndex = index; };
 
@@ -106,7 +104,7 @@ public:
 	int				GetEmptyGridCount();	// 
 	int				GetUsedGridCount();		// 
 
-public:	// 
+	// 
     GuiThrowItemEvent   evtThrowItem;
     GuiSwapItemEvent    evtSwapItem;
     GuiDragInGridEvent	evtBeforeAccept;
@@ -126,15 +124,13 @@ protected:
 	}
 	void			_OnScrollChange();
 
-protected:
-	CGuiPic*		_pImage;					// 
+CGuiPic*		_pImage;					// 
 	CScroll*		_pScroll;
 	CGuiPic*		_pUnit;						// 
 
 	CCommandObj**	_pItems;
 
-protected:
-	eShowStyle		_eShowStyle;
+eShowStyle		_eShowStyle;
 
 	int				_nUnitHeight, _nUnitWidth;	//  
 	int				_nSpaceX, _nSpaceY;			// 
@@ -154,8 +150,7 @@ private:
 	}
 	void			_DragEnd( int x, int y, DWORD key );
 
-private:
-	int				_nStartX, _nStartY;
+int				_nStartX, _nStartY;
 	int				_nPageShowNum;				// 
 	int				_nTotalW, _nTotalH;
 
@@ -169,11 +164,9 @@ private:
 	int				_nCurNum;					// 
 	bool			_IsShowHint;
 
-private:
-	static int 		_nTmpX, _nTmpY,  _nTmpRow,	_nTmpCol;
+static int 		_nTmpX, _nTmpY,  _nTmpRow,	_nTmpCol;
 
-private:
-	int _nTmpIndex;
+int _nTmpIndex;
 
 	bool selectorEnabled{ false };
 	std::unique_ptr<CGuiPic> selectItemImage{ nullptr };

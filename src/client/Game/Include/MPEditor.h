@@ -99,7 +99,7 @@ public:
 	
 	//lemon add@2004.11.4
 	bool		m_bShowLightBrush;
-public:		// 
+		// 
 
     DWORD       GetColor() { return _dwColor; }
 	void		SetColor( DWORD color ) { _dwColor=color; }

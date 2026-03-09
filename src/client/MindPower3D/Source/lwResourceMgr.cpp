@@ -84,7 +84,7 @@ LW_RESULT lwTex::Release()
                 {
                     if(LW_FAILED(tp->RemoveTask(__thread_proc_load_tex, (void*)this)))
                     {
-                        LG_MSGBOX("fatal error when release texture, call jack");
+                        ToLogService("default", "msgfatal error when release texture, call jack");
                     }
                 }
 
@@ -1308,7 +1308,7 @@ LW_RESULT lwMesh::LoadVideoMemory()
         }
         break;
     default:
-        LG_MSGBOX("invalid stream type called lwMesh::LoadVideoMemory");
+        ToLogService("default", "msginvalid stream type called lwMesh::LoadVideoMemory");
     }
 
     _state |= RES_STATE_VIDEOMEMORY;
@@ -1433,7 +1433,7 @@ LW_RESULT lwMesh::UnloadVideoMemory()
         }            
         break;
     default:
-        LG_MSGBOX("invalid stream type called lwMesh::UnloadVideoMemory");
+        ToLogService("default", "msginvalid stream type called lwMesh::UnloadVideoMemory");
     }
 
 
@@ -1518,7 +1518,7 @@ LW_RESULT lwMesh::BeginSet()
         }
         break;
     default:
-        LG_MSGBOX("invalid stream type called lwMesh::BeginSet");
+        ToLogService("default", "msginvalid stream type called lwMesh::BeginSet");
     }
 
     dev_obj->SetFVF(_mesh_info_ptr->fvf);
@@ -1597,7 +1597,7 @@ LW_RESULT lwMesh::DrawSubset(DWORD subset)
             }
             break;
         default:
-            LG_MSGBOX("invalid stream type called lwMesh::DrawSubset");
+            ToLogService("default", "msginvalid stream type called lwMesh::DrawSubset");
         }
 
 
@@ -2976,7 +2976,7 @@ LW_RESULT lwThreadPoolMgr::Create()
         for(DWORD j = 0; j < ci[i][0]; j++)
         {
             DWORD id = ((lwThreadPool*)_pool_seq[i])->GetThreadId(j);
-            LG("threadid", "%d:%s\n", id, "MindPower::LoadResource Thread");
+            ToLogService("threadid", "{}:{}", id, "MindPower::LoadResource Thread");
         }
     }
 

@@ -1,6 +1,4 @@
 ﻿#include <string>
-#include "dstring.h"
-#include "rstring.h"
 #include "DBCCommon.h"
 #include "PreAlloc.h"
 

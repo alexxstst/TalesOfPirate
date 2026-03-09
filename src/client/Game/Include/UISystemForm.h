@@ -64,8 +64,7 @@ public:
 	} m_startOption;
 	// End
 
-public:
-	CSystemProperties() {}
+CSystemProperties() {}
 	~CSystemProperties() {}
 	/**
 	 * Load the propties from the file(*.ini)
@@ -146,7 +145,7 @@ class CChaExitOnTime
 public:
 	CChaExitOnTime();
 
-public:	// 
+	// 
 	void	ChangeCha();	// 
 	void	ExitApp();		// 
 	void	OfflineMode();
@@ -160,15 +159,14 @@ public:	//
 
 	void	Reset();
 
-public:	// 
+	// 
 	void	NetStartExit( DWORD dwExitTime );	// 
 	void	NetCancelExit();					// 
 
 private:
 	bool	_IsTime();				// ,
 
-private:
-	enum eOptionType
+enum eOptionType
 	{
 		enumInit,
 		enumChangeCha,
@@ -195,8 +193,7 @@ public:
 
     void LoadCustomProp();
 
-public:
-	virtual void CloseForm();
+virtual void CloseForm();
 
 protected:
 	virtual bool Init();
@@ -218,8 +215,7 @@ private:
 	static void		_evtGameOptionFormMouseDown(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 	static void		_evtGameOptionFormBeforeShow(CForm* pForm, bool& IsShow);
 
-private:
-	CForm			 *frmSystem;
+CForm			 *frmSystem;
 
 	CForm            *frmAudio;
 	CProgressBar     *proAudioMusic;

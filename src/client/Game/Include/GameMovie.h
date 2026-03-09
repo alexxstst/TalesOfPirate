@@ -27,8 +27,6 @@ public:
 	CGameMovie(void);
 	virtual ~CGameMovie(void);
 
-public:
-
 	// 
 	bool Play(HWND hWnd, const char* pszFileName);
 

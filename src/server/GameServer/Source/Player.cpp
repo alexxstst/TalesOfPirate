@@ -6,7 +6,7 @@
 //=============================================================================
 #include "stdafx.h"
 #include "Player.h"
-#include "TryUtil.h"
+
 #include "GameApp.h"
 #include "GameDB.h"
 #include "CharStall.h"
@@ -17,7 +17,7 @@ _DBC_USING;
 
 CPlayer::CPlayer():
 m_sGarnerWiner(0)
-{T_B
+{
     Init(NULL, 0);
 	m_chGMLev = 0;
 	m_dwValidFlag = PLAYER_INVALID_FLAG;
@@ -42,10 +42,10 @@ m_sGarnerWiner(0)
 	// Modify by lark.li 20080317
 	memset(this->m_szPassword, 0 , sizeof(this->m_szPassword));
 	//End
-T_E}
+}
 
 void CPlayer::Initially()
-{T_B
+{
 	bIsValid = true;
     Init(NULL, 0);
     _nTeamMemberCnt = 0;
@@ -93,10 +93,10 @@ void CPlayer::Initially()
 	m_pCForgeman = NULL;
 
 	bReceiveRequests = true;
-T_E}
+}
 
 void CPlayer::Finally()
-{T_B
+{
 	GetNextPlayer() = NULL;
 
 	m_pMainCha->TradeClear( *this );
@@ -132,12 +132,12 @@ void CPlayer::Finally()
 	}
 
 	bIsValid = false;
-T_E}
+}
 
 void CPlayer::Free()
-{T_B
+{
 	g_pGameApp->m_pCPlySpace->ReturnPly(m_lHandle);
-T_E}
+}
 
 void CPlayer::SetIMP(long imp,bool sync) {
 	m_lIMP = imp<2000000000 ? imp : 2000000000; 
@@ -165,7 +165,7 @@ BOOL CPlayer::HasAllBoatInBerth( USHORT sBerthID )
 }
 
 BOOL CPlayer::HasBoatInBerth( USHORT sBerthID )
-{T_B
+{
 	for( int i = 0; i < m_byNumBoat; i++ )
 	{
 		if( m_Boat[i]->getAttr( ATTR_BOAT_BERTH ) == sBerthID && m_Boat[i]->getAttr( ATTR_BOAT_ISDEAD ) == 0 )
@@ -174,7 +174,7 @@ BOOL CPlayer::HasBoatInBerth( USHORT sBerthID )
 		}
 	}
 	return FALSE;
-T_E}
+}
 
 BOOL CPlayer::HasDeadBoatInBerth( USHORT sBerthID )
 {
@@ -233,7 +233,7 @@ void CPlayer::GetAllBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DATA
 }
 
 void CPlayer::GetBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DATA& Data )
-{T_B
+{
 	BYTE byIndex = 0;
 	for( BYTE i = 0; i < m_byNumBoat; i++ )
 	{
@@ -246,7 +246,7 @@ void CPlayer::GetBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DATA& D
 		}
 	}
 	byNumBoat = byIndex;
-T_E}
+}
 
 void CPlayer::GetDeadBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DATA& Data )
 {
@@ -265,7 +265,7 @@ void CPlayer::GetDeadBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DAT
 }
 
 BOOL CPlayer::AddBoat( CCharacter& Boat )
-{T_B
+{
 	if( IsBoatFull() ) return FALSE;
 	
 	Boat.SetPlayer( this );
@@ -280,7 +280,7 @@ BOOL CPlayer::AddBoat( CCharacter& Boat )
 		// m_pMainCha->BoatAdd( Boat );
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL CPlayer::ClearBoat( DWORD dwBoatDBID )
 {
@@ -340,7 +340,7 @@ BYTE CPlayer::GetBoatIndexByDBID(DWORD dwBoatDBID)
 }
 
 CCharacter* CPlayer::GetLuanchOut()
-{T_B
+{
 	if( m_dwLaunchID == -1 ) {
 		return NULL;
 	}
@@ -353,7 +353,7 @@ CCharacter* CPlayer::GetLuanchOut()
 		}
 	}
 	return NULL;
-T_E}
+}
 
 void CPlayer::SetBerth( USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT sDir )
 {
@@ -374,7 +374,7 @@ void CPlayer::GetBerth( USHORT& sBerthID, USHORT& sxPos, USHORT& syPos, USHORT& 
 // 
 // 
 void CPlayer::AddTeamMember(uplayer *pUPlayer)
-{T_B
+{
 	//LG("team", "[%s]: [dbid = %d] [gate_addr=%d]\n", GetCtrlCha()->GetLogName(), pUPlayer->m_dwDBChaId, pUPlayer->m_ulGateAddr);
 	if(_nTeamMemberCnt>=MAX_TEAM_MEMBER)
 	{
@@ -384,16 +384,16 @@ void CPlayer::AddTeamMember(uplayer *pUPlayer)
 	_Team[_nTeamMemberCnt] = *pUPlayer;
 	_nTeamMemberCnt++;
 	//LG("team", "  %d\n", _nTeamMemberCnt);
-T_E}
+}
 
 // 
 void CPlayer::ClearTeamMember()
-{T_B
+{
     _dwTeamLeaderID = 0;
 	NoticeTeamLeaderID();
 
 	_nTeamMemberCnt = 0;
-T_E}
+}
 
 void CPlayer::LeaveTeam()
 {
@@ -406,7 +406,7 @@ void CPlayer::UpdateTeam()
 
 //  : Player
 void CPlayer::NoticeTeamMemberData()
-{T_B
+{
 	int	nTMemberCnt = GetTeamMemberCnt();
 	if(nTMemberCnt==0) return;
 
@@ -428,7 +428,7 @@ void CPlayer::NoticeTeamMemberData()
 	pMainCha->WriteLookData(wpk, LOOK_TEAM);	 // , 
 
 	SENDTOCLIENT2(wpk, nTMemberCnt, _Team);
-T_E}
+}
 
 void CPlayer::NoticeTeamLeaderID(void)
 {
@@ -444,10 +444,6 @@ void CPlayer::NoticeTeamLeaderID(void)
 
 	SENDTOCLIENT2(pk, nTMemberCnt, _Team);
 	pCha->NotiChgToEyeshot(pk);
-	//pCha->ReflectINFof(pCha, pk);
-
-	//pCha->m_CLog.Log(" %d %d.", getTeamLeaderID(), pCha->GetID());
-	pCha->m_CLog.Log("in phase teamID:header  %d,oneself %d.", getTeamLeaderID(), pCha->GetID());
 }
 
 // 
@@ -739,7 +735,7 @@ bool CPlayer::OpenTiger(CCharacter *pCNpc)
 }
 
 void CPlayer::SystemNotice( const char szData[], ... )
-{T_B
+{
 	// Modify by lark.li 20080801 begin
 	char szTemp[250];
 	memset(szTemp, 0, sizeof(szTemp));
@@ -759,7 +755,7 @@ void CPlayer::SystemNotice( const char szData[], ... )
 	WRITE_SHORT(packet, 1);
 
 	GetGate()->SendData(packet);
-T_E}
+}
 
 bool CPlayer::RefreshMapMask(const char *szMapName, long lPosX, long lPosY)
 {

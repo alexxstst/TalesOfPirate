@@ -61,10 +61,10 @@ public:
 	DataSocket(uLong size);
 	void Init(SOCKET socket,cChar *peerip,uShort peerport,TcpCommApp *tca,bool IsServer);
 	void Free(){PreAllocStru::Free();}
-	LLong	volatile		m_sendbytes,m_recvbytes;
-	LLong	volatile		m_sendpkts,m_recvpkts;
-	uLong	volatile		m_sendbyteps,m_recvbyteps;
-	uLong	volatile		m_sendpktps,m_recvpktps;
+	LLong			m_sendbytes,m_recvbytes;
+	LLong			m_sendpkts,m_recvpkts;
+	uLong			m_sendbyteps,m_recvbyteps;
+	uLong			m_sendpktps,m_recvpktps;
 public:
 	virtual ~DataSocket();
 	void Initially();

@@ -293,7 +293,6 @@ public:
     void SetColumn( const char* columnName, bool isValidTime, int month, int day, int year ); // use CSQLBASE_OLEDATETIME( o ) as 2nd arg
 
     void ResetContent();
-protected:
 private:
     std::string _columns;
     std::string _values;
@@ -322,8 +321,7 @@ public:
     void     SetOrderBy( const char * a_szOrderBy );
     void     SetGroupBy( const char* a_szGroupBy );
 
-public:
-    double   dblSQLGetData( int column );
+double   dblSQLGetData( int column );
     int      nSQLGetData( int column );
     bool     bSQLGetData( int column );
     long     lSQLGetData( int column, int a_eDataType );
@@ -368,7 +366,6 @@ public:
     void SetColumn( const char* columnName, bool isValidTime, int month=0, int day=0, int year=0 );
 
     void ResetContent();
-protected:
 private:
     std::string _columns;
 };

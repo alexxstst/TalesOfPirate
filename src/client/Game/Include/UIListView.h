@@ -34,9 +34,8 @@ public:
 		virtual void		SetParent( CListView* p ) {}
 		virtual CImage*		GetImage( int index )				{return NULL;	}
 		virtual void		SetAlpha( BYTE alpha ){}
-		
 
-	public:
+
 		int		GetColumnWidth( unsigned int nCol ) { return _pList->GetList()->GetItems()->GetColumnWidth(nCol); }
 		
 	protected:
@@ -82,13 +81,11 @@ public:
 	private:
 		static void			_InitColumnPos( CCompent* pThis, unsigned int index );
 
-	private:
 		CContainer*			_pColumn;
 
 	};
 
-public:
-	CListView(CForm& frmOwn, int nCol, eStyle eTitle );
+CListView(CForm& frmOwn, int nCol, eStyle eTitle );
 	CListView( const CListView& rhs );
 	CListView& operator=(const CListView& rhs);
 	virtual ~CListView(void);
@@ -111,9 +108,8 @@ public:
 	virtual CCompent*   GetHintCompent( int x, int y );
 	virtual void        RenderHint( int x, int y );
 	CItemCommand*		pItem[15];
-	
-public:
-	CList*				GetList()						{ return _pList;			}
+
+CList*				GetList()						{ return _pList;			}
 	CListTitle*			GetTitle()						{ return _pTitle;			}
 	CImage*				GetColumnImage(int index) {	return _pTitle->GetImage(index);}
 
@@ -127,10 +123,9 @@ public:
 	bool				UpdateItemObj( int nRow, int nCol, CItemObj* pObj );
 	CItemObj*			GetItemObj( int nRow, int nCol );
 	bool				_IsShowHint;
-	
 
-public:
-	GuiEvent			evtColumnClick;				// 
+
+GuiEvent			evtColumnClick;				// 
 
 private:
 	void				_ColumnClick( CGuiData* pSender ){	if( evtColumnClick ) evtColumnClick(pSender); }

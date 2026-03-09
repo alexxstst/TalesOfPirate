@@ -839,7 +839,6 @@ namespace detail {
 template <class T, class E, bool = std::is_default_constructible_v<T>, bool = (std::is_void_v<T> || std::is_trivial_v<T>) && std::is_trivial_v<E>>
 union expected_storage
 {
-public:
     template <class U = T, class = std::enable_if_t<std::is_default_constructible_v<U>>>
     constexpr expected_storage() noexcept
         : value_()
@@ -888,7 +887,6 @@ private:
 template <class E>
 union expected_storage<void, E, true, true>
 {
-public:
     constexpr expected_storage() noexcept
         : dummy_(0)
     {
@@ -920,7 +918,6 @@ private:
 template <class T, class E>
 union expected_storage<T, E, true, false>
 {
-public:
     constexpr expected_storage() noexcept(std::is_nothrow_default_constructible_v<T>)
         : value_()
     {
@@ -970,7 +967,6 @@ private:
 template <class T, class E>
 union expected_storage<T, E, false, false>
 {
-public:
     constexpr explicit expected_storage() noexcept
         : dummy_(0)
     {
@@ -1021,7 +1017,6 @@ private:
 template <class E>
 union expected_storage<void, E, true, false>
 {
-public:
     constexpr expected_storage() noexcept
         : dummy_(0)
     {
@@ -2887,7 +2882,6 @@ namespace detail {
 template <class T>
 class IsContainer
 {
-private:
     typedef char yes[1]; 
     typedef char no[2]; 
 
@@ -2914,8 +2908,7 @@ namespace detail {
 
 class Userdata
 {
-private:
-    
+
     static Userdata* getExactClass(lua_State* L, int index, const void* classKey)
     {
         return (void)classKey, static_cast<Userdata*>(lua_touserdata(L, lua_absindex(L, index)));
@@ -3008,7 +3001,7 @@ private:
     {
         LUABRIDGE_ASSERT(lua_istable(L, -1) || lua_isnil(L, -1)); 
 
-        const char* expected = 0;
+        const char* expected = nullptr;
         if (lua_isnil(L, -1)) 
         {
             expected = "unregistered class";
@@ -9732,8 +9725,7 @@ class Namespace : public detail::Registrar
         }
     };
 
-private:
-    struct FromStack {};
+struct FromStack {};
 
     explicit Namespace(lua_State* L)
         : Registrar(L)

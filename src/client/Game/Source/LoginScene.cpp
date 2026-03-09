@@ -166,7 +166,7 @@ CLoginScene::CLoginScene(stSceneInitParam& param):
 
 CLoginScene::~CLoginScene()
 {
-	LG( "scene memory", "CLoginScene Destroy\n" );
+	ToLogService("scene memory", "CLoginScene Destroy");
 
 	for (int i =0 ; i<3 ; i++)
 		_pCntCha[i] = NULL ;
@@ -271,7 +271,7 @@ bool CLoginScene::_Init()
 
 	if (!_InitUI())
 	{
-		LG("login_ini", g_oLangRec.GetString(168));
+		ToLogService("login_ini", "{}", g_oLangRec.GetString(168));
 
 		return false;
 	}
@@ -295,7 +295,7 @@ bool CLoginScene::_Init()
 					const char * pszGate = pGate->szGateIP[k];
 					if( GetRegionMgr()->Add( pszRegion, pszGroup, pszGate ) )
 					{
-						LG( "all_gate", "%s, %s, %s\n", pszRegion, pszGroup, pszGate );
+						ToLogService("all_gate", "{}, {}, {}", pszRegion, pszGroup, pszGate);
 					}
 				}
 			}
@@ -1169,7 +1169,7 @@ void CLoginScene::_Connect()
 		return;
 	}
 
-	LG("connect", g_oLangRec.GetString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex);
+	ToLogService("connect", "{} {} {}", g_oLangRec.GetString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex);
 	//int nSelRegionNo = 0;
 	//int nNO = lstServer->GetItems()->GetSelect()->GetIndex();
 
@@ -1210,7 +1210,7 @@ void CLoginScene::_Connect()
 	if (!pszSelectGateIP)
 	{
 		//LG("connect", g_oLangRec.GetString(180), m_iCurSelRegionIndex, m_iCurSelServerIndex);
-		LG("connect", g_oLangRec.GetString(180), 0, 0);
+		ToLogService("connect", "{} {} {}", g_oLangRec.GetString(180), 0, 0);
 	}
 	else
 	{
@@ -1332,7 +1332,7 @@ void  CLoginScene::_evtVerErrorFrm(CCompent *pSender, int nMsgType, int x, int y
 void CLoginScene::Error( int error_no, const char* error_info )
 {
     CGameApp::Waiting( false );
-    LG( "error", "%s Error, Code:%d, Info: %s", error_info, error_no, g_GetServerError(error_no) );
+    ToLogService("error", "{} Error, Code:{}, Info: {}", error_info, error_no, g_GetServerError(error_no));
 
 	if( ERR_MC_VER_ERROR==error_no && !g_TomServer.bEnable )
 	{		

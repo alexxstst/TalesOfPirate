@@ -152,7 +152,7 @@ BOOL	SC_SendHandshake(LPRPACKET pk) {
 
 
 BOOL	SC_Login(LPRPACKET pk)
-{T_B
+{
 	uShort l_errno	=pk.ReadShort();
 	if(l_errno)
 	{
@@ -171,15 +171,15 @@ BOOL	SC_Login(LPRPACKET pk)
 	}
 	updateDiscordPresence("Selecting Character", "");
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Disconnect(LPRPACKET pk)
 {
-	T_B
+
 		auto reason = pk.ReadLong();
 		g_NetIF->m_connect.Disconnect(reason);
 		return true;
-	T_E
+
 }
 
 
@@ -187,7 +187,7 @@ BOOL SC_Disconnect(LPRPACKET pk)
 // S->C : 
 //--------------------
 BOOL SC_EnterMap(LPRPACKET pk)
-{T_B
+{
 	g_LogName.Init();
 
 	g_listguild_begin	=false;
@@ -210,7 +210,7 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	SMapInfo.szMapName = pk.ReadString();
 	SMapInfo.bCanTeam = pk.ReadChar() != 0 ? true : false;
 	NetSwitchMap(SMapInfo);
-	LG(g_oLangRec.GetString(295), "%s\n", SMapInfo.szMapName);
+	ToLogService(g_oLangRec.GetString(295), "{}", SMapInfo.szMapName);
 	
 	
 	int const IMPs = pk.ReadLong();
@@ -305,18 +305,18 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	//CS_AntiIndulgence_Close();
 
 	return TRUE;
-T_E}
+}
 
 BOOL    SC_BeginPlay(LPRPACKET pk)
-{T_B
+{
 uShort	l_errno = pk.ReadShort();
 NetBeginPlay(l_errno);
 	
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_EndPlay(LPRPACKET pk)
-{T_B
+{
 	uShort	l_errno	=pk.ReadShort();
 
 	//char    chPassword  =pk.ReadChar();
@@ -332,7 +332,7 @@ BOOL	SC_EndPlay(LPRPACKET pk)
 #endif
 	updateDiscordPresence("Selecting Character", "");
 	return TRUE;
-T_E}
+}
 
 std::optional<NetChaBehave> ReadSelectCharacter(RPacket& rpk)
 {
@@ -372,7 +372,7 @@ std::vector<NetChaBehave> ReadSelectCharacters(RPacket& rpk)
 
 
 BOOL	SC_NewCha(LPRPACKET pk)
-{T_B
+{
 	uShort	l_errno	=pk.ReadShort();
 	NetNewCha(l_errno);
 
@@ -381,28 +381,28 @@ BOOL	SC_NewCha(LPRPACKET pk)
 	pClient->Failure( l_errno );
 #endif
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_DelCha(LPRPACKET pk)
-{T_B
+{
 	uShort	l_errno	=pk.ReadShort();
 	NetDelCha(l_errno);
 	return TRUE;
-T_E}
+}
 
 BOOL SC_CreatePassword2(LPRPACKET pk)
-{T_B
+{
 	uShort	l_errno	=pk.ReadShort();
 	NetCreatePassword2(l_errno);
 	return TRUE;
-T_E}
+}
 
 BOOL SC_UpdatePassword2(LPRPACKET pk)
-{T_B
+{
 	uShort	l_errno	=pk.ReadShort();
 	NetUpdatePassword2(l_errno);
 	return TRUE;
-T_E}
+}
 
 //mothannakh create account 
 BOOL PC_REGISTER(LPRPACKET pk){
@@ -435,15 +435,15 @@ BOOL PC_REGISTER(LPRPACKET pk){
 }
 
 BOOL	PC_Ping(LPRPACKET pk)
-{T_B
+{
 	WPacket l_wpk = g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_PING);
 	g_NetIF->SendPacketMessage(l_wpk);
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_Ping(LPRPACKET pk)
-{T_B
+{
 	{
 		auto const l = std::lock_guard{g_NetIF->m_mutmov};
 
@@ -462,19 +462,19 @@ BOOL	SC_Ping(LPRPACKET pk)
 	if(g_NetIF->m_curdelay < g_NetIF->m_mindelay) g_NetIF->m_mindelay = g_NetIF->m_curdelay;
 
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_CheckPing(LPRPACKET pk)
-{T_B
+{
 	WPacket wpk = g_NetIF->GetWPacket();
 	wpk.WriteCmd(CMD_CM_CHECK_PING);
 	g_NetIF->SendPacketMessage(wpk);
 
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_Say(LPRPACKET pk)
-{T_B
+{
 	uShort	 l_len;
 	stNetSay l_netsay;
 	l_netsay.m_srcid	=pk.ReadLong();
@@ -483,13 +483,13 @@ BOOL	SC_Say(LPRPACKET pk)
 	NetSay(l_netsay,dwColour);
 
 	return TRUE;
-T_E}
+}
 
 //--------------------
 // S->C : 
 //--------------------
 BOOL	SC_SysInfo(LPRPACKET pk)
-{T_B
+{
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
@@ -498,50 +498,50 @@ BOOL	SC_SysInfo(LPRPACKET pk)
 	l_sysinfo.m_sysinfo	=pk.ReadSequence(l_retlen);
 	NetSysInfo(l_sysinfo);
 	return TRUE;
-T_E}
+}
 
 BOOL GuildSysInfo = false;
 
 BOOL	SC_GuildInfo(LPRPACKET pk)
-{T_B
+{
 	uShort	l_retlen;
 	stNetSysInfo l_sysinfo;
 	l_sysinfo.m_sysinfo	=pk.ReadSequence(l_retlen);
 	GuildSysInfo = true;
 	NetSysInfo(l_sysinfo);
 	return TRUE;
-T_E}
+}
 
 BOOL SC_PopupNotice(LPRPACKET pk)
-{T_B
+{
 	uShort	l_retlen;
 	cChar *szNotice	= pk.ReadSequence(l_retlen);
 	g_pGameApp->MsgBox(szNotice);
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_BickerNotice( LPRPACKET pk )
-{T_B
+{
 	char szData[1024];
 	strncpy( szData, pk.ReadString(), 1024 - 1 );
 	NetBickerInfo( szData );
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_ColourNotice( LPRPACKET pk )
-{T_B
+{
 	char szData[1024];
 	unsigned int rgb = pk.ReadLong();
 	strncpy( szData, pk.ReadString(), 1024 - 1 );
 	NetColourInfo( rgb, szData );
 	return TRUE;
-T_E}
+}
 
 //------------------------------------
 // S->C : ()
 //------------------------------------
 BOOL SC_ChaBeginSee(LPRPACKET pk)
-{T_B
+{
 	stNetActorCreate SCreateInfo;
 	char	chSeeType = pk.ReadChar();
 
@@ -598,13 +598,13 @@ BOOL SC_ChaBeginSee(LPRPACKET pk)
 	NetSynSkillState(SCreateInfo.ulWorldID, &SCurSState);
 
 	return TRUE;
-T_E}
+}
 
 //------------------------------------
 // S->C : ()
 //------------------------------------
 BOOL	SC_ChaEndSee(LPRPACKET pk)
-{T_B
+{
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
@@ -615,13 +615,13 @@ BOOL	SC_ChaEndSee(LPRPACKET pk)
 		g_stUIStart.RemoveTarget();
 	}
 	// log
-	LG(g_LogName.GetLogName( l_id ), "+++++++++++++Destroy\n");
+	ToLogService(g_LogName.GetLogName( l_id ), "+++++++++++++Destroy");
 	//
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_ItemCreate(LPRPACKET pk)
-{T_B
+{
 	stNetItemCreate SCreateInfo;
 	memset(&SCreateInfo, 0, sizeof(SCreateInfo));
 	SCreateInfo.lWorldID = pk.ReadLong();	// world ID
@@ -641,22 +641,22 @@ BOOL	SC_ItemCreate(LPRPACKET pk)
 		return FALSE;
 
 	// log
-	LG("SC_Item", "CreateType = %d, WorldID:%u, ItemID = %d, Pos = [%d,%d], SrcID = %u, \n", SCreateInfo.chAppeType, SCreateInfo.lWorldID, SCreateInfo.lID, SCreateInfo.SPos.x, SCreateInfo.SPos.y, SCreateInfo.lFromID);
+	ToLogService("SC_Item", "CreateType = {}, WorldID:{}, ItemID = {}, Pos = [{},{}], SrcID = {}, ", SCreateInfo.chAppeType, SCreateInfo.lWorldID, SCreateInfo.lID, SCreateInfo.SPos.x, SCreateInfo.SPos.y, SCreateInfo.lFromID);
 	//
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_ItemDestroy(LPRPACKET pk)
-{T_B
+{
 	unsigned long lID = pk.ReadLong();				//ID
 
 	NetItemDisappear(lID);
-	LG("SC_Item", "Item Destroy[%u]\n", lID);
+	ToLogService("SC_Item", "Item Destroy[{}]", lID);
 	return TRUE;
-T_E}
+}
 
 BOOL SC_AStateBeginSee(LPRPACKET pk)
-{T_B
+{
 	stNetAreaState	SynAState;
 
 	char	chValidNum = 0;
@@ -680,17 +680,17 @@ BOOL SC_AStateBeginSee(LPRPACKET pk)
 	// log
 	const char* szLogName = g_LogName.GetMainLogName();
 
-	LG(szLogName, g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum);
+	ToLogService(szLogName, "{} {} {} {}", g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum);
 	for (char j = 0; j < SynAState.chStateNum; j++)
-		LG(szLogName, "\t%d\t%d\n", SynAState.State[j].chID, SynAState.State[j].chLv);
-	LG(szLogName, "\n");
+		ToLogService(szLogName, "\t{}\t{}", SynAState.State[j].chID, SynAState.State[j].chLv);
+	ToLogService(szLogName, "");
 	//
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_AStateEndSee(LPRPACKET pk)
-{T_B
+{
 	stNetAreaState	SynAState;
 
 	SynAState.sAreaX = pk.ReadShort();
@@ -699,15 +699,15 @@ BOOL SC_AStateEndSee(LPRPACKET pk)
 	NetAreaStateEndSee(&SynAState);
 
 	// log
-	LG(g_LogName.GetMainLogName(), g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, 0);
+	ToLogService(g_LogName.GetMainLogName(), "{} {} {} {}", g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, 0);
 	//
 
 	return TRUE;
-T_E}
+}
 
 // S->C : 
 BOOL SC_AddItemCha(LPRPACKET pk)
-{T_B
+{
 	long	lMainChaID = pk.ReadLong();
 	stNetActorCreate SCreateInfo;
 	ReadChaBasePacket(pk, SCreateInfo);
@@ -731,11 +731,11 @@ BOOL SC_AddItemCha(LPRPACKET pk)
 	NetSynSkillState(SCreateInfo.ulWorldID, &SCurSState);
 
 	return TRUE;
-T_E}
+}
 
 // S->C : 
 BOOL SC_DelItemCha(LPRPACKET pk)
-{T_B
+{
 	long	lMainChaID = pk.ReadLong();
 
 	char	chSeeType = enumENTITY_SEEN_NEW;
@@ -743,22 +743,22 @@ BOOL SC_DelItemCha(LPRPACKET pk)
 	NetActorDestroy( l_id, chSeeType );
 
 	return TRUE;
-T_E}
+}
 
 // 
 BOOL SC_Cha_Emotion(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 	uShort sEmotion = pk.ReadShort();
 
 	NetChaEmotion( l_id, sEmotion );
-	LG( g_LogName.GetLogName( l_id ), g_oLangRec.GetString(297), sEmotion );
+	ToLogService(g_LogName.GetLogName( l_id ), "{} {}", g_oLangRec.GetString(297), sEmotion);
 	return TRUE;
-T_E}
+}
 
 // S->C : 
 BOOL SC_CharacterAction(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 
 	const char* szLogName = g_LogName.GetLogName( l_id );
@@ -769,7 +769,7 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 #ifdef defPROTOCOL_HAVE_PACKETID
 		lPacketId = pk.ReadLong();
 #endif
-		LG(szLogName, "$$$PacketID:\t%u\n", lPacketId);
+		ToLogService(szLogName, "$$$PacketID:\t{}", lPacketId);
 
 		switch(pk.ReadChar())
 		{
@@ -787,8 +787,8 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 
 				// log
 				long lDistX, lDistY, lDist = 0;
-				LG(szLogName, "===Recieve(Move):\tTick:[%u]\n", GetTickCount());
-				LG(szLogName, "Point:\t%3d\n", SMoveInfo.nPointNum);
+				ToLogService(szLogName, "===Recieve(Move):\tTick:[{}]", GetTickCount());
+				ToLogService(szLogName, "Point:\t{:3}", SMoveInfo.nPointNum);
 				bool isMainCha = g_LogName.IsMainCha( l_id );
 				for (int i = 0; i < SMoveInfo.nPointNum; i++)
 				{
@@ -813,10 +813,10 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 						lDistY = SMoveInfo.SPos[i].y - SMoveInfo.SPos[i - 1].y;
 						lDist = (long)sqrt((double)lDistX * lDistX + lDistY * lDistY);
 					}
-					LG(szLogName, "\t%d, %d\t%d\n", SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, lDist);
+					ToLogService(szLogName, "\t{}, {}\t{}", SMoveInfo.SPos[i].x, SMoveInfo.SPos[i].y, lDist);
 				}
 				if (SMoveInfo.sState)
-					LG(szLogName, "@@@End Move\tState:0x%x\n", SMoveInfo.sState);
+					ToLogService(szLogName, "@@@End Move\tState:0x{:x}", SMoveInfo.sState);
 
 
 #ifdef _TEST_CLIENT
@@ -833,10 +833,10 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 					{
 						lDist = (pCMainCha->GetCurX() - SMoveInfo.SPos[SMoveInfo.nPointNum - 1].x) * (pCMainCha->GetCurX() - SMoveInfo.SPos[SMoveInfo.nPointNum - 1].x)
 							+ (pCMainCha->GetCurY() - SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y) * (pCMainCha->GetCurY() - SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y);
-						LG(szLogName, "++++++++++++++Distance: %d\n", (long)sqrt(double(lDist)));
+						ToLogService(szLogName, "++++++++++++++Distance: {}", (long)sqrt(double(lDist)));
 					}
 				}
-				LG(szLogName, "\n");
+				ToLogService(szLogName, "");
 				//
 
 				
@@ -904,20 +904,20 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 				}
 
 				// log
-				LG(szLogName, "===Recieve(Skill Represent):\tTick:[%u]\n", GetTickCount());
-				LG(szLogName, "Angle:\t%d\tFightID:%d\n", SSkillInfo.sAngle, SSkillInfo.byFightID );
-				LG(szLogName, "SkillID:\t%u\tSkillSpeed:%d\n", SSkillInfo.lSkillID, SSkillInfo.lSkillSpeed);
-					LG(szLogName, "TargetInfo(ID, PosX, PosY):\t%d\n", SSkillInfo.lTargetID, SSkillInfo.STargetPoint.x, SSkillInfo.STargetPoint.y);
-				LG(szLogName, "Effect:[ID, Value]\n");
+				ToLogService(szLogName, "===Recieve(Skill Represent):\tTick:[{}]", GetTickCount());
+				ToLogService(szLogName, "Angle:\t{}\tFightID:{}", SSkillInfo.sAngle, SSkillInfo.byFightID );
+				ToLogService(szLogName, "SkillID:\t{}\tSkillSpeed:{}", SSkillInfo.lSkillID, SSkillInfo.lSkillSpeed);
+					ToLogService(szLogName, "TargetInfo(ID, PosX, PosY):\t{} {} {}", SSkillInfo.lTargetID, SSkillInfo.STargetPoint.x, SSkillInfo.STargetPoint.y);
+				ToLogService(szLogName, "Effect:[ID, Value]");
 				for (DWORD i = 0; i < SSkillInfo.SEffect.GetCount(); i++)
-					LG(szLogName, "\t%d,\t%d\n", SSkillInfo.SEffect[i].lAttrID, SSkillInfo.SEffect[i].lVal);
+					ToLogService(szLogName, "\t{},\t{}", SSkillInfo.SEffect[i].lAttrID, SSkillInfo.SEffect[i].lVal);
 				if (SSkillInfo.SState.GetCount() > 0)
-					LG(szLogName, "Skill State:[ID, LV]\n");
+					ToLogService(szLogName, "Skill State:[ID, LV]");
 				for (DWORD chNum = 0; chNum < SSkillInfo.SState.GetCount(); chNum++)
-					LG(szLogName, "\t%d, %d\n", SSkillInfo.SState[chNum].chID, SSkillInfo.SState[chNum].chLv);
+					ToLogService(szLogName, "\t{}, {}", SSkillInfo.SState[chNum].chID, SSkillInfo.SState[chNum].chLv);
 				if (SSkillInfo.sState)
-					LG(szLogName, "@@@End Skill\tState:0x%x\n", SSkillInfo.sState);
-				LG(szLogName, "\n");
+					ToLogService(szLogName, "@@@End Skill\tState:0x{:x}", SSkillInfo.sState);
+				ToLogService(szLogName, "");
 				//
 
 				NetActorSkillRep(l_id, SSkillInfo);
@@ -1047,10 +1047,10 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 				}
 
 				// log
-				LG(szLogName, "===Recieve(Lean):\tTick:[%u]\n", GetTickCount());
+				ToLogService(szLogName, "===Recieve(Lean):\tTick:[{}]", GetTickCount());
 				if (SLean.chState)
-					LG(szLogName, "@@@End Lean\tState:%d\n", SLean.chState);
-				LG(szLogName, "\n");
+					ToLogService(szLogName, "@@@End Lean\tState:{}", SLean.chState);
+				ToLogService(szLogName, "");
 				//
 
 				NetActorLean(l_id, SLean);
@@ -1126,9 +1126,9 @@ BOOL SC_CharacterAction(LPRPACKET pk)
                 NetFace( l_id, SNetFace, enumACTION_FACE );
 
 				// log
-				LG(szLogName, "===Recieve(Face):\tTick:[%u]\n", GetTickCount());
-				LG(szLogName, "Angle[%d]\tPose[%d]\n", SNetFace.sAngle, SNetFace.sPose);
-				LG(szLogName, "\n");
+				ToLogService(szLogName, "===Recieve(Face):\tTick:[{}]", GetTickCount());
+				ToLogService(szLogName, "Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose);
+				ToLogService(szLogName, "");
 				//
 
 			}
@@ -1141,9 +1141,9 @@ BOOL SC_CharacterAction(LPRPACKET pk)
                 NetFace( l_id, SNetFace, enumACTION_SKILL_POSE );
 
 				// log
-				LG(szLogName, "===Recieve(Skill Pos):\tTick:[%u]\n", GetTickCount());
-				LG(szLogName, "Angle[%d]\tPose[%d]\n", SNetFace.sAngle, SNetFace.sPose);
-				LG(szLogName, "\n");
+				ToLogService(szLogName, "===Recieve(Skill Pos):\tTick:[{}]", GetTickCount());
+				ToLogService(szLogName, "Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose);
+				ToLogService(szLogName, "");
 				//
 
 			}
@@ -1198,11 +1198,11 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 	//}
 
 	return TRUE;
-T_E}
+}
 
 // S->C : 
 BOOL SC_FailedAction(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 
 	char	chType, chReason;
@@ -1210,11 +1210,11 @@ BOOL SC_FailedAction(LPRPACKET pk)
 	chReason = pk.ReadChar();
     NetFailedAction( chReason );    
 	return TRUE;
-T_E}
+}
 
 // 
 BOOL SC_SynAttribute(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 
@@ -1229,11 +1229,11 @@ BOOL SC_SynAttribute(LPRPACKET pk)
 	NetSynAttr(l_id, SChaAttr.chType, SChaAttr.sNum, SChaAttr.SEff );
 
 	return TRUE;
-T_E}
+}
 
 // 
 BOOL SC_SynSkillBag(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 
@@ -1242,20 +1242,20 @@ BOOL SC_SynSkillBag(LPRPACKET pk)
 		NetSynSkillBag(l_id, &SCurSkill);
 
 	return TRUE;
-T_E}
+}
 
 // 
 BOOL SC_SynDefaultSkill(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 	stNetDefaultSkill	SDefaultSkill;
 	SDefaultSkill.sSkillID = pk.ReadShort();
 	SDefaultSkill.Exec();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SynSkillState(LPRPACKET pk)
-{T_B
+{
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
@@ -1268,10 +1268,10 @@ BOOL SC_SynSkillState(LPRPACKET pk)
 	NetSynSkillState(l_id, &SCurSState);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SynTeam(LPRPACKET pk)
-{T_B
+{
 	stNetTeamState	STeamState;
 
 	STeamState.ulID = pk.ReadLong();
@@ -1281,7 +1281,7 @@ BOOL SC_SynTeam(LPRPACKET pk)
     STeamState.lMaxSP = pk.ReadLong();
 	STeamState.lLV = pk.ReadLong();
 
-    LG( "Team", "Refresh, ID[%u], HP[%d], MaxHP[%d], SP[%d], MaxSP[%d], LV[%d]\n", STeamState.ulID, STeamState.lHP, STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV );
+    ToLogService( "Team", "Refresh, ID[{}], HP[{}], MaxHP[{}], SP[{}], MaxSP[{}], LV[{}]", STeamState.ulID, STeamState.lHP, STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV );
 
 	stNetLookInfo SLookInfo;
 	ReadChaLookPacket(pk, SLookInfo, const_cast<char*>(g_oLangRec.GetString(299)));
@@ -1299,24 +1299,24 @@ BOOL SC_SynTeam(LPRPACKET pk)
 	NetSynTeam(&STeamState);
 
 	return true;
-T_E}
+}
 
 BOOL SC_SynTLeaderID(LPRPACKET pk)
-{T_B
+{
 	long	lID = pk.ReadLong();
 	long	lLeaderID = pk.ReadLong();
 
 	NetChaTLeaderID(lID, lLeaderID);
 
 	// log
-	LG(g_LogName.GetLogName( lID ), g_oLangRec.GetString(300), lLeaderID, lID);
+	ToLogService(g_LogName.GetLogName( lID ), "{} {} {}", g_oLangRec.GetString(300), lLeaderID, lID);
 	//
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_HelpInfo( LPRPACKET packet )
-{T_B
+{
 	NET_HELPINFO Info;
 	memset( &Info, 0, sizeof(NET_HELPINFO) );
 
@@ -1338,11 +1338,11 @@ BOOL SC_HelpInfo( LPRPACKET packet )
 
 	NetShowHelp( Info );
 	return TRUE;
-T_E}
+}
 
 // NPC 
 BOOL SC_TalkInfo( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	BYTE byCmd = packet.ReadChar();
 	USHORT sLen = 0;
@@ -1350,10 +1350,10 @@ BOOL SC_TalkInfo( LPRPACKET packet )
 	if( pszDesp == NULL ) return FALSE;
 	NetShowTalk( pszDesp, byCmd, dwNpcID  );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_FuncInfo( LPRPACKET packet )
-{T_B
+{
 	NET_FUNCPAGE FuncPage;
 	memset( &FuncPage, 0, sizeof(NET_FUNCPAGE) );
 
@@ -1381,17 +1381,17 @@ BOOL SC_FuncInfo( LPRPACKET packet )
 
 	NetShowFunction( byPage, byCount, byMisCount, FuncPage, dwNpcID );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_CloseTalk( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	NetCloseTalk( dwNpcID );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TradeData( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	BYTE byPage = packet.ReadChar();
 	BYTE byIndex = packet.ReadChar();
@@ -1401,10 +1401,10 @@ BOOL SC_TradeData( LPRPACKET packet )
 
 	NetUpdateTradeData( dwNpcID, byPage, byIndex, sItemID, sCount, dwPrice );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TradeAllData( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	BYTE  byType = packet.ReadChar();
 	DWORD dwParam = packet.ReadLong();
@@ -1443,10 +1443,10 @@ BOOL SC_TradeAllData( LPRPACKET packet )
 	}
 	NetUpdateTradeAllData( Info, byType, dwNpcID, dwParam );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TradeInfo( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	BYTE  byType = packet.ReadChar();
 	DWORD dwParam = packet.ReadLong();
@@ -1485,10 +1485,10 @@ BOOL SC_TradeInfo( LPRPACKET packet )
 	}
 	NetShowTrade( Info, byType, dwNpcID, dwParam );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TradeUpdate( LPRPACKET packet )
-{T_B
+{
 	//,
 
 	DWORD dwNpcID = packet.ReadLong();
@@ -1534,23 +1534,23 @@ BOOL SC_TradeUpdate( LPRPACKET packet )
 	}
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TradeResult( LPRPACKET packet )
-{T_B
+{
 	BYTE byType = packet.ReadChar();
 	BYTE byIndex = packet.ReadChar();
 	BYTE byCount = packet.ReadChar();
 	USHORT sItemID = packet.ReadShort();
 	DWORD  dwMoney  = packet.ReadLong();
-	LG("trade", g_oLangRec.GetString(301), byType, byIndex, byCount, sItemID, dwMoney);
+	ToLogService("trade", "{} {} {} {} {} {}", g_oLangRec.GetString(301), byType, byIndex, byCount, sItemID, dwMoney);
 	  NetTradeResult( byType, byIndex, byCount, sItemID, dwMoney );
-	LG("trade", g_oLangRec.GetString(302));
+	ToLogService("trade", "{}", g_oLangRec.GetString(302));
 	return TRUE;
-T_E}
+}
 
 BOOL SC_CharTradeInfo( LPRPACKET packet )
-{T_B
+{
 	USHORT usCmd = packet.ReadShort();
 	switch( usCmd )
 	{
@@ -1714,30 +1714,30 @@ BOOL SC_CharTradeInfo( LPRPACKET packet )
 		break;
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL SC_DailyBuffInfo(LPRPACKET packet)
 {
-	T_B
+
 		const auto imgName = packet.ReadString();
 	if (!imgName)
 	{
-		LG("DailyBuffInfo","Error invalid reading image name \n");
+		ToLogService("DailyBuffInfo","Error invalid reading image name");
 		return FALSE;
 	}
 	const auto labelInfo = packet.ReadString();
 	if (!labelInfo)
 	{
-		LG("DailyBuffInfo", "Error invalid reading labelInfo  \n");
+		ToLogService("DailyBuffInfo", "Error invalid reading labelInfo");
 		return FALSE;
 	}
 	//show the form 
 	g_stUIMap.SetupDailyBuffForm(imgName, labelInfo);
 		return TRUE;
-	T_E
+
 }
 BOOL SC_MissionInfo( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	NET_MISSIONLIST list;
 	memset( &list, 0, sizeof(NET_MISSIONLIST) );
@@ -1759,10 +1759,10 @@ BOOL SC_MissionInfo( LPRPACKET packet )
 
 	NetShowMissionList( dwNpcID, list );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MisPage( LPRPACKET packet )
-{T_B
+{
 	BYTE byCmd = packet.ReadChar();
 	DWORD dwNpcID = packet.ReadLong();
 	NET_MISPAGE page;
@@ -1797,7 +1797,7 @@ BOOL SC_MisPage( LPRPACKET packet )
 				else
 				{
 					// 
-					LG( "mission_error", g_oLangRec.GetString(304));
+					ToLogService( "mission_error", "{}", g_oLangRec.GetString(304));
 					return FALSE;
 				}
 			}
@@ -1823,10 +1823,10 @@ BOOL SC_MisPage( LPRPACKET packet )
 
 	NetShowMisPage( dwNpcID, byCmd, page );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MisLog( LPRPACKET packet )
-{T_B
+{
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
@@ -1842,10 +1842,10 @@ BOOL SC_MisLog( LPRPACKET packet )
 
 	NetMisLogList( LogList );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MisLogInfo( LPRPACKET packet )
-{T_B
+{
 	NET_MISPAGE page;
 	memset( &page, 0,sizeof(NET_MISPAGE) );
 
@@ -1873,7 +1873,7 @@ BOOL SC_MisLogInfo( LPRPACKET packet )
 		else
 		{
 			// 
-			LG( "mission_error", g_oLangRec.GetString(304));
+			ToLogService( "mission_error", "{}", g_oLangRec.GetString(304));
 			return FALSE;
 		}
 	}
@@ -1894,36 +1894,36 @@ BOOL SC_MisLogInfo( LPRPACKET packet )
 
 	NetShowMisLog( wMisID, page );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MisLogClear( LPRPACKET packet )
-{T_B
+{
 	WORD wMisID  = packet.ReadShort();
 
 	NetMisLogClear( wMisID );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MisLogAdd( LPRPACKET packet )
-{T_B
+{
 	WORD wMisID  = packet.ReadShort();
 	BYTE byState = packet.ReadChar();
 
 	NetMisLogAdd( wMisID, byState );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MisLogState( LPRPACKET packet )
-{T_B
+{
 	WORD wID = packet.ReadShort();
 	BYTE byState = packet.ReadChar();
 
 	NetMisLogState( wID, byState );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TriggerAction( LPRPACKET packet )
-{T_B
+{
     stNetNpcMission info;
     info.byType = packet.ReadChar();	
 	info.sID = packet.ReadShort();		// ID
@@ -1931,113 +1931,113 @@ BOOL SC_TriggerAction( LPRPACKET packet )
 	info.sCount = packet.ReadShort();	// 
     NetTriggerAction( info );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_NpcStateChange( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	BYTE  byState = packet.ReadChar();
 	NetNpcStateChange( dwNpcID, byState );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_EntityStateChange( LPRPACKET packet )
-{T_B
+{
 	DWORD dwEntityID = packet.ReadLong();
 	BYTE byState = packet.ReadChar();
 	NetEntityStateChange( dwEntityID, byState );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Forge( LPRPACKET packet )
-{T_B
+{
 	NetShowForge();
 	return TRUE;
-T_E}
+}
 
 
 BOOL SC_Unite( LPRPACKET packet )
-{T_B
+{
 	NetShowUnite();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Milling( LPRPACKET packet )
-{T_B
+{
 	NetShowMilling();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Fusion( LPRPACKET packet )
-{T_B
+{
 	NetShowFusion();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Upgrade( LPRPACKET packet )
-{T_B
+{
 	NetShowUpgrade();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_EidolonMetempsychosis( LPRPACKET packet )
-{T_B
+{
 	//NetShowEidolonMetempsychosis();
 	NetShowEidolonFusion();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Eidolon_Fusion(LPRPACKET packet)
-{T_B
+{
 	NetShowEidolonFusion();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Purify(LPRPACKET packet)
-{T_B
+{
 	NetShowPurify();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Fix(LPRPACKET packet)
-{T_B
+{
 	NetShowRepairOven();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_GMSend(LPRPACKET packet)
-{T_B
+{
 	g_stUIMail.ShowQuestionForm();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_GMRecv(LPRPACKET packet)
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	CS_GMRecv(dwNpcID);
 	return TRUE;
-T_E}
+}
 
 BOOL SC_GetStone(LPRPACKET packet)
-{T_B
+{
 	NetShowGetStone();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Energy(LPRPACKET packet)
-{T_B
+{
 	NetShowEnergy();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_Tiger(LPRPACKET packet)
-{T_B
+{
 	NetShowTiger();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_CreateBoat( LPRPACKET packet )
-{T_B
+{
 	DWORD dwBoatID = packet.ReadLong();
 	xShipBuildInfo Info;
 	memset( &Info, 0, sizeof(xShipBuildInfo) );
@@ -2088,10 +2088,10 @@ BOOL SC_CreateBoat( LPRPACKET packet )
 
 	NetCreateBoat( Info );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_UpdateBoat( LPRPACKET packet )
-{T_B
+{
 	DWORD dwBoatID = packet.ReadLong();
 	xShipBuildInfo Info;
 	memset( &Info, 0, sizeof(xShipBuildInfo) );
@@ -2142,10 +2142,10 @@ BOOL SC_UpdateBoat( LPRPACKET packet )
 
 	NetUpdateBoat( Info );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_BoatInfo( LPRPACKET packet )
-{T_B
+{
 	DWORD dwBoatID = packet.ReadLong();
 	xShipBuildInfo Info;
 	memset( &Info, 0, sizeof(xShipBuildInfo) );
@@ -2196,15 +2196,15 @@ BOOL SC_BoatInfo( LPRPACKET packet )
 
 	NetBoatInfo( dwBoatID, szBoat, Info );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_UpdateBoatPart( LPRPACKET packet )
-{T_B
+{
 	return TRUE;
-T_E}
+}
 
 BOOL SC_BoatList( LPRPACKET packet )
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	BYTE byType = packet.ReadChar();
 	BYTE byNumBoat = packet.ReadChar();
@@ -2217,7 +2217,7 @@ BOOL SC_BoatList( LPRPACKET packet )
 
 	NetShowBoatList( dwNpcID, byNumBoat, Data, byType );
 	return TRUE;
-T_E}
+}
 
 //BOOL	SC_BoatBagList( LPRPACKET packet )
 //{
@@ -2234,7 +2234,7 @@ T_E}
 //}
 
 BOOL SC_StallInfo( LPRPACKET packet )
-{T_B
+{
 	DWORD dwCharID = packet.ReadLong();
 	BYTE byNum = packet.ReadChar();
 	const char* pszName = packet.ReadString();
@@ -2313,83 +2313,83 @@ BOOL SC_StallInfo( LPRPACKET packet )
 		}
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StallUpdateInfo( LPRPACKET packet )
-{T_B
+{
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StallDelGoods( LPRPACKET packet )
-{T_B
+{
 	DWORD dwCharID = packet.ReadLong();
 	BYTE byGrid = packet.ReadChar();
 	BYTE byCount = packet.ReadChar();
 	NetStallDelGoods( dwCharID, byGrid, byCount );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StallClose( LPRPACKET packet )
-{T_B
+{
 	DWORD dwCharID = packet.ReadLong();
 	NetStallClose( dwCharID );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StallSuccess( LPRPACKET packet )
-{T_B
+{
 	DWORD dwCharID = packet.ReadLong();
 	NetStallSuccess( dwCharID );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SynStallName(LPRPACKET packet)
-{T_B
+{
 	DWORD dwCharID = packet.ReadLong();
 	const char	*szStallName = packet.ReadString();
 	NetStallName( dwCharID, szStallName );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StartExit( LPRPACKET packet )
-{T_B
+{
 	DWORD dwExitTime = packet.ReadLong();
 	NetStartExit( dwExitTime );
 	return TRUE;
-T_E}
+}
 
 BOOL SC_CancelExit( LPRPACKET packet )
-{T_B
+{
 	NetCancelExit();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_UpdateHairRes( LPRPACKET packet )
-{T_B
+{
 	stNetUpdateHairRes rv;
 	rv.ulWorldID = packet.ReadLong();
 	rv.nScriptID = packet.ReadShort();
 	rv.szReason = packet.ReadString();
 	rv.Exec();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_OpenHairCut( LPRPACKET packet )
-{T_B
+{
 	stNetOpenHair hair;
 	hair.Exec();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TeamFightAsk(LPRPACKET packet)
-{T_B
+{
 	char szLogName[128] = {0};
 	strcpy(szLogName, g_oLangRec.GetString(305));
 
 	stNetTeamFightAsk SFightAsk;
 	SFightAsk.chSideNum2 = packet.ReverseReadChar();
 	SFightAsk.chSideNum1 = packet.ReverseReadChar();
-	LG(szLogName, g_oLangRec.GetString(306), SFightAsk.chSideNum1, SFightAsk.chSideNum2);
+	ToLogService(szLogName, "{} {} {}", g_oLangRec.GetString(306), SFightAsk.chSideNum1, SFightAsk.chSideNum2);
 	for (char i = 0; i < SFightAsk.chSideNum1 + SFightAsk.chSideNum2; i++)
 	{
 		SFightAsk.Info[i].szName = packet.ReadString();
@@ -2397,41 +2397,41 @@ BOOL SC_TeamFightAsk(LPRPACKET packet)
 		SFightAsk.Info[i].szJob = packet.ReadString();
 		SFightAsk.Info[i].usFightNum = packet.ReadShort();
 		SFightAsk.Info[i].usVictoryNum = packet.ReadShort();
-		LG(szLogName, g_oLangRec.GetString(307), SFightAsk.Info[i].szName, SFightAsk.Info[i].chLv, SFightAsk.Info[i].szJob);
+		ToLogService(szLogName, "{} {} {} {}", g_oLangRec.GetString(307), SFightAsk.Info[i].szName, SFightAsk.Info[i].chLv, SFightAsk.Info[i].szJob);
 	}
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "");
 	SFightAsk.Exec();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_BeginItemRepair(LPRPACKET packet)
-{T_B
+{
 	NetBeginRepairItem();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_ItemRepairAsk(LPRPACKET packet)
-{T_B
+{
 	stNetItemRepairAsk	SRepairAsk;
 	SRepairAsk.cszItemName = packet.ReadString();
 	SRepairAsk.lRepairMoney = packet.ReadLong();
 	SRepairAsk.Exec();
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_ItemForgeAsk(LPRPACKET packet)
-{T_B
+{
 	stSCNetItemForgeAsk	SForgeAsk;
 	SForgeAsk.chType = packet.ReadChar();
 	SForgeAsk.lMoney = packet.ReadLong();
 	SForgeAsk.Exec();
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_ItemForgeAnswer(LPRPACKET packet)
-{T_B
+{
 	stNetItemForgeAnswer	SForgeAnswer;
 	SForgeAnswer.lChaID = packet.ReadLong();
 	SForgeAnswer.chType = packet.ReadChar();
@@ -2439,28 +2439,28 @@ BOOL SC_ItemForgeAnswer(LPRPACKET packet)
 	SForgeAnswer.Exec();
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_ItemUseSuc(LPRPACKET packet)
-{T_B
+{
 	unsigned int nChaID = packet.ReadLong();
 	short sItemID = packet.ReadShort();
 	NetItemUseSuccess(nChaID, sItemID);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_KitbagCapacity(LPRPACKET packet)
-{T_B
+{
 	unsigned int nChaID = packet.ReadLong();
 	short sKbCap = packet.ReadShort();
 	NetKitbagCapacity(nChaID, sKbCap);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_EspeItem(LPRPACKET packet)
-{T_B
+{
 	stNetEspeItem	SEspItem;
 	unsigned int nChaID = packet.ReadLong();
 	SEspItem.chNum = packet.ReadChar();
@@ -2475,20 +2475,20 @@ BOOL SC_EspeItem(LPRPACKET packet)
 
 	NetEspeItem( nChaID, SEspItem );
 	return TRUE;
-T_E}
+}
 
 BOOL   SC_MapCrash(LPRPACKET packet)
-{T_B
+{
 	const char* pszDesp = packet.ReadString();
 	if( pszDesp == NULL ) 
 		return FALSE;
 
 	NetShowMapCrash(pszDesp);
 	return TRUE;
-T_E}
+}
 
 BOOL	SC_Message(LPRPACKET pk)
-{T_B
+{
 	/*
 	uLong l_id = pk.ReadLong();
 
@@ -2503,10 +2503,10 @@ BOOL	SC_Message(LPRPACKET pk)
 	return TRUE;
 
 
-T_E}
+}
 
 BOOL SC_QueryCha(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 
 	stNetSysInfo	SShowInfo;
@@ -2521,17 +2521,17 @@ BOOL SC_QueryCha(LPRPACKET pk)
 	NetSysInfo(SShowInfo);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_QueryChaItem(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_QueryChaPing(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 
 	stNetSysInfo	SShowInfo;
@@ -2544,10 +2544,10 @@ BOOL SC_QueryChaPing(LPRPACKET pk)
 	NetSysInfo(SShowInfo);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_QueryRelive(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 
 	stNetQueryRelive SQueryRelive;
@@ -2556,18 +2556,18 @@ BOOL SC_QueryRelive(LPRPACKET pk)
 	NetQueryRelive(l_id, SQueryRelive);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_PreMoveTime(LPRPACKET pk)
-{T_B
+{
 	uLong ulPreMoveTime = pk.ReadLong();
 	NetPreMoveTime(ulPreMoveTime);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_MapMask(LPRPACKET pk)
-{T_B
+{
 	uLong	l_id = pk.ReadLong();
 	uShort	usLen = 0;
 	BYTE	*pMapMask = 0;
@@ -2582,19 +2582,19 @@ BOOL SC_MapMask(LPRPACKET pk)
 	NetMapMask(l_id, pMapMask, usLen);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SynEventInfo(LPRPACKET pk)
-{T_B
+{
 	stNetEvent	SNetEvent;
 	ReadEntEventPacket(pk, SNetEvent);
 	
 	SNetEvent.ChangeEvent();
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SynSideInfo(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 	stNetChaSideInfo	SNetSideInfo;
@@ -2602,10 +2602,10 @@ BOOL SC_SynSideInfo(LPRPACKET pk)
 	NetChaSideInfo(l_id, SNetSideInfo);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SynAppendLook(LPRPACKET pk)
-{T_B
+{
 	uLong l_id = pk.ReadLong();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 	stNetAppendLook	SNetAppendLook;
@@ -2613,18 +2613,18 @@ BOOL SC_SynAppendLook(LPRPACKET pk)
 	SNetAppendLook.Exec(l_id);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_KitbagCheckAnswer(LPRPACKET packet)
-{T_B
+{
 	bool bLock = packet.ReadChar() ? true : false;
 	NetKitbagCheckAnswer(bLock);
 
     return TRUE;
-T_E}
+}
 
 BOOL SC_StoreOpenAnswer(LPRPACKET packet)
-{T_B
+{
 	bool bValid = packet.ReadChar() ? true : false; // 
 	if(bValid)
 	{
@@ -2686,10 +2686,10 @@ BOOL SC_StoreOpenAnswer(LPRPACKET packet)
 	g_stUIStore.ShowStoreLoad(false);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StoreListAnswer(LPRPACKET packet)
-{T_B
+{
 	g_stUIStore.ClearStoreItemList();
 
 	short sPageNum = packet.ReadShort(); // 
@@ -2737,10 +2737,10 @@ BOOL SC_StoreListAnswer(LPRPACKET packet)
 	g_stUIStore.SetStoreItemPage(sPageCur, sPageNum);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StoreBuyAnswer(LPRPACKET packet)
-{T_B
+{
 	bool bSucc = packet.ReadChar() ? true : false; // 
 	long lMoBean = 0;
 	long lRplMoney = 0;
@@ -2761,10 +2761,10 @@ BOOL SC_StoreBuyAnswer(LPRPACKET packet)
 
 	g_stUIStore.SetStoreBuyButtonEnable(true);
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StoreChangeAnswer(LPRPACKET packet)
-{T_B
+{
 	bool bSucc = packet.ReadChar() ? true : false; // 
 	if(bSucc)
 	{
@@ -2778,10 +2778,10 @@ BOOL SC_StoreChangeAnswer(LPRPACKET packet)
 		g_pGameApp->MsgBox(g_oLangRec.GetString(908));	// !
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StoreHistory(LPRPACKET packet)
-{T_B
+{
 	long lNum = packet.ReadLong(); // 
 	int i;
 	for(i = 0; i < lNum; i++)
@@ -2793,10 +2793,10 @@ BOOL SC_StoreHistory(LPRPACKET packet)
 		long lMoney = packet.ReadLong(); // 
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL SC_ActInfo(LPRPACKET packet)
-{T_B
+{
 	bool bSucc = packet.ReadChar() ? true : false; // 
 	if(bSucc)
 	{
@@ -2804,10 +2804,10 @@ BOOL SC_ActInfo(LPRPACKET packet)
 		long lRplMoney = packet.ReadLong(); // 
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL SC_StoreVIP(LPRPACKET packet)
-{T_B
+{
 	bool bSucc = packet.ReadChar() ? true : false;
 	if(bSucc)
 	{
@@ -2820,10 +2820,10 @@ BOOL SC_StoreVIP(LPRPACKET packet)
 		g_stUIStore.SetStoreMoney(lModou, lShuijing);
 	}
 	return TRUE;
-T_E}
+}
 
 BOOL SC_BlackMarketExchangeData(LPRPACKET packet)
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	g_stUIBlackTrade.SetNpcID(dwNpcID);
 
@@ -2846,10 +2846,10 @@ BOOL SC_BlackMarketExchangeData(LPRPACKET packet)
 	g_stUIBlackTrade.ShowBlackTradeForm(true);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_ExchangeData(LPRPACKET packet)
-{T_B
+{
 	DWORD dwNpcID = packet.ReadLong();
 	g_stUIBlackTrade.SetNpcID(dwNpcID);
 
@@ -2873,10 +2873,10 @@ BOOL SC_ExchangeData(LPRPACKET packet)
 	g_stUIBlackTrade.ShowBlackTradeForm(true);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_BlackMarketExchangeUpdate(LPRPACKET packet)
-{T_B
+{
 	//,!!!
 
 	DWORD dwNpcID = packet.ReadLong();
@@ -2909,10 +2909,10 @@ BOOL SC_BlackMarketExchangeUpdate(LPRPACKET packet)
 	}
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_BlackMarketExchangeAsr(LPRPACKET packet)
-{T_B
+{
 	bool bSucc = (packet.ReadChar() == 1) ? true : false;
 	if(bSucc)
 	{
@@ -2928,10 +2928,10 @@ BOOL SC_BlackMarketExchangeAsr(LPRPACKET packet)
 	}
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_TigerItemID(LPRPACKET packet)
-{T_B
+{
 	short sNum = packet.ReadShort();	// 
 	short sItemID[3] = {0};
 
@@ -2949,10 +2949,10 @@ BOOL SC_TigerItemID(LPRPACKET packet)
 	}
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_VolunteerList(LPRPACKET packet)
-{T_B
+{
 	short sPageNum = packet.ReadShort();	//
 	short sPage = packet.ReadShort();		//
 	short sRetNum = packet.ReadShort();		//
@@ -2971,18 +2971,18 @@ BOOL SC_VolunteerList(LPRPACKET packet)
 	}
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_VolunteerState(LPRPACKET packet)
-{T_B
+{
 	bool bState = (packet.ReadChar() == 0) ? false : true;
 	g_stUIFindTeam.SetOwnFindTeamState(bState);
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_VolunteerOpen(LPRPACKET packet)
-{T_B
+{
 	bool bState = (packet.ReadChar() == 0) ? false : true;
 	short sPageNum = packet.ReadShort();	//
 	short sRetNum = packet.ReadShort();		//
@@ -3004,15 +3004,15 @@ BOOL SC_VolunteerOpen(LPRPACKET packet)
 	g_stUIFindTeam.ShowFindTeamForm();
 
 	return TRUE;
-T_E}
+}
 
 BOOL SC_VolunteerAsk(LPRPACKET packet)
-{T_B
+{
 	const char *szName = packet.ReadString();
 	g_stUIFindTeam.FindTeamAsk(szName);
 	
 	return TRUE;
-T_E}
+}
 
 BOOL SC_SyncKitbagTemp(LPRPACKET packet)
 {
@@ -3338,7 +3338,7 @@ BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
 
 // =======================================================================
 void ReadChaBasePacket(LPRPACKET pk, stNetActorCreate &SCreateInfo)
-{T_B
+{
 	// 
 	SCreateInfo.ulChaID		= pk.ReadLong();
 	SCreateInfo.ulWorldID	= pk.ReadLong();
@@ -3371,13 +3371,13 @@ void ReadChaBasePacket(LPRPACKET pk, stNetActorCreate &SCreateInfo)
 	ReadChaPKPacket(pk, SCreateInfo.SPKCtrl, szLogName);
 	ReadChaAppendLookPacket(pk, SCreateInfo.SAppendLook, szLogName);
 
-	LG(szLogName, "+++++++++++++Create(State: %u\tPos: [%d, %d]\n", SCreateInfo.sState, SCreateInfo.SArea.centre.x, SCreateInfo.SArea.centre.y);
-	LG(szLogName, "CtrlType:%d, TeamdID:%u\n", SCreateInfo.chCtrlType, SCreateInfo.ulTLeaderID );
+	ToLogService(szLogName, "+++++++++++++Create(State: {}\tPos: [{}, {}]", SCreateInfo.sState, SCreateInfo.SArea.centre.x, SCreateInfo.SArea.centre.y);
+	ToLogService(szLogName, "CtrlType:{}, TeamdID:{}", SCreateInfo.chCtrlType, SCreateInfo.ulTLeaderID );
 
-T_E}
+}
 
 BOOL ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag &SCurSkill, const char *szLogName)
-{T_B
+{
 	memset(&SCurSkill, 0, sizeof(SCurSkill));
 	stNetDefaultSkill	SDefaultSkill;
 	SDefaultSkill.sSkillID = pk.ReadShort();
@@ -3407,8 +3407,8 @@ BOOL ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag &SCurSkill, const char *s
 	}
 
 	// log
-	LG(szLogName, "Syn Skill Bag, Type:%d,\tTick:[%u]\n", SCurSkill.chType, GetTickCount());
-	LG(szLogName, g_oLangRec.GetString(310));
+	ToLogService(szLogName, "Syn Skill Bag, Type:{},\tTick:[{}]", SCurSkill.chType, GetTickCount());
+	ToLogService(szLogName, "{}", g_oLangRec.GetString(310));
 	char	szRange[256];
 	for (i = 0; i < sSkillNum; i++)
 	{
@@ -3416,16 +3416,16 @@ BOOL ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag &SCurSkill, const char *s
 		if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
 			for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
 				sprintf(szRange + strlen(szRange), ",%d", pSBag[i].sRange[j]);
-		LG(szLogName, "\t%4d\t%4d\t%4d\t%6d\t%6d\t%6d\t%18d\t%s\n", pSBag[i].sID, pSBag[i].chState, pSBag[i].chLv, pSBag[i].sUseSP, pSBag[i].sUseEndure, pSBag[i].sUseEnergy, pSBag[i].lResumeTime, szRange);
+		ToLogService(szLogName, "\t{:4}\t{:4}\t{:4}\t{:6}\t{:6}\t{:6}\t{:18}\t{}", pSBag[i].sID, pSBag[i].chState, pSBag[i].chLv, pSBag[i].sUseSP, pSBag[i].sUseEndure, pSBag[i].sUseEnergy, pSBag[i].lResumeTime, szRange);
 	}
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "");
 	//
 
 	return TRUE;
-T_E}
+}
 
 void ReadChaSkillStatePacket(LPRPACKET pk, stNetSkillState &SCurSState, const char* szLogName)
-{T_B
+{
 	unsigned long currentClient = GetTickCount();	
 	unsigned long currentServer = pk.ReadLong()/1000;//current server time
 	memset(&SCurSState, 0, sizeof(SCurSState));
@@ -3452,16 +3452,16 @@ void ReadChaSkillStatePacket(LPRPACKET pk, stNetSkillState &SCurSState, const ch
 	}
 
 	// log
-	LG(szLogName, "Syn Skill State: Num[%d]\tTick[%u]\n", sNum, GetTickCount());
-	LG(szLogName, g_oLangRec.GetString(311));
+	ToLogService(szLogName, "Syn Skill State: Num[{}]\tTick[{}]", sNum, GetTickCount());
+	ToLogService(szLogName, "{}", g_oLangRec.GetString(311));
 	for (char i = 0; i < sNum; i++)
-		LG(szLogName, "\t%8d\t%4d\n", SCurSState.SState[i].chID, SCurSState.SState[i].chLv);
-	LG(szLogName, "\n");
+		ToLogService(szLogName, "\t{:8}\t{:4}", SCurSState.SState[i].chID, SCurSState.SState[i].chLv);
+	ToLogService(szLogName, "");
 	//
-T_E}
+}
 
 void ReadChaAttrPacket(LPRPACKET pk, stNetChaAttr& SChaAttr, const  char* szLogName)
-{T_B
+{
 	memset(&SChaAttr, 0, sizeof(SChaAttr));
 	SChaAttr.chType = pk.ReadChar();
 	SChaAttr.sNum = pk.ReadShort();
@@ -3472,18 +3472,18 @@ void ReadChaAttrPacket(LPRPACKET pk, stNetChaAttr& SChaAttr, const  char* szLogN
 	}
 
 	// log
-	LG(szLogName, "Syn Character Attr: Count=%d\t, Type:%d\tTick:[%u]\n", SChaAttr.sNum, SChaAttr.chType, GetTickCount());
-	LG(szLogName, g_oLangRec.GetString(312));
+	ToLogService(szLogName, "Syn Character Attr: Count={}\t, Type:{}\tTick:[{}]", SChaAttr.sNum, SChaAttr.chType, GetTickCount());
+	ToLogService(szLogName, "{}", g_oLangRec.GetString(312));
 	for (short i = 0; i < SChaAttr.sNum; i++)
 	{
-		LG(szLogName, "\t%d\t%d\n", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal);
+		ToLogService(szLogName, "\t{}\t{}", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal);
 	}
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "");
 	//
-T_E}
+}
 
 void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLogName)
-{T_B
+{
 	memset(&SLookInfo, 0, sizeof(SLookInfo));
 	SLookInfo.chSynType = pk.ReadChar();
 	stNetChangeChaPart	&SChaPart = SLookInfo.SLook;
@@ -3499,10 +3499,10 @@ void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLog
 		SChaPart.sEquipment = pk.ReadShort();
 
 		// log
-		LG(szLogName, "===Recieve(Look):\tTick:[%u]\n", GetTickCount());
-		LG(szLogName, "TypeID:%d, PoseID:%d\n", SChaPart.sTypeID, SChaPart.sPosID);
-		LG(szLogName, "\tPart: Boat:%u, Header:%u, Body:%u, Engine:%u, Cannon:%u, Equipment:%u\n", SChaPart.sBoatID, SChaPart.sHeader, SChaPart.sBody, SChaPart.sEngine, SChaPart.sCannon, SChaPart.sEquipment );
-		LG(szLogName, "\n");
+		ToLogService(szLogName, "===Recieve(Look):\tTick:[{}]", GetTickCount());
+		ToLogService(szLogName, "TypeID:{}, PoseID:{}", SChaPart.sTypeID, SChaPart.sPosID);
+		ToLogService(szLogName, "\tPart: Boat:{}, Header:{}, Body:{}, Engine:{}, Cannon:{}, Equipment:{}", SChaPart.sBoatID, SChaPart.sHeader, SChaPart.sBody, SChaPart.sEngine, SChaPart.sCannon, SChaPart.sEquipment );
+		ToLogService(szLogName, "");
 		//
 	}
 	else
@@ -3559,26 +3559,26 @@ void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLog
 		}
 
 		// log
-		LG(szLogName, "===Recieve(Look)\tTick:[%u]\n", GetTickCount());
-		LG(szLogName, "TypeID:%d, HairID:%d\n", SChaPart.sTypeID, SChaPart.sHairID);
+		ToLogService(szLogName, "===Recieve(Look)\tTick:[{}]", GetTickCount());
+		ToLogService(szLogName, "TypeID:{}, HairID:{}", SChaPart.sTypeID, SChaPart.sHairID);
 		for (int i = 0; i < enumEQUIP_NUM; i++)
-			LG(szLogName, "\tLink: %d\n", SChaPart.SLink[i].sID);
-		LG(szLogName, "\n");
+			ToLogService(szLogName, "\tLink: {}", SChaPart.SLink[i].sID);
+		ToLogService(szLogName, "");
 		//
 	}
-T_E}
+}
 
 void ReadChaLookEnergyPacket(LPRPACKET pk, stLookEnergy &SLookEnergy, const char *szLogName)
-{T_B
+{
 	memset(&SLookEnergy, 0, sizeof(SLookEnergy));
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
 		SLookEnergy.sEnergy[i] = pk.ReadShort();
 	}
-T_E}
+}
 
 void ReadChaPKPacket(LPRPACKET pk, stNetPKCtrl &SNetPKCtrl, const char *szLogName)
-{T_B
+{
 	char	chPKCtrl = pk.ReadChar();
 	std::bitset<8> states(chPKCtrl);
 	SNetPKCtrl.bInPK = states[0];
@@ -3586,25 +3586,25 @@ void ReadChaPKPacket(LPRPACKET pk, stNetPKCtrl &SNetPKCtrl, const char *szLogNam
 	SNetPKCtrl.pkGuild = states[2];
 
 	// log
-	LG(szLogName, "===Recieve(PKCtrl)\tTick:[%u]\n", GetTickCount());
-	LG(szLogName, "\tInGymkhana: %d, InPK: %d\n", SNetPKCtrl.bInGymkhana, SNetPKCtrl.bInPK);
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "===Recieve(PKCtrl)\tTick:[{}]", GetTickCount());
+	ToLogService(szLogName, "\tInGymkhana: {}, InPK: {}", SNetPKCtrl.bInGymkhana, SNetPKCtrl.bInPK);
+	ToLogService(szLogName, "");
 	//
-T_E}
+}
 
 void ReadChaSidePacket(LPRPACKET pk, stNetChaSideInfo &SNetSideInfo, const char *szLogName)
-{T_B
+{
 	SNetSideInfo.chSideID = pk.ReadChar();
 
 	// log
-	LG(szLogName, "===Recieve(SideInfo)\tTick:[%u]\n", GetTickCount());
-	LG(szLogName, "\tSideID: %d\n", SNetSideInfo.chSideID);
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "===Recieve(SideInfo)\tTick:[{}]", GetTickCount());
+	ToLogService(szLogName, "\tSideID: {}", SNetSideInfo.chSideID);
+	ToLogService(szLogName, "");
 	//
-T_E}
+}
 
 void ReadChaAppendLookPacket(LPRPACKET pk, stNetAppendLook &SNetAppendLook, const char *szLogName)
-{T_B
+{
 	for (char i = 0; i < defESPE_KBGRID_NUM; i++)
 	{
 		SNetAppendLook.sLookID[i] = pk.ReadShort();
@@ -3613,18 +3613,18 @@ void ReadChaAppendLookPacket(LPRPACKET pk, stNetAppendLook &SNetAppendLook, cons
 	}
 
 	// log
-	LG(szLogName, "===Recieve(Append Look)\tTick:[%u]\n", GetTickCount());
-	LG(szLogName, "\tAppend Look:%d(%d), %d(%d), %d(%d), %d(%d)\n",
+	ToLogService(szLogName, "===Recieve(Append Look)\tTick:[{}]", GetTickCount());
+	ToLogService(szLogName, "\tAppend Look:{}({}), {}({}), {}({}), {}({})",
 		SNetAppendLook.sLookID[0], SNetAppendLook.bValid[0],
 		SNetAppendLook.sLookID[1], SNetAppendLook.bValid[1],
 		SNetAppendLook.sLookID[2], SNetAppendLook.bValid[2],
 		SNetAppendLook.sLookID[3], SNetAppendLook.bValid[3]);
-	LG(szLogName, "\n");
+	ToLogService(szLogName, "");
 	//
-T_E}
+}
 
 void ReadEntEventPacket(LPRPACKET pk, stNetEvent &SNetEvent,const char *szLogName)
-{T_B
+{
 	SNetEvent.lEntityID = pk.ReadLong();
 	SNetEvent.chEntityType = pk.ReadChar();
 	SNetEvent.usEventID = pk.ReadShort();
@@ -3633,15 +3633,15 @@ void ReadEntEventPacket(LPRPACKET pk, stNetEvent &SNetEvent,const char *szLogNam
 	// log
 	if (szLogName)
 	{
-		LG(szLogName, "===Recieve(Event)\tTick:[%u]\n", GetTickCount());
-		LG(szLogName, "\tEntityID: %u, EventID: %u, EventName: %s\n", SNetEvent.lEntityID, SNetEvent.usEventID, SNetEvent.cszEventName);
-		LG(szLogName, "\n");
+		ToLogService(szLogName, "===Recieve(Event)\tTick:[{}]", GetTickCount());
+		ToLogService(szLogName, "\tEntityID: {}, EventID: {}, EventName: {}", SNetEvent.lEntityID, SNetEvent.usEventID, SNetEvent.cszEventName);
+		ToLogService(szLogName, "");
 	}
 	//
-T_E}
+}
 
 void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogName)
-{T_B
+{
 	memset(&SKitbag, 0, sizeof(SKitbag));
 	SKitbag.chType = pk.ReadChar(); // CompCommand.hESynKitbagType
 	int nGridNum = 0;
@@ -3649,7 +3649,7 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogNa
 	{
 		SKitbag.nKeybagNum = pk.ReadShort();
 	}
-	LG(szLogName, "===Recieve(Update Kitbag):\tGridNum:%d\tType:%d\tTick:[%u]\n", SKitbag.nKeybagNum, SKitbag.chType, GetTickCount());
+	ToLogService(szLogName, "===Recieve(Update Kitbag):\tGridNum:{}\tType:{}\tTick:[{}]", SKitbag.nKeybagNum, SKitbag.chType, GetTickCount());
 	stNetKitbag::stGrid* Grid = SKitbag.Grid;
 	SItemGrid *pItem;
 	CItemRecord* pItemRec;
@@ -3662,7 +3662,7 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogNa
 
 		pItem = &Grid[nGridNum].SGridContent;
 		pItem->sID = pk.ReadShort();
-		LG(szLogName, g_oLangRec.GetString(313), Grid[nGridNum].sGridID, pItem->sID);
+		ToLogService(szLogName, "{} {} {}", g_oLangRec.GetString(313), Grid[nGridNum].sGridID, pItem->sID);
 		if (pItem->sID > 0) // 
 		{
 			pItem->dwDBID = pk.ReadLong();
@@ -3672,7 +3672,7 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogNa
 			pItem->sEndure[1]	=	pk.ReadShort();
 			pItem->sEnergy[0]	=	pk.ReadShort();
 			pItem->sEnergy[1]	=	pk.ReadShort();
-			LG(szLogName, g_oLangRec.GetString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1], pItem->sEnergy[0], pItem->sEnergy[1]);
+			ToLogService(szLogName, "{} {} {} {} {} {}", g_oLangRec.GetString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1], pItem->sEnergy[0], pItem->sEnergy[1]);
 			pItem->chForgeLv = pk.ReadChar();
 			pItem->SetValid(pk.ReadChar() != 0 ? true : false);
 			pItem->bItemTradable = pk.ReadChar();
@@ -3710,43 +3710,43 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogNa
 				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadLong());
 			}
 
-			LG(szLogName, g_oLangRec.GetString(316), pItem->GetDBParam(enumITEMDBP_FORGE));
+			ToLogService(szLogName, "{} {}", g_oLangRec.GetString(316), pItem->GetDBParam(enumITEMDBP_FORGE));
 			if (pk.ReadChar()) // 
 			{
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 				{
 					pItem->sInstAttr[j][0] = pk.ReadShort();
 					pItem->sInstAttr[j][1] = pk.ReadShort();
-					LG(szLogName, g_oLangRec.GetString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]);
+					ToLogService(szLogName, "{} {} {}", g_oLangRec.GetString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]);
 				}
 			}
 		}
 		nGridNum++;
 		if (nGridNum > defMAX_KBITEM_NUM_PER_TYPE) // 
 		{
-			LG(g_oLangRec.GetString(318), g_oLangRec.GetString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE);
+			ToLogService(g_oLangRec.GetString(318), "{} {} {}", g_oLangRec.GetString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE);
 			break;
 		}
 	}
 	SKitbag.nGridNum = nGridNum;
-	LG(szLogName, g_oLangRec.GetString(320), SKitbag.nGridNum);
-T_E}
+	ToLogService(szLogName, "{} {}", g_oLangRec.GetString(320), SKitbag.nGridNum);
+}
 
 void ReadChaShortcutPacket(LPRPACKET pk, stNetShortCut &SShortcut, const char* szLogName)
-{T_B
+{
 	memset(&SShortcut, 0, sizeof(SShortcut));
-	LG(szLogName, "===Recieve(Update Shortcut):\tTick:[%u]\n", GetTickCount());
+	ToLogService(szLogName, "===Recieve(Update Shortcut):\tTick:[{}]", GetTickCount());
 	for (int i = 0; i < SHORT_CUT_NUM; i++)
 	{
 		SShortcut.chType[i] = pk.ReadChar();
 		SShortcut.byGridID[i] = pk.ReadShort();
-		LG(szLogName, g_oLangRec.GetString(321), SShortcut.chType[i], SShortcut.byGridID[i]);
+		ToLogService(szLogName, "{} {} {}", g_oLangRec.GetString(321), SShortcut.chType[i], SShortcut.byGridID[i]);
 	}
-T_E}
+}
 
 
 BOOL PC_PKSilver(LPRPACKET packet)
-{T_B
+{
     std::string szName;
     long sLevel;
     std::string szProfession;
@@ -3762,11 +3762,11 @@ BOOL PC_PKSilver(LPRPACKET packet)
 
     g_stUIPKSilver.ShowPKSilverForm();
     return TRUE;
-T_E}
+}
 
 
 BOOL SC_LifeSkillShow(LPRPACKET packet)
-{T_B
+{
     long lType = packet.ReadLong();
     switch(lType)
     {
@@ -3788,11 +3788,11 @@ BOOL SC_LifeSkillShow(LPRPACKET packet)
         }  break;
     }
     return TRUE;
-T_E}
+}
 
 
 BOOL SC_LifeSkill(LPRPACKET packet)
-{T_B
+{
     long lType = packet.ReadLong();
     short ret = packet.ReadShort();
     std::string txt = packet.ReadString();
@@ -3820,11 +3820,11 @@ BOOL SC_LifeSkill(LPRPACKET packet)
     }
 
     return TRUE;
-T_E}
+}
 
 
 BOOL SC_LifeSkillAsr(LPRPACKET packet)
-{T_B
+{
     long lType = packet.ReadLong();
     short tim = packet.ReadShort();
     std::string txt = packet.ReadString();
@@ -3849,12 +3849,12 @@ BOOL SC_LifeSkillAsr(LPRPACKET packet)
         }  break;
     }
     return TRUE;
-T_E}
+}
 
 
 BOOL	SC_DropLockAsr(LPRPACKET	pk)
 {
-	T_B
+
 	const auto success = pk.ReadChar();
 	if (success)
 	{
@@ -3865,13 +3865,13 @@ BOOL	SC_DropLockAsr(LPRPACKET	pk)
 		g_pGameApp->SysInfo("Locking failed!");
 	}
 	return	TRUE;
-	T_E
+
 };
 
 
 BOOL SC_UnlockItemAsr(LPRPACKET pk)
 {
-	T_B
+
 		g_pGameApp->SysInfo(
 			[&] {
 				switch (pk.ReadChar()) {
@@ -3884,7 +3884,7 @@ BOOL SC_UnlockItemAsr(LPRPACKET pk)
 				}
 			}());
 	return	TRUE;
-	T_E
+
 }
 
 //==================================================================================

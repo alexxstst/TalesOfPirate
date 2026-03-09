@@ -106,9 +106,8 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 
 	if(!pPly || !pPly2)
 	{
-		LogLine	l_line(g_LogMaster);
-		//l_line<<newln<<"MP_TEAM_CREATE()!";
-		l_line<<newln<<"MP_TEAM_CREATE() member is offline!";
+		//l_line<<newln<<...;
+		ToLogService("Master", "MP_TEAM_CREATE() member is offline!");
 		return;
 	}
 
@@ -131,9 +130,8 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 		cChar			*	l_invited_name	= szName1;
 		if(!l_invited_name ||l_len >16)
 		{
-			LogLine	l_line(g_LogMaster);
-			//l_line<<newln<<"MP_TEAM_CREATE()!";
-			l_line<<newln<<"MP_TEAM_CREATE() name length is invalid!";
+			//l_line<<newln<<...;
+			ToLogService("Master", "MP_TEAM_CREATE() name length is invalid!");
 			return;
 		}
 		Player			*	l_invited_ply	= pPly2;
@@ -182,9 +180,8 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 			pPly2->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00017));
 		}else if(l_count)
 		{
-			LogLine	l_line(g_LogMaster);
-			//l_line<<newln<<""<<pPly2->m_chaname[pPly2->m_currcha]<<""<<pPly2->GetLeader()->m_chaname[pPly2->GetLeader()->m_currcha]<<endln;
-			l_line<<newln<<"player "<<pPly2->m_chaname[pPly2->m_currcha]<<" add team "<<pPly2->GetLeader()->m_chaname[pPly2->GetLeader()->m_currcha]<<endln;
+		//l_line<<newln<<...;
+		ToLogService("Master", "player {} add team {}", pPly2->m_chaname[pPly2->m_currcha], pPly2->GetLeader()->m_chaname[pPly2->GetLeader()->m_currcha]);
 			//Client
 			{
 				Team		*	l_team	=pPly2->GetTeam();
@@ -257,18 +254,16 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 					{
 						sock->SendData(l_wpk);
 					}
-					LogLine	l_line(g_LogMaster);
-					//l_line<<newln<<"MP_TEAM_CREATE()ToGameServerGateServer";
-					l_line<<newln<<"MP_TEAM_CREATE() send ToGameServer data to GateServer";
+					//l_line<<newln<<...;
+					ToLogService("Master", "MP_TEAM_CREATE() send ToGameServer data to GateServer");
 				}
 			}
 		}
 	}
 	else
 	{
-		LogLine l_line(g_LogMaster);
-		//l_line<<newln<<"MP_TEAM_CREATE()";
-		l_line<<newln<<"MP_TEAM_CREATE() invite failed";
+		//l_line<<newln<<...;
+		ToLogService("Master", "MP_TEAM_CREATE() invite failed");
 	}
 }
 void GroupServerApp::CP_TEAM_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk)
@@ -282,9 +277,8 @@ void GroupServerApp::CP_TEAM_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00017));
 	}else if(l_count)
 	{
-		LogLine	l_line(g_LogTeam);
-		//l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<""<<ply->GetLeader()->m_chaname[ply->GetLeader()->m_currcha]<<endln;
-		l_line<<newln<<"player "<<ply->m_chaname[ply->m_currcha]<<"add team"<<ply->GetLeader()->m_chaname[ply->GetLeader()->m_currcha]<<endln;
+		//l_line<<newln<<...;
+		ToLogService("Team", "player {} add team {}", ply->m_chaname[ply->m_currcha], ply->GetLeader()->m_chaname[ply->GetLeader()->m_currcha]);
 		//Client
 		{
 			Team		*	l_team	=ply->GetTeam();
@@ -357,9 +351,8 @@ void GroupServerApp::CP_TEAM_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk
 				{
 					sock->SendData(l_wpk);
 				}
-				LogLine	l_line(g_LogTeam);
-				//l_line<<newln<<"ToGameServerGateServer";
-				l_line<<newln<<"MP_TEAM_CREATE() send ToGameServer data to GateServer";
+				//l_line<<newln<<...;
+				ToLogService("Team", "MP_TEAM_CREATE() send ToGameServer data to GateServer");
 			}
 		}
 	}
@@ -446,14 +439,11 @@ void GroupServerApp::CP_TEAM_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk)
 			{
 				l_team->GetLeader()->LeaveTeam();
 			}
-			LogLine	l_line(g_LogTeam);
 			/*l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<""
 				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",":"")
 				<<endln;
 			*/
-			l_line<<newln<<"player "<<ply->m_chaname[ply->m_currcha]<<"leave team "
-				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",free team.":".")
-				<<endln;
+			ToLogService("Team", "player {} leave team {}{}", ply->m_chaname[ply->m_currcha], l_leader->m_chaname[l_leader->m_currcha], (l_count==2?",free team.":"."));
 		}
 	}
 }
@@ -471,11 +461,8 @@ void GroupServerApp::CP_TEAM_KICK(Player *ply,DataSocket *datasock,RPacket &pk)
 	Player* pKicker = l_team->GetMember( dwKickedID );
 	if( !pKicker ) 
 	{
-		LogLine	l_line(g_LogTeam);
-		//l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<"ID["
-		//	<<dwKickedID<<"]"<<endln;
-		l_line<<newln<<"captain "<<ply->m_chaname[ply->m_currcha]<<"killed member not exsit! ID["
-			<<dwKickedID<<"]"<<endln;
+		//l_line<<newln<<...;
+		ToLogService("Team", "captain {} killed member not exsit! ID[{}]", ply->m_chaname[ply->m_currcha], dwKickedID);
 		return;
 	}
 	long	l_count		=pKicker->LeaveTeam();
@@ -555,14 +542,11 @@ void GroupServerApp::CP_TEAM_KICK(Player *ply,DataSocket *datasock,RPacket &pk)
 			{
 				l_team->GetLeader()->LeaveTeam();
 			}
-			LogLine	l_line(g_LogTeam);
 			/*l_line<<newln<<""<<pKicker->m_chaname[ply->m_currcha]<<""
 				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",":"")
 				<<endln;
 			*/
-			l_line<<newln<<"player"<<pKicker->m_chaname[ply->m_currcha]<<"killed by captain"
-				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",free team.":".")
-				<<endln;
+			ToLogService("Team", "player{} killed by captain {}{}", pKicker->m_chaname[ply->m_currcha], l_leader->m_chaname[l_leader->m_currcha], (l_count==2?",free team.":"."));
 		}
 	}
 }
@@ -671,8 +655,7 @@ void GroupServerApp::MP_SWITCH(Player *ply)
 			}
 		}
 
-		LogLine	l_line(g_LogTeam);
-		//l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<""<<l_leader->m_chaname[l_leader->m_currcha];
-		l_line<<newln<<"player"<<ply->m_chaname[ply->m_currcha]<<"refresh team by switch map"<<l_leader->m_chaname[l_leader->m_currcha];
+		//l_line<<newln<<...;
+		ToLogService("Team", "player{} refresh team by switch map {}", ply->m_chaname[ply->m_currcha], l_leader->m_chaname[l_leader->m_currcha]);
 	}
 }

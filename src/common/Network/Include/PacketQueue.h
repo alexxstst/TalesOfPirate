@@ -25,11 +25,11 @@ struct PKItem:public PreAllocStru {
 		m_iscall	=0;
 	}
 	Sema					m_semWait;
-	volatile char			m_iscall;
-	DataSocket	*volatile	m_datasock;
+	 char			m_iscall;
+	DataSocket	*	m_datasock;
 	RPacket					m_inpk;
 	WPacket					m_retpk;
-	PKItem		*volatile	m_next;
+	PKItem		*	m_next;
 	DWORD					m_dwLastTime;
 }; 
 struct	PKQueue{
@@ -51,12 +51,12 @@ private:
 	virtual void ProcessData(DataSocket *datasock,RPacket &recvbuf)=0;
 	virtual	WPacket	ServeCall(DataSocket *datasock,RPacket &in_para){return 0;};
 	const bool		m_mode;
-	bool			volatile m_isclose;
-	uLong			volatile m_pktotal;
+	bool			 m_isclose;
+	uLong			 m_pktotal;
 	std::recursive_mutex			m_mut;
 	Sema			m_sem;
-	PKItem		*	volatile m_head;
-	PKItem		*	volatile m_tail;
+	PKItem		*	 m_head;
+	PKItem		*	 m_tail;
 	inline static PreAllocHeapPtr<PKItem>	m_heap{ 1,100 };
 };
 
