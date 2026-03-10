@@ -199,7 +199,6 @@ bool CDataBaseCtrl::UserLogin(int nUserID, string strUserName, string strIP)
 		ToLogService("AccountServer", "CDataBaseCtrl::UserLogin: parameter strUserName is empty or null");
 		return false;
 	}
-	//LG("AccountServer", "CDataBaseCtrl::UserLogin: UserName=[%s] \n", strUserName.c_str());
 	if (!strIP.c_str()) strIP="";
 
 	char buf[1024];
@@ -267,7 +266,6 @@ bool CDataBaseCtrl::KickUser(std::string strUserName)
 		ToLogService("AccountServer", "CDataBaseCtrl::KickUser: parameter strUserName is empty or null");
 		return false;
 	}
-	//LG("AccountServer", "CDataBaseCtrl::KickUser: UserName=[%s] \n", strUserName.c_str());
 
 	char buf[1024];
 	sprintf(buf,"select id, login_group, last_logout_time from account_login where name='%s'", strUserName.c_str());

@@ -23,7 +23,6 @@ int lua_AddBirthPoint(lua_State *L)
 	int y = (int)lua_tonumber(L, 4);
 
 	g_BirthMgr.AddBirthPoint(pszLocation, pszMapName, x, y);
-	//LG("birth", "[%s] [%s] %d %d\n", pszLocation, pszMapName, x, y);
 	return 0;
 }
 
@@ -31,7 +30,6 @@ int lua_AddBirthPoint(lua_State *L)
 int lua_ClearAllBirthPoint(lua_State *L)
 {
 	g_BirthMgr.ClearAll();
-	//LG("birth", "\n");
 	return 0;
 }
 
@@ -156,7 +154,6 @@ void AddHelpInfo(const char *pszKey, const char *pszInfo)
 
 	g_HelpList[pszKey] = pszInfo;
 
-	//LG("help", " = %d\n", g_HelpList.size());
 	ToLogService("help", "now helplist amount = {}", g_HelpList.size());
 }
 
@@ -173,7 +170,6 @@ void AddMonsterHelp(int nScriptID, int x, int y)
 
 void AddHelpNPC(CCharacter *pNPC)
 {
-	//LG("init", "NPC[%s]\n", pNPC->GetName());
 	ToLogService("init", "Succeed add HelpNPC[{}]", pNPC->GetName());
 	g_HelpNPCList.push_back(pNPC);
 }

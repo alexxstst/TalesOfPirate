@@ -197,12 +197,10 @@ public:
 
 	//	if (!pCCha->m_pCEyeshotHost)
 	//	{
-	//		LG("", " %s [%d, %d]%s \n", GetName(), l_pt.x, l_pt.y, pCCha->GetLogName());
 	//		return;
 	//	}
 	//	if (pCCha->m_pCEyeshotHost != &m_pCEyeshotCell[l_pt.y][l_pt.x])
 	//	{
-	//		LG("", " %s  [%d, %d]%s [%d, %d]\n", GetName(), l_pt.x, l_pt.y, pCCha->GetLogName(), pCCha->m_pCEyeshotHost->m_sPosX, pCCha->m_pCEyeshotHost->m_sPosY);
 	//		return;
 	//	}
 	//	m_lActivePlayerNum--;
@@ -244,7 +242,6 @@ public:
 			if (CountEyeshotPlyActiveNum(lCellX, lCellY) > 0) // 
 			{
 				m_pCEyeshotCell[lCellY][lCellX].m_lActNum++;
-				//LG("", "!!![%d,%d]\n", lCellX, lCellY);
 				ToLogService("eyeshot activation error", "when eyeshot cell[{},{}] stop activation ,find the character player who has eyeshot ability.", lCellX, lCellY);
 			}
 			else

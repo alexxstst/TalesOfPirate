@@ -109,7 +109,6 @@ CAttachable *CConjureMgr::GetLeader()
 	//	pCAttach = m_pCLstHead;
 	//else
 	//{
-	//	LG("error", "msgCConjureMgr::GetLeader() m_pCLstHead = %p\n", m_pCLstHead);
 	//}
 
 	//return pCAttach;

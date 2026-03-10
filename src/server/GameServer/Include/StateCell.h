@@ -161,7 +161,6 @@ inline void CActStateCell::Add(CStateCell *pObj)
 {
 	if (pObj->m_pCLast || pObj->m_pCNext)
 	{
-		//LG("", " [%d,%d] ", pObj->m_sPosX, pObj->m_sPosY);
 		ToLogService("state cell operator error", "when add entity[{},{}] to state cellfind it is not break away foregone manage cell", pObj->m_sPosX, pObj->m_sPosY);
 		return;
 	}

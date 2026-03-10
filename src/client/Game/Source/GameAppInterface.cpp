@@ -168,7 +168,10 @@ int CGameApp::Run() {
 			g_NetIF->PeekPacket(1); // CPU100%
 
 			if (_pSteady->Run()) {
-				ToLogService("frame", "time:{}", GetTickCount() - _dwCurTick);
+				const auto frameTime = GetTickCount() - _dwCurTick;
+				if (frameTime > 100) {
+					ToLogService("common", "frame time: {}ms", frameTime);
+				}
 
 				g_Render.GetInterfaceMgr()->tp_loadres->SetPoolEvent(TRUE);
 				_dwCurTick = _pSteady->GetTick();

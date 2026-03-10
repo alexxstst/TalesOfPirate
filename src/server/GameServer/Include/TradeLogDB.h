@@ -26,7 +26,6 @@ public:
 		SQLRETURN l_sqlret  =  this->exec_sql_direct(sql);
 		if(!DBOK(l_sqlret))
 		{
-			//LG("gamelog", "log, sql = [%s]!\n", sql);
 			ToLogService("gamelog", "add log note failed, sql = [{}]!", sql);
 		}
 	}

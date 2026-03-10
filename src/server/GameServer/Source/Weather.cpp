@@ -42,12 +42,10 @@ void CWeather::RandLocation(SubMap *pMap)
 
 
 			g_pGameApp->LocalNotice( szText );
-			//LG("weather", "[%s][%s], time = %d\n", pMap->GetName(), szText, dwCurTick / 1000);
 			ToLogService("weather", "[{}]predict[{}], time = {}", pMap->GetName(), szText, dwCurTick / 1000);
 		}
 	}
 	
-	// LG("weather", "%d, [%d %d] w = %d h = %d\n", _btType, sx * 2, sy * 2, nw, nh);
 }
 
 

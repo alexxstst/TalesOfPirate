@@ -512,12 +512,6 @@ NetIF::NetIF(ThreadPool *comm):TcpClientApp(this,0,comm),RPCMGR(this),PKQueue(fa
     // 
     memset(_key, 0, sizeof _key);
     _key_len = 0;
-    g_rLvm = init_lua();
-    g_sLvm = init_lua();
-    load_luc(g_rLvm, "scripts/lua/apple.luc");
-    load_luc(g_sLvm, "scripts/lua/apple.luc");
-    load_luc(g_rLvm, "scripts/lua/pear.luc");
-    load_luc(g_sLvm, "scripts/lua/pear.luc");
 
 	handshakeDone = false;
 	memset(m_ulDelayTime, 0, sizeof(dbc::uLong) * 4);
@@ -534,8 +528,6 @@ NetIF::~NetIF()
 {
     _enc = false;
     memset(_key, 0, sizeof _key);
-    exit_lua(g_sLvm);
-    exit_lua(g_rLvm);
 
     ShutDown(6*1000);
 

@@ -44,7 +44,6 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 		int r = lua_pcall(g_pLuaState, 2, 0, 0); 
 		if(r!=0) // 
 		{
-			//LG("lua_err", "GetExp_New, ()[%s], [%s]!\n", pAtk->GetName(), pDead->GetName());
 			ToLogService("lua_err", "GetExp_New transact error, attacker(bugbear)[{}], people was bring down[{}]!", pAtk->GetName(), pDead->GetName());
 			lua_callalert(g_pLuaState, r); 	
 		}
@@ -54,7 +53,6 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 		DWORD dwEndTime = t.End();
 		if(dwEndTime > 10)
 		{
-			//LG("script_time", ", ! time = %d\n", dwEndTime);
 			ToLogService("script_time", "when player dead transfer experience assign script,account time too long! time = {}", dwEndTime);
 		}
 		return; // , 
@@ -84,7 +82,6 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 			pPlayer = pHarm->pAtk->GetPlayer();
 			if(pPlayer==NULL)
 			{
-				//LG("team_error", ", player!, [%s]\n", pHarm->pAtk->GetName());
 				ToLogService("team_error", "it appear especially error when check teammate experience assign, player finger is null!, character name[{}]", pHarm->pAtk->GetName());
 				break;
 			}
@@ -139,7 +136,6 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 	int r = lua_pcall(g_pLuaState, 2, 0, 0); 
 	if(r!=0) // 
 	{
-		//LG("lua_err", "GetExp_New, [%s], [%s]!\n", pAtk->GetName(), pDead->GetName());
 		ToLogService("lua_err", "GetExp_New transact error, attacker[{}], bugbear wsa bring down [{}]!", pAtk->GetName(), pDead->GetName());
 		lua_callalert(g_pLuaState, r); 	
 	}
@@ -175,7 +171,6 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 	DWORD dwEndTime = t.End();
 	if(dwEndTime > 10)
 	{
-		//LG("script_time", ", , time = %d, exp = %d, upgrade = %d, item = %d!\n", dwEndTime, tLua.GetTimeCount(), tMission.GetTimeCount(), tItem.GetTimeCount());
 		ToLogService("script_time", "the flow of assign experience when bugbear dead, calculate time too long, time = {}, exp = {}, upgrade = {}, item = {}!", dwEndTime, tLua.GetTimeCount(), tMission.GetTimeCount(), tItem.GetTimeCount());
 	}
 }

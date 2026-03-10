@@ -49,7 +49,6 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 		SetCurChaName(pCha->GetName());
 		//if(pCha->TakeMoney("", GetCurPrice()))
 		if(pCha->TakeMoney(RES_STRING(GM_AUCTIONITEM_CPP_00004), GetCurPrice()))
-		//LG("Auction", " %s  %ld !\n", GetCurChaName().c_str(),GetCurPrice());
 		ToLogService("Auction", "character {} bid {} success!", GetCurChaName().c_str(),GetCurPrice());
 		return true;
 	}
@@ -77,14 +76,12 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 	SetCurChaName(pCha->GetName());
 	//if(pCha->TakeMoney("", GetCurPrice()))
 	if(pCha->TakeMoney( RES_STRING(GM_AUCTIONITEM_CPP_00004), GetCurPrice()))
-		//LG("Auction", " %s  %ld !\n", GetCurChaName().c_str(),GetCurPrice());
 		ToLogService("Auction", "character {} bid {} success!", GetCurChaName().c_str(),GetCurPrice());
 
 	//
 	BOOL bOnline = false;
 	if(!game_db.IsChaOnline(dwPreChaID, bOnline))
 	{
-		//LG("Auction", " %s !\n", strPreChaName.c_str());
 		ToLogService("Auction", "get character {} online state failed!", strPreChaName.c_str());
 	}
 	else
@@ -93,7 +90,6 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 		{
 			if(!game_db.AddMoney(dwPreChaID, nPrePrice))
 			{
-				//LG("Auction", " %s  %ld !\n", strPreChaName.c_str(), nPrePrice);
 				ToLogService("Auction", "character {} back money {} failed!", strPreChaName.c_str(), nPrePrice);
 			}
 		}

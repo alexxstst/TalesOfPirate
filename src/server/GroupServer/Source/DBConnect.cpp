@@ -11,22 +11,18 @@ using namespace std;
 
 SQLRETURN Exec_sql_direct(const char *pszSQL, cfl_rs *pTable)
 {
-	//LG("group_sql", "[%s], SQL[%s]\n", pTable->get_table(), pszSQL);
 	ToLogService("group_sql", "Table [{}], begin execute SQL [{}]", pTable->get_table(), pszSQL);
 	SQLRETURN r = pTable->exec_sql_direct(pszSQL);
 	if(DBOK(r))
 	{
-		//LG("group_sql", "SQL!\n");
 		ToLogService("group_sql", "execute SQL success!");
 	}
 	else if(DBNODATA(r))
 	{
-		//LG("group_sql", "SQL, \n");
 		ToLogService("group_sql", "execute SQL, no result");
 	}
 	else
 	{
-		//LG("group_sql", "SQL, !\n");
 		ToLogService("group_sql", "execute SQL, failed!");
 	}
 	return r;
@@ -457,7 +453,6 @@ int TBLCharacters::FetchRowByChaID(int atorID)
 		l_bret	=_get_row(m_buf, CHA_MAXCOL, const_cast<char*>(param.c_str()), filter,&l_retrow);
 	}catch(...)
 	{
-		//LG("group_sql", "TBLCharacters::FetchRowByChaIDSQL, !,atorID =%d\n", atorID);
 		ToLogService("group_sql", "TBLCharacters::FetchRowByChaID execute SQL, failed!,atorID ={}", atorID);
 	}
 	_tbl_name	=l_tblname;
@@ -503,7 +498,6 @@ bool TBLCharacters::BackupRow(int atorID)
 				SQLRETURN l_sqlret = Exec_sql_direct(sql, this);
 				if( !DBOK(l_sqlret) )
 				{
-					//LG( "", "1>Reject:sql.ret = ", l_sqlret );
 		ToLogService("GuildSystem", "1>Reject:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 					return false;
 				}
@@ -511,7 +505,6 @@ bool TBLCharacters::BackupRow(int atorID)
 				{
 					if(get_affected_rows() !=1)
 					{
-						//LG( "", "2>Reject:sql.ret = ", l_sqlret );
 		ToLogService("GuildSystem", "2>Reject:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 						return false;
 
@@ -528,7 +521,6 @@ bool TBLCharacters::BackupRow(int atorID)
 				SQLRETURN l_sqlret = Exec_sql_direct(sql, this);
 				if( !DBOK(l_sqlret) )
 				{
-					//LG( "", "1>BackupRow:sql.ret = ", l_sqlret );
 		ToLogService("GuildSystem", "1>BackupRow:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 					return false;
 				}
@@ -536,7 +528,6 @@ bool TBLCharacters::BackupRow(int atorID)
 				{
 					if(get_affected_rows() !=1)
 					{
-						//LG( "", "2>BackupRow:sql.ret = ", l_sqlret );
 		ToLogService("GuildSystem", "2>BackupRow:delete chaupdate guild count failed! database sql failed .ret = {}", l_sqlret);
 						return false;
 					}
@@ -549,7 +540,6 @@ bool TBLCharacters::BackupRow(int atorID)
 		}
 	}else
 	{
-		//LG( "", "BackupRow:sql.atorID = ", atorID );
 		ToLogService("GuildSystem", "BackupRow:delete chaget guild info failed! database sql failed.atorID = {}", atorID);
 		return false;
 	}

@@ -11,13 +11,11 @@ BOOL CTradeLogDB::Init()
 	// 	const char* buf = g_Config.m_szTradeLogDBPass;
 	// 	if(strcmp(buf,"\"\"") == 0 || strcmp(buf,"''") == 0 || strcmp(buf,"22222") == 0)
 	// 	{
-	// 		LG("trade log db", "Database  Password Error!");
 	// 		return FALSE;
 	// 	}
 	//
 	// 	_connect.enable_errinfo();
 	//
-	// 	printf("Connectting database [%s : %s]......\n", g_Config.m_dsn.c_str());
 	//
 	//
 	// 	std::string err_info;
@@ -29,12 +27,10 @@ BOOL CTradeLogDB::Init()
 	// 	bool r = _connect.connect(g_Config.m_dsn, err_info);
 	// 	if(!r)
 	// 	{
-	// 		LG("trade log db", "msgDatabase [%s] Connect Failed!, ERROR REPORT[%d]", g_Config.m_dsn.c_str(), err_info.c_str
 	// 		() );
 	// 		return FALSE;
 	// 	}
 	//
-	// 	printf("Database Connected!\n");
 	//
 	// 	_tab_log   = new CTradeTableLog(&_connect);
 	//

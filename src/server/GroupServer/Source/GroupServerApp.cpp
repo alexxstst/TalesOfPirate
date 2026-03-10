@@ -47,7 +47,6 @@ private:
 			static short sStatCheatCount = 0;
 			if(sStatCheatCount == 0)
 			{
-				//LG("group_cheat", "[%ld]\n", g_gpsvr->m_dwCheatCount);
 				ToLogService("group_cheat", "current cheat count [{}]", g_gpsvr->m_dwCheatCount);
 			}
 			sStatCheatCount = (sStatCheatCount + 1) % 60;

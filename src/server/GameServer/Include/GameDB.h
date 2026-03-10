@@ -463,7 +463,6 @@ public:
 		}
 		catch (...)
 		{
-			//LG("enter_map", "!\n");
 			ToLogService("enter_map", "When save character item and money occured abnormity");
 			return false;
 		}
@@ -475,7 +474,6 @@ public:
 		// throw
 		try
 		{
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "Start save character assets.");
 			if (!pCCha || !pCCha->GetPlayer())
 				return false;
@@ -495,14 +493,11 @@ public:
 					return false;
 			}
 
-			//LG("enter_map", " %s(%s) .\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
 			ToLogService("enter_map", "Save character {}({})assets succeed.", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
-			//LG("", "%-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
 			ToLogService("Save data waste time", "totalled {}.[{} {}]", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
 		}
 		catch (...)
 		{
-			//LG("enter_map", "!\n");
 			ToLogService("enter_map", "When save character assets occured abnormity");
 			return false;
 		}
@@ -1263,7 +1258,6 @@ public:
 		SQLRETURN l_sqlret  =  _tab_log->exec_sql_direct(pszSQL);
 		if(!DBOK(l_sqlret))
 		{
-			//LG("gamelog", "log, sql = [%s]!\n", pszSQL);
 			ToLogService("gamelog", "add log note failed, sql = [{}]!", pszSQL);
 		}
 	}

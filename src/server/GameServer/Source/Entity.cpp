@@ -183,7 +183,6 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 		cszSrcLogName = pCSrcCha->GetLogName();
 	if (!pCMap)
 	{
-		//LG("", " %s \n", GetLogName());
 		ToLogService("eye shot activation error", "when entity {} is doing eye shot notifythe map is null", GetLogName());
 		return;
 	}
@@ -210,7 +209,6 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 				{
 					if (++lEntCount > lEntNum)
 					{
-						//LG("", "[%d,%d] %d\n", x, y, lEntNum);
 						ToLogService("eye shot activation error", "eye shot cell [{},{}] the fact entity number {}", x, y, lEntNum);
 						break;
 					}
@@ -238,7 +236,6 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 							}
 
 							if (!pCTarCha->GetSubMap())
-								//LG("", " %s[%d,%d]  %s(%s)[%d,%d] \n",
 								ToLogService("eye shot activation error", "when entity {}[{},{}] is doing eye shot notify, the aim player {}({})[{},{}] map is null",
 									cszSrcLogName, l_pos1.x, l_pos1.y,
 									pCTarCha->GetLogName(), pCTarCha->GetPlyCtrlCha()->GetLogName(), pCTarCha->GetPos().x, pCTarCha->GetPos().y);
@@ -252,7 +249,6 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 	}
 	catch (...)
 	{
-		//LG("", " %s ([%d,%d][%d,%d;%d,%d])[%d,%d]\n", cszSrcLogName,
 		//	l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
 		ToLogService("eye shot activation error", "entity {} eye shot notify error(coordnate [{},{}]eye shot [{},{};{},{}])currently eye shot cell[{},{}]", cszSrcLogName,
 			l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);

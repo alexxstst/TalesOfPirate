@@ -198,7 +198,6 @@ void CCharacter::RunEnd(DWORD dwCurTime)
 void CCharacter::StartExit()
 {
 
-		//LG( "", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("time too long exit", "StartExit: Name = {},exitcode = {}", this->GetName(), m_byExit);
 	if (m_byExit != CHAEXIT_BEGIN)
 	{
@@ -217,7 +216,6 @@ void CCharacter::StartExit()
 void CCharacter::CancelExit()
 {
 
-		//LG( "", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("time too long exit", "CancelExit: Name = {},exitcode = {}", this->GetName(), m_byExit);
 	if (m_byExit == CHAEXIT_BEGIN)
 	{
@@ -235,7 +233,6 @@ void CCharacter::Exit()
 {
 
 		// 
-		//LG( "", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("time too long exit", "Exit: Name = {}, exitcode = {}", this->GetName(), m_byExit);
 	WPACKET	l_wpk = GETWPACKET();
 	WRITE_CMD(l_wpk, CMD_MT_PALYEREXIT);

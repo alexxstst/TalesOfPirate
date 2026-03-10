@@ -122,6 +122,8 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 	}
 	if (m_SFightProc.sState == enumFSTATE_ON)
 	{
+		ToLogService("fight", "DesireFightBegin: sState==ON, skill={}, entityID={} -> EndFight+return false",
+			pSFightInit->pCSkillRecord ? pSFightInit->pCSkillRecord->sID : -1, GetID());
 		EndFight();
 		return false;
 	}
@@ -275,7 +277,6 @@ void CFightAble::OnFight(uLong ulCurTick)
 				{
 					if(sExecTime > 1)
 					{
-						//LG("skill_error", "[%s][%s], , %d ms, cooldown = %d\n", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
 						ToLogService("skill_error", "[{}] use [{}] skill, interval time account error, interval last time {} ms, skill cooldown = {}", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
 						sExecTime = 1; // 1, 
 						m_SFightInit.pSSkillGrid->lColdDownT = ulCurTick - lResumeT; 
@@ -1575,7 +1576,6 @@ inline bool CFightAble::IsFriend(CFightAble *pCTar)
 //=============================================================================
 void CFightAble::CountLevel()
 {
-	//printf("yes\n");
 	if (!IsLiveing())
 		return;
 
@@ -1763,8 +1763,6 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
 		lua_pop(g_pLuaState, 1);
-		//LG( "", "Check_SpawnResource" );
-		// printf( "Check_SpawnResource" );
 		return;
 	}
 
@@ -1780,8 +1778,6 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	int nStatus = lua_pcall( g_pLuaState, 4 + i, 0, 0 );
 	if( nStatus )
 	{
-		//LG( "", "Check_SpawnResource" );
-		// printf( "Check_SpawnResource" );
 		lua_callalert(g_pLuaState, nStatus);
 		lua_settop(g_pLuaState, 0);
 		return;
@@ -1791,8 +1787,6 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	CItem	*pCItem;
 	for (int i = 0; i < g_chItemFall[0]; i++)
 	{
-		//LG("", "\t%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
-		// printf( "SpawnResource:%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
 		// 
 		SItemGrid GridContent((Short)m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0], 1);
 		ItemInstance(enumITEM_INST_MONS, &GridContent);
@@ -1909,12 +1903,10 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	lua_settop(g_pLuaState, 0);
 	DWORD dwEndTime = t.End();
 	if (dwEndTime > 20)
-		//LG("script_time", "[%s] time = %d\n", szItemScript, dwEndTime);
 		ToLogService("script_time", "script [{}]cost time too long, time = {}", szItemScript, dwEndTime);
 
 	Long	lFallNum = g_chItemFall[0];
 	if (lFallNum > lItemNum)
-		//LG("", " %s (%u)", GetName(), lFallNum);
 		ToLogService("fall error", "character {} fall res number ({}) error", GetName(), lFallNum);
 	else
 	{
@@ -1978,12 +1970,10 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	lua_settop(g_pLuaState, 0);
 	dwEndTime = t.End();
 	if (dwEndTime > 20)
-		//LG("script_time", "[%s] time = %d\n", szItemScript, dwEndTime);
 		ToLogService("script_time", "script[{}]cost time too long, time = {}", szItemScript, dwEndTime);
 
 	lFallNum = g_chItemFall[0];
 	if (lFallNum > lItemNum)
-		//LG("", " %s (%u)", GetName(), lFallNum);
 		ToLogService("fall error", "roll {} fall task res number ({})error", GetName(), lFallNum);
 	else
 	{

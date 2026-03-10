@@ -240,7 +240,6 @@ void SubMap::Notice(const char *szString)
 		{
 			if (++lChaCount > lChaNum)
 			{
-				//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				ToLogService("eyeshot activation error", "eyeshot cell[{},{}]fact entity nubmer{}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				break;
 			}
@@ -259,7 +258,6 @@ void SubMap::Notice(const char *szString)
 				}
 
 				if (!pCCha->GetSubMap())
-					//LG("", " %s(%s)[%d,%d] \n",
 					ToLogService("eyeshot activation error", "in the wind map notify character {}({})[{},{}] 's map is empty",
 						pCCha->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName(), pCCha->GetPos().x, pCCha->GetPos().y);
 			}
@@ -288,7 +286,6 @@ dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
 	{
 		if (++lChaCount > lChaNum)
 		{
-			//LG("", "[%d,%d] %d\n", lCellX, lCellY, lChaNum);
 			ToLogService("eyeshot activation error", "account eyeshot cell [{},{}]'s activation character numberpractice character number{}", lCellX, lCellY, lChaNum);
 			break;
 		}
@@ -357,7 +354,6 @@ void SubMap::Add(Entity* pCEnt)
 
 	if (pCEnt->m_pCEyeshotHost)
 	{
-		//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 		ToLogService("map character operator error", "(switch) map {} to eyeshot cell [{}, {}]add entity {} find it is not break away foregone manage cell[{}, {}]", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 		return;
 	}
@@ -416,20 +412,17 @@ void SubMap::Delete(Entity* pCEnt)
 	//const Rect	&m_area = GetRange();
 	//if (l_pt.x < m_area.ltop.x || l_pt.x >= m_area.rbtm.x || l_pt.y < m_area.ltop.y || l_pt.y >= m_area.rbtm.y)
 	//{
-	//	LG("", " %s  %s [%d, %d]\n", GetName(), pCEnt->GetLogName(), l_pt.x, l_pt.y);
 	//	return;
 	//}
 	Rect		l_rect = GetEyeshot(l_pt);
 
 	if (!pCEnt->m_pCEyeshotHost)
 	{
-		//LG("", " %s [%d, %d] %s \n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName());
 		ToLogService("map character operator error", "(switch)map {} from eyeshot[{}, {}] delete entity {} find it isn't in eyeshot cell.", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName());
 		return;
 	}
 	if (pCEnt->m_pCEyeshotHost != &m_pCEyeshotCell[l_pt.y][l_pt.x])
 	{
-		//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 		ToLogService("map character operatot error", "(switch)map {} from eyeshot[{}, {}]delete entity {}find it isn't agree with log eyeshot cell[{}, {}].", GetName(), l_pt.x, l_pt.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 		return;
 	}
@@ -1254,7 +1247,6 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 		sprintf(szMess, "character %s move originality coordinate errorlast time position[%d, %d]current position[%d, %d]aim position[%d, %d]",
 			pCEnt->GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
 		//::MessageBox(0,szMess,"!",MB_OK);
-		//LG("", "%s\n", szMess);
 		ToLogService("move error", "{}", szMess);
 		pCEnt->SetPos(pCEnt->m_lastpos);
 	}
@@ -1278,13 +1270,11 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 		//
 		if (!pCEnt->m_pCEyeshotHost)
 		{
-			//LG("", " %s [%d, %d] %s \n", GetName(), l_src.x, l_src.y, pCEnt->GetLogName());
 			ToLogService("map character operator error", "(move)map  {} from eyeshot cell[{}, {}]delete entity {} find it isn't in the eyeshot cell.", GetName(), l_src.x, l_src.y, pCEnt->GetLogName());
 			return;
 		}
 		if (pCEnt->m_pCEyeshotHost != &m_pCEyeshotCell[l_src.y][l_src.x])
 		{
-			//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_src.x, l_src.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 			ToLogService("map character operator error", "(move)map {} from eyeshot cell[{}, {}]delete entity {} ,find it isn't agree with log eyeshot cell[{}, {}].", GetName(), l_src.x, l_src.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 			return;
 		}
@@ -1457,7 +1447,6 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 		//
 		if (pCEnt->m_pCEyeshotHost)
 		{
-			//LG("", " %s [%d, %d] %s [%d, %d]\n", GetName(), l_dst.x, l_dst.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 			ToLogService("map character operator error", "(move)map {} from eyeshot cell[{}, {}] add entity {} find it is not break away foregone manage cell[{}, {}]", GetName(), l_dst.x, l_dst.y, pCEnt->GetLogName(), pCEnt->m_pCEyeshotHost->m_sPosX, pCEnt->m_pCEyeshotHost->m_sPosY);
 			return;
 		}
@@ -1473,7 +1462,6 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 
 	DWORD	dwAllTime = tMoveState.GetTimeCount() + tMoveMMask.GetTimeCount() + tMoveEyeshot.GetTimeCount() + tMoveArea.GetTimeCount();
 	if (dwAllTime >= 50)
-		//LG("map_time", "\t\t[%s] time = %u%u%u%u%u\n",
 		ToLogService("map_time", "\t\tcharacter[{}] eyeshot move spend overabundance time time = {}thereinto state spend {}explore spend {}eyeshot spend {}area spend {}",
 			pCEnt->GetLogName(), dwAllTime, tMoveState.GetTimeCount(), tMoveMMask.GetTimeCount(), tMoveEyeshot.GetTimeCount(), tMoveArea.GetTimeCount());
 }
@@ -1512,7 +1500,6 @@ void SubMap::ResetNotPlyCha()
 			{
 				if (++lChaCount > lChaNum)
 				{
-					//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					ToLogService("eyeshot activation error", "eyeshot cell[{},{}] practice entity numbers{}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					break;
 				}
@@ -1535,7 +1522,6 @@ void SubMap::ClearPlayerCha()
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha, *pCProcCha;
 	long			lChaCount, lChaNum;
-	//LG("enter_map", " %s %d!\n", GetName(), GetCopyNO());
 	ToLogService("enter_map", "map {}(copyID {}),start delete all character!", GetName(), GetCopyNO());
 	m_CEyeshotCellL.BeginGet();
 	while (pCEyeCell = m_CEyeshotCellL.GetNext())
@@ -1547,7 +1533,6 @@ void SubMap::ClearPlayerCha()
 		{
 			if (++lChaCount > lChaNum)
 			{
-				//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity numbers {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				break;
 			}
@@ -1561,11 +1546,9 @@ void SubMap::ClearPlayerCha()
 			if(pCProcCha->IsPlayerFocusCha())
 			{
 				if (!pCProcCha->GetSubMap())
-					//LG("", " %s(%s)[%d,%d] \n",
 					ToLogService("eyeshot activation error", "in the wind map notify character {}({})[{},{}] 's map is empty",
 						pCProcCha->GetLogName(), pCProcCha->GetPlyCtrlCha()->GetLogName(), pCProcCha->GetPos().x, pCProcCha->GetPos().y);
 
-				//LG("enter_map", " %s  %s[%s]!\n", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				ToLogService("enter_map", "map {} closeclean out {}[{}]!", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				if (!pCProcCha->IsLiveing())
 				{
@@ -1581,7 +1564,6 @@ void SubMap::ClearPlayerCha()
 		}
 	}
 	m_COutMapCha.Drop();
-	//LG("enter_map", " %s %d !\n", GetName(), GetCopyNO());
 	ToLogService("enter_map", "map {}( copyID {})clean out character succeed!", GetName(), GetCopyNO());
 }
 
@@ -1603,7 +1585,6 @@ void SubMap::ClearAllMonster(void)
 			{
 				if (++lChaCount > lChaNum)
 				{
-					//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity number {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					break;
 				}
@@ -1638,7 +1619,6 @@ void SubMap::ClearAllMonsterByName(const char* szMonsName)
 			{
 				if (++lChaCount > lChaNum)
 				{
-					//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity number {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 					break;
 				}
@@ -1663,7 +1643,6 @@ void SubMap::ClearAllCha()
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha, *pCProcCha;
 	long			lChaCount, lChaNum;
-	//LG("enter_map", " %s %d!\n", GetName(), GetCopyNO());
 	ToLogService("enter_map", "map {}(copyID {})start clean out all monsters", GetName(), GetCopyNO());
 	m_CEyeshotCellL.BeginGet();
 	while (pCEyeCell = m_CEyeshotCellL.GetNext())
@@ -1675,7 +1654,6 @@ void SubMap::ClearAllCha()
 		{
 			if (++lChaCount > lChaNum)
 			{
-				//LG("", "[%d,%d] %d\n", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				ToLogService("eyeshot activation error", "eyeshot cell[{},{}]practice entity numbers {}", pCEyeCell->m_sPosX, pCEyeCell->m_sPosY, lChaNum);
 				break;
 			}
@@ -1693,11 +1671,9 @@ void SubMap::ClearAllCha()
 			else
 			{
 				if (!pCProcCha->GetSubMap())
-					//LG("", " %s(%s)[%d,%d] \n",
 					ToLogService("eyeshot activation error", "in the wind map notify character {}({})[{},{}] 's map is empty",
 					pCProcCha->GetLogName(), pCProcCha->GetPlyCtrlCha()->GetLogName(), pCProcCha->GetPos().x, pCProcCha->GetPos().y);
 
-				//LG("enter_map", " %s  %s[%s]!\n", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				ToLogService("enter_map", "map {} close,clean out character {}[{}]!", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				if (!pCProcCha->IsLiveing())
 				{
@@ -1713,7 +1689,6 @@ void SubMap::ClearAllCha()
 		}
 		pCEyeCell->m_pCChaL = NULL;
 	}
-	//LG("enter_map", " %s %d !\n", GetName(), GetCopyNO());
 	ToLogService("enter_map", "map {}(copyID {})clean out monster succeed!", GetName(), GetCopyNO());
 }
 
@@ -2062,7 +2037,6 @@ void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
 				CCharacter	*pCCha = pChaInfo->pCCha;
 				if (pCCha->IsPlayerCha()) // 
 				{
-					//LG("", " %s %s(%s)\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName());
 					ToLogService("monster renascence errror", "monster name {}character player name {}({})", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName(), pCCha->GetPlyCtrlCha()->GetLogName());
 					break;
 				}

@@ -38,7 +38,6 @@ BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 	int nStatus = lua_pcall( g_pLuaState, 8, 3, 0 );
 	if( nStatus )
 	{
-		//printf( "[GetOnlineCount]\n" );
 		printf( "call [GetOnlineCount] failed!\n" );
 		lua_callalert( g_pLuaState, nStatus );
 		lua_settop(g_pLuaState, 0);
@@ -49,7 +48,6 @@ BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 	dwLoginNum = (DWORD)lua_tonumber( g_pLuaState, -2 );
 	dwPlayerNum = (DWORD)lua_tonumber( g_pLuaState, -1 );
 
-	//printf( "Login Num = %d. Player num = %d.\n", dwLoginNum, dwPlayerNum );
 	lua_settop(g_pLuaState, 0);
 
 	return dwResult != 0;
@@ -146,8 +144,7 @@ inline int lua_LG(lua_State *L)
 		}
 		str << "  ";
     }
-    
-	str << "\n";
+
 	str << ends;
 
     ToLogService((char*)pszFile, "{}", str.str());

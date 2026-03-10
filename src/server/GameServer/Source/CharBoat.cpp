@@ -143,7 +143,6 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoat );
 		if( pInfo == NULL ) 
 		{
-			//LG( "boat_error", "ID[%d]!", AttrInfo.sBoat );
 			ToLogService( "boat_error", "set boat surface informationg,error information of boat  ID[{}]!", AttrInfo.sBoat );
 			return FALSE;
 		}
@@ -152,7 +151,6 @@ namespace mission
 		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pInfo->sBody );
 		if( pData == NULL ) 
 		{
-			//LG( "boat_error", "ID[%d]!", pInfo->sBody );
 			ToLogService( "boat_error", "set boat surface informationg,error information of boat  ID[{}]!", pInfo->sBody );
 			return FALSE;
 		}
@@ -791,7 +789,6 @@ namespace mission
 			owner.SetBoat( NULL );
 			//owner.SystemNotice( "%s", owner.GetName() );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00022), owner.GetName() );
-			//LG( "boat_error", "%s", owner.GetName() );
 			ToLogService( "boat_error", "character{} pass unlawful character pointer", owner.GetName() );
 			return FALSE;			
 		}
@@ -1021,7 +1018,6 @@ namespace mission
 		{
 			//owner.SystemNotice( "%s%s", owner.GetName(), pBoat->GetName() );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00031), owner.GetName(), pBoat->GetName() );
-			//LG( "boat_error", "%s%s", owner.GetName(), pBoat->GetName() ); 
 			ToLogService( "boat_error", "character{} boat {} temporary data memory failed", owner.GetName(), pBoat->GetName() ); 
 		}
 
@@ -1084,14 +1080,12 @@ namespace mission
 		
 		if( boat.getAttr( ATTR_HP ) < 0 )
 		{
-			//LG( "boatattr_error", "SetBoatAttr:HPHP = %d", boat.getAttr( ATTR_HP ) );
 			ToLogService( "boatattr_error", "SetBoatAttr: boat currently HP value errorautomatism resumeHP = {}", boat.getAttr( ATTR_HP ) );
 			boat.setAttr( ATTR_HP, 1 );
 		}
 
 		if( boat.getAttr( ATTR_SP ) < 0 )
 		{
-			//LG( "boatattr_error", "SetBoatAttr:SPSP = %d", boat.getAttr( ATTR_SP ) );
 			ToLogService( "boatattr_error", "SetBoatAttr: boat currently SP value errorautomatism resumeSP = {}", boat.getAttr( ATTR_SP ) );
 			boat.setAttr( ATTR_SP, 1 );
 		}
@@ -1168,7 +1162,6 @@ namespace mission
 		CCharacter* pBoat = g_pGameApp->GetNewCharacter();
 		if( pBoat == NULL )
 		{
-			//LG( "monsterboat_error", "!" );
 			ToLogService( "monsterboat_error", "when character online,loading boat and assign memory failed " );
 			return FALSE;
 		}
@@ -1185,7 +1178,6 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( Info.sBoat );
 		if( pInfo == NULL ) 
 		{
-			//LG( "monsterboat_error", "ID[%d]!", Info.sBoat );
 			ToLogService( "monsterboat_error", "craete boat failed , error information of boat ID[{}]!", Info.sBoat );
 			return FALSE;
 		}
@@ -1224,14 +1216,12 @@ namespace mission
 		CChaRecord* pRec = GetChaRecordInfo( pInfo->sCharID );
 		if( pRec == NULL )
 		{
-			//LG( "monsterboat_error", "ID[%d]", pInfo->sCharID );
 			ToLogService( "monsterboat_error", "create boatcannot get efficiency attribute informationID[{}]", pInfo->sCharID );
 			pBoat->Free();
 			return FALSE;
 		}
 		pBoat->m_pCChaRecord = pRec;		
 
-		//LG( "monsterboat_init", "%s", pBoat->GetName() );
 		ToLogService( "monsterboat_init", "succeed loading boat{}", pBoat->GetName() );
 
 		// 
@@ -1290,7 +1280,6 @@ namespace mission
 		{
 			//owner.SystemNotice( "!" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00034) );
-			//LG( "boat_error", "%sID[%d]!", owner.GetName(), dwBoatID );
 			ToLogService( "boat_error", "character {} go up loading boat and assign boatID[{}]memory failed!", owner.GetName(), dwBoatID );
 			return FALSE;
 		}
@@ -1302,7 +1291,6 @@ namespace mission
 			pBoat->Free();
 			//owner.SystemNotice( "%sID[%d]", owner.GetName(), dwBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00035), owner.GetName(), dwBoatID );
-			//LG( "boat_error", "%sID[%d]\n", owner.GetName(), dwBoatID );
 			ToLogService( "boat_error", "get character {} boat ID[{}]DB data failed", owner.GetName(), dwBoatID );
 			return FALSE;
 		}

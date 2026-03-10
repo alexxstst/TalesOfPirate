@@ -140,8 +140,6 @@ void AccountServer2::OnProcessData(DataSocket* datasock, RPacket& rpkt)
 
 			//g_Auth.AddPK(datasock, rpkt);
 
-			//LG("MemberCount", "Member Login! Now Count=%d\n", GetMembersCount());
-			//printf("Member Login! Now Count=%d\r\n", GetMembersCount());
 			//g_BillThread.AddPK(datasock, rpkt);
 			break;
 		}
@@ -163,8 +161,6 @@ void AccountServer2::OnProcessData(DataSocket* datasock, RPacket& rpkt)
 
 			//g_Auth.AddPK(datasock, rpkt);
 
-			//LG("MemberCount", "Member Logout! Now Count=%d\n", GetMembersCount());
-			//printf("Member Logout! Now Count=%d\r\n", GetMembersCount());
 			//g_BillThread.AddPK(datasock, rpkt);
 			break;
 		}
@@ -175,8 +171,6 @@ void AccountServer2::OnProcessData(DataSocket* datasock, RPacket& rpkt)
 			ResetMembersCount();
 			//g_Auth.AddPK(datasock, rpkt);
 
-			//printf("CMD_PA_GROUP_BILLEND_AND_LOGOUT! Now Count=%d\r\n", GetMembersCount());
-			//LG("MemberCount", "CMD_PA_GROUP_BILLEND_AND_LOGOUT! Now Count=%d\n", GetMembersCount());
 			//g_Bill.AddPK(datasock, rpkt);
 			//g_BillThread.AddPK(datasock, rpkt);
 			break;
@@ -1551,7 +1545,6 @@ void AuthThread::ResetAccount()
 		try
 		{
 			m_pAuth->ExecuteSQL(s.GetStatement());
-			//LG("As2", "AuthThread#%dAuth\n", m_nIndex);
 			ToLogService("As2", "AuthThread#{} Auth", m_nIndex);
 		}
 		catch (CSQLException* pEx)
@@ -1571,7 +1564,6 @@ void AuthThread::ResetAccount()
 	{
 		// 
 		AuthThread::m_Sema.lock();
-		//LG("As2", "AuthThread#%dAuth\n", m_nIndex);
 		ToLogService("As2", "AuthThread#{} Auth", m_nIndex);
 
 		// 
@@ -1657,7 +1649,6 @@ void AuthThreadPool::NotifyToExit()
 
 void AuthThreadPool::WaitForExit()
 {
-	//printf("\n");
 	printf(RES_STRING(AS_ACCOUNTSERVER2_CPP_00006));
 	for (int i = 0; i < AT_MAXNUM; ++i)
 	{

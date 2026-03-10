@@ -4738,7 +4738,6 @@ inline int lua_OpenHair(lua_State *L)
 	
 	if(pChar->HasTradeAction()) // 
 	{
-		//LG("hair", "[%s], !\n", pChar->GetName());
 		ToLogService("hair", "{}", RES_STRING(GM_CHARSCRIPT_CPP_00011));
 		lua_pushnumber( L, LUA_FALSE);
 		return 1;

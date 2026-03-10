@@ -63,7 +63,6 @@ inline void CEyeshotCell::AddEntity(CCharacter *pCCha)
 		return;
 	if (pCCha->m_pCEyeshotCellLast || pCCha->m_pCEyeshotCellNext)
 	{
-		//LG("", " %s ", pCCha->GetLogName());
 		ToLogService("eyeshot cell operator error", " when add character entity to eyeshot cell {} ,find it is not break away foregone manage cell", pCCha->GetLogName());
 		return;
 	}
@@ -85,7 +84,6 @@ inline void CEyeshotCell::AddEntity(CItem *pCItem)
 		return;
 	if (pCItem->m_pCEyeshotCellLast || pCItem->m_pCEyeshotCellNext)
 	{
-		//LG("", " %s ", pCItem->GetLogName());
 		ToLogService("eyeshot cell operator error", "when add item entity to  {} find it is not break away foregone manage cell", pCItem->GetLogName());
 		return;
 	}

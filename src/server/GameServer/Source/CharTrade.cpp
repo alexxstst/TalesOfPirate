@@ -516,7 +516,6 @@ namespace mission
 		CCharacter* pChar;
 		if( pMain->GetID() == dwCharID )
 		{
-			//printf( "ID" );
 			printf( RES_STRING(GM_CHARTRADE_CPP_00033) );
 			return FALSE;
 		}
@@ -633,7 +632,6 @@ namespace mission
 		}
 		else
 		{
-			//LG( "Trade", "()"  );
 			ToLogService( "Trade", "{}", "when delete characterit find error while clear trade information,the error is:(unsuited charcter pointer)" );
 			return FALSE;
 		}
@@ -1315,13 +1313,11 @@ namespace mission
 
 		if( pMain->GetID() == dwCharID )
 		{
-			//printf( "ID" );
 			printf( RES_STRING(GM_CHARTRADE_CPP_00033) );
 			return FALSE;
 		}		
 		else if( pTradeData->pRequest->GetID() != dwCharID && pTradeData->pAccept->GetID() != dwCharID )
 		{
-			//printf( "" );
 			printf( RES_STRING(GM_CHARTRADE_CPP_00036) );
 			return FALSE;
 		}

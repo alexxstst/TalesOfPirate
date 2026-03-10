@@ -180,14 +180,12 @@ namespace mission
 		}
 
 //#ifdef ROLE_DEBUG_INFO
-//		printf( "\nRecord start!\n" );
 //#endif
 //		for( int i = 0; i < ROLE_MAXNUM_RECORDSIZE; i++ )
 //		{
 //			sscanf( pTemp, "%d ", &nData1 );
 //			m_RoleRecord.szID[i] = (BYTE)nData1;
 //#ifdef ROLE_DEBUG_INFO
-//			printf( "%d ", m_RoleRecord.szID[i] );
 //#endif
 //			pTemp = strstr( pTemp, " " );
 //			if( pTemp == NULL ) 
@@ -265,13 +263,11 @@ namespace mission
 		}
 
 //#ifdef ROLE_DEBUG_INFO
-//		printf( "\nRecord start!\n" );
 //#endif
 //		for( int i = 0; i < ROLE_MAXNUM_RECORDSIZE; i++ )
 //		{
 //			sprintf( pszBuf + strlen( pszBuf ), "%d ", m_RoleRecord.szID[i] );
 //#ifdef ROLE_DEBUG_INFO
-//			printf( "%d ", m_RoleRecord.szID[i] );
 //#endif
 //		}
 #ifdef ROLE_DEBUG_INFO
@@ -900,7 +896,6 @@ namespace mission
 						break;
 					default:
 						{
-							//LG( "trigger_error", "" );
 							ToLogService( "trigger_error", "{}", "unknown time trigger time slot type" );
 							//m_pRoleChar->SystemNotice( "TID = %d, Type = %d", m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
 							m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00005), m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
@@ -2449,7 +2444,6 @@ namespace mission
 		{
 			if( m_byNumMisCount >= ROLE_MAXNUM_MISSIONCOUNT )
 			{
-				//LG( "randmission", "CCharMission::CompleteRandMission:" );
 				ToLogService( "randmission", "{}", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task note of compelete number" );
 				return FALSE;
 			}
@@ -2480,7 +2474,6 @@ namespace mission
 		{
 			if( m_byNumMisCount >= ROLE_MAXNUM_MISSIONCOUNT )
 			{
-				//LG( "randmission", "CCharMission::CompleteRandMission:" );
 				ToLogService( "randmission", "{}", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task compelete note " );
 				return FALSE;
 			}

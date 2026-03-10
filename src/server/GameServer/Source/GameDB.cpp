@@ -77,7 +77,6 @@ bool CTableMaster::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -147,7 +146,6 @@ bool CTableCha::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -244,13 +242,11 @@ bool CTableCha::ShowExpRank(CCharacter* pCha, int count) {
 //-----------------------
 bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 	if (!pPlayer) {
-		//LG("enter_map", "Player.\n");
 		ToLogService("enter_map", "Loading database errorPlayer is empty.");
 		return false;
 	}
 	CCharacter* pCha = pPlayer->GetMainCha();
 	if (!pCha || (pPlayer->GetDBChaId() != atorID)) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "Loading database error,the Main character is inexistence or not matching.");
 		return false;
 	}
@@ -262,7 +258,6 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 	sprintf(filter, "atorID=%d", atorID);
 	int r = _get_row(g_buf, g_cnCol, param, filter);
 	int r1 = get_affected_rows();
-	//LG("enter_map", "_get_row.\n");
 	ToLogService("enter_map", "Loading database succeed_get_row.");
 	if (DBOK(r) && r1 > 0) {
 		pPlayer->SetDBActId(Str2Int(g_buf[nIndex++]));
@@ -317,37 +312,29 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 		long lPosY = Str2Int(g_buf[nIndex++]);
 		pCha->SetPos(lPosX, lPosY);
 		pCha->SetBirthCity(g_buf[nIndex++].c_str());
-		//LG("enter_map", ".\n");
 
 		try {
 			int nLookDataID = nIndex;
 			if (!pCha->String2LookDate(g_buf[nIndex++])) {
-				//LG("enter_map", ".\n");
 				ToLogService("enter_map", "Appearance data check sum error.");
-				//LG("", "dbid %uname %sresid %u.\n", atorID, pCha->GetLogName(), pCha->GetKitbagRecDBID());
 				ToLogService("Check sum error",
 							 "the character (dbid {}name {}resid {})'s change appearance data check sum error.", atorID,
 							 pCha->GetLogName(), pCha->GetKitbagRecDBID());
 				return false;
 			}
 			pCha->SetCat(pCha->m_SChaPart.sTypeID);
-			//LG("enter_map", ".\n");
 		}
 		catch (...) {
-			//LG("enter_map", "Strin2LookData!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n");
 			ToLogService("enter_map", "Strin2LookData error!!");
-			//LG("enter_map", " %s\n", g_buf[nIndex - 1]);
 			ToLogService("enter_map", "Appearance String {}", g_buf[nIndex - 1].c_str());
 			throw;
 		}
 
 		int nSkillBagDataID = nIndex;
 		String2SkillBagData(&pCha->m_CSkillBag, g_buf[nIndex++]);
-		//LG("enter_map", ".\n");
 
 		int nSortcutDataID = nIndex;
 		String2ShortcutData(&pCha->m_CShortcut, g_buf[nIndex++]);
-		//LG("enter_map", ".\n");
 
 		//
 		pPlayer->MisClear();
@@ -357,7 +344,6 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 			//pCha->SystemNotice( "!" );
 			pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00009));
 		}
-		//LG("enter_map", "1.\n");
 
 		memset(g_szRecord, 0, ROLE_MAXSIZE_DBRECORD);
 		strncpy(g_szRecord, g_buf[nIndex++].c_str(), ROLE_MAXSIZE_DBRECORD - 1);
@@ -365,7 +351,6 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 			//pCha->SystemNotice( "!" );
 			pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00010));
 		}
-		//LG("enter_map", "2.\n");
 
 		memset(g_szTrigger, 0, ROLE_MAXSIZE_DBTRIGGER);
 		strncpy(g_szTrigger, g_buf[nIndex++].c_str(), ROLE_MAXSIZE_DBTRIGGER - 1);
@@ -373,7 +358,6 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 			//pCha->SystemNotice( "!" );
 			pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00011));
 		}
-		//LG("enter_map", "3.\n");
 
 		memset(g_szMisCount, 0, ROLE_MAXSIZE_DBMISCOUNT);
 		strncpy(g_szMisCount, g_buf[nIndex++].c_str(), ROLE_MAXSIZE_DBMISCOUNT - 1);
@@ -381,7 +365,6 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 			//pCha->SystemNotice( "!" );
 			pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00012));
 		}
-		//LG("enter_map", "4.\n");
 
 		string strList[2];
 		Util_ResolveTextLine(g_buf[nIndex++].c_str(), strList, 2, ',');
@@ -417,11 +400,9 @@ bool CTableCha::ReadAllData(CPlayer* pPlayer, DWORD atorID) {
 		pCha->SetIMP(Str2Int(g_buf[nIndex++]));
 		// End
 
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "Set the whole data succeed.");
 	}
 	else {
-		//LG("enter_map", "_get_row()%d.%u\n", r);
 		ToLogService("enter_map", "Loading database error_get_row() return value{}.{}", r, r1);
 		return false;
 	}
@@ -447,12 +428,10 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 			pCCtrlCha->SetToMainCha();
 			pCCtrlCha = pCha;
 			if (pCLogCha)
-				//LG("", " %s %s %s.\n", pCLogCha->GetLogName(), pCCtrlCha->GetLogName(), pCha->GetLogName());
 				ToLogService("logging character control error",
 							 "logging character {},control character {}Main character {}.", pCLogCha->GetLogName(),
 							 pCCtrlCha->GetLogName(), pCha->GetLogName());
 			else
-				//LG("", " %s %s %s.\n", "", pCCtrlCha->GetLogName(), pCha->GetLogName());
 				ToLogService("logging character control error",
 							 "logging character {},control character {}Main character {}.", "", pCCtrlCha->GetLogName(),
 							 pCha->GetLogName());
@@ -463,7 +442,6 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 		if (pCha != pCCtrlCha) //
 		{
 			pCCtrlCha = pCha;
-			//LG("", " %s %s %s.\n", pCCtrlCha->GetLogName(), pCCtrlCha->GetLogName(), pCha->GetLogName());
 			ToLogService("logging character control error",
 						 "logging character {},control character {}Main character {}.", pCCtrlCha->GetLogName(),
 						 pCCtrlCha->GetLogName(), pCha->GetLogName());
@@ -486,7 +464,6 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 	char szLogMsg[1024] = "";
 	//FILE	*fp;
 	//if (!(fp = fopen(szSaveChaFile, "r")))
-	//	LG(szSaveCha, "\t\t\t\t\tSQL\tSQL[()]\t\t\n");
 	//if (fp)
 	//	fclose(fp);
 	DWORD dwNowTick = GetTickCount();
@@ -534,15 +511,12 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 	dwNowTick = GetTickCount();
 	dwTotalTick += dwNowTick - dwOldTick;
 	sprintf(szLogMsg + strlen(szLogMsg), "%4u", dwNowTick - dwOldTick);
-	//LG("enter_map", ".\n");
 
 	g_look[0] = 0;
 	if (!LookData2String(&pCha->m_SChaPart, g_look, defLOOK_DATA_STRING_LEN, false)) {
-		//LG("enter_map", "%s\t!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tsave data (surface) error!", pCha->GetLogName());
 		return false;
 	}
-	//LG("enter_map", ".\n");
 
 	dwOldTick = dwNowTick;
 	dwNowTick = GetTickCount();
@@ -551,11 +525,9 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 
 	g_skillbag[0] = 0;
 	if (!SkillBagData2String(&pCha->m_CSkillBag, g_skillbag, defSKILLBAG_DATA_STRING_LEN)) {
-		//LG("enter_map", "%s\t!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tsave data(skill) error!", pCha->GetLogName());
 		return false;
 	}
-	//LG("enter_map", ".\n");
 
 	dwOldTick = dwNowTick;
 	dwNowTick = GetTickCount();
@@ -564,11 +536,9 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 
 	g_shortcut[0] = 0;
 	if (!ShortcutData2String(&pCha->m_CShortcut, g_shortcut, defSHORTCUT_DATA_STRING_LEN)) {
-		//LG("enter_map", "%s\t!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tsave data(shortcut)error!", pCha->GetLogName());
 		return false;
 	}
-	//LG("enter_map", ".\n");
 
 	dwOldTick = dwNowTick;
 	dwNowTick = GetTickCount();
@@ -580,43 +550,35 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 	if (!pPlayer->MisGetData(g_szMisInfo, ROLE_MAXSIZE_DBMISSION - 1)) {
 		//pCha->SystemNotice( "!ID = %d", pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00015), pCha->GetID());
-		//LG(szDBLog, "[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		ToLogService(szDBLog, "save character[ID: {}\tNAME: {}]data info,Get mission data error!ID = {}", atorID,
 					 pCha->GetName(), pCha->GetID());
 	}
-	//LG("enter_map", "1.\n");
 
 	memset(g_szRecord, 0, ROLE_MAXSIZE_DBRECORD);
 	if (!pPlayer->MisGetRecord(g_szRecord, ROLE_MAXSIZE_DBRECORD - 1)) {
 		//pCha->SystemNotice( "!ID = %d", pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00015), pCha->GetID());
-		//LG(szDBLog, "[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		ToLogService(szDBLog, "save character[ID: {}\tNAME: {}]data info,Get mission history data error !ID = {}",
 					 atorID, pCha->GetName(), pCha->GetID());
 	}
-	//LG("enter_map", "2.\n");
 
 	memset(g_szTrigger, 0, ROLE_MAXSIZE_DBTRIGGER);
 	if (!pPlayer->MisGetTrigger(g_szTrigger, ROLE_MAXSIZE_DBTRIGGER - 1)) {
 		//pCha->SystemNotice( "!ID = %d", pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00016), pCha->GetID());
-		//LG(szDBLog, "[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		ToLogService(szDBLog, "save character[ID: {}\tNAME: {}]data infoGet mission trigger data error!ID = {}", atorID,
 					 pCha->GetName(), pCha->GetID());
 	}
-	//LG("enter_map", "3.\n");
 
 	memset(g_szMisCount, 0, ROLE_MAXSIZE_DBMISCOUNT);
 	if (!pPlayer->MisGetMissionCount(g_szMisCount, ROLE_MAXSIZE_DBMISCOUNT - 1)) {
 		//pCha->SystemNotice( "!ID = %d", pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00017), pCha->GetID());
-		//LG(szDBLog, "[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		ToLogService(
 			szDBLog,
 			"save character[ID: {}\tNAME: {}]data infoGet randomicity mission take count of data error!ID = {}", atorID,
 			pCha->GetName(), pCha->GetID());
 	}
-	//LG("enter_map", "4.\n");
 
 	const char* szBirthName = pCha->GetBirthCity();
 	//dwOldTick = dwNowTick;
@@ -674,7 +636,6 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 				sail_lv, sail_exp, sail_left_exp, live_lv, live_exp, live_tp, nLocked, dwCredit, dwStoreItemID,
 				g_skillstate, g_extendAttr, chaIMP,
 				atorID);
-	//LG("enter_map", "SQL.\n");
 	//dwOldTick = dwNowTick;
 	//dwNowTick = GetTickCount();
 	//dwTotalTick += dwNowTick - dwOldTick;
@@ -688,18 +649,15 @@ bool CTableCha::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tcarry out SQL sentence error!", pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character {}!", atorID);
 		return false;
 	}
@@ -730,7 +688,6 @@ bool CTableCha::SavePos(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 
 		return false;
@@ -738,12 +695,10 @@ bool CTableCha::SavePos(CPlayer* pPlayer) {
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tcarry out save position SQL sentence error!", pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -771,19 +726,16 @@ bool CTableCha::SaveMoney(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tcarry out save money SQL sentence error!", pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -811,20 +763,17 @@ bool CTableCha::SaveKBagDBID(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character{}\tcarry out save kitbag indexical SQL sentence error!",
 					 pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -852,20 +801,17 @@ bool CTableCha::SaveKBagTmpDBID(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tcarry out save temp kitbag indexical SQL sentence error!",
 					 pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -894,20 +840,17 @@ bool CTableCha::SaveKBState(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tcarry out save kitbag lock state SQL sentence error!",
 					 pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -1070,7 +1013,6 @@ BOOL CTableCha::IsChaOnline(DWORD atorID, BOOL& bOnline) {
 		ret = true;
 	}
 	catch (int& e) {
-		//LG("Store_msg", "IsChaOnline ODBC %d\n",e);
 		ToLogService("Store_msg", "IsChaOnline ODBC interface transfer error ,position ID{}", e);
 	}
 	catch (...) {
@@ -1166,20 +1108,17 @@ bool CTableCha::SaveMMaskDBID(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%d\tSQL!\n", pPlayer->GetDBChaId());
 		ToLogService("enter_map", "character {}\tcarry out save big map indexical SQL senternce error!",
 					 pPlayer->GetDBChaId());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -1210,7 +1149,6 @@ bool CTableCha::SaveBankDBID(CPlayer* pPlayer) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 
 		return false;
@@ -1218,13 +1156,11 @@ bool CTableCha::SaveBankDBID(CPlayer* pPlayer) {
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%d\tSQL!\n", pPlayer->GetDBChaId());
 		ToLogService("enter_map", "character {}\tcarry out save bank indexcial SQL sentence error!",
 					 pPlayer->GetDBChaId());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", atorID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", atorID);
 		return false;
 	}
@@ -1254,7 +1190,6 @@ BOOL CTableCha::SaveMissionData(CPlayer* pPlayer, DWORD atorID) {
 	memset(g_szMisInfo, 0, ROLE_MAXSIZE_DBMISSION);
 	if (!pPlayer->MisGetData(g_szMisInfo, ROLE_MAXSIZE_DBMISSION - 1)) {
 		//pCha->SystemNotice( "SaveMissionData:!ID = %d", pCha->GetID() );
-		//LG(szDBLog, "SaveMissionData:[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00018), pCha->GetID());
 		ToLogService(
 			szDBLog, "SaveMissionData:save character[ID: {}\tNAME: {}]data info,Get mission data error!ID = {}", atorID,
@@ -1264,7 +1199,6 @@ BOOL CTableCha::SaveMissionData(CPlayer* pPlayer, DWORD atorID) {
 	memset(g_szRecord, 0, ROLE_MAXSIZE_DBRECORD);
 	if (!pPlayer->MisGetRecord(g_szRecord, ROLE_MAXSIZE_DBRECORD - 1)) {
 		//pCha->SystemNotice( "SaveMissionData:!ID = %d", pCha->GetID() );
-		//LG(szDBLog, "SaveMissionData:[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00018), pCha->GetID());
 		ToLogService(
 			szDBLog,
@@ -1275,7 +1209,6 @@ BOOL CTableCha::SaveMissionData(CPlayer* pPlayer, DWORD atorID) {
 	memset(g_szTrigger, 0, ROLE_MAXSIZE_DBTRIGGER);
 	if (!pPlayer->MisGetTrigger(g_szTrigger, ROLE_MAXSIZE_DBTRIGGER - 1)) {
 		//pCha->SystemNotice( "SaveMissionData:!ID = %d", pCha->GetID() );
-		//LG(szDBLog, "SaveMissionData:[ID: %d\tNAME: %s]!ID = %d\n", atorID, pCha->GetName(), pCha->GetID() );
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00019), pCha->GetID());
 		ToLogService(
 			szDBLog, "SaveMissionData:save character[ID: {}\tNAME: {}]data infoGet mission trigger data error!ID = {}",
@@ -1292,7 +1225,6 @@ BOOL CTableCha::SaveMissionData(CPlayer* pPlayer, DWORD atorID) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
@@ -1565,7 +1497,6 @@ bool CTableWinTicket::Exchange(int issue, char* itemno) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -2185,7 +2116,6 @@ bool CTableResource::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -2213,7 +2143,6 @@ bool CTableResource::Create(long& lDBID, long lChaId, long lTypeId) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -2233,7 +2162,6 @@ bool CTableResource::Create(long& lDBID, long lChaId, long lTypeId) {
 
 bool CTableResource::ReadKitbagData(CCharacter* pCha) {
 	if (!pCha) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "Load resource database error,character is inexistence");
 		return false;
 	}
@@ -2254,25 +2182,20 @@ bool CTableResource::ReadKitbagData(CCharacter* pCha) {
 		DWORD dwChaId = Str2Int(g_buf[nIndex++]);
 		char chType = Str2Int(g_buf[nIndex++]);
 		if (dwChaId != pCha->GetPlayer()->GetDBChaId() || chType != enumRESDB_TYPE_KITBAG) {
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "Load resource database errorcharacter is not matching.");
 			return false;
 		}
 		if (!pCha->String2KitbagData(g_buf[nIndex++])) {
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "kitbag data check sum error.");
-			//LG("", "%sresource_id %u.\n", pCha->GetLogName(), pCha->GetKitbagRecDBID());
 			ToLogService("check sum error", "character({}) kitbag data(resource_id {}) check sum error.",
 						 pCha->GetLogName(), pCha->GetKitbagRecDBID());
 			return false;
 		}
 	}
 	else {
-		//LG("enter_map", "_get_row()%d.\n", r);
 		ToLogService("enter_map", "Load resource database error_get_row()return value:{}.", r);
 		return false;
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "Load kitbag data succeed.");
 	return true;
 }
@@ -2280,14 +2203,11 @@ bool CTableResource::ReadKitbagData(CCharacter* pCha) {
 bool CTableResource::SaveKitbagData(CCharacter* pCha) {
 	if (!pCha || !pCha->IsValid()) return false;
 
-	//LG("enter_map", "!\n");
 	g_kitbag[0] = 0;
 	if (!KitbagData2String(&pCha->m_CKitbag, g_kitbag, defKITBAG_DATA_STRING_LEN)) {
-		//LG("enter_map", "%s\t!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tsave data(kitbag) error!", pCha->GetLogName());
 		return false;
 	}
-	//LG("enter_map", "\n");
 
 	sprintf(g_sql, "update %s set \
 				   content='%s' \
@@ -2296,7 +2216,6 @@ bool CTableResource::SaveKitbagData(CCharacter* pCha) {
 			g_kitbag,
 			pCha->GetKitbagRecDBID());
 
-	//LG("enter_map", "SQL\n");
 	if (strlen(g_sql) >= SQL_MAXLEN) {
 		//FILE	*pf = fopen("log\\SQL.txt", "a+");
 		FILE* pf = fopen("log\\SQLsentence_length_slopover.txt", "a+");
@@ -2304,23 +2223,18 @@ bool CTableResource::SaveKitbagData(CCharacter* pCha) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
-	//LG("enter_map", "SQL\n");
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\t carry out SQL sentence error!", pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", pCha->GetKitbagRecDBID());
 		ToLogService("enter_map", "Database couldn't find the kitbag resource {}!", pCha->GetKitbagRecDBID());
 		return false;
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "finish kitbag save.");
 
 	return true;
@@ -2328,7 +2242,6 @@ bool CTableResource::SaveKitbagData(CCharacter* pCha) {
 
 bool CTableResource::ReadKitbagTmpData(CCharacter* pCha) {
 	if (!pCha) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "Load resource database error,character is inexistence.");
 		return false;
 	}
@@ -2349,25 +2262,20 @@ bool CTableResource::ReadKitbagTmpData(CCharacter* pCha) {
 		DWORD dwChaId = Str2Int(g_buf[nIndex++]);
 		char chType = Str2Int(g_buf[nIndex++]);
 		if (dwChaId != pCha->GetPlayer()->GetDBChaId() || chType != enumRESDB_TYPE_KITBAGTMP) {
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "Load resource database error,character is not matching.");
 			return false;
 		}
 		if (!pCha->String2KitbagTmpData(g_buf[nIndex++])) {
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "Temp kitbag data check sum error.");
-			//LG("", "%sresource_id %u.\n", pCha->GetLogName(), pCha->GetKitbagTmpRecDBID());
 			ToLogService("check sum error", "character({}) temp kitbag data(resource_id {})check sum error.",
 						 pCha->GetLogName(), pCha->GetKitbagTmpRecDBID());
 			return false;
 		}
 	}
 	else {
-		//LG("enter_map", "_get_row()%d.\n", r);
 		ToLogService("enter_map", "Load resource database error,_get_row() return value:{}.", r);
 		return false;
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "Load temp kitbag data succeed.");
 
 	return true;
@@ -2427,7 +2335,6 @@ bool CTableResource::ReadKitbagTmpData(long lRecDBID, string& strData) {
 		ret = true;
 	}
 	catch (int& e) {
-		//LG("Store_msg", "ReadKitbagTmpData ODBC %d\n",e);
 		ToLogService("Store_msg", "ReadKitbagTmpData ODBC interface transfer error,position ID:{}", e);
 	}
 	catch (...) {
@@ -2461,23 +2368,19 @@ bool CTableResource::SaveKitbagTmpData(long lRecDBID, const string& strData) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("Store_msg", "SQL!\n");
 		ToLogService("Store_msg", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("Store_msg", "SQL!\n");
 		ToLogService("Store_msg", "carry out SQL sentence error!");
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("Store_msg", "%u!\n", lRecDBID);
 		ToLogService("Store_msg", "Database couldn't find the temp kitbag resource {}!", lRecDBID);
 		return false;
 	}
-	//LG("Store_msg", ".\n");
 	ToLogService("Store_msg", "finish the temp kitbag save.");
 
 	return true;
@@ -2488,7 +2391,6 @@ bool CTableResource::SaveKitbagTmpData(CCharacter* pCha) {
 
 	g_kitbagTmp[0] = 0;
 	if (!KitbagData2String(pCha->m_pCKitbagTmp, g_kitbagTmp, defKITBAG_DATA_STRING_LEN)) {
-		//LG("enter_map", "%s\t!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tsave data(temp kitbag)error!", pCha->GetLogName());
 		return false;
 	}
@@ -2507,23 +2409,19 @@ bool CTableResource::SaveKitbagTmpData(CCharacter* pCha) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "%s\tSQL!\n", pCha->GetLogName());
 		ToLogService("enter_map", "character {}\tcarry out SQL sentence error!", pCha->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", pCha->GetKitbagTmpRecDBID());
 		ToLogService("enter_map", "Database couldn't find the temp kitbag resource{}!", pCha->GetKitbagTmpRecDBID());
 		return false;
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "finish save the temp kitbag.");
 
 	return true;
@@ -2531,7 +2429,6 @@ bool CTableResource::SaveKitbagTmpData(CCharacter* pCha) {
 
 bool CTableResource::ReadBankData(CPlayer* pCPly, char chBankNO) {
 	if (!pCPly) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "Load resource database error,character is inexistence.");
 		return false;
 	}
@@ -2567,26 +2464,21 @@ bool CTableResource::ReadBankData(CPlayer* pCPly, char chBankNO) {
 			DWORD dwChaId = Str2Int(g_buf[nIndex++]);
 			char chType = Str2Int(g_buf[nIndex++]);
 			if (dwChaId != pCPly->GetDBChaId() || chType != enumRESDB_TYPE_BANK) {
-				//LG("enter_map", ".\n");
 				ToLogService("enter_map", "Load resource database error,character is not matching.");
 				return false;
 			}
 			if (!pCPly->String2BankData(i, g_buf[nIndex++])) {
-				//LG("enter_map", ".\n");
 				ToLogService("enter_map", "kitbag data check sum error.");
-				//LG("", "%uresource_id %u.\n", pCPly->GetDBChaId(), pCPly->GetBankDBID(i));
 				ToLogService("check sum error", "player ({}) bank data(resource_id {})check sum error.",
 							 pCPly->GetDBChaId(), pCPly->GetBankDBID(i));
 				return false;
 			}
 		}
 		else {
-			//LG("enter_map", "_get_row()%d.\n", r);
 			ToLogService("enter_map", "Load resource database error_get_row() return value:{}.", r);
 			return false;
 		}
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "Load bank data succeed.");
 	return true;
 }
@@ -2607,7 +2499,6 @@ bool CTableResource::SaveBankData(CPlayer* pCPly, char chBankNO) {
 		chStart = chEnd = chBankNO;
 	}
 
-	//LG("enter_map", "!\n");
 
 	for (char i = chStart; i <= chEnd; i++) {
 		if (!pCPly->BankWillSave(i))
@@ -2615,11 +2506,9 @@ bool CTableResource::SaveBankData(CPlayer* pCPly, char chBankNO) {
 		pCPly->SetBankSaveFlag(i, false);
 		g_kitbag[0] = 0;
 		if (!KitbagData2String(pCPly->GetBank(i), g_kitbag, defKITBAG_DATA_STRING_LEN)) {
-			//LG("enter_map", "%u\t!\n", pCPly->GetBankDBID(i));
 			ToLogService("enter_map", "character{}\tsave data(bank) error!", pCPly->GetBankDBID(i));
 			return false;
 		}
-		//LG("enter_map", "\n");
 
 		sprintf(g_sql, "update %s set \
 					content='%s' \
@@ -2628,7 +2517,6 @@ bool CTableResource::SaveBankData(CPlayer* pCPly, char chBankNO) {
 				g_kitbag,
 				pCPly->GetBankDBID(i));
 
-		//LG("enter_map", "SQL\n");
 		if (strlen(g_sql) >= SQL_MAXLEN) {
 			//FILE	*pf = fopen("log\\SQL.txt", "a+");
 			FILE* pf = fopen("log\\SQLsentence_length_slopover.txt", "a+");
@@ -2636,24 +2524,19 @@ bool CTableResource::SaveBankData(CPlayer* pCPly, char chBankNO) {
 				fprintf(pf, "%s\n\n", g_sql);
 				fclose(pf);
 			}
-			//LG("enter_map", "SQL!\n");
 			ToLogService("enter_map", "SQL sentence length slop over");
 			return false;
 		}
 		short sExec = exec_sql_direct(g_sql);
-		//LG("enter_map", "SQL\n");
 		if (!DBOK(sExec)) {
-			//LG("enter_map", "%u\tSQL!\n", pCPly->GetDBChaId());
 			ToLogService("enter_map", "player {}\tcarry out SQL sentence error!", pCPly->GetDBChaId());
 			return false;
 		}
 		if (DBNODATA(sExec)) {
-			//LG("enter_map", "%u!\n", pCPly->GetBankDBID(i));
 			ToLogService("enter_map", "Database couldn't find the bank resource{}!", pCPly->GetBankDBID(i));
 			return false;
 		}
 	}
-	//LG("enter_map", "[%d->%d].\n", chStart, chEnd);
 	ToLogService("enter_map", "finish the whole bank[{}->{}]save", chStart, chEnd);
 	return true;
 }
@@ -2671,7 +2554,6 @@ bool CTableMapMask::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -2726,7 +2608,6 @@ bool CTableMapMask::Create(long& lDBID, long lChaId) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -2746,7 +2627,6 @@ bool CTableMapMask::Create(long& lDBID, long lChaId) {
 
 bool CTableMapMask::ReadData(CPlayer* pCPly) {
 	if (!pCPly || !pCPly->IsValid()) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "Load map hideID database error,character is inexistence.");
 		return false;
 	}
@@ -2759,7 +2639,6 @@ bool CTableMapMask::ReadData(CPlayer* pCPly) {
 
 	char szMaskColName[30];
 	if (!GetColNameByMapName(pCPly->GetMaskMapName(), szMaskColName, 30)) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "choice map hideID data error.");
 		return false;
 	}
@@ -2774,20 +2653,16 @@ bool CTableMapMask::ReadData(CPlayer* pCPly) {
 	if (DBOK(r) && r1 > 0) {
 		DWORD dwChaId = Str2Int(g_buf[nIndex++]);
 		if (dwChaId != pCPly->GetDBChaId()) {
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "Load map hideID database error,character is not matching.");
 			return false;
 		}
 		pCPly->SetMapMaskBase64(g_buf[nIndex++].c_str());
 		//if (strcmp(g_buf[nIndex-1].c_str(), "0"))
-		//	LG("", " %s %u.\n", pCPly->GetMaskMapName(), strlen(g_buf[nIndex-1].c_str()));
 	}
 	else {
-		//LG("enter_map", "_get_row()%d.%u\n", r);
 		ToLogService("enter_map", "Load map hideID database error,_get_row() return value:{}", r);
 		return false;
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "Load big map data succeed.");
 	return true;
 }
@@ -2797,12 +2672,10 @@ bool CTableMapMask::SaveData(CPlayer* pCPly, BOOL bDirect) {
 
 	char szMaskColName[30];
 	if (!GetColNameByMapName(pCPly->GetMaskMapName(), szMaskColName, 30)) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "choice map hideID data error.");
 		return false;
 	}
 
-	//LG("enter_map", "!\n");
 	ToLogService("enter_map", "start save big map data!");
 	sprintf(g_sql, "update %s set \
 				   %s='%s' \
@@ -2812,7 +2685,6 @@ bool CTableMapMask::SaveData(CPlayer* pCPly, BOOL bDirect) {
 			pCPly->GetMapMaskBase64(),
 			pCPly->GetMapMaskDBID());
 
-	//LG("enter_map", "!\n");
 	ToLogService("enter_map", "organize big map data succeed!");
 
 	if (!bDirect) {
@@ -2835,25 +2707,19 @@ BOOL CTableMapMask::_ExecSQL(const char* pszSQL) {
 			fprintf(pf, "%s\n\n", pszSQL);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
 
 	short sExec = exec_sql_direct(pszSQL);
-	// LG("enter_map", "SQL!\n");
 	if (!DBOK(sExec)) {
-		//LG("enter_map", "SQLsql = [%s]\n", pszSQL);
 		ToLogService("enter_map", "player carry out SQL sentence error sql = [{}]", pszSQL);
 		return FALSE;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "sql = [%s]\n", pszSQL);
 		ToLogService("enter_map", "Database couldn't find the map hideID sql = [{}]", pszSQL);
 		return FALSE;
 	}
-	//LG("enter_map", ".\n");
-	//LG("", "[%d], [%d]\n", t.End(), _SaveMapMaskList.size() - 1);
 	ToLogService("save data waste time", "save big map waste time[{}],queue[{}]", t.End(), _SaveMapMaskList.size() - 1);
 	return TRUE;
 }
@@ -2864,7 +2730,6 @@ void CTableMapMask::SaveAll() {
 		string& strSQL = (*it);
 		_ExecSQL(strSQL.c_str());
 	}
-	//LG("enter_map", "SQL, [%d]!\n", _SaveMapMaskList.size());
 	ToLogService("enter_map", "one-off carry out every big map save SQL,totalize[{}] piece!", _SaveMapMaskList.size());
 	_SaveMapMaskList.clear();
 }
@@ -2889,7 +2754,6 @@ void CTableMapMask::HandleSaveList() {
 
 		_SaveMapMaskList.pop_front();
 
-		// LG("", "[%d]\n", nSize - 1);
 	}
 }
 
@@ -2906,7 +2770,6 @@ bool CTableAct::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -2978,7 +2841,6 @@ bool CTableBoat::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -3016,7 +2878,6 @@ BOOL CTableBoat::Create(DWORD& dwBoatID, const BOAT_DATA& Data) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
@@ -3064,7 +2925,6 @@ BOOL CTableBoat::GetBoat(CCharacter& Boat) {
 		BYTE byIsDeleted = (BYTE)Str2Int(g_buf[nIndex++]);
 		//if( dwOwnerID != Boat.GetPlayer()->GetDBChaId() )
 		//{
-		//	LG( "boat_error", "%sID[0x%X]ID[0x%X]%sID[0x%X].",
 		//		Data.szName, dwBoatID, dwOwnerID,
 		//		Boat.GetName(), Boat.GetPlayer()->GetDBChaId() );
 		//	Boat.SystemNotice( "%s!!" );
@@ -3157,7 +3017,6 @@ BOOL CTableBoat::SaveBoatTempData(DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDele
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
@@ -3176,7 +3035,6 @@ BOOL CTableBoat::SaveBoatDelTag(DWORD dwBoatID, BYTE byIsDeleted) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
@@ -3200,7 +3058,6 @@ BOOL CTableBoat::SaveBoatTempData(CCharacter& Boat, BYTE byIsDeleted) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
@@ -3209,7 +3066,6 @@ BOOL CTableBoat::SaveBoatTempData(CCharacter& Boat, BYTE byIsDeleted) {
 }
 
 BOOL CTableBoat::SaveBoat(CCharacter& Boat, char chSaveType) {
-	//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 	DWORD dwBoatID = (DWORD)Boat.getAttr(ATTR_BOAT_DBID);
 	USHORT sBerthID = (USHORT)Boat.getAttr(ATTR_BOAT_BERTH);
 	if (chSaveType == enumSAVE_TYPE_OFFLINE) //
@@ -3217,7 +3073,6 @@ BOOL CTableBoat::SaveBoat(CCharacter& Boat, char chSaveType) {
 	else //
 	{
 		if (!SStateData2String(&Boat, g_skillstate, defSSTATE_DATE_STRING_LIN, chSaveType)) {
-			//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 			ToLogService("enter_map", "boat {} ({})organize state data failed.", Boat.GetLogName(),
 						 Boat.GetPlyMainCha()->GetLogName());
 			return false;
@@ -3225,7 +3080,6 @@ BOOL CTableBoat::SaveBoat(CCharacter& Boat, char chSaveType) {
 	}
 	g_kitbag[0] = '\0';
 	KitbagData2String(&Boat.m_CKitbag, g_kitbag, defKITBAG_DATA_STRING_LEN);
-	//LG("enter_map", ".\n");
 
 	bool bWithPos = false;
 	if (Boat.GetPlyCtrlCha()->GetSubMap())
@@ -3268,7 +3122,6 @@ BOOL CTableBoat::SaveBoat(CCharacter& Boat, char chSaveType) {
 				(long)Boat.getAttr(ATTR_CEXP),
 				g_kitbag,
 				dwBoatID);
-	//LG("enter_map", "SQL.\n");
 
 	if (strlen(g_sql) >= SQL_MAXLEN) {
 		//FILE	*pf = fopen("log\\SQL.txt", "a+");
@@ -3277,30 +3130,24 @@ BOOL CTableBoat::SaveBoat(CCharacter& Boat, char chSaveType) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return FALSE;
 	}
 	short sExec = exec_sql_direct(g_sql);
-	//LG("enter_map", "SQL.\n");
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 		ToLogService("enter_map", "boat {} ({})save basic data failed.", Boat.GetLogName(),
 					 Boat.GetPlyMainCha()->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", dwBoatID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", dwBoatID);
 		return false;
 	}
-	//LG("enter_map", ".\n");
 
 	//if (!SaveCabin(Boat, chSaveType))
 	//	return false;
 
-	//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 	ToLogService("enter_map", "boat {} ({}) the whole data save succeed.", Boat.GetLogName(),
 				 Boat.GetPlyMainCha()->GetLogName());
 
@@ -3318,7 +3165,6 @@ bool CTableBoat::SaveAllData(CPlayer* pPlayer, char chSaveType) {
 		if (!SaveBoat(*pCBoat, chSaveType))
 			return false;
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "save the whole boat data succeed");
 
 	return true;
@@ -3341,24 +3187,20 @@ bool CTableBoat::SaveCabin(CCharacter& Boat, char chSaveType) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
 	short sExec = exec_sql_direct(g_sql);
 
 	if (!DBOK(sExec)) {
-		//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 		ToLogService("enter_map", "boat {} ({}) cabin data save failed.", Boat.GetLogName(),
 					 Boat.GetPlyMainCha()->GetLogName());
 		return false;
 	}
 	if (DBNODATA(sExec)) {
-		//LG("enter_map", "%u!\n", dwBoatID);
 		ToLogService("enter_map", "Database couldn't find the character{}!", dwBoatID);
 		return false;
 	}
-	//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 	ToLogService("enter_map", "boat {} ({})cabin data save succeed.", Boat.GetLogName(),
 				 Boat.GetPlyMainCha()->GetLogName());
 
@@ -3388,17 +3230,13 @@ bool CTableBoat::ReadCabin(CCharacter& Boat) //
 	int r = _get_row3(g_buf, g_cnCol, param, filter);
 	int r1 = get_affected_rows();
 	if (DBOK(r) && r1 > 0) {
-		//LG("enter_map", " %u (%s, %s) %s.\n", dwBoatID, Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName(), g_buf[nIndex].c_str());
 		if (!Boat.String2KitbagData(g_buf[nIndex++])) {
-			//LG("enter_map", ".\n");
 			ToLogService("enter_map", "cabin data check sum error.");
-			//LG("", "%sboat_id %u.\n", Boat.GetLogName(), Boat.getAttr( ATTR_BOAT_DBID ));
 			ToLogService("check sum error", "boat ({}) cabin data (boat_id {})check sum error.", Boat.GetLogName(),
 						 Boat.getAttr(ATTR_BOAT_DBID));
 			return false;
 		}
 
-		//LG("enter_map", " %s (%s).\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 		ToLogService("enter_map", "boat {} ({}) cabin data set succeed.", Boat.GetLogName(),
 					 Boat.GetPlyMainCha()->GetLogName());
 		return true;
@@ -3471,7 +3309,6 @@ BOOL CGameDB::Init() {
 	//_tab_ticket->Exchange(1 , "123456");
 
 	if (!_tab_log) {
-		//LG("init", "gamelog\n");
 		ToLogService("init", "gamelog data list init failed");
 	}
 
@@ -3525,7 +3362,6 @@ bool CGameDB::ReadPlayer(CPlayer* pPlayer, DWORD atorID) {
 		//if (lType >= 0)
 		//	pPlayer->GetMainCha()->setAttr(ATTR_GUILD_TYPE, lType, 1);
 	}
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "Load the character whole data succeed.");
 
 	//
@@ -3644,7 +3480,6 @@ bool CGameDB::SavePlayer(CPlayer* pPlayer, char chSaveType) {
 		bSaveBoat = _tab_boat->SaveAllData(pPlayer, chSaveType); //
 		DWORD dwSaveBoatTick = GetTickCount();
 
-		//LG("", "%-8d%-8d%-8d%-8d%-8d%-8d.[%d %s]\n",
 		ToLogService("save data waste time",
 					 "totalize {:<8}main character {:<8}main character kitbag {:<8}bank {:<8}big map {:<8}boat {:<8}.[{} {}]",
 					 dwSaveBoatTick - dwStartTick, dwSaveMainTick - dwStartTick, dwSaveKbTick - dwSaveMainTick,
@@ -3652,7 +3487,6 @@ bool CGameDB::SavePlayer(CPlayer* pPlayer, char chSaveType) {
 					 pPlayer->GetDBChaId(), pPlayer->GetMainCha()->GetLogName());
 	}
 	catch (...) {
-		//LG("enter_map", ".\n");
 		ToLogService("enter_map", "It's abnormity when saving the character's whole data.");
 	}
 
@@ -3663,7 +3497,6 @@ bool CGameDB::SavePlayer(CPlayer* pPlayer, char chSaveType) {
 	}
 	CommitTran();
 
-	//LG("enter_map", ".\n");
 	ToLogService("enter_map", "save character whole data succeed.");
 	//
 	if (chSaveType != enumSAVE_TYPE_TIMER) {
@@ -3814,7 +3647,6 @@ bool CTableGuild::Init(void) {
 			fprintf(pf, "%s\n\n", g_sql);
 			fclose(pf);
 		}
-		//LG("enter_map", "SQL!\n");
 		ToLogService("enter_map", "SQL sentence length slop over");
 		return false;
 	}
@@ -3965,11 +3797,9 @@ bool CTableGuild::ListAll(CCharacter* pCha, char disband_days) {
 		ret = true;
 	}
 	catch (int& e) {
-		//LG("", "ODBC %d\n",e);
 		ToLogService("consortia system", "found consortia process ODBC interfance transfer error,position ID:{}", e);
 	}
 	catch (...) {
-		//LG("", "Unknown Exception raised when list all guilds\n");
 		ToLogService("consortia system", "Unknown Exception raised when list all guilds");
 	}
 
@@ -4001,7 +3831,6 @@ void CTableGuild::TryFor(CCharacter* pCha, uLong guildid) {
 	if (!DBOK(l_ret)) {
 		//pCha->SystemNotice(".");
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00034));
-		//LG("","[%s][ID=%d]SQL.\n",pCha->GetName(),guildid);
 		ToLogService("consortia system", "character[{}]apply join in consortia [ID={}] carry out SQL failed.",
 					 pCha->GetName(), guildid);
 		return;
@@ -4020,7 +3849,6 @@ void CTableGuild::TryFor(CCharacter* pCha, uLong guildid) {
 	if (!DBOK(l_ret) || get_affected_rows() != 1) {
 		//pCha->SystemNotice(".");
 		pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00034));
-		//LG("","[%s][ID=%d]SQL.\n",pCha->GetName(),guildid);
 		ToLogService("consortia system", "character[{}]apply join in consortia [ID={}] carry out SQL failed.",
 					 pCha->GetName(), guildid);
 		return;
@@ -4035,7 +3863,6 @@ void CTableGuild::TryFor(CCharacter* pCha, uLong guildid) {
 	if (l_retrow == 1) {
 	}
 	else {
-		//LG( "", "TryFor%sID[0x%X]!", pCha->GetName(), guildid );
 		ToLogService("consortia system", "TryFor: character {} apply consortia ID[{:x}]is inexistence!",
 					 pCha->GetName(), guildid);
 		//pCha->SystemNotice( "!" );
@@ -4250,7 +4077,6 @@ bool CTableGuild::SetGuildLog(std::vector<BankLog> log, uLong guild_id) {
 		if (true) {
 			sprintf(buf, "%d-%lld-%lld-%d-%d;", log.at(i).type, log.at(i).time, log.at(i).parameter, log.at(i).quantity,
 					log.at(i).userID);
-			//printf(buf);
 		}
 		strcat(data, buf);
 	}
@@ -4380,12 +4206,10 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days) {
 		ret = true;
 	}
 	catch (int& e) {
-		//LG("", "ODBC %d\n",e);
 		ToLogService("consortia system",
 					 "consult apply consortia process memeberODBC interface transfer error,position ID:{}", e);
 	}
 	catch (...) {
-		//LG("", "Unknown Exception raised when list all guilds\n");
 		ToLogService("consortia system", "Unknown Exception raised when list all guilds");
 	}
 
@@ -4942,7 +4766,6 @@ bool CTableGuild::Leizhu(CCharacter* pCha, BYTE byLevel, DWORD dwMoney) {
 		SQLRETURN l_sqlret = exec_sql_direct(sql);
 		if (!DBOK(l_sqlret) || get_affected_rows() == 0) {
 			this->rollback();
-			//LG( "", "!!ID = %d.%d", pCha->GetValidGuildID(), byLevel );
 			ToLogService("challenge consortia",
 						 "challenge consortia over,leizhu failed:update lost consortia data operater failed! consortiaID = {}.consortia level:{}",
 						 pCha->GetValidGuildID(), byLevel);
@@ -5045,7 +4868,6 @@ bool CTableGuild::Challenge(CCharacter* pCha, BYTE byLevel, DWORD dwMoney) {
 		SQLRETURN l_sqlret = exec_sql_direct(sql);
 		if (!DBOK(l_sqlret) || get_affected_rows() == 0) {
 			this->rollback();
-			//LG( "", "!!ID = %d.%d", pCha->GetValidGuildID(), byLevel );
 			ToLogService("challenge consortia",
 						 "challenge consortia over,leizhu failed:update lost consortia data operater failed! consortiaID = {}.consortia level:{}",
 						 pCha->GetValidGuildID(), byLevel);
@@ -5273,7 +5095,6 @@ bool CTableGuild::HasCall(BYTE byLevel) {
 }
 
 bool CTableGuild::StartChall(BYTE byLevel) {
-	//LG( "", "%d...\n", byLevel );
 	ToLogService("challenge consortia", "range level {} challenge start treat with....", byLevel);
 	string buf[4];
 	char filter[80];
@@ -5307,20 +5128,17 @@ bool CTableGuild::StartChall(BYTE byLevel) {
 			dwGuildID);
 	SQLRETURN l_sqlret = exec_sql_direct(sql);
 	if (!DBOK(l_sqlret) || get_affected_rows() == 0) {
-		//LG( "", "!!" );
 		ToLogService("challenge consortia",
 					 "challenge consortia data operator failed!consortia battle already start or inexistence!");
 		return false;
 	}
 
-	//LG( "", "%d!GUILD1 = %d, GUILD2 = %d, Money = %u.\n", byLevel, dwGuildID, dwChallID, dwChallMoney );
 	ToLogService("challenge consortia", "range level {} challenge start succeed !GUILD1 = {}, GUILD2 = {}, Money = {}.",
 				 byLevel, dwGuildID, dwChallID, dwChallMoney);
 	return true;
 }
 
 void CTableGuild::EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall) {
-	//LG( "", "GUILD1 = %d, GUILD2 = %d...\n", dwGuild1, dwGuild2 );
 	ToLogService("challenge consortia",
 				 "arranger level consortia game start operator finish GUILD1 = {}, GUILD2 = {}...", dwGuild1, dwGuild2);
 	string buf[5];
@@ -5345,7 +5163,6 @@ void CTableGuild::EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall) {
 		byLevel = (BYTE)atoi(buf[4].c_str());
 		if (dwChallID == dwGuild2) {
 			ChallMoney(byLevel, bChall, dwGuild1, dwGuild2, dwChallMoney);
-			//LG( "", "%d!GUILD1 = %d, GUILD2 = %d, Money = %u.\n", byLevel, dwGuild1, dwGuild2, dwChallMoney );
 			ToLogService("challenge consortia",
 						 "range level {} consortia challenge over!GUILD1 = {}, GUILD2 = {}, Money = {}.", byLevel,
 						 dwGuild1, dwGuild2, dwChallMoney);
@@ -5363,7 +5180,6 @@ void CTableGuild::EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall) {
 		byLevel = (BYTE)atoi(buf[4].c_str());
 		if (dwChallID == dwGuild1) {
 			ChallMoney(byLevel, !bChall, dwGuild2, dwGuild1, dwChallMoney);
-			//LG( "", "%d!GUILD1 = %d, GUILD2 = %d, Money = %u.\n", byLevel, dwGuild2, dwGuild1, dwChallMoney );
 			ToLogService("challenge consortia",
 						 "range level {} consortia challenge over!GUILD1 = {}, GUILD2 = {}, Money = {}.", byLevel,
 						 dwGuild2, dwGuild1, dwChallMoney);
@@ -5371,7 +5187,6 @@ void CTableGuild::EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall) {
 		}
 	}
 
-	//LG( "", "!GUILD1 = %d, GUILD2 = %d, ChallFlag = %d.\n", dwGuild1, dwGuild2, ( bChall ) ? 1 : 0 );
 	ToLogService("challenge consortia",
 				 "consortia challenge result disposal failed!GUILD1 = {}, GUILD2 = {}, ChallFlag = {}.", dwGuild1,
 				 dwGuild2, (bChall) ? 1 : 0);
@@ -5380,7 +5195,6 @@ void CTableGuild::EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall) {
 bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD dwFailerGuildID) {
 	//
 	if (!begin_tran()) {
-		//LG( "", "!" );
 		ToLogService("challenge consortia", "challenge consortia finish,update consortia data start affair failed!");
 		return false;
 	}
@@ -5395,7 +5209,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 		//if( !DBOK( l_sqlret ) || get_affected_rows() == 0 )
 		//{
 		//	this->rollback();
-		//	LG( "", "!!ID = %d.%d", dwFailerGuildID, byLevel );
 		//	return false;
 		//}
 	}
@@ -5412,7 +5225,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 			byLvData = (BYTE)atoi(buf[0].c_str());
 		}
 		else {
-			//LG( "", "!GUILDID = %d, WINID = %d.\n", dwFailerGuildID, dwWinGuildID );
 			ToLogService("challenge consortia",
 						 "finish challenge consortialeizhu failed:inquire about failed consortia level info failed!GUILDID = {}, WINID = {}.",
 						 dwFailerGuildID, dwWinGuildID);
@@ -5433,7 +5245,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 			l_sqlret = exec_sql_direct(sql);
 			if (!DBOK(l_sqlret) || get_affected_rows() == 0) {
 				this->rollback();
-				//LG( "", "!!ID = %d.%d.\n", dwFailerGuildID, byLevel );
 				ToLogService("challenge consortia",
 							 "challenge consortia over,leizhu failed:update lost consortia data operater failed! consortiaID = {}.consortia level:{}.",
 							 dwFailerGuildID, byLevel);
@@ -5447,7 +5258,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 			l_sqlret = exec_sql_direct(sql);
 			if (!DBOK(l_sqlret) || get_affected_rows() == 0) {
 				this->rollback();
-				//LG( "", "!!ID = %d.%d.\n", dwFailerGuildID, byLevel );
 				ToLogService("challenge consortia",
 							 "challenge consortia over,leizhu failed:update lost consortia data operater failed! consortiaID = {}.consortia level:{}.",
 							 dwFailerGuildID, byLevel);
@@ -5461,7 +5271,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 	l_sqlret = exec_sql_direct(sql);
 	if (!DBOK(l_sqlret) || get_affected_rows() == 0) {
 		this->rollback();
-		//LG( "", "!!ID = %d.%d.\n", dwWinGuildID, byLevel );
 		ToLogService("challenge consortia",
 					 "challenge consortia over,update winner consortia data operator failed!inexistence consortia!consortiaID = {}.consortia level{}.",
 					 dwWinGuildID, byLevel);
@@ -5470,7 +5279,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 
 	if (!commit_tran()) {
 		this->rollback();
-		//LG( "", "!.\n" );
 		ToLogService("challenge consortia", "challenge consortia data referring failed,retry later on");
 		return false;
 	}
@@ -5479,7 +5287,6 @@ bool CTableGuild::ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD
 
 void CTableGuild::ChallMoney(BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD dwChallID, DWORD dwMoney) {
 	if (bChall) {
-		//LG( "", "ID = %d, ID = %d, %u, %d.\n", dwGuildID, dwChallID, dwMoney, byLevel  );
 		ToLogService("challenge consortia result",
 					 "challenge failed: winner:ID = {},loser:ID = {}, money = {},level:{}.", dwGuildID, dwChallID,
 					 dwMoney, byLevel);
@@ -5497,7 +5304,6 @@ void CTableGuild::ChallMoney(BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD d
 		}
 	}
 	else {
-		//LG( "", "ID = %d, ID = %d, %u, %d.\n", dwChallID, dwGuildID, dwMoney, byLevel  );
 		ToLogService("challenge consortia result",
 					 "challenge succeedwinner:ID = {},loser:ID = {}, money = {},level:{}.", dwChallID, dwGuildID,
 					 dwMoney, byLevel);

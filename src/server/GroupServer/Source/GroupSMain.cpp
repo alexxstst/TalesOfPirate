@@ -21,6 +21,8 @@ CLanguageRecord& CLanguageRecordInstance() {
 int _tmain(int argc, _TCHAR* argv[])
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
 
 	C_TITLE("GroupServer.exe")
 	C_PRINT("Loading GroupServer.cfg...\n");

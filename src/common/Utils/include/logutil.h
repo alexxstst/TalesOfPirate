@@ -53,6 +53,7 @@ namespace TalesOfPirate::Utils::Logs {
 		std::thread _logThread{};
 		bool _stopped{};
 		std::string _filePath{};
+		bool _enabledGlobalConsole;
 
 	public:
 		LogManager();
@@ -62,6 +63,7 @@ namespace TalesOfPirate::Utils::Logs {
 		bool AddLogger(const std::string& loggerName);
 		void SetLevel(const std::string& logSystem, LogLevel logLevel);
 		bool IsLogLevel(const std::string& logSystem, LogLevel logLevel);
+		void EnableGlobalConsole(bool status);
 
 		void Shutdown();
 		void
@@ -117,7 +119,6 @@ namespace TalesOfPirate::Utils::Logs {
 		std::string _logSystem{};
 		bool _enableConsole{};
 
-		void PrintConsoleMessage(const LogUtilEntry& logEntry);
 		void ToInternalLog(const LogUtilEntry& entry);
 
 	public:
@@ -138,6 +139,8 @@ namespace TalesOfPirate::Utils::Logs {
 		void EnableConsole(bool status) {
 			_enableConsole = status;
 		}
+
+		static void PrintConsoleMessage(const LogUtilEntry& logEntry);
 
 		template <class... _Types>
 		void LogError(std::format_string<std::remove_cvref_t<_Types>...> _Fmt, _Types&&... _Args) {

@@ -227,7 +227,6 @@ namespace mission
 			pData->Free();
 			//staller.SystemNotice( "%s[%d]", staller.GetName(), pData->m_byNum );
 			staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00014), staller.GetName(), pData->m_byNum );
-			//LG( "stall_error", "%s[%d]", staller.GetName(), pData->m_byNum );
 			ToLogService( "stall_error", "start to stallcharacter{}submit goods data over range[{}]", staller.GetName(), pData->m_byNum );
 			return;
 		}
@@ -271,7 +270,6 @@ namespace mission
 				pData->Free();
 				//staller.SystemNotice( "%sGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00016), staller.GetName(), pData->m_Goods[i].byGrid );
-				//LG( "stall_error", "%sGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
 				ToLogService( "stall_error", "start to stallcharacter{}submit goods data index over rangeGRID[{}]", staller.GetName(), pData->m_Goods[i].byGrid );
 				return;
 			}

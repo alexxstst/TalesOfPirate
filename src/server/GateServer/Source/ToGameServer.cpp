@@ -197,7 +197,6 @@ void ToGameServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	GameServer* l_game = (GameServer *)(datasock->GetPointer());
 
 	uShort l_cmd = recvbuf.ReadCmd();
-	//LG("ToGameServer", "-->l_cmd = %d\n", l_cmd);
 
 	printf("Incoming from GameServer Packet CMD ID: %d\n", l_cmd);
 	printf("Packet data size: %d bytes\n", recvbuf.GetDataLen());
@@ -312,7 +311,6 @@ void ToGameServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	{
 		ToLogService("ToGameServerError", "l_cmd = {}", l_cmd);
 	}
-	//LG("ToGameServer", "<--l_cmd = %d\n", l_cmd);
 }
 
 void ToGameServer::MT_LOGIN(DataSocket* datasock, RPacket& rpk)
@@ -531,7 +529,6 @@ void ToGameServer::MC_STARTEXIT(dbc::DataSocket* datasock, dbc::RPacket& recvbuf
 	if (l_ply)
 	{
 		g_gtsvr->cli_conn->SendData(l_ply->m_datasock, recvbuf);
-		//printf( "StartExit: id = %d\n", l_ply->m_actid );
 	}
 }
 
@@ -547,7 +544,6 @@ void ToGameServer::MC_CANCELEXIT(dbc::DataSocket* datasock, dbc::RPacket& recvbu
 		{
 			l_ply->m_exit = ClientConnection::Status::Invalid;
 			g_gtsvr->cli_conn->SendData(l_ply->m_datasock, recvbuf);
-			//printf( "MC:CancelExit: id = %d\n", l_ply->m_actid );
 		}
 	}
 }
@@ -561,7 +557,6 @@ void ToGameServer::MT_PALYEREXIT(dbc::DataSocket* datasock, dbc::RPacket& recvbu
 		if (l_ply && l_ply->m_dbid == recvbuf.ReverseReadLong())
 		{
 			auto const l_lockStat = std::lock_guard{ l_ply->m_mtxstat };
-			//printf( "PlayerExit id = %d, status = %d\n", l_ply->m_actid, l_ply->m_status );
 			uLong	l_ulMilliseconds = 30 * 1000;
 			if (l_ply->m_status == ClientConnection::Status::Playing && l_ply->m_exit == ClientConnection::Status::CharacterSelection) // 
 			{
@@ -615,7 +610,6 @@ void ToGameServer::MT_PALYEREXIT(dbc::DataSocket* datasock, dbc::RPacket& recvbu
 				l_wpk.WriteLong(l_ply->gp_addr);
 				l_ply->gp_addr = 0;
 				RPacket l_retpk = g_gtsvr->gp_conn->SyncCall(g_gtsvr->gp_conn->get_datasock(), l_wpk, l_ulMilliseconds);
-				//printf( "PlayerExit id = %d, status = %d\n", l_ply->m_actid, l_ply->m_status );
 				g_gtsvr->cli_conn->Disconnect(l_ply->m_datasock, 0, -23);	//23GameServer
 				l_ply->Free();
 			}

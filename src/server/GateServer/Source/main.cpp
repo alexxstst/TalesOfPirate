@@ -23,6 +23,8 @@ CLanguageRecord& CLanguageRecordInstance() {
 
 int main(int argc, char* argv[]) {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
 
 	C_TITLE("GateServer.exe")
 	C_PRINT("Loading GateServer.cfg...\n");

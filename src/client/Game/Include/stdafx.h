@@ -41,7 +41,8 @@ using namespace GUI;
 
 #include "LanguageRecord.h"
 
-extern CLanguageRecord g_oLangRec;	// 
+extern CLanguageRecord g_oLangRec;
+extern Logger animationLogger;
 
 inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
                            FLOAT a )

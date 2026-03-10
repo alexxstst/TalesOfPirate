@@ -50,7 +50,7 @@ namespace TalesOfPirate::Utils::Logs {
 			_logStream << "START NEW LOGGER SESSION" << '\n';
 		}
 
-		_logStream << entry.MessageTime << "|" << entry.LogLevel << " | " << entry.Message;
+		_logStream << entry.LogSystem << "|" << entry.MessageTime << "|" << entry.LogLevel << " | " << entry.Message;
 		if (!entry.Message.empty() && entry.Message[entry.Message.size() - 1] != '\n') {
 			_logStream << '\n';
 		}
@@ -148,6 +148,14 @@ namespace TalesOfPirate::Utils::Logs {
 							continue;
 						}
 
+						if (_enabledGlobalConsole) {
+							Logger::PrintConsoleMessage(lg);
+						}
+
+						if (lg.LogSystem != "common") {
+							_channels["common"]->Write(lg, lt);
+						}
+
 						it->second->Write(lg, lt);
 						_logsQueue.pop();
 					}
@@ -202,6 +210,10 @@ namespace TalesOfPirate::Utils::Logs {
 		}
 
 		return it->second->MinimumLogLevel >= logLevel;
+	}
+
+	void LogManager::EnableGlobalConsole(bool status) {
+		_enabledGlobalConsole = status;
 	}
 
 	void Logger::PrintConsoleMessage(const LogUtilEntry& logEntry) {

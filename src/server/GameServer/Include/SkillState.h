@@ -238,7 +238,6 @@ inline SSkillStateUnit* CSkillState::GetSStateByNum(unsigned char uchNum)
 		return m_pSState[uchNum];
 	else // 
 	{
-		//LG("", "msg!");
 		return 0;
 	}
 }

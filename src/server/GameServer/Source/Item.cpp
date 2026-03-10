@@ -93,7 +93,6 @@ void CItem::Run(dbc::uLong ulCurTick)
 			}
 		}
 		if (!m_submap)
-			//LG("", " %s(ID %uHANDLE %u[%d %d]) \n", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
 			ToLogService("Item disappear error", "item {}(ID {}HANDLE {}position[{} {}]) when it disappear find the map is null", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
 		else
 		{

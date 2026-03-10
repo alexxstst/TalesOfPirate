@@ -113,9 +113,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s][ResetNpcInfo]!", szName );
 			ToLogService( "NpcInit", "npc[{}]'s script init dispose function[ResetNpcInfo]transfer failed!", szName );
-			//printf( "npc[%s][ResetNpcInfo]!\n", szName );
 			printf( RES_STRING(GM_NPC_CPP_00001), szName );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -135,9 +133,7 @@ namespace mission
 		nStatus = lua_pcall( g_pLuaState, 0, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s][%s]!", szName, szFunc );
 			ToLogService( "NpcInit", "npc[{}]'s script data dispose function[{}]transfer failed!", szName, szFunc );
-			//printf( "npc[%s][%s]!\n", szName, szFunc );
 			printf( RES_STRING(GM_NPC_CPP_00002), szName, szFunc );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -160,9 +156,7 @@ namespace mission
 		nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s][GetNpcInfo]!", szName );
 			ToLogService( "NpcInit", "npc[{}]'s script init dispose function[GetNpcInfo]transfer failed!", szName );
-			//printf( "npc[%s][GetNpcInfo]!\n", szName );
 			printf(RES_STRING(GM_NPC_CPP_00003), szName );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -424,10 +418,8 @@ namespace mission
 				if( nStatus )
 				{
 #ifdef ROLE_DEBUG_INFO
-					//printf( "CTalkNpc::TimeOut:[TriggerProc]!" );
 					printf( RES_STRING(GM_NPC_CPP_00012) );
 #endif
-					//LG( "trigger_error", "CTalkNpc::TimeOut:[TriggerProc]!" );
 					ToLogService( "trigger_error", "CTalkNpc::TimeOut:task dispose fuction[TriggerProc]transfer failed!" );
 					lua_callalert( g_pLuaState, nStatus );
 					lua_settop(g_pLuaState, 0);
@@ -470,9 +462,7 @@ namespace mission
 						break;
 					default:
 						{
-							//LG( "trigger_error", "!" );
 							ToLogService( "trigger_error", "unknown time trigger distance taye!" );
-							//printf( "CTalkNpc::!Trigger ID = %d", m_Trigger[i].wTID );
 							printf( RES_STRING(GM_NPC_CPP_00013), m_Trigger[i].wTID );
 							ClearTrigger( i-- );
 						}

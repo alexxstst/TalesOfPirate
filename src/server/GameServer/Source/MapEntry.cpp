@@ -27,7 +27,6 @@ void CDynMapEntryCell::SetCopyNum(dbc::Short sCopyNum)
 {
 	if (sCopyNum > defMAX_MAP_COPY_NUM)
 	{
-		//LG("", "msg %d  %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
 		ToLogService("copy number error", "{}", RES_STRING(GM_GAMEAPP_CPP_00008));
 		return;
 	}

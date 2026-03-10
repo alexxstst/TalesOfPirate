@@ -59,7 +59,6 @@ long ConnectGateServer::Process()
 GameServerApp::GameServerApp(ThreadPool *proc,ThreadPool *comm)
     :TcpClientApp(this,proc,comm), RPCMGR(this), m_count(0), PKQueue(false)
 {
-	//LG("init", "ServerApp\n");	
 	ToLogService("init", "start init ServerApp");
 
 	// 
@@ -81,7 +80,6 @@ GameServerApp::GameServerApp(ThreadPool *proc,ThreadPool *comm)
     SetPKParse(0,2,32*1024,400);
     BeginWork(g_Config.m_lSocketAlive);
 
-	//LG("init", "ServerApp\n");
 	ToLogService("init", "ServerApp init over");
 }
 
@@ -286,7 +284,6 @@ void GameServerApp::ConnectGate(GateServer* pGate)
     DataSocket* datasock = Connect(pGate->GetIP().c_str(), pGate->GetPort());
     if (datasock == NULL)
     {
-		//LG("Connect", " GateServer , ip = %s, port = %d.\n", pGate->GetIP().c_str(), pGate->GetPort() ); 
 		ToLogService("Connect", "connect to  GateServer failed, ip = {}, port = {}.", pGate->GetIP().c_str(), pGate->GetPort());
 	}
     else 
@@ -331,7 +328,6 @@ bool GameServerApp::AddPlayer(GatePlayer* gtplayer, GateServer* gt, uLong gtaddr
     if (!gt->IsValid()) return false;
 	if (gtplayer->Next || gtplayer->Prev)
 	{
-		//LG("", "dbid %u\n", gtplayer->GetDBChaId());
 		ToLogService("character list error ", "when insert characterdbid {}to character ,find it connect pointer is not empty!", gtplayer->GetDBChaId());
 		return false;
 	}
@@ -558,7 +554,6 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
     if (uplayer_array == NULL) return false;
 
 #ifdef defCOMMU_LOG
-    //LG("SendToClient", "\nSendToClient called to notify %d players\n", array_cnt);
 #endif
 
     //  Gate
@@ -572,7 +567,6 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
         {
             pValidGate[sValidGateNum] = &m_gtarray[i];
 #ifdef defCOMMU_LOG
-            //LG("SendToClient", "Valid Gate 0x%x\n", pValidGate[sValidGateNum]);
 #endif
             usCount[sValidGateNum] = 0;
             CChginf[sValidGateNum] = pkt.Duplicate();
@@ -580,7 +574,6 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
         }
     }
 #ifdef defCOMMU_LOG
-    //LG("SendToClient", "Valid Gate num = %d\n", sValidGateNum);
 #endif
 
     //  uplayer_array  Gate 
@@ -588,7 +581,6 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
     for (int i = 0; i < array_cnt; ++ i)
     {
 #ifdef defCOMMU_LOG
-        //LG("SendToClient", "atorID = %d, pGate = 0x%x, gt_addr = 0x%x\n", uplayer_array[i].m_dwDBChaId, uplayer_array[i].pGate, uplayer_array[i].m_ulGateAddr);
 #endif
 
         if (uplayer_array[i].pGate == NULL)
@@ -615,7 +607,6 @@ bool GameServerApp::SendToClient(WPacket& pkt, int array_cnt, uplayer* uplayer_a
     for (int i = 0; i < sValidGateNum; i++)
     {
 #ifdef defCOMMU_LOG
-        //LG("SendToClient", "send to Gate: %s for %d players\n", pValidGate[i]->GetIP().c_str(), usCount[i]);
 #endif
         if (usCount[i] > 0)
         {            

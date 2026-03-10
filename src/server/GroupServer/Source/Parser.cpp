@@ -55,14 +55,12 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			m_nDoStringRet[0] = atoi(csString);
 			return 1;
 		}
-		//LG("lua_err", "DoString(%s)\n", csString);
 		ToLogService("lua_err", "no define DoString({})", csString);
 		return 0;
 	}
 
 	if (nRetNum > DOSTRING_RETURN_NUM)
 	{
-		//LG("lua_err", "msgDoString(%s) \n", csString);
 		ToLogService("lua_err", "msgDoString({}) return wrong num !!!", csString);
 
 		lua_settop(m_pSLua, 0);
@@ -107,7 +105,6 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 				lua_pushstring(m_pSLua, va_arg(list, char *));
 			break;
 		default:
-			//LG("lua_err", "msgDoString(%s) \n", csString);
 			ToLogService("lua_err", "msgDoString({}) parameter type is wrong!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
@@ -134,7 +131,6 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		{
 			if (!lua_isnumber(m_pSLua, -1 - i))
 			{
-				//LG("lua", " %s%d%d \n", csString, nParamNum, nRetNum);
 					ToLogService("lua return", "call {}(parameter {} return {}), return type can't matched!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
@@ -145,7 +141,6 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		{
 			if (!lua_isstring(m_pSLua, -1 - i))
 			{
-				//LG("lua", " %s%d%d \n", csString, nParamNum, nRetNum);
 					ToLogService("lua return", "call {}(parameter {} return {}), return type can't matched!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
@@ -154,7 +149,6 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		}
 		else
 		{
-			//LG("lua_err", "msgDoString(%s) \n", csString);
 			ToLogService("lua_err", "msgDoString({}) eturn type is wrong!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
@@ -166,7 +160,6 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	DWORD dwEndTime = t.End();
 	if(dwEndTime > 20)
 	{
-		//LG("script_time", "[%s] time = %d\n", csString, dwEndTime);
 		ToLogService("script_time", "script [{}] too long time = {}", csString, dwEndTime);
 	}
 	return nRet;

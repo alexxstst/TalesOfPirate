@@ -16,9 +16,7 @@ inline int lua_GetCurSubmap( lua_State* L )
 {
 	if( !g_pScriptMap )
 	{
-		//LG( "entity_error", "" );
 		ToLogService( "entity_error", "{}", RES_STRING(GM_ENTITYSCRIPT_CPP_00001) );
-		//printf( "" );
 		printf( RES_STRING(GM_ENTITYSCRIPT_CPP_00001) );
 		E_LUANULL;
 		return 0;

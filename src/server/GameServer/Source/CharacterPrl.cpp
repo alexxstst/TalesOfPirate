@@ -281,7 +281,6 @@ void CCharacter::ProcessPacket(unsigned short usCmd, RPACKET pk) {
 			m_dwPing = dwAddPing / defPING_RECORD_NUM;
 		}*/
 		m_dwPing = dwPing;
-		//printf("ping = %d [%s]\n", m_dwPing, GetName());
 		SendPreMoveTime();
 		break;
 	}
@@ -1521,7 +1520,6 @@ void CCharacter::ProcessPacket(unsigned short usCmd, RPACKET pk) {
 		//}
 		//pMainCha->TakeMoney("", lDelMoney);
 		long lCredit = (long)pMainCha->GetCredit(); //- 5 * pMainCha->GetLevel();
-		//printf(lCredit);
 		if (lCredit < 0) {
 			lCredit = 0;
 		}
@@ -1799,6 +1797,16 @@ void CCharacter::BeginAction(RPACKET pk) {
 #endif
 	Char chActionType = READ_CHAR(pk);
 
+	unsigned long ulWorldID{};
+	if (GetPlayer()) {
+		if (GetPlayer()->GetCtrlCha())
+			ulWorldID = GetPlayer()->GetCtrlCha()->GetID();
+		if (GetPlayer()->GetMainCha())
+			ulWorldID = GetPlayer()->GetMainCha()->GetID();
+	}
+
+	ToLogService("BeginAction", "type:{}, worldID:{}", static_cast<int>(chActionType), ulWorldID);
+
 	m_ulPacketID = ulPacketId;
 	switch (chActionType) {
 	case enumACTION_MOVE: {
@@ -1901,11 +1909,9 @@ void CCharacter::BeginAction(RPACKET pk) {
 
 			CSkillRecord* pRec = GetSkillRecordInfo(ulSkillID);
 			if (!pRec) {
-				//LG( "", "%s1: %d[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
 				ToLogService("skill inexistence", "character{}1skill inexistenceskill number: {}[PacketID: {}]",
 							 GetName(), ulSkillID, ulPacketId);
 				FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
-				//LG( "", "%s2: %d[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
 				ToLogService("skill inexistence", "character{}2skill inexistenceskill number: {}[PacketID: {}]", GetName(), ulSkillID, ulPacketId);
 				SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00040), ulSkillID);
 				break;
@@ -1913,6 +1919,7 @@ void CCharacter::BeginAction(RPACKET pk) {
 			Cmd_BeginSkill((Short)m_dwPing, Path, chPointNum, pRec, 1, lTarInfo1, lTarInfo2);
 		}
 		else {
+			ToLog("BeginAction::GM_CHARACTERPRL_CPP_00041: {}", RES_STRING(GM_CHARACTERPRL_CPP_00041));
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00041));
 			break;
 		}
@@ -2026,8 +2033,6 @@ void CCharacter::BeginAction(RPACKET pk) {
 			lParam2 = sGridID;
 		}
 
-		//printf("chLinkID: %d\n", chLinkID);
-		//printf("sGridID: %d\n", sGridID);
 
 		Short sUnfixNum = 0;
 		Short sRet = Cmd_UnfixItem(chLinkID, &sUnfixNum, chDir, lParam1, lParam2);

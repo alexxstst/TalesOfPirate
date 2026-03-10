@@ -252,7 +252,6 @@ bool ClientConnection::InitReference(dbc::DataSocket* datasock) {
 	else {
 		if (datasock) {
 			try {
-				//printf( "InitReference warning: %s", datasock->GetPeerIP() );
 				printf(RES_STRING(GS_GATESERVER_CPP_00013), datasock->GetPeerIP());
 				auto l_ply = static_cast<ClientConnection*>(datasock->GetPointer());
 				if (l_ply) {
@@ -261,7 +260,6 @@ bool ClientConnection::InitReference(dbc::DataSocket* datasock) {
 				}
 			}
 			catch (...) {
-				//printf( "InitReference warning: %sexception", datasock->GetPeerIP() );
 				printf(RES_STRING(GS_GATESERVER_CPP_00014), datasock->GetPeerIP());
 			}
 		}

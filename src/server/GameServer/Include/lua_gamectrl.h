@@ -107,7 +107,6 @@ inline int lua_SetCurMap(lua_State *L)
 	CMapRes *pMap = g_pGameApp->FindMapByName(pszName);
 	if(pMap==NULL)
 	{
-		//LG("lua_ai", "[%s], !\n", pszName);
 		ToLogService("lua_ai", "can't find pointer map[{}], keep former map!", pszName);
 		lua_pushnumber(L, 0);
 		return 1;
@@ -160,7 +159,6 @@ inline int lua_CreateChaNearPlayer(lua_State *L){ CHECK_MAP
 		lua_pushlightuserdata(L, pCCha);
 		return 1;
 	}else{
-		//LG("lua_ai", "\n");
 		ToLogService("lua_ai", "create character near role failed");
 		return 0;
 	}
@@ -188,7 +186,6 @@ inline int lua_CreateCha(lua_State *L)
 	short sAngle = (short)lua_tonumber(L, 4);      // 
 	long  lReliveTime = (int)lua_tonumber(L, 5);   // 
 
-	//LG("create_cha", "%d  pos = %d %d, angle = %d, rTime = %d\n", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 	ToLogService("create_cha", "create bugbear{}  pos = {} {}, angle = {}, rTime = {}", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
     
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
@@ -202,7 +199,6 @@ inline int lua_CreateCha(lua_State *L)
 	}
 	else
 	{
-		//LG("lua_ai", "\n");
 		ToLogService("lua_ai", "create character failed");
 		return 0;
 	}
@@ -228,7 +224,6 @@ inline int lua_CreateChaX(lua_State *L)
 	long  lReliveTime = (int)lua_tonumber(L, 5);   // 
 	CCharacter *pMainCha = (CCharacter *)lua_touserdata(L, 6);
 
-	//LG("create_chaX", "%d  pos = %d %d, angle = %d, rTime = %d\n", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 	ToLogService("create_chaX", "create bugbear{}  pos = {} {}, angle = {}, rTime = {}", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
@@ -242,7 +237,6 @@ inline int lua_CreateChaX(lua_State *L)
 	}
 	else
 	{
-		//LG("lua_ai", "\n");
 		ToLogService("lua_ai", "create character failed");
 		return 0;
 	}
@@ -274,7 +268,6 @@ inline int lua_CreateChaEx(lua_State *L)
 		E_LUANULL
 		return 0;
 	}
-	//LG("create_chaex", "%d  pos = %d %d, angle = %d, rTime = %d\n", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 	ToLogService("create_chaex", "create bugbear{}  pos = {} {}, angle = {}, rTime = {}", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
@@ -288,7 +281,6 @@ inline int lua_CreateChaEx(lua_State *L)
 	}
 	else
 	{
-		//LG("lua_ai", "\n");
 		ToLogService("lua_ai", "create character failed");
 		return 0;
 	}
@@ -684,7 +676,6 @@ inline int lua_SetChaAIType(lua_State *L)
     {
 		int nType = (int)lua_tonumber(L, 2);
 		pCha->m_AIType = nType;
-		//LG("lua_ai", "[%s]ai%d\n", pCha->GetName(), nType);
 		ToLogService("lua_ai", "character[{}]be set ai type is{}", pCha->GetName(), nType);
     }
 
@@ -938,7 +929,6 @@ inline int lua_GetChaFirstTarget(lua_State *L)
 		if(pTarget)
 		{
 			lua_pushlightuserdata(L, pTarget);
-			// LG("lua_ai", "[%s]\n", pTarget->GetName());
 			return 1;
 		}
 	}
@@ -999,7 +989,6 @@ inline int lua_GetChaHarmByNo(lua_State *L)
 	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha)
 	{
-		// LG("harm", ": [%s]\n", pCha->GetName());
 		int nNo = (int)(lua_tonumber(L, 2));
 	    SHarmRec *pHarm = pCha->m_pHate->GetHarmRec(nNo);
 		if(pHarm->btValid > 0)
@@ -1035,7 +1024,6 @@ inline int lua_GetChaHateByNo(lua_State *L)
 	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha)
 	{
-		// LG("harm", ": [%s]\n", pCha->GetName());
 		int nNo = (int)(lua_tonumber(L, 2));
 	    SHarmRec *pHarm = pCha->m_pHate->GetHarmRec(nNo);
 		if(pHarm->btValid > 0)
@@ -1888,7 +1876,7 @@ inline int lua_LG(lua_State *L)
 		}
 		str << "  ";
 	}
-	str << "\n";
+
 	str << std::ends;
 	ToLogService( (char*)pszFile, "{}", str.str() );
 	str.freeze(false);

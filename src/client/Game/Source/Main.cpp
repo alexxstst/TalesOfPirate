@@ -102,14 +102,34 @@ DWORD WINAPI LoadRes(LPVOID lpvThreadParam) //
 }
 
 HINSTANCE g_hInstance;
+Logger animationLogger = Logger("animation", true);
 
 int APIENTRY _tWinMain(HINSTANCE hInstance,
 					   HINSTANCE hPrevInstance,
 					   LPTSTR lpCmdLine,
 					   int nCmdShow) {
 	DWORD dx_ver = DX_VERSION_X_X;
+	AllocConsole();
+	freopen("CONOUT$", "w", stdout);
+	freopen("CONOUT$", "w", stderr);
+	freopen("CONIN$", "r", stdin);
+
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
 
 	std::cout << "Loading string..." << CLanguageRecordInstance().GetRecordCount() << std::endl;
+	::SetThreadName("main");
+	TalesOfPirate::Utils::Crush::SetGlobalCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetupDumpSetting("log\\client\\dumps");
+	g_logManager.InitLogger("log\\client");
+
+	animationLogger.LogWarning("Warn");
+	animationLogger.LogInfo("Info");
+	animationLogger.LogError("Error");
+	animationLogger.LogFatal("Fatal");
+	animationLogger.LogDebug("Debug");
+	animationLogger.LogDebug("Debug");
 
 
 	ToLogService("init", "Define __CATCH");

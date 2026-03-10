@@ -97,6 +97,8 @@ HANDLE hConsole = NULL;
 int main(int argc, char* argv[])
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
 
 	C_TITLE("AccountServer.exe")
 	C_PRINT("Loading AccountServer.cfg...\n");
@@ -118,7 +120,6 @@ int main(int argc, char* argv[])
 	if (!g_MainDBHandle.CreateObject())
 	{
 		C_PRINT("failed\n");
-		//printf("Main database handler create failed, AccountServer hang!\n");
 		printf(RES_STRING(AS_MAIN_CPP_00003));
 		system("pause");
 		return -1;
@@ -145,7 +146,6 @@ int main(int argc, char* argv[])
         Sleep(10 * 1000);
         return -1;
     } catch (...) {
-        //printf("AccountServer\n");
    		printf(RES_STRING(AS_MAIN_CPP_00006));
 		comm->DestroyPool();
         TcpCommApp::WSACleanup();

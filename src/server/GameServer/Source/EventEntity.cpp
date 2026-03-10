@@ -31,7 +31,6 @@ namespace mission
 		CChaRecord* pRec = GetChaRecordInfo( sID );
 		if( pRec == NULL ) 
 		{
-			//LG( "entity_error", "CEventEntity::Create!!ID[%d]", sID );
 			ToLogService( "entity_error", "CEventEntity::Create !establish failed!can't find character data info!ID[{}]", sID );
 			return FALSE;
 		}
@@ -58,7 +57,6 @@ namespace mission
 		Square SShape = { { dwxPos, dwyPos }, m_pCChaRecord->sRadii };
 		if( !Submap.Enter( &SShape, this ) )
 		{
-			//LG( "entity_error", "CEventEntity::Create!" );
 			ToLogService( "entity_error", "CEventEntity::Create entity enter map failed!" );
 			return FALSE; 
 		}

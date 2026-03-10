@@ -128,7 +128,7 @@ void CGameScene::_FrameMove(DWORD dwTimeParam)
 				}
 			}
 			m_dwValidEffCnt = nValidCnt;
-			ToLogService("aalidEff", "num=={}", m_dwValidEffCnt);
+			// ToLogService("scene", "aalidEff m_dwValidEffCnt=={}", m_dwValidEffCnt);
 
 			static CTimeWork time( 5 * 60 * 1000 );
 			if( time.IsTimeOut( dwTimeParam ) )

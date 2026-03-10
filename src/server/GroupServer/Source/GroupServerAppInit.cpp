@@ -33,7 +33,6 @@ void GroupServerApp::Initialize()
 		InitACTSvrConnect(*this);
 	}
 
-	//LG("init", "Lua Script...\n");
 	ToLogService("init", "init Lua Script...");
 	if( !InitLuaScript() )
 	{
@@ -163,39 +162,32 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 	gpapp.m_tblX1			=new friend_tbl(&(gpapp.m_cfg_db));
 	gpapp.m_tbLparam		=new TBLParam(&(gpapp.m_cfg_db));
 	
-	//LG("group_sql", " account \n");
 	ToLogService("group_sql", "begin check table [account]");
 	if(!gpapp.m_tblaccounts->IsReady())
 	{
-		//LG("group_sql", " account \n");
 		ToLogService("group_sql", " check table [account] failed");
 		//THROW_EXCP(excpDB,"");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00003));
 	}
 	
-	//LG("group_sql", "  \n");
 	ToLogService("group_sql", "begin check table [guild]");
 	if(!gpapp.m_tblguilds->IsReady())
 	{
-		//LG("group_sql", "  \n");
 		ToLogService("group_sql", " check table [guild] failed");
 		//THROW_EXCP(excpDB,"SQL");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00004));
 	}
 	gpapp.m_tblcharaters->ZeroAddr();
 
-	//LG("group_sql", " param \n");
 	ToLogService("group_sql", "begin check table [param]");
 
 	//if(!gpapp.m_tbLparam->IsReady())
 	//{
-	//	LG("group_sql", "  \n");
 	//	THROW_EXCP(excpDB,"SQL");
 
 	//}
 
 	if(gpapp.m_tbLparam->InitParam())
-	//LG("group_sql", "\n");
 	ToLogService("group_sql", "init database success");
 }
 

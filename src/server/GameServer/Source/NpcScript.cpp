@@ -851,7 +851,6 @@ inline int lua_ReloadNpcInfo( lua_State* L )
 	//LoadScript();
 	//if( g_pGameApp->ReloadNpcInfo( *this ) )
 	//{
-	//	printf( "NPClua" );
 	//}
 	return 0;
 }

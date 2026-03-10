@@ -3000,7 +3000,6 @@ inline int lua_Notice(lua_State* pLS) {
 	//if (strstr(cszNotiStr, ""))
 	if (strstr(cszNotiStr, RES_STRING(GM_EXPAND_H_00102)))
 		if (g_cchLogMapEntry)
-			//LG("", "%s\n", cszNotiStr);
 			ToLogService("map_entrance_flow", "system notice : {}", cszNotiStr);
 
 	return 0;
@@ -3039,7 +3038,6 @@ inline int lua_ScrollNotice(lua_State* L) {
 	//if (strstr(cszNotiStr, ""))
 	if (strstr(cszNotiStr, RES_STRING(GM_EXPAND_H_00102)))
 		if (g_cchLogMapEntry)
-			//LG("", "%s\n", cszNotiStr);
 			ToLogService("map_entrance_flow", "system notice : {}", cszNotiStr);
 
 	return 0;
@@ -3053,7 +3051,6 @@ inline int lua_GMNotice(lua_State* pLS) {
 	g_pGameApp->GMNotice(gmNotice);
 	if (strstr(gmNotice, RES_STRING(GM_EXPAND_H_00102)))
 		if (g_cchLogMapEntry)
-			//LG("", "%s\n", cszNotiStr);
 			ToLogService("map_entrance_flow", "system notice : {}", gmNotice);
 
 	return 0;
@@ -3072,7 +3069,6 @@ inline int lua_ChaNotice(lua_State* pLS) {
 	//if (strstr(cszNotiStr, ""))
 	if (strstr(cszNotiStr, RES_STRING(GM_EXPAND_H_00102)))
 		if (g_cchLogMapEntry)
-			//LG("", "%s\n", cszNotiStr);
 			ToLogService("map_entrance_flow", "system notice : {}", cszNotiStr);
 
 	return 0;
@@ -3993,7 +3989,6 @@ inline int lua_GetMapEntryPosInfo(lua_State* pLS) {
 	int nParaNum = lua_gettop(pLS); //
 
 	if (nParaNum != 1) {
-		//LG("err", "\t[%d]\n", nParaNum);
 		ToLogService("entry error", "\tThe parameter numbers [{}] is unlawful,transfer failed!", nParaNum);
 		bSuccess = false;
 		goto End;
@@ -4001,7 +3996,6 @@ inline int lua_GetMapEntryPosInfo(lua_State* pLS) {
 	{
 		CDynMapEntryCell* pEntry = (CDynMapEntryCell*)lua_touserdata(pLS, 1);
 		if (!pEntry) {
-			//LG("err", "\t\n");
 			ToLogService("entry error", "\t entrance object is inexistence,transfer failed");
 			bSuccess = false;
 			goto End;

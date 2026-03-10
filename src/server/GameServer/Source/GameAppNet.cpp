@@ -115,7 +115,6 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt) {
 	//	{
 	//		int reason = READ_LONG(pkt);
 
-	//		LG("GameLogin", "Gate %s Ip %s %d deleted\r\n", pGate->GetName(), pGate->GetIP(), reason);
 
 	//		pGate->Invalid();
 
@@ -971,7 +970,6 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 				int nCount = 0;
 				while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
 					if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-						//LG("???????????", "??????:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
 						ToLogService("player list error", "player number:{}, {}", GETPLAYERCOUNT(pGateServer),
 									 "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
 						break;
@@ -1005,7 +1003,6 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 				int nCount = 0;
 				while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
 					if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-						//LG("???????????", "??????:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
 						ToLogService("player list error", "player number:{}, {}", GETPLAYERCOUNT(pGateServer),
 									 "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
 						break;
@@ -1236,7 +1233,6 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	case CMD_MM_DO_STRING: {
 		const auto str = READ_STRING(pkt);
 
-		//LG("DO_STRING", "%s\n", str);
 		luaL_dostring(g_pLuaState, str);
 		break;
 	}
@@ -1264,7 +1260,6 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 		}
 		//else
 		//{
-		//	LG( "?????????", "??????????????????????DBID[%u],???[%u]\n", dwChaDBID, dwMoney );
 		//}
 
 		break;
@@ -1386,7 +1381,6 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt) {
 			cChar* cszSctLine;
 			Short sLineNum = READ_SHORT_R(pkt);
 			if (g_cchLogMapEntry)
-				//LG("??????????", "????????????????? %s --> %s[%u, %u]????????? %d\n", szSrcMapN, szTarMapN, lPosX, lPosY, sLineNum);
 				ToLogService("map entry flow",
 							 "receive request to create entry??position {} --> {}[{}, {}]??script line {}", szSrcMapN,
 							 szTarMapN, lPosX, lPosY, sLineNum);
@@ -1415,7 +1409,6 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt) {
 				}
 				else {
 					if (g_cchLogMapEntry)
-						//LG("??????????", "?????????????? %s --> %s[%u, %u]?????? %u ???????\n", szSrcMapN, szTarMapN, lPosX, lPosY, SItemCont.sID);
 						ToLogService("map entry flow",
 									 "create entry failed??position {} --> {}[{}, {}]??item {} create failed",
 									 szSrcMapN, szTarMapN, lPosX, lPosY, SItemCont.sID);
@@ -1438,7 +1431,6 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt) {
 				break;
 			}
 			if (g_cchLogMapEntry)
-				//LG("??????????", "?????????????? %s --> %s[%u, %u] \n", szSrcMapN, szTarMapN, lPosX, lPosY);
 				ToLogService("map entry flow", "create entry success??position {} --> {}[{}, {}] ", szSrcMapN,
 							 szTarMapN, lPosX, lPosY);
 
@@ -1486,7 +1478,6 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt) {
 	case enumMAPENTRY_DESTROY: {
 		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN);
 		if (g_cchLogMapEntry)
-			//LG("??????????", "????????????????? %s --> %s\n", szSrcMapN, szTarMapN);
 			ToLogService("map entry flow", "receive request to destroy entry??position {} --> {}", szSrcMapN,
 						 szTarMapN);
 		if (pCEntry) {
@@ -1511,7 +1502,6 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt) {
 				break;
 			}
 			if (g_cchLogMapEntry)
-				//LG("??????????", "?????????????? %s --> %s\n", szSrcMapN, szTarMapN);
 				ToLogService("map entry flow", "destroy entry success??position {} --> {}", szSrcMapN, szTarMapN);
 		}
 	}
@@ -1552,14 +1542,12 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt) {
 		case enumMAPENTRYO_CREATE_SUC: {
 			pCMap->CheckEntryState(enumMAPENTRY_STATE_OPEN);
 			if (g_cchLogMapEntry)
-				//LG("??????????", "????????????????? %s --> %s\n", szSrcMapN, szTarMapN);
 				ToLogService("map entry flow", "receive entry create success ??position {} --> {}", szSrcMapN,
 							 szTarMapN);
 		}
 		break;
 		case enumMAPENTRYO_DESTROY_SUC: {
 			if (g_cchLogMapEntry)
-				//LG("??????????", "???????????????? %s --> %s\n", szSrcMapN, szTarMapN);
 				ToLogService("map entry flow", "receive entry destroy success??position {} --> {}", szSrcMapN,
 							 szTarMapN);
 			pCMap->CheckEntryState(enumMAPENTRY_STATE_CLOSE_SUC);

@@ -298,7 +298,6 @@ void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 			break;
 		case CMD_PT_ESTOPUSER:
 			{
-				//printf( "CMD_PT_ESTOPUSER" );
 				uShort	l_aimnum	=recvbuf.ReverseReadShort();
 				auto l_ply = ToPointer<ClientConnection>(recvbuf.ReverseReadLong());
 				if(l_ply && l_ply->gp_addr ==recvbuf.ReverseReadLong())
@@ -396,7 +395,6 @@ void ToGroupServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	{
 		ToLogService("ToGroupServerError", "l_cmd = {}", l_cmd);
 	}
-	//LG("ToGroupServer", "<--l_cmd = %d\n", l_cmd);
 }
 
 //  GroupServer 

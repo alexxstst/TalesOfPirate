@@ -84,7 +84,6 @@ PATH_LINK* SearchPath(BYTE *block_buf , short width , short height , short sx , 
 
 	while(!found_flag)
 	{
-		//LG( "search", " start node_count: %d, current_node: %d, current_path: %d, nw: %d\n", node_count, current_node, current_path, nw );
 		if(node_count>=lMaxStep) 
 			break;
 
@@ -108,7 +107,6 @@ PATH_LINK* SearchPath(BYTE *block_buf , short width , short height , short sx , 
 				node_list[node_count].buf_ptr       = new_buf_ptr;
 				node_list[node_count].dire          = d;
 				node_list[node_count].last_node_ptr = &node_list[current_node];
-				//LG( "search", "new start node_count: %d, current_node: %d, current_path: %d, nw: %d\n", node_count, current_node, current_path, nw );
 				if(new_buf_ptr==target_ptr)
 				{   
 					NODE_SHARED *node_ptr     = &node_list[node_count];
@@ -124,7 +122,6 @@ PATH_LINK* SearchPath(BYTE *block_buf , short width , short height , short sx , 
 					found_flag = TRUE; 
 					break;
 				}
-				//LG( "search", "new end node_count: %d, current_node: %d, current_path: %d, nw: %d\n", node_count, current_node, current_path, nw );
 				if(node_count >= lMaxStep)
 			 {
 				 if(found_flag == TRUE)
@@ -142,7 +139,6 @@ PATH_LINK* SearchPath(BYTE *block_buf , short width , short height , short sx , 
 	
 	}
 skip:
-	//LG( "search", "end node_count: %d, current_node: %d, current_path: %d, nw: %d\n", node_count, current_node, current_path, nw );
 	if(found_flag)
 	{ 
 		return path_link_ptr;

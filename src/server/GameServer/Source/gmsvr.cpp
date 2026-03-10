@@ -49,7 +49,6 @@ DWORD WINAPI myiocpclt::conn_thrd(LPVOID conn_thrd_ctx)
                 sk_ctx = that->connect(that->gtarray[i].GetIP().c_str(), that->gtarray[i].GetPort());
                 if (sk_ctx == NULL)
                 {
-                   // LG("iocp_conn", " Gate %s:%d \n", that->gtarray[i].GetIP().c_str(),
                      //   that->gtarray[i].GetPort());
 					 ToLogService("iocp_conn", "connect Gate {}:{} failed", that->gtarray[i].GetIP().c_str(),
 						 that->gtarray[i].GetPort());
@@ -435,7 +434,6 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
     if (uplayer_array == NULL || pkt == NULL) return false;
 
 #ifdef defCOMMU_LOG
-    //LG("SendToClient", "\nSendToClient called to notify %d players\n", array_cnt);
 #endif
 
     //  Gate
@@ -450,7 +448,6 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
         {
             pValidGate[sValidGateNum] = &gtarray[i];
 #ifdef defCOMMU_LOG
-            //LG("SendToClient", "Valid Gate 0x%x\n", pValidGate[sValidGateNum]);
 #endif
             usCount[sValidGateNum] = 0;
 
@@ -465,7 +462,6 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
         }
     }
 #ifdef defCOMMU_LOG
-    //LG("SendToClient", "Valid Gate num = %d\n", sValidGateNum);
 #endif
 
     //  uplayer_array  Gate 
@@ -473,7 +469,6 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
     for (i = 0; i < array_cnt; ++ i)
     {
 #ifdef defCOMMU_LOG
-        //LG("SendToClient", "atorID = %d, pGate = 0x%x, gt_addr = 0x%x\n", uplayer_array[i].m_dwDBChaId, uplayer_array[i].pGate, uplayer_array[i].m_ulGateAddr);
 #endif
 
         if (uplayer_array[i].pGate == NULL)
@@ -501,7 +496,6 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
     for (i = 0; i < sValidGateNum; i++)
     {
 #ifdef defCOMMU_LOG
-        //LG("SendToClient", "send to Gate: %s for %d players\n", pValidGate[i]->GetIP().c_str(), usCount[i]);
 #endif
         if (usCount[i] > 0)
         {

@@ -375,15 +375,12 @@ void CPlayer::GetBerth( USHORT& sBerthID, USHORT& sxPos, USHORT& syPos, USHORT& 
 // 
 void CPlayer::AddTeamMember(uplayer *pUPlayer)
 {
-	//LG("team", "[%s]: [dbid = %d] [gate_addr=%d]\n", GetCtrlCha()->GetLogName(), pUPlayer->m_dwDBChaId, pUPlayer->m_ulGateAddr);
 	if(_nTeamMemberCnt>=MAX_TEAM_MEMBER)
 	{
-		//LG("team", "Team[%d], \n", MAX_TEAM_MEMBER);
 		return;
 	}
 	_Team[_nTeamMemberCnt] = *pUPlayer;
 	_nTeamMemberCnt++;
-	//LG("team", "  %d\n", _nTeamMemberCnt);
 }
 
 // 
@@ -414,7 +411,6 @@ void CPlayer::NoticeTeamMemberData()
 	CCharacter *pMainCha = pCha->GetPlayer()->GetMainCha();
 	
 	
-	//LG("team", "[%s][%d]\n", pCha->GetName(), nTMemberCnt);
 
     WPACKET	wpk = GETWPACKET();
 	WRITE_CMD(wpk, CMD_MC_TEAM);

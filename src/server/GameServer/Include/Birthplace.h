@@ -71,7 +71,6 @@ inline SBirthPoint* CBirthMgr::GetRandBirthPoint(const char *pszLocation)
 		SBirthplace *p = (*it).second;
 		int nSel = rand()%(p->nCount);
 		SBirthPoint *pPoint = &(p->PointList[nSel]);
-		//LG("birth", "[%s] %d %d\n", pPoint->szMapName, pPoint->x, pPoint->y);
 		return pPoint;
 	}
 	return NULL;
@@ -84,7 +83,6 @@ inline SBirthPoint* GetRandBirthPoint(const char *pszChaName, const char *pszLoc
 	SBirthPoint* pBirth = g_BirthMgr.GetRandBirthPoint(pszLocation);
 	if(pBirth==NULL)
 	{
-		//LG("birth_error", "[%s], Cha = [%s], \n", pszLocation, pszChaName);
 		ToLogService("birth_error", "invalid birth place[{}], Cha = [{}],will force to silver city", pszLocation, pszChaName);
 		pBirth = g_BirthMgr.GetRandBirthPoint(RES_STRING(GM_BIRTHPLACE_H_00001));
 	}

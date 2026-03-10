@@ -60,7 +60,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 		{
 			CCharacter* pBoat = pCPlayer->GetBoat(pCPlayer->GetLoginChaID());
 			if (!pBoat) {
-				//LG("enter_map", " %sID %u!\n", GetLogName(), pCPlayer->GetLoginChaID());
 				ToLogService("enter_map",
 							 "character {} use boat(ID {})form logging failed(boat is inexistence),be cut off connect!",
 							 GetLogName(), pCPlayer->GetLoginChaID());
@@ -69,7 +68,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			}
 			if (!BoatEnterMap(*pBoat, 0, 0, 0)) {
 				pBoat->SetToMainCha();
-				//LG("enter_map", " %sID %u!\n", GetLogName(), pCPlayer->GetLoginChaID());
 				ToLogService("enter_map",
 							 "character {}use boat(ID {})form logging failed(put boat failed),be cut off connect!",
 							 GetLogName(), pCPlayer->GetLoginChaID());
@@ -97,7 +95,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 				if (chLogin == 0) //
 				{
 					if (strcmp(l_map, pCCtrlCha->GetBirthMap())) {
-						//LG("enter_map", " %s(%s)  %s  %s !\n",
 						ToLogService("enter_map",
 									 "character {}({})'s aim map {} is not matched to focus character {}be cut off connect!",
 									 GetLogName(), pCCtrlCha->GetLogName(), l_map, pCCtrlCha->GetBirthMap());
@@ -121,7 +118,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			}
 
 			if (!pCMapRes) {
-				//LG("enter_map", " %s(%s) !\n", GetLogName(), pCCtrlCha->GetLogName());
 				ToLogService("enter_map", "player {}({})'s map name or city name is unlawfulbe cut off connect!",
 							 GetLogName(), pCCtrlCha->GetLogName());
 				sErrCode = ERR_MC_ENTER_POS;
@@ -129,7 +125,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			}
 			pCMap = pCMapRes->GetCopy((Short)lMapCopyNO);
 			if (!pCMap) {
-				//LG("enter_map", " %s(%s) !\n", GetLogName(), pCCtrlCha->GetLogName());
 				ToLogService("enter_map", "character {}({}) copy map ID is unlawfulbe cut off connect!", GetLogName(),
 							 pCCtrlCha->GetLogName());
 				sErrCode = ERR_MC_ENTER_POS;
@@ -144,7 +139,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			l_shape.radius = m_pCChaRecord->sRadii;
 			if (!pCMap->EnsurePos(&l_shape, pCCtrlCha)) // ,
 			{
-				//LG("enter_map", " %s(%s) [%d, %d]!\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
 				ToLogService("enter_map", "character {}({}) 's map coordinate[{}, {}]is unlawful,be cut off connect!",
 							 GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
 				sErrCode = ERR_MC_ENTER_POS;
@@ -292,7 +286,6 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 
 			ResetStoreTime();
 
-			//LG("enter_map", " %s(%s)\n", GetLogName(), pCCtrlCha->GetLogName());
 			ToLogService("enter_map", "finish enter game scene {}({})", GetLogName(), pCCtrlCha->GetLogName());
 			return true;
 		}
@@ -306,7 +299,6 @@ Error:
 	game_db.SavePlayerPos(pCPlayer);
 	g_pGameApp->GoOutGame(pCPlayer, true);
 
-	//LG("enter_map", " %s(%s)\n", GetLogName(), GetPlyCtrlCha()->GetLogName());
 	ToLogService("enter_map", "enter game scene failed {}({})", GetLogName(), GetPlyCtrlCha()->GetLogName());
 	return false;
 }
@@ -392,6 +384,8 @@ void CCharacter::Cmd_BeginMoveDirect(Entity* pTar) {
 //=============================================================================
 void CCharacter::Cmd_BeginSkill(Short sPing, Point* pPath, Char chPointNum,
 								CSkillRecord* pSkill, Long lSkillLv, Long lTarInfo1, Long lTarInfo2, Char chStopState) {
+	ToLogService("BeginSkill", "alive:{}, skill:{}, path:{}", IsLiveing(), pSkill ? pSkill->sID : -1, pPath ? 1 : 0);
+
 	if (!IsLiveing() || !pSkill || !pPath)
 		return;
 
@@ -423,7 +417,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point* pPath, Char chPointNum,
 					CSkillRecord* pSkillRec = GetSkillRecordInfo(pSkill->sID);
 					if (pSkillRec && !pSkillRec->IsShow()) {
 						BOOL bRet = GetPlayer()->GetMainCha()->LearnSkill(pSkill->sID, 1, true, false, true);
-						//LG("", "%s\t(SkillID: %u)\n", GetLogName(), pSkill->sID);
 						ToLogService("Item skill", "character:{}\tstudy Item skill(SkillID: {})", GetLogName(),
 									 pSkill->sID);
 						if (bRet) {
@@ -441,7 +434,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point* pPath, Char chPointNum,
 		if (IsBoat())
 			pSSkillCont = GetPlayer()->GetMainCha()->m_CSkillBag.GetSkillContByID(pSkill->sID);
 		if (!pSSkillCont) {
-			//LG("", "%s\t(SkillID: %u)\n", GetLogName(), pSkill->sID);
 			ToLogService("skill error", "character:{}\t hasn't the skill(SkillID: {})", GetLogName(), pSkill->sID);
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
 			return;
@@ -449,7 +441,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point* pPath, Char chPointNum,
 	}
 	CSkillTempData* pCSkillTData = g_pGameApp->GetSkillTData(pSSkillCont->sID, pSSkillCont->chLv);
 	if (!pCSkillTData) {
-		//LG("", "%s\t(SkillID: %u, SkillLv: %u)\n", GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
 		ToLogService("skill error", "character:{}\t hasn't get the skill(SkillID: {}, SkillLv: {})'s temp data",
 					 GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
 		FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
@@ -489,6 +480,11 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point* pPath, Char chPointNum,
 			&& GetFightState() == enumFSTATE_ON
 			&& IsRangePoint(pTarEnt->GetPos(), MoveInit.STargetInfo.ulDist)) //
 		{
+			// Fix-S3: уже атакуем тем же скиллом тот же таргет в зоне досягаемости —
+			// уведомляем клиента, иначе новый CAttackState ждёт SkillRepresent вечно
+			ToLogService("BeginSkill", "AlreadyFighting(target): skill={}, fightState={}, inRange=1 -> FailedActionNoti",
+				pSkill->sID, GetFightState());
+			FailedActionNoti(enumACTION_SKILL, enumFACTION_EXISTACT);
 			return;
 		}
 	}
@@ -500,6 +496,10 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point* pPath, Char chPointNum,
 			&& GetFightState() == enumFSTATE_ON
 			&& IsRangePoint(lTarInfo1, lTarInfo2, MoveInit.STargetInfo.ulDist)) //
 		{
+			// Fix-S3: то же самое для area-скиллов
+			ToLogService("BeginSkill", "AlreadyFighting(area): skill={}, fightState={}, inRange=1 -> FailedActionNoti",
+				pSkill->sID, GetFightState());
+			FailedActionNoti(enumACTION_SKILL, enumFACTION_EXISTACT);
 			return;
 		}
 	}
@@ -1233,14 +1233,12 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle) {
 		//
 		if (SaveAssets()) {
 			if (!game_db.SaveBoatTempData(dwBoatID, this->GetPlayer()->GetDBChaId())) {
-				//LG( "", "%sID[0x%X]!ID[0x%X]",
 				ToLogService("pick up goods error",
 							 "character{}ID[{:X}]pick up captain provebut boat data storage failed!boat data ID[{:X}]",
 							 this->GetName(), this->GetPlayer()->GetDBChaId(), dwBoatID);
 			}
 		}
 		else {
-			//LG( "", "%sID[0x%X]!ID[0x%X]",
 			ToLogService("pick up goods error",
 						 "character{}ID[{:X}]pick up captain provebut kitbag data storage failed!boat data ID[{:X}]",
 						 this->GetName(), this->GetPlayer()->GetDBChaId(), dwBoatID);
@@ -1249,7 +1247,6 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle) {
 		if (!BoatAdd(dwBoatID)) {
 			//SystemNotice( "!ID[0x%X]", dwBoatID );
 			SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00004), dwBoatID);
-			//LG( "", "%sID[0x%X]!ID[0x%X]",
 			ToLogService("pick up goods error",
 						 "character{}ID[{:X}]pick up captain proveadd boat failed!boat dataID[{:X}]",
 						 this->GetName(), this->GetPlayer()->GetDBChaId(), dwBoatID);
@@ -2530,7 +2527,6 @@ void CCharacter::Cmd_FightAnswer(bool bFight) {
 	_itoa(lEnterChaNum, szPrint, 10);
 	strPrint += szPrint;
 	strPrint += ".";
-	//LG("", "%s\n", strPrint.c_str());
 	ToLogService("entrance copy control", "{}", strPrint.c_str());
 	//
 	pCTeamFightEntry->SynCopyRun((Short)pCMCpyCell->GetPosID(), enumMAPCOPY_START_CDT_PLYNUM, lEnterChaNum);

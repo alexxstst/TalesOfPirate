@@ -97,8 +97,6 @@ public:
 	int _key_len;
 	virtual bool OnEncrypt(dbc::DataSocket* datasock, char* ciphertext, uLong ciphertext_len, const char* text, unsigned long& len);
 	virtual bool OnDecrypt(dbc::DataSocket *datasock,char *ciphertext,unsigned long& len);
-	lua_State* g_rLvm;
-	lua_State* g_sLvm;
 };
 
 

@@ -59,8 +59,6 @@ void CSteadyFrame::_Sleep()
 	{
 		Sleep( _dwTimeSpace );
 
-		ToLogService("_Sleep", "{} {}", dwTime, nCount);
-
 		InterlockedIncrement( &_lRun );
 
 		nCount++;

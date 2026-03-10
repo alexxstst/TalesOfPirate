@@ -57,7 +57,6 @@ inline int lua_GetTeamCha(lua_State *L)
 	CPlayer *pMember = g_pGameApp->GetPlayerByDBID(pPlayer->GetTeamMemberDBID(nNo));
 	if (!pMember)
 	{
-		// LG("harm", "[%d], !\n", nNo); 
 		return 0;
 	}
 	
@@ -67,7 +66,6 @@ inline int lua_GetTeamCha(lua_State *L)
 	}
 
 	lua_pushlightuserdata(L, pMember->GetCtrlCha());
-	// LG("harm", "[%d] = [%s]\n", nNo, pMember->GetCtrlCha()->GetName());
 	return 1;
 }
 
@@ -212,7 +210,6 @@ inline int lua_AddWeatherRegion(lua_State *L)
 	
 	g_pScriptMap->m_WeatherMgr.AddWeatherRange(pNew);
 
-	//LG("weather", "[%d],  = %d,  = %d, location = %d %d, %d %d\n", btType, dwFre, dwLastTime, sx, sy, w, h);
 	ToLogService("weather", "add weather area[{}], occur time limit = {}, duration = {}, location = {} {}, {} {}", btType, dwFre, dwLastTime, sx, sy, w, h);
 	return 0;
 }
@@ -224,7 +221,6 @@ inline int lua_ClearMapWeather(lua_State *L)
 	if(!g_pScriptMap) return 0;
 
 	g_pScriptMap->m_WeatherMgr.ClearAll();
-	//LG("weather", "[%s]!\n", g_pScriptMap->GetName());
 	ToLogService("weather", "weed out map[{}]upon all weather area!", g_pScriptMap->GetName());
 	return 0;
 }

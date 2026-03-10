@@ -81,7 +81,6 @@ long CChaSpawn::Load(SubMap *pCMap)
 	sprintf(szMap, "spawn mum %s", pCMap->GetName());
 	Long	lNum;
 	const Rect	&area = pCMap->GetRange();
-	//LG(szSpawnError, "123120\n\n\n");
 	for (int i = 0; i < m_lRegionNum; i++)
 	{
 		pMonRefRecord = GetMonRefRecordInfo(i + 1);
@@ -133,18 +132,15 @@ long CChaSpawn::Load(SubMap *pCMap)
 					lNum++;
 					if(m_lCount >= g_Config.m_nMaxCha)
 					{
-						//LG(szMap, "msg\n");
 						ToLogService(szMap, "{}", RES_STRING(GM_GAMEAPP_CPP_00016));
 						return 1;
 					}
 				}
 				else
-					//LG(szSpawnError, " %s[%d, %d] %d %d[%d, %d]\n", pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
 					ToLogService(szSpawnError, "character born errorborn informationmap {}[{}, {}]character hatch list number {}character list number {}born position[{}, {}]",
 							pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
 			}
 		}
-		//LG(szMap, " %d \t%d\n", i + 1, lNum);
 		ToLogService(szMap, "entry {} character number:\t{}", i + 1, lNum);
 	}
 	return lRet;
@@ -286,8 +282,6 @@ long CNpcSpawn::Load( SubMap& submap )
 	memset( m_NpcList, 0, sizeof(mission::CNpc*)*ROLE_MAXNUM_MAPNPC );
 	m_sNumNpc = 0;
 
-	//printf( "npc[%s]...\n", m_szSpawnTable );
-	//printf( RES_STRING(GM_ENTITYSPAWN_CPP_00009), m_szSpawnTable );
 	printf("Loading [%s] files... ", m_szSpawnTable );
 
 	bool hasError = false;
@@ -301,10 +295,7 @@ long CNpcSpawn::Load( SubMap& submap )
 		CChaRecord* pCharRecord = GetChaRecordInfo( pNpcRecord->sCharID );
 		if( pCharRecord == NULL ) {
 			hasError = true;
-			//printf( "IDID = %d \n", pNpcRecord->sCharID );
-			//printf( RES_STRING(GM_ENTITYSPAWN_CPP_00010), pNpcRecord->sCharID );
 			C_PRINT("\nerror: NPC %d model %d unfound!", i, pNpcRecord->sCharID );
-			//LG( "npcinit_error", "IDID = %d", pNpcRecord->sCharID );
 			ToLogService( "npcinit_error", "initialization map errornot find appoint ID roll attribute informationID = {}", pNpcRecord->sCharID );
 			continue;
 		}
@@ -341,8 +332,6 @@ long CNpcSpawn::Load( SubMap& submap )
 		}
 
 	}
-	//printf( "npc[%s]\n", m_szSpawnTable );
-	//printf( RES_STRING(GM_ENTITYSPAWN_CPP_00011), m_szSpawnTable );
 	if (!hasError)
 	{
 		C_PRINT("success!\n");

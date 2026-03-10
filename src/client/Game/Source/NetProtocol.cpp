@@ -679,6 +679,8 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 
 	if (pCha->IsMainCha()) {
 		state = dynamic_cast<CAttackState*>(pCha->GetActor()->GetCurState());
+		ToLogService("protocol", "NetActorSkillRep(main): skill={}, FightID={}, sState={:#x}, isRep={}, hasCurState={}",
+			SSkillRep.lSkillID, (int)SSkillRep.byFightID, SSkillRep.sState, isRep ? 1 : 0, state ? 1 : 0);
 		if (!state) {
 			ToLogService("protocol", "{}", g_oLangRec.GetString(268));
 			return;
@@ -722,6 +724,7 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 			}
 
 			if (!pCha->GetActor()->AddState(state)) {
+				animationLogger.LogError("NetActorSkillRep AddState return false");
 				g_pGameApp->AddTipText("NetActorSkillRep AddState return false\n");
 				return;
 			}
@@ -729,6 +732,8 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 		else {
 			state = dynamic_cast<CWaitAttackState*>(g_state);
 			if (!state) {
+				animationLogger.LogError("msgNetActorSkillRep g_state[{}] not is CWaitAttackState",
+							 SSkillRep.byFightID);
 				ToLogService("protocol", "msgNetActorSkillRep g_state[{}] not is CWaitAttackState",
 							 SSkillRep.byFightID);
 				return;
@@ -754,6 +759,8 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 
 	state->ServerYaw(SSkillRep.sAngle);
 	if (SSkillRep.sState) {
+		ToLogService("protocol", "NetActorSkillRep: ServerEnd(sState={:#x}) for skill={}, FightID={}, charID={}",
+			SSkillRep.sState, SSkillRep.lSkillID, (int)SSkillRep.byFightID, nID);
 		state->ServerEnd(SSkillRep.sState);
 	}
 }

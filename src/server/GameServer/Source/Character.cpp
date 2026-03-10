@@ -213,11 +213,9 @@ void CCharacter::Finally() {
 	}
 	catch (...) {
 		if (!GetPlayer())
-			//LG("exception3", "[%s], [CCharacter::Finally]\n", GetLogName());
 			ToLogService("exception3", "when character[{}]release occured abnormity, [CCharacter::Finally]",
 						 GetLogName());
 		else
-			//LG("exception3", "[ %sID %u], [CCharacter::Finally]\n", GetLogName(), GetPlayer()->GetDBActId());
 			ToLogService("exception3",
 						 "character player[name {}DatabaseID {}]release occured abnormity, [CCharacter::Finally]",
 						 GetLogName(), GetPlayer()->GetDBActId());
@@ -335,7 +333,6 @@ void CCharacter::SwitchMap(SubMap* pCSrcMap, cChar* szTarMapName, Long lTarX, Lo
 	if (!strcmp(pCSrcMap->GetName(), szTarMapName)) //
 	{
 		if (GetPlayer())
-			//LG("enter_map", "SwitchMap( %s[ %s] %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
 			ToLogService("enter_map",
 						 "SwitchMap(the same map switchcontrol player name {}[mainplayer {}]mapname {})--------",
 						 GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
@@ -378,12 +375,10 @@ void CCharacter::SwitchMap(SubMap* pCSrcMap, cChar* szTarMapName, Long lTarX, Lo
 		SubMap* pCBackM = GetSubMap();
 		SetSubMap(pCSrcMap);
 		pCSrcMap->BeforePlyOutMap(this);
-		//LG("enter_map", "SwitchMap(Server %s[ %s] %s %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
 		ToLogService("enter_map",
 					 "SwitchMap(differ Server map switchcontrol player name {}[mainplayer {}]formerly map {}aimmap {})--------",
 					 GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
 		if (GetSubMap())
-			//LG("enter_map", " %s\n", GetSubMap()->GetName());
 			ToLogService("enter_map", "character map name {}", GetSubMap()->GetName());
 		//
 		CPlayer* pPlayer = GetPlayer();
@@ -397,7 +392,6 @@ void CCharacter::SwitchMap(SubMap* pCSrcMap, cChar* szTarMapName, Long lTarX, Lo
 		}
 
 		game_db.SavePlayer(pPlayer, enumSAVE_TYPE_SWITCH);
-		//LG("enter_map", "\n");
 		ToLogService("enter_map", "save data succeed");
 
 		// NPC
@@ -429,7 +423,6 @@ void CCharacter::SwitchMap(SubMap* pCSrcMap, cChar* szTarMapName, Long lTarX, Lo
 		// gate server
 		pPlayer->OnLogoff();
 		DELPLAYER(pPlayer);
-		//LG("enter_map", "\n\n");
 		ToLogService("enter_map", "finish enter map");
 	}
 }
@@ -1345,7 +1338,6 @@ void CCharacter::OnDie(DWORD dwCurTime) {
 							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1,
 											   this, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
-								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("renascence compute error",
 											 "character {}({})after renascence compute HP is unlawful", GetLogName(),
 											 getAttr(ATTR_JOB));
@@ -1359,7 +1351,6 @@ void CCharacter::OnDie(DWORD dwCurTime) {
 							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1,
 											   this, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
-								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("renascence compute error",
 											 "character {}({})after renascence compute HP is unlawful", GetLogName(),
 											 getAttr(ATTR_JOB));
@@ -1381,7 +1372,6 @@ void CCharacter::OnDie(DWORD dwCurTime) {
 							g_CParser.DoString("Relive_now", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA,
 											   1, this, enumSCRIPT_PARAM_NUMBER, 1, m_chReliveLv, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
-								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("renascence compute error",
 											 "character {}({})after renascence compute HP is unlawful", GetLogName(),
 											 getAttr(ATTR_JOB));
@@ -1425,7 +1415,6 @@ void CCharacter::AfterStepMove(void) {
 				lTarX = clTarDist;
 				SrcPos.x = area.rbtm.x - clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "garnermagicsea\n");
 				ToLogService("enter_map", "character boat will switch garner to magicsea");
 			}
 		}
@@ -1436,7 +1425,6 @@ void CCharacter::AfterStepMove(void) {
 				lTarX = clTarDist;
 				SrcPos.x = area.rbtm.x - clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "magicseadarkblue\n");
 				ToLogService("enter_map", "character boat will switch magicsea to darkblue");
 			}
 			else if (GetPos().x <= area.ltop.x + clSwitchDist) {
@@ -1445,7 +1433,6 @@ void CCharacter::AfterStepMove(void) {
 				lTarX = area.rbtm.x - clTarDist;
 				SrcPos.x = area.ltop.x + clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "magicseagarner\n");
 				ToLogService("enter_map", "character boat will switch magicsea to garner");
 			}
 		}
@@ -1456,7 +1443,6 @@ void CCharacter::AfterStepMove(void) {
 				lTarX = area.rbtm.x - clTarDist;
 				SrcPos.x = area.ltop.x + clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "darkbluemagicsea\n");
 				ToLogService("enter_map", "character boat will switch darkblue to magicsea");
 			}
 		}
@@ -1475,7 +1461,6 @@ void CCharacter::SubsequenceMove() {
 	if (GetMoveState() != enumMSTATE_ON) {
 		SetExistState(GetMoveStopState());
 		if (GetMoveStopState() == enumEXISTS_SLEEPING && m_pCChaRecord->sDormancy == 0) {
-			// LG("host", "[%s] move to sleep end, set waiting\n", GetName());
 			SetExistState(enumEXISTS_WAITING);
 		}
 	}
@@ -1607,7 +1592,6 @@ void CCharacter::Die() {
 
 	if (!IsPlayerCha() && pCMap) {
 		if (this->InOutMapQueue()) {
-			//LG("", "%s!\n", GetLogName());
 		}
 		else {
 			this->SetInOutMapQueue();
@@ -1654,11 +1638,9 @@ void CCharacter::MoveCity(cChar* szCityName, Long lMapCopyNO, Char chSwitchType)
 	DWORD dwEndTime = t.End();
 	if (dwEndTime > 20) {
 		if (GetSubMap())
-			//LG("script_time", "\t %s %s-->%s time = %d\n", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
 			ToLogService("script_time", "\tcharacter {} map switch({}-->{}) expend much time:time = {}", GetLogName(),
 						 GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
 		else
-			//LG("script_time", "\t %s ""-->%s time = %d\n", GetLogName(), pSBirthP->szMapName, dwEndTime);
 			ToLogService("script_time", "\tcharacter {} map switch(-->{}) expend much time:time = {}", GetLogName(),
 						 pSBirthP->szMapName, dwEndTime);
 	}
@@ -2727,7 +2709,6 @@ BOOL CCharacter::SafeSaleGoods(DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD&
 				if (pBoat->KbPopItem(true, false, &Grid, byIndex) != enumKBACT_SUCCESS) {
 					//SystemNotice( "Failed to fetch% s cabin for sale!", pBoat->GetName() );
 					SystemNotice(RES_STRING(GM_CHARACTER_CPP_00022), pBoat->GetName());
-					//LG( "trade_error", "Failed to fetch character% s vessel% s cabin for sale of cargo!ID[%d], Count[%d]", GetName(), pBoat->GetName(), wItemID, byCount );
 					ToLogService("trade_error",
 								 "distill character {} boat {} cabin sale goods failed!ID[{}], Count[{}]", GetName(),
 								 pBoat->GetName(), wItemID, byCount);
@@ -3486,7 +3467,6 @@ BOOL CCharacter::SetTradeItemLevel(BYTE byLevel) {
 			CItemRecord* pItem = GetItemRecordInfo(pGridCont->sID);
 			if (pItem && pItem->sType == enumItemTypeTrade) {
 				sPosID = m_CKitbag.GetPosIDByNum(i);
-				//LG( "TradeCess", "%sLevel = %d, CurLevel = %d.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
 				ToLogService("TradeCess", "character {} add trade level:Level = {}, CurLevel = {}.", GetName(), byLevel,
 							 m_CKitbag.GetEnergy(false, sPosID));
 				m_CKitbag.SetChangeFlag(false);
@@ -3529,7 +3509,6 @@ BOOL CCharacter::AdjustTradeItemCess(USHORT sLowCess, USHORT sData) {
 			if (pItem && pItem->sType == enumItemTypeTrade) {
 				sPosID = m_CKitbag.GetPosIDByNum(i);
 				m_CKitbag.SetChangeFlag(false);
-				//LG( "TradeCess", "%sLowCess = %d, sData = %d, CurData = %d.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
 				ToLogService("TradeCess", "character {} add trade lowCess:LowCess = {}, sData = {}, CurData = {}.",
 							 GetName(), sLowCess, sData, m_CKitbag.GetEnergy(true, sPosID));
 				if (pGridCont->sEnergy[1] + sData >= sLowCess) {
@@ -4853,8 +4832,6 @@ void CCharacter::BoatDie(CCharacter& Attacker, CCharacter& Boat) {
 				if (pItem == NULL) {
 					//SystemNotice( "ID!ID = %d", pGridCont->sID );
 					SystemNotice(RES_STRING(GM_CHARACTER_CPP_00005), pGridCont->sID);
-					//LG( "boat_error", "ID!ID = %d", pGridCont->sID );
-					//LG( "boat_error", "ID!ID = %d", pGridCont->sID );
 					ToLogService("boat_error", "GridID errorcan't find the gridID = {}", pGridCont->sID);
 					continue;
 				}
@@ -4863,7 +4840,6 @@ void CCharacter::BoatDie(CCharacter& Attacker, CCharacter& Boat) {
 					if (sPosID < 0) {
 						//SystemNotice( "ID!ID = %d", pGridCont->sID );
 						SystemNotice(RES_STRING(GM_CHARACTER_CPP_00005), pGridCont->sID);
-						//LG( "boat_error", "ID!ID = %d", pGridCont->sID );
 						ToLogService("boat_error", "GridID errorcan't find the gridID = {}", pGridCont->sID);
 						continue;
 					}
@@ -4871,7 +4847,6 @@ void CCharacter::BoatDie(CCharacter& Attacker, CCharacter& Boat) {
 						//
 						//SystemNotice( "BoatDie:!ID[0x%X]", dwBoatID );
 						SystemNotice(RES_STRING(GM_CHARACTER_CPP_00060), dwBoatID);
-						//LG( "boat_error", "BoatDie:!ID[0x%X]", dwBoatID );
 						ToLogService("boat_error", "BoatDie:destroy captain prove failed! ID[{:X}]", dwBoatID);
 						break;
 					}
@@ -5033,7 +5008,6 @@ BOOL CCharacter::BoatLaunch(BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT 
 						   DOSTRING_PARAM_END)) {
 		int ret = g_CParser.GetReturnNumber(0);
 		if (ret != 1) {
-			//LG("RemoveYS_error", "RemoveYS!\n");
 			ToLogService("RemoveYS_error", "RemoveYS failed");
 		}
 	}
@@ -5319,7 +5293,6 @@ BOOL CCharacter::BoatSelected(BYTE byType, BYTE byIndex) {
 		if (!game_db.SaveBoatTempData(*pBoat)) {
 			//SystemNotice( "BoatSelected:!" );
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00089));
-			//LG( "boat_error", "BoatSelected:!" );
 			ToLogService("boat_error", "BoatSelected:salve boat deposit data operator failed!");
 		}
 		else {
@@ -5391,7 +5364,6 @@ BOOL CCharacter::BoatSelected(BYTE byType, BYTE byIndex) {
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00091));
 			return TRUE;
 		}
-		//	printf("Boat is here 1"); // test
 		if (byIndex >= byNumBoat) {
 			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00092), byIndex);
@@ -5399,13 +5371,11 @@ BOOL CCharacter::BoatSelected(BYTE byType, BYTE byIndex) {
 		}
 
 		CCharacter* pBoat = GetPlayer()->GetBoat(Data.byID[byIndex]);
-		//printf("Boat is here 2"); // test
 		if (!pBoat) {
 			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00093), byIndex);
 			return FALSE;
 		}
-		//	printf("Boat");
 		//
 		lua_getglobal(g_pLuaState, "BoatLevelUp");
 		if (!lua_isfunction(g_pLuaState, -1)) {
@@ -6488,7 +6458,6 @@ void CCharacter::CheatConfirm() {
 		m_sCheatX.dwInterval = GetCheatInterval(0);
 	}
 	else {
-		//LG("Cheat", " %s ,!\n", GetName());
 		ToLogService("Cheat", "character {} use waigua,kick it!", GetName());
 
 		GatePlayer* pGatePlyer = (GatePlayer*)GetPlayer();
@@ -6604,7 +6573,6 @@ bool Strin2SStateData(CCharacter* pCCha, std::string& strData) {
 
 				lOnTick = lOnTick - seconds;
 
-				//printf("ontick time = %d  s% \n", lOnTick, seconds);
 			}
 		}
 		pCCha->AddSkillState(0, g_pCSystemCha->GetID(), g_pCSystemCha->GetHandle(), 0, 0, 0, uchStateID, uchStateLv,

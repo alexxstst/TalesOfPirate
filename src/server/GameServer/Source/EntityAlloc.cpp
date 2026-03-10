@@ -38,7 +38,6 @@ CCharacter* CEntityAlloc::GetNewCha()
 	CCharacter* pChar = m_ChaAlloc.alloc();
 	if( !pChar )
 	{		
-		//LG(g_szEntiAlloc, "msg,");
 		ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00010));
 		return NULL;
 	}
@@ -53,7 +52,6 @@ CItem* CEntityAlloc::GetNewItem()
 	CItem* pItem = m_ItemAlloc.alloc();
 	if( !pItem )
 	{
-		//LG( g_szEntiAlloc, "msg,");
 		ToLogService( g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00011));
 		return NULL;
 	}
@@ -68,7 +66,6 @@ mission::CTalkNpc* CEntityAlloc::GetNewTNpc()
 	mission::CTalkNpc* pNpc = m_TalkNpcAlloc.alloc();
 	if( !pNpc )
 	{
-		//LG(g_szEntiAlloc, "msgNPC,NPC");
 		ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00012));
 		return NULL;
 	}
@@ -105,13 +102,11 @@ mission::CEventEntity* CEntityAlloc::GetEventEntity( BYTE byType )
 		break;
 	default:
 		{
-			//LG(g_szEntiAlloc, "msgType[%d]", byType);
 			ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00013));
 			return NULL;
 		}
 		break;
 	}
-	//LG(g_szEntiAlloc, "msgType[%d]", byType);
 	ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00014));
 	return NULL;
 }
@@ -189,7 +184,6 @@ CPlayer* CPlayerAlloc::GetNewPly()
 	CPlayer* pCPly = m_PlyAlloc.alloc();
 	if( !pCPly )
 	{		
-		//LG(g_szEntiAlloc, "msg,");
 		ToLogService(g_szEntiAlloc, "{}", RES_STRING(GM_GAMEAPP_CPP_00015));
 		return NULL;
 	}

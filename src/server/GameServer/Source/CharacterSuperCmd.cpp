@@ -49,10 +49,8 @@ void CCharacter::DoCommand(cChar *cszCommand, uLong ulLen)
 	
 	// GM
 	if(DoGMCommand(szComHead, szComParam))
-		//LG("DoCommand", "[]%s%s\n", GetLogName(), strPrint.c_str());
 		ToLogService("DoCommand", "[operator succeed]{}{}", GetLogName(), strPrint.c_str());
 	else
-		//LG("DoCommand", "[]%s%s\n", GetLogName(), strPrint.c_str());
 		ToLogService("DoCommand", "[operator succeed]{}{}", GetLogName(), strPrint.c_str());
 	
 }
@@ -1315,7 +1313,6 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 	CCharacter *pNPC1 = g_HelpNPCList.front();
 	if(pNPC1==NULL)
 	{
-		//LG("error", "NPC\n");
 		ToLogService("error", "inquire NPC is empty");
 		return;
 	}

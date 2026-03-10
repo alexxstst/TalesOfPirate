@@ -368,7 +368,6 @@ void CGameCommand::SetDefault() {
 }
 
 bool CGameCommand::Load(const std::string& pszFileName) {
-	//printf("Loading %s ", pszFileName);
 
 	ToLogService("init", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	ifstream in(pszFileName);

@@ -762,7 +762,6 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 	DWORD dwEyeMoveTime = t.End();
 
 	if (dwMoveTime + dwEyeMoveTime >= 60 )
-		//LG("map_time", "\t\t[%s] time = %u%u%u\n", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
 		ToLogService("map_time", "\t\troll[{}]move cost time too long, time = {}thereinto position cost{}eye shot cost{}", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
 
 	g_ulElapse += m_SMoveProc.ulElapse;
