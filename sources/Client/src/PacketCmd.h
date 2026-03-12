@@ -94,7 +94,7 @@ class CActionState;
 //                          Client To Server Protocol
 //---------------------------------------------------------------------------------
 // Э��C->S : ������Ϸ������,����ֵtrue���ύ��������ɹ���false���ύ��������ʧ�ܣ��ύ�ɹ���ʹ��GetConnStat������ӹ��̵�״̬��
-extern bool	CS_Connect(dbc::cChar *hostname,dbc::uShort port,dbc::uLong timeout);
+extern bool	CS_Connect(cChar *hostname, uint16_t port, uint32_t timeout);
 // Э��C->S : �Ͽ�����,�����˳�Ӧ��ֱ�ӵ���ShutDown,���õ�������Disconnect;
 extern void	CS_Disconnect(int reason);
 

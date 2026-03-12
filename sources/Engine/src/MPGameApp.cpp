@@ -5,7 +5,6 @@
 // Last Modifed : 2004/02/06
 //################################
 
-#include "MindPowerAPI.h"
 #include "Stdafx.h"
 #include "MPGameApp.h"
 #include "d3dutil.h"

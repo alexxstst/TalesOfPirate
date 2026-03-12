@@ -1,0 +1,93 @@
+@page "/guilds"
+@using Corsairs.Platform.Grpc.Contracts.Group
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject GroupAdmin.GroupAdminClient GroupClient
+
+<PageTitle>Гильдии - Corsairs Admin</PageTitle>
+
+<h1 class="text-2xl font-bold mb-6">Гильдии</h1>
+
+<div class="flex gap-2 mb-4">
+    <input type="text" placeholder="Поиск по названию..." class="input input-bordered flex-1" @bind="_nameFilter" @bind:event="oninput" />
+    <button class="btn btn-primary" @onclick="Search">Найти</button>
+</div>
+
+@if (_loading)
+{
+    <div class="flex justify-center py-8"><span class="loading loading-spinner loading-lg"></span></div>
+}
+else if (_guilds != null)
+{
+    <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Название</th>
+                    <th>Лидер</th>
+                    <th>Уровень</th>
+                    <th>Участников</th>
+                    <th>Создана</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var g in _guilds.Guilds)
+                {
+                    <tr>
+                        <td>@g.GuildId</td>
+                        <td>@g.Name</td>
+                        <td>@g.LeaderName</td>
+                        <td>@g.Level</td>
+                        <td>@g.MemberCount</td>
+                        <td>@DateTimeOffset.FromUnixTimeSeconds(g.CreatedAtUnix).LocalDateTime.ToString("d")</td>
+                        <td>
+                            <button class="btn btn-sm btn-error btn-outline" @onclick="() => Disband(g.GuildId, g.Name)">Расформировать</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-info mt-4">@_message</div>
+}
+
+@code {
+    private string _nameFilter = "";
+    private bool _loading;
+    private string? _message;
+    private Corsairs.Platform.Grpc.Contracts.Group.GuildList? _guilds;
+
+    protected override async Task OnInitializedAsync() => await Search();
+
+    private async Task Search()
+    {
+        _loading = true;
+        _message = null;
+        try
+        {
+            _guilds = await GroupClient.GetGuildsAsync(new GetGuildsRequest
+            {
+                NameFilter = _nameFilter,
+                Pagination = new PaginationRequest { Page = 1, PageSize = 50 }
+            });
+        }
+        catch (Exception ex) { _message = ex.Message; }
+        finally { _loading = false; }
+    }
+
+    private async Task Disband(int guildId, string name)
+    {
+        try
+        {
+            var result = await GroupClient.DisbandGuildAsync(new DisbandGuildRequest { GuildId = guildId });
+            _message = result.Message;
+            await Search();
+        }
+        catch (Exception ex) { _message = ex.Message; }
+    }
+}

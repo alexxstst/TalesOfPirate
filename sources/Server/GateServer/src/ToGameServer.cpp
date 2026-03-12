@@ -202,11 +202,7 @@ void ToGameServer::OnProcessData(DataSocket* datasock, RPacket &recvbuf)
 	GameServer* l_game = (GameServer *)(datasock->GetPointer());
 
 	uShort l_cmd = recvbuf.ReadCmd();
-	//LG("ToGameServer", "-->l_cmd = %d\n", l_cmd);
-
-	printf("Incoming from GameServer Packet CMD ID: %d\n", l_cmd);
-	printf("Packet data size: %d bytes\n", recvbuf.GetDataLen());
-	printf("Packet total size: %d bytes\n",recvbuf.GetPktLen());
+	std::cout << "Incoming from GameServer Packet CMD ID: " << recvbuf.ReadCmd() << std::endl;
 
 	try
 	{
@@ -476,11 +472,13 @@ void ToGameServer::MT_MAPENTRY(dbc::DataSocket* datasock, dbc::RPacket& recvbuf)
 	GameServer* l_game = g_gtsvr->gm_conn->find(l_map);
 	if (l_game)
 	{
+		std::cout << "MT_MAPENTRY: >> CMD_TM_MAPENTRY " << l_map << " " << l_game << std::endl;
 		l_wpk.WriteCmd(CMD_TM_MAPENTRY);
 		g_gtsvr->gm_conn->SendData(l_game->m_datasock, l_wpk);
 	}
 	else
 	{
+		std::cout << "MT_MAPENTRY: >> CMD_TM_MAPENTRY_NOMAP " << l_map << " " << l_game << std::endl;
 		l_wpk.WriteCmd(CMD_TM_MAPENTRY_NOMAP);
 		g_gtsvr->gm_conn->SendData(datasock, l_wpk);
 	}

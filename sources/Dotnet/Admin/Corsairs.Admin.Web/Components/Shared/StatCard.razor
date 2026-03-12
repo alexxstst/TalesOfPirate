@@ -1,0 +1,14 @@
+<div class="card bg-base-100 shadow">
+    <div class="card-body p-4">
+        <div class="stat p-0">
+            <div class="stat-title">@Title</div>
+            <div class="stat-value text-@Color">@Value</div>
+        </div>
+    </div>
+</div>
+
+@code {
+    [Parameter] public string Title { get; set; } = "";
+    [Parameter] public string Value { get; set; } = "";
+    [Parameter] public string Color { get; set; } = "primary";
+}

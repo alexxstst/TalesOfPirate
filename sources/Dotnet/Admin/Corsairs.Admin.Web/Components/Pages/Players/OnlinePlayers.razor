@@ -1,0 +1,97 @@
+@page "/players"
+@using Corsairs.Platform.Grpc.Contracts.Group
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject GroupAdmin.GroupAdminClient GroupClient
+
+<PageTitle>Онлайн игроки - Corsairs Admin</PageTitle>
+
+<h1 class="text-2xl font-bold mb-6">Онлайн игроки</h1>
+
+<div class="flex gap-2 mb-4">
+    <input type="text" placeholder="Поиск по имени..." class="input input-bordered flex-1" @bind="_nameFilter" @bind:event="oninput" />
+    <button class="btn btn-primary" @onclick="Search">Найти</button>
+    <button class="btn btn-ghost" @onclick="Refresh">Обновить</button>
+</div>
+
+@if (_loading)
+{
+    <div class="flex justify-center py-8"><span class="loading loading-spinner loading-lg"></span></div>
+}
+else if (_players != null)
+{
+    <div class="mb-2 text-sm opacity-70">Всего онлайн: @_players.Pagination?.TotalCount</div>
+    <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>Персонаж</th>
+                    <th>Account ID</th>
+                    <th>Уровень</th>
+                    <th>Класс</th>
+                    <th>Карта</th>
+                    <th>Гильдия</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var p in _players.Players)
+                {
+                    <tr>
+                        <td>@p.CharacterName</td>
+                        <td>@p.AccountId</td>
+                        <td>@p.Level</td>
+                        <td>@p.Job</td>
+                        <td>@p.MapName</td>
+                        <td>@p.GuildName</td>
+                        <td>
+                            <button class="btn btn-sm btn-error btn-outline" @onclick="() => KickPlayer(p.CharacterId, p.CharacterName)">Kick</button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="alert alert-info mt-4">@_message</div>
+}
+
+@code {
+    private string _nameFilter = "";
+    private bool _loading;
+    private string? _message;
+    private PlayerList? _players;
+
+    protected override async Task OnInitializedAsync() => await Search();
+
+    private async Task Search()
+    {
+        _loading = true;
+        _message = null;
+        try
+        {
+            _players = await GroupClient.GetOnlinePlayersAsync(new GetOnlinePlayersRequest
+            {
+                NameFilter = _nameFilter,
+                Pagination = new PaginationRequest { Page = 1, PageSize = 50 }
+            });
+        }
+        catch (Exception ex) { _message = ex.Message; }
+        finally { _loading = false; }
+    }
+
+    private async Task Refresh() => await Search();
+
+    private async Task KickPlayer(int chaId, string name)
+    {
+        try
+        {
+            var result = await GroupClient.KickPlayerAsync(new KickPlayerRequest { CharacterId = chaId, Reason = "Admin kick" });
+            _message = result.Message;
+            await Search();
+        }
+        catch (Exception ex) { _message = ex.Message; }
+    }
+}

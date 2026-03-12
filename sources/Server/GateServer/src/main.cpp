@@ -8,7 +8,7 @@ BYTE g_wpe = 0;
 BYTE g_ddos = 0;
 BYTE g_rsaaes = 0;
 uShort g_wpeversion = NULL;
-HANDLE hConsole = NULL;
+HANDLE hConsole = nullptr;
 
 //#pragma init_seg( lib )
 pi_LeakReporter pi_leakReporter("gatememleak.log");
@@ -19,6 +19,8 @@ CResourceBundleManage g_ResourceBundleManage("GateServer.loc"); //Add by lark.li
 int main(int argc, char* argv[])
 {
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
 
 	C_TITLE("GateServer.exe")
 	C_PRINT("Loading GateServer.cfg...\n");
@@ -33,7 +35,7 @@ int main(int argc, char* argv[])
 	{
 		g_wpe = std::stoi(inf["ToClient"]["WpeProtection"]);
 		std::string v = inf["ToClient"]["WpeVersion"];
-		g_wpeversion = (uShort)strtoul(v.c_str(), NULL, 16);
+		g_wpeversion = (uShort)strtoul(v.c_str(), nullptr, 16);
 		printf("Current WPE version is %s\n", v.c_str());
 		g_ddos = std::stoi(inf["ToClient"]["DDoSProtection"]);
 		g_rsaaes = std::stoi(inf["ToClient"]["RSAAES"]);

@@ -1,0 +1,174 @@
+@page "/accounts/{Id:int}"
+@using Corsairs.Platform.Grpc.Contracts.Account
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject AccountAdmin.AccountAdminClient AccountClient
+@inject NavigationManager Nav
+
+<PageTitle>Аккаунт #@Id - Corsairs Admin</PageTitle>
+
+<div class="flex items-center gap-2 mb-6">
+    <a href="/accounts" class="btn btn-ghost btn-sm">← Назад</a>
+    <h1 class="text-2xl font-bold">Аккаунт #@Id</h1>
+</div>
+
+@if (_loading)
+{
+    <div class="flex justify-center py-8"><span class="loading loading-spinner loading-lg"></span></div>
+}
+else if (_account != null)
+{
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Info -->
+        <div class="card bg-base-100 shadow">
+            <div class="card-body">
+                <h2 class="card-title">Информация</h2>
+                <div class="space-y-2">
+                    <p><span class="font-semibold">ID:</span> @_account.Id</p>
+                    <p><span class="font-semibold">Username:</span> @_account.Username</p>
+                    <p><span class="font-semibold">Email:</span> @(string.IsNullOrEmpty(_account.Email) ? "-" : _account.Email)</p>
+                    <p><span class="font-semibold">GM Level:</span> @_account.GmLevel</p>
+                    <p><span class="font-semibold">Кредит:</span> @_account.Credit.ToString("F2")</p>
+                    <p><span class="font-semibold">Создан:</span> @DateTimeOffset.FromUnixTimeSeconds(_account.CreatedAtUnix).LocalDateTime.ToString("g")</p>
+                    <p><span class="font-semibold">Последний вход:</span> @(_account.LastLoginAtUnix > 0 ? DateTimeOffset.FromUnixTimeSeconds(_account.LastLoginAtUnix).LocalDateTime.ToString("g") : "-")</p>
+                    <p><span class="font-semibold">Последний IP:</span> @(string.IsNullOrEmpty(_account.LastLoginIp) ? "-" : _account.LastLoginIp)</p>
+                    <p><span class="font-semibold">Наиграно:</span> @TimeSpan.FromSeconds(_account.TotalPlaytimeSeconds).ToString(@"d\.hh\:mm")</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Actions -->
+        <div class="space-y-4">
+            <!-- Ban/Unban -->
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Блокировка</h2>
+                    @if (_account.IsBanned)
+                    {
+                        <div class="alert alert-error mb-2">
+                            Заблокирован: @_account.BanReason
+                        </div>
+                        <button class="btn btn-warning" @onclick="Unban">Разблокировать</button>
+                    }
+                    else
+                    {
+                        <div class="form-control">
+                            <label class="label"><span class="label-text">Причина</span></label>
+                            <input type="text" class="input input-bordered" @bind="_banReason" />
+                        </div>
+                        <button class="btn btn-error mt-2" @onclick="Ban">Заблокировать</button>
+                    }
+                </div>
+            </div>
+
+            <!-- GM Level -->
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">GM-уровень</h2>
+                    <div class="flex gap-2">
+                        <input type="number" class="input input-bordered flex-1" @bind="_newGmLevel" min="0" max="255" />
+                        <button class="btn btn-primary" @onclick="SetGmLevel">Установить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Credit -->
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Кредит</h2>
+                    <div class="flex gap-2">
+                        <input type="number" class="input input-bordered flex-1" @bind="_newCredit" step="0.01" />
+                        <button class="btn btn-primary" @onclick="SetCredit">Установить</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reset Password -->
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">Пароль</h2>
+                    <div class="flex gap-2">
+                        <input type="text" class="input input-bordered flex-1" placeholder="Новый пароль" @bind="_newPassword" />
+                        <button class="btn btn-warning" @onclick="ResetPassword">Сбросить</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_message))
+{
+    <div class="toast toast-end">
+        <div class="alert @(_isError ? "alert-error" : "alert-success")">@_message</div>
+    </div>
+}
+
+@code {
+    [Parameter] public int Id { get; set; }
+
+    private bool _loading = true;
+    private AccountInfo? _account;
+    private string? _message;
+    private bool _isError;
+    private string _banReason = "";
+    private int _newGmLevel;
+    private double _newCredit;
+    private string _newPassword = "";
+
+    protected override async Task OnInitializedAsync() => await LoadAccount();
+
+    private async Task LoadAccount()
+    {
+        _loading = true;
+        try
+        {
+            _account = await AccountClient.GetAccountAsync(new GetAccountRequest { AccountId = Id });
+            _newGmLevel = _account.GmLevel;
+            _newCredit = _account.Credit;
+        }
+        catch (Exception ex) { ShowMessage(ex.Message, true); }
+        finally { _loading = false; }
+    }
+
+    private async Task Ban()
+    {
+        var result = await AccountClient.BanAccountAsync(new BanAccountRequest { AccountId = Id, Reason = _banReason });
+        ShowMessage(result.Message, !result.Success);
+        if (result.Success) await LoadAccount();
+    }
+
+    private async Task Unban()
+    {
+        var result = await AccountClient.UnbanAccountAsync(new UnbanAccountRequest { AccountId = Id });
+        ShowMessage(result.Message, !result.Success);
+        if (result.Success) await LoadAccount();
+    }
+
+    private async Task SetGmLevel()
+    {
+        var result = await AccountClient.SetGmLevelAsync(new SetGmLevelRequest { AccountId = Id, GmLevel = _newGmLevel });
+        ShowMessage(result.Message, !result.Success);
+        if (result.Success) await LoadAccount();
+    }
+
+    private async Task SetCredit()
+    {
+        var result = await AccountClient.SetCreditAsync(new SetCreditRequest { AccountId = Id, Credit = _newCredit });
+        ShowMessage(result.Message, !result.Success);
+        if (result.Success) await LoadAccount();
+    }
+
+    private async Task ResetPassword()
+    {
+        var result = await AccountClient.ResetPasswordAsync(new ResetPasswordRequest { AccountId = Id, NewPasswordHash = _newPassword });
+        ShowMessage(result.Message, !result.Success);
+        _newPassword = "";
+    }
+
+    private void ShowMessage(string msg, bool error)
+    {
+        _message = msg;
+        _isError = error;
+        _ = Task.Delay(3000).ContinueWith(_ => { _message = null; InvokeAsync(StateHasChanged); });
+    }
+}

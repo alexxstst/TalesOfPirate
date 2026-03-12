@@ -43,9 +43,12 @@
 #include "uiequipform.h"
 #include "uirichedit.h"
 
+// Crypto++ — шифрование UI таблиц (AES-128-GCM)
 #include "cryptlib.h"
 #include "filters.h"
 #include "files.h"
+#include "gcm.h"
+#include "aes.h"
 #include <fstream>
 
 #include <Windows.h>  //Lark.li 

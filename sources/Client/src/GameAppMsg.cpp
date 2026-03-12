@@ -1480,7 +1480,7 @@ T_B
 	{
 		if( g_NetIF->IsConnected() )
 		{
-			g_pGameApp->SysInfo( g_NetIF->m_connect.GetDatasock()->GetPeerIP() );
+			g_pGameApp->SysInfo( g_NetIF->m_connect.GetPeerHost() );
 		}
 		else
 		{

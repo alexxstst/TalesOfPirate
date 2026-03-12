@@ -238,7 +238,7 @@ void ToClient::OnConnected(DataSocket* datasock)
 			l_wpk.WriteSequence(reinterpret_cast<const char*>(publickey.data()), publickey.size()); // Send the public key as a const char sequence																								
 			SendData(datasock, l_wpk);
 			C_PRINT("[%s]", datasock->GetPeerIP());
-			printf("Public RSA sent\n");
+			std::cout << "Public RSA sent PK:" << publickey.size() << std::endl;
 		}
 		catch (std::exception const& e)
 		{

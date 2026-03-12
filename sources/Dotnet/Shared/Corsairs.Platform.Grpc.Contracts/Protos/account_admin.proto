@@ -1,0 +1,74 @@
+syntax = "proto3";
+package corsairs.admin;
+option csharp_namespace = "Corsairs.Platform.Grpc.Contracts.Account";
+
+import "Protos/common.proto";
+
+service AccountAdmin {
+    rpc GetAccount (GetAccountRequest) returns (AccountInfo);
+    rpc SearchAccounts (SearchAccountsRequest) returns (AccountList);
+    rpc BanAccount (BanAccountRequest) returns (OperationResult);
+    rpc UnbanAccount (UnbanAccountRequest) returns (OperationResult);
+    rpc ResetPassword (ResetPasswordRequest) returns (OperationResult);
+    rpc SetGmLevel (SetGmLevelRequest) returns (OperationResult);
+    rpc SetCredit (SetCreditRequest) returns (OperationResult);
+    rpc GetServerStatus (Empty) returns (ServerStatusResponse);
+}
+
+message GetAccountRequest {
+    oneof identifier {
+        int32 account_id = 1;
+        string username = 2;
+    }
+}
+
+message AccountInfo {
+    int32 id = 1;
+    string username = 2;
+    string email = 3;
+    bool is_banned = 4;
+    string ban_reason = 5;
+    int64 ban_expires_at_unix = 6;
+    int32 gm_level = 7;
+    int32 login_status = 8;
+    double credit = 9;
+    int64 created_at_unix = 10;
+    int64 last_login_at_unix = 11;
+    string last_login_ip = 12;
+    int64 total_playtime_seconds = 13;
+}
+
+message SearchAccountsRequest {
+    string query = 1;
+    PaginationRequest pagination = 2;
+}
+
+message AccountList {
+    repeated AccountInfo accounts = 1;
+    PaginationInfo pagination = 2;
+}
+
+message BanAccountRequest {
+    int32 account_id = 1;
+    string reason = 2;
+    int64 expires_at_unix = 3;
+}
+
+message UnbanAccountRequest {
+    int32 account_id = 1;
+}
+
+message ResetPasswordRequest {
+    int32 account_id = 1;
+    string new_password_hash = 2;
+}
+
+message SetGmLevelRequest {
+    int32 account_id = 1;
+    int32 gm_level = 2;
+}
+
+message SetCreditRequest {
+    int32 account_id = 1;
+    double credit = 2;
+}

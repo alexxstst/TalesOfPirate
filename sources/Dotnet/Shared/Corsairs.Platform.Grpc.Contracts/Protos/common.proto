@@ -1,0 +1,30 @@
+syntax = "proto3";
+package corsairs.admin;
+option csharp_namespace = "Corsairs.Platform.Grpc.Contracts.Common";
+
+message Empty {}
+
+message PaginationRequest {
+    int32 page = 1;
+    int32 page_size = 2;
+}
+
+message PaginationInfo {
+    int32 total_count = 1;
+    int32 page = 2;
+    int32 page_size = 3;
+    int32 total_pages = 4;
+}
+
+message ServerStatusResponse {
+    string server_name = 1;
+    bool is_running = 2;
+    int64 uptime_seconds = 3;
+    int32 active_connections = 4;
+    int64 memory_usage_bytes = 5;
+}
+
+message OperationResult {
+    bool success = 1;
+    string message = 2;
+}

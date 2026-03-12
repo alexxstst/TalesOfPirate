@@ -1,0 +1,78 @@
+@page "/servers"
+@using Corsairs.Admin.Web.Services
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject DashboardService Dashboard
+
+<PageTitle>Серверы - Corsairs Admin</PageTitle>
+
+<h1 class="text-2xl font-bold mb-6">Топология серверов</h1>
+
+<button class="btn btn-ghost mb-4" @onclick="Refresh">Обновить</button>
+
+@if (_loading)
+{
+    <div class="flex justify-center py-8"><span class="loading loading-spinner loading-lg"></span></div>
+}
+else
+{
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        @foreach (var server in _servers)
+        {
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <div class="flex items-center gap-2">
+                        <div class="badge @(server.Status?.IsRunning == true ? "badge-success" : "badge-error")">
+                            @(server.Status?.IsRunning == true ? "Online" : "Offline")
+                        </div>
+                        <h2 class="card-title">@server.Name</h2>
+                    </div>
+                    @if (server.Status != null)
+                    {
+                        <div class="space-y-1 mt-2 text-sm">
+                            <p>Uptime: @TimeSpan.FromSeconds(server.Status.UptimeSeconds).ToString(@"d\.hh\:mm\:ss")</p>
+                            <p>Подключений: @server.Status.ActiveConnections</p>
+                            <p>Memory: @(server.Status.MemoryUsageBytes / 1024 / 1024) MB</p>
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-sm opacity-50 mt-2">Нет данных</p>
+                    }
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-error mt-4">@_error</div>
+}
+
+@code {
+    private record ServerInfo(string Name, ServerStatusResponse? Status);
+
+    private bool _loading = true;
+    private string? _error;
+    private List<ServerInfo> _servers = new();
+
+    protected override async Task OnInitializedAsync() => await Refresh();
+
+    private async Task Refresh()
+    {
+        _loading = true;
+        _error = null;
+        try
+        {
+            var statuses = await Dashboard.GetAllStatuses();
+            _servers = new List<ServerInfo>
+            {
+                new("AccountServer", statuses.Account),
+                new("GateServer", statuses.Gate),
+                new("GroupServer", statuses.Group)
+            };
+        }
+        catch (Exception ex) { _error = ex.Message; }
+        finally { _loading = false; }
+    }
+}

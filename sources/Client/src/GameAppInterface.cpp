@@ -175,7 +175,7 @@ int CGameApp::Run()
             timer->OnTimer();
             #else
 
-            g_NetIF->PeekPacket(1); // 修正客户端CPU占用率100%
+            g_NetIF->PollPackets(100); // Обработка входящих пакетов
 
             if (_pSteady->Run()) {
                 LG("frame", "time:%u\n", GetTickCount() - _dwCurTick);

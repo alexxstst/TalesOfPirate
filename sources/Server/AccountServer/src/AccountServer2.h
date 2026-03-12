@@ -192,10 +192,7 @@ private:
     int m_nIndex;
 
 	static Sema m_Sema;
-	inline static std::string m_strSrvip;
-	inline static std::string m_strSrvdb;
-	inline static std::string m_strUserId;
-	inline static std::string m_strUserPwd;
+	inline static std::string m_strDsn;
 	inline static std::string m_strAccountTableName{ "account_login" };
 };
 

@@ -111,49 +111,39 @@ long Receiver::Process()
 						//}
 						RPacket	l_rpk	=m_rpk;
 						uLong l_len =l_rpk.GetDataLen();
-						try{
-							bool bDec = __tca->OnDecrypt(m_datasock,const_cast<char*>(l_rpk.GetDataAddr()),l_len);
-							// The above line doesn't do anything if the handshake is not completed.
+						uLong oldLen = l_len;
+						if (__tca->OnDecrypt(m_datasock,const_cast<char*>(l_rpk.GetDataAddr()),l_len) ) {
+							std::cout
+								<< "Command: " << l_rpk.ReadCmd()
+								<< " ENCRYPTED LEN: " << oldLen
+								<< " DECRYPTED LEN: " << l_len
+								<< std::endl;
 						}
-						catch (std::out_of_range const&) {
-							__tca->Disconnect(m_datasock, 0, -32);
-							return 0;
-						}
-						catch(...){
 
-							__tca->Disconnect(m_datasock, 0, -31);
-
-							return 0;
-						}
 						l_rpk.DiscardLast(l_rpk.GetDataLen() -l_len);
-						try
+						if(!__tca->__rpc || !__tca->__rpc->ProcessSESS(m_datasock,l_rpk))
 						{
-							if(!__tca->__rpc || !__tca->__rpc->ProcessSESS(m_datasock,l_rpk))
+							OnProcessData	*l_processdata	=m_HeapProcData.Get();
+							l_processdata->Init(m_datasock,l_rpk);
+							if(__tca->__mode && __tca->GetProcessor())
 							{
-								OnProcessData	*l_processdata	=m_HeapProcData.Get();
-								l_processdata->Init(m_datasock,l_rpk);
-								if(__tca->__mode && __tca->GetProcessor())
+								m_datasock->m_procflag++;
+								try{
+									__tca->GetProcessor()->AddTask(l_processdata);
+								}catch(...)
 								{
-									m_datasock->m_procflag++;
-									try{
-										__tca->GetProcessor()->AddTask(l_processdata);
-									}catch(...)
-									{
-										m_datasock->m_procflag--;
-									}
-								}else
-								{
-									m_datasock->m_procflag++;
-									try{
-										l_processdata->Process();
-									}catch(...){}
 									m_datasock->m_procflag--;
-									try{
-										l_processdata->Lastly();
-									}catch(...){}
 								}
+							}else
+							{
+								m_datasock->m_procflag++;
+								try{
+									l_processdata->Process();
+								}catch(...){}
+								m_datasock->m_procflag--;
+								l_processdata->Lastly();
 							}
-						}catch(...){}
+						}
 					}//if(m_rpk.GetPktLen() >_len_inc && m_datasock->m_isProcess)
 
 					m_rpk.SetOffset(m_rpk.GetOffset()+m_rpk.GetPktLen());

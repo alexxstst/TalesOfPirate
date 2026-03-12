@@ -1,0 +1,49 @@
+syntax = "proto3";
+package corsairs.admin;
+option csharp_namespace = "Corsairs.Platform.Grpc.Contracts.Gate";
+
+import "Protos/common.proto";
+
+service GateAdmin {
+    rpc GetActiveSessions (Empty) returns (SessionList);
+    rpc KickSession (KickSessionRequest) returns (OperationResult);
+    rpc KickAll (Empty) returns (OperationResult);
+    rpc GetNetworkStats (Empty) returns (NetworkStats);
+    rpc BroadcastNotice (NoticeRequest) returns (OperationResult);
+    rpc GetServerStatus (Empty) returns (ServerStatusResponse);
+}
+
+message SessionInfo {
+    uint32 channel_id = 1;
+    int32 account_id = 2;
+    int32 character_id = 3;
+    string character_name = 4;
+    string remote_address = 5;
+    string state = 6;
+    int64 connected_at_unix = 7;
+    int64 total_recv_bytes = 8;
+    int64 total_send_bytes = 9;
+}
+
+message SessionList {
+    repeated SessionInfo sessions = 1;
+    int32 total_count = 2;
+}
+
+message KickSessionRequest {
+    uint32 channel_id = 1;
+    string reason = 2;
+}
+
+message NetworkStats {
+    int32 active_connections = 1;
+    int32 used_operations = 2;
+    int32 free_operations = 3;
+    int32 total_operations = 4;
+    int64 total_recv_bytes = 5;
+    int64 total_send_bytes = 6;
+}
+
+message NoticeRequest {
+    string message = 1;
+}

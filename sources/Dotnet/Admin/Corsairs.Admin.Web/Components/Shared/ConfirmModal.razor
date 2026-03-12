@@ -1,0 +1,25 @@
+@if (IsOpen)
+{
+    <div class="modal modal-open">
+        <div class="modal-box">
+            <h3 class="font-bold text-lg">@Title</h3>
+            <p class="py-4">@Message</p>
+            <div class="modal-action">
+                <button class="btn btn-ghost" @onclick="Cancel">Отмена</button>
+                <button class="btn btn-error" @onclick="Confirm">Подтвердить</button>
+            </div>
+        </div>
+        <div class="modal-backdrop" @onclick="Cancel"></div>
+    </div>
+}
+
+@code {
+    [Parameter] public bool IsOpen { get; set; }
+    [Parameter] public string Title { get; set; } = "Подтверждение";
+    [Parameter] public string Message { get; set; } = "";
+    [Parameter] public EventCallback OnConfirm { get; set; }
+    [Parameter] public EventCallback OnCancel { get; set; }
+
+    private async Task Confirm() => await OnConfirm.InvokeAsync();
+    private async Task Cancel() => await OnCancel.InvokeAsync();
+}

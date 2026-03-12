@@ -9,7 +9,7 @@
 #include "procirculate.h"
 #include "GameConfig.h"
 #include "ProCirculate.h"
-//=============��������ͷ�ļ�BEGIN=============
+//=============附加包含头文件BEGIN=============
 #include "PacketCmd.h"
 #include "NetChat.h"
 #include "NetGuild.h"
@@ -17,13 +17,8 @@
 #include "uiglobalvar.h"
 #include <fstream>
 #include <iostream>
-#ifdef _TEST_CLIENT
-#include "..\..\TestClient\testclient.h"
-#endif
-//=============��������ͷ�ļ�END===============
+//=============附加包含头文件END===============
 
-//�κ��˲����޸�����2�У�лл������
-uLong	NetBuffer[]		= {100,10,0};
 bool	g_logautobak	= false;
 
 //End
@@ -37,18 +32,13 @@ extern CDoublePwdMgr	g_stUIDoublePwd;
 using namespace std;
 
 //-------------------
-// Packet��Ϣ��������
+// Packet消息处理函数
 //-------------------
 
-BOOL NetIF::HandlePacketMessage(DataSocket *datasock,LPRPACKET pk)
+BOOL NetIF::HandlePacketMessage(LPRPACKET pk)
 {
-		
 	if (!static_cast<bool>(pk)) return FALSE;
-	unsigned short sCmdType = pk.ReadCmd();
-
-#ifdef _TEST_CLIENT
-    m_connect.SwitchSocket( datasock, Connection::CNST_CONNECTED );
-#endif
+	unsigned short sCmdType = pk.GetCmd();
 
 	BOOL bRet = FALSE;
 	switch(sCmdType)
@@ -96,10 +86,10 @@ BOOL NetIF::HandlePacketMessage(DataSocket *datasock,LPRPACKET pk)
 	case CMD_MC_MISLOG_ADD:	 return SC_MisLogAdd(pk);
 	case CMD_MC_MISLOG_CHANGE: return SC_MisLogState(pk);
 	case CMD_MC_NPCSTATECHG: return SC_NpcStateChange(pk);
-	
+
 	case CMD_PC_ERRMSG :
-	case CMD_MC_MAPCRASH:    return SC_MapCrash(pk);  
-	
+	case CMD_MC_MAPCRASH:    return SC_MapCrash(pk);
+
 	case CMD_MC_TRIGGER_ACTION: return SC_TriggerAction(pk);
 	case CMD_MC_BEGIN_ITEM_FORGE: return SC_Forge(pk);
 
@@ -135,8 +125,8 @@ BOOL NetIF::HandlePacketMessage(DataSocket *datasock,LPRPACKET pk)
 	case CMD_MC_RANK: return SC_ShowRanking(pk);
 	case CMD_MC_STALLSEARCH: return SC_ShowStallSearch(pk);
 	case CMD_MC_UPDATEGUILDBANKGOLD : return SC_UpdateGuildGold(pk);
-	
-	case CMD_MC_UPDATEIMP : g_stUIEquip.UpdateIMP(pk.ReadLong()); return true;
+
+	case CMD_MC_UPDATEIMP : g_stUIEquip.UpdateIMP(pk.ReadUInt32()); return true;
 
 	case CMD_MC_REQUESTPIN: {
 								CCursor::I()->SetCursor(	CCursor::stNormal	);
@@ -144,8 +134,8 @@ BOOL NetIF::HandlePacketMessage(DataSocket *datasock,LPRPACKET pk)
 								g_stUIDoublePwd.ShowDoublePwdForm();
 								return true;
 							}
-	
-	
+
+
 	case CMD_PC_SAY2YOU:	 return PC_Say2You(pk);
 	case CMD_PC_SAY2TEM:	 return PC_Say2Team(pk);
 	case CMD_PC_SAY2GUD:	 return PC_Say2Gud(pk);
@@ -153,7 +143,7 @@ BOOL NetIF::HandlePacketMessage(DataSocket *datasock,LPRPACKET pk)
 	case CMD_PC_SAY2TRADE:	 return PC_SAY2TRADE(pk);
 	case CMD_PC_GM1SAY:		 return PC_GM1SAY(pk);
 	case CMD_PC_GM1SAY1:	return PC_GM1SAY1(pk);//add by sunny.sun20080804
-	
+
 	case CMD_PC_SESS_CREATE:	return PC_SESS_CREATE(pk);
 	case CMD_PC_SESS_ADD:	return PC_SESS_ADD(pk);
 	case CMD_PC_SESS_LEAVE:	return PC_SESS_LEAVE(pk);
@@ -269,9 +259,13 @@ BOOL NetIF::HandlePacketMessage(DataSocket *datasock,LPRPACKET pk)
 	case CMD_MC_REQUEST_EXP_RATE: return SC_RequestExpRate(pk);
 	case CMD_TC_DISCONNECT: return SC_Disconnect(pk);
 	case CMD_PC_REFRESH_SELECT: return SC_RefreshSelectScreen(pk);
+
+	// Пинг — обрабатываем здесь (ранее обрабатывались в OnProcessData)
+	case CMD_PC_PING: return PC_Ping(pk);
+	case CMD_MC_PING: return SC_Ping(pk);
+	case CMD_MC_CHECK_PING: return SC_CheckPing(pk);
 	}
 
-	//LG("net_r", "msgRecv Unknown Packet Msg Value = [%u]!\n", sCmdType);
 	return FALSE;
 }
 
@@ -287,7 +281,7 @@ void CLogName::Init()
 {
 	memset( _dwWorldArray, 0, sizeof(_dwWorldArray) );
 	memset( _szLogName, 0, sizeof(_szLogName) );
-	memset( _szNoFind, 0, sizeof(_szNoFind) );	
+	memset( _szNoFind, 0, sizeof(_szNoFind) );
 }
 
 const char* CLogName::SetLogName( DWORD dwWorlID, const char* szName )
@@ -350,17 +344,16 @@ bool CLogName::IsMainCha( DWORD dwWorlID )
 
 inline int lua_HandleNetMessage( lua_State* L )
 {
-	BOOL bValid = (lua_gettop(L)==2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata(L, 2));
+	BOOL bValid = (lua_gettop(L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid)
 	{
 		return 0;
 	}
 
-	dbc::DataSocket* pSocket = (dbc::DataSocket *)lua_touserdata( L, 1 );
-	dbc::RPacket* pPacket = (dbc::RPacket*)lua_touserdata( L, 2 );
-	if( pSocket && pPacket )
+	net::RPacket* pPacket = (net::RPacket*)lua_touserdata( L, 1 );
+	if( pPacket )
 	{
-		g_NetIF->HandlePacketMessage( pSocket, *pPacket );
+		g_NetIF->HandlePacketMessage( *pPacket );
 	}
 	return 0;
 }
@@ -368,143 +361,166 @@ inline int lua_HandleNetMessage( lua_State* L )
 //---------------------------------------------------------------------------
 // class NetIF
 //---------------------------------------------------------------------------
-NetIF::NetIF(ThreadPool *comm):TcpClientApp(this,0,comm),RPCMGR(this),PKQueue(false),m_framedelay(40)
-,m_maxdelay(0),m_curdelay(0),m_mindelay(0),m_pingid(0),m_connect(this)
-,m_ulCurStatistic(0),m_ulPacketCount(1), _enc(false), _comm_enc(0)
+NetIF::NetIF()
+	: m_framedelay(40)
+	, m_maxdelay(0), m_curdelay(0), m_mindelay(0), m_pingid(0)
+	, m_connect(this)
+	, m_ulCurStatistic(0), m_ulPacketCount(0)
+	, _enc(false), _comm_enc(0)
 {
-	TcpCommApp::WSAStartup();
+	net::InitWinSock();
 
-    // ��ʼ�����ܲ���
-    memset(_key, 0, sizeof _key);
-    _key_len = 0;
-    g_rLvm = init_lua();
-    g_sLvm = init_lua();
-    load_luc(g_rLvm, "scripts/lua/apple.luc");
-    load_luc(g_sLvm, "scripts/lua/apple.luc");
-    load_luc(g_rLvm, "scripts/lua/pear.luc");
-    load_luc(g_sLvm, "scripts/lua/pear.luc");
+	// Настройка TcpClient
+	_client.SetHandler(this);
+	_client.SetCrypto(this);
+
+	// Инициализация шифрования
+	memset(_key, 0, sizeof _key);
+	_key_len = 0;
+	g_rLvm = init_lua();
+	g_sLvm = init_lua();
+	load_luc(g_rLvm, "scripts/lua/apple.luc");
+	load_luc(g_sLvm, "scripts/lua/apple.luc");
+	load_luc(g_rLvm, "scripts/lua/pear.luc");
+	load_luc(g_sLvm, "scripts/lua/pear.luc");
 
 	handshakeDone = false;
-	memset(m_ulDelayTime, 0, sizeof(dbc::uLong) * 4);
-	SetPKParse(0,2,64*1024,100);
-	BeginWork( g_Config.m_nSendHeartbeat );
-
-	// Generate and initialize AES key
-	rng.GenerateBlock(cliPrivateKey.data(), cliPrivateKey.size());
+	hRsaPubKey = NULL;
+	hAesAlg = NULL;
+	hAesKey = NULL;
+	memset(cliAesKey, 0, sizeof(cliAesKey));
+	memset(m_ulDelayTime, 0, sizeof(unsigned long) * 4);
 
 	m_pCProCir = new CProCirculateCC( this );
 }
 
 NetIF::~NetIF()
 {
-    _enc = false;
-    memset(_key, 0, sizeof _key);
-    exit_lua(g_sLvm);
-    exit_lua(g_rLvm);
+	_enc = false;
+	memset(_key, 0, sizeof _key);
+	exit_lua(g_sLvm);
+	exit_lua(g_rLvm);
 
-    ShutDown(6*1000);
+	CleanupCrypto();
+
+	_client.Disconnect(0);
 
 	if( m_pCProCir )
-    {
-        delete m_pCProCir;
-        m_pCProCir = NULL;
-    }
+	{
+		delete m_pCProCir;
+		m_pCProCir = NULL;
+	}
 
-   TcpCommApp::WSACleanup();
+	net::CleanupWinSock();
 }
 
-void	NetIF::OnProcessData(dbc::DataSocket *datasock,dbc::RPacket& recvbuf){
-	dbc::RPacket rpk =recvbuf;
-	unsigned short sCmdType = rpk.ReadCmd();
+void NetIF::CleanupCrypto()
+{
+	if (hAesKey) { BCryptDestroyKey(hAesKey); hAesKey = NULL; }
+	if (hAesAlg) { BCryptCloseAlgorithmProvider(hAesAlg, 0); hAesAlg = NULL; }
+	if (hRsaPubKey) { BCryptDestroyKey(hRsaPubKey); hRsaPubKey = NULL; }
+	SecureZeroMemory(cliAesKey, sizeof(cliAesKey));
+	handshakeDone = false;
+}
 
-	if(sCmdType !=CMD_MC_PING)
-	{
-		LG("FromGateServer","%d\n",sCmdType);
-	}
-	
-	//LG("net_r", "Recv Packet Msg Type = [%d]\n", sCmdType);
-	//===============for test
-//	if(sCmdType == CMD_MC_NOTIACTION)
-//	{
-//		uLong l_id = rpk.ReadLong();
-//
-//		CCharacter *pCMainCha = NULL;
-//		CGameScene *pCScen = NULL;
-//		if (g_pGameApp && (pCScen = g_pGameApp->GetCurScene()))
-//			pCMainCha = pCScen->GetMainCha();
-//		if (pCMainCha && (l_id == pCMainCha->getAttachID()))
-//		{
-//#ifdef defPROTOCOL_HAVE_PACKETID
-//			uLong ulPacketID = rpk.ReadLong();
-//#endif
-//			uLong ulActType = rpk.ReadChar();
-//			Char szLogName[1024];
-//			sprintf(szLogName, "%s--check", pCMainCha->getLogName());
-//			LG(szLogName, "PacketID: %10d\tActType: %3d\tTime: %d\n", ulPacketID, ulActType, GetTickCount());
-//		}
-//	}
-	//================
+bool NetIF::InitAesKey()
+{
+	NTSTATUS status;
 
-	if(sCmdType==CMD_PC_PING)
-	{
-		PC_Ping(rpk);
+	status = BCryptOpenAlgorithmProvider(&hAesAlg, BCRYPT_AES_ALGORITHM, NULL, 0);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptOpenAlgorithmProvider failed: 0x%08X\n", status);
+		return false;
 	}
-	else if(sCmdType==CMD_MC_PING)
-	{
-		SC_Ping(rpk);
+
+	status = BCryptSetProperty(hAesAlg, BCRYPT_CHAINING_MODE,
+		(PUCHAR)BCRYPT_CHAIN_MODE_GCM, sizeof(BCRYPT_CHAIN_MODE_GCM), 0);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptSetProperty GCM failed: 0x%08X\n", status);
+		return false;
 	}
-	else if(sCmdType==CMD_MC_CHECK_PING)
+
+	status = BCryptGenerateSymmetricKey(hAesAlg, &hAesKey, NULL, 0, cliAesKey, 32, 0);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptGenerateSymmetricKey failed: 0x%08X\n", status);
+		return false;
+	}
+
+	return true;
+}
+
+// ── ITcpClientHandler ────────────────────────────────────────
+
+void NetIF::OnPacket(net::RPacket& packet)
+{
+	unsigned short sCmdType = packet.GetCmd();
+
+	if (sCmdType != CMD_MC_PING) {
+		LG("FromGateServer", "%d\n", sCmdType);
+	}
+
+	HandlePacketMessage(packet);
+}
+
+void NetIF::OnDisconnected(int reason)
+{
+	LG("connect", "\tOnDisconnected, Reason:%d\n", reason);
+
+	if (g_pGameApp)
 	{
-		SC_CheckPing(rpk);
+		CleanupCrypto();
+		m_connect.OnDisconnect();
+		g_pGameApp->SendMessage(APP_NET_DISCONNECT, reason);
+
+		if (m_pCProCir)
+		{
+			delete m_pCProCir;
+		}
+		m_pCProCir = new CProCirculateCC( this );
+	}
+}
+
+// ── ICryptoProvider ──────────────────────────────────────────
+
+bool NetIF::IsActive() const
+{
+	return _comm_enc > 0 && handshakeDone;
+}
+
+bool NetIF::Encrypt(uint8_t* ciphertext, int ciphertext_len,
+                    const uint8_t* plaintext, int& len)
+{
+	unsigned long ulen = static_cast<unsigned long>(len);
+	bool ok = EncryptAES(
+		reinterpret_cast<char*>(ciphertext),
+		static_cast<unsigned long>(ciphertext_len),
+		reinterpret_cast<const char*>(plaintext),
+		ulen);
+	len = static_cast<int>(ulen);
+	return ok;
+}
+
+bool NetIF::Decrypt(uint8_t* data, int& len)
+{
+	unsigned long ulen = static_cast<unsigned long>(len);
+	bool ok = DecryptAES(reinterpret_cast<char*>(data), ulen);
+	len = static_cast<int>(ulen);
+	return ok;
+}
+
+// ── SwitchNet ────────────────────────────────────────────────
+
+void NetIF::SwitchNet(bool isConnected)
+{
+	if( m_pCProCir ) delete m_pCProCir;
+	if( isConnected )
+	{
+		m_pCProCir = new CProCirculateCS(this);
 	}
 	else
 	{
-		AddPK(datasock, recvbuf);
+		m_pCProCir = new CProCirculateCC(this);
 	}
-}
-
-void NetIF::SwitchNet(bool isConnected)
-{ 
-    if( m_pCProCir ) delete m_pCProCir;
-    if( isConnected )
-    {
-        m_pCProCir = new CProCirculateCS(this);
-    }
-    else
-    {
-        m_pCProCir = new CProCirculateCC(this);
-    }
-}
-
-//����ֵ:true-��������,false-����������
-bool	NetIF::OnConnect(DataSocket *datasock)
-{
-    LG("connect","\tOnConnect\n");
-
-	datasock->SetRecvBuf(64*1024);
-	datasock->SetSendBuf(64*1024);
-	return	true;
-}
-//reasonֵ:0-���س��������˳���-1-Socket����-3-���类�Է��رգ�-5-�����ȳ������ơ�
-void	NetIF::OnDisconnect(DataSocket *datasock,int reason)
-{
-	LG("connect","\tOnDisconnect, Reason:%d, Tick:%u,recvTime:%u  \n", reason, GetCurrentTick(),GetRecvTime(datasock) );
-
-    if( g_pGameApp )
-    {
-		g_NetIF->handshakeDone = false;
-        m_connect.OnDisconnect();
-        g_pGameApp->SendMessage(APP_NET_DISCONNECT,reason);
-
-
-
-        if (m_pCProCir)
-        {
-            delete m_pCProCir;
-        }
-        m_pCProCir = new CProCirculateCC( this );
-    }
-	return;
 }
 
 std::string NetIF::GetDisconnectErrText(int reason) const
@@ -519,7 +535,6 @@ std::string NetIF::GetDisconnectErrText(int reason) const
 	}();
 }
 
-// xuedong 2004.09.01
 unsigned long NetIF::GetAveragePing()
 {
 	unsigned long ulAverage = 0, ulCount = 0;
@@ -543,247 +558,135 @@ unsigned long NetIF::GetAveragePing()
 
 	return ulAverage;
 }
-//
-void NetIF::ProcessData(dbc::DataSocket *datasock,dbc::RPacket& recvbuf)
-{
-	g_NetIF->HandlePacketMessage( datasock, recvbuf );
-}
 
-extern char g_szSendKey[4];
-extern char g_szRecvKey[4];
-
-bool NetIF::OnEncrypt(dbc::DataSocket *datasock,char *ciphertext, uLong ciphertext_len, const char *text,unsigned long& len)
-{
-	//TcpCommApp::OnEncrypt(datasock, ciphertext, text, len);
-	if (_comm_enc > 0 && g_NetIF->handshakeDone)
-	{
-		return EncryptAES(ciphertext, ciphertext_len, text, len, g_NetIF->cliPrivateKey);
-	}
-
-	if (ciphertext == text)
-	{
-		return true;
-	}
-
-	std::memcpy(ciphertext, text, len);
-	return true;
-}
-
-
-bool NetIF::OnDecrypt(dbc::DataSocket *datasock,char *ciphertext,unsigned long& len)
- {
-    //TcpCommApp::OnDecrypt(datasock, ciphertext, len);
-	try
-	{
-
-		if (_comm_enc > 0 && g_NetIF->handshakeDone)
-		{
-
-			return DecryptAES(ciphertext, ciphertext, len, g_NetIF->cliPrivateKey);
-			// Note: iv begins after the last ciphertext char.
-
-		}
-		else {
-			return false;
-		}
-	}
-    catch (...)
-    {
-        LG("dec", "Exception raised from OnDecrypt()\n");
-	}
-
-	return false;
-}
-
-//------------- Packet���ͺ���    Client -> Server ��Ϣ�����ܿ�----------------------------
+//------------- Packet отправка    Client -> Server ----------------------------
 void NetIF::SendPacketMessage(LPWPACKET pk)
 {
-	
-	
-	//pk.WriteShort(0xE44CF); //WPE CODE
-	
 	BOOL bUseFakeServer = FALSE;
 	if(bUseFakeServer)
 	{
-		// FakeServer.HandleClientPacket(pk);
 		return;
 	}
 
 	if(!IsConnected()) return;
 
-	if(!m_connect.GetDatasock())
+	if(!_client.IsConnected())
 	{
-		if ( !g_pGameApp->GetCurScene() )
-		{
-			LG("error", "msgg_pGameApp->GetCurScene() Is NULL, Can't Send Socket Message!\n");
-			return;
-		}
-		if (!g_pGameApp->GetCurScene()->GetMainCha())
-		{
-			LG("error", "msgg_pGameApp->GetCurScene()->GetMainCha() Is NULL, Can't Send Socket Message!\n");
-			return;
-		}
 		LG("error", "msgClientSocket Is NULL, Can't Send Socket Message!\n");
 		return;
 	}
 
-	if( SendData(m_connect.GetDatasock(), pk)==-1 )
+	// WPE: записываем инкрементальный счётчик пакетов в поле SESS (байты 2-5)
+	pk.WriteSess(m_ulPacketCount++);
+
+	if( !_client.Send(pk) )
 	{
 		LG("net_error", "msgSendData Error!\n");
-		
 	}
 }
 
-dbc::RPacket NetIF::SyncSendPacketMessage(LPWPACKET pk,unsigned long timeout)
+
+// AES-256-GCM шифрование (BCrypt). Wire format: [nonce(12)][tag(16)][ciphertext]
+bool NetIF::EncryptAES(char* ciphertext, uLong ciphertext_len, cChar* plaintext, unsigned long& ciphersize) {
+
+	const ULONG NONCE_SIZE = 12;
+	const ULONG TAG_SIZE = 16;
+	const ULONG overhead = NONCE_SIZE + TAG_SIZE;
+	ULONG plaintextLen = ciphersize;
+
+	if (ciphertext_len < overhead + plaintextLen) {
+		LG("enc", "EncryptAES: buffer too small (%u < %u)\n", ciphertext_len, overhead + plaintextLen);
+		return false;
+	}
+
+	BYTE nonce[NONCE_SIZE];
+	NTSTATUS status = BCryptGenRandom(NULL, nonce, NONCE_SIZE, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptGenRandom failed: 0x%08X\n", status);
+		return false;
+	}
+
+	BCRYPT_AUTHENTICATED_CIPHER_MODE_INFO authInfo;
+	BCRYPT_INIT_AUTH_MODE_INFO(authInfo);
+	authInfo.pbNonce = nonce;
+	authInfo.cbNonce = NONCE_SIZE;
+
+	BYTE tag[TAG_SIZE];
+	authInfo.pbTag = tag;
+	authInfo.cbTag = TAG_SIZE;
+
+	ULONG resultLen = 0;
+	char* ctOut = ciphertext + overhead;
+	if (plaintext != ciphertext) {
+		std::memcpy(ctOut, plaintext, plaintextLen);
+	} else {
+		std::memmove(ctOut, plaintext, plaintextLen);
+	}
+
+	status = BCryptEncrypt(
+		hAesKey,
+		(PUCHAR)ctOut, plaintextLen,
+		&authInfo,
+		NULL, 0,
+		(PUCHAR)ctOut, plaintextLen,
+		&resultLen,
+		0);
+
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptEncrypt failed: 0x%08X\n", status);
+		return false;
+	}
+
+	std::memcpy(ciphertext, nonce, NONCE_SIZE);
+	std::memcpy(ciphertext + NONCE_SIZE, tag, TAG_SIZE);
+	ciphersize = overhead + resultLen;
+
+	return true;
+}
+
+// AES-256-GCM дешифрование (BCrypt). Wire format: [nonce(12)][tag(16)][ciphertext]
+bool NetIF::DecryptAES(char* ciphertext, unsigned long& len)
 {
-	BOOL bUseFakeServer = FALSE;
-	if(bUseFakeServer)
-	{
-		// FakeServer.HandleClientPacket(pk);
-		return 0;
-	}
+	const ULONG NONCE_SIZE = 12;
+	const ULONG TAG_SIZE = 16;
+	const ULONG overhead = NONCE_SIZE + TAG_SIZE;
 
-	if(!IsConnected()) return 0;
-
-	if(!m_connect.GetDatasock())
-	{
-		if ( !g_pGameApp->GetCurScene() )
-		{
-			LG("error", "msgg_pGameApp->GetCurScene() Is NULL, Can't Send Socket Message!\n");
-			return 0;
-		}
-		if (!g_pGameApp->GetCurScene()->GetMainCha())
-		{
-			LG("error", "msgg_pGameApp->GetCurScene()->GetMainCha() Is NULL, Can't Send Socket Message!\n");
-			return 0;
-		}
-		LG("error", "msgClientSocket Is NULL, Can't Send Socket Message!\n");
-		return 0;
-	}
-
-	return SyncCall(m_connect.GetDatasock(), pk,timeout);
-}
-
-
-
-bool NetIF::EncryptAES(char* ciphertext, uLong ciphertext_len, cChar* plaintext, unsigned long& ciphersize, const CryptoPP::SecByteBlock& key) {
-
-	try
-	{
-		CryptoPP::SecByteBlock iv(CryptoPP::AES::BLOCKSIZE);
-		rng.GenerateBlock(iv.data(), CryptoPP::AES::BLOCKSIZE); // Generate random initialization vector
-
-		string output;
-		string cipher;
-		CryptoPP::GCM<CryptoPP::AES>::Encryption e;
-		
-		e.SetKeyWithIV(key.data(), key.size(), iv.data(), CryptoPP::AES::BLOCKSIZE);			// Set key and IV pair
-		CryptoPP::StringSource ss((CryptoPP::byte*)plaintext, ciphersize, true, new CryptoPP::AuthenticatedEncryptionFilter(e, new CryptoPP::StringSink(output), false, 12));
-		// Encrypt from byte pointer, ciphersize bytes long, towards output.
-		// plaintext might contain null-terminated values, so we got to use the ciphersize provided by operator<< definition.
-		CryptoPP::StringSource ss1(output, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(cipher), false));
-		// Encode the output using Base64.
-
-		if (ciphertext_len + (CryptoPP::AES::BLOCKSIZE + 1) < cipher.size())
-		{
-			// cipher wont fit in the buffer
-			return false;
-		}
-
-		std::memcpy(ciphertext, cipher.c_str(), cipher.size());	// This does not copy the null-terminated char.
-		// Copy the Base64 output to the ciphertext pointer.
-		ciphersize = cipher.size();								
-		// Update cipher size
-
-
-		//Data from text gets encrypted using key provided, then Base64Encoded. The result is char array, copied to ciphertext pointer.
-		//The text length provided also gets updated. New length is the ciphertext length, not including the null-terminated char.
-
-		std::memcpy(ciphertext + ciphersize + 1, iv.data(), CryptoPP::AES::BLOCKSIZE);
-		// Copy initialization vector to ciphertext char array. Do not overwrite the last char.
-		ciphersize += CryptoPP::AES::BLOCKSIZE + 1;
-
-
-		return true;
-	}
-	catch (CryptoPP::BufferedTransformation::NoChannelSupport& e)
-	{
-		// The tag must go in to the default channel:
-		//  "unknown: this object doesn't support multiple channels"
-		cerr << "Caught NoChannelSupport..." << endl;
-		cerr << e.what() << endl;
-		cerr << endl;
-		return false;
-	}
-	catch (CryptoPP::AuthenticatedSymmetricCipher::BadState& e)
-	{
-		// Pushing PDATA before ADATA results in:
-		//  "GMC/AES: Update was called before State_IVSet"
-		cerr << "Caught BadState..." << endl;
-		cerr << e.what() << endl;
-		cerr << endl;
-		return false;
-	}
-	catch (CryptoPP::InvalidArgument& e)
-	{
-		cerr << "Caught InvalidArgument..." << endl;
-		cerr << e.what() << endl;
-		cerr << endl;
+	if (len < overhead) {
+		LG("dec", "DecryptAES: data too short (%u < %u)\n", len, overhead);
 		return false;
 	}
 
-	return false;
-}
+	ULONG ctLen = len - overhead;
 
-bool NetIF::DecryptAES(cChar* ciphertext, char* plaintext, uLong& ciphersize, const CryptoPP::SecByteBlock& key)
-{
-	try
-	{
-		// Update ciphertext length
-		if (ciphersize < (CryptoPP::AES::BLOCKSIZE + 1))
-		{
-			// NOTE(Ogge): This must be the IV key
-			return false;
-		}
+	BYTE nonce[NONCE_SIZE];
+	BYTE tag[TAG_SIZE];
+	std::memcpy(nonce, ciphertext, NONCE_SIZE);
+	std::memcpy(tag, ciphertext + NONCE_SIZE, TAG_SIZE);
 
-		ciphersize -= (CryptoPP::AES::BLOCKSIZE + 1);
-		CryptoPP::SecByteBlock iv((CryptoPP::byte*)ciphertext + (ciphersize + 1), CryptoPP::AES::BLOCKSIZE);
+	PUCHAR ctData = (PUCHAR)ciphertext + overhead;
 
+	BCRYPT_AUTHENTICATED_CIPHER_MODE_INFO authInfo;
+	BCRYPT_INIT_AUTH_MODE_INFO(authInfo);
+	authInfo.pbNonce = nonce;
+	authInfo.cbNonce = NONCE_SIZE;
+	authInfo.pbTag = tag;
+	authInfo.cbTag = TAG_SIZE;
 
-		CryptoPP::GCM<CryptoPP::AES>::Decryption d;
-		string base64decoded;
-		string plain;
-		d.SetKeyWithIV(key.data(), key.size(), iv.data(), CryptoPP::AES::BLOCKSIZE);
-		CryptoPP::StringSource ss((CryptoPP::byte*)ciphertext, ciphersize, true, new CryptoPP::Base64Decoder(new CryptoPP::StringSink(base64decoded)));
-		CryptoPP::AuthenticatedDecryptionFilter df(d, new CryptoPP::StringSink(plain), CryptoPP::AuthenticatedDecryptionFilter::DEFAULT_FLAGS, 12);
-		CryptoPP::StringSource ss2(base64decoded, true, new CryptoPP::Redirector(df));
-		std::memcpy(plaintext, plain.c_str(), plain.size());
-		ciphersize = plain.size();
-		if (!df.GetLastResult()) return false;
+	ULONG resultLen = 0;
+	NTSTATUS status = BCryptDecrypt(
+		hAesKey,
+		ctData, ctLen,
+		&authInfo,
+		NULL, 0,
+		(PUCHAR)ciphertext, ctLen,
+		&resultLen,
+		0);
 
-		return true;
-
-	}
-	catch (CryptoPP::InvalidArgument& e)
-	{
-		cerr << "Caught InvalidArgument..." << endl;
-		cerr << e.what() << endl;
-		cerr << endl;
-	}
-	catch (CryptoPP::AuthenticatedSymmetricCipher::BadState& e)
-	{
-		// Pushing PDATA before ADATA results in:
-		//  "GMC/AES: Update was called before State_IVSet"
-		cerr << "Caught BadState..." << endl;
-		cerr << e.what() << endl;
-		cerr << endl;
-	}
-	catch (CryptoPP::HashVerificationFilter::HashVerificationFailed& e)
-	{
-		cerr << "Caught HashVerificationFailed..." << endl;
-		cerr << e.what() << endl;
-		cerr << endl;
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("dec", "BCryptDecrypt failed: 0x%08X\n", status);
+		return false;
 	}
 
-	return false;
+	len = resultLen;
+	return true;
 }

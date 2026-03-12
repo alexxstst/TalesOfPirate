@@ -1,0 +1,48 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <OtherFlags>--strict-indentation-</OtherFlags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Domain.fs" />
+        <Compile Include="DomainSerialization.fs" />
+        <Compile Include="Config/GateConfig.fs" />
+        <Compile Include="Services/ServiceInterfaces.fs" />
+        <Compile Include="Services\PlayerRecoverySystem.fs" />
+        <Compile Include="Services/EncryptionService.fs" />
+        <Compile Include="Services/GroupServerSystem.fs" />
+        <Compile Include="Services/GameServerSystem.fs" />
+        <Compile Include="Services/ClientSystem.fs" />
+        <Compile Include="Services/GateHostedService.fs" />
+        <Compile Include="Grpc/GateGrpcService.fs" />
+        <Compile Include="Program.fs" />
+        <Content Include="appsettings.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
+        <PackageReference Include="Grpc.AspNetCore.Server" Version="2.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\..\Shared\Corsairs.Platform.Shared\nlog.config" Link="nlog.config" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Network\Corsairs.Platform.Network.fsproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Protocol\Corsairs.Platform.Protocol.fsproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Shared\Corsairs.Platform.Shared.fsproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Grpc.Contracts\Corsairs.Platform.Grpc.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

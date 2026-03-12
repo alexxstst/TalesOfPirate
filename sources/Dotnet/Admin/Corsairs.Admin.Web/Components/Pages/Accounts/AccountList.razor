@@ -1,0 +1,127 @@
+@page "/accounts"
+@using Corsairs.Platform.Grpc.Contracts.Account
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject AccountAdmin.AccountAdminClient AccountClient
+
+<PageTitle>Аккаунты - Corsairs Admin</PageTitle>
+
+<h1 class="text-2xl font-bold mb-6">Аккаунты</h1>
+
+<div class="flex gap-2 mb-4">
+    <input type="text" placeholder="Поиск по имени..." class="input input-bordered flex-1" @bind="_searchQuery" @bind:event="oninput" />
+    <button class="btn btn-primary" @onclick="Search">Найти</button>
+</div>
+
+@if (_loading)
+{
+    <div class="flex justify-center py-8"><span class="loading loading-spinner loading-lg"></span></div>
+}
+else if (_accounts != null)
+{
+    <div class="overflow-x-auto">
+        <table class="table table-zebra w-full">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>GM</th>
+                    <th>Статус</th>
+                    <th>Бан</th>
+                    <th>Кредит</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var acc in _accounts.Accounts)
+                {
+                    <tr>
+                        <td>@acc.Id</td>
+                        <td>@acc.Username</td>
+                        <td>@acc.GmLevel</td>
+                        <td>
+                            @if (acc.LoginStatus > 0)
+                            {
+                                <span class="badge badge-success">Online</span>
+                            }
+                            else
+                            {
+                                <span class="badge badge-ghost">Offline</span>
+                            }
+                        </td>
+                        <td>
+                            @if (acc.IsBanned)
+                            {
+                                <span class="badge badge-error">Бан</span>
+                            }
+                        </td>
+                        <td>@acc.Credit.ToString("F2")</td>
+                        <td>
+                            <a href="/accounts/@acc.Id" class="btn btn-sm btn-ghost">Детали</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    @if (_accounts.Pagination != null && _accounts.Pagination.TotalPages > 1)
+    {
+        <div class="flex justify-center mt-4">
+            <div class="join">
+                @for (int i = 1; i <= _accounts.Pagination.TotalPages; i++)
+                {
+                    var pg = i;
+                    <button class="join-item btn @(pg == _currentPage ? "btn-active" : "")" @onclick="() => LoadPage(pg)">@pg</button>
+                }
+            </div>
+        </div>
+    }
+}
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-error mt-4">@_error</div>
+}
+
+@code {
+    private string _searchQuery = "";
+    private int _currentPage = 1;
+    private bool _loading;
+    private string? _error;
+    private Corsairs.Platform.Grpc.Contracts.Account.AccountList? _accounts;
+
+    protected override async Task OnInitializedAsync() => await Search();
+
+    private async Task Search()
+    {
+        _loading = true;
+        _error = null;
+        _currentPage = 1;
+        try
+        {
+            _accounts = await AccountClient.SearchAccountsAsync(new SearchAccountsRequest
+            {
+                Query = _searchQuery,
+                Pagination = new PaginationRequest { Page = 1, PageSize = 20 }
+            });
+        }
+        catch (Exception ex) { _error = ex.Message; }
+        finally { _loading = false; }
+    }
+
+    private async Task LoadPage(int page)
+    {
+        _loading = true;
+        _currentPage = page;
+        try
+        {
+            _accounts = await AccountClient.SearchAccountsAsync(new SearchAccountsRequest
+            {
+                Query = _searchQuery,
+                Pagination = new PaginationRequest { Page = page, PageSize = 20 }
+            });
+        }
+        catch (Exception ex) { _error = ex.Message; }
+        finally { _loading = false; }
+    }
+}

@@ -16,10 +16,7 @@ using namespace std;
 
 CDataBaseCtrl::CDataBaseCtrl(void)
 {
-	m_strServerIP="";
-	m_strServerDB="";
-	m_strUserID="";
-	m_strUserPwd="";
+	m_strDsn="";
 	m_pDataBase=NULL;
 }
 
@@ -38,10 +35,7 @@ bool CDataBaseCtrl::CreateObject()
 		dbc::IniFile inf(g_strCfgFile.c_str());
 		dbc::IniSection& is = inf["db"];
 
-		m_strServerIP = is["dbserver"];
-		m_strServerDB = is["db"];
-		m_strUserID = is["userid"];
-		m_strUserPwd = is["passwd"];
+		m_strDsn = is["dsnAccountDb"];
 	}
 	catch (dbc::excp& e)
 	{
@@ -49,15 +43,15 @@ bool CDataBaseCtrl::CreateObject()
 		return false;
 	}
 
-	printf("Connecting database [%s : %s]... ", m_strServerIP.c_str(), m_strServerDB.c_str());
+	printf("Connecting database [%s]... ", m_strDsn.c_str());
 	if (!Connect())
 		return false;
 	C_PRINT("success!\n");
 
-	//³õÊ¼»¯²¢²âÊÔÊý¾Ý¿â×Ö¶Î
+	//ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ö¶ï¿½
 	try
 	{
-        //  TOM±íÃûÒÑÐÞ¸Ä
+        //  TOMï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Þ¸ï¿½
 		//if (g_TomService.IsEnable())
 		//{
 		//	//m_pDataBase->ExecuteSQL("update tom_account set login_status=0, from_server='', last_login_tick=0");
@@ -151,7 +145,7 @@ bool CDataBaseCtrl::Connect()
 {
 	if (IsConnect()) return true;
 
-	//½¨Á¢Êý¾Ý¿â¶ÔÏó
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½ï¿½ï¿½
 	try
 	{
 		m_pDataBase=new CSQLDatabase();
@@ -169,12 +163,7 @@ bool CDataBaseCtrl::Connect()
 		return false;
 	}
 
-	//Á¬½ÓÊý¾Ý¿â
-	char buf[512] = {0};
-	sprintf(buf, "DRIVER={SQL Server};SERVER=%s;UID=%s;PWD=%s;DATABASE=%s", 
-		m_strServerIP.c_str(), m_strUserID.c_str(), m_strUserPwd.c_str(), m_strServerDB.c_str());
-
-	if (!m_pDataBase->Open(buf))
+	if (!m_pDataBase->Open(m_strDsn.c_str()))
 	{
 		SAFE_DELETE(m_pDataBase);
 		return false;
@@ -479,7 +468,7 @@ bool CDataBaseCtrl::UserLogoutMap(std::string strUserName)
 	m_mapUsers.erase(strUserName.c_str());
 	
 	CTimeSpan ctSpan=CTime::GetCurrentTime() - sData.ctLoginTime;
-	if (ctSpan > CTimeSpan(5) && ctSpan < CTimeSpan(30, 0, 0, 0))	//¼ÇÂ¼ÓÐÐ§Ê±¼ä5Ãëµ½30Ìì
+	if (ctSpan > CTimeSpan(5) && ctSpan < CTimeSpan(30, 0, 0, 0))	//ï¿½ï¿½Â¼ï¿½ï¿½Ð§Ê±ï¿½ï¿½5ï¿½ëµ½30ï¿½ï¿½
 	{
 		char buf[1024];
 		__int64 i64Span = ctSpan.GetTotalSeconds();

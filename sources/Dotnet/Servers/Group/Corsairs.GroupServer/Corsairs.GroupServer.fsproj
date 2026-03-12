@@ -1,0 +1,53 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>net10.0</TargetFramework>
+        <GenerateDocumentationFile>true</GenerateDocumentationFile>
+        <OtherFlags>--strict-indentation-</OtherFlags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="Config/GroupConfig.fs" />
+        <Compile Include="Types/PlayerRecord.fs" />
+        <Compile Include="Services/PlayerRegistry.fs" />
+        <Compile Include="Services/CharacterService.fs" />
+        <Compile Include="Services/GuildService.fs" />
+        <Compile Include="Services/TeamService.fs" />
+        <Compile Include="Services/FriendService.fs" />
+        <Compile Include="Services/ChatService.fs" />
+        <Compile Include="Services/MentorshipService.fs" />
+        <Compile Include="Services/GroupHostedService.fs" />
+        <Compile Include="Handlers/Gate/GateLoginHandler.fs" />
+        <Compile Include="Handlers/Gate/CharacterHandler.fs" />
+        <Compile Include="Handlers/Gate/GuildCommandHandler.fs" />
+        <Compile Include="Handlers/Gate/FriendCommandHandler.fs" />
+        <Compile Include="Handlers/Gate/ChatCommandHandler.fs" />
+        <Compile Include="Handlers/Game/GameEnterMapHandler.fs" />
+        <Compile Include="Handlers/Account/AccountResponseHandler.fs" />
+        <Compile Include="Grpc/GroupGrpcService.fs" />
+        <Compile Include="Program.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.*" />
+        <PackageReference Include="Grpc.AspNetCore.Server" Version="2.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\..\..\Shared\Corsairs.Platform.Shared\nlog.config" Link="nlog.config" CopyToOutputDirectory="PreserveNewest" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Network\Corsairs.Platform.Network.fsproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Protocol\Corsairs.Platform.Protocol.fsproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Shared\Corsairs.Platform.Shared.fsproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Database\Corsairs.Platform.Database.csproj" />
+        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Grpc.Contracts\Corsairs.Platform.Grpc.Contracts.csproj" />
+    </ItemGroup>
+
+</Project>

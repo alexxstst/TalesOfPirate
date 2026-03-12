@@ -52,7 +52,7 @@
 #include "SceneObj.h"
 #include "Scene.h"
 
-_DBC_USING
+// Типы uChar, uShort, uLong, cChar определены в NetIF.h
 
 
 //--------------------------------------------------
@@ -80,7 +80,7 @@ BOOL SC_UpdateGuildGold(LPRPACKET pk){
 }
 
 BOOL SC_ShowStallSearch(LPRPACKET pk){
-	uChar l_num		=pk.ReverseReadShort();
+	uChar l_num		=pk.ReverseReadUInt16();
 	NetMC_LISTGUILD_BEGIN();
 	for(uChar i =0;i<l_num;++i)
 	{
@@ -90,8 +90,8 @@ BOOL SC_ShowStallSearch(LPRPACKET pk){
 		cChar	*l_name			=pk.ReadString();//player name
 		cChar	*l_motto		=pk.ReadString();//stall name
 		cChar	*l_leadername	=pk.ReadString();//location
-		uShort	 l_memtotal		=pk.ReadLong(); //count remaining
-		__int64	 l_exp	=pk.ReadLong(); //cost each
+		uShort	 l_memtotal		=pk.ReadUInt32(); //count remaining
+		__int64	 l_exp	=pk.ReadUInt32(); //cost each
 		NetMC_LISTGUILD(l_id,l_name,l_motto,l_leadername,l_memtotal,l_exp);
 	}
 	NetMC_LISTGUILD_END();
@@ -99,7 +99,7 @@ BOOL SC_ShowStallSearch(LPRPACKET pk){
 }
 
 BOOL SC_ShowRanking(LPRPACKET pk){
-	uChar l_num		=pk.ReverseReadShort();
+	uChar l_num		=pk.ReverseReadUInt16();
 	NetMC_LISTGUILD_BEGIN();
 	for(uChar i =0;i<l_num;++i)
 	{
@@ -109,7 +109,7 @@ BOOL SC_ShowRanking(LPRPACKET pk){
 		cChar	*l_name			=buf;//rank
 		cChar	*l_motto		=pk.ReadString();//name
 		cChar	*l_leadername	=pk.ReadString();//job
-		uShort	 l_memtotal		=pk.ReadShort(); //level
+		uShort	 l_memtotal		=pk.ReadUInt16(); //level
 		uLong	 l_explow		=0;
 		uLong	 l_exphigh		=0;
 		__int64	 l_exp	=l_exphigh *0x100000000 +l_explow;
@@ -119,27 +119,89 @@ BOOL SC_ShowRanking(LPRPACKET pk){
 	return TRUE;
 }
 
+// CryptImportPublicKeyInfoEx2 доступна в crypt32.dll (Vista+),
+// но объявлена в wincrypt.h только при _WIN32_WINNT >= 0x0600.
+// Проект использует 0x0500 — объявляем вручную.
+typedef BOOL (WINAPI *PFN_CryptImportPublicKeyInfoEx2)(
+	DWORD dwCertEncodingType,
+	PCERT_PUBLIC_KEY_INFO pInfo,
+	DWORD dwFlags,
+	void* pvAuxInfo,
+	BCRYPT_KEY_HANDLE* phKey
+);
+
 BOOL	SC_SendPublicKey(LPRPACKET pk)
 {
-		uShort keySize = pk.ReadShort();
-		CryptoPP::ArraySource as(reinterpret_cast<const unsigned char*>(pk.ReadSequence(keySize)), keySize, true);
-		try {
-			g_NetIF->srvPublicKey.Load(as);
-			if (!g_NetIF->srvPublicKey.Validate(g_NetIF->rng, 2))
-			{
-				return false;
-			}
-		}
-		catch (const CryptoPP::BERDecodeErr& ex)
-		{
-			cerr << ex.what() << endl;
-		}
-	
-		g_NetIF->m_connect.CHAPSTR();
-		CS_SendPrivateKey();
-	
-	return TRUE;
+	// Читаем SPKI DER публичный ключ из пакета (WriteSequence = [uint16 len][data])
+	uShort keySize = 0;
+	const char* keyData = pk.ReadSequence(keySize);
+	if (!keyData || keySize == 0) {
+		LG("enc", "SC_SendPublicKey: empty key data\n");
+		return FALSE;
+	}
 
+	// Выводим полученный SPKI DER ключ в hex
+	{
+		std::string hex;
+		hex.reserve(keySize * 2);
+		for (uShort i = 0; i < keySize; i++) {
+			char buf[3];
+			sprintf(buf, "%02x", static_cast<unsigned char>(keyData[i]));
+			hex += buf;
+		}
+		LG("enc", "SC_SendPublicKey: received SPKI DER key (%u bytes):\n%s\n", keySize, hex.c_str());
+	}
+
+	// Декодируем SPKI DER → CERT_PUBLIC_KEY_INFO
+	CERT_PUBLIC_KEY_INFO* pubKeyInfo = NULL;
+	DWORD pubKeyInfoSize = 0;
+	if (!CryptDecodeObjectEx(
+		X509_ASN_ENCODING,
+		X509_PUBLIC_KEY_INFO,
+		reinterpret_cast<const BYTE*>(keyData), keySize,
+		CRYPT_DECODE_ALLOC_FLAG, NULL,
+		&pubKeyInfo, &pubKeyInfoSize))
+	{
+		LG("enc", "CryptDecodeObjectEx failed: %u\n", GetLastError());
+		return FALSE;
+	}
+
+	// Загружаем CryptImportPublicKeyInfoEx2 динамически
+	static PFN_CryptImportPublicKeyInfoEx2 pfnImport = NULL;
+	if (!pfnImport) {
+		HMODULE hCrypt32 = GetModuleHandleA("crypt32.dll");
+		if (hCrypt32)
+			pfnImport = (PFN_CryptImportPublicKeyInfoEx2)GetProcAddress(hCrypt32, "CryptImportPublicKeyInfoEx2");
+	}
+	if (!pfnImport) {
+		LG("enc", "CryptImportPublicKeyInfoEx2 not available\n");
+		LocalFree(pubKeyInfo);
+		return FALSE;
+	}
+
+	// Импортируем в BCrypt RSA handle
+	if (g_NetIF->hRsaPubKey) {
+		BCryptDestroyKey(g_NetIF->hRsaPubKey);
+		g_NetIF->hRsaPubKey = NULL;
+	}
+
+	BOOL result = pfnImport(
+		X509_ASN_ENCODING,
+		pubKeyInfo,
+		0, NULL,
+		&g_NetIF->hRsaPubKey);
+
+	LocalFree(pubKeyInfo);
+
+	if (!result) {
+		LG("enc", "CryptImportPublicKeyInfoEx2 failed: %u\n", GetLastError());
+		return FALSE;
+	}
+
+	g_NetIF->m_connect.CHAPSTR();
+	CS_SendPrivateKey();
+
+	return TRUE;
 }
 
 
@@ -153,16 +215,16 @@ BOOL	SC_SendHandshake(LPRPACKET pk) {
 
 BOOL	SC_Login(LPRPACKET pk)
 {T_B
-	uShort l_errno	=pk.ReadShort();
+	uShort l_errno	=pk.ReadUInt16();
 	if(l_errno)
 	{
 		cChar *l_errtext=pk.ReadString();
 		NetLoginFailure(l_errno);
 	}else			
 	{
-		const auto maxCharacters = static_cast<uint8_t>(pk.ReadChar());
+		const auto maxCharacters = static_cast<uint8_t>(pk.ReadUInt8());
 		const auto characters = ReadSelectCharacters(pk);
-		const auto chPassword = pk.ReadChar();
+		const auto chPassword = pk.ReadUInt8();
 		NetLoginSuccess(chPassword, maxCharacters, characters);
 
 		extern CGameWG g_oGameWG;
@@ -176,7 +238,7 @@ T_E}
 BOOL SC_Disconnect(LPRPACKET pk)
 {
 	T_B
-		auto reason = pk.ReadLong();
+		auto reason = pk.ReadUInt32();
 		g_NetIF->m_connect.Disconnect(reason);
 		return true;
 	T_E
@@ -193,27 +255,27 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	g_listguild_begin	=false;
 
 	stNetSwitchMap SMapInfo{};
-	SMapInfo.sEnterRet = pk.ReadShort();
+	SMapInfo.sEnterRet = pk.ReadUInt16();
 	if (SMapInfo.sEnterRet != ERR_SUCCESS)
 	{
 		NetSwitchMap(SMapInfo);
 		return FALSE;
 	}
 
-	auto const bAutoLock = static_cast<bool>(pk.ReadChar());
-	auto const bKitbagLock = static_cast<bool>(pk.ReadChar());
+	auto const bAutoLock = static_cast<bool>(pk.ReadUInt8());
+	auto const bKitbagLock = static_cast<bool>(pk.ReadUInt8());
 	g_stUISystem.m_sysProp.m_gameOption.bLockMode = bAutoLock;
 	g_stUIEquip.SetIsLock(bKitbagLock);
 
-	SMapInfo.chEnterType = pk.ReadChar();	// �����ͼ���ͣ��μ�CompCommand.h EEnterMapType
-	SMapInfo.bIsNewCha = static_cast<bool>(pk.ReadChar());
+	SMapInfo.chEnterType = pk.ReadUInt8();	// �����ͼ���ͣ��μ�CompCommand.h EEnterMapType
+	SMapInfo.bIsNewCha = static_cast<bool>(pk.ReadUInt8());
 	SMapInfo.szMapName = pk.ReadString();
-	SMapInfo.bCanTeam = pk.ReadChar() != 0 ? true : false;
+	SMapInfo.bCanTeam = pk.ReadUInt8() != 0 ? true : false;
 	NetSwitchMap(SMapInfo);
 	LG(g_oLangRec.GetString(295), "%s\n", SMapInfo.szMapName);
 	
 	
-	int const IMPs = pk.ReadLong();
+	int const IMPs = pk.ReadUInt32();
 	
 	g_stUIEquip.UpdateIMP(IMPs);
 	
@@ -230,12 +292,6 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	ReadChaSkillBagPacket(pk, SCurSkill, szLogName);
 	NetSynSkillBag(SCreateInfo.ulWorldID, &SCurSkill);
 
-#ifdef _TEST_CLIENT
-	CTestClient* pClient = reinterpret_cast<CTestClient*>( g_NetIF->m_connect.GetDatasock()->GetPointer() );
-	pClient->SetCharID(SCreateInfo.ulWorldID);
-	pClient->StartGame(SCreateInfo.SArea.centre.x, SCreateInfo.SArea.centre.y);
-	return TRUE;
-#endif
 
 	stNetSkillState SCurSState;
 	ReadChaSkillStatePacket(pk, SCurSState, szLogName);
@@ -263,7 +319,7 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	NetShortCut(SCreateInfo.ulWorldID, SShortcut);
 
 	// ��ֻ��Ϣ
-	char	chBoatNum = pk.ReadChar();
+	char	chBoatNum = pk.ReadUInt8();
 	for (char i = 0; i < chBoatNum; i++)
 	{
 		ReadChaBasePacket(pk, SCreateInfo);
@@ -284,7 +340,7 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	}
 
 	stNetChangeCha SChangeCha;
-	SChangeCha.ulMainChaID = pk.ReadLong();
+	SChangeCha.ulMainChaID = pk.ReadUInt32();
 	NetActorChangeCha(SCreateInfo.ulWorldID, SChangeCha);
 	
 	// ��ʱ��������ʱע�ͣ�!!!��Ҫ����entermap��
@@ -295,10 +351,6 @@ BOOL SC_EnterMap(LPRPACKET pk)
 	NetChangeKitbag(SCreateInfo.ulWorldID, SKitbagTemp);
 #endif
 
-//#ifdef _TEST_CLIENT
-//    CTestClient* pClient = reinterpret_cast<CTestClient*>( g_NetIF->m_connect.GetDatasock()->GetPointer() );
-//    pClient->StartGame(SCreateInfo.SArea.centre.x, SCreateInfo.SArea.centre.y);
-//#endif
 
 
 	// �رշ�����
@@ -309,7 +361,7 @@ T_E}
 
 BOOL    SC_BeginPlay(LPRPACKET pk)
 {T_B
-uShort	l_errno = pk.ReadShort();
+uShort	l_errno = pk.ReadUInt16();
 NetBeginPlay(l_errno);
 	
 	return TRUE;
@@ -317,26 +369,22 @@ T_E}
 
 BOOL	SC_EndPlay(LPRPACKET pk)
 {T_B
-	uShort	l_errno	=pk.ReadShort();
+	uShort	l_errno	=pk.ReadUInt16();
 
-	//char    chPassword  =pk.ReadChar();
+	//char    chPassword  =pk.ReadUInt8();
 	//g_Config.m_IsDoublePwd = chPassword ? true : false;
 	
-	const auto maxCharacters = pk.ReadChar();
+	const auto maxCharacters = pk.ReadUInt8();
 	const auto characters = ReadSelectCharacters(pk);
 	NetEndPlay(maxCharacters, characters);
 
-#ifdef _TEST_CLIENT
-	CTestClient* pClient = reinterpret_cast<CTestClient*>( g_NetIF->m_connect.GetDatasock()->GetPointer() );
-	pClient->ServerCha( l_chanum,l_netcha );
-#endif
 	updateDiscordPresence("Selecting Character", "");
 	return TRUE;
 T_E}
 
 std::optional<NetChaBehave> ReadSelectCharacter(RPacket& rpk)
 {
-	if (!rpk.ReadChar())
+	if (!rpk.ReadUInt8())
 	{
 		return {};
 	}
@@ -345,12 +393,12 @@ std::optional<NetChaBehave> ReadSelectCharacter(RPacket& rpk)
 	NetChaBehave cha;
 	cha.sCharName = rpk.ReadString();
 	cha.sJob = rpk.ReadString();
-	cha.iDegree = rpk.ReadShort();
+	cha.iDegree = rpk.ReadUInt16();
 
-	cha.look_minimal.typeID = rpk.ReadShort();
+	cha.look_minimal.typeID = rpk.ReadUInt16();
 	for (auto& id : cha.look_minimal.equip_IDs)
 	{
-		id = rpk.ReadShort();
+		id = rpk.ReadUInt16();
 	}
 
 	return cha;
@@ -359,7 +407,7 @@ std::optional<NetChaBehave> ReadSelectCharacter(RPacket& rpk)
 std::vector<NetChaBehave> ReadSelectCharacters(RPacket& rpk)
 {
 	std::vector<NetChaBehave> characters;
-	characters.reserve(rpk.ReadChar());
+	characters.reserve(rpk.ReadUInt8());
 	for (auto i = 0; i < characters.capacity(); ++i)
 	{
 		if (auto cha = ReadSelectCharacter(rpk))
@@ -373,33 +421,29 @@ std::vector<NetChaBehave> ReadSelectCharacters(RPacket& rpk)
 
 BOOL	SC_NewCha(LPRPACKET pk)
 {T_B
-	uShort	l_errno	=pk.ReadShort();
+	uShort	l_errno	=pk.ReadUInt16();
 	NetNewCha(l_errno);
 
-#ifdef _TEST_CLIENT
-	CTestClient* pClient = reinterpret_cast<CTestClient*>( g_NetIF->m_connect.GetDatasock()->GetPointer() );
-	pClient->Failure( l_errno );
-#endif
 	return TRUE;
 T_E}
 
 BOOL	SC_DelCha(LPRPACKET pk)
 {T_B
-	uShort	l_errno	=pk.ReadShort();
+	uShort	l_errno	=pk.ReadUInt16();
 	NetDelCha(l_errno);
 	return TRUE;
 T_E}
 
 BOOL SC_CreatePassword2(LPRPACKET pk)
 {T_B
-	uShort	l_errno	=pk.ReadShort();
+	uShort	l_errno	=pk.ReadUInt16();
 	NetCreatePassword2(l_errno);
 	return TRUE;
 T_E}
 
 BOOL SC_UpdatePassword2(LPRPACKET pk)
 {T_B
-	uShort	l_errno	=pk.ReadShort();
+	uShort	l_errno	=pk.ReadUInt16();
 	NetUpdatePassword2(l_errno);
 	return TRUE;
 T_E}
@@ -407,7 +451,7 @@ T_E}
 //mothannakh create account 
 BOOL PC_REGISTER(LPRPACKET pk){
 	CGameApp::Waiting(false);
-	char sucess = pk.ReadChar();
+	char sucess = pk.ReadUInt8();
 	if( g_NetIF->IsConnected() ){
 		CS_Disconnect(DS_DISCONN);			
 	}
@@ -449,11 +493,11 @@ BOOL	SC_Ping(LPRPACKET pk)
 
 		WPacket wpk = g_NetIF->GetWPacket();
 		wpk.WriteCmd(CMD_CM_PING);
-		wpk.WriteLong(pk.ReadLong());
-		wpk.WriteLong(pk.ReadLong());
-		wpk.WriteLong(pk.ReadLong());
-		wpk.WriteLong(pk.ReadLong());
-		wpk.WriteLong(pk.ReadLong());
+		wpk.WriteUInt32(pk.ReadUInt32());
+		wpk.WriteUInt32(pk.ReadUInt32());
+		wpk.WriteUInt32(pk.ReadUInt32());
+		wpk.WriteUInt32(pk.ReadUInt32());
+		wpk.WriteUInt32(pk.ReadUInt32());
 		g_NetIF->SendPacketMessage(wpk);
 	}
 
@@ -477,9 +521,9 @@ BOOL	SC_Say(LPRPACKET pk)
 {T_B
 	uShort	 l_len;
 	stNetSay l_netsay;
-	l_netsay.m_srcid	=pk.ReadLong();
+	l_netsay.m_srcid	=pk.ReadUInt32();
 	l_netsay.m_content	=pk.ReadSequence(l_len);
-	DWORD dwColour = pk.ReadLong();
+	DWORD dwColour = pk.ReadUInt32();
 	NetSay(l_netsay,dwColour);
 
 	return TRUE;
@@ -531,7 +575,7 @@ T_E}
 BOOL	SC_ColourNotice( LPRPACKET pk )
 {T_B
 	char szData[1024];
-	unsigned int rgb = pk.ReadLong();
+	unsigned int rgb = pk.ReadUInt32();
 	strncpy( szData, pk.ReadString(), 1024 - 1 );
 	NetColourInfo( rgb, szData );
 	return TRUE;
@@ -543,7 +587,7 @@ T_E}
 BOOL SC_ChaBeginSee(LPRPACKET pk)
 {T_B
 	stNetActorCreate SCreateInfo;
-	char	chSeeType = pk.ReadChar();
+	char	chSeeType = pk.ReadUInt8();
 
 	ReadChaBasePacket(pk, SCreateInfo);
 	SCreateInfo.chSeeType = chSeeType;
@@ -555,31 +599,31 @@ BOOL SC_ChaBeginSee(LPRPACKET pk)
 
 	stNetNPCShow	SNpcShow;
 	// NPC����״̬��Ϣ
-	SNpcShow.byNpcType	   = pk.ReadChar();
-    SNpcShow.byNpcState     = pk.ReadChar();
+	SNpcShow.byNpcType	   = pk.ReadUInt8();
+    SNpcShow.byNpcState     = pk.ReadUInt8();
 	SNpcShow.SetNpcShow( pCha );
 		
 
 	// �ж�����
-	switch (pk.ReadShort())
+	switch (pk.ReadUInt16())
 	{
 	case enumPoseLean:
 		{
 			stNetLeanInfo SLean;
-			SLean.chState = pk.ReadChar();
-			SLean.lPose = pk.ReadLong();
-			SLean.lAngle = pk.ReadLong();
-			SLean.lPosX = pk.ReadLong();
-			SLean.lPosY = pk.ReadLong();
-			SLean.lHeight = pk.ReadLong();
+			SLean.chState = pk.ReadUInt8();
+			SLean.lPose = pk.ReadUInt32();
+			SLean.lAngle = pk.ReadUInt32();
+			SLean.lPosX = pk.ReadUInt32();
+			SLean.lPosY = pk.ReadUInt32();
+			SLean.lHeight = pk.ReadUInt32();
 			NetActorLean(SCreateInfo.ulWorldID, SLean);
 			break;
 		}
 	case enumPoseSeat:
 		{
 			stNetFace SNetFace;
-			SNetFace.sAngle = pk.ReadShort();
-			SNetFace.sPose = pk.ReadShort();
+			SNetFace.sAngle = pk.ReadUInt16();
+			SNetFace.sPose = pk.ReadUInt16();
 			NetFace( SCreateInfo.ulWorldID, SNetFace, enumACTION_SKILL_POSE );
 			break;
 		}
@@ -608,8 +652,8 @@ BOOL	SC_ChaEndSee(LPRPACKET pk)
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
-	char	chSeeType = pk.ReadChar(); // �μ� CompCommand.h��EEntitySeenType
-	uLong l_id	= pk.ReadLong();
+	char	chSeeType = pk.ReadUInt8(); // �μ� CompCommand.h��EEntitySeenType
+	uLong l_id	= pk.ReadUInt32();
 	NetActorDestroy( l_id, chSeeType );
 	if (g_stUIStart.targetInfoID == l_id){
 		g_stUIStart.RemoveTarget();
@@ -624,15 +668,15 @@ BOOL	SC_ItemCreate(LPRPACKET pk)
 {T_B
 	stNetItemCreate SCreateInfo;
 	memset(&SCreateInfo, 0, sizeof(SCreateInfo));
-	SCreateInfo.lWorldID = pk.ReadLong();	// world ID
-	SCreateInfo.lHandle = pk.ReadLong();
-	SCreateInfo.lID = pk.ReadLong();		// ID
-	SCreateInfo.SPos.x = pk.ReadLong();		// ��ǰxλ��
-	SCreateInfo.SPos.y = pk.ReadLong();		// ��ǰyλ��
-	SCreateInfo.sAngle = pk.ReadShort();	// ����
-	SCreateInfo.sNum = pk.ReadShort();	// ����
-	SCreateInfo.chAppeType = pk.ReadChar();	// ����ԭ�򣨲μ�CompCommand.h EItemAppearType��
-	SCreateInfo.lFromID = pk.ReadLong();	// �׳�Դ��ID
+	SCreateInfo.lWorldID = pk.ReadUInt32();	// world ID
+	SCreateInfo.lHandle = pk.ReadUInt32();
+	SCreateInfo.lID = pk.ReadUInt32();		// ID
+	SCreateInfo.SPos.x = pk.ReadUInt32();		// ��ǰxλ��
+	SCreateInfo.SPos.y = pk.ReadUInt32();		// ��ǰyλ��
+	SCreateInfo.sAngle = pk.ReadUInt16();	// ����
+	SCreateInfo.sNum = pk.ReadUInt16();	// ����
+	SCreateInfo.chAppeType = pk.ReadUInt8();	// ����ԭ�򣨲μ�CompCommand.h EItemAppearType��
+	SCreateInfo.lFromID = pk.ReadUInt32();	// �׳�Դ��ID
 
 	ReadEntEventPacket(pk, SCreateInfo.SEvent);
 
@@ -648,7 +692,7 @@ T_E}
 
 BOOL	SC_ItemDestroy(LPRPACKET pk)
 {T_B
-	unsigned long lID = pk.ReadLong();				//ID
+	unsigned long lID = pk.ReadUInt32();				//ID
 
 	NetItemDisappear(lID);
 	LG("SC_Item", "Item Destroy[%u]\n", lID);
@@ -660,17 +704,17 @@ BOOL SC_AStateBeginSee(LPRPACKET pk)
 	stNetAreaState	SynAState;
 
 	char	chValidNum = 0;
-	SynAState.sAreaX = pk.ReadShort();
-	SynAState.sAreaY = pk.ReadShort();
-	SynAState.chStateNum = pk.ReadChar();
+	SynAState.sAreaX = pk.ReadUInt16();
+	SynAState.sAreaY = pk.ReadUInt16();
+	SynAState.chStateNum = pk.ReadUInt8();
 	for (char j = 0; j < SynAState.chStateNum; j++)
 	{
-		SynAState.State[chValidNum].chID = pk.ReadChar();
+		SynAState.State[chValidNum].chID = pk.ReadUInt8();
 		if (SynAState.State[chValidNum].chID == 0)
 			continue;
-		SynAState.State[chValidNum].chLv = pk.ReadChar();
-		SynAState.State[chValidNum].lWorldID = pk.ReadLong();
-		SynAState.State[chValidNum].uchFightID = pk.ReadChar();
+		SynAState.State[chValidNum].chLv = pk.ReadUInt8();
+		SynAState.State[chValidNum].lWorldID = pk.ReadUInt32();
+		SynAState.State[chValidNum].uchFightID = pk.ReadUInt8();
 		chValidNum++;
 	}
 	SynAState.chStateNum = chValidNum;
@@ -693,8 +737,8 @@ BOOL SC_AStateEndSee(LPRPACKET pk)
 {T_B
 	stNetAreaState	SynAState;
 
-	SynAState.sAreaX = pk.ReadShort();
-	SynAState.sAreaY = pk.ReadShort();
+	SynAState.sAreaX = pk.ReadUInt16();
+	SynAState.sAreaY = pk.ReadUInt16();
 
 	NetAreaStateEndSee(&SynAState);
 
@@ -708,7 +752,7 @@ T_E}
 // Э��S->C : ���ӵ��߽�ɫ
 BOOL SC_AddItemCha(LPRPACKET pk)
 {T_B
-	long	lMainChaID = pk.ReadLong();
+	long	lMainChaID = pk.ReadUInt32();
 	stNetActorCreate SCreateInfo;
 	ReadChaBasePacket(pk, SCreateInfo);
 	SCreateInfo.chSeeType = enumENTITY_SEEN_NEW;
@@ -736,10 +780,10 @@ T_E}
 // Э��S->C : ɾ�����߽�ɫ
 BOOL SC_DelItemCha(LPRPACKET pk)
 {T_B
-	long	lMainChaID = pk.ReadLong();
+	long	lMainChaID = pk.ReadUInt32();
 
 	char	chSeeType = enumENTITY_SEEN_NEW;
-	uLong l_id	= pk.ReadLong();
+	uLong l_id	= pk.ReadUInt32();
 	NetActorDestroy( l_id, chSeeType );
 
 	return TRUE;
@@ -748,8 +792,8 @@ T_E}
 // �������
 BOOL SC_Cha_Emotion(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
-	uShort sEmotion = pk.ReadShort();
+	uLong l_id = pk.ReadUInt32();
+	uShort sEmotion = pk.ReadUInt16();
 
 	NetChaEmotion( l_id, sEmotion );
 	LG( g_LogName.GetLogName( l_id ), g_oLangRec.GetString(297), sEmotion );
@@ -759,7 +803,7 @@ T_E}
 // Э��S->C : ��ɫ�ж�ͨ��
 BOOL SC_CharacterAction(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
 	const char* szLogName = g_LogName.GetLogName( l_id );
 
@@ -767,18 +811,18 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 	{
 		long lPacketId = 0;
 #ifdef defPROTOCOL_HAVE_PACKETID
-		lPacketId = pk.ReadLong();
+		lPacketId = pk.ReadUInt32();
 #endif
 		LG(szLogName, "$$$PacketID:\t%u\n", lPacketId);
 
-		switch(pk.ReadChar())
+		switch(pk.ReadUInt8())
 		{
 		case enumACTION_MOVE:
 			{
 				stNetNotiMove SMoveInfo;
-				SMoveInfo.sState = pk.ReadShort();
+				SMoveInfo.sState = pk.ReadUInt16();
 				if (SMoveInfo.sState != enumMSTATE_ON)
-					SMoveInfo.sStopState = pk.ReadShort();
+					SMoveInfo.sStopState = pk.ReadUInt16();
 				Point *STurnPos;
 				uShort ulTurnNum;
 				STurnPos = (Point *)pk.ReadSequence(ulTurnNum);
@@ -819,11 +863,6 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 					LG(szLogName, "@@@End Move\tState:0x%x\n", SMoveInfo.sState);
 
 
-#ifdef _TEST_CLIENT
-				CTestClient* pClient = reinterpret_cast<CTestClient*>( g_NetIF->m_connect.GetDatasock()->GetPointer() );
-				pClient->MoveTo( l_id, SMoveInfo.SPos[SMoveInfo.nPointNum - 1].x, SMoveInfo.SPos[SMoveInfo.nPointNum - 1].y );
-				break;
-#endif
 
 				if (SMoveInfo.sState & enumMSTATE_CANCEL)
 				{
@@ -853,53 +892,53 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 				SSkillInfo.chCrt = 0;
 				SSkillInfo.sStopState = enumEXISTS_WAITING;
 
-				SSkillInfo.byFightID = pk.ReadChar();
-				SSkillInfo.sAngle = pk.ReadShort();
-				SSkillInfo.sState = pk.ReadShort();
+				SSkillInfo.byFightID = pk.ReadUInt8();
+				SSkillInfo.sAngle = pk.ReadUInt16();
+				SSkillInfo.sState = pk.ReadUInt16();
 				if (SSkillInfo.sState != enumFSTATE_ON)
-					SSkillInfo.sStopState = pk.ReadShort();
-				SSkillInfo.lSkillID = pk.ReadLong();
-				SSkillInfo.lSkillSpeed = pk.ReadLong();
-				char chTarType = pk.ReadChar();
+					SSkillInfo.sStopState = pk.ReadUInt16();
+				SSkillInfo.lSkillID = pk.ReadUInt32();
+				SSkillInfo.lSkillSpeed = pk.ReadUInt32();
+				char chTarType = pk.ReadUInt8();
 				if (chTarType == 1)
 				{
-					SSkillInfo.lTargetID = pk.ReadLong();
-					SSkillInfo.STargetPoint.x = pk.ReadLong();
-					SSkillInfo.STargetPoint.y = pk.ReadLong();
+					SSkillInfo.lTargetID = pk.ReadUInt32();
+					SSkillInfo.STargetPoint.x = pk.ReadUInt32();
+					SSkillInfo.STargetPoint.y = pk.ReadUInt32();
 				}
 				else if (chTarType == 2)
 				{
 					SSkillInfo.lTargetID = 0;
-					SSkillInfo.STargetPoint.x = pk.ReadLong();
-					SSkillInfo.STargetPoint.y = pk.ReadLong();
+					SSkillInfo.STargetPoint.x = pk.ReadUInt32();
+					SSkillInfo.STargetPoint.y = pk.ReadUInt32();
 				}
-				SSkillInfo.sExecTime = pk.ReadShort();
+				SSkillInfo.sExecTime = pk.ReadUInt16();
 
 				// ͬ������
-				short lResNum =  pk.ReadShort();
+				short lResNum =  pk.ReadUInt16();
 				if (lResNum > 0)
 				{
 					SSkillInfo.SEffect.Resize( lResNum );
 					for (long i = 0; i < lResNum; i++)
 					{
-						SSkillInfo.SEffect[i].lAttrID = pk.ReadChar();
-						SSkillInfo.SEffect[i].lVal = pk.ReadLong();
+						SSkillInfo.SEffect[i].lAttrID = pk.ReadUInt8();
+						SSkillInfo.SEffect[i].lVal = pk.ReadUInt32();
 						/*if(SSkillInfo.SEffect[i].lAttrID==ATTR_CEXP||SSkillInfo.SEffect[i].lAttrID==ATTR_NLEXP ||SSkillInfo.SEffect[i].lAttrID==ATTR_CLEXP)
-							SSkillInfo.SEffect[i].lVal= pk.ReadLongLong();
+							SSkillInfo.SEffect[i].lVal= pk.ReadInt64();
 						else
-							SSkillInfo.SEffect[i].lVal = (long)pk.ReadLong();*/
+							SSkillInfo.SEffect[i].lVal = (long)pk.ReadUInt32();*/
 					}
 				}
 
 				// ͬ������״̬
-				short chSStateNum = pk.ReadChar();
+				short chSStateNum = pk.ReadUInt8();
 				if ( chSStateNum > 0 )
 				{
 					SSkillInfo.SState.Resize( chSStateNum );
 					for (short chNum = 0; chNum < chSStateNum; chNum++)
 					{
-						SSkillInfo.SState[chNum].chID = pk.ReadChar();
-						SSkillInfo.SState[chNum].chLv = pk.ReadChar();
+						SSkillInfo.SState[chNum].chID = pk.ReadUInt8();
+						SSkillInfo.SState[chNum].chLv = pk.ReadUInt8();
 					}
 				}
 
@@ -927,37 +966,37 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 			{
 				stNetNotiSkillEffect SSkillInfo{};
 
-				SSkillInfo.byFightID = pk.ReadChar();
-				SSkillInfo.sState = pk.ReadShort();
-				SSkillInfo.bDoubleAttack = pk.ReadChar() ? true : false;
-				SSkillInfo.bMiss = pk.ReadChar() ? true : false;
-				if (SSkillInfo.bBeatBack = pk.ReadChar() ? true : false)
+				SSkillInfo.byFightID = pk.ReadUInt8();
+				SSkillInfo.sState = pk.ReadUInt16();
+				SSkillInfo.bDoubleAttack = pk.ReadUInt8() ? true : false;
+				SSkillInfo.bMiss = pk.ReadUInt8() ? true : false;
+				if (SSkillInfo.bBeatBack = pk.ReadUInt8() ? true : false)
 				{
-					SSkillInfo.SPos.x = pk.ReadLong();
-					SSkillInfo.SPos.y = pk.ReadLong();
+					SSkillInfo.SPos.x = pk.ReadUInt32();
+					SSkillInfo.SPos.y = pk.ReadUInt32();
 				}
-				SSkillInfo.lSrcID = pk.ReadLong();
-				SSkillInfo.SSrcPos.x = pk.ReadLong();
-				SSkillInfo.SSrcPos.y = pk.ReadLong();
-				SSkillInfo.lSkillID = pk.ReadLong();
-				SSkillInfo.SSkillTPos.x = pk.ReadLong();
-				SSkillInfo.SSkillTPos.y = pk.ReadLong();
-				SSkillInfo.sExecTime = pk.ReadShort();
+				SSkillInfo.lSrcID = pk.ReadUInt32();
+				SSkillInfo.SSrcPos.x = pk.ReadUInt32();
+				SSkillInfo.SSrcPos.y = pk.ReadUInt32();
+				SSkillInfo.lSkillID = pk.ReadUInt32();
+				SSkillInfo.SSkillTPos.x = pk.ReadUInt32();
+				SSkillInfo.SSkillTPos.y = pk.ReadUInt32();
+				SSkillInfo.sExecTime = pk.ReadUInt16();
 
 				// ͬ������
-				pk.ReadChar();
-				short lResNum = pk.ReadShort();
+				pk.ReadUInt8();
+				short lResNum = pk.ReadUInt16();
 				if (lResNum > 0)
 				{
 					SSkillInfo.SEffect.Resize(lResNum);
 					for (long i = 0; i < lResNum; i++)
 					{
-						SSkillInfo.SEffect[i].lAttrID = pk.ReadChar();
-						SSkillInfo.SEffect[i].lVal = pk.ReadLong();
+						SSkillInfo.SEffect[i].lAttrID = pk.ReadUInt8();
+						SSkillInfo.SEffect[i].lVal = pk.ReadUInt32();
 						/*if(SSkillInfo.SEffect[i].lAttrID==ATTR_CEXP||SSkillInfo.SEffect[i].lAttrID==ATTR_NLEXP ||SSkillInfo.SEffect[i].lAttrID==ATTR_CLEXP)
-							SSkillInfo.SEffect[i].lVal= pk.ReadLongLong();
+							SSkillInfo.SEffect[i].lVal= pk.ReadInt64();
 						else
-							SSkillInfo.SEffect[i].lVal = (long)pk.ReadLong();*/
+							SSkillInfo.SEffect[i].lVal = (long)pk.ReadUInt32();*/
 
 						char val[32];
 						char buff[234];
@@ -968,63 +1007,63 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 
 				short chSStateNum = 0;
 				// ͬ������״̬
-				if (pk.ReadChar() == 1)
+				if (pk.ReadUInt8() == 1)
 				{
-					pk.ReadLong();
-					chSStateNum = pk.ReadChar();
+					pk.ReadUInt32();
+					chSStateNum = pk.ReadUInt8();
 					if (chSStateNum > 0)
 					{
 						SSkillInfo.SState.Resize( chSStateNum );
 						for (short chNum = 0; chNum < chSStateNum; chNum++)
 						{
-							SSkillInfo.SState[chNum].chID = pk.ReadChar();
-							SSkillInfo.SState[chNum].chLv = pk.ReadChar();
+							SSkillInfo.SState[chNum].chID = pk.ReadUInt8();
+							SSkillInfo.SState[chNum].chLv = pk.ReadUInt8();
 							
-							pk.ReadLong();
-							pk.ReadLong();
+							pk.ReadUInt32();
+							pk.ReadUInt32();
 						}
 					}
 				}
 
 				short lSrcResNum = 0;
 				short chSrcSStateNum = 0;
-				if (pk.ReadChar())
+				if (pk.ReadUInt8())
 				{
 					// ����Դ״̬
-					SSkillInfo.sSrcState = pk.ReadShort();
+					SSkillInfo.sSrcState = pk.ReadUInt16();
 					// ͬ������Դ����
-					pk.ReadChar();
-					lSrcResNum = pk.ReadShort();
+					pk.ReadUInt8();
+					lSrcResNum = pk.ReadUInt16();
 					if ( lSrcResNum > 0)
 					{
 						SSkillInfo.SSrcEffect.Resize( lSrcResNum );
 						for (long i = 0; i < lSrcResNum; i++)
 						{
-							SSkillInfo.SSrcEffect[i].lAttrID = pk.ReadChar();
-							SSkillInfo.SSrcEffect[i].lVal = pk.ReadLong();
+							SSkillInfo.SSrcEffect[i].lAttrID = pk.ReadUInt8();
+							SSkillInfo.SSrcEffect[i].lVal = pk.ReadUInt32();
 							/*if(SSkillInfo.SSrcEffect[i].lAttrID==ATTR_CEXP||SSkillInfo.SSrcEffect[i].lAttrID==ATTR_NLEXP ||SSkillInfo.SSrcEffect[i].lAttrID==ATTR_CLEXP)
-								SSkillInfo.SSrcEffect[i].lVal= pk.ReadLongLong();
+								SSkillInfo.SSrcEffect[i].lVal= pk.ReadInt64();
 							else
-								SSkillInfo.SSrcEffect[i].lVal = (long)pk.ReadLong();*/
+								SSkillInfo.SSrcEffect[i].lVal = (long)pk.ReadUInt32();*/
 						}
 					}
 					NetActorSkillEff(l_id, SSkillInfo);
 					break; 
 					
-					if (pk.ReadChar() == 1)
+					if (pk.ReadUInt8() == 1)
 					{
 						// ͬ������Դ����״̬
-						pk.ReadLong();
-						chSrcSStateNum = pk.ReadChar();
+						pk.ReadUInt32();
+						chSrcSStateNum = pk.ReadUInt8();
 						if (chSrcSStateNum > 0)
 						{
 							SSkillInfo.SSrcState.Resize( chSrcSStateNum );
 							for (short chNum = 0; chNum < chSrcSStateNum; chNum++)
 							{
-								SSkillInfo.SSrcState[chNum].chID = pk.ReadChar();
-								SSkillInfo.SSrcState[chNum].chLv = pk.ReadChar();
-								pk.ReadLong();
-								pk.ReadLong();
+								SSkillInfo.SSrcState[chNum].chID = pk.ReadUInt8();
+								SSkillInfo.SSrcState[chNum].chLv = pk.ReadUInt8();
+								pk.ReadUInt32();
+								pk.ReadUInt32();
 							}
 						}
 					}
@@ -1036,14 +1075,14 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 		case enumACTION_LEAN: // �п�
 			{
 				stNetLeanInfo SLean;
-				SLean.chState = pk.ReadChar();
+				SLean.chState = pk.ReadUInt8();
 				if (!SLean.chState)
 				{
-					SLean.lPose = pk.ReadLong();
-					SLean.lAngle = pk.ReadLong();
-					SLean.lPosX = pk.ReadLong();
-					SLean.lPosY = pk.ReadLong();
-					SLean.lHeight = pk.ReadLong();
+					SLean.lPose = pk.ReadUInt32();
+					SLean.lAngle = pk.ReadUInt32();
+					SLean.lPosX = pk.ReadUInt32();
+					SLean.lPosY = pk.ReadUInt32();
+					SLean.lHeight = pk.ReadUInt32();
 				}
 
 				// log
@@ -1059,7 +1098,7 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 		case enumACTION_ITEM_FAILED:
 			{
 				stNetSysInfo l_sysinfo;
-				short sFailedID = pk.ReadShort();
+				short sFailedID = pk.ReadUInt16();
 				l_sysinfo.m_sysinfo = g_GetUseItemFailedInfo(sFailedID);
 				NetSysInfo(l_sysinfo);
 			}
@@ -1105,15 +1144,15 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 		case enumACTION_TEMP:
 			{
 				stTempChangeChaPart STempChaPart;
-				STempChaPart.dwItemID = pk.ReadLong();
-				STempChaPart.dwPartID = pk.ReadLong();
+				STempChaPart.dwItemID = pk.ReadUInt32();
+				STempChaPart.dwPartID = pk.ReadUInt32();
 				NetTempChangeChaPart(l_id, STempChaPart);
 			}
 			break;
 		case enumACTION_CHANGE_CHA:
 			{
 				stNetChangeCha SChangeCha;
-				SChangeCha.ulMainChaID = pk.ReadLong();
+				SChangeCha.ulMainChaID = pk.ReadUInt32();
 
 				NetActorChangeCha(l_id, SChangeCha);
 			}
@@ -1121,8 +1160,8 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 		case enumACTION_FACE:
 			{
 				stNetFace SNetFace;
-				SNetFace.sAngle = pk.ReadShort();
-				SNetFace.sPose = pk.ReadShort();
+				SNetFace.sAngle = pk.ReadUInt16();
+				SNetFace.sPose = pk.ReadUInt16();
                 NetFace( l_id, SNetFace, enumACTION_FACE );
 
 				// log
@@ -1136,8 +1175,8 @@ BOOL SC_CharacterAction(LPRPACKET pk)
 		case enumACTION_SKILL_POSE:
 			{
 				stNetFace SNetFace;
-				SNetFace.sAngle = pk.ReadShort();
-				SNetFace.sPose = pk.ReadShort();
+				SNetFace.sAngle = pk.ReadUInt16();
+				SNetFace.sPose = pk.ReadUInt16();
                 NetFace( l_id, SNetFace, enumACTION_SKILL_POSE );
 
 				// log
@@ -1203,11 +1242,11 @@ T_E}
 // Э��S->C : ��ɫ������ж�ʧ��
 BOOL SC_FailedAction(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
 	char	chType, chReason;
-	chType = pk.ReadChar();
-	chReason = pk.ReadChar();
+	chType = pk.ReadUInt8();
+	chReason = pk.ReadUInt8();
     NetFailedAction( chReason );    
 	return TRUE;
 T_E}
@@ -1215,7 +1254,7 @@ T_E}
 // ͬ����ɫ����
 BOOL SC_SynAttribute(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 
 	stNetChaAttr SChaAttr;
@@ -1234,7 +1273,7 @@ T_E}
 // ͬ��������
 BOOL SC_SynSkillBag(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 
 	stNetSkillBag SCurSkill;
@@ -1247,9 +1286,9 @@ T_E}
 // ͬ��������
 BOOL SC_SynDefaultSkill(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 	stNetDefaultSkill	SDefaultSkill;
-	SDefaultSkill.sSkillID = pk.ReadShort();
+	SDefaultSkill.sSkillID = pk.ReadUInt16();
 	SDefaultSkill.Exec();
 	return TRUE;
 T_E}
@@ -1259,7 +1298,7 @@ BOOL SC_SynSkillState(LPRPACKET pk)
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 
 	stNetSkillState SCurSState;
@@ -1274,12 +1313,12 @@ BOOL SC_SynTeam(LPRPACKET pk)
 {T_B
 	stNetTeamState	STeamState;
 
-	STeamState.ulID = pk.ReadLong();
-	STeamState.lHP = pk.ReadLong();
-    STeamState.lMaxHP = pk.ReadLong();
-	STeamState.lSP = pk.ReadLong();
-    STeamState.lMaxSP = pk.ReadLong();
-	STeamState.lLV = pk.ReadLong();
+	STeamState.ulID = pk.ReadUInt32();
+	STeamState.lHP = pk.ReadUInt32();
+    STeamState.lMaxHP = pk.ReadUInt32();
+	STeamState.lSP = pk.ReadUInt32();
+    STeamState.lMaxSP = pk.ReadUInt32();
+	STeamState.lLV = pk.ReadUInt32();
 
     LG( "Team", "Refresh, ID[%u], HP[%d], MaxHP[%d], SP[%d], MaxSP[%d], LV[%d]\n", STeamState.ulID, STeamState.lHP, STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV );
 
@@ -1303,8 +1342,8 @@ T_E}
 
 BOOL SC_SynTLeaderID(LPRPACKET pk)
 {T_B
-	long	lID = pk.ReadLong();
-	long	lLeaderID = pk.ReadLong();
+	long	lID = pk.ReadUInt32();
+	long	lLeaderID = pk.ReadUInt32();
 
 	NetChaTLeaderID(lID, lLeaderID);
 
@@ -1320,7 +1359,7 @@ BOOL SC_HelpInfo( LPRPACKET packet )
 	NET_HELPINFO Info;
 	memset( &Info, 0, sizeof(NET_HELPINFO) );
 
-	Info.byType = packet.ReadChar();
+	Info.byType = packet.ReadUInt8();
 	if( Info.byType == mission::MIS_HELP_DESP || Info.byType == mission::MIS_HELP_IMAGE || 
 		Info.byType == mission::MIS_HELP_BICKER )
 	{
@@ -1329,7 +1368,7 @@ BOOL SC_HelpInfo( LPRPACKET packet )
 	}
 	else if( Info.byType == mission::MIS_HELP_SOUND )
 	{
-		Info.sID = packet.ReadShort();
+		Info.sID = packet.ReadUInt16();
 	}
 	else
 	{
@@ -1343,8 +1382,8 @@ T_E}
 // NPC �Ի���Ϣ����
 BOOL SC_TalkInfo( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE byCmd = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE byCmd = packet.ReadUInt8();
 	USHORT sLen = 0;
 	const char* pszDesp = packet.ReadString();
 	if( pszDesp == NULL ) return FALSE;
@@ -1357,10 +1396,10 @@ BOOL SC_FuncInfo( LPRPACKET packet )
 	NET_FUNCPAGE FuncPage;
 	memset( &FuncPage, 0, sizeof(NET_FUNCPAGE) );
 
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE byPage  = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE byPage  = packet.ReadUInt8();
 	strncpy( FuncPage.szTalk, packet.ReadString(), ROLE_MAXNUM_DESPSIZE - 1 );
-	BYTE byCount = packet.ReadChar();
+	BYTE byCount = packet.ReadUInt8();
 	
 	if( byCount > ROLE_MAXNUM_FUNCITEM ) byCount = ROLE_MAXNUM_FUNCITEM;
 	for( int i = 0; i < byCount; i++ )
@@ -1369,14 +1408,14 @@ BOOL SC_FuncInfo( LPRPACKET packet )
 		strncpy( FuncPage.FuncItem[i].szFunc, pszFunc, ROLE_MAXNUM_FUNCITEMSIZE - 1 );
 	}
 
-	BYTE byMisCount = packet.ReadChar();
+	BYTE byMisCount = packet.ReadUInt8();
 	if( byMisCount > ROLE_MAXNUM_CAPACITY ) {	byMisCount = ROLE_MAXNUM_CAPACITY; }
 
 	for( int i = 0; i < byMisCount; i++ )
 	{
 		const char* pszMis = packet.ReadString();
 		strncpy( FuncPage.MisItem[i].szMis, pszMis, ROLE_MAXNUM_FUNCITEMSIZE - 1 );
-		FuncPage.MisItem[i].byState = packet.ReadChar();
+		FuncPage.MisItem[i].byState = packet.ReadUInt8();
 	}
 
 	NetShowFunction( byPage, byCount, byMisCount, FuncPage, dwNpcID );
@@ -1385,19 +1424,19 @@ T_E}
 
 BOOL SC_CloseTalk( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
 	NetCloseTalk( dwNpcID );
 	return TRUE;
 T_E}
 
 BOOL SC_TradeData( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE byPage = packet.ReadChar();
-	BYTE byIndex = packet.ReadChar();
-	USHORT sItemID = packet.ReadShort();
-	USHORT sCount = packet.ReadShort();
-	DWORD dwPrice = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE byPage = packet.ReadUInt8();
+	BYTE byIndex = packet.ReadUInt8();
+	USHORT sItemID = packet.ReadUInt16();
+	USHORT sCount = packet.ReadUInt16();
+	DWORD dwPrice = packet.ReadUInt32();
 
 	NetUpdateTradeData( dwNpcID, byPage, byIndex, sItemID, sCount, dwPrice );
 	return TRUE;
@@ -1405,15 +1444,15 @@ T_E}
 
 BOOL SC_TradeAllData( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE  byType = packet.ReadChar();
-	DWORD dwParam = packet.ReadLong();
-	BYTE  byCount = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE  byType = packet.ReadUInt8();
+	DWORD dwParam = packet.ReadUInt32();
+	BYTE  byCount = packet.ReadUInt8();
 
 	NET_TRADEINFO Info;
 	for( BYTE i = 0; i < byCount; i++ )
 	{
-		BYTE byItemType = packet.ReadChar();
+		BYTE byItemType = packet.ReadUInt8();
 		switch( byItemType )
 		{
 		case mission::TI_WEAPON:
@@ -1421,18 +1460,18 @@ BOOL SC_TradeAllData( LPRPACKET packet )
 		case mission::TI_OTHER:		
 		case mission::TI_SYNTHESIS:		
 			{			
-				Info.TradePage[byItemType].byCount = packet.ReadChar();
+				Info.TradePage[byItemType].byCount = packet.ReadUInt8();
 				if( Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM )
 					Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
 
 				for( BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++ )
 				{
-					Info.TradePage[byItemType].sItemID[n] = packet.ReadShort();
+					Info.TradePage[byItemType].sItemID[n] = packet.ReadUInt16();
 					if( byType == mission::TRADE_GOODS )
 					{
-						Info.TradePage[byItemType].sCount[n] = packet.ReadShort();
-						Info.TradePage[byItemType].dwPrice[n] = packet.ReadLong();
-						Info.TradePage[byItemType].byLevel[n] = packet.ReadChar();
+						Info.TradePage[byItemType].sCount[n] = packet.ReadUInt16();
+						Info.TradePage[byItemType].dwPrice[n] = packet.ReadUInt32();
+						Info.TradePage[byItemType].byLevel[n] = packet.ReadUInt8();
 					}
 				}
 			}
@@ -1447,15 +1486,15 @@ T_E}
 
 BOOL SC_TradeInfo( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE  byType = packet.ReadChar();
-	DWORD dwParam = packet.ReadLong();
-	BYTE  byCount = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE  byType = packet.ReadUInt8();
+	DWORD dwParam = packet.ReadUInt32();
+	BYTE  byCount = packet.ReadUInt8();
 
 	NET_TRADEINFO Info;
 	for( BYTE i = 0; i < byCount; i++ )
 	{
-		BYTE byItemType = packet.ReadChar();
+		BYTE byItemType = packet.ReadUInt8();
 		switch( byItemType )
 		{
 		case mission::TI_WEAPON:
@@ -1463,18 +1502,18 @@ BOOL SC_TradeInfo( LPRPACKET packet )
 		case mission::TI_OTHER:		
 		case mission::TI_SYNTHESIS:		
 			{			
-				Info.TradePage[byItemType].byCount = packet.ReadChar();
+				Info.TradePage[byItemType].byCount = packet.ReadUInt8();
 				if( Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM )
 					Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
 
 				for( BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++ )
 				{
-					Info.TradePage[byItemType].sItemID[n] = packet.ReadShort();
+					Info.TradePage[byItemType].sItemID[n] = packet.ReadUInt16();
 					if( byType == mission::TRADE_GOODS )
 					{
-						Info.TradePage[byItemType].sCount[n] = packet.ReadShort();
-						Info.TradePage[byItemType].dwPrice[n] = packet.ReadLong();
-						Info.TradePage[byItemType].byLevel[n] = packet.ReadChar();
+						Info.TradePage[byItemType].sCount[n] = packet.ReadUInt16();
+						Info.TradePage[byItemType].dwPrice[n] = packet.ReadUInt32();
+						Info.TradePage[byItemType].byLevel[n] = packet.ReadUInt8();
 					}
 				}
 			}
@@ -1491,15 +1530,15 @@ BOOL SC_TradeUpdate( LPRPACKET packet )
 {T_B
 	//���н��׸���,ֻ���ڴ򿪺��н��׽�������²Ÿ���
 
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE  byType = packet.ReadChar();
-	DWORD dwParam = packet.ReadLong();
-	BYTE  byCount = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE  byType = packet.ReadUInt8();
+	DWORD dwParam = packet.ReadUInt32();
+	BYTE  byCount = packet.ReadUInt8();
 
 	NET_TRADEINFO Info;
 	for( BYTE i = 0; i < byCount; i++ )
 	{
-		BYTE byItemType = packet.ReadChar();
+		BYTE byItemType = packet.ReadUInt8();
 		switch( byItemType )
 		{
 		case mission::TI_WEAPON:
@@ -1507,18 +1546,18 @@ BOOL SC_TradeUpdate( LPRPACKET packet )
 		case mission::TI_OTHER:		
 		case mission::TI_SYNTHESIS:		
 			{			
-				Info.TradePage[byItemType].byCount = packet.ReadChar();
+				Info.TradePage[byItemType].byCount = packet.ReadUInt8();
 				if( Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM )
 					Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
 
 				for( BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++ )
 				{
-					Info.TradePage[byItemType].sItemID[n] = packet.ReadShort();
+					Info.TradePage[byItemType].sItemID[n] = packet.ReadUInt16();
 					if( byType == mission::TRADE_GOODS )
 					{
-						Info.TradePage[byItemType].sCount[n] = packet.ReadShort();
-						Info.TradePage[byItemType].dwPrice[n] = packet.ReadLong();
-						Info.TradePage[byItemType].byLevel[n] = packet.ReadChar();
+						Info.TradePage[byItemType].sCount[n] = packet.ReadUInt16();
+						Info.TradePage[byItemType].dwPrice[n] = packet.ReadUInt32();
+						Info.TradePage[byItemType].byLevel[n] = packet.ReadUInt8();
 					}
 				}
 			}
@@ -1538,11 +1577,11 @@ T_E}
 
 BOOL SC_TradeResult( LPRPACKET packet )
 {T_B
-	BYTE byType = packet.ReadChar();
-	BYTE byIndex = packet.ReadChar();
-	BYTE byCount = packet.ReadChar();
-	USHORT sItemID = packet.ReadShort();
-	DWORD  dwMoney  = packet.ReadLong();
+	BYTE byType = packet.ReadUInt8();
+	BYTE byIndex = packet.ReadUInt8();
+	BYTE byCount = packet.ReadUInt8();
+	USHORT sItemID = packet.ReadUInt16();
+	DWORD  dwMoney  = packet.ReadUInt32();
 	LG("trade", g_oLangRec.GetString(301), byType, byIndex, byCount, sItemID, dwMoney);
 	  NetTradeResult( byType, byIndex, byCount, sItemID, dwMoney );
 	LG("trade", g_oLangRec.GetString(302));
@@ -1551,27 +1590,27 @@ T_E}
 
 BOOL SC_CharTradeInfo( LPRPACKET packet )
 {T_B
-	USHORT usCmd = packet.ReadShort();
+	USHORT usCmd = packet.ReadUInt16();
 	switch( usCmd )
 	{
 	case CMD_MC_CHARTRADE_REQUEST:
 		{
-			BYTE byType = packet.ReadChar();
-			DWORD dwRequestID = packet.ReadLong();
+			BYTE byType = packet.ReadUInt8();
+			DWORD dwRequestID = packet.ReadUInt32();
 			NetShowCharTradeRequest( byType, dwRequestID );
 		}
 		break;
 	case CMD_MC_CHARTRADE_CANCEL:
 		{
-			DWORD dwCharID = packet.ReadLong();
+			DWORD dwCharID = packet.ReadUInt32();
 			NetCancelCharTrade( dwCharID );
 		}
 		break;
 	case CMD_MC_CHARTRADE_MONEY:
 		{
-			DWORD dwCharID = packet.ReadLong();
-			DWORD dwMoney  = packet.ReadLong();
-			int currency = packet.ReadChar();
+			DWORD dwCharID = packet.ReadUInt32();
+			DWORD dwMoney  = packet.ReadUInt32();
+			int currency = packet.ReadUInt8();
 	
 			if(currency==0){
 				NetTradeShowMoney( dwCharID, dwMoney );
@@ -1582,13 +1621,13 @@ BOOL SC_CharTradeInfo( LPRPACKET packet )
 		break;
 	case CMD_MC_CHARTRADE_ITEM:
 		{
-			DWORD dwRequestID = packet.ReadLong();
-			BYTE byOpType = packet.ReadChar();
+			DWORD dwRequestID = packet.ReadUInt32();
+			BYTE byOpType = packet.ReadUInt8();
 			if( byOpType == mission::TRADE_DRAGTO_ITEM )
 			{
-				BYTE byItemIndex = packet.ReadChar();
-				BYTE byIndex = packet.ReadChar();
-				BYTE byCount = packet.ReadChar();
+				BYTE byItemIndex = packet.ReadUInt8();
+				BYTE byIndex = packet.ReadUInt8();
+				BYTE byCount = packet.ReadUInt8();
 				
 				// ��Ʒʵ������
 				NET_CHARTRADE_ITEMDATA Data;
@@ -1598,39 +1637,39 @@ BOOL SC_CharTradeInfo( LPRPACKET packet )
 			}
 			else if( byOpType == mission::TRADE_DRAGTO_TRADE )
 			{
-				USHORT sItemID = packet.ReadShort();
-				BYTE byItemIndex = packet.ReadChar();
-				BYTE byIndex = packet.ReadChar();				
-				BYTE byCount = packet.ReadChar();				
-				USHORT sType = packet.ReadShort();
+				USHORT sItemID = packet.ReadUInt16();
+				BYTE byItemIndex = packet.ReadUInt8();
+				BYTE byIndex = packet.ReadUInt8();				
+				BYTE byCount = packet.ReadUInt8();				
+				USHORT sType = packet.ReadUInt16();
 				
 				if( sType == enumItemTypeBoat )
 				{
 					NET_CHARTRADE_BOATDATA Data;
 					memset( &Data, 0, sizeof(NET_CHARTRADE_BOATDATA) );
 
-					if( packet.ReadChar() == 0 )
+					if( packet.ReadUInt8() == 0 )
 					{
 						// ��Ϣ����
 					}
 					else
 					{
 						strncpy( Data.szName, packet.ReadString(), BOAT_MAXSIZE_BOATNAME - 1 );
-						Data.sBoatID = packet.ReadShort();
-						Data.sLevel = packet.ReadShort();
-						Data.dwExp = packet.ReadLong();
-						Data.dwHp = packet.ReadLong();
-						Data.dwMaxHp = packet.ReadLong();
-						Data.dwSp = packet.ReadLong();
-						Data.dwMaxSp = packet.ReadLong();
-						Data.dwMinAttack = packet.ReadLong();
-						Data.dwMaxAttack = packet.ReadLong();
-						Data.dwDef = packet.ReadLong();
-						Data.dwSpeed = packet.ReadLong();
-						Data.dwShootSpeed = packet.ReadLong();
-						Data.byHasItem = packet.ReadChar();
-						Data.byCapacity = packet.ReadChar();
-						Data.dwPrice = packet.ReadLong();
+						Data.sBoatID = packet.ReadUInt16();
+						Data.sLevel = packet.ReadUInt16();
+						Data.dwExp = packet.ReadUInt32();
+						Data.dwHp = packet.ReadUInt32();
+						Data.dwMaxHp = packet.ReadUInt32();
+						Data.dwSp = packet.ReadUInt32();
+						Data.dwMaxSp = packet.ReadUInt32();
+						Data.dwMinAttack = packet.ReadUInt32();
+						Data.dwMaxAttack = packet.ReadUInt32();
+						Data.dwDef = packet.ReadUInt32();
+						Data.dwSpeed = packet.ReadUInt32();
+						Data.dwShootSpeed = packet.ReadUInt32();
+						Data.byHasItem = packet.ReadUInt8();
+						Data.byCapacity = packet.ReadUInt8();
+						Data.dwPrice = packet.ReadUInt32();
 						NetTradeAddBoat( dwRequestID, byOpType, sItemID, byIndex, byCount, byItemIndex, Data );
 					}
 				}
@@ -1640,27 +1679,27 @@ BOOL SC_CharTradeInfo( LPRPACKET packet )
 					NET_CHARTRADE_ITEMDATA Data;
 					memset( &Data, 0, sizeof(NET_CHARTRADE_ITEMDATA) );
 
-					Data.sEndure[0] = packet.ReadShort();
-					Data.sEndure[1] = packet.ReadShort();
-					Data.sEnergy[0] = packet.ReadShort();
-					Data.sEnergy[1] = packet.ReadShort();
-					Data.byForgeLv = packet.ReadChar();
-					Data.bValid = packet.ReadChar() != 0 ? true : false;
-					Data.bItemTradable = packet.ReadChar();
-					Data.expiration = packet.ReadLong();
+					Data.sEndure[0] = packet.ReadUInt16();
+					Data.sEndure[1] = packet.ReadUInt16();
+					Data.sEnergy[0] = packet.ReadUInt16();
+					Data.sEnergy[1] = packet.ReadUInt16();
+					Data.byForgeLv = packet.ReadUInt8();
+					Data.bValid = packet.ReadUInt8() != 0 ? true : false;
+					Data.bItemTradable = packet.ReadUInt8();
+					Data.expiration = packet.ReadUInt32();
 
-					Data.lDBParam[enumITEMDBP_FORGE] = packet.ReadLong();
-					Data.lDBParam[enumITEMDBP_INST_ID] = packet.ReadLong();
+					Data.lDBParam[enumITEMDBP_FORGE] = packet.ReadUInt32();
+					Data.lDBParam[enumITEMDBP_INST_ID] = packet.ReadUInt32();
 
 
 
-					Data.byHasAttr = packet.ReadChar();
+					Data.byHasAttr = packet.ReadUInt8();
 					if( Data.byHasAttr )
 					{
 						for( int i = 0; i < defITEM_INSTANCE_ATTR_NUM; i++ )
 						{
-							Data.sInstAttr[i][0] = packet.ReadShort();
-							Data.sInstAttr[i][1] = packet.ReadShort();
+							Data.sInstAttr[i][0] = packet.ReadUInt16();
+							Data.sInstAttr[i][1] = packet.ReadUInt16();
 						}
 					}
 
@@ -1677,27 +1716,27 @@ BOOL SC_CharTradeInfo( LPRPACKET packet )
 		break;
 	case CMD_MC_CHARTRADE_PAGE:
 		{
-			BYTE byType = packet.ReadChar();
-			DWORD dwAcceptID = packet.ReadLong();
-			DWORD dwRequestID = packet.ReadLong();
+			BYTE byType = packet.ReadUInt8();
+			DWORD dwAcceptID = packet.ReadUInt32();
+			DWORD dwRequestID = packet.ReadUInt32();
 			NetShowCharTradeInfo( byType, dwAcceptID, dwRequestID );
 		}
 		break;
 	case CMD_MC_CHARTRADE_VALIDATEDATA:
 		{
-			DWORD dwCharID = packet.ReadLong();
+			DWORD dwCharID = packet.ReadUInt32();
 			NetValidateTradeData( dwCharID );
 		}
 		break;
 	case CMD_MC_CHARTRADE_VALIDATE:
 		{
-			DWORD dwCharID = packet.ReadLong();
+			DWORD dwCharID = packet.ReadUInt32();
 			NetValidateTrade( dwCharID );
 		}
 		break;
 	case CMD_MC_CHARTRADE_RESULT:
 		{
-			BYTE byResult = packet.ReadChar();
+			BYTE byResult = packet.ReadUInt8();
 			if( byResult == mission::TRADE_SUCCESS )
 			{
 				NetTradeSuccess();
@@ -1738,16 +1777,16 @@ BOOL SC_DailyBuffInfo(LPRPACKET packet)
 }
 BOOL SC_MissionInfo( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
 	NET_MISSIONLIST list;
 	memset( &list, 0, sizeof(NET_MISSIONLIST) );
 
-	list.byListType = packet.ReadChar();
-	list.byPrev = packet.ReadChar();
-	list.byNext = packet.ReadChar();
-	list.byPrevCmd = packet.ReadChar();
-	list.byNextCmd = packet.ReadChar();
-	list.byItemCount = packet.ReadChar();
+	list.byListType = packet.ReadUInt8();
+	list.byPrev = packet.ReadUInt8();
+	list.byNext = packet.ReadUInt8();
+	list.byPrevCmd = packet.ReadUInt8();
+	list.byNextCmd = packet.ReadUInt8();
+	list.byItemCount = packet.ReadUInt8();
 	
 	if( list.byItemCount > ROLE_MAXNUM_FUNCITEM ) list.byItemCount = ROLE_MAXNUM_FUNCITEM;
 	for( int i = 0; i < list.byItemCount; i++ )
@@ -1763,8 +1802,8 @@ T_E}
 
 BOOL SC_MisPage( LPRPACKET packet )
 {T_B
-	BYTE byCmd = packet.ReadChar();
-	DWORD dwNpcID = packet.ReadLong();
+	BYTE byCmd = packet.ReadUInt8();
+	DWORD dwNpcID = packet.ReadUInt32();
 	NET_MISPAGE page;
 	memset( &page, 0,sizeof(NET_MISPAGE) );
 	
@@ -1779,15 +1818,15 @@ BOOL SC_MisPage( LPRPACKET packet )
 	case ROLE_MIS_BTNPENDING:
 		{
 			// ����������Ϣ
-			page.byNeedNum = packet.ReadChar();
+			page.byNeedNum = packet.ReadUInt8();
 			for( int i = 0; i < page.byNeedNum; i++ )
 			{
-				page.MisNeed[i].byType = packet.ReadChar();
+				page.MisNeed[i].byType = packet.ReadUInt8();
 				if( page.MisNeed[i].byType == mission::MIS_NEED_ITEM || page.MisNeed[i].byType == mission::MIS_NEED_KILL )
 				{
-					page.MisNeed[i].wParam1 = packet.ReadShort();
-					page.MisNeed[i].wParam2 = packet.ReadShort();
-					page.MisNeed[i].wParam3 = packet.ReadChar();
+					page.MisNeed[i].wParam1 = packet.ReadUInt16();
+					page.MisNeed[i].wParam2 = packet.ReadUInt16();
+					page.MisNeed[i].wParam3 = packet.ReadUInt8();
 				}
 				else if( page.MisNeed[i].byType == mission::MIS_NEED_DESP )
 				{
@@ -1803,13 +1842,13 @@ BOOL SC_MisPage( LPRPACKET packet )
 			}
 			
 			// ��������Ϣ
-			page.byPrizeSelType = packet.ReadChar();
-			page.byPrizeNum = packet.ReadChar();
+			page.byPrizeSelType = packet.ReadUInt8();
+			page.byPrizeNum = packet.ReadUInt8();
 			for( int i = 0; i < page.byPrizeNum; i++ )
 			{
-				page.MisPrize[i].byType = packet.ReadChar();
-				page.MisPrize[i].wParam1 = packet.ReadShort();
-				page.MisPrize[i].wParam2 = packet.ReadShort();
+				page.MisPrize[i].byType = packet.ReadUInt8();
+				page.MisPrize[i].wParam1 = packet.ReadUInt16();
+				page.MisPrize[i].wParam2 = packet.ReadUInt16();
 			}
 
 			// ����������Ϣ
@@ -1833,11 +1872,11 @@ BOOL SC_MisLog( LPRPACKET packet )
 	NET_MISLOG_LIST LogList;
 	memset( &LogList, 0, sizeof(NET_MISLOG_LIST) );
 
-	LogList.byNumLog = packet.ReadChar();
+	LogList.byNumLog = packet.ReadUInt8();
 	for( int i = 0; i < LogList.byNumLog; i++ )
 	{		
-		LogList.MisLog[i].wMisID  = packet.ReadShort();
-		LogList.MisLog[i].byState = packet.ReadChar();
+		LogList.MisLog[i].wMisID  = packet.ReadUInt16();
+		LogList.MisLog[i].byState = packet.ReadUInt8();
 	}
 
 	NetMisLogList( LogList );
@@ -1850,20 +1889,20 @@ BOOL SC_MisLogInfo( LPRPACKET packet )
 	memset( &page, 0,sizeof(NET_MISPAGE) );
 
 	// ���������Ϣ
-	WORD wMisID = packet.ReadShort();	
+	WORD wMisID = packet.ReadUInt16();	
 	const char* pszName = packet.ReadString();
 	strncpy( page.szName, pszName, ROLE_MAXSIZE_MISNAME - 1 );
 
 	// ����������Ϣ
-	page.byNeedNum = packet.ReadChar();
+	page.byNeedNum = packet.ReadUInt8();
 	for( int i = 0; i < page.byNeedNum; i++ )
 	{
-		page.MisNeed[i].byType = packet.ReadChar();
+		page.MisNeed[i].byType = packet.ReadUInt8();
 		if( page.MisNeed[i].byType == mission::MIS_NEED_ITEM || page.MisNeed[i].byType == mission::MIS_NEED_KILL )
 		{
-			page.MisNeed[i].wParam1 = packet.ReadShort();
-			page.MisNeed[i].wParam2 = packet.ReadShort();
-			page.MisNeed[i].wParam3 = packet.ReadChar();
+			page.MisNeed[i].wParam1 = packet.ReadUInt16();
+			page.MisNeed[i].wParam2 = packet.ReadUInt16();
+			page.MisNeed[i].wParam3 = packet.ReadUInt8();
 		}
 		else if( page.MisNeed[i].byType == mission::MIS_NEED_DESP )
 		{
@@ -1879,13 +1918,13 @@ BOOL SC_MisLogInfo( LPRPACKET packet )
 	}
 
 	// ��������Ϣ
-	page.byPrizeSelType = packet.ReadChar();
-	page.byPrizeNum = packet.ReadChar();
+	page.byPrizeSelType = packet.ReadUInt8();
+	page.byPrizeNum = packet.ReadUInt8();
 	for( int i = 0; i < page.byPrizeNum; i++ )
 	{
-		page.MisPrize[i].byType = packet.ReadChar();
-		page.MisPrize[i].wParam1 = packet.ReadShort();
-		page.MisPrize[i].wParam2 = packet.ReadShort();
+		page.MisPrize[i].byType = packet.ReadUInt8();
+		page.MisPrize[i].wParam1 = packet.ReadUInt16();
+		page.MisPrize[i].wParam2 = packet.ReadUInt16();
 	}
 
 	// ����������Ϣ
@@ -1898,7 +1937,7 @@ T_E}
 
 BOOL SC_MisLogClear( LPRPACKET packet )
 {T_B
-	WORD wMisID  = packet.ReadShort();
+	WORD wMisID  = packet.ReadUInt16();
 
 	NetMisLogClear( wMisID );
 	return TRUE;
@@ -1906,8 +1945,8 @@ T_E}
 
 BOOL SC_MisLogAdd( LPRPACKET packet )
 {T_B
-	WORD wMisID  = packet.ReadShort();
-	BYTE byState = packet.ReadChar();
+	WORD wMisID  = packet.ReadUInt16();
+	BYTE byState = packet.ReadUInt8();
 
 	NetMisLogAdd( wMisID, byState );
 	return TRUE;
@@ -1915,8 +1954,8 @@ T_E}
 
 BOOL SC_MisLogState( LPRPACKET packet )
 {T_B
-	WORD wID = packet.ReadShort();
-	BYTE byState = packet.ReadChar();
+	WORD wID = packet.ReadUInt16();
+	BYTE byState = packet.ReadUInt8();
 
 	NetMisLogState( wID, byState );
 	return TRUE;
@@ -1925,26 +1964,26 @@ T_E}
 BOOL SC_TriggerAction( LPRPACKET packet )
 {T_B
     stNetNpcMission info;
-    info.byType = packet.ReadChar();	
-	info.sID = packet.ReadShort();		// ���ݻ��������ID
-	info.sNum = packet.ReadShort();		// ��Ҫ�ݻ����������
-	info.sCount = packet.ReadShort();	// ����ɼ���
+    info.byType = packet.ReadUInt8();	
+	info.sID = packet.ReadUInt16();		// ���ݻ��������ID
+	info.sNum = packet.ReadUInt16();		// ��Ҫ�ݻ����������
+	info.sCount = packet.ReadUInt16();	// ����ɼ���
     NetTriggerAction( info );
 	return TRUE;
 T_E}
 
 BOOL SC_NpcStateChange( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE  byState = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE  byState = packet.ReadUInt8();
 	NetNpcStateChange( dwNpcID, byState );
 	return TRUE;
 T_E}
 
 BOOL SC_EntityStateChange( LPRPACKET packet )
 {T_B
-	DWORD dwEntityID = packet.ReadLong();
-	BYTE byState = packet.ReadChar();
+	DWORD dwEntityID = packet.ReadUInt32();
+	BYTE byState = packet.ReadUInt8();
 	NetEntityStateChange( dwEntityID, byState );
 	return TRUE;
 T_E}
@@ -2013,7 +2052,7 @@ T_E}
 
 BOOL SC_GMRecv(LPRPACKET packet)
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
 	CS_GMRecv(dwNpcID);
 	return TRUE;
 T_E}
@@ -2038,7 +2077,7 @@ T_E}
 
 BOOL SC_CreateBoat( LPRPACKET packet )
 {T_B
-	DWORD dwBoatID = packet.ReadLong();
+	DWORD dwBoatID = packet.ReadUInt32();
 	xShipBuildInfo Info;
 	memset( &Info, 0, sizeof(xShipBuildInfo) );
 
@@ -2047,44 +2086,44 @@ BOOL SC_CreateBoat( LPRPACKET packet )
 	strncpy( Info.szName, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 	strncpy( Info.szDesp, packet.ReadString(), BOAT_MAXSIZE_DESP - 1 );
 	strncpy( Info.szBerth, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
-	Info.byIsUpdate = packet.ReadChar();
-	Info.sPosID = packet.ReadShort();
-	Info.dwBody = packet.ReadLong();
+	Info.byIsUpdate = packet.ReadUInt8();
+	Info.sPosID = packet.ReadUInt16();
+	Info.dwBody = packet.ReadUInt32();
 	strncpy( Info.szBody, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 	
 	if( Info.byIsUpdate )
 	{
-		Info.byHeader = packet.ReadChar();
-		Info.dwHeader = packet.ReadLong();
+		Info.byHeader = packet.ReadUInt8();
+		Info.dwHeader = packet.ReadUInt32();
 		strncpy( Info.szHeader, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-		Info.byEngine = packet.ReadChar();
-		Info.dwEngine = packet.ReadLong();
+		Info.byEngine = packet.ReadUInt8();
+		Info.dwEngine = packet.ReadUInt32();
 		strncpy( Info.szEngine, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 		for( int i = 0; i < BOAT_MAXNUM_MOTOR; i++ )
 		{
-			Info.dwMotor[i] = packet.ReadLong();
+			Info.dwMotor[i] = packet.ReadUInt32();
 		}
 	}
-	Info.byCannon = packet.ReadChar();
+	Info.byCannon = packet.ReadUInt8();
 	strncpy( Info.szCannon, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-	Info.byEquipment = packet.ReadChar();
+	Info.byEquipment = packet.ReadUInt8();
 	strncpy( Info.szEquipment, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-	Info.dwMoney = packet.ReadLong();
-	Info.dwMinAttack = packet.ReadLong();
-	Info.dwMaxAttack = packet.ReadLong();
-	Info.dwCurEndure = packet.ReadLong();
-	Info.dwMaxEndure = packet.ReadLong();
-	Info.dwSpeed  = packet.ReadLong();
-	Info.dwDistance = packet.ReadLong();
-	Info.dwDefence = packet.ReadLong();
-	Info.dwCurSupply = packet.ReadLong();
-	Info.dwMaxSupply = packet.ReadLong();
-	Info.dwConsume = packet.ReadLong();
-	Info.dwAttackTime = packet.ReadLong();
-	Info.sCapacity = packet.ReadShort();
+	Info.dwMoney = packet.ReadUInt32();
+	Info.dwMinAttack = packet.ReadUInt32();
+	Info.dwMaxAttack = packet.ReadUInt32();
+	Info.dwCurEndure = packet.ReadUInt32();
+	Info.dwMaxEndure = packet.ReadUInt32();
+	Info.dwSpeed  = packet.ReadUInt32();
+	Info.dwDistance = packet.ReadUInt32();
+	Info.dwDefence = packet.ReadUInt32();
+	Info.dwCurSupply = packet.ReadUInt32();
+	Info.dwMaxSupply = packet.ReadUInt32();
+	Info.dwConsume = packet.ReadUInt32();
+	Info.dwAttackTime = packet.ReadUInt32();
+	Info.sCapacity = packet.ReadUInt16();
 
 	NetCreateBoat( Info );
 	return TRUE;
@@ -2092,7 +2131,7 @@ T_E}
 
 BOOL SC_UpdateBoat( LPRPACKET packet )
 {T_B
-	DWORD dwBoatID = packet.ReadLong();
+	DWORD dwBoatID = packet.ReadUInt32();
 	xShipBuildInfo Info;
 	memset( &Info, 0, sizeof(xShipBuildInfo) );
 	
@@ -2101,44 +2140,44 @@ BOOL SC_UpdateBoat( LPRPACKET packet )
 	strncpy( Info.szName, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 	strncpy( Info.szDesp, packet.ReadString(), BOAT_MAXSIZE_DESP - 1 );
 	strncpy( Info.szBerth, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
-	Info.byIsUpdate = packet.ReadChar();
-	Info.sPosID = packet.ReadShort();
-	Info.dwBody = packet.ReadLong();
+	Info.byIsUpdate = packet.ReadUInt8();
+	Info.sPosID = packet.ReadUInt16();
+	Info.dwBody = packet.ReadUInt32();
 	strncpy( Info.szBody, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 	
 	if( Info.byIsUpdate )
 	{
-		Info.byHeader = packet.ReadChar();
-		Info.dwHeader = packet.ReadLong();
+		Info.byHeader = packet.ReadUInt8();
+		Info.dwHeader = packet.ReadUInt32();
 		strncpy( Info.szHeader, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-		Info.byEngine = packet.ReadChar();
-		Info.dwEngine = packet.ReadLong();
+		Info.byEngine = packet.ReadUInt8();
+		Info.dwEngine = packet.ReadUInt32();
 		strncpy( Info.szEngine, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 		for( int i = 0; i < BOAT_MAXNUM_MOTOR; i++ )
 		{
-			Info.dwMotor[i] = packet.ReadLong();
+			Info.dwMotor[i] = packet.ReadUInt32();
 		}
 	}
-	Info.byCannon = packet.ReadChar();
+	Info.byCannon = packet.ReadUInt8();
 	strncpy( Info.szCannon, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-	Info.byEquipment = packet.ReadChar();
+	Info.byEquipment = packet.ReadUInt8();
 	strncpy( Info.szEquipment, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-	Info.dwMoney = packet.ReadLong();
-	Info.dwMinAttack = packet.ReadLong();
-	Info.dwMaxAttack = packet.ReadLong();
-	Info.dwCurEndure = packet.ReadLong();
-	Info.dwMaxEndure = packet.ReadLong();
-	Info.dwSpeed  = packet.ReadLong();
-	Info.dwDistance = packet.ReadLong();
-	Info.dwDefence = packet.ReadLong();
-	Info.dwCurSupply = packet.ReadLong();
-	Info.dwMaxSupply = packet.ReadLong();
-	Info.dwConsume = packet.ReadLong();
-	Info.dwAttackTime = packet.ReadLong();
-	Info.sCapacity = packet.ReadShort();
+	Info.dwMoney = packet.ReadUInt32();
+	Info.dwMinAttack = packet.ReadUInt32();
+	Info.dwMaxAttack = packet.ReadUInt32();
+	Info.dwCurEndure = packet.ReadUInt32();
+	Info.dwMaxEndure = packet.ReadUInt32();
+	Info.dwSpeed  = packet.ReadUInt32();
+	Info.dwDistance = packet.ReadUInt32();
+	Info.dwDefence = packet.ReadUInt32();
+	Info.dwCurSupply = packet.ReadUInt32();
+	Info.dwMaxSupply = packet.ReadUInt32();
+	Info.dwConsume = packet.ReadUInt32();
+	Info.dwAttackTime = packet.ReadUInt32();
+	Info.sCapacity = packet.ReadUInt16();
 
 	NetUpdateBoat( Info );
 	return TRUE;
@@ -2146,7 +2185,7 @@ T_E}
 
 BOOL SC_BoatInfo( LPRPACKET packet )
 {T_B
-	DWORD dwBoatID = packet.ReadLong();
+	DWORD dwBoatID = packet.ReadUInt32();
 	xShipBuildInfo Info;
 	memset( &Info, 0, sizeof(xShipBuildInfo) );
 
@@ -2155,44 +2194,44 @@ BOOL SC_BoatInfo( LPRPACKET packet )
 	strncpy( Info.szName, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 	strncpy( Info.szDesp, packet.ReadString(), BOAT_MAXSIZE_DESP - 1 );
 	strncpy( Info.szBerth, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
-	Info.byIsUpdate = packet.ReadChar();
-	Info.sPosID = packet.ReadShort();
-	Info.dwBody = packet.ReadLong();
+	Info.byIsUpdate = packet.ReadUInt8();
+	Info.sPosID = packet.ReadUInt16();
+	Info.dwBody = packet.ReadUInt32();
 	strncpy( Info.szBody, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 	
 	if( Info.byIsUpdate )
 	{
-		Info.byHeader = packet.ReadChar();
-		Info.dwHeader = packet.ReadLong();
+		Info.byHeader = packet.ReadUInt8();
+		Info.dwHeader = packet.ReadUInt32();
 		strncpy( Info.szHeader, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-		Info.byEngine = packet.ReadChar();
-		Info.dwEngine = packet.ReadLong();
+		Info.byEngine = packet.ReadUInt8();
+		Info.dwEngine = packet.ReadUInt32();
 		strncpy( Info.szEngine, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 		for( int i = 0; i < BOAT_MAXNUM_MOTOR; i++ )
 		{
-			Info.dwMotor[i] = packet.ReadLong();
+			Info.dwMotor[i] = packet.ReadUInt32();
 		}
 	}
-	Info.byCannon = packet.ReadChar();
+	Info.byCannon = packet.ReadUInt8();
 	strncpy( Info.szCannon, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-	Info.byEquipment = packet.ReadChar();
+	Info.byEquipment = packet.ReadUInt8();
 	strncpy( Info.szEquipment, packet.ReadString(), BOAT_MAXSIZE_NAME - 1 );
 
-	Info.dwMoney = packet.ReadLong();
-	Info.dwMinAttack = packet.ReadLong();
-	Info.dwMaxAttack = packet.ReadLong();
-	Info.dwCurEndure = packet.ReadLong();
-	Info.dwMaxEndure = packet.ReadLong();
-	Info.dwSpeed  = packet.ReadLong();
-	Info.dwDistance = packet.ReadLong();
-	Info.dwDefence = packet.ReadLong();
-	Info.dwCurSupply = packet.ReadLong();
-	Info.dwMaxSupply = packet.ReadLong();
-	Info.dwConsume = packet.ReadLong();
-	Info.dwAttackTime = packet.ReadLong();
-	Info.sCapacity = packet.ReadShort();
+	Info.dwMoney = packet.ReadUInt32();
+	Info.dwMinAttack = packet.ReadUInt32();
+	Info.dwMaxAttack = packet.ReadUInt32();
+	Info.dwCurEndure = packet.ReadUInt32();
+	Info.dwMaxEndure = packet.ReadUInt32();
+	Info.dwSpeed  = packet.ReadUInt32();
+	Info.dwDistance = packet.ReadUInt32();
+	Info.dwDefence = packet.ReadUInt32();
+	Info.dwCurSupply = packet.ReadUInt32();
+	Info.dwMaxSupply = packet.ReadUInt32();
+	Info.dwConsume = packet.ReadUInt32();
+	Info.dwAttackTime = packet.ReadUInt32();
+	Info.sCapacity = packet.ReadUInt16();
 
 	NetBoatInfo( dwBoatID, szBoat, Info );
 	return TRUE;
@@ -2205,9 +2244,9 @@ T_E}
 
 BOOL SC_BoatList( LPRPACKET packet )
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
-	BYTE byType = packet.ReadChar();
-	BYTE byNumBoat = packet.ReadChar();
+	DWORD dwNpcID = packet.ReadUInt32();
+	BYTE byType = packet.ReadUInt8();
+	BYTE byNumBoat = packet.ReadUInt8();
 	BOAT_BERTH_DATA Data;
 	memset( &Data, 0, sizeof(BOAT_BERTH_DATA) );
 	for( BYTE i = 0; i < byNumBoat; i++ )
@@ -2221,7 +2260,7 @@ T_E}
 
 //BOOL	SC_BoatBagList( LPRPACKET packet )
 //{
-//	BYTE byNumBoat = packet.ReadChar();
+//	BYTE byNumBoat = packet.ReadUInt8();
 //	BOAT_BERTH_DATA Data;
 //	memset( &Data, 0, sizeof(BOAT_BERTH_DATA) );
 //	for( BYTE i = 0; i < byNumBoat; i++ )
@@ -2235,8 +2274,8 @@ T_E}
 
 BOOL SC_StallInfo( LPRPACKET packet )
 {T_B
-	DWORD dwCharID = packet.ReadLong();
-	BYTE byNum = packet.ReadChar();
+	DWORD dwCharID = packet.ReadUInt32();
+	BYTE byNum = packet.ReadUInt8();
 	const char* pszName = packet.ReadString();
 	if( !pszName ) return FALSE;
 
@@ -2244,39 +2283,39 @@ BOOL SC_StallInfo( LPRPACKET packet )
 
 	for( BYTE i = 0; i < byNum; ++i )
 	{
-		BYTE byGrid = packet.ReadChar();
-		USHORT sItemID = packet.ReadShort();
-		BYTE byCount = packet.ReadChar();
-		DWORD dwMoney = packet.ReadLong();
-		USHORT sType = packet.ReadShort();
+		BYTE byGrid = packet.ReadUInt8();
+		USHORT sItemID = packet.ReadUInt16();
+		BYTE byCount = packet.ReadUInt8();
+		DWORD dwMoney = packet.ReadUInt32();
+		USHORT sType = packet.ReadUInt16();
 
 		if( sType == enumItemTypeBoat )
 		{
 			NET_CHARTRADE_BOATDATA Data;
 			memset( &Data, 0, sizeof(NET_CHARTRADE_BOATDATA) );
 
-			if( packet.ReadChar() == 0 )
+			if( packet.ReadUInt8() == 0 )
 			{
 				// ��Ϣ����
 			}
 			else
 			{
 				strncpy( Data.szName, packet.ReadString(), BOAT_MAXSIZE_BOATNAME - 1 );
-				Data.sBoatID = packet.ReadShort();
-				Data.sLevel = packet.ReadShort();
-				Data.dwExp = packet.ReadLong();
-				Data.dwHp = packet.ReadLong();
-				Data.dwMaxHp = packet.ReadLong();
-				Data.dwSp = packet.ReadLong();
-				Data.dwMaxSp = packet.ReadLong();
-				Data.dwMinAttack = packet.ReadLong();
-				Data.dwMaxAttack = packet.ReadLong();
-				Data.dwDef = packet.ReadLong();
-				Data.dwSpeed = packet.ReadLong();
-				Data.dwShootSpeed = packet.ReadLong();
-				Data.byHasItem = packet.ReadChar();
-				Data.byCapacity = packet.ReadChar();
-				Data.dwPrice = packet.ReadLong();
+				Data.sBoatID = packet.ReadUInt16();
+				Data.sLevel = packet.ReadUInt16();
+				Data.dwExp = packet.ReadUInt32();
+				Data.dwHp = packet.ReadUInt32();
+				Data.dwMaxHp = packet.ReadUInt32();
+				Data.dwSp = packet.ReadUInt32();
+				Data.dwMaxSp = packet.ReadUInt32();
+				Data.dwMinAttack = packet.ReadUInt32();
+				Data.dwMaxAttack = packet.ReadUInt32();
+				Data.dwDef = packet.ReadUInt32();
+				Data.dwSpeed = packet.ReadUInt32();
+				Data.dwShootSpeed = packet.ReadUInt32();
+				Data.byHasItem = packet.ReadUInt8();
+				Data.byCapacity = packet.ReadUInt8();
+				Data.dwPrice = packet.ReadUInt32();
 				NetStallAddBoat( byGrid, sItemID, byCount, dwMoney, Data );
 			}
 		}
@@ -2286,27 +2325,27 @@ BOOL SC_StallInfo( LPRPACKET packet )
 			NET_CHARTRADE_ITEMDATA Data;
 			memset( &Data, 0, sizeof(NET_CHARTRADE_ITEMDATA) );
 
-			Data.sEndure[0] = packet.ReadShort();
-			Data.sEndure[1] = packet.ReadShort();
-			Data.sEnergy[0] = packet.ReadShort();
-			Data.sEnergy[1] = packet.ReadShort();
-			Data.byForgeLv = packet.ReadChar();
-			Data.bValid = packet.ReadChar() != 0 ? true : false;
-			Data.bItemTradable = packet.ReadChar();
-			Data.expiration = packet.ReadLong();
+			Data.sEndure[0] = packet.ReadUInt16();
+			Data.sEndure[1] = packet.ReadUInt16();
+			Data.sEnergy[0] = packet.ReadUInt16();
+			Data.sEnergy[1] = packet.ReadUInt16();
+			Data.byForgeLv = packet.ReadUInt8();
+			Data.bValid = packet.ReadUInt8() != 0 ? true : false;
+			Data.bItemTradable = packet.ReadUInt8();
+			Data.expiration = packet.ReadUInt32();
 
-			Data.lDBParam[enumITEMDBP_FORGE] = packet.ReadLong();
-			Data.lDBParam[enumITEMDBP_INST_ID] = packet.ReadLong();
+			Data.lDBParam[enumITEMDBP_FORGE] = packet.ReadUInt32();
+			Data.lDBParam[enumITEMDBP_INST_ID] = packet.ReadUInt32();
 			
 
 
-			Data.byHasAttr = packet.ReadChar();
+			Data.byHasAttr = packet.ReadUInt8();
 			if( Data.byHasAttr )
 			{
 				for( int i = 0; i < defITEM_INSTANCE_ATTR_NUM; i++ )
 				{
-					Data.sInstAttr[i][0] = packet.ReadShort();
-					Data.sInstAttr[i][1] = packet.ReadShort();
+					Data.sInstAttr[i][0] = packet.ReadUInt16();
+					Data.sInstAttr[i][1] = packet.ReadUInt16();
 				}
 			}
 			NetStallAddItem( byGrid, sItemID, byCount, dwMoney, Data );
@@ -2322,30 +2361,30 @@ T_E}
 
 BOOL SC_StallDelGoods( LPRPACKET packet )
 {T_B
-	DWORD dwCharID = packet.ReadLong();
-	BYTE byGrid = packet.ReadChar();
-	BYTE byCount = packet.ReadChar();
+	DWORD dwCharID = packet.ReadUInt32();
+	BYTE byGrid = packet.ReadUInt8();
+	BYTE byCount = packet.ReadUInt8();
 	NetStallDelGoods( dwCharID, byGrid, byCount );
 	return TRUE;
 T_E}
 
 BOOL SC_StallClose( LPRPACKET packet )
 {T_B
-	DWORD dwCharID = packet.ReadLong();
+	DWORD dwCharID = packet.ReadUInt32();
 	NetStallClose( dwCharID );
 	return TRUE;
 T_E}
 
 BOOL SC_StallSuccess( LPRPACKET packet )
 {T_B
-	DWORD dwCharID = packet.ReadLong();
+	DWORD dwCharID = packet.ReadUInt32();
 	NetStallSuccess( dwCharID );
 	return TRUE;
 T_E}
 
 BOOL SC_SynStallName(LPRPACKET packet)
 {T_B
-	DWORD dwCharID = packet.ReadLong();
+	DWORD dwCharID = packet.ReadUInt32();
 	const char	*szStallName = packet.ReadString();
 	NetStallName( dwCharID, szStallName );
 	return TRUE;
@@ -2353,7 +2392,7 @@ T_E}
 
 BOOL SC_StartExit( LPRPACKET packet )
 {T_B
-	DWORD dwExitTime = packet.ReadLong();
+	DWORD dwExitTime = packet.ReadUInt32();
 	NetStartExit( dwExitTime );
 	return TRUE;
 T_E}
@@ -2367,8 +2406,8 @@ T_E}
 BOOL SC_UpdateHairRes( LPRPACKET packet )
 {T_B
 	stNetUpdateHairRes rv;
-	rv.ulWorldID = packet.ReadLong();
-	rv.nScriptID = packet.ReadShort();
+	rv.ulWorldID = packet.ReadUInt32();
+	rv.nScriptID = packet.ReadUInt16();
 	rv.szReason = packet.ReadString();
 	rv.Exec();
 	return TRUE;
@@ -2387,16 +2426,16 @@ BOOL SC_TeamFightAsk(LPRPACKET packet)
 	strcpy(szLogName, g_oLangRec.GetString(305));
 
 	stNetTeamFightAsk SFightAsk;
-	SFightAsk.chSideNum2 = packet.ReverseReadChar();
-	SFightAsk.chSideNum1 = packet.ReverseReadChar();
+	SFightAsk.chSideNum2 = packet.ReverseReadUInt8();
+	SFightAsk.chSideNum1 = packet.ReverseReadUInt8();
 	LG(szLogName, g_oLangRec.GetString(306), SFightAsk.chSideNum1, SFightAsk.chSideNum2);
 	for (char i = 0; i < SFightAsk.chSideNum1 + SFightAsk.chSideNum2; i++)
 	{
 		SFightAsk.Info[i].szName = packet.ReadString();
-		SFightAsk.Info[i].chLv = packet.ReadChar();
+		SFightAsk.Info[i].chLv = packet.ReadUInt8();
 		SFightAsk.Info[i].szJob = packet.ReadString();
-		SFightAsk.Info[i].usFightNum = packet.ReadShort();
-		SFightAsk.Info[i].usVictoryNum = packet.ReadShort();
+		SFightAsk.Info[i].usFightNum = packet.ReadUInt16();
+		SFightAsk.Info[i].usVictoryNum = packet.ReadUInt16();
 		LG(szLogName, g_oLangRec.GetString(307), SFightAsk.Info[i].szName, SFightAsk.Info[i].chLv, SFightAsk.Info[i].szJob);
 	}
 	LG(szLogName, "\n");
@@ -2414,7 +2453,7 @@ BOOL SC_ItemRepairAsk(LPRPACKET packet)
 {T_B
 	stNetItemRepairAsk	SRepairAsk;
 	SRepairAsk.cszItemName = packet.ReadString();
-	SRepairAsk.lRepairMoney = packet.ReadLong();
+	SRepairAsk.lRepairMoney = packet.ReadUInt32();
 	SRepairAsk.Exec();
 
 	return TRUE;
@@ -2423,8 +2462,8 @@ T_E}
 BOOL SC_ItemForgeAsk(LPRPACKET packet)
 {T_B
 	stSCNetItemForgeAsk	SForgeAsk;
-	SForgeAsk.chType = packet.ReadChar();
-	SForgeAsk.lMoney = packet.ReadLong();
+	SForgeAsk.chType = packet.ReadUInt8();
+	SForgeAsk.lMoney = packet.ReadUInt32();
 	SForgeAsk.Exec();
 
 	return TRUE;
@@ -2433,9 +2472,9 @@ T_E}
 BOOL SC_ItemForgeAnswer(LPRPACKET packet)
 {T_B
 	stNetItemForgeAnswer	SForgeAnswer;
-	SForgeAnswer.lChaID = packet.ReadLong();
-	SForgeAnswer.chType = packet.ReadChar();
-	SForgeAnswer.chResult = packet.ReadChar();
+	SForgeAnswer.lChaID = packet.ReadUInt32();
+	SForgeAnswer.chType = packet.ReadUInt8();
+	SForgeAnswer.chResult = packet.ReadUInt8();
 	SForgeAnswer.Exec();
 
 	return TRUE;
@@ -2443,8 +2482,8 @@ T_E}
 
 BOOL SC_ItemUseSuc(LPRPACKET packet)
 {T_B
-	unsigned int nChaID = packet.ReadLong();
-	short sItemID = packet.ReadShort();
+	unsigned int nChaID = packet.ReadUInt32();
+	short sItemID = packet.ReadUInt16();
 	NetItemUseSuccess(nChaID, sItemID);
 
 	return TRUE;
@@ -2452,8 +2491,8 @@ T_E}
 
 BOOL SC_KitbagCapacity(LPRPACKET packet)
 {T_B
-	unsigned int nChaID = packet.ReadLong();
-	short sKbCap = packet.ReadShort();
+	unsigned int nChaID = packet.ReadUInt32();
+	short sKbCap = packet.ReadUInt16();
 	NetKitbagCapacity(nChaID, sKbCap);
 
 	return TRUE;
@@ -2462,15 +2501,15 @@ T_E}
 BOOL SC_EspeItem(LPRPACKET packet)
 {T_B
 	stNetEspeItem	SEspItem;
-	unsigned int nChaID = packet.ReadLong();
-	SEspItem.chNum = packet.ReadChar();
+	unsigned int nChaID = packet.ReadUInt32();
+	SEspItem.chNum = packet.ReadUInt8();
 	for(int i = 0; i < 1; i++)
 	{
-		SEspItem.SContent[i].sPos = packet.ReadShort();
-		SEspItem.SContent[i].sEndure = packet.ReadShort();
-		SEspItem.SContent[i].sEnergy = packet.ReadShort();
-		SEspItem.SContent[i].bItemTradable = packet.ReadChar();
-		SEspItem.SContent[i].expiration = packet.ReadLong();
+		SEspItem.SContent[i].sPos = packet.ReadUInt16();
+		SEspItem.SContent[i].sEndure = packet.ReadUInt16();
+		SEspItem.SContent[i].sEnergy = packet.ReadUInt16();
+		SEspItem.SContent[i].bItemTradable = packet.ReadUInt8();
+		SEspItem.SContent[i].expiration = packet.ReadUInt32();
 	}
 
 	NetEspeItem( nChaID, SEspItem );
@@ -2490,9 +2529,9 @@ T_E}
 BOOL	SC_Message(LPRPACKET pk)
 {T_B
 	/*
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
-    NetShowMessage( pk.ReadLong() );
+    NetShowMessage( pk.ReadUInt32() );
 	return TRUE;
 	*/
 	const char* pszDesp = pk.ReadString();
@@ -2507,15 +2546,15 @@ T_E}
 
 BOOL SC_QueryCha(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
 	stNetSysInfo	SShowInfo;
 	char	szInfo[512] = "";
 	const char	*pChaName = pk.ReadString();
 	const char	*pMapName = pk.ReadString();
-	long	lPosX = pk.ReadLong();
-	long	lPosY = pk.ReadLong();
-	long	lChaID = pk.ReadLong();
+	long	lPosX = pk.ReadUInt32();
+	long	lPosY = pk.ReadUInt32();
+	long	lChaID = pk.ReadUInt32();
 	sprintf(szInfo, g_oLangRec.GetString(308), pChaName, lChaID, pMapName, lPosX, lPosY);
 	SShowInfo.m_sysinfo = szInfo;
 	NetSysInfo(SShowInfo);
@@ -2525,20 +2564,20 @@ T_E}
 
 BOOL SC_QueryChaItem(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
 	return TRUE;
 T_E}
 
 BOOL SC_QueryChaPing(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
 	stNetSysInfo	SShowInfo;
 	char	szInfo[512] = "";
 	const char	*pChaName = pk.ReadString();
 	const char	*pMapName = pk.ReadString();
-	long	lPing = pk.ReadLong();
+	long	lPing = pk.ReadUInt32();
 	sprintf(szInfo, g_oLangRec.GetString(309), pMapName, lPing);
 	SShowInfo.m_sysinfo = szInfo;
 	NetSysInfo(SShowInfo);
@@ -2548,11 +2587,11 @@ T_E}
 
 BOOL SC_QueryRelive(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 
 	stNetQueryRelive SQueryRelive;
 	SQueryRelive.szSrcChaName = pk.ReadString();
-	SQueryRelive.chType = pk.ReadChar();
+	SQueryRelive.chType = pk.ReadUInt8();
 	NetQueryRelive(l_id, SQueryRelive);
 
 	return TRUE;
@@ -2560,7 +2599,7 @@ T_E}
 
 BOOL SC_PreMoveTime(LPRPACKET pk)
 {T_B
-	uLong ulPreMoveTime = pk.ReadLong();
+	uLong ulPreMoveTime = pk.ReadUInt32();
 	NetPreMoveTime(ulPreMoveTime);
 
 	return TRUE;
@@ -2568,10 +2607,10 @@ T_E}
 
 BOOL SC_MapMask(LPRPACKET pk)
 {T_B
-	uLong	l_id = pk.ReadLong();
+	uLong	l_id = pk.ReadUInt32();
 	uShort	usLen = 0;
 	BYTE	*pMapMask = 0;
-	if (pk.ReadChar())
+	if (pk.ReadUInt8())
 		pMapMask = (BYTE*)pk.ReadSequence(usLen);
 
 	//char	*szMask = new char[usLen + 1];
@@ -2595,7 +2634,7 @@ T_E}
 
 BOOL SC_SynSideInfo(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 	stNetChaSideInfo	SNetSideInfo;
 	ReadChaSidePacket(pk, SNetSideInfo, szLogName);
@@ -2606,7 +2645,7 @@ T_E}
 
 BOOL SC_SynAppendLook(LPRPACKET pk)
 {T_B
-	uLong l_id = pk.ReadLong();
+	uLong l_id = pk.ReadUInt32();
 	const char* szLogName = g_LogName.GetLogName( l_id );
 	stNetAppendLook	SNetAppendLook;
 	ReadChaAppendLookPacket(pk, SNetAppendLook, szLogName);
@@ -2617,7 +2656,7 @@ T_E}
 
 BOOL SC_KitbagCheckAnswer(LPRPACKET packet)
 {T_B
-	bool bLock = packet.ReadChar() ? true : false;
+	bool bLock = packet.ReadUInt8() ? true : false;
 	NetKitbagCheckAnswer(bLock);
 
     return TRUE;
@@ -2625,24 +2664,24 @@ T_E}
 
 BOOL SC_StoreOpenAnswer(LPRPACKET packet)
 {T_B
-	bool bValid = packet.ReadChar() ? true : false; // �̳��Ƿ���
+	bool bValid = packet.ReadUInt8() ? true : false; // �̳��Ƿ���
 	if(bValid)
 	{
 		g_stUIStore.ClearStoreTreeNode();
 		g_stUIStore.ClearStoreItemList();
 		//g_stUIStore.SetStoreBuyButtonEnable(true);
 
-		long lVip = packet.ReadLong(); // VIP
-		long lMoBean   = packet.ReadLong();	// Ħ��
-		long lRplMoney = packet.ReadLong();	// ���ң�ˮ����
+		long lVip = packet.ReadUInt32(); // VIP
+		long lMoBean   = packet.ReadUInt32();	// Ħ��
+		long lRplMoney = packet.ReadUInt32();	// ���ң�ˮ����
 		g_stUIStore.SetStoreMoney(lMoBean, lRplMoney);
 		g_stUIStore.SetStoreVip(lVip);
 
-		long lAfficheNum = packet.ReadLong(); // ��������
+		long lAfficheNum = packet.ReadUInt32(); // ��������
 		int i;
 		for(i = 0; i < lAfficheNum; i++)
 		{
-			long lAfficheID = packet.ReadLong(); // ����ID
+			long lAfficheID = packet.ReadUInt32(); // ����ID
 			uShort len;
 			cChar *szTitle = packet.ReadSequence(len); // �������
 			cChar *szComID = packet.ReadSequence(len); // ��Ӧ��ƷID,�ö��Ÿ���
@@ -2650,13 +2689,13 @@ BOOL SC_StoreOpenAnswer(LPRPACKET packet)
 			// ���ӹ���
 		}
 		long lFirstClass = 0;
-		long lClsNum = packet.ReadLong(); // ��������
+		long lClsNum = packet.ReadUInt32(); // ��������
 		for(i = 0; i < lClsNum; i++)
 		{
-			short lClsID = packet.ReadShort(); // ����ID
+			short lClsID = packet.ReadUInt16(); // ����ID
 			uShort len;
 			cChar *szClsName = packet.ReadSequence(len); // ������
-			short lParentID = packet.ReadShort(); // ����ID
+			short lParentID = packet.ReadUInt16(); // ����ID
 
 			// �����̳������
 			g_stUIStore.AddStoreTreeNode(lParentID, lClsID, szClsName);
@@ -2692,40 +2731,40 @@ BOOL SC_StoreListAnswer(LPRPACKET packet)
 {T_B
 	g_stUIStore.ClearStoreItemList();
 
-	short sPageNum = packet.ReadShort(); // ҳ��
-	short sPageCur = packet.ReadShort(); // ��ǰҳ
-	short sComNum = packet.ReadShort(); // ��Ʒ��
+	short sPageNum = packet.ReadUInt16(); // ҳ��
+	short sPageCur = packet.ReadUInt16(); // ��ǰҳ
+	short sComNum = packet.ReadUInt16(); // ��Ʒ��
 
 	long i;
 	for(i = 0; i < sComNum; i++)
 	{
-		long lComID = packet.ReadLong(); // ��ƷID
+		long lComID = packet.ReadUInt32(); // ��ƷID
 		uShort len;
 		cChar *szComName = packet.ReadSequence(len); // ��Ʒ����
-		long lPrice = packet.ReadLong(); // ��Ʒ�۸�
+		long lPrice = packet.ReadUInt32(); // ��Ʒ�۸�
 		cChar *szRemark = packet.ReadSequence(len); // ��Ʒ��ע
-		bool isHot = packet.ReadChar() ? true : false;	// �Ƿ���������Ʒ
-		long nTime = packet.ReadLong();
-		long lComNumber = packet.ReadLong();	// ��Ʒʣ�������-1������
-		long lComExpire = packet.ReadLong();	// ��Ʒ����ʱ��
+		bool isHot = packet.ReadUInt8() ? true : false;	// �Ƿ���������Ʒ
+		long nTime = packet.ReadUInt32();
+		long lComNumber = packet.ReadUInt32();	// ��Ʒʣ�������-1������
+		long lComExpire = packet.ReadUInt32();	// ��Ʒ����ʱ��
 
 		// ���ӵ��̳�
 		g_stUIStore.AddStoreItemInfo(i, lComID, szComName, lPrice, szRemark, isHot, nTime, lComNumber, lComExpire);
 
-		short sItemClsNum = packet.ReadShort(); // ������������
+		short sItemClsNum = packet.ReadUInt16(); // ������������
 		int j;
 		for(j = 0; j < sItemClsNum; j++)
 		{
-			short sItemID = packet.ReadShort(); // ����ID
-			short sItemNum = packet.ReadShort(); // ��������
-			short sFlute = packet.ReadShort(); // ��������
+			short sItemID = packet.ReadUInt16(); // ����ID
+			short sItemNum = packet.ReadUInt16(); // ��������
+			short sFlute = packet.ReadUInt16(); // ��������
 			short pItemAttrID[5];
 			short pItemAttrVal[5];
 			int k;
 			for(k = 0; k < 5; k++)
 			{
-				pItemAttrID[k] = packet.ReadShort(); // ����ID
-				pItemAttrVal[k] = packet.ReadShort(); // ����ֵ
+				pItemAttrID[k] = packet.ReadUInt16(); // ����ID
+				pItemAttrVal[k] = packet.ReadUInt16(); // ����ֵ
 			}
 
 			// ��Ʒϸ������
@@ -2741,7 +2780,7 @@ T_E}
 
 BOOL SC_StoreBuyAnswer(LPRPACKET packet)
 {T_B
-	bool bSucc = packet.ReadChar() ? true : false; // �����Ƿ�ɹ�
+	bool bSucc = packet.ReadUInt8() ? true : false; // �����Ƿ�ɹ�
 	long lMoBean = 0;
 	long lRplMoney = 0;
 
@@ -2749,8 +2788,8 @@ BOOL SC_StoreBuyAnswer(LPRPACKET packet)
 	// ...
 	if(bSucc)
 	{
-		//lMoBean = packet.ReadLong();
-		lRplMoney = packet.ReadLong();
+		//lMoBean = packet.ReadUInt32();
+		lRplMoney = packet.ReadUInt32();
 		g_stUIEquip.UpdateIMP(lRplMoney);
 		g_stUIStore.SetStoreMoney(-1, lRplMoney);
 	}
@@ -2765,11 +2804,11 @@ T_E}
 
 BOOL SC_StoreChangeAnswer(LPRPACKET packet)
 {T_B
-	bool bSucc = packet.ReadChar() ? true : false; // �һ������Ƿ�ɹ�
+	bool bSucc = packet.ReadUInt8() ? true : false; // �һ������Ƿ�ɹ�
 	if(bSucc)
 	{
-		long lMoBean = packet.ReadLong(); // ��ǰĦ������
-		long lRplMoney = packet.ReadLong(); // ��ǰ��������
+		long lMoBean = packet.ReadUInt32(); // ��ǰĦ������
+		long lRplMoney = packet.ReadUInt32(); // ��ǰ��������
 
 		g_stUIStore.SetStoreMoney(lMoBean, lRplMoney);
 	}
@@ -2782,39 +2821,39 @@ T_E}
 
 BOOL SC_StoreHistory(LPRPACKET packet)
 {T_B
-	long lNum = packet.ReadLong(); // ��ȡ�Ľ��׼�¼����
+	long lNum = packet.ReadUInt32(); // ��ȡ�Ľ��׼�¼����
 	int i;
 	for(i = 0; i < lNum; i++)
 	{
 		uShort len;
 		cChar *szTime = packet.ReadSequence(len); // ����ʱ��
-		long lComID = packet.ReadLong(); // ��ƷID
+		long lComID = packet.ReadUInt32(); // ��ƷID
 		cChar *szName = packet.ReadSequence(len); // ��Ʒ����
-		long lMoney = packet.ReadLong(); // ���׽��
+		long lMoney = packet.ReadUInt32(); // ���׽��
 	}
 	return TRUE;
 T_E}
 
 BOOL SC_ActInfo(LPRPACKET packet)
 {T_B
-	bool bSucc = packet.ReadChar() ? true : false; // �ʺ���Ϣ��ѯ�Ƿ�ɹ�
+	bool bSucc = packet.ReadUInt8() ? true : false; // �ʺ���Ϣ��ѯ�Ƿ�ɹ�
 	if(bSucc)
 	{
-		long lMoBean = packet.ReadLong(); // Ħ������
-		long lRplMoney = packet.ReadLong(); // ��������
+		long lMoBean = packet.ReadUInt32(); // Ħ������
+		long lRplMoney = packet.ReadUInt32(); // ��������
 	}
 	return TRUE;
 T_E}
 
 BOOL SC_StoreVIP(LPRPACKET packet)
 {T_B
-	bool bSucc = packet.ReadChar() ? true : false;
+	bool bSucc = packet.ReadUInt8() ? true : false;
 	if(bSucc)
 	{
-		short sVipID = packet.ReadShort();
-		short sMonth = packet.ReadShort();
-		long lShuijing = packet.ReadLong();
-		long lModou = packet.ReadLong();
+		short sVipID = packet.ReadUInt16();
+		short sMonth = packet.ReadUInt16();
+		long lShuijing = packet.ReadUInt32();
+		long lModou = packet.ReadUInt32();
 
 		g_stUIStore.SetStoreVip(sVipID);
 		g_stUIStore.SetStoreMoney(lModou, lShuijing);
@@ -2824,21 +2863,21 @@ T_E}
 
 BOOL SC_BlackMarketExchangeData(LPRPACKET packet)
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
 	g_stUIBlackTrade.SetNpcID(dwNpcID);
 
 	stBlackTrade SBlackTrade;
-	short sCount = packet.ReadShort();
+	short sCount = packet.ReadUInt16();
 	for(short sIndex = 0; sIndex < sCount; ++sIndex)
 	{
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
 		SBlackTrade.sIndex   = sIndex;
-		SBlackTrade.sSrcID   = packet.ReadShort();		// ������ƷID
-		SBlackTrade.sSrcNum  = packet.ReadShort();		// ������Ʒ����
-		SBlackTrade.sTarID   = packet.ReadShort();		// Ŀ����ƷID
-		SBlackTrade.sTarNum  = packet.ReadShort();		// Ŀ����Ʒ����
-		SBlackTrade.sTimeNum = packet.ReadShort();		// timeֵ
+		SBlackTrade.sSrcID   = packet.ReadUInt16();		// ������ƷID
+		SBlackTrade.sSrcNum  = packet.ReadUInt16();		// ������Ʒ����
+		SBlackTrade.sTarID   = packet.ReadUInt16();		// Ŀ����ƷID
+		SBlackTrade.sTarNum  = packet.ReadUInt16();		// Ŀ����Ʒ����
+		SBlackTrade.sTimeNum = packet.ReadUInt16();		// timeֵ
 
 		g_stUIBlackTrade.SetItem(& SBlackTrade);
 	}
@@ -2850,21 +2889,21 @@ T_E}
 
 BOOL SC_ExchangeData(LPRPACKET packet)
 {T_B
-	DWORD dwNpcID = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
 	g_stUIBlackTrade.SetNpcID(dwNpcID);
 
 	stBlackTrade SBlackTrade;
 
-	short sCount = packet.ReadShort();
+	short sCount = packet.ReadUInt16();
 	for(short sIndex = 0; sIndex < sCount; ++sIndex)
 	{
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
 		SBlackTrade.sIndex   = sIndex;
-		SBlackTrade.sSrcID   = packet.ReadShort();		// ������ƷID
-		SBlackTrade.sSrcNum  = packet.ReadShort();		// ������Ʒ����
-		SBlackTrade.sTarID   = packet.ReadShort();		// Ŀ����ƷID
-		SBlackTrade.sTarNum  = packet.ReadShort();		// Ŀ����Ʒ����
+		SBlackTrade.sSrcID   = packet.ReadUInt16();		// ������ƷID
+		SBlackTrade.sSrcNum  = packet.ReadUInt16();		// ������Ʒ����
+		SBlackTrade.sTarID   = packet.ReadUInt16();		// Ŀ����ƷID
+		SBlackTrade.sTarNum  = packet.ReadUInt16();		// Ŀ����Ʒ����
 		SBlackTrade.sTimeNum = 0;
 
 		g_stUIBlackTrade.SetItem(& SBlackTrade);
@@ -2879,23 +2918,23 @@ BOOL SC_BlackMarketExchangeUpdate(LPRPACKET packet)
 {T_B
 	//���жһ�����,ֻ���ڴ򿪺��жһ���������²Ÿ���!!!�м�
 
-	DWORD dwNpcID = packet.ReadLong();
+	DWORD dwNpcID = packet.ReadUInt32();
 	stBlackTrade SBlackTrade;
 
 	// ��ԭ�ȵĺ��жһ��������
 	g_stUIBlackTrade.ClearItemData();
 
-	short sCount = packet.ReadShort();
+	short sCount = packet.ReadUInt16();
 	for(short sIndex = 0; sIndex < sCount; ++sIndex)
 	{
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
 		SBlackTrade.sIndex   = sIndex;
-		SBlackTrade.sSrcID   = packet.ReadShort();		// ������ƷID
-		SBlackTrade.sSrcNum  = packet.ReadShort();		// ������Ʒ����
-		SBlackTrade.sTarID   = packet.ReadShort();		// Ŀ����ƷID
-		SBlackTrade.sTarNum  = packet.ReadShort();		// Ŀ����Ʒ����
-		SBlackTrade.sTimeNum = packet.ReadShort();		// timeֵ
+		SBlackTrade.sSrcID   = packet.ReadUInt16();		// ������ƷID
+		SBlackTrade.sSrcNum  = packet.ReadUInt16();		// ������Ʒ����
+		SBlackTrade.sTarID   = packet.ReadUInt16();		// Ŀ����ƷID
+		SBlackTrade.sTarNum  = packet.ReadUInt16();		// Ŀ����Ʒ����
+		SBlackTrade.sTimeNum = packet.ReadUInt16();		// timeֵ
 
 		if(g_stUIBlackTrade.GetIsShow() && g_stUIBlackTrade.GetNpcID() == dwNpcID)
 		{
@@ -2913,16 +2952,16 @@ T_E}
 
 BOOL SC_BlackMarketExchangeAsr(LPRPACKET packet)
 {T_B
-	bool bSucc = (packet.ReadChar() == 1) ? true : false;
+	bool bSucc = (packet.ReadUInt8() == 1) ? true : false;
 	if(bSucc)
 	{
 		stBlackTrade SBlackTrade;
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
-		SBlackTrade.sSrcID  = packet.ReadShort();
-		SBlackTrade.sSrcNum = packet.ReadShort();
-		SBlackTrade.sTarID  = packet.ReadShort();
-		SBlackTrade.sTarNum = packet.ReadShort();
+		SBlackTrade.sSrcID  = packet.ReadUInt16();
+		SBlackTrade.sSrcNum = packet.ReadUInt16();
+		SBlackTrade.sTarID  = packet.ReadUInt16();
+		SBlackTrade.sTarNum = packet.ReadUInt16();
 
 		g_stUIBlackTrade.ExchangeAnswerProc(bSucc, &SBlackTrade);
 	}
@@ -2932,12 +2971,12 @@ T_E}
 
 BOOL SC_TigerItemID(LPRPACKET packet)
 {T_B
-	short sNum = packet.ReadShort();	// ����
+	short sNum = packet.ReadUInt16();	// ����
 	short sItemID[3] = {0};
 
 	for(int i = 0; i < 3; i++)
 	{
-		sItemID[i] = packet.ReadShort();
+		sItemID[i] = packet.ReadUInt16();
 	}
 
 	g_stUISpirit.UpdateErnieNumber(sNum, sItemID[0], sItemID[1], sItemID[2]);
@@ -2953,9 +2992,9 @@ T_E}
 
 BOOL SC_VolunteerList(LPRPACKET packet)
 {T_B
-	short sPageNum = packet.ReadShort();	//��ҳ��
-	short sPage = packet.ReadShort();		//��ǰҳ��
-	short sRetNum = packet.ReadShort();		//־Ը������
+	short sPageNum = packet.ReadUInt16();	//��ҳ��
+	short sPage = packet.ReadUInt16();		//��ǰҳ��
+	short sRetNum = packet.ReadUInt16();		//־Ը������
 
 	g_stUIFindTeam.SetFindTeamPage(sPage, sPageNum);
 	g_stUIFindTeam.RemoveTeamInfo();
@@ -2963,8 +3002,8 @@ BOOL SC_VolunteerList(LPRPACKET packet)
 	for(int i = 0; i < sRetNum; i++)
 	{
 		const char *szName = packet.ReadString();
-		long level = packet.ReadLong();
-		long job = packet.ReadLong();
+		long level = packet.ReadUInt32();
+		long job = packet.ReadUInt32();
 		const char *szMapName = packet.ReadString();
 
 		g_stUIFindTeam.AddFindTeamInfo(i, szName, level, job, szMapName);
@@ -2975,7 +3014,7 @@ T_E}
 
 BOOL SC_VolunteerState(LPRPACKET packet)
 {T_B
-	bool bState = (packet.ReadChar() == 0) ? false : true;
+	bool bState = (packet.ReadUInt8() == 0) ? false : true;
 	g_stUIFindTeam.SetOwnFindTeamState(bState);
 
 	return TRUE;
@@ -2983,9 +3022,9 @@ T_E}
 
 BOOL SC_VolunteerOpen(LPRPACKET packet)
 {T_B
-	bool bState = (packet.ReadChar() == 0) ? false : true;
-	short sPageNum = packet.ReadShort();	//��ҳ��
-	short sRetNum = packet.ReadShort();		//־Ը������
+	bool bState = (packet.ReadUInt8() == 0) ? false : true;
+	short sPageNum = packet.ReadUInt16();	//��ҳ��
+	short sRetNum = packet.ReadUInt16();		//־Ը������
 
 	g_stUIFindTeam.SetOwnFindTeamState(bState);
 	g_stUIFindTeam.SetFindTeamPage(1, sPageNum <= 0 ? 1 : sPageNum);
@@ -2994,8 +3033,8 @@ BOOL SC_VolunteerOpen(LPRPACKET packet)
 	for(int i = 0; i < sRetNum; i++)
 	{
 		const char *szName = packet.ReadString();
-		long level = packet.ReadLong();
-		long job = packet.ReadLong();
+		long level = packet.ReadUInt32();
+		long job = packet.ReadUInt32();
 		const char *szMapName = packet.ReadString();
 
 		g_stUIFindTeam.AddFindTeamInfo(i, szName, level, job, szMapName);
@@ -3045,7 +3084,7 @@ BOOL SC_SyncTigerString(LPRPACKET packet)
 BOOL SC_MasterAsk(LPRPACKET packet)
 {
 	const char *szName = packet.ReadString(); // ����
-	DWORD dwCharID = packet.ReadLong();
+	DWORD dwCharID = packet.ReadUInt32();
 	g_stUIChat.MasterAsk(szName, dwCharID);
 	return TRUE;
 }
@@ -3053,65 +3092,65 @@ BOOL SC_MasterAsk(LPRPACKET packet)
 BOOL SC_PrenticeAsk(LPRPACKET packet)
 {
 	const char *szName = packet.ReadString(); // ����
-	DWORD dwCharID = packet.ReadLong();
+	DWORD dwCharID = packet.ReadUInt32();
 	g_stUIChat.PrenticeAsk(szName, dwCharID);
 	return TRUE;
 }
 
 BOOL PC_MasterRefresh(LPRPACKET packet)
 {
-	unsigned char l_type =packet.ReadChar();
+	unsigned char l_type =packet.ReadUInt8();
 	switch (l_type)
 	{
 	case MSG_MASTER_REFRESH_ONLINE:
 		{
-			uLong ulChaID = packet.ReadLong();
+			uLong ulChaID = packet.ReadUInt32();
 			NetMasterOnline(ulChaID);
 		}
 		break;
 	case MSG_MASTER_REFRESH_OFFLINE:
 		{
-			uLong ulChaID = packet.ReadLong();
+			uLong ulChaID = packet.ReadUInt32();
 			NetMasterOffline(ulChaID);
 		}
 		break;
 	case MSG_MASTER_REFRESH_DEL:
 		{
-			uLong ulChaID = packet.ReadLong();
+			uLong ulChaID = packet.ReadUInt32();
 			NetMasterDel(ulChaID);
 		}
 		break;
 	case MSG_MASTER_REFRESH_ADD:
 		{
 			cChar	*l_grp		=packet.ReadString();
-			uLong	l_chaid		=packet.ReadLong();
+			uLong	l_chaid		=packet.ReadUInt32();
 			cChar	*l_chaname	=packet.ReadString();
 			cChar	*l_motto	=packet.ReadString();
-			uShort	l_icon		=packet.ReadShort();
+			uShort	l_icon		=packet.ReadUInt16();
 			NetMasterAdd(l_chaid,l_chaname,l_motto,l_icon,l_grp);
 		}
 		break;
 	case MSG_MASTER_REFRESH_START:
 		{
 			stNetFrndStart l_self;
-			l_self.lChaid	=packet.ReadLong();
+			l_self.lChaid	=packet.ReadUInt32();
 			l_self.szChaname=packet.ReadString();
 			l_self.szMotto	=packet.ReadString();
-			l_self.sIconID	=packet.ReadShort();
+			l_self.sIconID	=packet.ReadUInt16();
 			stNetFrndStart l_nfs[100];
-			uShort	l_nfnum=0,l_grpnum	=packet.ReadShort();
+			uShort	l_nfnum=0,l_grpnum	=packet.ReadUInt16();
 			for(uShort l_grpi =0;l_grpi<l_grpnum;l_grpi++)
 			{
 				cChar*	l_grp		=packet.ReadString();
-				uShort	l_grpmnum	=packet.ReadShort();
+				uShort	l_grpmnum	=packet.ReadUInt16();
 				for(uShort l_grpmi =0;l_grpmi<l_grpmnum;l_grpmi++)
 				{
 					l_nfs[l_nfnum].szGroup	=l_grp;
-					l_nfs[l_nfnum].lChaid	=packet.ReadLong();
+					l_nfs[l_nfnum].lChaid	=packet.ReadUInt32();
 					l_nfs[l_nfnum].szChaname=packet.ReadString();
 					l_nfs[l_nfnum].szMotto	=packet.ReadString();
-					l_nfs[l_nfnum].sIconID	=packet.ReadShort();
-					l_nfs[l_nfnum].cStatus	=packet.ReadChar();
+					l_nfs[l_nfnum].sIconID	=packet.ReadUInt16();
+					l_nfs[l_nfnum].cStatus	=packet.ReadUInt8();
 					l_nfnum	++;
 				}
 			}
@@ -3121,54 +3160,54 @@ BOOL PC_MasterRefresh(LPRPACKET packet)
 
 	case MSG_PRENTICE_REFRESH_ONLINE:
 		{
-			uLong ulChaID = packet.ReadLong();
+			uLong ulChaID = packet.ReadUInt32();
 			NetPrenticeOnline(ulChaID);
 		}
 		break;
 	case MSG_PRENTICE_REFRESH_OFFLINE:
 		{
-			uLong ulChaID = packet.ReadLong();
+			uLong ulChaID = packet.ReadUInt32();
 			NetPrenticeOffline(ulChaID);
 		}
 		break;
 	case MSG_PRENTICE_REFRESH_DEL:
 		{
-			uLong ulChaID = packet.ReadLong();
+			uLong ulChaID = packet.ReadUInt32();
 			NetPrenticeDel(ulChaID);
 		}
 		break;
 	case MSG_PRENTICE_REFRESH_ADD:
 		{
 			cChar	*l_grp		=packet.ReadString();
-			uLong	l_chaid		=packet.ReadLong();
+			uLong	l_chaid		=packet.ReadUInt32();
 			cChar	*l_chaname	=packet.ReadString();
 			cChar	*l_motto	=packet.ReadString();
-			uShort	l_icon		=packet.ReadShort();
+			uShort	l_icon		=packet.ReadUInt16();
 			NetPrenticeAdd(l_chaid,l_chaname,l_motto,l_icon,l_grp);
 		}
 		break;
 	case MSG_PRENTICE_REFRESH_START:
 		{
 			stNetFrndStart l_self;
-			l_self.lChaid	=packet.ReadLong();
+			l_self.lChaid	=packet.ReadUInt32();
 			l_self.szChaname=packet.ReadString();
 			l_self.szMotto	=packet.ReadString();
-			l_self.sIconID	=packet.ReadShort();
+			l_self.sIconID	=packet.ReadUInt16();
 			stNetFrndStart l_nfs[100];
-			uShort	l_nfnum=0,l_grpnum	=packet.ReadShort();
+			uShort	l_nfnum=0,l_grpnum	=packet.ReadUInt16();
 			for(uShort l_grpi =0;l_grpi<l_grpnum;l_grpi++)
 			{
 				cChar*	l_grp		=packet.ReadString();
-				uShort	l_grpmnum	=packet.ReadShort();
+				uShort	l_grpmnum	=packet.ReadUInt16();
 				for(uShort l_grpmi =0;l_grpmi<l_grpmnum;l_grpmi++)
 				{
 					uShort index = l_grpmi % (sizeof(l_nfs) / sizeof(l_nfs[0]));
 					l_nfs[index].szGroup	= l_grp;
-					l_nfs[index].lChaid		= packet.ReadLong();
+					l_nfs[index].lChaid		= packet.ReadUInt32();
 					l_nfs[index].szChaname	= packet.ReadString();
 					l_nfs[index].szMotto	= packet.ReadString();
-					l_nfs[index].sIconID	= packet.ReadShort();
-					l_nfs[index].cStatus	= packet.ReadChar();
+					l_nfs[index].sIconID	= packet.ReadUInt16();
+					l_nfs[index].cStatus	= packet.ReadUInt8();
 					l_nfnum	++;
 				}
 			}
@@ -3181,18 +3220,18 @@ BOOL PC_MasterRefresh(LPRPACKET packet)
 
 BOOL PC_MasterCancel(LPRPACKET packet)
 {
-	unsigned char reason =packet.ReadChar();
-	uLong ulChaID = packet.ReadLong();
-	NetMasterCancel(packet.ReadLong(),reason);
+	unsigned char reason =packet.ReadUInt8();
+	uLong ulChaID = packet.ReadUInt32();
+	NetMasterCancel(packet.ReadUInt32(),reason);
 	return TRUE;
 }
 
 BOOL PC_MasterRefreshInfo(LPRPACKET packet)
 {
-	unsigned long l_chaid	=packet.ReadLong();
+	unsigned long l_chaid	=packet.ReadUInt32();
 	const char	* l_motto	=packet.ReadString();
-	unsigned short l_icon	=packet.ReadShort();
-	unsigned short l_degr	=packet.ReadShort();
+	unsigned short l_icon	=packet.ReadUInt16();
+	unsigned short l_degr	=packet.ReadUInt16();
 	const char	* l_job		=packet.ReadString();
 	const char	* l_guild	=packet.ReadString();
 	NetMasterRefreshInfo(l_chaid,l_motto,l_icon,l_degr,l_job,l_guild);
@@ -3201,10 +3240,10 @@ BOOL PC_MasterRefreshInfo(LPRPACKET packet)
 
 BOOL PC_PrenticeRefreshInfo(LPRPACKET packet)
 {
-	unsigned long l_chaid	=packet.ReadLong();
+	unsigned long l_chaid	=packet.ReadUInt32();
 	const char	* l_motto	=packet.ReadString();
-	unsigned short l_icon	=packet.ReadShort();
-	unsigned short l_degr	=packet.ReadShort();
+	unsigned short l_icon	=packet.ReadUInt16();
+	unsigned short l_degr	=packet.ReadUInt16();
 	const char	* l_job		=packet.ReadString();
 	const char	* l_guild	=packet.ReadString();
 	NetPrenticeRefreshInfo(l_chaid,l_motto,l_icon,l_degr,l_job,l_guild);
@@ -3213,8 +3252,8 @@ BOOL PC_PrenticeRefreshInfo(LPRPACKET packet)
 
 BOOL SC_ChaPlayEffect(LPRPACKET packet)
 {
-	unsigned int uiWorldID = packet.ReadLong();
-	int nEffectID = packet.ReadLong();
+	unsigned int uiWorldID = packet.ReadUInt32();
+	int nEffectID = packet.ReadUInt32();
 
 	NetChaPlayEffect(uiWorldID, nEffectID);
 
@@ -3236,7 +3275,7 @@ BOOL SC_GMMail(LPRPACKET packet)
 {
 	cChar *szTitle = packet.ReadString();
 	cChar *szContent = packet.ReadString();
-	long lTime = packet.ReadLong();
+	long lTime = packet.ReadUInt32();
 
 	g_stUIMail.ShowAnswerForm(szTitle, szContent);
 
@@ -3245,15 +3284,15 @@ BOOL SC_GMMail(LPRPACKET packet)
 
 BOOL SC_CheatCheck(LPRPACKET packet)
 {
-	short count = packet.ReadShort(); // ͼƬ����
+	short count = packet.ReadUInt16(); // ͼƬ����
 	for(int i = 0; i < count; i++)
 	{
 		char *picture = NULL;
-		short size = packet.ReadShort(); // ͼƬ��С
+		short size = packet.ReadUInt16(); // ͼƬ��С
 		picture = new char[size];
 		for(int j = 0; j < size; j++)
 		{
-			picture[j] = packet.ReadChar();
+			picture[j] = packet.ReadUInt8();
 		}
 
 		g_stUINumAnswer.SetBmp(i, (BYTE*)picture, size);
@@ -3269,18 +3308,18 @@ BOOL SC_CheatCheck(LPRPACKET packet)
 
 BOOL SC_ListAuction(LPRPACKET pk)
 {
-	short sNum = pk.ReverseReadShort(); // ��������
+	short sNum = pk.ReverseReadUInt16(); // ��������
 	stChurchChallenge stInfo;
 
 	for(int i = 0; i < sNum; i++)
 	{
-		short  sItemID   = pk.ReadShort();	// id
+		short  sItemID   = pk.ReadUInt16();	// id
 		cChar* szName    = pk.ReadString();	// name
 		cChar* szChaName = pk.ReadString();	// ��ս��
-		short  sCount    = pk.ReadShort();	// ����
-		long   baseprice = pk.ReadLong();	// �׼�
-		long   minbid    = pk.ReadLong();	// ��ͳ���
-		long   curprice  = pk.ReadLong();	// ��ǰ���ļ�
+		short  sCount    = pk.ReadUInt16();	// ����
+		long   baseprice = pk.ReadUInt32();	// �׼�
+		long   minbid    = pk.ReadUInt32();	// ��ͳ���
+		long   curprice  = pk.ReadUInt32();	// ��ǰ���ļ�
 
 		stInfo.sChurchID  = sItemID;
 		stInfo.sCount     = sCount;
@@ -3297,7 +3336,7 @@ BOOL SC_ListAuction(LPRPACKET pk)
 }
 
 BOOL SC_RequestDropRate(LPRPACKET pk) {
-	float rate = pk.ReadFloat();
+	float rate = pk.ReadFloat32();
 	g_DropBonus = rate;
 	if(!g_stUIStart.frmMonsterInfo->GetIsShow()) {
 		g_stUIStart.frmMonsterInfo->Show();
@@ -3308,13 +3347,13 @@ BOOL SC_RequestDropRate(LPRPACKET pk) {
 }
 
 BOOL SC_RequestExpRate(LPRPACKET pk) {
-	float rate = pk.ReadFloat();
+	float rate = pk.ReadFloat32();
 	g_ExpBonus = rate;
 	return true;
 }
 
 BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
-	const char chaDelSlot = pk.ReadChar();
+	const char chaDelSlot = pk.ReadUInt8();
 	const auto characters = ReadSelectCharacters(pk);
 	if (g_pGameApp->GetCurScene()->GetSceneTypeID() != enumSelectChaScene)
 	{
@@ -3340,29 +3379,29 @@ BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
 void ReadChaBasePacket(LPRPACKET pk, stNetActorCreate &SCreateInfo)
 {T_B
 	// ��������
-	SCreateInfo.ulChaID		= pk.ReadLong();
-	SCreateInfo.ulWorldID	= pk.ReadLong();
-	SCreateInfo.ulCommID	= pk.ReadLong();
+	SCreateInfo.ulChaID		= pk.ReadUInt32();
+	SCreateInfo.ulWorldID	= pk.ReadUInt32();
+	SCreateInfo.ulCommID	= pk.ReadUInt32();
 	SCreateInfo.szCommName	= pk.ReadString();
-	SCreateInfo.chGMLv		= pk.ReadChar();
-	SCreateInfo.lHandle		= pk.ReadLong();
-	SCreateInfo.chCtrlType	= pk.ReadChar();	// ��ɫ���ͣ��ο�CompCommand.h EChaCtrlType��
+	SCreateInfo.chGMLv		= pk.ReadUInt8();
+	SCreateInfo.lHandle		= pk.ReadUInt32();
+	SCreateInfo.chCtrlType	= pk.ReadUInt8();	// ��ɫ���ͣ��ο�CompCommand.h EChaCtrlType��
 	SCreateInfo.szName = pk.ReadString();
 	SCreateInfo.strMottoName = pk.ReadString(); // ����������
-	SCreateInfo.sIcon       = pk.ReadShort();   // ��ɫ����ͷ��
-	SCreateInfo.lGuildID = pk.ReadLong();
+	SCreateInfo.sIcon       = pk.ReadUInt16();   // ��ɫ����ͷ��
+	SCreateInfo.lGuildID = pk.ReadUInt32();
 	SCreateInfo.strGuildName = pk.ReadString(); // ������
 	SCreateInfo.strGuildMotto = pk.ReadString(); // ����������
-	SCreateInfo.chGuildPermission = pk.ReadLong(); // ����������
+	SCreateInfo.chGuildPermission = pk.ReadUInt32(); // ����������
 	SCreateInfo.strStallName = pk.ReadString(); // ����������
-	SCreateInfo.sState = pk.ReadShort();
-	SCreateInfo.SArea.centre.x = pk.ReadLong();
-	SCreateInfo.SArea.centre.y = pk.ReadLong();
-	SCreateInfo.SArea.radius = pk.ReadLong();
-	SCreateInfo.sAngle = pk.ReadShort();
-	SCreateInfo.ulTLeaderID = pk.ReadLong(); // �ӳ�ID
+	SCreateInfo.sState = pk.ReadUInt16();
+	SCreateInfo.SArea.centre.x = pk.ReadUInt32();
+	SCreateInfo.SArea.centre.y = pk.ReadUInt32();
+	SCreateInfo.SArea.radius = pk.ReadUInt32();
+	SCreateInfo.sAngle = pk.ReadUInt16();
+	SCreateInfo.ulTLeaderID = pk.ReadUInt32(); // �ӳ�ID
 	
-	SCreateInfo.chIsPlayer = pk.ReadChar();
+	SCreateInfo.chIsPlayer = pk.ReadUInt8();
 
 	const char* szLogName = g_LogName.SetLogName( SCreateInfo.ulWorldID, SCreateInfo.szName );
 	ReadChaSidePacket(pk, SCreateInfo.SSideInfo, szLogName);
@@ -3380,11 +3419,11 @@ BOOL ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag &SCurSkill, const char *s
 {T_B
 	memset(&SCurSkill, 0, sizeof(SCurSkill));
 	stNetDefaultSkill	SDefaultSkill;
-	SDefaultSkill.sSkillID = pk.ReadShort();
+	SDefaultSkill.sSkillID = pk.ReadUInt16();
 	SDefaultSkill.Exec();
 
-	SCurSkill.chType = pk.ReadChar();
-	short sSkillNum = pk.ReadShort();
+	SCurSkill.chType = pk.ReadUInt8();
+	short sSkillNum = pk.ReadUInt16();
 	if (sSkillNum <= 0)
 		return TRUE;
 
@@ -3393,17 +3432,17 @@ BOOL ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag &SCurSkill, const char *s
 	short i = 0;
 	for (; i < sSkillNum; i++)
 	{
-		pSBag[i].sID = pk.ReadShort();
-		pSBag[i].chState = pk.ReadChar();
-		pSBag[i].chLv = pk.ReadChar();
-		pSBag[i].sUseSP = pk.ReadShort();
-		pSBag[i].sUseEndure = pk.ReadShort();
-		pSBag[i].sUseEnergy = pk.ReadShort();
-		pSBag[i].lResumeTime = pk.ReadLong();
-		pSBag[i].sRange[0] = pk.ReadShort();
+		pSBag[i].sID = pk.ReadUInt16();
+		pSBag[i].chState = pk.ReadUInt8();
+		pSBag[i].chLv = pk.ReadUInt8();
+		pSBag[i].sUseSP = pk.ReadUInt16();
+		pSBag[i].sUseEndure = pk.ReadUInt16();
+		pSBag[i].sUseEnergy = pk.ReadUInt16();
+		pSBag[i].lResumeTime = pk.ReadUInt32();
+		pSBag[i].sRange[0] = pk.ReadUInt16();
 		if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
 			for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
-				pSBag[i].sRange[j] = pk.ReadShort();
+				pSBag[i].sRange[j] = pk.ReadUInt16();
 	}
 
 	// log
@@ -3427,21 +3466,21 @@ T_E}
 void ReadChaSkillStatePacket(LPRPACKET pk, stNetSkillState &SCurSState, const char* szLogName)
 {T_B
 	unsigned long currentClient = GetTickCount();	
-	unsigned long currentServer = pk.ReadLong()/1000;//current server time
+	unsigned long currentServer = pk.ReadUInt32()/1000;//current server time
 	memset(&SCurSState, 0, sizeof(SCurSState));
 	SCurSState.chType = 0;
-	short sNum = pk.ReadChar();
+	short sNum = pk.ReadUInt8();
 	if ( sNum>0 )
 	{
 		SCurSState.SState.Resize( sNum );
 		for (int nNum = 0; nNum < sNum; nNum++)
 		{
-			SCurSState.SState[nNum].chID = pk.ReadChar();
-			SCurSState.SState[nNum].chLv = pk.ReadChar();
+			SCurSState.SState[nNum].chID = pk.ReadUInt8();
+			SCurSState.SState[nNum].chLv = pk.ReadUInt8();
 			
 			
-			unsigned long duration = pk.ReadLong();//duration
-			unsigned long start = pk.ReadLong()/1000;//start time
+			unsigned long duration = pk.ReadUInt32();//duration
+			unsigned long start = pk.ReadUInt32()/1000;//start time
 			
 			
 			unsigned long dif = currentServer - currentClient;
@@ -3463,12 +3502,12 @@ T_E}
 void ReadChaAttrPacket(LPRPACKET pk, stNetChaAttr& SChaAttr, const  char* szLogName)
 {T_B
 	memset(&SChaAttr, 0, sizeof(SChaAttr));
-	SChaAttr.chType = pk.ReadChar();
-	SChaAttr.sNum = pk.ReadShort();
+	SChaAttr.chType = pk.ReadUInt8();
+	SChaAttr.sNum = pk.ReadUInt16();
 	for (short i = 0; i < SChaAttr.sNum; i++)
 	{
-		SChaAttr.SEff[i].lAttrID = pk.ReadChar();
-		SChaAttr.SEff[i].lVal = (long)pk.ReadLong();
+		SChaAttr.SEff[i].lAttrID = pk.ReadUInt8();
+		SChaAttr.SEff[i].lVal = (long)pk.ReadUInt32();
 	}
 
 	// log
@@ -3485,18 +3524,18 @@ T_E}
 void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLogName)
 {T_B
 	memset(&SLookInfo, 0, sizeof(SLookInfo));
-	SLookInfo.chSynType = pk.ReadChar();
+	SLookInfo.chSynType = pk.ReadUInt8();
 	stNetChangeChaPart	&SChaPart = SLookInfo.SLook;
-	SChaPart.sTypeID = pk.ReadShort();
-	if( pk.ReadChar() == 1 ) // �������
+	SChaPart.sTypeID = pk.ReadUInt16();
+	if( pk.ReadUInt8() == 1 ) // �������
 	{
-		SChaPart.sPosID = pk.ReadShort();
-		SChaPart.sBoatID = pk.ReadShort();
-		SChaPart.sHeader = pk.ReadShort();
-		SChaPart.sBody = pk.ReadShort();
-		SChaPart.sEngine = pk.ReadShort();
-		SChaPart.sCannon = pk.ReadShort();
-		SChaPart.sEquipment = pk.ReadShort();
+		SChaPart.sPosID = pk.ReadUInt16();
+		SChaPart.sBoatID = pk.ReadUInt16();
+		SChaPart.sHeader = pk.ReadUInt16();
+		SChaPart.sBody = pk.ReadUInt16();
+		SChaPart.sEngine = pk.ReadUInt16();
+		SChaPart.sCannon = pk.ReadUInt16();
+		SChaPart.sEquipment = pk.ReadUInt16();
 
 		// log
 		LG(szLogName, "===Recieve(Look):\tTick:[%u]\n", GetTickCount());
@@ -3507,14 +3546,14 @@ void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLog
 	}
 	else
 	{
-		SChaPart.sHairID = pk.ReadShort();
+		SChaPart.sHairID = pk.ReadUInt16();
 		SItemGrid *pItem;
 		for (int i = 0; i < enumEQUIP_NUM; i++)
 		{
 			pItem = &SChaPart.SLink[i];
-			pItem->sID = pk.ReadShort();
-			pItem->dwDBID = pk.ReadLong();
-			pItem->sNeedLv = pk.ReadShort();
+			pItem->sID = pk.ReadUInt16();
+			pItem->dwDBID = pk.ReadUInt32();
+			pItem->sNeedLv = pk.ReadUInt16();
 			if (pItem->sID == 0)
 			{
 				memset(pItem, 0, sizeof(SItemGrid));
@@ -3522,38 +3561,38 @@ void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLog
 			}
 			if (SLookInfo.chSynType == enumSYN_LOOK_CHANGE)
 			{
-				pItem->sEndure[0] = pk.ReadShort();
-				pItem->sEnergy[0] = pk.ReadShort();
-				pItem->SetValid(pk.ReadChar() != 0 ? true : false);
-				pItem->bItemTradable = pk.ReadChar();
-				pItem->expiration = pk.ReadLong();
+				pItem->sEndure[0] = pk.ReadUInt16();
+				pItem->sEnergy[0] = pk.ReadUInt16();
+				pItem->SetValid(pk.ReadUInt8() != 0 ? true : false);
+				pItem->bItemTradable = pk.ReadUInt8();
+				pItem->expiration = pk.ReadUInt32();
 				continue;
 			}
 			else
 			{
-				pItem->sNum = pk.ReadShort();
-				pItem->sEndure[0] = pk.ReadShort();
-				pItem->sEndure[1] = pk.ReadShort();
-				pItem->sEnergy[0] = pk.ReadShort();
-				pItem->sEnergy[1] = pk.ReadShort();
-				pItem->chForgeLv = pk.ReadChar();
-				pItem->SetValid(pk.ReadChar() != 0 ? true : false);
-				pItem->bItemTradable = pk.ReadChar();
-				pItem->expiration = pk.ReadLong();
+				pItem->sNum = pk.ReadUInt16();
+				pItem->sEndure[0] = pk.ReadUInt16();
+				pItem->sEndure[1] = pk.ReadUInt16();
+				pItem->sEnergy[0] = pk.ReadUInt16();
+				pItem->sEnergy[1] = pk.ReadUInt16();
+				pItem->chForgeLv = pk.ReadUInt8();
+				pItem->SetValid(pk.ReadUInt8() != 0 ? true : false);
+				pItem->bItemTradable = pk.ReadUInt8();
+				pItem->expiration = pk.ReadUInt32();
 
 			}
 
-			if (pk.ReadChar() == 0)
+			if (pk.ReadUInt8() == 0)
 				continue;
 
-			pItem->SetDBParam(enumITEMDBP_FORGE, pk.ReadLong());
-			pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadLong());
-			if (pk.ReadChar()) // ����ʵ������
+			pItem->SetDBParam(enumITEMDBP_FORGE, pk.ReadUInt32());
+			pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadUInt32());
+			if (pk.ReadUInt8()) // ����ʵ������
 			{
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 				{
-					pItem->sInstAttr[j][0] = pk.ReadShort();
-					pItem->sInstAttr[j][1] = pk.ReadShort();
+					pItem->sInstAttr[j][0] = pk.ReadUInt16();
+					pItem->sInstAttr[j][1] = pk.ReadUInt16();
 				}
 			}
 		}
@@ -3573,13 +3612,13 @@ void ReadChaLookEnergyPacket(LPRPACKET pk, stLookEnergy &SLookEnergy, const char
 	memset(&SLookEnergy, 0, sizeof(SLookEnergy));
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
-		SLookEnergy.sEnergy[i] = pk.ReadShort();
+		SLookEnergy.sEnergy[i] = pk.ReadUInt16();
 	}
 T_E}
 
 void ReadChaPKPacket(LPRPACKET pk, stNetPKCtrl &SNetPKCtrl, const char *szLogName)
 {T_B
-	char	chPKCtrl = pk.ReadChar();
+	char	chPKCtrl = pk.ReadUInt8();
 	std::bitset<8> states(chPKCtrl);
 	SNetPKCtrl.bInPK = states[0];
 	SNetPKCtrl.bInGymkhana = states[1];
@@ -3594,7 +3633,7 @@ T_E}
 
 void ReadChaSidePacket(LPRPACKET pk, stNetChaSideInfo &SNetSideInfo, const char *szLogName)
 {T_B
-	SNetSideInfo.chSideID = pk.ReadChar();
+	SNetSideInfo.chSideID = pk.ReadUInt8();
 
 	// log
 	LG(szLogName, "===Recieve(SideInfo)\tTick:[%u]\n", GetTickCount());
@@ -3607,9 +3646,9 @@ void ReadChaAppendLookPacket(LPRPACKET pk, stNetAppendLook &SNetAppendLook, cons
 {T_B
 	for (char i = 0; i < defESPE_KBGRID_NUM; i++)
 	{
-		SNetAppendLook.sLookID[i] = pk.ReadShort();
+		SNetAppendLook.sLookID[i] = pk.ReadUInt16();
 		if (SNetAppendLook.sLookID[i] != 0)
-			SNetAppendLook.bValid[i] = pk.ReadChar() != 0 ? true : false;
+			SNetAppendLook.bValid[i] = pk.ReadUInt8() != 0 ? true : false;
 	}
 
 	// log
@@ -3625,9 +3664,9 @@ T_E}
 
 void ReadEntEventPacket(LPRPACKET pk, stNetEvent &SNetEvent,const char *szLogName)
 {T_B
-	SNetEvent.lEntityID = pk.ReadLong();
-	SNetEvent.chEntityType = pk.ReadChar();
-	SNetEvent.usEventID = pk.ReadShort();
+	SNetEvent.lEntityID = pk.ReadUInt32();
+	SNetEvent.chEntityType = pk.ReadUInt8();
+	SNetEvent.usEventID = pk.ReadUInt16();
 	SNetEvent.cszEventName = pk.ReadString();
 
 	// log
@@ -3643,11 +3682,11 @@ T_E}
 void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogName)
 {T_B
 	memset(&SKitbag, 0, sizeof(SKitbag));
-	SKitbag.chType = pk.ReadChar(); // ���ο�CompCommand.h��ESynKitbagType��
+	SKitbag.chType = pk.ReadUInt8(); // ���ο�CompCommand.h��ESynKitbagType��
 	int nGridNum = 0;
 	if (SKitbag.chType == enumSYN_KITBAG_INIT) // ����������
 	{
-		SKitbag.nKeybagNum = pk.ReadShort();
+		SKitbag.nKeybagNum = pk.ReadUInt16();
 	}
 	LG(szLogName, "===Recieve(Update Kitbag):\tGridNum:%d\tType:%d\tTick:[%u]\n", SKitbag.nKeybagNum, SKitbag.chType, GetTickCount());
 	stNetKitbag::stGrid* Grid = SKitbag.Grid;
@@ -3655,28 +3694,28 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogNa
 	CItemRecord* pItemRec;
 	while (1)
 	{
-		short sGridID = pk.ReadShort();
+		short sGridID = pk.ReadUInt16();
 		if(sGridID < 0) break;
 
 		Grid[nGridNum].sGridID = sGridID;
 
 		pItem = &Grid[nGridNum].SGridContent;
-		pItem->sID = pk.ReadShort();
+		pItem->sID = pk.ReadUInt16();
 		LG(szLogName, g_oLangRec.GetString(313), Grid[nGridNum].sGridID, pItem->sID);
 		if (pItem->sID > 0) // ���ڵ���
 		{
-			pItem->dwDBID = pk.ReadLong();
-			pItem->sNeedLv		=	pk.ReadShort();
-			pItem->sNum			=	pk.ReadShort();
-			pItem->sEndure[0]	=	pk.ReadShort();
-			pItem->sEndure[1]	=	pk.ReadShort();
-			pItem->sEnergy[0]	=	pk.ReadShort();
-			pItem->sEnergy[1]	=	pk.ReadShort();
+			pItem->dwDBID = pk.ReadUInt32();
+			pItem->sNeedLv		=	pk.ReadUInt16();
+			pItem->sNum			=	pk.ReadUInt16();
+			pItem->sEndure[0]	=	pk.ReadUInt16();
+			pItem->sEndure[1]	=	pk.ReadUInt16();
+			pItem->sEnergy[0]	=	pk.ReadUInt16();
+			pItem->sEnergy[1]	=	pk.ReadUInt16();
 			LG(szLogName, g_oLangRec.GetString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1], pItem->sEnergy[0], pItem->sEnergy[1]);
-			pItem->chForgeLv = pk.ReadChar();
-			pItem->SetValid(pk.ReadChar() != 0 ? true : false);
-			pItem->bItemTradable = pk.ReadChar();
-			pItem->expiration = pk.ReadLong();
+			pItem->chForgeLv = pk.ReadUInt8();
+			pItem->SetValid(pk.ReadUInt8() != 0 ? true : false);
+			pItem->bItemTradable = pk.ReadUInt8();
+			pItem->expiration = pk.ReadUInt32();
 
 			pItemRec = GetItemRecordInfo( pItem->sID );
 			if(pItemRec==NULL)
@@ -3697,26 +3736,26 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const char *szLogNa
 
 			if( pItemRec->sType == enumItemTypeBoat ) // �����ߣ�д�봬��WorldID�����ڿͻ��˽������봬��ɫ�ҹ�
 			{
-				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadLong());
+				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadUInt32());
 			}
 
-			pItem->SetDBParam(enumITEMDBP_FORGE, pk.ReadLong());
+			pItem->SetDBParam(enumITEMDBP_FORGE, pk.ReadUInt32());
 			if( pItemRec->sType == enumItemTypeBoat ) 
 			{
-				pk.ReadLong();
+				pk.ReadUInt32();
 			}
 			else
 			{
-				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadLong());
+				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadUInt32());
 			}
 
 			LG(szLogName, g_oLangRec.GetString(316), pItem->GetDBParam(enumITEMDBP_FORGE));
-			if (pk.ReadChar()) // ����ʵ������
+			if (pk.ReadUInt8()) // ����ʵ������
 			{
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 				{
-					pItem->sInstAttr[j][0] = pk.ReadShort();
-					pItem->sInstAttr[j][1] = pk.ReadShort();
+					pItem->sInstAttr[j][0] = pk.ReadUInt16();
+					pItem->sInstAttr[j][1] = pk.ReadUInt16();
 					LG(szLogName, g_oLangRec.GetString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]);
 				}
 			}
@@ -3738,8 +3777,8 @@ void ReadChaShortcutPacket(LPRPACKET pk, stNetShortCut &SShortcut, const char* s
 	LG(szLogName, "===Recieve(Update Shortcut):\tTick:[%u]\n", GetTickCount());
 	for (int i = 0; i < SHORT_CUT_NUM; i++)
 	{
-		SShortcut.chType[i] = pk.ReadChar();
-		SShortcut.byGridID[i] = pk.ReadShort();
+		SShortcut.chType[i] = pk.ReadUInt8();
+		SShortcut.byGridID[i] = pk.ReadUInt16();
 		LG(szLogName, g_oLangRec.GetString(321), SShortcut.chType[i], SShortcut.byGridID[i]);
 	}
 T_E}
@@ -3754,9 +3793,9 @@ BOOL PC_PKSilver(LPRPACKET packet)
     for(int i = 0; i < MAX_PKSILVER_PLAYER; i++)
     {
         szName = packet.ReadString();
-        sLevel = packet.ReadLong();
+        sLevel = packet.ReadUInt32();
         szProfession = packet.ReadString();
-        lPkval = packet.ReadLong();
+        lPkval = packet.ReadUInt32();
         g_stUIPKSilver.AddFormAttribute(i, szName, sLevel, szProfession, lPkval);
     }
 
@@ -3767,7 +3806,7 @@ T_E}
 
 BOOL SC_LifeSkillShow(LPRPACKET packet)
 {T_B
-    long lType = packet.ReadLong();
+    long lType = packet.ReadUInt32();
     switch(lType)
     {
     case 0:     //  �ϳ�
@@ -3793,8 +3832,8 @@ T_E}
 
 BOOL SC_LifeSkill(LPRPACKET packet)
 {T_B
-    long lType = packet.ReadLong();
-    short ret = packet.ReadShort();
+    long lType = packet.ReadUInt32();
+    short ret = packet.ReadUInt16();
     std::string txt = packet.ReadString();
 
     switch(lType)
@@ -3825,8 +3864,8 @@ T_E}
 
 BOOL SC_LifeSkillAsr(LPRPACKET packet)
 {T_B
-    long lType = packet.ReadLong();
-    short tim = packet.ReadShort();
+    long lType = packet.ReadUInt32();
+    short tim = packet.ReadUInt16();
     std::string txt = packet.ReadString();
 
     switch(lType)
@@ -3855,7 +3894,7 @@ T_E}
 BOOL	SC_DropLockAsr(LPRPACKET	pk)
 {
 	T_B
-	const auto success = pk.ReadChar();
+	const auto success = pk.ReadUInt8();
 	if (success)
 	{
 		g_pGameApp->SysInfo("Locking successful!");
@@ -3874,7 +3913,7 @@ BOOL SC_UnlockItemAsr(LPRPACKET pk)
 	T_B
 		g_pGameApp->SysInfo(
 			[&] {
-				switch (pk.ReadChar()) {
+				switch (pk.ReadUInt8()) {
 				case 1:
 					return "Item Unlocked";
 				case 2:

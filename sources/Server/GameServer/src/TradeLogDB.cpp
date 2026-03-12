@@ -26,10 +26,11 @@ BOOL CTradeLogDB::Init()
 		//	LG("gamedb", "Database  Password Error!");
 		//	return FALSE;
 		//}
-		bool r = _connect.connect(g_Config.m_szTradeLogDBIP, g_Config.m_szTradeLogDBName, g_Config.m_szTradeLogDBUsr, g_Config.m_szTradeLogDBPass, err_info);
+		static const char* s_szDsn = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=gamedb;Trusted_Connection=Yes;";
+		bool r = _connect.connect(s_szDsn, err_info);
 		if(!r)
 		{
-			LG("trade log db", "msgDatabase [%s] Connect Failed!, ERROR REPORT[%d]", g_Config.m_szTradeLogDBName, err_info.c_str() );
+			LG("trade log db", "Database Connect Failed!, ERROR REPORT[%s]", err_info.c_str() );
 			return FALSE;
 		}
 

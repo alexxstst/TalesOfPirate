@@ -3772,17 +3772,16 @@ BOOL CGameDB::Init()
 
     _connect.enable_errinfo();
 
-	printf("Connecting database [%s : %s]... ", g_Config.m_szDBIP, g_Config.m_szDBName);
+	static const char* s_szDsn = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=gamedb;Trusted_Connection=Yes;";
+	printf("Connecting database [%s]... ", s_szDsn);
 
 	string err_info;
 
-	bool r = _connect.connect(g_Config.m_szDBIP, g_Config.m_szDBName, g_Config.m_szDBUsr, g_Config.m_szDBPass, err_info);
+	bool r = _connect.connect(s_szDsn, err_info);
     if(!r)
     {
-		char msg[256];
-		_snprintf_s(msg, _countof(msg), _TRUNCATE, "Database [%s] Connection Failed!", g_Config.m_szDBName);
-		MessageBox(NULL, msg, "Database Connection Error" , MB_ICONERROR | MB_OK);
-		LG("gamedb", "msgDatabase [%s] Connect Failed!, ERROR REPORT[%d]", g_Config.m_szDBName, err_info.c_str() );
+		MessageBox(NULL, "Database Connection Failed!", "Database Connection Error" , MB_ICONERROR | MB_OK);
+		LG("gamedb", "Database Connect Failed!, ERROR REPORT[%s]", err_info.c_str() );
         return FALSE;
     }
 	C_PRINT("sucess!\n");

@@ -11,26 +11,22 @@
 #include "AreaRecord.h"
 
 using namespace std;
+// Crypto++ — BLAKE2s для хеширования пароля при логине
 #include "blake2.h"
 #include "hex.h"
+#include "filters.h"
 #ifdef _TEST_CLIENT
 #include "..\..\TestClient\testclient.h"
 #endif
 
-_DBC_USING
+// Типы uChar, uShort, uLong, cChar определены в NetIF.h
 
 
 void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CActionState* pState )
 {
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_BEGINACTION);
-#ifdef _TEST_CLIENT
-	CTestClient* pClient = reinterpret_cast<CTestClient*>( g_NetIF->m_connect.GetDatasock()->GetPointer() );
-	DWORD dwCharID=(pCha)?pCha->getAttachID():pClient->GetCharID();
-	pk.WriteLong(dwCharID);
-#else
-	pk.WriteLong(pCha->getAttachID());
-#endif
+	pk.WriteUInt32(pCha->getAttachID());
 
     char	szLogName[1024] = { "BeginAction" };
 
@@ -44,9 +40,9 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		LG(szLogName, "$$$PacketID:\t%d\n", pCNetIf->m_ulPacketCount);
 
 #ifdef defPROTOCOL_HAVE_PACKETID
-		pk.WriteLong(pCNetIf->m_ulPacketCount++);
+		pk.WriteUInt32(pCNetIf->m_ulPacketCount++);
 #endif
-		pk.WriteChar((dbc::uChar)type);
+		pk.WriteUInt8((uint8_t)type);
 		switch (type)
 		{
 		case	enumACTION_MOVE:
@@ -99,15 +95,15 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_SKILL:
 			{
 				stNetSkillInfo *pSkill = (stNetSkillInfo *)param;
-				pk.WriteChar(pSkill->chMove);
-				pk.WriteChar(pSkill->byFightID);
+				pk.WriteUInt8(pSkill->chMove);
+				pk.WriteUInt8(pSkill->byFightID);
 				if (pSkill->chMove == 2)
 				{
 					pk.WriteSequence((cChar *)pSkill->SMove.pos_buf, uShort(sizeof(POINT) * pSkill->SMove.pos_num));
 				}
-				pk.WriteLong(pSkill->lSkillID);
-				pk.WriteLong(pSkill->lTarInfo1);
-				pk.WriteLong(pSkill->lTarInfo2);
+				pk.WriteUInt32(pSkill->lSkillID);
+				pk.WriteUInt32(pSkill->lTarInfo1);
+				pk.WriteUInt32(pSkill->lTarInfo2);
 
 				//for (int n = 0; n < 200; ++n)
 				//{
@@ -131,7 +127,7 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 			}
 		case	enumACTION_STOP_STATE:
 			{
-				pk.WriteShort(*((short *)param));
+				pk.WriteUInt16(*((short *)param));
 				pCNetIf->SendPacketMessage(pk);
 
 				// log
@@ -143,11 +139,11 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_LEAN: // �п�
 			{
 				stNetLeanInfo *pSLean = (stNetLeanInfo *)param;
-				pk.WriteLong(pSLean->lPose);
-				pk.WriteLong(pSLean->lAngle);
-				pk.WriteLong(pSLean->lPosX);
-				pk.WriteLong(pSLean->lPosY);
-				pk.WriteLong(pSLean->lHeight);
+				pk.WriteUInt32(pSLean->lPose);
+				pk.WriteUInt32(pSLean->lAngle);
+				pk.WriteUInt32(pSLean->lPosX);
+				pk.WriteUInt32(pSLean->lPosY);
+				pk.WriteUInt32(pSLean->lHeight);
 				pCNetIf->SendPacketMessage(pk);
 
 				// log
@@ -159,8 +155,8 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_PICK: // �����
 			{
 				stNetItemPick *pPick = (stNetItemPick *)param;
-				pk.WriteLong(pPick->lWorldID);
-				pk.WriteLong(pPick->lHandle);
+				pk.WriteUInt32(pPick->lWorldID);
+				pk.WriteUInt32(pPick->lHandle);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Pick):\tTick:[%d]\n", GetTickCount());
@@ -170,10 +166,10 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_THROW: // ������
 			{
 				stNetItemThrow *pThrow = (stNetItemThrow *)param;
-				pk.WriteShort(pThrow->sGridID);
-				pk.WriteShort((short)pThrow->lNum);
-				pk.WriteLong(pThrow->lPosX);
-				pk.WriteLong(pThrow->lPosY);
+				pk.WriteUInt16(pThrow->sGridID);
+				pk.WriteUInt16((short)pThrow->lNum);
+				pk.WriteUInt32(pThrow->lPosX);
+				pk.WriteUInt32(pThrow->lPosY);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Throw):\tTick:[%d]\n", GetTickCount());
@@ -183,8 +179,8 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_USE:
 			{
 				stNetUseItem *pUseItem = (stNetUseItem *)param;
-				pk.WriteShort(pUseItem->sGridID);
-				pk.WriteShort(pUseItem->sTarGridID);
+				pk.WriteUInt16(pUseItem->sGridID);
+				pk.WriteUInt16(pUseItem->sTarGridID);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Use Item):\tTick:[%d]\n", GetTickCount());
@@ -195,12 +191,12 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_UNFIX: // жװ����
 			{
 				stNetItemUnfix *pUnfix = (stNetItemUnfix *)param;
-				pk.WriteChar(pUnfix->chLinkID);
-				pk.WriteShort(pUnfix->sGridID);
+				pk.WriteUInt8(pUnfix->chLinkID);
+				pk.WriteUInt16(pUnfix->sGridID);
 				if (pUnfix->sGridID < 0) // ��������
 				{
-					pk.WriteLong(pUnfix->lPosX);
-					pk.WriteLong(pUnfix->lPosY);
+					pk.WriteUInt32(pUnfix->lPosX);
+					pk.WriteUInt32(pUnfix->lPosY);
 				}
 				pCNetIf->SendPacketMessage(pk);
 
@@ -211,9 +207,9 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_POS:
 			{
 				stNetItemPos *pChangePos = (stNetItemPos *)param;
-				pk.WriteShort(pChangePos->sSrcGridID);
-				pk.WriteShort(pChangePos->sSrcNum);
-				pk.WriteShort(pChangePos->sTarGridID);
+				pk.WriteUInt16(pChangePos->sSrcGridID);
+				pk.WriteUInt16(pChangePos->sSrcNum);
+				pk.WriteUInt16(pChangePos->sTarGridID);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Item pos):\tTick:[%d]\n", GetTickCount());
@@ -223,7 +219,7 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_DELETE:
 			{
 				stNetDelItem *pDelItem = (stNetDelItem *)param;
-				pk.WriteShort(pDelItem->sGridID);
+				pk.WriteUInt16(pDelItem->sGridID);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Del Item):\tTick:[%d]\n", GetTickCount());
@@ -234,8 +230,8 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_ITEM_INFO:
 			{
 				stNetItemInfo *pItemInfo = (stNetItemInfo *)param;
-				pk.WriteChar(pItemInfo->chType);
-				pk.WriteShort(pItemInfo->sGridID);
+				pk.WriteUInt8(pItemInfo->chType);
+				pk.WriteUInt16(pItemInfo->sGridID);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Item Info):\tTick:[%d]\n", GetTickCount());
@@ -247,21 +243,21 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_SHORTCUT: // ���¿����
 			{
 				stNetShortCutChange *pShortcutChange = (stNetShortCutChange *)param;
-				pk.WriteChar(pShortcutChange->chIndex);
-				pk.WriteChar(pShortcutChange->chType);
-				pk.WriteShort(pShortcutChange->shyGrid);
+				pk.WriteUInt8(pShortcutChange->chIndex);
+				pk.WriteUInt8(pShortcutChange->chType);
+				pk.WriteUInt16(pShortcutChange->shyGrid);
 				//pk.WriteByte(pShortcutChange->shyGrid2==-1?0:1);
-				//pk.WriteShort(pShortcutChange->shyGrid2);
+				//pk.WriteUInt16(pShortcutChange->shyGrid2);
 				pCNetIf->SendPacketMessage(pk);
 				break;
 			}
 		case	enumACTION_LOOK: // ������ۣ��紬�Ļ�װ��
 			{
 				stNetChangeChaPart *pSChaPart = (stNetChangeChaPart *)param;
-				pk.WriteShort(pSChaPart->sTypeID);
+				pk.WriteUInt16(pSChaPart->sTypeID);
 				for (int i = 0; i < enumEQUIP_NUM; i++)
 				{
-					pk.WriteShort(pSChaPart->SLink[i].sID);
+					pk.WriteUInt16(pSChaPart->SLink[i].sID);
 				}
 				pCNetIf->SendPacketMessage(pk);
 
@@ -272,8 +268,8 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_TEMP: //��ʱ��װЭ��
 			{
 				stTempChangeChaPart *pSTempChaPart = (stTempChangeChaPart *)param;
-				pk.WriteLong(pSTempChaPart->dwItemID);
-				pk.WriteLong(pSTempChaPart->dwPartID);
+				pk.WriteUInt32(pSTempChaPart->dwItemID);
+				pk.WriteUInt32(pSTempChaPart->dwPartID);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Temp):\tTick:[%d]\n", GetTickCount());
@@ -283,9 +279,9 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_EVENT: // �����¼�
 			{
 				stNetActivateEvent *pEvent = (stNetActivateEvent *)param;
-				pk.WriteLong(pEvent->lTargetID);
-				pk.WriteLong(pEvent->lHandle);
-				pk.WriteShort(pEvent->sEventID);
+				pk.WriteUInt32(pEvent->lTargetID);
+				pk.WriteUInt32(pEvent->lHandle);
+				pk.WriteUInt16(pEvent->sEventID);
                 pCNetIf->SendPacketMessage(pk);
 
 				// log
@@ -297,8 +293,8 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_FACE:
 			{
 				stNetFace	*pNetFace = (stNetFace *)param;
-				pk.WriteShort(pNetFace->sAngle);
-				pk.WriteShort(pNetFace->sPose);
+				pk.WriteUInt16(pNetFace->sAngle);
+				pk.WriteUInt16(pNetFace->sPose);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Face):\tTick:[%d]\n", GetTickCount());
@@ -308,8 +304,8 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_SKILL_POSE:
 			{
 				stNetFace	*pNetFace = (stNetFace *)param;
-				pk.WriteShort(pNetFace->sAngle);
-				pk.WriteShort(pNetFace->sPose);
+				pk.WriteUInt16(pNetFace->sAngle);
+				pk.WriteUInt16(pNetFace->sPose);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Skill Pos):\tTick:[%d]\n", GetTickCount());
@@ -320,11 +316,11 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_BANK:
 			{
 				stNetBank	*pNetBank = (stNetBank *)param;
-				pk.WriteChar(pNetBank->chSrcType);
-				pk.WriteShort(pNetBank->sSrcID);
-				pk.WriteShort(pNetBank->sSrcNum);
-				pk.WriteChar(pNetBank->chTarType);
-				pk.WriteShort(pNetBank->sTarID);
+				pk.WriteUInt8(pNetBank->chSrcType);
+				pk.WriteUInt16(pNetBank->sSrcID);
+				pk.WriteUInt16(pNetBank->sSrcNum);
+				pk.WriteUInt8(pNetBank->chTarType);
+				pk.WriteUInt16(pNetBank->sTarID);
 				pCNetIf->SendPacketMessage(pk);
 
                 LG(szLogName, "###Send(Bank Req):\tTick:[%d]\n", GetTickCount());
@@ -342,7 +338,7 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 		case	enumACTION_REQUESTGUILDLOGS:
 			{
 				uShort* curSize = reinterpret_cast<uShort*> (param);
-				pk.WriteShort(*curSize);
+				pk.WriteUInt16(*curSize);
 
 				pCNetIf->SendPacketMessage(pk);
 				break;
@@ -366,9 +362,9 @@ void CProCirculateCS::BeginAction( CCharacter* pCha, DWORD type, void* param, CA
 			{
 				stNetTempKitbag* pNetTempKitbag = (stNetTempKitbag*)param;
 
-				pk.WriteShort(pNetTempKitbag->sSrcGridID);
-				pk.WriteShort(pNetTempKitbag->sSrcNum);
-				pk.WriteShort(pNetTempKitbag->sTarGridID);
+				pk.WriteUInt16(pNetTempKitbag->sSrcGridID);
+				pk.WriteUInt16(pNetTempKitbag->sSrcNum);
+				pk.WriteUInt16(pNetTempKitbag->sTarGridID);
 
 				pCNetIf->SendPacketMessage(pk);
 				break;
@@ -411,26 +407,76 @@ void CProCirculate::Disconnect(int reason)
 
 bool CProCirculate::SendPrivateKey()
 {
-	CryptoPP::RSAES_OAEP_SHA_Encryptor e(g_NetIF->srvPublicKey);
-	// Get AES Private Key -> Encrypt w/ srvPublicKey -> Base64Encode
-	string spki_private;
-	string cipher_private;
-	string base64encoded_private;
-	CryptoPP::StringSource ss(g_NetIF->cliPrivateKey.data(), g_NetIF->cliPrivateKey.size(), true, new CryptoPP::PK_EncryptorFilter(g_NetIF->rng, e, new CryptoPP::StringSink(cipher_private)));
-	CryptoPP::StringSource ss2(cipher_private, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(base64encoded_private)));
+	// 1. Генерация 32-байт AES-256 ключа
+	NTSTATUS status = BCryptGenRandom(NULL, g_NetIF->cliAesKey, 32, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptGenRandom (AES key) failed: 0x%08X\n", status);
+		return false;
+	}
 
+	// 2. RSA-OAEP-SHA256 шифрование AES ключа публичным ключом сервера
+	BCRYPT_OAEP_PADDING_INFO oaepInfo = {};
+	oaepInfo.pszAlgId = BCRYPT_SHA256_ALGORITHM;
+	oaepInfo.pbLabel = NULL;
+	oaepInfo.cbLabel = 0;
 
+	// Определяем размер зашифрованных данных
+	ULONG encryptedLen = 0;
+	status = BCryptEncrypt(
+		g_NetIF->hRsaPubKey,
+		g_NetIF->cliAesKey, 32,
+		&oaepInfo,
+		NULL, 0,
+		NULL, 0, &encryptedLen,
+		BCRYPT_PAD_OAEP);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptEncrypt (RSA size query) failed: 0x%08X\n", status);
+		return false;
+	}
+
+	// Шифруем
+	std::vector<BYTE> encryptedKey(encryptedLen);
+	ULONG resultLen = 0;
+	status = BCryptEncrypt(
+		g_NetIF->hRsaPubKey,
+		g_NetIF->cliAesKey, 32,
+		&oaepInfo,
+		NULL, 0,
+		encryptedKey.data(), encryptedLen, &resultLen,
+		BCRYPT_PAD_OAEP);
+	if (!BCRYPT_SUCCESS(status)) {
+		LG("enc", "BCryptEncrypt (RSA encrypt) failed: 0x%08X\n", status);
+		return false;
+	}
+
+	// Логируем AES ключ и зашифрованные данные
+	{
+		std::string aesHex, encHex;
+		aesHex.reserve(64);
+		encHex.reserve(resultLen * 2);
+		char buf[3];
+		for (int i = 0; i < 32; i++) { sprintf(buf, "%02x", g_NetIF->cliAesKey[i]); aesHex += buf; }
+		for (ULONG i = 0; i < resultLen; i++) { sprintf(buf, "%02x", encryptedKey[i]); encHex += buf; }
+		LG("enc", "SendPrivateKey: AES-256 key (32 bytes):\n%s\n", aesHex.c_str());
+		LG("enc", "SendPrivateKey: RSA-encrypted key (%u bytes):\n%s\n", resultLen, encHex.c_str());
+	}
+
+	// 3. Инициализация BCrypt AES ключа для симметричного шифрования
+	if (!g_NetIF->InitAesKey()) {
+		LG("enc", "InitAesKey failed\n");
+		return false;
+	}
+
+	// 4. Отправка зашифрованного AES ключа серверу (сырые байты, без Base64)
 	WPacket pk = pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_SEND_PRIVATE_KEY);
-	// Send cipher to GateServer
-	pk.WriteString(base64encoded_private.c_str());
-	
+	pk.WriteSequence(reinterpret_cast<const char*>(encryptedKey.data()), static_cast<uShort>(resultLen));
+
 	pCNetIf->SendPacketMessage(pk);
 	g_NetIF->handshakeDone = true;
 	g_NetIF->_comm_enc = true;
 	g_NetIF->m_connect.CHAPSTR(false);
 	return true;
-
 }
 
 
@@ -456,8 +502,8 @@ void CProCirculate::Login(const char *accounts,const char *password, const char*
 	string strMac=GetMacString();
 	if (strMac.empty()) strMac="Unknown";
 	pk.WriteString(strMac.c_str());
-	pk.WriteShort(911);
-	pk.WriteShort(g_sClientVer);
+	pk.WriteUInt16(911);
+	pk.WriteUInt16(g_sClientVer);
 
 	pCNetIf->SendPacketMessage(pk);
 }
@@ -466,14 +512,15 @@ void CProCirculate::Logout()
 {
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_LOGOUT);
-	pCNetIf->SyncSendPacketMessage(pk,3000);
+	pCNetIf->SendPacketMessage(pk);
+	Sleep(1000); // Даём серверу время обработать logout
 }
 
 void CProCirculate::BeginPlay(char cha_index)
 {
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_BGNPLAY);
-	pk.WriteChar(cha_index);
+	pk.WriteUInt8(cha_index);
 
 	pCNetIf->SendPacketMessage(pk);
 }
@@ -491,9 +538,9 @@ void CProCirculate::NewCha(const char* chaname, const char* birth, int type, int
 	pk.WriteCmd(CMD_CM_NEWCHA);
 	pk.WriteString(chaname);
 	pk.WriteString(birth);
-	pk.WriteLong(type);
-	pk.WriteLong(hair);
-	pk.WriteLong(face);
+	pk.WriteUInt32(type);
+	pk.WriteUInt32(hair);
+	pk.WriteUInt32(face);
 	pCNetIf->SendPacketMessage(pk);
 }
 
@@ -501,7 +548,7 @@ void CProCirculate::DelCha(uint8_t cha_index, const char szPassword2[])
 {
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_DELCHA);
-	pk.WriteChar(cha_index);
+	pk.WriteUInt8(cha_index);
 	pk.WriteString(szPassword2);
 
 	pCNetIf->SendPacketMessage(pk);
@@ -536,13 +583,13 @@ void CProCirculate::SynBaseAttribute(CChaAttr *pCAttr)
 
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_SYNATTR);	
-	pk.WriteChar(chAttrNum);
+	pk.WriteUInt8(chAttrNum);
 	for (int i = ATTR_STR; i <= ATTR_LUK; i++)
 	{
 		if (pCAttr->GetChangeBitFlag(i))
 		{
-			pk.WriteShort(i);
-			pk.WriteLong((uLong)pCAttr->GetAttr(i));
+			pk.WriteUInt16(i);
+			pk.WriteUInt32((uLong)pCAttr->GetAttr(i));
 		}
 	}
 
@@ -565,8 +612,8 @@ void CProCirculate::RefreshChaData(long lWorldID, long lHandle)
 {
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_REFRESH_DATA);	
-	pk.WriteLong(lWorldID);
-	pk.WriteLong(lHandle);
+	pk.WriteUInt32(lWorldID);
+	pk.WriteUInt32(lHandle);
 
 	pCNetIf->SendPacketMessage(pk);
 }
@@ -575,8 +622,8 @@ void CProCirculate::SkillUpgrade(short sSkillID, char chAddLv)
 {
 	WPacket pk	=pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_SKILLUPGRADE);	
-	pk.WriteShort(sSkillID);
-	pk.WriteChar(chAddLv);
+	pk.WriteUInt16(sSkillID);
+	pk.WriteUInt8(chAddLv);
 
 	// log
 	char szReqChangeAttr[256] = {0};

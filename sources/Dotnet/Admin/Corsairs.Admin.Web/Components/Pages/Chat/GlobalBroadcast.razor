@@ -1,0 +1,55 @@
+@page "/broadcast"
+@using Corsairs.Platform.Grpc.Contracts.Group
+@using Corsairs.Platform.Grpc.Contracts.Gate
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject GroupAdmin.GroupAdminClient GroupClient
+@inject GateAdmin.GateAdminClient GateClient
+
+<PageTitle>Рассылка - Corsairs Admin</PageTitle>
+
+<h1 class="text-2xl font-bold mb-6">Глобальная рассылка</h1>
+
+<div class="card bg-base-100 shadow max-w-xl">
+    <div class="card-body">
+        <div class="form-control">
+            <label class="label"><span class="label-text">Сообщение</span></label>
+            <textarea class="textarea textarea-bordered h-24" placeholder="Текст уведомления..." @bind="_message"></textarea>
+        </div>
+        <div class="card-actions justify-end mt-4">
+            <button class="btn btn-primary" @onclick="SendToGate" disabled="@string.IsNullOrWhiteSpace(_message)">Через Gate (клиентам)</button>
+            <button class="btn btn-secondary" @onclick="SendGlobal" disabled="@string.IsNullOrWhiteSpace(_message)">Через Group (чат)</button>
+        </div>
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(_result))
+{
+    <div class="alert alert-info mt-4 max-w-xl">@_result</div>
+}
+
+@code {
+    private string _message = "";
+    private string? _result;
+
+    private async Task SendToGate()
+    {
+        try
+        {
+            var r = await GateClient.BroadcastNoticeAsync(new NoticeRequest { Message = _message });
+            _result = r.Message;
+            _message = "";
+        }
+        catch (Exception ex) { _result = ex.Message; }
+    }
+
+    private async Task SendGlobal()
+    {
+        try
+        {
+            var r = await GroupClient.SendGlobalMessageAsync(new GlobalMessageRequest { Message = _message });
+            _result = r.Message;
+            _message = "";
+        }
+        catch (Exception ex) { _result = ex.Message; }
+    }
+}

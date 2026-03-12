@@ -678,12 +678,7 @@ bool AuthThread::Connect()
         return false;
     }
 
-    // Á¬½Ódatabase
-    char conn_str[512] = {0};
-    char const* conn_fmt = "DRIVER={SQL Server};SERVER=%s;UID=%s;PWD=%s;DATABASE=%s";
-    sprintf(conn_str, conn_fmt, m_strSrvip.c_str(), m_strUserId.c_str(),
-            m_strUserPwd.c_str(), m_strSrvdb.c_str());
-    ret = m_pAuth->Open(conn_str);
+    ret = m_pAuth->Open(m_strDsn.c_str());
     if (ret) {
         m_pAuth->SetAutoCommit(true);
     } else {
@@ -720,10 +715,7 @@ void AuthThread::LoadConfig()
     try {
 		IniFile inf(g_strCfgFile.c_str());
 		IniSection& is = inf["db"];
-		m_strSrvip = is["dbserver"];
-		m_strSrvdb = is["db"];
-		m_strUserId = is["userid"];
-		m_strUserPwd = is["passwd"];
+		m_strDsn = is["dsnAccountDb"];
     } catch (excp& e) {
         cout << e.what() << endl;
         getchar();

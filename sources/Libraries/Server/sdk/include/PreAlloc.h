@@ -234,9 +234,6 @@ private:
 	PreAllocStru* newT(uLong size)
 	{
 		PreAllocStru	*l_t =new T(size);
-#ifdef _DEBUG
-		std::cout << "PreAllocStru: " << typeid(T).name() << std::endl;
-#endif
 		if(l_t)
 		{
 			l_t->__preAllocHeap	=reinterpret_cast<PreAllocHeap<PreAllocStru>*>(this);

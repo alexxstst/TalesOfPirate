@@ -4,7 +4,7 @@
 
 class CSQLDatabase;
 
-//此类只允许主线程调用
+//锟斤拷锟斤拷只锟斤拷锟斤拷锟斤拷锟竭程碉拷锟斤拷
 class CDataBaseCtrl
 {
 public:
@@ -38,10 +38,7 @@ private:
 	void Disconnect();
 
 private:
-	std::string m_strServerIP;
-	std::string m_strServerDB;
-	std::string m_strUserID;
-	std::string m_strUserPwd;
+	std::string m_strDsn;
 	CSQLDatabase* m_pDataBase;
 	StringMap m_mapUsers;
 };

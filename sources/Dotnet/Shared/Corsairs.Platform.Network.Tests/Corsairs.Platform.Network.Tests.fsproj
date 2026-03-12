@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <GenerateDocumentationFile>false</GenerateDocumentationFile>
+        <OtherFlags>--strict-indentation-</OtherFlags>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <Compile Include="PacketTests.fs" />
+        <Compile Include="OperationPoolTests.fs" />
+        <Compile Include="SystemCommandTests.fs" />
+        <Compile Include="CryptoTests.fs" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.*" />
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.*" />
+        <PackageReference Include="xunit" Version="2.*" />
+        <PackageReference Include="xunit.runner.visualstudio" Version="2.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Corsairs.Platform.Network\Corsairs.Platform.Network.fsproj" />
+    </ItemGroup>
+
+</Project>

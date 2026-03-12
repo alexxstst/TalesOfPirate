@@ -1,0 +1,100 @@
+syntax = "proto3";
+package corsairs.admin;
+option csharp_namespace = "Corsairs.Platform.Grpc.Contracts.Group";
+
+import "Protos/common.proto";
+
+service GroupAdmin {
+    rpc GetOnlinePlayers (GetOnlinePlayersRequest) returns (PlayerList);
+    rpc GetPlayerInfo (GetPlayerInfoRequest) returns (PlayerInfo);
+    rpc KickPlayer (KickPlayerRequest) returns (OperationResult);
+    rpc GetGuilds (GetGuildsRequest) returns (GuildList);
+    rpc DisbandGuild (DisbandGuildRequest) returns (OperationResult);
+    rpc SendGlobalMessage (GlobalMessageRequest) returns (OperationResult);
+    rpc MutePlayer (MutePlayerRequest) returns (OperationResult);
+    rpc GetServerTopology (Empty) returns (TopologyResponse);
+    rpc GetServerStatus (Empty) returns (ServerStatusResponse);
+}
+
+message GetOnlinePlayersRequest {
+    PaginationRequest pagination = 1;
+    string name_filter = 2;
+}
+
+message PlayerInfo {
+    int32 account_id = 1;
+    int32 character_id = 2;
+    string character_name = 3;
+    int32 level = 4;
+    string job = 5;
+    string map_name = 6;
+    string guild_name = 7;
+    uint32 gate_channel_id = 8;
+    uint32 game_channel_id = 9;
+    string state = 10;
+}
+
+message PlayerList {
+    repeated PlayerInfo players = 1;
+    PaginationInfo pagination = 2;
+}
+
+message GetPlayerInfoRequest {
+    oneof identifier {
+        int32 character_id = 1;
+        string character_name = 2;
+    }
+}
+
+message KickPlayerRequest {
+    int32 character_id = 1;
+    string reason = 2;
+}
+
+message GetGuildsRequest {
+    PaginationRequest pagination = 1;
+    string name_filter = 2;
+}
+
+message GuildInfo {
+    int32 guild_id = 1;
+    string name = 2;
+    string leader_name = 3;
+    int32 level = 4;
+    int32 member_count = 5;
+    int64 gold = 6;
+    int64 created_at_unix = 7;
+}
+
+message GuildList {
+    repeated GuildInfo guilds = 1;
+    PaginationInfo pagination = 2;
+}
+
+message DisbandGuildRequest {
+    int32 guild_id = 1;
+}
+
+message GlobalMessageRequest {
+    string message = 1;
+}
+
+message MutePlayerRequest {
+    int32 character_id = 1;
+    int32 duration_seconds = 2;
+    string reason = 3;
+}
+
+message TopologyResponse {
+    repeated ServerNode gates = 1;
+    repeated ServerNode game_servers = 2;
+    ServerNode account_server = 3;
+    int32 total_online = 4;
+}
+
+message ServerNode {
+    string name = 1;
+    string address = 2;
+    bool is_connected = 3;
+    int32 player_count = 4;
+}

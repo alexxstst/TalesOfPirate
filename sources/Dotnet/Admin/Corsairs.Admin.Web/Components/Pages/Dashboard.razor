@@ -1,0 +1,93 @@
+@page "/"
+@using Corsairs.Admin.Web.Services
+@using Corsairs.Platform.Grpc.Contracts.Common
+@inject DashboardService DashboardSvc
+
+<PageTitle>Dashboard - Corsairs Admin</PageTitle>
+
+<h1 class="text-2xl font-bold mb-6">Dashboard</h1>
+
+@if (_loading)
+{
+    <div class="flex justify-center py-12">
+        <span class="loading loading-spinner loading-lg"></span>
+    </div>
+}
+else
+{
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4 mb-8">
+        <Shared.StatCard Title="Онлайн" Value="@_onlineCount.ToString()" Color="primary" />
+        <Shared.StatCard Title="AccountServer" Value="@(_accountStatus?.IsRunning == true ? "Online" : "Offline")" Color="@(_accountStatus?.IsRunning == true ? "success" : "error")" />
+        <Shared.StatCard Title="GateServer" Value="@(_gateStatus?.IsRunning == true ? "Online" : "Offline")" Color="@(_gateStatus?.IsRunning == true ? "success" : "error")" />
+        <Shared.StatCard Title="GroupServer" Value="@(_groupStatus?.IsRunning == true ? "Online" : "Offline")" Color="@(_groupStatus?.IsRunning == true ? "success" : "error")" />
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        @if (_accountStatus != null)
+        {
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">AccountServer</h2>
+                    <p>Uptime: @TimeSpan.FromSeconds(_accountStatus.UptimeSeconds).ToString(@"d\.hh\:mm\:ss")</p>
+                    <p>Memory: @(_accountStatus.MemoryUsageBytes / 1024 / 1024) MB</p>
+                </div>
+            </div>
+        }
+        @if (_gateStatus != null)
+        {
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">GateServer</h2>
+                    <p>Uptime: @TimeSpan.FromSeconds(_gateStatus.UptimeSeconds).ToString(@"d\.hh\:mm\:ss")</p>
+                    <p>Подключений: @_gateStatus.ActiveConnections</p>
+                    <p>Memory: @(_gateStatus.MemoryUsageBytes / 1024 / 1024) MB</p>
+                </div>
+            </div>
+        }
+        @if (_groupStatus != null)
+        {
+            <div class="card bg-base-100 shadow">
+                <div class="card-body">
+                    <h2 class="card-title">GroupServer</h2>
+                    <p>Uptime: @TimeSpan.FromSeconds(_groupStatus.UptimeSeconds).ToString(@"d\.hh\:mm\:ss")</p>
+                    <p>Онлайн: @_groupStatus.ActiveConnections</p>
+                    <p>Memory: @(_groupStatus.MemoryUsageBytes / 1024 / 1024) MB</p>
+                </div>
+            </div>
+        }
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(_error))
+{
+    <div class="alert alert-error mt-4">@_error</div>
+}
+
+@code {
+    private bool _loading = true;
+    private string? _error;
+    private int _onlineCount;
+    private ServerStatusResponse? _accountStatus;
+    private ServerStatusResponse? _gateStatus;
+    private ServerStatusResponse? _groupStatus;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            var statuses = await DashboardSvc.GetAllStatuses();
+            _accountStatus = statuses.Account;
+            _gateStatus = statuses.Gate;
+            _groupStatus = statuses.Group;
+            _onlineCount = _gateStatus?.ActiveConnections ?? 0;
+        }
+        catch (Exception ex)
+        {
+            _error = $"Ошибка подключения: {ex.Message}";
+        }
+        finally
+        {
+            _loading = false;
+        }
+    }
+}

@@ -1,155 +1,101 @@
 #include "StdAfx.h"
-#pragma warning(disable: 4018)
 #include "Connection.h"
-#include "PacketCmd.h"
-#pragma warning(default: 4018)
+#include "NetIF.h"
 
-_DBC_USING
-
-bool Connection::Connect(dbc::cChar *hostname,dbc::uShort port,dbc::uLong timeout)
+Connection::Connection(NetIF* netif)
+	: m_netif(netif), m_status(CNST_INVALID),
+	  m_timeout(0), m_tick(0), m_port(0)
 {
-    LG( "connect", "Connect: %s, %d\n", hostname, port );
+	memset(m_hostname, 0, sizeof(m_hostname));
+}
 
-	if(m_datasock)
-	{
+Connection::~Connection()
+{
+	if (m_connectThread.joinable())
+		m_connectThread.join();
+}
+
+bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
+{
+	LG("connect", "Connect: %s, %d\n", hostname, port);
+
+	if (m_status == CNST_CONNECTING || m_status == CNST_CONNECTED || m_status == CNST_HANDSHAKE)
 		return false;
-	}
-	if((m_status ==CNST_CONNECTING)||(m_status ==CNST_CONNECTED) || (m_status == CNST_HANDSHAKE))
-	{
-		return false;
-	}
-	m_timeout	=max(timeout,1000);
-	if(m_timeout)
-	{
-		m_tick	=GetTickCount();
-	}else
-	{
-		m_tick	=0;
-	}
-	m_status	=CNST_CONNECTING;
-	strcpy(m_hostname,hostname);
-	m_port		=port;
-	if(m_netif->GetProcessor())
-	{
-		m_netif->GetProcessor()->AddTask(this);
-	}else
-	{
-		m_netif->GetCommunicator()->AddTask(this);
-	}
-	return true;
-}
-void Connection::Disconnect(int reason)
-{
-    LG( "connect", "Disconnect\n" );
 
-	m_netif->Disconnect(m_datasock,0,reason);
-}
-void Connection::OnDisconnect()
-{
-	m_datasock	=0;
-	m_status	=CNST_INVALID;
-}
+	m_timeout = max(timeout, (uint32_t)1000);
+	m_tick = GetTickCount();
+	m_status = CNST_CONNECTING;
 
-long Connection::Process()
-{
-	if(m_timeout)
-	{
-		LG( "connect", g_oLangRec.GetString(34), m_hostname );
-		m_datasock	=m_netif->Connect(m_hostname,m_port,&m_sock);
-	}else
-	{
-		LG( "connect", g_oLangRec.GetString(34), m_hostname );
-        m_datasock	=m_netif->Connect(m_hostname,m_port);
-	}
-	auto const l_lock = std::lock_guard{m_mtx};
-	if(m_datasock)
-	{
-		if(m_status.Assign(CNST_CONNECTING) ==CNST_TIMEOUT)
-		{
-			m_status =CNST_TIMEOUT;
-			if(m_datasock)
-			{
-				m_datasock->Free();
-				m_datasock	=0;
+	strncpy(m_hostname, hostname, sizeof(m_hostname) - 1);
+	m_hostname[sizeof(m_hostname) - 1] = '\0';
+	m_port = port;
+
+	// Ждём завершения предыдущего потока подключения
+	if (m_connectThread.joinable())
+		m_connectThread.join();
+
+	// Подключение в отдельном потоке (TcpClient::Connect блокирующий)
+	m_connectThread = std::thread([this]() {
+		bool ok = m_netif->GetClient().Connect(m_hostname, m_port, m_timeout);
+
+		std::lock_guard<std::mutex> lock(m_mtx);
+		if (ok) {
+			// TCP подключён. Статус остаётся CNST_CONNECTING
+			// до вызова CHAPSTR() из SC_SendPublicKey/CS_SendPrivateKey.
+			int cur = m_status.load();
+			if (cur == CNST_TIMEOUT) {
+				// Таймаут уже сработал — закрываем только что открытое соединение
+				m_netif->GetClient().Disconnect(0);
+			}
+		} else {
+			int expected = CNST_CONNECTING;
+			if (!m_status.compare_exchange_strong(expected, CNST_FAILURE)) {
+				// Статус уже изменился (например, CNST_TIMEOUT)
 			}
 		}
-	}else if(m_status.Assign(CNST_FAILURE) ==CNST_TIMEOUT)
-	{
-		m_status	=CNST_TIMEOUT;
-	}
-	return 0;
+	});
+
+	return true;
 }
+
+void Connection::Disconnect(int reason)
+{
+	LG("connect", "Disconnect\n");
+	m_netif->GetClient().Disconnect(reason);
+}
+
+void Connection::OnDisconnect()
+{
+	m_status = CNST_INVALID;
+}
+
 void Connection::CHAPSTR(bool handshake)
 {
-	LONG	l_stat;
-	auto const l_lock = std::lock_guard{m_mtx};
-	LONG newval = handshake == true ? CNST_HANDSHAKE : CNST_CONNECTED;
+	std::lock_guard<std::mutex> lock(m_mtx);
+	int newval = handshake ? CNST_HANDSHAKE : CNST_CONNECTED;
+	int old = m_status.exchange(newval);
 
-	if((l_stat =m_status.Assign(newval)) ==CNST_TIMEOUT)
-	{
-		m_status =CNST_TIMEOUT;
-		if(m_datasock)
-		{
-			m_datasock->Free();
-			m_datasock	=0;
-		}
-	}else if(l_stat == CNST_FAILURE)
-	{
-		l_stat =CNST_FAILURE;
-		if(m_datasock)
-		{
-			m_datasock->Free();
-			m_datasock	=0;
-		}
+	if (old == CNST_TIMEOUT || old == CNST_FAILURE) {
+		m_status = old;
+		m_netif->GetClient().Disconnect(0);
 	}
-	else{}
-
 }
 
-int  Connection::GetConnStat()
+int Connection::GetConnStat()
 {
-	if(m_status ==CNST_CONNECTING && m_timeout && (GetTickCount() -m_tick) >m_timeout)
+	if (m_status == CNST_CONNECTING && m_timeout &&
+	    (GetTickCount() - m_tick) > m_timeout)
 	{
-		auto const l_lock = std::lock_guard{m_mtx};
-		if(m_status.Assign(CNST_TIMEOUT) ==CNST_CONNECTED)
-		{
-			m_status	=CNST_CONNECTED;
-		}else if(m_datasock)
-		{
-			m_datasock->Free();
-			m_datasock	=0;
-		}else
-		{
-			closesocket(m_sock);
+		std::lock_guard<std::mutex> lock(m_mtx);
+		int expected = CNST_CONNECTING;
+		if (m_status.compare_exchange_strong(expected, CNST_TIMEOUT)) {
+			// Таймаут — поток подключения либо ещё работает, либо уже завершился.
+			// Если соединение установлено, оно будет закрыто в Process().
+		} else if (expected == CNST_CONNECTED || expected == CNST_HANDSHAKE) {
+			// Подключились как раз вовремя
+			m_status = expected;
 		}
 	}
 
 	return m_status;
 }
-
-/*
-	//xuedong 2004.08.18
-	cChar chAppendName[512] = {0};
-
-	if (cbNameAppendInfo)
-	{
-		cChar chIp[16] = {0}, chPort[16] = {0}, chHostName[64] = {0};
-
-		gethostname((char *)chHostName, 64);
-		sprintf((char *)chIp, "%s", m_datasock->GetLocalIP());
-		sprintf((char *)chPort, "%d", m_datasock->GetLocalPort());
-		strcat((char *)chAppendName, chHostName);
-		strcat((char *)chAppendName, ".");
-		strcat((char *)chAppendName, (char *)chPort);
-	}
-	//end
-
-	WPacket pk	=g_NetIF->GetWPacket();;
-	pk.WriteCmd(CMD_CM_SELROLE);			//����
-	pk.WriteLong(m_cat);
-	pk.WriteSequence(m_name, uShort(strlen(m_name) + 1));
-	if (cbNameAppendInfo)
-		pk.WriteSequence(chAppendName, uShort(strlen(chAppendName) + 1));
-	m_nt->SendData(m_datasock,pk);
-	return true;
-*/

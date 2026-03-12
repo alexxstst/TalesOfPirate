@@ -6,7 +6,7 @@
 
 HANDLE hConsole = NULL;
 
-// ³õÊ¼»¯Ë³Ðò
+// ï¿½ï¿½Ê¼ï¿½ï¿½Ë³ï¿½ï¿½
 #pragma init_seg( lib )
 pi_LeakReporter pi_leakReporter("groupememleak.log");
 CResourceBundleManage g_ResourceBundleManage("GroupServer.loc"); //Add by alfred.shi 20080130
@@ -14,6 +14,9 @@ CResourceBundleManage g_ResourceBundleManage("GroupServer.loc"); //Add by alfred
 // binary compatible
 int _tmain(int argc, _TCHAR* argv[])
 {
+	setvbuf(stdout, nullptr, _IONBF, 0);
+	setvbuf(stderr, nullptr, _IONBF, 0);
+
 	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	C_TITLE("GroupServer.exe")

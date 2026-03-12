@@ -68,6 +68,8 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -98,6 +100,8 @@
       <StructMemberAlignment>Default</StructMemberAlignment>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -199,9 +203,7 @@
     <ClCompile Include="..\src\Birthplace.cpp" />
     <ClCompile Include="..\src\cfl_iocp.cpp" />
     <ClCompile Include="..\src\cfl_lock.cpp" />
-    <ClCompile Include="..\src\Character.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\src\Character.cpp" />
     <ClCompile Include="..\src\CharacterAI.cpp" />
     <ClCompile Include="..\src\CharacterAIState.cpp" />
     <ClCompile Include="..\src\CharacterCmd.cpp" />
@@ -217,23 +219,18 @@
     <ClCompile Include="..\src\Config.cpp" />
     <ClCompile Include="..\src\Entity.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\src\EntityAlloc.cpp" />
     <ClCompile Include="..\src\EntityScript.cpp" />
-    <ClCompile Include="..\src\EntitySpawn.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\src\EntitySpawn.cpp" />
     <ClCompile Include="..\src\EventCalculate.cpp" />
     <ClCompile Include="..\src\EventEntity.cpp" />
     <ClCompile Include="..\src\EventHandler.cpp" />
     <ClCompile Include="..\src\EyeshotCell.cpp" />
     <ClCompile Include="..\src\FightAble.cpp" />
     <ClCompile Include="..\src\FindPath.cpp" />
-    <ClCompile Include="..\src\GameApp.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
-    </ClCompile>
+    <ClCompile Include="..\src\GameApp.cpp" />
     <ClCompile Include="..\src\GameAppNet.cpp" />
     <ClCompile Include="..\src\GameDB.cpp" />
     <ClCompile Include="..\src\GameServerApp.cpp" />
@@ -268,7 +265,6 @@
     </ClCompile>
     <ClCompile Include="..\src\SubMap.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
     </ClCompile>
     <ClCompile Include="..\src\SystemDialog.cpp" />
