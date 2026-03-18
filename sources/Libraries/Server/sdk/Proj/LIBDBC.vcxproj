@@ -94,21 +94,11 @@
     <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AcceptConnect.cpp" />
-    <ClCompile Include="..\src\Comm.cpp" />
-    <ClCompile Include="..\src\CommRPC.cpp" />
-    <ClCompile Include="..\src\DataSocket.cpp" />
     <ClCompile Include="..\src\DBCCommon.cpp" />
     <ClCompile Include="..\src\IniFile.cpp" />
     <ClCompile Include="..\src\LogStream.cpp" />
-    <ClCompile Include="..\src\Packet.cpp" />
-    <ClCompile Include="..\src\PacketQueue.cpp" />
     <ClCompile Include="..\src\Point.cpp" />
-    <ClCompile Include="..\src\Receiver.cpp" />
     <ClCompile Include="..\src\RWMutex.cpp" />
-    <ClCompile Include="..\src\Sender.cpp" />
-    <ClCompile Include="..\src\TaskQueue.cpp" />
-    <ClCompile Include="..\src\ThreadPool.cpp" />
     <ClCompile Include="..\src\Timer.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -131,14 +121,9 @@
     <ClInclude Include="..\Include\RunBiDirectChain.h" />
     <ClInclude Include="..\Include\RunCtrlThrd.h" />
     <ClInclude Include="..\Include\RWMutex.h" />
-    <ClInclude Include="..\Include\ThreadPool.h" />
+    <ClInclude Include="..\Include\Task.h" />
     <ClInclude Include="..\Include\Timer.h" />
     <ClInclude Include="..\Include\TLSIndex.h" />
-    <ClInclude Include="..\src\AcceptConnect.h" />
-    <ClInclude Include="..\src\Receiver.h" />
-    <ClInclude Include="..\src\RPCInfo.h" />
-    <ClInclude Include="..\src\Sender.h" />
-    <ClInclude Include="..\src\Thread.h" />
     <ClInclude Include="EventMsgRC.h" />
   </ItemGroup>
   <ItemGroup>

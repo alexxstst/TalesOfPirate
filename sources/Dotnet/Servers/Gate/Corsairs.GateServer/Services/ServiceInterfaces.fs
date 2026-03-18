@@ -273,6 +273,8 @@ type IClientSystem =
     abstract GetAllPlayers: unit -> PlayerChannelIO array
     /// Отключить игрока.
     abstract Disconnect: PlayerChannelIO -> unit
+    /// Сбросить GpAddr у всех игроков (при переподключении к GroupServer).
+    abstract ResetAllGpAddrs: unit -> unit
 
 /// Интерфейс системы подключения к GroupServer.
 [<AllowNullLiteral>]

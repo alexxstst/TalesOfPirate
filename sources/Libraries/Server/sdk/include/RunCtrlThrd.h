@@ -6,7 +6,7 @@ Usage:
 */
 #pragma once
 #include "DBCCommon.h"
-#include "ThreadPool.h"
+#include "Task.h"
 #include "RunBiDirectChain.h"
 #include "Timer.h"
 

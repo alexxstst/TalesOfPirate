@@ -1,11 +1,10 @@
 #include "Packet.h"
 #include <algorithm>
-#include <cassert>
 
 namespace net {
 
 // ═══════════════════════════════════════════════════════════════
-//  WPacket — реализация
+//  WPacket — реализация (msgpack payload)
 // ═══════════════════════════════════════════════════════════════
 
 WPacket::WPacket(int payloadCapacity) {
@@ -14,6 +13,26 @@ WPacket::WPacket(int payloadCapacity) {
     _data = PacketPool::Shared().Allocate(totalSize);
     std::memset(_data, 0, 8);
     writeUInt16(_data, 8); // Начальный размер = заголовок
+    UpdateWriterPosition();
+}
+
+WPacket::WPacket(const RPacket& rpk)
+    : _data(nullptr), _capacity(0) {
+    if (rpk.Data()) {
+        int size = rpk.GetPacketSize();
+        if (size > 0) {
+            _capacity = PacketPool::Shared().BucketSize(size);
+            _data = PacketPool::Shared().Allocate(size);
+            std::memcpy(_data, rpk.Data(), size);
+        }
+    }
+    if (!_data) {
+        _capacity = PacketPool::Shared().BucketSize(8);
+        _data = PacketPool::Shared().Allocate(8);
+        std::memset(_data, 0, 8);
+        writeUInt16(_data, 8);
+    }
+    UpdateWriterPosition();
 }
 
 WPacket::WPacket(const WPacket& other)
@@ -24,6 +43,13 @@ WPacket::WPacket(const WPacket& other)
         _data = PacketPool::Shared().Allocate(size);
         std::memcpy(_data, other._data, size);
     }
+    if (!_data) {
+        _capacity = PacketPool::Shared().BucketSize(8);
+        _data = PacketPool::Shared().Allocate(8);
+        std::memset(_data, 0, 8);
+        writeUInt16(_data, 8);
+    }
+    UpdateWriterPosition();
 }
 
 WPacket& WPacket::operator=(const WPacket& other) {
@@ -31,12 +57,14 @@ WPacket& WPacket::operator=(const WPacket& other) {
         WPacket tmp(other);
         std::swap(_data, tmp._data);
         std::swap(_capacity, tmp._capacity);
+        std::swap(_writer, tmp._writer);
+        UpdateWriterPosition();
     }
     return *this;
 }
 
 WPacket::WPacket(WPacket&& other) noexcept
-    : _data(other._data), _capacity(other._capacity) {
+    : _data(other._data), _capacity(other._capacity), _writer(other._writer) {
     other._data = nullptr;
     other._capacity = 0;
 }
@@ -44,10 +72,12 @@ WPacket::WPacket(WPacket&& other) noexcept
 WPacket& WPacket::operator=(WPacket&& other) noexcept {
     if (this != &other) {
         if (_data) {
+            mpack_writer_destroy(&_writer);
             PacketPool::Shared().Free(_data, _capacity);
         }
         _data = other._data;
         _capacity = other._capacity;
+        _writer = other._writer;
         other._data = nullptr;
         other._capacity = 0;
     }
@@ -56,9 +86,23 @@ WPacket& WPacket::operator=(WPacket&& other) noexcept {
 
 WPacket::~WPacket() {
     if (_data) {
+        mpack_writer_destroy(&_writer);
         PacketPool::Shared().Free(_data, _capacity);
         _data = nullptr;
     }
+}
+
+// ── Writer position ───────────────────────────────────────
+
+void WPacket::UpdateWriterPosition() {
+    mpack_writer_init(&_writer, reinterpret_cast<char*>(_data + 8), _capacity - 8);
+    _writer.position = reinterpret_cast<char*>(_data + 8) + PayloadLength();
+}
+
+void WPacket::SyncSize() {
+    int payloadUsed = static_cast<int>(
+        _writer.position - reinterpret_cast<char*>(_data + 8));
+    SetPacketSize(8 + payloadUsed);
 }
 
 // ── Заголовок ──────────────────────────────────────────────
@@ -100,9 +144,10 @@ int WPacket::PayloadLength() const {
 
 int WPacket::EnsureCapacity(int needed) {
     int pos = GetPacketSize();
-    int required = pos + needed;
+    int required = pos + needed + 4; // +4 запас для msgpack тегов
 
     if (required > _capacity) {
+        mpack_writer_destroy(&_writer);
         int newCapacity = std::max(_capacity * 2, required);
         int newBucketSize = PacketPool::Shared().BucketSize(newCapacity);
         uint8_t* newData = PacketPool::Shared().Allocate(newCapacity);
@@ -110,6 +155,7 @@ int WPacket::EnsureCapacity(int needed) {
         PacketPool::Shared().Free(_data, _capacity);
         _data = newData;
         _capacity = newBucketSize;
+        UpdateWriterPosition();
     }
 
     return pos;
@@ -117,96 +163,49 @@ int WPacket::EnsureCapacity(int needed) {
 
 // ── Запись payload ─────────────────────────────────────────
 
-void WPacket::WriteUInt8(uint8_t v) {
-    int pos = EnsureCapacity(1);
-    writeUInt8(_data + pos, v);
-    SetPacketSize(pos + 1);
-}
-
-void WPacket::WriteInt8(int8_t v) {
-    int pos = EnsureCapacity(1);
-    writeInt8(_data + pos, v);
-    SetPacketSize(pos + 1);
-}
-
-void WPacket::WriteUInt16(uint16_t v) {
-    int pos = EnsureCapacity(2);
-    writeUInt16(_data + pos, v);
-    SetPacketSize(pos + 2);
-}
-
-void WPacket::WriteInt16(int16_t v) {
-    int pos = EnsureCapacity(2);
-    writeInt16(_data + pos, v);
-    SetPacketSize(pos + 2);
-}
-
-void WPacket::WriteUInt32(uint32_t v) {
-    int pos = EnsureCapacity(4);
-    writeUInt32(_data + pos, v);
-    SetPacketSize(pos + 4);
-}
-
-void WPacket::WriteInt32(int32_t v) {
-    int pos = EnsureCapacity(4);
-    writeInt32(_data + pos, v);
-    SetPacketSize(pos + 4);
-}
-
 void WPacket::WriteInt64(int64_t v) {
-    int pos = EnsureCapacity(8);
-    writeInt64(_data + pos, v);
-    SetPacketSize(pos + 8);
+    EnsureCapacity(9);
+    mpack_write(&_writer, v);
+    SyncSize();
 }
 
-void WPacket::WriteUInt64(uint64_t v) {
-    int pos = EnsureCapacity(8);
-    writeUInt64(_data + pos, v);
-    SetPacketSize(pos + 8);
-}
+void WPacket::WriteUInt64(uint64_t v)  { WriteInt64(static_cast<int64_t>(v)); }
 
 void WPacket::WriteFloat32(float v) {
-    int pos = EnsureCapacity(4);
-    writeFloat32(_data + pos, v);
-    SetPacketSize(pos + 4);
+    EnsureCapacity(5);
+    mpack_write(&_writer, v);
+    SyncSize();
 }
 
 void WPacket::WriteSequence(const uint8_t* data, uint16_t len) {
-    WriteUInt16(len);
-    if (len > 0) {
-        int pos = EnsureCapacity(len);
-        std::memcpy(_data + pos, data, len);
-        SetPacketSize(pos + len);
-    }
+    EnsureCapacity(5 + len);
+    mpack_write_bin(&_writer, reinterpret_cast<const char*>(data), len);
+    SyncSize();
 }
 
 void WPacket::WriteSequence(const char* data, uint16_t len) {
     WriteSequence(reinterpret_cast<const uint8_t*>(data), len);
 }
 
-void WPacket::WriteString(const char* str) {
-    if (!str || str[0] == '\0') {
-        // Пустая строка: [len=1][null]
-        WriteUInt16(1);
-        int pos = EnsureCapacity(1);
-        _data[pos] = 0;
-        SetPacketSize(pos + 1);
+void WPacket::WriteString(const std::string& str) {
+    if (str.empty()) {
+        EnsureCapacity(6);
+        mpack_write_str(&_writer, "\0", 1); // 1 байт = null-terminator
     } else {
-        uint16_t strLen = static_cast<uint16_t>(std::strlen(str));
-        uint16_t totalLen = strLen + 1; // включая null
-        WriteUInt16(totalLen);
-        int pos = EnsureCapacity(totalLen);
-        std::memcpy(_data + pos, str, strLen);
-        _data[pos + strLen] = 0;
-        SetPacketSize(pos + totalLen);
+        int len = str.size() + 1; // +1 = null
+        EnsureCapacity(5 + len);
+        mpack_write_str(&_writer, str.c_str(), len);
     }
+    SyncSize();
 }
 
 // ── Reset ──────────────────────────────────────────────────
 
 void WPacket::Reset() {
+    mpack_writer_destroy(&_writer);
     std::memset(_data, 0, 8);
     SetPacketSize(8);
+    UpdateWriterPosition();
 }
 
 } // namespace net

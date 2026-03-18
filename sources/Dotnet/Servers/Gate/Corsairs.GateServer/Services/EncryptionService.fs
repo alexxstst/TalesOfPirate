@@ -6,7 +6,7 @@ open Corsairs.Platform.Network.Crypto
 /// Сервис шифрования для GateServer.
 /// Управляет RSA key exchange и AES transport.
 type EncryptionService(logger: ILogger<EncryptionService>) =
-    let _rsa = RsaKeyExchange()
+    let _rsa = new RsaKeyExchange()
 
     /// Получить публичный ключ сервера для отправки клиенту.
     member _.GetServerPublicKey() = _rsa.ExportPublicKey()
@@ -23,4 +23,4 @@ type EncryptionService(logger: ILogger<EncryptionService>) =
 
     /// Создать AES middleware для сессии.
     member _.CreateAesTransport(aesKey: byte[]) =
-        AesTransport(aesKey)
+        new AesTransport(aesKey)

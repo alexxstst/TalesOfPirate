@@ -57,7 +57,7 @@ BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 
 // Add by lark.li 20080306 begin
 inline int lua_GetResString( lua_State *L )
-{T_B
+{
 	BOOL bValid = lua_gettop( L ) == 1 && lua_isstring( L, 1 );
 	if( !bValid )
 	{
@@ -76,7 +76,7 @@ inline int lua_GetResString( lua_State *L )
 	lua_pushstring(L, text);
 
 	return 1;
-T_E}
+}
 // End
 
 inline int lua_LG(lua_State *L)

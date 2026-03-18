@@ -87,7 +87,7 @@ protected:
 	void	Initially();
 	void	Finally();
 	void	WritePK(WPACKET& wpk);
-	void	ReadPK(RPACKET& rpk);
+	void	ReadPK(RPACKET rpk);
 
 	virtual bool	overlap(long& xdist,long& ydist);
 	virtual CMoveAble* IsMoveAble() override { return this; }

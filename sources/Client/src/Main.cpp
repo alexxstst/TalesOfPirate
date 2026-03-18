@@ -29,7 +29,6 @@
 #include "Character.h"
 #include "gameloading.h"
 #include "CaLua.h"
-#include "ErrorHandler.h"
 
 #include "UdpClient.h"
 
@@ -112,17 +111,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
                      LPTSTR    lpCmdLine,
                      int       nCmdShow)
 {
-	// Add by lark.li 20080909 begin
-	ErrorHandler::Initialize();
-	ErrorHandler::DisableErrorDialogs();
-	// End
-
 	DWORD dx_ver = DX_VERSION_X_X;
 
-T_B
 
 	LG("init", "Define __CATCH\n");
-	SEHTranslator translator;
+	// SEHTranslator translator;
 	std::string strParam = lpCmdLine;
 	
 	if(strParam.find("editor")!= std::string::npos) // ����Ϸ�༭��
@@ -531,190 +524,6 @@ T_B
 		::WinExec( "Launcher.exe", SW_SHOWNORMAL );
 	}
 	// �Զ�����ʱ �쳣�������?
-	}
-	catch(std::exception& e) 
-	{ 
-		std::string	strfile;
-		LG_GetDir(strfile);
-		strfile += "\\exception.txt";
-
-		FILE * fp = fopen(strfile.c_str(),"a+");
-
-		if(fp) 
-		{ 
-			SYSTEMTIME st;
-			char tim[100] = {0};
-			GetLocalTime(&st);
-			sprintf(tim, "%02d-%02d %02d:%02d:%02d\r\n", st.wMonth, st.wDay, st.wHour, st.wMinute, st.wSecond);
-
-			fwrite(tim,strlen(tim),1,fp);
-
-			try
-			{
-				OSVERSIONINFOEX osvi;
-				BOOL bOsVersionInfoEx;
-
-				// Try calling GetVersionEx using the OSVERSIONINFOEX structure.
-				ZeroMemory(&osvi, sizeof(OSVERSIONINFOEX));
-				osvi.dwOSVersionInfoSize = sizeof(OSVERSIONINFOEX);
-				if(!(bOsVersionInfoEx = GetVersionEx((OSVERSIONINFO *) &osvi)))
-				{
-					// If OSVERSIONINFOEX doesn't work, try OSVERSIONINFO.
-					osvi.dwOSVersionInfoSize = sizeof (OSVERSIONINFO);
-					if(!GetVersionEx( (OSVERSIONINFO *) &osvi))
-					{
-						bOsVersionInfoEx = FALSE;
-					}
-				}
-
-				std::string mOSStringSimple = "Unknown Windwos Ver";
-
-				if(bOsVersionInfoEx)
-				{
-					switch(osvi.dwPlatformId)
-					{
-					case VER_PLATFORM_WIN32_NT:
-						{
-							// Test for the product.
-							if(osvi.dwMajorVersion <= 4)
-							{
-								mOSStringSimple = "Microsoft Windows NT ";
-							}
-							else if(osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 0)
-							{
-								mOSStringSimple = "Microsoft Windows 2000 ";
-							}
-							else if(osvi.dwMajorVersion ==5 && osvi.dwMinorVersion == 1)
-							{
-								mOSStringSimple = "Microsoft Windows XP ";
-							}
-							else if(osvi.dwMajorVersion == 5 && osvi.dwMinorVersion == 2)
-							{
-								if(osvi.wProductType == VER_NT_WORKSTATION)
-									mOSStringSimple = "Microsoft Windows XP x64 Edition ";
-								else
-									mOSStringSimple = "Microsoft Windows Server 2003 ";
-							}
-							else if(osvi.dwMajorVersion == 6 && osvi.dwMinorVersion == 0)
-							{
-								if(osvi.wProductType == VER_NT_WORKSTATION)
-									mOSStringSimple = "Microsoft Windows Vista ";
-								else mOSStringSimple = "Microsoft Windows Vista Server ";
-							}
-							else   // Use the registry on early versions of Windows NT.
-							{
-								mOSStringSimple += "Unknown Windows NT";
-							}
-
-						}
-						break;
-
-					case VER_PLATFORM_WIN32_WINDOWS:
-						// Test for the Windows 95 product family.
-						if(osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 0)
-						{
-							mOSStringSimple = "Microsoft Windows 95 ";
-							if ( osvi.szCSDVersion[1] == 'C' || osvi.szCSDVersion[1] == 'B' )
-							{
-								mOSStringSimple += "OSR2 ";
-							}
-						} 
-						if(osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 10)
-						{
-							mOSStringSimple = "Microsoft Windows 98 ";
-							if ( osvi.szCSDVersion[1] == 'A' )
-							{
-								mOSStringSimple += "SE ";
-							}
-						} 
-						if(osvi.dwMajorVersion == 4 && osvi.dwMinorVersion == 90)
-						{
-							mOSStringSimple = "Microsoft Windows Millennium Edition ";
-						}
-						break;
-					}
-
-					fprintf(fp, "%s\r\n", mOSStringSimple.c_str());
-				}
-
-				fprintf(fp, "DirectX Ver %X\r\n", dx_ver);
-			
-				D3DCAPSX caps;
-				g_Render.GetDevice()->GetDeviceCaps(&caps);
-
-				fprintf(fp, "DeviceType %X\r\n", caps.DeviceType);
-				fprintf(fp, "AdapterOrdinal %X\r\n", caps.AdapterOrdinal);
-				fprintf(fp, "Caps %X\r\n", caps.Caps);
-				fprintf(fp, "Caps2 %X\r\n", caps.Caps2);
-				fprintf(fp, "Caps3 %X\r\n", caps.Caps3);
-				fprintf(fp, "PresentationIntervals %X\r\n", caps.PresentationIntervals);
-
-				fprintf(fp, "CursorCaps %X\r\n", caps.CursorCaps);
-				fprintf(fp, "DevCaps %X\r\n", caps.DevCaps);
-
-				fprintf(fp, "PrimitiveMiscCaps %X\r\n", caps.PrimitiveMiscCaps);
-				fprintf(fp, "RasterCaps %X\r\n", caps.RasterCaps);
-				fprintf(fp, "ZCmpCaps %X\r\n", caps.ZCmpCaps);
-				fprintf(fp, "SrcBlendCaps %X\r\n", caps.SrcBlendCaps);
-				fprintf(fp, "DestBlendCaps %X\r\n", caps.DestBlendCaps);
-				fprintf(fp, "AlphaCmpCaps %X\r\n", caps.AlphaCmpCaps);
-				fprintf(fp, "ShadeCaps %X\r\n", caps.ShadeCaps);
-				fprintf(fp, "TextureCaps %X\r\n", caps.TextureCaps);
-				fprintf(fp, "TextureFilterCaps %X\r\n", caps.TextureFilterCaps);
-
-				fprintf(fp, "CubeTextureFilterCaps %X\r\n", caps.CubeTextureFilterCaps);
-				fprintf(fp, "VolumeTextureFilterCaps %X\r\n", caps.VolumeTextureFilterCaps);
-				fprintf(fp, "TextureAddressCaps %X\r\n", caps.TextureAddressCaps);
-				fprintf(fp, "VolumeTextureAddressCaps %X\r\n", caps.VolumeTextureAddressCaps);
-
-				fprintf(fp, "LineCaps %X\r\n", caps.LineCaps);
-				fprintf(fp, "MaxTextureWidth %X\r\n", caps.MaxTextureWidth);
-				fprintf(fp, "MaxTextureHeight %X\r\n", caps.MaxTextureHeight);
-
-				fprintf(fp, "MaxVolumeExtent %X\r\n", caps.MaxVolumeExtent);
-				fprintf(fp, "MaxTextureRepeat %X\r\n", caps.MaxTextureRepeat);
-				fprintf(fp, "MaxTextureAspectRatio %X\r\n", caps.MaxTextureAspectRatio);
-				fprintf(fp, "MaxAnisotropy %X\r\n", caps.MaxAnisotropy);
-				fprintf(fp, "MaxVertexW %f\r\n", caps.MaxVertexW);
-				fprintf(fp, "GuardBandLeft %f\r\n", caps.GuardBandLeft);
-				fprintf(fp, "GuardBandTop %f\r\n", caps.GuardBandTop);
-				fprintf(fp, "GuardBandRight %f\r\n", caps.GuardBandRight);
-				fprintf(fp, "GuardBandBottom %f\r\n", caps.GuardBandBottom);
-				fprintf(fp, "ExtentsAdjust %f\r\n", caps.ExtentsAdjust);
-				fprintf(fp, "StencilCaps %X\r\n", caps.StencilCaps);
-				fprintf(fp, "FVFCaps %X\r\n", caps.FVFCaps);
-				fprintf(fp, "TextureOpCaps %X\r\n", caps.TextureOpCaps);
-				fprintf(fp, "MaxTextureBlendStages %X\r\n", caps.MaxTextureBlendStages);
-				fprintf(fp, "MaxSimultaneousTextures %X\r\n", caps.MaxSimultaneousTextures);
-				fprintf(fp, "VertexProcessingCaps %X\r\n", caps.VertexProcessingCaps);
-				fprintf(fp, "MaxActiveLights %X\r\n", caps.MaxActiveLights);
-				fprintf(fp, "MaxUserClipPlanes %X\r\n", caps.MaxUserClipPlanes);
-				fprintf(fp, "MaxVertexBlendMatrices %X\r\n", caps.MaxVertexBlendMatrices);
-				fprintf(fp, "MaxVertexBlendMatrixIndex %X\r\n", caps.MaxVertexBlendMatrixIndex);
-				fprintf(fp, "MaxPointSize %f\r\n", caps.MaxPointSize);
-				fprintf(fp, "MaxPrimitiveCount %X\r\n", caps.MaxPrimitiveCount);
-				fprintf(fp, "MaxVertexIndex %X\r\n", caps.MaxVertexIndex);
-				fprintf(fp, "MaxStreams %X\r\n", caps.MaxStreams);
-				fprintf(fp, "MaxStreamStride %X\r\n", caps.MaxStreamStride);
-				fprintf(fp, "VertexShaderVersion %X\r\n", caps.VertexShaderVersion);
-				fprintf(fp, "MaxVertexShaderConst %X\r\n", caps.MaxVertexShaderConst);
-				fprintf(fp, "PixelShaderVersion %X\r\n", caps.PixelShaderVersion);
-				fprintf(fp, "MaxPixelShaderValue %f\r\n", caps.PixelShader1xMaxValue);
-			}
-			catch(...)
-			{
-				fwrite("GetDeviceCaps error\r\n",strlen("GetDeviceCaps error\r\n") - 1,1,fp); 
-			}
-
-			fwrite(e.what(),strlen(e.what()) - 1,1,fp); 
-			fclose(fp); 
-		} 
-		WinExec("system/errorreport.exe", SW_SHOW);
-	}
-	catch( ... )
-	{
-		MessageBox( NULL, g_oLangRec.GetString(186), g_oLangRec.GetString(185), 0 );
-	}
 
 	return 0;
 }

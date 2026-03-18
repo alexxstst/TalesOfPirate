@@ -19,6 +19,7 @@
         <Compile Include="Pool.fs" />
         <Compile Include="Commands.fs" />
         <Compile Include="Packets.fs" />
+        <Compile Include="CommandMessages.fs" />
         <Compile Include="Types.fs" />
         <!-- Network: Types и Pool нужны до Packets для BufferedRPacket -->
         <!-- Crypto -->
@@ -37,6 +38,10 @@
 
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="9.*" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\Corsairs.Platform.Msgpack\Corsairs.Platform.Msgpack.csproj" />
     </ItemGroup>
 
 </Project>

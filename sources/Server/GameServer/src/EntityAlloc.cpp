@@ -12,29 +12,29 @@
 char g_szEntiAlloc[256] = "EntityAlloc";
 
 CEntityAlloc::CEntityAlloc(long lChaNum, long lItemNum, long lTNpcNum)
-{T_B
+{
 	// 分配实体内存
 	m_ChaAlloc.create( lChaNum, defENTI_ALLOC_TYPE_CHA );
 	m_ItemAlloc.create( lItemNum, defENTI_ALLOC_TYPE_ITEM );
 	m_TalkNpcAlloc.create( lTNpcNum, defENTI_ALLOC_TYPE_TNPC );
 	m_BerthAlloc.create( 1000, defENTI_ALLOC_TYPE_ENTBERTH );
 	m_ResourceAlloc.create( 1000, defENTI_ALLOC_TYPE_ENTRESOURCE );
-T_E}
+}
 
 CEntityAlloc::~CEntityAlloc()
-{T_B
+{
 	m_ChaAlloc.clear();
 	m_ItemAlloc.clear();
 	m_TalkNpcAlloc.clear();
 	m_BerthAlloc.clear();
 	m_ResourceAlloc.clear();
-T_E}
+}
 
 //=============================================================================
 // 取一个闲置的角色。
 //=============================================================================
 CCharacter* CEntityAlloc::GetNewCha()
-{T_B
+{
 	CCharacter* pChar = m_ChaAlloc.alloc();
 	if( !pChar )
 	{		
@@ -43,13 +43,13 @@ CCharacter* CEntityAlloc::GetNewCha()
 		return NULL;
 	}
 	return pChar;
-T_E}
+}
 
 //=============================================================================
 // 取一个闲置的道具。
 //=============================================================================
 CItem* CEntityAlloc::GetNewItem()
-{T_B
+{
 	CItem* pItem = m_ItemAlloc.alloc();
 	if( !pItem )
 	{
@@ -58,13 +58,13 @@ CItem* CEntityAlloc::GetNewItem()
 		return NULL;
 	}
 	return pItem;
-T_E}
+}
 
 //=============================================================================
 // 取一个闲置的对话NPC。
 //=============================================================================
 mission::CTalkNpc* CEntityAlloc::GetNewTNpc()
-{T_B
+{
 	mission::CTalkNpc* pNpc = m_TalkNpcAlloc.alloc();
 	if( !pNpc )
 	{
@@ -73,7 +73,7 @@ mission::CTalkNpc* CEntityAlloc::GetNewTNpc()
 		return NULL;
 	}
 	return pNpc;
-T_E}
+}
 
 //=============================================================================
 // 取一个闲置的对话事件实体。
@@ -120,7 +120,7 @@ mission::CEventEntity* CEntityAlloc::GetEventEntity( BYTE byType )
 // 取一个有效实体
 //=============================================================================
 Entity* CEntityAlloc::GetEntity(long lID)
-{T_B
+{
 	long	lType = lID & 0xff000000;
 	long	lEntiID = lID & 0x00ffffff;
 
@@ -146,13 +146,13 @@ Entity* CEntityAlloc::GetEntity(long lID)
 	}
 	else
 		return 0;
-T_E}
+}
 
 //=============================================================================
 // 释放一个有效实体
 //=============================================================================
 void CEntityAlloc::ReturnEntity(long lID)
-{T_B
+{
 	long	lType = lID & 0xff000000;
 	long	lEntiID = lID & 0x00ffffff;
 
@@ -176,7 +176,7 @@ void CEntityAlloc::ReturnEntity(long lID)
 	{
 		return m_ResourceAlloc.destroy( lEntiID );
 	}
-T_E}
+}
 
 //=============================================================================
 //=============================================================================
@@ -185,7 +185,7 @@ T_E}
 // 取一个闲置的玩家。
 //=============================================================================
 CPlayer* CPlayerAlloc::GetNewPly()
-{T_B
+{
 	CPlayer* pCPly = m_PlyAlloc.alloc();
 	if( !pCPly )
 	{		
@@ -194,4 +194,4 @@ CPlayer* CPlayerAlloc::GetNewPly()
 		return NULL;
 	}
 	return pCPly;
-T_E}
+}

@@ -28,7 +28,7 @@ CMapRes::CMapRes()
 ,m_csStateCellWidth(200),m_csStateCellHeight(200)
 ,m_csBlockUnitWidth(50),m_csBlockUnitHeight(50)
 ,m_byMapID(0),m_bCanStall(true),m_bCanGuild(true)
-{T_B
+{
 	m_bValid = false;
 	m_chState = enumMAP_STATE_CLOSE;
 
@@ -37,10 +37,10 @@ CMapRes::CMapRes()
 	m_timeMgr.Begin(5 * 1000);
 	m_timeRun.Begin(100);
 	m_pfEntryFile = 0;
-T_E}
+}
 
 CMapRes::~CMapRes()
-{T_B
+{
 	if (m_pCMonsterSpawn)
 	{
 		delete m_pCMonsterSpawn;
@@ -64,10 +64,10 @@ CMapRes::~CMapRes()
 		fclose(m_pfEntryFile);
 		m_pfEntryFile = 0;
 	}
-T_E}
+}
 
 bool CMapRes::Init()
-{T_B
+{
 	SetGuildWar(false);
 
 	if( !g_MapID.GetID( m_strMapName.c_str(), m_byMapID ) )
@@ -150,7 +150,7 @@ bool CMapRes::Init()
 	m_bValid = true;
 	Open();
 	return true;
-T_E}
+}
 
 bool CMapRes::SetCopyNum(dbc::Short sCpyNum)
 {
@@ -172,13 +172,13 @@ SubMap* CMapRes::GetCopy(dbc::Short sCpyNO)
 }
 
 BOOL CMapRes::SummonNpc( USHORT sAreaID, const char szNpc[], USHORT sTime )
-{T_B
+{
 	return m_pNpcSpawn->SummonNpc( szNpc, sAreaID, sTime );
-T_E}
+}
 
 // 根据地图控制脚本初始化一些控制信息
 bool CMapRes::InitCtrl(void)
-{T_B
+{
 	if (g_IsFileExist(GetResPath(m_szCtrlFile)))
 		luaL_dofile(g_pLuaState, GetResPath(m_szCtrlFile));
 
@@ -216,11 +216,11 @@ bool CMapRes::InitCtrl(void)
 	m_pfEntryFile = fopen(GetResPath(m_szEntryFile), "rb");
 
 	return true;
-T_E}
+}
 
 // 创建入口，向目标地图发送入口的创建脚本文件.
 bool CMapRes::CreateEntry(void)
-{T_B
+{
 	if(!m_pfEntryFile)
 		return false;
 	fseek(m_pfEntryFile, 0, SEEK_SET);
@@ -290,11 +290,11 @@ bool CMapRes::CreateEntry(void)
 	}
 
 	return true;
-T_E}
+}
 
 // 释放入口，向目标地图发送入口关闭命令
 bool CMapRes::DestroyEntry(void)
-{T_B
+{
 	if (g_cchLogMapEntry)
 		//LG("地图入口流程", "请求关闭入口：位置 %s --> %s\n", GetName(), m_szEntryMapName);
 		LG("map entrance flow", "ask for close entrance:position %s --> %s\n", GetName(), m_szEntryMapName);
@@ -313,11 +313,11 @@ bool CMapRes::DestroyEntry(void)
 	}
 
 	return true;
-T_E}
+}
 
 // 告诉入口调整当前玩家数目
 bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
-{T_B
+{
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
@@ -338,11 +338,11 @@ bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
 	}
 
 	return true;
-T_E}
+}
 
 // 请求入口关闭副本
 bool CMapRes::SubEntryCopy(dbc::Short sCopyNO)
-{T_B
+{
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
@@ -365,29 +365,29 @@ bool CMapRes::SubEntryCopy(dbc::Short sCopyNO)
 	}
 
 	return true;
-T_E}
+}
 
 bool CMapRes::SetEntryMapName(const char *szMapName)
-{T_B
+{
 	if (!szMapName) return false;
 	strncpy(m_szEntryMapName, szMapName, MAX_MAPNAME_LENGTH - 1);
 	m_szEntryMapName[MAX_MAPNAME_LENGTH - 1] = '\0';
 
 	return true;
-T_E}
+}
 
 bool CMapRes::Open(void)
-{T_B
+{
 	if (m_chState == enumMAP_STATE_OPEN)
 		return true;
 
 	m_chState = enumMAP_STATE_OPEN;
 
 	return true;
-T_E}
+}
 
 bool CMapRes::Close(void)
-{T_B
+{
 	if (m_chState == enumMAP_STATE_CLOSE)
 	{
 		if (g_cchLogMapEntry)
@@ -419,11 +419,11 @@ bool CMapRes::Close(void)
 	}
 
 	return false;
-T_E}
+}
 
 // 控制入口的生命形态
 void CMapRes::Run(DWORD dwCurTime)
-{T_B
+{
 	if (!m_timeRun.IsOK(dwCurTime))
 		return;
 
@@ -496,11 +496,11 @@ void CMapRes::Run(DWORD dwCurTime)
 		CopyNotice(szInfo);
 	}
 
-T_E}
+}
 
 // 打开入口
 bool CMapRes::OpenEntry(void)
-{T_B
+{
 	if (m_chEntryState == enumMAPENTRY_STATE_OPEN)
 		return true;
 
@@ -519,11 +519,11 @@ bool CMapRes::OpenEntry(void)
 	m_chEntryState = enumMAPENTRY_STATE_ASK_OPEN;
 
 	return true;
-T_E}
+}
 
 // 关闭入口
 bool CMapRes::CloseEntry(void)
-{T_B
+{
 	if (m_chEntryState == enumMAPENTRY_STATE_ASK_OPEN)
 		return false;
 
@@ -539,11 +539,11 @@ bool CMapRes::CloseEntry(void)
 	m_chEntryState = enumMAPENTRY_STATE_ASK_CLOSE;
 
 	return true;
-T_E}
+}
 
 // 此函数待续（副本关闭操作要等到入口的相关操作成功返回后才能执行）
 bool CMapRes::CopyClose(dbc::Short sCopyNO)
-{T_B
+{
 	if (sCopyNO >= GetCopyNum())
 		return false;
 
@@ -563,10 +563,10 @@ bool CMapRes::CopyClose(dbc::Short sCopyNO)
 	}
 
 	return true;
-T_E}
+}
 
 bool CMapRes::CopyNotice(const char *szString, dbc::Short sCopyNO)
-{T_B
+{
 	if (sCopyNO >= GetCopyNum())
 		return false;
 
@@ -577,16 +577,16 @@ bool CMapRes::CopyNotice(const char *szString, dbc::Short sCopyNO)
 		m_pCMapCopy[sCopyNO].Notice(szString);
 
 	return true;
-T_E}
+}
 
 // 关闭副本
 bool CMapRes::ReleaseCopy(dbc::Short sCopyNO)
-{T_B
+{
 	return SubEntryCopy(sCopyNO);
-T_E}
+}
 
 void CMapRes::CheckEntryState(dbc::Char chState)
-{T_B
+{
 	if (chState == enumMAPENTRY_STATE_OPEN)
 	{
 		if (m_chEntryState == enumMAPENTRY_STATE_ASK_OPEN)
@@ -619,11 +619,11 @@ void CMapRes::CheckEntryState(dbc::Char chState)
 			Close();
 		}
 	}
-T_E}
+}
 
 // 取现一个正在运行的副本
 SubMap* CMapRes::GetNextUsedCopy(void)
-{T_B
+{
 	if (!m_pCMapCopy)
 		return NULL;
 
@@ -640,26 +640,26 @@ SubMap* CMapRes::GetNextUsedCopy(void)
 	}
 
 	return NULL;
-T_E}
+}
 
 mission::CNpc* CMapRes::FindNpc( const char szName[] )
-{T_B
+{
 	if( szName )
 	{
 		return m_pNpcSpawn->FindNpc( szName );
 	}
 	return NULL;
-T_E}
+}
 
 //=============================================================================
 CAreaData::CAreaData()
-{T_B
+{
 	m_sUnitCountX = 0;
 	m_sUnitCountY = 0;
 	m_sUnitWidth = 100;
 	m_sUnitHeight = 100;
 	m_nID = -1;
-T_E}
+}
 
 CAreaData::~CAreaData()
 {
@@ -667,7 +667,7 @@ CAreaData::~CAreaData()
 }
 
 Long CAreaData::Init(_TCHAR *chFile)
-{T_B
+{
 	if ((m_nID = s_openAttribFile(chFile)) == -1)
 		return 0;
 
@@ -678,43 +678,43 @@ Long CAreaData::Init(_TCHAR *chFile)
 	m_sUnitCountY = (Short)nHeight;
 
 	return 1;
-T_E}
+}
 
 void CAreaData::Free()
 {
 }
 
 bool CAreaData::GetUnitSize(Short *psWidth, Short *psHeight)
-{T_B
+{
 	*psWidth = m_sUnitWidth;
 	*psHeight = m_sUnitHeight;
 
 	return true;
-T_E}
+}
 
 bool CAreaData::GetUnitAttr(Short sUnitX, Short sUnitY, uShort &usAttribute)
-{T_B
+{
 	if (m_nID == -1)
 		return false;
 	//if (!IsValidPos(sUnitX, sUnitY))
 	//	return false;
 	return s_getTileAttrib(m_nID, sUnitX, sUnitY, usAttribute);
-T_E}
+}
 
 bool CAreaData::GetUnitIsland(Short sUnitX, Short sUnitY, uChar &uchIsland)
-{T_B
+{
 	if (m_nID == -1)
 		return false;
 	//if (!IsValidPos(sUnitX, sUnitY))
 	//	return false;
 	return s_getTileIsland(m_nID, sUnitX, sUnitY, uchIsland);
-T_E}
+}
 
 //=============================================================================
 CMapID::CMapID()
-{T_B
+{
 	Clear();
-T_E}
+}
 
 CMapID::~CMapID()
 {
@@ -728,17 +728,17 @@ void CMapID::Clear()
 }
 
 BOOL CMapID::AddInfo( const char szMap[], BYTE byID )
-{T_B
+{
 	if( m_byNumMap >= MAX_MAP )
 		return FALSE;
 	strncpy( m_MapInfo[m_byNumMap].szMap, szMap, MAX_MAPNAME_LENGTH - 1 );
 	m_MapInfo[m_byNumMap].byID = byID;
 	m_byNumMap++;
 	return TRUE;
-T_E}
+}
 
 BOOL CMapID::GetID( const char szMap[], BYTE& byID )
-{T_B
+{
 	for( BYTE b = 0; b < m_byNumMap; b++ )
 	{
 		if( strcmp( m_MapInfo[b].szMap, szMap ) == 0 )
@@ -748,10 +748,10 @@ BOOL CMapID::GetID( const char szMap[], BYTE& byID )
 		}
 	}
 	return FALSE;
-T_E}
+}
 
 CMapRes* CMapID::GetMap( BYTE byID )
-{T_B
+{
 	for( BYTE b = 0; b < m_byNumMap; b++ )
 	{
 		if( byID == m_MapInfo[b].byID )
@@ -760,10 +760,10 @@ CMapRes* CMapID::GetMap( BYTE byID )
 		}
 	}
 	return NULL;
-T_E}
+}
 
 BOOL CMapID::SetMap( BYTE byID, CMapRes* pMap )
-{T_B
+{
 	for( BYTE b = 0; b < m_byNumMap; b++ )
 	{
 		if( byID == m_MapInfo[b].byID )
@@ -773,4 +773,4 @@ BOOL CMapID::SetMap( BYTE byID, CMapRes* pMap )
 		}
 	}
 	return FALSE;
-T_E}
+}

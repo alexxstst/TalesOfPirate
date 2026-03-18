@@ -100,12 +100,12 @@ type GroupServerSystem
                 if sess > SESS_FLAG then
                     // Ответ на наш исходящий SyncCall
                     processSess packet |> ignore
-                elif sess > 0u then
+                elif sess > 0u && sess < SESS_FLAG then
                     // Входящий RPC от GroupServer (OnServeCall)
                     this.OnServeCall(sess, packet)
                     packet.Dispose()
                 else
-                    // Обычное async-сообщение (OnProcessData)
+                    // sess = 0 ИЛИ sess = SESS_FLAG → обычная команда
                     this.OnProcessData(packet)
                     packet.Dispose()
             with ex ->
@@ -122,6 +122,12 @@ type GroupServerSystem
                 | _ -> ()
 
             logger.LogWarning("GroupServerSystem: отключён от GroupServer")
+
+            // Сбросить GpAddr у всех игроков, чтобы SyncPlayerList
+            // заново зарегистрировал их после переподключения
+            if not (isNull _clientSystem) then
+                _clientSystem.ResetAllGpAddrs()
+
             Task.Run(Func<Task>(fun () -> task {
                 try
                     do! Task.Delay(5000, _ct)
@@ -157,13 +163,13 @@ type GroupServerSystem
     member private this.Login(channel: GroupServerIO) =
         let w = WPacket(64)
         w.WriteCmd(Commands.CMD_TP_LOGIN)
-        w.WriteUInt16(uint16 cfg.ProtocolVersion)
+        w.WriteInt64(int64 cfg.ProtocolVersion)
         w.WriteString(gateCfg.Name)
 
         (this :> IGroupServerSystem).SyncCall(channel, w, fun response ->
             match response with
             | Some rpkt ->
-                let err = rpkt.ReadInt16()
+                let err = int16 (rpkt.ReadInt64())
 
                 if err <> 0s then
                     logger.LogError("Login: GroupServer отклонил регистрацию, err={Err}", err)
@@ -186,7 +192,7 @@ type GroupServerSystem
             let mutable w = WPacket(16)
             w.WriteCmd(0us)
             w.WriteSess(sess ||| SESS_FLAG)
-            w.WriteInt16(errCode)
+            w.WriteInt64(int64 errCode)
             ch.SendPacket(w)
 
     /// Найти Playing-игрока по playerId и проверить gpAddr.
@@ -203,13 +209,17 @@ type GroupServerSystem
     member private this.OnServeCall(sess: uint32, packet: IRPacket) =
         match packet.GetCmd() with
         | Commands.CMD_PT_KICKPLAYINGPLAYER -> this.PT_KICKPLAYINGPLAYER(sess, packet)
+        // CMD_MM_DO_STRING приходит из TP_USER_LOGIN (C++ GroupServer) с ненулевым SESS,
+        // т.к. LIBDBC не обнуляет SESS в новых пакетах внутри RPC-обработчика.
+        // Действие то же: broadcast на все GameServer. RPC-ответ не нужен.
+        | Commands.CMD_MM_DO_STRING -> _gameSystem.BroadcastAll(packet)
         | cmd ->
-            logger.LogWarning("OnServeCall: неизвестная RPC-команда {Cmd}", cmd)
+            logger.LogWarning("OnServeCall: неизвестная RPC-команда {Cmd} с GroupServer пришло", cmd)
 
     /// CMD_PT_KICKPLAYINGPLAYER: кик играющего игрока через GameServer.
     /// C++ аналог: ToGroupServer::OnServeCall, case CMD_PT_KICKPLAYINGPLAYER.
     member private this.PT_KICKPLAYINGPLAYER(sess: uint32, packet: IRPacket) =
-        let playerId = packet.ReadUInt32()
+        let playerId = uint32 (packet.ReadInt64())
 
         match _clientSystem.GetPlayingPlayerById(PlayerId_ playerId) with
         | Some playing ->
@@ -217,7 +227,7 @@ type GroupServerSystem
             if not (isNull playing.GameServer) then
                 let mutable w = WPacket(16)
                 w.WriteCmd(Commands.CMD_TM_KICKCHA)
-                w.WriteUInt32(playing.DatabaseId)
+                w.WriteInt64(int64 playing.DatabaseId)
                 playing.GameServer.SendPacket(w)
 
             // Дисконнектить клиента
@@ -264,9 +274,9 @@ type GroupServerSystem
 
     /// CMD_AP_KICKUSER / CMD_PT_KICKUSER: кик клиента по gpAddr.
     member private _.PT_KICKUSER(packet: IRPacket) =
-        let _aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
-        let gpAddr = packet.ReverseReadUInt32()
+        let _aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
+        let gpAddr = uint32 (packet.ReverseReadInt64())
 
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player when player.GpAddr = gpAddr ->
@@ -279,9 +289,9 @@ type GroupServerSystem
 
     /// CMD_PT_ESTOPUSER / CMD_PT_DEL_ESTOPUSER: установить/снять Estop.
     member private _.PT_ESTOP(packet: IRPacket, value: bool) =
-        let _aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
-        let gpAddr = packet.ReverseReadUInt32()
+        let _aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
+        let gpAddr = uint32 (packet.ReverseReadInt64())
 
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player when player.GpAddr = gpAddr ->
@@ -301,22 +311,22 @@ type GroupServerSystem
     /// Диапазон CMD_PC_BASE (5000..5499) + CMD_MC_SYSINFO: пересылка клиентам по trailer.
     /// Trailer: [body][playerId₁][gpAddr₁]...[playerIdₙ][gpAddrₙ][aimnum(2b)]
     member private _.ForwardPC(cmd: uint16, packet: IRPacket) =
-        let aimnum = int (packet.ReverseReadUInt16())
+        let aimnum = int (packet.ReverseReadInt64())
 
         // Считать все пары (playerId, gpAddr) из trailer
         let mutable lastValidPlayer: PlayerChannelIO = null
 
         let targets =
             Array.init aimnum (fun _ ->
-                let playerId = packet.ReverseReadUInt32()
-                let gpAddr = packet.ReverseReadUInt32()
+                let playerId = uint32 (packet.ReverseReadInt64())
+                let gpAddr = uint32 (packet.ReverseReadInt64())
 
                 match _clientSystem.GetPlayerById(PlayerId_ playerId) with
                 | Some player when player.GpAddr = gpAddr -> Some player
                 | _ -> None)
 
         // Обрезать trailer
-        packet.DiscardLast(4 * 2 * aimnum + 2) |> ignore
+        packet.DiscardLast(2 * aimnum + 1) |> ignore
 
         // Переслать каждому валидному клиенту
         for target in targets do
@@ -334,11 +344,11 @@ type GroupServerSystem
                 let mutable w = WPacket(packet)
                 w.WriteCmd(Commands.CMD_TM_CHANGE_PERSONINFO)
                 let (ChannelId_ rawId) = lastValidPlayer.Id
-                w.WriteUInt32(rawId)
+                w.WriteInt64(int64 rawId)
 
                 match lastValidPlayer.GmAddr with
-                | Some(GameServerPlayerId_ gmAddr) -> w.WriteUInt32(gmAddr)
-                | None -> w.WriteUInt32(0u)
+                | Some(GameServerPlayerId_ gmAddr) -> w.WriteInt64(int64 gmAddr)
+                | None -> w.WriteInt64(0L)
 
                 game.SendPacket(w)
 
@@ -351,14 +361,14 @@ type GroupServerSystem
     /// Диапазон CMD_PM_BASE (4500..4999): пересылка на GameServer(s) по trailer.
     /// Trailer: [body][playerId₁][gpAddr₁]...[playerIdₙ][gpAddrₙ][aimnum(2b)]
     member private _.ForwardPM(packet: IRPacket) =
-        let aimnum = int (packet.ReverseReadUInt16())
+        let aimnum = int (packet.ReverseReadInt64())
 
         if aimnum = 0 then
-            // Broadcast на все GameServer: обрезать trailer (2 байта aimnum)
-            packet.DiscardLast(2) |> ignore
+            // Broadcast на все GameServer: обрезать trailer (1 элемент aimnum)
+            packet.DiscardLast(1) |> ignore
 
             let mutable w = WPacket(packet)
-            w.WriteUInt32(0u)
+            w.WriteInt64(0L)
 
             // Обернуть в RPacket для BroadcastAll
             use rpk = new RPacket(w.GetPacketMemory()) :> IRPacket
@@ -368,12 +378,12 @@ type GroupServerSystem
             // Считать пары из trailer
             let targets =
                 Array.init aimnum (fun _ ->
-                    let playerId = packet.ReverseReadUInt32()
-                    let gpAddr = packet.ReverseReadUInt32()
+                    let playerId = uint32 (packet.ReverseReadInt64())
+                    let gpAddr = uint32 (packet.ReverseReadInt64())
                     struct (playerId, gpAddr))
 
             // Обрезать trailer
-            packet.DiscardLast(4 * 2 * aimnum + 2) |> ignore
+            packet.DiscardLast(2 * aimnum + 1) |> ignore
 
             // Для каждого игрока: переслать на его GameServer
             for struct (playerId, gpAddr) in targets do
@@ -381,11 +391,11 @@ type GroupServerSystem
                 | Some player when player.GpAddr = gpAddr && not (isNull player.Game) ->
                     let mutable w = WPacket(packet)
                     let (ChannelId_ rawId) = player.Id
-                    w.WriteUInt32(rawId)
+                    w.WriteInt64(int64 rawId)
 
                     match player.GmAddr with
-                    | Some(GameServerPlayerId_ gmAddr) -> w.WriteUInt32(gmAddr)
-                    | None -> w.WriteUInt32(0u)
+                    | Some(GameServerPlayerId_ gmAddr) -> w.WriteInt64(int64 gmAddr)
+                    | None -> w.WriteInt64(0L)
 
                     player.Game.SendPacket(w)
                 | _ -> ()

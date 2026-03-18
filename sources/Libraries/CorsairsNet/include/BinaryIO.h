@@ -25,7 +25,7 @@ inline void writeUInt16(uint8_t* dst, uint16_t v) {
     std::memcpy(dst, &be, 2);
 }
 
-inline void writeInt16(uint8_t* dst, int16_t v) {
+inline void WriteInt64(uint8_t* dst, int16_t v) {
     writeUInt16(dst, static_cast<uint16_t>(v));
 }
 
@@ -34,7 +34,7 @@ inline void writeUInt32(uint8_t* dst, uint32_t v) {
     std::memcpy(dst, &be, 4);
 }
 
-inline void writeInt32(uint8_t* dst, int32_t v) {
+inline void WriteInt64(uint8_t* dst, int32_t v) {
     writeUInt32(dst, static_cast<uint32_t>(v));
 }
 

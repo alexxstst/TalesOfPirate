@@ -12,16 +12,16 @@
 CParser	g_CParser;
 
 void CParser::Init(lua_State *pLS)
-{T_B
+{
 	m_pSLua = pLS;
-T_E}
+}
 
 void CParser::Free()
-{T_B
-T_E}
+{
+}
 
 int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
-{T_B
+{
 
 /* 	if (!csString || csString == "" || csString == "0")
 	{
@@ -160,4 +160,4 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		LG("script_time", "script[%s]cost time too long time = %d\n", csString, dwEndTime);
 	}
 	return nRet;
-T_E}
+}

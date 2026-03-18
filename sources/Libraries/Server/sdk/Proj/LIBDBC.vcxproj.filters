@@ -127,7 +127,7 @@
     <ClInclude Include="..\Include\RWMutex.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\ThreadPool.h">
+    <ClInclude Include="..\Include\Task.h">
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\Timer.h">

@@ -19,7 +19,7 @@ namespace mission
 		virtual void SetType() { m_byType = EUDEMON; }
 
 		// 网络消息处理函数
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 		
 		// 装载世界守护神配置信息
 		virtual BOOL Load( const char szMsgProc[], const char szName[], dbc::uLong ulID );

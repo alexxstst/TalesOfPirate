@@ -119,7 +119,7 @@ inline int lua_EquipStringItem(lua_State *pLS){
 
 
 inline int lua_GetChaGuildPermission(lua_State *pLS)
-{T_B
+{
 	int nParaNum = lua_gettop(pLS); // 取得参数个数
 	if (nParaNum != 1){
 		return 0;
@@ -127,7 +127,6 @@ inline int lua_GetChaGuildPermission(lua_State *pLS)
 	CCharacter *pCha = (CCharacter*)lua_touserdata(pLS, 1);
 	lua_pushnumber(pLS, pCha->guildPermission);
 	return 1;
-	T_E
 }
 
 inline int lua_GetIMP(lua_State *pLS){
@@ -158,7 +157,7 @@ inline int lua_SetIMP(lua_State *pLS){
 }
 
 inline int lua_GetChaAttr(lua_State *pLS)
-{T_B
+{
 	bool	bSuccess = true;
 	int		nAttrVal;
 	LONG32  lAttrVal;
@@ -212,11 +211,11 @@ inline int lua_GetChaAttr(lua_State *pLS)
 	}
 	else
 		return 0;
-T_E}
+}
 
 // 设置角色对应属性的值
 inline int lua_SetChaAttr(lua_State *pLS)
-{T_B
+{
 	bool	bSuccess = true;
 
 	int nParaNum = lua_gettop(pLS); // 取得参数个数
@@ -255,11 +254,11 @@ inline int lua_SetChaAttr(lua_State *pLS)
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 // 返回角色类型：0，非玩家。1，玩家。
 inline int lua_CheckChaRole(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 int		nType = 0;
 
@@ -310,13 +309,13 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 取角色的玩家对象
 // 参数：角色对象
 // 返回：玩家对象（非玩家对象返回0）
 inline int lua_GetChaPlayer(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 CPlayer	*pCPly = 0;
 
@@ -366,14 +365,14 @@ if (pCPly)
 }
 else
 return 0;
-T_E}
+}
 
 // 取玩家的队伍编号
 // 参数：玩家对象
 // 返回：队伍编号
 inline int lua_GetPlayerTeamID(lua_State* pLS)
 {
-	T_B{
+	{
 		bool bSuccess = true;
 		DWORD ret = 0;
 #ifdef defPARSE_LOG
@@ -409,14 +408,14 @@ inline int lua_GetPlayerTeamID(lua_State* pLS)
 		lua_pushnumber(pLS, ret);
 
 		return 1;
-	}T_E
+	}
 }
 
 // 取玩家的编号
 // 参数：玩家对象
 // 返回：编号
 inline int lua_GetPlayerID(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 short ret = 0;
 #ifdef defPARSE_LOG
@@ -459,13 +458,13 @@ if (bSuccess)
 lua_pushnumber(pLS, ret);
 
 return 1;
-T_E}
+}
 
 // 设置技能区域
 // 参数：区域类型编号，对应该类型的参数（参见CompCommand.h ERangeType）
 // 返回值：无
 inline int lua_SetSkillRange(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -506,13 +505,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 设置技能区域状态
 // 参数：状态编号，等级，时间（秒）
 // 返回值：无
 inline int lua_SetRangeState(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -548,13 +547,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 取得技能点的位置（单位：厘米）
 // 参数：无
 // 返回值：位置[x,y]
 inline int lua_GetSkillPos(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -588,14 +587,14 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 取得对象的技能等级
 // 参数：角色对象
 //       技能编号
 // 返回值：技能等级
 inline int lua_GetSkillLv(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 char chSkillLv = 0;
 
@@ -651,14 +650,14 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 取得角色对应的状态等级
 // 参数：角色对象
 //       状态编号
 // 返回值：状态等级
 inline int lua_GetChaStateLv(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 unsigned char uchStateLv = 0;
 
@@ -711,13 +710,13 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 取得技能对象的方向
 // 参数：角色对象
 // 返回值：方向（单位：度）
 inline int lua_GetObjDire(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 int ret = 0;
 
@@ -763,14 +762,14 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 增加技能对象的状态
 // 参数：使用方对象，被用方对象
 //       状态编号，状态等级，状态持续时间
 // 返回值：无
 inline int lua_AddState(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -827,13 +826,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 删除技能对象的状态
 // 参数：角色对象，状态编号
 // 返回值：无
 inline int lua_RemoveState(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -886,7 +885,7 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 角色所在地表的某个状态的等级
 // 参数：角色对象，状态编号
@@ -948,7 +947,7 @@ End:
 // 参数：角色对象
 // 返回值：无
 inline int lua_SkillMiss(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -991,13 +990,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 技能Crt
 // 参数：角色对象
 // 返回值：无
 inline int lua_SkillCrt(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -1040,13 +1039,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 技能不能使用
 // 参数：角色对象
 // 返回值：无
 inline int lua_SkillUnable(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -1093,13 +1092,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 增加技能
 // 参数：角色对象，技能编号，等级，等级是设置还是在原来的基础上增加（1，设置。0，增加），是否扣除需要的技能点（１，扣除。０，不扣除）
 // 返回值：1，成功。0，不成功
 inline int lua_AddChaSkill(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -1167,11 +1166,11 @@ else
 lua_pushnumber(pLS, 0);
 
 return 1;
-T_E}
+}
 
 // 使用道具失败
 inline int lua_UseItemFailed(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -1205,11 +1204,11 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 //// 给任务时使用道具失败
 //inline int lua_UseItemGiveMission(lua_State *pLS)
-//{T_B
+//{
 //	bool	bSuccess = true;
 //
 //
@@ -1230,13 +1229,13 @@ T_E}
 //	}
 //
 //	return 0;
-//T_E}
+//}
 
 // 设置物品掉落
 // 参数：掉落个数，物品索引（以基数1进行编号）
 // 返回值：无
 inline int lua_SetItemFall(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -1279,13 +1278,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 击退
 // 参数：攻击方对象，受击方对象，击退长度（厘米）
 // 返回值：无
 inline int lua_BeatBack(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -1344,13 +1343,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 是否在竞技
 // 参数：角色对象
 // 返回值：1，是。0，不是
 inline int lua_IsInGymkhana(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 char chRet = 0; 
 
@@ -1397,13 +1396,13 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 是否在PK
 // 参数：角色对象
 // 返回值：1，是。0，不是
 inline int lua_IsInPK(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 char chRet = 0;
 
@@ -1450,7 +1449,7 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 得到背包中某一道具的数目
 // 参数：角色，道具编号
@@ -3175,25 +3174,25 @@ End:
 }
 
 inline int lua_LuaPrint(lua_State *pLS)
-{T_B
+{
 #ifdef defPARSE_LOG
 g_pCLogObj->Log(lua_tostring(pLS, 1));
 #endif
 
 return 0;
-T_E}
+}
 
 inline int lua_Stop(lua_State *pLS)
-{T_B
+{
 g_pGameApp->m_CTimerReset.Begin(1000);
 g_pGameApp->m_ulLeftSec = (int)lua_tonumber(pLS, 1);
 
 return 0;
-T_E}
+}
 
 // 全服通告
 inline int lua_Notice(lua_State *pLS)
-{T_B
+{
 if (!lua_isstring(pLS, 1))
 return 0;
 
@@ -3207,11 +3206,10 @@ if (g_cchLogMapEntry)
 LG("map_entrance_flow", "system notice : %s\n", cszNotiStr);
 
 return 0;
-T_E}
+}
 
 inline int lua_GuildNotice(lua_State *pLS)
 {
-	T_B
 	if (!lua_isnumber(pLS, 1) || !lua_isstring(pLS, 2))
 		return 0;
 
@@ -3219,12 +3217,11 @@ inline int lua_GuildNotice(lua_State *pLS)
 	const char *cszNotiStr = lua_tostring(pLS, 2);
 	g_pGameApp->GuildNotice(guildID, cszNotiStr);
 	return 0;
-	T_E
 }
 
 //Add by sunny.sun20080804
 inline int lua_ScrollNotice( lua_State* L )
-{T_B
+{
 int nParaNum = lua_gettop(L); // 取得参数个数
 if(	nParaNum != 3 )
 {
@@ -3249,11 +3246,11 @@ LG("map_entrance_flow", "system notice : %s\n", cszNotiStr);
 
 return 0;
 
-T_E}
+}
 
 //Add by sunny.sun 20080821
 inline int lua_GMNotice( lua_State *pLS )
-{T_B
+{
 	const char *gmNotice =	lua_tostring(pLS, 1);
 	g_pGameApp->GMNotice( gmNotice );
 	if (strstr(gmNotice, RES_STRING(GM_EXPAND_H_00102)))
@@ -3263,11 +3260,11 @@ inline int lua_GMNotice( lua_State *pLS )
 
 	return 0;
 
-T_E}
+}
 
 // 玩家通告
 inline int lua_ChaNotice(lua_State *pLS)
-{T_B
+{
 if (!lua_isstring(pLS, 1) || !lua_isstring(pLS, 2))
 return 0;
 
@@ -3281,13 +3278,13 @@ if (g_cchLogMapEntry)
 LG("map_entrance_flow", "system notice : %s\n", cszNotiStr);
 
 return 0;
-T_E}
+}
 
 // 地图副本通告
 // 参数：地图副本对象，通告内容
 // 返回值：无
 inline int lua_MapCopyNotice(lua_State *pLS)
-{T_B
+{
 if (!lua_islightuserdata(pLS, 1) || !lua_isstring(pLS, 2))
 return 0;
 
@@ -3296,13 +3293,13 @@ const char	*cszNotiStr = lua_tostring(pLS, 2);
 pCMapCopy->Notice(cszNotiStr);
 
 return 0;
-T_E}
+}
 
 // 地图副本通告
 // 参数：地图对象，副本编号（０为所有副本），通告内容
 // 返回值：无
 inline int lua_MapCopyNotice2(lua_State *pLS)
-{T_B
+{
 if (!lua_islightuserdata(pLS, 1) || !lua_isnumber(pLS, 2) || !lua_isstring(pLS, 3))
 return 0;
 
@@ -3310,7 +3307,7 @@ CMapRes	*pCMap = (CMapRes *)lua_touserdata(pLS, 1);
 pCMap->CopyNotice(lua_tostring(pLS, 3), (short)lua_tonumber(pLS, 2) - 1);
 
 return 0;
-T_E}
+}
 
 inline int lua_MapChaLight(lua_State *pLS)
 {
@@ -3321,7 +3318,7 @@ inline int lua_MapChaLight(lua_State *pLS)
 // 参数：掉料对象，属主对象
 // 返回值：成功1，失败0
 inline int lua_SetItemHost(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -3367,13 +3364,13 @@ else
 lua_pushnumber(pLS, 0);
 
 return 1;
-T_E}
+}
 
 // 取得角色名称
 // 参数：角色对象
 // 返回值：角色名称
 inline int lua_GetChaName(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 const char* ret = "";
 
@@ -3419,7 +3416,7 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 设置地图入口的控制时间
 // 参数：地图指针，首次执行时间，后续执行间隔，执行后的消失间隔，执行后的地图关闭间隔
@@ -4434,7 +4431,7 @@ End:
 // 参数：角色对象
 // 返回值：分边编号
 inline int lua_GetChaSideID(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 int		nSideID = 0;
 
@@ -4487,13 +4484,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 设置角色分边编号
 // 参数：角色对象，分边编号
 // 返回值：１，成功。０，失败
 inline int lua_SetChaSideID(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -4544,13 +4541,13 @@ else
 lua_pushnumber(pLS, 0);
 
 return 1;
-T_E}
+}
 
 // 取角色公会编号
 // 参数：角色对象
 // 返回值：公会编号（０为无效公会）
 inline int lua_GetChaGuildID(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 int		nGuildID = 0;
 
@@ -4599,13 +4596,13 @@ if (bSuccess)
 
 lua_pushnumber(pLS, nGuildID);
 return 1;
-T_E}
+}
 
 // 取角色队伍编号
 // 参数：角色对象
 // 返回值：队伍编号（０为无效队伍）
 inline int lua_GetChaTeamID(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 int		nTeamID = 0;
 
@@ -4654,13 +4651,13 @@ if (bSuccess)
 
 lua_pushnumber(pLS, nTeamID);
 return 1;
-T_E}
+}
 
 // 判断角色是否在PK状态
 // 参数：角色对象
 // 返回角色PK状态：1，可以PK。0，不可以。
 inline int lua_CheckChaPKState(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 int		nPKState = 0;
 
@@ -4709,13 +4706,13 @@ if (bSuccess)
 
 lua_pushnumber(pLS, nPKState);
 return 1;
-T_E}
+}
 
 // 取公会名
 // 参数：公会ID
 // 返回：公会名
 inline int lua_GetGuildName(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 std::string	strGuildName;
 
@@ -4753,7 +4750,7 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 关闭地图入口
 // 参数：地图名称
@@ -4857,7 +4854,7 @@ End:
 // 参数：角色对象，座右铭
 // 返回值：１，成功。０，失败
 inline int lua_SetChaMotto(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -4908,13 +4905,13 @@ else
 lua_pushnumber(pLS, 0);
 
 return 1;
-T_E}
+}
 
 // 角色是否在陆地区域
 // 参数：角色对象
 // 返回值：１，陆地。０，海洋
 inline int lua_IsChaInLand(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 char	chIsLand = 0;
 
@@ -4974,7 +4971,7 @@ if (bSuccess)
 }
 else
 return 0;
-T_E}
+}
 
 // 设置队伍挑战地图名
 // 参数：地图名
@@ -5570,7 +5567,7 @@ End:
 // 参数：角色对象
 // 返回值：地图类型
 inline int lua_GetChaMapType(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 char chMapType = enumMAPTYPE_NORMAL;
 
@@ -5630,14 +5627,13 @@ if (bSuccess)
 
 return 0;
 
-T_E
 }
 
 // 设置角色背包的改动标志
 // 参数：角色对象，改动（1，不管实际改动与否均设为全部被改动。0，仅设置实际改动的标志）
 // 返回值：无
 inline int lua_SetChaKitbagChange(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -5680,13 +5676,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 同步角色背包
 // 参数：角色对象，同步类型
 // 返回值：无
 inline int lua_SynChaKitbag(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -5729,13 +5725,13 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 取得角色当前地图的探索度
 // 参数：角色对象
 // 返回值：地图探索度
 inline int lua_GetChaMapOpenScale(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 float ret = 0.0;
 #ifdef defPARSE_LOG
@@ -5785,13 +5781,13 @@ if (bSuccess)
 lua_pushnumber(pLS, ret);
 
 return 1;
-T_E}
+}
 
 // 完成地图入口的副本设置
 // 参数：地图入口对象，副本编号
 // 返回值：无
 inline int lua_FinishSetMapEntryCopy(lua_State *pLS)
-{T_B
+{
 bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -5834,7 +5830,7 @@ if (bSuccess)
 }
 
 return 0;
-T_E}
+}
 
 // 取道具类型
 // 道具对象
@@ -7008,7 +7004,6 @@ inline void ReloadCal()
 
 inline int lua_GetWinLotteryItemno(lua_State *pLS)
 {
-	T_B
 	int nParaNum = lua_gettop(pLS); // 取得参数个数
 
 	if (nParaNum != 2)
@@ -7035,11 +7030,11 @@ inline int lua_GetWinLotteryItemno(lua_State *pLS)
 		}
 	}
 	return 0;
-T_E}
+}
 
 // 生成中奖号码
 inline int lua_CalWinLottery(lua_State *pLS)
-{T_B
+{
 int nParaNum = lua_gettop(pLS); // 取得参数个数
 if (nParaNum != 2)
 {
@@ -7067,11 +7062,11 @@ if(index >=0 && index <7)
 	}
 }
 return 0;	
-T_E}
+}
 
 // 获取当前期号
 inline int lua_GetLotteryIssue(lua_State *pLS)
-{T_B
+{
 int issue;
 
 if(game_db.GetLotteryIssue(issue))
@@ -7082,30 +7077,30 @@ if(game_db.GetLotteryIssue(issue))
 }
 
 return 0;
-T_E}
+}
 
 // 追加彩票期
 inline int lua_AddLotteryIssue(lua_State *pLS)
-{T_B
+{
 int issue = (int)lua_tonumber(pLS, 1);
 game_db.AddIssue(issue);
 
 return 1;
-T_E}
+}
 
 // 更改彩票期状态
 inline int lua_DisuseLotteryIssue(lua_State *pLS)
-{T_B
+{
 int issue = (int)lua_tonumber(pLS, 1);
 int state = (int)lua_tonumber(pLS, 2);
 game_db.DisuseIssue(issue, state);
 
 return 1;
-T_E}
+}
 
 // 判断是否是注册的合法队伍
 inline int lua_IsValidRegTeam(lua_State *pLS)
-{T_B
+{
 int teamID =(int)lua_tonumber(pLS, 1);
 CCharacter *pCaptain = (CCharacter*)lua_touserdata(pLS, 2);
 CCharacter *pMember1 = (CCharacter*)lua_touserdata(pLS, 3);
@@ -7121,7 +7116,7 @@ else
 }
 
 return 1;
-T_E}
+}
 
 // 判断合法的队伍
 // -1 不是队长
@@ -7130,7 +7125,7 @@ T_E}
 // -4 不存在角色
 // 1 OK
 inline int lua_IsValidTeam(lua_State *pLS)
-{T_B
+{
 // 是否在队伍中
 // 是否是3个人的队伍
 // 是否是师徒关系
@@ -7173,11 +7168,11 @@ if(game_db.IsMasterRelation(masterID, prenticeID1) && game_db.IsMasterRelation(m
 
 lua_pushnumber(pLS, (long)-3);
 return 1;
-T_E}
+}
 
 // 获取当前竞技场赛季号
 inline int lua_GetAmphitheaterSeason(lua_State *pLS)
-{T_B
+{
 int season = -1;
 int round = -1;
 
@@ -7193,11 +7188,11 @@ else
 }
 
 return 0;
-T_E}
+}
 
 // 获取当前竞技场轮次
 inline int lua_GetAmphitheaterRound(lua_State *pLS)
-{T_B
+{
 int season = -1;
 int round = -1;
 
@@ -7213,21 +7208,21 @@ else
 }
 
 return 0;
-T_E}
+}
 
 // 追加竞技场赛季号和轮次
 inline int lua_AddAmphitheaterSeason(lua_State *pLS)
-{T_B
+{
 int season  = (int)lua_tonumber(pLS, 1);
 
 game_db.AddAmphitheaterSeason(season);
 
 return 1;
-T_E}
+}
 
 // 更改赛季状态
 inline int lua_DisuseAmphitheaterSeason(lua_State *pLS)
-{T_B
+{
 int season = (int)lua_tonumber(pLS, 1);
 int state = (int)lua_tonumber(pLS, 2);
 const char* winner = (const char*)lua_tostring(pLS, 3);
@@ -7236,11 +7231,11 @@ if(game_db.DisuseAmphitheaterSeason(season, state,winner ))
 return 1;
 
 return 0;
-T_E}
+}
 
 // 更改赛季轮次
 inline int lua_UpdateAmphitheaterRound(lua_State *pLS)
-{T_B
+{
 int season = (int)lua_tonumber(pLS, 1);
 int round = (int)lua_tonumber(pLS, 2);
 
@@ -7248,11 +7243,11 @@ if(game_db.UpdateAmphitheaterRound(season, round))
 return 1;
 
 return 0;
-T_E}
+}
 
 // 取得竞技场参赛队伍个数
 inline int lua_GetAmphitheaterTeamCount(lua_State *pLS)
-{T_B
+{
 int count = 0;
 if(game_db.GetAmphitheaterTeamCount(count))
 {
@@ -7262,11 +7257,11 @@ if(game_db.GetAmphitheaterTeamCount(count))
 
 lua_pushnumber(pLS, (long)0);
 return 0;
-T_E}
+}
 
 // 取得参赛队伍ID
 inline int lua_GetAmphitheaterNoUseTeamID(lua_State *pLS)
-{T_B
+{
 int teamID = 0;
 if(game_db.GetAmphitheaterNoUseTeamID(teamID))
 {
@@ -7276,11 +7271,11 @@ if(game_db.GetAmphitheaterNoUseTeamID(teamID))
 
 lua_pushnumber(pLS, (long)0);
 return 1;
-T_E}
+}
 
 // 队伍注册
 inline int lua_AmphitheaterTeamSignUP(lua_State *pLS)
-{T_B
+{
 int teamID = (int)lua_tonumber(pLS, 1);
 CCharacter *pCaptain = (CCharacter*)lua_touserdata(pLS, 2);
 CCharacter *pMember1 = (CCharacter*)lua_touserdata(pLS, 3);
@@ -7290,25 +7285,25 @@ if(game_db.AmphitheaterTeamSignUP(teamID,pCaptain->GetPlayer()->GetDBChaId(), pM
 return 1;
 
 return 0;
-T_E}
+}
 
 // 队伍解散
 inline int lua_AmphitheaterTeamCancel(lua_State *pLS)
-{T_B
+{
 int teamID = (int)lua_tonumber(pLS, 1);
 
 if(game_db.AmphitheaterTeamCancel(teamID))
 return 1;
 
 return 0;
-T_E}
+}
 
 //Add by sunny.sun 20080723
 //判断当前人物是否已经注册
 //参数 角色
 //返回值 注册返回1，没有返回0
 inline int lua_IsAmphitheaterLogin(lua_State *pLS)
-{T_B
+{
 //int characterid = (int)lua_tonumber(pLS,1);
 CCharacter *pActor = (CCharacter*)lua_touserdata(pLS, 1);
 if(game_db.IsAmphitheaterLogin(pActor->GetID()))
@@ -7318,13 +7313,13 @@ if(game_db.IsAmphitheaterLogin(pActor->GetID()))
 }
 lua_pushnumber(pLS,(long)1);
 return 1;
-T_E}
+}
 
 //判断地图队伍已经注册个数
 //参数地图id
 //返回值 该地图注册队伍个数0，1，2
 inline int lua_IsMapFull(lua_State *pLS)
-{T_B
+{
 int PActorIDNum = 0;
 
 int MapID = (int)lua_tonumber(pLS, 1);
@@ -7334,12 +7329,12 @@ if(game_db.IsMapFull(MapID,PActorIDNum))
 	return 1;
 }
 return 0;
-T_E}
+}
 
 //更新进入地图后map字段的值为地图id
 // 参数 队长角色，地图id
 inline int lua_UpdateMapAfterEnter(lua_State *pLS)
-{T_B
+{
 	CCharacter *  Captain = (CCharacter*)lua_touserdata(pLS, 1);
 	int CaptainID = Captain->GetID();
 	int MapID = (int)lua_tonumber(pLS, 2);
@@ -7347,22 +7342,22 @@ inline int lua_UpdateMapAfterEnter(lua_State *pLS)
 	if(game_db.UpdateMapAfterEnter(CaptainID,MapID))
 		return 1;
 	return 0;
-T_E}
+}
 
 //更新比赛结束后map字段
 inline int lua_UpdateMap(lua_State *pLS)
-{T_B
+{
 int Mapid = (int)lua_tonumber(pLS, 1);
 if(game_db.UpdateMap(Mapid))
 {
 	return 1;
 }
 return 0;
-T_E}
+}
 //更新地图队伍中mapflag值
 //参数 队伍id，地图id，要设定的mapflag值
 inline int lua_UpdateMapNum(lua_State *pLS)
-{T_B
+{
 int nParaNum = lua_gettop(pLS); // 取得参数个数
 
 if (nParaNum != 3)
@@ -7380,11 +7375,11 @@ if(game_db.UpdateMapNum(Teamid,Mapid,MapFlag))
 }
 return 0;
 
-T_E}
+}
 //获得mapflag的值
 //参数 队伍id
 inline int lua_GetMapFlag(lua_State *pLS)
-{T_B
+{
 int Mapflag = 0;
 int Teamid = (int)lua_tonumber(pLS,1);
 if(game_db.GetMapFlag(Teamid,Mapflag))
@@ -7393,20 +7388,20 @@ if(game_db.GetMapFlag(Teamid,Mapflag))
 	return 1;
 }
 return 0;
-T_E}
+}
 //计算票数最高的复活队伍，并更新使其复活
 inline int lua_SetMaxBallotTeamRelive( lua_State *pLS)
-{T_B
+{
 if(game_db.SetMaxBallotTeamRelive())
 {
 	return 1;
 }
 return 0;
-T_E}
+}
 
 //设置队伍state状态
 inline int lua_SetMatchResult(lua_State *pLS)
-{T_B
+{
 int nParaNum = lua_gettop(pLS); // 取得参数个数
 if (nParaNum != 4)
 {
@@ -7423,10 +7418,10 @@ if(game_db.SetMatchResult(Teamid1,Teamid2,Id1state,Id2state))
 }
 return 0;
 
-T_E}
+}
 //根据地图id取地图中的队伍的队长id
 inline int lua_GetCaptainByMapId(lua_State *pLS)
-{T_B
+{
 int Mapid = (int)lua_tonumber(pLS,1);
 std::string Captainid1;
 std::string Captainid2;
@@ -7473,28 +7468,28 @@ if(game_db.GetCaptainByMapId(Mapid,Captainid1,Captainid2))
 	return 2;
 }
 return 0;
-T_E}
+}
 
 //更新没参加的队伍为复活
 inline int lua_UpdateAbsentTeamRelive(lua_State *pLS)
-{T_B
+{
 if(game_db.UpdateAbsentTeamRelive())
 	return 1;
 return 0;
-T_E}
+}
 
 // 更新胜利队伍winnum值
 inline int lua_UpdateWinnum( lua_State *pLS )
-{T_B
+{
 	int teamid = (int)lua_tonumber(pLS,1);
 	if(game_db.UpdateWinnum( teamid ))
 		return 1;
 	return 0;
-T_E}
+}
 
 //取winnum中唯一最大的值的队伍
 inline int lua_GetUniqueMaxWinnum( lua_State *pLS )
-{T_B
+{
 	int teamid = 0;
 	if(game_db.GetUniqueMaxWinnum( teamid ))
 	{	
@@ -7502,28 +7497,28 @@ inline int lua_GetUniqueMaxWinnum( lua_State *pLS )
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 // 设置matchno状态，用来更新队伍是否进入地图
 inline int lua_SetMatchnoState( lua_State *pLS )
-{T_B
+{
 	int teamid = (int)lua_tonumber(pLS,1);
 	if(game_db.SetMatchnoState( teamid ))
 		return 1;
 	return 0;
-T_E}
+}
 
 // 更新下一轮比赛前state状态
 inline int lua_UpdateState( lua_State *pLS )
-{T_B
+{
 	if(game_db.UpdateState())	
 			return 1;
 	return 0;
-T_E}
+}
 
 //计算state=1时的队伍个数，来判断复活条件
 inline int lua_CloseReliveByState( lua_State *pLS )
-{T_B
+{
 	int statenum = 0;
 	if(game_db.CloseReliveByState(statenum))
 	{	
@@ -7531,21 +7526,21 @@ inline int lua_CloseReliveByState( lua_State *pLS )
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 //根据队伍清除mapflag为空
 inline int lua_CleanMapFlag( lua_State *pLS )
-{T_B
+{
 	int teamid1 = (int)lua_tonumber(pLS,1);
 	int teamid2 = (int)lua_tonumber(pLS,2);
 	if(game_db.CleanMapFlag(teamid1,teamid2))
 		return 1;
 	return 0;
-T_E}
+}
 
 //根据队伍id得到队伍状态
 inline int lua_GetStateByTeamid( lua_State *pLS )
-{T_B
+{
 	int teamid = (int)lua_tonumber(pLS,1);
 	int state = 0;
 	if( game_db.GetStateByTeamid( teamid, state ))
@@ -7554,11 +7549,10 @@ inline int lua_GetStateByTeamid( lua_State *pLS )
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_LookEnergy(lua_State* pLS)
 {
-	T_B
 		bool	bSuccess = true;
 
 #ifdef defPARSE_LOG
@@ -7601,7 +7595,6 @@ End:
 	}
 
 	return 0;
-	T_E
 }
 
 inline int lua_SetExpiration(lua_State* L) {
@@ -7640,7 +7633,7 @@ End:
 }
 
 inline void RegisterLuaGameLogic(lua_State *L)
-{T_B 
+{ 
 g_pCLogObj = new CLogFile;
 if (!g_pCLogObj)
 {
@@ -7846,4 +7839,4 @@ REGFN(SetIMP);
 REGFN(LookEnergy);
 REGFN(SetExpiration);
 // End
-T_E}
+}

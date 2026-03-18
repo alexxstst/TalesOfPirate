@@ -1,6 +1,7 @@
 #include "PacketPool.h"
 #include <algorithm>
 #include <cassert>
+#include <iostream>
 
 namespace net {
 
@@ -44,6 +45,7 @@ uint8_t* PacketPool::Allocate(int size) {
     if (idx >= 0) {
         auto& bucket = _buckets[idx];
         std::lock_guard<std::mutex> lock(bucket.mtx);
+        ++bucket.inUseCount;
 
         if (!bucket.freeList.empty()) {
             uint8_t* buf = bucket.freeList.back();
@@ -66,12 +68,31 @@ void PacketPool::Free(uint8_t* buf, int allocatedSize) {
     if (idx >= 0 && BUCKET_SIZES[idx] == allocatedSize) {
         auto& bucket = _buckets[idx];
         std::lock_guard<std::mutex> lock(bucket.mtx);
+        --bucket.inUseCount;
         bucket.freeList.push_back(buf);
         return;
     }
 
     // Нестандартный размер — просто удаляем
     delete[] buf;
+}
+
+void PacketPool::PrintStats() const {
+    std::cout << "[PacketPool] ";
+    for (int i = 0; i < BUCKET_COUNT; ++i) {
+        auto& bucket = const_cast<Bucket&>(_buckets[i]);
+        int used = bucket.inUseCount.load();
+        int free;
+        {
+            std::lock_guard<std::mutex> lock(bucket.mtx);
+            free = static_cast<int>(bucket.freeList.size());
+        }
+        if (used > 0 || free > 0) {
+            std::cout << bucket.bufSize << "B: used=" << used << " free=" << free;
+            if (i < BUCKET_COUNT - 1) std::cout << " | ";
+        }
+    }
+    std::cout << std::endl;
 }
 
 } // namespace net

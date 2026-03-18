@@ -2,12 +2,13 @@
 
 #ifndef GRPNAMESVR_H
 #define GRPNAMESVR_H
-#include "ThreadPool.h"
-#include "CommRPC.h"
+#include "Task.h"
 #include "PreAlloc.h"
 #include "RunCtrlThrd.h"
 #include "IniFile.h"
 #include "LogStream.h"
+
+#include "CorsairsNet.h"
 
 #include "GateServer.h"
 #include "Player.h"
@@ -26,40 +27,46 @@
 
 _DBC_USING
 
-class GroupServerApp : public TcpServerApp, public RPCMGR {
+class GroupServerApp : public net::ITcpServerHandler {
 public:
-	GroupServerApp(ThreadPool *proc,ThreadPool *comm);
+	GroupServerApp();
 	~GroupServerApp();
 
-	uLong	m_dwCheatCount;	//ʹ����Ҹ���
+	uLong	m_dwCheatCount;	//使用外挂次数
 public:
-	friend void Player::EndPlay(DataSocket *datasock);
+	friend void Player::EndPlay(net::TcpClient *client);
 	void Initialize();
 	void Finalize();
-	virtual	bool	OnConnect(DataSocket *datasock);					//����ֵ:true-��������,false-����������
-	virtual void	OnDisconnect(DataSocket *datasock,int reason);
-	virtual	void	OnProcessData(DataSocket *datasock,RPacket &recvbuf);
-	virtual	WPacket	OnServeCall(DataSocket *datasock,RPacket &in_para);
-	bool GetCHAsFromDBByPlayer(Player *player,WPacket &wpk);
+
+	// net::ITcpServerHandler callbacks
+	bool	OnAccepted(net::TcpClient *client) override;
+	void	OnPacket(net::TcpClient *client, net::RPacket &pkt) override;
+	void	OnDisconnected(net::TcpClient *client, int reason) override;
+
+	// Обработка пакетов (бывший OnProcessData + OnServeCall)
+	void	OnProcessData(net::TcpClient *client, net::RPacket &recvbuf);
+	void	HandleServeCall(net::TcpClient *client, net::RPacket &pk);
+
+	bool GetCHAsFromDBByPlayer(Player *player, net::WPacket &wpk);
 	bool CanCreateBonusChar(Player* player);
-	char SendCharData(Player* player, WPacket& wpk);
+	char SendCharData(Player* player, net::WPacket& wpk);
 	int  GetChaCount(Player* player);
 	void RefreshClients(Player* player, char delChaSlot = -1);
 
-	WPacket	TP_REGISTER(DataSocket *datasock, RPacket &pk);
-	WPacket	TP_LOGIN(DataSocket *datasock,RPacket &pk);
-	WPacket	TP_USER_LOGIN(DataSocket *datasock,RPacket &pk);
-	WPacket TP_USER_LOGOUT(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket	TP_BGNPLAY(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket TP_ENDPLAY(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket	TP_NEWCHA(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket	TP_DELCHA(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket	TP_CREATE_PASSWORD2(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket TP_UPDATE_PASSWORD2(Player *ply,DataSocket *datasock,RPacket &pk);
-	WPacket	TP_CHANGEPASS(Player * l_ply, DataSocket *datasock, RPacket &pk);
+	net::WPacket	TP_REGISTER(net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_LOGIN(net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_USER_LOGIN(net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_USER_LOGOUT(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_BGNPLAY(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_ENDPLAY(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_NEWCHA(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_DELCHA(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_CREATE_PASSWORD2(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_UPDATE_PASSWORD2(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	TP_CHANGEPASS(Player * l_ply, net::TcpClient *client, net::RPacket &pk);
 
 
-	void	MP_ENTERMAP(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	MP_ENTERMAP(Player *ply, net::TcpClient *client, net::RPacket &pk);
 	void	MP_ONLINE(Player *ply);
 	void	MP_SWITCH(Player *ply);
 	void	PC_FRND_INIT(Player *ply);
@@ -67,94 +74,98 @@ public:
 	void	PC_GULD_INIT(Player *ply);
 	void	PC_MASTER_INIT(Player *ply);
 
-	void	MP_TEAM_CREATE(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	MP_TEAM_CREATE(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_MASTER_DEL(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_MASTER_FINISH(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	MP_MASTER_CREATE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_MASTER_DEL(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_MASTER_FINISH(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	WPacket	TP_REQPLYLST(DataSocket *datasock,RPacket &pk);
-	void	AP_KICKUSER(DataSocket *datasock,RPacket &pk);
-	void	AP_KICKUSER2( DataSocket* datasock, uLong acctid );
-    void    AP_EXPSCALE(DataSocket* datasock, RPacket &pk); //  ������
+	net::WPacket	TP_REQPLYLST(net::TcpClient *client, net::RPacket &pk);
+	void	AP_KICKUSER(net::TcpClient *client, net::RPacket &pk);
+	void	AP_KICKUSER2(net::TcpClient* client, uLong acctid);
+    void    AP_EXPSCALE(net::TcpClient* client, net::RPacket &pk);
 
-	void	TP_DISC(DataSocket *datasock,RPacket &pk);
-	void	TP_ESTOPUSER_CHECK(DataSocket *datasock,RPacket &pk);
+	void	TP_DISC(net::TcpClient *client, net::RPacket &pk);
+	void	TP_ESTOPUSER_CHECK(net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_TEAM_INVITE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_TEAM_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_TEAM_REFUSE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_TEAM_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_TEAM_KICK(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	CP_TEAM_INVITE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_TEAM_ACCEPT(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_TEAM_REFUSE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_TEAM_LEAVE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_TEAM_KICK(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_FRND_INVITE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_FRND_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_FRND_REFUSE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_FRND_DELETE(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	CP_FRND_INVITE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_FRND_ACCEPT(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_FRND_REFUSE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_FRND_DELETE(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_FRND_CHANGE_GROUP(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_FRND_REFRESH_INFO(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_CHANGE_PERSONINFO(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	CP_FRND_CHANGE_GROUP(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_FRND_REFRESH_INFO(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_CHANGE_PERSONINFO(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_MASTER_INVITE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_MASTER_ACCEPT(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_MASTER_REFUSE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_MASTER_DELETE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_PRENTICE_DELETE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_MASTER_REFRESH_INFO(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_PRENTICE_REFRESH_INFO(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	CP_MASTER_INVITE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_MASTER_ACCEPT(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_MASTER_REFUSE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_MASTER_DELETE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_PRENTICE_DELETE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_MASTER_REFRESH_INFO(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_PRENTICE_REFRESH_INFO(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_REFUSETOME(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_GM1SAY(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_GM1SAY1(Player *ply,DataSocket *datasock,RPacket &pk);//Add by sunny.sun20080804
-		
-	void	CP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SAY2YOU(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SAY2TEM(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SAY2GUD(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	CP_REFUSETOME(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_GM1SAY(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_GM1SAY1(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	MP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_GUILDNOTICE(Player *ply, DataSocket *datasock, RPacket &pk);
-	void	MP_CANRECEIVEREQUESTS(DataSocket* datasock, RPacket& pk);
+	void	CP_SAY2TRADE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SAY2ALL(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SAY2YOU(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SAY2TEM(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SAY2GUD(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SESS_SAY(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	CP_SESS_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk);
+	void	MP_SAY2ALL(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_SAY2TRADE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILDNOTICE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_CANRECEIVEREQUESTS(net::TcpClient* client, net::RPacket& pk);
 
-	void	MP_GUILD_APPROVE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_GUILD_CREATE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_GUILD_KICK(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_GUILD_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_GUILD_DISBAND(Player *ply,DataSocket *datasock,RPacket &pk);
-	void	MP_GUILD_MOTTO(Player *ply,DataSocket *datasock,RPacket	&pk);
-	void	MP_GUILD_CHALLMONEY(Player *ply,DataSocket *datasock,RPacket &pk); 
-	void	MP_GUILD_CHALL_PRIZEMONEY(Player *ply,DataSocket *datasock,RPacket &pk); 
+	void	CP_SESS_CREATE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SESS_SAY(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SESS_ADD(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	CP_SESS_LEAVE(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	MP_GM_BANACCOUNT(Player *ply, DataSocket *datasock,RPacket &pk); 
-	void	MP_GM_UNBANACCOUNT(Player *ply, DataSocket *datasock,RPacket &pk); 
-	void	MP_MUTE_PLAYER(Player* player, DataSocket* datasock, RPacket& pk);
+	void	MP_GUILD_APPROVE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILD_CREATE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILD_KICK(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILD_LEAVE(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILD_DISBAND(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILD_MOTTO(Player *ply, net::TcpClient *client, net::RPacket	&pk);
+	void	MP_GUILD_CHALLMONEY(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GUILD_CHALL_PRIZEMONEY(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
-	void	CP_PING(Player* ply, DataSocket* datasock, RPacket& pk);
-	void	CP_REPORT_WG(Player *ply,DataSocket *datasock,RPacket &pk);	
+	void	MP_GM_BANACCOUNT(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_GM_UNBANACCOUNT(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	MP_MUTE_PLAYER(Player* player, net::TcpClient* client, net::RPacket& pk);
+
+	void	CP_PING(Player* ply, net::TcpClient* client, net::RPacket& pk);
+	void	CP_REPORT_WG(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
 	// Add by lark.li 20081119 begin
-	WPacket	TP_SYNC_PLYLST(DataSocket *datasock,RPacket &pk);
-	WPacket	OS_LOGIN(DataSocket *datasock,RPacket &pk);
-	void	OS_PING(DataSocket *datasock,RPacket &pk);
+	net::WPacket	TP_SYNC_PLYLST(net::TcpClient *client, net::RPacket &pk);
+	net::WPacket	OS_LOGIN(net::TcpClient *client, net::RPacket &pk);
+	void	OS_PING(net::TcpClient *client, net::RPacket &pk);
 	// End
 
-	void	MP_GARNER2_UPDATE(Player *ply,DataSocket *datasock,RPacket &pk);//��������������������
+	void	MP_GARNER2_UPDATE(Player *ply, net::TcpClient *client, net::RPacket &pk);
 
 	bool	CheckFunction(std::string mapName, std::string funName);
+
+	// Сетевой цикл: вызывать из main loop
+	void	PollNetwork();
+
 public:
-	void	CP_GARNER2_GETORDER(Player *ply,DataSocket *datasock,RPacket &pk);//�ͻ������󷴶�����������
-	void	KickUser(DataSocket *datasock,uLong gpaddr,uLong gtaddr);
-	void	SendToAllClients(const WPacket& wpk);
-	void	SendToClient(Player* ply[], short cli_num, const WPacket& wpk);
-	void	SendToClient(Player* ply,WPacket &wpk);
+	void	CP_GARNER2_GETORDER(Player *ply, net::TcpClient *client, net::RPacket &pk);
+	void	KickUser(net::TcpClient *client, uLong gpaddr, uLong gtaddr);
+	void	SendToAllClients(const net::WPacket& wpk);
+	void	SendToClient(Player* ply[], short cli_num, const net::WPacket& wpk);
+	void	SendToClient(Player* ply, net::WPacket &wpk);
 	GateServer	*	FindGateSByName(cChar *gatename);
 	Guild		* 	FindGuildByName(cChar * gldname);
 	Guild		* 	FindGuildByGldID(uLong	gldid);
@@ -162,7 +173,7 @@ public:
 	Player		*	FindPlayerByChaName(cChar * plyname);
 	Player		*	FindPlayerByChaID(uLong chaid);
 
-	Player *GetPlayerByChaID(uLong chaid); //���ٻ�ȡ��ɫָ��
+	Player *GetPlayerByChaID(uLong chaid);
 	bool AddPlayerToList(uLong chaid, Player *pPlayer);
 	bool DelPlayerFromList(uLong chaid);
 
@@ -174,19 +185,22 @@ public:
 	GroupServerAgent m_groupServerAgent;
 	// End
 
+	// Сетевые компоненты (CorsairsNet)
+	net::TcpServer	m_server;		// Принимает GateServer подключения
+	net::TcpClient	m_acctClient;	// Исходящее подключение к AccountServer
+
 	struct
 	{
 		std::recursive_mutex			m_mtxlogin;
 		std::recursive_mutex			m_mtxSyn;
 		short			m_gatenum;
-		DataSocket	*	m_acctsock;
 		std::string			m_name;
 		// Add by lark.li 20081119 begin
 		std::recursive_mutex			m_mtxAgent;
 		// End
 	};
 
-	//�ڲ����ݽṹ��
+	//内部数据结构：
 	PreAllocHeap<Player>		m_plyheap;
 	RunBiDirectChain<Player> 	m_plylst;
 	PreAllocHeap<Guild>			m_gldheap;
@@ -199,7 +213,7 @@ public:
 	Chat_Session *AddSession();
 	void  DelSession(Chat_Session * sess);
 
-	//���ݿ����ӣ�
+	//数据库连接：
 	struct
 	{
 		std::recursive_mutex			m_mtxDB;
@@ -252,7 +266,9 @@ public:
 		uLong  Trade;
 		uLong  ToYou;
 	} const_interval;
-//	int nOrder[MAXORDERNUM];
+
+	std::atomic<bool> m_exitFlag{false};
+
 private:
 	bool InitMasterRelation();
 	int GetMasterCount(uLong atorID);
@@ -262,12 +278,19 @@ private:
 	bool DelMaster(uLong cha_id1,uLong cha_id2);
 	bool FinishMaster(uLong atorID);
 
-	std::map<uLong, uLong> m_mapMasterRelation; //ʦͽ��ϵ��
-	std::map<uLong, Player *> m_mapPlayerList; //��ɫӳ���
+	std::map<uLong, uLong> m_mapMasterRelation;
+	std::map<uLong, Player *> m_mapPlayerList;
 
 	// Add by lark.li 20080702 begin
-	std::map<std::string, std::string> m_mapBirthplace; //������
+	std::map<std::string, std::string> m_mapBirthplace;
 	// End
+
+	// Внутренний handler для AccountServer
+	struct AcctClientHandler : public net::ITcpClientHandler {
+		void OnPacket(net::RPacket& packet) override {}
+		void OnDisconnected(int reason) override;
+	};
+	AcctClientHandler m_acctHandler;
 };
 class GMBBS:public Timer
 {
@@ -283,14 +306,14 @@ private:
 		uLong	volatile	m_start;
 		uLong	volatile	m_inter;
 		uLong	volatile	m_times;
-		dstring			 	m_word;
+		std::string			 	m_word;
 	}	m_queue[em_words];
 	std::recursive_mutex	m_mtxque;
 
 	uLong	m_dwCount;
 };
 
-extern void InitACTSvrConnect(GroupServerApp &gpapp);	//AccountServer����
+extern void InitACTSvrConnect(GroupServerApp &gpapp);	//AccountServer连接
 extern GroupServerApp * g_gpsvr;
 extern InterLockedLong	g_exit;
 extern InterLockedLong	g_ref;

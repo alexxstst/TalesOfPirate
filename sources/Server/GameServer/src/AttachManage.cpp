@@ -25,7 +25,7 @@ CConjureMgr::~CConjureMgr()
 }
 
 void CConjureMgr::Add(CAttachable *pCAttach)
-{T_B
+{
 	if (m_pCLstTail)
 	{
 		pCAttach->m_pCConjureLast = m_pCLstTail;
@@ -40,10 +40,10 @@ void CConjureMgr::Add(CAttachable *pCAttach)
 		m_pCLstHead = pCAttach;
 		m_pCLstTail = pCAttach;
 	}
-T_E}
+}
 
 void CConjureMgr::Delete(CAttachable *pCAttach)
-{T_B
+{
 	if (pCAttach)
 	{
 		if (m_pCur == pCAttach)
@@ -61,10 +61,10 @@ void CConjureMgr::Delete(CAttachable *pCAttach)
 		pCAttach->m_pCConjureLast = 0;
 		pCAttach->m_pCConjureNext = 0;
 	}
-T_E}
+}
 
 bool CConjureMgr::SetLeader(CAttachable *pCAttach)
-{T_B
+{
 	bool	bRet = false;
 
 	if (!m_pCLstHead)
@@ -98,10 +98,10 @@ bool CConjureMgr::SetLeader(CAttachable *pCAttach)
 		bRet = true;
 
 	return bRet;
-T_E}
+}
 
 CAttachable *CConjureMgr::GetLeader()
-{T_B
+{
 	//CAttachable *pCAttach;
 
 	return m_pCLstHead;
@@ -113,10 +113,10 @@ CAttachable *CConjureMgr::GetLeader()
 	//}
 
 	//return pCAttach;
-T_E}
+}
 
 void CConjureMgr::FreeAll()
-{T_B
+{
 	CAttachable *pCTemp;
 	SubMap *pSubMap;
 	while (pCTemp = m_pCLstHead)
@@ -131,7 +131,7 @@ void CConjureMgr::FreeAll()
 	}
 	m_pCLstHead = 0;
 	m_pCLstTail = 0;
-T_E}
+}
 
 CAttachable *CConjureMgr::GetTail()
 {
@@ -182,7 +182,7 @@ void CPassengerMgr::Finally()
 }
 
 void CPassengerMgr::Add(CAttachable *pCAttach)
-{T_B
+{
 	if (m_pCLstTail)
 	{
 		pCAttach->m_pCPassengerLast = m_pCLstTail;
@@ -198,10 +198,10 @@ void CPassengerMgr::Add(CAttachable *pCAttach)
 		m_pCLstTail = pCAttach;
 	}
 	m_lNum++;
-T_E}
+}
 
 void CPassengerMgr::Delete(CAttachable *pCAttach)
-{T_B
+{
 	if (pCAttach && m_pCLstHead)
 	{
 		if (m_pCCurPess == pCAttach)
@@ -220,10 +220,10 @@ void CPassengerMgr::Delete(CAttachable *pCAttach)
 
 		m_lNum--;
 	}
-T_E}
+}
 
 bool CPassengerMgr::SetLeader(CAttachable *pCAttach)
-{T_B
+{
 	bool	bRet = false;
 
 	if (!m_pCLstHead)
@@ -256,19 +256,19 @@ bool CPassengerMgr::SetLeader(CAttachable *pCAttach)
 		bRet = false;
 
 	return bRet;
-T_E}
+}
 
 CAttachable *CPassengerMgr::GetLeader()
-{T_B
+{
 	CAttachable *pCAttach;
 
 	pCAttach = m_pCLstHead;
 
 	return pCAttach;
-T_E}
+}
 
 void CPassengerMgr::FreeAll()
-{T_B
+{
 	CAttachable *pCTemp;
 	SubMap *pSubMap;
 	while (pCTemp = m_pCLstHead)
@@ -283,10 +283,10 @@ void CPassengerMgr::FreeAll()
 	}
 	m_pCLstHead = 0;
 	m_pCLstTail = 0;
-T_E}
+}
 
 void CPassengerMgr::DeleteAll()
-{T_B
+{
 	CAttachable *pCTemp;
 	while (pCTemp = m_pCLstHead)
 	{
@@ -296,4 +296,4 @@ void CPassengerMgr::DeleteAll()
 	}
 	m_pCLstHead = 0;
 	m_pCLstTail = 0;
-T_E}
+}

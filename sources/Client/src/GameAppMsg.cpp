@@ -1256,7 +1256,6 @@ const char* ConsoleCallback(const char *pszCmd)
 		""
 	};
 	static bool UI_DEBUG_FLAG_ARCOL=false;
-T_B
 	if(strCmd=="?")
 	{
 		int n = 0;
@@ -2354,7 +2353,6 @@ T_B
 	{
 		return HandleMonsterCommand(strCmd, p1, p2);
 	}
-T_REPORT
     return strRes.c_str();
 }
 

@@ -1,5 +1,4 @@
 #include <string>
-#include "dstring.h"
 #include "rstring.h"
 #include "DBCCommon.h"
 #include "PreAlloc.h"
@@ -9,7 +8,7 @@ _DBC_USING
 char g_isSuportAcquire		=0;
 
 //=======PreAllocHeapPtr=======================================================================
-uLong PreAllocStru::Size()	//ºóÒáÀàOverride·µ»Øµ±Ç°½á¹¹¹ÜÀíµÄ»º´æ³ß´ç
+uLong PreAllocStru::Size()	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Overrideï¿½ï¿½ï¿½Øµï¿½Ç°ï¿½á¹¹ï¿½ï¿½ï¿½ï¿½Ä»ï¿½ï¿½ï¿½ß´ï¿½
 {
 	return __preAllocHeapPtr?__preAllocHeapPtr->m_unitsize:(__preAllocHeap?__preAllocHeap->m_unitsize:0);
 }
@@ -103,7 +102,7 @@ LONG InterLockedLong::Assign(LONG newval)							//The return value is the initia
 {
 	return InterlockedExchange(&m_plVal,newval);
 }
-LONG InterLockedLong::CompareAssign(LONG Comperand,LONG newval)		//ÏàµÈÊ±ºò²Å¸³Öµ,The return value is the initial value
+LONG InterLockedLong::CompareAssign(LONG Comperand,LONG newval)		//ï¿½ï¿½ï¿½Ê±ï¿½ï¿½Å¸ï¿½Öµ,The return value is the initial value
 {
 	/*
 	if(g_isSuportAcquire >0)

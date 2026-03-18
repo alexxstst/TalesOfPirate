@@ -25,7 +25,7 @@ type NetworkPlatform<'T when 'T :> ChannelIO>(_logger: ILogger, handler: IoHandl
             _onDisconnected.Trigger(typed))
 
         handler.OnReceiveCommand.Add(fun (ch, mem) ->
-            let packet = DirectRPacket(mem)
+            let packet = new DirectRPacket(mem)
             _onReceiveCommand.Trigger(ch :?> 'T, packet))
 
         handler.OnReceivePing.Add(fun ch -> _onPing.Trigger(ch :?> 'T))

@@ -29,11 +29,9 @@ PtInviter Invitation::BeginInvited(Player * inviter)
 	Invited *l_invited	=gheap_Invited.Get();
 	l_invited->m_ptinviter.m_chaid	=inviter->m_chaid[inviter->m_currcha];
 	l_invited->m_ptinviter.m_ply	=inviter;
-	l_invited->m_tick				=g_gpsvr->GetCurrentTick();
-	if(l_invited->_BeginRun(this) ==1)
-	{
-		g_gpsvr->GetProcessor()->AddTask(RunCtrlObj<Invitation>::_BeginRun(&(g_gpsvr->m_plyproc)));
-	}
+	l_invited->m_tick				=GetTickCount();
+	l_invited->_BeginRun(this);
+	// TODO: invitation timeout checking — ранее работало через GetProcessor/m_plyproc
 	l.unlock();
 	return l_ptinviter;
 }

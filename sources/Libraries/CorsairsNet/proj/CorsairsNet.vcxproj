@@ -79,16 +79,32 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\BinaryIO.h" />
+    <ClInclude Include="..\include\CommandMessages.h" />
     <ClInclude Include="..\include\CorsairsNet.h" />
     <ClInclude Include="..\include\Packet.h" />
     <ClInclude Include="..\include\PacketPool.h" />
     <ClInclude Include="..\include\TcpClient.h" />
+    <ClInclude Include="..\include\TcpServer.h" />
+    <ClInclude Include="..\include\mpack.h" />
+    <ClInclude Include="..\include\mpack-platform.h" />
+    <ClInclude Include="..\include\mpack-common.h" />
+    <ClInclude Include="..\include\mpack-writer.h" />
+    <ClInclude Include="..\include\mpack-reader.h" />
+    <ClInclude Include="..\include\mpack-expect.h" />
+    <ClInclude Include="..\include\mpack-node.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\PacketPool.cpp" />
     <ClCompile Include="..\src\WPacket.cpp" />
     <ClCompile Include="..\src\RPacket.cpp" />
     <ClCompile Include="..\src\TcpClient.cpp" />
+    <ClCompile Include="..\src\TcpServer.cpp" />
+    <ClCompile Include="..\include\mpack-platform.cpp" />
+    <ClCompile Include="..\include\mpack-common.cpp" />
+    <ClCompile Include="..\include\mpack-writer.cpp" />
+    <ClCompile Include="..\include\mpack-reader.cpp" />
+    <ClCompile Include="..\include\mpack-expect.cpp" />
+    <ClCompile Include="..\include\mpack-node.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

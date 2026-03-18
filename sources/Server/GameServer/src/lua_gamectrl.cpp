@@ -8,7 +8,7 @@ std::list<CCharacter*> g_HelpNPCList;
 
 // 添加出生地与出生点
 int lua_AddBirthPoint(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop(L)==4 && lua_isstring(L, 1) && lua_isstring(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4));
 	if(!bValid) 
@@ -25,15 +25,15 @@ int lua_AddBirthPoint(lua_State *L)
 	g_BirthMgr.AddBirthPoint(pszLocation, pszMapName, x, y);
 	//LG("birth", "添加出生点[%s] [%s] %d %d\n", pszLocation, pszMapName, x, y);
 	return 0;
-T_E}
+}
 
 // 清除所有出生地与出生点
 int lua_ClearAllBirthPoint(lua_State *L)
-{T_B
+{
 	g_BirthMgr.ClearAll();
 	//LG("birth", "清除了所有出生点\n");
 	return 0;
-T_E}
+}
 
 extern const char* GetResPath(const char *pszRes);
 void ReloadAISdk()
@@ -232,7 +232,7 @@ int lua_TestDBLog(lua_State *L)
 }
 
 int lua_GetMapDataByName(lua_State *L)
-{T_B
+{
 	BOOL bValid = (lua_gettop(L) == 1 && lua_isstring(L, 1));
 	if (!bValid)
 	{
@@ -252,10 +252,10 @@ int lua_GetMapDataByName(lua_State *L)
 	}
 	return 0;
 
-T_E}
+}
 
 void RegisterLuaAI(lua_State *L)
-{T_B
+{
 	
 	// 通用
 	REGFN(view);
@@ -356,7 +356,7 @@ void RegisterLuaAI(lua_State *L)
 	// 测试脚本
 	REGFN(TestDBLog);
 	
-T_E}
+}
 
 
 /*

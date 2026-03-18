@@ -7,7 +7,6 @@
  * @alias ÆÁÄ»1/4µ¥Ôª 
  */
 
-#include "TryUtil.h"
 
 //class MgrUnit {
 //public:
@@ -45,10 +44,10 @@
 //{
 //public:
 //	CActiveMgrUnitL()
-//	{T_B
+//	{
 //		m_pHead  = 0;
 //		m_lCount = 0;
-//	T_E}
+//	}
 //
 //	inline void		Add(MgrUnit *pObj);
 //	inline void		Del(MgrUnit *pObj);
@@ -70,7 +69,7 @@
 //};
 //
 //inline void CActiveMgrUnitL::Add(MgrUnit *pObj)
-//{T_B
+//{
 //	if (m_pHead)
 //	{
 //		pObj->m_pANext = m_pHead;
@@ -82,10 +81,10 @@
 //		m_pHead = pObj;
 //
 //	m_lCount++;
-//T_E}
+//}
 //
 //inline void CActiveMgrUnitL::Del(MgrUnit *pObj)
-//{T_B
+//{
 //	if (pObj != m_pHead)
 //	{
 //		pObj->m_pALast->m_pANext = pObj->m_pANext;
@@ -102,21 +101,21 @@
 //	}
 //
 //	m_lCount--;
-//T_E}
+//}
 //
 //inline void CActiveMgrUnitL::BeginGet()
-//{T_B
+//{
 //	m_pCur = m_pHead;
-//T_E}
+//}
 //
 //inline MgrUnit* CActiveMgrUnitL::GetNext()
-//{T_B
+//{
 //	MgrUnit	*pRet = m_pCur;
 //
 //	if (m_pCur)
 //		m_pCur = m_pCur->m_pANext;
 //
 //	return pRet;
-//T_E}
+//}
 //
 #endif //MGRUNIT_H

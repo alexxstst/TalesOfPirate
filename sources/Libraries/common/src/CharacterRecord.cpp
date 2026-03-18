@@ -30,7 +30,7 @@ void CChaRecord::RefreshPrivateData()
 CChaRecordSet * CChaRecordSet::_Instance = NULL;
 
 BOOL CChaRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &ParamList)
-{T_B
+{
 	if(ParamList.size()==0) return FALSE;
 
 	CChaRecord *pInfo = (CChaRecord*)pRawDataInfo;
@@ -407,7 +407,7 @@ BOOL CChaRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> 
 	}
 
 	return TRUE;
-T_E}
+}
 
 void CChaRecordSet::_ProcessRawDataInfo(CRawDataInfo *pInfo)
 {

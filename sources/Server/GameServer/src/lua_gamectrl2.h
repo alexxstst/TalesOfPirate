@@ -71,7 +71,7 @@ inline int lua_GetTeamCha(lua_State *L)
 
 // 取得角色脚下的区域属性编号
 inline int lua_IsChaInRegion(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
@@ -93,12 +93,12 @@ inline int lua_IsChaInRegion(lua_State *L)
 		lua_pushnumber(L, 0);
 	}
 	return 1; 
-T_E}
+}
 
 
 // 取得角色的类型名称
 inline int lua_GetChaDefaultName(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -114,25 +114,25 @@ inline int lua_GetChaDefaultName(lua_State *L)
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 extern int lua_GetChaAttr(lua_State *pLS);
 extern int lua_SetChaAttr(lua_State *pLS);
 // 取得角色的指定属性
 inline int lua_GetChaAttrI(lua_State *L)
-{T_B
+{
 	return lua_GetChaAttr(L);
-T_E}
+}
 
 // 设置角色的指定属性
 inline int lua_SetChaAttrI(lua_State *L)
-{T_B
+{
 	return lua_SetChaAttr(L);
-T_E}
+}
 
 // 取得角色的指定属性
 inline int lua_IsPlayer(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -151,11 +151,11 @@ inline int lua_IsPlayer(lua_State *L)
 		lua_pushnumber(L, 0);
 	}
 	return 1;
-T_E}
+}
 
 // 设置角色数值属性的最大值, 在游戏启动时应该全部设置完毕
 inline int lua_SetChaAttrMax(lua_State *L)
-{T_B
+{
 
 	// 参数合法性判别
     BOOL bValid = (lua_gettop(L)==2 && lua_isnumber(L, 1) && lua_isnumber(L, 2));
@@ -174,7 +174,7 @@ inline int lua_SetChaAttrMax(lua_State *L)
 		g_pGameApp->ChaAttrMaxValInit(true);
 	}
 	return 0;
-T_E}
+}
 
 // 为当前地图添加天气区域, 地图初始化时会被调用, 游戏中也可以调用
 inline int lua_AddWeatherRegion(lua_State *L)

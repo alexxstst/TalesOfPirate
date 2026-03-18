@@ -13,7 +13,7 @@ using namespace std;
 _DBC_USING
 
 void InitDBSvrConnect(GroupServerApp &gpapp);
-void InitACTSvrConnect(GroupServerApp &gpapp);	//AccountServer����
+void InitACTSvrConnect(GroupServerApp &gpapp);	//AccountServer连接
 
 void GroupServerApp::Initialize()
 {
@@ -22,61 +22,39 @@ void GroupServerApp::Initialize()
 
 	m_dwCheatCount = 0;
 	LogLine l_line(g_LogConnect);
-	//l_line<<newln<<"��ʼ���ݿ�����"<<endln;
 	l_line<<newln<<"begin connect database"<<endln;
 	InitDBSvrConnect(*this);
 	m_tblguilds->InitAllGuilds(7);
 	const std::string l_acct = m_cfg["AccountServer"]["AcctEnable"];
 	if(l_acct	!="0")
 	{
-		//l_line<<newln<<"��ʼ��ʼ��AccountServer����"<<endln;
 		l_line<<newln<<"begin init AccountServer connect"<<endln;
 		InitACTSvrConnect(*this);
 	}
 
-	//LG("init", "��ʼ��Lua Script...\n");
 	LG("init", "init Lua Script...\n");
 	if( !InitLuaScript() )
 	{
-		//THROW_EXCP(excp, "��ʼ��LUA�ű�ʧ�ܣ�");
 		THROW_EXCP(excp, "init LUA script failed!");
 	}
 
-	//�����Լ��Ķ˿���������GateServer/GameServer�����ӣ�
-	//l_line<<newln<<"��ʼ��ʼ��ȡGroupServer.cfg�����ļ�"<<endln;
 	l_line<<newln<<"begin read GroupServer.cfg"<<endln;
 	IniSection	&l_is	=m_cfg["Main"];
 	const std::string		l_ip = l_is["Listen_IP"];
 	uShort		l_port	= std::stoi(l_is["Listen_Port"]);
-/*
-	const_cha.MaxChaNum			=atoi(m_cfg["��ɫ"]["ÿ�ʺ�����ɫ��"]);
-	const_cha.MaxChaNum			=min(const_cha.MaxChaNum,Player::emMaxCharacters);
-	const_cha.MaxIconVal		=atoi(m_cfg["��ɫ"]["���Ի�ͼ������ֵ"]);
-	const_cha.MaxLoginUsr		=atoi(m_cfg["��ɫ"]["����¼����"]);
-*/
+
 	const_cha.MaxChaNum			= std::stoi(m_cfg["character"]["MaxCharacterNum"]);
 	const_cha.MaxChaNum			=min(const_cha.MaxChaNum,Player::emMaxCharacters);
 	const_cha.MaxIconVal		= std::stoi(m_cfg["character"]["MaxValue"]);
 	const_cha.MaxLoginUsr		= std::stoi(m_cfg["character"]["MaxPerson"]);
 
 
-	/*
-	const_frnd.InvitedMax		=atoi(m_cfg["����"]["��౻������"]);
-	const_frnd.PendTimeOut		=atoi(m_cfg["����"]["δ�����볬ʱ"])*1000;
-	const_frnd.FriendMax		=atoi(m_cfg["����"]["ÿ��ɫ��������"]);
-	const_frnd.FriendGroupMax	=atoi(m_cfg["����"]["ÿ��ɫ�����ƺ��ѷ�����"]);
-	*/
 	const_frnd.InvitedMax		= std::stoi(m_cfg["friend"]["MaxInvitedNum"]);
 	const_frnd.PendTimeOut		= std::stoi(m_cfg["friend"]["InvitedTime"])*1000;
 	const_frnd.FriendMax		= std::stoi(m_cfg["friend"]["MaxFriendNum"]);
 	const_frnd.FriendGroupMax	= std::stoi(m_cfg["friend"]["FriendGroupNum"]);
 
 
-	/*
-	const_team.InvitedMax		=atoi(m_cfg["���"]["��౻������"]);
-	const_team.PendTimeOut		=atoi(m_cfg["���"]["δ�����볬ʱ"])*1000;
-	const_team.MemberMax		=atoi(m_cfg["���"]["ÿ�������Ա��"]);
-	*/
 	const_team.InvitedMax = std::stoi(m_cfg["team"]["MaxInvitedNum"]);
 	const_team.PendTimeOut = std::stoi(m_cfg["team"]["InvitedTime"]) * 1000;
 	const_team.MemberMax = std::stoi(m_cfg["team"]["MaxPersonNum"]);
@@ -87,23 +65,12 @@ void GroupServerApp::Initialize()
 	const_master.MasterMax		= 1;
 	const_master.PrenticeMax	= 4;
 
-	/*
-	const_chat.MaxSession		=atoi(m_cfg["����"]["ÿ������Ự��"]);
-	const_chat.MaxSession		=min(const_chat.MaxSession,Player::emMaxSessChat);
-	const_chat.MaxPlayer		=atoi(m_cfg["����"]["ÿ�Ự��������"]);
-	const_chat.MaxPlayer		=min(const_chat.MaxPlayer,Player::emMaxSessPlayer);
-	*/
 	const_chat.MaxSession		= std::stoi(m_cfg["chat"]["MaxChatNumPerPlayer"]);
 	const_chat.MaxSession		=min(const_chat.MaxSession,Player::emMaxSessChat);
 	const_chat.MaxPlayer		= std::stoi(m_cfg["chat"]["maxPlayerPerChat"]);
 	const_chat.MaxPlayer		=min(const_chat.MaxPlayer,Player::emMaxSessPlayer);
 
 
-	/*
-	const_interval.World		=atoi(m_cfg["����"]["����Ƶ��˵�����"])*1000;
-	const_interval.Trade		=atoi(m_cfg["����"]["����Ƶ��˵�����"])*1000;
-	const_interval.ToYou		=atoi(m_cfg["����"]["˽��Ƶ��˵�����"])*1000;
-	*/
 	const_interval.World = std::stoi(m_cfg["chat"]["WorldInterval"]) * 1000;
 	const_interval.Trade = std::stoi(m_cfg["chat"]["TradeInterval"]) * 1000;
 	const_interval.ToYou = std::stoi(m_cfg["chat"]["ToYouInterval"]) * 1000;
@@ -111,23 +78,20 @@ void GroupServerApp::Initialize()
 
 	if(!InitMasterRelation())
 	{
-		//THROW_EXCP(excp, "��ʼ��ʦͽ��ϵ��ʧ�ܣ�");
 		THROW_EXCP(excp, RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00001));
 	}
-	
-	//l_line<<newln<<"��ʼװ��ChaNameFilter.txt�����ļ�"<<endln;
+
 	l_line<<newln<<"begin load ChaNameFilter.txt"<<endln;
 	CTextFilter::LoadFile("ChaNameFilter.txt");
-	//l_line<<newln<<"��ʼ�������˿�:"<<l_port<<endln;
 	l_line<<newln<<"begin listen port:"<<l_port<<endln;
-	if(OpenListenSocket(l_port,l_ip.c_str()))
+
+	// CorsairsNet: Listen через TcpServer
+	if(!m_server.Listen(l_ip, l_port, GATE_MAX))
 	{
-		//THROW_EXCP(excpSock,l_ip<<","<<l_port<<" ��ʧ�ܣ�����˿�"<<l_port<<"�Ƿ�ռ�û���GroupServer.cfg��Listen_IP���������Ƿ���ȷ��");
 		char l_content[500];
 		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00002),l_ip.c_str(), l_port, l_port);
 		THROW_EXCP(excpSock,l_content);
 	}
-	//l_line<<newln<<"��ʼ�������˿�:"<<l_port<<"�ɹ���ɣ���ʼ�����̽���"<<endln;
 	l_line<<newln<<"open listen port:"<<l_port<<"success, init is ok"<<endln;
 }
 
@@ -144,15 +108,7 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 	{
 		LG("group_sql", "connect database failed, error[%s]\n", l_errinfo.c_str());
 		THROW_EXCP(excpDB,l_errinfo.c_str());
-	} 
-	/*gpapp.m_tblsystem		=new TBLSystem(&(gpapp.m_cfg_db));
-	if(gpapp.m_tblsystem->Increment() !=1)
-	{
-		gpapp.m_tblsystem->Decrement();
-		delete gpapp.m_tblsystem;
-		gpapp.m_tblsystem	=0;
-		THROW_EXCP(excpDB,"GroupServer�ظ��������������˳�...");
-	}*/
+	}
 
 	LG("group_sql", "connect database ok, begin init datatable\n");
 
@@ -163,40 +119,25 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 	gpapp.m_tblguilds		=new TBLGuilds(&(gpapp.m_cfg_db));
 	gpapp.m_tblX1			=new friend_tbl(&(gpapp.m_cfg_db));
 	gpapp.m_tbLparam		=new TBLParam(&(gpapp.m_cfg_db));
-	
-	//LG("group_sql", "��ʼ��� account�� ������\n");
+
 	LG("group_sql", "begin check table [account] \n");
 	if(!gpapp.m_tblaccounts->IsReady())
 	{
-		//LG("group_sql", " account�� �����Լ��ʧ��\n");
 		LG("group_sql", " check table [account] failed\n");
-		//THROW_EXCP(excpDB,"��������ʼ��ʧ��");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00003));
 	}
-	
-	//LG("group_sql", "��ʼ��� ����� ������\n");
+
 	LG("group_sql", "begin check table [guild]\n");
 	if(!gpapp.m_tblguilds->IsReady())
 	{
-		//LG("group_sql", " ����� �����Լ��ʧ��\n");
 		LG("group_sql", " check table [guild] failed \n");
-		//THROW_EXCP(excpDB,"�������δִ�г�ʼ��SQL���");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00004));
 	}
 	gpapp.m_tblcharaters->ZeroAddr();
 
-	//LG("group_sql", "��ʼ��� param�� ������\n");
 	LG("group_sql", "begin check table [param]\n");
 
-	//if(!gpapp.m_tbLparam->IsReady())
-	//{
-	//	LG("group_sql", " ������ �����Լ��ʧ��\n");
-	//	THROW_EXCP(excpDB,"��������δִ�г�ʼ��SQL���");
-
-	//}
-
 	if(gpapp.m_tbLparam->InitParam())
-	//LG("group_sql", "���ݿ��ʼ���ɹ�\n");
 	LG("group_sql", "init database success\n");
 }
 
@@ -210,41 +151,58 @@ void InitACTSvrConnect(GroupServerApp &gpapp)
 
 	char buffer[512];
 
-	while(!g_exit && !g_gpsvr->m_acctsock)
+	while(!g_exit && !gpapp.m_acctClient.IsConnected())
 	{
-		gpapp.m_acctsock	=gpapp.Connect(l_ip.c_str(),l_port);
-		if(!gpapp.m_acctsock)
+		if(!gpapp.m_acctClient.Connect(l_ip, l_port))
 		{
-			//std::cout<<"����AccountServer:("<<l_ip<<","<<l_port<<")ʧ��,5����ٴ�����..."<<std::endl;
 			memset(buffer, 0, sizeof(buffer));
 			sprintf(buffer, RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00005), l_ip.c_str(), l_port);
 			std::cout<<buffer<<std::endl;
 			Sleep(5000);
 			continue;
 		}
-		WPacket	l_wpk	=gpapp.GetWPacket();
+
+		// AsyncCall: CMD_PA_LOGIN → callback обработает ответ
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PA_LOGIN);
 		l_wpk.WriteString(gpapp.m_name.c_str());
 		l_wpk.WriteString(l_passwd.c_str());
-		RPacket l_rpk	=gpapp.SyncCall(gpapp.m_acctsock,l_wpk);
-		if(!l_rpk.HasData())
-		{
-			//std::cout<<"��AccountServer:("<<l_ip<<","<<l_port<<")�ϵ�¼��ʱ,5���Ӻ��������Ӻ͵�¼..."<<std::endl;
-			memset(buffer, 0, sizeof(buffer));
-			sprintf(buffer, RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00006), l_ip.c_str(), l_port);
-			std::cout<<buffer<<std::endl;
-			gpapp.Disconnect(gpapp.m_acctsock,0,100);
-			break;
+
+		// Используем блокирующий подход при инициализации:
+		// AsyncCall + busy-wait на результат
+		volatile bool gotResponse = false;
+		volatile bool loginOk = false;
+
+		gpapp.m_acctClient.AsyncCall(l_wpk, 10000, [&](net::RPacket& rpk) {
+			if (!rpk) {
+				// Таймаут или ошибка
+				memset(buffer, 0, sizeof(buffer));
+				sprintf(buffer, RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00006), l_ip.c_str(), l_port);
+				std::cout << buffer << std::endl;
+			} else if (rpk.ReadInt64()) {
+				// Ненулевой код = ошибка
+				memset(buffer, 0, sizeof(buffer));
+				sprintf(buffer, RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00007), l_ip.c_str(), l_port);
+				std::cout << buffer << std::endl;
+			} else {
+				loginOk = true;
+			}
+			gotResponse = true;
+		});
+
+		// Ждём ответа (PollPackets вызывает callback)
+		while (!gotResponse && gpapp.m_acctClient.IsConnected()) {
+			gpapp.m_acctClient.PollPackets(0);
+			Sleep(10);
 		}
-		if(l_rpk.ReadShort())		//���ط�0��ʾʧ��
-		{
-			//std::cout<<"��AccountServer:("<<l_ip<<","<<l_port<<")�ϵ�¼ʧ��,5���Ӻ��������Ӻ͵�¼..."<<std::endl;
-			memset(buffer, 0, sizeof(buffer));
-			sprintf(buffer, RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00007), l_ip.c_str(), l_port);
-			std::cout<<buffer<<std::endl;
-			gpapp.Disconnect(gpapp.m_acctsock,0,200);
-			break;
+
+		if (!loginOk) {
+			gpapp.m_acctClient.Disconnect(0);
+			if (!g_exit) Sleep(5000);
+			continue;
 		}
-		gpapp.m_acctsock->SetPointer(0);
+
+		std::cout << "AccountServer login OK" << std::endl;
+		break;
 	}
 }

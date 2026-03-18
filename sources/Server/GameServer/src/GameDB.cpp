@@ -17,7 +17,6 @@ char	szDBLog[256] = "DBData";
 //-------------------
 BOOL CTableCha::VerifyName(const char* pszName)
 {
-	T_B
 	string buf[1];
 	char param[] = "atorNome";
 	char filter[80]; sprintf(filter, "atorNome='%s'", pszName);
@@ -28,7 +27,6 @@ BOOL CTableCha::VerifyName(const char* pszName)
 		return TRUE;
 	}
 	return FALSE;
-	T_E
 }
 
 std::string CTableCha::GetName(int cha_id) 
@@ -269,7 +267,7 @@ bool CTableCha::ShowExpRank(CCharacter* pCha, int count)
 // ��ɫ������Ϸʱ��ȡ���� 
 //-----------------------
 bool CTableCha::ReadAllData(CPlayer *pPlayer, DWORD atorID)
-{T_B
+{
 	if(!pPlayer)
 	{
 		//LG("enter_map", "�����ݿ����PlayerΪ��.\n");
@@ -465,13 +463,13 @@ bool CTableCha::ReadAllData(CPlayer *pPlayer, DWORD atorID)
 	}
 
 	return true;
-T_E}
+}
 
 //-----------------
 // ��ʱ��ɫ��Ϣ����
 //-----------------
 bool CTableCha::SaveAllData(CPlayer *pPlayer, char chSaveType)
-{T_B
+{
 	if(!pPlayer || !pPlayer->IsValid()) return false;
 	CCharacter *pCha = pPlayer->GetMainCha();
 	if (!pCha) return false;
@@ -765,7 +763,7 @@ bool CTableCha::SaveAllData(CPlayer *pPlayer, char chSaveType)
 	LG("enter_map", "save the main character whole data succeed!\n", pCha->GetLogName());
 
 	return true;
-T_E}
+}
 
 bool CTableCha::SavePos(CPlayer *pPlayer)
 {
@@ -1374,7 +1372,7 @@ bool CTableCha::SaveTableVer(DWORD atorID)
 }
 
 BOOL CTableCha::SaveMissionData(CPlayer *pPlayer, DWORD atorID)
-{T_B
+{
 	if( !pPlayer ) return FALSE;
 	CCharacter *pCha = pPlayer->GetMainCha();
 	if( !pCha ) return FALSE;
@@ -1428,7 +1426,7 @@ BOOL CTableCha::SaveMissionData(CPlayer *pPlayer, DWORD atorID)
 	}
 	short sExec = exec_sql_direct( g_sql );
 	return DBOK(sExec) && !DBNODATA(sExec);
-T_E}
+}
 
 // Add by lark.li 20080521 begin
 bool CTableLotterySetting::Init(void)
@@ -3248,7 +3246,7 @@ bool CTableAct::Init(void)
 }
 
 bool CTableAct::ReadAllData(CPlayer *pPlayer, DWORD ato_id)
-{T_B
+{
 	if(!pPlayer) return false;
 
 	string buf[3]; 
@@ -3265,9 +3263,9 @@ bool CTableAct::ReadAllData(CPlayer *pPlayer, DWORD ato_id)
     }
 
     return false;
-T_E}
+}
 
-bool CTableAct::SaveIMP(CPlayer *pPlayer){T_B
+bool CTableAct::SaveIMP(CPlayer *pPlayer){
 	int IMP = pPlayer->GetMainCha()->GetIMP();
 	int actID = pPlayer->GetMainCha()->GetID();
 	sprintf(g_sql, "Update %s set IMP = %d where atorID = %d;", "character",IMP,actID);
@@ -3276,10 +3274,10 @@ bool CTableAct::SaveIMP(CPlayer *pPlayer){T_B
 		return false;
 	}
 	return true;
-T_E}
+}
 
 bool CTableAct::SaveGmLv(CPlayer *pPlayer)
-{T_B
+{
 
 	int gmLv = pPlayer->GetGMLev();
 	int actID = pPlayer->GetDBActId();
@@ -3289,7 +3287,7 @@ bool CTableAct::SaveGmLv(CPlayer *pPlayer)
 		return false;
 	}
 	return true;
-T_E}
+}
 
 bool CTableBoat::Init(void)
 {
@@ -3327,7 +3325,7 @@ bool CTableBoat::Init(void)
 }
 
 BOOL CTableBoat::Create( DWORD& dwBoatID, const BOAT_DATA& Data )
-{T_B
+{
 	string	strKitbag = "";
 	KitbagStringConv(Data.sCapacity, strKitbag);
 	char szTime[128] = "";
@@ -3367,10 +3365,10 @@ BOOL CTableBoat::Create( DWORD& dwBoatID, const BOAT_DATA& Data )
 	}
 
 	return FALSE;
-T_E}
+}
 
 BOOL CTableBoat::GetBoat( CCharacter& Boat )
-{T_B
+{
 	DWORD dwBoatID = (DWORD)Boat.getAttr( ATTR_BOAT_DBID );
 	BOAT_DATA Data;
 	memset( &Data, 0, sizeof(BOAT_DATA) );
@@ -3485,7 +3483,7 @@ BOOL CTableBoat::GetBoat( CCharacter& Boat )
 	}
 
 	return TRUE;
-T_E}
+}
 
 
 BOOL CTableBoat::SaveBoatTempData( DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted )
@@ -3560,7 +3558,7 @@ BOOL CTableBoat::SaveBoatTempData( CCharacter& Boat, BYTE byIsDeleted )
 }
 
 BOOL CTableBoat::SaveBoat( CCharacter& Boat, char chSaveType )
-{T_B
+{
 	//LG("enter_map", "�� %s (%s)��ʼ���ñ�������.\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 	DWORD dwBoatID = (DWORD)Boat.getAttr( ATTR_BOAT_DBID );
 	USHORT sBerthID = (USHORT)Boat.getAttr( ATTR_BOAT_BERTH );
@@ -3657,7 +3655,7 @@ BOOL CTableBoat::SaveBoat( CCharacter& Boat, char chSaveType )
 	LG("enter_map", "boat %s (%s) the whole data save succeed.\n", Boat.GetLogName(), Boat.GetPlyMainCha()->GetLogName());
 
 	return true;
-T_E}
+}
 
 bool CTableBoat::SaveAllData(CPlayer *pPlayer, char chSaveType)
 {
@@ -3767,7 +3765,7 @@ bool CTableBoat::ReadCabin(CCharacter& Boat) // ��ȡ����
 }
 
 BOOL CGameDB::Init()
-{T_B
+{
 	m_bInitOK = FALSE;
 
     _connect.enable_errinfo();
@@ -3837,7 +3835,7 @@ BOOL CGameDB::Init()
 	m_bInitOK = TRUE;
 
 	return TRUE;
-T_E}
+}
 
 bool CGameDB::ReadPlayer(CPlayer *pPlayer, DWORD atorID)
 {
@@ -4212,7 +4210,7 @@ bool CTableGuild::Init(void)
 }
 
 long CTableGuild::Create(CCharacter* pCha, char *guildname, cChar *passwd)
-{T_B
+{
 	long l_ret_guild_id	=0;
 	string buf[1]; 
 	char sql[SQL_MAXLEN];
@@ -4270,7 +4268,7 @@ long CTableGuild::Create(CCharacter* pCha, char *guildname, cChar *passwd)
 	pCha->ReflectINFof(pCha,l_wpk);
 
     return l_ret_guild_id;	//���ᴴ���ɹ�,���ع���ID
-T_E}
+}
 
 bool CTableGuild::ListAll(CCharacter* pCha ,char disband_days)
 {
@@ -4344,7 +4342,7 @@ bool CTableGuild::ListAll(CCharacter* pCha ,char disband_days)
 			WRITE_STRING(l_wpk, (char const*)_buf[2]);		// guild motto
 			WRITE_STRING(l_wpk, (char const*)_buf[4]);		// leader name
 			WRITE_SHORT(l_wpk, atoi((const char*)_buf[6]));	// guild member count
-			l_wpk.WriteLongLong(std::atoll((const char*)_buf[5]));	// guild exp
+			l_wpk.WriteInt64(std::atoll((const char*)_buf[5]));	// guild exp
 
 			if(!(f_row %20))
 			{
@@ -4743,7 +4741,7 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days)
 	WRITE_STRING(l_wpk,		 buf[3].c_str());	//atorNome 4
 	WRITE_SHORT(l_wpk,	atoi(buf[4].c_str()));	//member_total 5
 	WRITE_SHORT(l_wpk,	g_Config.m_sGuildNum);		//6
-	l_wpk.WriteLongLong(_atoi64(buf[5].c_str())); //7 exp
+	l_wpk.WriteInt64(_atoi64(buf[5].c_str())); //7 exp
 
 	WRITE_LONG(l_wpk, 0); //8
 	WRITE_LONG(l_wpk, atol(buf[6].c_str())); //level 9
@@ -5156,7 +5154,7 @@ bool CTableGuild::Leave(CCharacter* pCha)
 	//pCha->SystemNotice("�Ѿ��뿪����!");
 	pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00056));
 
-	WPacket l_wpk	=GETWPACKET();
+	WPACKET l_wpk	=GETWPACKET();
 	WRITE_CMD(l_wpk,CMD_MP_GUILD_LEAVE);
 	pCha->ReflectINFof(pCha,l_wpk);
 
@@ -5254,7 +5252,7 @@ bool CTableGuild::Disband(CCharacter* pCha,cChar *passwd)
 		return false;
 	}
 	pCha->guildPermission = 0;
-	WPacket l_wpk	=GETWPACKET();
+	WPACKET l_wpk	=GETWPACKET();
 	WRITE_CMD(l_wpk,CMD_MP_GUILD_DISBAND);
 	pCha->ReflectINFof(pCha,l_wpk);
 
@@ -5292,7 +5290,7 @@ bool CTableGuild::Motto(CCharacter* pCha,cChar *motto)
 		return false;
 	}
 
-	WPacket	l_wpk	=GETWPACKET();
+	WPACKET	l_wpk	=GETWPACKET();
 	WRITE_CMD(l_wpk,CMD_MM_GUILD_MOTTO);
 	WRITE_LONG(l_wpk,pCha->GetGuildID());
 	WRITE_STRING(l_wpk,motto);
@@ -5649,7 +5647,7 @@ bool CTableGuild::Challenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
 	// ��֮ǰ����ս�����Ǯ����ȥ
 	if( dwChallID > 0 && dwChallMoney > 0 )
 	{
-		WPacket	l_wpk	=GETWPACKET();
+		WPACKET	l_wpk	=GETWPACKET();
 		WRITE_CMD(l_wpk,CMD_MP_GUILD_CHALLMONEY);
 		WRITE_LONG(l_wpk, dwChallID);
 		WRITE_LONG(l_wpk, dwChallMoney);
@@ -5674,7 +5672,7 @@ void CTableGuild::ListChallenge( CCharacter* pCha )
 	DWORD dwLeaderID = 0;
 	BYTE  byStart = 0;
 
-	WPacket l_wpk	=GETWPACKET();
+	WPACKET l_wpk	=GETWPACKET();
 	WRITE_CMD(l_wpk,CMD_MC_GUILD_LISTCHALL);
 
 	const char*param	="guild_id, guild_name, challid, challmoney, leader_id, challstart";
@@ -6024,7 +6022,7 @@ void CTableGuild::ChallMoney( BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD 
 		if( dwChallID != 0 )
 		{
 			dwMoney = DWORD(float(dwMoney*80)/100);
-			WPacket	l_wpk	=GETWPACKET();
+			WPACKET	l_wpk	=GETWPACKET();
 			WRITE_CMD(l_wpk,CMD_MP_GUILD_CHALL_PRIZEMONEY);
 			WRITE_LONG(l_wpk, dwGuildID);
 			WRITE_LONG(l_wpk, dwMoney);
@@ -6041,7 +6039,7 @@ void CTableGuild::ChallMoney( BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD 
 		}
 
 		dwMoney = DWORD(float(dwMoney*80)/100);
-		WPacket	l_wpk	=GETWPACKET();
+		WPACKET	l_wpk	=GETWPACKET();
 		WRITE_CMD(l_wpk,CMD_MP_GUILD_CHALL_PRIZEMONEY);
 		WRITE_LONG(l_wpk, dwChallID);
 		WRITE_LONG(l_wpk, dwMoney);

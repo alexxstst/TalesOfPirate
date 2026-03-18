@@ -322,7 +322,7 @@ void NetFrndAdd(unsigned long cha_id,const char * cha_name,const char * motto,un
 
 void NetGMStart(stNetFrndStart arrCha[],unsigned short arrnum){
 	for (int i=0;i<arrnum;i++){
-		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamGM )->Add(arrCha[i].lChaid,arrCha[i].szChaname,arrCha[i].szMotto,arrCha[i].sIconID);
+		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamGM )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 		if (pMember)
 		{
 			pMember->SetOnline(arrCha[i].cStatus != 0);
@@ -379,9 +379,9 @@ void NetFrndStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned short ar
 
 	for (int i=0;i<arrnum;i++)
 	{
-		LG("test_frnd",g_oLangRec.GetString(242),i,arrCha[i].szChaname,arrCha[i].lChaid);
+		LG("test_frnd",g_oLangRec.GetString(242),i,arrCha[i].szChaname.c_str(),arrCha[i].lChaid);
 
-		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamFrnd )->Add(arrCha[i].lChaid,arrCha[i].szChaname,arrCha[i].szMotto,arrCha[i].sIconID);
+		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamFrnd )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 
 		pMember->SetOnline(arrCha[i].cStatus!=0);
 	}
@@ -576,8 +576,8 @@ void NetMasterStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned short 
 	g_stUIChat._dwSelfID=self.lChaid;
 	for (int i=0;i<arrnum;i++)
 	{
-		LG("test_frnd",g_oLangRec.GetString(242),i,arrCha[i].szChaname,arrCha[i].lChaid);
-		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamMaster )->Add(arrCha[i].lChaid,arrCha[i].szChaname,arrCha[i].szMotto,arrCha[i].sIconID);
+		LG("test_frnd",g_oLangRec.GetString(242),i,arrCha[i].szChaname.c_str(),arrCha[i].lChaid);
+		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamMaster )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 		pMember->SetOnline(arrCha[i].cStatus!=0);
 	}
 	g_stUIChat._UpdateSelfInfo();
@@ -670,8 +670,8 @@ void NetPrenticeStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned shor
 	g_stUIChat._dwSelfID=self.lChaid;
 	for (int i=0;i<arrnum;i++)
 	{
-		LG("test_frnd",g_oLangRec.GetString(242),i,arrCha[i].szChaname,arrCha[i].lChaid);
-		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamPrentice )->Add(arrCha[i].lChaid,arrCha[i].szChaname,arrCha[i].szMotto,arrCha[i].sIconID);
+		LG("test_frnd",g_oLangRec.GetString(242),i,arrCha[i].szChaname.c_str(),arrCha[i].lChaid);
+		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamPrentice )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 		pMember->SetOnline(arrCha[i].cStatus!=0);
 	}
 	g_stUIChat._UpdateSelfInfo();

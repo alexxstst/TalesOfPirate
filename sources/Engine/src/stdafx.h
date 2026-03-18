@@ -16,7 +16,27 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#include <assert.h>
+#include <math.h>
 
-// TODO: reference additional headers your program requires here
+// STL
+#include <string>
+#include <list>
+#include <map>
+#include <vector>
+
 #include "GlobalInc.h"
+
+// ── Ядро движка (PCH-оптимизация) ────────────────────────────────
+// Порядок: каждый заголовок зависит только от предыдущих
+
+#include "lwHeader.h"       // базовые макросы, типы (LW_BEGIN/LW_END, LW_SAFE_DELETE и т.д.)
+#include "lwStdInc.h"       // системные includes (mmsystem.h, lmaccess.h)
+#include "lwFrontAPI.h"     // LW_FRONT_API макрос
+#include "lwDirectX.h"      // DirectX 8/9 типы и typedef'ы
+#include "lwErrorCode.h"    // коды ошибок, LW_FAILED/LW_SUCCEEDED
+#include "lwMath.h"         // lwVector3, lwMatrix44, lwQuaternion, геометрия
+#include "lwITypes.h"       // lwITypes — перечисления, структуры типов движка
+#include "lwClassDecl.h"    // forward-declarations классов движка
+#include "lwInterfaceExt.h" // lwInterface.h (~900 строк) + расширения
 

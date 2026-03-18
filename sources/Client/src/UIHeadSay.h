@@ -73,7 +73,7 @@ public:
     int             GetFaceID(){ return  _nCurFaceID ;}      //�õ���ǰ��ID.by billy
     void            SetRenderScale(float f ) { _fScale  = f  ;      }
 	
-    void			SetName( const char* name );
+    void			SetName( const std::string& name );
 
 	bool			InShop( int MouseX, int MouseY );
 

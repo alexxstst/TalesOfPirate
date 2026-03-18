@@ -28,7 +28,7 @@ namespace mission
 		virtual BOOL Create( SubMap& Submap, const char szName[], USHORT sID, USHORT sInfoID, DWORD dwxPos, DWORD dwyPos, USHORT sDir );
 
 		// 事件实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, dbc::RPacket& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 
 		// 获取实体状态信息
 		virtual void GetState( CCharacter& character, BYTE& byState ) { byState = ENTITY_DISABLE; }
@@ -51,7 +51,7 @@ namespace mission
 		BOOL SetData( USHORT sItemID, USHORT sNum, USHORT sTime );
 
 		// 传送实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, dbc::RPacket& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 
 		// 获取实体状态信息
 		virtual void GetState( CCharacter& character, BYTE& byState );
@@ -75,7 +75,7 @@ namespace mission
 		BOOL SetData( const char szMap[], USHORT sxPos, USHORT syPos );
 
 		// 传送实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, dbc::RPacket& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 
 		// 获取实体状态信息
 		virtual void GetState( CCharacter& character, BYTE& byState );
@@ -100,7 +100,7 @@ namespace mission
 		BOOL SetData( USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT sDir );
 
 		// 传送实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, dbc::RPacket& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 
 		// 获取实体状态信息
 		virtual void GetState( CCharacter& character, BYTE& byState );

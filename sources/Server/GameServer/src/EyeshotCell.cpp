@@ -48,7 +48,7 @@ CEyeshotCell::~CEyeshotCell()
 
 // 实体pCEnt进入视野单元，执行可视化操作
 void CEyeshotCell::EnterEyeshot(Entity *pCEnt)
-{T_B
+{
 	for (short i = 0; i < m_sStateCellNum; i++)
 		if (*m_pCStateCell[i])
 			(*m_pCStateCell[i])->StateBeginSeen(pCEnt);
@@ -86,10 +86,10 @@ void CEyeshotCell::EnterEyeshot(Entity *pCEnt)
 		else
 			pCCellItem = 0;
 	}
-T_E}
+}
 
 void CEyeshotCell::OutEyeshot(Entity *pCEnt)
-{T_B
+{
 	for (short i = 0; i < m_sStateCellNum; i++)
 		if (*m_pCStateCell[i])
 			(*m_pCStateCell[i])->StateEndSeen(pCEnt);
@@ -127,10 +127,10 @@ void CEyeshotCell::OutEyeshot(Entity *pCEnt)
 		else
 			pCCellItem = 0;
 	}
-T_E}
+}
 
 void CEyeshotCell::RefreshEyeshot(Entity *pCEnt, bool bToEyeshot, bool bToNoHide, bool bToNoShow)
-{T_B
+{
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	if (!pCCha)
 		return;
@@ -158,14 +158,14 @@ void CEyeshotCell::RefreshEyeshot(Entity *pCEnt, bool bToEyeshot, bool bToNoHide
 		else
 			pCCellCha = 0;
 	}
-T_E}
+}
 
 CCharacter* CEyeshotCell::GetNextCha(void)
-{T_B
+{
 	CCharacter	*pRet = m_pCChaSearch;
 
 	if (m_pCChaSearch)
 		m_pCChaSearch = m_pCChaSearch->m_pCEyeshotCellNext ? m_pCChaSearch->m_pCEyeshotCellNext->IsCharacter() : NULL;
 
 	return pRet;
-T_E}
+}

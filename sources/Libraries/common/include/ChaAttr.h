@@ -50,24 +50,24 @@ private:
 };
 
 inline LONG32 CChaAttr::GetAttr(long lNo)
-{T_B
+{
 	if (lNo >= ATTR_MAX_NUM)
 		return -1;
 
 	return m_lAttribute[lNo];
-T_E}
+}
 
 inline LONG32 CChaAttr::GetAttrMaxVal(long lNo)
-{T_B
+{
 	if (lNo >= ATTR_MAX_NUM)
 		return -1;
 
 	return g_lMaxChaAttr[lNo];
-T_E}
+}
 
 // 返回值：0，失败。1，成功设置，但请求的值超过最大值。2，成功设置。
 inline long CChaAttr::SetAttr(long lNo, LONG32 lVal)
-{T_B
+{
 	if (lNo >= ATTR_MAX_NUM) return 0;
 
 	long	lRet = 2;
@@ -89,11 +89,11 @@ inline long CChaAttr::SetAttr(long lNo, LONG32 lVal)
 	}
 
 	return lRet;
-T_E}
+}
 
 // 直接设置最大值，只用于客户端（因为客户端的数据来源于服务端，是合法数据）
 inline long CChaAttr::DirectSetAttr(long lNo, LONG32 lVal)
-{T_B
+{
 	if (lNo >= ATTR_MAX_NUM) return 0;
 
 	if (m_lAttribute[lNo] != lVal)
@@ -103,58 +103,58 @@ inline long CChaAttr::DirectSetAttr(long lNo, LONG32 lVal)
 	}
 
 	return 1;
-T_E}
+}
 
 inline long CChaAttr::AddAttr(long lNo, LONG32 lVal)
-{T_B
+{
 	if (lNo >= ATTR_MAX_NUM)
 		return 0;
 
 	SetAttr(lNo, m_lAttribute[lNo] + lVal);
 	return 1;
-T_E}
+}
 
 inline long CChaAttr::ReEvaluation(long lNo)
-{T_B
+{
 	if (lNo >= ATTR_MAX_NUM)
 		return 0;
 
 	//ExpressionParse(
 
 	return 1;
-T_E}
+}
 
 inline void CChaAttr::SetChangeFlag()
-{T_B	
+{	
 	memset(m_szChangeFlag, 0xff, sizeof(char) * ATTR_SIGN_BYTE_NUM);
 	m_sChangeNumClient = ATTR_CLIENT_MAX;
-T_E}
+}
 
 inline void CChaAttr::ResetChangeFlag()
-{T_B
+{
 	memset(m_szChangeFlag, 0, sizeof(char) * ATTR_SIGN_BYTE_NUM);
 	m_sChangeNumClient = 0;
-T_E}
+}
 
 // 此接口不设置m_sChangeNumClient
 inline void CChaAttr::SetChangeFlag(const char *cszChangeFlag, unsigned short usLen)
-{T_B
+{
 	if (!cszChangeFlag)
 		return;
 	if (usLen > ATTR_SIGN_BYTE_NUM)
 		usLen = ATTR_SIGN_BYTE_NUM;
 
 	memcpy(m_szChangeFlag, cszChangeFlag, usLen);
-T_E}
+}
 
 inline char* CChaAttr::GetChangeFlag(unsigned short& usLen)
-{T_B
+{
 	usLen = ATTR_SIGN_BYTE_NUM;
 	return m_szChangeFlag;
-T_E}
+}
 
 inline void CChaAttr::SetChangeBitFlag(long lBit)
-{T_B
+{
 	if (lBit >= ATTR_MAX_NUM)
 		return;
 
@@ -169,10 +169,10 @@ inline void CChaAttr::SetChangeBitFlag(long lBit)
 
 	size_t t = sizeof(CChaAttr);
 	m_szChangeFlag[sByteNO] |= chSetFlag;
-T_E}
+}
 
 inline bool	CChaAttr::GetChangeBitFlag(long lBit)
-{T_B
+{
 	if (lBit >= ATTR_MAX_NUM)
 		return false;
 
@@ -181,6 +181,6 @@ inline bool	CChaAttr::GetChangeBitFlag(long lBit)
 	sBitNO = short(lBit % 8);
 
 	return m_szChangeFlag[sByteNO] & (0x01 << sBitNO) ? true : false;
-T_E}
+}
 
 #endif // CHARACTERATTRIBUTE_H

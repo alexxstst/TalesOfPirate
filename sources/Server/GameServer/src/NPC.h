@@ -39,7 +39,7 @@ namespace mission
 		virtual BOOL Load( const CNpcRecord& recNpc, const CChaRecord& recChar );
 
 		// 网络消息处理函数
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 
 		// 任务状态处理函数
 		virtual BOOL MissionProc( CCharacter& character, BYTE& byState );
@@ -107,7 +107,7 @@ namespace mission
 		virtual BOOL InitScript( const char szFunc[], const char szName[] );
 
 		//
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET& packet );
+		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
 
 		//
 		virtual BOOL MissionProc( CCharacter& character, BYTE& byState );
@@ -156,8 +156,8 @@ namespace mission
 		virtual void SetType() { m_byType = TRADE; }
 
 		// 交易函数接口
-		virtual BOOL Sale( CCharacter& character, RPACKET& packet );
-		virtual BOOL Buy( CCharacter& character, RPACKET& packet );
+		virtual BOOL Sale( CCharacter& character, RPACKET packet );
+		virtual BOOL Buy( CCharacter& character, RPACKET packet );
 
 	private:
 

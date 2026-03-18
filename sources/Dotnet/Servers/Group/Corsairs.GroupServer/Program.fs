@@ -8,11 +8,7 @@ open Microsoft.Extensions.Configuration
 open Corsairs.GroupServer.Config
 open Corsairs.GroupServer.Services
 open Corsairs.GroupServer.Grpc
-open Corsairs.GroupServer.Handlers.Gate
-open Corsairs.GroupServer.Handlers.Game
-open Corsairs.GroupServer.Handlers.Account
 open Corsairs.Platform.Database
-open Corsairs.Platform.Protocol.Routing
 open Corsairs.Platform.Shared.Hosting
 
 [<EntryPoint>]
@@ -26,30 +22,18 @@ let main args =
     // База данных (GameDb)
     let dbConfig = builder.Configuration.GetSection("Database")
     let provider = DatabaseServiceExtensions.ParseProvider(dbConfig["Provider"])
-    let connStr = dbConfig["ConnectionString"]
+    let connName = dbConfig["ConnectionName"] |> Option.ofObj |> Option.defaultValue "GameDb"
+    let connStr = builder.Configuration.GetConnectionString(connName)
     builder.Services.AddGameDatabase(provider, connStr) |> ignore
 
-    // Сервисы
+    // Singleton-сервисы
     builder.Services.AddSingleton<PlayerRegistry>() |> ignore
-    builder.Services.AddScoped<CharacterService>() |> ignore
-    builder.Services.AddScoped<GuildService>() |> ignore
-    builder.Services.AddSingleton<TeamService>() |> ignore
-    builder.Services.AddScoped<FriendService>() |> ignore
-    builder.Services.AddSingleton<ChatService>() |> ignore
-    builder.Services.AddScoped<MentorshipService>() |> ignore
+    builder.Services.AddSingleton<InvitationManager>() |> ignore
+    builder.Services.AddSingleton<GateServerSystem>() |> ignore
+    builder.Services.AddSingleton<IGateServerSystem>(fun sp -> sp.GetRequiredService<GateServerSystem>() :> IGateServerSystem) |> ignore
+    builder.Services.AddSingleton<AccountServerSystem>() |> ignore
 
-    // Command handlers
-    builder.Services.AddSingleton<ICommandHandler, GateLoginHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, NewCharacterHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, DeleteCharacterHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, GuildCommandHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, FriendCommandHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, ChatCommandHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, GameEnterMapHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, AccountLoginResponseHandler>() |> ignore
-
-    // Router + HostedService
-    builder.Services.AddSingleton<CommandRouter>() |> ignore
+    // HostedService (оркестратор)
     builder.Services.AddHostedService<GroupHostedService>() |> ignore
 
     // gRPC
@@ -65,6 +49,7 @@ let main args =
     |> ignore
 
     let app = builder.Build()
+
     app.MapGrpcService<GroupGrpcService>() |> ignore
     app.Run()
     0

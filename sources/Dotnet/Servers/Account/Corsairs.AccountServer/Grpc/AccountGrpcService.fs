@@ -17,6 +17,7 @@ open Corsairs.AccountServer.Services
 /// gRPC-сервис администрирования аккаунтов.
 type AccountGrpcService(
     scopeFactory: IServiceScopeFactory,
+    auth: AuthService,
     logger: ILogger<AccountGrpcService>) =
     inherit AccountAdmin.AccountAdminBase()
 
@@ -27,18 +28,24 @@ type AccountGrpcService(
         info.Id <- a.Id
         info.Username <- a.Username
         info.Email <- if isNull a.Email then "" else a.Email
-        info.IsBanned <- a.IsBanned
-        info.BanReason <- if isNull a.BanReason then "" else a.BanReason
+        info.IsBanned <- a.Ban.GetValueOrDefault(false)
+        info.BanReason <- "" // legacy-схема не хранит причину бана
         info.BanExpiresAtUnix <-
-            if a.BanExpiresAt.HasValue then a.BanExpiresAt.Value.ToUnixTimeSeconds() else 0L
-        info.GmLevel <- int a.GmLevel
-        info.LoginStatus <- int a.LoginStatus
-        info.Credit <- float a.Credit
-        info.CreatedAtUnix <- a.CreatedAt.ToUnixTimeSeconds()
+            if a.EnableLoginTime.HasValue then DateTimeOffset(a.EnableLoginTime.Value, TimeSpan.Zero).ToUnixTimeSeconds()
+            else 0L
+        info.GmLevel <- 0 // GmLevel нет в account_login, хранится на уровне персонажей
+        info.LoginStatus <- a.LoginStatus
+        info.Credit <-
+            if isNull (box a.Details) then 0.0
+            else a.Details.Credit
+        info.CreatedAtUnix <-
+            if isNull (box a.Details) then 0L
+            else DateTimeOffset(a.Details.CreateTime, TimeSpan.Zero).ToUnixTimeSeconds()
         info.LastLoginAtUnix <-
-            if a.LastLoginAt.HasValue then a.LastLoginAt.Value.ToUnixTimeSeconds() else 0L
+            if a.LastLoginTime.HasValue then DateTimeOffset(a.LastLoginTime.Value, TimeSpan.Zero).ToUnixTimeSeconds()
+            else 0L
         info.LastLoginIp <- if isNull a.LastLoginIp then "" else a.LastLoginIp
-        info.TotalPlaytimeSeconds <- a.TotalPlaytimeSeconds
+        info.TotalPlaytimeSeconds <- a.TotalLiveTime
         info
 
     override _.GetAccount(request, context) =
@@ -48,9 +55,9 @@ type AccountGrpcService(
             let! account =
                 match request.IdentifierCase with
                 | GetAccountRequest.IdentifierOneofCase.AccountId ->
-                    db.Accounts.FindAsync(request.AccountId).AsTask()
+                    db.Accounts.Include(fun a -> a.Details).FirstOrDefaultAsync(fun a -> a.Id = request.AccountId)
                 | GetAccountRequest.IdentifierOneofCase.Username ->
-                    db.Accounts.FirstOrDefaultAsync(fun a -> a.Username = request.Username)
+                    db.Accounts.Include(fun a -> a.Details).FirstOrDefaultAsync(fun a -> a.Username = request.Username)
                 | _ ->
                     Task.FromResult<Account>(null)
             if isNull (box account) then
@@ -64,9 +71,9 @@ type AccountGrpcService(
             let db = scope.ServiceProvider.GetRequiredService<AccountDbContext>()
             let query =
                 if String.IsNullOrEmpty(request.Query) then
-                    db.Accounts.AsQueryable()
+                    db.Accounts.Include(fun a -> a.Details).AsQueryable()
                 else
-                    db.Accounts.Where(fun a -> a.Username.Contains(request.Query))
+                    db.Accounts.Include(fun a -> a.Details).Where(fun a -> a.Username.Contains(request.Query))
             let page = max 1 request.Pagination.Page
             let pageSize = max 10 (min 100 request.Pagination.PageSize)
             let! total = query.CountAsync()
@@ -93,11 +100,10 @@ type AccountGrpcService(
                 result.Success <- false
                 result.Message <- "Аккаунт не найден"
             else
-                account.IsBanned <- true
-                account.BanReason <- request.Reason
-                account.BanExpiresAt <-
+                account.Ban <- Nullable true
+                account.EnableLoginTime <-
                     if request.ExpiresAtUnix > 0L then
-                        Nullable(DateTimeOffset.FromUnixTimeSeconds(request.ExpiresAtUnix))
+                        Nullable(DateTimeOffset.FromUnixTimeSeconds(request.ExpiresAtUnix).UtcDateTime)
                     else Nullable()
                 let! _ = db.SaveChangesAsync()
                 result.Success <- true
@@ -116,9 +122,8 @@ type AccountGrpcService(
                 result.Success <- false
                 result.Message <- "Аккаунт не найден"
             else
-                account.IsBanned <- false
-                account.BanReason <- null
-                account.BanExpiresAt <- Nullable()
+                account.Ban <- Nullable false
+                account.EnableLoginTime <- Nullable()
                 let! _ = db.SaveChangesAsync()
                 result.Success <- true
                 result.Message <- "Аккаунт разблокирован"
@@ -130,14 +135,13 @@ type AccountGrpcService(
         task {
             use scope = scopeFactory.CreateScope()
             let db = scope.ServiceProvider.GetRequiredService<AccountDbContext>()
-            let auth = scope.ServiceProvider.GetRequiredService<AuthService>()
             let! account = db.Accounts.FindAsync(request.AccountId)
             let result = OperationResult()
             if isNull (box account) then
                 result.Success <- false
                 result.Message <- "Аккаунт не найден"
             else
-                account.PasswordHash <- auth.HashPassword(request.NewPasswordHash)
+                account.PasswordHash <- request.NewPasswordHash
                 let! _ = db.SaveChangesAsync()
                 result.Success <- true
                 result.Message <- "Пароль сброшен"
@@ -147,18 +151,10 @@ type AccountGrpcService(
 
     override _.SetGmLevel(request, context) =
         task {
-            use scope = scopeFactory.CreateScope()
-            let db = scope.ServiceProvider.GetRequiredService<AccountDbContext>()
-            let! account = db.Accounts.FindAsync(request.AccountId)
+            // GmLevel не хранится в account_login legacy-схемы
             let result = OperationResult()
-            if isNull (box account) then
-                result.Success <- false
-                result.Message <- "Аккаунт не найден"
-            else
-                account.GmLevel <- byte request.GmLevel
-                let! _ = db.SaveChangesAsync()
-                result.Success <- true
-                result.Message <- "GM-уровень установлен"
+            result.Success <- false
+            result.Message <- "GM-уровень хранится на уровне персонажей, не аккаунтов"
             return result
         }
 
@@ -166,13 +162,13 @@ type AccountGrpcService(
         task {
             use scope = scopeFactory.CreateScope()
             let db = scope.ServiceProvider.GetRequiredService<AccountDbContext>()
-            let! account = db.Accounts.FindAsync(request.AccountId)
+            let! details = db.AccountDetails.FindAsync(request.AccountId)
             let result = OperationResult()
-            if isNull (box account) then
+            if isNull (box details) then
                 result.Success <- false
-                result.Message <- "Аккаунт не найден"
+                result.Message <- "Детали аккаунта не найдены"
             else
-                account.Credit <- decimal request.Credit
+                details.Credit <- request.Credit
                 let! _ = db.SaveChangesAsync()
                 result.Success <- true
                 result.Message <- "Кредит установлен"

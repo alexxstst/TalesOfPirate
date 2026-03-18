@@ -6,13 +6,9 @@
 #include <string>
 #include "DBCCommon.h"
 #include "PreAlloc.h"
-#include "ThreadPool.h"
-#include "CommRPC.h"
 #include "Point.h"
 #include "Identity.h"
 #include "Usage.h"
-#include "DataSocket.h"
-#include "PacketQueue.h"
 #include "Config.h"
 #include "gtplayer.h"
 #include "util.h"
@@ -23,323 +19,352 @@
 #pragma pack( pop, before_InfoNet )
 
 #include "MsgQueue.h"
+#include "Task.h"
+#include "CorsairsNet.h"
 
 #include <mutex>
+#include <thread>
+#include <atomic>
 
-// GateServer �����ṹ
+// GateServer — структура подключения к GateServer
 class GameServerApp;
-class GateServer
-{
+
+class GateServer {
 public:
-    GateServer() : m_pCDataSock(0), m_usPort(0), m_gtname(""), m_playerlist(NULL), m_playercount(0)
-    {
-    }
+	GateServer() : m_pClient(nullptr), m_usPort(0), m_gtname(""), m_playerlist(NULL), m_playercount(0) {
+	}
 
-    ~GateServer()
-    {
-        m_pCDataSock = NULL;
-        m_gtname = "";
-    }
+	~GateServer() {
+		m_pClient = nullptr;
+		m_gtname = "";
+	}
 
-    void SetDataSock(dbc::DataSocket* datasock)
-    {
-        m_pCDataSock = datasock;
-    }
+	void SetClient(net::TcpClient* client) {
+		m_pClient = client;
+	}
 
-    void Invalid()
-    {
-        m_pCDataSock = NULL;
-    }
+	void Invalid() {
+		m_pClient = nullptr;
+	}
 
-    bool IsValid() {return (m_pCDataSock != NULL) ? true : false;}
+	bool IsValid() {
+		return m_pClient != nullptr && m_pClient->IsConnected();
+	}
 
-    std::string& GetIP() {return m_strIp;}
-    unsigned short& GetPort() {return m_usPort;}
-    std::string& GetName() {return m_gtname;}
-    //GatePlayer*& GetPlayerList() {return m_playerlist;}
-    dbc::DataSocket* GetDataSock() const {return m_pCDataSock;}
+	std::string& GetIP() {
+		return m_strIp;
+	}
 
-    long SendData(dbc::WPacket pkt)
-    {
-        if (IsValid()) {
-            return m_pCDataSock->SendData(pkt);
-        } else {
-            return 0;
-        }        
-    }
+	unsigned short& GetPort() {
+		return m_usPort;
+	}
 
-	GatePlayer* m_listcurplayer;	// ���ڱ�������
+	std::string& GetName() {
+		return m_gtname;
+	}
 
-    // Player ˫����
-    GatePlayer* m_playerlist;
+	bool SendData(net::WPacket& pkt) {
+		if (IsValid()) {
+			return m_pClient->Send(pkt);
+		}
+		return false;
+	}
+
+	GatePlayer* m_listcurplayer; // текущий элемент обхода
+
+	// Player двойной список
+	GatePlayer* m_playerlist;
 	int m_playercount;
-	void AddPlayerCount() {++ m_playercount;}
-	void DecPlayerCount() {-- m_playercount;}
-	int GetPlayerCount() const {return m_playercount;}
+
+	void AddPlayerCount() {
+		++m_playercount;
+	}
+
+	void DecPlayerCount() {
+		--m_playercount;
+	}
+
+	int GetPlayerCount() const {
+		return m_playercount;
+	}
 
 protected:
-    std::string m_strIp;
-    unsigned short m_usPort;
-    std::string m_gtname;
+	std::string m_strIp;
+	unsigned short m_usPort;
+	std::string m_gtname;
 
-    dbc::DataSocket* m_pCDataSock;
-
+	net::TcpClient* m_pClient;
 };
 
 
-// ���� GateServer ������
-class ConnectGateServer : public dbc::Task
-    {
+// InfoServer — очередь сообщений
+class NetMessageQueue : public MsgQueue<pNetMessage> {
 public:
-    ConnectGateServer(GameServerApp* gmsvr) {m_gmsvr = gmsvr; dwTimeOut = 3000;}
+	~NetMessageQueue() {
+		Clear();
+	}
 
-private:
-    virtual long Process();
-    DWORD dwTimeOut;
-    GameServerApp* m_gmsvr;};
+	void Clear() {
+		std::deque<pNetMessage>::iterator it;
 
-// InfoServer��Ϣ����
-class NetMessageQueue : public MsgQueue<pNetMessage>
-{
-public:
-    ~NetMessageQueue()
-    {
-        Clear();
-    }
-
-    void Clear()
-    {
-        std::deque<pNetMessage>::iterator it;
-
-        m_lock.lock();
-        for(it = m_queue.begin(); it != m_queue.end(); it++)
-        {
-            FreeNetMessage(*it);
-        }
-        m_queue.clear();
-        m_lock.unlock();
-    }
-    
+		m_lock.lock();
+		for (it = m_queue.begin(); it != m_queue.end(); it++) {
+			FreeNetMessage(*it);
+		}
+		m_queue.clear();
+		m_lock.unlock();
+	}
 };
 
-// InfoServer������
-class InfoServer : public InfoNetBase
-{
+// InfoServer — обработчик
+class InfoServer : public InfoNetBase {
 public:
-    enum
-    {
-        CMD_FM_CONNECTED,       // ����InfoServer
-        CMD_FM_DISCONNECTED,    // ��InfoServer�Ͽ�����
-        CMD_FM_MSG,             // InfoServer��������Ϣ
+	enum {
+		CMD_FM_CONNECTED,
+		CMD_FM_DISCONNECTED,
+		CMD_FM_MSG,
 
-        CMD_INFO_MSG_MAX
-    };
-    
-    InfoServer() : m_usPort(0), m_strIp(""), m_strPwd(""), bValid(false), m_nSection(0)
-    {
-    }
+		CMD_INFO_MSG_MAX
+	};
 
-    ~InfoServer()
-    {
-    }
+	InfoServer() : m_usPort(0), m_strIp(""), m_strPwd(""), bValid(false), m_nSection(0) {
+	}
 
-    bool IsValid() { return bValid; }
-    void SetValid() { bValid = true; }
-    void InValid() { bValid = false; }
+	~InfoServer() {
+	}
 
-	std::string GetIP() { return m_strIp; }
-	std::string GetPwd() { return m_strPwd; }
-    unsigned short GetPort() {return m_usPort;}
-    void SetInfoServer(std::string strIP, unsigned short usPort, std::string strPwd, int nSection)
-    {
-        if(usPort)
-        {
-            m_strIp = strIP;
-            m_usPort = usPort;
+	bool IsValid() {
+		return bValid;
+	}
+
+	void SetValid() {
+		bValid = true;
+	}
+
+	void InValid() {
+		bValid = false;
+	}
+
+	std::string GetIP() {
+		return m_strIp;
+	}
+
+	std::string GetPwd() {
+		return m_strPwd;
+	}
+
+	unsigned short GetPort() {
+		return m_usPort;
+	}
+
+	void SetInfoServer(std::string strIP, unsigned short usPort, std::string strPwd, int nSection) {
+		if (usPort) {
+			m_strIp = strIP;
+			m_usPort = usPort;
 			m_strPwd = strPwd;
 			m_nSection = nSection;
-        }
-    }
+		}
+	}
 
 	void Login();
 
-    //��InfoServer������Ϣ
-    virtual bool SendData(pNetMessage msg)
-    {
+	virtual bool SendData(pNetMessage msg) {
 		bool bSend = false;
 		msg->msgHead.msgSection = m_nSection;
 
-		try
-		{
+		try {
 			bSend = PostInfoSend(msg);
 		}
-		catch(...)
-		{
+		catch (...) {
 			LG("Store_data", "SendData Error!\n");
 		}
 
-        return bSend;
-    }
+		return bSend;
+	}
 
-    //ȡ��Ϣ����
-    virtual long PeekMsg(unsigned long ms);
+	virtual long PeekMsg(unsigned long ms);
 
-    virtual void OnConnect(bool result);
+	virtual void OnConnect(bool result);
 
-    virtual void OnNetMessage(pNetMessage msg)
-    {
-        m_MsgQueue.Push(msg);
-    }
+	virtual void OnNetMessage(pNetMessage msg) {
+		m_MsgQueue.Push(msg);
+	}
 
-    virtual void OnResend(pNetMessage msg)
-    {
-    }
+	virtual void OnResend(pNetMessage msg) {
+	}
 
-    virtual void OnDisconnect();
+	virtual void OnDisconnect();
 
 protected:
-    std::string m_strIp;
-    unsigned short m_usPort;
+	std::string m_strIp;
+	unsigned short m_usPort;
 	std::string m_strPwd;
 	int m_nSection;
-    bool bValid;
-    NetMessageQueue m_MsgQueue;
-
+	bool bValid;
+	NetMessageQueue m_MsgQueue;
 };
 
-// ���� InfoServer ������
-class ToInfoServer : public dbc::Task
-{
+// Подключение к InfoServer — фоновый поток (использует dbc::Task через ThreadPool)
+class ToInfoServer : public dbc::Task {
 public:
-    ToInfoServer(GameServerApp* gmsvr) {m_gmsvr = gmsvr; m_dwTimeOut = 30000;}
+	ToInfoServer(GameServerApp* gmsvr) {
+		m_gmsvr = gmsvr;
+		m_dwTimeOut = 30000;
+	}
 
 private:
-    virtual long Process();
-    GameServerApp* m_gmsvr;
+	virtual long Process();
+	GameServerApp* m_gmsvr;
 	DWORD m_dwTimeOut;
-    
 };
 
 
-// ����ͨ��Ӧ����
-class GameServerApp : public dbc::TcpClientApp, public dbc::RPCMGR, public dbc::PKQueue
-    {
-    friend class ConnectGateServer;
-    friend class ToInfoServer;
-    friend class InfoServer;
+// Callback-обработчик пакетов от GateServer
+class GateHandler : public net::ITcpClientHandler {
+public:
+	GateHandler() : _gateIndex(-1), _app(nullptr) {
+	}
+
+	void Init(int gateIndex, GameServerApp* app) {
+		_gateIndex = gateIndex;
+		_app = app;
+	}
+
+	void OnPacket(net::RPacket& packet) override;
+	void OnDisconnected(int reason) override;
+
+private:
+	int _gateIndex;
+	GameServerApp* _app;
+};
+
+
+// Игровой сервер — сетевое приложение (CorsairsNet)
+class GameServerApp {
+	friend class ToInfoServer;
+	friend class InfoServer;
+	friend class GateHandler;
 
 public:
-	GameServerApp(dbc::ThreadPool *proc,dbc::ThreadPool *comm);
-	virtual ~GameServerApp();
+	GameServerApp();
+	~GameServerApp();
 
-    // ��¼���
-    char const* GetName() const {return m_strGameName.c_str();}
-	void ConnectGate(GateServer *pGate);
-    bool IsValidGate(int i);
-    GateServer* FindGate(char const* gt_name);
+	// Имя сервера
+	char const* GetName() const {
+		return m_strGameName.c_str();
+	}
 
-    bool ConnectInfo(InfoServer *pInfo);
-    void DisconnectInfo(InfoServer *pInfo);
-    InfoServer *GetInfoServer() { return &m_IfServer; }
+	bool IsValidGate(int i);
+	GateServer* FindGate(char const* gt_name);
 
-    // Player ��� (GateServer����GatePlayer��һ��˫����)
-    bool AddPlayer(GatePlayer* gtplayer, GateServer* gt, dbc::uLong gtaddr);
-    bool DelPlayer(GatePlayer* gtplayer);
-	// add by xuedong
+	bool ConnectInfo(InfoServer* pInfo);
+	void DisconnectInfo(InfoServer* pInfo);
+
+	InfoServer* GetInfoServer() {
+		return &m_IfServer;
+	}
+
+	// Player список (GateServer хранит GatePlayer в двойном списке)
+	bool AddPlayer(GatePlayer* gtplayer, GateServer* gt, unsigned long gtaddr);
+	bool DelPlayer(GatePlayer* gtplayer);
 	bool BeginGetplayer(GateServer* gt);
 	GatePlayer* const GetNextPlayer(GateServer* gt);
 
 	void BeginGetGate(void);
 	GateServer* GetNextGate(void);
-	//
 
-    bool KickPlayer(GatePlayer* gtplayer, long lTimeSec = 0);
-	bool KickPlayer2(GatePlayer *gtplayer);
+	bool KickPlayer(GatePlayer* gtplayer, long lTimeSec = 0);
+	bool KickPlayer2(GatePlayer* gtplayer);
 
-    // �ض������ӿ�
-    bool SendToWorld(dbc::WPacket& pkt);
-	bool SendToGroup(dbc::WPacket& chginf);
-    bool SendToClient(GatePlayer* player, dbc::WPacket& pkt);
-    bool SendToClient(dbc::WPacket& pkt, GatePlayer* playerlist);
-    bool SendToClient(dbc::WPacket& pkt, int array_cnt, uplayer* uplayer_array);
-    bool SendToGame(dbc::WPacket& pkt, uplayer* uplyr);
-    
-protected:
-	virtual bool OnConnect(dbc::DataSocket *datasock); //����ֵ:true-��������,false-����������
-	virtual void OnDisconnect(dbc::DataSocket *datasock,int reason); //reasonֵ:0-���س��������˳���-3-���类�Է��رգ�-1-Socket����;-5-�����ȳ�������.
-	virtual void OnProcessData(dbc::DataSocket *datasock,dbc::RPacket &recvbuf);
-	void ProcessData(dbc::DataSocket* datasock, dbc::RPacket& recvbuf);
+	// Сетевые интерфейсы отправки
+	bool SendToWorld(net::WPacket& pkt);
+	bool SendToGroup(net::WPacket& chginf);
+	bool SendToClient(GatePlayer* player, net::WPacket& pkt);
+	bool SendToClient(net::WPacket& pkt, GatePlayer* playerlist);
+	bool SendToClient(net::WPacket& pkt, int array_cnt, uplayer* uplayer_array);
+	bool SendToGame(net::WPacket& pkt, uplayer* uplyr);
+
+	// CorsairsNet — сетевой цикл
+	void PeekPacket(unsigned long ms);
+	void DisconnectGate(GateServer* pGate);
+
+	net::WPacket GetWPacket() {
+		return net::WPacket(256);
+	}
+
+	// Обработка пакетов (вызывается из GateHandler::OnPacket в game thread)
+	void ProcessData(GateServer* gt, net::RPacket& pk);
+	// Обработка InfoServer сообщений
+	void ProcessData(pNetMessage msg, short sType);
+
+	// Обработка OnServeCall-команд (CMD_TM_KICKCHA, CMD_TM_OFFLINE_MODE) через SESS-echo
+	void HandleServeCall(GateServer* gt, net::RPacket& pk);
 
 public:
-	// SyncCall Handler
-	virtual	dbc::WPacket OnServeCall(dbc::DataSocket* datasock, dbc::RPacket& in_para);
-
-	dbc::WPacket TM_KICKCHA(dbc::DataSocket* datasock, dbc::RPacket& pk);
-
-	dbc::WPacket TM_OFFLINE_MODE(dbc::DataSocket* datasock, dbc::RPacket& rpk);
-    //����InfoServer��Ϣ
-    void ProcessData(pNetMessage msg, short sType);
-
-public:	
-	long 				m_count;
-	dbc::DataSocket	*	m_groupsock;
-	Usage				m_usage;
-
-
+	long m_count;
+	Usage m_usage;
 
 private:
-    std::recursive_mutex m_mutdisconn;
+	// Фоновый поток переподключения к GateServer'ам
+	void ConnectGateLoop();
+	void HandlePendingEvents();
 
-    GateServer m_gtarray[MAX_GATE];
-    short m_gtnum;
-	short m_listcurgt;
+	std::recursive_mutex m_mutdisconn;
 
-    InfoServer m_IfServer;
+	net::TcpClient m_gateClients[MAX_GATE]{};
+	GateHandler m_gateHandlers[MAX_GATE]{};
+	GateServer m_gtarray[MAX_GATE]{};
+	short m_gtnum{};
+	short m_listcurgt{};
 
-    std::string m_strGameName;};
+	std::thread m_connectThread;
+	std::atomic<bool> m_exitFlag{false};
+	// Atomic-флаги для cross-thread уведомлений (connect/disconnect)
+	// -1 = нет события, >= 0 = индекс гейта
+	std::atomic<int> m_pendingConnect{-1};
+	std::atomic<int> m_pendingDisconnect{-1};
 
-inline bool GameServerApp::BeginGetplayer(GateServer* gt)
-{
-    if (gt == NULL) return false;
-    if (!gt->IsValid()) return false;
+	InfoServer m_IfServer;
+
+	std::string m_strGameName;
+};
+
+inline bool GameServerApp::BeginGetplayer(GateServer* gt) {
+	if (gt == NULL) return false;
+	if (!gt->IsValid()) return false;
 
 	gt->m_listcurplayer = gt->m_playerlist;
 
 	return true;
 }
 
-inline GatePlayer* const GameServerApp::GetNextPlayer(GateServer* gt)
-{
-	GatePlayer*	pretplayer = gt->m_listcurplayer;
+inline GatePlayer* const GameServerApp::GetNextPlayer(GateServer* gt) {
+	GatePlayer* pretplayer = gt->m_listcurplayer;
 	if (gt->m_listcurplayer)
 		gt->m_listcurplayer = gt->m_listcurplayer->Next;
 
 	return pretplayer;
 }
 
-inline void GameServerApp::BeginGetGate(void)
-{
+inline void GameServerApp::BeginGetGate(void) {
 	m_listcurgt = 0;
 }
 
-inline GateServer* GameServerApp::GetNextGate(void)
-{
-	while (m_listcurgt < m_gtnum)
-	{
-	    if (m_gtarray[m_listcurgt++].IsValid())
+inline GateServer* GameServerApp::GetNextGate(void) {
+	while (m_listcurgt < m_gtnum) {
+		if (m_gtarray[m_listcurgt++].IsValid())
 			return m_gtarray + (m_listcurgt - 1);
 	}
 
 	return 0;
 }
 
-extern GameServerApp *g_gmsvr;
+extern GameServerApp* g_gmsvr;
 
-inline void uplayer::Init(char const* gt_name, unsigned long gt_addr, DWORD atorID)
-{
-    pGate = g_gmsvr->FindGate(gt_name);
-    m_dwDBChaId = atorID;
-    m_ulGateAddr = gt_addr;
+inline void uplayer::Init(char const* gt_name, unsigned long gt_addr, DWORD atorID) {
+	pGate = g_gmsvr->FindGate(gt_name);
+	m_dwDBChaId = atorID;
+	m_ulGateAddr = gt_addr;
 }
 
 #endif

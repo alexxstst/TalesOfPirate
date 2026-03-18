@@ -12,7 +12,6 @@
 // 总循环入口
 void CCharacter::Run(DWORD dwCurTime)
 {
-	T_B
 		MPTimer	t;
 	Char	chCount = 0;
 
@@ -181,23 +180,19 @@ void CCharacter::Run(DWORD dwCurTime)
 	}
 	m_dwCellRunTime[chCount++] = t.End();
 
-	T_E
 }
 
 void CCharacter::RunEnd(DWORD dwCurTime)
 {
-	T_B
 		if (m_byExit == CHAEXIT_BEGIN && m_timerExit.IsOK(dwCurTime))
 		{
 			// 正式退出
 			Exit();
 		}
-	T_E
 }
 
 void CCharacter::StartExit()
 {
-	T_B
 		//LG( "延时退出", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
 		LG("time too long exit", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit);
 	if (m_byExit != CHAEXIT_BEGIN)
@@ -211,12 +206,10 @@ void CCharacter::StartExit()
 		WRITE_LONG(l_wpk, dwExitTime);
 		ReflectINFof(this, l_wpk);
 	}
-	T_E
 }
 
 void CCharacter::CancelExit()
 {
-	T_B
 		//LG( "延时退出", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
 		LG("time too long exit", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit);
 	if (m_byExit == CHAEXIT_BEGIN)
@@ -228,12 +221,10 @@ void CCharacter::CancelExit()
 		WRITE_CMD(l_wpk, CMD_MC_CANCELEXIT);
 		ReflectINFof(this, l_wpk);
 	}
-	T_E
 }
 
 void CCharacter::Exit()
 {
-	T_B
 		// 正式退出
 		//LG( "延时退出", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit );
 		LG("time too long exit", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit);
@@ -244,7 +235,6 @@ void CCharacter::Exit()
 
 	m_byExit = CHAEXIT_NONE;
 	m_timerExit.Reset();
-	T_E
 }
 
 // 定时检查地域变化
@@ -254,7 +244,6 @@ void CCharacter::OnAreaCheck(DWORD dwCurTime)
 
 void CCharacter::OnDBUpdate(DWORD dwCurTime)
 {
-	T_B
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer)
 		return;
@@ -264,12 +253,10 @@ void CCharacter::OnDBUpdate(DWORD dwCurTime)
 	LG("enter_map", "OnDBUpdate start!\n");
 	game_db.SavePlayer(pCPlayer, enumSAVE_TYPE_TIMER);
 	LG("enter_map", "OnDBUpdate end!\n");
-	T_E
 }
 
 BOOL CCharacter::SaveMissionData()
 {
-	T_B
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer) return FALSE;
 	if (!game_db.SaveMissionData(pCPlayer, pCPlayer->GetDBChaId()))
@@ -279,23 +266,19 @@ BOOL CCharacter::SaveMissionData()
 		return FALSE;
 	}
 	return TRUE;
-	T_E
 }
 
 void CCharacter::OnTeamNotice(DWORD dwCurTime)
 {
-	T_B
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer)	return;
 
 	pCPlayer->NoticeTeamMemberData();
-	T_E
 }
 
 // 脚本定时器，用于HP回复，宠物消耗等
 void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 {
-	T_B
 		if (!IsPlayerCha())
 			return;
 
@@ -324,5 +307,4 @@ void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 		if (IsPlayerCha())
 			SynKitbagNew(enumSYN_KITBAG_ATTR);
 	}
-	T_E
 }

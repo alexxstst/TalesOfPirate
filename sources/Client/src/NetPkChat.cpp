@@ -36,7 +36,7 @@ void  CS_GM1Say1(const char *pszContent, DWORD color)
 	WPacket pk	=g_NetIF->GetWPacket();
 	pk.WriteCmd(CMD_CP_GM1SAY1);	//����
 	pk.WriteString(pszContent);
-	pk.WriteUInt32(color);
+	pk.WriteInt64(color);
 	g_NetIF->SendPacketMessage(pk);
 }
 //End
@@ -60,7 +60,7 @@ void  CP_RefuseToMe(bool refusetome)	//���þܾ�˽�ı�־
 {
 	WPacket	pk	=g_NetIF->GetWPacket();
 	pk.WriteCmd(CMD_CP_REFUSETOME);
-	pk.WriteUInt8(refusetome?1:0);
+	pk.WriteInt64(refusetome?1:0);
 
 	g_NetIF->SendPacketMessage(pk);
 }
@@ -103,7 +103,7 @@ void  CS_Team_Refuse(unsigned long chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_TEAM_REFUSE);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 
@@ -113,7 +113,7 @@ void  CS_Team_Confirm(unsigned long chaid)
 
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_TEAM_ACCEPT);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 
@@ -123,7 +123,7 @@ void  CS_Team_Kick( DWORD dwKickedID )
 
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_TEAM_KICK);
-	l_wpk.WriteUInt32( dwKickedID );
+	l_wpk.WriteInt64( dwKickedID );
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 
@@ -147,21 +147,21 @@ void  CS_Frnd_Refuse(unsigned long chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_FRND_REFUSE);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 void  CS_Frnd_Confirm(unsigned long chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_FRND_ACCEPT);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 void  CS_Frnd_Delete(unsigned long chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_FRND_DELETE);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 
@@ -169,7 +169,7 @@ void  CP_Frnd_Refresh_Info(unsigned long chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_FRND_REFRESH_INFO);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 
@@ -178,8 +178,8 @@ void CP_Change_PersonInfo(const char* motto, unsigned short icon, bool refuse_se
 	WPacket l_wpk = g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_CHANGE_PERSONINFO);
 	l_wpk.WriteString(motto);
-	l_wpk.WriteUInt16(icon);
-	l_wpk.WriteUInt8(refuse_sess);
+	l_wpk.WriteInt64(icon);
+	l_wpk.WriteInt64(refuse_sess);
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 
@@ -187,7 +187,7 @@ void  CS_Sess_Create(const char *chaname[],unsigned char chanum)
 {
 	WPacket	l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_SESS_CREATE);
-	l_wpk.WriteUInt8(chanum);
+	l_wpk.WriteInt64(chanum);
 	for(char i=0;i<chanum; i++)
 	{
 		l_wpk.WriteString(chaname[i]);
@@ -199,7 +199,7 @@ void  CS_Sess_Add(unsigned long sessid,const char *chaname)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_SESS_ADD);
-	l_wpk.WriteUInt32(sessid);
+	l_wpk.WriteInt64(sessid);
 	l_wpk.WriteString(chaname);
 
 	g_NetIF->SendPacketMessage(l_wpk);
@@ -208,7 +208,7 @@ void  CS_Sess_Leave(unsigned long sessid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_SESS_LEAVE);
-	l_wpk.WriteUInt32(sessid);
+	l_wpk.WriteInt64(sessid);
 
 	g_NetIF->SendPacketMessage(l_wpk);
 }
@@ -216,7 +216,7 @@ void  CS_Sess_Say(unsigned long sessid,const char *word)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CP_SESS_SAY);
-	l_wpk.WriteUInt32(sessid);
+	l_wpk.WriteInt64(sessid);
 	l_wpk.WriteString(word);
 
 	g_NetIF->SendPacketMessage(l_wpk);
@@ -230,25 +230,25 @@ BOOL	PC_Say2You(LPRPACKET pk)
 	l_say.m_src		=pk.ReadString();
 	l_say.m_dst		=pk.ReadString();
 	l_say.m_content	=pk.ReadString();
-	DWORD dwColour = pk.ReadUInt32();
+	DWORD dwColour = pk.ReadInt64();
 	NetSay2You(l_say,dwColour);
 	return TRUE;
 }
 BOOL	PC_Say2Team(LPRPACKET pk)
 {
-	unsigned long l_chaid	=pk.ReadUInt32();
-	const char	* l_word	=pk.ReadString();
-	DWORD dwColour = pk.ReadUInt32();
-	NetSay2Team(l_chaid,l_word,dwColour);
+	unsigned long l_chaid	=pk.ReadInt64();
+	std::string	l_word	=pk.ReadString();
+	DWORD dwColour = pk.ReadInt64();
+	NetSay2Team(l_chaid,l_word.c_str(),dwColour);
 	return TRUE;
 }
 
 BOOL	PC_Say2Gud(LPRPACKET pk)
 {
-	const char  * l_src		=pk.ReadString();
-	const char	* l_word	=pk.ReadString();
-	DWORD dwColour = pk.ReadUInt32();
-	NetSay2Gud(l_src,l_word,dwColour);
+	std::string l_src	=pk.ReadString();
+	std::string	l_word	=pk.ReadString();
+	DWORD dwColour = pk.ReadInt64();
+	NetSay2Gud(l_src.c_str(),l_word.c_str(),dwColour);
 	return TRUE;
 }
 
@@ -257,7 +257,7 @@ BOOL	PC_Say2All(LPRPACKET pk)
 	stNetSay2All l_say;
 	l_say.m_src		=pk.ReadString();
 	l_say.m_content	=pk.ReadString();
-	DWORD dwColour = pk.ReadUInt32();
+	DWORD dwColour = pk.ReadInt64();
 	NetSay2All(l_say,dwColour);
 	return TRUE;
 }
@@ -274,8 +274,8 @@ BOOL	PC_GM1SAY1(LPRPACKET pk)
 {
 	stNetScrollSay l_say;
 	l_say.m_content	=pk.ReadString();
-	l_say.setnum = pk.ReadUInt32();
-	l_say.color	= pk.ReadUInt32();
+	l_say.setnum = pk.ReadInt64();
+	l_say.color	= pk.ReadInt64();
 	NetGM1Say1(l_say);
 	return TRUE;
 }
@@ -285,28 +285,28 @@ BOOL	PC_SAY2TRADE(LPRPACKET pk)
 	stNetSay2All l_say;
 	l_say.m_src		=pk.ReadString();
 	l_say.m_content	=pk.ReadString();
-	DWORD dwColour = pk.ReadUInt32();
+	DWORD dwColour = pk.ReadInt64();
 	NetSay2Trade(l_say,dwColour);
 	return TRUE;
 }
 BOOL	PC_SESS_CREATE(LPRPACKET pk)
 {
-	uLong	l_newsessid	=pk.ReadUInt32();
+	uLong	l_newsessid	=pk.ReadInt64();
 	if(!l_newsessid)
 	{
-		NetSessCreate(pk.ReadString());
+		NetSessCreate(pk.ReadString().c_str());
 	}else
 	{
-		uShort	l_chanum	=pk.ReverseReadUInt16();
+		uShort	l_chanum	=pk.ReverseReadInt64();
 		if(!l_chanum && l_chanum >100) return FALSE;
 
 		stNetSessCreate l_nsc[100];
 		for(uShort i=0;i<l_chanum;i++)
 		{
-			l_nsc[i].lChaID		=pk.ReadUInt32();
+			l_nsc[i].lChaID		=pk.ReadInt64();
 			l_nsc[i].szChaName	=pk.ReadString();
 			l_nsc[i].szMotto	=pk.ReadString();
-			l_nsc[i].sIconID	=pk.ReadUInt16();
+			l_nsc[i].sIconID	=pk.ReadInt64();
 		}
 		NetSessCreate(l_newsessid,l_nsc,l_chanum);
 	}
@@ -315,57 +315,57 @@ BOOL	PC_SESS_CREATE(LPRPACKET pk)
 BOOL	PC_SESS_ADD(LPRPACKET pk)
 {
 	stNetSessCreate l_nsc;
-	uLong	l_sessid=pk.ReadUInt32();
-	l_nsc.lChaID	=pk.ReadUInt32();
+	uLong	l_sessid=pk.ReadInt64();
+	l_nsc.lChaID	=pk.ReadInt64();
 	l_nsc.szChaName	=pk.ReadString();
 	l_nsc.szMotto	=pk.ReadString();
-	l_nsc.sIconID	=pk.ReadUInt16();
+	l_nsc.sIconID	=pk.ReadInt64();
 	NetSessAdd(l_sessid,&l_nsc);
 	return TRUE;
 }
 BOOL	PC_SESS_LEAVE(LPRPACKET pk)
 {
-	uLong l_sessid	=pk.ReadUInt32();
-	uLong l_chaid	=pk.ReadUInt32();
+	uLong l_sessid	=pk.ReadInt64();
+	uLong l_chaid	=pk.ReadInt64();
 	NetSessLeave(l_sessid,l_chaid);
 	return TRUE;
 }
 BOOL	PC_SESS_SAY(LPRPACKET pk)
 {
-	uLong	l_sessid	=pk.ReadUInt32();
-	uLong	l_chaid		=pk.ReadUInt32();
-	cChar*	l_word		=pk.ReadString();
-	NetSessSay(l_sessid,l_chaid,l_word);
+	uLong	l_sessid	=pk.ReadInt64();
+	uLong	l_chaid		=pk.ReadInt64();
+	std::string	l_word	=pk.ReadString();
+	NetSessSay(l_sessid,l_chaid,l_word.c_str());
 	return TRUE;
 }
 BOOL	PC_TEAM_INVITE(LPRPACKET pk)
 {
-	const char * l_inviter_name =pk.ReadString();
-	uLong		 l_inviter_chaid=pk.ReadUInt32();
-	uShort		 l_inviter_icon	=pk.ReadUInt16();
-	NetTeamInvite(l_inviter_name,l_inviter_chaid,l_inviter_icon);
+	std::string l_inviter_name =pk.ReadString();
+	uLong		 l_inviter_chaid=pk.ReadInt64();
+	uShort		 l_inviter_icon	=pk.ReadInt64();
+	NetTeamInvite(l_inviter_name.c_str(),l_inviter_chaid,l_inviter_icon);
 	return TRUE;
 }
 BOOL	PC_TEAM_CANCEL(LPRPACKET pk)
 {
-	unsigned char reason =pk.ReadUInt8();
-	NetTeamCancel(pk.ReadUInt32(),reason);
+	unsigned char reason =pk.ReadInt64();
+	NetTeamCancel(pk.ReadInt64(),reason);
 	return TRUE;
 }
 //��ӳ�Ա�仯��Ϣˢ��
 BOOL	PC_TEAM_REFRESH(LPRPACKET pk)
 {
 	stNetPCTeam	l_pcteam;
-	l_pcteam.kind	=pk.ReadUInt8();
-	l_pcteam.count	=pk.ReadUInt8();  
+	l_pcteam.kind	=pk.ReadInt64();
+	l_pcteam.count	=pk.ReadInt64();
 
     LG("Team", "Kind:[%u], Count[%u]\n", l_pcteam.kind, l_pcteam.count );
 	for(unsigned char i=0;i<l_pcteam.count;i++)
 	{
-		l_pcteam.cha_dbid[i]	=pk.ReadUInt32();
-		strcpy( l_pcteam.cha_name[i], pk.ReadString() );
-		strcpy( l_pcteam.motto[i], pk.ReadString() );
-		l_pcteam.cha_icon[i]		=pk.ReadUInt16();
+		l_pcteam.cha_dbid[i]	=pk.ReadInt64();
+		strncpy( l_pcteam.cha_name[i], pk.ReadString().c_str(), sizeof(l_pcteam.cha_name[i]) - 1 );
+		strncpy( l_pcteam.motto[i], pk.ReadString().c_str(), sizeof(l_pcteam.motto[i]) - 1 );
+		l_pcteam.cha_icon[i]		=pk.ReadInt64();
 
         LG("Team", "    DB_ID:[%u], Name[%s]\n", l_pcteam.cha_dbid[i], l_pcteam.cha_name[i] );
 	}    
@@ -375,116 +375,116 @@ BOOL	PC_TEAM_REFRESH(LPRPACKET pk)
 }
 BOOL PC_FRND_INVITE(LPRPACKET pk)
 {
-	const char * l_inviter_name =pk.ReadString();
-	uLong		 l_inviter_chaid=pk.ReadUInt32();
-	uShort		 l_inviter_icon	=pk.ReadUInt16();
-	NetFrndInvite(l_inviter_name,l_inviter_chaid,l_inviter_icon);
+	std::string l_inviter_name =pk.ReadString();
+	uLong		 l_inviter_chaid=pk.ReadInt64();
+	uShort		 l_inviter_icon	=pk.ReadInt64();
+	NetFrndInvite(l_inviter_name.c_str(),l_inviter_chaid,l_inviter_icon);
 	return TRUE;
 }
 BOOL PC_FRND_CANCEL(LPRPACKET pk)
 {
-	unsigned char reason =pk.ReadUInt8();
-	NetFrndCancel(pk.ReadUInt32(),reason);
+	unsigned char reason =pk.ReadInt64();
+	NetFrndCancel(pk.ReadInt64(),reason);
 	return TRUE;
 }
 
 BOOL PC_GM_INFO(LPRPACKET pk){
-	unsigned char l_type =pk.ReadUInt8();
+	unsigned char l_type =pk.ReadInt64();
 	switch (l_type){
 		case MSG_FRND_REFRESH_START:{
 			stNetFrndStart l_nfs[100];
-			uShort	l_grpnum	=pk.ReadUInt8();
+			uShort	l_grpnum	=pk.ReadInt64();
 			for(uShort l_grpi =0;l_grpi<l_grpnum;l_grpi++){
 				l_nfs[l_grpi].szGroup	= "GM";
-				l_nfs[l_grpi].lChaid	=pk.ReadUInt32();
+				l_nfs[l_grpi].lChaid	=pk.ReadInt64();
 				l_nfs[l_grpi].szChaname=pk.ReadString();
 				l_nfs[l_grpi].szMotto	=pk.ReadString();
-				l_nfs[l_grpi].sIconID	=pk.ReadUInt16();
-				l_nfs[l_grpi].cStatus	=pk.ReadUInt8();
+				l_nfs[l_grpi].sIconID	=pk.ReadInt64();
+				l_nfs[l_grpi].cStatus	=pk.ReadInt64();
 			}
 			NetGMStart(l_nfs,l_grpnum);
 			break;
 		}
 		case MSG_FRND_REFRESH_OFFLINE:{
-			NetGMOffline(pk.ReadUInt32());
+			NetGMOffline(pk.ReadInt64());
 			break;
 		}
 		case MSG_FRND_REFRESH_ONLINE:{
-			NetGMOnline(pk.ReadUInt32());
+			NetGMOnline(pk.ReadInt64());
 			break;
 		}
 		case MSG_FRND_REFRESH_DEL:{
-			NetGMDel(pk.ReadUInt32());
+			NetGMDel(pk.ReadInt64());
 			break;
 		}
 		case MSG_FRND_REFRESH_ADD:
 		{
-			cChar	*l_grp		=pk.ReadString();
-			uLong	l_chaid		=pk.ReadUInt32();
-			cChar	*l_chaname	=pk.ReadString();
-			cChar	*l_motto	=pk.ReadString();
-			uShort	l_icon		=pk.ReadUInt16();
-			NetGMAdd(l_chaid,l_chaname,l_motto,l_icon,l_grp);
+			std::string	l_grp		=pk.ReadString();
+			uLong	l_chaid		=pk.ReadInt64();
+			std::string	l_chaname	=pk.ReadString();
+			std::string	l_motto	=pk.ReadString();
+			uShort	l_icon		=pk.ReadInt64();
+			NetGMAdd(l_chaid,l_chaname.c_str(),l_motto.c_str(),l_icon,l_grp.c_str());
 		}
 		break;
-		
+
 	}
 	return true;
 }
 
 BOOL PC_FRND_REFRESH(LPRPACKET pk)
 {
-	unsigned char l_type =pk.ReadUInt8();
+	unsigned char l_type =pk.ReadInt64();
 	switch (l_type)
 	{
 	case MSG_FRND_REFRESH_ONLINE:
 		{
-			NetFrndOnline(pk.ReadUInt32());
+			NetFrndOnline(pk.ReadInt64());
 		}
 		break;
 	case MSG_FRND_REFRESH_OFFLINE:
 		{
-			NetFrndOffline(pk.ReadUInt32());
+			NetFrndOffline(pk.ReadInt64());
 		}
 		break;
 	case MSG_FRND_REFRESH_DEL:
 		{
-			NetFrndDel(pk.ReadUInt32());
+			NetFrndDel(pk.ReadInt64());
 		}
 		break;
 	case MSG_FRND_REFRESH_ADD:
 		{
-			cChar	*l_grp		=pk.ReadString();
-			uLong	l_chaid		=pk.ReadUInt32();
-			cChar	*l_chaname	=pk.ReadString();
-			cChar	*l_motto	=pk.ReadString();
-			uShort	l_icon		=pk.ReadUInt16();
-			NetFrndAdd(l_chaid,l_chaname,l_motto,l_icon,l_grp);
+			std::string	l_grp		=pk.ReadString();
+			uLong	l_chaid		=pk.ReadInt64();
+			std::string	l_chaname	=pk.ReadString();
+			std::string	l_motto	=pk.ReadString();
+			uShort	l_icon		=pk.ReadInt64();
+			NetFrndAdd(l_chaid,l_chaname.c_str(),l_motto.c_str(),l_icon,l_grp.c_str());
 		}
 		break;
 	case MSG_FRND_REFRESH_START:
 		{
 			stNetFrndStart l_self;
-			l_self.lChaid	=pk.ReadUInt32();
+			l_self.lChaid	=pk.ReadInt64();
 			l_self.szChaname=pk.ReadString();
 			l_self.szMotto	=pk.ReadString();
-			l_self.sIconID	=pk.ReadUInt16();
+			l_self.sIconID	=pk.ReadInt64();
 
 			stNetFrndStart l_nfs[100];
 
-			uShort	l_nfnum=0,l_grpnum	=pk.ReadUInt16();
+			uShort	l_nfnum=0,l_grpnum	=pk.ReadInt64();
 			for(uShort l_grpi =0;l_grpi<l_grpnum;l_grpi++)
 			{
-				cChar*	l_grp		=pk.ReadString();
-				uShort	l_grpmnum	=pk.ReadUInt16();
+				std::string	l_grp	=pk.ReadString();
+				uShort	l_grpmnum	=pk.ReadInt64();
 				for(uShort l_grpmi =0;l_grpmi<l_grpmnum;l_grpmi++)
 				{
 					l_nfs[l_nfnum].szGroup	=l_grp;
-					l_nfs[l_nfnum].lChaid	=pk.ReadUInt32();
+					l_nfs[l_nfnum].lChaid	=pk.ReadInt64();
 					l_nfs[l_nfnum].szChaname=pk.ReadString();
 					l_nfs[l_nfnum].szMotto	=pk.ReadString();
-					l_nfs[l_nfnum].sIconID	=pk.ReadUInt16();
-					l_nfs[l_nfnum].cStatus	=pk.ReadUInt8();
+					l_nfs[l_nfnum].sIconID	=pk.ReadInt64();
+					l_nfs[l_nfnum].cStatus	=pk.ReadInt64();
 					l_nfnum	++;
 				}
 			}
@@ -498,25 +498,25 @@ BOOL PC_FRND_REFRESH(LPRPACKET pk)
 
 BOOL	PC_FRND_REFRESH_INFO(LPRPACKET pk)
 {
-	unsigned long l_chaid	=pk.ReadUInt32();
-	const char	* l_motto	=pk.ReadString();
-	unsigned short l_icon	=pk.ReadUInt16();
-	unsigned short l_degr	=pk.ReadUInt16();
+	unsigned long l_chaid	=pk.ReadInt64();
+	std::string	l_motto	=pk.ReadString();
+	unsigned short l_icon	=pk.ReadInt64();
+	unsigned short l_degr	=pk.ReadInt64();
 	if(l_degr==0)
 		l_degr=1;
-	const char	* l_job		=pk.ReadString();
-	const char	* l_guild	=pk.ReadString();
+	std::string	l_job	=pk.ReadString();
+	std::string	l_guild	=pk.ReadString();
 
-	NetFrndRefreshInfo(l_chaid,l_motto,l_icon,l_degr,l_job,l_guild);
+	NetFrndRefreshInfo(l_chaid,l_motto.c_str(),l_icon,l_degr,l_job.c_str(),l_guild.c_str());
 
 	return TRUE;
 }
 // �����Լ���Ϣ
 BOOL	PC_CHANGE_PERSONINFO(LPRPACKET pk)
 {
-	const char *l_motto	=pk.ReadString();
-	unsigned short	l_icon	=pk.ReadUInt16();
-	bool		l_refuse_sess =pk.ReadUInt8()?true:false;
-	NetChangePersonInfo(l_motto,l_icon,l_refuse_sess);
+	std::string l_motto	=pk.ReadString();
+	unsigned short	l_icon	=pk.ReadInt64();
+	bool		l_refuse_sess =pk.ReadInt64()?true:false;
+	NetChangePersonInfo(l_motto.c_str(),l_icon,l_refuse_sess);
 	return TRUE;
 }

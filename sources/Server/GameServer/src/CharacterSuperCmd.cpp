@@ -20,7 +20,7 @@ using namespace std;
 
 
 void CCharacter::DoCommand(cChar *cszCommand, uLong ulLen)
-{T_B
+{
 	Char	szComHead[256], szComParam[2048];
 	std::string	strList[10];
 	std::string strPrint = cszCommand;
@@ -55,7 +55,7 @@ void CCharacter::DoCommand(cChar *cszCommand, uLong ulLen)
 		//LG("DoCommand", "[执行失败]%s：%s\n", GetLogName(), strPrint.c_str());
 		LG("DoCommand", "[operator succeed]%s：%s\n", GetLogName(), strPrint.c_str());
 	
-T_E}
+}
 
 
 //--------------------------------------------------------------------------------
@@ -63,7 +63,7 @@ T_E}
 //--------------------------------------------------------------------------------
 //TODO(Ogge): Extract method for each GM-level
 BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
-{T_B
+{
 	CPlayer *pPlayer = GetPlayer(); 
 	if(!pPlayer) return FALSE;
 	
@@ -1246,11 +1246,11 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 	SystemNotice("Invalid command!");
 	return FALSE;
-T_E}
+}
 
 // 查询服务器状态
 void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
-{T_B
+{
 	Char szComHead[256], szComParam[256];
 	std::string	strList[10];
 
@@ -1278,7 +1278,7 @@ void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 		WRITE_STRING(WtPk, strList[0].c_str());
 		ReflectINFof(this, WtPk);//通告
 	}
-T_E}
+}
 
 	
 // NPC对玩家自己私人的说话， 别人无法看见的
@@ -1293,7 +1293,7 @@ void NPC_PrivateTalk(CCharacter *pCha, CCharacter *pNPC, const char *pszText)
 
 // 玩家请求帮助查询
 void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
-{T_B
+{
 	if(!pszCommand)           return;
 	
 	if(ulLen==0 || strlen(pszCommand)==0) 
@@ -1377,4 +1377,4 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 			NPC_PrivateTalk(this, pNPC1, RES_STRING(GM_CHARACTERSUPERCMD_CPP_00046) );
 		}
 	}
-T_E}
+}

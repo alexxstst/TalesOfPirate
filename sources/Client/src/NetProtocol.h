@@ -155,7 +155,7 @@ struct stNetEvent
 	long			lEntityID;
 	char			chEntityType;					// 1-��ɫ,2-����
 	unsigned short	usEventID;
-	const char*		cszEventName;
+	std::string		cszEventName;
 
 	CEvent*			ChangeEvent();					// �ı��¼�����
 
@@ -175,7 +175,7 @@ struct stNetActorCreate				// ������ɫ����Ϣ
 
 	unsigned long	ulWorldID{};
 	unsigned long	ulCommID{};		// ͨ��ID
-	const char* szCommName{};	// ͨ�н�ɫ��
+	std::string szCommName;	// ͨ�н�ɫ��
 	long			lHandle{};		// ����������Ϣ��ԭֵ����
 	unsigned long	ulChaID{};
 	char			chCtrlType{};		// �������ͣ���ң�NPC������ȡ��ο�CompCommand.h EChaCtrlType��
@@ -190,7 +190,7 @@ struct stNetActorCreate				// ������ɫ����Ϣ
 	std::string 			strGuildName;
 	std::string 			strGuildMotto;
 	std::string			strStallName;
-	const char* szName{};
+	std::string szName;
 	char			chSeeType{enumENTITY_SEEN_NEW};		// ���ֵ�����,EEntitySeenType
 	char			chGMLv{};			// GM�ȼ�
 	int 			chIsPlayer{};
@@ -229,7 +229,7 @@ struct stNetLeanInfo // �п�
 struct stNetSwitchMap // ��ɫ�������Ϣ
 {
 	short	sEnterRet;
-	char const* szMapName;
+	std::string szMapName;
 	char	chEnterType;
 	bool	bIsNewCha;
 	bool	bCanTeam;	// ��ͼ�Ƿ�ɲ�������
@@ -580,11 +580,10 @@ typedef struct _NET_GUILD_CHALLINFO
 
 } NET_GUILD_CHALLINFO, *PNET_GUILD_CHALLINFO;
 
-//NOTE(Ogge): Non-owning pointers; be cautious with lifetime
 struct NetChaBehave
 {
-	const char	*	sCharName;			//��ɫ��
-	const char	*	sJob;				//ְҵ
+	std::string		sCharName;			//��ɫ��
+	std::string		sJob;				//ְҵ
 	short			iDegree;			//��ɫ�ȼ�
 	Look_Minimal look_minimal;
 };
@@ -624,7 +623,7 @@ struct stNetChaAttr
 struct stNetQueryRelive
 {
 	char		chType;	// ͬCompCommand��EPlayerReliveType
-	const char	*szSrcChaName;
+	std::string	szSrcChaName;
 };
 
 // ������Ҫ�����������
@@ -645,7 +644,7 @@ struct stNetUpdateHairRes
 {
 	unsigned long	ulWorldID;			// ��Ӧ��ɫ
 	int				nScriptID;			// ������Ľű�ID
-	const char*		szReason;			// ����ʱ��ԭ��,�����ɹ�Ϊ:ok,����Ϊ��ķ���Ϊ��fail,����ʧ��Ϊ:����ԭ��
+	std::string		szReason;			// ����ʱ��ԭ��,�����ɹ�Ϊ:ok,����Ϊ��ķ���Ϊ��fail,����ʧ��Ϊ:����ԭ��
 
 	void	Exec();
 };
@@ -655,8 +654,8 @@ struct stNetTeamFightAsk
 {
 	struct
 	{
-		const char*	szName;
-		const char*	szJob;
+		std::string	szName;
+		std::string	szJob;
 		char		chLv;
 		unsigned short usVictoryNum;
 		unsigned short usFightNum;
@@ -669,7 +668,7 @@ struct stNetTeamFightAsk
 
 struct stNetItemRepairAsk
 {
-	const char	*cszItemName;
+	std::string	cszItemName;
 	long	lRepairMoney;
 
 	void	Exec();

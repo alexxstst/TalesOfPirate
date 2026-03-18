@@ -110,7 +110,7 @@ namespace GUI
 			return;
 
 		char szBuf[32];
-		sprintf(szBuf, "%s%s", g_stUIBoat.GetHuman()->getName(), g_oLangRec.GetString(440));//显示人物名及专用
+		sprintf(szBuf, "%s%s", g_stUIBoat.GetHuman()->getName().c_str(), g_oLangRec.GetString(440));//显示人物名及专用
 		//labCharName->SetCaption(szBuf);//设置标题名字
 
 		frmBank->Show();

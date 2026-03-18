@@ -129,7 +129,7 @@ void CAuctionSystem::ListAuction(CCharacter* pCha, CCharacter* pNpc)
 {
 	short sNum = 0;
 
-	WPacket l_wpk = GETWPACKET();
+	WPACKET l_wpk = GETWPACKET();
 	WRITE_CMD(l_wpk, CMD_MC_LISTAUCTION);
 
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.begin();
@@ -154,7 +154,7 @@ void CAuctionSystem::NotifyAuction( CCharacter* pCha, CCharacter* pNpc )
 {
 	short sNum = 0;
 
-	WPacket l_wpk = GETWPACKET();
+	WPACKET l_wpk = GETWPACKET();
 	WRITE_CMD(l_wpk, CMD_MC_LISTAUCTION);
 
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.begin();

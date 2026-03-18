@@ -67,7 +67,7 @@ public:
 	void			RefreshMainExperience(long num, long curlev, long nextlev);
 	
 	void			RefreshMainSP(long num, long max );
-	void			RefreshMainName(const char* szName );
+	void			RefreshMainName(const std::string& szName );
 	void			RefreshMainFace( stNetChangeChaPart& stPart );
 
 	void			RefreshPet( CItemCommand* pItem );

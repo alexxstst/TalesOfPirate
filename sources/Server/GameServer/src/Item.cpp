@@ -14,16 +14,16 @@
 _DBC_USING
 
 CItem::CItem()
-{T_B
+{
 	chValid = 0;
 	m_pCItemRecord = 0;
 	m_SGridContent.sID = 0;
 	m_lFromEntityID = 0;
 	m_chSpawType = enumITEM_APPE_NATURAL;
-T_E}
+}
 
 void CItem::Initially()
-{T_B
+{
 	Entity::Initially();
 
 	chValid = 0;
@@ -36,17 +36,17 @@ void CItem::Initially()
 	m_ulProtID = 0;
 	m_ulProtHandle = 0;
 	m_chProtType = enumITEM_PROT_OWN;
-T_E}
+}
 
 void CItem::Finally()
-{T_B
+{
 	if (m_submap)
 		m_submap->GoOut(this);
 	Entity::Finally();
-T_E}
+}
 
 void CItem::OnBeginSeen(CCharacter *pCMainCha)
-{T_B
+{
 	WPACKET pk =GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_ITEMBEGINSEE);
 	// 基本数据
@@ -64,15 +64,15 @@ void CItem::OnBeginSeen(CCharacter *pCMainCha)
 	WriteEventInfo(pk);
 
 	pCMainCha->ReflectINFof(this,pk);//通告
-T_E}
+}
 
 void CItem::OnEndSeen(CCharacter *pCMainCha)
-{T_B
+{
 	WPACKET pk =GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_ITEMENDSEE);
 	WRITE_LONG(pk, m_ID);				//ID
 	pCMainCha->ReflectINFof(this,pk);	//通告
-T_E}
+}
 
 void CItem::Run(dbc::uLong ulCurTick)
 {

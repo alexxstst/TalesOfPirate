@@ -338,18 +338,18 @@ private:
 };
 
 inline CMapRes* CGameApp::GetMap(int no)
-{T_B 
+{ 
 	return m_MapList[no]; 
-T_E}
+}
 	
 inline void CGameApp::AddPlayerIdx(DWORD dwDBID, CPlayer* pPlayer)
-{T_B
+{
 	_PlayerIdx[dwDBID] = pPlayer;
 	//LG("player_idx", "添加DB ID = %d对应的Player\n", dwDBID);
-T_E}
+}
 
 inline void	CGameApp::DelPlayerIdx(DWORD dwDBID)
-{T_B
+{
 	//LG("player_idx", "清除DB ID = %d对应的Player\n", dwDBID);
 	std::map<DWORD, CPlayer*>::iterator it = _PlayerIdx.find(dwDBID);
 	if(it!=_PlayerIdx.end())
@@ -362,15 +362,15 @@ inline void	CGameApp::DelPlayerIdx(DWORD dwDBID)
 		LG("player_idx", "when delete PlayerIdx it appear error, DB ID = %d no find index\n", dwDBID); 
 	}
 	//LG("player_idx", "Idx Size = %d\n\n", _PlayerIdx.size());
-T_E}
+}
 
 inline CPlayer* CGameApp::GetPlayerByDBID(DWORD dwDBID)
-{T_B
+{
 	return _PlayerIdx[dwDBID];
-T_E}
+}
 
 inline	CPlayer*	CGameApp::GetPlayerByMainChaName(	const	char*	sMainChaName	)
-{T_B
+{
 	if(	!sMainChaName	)
 	{
 		return	NULL;
@@ -391,7 +391,7 @@ inline	CPlayer*	CGameApp::GetPlayerByMainChaName(	const	char*	sMainChaName	)
 		++it;
 	};
 	return	NULL;
-T_E};
+};
 
 // 取对应等级技能的相关数据，如果该数据还没有初始化，则执行初始化动作。
 inline CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv)

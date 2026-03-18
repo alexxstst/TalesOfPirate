@@ -12,6 +12,7 @@
         <Compile Include="OperationPoolTests.fs" />
         <Compile Include="SystemCommandTests.fs" />
         <Compile Include="CryptoTests.fs" />
+        <Compile Include="CommandMessagesTests.fs" />
     </ItemGroup>
 
     <ItemGroup>

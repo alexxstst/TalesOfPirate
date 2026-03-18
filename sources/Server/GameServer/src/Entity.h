@@ -143,7 +143,7 @@ protected:
 	Entity();
 
 	virtual	void	WritePK(WPACKET& wpk);			//写入玩家本身及其所有附加结构(如召唤兽等)的所有数据
-	virtual	void	ReadPK(RPACKET& rpk);			//重构玩家本身及其所有附加结构(如召唤兽等)
+	virtual	void	ReadPK(RPACKET rpk);			//重构玩家本身及其所有附加结构(如召唤兽等)
 
 	virtual void ReflectINFof(Entity *srcent, WPACKET chginf){}
 

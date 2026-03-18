@@ -27,8 +27,8 @@ type DirectSystemCommand<'T when 'T :> ChannelIO>
     ) =
 
     let logger = loggerFactory.CreateLogger("DirectSystemCommand")
-    let rangedPool = RangedPool()
-    let ioHandler = IoHandlerImpl(loggerFactory, rangedPool)
+    let rangedPool = new RangedPool()
+    let ioHandler = new IoHandlerImpl(loggerFactory, rangedPool)
     let platform = NetworkPlatform<'T>(loggerFactory.CreateLogger("NetworkPlatform"), ioHandler)
     let listener = new NetListener(loggerFactory.CreateLogger<NetListener>())
 

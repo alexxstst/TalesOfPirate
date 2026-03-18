@@ -12,7 +12,6 @@ extern std::string g_strLogName;
 
 void CGameApp::ProcessNetMsg(int nMsgType, GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		switch (nMsgType)
 		{
 		case NETMSG_GATE_CONNECTED: // ??????Gate
@@ -32,12 +31,10 @@ void CGameApp::ProcessNetMsg(int nMsgType, GateServer* pGate, RPACKET pkt)
 			break;}
 
 		}
-	T_E
 }
 
 void CGameApp::ProcessInfoMsg(pNetMessage msg, short sType, InfoServer* pInfo)
 {
-	T_B
 		switch (sType)
 		{
 		case InfoServer::CMD_FM_CONNECTED:
@@ -55,34 +52,28 @@ void CGameApp::ProcessInfoMsg(pNetMessage msg, short sType, InfoServer* pInfo)
 		default:
 			break;
 		}
-	T_E
 }
 
 void CGameApp::OnInfoConnected(InfoServer* pInfo)
 {
-	T_B
-		//??¼InfoServer
+		//??ï¿½InfoServer
 		pInfo->Login();
-	T_E
 }
 
 void CGameApp::OnInfoDisconnected(InfoServer* pInfo)
 {
-	T_B
 		// ????????
 		g_StoreSystem.InValid();
 	pInfo->InValid();
-	T_E
 }
 
 void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 {
-	T_B
 		if (msg)
 		{
 			switch (msg->msgHead.msgID)
 			{
-			case INFO_LOGIN:		// ??¼InfoServer
+			case INFO_LOGIN:		// ??ï¿½InfoServer
 			{
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
@@ -102,7 +93,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				}
 				else
 				{
-					//LG("Store_data", "??¼InfoServer???????????!\n");
+					//LG("Store_data", "??ï¿½InfoServer???????????!\n");
 					LG("Store_data", "enter InfoServer message data error!\n");
 				}
 			}
@@ -145,7 +136,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 					short lComNum = LOWORD(msg->msgHead.msgExtend);
 					//???????
 					short lClassNum = HIWORD(msg->msgHead.msgExtend);
-					//???÷??????
+					//???ï¿½??????
 					g_StoreSystem.SetItemClass((ClassInfo*)(msg->msgBody), lClassNum);
 					//??????????
 					g_StoreSystem.SetItemList((StoreStruct*)((char*)msg->msgBody + lClassNum * sizeof(ClassInfo)), lComNum);
@@ -158,7 +149,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 					short lComNum = LOWORD(msg->msgHead.msgExtend);
 					//???????
 					short lClassNum = HIWORD(msg->msgHead.msgExtend);
-					//???÷??????
+					//???ï¿½??????
 					g_StoreSystem.SetItemClass((ClassInfo*)(msg->msgBody), lClassNum);
 					//??????????
 					g_StoreSystem.SetItemList((StoreStruct*)((char*)msg->msgBody + lClassNum * sizeof(ClassInfo)), lComNum);
@@ -173,20 +164,20 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 
 			case INFO_REQUEST_AFFICHE:		// ??????????
 			{
-				//LG("Store_data", "??ù??????!\n");
+				//LG("Store_data", "??ï¿½??????!\n");
 				LG("Store_data", "get offiche information!\n");
 				if (msg->msgHead.subID == INFO_SUCCESS) // ???????????
 				{
 					//???????
 					long lAfficheNum = msg->msgHead.msgExtend;
-					//???ù??????
+					//???ï¿½??????
 					g_StoreSystem.SetAfficheList((AfficheInfo*)msg->msgBody, lAfficheNum);
 				}
 				else if (msg->msgHead.subID == INFO_FAILED) // ???????????
 				{
 					//???????
 					long lAfficheNum = msg->msgHead.msgExtend;
-					//???ù??????
+					//???ï¿½??????
 					g_StoreSystem.SetAfficheList((AfficheInfo*)msg->msgBody, lAfficheNum);
 				}
 				else
@@ -279,12 +270,12 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 			}
 			break;
 
-			case INFO_REQUEST_HISTORY:		// ????????¼
+			case INFO_REQUEST_HISTORY:		// ????????ï¿½
 			{
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????????¼???!\n", lOrderID);
+					//LG("Store_data", "[%I64i]????????ï¿½???!\n", lOrderID);
 					LG("Store_data", "[%I64i]succeed to query trade note!\n", lOrderID);
 
 					HistoryInfo* pRecord = (HistoryInfo*)((char*)msg->msgBody + sizeof(long long));
@@ -293,14 +284,14 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????????¼???!\n", lOrderID);
+					//LG("Store_data", "[%I64i]????????ï¿½???!\n", lOrderID);
 					LG("Store_data", "[%I64i]query trade note failed!\n", lOrderID);
 
 					g_StoreSystem.CancelRecord(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "?????¼????????????????????!\n");
+					//LG("Store_data", "?????ï¿½????????????????????!\n");
 					LG("Store_data", "trade note query resoibsuib nessage data error!\n");
 				}
 			}
@@ -371,7 +362,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 
 			default:
 			{
-				//LG("Store_data", "??õ???????????!\n");
+				//LG("Store_data", "??ï¿½???????????!\n");
 				LG("Store_data", "get unknown information type!\n");
 			}
 			break;
@@ -380,13 +371,11 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 
 			FreeNetMessage(msg);
 		}
-	T_E
 }
 
 // ??Gate??????????????
 void CGameApp::OnGateConnected(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 	// ??GateServer???GameServer
 	WPACKET	wpk = GETWPACKET();
 	WRITE_CMD(wpk, CMD_MT_LOGIN);
@@ -396,13 +385,11 @@ void CGameApp::OnGateConnected(GateServer* pGate, RPACKET pkt)
 	LG("Connect", "[%s]\n", g_pGameApp->m_strMapNameList.c_str());
 
 	pGate->SendData(wpk);
-	T_E
 }
 
 // ??Gate???????????????
 void CGameApp::OnGateDisconnect(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		bool ret = VALIDRPACKET(pkt);
 	if (!ret) return; // ?????packet
 
@@ -422,13 +409,11 @@ void CGameApp::OnGateDisconnect(GateServer* pGate, RPACKET pkt)
 	}
 
 	pGate->Invalid();
-	T_E
 }
 
 // ?????????????
 void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		CPlayer* l_player = nullptr;
 	uShort cmd = READ_CMD(pkt);
 
@@ -439,31 +424,31 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 		short	sErrCode;
 		if (sErrCode = READ_SHORT(pkt))
 		{
-			/*LG("GameLogin", "??¼ GateServer: %s:%d???[%s], ?????[%s]\n",
+			/*LG("GameLogin", "??ï¿½ GateServer: %s:%d???[%s], ?????[%s]\n",
 				pGate->GetIP().c_str(), pGate->GetPort(), g_GameGateConnError(sErrCode),
 				g_pGameApp->m_strMapNameList.c_str());*/
 			LG("GameLogin", "enter GateServer: %s:%d failed [%s], register map[%s]\n",
 				pGate->GetIP().c_str(), pGate->GetPort(), g_GameGateConnError(sErrCode),
 				g_pGameApp->m_strMapNameList.c_str());
-			DISCONNECT(pGate->GetDataSock());
+			DISCONNECT(pGate);
 		}
 		else
 		{
 			pGate->GetName() = READ_STRING(pkt);
 			if (!strcmp(pGate->GetName().c_str(), ""))
 			{
-				/*LG("GameLogin", "??¼ GateServer: [%s:%d]??? ??û???õ???????????????????????\n",
+				/*LG("GameLogin", "??ï¿½ GateServer: [%s:%d]??? ??ï¿½???ï¿½???????????????????????\n",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());*/
 				LG("GameLogin", "entry GateServer: [%s:%d]success but do not get his name??so disconnection and entry again\n",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());
 
-				DISCONNECT(pGate->GetDataSock());
+				DISCONNECT(pGate);
 			}
 			else
 			{
-				/*LG("GameLogin", "??¼ GateServer: %s [%s:%d]??? [MapName:%s]\n",
+				/*LG("GameLogin", "??ï¿½ GateServer: %s [%s:%d]??? [MapName:%s]\n",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());*/
 				LG("GameLogin", "entry GateServer: %s [%s:%d]success [MapName:%s]\n",
@@ -490,13 +475,13 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 	case CMD_TM_ENTERMAP:
 	{
 		uLong l_actid = READ_LONG(pkt);
-		const char* pszPassword = READ_STRING(pkt);
-		if (pszPassword == NULL)
+		std::string pszPassword = READ_STRING(pkt);
+		if (pszPassword.empty())
 			break;
 		uLong l_dbid = READ_LONG(pkt);
 		uLong l_worldid = READ_LONG(pkt);
-		cChar* l_map = READ_STRING(pkt);
-		if (l_map == NULL)
+		std::string l_map = READ_STRING(pkt);
+		if (l_map.empty())
 			break;
 		Long lMapCpyNO = READ_LONG(pkt);
 		uLong l_x = READ_LONG(pkt);
@@ -507,7 +492,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 
 		LG("enter_map", "start entry map atorID = %d enter--------------------------\n", l_dbid);
 
-		l_player = CreateGamePlayer(pszPassword, l_dbid, l_worldid, l_map, chLogin == 0 ? 0 : 1);
+		l_player = CreateGamePlayer(pszPassword.c_str(), l_dbid, l_worldid, l_map.c_str(), chLogin == 0 ? 0 : 1);
 		if (!l_player)
 		{
 			WPACKET pkret = GETWPACKET();
@@ -532,7 +517,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 		l_player->OnLogin();
 
 		CCharacter* pCCha = l_player->GetMainCha();
-		if (pCCha->Cmd_EnterMap(l_map, lMapCpyNO, l_x, l_y, chLogin))
+		if (pCCha->Cmd_EnterMap(l_map.c_str(), lMapCpyNO, l_x, l_y, chLogin))
 		{
 			l_player->MisEnterMap();
 			if (chLogin == 0)
@@ -597,9 +582,9 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 	}
 	case CMD_PM_SAY2ALL:
 	{
-		uLong ulChaID = pkt.ReadLong();
-		cChar* szContent = pkt.ReadString();
-		long lChatMoney = pkt.ReadLong();
+		uLong ulChaID = pkt.ReadInt64();
+		std::string szContent = pkt.ReadString();
+		long lChatMoney = pkt.ReadInt64();
 
 		CPlayer* pPlayer = g_pGameApp->GetPlayerByDBID(ulChaID);
 		if (pPlayer)
@@ -610,7 +595,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 				//pCha->SystemNotice("??????????,?????????????????!");
 				pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00007));
 
-				WPacket l_wpk = GETWPACKET();
+				WPACKET l_wpk = GETWPACKET();
 				WRITE_CMD(l_wpk, CMD_MP_SAY2ALL);
 				WRITE_CHAR(l_wpk, 0);
 				pCha->ReflectINFof(pCha, l_wpk);
@@ -622,7 +607,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			//pCha->SystemNotice("?????????????????,??????%ld?????!", lChatMoney);
 			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00006), lChatMoney);
 
-			WPacket l_wpk = GETWPACKET();
+			WPACKET l_wpk = GETWPACKET();
 			WRITE_CMD(l_wpk, CMD_MP_SAY2ALL);
 			WRITE_CHAR(l_wpk, 1);
 			WRITE_STRING(l_wpk, pCha->GetName());
@@ -633,9 +618,9 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 	break;
 	case CMD_PM_SAY2TRADE:
 	{
-		uLong ulChaID = pkt.ReadLong();
-		cChar* szContent = pkt.ReadString();
-		long lChatMoney = pkt.ReadLong();
+		uLong ulChaID = pkt.ReadInt64();
+		std::string szContent = pkt.ReadString();
+		long lChatMoney = pkt.ReadInt64();
 
 		CPlayer* pPlayer = g_pGameApp->GetPlayerByDBID(ulChaID);
 		if (pPlayer)
@@ -646,7 +631,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 				//pCha->SystemNotice("??????????,????????????????!");
 				pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00005));
 
-				WPacket l_wpk = GETWPACKET();
+				WPACKET l_wpk = GETWPACKET();
 				WRITE_CMD(l_wpk, CMD_MP_SAY2TRADE);
 				WRITE_CHAR(l_wpk, 0);
 				pCha->ReflectINFof(pCha, l_wpk);
@@ -658,7 +643,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			//pCha->SystemNotice("????????????????,??????%ld?????!", lChatMoney);
 			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00004), lChatMoney);
 
-			WPacket l_wpk = GETWPACKET();
+			WPACKET l_wpk = GETWPACKET();
 			WRITE_CMD(l_wpk, CMD_MP_SAY2TRADE);
 			WRITE_CHAR(l_wpk, 1);
 			WRITE_STRING(l_wpk, pCha->GetName());
@@ -727,8 +712,8 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 	case CMD_PM_EXPSCALE:
 	{
 		//  ??????
-		uLong ulChaID = pkt.ReadLong();
-		uLong ulTime = pkt.ReadLong();
+		uLong ulChaID = pkt.ReadInt64();
+		uLong ulTime = pkt.ReadInt64();
 
 		CPlayer* pPlayer = g_pGameApp->GetPlayerByDBID(ulChaID);
 
@@ -932,17 +917,15 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			}
 		}
 	}
-	T_E
 }
 
 // ??????????????
 void CGameApp::ProcessGuildChallMoney(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		DWORD dwChaDBID = READ_LONG(pkt);
 	DWORD dwMoney = READ_LONG(pkt);
-	const char* pszGuild1 = READ_STRING(pkt);
-	const char* pszGuild2 = READ_STRING(pkt);
+	std::string pszGuild1 = READ_STRING(pkt);
+	std::string pszGuild2 = READ_STRING(pkt);
 
 	//	2007-8-4	yangyinyu	change	begin!	//	?????????????????????????????????
 	CPlayer* pPlayer = GetPlayerByDBID(dwChaDBID);
@@ -953,20 +936,18 @@ void CGameApp::ProcessGuildChallMoney(GateServer* pGate, RPACKET pkt)
 		pCha->AddMoney(RES_STRING(GM_GAMEAPPNET_CPP_00017), dwMoney);
 		/*pCha->SystemNotice( "??????????%s?????????%s????????????????(%u)????????????\n", pszGuild1, pszGuild2, dwMoney );
 		LG( "?????????", "??%s??????????%s?????????%s????????????????(%u)????????????\n", pCha->GetGuildName(), pszGuild1, pszGuild2, dwMoney );*/
-		pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00009), pszGuild1, pszGuild2, dwMoney);
-		LG("challenge consortia result", "??%s??bidder and consortia??%s??battle was consortia??%s??replace??your consortia gold (%u)had back to you??\n", pCha->GetGuildName(), pszGuild1, pszGuild2, dwMoney);
+		pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00009), pszGuild1.c_str(), pszGuild2.c_str(), dwMoney);
+		LG("challenge consortia result", "??%s??bidder and consortia??%s??battle was consortia??%s??replace??your consortia gold (%u)had back to you??\n", pCha->GetGuildName(), pszGuild1.c_str(), pszGuild2.c_str(), dwMoney);
 	}
 	else
 	{
 		//LG( "?????????", "?????????????????????DBID[%u],???[%u].\n", dwChaDBID, dwMoney );
 		LG("challenge consortia result", "not find deacon information finger??cannot back gold DBID[%u],how much money[%u].\n", dwChaDBID, dwMoney);
 	}
-	T_E
 }
 
 void CGameApp::ProcessGuildChallPrizeMoney(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		DWORD dwChaDBID = READ_LONG(pkt);
 	DWORD dwMoney = READ_LONG(pkt);
 	CPlayer* pPlayer = GetPlayerByDBID(dwChaDBID);
@@ -974,8 +955,8 @@ void CGameApp::ProcessGuildChallPrizeMoney(GateServer* pGate, RPACKET pkt)
 	{
 		CCharacter* pCha = pPlayer->GetMainCha();
 		pCha->AddMoney("??", dwMoney);
-		/*pCha->SystemNotice( "????????????%s????????????????????ý?????%u????", pCha->GetGuildName(), dwMoney );
-		LG( "?????????", "????????????%s????????????????????ý?????%u????", pCha->GetGuildName(), dwMoney );*/
+		/*pCha->SystemNotice( "????????????%s????????????????????ï¿½?????%u????", pCha->GetGuildName(), dwMoney );
+		LG( "?????????", "????????????%s????????????????????ï¿½?????%u????", pCha->GetGuildName(), dwMoney );*/
 		pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00010), pCha->GetGuildName(), dwMoney);
 		LG("challenge consortia result", "congratulate you have leading the consortia??%s??get win in consortia battle??gain bounty??%u????", pCha->GetGuildName(), dwMoney);
 	}
@@ -984,13 +965,11 @@ void CGameApp::ProcessGuildChallPrizeMoney(GateServer* pGate, RPACKET pkt)
 		//LG( "?????????", "??????????????????????DBID[%u],???[%u]", dwChaDBID, dwMoney );
 		LG("challenge consortia result", "cannot find deacon information finger??cannot hortation DBID[%u],how much money[%u]", dwChaDBID, dwMoney);
 	}
-	T_E
 }
 
 // ???????????
 void CGameApp::ProcessGuildMsg(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		DWORD dwChaDBID = READ_LONG(pkt);
 	CPlayer* pPlayer = GetPlayerByDBID(dwChaDBID);
 	if (pPlayer)
@@ -998,26 +977,24 @@ void CGameApp::ProcessGuildMsg(GateServer* pGate, RPACKET pkt)
 		CCharacter* pCha = pPlayer->GetCtrlCha();
 		DWORD dwGuildID = READ_LONG(pkt);
 		DWORD dwLeaderID = READ_LONG(pkt);
-		const char* pszGuildName = READ_STRING(pkt);
-		const char* pszGuildMotto = READ_STRING(pkt);
-		pCha->SetGuildName(pszGuildName);
-		pCha->SetGuildMotto(pszGuildMotto);
+		std::string pszGuildName = READ_STRING(pkt);
+		std::string pszGuildMotto = READ_STRING(pkt);
+		pCha->SetGuildName(pszGuildName.c_str());
+		pCha->SetGuildMotto(pszGuildMotto.c_str());
 		pCha->SyncGuildInfo();
 	}
-	T_E
 }
 
 // ?????????????
 void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 {
-	T_B
 		//LG("team", "?????????????\n");
 
 		char cTeamMsgType = READ_CHAR(pkt);
 
 	switch (cTeamMsgType)
 	{
-	case TEAM_MSG_ADD: {	/*LG("team", "?????? [?¼???] ???\n");*/ break; }
+	case TEAM_MSG_ADD: {	/*LG("team", "?????? [?ï¿½???] ???\n");*/ break; }
 	case TEAM_MSG_LEAVE: {	/*LG("team", "?????? [??????] ???\n");*/ break; }
 	case TEAM_MSG_UPDATE: {	/*LG("team", "?????? [??????] ???\n");*/ break; }
 	default:
@@ -1036,13 +1013,13 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 	// ????????????????????Player
 	for (char i = 0; i < cMemberCnt; i++)
 	{
-		const char* pszGateName = READ_STRING(pkt);
+		std::string pszGateName = READ_STRING(pkt);
 		DWORD dwGateAddr = READ_LONG(pkt);
 		DWORD dwChaDBID = READ_LONG(pkt);
-		Team[i].Init(pszGateName, dwGateAddr, dwChaDBID);
+		Team[i].Init(pszGateName.c_str(), dwGateAddr, dwChaDBID);
 		if (!Team[i].pGate)
 		{
-			LG("team", "GameServer can't find matched Gate??%s, addr = 0x%X, chaid = %d.\n", pszGateName, dwGateAddr, dwChaDBID);
+			LG("team", "GameServer can't find matched Gate??%s, addr = 0x%X, chaid = %d.\n", pszGateName.c_str(), dwGateAddr, dwChaDBID);
 			LG("team", "\tGameServer all Gate:\n");
 			BEGINGETGATE();
 			GateServer* pGateServer;
@@ -1122,7 +1099,7 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 
 				CSkillState& leader_states = leaderCha->m_CSkillState;
 
-				//if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // ×´Ì¬¼ÆÊ±Íê³É
+				//if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // ×´Ì¬ï¿½ï¿½Ê±ï¿½ï¿½ï¿½
 				if (leader_states.HasState(217))
 				{
 					const auto& state = leader_states.GetSStateByID(217);
@@ -1204,13 +1181,11 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 	//if(nLeftMember==1) LG("team", "nLeftMember==1, ??????!\n");
 
 	//LG("team", "??????????????\n\n");
-	T_E
 }
 
 // ????????????
 void CGameApp::CheckSeeWithTeamChange(bool CanSeen[][2], CPlayer** pCPlayerList, char chMemberCnt)
 {
-	T_B
 		if (chMemberCnt <= 1)
 			return;
 
@@ -1232,13 +1207,11 @@ void CGameApp::CheckSeeWithTeamChange(bool CanSeen[][2], CPlayer** pCPlayerList,
 			pCCurCha->CanSeen(pCProcCha) ? CanSeen[i][1] = true : CanSeen[i][1] = false;
 		}
 	}
-	T_E
 }
 
 // ??????????????????????????????
 void CGameApp::RefreshTeamEyeshot(bool CanSeenOld[][2], bool CanSeenNew[][2], CPlayer** pCPlayerList, char chMemberCnt, char chRefType)
 {
-	T_B
 		if (chMemberCnt <= 1)
 			return;
 
@@ -1272,13 +1245,11 @@ void CGameApp::RefreshTeamEyeshot(bool CanSeenOld[][2], bool CanSeenNew[][2], CP
 			}
 		}
 	}
-	T_E
 }
 
 // ???????????????????
 void CGameApp::RefreshTeamEyeshot(CPlayer** pCPlayerList, char chMemberCnt, char chRefType)
 {
-	T_B
 		if (chMemberCnt <= 1)
 			return;
 
@@ -1318,12 +1289,10 @@ void CGameApp::RefreshTeamEyeshot(CPlayer** pCPlayerList, char chMemberCnt, char
 			}
 		}
 	}
-	T_E
 }
 
 BOOL CGameApp::AddVolunteer(CCharacter* pCha)
 {
-	T_B
 		if (pCha->IsVolunteer())
 			return false;
 	pCha->SetVolunteer(true);
@@ -1338,12 +1307,10 @@ BOOL CGameApp::AddVolunteer(CCharacter* pCha)
 	m_vecVolunteerList.push_back(volNode);
 
 	return true;
-	T_E
 }
 
 BOOL CGameApp::DelVolunteer(CCharacter* pCha)
 {
-	T_B
 		if (!pCha->IsVolunteer())
 			return false;
 	pCha->SetVolunteer(false);
@@ -1359,29 +1326,23 @@ BOOL CGameApp::DelVolunteer(CCharacter* pCha)
 	}
 
 	return false;
-	T_E
 }
 
 int CGameApp::GetVolNum()
 {
-	T_B
 		return (int)m_vecVolunteerList.size();
-	T_E
 }
 
 SVolunteer* CGameApp::GetVolInfo(int nIndex)
 {
-	T_B
 		if (nIndex < 0 || nIndex >= (int)m_vecVolunteerList.size())
 			return NULL;
 
 	return &m_vecVolunteerList[nIndex];
-	T_E
 }
 
 SVolunteer* CGameApp::FindVolunteer(const char* szName)
 {
-	T_B
 		vector<SVolunteer>::iterator it;
 	for (it = m_vecVolunteerList.begin(); it != m_vecVolunteerList.end(); it++)
 	{
@@ -1391,12 +1352,10 @@ SVolunteer* CGameApp::FindVolunteer(const char* szName)
 		}
 	}
 	return NULL;
-	T_E
 }
 
 void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPACKET pkt)
 {
-	T_B
 	long	lSrcID = READ_LONG(pkt);
 	short	sNum = READ_SHORT_R(pkt);
 	long	lGatePlayerAddr = READ_LONG_R(pkt);
@@ -1464,7 +1423,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	case CMD_MM_GUILD_MOTTO:
 	{
 		uLong	l_gldid = lSrcID;
-		cChar* pszMotto = READ_STRING(pkt);
+		std::string pszMotto = READ_STRING(pkt);
 		{//??????FindPlayerChaByID
 			BEGINGETGATE();
 			CPlayer* pCPlayer;
@@ -1488,7 +1447,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 						continue;
 					if (pCha->GetGuildID() == l_gldid) // ??????
 					{
-						pCha->SetGuildMotto(pszMotto);
+						pCha->SetGuildMotto(pszMotto.c_str());
 						pCha->SyncGuildInfo();
 						//pCha->SystemNotice("????????????????");
 						//pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00012));
@@ -1548,14 +1507,14 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 		if (pCha)
 		{
 			pCha->SetGuildName("");
-			cChar* l_gldname = READ_STRING(pkt);
+			std::string l_gldname = READ_STRING(pkt);
 			pCha->guildPermission = 0;
-			pCha->SetGuildID(0);			//???ù???ID
+			pCha->SetGuildID(0);			//???ï¿½???ID
 			pCha->SetGuildState(0);
 			pCha->SetGuildName("");
 			pCha->SetGuildMotto("");
 			// pCha->SystemNotice("?????????????????[%s].",l_gldname);
-			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00014), l_gldname);
+			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00014), l_gldname.c_str());
 			pCha->SyncGuildInfo();
 		}
 	}
@@ -1566,14 +1525,14 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 		CCharacter* pCha = FindMainPlayerChaByID(l_chaid);
 		if (pCha)
 		{
-			pCha->SetGuildID(READ_LONG(pkt));				//???ù???ID
-			pCha->SetGuildState(0);	//???ù???Type
-			cChar* l_gldname = READ_STRING(pkt);
-			pCha->SetGuildName(l_gldname);
-			cChar* l_gldmotto = READ_STRING(pkt);
-			pCha->SetGuildMotto(l_gldmotto);
+			pCha->SetGuildID(READ_LONG(pkt));				//???ï¿½???ID
+			pCha->SetGuildState(0);	//???ï¿½???Type
+			std::string l_gldname = READ_STRING(pkt);
+			pCha->SetGuildName(l_gldname.c_str());
+			std::string l_gldmotto = READ_STRING(pkt);
+			pCha->SetGuildMotto(l_gldmotto.c_str());
 			//  pCha->SystemNotice("????????????????[%s].",l_gldname);
-			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00015), l_gldname);
+			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00015), l_gldname.c_str());
 			pCha->SyncGuildInfo();
 		}
 	}
@@ -1589,14 +1548,14 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 			pCha->SetGuildName("");
 
 			//pCha->SystemNotice("??????[%s]????????????.",READ_STRING(pkt));
-			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00016), READ_STRING(pkt));
+			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00016), READ_STRING(pkt).c_str());
 		}
 	}
 	break;
 	case	CMD_MM_QUERY_CHAPING:
 	{
-		const char* cszChaName = READ_STRING(pkt);
-		CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+		std::string cszChaName = READ_STRING(pkt);
+		CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 		if (!pCCha)
 			break;
 
@@ -1614,8 +1573,8 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	}
 	case	CMD_MM_QUERY_CHA:
 	{
-		const char* cszChaName = READ_STRING(pkt);
-		CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+		std::string cszChaName = READ_STRING(pkt);
+		CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 		if (!pCCha || !pCCha->GetSubMap())
 			break;
 
@@ -1636,8 +1595,8 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	}
 	case	CMD_MM_QUERY_CHAITEM:
 	{
-		const char* cszChaName = READ_STRING(pkt);
-		CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+		std::string cszChaName = READ_STRING(pkt);
+		CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 		if (!pCCha)
 			break;
 		pCCha->m_CKitbag.SetChangeFlag();
@@ -1655,32 +1614,32 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	}
 	case	CMD_MM_CALL_CHA:
 	{
-		const char* cszChaName = READ_STRING(pkt);
-		CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+		std::string cszChaName = READ_STRING(pkt);
+		CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 		if (!pCCha || !pCCha->GetSubMap())
 			break;
 		bool	bTarIsBoat = READ_CHAR(pkt) ? true : false;
 		if (bTarIsBoat != pCCha->IsBoat()) // ???????????
 			break;
-		const char* cszMapName = READ_STRING(pkt);
+		std::string cszMapName = READ_STRING(pkt);
 		long	lPosX = READ_LONG(pkt);
 		long	lPosY = READ_LONG(pkt);
 		long	lCopyNO = READ_LONG(pkt);
-		pCCha->SwitchMap(pCCha->GetSubMap(), cszMapName, lPosX, lPosY, true, enumSWITCHMAP_CARRY, lCopyNO);
+		pCCha->SwitchMap(pCCha->GetSubMap(), cszMapName.c_str(), lPosX, lPosY, true, enumSWITCHMAP_CARRY, lCopyNO);
 
 		break;
 	}
 	case	CMD_MM_GOTO_CHA:
 	{
-		const char* cszChaName = READ_STRING(pkt);
-		CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+		std::string cszChaName = READ_STRING(pkt);
+		CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 		if (!pCCha || !pCCha->GetSubMap())
 			break;
 		switch (READ_CHAR(pkt))
 		{
 		case	1: // ????????????
 		{
-			const char* cszSrcName = READ_STRING(pkt);
+			std::string cszSrcName = READ_STRING(pkt);
 			WPACKET WtPk = GETWPACKET();
 			WRITE_CMD(WtPk, CMD_MM_GOTO_CHA);
 			WRITE_LONG(WtPk, lSrcID);
@@ -1706,11 +1665,11 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 			bool	bTarIsBoat = READ_CHAR(pkt) ? true : false;
 			if (bTarIsBoat != pCCha->IsBoat()) // ???????????
 				break;
-			const char* cszMapName = READ_STRING(pkt);
+			std::string cszMapName = READ_STRING(pkt);
 			long	lPosX = READ_LONG(pkt);
 			long	lPosY = READ_LONG(pkt);
 			long	lCopyNO = READ_LONG(pkt);
-			pCCha->SwitchMap(pCCha->GetSubMap(), cszMapName, lPosX, lPosY, true, enumSWITCHMAP_CARRY, lCopyNO);
+			pCCha->SwitchMap(pCCha->GetSubMap(), cszMapName.c_str(), lPosX, lPosY, true, enumSWITCHMAP_CARRY, lCopyNO);
 
 			break;
 		}
@@ -1720,9 +1679,9 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	}
 	case	CMD_MM_KICK_CHA:
 	{
-		const char* cszChaName = READ_STRING(pkt);
+		std::string cszChaName = READ_STRING(pkt);
 		long	lTime = READ_LONG(pkt);
-		CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+		CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 		if (!pCCha || !pCCha->GetSubMap())
 			break;
 
@@ -1733,20 +1692,20 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 	}
 	case	CMD_MM_NOTICE:
 	{
-		LocalNotice(READ_STRING(pkt));
+		LocalNotice(READ_STRING(pkt).c_str());
 
 		break;
 	}
 	case	CMD_MM_CHA_NOTICE:
 	{
-		const char* cszNotiCont = READ_STRING(pkt);
-		const char* cszChaName = READ_STRING(pkt);
+		std::string cszNotiCont = READ_STRING(pkt);
+		std::string cszChaName = READ_STRING(pkt);
 
-		if (!strcmp(cszChaName, ""))
-			LocalNotice(cszNotiCont);
+		if (cszChaName.empty())
+			LocalNotice(cszNotiCont.c_str());
 		else
 		{
-			CCharacter* pCCha = FindPlayerChaByName(cszChaName);
+			CCharacter* pCCha = FindPlayerChaByName(cszChaName.c_str());
 			if (!pCCha)
 				break;
 
@@ -1763,12 +1722,12 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
         const auto str = READ_STRING(pkt);
 
         //LG("DO_STRING", "%s\n", str);
-        luaL_dostring(g_pLuaState, str);
+        luaL_dostring(g_pLuaState, str.c_str());
         break;
     }
 	case	CMD_MM_LOGIN:
 	{
-		g_pGameApp->AfterPlayerLogin(READ_STRING(pkt));
+		g_pGameApp->AfterPlayerLogin(READ_STRING(pkt).c_str());
 
 		break;
 	}
@@ -1781,8 +1740,8 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 		{
 			CCharacter* pCha = pPlayer->GetMainCha();
 			/*pCha->AddMoney( "??", dwMoney );
-			pCha->SystemNotice( "????????????%s????????????????????ý?????%u????", pCha->GetGuildName(), dwMoney );
-			LG( "?????????", "????????????%s??ID??%u????????????????????ý?????%u????\n", pCha->GetGuildName(),
+			pCha->SystemNotice( "????????????%s????????????????????ï¿½?????%u????", pCha->GetGuildName(), dwMoney );
+			LG( "?????????", "????????????%s??ID??%u????????????????????ï¿½?????%u????\n", pCha->GetGuildName(),
 				pCha->GetGuildID(), dwMoney );*/
 			pCha->AddMoney(RES_STRING(GM_GAMEAPPNET_CPP_00017), dwMoney);
 			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00010), pCha->GetGuildName(), dwMoney);
@@ -1863,18 +1822,14 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 		break;
 	}
 	}
-	T_E
 }
 void CGameApp::ProcessGroupBroadcast(unsigned short usCmd, GateServer* pGate, RPACKET pkt)
 {
-	T_B
 
 
-		T_E
 }
 void CGameApp::ProcessGarner2Update(RPACKET pkt)//CMD_PM_GARNER2_UPDATE
 {
-	T_B
 		long chaid[6];
 	CPlayer* pplay;
 	//	CCharacter * pcha;
@@ -1901,13 +1856,11 @@ void CGameApp::ProcessGarner2Update(RPACKET pkt)//CMD_PM_GARNER2_UPDATE
 			pplay->SetGarnerWiner(i);
 		}
 	}
-	T_E
 }
 void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 {
-	T_B
-		cChar* szTarMapN = READ_STRING(pkt);
-	cChar* szSrcMapN = READ_STRING(pkt);
+		std::string szTarMapN = READ_STRING(pkt);
+	std::string szSrcMapN = READ_STRING(pkt);
 
 	switch (READ_CHAR(pkt))
 	{
@@ -1915,7 +1868,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	{
 		CMapRes* pCMapRes;
 		SubMap* pCMap;
-		pCMapRes = FindMapByName(szTarMapN);
+		pCMapRes = FindMapByName(szTarMapN.c_str());
 		if (!pCMapRes)
 		{
 			break;
@@ -1926,8 +1879,8 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 		Short	sMapCopyNum = READ_SHORT(pkt);
 		Short	sCopyPlyNum = READ_SHORT(pkt);
 		CDynMapEntryCell	CEntryCell;
-		CEntryCell.SetMapName(szTarMapN);
-		CEntryCell.SetTMapName(szSrcMapN);
+		CEntryCell.SetMapName(szTarMapN.c_str());
+		CEntryCell.SetTMapName(szSrcMapN.c_str());
 		CEntryCell.SetEntiPos(lPosX, lPosY);
 		CDynMapEntryCell* pCEntry = g_CDMapEntry.Add(&CEntryCell);
 		if (pCEntry)
@@ -1935,11 +1888,11 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			pCEntry->SetCopyNum(sMapCopyNum);
 			pCEntry->SetCopyPlyNum(sCopyPlyNum);
 			string	strScript;
-			cChar* cszSctLine;
+			std::string cszSctLine;
 			Short	sLineNum = READ_SHORT_R(pkt);
 			if (g_cchLogMapEntry)
 				//LG("??????????", "????????????????? %s --> %s[%u, %u]????????? %d\n", szSrcMapN, szTarMapN, lPosX, lPosY, sLineNum);
-				LG("map entry flow", "receive request to create entry??position %s --> %s[%u, %u]??script line %d\n", szSrcMapN, szTarMapN, lPosX, lPosY, sLineNum);
+				LG("map entry flow", "receive request to create entry??position %s --> %s[%u, %u]??script line %d\n", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY, sLineNum);
 			while (--sLineNum >= 0)
 			{
 				cszSctLine = READ_STRING(pkt);
@@ -1968,7 +1921,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 				{
 					if (g_cchLogMapEntry)
 						//LG("??????????", "?????????????? %s --> %s[%u, %u]?????? %u ???????\n", szSrcMapN, szTarMapN, lPosX, lPosY, SItemCont.sID);
-						LG("map entry flow", "create entry failed??position %s --> %s[%u, %u]??item %u create failed\n", szSrcMapN, szTarMapN, lPosX, lPosY, SItemCont.sID);
+						LG("map entry flow", "create entry failed??position %s --> %s[%u, %u]??item %u create failed\n", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY, SItemCont.sID);
 					g_CDMapEntry.Del(pCEntry);
 					break;
 				}
@@ -1990,7 +1943,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			}
 			if (g_cchLogMapEntry)
 				//LG("??????????", "?????????????? %s --> %s[%u, %u] \n", szSrcMapN, szTarMapN, lPosX, lPosY);
-				LG("map entry flow", "create entry success??position %s --> %s[%u, %u] \n", szSrcMapN, szTarMapN, lPosX, lPosY);
+				LG("map entry flow", "create entry success??position %s --> %s[%u, %u] \n", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY);
 
 			g_CParser.DoString("after_create_entry", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCEntry, DOSTRING_PARAM_END);
 		}
@@ -2001,7 +1954,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 		Short	sCopyNO = READ_SHORT(pkt);
 		Short	sSubNum = READ_SHORT(pkt);
 
-		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN);
+		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN.c_str());
 		if (pCEntry)
 		{
 			CMapEntryCopyCell* pCCopyInfo = pCEntry->GetCopy(sCopyNO);
@@ -2014,7 +1967,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	{
 		Short	sCopyNO = READ_SHORT(pkt);
 
-		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN);
+		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN.c_str());
 		if (pCEntry)
 		{
 			pCEntry->ReleaseCopy(sCopyNO);
@@ -2039,10 +1992,10 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	break;
 	case	enumMAPENTRY_DESTROY:
 	{
-		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN);
+		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN.c_str());
 		if (g_cchLogMapEntry)
 			//LG("??????????", "????????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-			LG("map entry flow", "receive request to destroy entry??position %s --> %s\n", szSrcMapN, szTarMapN);
+			LG("map entry flow", "receive request to destroy entry??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
 		if (pCEntry)
 		{
 			string	strScript = "after_destroy_entry_";
@@ -2067,7 +2020,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			}
 			if (g_cchLogMapEntry)
 				//LG("??????????", "?????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-				LG("map entry flow", "destroy entry success??position %s --> %s\n", szSrcMapN, szTarMapN);
+				LG("map entry flow", "destroy entry success??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
 		}
 	}
 	break;
@@ -2075,7 +2028,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	{
 		CMapRes* pCMapRes;
 		SubMap* pCMap;
-		pCMapRes = FindMapByName(szTarMapN);
+		pCMapRes = FindMapByName(szTarMapN.c_str());
 		if (!pCMapRes)
 			break;
 		pCMap = pCMapRes->GetCopy(READ_SHORT(pkt));
@@ -2089,7 +2042,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	{
 		CMapRes* pCMapRes;
 		SubMap* pCMap;
-		pCMapRes = FindMapByName(szTarMapN);
+		pCMapRes = FindMapByName(szTarMapN.c_str());
 		if (!pCMapRes)
 			break;
 		pCMap = pCMapRes->GetCopy(READ_SHORT(pkt));
@@ -2103,7 +2056,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	break;
 	case	enumMAPENTRY_RETURN:
 	{
-		CMapRes* pCMap = FindMapByName(szTarMapN, true);
+		CMapRes* pCMap = FindMapByName(szTarMapN.c_str(), true);
 		if (!pCMap)
 			break;
 		switch (READ_CHAR(pkt))
@@ -2113,14 +2066,14 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			pCMap->CheckEntryState(enumMAPENTRY_STATE_OPEN);
 			if (g_cchLogMapEntry)
 				//LG("??????????", "????????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-				LG("map entry flow", "receive entry create success ??position %s --> %s\n", szSrcMapN, szTarMapN);
+				LG("map entry flow", "receive entry create success ??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
 		}
 		break;
 		case	enumMAPENTRYO_DESTROY_SUC:
 		{
 			if (g_cchLogMapEntry)
 				//LG("??????????", "???????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-				LG("map entry flow", "receive entry destroy success??position %s --> %s\n", szSrcMapN, szTarMapN);
+				LG("map entry flow", "receive entry destroy success??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
 			pCMap->CheckEntryState(enumMAPENTRY_STATE_CLOSE_SUC);
 		}
 		break;
@@ -2137,5 +2090,4 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 	default:
 		break;
 	};
-	T_E
 }

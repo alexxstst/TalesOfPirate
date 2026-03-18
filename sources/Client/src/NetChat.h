@@ -54,20 +54,20 @@ extern void	CP_Change_PersonInfo(const char *motto,unsigned short icon,bool refu
 
 struct stNetSay2You			// ����˵��
 {
-	const char *m_src;		// ˵����
-	const char *m_dst;		// ������
-	const char *m_content ;	// ����
+	std::string m_src;		// ˵����
+	std::string m_dst;		// ������
+	std::string m_content;	// ����
 };
 
 struct stNetSay2All		// ��������˵��
 {
-	const char *m_src;	//˵����
-	const char *m_content;//����
+	std::string m_src;	//˵����
+	std::string m_content;//����
 };
 
 struct stNetScrollSay//��˵����˵�� ������ʾ
 {
-	const char *m_content;//��ʾ����
+	std::string m_content;//��ʾ����
 	int		setnum;//��ʾ����
 	DWORD	color;
 };
@@ -139,10 +139,10 @@ extern void NetSynTeam(stNetTeamState *pSTeamState);
 
 struct stNetFrndStart
 {
-	const char *	szGroup;	//������������
+	std::string		szGroup;	//������������
 	unsigned long	lChaid;
-	const char *	szChaname;
-	const char *	szMotto;
+	std::string		szChaname;
+	std::string		szMotto;
 	unsigned short	sIconID;
 	unsigned char	cStatus;	//0-���ߣ���0-����
 };
@@ -187,8 +187,8 @@ extern void	NetChangePersonInfo(const char *motto,unsigned short icon,bool refus
 struct stNetSessCreate
 {
 	unsigned long	lChaID;
-	const char *	szChaName;
-	const char *	szMotto;
+	std::string		szChaName;
+	std::string		szMotto;
 	unsigned short	sIconID;
 };
 extern void NetSessCreate(const char *chaname);

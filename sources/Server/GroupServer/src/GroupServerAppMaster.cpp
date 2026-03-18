@@ -8,9 +8,9 @@ using namespace std;
 const cChar*	gc_master_group = RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00018);
 const cChar*	gc_prentice_group = RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00017);
 
-void GroupServerApp::CP_MASTER_REFRESH_INFO(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::CP_MASTER_REFRESH_INFO(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uLong	l_chaid	=pk.ReadLong();
+	uLong	l_chaid	=pk.ReadInt64();
 	m_mtxDB.lock();
 	//if(m_tblmaster->HasMaster(ply->m_chaid[ply->m_currcha],l_chaid) < 1)
 	if(HasMaster(ply->m_chaid[ply->m_currcha],l_chaid) < 1)
@@ -20,12 +20,12 @@ void GroupServerApp::CP_MASTER_REFRESH_INFO(Player *ply,DataSocket *datasock,RPa
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001));
 	}else if(m_tblcharaters->FetchRowByChaID(l_chaid) ==1)
 	{
-		WPacket	l_wpk	=GetWPacket();
+		net::WPacket	l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_MASTER_REFRESH_INFO);
-		l_wpk.WriteLong(l_chaid);
+		l_wpk.WriteInt64(l_chaid);
 		l_wpk.WriteString(m_tblcharaters->GetMotto());
-		l_wpk.WriteShort(m_tblcharaters->GetIcon());
-		l_wpk.WriteShort(m_tblcharaters->GetDegree());
+		l_wpk.WriteInt64(m_tblcharaters->GetIcon());
+		l_wpk.WriteInt64(m_tblcharaters->GetDegree());
 		l_wpk.WriteString(m_tblcharaters->GetJob());
 		l_wpk.WriteString(m_tblcharaters->GetGuildName());
 		m_mtxDB.unlock();
@@ -33,9 +33,9 @@ void GroupServerApp::CP_MASTER_REFRESH_INFO(Player *ply,DataSocket *datasock,RPa
 	}
 }
 
-void GroupServerApp::CP_PRENTICE_REFRESH_INFO(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::CP_PRENTICE_REFRESH_INFO(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uLong	l_chaid	=pk.ReadLong();
+	uLong	l_chaid	=pk.ReadInt64();
 	m_mtxDB.lock();
 	//if(m_tblmaster->HasMaster(l_chaid, ply->m_chaid[ply->m_currcha]) < 1)
 	if(HasMaster(l_chaid, ply->m_chaid[ply->m_currcha]) < 1)
@@ -45,12 +45,12 @@ void GroupServerApp::CP_PRENTICE_REFRESH_INFO(Player *ply,DataSocket *datasock,R
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001));
 	}else if(m_tblcharaters->FetchRowByChaID(l_chaid) ==1)
 	{
-		WPacket	l_wpk	=GetWPacket();
+		net::WPacket	l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_PRENTICE_REFRESH_INFO);
-		l_wpk.WriteLong(l_chaid);
+		l_wpk.WriteInt64(l_chaid);
 		l_wpk.WriteString(m_tblcharaters->GetMotto());
-		l_wpk.WriteShort(m_tblcharaters->GetIcon());
-		l_wpk.WriteShort(m_tblcharaters->GetDegree());
+		l_wpk.WriteInt64(m_tblcharaters->GetIcon());
+		l_wpk.WriteInt64(m_tblcharaters->GetDegree());
 		l_wpk.WriteString(m_tblcharaters->GetJob());
 		l_wpk.WriteString(m_tblcharaters->GetGuildName());
 		m_mtxDB.unlock();
@@ -58,16 +58,16 @@ void GroupServerApp::CP_PRENTICE_REFRESH_INFO(Player *ply,DataSocket *datasock,R
 	}
 }
 
-void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	cChar *szPrenticeName = pk.ReadString();
-	uLong l_prentice_chaid = pk.ReadLong();
-	cChar *szMasterName = pk.ReadString();
-	uLong l_master_chaid = pk.ReadLong();
+	auto szPrenticeName = pk.ReadString();
+	uLong l_prentice_chaid = pk.ReadInt64();
+	auto szMasterName = pk.ReadString();
+	uLong l_master_chaid = pk.ReadInt64();
 
-	Player *pPrentice = FindPlayerByChaName(szPrenticeName);
+	Player *pPrentice = FindPlayerByChaName(szPrenticeName.c_str());
 	//Player *pPrentice = GetPlayerByChaID(l_prentice_chaid);
-	Player *pMaster = FindPlayerByChaName(szMasterName);
+	Player *pMaster = FindPlayerByChaName(szMasterName.c_str());
 	//Player *pMaster = GetPlayerByChaID(l_master_chaid);
 
 	if(!pPrentice || !pMaster)
@@ -97,8 +97,8 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &
 	else
 	{
 		Invited			*	l_invited	=0;
-		uShort				l_len = (uShort)strlen(szMasterName);
-		cChar			*	l_invited_name	= szMasterName;
+		uShort				l_len = (uShort)szMasterName.size();
+		cChar			*	l_invited_name	= szMasterName.c_str();
 		if(!l_invited_name || l_len >16)
 		{
 			return;
@@ -179,22 +179,22 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &
 				pMaster->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00014));
 				//pPrentice->SendSysInfo("��ϲ������ʦ��!");
 				pPrentice->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00015));
-				WPacket	l_wpk =GetWPacket();
+				net::WPacket	l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_MASTER_REFRESH);
-				WPacket l_wpk2=l_wpk;
-				l_wpk.WriteChar(MSG_MASTER_REFRESH_ADD);
+				net::WPacket l_wpk2=l_wpk;
+				l_wpk.WriteInt64(MSG_MASTER_REFRESH_ADD);
 				l_wpk.WriteString(gc_master_group);
-				l_wpk.WriteLong(pMaster->m_chaid[pMaster->m_currcha]);
+				l_wpk.WriteInt64(pMaster->m_chaid[pMaster->m_currcha]);
 				l_wpk.WriteString(pMaster->m_chaname[pMaster->m_currcha].c_str());
 				l_wpk.WriteString(pMaster->m_motto[pMaster->m_currcha].c_str());
-				l_wpk.WriteShort(pMaster->m_icon[pMaster->m_currcha]);
+				l_wpk.WriteInt64(pMaster->m_icon[pMaster->m_currcha]);
 				SendToClient(l_inviter.m_ply,l_wpk);
-				l_wpk2.WriteChar(MSG_PRENTICE_REFRESH_ADD);
+				l_wpk2.WriteInt64(MSG_PRENTICE_REFRESH_ADD);
 				l_wpk2.WriteString(gc_prentice_group);
-				l_wpk2.WriteLong(l_inviter->m_chaid[l_inviter->m_currcha]);
+				l_wpk2.WriteInt64(l_inviter->m_chaid[l_inviter->m_currcha]);
 				l_wpk2.WriteString(l_inviter->m_chaname[l_inviter->m_currcha].c_str());
 				l_wpk2.WriteString(l_inviter->m_motto[l_inviter->m_currcha].c_str());
-				l_wpk2.WriteShort(l_inviter->m_icon[l_inviter->m_currcha]);
+				l_wpk2.WriteInt64(l_inviter->m_icon[l_inviter->m_currcha]);
 				SendToClient(pMaster,l_wpk2);
 			}
 		}
@@ -207,16 +207,16 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,DataSocket *datasock,RPacket &
 	}
 }
 
-void GroupServerApp::MP_MASTER_DEL(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::MP_MASTER_DEL(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	cChar *szPrenticeName = pk.ReadString();
-	uLong l_prentice_chaid = pk.ReadLong();
-	cChar *szMasterName = pk.ReadString();
-	uLong l_master_chaid = pk.ReadLong();
+	auto szPrenticeName = pk.ReadString();
+	uLong l_prentice_chaid = pk.ReadInt64();
+	auto szMasterName = pk.ReadString();
+	uLong l_master_chaid = pk.ReadInt64();
 
-	Player *pPrentice = FindPlayerByChaName(szPrenticeName);
+	Player *pPrentice = FindPlayerByChaName(szPrenticeName.c_str());
 	//Player *pPrentice = GetPlayerByChaID(l_prentice_chaid);
-	Player *pMaster = FindPlayerByChaName(szMasterName);
+	Player *pMaster = FindPlayerByChaName(szMasterName.c_str());
 	//Player *pMaster = GetPlayerByChaID(l_master_chaid);
 
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
@@ -228,20 +228,20 @@ void GroupServerApp::MP_MASTER_DEL(Player *ply,DataSocket *datasock,RPacket &pk)
 	{
 		if(pPrentice)
 		{
-			WPacket	l_wpk =GetWPacket();
+			net::WPacket	l_wpk(256);
 			l_wpk.WriteCmd(CMD_PC_MASTER_REFRESH);
-			l_wpk.WriteChar(MSG_MASTER_REFRESH_DEL);
-			l_wpk.WriteLong(l_master_chaid);
+			l_wpk.WriteInt64(MSG_MASTER_REFRESH_DEL);
+			l_wpk.WriteInt64(l_master_chaid);
 			SendToClient(pPrentice,l_wpk);
 			--(pPrentice->m_CurrMasterNum);
 		}
 		
 		if(pMaster)
 		{
-			WPacket	l_wpk =GetWPacket();
+			net::WPacket	l_wpk(256);
 			l_wpk.WriteCmd(CMD_PC_MASTER_REFRESH);
-			l_wpk.WriteChar(MSG_PRENTICE_REFRESH_DEL);
-			l_wpk.WriteLong(l_prentice_chaid);
+			l_wpk.WriteInt64(MSG_PRENTICE_REFRESH_DEL);
+			l_wpk.WriteInt64(l_prentice_chaid);
 			SendToClient(pMaster,l_wpk);
 			--(pMaster->m_CurrPrenticeNum);
 		}
@@ -258,9 +258,9 @@ void GroupServerApp::MP_MASTER_DEL(Player *ply,DataSocket *datasock,RPacket &pk)
 	}
 }
 
-void GroupServerApp::MP_MASTER_FINISH(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::MP_MASTER_FINISH(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uLong l_prentice_chaid = pk.ReadLong();
+	uLong l_prentice_chaid = pk.ReadInt64();
 	//if(m_tblmaster->GetMasterCount(l_prentice_chaid) > 0)
 	if(GetMasterCount(l_prentice_chaid) > 0)
 	{
@@ -277,39 +277,39 @@ void Player::MasterInvitedCheck(Invited	*invited)
 		MasterEndInvited(l_inviter);
 	}else if(l_inviter->m_currcha <0 || l_inviter->m_chaid[l_inviter->m_currcha] !=invited->m_ptinviter.m_chaid)
 	{
-		WPacket l_wpk	=g_gpsvr->GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_MASTER_CANCEL);
-		l_wpk.WriteChar(MSG_MASTER_CANCLE_OFFLINE);
-		l_wpk.WriteLong(invited->m_ptinviter.m_chaid);
+		l_wpk.WriteInt64(MSG_MASTER_CANCLE_OFFLINE);
+		l_wpk.WriteInt64(invited->m_ptinviter.m_chaid);
 		g_gpsvr->SendToClient(this,l_wpk);
 		MasterEndInvited(l_inviter);
 	}else if(l_inviter->m_CurrMasterNum >= g_gpsvr->const_master.MasterMax)
 	{
-		WPacket l_wpk	=g_gpsvr->GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_MASTER_CANCEL);
-		l_wpk.WriteChar(MSG_MASTER_CANCLE_INVITER_ISFULL);
-		l_wpk.WriteLong(invited->m_ptinviter.m_chaid);
+		l_wpk.WriteInt64(MSG_MASTER_CANCLE_INVITER_ISFULL);
+		l_wpk.WriteInt64(invited->m_ptinviter.m_chaid);
 		g_gpsvr->SendToClient(this,l_wpk);
 		MasterEndInvited(l_inviter);
 	}/*else if(m_CurrPrenticeNum >= g_gpsvr->const_master.PrenticeMax)
 	{
-		WPacket l_wpk	=g_gpsvr->GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_MASTER_CANCEL);
-		l_wpk.WriteChar(MSG_MASTER_CANCLE_SELF_ISFULL);
-		l_wpk.WriteLong(invited->m_ptinviter.m_chaid);
+		l_wpk.WriteInt64(MSG_MASTER_CANCLE_SELF_ISFULL);
+		l_wpk.WriteInt64(invited->m_ptinviter.m_chaid);
 		g_gpsvr->SendToClient(this,l_wpk);
 		MasterEndInvited(l_inviter);
-	}*/else if(g_gpsvr->GetCurrentTick() -invited->m_tick	>= g_gpsvr->const_master.PendTimeOut)
+	}*/else if(GetTickCount() -invited->m_tick	>= g_gpsvr->const_master.PendTimeOut)
 	{
 		char l_buf[256];
 		//sprintf(l_buf,"��ԡ�%s���İ�ʦ�����ѳ���%d����û�л�Ӧ��ϵͳ�Զ�ȡ����������롣",m_chaname[m_currcha].c_str(),g_gpsvr->const_master.PendTimeOut/1000);
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00016),m_chaname[m_currcha].c_str(),g_gpsvr->const_master.PendTimeOut/1000);
 		l_inviter->SendSysInfo(l_buf);
 
-		WPacket l_wpk	=g_gpsvr->GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_MASTER_CANCEL);
-		l_wpk.WriteChar(MSG_MASTER_CANCLE_TIMEOUT);
-		l_wpk.WriteLong(invited->m_ptinviter.m_chaid);
+		l_wpk.WriteInt64(MSG_MASTER_CANCLE_TIMEOUT);
+		l_wpk.WriteInt64(invited->m_ptinviter.m_chaid);
 		g_gpsvr->SendToClient(this,l_wpk);
 		MasterEndInvited(l_inviter);
 	}
@@ -325,19 +325,19 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 	//֪ͨѧͽ
 	m_tblmaster->GetPrenticeData(l_farray1,l_num1,ply->m_chaid[ply->m_currcha]);
 
-	WPacket	l_toPrentice =GetWPacket();
+	net::WPacket	l_toPrentice(256);
 	l_toPrentice.WriteCmd(CMD_PC_MASTER_REFRESH);
-	l_toPrentice.WriteChar(MSG_MASTER_REFRESH_ONLINE);
-	l_toPrentice.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_toPrentice.WriteInt64(MSG_MASTER_REFRESH_ONLINE);
+	l_toPrentice.WriteInt64(ply->m_chaid[ply->m_currcha]);
 
-	WPacket	l_toSelf1 =GetWPacket();
+	net::WPacket	l_toSelf1(256);
 	l_toSelf1.WriteCmd(CMD_PC_MASTER_REFRESH);
-	l_toSelf1.WriteChar(MSG_PRENTICE_REFRESH_START);
+	l_toSelf1.WriteInt64(MSG_PRENTICE_REFRESH_START);
 
-	l_toSelf1.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_toSelf1.WriteInt64(ply->m_chaid[ply->m_currcha]);
 	l_toSelf1.WriteString(ply->m_chaname[ply->m_currcha].c_str());
 	l_toSelf1.WriteString(ply->m_motto[ply->m_currcha].c_str());
-	l_toSelf1.WriteShort(ply->m_icon[ply->m_currcha]);
+	l_toSelf1.WriteInt64(ply->m_icon[ply->m_currcha]);
 
 	ply->m_CurrPrenticeNum	= 0;
 
@@ -351,14 +351,14 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 		{
 			if (l_farray1[i].icon_id == 0)
 			{
-				l_toSelf1.WriteShort(uShort(l_farray1[i].memaddr));
+				l_toSelf1.WriteInt64(uShort(l_farray1[i].memaddr));
 			}
 			else
 			{
 				//l_toSelf1.WriteString(l_farray1[i].relation.c_str());
 				//l_toSelf1.WriteString("ѧͽ");
 				l_toSelf1.WriteString(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00017));
-				l_toSelf1.WriteShort(uShort(l_farray1[i].memaddr));
+				l_toSelf1.WriteInt64(uShort(l_farray1[i].memaddr));
 				ply->m_CurrPrenticeNum += l_farray1[i].memaddr;
 			}
 		}else if((l_ply11 =ToPointer<Player>(l_farray1[i].memaddr))
@@ -368,19 +368,19 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 			l_plylst1[l_plynum1] = l_ply11;
 			++l_plynum1;
 
-			l_toSelf1.WriteLong(l_farray1[i].atorID);
+			l_toSelf1.WriteInt64(l_farray1[i].atorID);
 			l_toSelf1.WriteString(l_farray1[i].atorNome.c_str());
 			l_toSelf1.WriteString(l_farray1[i].motto.c_str());
-			l_toSelf1.WriteShort(l_farray1[i].icon_id);
-			l_toSelf1.WriteChar(1);
+			l_toSelf1.WriteInt64(l_farray1[i].icon_id);
+			l_toSelf1.WriteInt64(1);
 		}
 		else
 		{
-			l_toSelf1.WriteLong(l_farray1[i].atorID);
+			l_toSelf1.WriteInt64(l_farray1[i].atorID);
 			l_toSelf1.WriteString(l_farray1[i].atorNome.c_str());
 			l_toSelf1.WriteString(l_farray1[i].motto.c_str());
-			l_toSelf1.WriteShort(l_farray1[i].icon_id);
-			l_toSelf1.WriteChar(0);
+			l_toSelf1.WriteInt64(l_farray1[i].icon_id);
+			l_toSelf1.WriteInt64(0);
 		}
 	}
 	SendToClient(ply,l_toSelf1);
@@ -392,19 +392,19 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 	//֪ͨ��ʦ
 	m_tblmaster->GetMasterData(l_farray2,l_num2,ply->m_chaid[ply->m_currcha]);
 
-	WPacket	l_toMaster =GetWPacket();
+	net::WPacket	l_toMaster(256);
 	l_toMaster.WriteCmd(CMD_PC_MASTER_REFRESH);
-	l_toMaster.WriteChar(MSG_PRENTICE_REFRESH_ONLINE);
-	l_toMaster.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_toMaster.WriteInt64(MSG_PRENTICE_REFRESH_ONLINE);
+	l_toMaster.WriteInt64(ply->m_chaid[ply->m_currcha]);
 
-	WPacket	l_toSelf2 =GetWPacket();
+	net::WPacket	l_toSelf2(256);
 	l_toSelf2.WriteCmd(CMD_PC_MASTER_REFRESH);
-	l_toSelf2.WriteChar(MSG_MASTER_REFRESH_START);
+	l_toSelf2.WriteInt64(MSG_MASTER_REFRESH_START);
 
-	l_toSelf2.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_toSelf2.WriteInt64(ply->m_chaid[ply->m_currcha]);
 	l_toSelf2.WriteString(ply->m_chaname[ply->m_currcha].c_str());
 	l_toSelf2.WriteString(ply->m_motto[ply->m_currcha].c_str());
-	l_toSelf2.WriteShort(ply->m_icon[ply->m_currcha]);
+	l_toSelf2.WriteInt64(ply->m_icon[ply->m_currcha]);
 
 	ply->m_CurrPrenticeNum	= 0;
 
@@ -418,12 +418,12 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 		{
 			if (l_farray2[i].icon_id == 0)
 			{
-				l_toSelf2.WriteShort(uShort(l_farray2[i].memaddr));
+				l_toSelf2.WriteInt64(uShort(l_farray2[i].memaddr));
 			}
 			else
 			{
 				l_toSelf2.WriteString(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00018));
-				l_toSelf2.WriteShort(uShort(l_farray2[i].memaddr));
+				l_toSelf2.WriteInt64(uShort(l_farray2[i].memaddr));
 				ply->m_CurrMasterNum += l_farray2[i].memaddr;
 			}
 		}
@@ -434,19 +434,19 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 			l_plylst2[l_plynum2] = l_ply12;
 			l_plynum2++;
 
-			l_toSelf2.WriteLong(l_farray2[i].atorID);
+			l_toSelf2.WriteInt64(l_farray2[i].atorID);
 			l_toSelf2.WriteString(l_farray2[i].atorNome.c_str());
 			l_toSelf2.WriteString(l_farray2[i].motto.c_str());
-			l_toSelf2.WriteShort(l_farray2[i].icon_id);
-			l_toSelf2.WriteChar(1);
+			l_toSelf2.WriteInt64(l_farray2[i].icon_id);
+			l_toSelf2.WriteInt64(1);
 		}
 		else
 		{
-			l_toSelf2.WriteLong(l_farray2[i].atorID);
+			l_toSelf2.WriteInt64(l_farray2[i].atorID);
 			l_toSelf2.WriteString(l_farray2[i].atorNome.c_str());
 			l_toSelf2.WriteString(l_farray2[i].motto.c_str());
-			l_toSelf2.WriteShort(l_farray2[i].icon_id);
-			l_toSelf2.WriteChar(0);
+			l_toSelf2.WriteInt64(l_farray2[i].icon_id);
+			l_toSelf2.WriteInt64(0);
 		}
 	}
 	SendToClient(ply,l_toSelf2);

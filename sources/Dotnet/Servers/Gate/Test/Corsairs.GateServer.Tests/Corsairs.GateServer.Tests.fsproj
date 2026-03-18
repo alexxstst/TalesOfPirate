@@ -7,6 +7,10 @@
         <OtherFlags>--strict-indentation-</OtherFlags>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <NoWarn>FS0760</NoWarn>
+    </PropertyGroup>
+
     <ItemGroup>
         <Compile Include="RecoveryAggregateTests.fs" />
     </ItemGroup>

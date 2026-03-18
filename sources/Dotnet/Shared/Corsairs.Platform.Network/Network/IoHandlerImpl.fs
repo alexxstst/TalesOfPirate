@@ -255,7 +255,11 @@ type IoHandlerImpl(loggerFactory: ILoggerFactory, rangedPool: RangedPool) as thi
         member _.DoSend(channelId, packet: WPacket) =
             match _channelMap.TryGetValue(channelId) with
             | true, ch when not ch.IsResetOperation ->
-                logger.LogDebug("OUT >> {Channel} {Packet}", ch, packet)
+
+                match packet.GetCmd() with
+                | Commands.CMD_TP_SYNC_PLYLST -> ()
+                | _ -> logger.LogDebug("OUT >> {Channel} {Packet}", ch, packet)
+
                 let op =
                     _operationPool.AllocateForMemorySend(channelId, packet.Data, packet.GetPacketSize())
 

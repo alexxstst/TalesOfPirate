@@ -22,6 +22,7 @@
 #include "SkillState.h"
 #include "HarmRec.h"
 #include "lua_gamectrl.h"
+#include "CommandMessages.h"
 
 using namespace std;
 
@@ -33,7 +34,7 @@ _DBC_USING
 
 //=============================================================================
 CFightAble::CFightAble() : m_CSkillState(SKILL_STATE_MAXID)
-{T_B
+{
 	m_SFightInit.chTarType = 0;
 	m_SFightProc.sState = enumFSTATE_TARGET_NO;
 	m_SFightProc.sRequestState = SFightProc::Request::None;
@@ -43,10 +44,10 @@ CFightAble::CFightAble() : m_CSkillState(SKILL_STATE_MAXID)
 	m_usTickInterval = 100;
 	m_bOnFight = false;
 	m_uchFightID = 0;
-T_E}
+}
 
 void CFightAble::Initially()
-{T_B
+{
 	CAttachable::Initially();
 
 	memset(&m_SFightInit, 0, sizeof(SFightInit));
@@ -67,26 +68,26 @@ void CFightAble::Initially()
 	m_uchFightID = 0;
 
 	m_bLookAttrChange = false;
-T_E}
+}
 
 void CFightAble::Finally()
-{T_B
+{
 	m_SFightInit.chTarType = 0;
 	CAttachable::Finally();
-T_E}
+}
 
-void CFightAble::WritePK(WPACKET& wpk)		//Ð´ÈëÍæ¼Ò±¾Éí¼°ÆäËùÓÐ¸½¼Ó½á¹¹(ÈçÕÙ»½ÊÞµÈ)µÄËùÓÐÊý¾Ý
-{T_B
+void CFightAble::WritePK(WPACKET& wpk)		//Ð´ï¿½ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½Ó½á¹¹(ï¿½ï¿½ï¿½Ù»ï¿½ï¿½Þµï¿½)ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+{
 	Entity::WritePK(wpk);
-	//ToDo:Ð´Èë×Ô¼ºµÄÊý¾Ý
+	//ToDo:Ð´ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     WRITE_SEQ(wpk, (cChar *)&m_CChaAttr, sizeof(m_CChaAttr));
 
-T_E}
+}
 
-void CFightAble::ReadPK(RPACKET& rpk)		//ÖØ¹¹Íæ¼Ò±¾Éí¼°ÆäËùÓÐ¸½¼Ó½á¹¹(ÈçÕÙ»½ÊÞµÈ)
-{T_B
+void CFightAble::ReadPK(RPACKET rpk)		//ï¿½Ø¹ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½Ó½á¹¹(ï¿½ï¿½ï¿½Ù»ï¿½ï¿½Þµï¿½)
+{
 	Entity::ReadPK(rpk);
-	//ToDo:¶Á³ö×Ô¼ºµÄÊý¾Ý
+	//ToDo:ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	uShort usLen;
 	cChar *pData = READ_SEQ(rpk, usLen);
 	memcpy(&m_CChaAttr, pData, sizeof(m_CChaAttr));
@@ -96,27 +97,27 @@ void CFightAble::ReadPK(RPACKET& rpk)		//ÖØ¹¹Íæ¼Ò±¾Éí¼°ÆäËùÓÐ¸½¼Ó½á¹¹(ÈçÕÙ»½ÊÞµÈ
 	m_SFightProc.sRequestState = SFightProc::Request::None;
 
 	m_bOnFight = false;
-T_E}
+}
 
 void CFightAble::ResetFight()
-{T_B
+{
 	m_SFightInit.chTarType = 0;
 	m_SFightProc.sState = enumFSTATE_TARGET_NO;
 	m_SFightProc.sRequestState = SFightProc::Request::None;
 
 	m_bOnFight = false;
-T_E}
+}
 
 bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
-{T_B
+{
 	m_CChaAttr.ResetChangeFlag();
 	m_CSkillState.ResetChangeFlag();
 
 	if (!IsRightSkillSrc(pSFightInit->pCSkillRecord->chHelpful))
 	{
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("¾Ü¾øÕ½¶·ÇëÇó£¨·ÇÕ½¶·ÐÍÊµÌå£©\n\n");
-		m_CLog.Log("refuse battle request£¨isn't battle entity£©\n\n");
+		//m_CLog.Log("ï¿½Ü¾ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¨·ï¿½Õ½ï¿½ï¿½ï¿½ï¿½Êµï¿½å£©\n\n");
+		m_CLog.Log("refuse battle requestï¿½ï¿½isn't battle entityï¿½ï¿½\n\n");
 		memcpy(&m_SFightInit, pSFightInit, sizeof(SFightInit));
 		m_SFightProc.sState = enumFSTATE_OFF;
 		NotiSkillSrcToSelf();
@@ -126,13 +127,13 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 	if (m_SFightProc.sState == enumFSTATE_ON)
 	{
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("¾Ü¾øÕ½¶·ÇëÇó£¨Õ½¶·ÖÐ£©\n\n");
-		m_CLog.Log("refuse fight request£¨fighting..£©\n\n");
+		//m_CLog.Log("ï¿½Ü¾ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½Ð£ï¿½\n\n");
+		m_CLog.Log("refuse fight requestï¿½ï¿½fighting..ï¿½ï¿½\n\n");
 		EndFight();
 		return false;
 	}
 
-	// ¿ÉÒÔÊ¹ÓÃ¼¼ÄÜ
+	// ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¼ï¿½ï¿½ï¿½
 	SetExistState(enumEXISTS_FIGHTING);
 	if (GetTickCount() - (uLong)pSFightInit->pSSkillGrid->lColdDownT > (uLong)GetSkillTime(pSFightInit->pCSkillTData))
 	{
@@ -143,18 +144,18 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 	else// if( m_SFightInit.pSSkillGrid != pSFightInit->pSSkillGrid )
 	{
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("»º´æÕ½¶·ÇëÇó£¨¼¼ÄÜ»Ö¸´ÖÐ£©\n\n");
-		m_CLog.Log("difer fight request£¨skill is resume£©\n\n");
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¨¼ï¿½ï¿½Ü»Ö¸ï¿½ï¿½Ð£ï¿½\n\n");
+		m_CLog.Log("difer fight requestï¿½ï¿½skill is resumeï¿½ï¿½\n\n");
 		memcpy(&m_SFightInitCache, pSFightInit, sizeof(SFightInit));
 		m_SFightProc.sRequestState = SFightProc::Request::StartAttack;
 		OnFightBegin();
 		return true;
 	}
 	return true;
-T_E}
+}
 
 void CFightAble::BeginFight()
-{T_B
+{
 	// log
 	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 	m_CLog.Log("===Recieve(Skill):\tTick %u\n", GetTickCount());
@@ -168,16 +169,16 @@ void CFightAble::BeginFight()
 
 	Square	STarShape = {{0, 0}, 0};
 	Long	lReqDist = 0;
-	if (!GetFightTargetShape(&STarShape)) // Ä¿±ê²»´æÔÚ
+	if (!GetFightTargetShape(&STarShape)) // Ä¿ï¿½ê²»ï¿½ï¿½ï¿½ï¿½
 	{
 		m_SFightProc.sState = enumFSTATE_TARGET_NO;
 		m_SFightInit.chTarType = 0;
 		NotiSkillSrcToEyeshot();
-		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight): Ä¿±ê²»´æÔÚ\n");
+		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight): Ä¿ï¿½ê²»ï¿½ï¿½ï¿½ï¿½\n");
 		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight): aim inexistent\n");
 		SubsequenceFight();
 		
-		// add by ryan wang Ä¿±ê²»´æÔÚ, Ò²Ó¦¸ÃÖØÖÃlColdDownT, »³ÒÉÔì³ÉÍæ¼Ò±»ÃëÉ±ÏÖÏó
+		// add by ryan wang Ä¿ï¿½ê²»ï¿½ï¿½ï¿½ï¿½, Ò²Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lColdDownT, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½ï¿½
 		m_ulLastTick = GetTickCount();
 		m_SFightInit.pSSkillGrid->lColdDownT = m_ulLastTick;
 		//----------------------------------------------------------------------------
@@ -189,7 +190,7 @@ void CFightAble::BeginFight()
 	long	lDistY2 = (GetShape().centre.y - STarShape.centre.y) * (GetShape().centre.y - STarShape.centre.y);
 	if (lDistX2 + lDistY2 <= lReqDist * lReqDist)
 	{
-		if (m_SFightInit.pCSkillRecord->chOperate[0] == 0) // ÆÕÍ¨¼¼ÄÜ
+		if (m_SFightInit.pCSkillRecord->chOperate[0] == 0) // ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½
 		{
 			//g_CParser.DoString(m_SFightInit.pCSkillRecord->szPrepare, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
 			SkillGeneral((long)sqrt((double)lDistX2 + lDistY2));
@@ -209,7 +210,7 @@ void CFightAble::BeginFight()
 	}
 	else
 	{
-		// add by ryan wang Ä¿±êÀë¿ª·¶Î§, Ò²Ó¦¸ÃÖØÖÃlColdDownT, »³ÒÉÔì³ÉÍæ¼Ò±»ÃëÉ±ÏÖÏó
+		// add by ryan wang Ä¿ï¿½ï¿½ï¿½ë¿ªï¿½ï¿½Î§, Ò²Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½lColdDownT, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò±ï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½ï¿½
 		m_ulLastTick = GetTickCount();
 		m_SFightInit.pSSkillGrid->lColdDownT = m_ulLastTick;
 		//----------------------------------------------------------------------------
@@ -222,10 +223,10 @@ void CFightAble::BeginFight()
 		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight)\n");
 		SubsequenceFight();
 	}
-T_E}
+}
 
 void CFightAble::OnFight(uLong ulCurTick)
-{T_B
+{
 	if (!m_bOnFight)
 		return;
 
@@ -235,14 +236,14 @@ void CFightAble::OnFight(uLong ulCurTick)
 	m_ulLastTick = ulCurTick;
 
 	if (m_SFightProc.sState == enumFSTATE_ON)
-		if (m_SFightInit.pSSkillGrid->chState != enumSUSTATE_ACTIVE // Î´¼¤»î
-			|| (m_SFightInit.pCSkillTData->lResumeTime == 0 && !IsCharacter()->GetActControl(enumACTCONTROL_USE_GSKILL)) // ²»ÄÜÊ¹ÓÃÎïÀí¼¼ÄÜ
-			|| (m_SFightInit.pCSkillTData->lResumeTime > 0 && !IsCharacter()->GetActControl(enumACTCONTROL_USE_MSKILL))) // ²»ÄÜÊ¹ÓÃÄ§·¨¼¼ÄÜ
+		if (m_SFightInit.pSSkillGrid->chState != enumSUSTATE_ACTIVE // Î´ï¿½ï¿½ï¿½ï¿½
+			|| (m_SFightInit.pCSkillTData->lResumeTime == 0 && !IsCharacter()->GetActControl(enumACTCONTROL_USE_GSKILL)) // ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+			|| (m_SFightInit.pCSkillTData->lResumeTime > 0 && !IsCharacter()->GetActControl(enumACTCONTROL_USE_MSKILL))) // ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½ï¿½Ä§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
-			m_SFightProc.sState = enumFSTATE_CANCEL; // ±»ÒªÇóÍ£Ö¹
+			m_SFightProc.sState = enumFSTATE_CANCEL; // ï¿½ï¿½Òªï¿½ï¿½Í£Ö¹
 			NotiSkillSrcToEyeshot();
-			//m_CLog.Log("²»ºÏ·¨µÄ¼¼ÄÜÇëÇó£¨´æÔÚ²»ÄÜÊ¹ÓÃ¼¼ÄÜµÄ×´Ì¬£©[PacketID: %u]\n", m_ulPacketID);
-			m_CLog.Log("irregular skill request£¨exist cannot use skill state£©[PacketID: %u]\n", m_ulPacketID);
+			//m_CLog.Log("ï¿½ï¿½ï¿½Ï·ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ó£¨´ï¿½ï¿½Ú²ï¿½ï¿½ï¿½Ê¹ï¿½Ã¼ï¿½ï¿½Üµï¿½×´Ì¬ï¿½ï¿½[PacketID: %u]\n", m_ulPacketID);
+			m_CLog.Log("irregular skill requestï¿½ï¿½exist cannot use skill stateï¿½ï¿½[PacketID: %u]\n", m_ulPacketID);
 			EndFight();
 			return;
 		}
@@ -252,22 +253,22 @@ void CFightAble::OnFight(uLong ulCurTick)
 
 	if (m_SFightProc.sRequestState == SFightProc::Request::StopAttack)
 	{
-		m_SFightProc.sState = enumFSTATE_CANCEL; // ±»ÒªÇóÍ£Ö¹
+		m_SFightProc.sState = enumFSTATE_CANCEL; // ï¿½ï¿½Òªï¿½ï¿½Í£Ö¹
 		m_SFightProc.sRequestState = SFightProc::Request::None;
 		NotiSkillSrcToEyeshot();
-		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): ¿Í»§ÒªÇóÍ£Ö¹\n");
+		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): ï¿½Í»ï¿½Òªï¿½ï¿½Í£Ö¹\n");
 		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): client request cease\n");
 		SubsequenceFight();
 	}
 
 	Square	STarShape = {{0, 0}, 0};
 	Long	lReqDist = 0;
-	if (m_SFightProc.sState == enumFSTATE_ON && !GetFightTargetShape(&STarShape)) // Ä¿±ê²»´æÔÚ
+	if (m_SFightProc.sState == enumFSTATE_ON && !GetFightTargetShape(&STarShape)) // Ä¿ï¿½ê²»ï¿½ï¿½ï¿½ï¿½
 	{
 		m_SFightProc.sState = enumFSTATE_TARGET_NO;
 		m_SFightInit.chTarType = 0;
 		NotiSkillSrcToEyeshot();
-		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): Ä¿±ê²»´æÔÚ\n");
+		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): Ä¿ï¿½ê²»ï¿½ï¿½ï¿½ï¿½\n");
 		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): aim inexistent\n");
 		SubsequenceFight();
 	}
@@ -280,7 +281,7 @@ void CFightAble::OnFight(uLong ulCurTick)
 		long	lDistY2 = (GetShape().centre.y - STarShape.centre.y) * (GetShape().centre.y - STarShape.centre.y);
 		if (lDistX2 + lDistY2 > lReqDist * lReqDist)
 		{
-			m_SFightProc.sState = enumFSTATE_TARGET_OUT; // ¶ÔÏóÀë¿ª¹¥»÷·¶Î§
+			m_SFightProc.sState = enumFSTATE_TARGET_OUT; // ï¿½ï¿½ï¿½ï¿½ï¿½ë¿ªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î§
 			NotiSkillSrcToEyeshot();
 		}
 		else
@@ -296,20 +297,20 @@ void CFightAble::OnFight(uLong ulCurTick)
 				else
 					sExecTime = Short(lResumeDist / lResumeT);
 
-				// add by ryan wang, ½â¾öÍæ¼Ò¿ÉÄÜ±»ÃëÉ±ÎÊÌâ, Ô´Í·ÔÚÓÚ¼¼ÄÜ¼ÆËãÁ÷³Ì¹ýÓÚ»ìÂÒ
+				// add by ryan wang, ï¿½ï¿½ï¿½ï¿½ï¿½Ò¿ï¿½ï¿½Ü±ï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½ï¿½, Ô´Í·ï¿½ï¿½ï¿½Ú¼ï¿½ï¿½Ü¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì¹ï¿½ï¿½Ú»ï¿½ï¿½ï¿½
 				if(GetPlayer()==NULL)
 				{
 					if(sExecTime > 1)
 					{
-						//LG("skill_error", "[%s]Ê¹ÓÃ[%s]¼¼ÄÜ, ¼ä¸ôÊ±¼ä¼ÆËã³ö´í, ÀëÉÏÒ»´Î%d ms, ¼¼ÄÜcooldown = %d\n", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
+						//LG("skill_error", "[%s]Ê¹ï¿½ï¿½[%s]ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½%d ms, ï¿½ï¿½ï¿½ï¿½cooldown = %d\n", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
 						LG("skill_error", "[%s] use [%s] skill, interval time account error, interval last time %d ms, skill cooldown = %d\n", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
-						sExecTime = 1; // ×î¶àÖØÖÃÎª1´Î, ·ÀÖ¹Íæ¼Ò±»ÃëÉ±
+						sExecTime = 1; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª1ï¿½ï¿½, ï¿½ï¿½Ö¹ï¿½ï¿½Ò±ï¿½ï¿½ï¿½É±
 						m_SFightInit.pSSkillGrid->lColdDownT = ulCurTick - lResumeT; 
 					}
 				}
 				//-----------------------------------------------------------------------
 
-				if (m_SFightInit.pCSkillRecord->chOperate[0] == 0) // ÆÕÍ¨¼¼ÄÜ
+				if (m_SFightInit.pCSkillRecord->chOperate[0] == 0) // ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½
 				{
 					short i;
 					for (i = 0; i < sExecTime; i++)
@@ -320,8 +321,8 @@ void CFightAble::OnFight(uLong ulCurTick)
 					m_SFightInit.pSSkillGrid->lColdDownT += lResumeT * i;
 				}
 				else
-					//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ÔÚOnFightÖÐÖ´ÐÐµÄ¼¼ÄÜ²»ÊÇÆÕÍ¨¼¼ÄÜ£¬ÕâÖÖÇé¿ö²»Ó¦¸Ã·¢Éú\n");
-					m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!in OnFight uesed skill cannot is common skill£¬such state did't occur\n");
+					//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!ï¿½ï¿½OnFightï¿½ï¿½Ö´ï¿½ÐµÄ¼ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ó¦ï¿½Ã·ï¿½ï¿½ï¿½\n");
+					m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!in OnFight uesed skill cannot is common skillï¿½ï¿½such state did't occur\n");
 			}
 		}
 
@@ -333,7 +334,7 @@ void CFightAble::OnFight(uLong ulCurTick)
 	{
 		if (m_SFightProc.sRequestState == SFightProc::Request::StartAttack)
 		{
-			if (ulCurTick - (uLong)m_SFightInitCache.pSSkillGrid->lColdDownT > (uLong)GetSkillTime(m_SFightInitCache.pCSkillTData)) // ´æÔÚ»º´æµÄÕ½¶·ÇëÇó
+			if (ulCurTick - (uLong)m_SFightInitCache.pSSkillGrid->lColdDownT > (uLong)GetSkillTime(m_SFightInitCache.pCSkillTData)) // ï¿½ï¿½ï¿½Ú»ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			{
 				memcpy(&m_SFightInit, &m_SFightInitCache, sizeof(SFightInit));
 				m_SFightProc.sRequestState = SFightProc::Request::None;
@@ -345,7 +346,7 @@ void CFightAble::OnFight(uLong ulCurTick)
 		else
 			OnFightEnd();
 	}
-T_E}
+}
 
 void CFightAble::EndFight()
 {
@@ -354,7 +355,7 @@ void CFightAble::EndFight()
 
 void CFightAble::SkillTarEffect(SFireUnit *pSFireSrc)
 {
-	// ÒòÎªµ÷ÓÃ´Îº¯ÊýÇ°ÒÑ¾­È·±£ÁË¼¼ÄÜÔ´µÄÓÐÐ§ÐÔ£¬Òò´ËÎÞÐè¶Ô´Ë½øÒ»²½ÅÐ¶Ï
+	// ï¿½ï¿½Îªï¿½ï¿½ï¿½Ã´Îºï¿½ï¿½ï¿½Ç°ï¿½Ñ¾ï¿½È·ï¿½ï¿½ï¿½Ë¼ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Ð§ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô´Ë½ï¿½Ò»ï¿½ï¿½ï¿½Ð¶ï¿½
 	CCharacter	*pSrcCha = pSFireSrc->pCFightSrc->IsCharacter();
 	CCharacter	*pSrcMainC = 0;
 	pSrcMainC = pSrcCha->GetPlyMainCha();
@@ -382,20 +383,20 @@ void CFightAble::SkillTarEffect(SFireUnit *pSFireSrc)
 	IsCharacter()->GetPlyMainCha()->SetLookChangeFlag();
 	IsCharacter()->GetPlyMainCha()->SetEspeItemChangeFlag();
 
-	// ¼¼ÄÜÐ§¹û¼ÆËã
+	// ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	m_SFightProc.bCrt = false;
 	m_SFightProc.bMiss = false;
 
 	Long	lOldHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 	Long	lNowHP;
 	Long	lSrcOldHP = (long)pSrcCha->m_CChaAttr.GetAttr(ATTR_HP);
-	// ¼ÆËãÄ¿±ê±»¹¥»÷¶àÉÙ´ÎºóÖÂËÀ
+	// ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ê±»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ù´Îºï¿½ï¿½ï¿½ï¿½ï¿½
 	for (int i = 0; i < pSFireSrc->sExecTime; i++)
 		g_CParser.DoString(pSFireSrc->pCSkillRecord->szEffect, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pSrcCha, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSrcCha->m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
 	lNowHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 	BeUseSkill(lOldHP, lNowHP, pSrcCha, pSFireSrc->pCSkillRecord->chHelpful);
 
-	// ÅÐ¶ÏÊÇ·ñÊÇ²É¿ó¼¼ÄÜ
+	// ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Ç²É¿ï¿½ï¿½ï¿½
 	if( m_CChaAttr.GetAttr(ATTR_CHATYPE) != enumCHACTRL_MONS_MINE && m_CChaAttr.GetAttr(ATTR_CHATYPE) != enumCHACTRL_MONS_TREE
 		&& m_CChaAttr.GetAttr(ATTR_CHATYPE) != enumCHACTRL_MONS_FISH && m_CChaAttr.GetAttr(ATTR_CHATYPE) != enumCHACTRL_MONS_DBOAT)
 	{
@@ -411,10 +412,10 @@ void CFightAble::SkillTarEffect(SFireUnit *pSFireSrc)
 	}
 	else
 	{
-		// ²É¿ó»òÕß²ÉÄ¾¼¼ÄÜÊ¹µÃ¿óÊ¯²»¶Ï±»¿ª²É³öÀ´
+		// ï¿½É¿ï¿½ï¿½ï¿½ß²ï¿½Ä¾ï¿½ï¿½ï¿½ï¿½Ê¹ï¿½Ã¿ï¿½Ê¯ï¿½ï¿½ï¿½Ï±ï¿½ï¿½ï¿½ï¿½É³ï¿½ï¿½ï¿½
 		if(lNowHP <= 0)
 		{
-			// ¿ó»òÕßÄ¾²Ä±»¿ª²ÉÍê±Ï
+			// ï¿½ï¿½ï¿½ï¿½ï¿½Ä¾ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			SetExistState(enumEXISTS_WITHERING);
 			m_SFightInit.chTarType = 0;
 			m_SFightProc.sState = enumFSTATE_DIE;
@@ -427,16 +428,16 @@ void CFightAble::SkillTarEffect(SFireUnit *pSFireSrc)
 			lNumData = lOldHP;
 		else
 			lNumData = lOldHP - lNowHP;
-		// ¼ÆËãµô³öÐ¡¿óÊ¯ËéÆ¬
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½Ê¯ï¿½ï¿½Æ¬
 		for( int i = 0; i < lNumData; i++ )
 		{
-			// ¸ù¾Ý¼¼ÄÜµÈ¼¶ÓÐ²»Í¬µÄµÈ¼¶µÄµôÁÏÂÊ
+			// ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ÜµÈ¼ï¿½ï¿½Ð²ï¿½Í¬ï¿½ÄµÈ¼ï¿½ï¿½Äµï¿½ï¿½ï¿½ï¿½ï¿½
 			SpawnResource( pSrcCha, pSrcCha->m_SFightInit.pSSkillGrid->chLv );
 		}
 
-		/* ÒòÎª²É¿ó»òÕß²ÉÄ¾²»»áÓÐ·´µ¯¹¥»÷Î£ÏÕËùÒÔÖ÷½Ç²»ÐèÒª¼ÆËã²É¿ó»òÕß²ÉÄ¾Ê±ÉúÃüÊÇ·ñËÀÍö
+		/* ï¿½ï¿½Îªï¿½É¿ï¿½ï¿½ï¿½ß²ï¿½Ä¾ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç²ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½É¿ï¿½ï¿½ï¿½ß²ï¿½Ä¾Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½
 		
-		// Èç¹û½ÇÉ«²É¿ó»òÕß²ÉÄ¾Ê±±»·´»÷Ôò¼ÆËãÊÇ·ñËÀÍö
+		// ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½É¿ï¿½ï¿½ï¿½ß²ï¿½Ä¾Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (pSrcCha->m_CChaAttr.GetAttr(ATTR_HP) <= 0)
 		{
 			bSrcDie = true;
@@ -493,7 +494,7 @@ bool CFightAble::RectifyAttr()
 	return bRectify;
 }
 
-// ·µ»ØÖµ£º0£¬Ê§°Ü¡£1£¬³É¹¦ÉèÖÃ£¬µ«ÇëÇóµÄÖµ³¬¹ý×î´óÖµ¡£2£¬³É¹¦ÉèÖÃ¡£
+// ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½0ï¿½ï¿½Ê§ï¿½Ü¡ï¿½1ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½2ï¿½ï¿½ï¿½É¹ï¿½ï¿½ï¿½ï¿½Ã¡ï¿½
 Long CFightAble::setAttr(int nIdx, LONG32 lValue, int nType)
 {
 	if (nIdx == ATTR_GD && lValue < 0)
@@ -545,7 +546,7 @@ void CFightAble::SetDie(CCharacter *pCSkillSrcCha)
 
 Long CFightAble::GetSkillTime(CSkillTempData *pCSkillTData)
 {
-	if (pCSkillTData->lResumeTime == 0) // ÌìÉú¼¼ÄÜ
+	if (pCSkillTData->lResumeTime == 0) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		return (long)m_CChaAttr.GetAttr(ATTR_ASPD);
 	else
 		return pCSkillTData->lResumeTime;
@@ -562,7 +563,7 @@ void CFightAble::BeUseSkill(dbc::Long lPreHp, dbc::Long lNowHp, CCharacter *pCSr
 		if (lPreHp != lNowHp)
 		{
 			CCharacter *pCha = IsCharacter();
-			if(pCha->m_HostCha!=pCSrcCha) // Ö÷ÈË¹¥»÷²»¼ÇÈëÉËº¦¼ÇÂ¼
+			if(pCha->m_HostCha!=pCSrcCha) // ï¿½ï¿½ï¿½Ë¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ëºï¿½ï¿½ï¿½Â¼
 			{
 				pCha->m_pHate->AddHarm(pCSrcCha, Short(lPreHp - lNowHp), pCSrcCha->GetID());
 			}
@@ -582,10 +583,10 @@ void CFightAble::SetMonsterFightObj(uLong ulObjWorldID, Long lObjHandle)
 }
 
 void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		// ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_NOTIACTION);		// ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				// ID
 	WRITE_LONG(pk, m_ulPacketID);
 	WRITE_CHAR(pk, enumACTION_SKILL_SRC);
@@ -621,7 +622,7 @@ void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 	}
 	WRITE_SHORT(pk, sExecTime);
 
-	// ÊôÐÔ
+	// ï¿½ï¿½ï¿½ï¿½
 	short sTempChangeNum = 0;
 	short sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 	WRITE_SHORT(pk, sAttrChangeNum);
@@ -629,10 +630,10 @@ void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 	{
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				if (sTempChangeNum >= sAttrChangeNum)
-					//MessageBox(0, "ÊôÐÔ±ä»¯¸öÊýµÄÁ½¸öÍ³¼ÆÖµ²»ÎÇºÏ", "´íÎó", MB_OK);
+					//MessageBox(0, "ï¿½ï¿½ï¿½Ô±ä»¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½Öµï¿½ï¿½ï¿½Çºï¿½", "ï¿½ï¿½ï¿½ï¿½", MB_OK);
 					MessageBox(0, RES_STRING(GM_FIGHTALBE_CPP_00001), RES_STRING(GM_FIGHTALBE_CPP_00002), MB_OK);
 				WRITE_CHAR(pk, i);
 				if(i == ATTR_NLEXP ||i == ATTR_CLEXP||i == ATTR_CEXP)
@@ -653,10 +654,10 @@ void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 		m_CSkillState.BeginGetState();
 		while (pSStateUnit = m_CSkillState.GetNextState())
 		{
-			//if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID())) // Èç¹û¸Ã×´Ì¬ÓÐ±ä£¬ÔòÑ¹°ü
+			//if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID())) // ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				//if (sTempChangeNum >= uchStateChangeNum)
-				//	MessageBox(0, "×´Ì¬±ä»¯¸öÊýµÄÁ½¸öÍ³¼ÆÖµ²»ÎÇºÏ", "´íÎó", MB_OK);
+				//	MessageBox(0, "×´Ì¬ï¿½ä»¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½Öµï¿½ï¿½ï¿½Çºï¿½", "ï¿½ï¿½ï¿½ï¿½", MB_OK);
 				WRITE_CHAR(pk, pSStateUnit->GetStateID());
 				WRITE_CHAR(pk, pSStateUnit->GetStateLv());
 				sTempChangeNum++;
@@ -666,7 +667,7 @@ void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 	else
 		WRITE_CHAR(pk, 0);
 
-	NotiChgToEyeshot(pk);//Í¨¸æ
+	NotiChgToEyeshot(pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
@@ -679,11 +680,11 @@ void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 		else if (m_SFightInit.chTarType == 2)
 			m_CLog.Log("Target(Pos):\t%d, \t%d\n", m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
 		m_CLog.Log("Exec Time:\t%d\n", sExecTime);
-		//m_CLog.Log("ÊôÐÔ:[ID, Value]\n");
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½:[ID, Value]\n");
 		m_CLog.Log("attribute:[ID, Value]\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				m_CLog.Log("\t%d, \t%d\n", i, m_CChaAttr.GetAttr(i));
 			}
@@ -699,13 +700,13 @@ void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 		m_CLog.Log("\n");
 		//
 	}
-T_E}
+}
 
 void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WRITE_LONG(pk, m_ulPacketID);
 	WRITE_CHAR(pk, enumACTION_SKILL_SRC);
@@ -733,7 +734,7 @@ void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 	}
 	WRITE_SHORT(pk, sExecTime);
 
-	// ÊôÐÔ
+	// ï¿½ï¿½ï¿½ï¿½
 	short sTempChangeNum = 0;
 	short sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 	WRITE_SHORT(pk, sAttrChangeNum);
@@ -741,10 +742,10 @@ void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 	{
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				if (sTempChangeNum >= sAttrChangeNum)
-					//MessageBox(0, "ÊôÐÔ±ä»¯¸öÊýµÄÁ½¸öÍ³¼ÆÖµ²»ÎÇºÏ", "´íÎó", MB_OK);
+					//MessageBox(0, "ï¿½ï¿½ï¿½Ô±ä»¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½Öµï¿½ï¿½ï¿½Çºï¿½", "ï¿½ï¿½ï¿½ï¿½", MB_OK);
 					MessageBox(0, RES_STRING(GM_FIGHTALBE_CPP_00001), RES_STRING(GM_FIGHTALBE_CPP_00002), MB_OK);
 				WRITE_CHAR(pk, i);
 				if (i==ATTR_NLEXP ||i==ATTR_CLEXP||i ==ATTR_CEXP)
@@ -766,10 +767,10 @@ void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 		m_CSkillState.BeginGetState();
 		while (pSStateUnit = m_CSkillState.GetNextState())
 		{
-			if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID())) // Èç¹û¸Ã×´Ì¬ÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID())) // ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				if (sTempChangeNum >= uchStateChangeNum)
-					//MessageBox(0, "ÊôÐÔ±ä»¯¸öÊýµÄÁ½¸öÍ³¼ÆÖµ²»ÎÇºÏ", "´íÎó", MB_OK);
+					//MessageBox(0, "ï¿½ï¿½ï¿½Ô±ä»¯ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½Öµï¿½ï¿½ï¿½Çºï¿½", "ï¿½ï¿½ï¿½ï¿½", MB_OK);
 					MessageBox(0, RES_STRING(GM_FIGHTALBE_CPP_00001), RES_STRING(GM_FIGHTALBE_CPP_00002), MB_OK);
 				WRITE_CHAR(pk, pSStateUnit->GetStateID());
 				WRITE_CHAR(pk, pSStateUnit->GetStateLv());
@@ -780,7 +781,7 @@ void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 	else
 		WRITE_CHAR(pk, 0);
 
-	ReflectINFof(this,pk);//Í¨¸æ
+	ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
@@ -793,11 +794,11 @@ void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 		else if (m_SFightInit.chTarType == 2)
 			m_CLog.Log("Target(Pos):\t%d, \t%d\n", m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
 		m_CLog.Log("Exec Time:\t%d\n", sExecTime);
-		//m_CLog.Log("ÊôÐÔ:[ID, Value]\n");
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½:[ID, Value]\n");
 		m_CLog.Log("state:[ID, Value]\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				m_CLog.Log("\t%d, \t%d\n", i, m_CChaAttr.GetAttr(i));
 			}
@@ -813,13 +814,13 @@ void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 		m_CLog.Log("\n");
 		//
 	}
-T_E}
+}
 
 void CFightAble::NotiSkillTarToEyeshot(SFireUnit *pSFireSrc)
 {
 	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);	//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_NOTIACTION);	//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  			//ID
 #ifdef defPROTOCOL_HAVE_PACKETID
 	WRITE_LONG(pk, pSFireSrc->ulPacketID);
@@ -872,7 +873,7 @@ void CFightAble::NotiSkillTarToEyeshot(SFireUnit *pSFireSrc)
 	else
 		WRITE_CHAR(pk, 0);
 
-	NotiChgToEyeshot(pk);//Í¨¸æ
+	NotiChgToEyeshot(pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
@@ -884,11 +885,11 @@ void CFightAble::NotiSkillTarToEyeshot(SFireUnit *pSFireSrc)
 		m_CLog.Log("SourceChaID:\t%u\n", pSFireSrc->ulID);
 		m_CLog.Log("SkillID:\t%d\n", pSFireSrc->pCSkillRecord->sID);
 		m_CLog.Log("Exec Time:\t%d\n", pSFireSrc->sExecTime);
-		//m_CLog.Log("ÊôÐÔ:[ID, Value]\n");
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½:[ID, Value]\n");
 		m_CLog.Log("state:[ID, Value]\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				m_CLog.Log("\t%d, \t%d\n", i, m_CChaAttr.GetAttr(i));
 			}
@@ -901,16 +902,16 @@ void CFightAble::NotiSkillTarToEyeshot(SFireUnit *pSFireSrc)
 			m_CLog.Log("\t%d, %d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
 		if (m_SFightProc.sState == enumFSTATE_DIE)
 			m_CLog.Log("@@@Die\n");
-		//m_CLog.Log("¼¼ÄÜÔ´ÊôÐÔ:[ID, Value]\n");
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½:[ID, Value]\n");
 		m_CLog.Log("skill attribute:[ID, Value]\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (pSFireSrc->pCFightSrc->m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (pSFireSrc->pCFightSrc->m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				m_CLog.Log("\t%d, \t%d\n", i, pSFireSrc->pCFightSrc->m_CChaAttr.GetAttr(i));
 			}
 		}
-		//m_CLog.Log("¼¼ÄÜÔ´×´Ì¬ %d:[ID, LV]\n", pSFireSrc->pCFightSrc->m_CSkillState.GetStateNum());
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½Ô´×´Ì¬ %d:[ID, LV]\n", pSFireSrc->pCFightSrc->m_CSkillState.GetStateNum());
 		m_CLog.Log("skill attribute %d:[ID, LV]\n", pSFireSrc->pCFightSrc->m_CSkillState.GetStateNum());
 		pSFireSrc->pCFightSrc->m_CSkillState.BeginGetState();
 		while (pSStateUnit = pSFireSrc->pCFightSrc->m_CSkillState.GetNextState())
@@ -923,95 +924,95 @@ void CFightAble::NotiSkillTarToEyeshot(SFireUnit *pSFireSrc)
 }
 
 void CFightAble::SynAttr(Short sType)
-{T_B
+{
 	short	sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 	if (sAttrChangeNum == 0)
 		return;
 
 	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WriteAttr(pk, sType);
 
-	NotiChgToEyeshot(pk, true);//Í¨¸æ
+	NotiChgToEyeshot(pk, true);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization Attribute):\tTick %u\n\n", GetTickCount());
-		//m_CLog.Log("\tÊôÐÔ±àºÅ\tÊôÐÔÖµ\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½Ô±ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½Öµ\n");
 		m_CLog.Log("\t attribute number\t attribute value\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 				m_CLog.Log("\t%d\t%u\n", i, m_CChaAttr.GetAttr(i));
 		}
 		//
 	}
-T_E}
+}
 
 void CFightAble::SynAttrToSelf(Short sType)
-{T_B
+{
 	short	sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 	if (sAttrChangeNum == 0)
 		return;
 
 	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WriteAttr(pk, sType);
 
-	ReflectINFof(this,pk);//Í¨¸æ
+	ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization Attribute):\tTick %u\n\n", GetTickCount());
-		//m_CLog.Log("\tÊôÐÔ±àºÅ\tÊôÐÔÖµ\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½Ô±ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½Öµ\n");
 		m_CLog.Log("\tattribute number\tattribute value\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 				m_CLog.Log("\t%d\t%u\n", i, m_CChaAttr.GetAttr(i));
 		}
 		//
 	}
-T_E}
+}
 
-void CFightAble::SynAttrToEyeshot(Short sType) //²»°üÀ¨×Ô¼º
-{T_B
+void CFightAble::SynAttrToEyeshot(Short sType) //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½
+{
 	short	sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 	if (sAttrChangeNum == 0)
 		return;
 
 	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WriteAttr(pk, sType);
 
-	NotiChgToEyeshot(pk, false);//Í¨¸æ
+	NotiChgToEyeshot(pk, false);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization Attribute):\tTick %u\n\n", GetTickCount());
-		//m_CLog.Log("\tÊôÐÔ±àºÅ\tÊôÐÔÖµ\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½Ô±ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½Öµ\n");
 		m_CLog.Log("\tattribute number\tattribute value\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 				m_CLog.Log("\t%d\t%u\n", i, m_CChaAttr.GetAttr(i));
 		}
 		//
 	}
-T_E}
+}
 
-// ½«pCObjµÄÊôÐÔÍ¨¸æ¸ø×Ô¼º
+// ï¿½ï¿½pCObjï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½
 void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sType)
-{T_B
+{
 	if (!pCObj)
 		return;
 
@@ -1020,31 +1021,31 @@ void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sType)
 		return;
 
 	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, pCObj->GetID());		//ID
 	pCObj->WriteAttr(pk, sType);
 
-	ReflectINFof(this,pk);//Í¨¸æ
+	ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization %s Attribute to own):\tTick %u\n\n", pCObj->m_CLog.GetLogName(), GetTickCount());
-		//m_CLog.Log("\tÊôÐÔ±àºÅ\tÊôÐÔÖµ\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½Ô±ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½Öµ\n");
 		m_CLog.Log("\tattribute number\tattribute value\n");
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (pCObj->m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (pCObj->m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 				m_CLog.Log("\t%d\t%u\n", i, pCObj->m_CChaAttr.GetAttr(i));
 		}
 		//
 	}
-T_E}
+}
 
-// ½«pCObjµÄÊôÐÔÍ¨¸æ¸ø×Ô¼º
+// ï¿½ï¿½pCObjï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½
 void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sStartAttr, Short sEndAttr, Short sType)
-{T_B
+{
 	if (!pCObj)
 		return;
 
@@ -1052,18 +1053,18 @@ void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sStartAttr, Short sEndAt
 		return;
 
 	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNATTR);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, pCObj->GetID());		//ID
 	pCObj->WriteAttr(pk, sStartAttr, sEndAttr, sType);
 
-	ReflectINFof(this,pk);//Í¨¸æ
+	ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization %s Attribute to own):\tTick %u\n\n", pCObj->m_CLog.GetLogName(), GetTickCount());
-		//m_CLog.Log("\tÊôÐÔ±àºÅ\tÊôÐÔÖµ\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½Ô±ï¿½ï¿½\tï¿½ï¿½ï¿½ï¿½Öµ\n");
 		m_CLog.Log("\tattribute number\tattribute value\n");
 		for (int i = sStartAttr; i <= sEndAttr; i++)
 		{
@@ -1071,23 +1072,23 @@ void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sStartAttr, Short sEndAt
 		}
 		//
 	}
-T_E}
+}
 
 void CFightAble::SynSkillStateToSelf()
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WriteSkillState(pk);
 
-	ReflectINFof(this,pk);//Í¨¸æ
+	ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization Skill State): StateNum[%d]\tTick %u\n", m_CSkillState.GetStateNum(), GetTickCount());
-		//m_CLog.Log("\t±àºÅ\tµÈ¼¶\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½\tï¿½È¼ï¿½\n");
 		m_CLog.Log("\tnumber\tgrade\n");
 		SSkillStateUnit	*pSStateUnit;
 		m_CSkillState.BeginGetState();
@@ -1096,24 +1097,24 @@ void CFightAble::SynSkillStateToSelf()
 		m_CLog.Log("\n");
 		//
 	}
-T_E}
+}
 
 void CFightAble::SynSkillStateToEyeshot()
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WriteSkillState(pk);
 
-	NotiChgToEyeshot(pk, true);//Í¨¸æ
+	NotiChgToEyeshot(pk, true);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization Skill State): StateNum[%d]\tTick %u\n", m_CSkillState.GetStateNum(), GetTickCount());
-		//m_CLog.Log("\t±àºÅ\tµÈ¼¶\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½\tï¿½È¼ï¿½\n");
 		m_CLog.Log("\tnumber\tgrade\n");;
 		SSkillStateUnit	*pSStateUnit;
 		m_CSkillState.BeginGetState();
@@ -1122,27 +1123,27 @@ void CFightAble::SynSkillStateToEyeshot()
 		m_CLog.Log("\n");
 		//
 	}
-T_E}
+}
 
-// ½«pCObjµÄ¼¼ÄÜ×´Ì¬Í¨¸æ¸ø×Ô¼º
+// ï¿½ï¿½pCObjï¿½Ä¼ï¿½ï¿½ï¿½×´Ì¬Í¨ï¿½ï¿½ï¿½ï¿½Ô¼ï¿½
 void CFightAble::SynSkillStateToUnit(CFightAble *pCObj)
-{T_B
+{
 	if (!pCObj)
 		return;
 	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, pCObj->GetID());		//ID
 	pCObj->WriteSkillState(pk);
 
-	ReflectINFof(this,pk);//Í¨¸æ
+	ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 
 	if (m_CLog.GetEnable())
 	{
 		// log
 		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 		m_CLog.Log("###Send(Synchronization %s SkillState to own): StateNum[%d]\tTick %u\n", pCObj->m_CLog.GetLogName(), pCObj->m_CSkillState.GetStateNum(), GetTickCount());
-		//m_CLog.Log("\t±àºÅ\tµÈ¼¶\n");
+		//m_CLog.Log("\tï¿½ï¿½ï¿½\tï¿½È¼ï¿½\n");
 		m_CLog.Log("\tnumber\tgrade\n");;
 		SSkillStateUnit	*pSStateUnit;
 		pCObj->m_CSkillState.BeginGetState();
@@ -1151,20 +1152,20 @@ void CFightAble::SynSkillStateToUnit(CFightAble *pCObj)
 		m_CLog.Log("\n");
 		//
 	}
-T_E}
+}
 
 void CFightAble::SynLookEnergy(void)
 {
 	CCharacter	*pCMainCha = IsCharacter()->GetPlyMainCha();
 
 	WPACKET WtPk=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//Í¨¸æÐÐ¶¯
+	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//Í¨ï¿½ï¿½ï¿½Ð¶ï¿½
 	WRITE_LONG(WtPk, pCMainCha->GetID());
 	WRITE_LONG(WtPk, pCMainCha->m_ulPacketID);
 	WRITE_CHAR(WtPk, enumACTION_LOOK_ENERGY);
 
 	pCMainCha->WriteLookEnergy(WtPk);
-	pCMainCha->ReflectINFof(this,WtPk);//Í¨¸æ
+	pCMainCha->ReflectINFof(this,WtPk);//Í¨ï¿½ï¿½
 }
 
 void CFightAble::WriteSkillState(WPACKET &pk)
@@ -1199,7 +1200,7 @@ void CFightAble::WriteAttr(WPACKET &pk, Short sSynType)
 	{
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // Èç¹û¸ÃÊôÐÔÓÐ±ä£¬ÔòÑ¹°ü
+			if (m_CChaAttr.GetChangeBitFlag(i)) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ä£¬ï¿½ï¿½Ñ¹ï¿½ï¿½
 			{
 				WRITE_CHAR(pk, i);
 				WRITE_LONG(pk, m_CChaAttr.GetAttr(i)); // 1.3x
@@ -1252,8 +1253,8 @@ void CFightAble::WriteLookEnergy(WPACKET &pk)
 }
 
 bool CFightAble::GetFightTargetShape(Square *pSTarShape)
-{T_B
-	if (m_SFightInit.chTarType == 1) // Ä¿±êÊÇÎïÌå
+{
+	if (m_SFightInit.chTarType == 1) // Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		Entity	*pTarObj = g_pGameApp->IsMapEntity(m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
 		if (!pTarObj)
@@ -1263,7 +1264,7 @@ bool CFightAble::GetFightTargetShape(Square *pSTarShape)
 			*pSTarShape = pTarObj->GetShape();
 		}
 	}
-	else if (m_SFightInit.chTarType == 2) // Ä¿±êÊÇµã
+	else if (m_SFightInit.chTarType == 2) // Ä¿ï¿½ï¿½ï¿½Çµï¿½
 	{
 		if (pSTarShape)
 		{
@@ -1274,7 +1275,7 @@ bool CFightAble::GetFightTargetShape(Square *pSTarShape)
 	}
 
 	return true;
-T_E}
+}
 
 bool CFightAble::SkillExpend(Short sExecTime)
 {
@@ -1284,7 +1285,7 @@ bool CFightAble::SkillExpend(Short sExecTime)
 	if (pCMainCha != this->IsCharacter())
 		pCMainCha->m_CChaAttr.ResetChangeFlag();
 	pCMainCha->SetLookChangeFlag();
-	// ÏûºÄSP
+	// ï¿½ï¿½ï¿½ï¿½SP
 	if (m_SFightInit.pCSkillTData->sUseSP > 0)
 	{
 		if (m_SFightInit.pCSkillTData->sUseSP * sExecTime > pCMainCha->m_CChaAttr.GetAttr(ATTR_SP))
@@ -1297,7 +1298,7 @@ bool CFightAble::SkillExpend(Short sExecTime)
 			pCMainCha->setAttr(ATTR_SP, pCMainCha->m_CChaAttr.GetAttr(ATTR_SP) - m_SFightInit.pCSkillTData->sUseSP * sExecTime);
 	}
 
-	// ÏûºÄÄÜÁ¿
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Short	sNeedEnergy = m_SFightInit.pCSkillTData->sUseEnergy * sExecTime;
 	if (sNeedEnergy > 0)
 	{
@@ -1315,7 +1316,7 @@ bool CFightAble::SkillExpend(Short sExecTime)
 				break;
 		}
 
-		if (sNeedEnergy > 0) // ÄÜÁ¿²»×ã
+		if (sNeedEnergy > 0) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
 			m_SFightProc.sState |= enumFSTATE_NO_EXPEND;
 			NotiSkillSrcToEyeshot(sExecTime);
@@ -1347,7 +1348,7 @@ bool CFightAble::SkillExpend(Short sExecTime)
 		}
 	}
 
-	// Ö´ÐÐ½Å±¾
+	// Ö´ï¿½Ð½Å±ï¿½
 	if (strcmp(m_SFightInit.pCSkillRecord->szUse, "0"))
 		g_CParser.DoString(m_SFightInit.pCSkillRecord->szUse, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
 	if (m_SFightProc.sState == enumFSTATE_NO_EXPEND)
@@ -1376,7 +1377,7 @@ void CFightAble::RangeEffect(SFireUnit *pSFireSrc, SubMap *pCMap, Long *plRangeB
 	pCMap->BeginSearchInRange(plRangeBParam, lEParam, true);
 	while (pCFightObj = pCMap->GetNextCharacterInRange())
 	{
-		if (!pCFightObj->IsLiveing()) // ¶Ô·½ÒÑ¾­ËÀÍö
+		if (!pCFightObj->IsLiveing()) // ï¿½Ô·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½
 			continue;
 
 		if (!pCFightObj->IsRightSkillTar(this,
@@ -1384,16 +1385,16 @@ void CFightAble::RangeEffect(SFireUnit *pSFireSrc, SubMap *pCMap, Long *plRangeB
 			continue;
 
 		pCFightObj->SkillTarEffect(pSFireSrc);
-		if (m_SFightProc.sState & enumFSTATE_DIE) // ×Ô¼ºËÀÍö
+		if (m_SFightProc.sState & enumFSTATE_DIE) // ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
-			//m_CLog.Log("!!!ËÀÍö\tTick %u\n", GetTickCount());
+			//m_CLog.Log("!!!ï¿½ï¿½ï¿½ï¿½\tTick %u\n", GetTickCount());
 			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 			Die();
 			return;
 		}
-		if (pCFightObj->m_SFightProc.sState & enumFSTATE_DIE) // ¶Ô·½ÊÜ¹¥»÷ºóËÀÍö
+		if (pCFightObj->m_SFightProc.sState & enumFSTATE_DIE) // ï¿½Ô·ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
-			pCFightObj->//m_CLog.Log("!!!ËÀÍö\tTick %u\n", GetTickCount());
+			pCFightObj->//m_CLog.Log("!!!ï¿½ï¿½ï¿½ï¿½\tTick %u\n", GetTickCount());
 			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 			pCFightObj->Die();
 
@@ -1418,19 +1419,19 @@ void CFightAble::RangeEffect(SFireUnit *pSFireSrc, SubMap *pCMap, Long *plRangeB
 }
 
 //=============================================================================
-// lDist µ½¼¼ÄÜÄ¿±êÎ»ÖÃµÄ¾àÀë£¨ÀåÃ×£©¡£sExecTime ¼¼ÄÜµÄÖ´ÐÐ´ÎÊý
-// ¼¼ÄÜ³É¹¦Ê¹ÓÃ£¬·µ»Øtrue¡£·ñÔò·µ»Øfalse¡£
+// lDist ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½Î»ï¿½ÃµÄ¾ï¿½ï¿½ë£¨ï¿½ï¿½ï¿½×£ï¿½ï¿½ï¿½sExecTime ï¿½ï¿½ï¿½Üµï¿½Ö´ï¿½Ð´ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½Ü³É¹ï¿½Ê¹ï¿½Ã£ï¿½ï¿½ï¿½ï¿½ï¿½trueï¿½ï¿½ï¿½ï¿½ï¿½ò·µ»ï¿½falseï¿½ï¿½
 //=============================================================================
-bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
+bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ï¿½ï¿½Í¨ï¿½ï¿½ï¿½ï¿½
 {
-	if (!m_SFightInit.pCSkillRecord->chPlayTime) // Ö»Ê¹ÓÃÒ»´Î¼¼ÄÜ
+	if (!m_SFightInit.pCSkillRecord->chPlayTime) // Ö»Ê¹ï¿½ï¿½Ò»ï¿½Î¼ï¿½ï¿½ï¿½
 		m_SFightProc.sState |= enumFSTATE_STOP;
 
 	if (IsCharacter()->IsPlayerCha())
 		if (!SkillExpend())
 			return false;
 
-	if (m_SFightInit.chTarType == 2) // ¶ÔÏóÊÇ×ø±ê
+	if (m_SFightInit.chTarType == 2) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		g_SSkillPoint.x = m_SFightInit.lTarInfo1;
 		g_SSkillPoint.y = m_SFightInit.lTarInfo2;
@@ -1472,14 +1473,14 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
 			uLong ulLeftTime = lDist * 1000 / m_SFightInit.pCSkillRecord->sSkySpd;
 			g_CTimeSkillMgr.Add(&SFire, ulLeftTime, m_submap, &TarPos, m_SFightProc.lERangeBParam);
 		}
-		else if (m_SFightInit.pCSkillRecord->sSkySpd == 0)// ÎÞÐè¼ÆËã·ÉÐÐÊ±¼ä
+		else if (m_SFightInit.pCSkillRecord->sSkySpd == 0)// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 			RangeEffect(&SFire, m_submap, m_SFightProc.lERangeBParam);
-		else {} // Î´¶¨Òå
+		else {} // Î´ï¿½ï¿½ï¿½ï¿½
 	}
-	else if (m_SFightInit.chTarType == 1) // ¶ÔÏóÊÇID
+	else if (m_SFightInit.chTarType == 1) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ID
 	{
 		Entity	*pTarObj = g_pGameApp->IsMapEntity(m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
-		if (!pTarObj) // Ä¿±ê²»´æÔÚ
+		if (!pTarObj) // Ä¿ï¿½ê²»ï¿½ï¿½ï¿½ï¿½
 		{
 			m_SFightProc.sState = enumFSTATE_TARGET_NO;
 			NotiSkillSrcToEyeshot();
@@ -1489,7 +1490,7 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
 		CCharacter	*pObjCha = pTarObj->IsCharacter();
 
 		if (!pObjCha->IsRightSkillTar(this,
-			m_SFightInit.pCSkillRecord->chApplyTarget, m_SFightInit.pCSkillRecord->chTarType, m_SFightInit.pCSkillRecord->chHelpful)) // Ä¿±ê²»ºÏ·¨
+			m_SFightInit.pCSkillRecord->chApplyTarget, m_SFightInit.pCSkillRecord->chTarType, m_SFightInit.pCSkillRecord->chHelpful)) // Ä¿ï¿½ê²»ï¿½Ï·ï¿½
 		{
 			m_SFightProc.sState = enumFSTATE_TARGET_IMMUNE;
 			NotiSkillSrcToEyeshot();
@@ -1521,7 +1522,7 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
 		SFire.pCSkillTData = m_SFightInit.pCSkillTData;
 		SFire.sExecTime = sExecTime;
 
-		if (m_SFightInit.pCSkillRecord->chApplyType == 3) // ½¦Éä¼¼ÄÜ£¬·¶Î§ÉËº¦
+		if (m_SFightInit.pCSkillRecord->chApplyType == 3) // ï¿½ï¿½ï¿½ä¼¼ï¿½Ü£ï¿½ï¿½ï¿½Î§ï¿½Ëºï¿½
 			RangeEffect(&SFire, m_submap, m_SFightProc.lERangeBParam);
 		else
 		{
@@ -1529,15 +1530,15 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
 			pObjCha->SkillTarEffect(&SFire);
 
 
-			if (m_SFightProc.sState & enumFSTATE_DIE) // ×Ô¼ºËÀÍö
+			if (m_SFightProc.sState & enumFSTATE_DIE) // ï¿½Ô¼ï¿½ï¿½ï¿½ï¿½ï¿½
 			{
-				//m_CLog.Log("!!!ËÀÍö\tTick %u\n", GetTickCount());
+				//m_CLog.Log("!!!ï¿½ï¿½ï¿½ï¿½\tTick %u\n", GetTickCount());
 			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 				Die();
 				return true;
 			}
 
-			if (pObjCha->m_SFightProc.sState & enumFSTATE_DIE) // ¶Ô·½ÊÜ¹¥»÷ºóËÀÍö
+			if (pObjCha->m_SFightProc.sState & enumFSTATE_DIE) // ï¿½Ô·ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			{
 				m_SFightInit.chTarType = 0;
 				if (m_SFightProc.sState == enumFSTATE_ON)
@@ -1549,7 +1550,7 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
 					NotiSkillSrcToEyeshot();
 				}
 
-				pObjCha->//m_CLog.Log("!!!ËÀÍö\tTick %u\n", GetTickCount());
+				pObjCha->//m_CLog.Log("!!!ï¿½ï¿½ï¿½ï¿½\tTick %u\n", GetTickCount());
 			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 				if (bTarIsLive)
 					pObjCha->Die();
@@ -1560,9 +1561,9 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ÆÕÍ¨¼¼ÄÜ
 	return true;
 }
 
-// ¸ÃÀý³ÌÄÚ²¿µÄÓï¾äË³Ðò·Ç³£ÑÏ¸ñ£¬²»¿ÉËæ±ã¸ü¸Ä£¡£¡£¡
-CCharacter* CFightAble::SkillPopBoat(Long lPosX, Long lPosY, Short sDir) // ·Å´¬
-{T_B
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ç³ï¿½ï¿½Ï¸ñ£¬²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
+CCharacter* CFightAble::SkillPopBoat(Long lPosX, Long lPosY, Short sDir) // ï¿½Å´ï¿½
+{
 	CCharacter	*pCCha = 0;
 
 	Short	sUnitWidth, sUnitHeight;
@@ -1574,7 +1575,7 @@ CCharacter* CFightAble::SkillPopBoat(Long lPosX, Long lPosY, Short sDir) // ·Å´¬
 	sUnitY = static_cast<Short>(lPosY / sUnitHeight);
 	m_submap->GetTerrainCellAttr(sUnitX, sUnitY, usAreaAttr);
 
-	if (g_IsSea(usAreaAttr)) // Ä¿±êµãÊÇË®Óò
+	if (g_IsSea(usAreaAttr)) // Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½Ë®ï¿½ï¿½
 	{
 		Point		SPos = {lPosX, lPosY};
 		if (sDir == -1)
@@ -1586,7 +1587,7 @@ CCharacter* CFightAble::SkillPopBoat(Long lPosX, Long lPosY, Short sDir) // ·Å´¬
 
 			SSkillGrid	SSkillCont;
 			SSkillCont.chState = enumSUSTATE_ACTIVE;
-			SSkillCont.sID = 39;	// ¡°µÇÂ½¡°¼¼ÄÜ
+			SSkillCont.sID = 39;	// ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			SSkillCont.chLv = 1;
 			pCCha->m_CSkillBag.Add(&SSkillCont);
 
@@ -1595,10 +1596,10 @@ CCharacter* CFightAble::SkillPopBoat(Long lPosX, Long lPosY, Short sDir) // ·Å´¬
 	}
 
 	return pCCha;
-T_E}
+}
 
-// ¸ÃÀý³ÌÄÚ²¿µÄÓï¾äË³Ðò·Ç³£ÑÏ¸ñ£¬²»¿ÉËæ±ã¸ü¸Ä£¡£¡£¡
-bool CFightAble::SkillPopBoat(CCharacter *pCBoat, Long lPosX, Long lPosY, Short sDir) // ·Å´¬
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ç³ï¿½ï¿½Ï¸ñ£¬²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
+bool CFightAble::SkillPopBoat(CCharacter *pCBoat, Long lPosX, Long lPosY, Short sDir) // ï¿½Å´ï¿½
 {
 	if (GetSubMap())
 	{
@@ -1627,13 +1628,13 @@ bool CFightAble::SkillPopBoat(CCharacter *pCBoat, Long lPosX, Long lPosY, Short 
 	return true;
 }
 
-// ¸ÃÀý³ÌÄÚ²¿µÄÓï¾äË³Ðò·Ç³£ÑÏ¸ñ£¬²»¿ÉËæ±ã¸ü¸Ä£¡£¡£¡
-bool CFightAble::SkillInBoat(CCharacter *pCBoat) // ÉÏ´¬
-{T_B
-	// È¡ÏûËùÓÐ·Ç¼ÆÊ±¼¼ÄÜ²úÉúµÄ×´Ì¬
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ç³ï¿½ï¿½Ï¸ñ£¬²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
+bool CFightAble::SkillInBoat(CCharacter *pCBoat) // ï¿½Ï´ï¿½
+{
+	// È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ð·Ç¼ï¿½Ê±ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	RemoveOtherSkillState();
 
-	// ¸ü»»Ö÷½Ç
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	Point	SUpPos = GetPos();
 	if (GetSubMap())
 	{
@@ -1659,12 +1660,12 @@ bool CFightAble::SkillInBoat(CCharacter *pCBoat) // ÉÏ´¬
 	}
 
 	return true;
-T_E}
+}
 
-// ¸ÃÀý³ÌÄÚ²¿µÄÓï¾äË³Ðò·Ç³£ÑÏ¸ñ£¬²»¿ÉËæ±ã¸ü¸Ä£¡£¡£¡
-bool CFightAble::SkillOutBoat(Long lPosX, Long lPosY, Short sDir) // ÏÂ´¬
-{T_B
-	// È¡ÏûËùÓÐ·Ç¼ÆÊ±¼¼ÄÜ²úÉúµÄ×´Ì¬
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ç³ï¿½ï¿½Ï¸ñ£¬²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
+bool CFightAble::SkillOutBoat(Long lPosX, Long lPosY, Short sDir) // ï¿½Â´ï¿½
+{
+	// È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ð·Ç¼ï¿½Ê±ï¿½ï¿½ï¿½Ü²ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	RemoveOtherSkillState();
 
 	CAttachable	*pOutObj = this;
@@ -1672,7 +1673,7 @@ bool CFightAble::SkillOutBoat(Long lPosX, Long lPosY, Short sDir) // ÏÂ´¬
 	if (!pCShipM)
 		return false;
 
-	if (pCShipM == this) // Ö÷¿ØÕßÏÂ´¬
+	if (pCShipM == this) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â´ï¿½
 	{
 		if (!(pOutObj = GetShip()->GetLeader()))
 			return false;
@@ -1700,7 +1701,7 @@ bool CFightAble::SkillOutBoat(Long lPosX, Long lPosY, Short sDir) // ÏÂ´¬
 		return false;
 	else
 	{
-		// ¸ü»»Ö÷½Ç
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		pCMap->MoveTo(this, pOutObj->GetPos());
 		NotiChangeMainCha(pOutObj->GetID());
 		if (pCPlayer == pCShipM->GetPlayer())
@@ -1719,13 +1720,13 @@ bool CFightAble::SkillOutBoat(Long lPosX, Long lPosY, Short sDir) // ÏÂ´¬
 	}
 
 	return true;
-T_E}
+}
 
-// ¸ÃÀý³ÌÄÚ²¿µÄÓï¾äË³Ðò·Ç³£ÑÏ¸ñ£¬²»¿ÉËæ±ã¸ü¸Ä£¡£¡£¡
-bool CFightAble::SkillPushBoat(CCharacter* pCBoat, bool bFree) // ÊÕ´¬
-{T_B
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½Ç³ï¿½ï¿½Ï¸ñ£¬²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä£ï¿½ï¿½ï¿½ï¿½ï¿½
+bool CFightAble::SkillPushBoat(CCharacter* pCBoat, bool bFree) // ï¿½Õ´ï¿½
+{
 	if (bFree)
-		pCBoat->GetShip()->Free(); // ´Ë´¦ÒªÍêÉÆ£¬ÊÕ´¬Ê±£¬¡°³Ë¿Í¡°±ØÐëÎª¿Õ
+		pCBoat->GetShip()->Free(); // ï¿½Ë´ï¿½Òªï¿½ï¿½ï¿½Æ£ï¿½ï¿½Õ´ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ë¿Í¡ï¿½ï¿½ï¿½ï¿½ï¿½Îªï¿½ï¿½
 
 	pCBoat->BreakAction();
 	pCBoat->m_CSkillState.Reset();
@@ -1736,13 +1737,13 @@ bool CFightAble::SkillPushBoat(CCharacter* pCBoat, bool bFree) // ÊÕ´¬
 		pCBoat->Free();
 
 	return true;
-T_E}
+}
 
 void CFightAble::NotiChangeMainCha(uLong ulTargetID)
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//ÃüÁî2×Ö½Ú
+	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//ï¿½ï¿½ï¿½ï¿½2ï¿½Ö½ï¿½
 	WRITE_LONG(pk, m_ID);	  				//ID
 	WRITE_LONG(pk, m_ulPacketID);
 	WRITE_CHAR(pk, enumACTION_CHANGE_CHA);
@@ -1752,10 +1753,10 @@ void CFightAble::NotiChangeMainCha(uLong ulTargetID)
 
 	// log
 	//
-T_E}
+}
 
 bool CFightAble::IsRightSkill(CSkillRecord *pSkill)
-{T_B
+{
 	if (IsCharacter()->IsPlayerCha())
 	{
 		if (IsCharacter()->IsBoat())
@@ -1772,19 +1773,19 @@ bool CFightAble::IsRightSkill(CSkillRecord *pSkill)
 		}
 	}
 	return true;
-T_E}
+}
 
 bool CFightAble::IsRightSkillSrc(Char chSkillEffType)
-{T_B
-	if ((GetAreaAttr() & enumAREA_TYPE_NOT_FIGHT) && (chSkillEffType != enumSKILL_EFF_HELPFUL)) // ½ÇÉ«ÔÚ·ÇÕ½¶·ÇøÓòÇÒ·ÇÓÐÒæ¼¼ÄÜ
+{
+	if ((GetAreaAttr() & enumAREA_TYPE_NOT_FIGHT) && (chSkillEffType != enumSKILL_EFF_HELPFUL)) // ï¿½ï¿½É«ï¿½Ú·ï¿½Õ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ò·ï¿½ï¿½ï¿½ï¿½æ¼¼ï¿½ï¿½
 		return false;
 	else
 		return true;
-T_E}
+}
 
 bool CFightAble::IsRightSkillTar(CFightAble *pSkillSrc, Char chSkillObjType, Char chSkillObjHabitat, Char chSkillEffType, bool bIncHider)
-{T_B
-	//if (GetPlayer() && GetPlayer()->GetGMLev() > 0) // ²»ÄÜ×÷ÓÃÓÚGM
+{
+	//if (GetPlayer() && GetPlayer()->GetGMLev() > 0) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GM
 	//	return false;
 	if (!bIncHider)
 		if (IsCharacter()->IsHide())
@@ -1801,7 +1802,7 @@ bool CFightAble::IsRightSkillTar(CFightAble *pSkillSrc, Char chSkillObjType, Cha
 		return false;
 
 	return true;
-T_E}
+}
 
 inline bool CFightAble::IsTeammate(CFightAble *pCTar)
 {
@@ -1838,10 +1839,10 @@ inline bool CFightAble::IsFriend(CFightAble *pCTar)
 }
 
 //=============================================================================
-// ¸ù¾Ýµ±Ç°¾­ÑéÖµ£¬·µ»ØÉý¼¶Êý
+// ï¿½ï¿½ï¿½Ýµï¿½Ç°ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //=============================================================================
 void CFightAble::CountLevel()
-{T_B
+{
 	//printf("yes\n");
 	if (!IsLiveing())
 		return;
@@ -1870,19 +1871,19 @@ void CFightAble::CountLevel()
 			{
 				setAttr(ATTR_NLEXP, pNLvRec->ulExp);
 			}
-			g_CParser.DoString("Shengji_Shuxingchengzhang", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // Éý¼¶¼ÆËã£¨ÅäÖÃ»ù±¾ÊôÐÔ£¬ÉèÖÃÊôÐÔµã£©
+			g_CParser.DoString("Shengji_Shuxingchengzhang", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµã£©
 			OnLevelUp( (USHORT)lCurLevel );
 		}
 		else
 			break;
 	}
-T_E}
+}
 
 //=============================================================================
-// ¸ù¾Ýµ±Ç°º½º£¾­ÑéÖµ£¬·µ»ØÉý¼¶Êý
+// ï¿½ï¿½ï¿½Ýµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //=============================================================================
 void CFightAble::CountSailLevel()
-{T_B
+{
 	if (!IsLiveing())
 		return;
 	Long	lOldLevel, lCurLevel;
@@ -1895,7 +1896,7 @@ void CFightAble::CountSailLevel()
 		pCLvRec = GetSailLvRecordInfo(lCurLevel + 1);
 		if (!pCLvRec)
 		{
-			//m_CLog.Log("******ÕÒ²»µ½º½º£µÈ¼¶%dµÄ¼ÍÂ¼\n");
+			//m_CLog.Log("******ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½%dï¿½Ä¼ï¿½Â¼\n");
 			m_CLog.Log("******not find navigate grade %d note\n");
 			break;
 		}
@@ -1909,19 +1910,19 @@ void CFightAble::CountSailLevel()
 			{
 				setAttr(ATTR_NLV_SAILEXP, pNLvRec->ulExp);
 			}
-			g_CParser.DoString("Saillv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // Éý¼¶¼ÆËã£¨ÅäÖÃ»ù±¾ÊôÐÔ£¬ÉèÖÃÊôÐÔµã£©
+			g_CParser.DoString("Saillv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµã£©
 			OnSailLvUp( (USHORT)lCurLevel );
 		}
 		else
 			break;
 	}
-T_E}
+}
 
 //=============================================================================
-// ¸ù¾Ýµ±Ç°Éú»î¾­ÑéÖµ£¬·µ»ØÉý¼¶Êý
+// ï¿½ï¿½ï¿½Ýµï¿½Ç°ï¿½ï¿½ï¿½î¾­ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //=============================================================================
 void CFightAble::CountLifeLevel()
-{T_B
+{
 	if (!IsLiveing())
 		return;
 	Long	lOldLevel, lCurLevel;
@@ -1934,7 +1935,7 @@ void CFightAble::CountLifeLevel()
 		pCLvRec = GetLifeLvRecordInfo(lCurLevel + 1);
 		if (!pCLvRec)
 		{
-			//m_CLog.Log("******ÕÒ²»µ½Éú»îµÈ¼¶%dµÄ¼ÍÂ¼\n");
+			//m_CLog.Log("******ï¿½Ò²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½%dï¿½Ä¼ï¿½Â¼\n");
 			m_CLog.Log("******not find live grade %d note\n");
 			break;
 		}
@@ -1948,13 +1949,13 @@ void CFightAble::CountLifeLevel()
 			{
 				setAttr(ATTR_NLV_LIFEEXP, pNLvRec->ulExp);
 			}
-			g_CParser.DoString("Lifelv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // Éý¼¶¼ÆËã£¨ÅäÖÃ»ù±¾ÊôÐÔ£¬ÉèÖÃÊôÐÔµã£©
+			g_CParser.DoString("Lifelv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµã£©
 			OnLifeLvUp( (USHORT)lCurLevel );
 		}
 		else
 			break;
 	}
-T_E}
+}
 
 Long CalculateLevelByExp(Long lretLv, uLong t) /* by value */
 {
@@ -1974,7 +1975,7 @@ Long CalculateLevelByExp(Long lretLv, uLong t) /* by value */
 
 void CFightAble::AddExp(dbc::uLong ulAddExp)
 {
-	//g_CParser.DoString("EightyLv_ExpAdd", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER_UNSIGNED, 1, ulAddExp, DOSTRING_PARAM_END); // Éý¼¶¼ÆËã£¨ÅäÖÃ»ù±¾ÊôÐÔ£¬ÉèÖÃÊôÐÔµã£©
+	//g_CParser.DoString("EightyLv_ExpAdd", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER_UNSIGNED, 1, ulAddExp, DOSTRING_PARAM_END); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ã£¨ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôµã£©
 	if (!this || !GetPlayer())
 		return;
 
@@ -2008,17 +2009,16 @@ void CFightAble::AddExp(dbc::uLong ulAddExp)
 }
 
 bool CFightAble::AddExpAndNotic(dbc::Long lAddExp, Short sNotiType)
-{T_B
+{
 	m_CChaAttr.ResetChangeFlag();
 	AddExp(lAddExp);
 	SynAttr(sNotiType);
 
 	return true;
-T_E}
+}
 
 void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 {
-	T_B
 		Long i = 0;
 	for( ; i < defCHA_INIT_ITEM_NUM; i++ )
 	{
@@ -2026,24 +2026,24 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 			break;
 	}
 
-	// Ã»ÓÐÎïÆ·¿ÉÒÔ±©
+	// Ã»ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Ô±ï¿½
 	if( i < 1 ) return;
 
 	g_chItemFall[0] = 0;
-	// ±¬ÁÏ½Å±¾µÄ²ÎÊý£º¹¥»÷·½µÈ¼¶£¬ÊÜ»÷·½µÈ¼¶£¬¹¥»÷·½MF£¬ÊÜ»÷·½MF£¬¿É±¬ÎïÆ·µÄ¸öÊý£¬defCHA_INIT_ITEM_NUM¸öÎïÆ·µÄ±¬³ö¼¸ÂÊ¡£¸Ã½Å±¾µ÷ÓÃCº¯ÊýSetItemFall()
+	// ï¿½ï¿½ï¿½Ï½Å±ï¿½ï¿½Ä²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½ï¿½È¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½MFï¿½ï¿½ï¿½Ü»ï¿½ï¿½ï¿½MFï¿½ï¿½ï¿½É±ï¿½ï¿½ï¿½Æ·ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½defCHA_INIT_ITEM_NUMï¿½ï¿½ï¿½ï¿½Æ·ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¡ï¿½ï¿½Ã½Å±ï¿½ï¿½ï¿½ï¿½ï¿½Cï¿½ï¿½ï¿½ï¿½SetItemFall()
 	lua_getglobal( g_pLuaState, "Check_SpawnResource" );
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
 		lua_pop(g_pLuaState, 1);
-		//LG( "Éú»î¼¼ÄÜ±¬ÁÏ", "±©×ÊÔ´º¯ÊýCheck_SpawnResourceÎÞÐ§£¡" );
-		// printf( "±©×ÊÔ´º¯ÊýCheck_SpawnResourceÎÞÐ§£¡" );
+		//LG( "ï¿½ï¿½ï¿½î¼¼ï¿½Ü±ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Check_SpawnResourceï¿½ï¿½Ð§ï¿½ï¿½" );
+		// printf( "ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Check_SpawnResourceï¿½ï¿½Ð§ï¿½ï¿½" );
 		return;
 	}
 
 	lua_pushlightuserdata( g_pLuaState, pCAtk);
 	lua_pushlightuserdata( g_pLuaState, this->IsCharacter() );
 	lua_pushnumber( g_pLuaState, lSkillLv );
-	lua_pushnumber( g_pLuaState, i ); // ¼¸¸öÓÐÐ§ÎïÆ·²ÎÊý
+	lua_pushnumber( g_pLuaState, i ); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð§ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½
 	for( int n = 0; n < i; n++ )
 	{
 		lua_pushnumber( g_pLuaState, m_pCChaRecord->lItem[n][1] );
@@ -2052,8 +2052,8 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	int nStatus = lua_pcall( g_pLuaState, 4 + i, 0, 0 );
 	if( nStatus )
 	{
-		//LG( "Éú»î¼¼ÄÜ±¬ÁÏ", "±©×ÊÔ´º¯ÊýCheck_SpawnResourceµ÷ÓÃÊ§°Ü£¡" );
-		// printf( "±©×ÊÔ´º¯ÊýCheck_SpawnResourceµ÷ÓÃÊ§°Ü£¡" );
+		//LG( "ï¿½ï¿½ï¿½î¼¼ï¿½Ü±ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Check_SpawnResourceï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½" );
+		// printf( "ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½Check_SpawnResourceï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½" );
 		lua_callalert(g_pLuaState, nStatus);
 		lua_settop(g_pLuaState, 0);
 		return;
@@ -2063,12 +2063,12 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	CItem	*pCItem;
 	for (int i = 0; i < g_chItemFall[0]; i++)
 	{
-		//LG("Éú»î¼¼ÄÜ±¬ÁÏ", "\tµôÂäµÄÎïÆ·±àºÅ£º%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
-		// printf( "SpawnResource:µôÂäµÄÎïÆ·±àºÅ£º%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
-		// ÊµÀý»¯
+		//LG("ï¿½ï¿½ï¿½î¼¼ï¿½Ü±ï¿½ï¿½ï¿½", "\tï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½Å£ï¿½%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
+		// printf( "SpawnResource:ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½Å£ï¿½%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
+		// Êµï¿½ï¿½ï¿½ï¿½
 		SItemGrid GridContent((Short)m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0], 1);
 		ItemInstance(enumITEM_INST_MONS, &GridContent);
-		// ³öÉú
+		// ï¿½ï¿½ï¿½ï¿½
 		CCharacter	*pCCtrlCha = IsCharacter()->GetPlyCtrlCha(), *pCAtkMainCha = pCAtk->GetPlyMainCha();
 		Long	lPosX, lPosY;
 		pCCtrlCha->GetTrowItemPos(&lPosX, &lPosY);
@@ -2076,7 +2076,7 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 		if (pCItem)
 			pCItem->SetProtType(enumITEM_PROT_TEAM);
 	}
-T_E}
+}
 
 bool CFightAble::GetTrowItemPos(Long *plPosX, Long *plPosY)
 {
@@ -2086,7 +2086,7 @@ bool CFightAble::GetTrowItemPos(Long *plPosX, Long *plPosY)
 	if (!pCMap)
 		return false;
 
-	// ¼ì²âÊÇ·ñºÏ·¨Î»ÖÃ
+	// ï¿½ï¿½ï¿½ï¿½Ç·ï¿½Ï·ï¿½Î»ï¿½ï¿½
 	Pos = pCCtrlCha->GetShape().centre;
 	Pos.move(rand() % 360, 150);
 	if (!pCMap->IsValidPos(Pos.x, Pos.y))
@@ -2115,7 +2115,6 @@ bool CFightAble::GetTrowItemPos(Long *plPosX, Long *plPosY)
 
 void CFightAble::ItemCount(CCharacter* pAtk)
 {
-	T_B
 		CCharacter* pCItemHCha = pAtk;
 	if (m_pCItemHostObj)
 		pCItemHCha = m_pCItemHostObj->IsCharacter();
@@ -2123,7 +2122,7 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	CCharacter* pThis = this->IsCharacter();
 	CCharacter* pCCtrlCha = pThis->GetPlyCtrlCha(), * pCItemHMainCha = pCItemHCha->GetPlyMainCha();
 
-	if (pThis->IsBoat() && pThis->IsPlayerCha()) // Íæ¼Ò´¬£¬Ôò±¬³ö´¬²ÕËùÓÐµÄÎïÆ·
+	if (pThis->IsBoat() && pThis->IsPlayerCha()) // ï¿½ï¿½Ò´ï¿½ï¿½ï¿½ï¿½ò±¬³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðµï¿½ï¿½ï¿½Æ·
 	{
 		//Short	sItemNum = pThis->m_CKitbag.GetUseGridNum();
 		//SItemGrid	*pCThrow;
@@ -2146,11 +2145,11 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	Long	lItemNum;
 	const char* szItemScript = "Check_Baoliao";
 
-	// ÆÕÍ¨ÎïÆ·±¬ÁÏ
+	// ï¿½ï¿½Í¨ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½
 	g_chItemFall[0] = 0;
 	MPTimer t; t.Begin();
 	lua_getglobal(g_pLuaState, szItemScript);
-	if (!lua_isfunction(g_pLuaState, -1)) // ²»ÊÇº¯ÊýÃû
+	if (!lua_isfunction(g_pLuaState, -1)) // ï¿½ï¿½ï¿½Çºï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		lua_pop(g_pLuaState, 1);
 		return;
@@ -2181,17 +2180,17 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	lua_settop(g_pLuaState, 0);
 	DWORD dwEndTime = t.End();
 	if (dwEndTime > 20)
-		//LG("script_time", "½Å±¾[%s]»¨·ÑÊ±¼ä¹ý³¤ time = %d\n", szItemScript, dwEndTime);
+		//LG("script_time", "ï¿½Å±ï¿½[%s]ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ time = %d\n", szItemScript, dwEndTime);
 		LG("script_time", "script [%s]cost time too long, time = %d\n", szItemScript, dwEndTime);
 
 	Long	lFallNum = g_chItemFall[0];
 	if (lFallNum > lItemNum)
-		//LG("±¬ÁÏ´íÎó", "½ÇÉ« %s ±¬ÁÏÎïÆ·¸öÊý(%u)´íÎó", GetName(), lFallNum);
+		//LG("ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½", "ï¿½ï¿½É« %s ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½(%u)ï¿½ï¿½ï¿½ï¿½", GetName(), lFallNum);
 		LG("fall error", "character %s fall res number (%u) error", GetName(), lFallNum);
 	else
 	{
-		//m_CLog.Log("±¬ÁÏ¸öÊý£º%d\n", lFallNum);
-		m_CLog.Log("fall number£º%d\n", lFallNum);
+		//m_CLog.Log("ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½%d\n", lFallNum);
+		m_CLog.Log("fall numberï¿½ï¿½%d\n", lFallNum);
 		for (int i = 0; i < lFallNum; i++)
 			lItem[i] = g_chItemFall[i + 1];
 		for (int i = 0; i < lFallNum; i++)
@@ -2202,12 +2201,12 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 			if (itemID == 453)
 				continue;
 
-			//m_CLog.Log("ÎïÆ·±àºÅ£º%d\n", m_pCChaRecord->lItem[lItem[i] - 1][0]);
-			m_CLog.Log("res number£º%d\n", m_pCChaRecord->lItem[lItem[i] - 1][0]);
-			// ÊµÀý»¯
+			//m_CLog.Log("ï¿½ï¿½Æ·ï¿½ï¿½Å£ï¿½%d\n", m_pCChaRecord->lItem[lItem[i] - 1][0]);
+			m_CLog.Log("res numberï¿½ï¿½%d\n", m_pCChaRecord->lItem[lItem[i] - 1][0]);
+			// Êµï¿½ï¿½ï¿½ï¿½
 			SItemGrid GridContent((Short)m_pCChaRecord->lItem[lItem[i] - 1][0], 1);
 			ItemInstance(enumITEM_INST_MONS, &GridContent);
-			// ³öÉú
+			// ï¿½ï¿½ï¿½ï¿½
 			Long	lPosX, lPosY;
 			pCCtrlCha->GetTrowItemPos(&lPosX, &lPosY);
 			pCItem = pCCtrlCha->GetSubMap()->ItemSpawn(&GridContent, lPosX, lPosY, enumITEM_APPE_MONS, pCCtrlCha->GetID(), pCItemHMainCha->GetID(), pCItemHMainCha->GetHandle());
@@ -2216,11 +2215,11 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 		}
 	}
 
-	// ÈÎÎñÎïÆ·±¬ÁÏ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½
 	g_chItemFall[0] = 0;
 	t.Begin();
 	lua_getglobal(g_pLuaState, szItemScript);
-	if (!lua_isfunction(g_pLuaState, -1)) // ²»ÊÇº¯ÊýÃû
+	if (!lua_isfunction(g_pLuaState, -1)) // ï¿½ï¿½ï¿½Çºï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		lua_pop(g_pLuaState, 1);
 		return;
@@ -2255,38 +2254,36 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	lua_settop(g_pLuaState, 0);
 	dwEndTime = t.End();
 	if (dwEndTime > 20)
-		//LG("script_time", "½Å±¾[%s]»¨·ÑÊ±¼ä¹ý³¤ time = %d\n", szItemScript, dwEndTime);
+		//LG("script_time", "ï¿½Å±ï¿½[%s]ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ time = %d\n", szItemScript, dwEndTime);
 		LG("script_time", "script[%s]cost time too long, time = %d\n", szItemScript, dwEndTime);
 
 	lFallNum = g_chItemFall[0];
 	if (lFallNum > lItemNum)
-		//LG("±¬ÁÏ´íÎó", "½ÇÉ« %s ±¬ÁÏÈÎÎñÎïÆ·¸öÊý(%u)´íÎó", GetName(), lFallNum);
+		//LG("ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½", "ï¿½ï¿½É« %s ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½ï¿½(%u)ï¿½ï¿½ï¿½ï¿½", GetName(), lFallNum);
 		LG("fall error", "roll %s fall task res number (%u)error", GetName(), lFallNum);
 	else
 	{
-		//m_CLog.Log("ÈÎÎñÎïÆ·±¬ÁÏ¸öÊý£º%d\n", lFallNum);
-		m_CLog.Log("task res fall number£º%d\n", lFallNum);
+		//m_CLog.Log("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Ï¸ï¿½ï¿½ï¿½ï¿½ï¿½%d\n", lFallNum);
+		m_CLog.Log("task res fall numberï¿½ï¿½%d\n", lFallNum);
 		for (int i = 0; i < lFallNum; i++)
 			lItem[i] = g_chItemFall[i + 1];
 		for (int i = 0; i < lFallNum; i++)
 		{
-			//m_CLog.Log("ÎïÆ·±àºÅ£º%d\n", m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0]);
-			m_CLog.Log("res number£º%d\n", m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0]);
-			// ÊµÀý»¯
+			//m_CLog.Log("ï¿½ï¿½Æ·ï¿½ï¿½Å£ï¿½%d\n", m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0]);
+			m_CLog.Log("res numberï¿½ï¿½%d\n", m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0]);
+			// Êµï¿½ï¿½ï¿½ï¿½
 			SItemGrid GridContent((Short)m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0], 1);
 			ItemInstance(enumITEM_INST_MONS, &GridContent);
-			// ³öÉú
+			// ï¿½ï¿½ï¿½ï¿½
 			Long	lPosX, lPosY;
 			pCCtrlCha->GetTrowItemPos(&lPosX, &lPosY);
 			pCItem = pCCtrlCha->GetSubMap()->ItemSpawn(&GridContent, lPosX, lPosY, enumITEM_APPE_MONS, pCCtrlCha->GetID(), pCItemHMainCha->GetID(), pCItemHMainCha->GetHandle(), -1);
 		}
 	}
-	T_E
 }
 
 void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTradable, LONG expiration)
 {
-	T_B
 		if (!pGridContent)
 			return;
 	CItemRecord* pCItemRec;
@@ -2294,7 +2291,7 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 	if (!pCItemRec)
 		return;
 
-	//char szItemInstLog[256] = "ÊµÀý»¯";
+	//char szItemInstLog[256] = "Êµï¿½ï¿½ï¿½ï¿½";
 
 	char szItemInstLog[256];
 	strncpy(szItemInstLog, RES_STRING(GM_FIGHTABLE_CPP_00003), 256 - 1);
@@ -2329,39 +2326,39 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 			sMax = g_pCItemAttr[pGridContent->sID].GetAttr(nAttrID, true);
 			if (nAttrID == ITEMATTR_MAXURE)
 			{
-				if (nAttr < 0 || nAttr > 100) // ´íÎóµÄ±ÈÀý
+				if (nAttr < 0 || nAttr > 100) // ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½
 				{
-					/*LG("µÀ¾ßÊµÀý»¯´íÎó", "ÊµÀý»¯µÀ¾ß£º±àºÅ %u£¬Ãû³Æ %s£¬ÀàÐÍ %u£¬ÐèÇóµÈ¼¶ %u£¬ÊµÀý»¯ÀàÐÍ %u¡£ÊôÐÔ´íÎó£ºÊôÐÔºÅ %u£¬Öµ %d¡£\n",
+					/*LG("ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", "Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ %uï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ %uï¿½ï¿½Öµ %dï¿½ï¿½\n",
 						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);*/
-					LG("item instantiation error", "instantiation itme£ºnumber %u£¬Ãûname %s£¬type %u£¬requirement grade %u£¬instantiation type %u¡£attribute error£ºattribute number %u£¬value %d¡£\n",
+					LG("item instantiation error", "instantiation itmeï¿½ï¿½number %uï¿½ï¿½ï¿½ï¿½name %sï¿½ï¿½type %uï¿½ï¿½requirement grade %uï¿½ï¿½instantiation type %uï¿½ï¿½attribute errorï¿½ï¿½attribute number %uï¿½ï¿½value %dï¿½ï¿½\n",
 						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);
 					continue;
 				}
 				pGridContent->sEndure[1] = sMin + (sMax - sMin) * nAttr / 100;
 				pGridContent->sEndure[0] = pGridContent->sEndure[1];
 			}
-			else if (nAttrID == ITEMATTR_MAXENERGY) // ÄÜÁ¿ÎªÇ§·Ö±È
+			else if (nAttrID == ITEMATTR_MAXENERGY) // ï¿½ï¿½ï¿½ï¿½ÎªÇ§ï¿½Ö±ï¿½
 			{
-				if (nAttr < 0 || nAttr > 1000) // ´íÎóµÄ±ÈÀý
+				if (nAttr < 0 || nAttr > 1000) // ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½
 				{
-					/*LG("µÀ¾ßÊµÀý»¯´íÎó", "ÊµÀý»¯µÀ¾ß£º±àºÅ %u£¬Ãû³Æ %s£¬ÀàÐÍ %u£¬ÐèÇóµÈ¼¶ %u£¬ÊµÀý»¯ÀàÐÍ %u¡£ÊôÐÔ´íÎó£ºÊôÐÔºÅ %u£¬Öµ %d¡£\n",
+					/*LG("ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", "Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ %uï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ %uï¿½ï¿½Öµ %dï¿½ï¿½\n",
 						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);*/
-					LG("item instantiation error", "instantiation itme£ºnumber %u£¬Ãûname %s£¬type %u£¬requirement grade %u£¬instantiation type %u¡£attribute error£ºattribute number %u£¬value %d¡£\n",
+					LG("item instantiation error", "instantiation itmeï¿½ï¿½number %uï¿½ï¿½ï¿½ï¿½name %sï¿½ï¿½type %uï¿½ï¿½requirement grade %uï¿½ï¿½instantiation type %uï¿½ï¿½attribute errorï¿½ï¿½attribute number %uï¿½ï¿½value %dï¿½ï¿½\n",
 						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);
 					continue;
 				}
-				pGridContent->sEnergy[1] = sMin + (sMax - sMin) * nAttr / 100; // ÕûÀíºóÐèÒª¸Ä³É³ýÒÔ1000
+				pGridContent->sEnergy[1] = sMin + (sMax - sMin) * nAttr / 100; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½Ä³É³ï¿½ï¿½ï¿½1000
 				pGridContent->sEnergy[0] = pGridContent->sEnergy[1];
 			}
 			else
 			{
 				if (nAttrPos < defITEM_INSTANCE_ATTR_NUM)
 				{
-					if (nAttr < 0 || nAttr > 100) // ´íÎóµÄ±ÈÀý
+					if (nAttr < 0 || nAttr > 100) // ï¿½ï¿½ï¿½ï¿½Ä±ï¿½ï¿½ï¿½
 					{
-						/*LG("µÀ¾ßÊµÀý»¯´íÎó", "ÊµÀý»¯µÀ¾ß£º±àºÅ %u£¬Ãû³Æ %s£¬ÀàÐÍ %u£¬ÐèÇóµÈ¼¶ %u£¬ÊµÀý»¯ÀàÐÍ %u¡£ÊôÐÔ´íÎó£ºÊôÐÔºÅ %u£¬Öµ %d¡£\n",
+						/*LG("ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½", "Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %sï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¼ï¿½ %uï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ %uï¿½ï¿½ï¿½ï¿½ï¿½Ô´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ôºï¿½ %uï¿½ï¿½Öµ %dï¿½ï¿½\n",
 						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);*/
-						LG("item instantiation error", "instantiation itme£ºnumber %u£¬Ãûname %s£¬type %u£¬requirement grade %u£¬instantiation type %u¡£attribute error£ºattribute number %u£¬value %d¡£\n",
+						LG("item instantiation error", "instantiation itmeï¿½ï¿½number %uï¿½ï¿½ï¿½ï¿½name %sï¿½ï¿½type %uï¿½ï¿½requirement grade %uï¿½ï¿½instantiation type %uï¿½ï¿½attribute errorï¿½ï¿½attribute number %uï¿½ï¿½value %dï¿½ï¿½\n",
 							pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);
 						continue;
 					}
@@ -2380,10 +2377,10 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 
 ItemInstanceEnd:
 	return;
-T_E}
+}
 
 void CFightAble::OnSkillState(DWORD dwCurTick)
-{T_B
+{
 	if (!IsLiveing())
 		return;
 
@@ -2428,7 +2425,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 			}
 
 			lOldHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
-			if (pSStateUnit->lOnTick > 0) // ÓÐÏÞ³ÖÐøÊ±¼ä
+			if (pSStateUnit->lOnTick > 0) // ï¿½ï¿½ï¿½Þ³ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 			{
 				if (dwCurTick - pSStateUnit->ulStartTick > (unsigned long)pSStateUnit->lOnTick * 1000)
 				{
@@ -2436,7 +2433,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 				}
 				else
 				{
-					if (pCSStateRec->sFrequency > 0) // Ê±¼äÂö³å´¥·¢
+					if (pCSStateRec->sFrequency > 0) // Ê±ï¿½ï¿½ï¿½ï¿½ï¿½å´¥ï¿½ï¿½
 					{
 						sExecTime = Short(dwCurTick - pSStateUnit->ulLastTick) / (pCSStateRec->sFrequency * 1000);
 						for (int j = 0; j < sExecTime; j++)
@@ -2445,15 +2442,15 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 						}
 						pSStateUnit->ulLastTick += pCSStateRec->sFrequency * sExecTime * 1000;
 					}
-					else if (pCSStateRec->sFrequency < 0) // Ö»´¥·¢Ò»´Î£¨ÔÚÌí¼ÓµÄÊ±ºòÒÑ¾­´¥·¢¹ý£©
+					else if (pCSStateRec->sFrequency < 0) // Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ê±ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 					{
 						pSStateUnit->ulLastTick = dwCurTick;
 					}
 				}
 			}
-			else if (pSStateUnit->lOnTick < 0) // ÎÞÏÞ³ÖÐøÊ±¼ä
+			else if (pSStateUnit->lOnTick < 0) // ï¿½ï¿½ï¿½Þ³ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 			{
-				if (pCSStateRec->sFrequency > 0) // Ê±¼äÂö³å´¥·¢
+				if (pCSStateRec->sFrequency > 0) // Ê±ï¿½ï¿½ï¿½ï¿½ï¿½å´¥ï¿½ï¿½
 				{
 					sExecTime = Short(dwCurTick - pSStateUnit->ulLastTick) / (pCSStateRec->sFrequency * 1000);
 					for (int j = 0; j < sExecTime; j++)
@@ -2462,7 +2459,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 					}
 					pSStateUnit->ulLastTick += pCSStateRec->sFrequency * sExecTime * 1000;
 				}
-				else if (pCSStateRec->sFrequency < 0) // Ö»´¥·¢Ò»´Î£¨ÔÚÌí¼ÓµÄÊ±ºòÒÑ¾­´¥·¢¹ý£©
+				else if (pCSStateRec->sFrequency < 0) // Ö»ï¿½ï¿½ï¿½ï¿½Ò»ï¿½Î£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Óµï¿½Ê±ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				{
 					pSStateUnit->ulLastTick = dwCurTick;
 				}
@@ -2471,7 +2468,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 			BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, pSStateUnit->chEffType);
 			if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) bIsDie = true;
 			else bIsDie = false;
-			if (bIsDie) // ËÀÍö
+			if (bIsDie) // ï¿½ï¿½ï¿½ï¿½
 			{
 				SetDie(pCCha);
 			}
@@ -2486,16 +2483,16 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 			{
 				pSrcMainC->SynAttr(enumATTRSYN_ATTACK);
 			}
-			if (bIsDie) // ËÀÍö
+			if (bIsDie) // ï¿½ï¿½ï¿½ï¿½
 			{
-				//m_CLog.Log("!!!ËÀÍö\tTick %u\n", GetTickCount());
+				//m_CLog.Log("!!!ï¿½ï¿½ï¿½ï¿½\tTick %u\n", GetTickCount());
 			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 				Die();
 				break;
 			}
 		}
 		// log
-		//m_CLog.Log("$$$ÓÉ×´Ì¬Òý·¢µÄÊôÐÔÍ¬²½\n");
+		//m_CLog.Log("$$$ï¿½ï¿½×´Ì¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¬ï¿½ï¿½\n");
 		m_CLog.Log("$$$attribute in-phase cause by state\n");
 		//
 		SynSkillStateToEyeshot();
@@ -2503,7 +2500,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 		IsCharacter()->GetPlyMainCha()->SynLook(enumSYN_LOOK_CHANGE);
 		RectifyAttr();
 	}
-T_E}
+}
 
 void CFightAble::RemoveOtherSkillState()
 {
@@ -2516,7 +2513,7 @@ void CFightAble::RemoveOtherSkillState()
 		m_CSkillState.BeginGetState();
 		while (pSStateUnit = m_CSkillState.GetNextState())
 		{
-			if (pSStateUnit->lOnTick > 0) // ÓÐÏÞ³ÖÐøÊ±¼ä
+			if (pSStateUnit->lOnTick > 0) // ï¿½ï¿½ï¿½Þ³ï¿½ï¿½ï¿½Ê±ï¿½ï¿½
 			{
 				DelSkillState(pSStateUnit->GetStateID(), false);
 			}
@@ -2541,9 +2538,9 @@ void CFightAble::RemoveAllSkillState()
 	}
 }
 
-// ¸ù¾Ý¼¼ÄÜÀ¸ÖÐ¼¼ÄÜµÄµÈ¼¶£¬¼ÆËã³öÓëÆäÏà¹ØµÄÏî
+// ï¿½ï¿½ï¿½Ý¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ÜµÄµÈ¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½ï¿½ï¿½
 void CFightAble::EnrichSkillBag(bool bActive)
-{T_B
+{
 	SSkillGrid	SSkillCont;
 	if (bActive)
 		SSkillCont.chState = enumSUSTATE_ACTIVE;
@@ -2558,19 +2555,19 @@ void CFightAble::EnrichSkillBag(bool bActive)
 			m_CSkillBag.Add(&SSkillCont);
 		}
 	}
-T_E}
+}
 
 //=============================================================================
 CTimeSkillMgr::CTimeSkillMgr(unsigned short usFreq)
-{T_B
+{
 	m_ulTick = GetTickCount();
 	m_usFreq = usFreq;
 	m_pSExecQueue = NULL;
 	m_pSFreeQueue = NULL;
-T_E}
+}
 
 CTimeSkillMgr::~CTimeSkillMgr()
-{T_B
+{
 	SMgrUnit	*pSCarrier;
 
 	pSCarrier = m_pSExecQueue;
@@ -2588,28 +2585,28 @@ CTimeSkillMgr::~CTimeSkillMgr()
 		delete pSCarrier;
 		pSCarrier = m_pSFreeQueue;
 	}
-T_E}
+}
 
 void CTimeSkillMgr::Add(SFireUnit *pSFireSrc, uLong ulLeftTick, SubMap *pCMap, Point *pStarget, Long *plRangeBParam)
-{T_B
+{
 	SMgrUnit	*pSCarrier = NULL;
 
-	if (m_pSFreeQueue) // ÓÐ¿ÕÏÐµÄÔØÌå
+	if (m_pSFreeQueue) // ï¿½Ð¿ï¿½ï¿½Ðµï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		pSCarrier = m_pSFreeQueue;
 		m_pSFreeQueue = pSCarrier->pSNext;
 	}
-	else // ·ÖÅäÐÂµÄÔØÌå
+	else // ï¿½ï¿½ï¿½ï¿½ï¿½Âµï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		pSCarrier = new SMgrUnit;
 		if (!pSCarrier)
 		{
-			//THROW_EXCP(excpMem, "¼ÆÊ±¼¼ÄÜ¹ÜÀí¶ÔÏó¹¹Ôì¹ý³ÌÖÐ·ÖÅäÄÚ´æÊ§°Ü");
+			//THROW_EXCP(excpMem, "ï¿½ï¿½Ê±ï¿½ï¿½ï¿½Ü¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð·ï¿½ï¿½ï¿½ï¿½Ú´ï¿½Ê§ï¿½ï¿½");
 			THROW_EXCP(excpMem, RES_STRING(GM_FIGHTALBE_CPP_00004));
 		}
 	}
 
-	// ÉèÖÃÊý¾Ý²¢½«Ö®¼ÓÈëÖ´ÐÐ¶ÓÁÐ
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½Ö´ï¿½Ð¶ï¿½ï¿½ï¿½
 	pSCarrier->SFireSrc = *pSFireSrc;
 	pSCarrier->ulLeftTick = ulLeftTick;
 	pSCarrier->pCMap = pCMap;
@@ -2619,10 +2616,10 @@ void CTimeSkillMgr::Add(SFireUnit *pSFireSrc, uLong ulLeftTick, SubMap *pCMap, P
 
 	pSCarrier->pSNext = m_pSExecQueue;
 	m_pSExecQueue = pSCarrier;
-T_E}
+}
 
 void CTimeSkillMgr::Run(unsigned long ulCurTick)
-{T_B
+{
 	unsigned long	ulTickDist = ulCurTick - m_ulTick;
 
 	if (ulTickDist < m_usFreq)
@@ -2641,10 +2638,10 @@ void CTimeSkillMgr::Run(unsigned long ulCurTick)
 			pSCarrier = pSCarrier->pSNext;
 
 		}
-		else // ÔØÌåµÄ¼ÆÊ±Íê³É
+		else // ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½Ê±ï¿½ï¿½ï¿½
 		{
 			ExecTimeSkill(pSCarrier);
-			// ´ÓÖ´ÐÐ¶ÓÁÐÖÐÍÑÁ´
+			// ï¿½ï¿½Ö´ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if (pSCarrier == m_pSExecQueue)
 			{
 				m_pSExecQueue = pSCarrier->pSNext;
@@ -2666,14 +2663,14 @@ void CTimeSkillMgr::Run(unsigned long ulCurTick)
 			}
 		}
 	}
-T_E}
+}
 
 void CTimeSkillMgr::ExecTimeSkill(SMgrUnit *pFireInfo)
-{T_B
-	// ËÑË÷·ûºÏÌõ¼þµÄÄ¿±ê
+{
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½
 	CCharacter	*pSrcCha;
 	Entity	*pSrcEnt = g_pGameApp->IsLiveingEntity(pFireInfo->SFireSrc.ulID, pFireInfo->SFireSrc.pCFightSrc->GetHandle());
-	if (!pSrcEnt || !(pSrcCha = pSrcEnt->IsCharacter())) // ¼¼ÄÜÔ´ÒÑ¾­ÎÞÐ§
+	if (!pSrcEnt || !(pSrcCha = pSrcEnt->IsCharacter())) // ï¿½ï¿½ï¿½ï¿½Ô´ï¿½Ñ¾ï¿½ï¿½ï¿½Ð§
 		return;
 
 	g_ulCurID = pSrcCha->GetID();
@@ -2684,5 +2681,56 @@ void CTimeSkillMgr::ExecTimeSkill(SMgrUnit *pFireInfo)
 
 	g_ulCurID = defINVALID_CHA_ID;
 	g_lCurHandle = defINVALID_CHA_HANDLE;
-T_E}
+}
+
+// =====================================================================
+//  Fill* â€” Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ‚Ð¸Ð¿Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€ (CommandMessages.h)
+// =====================================================================
+
+void CFightAble::FillSkillState(net::msg::ChaSkillStateInfo &s)
+{
+	s.currentTime = GetTickCount();
+	s.states.clear();
+
+	SSkillStateUnit *pSStateUnit;
+	m_CSkillState.BeginGetState();
+	while (pSStateUnit = m_CSkillState.GetNextState())
+	{
+		net::msg::SkillStateEntry e;
+		e.stateId = pSStateUnit->GetStateID();
+		e.stateLv = pSStateUnit->GetStateLv();
+		if (pSStateUnit->lOnTick < 1)
+		{
+			e.duration = 0;
+			e.startTime = 0;
+		}
+		else
+		{
+			e.duration = pSStateUnit->lOnTick;
+			e.startTime = pSStateUnit->ulStartTick;
+		}
+		s.states.push_back(e);
+	}
+}
+
+void CFightAble::FillAttr(net::msg::ChaAttrInfo &a, Short sSynType)
+{
+	a.synType = sSynType;
+	a.attrs.clear();
+
+	short sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
+	if (sAttrChangeNum > 0)
+	{
+		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
+		{
+			if (m_CChaAttr.GetChangeBitFlag(i))
+			{
+				net::msg::AttrEntry e;
+				e.attrId = i;
+				e.attrVal = m_CChaAttr.GetAttr(i);
+				a.attrs.push_back(e);
+			}
+		}
+	}
+}
 

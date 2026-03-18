@@ -63,9 +63,6 @@
     <ClCompile Include="ErrorHandler.cpp">
       <Filter>Header Files\exception</Filter>
     </ClCompile>
-    <ClCompile Include="se_translator.cpp">
-      <Filter>Header Files\exception</Filter>
-    </ClCompile>
     <ClCompile Include="Stacktrace.cpp">
       <Filter>Header Files\exception</Filter>
     </ClCompile>
@@ -149,19 +146,10 @@
     <ClInclude Include="..\include\ReturnValues.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\se_translator.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\Stacktrace.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
     <ClInclude Include="..\include\sym_engine.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\TryUtil.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\unhandled_report.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
     <ClInclude Include="..\include\AttribData.h">

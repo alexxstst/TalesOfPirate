@@ -1,7 +1,6 @@
 #pragma once
 
 #include "DBCCommon.h"
-#include "dstring.h"
 #include "RunBiDirectChain.h"
 
 #include <iostream>
@@ -31,9 +30,9 @@ private:
 	void Free(){}
 	void Open(bool bakmode =true);
 
-	dstring				m_LogFileName;
-	dstring				m_DirName;
-	dstring				m_DirRoot;
+	std::string				m_LogFileName;
+	std::string				m_DirName;
+	std::string				m_DirRoot;
 	std::recursive_mutex				m_mtxline;
 	bool	volatile	m_line;
 	LogLine			*	m_logline;

@@ -30,11 +30,11 @@ void CActionState::Cancel()
 	if( GetActor()->GetCha() == g_pGameApp->GetCurScene()->GetMainCha() )	
 	{
 		static char buf[256] = { 0 };
-		sprintf( buf, "state-%s", GetActor()->GetCha()->getName() );
+		sprintf( buf, "state-%s", GetActor()->GetCha()->getName().c_str() );
 
 		if( _pParent )
 			LG( buf, "  \t%s-cancel, Tick:%d\n", GetExplain(), GetTickCount() );
-		else 
+		else
 			LG( buf, "  %s-cancel, Tick:%d\n", GetExplain(), GetTickCount() );
 	}
 #endif
@@ -48,17 +48,17 @@ void CActionState::FrameMove()
 void CActionState::End()
 {
 	if( _IsInit )
-		_End();				// Ö´ÐÐÊÕÎ²¹¤×÷,ÈçÔÙ´Î²úÉúÒ»¸ö¹¥»÷µÈ
+		_End();				// Ö´ï¿½ï¿½ï¿½ï¿½Î²ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Ù´Î²ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 #ifdef _STATE_DEBUG
 	if( GetActor()->GetCha()->IsMainCha() )	
 	{
 		static char buf[256] = { 0 };
-		sprintf( buf, "state-%s", GetActor()->GetCha()->getName() );
+		sprintf( buf, "state-%s", GetActor()->GetCha()->getName().c_str() );
 
 		if( _pParent )
 			LG( buf, "\t%s-end, Tick:%d\n", GetExplain(), GetTickCount() );
-		else 
+		else
 			LG( buf, "%s-end, Tick:%d\n\n", GetExplain(), GetTickCount() );
 	}
 #endif
@@ -80,10 +80,10 @@ void CActionState::Start()
     isMain = GetActor()->GetCha()->IsMainCha();
     if( isMain )	
     {
-        sprintf( buf, "state-%s", GetActor()->GetCha()->getName() );
+        sprintf( buf, "state-%s", GetActor()->GetCha()->getName().c_str() );
         if( _pParent )
             LG( buf, "\t%s-start, Tick:%d\n", GetExplain(), GetTickCount() );
-        else 
+        else
             LG( buf, "%s-start, Tick:%d\n", GetExplain(), GetTickCount() );
     }
 #endif

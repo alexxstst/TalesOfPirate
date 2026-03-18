@@ -26,9 +26,12 @@ module private ClientCommandPatterns =
 
 /// Система управления клиентскими подключениями (аналог ToClient в C++).
 /// Владеет DirectSystemCommand для TCP-листенера и обработки событий.
-type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory) as this =
+type ClientSystem
+    (config: IOptions<ClientConfig>, gateConfig: IOptions<GateConfig>, loggerFactory: ILoggerFactory) as this
+    =
 
     let cfg = config.Value
+    let gateCfg = gateConfig.Value
     let logger = loggerFactory.CreateLogger<ClientSystem>()
 
     let system =
@@ -46,6 +49,7 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
     let _players = ConcurrentDictionary<ChannelId, PlayerChannelIO>()
     let mutable _groupSystem: IGroupServerSystem = null
     let mutable _gameSystem: IGameServerSystem = null
+    let mutable _syncTimer: Timer = null
 
     // ── Chaos-карта ──
     let _chaosActive = cfg.ChaosActive
@@ -59,7 +63,13 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                 let decrypted = ch.DecryptIncoming(packet)
 
                 try
-                    logger.LogDebug("Client ← {Packet} Ch={Ch}", decrypted, ch.Id)
+                    logger.LogDebug(
+                        "RECV Client {Packet} Ch={Ch}, Server counter: {Counter}",
+                        decrypted,
+                        ch.Id,
+                        ch.PacketCounter
+                    )
+
                     this.OnProcessData(ch, decrypted)
                 finally
                     if not (obj.ReferenceEquals(decrypted, packet)) then
@@ -90,6 +100,13 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
 
         if _rsaAes then
             this.SendHandshake(channel)
+        else
+            // Шифрование выключено — отправляем пустой handshake (keySize=0),
+            // чтобы клиент перешёл в CONNECTED без RSA/AES
+            let mutable w = WPacket(4)
+            w.WriteCmd(Commands.CMD_MC_SEND_SERVER_PUBLIC_KEY)
+            w.WriteSequence(ReadOnlySpan<byte>.Empty)
+            channel.SendPacket(w)
 
         logger.LogInformation(
             "Клиент подключён: Ch#{ChannelId} с {RemoteEndPoint}",
@@ -112,11 +129,50 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
     //  Утилиты
     // ══════════════════════════════════════════════════════════
 
-    /// Отправить ошибку клиенту: WPacket с Cmd + Int16(errCode).
+    /// Отправить ошибку клиенту: WPacket с Cmd + errCode + текстовое описание.
     member private _.SendError(player: PlayerChannelIO, cmd: uint16, err: int16) =
-        let w = WPacket(16)
+        let desc =
+            match err with
+            | Commands.ERR_MC_NETEXCP      -> "Network error"
+            | Commands.ERR_MC_NOTSELCHA    -> "Not in character selection"
+            | Commands.ERR_MC_NOTPLAY      -> "Not in game"
+            | Commands.ERR_MC_NOTARRIVE    -> "Map not available"
+            | Commands.ERR_MC_TOOMANYPLY   -> "Too many players on server"
+            | Commands.ERR_MC_NOTLOGIN     -> "Not logged in"
+            | Commands.ERR_MC_VER_ERROR    -> "Client version mismatch"
+            | Commands.ERR_MC_ENTER_ERROR  -> "Map enter error"
+            | Commands.ERR_MC_ENTER_POS    -> "Invalid map position"
+            | Commands.ERR_MC_BANUSER      -> "Account banned"
+            | Commands.ERR_MC_PBANUSER     -> "Account banned (protection)"
+            | Commands.ERR_PT_LOGFAIL      -> "Gate registration failed"
+            | Commands.ERR_PT_SAMEGATENAME -> "Gate name already registered"
+            | Commands.ERR_PT_INVALIDDAT   -> "Invalid data format"
+            | Commands.ERR_PT_INERR        -> "Internal server error"
+            | Commands.ERR_PT_NETEXCP      -> "Group-Account connection error"
+            | Commands.ERR_PT_DBEXCP       -> "Database error"
+            | Commands.ERR_PT_INVALIDCHA   -> "Character not owned by account"
+            | Commands.ERR_PT_TOMAXCHA     -> "Character limit reached"
+            | Commands.ERR_PT_SAMECHANAME  -> "Character name already taken"
+            | Commands.ERR_PT_INVALIDBIRTH -> "Invalid class/profession"
+            | Commands.ERR_PT_TOOBIGCHANM  -> "Character name too long"
+            | Commands.ERR_PT_KICKUSER     -> "Kicked by server"
+            | Commands.ERR_PT_ISGLDLEADER  -> "Cannot delete guild leader"
+            | Commands.ERR_PT_ERRCHANAME   -> "Invalid character name"
+            | Commands.ERR_PT_SERVERBUSY   -> "Server is busy"
+            | Commands.ERR_PT_TOOBIGPW2    -> "Second password too long"
+            | Commands.ERR_PT_INVALID_PW2  -> "Invalid second password"
+            | Commands.ERR_PT_BANUSER      -> "Account banned"
+            | Commands.ERR_PT_PBANUSER     -> "Account banned (protection)"
+            | Commands.ERR_PT_GMISLOG      -> "GM already logged in"
+            | Commands.ERR_PT_MULTICHA     -> "Multi-character not allowed"
+            | Commands.ERR_PT_BONUSCHARS   -> "Bonus character slots"
+            | Commands.ERR_PT_BADBOY       -> "Negative reputation (PK)"
+            | _ -> $"Unknown error ({err})"
+
+        let w = WPacket(16 + desc.Length)
         w.WriteCmd(cmd)
-        w.WriteInt16(err)
+        w.WriteInt64(int64 err)
+        w.WriteString(desc)
         player.SendPacket(w)
 
     /// Переслать пакет на GameServer с trailer (gateAddr, gmAddr).
@@ -126,11 +182,11 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
         if not (isNull playing.GameServer) then
             let w = WPacket(packet)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
+            w.WriteInt64(int64 rawId)
 
             match playing.GameServerPlayerId with
-            | Some(GameServerPlayerId_ gmAddr) -> w.WriteUInt32(gmAddr)
-            | None -> w.WriteUInt32(0u)
+            | Some(GameServerPlayerId_ gmAddr) -> w.WriteInt64(int64 gmAddr)
+            | None -> w.WriteInt64(0L)
 
             playing.GameServer.SendPacket(w)
 
@@ -140,8 +196,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
         =
         let w = WPacket(packet)
         let (ChannelId_ rawId) = player.Id
-        w.WriteUInt32(rawId)
-        w.WriteUInt32(playing.GroupServerPlayerId)
+        w.WriteInt64(int64 rawId)
+        w.WriteInt64(int64 playing.GroupServerPlayerId)
         this.SendToGroup(w)
 
     /// Отправить WPacket на GroupServer (через канал напрямую).
@@ -215,7 +271,7 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
     member private _.OnPreProcessingCommand
         (ch: PlayerChannelIO, packet: IRPacket)
         : IRPacket voption =
-        if packet.PayloadLength < 4 then
+        if packet.GetPacketSize() < 8 then
             logger.LogWarning(
                 "WPE: пакет слишком мал от Ch#{Channel} (DataSize={Size})",
                 ch.Id,
@@ -225,6 +281,7 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             ValueNone
         else
             let counter = packet.Sess
+
             if _wpeEnabled && counter <> ch.PacketCounter then
                 logger.LogWarning(
                     "WPE: счётчик не совпадает Ch#{Channel}: ожидался {Expected}, получен {Actual}, CMD={Cmd}",
@@ -291,41 +348,29 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             player.SendPacket(w)
         else
 
-            let account = packet.ReadString()
-            let password = packet.ReadString()
-            let mac = packet.ReadString()
+            let msg = CommandMessages.Deserialize.cmLoginRequest packet
 
             logger.LogInformation(
                 "CM_LOGIN. Account: {Account}, MAC: {Mac}, PWD: {password} Ch#{ChannelId}",
-                account,
-                mac,
-                password,
+                msg.AcctName,
+                msg.Mac,
+                msg.PasswordHash,
                 player.Id
             )
 
-            // Читаем version и cheat-маркер из tail пакета
-            let version = packet.ReverseReadUInt16()
-
-            if version <> _version then
+            if uint16 msg.ClientVersion <> _version then
                 this.SendError(player, Commands.CMD_MC_LOGIN, Commands.ERR_MC_VER_ERROR)
                 player.Close()
             else
 
-                let cheatMarker = packet.ReverseReadUInt16()
-                let bCheat = cheatMarker <> 911us
-
-                if not bCheat then
-                    packet.DiscardLast(2) |> ignore // DiscardLast cheat marker
-
-                packet.DiscardLast(2) |> ignore // DiscardLast version
-
-                // Формируем пакет CMD_TP_USER_LOGIN для GroupServer
-                let w = WPacket(packet)
-                w.WriteCmd(Commands.CMD_TP_USER_LOGIN)
-                w.WriteUInt32(player.ClientIp)
+                let bCheat = uint16 msg.CheatMarker <> 911us
                 let (ChannelId_ rawId) = player.Id
-                w.WriteUInt32(rawId)
-                w.WriteUInt16(if bCheat then 0us else 911us)
+
+                let tpMsg : CommandMessages.TpUserLoginRequest =
+                    { AcctName = msg.AcctName; AcctPassword = msg.PasswordHash; AcctMac = msg.Mac
+                      ClientIp = player.ClientIp; GateAddr = uint32 rawId
+                      CheatMarker = if bCheat then 0L else 911L }
+                let w = CommandMessages.Serialize.tpUserLoginRequest tpMsg
 
                 this.SyncCallGroup(
                     w,
@@ -336,43 +381,30 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                             player.Close()
 
                         | Some rpkt ->
-                            let errno = rpkt.ReadInt16()
-
-                            if errno <> 0s then
-                                // Ошибка — переслать ответ GroupServer клиенту
-                                let errW = WPacket(rpkt)
-                                errW.WriteCmd(Commands.CMD_MC_LOGIN)
-                                errW.WriteInt16(errno)
-                                player.SendPacket(errW)
+                            match CommandMessages.Deserialize.tpUserLoginResponse rpkt with
+                            | CommandMessages.TpUserLoginError errCode ->
+                                this.SendError(player, Commands.CMD_MC_LOGIN, errCode)
                                 player.Close()
-                            else
-                                // Успех: считать данные из tail ответа
-                                let gpAddr = rpkt.ReverseReadUInt32()
-                                let loginId = rpkt.ReverseReadUInt32()
-                                let actId = rpkt.ReverseReadUInt32()
-                                let byPassword = rpkt.ReverseReadUInt8()
-                                rpkt.DiscardLast(4 + 4 + 4 + 1) |> ignore
 
+                            | CommandMessages.TpUserLoginSuccess data ->
                                 // Установить состояние Authorized
                                 let auth =
-                                    { ActId = actId
-                                      LoginId = loginId
+                                    { ActId = uint32 data.AcctId
+                                      LoginId = uint32 data.AcctLoginId
                                       Password = ""
-                                      GroupServerPlayerId = gpAddr
+                                      GroupServerPlayerId = data.GpAddr
                                       Channel = player }
 
                                 player.State <- Authorized_ auth
 
-                                // Отправить CMD_MC_LOGIN клиенту (тело ответа + byPassword)
-                                let resp = WPacket(rpkt)
-                                resp.WriteCmd(Commands.CMD_MC_LOGIN)
-                                resp.WriteUInt8(byPassword)
+                                // Отправить CMD_MC_LOGIN клиенту
+                                let resp = CommandMessages.Serialize.mcLoginResponse (CommandMessages.McLoginSuccess
+                                    { MaxChaNum = data.MaxChaNum; Characters = data.Characters; HasPassword2 = data.HasPassword2 })
 
                                 logger.LogInformation(
-                                    "CM_LOGIN: игрок {ActId} авторизован, Ch#{ChannelId}, Cmd: {Cmd}",
-                                    actId,
-                                    player.Id,
-                                    resp
+                                    "CM_LOGIN: игрок {ActId} авторизован, Ch#{ChannelId}",
+                                    data.AcctId,
+                                    player.Id
                                 )
 
                                 player.SendPacket(resp)
@@ -386,8 +418,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             // Отправить CMD_TP_DISC на GroupServer
             let disc = WPacket(64)
             disc.WriteCmd(Commands.CMD_TP_DISC)
-            disc.WriteUInt32(auth.ActId)
-            disc.WriteUInt32(player.ClientIp)
+            disc.WriteInt64(int64 auth.ActId)
+            disc.WriteInt64(int64 player.ClientIp)
             disc.WriteString("normal logout")
             this.SendToGroup(disc)
 
@@ -395,16 +427,16 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let logout = WPacket(32)
             logout.WriteCmd(Commands.CMD_TP_USER_LOGOUT)
             let (ChannelId_ rawId) = player.Id
-            logout.WriteUInt32(rawId)
-            logout.WriteUInt32(0u) // gp_addr = 0 для Authorized
+            logout.WriteInt64(int64 rawId)
+            logout.WriteInt64(0L) // gp_addr = 0 для Authorized
             this.SyncCallGroup(logout, fun _ -> ())
 
         | Playing_ playing ->
             // Отправить CMD_TP_DISC на GroupServer
             let disc = WPacket(64)
             disc.WriteCmd(Commands.CMD_TP_DISC)
-            disc.WriteUInt32(playing.Auth.ActId)
-            disc.WriteUInt32(player.ClientIp)
+            disc.WriteInt64(int64 playing.Auth.ActId)
+            disc.WriteInt64(int64 player.ClientIp)
             disc.WriteString("normal logout")
             this.SendToGroup(disc)
 
@@ -412,13 +444,13 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             if not (isNull playing.GameServer) then
                 let goout = WPacket(32)
                 goout.WriteCmd(Commands.CMD_TM_GOOUTMAP)
-                goout.WriteUInt8(0uy)
+                goout.WriteInt64(0L)
                 let (ChannelId_ rawId) = player.Id
-                goout.WriteUInt32(rawId)
+                goout.WriteInt64(int64 rawId)
 
                 match playing.GameServerPlayerId with
-                | Some(GameServerPlayerId_ gmAddr) -> goout.WriteUInt32(gmAddr)
-                | None -> goout.WriteUInt32(0u)
+                | Some(GameServerPlayerId_ gmAddr) -> goout.WriteInt64(int64 gmAddr)
+                | None -> goout.WriteInt64(0L)
 
                 playing.GameServer.PlayerCount <- playing.GameServer.PlayerCount - 1
                 playing.GameServer.SendPacket(goout)
@@ -429,20 +461,19 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let logout = WPacket(32)
             logout.WriteCmd(Commands.CMD_TP_USER_LOGOUT)
             let (ChannelId_ rawId2) = player.Id
-            logout.WriteUInt32(rawId2)
-            logout.WriteUInt32(playing.GroupServerPlayerId)
+            logout.WriteInt64(int64 rawId2)
+            logout.WriteInt64(int64 playing.GroupServerPlayerId)
             this.SyncCallGroup(logout, fun _ -> ())
 
     /// CMD_CM_BGNPLAY: Начать игру (выбор персонажа → вход на карту).
     member private this.CM_BGNPLAY(player: PlayerChannelIO, packet: IRPacket) =
         match player.State with
         | Authorized_ _auth ->
-            // Формируем пакет для GroupServer
-            let w = WPacket(packet)
-            w.WriteCmd(Commands.CMD_TP_BGNPLAY)
+            // Десериализация клиентского запроса и формирование запроса к GroupServer
+            let chaIndex = packet.ReadInt64()
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
-            w.WriteUInt32(player.GpAddr)
+            let w = CommandMessages.Serialize.tpBgnPlayRequest
+                        { ChaIndex = chaIndex; GateAddr = uint32 rawId; GpAddr = player.GpAddr }
 
             this.SyncCallGroup(
                 w,
@@ -452,23 +483,21 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                         this.SendError(player, Commands.CMD_MC_BGNPLAY, Commands.ERR_MC_NETEXCP)
 
                     | Some rpkt ->
-                        let errno = rpkt.ReadInt16()
+                        let resp = CommandMessages.Deserialize.tpBgnPlayResponse rpkt
 
-                        if errno <> 0s then
-                            // Ошибка — переслать ответ клиенту
-                            let errW = WPacket(rpkt)
-                            errW.WriteCmd(Commands.CMD_MC_BGNPLAY)
-                            player.SendPacket(errW)
+                        if resp.ErrCode <> 0s then
+                            this.SendError(player, Commands.CMD_MC_BGNPLAY, resp.ErrCode)
 
-                            if errno = Commands.ERR_PT_KICKUSER then
+                            if resp.ErrCode = Commands.ERR_PT_KICKUSER then
                                 player.Close()
                         else
-                            // Успех: считать данные персонажа
-                            let password2 = rpkt.ReadString()
-                            let dbid = rpkt.ReadUInt32()
-                            let worldid = rpkt.ReadUInt32()
-                            let mapName = rpkt.ReadString()
-                            let garnerWinner = rpkt.ReadInt16()
+                            let data = resp.Data.Value
+                            // Успех: данные персонажа
+                            let password2 = data.Password2
+                            let dbid = uint32 data.ChaId
+                            let worldid = uint32 data.WorldId
+                            let mapName = data.MapName
+                            let garnerWinner = int16 data.Swiner
 
                             // Найти GameServer для карты
                             match _gameSystem.FindByMap(MapName_ mapName) with
@@ -506,18 +535,18 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                                     // Отправить CMD_TM_ENTERMAP на GameServer
                                     let enter = WPacket(256)
                                     enter.WriteCmd(Commands.CMD_TM_ENTERMAP)
-                                    enter.WriteUInt32(playing.Auth.ActId)
+                                    enter.WriteInt64(int64 playing.Auth.ActId)
                                     enter.WriteString(password2)
-                                    enter.WriteUInt32(dbid)
-                                    enter.WriteUInt32(worldid)
+                                    enter.WriteInt64(int64 dbid)
+                                    enter.WriteInt64(int64 worldid)
                                     enter.WriteString(mapName)
-                                    enter.WriteInt32(-1) // mapCopyNo
-                                    enter.WriteUInt32(0u) // x
-                                    enter.WriteUInt32(0u) // y
-                                    enter.WriteUInt8(0uy) // isSwitch = false
+                                    enter.WriteInt64(-1L) // mapCopyNo
+                                    enter.WriteInt64(0L) // x
+                                    enter.WriteInt64(0L) // y
+                                    enter.WriteInt64(0L) // isSwitch = false
                                     let (ChannelId_ gateAddr) = player.Id
-                                    enter.WriteUInt32(gateAddr)
-                                    enter.WriteInt16(garnerWinner)
+                                    enter.WriteInt64(int64 gateAddr)
+                                    enter.WriteInt64(int64 garnerWinner)
                                     game.SendPacket(enter)
 
                                     logger.LogInformation(
@@ -537,13 +566,13 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             if not (isNull playing.GameServer) then
                 let goout = WPacket(packet)
                 goout.WriteCmd(Commands.CMD_TM_GOOUTMAP)
-                goout.WriteUInt8(0uy)
+                goout.WriteInt64(0L)
                 let (ChannelId_ rawId) = player.Id
-                goout.WriteUInt32(rawId)
+                goout.WriteInt64(int64 rawId)
 
                 match playing.GameServerPlayerId with
-                | Some(GameServerPlayerId_ gmAddr) -> goout.WriteUInt32(gmAddr)
-                | None -> goout.WriteUInt32(0u)
+                | Some(GameServerPlayerId_ gmAddr) -> goout.WriteInt64(int64 gmAddr)
+                | None -> goout.WriteInt64(0L)
 
                 playing.GameServer.PlayerCount <- playing.GameServer.PlayerCount - 1
                 playing.GameServer.SendPacket(goout)
@@ -557,8 +586,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let endplay = WPacket(packet)
             endplay.WriteCmd(Commands.CMD_TP_ENDPLAY)
             let (ChannelId_ rawId2) = player.Id
-            endplay.WriteUInt32(rawId2)
-            endplay.WriteUInt32(playing.GroupServerPlayerId)
+            endplay.WriteInt64(int64 rawId2)
+            endplay.WriteInt64(int64 playing.GroupServerPlayerId)
 
             this.SyncCallGroup(
                 endplay,
@@ -569,11 +598,15 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                         player.Close()
 
                     | Some rpkt ->
-                        let resp = WPacket(rpkt)
-                        resp.WriteCmd(Commands.CMD_MC_ENDPLAY)
-                        player.SendPacket(resp)
+                        let groupResp = CommandMessages.Deserialize.tpEndPlayResponse rpkt
+                        let w = CommandMessages.Serialize.mcEndPlayResponse
+                                    { ErrCode = groupResp.ErrCode
+                                      Data = groupResp.Data |> ValueOption.map (fun d ->
+                                        { CommandMessages.McEndPlayResponseData.MaxChaNum = d.MaxChaNum
+                                          Characters = d.Characters }) }
+                        player.SendPacket(w)
 
-                        if rpkt.ReadInt16() = Commands.ERR_PT_KICKUSER then
+                        if groupResp.ErrCode = Commands.ERR_PT_KICKUSER then
                             player.Close()
             )
         | _ ->
@@ -587,8 +620,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let w = WPacket(packet)
             w.WriteCmd(Commands.CMD_TP_NEWCHA)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
-            w.WriteUInt32(player.GpAddr)
+            w.WriteInt64(int64 rawId)
+            w.WriteInt64(int64 player.GpAddr)
 
             this.SyncCallGroup(
                 w,
@@ -599,11 +632,11 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                         player.Close()
 
                     | Some rpkt ->
-                        let resp = WPacket(rpkt)
-                        resp.WriteCmd(Commands.CMD_MC_NEWCHA)
-                        player.SendPacket(resp)
+                        let groupResp = CommandMessages.Deserialize.tpNewChaResponse rpkt
+                        let w = CommandMessages.Serialize.mcNewChaResponse { ErrCode = groupResp.ErrCode }
+                        player.SendPacket(w)
 
-                        if rpkt.ReadInt16() = Commands.ERR_PT_KICKUSER then
+                        if groupResp.ErrCode = Commands.ERR_PT_KICKUSER then
                             player.Close()
             )
         | _ -> this.SendError(player, Commands.CMD_MC_NEWCHA, Commands.ERR_MC_NOTSELCHA)
@@ -615,8 +648,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let w = WPacket(packet)
             w.WriteCmd(Commands.CMD_TP_DELCHA)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
-            w.WriteUInt32(player.GpAddr)
+            w.WriteInt64(int64 rawId)
+            w.WriteInt64(int64 player.GpAddr)
 
             this.SyncCallGroup(
                 w,
@@ -627,11 +660,11 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                         player.Close()
 
                     | Some rpkt ->
-                        let resp = WPacket(rpkt)
-                        resp.WriteCmd(Commands.CMD_MC_DELCHA)
-                        player.SendPacket(resp)
+                        let groupResp = CommandMessages.Deserialize.tpDelChaResponse rpkt
+                        let w = CommandMessages.Serialize.mcDelChaResponse { ErrCode = groupResp.ErrCode }
+                        player.SendPacket(w)
 
-                        if rpkt.ReadInt16() = Commands.ERR_PT_KICKUSER then
+                        if groupResp.ErrCode = Commands.ERR_PT_KICKUSER then
                             player.Close()
             )
         | _ -> this.SendError(player, Commands.CMD_MC_DELCHA, Commands.ERR_MC_NOTSELCHA)
@@ -643,8 +676,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let w = WPacket(packet)
             w.WriteCmd(Commands.CMD_TP_CREATE_PASSWORD2)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
-            w.WriteUInt32(player.GpAddr)
+            w.WriteInt64(int64 rawId)
+            w.WriteInt64(int64 player.GpAddr)
 
             this.SyncCallGroup(
                 w,
@@ -660,11 +693,11 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                         player.Close()
 
                     | Some rpkt ->
-                        let resp = WPacket(rpkt)
-                        resp.WriteCmd(Commands.CMD_MC_CREATE_PASSWORD2)
-                        player.SendPacket(resp)
+                        let errCode = int16 (rpkt.ReadInt64())
+                        let w = CommandMessages.Serialize.mcCreatePassword2Response { ErrCode = errCode }
+                        player.SendPacket(w)
 
-                        if rpkt.ReadInt16() = Commands.ERR_PT_KICKUSER then
+                        if errCode = Commands.ERR_PT_KICKUSER then
                             player.Close()
             )
         | _ -> this.SendError(player, Commands.CMD_MC_CREATE_PASSWORD2, Commands.ERR_MC_NOTSELCHA)
@@ -676,8 +709,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let w = WPacket(packet)
             w.WriteCmd(Commands.CMD_TP_UPDATE_PASSWORD2)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
-            w.WriteUInt32(player.GpAddr)
+            w.WriteInt64(int64 rawId)
+            w.WriteInt64(int64 player.GpAddr)
 
             this.SyncCallGroup(
                 w,
@@ -693,11 +726,11 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                         player.Close()
 
                     | Some rpkt ->
-                        let resp = WPacket(rpkt)
-                        resp.WriteCmd(Commands.CMD_MC_UPDATE_PASSWORD2)
-                        player.SendPacket(resp)
+                        let errCode = int16 (rpkt.ReadInt64())
+                        let w = CommandMessages.Serialize.mcUpdatePassword2Response { ErrCode = errCode }
+                        player.SendPacket(w)
 
-                        if rpkt.ReadInt16() = Commands.ERR_PT_KICKUSER then
+                        if errCode = Commands.ERR_PT_KICKUSER then
                             player.Close()
             )
         | _ -> this.SendError(player, Commands.CMD_MC_UPDATE_PASSWORD2, Commands.ERR_MC_NOTSELCHA)
@@ -707,8 +740,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
         let w = WPacket(packet)
         w.WriteCmd(Commands.CMD_TP_REGISTER)
         let (ChannelId_ rawId) = player.Id
-        w.WriteUInt32(rawId)
-        w.WriteUInt32(player.GpAddr)
+        w.WriteInt64(int64 rawId)
+        w.WriteInt64(int64 player.GpAddr)
 
         this.SyncCallGroup(
             w,
@@ -729,8 +762,8 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
         let w = WPacket(packet)
         w.WriteCmd(Commands.CMD_TP_CHANGEPASS)
         let (ChannelId_ rawId) = player.Id
-        w.WriteUInt32(rawId)
-        w.WriteUInt32(player.GpAddr)
+        w.WriteInt64(int64 rawId)
+        w.WriteInt64(int64 player.GpAddr)
 
         this.SyncCallGroup(
             w,
@@ -750,10 +783,10 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
         | Playing_ playing when playing.GameServerPlayerId.IsSome ->
             let w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_PING)
-            w.WriteUInt32(0u) // elapsed (в C++ GetTickCount - m_pingtime)
+            w.WriteInt64(0L) // elapsed (в C++ GetTickCount - m_pingtime)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
-            w.WriteUInt32(playing.GroupServerPlayerId)
+            w.WriteInt64(int64 rawId)
+            w.WriteInt64(int64 playing.GroupServerPlayerId)
             this.SendToGroup(w)
         | _ -> ()
 
@@ -778,7 +811,7 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
                 // Отправить проверку estop на GroupServer
                 let check = WPacket(16)
                 check.WriteCmd(Commands.CMD_TP_ESTOPUSER_CHECK)
-                check.WriteUInt32(playing.Auth.ActId)
+                check.WriteInt64(int64 playing.Auth.ActId)
                 this.SendToGroup(check)
             else
                 // Переслать на GameServer
@@ -793,11 +826,11 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
             let w = WPacket(32)
             w.WriteCmd(Commands.CMD_TM_OFFLINE_MODE)
             let (ChannelId_ rawId) = player.Id
-            w.WriteUInt32(rawId)
+            w.WriteInt64(int64 rawId)
 
             match playing.GameServerPlayerId with
-            | Some(GameServerPlayerId_ gmAddr) -> w.WriteUInt32(gmAddr)
-            | None -> w.WriteUInt32(0u)
+            | Some(GameServerPlayerId_ gmAddr) -> w.WriteInt64(int64 gmAddr)
+            | None -> w.WriteInt64(0L)
 
             playing.GameServer.SendPacket(w)
         // NOTE: В C++ есть SyncCall к GameServer с обработкой ответа.
@@ -840,12 +873,91 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
         | _ -> ()
 
     // ══════════════════════════════════════════════════════════
+    //  Синхронизация списка игроков (CMD_TP_SYNC_PLYLST)
+    // ══════════════════════════════════════════════════════════
+
+    /// Периодическая синхронизация списка игроков с GroupServer.
+    /// Аналог ConnectGroupServer::Process в C++ (ToGroupServer.cpp).
+    /// Отправляет список всех подключённых игроков, получает их gpAddr.
+    member private this.SyncPlayerList() =
+        if isNull _groupSystem || not _groupSystem.IsConnected then
+            ()
+        else
+
+            // Только игроки без установленного GroupServerPlayerId
+            let players =
+                _players.Values
+                |> Seq.filter (fun p -> p.IsAuthorized && p.GpAddr = 0u)
+                |> Seq.toArray
+
+            if players.Length = 0 then
+                ()
+            else
+
+                let playerCount = players.Length
+
+                let w = WPacket(64 + playerCount * 12)
+                w.WriteCmd(Commands.CMD_TP_SYNC_PLYLST)
+                w.WriteInt64(int64 playerCount)
+                w.WriteString(gateCfg.Name)
+
+                for player in players do
+                    let (ChannelId_ rawId) = player.Id
+                    w.WriteInt64(int64 rawId)
+                    w.WriteInt64(int64 player.LoginId)
+                    w.WriteInt64(int64 player.ActId)
+
+                this.SyncCallGroup(
+                    w,
+                    fun response ->
+                        match response with
+                        | None ->
+                            logger.LogWarning(
+                                "SyncPlayerList: таймаут или нет подключения к GroupServer"
+                            )
+
+                        | Some rpkt ->
+                            let err = int16 (rpkt.ReadInt64())
+
+                            if err = Commands.ERR_PT_LOGFAIL then
+                                logger.LogError(
+                                    "SyncPlayerList: GroupServer отклонил синхронизацию (ERR_PT_LOGFAIL)"
+                                )
+                            else
+                                let num = int (rpkt.ReadInt64())
+
+                                if num <> playerCount then
+                                    logger.LogWarning(
+                                        "SyncPlayerList: количество не совпадает: отправлено {Sent}, получено {Received}",
+                                        playerCount,
+                                        num
+                                    )
+                                else
+                                    for i in 0 .. num - 1 do
+                                        if int16 (rpkt.ReadInt64()) = 1s then
+                                            let gpAddr = uint32 (rpkt.ReadInt64())
+
+                                            match players[i].State with
+                                            | Authorized_ auth ->
+                                                players[i].State <-
+                                                    Authorized_
+                                                        { auth with GroupServerPlayerId = gpAddr }
+                                            | Playing_ playing ->
+                                                playing.GroupServerPlayerId <- gpAddr
+                                            | _ -> ()
+                )
+
+    // ══════════════════════════════════════════════════════════
     //  Запуск системы
     // ══════════════════════════════════════════════════════════
 
     /// Запустить TCP-листенер (event-driven, не блокирует).
     member _.Start(ct: CancellationToken) =
         system.Start(ct)
+
+        // Таймер синхронизации списка игроков (каждую секунду)
+        _syncTimer <- new Timer(TimerCallback(fun _ -> this.SyncPlayerList()), null, 1000, 1000)
+
         logger.LogInformation("ClientSystem: слушает на {Address}:{Port}", cfg.Address, cfg.Port)
 
     // ══════════════════════════════════════════════════════════
@@ -884,8 +996,27 @@ type ClientSystem(config: IOptions<ClientConfig>, loggerFactory: ILoggerFactory)
 
         member _.Disconnect(player) = player.Close()
 
+        member _.ResetAllGpAddrs() =
+            let mutable count = 0
+
+            for player in _players.Values do
+                match player.State with
+                | Authorized_ auth when auth.GroupServerPlayerId <> 0u ->
+                    player.State <- Authorized_ { auth with GroupServerPlayerId = 0u }
+                    count <- count + 1
+                | Playing_ playing when playing.GroupServerPlayerId <> 0u ->
+                    playing.GroupServerPlayerId <- 0u
+                    count <- count + 1
+                | _ -> ()
+
+            if count > 0 then
+                logger.LogInformation("ResetAllGpAddrs: сброшено {Count} игроков", count)
+
     interface IDisposable with
         member _.Dispose() =
+            if not (isNull _syncTimer) then
+                _syncTimer.Dispose()
+
             (system :> IDisposable).Dispose()
 
             if not (isNull _rsa) then

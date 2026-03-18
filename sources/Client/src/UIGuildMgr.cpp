@@ -288,7 +288,7 @@ void CUIGuildMgr::_OnClickPerm(CGuiData *pSender, int x, int y, DWORD key){
 void CUIGuildMgr::UpdateGuildLogs(LPRPACKET pk){
 	g_stUIGuildMgr.banklogs.clear();
 	m_plistBankLog->GetList()->GetScroll()->Reset();
-	uShort logsize = pk.ReadUInt16();
+	uShort logsize = pk.ReadInt64();
 
 
 	m_btnPrev->SetIsEnabled(false); 	// Can't fetch newer logs than what we currently have
@@ -296,15 +296,15 @@ void CUIGuildMgr::UpdateGuildLogs(LPRPACKET pk){
 
 	for (int i = 0; i < 13; i++){				// Let's register 13 new logs
 		BankLog l;
-		l.type = pk.ReadUInt16();
+		l.type = pk.ReadInt64();
 		if(l.type == 9){
 			m_btnNext->SetIsEnabled(false);
 			break;
 		}
 		l.time = pk.ReadInt64();
 		l.parameter = pk.ReadInt64();
-		l.quantity = pk.ReadUInt16();
-		l.userID = pk.ReadUInt16();
+		l.quantity = pk.ReadInt64();
+		l.userID = pk.ReadInt64();
 		g_stUIGuildMgr.banklogs.push_back(l);
 	}
 
@@ -379,15 +379,15 @@ void CUIGuildMgr::RequestGuildLogs(LPRPACKET pk){
 	// curLogPage was already incremented, so just get the new data and update the list
 	for (int i = 0; i < 13; i++){				// Let's register the latest 13 logs
 		BankLog l;
-		l.type = pk.ReadUInt16();
+		l.type = pk.ReadInt64();
 		if(l.type == 9){
 			m_btnNext->SetIsEnabled(false);
 			break;
 		}
 		l.time = pk.ReadInt64();
 		l.parameter = pk.ReadInt64();
-		l.quantity = pk.ReadUInt16();
-		l.userID = pk.ReadUInt16();
+		l.quantity = pk.ReadInt64();
+		l.userID = pk.ReadInt64();
 		g_stUIGuildMgr.banklogs.push_back(l);
 	}
 

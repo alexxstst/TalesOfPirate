@@ -46,10 +46,10 @@ namespace mission
 		CStallSystem();
 		~CStallSystem();
 
-		void StartStall( CCharacter& staller, RPACKET& packet );
+		void StartStall( CCharacter& staller, RPACKET packet );
 		void CloseStall( CCharacter& staller );
-		void OpenStall( CCharacter& character, RPACKET& packet );
-		void BuyGoods( CCharacter& character, RPACKET& packet );
+		void OpenStall( CCharacter& character, RPACKET packet );
+		void BuyGoods( CCharacter& character, RPACKET packet );
 		void SearchItem(CCharacter& character, int itemID);
 	private:
 		void SyncData( CCharacter& character, CCharacter& staller );

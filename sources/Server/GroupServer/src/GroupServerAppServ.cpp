@@ -10,314 +10,214 @@
 
 using namespace std;
 
-bool GroupServerApp::OnConnect(DataSocket* datasock)					//·μ???μ:true-?êDíá??ó,false-2??êDíá??ó
-{
-	datasock->SetRecvBuf(64 * 1024);
-	datasock->SetSendBuf(64 * 1024);
-	if (!datasock->IsServer())
-	{
-		LogLine	l_line(g_LogConnect);
-		l_line << newln << "AccountServer:" << datasock->GetPeerIP() << "," << datasock->GetPeerPort() << "come ! Socket num:"
-			<< GetSockTotal() + 1 << endln;
+// CorsairsNet: OnConnect/OnDisconnect → GroupServerApp.cpp (OnAccepted/OnDisconnected)
 
-		std::cout << "AccountServer:" << datasock->GetPeerIP() << "," << datasock->GetPeerPort() << "come ! Socket num:" << GetSockTotal() + 1 << std::endl;
-	}
-	else
-	{
-		LogLine	l_line(g_LogConnect);
-		l_line << newln << "GateServer:" << datasock->GetPeerIP() << "," << datasock->GetPeerPort() << "come ! Socket num:"
-			<< GetSockTotal() + 1 << endln;
-
-		std::cout << "GateServer:" << datasock->GetPeerIP() << "," << datasock->GetPeerPort() << "come ! Socket num:" << GetSockTotal() + 1 << std::endl;
-	}
-	return true;
-}
-
-void GroupServerApp::OnDisconnect(DataSocket *datasock,int reason)
-{
-	if(!datasock->IsServer())
-	{
-		m_mtxlogin.lock();
-		try{
-			if(g_gpsvr->m_acctsock	==datasock)
-			{	
-				g_gpsvr->m_acctsock	=0;
-			}
-		}catch(...){}
-		m_mtxlogin.unlock();
-		LogLine	l_line(g_LogConnect);
-		/*
-		l_line<<newln<<"AccountServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"×?á?￡?Socketêy:"
-			<<GetSockTotal()<<"reason=("<<reason<<")"<<GetDisconnectErrText(reason)
-			<<endln;
-		*/
-		l_line<<newln<<"AccountServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"go ! Socket num:"
-			<<GetSockTotal()<<"reason=("<<reason<<")"<<GetDisconnectErrText(reason)
-			<<endln;
-		//std::cout<<"AccountServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"×?á?￡?Socketêy:"<<GetSockTotal()<<"reason="<<GetDisconnectErrText(reason).c_str()<<std::endl;
-		std::cout<<"AccountServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"go ! Socket num:"<<GetSockTotal()<<"reason="<<GetDisconnectErrText(reason).c_str()<<std::endl;
-
-		if(reason ==DS_SHUTDOWN || reason ==DS_DISCONN){return;}
-
-		//std::cout<<"5???óoó?ù′???á?......"<<std::endl;
-		std::cout<<"after 5 seconds reconnect......"<<std::endl;
-		Sleep(5000);
-		InitACTSvrConnect(*g_gpsvr);
-	}else
-	{
-		GateServer* l_gate = (GateServer*)datasock->GetPointer();
-		if (!l_gate)
-		{
-			return;
-		}
-		m_mtxlogin.lock();
-		try{
-	        l_gate->SetDataSock(0);
-		}catch(...){}
-		m_mtxlogin.unlock();
-		LogLine	l_line(g_LogConnect);
-		/*
-		l_line<<newln<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"×?á?￡?Socketêy:"
-			<<GetSockTotal()<<"reason=("<<reason<<")"<<GetDisconnectErrText(reason)
-			<<endln;
-		*/
-		l_line<<newln<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"go ! Socket num:"
-			<<GetSockTotal()<<"reason=("<<reason<<")"<<GetDisconnectErrText(reason)
-			<<endln;
-		//std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"×?á?￡?Socketêy:"<<GetSockTotal()<<"reason="<<GetDisconnectErrText(reason).c_str()<<std::endl;
-		std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"go ! Socket num:"<<GetSockTotal()<<"reason="<<GetDisconnectErrText(reason).c_str()<<std::endl;
-
-		Player	*l_ply	=0;
-		RunChainGetArmor<Player> l(m_plylst);
-		while(l_ply =m_plylst.GetNextItem())
-		{
-			if(l_ply->m_gate ==l_gate)
-			{
-				RPacket	l_rpk;
-				TP_USER_LOGOUT(l_ply,datasock,l_rpk);
-			}
-		}
-		l.unlock();
-	}
-}
-
-WPacket	GroupServerApp::OnServeCall(DataSocket *datasock,RPacket &pk)
-{
-	uShort l_cmd	=pk.ReadCmd();
-	switch (l_cmd)
-	{
-	case CMD_TP_LOGIN:		return TP_LOGIN(datasock,pk);
-	case CMD_TP_USER_LOGIN:	return TP_USER_LOGIN(datasock,pk);
-	case CMD_TP_REQPLYLST:	return TP_REQPLYLST(datasock,pk);	
+void GroupServerApp::HandleServeCall(net::TcpClient* client, net::RPacket& pk) {
+	uint32_t sess = pk.GetSess();
+	net::WPacket retpk = [&]() -> net::WPacket {
+		uShort l_cmd = pk.ReadCmd();
+		switch (l_cmd) {
+		case CMD_TP_LOGIN: return TP_LOGIN(client, pk);
+		case CMD_TP_USER_LOGIN: return TP_USER_LOGIN(client, pk);
+		case CMD_TP_REQPLYLST: return TP_REQPLYLST(client, pk);
 		// Add by lark.li 20081119 begin
-	case CMD_TP_SYNC_PLYLST:	return TP_SYNC_PLYLST(datasock,pk);
-	case CMD_OS_LOGIN:	return OS_LOGIN(datasock,pk);
+		case CMD_TP_SYNC_PLYLST: return TP_SYNC_PLYLST(client, pk);
+		case CMD_OS_LOGIN: return OS_LOGIN(client, pk);
 		// End
-	case CMD_TP_REGISTER:return TP_REGISTER(datasock, pk);
+		case CMD_TP_REGISTER: return TP_REGISTER(client, pk);
+		}
 
-	
-	}
-
-	auto	l_ply = ToPointer<Player>(pk.ReverseReadLong());
-	uLong		l_gtaddr=pk.ReverseReadLong();
-	uLong		l_plygt	=0;
-	try
-	{
-		l_plygt	=l_ply->m_gtAddr;
-	}catch(...)
-	{
-		l_ply	=0;
-	}
-	if(!l_ply || l_gtaddr !=l_plygt)
-	{
-		WPacket	l_retpk	=GetWPacket();
-		l_retpk.WriteShort(ERR_PT_KICKUSER);
-		return l_retpk;
-	}
-	switch (l_cmd)
-	{
-	
-	case CMD_TP_USER_LOGOUT:return TP_USER_LOGOUT(l_ply,datasock,pk);
-	case CMD_TP_BGNPLAY:	return TP_BGNPLAY(l_ply,datasock,pk);
-	case CMD_TP_ENDPLAY:	return TP_ENDPLAY(l_ply,datasock,pk);
-	case CMD_TP_NEWCHA:		return TP_NEWCHA(l_ply,datasock,pk);
-	case CMD_TP_DELCHA:		return TP_DELCHA(l_ply,datasock,pk);
-	case CMD_TP_CREATE_PASSWORD2: return TP_CREATE_PASSWORD2(l_ply,datasock,pk);
-	case CMD_TP_UPDATE_PASSWORD2: return TP_UPDATE_PASSWORD2(l_ply,datasock,pk);
-	case CMD_TP_CHANGEPASS:return TP_CHANGEPASS(l_ply, datasock, pk);
-	}
-	return 0;
+		auto l_ply = ToPointer<Player>(pk.ReverseReadInt64());
+		uLong l_gtaddr = pk.ReverseReadInt64();
+		uLong l_plygt = 0;
+		try {
+			l_plygt = l_ply->m_gtAddr;
+		}
+		catch (...) {
+			l_ply = 0;
+		}
+		if (!l_ply || l_gtaddr != l_plygt) {
+			net::WPacket l_retpk(256);
+			l_retpk.WriteInt64(ERR_PT_KICKUSER);
+			return l_retpk;
+		}
+		switch (l_cmd) {
+		case CMD_TP_USER_LOGOUT: return TP_USER_LOGOUT(l_ply, client, pk);
+		case CMD_TP_BGNPLAY: return TP_BGNPLAY(l_ply, client, pk);
+		case CMD_TP_ENDPLAY: return TP_ENDPLAY(l_ply, client, pk);
+		case CMD_TP_NEWCHA: return TP_NEWCHA(l_ply, client, pk);
+		case CMD_TP_DELCHA: return TP_DELCHA(l_ply, client, pk);
+		case CMD_TP_CREATE_PASSWORD2: return TP_CREATE_PASSWORD2(l_ply, client, pk);
+		case CMD_TP_UPDATE_PASSWORD2: return TP_UPDATE_PASSWORD2(l_ply, client, pk);
+		case CMD_TP_CHANGEPASS: return TP_CHANGEPASS(l_ply, client, pk);
+		}
+		return net::WPacket(256);
+	}();
+	// SESS-echo: отвечаем с тем же SESS | FLAG
+	retpk.WriteSess(sess | 0x80000000);
+	client->Send(retpk);
 }
 
 
 //change password function >>>client << mothannakh >>add cooldown<<//
-WPacket	GroupServerApp::TP_CHANGEPASS(Player * l_ply, DataSocket *datasock, RPacket &pk){
-	uShort pass_len{};
-	cChar* newPass = pk.ReadString(&pass_len);
-	cChar* PIN = pk.ReadString();
-	WPacket	l_wpk = GetWPacket();
+net::WPacket GroupServerApp::TP_CHANGEPASS(Player* l_ply, net::TcpClient* client, net::RPacket& pk) {
+	auto newPass = pk.ReadString();
+	auto PIN = pk.ReadString();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_ERRMSG);
 	//cooldown  for changing the name //
-	uLong	l_curtick = this->GetCurrentTick();
-	if (l_ply->CHangePasswordCol > l_curtick)
-	{
+	uLong l_curtick = GetTickCount();
+	if (l_ply->CHangePasswordCol > l_curtick) {
 		l_wpk.WriteString("Please Calm Down! do not spam!.");
 		return l_wpk;
 	}
-	
 
-	if (strcmp(l_ply->m_password.c_str(), PIN) != 0) {
+
+	if (l_ply->m_password != PIN) {
 		l_wpk.WriteString("Incorrect PIN.");
 	}
-	else if (pass_len != 32 || !isAlphanumeric({ newPass, pass_len })) {
+	else if (newPass.size() != 32 || !isAlphanumeric(newPass)) {
 		l_wpk.WriteString("Invalid Password.");
 	}
 	else {
-		WPacket l_wpk_acc = GetWPacket();
+		net::WPacket l_wpk_acc(256);
 		l_wpk_acc.WriteCmd(CMD_PA_CHANGEPASS);
 		l_wpk_acc.WriteString(l_ply->m_acctname.c_str());
 		l_wpk_acc.WriteString(newPass);
-		g_gpsvr->SendData(g_gpsvr->m_acctsock, l_wpk_acc);
+		g_gpsvr->m_acctClient.Send(l_wpk_acc);
 
 		l_wpk.WriteString("Password has been changed.");
-		l_ply->CHangePasswordCol = l_curtick + 3000;	// set up new cooldown if password changed 3 mins 
+		l_ply->CHangePasswordCol = l_curtick + 3000; // set up new cooldown if password changed 3 mins
 	}
 	return l_wpk;
 }
+
 //this form already has cooldown inside client  , maybe add second one here?
-WPacket	GroupServerApp::TP_REGISTER( DataSocket *datasock, RPacket &pk){
-	uShort userlen{}, passlen{}, emaillen{};
+net::WPacket GroupServerApp::TP_REGISTER(net::TcpClient* client, net::RPacket& pk) {
+	auto userName = pk.ReadString();
+	auto password = pk.ReadString();
+	auto email = pk.ReadString();
 
-	cChar* userName = pk.ReadString(&userlen);
-	cChar* password = pk.ReadString(&passlen);
-	cChar* email = pk.ReadString(&emaillen);
-
-	WPacket ret_pk = g_gpsvr->GetWPacket();
+	net::WPacket ret_pk(256);
 	ret_pk.WriteCmd(CMD_PT_REGISTER);
 
-	if (userlen < 5 || userlen > 16 || !isAlphanumeric({ userName, userlen })) {
-		ret_pk.WriteChar(0);
+	if (userName.size() < 5 || userName.size() > 16 || !isAlphanumeric(userName)) {
+		ret_pk.WriteInt64(0);
 		ret_pk.WriteString("Invalid Username.");
 	}
-	else if (!isAlphanumeric({ password, passlen })) {
-		ret_pk.WriteChar(0);
+	else if (!isAlphanumeric(password)) {
+		ret_pk.WriteInt64(0);
 		ret_pk.WriteString("Invalid Password.");
 	}
-	else if (emaillen < 3 || emaillen > 254 || !isEmail(email)){
-		ret_pk.WriteChar(0);
+	else if (email.size() < 3 || email.size() > 254 || !isEmail(email.c_str())) {
+		ret_pk.WriteInt64(0);
 		ret_pk.WriteString("Invalid Email.");
 	}
-	else if (m_tblaccounts->FetchRowByActName(userName)){
-		ret_pk.WriteChar(0);
+	else if (m_tblaccounts->FetchRowByActName(userName.c_str())) {
+		ret_pk.WriteInt64(0);
 		ret_pk.WriteString("Username is taken.");
 	}
-	
 
-	else if (m_tblaccounts->InsertRow(0, userName, "0")){
+
+	else if (m_tblaccounts->InsertRow(0, userName.c_str(), "0")) {
 		//request acc server to insert other half.
-		WPacket l_wpk = g_gpsvr->GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PA_REGISTER);
 		l_wpk.WriteString(userName);
 		l_wpk.WriteString(password);
 		l_wpk.WriteString(email);
-		g_gpsvr->SendData(g_gpsvr->m_acctsock, l_wpk);
+		g_gpsvr->m_acctClient.Send(l_wpk);
 		//tell client acc created.
-		ret_pk.WriteChar(1);
-	}else{
-		ret_pk.WriteChar(0);
+		ret_pk.WriteInt64(1);
+	}
+	else {
+		ret_pk.WriteInt64(0);
 		ret_pk.WriteString("Unknown Error.");
-	
 	}
 	return ret_pk;
 }
-void GroupServerApp::OnProcessData(DataSocket *datasock,RPacket &recvbuf)
-{
-	try
-	{
-		uShort l_cmd	=recvbuf.ReadCmd();
+
+void GroupServerApp::OnProcessData(net::TcpClient* client, net::RPacket& recvbuf) {
+	try {
+		uShort l_cmd = recvbuf.ReadCmd();
 		LG("OnProcessData", "CMD: %d, l_cmd");
-		switch (l_cmd)
-		{
+		switch (l_cmd) {
 		case CMD_AP_KICKUSER:
-			recvbuf.ReadShort();
-			AP_KICKUSER(datasock,recvbuf);
+			recvbuf.ReadInt64();
+			AP_KICKUSER(client, recvbuf);
 			return;
-        case CMD_AP_EXPSCALE:   //  ·à3á??
-            AP_EXPSCALE(datasock, recvbuf);
-            return;
+		case CMD_AP_EXPSCALE: //  ·à3á??
+			AP_EXPSCALE(client, recvbuf);
+			return;
 		case CMD_TP_DISC:
-			TP_DISC(datasock,recvbuf);
+			TP_DISC(client, recvbuf);
 			return;
-		case CMD_TP_ESTOPUSER_CHECK: 
-			TP_ESTOPUSER_CHECK(datasock, recvbuf);
+		case CMD_TP_ESTOPUSER_CHECK:
+			TP_ESTOPUSER_CHECK(client, recvbuf);
 			return;
 		case CMD_MP_GUILD_CHALL_PRIZEMONEY:
-			MP_GUILD_CHALL_PRIZEMONEY( NULL, datasock, recvbuf );
+			MP_GUILD_CHALL_PRIZEMONEY(NULL, client, recvbuf);
 			return;
-		case CMD_MP_GM1SAY1://Add by sunny.sun 20080804			
-			CP_GM1SAY1(NULL,datasock,recvbuf);
+		case CMD_MP_GM1SAY1: //Add by sunny.sun 20080804
+			CP_GM1SAY1(NULL, client, recvbuf);
 			return;
 		case CMD_MP_GM1SAY:
-			CP_GM1SAY( NULL, datasock, recvbuf);
+			CP_GM1SAY(NULL, client, recvbuf);
 			return;
 		case CMD_MP_GMBANACCOUNT:
-			MP_GM_BANACCOUNT(NULL, datasock, recvbuf);
+			MP_GM_BANACCOUNT(NULL, client, recvbuf);
 			return;
 		case CMD_MP_GMUNBANACCOUNT:
-			MP_GM_UNBANACCOUNT(NULL, datasock,recvbuf);
+			MP_GM_UNBANACCOUNT(NULL, client, recvbuf);
 			return;
 		case CMD_MP_GUILDNOTICE:
-			MP_GUILDNOTICE(NULL, datasock, recvbuf);
+			MP_GUILDNOTICE(NULL, client, recvbuf);
 			return;
 		case CMD_MP_CANRECEIVEREQUESTS:
-			MP_CANRECEIVEREQUESTS(datasock, recvbuf);
+			MP_CANRECEIVEREQUESTS(client, recvbuf);
 			return;
-		
 		}
 
-		auto l_ply = ToPointer<Player>(recvbuf.ReverseReadLong());
-		uLong l_gtaddr = recvbuf.ReverseReadLong();
-		try
-		{
-			if (!l_ply || 
-				(l_cmd != CMD_MP_ENTERMAP && l_ply->m_currcha < 0) || 
-				l_gtaddr != l_ply->m_gtAddr)
-			{
-				KickUser(datasock,ToAddress(l_ply),l_gtaddr);
+		auto l_ply = ToPointer<Player>(recvbuf.ReverseReadInt64());
+		uLong l_gtaddr = recvbuf.ReverseReadInt64();
+		try {
+			if (!l_ply ||
+				(l_cmd != CMD_MP_ENTERMAP && l_ply->m_currcha < 0) ||
+				l_gtaddr != l_ply->m_gtAddr) {
+				KickUser(client, ToAddress(l_ply), l_gtaddr);
 				return;
 			}
 		}
-		catch(...)
-		{
-			KickUser(datasock,ToAddress(l_ply),l_gtaddr);
+		catch (...) {
+			KickUser(client, ToAddress(l_ply), l_gtaddr);
 			return;
 		}
-		switch (l_cmd)
-		{
+		switch (l_cmd) {
 		case CMD_MP_PUSHTOGUILDBANK:
-		case CMD_CP_GUILDBANK:{
+		case CMD_CP_GUILDBANK: {
 			int guildID = l_ply->m_guild[l_ply->m_currcha];
-			if (guildID < 1 || guildID > 200){
+			if (guildID < 1 || guildID > 200) {
 				return;
 			}
 
 
-			WPacket	l_wpk = WPacket(recvbuf).Duplicate();
-			if (l_cmd == CMD_CP_GUILDBANK){
+			net::WPacket l_wpk(recvbuf);
+			if (l_cmd == CMD_CP_GUILDBANK) {
 				l_wpk.WriteCmd(CMD_PM_GUILDBANK);
-			}else if (l_cmd == CMD_MP_PUSHTOGUILDBANK){
+			}
+			else if (l_cmd == CMD_MP_PUSHTOGUILDBANK) {
 				l_wpk.WriteCmd(CMD_PM_PUSHTOGUILDBANK);
 			}
 
 			GuildBankMsg gbm;
 			gbm.player = l_ply;
 			gbm.msg = l_wpk;
-			
+
 			const int queueSize = guildBankMsgQueue[guildID].size();
-			
+
 			/*
 			if (GetTickCount() - l_ply->lLastGuildMove <= 1000) {
-				WPacket	l_wpk = GetWPacket();
+				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_ERRMSG);
 				l_wpk.WriteString("You're spamming, stop~~");
 				SendToClient(l_ply, l_wpk);
@@ -325,14 +225,13 @@ void GroupServerApp::OnProcessData(DataSocket *datasock,RPacket &recvbuf)
 
 			}
 			*/
-		
 
 
-			if (queueSize >= 10){
-				WPacket	l_wpk = GetWPacket();
+			if (queueSize >= 10) {
+				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_ERRMSG);
 				char buf[200];
-				sprintf(buf,"Guild Bank is currently busy. Try again later.");
+				sprintf(buf, "Guild Bank is currently busy. Try again later.");
 				l_wpk.WriteString(buf);
 				SendToClient(l_ply, l_wpk);
 				return;
@@ -340,54 +239,52 @@ void GroupServerApp::OnProcessData(DataSocket *datasock,RPacket &recvbuf)
 
 			guildBankMsgQueue[guildID].push_back(gbm);
 
-			//if (guildBankMsgQueue[guildID].size() == 1){		// Mdr: why? Let's send the information regardless of queue size. 
-				SendToClient(l_ply, l_wpk);
+			//if (guildBankMsgQueue[guildID].size() == 1){		// Mdr: why? Let's send the information regardless of queue size.
+			SendToClient(l_ply, l_wpk);
 			//}
 
 			break;
 		}
-		
-		case CMD_MP_GUILDBANK:{
-			int guildID = recvbuf.ReadLong();
 
-			if (guildID < 1 || guildID > 200){
+		case CMD_MP_GUILDBANK: {
+			int guildID = recvbuf.ReadInt64();
+
+			if (guildID < 1 || guildID > 200) {
 				return;
 			}
 
 			auto& msgQueue = guildBankMsgQueue[guildID];
-			if (!msgQueue.empty())
-			{
+			if (!msgQueue.empty()) {
 				// Pop previous(processed) request
 				msgQueue.pop_front();
 
 				// Send next request in queue if any
-				if (!msgQueue.empty())
-				{
+				if (!msgQueue.empty()) {
 					auto& msg = msgQueue.front();
 					SendToClient(msg.player, msg.msg);
 				}
 			}
 			break;
 		}
-							 //Player Chat Color mothannakh
+		//Player Chat Color mothannakh
 		//case CMD_MP_PlayerChatColor: {
-			//const DWORD color = recvbuf.ReadLong();
+		//const DWORD color = recvbuf.ReadInt64();
 		//	l_ply->m_chatColour[l_ply->m_currcha] = color;
-		
-		//	break;
-	//	}
-			
-		case CMD_MP_GUILD_PERM:{
-			int targetID = recvbuf.ReadLong();
-			unsigned long permission = recvbuf.ReadLong();
 
-			Guild	*l_guild = l_ply->GetGuild();
-			if (!l_guild){
+		//	break;
+		//	}
+
+		case CMD_MP_GUILD_PERM: {
+			int targetID = recvbuf.ReadInt64();
+			unsigned long permission = recvbuf.ReadInt64();
+
+			Guild* l_guild = l_ply->GetGuild();
+			if (!l_guild) {
 				return;
 			}
-			Player	*l_dst = l_guild->FindGuildMemByChaID(targetID);
+			Player* l_dst = l_guild->FindGuildMemByChaID(targetID);
 			//update in memory if player is online
-			if (l_dst && l_dst->m_currcha >= 0){
+			if (l_dst && l_dst->m_currcha >= 0) {
 				l_dst->m_guildPermission[l_dst->m_currcha] = permission;
 			}
 			//if player is on char select screen, find desired char and update
@@ -400,16 +297,16 @@ void GroupServerApp::OnProcessData(DataSocket *datasock,RPacket &recvbuf)
 			//	}
 			//}
 			//notify all in guild that permission has changed.
-			WPacket l_wpk = GetWPacket();
+			net::WPacket l_wpk(256);
 			l_wpk.WriteCmd(CMD_PC_GUILD_PERM);
-			l_wpk.WriteLong(targetID);
-			l_wpk.WriteLong(permission);
-			
-			Player *l_plylst[10240];
-			short	l_plynum = 0;
+			l_wpk.WriteInt64(targetID);
+			l_wpk.WriteInt64(permission);
+
+			Player* l_plylst[10240];
+			short l_plynum = 0;
 
 			RunChainGetArmor<GuildMember> l(*l_guild);
-			while (l_ply = static_cast<Player	*>(l_guild->GetNextItem())){
+			while (l_ply = static_cast<Player*>(l_guild->GetNextItem())) {
 				l_plylst[l_plynum] = l_ply;
 				l_plynum++;
 			}
@@ -419,344 +316,358 @@ void GroupServerApp::OnProcessData(DataSocket *datasock,RPacket &recvbuf)
 			return;
 		}
 		case CMD_CP_PING:
-			CP_PING(l_ply,datasock,recvbuf);
+			CP_PING(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_REPORT_WG:
-			CP_REPORT_WG(l_ply,datasock,recvbuf);
+			CP_REPORT_WG(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_MOTTO:
-			MP_GUILD_MOTTO(l_ply,datasock,recvbuf);
+			MP_GUILD_MOTTO(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_CHALLMONEY:
-			MP_GUILD_CHALLMONEY( l_ply, datasock, recvbuf );
+			MP_GUILD_CHALLMONEY(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_DISBAND:
-			MP_GUILD_DISBAND(l_ply,datasock,recvbuf);
+			MP_GUILD_DISBAND(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_LEAVE:
-			MP_GUILD_LEAVE(l_ply,datasock,recvbuf);
+			MP_GUILD_LEAVE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_KICK:
-			MP_GUILD_KICK(l_ply,datasock,recvbuf);
+			MP_GUILD_KICK(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_CREATE:
-			MP_GUILD_CREATE(l_ply,datasock,recvbuf);
+			MP_GUILD_CREATE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GUILD_APPROVE:
-			MP_GUILD_APPROVE(l_ply,datasock,recvbuf);
+			MP_GUILD_APPROVE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_SAY2ALL:
-			MP_SAY2ALL(l_ply,datasock,recvbuf);
+			MP_SAY2ALL(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_SAY2TRADE:
-			MP_SAY2TRADE(l_ply,datasock,recvbuf);
+			MP_SAY2TRADE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_REFUSETOME:
-			CP_REFUSETOME(l_ply,datasock,recvbuf);
+			CP_REFUSETOME(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_GM1SAY:
-			CP_GM1SAY(l_ply,datasock,recvbuf);
+			CP_GM1SAY(l_ply, client, recvbuf);
 			return;
-		case CMD_CP_GM1SAY1://Add by sunny.sun 20080804
-			CP_GM1SAY1(l_ply,datasock,recvbuf);
+		case CMD_CP_GM1SAY1: //Add by sunny.sun 20080804
+			CP_GM1SAY1(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SAY2TRADE:
-			CP_SAY2TRADE(l_ply,datasock,recvbuf);
+			CP_SAY2TRADE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SAY2ALL:
-			CP_SAY2ALL(l_ply,datasock,recvbuf);
+			CP_SAY2ALL(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SAY2YOU:
-			CP_SAY2YOU(l_ply,datasock,recvbuf);
+			CP_SAY2YOU(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SAY2TEM:
-			CP_SAY2TEM(l_ply,datasock,recvbuf);
+			CP_SAY2TEM(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SAY2GUD:
-			CP_SAY2GUD(l_ply,datasock,recvbuf);
+			CP_SAY2GUD(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_TEAM_INVITE:
-			CP_TEAM_INVITE(l_ply,datasock,recvbuf);
+			CP_TEAM_INVITE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_TEAM_ACCEPT:
-			CP_TEAM_ACCEPT(l_ply,datasock,recvbuf);
+			CP_TEAM_ACCEPT(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_TEAM_REFUSE:
-			CP_TEAM_REFUSE(l_ply,datasock,recvbuf);
+			CP_TEAM_REFUSE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_TEAM_LEAVE:
-			CP_TEAM_LEAVE(l_ply,datasock,recvbuf);
+			CP_TEAM_LEAVE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_TEAM_KICK:
-			CP_TEAM_KICK(l_ply,datasock,recvbuf);
+			CP_TEAM_KICK(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_TEAM_CREATE:
-			MP_TEAM_CREATE(l_ply,datasock,recvbuf);
+			MP_TEAM_CREATE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_ENTERMAP:
-			MP_ENTERMAP(l_ply,datasock,recvbuf);
+			MP_ENTERMAP(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_MASTER_CREATE:
-			MP_MASTER_CREATE(l_ply,datasock,recvbuf);
+			MP_MASTER_CREATE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_MASTER_DEL:
-			MP_MASTER_DEL(l_ply,datasock,recvbuf);
+			MP_MASTER_DEL(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_MASTER_FINISH:
-			MP_MASTER_FINISH(l_ply,datasock,recvbuf);
+			MP_MASTER_FINISH(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_MASTER_REFRESH_INFO:
-			CP_MASTER_REFRESH_INFO(l_ply,datasock,recvbuf);
+			CP_MASTER_REFRESH_INFO(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_PRENTICE_REFRESH_INFO:
-			CP_PRENTICE_REFRESH_INFO(l_ply,datasock,recvbuf);
+			CP_PRENTICE_REFRESH_INFO(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_FRND_INVITE:
-			CP_FRND_INVITE(l_ply,datasock,recvbuf);
+			CP_FRND_INVITE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_FRND_ACCEPT:
-			CP_FRND_ACCEPT(l_ply,datasock,recvbuf);
+			CP_FRND_ACCEPT(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_FRND_REFUSE:
-			CP_FRND_REFUSE(l_ply,datasock,recvbuf);
+			CP_FRND_REFUSE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_FRND_DELETE:
-			CP_FRND_DELETE(l_ply,datasock,recvbuf);
+			CP_FRND_DELETE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_FRND_CHANGE_GROUP:
-			CP_FRND_CHANGE_GROUP(l_ply, datasock,recvbuf);
+			CP_FRND_CHANGE_GROUP(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_FRND_REFRESH_INFO:
-			CP_FRND_REFRESH_INFO(l_ply,datasock,recvbuf);
+			CP_FRND_REFRESH_INFO(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_CHANGE_PERSONINFO:
-			CP_CHANGE_PERSONINFO(l_ply, datasock,recvbuf);
+			CP_CHANGE_PERSONINFO(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SESS_CREATE:
-			CP_SESS_CREATE(l_ply,datasock,recvbuf);
+			CP_SESS_CREATE(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SESS_SAY:
-			CP_SESS_SAY(l_ply,datasock,recvbuf);
+			CP_SESS_SAY(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SESS_ADD:
-			CP_SESS_ADD(l_ply,datasock,recvbuf);
+			CP_SESS_ADD(l_ply, client, recvbuf);
 			return;
 		case CMD_CP_SESS_LEAVE:
-			CP_SESS_LEAVE(l_ply,datasock,recvbuf);
+			CP_SESS_LEAVE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_GARNER2_CGETORDER:
-			CP_GARNER2_GETORDER(l_ply,datasock,recvbuf);
+			CP_GARNER2_GETORDER(l_ply, client, recvbuf);
 			return;
-		case CMD_MP_GARNER2_UPDATE://·′?·°×ò?￡??üD?×?D?μ?????
-			MP_GARNER2_UPDATE(l_ply,datasock,recvbuf);
+		case CMD_MP_GARNER2_UPDATE: //·′?·°×ò?￡??üD?×?D?μ?????
+			MP_GARNER2_UPDATE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_MUTE_PLAYER:
-			MP_MUTE_PLAYER(l_ply, datasock, recvbuf);
+			MP_MUTE_PLAYER(l_ply, client, recvbuf);
 			return;
 		}
-	}catch(...)
-	{
-		LG("packetException", "Packet CMD [%d] from [%s] caused exception.\n", recvbuf.ReadCmd(), datasock->GetPeerIP());
+	}
+	catch (...) {
+		LG("packetException", "Packet CMD [%d] from [%s] caused exception.\n", recvbuf.ReadCmd(),
+		   client->GetPeerIP().c_str());
 		return;
 	}
-
 }
 
 // Add by lark.li 20081119 begin
-WPacket GroupServerApp::TP_SYNC_PLYLST(DataSocket *datasock,RPacket &pk)
-{
-	WPacket	l_retpk			=GetWPacket();
+net::WPacket GroupServerApp::TP_SYNC_PLYLST(net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
 
 	m_mtxSyn.lock();
 
-	try
-	{
-		uLong num = pk.ReadLong();
-		cChar		*l_gatename	=pk.ReadString();
-		GateServer* pServer = this->FindGateSByName(l_gatename);
+	try {
+		uLong num = pk.ReadInt64();
+		auto l_gatename = pk.ReadString();
+		GateServer* pServer = this->FindGateSByName(l_gatename.c_str());
 
-		if(pServer)
-		{
-			l_retpk.WriteShort(ERR_SUCCESS);
+		if (pServer) {
+			l_retpk.WriteInt64(ERR_SUCCESS);
 
-			l_retpk.WriteShort((uShort)num);
-			for(int i=0;i<(int)num;i++)
-			{
-				Player	*l_ply	=g_gpsvr->m_plyheap.Get();
-				if(l_ply)
-				{
-					l_retpk.WriteShort(1);
-					uLong test = ToAddress(l_ply);
-					l_retpk.WriteLong(ToAddress(l_ply));
+			l_retpk.WriteInt64((uShort)num);
+			for (int i = 0; i < (int)num; i++) {
+				uLong l_gtAddr = pk.ReadInt64();
+				uLong l_acctLoginID = pk.ReadInt64();
+				uLong l_acctid = pk.ReadInt64();
+
+				// Поиск существующего Player по gtAddr на этом GateServer
+				Player* l_ply = nullptr;
+				bool l_found = false;
+				for (auto l_p = g_gpsvr->m_plylst.GetNextItem(); l_p; l_p = g_gpsvr->m_plylst.GetNextItem()) {
+					if (l_p->m_gate == pServer && l_p->m_gtAddr == l_gtAddr) {
+						l_ply = l_p;
+						l_found = true;
+						break;
+					}
+				}
+
+				if (!l_ply) {
+					// Игрок не найден — создаём нового
+					l_ply = g_gpsvr->m_plyheap.Get();
+				}
+
+				if (l_ply) {
+					l_retpk.WriteInt64(1);
+					l_retpk.WriteInt64(ToAddress(l_ply));
 
 					l_ply->m_gate = pServer;
-					l_ply->m_gtAddr		=pk.ReadLong();
-					l_ply->m_acctLoginID = pk.ReadLong();
-					l_ply->m_acctid = pk.ReadLong();
+					l_ply->m_gtAddr = l_gtAddr;
+					l_ply->m_acctLoginID = l_acctLoginID;
+					l_ply->m_acctid = l_acctid;
 
-					l_ply->BeginRun();
+					if (!l_found) {
+						l_ply->BeginRun();
+					}
 				}
-				else
-				{
-					l_retpk.WriteShort(0);
+				else {
+					l_retpk.WriteInt64(0);
 				}
 			}
 		}
 		else
-			l_retpk.WriteShort(ERR_PT_LOGFAIL);
+			l_retpk.WriteInt64(ERR_PT_LOGFAIL);
 	}
-	catch(...)
-	{
-		l_retpk.WriteShort(ERR_PT_LOGFAIL);
+	catch (...) {
+		l_retpk.WriteInt64(ERR_PT_LOGFAIL);
 	}
 	m_mtxSyn.unlock();
-	
+
 	return l_retpk;
 }
 
-WPacket GroupServerApp::OS_LOGIN(DataSocket *datasock,RPacket &pk)
-{
-	WPacket	l_retpk			=GetWPacket();
-	if(pk.ReadShort() !=std::stoi(m_cfg["Main"]["Version"]))
-	{
-		l_retpk.WriteShort(ERR_OS_NOTMATCH_VERSION);
-		Disconnect(datasock,100,-15);
+net::WPacket GroupServerApp::OS_LOGIN(net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	if (pk.ReadInt64() != std::stoi(m_cfg["Main"]["Version"])) {
+		l_retpk.WriteInt64(ERR_OS_NOTMATCH_VERSION);
+		m_server.DisconnectClient(client, -15);
 		return l_retpk;
 	}
-	cChar		*agentName	=pk.ReadString();
+	auto agentName = pk.ReadString();
 
-	LogLine	l_line(g_LogConnect);
-	l_line<<newln<<"AgentServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<< "OS_LOGIN1" <<endln;
-	
+	LogLine l_line(g_LogConnect);
+	l_line << newln << "AgentServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "OS_LOGIN1" <<
+		endln;
+
 	m_mtxAgent.lock();
 
-	l_line<<newln<<"AgentServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<< "OS_LOGIN2" <<endln;
-	try{
-		if(m_groupServerAgent.SetDataSock(datasock))
-		{
-			l_retpk.WriteShort(ERR_SUCCESS);
-			std::cout<<"AgentServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"Re-log successful!"<<std::endl;
-		}else
-		{
-			l_retpk.WriteShort(ERR_PT_SAMEGATENAME);
-			std::cout<<"AgentServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"Login failed: A same name is already logged on in AgentServer"<<std::endl;
-			Disconnect(datasock);
+	l_line << newln << "AgentServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "OS_LOGIN2" <<
+		endln;
+	try {
+		if (m_groupServerAgent.SetClient(client)) {
+			l_retpk.WriteInt64(ERR_SUCCESS);
+			std::cout << "AgentServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() <<
+				"Re-log successful!" << std::endl;
 		}
-	}catch(...){}
+		else {
+			l_retpk.WriteInt64(ERR_PT_SAMEGATENAME);
+			std::cout << "AgentServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() <<
+				"Login failed: A same name is already logged on in AgentServer" << std::endl;
+			m_server.DisconnectClient(client);
+		}
+	}
+	catch (...) {
+	}
 	m_mtxAgent.unlock();
-	l_line<<newln<<"AgentServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<< "OS_LOGIN3" <<endln;
+	l_line << newln << "AgentServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "OS_LOGIN3" <<
+		endln;
 
 	return l_retpk;
 }
 
-void GroupServerApp::OS_PING(DataSocket *datasock,RPacket &pk)
-{
-	WPacket l_wpk	=GetWPacket();
+void GroupServerApp::OS_PING(net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_SO_PING);
-	l_wpk.WriteLong(m_plyheap.GetUsedNum());
-	SendData(datasock,l_wpk);
+	l_wpk.WriteInt64(m_plyheap.GetUsedNum());
+	client->Send(l_wpk);
 }
+
 // End
 
-void GroupServerApp::CP_PING(Player *ply,DataSocket *datasock,RPacket	&pk)
-{
-	Player	*l_ply	=ply->m_pingply;
-	if(!l_ply)	return;
-	ply->m_pingply	=0;
-	//l_ply->SendSysInfo(dstring("·t???÷μ?í??ò??")<<ply->m_chaname[ply->m_currcha].c_str()<<"??μ?ping?μ?a:"<<pk.ReadLong()<<"oá??");
+void GroupServerApp::CP_PING(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	Player* l_ply = ply->m_pingply;
+	if (!l_ply) return;
+	ply->m_pingply = 0;
+	//l_ply->SendSysInfo(dstring("·t???÷μ?í??ò??")<<ply->m_chaname[ply->m_currcha].c_str()<<"??μ?ping?μ?a:"<<pk.ReadInt64()<<"oá??");
 	char l_buf[256];
-	sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001),ply->m_chaname[ply->m_currcha].c_str(), pk.ReadLong());
+	sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001), ply->m_chaname[ply->m_currcha].c_str(), pk.ReadInt64());
 	l_ply->SendSysInfo(l_buf);
 }
 
-void GroupServerApp::CP_REPORT_WG(Player *ply,DataSocket *datasock,RPacket &pk)
-{
+void GroupServerApp::CP_REPORT_WG(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	// í3??í??òê1ó?ía1òêyá?
-	if( !ply->m_bWG )
-	{
+	if (!ply->m_bWG) {
 		ply->m_bWG = TRUE;
 		m_curWGChaNum++;
 	}
 	//ply->SendSysInfo( "±¨??á???é?ê1ó?ía1ò￡?" );
 }
 
-void GroupServerApp::KickUser(DataSocket *datasock,uLong gpaddr,uLong gtaddr)
-{
-	WPacket l_wpk	=GetWPacket();
+void GroupServerApp::KickUser(net::TcpClient* client, uLong gpaddr, uLong gtaddr) {
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PT_KICKUSER);
-	l_wpk.WriteLong(gpaddr);
-	l_wpk.WriteLong(gtaddr);
-	l_wpk.WriteShort(1);
-	SendData(datasock,l_wpk);
+	l_wpk.WriteInt64(gpaddr);
+	l_wpk.WriteInt64(gtaddr);
+	l_wpk.WriteInt64(1);
+	client->Send(l_wpk);
 }
 
-WPacket	GroupServerApp::TP_LOGIN(DataSocket *datasock,RPacket &pk)
-{
-	WPacket	l_retpk			=GetWPacket();
-	if(pk.ReadShort() !=std::stoi(m_cfg["Main"]["Version"]))
-	{
-		l_retpk.WriteShort(ERR_PT_LOGFAIL);
-		Disconnect(datasock,100,-15);
+net::WPacket GroupServerApp::TP_LOGIN(net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	if (pk.ReadInt64() != std::stoi(m_cfg["Main"]["Version"])) {
+		l_retpk.WriteInt64(ERR_PT_LOGFAIL);
+		m_server.DisconnectClient(client, -15);
 		return l_retpk;
 	}
-	cChar		*l_gatename	=pk.ReadString();
+	auto l_gatename = pk.ReadString();
 	m_mtxlogin.lock();
-	try{
-		GateServer	*l_gate		=FindGateSByName(l_gatename);
-		if(l_gate)
-		{
-			if(l_gate->SetDataSock(datasock))
-			{
-				l_retpk.WriteShort(ERR_SUCCESS);
-				//std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"??μ???3é1|￡?"<<std::endl;
-				std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"re login success!"<<std::endl;
-			}else
-			{
-				l_retpk.WriteShort(ERR_PT_SAMEGATENAME);
-				//std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"μ???ê§°ü:ó?ò?μ???GateServer?????￡"<<std::endl;
-				std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"login failed: exsit the same name's GateServer "<<std::endl;
-				Disconnect(datasock);
+	try {
+		GateServer* l_gate = FindGateSByName(l_gatename.c_str());
+		if (l_gate) {
+			if (l_gate->SetClient(client)) {
+				l_retpk.WriteInt64(ERR_SUCCESS);
+				//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"??μ???3é1|￡?"<<std::endl;
+				std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() <<
+					"re login success!" << std::endl;
+			}
+			else {
+				l_retpk.WriteInt64(ERR_PT_SAMEGATENAME);
+				//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"μ???ê§°ü:ó?ò?μ???GateServer?????￡"<<std::endl;
+				std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() <<
+					"login failed: exsit the same name's GateServer " << std::endl;
+				m_server.DisconnectClient(client);
 			}
 		}
-		else if (m_gatenum < m_gate.size())
-		{
-			l_retpk.WriteShort(ERR_SUCCESS);
-			m_gate[m_gatenum].m_name	=l_gatename;
-			m_gate[m_gatenum].SetDataSock(datasock);
+		else if (m_gatenum < m_gate.size()) {
+			l_retpk.WriteInt64(ERR_SUCCESS);
+			m_gate[m_gatenum].m_name = l_gatename;
+			m_gate[m_gatenum].SetClient(client);
 			++m_gatenum;
-			//std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"μ???3é1|￡?"<<std::endl;
-			std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"login success"<<std::endl;
-		}else
-		{
-			l_retpk.WriteShort(ERR_PT_LOGFAIL);
-			//std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"μ???ê§°ü￡?"<<std::endl;
-			std::cout<<"GateServer:"<<datasock->GetPeerIP()<<","<<datasock->GetPeerPort()<<"login failed!"<<std::endl;
-			Disconnect(datasock);
+			//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"μ???3é1|￡?"<<std::endl;
+			std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "login success"
+				<<
+				std::endl;
 		}
-	}catch(...){}
+		else {
+			l_retpk.WriteInt64(ERR_PT_LOGFAIL);
+			//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"μ???ê§°ü￡?"<<std::endl;
+			std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "login failed!"
+				<<
+				std::endl;
+			m_server.DisconnectClient(client);
+		}
+	}
+	catch (...) {
+	}
 	m_mtxlogin.unlock();
 	return l_retpk;
 }
 
-WPacket	GroupServerApp::TP_REQPLYLST(DataSocket *datasock,RPacket &pk)
-{
-	GateServer *l_gate	=(GateServer *)datasock->GetPointer();
-	if(!l_gate)
-	{
-		return 0;
+net::WPacket GroupServerApp::TP_REQPLYLST(net::TcpClient* client, net::RPacket& pk) {
+	GateServer* l_gate = (GateServer*)client->GetPointer();
+	if (!l_gate) {
+		return net::WPacket();
 	}
-	WPacket	l_retpk	=GetWPacket();
-	Player	*	l_ply;uShort l_plynum =0;
+	net::WPacket l_retpk(256);
+	Player* l_ply;
+	uShort l_plynum = 0;
 	RunChainGetArmor<Player> l(m_plylst);
-	for(l_ply	=m_plylst.GetNextItem();l_ply;l_ply	=m_plylst.GetNextItem())
-	{
-		if(l_ply->m_gate !=l_gate || l_ply->m_currcha <0)continue;
-		l_retpk.WriteLong(l_ply->m_gtAddr);
-		l_retpk.WriteLong(l_ply->m_chaid[l_ply->m_currcha]);
-		l_plynum	++;
+	for (l_ply = m_plylst.GetNextItem(); l_ply; l_ply = m_plylst.GetNextItem()) {
+		if (l_ply->m_gate != l_gate || l_ply->m_currcha < 0)continue;
+		l_retpk.WriteInt64(l_ply->m_gtAddr);
+		l_retpk.WriteInt64(l_ply->m_chaid[l_ply->m_currcha]);
+		l_plynum++;
 	}
 	l.unlock();
-	l_retpk.WriteShort(l_plynum);
+	l_retpk.WriteInt64(l_plynum);
 	return l_retpk;
 }
 
@@ -765,55 +676,52 @@ int GroupServerApp::GetChaCount(Player* player) {
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	int l_row = 0;
 	int k = -1;
-	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0)		//D??¤???êo?
+	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0) //D??¤???êo?
 	{
 		// New account, so no chars.
 		return 0;
 	}
 	else {
 		std::string l_chaid[Player::emMaxCharacters];
-		player->m_chanum = char(Util_ResolveTextLine(m_tblaccounts->GetChaIDs(), l_chaid, Player::emMaxCharacters, ';'));
+		player->m_chanum =
+			char(Util_ResolveTextLine(m_tblaccounts->GetChaIDs(), l_chaid, Player::emMaxCharacters, ';'));
 		char i = 0, j = 0;
-		for (; j < player->m_chanum; i++, j++)
-		{
+		for (; j < player->m_chanum; i++, j++) {
 			player->m_chaid[i] = atoi(l_chaid[j].c_str());
-			if (!player->m_chaid[i])
-			{
+			if (!player->m_chaid[i]) {
 				// Character invalid, decrease counter.
 				i--;
 			}
-			else
-			{
-				if ((l_row = m_tblcharaters->FetchRowByChaID(player->m_chaid[i])) == 1)
-				{
-					char* l_look = const_cast<char*>(m_tblcharaters->GetLook());			//??è?ía1?êy?Y
-					LOOK	look; MemSet((char*)&look, 0, sizeof(LOOK));
+			else {
+				if ((l_row = m_tblcharaters->FetchRowByChaID(player->m_chaid[i])) == 1) {
+					char* l_look = const_cast<char*>(m_tblcharaters->GetLook()); //??è?ía1?êy?Y
+					LOOK look;
+					MemSet((char*)&look, 0, sizeof(LOOK));
 					try {
 						std::string s(l_look);
 						Strin2LookData(&look, s);
 					}
-					catch (...)
-					{
+					catch (...) {
 						LogLine l_line(g_LogGrpServer);
 						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúía1?êy?Y?a??òì3￡?￡"<<endln;
-						l_line << newln << "enum account [" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i] << "] find appearance data exception." << endln;
+						l_line << newln << "enum account [" << player->m_acctname << "]'s char[ID:" << player->m_chaid[
+							i] << "] find appearance data exception." << endln;
 						i--;
 						continue;
 					}
 				}
-				else
-				{
-					if (l_row == 0)
-					{
+				else {
+					if (l_row == 0) {
 						LogLine l_line(g_LogGrpServer);
 						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";
-						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i] << "] can't find data in table character.";
+						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
+							<< "] can't find data in table character.";
 					}
-					else
-					{
+					else {
 						LogLine l_line(g_LogGrpServer);
 						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúêy?Y?a2ù×÷′í?ó?￡";
-						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i] << "] databse exception.";
+						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
+							<< "] databse exception.";
 					}
 					i--;
 				}
@@ -839,15 +747,15 @@ bool GroupServerApp::CanCreateBonusChar(Player* player) {
 				if (m_tblcharaters->GetDegree() > highestLevel) highestLevel = m_tblcharaters->GetDegree();
 			}
 			else {
-				if (l_row == 0)
-				{
+				if (l_row == 0) {
 					LogLine l_line(g_LogGrpServer);
-					l_line << newln << "CanCreateBonusChar:" << player->m_acctname << "'s charID:" << player->m_chaid[i] << "] can't find data in table character.";
+					l_line << newln << "CanCreateBonusChar:" << player->m_acctname << "'s charID:" << player->m_chaid[i]
+						<< "] can't find data in table character.";
 				}
-				else
-				{
+				else {
 					LogLine l_line(g_LogGrpServer);
-					l_line << newln << "CanCreateBonusChar:" << player->m_acctname << "'s charID:" << player->m_chaid[i] << "] databse exception.";
+					l_line << newln << "CanCreateBonusChar:" << player->m_acctname << "'s charID:" << player->m_chaid[i]
+						<< "] databse exception.";
 				}
 				return false;
 			}
@@ -863,178 +771,169 @@ bool GroupServerApp::CanCreateBonusChar(Player* player) {
 }
 
 
-
-
-char GroupServerApp::SendCharData(Player* player, WPacket& wpk) {
+char GroupServerApp::SendCharData(Player* player, net::WPacket& wpk) {
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	int l_row = 0;
 	char l_chanum;
 	std::string l_chaid[Player::emMaxCharacters];
-	char* l_look = const_cast<char*>(m_tblcharaters->GetLook());			//??è?ía1?êy?Y
-	LOOK	look; MemSet((char*)&look, 0, sizeof(LOOK));
+	char* l_look = const_cast<char*>(m_tblcharaters->GetLook()); //??è?ía1?êy?Y
+	LOOK look;
+	MemSet((char*)&look, 0, sizeof(LOOK));
 	try {
 		std::string s(l_look);
 		Strin2LookData(&look, s);
-		}
-	catch (...)
-	{
+	}
+	catch (...) {
 		LogLine l_line(g_LogGrpServer);
-		wpk.WriteChar(0);		
+		wpk.WriteInt64(0);
 		return -1;
 	}
-	wpk.WriteString(m_tblcharaters->GetChaName());	
-	wpk.WriteString(m_tblcharaters->GetJob());			
-	wpk.WriteShort(m_tblcharaters->GetDegree());		
+	wpk.WriteString(m_tblcharaters->GetChaName());
+	wpk.WriteString(m_tblcharaters->GetJob());
+	wpk.WriteInt64(m_tblcharaters->GetDegree());
 
 	Look_Minimal const minimal_look(look);
 
-	wpk.WriteShort(minimal_look.typeID);
-	for (auto const& id : minimal_look.equip_IDs)
-	{
-		wpk.WriteShort(id);
+	wpk.WriteInt64(minimal_look.typeID);
+	for (auto const& id : minimal_look.equip_IDs) {
+		wpk.WriteInt64(id);
 	}
 
 	return 0;
 }
 
-bool GroupServerApp::GetCHAsFromDBByPlayer(Player *player,WPacket &wpk)
-{
+bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 	// This function is used to load some Player data and also to write char data to packet.
 	// A small section of this function was moved to GroupServerApp::SendCharData()
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
-	int l_row =0;
-	if((l_row  =m_tblaccounts->FetchRowByActName(player->m_acctname.c_str()))==0)		//D??¤???êo?
+	int l_row = 0;
+	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0) //D??¤???êo?
 	{
 		// Player doesn't have a row yet
 
 		player->m_bNew = true;
 		player->m_password.clear();
-		if( !m_tblaccounts->InsertRow(player->m_acctLoginID,player->m_acctname.c_str(),"0") )
+		if (!m_tblaccounts->InsertRow(player->m_acctLoginID, player->m_acctname.c_str(), "0"))
 			return false;
-		if( !m_tblaccounts->FetchRowByActName(player->m_acctname.c_str()) )
+		if (!m_tblaccounts->FetchRowByActName(player->m_acctname.c_str()))
 			return false;
 		player->m_acctid = m_tblaccounts->GetActID();
-		wpk.WriteChar(0);							//??é???êy
-	}else if(l_row ==1)
-	{
+		wpk.WriteInt64(0); //??é???êy
+	}
+	else if (l_row == 1) {
 		// Player already has a row, fill the data to memory.
 		// m_tblaccounts functions must be called after FetchRowByActName to "select" the correct player.
 		player->m_bNew = false;
 		player->m_acctid = m_tblaccounts->GetActID();
 		player->m_password = m_tblaccounts->GetPassword();
-		player->m_gm	 =m_tblaccounts->GetGM();
+		std::cout << "INIT ply_address:: " << player << std::endl;
+
+		player->m_gm = m_tblaccounts->GetGM();
 		std::string l_chaid[Player::emMaxCharacters];
-		player->m_chanum =char(Util_ResolveTextLine(m_tblaccounts->GetChaIDs(),l_chaid,Player::emMaxCharacters,';'));		
-		wpk.WriteChar(player->m_chanum);			//??é???êy
+		player->m_chanum =
+			char(Util_ResolveTextLine(m_tblaccounts->GetChaIDs(), l_chaid, Player::emMaxCharacters, ';'));
+		wpk.WriteInt64(player->m_chanum); //??é???êy
 
 		char i = 0, j = 0;
-		for(;j<player->m_chanum;i++,j++)
-		{
-			player->m_chaid[i]		=atoi(l_chaid[j].c_str());
-			if(!player->m_chaid[i])
-			{
-				wpk.WriteChar(0);
+		for (; j < player->m_chanum; i++, j++) {
+			player->m_chaid[i] = atoi(l_chaid[j].c_str());
+			if (!player->m_chaid[i]) {
+				wpk.WriteInt64(0);
 				i--;
-			}else
-			{
-				if((l_row =m_tblcharaters->FetchRowByChaID(player->m_chaid[i])) ==1)
-				{
+			}
+			else {
+				if ((l_row = m_tblcharaters->FetchRowByChaID(player->m_chaid[i])) == 1) {
 					// Row from character ID is valid (OK)
 					// Write char properties to packet and send them to client
 					// m_tblcharacters functions must be called only *after* FetchRowByChaID to "select" correct character.
-					wpk.WriteChar(1);					//±ê???a????é?êy?Yê?óDD§μ?
-					player->m_chaname[i]	=m_tblcharaters->GetChaName();
-					player->m_motto[i]		=m_tblcharaters->GetMotto();
-					player->m_icon[i]		=m_tblcharaters->GetIcon();
-					player->m_guild[i]		=m_tblcharaters->GetGuildID();
+					wpk.WriteInt64(1); //±ê???a????é?êy?Yê?óDD§μ?
+					player->m_chaname[i] = m_tblcharaters->GetChaName();
+					player->m_motto[i] = m_tblcharaters->GetMotto();
+					player->m_icon[i] = m_tblcharaters->GetIcon();
+					player->m_guild[i] = m_tblcharaters->GetGuildID();
 					player->m_guildPermission[i] = m_tblcharaters->GetGuildPermission();
-					player->m_chatColour[i] =  m_tblcharaters->GetChatColour();//todo
+					player->m_chatColour[i] = m_tblcharaters->GetChatColour(); //todo
 
 					char cRet = SendCharData(player, wpk);
 					if (cRet == -1) {
-
-
 					}
 					// This is essentially the same function, but it doesn't set player data, just gets it from DB and writes to packet.
-				}else
-				{
-					if(l_row ==0)
-					{
+				}
+				else {
+					if (l_row == 0) {
 						LogLine l_line(g_LogGrpServer);
 						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";
-						l_line<<newln<<"enum account["<<player->m_acctname<<"]'s char[ID:"<<player->m_chaid[i]<<"] can't find data in table character.";
- 					}else
-					{
+						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
+							<< "] can't find data in table character.";
+					}
+					else {
 						LogLine l_line(g_LogGrpServer);
 						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúêy?Y?a2ù×÷′í?ó?￡";
-						l_line<<newln<<"enum account["<<player->m_acctname<<"]'s char[ID:"<<player->m_chaid[i]<<"] databse exception.";
+						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
+							<< "] databse exception.";
 					}
-					wpk.WriteChar(0);					//±ê???a????é?êy?Yê??TD§μ?
+					wpk.WriteInt64(0); //±ê???a????é?êy?Yê??TD§μ?
 					i--;
 				}
 			}
 		}
 		// This is where m_chanum is defined. Number of *valid* characters (checked on the for loop above).
-		player->m_chanum	=i;
+		player->m_chanum = i;
 		// This function is only called on login, so other clients in the CreateChaScene will have the same m_chanum.
-	}else
-	{
+	}
+	else {
 		LogLine l_line(g_LogGrpServer);
 		//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?ê±oò·￠éúaccount±íμ?êy?Y?a2ù×÷′í?ó?￡";
-		l_line<<newln<<"enum account["<<player->m_acctname<<"] operate table account failed";
+		l_line << newln << "enum account[" << player->m_acctname << "] operate table account failed";
 	}
 	return true;
 }
 
-WPacket	GroupServerApp::TP_USER_LOGIN(DataSocket* datasock, RPacket& pk)
-{
+net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket& pk) {
+	uLong l_ulMilliseconds = 25 * 1000;
+	uLong l_tick = 0; // net::RPacket не хранит tick приёма пакета
 
-	uLong	l_ulMilliseconds = 25 * 1000;
-	uLong	l_tick = GetTickCount() - pk.GetTickCount();
-
-	if (!(l_ulMilliseconds > l_tick))
-	{
-		auto	l_retpk = GetWPacket();
-		l_retpk.WriteShort(ERR_PT_NETEXCP);
+	if (!(l_ulMilliseconds > l_tick)) {
+		auto l_retpk = net::WPacket(256);
+		l_retpk.WriteInt64(ERR_PT_NETEXCP);
 		return l_retpk;
 	}
 
 	l_ulMilliseconds = l_ulMilliseconds - l_tick;
 
 	Player* l_ply = g_gpsvr->m_plyheap.Get();
-	bool	bCheat = (pk.ReverseReadShort() == 911) ? false : true;
-	if (bCheat)
-	{
+	bool bCheat = (pk.ReverseReadInt64() == 911) ? false : true;
+	if (bCheat) {
 		m_dwCheatCount++;
 		l_ply->m_bCheat = true;
 	}
 
-	l_ply->m_gate = static_cast<GateServer*>(datasock->GetPointer());
-	l_ply->m_gtAddr = pk.ReverseReadLong();
-	in_addr		l_ina;
-	l_ina.S_un.S_addr = pk.ReverseReadLong();
+	l_ply->m_gate = static_cast<GateServer*>(client->GetPointer());
+	l_ply->m_gtAddr = pk.ReverseReadInt64();
+	in_addr l_ina;
+	l_ina.S_un.S_addr = pk.ReverseReadInt64();
 	strcpy(l_ply->m_clientip, inet_ntoa(l_ina));
 
-	pk.DiscardLast(static_cast<uLong>(sizeof(uShort)));
+	std::cout << "PK: " << pk.PrintCommand() << std::endl;
+	// pk.DiscardLast(static_cast<uLong>(sizeof(uShort)));
 	pk.DiscardLast(4);
 
-	uShort	l_len;
 	//cChar *l_passport = pk.ReadString(&l_len);
 	//if( !l_passport || strlen(l_passport) >= 64 )
 	//{
 	//	l_ply->Free();
-	//	l_retpk = GetWPacket();
+	//	l_retpk = net::WPacket(256);
 	//	l_retpk.WriteCmd(ERR_PT_INERR);
 	//	return l_retpk;
 	//}
 	//l_ply->m_passport = l_passport;
+	std::cout << "PK: " << pk.PrintCommand() << std::endl;
 
-	cChar* l_acctname = pk.ReadString(&l_len);			//AcctName
-	if (!l_acctname || strlen(l_acctname) > 128)
-	{
+	auto l_acctname = pk.ReadString(); //AcctName
+	if (l_acctname.empty() || l_acctname.size() > 128) {
 		l_ply->Free();
-		auto l_retpk = GetWPacket();
-		l_retpk.WriteShort(ERR_PT_INERR);
+		auto l_retpk = net::WPacket(256);
+		l_retpk.WriteInt64(ERR_PT_INERR);
 		return l_retpk;
 	}
 	//if(strchr(l_acctname,'\'') || !IsValidName(l_acctname,l_len))
@@ -1043,394 +942,385 @@ WPacket	GroupServerApp::TP_USER_LOGIN(DataSocket* datasock, RPacket& pk)
 	//	l_line<<newln<<"("<<l_ply->m_clientip<<"):["<<l_ply->m_acctname<<"]μ???×??Dòò°üà¨·?·¨μ?μ￥òyo?'×?·???±??ü??μ???";
 	//	l_line<<endln;
 	//	l_ply->Free();
-	//	l_retpk =GetWPacket();
-	//	l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	//	l_retpk =net::WPacket(256);
+	//	l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 	//	return l_retpk;
 	//}
-	if (m_plylst.GetTotal() >= const_cha.MaxLoginUsr)
-	{
+	if (m_plylst.GetTotal() >= const_cha.MaxLoginUsr) {
 		l_ply->Free();
-		auto l_retpk = GetWPacket();
-		l_retpk.WriteShort(ERR_MC_TOOMANYPLY);
+		auto l_retpk = net::WPacket(256);
+		l_retpk.WriteInt64(ERR_MC_TOOMANYPLY);
 		return l_retpk;
 	}
 	l_ply->m_acctname = l_acctname;
 
-	WPacket l_wpk = pk;
+	net::WPacket l_wpk(pk);
 	l_wpk.WriteCmd(CMD_PA_USER_LOGIN);
-	RPacket	rpkFromAccountServer = SyncCall(m_acctsock, l_wpk, l_ulMilliseconds);	//μ?AccountServerè??¤
-	if (!rpkFromAccountServer.HasData())
-	{
-		auto l_retpk = GetWPacket();
-		l_retpk.WriteShort(ERR_PT_NETEXCP);					//′í?ó??
+
+	// AsyncCall + busy-wait (замена SyncCall к AccountServer)
+	volatile bool gotAcctResp = false;
+	net::RPacket rpkFromAccountServer;
+	m_acctClient.AsyncCall(l_wpk, l_ulMilliseconds, [&](net::RPacket& rpk) {
+		rpkFromAccountServer = std::move(rpk);
+		gotAcctResp = true;
+	});
+	while (!gotAcctResp && m_acctClient.IsConnected()) {
+		m_acctClient.PollPackets(0);
+		Sleep(1);
+	}
+
+	if (!rpkFromAccountServer) {
+		auto l_retpk = net::WPacket(256);
+		l_retpk.WriteInt64(ERR_PT_NETEXCP); //′í?ó??
 		LogLine l_line(g_LogGrpServer);
 		l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "] login net failed" << endln;
 		l_ply->Free();
 		return l_retpk;
 	}
 
-	const auto l_errno = rpkFromAccountServer.ReadShort();
+	const auto l_errno = rpkFromAccountServer.ReadInt64();
 
-	if (l_errno && (rpkFromAccountServer.ReadCmd() == CMD_AP_KICKUSER))
-	{
-		auto rpk = RPacket(rpkFromAccountServer);
-		AP_KICKUSER(datasock, rpk);
-		rpkFromAccountServer.DiscardLast(sizeof(uLong));
-		return static_cast<WPacket>(rpkFromAccountServer);
+	if (l_errno && (rpkFromAccountServer.ReadCmd() == CMD_AP_KICKUSER)) {
+		net::RPacket rpk(rpkFromAccountServer.Data(), rpkFromAccountServer.GetPacketSize());
+		AP_KICKUSER(client, rpk);
+		rpkFromAccountServer.DiscardLast(1);
+		return net::WPacket(rpkFromAccountServer);
 	}
-	if (l_errno)
-	{
-		auto l_retpk = GetWPacket();
-		l_retpk.WriteShort(l_errno);
-		l_retpk = rpkFromAccountServer;
+	if (l_errno) {
+		auto l_retpk = net::WPacket(rpkFromAccountServer);
 
 		LogLine l_line(g_LogGrpServer);
-		l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "]login failed, error:" << l_errno << endln;
+		l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "]login failed, error:" << l_errno
+			<< endln;
 		l_ply->Free();
 		return l_retpk;
 	}
 
-	l_ply->m_acctLoginID = rpkFromAccountServer.ReadLong();
+	l_ply->m_acctLoginID = rpkFromAccountServer.ReadInt64();
 	uShort l_keylen, l_textlen;
 	//cChar	* l_key		=l_rpk.ReadSequence(l_keylen);
 	//cChar	* l_text	=l_rpk.ReadSequence(l_textlen);
-	l_ply->m_sessid = rpkFromAccountServer.ReadLong();
+	l_ply->m_sessid = rpkFromAccountServer.ReadInt64();
 
-	auto l_retpk = GetWPacket();
-	l_retpk.WriteShort(ERR_SUCCESS);			//3é1|·μ???μ
+	auto l_retpk = net::WPacket(256);
+	l_retpk.WriteInt64(ERR_SUCCESS); //3é1|·μ???μ
 	//l_retpk.WriteSequence(l_key,l_keylen);		//·μ???ó?ükey
 
-	l_retpk.WriteChar(const_cha.MaxChaNum);
-	GetCHAsFromDBByPlayer(l_ply, l_retpk);		//??è?êy?Y?aè???é?áD±í
+	l_retpk.WriteInt64(const_cha.MaxChaNum);
+	GetCHAsFromDBByPlayer(l_ply, l_retpk); //??è?êy?Y?aè???é?áD±í
 
-	if (l_ply->m_password.length() < 32)
-	{
+	if (l_ply->m_password.length() < 32) {
 		LogLine l_line(g_LogErrServer);
-		//l_line<<newln<<"?ê?§:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;		
-		//l_line<<newln<<"account:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;		
+		//l_line<<newln<<"?ê?§:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;
+		//l_line<<newln<<"account:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;
 	}
 
 	//l_retpk.WriteSequence(l_text,l_textlen);	//·μ???÷??key
-	//l_retpk.WriteShort(l_textlen);
+	//l_retpk.WriteInt64(l_textlen);
 
-	if (l_ply->m_password.length() > 0 && !l_ply->m_bNew)
-	{
-		l_retpk.WriteChar(1);
+	if (l_ply->m_password.length() > 0 && !l_ply->m_bNew) {
+		l_retpk.WriteInt64(1);
 	}
-	else
-	{
-		l_retpk.WriteChar(0);
+	else {
+		l_retpk.WriteInt64(0);
 	}
 
-	l_retpk.WriteLong(l_ply->m_acctid);
-	l_retpk.WriteLong(l_ply->m_acctLoginID);
-	l_retpk.WriteLong(ToAddress(l_ply));		//??′?é?×??oμ?μ??·
+	l_retpk.WriteInt64(l_ply->m_acctid);
+	l_retpk.WriteInt64(l_ply->m_acctLoginID);
+	l_retpk.WriteInt64(ToAddress(l_ply)); //??′?é?×??oμ?μ??·
 	l_ply->BeginRun();
 	LogLine l_line(g_LogGrpServer);
 	//l_line<<newln<<"("<<l_ply->m_clientip<<"):["<<l_ply->m_acctname<<"]μ???3é1|￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)<<endln;
-	l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "]login success, \t nline/total:" << m_plylst.GetTotal() << "/" << long(m_curChaNum) << endln;
+	l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "]login success, \t nline/total:" <<
+		m_plylst.GetTotal() << "/" << long(m_curChaNum) << endln;
 
-    for (short i = 0; i < l_ply->m_chanum; i++)
-    {
-        char luaCmd[64];
-        sprintf(luaCmd, "ClearOnlineChars(%d)", l_ply->m_chaid[i]);
-        WPacket    l_wpk = GetWPacket();
-        l_wpk.WriteCmd(CMD_MM_DO_STRING);
-        l_wpk.WriteLong(ToAddress(l_ply));
-        l_wpk.WriteString(luaCmd);
-        SendToClient(l_ply, l_wpk);
-    }
+	for (short i = 0; i < l_ply->m_chanum; i++) {
+		char luaCmd[64];
+		sprintf(luaCmd, "ClearOnlineChars(%d)", l_ply->m_chaid[i]);
+		net::WPacket l_wpk(256);
+		l_wpk.WriteCmd(CMD_MM_DO_STRING);
+		l_wpk.WriteInt64(ToAddress(l_ply));
+		l_wpk.WriteString(luaCmd);
+		SendToClient(l_ply, l_wpk);
+	}
 
 	return l_retpk;
 }
 
-void GroupServerApp::AP_KICKUSER2( DataSocket* datasock, uLong acctid )
-{
-	Player	*l_ply	=0;
-	uLong l_acctid	=acctid;
+void GroupServerApp::AP_KICKUSER2(net::TcpClient* client, uLong acctid) {
+	Player* l_ply = 0;
+	uLong l_acctid = acctid;
 	RunChainGetArmor<Player> l(m_plylst);
-	for(l_ply =m_plylst.GetNextItem();l_ply;l_ply =m_plylst.GetNextItem())
-	{
-		if(l_ply->m_acctid ==l_acctid)
-		{
+	for (l_ply = m_plylst.GetNextItem(); l_ply; l_ply = m_plylst.GetNextItem()) {
+		if (l_ply->m_acctid == l_acctid) {
 			break;
 		}
 	}
-	if(l_ply)
-	{
-		l_ply->EndPlay(datasock);
-		if(l_ply->EndRun())
-		{
-			if( l_ply->m_currcha != -1 )
-			{
+	if (l_ply) {
+		l_ply->EndPlay(client);
+		if (l_ply->EndRun()) {
+			if (l_ply->m_currcha != -1) {
 				//?òAccountServer·￠?í?áê???·??üá?
-				WPacket l_wpk	=GetWPacket();
+				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 				l_wpk.WriteString(l_ply->m_acctname.c_str());
-				SendData(m_acctsock,l_wpk);
+				m_acctClient.Send(l_wpk);
 			}
 			////?òAccountServer·￠?íLogOut?üá?
-			WPacket l_wpk	=GetWPacket();
+			net::WPacket l_wpk(256);
 			//l_wpk.WriteCmd(CMD_PA_USER_LOGOUT);
-			//l_wpk.WriteLong(l_ply->m_acctid);
-			//l_wpk.WriteLong(l_ply->m_sessid);
+			//l_wpk.WriteInt64(l_ply->m_acctid);
+			//l_wpk.WriteInt64(l_ply->m_sessid);
 			//SendData(m_acctsock,l_wpk);
 			//?òGateServer·￠?íì?è??üá?
-			//l_wpk	=GetWPacket();
+			//l_wpk	=net::WPacket(256);
 			l_wpk.WriteCmd(CMD_AP_KICKUSER);
-			SendToClient(l_ply,l_wpk);
+			SendToClient(l_ply, l_wpk);
 			//ì?è?3é1|
 			LogLine l_line(g_LogGrpServer);
 			//l_line<<newln<<"ê?μ?ò???Tμ?acctid/acctname:["<<l_acctid<<"]/["<<l_ply->m_acctname<<"]μ??üá?!"<<endln;
-			l_line<<newln<<"recieved killed acctid/acctname:["<<l_acctid<<"]/["<<l_ply->m_acctname<<"] command!"<<endln;
+			l_line << newln << "recieved killed acctid/acctname:[" << l_acctid << "]/[" << l_ply->m_acctname <<
+				"] command!" << endln;
 		}
 		l_ply->Free();
-	}else
-	{
+	}
+	else {
 		l.unlock();
 		LogLine l_line(g_LogGrpServer);
 		//l_line<<newln<<"ê?μ?ò???Tμ??úí??òáD±í?D???òμ?acctid:["<<l_acctid<<"]μ??üá?!";
-		l_line<<newln<<"recieved kill acctid:["<<l_acctid<<"] command(not in play list)!";
+		l_line << newln << "recieved kill acctid:[" << l_acctid << "] command(not in play list)!";
 	}
 }
 
-void GroupServerApp::AP_KICKUSER(DataSocket *datasock,RPacket &pk)
-{
-	Player	*l_ply	=0;
-	uLong l_acctid	=pk.ReadLong();
+void GroupServerApp::AP_KICKUSER(net::TcpClient* client, net::RPacket& pk) {
+	Player* l_ply = 0;
+	uLong l_acctid = pk.ReadInt64();
 	RunChainGetArmor<Player> l(m_plylst);
-	for(l_ply =m_plylst.GetNextItem();l_ply;l_ply =m_plylst.GetNextItem())
-	{
-		if(l_ply->m_acctLoginID ==l_acctid)
-		{
+	for (l_ply = m_plylst.GetNextItem(); l_ply; l_ply = m_plylst.GetNextItem()) {
+		if (l_ply->m_acctLoginID == l_acctid) {
 			break;
 		}
 	}
-	if(l_ply)
-	{
-		l_ply->EndPlay(datasock);
-		if(l_ply->EndRun())
-		{
-			if( l_ply->m_currcha != -1 )
-			{
+	if (l_ply) {
+		l_ply->EndPlay(client);
+		if (l_ply->EndRun()) {
+			if (l_ply->m_currcha != -1) {
 				//?òAccountServer·￠?í?áê???·??üá?
-				WPacket l_wpk	=GetWPacket();
+				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 				l_wpk.WriteString(l_ply->m_acctname.c_str());
-				SendData(m_acctsock,l_wpk);
+				m_acctClient.Send(l_wpk);
 			}
 			//?òAccountServer·￠?íLogOut?üá?
-			//WPacket l_wpk	=GetWPacket();
+			//WPacket l_wpk	=net::WPacket(256);
 			//l_wpk.WriteCmd(CMD_PA_USER_LOGOUT);
-			//l_wpk.WriteLong(l_ply->m_acctid);
-			//l_wpk.WriteLong(l_ply->m_sessid);
+			//l_wpk.WriteInt64(l_ply->m_acctid);
+			//l_wpk.WriteInt64(l_ply->m_sessid);
 			//SendData(m_acctsock,l_wpk);
 			//?òGateServer·￠?íì?è??üá?
-			WPacket l_wpk	=GetWPacket();
+			net::WPacket l_wpk(256);
 			l_wpk.WriteCmd(CMD_AP_KICKUSER);
-			SendToClient(l_ply,l_wpk);
+			SendToClient(l_ply, l_wpk);
 			//ì?è?3é1|
 			LogLine l_line(g_LogGrpServer);
 			//l_line<<newln<<"ê?μ?ò???Tμ?acctid/acctname:["<<l_ply->m_acctid<<"]/["<<l_ply->m_acctname<<"]μ??üá?!"<<endln;
-			l_line<<newln<<"recieved killed acctid/acctname:["<<l_ply->m_acctid<<"]/["<<l_ply->m_acctname<<"] command!"<<endln;
+			l_line << newln << "recieved killed acctid/acctname:[" << l_ply->m_acctid << "]/[" << l_ply->m_acctname <<
+				"] command!" << endln;
 		}
 		l_ply->Free();
-	}else
-	{
+	}
+	else {
 		l.unlock();
 		LogLine l_line(g_LogGrpServer);
 		//l_line<<newln<<"ê?μ?ò???Tμ??úí??òáD±í?D???òμ?acctid:["<<l_acctid<<"]μ??üá?!";
-		l_line<<newln<<"recieved kill acctid:["<<l_acctid<<"] command(not in play list)!";
+		l_line << newln << "recieved kill acctid:[" << l_acctid << "] command(not in play list)!";
 	}
 }
 
-void GroupServerApp::AP_EXPSCALE(DataSocket* datasock, RPacket &pk)
-{
-    //  ·à3á??
-    Player	*l_ply = 0;
-    uLong ulChaID = pk.ReadLong();
-    uLong ulTime = pk.ReadLong();
+void GroupServerApp::AP_EXPSCALE(net::TcpClient* client, net::RPacket& pk) {
+	//  ·à3á??
+	Player* l_ply = 0;
+	uLong ulChaID = pk.ReadInt64();
+	uLong ulTime = pk.ReadInt64();
 
-    RunChainGetArmor<Player> l(m_plylst);
-	for(l_ply =m_plylst.GetNextItem(); l_ply; l_ply =m_plylst.GetNextItem())
-	{
-		if(l_ply->m_acctLoginID == ulChaID)
-		{
-			break;
-		}
-	}
-
-    if(l_ply)
-    {
-        WPacket	l_wpk = GetWPacket();
-        l_wpk.WriteCmd(CMD_PM_EXPSCALE);
-        l_wpk.WriteLong(l_ply->m_chaid[l_ply->m_currcha]);
-        l_wpk.WriteLong(ulTime);
-
-        //l_ply->m_gate->GetDataSock()->SendData(l_wpk);
-        SendToClient(l_ply, l_wpk);
-    }
-}
-
-void GroupServerApp::TP_DISC(DataSocket *datasock,RPacket &pk)
-{
-	uLong	l_actid	=pk.ReadLong();
-	in_addr		l_ina;
-	l_ina.S_un.S_addr	=pk.ReadLong();
-	cChar	*l_reason	=pk.ReadString();
-	auto const l_lockDB = std::lock_guard{m_mtxDB};
-	m_tblaccounts->SetDiscInfo(l_actid,inet_ntoa(l_ina),l_reason);
-}
-
-void GroupServerApp::TP_ESTOPUSER_CHECK(DataSocket *datasock,RPacket &pk)
-{
-	Player	*l_ply	=0;
-	uLong l_acctid	=pk.ReadLong();
 	RunChainGetArmor<Player> l(m_plylst);
-	for(l_ply =m_plylst.GetNextItem();l_ply;l_ply =m_plylst.GetNextItem())
-	{
-		if(l_ply->m_acctid ==l_acctid)
-		{
+	for (l_ply = m_plylst.GetNextItem(); l_ply; l_ply = m_plylst.GetNextItem()) {
+		if (l_ply->m_acctLoginID == ulChaID) {
 			break;
 		}
 	}
-	if(l_ply)
-	{
+
+	if (l_ply) {
+		net::WPacket l_wpk(256);
+		l_wpk.WriteCmd(CMD_PM_EXPSCALE);
+		l_wpk.WriteInt64(l_ply->m_chaid[l_ply->m_currcha]);
+		l_wpk.WriteInt64(ulTime);
+
+		//l_ply->m_gate->GetDataSock()->SendData(l_wpk);
+		SendToClient(l_ply, l_wpk);
+	}
+}
+
+void GroupServerApp::TP_DISC(net::TcpClient* client, net::RPacket& pk) {
+	uLong l_actid = pk.ReadInt64();
+	in_addr l_ina;
+	l_ina.S_un.S_addr = pk.ReadInt64();
+	auto l_reason = pk.ReadString();
+	auto const l_lockDB = std::lock_guard{m_mtxDB};
+	m_tblaccounts->SetDiscInfo(l_actid, inet_ntoa(l_ina), l_reason.c_str());
+}
+
+void GroupServerApp::TP_ESTOPUSER_CHECK(net::TcpClient* client, net::RPacket& pk) {
+	Player* l_ply = 0;
+	uLong l_acctid = pk.ReadInt64();
+	RunChainGetArmor<Player> l(m_plylst);
+	for (l_ply = m_plylst.GetNextItem(); l_ply; l_ply = m_plylst.GetNextItem()) {
+		if (l_ply->m_acctid == l_acctid) {
+			break;
+		}
+	}
+	if (l_ply) {
 		l_ply->IsEstop();
 	}
 }
 
-WPacket GroupServerApp::TP_USER_LOGOUT(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-	WPacket	l_retpk	=GetWPacket();
-	uLong	l_acctid	=ply->m_acctid;
+net::WPacket GroupServerApp::TP_USER_LOGOUT(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	uLong l_acctid = ply->m_acctid;
 	RunChainGetArmor<Player> l(m_plylst);
-	if(!ply || !ply->m_gtAddr || !l_acctid ||l_acctid !=ply->m_acctid)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);
+	if (!ply || !ply->m_gtAddr || !l_acctid || l_acctid != ply->m_acctid) {
+		l_retpk.WriteInt64(ERR_PT_INERR);
 		return l_retpk;
 	}
 
-	if(ply->m_bCheat)
-	{
-		if(m_dwCheatCount > 0)
+	if (ply->m_bCheat) {
+		if (m_dwCheatCount > 0)
 			m_dwCheatCount--;
 	}
 
-	ply->EndPlay(datasock);
+	ply->EndPlay(client);
 
-	if(ply->EndRun())
-	{
-		if( ply->m_currcha != -1 )
-		{
+	if (ply->EndRun()) {
+		if (ply->m_currcha != -1) {
 			//·￠?í?áê???·??üá?
-			WPacket	l_wpk	=GetWPacket();
-			l_wpk.WriteCmd(CMD_PA_USER_BILLEND); 
+			net::WPacket l_wpk(256);
+			l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 			l_wpk.WriteString(ply->m_acctname.c_str());
-			SendData(m_acctsock,l_wpk);
+			m_acctClient.Send(l_wpk);
 		}
 
 		//?òAccountServer·￠?íLogOut?üá?
-		WPacket	l_wpk	=GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PA_USER_LOGOUT);
-		l_wpk.WriteLong(ply->m_acctLoginID);
-		l_wpk.WriteLong(ply->m_sessid);
-		SendData(m_acctsock,l_wpk);
+		l_wpk.WriteInt64(ply->m_acctLoginID);
+		l_wpk.WriteInt64(ply->m_sessid);
+		m_acctClient.Send(l_wpk);
 		//μ?3?3é1|
 		LogLine l_line(g_LogGrpServer);
 		//l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]μ?3?á?￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
-		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]logout,\t online/total:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
-	}else
-	{
-		LogLine l_line(g_LogGrpServer);
-		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00026)<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
+		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]logout,\t online/total:" << m_plylst.
+			GetTotal() << "/" << long(m_curChaNum);
 	}
-	
-	if( ply->m_bWG )
-	{
+	else {
+		LogLine l_line(g_LogGrpServer);
+		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname <<
+			RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00026) << m_plylst.GetTotal() << "/" << long(m_curChaNum);
+	}
+
+	if (ply->m_bWG) {
 		m_curWGChaNum--;
 	}
 
 	ply->Free();
 	l.unlock();
 	//·μ??3é1|′í?ó??
-	l_retpk.WriteShort(ERR_SUCCESS);
+	l_retpk.WriteInt64(ERR_SUCCESS);
 	return l_retpk;
 }
 
-WPacket	GroupServerApp::TP_BGNPLAY(Player* ply, DataSocket* datasock, RPacket& pk)
-{
-	WPacket		l_retpk = GetWPacket();
-	if (ply->m_currcha >= 0)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);				//ó|??è??μμ??ú2?′í?ó
+net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	if (ply->m_currcha >= 0) {
+		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??ú2?′í?ó
 		return l_retpk;
 	}
 
 	auto const l_lockCha = std::lock_guard{ply->m_mtxCha};
-	const uint8_t cha_index = pk.ReadChar();
+	const uint8_t cha_index = pk.ReadInt64();
 
 	// #MAGIC
-	if (cha_index > const_cha.MaxChaNum || cha_index > ply->m_chanum )
-	{
-		l_retpk.WriteShort(ERR_PT_INVALIDCHA);
+	if (cha_index > const_cha.MaxChaNum || cha_index > ply->m_chanum) {
+		l_retpk.WriteInt64(ERR_PT_INVALIDCHA);
 		return l_retpk;
 	}
 
 	ply->m_bp_currcha = cha_index;
 
-	if (ply->m_password.length() <= 0)
-	{
-		l_retpk.WriteShort(ERR_PT_INVALID_PW2);
+	std::cout << "CHEK ply_address:: " << ply << std::endl;
+	if (ply->m_password.empty()) {
+		l_retpk.WriteInt64(ERR_PT_INVALID_PW2);
 		return l_retpk;
 	}
 
 
-	if (auto playing_player = GetPlayerByChaID(ply->m_chaid[cha_index]); playing_player)
-	{
+	if (auto playing_player = GetPlayerByChaID(ply->m_chaid[cha_index]); playing_player) {
 		constexpr auto timeout = 10'000;
-		auto wpk = GetWPacket();
+		auto wpk = net::WPacket(256);
 		wpk.WriteCmd(CMD_PT_KICKPLAYINGPLAYER);
-		wpk.WriteLong(playing_player->m_gtAddr);
-		auto rpk = SyncCall(playing_player->m_gate->GetDataSock(), wpk, timeout);
-		if (rpk.HasData() && rpk.ReadShort() == ERR_SUCCESS)
-		{
-			RPacket rpk{ nullptr };
-			TP_USER_LOGOUT(playing_player, playing_player->m_gate->m_datasock, rpk);
+		wpk.WriteInt64(playing_player->m_gtAddr);
+
+		// AsyncCall + busy-wait (замена SyncCall)
+		volatile bool gotKickResp = false;
+		volatile bool kickOk = false;
+		auto* gateClient = playing_player->m_gate->GetClient();
+		if (gateClient && gateClient->IsConnected()) {
+			gateClient->AsyncCall(wpk, timeout, [&](net::RPacket& rpk) {
+				if (rpk && rpk.ReadInt64() == ERR_SUCCESS) {
+					kickOk = true;
+				}
+				gotKickResp = true;
+			});
+			while (!gotKickResp && gateClient->IsConnected()) {
+				gateClient->PollPackets(0);
+				Sleep(1);
+			}
+		}
+		if (kickOk) {
+			net::RPacket emptyPk;
+			TP_USER_LOGOUT(playing_player, gateClient, emptyPk);
 		}
 	}
 
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
-	if (m_tblcharaters->FetchRowByChaID(ply->m_chaid[ply->m_bp_currcha]) < 1)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);
+	if (m_tblcharaters->FetchRowByChaID(ply->m_chaid[ply->m_bp_currcha]) < 1) {
+		l_retpk.WriteInt64(ERR_PT_INERR);
 		return l_retpk;
 	}
 
 	ply->m_guildPermission[ply->m_bp_currcha] = m_tblcharaters->GetGuildPermission();
-	ply->m_chatColour[ply->m_bp_currcha] = m_tblcharaters->GetChatColour();	//fixed  chat color for first login //mothannakh
+	ply->m_chatColour[ply->m_bp_currcha] = m_tblcharaters->GetChatColour();
+	//fixed  chat color for first login //mothannakh
 
 
-	const auto	l_maxval = std::stoi(m_cfg["Database"]["MaxVal"]);
+	const auto l_maxval = std::stoi(m_cfg["Database"]["MaxVal"]);
 	if (l_maxval &&
 		(m_tblcharaters->GetStr() > l_maxval || m_tblcharaters->GetDex() > l_maxval ||
 			m_tblcharaters->GetAgi() > l_maxval || m_tblcharaters->GetCon() > l_maxval ||
-			m_tblcharaters->GetSta() > l_maxval || m_tblcharaters->GetLuk() > l_maxval))
-	{
-		l_retpk.WriteShort(ERR_PT_BADBOY);
-		WPacket l_wpk = GetWPacket();
+			m_tblcharaters->GetSta() > l_maxval || m_tblcharaters->GetLuk() > l_maxval)) {
+		l_retpk.WriteInt64(ERR_PT_BADBOY);
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_MC_SYSINFO);
 		//l_wpk.WriteString(dstring("??í¨±¨?ú?à??ò??-·￠??ò???BTo￠×ó[?êo?:")<<ply->m_acctname.c_str()<<",??é?:"<< ply->m_chaname[ply->m_bp_currcha].c_str()<<"]?￡");
 		char l_buf[256];
-		sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00002), ply->m_acctname.c_str(), ply->m_chaname[ply->m_bp_currcha].c_str());
+		sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00002), ply->m_acctname.c_str(),
+				ply->m_chaname[ply->m_bp_currcha].c_str());
 		l_wpk.WriteString(l_buf);
 
 		Player* l_plylst[10240];
-		short	l_plynum = 0;
+		short l_plynum = 0;
 
 		RunChainGetArmor<Player> l(m_plylst);
-		for (Player* l_plyr = m_plylst.GetNextItem(); l_plyr; l_plyr = m_plylst.GetNextItem())
-		{
+		for (Player* l_plyr = m_plylst.GetNextItem(); l_plyr; l_plyr = m_plylst.GetNextItem()) {
 			if (l_plyr->m_bp_currcha < 0)continue;
 			l_plylst[l_plynum] = l_plyr;
 			l_plynum++;
@@ -1440,99 +1330,93 @@ WPacket	GroupServerApp::TP_BGNPLAY(Player* ply, DataSocket* datasock, RPacket& p
 		return l_retpk;
 	}
 
-		short swiner = 0;
-		//·μ??3é1|?à1?D??￠
-		l_retpk.WriteShort(ERR_SUCCESS);	//????é?3é1|·μ??
-		l_retpk.WriteString(ply->m_password.c_str());
-		l_retpk.WriteLong(ply->m_chaid[ply->m_bp_currcha]);//??é?ID
-		l_retpk.WriteLong(ply->m_chaid[ply->m_bp_currcha]);//WorldID
-		l_retpk.WriteString(m_tblcharaters->GetMap());		//é?′?????μ?μ?í???
-		for (int i = 0; i < MAXORDERNUM; i++)
-		{
-			if (ply->m_chaid[ply->m_bp_currcha] == m_tbLparam->GetOrderData(i)->nid)
-			{
-				swiner = i + 1;
-				break;
-			}
+	short swiner = 0;
+	//·μ??3é1|?à1?D??￠
+	l_retpk.WriteInt64(ERR_SUCCESS); //????é?3é1|·μ??
+	l_retpk.WriteString(ply->m_password.c_str());
+	l_retpk.WriteInt64(ply->m_chaid[ply->m_bp_currcha]); //??é?ID
+	l_retpk.WriteInt64(ply->m_chaid[ply->m_bp_currcha]); //WorldID
+	l_retpk.WriteString(m_tblcharaters->GetMap()); //é?′?????μ?μ?í???
+	for (int i = 0; i < MAXORDERNUM; i++) {
+		if (ply->m_chaid[ply->m_bp_currcha] == m_tbLparam->GetOrderData(i)->nid) {
+			swiner = i + 1;
+			break;
 		}
-		l_retpk.WriteShort(swiner);
-		LogLine l_line(g_LogGrpServer);
-		/*
-		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]??????é?["<<l_cha
-			<<"]×?±??aê?ó??·á?...￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"
-			<<long(m_curChaNum);
-		*/
-		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]select char[" << ply->m_chaname[ply->m_bp_currcha]
-			<< "]begin paly...￡?\t online/total:" << m_plylst.GetTotal() << "/"
-			<< long(m_curChaNum);
+	}
+	l_retpk.WriteInt64(swiner);
+	LogLine l_line(g_LogGrpServer);
+	/*
+	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]??????é?["<<l_cha
+		<<"]×?±??aê?ó??·á?...￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"
+		<<long(m_curChaNum);
+	*/
+	l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]select char[" << ply->m_chaname[ply->
+			m_bp_currcha]
+		<< "]begin paly...￡?\t online/total:" << m_plylst.GetTotal() << "/"
+		<< long(m_curChaNum);
 
 	return l_retpk;
 }
 
-WPacket GroupServerApp::TP_ENDPLAY(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-	WPacket		l_retpk	=GetWPacket();
-	if(ply->m_currcha <0)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);				//ó|??è??μμ??μí32?ò???′í?ó
-	}else
-	{
-		l_retpk.WriteShort(ERR_SUCCESS);				//??????é?3é1|·μ??
-		ply->EndPlay(datasock);
+net::WPacket GroupServerApp::TP_ENDPLAY(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	if (ply->m_currcha < 0) {
+		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??μí32?ò???′í?ó
+	}
+	else {
+		l_retpk.WriteInt64(ERR_SUCCESS); //??????é?3é1|·μ??
+		ply->EndPlay(client);
 
 		LogLine l_line(g_LogGrpServer);
-		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]exit char["
-			<<ply->m_chaname[ply->m_currcha]<<"]begin entry select char UI...￡?\t online/total:"
-			<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
-		l_line<<endln;
+		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]exit char["
+			<< ply->m_chaname[ply->m_currcha] << "]begin entry select char UI...￡?\t online/total:"
+			<< m_plylst.GetTotal() << "/" << long(m_curChaNum);
+		l_line << endln;
 
-		ply->m_currcha	=-1;						//???a?TD§μ?μ±?°??é?
+		ply->m_currcha = -1; //???a?TD§μ?μ±?°??é?
 		ply->EndPlayReset();
 		//·￠?í?áê???·??üá?
-		WPacket	l_wpk	=GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 		l_wpk.WriteString(ply->m_acctname.c_str());
-		SendData(m_acctsock,l_wpk);
+		m_acctClient.Send(l_wpk);
 
 		//′óêy?Y?aà???è?3???é?±í
 
-		l_retpk.WriteChar(const_cha.MaxChaNum);
-		GetCHAsFromDBByPlayer(ply,l_retpk);
+		l_retpk.WriteInt64(const_cha.MaxChaNum);
+		GetCHAsFromDBByPlayer(ply, l_retpk);
 	}
 	return l_retpk;
 }
 
-void GroupServerApp::MP_ENTERMAP(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-	char		l_isSwitch;
-	if(!(l_isSwitch	=pk.ReadChar()) && ply->m_currcha <0)
-	{
+void GroupServerApp::MP_ENTERMAP(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	char l_isSwitch;
+	if (!(l_isSwitch = pk.ReadInt64()) && ply->m_currcha < 0) {
 		MP_ONLINE(ply);
-	}else if(l_isSwitch && ply->m_currcha >=0)
-	{
+	}
+	else if (l_isSwitch && ply->m_currcha >= 0) {
 		MP_SWITCH(ply);
 	}
 }
 
-void GroupServerApp::MP_ONLINE(Player *ply)
-{
+void GroupServerApp::MP_ONLINE(Player* ply) {
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	AddPlayerToList(ply->m_chaid[ply->m_bp_currcha], ply);
-	ply->m_currcha	=ply->m_bp_currcha;
-	ply->m_bp_currcha	=-1;
-	m_tblcharaters->SetAddr(ply->m_chaid[ply->m_currcha],ToAddress(ply));
+	ply->m_currcha = ply->m_bp_currcha;
+	ply->m_bp_currcha = -1;
+	m_tblcharaters->SetAddr(ply->m_chaid[ply->m_currcha], ToAddress(ply));
 	++m_curChaNum;
 	LogLine l_line(g_LogGrpServer);
-	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"] char ["
-		<<ply->m_chaname[ply->m_currcha]<<"]entry map server begin play...￡?\t online/total:"
-		<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
-	l_line<<endln;
+	l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "] char ["
+		<< ply->m_chaname[ply->m_currcha] << "]entry map server begin play...￡?\t online/total:"
+		<< m_plylst.GetTotal() << "/" << long(m_curChaNum);
+	l_line << endln;
 
-	WPacket	l_wpk	=GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PA_USER_BILLBGN);
 	l_wpk.WriteString(ply->m_acctname.c_str());
 	l_wpk.WriteString(ply->m_passport.c_str());
-	SendData(m_acctsock,l_wpk);
+	m_acctClient.Send(l_wpk);
 
 	ply->CheckEstop();
 
@@ -1550,29 +1434,27 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 	Player* validPlayers[Player::emMaxCharacters];
 	int validCount = 0;
 
-	if ((l_row = m_tblaccounts->FetchRowByActName(ply->m_acctname.c_str())) == 0)		//D??¤???êo?
+	if ((l_row = m_tblaccounts->FetchRowByActName(ply->m_acctname.c_str())) == 0) //D??¤???êo?
 	{
 		// Player doesn't have a row yet
 		return;
 	}
-	else if (l_row == 1)
-	{
+	else if (l_row == 1) {
 		// First, we need all chaIDs of the account
 		std::string l_chaid[Player::emMaxCharacters];
 
-		int n = Util_ResolveTextLine(m_tblaccounts->GetChaIDs(), l_chaid, Player::emMaxCharacters, ';'); // Sends chaIDs to l_chaid array
+		int n = Util_ResolveTextLine(m_tblaccounts->GetChaIDs(), l_chaid, Player::emMaxCharacters, ';');
+		// Sends chaIDs to l_chaid array
 		Player* plyPointers;
 		bool bRemaining = true;
-		while(bRemaining) {
+		while (bRemaining) {
 			// Iterate until no valid players are found.
 			RunChainGetArmor<Player> l(m_plylst);
-			for (plyPointers = m_plylst.GetNextItem(); plyPointers; plyPointers = m_plylst.GetNextItem())
-			{
+			for (plyPointers = m_plylst.GetNextItem(); plyPointers; plyPointers = m_plylst.GetNextItem()) {
 				// Iterates over all players
-				if (ply != plyPointers && !plyPointers->m_bRefreshFlag && plyPointers->m_acctname == ply->m_acctname)
-				{
-				
-					printf("\nfound valid player, whose characters are %d, %d, %d\n", plyPointers->m_chaid[0], plyPointers->m_chaid[1], plyPointers->m_chaid[2]);
+				if (ply != plyPointers && !plyPointers->m_bRefreshFlag && plyPointers->m_acctname == ply->m_acctname) {
+					printf("\nfound valid player, whose characters are %d, %d, %d\n", plyPointers->m_chaid[0],
+						   plyPointers->m_chaid[1], plyPointers->m_chaid[2]);
 					break;
 					// We found a Player object that has a char ID belonging to the account (which is not itself)
 					// Break out of the loop, send update packet to that player.
@@ -1587,118 +1469,102 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 				validPlayers[validCount] = plyPointers;
 				validCount++;
 
-				WPacket l_wpk = g_gpsvr->GetWPacket();
+				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_REFRESH_SELECT);
 				printf("\n ply->m-chanum:%d\n", ply->m_chanum);
-				l_wpk.WriteChar(delChaSlot);
-				l_wpk.WriteChar(ply->m_chanum);
+				l_wpk.WriteInt64(delChaSlot);
+				l_wpk.WriteInt64(ply->m_chanum);
 				char k = 0, j = 0;
-				for (; j < ply->m_chanum; k++, j++)
-				{
+				for (; j < ply->m_chanum; k++, j++) {
 					// Update chaID array for the other client, to avoid him logging into the wrong char.
-					plyPointers->m_chaid[k] = atoi(l_chaid[j].c_str()); 
+					plyPointers->m_chaid[k] = atoi(l_chaid[j].c_str());
 					plyPointers->m_chanum = ply->m_chanum;
-					
-					if (!ply->m_chaid[k])
-					{
+
+					if (!ply->m_chaid[k]) {
 						printf("\ninvalid player1\n");
-						l_wpk.WriteChar(0);
+						l_wpk.WriteInt64(0);
 						k--;
 					}
-					else
-					{
-
-						if ((l_row = m_tblcharaters->FetchRowByChaID(ply->m_chaid[k])) == 1)
-						{
-							
+					else {
+						if ((l_row = m_tblcharaters->FetchRowByChaID(ply->m_chaid[k])) == 1) {
 							printf("\nfound char data\n");
 							// Row from character ID is valid (OK)
 							// Write char properties to packet and send them to client
 							// m_tblcharacters functions must be called only *after* FetchRowByChaID to "select" correct character.
-							l_wpk.WriteChar(1);
+							l_wpk.WriteInt64(1);
 							char cRet = SendCharData(ply, l_wpk);
 							if (cRet == -1) {
 								printf("\nerror writing char data\n");
-
 							}
 							// This is essentially the same function, but it doesn't set player data, just gets it from DB and writes to packet.
 						}
-						else
-						{
+						else {
 							printf("\nerror writing char data\n");
-							if (l_row == 0)
-							{
-
+							if (l_row == 0) {
 								LogLine l_line(g_LogGrpServer);
 								//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";
-								l_line << newln << "enum account[" << ply->m_acctname << "]'s char[ID:" << ply->m_chaid[k] << "] can't find data in table character.";
+								l_line << newln << "enum account[" << ply->m_acctname << "]'s char[ID:" << ply->m_chaid[
+									k] << "] can't find data in table character.";
 							}
-							else
-							{
+							else {
 								LogLine l_line(g_LogGrpServer);
 								//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúêy?Y?a2ù×÷′í?ó?￡";
-								l_line << newln << "enum account[" << ply->m_acctname << "]'s char[ID:" << ply->m_chaid[k] << "] databse exception.";
+								l_line << newln << "enum account[" << ply->m_acctname << "]'s char[ID:" << ply->m_chaid[
+									k] << "] databse exception.";
 							}
-							l_wpk.WriteChar(0);					//±ê???a????é?êy?Yê??TD§μ?
+							l_wpk.WriteInt64(0); //±ê???a????é?êy?Yê??TD§μ?
 							k--;
 						}
 					}
-
 				}
 				SendToClient(plyPointers, l_wpk);
-				
-
 			}
 			else {
 				bRemaining = false;
-
 			}
 			l.unlock();
 		}
-		
+
 		for (int i = 0; i < validCount; i++) {
 			validPlayers[i]->m_bRefreshFlag = false;
 		}
 	}
 }
 
-WPacket	GroupServerApp::TP_NEWCHA(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-	WPacket		l_retpk	=GetWPacket();
-	if(ply->m_currcha >=0)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);					//ó|??è??μμ??μí32?ò???′í?ó
+net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	if (ply->m_currcha >= 0) {
+		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??μí32?ò???′í?ó
 		return l_retpk;
 	}
 	auto const l_lockCha = std::lock_guard{ply->m_mtxCha};
 	int chaNum = GetChaCount(ply);
-	if(ply->m_chanum >=const_cha.MaxChaNum)		//ò?′?μ??μí3?T??×?′ó??é?êy
+	if (ply->m_chanum >= const_cha.MaxChaNum) //ò?′?μ??μí3?T??×?′ó??é?êy
 	{
-		l_retpk.WriteShort(ERR_PT_TOMAXCHA);
+		l_retpk.WriteInt64(ERR_PT_TOMAXCHA);
 		return l_retpk;
 	}
 
 	/* #Slot-level-restriction
 	if (!CanCreateBonusChar(ply)) {
-		l_retpk.WriteShort(ERR_PT_BONUSCHARS);
+		l_retpk.WriteInt64(ERR_PT_BONUSCHARS);
 		return l_retpk;
 	}
 	*/
 
-	uShort	l_len;
-	cChar	*l_chaname	=pk.ReadString(&l_len);
-	if(!l_chaname)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);
-		return l_retpk;
-	}else if(l_len >16)
-	{
-		l_retpk.WriteShort(ERR_PT_TOOBIGCHANM);
+	auto l_chaname = pk.ReadString();
+	if (l_chaname.empty()) {
+		l_retpk.WriteInt64(ERR_PT_INERR);
 		return l_retpk;
 	}
-	else if (l_len == 0 || !isAlphanumeric({ l_chaname,l_len }) || !IsValidName(l_chaname, l_len) || !CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, l_chaname))								//(strchr(l_chaname,'\''))//??é????D2??üóDμ￥òyo?'
+	else if (l_chaname.size() > 16) {
+		l_retpk.WriteInt64(ERR_PT_TOOBIGCHANM);
+		return l_retpk;
+	}
+	else if (!isAlphanumeric(l_chaname) || !IsValidName(l_chaname.c_str(), l_chaname.size()) || !
+		CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, l_chaname.c_str())) //(strchr(l_chaname,'\''))//??é????D2??üóDμ￥òyo?'
 	{
-		l_retpk.WriteShort(ERR_PT_ERRCHANAME);//??é???2?o?·¨
+		l_retpk.WriteInt64(ERR_PT_ERRCHANAME); //??é???2?o?·¨
 		return l_retpk;
 	}
 	//cChar	*	l_birth			=pk.ReadString(&l_len);
@@ -1720,87 +1586,83 @@ WPacket	GroupServerApp::TP_NEWCHA(Player *ply,DataSocket *datasock,RPacket &pk)
 	//}
 	//if(!l_birth2 ||!strstr(l_birth2,l_birth1))
 	//{
-	//	l_retpk.WriteShort(ERR_PT_INVALIDBIRTH);		//3?éúμ?·?·¨
+	//	l_retpk.WriteInt64(ERR_PT_INVALIDBIRTH);		//3?éúμ?·?·¨
 	//}else
 	//{
-	cChar	*	l_birth			=pk.ReadString(&l_len);
-	dstring		l_birth1		="";
-	cChar	*	l_map			=0;
-	if(l_birth && l_len <30 && !strchr(l_birth,'/'))
-	{
-		l_birth1	=l_birth;
-		try{
-			map<string, string>::iterator it = m_mapBirthplace.find(string(l_birth));
+	auto l_birth = pk.ReadString();
+	std::string l_birth1 = "";
+	cChar* l_map = 0;
+	if (!l_birth.empty() && l_birth.size() < 30 && !strchr(l_birth.c_str(), '/')) {
+		l_birth1 = l_birth;
+		try {
+			map<string, string>::iterator it = m_mapBirthplace.find(l_birth);
 
-			if(it != m_mapBirthplace.end())
-			{
+			if (it != m_mapBirthplace.end()) {
 				l_map = it->second.c_str();
 			}
-		}catch(...)
-		{
-			l_map	=0;
 		}
-	}else
-	{
-		l_map	=0;
+		catch (...) {
+			l_map = 0;
+		}
+	}
+	else {
+		l_map = 0;
 	}
 
 	if (l_map == NULL) {
 		l_map = "garner";
 	}
 
-	if(!l_map)
-	{
-		l_retpk.WriteShort(ERR_PT_INVALIDBIRTH);		//3?éúμ?·?·¨
+	if (!l_map) {
+		l_retpk.WriteInt64(ERR_PT_INVALIDBIRTH); //3?éúμ?·?·¨
 		return l_retpk;
 	}
 
-		
 
-	int typeID = pk.ReadLong();
-	int hairID = pk.ReadLong();
-	int faceID = pk.ReadLong();
+	int typeID = pk.ReadInt64();
+	int hairID = pk.ReadInt64();
+	int faceID = pk.ReadInt64();
 
 	//cout << typeID << "\n" << hairID << "\n" << faceID << "\n";
 
 	//validate type (1/2/3/4)
-	if (typeID > 4 || typeID < 1){
-		l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	if (typeID > 4 || typeID < 1) {
+		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 		return l_retpk;
 	}
 	//check if hair ids valid	//mothannakh
-	if (hairID <2000 || hairID >3000)
-	{
-		std::cout << "illegal hairID On Create Section From:" << l_chaname <<"Hair ID :"<< hairID <<"\n"<< std::endl;
-		l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	if (hairID < 2000 || hairID > 3000) {
+		std::cout << "illegal hairID On Create Section From:" << l_chaname << "Hair ID :" << hairID << "\n" <<
+			std::endl;
+		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 		return l_retpk;
 	}
 	//confirm the faceid is legal // mothannakh
-	if (faceID < 2554 || faceID > 2561)
-	{
-		std::cout << "illegal faceID On Create Section From:" << l_chaname << "face ID :" << faceID << "\n" << std::endl;
-		l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	if (faceID < 2554 || faceID > 2561) {
+		std::cout << "illegal faceID On Create Section From:" << l_chaname << "face ID :" << faceID << "\n" <<
+			std::endl;
+		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 		return l_retpk;
 	}
 
-	int  nHairTestCnt[4] = { 2000, 2062, 2124, 2291 };
-	int  nFaceTestCnt[4] = { 2554, 2554, 2554, 2554 };
-	int nSelHairNum[4] = { 8, 8, 8, 4, };
-	int nSelFaceNum[4] = { 8, 8, 8, 8, };
+	int nHairTestCnt[4] = {2000, 2062, 2124, 2291};
+	int nFaceTestCnt[4] = {2554, 2554, 2554, 2554};
+	int nSelHairNum[4] = {8, 8, 8, 4,};
+	int nSelFaceNum[4] = {8, 8, 8, 8,};
 
 	int index = typeID - 1;
-	if (hairID < nHairTestCnt[index] || hairID >= nHairTestCnt[index] + nSelHairNum[index]){
-		l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	if (hairID < nHairTestCnt[index] || hairID >= nHairTestCnt[index] + nSelHairNum[index]) {
+		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 		return l_retpk;
 	}
-	if (faceID < nFaceTestCnt[index] || faceID >= nFaceTestCnt[index] + nSelFaceNum[index]){
-		l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	if (faceID < nFaceTestCnt[index] || faceID >= nFaceTestCnt[index] + nSelFaceNum[index]) {
+		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 		return l_retpk;
 	}
 
-	stNetChangeChaPart	part;
+	stNetChangeChaPart part;
 	memset(&part, 0, sizeof(part));
-	
+
 	part.sHairID = hairID;
 	part.SLink[enumEQUIP_FACE].sID = faceID;
 	part.sTypeID = typeID;
@@ -1809,52 +1671,49 @@ WPacket	GroupServerApp::TP_NEWCHA(Player *ply,DataSocket *datasock,RPacket &pk)
 	//
 	//if(!look || l_len !=sizeof(LOOK))
 	//{
-	//	l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	//	l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 	//	return l_retpk;
 	//}
-	char	l_look[defLOOK_DATA_STRING_LEN];
+	char l_look[defLOOK_DATA_STRING_LEN];
 
-	try
-	{
-		if(!LookData2String(&part,l_look,defLOOK_DATA_STRING_LEN))
-		{
-			l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+	try {
+		if (!LookData2String(&part, l_look,defLOOK_DATA_STRING_LEN)) {
+			l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 			return l_retpk;
 		}
 	}
-	catch(...)
-	{
+	catch (...) {
 		LogLine l_line(g_LogGrpServer);
 		//l_line<<newln<<"?êo?["<<ply->m_acctname<<"]D??¨??é?["<<l_chaname<<"]ê±oò·￠éúía1?êy?Y×a??òì3￡?￡"<<endln;
-		l_line<<newln<<"account["<<ply->m_acctname<<"]new char["<<l_chaname<<"]find appreance data convert exception"<<endln;
-		l_retpk.WriteShort(ERR_PT_INVALIDDAT);
+		l_line << newln << "account[" << ply->m_acctname << "]new char[" << l_chaname <<
+			"]find appreance data convert exception" << endln;
+		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 		return l_retpk;
 	}
 	{
 		auto const l_lockDB = std::lock_guard{m_mtxDB};
-		//mothannakh check if the name vaild before insirt it 
-		if (m_tblcharaters->FetchRowByChaName(l_chaname) >= 1)
-		{
+		//mothannakh check if the name vaild before insirt it
+		if (m_tblcharaters->FetchRowByChaName(l_chaname.c_str()) >= 1) {
 			//printf_s("same name ");
-			l_retpk.WriteShort(ERR_PT_SAMECHANAME);
+			l_retpk.WriteInt64(ERR_PT_SAMECHANAME);
 			return l_retpk;
 		}
 
-		if (!m_tblcharaters->InsertRow(l_chaname,ply->m_acctid,l_birth,l_map,l_look))				//??é??????′
+		if (!m_tblcharaters->InsertRow(l_chaname.c_str(), ply->m_acctid, l_birth.c_str(), l_map, l_look)) //??é??????′
 		{
 			LogLine l_line(g_LogGrpServer);
-			
-			l_line << newln << "account[" << ply->m_acctname << "]new char[" << l_chaname << "]the same name exception" << endln;
-			l_retpk.WriteShort(ERR_PT_SAMECHANAME);
+
+			l_line << newln << "account[" << ply->m_acctname << "]new char[" << l_chaname << "]the same name exception"
+				<< endln;
+			l_retpk.WriteInt64(ERR_PT_SAMECHANAME);
 			return l_retpk;
 		}
-		l_retpk.WriteShort(ERR_SUCCESS);
-		
-		if (m_tblcharaters->FetchRowByChaName(l_chaname) < 1)
-		{
-			l_retpk.WriteShort(ERR_PT_INERR);
+		l_retpk.WriteInt64(ERR_SUCCESS);
+
+		if (m_tblcharaters->FetchRowByChaName(l_chaname.c_str()) < 1) {
+			l_retpk.WriteInt64(ERR_PT_INERR);
 			LogLine l_line(g_LogGrpServer);
-			
+
 			l_line << newln << "account[" << ply->m_acctname << "] when create char , can't restore database failed.";
 			return l_retpk;
 		}
@@ -1868,8 +1727,7 @@ WPacket	GroupServerApp::TP_NEWCHA(Player *ply,DataSocket *datasock,RPacket &pk)
 		char l_CharIDs[80];
 		l_CharIDs[0] = 0;
 		char l_buf[20];
-		for (char i = 0; i < ply->m_chanum; i++)
-		{
+		for (char i = 0; i < ply->m_chanum; i++) {
 			strcat(l_CharIDs, itoa(ply->m_chaid[i], l_buf, 10));
 			strcat(l_CharIDs, ";");
 		}
@@ -1883,62 +1741,55 @@ WPacket	GroupServerApp::TP_NEWCHA(Player *ply,DataSocket *datasock,RPacket &pk)
 		<<l_chaname<<"]￡?\tμ±?°μ???/ó??·í??òêy:"
 		<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)<<endln;
 	*/
-	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]create char ["
-		<<l_chaname<<"]￡?\t online/total:"
-		<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)<<endln;
+	l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]create char ["
+		<< l_chaname << "]￡?\t online/total:"
+		<< m_plylst.GetTotal() << "/" << long(m_curChaNum) << endln;
 	return l_retpk;
 }
 
-WPacket	GroupServerApp::TP_DELCHA(Player* ply, DataSocket* datasock, RPacket& pk)
-{
-	WPacket		l_retpk = GetWPacket();
-	if (ply->m_currcha >= 0)
-	{
-		l_retpk.WriteShort(ERR_PT_INERR);					//ó|??è??μμ??μí32?ò???′í?ó
+net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
+	if (ply->m_currcha >= 0) {
+		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??μí32?ò???′í?ó
 		return l_retpk;
 	}
 
 
-
-	const auto cha_index = static_cast<uint8_t>(pk.ReadChar());
+	const auto cha_index = static_cast<uint8_t>(pk.ReadInt64());
 	auto const l_lockCha = std::lock_guard{ply->m_mtxCha};
-	if (cha_index >= ply->m_chanum || cha_index >= const_cha.MaxChaNum)
-	{
-		l_retpk.WriteShort(ERR_PT_INVALIDCHA);
+	if (cha_index >= ply->m_chanum || cha_index >= const_cha.MaxChaNum) {
+		l_retpk.WriteInt64(ERR_PT_INVALIDCHA);
 		return l_retpk;
 	}
 
 	const std::string cha_name = ply->m_chaname[cha_index];
 
-	uShort l_len2;
-	cChar* l_pw2 = pk.ReadString(&l_len2);
-	if (strcmp(l_pw2, ply->m_password.c_str()))
-	{
-		l_retpk.WriteShort(ERR_PT_INVALID_PW2);
+	auto l_pw2 = pk.ReadString();
+	if (l_pw2 != ply->m_password) {
+		l_retpk.WriteInt64(ERR_PT_INVALID_PW2);
 		return l_retpk;
 	}
 
-	if (GetPlayerByChaID(ply->m_chaid[cha_index]))
-	{
-		//GetPlayerByChaID only works if the Player is logged in, so its a good check. 
+	if (GetPlayerByChaID(ply->m_chaid[cha_index])) {
+		//GetPlayerByChaID only works if the Player is logged in, so its a good check.
 		//For reference, see AddPlayerToList and DelPlayerFromList
-		l_retpk.WriteShort(ERR_PT_MULTICHA);
+		l_retpk.WriteInt64(ERR_PT_MULTICHA);
 		return l_retpk;
 	}
 
-	if (FindGuildByLeadID(ply->m_chaid[cha_index]))						//o?·¨μ???é?
+	if (FindGuildByLeadID(ply->m_chaid[cha_index])) //o?·¨μ???é?
 	{
-		l_retpk.WriteShort(ERR_PT_ISGLDLEADER);
+		l_retpk.WriteInt64(ERR_PT_ISGLDLEADER);
 		return l_retpk;
 	}
 
 
 	bool bFlag = false;
-	int		l_chaid = ply->m_chaid[cha_index];
-	char	l_CharIDs[80]; l_CharIDs[0] = 0;
-	char	l_buf[20];
-	for (char i = 0; i < ply->m_chanum; i++)
-	{
+	int l_chaid = ply->m_chaid[cha_index];
+	char l_CharIDs[80];
+	l_CharIDs[0] = 0;
+	char l_buf[20];
+	for (char i = 0; i < ply->m_chanum; i++) {
 		if (i == cha_index) continue;
 		strcat(l_CharIDs, itoa(ply->m_chaid[i], l_buf, 10));
 		strcat(l_CharIDs, ";");
@@ -1946,25 +1797,21 @@ WPacket	GroupServerApp::TP_DELCHA(Player* ply, DataSocket* datasock, RPacket& pk
 
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	// ?D????é?ê?·?1??á3é?±￡?·??òé?3y1??ááD±íD??￠
-	if (m_tblaccounts->begin_tran())
-	{
-		if (!m_tblaccounts->UpdateRow(ply->m_acctid, l_CharIDs) || !m_tblcharaters->BackupRow(l_chaid) || !m_tblaccounts->commit_tran())
-		{
+	if (m_tblaccounts->begin_tran()) {
+		if (!m_tblaccounts->UpdateRow(ply->m_acctid, l_CharIDs) || !m_tblcharaters->BackupRow(l_chaid) || !m_tblaccounts
+			->commit_tran()) {
 			m_tblaccounts->rollback();
 		}
-		else
-		{
+		else {
 			bFlag = true;
 		}
 	}
-	
 
-	if (bFlag)
-	{
-		l_retpk.WriteShort(ERR_SUCCESS);	//é?3y??é?3é1|·μ??
+
+	if (bFlag) {
+		l_retpk.WriteInt64(ERR_SUCCESS); //é?3y??é?3é1|·μ??
 		--ply->m_chanum;
-		for (auto i = cha_index; i < ply->m_chanum; ++i)
-		{
+		for (auto i = cha_index; i < ply->m_chanum; ++i) {
 			ply->m_chaid[i] = ply->m_chaid[i + 1];
 			ply->m_chaname[i] = ply->m_chaname[i + 1];
 			ply->m_motto[i] = ply->m_motto[i + 1];
@@ -1974,8 +1821,7 @@ WPacket	GroupServerApp::TP_DELCHA(Player* ply, DataSocket* datasock, RPacket& pk
 		// Note: must update currcha for already online Players.
 		RunChainGetArmor<Player> l(m_plylst);
 		Player* d;
-		for (d = m_plylst.GetNextItem(); d; d = m_plylst.GetNextItem())
-		{
+		for (d = m_plylst.GetNextItem(); d; d = m_plylst.GetNextItem()) {
 			if (d->m_currcha >= 0 && d->m_acctname == ply->m_acctname) {
 				// We found a player that is ingame with the same account. Do we need to update it?
 				if (d->m_currcha < cha_index) {
@@ -1987,9 +1833,7 @@ WPacket	GroupServerApp::TP_DELCHA(Player* ply, DataSocket* datasock, RPacket& pk
 				}
 				else {
 					// Sanity check, shouldnt ever happen (currcha == chaindex means we deleted char online)
-
 				}
-
 			}
 		}
 
@@ -2000,13 +1844,14 @@ WPacket	GroupServerApp::TP_DELCHA(Player* ply, DataSocket* datasock, RPacket& pk
 			<<l_cha<<"]￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)
 			<<endln;
 	   */
-		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00043)
-			<< cha_name.c_str() << RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00044) << m_plylst.GetTotal() << "/" << long(m_curChaNum)
+		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << RES_STRING(
+				GP_GROUPSERVERAPPSERV_CPP_00043)
+			<< cha_name.c_str() << RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00044) << m_plylst.GetTotal() << "/" << long(
+				m_curChaNum)
 			<< endln;
 	}
-	else
-	{
-		l_retpk.WriteShort(ERR_PT_SERVERBUSY);	//·t???÷?|?μ￡???é?oó
+	else {
+		l_retpk.WriteInt64(ERR_PT_SERVERBUSY); //·t???÷?|?μ￡???é?oó
 		LogLine l_line(g_LogGrpServer);
 		/*
 		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]é?3y??é?ê§°ü["
@@ -2020,63 +1865,58 @@ WPacket	GroupServerApp::TP_DELCHA(Player* ply, DataSocket* datasock, RPacket& pk
 	return l_retpk;
 }
 
-WPacket	GroupServerApp::TP_CREATE_PASSWORD2(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-	WPacket		l_retpk	=GetWPacket();
+net::WPacket GroupServerApp::TP_CREATE_PASSWORD2(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
 	std::string strPassword = pk.ReadString();
-	
-	if( ply->m_password.length() == 0 && strPassword.length() <= ROLE_MAXSIZE_PASSWORD2 && IsValidName(strPassword.c_str(), strPassword.length()))
-	{
+
+	if (ply->m_password.empty() && strPassword.length() <= ROLE_MAXSIZE_PASSWORD2 && IsValidName(
+		strPassword.c_str(), strPassword.length())) {
 		auto const lockDB = std::lock_guard{m_mtxDB};
 
-		if( m_tblaccounts->UpdatePassword( ply->m_acctid, strPassword.c_str() ) )
-		{
+		if (m_tblaccounts->UpdatePassword(ply->m_acctid, strPassword.c_str())) {
 			ply->m_password = strPassword;
-			l_retpk.WriteShort( ERR_SUCCESS );
+			l_retpk.WriteInt64(ERR_SUCCESS);
 			LogLine l_line(g_LogErrServer);
-			l_line<<newln<<"account:"<<ply->m_acctname<<"ID:"<<ply->m_acctid<<"database operate success:("<<strPassword.c_str()<<")"<<endln;		
+			l_line << newln << "account:" << ply->m_acctname << "ID:" << ply->m_acctid << "database operate success:("
+				<< strPassword.c_str() << ")" << endln;
 		}
-		else
-		{
-			l_retpk.WriteShort( ERR_PT_SERVERBUSY );
+		else {
+			l_retpk.WriteInt64(ERR_PT_SERVERBUSY);
 			LogLine l_line(g_LogErrServer);
-			l_line<<newln<<"account:"<<ply->m_acctname<<"ID:"<<ply->m_acctid<<"database operate failed:("<<strPassword.c_str()<<")"<<endln;
+			l_line << newln << "account:" << ply->m_acctname << "ID:" << ply->m_acctid << "database operate failed:(" <<
+				strPassword.c_str() << ")" << endln;
 		}
 	}
-	else
-	{
-		l_retpk.WriteShort( ERR_PT_INVALID_PW2 );
+	else {
+		l_retpk.WriteInt64(ERR_PT_INVALID_PW2);
 		LogLine l_line(g_LogErrServer);
-		l_line<<newln<<"account:"<<ply->m_acctname<<"ID:"<<ply->m_acctid<<"wrong second password:("<<strPassword.c_str()<<")"<<endln;		
+		l_line << newln << "account:" << ply->m_acctname << "ID:" << ply->m_acctid << "wrong second password:(" <<
+			strPassword.c_str() << ")" << endln;
 	}
 	return l_retpk;
 }
 
-//mothannakh pin code 
-WPacket GroupServerApp::TP_UPDATE_PASSWORD2(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-	WPacket		l_retpk	=GetWPacket();
+//mothannakh pin code
+net::WPacket GroupServerApp::TP_UPDATE_PASSWORD2(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_retpk(256);
 	std::string strOld = pk.ReadString();
-	std::string strPassword = pk.ReadString();	
+	std::string strPassword = pk.ReadString();
 	//std::cout << strPassword << std::endl;
 
-	if (ply->m_password != strOld ||
-		strPassword.length() > ROLE_MAXSIZE_PASSWORD2 ||
-		!IsValidName(strPassword.c_str(), strPassword.length()));
-	{
-		l_retpk.WriteShort(ERR_PT_INVALID_PW2);
+	if (ply->m_password != strOld
+		|| strPassword.length() > ROLE_MAXSIZE_PASSWORD2
+		|| !IsValidName(strPassword.c_str(), strPassword.length())) {
+		l_retpk.WriteInt64(ERR_PT_INVALID_PW2);
 		return l_retpk;
 	}
 
-	auto const lockDB = std::lock_guard{m_mtxDB};
-	if (m_tblaccounts->UpdatePassword(ply->m_acctid, strPassword.c_str()))
-	{
+	std::scoped_lock lockDB(m_mtxDB);
+	if (m_tblaccounts->UpdatePassword(ply->m_acctid, strPassword.c_str())) {
 		ply->m_password = strPassword;
-		l_retpk.WriteShort(ERR_SUCCESS);
+		l_retpk.WriteInt64(ERR_SUCCESS);
 	}
-	else
-	{
-		l_retpk.WriteShort(ERR_PT_SERVERBUSY);
+	else {
+		l_retpk.WriteInt64(ERR_PT_SERVERBUSY);
 	}
 
 	return l_retpk;
@@ -2129,83 +1969,75 @@ WPacket GroupServerApp::TP_UPDATE_PASSWORD2(Player *ply,DataSocket *datasock,RPa
 */
 
 
-void GroupServerApp::MP_GARNER2_UPDATE(Player *ply,DataSocket *datasock,RPacket &pk)
-{
+void GroupServerApp::MP_GARNER2_UPDATE(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	ORDERINFO orderinfo;
 	//SYSTEMTIME st;time_t
 	//GetLocalTime( &st);
 	//time_t tt;
 	//time(&tt);
-	orderinfo .nid = pk.ReadLong();
+	orderinfo.nid = pk.ReadInt64();
 	string strChaName = pk.ReadString();
-	orderinfo.nlev = pk.ReadLong();
+	orderinfo.nlev = pk.ReadInt64();
 	string strjob = pk.ReadString();
-	short sFightpoint = pk.ReadShort();
+	short sFightpoint = pk.ReadInt64();
 
-	if (strChaName.length() > 19)
-	{
-		LogLine	l_line(g_LogGarner2);
+	if (strChaName.length() > 19) {
+		LogLine l_line(g_LogGarner2);
 		//l_line<<newln<<"·′?·°×ò?????êy?Y3?′í";
-		l_line<<newln<<"order data exception";
+		l_line << newln << "order data exception";
 		return;
 	}
-	strcpy(orderinfo.strname,strChaName.c_str());
+	strcpy(orderinfo.strname, strChaName.c_str());
 
-	if(strjob.length() > 99)
-	{
-		LogLine	l_line(g_LogGarner2);
+	if (strjob.length() > 99) {
+		LogLine l_line(g_LogGarner2);
 		//l_line<<newln<<"·′?·°×ò?????êy?Y3?′í";
-		l_line<<newln<<"order data exception";
+		l_line << newln << "order data exception";
 		return;
 	}
-	strcpy(orderinfo.strjob,strjob.c_str());
-	orderinfo.nfightpoint = (long)sFightpoint; 
+	strcpy(orderinfo.strjob, strjob.c_str());
+	orderinfo.nfightpoint = (long)sFightpoint;
 
 	auto const lockDB = std::lock_guard{m_mtxDB};
 	m_tbLparam->UpdateOrder(orderinfo);
-	CP_GARNER2_GETORDER(ply,datasock,pk);
+	CP_GARNER2_GETORDER(ply, client, pk);
 }
 
-void GroupServerApp::CP_GARNER2_GETORDER(Player *ply,DataSocket *datasock,RPacket &pk)
-{
-		WPacket l_wpk = g_gpsvr->GetWPacket();
-		ORDERINFO * porder;
-		l_wpk.WriteCmd(CMD_PC_GARNER2_ORDER);
-		for(int i = 0;i<MAXORDERNUM;i++)
-		{
-			porder = m_tbLparam->GetOrderData(i);
-			l_wpk.WriteString(porder->strname);
-			l_wpk.WriteLong(porder->nlev);
-			l_wpk.WriteString(porder->strjob);
-			l_wpk.WriteLong(porder->nfightpoint);
-		}
-		g_gpsvr->SendToClient(ply,l_wpk);
-	
+void GroupServerApp::CP_GARNER2_GETORDER(Player* ply, net::TcpClient* client, net::RPacket& pk) {
+	net::WPacket l_wpk(256);
+	ORDERINFO* porder;
+	l_wpk.WriteCmd(CMD_PC_GARNER2_ORDER);
+	for (int i = 0; i < MAXORDERNUM; i++) {
+		porder = m_tbLparam->GetOrderData(i);
+		l_wpk.WriteString(porder->strname);
+		l_wpk.WriteInt64(porder->nlev);
+		l_wpk.WriteString(porder->strjob);
+		l_wpk.WriteInt64(porder->nfightpoint);
+	}
+	g_gpsvr->SendToClient(ply, l_wpk);
 }
 
 //Add by sunny.sun 20090828
-void GroupServerApp::MP_GM_BANACCOUNT(Player *ply, DataSocket *datasock,RPacket &pk)
-{
+void GroupServerApp::MP_GM_BANACCOUNT(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	string actName = pk.ReadString();
-	WPacket l_wpk = g_gpsvr->GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PA_GMBANACCOUNT);
 	l_wpk.WriteString(actName.c_str());
-	g_gpsvr->SendData(g_gpsvr->m_acctsock,l_wpk);
+	g_gpsvr->m_acctClient.Send(l_wpk);
 }
 
-void GroupServerApp::MP_GM_UNBANACCOUNT(Player *ply, DataSocket *datasock,RPacket &pk)
-{
+void GroupServerApp::MP_GM_UNBANACCOUNT(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	string actName = pk.ReadString();
-	WPacket l_wpk = g_gpsvr->GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PA_GMUNBANACCOUNT);
 	l_wpk.WriteString(actName.c_str());
-	g_gpsvr->SendData(g_gpsvr->m_acctsock,l_wpk);
+	g_gpsvr->m_acctClient.Send(l_wpk);
 }
 
-void GroupServerApp::MP_MUTE_PLAYER(Player* player, DataSocket* datasock, RPacket& pk)
-{
+void GroupServerApp::MP_MUTE_PLAYER(Player* player, net::TcpClient* client, net::RPacket& pk) {
 	const auto name = pk.ReadString();
-	const auto time = pk.ReadLong();
-	time > 0 ? player->EstopPlayer(name, time)
-		: player->DelEstopPlayer(name);
+	const auto time = pk.ReadInt64();
+	time > 0
+		? player->EstopPlayer(name.c_str(), time)
+		: player->DelEstopPlayer(name.c_str());
 }

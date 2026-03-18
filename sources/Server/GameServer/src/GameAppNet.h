@@ -2,7 +2,7 @@
 #ifndef _GAMEAPPNET_H_
 #define _GAMEAPPNET_H_
 
-// Í¨ÓÃÊý¾Ý
+// Í¨ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 #include "stdafx.h" //add by alfred.shi 20080313
 
@@ -16,16 +16,16 @@
 #define NETMSG_GATE_DISCONNECT  101
 #define NETMSG_PACKET           200
 
-#define EXCEPTION()	LG("EXCEPTION", "Exception£ºFile %s£¬Line %d¡£\n", __FILE__, __LINE__)
+#define EXCEPTION()	LG("EXCEPTION", "Exceptionï¿½ï¿½File %sï¿½ï¿½Line %dï¿½ï¿½\n", __FILE__, __LINE__)
 
 inline const char* g_GameGateConnError( int error_code )
 {
     switch( error_code )
     {
-    /*case ERR_TM_OVERNAME:	return "GameServerÃûÖØ¸´";
-    case ERR_TM_OVERMAP:	return "GameServerÉÏµØÍ¼ÃûÖØ¸´";
-    case ERR_TM_MAPERR:		return "GameServerµØÍ¼ÅäÖÃÓï·¨´íÎó";
-    default:                return "Î´Öª´íÎó";*/
+    /*case ERR_TM_OVERNAME:	return "GameServerï¿½ï¿½ï¿½Ø¸ï¿½";
+    case ERR_TM_OVERMAP:	return "GameServerï¿½Ïµï¿½Í¼ï¿½ï¿½ï¿½Ø¸ï¿½";
+    case ERR_TM_MAPERR:		return "GameServerï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï·¨ï¿½ï¿½ï¿½ï¿½";
+    default:                return "Î´Öªï¿½ï¿½ï¿½ï¿½";*/
 	case ERR_TM_OVERNAME:	return RES_STRING(GM_GAMEAPPNET_H_00001);
     case ERR_TM_OVERMAP:	return RES_STRING(GM_GAMEAPPNET_H_00002);
     case ERR_TM_MAPERR:		return RES_STRING(GM_GAMEAPPNET_H_00003);
@@ -35,7 +35,7 @@ inline const char* g_GameGateConnError( int error_code )
 
 
 
-// ²»Í¬ÍøÂçµ×²ãÊý¾Ý½á¹¹ºÍÀàÐÍ³éÏó
+// ï¿½ï¿½Í¬ï¿½ï¿½ï¿½ï¿½×²ï¿½ï¿½ï¿½ï¿½Ý½á¹¹ï¿½ï¿½ï¿½ï¿½ï¿½Í³ï¿½ï¿½ï¿½
 
 #ifdef USE_IOCP
 
@@ -65,22 +65,22 @@ inline const char* g_GameGateConnError( int error_code )
 #define GETWPACKET() g_mygmsvr->getpkt()
 #define RETRPACKET(pkt) pkt->free()
 #define WRITE_CMD(pkt, cmd) pkt->WriteCmd(cmd)
-#define WRITE_CHAR(pkt, c) pkt->WriteChar(c)
-#define WRITE_SHORT(pkt, s) pkt->WriteShort(s)
-#define WRITE_LONG(pkt, l) pkt->WriteLong(l)
-#define WRITE_LONGLONG(pkt, l) pkt->WriteLongLong(l)
+#define WRITE_CHAR(pkt, c) pkt->WriteInt64(c)
+#define WRITE_SHORT(pkt, s) pkt->WriteInt64(s)
+#define WRITE_LONG(pkt, l) pkt->WriteInt64(l)
+#define WRITE_LONGLONG(pkt, l) pkt->WriteInt64(l)
 #define WRITE_SEQ(pkt, seq, len) pkt->WriteSequence(seq, len)
 #define WRITE_STRING(pkt, str) pkt->WriteString(str)
 #define READ_CMD(pkt) pkt->ReadCmd()
-#define READ_CHAR(pkt) pkt->ReadChar()
-#define READ_SHORT(pkt) pkt->ReadShort()
-#define READ_LONG(pkt) pkt->ReadLong()
-#define READ_LONGLONG(pkt) pkt->ReadLongLong()
+#define READ_CHAR(pkt) pkt->ReadInt64()
+#define READ_SHORT(pkt) pkt->ReadInt64()
+#define READ_LONG(pkt) pkt->ReadInt64()
+#define READ_LONGLONG(pkt) pkt->ReadInt64()
 #define READ_SEQ(pkt, len) pkt->ReadSequence(len)
 #define READ_STRING(pkt) pkt->ReadString()
 
-#define READ_LONG_R(pkt) pkt->ReverseReadLong()
-#define READ_SHORT_R(pkt) pkt->ReverseReadShort()
+#define READ_LONG_R(pkt) pkt->ReverseReadInt64()
+#define READ_SHORT_R(pkt) pkt->ReverseReadInt64()
 
 #define BEGINGETGATE() g_mygmsvr->begingetgate()
 #define GETNEXTGATE() g_mygmsvr->getnextgate()
@@ -96,7 +96,7 @@ inline const char* g_GameGateConnError( int error_code )
 #define DELPLAYER(ply) g_gmsvr->DelPlayer(ply)
 #define KICKPLAYER(ply, time) g_gmsvr->KickPlayer(ply, time)
 #define PEEKPACKET(ms) g_gmsvr->PeekPacket(ms)
-#define DISCONNECT(sk) g_gmsvr->Disconnect(sk)
+#define DISCONNECT(pGate) g_gmsvr->DisconnectGate(pGate)
 #define ISVALIDGATE(i) g_gmsvr->IsValidGate(i)
 #define BEGINGETPLAYER(pGate) g_gmsvr->BeginGetplayer(pGate)
 #define GETNEXTPLAYER(pGate) g_gmsvr->GetNextPlayer(pGate)
@@ -109,29 +109,29 @@ inline const char* g_GameGateConnError( int error_code )
 #define SENDTOSINGLE(pkt, l) g_gmsvr->SendToClient(l, pkt)
 #define SENDTOGAME(pkt, p) g_gmsvr->SendToGame(pkt, p)
 
-#define WPACKET dbc::WPacket
-#define RPACKET dbc::RPacket
-#define VALIDRPACKET(pkt) (true)
+#define WPACKET net::WPacket
+#define RPACKET net::RPacket&
+#define VALIDRPACKET(pkt) (static_cast<bool>(pkt))
 
 #define GETWPACKET() g_gmsvr->GetWPacket()
 #define RETRPACKET(pkt)
 #define WRITE_CMD(pkt, cmd) pkt.WriteCmd(cmd)
-#define WRITE_CHAR(pkt, c) pkt.WriteChar(c)
-#define WRITE_SHORT(pkt, s) pkt.WriteShort(s)
-#define WRITE_LONG(pkt, l) pkt.WriteLong(l)
-#define WRITE_LONGLONG(pkt, l) pkt.WriteLongLong(l)
+#define WRITE_CHAR(pkt, c) pkt.WriteInt64(c)
+#define WRITE_SHORT(pkt, s) pkt.WriteInt64(s)
+#define WRITE_LONG(pkt, l) pkt.WriteInt64(l)
+#define WRITE_LONGLONG(pkt, l) pkt.WriteInt64(l)
 #define WRITE_SEQ(pkt, seq, len) pkt.WriteSequence(seq, len)
 #define WRITE_STRING(pkt, str) pkt.WriteString(str)
 #define READ_CMD(pkt) pkt.ReadCmd()
-#define READ_CHAR(pkt) pkt.ReadChar()
-#define READ_SHORT(pkt) pkt.ReadShort()
-#define READ_LONG(pkt) pkt.ReadLong()
-#define READ_LONGLONG(pkt) pkt.ReadLongLong()
+#define READ_CHAR(pkt) pkt.ReadInt64()
+#define READ_SHORT(pkt) pkt.ReadInt64()
+#define READ_LONG(pkt) pkt.ReadInt64()
+#define READ_LONGLONG(pkt) pkt.ReadInt64()
 #define READ_SEQ(pkt, len) pkt.ReadSequence(len)
 #define READ_STRING(pkt) pkt.ReadString()
 
-#define READ_LONG_R(pkt) pkt.ReverseReadLong()
-#define READ_SHORT_R(pkt) pkt.ReverseReadShort()
+#define READ_LONG_R(pkt) pkt.ReverseReadInt64()
+#define READ_SHORT_R(pkt) pkt.ReverseReadInt64()
 
 #define BEGINGETGATE() g_gmsvr->BeginGetGate()
 #define GETNEXTGATE() g_gmsvr->GetNextGate()

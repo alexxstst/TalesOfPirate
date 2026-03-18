@@ -2,7 +2,7 @@
 #include <deque>
 struct GuildBankMsg{
 	Player* player;
-	WPacket msg;
+	net::WPacket msg;
 };
 
 std::deque<GuildBankMsg> guildBankMsgQueue[201];

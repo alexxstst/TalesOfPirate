@@ -134,7 +134,7 @@ void ChaException(uLong ulCurID, Long lCurHandle)
 DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 {
 #ifdef __CATCH
-	SEHTranslator translator;
+	// SEHTranslator translator;
 #endif	
 	DWORD dwLastTick;
 	DWORD dwCurTick;
@@ -150,7 +150,6 @@ DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 
     while (!g_bGameEnd)
 	{
-		T_B
 		
 		DWORD	dwInterval = 50; // 毫秒
 
@@ -190,7 +189,6 @@ DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 		    
 		g_pGameApp->m_dwRunStep = 104;
 
-		T_EXIT
 	}
 	//LG("init", "游戏线程结束!\n");
 	LG("init", "game thread finish!\n");
@@ -317,7 +315,7 @@ CGameApp::CGameApp()
  m_StallDataHeap(1, ROLE_MAXSIZE_STALLDATA),
  m_mapnum(0),
  m_ulLeftSec(0)
-{T_B
+{
 	extern CGameApp *g_pGameApp;
 	g_pGameApp = this;
 	for (int i = 0; i < MAX_GATE; i++)
@@ -338,11 +336,11 @@ CGameApp::CGameApp()
 	m_fGlobalDropRate = 0;
 	m_fGlobalExpRate = 0;
 	ChaAttrMaxValInit(false);
-T_E}
+}
 
 
 CGameApp::~CGameApp()
-{T_B
+{
 	
 	//Log("关闭", "haha", "", "" ,"", "");
 	Log("close", "haha", "", "" ,"", "");
@@ -364,7 +362,7 @@ CGameApp::~CGameApp()
 	SAFE_DELETE(m_PicSet);
 
 	m_vecVolunteerList.clear();
-T_E}
+}
 
 
 const char* GetResPath(const char *pszRes)
@@ -395,7 +393,7 @@ BOOL LoadTable(CRawDataSet *pTable, const char *pszTableName)
 
 
 BOOL CGameApp::Init()
-{T_B
+{
 	//LG("init", "开始初始化GameApp\n");
 	LG("init", "start initialization GameApp\n");
 
@@ -545,11 +543,11 @@ BOOL CGameApp::Init()
 	m_CTimerItem.Begin(3 * 1000);
 
 	return TRUE;
-T_E}
+}
     
 
 void CGameApp::Run(DWORD dwCurTime)
-{T_B
+{
 	m_dwRunStep = 0;
 
 	DWORD	dwChaCnt, dwPlayerCnt, dwActiveMgrUnit;
@@ -657,10 +655,10 @@ void CGameApp::Run(DWORD dwCurTime)
 				dwGameRunTime, dwMgrUnitRunTime, dwItemRunTime, dwMapMgrRunTime, dwDataStatisticTime, dwSkillMgrRunTime, dwMapMaskSaveTime);
 	}
 	//
-T_E}
+}
 
 void CGameApp::MgrUnitRun(DWORD dwCurTime)
-{T_B
+{
 	SubMap		*pCSubMap;
 
 	m_dwChaCnt = m_dwPlayerCnt;
@@ -829,7 +827,7 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime)
 			}
 		}
 	}
-T_E}
+}
 
 void CGameApp::GameItemRun(DWORD dwCurTime)
 {
@@ -856,7 +854,7 @@ void CGameApp::MapMgrRun(DWORD dwCurTime)
 }
 
 void CGameApp::SetEntityEnableLog(bool bValid)
-{T_B
+{
 	SubMap			*pCSubMap;
 	//CEyeshotCell	*pUnit;
 	Entity			*pCEnt;
@@ -896,22 +894,22 @@ void CGameApp::SetEntityEnableLog(bool bValid)
 			}
 		}
 	}
-T_E}
+}
 
 // 分配一个新的玩家
 CPlayer* CGameApp::GetNewPlayer()
-{T_B
+{
 	return m_pCPlySpace->GetNewPly();
-T_E}
+}
 
 // 根据玩家句柄取指针
 CPlayer* CGameApp::GetPlayer(long lHandle)
-{T_B
+{
 	return m_pCPlySpace->GetPly(lHandle);
-T_E}
+}
 
 CPlayer* CGameApp::IsValidPlayer(long lID, long lHandle)
-{T_B
+{
 	CPlayer	*pCPly = m_pCPlySpace->GetPly(lHandle);
 	if (!pCPly)
 		return 0;
@@ -919,12 +917,12 @@ CPlayer* CGameApp::IsValidPlayer(long lID, long lHandle)
 		return 0;
 
 	return pCPly;
-T_E}
+}
 
 // 创建玩家数据结构，读取数据库
 // chType：0，角色上线。1，地图切换
 CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uLong ulWorldId, const char *cszMapName, char chType)
-{T_B
+{
 	CPlayer	*pCOldPly = GetPlayerByDBID(ulChaDBId);
 	if (pCOldPly)
 	{
@@ -995,11 +993,11 @@ CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uL
 
     LG("enter_map", "atorID = %d (%s) end entermap\n", ulChaDBId, pCMainCha->GetName());
     LG("enter_map", "atorID = %d, logname = [%s] end enter\n", ulChaDBId, pCMainCha->m_CLog.GetLogName());
-T_E}
+}
 
 // 保存玩家资料，归还内存
 void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
-{T_B
+{
     // 资料写数据库，释放角色
     if(pPlayer && pPlayer->IsValid())
 	{
@@ -1060,7 +1058,7 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
 
 		LG("enter_map", "atorID = %d, goout\n", pPlayer->GetDBChaId());
 	}
-T_E}
+}
 
 void CGameApp::GoOutGame(CPlayer* pPlayer, bool bOffLine, bool mOffLine)
 {
@@ -1117,30 +1115,30 @@ void CGameApp::AfterPlayerLogin(const char *cszPlyName)
 
 // 分配一个新的角色
 CCharacter* CGameApp::GetNewCharacter()
-{T_B
+{
 	return m_pCEntSpace->GetNewCha();
-T_E}
+}
 
 // 分配一个新的道具
 CItem* CGameApp::GetNewItem()
-{T_B
+{
 	return m_pCEntSpace->GetNewItem();
-T_E}
+}
 
 // 分配一个新的NPC
 mission::CTalkNpc* CGameApp::GetNewTNpc()
-{T_B
+{
 	return m_pCEntSpace->GetNewTNpc();
-T_E}
+}
 
 Entity* CGameApp::GetEntity(long lHandle)
-{T_B
+{
 	return m_pCEntSpace->GetEntity(lHandle);
-T_E}
+}
 
 // 角色是有效实体
 Entity* CGameApp::IsValidEntity(unsigned long ulID, long lHandle)
-{T_B
+{
 	Entity	*pEnti = g_pGameApp->GetEntity(lHandle);
 	if (!pEnti)
 		return 0;
@@ -1149,11 +1147,11 @@ Entity* CGameApp::IsValidEntity(unsigned long ulID, long lHandle)
 		return 0;
 
 	return pEnti;
-T_E}
+}
 
 // 角色是有效实体，存在于地图且在生存状态
 Entity* CGameApp::IsLiveingEntity(unsigned long ulID, long lHandle)
-{T_B
+{
 	Entity	*pEnti = IsValidEntity(ulID, lHandle);
 	if (!pEnti)
 		return 0;
@@ -1162,11 +1160,11 @@ Entity* CGameApp::IsLiveingEntity(unsigned long ulID, long lHandle)
 			return 0;
 
 	return pEnti;
-T_E}
+}
 
 // 角色是有效实体，存在于地图
 Entity* CGameApp::IsMapEntity(unsigned long ulID, long lHandle)
-{T_B
+{
 	Entity	*pEnti = IsValidEntity(ulID, lHandle);
 	if (!pEnti)
 		return 0;
@@ -1175,11 +1173,11 @@ Entity* CGameApp::IsMapEntity(unsigned long ulID, long lHandle)
 			return 0;
 
 	return pEnti;
-T_E}
+}
 
 // 角色是有效实体，有生命
 Entity* CGameApp::IsLifeEntity(unsigned long ulID, long lHandle)
-{T_B
+{
 	Entity	*pEnti = IsValidEntity(ulID, lHandle);
 	if (!pEnti)
 		return 0;
@@ -1188,11 +1186,11 @@ Entity* CGameApp::IsLifeEntity(unsigned long ulID, long lHandle)
 			return 0;
 
 	return pEnti;
-T_E}
+}
 
 // 初始化所有地图
 BOOL CGameApp::InitMap()
-{T_B
+{
 	//LG("init", "初始化地图列表...\n");
 	LG("init", "initialization map list...\n");
 	
@@ -1270,10 +1268,10 @@ BOOL CGameApp::InitMap()
 	
 	return TRUE;
 
-T_E}
+}
 
 BOOL CGameApp::SummonNpc( BYTE byMapID, USHORT sAreaID, const char szNpc[], USHORT sTime )
-{T_B
+{
 	CMapRes* pMap = g_MapID.GetMap( byMapID );
 	if( pMap )
 	{
@@ -1281,11 +1279,11 @@ BOOL CGameApp::SummonNpc( BYTE byMapID, USHORT sAreaID, const char szNpc[], USHO
 	}
 
 	return FALSE;
-T_E}
+}
 
 // 通过名称查找子地图
 CMapRes *CGameApp::FindMapByName(const char *mapname, bool bIncUnRun)
-{T_B
+{
 	if (!mapname)
 		return 0;
 
@@ -1311,38 +1309,38 @@ CMapRes *CGameApp::FindMapByName(const char *mapname, bool bIncUnRun)
 	{
 		return 0;
 	}
-T_E}
+}
 
 void CGameApp::LoadAllTable()
-{T_B
+{
 	LoadCharacterInfo();
 	LoadSkillInfo();
 	LoadItemInfo();
-T_E}
+}
 
 void CGameApp::LoadCharacterInfo()
-{T_B
+{
 	m_CChaRecordSet->Release();
 	m_CChaRecordSet = new CChaRecordSet(0, defMAX_CHARINFO_NO);
 	LoadTable(m_CChaRecordSet, szChaInfoName);
-T_E}
+}
 
 void CGameApp::LoadSkillInfo()
-{T_B
+{
 	m_CSkillRecordSet->Release();
 	m_CSkillRecordSet = new CSkillRecordSet(0, defMAX_SKILL_NO);
 	LoadTable(m_CSkillRecordSet, szSkillInfoName);
-T_E}
+}
 
 void CGameApp::LoadItemInfo()
-{T_B
+{
 	m_CItemRecordSet->Release();
 	m_CItemRecordSet = new CItemRecordSet(0, CItemRecord::enumItemMax);
 	LoadTable(m_CItemRecordSet, szItemInfoName);
-T_E}
+}
 
 BOOL CGameApp::ReloadNpcInfo( CCharacter& character )
-{T_B
+{
 	g_pGameApp->BeginGetTNpc();
 	mission::CTalkNpc* pTalkNpc = NULL;
 	while( (pTalkNpc = g_pGameApp->GetNextTNpc()) )
@@ -1357,7 +1355,7 @@ BOOL CGameApp::ReloadNpcInfo( CCharacter& character )
 	//mission::g_WorldEudemon.Load( "Eudemon", "守护神", -1 );
 	mission::g_WorldEudemon.Load( "Eudemon", "Eudemon", -1 );
 	return TRUE;
-T_E}
+}
 
 mission::CNpc* CGameApp::FindNpc( const char szName[] )
 {
@@ -1373,7 +1371,7 @@ mission::CNpc* CGameApp::FindNpc( const char szName[] )
 }
 
 void CGameApp::NotiGameReset(unsigned long ulLeftSec)
-{T_B
+{
 	char	szNotiMsg[1024];
 
 	//sprintf(szNotiMsg, "游戏服务器\"%s\"将在 %u 秒后重启，请在地图\"%s\"上的玩家做好准备", g_Config.m_szName, ulLeftSec, m_strMapNameList.c_str());
@@ -1383,20 +1381,20 @@ void CGameApp::NotiGameReset(unsigned long ulLeftSec)
 	WRITE_CMD(wpk, CMD_MC_SYSINFO);
 	WRITE_STRING(wpk, szNotiMsg);
 	NotiPkToWorld(wpk);
-T_E}
+}
 
 void CGameApp::BeginGetTNpc(void) 
-{T_B
+{
 	m_pCEntSpace->BeginGetTNpc();
-T_E}
+}
 
 mission::CTalkNpc*	CGameApp::GetNextTNpc(void)
-{T_B
+{
 	return m_pCEntSpace->GetNextTNpc();
-T_E}
+}
 
 void CGameApp::SaveAllPlayer(void)
-{T_B
+{
 	BEGINGETGATE();
 	CPlayer	*pCPlayer;
 	GateServer	*pGateServer;
@@ -1421,7 +1419,7 @@ void CGameApp::SaveAllPlayer(void)
 	}
 	game_db.GetMapMaskTable()->SaveAll(); // 退出时, 一次性处理剩下的保存大地图请求
 	LG("enter_map", "End SaveAllPlayer################################################################\n");
-T_E}
+}
 
 void CGameApp::DataStatistic(void)
 {

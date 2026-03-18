@@ -281,7 +281,7 @@ private:
 private:
 	int				_ulChaID;
 
-    char			_szName[33];		// ����
+    std::string		_szName{};		// ����
 	char			_szHumanName[33];	// ��һ����ɫ������
 	char			_szGuildName[33];	// ��������
 	char			_szGuildMotto[101];	// ����������
@@ -306,8 +306,8 @@ public:	// Ӧ�ò�
 	bool			_isPlayerCha;
 	
 	void			RefreshSelfEffects();
-	void			setName(const char *pszName);
-	const char*		getName()							{ return _szName;					}
+	void			setName(const std::string& pszName);
+	const std::string& getName()						{ return _szName;					}
 
 	void			setGuildID( int nGuildID );
 	
@@ -407,7 +407,7 @@ public:
     int             LoadCha( const LoadChaInfo* info );
 
     void            UpdateTileColor();
-	char*			getLogName();
+	const char*		getLogName();
 	
 	void			setSecondName(const char *pszSecName) { strcpy(_szSecondName, pszSecName); }
 	const char*     getSecondName()						  { return _szSecondName;              }
@@ -682,12 +682,12 @@ inline bool CCharacter::IsDefaultSkill()
 	return _pReadySkillInfo==NULL || _pReadySkillInfo==_pDefaultSkillInfo;	
 }
 
-inline char* CCharacter::getLogName()					
-{ 
+inline const char* CCharacter::getLogName()
+{
 #ifdef _LOG_NAME_
 	return _szLogName;
 #else
-	return _szName;
+	return _szName.c_str();
 #endif
 }
 

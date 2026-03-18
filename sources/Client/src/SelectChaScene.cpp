@@ -970,7 +970,7 @@ void CSelectChaScene::SendBeginPlayToServer()
 
 	//���Դ���
 	LG("select", "Client Send:%s,%d,%d,%d,%d,%d\n",
-		pCha->getName(), pCha->GetPartID(0), pCha->GetPartID(1),
+		pCha->getName().c_str(), pCha->GetPartID(0), pCha->GetPartID(1),
 		pCha->GetPartID(2), pCha->GetPartID(3), pCha->GetPartID(4));
 }
 

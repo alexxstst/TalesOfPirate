@@ -1534,7 +1534,7 @@ long CGameScene::AddCharacterBlock(int nCurX, int nCurY, int nDist, BYTE *byBloc
 					}
 					else
 					{
-						LG( "pathfind", "msgCGameScene::AddCharacterBlock nRange[%d] isn't Valid, Cha name[%s], pos:[%d, %d]", nRange, pCha->getName(), pCha->GetCurX(), pCha->GetCurY() );
+						LG( "pathfind", "msgCGameScene::AddCharacterBlock nRange[%d] isn't Valid, Cha name[%s], pos:[%d, %d]", nRange, pCha->getName().c_str(), pCha->GetCurX(), pCha->GetCurY() );
 						return 0;
 					}
 				}
@@ -1902,7 +1902,7 @@ CCharacter* CGameScene::SearchByName(const char* name)
 	for(int i = 0; i < _nChaCnt; i++)
 	{
 		pCha = &_pChaArray[i];
-		if(pCha->IsValid() && strcmp( pCha->getName(), name )==0 )
+		if(pCha->IsValid() && strcmp( pCha->getName().c_str(), name )==0 )
 		{
 			return pCha;
 		}

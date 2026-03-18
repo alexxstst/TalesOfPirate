@@ -7,8 +7,7 @@
 #include "Player.h"
 #include "GameServerApp.h"
 #include "util.h"
-#include "ThreadPool.h"
-#include "TryUtil.h"
+#include "Task.h"
 #include "Config.h"
 #include "GameApp.h"
 
@@ -18,19 +17,19 @@ _DBC_USING
 OuterServer::OuterServer(ThreadPool *proc,ThreadPool *comm)
 :TcpServerApp(this,proc,comm),RPCMGR(this)
 ,m_count(0)
-{T_B
+{
 	SetPKParse(0,2,4*1024,400);
 	BeginWork(g_Config.m_lSocketAlive);
 	m_mutdisc.Create(false);
-T_E}
+}
 
 OuterServer::~OuterServer()
-{T_B
+{
 	ShutDown(12*1000);
-T_E}
+}
 
 bool	OuterServer::OnConnect(DataSocket *datasock)					//返回值:true-允许连接,false-不允许连接
-{T_B
+{
 	datasock->SetRecvBuf(32*1024); 
 	datasock->SetSendBuf(32*1024);
 	LG(g_szConnectLog, "GateServer Cconnected! IP = [%s] port = %d\n",  datasock->GetPeerIP() , datasock->GetPeerPort());
@@ -42,10 +41,10 @@ bool	OuterServer::OnConnect(DataSocket *datasock)					//返回值:true-允许连接,fal
     AddPK(datasock, wpkt);
 
 	return true;
-T_E}
+}
 
 void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reason值:0-本地程序正常退出；-3-网络被对方关闭；-1-Socket错误;-5-包长度超过限制。
-{T_B
+{
 	LG(g_szConnectLog, "GateServer Disconnect! IP = [%s] port = %d, reason = [%d]\n",  datasock->GetPeerIP() , datasock->GetPeerPort(), reason);
 
     GateServer* gt = (GateServer *)datasock->GetPointer();
@@ -62,23 +61,23 @@ void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reason值:0-本
         // 清理GateServer
         gt->Invalid();      
     }
-T_E}
+}
 
 void OuterServer::OnProcessData(DataSocket *datasock,RPacket recvbuf)
-{T_B
+{
 	AddPK(datasock,recvbuf);
-T_E}
+}
 
 
 WPacket	OuterServer::ServeCall(DataSocket *datasock,RPacket in_para)
-{T_B
+{
     m_count++;
     WPacket l_retpk = GetWPacket();
     return l_retpk;
-T_E}
+}
 
 void OuterServer::ProcessData(DataSocket* datasock, RPacket pk)
-{T_B
+{
     if (datasock == NULL) return;
     GateServer* gt = (GateServer *)datasock->GetPointer();
     if (gt == NULL) return;
@@ -101,7 +100,7 @@ void OuterServer::ProcessData(DataSocket* datasock, RPacket pk)
         }
 
     g_pGameApp->ProcessNetMsg(msg_id, gt, pk);
-T_E}
+}
 
 
 
@@ -109,7 +108,7 @@ char	g_szConnectLog[256] = "Connect";
 
 
 long ToGateServer::Process()
-{T_B
+{
 	DWORD	dwTick, dwCurTick;
 	DWORD	dwInterval = 5000;
 	DWORD	dwConnectTick = 0;
@@ -141,4 +140,4 @@ long ToGateServer::Process()
 	}
 
 	return 0;
-T_E}
+}

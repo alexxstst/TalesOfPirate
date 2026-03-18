@@ -161,7 +161,7 @@ void CHeadSay::AddItem( CItemEx* obj )
     _fScale    = 0.1f ;
 }
 
-void CHeadSay::SetName( const char* name )
+void CHeadSay::SetName( const std::string& name )
 {
     _nChaNameOffX = 0 - CGuiFont::s_Font.GetWidth( name )/2;
 }
@@ -513,7 +513,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 			{
 				strncpy( s_sNamePart[NAME_INDEX], _pOwn->getHumanName(), NAME_LENGTH );
 				strncpy( s_sNamePart[BOAT_NAME_SEP1_INDEX], "[", strlen("[") );
-				strncpy( s_sNamePart[BOAT_NAME_INDEX], _pOwn->getName(),  NAME_LENGTH);
+				strncpy( s_sNamePart[BOAT_NAME_INDEX], _pOwn->getName().c_str(),  NAME_LENGTH);
 				strncpy( s_sNamePart[BOAT_NAME_SEP2_INDEX], "]", strlen("]") );
 			}
 			else 
@@ -521,7 +521,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				strncpy( s_sNamePart[BOAT_NAME_SEP1_INDEX], "", NAME_LENGTH );
 				strncpy( s_sNamePart[BOAT_NAME_INDEX], "", NAME_LENGTH );
 				strncpy( s_sNamePart[BOAT_NAME_SEP2_INDEX], "", NAME_LENGTH );
-				strncpy( s_sNamePart[NAME_INDEX], _pOwn->getName(), NAME_LENGTH );
+				strncpy( s_sNamePart[NAME_INDEX], _pOwn->getName().c_str(), NAME_LENGTH );
 
 				if (_pOwn->IsMonster() )
 				{	//����ǹ���ҵȼ���������10������ʾ����ȼ�
@@ -541,11 +541,11 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 					static char szBuf[NAME_LENGTH] = { 0 };
 					if (nMonsterLevel - nMainLevel <= 10)
 					{	//��ʾ�ȼ�
-						sprintf(szBuf, "Lv%d %s", nMonsterLevel, _pOwn->getName());
+						sprintf(szBuf, "Lv%d %s", nMonsterLevel, _pOwn->getName().c_str());
 					}
 					else
 					{
-						sprintf(szBuf, "??? %s", _pOwn->getName());
+						sprintf(szBuf, "??? %s", _pOwn->getName().c_str());
 					}
 					strncpy( s_sNamePart[NAME_INDEX], szBuf, NAME_LENGTH );
 				}
@@ -621,7 +621,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 			else	//��ʾ��ɫ��
 			{
 				int  nNameLength =  0 - CGuiFont::s_Font.GetWidth( _pOwn->getName() )/2;
-				CGuiFont::s_Font.BRender( _pOwn->getName(), x +  nNameLength ,   y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
+				CGuiFont::s_Font.BRender( _pOwn->getName().c_str(), x +  nNameLength ,   y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
 				if(_pOwn->IsShowSecondName())
 				{
 					if(strlen(_pOwn->getSecondName()) > 0)

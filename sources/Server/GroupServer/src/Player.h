@@ -15,6 +15,8 @@ class Team;
 
 _DBC_USING
 
+namespace net { class TcpClient; }
+
 class Player :public PreAllocStru , public RunBiDirectItem<Player>
 , public TeamMember, public GuildMember
 , public Friend, public Master{
@@ -24,7 +26,7 @@ public:
 	void	Free(){PreAllocStru::Free();}
 	bool	BeginRun();
 	bool	EndRun();
-	void	EndPlay(DataSocket *datasock);
+	void	EndPlay(net::TcpClient *client);
 	void	EndPlayReset();
 
 	bool	CanReceiveRequests() { return bCanReceiveRequests; }

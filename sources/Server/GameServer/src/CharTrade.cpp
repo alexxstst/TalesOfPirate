@@ -22,31 +22,31 @@ namespace mission
 
 	CTradeData::CTradeData(dbc::uLong lSize)
 	: PreAllocStru(1)
-	{T_B
+	{
 
-	T_E}
+	}
 
 	CTradeData::~CTradeData()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	//----------------------------------------------------
 	// CTradeSystem implemented
 
 	CTradeSystem::CTradeSystem()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	CTradeSystem::~CTradeSystem()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	// 交易操作
 	BOOL CTradeSystem::Request( BYTE byType, CCharacter& character, DWORD dwAcceptID )
-	{T_B
+	{
 		if(character.GetPlyMainCha()->IsStoreEnable())
 		{
 			//character.SystemNotice("无法交易!");
@@ -228,19 +228,19 @@ namespace mission
 
 		pChar->ReflectINFof( pChar, packet );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::IsTradeDist( CCharacter& Char1, CCharacter& Char2, DWORD dwDist )
-	{T_B
+	{
 		DWORD dwxDist = (Char1.GetShape().centre.x - Char2.GetShape().centre.x) * 
 			(Char1.GetShape().centre.x - Char2.GetShape().centre.x);
 		DWORD dwyDist = (Char1.GetShape().centre.y - Char2.GetShape().centre.y) * 
 			(Char1.GetShape().centre.y - Char2.GetShape().centre.y);
 		return ( dwxDist + dwyDist < dwDist * 100 );
-	T_E}
+	}
 
 	BOOL CTradeSystem::Accept( BYTE byType, CCharacter& character, DWORD dwRequestID )
-	{T_B
+	{
 		if( character.GetBoat() )
 		{
 			//character.SystemNotice( "正在建造船只，不可以交易！" );
@@ -480,10 +480,10 @@ namespace mission
 		pChar->ReflectINFof( pMain, packet );
 		pMain->ReflectINFof( pMain, packet );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::Cancel( BYTE byType, CCharacter& character, DWORD dwCharID )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -571,10 +571,10 @@ namespace mission
 		pTradeData1->Free();
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::Clear( BYTE byType, CCharacter& character )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -642,11 +642,10 @@ namespace mission
 
 		pTradeData->Free();
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::AddIMP(BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, DWORD dwMoney)
 	{
-		T_B
 			CCharacter* pMain = &character;
 		if (!pMain->GetPlyMainCha()){
 			pMain->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00010));
@@ -729,11 +728,10 @@ namespace mission
 		pTradeData->pAccept->ReflectINFof(pMain, packet);
 		pTradeData->pRequest->ReflectINFof(pMain, packet);
 		return TRUE;
-		T_E
 	}
 
 	BOOL CTradeSystem::AddMoney( BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, DWORD dwMoney )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() ){
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
@@ -811,11 +809,11 @@ namespace mission
 		pTradeData->pAccept->ReflectINFof( pMain, packet );
 		pTradeData->pRequest->ReflectINFof( pMain, packet );
 		return TRUE;
-	T_E}
+	}
 
 	// 放置或者取走物品到交易栏
 	BOOL CTradeSystem::AddItem( BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, BYTE byIndex, BYTE byItemIndex, BYTE byCount )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( pMain->GetPlayer() == NULL )
 		{		
@@ -1189,10 +1187,10 @@ namespace mission
 		}
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::ValidateItemData( BYTE byType, CCharacter& character, DWORD dwCharID )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -1276,10 +1274,10 @@ namespace mission
 			pTradeData->pRequest->ReflectINFof( pMain, packet );
 		}	
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTradeSystem::ValidateTrade( BYTE byType, CCharacter& character, DWORD dwCharID )
-	{T_B
+	{
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
@@ -2154,10 +2152,10 @@ namespace mission
 		}
 
 		return TRUE;
-	T_E}
+	}
 
 	void CTradeSystem::ResetItemState( CCharacter& character, CTradeData& TradeData )
-	{T_B
+	{
 		int nCapacity = character.m_CKitbag.GetCapacity();
 		CKitbag& Bag = character.m_CKitbag;
 		TRADE_DATA* pItemData;
@@ -2177,20 +2175,20 @@ namespace mission
 				Bag.Enable( pItemData->ItemArray[i].byIndex );
 			}				
 		}
-	T_E}
+	}
 
 	CStoreSystem::CStoreSystem() : m_bValid(false)
-	{T_B
+	{
 		
-	T_E}
+	}
 
     CStoreSystem::~CStoreSystem()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	BOOL CStoreSystem::PushOrder(CCharacter *pCha, long long lOrderID, long lComID, long lNum)
-	{T_B
+	{
 		SOrderData OrderInfo;
 		OrderInfo.lOrderID = lOrderID;
 		OrderInfo.ChaID = pCha->GetPlayer()->GetDBChaId();
@@ -2203,10 +2201,10 @@ namespace mission
 		m_OrderList.push_back(OrderInfo);
 		LG("Store_order", "PushOrder:[OrderID:%I64i][ChaID:%ld][ChaName:%s][ComID:%ld][Num:%ld][RecDBID:%ld][TickCount:%ld]\n", OrderInfo.lOrderID, OrderInfo.ChaID, OrderInfo.ChaName, OrderInfo.lComID, OrderInfo.lNum, OrderInfo.lRecDBID, OrderInfo.dwTickCount);
 		return true;
-	T_E}
+	}
 
 	SOrderData CStoreSystem::PopOrder(long long lOrderID)
-	{T_B
+	{
 		SOrderData OrderInfo;
 		BOOL bFound = false;
 
@@ -2237,10 +2235,10 @@ namespace mission
 			OrderInfo.lRecDBID = 0;
 		}
 		return OrderInfo;
-	T_E}
+	}
 
 	BOOL CStoreSystem::HasOrder(long long lOrderID)
-	{T_B
+	{
 		vector<SOrderData>::iterator vec_it;
 		for(vec_it = m_OrderList.begin(); vec_it != m_OrderList.end(); vec_it++)
 		{
@@ -2250,10 +2248,10 @@ namespace mission
 			}			
 		}
 		return false;
-	T_E}
+	}
 
 	long CStoreSystem::GetClassId(long lComID)
-	{T_B
+	{
 		map<long,long>::iterator it = m_ItemSearchList.find(lComID);
 		if(it != m_ItemSearchList.end())
 		{
@@ -2261,10 +2259,10 @@ namespace mission
 		}
 		else
 			return 0;
-	T_E}
+	}
 
 	cChar *CStoreSystem::GetClassName(long lClsID)
-	{T_B
+	{
 		vector<ClassInfo>::iterator vec_it;
 		for(vec_it = m_ItemClass.begin(); vec_it != m_ItemClass.end(); vec_it++)
 		{
@@ -2272,10 +2270,10 @@ namespace mission
 				return (*vec_it).clsName;
 		}
 		return NULL;
-	T_E}
+	}
 
 	SItemData *CStoreSystem::GetItemData(long lComID)
-	{T_B
+	{
 		long lClsID = GetClassId(lComID);
 		if(lClsID != 0)
 		{
@@ -2287,10 +2285,10 @@ namespace mission
 			}
 		}
 		return NULL;
-	T_E}
+	}
 
 	BOOL CStoreSystem::DelItemData(long lComID)
-	{T_B
+	{
 		long lClsID = 0;
 
 		map<long,long>::iterator cls_it = m_ItemSearchList.find(lComID);
@@ -2314,10 +2312,10 @@ namespace mission
 		}
 
 		return TRUE;
-	T_E}
+	}
 
     BOOL CStoreSystem::Request( CCharacter *pCha, long lComID )
-    {T_B
+    {
 		if(pCha->IsStoreBuy())
 		{
 			//pCha->SystemNotice("您的上一个订单还未处理完!");
@@ -2457,10 +2455,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
         return true;
-    T_E}
+    }
 
 	BOOL CStoreSystem::Accept( CCharacter *pCha, long lComID )
-	{T_B
+	{
 		pCha->SetStoreBuy(false);
 		SItemData *pComData = GetItemData(lComID);
 		if(pComData)
@@ -2495,10 +2493,10 @@ namespace mission
 			return false;
 		}
 		return true;
-	T_E}
+	}
 
     BOOL CStoreSystem::Accept( long long lOrderID, RoleInfo *ChaInfo )
-    {T_B
+    {
 		extern CGameApp *g_pGameApp;
 
 		BOOL bSucc = false;
@@ -2651,10 +2649,10 @@ namespace mission
 			LG("Store_msg", "Accept:not find order form[ID:%I64i]!\n", lOrderID);
 		}
         return true;
-    T_E}
+    }
 
     BOOL CStoreSystem::Cancel( long long lOrderID )
-    {T_B
+    {
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -2690,7 +2688,7 @@ namespace mission
 			LG("Store_msg", "Cancel:not find order form[ID:%I64i]!\n", lOrderID);
 		}
         return true;
-    T_E}
+    }
 
     void CStoreSystem::Run( DWORD dwCurTime, DWORD dwIntervalTime, DWORD dwOrderTime )
     {
@@ -2737,7 +2735,7 @@ namespace mission
     }
 
 	BOOL CStoreSystem::GetItemList()
-	{T_B
+	{
 		//LG("Store_msg", "请求商城列表!\n");
 		LG("Store_msg", "ask for store list!\n");
 		pNetMessage pNm = new NetMessage();
@@ -2745,10 +2743,10 @@ namespace mission
 		g_gmsvr->GetInfoServer()->SendData(pNm);
 		FreeNetMessage(pNm);
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestItemList(CCharacter *pCha, long lClsID, short sPage, short sNum)
-	{T_B
+	{
 		map< long, vector<SItemData> >::iterator map_it = m_ItemList.find(lClsID);
 		if(map_it != m_ItemList.end())
 		{
@@ -2835,10 +2833,10 @@ namespace mission
 		}
 		
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestVIP(CCharacter *pCha, short sVipID, short sMonth)
-	{T_B
+	{
 		pNetMessage pNm = new NetMessage();
 		RoleInfo *pChaInfo = new RoleInfo();
 
@@ -2888,10 +2886,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::AcceptVIP(long long lOrderID, RoleInfo *ChaInfo, DWORD dwVipParam)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -2931,10 +2929,10 @@ namespace mission
 			LG("Store_data", "[%s] purchase VIP succeed!\n", pCha->GetName());
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::CancelVIP(long long lOrderID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -2966,10 +2964,10 @@ namespace mission
 			LG("Store_msg", "CancelVIP:cannot find order form[ID:%I64i]!\n", lOrderID);
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestChange(CCharacter *pCha, long lNum)
-	{T_B
+	{
 		pNetMessage pNm = new NetMessage();
 		RoleInfo *pChaInfo = new RoleInfo();
 
@@ -3017,10 +3015,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::AcceptChange(long long lOrderID, RoleInfo *ChaInfo)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3056,10 +3054,10 @@ namespace mission
 			LG("Store_data", "[%s]change token succeed!\n", pCha->GetName());
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::CancelChange(long long lOrderID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3089,10 +3087,10 @@ namespace mission
 			LG("Store_msg", "CancelChange:cannot find order form[ID:%I64i]!\n", lOrderID);
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestRoleInfo(CCharacter *pCha)
-	{T_B
+	{
 		pNetMessage pNm = new NetMessage();
 		RoleInfo *pChaInfo = new RoleInfo();
 
@@ -3143,10 +3141,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::AcceptRoleInfo(long long lOrderID, RoleInfo *ChaInfo)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3181,10 +3179,10 @@ namespace mission
 			LG("Store_data", "[%s]get account information succeed!\n", pCha->GetName());
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::CancelRoleInfo(long long lOrderID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3216,10 +3214,10 @@ namespace mission
 			LG("Store_data", "[%s]get account information failed!\n", pCha->GetName());
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestRecord(CCharacter *pCha, long lNum)
-	{T_B
+	{
 		pNetMessage pNm = new NetMessage();
 		RoleInfo *pChaInfo = new RoleInfo();
 
@@ -3267,10 +3265,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::AcceptRecord(long long lOrderID, HistoryInfo *pRecord)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3309,10 +3307,10 @@ namespace mission
 			LG("Store_data", "[%s]query trade note succeed!\n", pCha->GetName());
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::CancelRecord(long long lOrderID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3341,10 +3339,10 @@ namespace mission
 			LG("Store_data", "[%s]query trade note failed!\n", pCha->GetName());
 		}
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestGMSend(CCharacter *pCha, cChar *szTitle, cChar *szContent)
-	{T_B
+	{
 		pNetMessage pNm = new NetMessage();
 		pMailInfo pMi = new MailInfo();
 
@@ -3384,10 +3382,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::AcceptGMSend(long long lOrderID, long lMailID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3415,10 +3413,10 @@ namespace mission
 		}
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::CancelGMSend(long long lOrderID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3446,10 +3444,10 @@ namespace mission
 		}
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::RequestGMRecv(CCharacter *pCha)
-	{T_B
+	{
 		pNetMessage pNm = new NetMessage();
 		RoleInfo *pChaInfo = new RoleInfo();
 
@@ -3489,10 +3487,10 @@ namespace mission
 		FreeNetMessage(pNm);
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::AcceptGMRecv(long long lOrderID, MailInfo *pMi)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3526,10 +3524,10 @@ namespace mission
 		}
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::CancelGMRecv(long long lOrderID)
-	{T_B
+	{
 		extern CGameApp *g_pGameApp;
 
 		SOrderData OrderInfo = PopOrder(lOrderID);
@@ -3564,10 +3562,10 @@ namespace mission
 		}
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::GetAfficheList()
-	{T_B
+	{
 		//LG("Store_msg", "请求公告列表!\n");
 		LG("Store_msg", "ask for affiche list!\n");
 		pNetMessage pNm = new NetMessage();
@@ -3575,7 +3573,7 @@ namespace mission
 		g_gmsvr->GetInfoServer()->SendData(pNm);
 		FreeNetMessage(pNm);
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::SetItemList(void *pItemList, long lNum)
 	{
@@ -3672,14 +3670,14 @@ namespace mission
 	}
 
 	BOOL CStoreSystem::ClearItemList()
-	{T_B
+	{
 		m_ItemList.clear();
 		m_ItemSearchList.clear();
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::SetItemClass(ClassInfo *pClassList, long lNum)
-	{T_B
+	{
 		//LG("Store_msg", "设置商城道具分类!\n");
 		LG("Store_msg", "set store item sort!\n");
 		ClearItemClass();
@@ -3701,16 +3699,16 @@ namespace mission
 		LG("Store_info", "\n");
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::ClearItemClass()
-	{T_B
+	{
 		m_ItemClass.clear();
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::SetAfficheList(AfficheInfo *pAfficheList, long lNum)
-	{T_B
+	{
 		//LG("Store_msg", "设置商城公告列表!\n");
 		LG("Store_msg", "set stroe affiche list!\n");
 		ClearAfficheList();
@@ -3733,16 +3731,16 @@ namespace mission
 		LG("Store_info", "\n");
 
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::ClearAfficheList()
-	{T_B
+	{
 		m_AfficheList.clear();
 		return true;
-	T_E}
+	}
 
 	BOOL CStoreSystem::Open(CCharacter *pCha, long vip)
-	{T_B
+	{
 		char bValid;
 		long lAfficheNum;
 		long lClsNum;
@@ -3799,6 +3797,6 @@ namespace mission
 		}
 
 		return true;
-	T_E}
+	}
 
 }

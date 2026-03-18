@@ -364,12 +364,6 @@
 					RelativePath="..\include\ReturnValues.h">
 				</File>
 				<File
-					RelativePath=".\se_translator.cpp">
-				</File>
-				<File
-					RelativePath="..\include\se_translator.h">
-				</File>
-				<File
 					RelativePath=".\Stacktrace.cpp">
 				</File>
 				<File
@@ -382,11 +376,7 @@
 					RelativePath="..\include\sym_engine.h">
 				</File>
 				<File
-					RelativePath="..\include\TryUtil.h">
-				</File>
 				<File
-					RelativePath="..\include\unhandled_report.h">
-				</File>
 			</Filter>
 		</Filter>
 		<Filter

@@ -9,12 +9,9 @@
 
     <ItemGroup>
         <Compile Include="Config/AccountConfig.fs" />
+        <Compile Include="Services/GroupServerRegistry.fs" />
         <Compile Include="Services/AuthService.fs" />
         <Compile Include="Services/AccountHostedService.fs" />
-        <Compile Include="Handlers/UserLoginHandler.fs" />
-        <Compile Include="Handlers/UserLogoutHandler.fs" />
-        <Compile Include="Handlers/RegisterHandler.fs" />
-        <Compile Include="Handlers/BanHandler.fs" />
         <Compile Include="Grpc/AccountGrpcService.fs" />
         <Compile Include="Program.fs" />
     </ItemGroup>
@@ -30,12 +27,15 @@
     </ItemGroup>
 
     <ItemGroup>
+        <Content Include="appsettings.json">
+          <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+        </Content>
+        <Content Include="appsettings.local.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.local.json')" />
         <Content Include="..\..\..\Shared\Corsairs.Platform.Shared\nlog.config" Link="nlog.config" CopyToOutputDirectory="PreserveNewest" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Network\Corsairs.Platform.Network.fsproj" />
-        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Protocol\Corsairs.Platform.Protocol.fsproj" />
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Shared\Corsairs.Platform.Shared.fsproj" />
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Database\Corsairs.Platform.Database.csproj" />
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Grpc.Contracts\Corsairs.Platform.Grpc.Contracts.csproj" />

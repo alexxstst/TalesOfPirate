@@ -169,9 +169,11 @@ module AesTransportTests =
     let ``Constructor rejects non-32-byte key`` () =
         Assert.ThrowsAny<ArgumentException>(fun () ->
             new AesTransport(Array.zeroCreate<byte> 16) |> ignore)
+        |> ignore
 
         Assert.ThrowsAny<ArgumentException>(fun () ->
             new AesTransport(Array.zeroCreate<byte> 24) |> ignore)
+        |> ignore
 
     [<Fact>]
     let ``IsActive is true`` () =

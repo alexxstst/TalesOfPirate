@@ -40,7 +40,6 @@
 
     <ItemGroup>
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Network\Corsairs.Platform.Network.fsproj" />
-        <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Protocol\Corsairs.Platform.Protocol.fsproj" />
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Shared\Corsairs.Platform.Shared.fsproj" />
         <ProjectReference Include="..\..\..\Shared\Corsairs.Platform.Grpc.Contracts\Corsairs.Platform.Grpc.Contracts.csproj" />
     </ItemGroup>

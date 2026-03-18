@@ -851,7 +851,7 @@ void CEquipMgr::UpdataEquipSpy( const stNetChangeChaPart& SPart, CCharacter* pCh
 	
 	CLabel* labTitle = (CLabel*)frmItemSpy->Find( "labTitle" );
 	char buf[64];
-	sprintf(buf,"Stalk - %s",pCha->getName());
+	sprintf(buf,"Stalk - %s",pCha->getName().c_str());
 	labTitle->SetCaption(buf);
 	
 	

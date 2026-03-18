@@ -9,7 +9,6 @@
 #include "SubMap.h"
 #include "GameAppNet.h"
 #include "CommFunc.h"
-#include "TryUtil.h"
 #include "GameApp.h"
 
 _DBC_USING
@@ -18,7 +17,7 @@ unsigned long	g_ulElapse;
 unsigned long	g_ulDist;
 
 CMoveAble::CMoveAble()
-{T_B
+{
 	m_usHeartbeatFreq = 0;
 
 	m_SMoveInit.STargetInfo.chType = 0;
@@ -35,10 +34,10 @@ CMoveAble::CMoveAble()
 
 	m_bOnMove = false;
 	m_timeRun.Begin(1 * 300);
-T_E}
+}
 
 void CMoveAble::Initially()
-{T_B
+{
 	CFightAble::Initially();
 
 	m_SMoveInit.STargetInfo.chType = 0;
@@ -56,22 +55,22 @@ void CMoveAble::Initially()
 	m_lSetPing = -1;
 
 	m_bOnMove = false;
-T_E}
+}
 
 void CMoveAble::Finally()
-{T_B
+{
 	CFightAble::Finally();
-T_E}
+}
 
 void CMoveAble::WritePK(WPACKET& wpk)
-{T_B
+{
 	CFightAble::WritePK(wpk);
 	//ToDo:写入自己的数据
 
-T_E}
+}
 
-void CMoveAble::ReadPK(RPACKET& rpk)
-{T_B
+void CMoveAble::ReadPK(RPACKET rpk)
+{
 	CFightAble::ReadPK(rpk);
 
 	m_SMoveInit.STargetInfo.chType = 0;
@@ -87,10 +86,10 @@ void CMoveAble::ReadPK(RPACKET& rpk)
 	m_SMoveRedu.ulStartTick = 0;
 
 	m_bOnMove = false;
-T_E}
+}
 
 void CMoveAble::ResetMove()
-{T_B
+{
 	m_SMoveProc.sState = enumMSTATE_ARRIVE;
 	m_SMoveProc.chRequestState = 0;
 	m_SMoveProc.chLagMove = 0;
@@ -103,7 +102,7 @@ void CMoveAble::ResetMove()
 	m_SMoveRedu.ulStartTick = 0;
 
 	m_bOnMove = false;
-T_E}
+}
 
 //bool CMoveAble::AreaOverlap(long &xdist, long &ydist)
 //{
@@ -358,7 +357,7 @@ bool CMoveAble::AreaOverlap(long &xdist, long &ydist)
 }
 
 bool CMoveAble::overlap(long &xdist, long &ydist)
-{T_B
+{
 	bool	b_retval	= false;
 
 	if (Entity::overlap(xdist, ydist))
@@ -367,10 +366,10 @@ bool CMoveAble::overlap(long &xdist, long &ydist)
 		b_retval = true;
 
 	return b_retval;
-T_E}
+}
 
 bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
-{T_B
+{
 	if (m_usHeartbeatFreq == 0)
 	{
 		if (IsCharacter()->IsPlayerCha())
@@ -422,10 +421,10 @@ bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
 	}
 
 	return true;
-T_E}
+}
 
 void CMoveAble::BeginMove(uLong ulElapse)
-{T_B
+{
 	if (GetPos() != m_SMoveInit.SInflexionInfo.SList[0]
 	&& IsCharacter()->IsRangePoint2(m_SMoveInit.SInflexionInfo.SList[0], 25 * 25 * 2)) // 客户端会把当前位置调整到单元中点
 	{
@@ -532,19 +531,19 @@ void CMoveAble::BeginMove(uLong ulElapse)
 		NotiSelfMov();
 		SubsequenceMove();
 	}
-T_E}
+}
 
 void CMoveAble::EndMove()
-{T_B
+{
 	m_SMoveProc.chRequestState = 1;
 	// log
 	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
 	m_CLog.Log("===Recieve(Stop Move):\tTick %u\n", GetTickCount());
 	//
-T_E}
+}
 
 void CMoveAble::OnMove(uLong dwCurTime)
-{T_B
+{
 	if (!m_bOnMove || !m_submap)
 		return;
 	if (!IsCharacter()->IsPlayerCha() && !m_timeRun.IsOK(dwCurTime))
@@ -674,14 +673,14 @@ void CMoveAble::OnMove(uLong dwCurTime)
 	if (bAttemptMove)
 		AfterStepMove(); // 处理依靠单步位置的事件，如地图切换
 
-T_E}
+}
 
 //=============================================================================
 // 功能：移动distance的路程。
 // 返回值同SMoveProc.sState
 //=============================================================================
 Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
-{T_B
+{
 	Char	chRet = enumMSTATE_ON;
 	double	dLeftDist = dPreMoveDist;
 	uLong	ulElapse = 0;
@@ -805,7 +804,7 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 		GetTickCount(), lMoveDist, m_SMoveProc.ulElapse, g_ulDist, g_ulElapse);
 
 	return chRet;
-T_E}
+}
 
 //=============================================================================
 // 功能：向目标点STar移动distance的路程。*ulElapse返回实际移动所花的时间
@@ -813,7 +812,7 @@ T_E}
 //        -1，因到达目标点而未移动成功。-2，因遇到障碍而未移动成功
 //=============================================================================
 Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
-{T_B
+{
 	uLong	ulMoveSpd = (long)m_CChaAttr.GetAttr(ATTR_MSPD);
 	if (ulMoveSpd == 0)
 	{
@@ -903,10 +902,10 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 	*ulElapse = l_elapse;
 
 	return l_retval;
-T_E}
+}
 
 void CMoveAble::NotiMovToEyeshot()
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//命令2字节
 	WRITE_LONG(pk, m_ID);	  				//ID
@@ -938,10 +937,10 @@ void CMoveAble::NotiMovToEyeshot()
 		m_CLog.Log("@@@End Move\tState:%d\n", m_SMoveProc.sState);
 	m_CLog.Log("\n");
 	//
-T_E}
+}
 
 void CMoveAble::NotiSelfMov()
-{T_B
+{
 	WPACKET pk	=GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//命令2字节
 	WRITE_LONG(pk, m_ID);	  				//ID
@@ -973,10 +972,10 @@ void CMoveAble::NotiSelfMov()
 		m_CLog.Log("@@@End Move\tState:%d\n", m_SMoveProc.sState);
 	m_CLog.Log("\n");
 	//
-T_E}
+}
 
 bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)
-{T_B
+{
 	if (m_SMoveInit.STargetInfo.chType == 1) // 目标是物体
 	{
 		Entity	*pTarObj = g_pGameApp->IsMapEntity(m_SMoveInit.STargetInfo.lInfo1, m_SMoveInit.STargetInfo.lInfo2);
@@ -998,7 +997,7 @@ bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)
 	}
 
 	return true;
-T_E}
+}
 
 bool CMoveAble::SetMoveOnInfo(SMoveInit* pSMoveI)
 {
@@ -1022,7 +1021,7 @@ bool CMoveAble::SetMoveOnInfo(SMoveInit* pSMoveI)
 // 求线段（pSPort1，pSPort2）上距离点pSReference最近的点
 //=============================================================================
 Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *pSPort2, const Point *pSReference)
-{T_B
+{
 	Point	SNearlyPoint;
 	Long	lMaxX, lMinX, lMaxY, lMinY;
 
@@ -1078,7 +1077,7 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 	}
 
 	return SNearlyPoint;
-T_E}
+}
 
 //=============================================================================
 // 求从点pSPort1到点pSPort2的过程中，首次进入圆pSCircle的点

@@ -6,12 +6,10 @@
 #include "DBConnect.h"
 #include "Team.h"
 
-void	GroupServerApp::CP_GM1SAY(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_GM1SAY(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uShort		l_len;
-	cChar	*	l_content	=pk.ReadString(&l_len);
-	cChar * Nsrc = "";
-	if(!l_content ||l_len >500)return;
+	auto		l_content	=pk.ReadString();
+	if(l_content.empty() ||l_content.size() >500)return;
 	//Modify by sunny.sun 20080821
 	if( ply != NULL )
 	{
@@ -22,13 +20,13 @@ void	GroupServerApp::CP_GM1SAY(Player *ply,DataSocket *datasock,RPacket &pk)
 			return;
 		}
 	}
-	WPacket	l_wpk	=GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_GM1SAY);
 	if( ply != NULL)
 		l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());	//?��?�㨨?��???��?
 	else
 		{
-			l_wpk.WriteString( Nsrc );
+			l_wpk.WriteString( "" );
 		}
 	l_wpk.WriteString(l_content);								//?��?���??����Y
 
@@ -45,20 +43,18 @@ void	GroupServerApp::CP_GM1SAY(Player *ply,DataSocket *datasock,RPacket &pk)
 			l_plynum ++;
 		}
 	}
-	Nsrc = NULL;
 	l.unlock();
 	SendToClient(l_plylst,l_plynum,l_wpk);
 }
 
 //Add by sunny.sun20080804
 //Begin
-void	GroupServerApp::CP_GM1SAY1(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_GM1SAY1(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uShort		l_len;
-	cChar	*	l_content	=pk.ReadString(&l_len);
+	auto		l_content	=pk.ReadString();
 	int			SetNum = 1;
-	
-	if(!l_content ||l_len >500)return;
+
+	if(l_content.empty() ||l_content.size() >500)return;
 	if(ply != NULL)
 	{
 		if(!ply->m_gm)
@@ -68,15 +64,15 @@ void	GroupServerApp::CP_GM1SAY1(Player *ply,DataSocket *datasock,RPacket &pk)
 		}
 	}
 	else
-		SetNum = pk.ReadLong();
-	DWORD		color = pk.ReadLong();
+		SetNum = pk.ReadInt64();
+	DWORD		color = pk.ReadInt64();
 
-	WPacket	l_wpk	=GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_GM1SAY1);
 	//l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());	//?��?�㨨?��???��?
 	l_wpk.WriteString(l_content);								//?��?���??����Y
-	l_wpk.WriteLong(SetNum);
-	l_wpk.WriteLong(color);
+	l_wpk.WriteInt64(SetNum);
+	l_wpk.WriteInt64(color);
 	Player *l_plylst[10240];
 	short	l_plynum	=0;
 
@@ -94,7 +90,7 @@ void	GroupServerApp::CP_GM1SAY1(Player *ply,DataSocket *datasock,RPacket &pk)
 	SendToClient(l_plylst,l_plynum,l_wpk);
 }
 //End
-void	GroupServerApp::CP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SAY2TRADE(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
 	if( ply->IsEstop() )
 	{
@@ -103,7 +99,7 @@ void	GroupServerApp::CP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	uLong	l_curtick	=this->GetCurrentTick();
+	uLong	l_curtick	=GetTickCount();
 	if(!ply->m_gm && l_curtick - ply->m_tradetick <const_interval.Trade)
 	{
 		//ply->SendSysInfo("???e?�̡�������??");
@@ -124,16 +120,15 @@ void	GroupServerApp::CP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
 	ply->m_tradeticktemp = ply->m_tradetick;
 	ply->m_tradetick	=l_curtick;
 
-	uShort		l_len;
-	cChar	*	l_content	=pk.ReadString(&l_len);
-	if(!l_content ||l_len >200)return;
+	auto		l_content	=pk.ReadString();
+	if(l_content.empty() ||l_content.size() >200)return;
 	if(ply) //->m_gm	//to fix for none gm players
 	{
-		WPacket	l_wpk	=GetWPacket();
+		net::WPacket	l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_SAY2TRADE);
 		l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());	//?��?�㨨?��???��?
 		l_wpk.WriteString(l_content);								//?��?���??����Y
-		l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+		l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 		Player *l_plylst[10240];
 		short	l_plynum	=0;
 
@@ -153,15 +148,15 @@ void	GroupServerApp::CP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
 	}
 	//maybe disable this later? make fee 0?
 	/* 
-	WPacket	l_wpk = GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PM_SAY2TRADE);
-	l_wpk.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);
 	l_wpk.WriteString(l_content);
-	l_wpk.WriteLong(ply->m_lTradeChatMoney);
+	l_wpk.WriteInt64(ply->m_lTradeChatMoney);
 	SendToClient( ply, l_wpk );
 	*/
 }
-void GroupServerApp::CP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::CP_SAY2ALL(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
 	if( ply->IsEstop() )
 	{
@@ -170,7 +165,7 @@ void GroupServerApp::CP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	uLong	l_curtick	=this->GetCurrentTick();
+	uLong	l_curtick	=GetTickCount();
 	if(!ply->m_gm && l_curtick - ply->m_worldtick <const_interval.World)
 	{
 		//ply->SendSysInfo("???e?�̡�������??");
@@ -191,16 +186,15 @@ void GroupServerApp::CP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
 	ply->m_worldticktemp = ply->m_worldtick;
 	ply->m_worldtick	=l_curtick;
 
-	uShort		l_len;
-	cChar	*	l_content	=pk.ReadString(&l_len);
-	if(!l_content ||l_len >200)return;
+	auto		l_content	=pk.ReadString();
+	if(l_content.empty() ||l_content.size() >200)return;
 	if(ply->m_gm)
 	{
-		WPacket	l_wpk	=GetWPacket();
+		net::WPacket	l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_SAY2ALL);
 		l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());	//?��?�㨨?��???��?
 		l_wpk.WriteString(l_content);								//?��?���??����Y
-		l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+		l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 		Player *l_plylst[10240];
 		short	l_plynum	=0;
 
@@ -219,17 +213,17 @@ void GroupServerApp::CP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	WPacket	l_wpk = GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PM_SAY2ALL);
-	l_wpk.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);
 	l_wpk.WriteString( l_content );
-	l_wpk.WriteLong(ply->m_lChatMoney);
+	l_wpk.WriteInt64(ply->m_lChatMoney);
 	SendToClient( ply, l_wpk );
 }
 
-void GroupServerApp::MP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::MP_SAY2TRADE(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	char succ = pk.ReadChar();
+	char succ = pk.ReadInt64();
 	if(succ == 0)
 	{
 		ply->m_tradetick = ply->m_tradeticktemp;
@@ -239,17 +233,15 @@ void GroupServerApp::MP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
 		}
 		return;
 	}
-	uShort		l_len{};	//mothanna test <<<
-	cChar	*	szName		=pk.ReadString();
-	cChar	*	l_content	=pk.ReadString(&l_len);
-	//mothanna test
-	if (!l_content || l_len > 200)return;
+	auto		szName		=pk.ReadString();
+	auto		l_content	=pk.ReadString();
+	if (l_content.empty() || l_content.size() > 200)return;
 	///
-	WPacket	l_wpk	=GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SAY2TRADE);
 	l_wpk.WriteString(szName);	//?��?�㨨?��???��?
 	l_wpk.WriteString(l_content);								//?��?���??����Y
-	l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 	Player *l_plylst[10240];
 	short	l_plynum	=0;
 
@@ -267,9 +259,9 @@ void GroupServerApp::MP_SAY2TRADE(Player *ply,DataSocket *datasock,RPacket &pk)
 	SendToClient(l_plylst,l_plynum,l_wpk);
 }
 
-void GroupServerApp::MP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
+void GroupServerApp::MP_SAY2ALL(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	char succ = pk.ReadChar();
+	char succ = pk.ReadInt64();
 	if(succ == 0)
 	{
 		ply->m_worldtick = ply->m_worldticktemp;
@@ -280,14 +272,14 @@ void GroupServerApp::MP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	cChar	*	szName		=pk.ReadString();
-	cChar	*	l_content	=pk.ReadString();
+	auto		szName		=pk.ReadString();
+	auto		l_content	=pk.ReadString();
 
-	WPacket	l_wpk	=GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SAY2ALL);
 	l_wpk.WriteString(szName);	//?��?�㨨?��???��?
 	l_wpk.WriteString(l_content);								//?��?���??����Y
-	l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 	Player *l_plylst[10240];
 	short	l_plynum	=0;
 
@@ -305,15 +297,15 @@ void GroupServerApp::MP_SAY2ALL(Player *ply,DataSocket *datasock,RPacket &pk)
 	SendToClient(l_plylst,l_plynum,l_wpk);
 }
 
-void GroupServerApp::MP_GUILDNOTICE(Player *ply, DataSocket *datasock, RPacket &pk)
+void GroupServerApp::MP_GUILDNOTICE(Player *ply, net::TcpClient *client, net::RPacket &pk)
 {
-	uLong guildID = pk.ReadLong();
+	uLong guildID = pk.ReadInt64();
 	if (!guildID)
 		return;
 
-	cChar* l_content = pk.ReadString();
+	auto l_content = pk.ReadString();
 
-	WPacket	l_wpk = GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_GUILDNOTICE); // CMD_PC_GUILDNOTICE
 	l_wpk.WriteString(l_content);
 
@@ -347,16 +339,16 @@ void GroupServerApp::MP_GUILDNOTICE(Player *ply, DataSocket *datasock, RPacket &
 }
 
 
-void GroupServerApp::MP_CANRECEIVEREQUESTS(DataSocket* datasock, RPacket& pk) {
-	uLong chaID = pk.ReadLong();
-	bool CanSend = pk.ReadShort();
+void GroupServerApp::MP_CANRECEIVEREQUESTS(net::TcpClient* client, net::RPacket& pk) {
+	uLong chaID = pk.ReadInt64();
+	bool CanSend = pk.ReadInt64();
 	Player* l_player = FindPlayerByChaID(chaID);
 	if(l_player)
 	l_player->SetCanReceiveRequests(CanSend);
 }
 
 
-void GroupServerApp::CP_SAY2YOU(Player *ply, DataSocket *datasock, RPacket &pk)
+void GroupServerApp::CP_SAY2YOU(Player *ply, net::TcpClient *client, net::RPacket &pk)
 {
 	if (ply->IsEstop())
 	{
@@ -364,7 +356,7 @@ void GroupServerApp::CP_SAY2YOU(Player *ply, DataSocket *datasock, RPacket &pk)
 		return;
 	}
 
-	uLong	l_curtick = this->GetCurrentTick();
+	uLong	l_curtick = GetTickCount();
 	if (!ply->m_gm && l_curtick - ply->m_toyoutick <const_interval.ToYou)
 	{
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00003));
@@ -372,19 +364,18 @@ void GroupServerApp::CP_SAY2YOU(Player *ply, DataSocket *datasock, RPacket &pk)
 	}
 	ply->m_toyoutick = l_curtick;
 
-	uShort	l_len;
-	cChar	*l_you = pk.ReadString(&l_len);
-	if (!l_you || l_len >16)return;
-	cChar	*l_content = pk.ReadString(&l_len);
-	if (!l_content || l_len >200)return;
+	auto	l_you = pk.ReadString();
+	if (l_you.empty() || l_you.size() >16)return;
+	auto	l_msg = pk.ReadString();
+	if (l_msg.empty() || l_msg.size() >200)return;
 
-	Player* l_dst = FindPlayerByChaName(l_you);
+	Player* l_dst = FindPlayerByChaName(l_you.c_str());
 	if (!l_dst || l_dst->m_currcha < 0)
 	{
 		// destination player offline
-		char l_content[500];
-		sprintf(l_content, RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00004), l_you);
-		ply->SendSysInfo(l_content);
+		char l_buf[500];
+		sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00004), l_you.c_str());
+		ply->SendSysInfo(l_buf);
 	}
 	else if (ply == l_dst)
 	{
@@ -394,29 +385,29 @@ void GroupServerApp::CP_SAY2YOU(Player *ply, DataSocket *datasock, RPacket &pk)
 	else if (l_dst->m_refuse_tome)
 	{
 		// destination player is blocking pms
-		char l_content[500];
-		sprintf(l_content, RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00006), l_you);
-		ply->SendSysInfo(l_content);
+		char l_buf[500];
+		sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00006), l_you.c_str());
+		ply->SendSysInfo(l_buf);
 	}
 	else
 	{
-		WPacket l_wpk = GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_SAY2YOU);
 		l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());
 		l_wpk.WriteString(l_dst->m_chaname[l_dst->m_currcha].c_str());
-		l_wpk.WriteString(l_content);
-		l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+		l_wpk.WriteString(l_msg);
+		l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 		Player* l_dst1[2];
 		l_dst1[0] = ply;
 		l_dst1[1] = l_dst;
 		SendToClient(l_dst1, 2, l_wpk);
 
 		char PM[32];
-		sprintf(PM, "PM - %s", l_you);
+		sprintf(PM, "PM - %s", l_you.c_str());
 	}
 }
 
-void	GroupServerApp::CP_SAY2TEM(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SAY2TEM(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
 	if( ply->IsEstop() )
 	{
@@ -425,11 +416,10 @@ void	GroupServerApp::CP_SAY2TEM(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	uShort	l_len;
 	Team	*l_team		=ply->GetTeam();
 	if(!l_team)return;
-	cChar	*l_word		=pk.ReadString(&l_len);
-	if(!l_word ||l_len >200)return;
+	auto	l_word		=pk.ReadString();
+	if(l_word.empty() ||l_word.size() >200)return;
 
 	Player *l_ply1;
 	Player *l_plylst[10240];
@@ -443,16 +433,16 @@ void	GroupServerApp::CP_SAY2TEM(Player *ply,DataSocket *datasock,RPacket &pk)
 	}
 	l.unlock();
 
-	WPacket l_wpk	=GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SAY2TEM);
-	l_wpk.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);
 	l_wpk.WriteString(l_word);
-	l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 	SendToClient(l_plylst,l_plynum,l_wpk);
 }
 
 //TODO: Rename to proper name 
-void	GroupServerApp::CP_SAY2GUD(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SAY2GUD(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
 	if (ply->IsEstop())
 	{
@@ -469,11 +459,10 @@ void	GroupServerApp::CP_SAY2GUD(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	uShort	l_len;
 	Guild	*l_guild = ply->GetGuild();
 	if(!l_guild)return;
-	cChar	*l_word		=pk.ReadString(&l_len);
-	if(!l_word ||l_len >200)return;
+	auto	l_word		=pk.ReadString();
+	if(l_word.empty() ||l_word.size() >200)return;
 
 	Player *l_ply1;
 	Player *l_plylst[10240];
@@ -488,11 +477,11 @@ void	GroupServerApp::CP_SAY2GUD(Player *ply,DataSocket *datasock,RPacket &pk)
 	l.unlock();
 
 
-	WPacket l_wpk	=GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SAY2GUD);
 	l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());		//?��?�㨨?
 	l_wpk.WriteString(l_word);
-	l_wpk.WriteLong(ply->m_chatColour[ply->m_currcha]);
+	l_wpk.WriteInt64(ply->m_chatColour[ply->m_currcha]);
 	SendToClient(l_plylst,l_plynum,l_wpk);
 
 	char guild[32];
@@ -505,15 +494,15 @@ void	GroupServerApp::CP_SAY2GUD(Player *ply,DataSocket *datasock,RPacket &pk)
 inline void sendfailue(Player *ply,GroupServerApp *gsapp,const char *chaname)
 {
 	if(!chaname)return;
-	WPacket l_wpk =gsapp->GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SESS_CREATE);
-	l_wpk.WriteLong(0);
+	l_wpk.WriteInt64(0);
 	l_wpk.WriteString(chaname);
 	gsapp->SendToClient(ply,l_wpk);
 }
-void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SESS_CREATE(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uChar	l_chanum	=pk.ReadChar();
+	uChar	l_chanum	=pk.ReadInt64();
 	if(!l_chanum)
 	{
 		return;
@@ -521,7 +510,7 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 	if(++(ply->m_chatnum) >const_chat.MaxSession)
 	{
 		--(ply->m_chatnum);
-		if(l_chanum ==1){sendfailue(ply,this,pk.ReadString());}
+		if(l_chanum ==1){sendfailue(ply,this,pk.ReadString().c_str());}
 		//ply->SendSysInfo("??�̡�?���?��?�������?����y��??-��?��??�̨�3��?��?�䨮��??T��?.");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00007));
 		return;
@@ -529,30 +518,29 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 	if(l_chanum >const_chat.MaxPlayer -1)
 	{
 		--(ply->m_chatnum);
-		if(l_chanum ==1){sendfailue(ply,this,pk.ReadString());}
+		if(l_chanum ==1){sendfailue(ply,this,pk.ReadString().c_str());}
 		//ply->SendSysInfo("?����a���?��?��?���?��??����y1y?��.");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00008));
 		return;
 	}
-	const char		*	l_chaname;
+	std::string			l_chaname;
 	Chat_Session	*	l_sess			=0;
 	int					l_notiplycount	=0;
 	Player			*	l_notiply[Player::emMaxSessPlayer];
 	Player			*	l_sessply;
-	WPacket				l_wpk;
-	uShort				l_len;
+	net::WPacket				l_wpk;
 	for(uChar i=0;i<l_chanum;i++)
 	{
-		l_chaname	=pk.ReadString(&l_len);
-		if(!l_chaname ||l_len >16)
+		l_chaname	=pk.ReadString();
+		if(l_chaname.empty() ||l_chaname.size() >16)
 		{
 			continue;
 		}
-		if(!(l_sessply =FindPlayerByChaName(l_chaname)))
+		if(!(l_sessply =FindPlayerByChaName(l_chaname.c_str())))
 		{
 			//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"?????��2??��??��?.");
 			char l_content[500];
-			sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00009),l_chaname);
+			sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00009),l_chaname.c_str());
 			ply->SendSysInfo(l_content);
 			continue;
 		}
@@ -571,7 +559,7 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 		{
 			//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"??�̡�?���|����?��???��?����䨬?.");
 			char l_content[500];
-			sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00010),l_chaname);
+			sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00010),l_chaname.c_str());
 			ply->SendSysInfo(l_content);
 			continue;
 		}
@@ -580,7 +568,7 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 			--(l_sessply->m_chatnum);
 			//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"??��?��?�������?����y��??-��?��??�̨�3��?��?�䨮��??T��?.");
 			char l_content[500];
-			sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00011),l_chaname);
+			sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00011),l_chaname.c_str());
 			ply->SendSysInfo(l_content);
 			continue;
 		}
@@ -589,23 +577,23 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 			l_sess	=AddSession();
 			l_sess->AddPlayer(ply);
 
-			l_wpk	=GetWPacket();
+			l_wpk	= net::WPacket(256);
 			l_wpk.WriteCmd(CMD_PC_SESS_CREATE);
-			l_wpk.WriteLong(l_sess->GetID());
-			l_wpk.WriteLong(ply->m_chaid[ply->m_currcha]);
+			l_wpk.WriteInt64(l_sess->GetID());
+			l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);
 			l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());
 			l_wpk.WriteString(ply->m_motto[ply->m_currcha].c_str());
-			l_wpk.WriteShort(ply->m_icon[ply->m_currcha]);
+			l_wpk.WriteInt64(ply->m_icon[ply->m_currcha]);
 
 			l_notiply[l_notiplycount]	=ply;
 			++l_notiplycount;
 		}
 		l_sess->AddPlayer(l_sessply);
 
-		l_wpk.WriteLong(l_sessply->m_chaid[l_sessply->m_currcha]);
+		l_wpk.WriteInt64(l_sessply->m_chaid[l_sessply->m_currcha]);
 		l_wpk.WriteString(l_sessply->m_chaname[l_sessply->m_currcha].c_str());
 		l_wpk.WriteString(l_sessply->m_motto[l_sessply->m_currcha].c_str());
-		l_wpk.WriteShort(l_sessply->m_icon[l_sessply->m_currcha]);
+		l_wpk.WriteInt64(l_sessply->m_icon[l_sessply->m_currcha]);
 
 		l_notiply[l_notiplycount]	=l_sessply;
 		++l_notiplycount;
@@ -654,7 +642,7 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 		}
 		if(!l_isRepeat)
 		{
-			l_wpk.WriteShort(l_notiplycount);
+			l_wpk.WriteInt64(l_notiplycount);
 			SendToClient(l_notiply,l_notiplycount,l_wpk);
 		}else
 		{
@@ -664,7 +652,7 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 				l_sess->DelPlayer(l_ply3);
 				--(l_ply3->m_chatnum);
 			}
-			if(l_chanum ==1){sendfailue(ply,this,l_chaname);}
+			if(l_chanum ==1){sendfailue(ply,this,l_chaname.c_str());}
 			//ply->SendSysInfo("��??-��D��????����?3��?����??��?�㨢?.");
 			ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00012));
 
@@ -674,27 +662,26 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,DataSocket *datasock,RPacket &pk
 		}
 	}else
 	{
-		if(l_chanum ==1){sendfailue(ply,this,l_chaname);}
+		if(l_chanum ==1){sendfailue(ply,this,l_chaname.c_str());}
 		--(ply->m_chatnum);
 	}
 }
-void	GroupServerApp::CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SESS_ADD(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uShort l_len;
-	uLong	l_sessid		=pk.ReadLong();
+	uLong	l_sessid		=pk.ReadInt64();
 	if(!l_sessid)return;
-	cChar *	l_chaname		=pk.ReadString(&l_len);
-	if(!l_chaname ||l_len >16)return;
+	auto	l_chaname		=pk.ReadString();
+	if(l_chaname.empty() ||l_chaname.size() >16)return;
 	auto const lock = std::lock_guard{ply->m_mtxChat};
 	Chat_Session  *	l_sess	=ply->FindSessByID(l_sessid);
 	if(!l_sess)return;
 
-	Player	*l_sessply		=FindPlayerByChaName(l_chaname);
+	Player	*l_sessply		=FindPlayerByChaName(l_chaname.c_str());
 	if(!l_sessply || l_sessply->m_currcha <0)
 	{
 		//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"?????��2??��??��??��");************************
 		char l_content[500];
-		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00009),l_chaname);
+		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00009),l_chaname.c_str());
 		ply->SendSysInfo(l_content);
 		return;
 	}
@@ -708,7 +695,7 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk)
 	{
 		//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"??��??-?��??��?��?�������?����???.");
 		char l_content[500];
-		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00013),l_chaname);
+		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00013),l_chaname.c_str());
 		ply->SendSysInfo(l_content);
 		return;
 	}
@@ -716,7 +703,7 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk)
 	{
 		//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"??�̡�?���|����?��???��?����䨬?.");
 		char l_content[500];
-		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00010),l_chaname);
+		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00010),l_chaname.c_str());
 		ply->SendSysInfo(l_content);
 		return;
 	}
@@ -726,7 +713,7 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk)
 		--(l_sessply->m_chatnum);
 		//ply->SendSysInfo(dstring("��??��??")<<l_chaname<<"??��?��?�������?����y��??-��?��??�̨�3��?��?�䨮��??T��??��");
 		char l_content[500];
-		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00011),l_chaname);
+		sprintf(l_content,RES_STRING(GP_GROUPSERVERAPPCHAT_CPP_00011),l_chaname.c_str());
 		ply->SendSysInfo(l_content);
 		return;
 	}
@@ -742,18 +729,18 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk)
 	Player	*l_notiply[Player::emMaxSessPlayer];
 	Player	*l_sessply1;
 
-	WPacket l_toAdded =GetWPacket();
+	net::WPacket l_toAdded(256);
 	l_toAdded.WriteCmd(CMD_PC_SESS_CREATE);
-	l_toAdded.WriteLong(l_sess->GetID());
+	l_toAdded.WriteInt64(l_sess->GetID());
 	RunChainGetArmor<Chat_Player> ll(*l_sess);
 	while(l_sessply1 =l_sess->GetNextPlayer())
 	{
 		if(l_sessply1->m_currcha >=0)
 		{
-			l_toAdded.WriteLong(l_sessply1->m_chaid[l_sessply1->m_currcha]);
+			l_toAdded.WriteInt64(l_sessply1->m_chaid[l_sessply1->m_currcha]);
 			l_toAdded.WriteString(l_sessply1->m_chaname[l_sessply1->m_currcha].c_str());
 			l_toAdded.WriteString(l_sessply1->m_motto[l_sessply1->m_currcha].c_str());
-			l_toAdded.WriteShort(l_sessply1->m_icon[l_sessply1->m_currcha]);
+			l_toAdded.WriteInt64(l_sessply1->m_icon[l_sessply1->m_currcha]);
 
 			l_notiply[l_notiplycount] =l_sessply1;
 			l_notiplycount ++;
@@ -762,25 +749,25 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,DataSocket *datasock,RPacket &pk)
 	ll.unlock();
 	if(l_notiplycount)
 	{
-		l_toAdded.WriteShort(l_notiplycount);
+		l_toAdded.WriteInt64(l_notiplycount);
 		SendToClient(l_sessply,l_toAdded);
 
-		WPacket l_wpk =GetWPacket();
+		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PC_SESS_ADD);
-		l_wpk.WriteLong(l_sess->GetID());
-		l_wpk.WriteLong(l_sessply->m_chaid[l_sessply->m_currcha]);
+		l_wpk.WriteInt64(l_sess->GetID());
+		l_wpk.WriteInt64(l_sessply->m_chaid[l_sessply->m_currcha]);
 		l_wpk.WriteString(l_sessply->m_chaname[l_sessply->m_currcha].c_str());
 		l_wpk.WriteString(l_sessply->m_motto[l_sessply->m_currcha].c_str());
-		l_wpk.WriteShort(l_sessply->m_icon[l_sessply->m_currcha]);
+		l_wpk.WriteInt64(l_sessply->m_icon[l_sessply->m_currcha]);
 		SendToClient(l_notiply,l_notiplycount,l_wpk);
 	}else
 	{
 		--(l_sessply->m_chatnum);
 	}
 }
-void	GroupServerApp::CP_SESS_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SESS_LEAVE(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
-	uLong	l_sessid		=pk.ReadLong();
+	uLong	l_sessid		=pk.ReadInt64();
 	if(!l_sessid)return;
 	auto const lock = std::lock_guard{ply->m_mtxChat};
 	Chat_Session  *	l_sess	=ply->FindSessByID(l_sessid);
@@ -793,10 +780,10 @@ void	GroupServerApp::CP_SESS_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk)
 	Player	*l_notiply[Player::emMaxSessPlayer];
 	Player	*l_sessply;
 
-	WPacket l_wpk	=GetWPacket();
+	net::WPacket l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SESS_LEAVE);
-	l_wpk.WriteLong(l_sessid);
-	l_wpk.WriteLong(ply->m_chaid[ply->m_currcha]);
+	l_wpk.WriteInt64(l_sessid);
+	l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);
 	if(l_num >1)
 	{
 		RunChainGetArmor<Chat_Player> l(*l_sess);
@@ -813,16 +800,16 @@ void	GroupServerApp::CP_SESS_LEAVE(Player *ply,DataSocket *datasock,RPacket &pk)
 	SendToClient(l_notiply,l_notiplycount,l_wpk);
 	if(l_num == 2)
 	{
-		WPacket l_wpk	=GetWPacket();
-		l_wpk.WriteLong(l_sessid);
-		auto rpkt = RPacket(l_wpk);
-		CP_SESS_LEAVE(l_sess->GetFirstPlayer(),datasock,rpkt);
+		net::WPacket l_wpk(256);
+		l_wpk.WriteInt64(l_sessid);
+		net::RPacket rpkt(l_wpk.Data(), l_wpk.GetPacketSize());
+		CP_SESS_LEAVE(l_sess->GetFirstPlayer(),client,rpkt);
 	}else if(l_num == 1)
 	{
 		DelSession(l_sess);
 	}
 }
-void	GroupServerApp::CP_SESS_SAY(Player *ply,DataSocket *datasock,RPacket &pk)
+void	GroupServerApp::CP_SESS_SAY(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
 	if( ply->IsEstop() )
 	{
@@ -831,11 +818,10 @@ void	GroupServerApp::CP_SESS_SAY(Player *ply,DataSocket *datasock,RPacket &pk)
 		return;
 	}
 
-	uShort	l_len;
-	uLong	l_sessid		=pk.ReadLong();
+	uLong	l_sessid		=pk.ReadInt64();
 	if(!l_sessid)return;
-	cChar *	l_word			=pk.ReadString(&l_len);
-	if(!l_word ||l_len >200)return;
+	auto	l_word			=pk.ReadString();
+	if(l_word.empty() ||l_word.size() >200)return;
 	Chat_Session  *	l_sess	=ply->FindSessByID(l_sessid);
 	if(!l_sess)return;
 
@@ -843,10 +829,10 @@ void	GroupServerApp::CP_SESS_SAY(Player *ply,DataSocket *datasock,RPacket &pk)
 	Player	*l_notiply[Player::emMaxSessPlayer];
 	Player	*l_sessply;
 
-	WPacket	l_wpk	=GetWPacket();
+	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_SESS_SAY);
-	l_wpk.WriteLong(l_sess->GetID());
-	l_wpk.WriteLong(ply->m_chaid[ply->m_currcha]);	//?��?�㨨?
+	l_wpk.WriteInt64(l_sess->GetID());
+	l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);	//?��?�㨨?
 	l_wpk.WriteString(l_word);
 	RunChainGetArmor<Chat_Player> l(*l_sess);
 	while(l_sessply =l_sess->GetNextPlayer())

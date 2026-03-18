@@ -1284,7 +1284,7 @@ void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 
 
 
-void CStartMgr::RefreshMainName(const char* szName )
+void CStartMgr::RefreshMainName(const std::string& szName )
 {
 	if ( labMainName )
 	{

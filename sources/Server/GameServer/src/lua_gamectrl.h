@@ -7,7 +7,6 @@
 #include "NPC.h"
 #include <strstream>
 #include <algorithm>
-#include "TryUtil.h"
 #include "ChaAttr.h"
 #include "EventHandler.h"
 #include "stdafx.h" //Add by alfred.shi 20080306
@@ -60,7 +59,7 @@ void  AddHelpNPC(CCharacter *pNPC);
 
 // 使用lua pcall的错误报告函数
 inline void lua_callalert(lua_State* L, int status)
-{T_B
+{
 	if (status != 0)
 	{
 		lua_getglobal(L, "_ALERT");
@@ -75,13 +74,13 @@ inline void lua_callalert(lua_State* L, int status)
 			lua_pop(L, 2);
 		}
 	}
-T_E}
+}
 
 
 //------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------
 inline int lua_EnableAI(lua_State *L)
-{T_B
+{
 	BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
 	if(!bValid)
 	{
@@ -91,11 +90,11 @@ inline int lua_EnableAI(lua_State *L)
 	extern BOOL g_bEnableAI;
 	g_bEnableAI = (BOOL)(lua_tonumber(L, 1));
 	return 0;
-T_E}
+}
 
 // 设置当前地图
 inline int lua_SetCurMap(lua_State *L)
-{T_B
+{
 	BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
 	if(!bValid)
 	{
@@ -115,7 +114,7 @@ inline int lua_SetCurMap(lua_State *L)
 	lua_pushnumber(L, 1);
 	g_pScriptMap = pMap->GetCopy();
 	return 1;
-T_E}
+}
 
 inline int lua_GetChaID(lua_State *L)
 {
@@ -140,7 +139,7 @@ inline int lua_GetChaID(lua_State *L)
 }
 
 
-inline int lua_CreateChaNearPlayer(lua_State *L){T_B CHECK_MAP
+inline int lua_CreateChaNearPlayer(lua_State *L){ CHECK_MAP
 	BOOL bValid = (lua_gettop(L) == 2 && lua_isuserdata(L, 1) && lua_isnumber(L, 2));
 	if (!bValid){
 		PARAM_ERROR
@@ -164,12 +163,12 @@ inline int lua_CreateChaNearPlayer(lua_State *L){T_B CHECK_MAP
 		LG("lua_ai", "create character near role failed\n");
 		return 0;
 	}
-T_E}
+}
 
 
 // 在指定坐标创建角色
 inline int lua_CreateCha(lua_State *L)
-{T_B
+{
 	CHECK_MAP
 
 	// 参数合法性判别
@@ -206,10 +205,10 @@ inline int lua_CreateCha(lua_State *L)
 		LG("lua_ai", "create character failed\n");
 		return 0;
 	}
-T_E}
+}
 
 inline int lua_CreateChaX(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
 	BOOL bValid = (lua_gettop (L)==6 && lua_isnumber(L, 1) && lua_isnumber (L, 2)
 				&& lua_isnumber (L, 3) && lua_isnumber (L, 4) && lua_isnumber(L, 5)
@@ -246,10 +245,10 @@ inline int lua_CreateChaX(lua_State *L)
 		LG("lua_ai", "create character failed\n");
 		return 0;
 	}
-T_E}
+}
 
 inline int lua_CreateChaEx(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
 	CHECK_MAP
 
@@ -292,11 +291,11 @@ inline int lua_CreateChaEx(lua_State *L)
 		LG("lua_ai", "create character failed\n");
 		return 0;
 	}
-T_E}
+}
 
 // 角色前往指定坐标
 inline int lua_ChaMove(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
     if(!bValid) 
@@ -321,11 +320,11 @@ inline int lua_ChaMove(lua_State *L)
 	}
 
 	return 0;
-T_E}
+}
 
 // 角色前往指定坐标，到达后休眠
 inline int lua_ChaMoveToSleep(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
     if(!bValid) 
@@ -354,11 +353,11 @@ inline int lua_ChaMoveToSleep(lua_State *L)
     }
 
 	return 0;
-T_E}
+}
 
 // 获得角色出生点
 inline int lua_GetChaSpawnPos(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -377,12 +376,12 @@ inline int lua_GetChaSpawnPos(lua_State *L)
 		return 2;	
     }
 	return 0;
-T_E}
+}
 
 
 // 取得角色的巡逻点
 inline int lua_GetChaPatrolPos(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -401,11 +400,11 @@ inline int lua_GetChaPatrolPos(lua_State *L)
 		return 2;	
     }
 	return 0;
-T_E}
+}
 
 // 设置指定角色的巡逻状态, 用于AI控制
 inline int lua_SetChaPatrolState(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
 	if(!bValid) 
@@ -419,11 +418,11 @@ inline int lua_SetChaPatrolState(lua_State *L)
 		pCha->m_btPatrolState = ((BYTE)lua_tonumber(L,2));
 
 	return 0;
-T_E}
+}
 
 // 返回指定角色的巡逻状态, 用于AI控制
 inline int lua_GetChaPatrolState(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -435,7 +434,7 @@ inline int lua_GetChaPatrolState(lua_State *L)
 	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	lua_pushnumber(L,(BYTE)(pCha->m_btPatrolState));
 	return 1;
-T_E}
+}
 
 
 
@@ -443,7 +442,7 @@ T_E}
 // 参数：角色对象，目标对象，技能编号（如果该技能是作用于目标点，则目标点取目标角色对象的当前位置），[是否立即执行]
 // 返回值：无
 inline int lua_ChaUseSkill(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_islightuserdata(L, 1) && lua_islightuserdata (L, 2) &&  lua_isnumber (L, 3));
     if(!bValid) 
@@ -479,13 +478,13 @@ inline int lua_ChaUseSkill(lua_State *L)
     }
 
 	return 0;
-T_E}
+}
 
 // 角色使用技能
 // 参数：角色对象，技能编号，技能等级，目标位置[x,y]，[是否立即执行]
 // 返回值：无
 inline int lua_ChaUseSkill2(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3) &&  lua_isnumber (L, 4) &&  lua_isnumber (L, 5));
     if(!bValid) 
@@ -525,11 +524,11 @@ inline int lua_ChaUseSkill2(lua_State *L)
     }
 
 	return 0;
-T_E}
+}
 
 // 返回指定角色的属性
 inline int lua_QueryChaAttr(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
@@ -548,11 +547,11 @@ inline int lua_QueryChaAttr(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;
-T_E}
+}
 
 // 返回指定角色的类型ID
 inline int lua_GetChaType(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -568,11 +567,11 @@ inline int lua_GetChaType(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;
-T_E}
+}
 
 // 返回指定角色的阻碍次数, 用于AI判断
 inline int lua_GetChaBlockCnt(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -588,11 +587,11 @@ inline int lua_GetChaBlockCnt(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;
-T_E}
+}
 
 // 设置指定角色的阻碍次数, 用于AI控制
 inline int lua_SetChaBlockCnt(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
 	if(!bValid) 
@@ -606,11 +605,11 @@ inline int lua_SetChaBlockCnt(lua_State *L)
 		pCha->SetBlockCnt((BYTE)lua_tonumber(L,2));
 
 	return 0;
-T_E}
+}
 
 // 返回指定角色的AI类型
 inline int lua_GetChaAIType(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -626,11 +625,11 @@ inline int lua_GetChaAIType(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;
-T_E}
+}
 
 // 返回指定角色的追踪范围
 inline int lua_GetChaChaseRange(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -646,11 +645,11 @@ inline int lua_GetChaChaseRange(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;
-T_E}
+}
 
 // 设置指定角色的追踪范围
 inline int lua_SetChaChaseRange(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
@@ -665,12 +664,12 @@ inline int lua_SetChaChaseRange(lua_State *L)
 		pCha->m_sChaseRange = (short)lua_tonumber(L, 2);
 	}
 	return 0;
-T_E}
+}
 
 
 // 设定指定角色的AI类型
 inline int lua_SetChaAIType(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
 	if(!bValid) 
@@ -689,12 +688,12 @@ inline int lua_SetChaAIType(lua_State *L)
     }
 
 	return 0;
-T_E}
+}
 
 // 参数：角色对象
 // 取得角色的类型
 inline int lua_GetChaTypeID(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -714,11 +713,11 @@ inline int lua_GetChaTypeID(lua_State *L)
 	}
 	else
 		return 0;
-T_E}
+}
 
 // 取得角色的视野范围(索敌范围)
 inline int lua_GetChaVision(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -733,7 +732,7 @@ inline int lua_GetChaVision(lua_State *L)
 		lua_pushnumber(L, pCha->m_pCChaRecord->lVision);
 	}
 	return 1;
-T_E}
+}
 
 // 取出角色天生所会的技能数量, 用于怪物AI
 inline int lua_GetChaSkillNum(lua_State *L)
@@ -780,7 +779,7 @@ inline int lua_GetChaSkillInfo(lua_State *L)
 
 // 指定角色的当前目标
 inline int lua_SetChaTarget(lua_State *L)
-{T_B
+{
 	// 参数合法性判别, target可以为0, 所以不做参数检查
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -820,11 +819,11 @@ inline int lua_SetChaTarget(lua_State *L)
     }
 
 	return 0;
-T_E}
+}
 
 // 返回指定角色的当前目标
 inline int lua_GetChaTarget(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -840,11 +839,11 @@ inline int lua_GetChaTarget(lua_State *L)
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 // 返回指定角色的主人
 inline int lua_GetChaHost(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -860,11 +859,11 @@ inline int lua_GetChaHost(lua_State *L)
 		return 1;
 	}
 	return 0;
-T_E}
+}
 
 // 指定角色的主人
 inline int lua_SetChaHost(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -894,10 +893,10 @@ inline int lua_SetChaHost(lua_State *L)
 		}
 	}
 	return 0;
-T_E}
+}
 
 inline int lua_GetPetNum(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
 	BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -918,7 +917,7 @@ inline int lua_GetPetNum(lua_State *L)
 		lua_pushnumber(L, 0);
 	}
 	return 1;
-T_E}
+}
 
 // 取得对角色伤害最大的目标
 inline int lua_GetChaFirstTarget(lua_State *L)
@@ -1081,7 +1080,7 @@ inline int lua_AddHate(lua_State *L)
 
 
 inline int lua_GetChaPos(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
 	int nPNum = lua_gettop (L);
     BOOL bValid = (nPNum==1 && lua_islightuserdata(L, 1));
@@ -1101,11 +1100,11 @@ inline int lua_GetChaPos(lua_State *L)
 		return 2;	
     }
 	return 0;
-T_E}
+}
 
 // 检查角色是否在战斗中
 inline int lua_IsChaFighting(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -1121,11 +1120,11 @@ inline int lua_IsChaFighting(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;	
-T_E}
+}
 
 // 检查角色是否在睡眠中
 inline int lua_IsChaSleeping(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
@@ -1141,7 +1140,7 @@ inline int lua_IsChaSleeping(lua_State *L)
 		lua_pushnumber(L, 0);
 
 	return 1;	
-T_E}
+}
 
 
 
@@ -1150,7 +1149,7 @@ T_E}
 // 角色激活视野
 // 参数：角色地址，激活与否（1，激活。0，停止激活）
 inline int lua_ChaActEyeshot(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
@@ -1165,11 +1164,11 @@ inline int lua_ChaActEyeshot(lua_State *L)
 		pCha->ActiveEyeshot((bool)bActive);
 
 	return 0;
-T_E}
+}
 
 // 返回距离指定坐标附近最近的角色
 inline int lua_GetChaByRange(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
     if(!bValid) 
@@ -1246,11 +1245,11 @@ inline int lua_GetChaByRange(lua_State *L)
 	}
 
 	return 0;
-T_E}
+}
 
 // 解除范围内的所有隐身状态
 inline int lua_ClearHideChaByRange(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
     if(!bValid) 
@@ -1318,12 +1317,12 @@ inline int lua_ClearHideChaByRange(lua_State *L)
 		}
 	}
 	return 0;
-T_E}
+}
 
 
 // 返回距离内的所有指定类型怪
 inline int lua_GetChaSetByRange(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
     if(!bValid) 
@@ -1390,7 +1389,7 @@ inline int lua_GetChaSetByRange(lua_State *L)
 		lua_pushlightuserdata(L, ChaList[i]);
 	}
 	return n;
-T_E}
+}
 
 
 // 查找指定位置和范围内的道具
@@ -1459,7 +1458,7 @@ inline int lua_GetItemPos(lua_State *L)
 
 // 检查指定角色目标位置是否可达
 inline int lua_IsPosValid(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
 	if(!bValid) 
@@ -1478,7 +1477,7 @@ inline int lua_IsPosValid(lua_State *L)
 		lua_pushnumber(L, 0);	
 
 	return 1;
-T_E}
+}
 
 
 // 取得角色面向方面前面的位置
@@ -1619,13 +1618,13 @@ inline int lua_GetResPath(lua_State *L)
 extern lua_State *g_pLuaState;
 // FrameMove
 inline void lua_FrameMove()
-{T_B
+{
  	luaL_dostring(g_pLuaState, "RunTimer()");
-T_E}
+}
 
 // 移动对话框地图观察点
 inline int lua_view(lua_State *L)
-{T_B
+{
 	// 参数合法性判别
     BOOL bValid = (lua_gettop(L)==2 && lua_isnumber(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
@@ -1639,10 +1638,10 @@ inline int lua_view(lua_State *L)
 	g_lViewAtMapX = (long)lua_tonumber(L, 1);
 	g_lViewAtMapY = (long)lua_tonumber(L, 2);
 	return 0;
-T_E}
+}
 
 inline void lua_AIRun(CCharacter *pCha, DWORD dwResumeExecTime)
-{T_B
+{
 	
 	static int g_test[20];
 	lua_getglobal(g_pLuaState, "ai_timer");
@@ -1685,10 +1684,10 @@ inline void lua_AIRun(CCharacter *pCha, DWORD dwResumeExecTime)
 	lua_pop(g_pLuaState, 3);
 	LG("return", "end\n\n");
 */
-T_E}
+}
 
 inline void lua_NPCRun(CCharacter *pCha)
-{T_B
+{
 	
 	static int g_test[20];
 	lua_getglobal(g_pLuaState, "npc_timer");
@@ -1704,31 +1703,31 @@ inline void lua_NPCRun(CCharacter *pCha)
 		lua_callalert(g_pLuaState, r); 	
 	}
 	lua_settop(g_pLuaState, 0);
-T_E}
+}
 
 inline int lua_GetTickCount(lua_State *L)
-{T_B
+{
     lua_pushnumber(L, GetTickCount());
     return 1;
-T_E}
+}
 
 inline int lua_Msg(lua_State *L)
-{T_B
+{
     const char *pszContent = lua_tostring(L, 1);
     MessageBox(NULL, pszContent, "msg", 0);
     return 0;
-T_E}
+}
 
 
 inline int lua_Exit(lua_State *L)
-{T_B
+{
 	extern BOOL g_bGameEnd;
 	g_bGameEnd = TRUE;
 	return 1;
-T_E}
+}
 
 inline int lua_PRINT( lua_State* L )
-{T_B
+{
 	if( g_Config.m_bLogMission == FALSE )
 	{
 		return 0;
@@ -1800,10 +1799,10 @@ inline int lua_PRINT( lua_State* L )
     printf( "%s", str.str() );
 	str.freeze(false);
     return 0;
-T_E}
+}
 
 inline int lua_LG(lua_State *L)
-{T_B
+{
 	int count = lua_gettop(L);
 	if( count<=1 ) 
 	{
@@ -1893,10 +1892,10 @@ inline int lua_LG(lua_State *L)
 	LG( (char*)pszFile, "%s", str.str() );
 	str.freeze(false);
 	return 0;
-T_E}
+}
 
 inline int lua_EXLG(lua_State *L)
-{T_B
+{
 	int nNumParam = lua_gettop(L);
 	if( nNumParam <=1 ) 
 	{
@@ -1983,7 +1982,7 @@ inline int lua_EXLG(lua_State *L)
 	LG( (char*)pszFile, str.str() );
 	str.freeze(false);
 	return 0;
-T_E}
+}
 
 
 

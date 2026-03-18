@@ -165,11 +165,11 @@ module DirectPacketExchange =
         let received = TaskCompletionSource<byte>()
 
         server.OnCommand.Add(fun (_ch, pkt) ->
-            received.TrySetResult(pkt.ReadUInt8()) |> ignore)
+            received.TrySetResult(byte (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(1us)
-        w.WriteUInt8(0xABuy)
+        w.WriteInt64(0xABL)
         clientCh.SendPacket(w)
 
         let! value = awaitTimeout received 5000
@@ -185,11 +185,11 @@ module DirectPacketExchange =
         let received = TaskCompletionSource<sbyte>()
 
         client.OnCommand.Add(fun (_ch, pkt) ->
-            received.TrySetResult(pkt.ReadInt8()) |> ignore)
+            received.TrySetResult(sbyte (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(2us)
-        w.WriteInt8(-42y)
+        w.WriteInt64(-42L)
         serverCh.SendPacket(w)
 
         let! value = awaitTimeout received 5000
@@ -205,11 +205,11 @@ module DirectPacketExchange =
         let received = TaskCompletionSource<uint16>()
 
         server.OnCommand.Add(fun (_ch, pkt) ->
-            received.TrySetResult(pkt.ReadUInt16()) |> ignore)
+            received.TrySetResult(uint16 (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(3us)
-        w.WriteUInt16(54321us)
+        w.WriteInt64(54321L)
         clientCh.SendPacket(w)
 
         let! value = awaitTimeout received 5000
@@ -225,11 +225,11 @@ module DirectPacketExchange =
         let received = TaskCompletionSource<int16>()
 
         client.OnCommand.Add(fun (_ch, pkt) ->
-            received.TrySetResult(pkt.ReadInt16()) |> ignore)
+            received.TrySetResult(int16 (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(4us)
-        w.WriteInt16(-12345s)
+        w.WriteInt64(-12345L)
         serverCh.SendPacket(w)
 
         let! value = awaitTimeout received 5000
@@ -245,11 +245,11 @@ module DirectPacketExchange =
         let received = TaskCompletionSource<uint32>()
 
         server.OnCommand.Add(fun (_ch, pkt) ->
-            received.TrySetResult(pkt.ReadUInt32()) |> ignore)
+            received.TrySetResult(uint32 (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(5us)
-        w.WriteUInt32(0xDEADBEEFu)
+        w.WriteInt64(0xDEADBEEFL)
         clientCh.SendPacket(w)
 
         let! value = awaitTimeout received 5000
@@ -265,11 +265,11 @@ module DirectPacketExchange =
         let received = TaskCompletionSource<int32>()
 
         client.OnCommand.Add(fun (_ch, pkt) ->
-            received.TrySetResult(pkt.ReadInt32()) |> ignore)
+            received.TrySetResult(int32 (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(6us)
-        w.WriteInt32(-999_999)
+        w.WriteInt64(-999_999L)
         serverCh.SendPacket(w)
 
         let! value = awaitTimeout received 5000
@@ -454,12 +454,12 @@ module DirectPacketExchange =
         let w = WPacket(256)
         w.WriteCmd(500us)
         w.WriteSess(777u)
-        w.WriteUInt8(255uy)
-        w.WriteInt8(-128y)
-        w.WriteUInt16(65535us)
-        w.WriteInt16(-32768s)
-        w.WriteUInt32(UInt32.MaxValue)
-        w.WriteInt32(Int32.MinValue)
+        w.WriteInt64(255L)
+        w.WriteInt64(-128L)
+        w.WriteInt64(65535L)
+        w.WriteInt64(-32768L)
+        w.WriteInt64(int64 UInt32.MaxValue)
+        w.WriteInt64(int64 Int32.MinValue)
         w.WriteInt64(Int64.MaxValue)
         w.WriteUInt64(UInt64.MaxValue)
         w.WriteFloat32(-99.5f)
@@ -470,12 +470,12 @@ module DirectPacketExchange =
         let! pkt = awaitTimeout received 5000
         Assert.Equal(500us, pkt.GetCmd())
         Assert.Equal(777u, pkt.Sess)
-        Assert.Equal(255uy, pkt.ReadUInt8())
-        Assert.Equal(-128y, pkt.ReadInt8())
-        Assert.Equal(65535us, pkt.ReadUInt16())
-        Assert.Equal(-32768s, pkt.ReadInt16())
-        Assert.Equal(UInt32.MaxValue, pkt.ReadUInt32())
-        Assert.Equal(Int32.MinValue, pkt.ReadInt32())
+        Assert.Equal(255uy, byte (pkt.ReadInt64()))
+        Assert.Equal(-128y, sbyte (pkt.ReadInt64()))
+        Assert.Equal(65535us, uint16 (pkt.ReadInt64()))
+        Assert.Equal(-32768s, int16 (pkt.ReadInt64()))
+        Assert.Equal(UInt32.MaxValue, uint32 (pkt.ReadInt64()))
+        Assert.Equal(Int32.MinValue, int32 (pkt.ReadInt64()))
         Assert.Equal(Int64.MaxValue, pkt.ReadInt64())
         Assert.Equal(UInt64.MaxValue, pkt.ReadUInt64())
         Assert.Equal(-99.5f, pkt.ReadFloat32())
@@ -500,18 +500,18 @@ module DirectPacketExchange =
 
         let w = WPacket(128)
         w.WriteCmd(UInt16.MaxValue)
-        w.WriteUInt8(Byte.MinValue)
-        w.WriteUInt8(Byte.MaxValue)
-        w.WriteInt8(SByte.MinValue)
-        w.WriteInt8(SByte.MaxValue)
-        w.WriteUInt16(UInt16.MinValue)
-        w.WriteUInt16(UInt16.MaxValue)
-        w.WriteInt16(Int16.MinValue)
-        w.WriteInt16(Int16.MaxValue)
-        w.WriteUInt32(UInt32.MinValue)
-        w.WriteUInt32(UInt32.MaxValue)
-        w.WriteInt32(Int32.MinValue)
-        w.WriteInt32(Int32.MaxValue)
+        w.WriteInt64(int64 Byte.MinValue)
+        w.WriteInt64(int64 Byte.MaxValue)
+        w.WriteInt64(int64 SByte.MinValue)
+        w.WriteInt64(int64 SByte.MaxValue)
+        w.WriteInt64(int64 UInt16.MinValue)
+        w.WriteInt64(int64 UInt16.MaxValue)
+        w.WriteInt64(int64 Int16.MinValue)
+        w.WriteInt64(int64 Int16.MaxValue)
+        w.WriteInt64(int64 UInt32.MinValue)
+        w.WriteInt64(int64 UInt32.MaxValue)
+        w.WriteInt64(int64 Int32.MinValue)
+        w.WriteInt64(int64 Int32.MaxValue)
         w.WriteInt64(Int64.MinValue)
         w.WriteInt64(Int64.MaxValue)
         w.WriteUInt64(UInt64.MinValue)
@@ -522,18 +522,18 @@ module DirectPacketExchange =
 
         let! pkt = awaitTimeout received 5000
         Assert.Equal(UInt16.MaxValue, pkt.GetCmd())
-        Assert.Equal(Byte.MinValue, pkt.ReadUInt8())
-        Assert.Equal(Byte.MaxValue, pkt.ReadUInt8())
-        Assert.Equal(SByte.MinValue, pkt.ReadInt8())
-        Assert.Equal(SByte.MaxValue, pkt.ReadInt8())
-        Assert.Equal(UInt16.MinValue, pkt.ReadUInt16())
-        Assert.Equal(UInt16.MaxValue, pkt.ReadUInt16())
-        Assert.Equal(Int16.MinValue, pkt.ReadInt16())
-        Assert.Equal(Int16.MaxValue, pkt.ReadInt16())
-        Assert.Equal(UInt32.MinValue, pkt.ReadUInt32())
-        Assert.Equal(UInt32.MaxValue, pkt.ReadUInt32())
-        Assert.Equal(Int32.MinValue, pkt.ReadInt32())
-        Assert.Equal(Int32.MaxValue, pkt.ReadInt32())
+        Assert.Equal(Byte.MinValue, byte (pkt.ReadInt64()))
+        Assert.Equal(Byte.MaxValue, byte (pkt.ReadInt64()))
+        Assert.Equal(SByte.MinValue, sbyte (pkt.ReadInt64()))
+        Assert.Equal(SByte.MaxValue, sbyte (pkt.ReadInt64()))
+        Assert.Equal(UInt16.MinValue, uint16 (pkt.ReadInt64()))
+        Assert.Equal(UInt16.MaxValue, uint16 (pkt.ReadInt64()))
+        Assert.Equal(Int16.MinValue, int16 (pkt.ReadInt64()))
+        Assert.Equal(Int16.MaxValue, int16 (pkt.ReadInt64()))
+        Assert.Equal(UInt32.MinValue, uint32 (pkt.ReadInt64()))
+        Assert.Equal(UInt32.MaxValue, uint32 (pkt.ReadInt64()))
+        Assert.Equal(Int32.MinValue, int32 (pkt.ReadInt64()))
+        Assert.Equal(Int32.MaxValue, int32 (pkt.ReadInt64()))
         Assert.Equal(Int64.MinValue, pkt.ReadInt64())
         Assert.Equal(Int64.MaxValue, pkt.ReadInt64())
         Assert.Equal(UInt64.MinValue, pkt.ReadUInt64())
@@ -585,19 +585,19 @@ module DirectPacketExchange =
 
         // Сервер получает команду и отвечает
         server.OnCommand.Add(fun (ch, pkt) ->
-            let value = pkt.ReadUInt32()
+            let value = uint32 (pkt.ReadInt64())
             let w = WPacket(16)
             w.WriteCmd(200us)
-            w.WriteUInt32(value + 1u)
+            w.WriteInt64(int64 (value + 1u))
             ch.SendPacket(w))
 
         // Клиент получает ответ
         client.OnCommand.Add(fun (_ch, pkt) ->
-            clientReceived.TrySetResult(pkt.ReadUInt32()) |> ignore)
+            clientReceived.TrySetResult(uint32 (pkt.ReadInt64())) |> ignore)
 
         let w = WPacket(16)
         w.WriteCmd(100us)
-        w.WriteUInt32(42u)
+        w.WriteInt64(42L)
         clientCh.SendPacket(w)
 
         let! result = awaitTimeout clientReceived 5000
@@ -615,7 +615,7 @@ module DirectPacketExchange =
         let allReceived = TaskCompletionSource<unit>()
 
         server.OnCommand.Add(fun (_ch, pkt) ->
-            let idx = pkt.ReadInt32()
+            let idx = int32 (pkt.ReadInt64())
             Assert.True(idx >= 0 && idx < count)
             if Interlocked.Increment(&receivedCount) >= count then
                 allReceived.TrySetResult(()) |> ignore)
@@ -623,7 +623,7 @@ module DirectPacketExchange =
         for i in 0..count-1 do
             let w = WPacket(16)
             w.WriteCmd(30us)
-            w.WriteInt32(i)
+            w.WriteInt64(int64 i)
             clientCh.SendPacket(w)
 
         do! awaitSignal allReceived 5000
@@ -648,7 +648,7 @@ module DirectPacketExchange =
         for i in 1us..uint16 total do
             let w = WPacket(16)
             w.WriteCmd(i * 100us)
-            w.WriteUInt32(uint32 i)
+            w.WriteInt64(int64 i)
             clientCh.SendPacket(w)
 
         do! awaitSignal allReceived 5000
@@ -761,7 +761,7 @@ module DirectPing =
         server.OnConnected.Add(fun ch -> serverConnected.TrySetResult(ch) |> ignore)
         server.OnPing.Add(fun _ -> Interlocked.Increment(&pingCount) |> ignore)
         server.OnCommand.Add(fun (_ch, pkt) ->
-            cmdReceived.TrySetResult(pkt.ReadUInt32()) |> ignore)
+            cmdReceived.TrySetResult(uint32 (pkt.ReadInt64())) |> ignore)
         server.Start(cts.Token)
 
         use client = new DirectSystemCommand<TestChannel>(
@@ -775,7 +775,7 @@ module DirectPing =
         clientCh.SendPing()
         let w = WPacket(16)
         w.WriteCmd(50us)
-        w.WriteUInt32(12345u)
+        w.WriteInt64(12345L)
         clientCh.SendPacket(w)
         clientCh.SendPing()
 
@@ -843,12 +843,12 @@ module DirectRpc =
             let sess = pkt.Sess
             if sess > 0u && sess < SESS_FLAG then
                 // Это RPC запрос — обрабатываем и отвечаем
-                let value = pkt.ReadInt32()
+                let value = int32 (pkt.ReadInt64())
                 let w = WPacket(16)
                 w.WriteCmd(0us) // Cmd не важен для ответа
                 w.WriteSess(sess ||| SESS_FLAG)
-                w.WriteInt16(0s) // ERR_SUCCESS
-                w.WriteInt32(value * 2) // Результат
+                w.WriteInt64(0L) // ERR_SUCCESS
+                w.WriteInt64(int64 (value * 2)) // Результат
                 ch.SendPacket(w))
         server.Start(cts.Token)
 
@@ -859,7 +859,7 @@ module DirectRpc =
         client.OnCommand.Add(fun (_ch, pkt) ->
             let sess = pkt.Sess
             if sess > SESS_FLAG then
-                let err = pkt.ReadInt16()
+                let err = int16 (pkt.ReadInt64())
                 rpcResult.TrySetResult(err) |> ignore)
         client.Start(cts.Token)
 
@@ -870,7 +870,7 @@ module DirectRpc =
         let w = WPacket(16)
         w.WriteCmd(100us)
         w.WriteSess(1u)
-        w.WriteInt32(21)
+        w.WriteInt64(21L)
         clientCh.SendPacket(w)
 
         let! err = awaitTimeout rpcResult 5000
@@ -893,14 +893,14 @@ module DirectRpc =
             let sess = pkt.Sess
             if sess > 0u && sess < SESS_FLAG then
                 let name = pkt.ReadString()
-                let age = pkt.ReadInt32()
+                let age = int32 (pkt.ReadInt64())
                 // Ответ: err + вычисленные данные
                 let w = WPacket(128)
                 w.WriteCmd(0us)
                 w.WriteSess(sess ||| SESS_FLAG)
-                w.WriteInt16(0s) // success
+                w.WriteInt64(0L) // success
                 w.WriteString($"Hello, {name}!")
-                w.WriteInt32(age + 10)
+                w.WriteInt64(int64 (age + 10))
                 w.WriteUInt64(0xDEADCAFEuL)
                 ch.SendPacket(w))
         server.Start(cts.Token)
@@ -921,14 +921,14 @@ module DirectRpc =
         w.WriteCmd(200us)
         w.WriteSess(42u)
         w.WriteString("Алексей")
-        w.WriteInt32(25)
+        w.WriteInt64(25L)
         clientCh.SendPacket(w)
 
         let! pkt = awaitTimeout rpcResult 5000
         Assert.Equal(42u ||| SESS_FLAG, pkt.Sess)
-        Assert.Equal(0s, pkt.ReadInt16())
+        Assert.Equal(0s, int16 (pkt.ReadInt64()))
         Assert.Equal("Hello, Алексей!", pkt.ReadString())
-        Assert.Equal(35, pkt.ReadInt32())
+        Assert.Equal(35, int32 (pkt.ReadInt64()))
         Assert.Equal(0xDEADCAFEuL, pkt.ReadUInt64())
         pkt.Dispose()
     }
@@ -950,12 +950,12 @@ module DirectRpc =
         server.OnCommand.Add(fun (ch, pkt) ->
             let sess = pkt.Sess
             if sess > 0u && sess < SESS_FLAG then
-                let input = pkt.ReadInt32()
+                let input = int32 (pkt.ReadInt64())
                 let w = WPacket(16)
                 w.WriteCmd(0us)
                 w.WriteSess(sess ||| SESS_FLAG)
-                w.WriteInt16(0s)
-                w.WriteInt32(input * input) // Квадрат
+                w.WriteInt64(0L)
+                w.WriteInt64(int64 (input * input)) // Квадрат
                 ch.SendPacket(w))
         server.Start(cts.Token)
 
@@ -966,8 +966,8 @@ module DirectRpc =
             let sess = pkt.Sess
             if sess > SESS_FLAG then
                 let origSess = sess - SESS_FLAG
-                let _err = pkt.ReadInt16()
-                let result = pkt.ReadInt32()
+                let _err = int16 (pkt.ReadInt64())
+                let result = int32 (pkt.ReadInt64())
                 results[origSess] <- result
                 if results.Count >= total then
                     allDone.TrySetResult(()) |> ignore)
@@ -981,7 +981,7 @@ module DirectRpc =
             let w = WPacket(16)
             w.WriteCmd(300us)
             w.WriteSess(uint32 i)
-            w.WriteInt32(i)
+            w.WriteInt64(int64 i)
             clientCh.SendPacket(w)
 
         do! awaitSignal allDone 5000
@@ -1010,7 +1010,7 @@ module DirectRpc =
                 let w = WPacket(16)
                 w.WriteCmd(0us)
                 w.WriteSess(sess ||| SESS_FLAG)
-                w.WriteInt16(501s) // ERR_PT_LOGFAIL
+                w.WriteInt64(501L) // ERR_PT_LOGFAIL
                 ch.SendPacket(w))
         server.Start(cts.Token)
 
@@ -1019,7 +1019,7 @@ module DirectRpc =
 
         client.OnCommand.Add(fun (_ch, pkt) ->
             if pkt.Sess > SESS_FLAG then
-                rpcResult.TrySetResult(pkt.ReadInt16()) |> ignore)
+                rpcResult.TrySetResult(int16 (pkt.ReadInt64())) |> ignore)
         client.Start(cts.Token)
 
         let! clientCh = client.ConnectAsync(IPEndPoint(IPAddress.Loopback, port), cts.Token)
@@ -1085,7 +1085,7 @@ module ChannelSystem =
         let w = WPacket(64)
         w.WriteCmd(100us)
         w.WriteString("Channel test")
-        w.WriteUInt32(42u)
+        w.WriteInt64(42L)
         clientCh.SendPacket(w)
 
         let! cmdEvt = server.ReadEventAsync()
@@ -1093,7 +1093,7 @@ module ChannelSystem =
         | SystemEvent.CommandReceived(_ch, pkt) ->
             Assert.Equal(100us, pkt.GetCmd())
             Assert.Equal("Channel test", pkt.ReadString())
-            Assert.Equal(42u, pkt.ReadUInt32())
+            Assert.Equal(42u, uint32 (pkt.ReadInt64()))
             pkt.Dispose()
         | _ -> Assert.Fail("Ожидался CommandReceived")
     }
@@ -1171,12 +1171,12 @@ module ChannelSystem =
         let w = WPacket(256)
         w.WriteCmd(777us)
         w.WriteSess(999u)
-        w.WriteUInt8(0xFFuy)
-        w.WriteInt8(-1y)
-        w.WriteUInt16(0xABCDus)
-        w.WriteInt16(-9999s)
-        w.WriteUInt32(0xDEADBEEFu)
-        w.WriteInt32(-123456)
+        w.WriteInt64(0xFFL)
+        w.WriteInt64(-1L)
+        w.WriteInt64(0xABCDL)
+        w.WriteInt64(-9999L)
+        w.WriteInt64(0xDEADBEEFL)
+        w.WriteInt64(-123456L)
         w.WriteInt64(0x123456789ABCDEF0L)
         w.WriteUInt64(UInt64.MaxValue)
         w.WriteFloat32(42.5f)
@@ -1189,12 +1189,12 @@ module ChannelSystem =
         | SystemEvent.CommandReceived(_ch, pkt) ->
             Assert.Equal(777us, pkt.GetCmd())
             Assert.Equal(999u, pkt.Sess)
-            Assert.Equal(0xFFuy, pkt.ReadUInt8())
-            Assert.Equal(-1y, pkt.ReadInt8())
-            Assert.Equal(0xABCDus, pkt.ReadUInt16())
-            Assert.Equal(-9999s, pkt.ReadInt16())
-            Assert.Equal(0xDEADBEEFu, pkt.ReadUInt32())
-            Assert.Equal(-123456, pkt.ReadInt32())
+            Assert.Equal(0xFFuy, byte (pkt.ReadInt64()))
+            Assert.Equal(-1y, sbyte (pkt.ReadInt64()))
+            Assert.Equal(0xABCDus, uint16 (pkt.ReadInt64()))
+            Assert.Equal(-9999s, int16 (pkt.ReadInt64()))
+            Assert.Equal(0xDEADBEEFu, uint32 (pkt.ReadInt64()))
+            Assert.Equal(-123456, int32 (pkt.ReadInt64()))
             Assert.Equal(0x123456789ABCDEF0L, pkt.ReadInt64())
             Assert.Equal(UInt64.MaxValue, pkt.ReadUInt64())
             Assert.Equal(42.5f, pkt.ReadFloat32())
@@ -1252,7 +1252,7 @@ module ChannelSystem =
             let resp = WPacket(32)
             resp.WriteCmd(0us)
             resp.WriteSess(7u ||| SESS_FLAG)
-            resp.WriteInt16(0s)
+            resp.WriteInt64(0L)
             resp.WriteString($"echo: {data}")
             ch.SendPacket(resp)
         | _ -> failwith "Ожидался CommandReceived"
@@ -1262,7 +1262,7 @@ module ChannelSystem =
         match respEvt with
         | SystemEvent.CommandReceived(_ch, pkt) ->
             Assert.Equal(7u ||| SESS_FLAG, pkt.Sess)
-            Assert.Equal(0s, pkt.ReadInt16())
+            Assert.Equal(0s, int16 (pkt.ReadInt64()))
             Assert.Equal("echo: ping-data", pkt.ReadString())
             pkt.Dispose()
         | _ -> Assert.Fail("Ожидался CommandReceived")
@@ -1290,7 +1290,7 @@ module ChannelSystem =
         for i in 0..count-1 do
             let w = WPacket(32)
             w.WriteCmd(uint16 (i + 1))
-            w.WriteInt32(i * i)
+            w.WriteInt64(int64 (i * i))
             w.WriteString($"пакет #{i}")
             clientCh.SendPacket(w)
 
@@ -1301,7 +1301,7 @@ module ChannelSystem =
             | SystemEvent.CommandReceived(_ch, pkt) ->
                 let idx = received
                 Assert.Equal(uint16 (idx + 1), pkt.GetCmd())
-                Assert.Equal(idx * idx, pkt.ReadInt32())
+                Assert.Equal(idx * idx, int32 (pkt.ReadInt64()))
                 Assert.Equal($"пакет #{idx}", pkt.ReadString())
                 pkt.Dispose()
                 received <- received + 1
@@ -1378,14 +1378,14 @@ module MixedScenarios =
 
         let w1 = WPacket(16)
         w1.WriteCmd(1us)
-        w1.WriteUInt32(111u)
+        w1.WriteInt64(111L)
         clientCh.SendPacket(w1)
 
         clientCh.SendPing()
 
         let w2 = WPacket(16)
         w2.WriteCmd(2us)
-        w2.WriteUInt32(222u)
+        w2.WriteInt64(222L)
         clientCh.SendPacket(w2)
 
         clientCh.SendPing()
@@ -1400,7 +1400,7 @@ module MixedScenarios =
             match evt with
             | SystemEvent.PingReceived _ -> pingCount <- pingCount + 1
             | SystemEvent.CommandReceived(_ch, pkt) ->
-                cmds.Add(pkt.GetCmd(), pkt.ReadUInt32())
+                cmds.Add(pkt.GetCmd(), uint32 (pkt.ReadInt64()))
                 pkt.Dispose()
                 cmdCount <- cmdCount + 1
             | _ -> ()
@@ -1438,23 +1438,23 @@ module MixedScenarios =
         let w = WPacket(64)
         w.WriteCmd(5000us) // PC range
         w.WriteString("chat message")
-        w.WriteUInt32(100u)   // playerId
-        w.WriteUInt32(200u)   // gpAddr
-        w.WriteUInt16(1us)    // aimnum
+        w.WriteInt64(100L)   // playerId
+        w.WriteInt64(200L)   // gpAddr
+        w.WriteInt64(1L)    // aimnum
         clientCh.SendPacket(w)
 
         let! pkt = awaitTimeout received 5000
 
         // Обратное чтение trailer
-        let aimnum = pkt.ReverseReadUInt16()
+        let aimnum = uint16 (pkt.ReverseReadInt64())
         Assert.Equal(1us, aimnum)
-        let gpAddr = pkt.ReverseReadUInt32()
+        let gpAddr = uint32 (pkt.ReverseReadInt64())
         Assert.Equal(200u, gpAddr)
-        let playerId = pkt.ReverseReadUInt32()
+        let playerId = uint32 (pkt.ReverseReadInt64())
         Assert.Equal(100u, playerId)
 
         // Отбрасываем trailer
-        Assert.True(pkt.DiscardLast(4 + 4 + 2))
+        Assert.True(pkt.DiscardLast(3)) // 3 элемента: playerId + gpAddr + aimnum
 
         // Прямое чтение body
         Assert.Equal("chat message", pkt.ReadString())
@@ -1488,7 +1488,7 @@ module MixedScenarios =
         // Клиент → Сервер: UInt32 + String
         let w1 = WPacket(64)
         w1.WriteCmd(100us)
-        w1.WriteUInt32(42u)
+        w1.WriteInt64(42L)
         w1.WriteString("request")
         clientCh.SendPacket(w1)
 
@@ -1496,7 +1496,7 @@ module MixedScenarios =
         match evt1 with
         | SystemEvent.CommandReceived(_ch, pkt) ->
             Assert.Equal(100us, pkt.GetCmd())
-            Assert.Equal(42u, pkt.ReadUInt32())
+            Assert.Equal(42u, uint32 (pkt.ReadInt64()))
             Assert.Equal("request", pkt.ReadString())
             pkt.Dispose()
         | _ -> failwith "Ожидался CommandReceived"
@@ -1504,7 +1504,7 @@ module MixedScenarios =
         // Сервер → Клиент: Int16 + Float32 + UInt64
         let w2 = WPacket(32)
         w2.WriteCmd(200us)
-        w2.WriteInt16(-1s)
+        w2.WriteInt64(-1L)
         w2.WriteFloat32(99.9f)
         w2.WriteUInt64(0xCAFEBABEuL)
         serverCh.SendPacket(w2)
@@ -1513,7 +1513,7 @@ module MixedScenarios =
         match evt2 with
         | SystemEvent.CommandReceived(_ch, pkt) ->
             Assert.Equal(200us, pkt.GetCmd())
-            Assert.Equal(-1s, pkt.ReadInt16())
+            Assert.Equal(-1s, int16 (pkt.ReadInt64()))
             Assert.Equal(99.9f, pkt.ReadFloat32())
             Assert.Equal(0xCAFEBABEuL, pkt.ReadUInt64())
             pkt.Dispose()

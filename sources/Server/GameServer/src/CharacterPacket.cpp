@@ -8,6 +8,7 @@
 #include "Character.h"
 #include "Player.h"
 #include "GameApp.h"
+#include "CommandMessages.h"
 
 void CCharacter::WriteBaseInfo(WPACKET &pkret, Char chLookType)
 {
@@ -66,7 +67,7 @@ void CCharacter::WriteBaseInfo(WPACKET &pkret, Char chLookType)
 	WRITE_LONG(pkret, GetPos().y);
 	WRITE_LONG(pkret, GetRadius());
 	WRITE_SHORT(pkret, GetAngle());
-	// ¶Ó³¤ID
+	// ï¿½Ó³ï¿½ID
 	CPlayer	*pCPly = GetPlayer();
 	if (pCPly)
 		WRITE_LONG(pkret, pCPly->getTeamLeaderID());
@@ -111,7 +112,7 @@ void CCharacter::WriteSkillbag(WPACKET &pk, int nSynType)
 	CCharacter	*pCCtrlCha = GetPlyCtrlCha();
 	bool	bIsBoatCtrl = pCCtrlCha->IsBoat();
 	bool	bAddBoatSkill = false;
-	if (bIsBoatCtrl) // Ö÷¿ØÊÇ´¬½ÇÉ«£¬Ôò¼ÓÈë´¬µÄÄ¬ÈÏ¼¼ÄÜ
+	if (bIsBoatCtrl) // ï¿½ï¿½ï¿½ï¿½ï¿½Ç´ï¿½ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë´¬ï¿½ï¿½Ä¬ï¿½Ï¼ï¿½ï¿½ï¿½
 	{
 		pSkillGrid = pCCtrlCha->m_CSkillBag.GetSkillContByNum(0);
 		if (pSkillGrid)
@@ -191,7 +192,7 @@ void CCharacter::WriteKitbag(CKitbag &CKb, WPACKET &WtPk, int nSynType)
 			WRITE_SHORT(WtPk, 0);
 			continue;
 		}
-		// ÓÐµÀ¾ß
+		// ï¿½Ðµï¿½ï¿½ï¿½
 		WRITE_SHORT(WtPk, pGridCont->sID);
 		WRITE_LONG(WtPk, pGridCont->dwDBID	);
 		WRITE_SHORT(WtPk, pGridCont->sNeedLv);
@@ -206,7 +207,7 @@ void CCharacter::WriteKitbag(CKitbag &CKb, WPACKET &WtPk, int nSynType)
 		WRITE_LONG(WtPk, pGridCont->expiration);
 
 		pItemRec = GetItemRecordInfo( pGridCont->sID );
-		if( pItemRec->sType == enumItemTypeBoat ) // ´¬µÀ¾ß£¬Ð´Èë´¬µÄWorldID£¬ÓÃÓÚ¿Í»§¶Ë½«µÀ¾ßÓë´¬½ÇÉ«¹Ò¹³
+		if( pItemRec->sType == enumItemTypeBoat ) // ï¿½ï¿½ï¿½ï¿½ï¿½ß£ï¿½Ð´ï¿½ë´¬ï¿½ï¿½WorldIDï¿½ï¿½ï¿½ï¿½ï¿½Ú¿Í»ï¿½ï¿½Ë½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë´¬ï¿½ï¿½É«ï¿½Ò¹ï¿½
 		{
 			CCharacter	*pCBoat = GetPlayer()->GetBoat((DWORD)pGridCont->GetDBParam(enumITEMDBP_INST_ID));
 			if (pCBoat)
@@ -217,7 +218,7 @@ void CCharacter::WriteKitbag(CKitbag &CKb, WPACKET &WtPk, int nSynType)
 
 		WRITE_LONG(WtPk, pGridCont->GetDBParam(enumITEMDBP_FORGE));
 		WRITE_LONG(WtPk, pGridCont->GetDBParam(enumITEMDBP_INST_ID));
-		if (pGridCont->IsInstAttrValid()) // ´æÔÚÊµÀýÊôÐÔ
+		if (pGridCont->IsInstAttrValid()) // ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		{
 			WRITE_CHAR(WtPk, 1);
 			for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
@@ -227,9 +228,9 @@ void CCharacter::WriteKitbag(CKitbag &CKb, WPACKET &WtPk, int nSynType)
 			}
 		}
 		else
-			WRITE_CHAR(WtPk, 0); // ²»´æÔÚÊµÀýÊôÐÔ
+			WRITE_CHAR(WtPk, 0); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
-	WRITE_SHORT(WtPk, -1); // ½áÊø±êÖ¾
+	WRITE_SHORT(WtPk, -1); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾
 }
 
 // client: ReadChaLookPacket
@@ -305,7 +306,7 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 	WRITE_SHORT(WtPk, m_SChaPart.sTypeID);
 	if( m_CChaAttr.GetAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER && IsBoat() )
 	{
-		WRITE_CHAR( WtPk, 1); // ´¬µÄÍâ¹Û
+		WRITE_CHAR( WtPk, 1); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		WRITE_SHORT( WtPk, m_SChaPart.sPosID );
 		WRITE_SHORT( WtPk, m_SChaPart.sBoatID );
 		WRITE_SHORT( WtPk, m_SChaPart.sHeader );
@@ -369,7 +370,7 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 					WRITE_LONG(WtPk, pItem->expiration);
 
 				}
-				if(chLookType!=LOOK_SELF) // ³ý·ÇÊÇ×ÔÉíÍ¨Öª, ·ñÔò²»ÐèÒªÏÂÃæµÄÐÅÏ¢
+				if(chLookType!=LOOK_SELF) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨Öª, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 				{
 					WRITE_CHAR(WtPk, 0);
 					continue;
@@ -399,7 +400,7 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 
 		int nItemCnt = enumEQUIP_NUM;
 
-		//if(chLookType==LOOK_TEAM) nItemCnt = 3; // ×é¶ÓÀàÐÍµÄÍâ¹ÛÍ¨Öª, Ö»ÐèÒªÉÏ°ëÉíÐÅÏ¢
+		//if(chLookType==LOOK_TEAM) nItemCnt = 3; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Í¨Öª, Ö»ï¿½ï¿½Òªï¿½Ï°ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 
 		for (int i = 0; i < nItemCnt; i++)
 		{
@@ -439,7 +440,7 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 				WRITE_LONG(WtPk, pItem->expiration);
 			}
 
-			//if(chLookType!=LOOK_SELF) // ³ý·ÇÊÇ×ÔÉíÍ¨Öª, ·ñÔò²»ÐèÒªÏÂÃæµÄÐÅÏ¢
+			//if(chLookType!=LOOK_SELF) // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¨Öª, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 			//{
 			//	WRITE_CHAR(WtPk, 0);
 			//	continue;
@@ -463,7 +464,7 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 	}
 }
 
-// ×¢Òâ¸Ãº¯ÊýÊ¹ÓÃµÀ¾ßÀ¸µÄ¸Ä±ä±êÖ¾¡£
+// ×¢ï¿½ï¿½Ãºï¿½ï¿½ï¿½Ê¹ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¸Ä±ï¿½ï¿½Ö¾ï¿½ï¿½
 bool CCharacter::WriteAppendLook(CKitbag &CKb, WPACKET &pk, bool bInit)
 {
 	SItemGrid	*pGridCont;
@@ -486,7 +487,7 @@ bool CCharacter::WriteAppendLook(CKitbag &CKb, WPACKET &pk, bool bInit)
 	else return bHasData;
 }
 
-void CCharacter::WriteShortcut(WPACKET &WtPk)
+void CCharacter::WriteInt64cut(WPACKET &WtPk)
 {
 	for (int i = 0; i < SHORT_CUT_NUM; i++)
 	{
@@ -519,6 +520,361 @@ void CCharacter::WriteItemChaBoat(WPACKET &WtPk, CCharacter *pCBoat)
 	pCBoat->WriteBaseInfo(WtPk);
 	pCBoat->WriteAttr(WtPk, enumATTRSYN_INIT);
 	pCBoat->m_CKitbag.SetChangeFlag(true);
-	pCBoat->WriteKitbag(pCBoat->m_CKitbag, WtPk, enumSYN_KITBAG_INIT); // µÀ¾ßÀ¸
+	pCBoat->WriteKitbag(pCBoat->m_CKitbag, WtPk, enumSYN_KITBAG_INIT); // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	pCBoat->WriteSkillState(WtPk);
+}
+
+// =====================================================================
+//  Fill* â€” Ð·Ð°Ð¿Ð¾Ð»Ð½ÐµÐ½Ð¸Ðµ Ñ‚Ð¸Ð¿Ð¸Ð·Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð½Ñ‹Ñ… ÑÑ‚Ñ€ÑƒÐºÑ‚ÑƒÑ€ (CommandMessages.h)
+// =====================================================================
+
+void CCharacter::FillBaseInfo(net::msg::ChaBaseInfo &b, Char chLookType)
+{
+	CPlayer *pCPlayer = GetPlayer();
+
+	b.chaId = GetCat();
+	b.worldId = GetID();
+	if (pCPlayer)
+	{
+		b.commId = pCPlayer->GetMainCha()->GetID();
+		b.commName = pCPlayer->GetMainCha()->GetName();
+		b.gmLv = pCPlayer->GetGMLev();
+	}
+	else
+	{
+		b.commId = GetID();
+		b.commName = "";
+		b.gmLv = 0;
+	}
+
+	if (g_Config.m_bBlindChaos && IsPlayerCha() && LOOK_OTHER == chLookType && IsPKSilver())
+	{
+		b.handle = GetHandle();
+		b.ctrlType = (Char)m_CChaAttr.GetAttr(ATTR_CHATYPE);
+		b.name = "";
+		b.motto = "";
+		b.icon = GetPlyMainCha()->GetIcon();
+		b.guildId = 0;
+		b.guildName = "";
+		b.guildMotto = "";
+		b.guildPermission = 0;
+		b.stallName = "";
+	}
+	else
+	{
+		b.handle = GetHandle();
+		b.ctrlType = (Char)m_CChaAttr.GetAttr(ATTR_CHATYPE);
+		b.name = m_name;
+		b.motto = GetMotto();
+		b.icon = GetPlyMainCha()->GetIcon();
+		b.guildId = GetValidGuildID();
+		b.guildName = GetValidGuildName();
+		b.guildMotto = GetValidGuildMotto();
+		b.guildPermission = guildPermission;
+		b.stallName = GetStallName();
+	}
+
+	b.state = GetExistState();
+	b.posX = GetPos().x;
+	b.posY = GetPos().y;
+	b.radius = GetRadius();
+	b.angle = GetAngle();
+
+	CPlayer *pCPly = GetPlayer();
+	b.teamLeaderId = pCPly ? pCPly->getTeamLeaderID() : 0;
+	b.isPlayer = IsPlayerCha() ? 1 : 0;
+
+	// Side
+	b.side.sideId = GetSideID();
+
+	// Event
+	b.event.entityId = GetID();
+	b.event.entityType = IsCharacter() ? 1 : 2;
+	b.event.eventId = GetEvent().GetID();
+	b.event.eventName = GetEvent().GetName();
+
+	// Look
+	b.look.synType = enumSYN_LOOK_SWITCH;
+	b.look.typeId = m_SChaPart.sTypeID;
+
+	if (m_CChaAttr.GetAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER && IsBoat())
+	{
+		b.look.isBoat = true;
+		b.look.boatParts.posId = m_SChaPart.sPosID;
+		b.look.boatParts.boatId = m_SChaPart.sBoatID;
+		b.look.boatParts.header = m_SChaPart.sHeader;
+		b.look.boatParts.body = m_SChaPart.sBody;
+		b.look.boatParts.engine = m_SChaPart.sEngine;
+		b.look.boatParts.cannon = m_SChaPart.sCannon;
+		b.look.boatParts.equipment = m_SChaPart.sEquipment;
+	}
+	else
+	{
+		b.look.isBoat = false;
+		long nJob = (long)getAttr(ATTR_JOB);
+		bool bChaos = g_Config.m_bBlindChaos && IsPlayerCha() && LOOK_OTHER == chLookType && IsPKSilver();
+
+		if (bChaos)
+			b.look.hairId = 0;
+		else
+			b.look.hairId = m_SChaPart.sHairID;
+
+		for (int i = 0; i < enumEQUIP_NUM; i++)
+		{
+			SItemGrid *pItem = &m_SChaPart.SLink[i];
+			auto &eq = b.look.equips[i];
+
+			if (bChaos)
+			{
+				Short eqID = GetChaosEquip(i, nJob);
+				eq.id = eqID;
+				eq.dbId = pItem->dwDBID;
+				eq.needLv = pItem->sNeedLv;
+				if (eqID == 0) continue;
+				eq.num = pItem->sNum;
+				eq.endure0 = pItem->sEndure[0];
+				eq.endure1 = pItem->sEndure[1];
+				eq.energy0 = pItem->sEnergy[0];
+				eq.energy1 = pItem->sEnergy[1];
+				eq.forgeLv = pItem->chForgeLv;
+				eq.valid = pItem->IsValid() ? 1 : 0;
+				eq.tradable = pItem->bItemTradable;
+				eq.expiration = pItem->expiration;
+				if (chLookType != LOOK_SELF)
+				{
+					eq.hasExtra = false;
+				}
+				else
+				{
+					eq.hasExtra = true;
+					eq.forgeParam = pItem->GetDBParam(enumITEMDBP_FORGE);
+					eq.instId = pItem->GetDBParam(enumITEMDBP_INST_ID);
+					eq.hasInstAttr = pItem->IsInstAttrValid();
+					if (eq.hasInstAttr)
+					{
+						for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
+						{
+							eq.instAttr[j][0] = pItem->sInstAttr[j][0];
+							eq.instAttr[j][1] = pItem->sInstAttr[j][1];
+						}
+					}
+				}
+			}
+			else
+			{
+				eq.id = pItem->sID;
+				eq.dbId = pItem->dwDBID;
+				eq.needLv = pItem->sNeedLv;
+				if (pItem->sID == 0) continue;
+				eq.num = pItem->sNum;
+				eq.endure0 = pItem->sEndure[0];
+				eq.endure1 = pItem->sEndure[1];
+				eq.energy0 = pItem->sEnergy[0];
+				eq.energy1 = pItem->sEnergy[1];
+				eq.forgeLv = pItem->chForgeLv;
+				eq.valid = pItem->IsValid() ? 1 : 0;
+				eq.tradable = pItem->bItemTradable;
+				eq.expiration = pItem->expiration;
+				eq.hasExtra = true;
+				eq.forgeParam = pItem->GetDBParam(enumITEMDBP_FORGE);
+				eq.instId = pItem->GetDBParam(enumITEMDBP_INST_ID);
+				eq.hasInstAttr = pItem->IsInstAttrValid();
+				if (eq.hasInstAttr)
+				{
+					for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
+					{
+						eq.instAttr[j][0] = pItem->sInstAttr[j][0];
+						eq.instAttr[j][1] = pItem->sInstAttr[j][1];
+					}
+				}
+			}
+		}
+	}
+
+	// PK Ctrl
+	b.pkCtrl = m_chPKCtrl.to_ulong();
+
+	// AppendLook
+	for (int i = 0; i < defESPE_KBGRID_NUM; i++)
+	{
+		SItemGrid *pGridCont = m_CKitbag.GetGridContByID(i);
+		if (!pGridCont || !ItemIsAppendLook(pGridCont))
+		{
+			b.appendLook[i].lookId = 0;
+		}
+		else
+		{
+			b.appendLook[i].lookId = pGridCont->sID;
+			b.appendLook[i].valid = pGridCont->IsValid() ? 1 : 0;
+		}
+	}
+}
+
+void CCharacter::FillSkillBag(net::msg::ChaSkillBagInfo &s, int nSynType)
+{
+	SSkillGrid *pSkillGrid = 0;
+	CSkillTempData *pSkillTData = 0;
+
+	s.defSkillId = m_sDefSkillNo;
+	s.synType = nSynType;
+	s.skills.clear();
+
+	CCharacter *pCCtrlCha = GetPlyCtrlCha();
+	bool bIsBoatCtrl = pCCtrlCha->IsBoat();
+
+	// Ð•ÑÐ»Ð¸ ÑƒÐ¿Ñ€Ð°Ð²Ð»ÑÐµÐ¼Ñ‹Ð¹ â€” ÐºÐ¾Ñ€Ð°Ð±Ð»ÑŒ, Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ ÑÐºÐ¸Ð»Ð» ÐºÐ¾Ñ€Ð°Ð±Ð»Ñ Ð¿ÐµÑ€Ð²Ñ‹Ð¼
+	if (bIsBoatCtrl)
+	{
+		pSkillGrid = pCCtrlCha->m_CSkillBag.GetSkillContByNum(0);
+		if (pSkillGrid)
+		{
+			pSkillTData = g_pGameApp->GetSkillTData(pSkillGrid->sID, pSkillGrid->chLv);
+			if (pSkillTData)
+			{
+				net::msg::SkillEntry e;
+				e.id = pSkillGrid->sID;
+				e.state = pSkillGrid->chState;
+				e.level = pSkillGrid->chLv;
+				e.useSp = pSkillTData->sUseSP;
+				e.useEndure = pSkillTData->sUseEndure;
+				e.useEnergy = pSkillTData->sUseEnergy;
+				e.resumeTime = pSkillTData->lResumeTime;
+				e.range[0] = pSkillTData->sRange[0];
+				if (pSkillTData->sRange[0] != enumRANGE_TYPE_NONE)
+				{
+					for (short j = 1; j < defSKILL_RANGE_EXTEP_NUM; j++)
+						e.range[j] = pSkillTData->sRange[j];
+				}
+				s.skills.push_back(e);
+			}
+		}
+	}
+
+	short sChangeSkillNum = m_CSkillBag.GetChangeSkillNum();
+	for (short i = 0; i < sChangeSkillNum; i++)
+	{
+		pSkillGrid = m_CSkillBag.GetChangeSkill(i);
+		if (!pSkillGrid)
+			return;
+		pSkillTData = g_pGameApp->GetSkillTData(pSkillGrid->sID, pSkillGrid->chLv);
+		if (!pSkillTData)
+			return;
+		net::msg::SkillEntry e;
+		e.id = pSkillGrid->sID;
+		e.state = pSkillGrid->chState;
+		e.level = pSkillGrid->chLv;
+		e.useSp = pSkillTData->sUseSP;
+		e.useEndure = pSkillTData->sUseEndure;
+		e.useEnergy = pSkillTData->sUseEnergy;
+		e.resumeTime = pSkillTData->lResumeTime;
+		e.range[0] = pSkillTData->sRange[0];
+		if (pSkillTData->sRange[0] != enumRANGE_TYPE_NONE)
+		{
+			for (short j = 1; j < defSKILL_RANGE_EXTEP_NUM; j++)
+				e.range[j] = pSkillTData->sRange[j];
+		}
+		s.skills.push_back(e);
+	}
+}
+
+void CCharacter::FillKitbag(net::msg::ChaKitbagInfo &k, CKitbag &CKb, int nSynType)
+{
+	k.synType = nSynType;
+	k.items.clear();
+
+	Short sCapacity = CKb.GetCapacity();
+	if (nSynType == enumSYN_KITBAG_INIT)
+		k.capacity = sCapacity;
+
+	for (int i = 0; i < sCapacity; i++)
+	{
+		if (!CKb.IsSingleChange(i))
+			continue;
+
+		net::msg::KitbagItem item;
+		item.gridId = i;
+
+		SItemGrid *pGridCont = CKb.GetGridContByID(i);
+		if (!pGridCont)
+		{
+			item.itemId = 0;
+			k.items.push_back(item);
+			continue;
+		}
+		CItemRecord *pItemRec = GetItemRecordInfo(pGridCont->sID);
+		if (!pItemRec)
+		{
+			item.itemId = 0;
+			k.items.push_back(item);
+			continue;
+		}
+
+		item.itemId = pGridCont->sID;
+		item.dbId = pGridCont->dwDBID;
+		item.needLv = pGridCont->sNeedLv;
+		item.num = pGridCont->sNum;
+		item.endure0 = pGridCont->sEndure[0];
+		item.endure1 = pGridCont->sEndure[1];
+		item.energy0 = pGridCont->sEnergy[0];
+		item.energy1 = pGridCont->sEnergy[1];
+		item.forgeLv = pGridCont->chForgeLv;
+		item.valid = pGridCont->IsValid() ? 1 : 0;
+		item.tradable = pGridCont->bItemTradable;
+		item.expiration = pGridCont->expiration;
+
+		if (pItemRec->sType == enumItemTypeBoat)
+		{
+			item.isBoat = true;
+			CCharacter *pCBoat = GetPlayer()->GetBoat((DWORD)pGridCont->GetDBParam(enumITEMDBP_INST_ID));
+			item.boatWorldId = pCBoat ? pCBoat->GetID() : 0;
+		}
+
+		item.forgeParam = pGridCont->GetDBParam(enumITEMDBP_FORGE);
+		item.instId = pGridCont->GetDBParam(enumITEMDBP_INST_ID);
+		item.hasInstAttr = pGridCont->IsInstAttrValid();
+		if (item.hasInstAttr)
+		{
+			for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
+			{
+				item.instAttr[j][0] = pGridCont->sInstAttr[j][0];
+				item.instAttr[j][1] = pGridCont->sInstAttr[j][1];
+			}
+		}
+
+		k.items.push_back(item);
+	}
+}
+
+void CCharacter::FillShortcut(net::msg::ChaShortcutInfo &s)
+{
+	for (int i = 0; i < SHORT_CUT_NUM; i++)
+	{
+		s.entries[i].type = m_CShortcut.chType[i];
+		s.entries[i].gridId = m_CShortcut.byGridID[i];
+	}
+}
+
+void CCharacter::FillBoats(std::vector<net::msg::BoatData> &boats)
+{
+	CPlayer *pCPlayer = GetPlayer();
+	if (!pCPlayer)
+	{
+		boats.clear();
+		return;
+	}
+
+	BYTE numBoats = pCPlayer->GetNumBoat();
+	boats.resize(numBoats);
+	for (BYTE i = 0; i < numBoats; i++)
+	{
+		CCharacter *pCBoat = pCPlayer->GetBoat(i);
+		if (!pCBoat)
+			continue;
+
+		pCBoat->FillBaseInfo(boats[i].baseInfo);
+		pCBoat->FillAttr(boats[i].attr, enumATTRSYN_INIT);
+		pCBoat->m_CKitbag.SetChangeFlag(true);
+		pCBoat->FillKitbag(boats[i].kitbag, pCBoat->m_CKitbag, enumSYN_KITBAG_INIT);
+		pCBoat->FillSkillState(boats[i].skillState);
+	}
 }

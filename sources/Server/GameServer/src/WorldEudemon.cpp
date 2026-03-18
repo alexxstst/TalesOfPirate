@@ -23,7 +23,7 @@ namespace mission
 	}
 
 	BOOL CWorldEudemon::InitScript( const char szFunc[], const char szName[] )
-	{T_B
+	{
 		if( szFunc[0] == '0' ) return TRUE;
 
 		// 初始化NPC脚本全局变量信息
@@ -99,7 +99,7 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CWorldEudemon::Load( const char szMsgProc[], const char szName[], dbc::uLong ulID )
 	{
@@ -130,7 +130,7 @@ namespace mission
 		return TRUE;
 	}
     
-	HRESULT CWorldEudemon::MsgProc( CCharacter& character, RPACKET& packet )
+	HRESULT CWorldEudemon::MsgProc( CCharacter& character, RPACKET packet )
 	{
 		// 调用NPC脚本对话处理函数
 		lua_getglobal( g_pLuaState, "NpcProc" );

@@ -46,7 +46,7 @@ public:
 	void    FrameRender( const char* str, int x, int y );
 	void    TipRender( const char* str, int x, int y );
 
-	int		GetWidth( const char* );
+	int		GetWidth( const std::string& );
 	int		GetHeight( const char* );
 	void	GetSize( const char* str, int& w, int &h );					// �Ѿ��Զ���������Ļת��
 	bool	GetSize( unsigned int dwIndex, const char* str, int& w, int &h );
@@ -285,9 +285,9 @@ inline void CGuiFont::Render3d( const char* str, D3DXVECTOR3& pos, DWORD color )
 	_pFont->Draw3DText((char*)str, pos, color );
 }
 
-inline int CGuiFont::GetWidth( const char* str )
+inline int CGuiFont::GetWidth( const std::string& str )
 {
-	_pFont->GetTextSize( const_cast<char*>(str), &_size );
+	_pFont->GetTextSize( str, &_size );
 	return _size.cx;
 }
 

@@ -71,7 +71,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CEventEntity::MsgProc( CCharacter& character, dbc::RPacket& packet )
+	HRESULT CEventEntity::MsgProc( CCharacter& character, RPACKET packet )
 	{
 		return 0;
 	}
@@ -107,7 +107,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CResourceEntity::MsgProc( CCharacter& character, dbc::RPacket& packet )
+	HRESULT CResourceEntity::MsgProc( CCharacter& character, RPACKET packet )
 	{
 		if( this->GetExistState() == enumEXISTS_WITHERING )
 		{
@@ -196,7 +196,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CTransitEntity::MsgProc( CCharacter& character, dbc::RPacket& packet )
+	HRESULT CTransitEntity::MsgProc( CCharacter& character, RPACKET packet )
 	{	
 		return 0;
 	}
@@ -238,7 +238,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CBerthEntity::MsgProc( CCharacter& character, dbc::RPacket& packet )
+	HRESULT CBerthEntity::MsgProc( CCharacter& character, RPACKET packet )
 	{
 		character.BoatBerth( m_sBerthID, m_sxPos, m_syPos, m_sDir );
 		return 0;

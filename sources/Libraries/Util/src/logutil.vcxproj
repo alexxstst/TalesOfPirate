@@ -96,7 +96,6 @@
     <ClCompile Include="bill.cpp" />
     <ClCompile Include="db.cpp" />
     <ClCompile Include="db3.cpp" />
-    <ClCompile Include="ErrorHandler.cpp" />
     <ClCompile Include="LanguageRecord.cpp" />
     <ClCompile Include="log.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -125,9 +124,6 @@
     </ClCompile>
     <ClCompile Include="playsound.cpp" />
     <ClCompile Include="SectionData.cpp" />
-    <ClCompile Include="se_translator.cpp" />
-    <ClCompile Include="Stacktrace.cpp" />
-    <ClCompile Include="sym_engine.cpp" />
     <ClCompile Include="util2.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -137,10 +133,6 @@
     <ClInclude Include="..\include\bill.h" />
     <ClInclude Include="..\include\db.h" />
     <ClInclude Include="..\include\db3.h" />
-    <ClInclude Include="..\include\debug_stream.h" />
-    <ClInclude Include="..\include\ErrorHandler.h" />
-    <ClInclude Include="..\include\exception2.h" />
-    <ClInclude Include="..\include\exception_trap.h" />
     <ClInclude Include="..\include\fifo.h" />
     <ClInclude Include="..\include\kbase.h" />
     <ClInclude Include="..\include\LanguageRecord.h" />
@@ -154,13 +146,8 @@
     <ClInclude Include="..\include\playsound.h" />
     <ClInclude Include="..\include\ReturnValues.h" />
     <ClInclude Include="..\include\SectionData.h" />
-    <ClInclude Include="..\include\se_translator.h" />
     <ClInclude Include="..\include\singleton.h" />
-    <ClInclude Include="..\include\Stacktrace.h" />
-    <ClInclude Include="..\include\sym_engine.h" />
     <ClInclude Include="..\include\TerrainData.h" />
-    <ClInclude Include="..\include\TryUtil.h" />
-    <ClInclude Include="..\include\unhandled_report.h" />
     <ClInclude Include="..\include\util.h" />
     <ClInclude Include="..\include\util2.h" />
     <ClInclude Include="md5.h" />

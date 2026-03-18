@@ -784,7 +784,7 @@ void CItemCommand::AddHint( int x, int y ){
 			if( pBoat )
 			{
 				CCharacter* pCha = pBoat->GetCha();
-				PushHint( pCha->getName() );
+				PushHint( pCha->getName().c_str() );
 
 				int nNeedLv = pCha->GetShipInfo()->sLvLimit;
 				if( nNeedLv>0 )

@@ -37,7 +37,7 @@ int  UNIT_SCALE =  1;
 
 
 BOOL CALLBACK DlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{T_B
+{
     switch(uMsg)
     {
         case WM_INITDIALOG:
@@ -110,10 +110,10 @@ BOOL CALLBACK DlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 		}
 	}
 	return FALSE;
-T_E}
+}
 
 BOOL CALLBACK ReportDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{T_B
+{
     switch(uMsg)
     {
         case WM_INITDIALOG:
@@ -190,11 +190,11 @@ BOOL CALLBACK ReportDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lPara
 		
     }
     return FALSE;
-T_E}
+}
 
 
 void DrawMgrUnit(HDC dc, int map_sx, int map_sy, int view_w, int view_h)
-{T_B
+{
 	int cnt_x = view_w / UNIT_DRAW_SIZE + 1;
 	int cnt_y = view_h / UNIT_DRAW_SIZE + 1;
 
@@ -217,10 +217,10 @@ void DrawMgrUnit(HDC dc, int map_sx, int map_sy, int view_w, int view_h)
 		MoveToEx(dc, draw_sx,                           draw_sy + y * UNIT_DRAW_SIZE, &p);
 		LineTo(dc,   draw_sx + view_w + UNIT_DRAW_SIZE, draw_sy + y * UNIT_DRAW_SIZE);
 	}
-T_E}
+}
 
 void DrawMapUnit(SubMap *pMap, HDC dc, int sx, int sy, int w, int h)
-{T_B
+{
 	if(pMap==NULL) return;
 
 
@@ -320,7 +320,7 @@ void DrawMapUnit(SubMap *pMap, HDC dc, int sx, int sy, int w, int h)
 		}
 	}
 	DeleteObject(brMonster);
-T_E}
+}
 
 static DWORD g_dwLastMouseX    = 0;
 static DWORD g_dwLastMouseY    = 0;
@@ -329,7 +329,7 @@ static long  g_lLastViewAtMapY = 0;
 static BOOL	 g_bDragMap         = FALSE;
 
 BOOL CALLBACK MapDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{T_B
+{
     switch(uMsg)
     {
 		case WM_INITDIALOG:
@@ -388,10 +388,10 @@ BOOL CALLBACK MapDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
         }
 	}
 	return FALSE;
-T_E}
+}
 
 void CreateMainDialog(HINSTANCE hInst, HWND hParent)
-{T_B
+{
     g_SysDlg = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DLG_MAIN), hParent, DlgProc);
     ShowWindow(g_SysDlg, SW_SHOW);
 	/*std::string	strCaption = "KOPOL-GS(Ver1.30-7)";
@@ -409,10 +409,10 @@ void CreateMainDialog(HINSTANCE hInst, HWND hParent)
 	ShowWindow(g_MapView, SW_SHOW);
 
 	SetWindowPos(g_MapView, NULL, 65, 340, 0,0, SWP_NOSIZE);
-T_E}
+}
 
 void SystemReport(DWORD dwTimeParam)
-{T_B
+{
 	g_pGameApp->HandleLogList();
 
 	static DWORD dwLastReportTime = 0;
@@ -541,6 +541,6 @@ void SystemReport(DWORD dwTimeParam)
 	sprintf(szFPS, "%d  %d", g_lMouseAtMapX, g_lMouseAtMapY);
 	SetWindowText(hMouseXY, szFPS);
 
-T_E}
+}
 
 #endif

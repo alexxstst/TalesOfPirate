@@ -52,9 +52,8 @@ int main(int argc, char* argv[])
 
 	DisableCloseButton();
 
-	SEHTranslator translator;
+	// SEHTranslator translator;
 
-	T_B
 	if (argc >= 2)
 	{
 		strncpy(szConfigFileN, argv[1], defCONFIG_FILE_NAME_LEN - 1);
@@ -104,7 +103,6 @@ int main(int argc, char* argv[])
 	}
 	GameServer_End();
 	LG("init", "game map server succeed to exit\n"); 
-	T_FINAL
 	return 0;
 }
  
@@ -116,14 +114,13 @@ int main(int argc, char* argv[])
 #ifdef USE_IOCP
 
 #else
-ThreadPool	*l_proc = NULL;
-ThreadPool	*l_comm = NULL;
+// CorsairsNet: ThreadPool больше не нужен — TcpClient создаёт собственные потоки
 #endif
 
 
 extern DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter);
 BOOL GameServer_Begin()
-{T_B
+{
 	_setmaxstdio(2048);
 
 	//LG("init", "��Ϸ��ͼ������[%s]����...\n", g_Config.m_szName);
@@ -144,16 +141,11 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
     g_mygmsvr->init_gtconn(&g_Config);
 
 #else
-    TcpCommApp::WSAStartup();
-    //l_proc = ThreadPool::CreatePool(1, 60, 512);
-    l_comm = ThreadPool::CreatePool(8, 8, 512);//,THREAD_PRIORITY_ABOVE_NORMAL);
+    net::InitWinSock();
 
-	g_gmsvr	= new GameServerApp(0, l_comm);
-
-    // ���� GateServer �����߳�
-   // LG("init", "����Gate�����������߳�...\n");
-	 LG("init", "startup Gate server connect thread...\n");
-    l_comm->AddTask(new ConnectGateServer(g_gmsvr));
+	g_gmsvr	= new GameServerApp();
+	// connect thread запускается в конструкторе GameServerApp
+	LG("init", "startup Gate server connect thread...\n");
 #endif
 
     //���Ӳ�����InfoServer
@@ -178,11 +170,11 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
 	Log("restart", "GameServer restart", g_Config.m_szMapList[0], "", "", "");
 	
 	return TRUE;
-T_E}
+}
 
 
 void GameServer_End()
-{T_B
+{
 	//LG("init", "��ʼ������Ϸ��ͼ������\n");
 	LG("init", "start to exit game map server\n");
 	CloseHandle(hGameT);
@@ -209,13 +201,10 @@ void GameServer_End()
 #else
 	delete g_gmsvr;
 
-	// l_comm->DestroyPool();
-	// l_proc->DestroyPool();
-
-	TcpCommApp::WSACleanup();
+	net::CleanupWinSock();
 #endif
 
-T_E}
+}
 
 typedef HWND (*LPGETCONSOLEWINDOW)(void);
 void DisableCloseButton()

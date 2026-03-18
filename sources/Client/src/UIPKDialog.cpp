@@ -19,7 +19,7 @@ bool CPkDialog::Init()
 {
 	CFormMgr &mgr = CFormMgr::s_Mgr;
 
-	{	// pk ¿ªÊ¼Ç°µÄ¶Ô»°¿ò
+	{	// pk ï¿½ï¿½Ê¼Ç°ï¿½Ä¶Ô»ï¿½ï¿½ï¿½
 		frmTeamPkStart = mgr.Find("frmTeamPK");
 		if ( !frmTeamPkStart)
 		{
@@ -56,11 +56,11 @@ bool CPkDialog::Init()
 	}
 
 	{
-		 // pk ½áÊøºóµÄ¶Ô»°¿ò
+		 // pk ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¶Ô»ï¿½ï¿½ï¿½
 		//frmTeamPkEnd = mgr.Find("frmfrmTeamPkStart");
 		//if ( !frmTeamPkEnd)
 		//{
-		//	LG("gui", "npc.cluÖÐÃ»ÓÐ¶¨Òå½çÃæfrmfrmTeamPk");
+		//	LG("gui", "npc.cluï¿½ï¿½Ã»ï¿½Ð¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½frmfrmTeamPk");
 		//	return false;
 		//}
 		//frmTeamPkEnd->evtEntrustMouseEvent = _MainMousePkEndEvent;
@@ -71,7 +71,7 @@ bool CPkDialog::Init()
 		//	sprintf(szBuf, "lvEndTeam%d", i);
 		//	lvEndTeams[i] = dynamic_cast<CListView*>(frmTeamPkEnd->Find(szBuf));
 		//	if (!lvEndTeams[i]) 
-		//		return Error("npc.clu½çÃæ<%s>ÉÏÕÒ²»µ½¿Ø¼þ<%s>",
+		//		return Error("npc.cluï¿½ï¿½ï¿½ï¿½<%s>ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½<%s>",
 		//					 frmTeamPkEnd->GetName(), 
 		//					 szBuf);
 		//}
@@ -93,8 +93,8 @@ void CPkDialog::SetStartDialogContent(const stNetTeamFightAsk & sNetTeamFightAsk
 	char szBuf[128];
 	for (int i(0); i<iLeftNum; i++)
 	{
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(0)->SetString(sNetTeamFightAsk.Info[i].szName);
-		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(1)->SetString(sNetTeamFightAsk.Info[i].szJob);
+		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(0)->SetString(sNetTeamFightAsk.Info[i].szName.c_str());
+		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(1)->SetString(sNetTeamFightAsk.Info[i].szJob.c_str());
 		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i].chLv));
 		lvStartTeams[TEAM_LEFT]->GetList()->GetItems()->GetItem(i)->GetIndex(2)->SetString(szBuf);
 		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i].usVictoryNum));
@@ -108,8 +108,8 @@ void CPkDialog::SetStartDialogContent(const stNetTeamFightAsk & sNetTeamFightAsk
 	iLeftNum = static_cast<int>(sNetTeamFightAsk.chSideNum1);
 	for (int i(0); i<iRightNum; i++)
 	{
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(0)->SetString(sNetTeamFightAsk.Info[i+iLeftNum].szName);
-		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(1)->SetString(sNetTeamFightAsk.Info[i+iLeftNum].szJob);
+		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(0)->SetString(sNetTeamFightAsk.Info[i+iLeftNum].szName.c_str());
+		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(1)->SetString(sNetTeamFightAsk.Info[i+iLeftNum].szJob.c_str());
 		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i+iLeftNum].chLv));
 		lvStartTeams[TEAM_RIGHT]->GetList()->GetItems()->GetItem(i)->GetIndex(2)->SetString(szBuf);
 		sprintf(szBuf, "%d", static_cast<int>(sNetTeamFightAsk.Info[i+iLeftNum].usVictoryNum));
@@ -147,13 +147,13 @@ string CPkDialog::ShowStartDialogDebug(const stNetTeamFightAsk & sNetTeamFightAs
 	char szBuf[1024];
 	for (int i(0); i<iLeftNum; i++)
 	{
-		sprintf(szBuf, "%d\t%s\t%s\n", sNetTeamFightAsk.Info[i].chLv, sNetTeamFightAsk.Info[i].szJob, sNetTeamFightAsk.Info[i].szName);
+		sprintf(szBuf, "%d\t%s\t%s\n", sNetTeamFightAsk.Info[i].chLv, sNetTeamFightAsk.Info[i].szJob.c_str(), sNetTeamFightAsk.Info[i].szName.c_str());
 		sShow += szBuf;
 	}
 
 	for (int i(0); i<iRightNum; i++)
 	{
-		sprintf(szBuf, "%s\t%s\t%d\n", sNetTeamFightAsk.Info[i+iLeftNum].szName, sNetTeamFightAsk.Info[i+iLeftNum].szJob, sNetTeamFightAsk.Info[i+iLeftNum].chLv);
+		sprintf(szBuf, "%s\t%s\t%d\n", sNetTeamFightAsk.Info[i+iLeftNum].szName.c_str(), sNetTeamFightAsk.Info[i+iLeftNum].szJob.c_str(), sNetTeamFightAsk.Info[i+iLeftNum].chLv);
 		sShow += szBuf;
 	}
 

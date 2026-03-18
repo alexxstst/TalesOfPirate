@@ -5,7 +5,7 @@
 */
 #ifndef OUTERSERVER_H
 #define OUTERSERVER_H
-#include "ThreadPool.h"
+#include "Task.h"
 #include "CommRPC.h"
 #include "PacketQueue.h"
 #include "NetCommand.h"

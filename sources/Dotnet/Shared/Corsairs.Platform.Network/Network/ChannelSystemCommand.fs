@@ -41,7 +41,7 @@ type ChannelSystemCommand<'T when 'T :> ChannelIO>
     let logger = loggerFactory.CreateLogger("ChannelSystemCommand")
 
     let direct =
-        DirectSystemCommand<'T>(
+        new DirectSystemCommand<'T>(
             { Endpoints = config.Endpoints },
             channelFactory,
             loggerFactory

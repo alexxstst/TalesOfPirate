@@ -109,6 +109,16 @@ class CHateMgr;
 class CAction;
 class CActionCache;
 
+namespace net { namespace msg {
+	struct ChaBaseInfo;
+	struct ChaSkillBagInfo;
+	struct ChaKitbagInfo;
+	struct ChaShortcutInfo;
+	struct ChaSkillStateInfo;
+	struct ChaAttrInfo;
+	struct BoatData;
+}}
+
 class CCharacter : public CMoveAble
 {
 	friend class CChaSpawn;
@@ -139,11 +149,11 @@ public:
 	float		GetDropRate();
 	float       GetExpRate();
 
-	void ItemUnlockRequest(RPacket& rpk);
+	void ItemUnlockRequest(RPACKET rpk);
 
 	void	WritePK(WPACKET& wpk);			//д����ұ����������и��ӽṹ(���ٻ��޵�)����������
-	void	WriteCharPartInfo(WPACKET& packet);
-	void	ReadPK(RPACKET& rpk);			//�ع���ұ����������и��ӽṹ(���ٻ��޵�)
+	void	WriteInt64PartInfo(WPACKET& packet);
+	void	ReadPK(RPACKET rpk);			//�ع���ұ����������и��ӽṹ(���ٻ��޵�)
 	void	SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Long lTarY, bool bNeedOutSrcMap = true, Char chSwitchType = enumSWITCHMAP_CARRY, Long lTMapCpyNO = -1);
 
 	virtual void	ProcessPacket(uShort usCmd, RPACKET pk);
@@ -201,10 +211,10 @@ public:
 		m_chPKCtrl[2] = v;
 	}
 
-	void		Cmd_ReassignAttr(RPACKET &pk);
+	void		Cmd_ReassignAttr(RPACKET pk);
 	dbc::Short	Cmd_RemoveItem(dbc::Long lItemID, dbc::Long lItemNum, dbc::Char chFromType, dbc::Short sFromID, dbc::Char chToType, dbc::Short sToID, bool bRefresh = true, bool bForcible = true);
 
-	void		Cmd_ChangeHair(RPACKET &pk);											// ������������
+	void		Cmd_ChangeHair(RPACKET pk);											// ������������
 	void		Prl_ChangeHairResult(int nScriptID, const char* szReason, BOOL bNoticeAll = FALSE); // �������͵���Ϣ����
 	void		Prl_OpenHair();															// ֪ͨ�ͻ��˴���������	
 
@@ -405,7 +415,7 @@ public:
 	void	RestoreAllSp();
 	void	RestoreAll();
 
-	BOOL	ViewItemInfo( RPACKET& pk );
+	BOOL	ViewItemInfo( RPACKET pk );
 
 	BOOL	AddAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK ); // ��Ҫ����ATTR_CEXP���ԣ���ʹ��CFightAble::AddExp
 	BOOL	TakeAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK );
@@ -419,8 +429,8 @@ public:
 	void	SetRelive(Char chType = enumEPLAYER_RELIVE_ORIGIN, Char chLv = 0, cChar *szInfo = 0);
 	void	Reset(void);
 
-	virtual void BreakAction(RPACKET pk = NULL);
-	virtual void EndAction(RPACKET pk = NULL);
+	virtual void BreakAction(net::RPacket* pk = nullptr);
+	virtual void EndAction(net::RPacket* pk = nullptr);
 	// ��ɫ�¼���������
 	virtual void AfterObjDie(CCharacter *pCAtk, CCharacter *pCDead);
 	virtual void AfterPeekItem(dbc::Short sItemID, dbc::Short sNum);
@@ -550,10 +560,16 @@ public:
 	void	WriteKitbag(CKitbag &CKb, WPACKET &pk, int nSynType);
 	void	WriteLookData(WPACKET &pk, dbc::Char chLookType = LOOK_SELF, dbc::Char chSynType = enumSYN_LOOK_SWITCH);
 	bool	WriteAppendLook(CKitbag &CKb, WPACKET &pk, bool bInit = false);
-	void	WriteShortcut(WPACKET &pk);
+	void	WriteInt64cut(WPACKET &pk);
 	void	WriteBoat(WPACKET &pk);
 	void	WriteItemChaBoat(WPACKET &pk, CCharacter *pCBoat);
 	void	WriteSideInfo(WPACKET &pk);
+	// Fill* — заполнение типизированных структур (CommandMessages.h)
+	void	FillBaseInfo(net::msg::ChaBaseInfo &b, dbc::Char chLookType = LOOK_SELF);
+	void	FillSkillBag(net::msg::ChaSkillBagInfo &s, int nSynType);
+	void	FillKitbag(net::msg::ChaKitbagInfo &k, CKitbag &CKb, int nSynType);
+	void	FillShortcut(net::msg::ChaShortcutInfo &s);
+	void	FillBoats(std::vector<net::msg::BoatData> &boats);
 	//
 
 	// ������ж�ʧ��

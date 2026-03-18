@@ -85,17 +85,17 @@ type SlabPool(itemSize: int, itemCount: int) =
 /// Размеры: 32, 64, 128, 256, 512, 1K, 2K, 4K, 8K, 16K, 32K.
 [<AllowNullLiteral>]
 type RangedPool() =
-    let _pool32    = SlabPool(32, 500)
-    let _pool64    = SlabPool(64, 500)
-    let _pool128   = SlabPool(128, 500)
-    let _pool256   = SlabPool(256, 500)
-    let _pool512   = SlabPool(512, 500)
-    let _pool1024  = SlabPool(1024, 500)
-    let _pool2048  = SlabPool(2048, 500)
-    let _pool4096  = SlabPool(4096, 500)
-    let _pool8192  = SlabPool(8192, 500)
-    let _pool16384 = SlabPool(16384, 500)
-    let _pool32768 = SlabPool(32768, 500)
+    let _pool32    = new SlabPool(32, 500)
+    let _pool64    = new SlabPool(64, 500)
+    let _pool128   = new SlabPool(128, 500)
+    let _pool256   = new SlabPool(256, 500)
+    let _pool512   = new SlabPool(512, 500)
+    let _pool1024  = new SlabPool(1024, 500)
+    let _pool2048  = new SlabPool(2048, 500)
+    let _pool4096  = new SlabPool(4096, 500)
+    let _pool8192  = new SlabPool(8192, 500)
+    let _pool16384 = new SlabPool(16384, 500)
+    let _pool32768 = new SlabPool(32768, 500)
 
     let _pools = [| _pool32; _pool64; _pool128; _pool256; _pool512
                     _pool1024; _pool2048; _pool4096; _pool8192; _pool16384; _pool32768 |]

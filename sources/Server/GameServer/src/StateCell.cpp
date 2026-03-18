@@ -9,7 +9,7 @@
 #include "SubMap.h"
 
 CChaListNode* CStateCell::AddCharacter(CCharacter *pCCha, bool bIn)
-{T_B
+{
 	CChaListNode	*pNode = g_pGameApp->m_ChaListHeap.Get();
 	pNode->m_pCCha = pCCha;
 	pNode->m_bIn = bIn;
@@ -45,10 +45,10 @@ CChaListNode* CStateCell::AddCharacter(CCharacter *pCCha, bool bIn)
 	}
 
 	return pNode;
-T_E}
+}
 
 void CStateCell::DelCharacter(CChaListNode *pCEntNode)
-{T_B
+{
 	if (pCEntNode->m_pCLast)
 		pCEntNode->m_pCLast->m_pCNext = pCEntNode->m_pCNext;
 	if (pCEntNode->m_pCNext)
@@ -89,7 +89,7 @@ void CStateCell::DelCharacter(CChaListNode *pCEntNode)
 	}
 
 	pCEntNode->Free();
-T_E}
+}
 
 void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 {
@@ -172,7 +172,7 @@ void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 
 bool CStateCell::AddState(unsigned char uchFightID, unsigned long ulSrcWorldID, long lSrcHandle, char chObjType, char chObjHabitat, char chEffType,
 						unsigned char uchStateID, unsigned char uchStateLv, unsigned long ulStartTick, long lOnTick, char chType, char chWithCenter)
-{T_B
+{
 	// 向地表增加状态
 	if (!m_CSkillState.Add(uchFightID, ulSrcWorldID, lSrcHandle, chObjType, chObjHabitat, chEffType, uchStateID, uchStateLv, ulStartTick, lOnTick, chType, chWithCenter))
 		return false;
@@ -194,14 +194,14 @@ bool CStateCell::AddState(unsigned char uchFightID, unsigned long ulSrcWorldID, 
 	}
 
 	return true;
-T_E}
+}
 
 void CStateCell::DelState(unsigned char uchStateID)
 {
 }
 
 bool CStateCell::ResetStateToCharacter(unsigned char uchStateNo, CCharacter *pCCha, long lOnTime, char chAddType, bool bNotice)
-{T_B
+{
 	if (!pCCha->IsLiveing())
 		return false;
 	CCharacter		*pCSrcCha;
@@ -227,10 +227,10 @@ bool CStateCell::ResetStateToCharacter(unsigned char uchStateNo, CCharacter *pCC
 	}
 
 	return false;
-T_E}
+}
 
 bool CStateCell::AddStateToCharacter(unsigned char uchStateNo, CCharacter *pCCha, long lOnTime, char chAddType, bool bNotice)
-{T_B
+{
 	if (!pCCha->IsLiveing())
 		return false;
 	CCharacter		*pCSrcCha;
@@ -254,10 +254,10 @@ bool CStateCell::AddStateToCharacter(unsigned char uchStateNo, CCharacter *pCCha
 	}
 
 	return false;
-T_E}
+}
 
 bool CStateCell::AddStateToCharacter(SSkillStateUnit	*pSStateUnit, CCharacter *pCCha, long lOnTime, char chAddType, bool bNotice)
-{T_B
+{
 	if (!pCCha->IsLiveing())
 		return false;
 	CCharacter		*pCSrcCha;
@@ -277,11 +277,11 @@ bool CStateCell::AddStateToCharacter(SSkillStateUnit	*pSStateUnit, CCharacter *p
 	}
 
 	return false;
-T_E}
+}
 
 // 状态周期控制
 void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
-{T_B
+{
 	unsigned char	uchStateNum = m_CSkillState.GetStateNum();
 	SSkillStateUnit	*pSStateUnit;
 	long			lOnTime;
@@ -334,10 +334,10 @@ void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 	{
 		pCMap->NotiStateCellToEyeshot(m_sPosX, m_sPosY);
 	}
-T_E}
+}
 
 void CStateCell::DropState(SubMap *pCMap)
-{T_B
+{
 	SSkillStateUnit	*pSStateUnit;
 	m_CSkillState.BeginGetState();
 	while (pSStateUnit = m_CSkillState.GetNextState())
@@ -348,10 +348,10 @@ void CStateCell::DropState(SubMap *pCMap)
 			pCMap->InactiveStateCell(m_sPosX, m_sPosY);
 		}
 	}
-T_E}
+}
 
 void CStateCell::StateBeginSeen(Entity *pCEnt)
-{T_B
+{
 	if (m_CSkillState.GetStateNum() <= 0)
 		return;
 
@@ -369,10 +369,10 @@ void CStateCell::StateBeginSeen(Entity *pCEnt)
 	m_CSkillState.WriteState(pk);
 
 	pCCha->ReflectINFof(pCCha, pk);//通告
-T_E}
+}
 
 void CStateCell::StateEndSeen(Entity *pCEnt)
-{T_B
+{
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 
 	if (!pCCha)
@@ -389,4 +389,4 @@ void CStateCell::StateEndSeen(Entity *pCEnt)
 	WRITE_SHORT(pk, m_sPosY);
 
 	pCCha->ReflectINFof(pCCha, pk);//通告
-T_E}
+}

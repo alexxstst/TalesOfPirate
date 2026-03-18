@@ -23,45 +23,45 @@ namespace mission
 
 	CNpc::CNpc()
 	: CCharacter()
-	{T_B
+	{
 		SetType();
-	T_E}
+	}
 
 	CNpc::~CNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	void CNpc::Clear()
-	{T_B
+	{
 		m_sScriptID = INVALID_SCRIPT_NPCHANDLE;
 		m_bHasMission = FALSE;
 		m_sNpcID = 0;
 		m_byShowType = 0;
 		memset( m_szMsgProc, 0, ROLE_MAXSIZE_MSGPROC );
 		memset( m_szName, 0, 128 );
-	T_E}
+	}
 
 	BOOL CNpc::Load( const CNpcRecord& recNpc, const CChaRecord& recChar )
-	{T_B
+	{
 		return FALSE;
-	T_E}
+	}
 
 	BOOL CNpc::IsMapNpc( const char szMap[], USHORT sID )
 	{
 		return FALSE;
 	}
 
-	HRESULT CNpc::MsgProc( CCharacter& character, RPACKET& pk )
-	{T_B
+	HRESULT CNpc::MsgProc( CCharacter& character, RPACKET pk )
+	{
 		return EN_OK;
-	T_E}
+	}
 
 	BOOL CNpc::MissionProc( CCharacter& character, BYTE& byState )
-	{T_B
+	{
 		byState = 0;
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CNpc::AddNpcTrigger( WORD wID, mission::TRIGGER_EVENT e, WORD wParam1, WORD wParam2, WORD wParam3, WORD wParam4 )
 	{
@@ -78,24 +78,24 @@ namespace mission
 
 	CTalkNpc::CTalkNpc()
 	: CNpc()
-	{T_B
+	{
 		SetType();
 		Clear();
-	T_E}
+	}
 
 	CTalkNpc::~CTalkNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 
 	void CTalkNpc::Clear()
-	{T_B
+	{
 		m_sTime = 0;
 		m_bSummoned = FALSE;		
-	T_E}
+	}
 
 	BOOL CTalkNpc::InitScript( const char szFunc[], const char szName[] )
-	{T_B
+	{
 		if( szFunc[0] == '0' ) return TRUE;
 
 		// 初始化NPC脚本全局变量信息
@@ -172,10 +172,10 @@ namespace mission
 
 		strcpy( m_szName, szName );
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTalkNpc::Load( const CNpcRecord& recNpc, const CChaRecord& recChar )
-	{T_B
+	{
 		Clear();
 		// 设置npc为未激活状态
 		SetEyeshotAbility( false );	
@@ -204,21 +204,21 @@ namespace mission
 		setAttr(ATTR_CHATYPE, enumCHACTRL_NPC);
 		
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTalkNpc::Load( const char szNpcScript[] )
-	{T_B		
+	{		
 		return TRUE;
-	T_E}
+	}
 
 	BOOL CTalkNpc::IsMapNpc( const char szMap[], USHORT sID )
-	{T_B
+	{
 		assert( GetSubMap() != NULL );
 		return strcmp( szMap, GetSubMap()->GetName() ) == 0 && m_sNpcID == sID;
-	T_E}
+	}
 
-	HRESULT CTalkNpc::MsgProc( CCharacter& character, RPACKET& packet )
-	{T_B
+	HRESULT CTalkNpc::MsgProc( CCharacter& character, RPACKET packet )
+	{
 		//if( m_sScriptID == INVALID_SCRIPT_NPCHANDLE )
 		//	return EN_OK;
 		
@@ -292,10 +292,10 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 
 		return EN_OK;
-	T_E}
+	}
 
 	BOOL CTalkNpc::MissionProc( CCharacter& character, BYTE& byState )
-	{T_B
+	{
 		if( !m_bHasMission )
 			return TRUE;
 
@@ -331,10 +331,10 @@ namespace mission
 		}
 
 		return character.GetMissionState( m_ID, byState );
-	T_E}
+	}
 
 	BOOL CTalkNpc::AddNpcTrigger( WORD wID, mission::TRIGGER_EVENT e, WORD wParam1, WORD wParam2, WORD wParam3, WORD wParam4 )
-	{T_B
+	{
 		if( m_byNumTrigger >= ROLE_MAXNUM_NPCTRIGGER )
 			return FALSE;
 
@@ -347,10 +347,10 @@ namespace mission
 		m_byNumTrigger++;
 
 		return TRUE;
-	T_E}
+	}
 
 	void CTalkNpc::ClearTrigger( WORD wIndex )
-	{T_B
+	{
 		if( wIndex >= m_byNumTrigger )
 			return;
 	
@@ -360,7 +360,7 @@ namespace mission
 		memcpy( m_Trigger, Info + wIndex, sizeof(NPC_TRIGGER_DATA)*wIndex );
 		memcpy( m_Trigger + wIndex, Info + wIndex + 1, sizeof(NPC_TRIGGER_DATA)*(m_byNumTrigger - wIndex - 1) );
 		m_byNumTrigger--;
-	T_E}
+	}
 
 	BOOL CTalkNpc::EventProc( TRIGGER_EVENT e, WPARAM wParam, LPARAM lParam )
 	{
@@ -386,7 +386,7 @@ namespace mission
 	}
 
 	void CTalkNpc::TimeOut( USHORT sTime )
-	{T_B
+	{
 		if( m_bSummoned )
 		{
 			if( m_sTime > 1 )
@@ -490,10 +490,10 @@ namespace mission
 				}
 			}
 		}
-	T_E}
+	}
 
 	void CTalkNpc::Summoned( USHORT sTime )
-	{T_B
+	{
 		m_sTime = sTime;
 		
 		// 判断是否还没有被召唤出来
@@ -502,45 +502,45 @@ namespace mission
 			m_bSummoned = TRUE;
 			Show();
 		}
-	T_E}
+	}
 
 	//-----------------------------------------------------
 	// class CTradeNpc implemented
 
 	CTradeNpc::CTradeNpc()
 	: CTalkNpc()
-	{T_B
+	{
 		SetType();
-	T_E}
+	}
 
 	CTradeNpc::~CTradeNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 
-	BOOL CTradeNpc::Sale( CCharacter& character, RPACKET& packet )
-	{T_B
+	BOOL CTradeNpc::Sale( CCharacter& character, RPACKET packet )
+	{
 		return TRUE;
-	T_E}
+	}
 
-	BOOL CTradeNpc::Buy( CCharacter& character, RPACKET& packet )
-	{T_B
+	BOOL CTradeNpc::Buy( CCharacter& character, RPACKET packet )
+	{
 		return TRUE;
-	T_E}
+	}
 
 	//-----------------------------------------------------
 	// class CTradeNpc implemented
 
 	CRoleNpc::CRoleNpc()
 	: CTalkNpc()
-	{T_B
+	{
 		SetType();
-	T_E}
+	}
 
 	CRoleNpc::~CRoleNpc()
-	{T_B
+	{
 
-	T_E}
+	}
 	
 }
 

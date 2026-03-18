@@ -66,7 +66,7 @@ bool CChaSpawn::Init(char *szSpawnTable, long lRegionNum)
 }
 
 long CChaSpawn::Load(SubMap *pCMap)
-{T_B
+{
 	m_pCMap = pCMap;
 
 	long	lRet = 1;
@@ -148,13 +148,13 @@ long CChaSpawn::Load(SubMap *pCMap)
 		LG(szMap, "entry %d character number:\t%d\n", i + 1, lNum);
 	}
 	return lRet;
-T_E}
+}
 
 long CChaSpawn::Reload()
-{T_B
+{
 	// 清除所属地图上的所有怪物
 	return 0;
-T_E}
+}
 
 //=============================================================================
 CMapSwitchEntitySpawn::CMapSwitchEntitySpawn()

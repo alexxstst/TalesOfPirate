@@ -290,9 +290,9 @@ int   CMPFont::GetAscLength(float fscale)
 }
 
 
-SIZE* CMPFont::GetTextSize(char* szText, SIZE* pSize ,float fScale)
+SIZE* CMPFont::GetTextSize(const std::string& szText, SIZE* pSize ,float fScale)
 {
-	if( !szText)
+	if( szText.empty())
 		return pSize;
 
 	float sx = 0, sy = 0,
@@ -300,8 +300,7 @@ SIZE* CMPFont::GetTextSize(char* szText, SIZE* pSize ,float fScale)
 	w = h = ((float)(_TextSize) * fScale) / 2.0f;
 	sy = h * 2;
 
-	char* ch;
-	ch = szText;
+	auto ch = szText.c_str();
 
 	int sx2 = 0;
 	while(*ch != '\0')

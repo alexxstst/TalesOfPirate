@@ -8,9 +8,7 @@ open Microsoft.Extensions.Configuration
 open Corsairs.AccountServer.Config
 open Corsairs.AccountServer.Services
 open Corsairs.AccountServer.Grpc
-open Corsairs.AccountServer.Handlers
 open Corsairs.Platform.Database
-open Corsairs.Platform.Protocol.Routing
 open Corsairs.Platform.Shared.Hosting
 
 [<EntryPoint>]
@@ -23,21 +21,15 @@ let main args =
     // База данных
     let dbConfig = builder.Configuration.GetSection("Database")
     let provider = DatabaseServiceExtensions.ParseProvider(dbConfig["Provider"])
-    let connStr = dbConfig["ConnectionString"]
+    let connName = dbConfig["ConnectionName"] |> Option.ofObj |> Option.defaultValue "AccountDb"
+    let connStr = builder.Configuration.GetConnectionString(connName)
     builder.Services.AddAccountDatabase(provider, connStr) |> ignore
 
     // Сервисы
     builder.Services.AddSingleton<AuthService>() |> ignore
+    builder.Services.AddSingleton<GroupServerRegistry>() |> ignore
 
-    // Command handlers
-    builder.Services.AddSingleton<ICommandHandler, UserLoginHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, UserLogoutHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, RegisterHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, BanHandler>() |> ignore
-    builder.Services.AddSingleton<ICommandHandler, UnbanHandler>() |> ignore
-
-    // Router + HostedService
-    builder.Services.AddSingleton<CommandRouter>() |> ignore
+    // HostedService (диспатч команд через паттерн-матчинг)
     builder.Services.AddHostedService<AccountHostedService>() |> ignore
 
     // gRPC

@@ -5,6 +5,7 @@
 // Используется из recv thread и game thread.
 
 #include <cstdint>
+#include <atomic>
 #include <mutex>
 #include <vector>
 
@@ -31,6 +32,9 @@ public:
     // Размер бакета для данного размера (для передачи в Free)
     int BucketSize(int size) const;
 
+    // Вывод статистики пула в std::cout
+    void PrintStats() const;
+
 private:
     static constexpr int BUCKET_COUNT = 11;
     static constexpr int BUCKET_SIZES[BUCKET_COUNT] = {
@@ -41,6 +45,7 @@ private:
         std::mutex mtx;
         std::vector<uint8_t*> freeList;
         int bufSize;
+        std::atomic<int> inUseCount{0};
     };
 
     Bucket _buckets[BUCKET_COUNT];

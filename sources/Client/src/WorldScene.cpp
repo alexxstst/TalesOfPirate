@@ -1451,7 +1451,7 @@ void CWorldScene::SetMainCha(int nChaID)
 		}
 	}
 
-	char* szLogName = pCha->getLogName();
+	const char* szLogName = pCha->getLogName();
 	LG(szLogName, g_oLangRec.GetString(796), GetTickCount());
 	
 	_pMainCha = pCha;

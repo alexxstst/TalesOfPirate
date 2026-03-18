@@ -16,7 +16,7 @@ void CM_GUILD_PUTNAME(bool confirm,cChar *guildname,cChar *passwd)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_PUTNAME);
-	l_wpk.WriteUInt8(confirm?1:0);
+	l_wpk.WriteInt64(confirm?1:0);
 	l_wpk.WriteString(guildname);
 	l_wpk.WriteString(passwd);
 
@@ -25,7 +25,7 @@ void CM_GUILD_PUTNAME(bool confirm,cChar *guildname,cChar *passwd)
 bool	g_listguild_begin	=false;
 BOOL MC_LISTGUILD(LPRPACKET pk)
 {
-	uChar l_num		=pk.ReverseReadUInt8();
+	uChar l_num		=pk.ReverseReadInt64();
 	if(!g_listguild_begin)
 	{
 		g_listguild_begin	=true;
@@ -33,13 +33,13 @@ BOOL MC_LISTGUILD(LPRPACKET pk)
 	}
 	for(uChar i =0;i<l_num;++i)
 	{
-		uLong	 l_id = pk.ReadUInt32();
-		cChar* l_name = pk.ReadString();
-		cChar* l_motto = pk.ReadString();
-		cChar* l_leadername = pk.ReadString();
-		uShort	 l_memtotal = pk.ReadUInt16();
+		uLong	 l_id = pk.ReadInt64();
+		std::string l_name = pk.ReadString();
+		std::string l_motto = pk.ReadString();
+		std::string l_leadername = pk.ReadString();
+		uShort	 l_memtotal = pk.ReadInt64();
 		auto	 l_exp = pk.ReadInt64();
-		NetMC_LISTGUILD(l_id,l_name,l_motto,l_leadername,l_memtotal,l_exp);
+		NetMC_LISTGUILD(l_id,l_name.c_str(),l_motto.c_str(),l_leadername.c_str(),l_memtotal,l_exp);
 	}
 	if(l_num <20)
 	{
@@ -48,28 +48,28 @@ BOOL MC_LISTGUILD(LPRPACKET pk)
 	}
 	return TRUE;
 }
-void CM_GUILD_TRYFOR(uLong	guildid)	//ÉêÇë¼ÓÈë¹«»á
+void CM_GUILD_TRYFOR(uLong	guildid)	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ë¹«ï¿½ï¿½
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_TRYFOR);
-	l_wpk.WriteUInt32(guildid);
+	l_wpk.WriteInt64(guildid);
 
 	g_NetIF->SendPacketMessage(l_wpk);
 }
 BOOL MC_GUILD_TRYFORCFM(LPRPACKET pk)
 {
-	NetMC_GUILD_TRYFORCFM(pk.ReadString());
+	NetMC_GUILD_TRYFORCFM(pk.ReadString().c_str());
 	return TRUE;
 }
-void CM_GUILD_TRYFORCFM(bool confirm)	//È·ÈÏ¼ÓÈëconfirm =true;
+void CM_GUILD_TRYFORCFM(bool confirm)	//È·ï¿½Ï¼ï¿½ï¿½ï¿½confirm =true;
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_TRYFORCFM);
-	l_wpk.WriteUInt8(confirm?1:0);
+	l_wpk.WriteInt64(confirm?1:0);
 
 	g_NetIF->SendPacketMessage(l_wpk);
 }
-void CM_GUILD_LISTTRYPLAYER()			//¹ÜÀí
+void CM_GUILD_LISTTRYPLAYER()			//ï¿½ï¿½ï¿½ï¿½
 {
 	WPacket	l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_LISTTRYPLAYER);
@@ -78,26 +78,26 @@ void CM_GUILD_LISTTRYPLAYER()			//¹ÜÀí
 }
 BOOL MC_GUILD_LISTTRYPLAYER(LPRPACKET pk)
 {
-	uLong	l_gldid = pk.ReadUInt32();//guild_id 1
-	cChar*	l_gldname = pk.ReadString();//guild_name 2
-	cChar*	l_motto = pk.ReadString();//motto 3
-	uChar	l_stat = CGuildData::eState::normal;/*pk.ReadUInt8();*/
-	cChar*	l_ldrname = pk.ReadString();//atorNome 4
-	uShort	l_memnum = pk.ReadUInt16();//member_total 5
-	uShort	l_maxmem = pk.ReadUInt16();	//guild maxnumb 6
+	uLong	l_gldid = pk.ReadInt64();//guild_id 1
+	std::string	l_gldname = pk.ReadString();//guild_name 2
+	std::string	l_motto = pk.ReadString();//motto 3
+	uChar	l_stat = CGuildData::eState::normal;/*pk.ReadInt64();*/
+	std::string	l_ldrname = pk.ReadString();//atorNome 4
+	uShort	l_memnum = pk.ReadInt64();//member_total 5
+	uShort	l_maxmem = pk.ReadInt64();	//guild maxnumb 6
 	auto	l_exp = pk.ReadInt64();//7 exp
-	uLong	l_remain = pk.ReadUInt32();//8 always 0
-	const auto level = pk.ReadUInt32();//level 9
-	NetMC_LISTTRYPLAYER_BEGIN(l_gldid,l_gldname,l_motto,l_stat,l_ldrname,l_memnum,l_maxmem,l_exp,l_remain);
-	
-	uLong	l_num = pk.ReverseReadUInt32();
+	uLong	l_remain = pk.ReadInt64();//8 always 0
+	const auto level = pk.ReadInt64();//level 9
+	NetMC_LISTTRYPLAYER_BEGIN(l_gldid,l_gldname.c_str(),l_motto.c_str(),l_stat,l_ldrname.c_str(),l_memnum,l_maxmem,l_exp,l_remain);
+
+	uLong	l_num = pk.ReverseReadInt64();
 	for(uLong i =0;i<l_num;i++)
 	{
-		uLong	l_chaid = pk.ReadUInt32();
-		cChar*	l_chaname = pk.ReadString();
-		cChar*	l_job = pk.ReadString();
-		uShort	l_degree = pk.ReadUInt16();
-		NetMC_LISTTRYPLAYER(l_chaid,l_chaname,l_job,l_degree);
+		uLong	l_chaid = pk.ReadInt64();
+		std::string	l_chaname = pk.ReadString();
+		std::string	l_job = pk.ReadString();
+		uShort	l_degree = pk.ReadInt64();
+		NetMC_LISTTRYPLAYER(l_chaid,l_chaname.c_str(),l_job.c_str(),l_degree);
 	}
 	NetMC_LISTTRYPLAYER_END();
 	return TRUE;
@@ -120,52 +120,52 @@ struct stGuildInfo
 vector<stGuildInfo> g_vecGuildInfo;
 
 BOOL PC_GUILD_PERM(LPRPACKET pk){
-	uLong	chaid	=pk.ReadUInt32();
-	uLong	perm	=pk.ReadUInt32();
+	uLong	chaid	=pk.ReadInt64();
+	uLong	perm	=pk.ReadInt64();
 	NetPC_GUILD_UPDATEPERM(chaid,perm);
 	return true;
 }
 
 BOOL PC_GUILD(LPRPACKET pk)
 {
-	uChar	l_msg =pk.ReadUInt8();
+	uChar	l_msg =pk.ReadInt64();
 	switch(l_msg)
 	{
 	case MSG_GUILD_ONLINE:
 		{
-			NetPC_GUILD_ONLINE(pk.ReadUInt32());
+			NetPC_GUILD_ONLINE(pk.ReadInt64());
 		}
 		break;
 	case MSG_GUILD_OFFLINE:
 		{
-			NetPC_GUILD_OFFLINE(pk.ReadUInt32());
+			NetPC_GUILD_OFFLINE(pk.ReadInt64());
 		}
 		break;
 	case MSG_GUILD_START:
 		{
-			uChar l_num		=pk.ReverseReadUInt8();
-			uLong lPacketIndex = pk.ReverseReadUInt32(); // ±¨ÎÄ±àºÅ(´Ó0¿ªÊ¼)
+			uChar l_num		=pk.ReverseReadInt64();
+			uLong lPacketIndex = pk.ReverseReadInt64(); // ï¿½ï¿½ï¿½Ä±ï¿½ï¿½(ï¿½ï¿½0ï¿½ï¿½Ê¼)
 			static int nGuildCount = 0;
 
 			//if(!g_guild_start_begin)
-			if(lPacketIndex == 0 && l_num > 0)	// µÚÒ»¸öÊý¾Ý°ü
+			if(lPacketIndex == 0 && l_num > 0)	// ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½
 			{
 				//g_guild_start_begin	=true;
-				uLong	l_guildid	=pk.ReadUInt32();
-				cChar*	l_guildname	=pk.ReadString();
-				uLong	l_leader	=pk.ReadUInt32();
-				NetPC_GUILD_START_BEGIN(l_guildid,l_guildname,l_leader);
+				uLong	l_guildid	=pk.ReadInt64();
+				std::string	l_guildname	=pk.ReadString();
+				uLong	l_leader	=pk.ReadInt64();
+				NetPC_GUILD_START_BEGIN(l_guildid,l_guildname.c_str(),l_leader);
 			}
 			for(uChar i =0;i<l_num;++i)
 			{
-				bool	l_online	=pk.ReadUInt8()?true:false;
-				uLong	l_chaid		=pk.ReadUInt32();
-				cChar*	l_chaname	=pk.ReadString();
-				cChar*	l_motto		=pk.ReadString();
-				cChar*	l_job		=pk.ReadString();
-				uShort	l_degree	=pk.ReadUInt16();
-				uShort	l_icon		=pk.ReadUInt16();
-				uLong	l_permission=pk.ReadUInt32();
+				bool	l_online	=pk.ReadInt64()?true:false;
+				uLong	l_chaid		=pk.ReadInt64();
+				std::string	l_chaname	=pk.ReadString();
+				std::string	l_motto		=pk.ReadString();
+				std::string	l_job		=pk.ReadString();
+				uShort	l_degree	=pk.ReadInt64();
+				uShort	l_icon		=pk.ReadInt64();
+				uLong	l_permission=pk.ReadInt64();
 				
 				stGuildInfo info;
 				memset(&info, 0, sizeof(stGuildInfo));
@@ -174,15 +174,15 @@ BOOL PC_GUILD(LPRPACKET pk)
 				info.sDegree = l_degree;
 				info.sIcon   = l_icon;
 				info.sPreMission = l_permission;
-				strcpy(info.szChaName, l_chaname);
-				strcpy(info.szJob, l_job);
-				strcpy(info.szMotto, l_motto);
+				strncpy(info.szChaName, l_chaname.c_str(), sizeof(info.szChaName) - 1);
+				strncpy(info.szJob, l_job.c_str(), sizeof(info.szJob) - 1);
+				strncpy(info.szMotto, l_motto.c_str(), sizeof(info.szMotto) - 1);
 
 				g_vecGuildInfo.push_back(info);
 
 				//NetPC_GUILD_START(l_online,l_chaid,l_chaname,l_motto,l_job,l_degree,l_icon,l_permission);
 			}
-			if(l_num <20)	// ×îºóÒ»¸öÊý¾Ý°ü
+			if(l_num <20)	// ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½Ý°ï¿½
 			{
 				nGuildCount = 20 * lPacketIndex + l_num;
 			//	NetPC_GUILD_START_END();
@@ -216,21 +216,21 @@ BOOL PC_GUILD(LPRPACKET pk)
 		break;
 	case MSG_GUILD_ADD:
 		{
-			bool	l_online	=pk.ReadUInt8()?true:false;
-			uLong	l_chaid		=pk.ReadUInt32();
-			cChar*	l_chaname	=pk.ReadString();
-			cChar*	l_motto		=pk.ReadString();
-			cChar*	l_job		=pk.ReadString();
-			uShort	l_degree	=pk.ReadUInt16();
-			uShort	l_icon		=pk.ReadUInt16();
-			uLong	l_permission=pk.ReadUInt32();
+			bool	l_online	=pk.ReadInt64()?true:false;
+			uLong	l_chaid		=pk.ReadInt64();
+			std::string	l_chaname	=pk.ReadString();
+			std::string	l_motto		=pk.ReadString();
+			std::string	l_job		=pk.ReadString();
+			uShort	l_degree	=pk.ReadInt64();
+			uShort	l_icon		=pk.ReadInt64();
+			uLong	l_permission=pk.ReadInt64();
 
-			NetPC_GUILD_ADD(l_online,l_chaid,l_chaname,l_motto,l_job,l_degree,l_icon,l_permission);
+			NetPC_GUILD_ADD(l_online,l_chaid,l_chaname.c_str(),l_motto.c_str(),l_job.c_str(),l_degree,l_icon,l_permission);
 		}
 		break;
 	case MSG_GUILD_DEL:
 		{
-			NetPC_GUILD_DEL(pk.ReadUInt32());
+			NetPC_GUILD_DEL(pk.ReadInt64());
 		}
 		break;
 	default:
@@ -242,7 +242,7 @@ void CM_GUILD_APPROVE(uLong	chaid)
 {
 	WPacket	l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_APPROVE);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 
 	g_NetIF->SendPacketMessage(l_wpk);
 }
@@ -250,7 +250,7 @@ void CM_GUILD_REJECT(uLong	chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_REJECT);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 
 	g_NetIF->SendPacketMessage(l_wpk);
 }
@@ -258,7 +258,7 @@ void CM_GUILD_KICK(uLong	chaid)
 {
 	WPacket l_wpk	=g_NetIF->GetWPacket();
 	l_wpk.WriteCmd(CMD_CM_GUILD_KICK);
-	l_wpk.WriteUInt32(chaid);
+	l_wpk.WriteInt64(chaid);
 
 	g_NetIF->SendPacketMessage(l_wpk);
 }
@@ -289,8 +289,8 @@ void CM_GUILD_CHALL( BYTE byLevel, DWORD dwMoney )
 {
 	WPacket l_wpk = g_NetIF->GetWPacket();
 	l_wpk.WriteCmd( CMD_CM_GUILD_CHALLENGE );
-	l_wpk.WriteUInt8( byLevel );
-	l_wpk.WriteUInt32( dwMoney );
+	l_wpk.WriteInt64( byLevel );
+	l_wpk.WriteInt64( dwMoney );
 
 	g_NetIF->SendPacketMessage( l_wpk );
 }
@@ -298,14 +298,14 @@ void CM_GUILD_LEIZHU( BYTE byLevel, DWORD dwMoney )
 {
 	WPacket l_wpk = g_NetIF->GetWPacket();
 	l_wpk.WriteCmd( CMD_CM_GUILD_LEIZHU );
-	l_wpk.WriteUInt8( byLevel );
-	l_wpk.WriteUInt32( dwMoney );
+	l_wpk.WriteInt64( byLevel );
+	l_wpk.WriteInt64( dwMoney );
 
 	g_NetIF->SendPacketMessage( l_wpk );
 }
 BOOL MC_GUILD_MOTTO(LPRPACKET pk)
 {
-	NetMC_GUILD_MOTTO(pk.ReadString());
+	NetMC_GUILD_MOTTO(pk.ReadString().c_str());
 
 	return TRUE;
 }
@@ -322,12 +322,12 @@ BOOL MC_GUILD_KICK(LPRPACKET pk)
 
 BOOL MC_GUILD_INFO(LPRPACKET pk)
 {
-	DWORD dwCharID = pk.ReadUInt32();
-	DWORD dwGuildID = pk.ReadUInt32();
-	const char* pszGuildName = pk.ReadString();
-	const char* pszGuildMotto = pk.ReadString();
-	uLong chGuildPermission = pk.ReadUInt32();
-	NetMC_GUILD_INFO( dwCharID, dwGuildID, pszGuildName, pszGuildMotto,chGuildPermission );
+	DWORD dwCharID = pk.ReadInt64();
+	DWORD dwGuildID = pk.ReadInt64();
+	std::string pszGuildName = pk.ReadString();
+	std::string pszGuildMotto = pk.ReadString();
+	uLong chGuildPermission = pk.ReadInt64();
+	NetMC_GUILD_INFO( dwCharID, dwGuildID, pszGuildName.c_str(), pszGuildMotto.c_str(),chGuildPermission );
 	return TRUE;
 }
 
@@ -336,16 +336,16 @@ BOOL MC_GUILD_LISTCHALL(LPRPACKET pk)
 	NET_GUILD_CHALLINFO Info;
 	memset( &Info, 0, sizeof(Info) );
 
-	Info.byIsLeader = pk.ReadUInt8();
+	Info.byIsLeader = pk.ReadInt64();
 	for( int i = 0; i < MAX_GUILD_CHALLLEVEL; i++ )
 	{
-		Info.byLevel[i] = pk.ReadUInt8();
+		Info.byLevel[i] = pk.ReadInt64();
 		if( Info.byLevel[i] )
 		{
-			Info.byStart[i] = pk.ReadUInt8();
-			strncpy( Info.szGuild[i], pk.ReadString(), 64 - 1 );
-			strncpy( Info.szChall[i], pk.ReadString(), 64 - 1 );
-			Info.dwMoney[i] = pk.ReadUInt32();
+			Info.byStart[i] = pk.ReadInt64();
+			strncpy( Info.szGuild[i], pk.ReadString().c_str(), 64 - 1 );
+			strncpy( Info.szChall[i], pk.ReadString().c_str(), 64 - 1 );
+			Info.dwMoney[i] = pk.ReadInt64();
 		}
 	}
 

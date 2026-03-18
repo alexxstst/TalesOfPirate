@@ -9,6 +9,7 @@ open Corsairs.GateServer.Config
 open Corsairs.Platform.Network
 open Corsairs.Platform.Network.Network
 open Corsairs.Platform.Network.Protocol
+open Corsairs.Platform.Network.Protocol.CommandMessages
 open Microsoft.Extensions.Logging
 open Microsoft.Extensions.Options
 
@@ -61,7 +62,7 @@ type GameServerSystem
 
         system.OnCommand.Add(fun (ch, packet) ->
             try
-                logger.LogDebug("GameServer ← {Packet} Ch={Ch}", packet, ch.Id)
+                logger.LogDebug("IN << GameServer {Packet} Ch={Ch}", packet, ch.Id)
                 this.OnProcessData(ch, packet)
             finally
                 packet.Dispose())
@@ -128,14 +129,43 @@ type GameServerSystem
             ch.RemoteEndPoint
         )
 
+    /// Отправить CMD_MC_MAPCRASH и отключить всех игроков на данном GameServer.
+    /// Аналог post_mapcrash_msg + Disconnect в C++ ToGameServer::OnDisconnect.
+    member private _.DisconnectPlayersOnGame(game: GameServerIO) =
+        if isNull _clientSystem then () else
+
+        let players = _clientSystem.GetAllPlayers()
+        let mutable count = 0
+
+        for player in players do
+            match player.State with
+            | Playing_ playing when playing.GameServer = game ->
+                // Отправить сообщение о крэше карты (CMD_MC_MAPCRASH)
+                let mutable w = WPacket(64)
+                w.WriteCmd(Commands.CMD_MC_MAPCRASH)
+                w.WriteString("Map server has crashed, please wait...")
+                player.SendPacket(w)
+
+                // Сбросить ссылку на GameServer и отключить клиента
+                playing.GameServer <- null
+                playing.GameServerPlayerId <- None
+                _clientSystem.Disconnect(player)
+                count <- count + 1
+            | _ -> ()
+
+        if count > 0 then
+            logger.LogWarning(
+                "Отключено {Count} игроков из-за крэша GameServer",
+                count
+            )
+
     member private this.OnDisconnect(ch: GameServerIO) =
         match ch.State with
         | Connected_ ->
             logger.LogWarning("GameServer отключён (незарегистрированный): Ch#{ChannelId}", ch.Id)
         | Online_ online ->
             this.UnregisterGame(online)
-            // TODO: Оповестить игроков на этом GameServer о крэше (post_mapcrash_msg)
-            // TODO: Отключить затронутых клиентов
+            this.DisconnectPlayersOnGame(online.Channel)
             logger.LogWarning("GameServer [{Name}] отключён: Ch#{ChannelId}", online.Name, ch.Id)
 
     // ══════════════════════════════════════════════════════════
@@ -155,18 +185,18 @@ type GameServerSystem
         ) =
         let mutable w = WPacket(256)
         w.WriteCmd(Commands.CMD_TM_ENTERMAP)
-        w.WriteUInt32(player.ActId)
+        w.WriteInt64(int64 player.ActId)
         w.WriteString(player.Password)
-        w.WriteUInt32(player.DatabaseId)
-        w.WriteUInt32(player.WorldId)
+        w.WriteInt64(int64 player.DatabaseId)
+        w.WriteInt64(int64 player.WorldId)
         w.WriteString(map)
-        w.WriteInt32(mapCopyNo)
-        w.WriteUInt32(x)
-        w.WriteUInt32(y)
-        w.WriteUInt8(if isSwitch then 1uy else 0uy)
+        w.WriteInt64(int64 mapCopyNo)
+        w.WriteInt64(int64 x)
+        w.WriteInt64(int64 y)
+        w.WriteInt64(if isSwitch then 1L else 0L)
         let (ChannelId_ rawId) = player.Id
-        w.WriteUInt32(rawId)
-        w.WriteInt16(player.GarnerWinner)
+        w.WriteInt64(int64 rawId)
+        w.WriteInt64(int64 player.GarnerWinner)
         game.SendPacket(w)
 
     /// Отправить пакет на GroupServer (с проверкой подключения).
@@ -211,39 +241,39 @@ type GameServerSystem
         match (gameName, maps) with
         | LoginValidation.EmptyMaps ->
             logger.LogWarning("MT_LOGIN: некорректная строка карт от [{Name}]", gameName)
-            w.WriteInt16(Commands.ERR_TM_MAPERR)
+            w.WriteInt64(int64 Commands.ERR_TM_MAPERR)
         | LoginValidation.DupName this.ExistsByName ->
             logger.LogWarning("MT_LOGIN: дублирующееся имя GameServer: {Name}", gameName)
-            w.WriteInt16(Commands.ERR_TM_OVERNAME)
+            w.WriteInt64(int64 Commands.ERR_TM_OVERNAME)
         | LoginValidation.DupMap this.MapExists dupMap ->
             logger.LogWarning("MT_LOGIN: дублирующаяся карта [{Map}]", dupMap)
-            w.WriteInt16(Commands.ERR_TM_OVERMAP)
+            w.WriteInt64(int64 Commands.ERR_TM_OVERMAP)
         | _ ->
             this.RegisterGameServer(ch, gameName, maps)
-            w.WriteInt16(Commands.ERR_SUCCESS)
+            w.WriteInt64(int64 Commands.ERR_SUCCESS)
             w.WriteString(gateName)
 
         ch.SendPacket(w)
 
     /// CMD_MT_SWITCHMAP: Игрок переключается между картами.
     member private this.MT_SWITCHMAP(online: GameServerOnline, packet: IRPacket) =
-        let aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
-        let playerDbid = packet.ReverseReadUInt32()
+        let aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
+        let playerDbid = uint32 (packet.ReverseReadInt64())
         match _clientSystem.GetPlayingPlayerById(PlayerId_ playerId) with
         | Some playing when playing.DatabaseId = playerDbid ->
-            let returnFlag = packet.ReverseReadUInt8()
-            // DiscardLast: return(1) + addr+dbid пары (4*2*aimnum) + aimnum(2)
-            packet.DiscardLast(1 + 4 * 2 * int aimnum + 2) |> ignore
+            let returnFlag = byte (packet.ReverseReadInt64())
+            // DiscardLast: returnFlag(1) + addr+dbid пары (2*aimnum) + aimnum(1) элементов
+            packet.DiscardLast(2 + 2 * int aimnum) |> ignore
 
             let srcMapStr = packet.ReadString()
-            let srcMapCopyNo = packet.ReadInt32()
-            let srcX = packet.ReadUInt32()
-            let srcY = packet.ReadUInt32()
+            let srcMapCopyNo = int32 (packet.ReadInt64())
+            let srcX = uint32 (packet.ReadInt64())
+            let srcY = uint32 (packet.ReadInt64())
             let destMapStr = packet.ReadString()
-            let destMapCopyNo = packet.ReadInt32()
-            let destX = packet.ReadUInt32()
-            let destY = packet.ReadUInt32()
+            let destMapCopyNo = int32 (packet.ReadInt64())
+            let destX = uint32 (packet.ReadInt64())
+            let destY = uint32 (packet.ReadInt64())
 
             match this.FindByMap(MapName_ destMapStr) with
             | Some targetGame ->
@@ -277,12 +307,12 @@ type GameServerSystem
 
     /// CMD_MC_ENTERMAP: Подтверждение входа игрока на карту от GameServer.
     member private this.MC_ENTERMAP(online: GameServerOnline, packet: IRPacket) =
-        let aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
-        let playerDbid = packet.ReverseReadUInt32()
+        let aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
+        let playerDbid = uint32 (packet.ReverseReadInt64())
         match _clientSystem.GetPlayingPlayerById(PlayerId_ playerId) with
         | Some playing when playing.DatabaseId = playerDbid ->
-            let retcode = packet.ReadInt16()
+            let retcode = int16 (packet.ReadInt64())
 
             if retcode <> Commands.ERR_SUCCESS then
                 // Ошибка входа на карту → возврат к Authorized
@@ -297,28 +327,27 @@ type GameServerSystem
                 )
             else
                 // Успех: считать доп. поля из trailer
-                let gameServerPlayerId = packet.ReverseReadUInt32()
-                let plyNum = packet.ReverseReadUInt32()
-                let isSwitch = packet.ReverseReadUInt8()
+                let gameServerPlayerId = uint32 (packet.ReverseReadInt64())
+                let plyNum = uint32 (packet.ReverseReadInt64())
+                let isSwitch = byte (packet.ReverseReadInt64())
 
                 playing.GameServer <- online.Channel
                 playing.GameServerPlayerId <- Some(GameServerPlayerId_ gameServerPlayerId)
                 online.PlayerCount <- int plyNum
 
-                // DiscardLast: aimnum(2) + addr+dbid(8*aimnum) + gmAddr(4) + plyNum(4) + isSwitch(1)
-                packet.DiscardLast(2 + 4 * 2 * int aimnum + 4 + 4 + 1) |> ignore
+                // DiscardLast: aimnum(1) + addr+dbid(2*aimnum) + gmAddr(1) + plyNum(1) + isSwitch(1) элементов
+                packet.DiscardLast(4 + 2 * int aimnum) |> ignore
 
                 // Переслать клиенту (пакет без trailer)
                 playing.Channel.ForwardPacket(packet)
 
                 // Уведомить GroupServer (CMD_MP_ENTERMAP)
-                let mutable w = WPacket(32)
-                w.WriteCmd(Commands.CMD_MP_ENTERMAP)
-                w.WriteUInt8(isSwitch)
                 let (ChannelId_ rawId) = playing.Channel.Id
-                w.WriteUInt32(rawId)
-                w.WriteUInt32(playing.GroupServerPlayerId)
-                this.SendToGroup(w)
+                let enterMapPkt = Serialize.mpEnterMapMessage
+                                    { IsSwitch = int64 isSwitch
+                                      GateAddr = uint32 rawId
+                                      GpAddr = playing.GroupServerPlayerId }
+                this.SendToGroup(enterMapPkt)
         | _ ->
             logger.LogWarning(
                 "MC_ENTERMAP: игрок {PlayerId} не найден или не в Playing",
@@ -329,8 +358,8 @@ type GameServerSystem
 
     /// CMD_MC_STARTEXIT: Пересылка начала выхода клиенту.
     member private this.MC_STARTEXIT(_online: GameServerOnline, packet: IRPacket) =
-        let _aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
+        let _aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
 
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player ->
@@ -342,8 +371,8 @@ type GameServerSystem
 
     /// CMD_MC_CANCELEXIT: Пересылка отмены выхода клиенту.
     member private this.MC_CANCELEXIT(_online: GameServerOnline, packet: IRPacket) =
-        let _aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
+        let _aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
 
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player ->
@@ -358,11 +387,11 @@ type GameServerSystem
 
     /// CMD_MT_PALYEREXIT: Обработка выхода игрока(ов).
     member private this.MT_PALYEREXIT(_online: GameServerOnline, packet: IRPacket) =
-        let aimnum = int (packet.ReverseReadUInt16())
+        let aimnum = int (packet.ReverseReadInt64())
 
         for _ in 0 .. aimnum - 1 do
-            let playerId = packet.ReverseReadUInt32()
-            let playerDbid = packet.ReverseReadUInt32()
+            let playerId = uint32 (packet.ReverseReadInt64())
+            let playerDbid = uint32 (packet.ReverseReadInt64())
 
             match _clientSystem.GetPlayingPlayerById(PlayerId_ playerId) with
             | Some playing when playing.DatabaseId = playerDbid ->
@@ -373,8 +402,8 @@ type GameServerSystem
                     let mutable endplayGrp = WPacket(32)
                     endplayGrp.WriteCmd(Commands.CMD_TP_ENDPLAY)
                     let (ChannelId_ rawId) = playing.Channel.Id
-                    endplayGrp.WriteUInt32(rawId)
-                    endplayGrp.WriteUInt32(playing.GroupServerPlayerId)
+                    endplayGrp.WriteInt64(int64 rawId)
+                    endplayGrp.WriteInt64(int64 playing.GroupServerPlayerId)
 
                     this.SyncCall(endplayGrp, fun response ->
                         match response with
@@ -382,7 +411,7 @@ type GameServerSystem
                             // Timeout/ошибка сети → отправить ошибку клиенту
                             let mutable errPkt = WPacket(16)
                             errPkt.WriteCmd(Commands.CMD_MC_ENDPLAY)
-                            errPkt.WriteInt16(Commands.ERR_MC_NETEXCP)
+                            errPkt.WriteInt64(int64 Commands.ERR_MC_NETEXCP)
                             playing.Channel.SendPacket(errPkt)
 
                         | Some rpkt ->
@@ -398,7 +427,7 @@ type GameServerSystem
                             playing.Channel.State <- Authorized_ playing.Auth
 
                             // GroupServer может запросить кик
-                            if rpkt.ReadInt16() = Commands.ERR_PT_KICKUSER then
+                            if int16 (rpkt.ReadInt64()) = Commands.ERR_PT_KICKUSER then
                                 _clientSystem.Disconnect(playing.Channel)
                     )
 
@@ -406,16 +435,16 @@ type GameServerSystem
                     // Полный logout → CMD_TP_DISC (async) + SyncCall CMD_TP_USER_LOGOUT
                     let mutable disc = WPacket(64)
                     disc.WriteCmd(Commands.CMD_TP_DISC)
-                    disc.WriteUInt32(playing.Auth.ActId)
-                    disc.WriteUInt32(playing.Channel.ClientIp)
+                    disc.WriteInt64(int64 playing.Auth.ActId)
+                    disc.WriteInt64(int64 playing.Channel.ClientIp)
                     disc.WriteString("normal logout")
                     this.SendToGroup(disc)
 
                     let mutable logout = WPacket(32)
                     logout.WriteCmd(Commands.CMD_TP_USER_LOGOUT)
                     let (ChannelId_ rawId) = playing.Channel.Id
-                    logout.WriteUInt32(rawId)
-                    logout.WriteUInt32(playing.GroupServerPlayerId)
+                    logout.WriteInt64(int64 rawId)
+                    logout.WriteInt64(int64 playing.GroupServerPlayerId)
 
                     this.SyncCall(logout, fun _response ->
                         // Ответ от GroupServer (не проверяется, disconnect в любом случае)
@@ -432,9 +461,9 @@ type GameServerSystem
 
     /// CMD_MT_KICKUSER: GameServer запрашивает кик игрока.
     member private this.MT_KICKUSER(online: GameServerOnline, packet: IRPacket) =
-        let _aimnum = packet.ReverseReadUInt16()
-        let playerId = packet.ReverseReadUInt32()
-        let playerDbid = packet.ReverseReadUInt32()
+        let _aimnum = uint16 (packet.ReverseReadInt64())
+        let playerId = uint32 (packet.ReverseReadInt64())
+        let playerDbid = uint32 (packet.ReverseReadInt64())
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player when player.DatabaseId = playerDbid ->
             _clientSystem.Disconnect(player)
@@ -481,41 +510,45 @@ type GameServerSystem
 
     /// MC диапазон: пересылка клиентам по routing info из trailer пакета.
     member private this.ForwardMC(_online: GameServerOnline, packet: IRPacket) =
-        let aimnum = int (packet.ReverseReadUInt16())
+        if not packet.HasData then
+            logger.LogWarning("Commands {Packet} is empty!", packet)
+        else
+
+        let aimnum = int (packet.ReverseReadInt64())
 
         let targets =
             Array.init aimnum (fun _ ->
-                let playerId = packet.ReverseReadUInt32()
-                let dbid = packet.ReverseReadUInt32()
+                let playerId = uint32 (packet.ReverseReadInt64())
+                let dbid = uint32 (packet.ReverseReadInt64())
 
                 _clientSystem.GetPlayerById(PlayerId_ playerId)
                 |> Option.filter (fun p -> p.DatabaseId = dbid))
 
-        packet.DiscardLast(4 * 2 * aimnum + 2) |> ignore
+        packet.DiscardLast(2 * aimnum + 1) |> ignore
 
         for player in targets do
             match player with
             | Some p -> p.ForwardPacket(packet)
             | None -> ()
 
-        logger.LogTrace("ForwardMC: CMD {Cmd}, targets={Count}", packet.GetCmd(), aimnum)
+        logger.LogTrace("ForwardMC: CMD {Cmd}, targets={Count}", packet, aimnum)
 
     /// MP диапазон: пересылка на GroupServer с заменой trailer.
     /// C++: DiscardLast до if/else; при aimnum>0 — отдельный пакет на каждого игрока.
     member private this.ForwardMP(_online: GameServerOnline, packet: IRPacket) =
-        let aimnum = int (packet.ReverseReadUInt16())
+        let aimnum = int (packet.ReverseReadInt64())
 
         let players =
             Array.init aimnum (fun _ ->
-                let gateAddr = packet.ReverseReadUInt32()
-                let dbid = packet.ReverseReadUInt32()
+                let gateAddr = uint32 (packet.ReverseReadInt64())
+                let dbid = uint32 (packet.ReverseReadInt64())
 
                 _clientSystem.GetPlayerById(PlayerId_ gateAddr)
                 |> Option.filter (fun p -> p.DatabaseId = dbid)
                 |> Option.map (fun p -> struct (gateAddr, p.GpAddr)))
 
-        // C++: DiscardLast вызывается ДО проверки aimnum (при aimnum=0 удаляет 2 байта aimnum)
-        packet.DiscardLast(4 * 2 * aimnum + 2) |> ignore
+        // C++: DiscardLast вызывается ДО проверки aimnum (при aimnum=0 удаляет 1 элемент aimnum)
+        packet.DiscardLast(2 * aimnum + 1) |> ignore
 
         if aimnum = 0 then
             _groupSystem.Send(packet)
@@ -525,8 +558,8 @@ type GameServerSystem
                 match player with
                 | Some struct (gateAddr, gpAddr) ->
                     let mutable w = WPacket(packet)
-                    w.WriteUInt32(gateAddr)
-                    w.WriteUInt32(gpAddr)
+                    w.WriteInt64(int64 gateAddr)
+                    w.WriteInt64(int64 gpAddr)
                     this.SendToGroup(w)
                 | None -> ()
 
@@ -572,6 +605,7 @@ type GameServerSystem
             | CommandPatterns.McRange -> this.ForwardMC(online, packet)
             | CommandPatterns.MpRange -> this.ForwardMP(online, packet)
             | CommandPatterns.MmRange -> this.BroadcastMM(online, packet)
+            | 0us -> () // ACK-ответ от GameServer, игнорируем
             | cmd ->
                 logger.LogWarning(
                     "Неизвестная команда от GameServer [{Name}]: {Cmd}",

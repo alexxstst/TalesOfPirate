@@ -187,7 +187,7 @@ void CStateMgr::RefreshStateFrm()
 	//�������
 	if(labStateName)		
 	{
-		sprintf( pszCha , "%s", pCha->getName());
+		sprintf( pszCha , "%s", pCha->getName().c_str());
 		labStateName->SetCaption( (const char* ) pszCha) ;
 	}
 

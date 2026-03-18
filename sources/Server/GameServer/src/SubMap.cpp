@@ -43,7 +43,7 @@ SubMap::~SubMap()
 }
 
 bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
-{T_B
+{
 	m_pCMapRes = pCMapRes;
 	m_pCBaseRange = 0;
 
@@ -109,7 +109,7 @@ bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
 	memset(m_lInfoParam, 0, sizeof(dbc::Long) * defMAPCOPY_INFO_PARAM_NUM);
 
 	return true;
-T_E}
+}
 
 //=============================================================================
 // lFromEntityID 道具从该角色身上抛出来
@@ -120,7 +120,7 @@ T_E}
 CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Char chSpawnType,
 						 Long lFromEntityID, Long lProtChaID, Long lProtChaHandle, Long lProtTime, Long lOnTick,
 						 CEvent	*pCEvent)
-{T_B
+{
 	CItem *pCItem;
 	CItemRecord *pCItemRec;
 
@@ -171,13 +171,13 @@ CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Cha
 	pCItem->m_CLog.SetEnable(g_bLogEntity);
 
 	return pCItem;
-T_E}
+}
 
 //=============================================================================
 // chCtrlType 角色控制类型，参考CompCommand.h EChaCtrlType
 //=============================================================================
 CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Point *pSPos, bool bEyeshotAbility, dbc::cChar *cszChaName, const long clSearchRadius)
-{T_B
+{
 	CCharacter	*pCCha;
 	CChaRecord	*pCChaRecord;
 
@@ -227,11 +227,11 @@ CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Poi
 	// pCCha->ResetLifeTime(5000);
 	
 	return pCCha;
-T_E}
+}
 
 // 通告副本内的所有玩家
 void SubMap::Notice(const char *szString)
-{T_B
+{
 	WPACKET WtPk  = GETWPACKET();
 	WRITE_CMD(WtPk, CMD_MC_SYSINFO);
 	WRITE_STRING(WtPk, szString);
@@ -284,10 +284,10 @@ void SubMap::Notice(const char *szString)
 	if (pLastPlayer)
 		pLastPlayer->GetNextPlayer() = NULL;
 	SENDTOCLIENT(WtPk, pHeadPlayer);
-T_E}
+}
 
 dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
-{T_B
+{
 	Long	lActNum = 0;
 
 	CCharacter		*pCCha;
@@ -316,28 +316,28 @@ dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
 	}
 
 	return lActNum;
-T_E}
+}
 
 // 检测位置是否可以通过
 bool SubMap::IsMoveAble(Entity *pCEnt, Long lPosX, Long lPosY)
-{T_B
+{
 	CFightAble	*pCCha = 0;
 	if (!pCEnt || !(pCCha = pCEnt->IsFightAble()))
 		return false;
 	return g_IsMoveAble((char)pCCha->m_CChaAttr.GetAttr(ATTR_CHATYPE), pCCha->m_pCChaRecord->chTerritory, pCEnt->GetAreaAttr()); //存在障碍
-T_E}
+}
 
 BOOL SubMap::LoadEventEntity()
-{T_B
+{
 	g_pScriptMap = this;
 	char szMapEntity[256];
 	sprintf( szMapEntity, "%s\\%s%s", GetName(), GetName(), "entity.lua" );
 	ReloadEntity( GetResPath(szMapEntity) );
 	return TRUE;
-T_E}
+}
 
 BOOL SubMap::LoadNpc()
-{T_B
+{
 	if( m_pCMapRes->m_pNpcSpawn->Load( *this ) == -1 )
 	{
 		//THROW_EXCP( excpMem, "初始化地图NPC出生信息错误!" );
@@ -346,7 +346,7 @@ BOOL SubMap::LoadNpc()
 	}
 
 	return TRUE;
-T_E}
+}
 
 CNpcRecord* SubMap::GetNpcInfo( USHORT sNpcID )
 {
@@ -359,7 +359,7 @@ CNpcRecord* SubMap::GetNpcInfo( USHORT sNpcID )
 
 // 加入视野单元
 void SubMap::Add(Entity* pCEnt)
-{T_B
+{
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	CItem		*pCItem;
 	Point		l_pt = pCEnt->GetPos();
@@ -417,10 +417,10 @@ void SubMap::Add(Entity* pCEnt)
 	{
 		pCCha->EntryMapUnit( GetMapID(), WORD(l_pt.x), WORD(l_pt.y) );
 	}
-T_E}
+}
 
 void SubMap::Delete(Entity* pCEnt)
-{T_B
+{
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	Point		l_pt = pCEnt->GetPos();
 	//const Rect	&m_area = GetRange();
@@ -468,11 +468,11 @@ void SubMap::Delete(Entity* pCEnt)
 			pCNode = pCNode->m_pCNext;
 		}
 	}
-T_E}
+}
 
 // 脱离原状态单元，加入新的状态单元
 void SubMap::MoveInStateCell(CCharacter* pCCha, const Point &SSrcPos, const Point &STarPos)
-{T_B
+{
 	Point	l_src = SSrcPos;
 	Point	l_dst = STarPos;
 	Long	lRadius = pCCha->GetRadius();
@@ -506,10 +506,10 @@ void SubMap::MoveInStateCell(CCharacter* pCCha, const Point &SSrcPos, const Poin
 				StateCellAddCha(x, y, pCCha, true); // 加入到中心管理单元
 		}
 	}
-T_E}
+}
 
 void SubMap::MoveInMapMask(CCharacter* pCCha, const Point &SSrcPos, const Point &STarPos)
-{T_B
+{
 	if (!pCCha->IsPlayerCha())
 		return;
 	Point	l_src, l_dst;
@@ -521,7 +521,7 @@ void SubMap::MoveInMapMask(CCharacter* pCCha, const Point &SSrcPos, const Point 
 	l_dst.y = STarPos.y / lStep;
 	if (l_src != l_dst)
 		pCCha->GetPlayer()->RefreshMapMask(GetName(), STarPos.x / 100, STarPos.y / 100);
-T_E}
+}
 
 //void SubMap::Move(Entity* pCEnt, Point STarPos, Char chStep)
 //{
@@ -693,7 +693,7 @@ T_E}
 // bActiveMgr 是否会激活管理单元
 //=============================================================================
 bool SubMap::Enter(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
-{T_B
+{
 	ent->SetInitShape(*pSEntShape);
 
 	const	Point l_pt = pSEntShape->centre;
@@ -777,11 +777,11 @@ bool SubMap::Enter(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
 
 
 	return l_retval;
-T_E}
+}
 
 // 模拟Enter例程，确定进入位置，但不执行进入副本操作
 bool SubMap::EnsurePos(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
-{T_B
+{
 	ent->SetInitShape(*pSEntShape);
 
 	const	Point l_pt = pSEntShape->centre;
@@ -842,14 +842,14 @@ bool SubMap::EnsurePos(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
 
 
 	return l_retval;
-T_E}
+}
 
 //=============================================================================
 // 出副本，脱离视野单元，进行视野通告
 // bActiveMgr 是否对管理单元的计数产生影响
 //=============================================================================
 void SubMap::GoOut(Entity * ent)
-{T_B
+{
 	Point l_pt =ent->GetShape().centre;
 	Rect l_rect =GetEyeshot(l_pt);
 	//删除
@@ -870,7 +870,7 @@ void SubMap::GoOut(Entity * ent)
 	}
 
 	ent->m_submap =0;
-T_E}
+}
 
 // 视野内的所有视野单元进行视野刷新
 void SubMap::RefreshEyeshot(Entity *pCEnt, bool bEyeshot, bool bHide, bool bShow)
@@ -888,7 +888,7 @@ void SubMap::RefreshEyeshot(Entity *pCEnt, bool bEyeshot, bool bHide, bool bShow
 }
 
 Rect SubMap::GetEyeshot(Point &pt)const
-{T_B
+{
 	const Rect	&m_area = GetRange();
 	Rect l_rect;
 	pt.x	=(pt.x - m_area.ltop.x)/GetEyeshotCellWidth();
@@ -898,10 +898,10 @@ Rect SubMap::GetEyeshot(Point &pt)const
 	l_rect.rbtm.x	=min(pt.x +GetEyeshotWidth(),GetEyeshotCellCol() -1);
 	l_rect.rbtm.y	=min(pt.y +GetEyeshotWidth(),GetEyeshotCellLin() -1);
 	return l_rect;
-T_E}
+}
 
 Rect SubMap::GetEyeshot(short sMgrUnitX, short sMgrUnitY)const
-{T_B
+{
 	Rect	l_rect;
 
 	l_rect.ltop.x = max(sMgrUnitX - GetEyeshotWidth(), 0);
@@ -910,17 +910,17 @@ Rect SubMap::GetEyeshot(short sMgrUnitX, short sMgrUnitY)const
 	l_rect.rbtm.y = min(sMgrUnitY + GetEyeshotWidth(), GetEyeshotCellLin() -1);
 
 	return l_rect;
-T_E}
+}
 
 void SubMap::GetEyeshotCenter(Point &pt)
-{T_B
+{
 	const Rect	&m_area = GetRange();
 	pt.x	=(pt.x - m_area.ltop.x) / GetEyeshotCellWidth();
 	pt.y	=(pt.y - m_area.ltop.y) / GetEyeshotCellHeight();
-T_E}
+}
 
 Rect SubMap::GetHoldStateCell(Point &pt, Long lRadius) const 
-{T_B
+{
 	const Rect	&m_area = GetRange();
 	Rect l_rect;
 	if (lRadius > 0)
@@ -946,7 +946,7 @@ Rect SubMap::GetHoldStateCell(Point &pt, Long lRadius) const
 	pt.y = (pt.y - m_area.ltop.y) / GetStateCellHeight();
 
 	return l_rect;
-T_E}
+}
 
 void SubMap::GetHoldStateCellCenter(Point &pt)
 {
@@ -957,7 +957,7 @@ void SubMap::GetHoldStateCellCenter(Point &pt)
 
 //===============Search===================================================================================
 CCharacter*	SubMap::FindCharacter( dbc::uLong ulID, const Point& point )
-{T_B
+{
 	CCharacter* pCha = NULL;
 	Long	lRangeB[] = {point.x, point.y, 0};
 	Long	lRangeE[] = {enumRANGE_TYPE_CIRCLE, 10 * 100};
@@ -969,7 +969,7 @@ CCharacter*	SubMap::FindCharacter( dbc::uLong ulID, const Point& point )
 	}
 
 	return pCha;
-T_E}
+}
 
 //=============================================================================
 // plRangeBParam 区域基本参数：个数 defSKILL_RANGE_BASEP_NUM， 内容 区域中心坐标，方向
@@ -977,7 +977,7 @@ T_E}
 // bIncludeHideEnti 是否包含隐身的实体
 //=============================================================================
 void SubMap::BeginSearchInRange(Long *plRangeBParam, Long *plRangeEParam, bool bIncludeHideEnti)
-{T_B
+{
     m_sRangeCurMgrUnit = -1;
 	m_pRangeCurEntiNode = 0;
 	m_bIncludeHideEnti = bIncludeHideEnti;
@@ -1079,10 +1079,10 @@ void SubMap::BeginSearchInRange(Long *plRangeBParam, Long *plRangeEParam, bool b
 				}
 			}
 		}
-T_E}
+}
 
 CCharacter* SubMap::GetNextCharacterInRange(void)
-{T_B
+{
 	if (!m_pCBaseRange)
 		return 0;
 
@@ -1114,14 +1114,14 @@ Research:
 	}
 	else
 		return 0;
-T_E}
+}
 
 //=============================================================================
 // 在例程BeginSearchInRange设定的范围内增加状态
 //=============================================================================
 bool SubMap::RangeAddState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle,
 						   Char chObjType, Char chObjHabitat, Char chEffType, Short *sStateParam)
-{T_B
+{
 	if (sStateParam[0] > AREA_STATE_MAXID || sStateParam[1] > SKILL_STATE_LEVEL)
 		return false;
 
@@ -1156,11 +1156,11 @@ bool SubMap::RangeAddState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle
 	}
 
 	return true;
-T_E}
+}
 
 bool SubMap::RangeAddState(Rect *pSRange, uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle,
 						   Char chObjType, Char chObjHabitat, Char chEffType, Short *sStateParam)
-{T_B
+{
 	if (sStateParam[0] > AREA_STATE_MAXID || sStateParam[1] > SKILL_STATE_LEVEL)
 		return false;
 
@@ -1205,10 +1205,10 @@ bool SubMap::RangeAddState(Rect *pSRange, uChar uchFightID, uLong ulSrcWorldID, 
 		}
 
 	return true;
-T_E}
+}
 
 void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
-{T_B
+{
 	if (!m_pCStateCell[sCellY][sCellX])
 		return;
 
@@ -1250,13 +1250,13 @@ void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
 	if (pLastPlayer)
 		pLastPlayer->GetNextPlayer() = NULL;
 	SENDTOCLIENT(pk, pHeadPlayer);
-T_E}
+}
 
 //=============================================================================
 // 移动（移动位置，视野）
 //=============================================================================
 void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
-{T_B
+{
 	if (pCEnt->GetPos() != pCEnt->m_lastpos)
 	{
 		Char	szMess[512];
@@ -1486,26 +1486,26 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 		//LG("map_time", "\t\t角色[%s]视野移动花费的时间过长 time = %u（其中状态花费%u，探索度花费%u，视野花费%u，区域花费%u）\n",
 		LG("map_time", "\t\tcharacter[%s] eyeshot move spend overabundance time time = %u（thereinto state spend %u，explore spend %u，eyeshot spend %u，area spend %u）\n",
 			pCEnt->GetLogName(), dwAllTime, tMoveState.GetTimeCount(), tMoveMMask.GetTimeCount(), tMoveEyeshot.GetTimeCount(), tMoveArea.GetTimeCount());
-T_E}
+}
 
 void SubMap::LoadMonsterInfo(void)
-{T_B
-T_E}
+{
+}
 
 // 重置地表状态
 void SubMap::ClearSurfaceState(void)
-{T_B
+{
 	CStateCell		*pCStateCell;
 	m_CStateCellL.BeginGet();
 	while (pCStateCell = m_CStateCellL.GetNext())
 	{
 		pCStateCell->DropState(this);
 	}
-T_E}
+}
 
 // 复位非玩家角色，用于副本重新开启时的角色初始化
 void SubMap::ResetNotPlyCha()
-{T_B
+{
 	CCharacter	*pCCha;
 	Long		lChaCount, lChaNum;
 	CEyeshotCell	*pCEyeCell;
@@ -1537,11 +1537,11 @@ void SubMap::ResetNotPlyCha()
 			}
 		}
 	}
-T_E}
+}
 
 // 驱除玩家角色，用于副本关闭时，所有玩家角色出副本
 void SubMap::ClearPlayerCha()
-{T_B
+{
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha, *pCProcCha;
 	long			lChaCount, lChaNum;
@@ -1593,10 +1593,10 @@ void SubMap::ClearPlayerCha()
 	m_COutMapCha.Drop();
 	//LG("enter_map", "地图 %s（副本号 %d） 清除玩家成功!\n", GetName(), GetCopyNO());
 	LG("enter_map", "map %s( copyID %d)clean out character succeed!\n", GetName(), GetCopyNO());
-T_E}
+}
 
 void SubMap::ClearAllMonster(void)
-{T_B
+{
 	CCharacter	*pCCha;
 	Long		lChaCount, lChaNum;
 	CEyeshotCell	*pCEyeCell;
@@ -1628,10 +1628,10 @@ void SubMap::ClearAllMonster(void)
 			}
 		}
 	}
-T_E}
+}
 
 void SubMap::ClearAllMonsterByName(const char* szMonsName)
-{T_B
+{
 	CCharacter	*pCCha;
 	Long		lChaCount, lChaNum;
 	CEyeshotCell	*pCEyeCell;
@@ -1666,10 +1666,10 @@ void SubMap::ClearAllMonsterByName(const char* szMonsName)
 			}
 		}
 	}
-T_E}
+}
 
 void SubMap::ClearAllCha()
-{T_B
+{
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha, *pCProcCha;
 	long			lChaCount, lChaNum;
@@ -1725,27 +1725,27 @@ void SubMap::ClearAllCha()
 	}
 	//LG("enter_map", "地图 %s（副本号 %d） 清除怪物成功!\n", GetName(), GetCopyNO());
 	LG("enter_map", "map %s(copyID %d)clean out monster succeed!\n", GetName(), GetCopyNO());
-T_E}
+}
 
 void SubMap::EntryOpen()
-{T_B
+{
 	Open();
-T_E}
+}
 
 void SubMap::EntryClose()
-{T_B
-T_E}
+{
+}
 
 void SubMap::Open()
-{T_B
+{
 	if (m_bIsRun)
 		return;
 
 	m_bIsRun = true;
-T_E}
+}
 
 void SubMap::Run(DWORD dwCurTime)
-{T_B
+{
 	if (!m_bIsRun)
 		return;
 
@@ -1766,10 +1766,10 @@ void SubMap::Run(DWORD dwCurTime)
 
 	}
 
-T_E}
+}
 
 void SubMap::Close()
-{T_B
+{
 	if (!m_bIsRun)
 		return;
 	string	strScript = "map_copy_before_close_";
@@ -1787,34 +1787,34 @@ void SubMap::Close()
 	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 
 	m_bIsRun = false;
-T_E}
+}
 
 void SubMap::BeforePlyOutMap(CCharacter *pCCha)
-{T_B
+{
 	m_pCMapRes->SubEntryPlayer(GetCopyNO());
 
 	string	strScript = "before_leave_";
 	strScript += GetName();
 	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha, this, DOSTRING_PARAM_END);
-T_E}
+}
 
 void SubMap::AfterPlyEnterMap(CCharacter *pCCha)
-{T_B
+{
 	string	strScript = "after_enter_";
 	strScript += GetName();
 	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha, this, DOSTRING_PARAM_END);
-T_E}
+}
 
 void SubMap::BeginGetPlyCha(void)
-{T_B
+{
 	m_CEyeshotCellL.BeginGet();
 	CEyeshotCell	*pCEyeCell = m_CEyeshotCellL.GetCurrent();
 	if (pCEyeCell)
 		pCEyeCell->BeginGetCha();
-T_E}
+}
 
 CCharacter* SubMap::GetNextPlyCha(void)
-{T_B
+{
 	CCharacter	*pCCha = 0;
 
 Research:
@@ -1837,10 +1837,10 @@ Research:
 			goto Research;
 
 	return pCCha;
-T_E}
+}
 
 bool SubMap::CheckRun(void)
-{T_B
+{
 	if (IsRun())
 		return true;
 	if (!m_pCMapRes)
@@ -1864,10 +1864,10 @@ bool SubMap::CheckRun(void)
 	}
 
 	return false;
-T_E}
+}
 
 void SubMap::DealActivePlayer(string& function)
-{T_B
+{
 	CCharacter * pCha;
 	BeginGetPlyCha();
 
@@ -1880,10 +1880,10 @@ void SubMap::DealActivePlayer(string& function)
 	}
 	
 
-T_E}
+}
 
 void SubMap::DealPlayer(string& function)
-{T_B
+{
 	CCharacter * pCha = NULL;
 	BeginGetPlyCha();
 
@@ -1894,17 +1894,17 @@ void SubMap::DealPlayer(string& function)
 			g_CParser.DoString(function.c_str(),enumSCRIPT_RETURN_NONE, 0,enumSCRIPT_PARAM_LIGHTUSERDATA, 1,pCha,DOSTRING_PARAM_END);
 		}
 	}
-T_E}
+}
 
 //=============================================================================
 COutMapCha::COutMapCha(unsigned short usFreq)
-{T_B
+{
 	m_ulTick = GetTickCount();
 	m_usFreq = usFreq;
-T_E}
+}
 
 COutMapCha::~COutMapCha()
-{T_B
+{
 	/*
 	SMgrUnit	*pSCarrier;
 	pSCarrier = m_pSExecQueue;
@@ -1925,10 +1925,10 @@ COutMapCha::~COutMapCha()
 
 	*/
 	spawnQueue.clear();
-T_E}
+}
 
 void COutMapCha::Add(CCharacter *pCObj, dbc::uLong	ulChaID, SSwitchMapInfo *pSwitchInfo, Char chAction, Long lLeftTick1, Long lLeftTick2)
-{T_B
+{
 	if (!pCObj)
 		return;
 
@@ -1945,10 +1945,10 @@ void COutMapCha::Add(CCharacter *pCObj, dbc::uLong	ulChaID, SSwitchMapInfo *pSwi
 	
 	// Spawn queue recoded - Mdr September 2020
 
-T_E}
+}
 
 void COutMapCha::Run(unsigned long ulCurTick)
-{T_B
+{
 	
 	long	lTickDist = ulCurTick - m_ulTick;
 
@@ -2037,11 +2037,10 @@ void COutMapCha::Run(unsigned long ulCurTick)
 	//	n++;
 	//}
 	//
-T_E}
+}
 
 void COutMapCha::Drop()
 {
-T_B
 
 	for (const auto& pSCarrier : spawnQueue)
 	{
@@ -2053,10 +2052,10 @@ T_B
 	}
 	spawnQueue.clear();
 
-T_E}
+}
 
 void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
-{T_B
+{
 	if (pChaInfo->chStep == 1)
 	{
 		pChaInfo->SwitchInfo.pSrcMap->GoOut(pChaInfo->pCCha);
@@ -2105,5 +2104,5 @@ void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
 		}
 		pChaInfo->chStep++;
 	}
-T_E}
+}
 

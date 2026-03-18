@@ -319,7 +319,7 @@ public:
 
 	bool Draw3DText(char* szText,D3DXVECTOR3& vPos, D3DXCOLOR color = 0xFFFFFFFF,float fScale = 0.3f );
 
-	SIZE* GetTextSize(char* szText, SIZE* pSize,float fScale = 1.0f);
+	SIZE* GetTextSize(const std::string& szText, SIZE* pSize,float fScale = 1.0f);
 	int	  GetHzLength(float fscale = 1.0f);
 	int   GetAscLength(float fscale = 1.0f);
 

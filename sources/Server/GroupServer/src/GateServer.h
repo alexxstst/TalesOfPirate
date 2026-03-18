@@ -3,43 +3,48 @@
 #ifndef GATESERVER_H
 #define GATESERVER_H
 
-#include "dstring.h"
-#include "DataSocket.h"
-
-_DBC_USING
+#include <string>
+#include "CorsairsNet.h"
 
 class GateServer
 {
 	friend class GroupServerApp;
 public:
-	// Modify by lark.li 20081119 begin
-	//GateServer() :m_datasock(0){}
-	GateServer() :m_datasock(0),m_bSync(false){}
-	// End
-	bool SetDataSock(DataSocket	*datasock)
+	GateServer() : m_client(nullptr), m_bSync(false) {}
+
+	bool SetClient(net::TcpClient* client)
 	{
-		bool l_retval =true;
-		if(m_datasock && datasock)
+		bool l_retval = true;
+		if (m_client && client)
 		{
-			l_retval	=false;
-		}else	if(datasock)
-		{
-			l_retval  =datasock->SetPointer(this);
+			l_retval = false;
 		}
-		if(l_retval)
+		else if (client)
 		{
-			if(m_datasock)
+			l_retval = true;
+			client->SetPointer(this);
+		}
+		if (l_retval)
+		{
+			if (m_client)
 			{
-				m_datasock->SetPointer(0);
+				m_client->SetPointer(nullptr);
 			}
-			m_datasock	=datasock;
+			m_client = client;
 		}
-		return	l_retval;
+		return l_retval;
 	}
-	DataSocket	*GetDataSock()
+
+	net::TcpClient* GetClient()
 	{
-		return m_datasock;
+		return m_client;
 	}
+
+	// Проверка валидности подключения
+	bool IsValid() const { return m_client && m_client->IsConnected(); }
+
+	// Отправка пакета через gate
+	bool SendData(net::WPacket& pkt) { return IsValid() ? m_client->Send(pkt) : false; }
 
 	// Add by lark.li 20081119 begin
 	bool	IsSync(){ return m_bSync; }
@@ -47,10 +52,10 @@ public:
 	// End
 
 private:
-	dstring			m_name;
-	DataSocket	*	m_datasock;
+	std::string			m_name;
+	net::TcpClient*		m_client;
 	// Add by lark.li 20081119 begin
-	bool		m_bSync;		// GateServer��GroupServer��ͬ����־
+	bool		m_bSync;		// GateServer←→GroupServer同步标志
 	// End
 };
 
@@ -60,34 +65,42 @@ class GroupServerAgent
 {
 	friend class GroupServerApp;
 public:
-	GroupServerAgent() :m_datasock(0){}
-	bool SetDataSock(DataSocket	*datasock)
+	GroupServerAgent() : m_client(nullptr) {}
+
+	bool SetClient(net::TcpClient* client)
 	{
-		bool l_retval =true;
-		if(m_datasock && datasock)
+		bool l_retval = true;
+		if (m_client && client)
 		{
-			l_retval	=false;
-		}else	if(datasock)
-		{
-			l_retval  =datasock->SetPointer(this);
+			l_retval = false;
 		}
-		if(l_retval)
+		else if (client)
 		{
-			if(m_datasock)
+			l_retval = true;
+			client->SetPointer(this);
+		}
+		if (l_retval)
+		{
+			if (m_client)
 			{
-				m_datasock->SetPointer(0);
+				m_client->SetPointer(nullptr);
 			}
-			m_datasock	=datasock;
+			m_client = client;
 		}
-		return	l_retval;
+		return l_retval;
 	}
-	DataSocket	*GetDataSock()
+
+	net::TcpClient* GetClient()
 	{
-		return m_datasock;
+		return m_client;
 	}
+
+	bool IsValid() const { return m_client && m_client->IsConnected(); }
+	bool SendData(net::WPacket& pkt) { return IsValid() ? m_client->Send(pkt) : false; }
+
 private:
-	dstring			m_name;
-	DataSocket	*	m_datasock;
+	std::string			m_name;
+	net::TcpClient*		m_client;
 };
 // End
 

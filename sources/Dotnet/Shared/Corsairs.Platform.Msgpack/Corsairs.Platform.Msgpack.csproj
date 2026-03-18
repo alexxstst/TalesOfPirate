@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk" ToolsVersion="15.0">
+    <PropertyGroup>
+        <Description>MsgPack reference serialization library. It provides fast and efficient way to work with msgpack data.</Description>
+        <Title>MsgPack reference serialization library</Title>
+        <Product>progaudi.msgpack.spec</Product>
+        <Copyright>Copyright © 2016-2018</Copyright>
+        <PackageTags>msgpack;serialization</PackageTags>
+        <PackageProjectUrl>https://github.com/progaudi/msgpack.spec</PackageProjectUrl>
+        <PackageLicenseUrl>https://github.com/progaudi/msgpack.spec/blob/master/LICENSE</PackageLicenseUrl>
+        <ProjectGuid>{7058F131-95D8-411F-A8F9-5D545B2F6CD6}</ProjectGuid>
+        <Authors>roman-kozachenko;aensidhe</Authors>
+        <Company>progaudi</Company>
+        <TargetFramework>net10.0</TargetFramework>
+        <IsPackable>false</IsPackable>
+        <Platforms>AnyCPU</Platforms>
+        <Configurations>Debug;Release;DebugWithLuaJIT</Configurations>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+        <TargetFrameworks>netstandard1.4;netstandard2.0;netcoreapp2.1;netcoreapp2.2</TargetFrameworks>
+    </PropertyGroup>
+    <PropertyGroup>
+        <Version>1.0.0</Version>
+
+        <GenerateAssemblyTitleAttribute>true</GenerateAssemblyTitleAttribute>
+        <GenerateAssemblyProductAttribute>true</GenerateAssemblyProductAttribute>
+        <GenerateAssemblyCopyrightAttribute>true</GenerateAssemblyCopyrightAttribute>
+    </PropertyGroup>
+    <PropertyGroup>
+        <LangVersion>latestmajor</LangVersion> <!-- default to allowing all language features -->
+        <WarningLevel>4</WarningLevel>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    </PropertyGroup>
+    <PropertyGroup>
+        <!-- Optional: Declare that the Repository URL can be published to NuSpec -->
+        <PublishRepositoryUrl>true</PublishRepositoryUrl>
+        <!-- Optional: Embed source files that are not tracked by the source control manager to the PDB -->
+        <EmbedUntrackedSources>true</EmbedUntrackedSources>
+        <!-- Optional: Include PDB in the built .nupkg -->
+        <AllowedOutputExtensionsInPackageBuildOutputFolder>$(AllowedOutputExtensionsInPackageBuildOutputFolder);.pdb</AllowedOutputExtensionsInPackageBuildOutputFolder>
+    </PropertyGroup>
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)'=='DebugWithLuaJIT'">
+        <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    </PropertyGroup>
+    <ItemGroup>
+    </ItemGroup>
+</Project>

@@ -39,8 +39,8 @@ namespace mission
 		BOOL	CreateBoat( CCharacter& owner, DWORD dwBoatID, char chType );
 		BOOL	Create( CCharacter& owner, USHORT sBoatID, USHORT sBerthID );
 		void	Cancel( CCharacter& owner );
-		BOOL	Update( CCharacter& owner, RPACKET& packet );
-		BOOL	MakeBoat( CCharacter& owner, RPACKET& packet );
+		BOOL	Update( CCharacter& owner, RPACKET packet );
+		BOOL	MakeBoat( CCharacter& owner, RPACKET packet );
 		void	GetBerthName( USHORT sBerthID, char szBerth[], USHORT sLen );
 		BOOL	GetBoatInfo( CCharacter& owner, DWORD dwBoatID );
 		BOOL	GetTradeBoatInfo( CCharacter& viewer, CCharacter& owner, DWORD dwBoatID );

@@ -81,15 +81,11 @@ public class Character
     // --- Навигация ---
     public Guild? Guild { get; set; }
     public PersonInfo? PersonInfo { get; set; }
-    public ICollection<InventoryItem> InventoryItems { get; set; } = [];
-    public ICollection<SkillSlot> Skills { get; set; } = [];
-    public ICollection<MissionProgress> Missions { get; set; } = [];
     public ICollection<Boat> Boats { get; set; } = [];
     public ICollection<Friendship> FriendshipsAsFirst { get; set; } = [];
     public ICollection<Friendship> FriendshipsAsSecond { get; set; } = [];
     public ICollection<Mentorship> MentorshipsAsMaster { get; set; } = [];
     public ICollection<Mentorship> MentorshipsAsPrentice { get; set; } = [];
-    public ICollection<MapMask> MapMasks { get; set; } = [];
     public ICollection<CharacterResource> Resources { get; set; } = [];
 }
 

@@ -408,7 +408,6 @@
 				RelativePath="..\Include\RWMutex.h">
 			</File>
 			<File
-				RelativePath="..\Include\ThreadPool.h">
 			</File>
 			<File
 				RelativePath="..\Include\Timer.h">

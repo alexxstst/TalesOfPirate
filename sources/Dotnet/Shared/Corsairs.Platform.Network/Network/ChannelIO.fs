@@ -55,9 +55,7 @@ type ChannelIO(socket: Socket, handler: IoHandler) =
     /// Владение буфером передаётся — после вызова пакет нельзя использовать.
     member this.SendPacket(packet: WPacket) =
         if not this.IsResetOperation then
-            Console.WriteLine($"Decrypted packet({packet}): {packet.ToArray().ToHexString()}")
             let encrypted = this.EncryptOutgoing(packet)
-            Console.WriteLine($"Encrypted packet({encrypted}): {encrypted.ToArray().ToHexString()}")
             handler.DoSend(_id, encrypted)
         else
             packet.Dispose()

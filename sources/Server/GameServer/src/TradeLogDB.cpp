@@ -3,7 +3,7 @@
 #include "Config.h"
 
 BOOL CTradeLogDB::Init()
-{T_B
+{
 	m_bInitOK = FALSE;
 
 	if(g_Config.m_bTradeLogIsConfig)
@@ -45,7 +45,7 @@ BOOL CTradeLogDB::Init()
 	m_bInitOK = TRUE;
 
 	return TRUE;
-T_E}
+}
 
 
 CTradeLogDB tradeLog_db;

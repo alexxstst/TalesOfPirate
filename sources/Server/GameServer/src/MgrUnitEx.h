@@ -385,17 +385,17 @@ private:
 };
 
 inline void CActiveMgrUnitL::Add(CMgrUnit *pObj)
-{T_B
+{
 	pObj->m_pCLast = 0;
 	if (pObj->m_pCNext = m_pHead)
 		m_pHead->m_pCLast = pObj;
 	m_pHead = pObj;
 
 	m_lCount++;
-T_E}
+}
 
 inline void CActiveMgrUnitL::Del(CMgrUnit *pObj)
-{T_B
+{
 	if (pObj->m_pCLast)
 		pObj->m_pCLast->m_pCNext = pObj->m_pCNext;
 	if (pObj->m_pCNext)
@@ -406,22 +406,22 @@ inline void CActiveMgrUnitL::Del(CMgrUnit *pObj)
 	pObj->m_pCLast = 0;
 
 	m_lCount--;
-T_E}
+}
 
 inline void CActiveMgrUnitL::BeginGet()
-{T_B
+{
 	m_pCur = m_pHead;
-T_E}
+}
 
 inline CMgrUnit* CActiveMgrUnitL::GetNext()
-{T_B
+{
 	CMgrUnit	*pRet = m_pCur;
 
 	if (m_pCur)
 		m_pCur = m_pCur->m_pCNext;
 
 	return pRet;
-T_E}
+}
 
 class CMgrNode : public dbc::PreAllocStru
 {

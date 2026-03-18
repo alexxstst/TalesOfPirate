@@ -598,15 +598,15 @@ void CCozeForm::OnSightMsg(CCharacter* pChar, string strMsg,DWORD dwColour)
 	ReplaceSpecialFace(strMsg,pcnsenderface,preplaceface);//�滻�ַ���
 	//End
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
-	OnSightMsg(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName(), strMsg,0xFF56bdfc);	//local chat color default //mothannakh player name color 
+	OnSightMsg(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str(), strMsg,0xFF56bdfc);	//local chat color default //mothannakh player name color
 
-	string str = string(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName())+": "+strMsg;// 需要修�? ning.yan 2008-11-07
+	string str = string(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str())+": "+strMsg;// 需要修�? ning.yan 2008-11-07
 	CItemEx *item = new CItemEx(str.c_str(), CCharMsg::GetChannelColor(CCharMsg::CHANNEL_SIGHT));
 	if (strlen(str.c_str()) > 32)  //�������?32���ַ�����������?
 	{
 		item->SetIsMultiLine(true);
 		//item->ProcessString((int)strlen(pChar->getHumanName())+1);
-		item->ProcessString((int)strlen(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName())+1);
+		item->ProcessString((int)strlen(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str())+1);
 	}
 	if (str.find("#") != std::string::npos)
 	{

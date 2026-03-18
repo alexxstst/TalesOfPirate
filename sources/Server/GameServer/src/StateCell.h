@@ -156,7 +156,7 @@ private:
 };
 
 inline void CActStateCell::Add(CStateCell *pObj)
-{T_B
+{
 	if (pObj->m_pCLast || pObj->m_pCNext)
 	{
 		//LG("状态单元操作错误", "向状态单元增加实体 [%d,%d] 时，发现其没有脱离先前的单元", pObj->m_sPosX, pObj->m_sPosY);
@@ -170,10 +170,10 @@ inline void CActStateCell::Add(CStateCell *pObj)
 	m_pHead = pObj;
 
 	m_lCount++;
-T_E}
+}
 
 inline void CActStateCell::Del(CStateCell *pObj)
-{T_B
+{
 	if (!pObj)
 		return;
 	if (m_pCur == pObj)
@@ -190,22 +190,22 @@ inline void CActStateCell::Del(CStateCell *pObj)
 	pObj->m_pCLast = 0;
 
 	m_lCount--;
-T_E}
+}
 
 inline void CActStateCell::BeginGet()
-{T_B
+{
 	m_pCur = m_pHead;
-T_E}
+}
 
 inline CStateCell* CActStateCell::GetNext()
-{T_B
+{
 	CStateCell	*pRet = m_pCur;
 
 	if (m_pCur)
 		m_pCur = m_pCur->m_pCNext;
 
 	return pRet;
-T_E}
+}
 
 class CStateCellNode : public dbc::PreAllocStru
 {

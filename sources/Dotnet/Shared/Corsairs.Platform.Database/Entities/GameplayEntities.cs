@@ -1,5 +1,22 @@
 namespace Corsairs.Platform.Database.Entities;
 
+/// <summary>Игровой аккаунт (GameDB.dbo.account). Хранит привязку к персонажам, второй пароль, данные отключения.</summary>
+public class GameAccount
+{
+    public int Id { get; set; }
+    public string AccountName { get; set; } = string.Empty;
+    public byte GmFlag { get; set; }
+    public string CharacterIds { get; set; } = "0";
+    public string LastIp { get; set; } = string.Empty;
+    public string DisconnectReason { get; set; } = string.Empty;
+    public DateTime LastLeave { get; set; }
+    public string? Password2 { get; set; }
+    public int MergeState { get; set; }
+    public int Imp { get; set; }
+    public int TotalVotes { get; set; }
+    public int Credit { get; set; }
+}
+
 /// <summary>Корабль.</summary>
 public class Boat
 {
@@ -47,45 +64,6 @@ public class Boat
     public Character OwnerCharacter { get; set; } = null!;
 }
 
-/// <summary>Прогресс миссии/квеста.</summary>
-public class MissionProgress
-{
-    public long Id { get; set; }
-    public int CharacterId { get; set; }
-
-    /// <summary>ID миссии из таблицы данных.</summary>
-    public int MissionDataId { get; set; }
-
-    /// <summary>Статус: 0=в процессе, 1=завершена, 2=провалена.</summary>
-    public byte Status { get; set; }
-
-    /// <summary>Текущий этап/шаг.</summary>
-    public int CurrentStep { get; set; }
-
-    /// <summary>Сериализованный прогресс (JSON).</summary>
-    public string? ProgressJson { get; set; }
-
-    public DateTimeOffset AcceptedAt { get; set; }
-    public DateTimeOffset? CompletedAt { get; set; }
-
-    public Character Character { get; set; } = null!;
-}
-
-/// <summary>Маска карты (туман войны) для персонажа.</summary>
-public class MapMask
-{
-    public long Id { get; set; }
-    public int CharacterId { get; set; }
-
-    /// <summary>Имя карты.</summary>
-    public string MapName { get; set; } = string.Empty;
-
-    /// <summary>Бинарные данные маски.</summary>
-    public byte[] MaskData { get; set; } = [];
-
-    public Character Character { get; set; } = null!;
-}
-
 /// <summary>Ресурсные данные персонажа (расширяемое хранилище).</summary>
 public class CharacterResource
 {
@@ -96,6 +74,22 @@ public class CharacterResource
     public string ContentJson { get; set; } = string.Empty;
 
     public Character Character { get; set; } = null!;
+}
+
+/// <summary>Таблица параметров сервера (рейтинг Top-5, param1..5 = ID персонажей, param6..10 = fight points).</summary>
+public class ServerParam
+{
+    public int Id { get; set; }
+    public int? Param1 { get; set; }
+    public int? Param2 { get; set; }
+    public int? Param3 { get; set; }
+    public int? Param4 { get; set; }
+    public int? Param5 { get; set; }
+    public int? Param6 { get; set; }
+    public int? Param7 { get; set; }
+    public int? Param8 { get; set; }
+    public int? Param9 { get; set; }
+    public int? Param10 { get; set; }
 }
 
 /// <summary>Статистический лог сервера.</summary>

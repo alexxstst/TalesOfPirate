@@ -277,7 +277,7 @@ CCharacter::CCharacter()
  chaMount(NULL),
  mountOwner(NULL)
 {
-    memset( _szName,0,sizeof(_szName) );
+    _szName.clear();
     memset( _szHumanName,0,sizeof(_szHumanName) );
 	memset( &_vPos, 0, sizeof(_vPos) );
     memset( _szGuildName,0,sizeof(_szGuildName) );	
@@ -288,7 +288,7 @@ CCharacter::CCharacter()
 	memset( _pItemFaceEff,0,sizeof(_pItemFaceEff) );
 	memset(CLOAKGlow, 0, sizeof(CLOAKGlow));
 
-	strcpy( _szName, "Player" );
+	_szName = "Player";
 	strcpy( _szSecondName, "");
 	
 	_bUpdate = false;
@@ -1138,9 +1138,9 @@ void CCharacter::OperatorEffect( char oper, int x, int y )
 	//}
 }
 
-void CCharacter::setName(const char *pszName)
+void CCharacter::setName(const std::string& pszName)
 {
-	strncpy( _szName, pszName, sizeof(_szName) );
+	_szName = pszName;
 	_pHeadSay->SetName( _szName );
 }
 

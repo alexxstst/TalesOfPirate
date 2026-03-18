@@ -2,7 +2,11 @@
 //
 
 #include "stdafx.h"
+#include <thread>
 #include "GroupServerApp.h"
+#include "Timer.h"
+
+extern dbc::TimerMgr g_timermgr;
 
 HANDLE hConsole = NULL;
 
@@ -24,44 +28,49 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	//SEHTranslator translator;
 
-	T_B
 
-	TcpCommApp::WSAStartup();
-	ThreadPool	*l_proc = ThreadPool::CreatePool(8,8,2048);
-	ThreadPool	*l_comm = ThreadPool::CreatePool(4,4,512,THREAD_PRIORITY_ABOVE_NORMAL);
+	net::InitWinSock();
 
 	try{
-		g_gpsvr	=new GroupServerApp(l_proc,l_comm);
+		g_gpsvr	=new GroupServerApp();
 	}catch(...)
 	{
-		l_comm->DestroyPool();
-		l_proc->DestroyPool();
-		TcpCommApp::WSACleanup();
+		net::CleanupWinSock();
 		Sleep(10*1000);
 		return -1;
 	}
-	while(!g_exit)
-	{
-		std::string str;
-		str.reserve(256);
 
-        std::cout<<RES_STRING(GP_MAIN_CPP_00001);
-		std::cin >> str;
-		if(str =="exit" ||g_exit)
-		{
-			std::cout<<RES_STRING(GP_MAIN_CPP_00002)<<std::endl;
-			break;
+	// Запуск таймеров (AddStatLog, DisableCloseButton, GMBBS) в отдельном потоке
+	g_timermgr.Start();
+
+	// stdin в отдельном потоке, чтобы не блокировать main loop
+	std::thread consoleThread([&]() {
+		while (!g_exit) {
+			std::string str;
+			str.reserve(256);
+			std::cout << RES_STRING(GP_MAIN_CPP_00001);
+			std::cin >> str;
+			if (str == "exit" || g_exit) {
+				std::cout << RES_STRING(GP_MAIN_CPP_00002) << std::endl;
+				g_exit = 1;
+				break;
+			}
+			else if (str == "logbak") {
+				LogStream::Backup();
+			}
+			else {
+				std::cout << RES_STRING(GP_MAIN_CPP_00003) << std::endl;
+			}
 		}
-		else if(str =="logbak")
-		{
-			LogStream::Backup();
-		}
-		else
-		{
-			std::cout<<RES_STRING(GP_MAIN_CPP_00003)<<std::endl;
-		}
+	});
+	consoleThread.detach();
+
+	// Main loop: PollNetwork + Sleep(1)
+	while (!g_exit) {
+		g_gpsvr->PollNetwork();
+		Sleep(1);
 	}
-	//if(!g_exit)
+
 	{
 		g_exit	=1;
 		while(g_ref)
@@ -70,9 +79,8 @@ int _tmain(int argc, _TCHAR* argv[])
 		}
 		delete g_gpsvr;
 
-		l_comm->DestroyPool();
-		l_proc->DestroyPool();
-		TcpCommApp::WSACleanup();
+		g_timermgr.Stop();
+		net::CleanupWinSock();
 		g_exit	=2;
 		Sleep(2000);
 	}
@@ -81,6 +89,5 @@ int _tmain(int argc, _TCHAR* argv[])
 		Sleep(1);
 	}
 
-	T_FINAL
 	return 0;
 }
