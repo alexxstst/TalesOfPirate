@@ -178,7 +178,7 @@ int CGameApp::Run()
             g_NetIF->PollPackets(100); // Обработка входящих пакетов
 
             if (_pSteady->Run()) {
-                LG("frame", "time:%u\n", GetTickCount() - _dwCurTick);
+                //LG("frame", "time:%u\n", GetTickCount() - _dwCurTick);
 
                 g_Render.GetInterfaceMgr()->tp_loadres->SetPoolEvent(TRUE);
                 _dwCurTick = _pSteady->GetTick();

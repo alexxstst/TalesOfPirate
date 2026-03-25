@@ -911,7 +911,6 @@ namespace net {
 		};
 
 		/// CMD_TM_ENTERMAP (1003): GateServer → GameServer. Игрок входит на карту.
-		/// Последние 2 поля читаются GameServer'ом с конца пакета (ReverseRead).
 		struct TmEnterMapMessage {
 			int64_t actId = 0; // actor login ID
 			std::string password;
@@ -921,10 +920,9 @@ namespace net {
 			int64_t mapCopyNo = 0;
 			int64_t posX = 0;
 			int64_t posY = 0;
-			int64_t loginFlag = 0; // CHAR: 0=offline mode, 1=normal
-			// Trailer (reverse-read на стороне GameServer):
-			int64_t winer = 0; // SHORT
-			int64_t gateAddr = 0; // LONG — адрес GateServer
+			int64_t loginFlag = 0; // 0=initial login, 1=map switch
+			int64_t gateAddr = 0; // адрес GateServer
+			int64_t winer = 0; // garner winner
 		};
 
 		/// CMD_TM_GOOUTMAP (1004): GateServer → GameServer. Игрок покидает карту.
@@ -1207,6 +1205,15 @@ namespace net {
 		/// CMD_MM_UPDATEGUILDBANKGOLD (4024): Синхронизация золота банка гильдии.
 		struct MmUpdateGuildBankGoldMessage {
 			int64_t guildId = 0;
+		};
+
+		// =================================================================
+		//  Группа J: GameServer -> Client (MC) — игровые уведомления
+		// =================================================================
+
+		/// CMD_MC_SYSINFO (517): Системное сообщение клиенту.
+		struct McSysInfoMessage {
+			std::string info;
 		};
 
 		// =================================================================
@@ -2761,9 +2768,8 @@ namespace net {
 			w.WriteInt64(msg.posX);
 			w.WriteInt64(msg.posY);
 			w.WriteInt64(msg.loginFlag);
-			// Trailer (GameServer читает ReverseRead):
-			w.WriteInt64(msg.winer);
 			w.WriteInt64(msg.gateAddr);
+			w.WriteInt64(msg.winer);
 			return w;
 		}
 
@@ -3115,6 +3121,15 @@ namespace net {
 			return w;
 		}
 
+		// --- Группа J: MC ---
+
+		inline WPacket serialize(const McSysInfoMessage& msg) {
+			WPacket w(static_cast<int>(msg.info.size()) + 32);
+			w.WriteCmd(CMD_MC_SYSINFO);
+			w.WriteString(msg.info);
+			return w;
+		}
+
 		// --- Группа G: CM ---
 
 		inline WPacket serialize(const CmLoginRequest& msg) {
@@ -3327,6 +3342,22 @@ namespace net {
 			}
 		}
 
+		/// Сериализация ChaEventInfo.
+		inline void serializeChaEventInfo(WPacket& w, const ChaEventInfo& e) {
+			w.WriteInt64(e.entityId);
+			w.WriteInt64(e.entityType);
+			w.WriteInt64(e.eventId);
+			w.WriteString(e.eventName);
+		}
+
+		/// Десериализация ChaEventInfo.
+		inline void deserializeChaEventInfo(RPacket& pk, ChaEventInfo& e) {
+			e.entityId = pk.ReadInt64();
+			e.entityType = pk.ReadInt64();
+			e.eventId = pk.ReadInt64();
+			e.eventName = pk.ReadString();
+		}
+
 		inline void serializeChaSkillStateInfo(WPacket& w, const ChaSkillStateInfo& s) {
 			w.WriteInt64(s.currentTime);
 			w.WriteInt64(static_cast<int64_t>(s.states.size()));
@@ -3344,6 +3375,62 @@ namespace net {
 			for (const auto& attr : a.attrs) {
 				w.WriteInt64(attr.attrId);
 				w.WriteInt64(attr.attrVal);
+			}
+		}
+
+		/// Сериализация ChaLookInfo (standalone — для McCharacterAction и т.д.).
+		inline void serializeChaLookInfo(WPacket& w, const ChaLookInfo& look) {
+			w.WriteInt64(look.synType);
+			w.WriteInt64(look.typeId);
+			w.WriteInt64(look.isBoat ? 1 : 0);
+			if (look.isBoat) {
+				w.WriteInt64(look.boatParts.posId);
+				w.WriteInt64(look.boatParts.boatId);
+				w.WriteInt64(look.boatParts.header);
+				w.WriteInt64(look.boatParts.body);
+				w.WriteInt64(look.boatParts.engine);
+				w.WriteInt64(look.boatParts.cannon);
+				w.WriteInt64(look.boatParts.equipment);
+			}
+			else {
+				w.WriteInt64(look.hairId);
+				for (int i = 0; i < EQUIP_NUM; ++i) {
+					const auto& eq = look.equips[i];
+					w.WriteInt64(eq.id);
+					w.WriteInt64(eq.dbId);
+					w.WriteInt64(eq.needLv);
+					if (eq.id == 0) continue;
+					if (look.synType == SYN_LOOK_CHANGE) {
+						w.WriteInt64(eq.endure0);
+						w.WriteInt64(eq.energy0);
+						w.WriteInt64(eq.valid);
+						w.WriteInt64(eq.tradable);
+						w.WriteInt64(eq.expiration);
+					}
+					else {
+						w.WriteInt64(eq.num);
+						w.WriteInt64(eq.endure0);
+						w.WriteInt64(eq.endure1);
+						w.WriteInt64(eq.energy0);
+						w.WriteInt64(eq.energy1);
+						w.WriteInt64(eq.forgeLv);
+						w.WriteInt64(eq.valid);
+						w.WriteInt64(eq.tradable);
+						w.WriteInt64(eq.expiration);
+						w.WriteInt64(eq.hasExtra ? 1 : 0);
+						if (eq.hasExtra) {
+							w.WriteInt64(eq.forgeParam);
+							w.WriteInt64(eq.instId);
+							w.WriteInt64(eq.hasInstAttr ? 1 : 0);
+							if (eq.hasInstAttr) {
+								for (int j = 0; j < ITEM_INSTANCE_ATTR_NUM; ++j) {
+									w.WriteInt64(eq.instAttr[j][0]);
+									w.WriteInt64(eq.instAttr[j][1]);
+								}
+							}
+						}
+					}
+				}
 			}
 		}
 
@@ -4340,9 +4427,8 @@ namespace net {
 			r.posX = pk.ReadInt64();
 			r.posY = pk.ReadInt64();
 			r.loginFlag = pk.ReadInt64();
-			// Trailer (reverse-read):
-			r.gateAddr = pk.ReverseReadInt64();
-			r.winer = pk.ReverseReadInt64();
+			r.gateAddr = pk.ReadInt64();
+			r.winer = pk.ReadInt64();
 		}
 
 		inline void deserialize(RPacket& pk, TmGoOutMapMessage& r) {
@@ -4596,6 +4682,12 @@ namespace net {
 			r.guildId = pk.ReadInt64();
 		}
 
+		// --- Группа J: MC ---
+
+		inline void deserialize(RPacket& pk, McSysInfoMessage& r) {
+			r.info = pk.ReadString();
+		}
+
 		// --- Группа G: CM ---
 
 		inline void deserialize(RPacket& pk, CmLoginRequest& r) {
@@ -4808,6 +4900,62 @@ namespace net {
 			}
 		}
 
+		/// Десериализация ChaLookInfo (standalone — для McCharacterAction и т.д.).
+		inline void deserializeChaLookInfo(RPacket& pk, ChaLookInfo& look) {
+			look.synType = pk.ReadInt64();
+			look.typeId = pk.ReadInt64();
+			look.isBoat = pk.ReadInt64() != 0;
+			if (look.isBoat) {
+				look.boatParts.posId = pk.ReadInt64();
+				look.boatParts.boatId = pk.ReadInt64();
+				look.boatParts.header = pk.ReadInt64();
+				look.boatParts.body = pk.ReadInt64();
+				look.boatParts.engine = pk.ReadInt64();
+				look.boatParts.cannon = pk.ReadInt64();
+				look.boatParts.equipment = pk.ReadInt64();
+			}
+			else {
+				look.hairId = pk.ReadInt64();
+				for (int i = 0; i < EQUIP_NUM; ++i) {
+					auto& eq = look.equips[i];
+					eq.id = pk.ReadInt64();
+					eq.dbId = pk.ReadInt64();
+					eq.needLv = pk.ReadInt64();
+					if (eq.id == 0) continue;
+					if (look.synType == SYN_LOOK_CHANGE) {
+						eq.endure0 = pk.ReadInt64();
+						eq.energy0 = pk.ReadInt64();
+						eq.valid = pk.ReadInt64();
+						eq.tradable = pk.ReadInt64();
+						eq.expiration = pk.ReadInt64();
+					}
+					else {
+						eq.num = pk.ReadInt64();
+						eq.endure0 = pk.ReadInt64();
+						eq.endure1 = pk.ReadInt64();
+						eq.energy0 = pk.ReadInt64();
+						eq.energy1 = pk.ReadInt64();
+						eq.forgeLv = pk.ReadInt64();
+						eq.valid = pk.ReadInt64();
+						eq.tradable = pk.ReadInt64();
+						eq.expiration = pk.ReadInt64();
+						eq.hasExtra = pk.ReadInt64() != 0;
+						if (eq.hasExtra) {
+							eq.forgeParam = pk.ReadInt64();
+							eq.instId = pk.ReadInt64();
+							eq.hasInstAttr = pk.ReadInt64() != 0;
+							if (eq.hasInstAttr) {
+								for (int j = 0; j < ITEM_INSTANCE_ATTR_NUM; ++j) {
+									eq.instAttr[j][0] = pk.ReadInt64();
+									eq.instAttr[j][1] = pk.ReadInt64();
+								}
+							}
+						}
+					}
+				}
+			}
+		}
+
 		inline void deserializeChaKitbagInfo(RPacket& pk, ChaKitbagInfo& k) {
 			k.synType = pk.ReadInt64();
 			if (k.synType == SYN_KITBAG_INIT)
@@ -4932,6 +5080,1599 @@ namespace net {
 			d.ctrlChaId = pk.ReadInt64();
 			// loginFlag, playerCount, playerAddr — GateServer уже срезал.
 			r.data = std::move(d);
+		}
+
+		// =================================================================
+		//  Геймплейные команды Client ↔ GameServer (Фаза 1 — простые)
+		// =================================================================
+
+		// ─── CM — простые (1-3 поля) ───────────────────────────────
+
+		struct CmDieReturnMessage { int64_t reliveType; };
+		struct CmAutoKitbagLockMessage { int64_t autoLock; };
+		struct CmStallSearchMessage { int64_t itemId; };
+		struct CmForgeItemMessage { int64_t index; };
+		struct CmEntityEventMessage { int64_t entityId; };
+		struct CmStallOpenMessage { int64_t charId; };
+		struct CmMisLogInfoMessage { int64_t id; };
+		struct CmMisLogClearMessage { int64_t id; };
+		struct CmStoreBuyAskMessage { int64_t comId; };
+		struct CmStoreChangeAskMessage { int64_t num; };
+		struct CmStoreQueryMessage { int64_t num; };
+		struct CmTeamFightAnswerMessage { int64_t accept; };
+		struct CmItemRepairAnswerMessage { int64_t accept; };
+		struct CmItemForgeAnswerMessage { int64_t accept; };
+		struct CmItemLotteryAnswerMessage { int64_t accept; };
+		struct CmVolunteerOpenMessage { int64_t num; };
+		struct CmVolunteerListMessage { int64_t page; int64_t num; };
+		struct CmStoreListAskMessage { int64_t clsId; int64_t page; int64_t num; };
+		struct CmCaptainConfirmAsrMessage { int64_t ret; int64_t teamId; };
+		struct CmMapMaskMessage { std::string mapName; };
+		struct CmStoreOpenAskMessage { std::string password; };
+		struct CmVolunteerSelMessage { std::string name; };
+		struct CmKitbagUnlockMessage { std::string password; };
+
+		// ─── MC — простые ──────────────────────────────────────────
+
+		struct McFailedActionMessage { int64_t worldId; int64_t actionType; int64_t reason; };
+		struct McChaEndSeeMessage { int64_t seeType; int64_t worldId; };
+		struct McItemDestroyMessage { int64_t worldId; };
+		struct McForgeResultMessage { int64_t result; };
+		struct McUniteResultMessage { int64_t result; };
+		struct McMillingResultMessage { int64_t result; };
+		struct McFusionResultMessage { int64_t result; };
+		struct McUpgradeResultMessage { int64_t result; };
+		struct McPurifyResultMessage { int64_t result; };
+		struct McFixResultMessage { int64_t result; };
+		struct McEidolonMetempsychosisMessage { int64_t result; };
+		struct McEidolonFusionMessage { int64_t result; };
+		struct McMessageMessage { std::string text; };
+		struct McBickerNoticeMessage { std::string text; };
+		struct McColourNoticeMessage { int64_t color; std::string text; };
+		struct McTriggerActionMessage { int64_t type; int64_t id; int64_t num; int64_t count; };
+		struct McNpcStateChangeMessage { int64_t npcId; int64_t state; };
+		struct McEntityStateChangeMessage { int64_t entityId; int64_t state; };
+		struct McCloseTalkMessage { int64_t npcId; };
+		struct McKitbagCheckAnswerMessage { int64_t locked; };
+		struct McPreMoveTimeMessage { int64_t time; };
+		struct McItemUseSuccMessage { int64_t worldId; int64_t itemId; };
+		struct McChaPlayEffectMessage { int64_t worldId; int64_t effectId; };
+		struct McSynDefaultSkillMessage { int64_t worldId; int64_t skillId; };
+
+		// ─── MC — ReadSequence→ReadString миграция ─────────────────
+
+		struct McSayMessage { int64_t sourceId; std::string content; int64_t color; };
+		struct McPopupNoticeMessage { std::string notice; };
+		struct McPingMessage { int64_t v1; int64_t v2; int64_t v3; int64_t v4; int64_t v5; };
+
+		// =================================================================
+		//  Геймплейные команды: Фаза 2 — средние
+		// =================================================================
+
+		// ─── CM — средние ──────────────────────────────────────────
+
+		struct CmChangePassMessage { std::string pass; std::string pin; };
+		struct CmGuildBankOperMessage { int64_t op; int64_t srcType; int64_t srcId; int64_t srcNum; int64_t tarType; int64_t tarId; };
+		struct CmGuildBankGoldMessage { int64_t op; int64_t direction; int64_t gold; };
+		struct CmUpdateHairMessage { int64_t scriptId; int64_t gridLoc0; int64_t gridLoc1; int64_t gridLoc2; int64_t gridLoc3; };
+		struct CmTeamFightAskMessage { int64_t type; int64_t worldId; int64_t handle; };
+		struct CmItemRepairAskMessage { int64_t repairmanId; int64_t repairmanHandle; int64_t posType; int64_t posId; };
+		struct CmRequestTradeMessage { int64_t type; int64_t charId; };
+		struct CmAcceptTradeMessage { int64_t type; int64_t charId; };
+		struct CmCancelTradeMessage { int64_t type; int64_t charId; };
+		struct CmValidateTradeDataMessage { int64_t type; int64_t charId; };
+		struct CmValidateTradeMessage { int64_t type; int64_t charId; };
+		struct CmAddItemMessage { int64_t type; int64_t charId; int64_t opType; int64_t index; int64_t itemIndex; int64_t count; };
+		struct CmAddMoneyMessage { int64_t type; int64_t charId; int64_t opType; int64_t isImp; int64_t money; };
+		struct CmTigerStartMessage { int64_t npcId; int64_t sel1; int64_t sel2; int64_t sel3; };
+		struct CmTigerStopMessage { int64_t npcId; int64_t num; };
+		struct CmVolunteerAsrMessage { int64_t ret; std::string name; };
+		struct CmCreateBoatMessage { std::string boat; int64_t header; int64_t engine; int64_t cannon; int64_t equipment; };
+		struct CmUpdateBoatMessage { int64_t header; int64_t engine; int64_t cannon; int64_t equipment; };
+		struct CmSelectBoatListMessage { int64_t npcId; int64_t type; int64_t index; };
+		struct CmBoatLaunchMessage { int64_t npcId; int64_t index; };
+		struct CmBoatBagSelMessage { int64_t npcId; int64_t index; };
+		struct CmReportWgMessage { std::string info; };
+		struct CmSay2CampMessage { std::string content; };
+		struct CmStallBuyMessage { int64_t charId; int64_t index; int64_t count; int64_t gridId; };
+		struct CmSkillUpgradeMessage { int64_t skillId; int64_t addGrade; };
+		struct CmRefreshDataMessage { int64_t worldId; int64_t handle; };
+		struct CmPkCtrlMessage { int64_t ctrl; };
+		struct CmItemAmphitheaterAskMessage { int64_t sure; int64_t reId; };
+		struct CmMasterInviteMessage { int64_t masterId; };
+		struct CmMasterAsrMessage { int64_t agree; int64_t masterId; };
+		struct CmMasterDelMessage { int64_t masterId; };
+		struct CmPrenticeInviteMessage { int64_t prenticeId; };
+		struct CmPrenticeAsrMessage { int64_t agree; int64_t prenticeId; };
+		struct CmPrenticeDelMessage { int64_t prenticeId; };
+
+		// ─── NPC Talk составные команды ─────────────────────────────
+		struct CmRequestTalkMessage { int64_t npcId; int64_t cmd; };
+		struct CmSelFunctionMessage { int64_t npcId; int64_t pageId; int64_t index; };
+		struct CmSaleMessage { int64_t npcId; int64_t index; int64_t count; };
+		struct CmBuyMessage { int64_t npcId; int64_t itemType; int64_t index1; int64_t index2; int64_t count; };
+		struct CmMissionPageMessage { int64_t npcId; int64_t cmd; int64_t selItem; int64_t param; };
+		struct CmSelMissionMessage { int64_t npcId; int64_t index; };
+		struct CmBlackMarketExchangeReqMessage { int64_t npcId; int64_t timeNum; int64_t srcId; int64_t srcNum; int64_t tarId; int64_t tarNum; int64_t index; };
+
+		// ─── MC — средние ──────────────────────────────────────────
+		struct McSay2CampMessage { std::string chaName; std::string content; };
+		struct McTalkInfoMessage { int64_t npcId; int64_t cmd; std::string text; };
+		struct McTradeDataMessage { int64_t npcId; int64_t page; int64_t index; int64_t itemId; int64_t count; int64_t price; };
+		struct McTradeResultMessage { int64_t type; int64_t index; int64_t count; int64_t itemId; int64_t money; };
+		struct McUpdateHairResMessage { int64_t worldId; int64_t scriptId; std::string reason; };
+		struct McSynTLeaderIdMessage { int64_t worldId; int64_t leaderId; };
+		struct McKitbagCapacityMessage { int64_t worldId; int64_t capacity; };
+		struct McItemForgeAskMessage { int64_t type; int64_t money; };
+		struct McItemForgeAnswerMessage { int64_t worldId; int64_t type; int64_t result; };
+		struct McQueryChaMessage { int64_t chaId; std::string name; std::string mapName; int64_t posX; int64_t posY; int64_t chaId2; };
+		struct McQueryChaPingMessage { int64_t chaId; std::string name; std::string mapName; int64_t ping; };
+		struct McQueryReliveMessage { int64_t chaId; std::string sourceName; int64_t reliveType; };
+		struct McGmMailMessage { std::string title; std::string content; int64_t time; };
+		struct McSynStallNameMessage { int64_t charId; std::string name; };
+		struct McMapCrashMessage { std::string text; };
+		struct McVolunteerStateMessage { int64_t state; };
+		struct McVolunteerAskMessage { std::string name; };
+		struct McMasterAskMessage { std::string name; int64_t chaId; };
+		struct McPrenticeAskMessage { std::string name; int64_t chaId; };
+		struct McItemRepairAskMcMessage { std::string itemName; int64_t repairCost; };
+		struct McItemLotteryAsrMessage { int64_t success; };
+
+		// =================================================================
+		//  Геймплейные команды: Фаза 3 — сложные
+		// =================================================================
+
+		struct McSynAttributeMessage { int64_t worldId; ChaAttrInfo attr; };
+		struct McSynSkillStateMessage { int64_t worldId; ChaSkillStateInfo skillState; };
+
+		struct McAStateEndSeeMessage { int64_t areaX; int64_t areaY; };
+
+		struct AStateBeginSeeEntry { int64_t stateId; int64_t stateLv; int64_t worldId; int64_t fightId; };
+		struct McAStateBeginSeeMessage { int64_t areaX; int64_t areaY; std::vector<AStateBeginSeeEntry> states; };
+
+		struct McDelItemChaMessage { int64_t mainChaId; int64_t worldId; };
+
+		struct McSynEventInfoMessage { int64_t entityId; int64_t entityType; int64_t eventId; std::string eventName; };
+		struct McSynSideInfoMessage { int64_t worldId; ChaSideInfo side; };
+
+		/// CMD_MC_ITEMBEGINSEE — предмет появился на земле (9 полей + ChaEventInfo).
+		struct McItemCreateMessage {
+			int64_t worldId = 0; int64_t handle = 0; int64_t itemId = 0;
+			int64_t posX = 0; int64_t posY = 0; int64_t angle = 0; int64_t num = 0;
+			int64_t appeType = 0; int64_t fromId = 0;
+			ChaEventInfo event;
+		};
+
+		/// CMD_MC_SYNSKILLBAG — синхронизация сумки скиллов.
+		struct McSynSkillBagMessage { int64_t worldId = 0; ChaSkillBagInfo skillBag; };
+
+		// ─── Квестовые ─────────────────────────────────────────────
+		struct McMissionInfoMessage { int64_t npcId; int64_t listType; int64_t prev; int64_t next; int64_t prevCmd; int64_t nextCmd; std::vector<std::string> items; };
+
+		/// Константы типов потребностей квеста (mission::MIS_NEED_TYPE).
+		constexpr int64_t MIS_NEED_ITEM = 0;
+		constexpr int64_t MIS_NEED_KILL = 1;
+		constexpr int64_t MIS_NEED_DESP = 5;
+
+		/// Запись потребности квеста (условная сериализация по needType).
+		struct MisNeedEntry {
+			int64_t needType = 0;
+			int64_t param1 = 0; int64_t param2 = 0; int64_t param3 = 0; // MIS_NEED_ITEM/KILL
+			std::string desp; // MIS_NEED_DESP
+		};
+
+		/// Запись награды квеста.
+		struct MisPrizeEntry { int64_t type = 0; int64_t param1 = 0; int64_t param2 = 0; };
+
+		/// CMD_MC_MISPAGE — страница квеста (сложный формат с условной сериализацией).
+		struct McMisPageMessage {
+			int64_t cmd = 0; int64_t npcId = 0; std::string name;
+			std::vector<MisNeedEntry> needs;
+			int64_t prizeSelType = 0; std::vector<MisPrizeEntry> prizes;
+			std::string description;
+		};
+
+		struct MisLogEntry { int64_t misId; int64_t state; };
+		struct McMisLogMessage { std::vector<MisLogEntry> logs; };
+
+		/// CMD_MC_MISLOGINFO — детали записи журнала квестов (формат аналогичен MisPage).
+		struct McMisLogInfoMessage {
+			int64_t misId = 0; std::string name;
+			std::vector<MisNeedEntry> needs;
+			int64_t prizeSelType = 0; std::vector<MisPrizeEntry> prizes;
+			std::string description;
+		};
+		struct McMisLogClearMcMessage { int64_t missionId; };
+		struct McMisLogAddMessage { int64_t missionId; int64_t state; };
+		struct McMisLogStateMessage { int64_t missionId; int64_t state; };
+
+		// ─── NPC диалоги ───────────────────────────────────────────
+		struct FuncInfoFuncItem { std::string name; };
+		struct FuncInfoMissionItem { std::string name; int64_t state; };
+		struct McFuncInfoMessage {
+			int64_t npcId; int64_t page; std::string talkText;
+			std::vector<FuncInfoFuncItem> funcItems;
+			std::vector<FuncInfoMissionItem> missionItems;
+		};
+
+		// ─── Volunteer с массивами ─────────────────────────────────
+		struct VolunteerEntry { std::string name; int64_t level; int64_t job; std::string map; };
+		struct McVolunteerListMessage { int64_t pageTotal; int64_t page; std::vector<VolunteerEntry> volunteers; };
+		struct McVolunteerOpenMessage { int64_t state; int64_t pageTotal; std::vector<VolunteerEntry> volunteers; };
+
+		// ─── StallSearch / Ranking (count в начале — новый формат) ─
+		struct StallSearchEntry { std::string name; std::string stallName; std::string location; int64_t count; int64_t cost; };
+		struct McShowStallSearchMessage { std::vector<StallSearchEntry> entries; };
+
+		struct RankingEntry { std::string name; std::string guild; int64_t level; int64_t job; int64_t score; };
+		struct McShowRankingMessage { std::vector<RankingEntry> entries; };
+
+		// ─── EspeItem ──────────────────────────────────────────────
+		struct EspeItemEntry { int64_t position; int64_t endure; int64_t energy; int64_t tradable; int64_t expiration; };
+		struct McEspeItemMessage { int64_t worldId; std::vector<EspeItemEntry> items; };
+
+		// ─── BlackMarket/Exchange ──────────────────────────────────
+		struct BlackMarketExchangeEntry { int64_t srcId; int64_t srcCount; int64_t tarId; int64_t tarCount; int64_t timeValue; };
+		struct McBlackMarketExchangeDataMessage { int64_t npcId; std::vector<BlackMarketExchangeEntry> exchanges; };
+
+		struct ExchangeEntry { int64_t srcId; int64_t srcCount; int64_t tarId; int64_t tarCount; };
+		struct McExchangeDataMessage { int64_t npcId; std::vector<ExchangeEntry> exchanges; };
+
+		struct McBlackMarketExchangeUpdateMessage { int64_t npcId; std::vector<BlackMarketExchangeEntry> exchanges; };
+
+		struct McBlackMarketExchangeAsrMessage { int64_t success; int64_t srcId; int64_t srcCount; int64_t tarId; int64_t tarCount; };
+
+		// ─── MC — торговля NPC (полные данные) ─────────────────────
+
+		/// Предмет на торговой странице (товары NPC).
+		struct TradePageItem { int64_t itemId = 0; int64_t count = 0; int64_t price = 0; int64_t level = 0; };
+		/// Страница торговли NPC — тип товаров + список предметов.
+		struct TradePage { int64_t itemType = 0; std::vector<TradePageItem> items; };
+		/// CMD_MC_TRADE_ALLDATA — полные данные торговли NPC.
+		struct McTradeAllDataMessage { int64_t npcId = 0; int64_t tradeType = 0; int64_t param = 0; std::vector<TradePage> pages; };
+
+		// ─── MC — магазин (Store) ──────────────────────────────────
+
+		/// Запись объявления магазина.
+		struct StoreAfficheEntry { int64_t afficheId = 0; std::string title; std::string comId; };
+		/// Запись категории магазина.
+		struct StoreClassEntry { int64_t classId = 0; std::string className; int64_t parentId = 0; };
+		/// CMD_MC_STORE_OPEN_ASR — ответ на открытие магазина.
+		struct McStoreOpenAnswerMessage {
+			bool isValid = false; int64_t vip = 0; int64_t moBean = 0; int64_t replMoney = 0;
+			std::vector<StoreAfficheEntry> affiches; std::vector<StoreClassEntry> classes;
+		};
+
+		/// Вариант товара (предмет внутри товара магазина).
+		struct StoreVariantEntry { int64_t itemId = 0; int64_t itemNum = 0; int64_t flute = 0; };
+		/// Атрибут товара магазина.
+		struct StoreAttrEntry { int64_t attrId = 0; int64_t attrVal = 0; };
+		/// Товар магазина.
+		struct StoreProductEntry {
+			int64_t comId = 0; std::string comName; int64_t price = 0; std::string remark;
+			bool isHot = false; int64_t time = 0; int64_t quantity = 0; int64_t expire = 0;
+			std::vector<StoreVariantEntry> variants; StoreAttrEntry attrs[5];
+		};
+		/// CMD_MC_STORE_LIST_ASR — список товаров магазина.
+		struct McStoreListAnswerMessage { int64_t pageTotal = 0; int64_t pageCurrent = 0; std::vector<StoreProductEntry> products; };
+
+		/// Запись истории покупок магазина.
+		struct StoreHistoryEntry { std::string time; int64_t itemId = 0; std::string name; int64_t money = 0; };
+		/// CMD_MC_STORE_QUERY — история покупок магазина.
+		struct McStoreHistoryMessage { std::vector<StoreHistoryEntry> records; };
+
+		/// CMD_MC_STORE_VIP — VIP-данные магазина.
+		struct McStoreVipMessage { int64_t success = 0; int64_t vipId = 0; int64_t months = 0; int64_t shuijing = 0; int64_t modou = 0; };
+
+		// ─── MC — синхронизация команды (пати) ─────────────────────
+
+		/// CMD_MC_TEAM — синхронизация данных члена пати.
+		struct McSynTeamMessage {
+			int64_t memberId = 0; int64_t hp = 0; int64_t maxHP = 0; int64_t sp = 0; int64_t maxSP = 0; int64_t level = 0;
+			ChaLookInfo look;
+		};
+
+		// ─── McChaBeginSee ─────────────────────────────────────────
+
+		/// Информация о наклоне (poseType == 1).
+		struct LeanInfo { int64_t leanState = 0; int64_t pose = 0; int64_t angle = 0; int64_t posX = 0; int64_t posY = 0; int64_t height = 0; };
+		/// Информация о сидячей позе (poseType == 2).
+		struct SeatInfo { int64_t seatAngle = 0; int64_t seatPose = 0; };
+
+		/// CMD_MC_CHABEGINSEE — персонаж появился в зоне видимости.
+		struct McChaBeginSeeMessage {
+			int64_t seeType = 0;
+			ChaBaseInfo base;
+			int64_t npcType = 0;
+			int64_t npcState = 0;
+			int64_t poseType = 0;
+			LeanInfo lean;  // валидно при poseType == 1
+			SeatInfo seat;  // валидно при poseType == 2
+			ChaAttrInfo attr;
+			ChaSkillStateInfo skillState;
+		};
+
+		/// CMD_MC_ADD_ITEM_CHA — добавление предметного персонажа (item cha).
+		struct McAddItemChaMessage {
+			int64_t mainChaId = 0;
+			ChaBaseInfo base;
+			ChaAttrInfo attr;
+			ChaKitbagInfo kitbag;
+			ChaSkillStateInfo skillState;
+		};
+
+		// ─── McCharacterAction (CMD_MC_NOTIACTION) ──────────────
+
+		/// Константы типов действий (enumACTION_*).
+		namespace ActionType {
+			constexpr int64_t NONE       = 0;
+			constexpr int64_t MOVE       = 1;
+			constexpr int64_t SKILL      = 2;
+			constexpr int64_t SKILL_SRC  = 3;
+			constexpr int64_t SKILL_TAR  = 4;
+			constexpr int64_t LOOK       = 5;
+			constexpr int64_t KITBAG     = 6;
+			constexpr int64_t ITEM_FAILED = 15;
+			constexpr int64_t LEAN       = 16;
+			constexpr int64_t CHANGE_CHA = 17;
+			constexpr int64_t FACE       = 19;
+			constexpr int64_t SKILL_POSE = 21;
+			constexpr int64_t TEMP       = 24;
+			constexpr int64_t SHORTCUT   = 25;
+			constexpr int64_t BANK       = 26;
+			constexpr int64_t KITBAGTMP  = 28;
+			constexpr int64_t GUILDBANK  = 30;
+		}
+
+		/// Константы состояний.
+		constexpr int64_t MSTATE_ON = 0x00;
+		constexpr int64_t FSTATE_ON = 0x0000;
+
+		/// Запись эффекта атрибута (SKILL_SRC / SKILL_TAR).
+		struct ActionEffectEntry {
+			int64_t attrId = 0;
+			int64_t attrVal = 0;
+		};
+
+		/// Запись состояния скилла (SKILL_SRC).
+		struct ActionStateEntry {
+			int64_t stateId = 0;
+			int64_t stateLv = 0;
+		};
+
+		/// Запись состояния скилла в SKILL_TAR (4 поля).
+		struct ActionTarStateEntry {
+			int64_t stateId = 0;
+			int64_t stateLv = 0;
+			int64_t duration = 0;
+			int64_t startTime = 0;
+		};
+
+		/// Данные действия MOVE.
+		struct ActionMoveData {
+			int64_t moveState = 0;
+			int64_t stopState = 0;
+			std::vector<uint8_t> waypoints; // бинарные Point[]
+		};
+
+		/// Данные действия SKILL_SRC (источник скилла).
+		struct ActionSkillSrcData {
+			int64_t fightId = 0;
+			int64_t angle = 0;
+			int64_t state = 0;
+			int64_t stopState = 0;
+			int64_t skillId = 0;
+			int64_t skillSpeed = 0;
+			int64_t targetType = 0;
+			int64_t targetId = 0;
+			int64_t targetX = 0;
+			int64_t targetY = 0;
+			int64_t execTime = 0;
+			std::vector<ActionEffectEntry> effects;
+			std::vector<ActionStateEntry> states;
+		};
+
+		/// Данные действия SKILL_TAR (цель скилла).
+		struct ActionSkillTarData {
+			int64_t fightId = 0;
+			int64_t state = 0;
+			bool doubleAttack = false;
+			bool miss = false;
+			bool beatBack = false;
+			int64_t beatBackX = 0;
+			int64_t beatBackY = 0;
+			int64_t srcId = 0;
+			int64_t srcPosX = 0;
+			int64_t srcPosY = 0;
+			int64_t skillId = 0;
+			int64_t skillTargetX = 0;
+			int64_t skillTargetY = 0;
+			int64_t execTime = 0;
+			int64_t synType = 0;
+			std::vector<ActionEffectEntry> effects;
+			bool hasStates = false;
+			int64_t stateTime = 0;
+			std::vector<ActionTarStateEntry> states;
+			bool hasSrcEffect = false;
+			int64_t srcState = 0;
+			int64_t srcSynType = 0;
+			std::vector<ActionEffectEntry> srcEffects;
+		};
+
+		/// Данные действия LEAN (наклон/присаживание).
+		struct ActionLeanData {
+			int64_t leanState = 0;
+			int64_t pose = 0;
+			int64_t angle = 0;
+			int64_t posX = 0;
+			int64_t posY = 0;
+			int64_t height = 0;
+		};
+
+		/// Данные действия FACE / SKILL_POSE.
+		struct ActionFaceData {
+			int64_t angle = 0;
+			int64_t pose = 0;
+		};
+
+		/// CMD_MC_NOTIACTION — уведомление о действии персонажа.
+		/// actionType определяет, какое из полей-данных заполнено.
+		struct McCharacterActionMessage {
+			int64_t worldId = 0;
+			int64_t packetId = 0;
+			int64_t actionType = 0;
+			// Одно из этих полей заполнено в зависимости от actionType:
+			ActionMoveData move;
+			ActionSkillSrcData skillSrc;
+			ActionSkillTarData skillTar;
+			ActionLeanData lean;
+			ActionFaceData face;
+			int64_t itemFailedId = 0;
+			int64_t tempItemId = 0;
+			int64_t tempPartId = 0;
+			int64_t changeChaMainId = 0;
+			ChaLookInfo look;
+			ChaKitbagInfo kitbag;
+			ChaShortcutInfo shortcut;
+		};
+
+		// ─── Serialize: cmd-only ───────────────────────────────────
+
+		inline WPacket serializeCmOfflineModeCmd() { WPacket w(8); w.WriteCmd(CMD_CM_OFFLINE_MODE); return w; }
+		inline WPacket serializeCmCancelExitCmd() { WPacket w(8); w.WriteCmd(CMD_CM_CANCELEXIT); return w; }
+		inline WPacket serializeCmKitbagLockCmd() { WPacket w(8); w.WriteCmd(CMD_CM_KITBAG_LOCK); return w; }
+		inline WPacket serializeCmKitbagCheckCmd() { WPacket w(8); w.WriteCmd(CMD_CM_KITBAG_CHECK); return w; }
+		inline WPacket serializeCmKitbagTempSyncCmd() { WPacket w(8); w.WriteCmd(CMD_CM_KITBAGTEMP_SYNC); return w; }
+		inline WPacket serializeCmReadBookStartCmd() { WPacket w(8); w.WriteCmd(CMD_CM_READBOOK_START); return w; }
+		inline WPacket serializeCmReadBookCloseCmd() { WPacket w(8); w.WriteCmd(CMD_CM_READBOOK_CLOSE); return w; }
+		inline WPacket serializeCmBoatCancelCmd() { WPacket w(8); w.WriteCmd(CMD_CM_BOAT_CANCEL); return w; }
+		inline WPacket serializeCmBoatGetInfoCmd() { WPacket w(8); w.WriteCmd(CMD_CM_BOAT_GETINFO); return w; }
+		inline WPacket serializeCmVolunteerAddCmd() { WPacket w(8); w.WriteCmd(CMD_CM_VOLUNTER_ADD); return w; }
+		inline WPacket serializeCmVolunteerDelCmd() { WPacket w(8); w.WriteCmd(CMD_CM_VOLUNTER_DEL); return w; }
+		inline WPacket serializeCmStoreCloseCmd() { WPacket w(8); w.WriteCmd(CMD_CM_STORE_CLOSE); return w; }
+		inline WPacket serializeCmStallCloseCmd() { WPacket w(8); w.WriteCmd(CMD_CM_STALL_CLOSE); return w; }
+		inline WPacket serializeCmMisLogCmd() { WPacket w(8); w.WriteCmd(CMD_CM_MISLOG); return w; }
+		inline WPacket serializeCmDailyBuffRequestCmd() { WPacket w(8); w.WriteCmd(CMD_CM_DailyBuffRequest); return w; }
+		inline WPacket serializeCmRequestDropRateCmd() { WPacket w(8); w.WriteCmd(CMD_CM_REQUEST_DROP_RATE); return w; }
+		inline WPacket serializeCmRequestExpRateCmd() { WPacket w(8); w.WriteCmd(CMD_CM_REQUEST_EXP_RATE); return w; }
+
+		// ─── Serialize: CM с полями ────────────────────────────────
+
+		inline WPacket serialize(const CmDieReturnMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_DIE_RETURN); w.WriteInt64(m.reliveType); return w; }
+		inline WPacket serialize(const CmAutoKitbagLockMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_KITBAG_AUTOLOCK); w.WriteInt64(m.autoLock); return w; }
+		inline WPacket serialize(const CmStallSearchMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_STALLSEARCH); w.WriteInt64(m.itemId); return w; }
+		inline WPacket serialize(const CmForgeItemMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_FORGE); w.WriteInt64(m.index); return w; }
+		inline WPacket serialize(const CmEntityEventMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ENTITY_EVENT); w.WriteInt64(m.entityId); return w; }
+		inline WPacket serialize(const CmStallOpenMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_STALL_OPEN); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const CmMisLogInfoMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_MISLOGINFO); w.WriteInt64(m.id); return w; }
+		inline WPacket serialize(const CmMisLogClearMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_MISLOG_CLEAR); w.WriteInt64(m.id); return w; }
+		inline WPacket serialize(const CmStoreBuyAskMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_STORE_BUY_ASK); w.WriteInt64(m.comId); return w; }
+		inline WPacket serialize(const CmStoreChangeAskMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_STORE_CHANGE_ASK); w.WriteInt64(m.num); return w; }
+		inline WPacket serialize(const CmStoreQueryMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_STORE_QUERY); w.WriteInt64(m.num); return w; }
+		inline WPacket serialize(const CmTeamFightAnswerMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_TEAM_FIGHT_ASR); w.WriteInt64(m.accept); return w; }
+		inline WPacket serialize(const CmItemRepairAnswerMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ITEM_REPAIR_ASR); w.WriteInt64(m.accept); return w; }
+		inline WPacket serialize(const CmItemForgeAnswerMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ITEM_FORGE_ASR); w.WriteInt64(m.accept); return w; }
+		inline WPacket serialize(const CmItemLotteryAnswerMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ITEM_LOTTERY_ASR); w.WriteInt64(m.accept); return w; }
+		inline WPacket serialize(const CmVolunteerOpenMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_VOLUNTER_OPEN); w.WriteInt64(m.num); return w; }
+		inline WPacket serialize(const CmVolunteerListMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_VOLUNTER_LIST); w.WriteInt64(m.page); w.WriteInt64(m.num); return w; }
+		inline WPacket serialize(const CmStoreListAskMessage& m) { WPacket w(32); w.WriteCmd(CMD_CM_STORE_LIST_ASK); w.WriteInt64(m.clsId); w.WriteInt64(m.page); w.WriteInt64(m.num); return w; }
+		inline WPacket serialize(const CmCaptainConfirmAsrMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CAPTAIN_CONFIRM_ASR); w.WriteInt64(m.ret); w.WriteInt64(m.teamId); return w; }
+		inline WPacket serialize(const CmMapMaskMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_MAP_MASK); w.WriteString(m.mapName); return w; }
+		inline WPacket serialize(const CmStoreOpenAskMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_STORE_OPEN_ASK); w.WriteString(m.password); return w; }
+		inline WPacket serialize(const CmVolunteerSelMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_VOLUNTER_SEL); w.WriteString(m.name); return w; }
+		inline WPacket serialize(const CmKitbagUnlockMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_KITBAG_UNLOCK); w.WriteString(m.password); return w; }
+
+		// ─── Serialize: MC простые ─────────────────────────────────
+
+		inline WPacket serialize(const McFailedActionMessage& m) { WPacket w(32); w.WriteCmd(CMD_MC_FAILEDACTION); w.WriteInt64(m.worldId); w.WriteInt64(m.actionType); w.WriteInt64(m.reason); return w; }
+		inline WPacket serialize(const McChaEndSeeMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_CHAENDSEE); w.WriteInt64(m.seeType); w.WriteInt64(m.worldId); return w; }
+		inline WPacket serialize(const McItemDestroyMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_ITEMENDSEE); w.WriteInt64(m.worldId); return w; }
+		inline WPacket serialize(const McForgeResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_FORGE); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McUniteResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_UNITE); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McMillingResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_MILLING); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McFusionResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_FUSION); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McUpgradeResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_UPGRADE); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McPurifyResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_PURIFY); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McFixResultMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_FIX); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McEidolonMetempsychosisMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_EIDOLON_METEMPSYCHOSIS); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McEidolonFusionMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_ITEM_EIDOLON_FUSION); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McMessageMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_MESSAGE); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McBickerNoticeMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_BICKER_NOTICE); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McColourNoticeMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_COLOUR_NOTICE); w.WriteInt64(m.color); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McTriggerActionMessage& m) { WPacket w(40); w.WriteCmd(CMD_MC_TRIGGER_ACTION); w.WriteInt64(m.type); w.WriteInt64(m.id); w.WriteInt64(m.num); w.WriteInt64(m.count); return w; }
+		inline WPacket serialize(const McNpcStateChangeMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_NPCSTATECHG); w.WriteInt64(m.npcId); w.WriteInt64(m.state); return w; }
+		inline WPacket serialize(const McEntityStateChangeMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_ENTITY_CHGSTATE); w.WriteInt64(m.entityId); w.WriteInt64(m.state); return w; }
+		inline WPacket serialize(const McCloseTalkMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_CLOSETALK); w.WriteInt64(m.npcId); return w; }
+		inline WPacket serialize(const McKitbagCheckAnswerMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_KITBAG_CHECK_ASR); w.WriteInt64(m.locked); return w; }
+		inline WPacket serialize(const McPreMoveTimeMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_PREMOVE_TIME); w.WriteInt64(m.time); return w; }
+		inline WPacket serialize(const McItemUseSuccMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_ITEM_USE_SUC); w.WriteInt64(m.worldId); w.WriteInt64(m.itemId); return w; }
+		inline WPacket serialize(const McChaPlayEffectMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_CHAPLAYEFFECT); w.WriteInt64(m.worldId); w.WriteInt64(m.effectId); return w; }
+		inline WPacket serialize(const McSynDefaultSkillMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_SYNDEFAULTSKILL); w.WriteInt64(m.worldId); w.WriteInt64(m.skillId); return w; }
+
+		// ─── Serialize: MC — ReadSequence→ReadString ───────────────
+
+		inline WPacket serialize(const McSayMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_SAY); w.WriteInt64(m.sourceId); w.WriteString(m.content); w.WriteInt64(m.color); return w; }
+		inline WPacket serialize(const McPopupNoticeMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_ALARM); w.WriteString(m.notice); return w; }
+		inline WPacket serialize(const McPingMessage& m) { WPacket w(48); w.WriteCmd(CMD_MC_PING); w.WriteInt64(m.v1); w.WriteInt64(m.v2); w.WriteInt64(m.v3); w.WriteInt64(m.v4); w.WriteInt64(m.v5); return w; }
+
+		// ─── Serialize: CM — средние (Фаза 2) ────────────────────────
+
+		inline WPacket serialize(const CmChangePassMessage& m) { WPacket w(128); w.WriteCmd(CMD_CP_CHANGEPASS); w.WriteString(m.pass); w.WriteString(m.pin); return w; }
+		inline WPacket serialize(const CmGuildBankOperMessage& m) { WPacket w(56); w.WriteCmd(CMD_CP_GUILDBANK); w.WriteInt64(m.op); w.WriteInt64(m.srcType); w.WriteInt64(m.srcId); w.WriteInt64(m.srcNum); w.WriteInt64(m.tarType); w.WriteInt64(m.tarId); return w; }
+		inline WPacket serialize(const CmGuildBankGoldMessage& m) { WPacket w(32); w.WriteCmd(CMD_CP_GUILDBANK); w.WriteInt64(m.op); w.WriteInt64(m.direction); w.WriteInt64(m.gold); return w; }
+		inline WPacket serialize(const CmUpdateHairMessage& m) { WPacket w(48); w.WriteCmd(CMD_CM_UPDATEHAIR); w.WriteInt64(m.scriptId); w.WriteInt64(m.gridLoc0); w.WriteInt64(m.gridLoc1); w.WriteInt64(m.gridLoc2); w.WriteInt64(m.gridLoc3); return w; }
+		inline WPacket serialize(const CmTeamFightAskMessage& m) { WPacket w(32); w.WriteCmd(CMD_CM_TEAM_FIGHT_ASK); w.WriteInt64(m.type); w.WriteInt64(m.worldId); w.WriteInt64(m.handle); return w; }
+		inline WPacket serialize(const CmItemRepairAskMessage& m) { WPacket w(40); w.WriteCmd(CMD_CM_ITEM_REPAIR_ASK); w.WriteInt64(m.repairmanId); w.WriteInt64(m.repairmanHandle); w.WriteInt64(m.posType); w.WriteInt64(m.posId); return w; }
+		inline WPacket serialize(const CmRequestTradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_REQUEST); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const CmAcceptTradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_ACCEPT); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const CmCancelTradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_CANCEL); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const CmValidateTradeDataMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_VALIDATEDATA); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const CmValidateTradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_VALIDATE); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const CmAddItemMessage& m) { WPacket w(56); w.WriteCmd(CMD_CM_CHARTRADE_ITEM); w.WriteInt64(m.type); w.WriteInt64(m.charId); w.WriteInt64(m.opType); w.WriteInt64(m.index); w.WriteInt64(m.itemIndex); w.WriteInt64(m.count); return w; }
+		inline WPacket serialize(const CmAddMoneyMessage& m) { WPacket w(48); w.WriteCmd(CMD_CM_CHARTRADE_MONEY); w.WriteInt64(m.type); w.WriteInt64(m.charId); w.WriteInt64(m.opType); w.WriteInt64(m.isImp); w.WriteInt64(m.money); return w; }
+		inline WPacket serialize(const CmTigerStartMessage& m) { WPacket w(40); w.WriteCmd(CMD_CM_TIGER_START); w.WriteInt64(m.npcId); w.WriteInt64(m.sel1); w.WriteInt64(m.sel2); w.WriteInt64(m.sel3); return w; }
+		inline WPacket serialize(const CmTigerStopMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_TIGER_STOP); w.WriteInt64(m.npcId); w.WriteInt64(m.num); return w; }
+		inline WPacket serialize(const CmVolunteerAsrMessage& m) { WPacket w(80); w.WriteCmd(CMD_CM_VOLUNTER_ASR); w.WriteInt64(m.ret); w.WriteString(m.name); return w; }
+		inline WPacket serialize(const CmCreateBoatMessage& m) { WPacket w(96); w.WriteCmd(CMD_CM_CREATE_BOAT); w.WriteString(m.boat); w.WriteInt64(m.header); w.WriteInt64(m.engine); w.WriteInt64(m.cannon); w.WriteInt64(m.equipment); return w; }
+		inline WPacket serialize(const CmUpdateBoatMessage& m) { WPacket w(40); w.WriteCmd(CMD_CM_UPDATEBOAT_PART); w.WriteInt64(m.header); w.WriteInt64(m.engine); w.WriteInt64(m.cannon); w.WriteInt64(m.equipment); return w; }
+		inline WPacket serialize(const CmSelectBoatListMessage& m) { WPacket w(32); w.WriteCmd(CMD_CM_BOAT_SELECT); w.WriteInt64(m.npcId); w.WriteInt64(m.type); w.WriteInt64(m.index); return w; }
+		inline WPacket serialize(const CmBoatLaunchMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_BOAT_LUANCH); w.WriteInt64(m.npcId); w.WriteInt64(m.index); return w; }
+		inline WPacket serialize(const CmBoatBagSelMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_BOAT_BAGSEL); w.WriteInt64(m.npcId); w.WriteInt64(m.index); return w; }
+		inline WPacket serialize(const CmReportWgMessage& m) { WPacket w(128); w.WriteCmd(CMD_CP_REPORT_WG); w.WriteString(m.info); return w; }
+		inline WPacket serialize(const CmSay2CampMessage& m) { WPacket w(128); w.WriteCmd(CMD_CM_SAY2CAMP); w.WriteString(m.content); return w; }
+		inline WPacket serialize(const CmStallBuyMessage& m) { WPacket w(40); w.WriteCmd(CMD_CM_STALL_BUY); w.WriteInt64(m.charId); w.WriteInt64(m.index); w.WriteInt64(m.count); w.WriteInt64(m.gridId); return w; }
+		inline WPacket serialize(const CmSkillUpgradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_SKILLUPGRADE); w.WriteInt64(m.skillId); w.WriteInt64(m.addGrade); return w; }
+		inline WPacket serialize(const CmRefreshDataMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_REFRESH_DATA); w.WriteInt64(m.worldId); w.WriteInt64(m.handle); return w; }
+		inline WPacket serialize(const CmPkCtrlMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_PK_CTRL); w.WriteInt64(m.ctrl); return w; }
+		inline WPacket serialize(const CmItemAmphitheaterAskMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_ITEM_AMPHITHEATER_ASK); w.WriteInt64(m.sure); w.WriteInt64(m.reId); return w; }
+		inline WPacket serialize(const CmMasterInviteMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_MASTER_INVITE); w.WriteInt64(m.masterId); return w; }
+		inline WPacket serialize(const CmMasterAsrMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_MASTER_ASR); w.WriteInt64(m.agree); w.WriteInt64(m.masterId); return w; }
+		inline WPacket serialize(const CmMasterDelMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_MASTER_DEL); w.WriteInt64(m.masterId); return w; }
+		inline WPacket serialize(const CmPrenticeInviteMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_PRENTICE_INVITE); w.WriteInt64(m.prenticeId); return w; }
+		inline WPacket serialize(const CmPrenticeAsrMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_PRENTICE_ASR); w.WriteInt64(m.agree); w.WriteInt64(m.prenticeId); return w; }
+		inline WPacket serialize(const CmPrenticeDelMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_PRENTICE_DEL); w.WriteInt64(m.prenticeId); return w; }
+
+		// ─── Serialize: NPC Talk составные (Фаза 2) ──────────────────
+
+		// CmRequestTalkMessage: [npcId, CMD_CM_TALKPAGE, cmd]
+		inline WPacket serialize(const CmRequestTalkMessage& m) {
+			WPacket w(32); w.WriteCmd(CMD_CM_REQUESTTALK);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_TALKPAGE); w.WriteInt64(m.cmd); return w;
+		}
+		// CmSelFunctionMessage: [npcId, CMD_CM_FUNCITEM, pageId, index]
+		inline WPacket serialize(const CmSelFunctionMessage& m) {
+			WPacket w(40); w.WriteCmd(CMD_CM_REQUESTTALK);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_FUNCITEM); w.WriteInt64(m.pageId); w.WriteInt64(m.index); return w;
+		}
+		// CmSaleMessage: [npcId, CMD_CM_TRADEITEM, ROLE_TRADE_SALE(0), index, count]
+		inline WPacket serialize(const CmSaleMessage& m) {
+			WPacket w(48); w.WriteCmd(CMD_CM_REQUESTTRADE);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_TRADEITEM); w.WriteInt64(0); w.WriteInt64(m.index); w.WriteInt64(m.count); return w;
+		}
+		// CmBuyMessage: [npcId, CMD_CM_TRADEITEM, ROLE_TRADE_BUY(1), itemType, index1, index2, count]
+		inline WPacket serialize(const CmBuyMessage& m) {
+			WPacket w(64); w.WriteCmd(CMD_CM_REQUESTTRADE);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_TRADEITEM); w.WriteInt64(1); w.WriteInt64(m.itemType); w.WriteInt64(m.index1); w.WriteInt64(m.index2); w.WriteInt64(m.count); return w;
+		}
+		// CmMissionPageMessage: [npcId, CMD_CM_MISSION, cmd, selItem, param]
+		inline WPacket serialize(const CmMissionPageMessage& m) {
+			WPacket w(48); w.WriteCmd(CMD_CM_REQUESTTALK);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_MISSION); w.WriteInt64(m.cmd); w.WriteInt64(m.selItem); w.WriteInt64(m.param); return w;
+		}
+		// CmSelMissionMessage: [npcId, CMD_CM_MISSION, ROLE_MIS_SEL(4), index]
+		inline WPacket serialize(const CmSelMissionMessage& m) {
+			WPacket w(40); w.WriteCmd(CMD_CM_REQUESTTALK);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_MISSION); w.WriteInt64(4); w.WriteInt64(m.index); return w;
+		}
+		// CmBlackMarketExchangeReqMessage: [npcId, CMD_CM_BLACKMARKET_EXCHANGE_REQ, timeNum, srcId, srcNum, tarId, tarNum, index]
+		inline WPacket serialize(const CmBlackMarketExchangeReqMessage& m) {
+			WPacket w(72); w.WriteCmd(CMD_CM_REQUESTTRADE);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_BLACKMARKET_EXCHANGE_REQ); w.WriteInt64(m.timeNum);
+			w.WriteInt64(m.srcId); w.WriteInt64(m.srcNum); w.WriteInt64(m.tarId); w.WriteInt64(m.tarNum); w.WriteInt64(m.index); return w;
+		}
+
+		// ─── Serialize: MC — средние (Фаза 2) ────────────────────────
+
+		inline WPacket serialize(const McSay2CampMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_SAY2CAMP); w.WriteString(m.chaName); w.WriteString(m.content); return w; }
+		inline WPacket serialize(const McTalkInfoMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_TALKPAGE); w.WriteInt64(m.npcId); w.WriteInt64(m.cmd); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McTradeDataMessage& m) { WPacket w(56); w.WriteCmd(CMD_MC_TRADE_DATA); w.WriteInt64(m.npcId); w.WriteInt64(m.page); w.WriteInt64(m.index); w.WriteInt64(m.itemId); w.WriteInt64(m.count); w.WriteInt64(m.price); return w; }
+		inline WPacket serialize(const McTradeResultMessage& m) { WPacket w(48); w.WriteCmd(CMD_MC_TRADERESULT); w.WriteInt64(m.type); w.WriteInt64(m.index); w.WriteInt64(m.count); w.WriteInt64(m.itemId); w.WriteInt64(m.money); return w; }
+		inline WPacket serialize(const McUpdateHairResMessage& m) { WPacket w(96); w.WriteCmd(CMD_MC_UPDATEHAIR_RES); w.WriteInt64(m.worldId); w.WriteInt64(m.scriptId); w.WriteString(m.reason); return w; }
+		inline WPacket serialize(const McSynTLeaderIdMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_TLEADER_ID); w.WriteInt64(m.worldId); w.WriteInt64(m.leaderId); return w; }
+		inline WPacket serialize(const McKitbagCapacityMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_KITBAG_CAPACITY); w.WriteInt64(m.worldId); w.WriteInt64(m.capacity); return w; }
+		inline WPacket serialize(const McItemForgeAskMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_ITEM_FORGE_ASK); w.WriteInt64(m.type); w.WriteInt64(m.money); return w; }
+		inline WPacket serialize(const McItemForgeAnswerMessage& m) { WPacket w(32); w.WriteCmd(CMD_MC_ITEM_FORGE_ASR); w.WriteInt64(m.worldId); w.WriteInt64(m.type); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McQueryChaMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_QUERY_CHA); w.WriteInt64(m.chaId); w.WriteString(m.name); w.WriteString(m.mapName); w.WriteInt64(m.posX); w.WriteInt64(m.posY); w.WriteInt64(m.chaId2); return w; }
+		inline WPacket serialize(const McQueryChaPingMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_QUERY_CHAPING); w.WriteInt64(m.chaId); w.WriteString(m.name); w.WriteString(m.mapName); w.WriteInt64(m.ping); return w; }
+		inline WPacket serialize(const McQueryReliveMessage& m) { WPacket w(96); w.WriteCmd(CMD_MC_QUERY_RELIVE); w.WriteInt64(m.chaId); w.WriteString(m.sourceName); w.WriteInt64(m.reliveType); return w; }
+		inline WPacket serialize(const McGmMailMessage& m) { WPacket w(256); w.WriteCmd(CMD_MC_GM_MAIL); w.WriteString(m.title); w.WriteString(m.content); w.WriteInt64(m.time); return w; }
+		inline WPacket serialize(const McSynStallNameMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_STALL_NAME); w.WriteInt64(m.charId); w.WriteString(m.name); return w; }
+		inline WPacket serialize(const McMapCrashMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_MAPCRASH); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McVolunteerStateMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_VOLUNTER_STATE); w.WriteInt64(m.state); return w; }
+		inline WPacket serialize(const McVolunteerAskMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_VOLUNTER_ASK); w.WriteString(m.name); return w; }
+		inline WPacket serialize(const McMasterAskMessage& m) { WPacket w(80); w.WriteCmd(CMD_MC_MASTER_ASK); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const McPrenticeAskMessage& m) { WPacket w(80); w.WriteCmd(CMD_MC_PRENTICE_ASK); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const McItemRepairAskMcMessage& m) { WPacket w(80); w.WriteCmd(CMD_MC_ITEM_REPAIR_ASK); w.WriteString(m.itemName); w.WriteInt64(m.repairCost); return w; }
+		inline WPacket serialize(const McItemLotteryAsrMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_ITEM_LOTTERY_ASR); w.WriteInt64(m.success); return w; }
+
+		// ─── Deserialize: CM с полями ──────────────────────────────
+
+		inline void deserialize(RPacket& pk, CmDieReturnMessage& m) { m.reliveType = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmAutoKitbagLockMessage& m) { m.autoLock = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStallSearchMessage& m) { m.itemId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmForgeItemMessage& m) { m.index = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmEntityEventMessage& m) { m.entityId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStallOpenMessage& m) { m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMisLogInfoMessage& m) { m.id = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMisLogClearMessage& m) { m.id = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStoreBuyAskMessage& m) { m.comId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStoreChangeAskMessage& m) { m.num = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStoreQueryMessage& m) { m.num = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmTeamFightAnswerMessage& m) { m.accept = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemRepairAnswerMessage& m) { m.accept = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemForgeAnswerMessage& m) { m.accept = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemLotteryAnswerMessage& m) { m.accept = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmVolunteerOpenMessage& m) { m.num = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmVolunteerListMessage& m) { m.page = pk.ReadInt64(); m.num = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStoreListAskMessage& m) { m.clsId = pk.ReadInt64(); m.page = pk.ReadInt64(); m.num = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmCaptainConfirmAsrMessage& m) { m.ret = pk.ReadInt64(); m.teamId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMapMaskMessage& m) { m.mapName = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmStoreOpenAskMessage& m) { m.password = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmVolunteerSelMessage& m) { m.name = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmKitbagUnlockMessage& m) { m.password = pk.ReadString(); }
+
+		// ─── Deserialize: MC простые ───────────────────────────────
+
+		inline void deserialize(RPacket& pk, McFailedActionMessage& m) { m.worldId = pk.ReadInt64(); m.actionType = pk.ReadInt64(); m.reason = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McChaEndSeeMessage& m) { m.seeType = pk.ReadInt64(); m.worldId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McItemDestroyMessage& m) { m.worldId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McForgeResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McUniteResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McMillingResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McFusionResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McUpgradeResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McPurifyResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McFixResultMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McEidolonMetempsychosisMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McEidolonFusionMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McMessageMessage& m) { m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McBickerNoticeMessage& m) { m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McColourNoticeMessage& m) { m.color = pk.ReadInt64(); m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McTriggerActionMessage& m) { m.type = pk.ReadInt64(); m.id = pk.ReadInt64(); m.num = pk.ReadInt64(); m.count = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McNpcStateChangeMessage& m) { m.npcId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McEntityStateChangeMessage& m) { m.entityId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McCloseTalkMessage& m) { m.npcId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McKitbagCheckAnswerMessage& m) { m.locked = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McPreMoveTimeMessage& m) { m.time = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McItemUseSuccMessage& m) { m.worldId = pk.ReadInt64(); m.itemId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McChaPlayEffectMessage& m) { m.worldId = pk.ReadInt64(); m.effectId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McSynDefaultSkillMessage& m) { m.worldId = pk.ReadInt64(); m.skillId = pk.ReadInt64(); }
+
+		// ─── Deserialize: MC — ReadSequence→ReadString ─────────────
+
+		inline void deserialize(RPacket& pk, McSayMessage& m) { m.sourceId = pk.ReadInt64(); m.content = pk.ReadString(); m.color = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McPopupNoticeMessage& m) { m.notice = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McPingMessage& m) { m.v1 = pk.ReadInt64(); m.v2 = pk.ReadInt64(); m.v3 = pk.ReadInt64(); m.v4 = pk.ReadInt64(); m.v5 = pk.ReadInt64(); }
+
+		// ─── Deserialize: CM — средние (Фаза 2) ──────────────────────
+
+		inline void deserialize(RPacket& pk, CmChangePassMessage& m) { m.pass = pk.ReadString(); m.pin = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGuildBankOperMessage& m) { m.op = pk.ReadInt64(); m.srcType = pk.ReadInt64(); m.srcId = pk.ReadInt64(); m.srcNum = pk.ReadInt64(); m.tarType = pk.ReadInt64(); m.tarId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildBankGoldMessage& m) { m.op = pk.ReadInt64(); m.direction = pk.ReadInt64(); m.gold = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmUpdateHairMessage& m) { m.scriptId = pk.ReadInt64(); m.gridLoc0 = pk.ReadInt64(); m.gridLoc1 = pk.ReadInt64(); m.gridLoc2 = pk.ReadInt64(); m.gridLoc3 = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmTeamFightAskMessage& m) { m.type = pk.ReadInt64(); m.worldId = pk.ReadInt64(); m.handle = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemRepairAskMessage& m) { m.repairmanId = pk.ReadInt64(); m.repairmanHandle = pk.ReadInt64(); m.posType = pk.ReadInt64(); m.posId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmRequestTradeMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmAcceptTradeMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmCancelTradeMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmValidateTradeDataMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmValidateTradeMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmAddItemMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); m.opType = pk.ReadInt64(); m.index = pk.ReadInt64(); m.itemIndex = pk.ReadInt64(); m.count = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmAddMoneyMessage& m) { m.type = pk.ReadInt64(); m.charId = pk.ReadInt64(); m.opType = pk.ReadInt64(); m.isImp = pk.ReadInt64(); m.money = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmTigerStartMessage& m) { m.npcId = pk.ReadInt64(); m.sel1 = pk.ReadInt64(); m.sel2 = pk.ReadInt64(); m.sel3 = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmTigerStopMessage& m) { m.npcId = pk.ReadInt64(); m.num = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmVolunteerAsrMessage& m) { m.ret = pk.ReadInt64(); m.name = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmCreateBoatMessage& m) { m.boat = pk.ReadString(); m.header = pk.ReadInt64(); m.engine = pk.ReadInt64(); m.cannon = pk.ReadInt64(); m.equipment = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmUpdateBoatMessage& m) { m.header = pk.ReadInt64(); m.engine = pk.ReadInt64(); m.cannon = pk.ReadInt64(); m.equipment = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmSelectBoatListMessage& m) { m.npcId = pk.ReadInt64(); m.type = pk.ReadInt64(); m.index = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmBoatLaunchMessage& m) { m.npcId = pk.ReadInt64(); m.index = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmBoatBagSelMessage& m) { m.npcId = pk.ReadInt64(); m.index = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmReportWgMessage& m) { m.info = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmSay2CampMessage& m) { m.content = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmStallBuyMessage& m) { m.charId = pk.ReadInt64(); m.index = pk.ReadInt64(); m.count = pk.ReadInt64(); m.gridId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmSkillUpgradeMessage& m) { m.skillId = pk.ReadInt64(); m.addGrade = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmRefreshDataMessage& m) { m.worldId = pk.ReadInt64(); m.handle = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPkCtrlMessage& m) { m.ctrl = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemAmphitheaterAskMessage& m) { m.sure = pk.ReadInt64(); m.reId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMasterInviteMessage& m) { m.masterId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMasterAsrMessage& m) { m.agree = pk.ReadInt64(); m.masterId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMasterDelMessage& m) { m.masterId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPrenticeInviteMessage& m) { m.prenticeId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPrenticeAsrMessage& m) { m.agree = pk.ReadInt64(); m.prenticeId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPrenticeDelMessage& m) { m.prenticeId = pk.ReadInt64(); }
+
+		// ─── Deserialize: NPC Talk составные (Фаза 2) ────────────────
+
+		inline void deserialize(RPacket& pk, CmRequestTalkMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); m.cmd = pk.ReadInt64();
+		}
+		inline void deserialize(RPacket& pk, CmSelFunctionMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); m.pageId = pk.ReadInt64(); m.index = pk.ReadInt64();
+		}
+		inline void deserialize(RPacket& pk, CmSaleMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.index = pk.ReadInt64(); m.count = pk.ReadInt64();
+		}
+		inline void deserialize(RPacket& pk, CmBuyMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.itemType = pk.ReadInt64(); m.index1 = pk.ReadInt64(); m.index2 = pk.ReadInt64(); m.count = pk.ReadInt64();
+		}
+		inline void deserialize(RPacket& pk, CmMissionPageMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); m.cmd = pk.ReadInt64(); m.selItem = pk.ReadInt64(); m.param = pk.ReadInt64();
+		}
+		inline void deserialize(RPacket& pk, CmSelMissionMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.index = pk.ReadInt64();
+		}
+		inline void deserialize(RPacket& pk, CmBlackMarketExchangeReqMessage& m) {
+			m.npcId = pk.ReadInt64(); pk.ReadInt64(); m.timeNum = pk.ReadInt64();
+			m.srcId = pk.ReadInt64(); m.srcNum = pk.ReadInt64(); m.tarId = pk.ReadInt64(); m.tarNum = pk.ReadInt64(); m.index = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: MC — средние (Фаза 2) ──────────────────────
+
+		inline void deserialize(RPacket& pk, McSay2CampMessage& m) { m.chaName = pk.ReadString(); m.content = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McTalkInfoMessage& m) { m.npcId = pk.ReadInt64(); m.cmd = pk.ReadInt64(); m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McTradeDataMessage& m) { m.npcId = pk.ReadInt64(); m.page = pk.ReadInt64(); m.index = pk.ReadInt64(); m.itemId = pk.ReadInt64(); m.count = pk.ReadInt64(); m.price = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McTradeResultMessage& m) { m.type = pk.ReadInt64(); m.index = pk.ReadInt64(); m.count = pk.ReadInt64(); m.itemId = pk.ReadInt64(); m.money = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McUpdateHairResMessage& m) { m.worldId = pk.ReadInt64(); m.scriptId = pk.ReadInt64(); m.reason = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McSynTLeaderIdMessage& m) { m.worldId = pk.ReadInt64(); m.leaderId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McKitbagCapacityMessage& m) { m.worldId = pk.ReadInt64(); m.capacity = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McItemForgeAskMessage& m) { m.type = pk.ReadInt64(); m.money = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McItemForgeAnswerMessage& m) { m.worldId = pk.ReadInt64(); m.type = pk.ReadInt64(); m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McQueryChaMessage& m) { m.chaId = pk.ReadInt64(); m.name = pk.ReadString(); m.mapName = pk.ReadString(); m.posX = pk.ReadInt64(); m.posY = pk.ReadInt64(); m.chaId2 = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McQueryChaPingMessage& m) { m.chaId = pk.ReadInt64(); m.name = pk.ReadString(); m.mapName = pk.ReadString(); m.ping = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McQueryReliveMessage& m) { m.chaId = pk.ReadInt64(); m.sourceName = pk.ReadString(); m.reliveType = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McGmMailMessage& m) { m.title = pk.ReadString(); m.content = pk.ReadString(); m.time = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McSynStallNameMessage& m) { m.charId = pk.ReadInt64(); m.name = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McMapCrashMessage& m) { m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McVolunteerStateMessage& m) { m.state = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McVolunteerAskMessage& m) { m.name = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McMasterAskMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McPrenticeAskMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McItemRepairAskMcMessage& m) { m.itemName = pk.ReadString(); m.repairCost = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McItemLotteryAsrMessage& m) { m.success = pk.ReadInt64(); }
+
+		// ─── Serialize: Фаза 3 ─────────────────────────────────────
+
+		inline WPacket serialize(const McSynAttributeMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_SYNATTR);
+			w.WriteInt64(m.worldId);
+			serializeChaAttrInfo(w, m.attr);
+			return w;
+		}
+
+		inline WPacket serialize(const McSynSkillStateMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_SYNASKILLSTATE);
+			w.WriteInt64(m.worldId);
+			serializeChaSkillStateInfo(w, m.skillState);
+			return w;
+		}
+
+		inline WPacket serialize(const McAStateEndSeeMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_ASTATEENDSEE);
+			w.WriteInt64(m.areaX); w.WriteInt64(m.areaY);
+			return w;
+		}
+
+		inline WPacket serialize(const McAStateBeginSeeMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MC_ASTATEBEGINSEE);
+			w.WriteInt64(m.areaX); w.WriteInt64(m.areaY);
+			w.WriteInt64(static_cast<int64_t>(m.states.size()));
+			for (auto& s : m.states) {
+				w.WriteInt64(s.stateId);
+				if (s.stateId != 0) {
+					w.WriteInt64(s.stateLv);
+					w.WriteInt64(s.worldId);
+					w.WriteInt64(s.fightId);
+				}
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McDelItemChaMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_DEL_ITEM_CHA);
+			w.WriteInt64(m.mainChaId); w.WriteInt64(m.worldId); return w;
+		}
+
+		inline WPacket serialize(const McSynEventInfoMessage& m) {
+			WPacket w(64); w.WriteCmd(CMD_MC_EVENT_INFO);
+			w.WriteInt64(m.entityId); w.WriteInt64(m.entityType);
+			w.WriteInt64(m.eventId); w.WriteString(m.eventName); return w;
+		}
+
+		inline WPacket serialize(const McSynSideInfoMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_SIDE_INFO);
+			w.WriteInt64(m.worldId); w.WriteInt64(m.side.sideId); return w;
+		}
+
+		inline WPacket serialize(const McItemCreateMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_ITEMBEGINSEE);
+			w.WriteInt64(m.worldId); w.WriteInt64(m.handle); w.WriteInt64(m.itemId);
+			w.WriteInt64(m.posX); w.WriteInt64(m.posY); w.WriteInt64(m.angle);
+			w.WriteInt64(m.num); w.WriteInt64(m.appeType); w.WriteInt64(m.fromId);
+			serializeChaEventInfo(w, m.event);
+			return w;
+		}
+
+		inline WPacket serialize(const McSynSkillBagMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_SYNSKILLBAG);
+			w.WriteInt64(m.worldId);
+			serializeChaSkillBagInfo(w, m.skillBag);
+			return w;
+		}
+
+		inline WPacket serialize(const McMissionInfoMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_MISSION);
+			w.WriteInt64(m.npcId); w.WriteInt64(m.listType);
+			w.WriteInt64(m.prev); w.WriteInt64(m.next);
+			w.WriteInt64(m.prevCmd); w.WriteInt64(m.nextCmd);
+			w.WriteInt64(static_cast<int64_t>(m.items.size()));
+			for (auto& item : m.items) w.WriteString(item);
+			return w;
+		}
+
+		/// Сериализация потребностей квеста (условная по needType).
+		inline void serializeMisNeeds(WPacket& w, const std::vector<MisNeedEntry>& needs) {
+			w.WriteInt64(static_cast<int64_t>(needs.size()));
+			for (const auto& n : needs) {
+				w.WriteInt64(n.needType);
+				if (n.needType == MIS_NEED_ITEM || n.needType == MIS_NEED_KILL) {
+					w.WriteInt64(n.param1);
+					w.WriteInt64(n.param2);
+					w.WriteInt64(n.param3);
+				} else if (n.needType == MIS_NEED_DESP) {
+					w.WriteString(n.desp);
+				}
+			}
+		}
+
+		/// Сериализация наград квеста.
+		inline void serializeMisPrizes(WPacket& w, const std::vector<MisPrizeEntry>& prizes) {
+			w.WriteInt64(static_cast<int64_t>(prizes.size()));
+			for (const auto& p : prizes) {
+				w.WriteInt64(p.type);
+				w.WriteInt64(p.param1);
+				w.WriteInt64(p.param2);
+			}
+		}
+
+		inline WPacket serialize(const McMisPageMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_MISPAGE);
+			w.WriteInt64(m.cmd); w.WriteInt64(m.npcId); w.WriteString(m.name);
+			serializeMisNeeds(w, m.needs);
+			w.WriteInt64(m.prizeSelType);
+			serializeMisPrizes(w, m.prizes);
+			w.WriteString(m.description);
+			return w;
+		}
+
+		inline WPacket serialize(const McMisLogMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_MISLOG);
+			w.WriteInt64(static_cast<int64_t>(m.logs.size()));
+			for (auto& l : m.logs) { w.WriteInt64(l.misId); w.WriteInt64(l.state); }
+			return w;
+		}
+
+		inline WPacket serialize(const McMisLogInfoMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_MISLOGINFO);
+			w.WriteInt64(m.misId); w.WriteString(m.name);
+			serializeMisNeeds(w, m.needs);
+			w.WriteInt64(m.prizeSelType);
+			serializeMisPrizes(w, m.prizes);
+			w.WriteString(m.description);
+			return w;
+		}
+
+		inline WPacket serialize(const McMisLogClearMcMessage& m) {
+			WPacket w(16); w.WriteCmd(CMD_MC_MISLOG_CLEAR);
+			w.WriteInt64(m.missionId); return w;
+		}
+
+		inline WPacket serialize(const McMisLogAddMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_MISLOG_ADD);
+			w.WriteInt64(m.missionId); w.WriteInt64(m.state); return w;
+		}
+
+		inline WPacket serialize(const McMisLogStateMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_MISLOG_CHANGE);
+			w.WriteInt64(m.missionId); w.WriteInt64(m.state); return w;
+		}
+
+		inline WPacket serialize(const McFuncInfoMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_FUNCPAGE);
+			w.WriteInt64(m.npcId); w.WriteInt64(m.page); w.WriteString(m.talkText);
+			w.WriteInt64(static_cast<int64_t>(m.funcItems.size()));
+			for (auto& f : m.funcItems) w.WriteString(f.name);
+			w.WriteInt64(static_cast<int64_t>(m.missionItems.size()));
+			for (auto& mi : m.missionItems) { w.WriteString(mi.name); w.WriteInt64(mi.state); }
+			return w;
+		}
+
+		inline WPacket serialize(const McVolunteerListMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_VOLUNTER_LIST);
+			w.WriteInt64(m.pageTotal); w.WriteInt64(m.page);
+			w.WriteInt64(static_cast<int64_t>(m.volunteers.size()));
+			for (auto& v : m.volunteers) { w.WriteString(v.name); w.WriteInt64(v.level); w.WriteInt64(v.job); w.WriteString(v.map); }
+			return w;
+		}
+
+		inline WPacket serialize(const McVolunteerOpenMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_VOLUNTER_OPEN);
+			w.WriteInt64(m.state); w.WriteInt64(m.pageTotal);
+			w.WriteInt64(static_cast<int64_t>(m.volunteers.size()));
+			for (auto& v : m.volunteers) { w.WriteString(v.name); w.WriteInt64(v.level); w.WriteInt64(v.job); w.WriteString(v.map); }
+			return w;
+		}
+
+		inline WPacket serialize(const McShowStallSearchMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_STALLSEARCH);
+			w.WriteInt64(static_cast<int64_t>(m.entries.size()));
+			for (auto& e : m.entries) { w.WriteString(e.name); w.WriteString(e.stallName); w.WriteString(e.location); w.WriteInt64(e.count); w.WriteInt64(e.cost); }
+			return w;
+		}
+
+		inline WPacket serialize(const McShowRankingMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_RANK);
+			w.WriteInt64(static_cast<int64_t>(m.entries.size()));
+			for (auto& e : m.entries) { w.WriteString(e.name); w.WriteString(e.guild); w.WriteInt64(e.level); w.WriteInt64(e.job); w.WriteInt64(e.score); }
+			return w;
+		}
+
+		inline WPacket serialize(const McEspeItemMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MC_ESPE_ITEM);
+			w.WriteInt64(m.worldId);
+			w.WriteInt64(static_cast<int64_t>(m.items.size()));
+			for (auto& i : m.items) { w.WriteInt64(i.position); w.WriteInt64(i.endure); w.WriteInt64(i.energy); w.WriteInt64(i.tradable); w.WriteInt64(i.expiration); }
+			return w;
+		}
+
+		inline WPacket serialize(const McBlackMarketExchangeDataMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MC_BLACKMARKET_EXCHANGEDATA);
+			w.WriteInt64(m.npcId);
+			w.WriteInt64(static_cast<int64_t>(m.exchanges.size()));
+			for (auto& e : m.exchanges) { w.WriteInt64(e.srcId); w.WriteInt64(e.srcCount); w.WriteInt64(e.tarId); w.WriteInt64(e.tarCount); w.WriteInt64(e.timeValue); }
+			return w;
+		}
+
+		inline WPacket serialize(const McExchangeDataMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MC_EXCHANGEDATA);
+			w.WriteInt64(m.npcId);
+			w.WriteInt64(static_cast<int64_t>(m.exchanges.size()));
+			for (auto& e : m.exchanges) { w.WriteInt64(e.srcId); w.WriteInt64(e.srcCount); w.WriteInt64(e.tarId); w.WriteInt64(e.tarCount); }
+			return w;
+		}
+
+		inline WPacket serialize(const McBlackMarketExchangeUpdateMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MC_BLACKMARKET_EXCHANGEUPDATE);
+			w.WriteInt64(m.npcId);
+			w.WriteInt64(static_cast<int64_t>(m.exchanges.size()));
+			for (auto& e : m.exchanges) { w.WriteInt64(e.srcId); w.WriteInt64(e.srcCount); w.WriteInt64(e.tarId); w.WriteInt64(e.tarCount); w.WriteInt64(e.timeValue); }
+			return w;
+		}
+
+		inline WPacket serialize(const McBlackMarketExchangeAsrMessage& m) {
+			WPacket w(48); w.WriteCmd(CMD_MC_BLACKMARKET_EXCHANGE_ASR);
+			w.WriteInt64(m.success); w.WriteInt64(m.srcId); w.WriteInt64(m.srcCount); w.WriteInt64(m.tarId); w.WriteInt64(m.tarCount);
+			return w;
+		}
+
+		// ─── MC — торговля NPC (полные данные) ─────────────────────
+
+		inline WPacket serialize(const McTradeAllDataMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_TRADE_ALLDATA);
+			w.WriteInt64(m.npcId); w.WriteInt64(m.tradeType); w.WriteInt64(m.param);
+			w.WriteInt64(static_cast<int64_t>(m.pages.size()));
+			for (auto& page : m.pages) {
+				w.WriteInt64(page.itemType);
+				w.WriteInt64(static_cast<int64_t>(page.items.size()));
+				for (auto& item : page.items) { w.WriteInt64(item.itemId); }
+				// Если TRADE_GOODS (type==1) — доп. поля count/price/level
+				if (m.tradeType == 1) {
+					for (auto& item : page.items) { w.WriteInt64(item.count); w.WriteInt64(item.price); w.WriteInt64(item.level); }
+				}
+			}
+			return w;
+		}
+
+		// ─── MC — магазин (Store) ──────────────────────────────────
+
+		inline WPacket serialize(const McStoreOpenAnswerMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_STORE_OPEN_ASR);
+			w.WriteInt64(m.isValid ? 1 : 0);
+			if (m.isValid) {
+				w.WriteInt64(m.vip); w.WriteInt64(m.moBean); w.WriteInt64(m.replMoney);
+				w.WriteInt64(static_cast<int64_t>(m.affiches.size()));
+				for (auto& a : m.affiches) { w.WriteInt64(a.afficheId); w.WriteString(a.title); w.WriteString(a.comId); }
+				w.WriteInt64(static_cast<int64_t>(m.classes.size()));
+				for (auto& c : m.classes) { w.WriteInt64(c.classId); w.WriteString(c.className); w.WriteInt64(c.parentId); }
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McStoreListAnswerMessage& m) {
+			WPacket w(1024); w.WriteCmd(CMD_MC_STORE_LIST_ASR);
+			w.WriteInt64(m.pageTotal); w.WriteInt64(m.pageCurrent);
+			w.WriteInt64(static_cast<int64_t>(m.products.size()));
+			for (auto& p : m.products) {
+				w.WriteInt64(p.comId); w.WriteString(p.comName); w.WriteInt64(p.price);
+				w.WriteString(p.remark); w.WriteInt64(p.isHot ? 1 : 0);
+				w.WriteInt64(p.time); w.WriteInt64(p.quantity); w.WriteInt64(p.expire);
+				w.WriteInt64(static_cast<int64_t>(p.variants.size()));
+				for (auto& v : p.variants) { w.WriteInt64(v.itemId); w.WriteInt64(v.itemNum); w.WriteInt64(v.flute); }
+				// Всегда ровно 5 атрибутов
+				for (int i = 0; i < 5; ++i) { w.WriteInt64(p.attrs[i].attrId); w.WriteInt64(p.attrs[i].attrVal); }
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McStoreHistoryMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_STORE_QUERY);
+			w.WriteInt64(static_cast<int64_t>(m.records.size()));
+			for (auto& r : m.records) { w.WriteString(r.time); w.WriteInt64(r.itemId); w.WriteString(r.name); w.WriteInt64(r.money); }
+			return w;
+		}
+
+		inline WPacket serialize(const McStoreVipMessage& m) {
+			WPacket w(48); w.WriteCmd(CMD_MC_STORE_VIP);
+			w.WriteInt64(m.success);
+			if (m.success != 0) { w.WriteInt64(m.vipId); w.WriteInt64(m.months); w.WriteInt64(m.shuijing); w.WriteInt64(m.modou); }
+			return w;
+		}
+
+		// ─── MC — синхронизация команды (пати) ─────────────────────
+
+		inline WPacket serialize(const McSynTeamMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_TEAM);
+			w.WriteInt64(m.memberId); w.WriteInt64(m.hp); w.WriteInt64(m.maxHP);
+			w.WriteInt64(m.sp); w.WriteInt64(m.maxSP); w.WriteInt64(m.level);
+			serializeChaLookInfo(w, m.look);
+			return w;
+		}
+
+		inline WPacket serialize(const McChaBeginSeeMessage& m) {
+			WPacket w(4096);
+			w.WriteCmd(CMD_MC_CHABEGINSEE);
+			w.WriteInt64(m.seeType);
+			serializeChaBaseInfo(w, m.base);
+			w.WriteInt64(m.npcType);
+			w.WriteInt64(m.npcState);
+			w.WriteInt64(m.poseType);
+			if (m.poseType == 1) {
+				w.WriteInt64(m.lean.leanState); w.WriteInt64(m.lean.pose); w.WriteInt64(m.lean.angle);
+				w.WriteInt64(m.lean.posX); w.WriteInt64(m.lean.posY); w.WriteInt64(m.lean.height);
+			} else if (m.poseType == 2) {
+				w.WriteInt64(m.seat.seatAngle); w.WriteInt64(m.seat.seatPose);
+			}
+			serializeChaAttrInfo(w, m.attr);
+			serializeChaSkillStateInfo(w, m.skillState);
+			return w;
+		}
+
+		inline WPacket serialize(const McAddItemChaMessage& m) {
+			WPacket w(4096);
+			w.WriteCmd(CMD_MC_ADD_ITEM_CHA);
+			w.WriteInt64(m.mainChaId);
+			serializeChaBaseInfo(w, m.base);
+			serializeChaAttrInfo(w, m.attr);
+			serializeChaKitbagInfo(w, m.kitbag);
+			serializeChaSkillStateInfo(w, m.skillState);
+			return w;
+		}
+
+		// ─── McCharacterAction (CMD_MC_NOTIACTION) — Serialize ───
+
+		/// Сериализация данных действия MOVE.
+		inline void serializeActionMove(WPacket& w, const ActionMoveData& d) {
+			w.WriteInt64(d.moveState);
+			if (d.moveState != MSTATE_ON)
+				w.WriteInt64(d.stopState);
+			w.WriteSequence(d.waypoints.data(), static_cast<uint16_t>(d.waypoints.size()));
+		}
+
+		/// Сериализация данных действия SKILL_SRC.
+		inline void serializeActionSkillSrc(WPacket& w, const ActionSkillSrcData& d) {
+			w.WriteInt64(d.fightId); w.WriteInt64(d.angle); w.WriteInt64(d.state);
+			if (d.state != FSTATE_ON)
+				w.WriteInt64(d.stopState);
+			w.WriteInt64(d.skillId); w.WriteInt64(d.skillSpeed);
+			w.WriteInt64(d.targetType);
+			if (d.targetType == 1) {
+				w.WriteInt64(d.targetId); w.WriteInt64(d.targetX); w.WriteInt64(d.targetY);
+			} else if (d.targetType == 2) {
+				w.WriteInt64(d.targetX); w.WriteInt64(d.targetY);
+			}
+			w.WriteInt64(d.execTime);
+			// Эффекты атрибутов
+			w.WriteInt64(static_cast<int64_t>(d.effects.size()));
+			for (const auto& e : d.effects) { w.WriteInt64(e.attrId); w.WriteInt64(e.attrVal); }
+			// Состояния скиллов
+			w.WriteInt64(static_cast<int64_t>(d.states.size()));
+			for (const auto& s : d.states) { w.WriteInt64(s.stateId); w.WriteInt64(s.stateLv); }
+		}
+
+		/// Сериализация данных действия SKILL_TAR.
+		inline void serializeActionSkillTar(WPacket& w, const ActionSkillTarData& d) {
+			w.WriteInt64(d.fightId); w.WriteInt64(d.state);
+			w.WriteInt64(d.doubleAttack ? 1 : 0);
+			w.WriteInt64(d.miss ? 1 : 0);
+			w.WriteInt64(d.beatBack ? 1 : 0);
+			if (d.beatBack) { w.WriteInt64(d.beatBackX); w.WriteInt64(d.beatBackY); }
+			w.WriteInt64(d.srcId); w.WriteInt64(d.srcPosX); w.WriteInt64(d.srcPosY);
+			w.WriteInt64(d.skillId); w.WriteInt64(d.skillTargetX); w.WriteInt64(d.skillTargetY);
+			w.WriteInt64(d.execTime);
+			// Эффекты цели: synType + count + entries
+			w.WriteInt64(d.synType);
+			w.WriteInt64(static_cast<int64_t>(d.effects.size()));
+			for (const auto& e : d.effects) { w.WriteInt64(e.attrId); w.WriteInt64(e.attrVal); }
+			// Состояния цели
+			if (d.hasStates) {
+				w.WriteInt64(1);
+				w.WriteInt64(d.stateTime);
+				w.WriteInt64(static_cast<int64_t>(d.states.size()));
+				for (const auto& s : d.states) {
+					w.WriteInt64(s.stateId); w.WriteInt64(s.stateLv);
+					w.WriteInt64(s.duration); w.WriteInt64(s.startTime);
+				}
+			} else {
+				w.WriteInt64(0);
+			}
+			// Эффекты источника
+			if (d.hasSrcEffect) {
+				w.WriteInt64(1);
+				w.WriteInt64(d.srcState);
+				w.WriteInt64(d.srcSynType);
+				w.WriteInt64(static_cast<int64_t>(d.srcEffects.size()));
+				for (const auto& e : d.srcEffects) { w.WriteInt64(e.attrId); w.WriteInt64(e.attrVal); }
+			} else {
+				w.WriteInt64(0);
+			}
+		}
+
+		/// Сериализация CMD_MC_NOTIACTION.
+		inline WPacket serialize(const McCharacterActionMessage& m) {
+			WPacket w(4096);
+			w.WriteCmd(CMD_MC_NOTIACTION);
+			w.WriteInt64(m.worldId);
+			w.WriteInt64(m.packetId);
+			w.WriteInt64(m.actionType);
+			if (m.actionType == ActionType::MOVE) {
+				serializeActionMove(w, m.move);
+			} else if (m.actionType == ActionType::SKILL_SRC) {
+				serializeActionSkillSrc(w, m.skillSrc);
+			} else if (m.actionType == ActionType::SKILL_TAR) {
+				serializeActionSkillTar(w, m.skillTar);
+			} else if (m.actionType == ActionType::LEAN) {
+				w.WriteInt64(m.lean.leanState);
+				if (m.lean.leanState == 0) {
+					w.WriteInt64(m.lean.pose); w.WriteInt64(m.lean.angle);
+					w.WriteInt64(m.lean.posX); w.WriteInt64(m.lean.posY); w.WriteInt64(m.lean.height);
+				}
+			} else if (m.actionType == ActionType::FACE || m.actionType == ActionType::SKILL_POSE) {
+				w.WriteInt64(m.face.angle); w.WriteInt64(m.face.pose);
+			} else if (m.actionType == ActionType::ITEM_FAILED) {
+				w.WriteInt64(m.itemFailedId);
+			} else if (m.actionType == ActionType::TEMP) {
+				w.WriteInt64(m.tempItemId); w.WriteInt64(m.tempPartId);
+			} else if (m.actionType == ActionType::CHANGE_CHA) {
+				w.WriteInt64(m.changeChaMainId);
+			} else if (m.actionType == ActionType::LOOK) {
+				serializeChaLookInfo(w, m.look);
+			} else if (m.actionType == ActionType::KITBAG || m.actionType == ActionType::BANK
+					|| m.actionType == ActionType::GUILDBANK || m.actionType == ActionType::KITBAGTMP) {
+				serializeChaKitbagInfo(w, m.kitbag);
+			} else if (m.actionType == ActionType::SHORTCUT) {
+				serializeChaShortcutInfo(w, m.shortcut);
+			}
+			return w;
+		}
+
+		// ─── Deserialize: Фаза 3 ──────────────────────────────────
+
+		inline void deserialize(RPacket& pk, McSynAttributeMessage& m) {
+			m.worldId = pk.ReadInt64();
+			deserializeChaAttrInfo(pk, m.attr);
+		}
+
+		inline void deserialize(RPacket& pk, McSynSkillStateMessage& m) {
+			m.worldId = pk.ReadInt64();
+			deserializeChaSkillStateInfo(pk, m.skillState);
+		}
+
+		inline void deserialize(RPacket& pk, McAStateEndSeeMessage& m) {
+			m.areaX = pk.ReadInt64(); m.areaY = pk.ReadInt64();
+		}
+
+		inline void deserialize(RPacket& pk, McAStateBeginSeeMessage& m) {
+			m.areaX = pk.ReadInt64(); m.areaY = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.states.resize(static_cast<size_t>(count));
+			for (auto& s : m.states) {
+				s.stateId = pk.ReadInt64();
+				if (s.stateId != 0) {
+					s.stateLv = pk.ReadInt64();
+					s.worldId = pk.ReadInt64();
+					s.fightId = pk.ReadInt64();
+				} else {
+					s.stateLv = 0; s.worldId = 0; s.fightId = 0;
+				}
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McDelItemChaMessage& m) { m.mainChaId = pk.ReadInt64(); m.worldId = pk.ReadInt64(); }
+
+		inline void deserialize(RPacket& pk, McSynEventInfoMessage& m) {
+			m.entityId = pk.ReadInt64(); m.entityType = pk.ReadInt64();
+			m.eventId = pk.ReadInt64(); m.eventName = pk.ReadString();
+		}
+
+		inline void deserialize(RPacket& pk, McSynSideInfoMessage& m) {
+			m.worldId = pk.ReadInt64(); m.side.sideId = pk.ReadInt64();
+		}
+
+		inline void deserialize(RPacket& pk, McItemCreateMessage& m) {
+			m.worldId = pk.ReadInt64(); m.handle = pk.ReadInt64(); m.itemId = pk.ReadInt64();
+			m.posX = pk.ReadInt64(); m.posY = pk.ReadInt64(); m.angle = pk.ReadInt64();
+			m.num = pk.ReadInt64(); m.appeType = pk.ReadInt64(); m.fromId = pk.ReadInt64();
+			deserializeChaEventInfo(pk, m.event);
+		}
+
+		inline void deserialize(RPacket& pk, McSynSkillBagMessage& m) {
+			m.worldId = pk.ReadInt64();
+			deserializeChaSkillBagInfo(pk, m.skillBag);
+		}
+
+		inline void deserialize(RPacket& pk, McMissionInfoMessage& m) {
+			m.npcId = pk.ReadInt64(); m.listType = pk.ReadInt64();
+			m.prev = pk.ReadInt64(); m.next = pk.ReadInt64();
+			m.prevCmd = pk.ReadInt64(); m.nextCmd = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.items.resize(static_cast<size_t>(count));
+			for (auto& item : m.items) item = pk.ReadString();
+		}
+
+		/// Десериализация потребностей квеста (условная по needType).
+		inline void deserializeMisNeeds(RPacket& pk, std::vector<MisNeedEntry>& needs) {
+			auto count = pk.ReadInt64();
+			needs.resize(static_cast<size_t>(count));
+			for (auto& n : needs) {
+				n.needType = pk.ReadInt64();
+				if (n.needType == MIS_NEED_ITEM || n.needType == MIS_NEED_KILL) {
+					n.param1 = pk.ReadInt64();
+					n.param2 = pk.ReadInt64();
+					n.param3 = pk.ReadInt64();
+				} else if (n.needType == MIS_NEED_DESP) {
+					n.desp = pk.ReadString();
+				}
+			}
+		}
+
+		/// Десериализация наград квеста.
+		inline void deserializeMisPrizes(RPacket& pk, std::vector<MisPrizeEntry>& prizes) {
+			auto count = pk.ReadInt64();
+			prizes.resize(static_cast<size_t>(count));
+			for (auto& p : prizes) {
+				p.type = pk.ReadInt64();
+				p.param1 = pk.ReadInt64();
+				p.param2 = pk.ReadInt64();
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McMisPageMessage& m) {
+			m.cmd = pk.ReadInt64(); m.npcId = pk.ReadInt64(); m.name = pk.ReadString();
+			deserializeMisNeeds(pk, m.needs);
+			m.prizeSelType = pk.ReadInt64();
+			deserializeMisPrizes(pk, m.prizes);
+			m.description = pk.ReadString();
+		}
+
+		inline void deserialize(RPacket& pk, McMisLogMessage& m) {
+			auto count = pk.ReadInt64();
+			m.logs.resize(static_cast<size_t>(count));
+			for (auto& l : m.logs) { l.misId = pk.ReadInt64(); l.state = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McMisLogInfoMessage& m) {
+			m.misId = pk.ReadInt64(); m.name = pk.ReadString();
+			deserializeMisNeeds(pk, m.needs);
+			m.prizeSelType = pk.ReadInt64();
+			deserializeMisPrizes(pk, m.prizes);
+			m.description = pk.ReadString();
+		}
+		inline void deserialize(RPacket& pk, McMisLogClearMcMessage& m) { m.missionId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McMisLogAddMessage& m) { m.missionId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McMisLogStateMessage& m) { m.missionId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
+
+		inline void deserialize(RPacket& pk, McFuncInfoMessage& m) {
+			m.npcId = pk.ReadInt64(); m.page = pk.ReadInt64(); m.talkText = pk.ReadString();
+			auto fCount = pk.ReadInt64();
+			m.funcItems.resize(static_cast<size_t>(fCount));
+			for (auto& f : m.funcItems) f.name = pk.ReadString();
+			auto mCount = pk.ReadInt64();
+			m.missionItems.resize(static_cast<size_t>(mCount));
+			for (auto& mi : m.missionItems) { mi.name = pk.ReadString(); mi.state = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McVolunteerListMessage& m) {
+			m.pageTotal = pk.ReadInt64(); m.page = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.volunteers.resize(static_cast<size_t>(count));
+			for (auto& v : m.volunteers) { v.name = pk.ReadString(); v.level = pk.ReadInt64(); v.job = pk.ReadInt64(); v.map = pk.ReadString(); }
+		}
+
+		inline void deserialize(RPacket& pk, McVolunteerOpenMessage& m) {
+			m.state = pk.ReadInt64(); m.pageTotal = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.volunteers.resize(static_cast<size_t>(count));
+			for (auto& v : m.volunteers) { v.name = pk.ReadString(); v.level = pk.ReadInt64(); v.job = pk.ReadInt64(); v.map = pk.ReadString(); }
+		}
+
+		inline void deserialize(RPacket& pk, McShowStallSearchMessage& m) {
+			auto count = pk.ReadInt64();
+			m.entries.resize(static_cast<size_t>(count));
+			for (auto& e : m.entries) { e.name = pk.ReadString(); e.stallName = pk.ReadString(); e.location = pk.ReadString(); e.count = pk.ReadInt64(); e.cost = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McShowRankingMessage& m) {
+			auto count = pk.ReadInt64();
+			m.entries.resize(static_cast<size_t>(count));
+			for (auto& e : m.entries) { e.name = pk.ReadString(); e.guild = pk.ReadString(); e.level = pk.ReadInt64(); e.job = pk.ReadInt64(); e.score = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McEspeItemMessage& m) {
+			m.worldId = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.items.resize(static_cast<size_t>(count));
+			for (auto& i : m.items) { i.position = pk.ReadInt64(); i.endure = pk.ReadInt64(); i.energy = pk.ReadInt64(); i.tradable = pk.ReadInt64(); i.expiration = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McBlackMarketExchangeDataMessage& m) {
+			m.npcId = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.exchanges.resize(static_cast<size_t>(count));
+			for (auto& e : m.exchanges) { e.srcId = pk.ReadInt64(); e.srcCount = pk.ReadInt64(); e.tarId = pk.ReadInt64(); e.tarCount = pk.ReadInt64(); e.timeValue = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McExchangeDataMessage& m) {
+			m.npcId = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.exchanges.resize(static_cast<size_t>(count));
+			for (auto& e : m.exchanges) { e.srcId = pk.ReadInt64(); e.srcCount = pk.ReadInt64(); e.tarId = pk.ReadInt64(); e.tarCount = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McBlackMarketExchangeUpdateMessage& m) {
+			m.npcId = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.exchanges.resize(static_cast<size_t>(count));
+			for (auto& e : m.exchanges) { e.srcId = pk.ReadInt64(); e.srcCount = pk.ReadInt64(); e.tarId = pk.ReadInt64(); e.tarCount = pk.ReadInt64(); e.timeValue = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McBlackMarketExchangeAsrMessage& m) {
+			m.success = pk.ReadInt64(); m.srcId = pk.ReadInt64(); m.srcCount = pk.ReadInt64(); m.tarId = pk.ReadInt64(); m.tarCount = pk.ReadInt64();
+		}
+
+		// ─── MC — торговля NPC (полные данные) ─────────────────────
+
+		inline void deserialize(RPacket& pk, McTradeAllDataMessage& m) {
+			m.npcId = pk.ReadInt64(); m.tradeType = pk.ReadInt64(); m.param = pk.ReadInt64();
+			auto pageCount = static_cast<size_t>(pk.ReadInt64());
+			m.pages.resize(pageCount);
+			for (auto& page : m.pages) {
+				page.itemType = pk.ReadInt64();
+				auto itemCount = static_cast<size_t>(pk.ReadInt64());
+				page.items.resize(itemCount);
+				// Сначала читаем itemId для всех предметов
+				for (auto& item : page.items) { item.itemId = pk.ReadInt64(); }
+				// Если TRADE_GOODS (type==1) — доп. поля count/price/level
+				if (m.tradeType == 1) {
+					for (auto& item : page.items) { item.count = pk.ReadInt64(); item.price = pk.ReadInt64(); item.level = pk.ReadInt64(); }
+				}
+			}
+		}
+
+		// ─── MC — магазин (Store) ──────────────────────────────────
+
+		inline void deserialize(RPacket& pk, McStoreOpenAnswerMessage& m) {
+			m.isValid = pk.ReadInt64() != 0;
+			if (m.isValid) {
+				m.vip = pk.ReadInt64(); m.moBean = pk.ReadInt64(); m.replMoney = pk.ReadInt64();
+				auto afficheCount = static_cast<size_t>(pk.ReadInt64());
+				m.affiches.resize(afficheCount);
+				for (auto& a : m.affiches) { a.afficheId = pk.ReadInt64(); a.title = pk.ReadString(); a.comId = pk.ReadString(); }
+				auto classCount = static_cast<size_t>(pk.ReadInt64());
+				m.classes.resize(classCount);
+				for (auto& c : m.classes) { c.classId = pk.ReadInt64(); c.className = pk.ReadString(); c.parentId = pk.ReadInt64(); }
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McStoreListAnswerMessage& m) {
+			m.pageTotal = pk.ReadInt64(); m.pageCurrent = pk.ReadInt64();
+			auto productCount = static_cast<size_t>(pk.ReadInt64());
+			m.products.resize(productCount);
+			for (auto& p : m.products) {
+				p.comId = pk.ReadInt64(); p.comName = pk.ReadString(); p.price = pk.ReadInt64();
+				p.remark = pk.ReadString(); p.isHot = pk.ReadInt64() != 0;
+				p.time = pk.ReadInt64(); p.quantity = pk.ReadInt64(); p.expire = pk.ReadInt64();
+				auto variantCount = static_cast<size_t>(pk.ReadInt64());
+				p.variants.resize(variantCount);
+				for (auto& v : p.variants) { v.itemId = pk.ReadInt64(); v.itemNum = pk.ReadInt64(); v.flute = pk.ReadInt64(); }
+				// Всегда ровно 5 атрибутов
+				for (int i = 0; i < 5; ++i) { p.attrs[i].attrId = pk.ReadInt64(); p.attrs[i].attrVal = pk.ReadInt64(); }
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McStoreHistoryMessage& m) {
+			auto recordCount = static_cast<size_t>(pk.ReadInt64());
+			m.records.resize(recordCount);
+			for (auto& r : m.records) { r.time = pk.ReadString(); r.itemId = pk.ReadInt64(); r.name = pk.ReadString(); r.money = pk.ReadInt64(); }
+		}
+
+		inline void deserialize(RPacket& pk, McStoreVipMessage& m) {
+			m.success = pk.ReadInt64();
+			if (m.success != 0) { m.vipId = pk.ReadInt64(); m.months = pk.ReadInt64(); m.shuijing = pk.ReadInt64(); m.modou = pk.ReadInt64(); }
+		}
+
+		// ─── MC — синхронизация команды (пати) ─────────────────────
+
+		inline void deserialize(RPacket& pk, McSynTeamMessage& m) {
+			m.memberId = pk.ReadInt64(); m.hp = pk.ReadInt64(); m.maxHP = pk.ReadInt64();
+			m.sp = pk.ReadInt64(); m.maxSP = pk.ReadInt64(); m.level = pk.ReadInt64();
+			deserializeChaLookInfo(pk, m.look);
+		}
+
+		inline void deserialize(RPacket& pk, McChaBeginSeeMessage& m) {
+			m.seeType = pk.ReadInt64();
+			deserializeChaBaseInfo(pk, m.base);
+			m.npcType = pk.ReadInt64();
+			m.npcState = pk.ReadInt64();
+			m.poseType = pk.ReadInt64();
+			if (m.poseType == 1) {
+				m.lean.leanState = pk.ReadInt64(); m.lean.pose = pk.ReadInt64(); m.lean.angle = pk.ReadInt64();
+				m.lean.posX = pk.ReadInt64(); m.lean.posY = pk.ReadInt64(); m.lean.height = pk.ReadInt64();
+			} else if (m.poseType == 2) {
+				m.seat.seatAngle = pk.ReadInt64(); m.seat.seatPose = pk.ReadInt64();
+			}
+			deserializeChaAttrInfo(pk, m.attr);
+			deserializeChaSkillStateInfo(pk, m.skillState);
+		}
+
+		inline void deserialize(RPacket& pk, McAddItemChaMessage& m) {
+			m.mainChaId = pk.ReadInt64();
+			deserializeChaBaseInfo(pk, m.base);
+			deserializeChaAttrInfo(pk, m.attr);
+			deserializeChaKitbagInfo(pk, m.kitbag);
+			deserializeChaSkillStateInfo(pk, m.skillState);
+		}
+
+		// ─── McCharacterAction (CMD_MC_NOTIACTION) — Deserialize ─
+
+		/// Десериализация данных действия MOVE.
+		inline void deserializeActionMove(RPacket& pk, ActionMoveData& d) {
+			d.moveState = pk.ReadInt64();
+			d.stopState = (d.moveState != MSTATE_ON) ? pk.ReadInt64() : 0;
+			uint16_t len = 0;
+			auto* ptr = pk.ReadSequence(len);
+			d.waypoints.assign(reinterpret_cast<const uint8_t*>(ptr),
+							   reinterpret_cast<const uint8_t*>(ptr) + len);
+		}
+
+		/// Десериализация данных действия SKILL_SRC.
+		inline void deserializeActionSkillSrc(RPacket& pk, ActionSkillSrcData& d) {
+			d.fightId = pk.ReadInt64(); d.angle = pk.ReadInt64(); d.state = pk.ReadInt64();
+			d.stopState = (d.state != FSTATE_ON) ? pk.ReadInt64() : 0;
+			d.skillId = pk.ReadInt64(); d.skillSpeed = pk.ReadInt64();
+			d.targetType = pk.ReadInt64();
+			if (d.targetType == 1) {
+				d.targetId = pk.ReadInt64(); d.targetX = pk.ReadInt64(); d.targetY = pk.ReadInt64();
+			} else if (d.targetType == 2) {
+				d.targetId = 0; d.targetX = pk.ReadInt64(); d.targetY = pk.ReadInt64();
+			}
+			d.execTime = pk.ReadInt64();
+			auto effCount = static_cast<size_t>(pk.ReadInt64());
+			d.effects.resize(effCount);
+			for (auto& e : d.effects) { e.attrId = pk.ReadInt64(); e.attrVal = pk.ReadInt64(); }
+			auto stCount = static_cast<size_t>(pk.ReadInt64());
+			d.states.resize(stCount);
+			for (auto& s : d.states) { s.stateId = pk.ReadInt64(); s.stateLv = pk.ReadInt64(); }
+		}
+
+		/// Десериализация данных действия SKILL_TAR.
+		inline void deserializeActionSkillTar(RPacket& pk, ActionSkillTarData& d) {
+			d.fightId = pk.ReadInt64(); d.state = pk.ReadInt64();
+			d.doubleAttack = pk.ReadInt64() != 0;
+			d.miss = pk.ReadInt64() != 0;
+			d.beatBack = pk.ReadInt64() != 0;
+			if (d.beatBack) { d.beatBackX = pk.ReadInt64(); d.beatBackY = pk.ReadInt64(); }
+			d.srcId = pk.ReadInt64(); d.srcPosX = pk.ReadInt64(); d.srcPosY = pk.ReadInt64();
+			d.skillId = pk.ReadInt64(); d.skillTargetX = pk.ReadInt64(); d.skillTargetY = pk.ReadInt64();
+			d.execTime = pk.ReadInt64();
+			// Эффекты цели: synType + count + entries
+			d.synType = pk.ReadInt64();
+			auto effCount = static_cast<size_t>(pk.ReadInt64());
+			d.effects.resize(effCount);
+			for (auto& e : d.effects) { e.attrId = pk.ReadInt64(); e.attrVal = pk.ReadInt64(); }
+			// Состояния цели
+			d.hasStates = pk.ReadInt64() == 1;
+			if (d.hasStates) {
+				d.stateTime = pk.ReadInt64();
+				auto stCount = static_cast<size_t>(pk.ReadInt64());
+				d.states.resize(stCount);
+				for (auto& s : d.states) {
+					s.stateId = pk.ReadInt64(); s.stateLv = pk.ReadInt64();
+					s.duration = pk.ReadInt64(); s.startTime = pk.ReadInt64();
+				}
+			}
+			// Эффекты источника
+			d.hasSrcEffect = pk.ReadInt64() != 0;
+			if (d.hasSrcEffect) {
+				d.srcState = pk.ReadInt64();
+				d.srcSynType = pk.ReadInt64();
+				auto srcCount = static_cast<size_t>(pk.ReadInt64());
+				d.srcEffects.resize(srcCount);
+				for (auto& e : d.srcEffects) { e.attrId = pk.ReadInt64(); e.attrVal = pk.ReadInt64(); }
+			}
+		}
+
+		/// Десериализация CMD_MC_NOTIACTION — диспетчер по actionType.
+		inline void deserialize(RPacket& pk, McCharacterActionMessage& m) {
+			m.worldId = pk.ReadInt64();
+			m.packetId = pk.ReadInt64();
+			m.actionType = pk.ReadInt64();
+			if (m.actionType == ActionType::MOVE) {
+				deserializeActionMove(pk, m.move);
+			} else if (m.actionType == ActionType::SKILL_SRC) {
+				deserializeActionSkillSrc(pk, m.skillSrc);
+			} else if (m.actionType == ActionType::SKILL_TAR) {
+				deserializeActionSkillTar(pk, m.skillTar);
+			} else if (m.actionType == ActionType::LEAN) {
+				m.lean.leanState = pk.ReadInt64();
+				if (m.lean.leanState == 0) {
+					m.lean.pose = pk.ReadInt64(); m.lean.angle = pk.ReadInt64();
+					m.lean.posX = pk.ReadInt64(); m.lean.posY = pk.ReadInt64(); m.lean.height = pk.ReadInt64();
+				}
+			} else if (m.actionType == ActionType::FACE || m.actionType == ActionType::SKILL_POSE) {
+				m.face.angle = pk.ReadInt64(); m.face.pose = pk.ReadInt64();
+			} else if (m.actionType == ActionType::ITEM_FAILED) {
+				m.itemFailedId = pk.ReadInt64();
+			} else if (m.actionType == ActionType::TEMP) {
+				m.tempItemId = pk.ReadInt64(); m.tempPartId = pk.ReadInt64();
+			} else if (m.actionType == ActionType::CHANGE_CHA) {
+				m.changeChaMainId = pk.ReadInt64();
+			} else if (m.actionType == ActionType::LOOK) {
+				deserializeChaLookInfo(pk, m.look);
+			} else if (m.actionType == ActionType::KITBAG || m.actionType == ActionType::BANK
+					|| m.actionType == ActionType::GUILDBANK || m.actionType == ActionType::KITBAGTMP) {
+				deserializeChaKitbagInfo(pk, m.kitbag);
+			} else if (m.actionType == ActionType::SHORTCUT) {
+				deserializeChaShortcutInfo(pk, m.shortcut);
+			}
 		}
 	}
 } // namespace net::msg

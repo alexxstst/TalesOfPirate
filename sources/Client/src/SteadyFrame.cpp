@@ -59,7 +59,7 @@ void CSteadyFrame::_Sleep()
 	{
 		Sleep( _dwTimeSpace );
 
-		LG( "_Sleep", "%d %d\n", dwTime, nCount);
+		//LG( "_Sleep", "%d %d\n", dwTime, nCount);
 
 		InterlockedIncrement( &_lRun );
 

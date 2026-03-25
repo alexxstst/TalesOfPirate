@@ -463,42 +463,58 @@ return;
 	}
 	
 	void CStallSystem::SearchItem(CCharacter& ply, int itemID){
-		WPACKET WtPk = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_STALLSEARCH);
+		// Сначала собираем результаты поиска, затем формируем пакет (count в начале)
+		struct StallResult {
+			const char* name;
+			const char* stallName;
+			char location[16];
+			DWORD count;
+			DWORD cost;
+		};
+		std::vector<StallResult> results;
 
-		int resultCount = 0;
 		CCharacter * pCha;
 		SubMap* map = ply.GetSubMap();
 		map->BeginGetPlyCha();
 		while ((pCha = map->GetNextPlyCha())){
-			if (resultCount == 255){
+			if (results.size() >= 255){
 				break;
 			}
-			
+
 			if (pCha->IsPlayerCha() && pCha->IsLiveing()){
 				CStallData* pData = pCha->GetStallData();
 				if (pData){
 					for (BYTE i = 0; i < pData->m_byNum; ++i){
 						if (pData->m_Goods[i].sItemID == itemID){
-							resultCount += 1;
-							WRITE_STRING(WtPk, pCha->GetName());
-							WRITE_STRING(WtPk, pCha->GetStallName());
-							char buf[16];
-							sprintf(buf, "%d,%d", (int)pCha->GetPos().x/100, (int)pCha->GetPos().y/100);
-							WRITE_STRING(WtPk, buf);
-							WRITE_LONG(WtPk, pData->m_Goods[i].byCount);
-							WRITE_LONG(WtPk, pData->m_Goods[i].dwMoney);
-							
-							if (resultCount == 255){
+							StallResult r;
+							r.name = pCha->GetName();
+							r.stallName = pCha->GetStallName();
+							sprintf(r.location, "%d,%d", (int)pCha->GetPos().x/100, (int)pCha->GetPos().y/100);
+							r.count = pData->m_Goods[i].byCount;
+							r.cost = pData->m_Goods[i].dwMoney;
+							results.push_back(r);
+
+							if (results.size() >= 255){
 								break;
 							}
 						}
 					}
 				}
-				
+
 			}
 		}
-		WRITE_SHORT(WtPk, resultCount);
+
+		// Формат count-first: [count, data1, data2, ..., dataN]
+		WPACKET WtPk = GETWPACKET();
+		WRITE_CMD(WtPk, CMD_MC_STALLSEARCH);
+		WRITE_LONG(WtPk, (long)results.size());
+		for (size_t i = 0; i < results.size(); ++i){
+			WRITE_STRING(WtPk, results[i].name);
+			WRITE_STRING(WtPk, results[i].stallName);
+			WRITE_STRING(WtPk, results[i].location);
+			WRITE_LONG(WtPk, results[i].count);
+			WRITE_LONG(WtPk, results[i].cost);
+		}
 		ply.ReflectINFof(&ply, WtPk);
 	}
 

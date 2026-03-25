@@ -1,5 +1,8 @@
 
 #include "log2.h"
+
+#include <iostream>
+
 #include "util2.h"
 #include <stdexcept>
 
@@ -181,6 +184,7 @@ void CLog2::Log(char const* szFormat, ...)
     _fpLock.Lock();
     try
     {
+    	std::cout << buf;
         fprintf(_fp, "%s", buf);
         fflush(_fp);
     }

@@ -1392,7 +1392,7 @@ bool CCharacter::PlayPose( DWORD pose, DWORD type, int time, int fps, bool isBle
 	if(!g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = true;
 
 	fps = CGameApp::GetFrameFPS();
-	LG( getLogName(), "Pose:%d, type:%d, time:%d\n", pose, type, time, fps ); 
+	//LG( getLogName(), "Pose:%d, type:%d, time:%d\n", pose, type, time, fps );
 	
     bool rv = GetCurPoseType()==pose;
 

@@ -68,7 +68,6 @@ type PlayerAuthorized =
       GateAddr: uint32
       mutable Password2: string
       mutable Characters: CharacterSlot array
-      mutable CharacterCount: int
       mutable CurrentCha: int
       mutable CanReceiveRequests: bool }
 

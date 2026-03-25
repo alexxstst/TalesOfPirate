@@ -99,6 +99,7 @@ module Commands =
     [<Literal>] let CMD_CM_ITEM_LOTTERY_ASK = 95us  // Запрос лотереи
     [<Literal>] let CMD_CM_ITEM_LOTTERY_ASR = 96us  // Ответ лотереи
     [<Literal>] let CMD_CM_RANK             = 97us  // Запрос рейтинга
+    [<Literal>] let CMD_CM_CAPTAIN_CONFIRM_ASR = 97us // Подтверждение капитана (дубликат CMD_CM_RANK)
     [<Literal>] let CMD_CM_ITEM_AMPHITHEATER_ASK = 98us // Запрос амфитеатра (PvP-арена)
     [<Literal>] let CMD_CM_ITEM_LOCK_ASK    = 99us  // Запрос блокировки предмета
     [<Literal>] let CMD_CM_ITEM_UNLOCK_ASK  = 100us // Запрос разблокировки предмета

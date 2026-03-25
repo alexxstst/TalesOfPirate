@@ -122,20 +122,7 @@ let handleTpUserLogin (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (p
                         let gameAcct = db.GetOrCreateGameAccount(int acctId, acctName)
                         let pw2 = if isNull gameAcct.Password2 then "" else gameAcct.Password2
                         let chars = db.GetCharactersByAccount(int acctId, cfg.MaxCharacters)
-                        let mapped = chars |> Array.map (fun c ->
-                            let struct (typeId, equipIds) = parseLookMinimal c.LookData
-                            { ChaId = c.Id
-                              ChaName = c.Name
-                              Job = defaultArg (Option.ofObj c.Job) ""
-                              Level = c.Level
-                              TypeId = typeId
-                              EquipIds = equipIds
-                              Motto = defaultArg (Option.ofObj c.Motto) ""
-                              Icon = c.IconId
-                              GuildId = if c.GuildId.HasValue then c.GuildId.Value else 0
-                              GuildPermission = uint32 c.GuildPermissions
-                              ChatColour = uint32 c.ChatColor
-                              Estop = c.EstopUntil.HasValue && c.EstopUntil.Value > DateTimeOffset.UtcNow })
+                        let mapped = chars |> Array.map toCharacterSlot
                         mapped, pw2
                     with ex ->
                         ctx.Logger.LogError(ex, "TP_USER_LOGIN: ошибка загрузки персонажей для {Name}", acctName)
@@ -154,7 +141,6 @@ let handleTpUserLogin (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (p
                       GateAddr = gtAddr
                       Password2 = password2
                       Characters = characters
-                      CharacterCount = characters.Length
                       CurrentCha = -1
                       CanReceiveRequests = true }
 
@@ -470,7 +456,6 @@ let handleTpSyncPlylst (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (
                   GateAddr = gtAddr
                   Password2 = pw2
                   Characters = Array.empty
-                  CharacterCount = 0
                   CurrentCha = -1
                   CanReceiveRequests = true }
             registry.Register(gpAddr, player)

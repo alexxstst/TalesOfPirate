@@ -183,20 +183,18 @@ type GameServerSystem
             y: uint32,
             isSwitch: bool
         ) =
-        let mutable w = WPacket(256)
-        w.WriteCmd(Commands.CMD_TM_ENTERMAP)
-        w.WriteInt64(int64 player.ActId)
-        w.WriteString(player.Password)
-        w.WriteInt64(int64 player.DatabaseId)
-        w.WriteInt64(int64 player.WorldId)
-        w.WriteString(map)
-        w.WriteInt64(int64 mapCopyNo)
-        w.WriteInt64(int64 x)
-        w.WriteInt64(int64 y)
-        w.WriteInt64(if isSwitch then 1L else 0L)
         let (ChannelId_ rawId) = player.Id
-        w.WriteInt64(int64 rawId)
-        w.WriteInt64(int64 player.GarnerWinner)
+        let w = Serialize.tmEnterMapMessage
+                    { ActId = player.ActId
+                      Password = player.Password
+                      DatabaseId = player.DatabaseId
+                      WorldId = player.WorldId
+                      MapName = map
+                      MapCopyNo = mapCopyNo
+                      X = x; Y = y
+                      IsSwitch = isSwitch
+                      GateAddr = uint32 rawId
+                      GarnerWinner = player.GarnerWinner }
         game.SendPacket(w)
 
     /// Отправить пакет на GroupServer (с проверкой подключения).

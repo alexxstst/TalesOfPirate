@@ -7,6 +7,7 @@
 #include "procirculate.h"
 #include "UIBoothForm.h"
 #include "UIStoreForm.h"
+#include "CommandMessages.h"
 // Типы uChar, uShort, uLong, cChar определены в NetIF.h
 // Crypto++ — BLAKE2s для хеширования пароля
 #include "blake2.h"
@@ -71,8 +72,7 @@ void CS_Logout()
 
 void CS_OfflineMode()
 {
-	WPacket pk = g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_OFFLINE_MODE);
+	auto pk = net::msg::serializeCmOfflineModeCmd();
 	g_NetIF->SendPacketMessage(pk);
 	//fix stall bugs with offline stalls @mothannakh
 	g_stUIBooth.PullBoothSuccess();
@@ -133,14 +133,7 @@ void CS_GuildBankOper(stNetBank * pNetBank){
 		return;
 	}
 
-	WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CP_GUILDBANK);
-	pk.WriteInt64(0);
-	pk.WriteInt64(pNetBank->chSrcType);
-	pk.WriteInt64(pNetBank->sSrcID);
-	pk.WriteInt64(pNetBank->sSrcNum);
-	pk.WriteInt64(pNetBank->chTarType);
-	pk.WriteInt64(pNetBank->sTarID);
+	auto pk = net::msg::serialize(net::msg::CmGuildBankOperMessage{0, pNetBank->chSrcType, pNetBank->sSrcID, pNetBank->sSrcNum, pNetBank->chTarType, pNetBank->sTarID});
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -149,11 +142,7 @@ void CS_GuildBankTakeGold(int gold){
 		g_pGameApp->MsgBox("Not available at sea");
 		return;
 	}
-	WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CP_GUILDBANK);
-	pk.WriteInt64(1);
-	pk.WriteInt64(0);
-	pk.WriteInt64(gold);
+	auto pk = net::msg::serialize(net::msg::CmGuildBankGoldMessage{1, 0, gold});
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -162,21 +151,14 @@ void CS_GuildBankGiveGold(int gold){
 		g_pGameApp->MsgBox("Not available at sea");
 		return;
 	}
-	WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CP_GUILDBANK);
-	pk.WriteInt64(1);
-	pk.WriteInt64(1);
-	pk.WriteInt64(gold);
+	auto pk = net::msg::serialize(net::msg::CmGuildBankGoldMessage{1, 1, gold});
 	g_NetIF->SendPacketMessage(pk);
 }
 
 void CS_ChangePass(const char *pass,const char *pin)
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CP_CHANGEPASS);	
 //TODO(Ogge): Might need to hash it using blake2s?
-	pk.WriteString(pass);	
-	pk.WriteString(pin);
+	auto pk = net::msg::serialize(net::msg::CmChangePassMessage{pass, pin});
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -202,9 +184,7 @@ void CS_Register(const char *user,const char *pass,const char *email)
 
 void CS_StallSearch(int ItemID)
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_STALLSEARCH);	//�����ж�
-	pk.WriteInt64(ItemID);
+	auto pk = net::msg::serialize(net::msg::CmStallSearchMessage{ItemID});
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -233,38 +213,28 @@ void CS_UpdatePassword2( const char szOld[], const char szPassword[] )
 //��������
 void CS_LockKitbag()
 {
-    WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_KITBAG_LOCK);
+	auto pk = net::msg::serializeCmKitbagLockCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
 //��������
 void CS_UnlockKitbag( const char szPassword[] )
 {
-    WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_KITBAG_UNLOCK);
-    pk.WriteString(szPassword);
+	auto pk = net::msg::serialize(net::msg::CmKitbagUnlockMessage{szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
 //��鱳������״̬
 void CS_KitbagCheck()
 {
-    WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_KITBAG_CHECK);
+	auto pk = net::msg::serializeCmKitbagCheckCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
 // �����Զ�����״̬
 void CS_AutoKitbagLock(bool bAutoLock)
 {
-	WPacket pk = g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_KITBAG_AUTOLOCK);
-	pk.WriteInt64(bAutoLock ? 1 : 0);
+	auto pk = net::msg::serialize(net::msg::CmAutoKitbagLockMessage{bAutoLock ? 1 : 0});
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -283,10 +253,7 @@ void CS_EndAction( CActionState* pState )
 // Э��C->S : ����ֹͣ�ж���Ϣ
 void CS_DieReturn(char chReliveType)
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_DIE_RETURN);	//�����ж�
-	pk.WriteInt64(chReliveType);
+	auto pk = net::msg::serialize(net::msg::CmDieReturnMessage{chReliveType});
 	g_NetIF->SendPacketMessage(pk);
 
 	// log
@@ -313,10 +280,7 @@ void CS_SendPing()
 
 void CS_MapMask(const char *szMapName)
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_MAP_MASK);	//�����ж�
-	pk.WriteString(szMapName);
+	auto pk = net::msg::serialize(net::msg::CmMapMaskMessage{szMapName});
 	g_NetIF->SendPacketMessage(pk);
 
 	// log
@@ -326,52 +290,25 @@ void CS_MapMask(const char *szMapName)
 
 void CS_RequestTalk( DWORD dwNpcID, BYTE byCmd )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTALK );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_TALKPAGE );
-	packet.WriteInt64( byCmd );
-
+	auto packet = net::msg::serialize(net::msg::CmRequestTalkMessage{(int64_t)dwNpcID, (int64_t)byCmd});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_SelFunction( DWORD dwNpcID, BYTE byPageID, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTALK );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_FUNCITEM );
-	packet.WriteInt64( byPageID );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmSelFunctionMessage{(int64_t)dwNpcID, (int64_t)byPageID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_Sale( DWORD dwNpcID, BYTE byIndex, BYTE byCount )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTRADE );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_TRADEITEM );
-	packet.WriteInt64( ROLE_TRADE_SALE );
-	packet.WriteInt64( byIndex );
-	packet.WriteInt64( byCount );
-
+	auto packet = net::msg::serialize(net::msg::CmSaleMessage{(int64_t)dwNpcID, (int64_t)byIndex, (int64_t)byCount});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_Buy(  DWORD dwNpcID, BYTE byItemType, BYTE byIndex1, BYTE byIndex2, BYTE byCount )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTRADE );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_TRADEITEM );
-	packet.WriteInt64( ROLE_TRADE_BUY );
-	packet.WriteInt64( byItemType );
-	packet.WriteInt64( byIndex1 );
-	packet.WriteInt64( byIndex2 );
-	packet.WriteInt64( byCount );
-
+	auto packet = net::msg::serialize(net::msg::CmBuyMessage{(int64_t)dwNpcID, (int64_t)byItemType, (int64_t)byIndex1, (int64_t)byIndex2, (int64_t)byCount});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -419,132 +356,67 @@ void CS_BuyGoods( DWORD dwNpcID, DWORD dwBoatID, BYTE byItemType, BYTE byIndex1,
 
 void CS_BlackMarketExchangeReq( DWORD dwNpcID, short sSrcID, short sSrcNum, short sTarID, short sTarNum, short sTimeNum, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTRADE );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_BLACKMARKET_EXCHANGE_REQ );
-	packet.WriteInt64( sTimeNum );
-	packet.WriteInt64( sSrcID );
-	packet.WriteInt64( sSrcNum );
-	packet.WriteInt64( sTarID );
-	packet.WriteInt64( sTarNum );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmBlackMarketExchangeReqMessage{(int64_t)dwNpcID, (int64_t)sTimeNum, (int64_t)sSrcID, (int64_t)sSrcNum, (int64_t)sTarID, (int64_t)sTarNum, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_RequestTrade( BYTE byType, DWORD dwCharID )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_REQUEST );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-
+	auto packet = net::msg::serialize(net::msg::CmRequestTradeMessage{byType, dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_AcceptTrade( BYTE byType, DWORD dwCharID )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_ACCEPT );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-
+	auto packet = net::msg::serialize(net::msg::CmAcceptTradeMessage{byType, dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_AddItem( BYTE byType, DWORD dwCharID, BYTE byOpType, BYTE byIndex, BYTE byItemIndex, BYTE byCount )
 {
-    WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_ITEM );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-	packet.WriteInt64( byOpType );
-	packet.WriteInt64( byIndex );
-	packet.WriteInt64( byItemIndex );
-	packet.WriteInt64( byCount );
-
+	auto packet = net::msg::serialize(net::msg::CmAddItemMessage{byType, dwCharID, byOpType, byIndex, byItemIndex, byCount});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_AddMoney( BYTE byType, DWORD dwCharID, BYTE byOpType, DWORD dwMoney )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_MONEY );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-	packet.WriteInt64( byOpType );
-	packet.WriteInt64(0);
-	packet.WriteInt64( dwMoney );
-
+	auto packet = net::msg::serialize(net::msg::CmAddMoneyMessage{byType, dwCharID, byOpType, 0, dwMoney});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_AddIMP( BYTE byType, DWORD dwCharID, BYTE byOpType, DWORD dwMoney )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_MONEY );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-	packet.WriteInt64( byOpType );
-	packet.WriteInt64(1);
-	packet.WriteInt64( dwMoney );
-
+	auto packet = net::msg::serialize(net::msg::CmAddMoneyMessage{byType, dwCharID, byOpType, 1, dwMoney});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_CancelTrade( BYTE byType, DWORD dwCharID )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_CANCEL );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-
+	auto packet = net::msg::serialize(net::msg::CmCancelTradeMessage{byType, dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_ValidateTradeData( BYTE byType, DWORD dwCharID )
 {
-    WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_VALIDATEDATA );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-
+	auto packet = net::msg::serialize(net::msg::CmValidateTradeDataMessage{byType, dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_ValidateTrade( BYTE byType, DWORD dwCharID )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CHARTRADE_VALIDATE );
-	packet.WriteInt64( byType );
-	packet.WriteInt64( dwCharID );
-
+	auto packet = net::msg::serialize(net::msg::CmValidateTradeMessage{byType, dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_MissionPage( DWORD dwNpcID, BYTE byCmd, BYTE bySelItem, BYTE byParam )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTALK );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_MISSION );
-	packet.WriteInt64( byCmd );
-	packet.WriteInt64( bySelItem );
-	packet.WriteInt64( byParam );
-
+	auto packet = net::msg::serialize(net::msg::CmMissionPageMessage{(int64_t)dwNpcID, (int64_t)byCmd, (int64_t)bySelItem, (int64_t)byParam});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_SelMission( DWORD dwNpcID, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTALK );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_MISSION );
-	packet.WriteInt64( ROLE_MIS_SEL );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmSelMissionMessage{(int64_t)dwNpcID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -577,19 +449,15 @@ void CS_SelMissionFunc( DWORD dwNpcID, BYTE byPageID, BYTE byIndex )
 
 void CS_MisLog()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_MISLOG );
-
-	g_NetIF->SendPacketMessage( packet );	
+	auto packet = net::msg::serializeCmMisLogCmd();
+	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_MisLogInfo( WORD wID )
 {
 	if( wID == -1 )
 		return;
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_MISLOGINFO );
-	packet.WriteInt64( wID );
+	auto packet = net::msg::serialize(net::msg::CmMisLogInfoMessage{wID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -597,107 +465,70 @@ void CS_MisClear( WORD wID )
 {
 	if( wID == -1 )
 		return;
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_MISLOG_CLEAR );
-	packet.WriteInt64( wID );
+	auto packet = net::msg::serialize(net::msg::CmMisLogClearMessage{wID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_ForgeItem( BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_FORGE );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmForgeItemMessage{byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_CreateBoat( const char szBoat[], char szHeader, char szEngine, char szCannon, char szEquipment )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CREATE_BOAT );
-	packet.WriteString( szBoat );
-	packet.WriteInt64( szHeader );
-	packet.WriteInt64( szEngine );
-	packet.WriteInt64( szCannon );
-	packet.WriteInt64( szEquipment );
-
+	auto packet = net::msg::serialize(net::msg::CmCreateBoatMessage{szBoat, szHeader, szEngine, szCannon, szEquipment});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_SelectBoatList( DWORD dwNpcID, BYTE byType, BYTE byIndex )
 {
-	
+
 	if( byType == mission::BERTH_TRADE_LIST )
 	{
 		CS_SelectTradeBoat( dwNpcID, byIndex );
 	}
 	else
-	{		
-		WPacket packet = g_NetIF->GetWPacket();
-		packet.WriteCmd( CMD_CM_BOAT_SELECT );
-		packet.WriteInt64( dwNpcID );
-		packet.WriteInt64( byType );
-		packet.WriteInt64( byIndex );
+	{
+		auto packet = net::msg::serialize(net::msg::CmSelectBoatListMessage{(int64_t)dwNpcID, (int64_t)byType, (int64_t)byIndex});
 		g_NetIF->SendPacketMessage( packet );
 	}
-	
+
 }
 
 void CS_SelectBoat( DWORD dwNpcID, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_BOAT_LUANCH );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmBoatLaunchMessage{(int64_t)dwNpcID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_SelectBoatBag( DWORD dwNpcID, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_BOAT_BAGSEL );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmBoatBagSelMessage{(int64_t)dwNpcID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_UpdateBoat( char szHeader, char szEngine, char szCannon, char szEquipment )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_UPDATEBOAT_PART );
-	packet.WriteInt64( szHeader );
-	packet.WriteInt64( szEngine );
-	packet.WriteInt64( szCannon );
-	packet.WriteInt64( szEquipment );
-
+	auto packet = net::msg::serialize(net::msg::CmUpdateBoatMessage{szHeader, szEngine, szCannon, szEquipment});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_CancelBoat()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_BOAT_CANCEL );
-
+	auto packet = net::msg::serializeCmBoatCancelCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_GetBoatInfo()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_BOAT_GETINFO );
-
-	g_NetIF->SendPacketMessage( packet );	
+	auto packet = net::msg::serializeCmBoatGetInfoCmd();
+	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_EntityEvent( DWORD dwEntityID )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_ENTITY_EVENT );
-	packet.WriteInt64( dwEntityID );
-
+	auto packet = net::msg::serialize(net::msg::CmEntityEventMessage{(int64_t)dwEntityID});
 	g_NetIF->SendPacketMessage( packet );
 
 	const char* szLogName = g_LogName.GetMainLogName();
@@ -723,73 +554,51 @@ void CS_StallInfo( const char szName[], mission::NET_STALL_ALLDATA& Data )
 
 void CS_StallOpen( DWORD dwCharID )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STALL_OPEN );
-	packet.WriteInt64( dwCharID );
+	auto packet = net::msg::serialize(net::msg::CmStallOpenMessage{(int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StallBuy( DWORD dwCharID, BYTE byIndex, BYTE byCount ,int gridID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STALL_BUY );
-	packet.WriteInt64( dwCharID );
-	packet.WriteInt64( byIndex );
-	packet.WriteInt64( byCount );
-	packet.WriteInt64( gridID );
+	auto packet = net::msg::serialize(net::msg::CmStallBuyMessage{(int64_t)dwCharID, (int64_t)byIndex, (int64_t)byCount, (int64_t)gridID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StallClose()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STALL_CLOSE );
+	auto packet = net::msg::serializeCmStallCloseCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
 //add by jilinlee 2007/4/20/////////////////////
 void CS_ReadBookStart()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_READBOOK_START );
+	auto packet = net::msg::serializeCmReadBookStartCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_ReadBookClose()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_READBOOK_CLOSE );
+	auto packet = net::msg::serializeCmReadBookCloseCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 ///////////////////////////////////////////////
 
 void CS_UpdateHair( stNetUpdateHair& stData )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_UPDATEHAIR );
-	packet.WriteInt64( stData.sScriptID );
-	for(short i = 0; i < 4; i++)
-	{
-		packet.WriteInt64( stData.sGridLoc[i] );
-	}
+	auto packet = net::msg::serialize(net::msg::CmUpdateHairMessage{stData.sScriptID, stData.sGridLoc[0], stData.sGridLoc[1], stData.sGridLoc[2], stData.sGridLoc[3]});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_TeamFightAsk( unsigned long ulWorldID, long lHandle, char chType )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_TEAM_FIGHT_ASK );
-	packet.WriteInt64(chType);
-	packet.WriteInt64( ulWorldID );
-	packet.WriteInt64( lHandle );
+	auto packet = net::msg::serialize(net::msg::CmTeamFightAskMessage{chType, (int64_t)ulWorldID, lHandle});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_TeamFightAnswer(bool bAccess)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_TEAM_FIGHT_ASR );
-	packet.WriteInt64(bAccess ? 1 : 0);
+	auto packet = net::msg::serialize(net::msg::CmTeamFightAnswerMessage{bAccess ? 1 : 0});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -798,20 +607,13 @@ void CS_TeamFightAnswer(bool bAccess)
 // chPosID����Ӧλ�õı��
 void CS_ItemRepairAsk(long lRepairmanID, long lRepairmanHandle, char chPosType, char chPosID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_ITEM_REPAIR_ASK );
-	packet.WriteInt64( lRepairmanID );
-	packet.WriteInt64( lRepairmanHandle );
-	packet.WriteInt64(chPosType);
-	packet.WriteInt64(chPosID);
+	auto packet = net::msg::serialize(net::msg::CmItemRepairAskMessage{lRepairmanID, lRepairmanHandle, chPosType, chPosID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_ItemRepairAnswer(bool bAccess)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_ITEM_REPAIR_ASR );
-	packet.WriteInt64(bAccess ? 1 : 0);
+	auto packet = net::msg::serialize(net::msg::CmItemRepairAnswerMessage{bAccess ? 1 : 0});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -843,18 +645,14 @@ void CS_ItemForgeAsk(bool bSure, stNetItemForgeAsk *pSForge)
 
 void CS_ItemForgeAnswer(bool bAccess)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_ITEM_FORGE_ASR );
-	packet.WriteInt64(bAccess ? 1 : 0);
+	auto packet = net::msg::serialize(net::msg::CmItemForgeAnswerMessage{bAccess ? 1 : 0});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 // Add by lark.li 20080514 begin
 void CS_ItemLotteryAnswer(bool bAccess)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_ITEM_LOTTERY_ASR );
-	packet.WriteInt64(bAccess ? 1 : 0);
+	auto packet = net::msg::serialize(net::msg::CmItemLotteryAnswerMessage{bAccess ? 1 : 0});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -939,50 +737,37 @@ void CS_ItemForgeAsk(bool bSure, int nType, int arPacketPos[], int nPosCount)
 // ���̳�
 void CS_StoreOpenAsk(const char szPassword[])
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STORE_OPEN_ASK );
-	packet.WriteString(szPassword);
+	auto packet = net::msg::serialize(net::msg::CmStoreOpenAskMessage{szPassword});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StoreClose()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STORE_CLOSE );
+	auto packet = net::msg::serializeCmStoreCloseCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StoreListAsk(long lClsID, short sPage, short sNum)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STORE_LIST_ASK );
-	packet.WriteInt64(lClsID);
-	packet.WriteInt64(sPage);
-	packet.WriteInt64(sNum);
+	auto packet = net::msg::serialize(net::msg::CmStoreListAskMessage{lClsID, sPage, sNum});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StoreBuyAsk(long lComID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STORE_BUY_ASK );
-	packet.WriteInt64(lComID);
+	auto packet = net::msg::serialize(net::msg::CmStoreBuyAskMessage{lComID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StoreChangeAsk(long lNum)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STORE_CHANGE_ASK );
-	packet.WriteInt64(lNum);
+	auto packet = net::msg::serialize(net::msg::CmStoreChangeAskMessage{lNum});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_StoreQuery(long lNum)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STORE_QUERY );
-	packet.WriteInt64(lNum);
+	auto packet = net::msg::serialize(net::msg::CmStoreQueryMessage{lNum});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -997,53 +782,38 @@ void CS_StoreQuery(long lNum)
 
 void CS_ReportWG( const char szInfo[] )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CP_REPORT_WG );
-	packet.WriteString( szInfo );
+	auto packet = net::msg::serialize(net::msg::CmReportWgMessage{szInfo});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_TigerStart( DWORD dwNpcID, short sSel1, short sSel2, short sSel3 )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_TIGER_START );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64(sSel1);
-	packet.WriteInt64(sSel2);
-	packet.WriteInt64(sSel3);
+	auto packet = net::msg::serialize(net::msg::CmTigerStartMessage{(int64_t)dwNpcID, sSel1, sSel2, sSel3});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_TigerStop( DWORD dwNpcID, short sNum )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_TIGER_STOP );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( sNum );
+	auto packet = net::msg::serialize(net::msg::CmTigerStopMessage{(int64_t)dwNpcID, sNum});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_RequestDailyBuffInfo()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd(CMD_CM_DailyBuffRequest);
+	auto packet = net::msg::serializeCmDailyBuffRequestCmd();
 	g_NetIF->SendPacketMessage(packet);
 }
 
 
 void CS_VolunteerList(short sPage, short sNum)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_VOLUNTER_LIST );
-	packet.WriteInt64( sPage );
-	packet.WriteInt64( sNum );
+	auto packet = net::msg::serialize(net::msg::CmVolunteerListMessage{sPage, sNum});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_VolunteerAdd()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_VOLUNTER_ADD );
+	auto packet = net::msg::serializeCmVolunteerAddCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -1051,51 +821,38 @@ void CS_VolunteerAdd()
 
 void CS_VolunteerDel()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_VOLUNTER_DEL );
+	auto packet = net::msg::serializeCmVolunteerDelCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_VolunteerSel(const char *szName)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_VOLUNTER_SEL );
-	packet.WriteString(szName);
+	auto packet = net::msg::serialize(net::msg::CmVolunteerSelMessage{szName});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_VolunteerOpen(short sNum)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_VOLUNTER_OPEN );
-	packet.WriteInt64( sNum );
+	auto packet = net::msg::serialize(net::msg::CmVolunteerOpenMessage{sNum});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_VolunteerAsr(BOOL bRet, const char *szName)
 {
-	short sRet = bRet ? 1 : 0;
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_VOLUNTER_ASR );
-	packet.WriteInt64( sRet );
-	packet.WriteString( szName );
+	auto packet = net::msg::serialize(net::msg::CmVolunteerAsrMessage{bRet ? 1 : 0, szName});
 	g_NetIF->SendPacketMessage( packet );
 }
 
 void CS_SyncKitbagTemp()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_KITBAGTEMP_SYNC );
+	auto packet = net::msg::serializeCmKitbagTempSyncCmd();
 	g_NetIF->SendPacketMessage( packet );
 }
 
 // Add by lark.li 20080707 begin
 void CS_CaptainConfirmAsr(short sRet, DWORD dwTeamID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_CAPTAIN_CONFIRM_ASR );
-	packet.WriteInt64(sRet);
-	packet.WriteInt64(dwTeamID);
+	auto packet = net::msg::serialize(net::msg::CmCaptainConfirmAsrMessage{sRet, (int64_t)dwTeamID});
 	g_NetIF->SendPacketMessage( packet );
 }
 // End

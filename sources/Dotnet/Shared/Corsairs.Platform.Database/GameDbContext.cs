@@ -79,6 +79,8 @@ public class GameDbContext : DbContext
             e.Property(c => c.Name).HasColumnName("atorNome").HasMaxLength(50);
             e.Property(c => c.Motto).HasColumnName("motto").HasMaxLength(50);
             e.Property(c => c.IconId).HasColumnName("icon");
+            // version DEFAULT 1 — при C# default 0 пусть БД ставит 1
+            e.Property(c => c.Version).HasColumnName("version").HasDefaultValue((short)1);
             e.Property(c => c.Job).HasColumnName("job").HasMaxLength(50);
             e.Property(c => c.Level).HasColumnName("degree");
             e.Property(c => c.Experience).HasColumnName("exp");
@@ -94,13 +96,19 @@ public class GameDbContext : DbContext
             e.Property(c => c.Luck).HasColumnName("luk");
             e.Property(c => c.SailLevel).HasColumnName("sail_lv");
             e.Property(c => c.SailExperience).HasColumnName("sail_exp");
+            e.Property(c => c.SailLeftExperience).HasColumnName("sail_left_exp");
             e.Property(c => c.LifeLevel).HasColumnName("live_lv");
             e.Property(c => c.LifeExperience).HasColumnName("live_exp");
+            e.Property(c => c.LifeTp).HasColumnName("live_tp");
             e.Property(c => c.MapName).HasColumnName("map").HasMaxLength(50);
+            e.Property(c => c.MainMap).HasColumnName("main_map").HasMaxLength(50);
             e.Property(c => c.MapX).HasColumnName("map_x");
             e.Property(c => c.MapY).HasColumnName("map_y");
+            e.Property(c => c.Radius).HasColumnName("radius");
             e.Property(c => c.Angle).HasColumnName("angle");
-            e.Property(c => c.MainMap).HasColumnName("main_map").HasMaxLength(50);
+            e.Property(c => c.MapMask).HasColumnName("map_mask").HasMaxLength(8000);
+            e.Property(c => c.BirthCity).HasColumnName("birth").HasMaxLength(50);
+            e.Property(c => c.LoginCha).HasColumnName("login_cha").HasMaxLength(50);
             // Gold (long) ↔ bomd (int): legacy хранит как int
             e.Property(c => c.Gold).HasColumnName("bomd")
                 .HasConversion(v => (int)v, v => (long)v);
@@ -111,7 +119,28 @@ public class GameDbContext : DbContext
             e.Property(c => c.GuildRank).HasColumnName("guild_stat");
             e.Property(c => c.GuildPermissions).HasColumnName("guild_permission");
             e.Property(c => c.LookData).HasColumnName("olhe").HasMaxLength(2000);
-            e.Property(c => c.ChatColor).HasColumnName("chatColour");
+            e.Property(c => c.ChatColor).HasColumnName("chatColour").HasDefaultValue(-1);
+            // Инвентарь
+            // kb_capacity DEFAULT 24 — при C# default 0 пусть БД ставит 24
+            e.Property(c => c.KitbagCapacity).HasColumnName("kb_capacity").HasDefaultValue(24);
+            e.Property(c => c.Kitbag).HasColumnName("kitbag").HasMaxLength(7000);
+            e.Property(c => c.KitbagTmp).HasColumnName("kitbag_tmp");
+            e.Property(c => c.KitbagLocked).HasColumnName("kb_locked");
+            // Навыки
+            e.Property(c => c.Skillbag).HasColumnName("skillbag").HasMaxLength(1200);
+            e.Property(c => c.SkillState).HasColumnName("skill_state").HasMaxLength(1024);
+            e.Property(c => c.Shortcut).HasColumnName("shortcut").HasMaxLength(1200);
+            // Квесты
+            e.Property(c => c.Mission).HasColumnName("mission").HasMaxLength(2048);
+            e.Property(c => c.MissionRecord).HasColumnName("misrecord").HasMaxLength(2048);
+            e.Property(c => c.MissionTrigger).HasColumnName("mistrigger").HasMaxLength(2048);
+            e.Property(c => c.MissionCount).HasColumnName("miscount").HasMaxLength(512);
+            // Банк / магазин
+            e.Property(c => c.Bank).HasColumnName("bank").HasMaxLength(50);
+            e.Property(c => c.Credit).HasColumnName("credit");
+            e.Property(c => c.StoreItemId).HasColumnName("store_item");
+            // Сетевой адрес (runtime)
+            e.Property(c => c.ServerAddress).HasColumnName("endeMem");
             // IsDeleted (bool) ↔ delflag (tinyint)
             e.Property(c => c.IsDeleted).HasColumnName("delflag")
                 .HasConversion(v => (byte)(v ? 1 : 0), v => v != 0);
@@ -132,6 +161,10 @@ public class GameDbContext : DbContext
                         v => v.HasValue ? v.Value.UtcDateTime : new DateTime(2001, 1, 1),
                         v => (DateTimeOffset?)new DateTimeOffset(
                             DateTime.SpecifyKind(v, DateTimeKind.Utc))));
+            e.Property(c => c.EstopTime).HasColumnName("estoptime");
+            // Расширенные данные (nullable в БД)
+            e.Property(c => c.ExtendData).HasColumnName("extend").HasMaxLength(2048);
+            e.Property(c => c.Imp).HasColumnName("IMP");
 
             // Свойства без legacy-колонок
             e.Ignore(c => c.MaxHp);

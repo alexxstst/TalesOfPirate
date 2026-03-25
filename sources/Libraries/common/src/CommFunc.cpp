@@ -8,6 +8,9 @@
 
 #include "CommFunc.h"
 #include "GameCommon.h"
+#include <charconv>
+#include <string_view>
+#include <vector>
 
 using namespace std;
 
@@ -666,225 +669,249 @@ void String2Item(const char* pszData, SItemGrid* SGridCont) {
 }
 
 
-// �������ת��Ϊ�ַ���
-char* LookData2String(const stNetChangeChaPart *pLook, char *szLookBuf, int nLen, bool bNewLook)
+// Вспомогательная функция: разбить строку по разделителю
+static std::vector<std::string_view> SplitView(std::string_view sv, char delim)
 {
-	if (!pLook || !szLookBuf) return NULL;
-	if (bNewLook && !g_IsValidLook(pLook->sTypeID, enumEQUIP_NUM, pLook->sHairID))
-		return NULL;
+	std::vector<std::string_view> result;
+	while (!sv.empty())
+	{
+		auto pos = sv.find(delim);
+		if (pos == std::string_view::npos)
+		{
+			result.push_back(sv);
+			break;
+		}
+		result.push_back(sv.substr(0, pos));
+		sv.remove_prefix(pos + 1);
+	}
+	return result;
+}
 
-	__int64	lnCheckSum	= 0;
-	char	szData[512];
-	int		nBufLen = 0, nDataLen;
-	szLookBuf[0] = '\0';
+static int ParseInt(std::string_view sv)
+{
+	int value = 0;
+	std::from_chars(sv.data(), sv.data() + sv.size(), value);
+	return value;
+}
 
-	/*	2008-8-7	yangyinyu	change	begin!
-	sprintf(szData, "%d#", defLOOK_CUR_VER);
-	*/
-	strcpy(szData, "112#");
-	//	2008-8-7	yangyinyu	change	end!
-	nDataLen = (int)strlen(szData);
-	if (nBufLen + nDataLen >= nLen) return NULL;
-	strcat(szLookBuf, szData);
-	nBufLen += nDataLen;
+static long ParseLong(std::string_view sv)
+{
+	long value = 0;
+	std::from_chars(sv.data(), sv.data() + sv.size(), value);
+	return value;
+}
 
-	sprintf(szData, "%d,%d", pLook->sTypeID, pLook->sHairID);
-	nDataLen = (int)strlen(szData);
-	if (nBufLen + nDataLen >= nLen) return NULL;
-	strcat(szLookBuf, szData);
-	nBufLen += nDataLen;
-	lnCheckSum += (pLook->sTypeID + pLook->sHairID);
+bool LookData2String(const stNetChangeChaPart &pLook, std::string &strData)
+{
+	int64_t checkSum = 0;
+	strData.clear();
+	strData.reserve(4096);
 
-	SItemGrid const* pGridCont;
+	// Версия
+	strData += "112#";
+
+	// TypeID, HairID
+	strData += std::to_string(pLook.sTypeID);
+	strData += ',';
+	strData += std::to_string(pLook.sHairID);
+	checkSum += pLook.sTypeID + pLook.sHairID;
+
+	// 34 слота экипировки
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
-		pGridCont = static_cast<SItemGrid const*>(&pLook->SLink[i]);
-		if (bNewLook && !g_IsValidLook(pLook->sTypeID, i, pGridCont->sID)) return NULL; // ���ݲ��Ϸ�
+		const auto &item = pLook.SLink[i];
+		strData += ';';
 
-		/*	2008-8-7	yangyinyu	change	begin!
-		sprintf(szData, ";%d,%d,%d,%d,%d,%d,%d",
-			pGridCont->sID, pGridCont->sNum,
-			pGridCont->sEndure[0], pGridCont->sEndure[1], pGridCont->sEnergy[0], pGridCont->sEnergy[1], pGridCont->chForgeLv);
-			*/
-		sprintf(szData, ";%ld,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
-			pGridCont->expiration, pGridCont->bItemTradable,pGridCont->bIsLock, pGridCont->sNeedLv, pGridCont->dwDBID, pGridCont->sID, pGridCont->sNum,
-			pGridCont->sEndure[0], pGridCont->sEndure[1], pGridCont->sEnergy[0], pGridCont->sEnergy[1], pGridCont->chForgeLv);
-		//	2008-8-7	yangyinyu	change	end!
-		nDataLen = (int)strlen(szData);
-		if (nBufLen + nDataLen >= nLen) return NULL;
-		strcat(szLookBuf, szData);
-		nBufLen += nDataLen;
+		// expiration, bItemTradable, bIsLock, sNeedLv, dwDBID, sID, sNum,
+		// sEndure[0], sEndure[1], sEnergy[0], sEnergy[1], chForgeLv
+		strData += std::to_string(item.expiration);
+		strData += ','; strData += std::to_string(static_cast<int>(item.bItemTradable));
+		strData += ','; strData += std::to_string(static_cast<int>(item.bIsLock));
+		strData += ','; strData += std::to_string(item.sNeedLv);
+		strData += ','; strData += std::to_string(item.dwDBID);
+		strData += ','; strData += std::to_string(item.sID);
+		strData += ','; strData += std::to_string(item.sNum);
+		strData += ','; strData += std::to_string(item.sEndure[0]);
+		strData += ','; strData += std::to_string(item.sEndure[1]);
+		strData += ','; strData += std::to_string(item.sEnergy[0]);
+		strData += ','; strData += std::to_string(item.sEnergy[1]);
+		strData += ','; strData += std::to_string(static_cast<int>(item.chForgeLv));
 
-		/*	2008-8-7	yangyinyu	change	begin!
-		lnCheckSum += (pGridCont->sID + pGridCont->sNum + pGridCont->sEndure[0] + pGridCont->sEndure[1] + pGridCont->sEnergy[0] + pGridCont->sEnergy[1] + pGridCont->chForgeLv);
-		*/
-		lnCheckSum += (pGridCont->bItemTradable + pGridCont->bIsLock + pGridCont->sNeedLv + pGridCont->dwDBID + pGridCont->sID + pGridCont->sNum + pGridCont->sEndure[0] + pGridCont->sEndure[1] + pGridCont->sEnergy[0] + pGridCont->sEnergy[1] + pGridCont->chForgeLv);
-		//	2008-8-7	yangyinyu	change	end!
+		checkSum += item.bItemTradable + item.bIsLock + item.sNeedLv + item.dwDBID
+			+ item.sID + item.sNum + item.sEndure[0] + item.sEndure[1]
+			+ item.sEnergy[0] + item.sEnergy[1] + item.chForgeLv;
+
+		// DB параметры
 		for (int m = 0; m < enumITEMDBP_MAXNUM; m++)
 		{
-			sprintf(szData, ",%ld", pGridCont->GetDBParam(m));
-			nDataLen = (int)strlen(szData);
-			if (nBufLen + nDataLen >= nLen) return NULL;
-			strcat(szLookBuf, szData);
-			nBufLen += nDataLen;
-			lnCheckSum += pGridCont->GetDBParam(m);
+			strData += ','; strData += std::to_string(item.GetDBParam(m));
+			checkSum += item.GetDBParam(m);
 		}
-		if (pGridCont->IsInstAttrValid())
-		{
-			nDataLen = 2;
-			if (nBufLen + nDataLen >= nLen) return NULL;
-			strcat(szLookBuf, ",1");
-			nBufLen += nDataLen;
 
+		// Instance-атрибуты
+		if (item.IsInstAttrValid())
+		{
+			strData += ",1";
 			for (int k = 0; k < defITEM_INSTANCE_ATTR_NUM; k++)
 			{
-				sprintf(szData, ",%d,%d", pGridCont->sInstAttr[k][0], pGridCont->sInstAttr[k][1]);
-				nDataLen = (int)strlen(szData);
-				if (nBufLen + nDataLen >= nLen) return NULL;
-				strcat(szLookBuf, szData);
-				nBufLen += nDataLen;
-				lnCheckSum += pGridCont->sInstAttr[k][0] + pGridCont->sInstAttr[k][1];
+				strData += ','; strData += std::to_string(item.sInstAttr[k][0]);
+				strData += ','; strData += std::to_string(item.sInstAttr[k][1]);
+				checkSum += item.sInstAttr[k][0] + item.sInstAttr[k][1];
 			}
 		}
 		else
 		{
-			nDataLen = 2;
-			if (nBufLen + nDataLen >= nLen) return NULL;
-			strcat(szLookBuf, ",0");
-			nBufLen += nDataLen;
+			strData += ",0";
 		}
 	}
-	sprintf(szData, ";%lld", lnCheckSum);
-	nDataLen = (int)strlen(szData);
-	if (nBufLen + nDataLen >= nLen) return NULL;
-	strcat(szLookBuf, szData);
-	nBufLen += nDataLen;
 
-	return szLookBuf;
+	// Контрольная сумма
+	strData += ';';
+	strData += std::to_string(checkSum);
+
+	return true;
 }
 
-// �ַ���ת��Ϊ�������
-bool Strin2LookData(stNetChangeChaPart *pLook, std::string &strData)
+bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 {
-	if (!pLook)
+	if (strData.empty())
 		return false;
 
-	__int64	lnCheckSum	= 0;
-	const short csStrNum = enumEQUIP_NUM + 1 + 10;
-	std::string strList[csStrNum];
-	/*	2008-7-8	yangyinyu	change	begin!
-	const short csSubNum = 8 + defITEM_INSTANCE_ATTR_NUM_VER110 * 2 + 1;
-	*/
-	const short csSubNum = 9 + defITEM_INSTANCE_ATTR_NUM_VER110 * 2 + 1 +1 ;
-	//	2008-7-8	yangyinyu	change	end!
-	std::string strSubList[csSubNum];
-	std::string	strVer[2];
-	bool bIsOldVer = Util_ResolveTextLine(strData.c_str(), strVer, 2, '#') == 1 ? true : false;
+	int64_t checkSum = 0;
 
-	/*	2008-7-8	yangyinyu	add	begin!
-	if (bIsOldVer)
-		Util_ResolveTextLine(strData.c_str(), strList, csStrNum, ';');
-	else
-		Util_ResolveTextLine(strVer[1].c_str(), strList, csStrNum, ';');
-		*/
-	int	iVer	=	0;
-
-	if (bIsOldVer)
-		Util_ResolveTextLine(strData.c_str(), strList, csStrNum, ';');
-	else
+	// Определяем версию: "version#data" или просто "data"
+	int version = 0;
+	std::string_view dataView(strData);
+	auto hashPos = dataView.find('#');
+	if (hashPos != std::string_view::npos)
 	{
-		Util_ResolveTextLine(strVer[1].c_str(), strList, csStrNum, ';');
-		iVer	=	atoi(	strVer[0].c_str()	);
-	};
-	//	2008-7-8	yangyinyu	add	end!
+		version = ParseInt(dataView.substr(0, hashPos));
+		dataView.remove_prefix(hashPos + 1);
+	}
 
-	Util_ResolveTextLine(strList[0].c_str(), strSubList, 3, ',');
-	pLook->sTypeID = Str2Int(strSubList[0]);
-	pLook->sHairID = Str2Int(strSubList[1]);
-	lnCheckSum += pLook->sTypeID + pLook->sHairID;
-	SItemGrid	*pItem = 0;
-	short	sTCount;
-	int i = 0;
-	for ( i = 0; i < enumEQUIP_NUM; i++)
+	// Разбиваем по ';': section[0]=header, section[1..34]=slots, section[35]=checksum
+	auto sections = SplitView(dataView, ';');
+
+	// Простой F# формат: "typeID;hairID;faceID" (2-3 секции, без запятых в header)
+	if (sections.size() < static_cast<size_t>(enumEQUIP_NUM) + 1)
 	{
-		sTCount = 0;
-		pItem = &pLook->SLink[i];
-		Util_ResolveTextLine(strList[i + 1].c_str(), strSubList, csSubNum, ',');
-
-		//	2008-7-8	yangyinyu	add	begin!
-		pItem->expiration	= std::stol(strSubList[sTCount++]);
-		pItem->bItemTradable = Str2Int(strSubList[sTCount++]);
-		
-
-		if(	iVer	==	112	)
+		if (sections.size() >= 2 && sections[0].find(',') == std::string_view::npos)
 		{
-			pItem->bIsLock = Str2Int(strSubList[sTCount++]);
-			pItem->sNeedLv = Str2Int(strSubList[sTCount++]);
-			pItem->dwDBID	=	Str2Int(	strSubList[sTCount++]	);
+			pLook.sTypeID = static_cast<short>(ParseInt(sections[0]));
+			pLook.sHairID = static_cast<short>(ParseInt(sections[1]));
+			for (auto &item : pLook.SLink)
+				item = SItemGrid();
+			return true;
+		}
+		return false;
+	}
+
+	// Section 0: "typeID,hairID"
+	auto headerFields = SplitView(sections[0], ',');
+	if (headerFields.size() < 2)
+		return false;
+	pLook.sTypeID = static_cast<short>(ParseInt(headerFields[0]));
+	pLook.sHairID = static_cast<short>(ParseInt(headerFields[1]));
+	checkSum += pLook.sTypeID + pLook.sHairID;
+
+	// Sections 1..34: слоты экипировки
+	for (int i = 0; i < enumEQUIP_NUM; i++)
+	{
+		auto fields = SplitView(sections[i + 1], ',');
+		int idx = 0;
+		auto &item = pLook.SLink[i];
+
+		auto nextInt = [&]() -> int {
+			return (idx < static_cast<int>(fields.size())) ? ParseInt(fields[idx++]) : 0;
 		};
-		//	2008-7-8	yangyinyu	add	end!
+		auto nextLong = [&]() -> long {
+			return (idx < static_cast<int>(fields.size())) ? ParseLong(fields[idx++]) : 0L;
+		};
 
-		pItem->sID = Str2Int(strSubList[sTCount++]);
-		pItem->sNum = Str2Int(strSubList[sTCount++]);
-		pItem->sEndure[0] = Str2Int(strSubList[sTCount++]);
-		pItem->sEndure[1] = Str2Int(strSubList[sTCount++]);
-		pItem->sEnergy[0] = Str2Int(strSubList[sTCount++]);
-		pItem->sEnergy[1] = Str2Int(strSubList[sTCount++]);
-		pItem->chForgeLv = Str2Int(strSubList[sTCount++]);
+		item.expiration = nextLong();
+		item.bItemTradable = nextInt();
 
-		/*	2008-7-8	yangyinyu	add	begin!
-		lnCheckSum += pItem->sID + pItem->sNum + pItem->sEndure[0] + pItem->sEndure[1] + pItem->sEnergy[0] + pItem->sEnergy[1] + pItem->chForgeLv;
-		*/
-		if(	iVer	==	112	)
+		if (version == 112)
 		{
-			lnCheckSum +=	pItem->bIsLock + pItem->sNeedLv + pItem->dwDBID + pItem->sID + pItem->sNum + pItem->sEndure[0] + pItem->sEndure[1] + pItem->sEnergy[0] + pItem->sEnergy[1] + pItem->chForgeLv;
+			item.bIsLock = nextInt();
+			item.sNeedLv = nextInt();
+			item.dwDBID = nextInt();
+		}
+
+		item.sID = static_cast<short>(nextInt());
+		item.sNum = static_cast<short>(nextInt());
+		item.sEndure[0] = static_cast<short>(nextInt());
+		item.sEndure[1] = static_cast<short>(nextInt());
+		item.sEnergy[0] = static_cast<short>(nextInt());
+		item.sEnergy[1] = static_cast<short>(nextInt());
+		item.chForgeLv = static_cast<char>(nextInt());
+
+		if (version == 112)
+		{
+			checkSum += item.bIsLock + item.sNeedLv + item.dwDBID
+				+ item.sID + item.sNum + item.sEndure[0] + item.sEndure[1]
+				+ item.sEnergy[0] + item.sEnergy[1] + item.chForgeLv;
 		}
 		else
 		{
-			lnCheckSum += pItem->sID + pItem->sNum + pItem->sEndure[0] + pItem->sEndure[1] + pItem->sEnergy[0] + pItem->sEnergy[1] + pItem->chForgeLv;
+			checkSum += item.sID + item.sNum + item.sEndure[0] + item.sEndure[1]
+				+ item.sEnergy[0] + item.sEnergy[1] + item.chForgeLv;
 		}
-		//	2008-7-8	yangyinyu	add	end!
-		lnCheckSum += pItem->bItemTradable;
-		
+		checkSum += item.bItemTradable;
+
+		// DB параметры
 		for (int m = 0; m < enumITEMDBP_MAXNUM; m++)
 		{
-			pItem->SetDBParam(m, std::stol(strSubList[sTCount++]));
-			lnCheckSum += pItem->GetDBParam(m);
+			item.SetDBParam(m, nextLong());
+			checkSum += item.GetDBParam(m);
 		}
-		if (!bIsOldVer && iVer >= defLOOK_CUR_VER) // �����������Ƿ���ڵı�ʾ
+
+		// Instance-атрибуты
+		bool hasInstAttr = version >= defLOOK_CUR_VER && hashPos != std::string_view::npos;
+		if (hasInstAttr)
 		{
-			if (Str2Int(strSubList[sTCount++]) > 0) // ����ʵ������
+			if (nextInt() > 0)
 			{
 				for (int k = 0; k < defITEM_INSTANCE_ATTR_NUM; k++)
 				{
-					pItem->sInstAttr[k][0] = Str2Int(strSubList[sTCount + k * 2]);
-					pItem->sInstAttr[k][1] = Str2Int(strSubList[sTCount + k * 2 + 1]);
-					lnCheckSum += (pItem->sInstAttr[k][0] + pItem->sInstAttr[k][1]);
+					item.sInstAttr[k][0] = static_cast<short>(nextInt());
+					item.sInstAttr[k][1] = static_cast<short>(nextInt());
+					checkSum += item.sInstAttr[k][0] + item.sInstAttr[k][1];
 				}
 			}
 			else
-				pItem->SetInstAttrInvalid();
+			{
+				item.SetInstAttrInvalid();
+			}
 		}
 		else
 		{
 			for (int k = 0; k < defITEM_INSTANCE_ATTR_NUM; k++)
 			{
-				pItem->sInstAttr[k][0] = Str2Int(strSubList[sTCount + k * 2]);
-				pItem->sInstAttr[k][1] = Str2Int(strSubList[sTCount + k * 2 + 1]);
-				lnCheckSum += (pItem->sInstAttr[k][0] + pItem->sInstAttr[k][1]);
+				item.sInstAttr[k][0] = static_cast<short>(nextInt());
+				item.sInstAttr[k][1] = static_cast<short>(nextInt());
+				checkSum += item.sInstAttr[k][0] + item.sInstAttr[k][1];
 			}
 		}
 	}
 
-	if (!bIsOldVer)
+	// Проверка контрольной суммы (только для новых форматов с версией)
+	if (hashPos != std::string_view::npos)
 	{
-		char	szCheckSum[64];
-		sprintf(szCheckSum, "%lld", lnCheckSum);
-		if (strncmp(szCheckSum, strList[i + 1].c_str(), 64))
-			return false;
+		auto checksumIdx = static_cast<size_t>(enumEQUIP_NUM) + 1;
+		if (checksumIdx < sections.size())
+		{
+			int64_t expected = 0;
+			std::from_chars(sections[checksumIdx].data(),
+				sections[checksumIdx].data() + sections[checksumIdx].size(), expected);
+			if (expected != checkSum)
+				return false;
+		}
 	}
 	else
-		pLook->sVer = defLOOK_CUR_VER;
+	{
+		pLook.sVer = defLOOK_CUR_VER;
+	}
 
 	return true;
 }

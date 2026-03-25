@@ -14,6 +14,15 @@ open Corsairs.Platform.Database
 open Corsairs.Platform.Database.Entities
 open Corsairs.GroupServer.LookDataParser
 
+/// Резолв birthplace → имя карты через конфиг (аналог C++ m_mapBirthplace).
+let private resolveMapName (cfg: Corsairs.GroupServer.Config.GroupServerConfig) (birthplace: string) =
+    match cfg.Birthplaces with
+    | null -> "garner"
+    | bp ->
+        match bp.TryGetValue(birthplace) with
+        | true, map -> map
+        | _ -> "garner"
+
 // ══════════════════════════════════════════════════════════
 //  TP_BGNPLAY — Выбор персонажа и вход в игру
 // ══════════════════════════════════════════════════════════
@@ -33,7 +42,7 @@ let handleTpBgnplay (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (pla
     | Authorized_ auth ->
         if auth.CurrentCha >= 0 then
             sendErr Commands.ERR_PT_INERR
-        elif chaIndex < 0 || chaIndex >= cfg.MaxCharacters || chaIndex >= auth.CharacterCount then
+        elif chaIndex < 0 || chaIndex >= cfg.MaxCharacters || chaIndex >= auth.Characters.Length then
             sendErr Commands.ERR_PT_INVALIDCHA
         elif auth.Password2.Length = 0 then
             sendErr Commands.ERR_PT_INVALID_PW2
@@ -170,26 +179,12 @@ let handleTpEndplay (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (pla
                 use scope = ctx.ScopeFactory.CreateScope()
                 let db = scope.ServiceProvider.GetRequiredService<GameDbContext>()
                 let chars = db.GetCharactersByAccount(int auth.ActId, cfg.MaxCharacters)
-                chars |> Array.map (fun c ->
-                    let struct (typeId, equipIds) = parseLookMinimal c.LookData
-                    { ChaId = c.Id
-                      ChaName = c.Name
-                      Job = defaultArg (Option.ofObj c.Job) ""
-                      Level = c.Level
-                      TypeId = typeId
-                      EquipIds = equipIds
-                      Motto = defaultArg (Option.ofObj c.Motto) ""
-                      Icon = c.IconId
-                      GuildId = if c.GuildId.HasValue then c.GuildId.Value else 0
-                      GuildPermission = uint32 c.GuildPermissions
-                      ChatColour = uint32 c.ChatColor
-                      Estop = c.EstopUntil.HasValue && c.EstopUntil.Value > DateTimeOffset.UtcNow })
+                chars |> Array.map toCharacterSlot
             with ex ->
                 ctx.Logger.LogError(ex, "TP_ENDPLAY: ошибка загрузки персонажей для {Act}", auth.ActId)
                 auth.Characters
 
         auth.Characters <- characters
-        auth.CharacterCount <- characters.Length
         auth.CurrentCha <- -1
         player.State <- Authorized_ auth
 
@@ -252,7 +247,7 @@ let handleTpNewcha (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (play
     | Authorized_ auth ->
         if auth.CurrentCha >= 0 then
             sendResult Commands.ERR_PT_INERR
-        elif auth.CharacterCount >= cfg.MaxCharacters then
+        elif auth.Characters.Length >= cfg.MaxCharacters then
             sendResult Commands.ERR_PT_TOMAXCHA
         elif not (isValidCharName chaName) then
             sendResult Commands.ERR_PT_ERRCHANAME
@@ -270,14 +265,16 @@ let handleTpNewcha (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (play
                 if nameExists then
                     sendResult Commands.ERR_PT_SAMECHANAME
                 else
-                    let mapName = if String.IsNullOrEmpty(birthplace) then "garner" else birthplace
-                    let lookData = $"{typeId};{hairId};{faceId}"
+                    let mapName = resolveMapName cfg birthplace
+                    let lookData = buildLookData typeId hairId faceId
                     let newChar = Character()
                     newChar.AccountId <- int auth.ActId
                     newChar.Name <- chaName
                     newChar.Job <- ""
-                    newChar.Level <- 1s
+                    newChar.Level <- 0s
                     newChar.MapName <- mapName
+                    newChar.MainMap <- mapName
+                    newChar.BirthCity <- birthplace
                     newChar.LookData <- lookData
                     newChar.CreatedAt <- DateTimeOffset.UtcNow
                     newChar.LastLoginAt <- DateTimeOffset.UtcNow
@@ -289,21 +286,9 @@ let handleTpNewcha (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (play
                     db.Characters.Add(newChar) |> ignore
                     db.SaveChanges() |> ignore
 
-                    let newSlot =
-                        { ChaId = newChar.Id
-                          ChaName = chaName
-                          Job = ""
-                          Level = 1s
-                          TypeId = int16 typeId
-                          EquipIds = Array.zeroCreate CommandMessages.EQUIP_NUM
-                          Motto = ""
-                          Icon = 0s
-                          GuildId = 0
-                          GuildPermission = 0u
-                          ChatColour = 0u
-                          Estop = false }
-                    auth.Characters <- Array.append auth.Characters [| newSlot |]
-                    auth.CharacterCount <- auth.CharacterCount + 1
+                    // Перезагружаем список персонажей из БД
+                    let chars = db.GetCharactersByAccount(int auth.ActId, cfg.MaxCharacters)
+                    auth.Characters <- chars |> Array.map toCharacterSlot
                     sendResult Commands.ERR_SUCCESS
                     ctx.Logger.LogInformation("TP_NEWCHA: {Name} создан для аккаунта {Act}", chaName, auth.ActId)
             with ex ->
@@ -331,7 +316,7 @@ let handleTpDelcha (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (play
     | Authorized_ auth ->
         if auth.CurrentCha >= 0 then
             sendResult Commands.ERR_PT_INERR
-        elif chaIndex < 0 || chaIndex >= auth.CharacterCount then
+        elif chaIndex < 0 || chaIndex >= auth.Characters.Length then
             sendResult Commands.ERR_PT_INVALIDCHA
         elif auth.Password2 <> password2 then
             sendResult Commands.ERR_PT_INVALID_PW2
@@ -365,7 +350,6 @@ let handleTpDelcha (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (play
                             |> Array.indexed
                             |> Array.filter (fun (i, _) -> i <> chaIndex)
                             |> Array.map snd
-                        auth.CharacterCount <- auth.CharacterCount - 1
 
                         sendResult Commands.ERR_SUCCESS
                         ctx.Logger.LogInformation("TP_DELCHA: {Name} удалён", chaSlot.ChaName)

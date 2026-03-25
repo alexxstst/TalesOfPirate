@@ -8,6 +8,7 @@
 #include "BinaryIO.h"
 #include "PacketPool.h"
 #include "MsgpackUtil.h"
+#include "CommandNames.h"
 #include "mpack.h"
 #include <cstdint>
 #include <cstring>
@@ -74,7 +75,12 @@ public:
             ? mpack_sequence_to_string(
                   reinterpret_cast<const char*>(_data + 8), pl)
             : "";
-        return ">> WPacket[Cmd=" + std::to_string(GetCmd())
+        auto cmd = GetCmd();
+        auto name = net::GetCommandName(cmd);
+        std::string cmdStr = name
+            ? std::string(name) + "(" + std::to_string(cmd) + ")"
+            : std::to_string(cmd);
+        return ">> WPacket[Cmd=" + cmdStr
             + " Sess=" + std::to_string(GetSess())
             + " Size=" + std::to_string(GetPacketSize())
             + payload + "]";
@@ -162,7 +168,12 @@ public:
             ? mpack_sequence_to_string(
                   reinterpret_cast<const char*>(_data + 8), pl)
             : "";
-        return "<< RPacket[Cmd=" + std::to_string(GetCmd())
+        auto cmd = GetCmd();
+        auto name = net::GetCommandName(cmd);
+        std::string cmdStr = name
+            ? std::string(name) + "(" + std::to_string(cmd) + ")"
+            : std::to_string(cmd);
+        return "<< RPacket[Cmd=" + cmdStr
             + " Sess=" + std::to_string(GetSess())
             + " Size=" + std::to_string(GetPacketSize())
             + payload + "]";

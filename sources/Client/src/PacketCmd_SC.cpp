@@ -79,38 +79,28 @@ BOOL SC_UpdateGuildGold(LPRPACKET pk) {
 }
 
 BOOL SC_ShowStallSearch(LPRPACKET pk) {
-	uChar l_num = pk.ReverseReadInt64();
+	// Формат count-first: десериализуем через McShowStallSearchMessage
+	net::msg::McShowStallSearchMessage msg;
+	net::msg::deserialize(pk, msg);
 	NetMC_LISTGUILD_BEGIN();
-	for (uChar i = 0; i < l_num; ++i) {
-		//char buf[8];
-		//sprintf(buf,"%03d>",i+1);
-		uLong l_id = i + 1;
-		std::string l_name = pk.ReadString(); //player name
-		std::string l_motto = pk.ReadString(); //stall name
-		std::string l_leadername = pk.ReadString(); //location
-		uShort l_memtotal = pk.ReadInt64(); //count remaining
-		__int64 l_exp = pk.ReadInt64(); //cost each
-		NetMC_LISTGUILD(l_id, l_name.c_str(), l_motto.c_str(), l_leadername.c_str(), l_memtotal, l_exp);
+	for (size_t i = 0; i < msg.entries.size(); ++i) {
+		auto& e = msg.entries[i];
+		NetMC_LISTGUILD(i + 1, e.name.c_str(), e.stallName.c_str(), e.location.c_str(), e.count, e.cost);
 	}
 	NetMC_LISTGUILD_END();
 	return TRUE;
 }
 
 BOOL SC_ShowRanking(LPRPACKET pk) {
-	uChar l_num = pk.ReverseReadInt64();
+	// Формат count-first: десериализуем через McShowRankingMessage
+	net::msg::McShowRankingMessage msg;
+	net::msg::deserialize(pk, msg);
 	NetMC_LISTGUILD_BEGIN();
-	for (uChar i = 0; i < l_num; ++i) {
+	for (size_t i = 0; i < msg.entries.size(); ++i) {
+		auto& e = msg.entries[i];
 		char buf[8];
-		sprintf(buf, "%03d>", i + 1);
-		uLong l_id = i + 1;
-		cChar* l_name = buf; //rank
-		std::string l_motto = pk.ReadString(); //name
-		std::string l_leadername = pk.ReadString(); //job
-		uShort l_memtotal = pk.ReadInt64(); //level
-		uLong l_explow = 0;
-		uLong l_exphigh = 0;
-		__int64 l_exp = l_exphigh * 0x100000000 + l_explow;
-		NetMC_LISTGUILD(l_id, l_name, l_motto.c_str(), l_leadername.c_str(), l_memtotal, l_exp);
+		sprintf(buf, "%03d>", (int)(i + 1));
+		NetMC_LISTGUILD(i + 1, buf, e.name.c_str(), e.guild.c_str(), (uShort)e.level, e.score);
 	}
 	NetMC_LISTGUILD_END();
 	return TRUE;
@@ -302,7 +292,8 @@ static void convertBaseInfo(const net::msg::ChaBaseInfo& src, stNetActorCreate& 
 		dst.SLookInfo.SLook.sEngine = static_cast<USHORT>(src.look.boatParts.engine);
 		dst.SLookInfo.SLook.sCannon = static_cast<USHORT>(src.look.boatParts.cannon);
 		dst.SLookInfo.SLook.sEquipment = static_cast<USHORT>(src.look.boatParts.equipment);
-	} else {
+	}
+	else {
 		dst.SLookInfo.SLook.sHairID = static_cast<short>(src.look.hairId);
 		for (int i = 0; i < enumEQUIP_NUM; ++i) {
 			const auto& eq = src.look.equips[i];
@@ -317,7 +308,8 @@ static void convertBaseInfo(const net::msg::ChaBaseInfo& src, stNetActorCreate& 
 				item.bValid = eq.valid != 0;
 				item.bItemTradable = eq.tradable != 0;
 				item.expiration = static_cast<long>(eq.expiration);
-			} else {
+			}
+			else {
 				item.sNum = static_cast<short>(eq.num);
 				item.sEndure[0] = static_cast<short>(eq.endure0);
 				item.sEndure[1] = static_cast<short>(eq.endure1);
@@ -573,7 +565,8 @@ BOOL SC_EndPlay(LPRPACKET pk) {
 			}
 		}
 		NetEndPlay(data.maxChaNum, characters);
-	} else {
+	}
+	else {
 		NetEndPlay(0, {});
 	}
 
@@ -679,16 +672,18 @@ BOOL PC_Ping(LPRPACKET pk) {
 }
 
 BOOL SC_Ping(LPRPACKET pk) {
+	net::msg::McPingMessage msg;
+	net::msg::deserialize(pk, msg);
 	{
 		auto const l = std::lock_guard{g_NetIF->m_mutmov};
 
 		WPacket wpk = g_NetIF->GetWPacket();
 		wpk.WriteCmd(CMD_CM_PING);
-		wpk.WriteInt64(pk.ReadInt64());
-		wpk.WriteInt64(pk.ReadInt64());
-		wpk.WriteInt64(pk.ReadInt64());
-		wpk.WriteInt64(pk.ReadInt64());
-		wpk.WriteInt64(pk.ReadInt64());
+		wpk.WriteInt64(msg.v1);
+		wpk.WriteInt64(msg.v2);
+		wpk.WriteInt64(msg.v3);
+		wpk.WriteInt64(msg.v4);
+		wpk.WriteInt64(msg.v5);
 		g_NetIF->SendPacketMessage(wpk);
 	}
 
@@ -708,12 +703,12 @@ BOOL SC_CheckPing(LPRPACKET pk) {
 }
 
 BOOL SC_Say(LPRPACKET pk) {
-	uShort l_len;
+	net::msg::McSayMessage msg;
+	net::msg::deserialize(pk, msg);
 	stNetSay l_netsay;
-	l_netsay.m_srcid = pk.ReadInt64();
-	l_netsay.m_content = pk.ReadSequence(l_len);
-	DWORD dwColour = pk.ReadInt64();
-	NetSay(l_netsay, dwColour);
+	l_netsay.m_srcid = msg.sourceId;
+	l_netsay.m_content = msg.content.c_str();
+	NetSay(l_netsay, msg.color);
 
 	return TRUE;
 }
@@ -725,9 +720,10 @@ BOOL SC_SysInfo(LPRPACKET pk) {
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
-	uShort l_retlen;
+	net::msg::McSysInfoMessage msg;
+	net::msg::deserialize(pk, msg);
 	stNetSysInfo l_sysinfo;
-	l_sysinfo.m_sysinfo = pk.ReadSequence(l_retlen);
+	l_sysinfo.m_sysinfo = msg.info.c_str();
 	NetSysInfo(l_sysinfo);
 	return TRUE;
 }
@@ -735,33 +731,37 @@ BOOL SC_SysInfo(LPRPACKET pk) {
 BOOL GuildSysInfo = false;
 
 BOOL SC_GuildInfo(LPRPACKET pk) {
-	uShort l_retlen;
+	net::msg::McSysInfoMessage msg;
+	net::msg::deserialize(pk, msg);
 	stNetSysInfo l_sysinfo;
-	l_sysinfo.m_sysinfo = pk.ReadSequence(l_retlen);
+	l_sysinfo.m_sysinfo = msg.info.c_str();
 	GuildSysInfo = true;
 	NetSysInfo(l_sysinfo);
 	return TRUE;
 }
 
 BOOL SC_PopupNotice(LPRPACKET pk) {
-	uShort l_retlen;
-	cChar* szNotice = pk.ReadSequence(l_retlen);
-	g_pGameApp->MsgBox(szNotice);
+	net::msg::McPopupNoticeMessage msg;
+	net::msg::deserialize(pk, msg);
+	g_pGameApp->MsgBox(msg.notice.c_str());
 	return TRUE;
 }
 
 BOOL SC_BickerNotice(LPRPACKET pk) {
+	net::msg::McBickerNoticeMessage msg;
+	net::msg::deserialize(pk, msg);
 	char szData[1024];
-	strncpy(szData, pk.ReadString().c_str(), 1024 - 1);
+	strncpy(szData, msg.text.c_str(), 1024 - 1);
 	NetBickerInfo(szData);
 	return TRUE;
 }
 
 BOOL SC_ColourNotice(LPRPACKET pk) {
+	net::msg::McColourNoticeMessage msg;
+	net::msg::deserialize(pk, msg);
 	char szData[1024];
-	unsigned int rgb = pk.ReadInt64();
-	strncpy(szData, pk.ReadString().c_str(), 1024 - 1);
-	NetColourInfo(rgb, szData);
+	strncpy(szData, msg.text.c_str(), 1024 - 1);
+	NetColourInfo(static_cast<unsigned int>(msg.color), szData);
 	return TRUE;
 }
 
@@ -830,8 +830,10 @@ BOOL SC_ChaEndSee(LPRPACKET pk) {
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
-	char chSeeType = pk.ReadInt64(); // �μ� CompCommand.h��EEntitySeenType
-	uLong l_id = pk.ReadInt64();
+	net::msg::McChaEndSeeMessage msg;
+	net::msg::deserialize(pk, msg);
+	char chSeeType = static_cast<char>(msg.seeType);
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	NetActorDestroy(l_id, chSeeType);
 	if (g_stUIStart.targetInfoID == l_id) {
 		g_stUIStart.RemoveTarget();
@@ -843,19 +845,25 @@ BOOL SC_ChaEndSee(LPRPACKET pk) {
 }
 
 BOOL SC_ItemCreate(LPRPACKET pk) {
+	// Десериализация через типизированное сообщение
+	net::msg::McItemCreateMessage msg;
+	net::msg::deserialize(pk, msg);
+
 	stNetItemCreate SCreateInfo;
 	memset(&SCreateInfo, 0, sizeof(SCreateInfo));
-	SCreateInfo.lWorldID = pk.ReadInt64(); // world ID
-	SCreateInfo.lHandle = pk.ReadInt64();
-	SCreateInfo.lID = pk.ReadInt64(); // ID
-	SCreateInfo.SPos.x = pk.ReadInt64(); // ��ǰxλ��
-	SCreateInfo.SPos.y = pk.ReadInt64(); // ��ǰyλ��
-	SCreateInfo.sAngle = pk.ReadInt64(); // ����
-	SCreateInfo.sNum = pk.ReadInt64(); // ����
-	SCreateInfo.chAppeType = pk.ReadInt64(); // ����ԭ�򣨲μ�CompCommand.h EItemAppearType��
-	SCreateInfo.lFromID = pk.ReadInt64(); // �׳�Դ��ID
-
-	ReadEntEventPacket(pk, SCreateInfo.SEvent);
+	SCreateInfo.lWorldID = static_cast<decltype(SCreateInfo.lWorldID)>(msg.worldId);
+	SCreateInfo.lHandle = static_cast<decltype(SCreateInfo.lHandle)>(msg.handle);
+	SCreateInfo.lID = static_cast<decltype(SCreateInfo.lID)>(msg.itemId);
+	SCreateInfo.SPos.x = static_cast<decltype(SCreateInfo.SPos.x)>(msg.posX);
+	SCreateInfo.SPos.y = static_cast<decltype(SCreateInfo.SPos.y)>(msg.posY);
+	SCreateInfo.sAngle = static_cast<decltype(SCreateInfo.sAngle)>(msg.angle);
+	SCreateInfo.sNum = static_cast<decltype(SCreateInfo.sNum)>(msg.num);
+	SCreateInfo.chAppeType = static_cast<decltype(SCreateInfo.chAppeType)>(msg.appeType);
+	SCreateInfo.lFromID = static_cast<decltype(SCreateInfo.lFromID)>(msg.fromId);
+	SCreateInfo.SEvent.lEntityID = static_cast<decltype(SCreateInfo.SEvent.lEntityID)>(msg.event.entityId);
+	SCreateInfo.SEvent.chEntityType = static_cast<decltype(SCreateInfo.SEvent.chEntityType)>(msg.event.entityType);
+	SCreateInfo.SEvent.usEventID = static_cast<decltype(SCreateInfo.SEvent.usEventID)>(msg.event.eventId);
+	SCreateInfo.SEvent.cszEventName = msg.event.eventName;
 
 	CSceneItem* CItem = NetCreateItem(SCreateInfo);
 	if (!CItem)
@@ -869,7 +877,9 @@ BOOL SC_ItemCreate(LPRPACKET pk) {
 }
 
 BOOL SC_ItemDestroy(LPRPACKET pk) {
-	unsigned long lID = pk.ReadInt64(); //ID
+	net::msg::McItemDestroyMessage msg;
+	net::msg::deserialize(pk, msg);
+	unsigned long lID = static_cast<unsigned long>(msg.worldId);
 
 	NetItemDisappear(lID);
 	LG("SC_Item", "Item Destroy[%u]\n", lID);
@@ -877,19 +887,21 @@ BOOL SC_ItemDestroy(LPRPACKET pk) {
 }
 
 BOOL SC_AStateBeginSee(LPRPACKET pk) {
-	stNetAreaState SynAState;
+	net::msg::McAStateBeginSeeMessage msg;
+	net::msg::deserialize(pk, msg);
 
+	stNetAreaState SynAState;
 	char chValidNum = 0;
-	SynAState.sAreaX = pk.ReadInt64();
-	SynAState.sAreaY = pk.ReadInt64();
-	SynAState.chStateNum = pk.ReadInt64();
+	SynAState.sAreaX = static_cast<short>(msg.areaX);
+	SynAState.sAreaY = static_cast<short>(msg.areaY);
+	SynAState.chStateNum = static_cast<char>(msg.states.size());
 	for (char j = 0; j < SynAState.chStateNum; j++) {
-		SynAState.State[chValidNum].chID = pk.ReadInt64();
+		SynAState.State[chValidNum].chID = static_cast<decltype(SynAState.State[0].chID)>(msg.states[j].stateId);
 		if (SynAState.State[chValidNum].chID == 0)
 			continue;
-		SynAState.State[chValidNum].chLv = pk.ReadInt64();
-		SynAState.State[chValidNum].lWorldID = pk.ReadInt64();
-		SynAState.State[chValidNum].uchFightID = pk.ReadInt64();
+		SynAState.State[chValidNum].chLv = static_cast<decltype(SynAState.State[0].chLv)>(msg.states[j].stateLv);
+		SynAState.State[chValidNum].lWorldID = static_cast<decltype(SynAState.State[0].lWorldID)>(msg.states[j].worldId);
+		SynAState.State[chValidNum].uchFightID = static_cast<decltype(SynAState.State[0].uchFightID)>(msg.states[j].fightId);
 		chValidNum++;
 	}
 	SynAState.chStateNum = chValidNum;
@@ -909,10 +921,13 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 }
 
 BOOL SC_AStateEndSee(LPRPACKET pk) {
-	stNetAreaState SynAState;
+	// Десериализация через типизированное сообщение
+	net::msg::McAStateEndSeeMessage msg;
+	net::msg::deserialize(pk, msg);
 
-	SynAState.sAreaX = pk.ReadInt64();
-	SynAState.sAreaY = pk.ReadInt64();
+	stNetAreaState SynAState;
+	SynAState.sAreaX = static_cast<decltype(SynAState.sAreaX)>(msg.areaX);
+	SynAState.sAreaY = static_cast<decltype(SynAState.sAreaY)>(msg.areaY);
 
 	NetAreaStateEndSee(&SynAState);
 
@@ -952,10 +967,11 @@ BOOL SC_AddItemCha(LPRPACKET pk) {
 
 // Э��S->C : ɾ�����߽�ɫ
 BOOL SC_DelItemCha(LPRPACKET pk) {
-	long lMainChaID = pk.ReadInt64();
+	net::msg::McDelItemChaMessage msg;
+	net::msg::deserialize(pk, msg);
 
 	char chSeeType = enumENTITY_SEEN_NEW;
-	uLong l_id = pk.ReadInt64();
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	NetActorDestroy(l_id, chSeeType);
 
 	return TRUE;
@@ -1367,50 +1383,103 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 
 // Э��S->C : ��ɫ������ж�ʧ��
 BOOL SC_FailedAction(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
-
-	char chType, chReason;
-	chType = pk.ReadInt64();
-	chReason = pk.ReadInt64();
-	NetFailedAction(chReason);
+	// Десериализация через типизированное сообщение
+	net::msg::McFailedActionMessage msg;
+	net::msg::deserialize(pk, msg);
+	NetFailedAction(static_cast<char>(msg.reason));
 	return TRUE;
 }
 
 // ͬ����ɫ����
 BOOL SC_SynAttribute(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McSynAttributeMessage msg;
+	net::msg::deserialize(pk, msg);
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	const char* szLogName = g_LogName.GetLogName(l_id);
 
 	stNetChaAttr SChaAttr;
-	ReadChaAttrPacket(pk, SChaAttr, szLogName);
+	memset(&SChaAttr, 0, sizeof(SChaAttr));
+	SChaAttr.chType = static_cast<char>(msg.attr.synType);
+	SChaAttr.sNum = static_cast<short>(msg.attr.attrs.size());
+	for (short i = 0; i < SChaAttr.sNum; i++) {
+		SChaAttr.SEff[i].lAttrID = static_cast<long>(msg.attr.attrs[i].attrId);
+		SChaAttr.SEff[i].lVal = static_cast<long>(msg.attr.attrs[i].attrVal);
+	}
 
-	//char val[32];
-	//char buff[245];
-	//sprintf(buff, "NetSynAttr %s\r\n", _i64toa(SChaAttr.SEff[0].lVal , val, 10));
-	//OutputDebugStr(buff);
+	// log
+	LG(szLogName, "Syn Character Attr: Count=%d\t, Type:%d\tTick:[%u]\n", SChaAttr.sNum, SChaAttr.chType,
+	   GetTickCount());
+	LG(szLogName, g_oLangRec.GetString(312));
+	for (short i = 0; i < SChaAttr.sNum; i++) {
+		LG(szLogName, "\t%d\t%d\n", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal);
+	}
 
 	NetSynAttr(l_id, SChaAttr.chType, SChaAttr.sNum, SChaAttr.SEff);
 
 	return TRUE;
 }
 
-// ͬ��������
+// Синхронизация сумки скиллов
 BOOL SC_SynSkillBag(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	// Десериализация через типизированное сообщение
+	net::msg::McSynSkillBagMessage msg;
+	net::msg::deserialize(pk, msg);
+
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	const char* szLogName = g_LogName.GetLogName(l_id);
 
 	stNetSkillBag SCurSkill;
-	if (ReadChaSkillBagPacket(pk, SCurSkill, szLogName))
-		NetSynSkillBag(l_id, &SCurSkill);
+	memset(&SCurSkill, 0, sizeof(SCurSkill));
 
+	// Установка default skill
+	stNetDefaultSkill SDefaultSkill;
+	SDefaultSkill.sSkillID = static_cast<decltype(SDefaultSkill.sSkillID)>(msg.skillBag.defSkillId);
+	SDefaultSkill.Exec();
+
+	SCurSkill.chType = static_cast<decltype(SCurSkill.chType)>(msg.skillBag.synType);
+	short sSkillNum = static_cast<short>(msg.skillBag.skills.size());
+	if (sSkillNum > 0) {
+		SCurSkill.SBag.Resize(sSkillNum);
+		SSkillGridEx* pSBag = SCurSkill.SBag.GetValue();
+		for (short i = 0; i < sSkillNum; i++) {
+			const auto& sk = msg.skillBag.skills[i];
+			pSBag[i].sID = static_cast<decltype(pSBag[i].sID)>(sk.id);
+			pSBag[i].chState = static_cast<decltype(pSBag[i].chState)>(sk.state);
+			pSBag[i].chLv = static_cast<decltype(pSBag[i].chLv)>(sk.level);
+			pSBag[i].sUseSP = static_cast<decltype(pSBag[i].sUseSP)>(sk.useSp);
+			pSBag[i].sUseEndure = static_cast<decltype(pSBag[i].sUseEndure)>(sk.useEndure);
+			pSBag[i].sUseEnergy = static_cast<decltype(pSBag[i].sUseEnergy)>(sk.useEnergy);
+			pSBag[i].lResumeTime = static_cast<decltype(pSBag[i].lResumeTime)>(sk.resumeTime);
+			for (int j = 0; j < defSKILL_RANGE_PARAM_NUM; j++)
+				pSBag[i].sRange[j] = static_cast<short>(sk.range[j]);
+		}
+
+		// log
+		LG(szLogName, "Syn Skill Bag, Type:%d,\tTick:[%u]\n", SCurSkill.chType, GetTickCount());
+		LG(szLogName, g_oLangRec.GetString(310));
+		char szRange[256];
+		for (short i = 0; i < sSkillNum; i++) {
+			sprintf(szRange, "%d", pSBag[i].sRange[0]);
+			if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
+				for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
+					sprintf(szRange + strlen(szRange), ",%d", pSBag[i].sRange[j]);
+			LG(szLogName, "\t%4d\t%4d\t%4d\t%6d\t%6d\t%6d\t%18d\t%s\n", pSBag[i].sID, pSBag[i].chState, pSBag[i].chLv,
+			   pSBag[i].sUseSP, pSBag[i].sUseEndure, pSBag[i].sUseEnergy, pSBag[i].lResumeTime, szRange);
+		}
+		LG(szLogName, "\n");
+	}
+
+	NetSynSkillBag(l_id, &SCurSkill);
 	return TRUE;
 }
 
 // ͬ��������
 BOOL SC_SynDefaultSkill(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McSynDefaultSkillMessage msg;
+	net::msg::deserialize(pk, msg);
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	stNetDefaultSkill SDefaultSkill;
-	SDefaultSkill.sSkillID = pk.ReadInt64();
+	SDefaultSkill.sSkillID = static_cast<decltype(SDefaultSkill.sSkillID)>(msg.skillId);
 	SDefaultSkill.Exec();
 	return TRUE;
 }
@@ -1419,11 +1488,40 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
-	uLong l_id = pk.ReadInt64();
+	net::msg::McSynSkillStateMessage msg;
+	net::msg::deserialize(pk, msg);
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	const char* szLogName = g_LogName.GetLogName(l_id);
 
+	unsigned long currentClient = GetTickCount();
+	unsigned long currentServer = static_cast<unsigned long>(msg.skillState.currentTime) / 1000;
+
 	stNetSkillState SCurSState;
-	ReadChaSkillStatePacket(pk, SCurSState, szLogName);
+	memset(&SCurSState, 0, sizeof(SCurSState));
+	SCurSState.chType = 0;
+	short sNum = static_cast<short>(msg.skillState.states.size());
+	if (sNum > 0) {
+		SCurSState.SState.Resize(sNum);
+		for (int nNum = 0; nNum < sNum; nNum++) {
+			SCurSState.SState[nNum].chID = static_cast<decltype(SCurSState.SState[nNum].chID)>(msg.skillState.states[nNum].stateId);
+			SCurSState.SState[nNum].chLv = static_cast<decltype(SCurSState.SState[nNum].chLv)>(msg.skillState.states[nNum].stateLv);
+
+			unsigned long duration = static_cast<unsigned long>(msg.skillState.states[nNum].duration);
+			unsigned long start = static_cast<unsigned long>(msg.skillState.states[nNum].startTime) / 1000;
+
+			unsigned long dif = currentServer - currentClient;
+			unsigned long end = start - dif + duration;
+
+			SCurSState.SState[nNum].lTimeRemaining = duration == 0 ? 0 : end - currentClient;
+		}
+	}
+
+	// log
+	LG(szLogName, "Syn Skill State: Num[%d]\tTick[%u]\n", sNum, GetTickCount());
+	LG(szLogName, g_oLangRec.GetString(311));
+	for (char i = 0; i < sNum; i++)
+		LG(szLogName, "\t%8d\t%4d\n", SCurSState.SState[i].chID, SCurSState.SState[i].chLv);
+	LG(szLogName, "\n");
 
 	NetSynSkillState(l_id, &SCurSState);
 
@@ -1461,8 +1559,10 @@ BOOL SC_SynTeam(LPRPACKET pk) {
 }
 
 BOOL SC_SynTLeaderID(LPRPACKET pk) {
-	long lID = pk.ReadInt64();
-	long lLeaderID = pk.ReadInt64();
+	net::msg::McSynTLeaderIdMessage msg;
+	net::msg::deserialize(pk, msg);
+	long lID = static_cast<long>(msg.worldId);
+	long lLeaderID = static_cast<long>(msg.leaderId);
 
 	NetChaTLeaderID(lID, lLeaderID);
 
@@ -1496,39 +1596,38 @@ BOOL SC_HelpInfo(LPRPACKET packet) {
 
 // NPC �Ի���Ϣ����
 BOOL SC_TalkInfo(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byCmd = packet.ReadInt64();
-	USHORT sLen = 0;
-	std::string pszDesp = packet.ReadString();
-	if (pszDesp.empty()) return FALSE;
-	NetShowTalk(pszDesp.c_str(), byCmd, dwNpcID);
+	net::msg::McTalkInfoMessage msg;
+	net::msg::deserialize(packet, msg);
+	if (msg.text.empty()) return FALSE;
+	NetShowTalk(msg.text.c_str(), static_cast<BYTE>(msg.cmd), static_cast<DWORD>(msg.npcId));
 	return TRUE;
 }
 
 BOOL SC_FuncInfo(LPRPACKET packet) {
+	net::msg::McFuncInfoMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	NET_FUNCPAGE FuncPage;
 	memset(&FuncPage, 0, sizeof(NET_FUNCPAGE));
 
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byPage = packet.ReadInt64();
-	strncpy(FuncPage.szTalk, packet.ReadString().c_str(), ROLE_MAXNUM_DESPSIZE - 1);
-	BYTE byCount = packet.ReadInt64();
+	DWORD dwNpcID = static_cast<DWORD>(msg.npcId);
+	BYTE byPage = static_cast<BYTE>(msg.page);
+	strncpy(FuncPage.szTalk, msg.talkText.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
 
+	BYTE byCount = static_cast<BYTE>(msg.funcItems.size());
 	if (byCount > ROLE_MAXNUM_FUNCITEM) byCount = ROLE_MAXNUM_FUNCITEM;
 	for (int i = 0; i < byCount; i++) {
-		std::string pszFunc = packet.ReadString();
-		strncpy(FuncPage.FuncItem[i].szFunc, pszFunc.c_str(), ROLE_MAXNUM_FUNCITEMSIZE - 1);
+		strncpy(FuncPage.FuncItem[i].szFunc, msg.funcItems[i].name.c_str(), ROLE_MAXNUM_FUNCITEMSIZE - 1);
 	}
 
-	BYTE byMisCount = packet.ReadInt64();
+	BYTE byMisCount = static_cast<BYTE>(msg.missionItems.size());
 	if (byMisCount > ROLE_MAXNUM_CAPACITY) {
 		byMisCount = ROLE_MAXNUM_CAPACITY;
 	}
 
 	for (int i = 0; i < byMisCount; i++) {
-		std::string pszMis = packet.ReadString();
-		strncpy(FuncPage.MisItem[i].szMis, pszMis.c_str(), ROLE_MAXNUM_FUNCITEMSIZE - 1);
-		FuncPage.MisItem[i].byState = packet.ReadInt64();
+		strncpy(FuncPage.MisItem[i].szMis, msg.missionItems[i].name.c_str(), ROLE_MAXNUM_FUNCITEMSIZE - 1);
+		FuncPage.MisItem[i].byState = static_cast<BYTE>(msg.missionItems[i].state);
 	}
 
 	NetShowFunction(byPage, byCount, byMisCount, FuncPage, dwNpcID);
@@ -1536,20 +1635,19 @@ BOOL SC_FuncInfo(LPRPACKET packet) {
 }
 
 BOOL SC_CloseTalk(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	NetCloseTalk(dwNpcID);
+	net::msg::McCloseTalkMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetCloseTalk(static_cast<DWORD>(msg.npcId));
 	return TRUE;
 }
 
 BOOL SC_TradeData(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byPage = packet.ReadInt64();
-	BYTE byIndex = packet.ReadInt64();
-	USHORT sItemID = packet.ReadInt64();
-	USHORT sCount = packet.ReadInt64();
-	DWORD dwPrice = packet.ReadInt64();
+	net::msg::McTradeDataMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	NetUpdateTradeData(dwNpcID, byPage, byIndex, sItemID, sCount, dwPrice);
+	NetUpdateTradeData(static_cast<DWORD>(msg.npcId), static_cast<BYTE>(msg.page),
+		static_cast<BYTE>(msg.index), static_cast<USHORT>(msg.itemId),
+		static_cast<USHORT>(msg.count), static_cast<DWORD>(msg.price));
 	return TRUE;
 }
 
@@ -1668,11 +1766,13 @@ BOOL SC_TradeUpdate(LPRPACKET packet) {
 }
 
 BOOL SC_TradeResult(LPRPACKET packet) {
-	BYTE byType = packet.ReadInt64();
-	BYTE byIndex = packet.ReadInt64();
-	BYTE byCount = packet.ReadInt64();
-	USHORT sItemID = packet.ReadInt64();
-	DWORD dwMoney = packet.ReadInt64();
+	net::msg::McTradeResultMessage msg;
+	net::msg::deserialize(packet, msg);
+	BYTE byType = static_cast<BYTE>(msg.type);
+	BYTE byIndex = static_cast<BYTE>(msg.index);
+	BYTE byCount = static_cast<BYTE>(msg.count);
+	USHORT sItemID = static_cast<USHORT>(msg.itemId);
+	DWORD dwMoney = static_cast<DWORD>(msg.money);
 	LG("trade", g_oLangRec.GetString(301), byType, byIndex, byCount, sItemID, dwMoney);
 	NetTradeResult(byType, byIndex, byCount, sItemID, dwMoney);
 	LG("trade", g_oLangRec.GetString(302));
@@ -1840,74 +1940,74 @@ BOOL SC_DailyBuffInfo(LPRPACKET packet) {
 }
 
 BOOL SC_MissionInfo(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
+	// Десериализация через типизированное сообщение
+	net::msg::McMissionInfoMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	NET_MISSIONLIST list;
 	memset(&list, 0, sizeof(NET_MISSIONLIST));
 
-	list.byListType = packet.ReadInt64();
-	list.byPrev = packet.ReadInt64();
-	list.byNext = packet.ReadInt64();
-	list.byPrevCmd = packet.ReadInt64();
-	list.byNextCmd = packet.ReadInt64();
-	list.byItemCount = packet.ReadInt64();
+	list.byListType = static_cast<decltype(list.byListType)>(msg.listType);
+	list.byPrev = static_cast<decltype(list.byPrev)>(msg.prev);
+	list.byNext = static_cast<decltype(list.byNext)>(msg.next);
+	list.byPrevCmd = static_cast<decltype(list.byPrevCmd)>(msg.prevCmd);
+	list.byNextCmd = static_cast<decltype(list.byNextCmd)>(msg.nextCmd);
+	list.byItemCount = static_cast<decltype(list.byItemCount)>(msg.items.size());
 
 	if (list.byItemCount > ROLE_MAXNUM_FUNCITEM) list.byItemCount = ROLE_MAXNUM_FUNCITEM;
 	for (int i = 0; i < list.byItemCount; i++) {
-		USHORT sLen = 0;
-		std::string pszFunc = packet.ReadString();
-		strncpy(list.FuncPage.FuncItem[i].szFunc, pszFunc.c_str(), 32);
+		strncpy(list.FuncPage.FuncItem[i].szFunc, msg.items[i].c_str(), 32);
 	}
 
-	NetShowMissionList(dwNpcID, list);
+	NetShowMissionList(static_cast<DWORD>(msg.npcId), list);
 	return TRUE;
 }
 
 BOOL SC_MisPage(LPRPACKET packet) {
-	BYTE byCmd = packet.ReadInt64();
-	DWORD dwNpcID = packet.ReadInt64();
+	// Десериализация через типизированное сообщение
+	net::msg::McMisPageMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	BYTE byCmd = static_cast<BYTE>(msg.cmd);
+	DWORD dwNpcID = static_cast<DWORD>(msg.npcId);
 	NET_MISPAGE page;
 	memset(&page, 0, sizeof(NET_MISPAGE));
 
-	// ��������
-	std::string pszName = packet.ReadString();
-	strncpy(page.szName, pszName.c_str(), ROLE_MAXSIZE_MISNAME - 1);
+	strncpy(page.szName, msg.name.c_str(), ROLE_MAXSIZE_MISNAME - 1);
 
 	switch (byCmd) {
 	case ROLE_MIS_BTNACCEPT:
 	case ROLE_MIS_BTNDELIVERY:
 	case ROLE_MIS_BTNPENDING: {
-		// ����������Ϣ
-		page.byNeedNum = packet.ReadInt64();
+		// Потребности квеста
+		page.byNeedNum = static_cast<decltype(page.byNeedNum)>(msg.needs.size());
 		for (int i = 0; i < page.byNeedNum; i++) {
-			page.MisNeed[i].byType = packet.ReadInt64();
+			page.MisNeed[i].byType = static_cast<decltype(page.MisNeed[i].byType)>(msg.needs[i].needType);
 			if (page.MisNeed[i].byType == mission::MIS_NEED_ITEM || page.MisNeed[i].byType == mission::MIS_NEED_KILL) {
-				page.MisNeed[i].wParam1 = packet.ReadInt64();
-				page.MisNeed[i].wParam2 = packet.ReadInt64();
-				page.MisNeed[i].wParam3 = packet.ReadInt64();
+				page.MisNeed[i].wParam1 = static_cast<decltype(page.MisNeed[i].wParam1)>(msg.needs[i].param1);
+				page.MisNeed[i].wParam2 = static_cast<decltype(page.MisNeed[i].wParam2)>(msg.needs[i].param2);
+				page.MisNeed[i].wParam3 = static_cast<decltype(page.MisNeed[i].wParam3)>(msg.needs[i].param3);
 			}
 			else if (page.MisNeed[i].byType == mission::MIS_NEED_DESP) {
-				std::string pszTemp = packet.ReadString();
-				strncpy(page.MisNeed[i].szNeed, pszTemp.c_str(), ROLE_MAXNUM_NEEDDESPSIZE - 1);
+				strncpy(page.MisNeed[i].szNeed, msg.needs[i].desp.c_str(), ROLE_MAXNUM_NEEDDESPSIZE - 1);
 			}
 			else {
-				// δ֪����������
 				LG("mission_error", g_oLangRec.GetString(304));
 				return FALSE;
 			}
 		}
 
-		// ��������Ϣ
-		page.byPrizeSelType = packet.ReadInt64();
-		page.byPrizeNum = packet.ReadInt64();
+		// Награды квеста
+		page.byPrizeSelType = static_cast<decltype(page.byPrizeSelType)>(msg.prizeSelType);
+		page.byPrizeNum = static_cast<decltype(page.byPrizeNum)>(msg.prizes.size());
 		for (int i = 0; i < page.byPrizeNum; i++) {
-			page.MisPrize[i].byType = packet.ReadInt64();
-			page.MisPrize[i].wParam1 = packet.ReadInt64();
-			page.MisPrize[i].wParam2 = packet.ReadInt64();
+			page.MisPrize[i].byType = static_cast<decltype(page.MisPrize[i].byType)>(msg.prizes[i].type);
+			page.MisPrize[i].wParam1 = static_cast<decltype(page.MisPrize[i].wParam1)>(msg.prizes[i].param1);
+			page.MisPrize[i].wParam2 = static_cast<decltype(page.MisPrize[i].wParam2)>(msg.prizes[i].param2);
 		}
 
-		// ����������Ϣ
-		std::string pszDesp = packet.ReadString();
-		strncpy(page.szDesp, pszDesp.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
+		// Описание квеста
+		strncpy(page.szDesp, msg.description.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
 	}
 	break;
 	default:
@@ -1922,13 +2022,17 @@ BOOL SC_MisLog(LPRPACKET packet) {
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
+	// Десериализация через типизированное сообщение
+	net::msg::McMisLogMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	NET_MISLOG_LIST LogList;
 	memset(&LogList, 0, sizeof(NET_MISLOG_LIST));
 
-	LogList.byNumLog = packet.ReadInt64();
+	LogList.byNumLog = static_cast<decltype(LogList.byNumLog)>(msg.logs.size());
 	for (int i = 0; i < LogList.byNumLog; i++) {
-		LogList.MisLog[i].wMisID = packet.ReadInt64();
-		LogList.MisLog[i].byState = packet.ReadInt64();
+		LogList.MisLog[i].wMisID = static_cast<decltype(LogList.MisLog[i].wMisID)>(msg.logs[i].misId);
+		LogList.MisLog[i].byState = static_cast<decltype(LogList.MisLog[i].byState)>(msg.logs[i].state);
 	}
 
 	NetMisLogList(LogList);
@@ -1936,95 +2040,98 @@ BOOL SC_MisLog(LPRPACKET packet) {
 }
 
 BOOL SC_MisLogInfo(LPRPACKET packet) {
+	// Десериализация через типизированное сообщение
+	net::msg::McMisLogInfoMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	WORD wMisID = static_cast<WORD>(msg.misId);
 	NET_MISPAGE page;
 	memset(&page, 0, sizeof(NET_MISPAGE));
 
-	// ���������Ϣ
-	WORD wMisID = packet.ReadInt64();
-	std::string pszName = packet.ReadString();
-	strncpy(page.szName, pszName.c_str(), ROLE_MAXSIZE_MISNAME - 1);
+	strncpy(page.szName, msg.name.c_str(), ROLE_MAXSIZE_MISNAME - 1);
 
-	// ����������Ϣ
-	page.byNeedNum = packet.ReadInt64();
+	// Потребности квеста
+	page.byNeedNum = static_cast<decltype(page.byNeedNum)>(msg.needs.size());
 	for (int i = 0; i < page.byNeedNum; i++) {
-		page.MisNeed[i].byType = packet.ReadInt64();
+		page.MisNeed[i].byType = static_cast<decltype(page.MisNeed[i].byType)>(msg.needs[i].needType);
 		if (page.MisNeed[i].byType == mission::MIS_NEED_ITEM || page.MisNeed[i].byType == mission::MIS_NEED_KILL) {
-			page.MisNeed[i].wParam1 = packet.ReadInt64();
-			page.MisNeed[i].wParam2 = packet.ReadInt64();
-			page.MisNeed[i].wParam3 = packet.ReadInt64();
+			page.MisNeed[i].wParam1 = static_cast<decltype(page.MisNeed[i].wParam1)>(msg.needs[i].param1);
+			page.MisNeed[i].wParam2 = static_cast<decltype(page.MisNeed[i].wParam2)>(msg.needs[i].param2);
+			page.MisNeed[i].wParam3 = static_cast<decltype(page.MisNeed[i].wParam3)>(msg.needs[i].param3);
 		}
 		else if (page.MisNeed[i].byType == mission::MIS_NEED_DESP) {
-			std::string pszTemp = packet.ReadString();
-			strncpy(page.MisNeed[i].szNeed, pszTemp.c_str(), ROLE_MAXNUM_NEEDDESPSIZE - 1);
+			strncpy(page.MisNeed[i].szNeed, msg.needs[i].desp.c_str(), ROLE_MAXNUM_NEEDDESPSIZE - 1);
 		}
 		else {
-			// δ֪����������
 			LG("mission_error", g_oLangRec.GetString(304));
 			return FALSE;
 		}
 	}
 
-	// ��������Ϣ
-	page.byPrizeSelType = packet.ReadInt64();
-	page.byPrizeNum = packet.ReadInt64();
+	// Награды квеста
+	page.byPrizeSelType = static_cast<decltype(page.byPrizeSelType)>(msg.prizeSelType);
+	page.byPrizeNum = static_cast<decltype(page.byPrizeNum)>(msg.prizes.size());
 	for (int i = 0; i < page.byPrizeNum; i++) {
-		page.MisPrize[i].byType = packet.ReadInt64();
-		page.MisPrize[i].wParam1 = packet.ReadInt64();
-		page.MisPrize[i].wParam2 = packet.ReadInt64();
+		page.MisPrize[i].byType = static_cast<decltype(page.MisPrize[i].byType)>(msg.prizes[i].type);
+		page.MisPrize[i].wParam1 = static_cast<decltype(page.MisPrize[i].wParam1)>(msg.prizes[i].param1);
+		page.MisPrize[i].wParam2 = static_cast<decltype(page.MisPrize[i].wParam2)>(msg.prizes[i].param2);
 	}
 
-	// ����������Ϣ
-	std::string pszDesp = packet.ReadString();
-	strncpy(page.szDesp, pszDesp.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
+	// Описание квеста
+	strncpy(page.szDesp, msg.description.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
 
 	NetShowMisLog(wMisID, page);
 	return TRUE;
 }
 
 BOOL SC_MisLogClear(LPRPACKET packet) {
-	WORD wMisID = packet.ReadInt64();
+	net::msg::McMisLogClearMcMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	NetMisLogClear(wMisID);
+	NetMisLogClear(static_cast<WORD>(msg.missionId));
 	return TRUE;
 }
 
 BOOL SC_MisLogAdd(LPRPACKET packet) {
-	WORD wMisID = packet.ReadInt64();
-	BYTE byState = packet.ReadInt64();
-
-	NetMisLogAdd(wMisID, byState);
+	// Десериализация через типизированное сообщение
+	net::msg::McMisLogAddMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetMisLogAdd(static_cast<WORD>(msg.missionId), static_cast<BYTE>(msg.state));
 	return TRUE;
 }
 
 BOOL SC_MisLogState(LPRPACKET packet) {
-	WORD wID = packet.ReadInt64();
-	BYTE byState = packet.ReadInt64();
-
-	NetMisLogState(wID, byState);
+	// Десериализация через типизированное сообщение
+	net::msg::McMisLogStateMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetMisLogState(static_cast<WORD>(msg.missionId), static_cast<BYTE>(msg.state));
 	return TRUE;
 }
 
 BOOL SC_TriggerAction(LPRPACKET packet) {
+	// Десериализация через типизированное сообщение
+	net::msg::McTriggerActionMessage msg;
+	net::msg::deserialize(packet, msg);
 	stNetNpcMission info;
-	info.byType = packet.ReadInt64();
-	info.sID = packet.ReadInt64(); // ���ݻ��������ID
-	info.sNum = packet.ReadInt64(); // ��Ҫ�ݻ����������
-	info.sCount = packet.ReadInt64(); // ����ɼ���
+	info.byType = static_cast<decltype(info.byType)>(msg.type);
+	info.sID = static_cast<decltype(info.sID)>(msg.id);
+	info.sNum = static_cast<decltype(info.sNum)>(msg.num);
+	info.sCount = static_cast<decltype(info.sCount)>(msg.count);
 	NetTriggerAction(info);
 	return TRUE;
 }
 
 BOOL SC_NpcStateChange(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byState = packet.ReadInt64();
-	NetNpcStateChange(dwNpcID, byState);
+	net::msg::McNpcStateChangeMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetNpcStateChange(static_cast<DWORD>(msg.npcId), static_cast<BYTE>(msg.state));
 	return TRUE;
 }
 
 BOOL SC_EntityStateChange(LPRPACKET packet) {
-	DWORD dwEntityID = packet.ReadInt64();
-	BYTE byState = packet.ReadInt64();
-	NetEntityStateChange(dwEntityID, byState);
+	net::msg::McEntityStateChangeMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetEntityStateChange(static_cast<DWORD>(msg.entityId), static_cast<BYTE>(msg.state));
 	return TRUE;
 }
 
@@ -2384,9 +2491,10 @@ BOOL SC_StallSuccess(LPRPACKET packet) {
 }
 
 BOOL SC_SynStallName(LPRPACKET packet) {
-	DWORD dwCharID = packet.ReadInt64();
-	std::string szStallName = packet.ReadString();
-	NetStallName(dwCharID, szStallName.c_str());
+	// Десериализация через типизированное сообщение
+	net::msg::McSynStallNameMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetStallName(static_cast<DWORD>(msg.charId), msg.name.c_str());
 	return TRUE;
 }
 
@@ -2402,10 +2510,12 @@ BOOL SC_CancelExit(LPRPACKET packet) {
 }
 
 BOOL SC_UpdateHairRes(LPRPACKET packet) {
+	net::msg::McUpdateHairResMessage msg;
+	net::msg::deserialize(packet, msg);
 	stNetUpdateHairRes rv;
-	rv.ulWorldID = packet.ReadInt64();
-	rv.nScriptID = packet.ReadInt64();
-	rv.szReason = packet.ReadString();
+	rv.ulWorldID = static_cast<decltype(rv.ulWorldID)>(msg.worldId);
+	rv.nScriptID = static_cast<decltype(rv.nScriptID)>(msg.scriptId);
+	rv.szReason = msg.reason;
 	rv.Exec();
 	return TRUE;
 }
@@ -2453,50 +2563,57 @@ BOOL SC_ItemRepairAsk(LPRPACKET packet) {
 }
 
 BOOL SC_ItemForgeAsk(LPRPACKET packet) {
+	net::msg::McItemForgeAskMessage msg;
+	net::msg::deserialize(packet, msg);
 	stSCNetItemForgeAsk SForgeAsk;
-	SForgeAsk.chType = packet.ReadInt64();
-	SForgeAsk.lMoney = packet.ReadInt64();
+	SForgeAsk.chType = static_cast<decltype(SForgeAsk.chType)>(msg.type);
+	SForgeAsk.lMoney = static_cast<decltype(SForgeAsk.lMoney)>(msg.money);
 	SForgeAsk.Exec();
 
 	return TRUE;
 }
 
 BOOL SC_ItemForgeAnswer(LPRPACKET packet) {
+	net::msg::McItemForgeAnswerMessage msg;
+	net::msg::deserialize(packet, msg);
 	stNetItemForgeAnswer SForgeAnswer;
-	SForgeAnswer.lChaID = packet.ReadInt64();
-	SForgeAnswer.chType = packet.ReadInt64();
-	SForgeAnswer.chResult = packet.ReadInt64();
+	SForgeAnswer.lChaID = static_cast<decltype(SForgeAnswer.lChaID)>(msg.worldId);
+	SForgeAnswer.chType = static_cast<decltype(SForgeAnswer.chType)>(msg.type);
+	SForgeAnswer.chResult = static_cast<decltype(SForgeAnswer.chResult)>(msg.result);
 	SForgeAnswer.Exec();
 
 	return TRUE;
 }
 
 BOOL SC_ItemUseSuc(LPRPACKET packet) {
-	unsigned int nChaID = packet.ReadInt64();
-	short sItemID = packet.ReadInt64();
-	NetItemUseSuccess(nChaID, sItemID);
+	net::msg::McItemUseSuccMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetItemUseSuccess(static_cast<unsigned int>(msg.worldId), static_cast<short>(msg.itemId));
 
 	return TRUE;
 }
 
 BOOL SC_KitbagCapacity(LPRPACKET packet) {
-	unsigned int nChaID = packet.ReadInt64();
-	short sKbCap = packet.ReadInt64();
-	NetKitbagCapacity(nChaID, sKbCap);
+	net::msg::McKitbagCapacityMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetKitbagCapacity(static_cast<unsigned int>(msg.worldId), static_cast<short>(msg.capacity));
 
 	return TRUE;
 }
 
 BOOL SC_EspeItem(LPRPACKET packet) {
+	net::msg::McEspeItemMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	stNetEspeItem SEspItem;
-	unsigned int nChaID = packet.ReadInt64();
-	SEspItem.chNum = packet.ReadInt64();
-	for (int i = 0; i < 1; i++) {
-		SEspItem.SContent[i].sPos = packet.ReadInt64();
-		SEspItem.SContent[i].sEndure = packet.ReadInt64();
-		SEspItem.SContent[i].sEnergy = packet.ReadInt64();
-		SEspItem.SContent[i].bItemTradable = packet.ReadInt64();
-		SEspItem.SContent[i].expiration = packet.ReadInt64();
+	unsigned int nChaID = static_cast<unsigned int>(msg.worldId);
+	SEspItem.chNum = static_cast<decltype(SEspItem.chNum)>(msg.items.size());
+	for (int i = 0; i < 1 && i < static_cast<int>(msg.items.size()); i++) {
+		SEspItem.SContent[i].sPos = static_cast<decltype(SEspItem.SContent[0].sPos)>(msg.items[i].position);
+		SEspItem.SContent[i].sEndure = static_cast<decltype(SEspItem.SContent[0].sEndure)>(msg.items[i].endure);
+		SEspItem.SContent[i].sEnergy = static_cast<decltype(SEspItem.SContent[0].sEnergy)>(msg.items[i].energy);
+		SEspItem.SContent[i].bItemTradable = static_cast<decltype(SEspItem.SContent[0].bItemTradable)>(msg.items[i].tradable);
+		SEspItem.SContent[i].expiration = static_cast<decltype(SEspItem.SContent[0].expiration)>(msg.items[i].expiration);
 	}
 
 	NetEspeItem(nChaID, SEspItem);
@@ -2513,31 +2630,23 @@ BOOL SC_MapCrash(LPRPACKET packet) {
 }
 
 BOOL SC_Message(LPRPACKET pk) {
-	/*
-	uLong l_id = pk.ReadInt64();
-
-    NetShowMessage( pk.ReadInt64() );
-	return TRUE;
-	*/
-	std::string pszDesp = pk.ReadString();
-	if (pszDesp.empty())
+	net::msg::McMessageMessage msg;
+	net::msg::deserialize(pk, msg);
+	if (msg.text.empty())
 		return FALSE;
 
-	NetShowMapCrash(pszDesp.c_str());
+	NetShowMapCrash(msg.text.c_str());
 	return TRUE;
 }
 
 BOOL SC_QueryCha(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McQueryChaMessage msg;
+	net::msg::deserialize(pk, msg);
 
 	stNetSysInfo SShowInfo;
 	char szInfo[512] = "";
-	std::string pChaName = pk.ReadString();
-	std::string pMapName = pk.ReadString();
-	long lPosX = pk.ReadInt64();
-	long lPosY = pk.ReadInt64();
-	long lChaID = pk.ReadInt64();
-	sprintf(szInfo, g_oLangRec.GetString(308), pChaName.c_str(), lChaID, pMapName.c_str(), lPosX, lPosY);
+	sprintf(szInfo, g_oLangRec.GetString(308), msg.name.c_str(), static_cast<long>(msg.chaId2),
+		msg.mapName.c_str(), static_cast<long>(msg.posX), static_cast<long>(msg.posY));
 	SShowInfo.m_sysinfo = szInfo;
 	NetSysInfo(SShowInfo);
 
@@ -2551,14 +2660,12 @@ BOOL SC_QueryChaItem(LPRPACKET pk) {
 }
 
 BOOL SC_QueryChaPing(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McQueryChaPingMessage msg;
+	net::msg::deserialize(pk, msg);
 
 	stNetSysInfo SShowInfo;
 	char szInfo[512] = "";
-	std::string pChaName = pk.ReadString();
-	std::string pMapName = pk.ReadString();
-	long lPing = pk.ReadInt64();
-	sprintf(szInfo, g_oLangRec.GetString(309), pMapName.c_str(), lPing);
+	sprintf(szInfo, g_oLangRec.GetString(309), msg.mapName.c_str(), static_cast<long>(msg.ping));
 	SShowInfo.m_sysinfo = szInfo;
 	NetSysInfo(SShowInfo);
 
@@ -2566,19 +2673,21 @@ BOOL SC_QueryChaPing(LPRPACKET pk) {
 }
 
 BOOL SC_QueryRelive(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McQueryReliveMessage msg;
+	net::msg::deserialize(pk, msg);
 
 	stNetQueryRelive SQueryRelive;
-	SQueryRelive.szSrcChaName = pk.ReadString();
-	SQueryRelive.chType = pk.ReadInt64();
-	NetQueryRelive(l_id, SQueryRelive);
+	SQueryRelive.szSrcChaName = msg.sourceName;
+	SQueryRelive.chType = static_cast<decltype(SQueryRelive.chType)>(msg.reliveType);
+	NetQueryRelive(static_cast<uLong>(msg.chaId), SQueryRelive);
 
 	return TRUE;
 }
 
 BOOL SC_PreMoveTime(LPRPACKET pk) {
-	uLong ulPreMoveTime = pk.ReadInt64();
-	NetPreMoveTime(ulPreMoveTime);
+	net::msg::McPreMoveTimeMessage msg;
+	net::msg::deserialize(pk, msg);
+	NetPreMoveTime(static_cast<uLong>(msg.time));
 
 	return TRUE;
 }
@@ -2601,18 +2710,33 @@ BOOL SC_MapMask(LPRPACKET pk) {
 }
 
 BOOL SC_SynEventInfo(LPRPACKET pk) {
+	net::msg::McSynEventInfoMessage msg;
+	net::msg::deserialize(pk, msg);
+
 	stNetEvent SNetEvent;
-	ReadEntEventPacket(pk, SNetEvent);
+	SNetEvent.lEntityID = static_cast<decltype(SNetEvent.lEntityID)>(msg.entityId);
+	SNetEvent.chEntityType = static_cast<decltype(SNetEvent.chEntityType)>(msg.entityType);
+	SNetEvent.usEventID = static_cast<decltype(SNetEvent.usEventID)>(msg.eventId);
+	SNetEvent.cszEventName = msg.eventName;
 
 	SNetEvent.ChangeEvent();
 	return TRUE;
 }
 
 BOOL SC_SynSideInfo(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McSynSideInfoMessage msg;
+	net::msg::deserialize(pk, msg);
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	const char* szLogName = g_LogName.GetLogName(l_id);
+
 	stNetChaSideInfo SNetSideInfo;
-	ReadChaSidePacket(pk, SNetSideInfo, szLogName);
+	SNetSideInfo.chSideID = static_cast<decltype(SNetSideInfo.chSideID)>(msg.side.sideId);
+
+	// log
+	LG(szLogName, "===Recieve(SideInfo)\tTick:[%u]\n", GetTickCount());
+	LG(szLogName, "\tSideID: %d\n", SNetSideInfo.chSideID);
+	LG(szLogName, "\n");
+
 	NetChaSideInfo(l_id, SNetSideInfo);
 
 	return TRUE;
@@ -2629,7 +2753,9 @@ BOOL SC_SynAppendLook(LPRPACKET pk) {
 }
 
 BOOL SC_KitbagCheckAnswer(LPRPACKET packet) {
-	bool bLock = packet.ReadInt64() ? true : false;
+	net::msg::McKitbagCheckAnswerMessage msg;
+	net::msg::deserialize(packet, msg);
+	bool bLock = msg.locked ? true : false;
 	NetKitbagCheckAnswer(bLock);
 
 	return TRUE;
@@ -2812,20 +2938,22 @@ BOOL SC_StoreVIP(LPRPACKET packet) {
 }
 
 BOOL SC_BlackMarketExchangeData(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
+	net::msg::McBlackMarketExchangeDataMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	DWORD dwNpcID = static_cast<DWORD>(msg.npcId);
 	g_stUIBlackTrade.SetNpcID(dwNpcID);
 
 	stBlackTrade SBlackTrade;
-	short sCount = packet.ReadInt64();
-	for (short sIndex = 0; sIndex < sCount; ++sIndex) {
+	for (short sIndex = 0; sIndex < static_cast<short>(msg.exchanges.size()); ++sIndex) {
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
 		SBlackTrade.sIndex = sIndex;
-		SBlackTrade.sSrcID = packet.ReadInt64(); // ������ƷID
-		SBlackTrade.sSrcNum = packet.ReadInt64(); // ������Ʒ����
-		SBlackTrade.sTarID = packet.ReadInt64(); // Ŀ����ƷID
-		SBlackTrade.sTarNum = packet.ReadInt64(); // Ŀ����Ʒ����
-		SBlackTrade.sTimeNum = packet.ReadInt64(); // timeֵ
+		SBlackTrade.sSrcID = static_cast<short>(msg.exchanges[sIndex].srcId);
+		SBlackTrade.sSrcNum = static_cast<short>(msg.exchanges[sIndex].srcCount);
+		SBlackTrade.sTarID = static_cast<short>(msg.exchanges[sIndex].tarId);
+		SBlackTrade.sTarNum = static_cast<short>(msg.exchanges[sIndex].tarCount);
+		SBlackTrade.sTimeNum = static_cast<short>(msg.exchanges[sIndex].timeValue);
 
 		g_stUIBlackTrade.SetItem(&SBlackTrade);
 	}
@@ -2836,20 +2964,21 @@ BOOL SC_BlackMarketExchangeData(LPRPACKET packet) {
 }
 
 BOOL SC_ExchangeData(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
+	net::msg::McExchangeDataMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	DWORD dwNpcID = static_cast<DWORD>(msg.npcId);
 	g_stUIBlackTrade.SetNpcID(dwNpcID);
 
 	stBlackTrade SBlackTrade;
-
-	short sCount = packet.ReadInt64();
-	for (short sIndex = 0; sIndex < sCount; ++sIndex) {
+	for (short sIndex = 0; sIndex < static_cast<short>(msg.exchanges.size()); ++sIndex) {
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
 		SBlackTrade.sIndex = sIndex;
-		SBlackTrade.sSrcID = packet.ReadInt64(); // ������ƷID
-		SBlackTrade.sSrcNum = packet.ReadInt64(); // ������Ʒ����
-		SBlackTrade.sTarID = packet.ReadInt64(); // Ŀ����ƷID
-		SBlackTrade.sTarNum = packet.ReadInt64(); // Ŀ����Ʒ����
+		SBlackTrade.sSrcID = static_cast<short>(msg.exchanges[sIndex].srcId);
+		SBlackTrade.sSrcNum = static_cast<short>(msg.exchanges[sIndex].srcCount);
+		SBlackTrade.sTarID = static_cast<short>(msg.exchanges[sIndex].tarId);
+		SBlackTrade.sTarNum = static_cast<short>(msg.exchanges[sIndex].tarCount);
 		SBlackTrade.sTimeNum = 0;
 
 		g_stUIBlackTrade.SetItem(&SBlackTrade);
@@ -2861,24 +2990,23 @@ BOOL SC_ExchangeData(LPRPACKET packet) {
 }
 
 BOOL SC_BlackMarketExchangeUpdate(LPRPACKET packet) {
-	//���жһ�����,ֻ���ڴ򿪺��жһ���������²Ÿ���!!!�м�
+	net::msg::McBlackMarketExchangeUpdateMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	DWORD dwNpcID = packet.ReadInt64();
+	DWORD dwNpcID = static_cast<DWORD>(msg.npcId);
 	stBlackTrade SBlackTrade;
 
-	// ��ԭ�ȵĺ��жһ��������
 	g_stUIBlackTrade.ClearItemData();
 
-	short sCount = packet.ReadInt64();
-	for (short sIndex = 0; sIndex < sCount; ++sIndex) {
+	for (short sIndex = 0; sIndex < static_cast<short>(msg.exchanges.size()); ++sIndex) {
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
 		SBlackTrade.sIndex = sIndex;
-		SBlackTrade.sSrcID = packet.ReadInt64(); // ������ƷID
-		SBlackTrade.sSrcNum = packet.ReadInt64(); // ������Ʒ����
-		SBlackTrade.sTarID = packet.ReadInt64(); // Ŀ����ƷID
-		SBlackTrade.sTarNum = packet.ReadInt64(); // Ŀ����Ʒ����
-		SBlackTrade.sTimeNum = packet.ReadInt64(); // timeֵ
+		SBlackTrade.sSrcID = static_cast<short>(msg.exchanges[sIndex].srcId);
+		SBlackTrade.sSrcNum = static_cast<short>(msg.exchanges[sIndex].srcCount);
+		SBlackTrade.sTarID = static_cast<short>(msg.exchanges[sIndex].tarId);
+		SBlackTrade.sTarNum = static_cast<short>(msg.exchanges[sIndex].tarCount);
+		SBlackTrade.sTimeNum = static_cast<short>(msg.exchanges[sIndex].timeValue);
 
 		if (g_stUIBlackTrade.GetIsShow() && g_stUIBlackTrade.GetNpcID() == dwNpcID) {
 			g_stUIBlackTrade.SetItem(&SBlackTrade);
@@ -2893,15 +3021,18 @@ BOOL SC_BlackMarketExchangeUpdate(LPRPACKET packet) {
 }
 
 BOOL SC_BlackMarketExchangeAsr(LPRPACKET packet) {
-	bool bSucc = (packet.ReadInt64() == 1) ? true : false;
+	net::msg::McBlackMarketExchangeAsrMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	bool bSucc = (msg.success == 1) ? true : false;
 	if (bSucc) {
 		stBlackTrade SBlackTrade;
 		memset(&SBlackTrade, 0, sizeof(stBlackTrade));
 
-		SBlackTrade.sSrcID = packet.ReadInt64();
-		SBlackTrade.sSrcNum = packet.ReadInt64();
-		SBlackTrade.sTarID = packet.ReadInt64();
-		SBlackTrade.sTarNum = packet.ReadInt64();
+		SBlackTrade.sSrcID = static_cast<short>(msg.srcId);
+		SBlackTrade.sSrcNum = static_cast<short>(msg.srcCount);
+		SBlackTrade.sTarID = static_cast<short>(msg.tarId);
+		SBlackTrade.sTarNum = static_cast<short>(msg.tarCount);
 
 		g_stUIBlackTrade.ExchangeAnswerProc(bSucc, &SBlackTrade);
 	}
@@ -2928,48 +3059,50 @@ BOOL SC_TigerItemID(LPRPACKET packet) {
 }
 
 BOOL SC_VolunteerList(LPRPACKET packet) {
-	short sPageNum = packet.ReadInt64(); //��ҳ��
-	short sPage = packet.ReadInt64(); //��ǰҳ��
-	short sRetNum = packet.ReadInt64(); //־Ը������
+	net::msg::McVolunteerListMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	short sPageNum = static_cast<short>(msg.pageTotal);
+	short sPage = static_cast<short>(msg.page);
 
 	g_stUIFindTeam.SetFindTeamPage(sPage, sPageNum);
 	g_stUIFindTeam.RemoveTeamInfo();
 
-	for (int i = 0; i < sRetNum; i++) {
-		std::string szName = packet.ReadString();
-		long level = packet.ReadInt64();
-		long job = packet.ReadInt64();
-		std::string szMapName = packet.ReadString();
-
-		g_stUIFindTeam.AddFindTeamInfo(i, szName.c_str(), level, job, szMapName.c_str());
+	for (int i = 0; i < static_cast<int>(msg.volunteers.size()); i++) {
+		g_stUIFindTeam.AddFindTeamInfo(i, msg.volunteers[i].name.c_str(),
+			static_cast<long>(msg.volunteers[i].level),
+			static_cast<long>(msg.volunteers[i].job),
+			msg.volunteers[i].map.c_str());
 	}
 
 	return TRUE;
 }
 
 BOOL SC_VolunteerState(LPRPACKET packet) {
-	bool bState = (packet.ReadInt64() == 0) ? false : true;
+	net::msg::McVolunteerStateMessage msg;
+	net::msg::deserialize(packet, msg);
+	bool bState = (msg.state == 0) ? false : true;
 	g_stUIFindTeam.SetOwnFindTeamState(bState);
 
 	return TRUE;
 }
 
 BOOL SC_VolunteerOpen(LPRPACKET packet) {
-	bool bState = (packet.ReadInt64() == 0) ? false : true;
-	short sPageNum = packet.ReadInt64(); //��ҳ��
-	short sRetNum = packet.ReadInt64(); //־Ը������
+	net::msg::McVolunteerOpenMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	bool bState = (msg.state == 0) ? false : true;
+	short sPageNum = static_cast<short>(msg.pageTotal);
 
 	g_stUIFindTeam.SetOwnFindTeamState(bState);
 	g_stUIFindTeam.SetFindTeamPage(1, sPageNum <= 0 ? 1 : sPageNum);
 	g_stUIFindTeam.RemoveTeamInfo();
 
-	for (int i = 0; i < sRetNum; i++) {
-		std::string szName = packet.ReadString();
-		long level = packet.ReadInt64();
-		long job = packet.ReadInt64();
-		std::string szMapName = packet.ReadString();
-
-		g_stUIFindTeam.AddFindTeamInfo(i, szName.c_str(), level, job, szMapName.c_str());
+	for (int i = 0; i < static_cast<int>(msg.volunteers.size()); i++) {
+		g_stUIFindTeam.AddFindTeamInfo(i, msg.volunteers[i].name.c_str(),
+			static_cast<long>(msg.volunteers[i].level),
+			static_cast<long>(msg.volunteers[i].job),
+			msg.volunteers[i].map.c_str());
 	}
 
 	g_stUIFindTeam.ShowFindTeamForm();
@@ -2978,8 +3111,9 @@ BOOL SC_VolunteerOpen(LPRPACKET packet) {
 }
 
 BOOL SC_VolunteerAsk(LPRPACKET packet) {
-	std::string szName = packet.ReadString();
-	g_stUIFindTeam.FindTeamAsk(szName.c_str());
+	net::msg::McVolunteerAskMessage msg;
+	net::msg::deserialize(packet, msg);
+	g_stUIFindTeam.FindTeamAsk(msg.name.c_str());
 
 	return TRUE;
 }
@@ -3011,16 +3145,16 @@ BOOL SC_SyncTigerString(LPRPACKET packet) {
 }
 
 BOOL SC_MasterAsk(LPRPACKET packet) {
-	std::string szName = packet.ReadString(); // ����
-	DWORD dwCharID = packet.ReadInt64();
-	g_stUIChat.MasterAsk(szName.c_str(), dwCharID);
+	net::msg::McMasterAskMessage msg;
+	net::msg::deserialize(packet, msg);
+	g_stUIChat.MasterAsk(msg.name.c_str(), static_cast<DWORD>(msg.chaId));
 	return TRUE;
 }
 
 BOOL SC_PrenticeAsk(LPRPACKET packet) {
-	std::string szName = packet.ReadString(); // ����
-	DWORD dwCharID = packet.ReadInt64();
-	g_stUIChat.PrenticeAsk(szName.c_str(), dwCharID);
+	net::msg::McPrenticeAskMessage msg;
+	net::msg::deserialize(packet, msg);
+	g_stUIChat.PrenticeAsk(msg.name.c_str(), static_cast<DWORD>(msg.chaId));
 	return TRUE;
 }
 
@@ -3159,30 +3293,28 @@ BOOL PC_PrenticeRefreshInfo(LPRPACKET packet) {
 }
 
 BOOL SC_ChaPlayEffect(LPRPACKET packet) {
-	unsigned int uiWorldID = packet.ReadInt64();
-	int nEffectID = packet.ReadInt64();
+	net::msg::McChaPlayEffectMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	NetChaPlayEffect(uiWorldID, nEffectID);
+	NetChaPlayEffect(static_cast<unsigned int>(msg.worldId), static_cast<int>(msg.effectId));
 
 	return TRUE;
 }
 
 BOOL SC_Say2Camp(LPRPACKET packet) {
-	std::string szName = packet.ReadString();
-	std::string szContent = packet.ReadString();
+	net::msg::McSay2CampMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	//g_pGameApp->SysInfo("[��Ӫ]%s:%s", szName, szContent);
-	NetSideInfo(szName.c_str(), szContent.c_str());
+	NetSideInfo(msg.chaName.c_str(), msg.content.c_str());
 
 	return TRUE;
 }
 
 BOOL SC_GMMail(LPRPACKET packet) {
-	std::string szTitle = packet.ReadString();
-	std::string szContent = packet.ReadString();
-	long lTime = packet.ReadInt64();
+	net::msg::McGmMailMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	g_stUIMail.ShowAnswerForm(szTitle.c_str(), szContent.c_str());
+	g_stUIMail.ShowAnswerForm(msg.title.c_str(), msg.content.c_str());
 
 	return TRUE;
 }

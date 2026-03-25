@@ -342,7 +342,7 @@ bool CLoginScene::_Init()
 			stNetChangeChaPart pLook;
 			memset(&pLook, 0, sizeof(pLook));
 			string strLook(modelLook);			
-			if(Strin2LookData(&pLook, strLook)){
+			if(String2LookData(pLook, strLook)){
 				modelCha = AddCharacter(pLook.sTypeID);
 				modelCha->SetIsForUI( 1 );
 				modelCha->UpdataFace( pLook );

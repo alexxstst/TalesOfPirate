@@ -143,12 +143,41 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			l_shape.centre.x = l_x;
 			l_shape.centre.y = l_y;
 			l_shape.radius = m_pCChaRecord->sRadii;
-			if (!pCMap->EnsurePos(&l_shape, pCCtrlCha)) // ����ʧ��, �ж�����
+			if (!pCMap->EnsurePos(&l_shape, pCCtrlCha))
 			{
-				//LG("enter_map", "��� %s(%s) �ĵ�ͼ����[%d, %d]�Ƿ������ж�����!\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
-				LG("enter_map", "character %s(%s) 's map coordinate[%d, %d]is unlawful,be cut off connect!\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
-				sErrCode = ERR_MC_ENTER_POS;
-				goto Error;
+				LG("enter_map", "character %s(%s) 's map coordinate[%d, %d]is unlawful, fallback to birth point\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
+				SBirthPoint* pFallback = GetRandBirthPoint(GetLogName(), pCCtrlCha->GetBirthCity());
+				if (pFallback)
+				{
+					l_x = (pFallback->x + 2 - rand() % 4) * 100;
+					l_y = (pFallback->y + 2 - rand() % 4) * 100;
+					pCMapRes = g_pGameApp->FindMapByName(pFallback->szMapName);
+					if (pCMapRes)
+					{
+						pCMap = pCMapRes->GetCopy(-1);
+						if (pCMap)
+						{
+							if (pCMapRes->GetCopyStartType() != enumMAPCOPY_START_CONDITION)
+								pCMap->Open();
+							pCCtrlCha->SetBirthMap(pCMap->GetName());
+						}
+					}
+					l_shape.centre.x = l_x;
+					l_shape.centre.y = l_y;
+					if (!pCMap || !pCMap->EnsurePos(&l_shape, pCCtrlCha))
+					{
+						LG("enter_map", "character %s(%s) birth point fallback also failed [%d, %d]\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
+						sErrCode = ERR_MC_ENTER_POS;
+						goto Error;
+					}
+					LG("enter_map", "character %s(%s) relocated to birth point [%d, %d] on map %s\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y, pCMap->GetName());
+				}
+				else
+				{
+					LG("enter_map", "character %s(%s) no birth point found, disconnecting\n", GetLogName(), pCCtrlCha->GetLogName());
+					sErrCode = ERR_MC_ENTER_POS;
+					goto Error;
+				}
 			}
 
 			pCPlayer->CheckChaItemFinalData();
@@ -1429,7 +1458,7 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 
 	WPACKET WtPk = GETWPACKET();
 	WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-	WRITE_SEQ(WtPk, szTeamMsg, uShort(strlen(szTeamMsg) + 1));
+	WRITE_STRING(WtPk, szTeamMsg);
 	SENDTOCLIENT2(WtPk, GetPlayer()->GetTeamMemberCnt(), GetPlayer()->_Team);
 
 	if (sPushRet == enumKBACT_SUCCESS)
@@ -2600,7 +2629,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 		strNoti += RES_STRING(GM_CHARACTERCMD_CPP_00033);
 		WPACKET WtPk	= GETWPACKET();
 		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_SEQ(WtPk, strNoti.c_str(), (Short)strNoti.length() + 1 );
+		WRITE_STRING(WtPk, strNoti.c_str());
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
 		{
@@ -2622,7 +2651,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 		std::string	strNoti = RES_STRING(GM_CHARACTERCMD_CPP_00034);
 		WPACKET WtPk	= GETWPACKET();
 		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_SEQ(WtPk, strNoti.c_str(), (Short)strNoti.length() + 1 );
+		WRITE_STRING(WtPk, strNoti.c_str());
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
 		{
@@ -2643,7 +2672,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 		std::string	strNoti = RES_STRING(GM_CHARACTERCMD_CPP_00035);
 		WPACKET WtPk	= GETWPACKET();
 		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_SEQ(WtPk, strNoti.c_str(), (Short)strNoti.length() + 1 );
+		WRITE_STRING(WtPk, strNoti.c_str());
 		ReflectINFof(this, WtPk);
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
@@ -2661,7 +2690,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 		std::string	strNoti = RES_STRING(GM_CHARACTERCMD_CPP_00036);
 		WPACKET WtPk	= GETWPACKET();
 		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_SEQ(WtPk, strNoti.c_str(), (Short)strNoti.length() + 1 );
+		WRITE_STRING(WtPk, strNoti.c_str());
 		ReflectINFof(this, WtPk);
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)

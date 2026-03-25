@@ -533,20 +533,18 @@ type ClientSystem
                                     player.State <- Playing_ playing
 
                                     // Отправить CMD_TM_ENTERMAP на GameServer
-                                    let enter = WPacket(256)
-                                    enter.WriteCmd(Commands.CMD_TM_ENTERMAP)
-                                    enter.WriteInt64(int64 playing.Auth.ActId)
-                                    enter.WriteString(password2)
-                                    enter.WriteInt64(int64 dbid)
-                                    enter.WriteInt64(int64 worldid)
-                                    enter.WriteString(mapName)
-                                    enter.WriteInt64(-1L) // mapCopyNo
-                                    enter.WriteInt64(0L) // x
-                                    enter.WriteInt64(0L) // y
-                                    enter.WriteInt64(0L) // isSwitch = false
                                     let (ChannelId_ gateAddr) = player.Id
-                                    enter.WriteInt64(int64 gateAddr)
-                                    enter.WriteInt64(int64 garnerWinner)
+                                    let enter = CommandMessages.Serialize.tmEnterMapMessage
+                                                    { ActId = playing.Auth.ActId
+                                                      Password = password2
+                                                      DatabaseId = dbid
+                                                      WorldId = worldid
+                                                      MapName = mapName
+                                                      MapCopyNo = -1
+                                                      X = 0u; Y = 0u
+                                                      IsSwitch = false
+                                                      GateAddr = uint32 gateAddr
+                                                      GarnerWinner = garnerWinner }
                                     game.SendPacket(enter)
 
                                     logger.LogInformation(

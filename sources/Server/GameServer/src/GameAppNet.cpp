@@ -1,6 +1,7 @@
 #include "Stdafx.h"
 #include "GameApp.h"
 #include "GameAppNet.h"
+#include "CommandMessages.h"
 #include "SubMap.h"
 #include "MapEntry.h"
 #include "CharTrade.h"
@@ -474,53 +475,46 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 
 	case CMD_TM_ENTERMAP:
 	{
-		uLong l_actid = READ_LONG(pkt);
-		std::string pszPassword = READ_STRING(pkt);
-		if (pszPassword.empty())
-			break;
-		uLong l_dbid = READ_LONG(pkt);
-		uLong l_worldid = READ_LONG(pkt);
-		std::string l_map = READ_STRING(pkt);
-		if (l_map.empty())
-			break;
-		Long lMapCpyNO = READ_LONG(pkt);
-		uLong l_x = READ_LONG(pkt);
-		uLong l_y = READ_LONG(pkt);
-		char chLogin = READ_CHAR(pkt);
-		short swiner = READ_SHORT_R(pkt);
-		uLong l_gtaddr = READ_LONG_R(pkt);
+		net::msg::TmEnterMapMessage enterMsg;
+		net::msg::deserialize(pkt, enterMsg);
 
-		LG("enter_map", "start entry map atorID = %d enter--------------------------\n", l_dbid);
+		if (enterMsg.password.empty())
+			break;
+		if (enterMsg.mapName.empty())
+			break;
 
-		l_player = CreateGamePlayer(pszPassword.c_str(), l_dbid, l_worldid, l_map.c_str(), chLogin == 0 ? 0 : 1);
+		LG("enter_map", "start entry map atorID = %d enter--------------------------\n", enterMsg.dbCharId);
+
+		l_player = CreateGamePlayer(enterMsg.password.c_str(), enterMsg.dbCharId, enterMsg.worldId,
+			enterMsg.mapName.c_str(), enterMsg.loginFlag == 0 ? 0 : 1);
 		if (!l_player)
 		{
 			WPACKET pkret = GETWPACKET();
 			WRITE_CMD(pkret, CMD_MC_ENTERMAP);
 			WRITE_SHORT(pkret, ERR_MC_ENTER_ERROR);
-			WRITE_LONG(pkret, l_dbid);
-			WRITE_LONG(pkret, l_gtaddr);
+			WRITE_LONG(pkret, enterMsg.dbCharId);
+			WRITE_LONG(pkret, enterMsg.gateAddr);
 			WRITE_SHORT(pkret, 1);
 			pGate->SendData(pkret);
-			LG("enter_map", "when create new palyer ID = %u assign memory failed \n", l_dbid);
+			LG("enter_map", "when create new palyer ID = %u assign memory failed \n", enterMsg.dbCharId);
 			return;
 		}
-		l_player->SetActLoginID(l_actid);
-		l_player->SetGarnerWiner(swiner);
+		l_player->SetActLoginID(enterMsg.actId);
+		l_player->SetGarnerWiner(enterMsg.winer);
 		l_player->GetLifeSkillinfo() = "";
 		l_player->SetInLifeSkill(false);
 
-		if (!chLogin)
+		if (!enterMsg.loginFlag)
 			l_player->MisLogin();
 
-		ADDPLAYER(l_player, pGate, l_gtaddr);
+		ADDPLAYER(l_player, pGate, enterMsg.gateAddr);
 		l_player->OnLogin();
 
 		CCharacter* pCCha = l_player->GetMainCha();
-		if (pCCha->Cmd_EnterMap(l_map.c_str(), lMapCpyNO, l_x, l_y, chLogin))
+		if (pCCha->Cmd_EnterMap(enterMsg.mapName.c_str(), enterMsg.mapCopyNo, enterMsg.posX, enterMsg.posY, enterMsg.loginFlag))
 		{
 			l_player->MisEnterMap();
-			if (chLogin == 0)
+			if (enterMsg.loginFlag == 0)
 			{
 				NoticePlayerLogin(l_player);
 			}

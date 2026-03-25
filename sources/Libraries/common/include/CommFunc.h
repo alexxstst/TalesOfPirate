@@ -137,8 +137,8 @@ inline bool g_IsFileExist(const char *szFileName)
 }
 
 extern void String2Item(const char* pszData, SItemGrid* SGridCont);
-extern char* LookData2String(const stNetChangeChaPart *pLook, char *szLookBuf, int nLen, bool bNewLook = true);
-extern bool Strin2LookData(stNetChangeChaPart *pLook, std::string &strData);
+extern bool LookData2String(const stNetChangeChaPart &pLook, std::string &strData);
+extern bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData);
 extern char* ShortcutData2String(const stNetShortCut *pShortcut, char *szShortcutBuf, int nLen);
 extern bool String2ShortcutData(stNetShortCut *pShortcut, std::string &strData);
 

@@ -222,24 +222,40 @@ bool CTableCha::ShowExpRank(CCharacter* pCha, int count)
 			SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i], MAX_DATALEN, &_buf_len[i]);
 		}
 
-		WPACKET		l_wpk = GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MC_RANK);
+		// Собираем результаты рейтинга для формата count-first
+		struct RankRow { char name[MAX_DATALEN]; char job[MAX_DATALEN]; short level; };
+		std::vector<RankRow> rows;
 
-
-		int f_row = 0;
-		for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; ++f_row)
+		for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO;)
 		{
 			if (sqlret != SQL_SUCCESS)
 			{
 				handle_err(hstmt, SQL_HANDLE_STMT, sqlret);
 			}
 
-			WRITE_STRING(l_wpk, (char const *)_buf[0]);	//name
-			WRITE_STRING(l_wpk, (char const *)_buf[1]);		//job
-			WRITE_SHORT(l_wpk, atol((char const *)_buf[2]));		//lv
+			RankRow r;
+			strncpy(r.name, (char const *)_buf[0], MAX_DATALEN - 1);
+			r.name[MAX_DATALEN - 1] = '\0';
+			strncpy(r.job, (char const *)_buf[1], MAX_DATALEN - 1);
+			r.job[MAX_DATALEN - 1] = '\0';
+			r.level = (short)atol((char const *)_buf[2]);
+			rows.push_back(r);
 		}
 
-		WRITE_SHORT(l_wpk, f_row);
+		// Формат count-first, совместимый с McShowRankingMessage:
+		// [count, (name, guild, level, job, score) x N]
+		WPACKET		l_wpk = GETWPACKET();
+		WRITE_CMD(l_wpk, CMD_MC_RANK);
+		WRITE_LONG(l_wpk, (long)rows.size());
+		for (size_t i = 0; i < rows.size(); ++i)
+		{
+			WRITE_STRING(l_wpk, rows[i].name);		// name — имя персонажа
+			WRITE_STRING(l_wpk, rows[i].job);		// guild — класс персонажа (в контексте рейтинга)
+			WRITE_LONG(l_wpk, rows[i].level);		// level — уровень
+			WRITE_LONG(l_wpk, 0);					// job — не используется в этом рейтинге
+			WRITE_LONG(l_wpk, 0);					// score — не используется в этом рейтинге
+		}
+
 		pCha->ReflectINFof(pCha, l_wpk);
 
 		SQLFreeStmt(hstmt, SQL_UNBIND);
@@ -575,13 +591,14 @@ bool CTableCha::SaveAllData(CPlayer *pPlayer, char chSaveType)
 	sprintf(szLogMsg + strlen(szLogMsg), "%4u", dwNowTick - dwOldTick);
 	//LG("enter_map", "���ý�ɫ�������ݳɹ�.\n");
 
-	g_look[0] = 0;
-	if(!LookData2String(&pCha->m_SChaPart, g_look, defLOOK_DATA_STRING_LEN, false))
+	std::string g_lookStr;
+	if(!LookData2String(pCha->m_SChaPart, g_lookStr))
 	{
-		//LG("enter_map", "��ɫ%s\t�������ݣ���ۣ�ʱ����!\n", pCha->GetLogName());
 		LG("enter_map", "character %s\tsave data (surface) error!\n", pCha->GetLogName());
 		return false;
 	}
+	strncpy(g_look, g_lookStr.c_str(), defLOOK_DATA_STRING_LEN - 1);
+	g_look[defLOOK_DATA_STRING_LEN - 1] = '\0';
 	//LG("enter_map", "���ý�ɫ��۳ɹ�.\n");
 
 	dwOldTick = dwNowTick;

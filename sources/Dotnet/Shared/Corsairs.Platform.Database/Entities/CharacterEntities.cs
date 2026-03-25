@@ -11,8 +11,11 @@ public class Character
     /// <summary>Уникальное имя персонажа.</summary>
     public string Name { get; set; } = string.Empty;
 
-    public string? Motto { get; set; }
+    public string Motto { get; set; } = string.Empty;
     public short IconId { get; set; }
+
+    /// <summary>Версия схемы данных персонажа.</summary>
+    public short Version { get; set; }
 
     /// <summary>Класс/профессия (код из job таблицы данных).</summary>
     public string Job { get; set; } = string.Empty;
@@ -42,15 +45,23 @@ public class Character
     // --- Мореходство ---
     public int SailLevel { get; set; }
     public int SailExperience { get; set; }
+    public int SailLeftExperience { get; set; }
     public int LifeLevel { get; set; }
     public int LifeExperience { get; set; }
+    public int LifeTp { get; set; }
 
     // --- Позиция ---
     public string MapName { get; set; } = string.Empty;
+    public string MainMap { get; set; } = string.Empty;
     public int MapX { get; set; }
     public int MapY { get; set; }
+    public int Radius { get; set; }
     public int Angle { get; set; }
-    public string? MainMap { get; set; }
+    public string MapMask { get; set; } = string.Empty;
+
+    // --- Рождение / логин ---
+    public string BirthCity { get; set; } = string.Empty;
+    public string LoginCha { get; set; } = string.Empty;
 
     // --- Денежные средства ---
     public long Gold { get; set; }
@@ -69,6 +80,31 @@ public class Character
     public string LookData { get; set; } = string.Empty;
     public int ChatColor { get; set; }
 
+    // --- Инвентарь ---
+    public int KitbagCapacity { get; set; }
+    public string Kitbag { get; set; } = string.Empty;
+    public int KitbagTmp { get; set; }
+    public int KitbagLocked { get; set; }
+
+    // --- Навыки ---
+    public string Skillbag { get; set; } = string.Empty;
+    public string SkillState { get; set; } = string.Empty;
+    public string Shortcut { get; set; } = string.Empty;
+
+    // --- Квесты ---
+    public string Mission { get; set; } = string.Empty;
+    public string MissionRecord { get; set; } = string.Empty;
+    public string MissionTrigger { get; set; } = string.Empty;
+    public string MissionCount { get; set; } = string.Empty;
+
+    // --- Банк / магазин ---
+    public string Bank { get; set; } = string.Empty;
+    public int Credit { get; set; }
+    public int StoreItemId { get; set; }
+
+    // --- Сетевой адрес (runtime) ---
+    public int ServerAddress { get; set; }
+
     // --- Состояние ---
     public bool IsDeleted { get; set; }
     public DateTimeOffset? DeletedAt { get; set; }
@@ -77,6 +113,11 @@ public class Character
 
     // --- Блокировки ---
     public DateTimeOffset? EstopUntil { get; set; }
+    public int EstopTime { get; set; }
+
+    // --- Расширенные данные (nullable в БД) ---
+    public string? ExtendData { get; set; }
+    public int? Imp { get; set; }
 
     // --- Навигация ---
     public Guild? Guild { get; set; }

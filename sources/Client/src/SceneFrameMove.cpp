@@ -60,7 +60,7 @@ void CGameScene::_FrameMove(DWORD dwTimeParam)
 		_nMouseX = (int)(_vMousePos.x * 100.0f);
 		_nMouseY = (int)(_vMousePos.y * 100.0f);
 
-		// ¾µÍ··Ç¸úËæÄ£Ê½ÏÂ, ÒÔÆÁÄ»ÖÐ¼äÓ³Éäµ½µØ±íÉÏµÄÎ»ÖÃÎª¾µÍ·½¹µã
+		// ï¿½ï¿½Í·ï¿½Ç¸ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½Ä»ï¿½Ð¼ï¿½Ó³ï¿½äµ½ï¿½Ø±ï¿½ï¿½Ïµï¿½Î»ï¿½ï¿½Îªï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½
 		if( g_Config.m_bEditor && !g_pGameApp->IsCameraFollow() )
 		{
 			static D3DXVECTOR3 vecPos; 
@@ -128,7 +128,7 @@ void CGameScene::_FrameMove(DWORD dwTimeParam)
 				}
 			}
 			m_dwValidEffCnt = nValidCnt;
-			LG("aalidEff","num==%d\n",m_dwValidEffCnt);
+			//LG("aalidEff","num==%d\n",m_dwValidEffCnt);
 
 			static CTimeWork time( 5 * 60 * 1000 );
 			if( time.IsTimeOut( dwTimeParam ) )

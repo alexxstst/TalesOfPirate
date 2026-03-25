@@ -377,7 +377,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, RPACKET pk)
 				WPACKET wpk	= GETWPACKET();
 				WRITE_CMD(wpk, CMD_MC_SAY);
 				WRITE_LONG(wpk, m_ID);
-				WRITE_SEQ(wpk, l_content,l_retlen);
+				WRITE_STRING(wpk, l_content);
 				WRITE_LONG(wpk, chatColour);
 				NotiChgToEyeshot(wpk);
 			}

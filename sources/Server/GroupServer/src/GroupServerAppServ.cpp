@@ -699,7 +699,7 @@ int GroupServerApp::GetChaCount(Player* player) {
 					MemSet((char*)&look, 0, sizeof(LOOK));
 					try {
 						std::string s(l_look);
-						Strin2LookData(&look, s);
+						String2LookData(look, s);
 					}
 					catch (...) {
 						LogLine l_line(g_LogGrpServer);
@@ -781,7 +781,7 @@ char GroupServerApp::SendCharData(Player* player, net::WPacket& wpk) {
 	MemSet((char*)&look, 0, sizeof(LOOK));
 	try {
 		std::string s(l_look);
-		Strin2LookData(&look, s);
+		String2LookData(look, s);
 	}
 	catch (...) {
 		LogLine l_line(g_LogGrpServer);
@@ -1674,17 +1674,16 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 	//	l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 	//	return l_retpk;
 	//}
-	char l_look[defLOOK_DATA_STRING_LEN];
+	std::string l_lookStr;
 
 	try {
-		if (!LookData2String(&part, l_look,defLOOK_DATA_STRING_LEN)) {
+		if (!LookData2String(part, l_lookStr)) {
 			l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
 			return l_retpk;
 		}
 	}
 	catch (...) {
 		LogLine l_line(g_LogGrpServer);
-		//l_line<<newln<<"?êo?["<<ply->m_acctname<<"]D??¨??é?["<<l_chaname<<"]ê±oò·￠éúía1?êy?Y×a??òì3￡?￡"<<endln;
 		l_line << newln << "account[" << ply->m_acctname << "]new char[" << l_chaname <<
 			"]find appreance data convert exception" << endln;
 		l_retpk.WriteInt64(ERR_PT_INVALIDDAT);
@@ -1699,7 +1698,7 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 			return l_retpk;
 		}
 
-		if (!m_tblcharaters->InsertRow(l_chaname.c_str(), ply->m_acctid, l_birth.c_str(), l_map, l_look)) //??é??????′
+		if (!m_tblcharaters->InsertRow(l_chaname.c_str(), ply->m_acctid, l_birth.c_str(), l_map, l_lookStr.c_str())) //??é??????′
 		{
 			LogLine l_line(g_LogGrpServer);
 

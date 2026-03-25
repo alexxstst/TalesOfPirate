@@ -1,5 +1,7 @@
 namespace Corsairs.GroupServer.Config
 
+open System.Collections.Generic
+
 /// Конфигурация GroupServer.
 [<CLIMutable>]
 type GroupServerConfig =
@@ -50,7 +52,9 @@ type GroupServerConfig =
       /// Максимальное допустимое значение характеристики (защита от читов).
       MaxStatValue: int
       /// Максимальный размер 2-го пароля.
-      MaxPassword2Length: int }
+      MaxPassword2Length: int
+      /// Маппинг birthplace → имя карты (аналог C++ m_mapBirthplace).
+      Birthplaces: Dictionary<string, string> }
 
     static member Default =
         { GateListenPort = 1975
@@ -76,7 +80,10 @@ type GroupServerConfig =
           WorldChatFeeInterval = 1000
           ProtocolVersion = 103
           MaxStatValue = 999
-          MaxPassword2Length = 32 }
+          MaxPassword2Length = 32
+          Birthplaces = Dictionary(dict [ "Shaitan City", "magicsea"
+                                          "Icicle Castle", "darkblue"
+                                          "Argent City", "garner" ]) }
 
 /// Конфигурация подключения к AccountServer.
 [<CLIMutable>]

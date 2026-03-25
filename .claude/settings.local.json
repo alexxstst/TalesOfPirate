@@ -1,7 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "WebSearch"
-    ]
+      "Bash(dotnet build:*)",
+      "Bash(*)",
+      "Bash(grep:*)",
+      "Bash(sed 's/^.*let //')",
+      "Bash(sed 's/ .*//')",
+      "Read(//tmp/**)",
+      "Bash(dotnet test:*)"
+    ],
+    "defaultMode": "auto"
   }
 }

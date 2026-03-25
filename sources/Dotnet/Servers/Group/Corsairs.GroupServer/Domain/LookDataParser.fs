@@ -2,6 +2,7 @@ module Corsairs.GroupServer.LookDataParser
 
 open System
 open Corsairs.Platform.Network.Protocol.CommandMessages
+open Corsairs.Platform.Database.Entities
 
 /// Парсинг строки LookData из БД → (typeId, equipIds[34]).
 /// Формат C++ (с версией):  "version#typeID,hairID;equip0;equip1;...;equip33;checksum"
@@ -50,3 +51,55 @@ let parseLookMinimal (lookData: string) : struct (int16 * int64[]) =
                 | _ -> ()
 
     struct (typeId, equipIds)
+
+/// Константы слотов экипировки (из CompCommand.h).
+[<Literal>]
+let private EQUIP_FACE = 1
+
+/// Количество DB-параметров (enumITEMDBP_MAXNUM).
+[<Literal>]
+let private ITEMDBP_MAXNUM = 2
+
+/// Количество instance-атрибутов (defITEM_INSTANCE_ATTR_NUM).
+[<Literal>]
+let private ITEM_INSTANCE_ATTR_NUM = 5
+
+/// Генерация LookData в формате C++ v112: "112#typeID,hairID;slot0;...;slot33;checksum"
+/// Аналог C++ LookData2String — для нового персонажа только hairID и faceID заполнены.
+let buildLookData (typeId: int) (hairId: int) (faceId: int) =
+    let sb = System.Text.StringBuilder(1024)
+    let mutable checkSum = 0L
+
+    // Версия + header
+    sb.Append("112#").Append(typeId).Append(',').Append(hairId) |> ignore
+    checkSum <- checkSum + int64 typeId + int64 hairId
+
+    // 34 слота: expiration,tradable,lock,needLv,dbId,sID,num,endure0,endure1,energy0,energy1,forgeLv,dbParam0,dbParam1,instAttrFlag
+    let emptySlot = ";0,0,0,0,0,0,0,0,0,0,0,0,0,0,0"
+    for i in 0 .. EQUIP_NUM - 1 do
+        if i = EQUIP_FACE then
+            // faceID в слоте enumEQUIP_FACE (позиция sID = index 5)
+            sb.Append(";0,0,0,0,0,").Append(faceId).Append(",0,0,0,0,0,0,0,0,0") |> ignore
+            checkSum <- checkSum + int64 faceId
+        else
+            sb.Append(emptySlot) |> ignore
+
+    // Контрольная сумма
+    sb.Append(';').Append(checkSum) |> ignore
+    sb.ToString()
+
+/// Маппинг Character entity из БД → CharacterSlot (in-memory).
+let toCharacterSlot (c: Character) =
+    let struct (typeId, equipIds) = parseLookMinimal c.LookData
+    { ChaId = c.Id
+      ChaName = c.Name
+      Job = defaultArg (Option.ofObj c.Job) ""
+      Level = c.Level
+      TypeId = typeId
+      EquipIds = equipIds
+      Motto = defaultArg (Option.ofObj c.Motto) ""
+      Icon = c.IconId
+      GuildId = if c.GuildId.HasValue then c.GuildId.Value else 0
+      GuildPermission = uint32 c.GuildPermissions
+      ChatColour = uint32 c.ChatColor
+      Estop = c.EstopUntil.HasValue && c.EstopUntil.Value > DateTimeOffset.UtcNow }

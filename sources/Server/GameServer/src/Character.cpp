@@ -1218,7 +1218,7 @@ void CCharacter::CheckLookItemValid(void)
 
 bool CCharacter::String2LookDate(std::string &strData)
 {
-	if (::Strin2LookData(&m_SChaPart, strData))
+	if (::String2LookData(m_SChaPart, strData))
 	{
 		CheckLookItemValid();
 		return true;
@@ -1984,8 +1984,8 @@ void CCharacter::SystemNotice( const char szData[], ... )
 
 	WPACKET packet = GETWPACKET();
 	WRITE_CMD(packet, CMD_MC_SYSINFO );
-	WRITE_SEQ(packet, szTemp, uShort( strlen(szTemp) ) + 1 );
-	
+	WRITE_STRING(packet, szTemp);
+
 	this->ReflectINFof( this, packet );
 }
 
@@ -2003,7 +2003,7 @@ void CCharacter::PopupNotice( const char szData[], ... )
 
 	WPACKET packet = GETWPACKET();
 	WRITE_CMD(packet, CMD_MC_POPUP_NOTICE );
-	WRITE_SEQ(packet, szTemp, uShort( strlen(szTemp) ) + 1 );
+	WRITE_STRING(packet, szTemp);
 
 	this->ReflectINFof( this, packet );
 }
