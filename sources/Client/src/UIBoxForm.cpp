@@ -27,7 +27,7 @@ CForm* CBoxMgr::_cfrmError = NULL;
 //---------------------------------------------------------------------------
 bool CBoxMgr::Init()
 {
-	// ½»Ò×¶Ô»°¿ò
+	// ï¿½ï¿½ï¿½×¶Ô»ï¿½ï¿½ï¿½
     CForm* frmTrade  = _FindForm("frmTrade");   
 	if ( !frmTrade ) return false;
 
@@ -43,7 +43,7 @@ bool CBoxMgr::Init()
 
 	_cTrade.Init( frmTrade );
 
-	// Ñ¡Ôñ¶Ô»°¿ò
+	// Ñ¡ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
     CForm* frmSelect  = _FindForm("frmSelect");   
 	if ( !frmSelect ) return false;
 	//frmSelect->SetPos( g_Render.GetScrWidth(), g_Render.GetScrHeight() - 151 );
@@ -53,7 +53,7 @@ bool CBoxMgr::Init()
 
 	_cSelect.Init( frmSelect );
 
-	// ÊäÈëÊýÁ¿¶Ô»°¿ò
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
     CForm* frmNumber = _FindForm("frmNumber");
     if( !frmNumber ) return false;
 
@@ -67,7 +67,7 @@ bool CBoxMgr::Init()
 	_cNumber.Init( frmNumber );
 
 
-	// ÊäÈëÃÜÂë¶Ô»°¿ò
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô»ï¿½ï¿½ï¿½
 	CForm* frmPassword = _FindForm("frmPass");
 	if( !frmPassword ) return false;
 
@@ -80,7 +80,7 @@ bool CBoxMgr::Init()
 	_cPassword.Init( frmPassword );
 
 
-	// Ò»¸öÐÅÏ¢¶Ô»°¿ò
+	// Ò»ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½Ô»ï¿½ï¿½ï¿½
     CForm* frmError  = _FindForm("frmError");   
 	if ( !frmError ) return false;
 
@@ -97,7 +97,7 @@ bool CBoxMgr::Init()
 CForm* CBoxMgr::_FindForm(const char * frmName)
 {
 	CForm* form = CFormMgr::s_Mgr.Find( frmName, 4 );
-	if( !form )	LG("gui", g_oLangRec.GetString(464), frmName );
+	if( !form )	{ char _buf[256]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(464), frmName); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
 	return form;
 }
 
@@ -120,7 +120,7 @@ void CBoxMgr::_ClearBox( CHideForm& list )
 
 		if(frm->GetPointer())
 		{
-			delete frm->GetPointer(); // UIµ±»ú´¦Àí
+			delete frm->GetPointer(); // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			frm->SetPointer( NULL );
 		}
 	}
@@ -171,7 +171,7 @@ stTradeBox* CBoxMgr::ShowTradeBox( FormMouseEvent evtForm, float fUnitMoney, int
 		t->edtNumber->SetCaption( "" );
 	}
 	t->nTotalNum = nTotalNum;
-	t->fUnitMoney = (float)(int)fUnitMoney;				// ÓÎÏ·½öÏÔÊ¾È¡ÕûºóµÄÊý×Ö call ÂÞÍþ
+	t->fUnitMoney = (float)(int)fUnitMoney;				// ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½Ê¾È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ call ï¿½ï¿½ï¿½ï¿½
 	return t;
 }
 
@@ -470,7 +470,6 @@ int stNumBox::GetNumber()
 void stNumBox::GetString(const char*& out)
 {	
 	out = edtNumber->GetCaption();
-	//sprintf(out,"%s",edtNumber->GetCaption() );
 	//memcpy(out,edtNumber->GetCaption() ,strlen(edtNumber->GetCaption() )+1 );
 }
 

@@ -303,7 +303,7 @@ void CFightAble::OnFight(uLong ulCurTick)
 					if(sExecTime > 1)
 					{
 						//LG("skill_error", "[%s]ʹ��[%s]����, ���ʱ��������, ����һ��%d ms, ����cooldown = %d\n", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
-						LG("skill_error", "[%s] use [%s] skill, interval time account error, interval last time %d ms, skill cooldown = %d\n", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
+						ToLogService("errors", LogLevel::Error, "[{}] use [{}] skill, interval time account error, interval last time {} ms, skill cooldown = {}", GetName(), m_SFightInit.pCSkillRecord->szName, lResumeDist, lResumeT);
 						sExecTime = 1; // �������Ϊ1��, ��ֹ��ұ���ɱ
 						m_SFightInit.pSSkillGrid->lColdDownT = ulCurTick - lResumeT; 
 					}
@@ -1843,7 +1843,6 @@ inline bool CFightAble::IsFriend(CFightAble *pCTar)
 //=============================================================================
 void CFightAble::CountLevel()
 {
-	//printf("yes\n");
 	if (!IsLiveing())
 		return;
 
@@ -1858,7 +1857,7 @@ void CFightAble::CountLevel()
 		if (!pCLvRec)
 		{
 			//m_CLog.Log("******can't find level %d record\n", lCurLevel + 1);
-			LG("level_err", "Unable to find Lv%d record\n", lCurLevel + 1);
+			ToLogService("common", "Unable to find Lv{} record", lCurLevel + 1);
 			break;
 		}
 		if (lCurExp >= pCLvRec->ulExp)
@@ -2036,7 +2035,6 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	{
 		lua_pop(g_pLuaState, 1);
 		//LG( "����ܱ���", "����Դ����Check_SpawnResource��Ч��" );
-		// printf( "����Դ����Check_SpawnResource��Ч��" );
 		return;
 	}
 
@@ -2053,7 +2051,6 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	if( nStatus )
 	{
 		//LG( "����ܱ���", "����Դ����Check_SpawnResource����ʧ�ܣ�" );
-		// printf( "����Դ����Check_SpawnResource����ʧ�ܣ�" );
 		lua_callalert(g_pLuaState, nStatus);
 		lua_settop(g_pLuaState, 0);
 		return;
@@ -2064,7 +2061,6 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 	for (int i = 0; i < g_chItemFall[0]; i++)
 	{
 		//LG("����ܱ���", "\t�������Ʒ��ţ�%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
-		// printf( "SpawnResource:�������Ʒ��ţ�%d\n", m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0]);
 		// ʵ����
 		SItemGrid GridContent((Short)m_pCChaRecord->lItem[g_chItemFall[i + 1] - 1][0], 1);
 		ItemInstance(enumITEM_INST_MONS, &GridContent);
@@ -2172,7 +2168,7 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	int nState = lua_pcall(g_pLuaState, 2 + lItemNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", szItemScript);
+		ToLogService("lua", LogLevel::Error, "DoString {}", szItemScript);
 		lua_callalert(g_pLuaState, nState);
 		lua_settop(g_pLuaState, 0);
 		return;
@@ -2181,12 +2177,12 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	DWORD dwEndTime = t.End();
 	if (dwEndTime > 20)
 		//LG("script_time", "�ű�[%s]����ʱ����� time = %d\n", szItemScript, dwEndTime);
-		LG("script_time", "script [%s]cost time too long, time = %d\n", szItemScript, dwEndTime);
+		ToLogService("lua", LogLevel::Trace, "script [{}]cost time too long, time = {}", szItemScript, dwEndTime);
 
 	Long	lFallNum = g_chItemFall[0];
 	if (lFallNum > lItemNum)
 		//LG("���ϴ���", "��ɫ %s ������Ʒ����(%u)����", GetName(), lFallNum);
-		LG("fall error", "character %s fall res number (%u) error", GetName(), lFallNum);
+		ToLogService("errors", LogLevel::Error, "character {} fall res number ({}) error", GetName(), lFallNum);
 	else
 	{
 		//m_CLog.Log("���ϸ�����%d\n", lFallNum);
@@ -2246,7 +2242,7 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	nState = lua_pcall(g_pLuaState, 2 + lItemNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", szItemScript);
+		ToLogService("lua", LogLevel::Error, "DoString {}", szItemScript);
 		lua_callalert(g_pLuaState, nState);
 		lua_settop(g_pLuaState, 0);
 		return;
@@ -2255,12 +2251,12 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 	dwEndTime = t.End();
 	if (dwEndTime > 20)
 		//LG("script_time", "�ű�[%s]����ʱ����� time = %d\n", szItemScript, dwEndTime);
-		LG("script_time", "script[%s]cost time too long, time = %d\n", szItemScript, dwEndTime);
+		ToLogService("lua", LogLevel::Trace, "script[{}]cost time too long, time = {}", szItemScript, dwEndTime);
 
 	lFallNum = g_chItemFall[0];
 	if (lFallNum > lItemNum)
 		//LG("���ϴ���", "��ɫ %s ����������Ʒ����(%u)����", GetName(), lFallNum);
-		LG("fall error", "roll %s fall task res number (%u)error", GetName(), lFallNum);
+		ToLogService("errors", LogLevel::Error, "roll {} fall task res number ({})error", GetName(), lFallNum);
 	else
 	{
 		//m_CLog.Log("������Ʒ���ϸ�����%d\n", lFallNum);
@@ -2328,10 +2324,8 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 			{
 				if (nAttr < 0 || nAttr > 100) // ����ı���
 				{
-					/*LG("����ʵ��������", "ʵ�������ߣ���� %u������ %s������ %u������ȼ� %u��ʵ�������� %u�����Դ������Ժ� %u��ֵ %d��\n",
-						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);*/
-					LG("item instantiation error", "instantiation itme��number %u����name %s��type %u��requirement grade %u��instantiation type %u��attribute error��attribute number %u��value %d��\n",
-						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);
+					ToLogService("errors", LogLevel::Error, "instantiation item: number {}, name {}, type {}, requirement grade {}, instantiation type {}, attribute error, attribute number {}, value {}",
+						pCItemRec->lID, pCItemRec->szName, static_cast<int>(pCItemRec->sType), static_cast<int>(pCItemRec->sNeedLv), static_cast<int>(chType), nAttrID, nAttr);
 					continue;
 				}
 				pGridContent->sEndure[1] = sMin + (sMax - sMin) * nAttr / 100;
@@ -2341,10 +2335,8 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 			{
 				if (nAttr < 0 || nAttr > 1000) // ����ı���
 				{
-					/*LG("����ʵ��������", "ʵ�������ߣ���� %u������ %s������ %u������ȼ� %u��ʵ�������� %u�����Դ������Ժ� %u��ֵ %d��\n",
-						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);*/
-					LG("item instantiation error", "instantiation itme��number %u����name %s��type %u��requirement grade %u��instantiation type %u��attribute error��attribute number %u��value %d��\n",
-						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);
+					ToLogService("errors", LogLevel::Error, "instantiation item: number {}, name {}, type {}, requirement grade {}, instantiation type {}, attribute error, attribute number {}, value {}",
+						pCItemRec->lID, pCItemRec->szName, static_cast<int>(pCItemRec->sType), static_cast<int>(pCItemRec->sNeedLv), static_cast<int>(chType), nAttrID, nAttr);
 					continue;
 				}
 				pGridContent->sEnergy[1] = sMin + (sMax - sMin) * nAttr / 100; // ��������Ҫ�ĳɳ���1000
@@ -2356,10 +2348,8 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 				{
 					if (nAttr < 0 || nAttr > 100) // ����ı���
 					{
-						/*LG("����ʵ��������", "ʵ�������ߣ���� %u������ %s������ %u������ȼ� %u��ʵ�������� %u�����Դ������Ժ� %u��ֵ %d��\n",
-						pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);*/
-						LG("item instantiation error", "instantiation itme��number %u����name %s��type %u��requirement grade %u��instantiation type %u��attribute error��attribute number %u��value %d��\n",
-							pCItemRec->lID, pCItemRec->szName, pCItemRec->sType, pCItemRec->sNeedLv, chType, nAttrID, nAttr);
+						ToLogService("errors", LogLevel::Error, "instantiation item: number {}, name {}, type {}, requirement grade {}, instantiation type {}, attribute error, attribute number {}, value {}",
+							pCItemRec->lID, pCItemRec->szName, static_cast<int>(pCItemRec->sType), static_cast<int>(pCItemRec->sNeedLv), static_cast<int>(chType), nAttrID, nAttr);
 						continue;
 					}
 					pGridContent->sInstAttr[nAttrPos][0] = nAttrID;

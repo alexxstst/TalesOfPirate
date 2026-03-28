@@ -142,7 +142,7 @@ bool CFormMgr::_AddMemory( CForm* form )
 	{
 		if( stricmp( form->GetName(), (*it)->GetName() )==0 )
 		{
-			LG("gui", g_oLangRec.GetString(574), form->GetName() );
+			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(574), form->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			return false;
 		}
 	}
@@ -329,7 +329,7 @@ void CFormMgr::_ModalClose( CForm* form )
         return;
     }
 
-    LG( "gui", "msgCFormMgr::_ModalClose(%s) not find this form", form->GetName() );
+    ToLogService("common", "msgCFormMgr::_ModalClose({}) not find this form", form->GetName());
 }
 
 void CFormMgr::_SetNewActiveForm()
@@ -897,7 +897,6 @@ void CFormMgr::ShowDebugInfo()
 		//pInfo[i].formName=pForm->GetName();
 		//pInfo[i].isShow=pForm->GetIsShow()?"Y":"N";
 		//pInfo[i].isEnable=pForm->GetIsEnabled()?"N":"Y";
-		//sprintf(buf,"(%4d,%4d)-(%4d,%4d)",pForm->GetLeft(),pForm->GetTop(),pForm->GetRight(),pForm->GetBottom());
 		//pInfo[i].coordinate=buf;
 		//pInfo[i].parent=pForm->GetParent()?pForm->GetParent()->GetName():"û�и�����";
 		//pInfo[i].totalCompents=pForm->_allCompents.size();
@@ -905,8 +904,6 @@ void CFormMgr::ShowDebugInfo()
 		//pInfo[i].hasPopMenu=(pForm->_pPopMenu)"Y":"N";
 
 		//DWORD color=COLOR_WHITE;
-		//sprintf(buf,"%-6d %-20s %s     %s  (%4d,%4d)-(%4d,%4d) %-15s   %3d",i,pForm->GetName(),pForm->GetIsShow()?"Y":"N",pForm->GetIsEnabled()?"N":"Y",pForm->GetLeft(),pForm->GetTop(),pForm->GetRight(),pForm->GetBottom(),
-		//	pForm->GetParent()?pForm->GetParent()->GetName():"û�и�����",pForm->_allCompents.size());
 
 		DWORD color=COLOR_WHITE;
 		//"����ID       ��������          ����            ��ʾ  ����  �˵�   ��   �ؼ���    �ȼ�     ��Ⱦʱ��"

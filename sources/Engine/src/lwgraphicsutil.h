@@ -93,7 +93,7 @@ inline void __cdecl LGX(const char* format, ...)
     _vsntprintf( &buf[3], 512, format, args );
     va_end( args );
 
-    LG("default", buf);
+    g_logManager.InternalLog(LogLevel::Error, "errors", buf);
 }
 
 #define LG_MSGBOX LGX

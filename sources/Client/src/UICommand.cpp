@@ -112,7 +112,7 @@ bool CCommandObj::UserExec()
 
 bool CCommandObj::UseCommand(bool value)
 {
-    LG( "CCommandObj", "msgTest CCommandObj" );
+    ToLogService("common", "msgTest CCommandObj");
     return true;
 }
 

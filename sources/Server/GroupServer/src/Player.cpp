@@ -527,7 +527,6 @@ void Player::DelEstopPlayer( cChar* plyname )
 	if( !g_gpsvr->m_tblcharaters->DelEstop( plyname ) )
 	{
 		char szData[128];
-		//sprintf( szData, "?a3y??????��???%s?��2?��??����?", plyname );
 		sprintf( szData, RES_STRING(GP_PLAYER_CPP_00018), plyname );
 		SendSysInfo( szData );
 		return;
@@ -535,12 +534,10 @@ void Player::DelEstopPlayer( cChar* plyname )
 	else
 	{
 		char szData[128];
-		//sprintf( szData, "?a3y??��???%s?��????2������3��1|��?", plyname );
 		sprintf( szData, RES_STRING(GP_PLAYER_CPP_00019), plyname );
 		SendSysInfo( szData );
 
 		char szTemp[128];
-		//sprintf( szTemp, "??��??-��?GM??%s?��?a3y????��?", m_chaname[m_currcha].c_str() );
 		sprintf( szTemp, RES_STRING(GP_PLAYER_CPP_00020), m_chaname[m_currcha].c_str() );
 		ply->SendSysInfo( szTemp );
 
@@ -573,7 +570,6 @@ void Player::EstopPlayer( cChar* plyname, uLong lTimes )
 	if( !g_gpsvr->m_tblcharaters->Estop( plyname, lTimes ) )
 	{
 		char szData[128];
-		//sprintf( szData, "??????��???%s?��2?��??����?", plyname );
 		sprintf( szData, RES_STRING(GP_PLAYER_CPP_00023), plyname );
 		SendSysInfo( szData );
 		return;
@@ -629,7 +625,6 @@ void Player::DisablePlayer( cChar* plyname, uLong lTimes )
 			g_gpsvr->SendToClient(ply,l_wpk);
 
 			char szData[128];
-			//sprintf( szData, "?����???��???%s?��?��o?2������3��1|��?", plyname );
 			sprintf( szData, RES_STRING(GP_PLAYER_CPP_00028), plyname );
 			SendSysInfo( szData );
 
@@ -646,7 +641,6 @@ void Player::DisablePlayer( cChar* plyname, uLong lTimes )
 		if( !g_gpsvr->m_tblcharaters->FetchAccidByChaName( plyname, cha_accid ) )
 		{
 			char szData[128];
-			//sprintf( szData, "?����???��???%s?��2?��??����?", plyname );
 			sprintf( szData, RES_STRING(GP_PLAYER_CPP_00031), plyname );
 			SendSysInfo( szData );
 			return;
@@ -661,7 +655,6 @@ void Player::DisablePlayer( cChar* plyname, uLong lTimes )
 			g_gpsvr->m_acctClient.Send(l_wpk);
 
 			char szData[128];
-			//sprintf( szData, "?����???��???%s?��?��o?2������3��1|��?", plyname );
 			sprintf( szData, RES_STRING(GP_PLAYER_CPP_00032), plyname );
 			SendSysInfo( szData );
 

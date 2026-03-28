@@ -46,3 +46,4 @@
 #include "ItemContent.h"
 #include "CommFunc.h"
 #include "GameCommon.h"
+#include "logutil.h"

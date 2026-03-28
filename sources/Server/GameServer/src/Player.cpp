@@ -745,7 +745,6 @@ void CPlayer::SystemNotice( const char szData[], ... )
 	va_list list;
 	va_start( list, szData );
 	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
-	//vsprintf( szTemp, szData, list );
 	// End
 	va_end( list );
 

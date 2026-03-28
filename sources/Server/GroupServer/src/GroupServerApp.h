@@ -317,22 +317,21 @@ extern void InitACTSvrConnect(GroupServerApp &gpapp);	//AccountServer连接
 extern GroupServerApp * g_gpsvr;
 extern InterLockedLong	g_exit;
 extern InterLockedLong	g_ref;
-extern LogStream			g_LogGrpServer;
-extern LogStream			g_LogErrServer;
-extern LogStream			g_LogGuild;
-extern LogStream			g_LogFriend;
-extern LogStream			g_LogMaster;
-extern LogStream			g_LogTeam;
-extern LogStream			g_LogConnect;
-extern LogStream			g_LogDB;
-extern LogStream			g_LogGarner2;
+extern dbc::LogStream			g_LogGrpServer;
+extern dbc::LogStream			g_LogErrServer;
+extern dbc::LogStream			g_LogGuild;
+extern dbc::LogStream			g_LogFriend;
+extern dbc::LogStream			g_LogMaster;
+extern dbc::LogStream			g_LogTeam;
+extern dbc::LogStream			g_LogConnect;
+extern dbc::LogStream			g_LogDB;
+extern dbc::LogStream			g_LogGarner2;
 extern GMBBS		*		g_gmbbs;
 extern HANDLE				hConsole;
 
+// C_PRINT заменён на логирование через logutil
 #define C_PRINT(s, ...) \
-	SetConsoleTextAttribute(hConsole, 14); \
-	printf(s, __VA_ARGS__); \
-	SetConsoleTextAttribute(hConsole, 10);
+	g_logManager.InternalLog(LogLevel::Info, "common", s);
 
 #define C_TITLE(s) \
 	char szPID[32]; \

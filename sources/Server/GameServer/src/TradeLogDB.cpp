@@ -11,13 +11,13 @@ BOOL CTradeLogDB::Init()
 		const char* buf = g_Config.m_szTradeLogDBPass;
 		if(strcmp(buf,"\"\"") == 0 || strcmp(buf,"''") == 0 || strcmp(buf,"22222") == 0)
 		{
-			LG("trade log db", "Database  Password Error!");
+			ToLogService("common", "Database  Password Error!");
 			return FALSE;
 		}
 
 		_connect.enable_errinfo();
 
-		printf("Connectting database [%s : %s]......\n", g_Config.m_szTradeLogDBIP, g_Config.m_szTradeLogDBName);
+		ToLogService("common", "Connectting database [{} : {}]......", g_Config.m_szTradeLogDBIP, g_Config.m_szTradeLogDBName);
 
 
 		std::string err_info;
@@ -30,11 +30,11 @@ BOOL CTradeLogDB::Init()
 		bool r = _connect.connect(s_szDsn, err_info);
 		if(!r)
 		{
-			LG("trade log db", "Database Connect Failed!, ERROR REPORT[%s]", err_info.c_str() );
+			ToLogService("common", "Database Connect Failed!, ERROR REPORT[{}]", err_info.c_str() );
 			return FALSE;
 		}
 
-		printf("Database Connected!\n");
+		ToLogService("common", "Database Connected!");
 
 		_tab_log   = new CTradeTableLog(&_connect);
 

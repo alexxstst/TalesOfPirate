@@ -35,18 +35,13 @@ struct MPTexRect
 
 inline void __cdecl LGX(const char* format, ...)
 {
-    char buf[512];
-    buf[0] = 'm';
-    buf[1] = 's';
-    buf[2] = 'g';
-    buf[3] = 0;
-    
+    char buf[512]{};
     va_list args;
-    va_start( args, format );
-    _vsntprintf( &buf[3], 512, format, args );
-    va_end( args );
+    va_start(args, format);
+    _vsntprintf(buf, 512, format, args);
+    va_end(args);
 
-    LG("default", buf);
+    g_logManager.InternalLog(LogLevel::Error, "errors", buf);
 }
 
 #ifndef USE_LG_MSGBOX

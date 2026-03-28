@@ -31,7 +31,7 @@ namespace GUI
 		frmBank = mgr.Find("frmManage");// 查找NPC银行存储表单 
 		if ( !frmBank)
 		{
-			LG("gui", g_oLangRec.GetString(438));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(438));
 			return false;
 		}
 
@@ -182,7 +182,6 @@ namespace GUI
 			CS_GuildBankOper(&g_stUIGuildBank.m_kNetBank);
 			return true;
 			//char buf[256] = { 0 };
-			//sprintf(buf, "您确认放入银行\n[%s]?", pkItemCmd->GetName());
 			//g_stUIBox.ShowSelectBox(_MoveAItemEvent, buf, true);
 			//return true;
 		}
@@ -221,7 +220,6 @@ namespace GUI
 			return true;
 
 			//char buf[256] = { 0 };
-			//sprintf(buf, "您确认取出\n[%s]?", pkItemCmd->GetName());
 			//g_stUIBox.ShowSelectBox(_MoveAItemEvent, buf, true);
 			//return true;
 		}

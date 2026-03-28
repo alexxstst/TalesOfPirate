@@ -392,8 +392,7 @@ bool CEquipMgr::Init()
 	
 	CTextButton* btnLeft3d = (CTextButton*)frmItemSpy->Find("btnLeft3d");
 	if (!btnLeft3d){
-		Error(g_oLangRec.GetString(45), 
-			frmItemSpy->GetName(), "btnLeft3d");
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), frmItemSpy->GetName(), "btnLeft3d"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 	btnLeft3d->evtMouseClick = _RotateSpyLeft;
@@ -401,8 +400,7 @@ bool CEquipMgr::Init()
 
 	CTextButton* btnRight3d = (CTextButton*)frmItemSpy->Find("btnRight3d");
 	if (!btnRight3d){
-		Error(g_oLangRec.GetString(45), 
-			frmItemSpy->GetName(), "btnRight3d");
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), frmItemSpy->GetName(), "btnRight3d"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 	btnRight3d->evtMouseClick = _RotateSpyRight;
@@ -641,7 +639,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
     CCharacter * pCha = g_stUIBoat.GetHuman();
 	if( !pCha || pCha->getAttachID()!=dwCharID) 
 	{
-        LG( "protocol", g_oLangRec.GetString(547) );
+        g_logManager.InternalLog(LogLevel::Debug, "network", g_oLangRec.GetString(547));
         return;
 	}
 
@@ -665,7 +663,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
                 pInfo = GetSkillRecordInfo( pSBag[i].sID );
                 if( !pInfo )
                 {
-                    LG( "protocol", g_oLangRec.GetString(548), pSBag[i].sID );
+                    { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(548), pSBag[i].sID); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
                     continue;
                 }
                 pInfo->GetSkillGrid() = pSBag[i];
@@ -688,7 +686,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
                 pInfo = GetSkillRecordInfo( pSBag[i].sID );
                 if( !pInfo )
                 {
-                    LG( "protocol", g_oLangRec.GetString(549), pSBag[i].sID );
+                    { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(549), pSBag[i].sID); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
                     continue;
                 }
                 pInfo->GetSkillGrid() = pSBag[i];
@@ -711,7 +709,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
                 pInfo = GetSkillRecordInfo( pSBag[i].sID );
                 if( !pInfo )
                 {
-                    LG( "protocol", g_oLangRec.GetString(550), pSBag[i].sID );
+                    { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(550), pSBag[i].sID); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
                     continue;
                 }
                 pInfo->GetSkillGrid() = pSBag[i];
@@ -720,14 +718,14 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
 
                 if( pSBag[i].chLv==0 && !GetSkillList( pInfo->chFightType )->DelSkill( pSBag[i].sID ) )
                 {
-                    LG( "protocol", g_oLangRec.GetString(551), pSBag[i].sID );
+                    { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(551), pSBag[i].sID); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
                     continue;
                 }
             }        
         }
         break;
     default:
-        LG( "protocol", g_oLangRec.GetString(552), pSSkillBag->chType );
+        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(552), pSSkillBag->chType); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
         return;
     }
 
@@ -817,7 +815,7 @@ void CEquipMgr::UpdataEquipData( const stNetChangeChaPart& SPart, CCharacter* pC
         }
 		else
 		{
-			LG( "error", g_oLangRec.GetString(554),( pItem ? pItem->GetItemInfo()->lID : 0), SPart.SLink[i].sID );
+			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(554), ( pItem ? pItem->GetItemInfo()->lID : 0), SPart.SLink[i].sID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		}
 	}
 }
@@ -1064,7 +1062,7 @@ bool CEquipMgr::_UpdataEquip( SItemGrid& Item, int nLink )
         CItemRecord* pInfo = GetItemRecordInfo( nItemID );
         if( !pInfo )
         {
-            LG( "UpdataEquip", g_oLangRec.GetString(555), nItemID );
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(555), nItemID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
             return false;
         }
 
@@ -1153,11 +1151,11 @@ int CEquipMgr::RefreshServerShortCut()
 			CS_BeginAction( g_stUIBoat.GetHuman(), enumACTION_SHORTCUT, (void*)&param );
 			nCount++;
 
-			LG( "shortcut", "Index:%d, Type:%d, GridID:%d\n", param.chIndex, param.chType, param.shyGrid );
+			ToLogService("common", "Index:{}, Type:{}, GridID:{}", param.chIndex, param.chType, param.shyGrid);
 		}
 	}
 	memcpy( &_stShortCut, &tmp, sizeof(tmp) );
-	LG( "shortcut", "Total:%d\n\n", nCount );
+	ToLogService("common", "Total:{}\n", nCount);
 	return nCount;
 }
 
@@ -1410,7 +1408,6 @@ void CEquipMgr::_ActiveFast( int num )
     }
     _nFastCur = num;
 
-	//sprintf( szBuf, "%d", _nFastCur + 1 );
 	//_pActiveFastLabel->SetCaption( szBuf );
 }
 

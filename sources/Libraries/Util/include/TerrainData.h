@@ -42,7 +42,7 @@ inline BOOL MPTerrainData::_ReadFileHeader()
     fread(&_header, sizeof(_header), 1, _fp);
     if(_header.nMapFlag<780624 || _header.nMapFlag>780630) 
 	{
-		LG(GetDataName(), "msg不是合法的map文件!\n");
+		g_logManager.LogDebug("common", "msg不是合法的map文件!");
         return FALSE;
 	}
 
@@ -80,7 +80,7 @@ inline DWORD MPTerrainData::_ReadSectionIdx(DWORD dwSectionNo)
     DWORD dwOffset = 0; fread(&dwOffset, sizeof(DWORD), 1, _fp);
     if(_bDebug)
     {
-        LG(GetDataName(), "读取索引区数据[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+        g_logManager.LogDebug("common", "读取索引区数据[{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
     return dwOffset;
 }
@@ -91,7 +91,7 @@ inline void MPTerrainData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
     fwrite(&dwOffset, sizeof(DWORD), 1, _fp);
     if(_bDebug)
     {
-        LG(GetDataName(), "写入索引区数据[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+        g_logManager.LogDebug("common", "写入索引区数据[{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
 }
 
@@ -252,7 +252,7 @@ inline void PackDirection(const char *pszDir, const char *pszPackFile)
 		FILE *fpTmp = fopen(pszFile, "rb");
 		if(fpTmp==NULL)
 		{
-			LG("pack", "被打包的文件[%s]无法打开!\n", pszFile);
+			ToLogService("common", "被打包的文件[{}]无法打开!", pszFile);
 			continue;
 		}
 		fseek(fpTmp, 0, SEEK_END);
@@ -260,7 +260,7 @@ inline void PackDirection(const char *pszDir, const char *pszPackFile)
 
 		if(dwSize>=dwMaxFileSize)
 		{
-			LG("pack", "被打包的文件[%s]文件尺寸超标, 略过!\n", pszFile);
+			ToLogService("common", "被打包的文件[{}]文件尺寸超标, 略过!", pszFile);
 			fclose(fpTmp);
 			continue;
 		}
@@ -291,7 +291,7 @@ inline void PackDirection(const char *pszDir, const char *pszPackFile)
 	delete pbtIdx;
 	fclose(fp);
 
-	LG("pack", "msg指定目录文件已经被打包成[%s]\n", pszPackFile);
+	ToLogService("common", LogLevel::Error, "指定目录文件已经被打包成[{}]", pszPackFile);
 }
 
 

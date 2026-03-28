@@ -194,7 +194,7 @@ void CEditArticle::DelSelect()
 		}
 		else
 		{
-			LG( "DelSelect", "msgSize:%d, Start:%d, End:%d\n", _memorys.size(), _nSelStart, _nSelEnd );
+			ToLogService("common", "msgSize:{}, Start:{}, End:{}", _memorys.size(), _nSelStart, _nSelEnd);
 		}
 		_eRunType = enumNormal;
 	}

@@ -842,9 +842,9 @@ void CLogvwrDlg::OnViewTest()
 	char* type = "init";
 	EnableAllLG();
 	EnableLG(type, false);
-	LG(type, "you can't see this message\n");
+	g_logManager.InternalLog(LogLevel::Debug, type, "you can't see this message");
 	EnableLG(type);
-	LG(type, "you can see this message\n");
+	g_logManager.InternalLog(LogLevel::Debug, type, "you can see this message");
 #endif
 
 #if 0
@@ -941,11 +941,11 @@ void CLogvwrDlg::OnViewTest()
 #if 0
     SetLGDir("d:/log");
 
-    LG("init", "hehe");
+    ToLogService("common", "hehe");
 
-    LG("init", "第%d条LOG消息\n", ++ cnt);
+    ToLogService("common", "第{}条LOG消息", ++ cnt);
     GPL("FPS", 20, 20, "FPS : 第%d条LOG消息\n", ++ cnt);
-    LG("debug", "第%d条LOG消息\n", ++ cnt);
+    ToLogService("common", "第{}条LOG消息", ++ cnt);
     GPL("CPU", 20, 80, "CPU : 第%d条LOG消息\n", ++ cnt);
 #endif
 #if 0

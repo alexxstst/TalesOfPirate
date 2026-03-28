@@ -67,7 +67,7 @@ void CServerHarm::Gouge( int nGouge )
 
 void CServerHarm::ExecAll(int nCount)
 {
-	LG( _pCha->getLogName(), "CServerHarm ExecAll(int), FightID[%d], Ready[%d], Size[%d], Count[%d]\n", GetFightID(), _nReadyExec, _harm.size(), nCount );
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm ExecAll(int), FightID[{}], Ready[{}], Size[{}], Count[{}]", GetFightID(), _nReadyExec, _harm.size(), nCount));
 
 	while( !_harm.empty() && nCount>0 )
 	{
@@ -85,7 +85,7 @@ void CServerHarm::ExecAll(int nCount)
 
 void CServerHarm::ExecAll()
 {
-	LG( _pCha->getLogName(), "CServerHarm ExecAll, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm ExecAll, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 
 	while( !_harm.empty() )
 	{
@@ -98,13 +98,13 @@ void CServerHarm::ExecAll()
 
 void CServerHarm::Exec()
 {
-	LG( _pCha->getLogName(), "CServerHarm Exec, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm Exec, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 
 	if( GetIsExecEnd() ) return;
 
 	if( _harm.size()>0 && _nReadyExec<=0 )
 	{
-		LG( _pCha->getLogName(), "!!!!!!!!!!!!!!!!!CServerHarm Exec, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("!!!!!!!!!!!!!!!!!CServerHarm Exec, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 	}
 
     _nReadyExec--;
@@ -137,7 +137,7 @@ void CServerHarm::Exec()
 
 	if( !_IsOuter && _harm.empty() && _nReadyExec<=0 )
 	{
-		LG( _pCha->getLogName(), "CServerHarm Over, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm Over, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 	    _nFightID = ERROR_FIGHT_ID;
 	}
 }
@@ -179,7 +179,7 @@ void CServerHarm::SetIsOuter( bool v )
 { 
 	if( GetIsExecEnd() ) return;
 
-	LG( _pCha->getLogName(), "CServerHarm SetIsOuter, FightID[%d], Ready[%d], Size[%d], IsOuter[%d], OldOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), v, _IsOuter );
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm SetIsOuter, FightID[{}], Ready[{}], Size[{}], IsOuter[{}], OldOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), v, _IsOuter));
 
 	_IsOuter = v;	
 	if( !v )
@@ -188,12 +188,12 @@ void CServerHarm::SetIsOuter( bool v )
 		{
 			if( _pSkill->IsHarmRange() )
 			{
-				// ·¶Î§¼¼ÄÜ£¬ÏÂÒ»´ÎÄÜÖ´ÐÐÍê
+				// ï¿½ï¿½Î§ï¿½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½
 				return;
 			}
 			else if( _nReadyExec<(int)_harm.size() )
 			{
-				// µ¥¸ö¼¼ÄÜ½«¶àÓà²¿·ÖÖ´ÐÐµô
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü½ï¿½ï¿½ï¿½ï¿½à²¿ï¿½ï¿½Ö´ï¿½Ðµï¿½
 				ExecAll( (int)_harm.size() - _nReadyExec );
 				return;
 			}
@@ -201,10 +201,10 @@ void CServerHarm::SetIsOuter( bool v )
 
 		if( !_harm.empty() ) ExecAll();
 
-		// ÓÐÍâ²¿Ö´ÐÐÊ±,ÓÉÍâ²¿Ö´ÐÐ½áÊø
+		// ï¿½ï¿½ï¿½â²¿Ö´ï¿½ï¿½Ê±,ï¿½ï¿½ï¿½â²¿Ö´ï¿½Ð½ï¿½ï¿½ï¿½
 		if( _nReadyExec<=0 )
 		{
-			LG( _pCha->getLogName(), "CServerHarm Over(Outer), FightID[%d]\n", GetFightID() );
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm Over(Outer), FightID[{}]", GetFightID()));
 			_nFightID = ERROR_FIGHT_ID;
 		}
 		return;
@@ -215,7 +215,7 @@ bool CServerHarm::AddHarm( CAttackEffect* s, CSkillRecord *pSkill )
 { 	
 	if( pSkill!=_pSkill ) 
 	{
-		LG( _pCha->getLogName(), "AddHarm skill false, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("AddHarm skill false, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 		return false;
 	}
 
@@ -229,13 +229,13 @@ bool CServerHarm::AddHarm( CAttackEffect* s, CSkillRecord *pSkill )
 		{
 			if( _nReadyExec<=(int)_harm.size() ) 
 			{
-				LG( _pCha->getLogName(), "AddHarm attrange false, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("AddHarm attrange false, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 				return false;
 			}
 		}
 		else if( _nReadyExec<=0 )
 		{
-			LG( _pCha->getLogName(), "AddHarm false, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("AddHarm false, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
 			return false;
 		}
 	}
@@ -244,6 +244,6 @@ bool CServerHarm::AddHarm( CAttackEffect* s, CSkillRecord *pSkill )
 	s->Reset();
 	_harm.push_back(s);
 
-	LG( _pCha->getLogName(), "AddHarm, FightID[%d], Ready[%d], Size[%d], IsOuter[%d]\n", GetFightID(), _nReadyExec, _harm.size(), _IsOuter );
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("AddHarm, FightID[{}], Ready[{}], Size[{}], IsOuter[{}]", GetFightID(), _nReadyExec, _harm.size(), _IsOuter));
     return true;
 }  

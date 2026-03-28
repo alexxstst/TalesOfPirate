@@ -114,7 +114,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	DWORD dx_ver = DX_VERSION_X_X;
 
 
-	LG("init", "Define __CATCH\n");
+	ToLogService("common", "Define __CATCH");
 	// SEHTranslator translator;
 	std::string strParam = lpCmdLine;
 	
@@ -232,9 +232,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 		CMiniPack pkfile;
 		if(pkfile.SaveToPack(pszpath,pszFile))
-			LG("ok", g_oLangRec.GetString(188),pszPos);
+			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(188), pszPos); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		else
-			LG("ok", g_oLangRec.GetString(189),pszPos);
+			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(189), pszPos); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		return 0;
 	}
 
@@ -472,7 +472,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	if(!g_pGameApp->Init(hInstance, szWindowClass, nWidth, nHeight, nDepth, FALSE /*g_Config.m_bFullScreen*/))
     {
-        LG("init", g_oLangRec.GetString(191));
+        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(191));
         g_pGameApp->End();
         return 0;
     }
@@ -493,7 +493,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		loading.Close();
 	}
 
-	LG("init", "init use time = %d ms\n", t.End());
+	ToLogService("common", "init use time = {} ms", t.End());
 
 	// Main message loop:
 	ZeroMemory( &msg, sizeof(msg) );
@@ -973,7 +973,6 @@ int InstallFont(const char* pszPath)
 
 	//WIN32_FIND_DATA oFinder;
 
-	//sprintf(szBuffer, "%s%s", pszPath, "*.*");
 	//HANDLE hFind = FindFirstFile(szBuffer, &oFinder);
 
 	//if(hFind == INVALID_HANDLE_VALUE)
@@ -989,7 +988,6 @@ int InstallFont(const char* pszPath)
 	//		continue;
 	//	}
 
-	//	sprintf(szBuffer, "%s%s", pszPath, oFinder.cFileName);
 	//	nRet += AddFontResource(szBuffer);	//AddFontResourceEx(szBuffer, FR_NOT_ENUM, 0);
 	//}
 

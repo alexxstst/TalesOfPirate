@@ -11,9 +11,8 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 
 	if (fp == NULL)
 	{
-		LG2("error", "Load Raw Data Info Bin File [%s] Failed!\n", pszFileName);
-		//sprintf(szMsg, "´ò¿ª±í¸ñÎÄ¼þÊ§°Ü£º%s\n³ÌÐò¼´½«ÍË³ö!\n", pszFileName);
-		//MessageBox(NULL, szMsg, "´íÎó", MB_OK | MB_ICONERROR);
+		ToLogService("errors", LogLevel::Error, "Load Raw Data Info Bin File [{}] Failed!", pszFileName);
+		//MessageBox(NULL, szMsg, "ï¿½ï¿½ï¿½ï¿½", MB_OK | MB_ICONERROR);
 		sprintf(szMsg, "Open table file failed:%s\nProgram will exit!\n", pszFileName);
 		MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 		return FALSE;
@@ -31,13 +30,11 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 	/*
 	if(dwInfoSize!=_GetRawDataInfoSize())
 	{
-		//sprintf(szMsg, "dwInfoSize: %d\n_GetRawDataInfoSize: %d!\n", dwInfoSize, _GetRawDataInfoSize());
 		//MessageBox(NULL, szMsg, "Error2", MB_OK | MB_ICONERROR);
-		//LG2("table", "msg¶ÁÈ¡±í¸ñÎÄ¼þ[%s]Ê±, ·¢ÏÖ°æ±¾²»Ò»ÖÂ!\n", pszFileName);
-		LG2("table", "msg read table file [%s], version can't match!\n", pszFileName);
+		//LG2("table", "msgï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½[%s]Ê±, ï¿½ï¿½ï¿½Ö°æ±¾ï¿½ï¿½Ò»ï¿½ï¿½!\n", pszFileName);
+		ToLogService("common", LogLevel::Error, " read table file [{}], version can't match!", pszFileName);
 		fclose(fp);
-		//sprintf(szMsg, "¶ÁÈ¡±í¸ñÎÄ¼þ´íÎó£º%s\n³ÌÐò¼´½«ÍË³ö!\n", pszFileName);
-		//MessageBox(NULL, szMsg, "´íÎó", MB_OK | MB_ICONERROR);
+		//MessageBox(NULL, szMsg, "ï¿½ï¿½ï¿½ï¿½", MB_OK | MB_ICONERROR);
 		sprintf(szMsg, "Open table file failed:%s\nProgram will exit!\n", pszFileName);
 		MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 		exit(0);
@@ -54,7 +51,6 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 	CryptoPP::StringSource ss(pbtResInfo, nSize, true, new CryptoPP::Redirector(df));
 
 	//if (sink.size() != nSize - 12) {
-	//	sprintf(szMsg, "Size:%d\n, expected:%d\n", sink.size(), (nInfoSize * _nIDCnt) + 12);
 	//	MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 	//}
 	memset(pbtResInfo, 0, nSize);
@@ -72,11 +68,11 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 		if (IsValidID(i) == FALSE) continue;
 
 		CRawDataInfo* pCurInfo = _GetRawDataInfo(pInfo->nID);
-		memcpy(pCurInfo, pInfo, nInfoSize); // Ìæ´úÔ­ÓÐµÄÐÅÏ¢
+		memcpy(pCurInfo, pInfo, nInfoSize); // ï¿½ï¿½ï¿½Ô­ï¿½Ðµï¿½ï¿½ï¿½Ï¢
 		_IDIdx[pCurInfo->szDataName] = pCurInfo;
 		//vector<string> ParamList; _ReadRawDataInfo(pCurInfo, ParamList);
 		_ProcessRawDataInfo(pCurInfo);
-		LG2("debug", "Load Bin RawData [%s] = %d\n", pCurInfo->szDataName, pCurInfo->nID);
+		ToLogService("common", "Load Bin RawData [{}] = {}", pCurInfo->szDataName, pCurInfo->nID);
 	}
 
 	delete pbtResInfo;
@@ -115,7 +111,6 @@ void CRawDataSet::_WriteRawDataInfo_Bin(const char* pszFileName)
 	fwrite(sink.c_str(), sizeof(char), (dwInfoSize*_nIDCnt) + 12, fp);
 
 	//if (sink.size() != (dwInfoSize * _nIDCnt) + 12) {
-	//	sprintf(szMsg, "Size:%d\n, expected:%d\n", sink.size(), (dwInfoSize * _nIDCnt) + 12);
 	//	MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 	//}
 	fclose(fp);

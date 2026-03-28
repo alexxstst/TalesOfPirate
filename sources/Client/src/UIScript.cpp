@@ -258,7 +258,6 @@ int UI_CreateForm(char *pszName, int isModal, int w, int h, int x, int y, int is
 	f->GetFrameImage()->SetIsShowFrame( isShowFrame!=0 ? true: false );
 //#if _DEBUG
 //	char buffer[255];
-//	sprintf(buffer,"UI_CreateForm\t%s\r\n", pszName);
 //	::OutputDebugStr(buffer);
 //#endif
 	return f->GetID();

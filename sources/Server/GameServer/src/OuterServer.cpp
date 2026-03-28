@@ -28,13 +28,13 @@ OuterServer::~OuterServer()
 	ShutDown(12*1000);
 }
 
-bool	OuterServer::OnConnect(DataSocket *datasock)					//·µ»ØÖµ:true-ÔÊÐíÁ¬½Ó,false-²»ÔÊÐíÁ¬½Ó
+bool	OuterServer::OnConnect(DataSocket *datasock)					//ï¿½ï¿½ï¿½ï¿½Öµ:true-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,false-ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 {
 	datasock->SetRecvBuf(32*1024); 
 	datasock->SetSendBuf(32*1024);
-	LG(g_szConnectLog, "GateServer Cconnected! IP = [%s] port = %d\n",  datasock->GetPeerIP() , datasock->GetPeerPort());
+	ToLogService("network", "GateServer Connected! IP = [{}] port = {}", datasock->GetPeerIP(), datasock->GetPeerPort());
 
-    // Í¨ÖªÓ¦ÓÃ²ã£¬Á¬ÉÏÒ»¸ö GateServer
+    // Í¨ÖªÓ¦ï¿½Ã²ã£¬ï¿½ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ GateServer
     WPacket wpkt = g_gmsvr->GetWPacket();
     wpkt.WriteCmd(CMD_MM_GATE_CONNECT);
     wpkt.WriteChar(0);
@@ -43,22 +43,22 @@ bool	OuterServer::OnConnect(DataSocket *datasock)					//·µ»ØÖµ:true-ÔÊÐíÁ¬½Ó,fal
 	return true;
 }
 
-void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reasonÖµ:0-±¾µØ³ÌÐòÕý³£ÍË³ö£»-3-ÍøÂç±»¶Ô·½¹Ø±Õ£»-1-Socket´íÎó;-5-°ü³¤¶È³¬¹ýÏÞÖÆ¡£
+void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reasonÖµ:0-ï¿½ï¿½ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½-3-ï¿½ï¿½ï¿½ç±»ï¿½Ô·ï¿½ï¿½Ø±Õ£ï¿½-1-Socketï¿½ï¿½ï¿½ï¿½;-5-ï¿½ï¿½ï¿½ï¿½ï¿½È³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ¡ï¿½
 {
-	LG(g_szConnectLog, "GateServer Disconnect! IP = [%s] port = %d, reason = [%d]\n",  datasock->GetPeerIP() , datasock->GetPeerPort(), reason);
+	ToLogService("network", "GateServer Disconnect! IP = [{}] port = {}, reason = [{}]", datasock->GetPeerIP(), datasock->GetPeerPort(), reason);
 
     GateServer* gt = (GateServer *)datasock->GetPointer();
     if (gt == NULL) return;
 
 	if (gt->IsValid())
 	{
-		// Í¨ÖªÂß¼­²ãÓë¸ÃGateµÄÁ¬½Ó¶Ï¿ª
+		// Í¨Öªï¿½ß¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Gateï¿½ï¿½ï¿½ï¿½ï¿½Ó¶Ï¿ï¿½
 		WPacket WtPk=g_gmsvr->GetWPacket();
 		WtPk.WriteCmd(CMD_MM_GATE_RELEASE);
 		WtPk.WriteChar(0);
 		AddPK(datasock, WtPk);
 
-        // ÇåÀíGateServer
+        // ï¿½ï¿½ï¿½ï¿½GateServer
         gt->Invalid();      
     }
 }
@@ -114,7 +114,7 @@ long ToGateServer::Process()
 	DWORD	dwConnectTick = 0;
 	
 	dwTick = dwCurTick = GetTickCount();
-	dwTick -= dwConnectTick; // ±£Ö¤Ïß³ÌÔËÐÐºóÁ¢¼´Ö´ÐÐÁ¬½ÓGateServerµÄ²Ù×÷
+	dwTick -= dwConnectTick; // ï¿½ï¿½Ö¤ï¿½ß³ï¿½ï¿½ï¿½ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½GateServerï¿½Ä²ï¿½ï¿½ï¿½
 
 	while (!GetExitFlag())
     {
@@ -129,7 +129,7 @@ long ToGateServer::Process()
 		
 		dwLastRunTick = dwCurTick;
 
-		// ¶ÔÎ´Á¬½ÓµÄ GateServer ½øÐÐÁ¬½Ó
+		// ï¿½ï¿½Î´ï¿½ï¿½ï¿½Óµï¿½ GateServer ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if (dwCurTick - dwTick >= dwConnectTick)
 	    {
 			dwTick = dwCurTick;

@@ -24,14 +24,14 @@ CThreadBase::~CThreadBase()
 
 bool CThreadBase::Begin(int flag)
 {
-    // ´´½¨µÄÊ±ºòÏÈ¹ÒÆð
+    // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½È¹ï¿½ï¿½ï¿½
     m_thread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, CREATE_SUSPENDED, &m_threadid);
 
-	LG( "threadid", "%d:%s\n", m_threadid, "CThreadBase" );
+	ToLogService("common", "{}:{}", m_threadid, "CThreadBase");
 
     if(m_thread)
     {
-        // Ö¸¶¨ CPU ÔËÐÐºóÔÙ¿ªÊ¼ÔËÐÐ
+        // Ö¸ï¿½ï¿½ CPU ï¿½ï¿½ï¿½Ðºï¿½ï¿½Ù¿ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½
         SetThreadAffinityMask(m_thread, 1);
         ResumeThread(m_thread);
     }

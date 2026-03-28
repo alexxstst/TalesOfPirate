@@ -3,7 +3,6 @@
 #include "LootFilter.h"
 #include "GameApp.h"
 #include <string>
-#include "log.h"
 
 using namespace std;
 

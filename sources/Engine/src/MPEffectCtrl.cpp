@@ -163,7 +163,7 @@ void	CMPEffectCtrl::SetFontEffect(char* pszText,CMPFont* pFont)
 	}
 	else
 	{
-		LG( "error", "msg CMPEffectCtrl::SetFontEffect显示字体特效，字体错误指针！" );
+		ToLogService("errors", LogLevel::Error, " CMPEffectCtrl::SetFontEffect显示字体特效，字体错误指针！");
 	}
 }
 /************************************************************************/

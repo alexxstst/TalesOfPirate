@@ -51,7 +51,7 @@ namespace GUI
 		frmTempBag = mgr.Find("frmTempBag");
 		if (!frmTempBag)
 		{
-			LG("gui", "frmTempBag not found.\n");
+			ToLogService("common", "frmTempBag not found.");
 			return false;
 		}
 		frmTempBag->SetIsDrag(true);
@@ -60,7 +60,7 @@ namespace GUI
 		grdTempBag = dynamic_cast<CGoodsGrid*>(frmTempBag->Find("grdTempBag"));
 		if (!grdTempBag)
 		{
-			LG("gui", "frmTempBag:grdTempBag not found.\n");
+			ToLogService("common", "frmTempBag:grdTempBag not found.");
 			return false;
 		}
 		grdTempBag->evtBeforeAccept = CUIInterface::_evtDragToGoodsEvent;
@@ -71,7 +71,7 @@ namespace GUI
 		frmStore = mgr.Find("frmStore");
 		if(!frmStore)
 		{
-			LG("gui", "frmStore not found.\n");
+			ToLogService("common", "frmStore not found.");
 			return false;
 		}
 		frmStore->evtEntrustMouseEvent = _evtStoreFormMouseEvent;
@@ -81,7 +81,7 @@ namespace GUI
 		trvStore = dynamic_cast<CTreeView*>(frmStore->Find("trvStore"));
 		if(!trvStore)
 		{
-			LG("gui", "frmStore:trvStore not found. \n");
+			ToLogService("common", "frmStore:trvStore not found. ");
 			return false;
 		}
 		trvStore->SetSelectColor( 0 );
@@ -91,7 +91,7 @@ namespace GUI
 		labMoneyLeft = dynamic_cast<CLabelEx*>(frmStore->Find("labMoneyLeft"));
 		if(!labMoneyLeft)
 		{
-			LG("gui", "frmStore:labMoneyLeft not found. \n");
+			ToLogService("common", "frmStore:labMoneyLeft not found. ");
 			return false;
 		}
 
@@ -99,7 +99,7 @@ namespace GUI
 		labBeanLeft = dynamic_cast<CLabelEx*>(frmStore->Find("labBeanLeft"));
 		if(!labBeanLeft)
 		{
-			LG("gui", "frmStore:labBeanLeft not found. \n");
+			ToLogService("common", "frmStore:labBeanLeft not found. ");
 			return false;
 		}
 
@@ -107,7 +107,7 @@ namespace GUI
 		labMemberStyle = dynamic_cast<CLabelEx*>(frmStore->Find("labMemberStyle"));
 		if(! labMemberStyle)
 		{
-			LG("gui", "frmStore:labMemberStyle not found. \n");
+			ToLogService("common", "frmStore:labMemberStyle not found. ");
 			return false;
 		}
 
@@ -115,28 +115,28 @@ namespace GUI
 		labNameTitle = dynamic_cast<CLabelEx*>(frmStore->Find("labNameTitle0"));
 		if(!labNameTitle)
 		{
-			LG("gui", "frmStore:labNameTitle0 not found. \n");
+			ToLogService("common", "frmStore:labNameTitle0 not found. ");
 			return false;
 		}
 
 		labPriceTitle = dynamic_cast<CLabelEx*>(frmStore->Find("labPriceTitle"));
 		if(!labPriceTitle)
 		{
-			LG("gui", "frmStore:labPriceTitle not found. \n");
+			ToLogService("common", "frmStore:labPriceTitle not found. ");
 			return false;
 		}
 
 		labLeftTimeTitle = dynamic_cast<CLabelEx*>(frmStore->Find("labLeftTimeTitle"));
 		if(!labLeftTimeTitle)
 		{
-			LG("gui", "frmStore:labLeftTimeTitle not found. \n");
+			ToLogService("common", "frmStore:labLeftTimeTitle not found. ");
 			return false;
 		}
 
 		labLeftNumTitle = dynamic_cast<CLabelEx*>(frmStore->Find("labLeftNumTitle"));
 		if(!labLeftNumTitle)
 		{
-			LG("gui", "frmStore:labLeftNumTitle not found. \n");
+			ToLogService("common", "frmStore:labLeftNumTitle not found. ");
 			return false;
 		}
 
@@ -147,7 +147,7 @@ namespace GUI
 		labListPage = dynamic_cast<CLabelEx*>(frmStore->Find("labListPage"));
 		if(!labListPage)
 		{
-			LG("gui", "frmStore:labListPage not found. \n");
+			ToLogService("common", "frmStore:labListPage not found. ");
 			return false;
 		}
 
@@ -155,7 +155,7 @@ namespace GUI
 		btnLeftPage = dynamic_cast<CTextButton*>(frmStore->Find("btnLeftPage"));
 		if(! btnLeftPage)
 		{
-			LG("gui", "frmStore:btnLeftPage not found. \n");
+			ToLogService("common", "frmStore:btnLeftPage not found. ");
 			return false;
 		}
 
@@ -163,7 +163,7 @@ namespace GUI
 		btnRightPage = dynamic_cast<CTextButton*>(frmStore->Find("btnRightPage"));
 		if(! btnRightPage)
 		{
-			LG("gui", "frmStore:btnRightPage not found. \n");
+			ToLogService("common", "frmStore:btnRightPage not found. ");
 			return false;
 		}
 
@@ -171,7 +171,7 @@ namespace GUI
 		btnTrade = dynamic_cast<CTextButton*>(frmStore->Find("btnTrade"));
 		if(! btnTrade)
 		{
-			LG("gui", "frmStore:btnTrade not found. \n");
+			ToLogService("common", "frmStore:btnTrade not found. ");
 			return false;
 		}
 		btnTrade->SetIsEnabled(false);
@@ -180,7 +180,7 @@ namespace GUI
 		btnTryon = dynamic_cast<CTextButton*>(frmStore->Find("btnTryon"));
 		if(! btnTryon)
 		{
-			LG("gui", "frmStore:btnTryon not found. \n");
+			ToLogService("common", "frmStore:btnTryon not found. ");
 			return false;
 		}
 		btnTryon->SetIsEnabled(false);
@@ -188,7 +188,7 @@ namespace GUI
 		btnViewAll = dynamic_cast<CTextButton*>(frmStore->Find("btnViewAll"));
 		if(! btnViewAll)
 		{
-			LG("gui", "frmStore:btnViewAll not found. \n");
+			ToLogService("common", "frmStore:btnViewAll not found. ");
 			return false;
 		}
 		btnViewAll->SetIsEnabled(false);
@@ -197,7 +197,7 @@ namespace GUI
 		labTrade = dynamic_cast<CLabelEx*>(frmStore->Find("labTrade"));
 		if(! labTrade)
 		{
-			LG("gui", "frmStore:labTrade not found. \n");
+			ToLogService("common", "frmStore:labTrade not found. ");
 			return false;
 		}
 
@@ -205,7 +205,7 @@ namespace GUI
 		labTryon = dynamic_cast<CLabelEx*>(frmStore->Find("labTryon"));
 		if(! labTryon)
 		{
-			LG("gui", "frmStore:labTryon not found. \n");
+			ToLogService("common", "frmStore:labTryon not found. ");
 			return false;
 		}
 
@@ -213,7 +213,7 @@ namespace GUI
 		labViewAll = dynamic_cast<CLabelEx*>(frmStore->Find("labViewAll"));
 		if(! labViewAll)
 		{
-			LG("gui", "frmStore:labViewAll not found. \n");
+			ToLogService("common", "frmStore:labViewAll not found. ");
 			return false;
 		}
 
@@ -221,7 +221,7 @@ namespace GUI
 		memStoreHelp = dynamic_cast<CMemo*>(frmStore->Find("memStoreHelp"));
 		if(! memStoreHelp)
 		{
-			LG("gui", "frmStore:memStoreHelp not found. \n");
+			ToLogService("common", "frmStore:memStoreHelp not found. ");
 			return false;
 		}
 
@@ -237,7 +237,7 @@ namespace GUI
 		imgBackGround10 = dynamic_cast<CImage*>(frmStore->Find("imgBackGround10"));
 		if(! imgBackGround10)
 		{
-			LG("gui", "frmStore:imgBackGround10 not found. \n");
+			ToLogService("common", "frmStore:imgBackGround10 not found. ");
 			return false;
 		}
 
@@ -249,7 +249,7 @@ namespace GUI
 			m_stStoreGui[i].labName = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].labName)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -257,7 +257,7 @@ namespace GUI
 			m_stStoreGui[i].labPrice = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].labPrice)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -265,7 +265,7 @@ namespace GUI
 			m_stStoreGui[i].labLeftTime = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].labLeftTime)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -273,7 +273,7 @@ namespace GUI
 			m_stStoreGui[i].labLeftNum = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].labLeftNum)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -281,7 +281,7 @@ namespace GUI
 			m_stStoreGui[i].labRemark = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].labRemark)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -289,7 +289,7 @@ namespace GUI
 			m_stStoreGui[i].labRightClickView = dynamic_cast<CLabelEx*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].labRightClickView)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -297,7 +297,7 @@ namespace GUI
 			m_stStoreGui[i].cmdStore = dynamic_cast<COneCommand*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].cmdStore)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 			m_stStoreGui[i].cmdStore->SetIsDrag(false);	// �������϶�
@@ -306,7 +306,7 @@ namespace GUI
 			m_stStoreGui[i].imgSquare = dynamic_cast<CImage*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].imgSquare)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -314,7 +314,7 @@ namespace GUI
 			m_stStoreGui[i].btnBlue = dynamic_cast<CTextButton*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].btnBlue)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 			m_stStoreGui[i].btnBlue->evtMouseRClick  = _evtStoreListMouseRClick;
@@ -324,7 +324,7 @@ namespace GUI
 			m_stStoreGui[i].imgCutLine = dynamic_cast<CImage*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].imgCutLine)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -332,7 +332,7 @@ namespace GUI
 			m_stStoreGui[i].imgHot = dynamic_cast<CImage*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].imgHot)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -340,7 +340,7 @@ namespace GUI
 			m_stStoreGui[i].imgNew = dynamic_cast<CImage*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].imgNew)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -348,7 +348,7 @@ namespace GUI
 			m_stStoreGui[i].imgBlue = dynamic_cast<CImage*>(frmStore->Find(szName));
 			if(! m_stStoreGui[i].imgBlue)
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 			
@@ -375,7 +375,7 @@ namespace GUI
 		frmViewAll = CFormMgr::s_Mgr.Find("frmViewAll");
 		if(! frmViewAll)
 		{
-			LG("gui", "frmViewAll not found.\n");
+			ToLogService("common", "frmViewAll not found.");
 			return false;
 		}
 		frmViewAll->evtLost = _evtStoreViewAllLostEvent;
@@ -383,7 +383,7 @@ namespace GUI
 		memViewAll = dynamic_cast<CMemo*>(frmViewAll->Find("memViewAll"));
 		if(! memViewAll)
 		{
-			LG("gui", "frmViewAll:memViewAll not found.\n");
+			ToLogService("common", "frmViewAll:memViewAll not found.");
 			return false;
 		}
 
@@ -393,7 +393,7 @@ namespace GUI
 			imgSquareViewAll[i] = dynamic_cast<CImage*>(frmViewAll->Find(szName));
 			if(! imgSquareViewAll[i])
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -401,7 +401,7 @@ namespace GUI
 			cmdSquareIcon[i] = dynamic_cast<COneCommand*>(frmViewAll->Find(szName));
 			if(! cmdSquareIcon[i])
 			{
-				LG("gui", "frmStore:%s not found. \n", szName);
+				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
 
@@ -415,7 +415,7 @@ namespace GUI
 		frmTryon = mgr.Find("frmTryon");
 		if(!frmTryon)
 		{
-			LG("gui", "frmTryon not found.\n");
+			ToLogService("common", "frmTryon not found.");
 			return false;
 		}
 		frmTryon->evtClose = _evtTryonFormClose;
@@ -424,7 +424,7 @@ namespace GUI
 		ui3dplayer = dynamic_cast<C3DCompent*>(frmTryon->Find("ui3dplayer"));
 		if(! ui3dplayer)
 		{
-			LG("gui", "frmStore:ui3dplayer not found. \n");
+			ToLogService("common", "frmStore:ui3dplayer not found. ");
 			return false;
 		}
 		ui3dplayer->SetRenderEvent(_evtChaTryonRenderEvent);
@@ -1001,11 +1001,9 @@ namespace GUI
 		}
 
 		char szTemp[128] = {0};
-		//sprintf(szTemp, "%s:%s", g_oLangRec.GetString(845), szName);
 		m_stStoreGui[nSeq].labName->SetCaption(szName);		// ��Ʒ��
 		m_stStoreGui[nSeq].labName->SetIsShow(true);
 
-		//sprintf(szTemp, "%s:%s", g_oLangRec.GetString(846), StringSplitNum(nPrice, 3, ','));
 		m_stStoreGui[nSeq].labPrice->SetCaption(StringSplitNum(nPrice, 3, ','));	// ��Ʒ�۸�
 		m_stStoreGui[nSeq].labPrice->SetIsShow(true);
 

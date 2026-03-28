@@ -14,19 +14,19 @@
 
 #include "lua.hpp"
 
-//#define PARAM_ERROR        { LG("lua_ai", "luaÀ©Õ¹º¯Êý[%s]²ÎÊý¸öÊý»òÕßÀàÐÍ´íÎó!",__FUNCTION__ ); }
-#define PARAM_ERROR        { LG("lua_ai", "lua extend [%s] parameter type is wrong!",__FUNCTION__ ); }
-//#define MAP_NULL_ERROR     { LG("lua_ai", "luaÀ©Õ¹º¯Êý[%s]µ±Ç°µØÍ¼Îª¿Õ", __FUNCTION__);          }
-#define MAP_NULL_ERROR     { LG("lua_ai", "lua extend [%s] map is null", __FUNCTION__);          }
+//#define PARAM_ERROR        { LG("lua_ai", "luaï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½!",__FUNCTION__ ); }
+#define PARAM_ERROR        { ToLogService("lua", LogLevel::Error, "lua extend [{}] parameter type is wrong!", __FUNCTION__); }
+//#define MAP_NULL_ERROR     { LG("lua_ai", "luaï¿½ï¿½Õ¹ï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½Ç°ï¿½ï¿½Í¼Îªï¿½ï¿½", __FUNCTION__);          }
+#define MAP_NULL_ERROR     { ToLogService("lua", LogLevel::Error, "lua extend [{}] map is null", __FUNCTION__); }
 #define CHECK_MAP          { if(g_pScriptMap==NULL) { MAP_NULL_ERROR return 0; }				    }
-//#define PARAM_LG_ERROR		 THROW_EXCP( excp, "luaº¯ÊýÃ»ÓÐÖ¸¶¨Êä³öÎÄ¼þÃû»òÕßÃ»ÓÐÊä³öÐÅÏ¢´íÎó!" );
+//#define PARAM_LG_ERROR		 THROW_EXCP( excp, "luaï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½!" );
 #define PARAM_LG_ERROR		 THROW_EXCP( excp, "lua has no filename!" );
 
 #define REGFN_INIT g_luaFNList.clear();
 #define REGFN(fn)  { lua_pushstring(L, "" #fn ""); \
 	lua_pushcfunction(L, lua_##fn); \
 	lua_settable(L, LUA_GLOBALSINDEX); \
-    if(find(g_luaFNList.begin(), g_luaFNList.end(), ""#fn"")!=g_luaFNList.end()) LG("lua", RES_STRING(GP_PARSER_H_CPP_00004), ""#fn""); else \
+    if(find(g_luaFNList.begin(), g_luaFNList.end(), ""#fn"")!=g_luaFNList.end()) { char _buf[256]; sprintf(_buf, RES_STRING(GP_PARSER_H_CPP_00004), ""#fn""); g_logManager.InternalLog(LogLevel::Debug, "lua", _buf); } else \
 	g_luaFNList.push_back(""#fn"");  }
 
 #define DOSTRING_PARAM_END	999999999
@@ -70,7 +70,7 @@ private:
 		return true;
 	}
 
-	lua_State	*m_pSLua; // lua½Å±¾½âÊÍÆ÷
+	lua_State	*m_pSLua; // luaï¿½Å±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	int			m_nDoStringRet[DOSTRING_RETURN_NUM];
 	char		m_szDoStringRet[DOSTRING_RETURN_NUM][DOSTRING_RETURN_STRING_LEN];

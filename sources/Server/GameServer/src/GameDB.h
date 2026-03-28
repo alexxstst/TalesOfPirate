@@ -7,10 +7,10 @@
 
 enum ESaveType
 {
-	enumSAVE_TYPE_OFFLINE,	// ÏÂÏß
-	enumSAVE_TYPE_SWITCH,	// µØÍ¼ÇÐ»»
-	enumSAVE_TYPE_TIMER,	// ¶¨Ê±±£´æ
-	enumSAVE_TYPE_TRADE,	// ½»Ò×
+	enumSAVE_TYPE_OFFLINE,	// ï¿½ï¿½ï¿½ï¿½
+	enumSAVE_TYPE_SWITCH,	// ï¿½ï¿½Í¼ï¿½Ð»ï¿½
+	enumSAVE_TYPE_TIMER,	// ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
+	enumSAVE_TYPE_TRADE,	// ï¿½ï¿½ï¿½ï¿½
 };
 
 class CPlayer;
@@ -26,18 +26,18 @@ public:
 
 	bool ShowExpRank(CCharacter* pCha, int count);
 	bool Init(void);
-    bool ReadAllData(CPlayer *pPlayer, DWORD atorID);	// ½ÇÉ«½øÈëÓÎÏ·¶ÁÅÌ
-    bool SaveAllData(CPlayer *pPlayer, char chSaveType);// ½ÇÉ«´æÅÌ
-	bool SavePos(CPlayer *pPlayer);						// ±£´æ½ÇÉ«Î»ÖÃ
+    bool ReadAllData(CPlayer *pPlayer, DWORD atorID);	// ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½
+    bool SaveAllData(CPlayer *pPlayer, char chSaveType);// ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½
+	bool SavePos(CPlayer *pPlayer);						// ï¿½ï¿½ï¿½ï¿½ï¿½É«Î»ï¿½ï¿½
 	bool SaveMoney(CPlayer *pPlayer);
 	bool SaveKBagDBID(CPlayer *pPlayer);
-    bool SaveKBagTmpDBID(CPlayer *pPlayer);             // ±£´æÁÙÊ±±³°üID
-    bool SaveKBState(CPlayer *pPlayer);                 // ±£´æÃÜÂëËø¶¨×´Ì¬
+    bool SaveKBagTmpDBID(CPlayer *pPlayer);             // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ID
+    bool SaveKBState(CPlayer *pPlayer);                 // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	bool SaveMMaskDBID(CPlayer *pPlayer);
 	bool SaveBankDBID(CPlayer *pPlayer);
-	bool SaveTableVer(DWORD atorID);					// ±£´æ±íµÄ°æ±¾
-	BOOL SaveMissionData(CPlayer *pPlayer, DWORD atorID); // ½ÇÉ«ÈÎÎñÐÅÏ¢´æÅÌ
-    BOOL VerifyName(const char *pszName);               // ½ÇÉ«ÃûÊÇ·ñ´æÔÚ
+	bool SaveTableVer(DWORD atorID);					// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä°æ±¾
+	BOOL SaveMissionData(CPlayer *pPlayer, DWORD atorID); // ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+    BOOL VerifyName(const char *pszName);               // ï¿½ï¿½É«ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½
 	std::string GetName(int cha_id);
 
 	BOOL AddCreditByDBID(DWORD atorID, long lCredit);
@@ -70,24 +70,24 @@ public:
 	bool IsMasterRelation(int masterID, int prenticeID);
 };
 
-// ´ËÖµºÍÊý¾Ý¿â¶ÔÓ¦£¬²»¿É¸Ä¶¯
+// ï¿½ï¿½Öµï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½ï¿½É¸Ä¶ï¿½
 enum ResDBTypeID
 {
-	enumRESDB_TYPE_LOOK,	// Íâ¹Û
-	enumRESDB_TYPE_KITBAG,	// µÀ¾ßÀ¸
-	enumRESDB_TYPE_BANK,	// ÒøÐÐ
-	enumRESDB_TYPE_KITBAGTMP, //ÁÙÊ±±³°ü
+	enumRESDB_TYPE_LOOK,	// ï¿½ï¿½ï¿½
+	enumRESDB_TYPE_KITBAG,	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	enumRESDB_TYPE_BANK,	// ï¿½ï¿½ï¿½ï¿½
+	enumRESDB_TYPE_KITBAGTMP, //ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 };
 
 // Add by lark.li 20080521 begin
 enum IssueState
 {
-	enumCURRENT = 0,	// µ±Ç°ÆÚ
-	enumPASTDUE = 1,	// ¹ýÆÚ
-	enumDISUSE = 2,		// ·ÏÆú
+	enumCURRENT = 0,	// ï¿½ï¿½Ç°ï¿½ï¿½
+	enumPASTDUE = 1,	// ï¿½ï¿½ï¿½ï¿½
+	enumDISUSE = 2,		// ï¿½ï¿½ï¿½ï¿½
 };
 
-// ²ÊÆ±Éè¶¨
+// ï¿½ï¿½Æ±ï¿½è¶¨
 class CTableLotterySetting : public cfl_rs
 {
 public:
@@ -105,7 +105,7 @@ public:
 	bool GetWinItemNo(int issue, std::string& itemno);
 };
 
-// ²ÊÆ±±£´æ
+// ï¿½ï¿½Æ±ï¿½ï¿½ï¿½ï¿½
 class CTableTicket : public cfl_rs
 {
 public:
@@ -123,7 +123,7 @@ private:
 	bool AddTicket(int atorID, int issue, char itemno1, char itemno2, char itemno3, char itemno4, char itemno5, char itemno6, int real = 1);
 };
 
-// ÖÐ½±ºÅÂë±£´æ
+// ï¿½Ð½ï¿½ï¿½ï¿½ï¿½ë±£ï¿½ï¿½
 class CTableWinTicket : public cfl_rs
 {
 public:
@@ -151,16 +151,16 @@ struct AmphitheaterTeam
 {
 	enum AmphitheaterSateTeam
 	{
-		enumNotUse = 0,				//Ã»×¢²á
-		enumUse = 1,				// Õý³£
-		enumPromotion = 2,			// ½ú¼¶
-		enumRelive = 3,				// ¸´»î
-		enumOut = 4,				// ÌÔÌ­
+		enumNotUse = 0,				//Ã»×¢ï¿½ï¿½
+		enumUse = 1,				// ï¿½ï¿½ï¿½ï¿½
+		enumPromotion = 2,			// ï¿½ï¿½ï¿½ï¿½
+		enumRelive = 3,				// ï¿½ï¿½ï¿½ï¿½
+		enumOut = 4,				// ï¿½ï¿½Ì­
 	};
 };
 
-// ¾º¼¼³¡Éè¶¨ÐÅÏ¢±£´æ
-// ±£´æ µ±Ç°ÊÇµÚ¼¸Èü¼¾ µÚ¼¸ÂÖ´Î µÈÐÅÏ¢
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½è¶¨ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
+// ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ç°ï¿½ÇµÚ¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ú¼ï¿½ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½ï¿½Ï¢
 class CTableAmphitheaterSetting : public cfl_rs
 {
 public:
@@ -177,7 +177,7 @@ public:
 	bool UpdateRound(int season, int round);
 };
 
-// ¾º¼¼³¡²ÎÈü¶ÓÎéÐÅÏ¢±£´æ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 class CTableAmphitheaterTeam : public cfl_rs
 {
 public:
@@ -278,7 +278,7 @@ public:
 protected:
 
 	BOOL			_ExecSQL(const char *pszSQL);
-	std::list<std::string>	_SaveMapMaskList;  // ±£´æ´óµØÍ¼µÄ¶ÓÁÐ
+	std::list<std::string>	_SaveMapMaskList;  // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼ï¿½Ä¶ï¿½ï¿½ï¿½
 };
 
 void inline CTableMapMask::AddSaveQuest(const char *pszSQL)
@@ -321,8 +321,8 @@ public:
 	BOOL SaveBoatDelTag( DWORD dwBoatID, BYTE byIsDeleted = 0 );	
 
     bool SaveAllData(CPlayer *pPlayer, char chSaveType);
-	bool ReadCabin(CCharacter& Boat);	// ¶ÁÈ¡´¬²Õ
-	bool SaveCabin(CCharacter& Boat, char chSaveType);	// ±£´æ´¬²Õ
+	bool ReadCabin(CCharacter& Boat);	// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½
+	bool SaveCabin(CCharacter& Boat, char chSaveType);	// ï¿½ï¿½ï¿½æ´¬ï¿½ï¿½
 	bool SaveAllCabin(CPlayer *pPlayer, char chSaveType);
 };
 
@@ -374,7 +374,7 @@ public:
 	bool Motto(CCharacter* pCha,cChar *motto);
 	bool GetGuildName(long lGuildID, std::string& strGuildName);
 
-	// ¹«»áÌôÕ½
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½
 	bool Challenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney );
 	bool Leizhu( CCharacter* pCha, BYTE byLevel, DWORD dwMoney );
 	void ListChallenge( CCharacter* pCha );
@@ -387,7 +387,7 @@ public:
 	bool HasGuildLevel( CCharacter* pChar, BYTE byLevel );
 };
 
-// Log×¨ÓÃ±í
+// Log×¨ï¿½Ã±ï¿½
 class CTableLog : public cfl_rs
 {
 public:
@@ -451,7 +451,7 @@ public:
 	bool	SavePlayerKitbag(CPlayer *pPlayer, char chSaveType = enumSAVE_TYPE_TRADE)
 	{
 		return false;
-		// ÒòÎª´Ë²Ù×÷¿ÉÄÜ°üº¬Êý¾Ý¿â»Ø¹ö²Ù×÷£¬ËùÒÔÆÚ¼ä²»ÄÜthrowÒì³£
+		// ï¿½ï¿½Îªï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ä²»ï¿½ï¿½throwï¿½ì³£
 		try
 		{
 			if (!_tab_res->SaveKitbagData(pPlayer->GetMainCha()))
@@ -461,8 +461,8 @@ public:
 		}
 		catch (...)
 		{
-			//LG("enter_map", "±£´æÍæ¼ÒµÀ¾ßºÍ½ðÇ®Ê±£¬·¢ÉúÒì³£!\n");
-			LG("enter_map", "When save character item and money occured abnormity\n");
+			//LG("enter_map", "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Òµï¿½ï¿½ßºÍ½ï¿½Ç®Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì³£!\n");
+			ToLogService("map", LogLevel::Error, "When save character item and money occured abnormity");
 			return false;
 		}
 
@@ -470,11 +470,11 @@ public:
 	}
 	bool	SaveChaAssets(CCharacter *pCCha)
 	{
-		// ÒòÎª´Ë²Ù×÷¿ÉÄÜ°üº¬Êý¾Ý¿â»Ø¹ö²Ù×÷£¬ËùÒÔÆÚ¼ä²»ÄÜthrowÒì³£
+		// ï¿½ï¿½Îªï¿½Ë²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ü°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý¿ï¿½Ø¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú¼ä²»ï¿½ï¿½throwï¿½ì³£
 		try
 		{
-			//LG("enter_map", "¿ªÊ¼±£´æ½ÇÉ«×Ê²ú.\n");
-			LG("enter_map", "Start save character assets.\n");
+			//LG("enter_map", "ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½Ê²ï¿½.\n");
+			ToLogService("map", "Start save character assets.");
 			if (!pCCha || !pCCha->GetPlayer())
 				return false;
 
@@ -493,15 +493,15 @@ public:
 					return false;
 			}
 
-			//LG("enter_map", "±£´æ½ÇÉ« %s(%s) ×Ê²ú³É¹¦.\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
-			LG("enter_map", "Save character %s(%s)assets succeed.\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
-			//LG("±£´æÊý¾ÝºÄÊ±", "×Ü¼Æ%-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
-			LG("Save data waste time", "totalled %-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
+			//LG("enter_map", "ï¿½ï¿½ï¿½ï¿½ï¿½É« %s(%s) ï¿½Ê²ï¿½ï¿½É¹ï¿½.\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
+			ToLogService("map", "Save character {}({}) assets succeed.", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
+			//LG("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ýºï¿½Ê±", "ï¿½Ü¼ï¿½%-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
+			ToLogService("common", "Save data waste time: totalled {}. [{} {}]", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
 		}
 		catch (...)
 		{
-			//LG("enter_map", "±£´æ½ÇÉ«×Ê²úÊ±£¬·¢ÉúÒì³£!\n");
-			LG("enter_map", "When save character assets occured abnormity\n");
+			//LG("enter_map", "ï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½Ê²ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ì³£!\n");
+			ToLogService("map", LogLevel::Error, "When save character assets occured abnormity");
 			return false;
 		}
 
@@ -624,7 +624,7 @@ public:
 		return ret;
 	}
 
-	// Ê¦Í½¹ØÏµÅÐ¶Ï
+	// Ê¦Í½ï¿½ï¿½Ïµï¿½Ð¶ï¿½
 	bool IsMasterRelation(int masterID, int prenticeID)
 	{
 		bool ret = false;
@@ -641,7 +641,7 @@ public:
 		return ret;
 	}
 
-	// È¡µÃµ±Ç°Èü¼¾ ºÍ ÂÖ´Îs
+	// È¡ï¿½Ãµï¿½Ç°ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½Ö´ï¿½s
 	bool GetAmphitheaterSeasonAndRound(int& season, int& round)
 	{
 		try
@@ -654,7 +654,7 @@ public:
 		}
 	}
 
-	// ×·¼ÓÈü¼¾
+	// ×·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool AddAmphitheaterSeason(int season)
 	{
 		try
@@ -667,7 +667,7 @@ public:
 		}
 	}
 
-	// ¸üÐÂÈü¼¾×´Ì¬
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×´Ì¬
 	bool DisuseAmphitheaterSeason(int season, int state,const char* winner)
 	{
 		try
@@ -680,7 +680,7 @@ public:
 		}
 	}
 
-	// ¸üÐÂÂÖ´Î 
+	// ï¿½ï¿½ï¿½ï¿½ï¿½Ö´ï¿½ 
 	bool UpdateAmphitheaterRound(int season, int round)
 	{
 		try
@@ -693,7 +693,7 @@ public:
 		}
 	}
 
-	// »ñÈ¡¶ÓÎé¸öÊý
+	// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool GetAmphitheaterTeamCount(int& count)
 	{
 		try
@@ -706,7 +706,7 @@ public:
 		}
 	}
 
-	// »ñÈ¡¶ÓÎéID
+	// ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ID
 	bool GetAmphitheaterNoUseTeamID(int &teamID)
 	{
 		try
@@ -719,7 +719,7 @@ public:
 		}
 	}
 
-	// ×¢²á
+	// ×¢ï¿½ï¿½
 	bool AmphitheaterTeamSignUP(int &teamID, int captain, int member1, int member2)
 	{
 		try
@@ -732,7 +732,7 @@ public:
 		}
 	}
 
-	// ×¢Ïú
+	// ×¢ï¿½ï¿½
 	bool AmphitheaterTeamCancel(int teamID)
 	{
 		try
@@ -745,7 +745,7 @@ public:
 		}
 	}
 	//Add by sunny.sun20080714
-	//²éÑ¯¸Ã½ÇÉ«IDÊÇ·ñÒÑ¾­×¢²á
+	//ï¿½ï¿½Ñ¯ï¿½Ã½ï¿½É«IDï¿½Ç·ï¿½ï¿½Ñ¾ï¿½×¢ï¿½ï¿½
 	bool IsAmphitheaterLogin(int pActorID)
 	{
 		try
@@ -758,7 +758,7 @@ public:
 		}
 	
 	}
-	//ÅÐ¶ÏÊÇ·ñµØÍ¼¶ÓÎéÒÑÂú
+	//ï¿½Ð¶ï¿½ï¿½Ç·ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	bool IsMapFull(int MapID,int &PActorIDNum)
 	{
 		try 
@@ -770,7 +770,7 @@ public:
 			return false;
 		}
 	}
-		//¸üÐÂµØÍ¼¶ÓÎémapflag
+		//ï¿½ï¿½ï¿½Âµï¿½Í¼ï¿½ï¿½ï¿½ï¿½mapflag
 	bool UpdateMapNum(int Teamid,int Mapid,int MapFlag)
 	{
 		try
@@ -1077,12 +1077,12 @@ public:
 		return _tab_cha->SetChaAddr(atorID, addr);
 	}
 
-	BOOL	SaveMissionData( CPlayer *pPlayer, DWORD atorID ) // ½ÇÉ«ÈÎÎñÐÅÏ¢´æÅÌ
+	BOOL	SaveMissionData( CPlayer *pPlayer, DWORD atorID ) // ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 	{
 		return _tab_cha->SaveMissionData( pPlayer, atorID );
 	}
 
-	// ´¬Ö»´æ´¢
+	// ï¿½ï¿½Ö»ï¿½æ´¢
 	BOOL Create( DWORD& dwBoatID, const BOAT_DATA& Data )
 	{
 		return _tab_boat->Create( dwBoatID, Data );
@@ -1255,18 +1255,18 @@ public:
 		return _tab_gld->HasGuildLevel( pChar, byLevel );
 	}
 
-	// Ö´ÐÐsqlÓï¾äµ½gamelog±í
+	// Ö´ï¿½ï¿½sqlï¿½ï¿½äµ½gamelogï¿½ï¿½
 	void ExecLogSQL(const char *pszSQL)
 	{
 		SQLRETURN l_sqlret  =  _tab_log->exec_sql_direct(pszSQL);
 		if(!DBOK(l_sqlret))
 		{
-			//LG("gamelog", "Ìí¼Ólog¼ÇÂ¼Ê§°Ü, sql = [%s]!\n", pszSQL);
-			LG("gamelog", "add log note failed, sql = [%s]!\n", pszSQL);
+			//LG("gamelog", "ï¿½ï¿½ï¿½ï¿½logï¿½ï¿½Â¼Ê§ï¿½ï¿½, sql = [%s]!\n", pszSQL);
+			ToLogService("db", LogLevel::Error, "add log note failed, sql = [{}]!", pszSQL);
 		}
 	}
 	
-	// ¿ÉÒÔLog 5¸ö×Ö·û´®×Ö¶Î, ×îºóÒ»¸ö³¤¶ÈÎª8000×Ö·ûÒÔÄÚ
+	// ï¿½ï¿½ï¿½ï¿½Log 5ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½, ï¿½ï¿½ï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª8000ï¿½Ö·ï¿½ï¿½ï¿½ï¿½ï¿½
 	//void Log(const char *type, const char *c1, const char *c2, const char *c3, const char *c4, const char *p, BOOL bAddToList = TRUE);
 	//void Log1(int nType, const char *cha1, const char *cha2, const char *pszContent);
 	//void Log2(int nType, CCharacter *pCha1, CCharacter *pCha2, const char *pszContent);
@@ -1312,12 +1312,12 @@ protected:
 	CTableResource*	_tab_res;
 	
 	// Add by lark.li 20080521 begin
-	// ²ÊÆ±
+	// ï¿½ï¿½Æ±
 	CTableLotterySetting*	_tab_setting;
 	CTableTicket*			_tab_ticket;
 	CTableWinTicket*			_tab_winticket;
 
-	// ¾º¼¼³¡
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	CTableAmphitheaterSetting*	_tab_amp_setting;
 	CTableAmphitheaterTeam*	_tab_amp_team;
 	// End

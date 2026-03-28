@@ -56,7 +56,7 @@ int _tmain(int argc, _TCHAR* argv[])
 				break;
 			}
 			else if (str == "logbak") {
-				LogStream::Backup();
+				dbc::LogStream::Backup();
 			}
 			else {
 				std::cout << RES_STRING(GP_MAIN_CPP_00003) << std::endl;

@@ -40,22 +40,22 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 	fFile = _tfopen(ptcsFileName, _TEXT("rb"));
 	if (fFile == NULL)
 	{
-		LG("error", "msgLoad Raw Data Info Txt File [%s] Fail!\n", ptcsFileName);
+		ToLogService("errors", LogLevel::Error, "msgLoad Raw Data Info Txt File [{}] Fail!", ptcsFileName);
 		bRet = false;
 		goto end;
 	}
 
-	// »ñµÃ"½ÇÉ«¶¯×÷ÀàÐÍµÄ×î´óÖµ"(m_iMaxCharacterType),ÒÔ¼°"½ÇÉ«¶¯×÷ÀàÐÍµÄÓÐÐ§ÊýÄ¿"(m_iActualCharacterType);
+	// ï¿½ï¿½ï¿½"ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½ï¿½Öµ"(m_iMaxCharacterType),ï¿½Ô¼ï¿½"ï¿½ï¿½É«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Íµï¿½ï¿½ï¿½Ð§ï¿½ï¿½Ä¿"(m_iActualCharacterType);
 	while (!feof(fFile))
 	{
 		lIndex = 0;
 		_fgetts(tcsLine, 1023, fFile);
 		StringSkipCompartment(tcsLine, &lIndex, " ", 1);
-		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //ï¿½Ø³ï¿½, ï¿½ï¿½ï¿½ï¿½
 			continue;
-		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ï¿½ï¿½
 			continue;
-		if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü (ÔÚ¸ÃÎÄ±¾ÖÐÓÃÓÚ"½ÇÉ«ÀàÐÍµÄÒ»¸ö¶¯×÷"ÐÐµÄ¿ªÊ¼·ûºÅ)
+		if (tcsLine[lIndex] == _TEXT('\t')) // tabï¿½ï¿½ (ï¿½Ú¸ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½É«ï¿½ï¿½ï¿½Íµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ÐµÄ¿ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½)
 			continue;
 
 		m_iActualCharacterType ++;
@@ -81,25 +81,25 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 	}
 	memset((void *)m_SCharacterAction, 0, sizeof(SCharacterAction) * m_iMaxCharacterType);
 
-	// »ñµÃµ¥¸ö½ÇÉ«ÐÅÏ¢
+	// ï¿½ï¿½Ãµï¿½ï¿½ï¿½ï¿½ï¿½É«ï¿½ï¿½Ï¢
 	fseek(fFile, 0, SEEK_SET);
 	while (!feof(fFile))
 	{
 		lIndex = 0;
 		_fgetts(tcsLine, 1023, fFile);
 		StringSkipCompartment(tcsLine, &lIndex, _TEXT(" "), 1);
-		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //ï¿½Ø³ï¿½, ï¿½ï¿½ï¿½ï¿½
 			continue;
-		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ï¿½ï¿½
 			continue;
-		if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü (ÔÚ¸ÃÎÄ±¾ÖÐÓÃÓÚ"½ÇÉ«ÀàÐÍµÄÒ»¸ö¶¯×÷ÐÐµÄ¿ªÊ¼·ûºÅ)
+		if (tcsLine[lIndex] == _TEXT('\t')) // tabï¿½ï¿½ (ï¿½Ú¸ï¿½ï¿½Ä±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½"ï¿½ï¿½É«ï¿½ï¿½ï¿½Íµï¿½Ò»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÐµÄ¿ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½)
 			continue;
 
 		StringGet(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5);
 		iCurType = _ttoi(tcsTemp) - 1;
 		if (iCurType < 0)
 			continue;
-		// ½ÇÉ«µÄ¶¯×÷ÊýÄ¿
+		// ï¿½ï¿½É«ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿
 		m_SCharacterAction[iCurType].m_SActionInfo = NULL;
 		m_SCharacterAction[iCurType].m_iActualActionNum = 0;
 		m_SCharacterAction[iCurType].m_iCharacterType = iCurType + 1;
@@ -110,18 +110,18 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 			lIndex = 0;
 			_fgetts(tcsLine, 1023, fFile);
 			StringSkipCompartment(tcsLine, &lIndex, _TEXT(" "), 1);
-			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //ï¿½Ø³ï¿½, ï¿½ï¿½ï¿½ï¿½
 				continue;
-			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ï¿½ï¿½
 				continue;
-			if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü
+			if (tcsLine[lIndex] == _TEXT('\t')) // tabï¿½ï¿½
 			{
 				m_SCharacterAction[iCurType].m_iActualActionNum ++;
 
 				StringSkipCompartment(tcsLine, &lIndex, _TEXT(" ,\x09"), 3);
 				StringGet(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5);
 
-				// ÁÙÊ±´úÂë£¬ ÓÃÓÚÌáÊ¾¸üÐÂÎÄ¼þ°æ±¾¡£
+				// ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ë£¬ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½æ±¾ï¿½ï¿½
 				if (_ttoi(tcsTemp) < 1)
 				{
 					MessageBox(NULL, _TEXT(g_oLangRec.GetString(24)), _TEXT(g_oLangRec.GetString(25)), 0);
@@ -147,7 +147,7 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 		}
 		memset((void *)(m_SCharacterAction[iCurType].m_SActionInfo), 0, sizeof(SActionInfo) * m_SCharacterAction[iCurType].m_iMaxActionNum);
 
-		// µ¥¸ö¶¯×÷ÐÅÏ¢
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
         SActionInfo* s;
 		fseek(fFile, lFilePos, SEEK_SET);
 		while (!feof(fFile))
@@ -156,11 +156,11 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 			lIndex = 0;
 			_fgetts(tcsLine, 1023, fFile);
 			StringSkipCompartment(tcsLine, &lIndex, _TEXT(" "), 1);
-			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //ï¿½Ø³ï¿½, ï¿½ï¿½ï¿½ï¿½
 				continue;
-			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ï¿½ï¿½
 				continue;
-			if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü
+			if (tcsLine[lIndex] == _TEXT('\t')) // tabï¿½ï¿½
 			{
 				StringSkipCompartment(tcsLine, &lIndex, _TEXT("\x09"), 1);
 				StringGet(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5);
@@ -185,7 +185,7 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 
 				StringSkipCompartment(tcsLine, &lIndex, _TEXT(" ,\x09"), 3);
 				lOldIndex = lIndex;
-				// ¹Ø¼üÖ¡ÊýÄ¿
+				// ï¿½Ø¼ï¿½Ö¡ï¿½ï¿½Ä¿
 				iCurKeyFrame = 0;
 				while (StringGet(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5))
 				{
@@ -211,7 +211,7 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 				//}
 
 				lIndex = lOldIndex;
-				// ¹Ø¼üÖ¡
+				// ï¿½Ø¼ï¿½Ö¡
 				iCurKeyFrame = 0;
 				while (StringGet(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5))
 				{
@@ -259,11 +259,11 @@ void CGameCharacterAction::Free(void)
 			
 			//delete [] m_SCharacterAction[i].m_SActionInfo;
 			//m_SCharacterAction[i].m_SActionInfo = NULL;
-			SAFE_DELETE_ARRAY(m_SCharacterAction[i].m_SActionInfo); // UIµ±»ú´¦Àí
+			SAFE_DELETE_ARRAY(m_SCharacterAction[i].m_SActionInfo); // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		}
 		//delete [] m_SCharacterAction;
 		//m_SCharacterAction = NULL;
-		SAFE_DELETE_ARRAY(m_SCharacterAction); // UIµ±»ú´¦Àí
+		SAFE_DELETE_ARRAY(m_SCharacterAction); // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 }
 
@@ -327,8 +327,8 @@ bool CGameCharacterAction::GetCharAction(int iCharType, SCharacterAction *SCharA
 	return true;
 }
 
-// ´Ó¸ø¶¨×Ö·û´Ü(_TCHAR *in)µÄ¸ø¶¨Î»ÖÃ(long *in_from)»ñÈ¡×Ö·û´Ü£¬
-// Ö±µ½Óöµ½×Ö·û´ÜÁÐ±í(_TCHAR *end_list)ÖÐµÄÈÎÒ»×Ö·ûÊ±½áÊø
+// ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½(_TCHAR *in)ï¿½Ä¸ï¿½ï¿½ï¿½Î»ï¿½ï¿½(long *in_from)ï¿½ï¿½È¡ï¿½Ö·ï¿½ï¿½Ü£ï¿½
+// Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ð±ï¿½(_TCHAR *end_list)ï¿½Ðµï¿½ï¿½ï¿½Ò»ï¿½Ö·ï¿½Ê±ï¿½ï¿½ï¿½ï¿½
 long StringGet(char* out, long out_max, char* in, long* in_from, const char* end_list, long end_len)
 {
     long offset=-1;    // set offset of get string to -1 for the first do process
@@ -350,7 +350,7 @@ long StringGet(char* out, long out_max, char* in, long* in_from, const char* end
     return offset;
 }
 
-// ´Ó¸ø¶¨×Ö·û´Ü(_TCHAR *in)µÄ¸ø¶¨Î»ÖÃ(long *in_from)ÌÞ³ý×Ö·û´ÜÁÐ±í(_TCHAR *end_list)ÖÐµÄÈÎÒ»×Ö·û
+// ï¿½Ó¸ï¿½ï¿½ï¿½ï¿½Ö·ï¿½ï¿½ï¿½(_TCHAR *in)ï¿½Ä¸ï¿½ï¿½ï¿½Î»ï¿½ï¿½(long *in_from)ï¿½Þ³ï¿½ï¿½Ö·ï¿½ï¿½ï¿½ï¿½Ð±ï¿½(_TCHAR *end_list)ï¿½Ðµï¿½ï¿½ï¿½Ò»ï¿½Ö·ï¿½
 void StringSkipCompartment(char* in, long* in_from, const char* skip_list, long skip_len)
 {
     long i;    // temp variable

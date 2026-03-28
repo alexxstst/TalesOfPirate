@@ -45,7 +45,7 @@ bool CMisLogForm::Init()
 	m_pForm = _FindForm( "frmMission" );
 	if( !m_pForm )
 	{
-		LG( "gui", g_oLangRec.GetString(721) );
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(721));
 		return false;
 	}
 
@@ -124,7 +124,6 @@ void CMisLogForm::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 			//	{
 			//		nMoney += pMain->getGameAttr()->get(ATTR_LV) * pMain->getGameAttr()->get(ATTR_LV);
 			//	}
-			//	sprintf( szBuf, "�ж�[%s]\n���۳���Ǯ[%d$]?", szData, nMoney );
 			//}
 			//else
 			//{

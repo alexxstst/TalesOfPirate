@@ -15,6 +15,14 @@
 #include "uiboatform.h"
 using namespace std;
 using namespace GUI;
+
+// Локальная обёртка: логирует ошибку UI-компонента и возвращает false для удобного return
+inline bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
+	char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
+	g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
+	return false;
+}
+
 //---------------------------------------------------------------------------
 // class CStateMgr
 //---------------------------------------------------------------------------
@@ -293,7 +301,6 @@ void CStateMgr::RefreshStateFrm()
 		labSailEXP->SetCaption( (const char* ) pszCha);
 	}
 
-	//sprintf( pszCha , "%d" , pCChaAttr->get(ATTR_LUK));
 	//if(labLukshow)		labLukshow->SetCaption( (const char* ) pszCha);
 
 	//8����������
@@ -346,13 +353,11 @@ void CStateMgr::RefreshStateFrm()
 
 	//if(labCriticalShow)		
 	//{
-	//	sprintf( pszCha , "%d" , pCChaAttr->get(ATTR_CRT)); // ������
 	//	labCriticalShow->SetCaption( (const char* ) pszCha);
 	//}
 
 	//if(labMfShow)			
 	//{
-	//	sprintf( pszCha , "%d" , pCChaAttr->get(ATTR_MF));	 // Ѱ����
 	//	labMfShow->SetCaption( (const char* ) pszCha);
 	//}
 

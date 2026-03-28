@@ -33,7 +33,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 	}
 	if(fp==NULL) 
 	{
-		LG("map", "msgLoad Map [%s] Error!\n", pszMapName);
+		ToLogService("map", LogLevel::Error, "Load Map [{}] Error!", pszMapName);
 		return FALSE;
 	}
 	
@@ -47,7 +47,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
     if(header.nMapFlag==MP_MAP_FLAG+1)
     {
 	    fclose(fp);
-		LG("map", "msg该地图文件[%s]版本过期, 请使用MapTool打开它来升级版本!", pszMapName);
+		ToLogService("map", LogLevel::Error, "该地图文件[{}]版本过期, 请使用MapTool打开它来升级版本!", pszMapName);
 		return FALSE;
 	}
     
@@ -58,7 +58,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 #endif
 	{
 		fclose(fp);
-		LG("map", "msg[%s]不是有效的 MindPower Map File!\n", pszMapName);
+		ToLogService("map", LogLevel::Error, "[{}]不是有效的 MindPower Map File!", pszMapName);
 		return FALSE;
 	}
 
@@ -387,7 +387,7 @@ void MPMap::DynamicLoading(DWORD dwTimeParam)
                 }
 			}
 		}
-        if(bDelFail) LG("map", "释放Section数据时, 超过最大Buffer, n = %d\n", n);
+        if(bDelFail) ToLogService("map", "释放Section数据时, 超过最大Buffer, n = {}", n);
 	
 		for(int i = 0; i < n; i++) // 清除不需要的Section Tile Data
 		{

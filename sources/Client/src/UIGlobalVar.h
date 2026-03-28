@@ -1,8 +1,9 @@
 #pragma once
 
 
-#define FORM_LOADING_CHECK(a,b,c) a=CFormMgr::s_Mgr.Find(c); if (!a) {::Error(g_oLangRec.GetString(577),b,c); return false;}
-#define FORM_CONTROL_LOADING_CHECK(a,b,c,d,e) a=dynamic_cast<c*>(b->Find(e)); if (!a) {::Error(g_oLangRec.GetString(578),d,b->GetName(),e); return false;}
+// Макросы проверки загрузки UI-форм и контролов — логируют ошибку через g_logManager
+#define FORM_LOADING_CHECK(a,b,c) a=CFormMgr::s_Mgr.Find(c); if (!a) { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(577),b,c); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); return false;}
+#define FORM_CONTROL_LOADING_CHECK(a,b,c,d,e) a=dynamic_cast<c*>(b->Find(e)); if (!a) { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(578),d,b->GetName(),e); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); return false;}
 
 
 // �ȼ�����FLAG��SetEnableHotKey����

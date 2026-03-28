@@ -32,17 +32,18 @@ extern void ReloadLuaInit();
 extern void ReloadEntity( const char szFileName[] );
 
 
-//#define E_LUAPARAM		LG( "luamis_error", "luaº¯Êý[%s]²ÎÊý¸öÊý»òÕßÀàÐÍ´íÎó!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]²ÎÊý¸öÊý»òÕßÀàÐÍ´íÎó!", __FUNCTION__ );
-//#define E_LUANULL		LG( "luamis_error", "luaº¯Êý[%s]´«µÝ²ÎÊýÖ¸ÕëÎª¿Õ´íÎó!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]´«µÝ²ÎÊýÖ¸ÕëÎª¿Õ´íÎó!", __FUNCTION__ );
-//#define E_LUACOMPARE	LG( "luamis_error", "luaº¯Êý[%s]²ÎÊý´íÎóÎªÎ´ÖªµÄ±È½Ï×Ö·û!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]²ÎÊý´íÎóÎªÎ´ÖªµÄ±È½Ï×Ö·û!", __FUNCTION__ );
-#define E_LUAPARAM		LG( "luamis_error", "lua function[%s]param number or type error!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param number or type error!", __FUNCTION__ );
-#define E_LUANULL		LG( "luamis_error", "lua function[%s]pass param pointer is null and error!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]pass param pointer is null and error!", __FUNCTION__ );
-#define E_LUACOMPARE	LG( "luamis_error", "lua function[%s]param error is unknown of compara character!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param error is unknow of compara character!", __FUNCTION__ );
+//#define E_LUAPARAM		LG( "luamis_error", "luaï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í´ï¿½ï¿½ï¿½!", __FUNCTION__ );
+//#define E_LUANULL		LG( "luamis_error", "luaï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Îªï¿½Õ´ï¿½ï¿½ï¿½!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Îªï¿½Õ´ï¿½ï¿½ï¿½!", __FUNCTION__ );
+//#define E_LUACOMPARE	LG( "luamis_error", "luaï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÎ´Öªï¿½Ä±È½ï¿½ï¿½Ö·ï¿½!\n", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaï¿½ï¿½ï¿½ï¿½[%s]ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÎªÎ´Öªï¿½Ä±È½ï¿½ï¿½Ö·ï¿½!", __FUNCTION__ );
+// ÐœÐ°ÐºÑ€Ð¾ÑÑ‹ Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ¸ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€Ð¾Ð² Lua-Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¹ (NPC-ÑÐºÑ€Ð¸Ð¿Ñ‚Ñ‹)
+#define E_LUAPARAM		ToLogService("lua", LogLevel::Error, "lua function[{}] param number or type error!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param number or type error!", __FUNCTION__ );
+#define E_LUANULL		ToLogService("lua", LogLevel::Error, "lua function[{}] pass param pointer is null and error!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]pass param pointer is null and error!", __FUNCTION__ );
+#define E_LUACOMPARE	ToLogService("lua", LogLevel::Error, "lua function[{}] param error is unknown of compara character!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua function[%s]param error is unknow of compara character!", __FUNCTION__ );
 
 
-#define LUA_TRUE		1	// ÕýÈ·
+#define LUA_TRUE		1	// ï¿½ï¿½È·
 #define LUA_FALSE		0	// 
-#define LUA_ERROR		-1	// ´íÎó
+#define LUA_ERROR		-1	// ï¿½ï¿½ï¿½ï¿½
 
 #endif // _SCRIPT_H_
 

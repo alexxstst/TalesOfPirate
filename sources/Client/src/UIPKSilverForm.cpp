@@ -78,7 +78,7 @@ namespace GUI
         frmPKSilver = mgr.Find("frmPKSilver");
         if(!frmPKSilver)
         {
-            LG("gui", "frmPKSilver not found.\n");
+            ToLogService("common", "frmPKSilver not found.");
             return false;
         }
 
@@ -89,7 +89,7 @@ namespace GUI
             labName[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
             if(! labName[i])
 			{
-                LG("gui", "frmPKSilver:%s not found. \n", szTitle);
+                ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
 
@@ -97,7 +97,7 @@ namespace GUI
             labLevel[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
             if(! labLevel[i])
 			{
-				LG("gui", "frmPKSilver:%s not found. \n", szTitle);
+				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
 
@@ -105,7 +105,7 @@ namespace GUI
             labJob[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
             if(! labJob[i])
 			{
-				LG("gui", "frmPKSilver:%s not found. \n", szTitle);
+				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
 
@@ -113,7 +113,7 @@ namespace GUI
             labDate[i] = dynamic_cast<CLabelEx*>(frmPKSilver->Find(szTitle));
             if(! labDate[i])
 			{
-				LG("gui", "frmPKSilver:%s not found. \n", szTitle);
+				ToLogService("common", "frmPKSilver:{} not found. ", szTitle);
 				return false;
 			}
         }
@@ -131,7 +131,7 @@ namespace GUI
    //     string szName = pSender->GetName();
    //     if(szName == "btnSort")
    //     {
-   //         //  ±éÀú±³°ü
+   //         //  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
    //         CGoodsGrid* pGrid  = g_stUIEquip.GetGoodsGrid();
 			//CItemCommand* pCmd = NULL;
    //         CItemRecord* pItemRecord = NULL;

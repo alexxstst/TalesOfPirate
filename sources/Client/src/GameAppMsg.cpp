@@ -155,7 +155,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 			if (bObjChange)
 				g_ObjFile.WriteSectionObjInfo(nSectionNO, infoex, nSectionObjCnt);
 
-            LG("load", "Total: %d, Scene: %d\n", nSectionObjCnt, nSceneObj);
+            ToLogService("common", "Total: {}, Scene: {}", nSectionObjCnt, nSceneObj);
         }
 
 		MPTile	*SMPTile;
@@ -392,7 +392,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 
 void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool bWindowed )
 {
-	LG("video", g_oLangRec.GetString(104), width, height, bWindowed);
+	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(104), width, height, bWindowed); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
 
 	//MPInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
 	//MPIResourceMgr* res_mgr = imgr->res_mgr;
@@ -467,18 +467,18 @@ void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool b
 	
 	if(g_Render.ToggleFullScreen(width, height, format, bWindowed) == 0)
     {
-		LG("video", "msgToggleFullScreen error");
+		ToLogService("ui", "msgToggleFullScreen error");
 		return;
     }
 
-	LG("video", g_oLangRec.GetString(105));
+	g_logManager.InternalLog(LogLevel::Debug, "ui", g_oLangRec.GetString(105));
 
 	//SetIsFullScreen( !bWindowed);
 
 	g_pGameApp->_nWindowWidth = width ;		
 	g_pGameApp->_nWindowHeight = height ;
 	
-	LG("video", "GetRender SetScreen w = %d, h = %d\n", width, height);
+	ToLogService("ui", "GetRender SetScreen w = {}, h = {}", width, height);
     
 	GetRender().SetScreen( g_Render.GetScrWidth(), g_Render.GetScrHeight(), !bWindowed );
 
@@ -968,7 +968,7 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 				GetConsole()->OnKeyDownEvent(dwParam1);
 			}
 			//g_InputBox.HandleWindowMsg(dwMsg, dwParam1, dwParam2);
-			LG( "key", "keydown:%d, %d\n", dwParam1, dwParam2 );
+			ToLogService("common", "keydown:{}, {}", dwParam1, dwParam2);
 			
 			CFormMgr::s_Mgr.OnKeyDown((int)dwParam1);
 
@@ -989,7 +989,7 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 				if( GetConsole()->OnCharEvent((TCHAR)dwParam1, dwParam2) ) return false;
 			}
 			//g_InputBox.HandleWindowMsg(dwMsg, dwParam1, dwParam2);
-			LG( "key", "keychar:%d, %d\n", dwParam1, dwParam2 );
+			ToLogService("common", "keychar:{}, {}", dwParam1, dwParam2);
 			
 			if( CFormMgr::s_Mgr.OnKeyChar((char)dwParam1) ) return false;
 
@@ -1103,7 +1103,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			}
 			else
 			{
-				LG(g_oLangRec.GetString(112), g_oLangRec.GetString(113), nChaID);
+				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(113), nChaID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			}
 		}
 		in.close();
@@ -1220,14 +1220,14 @@ void CheckSkillEffect( CSkillRecord* pSkill, int nEffectID )
 
 	if( name.empty() )
 	{
-		LG( "skillinfoerror", g_oLangRec.GetString(117), pSkill->nID, pSkill->szName, nEffectID );
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(117), pSkill->nID, pSkill->szName, nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		return;
 	}
 
 	int n = (int)name.find( g_oLangRec.GetString(118) );
 	if( n >= 0 )
 	{
-		LG( "skillinfoerror", g_oLangRec.GetString(119), pSkill->nID, pSkill->szName, nEffectID );
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(119), pSkill->nID, pSkill->szName, nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 	}
 }
 
@@ -1473,7 +1473,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	else if( strCmd=="lgclear" )
 	{
-		::LG_CloseAll();
+		g_logManager.Shutdown();
 	}
 	else if( strCmd=="gate" )
 	{
@@ -1488,7 +1488,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	else if( strCmd=="teamleaderid" )
 	{
-		LG( "teamleaderid", "msg%u\n", CTeamMgr::GetTeamLeaderID() );
+		ToLogService("common", "msg{}", CTeamMgr::GetTeamLeaderID());
 	}
 	else if( strCmd=="state" )
 	{
@@ -1539,14 +1539,14 @@ const char* ConsoleCallback(const char *pszCmd)
 				int nCharID = pMain->getTypeID() - 1;
 				if( nCharID<0 || nCharID>3 )
 				{
-					LG( "error", g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName, RefineID );
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName, RefineID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					return strRes.c_str();
 				}
 
 				CItemRefineEffectInfo* pInfo = GetItemRefineEffectInfo( RefineID );
 				if( !pInfo )
 				{
-					LG( "error", g_oLangRec.GetString(127), RefineID );
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(127), RefineID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					return strRes.c_str();
 				}
 
@@ -1580,7 +1580,7 @@ const char* ConsoleCallback(const char *pszCmd)
 					// ʹ�õ��߱����dummy
 					if( !pEffect->Create( nEffectID ) )
 					{
-						LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+						ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
 						return strRes.c_str();
 					}
 					pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);
@@ -1590,7 +1590,7 @@ const char* ConsoleCallback(const char *pszCmd)
 					pEffect->SetValid(TRUE);
 					pItem->AddEffect(pEffect->getID());
 
-					LG( g_oLangRec.GetString(128), "ID:%d, Dummy:%d\n", nEffectID, pInfo->chDummy[i] );
+					g_logManager.InternalLog(LogLevel::Debug, "common", std::format("ID:{}, Dummy:{}", nEffectID, pInfo->chDummy[i]));
 				}
 			}
 		}
@@ -1961,7 +1961,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		// ʹ�õ��߱����dummy
 		if( !pEffect->Create( nEffectID ) )
 		{
-			LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+			ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
 			return strRes.c_str();
 		}
 		pEffect->setFollowObj( (CSceneNode*)pMain, NODE_CHA, nDummy );
@@ -2043,7 +2043,7 @@ const char* ConsoleCallback(const char *pszCmd)
 								// ʹ�õ��߱����dummy
 								if( !pEffect->Create( nEffectID ) )
 								{
-									LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+									ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
 									return strRes.c_str();
 								}
 								pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);
@@ -2053,7 +2053,7 @@ const char* ConsoleCallback(const char *pszCmd)
 								pEffect->SetValid(TRUE);
 								pItem->AddEffect(pEffect->getID());
 
-								LG( g_oLangRec.GetString(128), "ID:%d, Dummy:%d\n", nEffectID, pInfo->chDummy[i] );
+								g_logManager.InternalLog(LogLevel::Debug, "common", std::format("ID:{}, Dummy:{}", nEffectID, pInfo->chDummy[i]));
 							}
 						}
 					}
@@ -2100,7 +2100,7 @@ const char* ConsoleCallback(const char *pszCmd)
 								// ʹ�õ��߱����dummy
 								if( !pEffect->Create( nEffectID ) )
 								{
-									LG("ERROR","msgcreate cha`s effect fail,ID %d", nEffectID );
+									ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
 									return strRes.c_str();
 								}
 								pEffect->setFollowObj((CSceneNode*)pItem,NODE_ITEM,pInfo->chDummy[i]);
@@ -2110,7 +2110,7 @@ const char* ConsoleCallback(const char *pszCmd)
 								pEffect->SetValid(TRUE);
 								pItem->AddEffect(pEffect->getID());
 
-								LG( g_oLangRec.GetString(128), "ID:%d, Dummy:%d\n", nEffectID, pInfo->chDummy[i] );
+								g_logManager.InternalLog(LogLevel::Debug, "common", std::format("ID:{}, Dummy:{}", nEffectID, pInfo->chDummy[i]));
 							}
 						}
 					}
@@ -2261,7 +2261,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					continue;
 				}
 			}
@@ -2276,7 +2276,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					continue;
 				}
 			}
@@ -2292,7 +2292,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadTower( pInfo->chModalType, part_buf ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					continue;
 				}
 			}
@@ -2314,13 +2314,13 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadCha( &load_info ) == 0 )
 				{
-					LG("error", g_oLangRec.GetString(26), nScriptID, pInfo->szDataName);  
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					continue;
 				}  
 			}
 			if( ((CCharacterModel*)pCha)->LoadPose( pInfo->sActionID ) == 0 )
 			{
-				LG("error", g_oLangRec.GetString(27), nScriptID, pInfo->szDataName);  
+				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(27), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					continue;
 			} 
 		    pCha->SetValid(TRUE); 

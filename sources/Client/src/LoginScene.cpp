@@ -56,7 +56,6 @@
 #include "UITemplete.h"
 #include "commfunc.h"
 #include "uiboxform.h"
-#include "bill.h"
 
 #include "uisystemform.h"
 
@@ -168,7 +167,7 @@ CLoginScene::CLoginScene(stSceneInitParam& param):
 
 CLoginScene::~CLoginScene()
 {
-	LG( "scene memory", "CLoginScene Destroy\n" );
+	ToLogService("common", "CLoginScene Destroy");
 
 	for (int i =0 ; i<3 ; i++)
 		_pCntCha[i] = NULL ;
@@ -273,7 +272,7 @@ bool CLoginScene::_Init()
 
 	if (!_InitUI())
 	{
-		LG("login_ini", g_oLangRec.GetString(168));
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(168));
 
 		return false;
 	}
@@ -297,7 +296,7 @@ bool CLoginScene::_Init()
 					const char * pszGate = pGate->szGateIP[k];
 					if( GetRegionMgr()->Add( pszRegion, pszGroup, pszGate ) )
 					{
-						LG( "all_gate", "%s, %s, %s\n", pszRegion, pszGroup, pszGate );
+						ToLogService("common", "{}, {}, {}", pszRegion, pszGroup, pszGate);
 					}
 				}
 			}
@@ -1151,45 +1150,6 @@ bool CLoginScene::_CheckAccount()
 	return true;
 }
 
-bool CLoginScene::_Bill()
-{
-	//�շ�����
-
-    if (g_Config.m_IsBill)
-	{
-		static CPAI cpai;
-        int ret = cpai.Login(edtID->GetCaption(), edtPassword->GetCaption());
-		if (10000 == ret)
-		{
-			m_sPassport = cpai.GetPassport();
-			return true;
-		}
-        else if(10004 == ret)
-        {
-            CBoxMgr::ShowMsgBox( NULL, g_oLangRec.GetString(176), true );
-        }
-        else
-        {
-            std::string ret = cpai.LastError();
-            if(ret == "[Player_Missing]")
-            {
-                CBoxMgr::ShowMsgBox( NULL, g_oLangRec.GetString(177), true );
-            }
-            else if(ret == "[Player_Failure]")
-            {
-                CBoxMgr::ShowMsgBox( NULL, g_oLangRec.GetString(178), true );
-            }
-            else
-            {
-                CBoxMgr::ShowMsgBox( NULL, "PAI: Unknown Error. !", true );
-            }
-        }
-		return false;
-	}
-	m_sPassport = "nobill";
-	return true;
-}
-
 void CLoginScene::_Connect()
 {
 	CGameApp::Waiting(true);
@@ -1204,7 +1164,7 @@ void CLoginScene::_Connect()
 		return;
 	}
 
-	LG("connect", g_oLangRec.GetString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex);
+	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex); g_logManager.InternalLog(LogLevel::Debug, "connections", _buf); }
 	//int nSelRegionNo = 0;
 	//int nNO = lstServer->GetItems()->GetSelect()->GetIndex();
 
@@ -1245,7 +1205,7 @@ void CLoginScene::_Connect()
 	if (!pszSelectGateIP)
 	{
 		//LG("connect", g_oLangRec.GetString(180), m_iCurSelRegionIndex, m_iCurSelServerIndex);
-		LG("connect", g_oLangRec.GetString(180), 0, 0);
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(180), 0, 0); g_logManager.InternalLog(LogLevel::Debug, "connections", _buf); }
 	}
 	else
 	{
@@ -1282,9 +1242,7 @@ void CLoginScene::LoginFlow()
         }   break;
     }
     //  end
-	if (!_Bill()){
-		return;
-	}
+	m_sPassport = "nobill";
 	_Connect();
 }
 
@@ -1367,7 +1325,7 @@ void  CLoginScene::_evtVerErrorFrm(CCompent *pSender, int nMsgType, int x, int y
 void CLoginScene::Error( int error_no, const char* error_info )
 {
     CGameApp::Waiting( false );
-    LG( "error", "%s Error, Code:%d, Info: %s", error_info, error_no, g_GetServerError(error_no) );
+    ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no, g_GetServerError(error_no));
 
 	if( ERR_MC_VER_ERROR==error_no && !g_TomServer.bEnable )
 	{		

@@ -246,7 +246,7 @@ BOOL CGameApp::_Init()
 	_IsMusicSystemValid = true;
     if( !_IsMusicSystemValid && g_Config.m_bEnableMusic!=0 )
     {
-        LG( "init", g_oLangRec.GetString(65) );
+        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(65));
     }
 
 	_bConnected = FALSE;
@@ -282,7 +282,7 @@ BOOL CGameApp::_Init()
 
 	if( !_stScriptMgr.Init() )
 	{
-		LG("init", g_oLangRec.GetString(68));
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(68));
 		return FALSE;
 	}
    
@@ -314,7 +314,7 @@ BOOL CGameApp::_Init()
 
 	if( !CFormMgr::s_Mgr.Init( g_pGameApp->GetHWND() ) )    // by lh ִ�����CLU_LoadScript�����
 	{
-		LG("init", g_oLangRec.GetString(69));
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(69));
 		return FALSE;
 	}
 
@@ -324,7 +324,7 @@ BOOL CGameApp::_Init()
 
 	if( !_stScriptMgr.LoadScript() )
 	{
-		LG("init", g_oLangRec.GetString(70));
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(70));
 		return FALSE;
 	}
 
@@ -357,7 +357,7 @@ BOOL CGameApp::_Init()
 
 	if( !CGameScene::_InitScene() )
 	{
-		LG( "init", "msgCGameScene::_InitScene() return false" );
+		ToLogService("common", "msgCGameScene::_InitScene() return false");
 		return false;
 	}
 
@@ -435,9 +435,9 @@ void CGameApp::_End()
 
 	SAFE_DELETE( _pCurScene );
 
-    LG("end", "NetIF release start\n");
+    ToLogService("common", "NetIF release start");
     SAFE_DELETE( g_NetIF );
-    LG("end", "NetIF release end\n");
+    ToLogService("common", "NetIF release end");
 
 	CFormMgr::s_Mgr.Clear();
 

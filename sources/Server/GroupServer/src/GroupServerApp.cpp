@@ -17,15 +17,15 @@ using namespace std;
 
 bool	g_logautobak	=true;
 
-LogStream			g_LogErrServer("ErrorServer");
-LogStream			g_LogGrpServer("GroupServer");
-LogStream			g_LogGuild("Guild");
-LogStream			g_LogFriend("Friend");
-LogStream			g_LogMaster("Master");
-LogStream			g_LogTeam("Team");
-LogStream			g_LogConnect("Connect");
-LogStream			g_LogDB("Database");
-LogStream			g_LogGarner2("Garner2");
+dbc::LogStream			g_LogErrServer("ErrorServer");
+dbc::LogStream			g_LogGrpServer("GroupServer");
+dbc::LogStream			g_LogGuild("Guild");
+dbc::LogStream			g_LogFriend("Friend");
+dbc::LogStream			g_LogMaster("Master");
+dbc::LogStream			g_LogTeam("Team");
+dbc::LogStream			g_LogConnect("Connect");
+dbc::LogStream			g_LogDB("Database");
+dbc::LogStream			g_LogGarner2("Garner2");
 
 GroupServerApp	*	g_gpsvr	=0;
 InterLockedLong		g_exit	=0;
@@ -54,7 +54,8 @@ private:
 			static short sStatCheatCount = 0;
 			if(sStatCheatCount == 0)
 			{
-				LG("group_cheat", "current cheat count [%ld]\n", g_gpsvr->m_dwCheatCount);
+				// Счётчик читов
+			ToLogService("players", LogLevel::Warning, "current cheat count [{}]", (int)g_gpsvr->m_dwCheatCount);
 			}
 			sStatCheatCount = (sStatCheatCount + 1) % 60;
 

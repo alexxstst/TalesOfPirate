@@ -1567,7 +1567,7 @@ bool CMPFont::Draw3DText(char* szText,D3DXVECTOR3& vPos, D3DXCOLOR color,float f
 		sx+=offset;
 #ifdef USE_RENDER
 		if(LW_FAILED(_pVB->DrawSubset(0)))
-			LG("error","msgCMPFont draw");
+			ToLogService("errors", LogLevel::Error, "CMPFont draw");
 #else
 		_pDev->DrawPrimitive( D3DPT_TRIANGLELIST, 0, 2 );
 #endif

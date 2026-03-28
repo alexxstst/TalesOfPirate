@@ -549,7 +549,7 @@ private:
     pGMI = (tGMI) GetProcAddress( hPsapi, "GetModuleInformation" );
     if ( (pEPM == NULL) || (pGMFNE == NULL) || (pGMBN == NULL) || (pGMI == NULL) )
     {
-      // we couldn´t find all functions
+      // we couldnï¿½t find all functions
       FreeLibrary(hPsapi);
       return FALSE;
     }
@@ -562,13 +562,11 @@ private:
 
     if ( ! pEPM( hProcess, hMods, TTBUFLEN, &cbNeeded ) )
     {
-      //_ftprintf(fLogFile, _T("%lu: EPM failed, GetLastError = %lu\n"), g_dwShowCount, gle );
       goto cleanup;
     }
 
     if ( cbNeeded > TTBUFLEN )
     {
-      //_ftprintf(fLogFile, _T("%lu: More than %lu module handles. Huh?\n"), g_dwShowCount, lenof( hMods ) );
       goto cleanup;
     }
 
@@ -1077,7 +1075,6 @@ BOOL StackWalker::ShowCallstack(HANDLE hThread, const CONTEXT *context, PReadPro
           csEntry.symTypeString = "Virtual";
           break;
         default:
-          //_snprintf( ty, sizeof ty, "symtype=%ld", (long) Module.SymType );
           csEntry.symTypeString = NULL;
           break;
         }
@@ -1128,7 +1125,6 @@ BOOL __stdcall StackWalker::myReadProcMem(
     SIZE_T st;
     BOOL bRet = ReadProcessMemory(hProcess, (LPVOID) qwBaseAddress, lpBuffer, nSize, &st);
     *lpNumberOfBytesRead = (DWORD) st;
-    //printf("ReadMemory: hProcess: %p, baseAddr: %p, buffer: %p, size: %d, read: %d, result: %d\n", hProcess, (LPVOID) qwBaseAddress, lpBuffer, nSize, (DWORD) st, (DWORD) bRet);
     return bRet;
   }
   else

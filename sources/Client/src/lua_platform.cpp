@@ -22,7 +22,7 @@ int lua_sysAddHelpString(lua_State *L)
 
 void InitLuaPlatform()
 {
-    LG("init", g_oLangRec.GetString(182));
+    g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(182));
     
     L = lua_open ();
     lua_baselibopen (L);
@@ -38,7 +38,7 @@ void InitLuaPlatform()
 
     lua_register(L, "sysAddHelpString", lua_sysAddHelpString);
     
-    // util¶ÔÏó²Ù×÷º¯Êý
+    // utilï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[util]");
     REGFN(MsgBox);
     REGFN(GetTickCount);
@@ -47,7 +47,7 @@ void InitLuaPlatform()
     REGFN(SysInfo);
     g_luaFNList.push_back("\r");
 
-    // app¶ÔÏó²Ù×÷º¯Êý
+    // appï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[app]");
     REGFN(appGetCurScene);
     REGFN(appSetCaption);
@@ -56,7 +56,7 @@ void InitLuaPlatform()
     //lua_dofile(L, "scripts/gamesdk/app.lua");
     g_luaFNList.push_back("\r");
     
-    // scene¶ÔÏó²Ù×÷º¯Êý
+    // sceneï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[scene]");
     REGFN(sceAddObj);
     REGFN(sceRemoveObj);
@@ -68,7 +68,7 @@ void InitLuaPlatform()
     //lua_dofile(L, "scripts/gamesdk/scene.lua");
     g_luaFNList.push_back("\r");
     
-    // object¶ÔÏó²Ù×÷º¯Êý
+    // objectï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[object]");
     REGFN(objSetPos);
     REGFN(objGetPos);
@@ -86,7 +86,7 @@ void InitLuaPlatform()
     //lua_dofile(L, "scripts/gamesdk/object.lua");
     g_luaFNList.push_back("\r");
 
-    // ¾µÍ·¶ÔÏó²Ù×÷º¯Êý
+    // ï¿½ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[camera]");
     REGFN(camGetCenter);
     REGFN(camSetCenter);
@@ -97,13 +97,13 @@ void InitLuaPlatform()
     REGFN(camSetAngle);
     g_luaFNList.push_back("\r");
 
-    // Input¶ÔÏó²Ù×÷º¯Êý
+    // Inputï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[input]");
     REGFN(IsKeyDown);
     //lua_dofile(L, "scripts/gamesdk/input.lua");
     g_luaFNList.push_back("\r");
 
-    // UI¶ÔÏó²Ù×÷º¯Êý
+    // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     g_luaFNList.push_back("[UI]");
     REGFN(uiHideAll);
     // lua_dofile(L, "scripts/gamesdk/input.lua");

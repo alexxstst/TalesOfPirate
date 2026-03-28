@@ -93,18 +93,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
-    <ClCompile Include="bill.cpp" />
     <ClCompile Include="db.cpp" />
     <ClCompile Include="db3.cpp" />
     <ClCompile Include="LanguageRecord.cpp" />
-    <ClCompile Include="log.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-      </PrecompiledHeader>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch.h</PrecompiledHeaderFile>
-    </ClCompile>
-    <ClCompile Include="log2.cpp" />
     <ClCompile Include="logutil.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch.h</PrecompiledHeaderFile>
@@ -125,19 +116,20 @@
     <ClCompile Include="playsound.cpp" />
     <ClCompile Include="SectionData.cpp" />
     <ClCompile Include="util2.cpp" />
+    <ClCompile Include="newlogutil.cpp" />
+    <ClCompile Include="ObjectPools.cpp" />
+    <ClCompile Include="CrushSystem.cpp" />
+    <ClCompile Include="ConsoleColor.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\algo.h" />
     <ClInclude Include="..\include\AtlAux2.h" />
     <ClInclude Include="..\include\AttribData.h" />
-    <ClInclude Include="..\include\bill.h" />
     <ClInclude Include="..\include\db.h" />
     <ClInclude Include="..\include\db3.h" />
     <ClInclude Include="..\include\fifo.h" />
     <ClInclude Include="..\include\kbase.h" />
     <ClInclude Include="..\include\LanguageRecord.h" />
-    <ClInclude Include="..\include\log.h" />
-    <ClInclude Include="..\include\log2.h" />
     <ClInclude Include="..\include\MapUtil.h" />
     <ClInclude Include="..\include\matrix_stuff.h" />
     <ClInclude Include="..\include\MPMapDef.h" />
@@ -151,9 +143,10 @@
     <ClInclude Include="..\include\util.h" />
     <ClInclude Include="..\include\util2.h" />
     <ClInclude Include="md5.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <ClInclude Include="..\include\logutil.h" />
+    <ClInclude Include="..\include\ConsoleColor.h" />
+    <ClInclude Include="..\include\ObjectPools.h" />
+    <ClInclude Include="..\include\CrushSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

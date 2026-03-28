@@ -9,7 +9,7 @@ BOOL MU_LoadMapData(CSectionDataMgr *pData, const char *pszDataName)
 {
 	if(!pData->CreateFromFile(pszDataName, TRUE)) 
     {
-        LG("maputil", "msg读取数据文件%s失败!\n", pszDataName);
+        ToLogService("common", LogLevel::Error, "读取数据文件{}失败!", pszDataName);
         return FALSE;
     }
     
@@ -42,7 +42,7 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 	if(oldmap.GetSectionCntX()!=newmap.GetSectionCntX() || oldmap.GetSectionCntY()!=newmap.GetSectionCntY())
 	{
 		//LG("mappatch", "msg地图尺寸不匹配, 无法继续生成补丁!\n");
-		LG("mappatch", "msg map size can't match, can't go on!\n");
+		ToLogService("common", LogLevel::Error, " map size can't match, can't go on!");
 		return FALSE;
 	}
 
@@ -103,13 +103,13 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 	if(dwCnt==0)
 	{
 		//LG("mappatch", "msg此两张地图完全相同, 无需生成补丁文件!\n");
-		LG("mappatch", "msg the two file is the same!\n");
+		ToLogService("common", LogLevel::Error, " the two file is the same!");
 		DeleteFile(szPatchName);
 	}
 	else
 	{
 		//LG("mappatch", "msg地图补丁文件创建成功, 总计需要更新%d个区域, 补丁文件为[%s]\n", dwCnt, szPatchName); 
-		LG("mappatch", "msg map patch create ok, totle update %d area, patch file is [%s]\n", dwCnt, szPatchName); 
+		ToLogService("common", LogLevel::Error, " map patch create ok, totle update {} area, patch file is [{}]", dwCnt, szPatchName); 
 	}
 	return TRUE;
 }
@@ -122,7 +122,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 	if(fp==NULL)
 	{
 		//LG("mappatch", "msg打开地图补丁文件[%s]失败!\n", pszPatch);
-		LG("mappatch", "msg open patch map file [%s] failed!\n", pszPatch);
+		ToLogService("common", LogLevel::Error, " open patch map file [{}] failed!", pszPatch);
 		return FALSE;
 	}
 
@@ -130,7 +130,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 	fread(&header,sizeof SMapPatchHeader, 1, fp);
 
 	//LG("mappatch", "msg总计需要更新区域[%d]个\n", header.dwUpdateCnt);
-	LG("mappatch", "msg totle update [%d] area\n", header.dwUpdateCnt);
+	ToLogService("common", LogLevel::Error, " totle update [{}] area", header.dwUpdateCnt);
 
 	MPTerrainData oldmap; MU_LoadMapData(&oldmap, pszMap);
 
@@ -169,7 +169,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 	delete[] pBuf;
 
 	//LG("mappatch", "msg地图补丁成功执行, 总计更新区域[%d]个\n", dwCnt);
-	LG("mappatch", "msg map patch create ok, totle update [%d] area\n", dwCnt);
+	ToLogService("common", LogLevel::Error, " map patch create ok, totle update [{}] area", dwCnt);
 	return TRUE;
 }
 

@@ -37,11 +37,11 @@ namespace GUI
 	bool CGuildChallengeMgr::Init()
 	{
 		CFormMgr &mgr = CFormMgr::s_Mgr;
-		//³õÊ¼»¯npc¶Ô»°±íµ¥
+		//ï¿½ï¿½Ê¼ï¿½ï¿½npcï¿½Ô»ï¿½ï¿½ï¿½ï¿½ï¿½
 		frmGuildPK  = mgr.Find("frmGuildPK" );
 		if ( !frmGuildPK )
 		{	
-			LG("gui", g_oLangRec.GetString(560));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(560));
 			return false;
 		}
 
@@ -49,7 +49,7 @@ namespace GUI
 		//frmNPCforge->evtClose = _OnClose;
 		//lstGuildPK = dynamic_cast<CList*>(frmGuildPK->Find("lstGuildPK"));
 		//if (!lstGuildPK)
-		//	return Error("NPC.clu½çÃæ<%s>ÉÏÕÒ²»µ½¿Ø¼þ<%s>",
+		//	return Error("NPC.cluï¿½ï¿½ï¿½ï¿½<%s>ï¿½ï¿½ï¿½Ò²ï¿½ï¿½ï¿½ï¿½Ø¼ï¿½<%s>",
 		//				 frmGuildPK->GetName(), 
 		//				 "lstGuildPK");
 		char szBuf[32];
@@ -196,7 +196,7 @@ namespace GUI
 	//-------------------------------------------------------------------------
 	void CGuildChallengeMgr::_ChargeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
-		if( nMsgType!=CForm::mrYes )	// ÐÞÕý¾ºÅÄµãÈ¡ÏûÒ²ÊÕÇ®µÄ BUG  add by Philip.Wu  2006-07-25
+		if( nMsgType!=CForm::mrYes )	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Äµï¿½È¡ï¿½ï¿½Ò²ï¿½ï¿½Ç®ï¿½ï¿½ BUG  add by Philip.Wu  2006-07-25
 		{
 			g_stGuildChallenge.m_iSelIndex = -1;
 			return;

@@ -3,7 +3,7 @@
 #include <time.h>
 
 
-// Log×¨ÓÃ±í
+// Log×¨ï¿½Ã±ï¿½
 class CTradeTableLog : public cfl_rs
 {
 public:
@@ -24,8 +24,8 @@ public:
 		SQLRETURN l_sqlret  =  this->exec_sql_direct(sql);
 		if(!DBOK(l_sqlret))
 		{
-			//LG("gamelog", "Ìí¼Ólog¼ÇÂ¼Ê§°Ü, sql = [%s]!\n", sql);
-			LG("gamelog", "add log note failed, sql = [%s]!\n", sql);
+			//LG("gamelog", "ï¿½ï¿½ï¿½ï¿½logï¿½ï¿½Â¼Ê§ï¿½ï¿½, sql = [%s]!\n", sql);
+			ToLogService("db", LogLevel::Error, "add log note failed, sql = [{}]!", sql);
 		}
 	}
 };

@@ -19,7 +19,7 @@
 bool CS_Connect(cChar *hostname, uint16_t port, uint32_t timeout)
 {
 	
-	LG( "connect", g_oLangRec.GetString(294), hostname );
+	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(294), hostname); g_logManager.InternalLog(LogLevel::Debug, "connections", _buf); }
     if( g_NetIF->m_pCProCir )
     {
         delete g_NetIF->m_pCProCir;
@@ -257,7 +257,7 @@ void CS_DieReturn(char chReliveType)
 	g_NetIF->SendPacketMessage(pk);
 
 	// log
-	LG(g_LogName.GetMainLogName(), "###Send(DieReturn):\tTick:[%d]\n", GetTickCount());
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(DieReturn):\tTick:[{}]", GetTickCount()));
 	//
 }
 
@@ -284,7 +284,7 @@ void CS_MapMask(const char *szMapName)
 	g_NetIF->SendPacketMessage(pk);
 
 	// log
-	LG(g_LogName.GetMainLogName(), "###Send(MapMask):\tTick:[%d]\n", GetTickCount());
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(MapMask):\tTick:[{}]", GetTickCount()));
 	//
 }
 
@@ -532,8 +532,8 @@ void CS_EntityEvent( DWORD dwEntityID )
 	g_NetIF->SendPacketMessage( packet );
 
 	const char* szLogName = g_LogName.GetMainLogName();
-	LG(szLogName, "###Send(Event-Entyty):\tTick:[%d]\n", GetTickCount());
-	LG(szLogName, "\n");
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Event-Entyty):\tTick:[{}]", GetTickCount()));
+
 }
 
 void CS_StallInfo( const char szName[], mission::NET_STALL_ALLDATA& Data )

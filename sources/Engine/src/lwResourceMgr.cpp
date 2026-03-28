@@ -2976,7 +2976,7 @@ LW_RESULT lwThreadPoolMgr::Create()
         for(DWORD j = 0; j < ci[i][0]; j++)
         {
             DWORD id = ((lwThreadPool*)_pool_seq[i])->GetThreadId(j);
-            LG("threadid", "%d:%s\n", id, "MindPower::LoadResource Thread");
+            ToLogService("common", "{}:{}", id, "MindPower::LoadResource Thread");
         }
     }
 

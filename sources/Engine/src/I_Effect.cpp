@@ -191,7 +191,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 				char pszMsg[64];
 				sprintf(pszMsg,"特效文件[%s]加载帖图[%s]时出错",
 					pszParentName,m_CTextruelist.m_vecTexName.c_str());
-				LG("ERROR","msg%s",pszMsg);
+				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 				return 1;
 			}
 		}
@@ -205,7 +205,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 			char pszMsg[64];
 			sprintf(pszMsg,"特效文件[%s]加载帖图[%s]时出错",
 			pszParentName,m_CTextruelist.m_vecTexName.c_str());
-			LG("ERROR","msg%s",pszMsg);
+			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 			return 1;
 		}
 		m_CTextruelist.m_lpCurTex = m_CTextruelist.m_pTex->GetTex();
@@ -245,7 +245,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 				char pszMsg[64];
 				sprintf(pszMsg,"特效文件[%s]缺少可变模型[%s]",
 					pszParentName,m_strModelName.c_str());
-				LG("ERROR","msg%s",pszMsg);
+				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 				return 2;
 			}
 		}
@@ -258,7 +258,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 			char pszMsg[64];
 			sprintf(pszMsg,"特效文件[%s]加载模型[%s]时出错",
 				pszParentName,m_CTextruelist.m_vecTexName.c_str());
-			LG("ERROR","msg%s",pszMsg);
+			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 			return 2;
 		}
 
@@ -2040,9 +2040,9 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
 	lwSubsetInfo_Construct(&mi.subset_seq[0], wFaceNum, 0, wVerNum, 0);
 
 	if(LW_FAILED( _lwMesh->LoadSystemMemory(&mi)))
-		LG("error","msg阴影模型装入系统内存失败");
+		g_logManager.InternalLog(LogLevel::Error, "errors", "Shadow model load system memory failed");
 	if(LW_FAILED( _lwMesh->LoadVideoMemory()))
-		LG("error","msg阴影模型装入显存失败");
+		g_logManager.InternalLog(LogLevel::Error, "errors", "Shadow model load video memory failed");
 
 	if(usesoft)
 	{
@@ -2192,7 +2192,7 @@ void	CEffectModel::RenderModel()
 		//m_pDev->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
 
         if(LW_FAILED(_lwMesh->DrawSubset(0)))
-			LG("error","CEffectModel %s",(TCHAR*)m_strName.c_str());
+			g_logManager.LogError("errors", "CEffectModel {}", (TCHAR*)m_strName.c_str());
 #else
 
 		m_pDev->SetStreamSource(0,_lpVB,sizeof(SEFFECT_VERTEX));
@@ -2748,7 +2748,7 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	int id = pCResMagr->GetTextureID(m_vecTexName);
 	if(id < 0)
 	{
-		LG("error", "msgCEffectFont纹理%s没有找到",m_vecTexName.c_str());
+		g_logManager.LogError("errors", "CEffectFont texture {} not found", m_vecTexName.c_str());
 		m_lpCurTex = NULL;
 		m_pTex = NULL;
 	}else
@@ -2762,7 +2762,7 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	id = pCResMagr->GetTextureID(_strBackBmp);
 	if(id < 0)
 	{
-		LG("error", "msgCEffectFont纹理%s没有找到",_strBackBmp.c_str());
+		g_logManager.LogError("errors", "CEffectFont texture {} not found", _strBackBmp.c_str());
 		_lpBackTex = NULL;
 	}else
 	{
@@ -2945,7 +2945,7 @@ void	CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat)
 	m_pDev->SetTransformWorld(pmat);
 
 	if(FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&t_SEffVer,sizeof(SEFFECT_VERTEX))))
-		LG("error","msgCEffectFont draw");
+		g_logManager.InternalLog(LogLevel::Error, "errors", "CEffectFont draw failed");
 #else
 	m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), pmat);
 
@@ -2987,7 +2987,7 @@ void	CEffectFont::RenderEffectFont(D3DXMATRIX* pmat)
 		//m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, n * 4, 2);
 #ifdef USE_RENDER
 		if(FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX))))
-			LG("error","msgCEffectFont draw2");
+			g_logManager.InternalLog(LogLevel::Error, "errors", "CEffectFont draw2 failed");
 #else
 		m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX));
 #endif
@@ -3369,7 +3369,7 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 	fFile = _tfopen(ptcsFileName, _TEXT("rb"));
 	if (fFile == NULL)
 	{
-		LG("error", "msgLoad Txt File [%s] Fail!\n", ptcsFileName);
+		g_logManager.LogError("errors", "Load Txt File [{}] Fail!", ptcsFileName);
 		bRet = false;
 		goto end;
 	}

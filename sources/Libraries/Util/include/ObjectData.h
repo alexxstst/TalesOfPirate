@@ -70,7 +70,7 @@ public:
         if(_bDebug)
         {
             //LG(GetDataName(), "数据文件操作结束!\n");
-			LG(GetDataName(), "data file operate over!\n");
+			g_logManager.InternalLog(LogLevel::Debug, "common", "data file operate over!");
         }
     }
 
@@ -98,7 +98,7 @@ inline BOOL CSceneObjData::_ReadFileHeader()
     if(_header.lVersion!=600)
 	{
 		//LG(GetDataName(), "msg不是合法的obj文件!\n");
-		LG(GetDataName(), "msg not legitimacy obj file!\n");
+		g_logManager.InternalLog(LogLevel::Error, "common", "not legitimacy obj file!");
         return FALSE;
 	}
 
@@ -126,7 +126,7 @@ inline void CSceneObjData::_WriteFileHeader()
     if(_bDebug)
     {
         //LG(GetDataName(), "写入文件头信息, lFileSize = %d\n", _header.lFileSize);
-		LG(GetDataName(), "write file head info, lFileSize = %d\n", _header.lFileSize);
+		g_logManager.LogDebug("common", "write file head info, lFileSize = {}", _header.lFileSize);
     }
 }
 
@@ -145,7 +145,7 @@ inline DWORD CSceneObjData::_ReadSectionIdx(DWORD dwSectionNo)
         {
             if(_bDebug)
             {
-                LG(GetDataName(), "Read Object Idx , ObjNum = %d\n", idx.iObjNum);
+                g_logManager.LogDebug("common", "Read Object Idx, ObjNum = {}", idx.iObjNum);
             }
         }
     }
@@ -169,7 +169,7 @@ inline void CSceneObjData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
     fwrite(&idx, sizeof(idx), 1, _fp);
     if(_bDebug)
     {
-        LG(GetDataName(), "[%d %d]Write SceneIdx idx.ObjNum = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, idx.iObjNum);
+        g_logManager.LogDebug("common", "[{} {}]Write SceneIdx idx.ObjNum = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, idx.iObjNum);
     } 
 }
 
@@ -178,7 +178,7 @@ inline void CSceneObjData::_AfterReadSectionData(SDataSection *pSection, int nSe
 {
     //if(_bDebug)
     {
-        LG(GetDataName(), "Read SectionData [%d %d]\n", nSectionX, nSectionY);
+        g_logManager.LogDebug("common", "Read SectionData [{} {}]", nSectionX, nSectionY);
         SSceneObjInfo *pObjArray = (SSceneObjInfo*)pSection->pData;
         SSceneObjInfo *pObjInfo  = pObjArray + 0;
 		for(DWORD i = 0;i < pSection->dwParam; i++)
@@ -187,7 +187,7 @@ inline void CSceneObjData::_AfterReadSectionData(SDataSection *pSection, int nSe
 			if(sID==1398 || sID==0)
 			{
 				//LG("maptoolerr", "发现不正常ID %d\n", sID);
-				LG("maptoolerr", "find unnormal ID %d\n", sID);
+				ToLogService("common", "find unnormal ID {}", sID);
 			}
 		}
         // LG(GetDataName(), "Read SceneObj Type = %d, nX = %d, nY = %d\n", pObjInfo->sTypeID, pObjInfo->nX, pObjInfo->nY);
@@ -215,10 +215,10 @@ inline void CSceneObjData::TrimFile(const char *pszTarget)
             {
 				pCurIdx->lObjInfoPos = ftell(fp);
 				pCurIdx->iObjNum     = pSection->dwParam;
-				LG("objcnt", "objNum = %d at [%d  %d]\n", pCurIdx->iObjNum, x, y);
+				ToLogService("common", "objNum = {} at [{}  {}]", pCurIdx->iObjNum, x, y);
 				if(pCurIdx->iObjNum > MAX_SECTION_OBJ)
 				{
-					LG("objcnt", "section obj cnt = %d, location(%d %d)\n", pCurIdx->iObjNum, x * 8, y * 8);
+					ToLogService("common", "section obj cnt = {}, location({} {})", pCurIdx->iObjNum, x * 8, y * 8);
 					pCurIdx->iObjNum  = MAX_SECTION_OBJ;
 					pSection->dwParam = MAX_SECTION_OBJ;
 				}

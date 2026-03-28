@@ -285,7 +285,6 @@ void CCharacter::ProcessPacket(unsigned short usCmd, RPACKET pk)
 				m_dwPing = dwAddPing / defPING_RECORD_NUM;
 			}*/
 			m_dwPing = dwPing;
-			//printf("ping = %d [%s]\n", m_dwPing, GetName());
 			SendPreMoveTime();
 			break;
 		}
@@ -336,7 +335,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, RPACKET pk)
 			if (!GetSubMap())
 			{
 				//LG("�Ի�����", "��ɫ%s �ڶԻ�ʱ�����ͼΪ�գ�\n", m_CLog.GetLogName());
-				LG("dialog error", "when character%s is dialog��the map is null��\n", m_CLog.GetLogName());
+				ToLogService("errors", LogLevel::Error, "when character{} is dialog��the map is null��", m_CLog.GetLogName());
 				break;
 			}
 			uShort	l_retlen;
@@ -1673,7 +1672,6 @@ void CCharacter::ProcessPacket(unsigned short usCmd, RPACKET pk)
 			//}
 			//pMainCha->TakeMoney("ϵͳ", lDelMoney);
 			long lCredit = (long)pMainCha->GetCredit();//- 5 * pMainCha->GetLevel();
-			//printf(lCredit);
 			if(lCredit < 0)
 			{
 				lCredit = 0;
@@ -2149,10 +2147,10 @@ void CCharacter::BeginAction(RPACKET pk)
 				if (!pRec)
 				{
 					//LG( "���ܲ�����", "��ɫ��%s��1���ܲ����ڣ����ܱ��: %d��[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
-					LG( "skill inexistence", "character��%s��1skill inexistence��skill number: %d��[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
+					ToLogService("common", "character��{}��1skill inexistence��skill number: {}��[PacketID: {}]", GetName(), ulSkillID, ulPacketId);
 					FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
 					//LG( "���ܲ�����", "��ɫ��%s��2���ܲ����ڣ����ܱ��: %d��[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
-					LG( "skill inexistence", "character��%s��2skill inexistence��skill number: %d��[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
+					ToLogService("common", "character��{}��2skill inexistence��skill number: {}��[PacketID: {}]", GetName(), ulSkillID, ulPacketId);
 					//SystemNotice("���ܲ����ڣ����ܱ��: %d��\n", ulSkillID);					
 					SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00040), ulSkillID);					
 					//m_CLog.Log("���ܲ����ڣ����ܱ��: %d��[PacketID: %u]\n", ulSkillID, ulPacketId);
@@ -2298,8 +2296,6 @@ void CCharacter::BeginAction(RPACKET pk)
 				lParam2 = sGridID;
 			}
 
-			//printf("chLinkID: %d\n", chLinkID);
-			//printf("sGridID: %d\n", sGridID);
 
 			Short	sUnfixNum = 0;
 			Short sRet = Cmd_UnfixItem(chLinkID, &sUnfixNum, chDir, lParam1, lParam2);
@@ -2605,7 +2601,6 @@ void CCharacter::Cmd_ChangeHair(RPACKET pk)
 
 	if(m_CKitbag.IsPwdLocked())
 	{
-		//sprintf(szRes, "�����������ʧ��, ����������");
 		sprintf(szRes, RES_STRING(GM_CHARACTERPRL_CPP_00042));
 		Prl_ChangeHairResult(0, szRes);
 		return;
@@ -2614,7 +2609,6 @@ void CCharacter::Cmd_ChangeHair(RPACKET pk)
 	CHairRecord *pHair = GetHairRecordInfo(sScriptID);
 	if(!pHair)
 	{
-		//sprintf(szRes, "�����������ʧ��, ��Ч����ID = %d", sScriptID);
 		sprintf(szRes, RES_STRING(GM_CHARACTERPRL_CPP_00043), sScriptID);
 		Prl_ChangeHairResult(0, szRes);
 		return;
@@ -2644,7 +2638,6 @@ void CCharacter::Cmd_ChangeHair(RPACKET pk)
 
 			if(!bOK)
 			{
-				//sprintf(szRes, "��������ʧ��, ȱ����Ҫ�ĵ���");
 				sprintf(szRes, RES_STRING(GM_CHARACTERPRL_CPP_00044));
 				Prl_ChangeHairResult(0, szRes);
 				return;

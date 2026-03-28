@@ -56,7 +56,7 @@ CItemCommand::CItemCommand( CItemRecord* pItem )
 : _pItem(pItem), _dwColor(COLOR_WHITE), _pBoatHint(NULL),
 _pAniClock(NULL), _pSkill(NULL), _dwPlayTime(0),_canDrag(true)
 {
-    if( !_pItem )  LG( "error", "msgCItemCommand::CItemCommand(CItemRecord* pItem) pItem is NULL" );
+    if( !_pItem )  ToLogService("errors", LogLevel::Error, "CItemCommand::CItemCommand(CItemRecord* pItem) pItem is NULL");
 
     _pImage = new CGuiPic;
 
@@ -319,7 +319,6 @@ void CItemCommand::Render( int x, int y )
 			if( Forge.nLevel>0 )
 			{
 				sType != 26 && sType != 25 ? sprintf(buf, "EQP+%d", Forge.nLevel ):sprintf(buf, "+%d", Forge.nLevel );
-				//sprintf(buf, "EQP+%d", Forge.nLevel );
 				static int w, h;
 				CGuiFont::s_Font.GetSize( buf, w, h );
 
@@ -434,7 +433,6 @@ void CItemCommand::OwnDefRender( int x, int y, int nWidth, int nHeight )
 		CGuiFont::s_Font.Render( _pItem->szName, x + ( nWidth - w ) / 2, nY - h - 2, COLOR_BLACK );
 	}
 
-	//sprintf( buf, "$%s", StringSplitNum(_nPrice) );
 	CGuiFont::s_Font.GetSize( _OwnDefText.c_str(), w, h );
 	CGuiFont::s_Font.Render ( _OwnDefText.c_str(), x + ( nWidth - w ) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK );
 }
@@ -1410,7 +1408,6 @@ void CItemCommand::AddHint( int x, int y ){
 		{
 			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
-			//sprintf( buf, g_oLangRec.GetString(626), item.sEndure[0] * 1000, item.sEndure[1] * 1000 );
 			sprintf( buf, g_oLangRec.GetString(626), item.sEnergy[0], item.sEnergy[1] );
 			PushHint( buf, GENERIC_COLOR );
 
@@ -1684,17 +1681,14 @@ string CItemCommand::GetStoneHint(int nLevel)
 //				{
 //					if( !(item.sInstAttr[i][1] % 10) )
 //					{						
-//						sprintf( buf, "%s:%+d%%", g_GetItemAttrExplain( item.sInstAttr[i][0]), item.sInstAttr[i][1] / 10 );
 //					}
 //					else
 //					{
 //						float f = (float)item.sInstAttr[i][1] / 10.0f;
-//						sprintf( buf, "%s:%+.1f%%", g_GetItemAttrExplain( item.sInstAttr[i][0]), f );
 //					}
 //				}
 //				else
 //				{
-//					sprintf( buf, "%s:%+d", g_GetItemAttrExplain( item.sInstAttr[i][0]), item.sInstAttr[i][1] );
 //				}
 //				PushHint( buf, color );
 //
@@ -2412,7 +2406,6 @@ void CItemCommand::_ShowWork( xShipInfo* pInfo, SGameAttr* pAttr )
 			g_GetJobName(pInfo->sPfLimit[i]);
 			if(name.compare(g_GetJobName(pInfo->sPfLimit[i])) == 0)
 			{
-				//sprintf( buf,"%s",RES_STRING(CL_UIITEMCOMMAND_CPP_00011));
 				sprintf( buf,"%s", "��ӡ�ŵ�װ��");
 				//PushHint( buf, VALID_COLOR );
 			}
@@ -2624,7 +2617,6 @@ SItemForge& SItemForge::Convert( DWORD v, int nItemID )
 	//string hint;
 	//for( int i=0; i<3; i++ )
 	//{
-	//	sprintf( buf, "Get_Stone_%d", i+1 );
 	//	nStone = 0;
 	//	if( !g_pGameApp->GetScriptMgr()->DoString( buf, "u-d", dwForgeValue, &nStone ) )
 	//		continue;
@@ -2635,7 +2627,6 @@ SItemForge& SItemForge::Convert( DWORD v, int nItemID )
 	//	forge.pStoneInfo[ StoneNum ] = pStone;
 
 	//	nStoneLv = 0;
-	//	sprintf( buf, "Get_StoneLv_%d", i+1 );
 	//	if( g_pGameApp->GetScriptMgr()->DoString( buf, "u-d", dwForgeValue, &nStoneLv ) )
 	//	{
 	//		forge.nStoneLevel[ StoneNum ] = nStoneLv;

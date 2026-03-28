@@ -81,18 +81,18 @@ namespace GUI
                     {
                         switch(pItemCommand->GetItemInfo()->sType)
                         {
-                        case 1:     //  ½£
-                        case 2:     //  ¾Þ½£
-                        case 3:     //  ¹­
-                        case 4:     //  »ðÇ¹
-                        case 7:     //  Ø°Ê×
-                        case 9:     //  ·¨ÕÈ
-                        case 11:     //  ¶ÜÅÆ
-                        case 20:     //  Ã±×Ó
-                        case 22:     //  ÒÂ·þ
-                        case 23:     //  ÊÖÌ×
-                        case 24:     //  Ð¬×Ó
-                        case 27:     //  ÎÆÉí
+                        case 1:     //  ï¿½ï¿½
+                        case 2:     //  ï¿½Þ½ï¿½
+                        case 3:     //  ï¿½ï¿½
+                        case 4:     //  ï¿½ï¿½Ç¹
+                        case 7:     //  Ø°ï¿½ï¿½
+                        case 9:     //  ï¿½ï¿½ï¿½ï¿½
+                        case 11:     //  ï¿½ï¿½ï¿½ï¿½
+                        case 20:     //  Ã±ï¿½ï¿½
+                        case 22:     //  ï¿½Â·ï¿½
+                        case 23:     //  ï¿½ï¿½ï¿½ï¿½
+                        case 24:     //  Ð¬ï¿½ï¿½
+                        case 27:     //  ï¿½ï¿½ï¿½ï¿½
                             {
                                 PushItem(i, *pItemCommand, true);
                             }  break;
@@ -154,28 +154,28 @@ namespace GUI
         frmBreak = mgr.Find("frmBreak");
         if(!frmBreak)
         {
-            LG("gui", "frmBreak not found.\n");
+            ToLogService("common", "frmBreak not found.");
             return false;
         }
 
         labNumInput = dynamic_cast<CLabelEx*>(frmBreak->Find("labNumOutputLeft"));
         if(!labNumInput)
         {
-            LG("gui", "frmCompose::labNumOutputLeft not found.\n");
+            ToLogService("common", "frmCompose::labNumOutputLeft not found.");
             return false;
         }
 
         labUsrInput = dynamic_cast<CLabelEx*>(frmBreak->Find("labNumOutputRight"));
         if(!labUsrInput)
         {
-            LG("gui", "frmCompose::labNumOutputRight not found.\n");
+            ToLogService("common", "frmCompose::labNumOutputRight not found.");
             return false;
         }
 
         proBreak = dynamic_cast<CProgressBar*>(frmBreak->Find("proBreak"));
         if(!proBreak)
         {
-            LG("gui", "frmBreak::proBreak not found.\n");
+            ToLogService("common", "frmBreak::proBreak not found.");
             return false;
         }
         proBreak->evtTimeArrive = _ProTimeArriveEvt;
@@ -183,7 +183,7 @@ namespace GUI
         btnForgeYes = dynamic_cast<CTextButton*>(frmBreak->Find("btnForgeYes"));
         if(!btnForgeYes)
         {
-            LG("gui", "frmBreak::btnForgeYes not found.\n");
+            ToLogService("common", "frmBreak::btnForgeYes not found.");
             return false;
         }
         btnForgeYes->SetIsEnabled(false);
@@ -191,7 +191,7 @@ namespace GUI
         btnForgeNo = dynamic_cast<CTextButton*>(frmBreak->Find("btnForgeNo"));
         if(!btnForgeNo)
         {
-            LG("gui", "frmBreak::btnForgeNo not found.\n");
+            ToLogService("common", "frmBreak::btnForgeNo not found.");
             return false;
         }
         btnForgeNo->SetIsEnabled(false);
@@ -203,7 +203,7 @@ namespace GUI
             cmdBreak[i] = dynamic_cast<COneCommand*>(frmBreak->Find(buff));
             if(!cmdBreak[i])
             {
-                LG("gui", "frmBreak::%s not found.\n", buff);
+                ToLogService("common", "frmBreak::{} not found.", buff);
                 return false;
             }
             iBreakPos[i] = NO_USE;
@@ -246,26 +246,26 @@ namespace GUI
 
     void CBreakMgr::PopItem(int iIndex, bool bRetry/* = false*/)
     {
-        //  ÊÇ·ñËø¶¨
+        //  ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½
         if(bLock)
         {
             return;
         }
-        // É¾³ýCmdÖÐµÄItem£¬¸ÃItem»áÔÚPushItem()ÖÐÓÉnewÉú³É
+        // É¾ï¿½ï¿½Cmdï¿½Ðµï¿½Itemï¿½ï¿½ï¿½ï¿½Itemï¿½ï¿½ï¿½ï¿½PushItem()ï¿½ï¿½ï¿½ï¿½newï¿½ï¿½ï¿½ï¿½
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdBreak[iIndex]->GetCommand());
 		if (! pItemCommand)
             return;
 
-		cmdBreak[iIndex]->DelCommand();	// ¸Ãº¯Êý½«É¾³ýdelete Item
+		cmdBreak[iIndex]->DelCommand();	// ï¿½Ãºï¿½ï¿½ï¿½ï¿½ï¿½É¾ï¿½ï¿½delete Item
 
-		// ½«ItemÏàÓ¦µÄÎïÆ·À¸»Ö¸´³É¿ÉÓÃ
+		// ï¿½ï¿½Itemï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½É¿ï¿½ï¿½ï¿½
 		CCommandObj* pItem = g_stUIEquip.GetGoodsGrid()->GetItem(iBreakPos[iIndex]);
 		if (pItem)
 		{
 			pItem->SetIsValid(true);
 		}
 
-		// ¼ÇÂ¼ItemÔÚÎïÆ·À¸ÖÐµÄÎ»ÖÃ
+		// ï¿½ï¿½Â¼Itemï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Ðµï¿½Î»ï¿½ï¿½
         if(!bRetry)
         {
             iBreakPos[iIndex] = NO_USE;
@@ -274,34 +274,34 @@ namespace GUI
 
     void CBreakMgr::PushItem(int iIndex, CItemCommand& rItem, bool bRetry/* = false*/)
     {
-        //  ÊÇ·ñËø¶¨
+        //  ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½
         if(bLock)
         {
             return;
         }
-        // ÅÐ¶ÏµÀ¾ßÊÇ·ñ¿ÉÒÔÍÏ
+        // ï¿½Ð¶Ïµï¿½ï¿½ï¿½ï¿½Ç·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		if(! rItem.GetIsValid())
 		{
 			return;
 		}
 
-		// ²é¿´Ô­À´µÄCmdÖÐÊÇ·ñÒÑ¾­ÓÐItemÁË£¬Èç¹ûÓÐÔòÒÆ³ö
+		// ï¿½é¿´Ô­ï¿½ï¿½ï¿½ï¿½Cmdï¿½ï¿½ï¿½Ç·ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½Itemï¿½Ë£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Æ³ï¿½
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdBreak[iIndex]->GetCommand());
 		if (pItemCommand)
 		{
 			PopItem(iIndex);
 		}
 
-		// ¼ÇÂ¼ItemÔÚÎïÆ·À¸ÖÐµÄÎ»ÖÃ
+		// ï¿½ï¿½Â¼Itemï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Ðµï¿½Î»ï¿½ï¿½
         if(!bRetry)
         {
             iBreakPos[iIndex] = g_stUIEquip.GetGoodsGrid()->GetDragIndex();
         }
 
-		// ½«ItemÏàÓ¦µÄÎïÆ·À¸»Òµ÷
+		// ï¿½ï¿½Itemï¿½ï¿½Ó¦ï¿½ï¿½ï¿½ï¿½Æ·ï¿½ï¿½ï¿½Òµï¿½
 		rItem.SetIsValid(false);
 
-		// ½«´´½¨µÄItem·ÅÈëCmdÖÐ£¬ÕâÀïÓÃnew½«»áÔÚPopItem()ÖÐÉ¾³ý
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Itemï¿½ï¿½ï¿½ï¿½Cmdï¿½Ð£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½newï¿½ï¿½ï¿½ï¿½ï¿½ï¿½PopItem()ï¿½ï¿½É¾ï¿½ï¿½
 		CItemCommand* pItemCmd = new CItemCommand(rItem);
 		pItemCmd->SetIsValid(true);
 		cmdBreak[iIndex]->AddCommand(pItemCmd);
@@ -413,18 +413,18 @@ namespace GUI
             return;
         switch(pItemCommand->GetItemInfo()->sType)
         {
-        case 1:     //  ½£
-        case 2:     //  ¾Þ½£
-        case 3:     //  ¹­
-        case 4:     //  »ðÇ¹
-        case 7:     //  Ø°Ê×
-        case 9:     //  ·¨ÕÈ
-        case 11:     //  ¶ÜÅÆ
-        case 20:     //  Ã±×Ó
-        case 22:     //  ÒÂ·þ
-        case 23:     //  ÊÖÌ×
-        case 24:     //  Ð¬×Ó
-        case 27:     //  ÎÆÉí
+        case 1:     //  ï¿½ï¿½
+        case 2:     //  ï¿½Þ½ï¿½
+        case 3:     //  ï¿½ï¿½
+        case 4:     //  ï¿½ï¿½Ç¹
+        case 7:     //  Ø°ï¿½ï¿½
+        case 9:     //  ï¿½ï¿½ï¿½ï¿½
+        case 11:     //  ï¿½ï¿½ï¿½ï¿½
+        case 20:     //  Ã±ï¿½ï¿½
+        case 22:     //  ï¿½Â·ï¿½
+        case 23:     //  ï¿½ï¿½ï¿½ï¿½
+        case 24:     //  Ð¬ï¿½ï¿½
+        case 27:     //  ï¿½ï¿½ï¿½ï¿½
             {}  break;
         default:
             {

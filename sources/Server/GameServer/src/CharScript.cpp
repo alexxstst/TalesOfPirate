@@ -609,10 +609,9 @@ inline int lua_AddSkill( lua_State* L )
 		}
 
 		char szData[128];
-		//sprintf( szData, "���%s����ѧ���˼��ܡ�%s����", szNpc, szSkill );
 		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00003), szNpc, szSkill );
 		pChar->SystemNotice( szData );
-		TL( CHA_MIS, pChar->GetName(), "", szData );
+		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
 
 	return 1;
@@ -663,10 +662,9 @@ inline int lua_AddSailExp( lua_State* L )
 
 	pChar->GetPlyMainCha()->AddAttr( ATTR_CSAILEXP, dwValue );
 	char szData[128];
-	//sprintf( szData, "%s������%dת�����飡", szNpc, dwValue );
 	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue );
 	pChar->SystemNotice( szData );
-	TL( CHA_MIS, pChar->GetName(), "", szData );
+	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
 	lua_pushnumber( L, LUA_TRUE );
 
@@ -713,10 +711,9 @@ inline int lua_AddLifeExp( lua_State* L )
 	
 	pChar->GetPlyMainCha()->AddAttr( ATTR_CLIFEEXP, dwValue );
 	char szData[128];
-	//sprintf( szData, "%s������%d����飡", szNpc, dwValue );
 	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue );
 	pChar->SystemNotice( szData );
-	TL( CHA_MIS, pChar->GetName(), "", szData );
+	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
 	lua_pushnumber( L, LUA_TRUE );
 
@@ -765,10 +762,9 @@ inline int lua_AddExp( lua_State* L )
 	
 	BOOL bRet = pChar->GetPlyMainCha()->AddExpAndNotic( dwValue );	
 	char szData[128];
-	//sprintf( szData, "%s������%d���飡", szNpc, dwValue );
 	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue );
 	pChar->SystemNotice( szData );
-	TL( CHA_MIS, pChar->GetName(), "", szData );
+	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
 	lua_pushnumber( L, LUA_TRUE );
 
@@ -821,28 +817,25 @@ inline int lua_AddExpAndType( lua_State* L )
 	{
 		bRet = pChar->GetPlyMainCha()->AddExpAndNotic( dwValue );
 		char szData[128];
-		//sprintf( szData, "%s������%d���飡", szNpc, dwValue );
 		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue );
 		pChar->SystemNotice( szData );
-		TL( CHA_MIS, pChar->GetName(), "", szData );
+		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
 	else if( byType == MIS_EXP_SAIL ) 	// ������������
 	{
 		bRet = pChar->GetPlyMainCha()->AddAttr( ATTR_CSAILEXP, dwValue );
 		char szData[128];
-		//sprintf( szData, "%s������%dת�����飡", szNpc, dwValue );
 		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue );
 		pChar->SystemNotice( szData );
-		TL( CHA_MIS, pChar->GetName(), "", szData );
+		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
 	else if( byType == MIS_EXP_LIFE	)	// ���������
 	{
 		bRet = pChar->GetPlyMainCha()->AddAttr( ATTR_CLIFEEXP, dwValue );
 		char szData[128];
-		//sprintf( szData, "%s������%d����飡", szNpc, dwValue );
 		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue );
 		pChar->SystemNotice( szData );
-		TL( CHA_MIS, pChar->GetName(), "", szData );
+		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
 	else
 	{
@@ -886,9 +879,8 @@ inline int lua_AddMoney( lua_State* L )
 	DWORD dwMoney = (DWORD)lua_tonumber( L, 3 );
 	pChar->GetPlyMainCha()->AddMoney( szNpc, dwMoney );
 	char szData[128];
-	//sprintf( szData, "%s������%d��Ǯ��", szNpc, dwMoney );
 	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00008), szNpc, dwMoney );
-	TL( CHA_MIS, pChar->GetName(), "", szData );
+	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	lua_pushnumber( L, LUA_TRUE );
 
 	return 1;
@@ -925,9 +917,8 @@ inline int lua_TakeMoney( lua_State* L )
 	DWORD dwMoney = (DWORD)lua_tonumber( L, 3 );
 	BOOL bRet = pChar->GetPlyMainCha()->TakeMoney( szNpc, dwMoney );
 	char szData[128];
-	//sprintf( szData, "%sȡ������%d��Ǯ��", szNpc, dwMoney );
 	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00009), szNpc, dwMoney );
-	TL( CHA_MIS, pChar->GetName(), "", szData );
+	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
 	return 1;
 }
@@ -4737,7 +4728,7 @@ inline int lua_OpenHair(lua_State *L)
 	if(pChar->HasTradeAction()) // �Ѿ��ڽ�����
 	{
 		//LG("hair", "��ɫ[%s]�Ѿ��ڽ�����, �޷�����������!\n", pChar->GetName());
-		LG("hair", RES_STRING(GM_CHARSCRIPT_CPP_00011), pChar->GetName());
+		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_CHARSCRIPT_CPP_00011), pChar->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		lua_pushnumber( L, LUA_FALSE);
 		return 1;
 	}

@@ -29,7 +29,7 @@ bool CSceneSign::Init( CGameScene* pScene )
 	}
     else
     {
-        LG( "init", g_oLangRec.GetString(377) );
+        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(377));
         return false;
     }
 
@@ -44,7 +44,7 @@ bool CSceneSign::Init( CGameScene* pScene )
 	}
     else
     {
-        LG( "init", g_oLangRec.GetString(378) );
+        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(378));
         return false;
     }
 
@@ -56,7 +56,7 @@ bool CSceneSign::Init( CGameScene* pScene )
     }
     else
     {
-        LG( "init", g_oLangRec.GetString(379) );
+        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(379));
         return false;
     }
 	return true;

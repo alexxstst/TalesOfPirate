@@ -10,6 +10,7 @@
 #include <vector>
 #include <optional>
 #include <cstdint>
+#include <stdexcept>
 
 namespace net {
 	namespace msg {
@@ -5017,50 +5018,38 @@ namespace net {
 			deserializeChaBaseInfo(pk, d.baseInfo);
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_BASEINFO) {
-					printf("ENTERMAP: BASEINFO marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_BASEINFO)
+					throw std::runtime_error("ENTERMAP: BASEINFO marker mismatch");
 			}
 			deserializeChaSkillBagInfo(pk, d.skillBag);
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_SKILLBAG) {
-					printf("ENTERMAP: SKILLBAG marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_SKILLBAG)
+					throw std::runtime_error("ENTERMAP: SKILLBAG marker mismatch");
 			}
 			deserializeChaSkillStateInfo(pk, d.skillState);
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_SKILLSTATE) {
-					printf("ENTERMAP: SKILLSTATE marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_SKILLSTATE)
+					throw std::runtime_error("ENTERMAP: SKILLSTATE marker mismatch");
 			}
 			deserializeChaAttrInfo(pk, d.attr);
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_ATTR) {
-					printf("ENTERMAP: ATTR marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_ATTR)
+					throw std::runtime_error("ENTERMAP: ATTR marker mismatch");
 			}
 			deserializeChaKitbagInfo(pk, d.kitbag);
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_KITBAG) {
-					printf("ENTERMAP: KITBAG marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_KITBAG)
+					throw std::runtime_error("ENTERMAP: KITBAG marker mismatch");
 			}
 			deserializeChaShortcutInfo(pk, d.shortcut);
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_SHORTCUT) {
-					printf("ENTERMAP: SHORTCUT marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_SHORTCUT)
+					throw std::runtime_error("ENTERMAP: SHORTCUT marker mismatch");
 			}
 			auto boatNum = pk.ReadInt64();
 			d.boats.resize(static_cast<size_t>(boatNum));
@@ -5072,10 +5061,8 @@ namespace net {
 			}
 			{
 				auto m = pk.ReadInt64();
-				if (m != ENTERMAP_MARK_BOATS) {
-					printf("ENTERMAP: BOATS marker mismatch! got=%lld pos=%d\n", (long long)m, pk.Position());
-					return;
-				}
+				if (m != ENTERMAP_MARK_BOATS)
+					throw std::runtime_error("ENTERMAP: BOATS marker mismatch");
 			}
 			d.ctrlChaId = pk.ReadInt64();
 			// loginFlag, playerCount, playerAddr — GateServer уже срезал.

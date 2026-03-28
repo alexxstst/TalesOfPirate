@@ -295,7 +295,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
         {
-            LG("error", g_oLangRec.GetString(26), type_id, pInfo->szDataName);  
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
             return NULL;
         }
 #endif
@@ -316,7 +316,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( &load_info ) == 0 )
         {
-            LG("error", g_oLangRec.GetString(26), type_id, pInfo->szDataName);  
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
             return NULL;
         }
 #endif
@@ -332,7 +332,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
         {
-            LG("error", g_oLangRec.GetString(26), type_id, pInfo->szDataName);  
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
             return NULL;
         }
     }
@@ -348,7 +348,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadTower( pInfo->chModalType, part_buf ) == 0 )
         {
-            LG("error", g_oLangRec.GetString(26), type_id, pInfo->szDataName);  
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
             return NULL;
         }
     }
@@ -370,7 +370,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( &load_info ) == 0 )
         {
-            LG("error", g_oLangRec.GetString(26), type_id, pInfo->szDataName);  
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
             return NULL;
         }
     }
@@ -380,7 +380,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
     if( LoadPose( type_id ) == 0 )
     {
-       LG("error", g_oLangRec.GetString(27), type_id, pInfo->szDataName);  
+       { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(27), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
        return NULL;
     }
     
@@ -463,7 +463,7 @@ int CCharacterModel::ChangePart( DWORD tab_id )
     CItemRecord* ir = GetItemRecordInfo( tab_id );
     if( !ir )
     {
-        LG( "xXx", "invalid table id" );
+        ToLogService("common", "invalid table id");
         return 0;
     }
 
@@ -519,7 +519,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
 
     if( strcmp( sx, "0" ) == 0 )
     {
-        LG("xXx", "msgLoadPart error with Invalid ID: %d, call robin!", tab_id );
+        ToLogService("common", "msgLoadPart error with Invalid ID: {}, call robin!", tab_id);
         return 0;
     }
 
@@ -530,7 +530,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
     sprintf( str, "%s.lgo", sx );
     if( FAILED( LoadPart( part_id, str ) ) )
     {
-        LG("xXx", "msgLoadPart Failed with file: %s, call sean!", str );
+        ToLogService("common", "msgLoadPart Failed with file: {}, call sean!", str);
         return 0;
     }
 
@@ -563,7 +563,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
                 CItemRecord* iiir = GetItemRecordInfo( o );
                 if( iiir == 0 || iiir->chModule[0] == 0 )
                 {
-                    LG("xXx", "msgLoadPart no model file exists: %d, call robin", o );
+                    ToLogService("common", "msgLoadPart no model file exists: {}, call robin", o);
                     return 0;
                 }
 
@@ -571,7 +571,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
                 
                 if( FAILED( LoadPart( 4 + i, str ) ) )
                 {
-                    LG( "xXx", "msgLoadPart no model file: %s, call sean!", str );
+                    ToLogService("common", "msgLoadPart no model file: {}, call sean!", str);
                     return 0;
                 }
 
@@ -628,7 +628,7 @@ int CCharacterModel::LoadPose()
     SCharacterAction SCharAct;
     if (false == GetCharacterAction(cha_type, &SCharAct)) // û�����ļ����ҵ���Ӧ��ID
     {
-        LG("default", "msgInvalid LoadPose call");
+        ToLogService("common", "msgInvalid LoadPose call");
         return 0;
     }
 
@@ -651,7 +651,7 @@ int CCharacterModel::LoadPose()
     {
         if(LW_FAILED(c->InsertPose(c->GetPoseNum(), buf, num)))
         {
-            LG("error", "msgCharacter Insert Pose Error: %d", cha_type);
+            ToLogService("errors", LogLevel::Error, "msgCharacter Insert Pose Error: {}", cha_type);
             return 0;
         }
     }
@@ -712,7 +712,7 @@ DWORD CCharacterModel::_BigPose2SmallPose(DWORD pose_id)
     CPoseInfo* info = ::GetPoseInfo( (short)pose_id );
     if( info == NULL )
     {
-        LG("pose_id", g_oLangRec.GetString(28), pose_id);
+        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(28), pose_id); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
         return -1;
     }
 
@@ -923,7 +923,7 @@ int CCharacterModel::AttachItem( DWORD link_id, CSceneItem* obj, DWORD part_type
 
     if(AttachItem( link_id, &info ) == 0)
     {
-        LG("error", "msgType: %s, link_id: %d, item_id: %d", obj->GetItemInfo()->szName,  link_id, item_link_id);
+        ToLogService("errors", LogLevel::Error, "msgType: {}, link_id: {}, item_id: {}", obj->GetItemInfo()->szName, link_id, item_link_id);
         return 0;
     }
     return 1;
@@ -1398,7 +1398,6 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id)
 
         char file[260];
 		sprintf(file, "%s.lgo", _PartFile[part_id]);
-		//sprintf(file, "%s.lgo", "0000810002");
 
         LitInfo* l = g_lit_mgr.Lit(0, 0, file);
         if(l == 0)
@@ -1522,7 +1521,7 @@ float CCharacterModel::GetPoseVelocity()
         v = GetObjImpPlayPoseInfo(1, ANIM_CTRL_TYPE_MAT)->velocity;
         break;
     default:
-        LG("error", "msgCCharacterModel::GetPoseVelocity Type Invalid");
+        ToLogService("errors", LogLevel::Error, "msgCCharacterModel::GetPoseVelocity Type Invalid");
     }
 
     return v;

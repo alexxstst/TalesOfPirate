@@ -99,7 +99,7 @@ void CGameConfig::SetDefault()   // Ĭ������
 
 void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 { 
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	
 	ifstream in(pszFileName);
 	if(in.is_open()==0)  //�Ƿ��ܴ�
@@ -127,9 +127,10 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		}
 		Util_TrimString(strLine);   //  ��ʧ�ո�����
 		if(strLine.size()==0) continue;
-		if(strLine[0]=='[') 
+		if(strLine[0]=='[')
 		{
-			Log("\n%s\n", strLine.c_str());
+			// Секция конфигурационного файла
+			ToLogService("common", "{}", strLine);
 			continue;
 		}
 		

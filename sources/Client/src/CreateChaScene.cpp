@@ -74,7 +74,7 @@ using namespace std;
 #define ARRAY_SIZE( array )	( sizeof( array ) / sizeof( ( array )[0] ) )
 
 inline bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
-	LG("gui", strInfo, strFormName, strCompentName );
+	{ char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 	return false;
 }
 
@@ -743,13 +743,13 @@ int CCreateChaScene::nSelFaceNum[MAX_CHA_NUM] = { 8, 8, 8, 8, };
 CCreateChaScene::CCreateChaScene(stSceneInitParam &param)
 : CGameScene(param), m_bInitOnce(false), m_bSameNameError(false)
 {
-	LG( "scene memory", "CCreateChaScene Create\n" );
+	ToLogService("common", "CCreateChaScene Create");
 }
 
 //~ Destructors ===============================================================
 CCreateChaScene::~CCreateChaScene()
 {
-	LG( "scene memory", "CCreateChaScene Destroy\n" );
+	ToLogService("common", "CCreateChaScene Destroy");
 }
 
 //~ ������صĺ��� ==========================================================
@@ -1003,7 +1003,7 @@ bool CCreateChaScene::_InitUI()
         frmChaFound = CFormMgr::s_Mgr.Find("frmFound", GetInitParam()->nUITemplete);
         if (!frmChaFound)
         {
-            LG( "xXx", "msgInit frmFound UI error\n" );
+            ToLogService("common", "msgInit frmFound UI error");
             return false;
         }
         CTextButton* btnLeftHair = (CTextButton*)frmChaFound->Find("btnLeftHair");
@@ -1112,7 +1112,7 @@ bool CCreateChaScene::_InitUI()
         frmChaCity = CFormMgr::s_Mgr.Find( "frmCity", GetInitParam()->nUITemplete );
         if (!frmChaFound)
         {
-            LG( "xXx", "msgInit frmCity UI error\n" );
+            ToLogService("common", "msgInit frmCity UI error");
             return false;
         }
 
@@ -1161,7 +1161,7 @@ bool CCreateChaScene::_InitUI()
         frmQuit = CFormMgr::s_Mgr.Find( "frmQuit", GetInitParam()->nUITemplete );
         if (!frmQuit)
         {
-            LG( "xXx", "msgInit frmQuit UI error\n" );
+            ToLogService("common", "msgInit frmQuit UI error");
             return false;
         }
         frmQuit->evtEntrustMouseEvent = _QuitFrmMouseEvent;
@@ -1180,7 +1180,7 @@ bool CCreateChaScene::_InitUI()
 		frmRoleInfo = CFormMgr::s_Mgr.Find("frmRoleInfo");
 		if(! frmRoleInfo)
 		{
-			LG( "xXx", "msgInit frmRoleInfo UI error\n" );
+			ToLogService("common", "msgInit frmRoleInfo UI error");
 			return false;
 		}
 		frmRoleInfo->evtEntrustMouseEvent = _evtRoleInfoFormMouseEvent;
@@ -1190,7 +1190,7 @@ bool CCreateChaScene::_InitUI()
 		frmLanchInfo = CFormMgr::s_Mgr.Find("frmLanchInfo");
 		if(! frmLanchInfo)
 		{
-			LG( "xXx", "msgInit frmLanchInfo UI error\n" );
+			ToLogService("common", "msgInit frmLanchInfo UI error");
 			return false;
 		}
 		frmLanchInfo->evtEntrustMouseEvent = _evtLanchInfoFormMouseEvent;
@@ -1198,7 +1198,7 @@ bool CCreateChaScene::_InitUI()
 		frmAimiInfo = CFormMgr::s_Mgr.Find("frmAimiInfo");
 		if(! frmAimiInfo)
 		{
-			LG( "xXx", "msgInit frmAimiInfo UI error\n" );
+			ToLogService("common", "msgInit frmAimiInfo UI error");
 			return false;
 		}
 		frmAimiInfo->evtEntrustMouseEvent = _evtAimiInfoFormMouseEvent;
@@ -1206,7 +1206,7 @@ bool CCreateChaScene::_InitUI()
 		frmFelierInfo = CFormMgr::s_Mgr.Find("frmFelierInfo");
 		if(! frmFelierInfo)
 		{
-			LG( "xXx", "msgInit frmFelierInfo UI error\n" );
+			ToLogService("common", "msgInit frmFelierInfo UI error");
 			return false;
 		}
 		frmFelierInfo->evtEntrustMouseEvent = _evtFelierInfoFormMouseEvent;
@@ -1214,7 +1214,7 @@ bool CCreateChaScene::_InitUI()
 		frmCaxiusInfo = CFormMgr::s_Mgr.Find("frmCaxiusInfo");
 		if(! frmCaxiusInfo)
 		{
-			LG( "xXx", "msgInit frmCaxiusInfo UI error\n" );
+			ToLogService("common", "msgInit frmCaxiusInfo UI error");
 			return false;
 		}
 		frmCaxiusInfo->evtEntrustMouseEvent = _evtCaxiusInfoFormMouseEvent;
@@ -1222,7 +1222,7 @@ bool CCreateChaScene::_InitUI()
 		frmRoleAllInfo = CFormMgr::s_Mgr.Find("frmRoleAllInfo");
 		if(! frmRoleAllInfo)
 		{
-			LG( "xXx", "msgInit frmRoleAllInfo UI error\n" );
+			ToLogService("common", "msgInit frmRoleAllInfo UI error");
 			return false;
 		}
 		frmRoleAllInfo->evtEntrustMouseEvent = _evtRoleAllInfoFormMouseEvent;
@@ -1231,13 +1231,13 @@ bool CCreateChaScene::_InitUI()
 		memChaDescribeUp = dynamic_cast<CMemo*>(frmRoleAllInfo->Find("memChaDescribeUp"));
 		if(! memChaDescribeUp)
 		{
-			LG( "xXx", "msgInit memChaDescribeUp UI error\n" );
+			ToLogService("common", "msgInit memChaDescribeUp UI error");
 			return false;
 		}
 		memChaDescribeDown = dynamic_cast<CMemo*>(frmRoleAllInfo->Find("memChaDescribeDown"));
 		if(! memChaDescribeDown)
 		{
-			LG( "xXx", "msgInit memChaDescribeDown UI error\n" );
+			ToLogService("common", "msgInit memChaDescribeDown UI error");
 			return false;
 		}
 
@@ -1252,7 +1252,7 @@ bool CCreateChaScene::_InitUI()
 
 			if(! imgChaView[i])
 			{
-				LG( "xXx", "msgInit %s UI error\n", szChaView );
+				ToLogService("common", "msgInit {} UI error", szChaView);
 				return false;
 			}
 		}
@@ -1537,7 +1537,7 @@ void CCreateChaScene::ChangeHair(eDirectType enumDirect)
     }	
     else
     {
-        LG( "error", g_oLangRec.GetString(47),  m_nCurHairIndex);
+        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(47), m_nCurHairIndex); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
     }
 
 }
@@ -1630,7 +1630,7 @@ void CCreateChaScene::InitChaFoundFrm()
 	}	
 	else
 	{
-		LG( "error", g_oLangRec.GetString(47),  m_nCurHairIndex);
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(47), m_nCurHairIndex); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 	}
 	bOK = m_pChaForUI[m_nSelChaIndex]->ChangePart(enumEQUIP_FACE, m_nCurFaceIndex);
 	if(bOK)
@@ -1644,7 +1644,7 @@ void CCreateChaScene::InitChaFoundFrm()
 	}				
 	else
 	{
-		LG( "error", g_oLangRec.GetString(48),  m_nCurHairIndex);
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(48), m_nCurHairIndex); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 	}
 
 }
@@ -1846,14 +1846,14 @@ void CCreateChaScene::NewChaError( int error_no, const char* error_info )
 		frmChaFound->ShowModal();
 
 		g_pGameApp->MsgBox( "%s", g_GetServerError(error_no) );
-		LG( "error", "%s Error, Code:%d, Info: %s", error_info, error_no, g_GetServerError(error_no) );
+		ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no, g_GetServerError(error_no));
 		CGameApp::Waiting( false );
 
 	}
 	else
 	{
 		g_pGameApp->MsgBox( "%s", g_GetServerError(error_no) );
-		LG( "error", "%s Error, Code:%d, Info: %s", error_info, error_no, g_GetServerError(error_no) );
+		ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no, g_GetServerError(error_no));
 		CGameApp::Waiting( false );
 
 		if (!m_bSameNameError)

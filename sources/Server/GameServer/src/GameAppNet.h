@@ -16,7 +16,8 @@
 #define NETMSG_GATE_DISCONNECT  101
 #define NETMSG_PACKET           200
 
-#define EXCEPTION()	LG("EXCEPTION", "Exception��File %s��Line %d��\n", __FILE__, __LINE__)
+// Макрос логирования исключений — пишет файл и строку в канал ошибок
+#define EXCEPTION()	ToLogService("errors", LogLevel::Error, "Exception: File {}, Line {}", __FILE__, __LINE__)
 
 inline const char* g_GameGateConnError( int error_code )
 {

@@ -64,7 +64,7 @@ bool UIMainInit( CFormMgr* pSender )
 {
     if( !CHeadSay::Init() )
     {
-        LG( "gui", "CHeadSay::Init failed" );
+        ToLogService("common", "CHeadSay::Init failed");
         return false;
     }
 
@@ -75,7 +75,7 @@ bool UIClear()
 {
     if( !CHeadSay::Clear() )
     {
-        LG( "gui", "CHeadSay::Clear failed" );
+        ToLogService("common", "CHeadSay::Clear failed");
         return false;
     }
 
@@ -150,7 +150,7 @@ bool CUIInterface::All_Init()
 		if( !pUI->Init() )
 		{
 			const type_info& info = typeid(**it);
-			LG( "gui", "msg[%s] Init failed", info.name() );
+			ToLogService("common", "msg[{}] Init failed", info.name());
 			return false;
 		}
 	}
@@ -204,7 +204,7 @@ void CUIInterface::MainChaMove()
 CForm* CUIInterface::_FindForm(const char * frmName)
 {
 	CForm*	form = CFormMgr::s_Mgr.Find( frmName );
-	if( !form )	LG("gui", g_oLangRec.GetString(464), frmName );
+	if( !form )	{ char _buf[256]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(464), frmName); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
 	return form;
 }
 
@@ -465,6 +465,6 @@ bool CUIInterface::Error(const char* strInfo, const char* strFormName, const cha
 	if( strFormat.substr( 0, 3 )!="msg" )
 		strFormat = "msg" + strFormat;
 	
-	LG("gui", strFormat.c_str(), strFormName, strCompentName );
+	{ char _buf[512]; snprintf(_buf, sizeof(_buf), strFormat.c_str(), strFormName, strCompentName); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 	return false;
 }

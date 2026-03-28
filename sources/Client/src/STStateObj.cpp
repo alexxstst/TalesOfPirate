@@ -33,9 +33,9 @@ void CActionState::Cancel()
 		sprintf( buf, "state-%s", GetActor()->GetCha()->getName().c_str() );
 
 		if( _pParent )
-			LG( buf, "  \t%s-cancel, Tick:%d\n", GetExplain(), GetTickCount() );
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("  \t{}-cancel, Tick:{}", GetExplain(), GetTickCount()));
 		else
-			LG( buf, "  %s-cancel, Tick:%d\n", GetExplain(), GetTickCount() );
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("  {}-cancel, Tick:{}", GetExplain(), GetTickCount()));
 	}
 #endif
 }
@@ -57,9 +57,9 @@ void CActionState::End()
 		sprintf( buf, "state-%s", GetActor()->GetCha()->getName().c_str() );
 
 		if( _pParent )
-			LG( buf, "\t%s-end, Tick:%d\n", GetExplain(), GetTickCount() );
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}-end, Tick:{}", GetExplain(), GetTickCount()));
 		else
-			LG( buf, "%s-end, Tick:%d\n\n", GetExplain(), GetTickCount() );
+			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("{}-end, Tick:{}\n", GetExplain(), GetTickCount()));
 	}
 #endif
 }
@@ -82,9 +82,9 @@ void CActionState::Start()
     {
         sprintf( buf, "state-%s", GetActor()->GetCha()->getName().c_str() );
         if( _pParent )
-            LG( buf, "\t%s-start, Tick:%d\n", GetExplain(), GetTickCount() );
+            g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}-start, Tick:{}", GetExplain(), GetTickCount()));
         else
-            LG( buf, "%s-start, Tick:%d\n", GetExplain(), GetTickCount() );
+            g_logManager.InternalLog(LogLevel::Debug, "common", std::format("{}-start, Tick:{}", GetExplain(), GetTickCount()));
     }
 #endif
 
@@ -97,9 +97,9 @@ void CActionState::Start()
 		if( isMain )	
 		{
 			if( _pParent )
-				LG( buf, "\t%s-Not Start, Tick:%d\n", GetExplain(), GetTickCount() );
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}-Not Start, Tick:{}", GetExplain(), GetTickCount()));
 			else 
-				LG( buf, "%s-Not Start, Tick:%d\n", GetExplain(), GetTickCount() );
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("{}-Not Start, Tick:{}", GetExplain(), GetTickCount()));
 			return;
 		}
 	}

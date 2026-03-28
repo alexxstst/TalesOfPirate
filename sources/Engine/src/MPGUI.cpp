@@ -84,7 +84,7 @@ int CGuiMgr::HandleMsg(unsigned long dwMsgType, DWORD dwParam1, DWORD dwParam2)
         {
 			int nMouseX = dwParam1;
 			int nMouseY = dwParam2;
-			if(_bEditor && _pFocusObj) // && ◊Ûº¸∞¥œ¬
+			if(_bEditor && _pFocusObj) // && ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ
             {
 				_pFocusObj->SetPos(_pFocusObj->GetX() + nMouseX - _nLastMouseX, _pFocusObj->GetY() + nMouseY - _nLastMouseY);
             }
@@ -218,24 +218,24 @@ int CGuiMgr::_MouseMove(int nMouseX, int nMouseY)
 
 void CGuiMgr::DebugOut()
 {
-    LG("gui", "All Gui Object List : \n");
+    ToLogService("common", "All Gui Object List : ");
     list<CGuiObj*>::iterator it;
     int n = 0;
     for(it = _GuiObjList.begin() ; it!=_GuiObjList.end() ; it++)
     {
         CGuiObj *pObj = (*it);
-        LG("gui", "Obj[%d], ID = %d (%d, %d) Show = %d", n,  pObj->GetID(), pObj->GetX(), pObj->GetY(), pObj->IsVisible());
+        ToLogService("common", "Obj[{}], ID = {} ({}, {}) Show = {}", n,  pObj->GetID(), pObj->GetX(), pObj->GetY(), pObj->IsVisible());
         if(pObj->GetParent())
         {
-            LG("gui", " , Parent ID = %d\n" , pObj->GetParent()->GetID());
+            ToLogService("common", " , Parent ID = {}", pObj->GetParent()->GetID());
         }
         else
         {
-            LG("gui", "\n");
+            ToLogService("common", "");
         }
         n++;
     }
-    LG("gui", "Gui Object List End\n");
+    ToLogService("common", "Gui Object List End");
 }
 
 
@@ -253,7 +253,8 @@ void CGuiMgr::_Add(CGuiObj* pGuiObj)
             }
             else
             {
-                Log("ERR , GuiObj ID = <%d> , No Parent Found!\n" , pGuiObj->GetID());
+                // –†–æ–¥–∏—Ç–µ–ª—å—Å–∫–∏–π GUI-–æ–±—ä–µ–∫—Ç –Ω–µ –Ω–∞–π–¥–µ–Ω
+                g_logManager.InternalLog(LogLevel::Error, "common", std::format("ERR, GuiObj ID = <{}>, No Parent Found!", pGuiObj->GetID()));
             }
         }
         else
@@ -268,7 +269,8 @@ void CGuiMgr::_Remove(CGuiObj *pGuiObj)
     if(pGuiObj!=NULL)
     {
         _GuiObjList.remove(pGuiObj);
-        Log("Remove Obj [%d]\n", pGuiObj->GetID());
+        // –£–¥–∞–ª–µ–Ω–∏–µ GUI-–æ–±—ä–µ–∫—Ç–∞
+        g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Remove Obj [{}]", pGuiObj->GetID()));
     }
 }
 
@@ -357,7 +359,7 @@ BOOL CGuiMgr::LoadFromResource(const char *pszFile)
 
 void CGuiMgr::SendMessage(int nMsgType, int nGuiObjID, DWORD dwParam1, DWORD dwParam2)
 {
-	// ƒ⁄≤ø––Œ™¥¶¿Ì
+	// ÔøΩ⁄≤ÔøΩÔøΩÔøΩŒ™ÔøΩÔøΩÔøΩÔøΩ
 	if(nMsgType==MSG_GUI_BUTTON_CHECK && dwParam1==1) 
 	{
 		CGuiButton *pButton = (CGuiButton*)GetGuiObj(nGuiObjID);
@@ -476,7 +478,7 @@ void CGuiObj::Show(BOOL bShow)
 }
 
 //--------------
-//  …Ë÷√’⁄µ≤≤„¥Œ
+//  ÔøΩÔøΩÔøΩÔøΩÔøΩ⁄µÔøΩÔøΩÔøΩÔøΩ
 //--------------
 void CGuiObj::SetLayer(int nLayer)
 {
@@ -517,7 +519,7 @@ CGuiObj::~CGuiObj()
         for(unsigned int i = 0; i < ObjList.size(); i++)
         {
             CGuiObj *pObj = ObjList[i];
-            delete pObj; // ¿Ô√Êª·¥•∑¢'Ω‚≥˝Parentπÿœµ'
+            delete pObj; // ÔøΩÔøΩÔøΩÔøΩ·¥•ÔøΩÔøΩ'ÔøΩÔøΩÔøΩParentÔøΩÔøΩœµ'
         }
         ObjList.clear();
         _ChildList.clear();

@@ -19,12 +19,12 @@ long ToInfoServer::Process()
 {
 	if(m_gmsvr->m_IfServer.GetPort() == 0)
 	{
-		LG("Store_data", "not configure InfoServer!\n");
+		ToLogService("store", "not configure InfoServer!");
 		return 0;
 	}
 
 	m_gmsvr->m_IfServer.InValid();
-	LG("Store_data", "Connect InfoServer(%s, %d)...\n", m_gmsvr->m_IfServer.GetIP().c_str(), m_gmsvr->m_IfServer.GetPort());
+	ToLogService("store", "Connect InfoServer({}, {})...", m_gmsvr->m_IfServer.GetIP().c_str(), m_gmsvr->m_IfServer.GetPort());
 	g_gmsvr->ConnectInfo(&m_gmsvr->m_IfServer);
 
 	DWORD	dwCurTick;
@@ -47,19 +47,19 @@ long ToInfoServer::Process()
 		{
 			if(!m_gmsvr->m_IfServer.IsValid() && m_gmsvr->m_IfServer.IsConnect())
 			{
-				LG("Store_data", "Login InfoServer...\n");
+				ToLogService("store", "Login InfoServer...");
 				m_gmsvr->m_IfServer.Login();
 			}
 		}
 		catch(...)
 		{
-			LG("Store_data", "Process Error!\n");
+			ToLogService("store", "Process Error!");
 		}
 
 		dwLastRunTick = dwCurTick;
 	}
 
-	LG("Store_data", "ToInfoServer Process Out!\n");
+	ToLogService("store", "ToInfoServer Process Out!");
 
 	return 0;
 }
@@ -71,7 +71,7 @@ void InfoServer::Login()
 	cChar *szPassword = (cChar *)GetPassword();
 	if(strlen(szPassword) > 32)
 	{
-		LG("Store_data", "Login password too long!\n");
+		ToLogService("store", "Login password too long!");
 		return;
 	}
 	strcpy(szPwd, szPassword);
@@ -102,19 +102,19 @@ void InfoServer::OnConnect(bool result)
 {
 	if(result)
 	{
-		LG("Store_data", "InfoServer Connected!\n");
+		ToLogService("store", "InfoServer Connected!");
 		g_gmsvr->ProcessData(NULL, CMD_FM_CONNECTED);
 	}
 	else
 	{
-		LG("Store_data", "InfoServer Connect Failed!\n");
+		ToLogService("store", "InfoServer Connect Failed!");
 	}
 }
 
 void InfoServer::OnDisconnect()
 {
     InValid();
-	LG("Store_data", "InfoServer Disconnected!\n");
+	ToLogService("store", "InfoServer Disconnected!");
     g_gmsvr->ProcessData(NULL, CMD_FM_DISCONNECTED);
 }
 
@@ -142,7 +142,7 @@ void GateHandler::OnDisconnected(int reason)
 GameServerApp::GameServerApp()
     : m_count(0)
 {
-	LG("init", "start init ServerApp\n");
+	ToLogService("common", "start init ServerApp");
 
 	srand( (unsigned)time( NULL ) );
 
@@ -165,7 +165,7 @@ GameServerApp::GameServerApp()
     // Запуск фонового потока переподключения
     m_connectThread = std::thread(&GameServerApp::ConnectGateLoop, this);
 
-	LG("init", "ServerApp init over\n");
+	ToLogService("common", "ServerApp init over");
 }
 
 GameServerApp::~GameServerApp()
@@ -173,7 +173,7 @@ GameServerApp::~GameServerApp()
 	if(m_IfServer.IsConnect())
 	{
 		DisconnectInfo(&m_IfServer);
-		LG("Store_data", "Disconnect InfoServer!\n");
+		ToLogService("store", "Disconnect InfoServer!");
 	}
 
     // Остановка потока переподключения
@@ -205,7 +205,7 @@ void GameServerApp::ConnectGateLoop()
 
             if (!m_gtarray[i].IsValid() && !m_gateClients[i].IsConnected())
             {
-                LG("Connect", "connecting to GateServer %s:%d...\n",
+                ToLogService("network", "connecting to GateServer {}:{}...",
                     m_gtarray[i].GetIP().c_str(), m_gtarray[i].GetPort());
 
                 if (m_gateClients[i].Connect(m_gtarray[i].GetIP().c_str(), m_gtarray[i].GetPort()))
@@ -213,12 +213,12 @@ void GameServerApp::ConnectGateLoop()
                     m_gtarray[i].SetClient(&m_gateClients[i]);
                     // Уведомляем game thread о новом подключении
                     m_pendingConnect.store(i);
-                    LG("Connect", "GateServer connected: %s:%d\n",
+                    ToLogService("network", "GateServer connected: {}:{}",
                         m_gtarray[i].GetIP().c_str(), m_gtarray[i].GetPort());
                 }
                 else
                 {
-                    LG("Connect", "connect to GateServer failed, ip = %s, port = %d.\n",
+                    ToLogService("network", "connect to GateServer failed, ip = {}, port = {}.",
                         m_gtarray[i].GetIP().c_str(), m_gtarray[i].GetPort());
                 }
             }
@@ -333,7 +333,7 @@ void GameServerApp::ProcessData(GateServer* gt, net::RPacket& pk)
     switch (cmd)
     {
         case CMD_MM_GATE_CONNECT:
-		    LG("Connect", "ProcessData Gate_Connect\n");
+		    ToLogService("network", "ProcessData Gate_Connect");
             msg_id = NETMSG_GATE_CONNECTED;
             break;
 
@@ -511,7 +511,7 @@ bool GameServerApp::AddPlayer(GatePlayer* gtplayer, GateServer* gt, unsigned lon
     if (!gt->IsValid()) return false;
 	if (gtplayer->Next || gtplayer->Prev)
 	{
-		LG("character list error ", "when insert character, dbid %u, find it connect pointer is not empty!\n", gtplayer->GetDBChaId());
+		ToLogService("common", "when insert character, dbid {}, find it connect pointer is not empty!", gtplayer->GetDBChaId());
 		return false;
 	}
 
@@ -692,7 +692,7 @@ bool GameServerApp::SendToClient(net::WPacket& pkt, GatePlayer* playerlist)
         if (tmp->GetGate() == NULL)
         {
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
+            ToLogService("common", "WARNING! pGate = NULL, atorID={}, gt_addr=0x{:x}",
                 tmp->GetDBChaId(), tmp->GetGateAddr());
 #endif
         }
@@ -750,7 +750,7 @@ bool GameServerApp::SendToClient(net::WPacket& pkt, int array_cnt, uplayer* upla
         if (uplayer_array[i].pGate == NULL)
         {
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
+            ToLogService("common", "WARNING! pGate = NULL, atorID={}, gt_addr=0x{:x}",
                 uplayer_array[i].m_dwDBChaId, uplayer_array[i].m_ulGateAddr);
 #endif
             continue;

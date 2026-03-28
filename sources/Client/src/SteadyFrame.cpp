@@ -17,7 +17,7 @@ bool CSteadyFrame::Init()
 
 	if( hThread != NULL )
 	{
-		LG( "threadid", "%d:%s\n", dwThread, "_SleepThreadProc" );
+		ToLogService("common", "{}:{}", dwThread, "_SleepThreadProc");
 		return true;
 	}
 	return false;
@@ -35,14 +35,14 @@ void CSteadyFrame::Exit()
 			{
 				if(TerminateThread(hThread, 0))
 				{
-					LG( "threadid", "_SleepThreadProc end\n");
+					ToLogService("common", "_SleepThreadProc end");
 					::CloseHandle(hThread);
 				}
 			}
 			else
 			{
 				DWORD error = ::GetLastError();
-				LG( "threadid", "_SleepThreadProc error %d\n", error);
+				ToLogService("common", "_SleepThreadProc error {}", error);
 			}
 		}
 	}

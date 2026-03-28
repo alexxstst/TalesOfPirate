@@ -51,7 +51,7 @@ DWORD WINAPI myiocpclt::conn_thrd(LPVOID conn_thrd_ctx)
                 {
                    // LG("iocp_conn", "���� Gate %s:%d ʧ�ܣ�\n", that->gtarray[i].GetIP().c_str(),
                      //   that->gtarray[i].GetPort());
-					 LG("iocp_conn", "connect Gate %s:%d failed��\n", that->gtarray[i].GetIP().c_str(),
+					 ToLogService("common", "connect Gate {}:{} failed��", that->gtarray[i].GetIP().c_str(),
 						 that->gtarray[i].GetPort());
                 }
                 else
@@ -66,7 +66,7 @@ DWORD WINAPI myiocpclt::conn_thrd(LPVOID conn_thrd_ctx)
         Sleep(1000);
     }
 
-    LG("iocp_conn", "conn_thrd thread exit\n");
+    ToLogService("common", "conn_thrd thread exit");
     return 0;
 }
 
@@ -133,8 +133,6 @@ int myiocpclt::on_disconn(PER_SOCKET_CONTEXT* sk_ctx)
 
 int myiocpclt::on_recvdat(PER_SOCKET_CONTEXT* sk_ctx, DWORD size)
     {
-    //cfl_printf("Receive %dB from %s:%d\n", size, sk_ctx->remote_ip.c_str(), sk_ctx->remote_port);
-
     char* buf = sk_ctx->io_ctx->buffer;
     int& sent_bytes = sk_ctx->io_ctx->sent_bytes; // data last received
     short len = (short)size;
@@ -156,7 +154,6 @@ int myiocpclt::on_recvdat(PER_SOCKET_CONTEXT* sk_ctx, DWORD size)
             remain_len = pkt_size - len;
             break;}
 
-        //cfl_printf("packet size = %d\n", pkt_size);
 
         // receive a packet
         pkt = (Packet *)rpktpool.get();
@@ -175,8 +172,6 @@ int myiocpclt::on_recvdat(PER_SOCKET_CONTEXT* sk_ctx, DWORD size)
 
     if (len > 0)
         {
-        //cfl_printf("Remain length = %d, enter recv state again!\n", remain_len);
-        
         // need to move data to the start position
         //  will be optimized in the future
         char* buf2 = sk_ctx->io_ctx->buffer;
@@ -188,7 +183,6 @@ int myiocpclt::on_recvdat(PER_SOCKET_CONTEXT* sk_ctx, DWORD size)
         sent_bytes = len;
         _recv(sk_ctx, len);}
     else {
-        //cfl_printf("Enter recv state normally!\n");
         sent_bytes = 0;
         _recv(sk_ctx);}
 
@@ -196,7 +190,6 @@ int myiocpclt::on_recvdat(PER_SOCKET_CONTEXT* sk_ctx, DWORD size)
 
 int myiocpclt::on_sendfsh(PER_SOCKET_CONTEXT* sk_ctx, DWORD size)
     {
-    //cfl_printf("Send %dB to %s:%d\n", size, sk_ctx->remote_ip.c_str(), sk_ctx->remote_port);
 
     return 0;}
 
@@ -395,7 +388,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, GatePlayer* playerlist)
         if (tmp->GetGate() == NULL)
         {      
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
+            ToLogService("common", "WARNING! pGate = NULL, atorID={}, gt_addr=0x{:x}",
                 tmp->GetDBChaId(), tmp->GetGateAddr());
 #endif
         }
@@ -479,7 +472,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
         if (uplayer_array[i].pGate == NULL)
         {
 #ifdef defCOMMU_LOG
-            LG("SendToClient", "WARNING! pGate = NULL, atorID=%d, gt_addr=0x%x\n",
+            ToLogService("common", "WARNING! pGate = NULL, atorID={}, gt_addr=0x{:x}",
                 uplayer_array[i].m_dwDBChaId, uplayer_array[i].m_ulGateAddr);
 #endif
             continue;

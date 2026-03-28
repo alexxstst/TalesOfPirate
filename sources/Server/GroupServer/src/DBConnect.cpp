@@ -11,23 +11,20 @@ using namespace std;
 
 SQLRETURN Exec_sql_direct(const char *pszSQL, cfl_rs *pTable)
 {
-	//LG("group_sql", "��[%s], ��ʼִ��SQL���[%s]\n", pTable->get_table(), pszSQL);
-	LG("group_sql", "Table [%s], begin execute SQL [%s]\n", pTable->get_table(), pszSQL);
+	// Выполнение SQL-запроса
+	ToLogService("db", "Table [{}], begin execute SQL [{}]", pTable->get_table(), pszSQL);
 	SQLRETURN r = pTable->exec_sql_direct(pszSQL);
 	if(DBOK(r))
 	{
-		//LG("group_sql", "�ɹ�ִ��SQL!\n");
-		LG("group_sql", "execute SQL success!");
+		ToLogService("db", "execute SQL success!");
 	}
 	else if(DBNODATA(r))
 	{
-		//LG("group_sql", "ִ��SQL, ���޽������\n");
-		LG("group_sql", "execute SQL, no result \n");
+		ToLogService("db", "execute SQL, no result");
 	}
 	else
 	{
-		//LG("group_sql", "ִ��SQL, ����!\n");
-		LG("group_sql", "execute SQL, failed!\n");
+		ToLogService("db", LogLevel::Error, "execute SQL, failed!");
 	}
 	return r;
 }
@@ -256,7 +253,6 @@ bool TBLCharacters::ZeroAddr()
 //		// account_save ���� id �ֶ�������
 //		int nMinID = i * 10000;
 //		int nMaxID = (i + 1) * 10000;
-//		sprintf(sql, "update %s set mem_addr = 0 where cha_id > %d and cha_id < %d and mem_addr != 0",_get_table(), nMinID, nMaxID );
 //		SQLRETURN l_ret =Exec_sql_direct(sql, this, 60);
 //		if( !DBOK(l_ret) )
 //		{
@@ -410,7 +406,7 @@ int TBLCharacters::FetchChaIDByCharName(cChar* atorNome)
 	}
 	catch (...)
 	{
-		LG("group_sql", "TBLCharacters::FetchChaIDByCharName execute SQL, failed!,atorID =%s\n", atorNome);
+		ToLogService("db", LogLevel::Error, "TBLCharacters::FetchChaIDByCharName execute SQL, failed!,atorID ={}", atorNome);
 	}
 	return 0;
 }
@@ -431,7 +427,7 @@ int TBLCharacters::FetchActIDByCharName(cChar* atorNome)
 	}
 	catch (...)
 	{
-		LG("group_sql", "TBLCharacters::FetchActIDByCharName execute SQL, failed!,atorID =%s\n", atorNome);
+		ToLogService("db", LogLevel::Error, "TBLCharacters::FetchActIDByCharName execute SQL, failed!,atorID ={}", atorNome);
 	}
 	return 0;
 }
@@ -462,7 +458,7 @@ int TBLCharacters::FetchRowByChaID(int atorID)
 	}catch(...)
 	{
 		//LG("group_sql", "TBLCharacters::FetchRowByChaIDִ��SQL, �����쳣!,atorID =%d\n", atorID);
-		LG("group_sql", "TBLCharacters::FetchRowByChaID execute SQL, failed!,atorID =%d\n", atorID);
+		ToLogService("db", LogLevel::Error, "TBLCharacters::FetchRowByChaID execute SQL, failed!,atorID ={}", atorID);
 	}
 	_tbl_name	=l_tblname;
 	if(l_bret)
@@ -508,7 +504,7 @@ bool TBLCharacters::BackupRow(int atorID)
 				if( !DBOK(l_sqlret) )
 				{
 					//LG( "����ϵͳ", "1>Reject:ɾ����ɫ�����Ǹ��¼��ٹ����Ա�˼�������ʧ�ܣ����ݿ�sql����.ret = ", l_sqlret );
-					LG( "GuildSystem", "1>Reject:delete cha��update guild count failed! database sql failed .ret = ", l_sqlret );
+					ToLogService("db", LogLevel::Error, "1>Reject:delete cha, update guild count failed! database sql failed .ret = {}", (int)l_sqlret);
 					return false;
 				}
 				else
@@ -516,7 +512,7 @@ bool TBLCharacters::BackupRow(int atorID)
 					if(get_affected_rows() !=1)
 					{
 						//LG( "����ϵͳ", "2>Reject:ɾ����ɫ�����Ǹ��¼��ٹ����Ա�˼�������ʧ�ܣ����ݿ�sql����.ret = ", l_sqlret );
-					LG( "GuildSystem", "2>Reject:delete cha��update guild count failed! database sql failed .ret = ", l_sqlret );
+					ToLogService("db", LogLevel::Error, "2>Reject:delete cha, update guild count failed! database sql failed .ret = {}", (int)l_sqlret);
 						return false;
 
 					}
@@ -533,7 +529,7 @@ bool TBLCharacters::BackupRow(int atorID)
 				if( !DBOK(l_sqlret) )
 				{
 					//LG( "����ϵͳ", "1>BackupRow:ɾ����ɫ�����Ǹ��¼��ٹ��������˼�������ʧ�ܣ����ݿ�sql����.ret = ", l_sqlret );
-					LG( "GuildSystem", "1>BackupRow:delete cha��update guild count failed! database sql failed .ret = ", l_sqlret );
+					ToLogService("db", LogLevel::Error, "1>BackupRow:delete cha, update guild count failed! database sql failed .ret = {}", (int)l_sqlret);
 					return false;
 				}
 				else
@@ -541,7 +537,7 @@ bool TBLCharacters::BackupRow(int atorID)
 					if(get_affected_rows() !=1)
 					{
 						//LG( "����ϵͳ", "2>BackupRow:ɾ����ɫ�����Ǹ��¼��ٹ��������˼�������ʧ�ܣ����ݿ�sql����.ret = ", l_sqlret );
-						LG( "GuildSystem", "2>BackupRow:delete cha��update guild count failed! database sql failed .ret = ", l_sqlret );
+						ToLogService("db", LogLevel::Error, "2>BackupRow:delete cha, update guild count failed! database sql failed .ret = {}", (int)l_sqlret);
 						return false;
 					}
 					else
@@ -554,12 +550,11 @@ bool TBLCharacters::BackupRow(int atorID)
 	}else
 	{
 		//LG( "����ϵͳ", "BackupRow:ɾ����ɫ����ȡ��ɫ������Ϣʧ�ܣ����ݿ�sql����.atorID = ", atorID );
-		LG( "GuildSystem", "BackupRow:delete cha��get guild info failed! database sql failed.atorID = ", atorID );
+		ToLogService("db", LogLevel::Error, "BackupRow:delete cha, get guild info failed! database sql failed.atorID = {}", atorID);
 		return false;
 	}
 
 
-	//sprintf(sql, "delete from %s where atorID=%d",_get_table(), atorID);
 	sprintf(sql, "update %s set delflag =1,deldate =getdate() where atorID=%d",_get_table(), atorID);   //  ɾ��ʱ�����
 	SQLRETURN l_ret =Exec_sql_direct(sql, this);
 	return (DBOK(l_ret))?true:false;
@@ -1551,7 +1546,8 @@ bool TBLParam::SaveParam(void)
 	sqlret = _db->exec_sql_direct(buff);
 	if(sqlret != SQL_SUCCESS)
 	{
-		LG("ParamErr","Save Param Error SQL = %s",buff);
+		// Ошибка сохранения параметров
+		ToLogService("network", LogLevel::Error, "Save Param Error SQL = {}", buff);
 	}
 	return true;
 }

@@ -35,7 +35,7 @@ _Instance = this;
 
 protected:
 
-	static CMusicSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CMusicSet* _Instance; // ï¿½àµ±ï¿½Úµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½×¡
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -70,7 +70,7 @@ BT_		delete[] (CMusicInfo*)_RawDataArray;
 
         pInfo->nType = Str2Int(ParamList[0]);
 		
-        LG("music", "Read Music List [%d][%s]\n", pInfo->nID, pInfo->szDataName);
+        ToLogService("common", "Read Music List [{}][{}]", pInfo->nID, pInfo->szDataName);
             
         return TRUE;
     }

@@ -7,12 +7,12 @@
 
 
 //
-// 1.0 °æ±¾µÄÒôÀÖ²¥·Å·½°¸ by claude Fan at 2004-08-22
+// 1.0 ï¿½æ±¾ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Å·ï¿½ï¿½ï¿½ by claude Fan at 2004-08-22
 //
 
 
 //
-// 2.0 °æ±¾µÄÒôÀÖ²¥·Å·½°¸ by claude Fan at 2004-10-20
+// 2.0 ï¿½æ±¾ï¿½ï¿½ï¿½ï¿½ï¿½Ö²ï¿½ï¿½Å·ï¿½ï¿½ï¿½ by claude Fan at 2004-10-20
 //
 
 const int ERROR_TIME = 10000;
@@ -198,18 +198,19 @@ inline bool is_playing(int id) {return !is_free(id);}
 inline void dump_mus_dat(int id)
     {
     mus_dat* pdat = &mus_dat_array[id];
-    LG("mus_err", "thread#%d [%s], cmd=%d, group=%d, channel=%d, fname=%s, vol=%d, \
-loop=%d, mem_cache=%d, mix=%d\n, wave=%p, music=%p, wave_cache_id=%d, status=%s\n",
+    ToLogService("common", LogLevel::Error, "thread#{} [{}], cmd={}, group={}, channel={}, fname={}, vol={}, loop={}, mem_cache={}, mix={}, wave={}, music={}, wave_cache_id={}, status={}",
             id, (pdat->used) ? "used" : "not use", pdat->cmd, pdat->group,
             pdat->channel, pdat->fname, pdat->vol, pdat->loop,
-            pdat->mem_cache, pdat->mix, pdat->wave, pdat->music,
+            pdat->mem_cache, pdat->mix, (void*)pdat->wave, (void*)pdat->music,
             pdat->wave_cache_id,
-            (pdat->status == mus_dat::PMT_PLAYING) ? "playing" : "free");}
+            (pdat->status == mus_dat::PMT_PLAYING) ? "playing" : "free");
+    }
 
 inline void dump_mus_dat()
     {
     for (int i = MUS_ID_START; i <= MUS_ID_END; ++ i) dump_mus_dat(i);
-    LG("mus_err", "\n");}
+    ToLogService("common", LogLevel::Error, "");
+    }
 
 bool play_env_snd(int id)
     {
@@ -222,14 +223,10 @@ bool play_env_snd(int id)
     wave = Mix_LoadWAV(pdat->fname);
     if (wave == NULL)
         {
-        LG("mus_err", "thread#%d failed Mix_LoadWAV: %s: fname length=%d, %s\n",
+        ToLogService("common", LogLevel::Error, "thread#{} failed Mix_LoadWAV: {}: fname length={}, {}",
             id, pdat->fname, strlen(pdat->fname), SDL_GetError());
         pdat->status = mus_dat::PMT_FREE;
         pdat->used = false; return false;}
-
-        /*
-    LG("mus", "thread#%d allocated=%d, abuf=%p, alen=%d, volume=%d\n",
-        id, wave->allocated, wave->abuf, wave->alen,wave->volume);*/
 
     // set volume of channel and save
     Mix_Volume(pdat->channel, pdat->vol);
@@ -237,13 +234,13 @@ bool play_env_snd(int id)
     int channel = Mix_PlayChannel(pdat->channel, wave, loops);
     if (channel == -1)
         { // some error occured
-        LG("mus_err", "thread#%d play channel error, dump...\n", id);
+        ToLogService("common", LogLevel::Error, "thread#{} play channel error, dump...", id);
         dump_mus_dat(id); Mix_FreeChunk(wave);
         pdat->status = mus_dat::PMT_FREE;
         pdat->used = false;
         return false;}
     else {
-        LG("mus", "thread#%d pdat->channel=%d, play channel=%d\n",
+        ToLogService("common", "thread#{} pdat->channel={}, play channel={}",
                 id, pdat->channel, channel);
         if (pdat->loop) // continue blocking the following play request
             {
@@ -251,7 +248,7 @@ bool play_env_snd(int id)
             pdat->wave = wave;}
         else {
             // wait it for playing end
-            LG("mus", "thread#%d wait %s for playing end\n",
+            ToLogService("common", "thread#{} wait {} for playing end",
                     id, pdat->fname);
 
             DWORD ret; // tell whether to exit loop when playing
@@ -261,7 +258,7 @@ bool play_env_snd(int id)
                 ret = WaitForSingleObject(pdat->sig_exit, 1);
                 if (ret == WAIT_OBJECT_0)
                     {
-                    LG("mus", "thread#%d recv sig_exit when playing\n", id);
+                    ToLogService("common", "thread#{} recv sig_exit when playing", id);
                     break;}
                 }
 
@@ -283,15 +280,11 @@ bool play_cmn_snd(int id)
                           pwcd->buf_len), 0);
     if (wave == NULL)
         {
-        LG("mus_err", "thread#%d Couldn't load %s: %s\n", id,
+        ToLogService("common", LogLevel::Error, "thread#{} Couldn't load {}: {}", id,
                 pdat->fname, SDL_GetError());
         pdat->status = mus_dat::PMT_FREE;
         pdat->used = false;
         return false;}
-
-        /*
-    LG("mus", "thread#%d allocated=%d, abuf=%p, alen=%d, volume=%d\n",
-            id, wave->allocated, wave->abuf, wave->alen,wave->volume);*/
 
     // set volume of channel and save
     Mix_Volume(pdat->channel, pdat->vol);
@@ -300,23 +293,20 @@ bool play_cmn_snd(int id)
     if (channel == -1)
         {
         // some error occured
-        LG("mus_err", "thread#%d play channel error, dump...\n", id);
+        ToLogService("common", LogLevel::Error, "thread#{} play channel error, dump...", id);
         dump_mus_dat(id);
         Mix_FreeChunk(wave);
         pdat->status = mus_dat::PMT_FREE;
         pdat->used = false;
         return false;}
     else {
-        /*
-        LG("mus", "thread#%d pdat->channel=%d, play channel=%d\n",
-            id, pdat->channel, channel);*/
         if (pdat->loop) // continue blocking the following play request
             {
             pdat->channel = channel;
             pdat->wave = wave;}
         else {
             // wait it for playing end
-            LG("mus", "thread#%d wait %s for playing end\n",
+            ToLogService("common", "thread#{} wait {} for playing end",
                     id, pdat->fname);
 
             DWORD ret; // tell whether to exit loop when playing
@@ -326,7 +316,7 @@ bool play_cmn_snd(int id)
                 ret = WaitForSingleObject(pdat->sig_exit, 1);
                 if (ret == WAIT_OBJECT_0)
                     {
-                    LG("mus", "thread#%d recv sig_exit when playing\n", id);
+                    ToLogService("common", "thread#{} recv sig_exit when playing", id);
                     break;}
                 }
 
@@ -345,7 +335,7 @@ void bkg_snd_finished_callback()
     if ((mus_hwnd != NULL) && (mus_msg_id != 0))
         PostMessage(mus_hwnd, mus_msg_id, 0, 0);
 
-    LG("mus", "background music finished\n");
+    ToLogService("common", "background music finished");
     }
 
 bool play_bkg_snd(int id)
@@ -367,19 +357,19 @@ bool play_bkg_snd(int id)
     music = Mix_LoadMUS(pdat->fname);
     if (music == NULL)
         {
-        LG("mus_err", "thread#%d Couldn't load %s: %s\n", id, pdat->fname,
+        ToLogService("common", LogLevel::Error, "thread#{} Couldn't load {}: {}", id, pdat->fname,
            SDL_GetError());
         pdat->status = mus_dat::PMT_FREE;
         pdat->used = false;
         pdat->errcode = mus_dat::OP_FILE_NOT_FOUND;
         return false;}
 
-    LG("mus", "thread#1 playing background music [%s]\n", pdat->fname);
+    ToLogService("common", "thread#1 playing background music [{}]", pdat->fname);
     Mix_HookMusicFinished(bkg_snd_finished_callback);
     if (Mix_PlayMusic(music, loops) == -1)
         {
         // some error occured
-        LG("mus_err", "thread#%d play [%s] error, dump...\n", id);
+        ToLogService("common", LogLevel::Error, "thread#{} play [{}] error, dump...", id, pdat->fname);
         dump_mus_dat(id); Mix_FreeMusic(music);
         pdat->status = mus_dat::PMT_FREE;
         pdat->used = false;
@@ -406,7 +396,7 @@ bool stop_env_snd(int id)
 
     pdat->status = mus_dat::PMT_FREE;
     pdat->used = false;
-    LG("mus", "thread#%d has been stopped by caller [%d]\n", id, GetTickCount());
+    ToLogService("common", "thread#{} has been stopped by caller [{}]", id, GetTickCount());
     return true;}
 
 bool stop_cmn_snd(int id) {return true;} // you can't stop a common sound
@@ -458,7 +448,7 @@ void dispatch_cmd(int id)
                 else if (is_cmn_snd(id)) play_cmn_snd(id);
                 else if (is_bkg_snd(id)) play_bkg_snd(id);
                 else {
-                    LG("mus_err", "thread#%d unknown cmd_play, dump...\n", id);
+                    ToLogService("common", LogLevel::Error, "thread#{} unknown cmd_play, dump...", id);
                     dump_mus_dat(id);}
                 break;
 #if 0
@@ -467,7 +457,7 @@ void dispatch_cmd(int id)
                 else if (is_cmn_snd(id)) ;
                 else if (is_bkg_snd(id)) vol_bkg_snd(id);
                 else {
-                    LG("mus_err", "thread#%d unknown cmd_vol, dump...\n", id);
+                    ToLogService("common", LogLevel::Error, "thread#{} unknown cmd_vol, dump...", id);
                     dump_mus_dat(id);}
                 break;
 #endif
@@ -485,7 +475,7 @@ void dispatch_cmd(int id)
                 else if (is_cmn_snd(id)) stop_cmn_snd(id);
                 else if (is_bkg_snd(id)) stop_bkg_snd(id);
                 else {
-                    LG("mus_err", "thread#%d unknown cmd_stop, dump...\n", id);
+                    ToLogService("common", LogLevel::Error, "thread#{} unknown cmd_stop, dump...", id);
                     dump_mus_dat(id);}
                 break;
 
@@ -494,7 +484,7 @@ void dispatch_cmd(int id)
                 else if (is_cmn_snd(id)) vol_cmn_snd(id);
                 else if (is_bkg_snd(id)) vol_bkg_snd(id);
                 else {
-                    LG("mus_err", "thread#%d unknown cmd_vol, dump...\n", id);
+                    ToLogService("common", LogLevel::Error, "thread#{} unknown cmd_vol, dump...", id);
                     dump_mus_dat(id);}
                 break;
 
@@ -529,7 +519,7 @@ void dispatch_exit(int id)
         Mix_FreeMusic(pdat->music);
 
     pdat->used = false;
-    LG("mus", "thread#%d exit\n", id);
+    ToLogService("common", "thread#{} exit", id);
     }
 
 DWORD WINAPI play_mus_thread(LPVOID lpParameter)
@@ -545,7 +535,7 @@ DWORD WINAPI play_mus_thread(LPVOID lpParameter)
         if (ret == WAIT_OBJECT_0) break;
         if (ret == WAIT_ABANDONED)
             {
-            LG("mus_err", "WAIT_ABANDONED!!!\n");
+            ToLogService("common", LogLevel::Error, "WAIT_ABANDONED!!!");
             break;}
 
         ret = WaitForSingleObject(sig_cmd, 2); // wait 2ms
@@ -599,15 +589,16 @@ inline void mus_cmd_play(int id)
 inline void dump_cache_dat(int id)
     {
     wave_cache_dat* p = &wave_cache_dat_array[id];
-    LG("mus_err", "cache#%d [%s], fname=%s, buf=%p, buf_len=%d, time_stamp=%d, \
-ref_cnt=%d\n", id, (p->used) ? "used" : "not use", p->fname, p->buf,
-            p->buf_len, p->time_stamp, p->ref_cnt);}
+    ToLogService("common", LogLevel::Error, "cache#{} [{}], fname={}, buf={}, buf_len={}, time_stamp={}, ref_cnt={}",
+            id, (p->used) ? "used" : "not use", p->fname, (void*)p->buf,
+            p->buf_len, p->time_stamp, (int)p->ref_cnt);
+    }
 
 inline void dump_cache_dat()
     {
     for (int i = WAV_CACHE_ID_START; i <= WAV_CACHE_ID_END; ++ i) dump_cache_dat(i);
 
-    LG("mus_err", "\n");
+    ToLogService("common", LogLevel::Error, "");
     }
 
 inline void wave_cache_set_used(wave_cache_dat* p, bool used = true)
@@ -636,7 +627,7 @@ bool wave_cache_load(wave_cache_dat* p)
     FILE* fp = NULL;
     if (fp = fopen(p->fname, "rb"), fp == NULL)
         {
-        LG("mus_err", "failed to open file %s\n", p->fname);
+        ToLogService("common", LogLevel::Error, "failed to open file {}", p->fname);
         return false;}
 
     fseek(fp, 0, SEEK_END); long len = ftell(fp);
@@ -647,12 +638,12 @@ bool wave_cache_load(wave_cache_dat* p)
         len = (Uint32)fread(buf, sizeof Uint8, len, fp);}
     catch (bad_alloc& ba)
         {
-        LG("mus_err", "'new' except: %s in wave_cache_load\n", ba.what());
+        ToLogService("common", LogLevel::Error, "'new' except: {} in wave_cache_load", ba.what());
         fclose(fp);
         return false;}
     catch (...)
         {
-        LG("mus_err", "other except... in wave_cache_load\n");
+        ToLogService("common", LogLevel::Error, "other except... in wave_cache_load");
         if (buf) delete buf;
         fclose(fp);
         return false;}
@@ -721,7 +712,7 @@ int wave_cache_add(char const* fname)
         {
         // replace a wave cache
         id = wav_cache_get_discard();
-        LG("mus", "replace cache#%d with file %s\n", id, fname);
+        ToLogService("common", "replace cache#{} with file {}", id, fname);
         p = &wave_cache_dat_array[id];
         wave_cache_replace(p, fname);
         return id;}
@@ -764,14 +755,14 @@ bool mus_mgr_init(bool enable, DWORD_PTR dwValue)
     {
     if (SDL_Init(SDL_INIT_AUDIO) < 0)
         {
-        LG("mus_err", "Couldn't initialize SDL: %s\n", SDL_GetError());
+        ToLogService("common", LogLevel::Error, "Couldn't initialize SDL: {}", SDL_GetError());
         return false;}
 
     if (!enable) return false;
 
     // init music
     int i;
-    LG("mus", "mus_mgr_init\n");
+    ToLogService("common", "mus_mgr_init");
 
     // init the share data
     for (i = ENV_SND_ID_START; i <= ENV_SND_ID_END; ++ i)
@@ -787,33 +778,30 @@ bool mus_mgr_init(bool enable, DWORD_PTR dwValue)
     int audio_channels = MIX_DEFAULT_CHANNELS;
     if (Mix_OpenAudio(audio_rate, audio_format, audio_channels, 4096) < 0)
         {
-        LG("mus_err", "Couldn't open audio: %s\n", SDL_GetError());
+        ToLogService("common", LogLevel::Error, "Couldn't open audio: {}", SDL_GetError());
         return false;}
 
     Mix_QuerySpec(&audio_rate, &audio_format, &audio_channels);
-    /*
-    LG("mus", "Opened audio at %d Hz %d bit %s\n", audio_rate,
-        (audio_format & 0xFF), (audio_channels > 1) ? "stereo" : "mono");*/
 
     // create exit signal
     sig_exit = CreateEvent(NULL, TRUE, FALSE, NULL);
     if (sig_exit == NULL)
         {
-        LG("mus_err", "create exit signal error\n");
+        ToLogService("common", LogLevel::Error, "create exit signal error");
         return false;}
     if ((sig_exit != NULL) && (GetLastError() == ERROR_ALREADY_EXISTS))
         {
-        LG("mus_err", "exit signal already exist\n");
+        ToLogService("common", LogLevel::Error, "exit signal already exist");
         return false;}
 
     sig_task = CreateEvent(NULL, FALSE, FALSE, NULL);
     if (sig_task == NULL)
         {
-        LG("mus_err", "create task signal error\n");
+        ToLogService("common", LogLevel::Error, "create task signal error");
         return false;}
     if ((sig_task != NULL) && (GetLastError() == ERROR_ALREADY_EXISTS))
         {
-        LG("mus_err", "task signal already exist\n");
+        ToLogService("common", LogLevel::Error, "task signal already exist");
         return false;}
 
     // create child thread and command signals
@@ -838,7 +826,7 @@ void mus_mgr_reset(int op) // -1 clear all, 0 clear all except bkg_snd
 
     // reset music
     int i;
-    LG("mus", "mus_mgr_reset\n");
+    ToLogService("common", "mus_mgr_reset");
 
     for (i = ENV_SND_ID_START; i <= ENV_SND_ID_END; ++ i)
         {
@@ -853,7 +841,7 @@ void mus_mgr_exit()
     {
     if (mus_init_flag)
         {
-        LG("mus_err", "before post exit signal: [%d]\n",GetTickCount());
+        ToLogService("common", LogLevel::Error, "before post exit signal: [{}]", GetTickCount());
         dump_mus_dat();
         dump_cache_dat();
         SetEvent(sig_exit);
@@ -866,20 +854,20 @@ void mus_mgr_exit()
             if (!GetExitCodeThread(thrdpool[i], &exitcode))
                 {
                 if (exitcode == STILL_ACTIVE)
-                    LG("mus_err", "thread#%d failed to exit, kill it!\n", i);
+                    ToLogService("common", LogLevel::Error, "thread#{} failed to exit, kill it!", i);
 
                 if (TerminateThread(thrdpool[i], 0))
-                    LG("mus_err", "thread#%d was killed successfully!\n", i);
+                    ToLogService("common", LogLevel::Error, "thread#{} was killed successfully!", i);
                 else {
-                    LG("mus_err", "thread#%d can't be killed, err = %d!\n", i, GetLastError());}
+                    ToLogService("common", LogLevel::Error, "thread#{} can't be killed, err = {}!", i, GetLastError());}
                 }
             else {
-                LG("mus_err", "thread#%d exit successfully!\n", i);
+                ToLogService("common", LogLevel::Error, "thread#{} exit successfully!", i);
                 continue;}
             }
 
         wave_cache_exit();
-        LG("mus_err", "after post exit signal:\n");
+        ToLogService("common", LogLevel::Error, "after post exit signal:");
         dump_mus_dat();
         dump_cache_dat();
 
@@ -891,7 +879,7 @@ void mus_mgr_exit()
         Mix_CloseAudio();}
     
     SDL_Quit();
-    LG("mus", "mus_mgr_exit\n");
+    ToLogService("common", "mus_mgr_exit");
     }
 
 #if 0
@@ -1001,7 +989,7 @@ bool bkg_snd_play(char const* fname, bool loop /* = false */)
     {
     if ((_access(fname, 00) == -1) || (_access(fname, 04) == -1))
         {
-        LG("mus_err", "%s not found or can't be read\n", fname);
+        ToLogService("common", LogLevel::Error, "{} not found or can't be read", fname);
         return false;}
     if (is_used(BKG_SND_ID_START)) return false;
 
@@ -1020,7 +1008,7 @@ bool bkg_snd_play(char const* fname, bool loop /* = false */)
 
 		if (++i > ERROR_TIME)
 			{
-			LG(ERROR_FILE, "msgbkg_snd_play time out!\n");
+			ToLogService("common", LogLevel::Error, "bkg_snd_play time out!");
 			break;
 			}
 		}
@@ -1050,10 +1038,10 @@ void bkg_snd_stop()
 		
 		if (++i > ERROR_TIME)
 			{
-			LG(ERROR_FILE, "msgbkg_snd_stop time out!\n");
+			ToLogService("common", LogLevel::Error, "bkg_snd_stop time out!");
 			break;
 			}
 		}
 
-    LG("mus", "stop bkg_snd success\n");
+    ToLogService("common", "stop bkg_snd success");
     }

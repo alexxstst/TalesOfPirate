@@ -95,7 +95,6 @@ CGuiData& CGuiData::operator=( const CGuiData& rhs )
 CGuiData::~CGuiData()
 {
 	//static char buf[256] = { 0 };
-	//sprintf( buf, "%s, %d, %d\n", GetName(), _dwID, _pDrag ? 1 : 0 );
 	//OutputDebugString( buf );
 
 	if(_pDrag)

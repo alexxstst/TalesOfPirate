@@ -439,20 +439,20 @@ bool NetIF::InitAesKey() {
 
 	status = BCryptOpenAlgorithmProvider(&hAesAlg, BCRYPT_AES_ALGORITHM, NULL, 0);
 	if (!BCRYPT_SUCCESS(status)) {
-		LG("enc", "BCryptOpenAlgorithmProvider failed: 0x%08X\n", status);
+		ToLogService("connections", "BCryptOpenAlgorithmProvider failed: 0x{:08X}", status);
 		return false;
 	}
 
 	status = BCryptSetProperty(hAesAlg, BCRYPT_CHAINING_MODE,
 							   (PUCHAR)BCRYPT_CHAIN_MODE_GCM, sizeof(BCRYPT_CHAIN_MODE_GCM), 0);
 	if (!BCRYPT_SUCCESS(status)) {
-		LG("enc", "BCryptSetProperty GCM failed: 0x%08X\n", status);
+		ToLogService("connections", "BCryptSetProperty GCM failed: 0x{:08X}", status);
 		return false;
 	}
 
 	status = BCryptGenerateSymmetricKey(hAesAlg, &hAesKey, NULL, 0, cliAesKey, 32, 0);
 	if (!BCRYPT_SUCCESS(status)) {
-		LG("enc", "BCryptGenerateSymmetricKey failed: 0x%08X\n", status);
+		ToLogService("connections", "BCryptGenerateSymmetricKey failed: 0x{:08X}", status);
 		return false;
 	}
 
@@ -465,18 +465,16 @@ void NetIF::OnPacket(net::RPacket& packet) {
 	unsigned short sCmdType = packet.GetCmd();
 
 	if (sCmdType != CMD_MC_PING) {
-		LG("FromGateServer", "%d\n", sCmdType);
+		ToLogService("common", "{}", sCmdType);
 		// [IN] логи временно отключены для отладки SESS-счётчика
 		//EnsureConsole();
-		//printf("[IN ] CMD=%5u %-40s SESS=%10u SIZE=%d\n",
-		//	   sCmdType, GetCmdName(sCmdType), packet.GetSess(), packet.GetPacketSize());
 	}
 
 	HandlePacketMessage(packet);
 }
 
 void NetIF::OnDisconnected(int reason) {
-	LG("connect", "\tOnDisconnected, Reason:%d\n", reason);
+	ToLogService("connections", "\tOnDisconnected, Reason:{}", reason);
 
 	if (g_pGameApp) {
 		CleanupCrypto();
@@ -569,7 +567,7 @@ void NetIF::SendPacketMessage(LPWPACKET pk) {
 	if (!IsConnected()) return;
 
 	if (!_client.IsConnected()) {
-		LG("error", "msgClientSocket Is NULL, Can't Send Socket Message!\n");
+		ToLogService("errors", LogLevel::Error, "msgClientSocket Is NULL, Can't Send Socket Message!");
 		return;
 	}
 
@@ -580,13 +578,12 @@ void NetIF::SendPacketMessage(LPWPACKET pk) {
 		unsigned short cmd = pk.GetCmd();
 		if (cmd != CMD_CM_PING) {
 			EnsureConsole();
-			printf("[OUT] CMD=%5u %-40s SESS=%10u SIZE=%d\n",
-				   cmd, GetCmdName(cmd), pk.GetSess(), pk.GetPacketSize());
+			ToLogService("network", "[OUT] CMD={:5} {:40} SESS={:10} SIZE={}", cmd, GetCmdName(cmd), pk.GetSess(), pk.GetPacketSize());
 		}
 	}
 
 	if (!_client.Send(pk)) {
-		LG("net_error", "msgSendData Error!\n");
+		ToLogService("common", "msgSendData Error!");
 	}
 }
 
@@ -599,14 +596,14 @@ bool NetIF::EncryptAES(char* ciphertext, uLong ciphertext_len, cChar* plaintext,
 	ULONG plaintextLen = ciphersize;
 
 	if (ciphertext_len < overhead + plaintextLen) {
-		LG("enc", "EncryptAES: buffer too small (%u < %u)\n", ciphertext_len, overhead + plaintextLen);
+		ToLogService("connections", "EncryptAES: buffer too small ({} < {})", ciphertext_len, overhead + plaintextLen);
 		return false;
 	}
 
 	BYTE nonce[NONCE_SIZE];
 	NTSTATUS status = BCryptGenRandom(NULL, nonce, NONCE_SIZE, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
 	if (!BCRYPT_SUCCESS(status)) {
-		LG("enc", "BCryptGenRandom failed: 0x%08X\n", status);
+		ToLogService("connections", "BCryptGenRandom failed: 0x{:08X}", status);
 		return false;
 	}
 
@@ -638,7 +635,7 @@ bool NetIF::EncryptAES(char* ciphertext, uLong ciphertext_len, cChar* plaintext,
 		0);
 
 	if (!BCRYPT_SUCCESS(status)) {
-		LG("enc", "BCryptEncrypt failed: 0x%08X\n", status);
+		ToLogService("connections", "BCryptEncrypt failed: 0x{:08X}", status);
 		return false;
 	}
 
@@ -656,7 +653,7 @@ bool NetIF::DecryptAES(char* ciphertext, unsigned long& len) {
 	const ULONG overhead = NONCE_SIZE + TAG_SIZE;
 
 	if (len < overhead) {
-		LG("dec", "DecryptAES: data too short (%u < %u)\n", len, overhead);
+		ToLogService("common", "DecryptAES: data too short ({} < {})", len, overhead);
 		return false;
 	}
 
@@ -687,7 +684,7 @@ bool NetIF::DecryptAES(char* ciphertext, unsigned long& len) {
 		0);
 
 	if (!BCRYPT_SUCCESS(status)) {
-		LG("dec", "BCryptDecrypt failed: 0x%08X\n", status);
+		ToLogService("common", "BCryptDecrypt failed: 0x{:08X}", status);
 		return false;
 	}
 

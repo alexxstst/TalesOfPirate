@@ -928,7 +928,6 @@ void CGameApp::ShowStateHint(int x, int y, CChaStateMgr::stChaState stateData) {
     _pNotify->Clear();
     _pNotify->PushHint(szTitle, COLOR_WHITE);
 	//char szDescHint[255];
-	//sprintf(szDescHint, "%s", stateData.pInfo->szDesc);
     //_pNotify->PushHint(szDescHint, COLOR_WHITE);
     if (stateData.lTimeRemaining > 0) {
         int minutes = stateData.lTimeRemaining / 60;
@@ -1037,7 +1036,7 @@ void CGameApp::AutoTestInfo( const char *pszFormat, ... )
     string info = _szOutBuf;
 	ShowMidText( info.c_str() );
 	info += "\n";
-	LG( "autotest", info.c_str() );
+	g_logManager.InternalLog(LogLevel::Debug, "common", info.c_str());
 
 	FrameMove( GetTickCount() );
 	Render();
@@ -1630,7 +1629,7 @@ void LoadResModelBuf(MPIResourceMgr* res_mgr)
 
         if(LW_FAILED(buf_mgr->RegisterModelObjInfo(handle, path)))
         {
-            LG("init", "msgcannot find model file: %s", path);
+            ToLogService("common", "msgcannot find model file: {}", path);
             continue;
         }
     }    
@@ -1657,7 +1656,7 @@ bool CGameApp::HasLogFile( const char* log_file, bool isOpen )
 {
 	// ����Ƿ���gui
 	string file;
-	GetLGDir( file );
+	file = g_logManager.GetLogDirectory();
 	file += "/";
 	file += log_file;
 	file += ".log";
@@ -2044,14 +2043,5 @@ void CGameApp::LG_Config(const LGInfo& info)
 	}
 
 	MPGameApp::LG_Config( in );
-
-    if(in.bCloseAll)
-    {
-        ::LG_CloseAll();
-    }
-    ::LG_SetEraseMode(in.bEraseMode);
-    ::LG_SetDir(in.dir);
-    ::LG_EnableAll(in.bEnableAll);
-    ::LG_EnableMsgBox(in.bMsgBox);
 }
 

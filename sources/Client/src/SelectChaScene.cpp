@@ -74,7 +74,7 @@ CSelectChaScene::CSelectChaScene(stSceneInitParam& param)
 	: CGameScene(param), m_isInit(false), m_isCreateCha(false),
 	frmSelectCha(NULL), btnDel(NULL), btnYes(NULL), btnCreate(NULL), btnExit(NULL), btnChangePassConf(NULL)
 {
-	LG("scene memory", "CSelectChaScene Create\n");
+	ToLogService("common", "CSelectChaScene Create");
 
 	// distance between each char
     m_XPositions.push_back(2164);           
@@ -98,7 +98,7 @@ CSelectChaScene::CSelectChaScene(stSceneInitParam& param)
 //~ Destructors ===============================================================
 CSelectChaScene::~CSelectChaScene()
 {
-	LG("scene memory", "CSelectChaScene Destroy\n");
+	ToLogService("common", "CSelectChaScene Destroy");
 }
 
 //~ ������ص� ===============================================================
@@ -969,8 +969,7 @@ void CSelectChaScene::SendBeginPlayToServer()
 	CCharacter* pCha = chaFont.pCha;
 
 	//���Դ���
-	LG("select", "Client Send:%s,%d,%d,%d,%d,%d\n",
-		pCha->getName().c_str(), pCha->GetPartID(0), pCha->GetPartID(1),
+	ToLogService("ui", "Client Send:{},{},{},{},{},{}", pCha->getName(), pCha->GetPartID(0), pCha->GetPartID(1),
 		pCha->GetPartID(2), pCha->GetPartID(3), pCha->GetPartID(4));
 }
 
@@ -1120,7 +1119,7 @@ CSelectChaScene& CSelectChaScene::GetCurrScene()
 void CSelectChaScene::SelectChaError(int error_no, const char* error_info)
 {
 	g_pGameApp->MsgBox("%s", g_GetServerError(error_no));
-	LG("error", "%s Error, Code:%d, Info: %s", error_info, error_no, g_GetServerError(error_no));
+	ToLogService("errors", LogLevel::Error, "{} Error, Code:{}, Info: {}", error_info, error_no, g_GetServerError(error_no));
 	CGameApp::Waiting(false);
 }
 void CSelectChaScene::SetChaDark(CCharacter* pCha)

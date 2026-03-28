@@ -24,5 +24,5 @@ void CLogFile::Log(const char* format, ...)
 	va_end(args);
 
 	if (len > sizeof buf) throw std::logic_error("format len > 1000\n");
-	LG(m_szLogName, buf);
+	g_logManager.InternalLog(LogLevel::Debug, m_szLogName, buf);
 }

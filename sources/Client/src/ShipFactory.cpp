@@ -17,7 +17,7 @@
 using namespace std;
 
 //---------------------------------------------------------------------------
-#define ERR_CHK(p, s) { if(p == 0) { LG("init", "msgShipFactory Load error: %s", s); } }
+#define ERR_CHK(p, s) { if(p == 0) { ToLogService("common", LogLevel::Error, "ShipFactory Load error: {}", s); } }
 
 //---------------------------------------------------------------------------
 static xShipFactory* __xsf = 0;

@@ -16,10 +16,10 @@ inline int lua_GetCurSubmap( lua_State* L )
 {
 	if( !g_pScriptMap )
 	{
-		//LG( "entity_error", "µØÍ¼Ö¸ÕëÎª¿Õ£¡" );
-		LG( "entity_error", RES_STRING(GM_ENTITYSCRIPT_CPP_00001) );
-		//printf( "µØÍ¼Ö¸ÕëÎª¿Õ£¡" );
-		printf( RES_STRING(GM_ENTITYSCRIPT_CPP_00001) );
+		//LG( "entity_error", "ï¿½ï¿½Í¼Ö¸ï¿½ï¿½Îªï¿½Õ£ï¿½" );
+		g_logManager.InternalLog(LogLevel::Error, "errors", RES_STRING(GM_ENTITYSCRIPT_CPP_00001) );
+		// Ð—Ð°Ð¼ÐµÐ½ÐµÐ½Ð¾ printf â†’ Ð»Ð¾Ð³Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ
+		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_ENTITYSCRIPT_CPP_00001));
 		E_LUANULL;
 		return 0;
 	}
@@ -78,12 +78,12 @@ int lua_SetEntityData( lua_State* L )
 	mission::CEventEntity* pEntity = (mission::CEventEntity*)lua_touserdata( L, 1 );
 	switch( pEntity->GetType() )
 	{
-	case BASE_ENTITY:			// »ù±¾ÊµÌå
+	case BASE_ENTITY:			// ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
 		{
 		}
 		break;
 
-	case RESOURCE_ENTITY:		// ×ÊÔ´ÊµÌå
+	case RESOURCE_ENTITY:		// ï¿½ï¿½Ô´Êµï¿½ï¿½
 		{
 			bValid = lua_gettop( L ) >= 4;
 			if( !bValid )
@@ -98,12 +98,12 @@ int lua_SetEntityData( lua_State* L )
 		}
 		break;
 
-	case TRANSIT_ENTITY:		// ´«ËÍÊµÌå
+	case TRANSIT_ENTITY:		// ï¿½ï¿½ï¿½ï¿½Êµï¿½ï¿½
 		{
 		}
 		break;
 
-	case BERTH_ENTITY:			// Í£²´ÊµÌå
+	case BERTH_ENTITY:			// Í£ï¿½ï¿½Êµï¿½ï¿½
 		{
 			BOOL bValid = lua_gettop( L ) >= 5;
 			if( !bValid )

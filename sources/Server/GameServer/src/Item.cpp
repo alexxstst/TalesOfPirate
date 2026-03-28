@@ -49,21 +49,21 @@ void CItem::OnBeginSeen(CCharacter *pCMainCha)
 {
 	WPACKET pk =GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_ITEMBEGINSEE);
-	// »ù±¾Êý¾Ý
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	WRITE_LONG(pk, m_ID);							// world ID
 	WRITE_LONG(pk, m_lHandle);
 	WRITE_LONG(pk, m_pCItemRecord->lID);			// ID
-	WRITE_LONG(pk, GetShape().centre.x);			// µ±Ç°xÎ»ÖÃ
-	WRITE_LONG(pk, GetShape().centre.y);			// µ±Ç°yÎ»ÖÃ
-	WRITE_SHORT(pk, m_sAngle);					// ·½Ïò
-	WRITE_SHORT(pk, m_SGridContent.sNum);			// ¸öÊý
+	WRITE_LONG(pk, GetShape().centre.x);			// ï¿½ï¿½Ç°xÎ»ï¿½ï¿½
+	WRITE_LONG(pk, GetShape().centre.y);			// ï¿½ï¿½Ç°yÎ»ï¿½ï¿½
+	WRITE_SHORT(pk, m_sAngle);					// ï¿½ï¿½ï¿½ï¿½
+	WRITE_SHORT(pk, m_SGridContent.sNum);			// ï¿½ï¿½ï¿½ï¿½
 	//
 	WRITE_CHAR(pk, m_chSpawType);
 	WRITE_LONG(pk, m_lFromEntityID);
-	// ÊÂ¼þÐÅÏ¢
+	// ï¿½Â¼ï¿½ï¿½ï¿½Ï¢
 	WriteEventInfo(pk);
 
-	pCMainCha->ReflectINFof(this,pk);//Í¨¸æ
+	pCMainCha->ReflectINFof(this,pk);//Í¨ï¿½ï¿½
 }
 
 void CItem::OnEndSeen(CCharacter *pCMainCha)
@@ -71,30 +71,30 @@ void CItem::OnEndSeen(CCharacter *pCMainCha)
 	WPACKET pk =GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_ITEMENDSEE);
 	WRITE_LONG(pk, m_ID);				//ID
-	pCMainCha->ReflectINFof(this,pk);	//Í¨¸æ
+	pCMainCha->ReflectINFof(this,pk);	//Í¨ï¿½ï¿½
 }
 
 void CItem::Run(dbc::uLong ulCurTick)
 {
 	if (m_ulProtID != 0)
-		if (m_ulProtOnTick != 0 && ulCurTick - m_ulStartTick >= m_ulProtOnTick) // ±£»¤Ê±¼äÏûÊ§
+		if (m_ulProtOnTick != 0 && ulCurTick - m_ulStartTick >= m_ulProtOnTick) // ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½Ê§
 			m_ulProtID = 0;
 
 	if (m_ulOnTick != 0 && ulCurTick - m_ulStartTick >= m_ulOnTick)
 	{
-		// ÅÐ¶ÏÊÇ·ñ´¬³¤Ö¤Ã÷µÀ¾ß
+		// ï¿½Ð¶ï¿½ï¿½Ç·ñ´¬³ï¿½Ö¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 		CItemRecord* pItem = m_pCItemRecord;
 		if( pItem != NULL )
 		{
-			// ÅÐ¶Ï¶ªÆú´¬³¤Ö¤Ã÷
+			// ï¿½Ð¶Ï¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¤ï¿½ï¿½
 			if( pItem->sType == enumItemTypeBoat )
 			{
 				game_db.SaveBoatDelTag( this->GetGridContent()->GetDBParam( enumITEMDBP_INST_ID ), 1 );
 			}
 		}
 		if (!m_submap)
-			//LG("µÀ¾ßÏûÊ§´íÎó", "µÀ¾ß %s(ID %u£¬HANDLE %u£¬Î»ÖÃ[%d %d]) ÔÚÏûÊ§Ê±·¢ÏÖÆäµØÍ¼Îª¿Õ\n", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
-			LG("Item disappear error", "item %s(ID %u£¬HANDLE %u£¬position[%d %d]) when it disappear find the map is null\n", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
+			//LG("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½ï¿½ï¿½ï¿½", "ï¿½ï¿½ï¿½ï¿½ %s(ID %uï¿½ï¿½HANDLE %uï¿½ï¿½Î»ï¿½ï¿½[%d %d]) ï¿½ï¿½ï¿½ï¿½Ê§Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Í¼Îªï¿½ï¿½\n", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
+			ToLogService("errors", LogLevel::Error, "item {}(ID {}ï¿½ï¿½HANDLE {}ï¿½ï¿½position[{} {}]) when it disappear find the map is null", GetName(), GetID(), GetHandle(), GetPos().x, GetPos().y);
 		else
 		{
 			Free();

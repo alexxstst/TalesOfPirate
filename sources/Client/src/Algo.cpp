@@ -194,7 +194,7 @@ int load_luc(lua_State* L, char const* fname)
     int status = luaL_loadfile(L, fname);
     if (status != 0)
         {
-        printf("load luc file %s error\n", fname);
+        ToLogService("common", "load luc file {} error", fname);
         return -1;}
     status = lua_pcall(L, 0, LUA_MULTRET, 0);
     callalert(L, status);

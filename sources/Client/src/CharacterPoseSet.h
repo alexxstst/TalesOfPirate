@@ -12,7 +12,7 @@ public:
 	{
         for(int i=0; i<7; i++)  sRealPoseID[i] = 0;
     }
-    short sRealPoseID[7]; // 5ÖÖ¶¯×÷ÀàÐÍ, ¿ÕÊÖ, µ¥ÊÖÎäÆ÷, Ë«ÊÖÎäÆ÷, ¹­¼ý.....
+    short sRealPoseID[7]; // 5ï¿½Ö¶ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, Ë«ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½.....
 };
 
 
@@ -32,7 +32,7 @@ public:
 
 protected:
 
-	static CPoseSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CPoseSet* _Instance; // ï¿½àµ±ï¿½Úµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½×¡
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -73,7 +73,7 @@ protected:
         pInfo->sRealPoseID[5] = (short)Str2Int(ParamList[5]);
         pInfo->sRealPoseID[6] = (short)Str2Int(ParamList[6]);
         
-        LG("poseset", "Read Pose List [%d][%s]\n", pInfo->nID, pInfo->szDataName);
+        ToLogService("common", "Read Pose List [{}][{}]", pInfo->nID, pInfo->szDataName);
             
         return TRUE;
     }

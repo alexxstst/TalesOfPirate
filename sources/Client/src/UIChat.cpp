@@ -132,7 +132,7 @@ bool CChat::Init()
 
     CFormMgr& mgr = CFormMgr::s_Mgr;
 
-    // ³õÊ¼»¯×é¶Ó¿Ø¼þ
+    // ï¿½ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ó¿Ø¼ï¿½
     char szBuf[80] = { 0 };
     for( int i=0; i<MAX_MEMBER; i++ )
     {
@@ -186,11 +186,11 @@ bool CChat::Init()
         _pCharacter[i]->Create( rt );
     }
 
-	// ³õÊ¼»¯QQ½çÃæ
+	// ï¿½ï¿½Ê¼ï¿½ï¿½QQï¿½ï¿½ï¿½ï¿½
 	_frmQQ = mgr.Find("frmQQ");
 	if( !_frmQQ )
 	{
-		::Error(g_oLangRec.GetString(412));
+		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(412));
 		return false;
 	}
 
@@ -320,7 +320,7 @@ bool CChat::Init()
 	_frmAddFriend = mgr.Find("frmAddFriend");
 	if( !_frmAddFriend )
 	{
-		::Error(g_oLangRec.GetString(470));
+		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(470));
 		return false;
 	}
 	_frmAddFriend->SetIsShow(true);
@@ -338,7 +338,7 @@ bool CChat::Init()
 	_frmEditMotto = mgr.Find("frmEdit");
 	if( !_frmEditMotto )
 	{
-		::Error(g_oLangRec.GetString(471));
+		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(471));
 		return false;
 	}
 	_frmEditMotto->SetIsShow(true);
@@ -358,7 +358,7 @@ bool CChat::Init()
 	_frmDetails = mgr.Find("frmdetails");
 	if( !_frmDetails )
 	{
-		::Error(g_oLangRec.GetString(472));
+		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(472));
 		return false;
 	}
 	_frmDetails->SetIsShow(true);
@@ -369,7 +369,7 @@ bool CChat::Init()
 	_frmBlockPlayer = mgr.Find("frmBlockPlayer");
 	if( !_frmBlockPlayer )
 	{
-		::Error(g_oLangRec.GetString(470));
+		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(470));
 		return false;
 	}
 	_frmBlockPlayer->SetIsShow(true);
@@ -386,13 +386,13 @@ void CChat::End()
 {
     m_pQQTreeView = NULL;
     //delete _pTeamMgr;
-	SAFE_DELETE(_pTeamMgr); // UIµ±»ú´¦Àí
+	SAFE_DELETE(_pTeamMgr); // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     for( int i=0; i<MAX_MEMBER; i++ )
     {
         //delete _pCharacter[i];
         //_pCharacter[i] = 0;
-		SAFE_DELETE(_pCharacter[i]); // UIµ±»ú´¦Àí
+		SAFE_DELETE(_pCharacter[i]); // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     }
 }
 
@@ -435,7 +435,7 @@ void CChat::RefreshTeam()
 
 	if( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getHumanID()==CTeamMgr::GetTeamLeaderID() )
 	{
-		// ÔÚ×ÔÒÑµÄÍ·ÉÏÏÔÊ¾¶Ó³¤±êÖ¾
+		// ï¿½ï¿½ï¿½ï¿½ï¿½Ñµï¿½Í·ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½Ó³ï¿½ï¿½ï¿½Ö¾
 		g_stUIStart.SetIsLeader( true );
 	}
 	else
@@ -577,7 +577,7 @@ int CChat::TeamSend( DWORD dwMsg, void* pData, DWORD dwParam )
             CMember* pMember = (CMember*)pData;
             CTextGraph* pItem = (CTextGraph*)(pMember->GetPointer());
 			CChatIconInfo *pIconInfo=GetChatIconInfo(pMember->GetIconID());
-			if (pIconInfo && pItem)	// modify by Philip.Wu  2006-08-13  ÐÞ¸ÄÈ¥³ýÂ·ÈËºóµÄµ±»ú
+			if (pIconInfo && pItem)	// modify by Philip.Wu  2006-08-13  ï¿½Þ¸ï¿½È¥ï¿½ï¿½Â·ï¿½Ëºï¿½Äµï¿½ï¿½ï¿½
 			{
 				CGuiPic* pPic=pItem->GetImage();
 				string strPath="texture/ui/HEAD/";
@@ -655,7 +655,7 @@ void CChat::SortOnlineFrnd(CTreeGridNode* pNode)
 			pMember2=(CMember*)(pItem2->GetPointer());
 			if (pMember2->IsOnline())
 			{
-				//1ºÍ2Ïî¶Ô»»
+				//1ï¿½ï¿½2ï¿½ï¿½Ô»ï¿½
 				pMember1->SetPointer(pItem2);
 				pMember2->SetPointer(pItem1);
 				pItem1->SetPointer(pMember2);
@@ -723,7 +723,7 @@ void CChat::SortOnlineFrnd()
 			pMember2=(CMember*)(pItem2->GetPointer());
 			if (pMember2->IsOnline())
 			{
-				//1ºÍ2Ïî¶Ô»»
+				//1ï¿½ï¿½2ï¿½ï¿½Ô»ï¿½
 				pMember1->SetPointer(pItem2);
 				pMember2->SetPointer(pItem1);
 				pItem1->SetPointer(pMember2);
@@ -911,7 +911,7 @@ void CChat::_MainMouseClick(CGuiData *pSender, int x, int y, DWORD key)
 			}
 		}
 	}
-	else if (pSelectNode == _pTeamMgr->Find( enumTeamMaster )->GetPointer())	// µ¼Ê¦
+	else if (pSelectNode == _pTeamMgr->Find( enumTeamMaster )->GetPointer())	// ï¿½ï¿½Ê¦
 	{
 		CTeam *pTeam=_pTeamMgr->Find( enumTeamMaster );
 		for (DWORD i=0;i<pTeam->GetCount();i++)
@@ -1164,7 +1164,7 @@ void CChat::_OnMouseSessMenu(CGuiData *pSender, int x, int y, DWORD key)
 	CMenuItem* pItem=_sessMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str=pItem->GetString();
-	if (str== g_oLangRec.GetString(485))	// ÃÜÓï¶Ô·½
+	if (str== g_oLangRec.GetString(485))	// ï¿½ï¿½ï¿½ï¿½Ô·ï¿½
 	{
 		CTalkSessionFormMgr::OnClickCloseSession( static_cast<CTalkSessionForm*>(_sessMouseRight->GetPointer()) );
 	}
@@ -1172,7 +1172,7 @@ void CChat::_OnMouseSessMenu(CGuiData *pSender, int x, int y, DWORD key)
 	_frmQQ->Refresh();
 }
 
-// µ¼Ê¦²Ëµ¥
+// ï¿½ï¿½Ê¦ï¿½Ëµï¿½
 void CChat::_OnMouseMasterMenu(CGuiData *pSender, int x, int y, DWORD key)
 {
 	_frmQQ->PopMenu(FALSE);
@@ -1182,7 +1182,7 @@ void CChat::_OnMouseMasterMenu(CGuiData *pSender, int x, int y, DWORD key)
 
 	string strCommand = pItem->GetString();
 
-	if(strCommand == g_oLangRec.GetString(482))			// Ìí¼ÓºÃÓÑ
+	if(strCommand == g_oLangRec.GetString(482))			// ï¿½ï¿½ï¿½Óºï¿½ï¿½ï¿½
 	{
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 		if(pMainCha && pMainCha->getGameAttr() && pMainCha->getGameAttr()->get(ATTR_LV) >= 7)
@@ -1191,11 +1191,11 @@ void CChat::_OnMouseMasterMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// Æß¼¶ÒÔÏÂ½ûÖ¹Ìí¼ÓºÃÓÑ
+			// ï¿½ß¼ï¿½ï¿½ï¿½ï¿½Â½ï¿½Ö¹ï¿½ï¿½ï¿½Óºï¿½ï¿½ï¿½
 			g_pGameApp->SysInfo(g_oLangRec.GetString(865));
 		}
 	}
-	else if(strCommand == g_oLangRec.GetString(484))	// ÑûÇë×é¶Ó
+	else if(strCommand == g_oLangRec.GetString(484))	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 		if(pMainCha && (pMainCha->IsBoat() || (pMainCha->getGameAttr() && pMainCha->getGameAttr()->get(ATTR_LV) >= 8)))
@@ -1204,19 +1204,19 @@ void CChat::_OnMouseMasterMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// °Ë¼¶ÒÔÏÂ½ûÖ¹×é¶Ó
+			// ï¿½Ë¼ï¿½ï¿½ï¿½ï¿½Â½ï¿½Ö¹ï¿½ï¿½ï¿½
 			g_pGameApp->SysInfo(g_oLangRec.GetString(866));
 		}
 	}
-	else if(strCommand == g_oLangRec.GetString(481))	// ÃÜÓï¶Ô·½
+	else if(strCommand == g_oLangRec.GetString(481))	// ï¿½ï¿½ï¿½ï¿½Ô·ï¿½
 	{
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
-	else if(strCommand == g_oLangRec.GetString(478))	// ·¢ËÍÏûÏ¢
+	else if(strCommand == g_oLangRec.GetString(478))	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	{
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if(strCommand == g_oLangRec.GetString(854))	// ½â³ý¹ØÏµ£¨Í½µÜ½â³ýÊ¦¸µ£©
+	else if(strCommand == g_oLangRec.GetString(854))	// ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½Í½ï¿½Ü½ï¿½ï¿½Ê¦ï¿½ï¿½ï¿½ï¿½
 	{
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if( pMain && pMain->getGameAttr() )
@@ -1224,7 +1224,7 @@ void CChat::_OnMouseMasterMenu(CGuiData *pSender, int x, int y, DWORD key)
 			long nLevel = pMain->getGameAttr()->get(ATTR_LV);
 
 			char szBuffer[256] = {0};
-			sprintf(szBuffer, g_oLangRec.GetString(889), _curSelectMember->GetName(), nLevel * 500); // "½â³ýÊ¦¸µ %s Äú½«¿Û³ý\n½ðÇ®:%d\nÈ·¶¨Âð£¿"
+			sprintf(szBuffer, g_oLangRec.GetString(889), _curSelectMember->GetName(), nLevel * 500); // "ï¿½ï¿½ï¿½Ê¦ï¿½ï¿½ %s ï¿½ï¿½ï¿½ï¿½ï¿½Û³ï¿½\nï¿½ï¿½Ç®:%d\nÈ·ï¿½ï¿½ï¿½ï¿½"
 
 			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnMasterDeleteConfirm, szBuffer, true);
 			pSelectBox->dwTag = _curSelectMember->GetID();
@@ -1235,7 +1235,7 @@ void CChat::_OnMouseMasterMenu(CGuiData *pSender, int x, int y, DWORD key)
 	_frmQQ->Refresh();
 }
 
-// Ñ§Í½²Ëµ¥
+// Ñ§Í½ï¿½Ëµï¿½
 void CChat::_OnMouseStudentMenu(CGuiData *pSender, int x, int y, DWORD key)
 {
 	_frmQQ->PopMenu(FALSE);
@@ -1245,11 +1245,11 @@ void CChat::_OnMouseStudentMenu(CGuiData *pSender, int x, int y, DWORD key)
 
 	string strCommand = pItem->GetString();
 
-	if(strCommand == g_oLangRec.GetString(482))			// Ìí¼ÓºÃÓÑ
+	if(strCommand == g_oLangRec.GetString(482))			// ï¿½ï¿½ï¿½Óºï¿½ï¿½ï¿½
 	{
 		CS_Frnd_Invite(_curSelectMember->GetName());
 	}
-	else if(strCommand == g_oLangRec.GetString(484))	// ÑûÇë×é¶Ó
+	else if(strCommand == g_oLangRec.GetString(484))	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	{
 		if(_curSelectMember->GetLevel() >= 8)
 		{
@@ -1257,19 +1257,19 @@ void CChat::_OnMouseStudentMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// °Ë¼¶ÒÔÏÂ½ûÖ¹×é¶Ó
+			// ï¿½Ë¼ï¿½ï¿½ï¿½ï¿½Â½ï¿½Ö¹ï¿½ï¿½ï¿½
 			g_pGameApp->SysInfo(g_oLangRec.GetString(866));
 		}
 	}
-	else if(strCommand == g_oLangRec.GetString(481))	// ÃÜÓï¶Ô·½
+	else if(strCommand == g_oLangRec.GetString(481))	// ï¿½ï¿½ï¿½ï¿½Ô·ï¿½
 	{
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
-	else if(strCommand == g_oLangRec.GetString(478))	// ·¢ËÍÏûÏ¢
+	else if(strCommand == g_oLangRec.GetString(478))	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 	{
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if(strCommand == g_oLangRec.GetString(854))	// ½â³ý¹ØÏµ£¨Ê¦¸µ½â³ýÍ½µÜ£©
+	else if(strCommand == g_oLangRec.GetString(854))	// ï¿½ï¿½ï¿½ï¿½ï¿½Ïµï¿½ï¿½Ê¦ï¿½ï¿½ï¿½ï¿½ï¿½Í½ï¿½Ü£ï¿½
 	{
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if( pMain && pMain->getGameAttr() )
@@ -1277,7 +1277,7 @@ void CChat::_OnMouseStudentMenu(CGuiData *pSender, int x, int y, DWORD key)
 			long nLevel = pMain->getGameAttr()->get(ATTR_LV);
 
 			char szBuffer[256] = {0};
-			sprintf(szBuffer, g_oLangRec.GetString(856), _curSelectMember->GetName(),nLevel * 5); // ½â³ýÍ½µÜ %s Äú½«¿Û³ý\n½ðÇ®:%d  ÉùÍû:%d\nÈ·¶¨Âð£¿
+			sprintf(szBuffer, g_oLangRec.GetString(856), _curSelectMember->GetName(),nLevel * 5); // ï¿½ï¿½ï¿½Í½ï¿½ï¿½ %s ï¿½ï¿½ï¿½ï¿½ï¿½Û³ï¿½\nï¿½ï¿½Ç®:%d  ï¿½ï¿½ï¿½ï¿½:%d\nÈ·ï¿½ï¿½ï¿½ï¿½
 
 			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnStudentDeleteConfirm, szBuffer, true);
 			pSelectBox->dwTag = _curSelectMember->GetID();

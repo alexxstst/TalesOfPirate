@@ -24,7 +24,7 @@ namespace GUI
 		frmQuestion = CFormMgr::s_Mgr.Find("frmQuestion");
 		if(! frmQuestion)
 		{
-			LG("gui", "main.clu   frmQuestion not found.\n");
+			ToLogService("common", "main.clu   frmQuestion not found.");
 			return false;
 		}
 		frmQuestion->evtEntrustMouseEvent = _evtQuestionFormEvent;
@@ -32,7 +32,7 @@ namespace GUI
 		edtQuestionTitle = dynamic_cast<CEdit*>(frmQuestion->Find("edtQuestionTitle"));
 		if(! edtQuestionTitle)
 		{
-			LG("gui", "main.clu   frmQuestion:edtQuestionTitle not found.\n");
+			ToLogService("common", "main.clu   frmQuestion:edtQuestionTitle not found.");
 			return false;
 		}
 		edtQuestionTitle->SetIsWrap(true);
@@ -40,7 +40,7 @@ namespace GUI
 		memCentent = dynamic_cast<CMemo*>(frmQuestion->Find("memCentent"));
 		if(! memCentent)
 		{
-			LG("gui", "main.clu   frmQuestion:memCentent not found.\n");
+			ToLogService("common", "main.clu   frmQuestion:memCentent not found.");
 			return false;
 		}
 
@@ -48,14 +48,14 @@ namespace GUI
 		frmAnswer = CFormMgr::s_Mgr.Find("frmAnswer");
 		if(! frmAnswer)
 		{
-			LG("gui", "main.clu   frmAnswer not found.\n");
+			ToLogService("common", "main.clu   frmAnswer not found.");
 			return false;
 		}
 
 		memMiss = dynamic_cast<CMemo*>(frmAnswer->Find("memMiss"));
 		if(! memMiss)
 		{
-			LG("gui", "main.clu   frmAnswer:memMiss not found.\n");
+			ToLogService("common", "main.clu   frmAnswer:memMiss not found.");
 			return false;
 		}
 
@@ -111,7 +111,7 @@ namespace GUI
 	{
 		if(strlen(edtQuestionTitle->GetCaption()) < 16)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(914));	// ÓÊ¼þÄÚÈÝ²»µÃÉÙÓÚ8¸öºº×Ö£¨16¸öÓ¢ÎÄ×Ö£©£¡
+			g_pGameApp->MsgBox(g_oLangRec.GetString(914));	// ï¿½Ê¼ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½8ï¿½ï¿½ï¿½ï¿½ï¿½Ö£ï¿½16ï¿½ï¿½Ó¢ï¿½ï¿½ï¿½Ö£ï¿½ï¿½ï¿½
 			return;
 		}
 
@@ -126,7 +126,7 @@ namespace GUI
 	void CMailMgr::_evtQuestionFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		string strName = pSender->GetName();
-		if(strName == "btnSubmit")	// Ìá½»ÎÊÌâ
+		if(strName == "btnSubmit")	// ï¿½á½»ï¿½ï¿½ï¿½ï¿½
 		{
 			g_stUIMail.SubmitQuestion();
 		}

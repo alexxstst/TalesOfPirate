@@ -192,7 +192,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 	if (!pCMap)
 	{
 		//LG("��Ұ�������", "ʵ�� %s �ڽ�����Ұͨ��ʱ�����ͼΪ��\n", GetLogName());
-		LG("eye shot activation error", "when entity %s is doing eye shot notify��the map is null\n", GetLogName());
+		ToLogService("errors", LogLevel::Error, "when entity {} is doing eye shot notify��the map is null", GetLogName());
 		return;
 	}
 
@@ -219,7 +219,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 					if (++lEntCount > lEntNum)
 					{
 						//LG("��Ұ�������", "��Ұ��Ԫ[%d,%d]ʵ��ʵ���� %d\n", x, y, lEntNum);
-						LG("eye shot activation error", "eye shot cell [%d,%d] the fact entity number %d\n", x, y, lEntNum);
+						ToLogService("errors", LogLevel::Error, "eye shot cell [{},{}] the fact entity number {}", x, y, lEntNum);
 						break;
 					}
 
@@ -247,7 +247,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 
 							if (!pCTarCha->GetSubMap())
 								//LG("��Ұ�������", "ʵ�� %s[%d,%d] �ڽ�����Ұͨ��ʱĿ����� %s(%s)[%d,%d] �ĵ�ͼΪ��\n",
-								LG("eye shot activation error", "when entity %s[%d,%d] is doing eye shot notify, the aim player %s(%s)[%d,%d] map is null\n",
+								ToLogService("errors", LogLevel::Error, "when entity {}[{},{}] is doing eye shot notify, the aim player {}({})[{},{}] map is null",
 									cszSrcLogName, l_pos1.x, l_pos1.y,
 									pCTarCha->GetLogName(), pCTarCha->GetPlyCtrlCha()->GetLogName(), pCTarCha->GetPos().x, pCTarCha->GetPos().y);
 						}
@@ -262,7 +262,7 @@ void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
 	{
 		//LG("��Ұ�������", "ʵ�� %s �ڽ�����Ұͨ��ʱ����(����[%d,%d]����Ұ[%d,%d;%d,%d])����ǰ��Ұ��Ԫ[%d,%d]\n", cszSrcLogName,
 		//	l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
-		LG("eye shot activation error", "entity %s eye shot notify error(coordnate [%d,%d]��eye shot [%d,%d;%d,%d])��currently eye shot cell[%d,%d]\n", cszSrcLogName,
+		ToLogService("errors", LogLevel::Error, "entity {} eye shot notify error(coordnate [{},{}]��eye shot [{},{};{},{}])��currently eye shot cell[{},{}]", cszSrcLogName,
 			l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
 		throw;
 	}

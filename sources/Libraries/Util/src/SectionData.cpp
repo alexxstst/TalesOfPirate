@@ -29,7 +29,7 @@ BOOL CSectionDataMgr::Create(int nSectionCntX, int nSectionCntY, const char *psz
     if(_bDebug)
     {
         //LG(GetDataName(), "开始创建新的数据文件[%s], Size = (%d %d)\n", pszMapName, nSectionCntX, nSectionCntY);
-		LG(GetDataName(), "begin create new data file[%s], Size = (%d %d)\n", pszMapName, nSectionCntX, nSectionCntY);
+		g_logManager.LogDebug("common", "begin create new data file[{}], Size = ({} {})", pszMapName, nSectionCntX, nSectionCntY);
     }
     
     _nSectionCntX   = nSectionCntX;
@@ -40,7 +40,7 @@ BOOL CSectionDataMgr::Create(int nSectionCntX, int nSectionCntY, const char *psz
     if(_fp==NULL)
     {
         //LG(GetDataName(), "msg文件 %s 创建失败!\n", pszMapName);
-		LG(GetDataName(), "msg file %s create failed!\n", pszMapName);
+		g_logManager.LogError("common", "file {} create failed!", pszMapName);
         return FALSE;
     }
 	
@@ -63,7 +63,7 @@ BOOL CSectionDataMgr::Create(int nSectionCntX, int nSectionCntY, const char *psz
     if(_bDebug)
     {
         //LG(GetDataName(), "创建结束, TotalSectionCnt = %d!\n", nTotal);
-		LG(GetDataName(), "create ok, TotalSectionCnt = %d!\n", nTotal);
+		g_logManager.LogDebug("common", "create ok, TotalSectionCnt = {}!", nTotal);
     }
     return TRUE;
 }
@@ -76,7 +76,7 @@ BOOL CSectionDataMgr::CreateFromFile(const char *pszMapName, BOOL bEdit)
     if(_bDebug)
     {
        // LG(GetDataName(), "开始读取数据文件[%s]\n", pszMapName);
-		 LG(GetDataName(), "begin read data file [%s]\n", pszMapName);
+		 g_logManager.LogDebug("common", "begin read data file [{}]", pszMapName);
     }
     
     if(_fp!=NULL) 
@@ -96,7 +96,7 @@ BOOL CSectionDataMgr::CreateFromFile(const char *pszMapName, BOOL bEdit)
 	}
 	if(fp==NULL) 
 	{
-		LG("map", "Load Map File[%s] Error!\n", pszMapName);
+		g_logManager.LogError("map", "Load Map File[{}] Error!", pszMapName);
 		return FALSE;
 	}
 	
@@ -105,7 +105,7 @@ BOOL CSectionDataMgr::CreateFromFile(const char *pszMapName, BOOL bEdit)
     if(!_ReadFileHeader())
     {
         //LG("map", "msg读取文件头失败, [%s] 可能是无效数据文件!\n", pszMapName);
-		LG("map", "msg read file failed, [%s] invalid file!\n", pszMapName);
+		g_logManager.LogError("map", "read file failed, [{}] invalid file!", pszMapName);
         fclose(fp);
         return FALSE;
     }
@@ -137,7 +137,7 @@ SDataSection *CSectionDataMgr::LoadSectionData(int nSectionX, int nSectionY)
         fseek(_fp, pSection->dwDataOffset, SEEK_SET);
         if(_bDebug)
         {
-            LG(GetDataName(), "Seek Offset = %d\n", pSection->dwDataOffset);
+            g_logManager.LogDebug("common", "Seek Offset = {}", pSection->dwDataOffset);
         }
         fread(pSection->pData, _GetSectionDataSize(), 1, _fp);
         
@@ -159,7 +159,7 @@ void CSectionDataMgr::SaveSectionData(int nSectionX, int nSectionY)
 		if(_bDebug)
         {
             //LG(GetDataName(), "[%d %d]区块数据索引值已经存在, 直接保存!\n", nSectionX, nSectionY);
-			LG(GetDataName(), "[%d %d] exsit, save directly!\n", nSectionX, nSectionY);
+			g_logManager.LogDebug("common", "[{} {}] exsit, save directly!", nSectionX, nSectionY);
         }
         
         fseek(_fp, pSection->dwDataOffset, SEEK_SET);
@@ -169,7 +169,7 @@ void CSectionDataMgr::SaveSectionData(int nSectionX, int nSectionY)
 	    if(_bDebug)
         {
             //LG(GetDataName(), "[%d %d]到文件末尾分配新的区块数据空间\n", nSectionX, nSectionY);
-			LG(GetDataName(), "[%d %d] alloc new area at file tail \n", nSectionX, nSectionY);
+			g_logManager.LogDebug("common", "[{} {}] alloc new area at file tail", nSectionX, nSectionY);
         }
         // 首先应该寻找废弃的Data数据段
         // 但缺乏废弃区域索引, 所以只能到文件末尾去添加

@@ -182,7 +182,7 @@ bool	CMPModelEff::SaveToFile(char* pszFileName)
 	t_pFile = fopen(pszFileName, "wb");
 	if(!t_pFile)
 	{
-		LG("error","msg %s,只读文件，打开失败",pszFileName);
+		ToLogService("errors", LogLevel::Error, " {},只读文件，打开失败",pszFileName);
 		return false;
 	}
 	//!版本

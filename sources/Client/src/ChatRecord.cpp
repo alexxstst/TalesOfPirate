@@ -26,11 +26,10 @@ bool CChatRecord::Save(const string name, DWORD number, const string chatData)
 	CreateDirectory("chats",NULL);
 	CreateDirectory(folder,NULL);
 	ofstream chatLog;
-	// ¸Ä±ä±£´æÁÄÌì¼ÇÂ¼·½Ê½  modify by ning.yan  20080725 Begin
+	// ï¿½Ä±ä±£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½Ê½  modify by ning.yan  20080725 Begin
 	//int i=1;
 	//for (;i<1000;i++)
 	//{
-	//	sprintf(buf,"\\[%d]%s%03d.txt",number,name.c_str(),i);
 	//	m_strPath=folder+string(buf);
 	//	if (access(m_strPath.c_str(),0)!=-1) continue;
 	//	chatLog.open(m_strPath.c_str(),ios::out);
@@ -42,7 +41,7 @@ bool CChatRecord::Save(const string name, DWORD number, const string chatData)
 	//}
 	sprintf(buf,"\\%s.txt",name.c_str());
 	m_strPath=folder+string(buf);
-	chatLog.open(m_strPath.c_str(),ios_base::app); // ÒÔ¸½¼ÓÄ£Ê½´ò¿ªÎÄ¼þ£¬ÐÂ½¨ÎÄ¼þ»ò½«Êý¾ÝÐ´µ½ÎÄ¼þÎ²²¿
+	chatLog.open(m_strPath.c_str(),ios_base::app); // ï¿½Ô¸ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½Â½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´ï¿½ï¿½ï¿½Ä¼ï¿½Î²ï¿½ï¿½
 	// End
 	chatLog<<chatData.c_str();
 	chatLog.close();

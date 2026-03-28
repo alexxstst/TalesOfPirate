@@ -13,7 +13,7 @@ using namespace std;
 
 CDynMapEntry	g_CDMapEntry;
 
-char	g_szTFightMapName[MAX_MAPNAME_LENGTH] = "";	// ¶ÓÎéÌôÕ½µØÍ¼Ãû
+char	g_szTFightMapName[MAX_MAPNAME_LENGTH] = "";	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½Í¼ï¿½ï¿½
 
 //=============================================================================
 void CMapEntryCopyCell::WriteParamPacket(WPACKET &pk)
@@ -27,8 +27,8 @@ void CDynMapEntryCell::SetCopyNum(dbc::Short sCopyNum)
 {
 	if (sCopyNum > defMAX_MAP_COPY_NUM)
 	{
-		//LG("¸±±¾ÊýÄ¿´íÎó", "msgÉè¶¨µÄ¸±±¾ÊýÄ¿ %d ³¬¹ý×î´óÖµ %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
-		LG("copy number error", RES_STRING(GM_GAMEAPP_CPP_00008), sCopyNum, defMAX_MAP_COPY_NUM);
+		//LG("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ï¿½ï¿½ï¿½ï¿½", "msgï¿½è¶¨ï¿½Ä¸ï¿½ï¿½ï¿½ï¿½ï¿½Ä¿ %d ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Öµ %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
+		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00008), sCopyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return;
 	}
 

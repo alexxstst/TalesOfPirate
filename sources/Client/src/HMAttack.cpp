@@ -163,7 +163,6 @@ void CAttackEffect::ExecHarm( CSizeArray<stEffect>& Value, CCharacter* pTarget, 
 		//char v1[32];
 		//char v2[32];
 
-		//sprintf(str,"%s == >%s %s %s\r\n",pAttack->getName(),pTarget->getName(),  _i64toa(p[i].lVal, v1, 10), _i64toa( pAttr->get( (short)p[i].lAttrID ), v2, 10));
 
 		//::OutputDebugStr(str);
 
@@ -182,7 +181,6 @@ void CAttackEffect::ExecHarm( CSizeArray<stEffect>& Value, CCharacter* pTarget, 
 				}
                 break;
 		    //case ATTR_SP: type = val<0 ? enumSubSp : enumAddSp;
-	     //       sprintf( buf, "%d", abs(val) );
       //          CreateEffect( type, buf, VPOS2, VPOS, vdir, isMain, dwDelay );
       //          break;
 			case ATTR_CEXP: 
@@ -286,7 +284,7 @@ void CAttackEffect::CreateEffect( int eType, const char* str, D3DXVECTOR3& start
     CEffectObj	*pEffect = CGameApp::GetCurScene()->GetFirstInvalidEffObj();
 	if(pEffect==NULL)
     {
-        LG("error", g_oLangRec.GetString(147));
+        g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(147));
         return;
     }
 

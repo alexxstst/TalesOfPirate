@@ -52,6 +52,12 @@
 using namespace std;
 using namespace GUI;
 
+// Локальная обёртка: логирует ошибку UI-компонента и возвращает false для удобного return
+inline bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
+	char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
+	g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
+	return false;
+}
 
 static CForm* frmSelectOriginRelive	= NULL;
 
@@ -274,12 +280,12 @@ void CStartMgr::UpdateBackDrop()
    CCompent* teamBackDrops[4]{};
    if (!imgBackDropPlayer)
    {
-	   LG("updatebackdrop", "imgBackDropPlayer null not found \n");
+	   ToLogService("common", "imgBackDropPlayer null not found ");
 	   return;
    }
    if ( !imgBackDropTarget)
    {
-	   LG("updatebackdrop", "imgBackDropTarget null not found \n");
+	   ToLogService("common", "imgBackDropTarget null not found ");
 	   return;
    }
     for (int i = 0; i < 4; i++) {
@@ -290,7 +296,7 @@ void CStartMgr::UpdateBackDrop()
         teamBackDrops[i] = dynamic_cast<CCompent*>(g_stUIStart._FindForm(formName)->Find(imgName));
 		if (!teamBackDrops[i])
 		{
-			LG("updatebackdrop", "teamBackDrops null not found %s\n", imgName);
+			ToLogService("common", "teamBackDrops null not found {}", imgName);
 			return;
 		}
     }
@@ -1204,7 +1210,6 @@ void CStartMgr::RefreshMainLifeNum( long num, long max )
 	////HP�ı仯
 	//char szHP[32] = { 0 };
 	//if ( num < 0 )	num = 0;
-	//sprintf( szHP,"%d/%d", num, max);
 	//szHP[sizeof(szHP)-1] = '\0';
 
 	//float f = (float) num /(float) max;
@@ -1240,7 +1245,7 @@ void CStartMgr::RefreshMainLifeNum( long num, long max )
 
 void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 {
-	LG("exp", g_oLangRec.GetString(763), num, curlev, nextlev, 100.0f * (float)(num - curlev) / (float)(nextlev - curlev));
+	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(763), num, curlev, nextlev, 100.0f * (float)(num - curlev) / (float)(nextlev - curlev)); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 	
 	//// EXP�ı仯
 	//long max = nextlev - curlev;
@@ -1248,9 +1253,7 @@ void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 	//if ( num < 0 ) num = 0;
 
 	//if (max!=0)
-	//	sprintf( szBuf , "%4.2f%%" , num*100.0f/max );	
 	//else 
-	//	sprintf( szBuf , "0.00%");
 	//szBuf[sizeof(szBuf)-1] = '\0';
 
 	//_pShowExp->SetCaption( szBuf );

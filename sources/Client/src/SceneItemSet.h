@@ -17,12 +17,12 @@ public:
 	int		nAttachEffectID;
     int     nCharacterID;
     BYTE    btWeaponType;  
-    //  ÎäÆ÷ÀàÐÍ
-    //  0   µ¥ÊÖ½üÕ½ÎäÆ÷(Í¬Í½ÊÖ¹²ÓÃ)	
-    //  1   Ë«ÊÖ½üÕ½ÎäÆ÷	
-    //  2   ÊÖ³ÖÁ½°Ñ½üÕ½ÎäÆ÷	
-    //  3   µ¥ÊÖ³ÖÇ¹ÐµÎäÆ÷	
-    //  4   Ë«ÊÖ³Ö¹­¼ýÀàÎäÆ÷
+    //  ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    //  0   ï¿½ï¿½ï¿½Ö½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½(Í¬Í½ï¿½Ö¹ï¿½ï¿½ï¿½)	
+    //  1   Ë«ï¿½Ö½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½	
+    //  2   ï¿½Ö³ï¿½ï¿½ï¿½ï¿½Ñ½ï¿½Õ½ï¿½ï¿½ï¿½ï¿½	
+    //  3   ï¿½ï¿½ï¿½Ö³ï¿½Ç¹Ðµï¿½ï¿½ï¿½ï¿½	
+    //  4   Ë«ï¿½Ö³Ö¹ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
     //int     nShipLinkID;
     //int     nItemLinkID;
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-	static CSceneItemSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CSceneItemSet* _Instance; // ï¿½àµ±ï¿½Úµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½×¡
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -92,7 +92,7 @@ protected:
 		char szPhoto[72]; sprintf(szPhoto, "texture/photo/%s.bmp", pInfo->szName);
 		pInfo->nPhotoTexID = GetTextureID(szPhoto);
 
-        LG("sceneobj", "Read ItemInfo Model = [%s], Name = [%s],  Type = %d\n", pInfo->szDataName, pInfo->szName, pInfo->btWeaponType);
+        ToLogService("ui", "Read ItemInfo Model = [{}], Name = [{}],  Type = {}", pInfo->szDataName, pInfo->szName, pInfo->btWeaponType);
         return TRUE;
     }
 };

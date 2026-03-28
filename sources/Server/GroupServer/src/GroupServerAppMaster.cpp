@@ -108,7 +108,6 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 		if(!l_invited_ply || l_invited_ply->m_currcha <0 || l_invited_ply == pPrentice)
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"��ҡ�%s����ǰ�������ϡ�",l_invited_name);
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00007),l_invited_name);
 			pPrentice->SendSysInfo(l_buf);
 		}else if(l_invited = l_invited_ply->MasterFindInvitedByInviterChaID(pPrentice->m_chaid[pPrentice->m_currcha]))
@@ -136,7 +135,6 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 			if(l_ptinviter )
 			{
 				char l_buf[256];
-				//sprintf(l_buf,"��ҡ�%s�����ڷ�æ״̬!",l_invited_name);
 				sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00012),l_invited_name);
 				l_ptinviter->SendSysInfo(l_buf);
 			}
@@ -302,7 +300,6 @@ void Player::MasterInvitedCheck(Invited	*invited)
 	}*/else if(GetTickCount() -invited->m_tick	>= g_gpsvr->const_master.PendTimeOut)
 	{
 		char l_buf[256];
-		//sprintf(l_buf,"��ԡ�%s���İ�ʦ�����ѳ���%d����û�л�Ӧ��ϵͳ�Զ�ȡ����������롣",m_chaname[m_currcha].c_str(),g_gpsvr->const_master.PendTimeOut/1000);
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00016),m_chaname[m_currcha].c_str(),g_gpsvr->const_master.PendTimeOut/1000);
 		l_inviter->SendSysInfo(l_buf);
 

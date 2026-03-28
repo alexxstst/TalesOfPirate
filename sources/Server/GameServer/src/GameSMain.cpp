@@ -61,7 +61,7 @@ int main(int argc, char* argv[])
 	}
 	if (!g_Config.Load(szConfigFileN))
 	{
-		LG("init", "config init...Fail!\n");
+		ToLogService("common", "config init...Fail!");
 		return FALSE;		
 	}
 	if (!g_Command.Load("cmd.cfg"))
@@ -70,7 +70,7 @@ int main(int argc, char* argv[])
 	}
 
 #ifdef __CATCH	
-    LG("init", "Define __CATCH\n");
+    ToLogService("common", "Define __CATCH");
 #endif
 
 	atexit(AppExit);
@@ -102,7 +102,7 @@ int main(int argc, char* argv[])
 		}
 	}
 	GameServer_End();
-	LG("init", "game map server succeed to exit\n"); 
+	ToLogService("common", "game map server succeed to exit"); 
 	return 0;
 }
  
@@ -124,13 +124,13 @@ BOOL GameServer_Begin()
 	_setmaxstdio(2048);
 
 	//LG("init", "��Ϸ��ͼ������[%s]����...\n", g_Config.m_szName);
-LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
+ToLogService("common", "game map server [{}] startup...", g_Config.m_szName);
 
 	g_pGameApp = new CGameApp();
 	if(!g_pGameApp->Init())
 	{
 		//LG("init", "GameApp ��ʼ��ʧ��, �˳�!\n");
-		LG("init", "GameApp initialization failed, exit!\n");
+		ToLogService("common", "GameApp initialization failed, exit!");
 		return FALSE;
 	}
 	
@@ -145,7 +145,7 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
 
 	g_gmsvr	= new GameServerApp();
 	// connect thread запускается в конструкторе GameServerApp
-	LG("init", "startup Gate server connect thread...\n");
+	ToLogService("common", "startup Gate server connect thread...");
 #endif
 
     //���Ӳ�����InfoServer
@@ -155,19 +155,19 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
 	
 	// ������Ϸ�߳�
 	//LG("init", "������Ϸ�߳�...\n");
-	LG("init", "startup game thread...\n");
+	ToLogService("common", "startup game thread...");
 	DWORD	dwThreadID;
 	hGameT = CreateThread(NULL, 0, g_GameLogicProcess, 0, 0, &dwThreadID);
-	LG("init", "Game Thread ID = %d\n", dwThreadID);
+	ToLogService("common", "Game Thread ID = {}", dwThreadID);
 	//
 
 	//LG("init",  "��ʼ����Win32 ���ƶԻ���\n");
-	LG("init",  "start create Win32 control dialog box\n");
+	ToLogService("common", "start create Win32 control dialog box");
 	HINSTANCE hInst = GetModuleHandle(0);
 	CreateMainDialog(hInst, NULL);
 
-	//Log("����", "GameServer����", g_Config.m_szMapList[0], "", "", "");
-	Log("restart", "GameServer restart", g_Config.m_szMapList[0], "", "", "");
+	// Лог перезапуска в БД через метод CGameApp::Log
+	g_pGameApp->Log("restart", "GameServer restart", g_Config.m_szMapList[0], "", "", "");
 	
 	return TRUE;
 }
@@ -176,7 +176,7 @@ LG("init", "game map server [%s] startup...\n", g_Config.m_szName);
 void GameServer_End()
 {
 	//LG("init", "��ʼ������Ϸ��ͼ������\n");
-	LG("init", "start to exit game map server\n");
+	ToLogService("common", "start to exit game map server");
 	CloseHandle(hGameT);
 
 	HWND hConsole = GetConsoleWindow();

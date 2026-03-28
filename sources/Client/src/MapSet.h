@@ -24,7 +24,7 @@ public:
     int   nInitY;
     float fLightDir[3];
     BYTE  btLightColor[3];
-	bool  IsShowSwitch;		// ÊÇ·ñÒªÏÔÊ¾ÇÐ»»µØÍ¼
+	bool  IsShowSwitch;		// ï¿½Ç·ï¿½Òªï¿½ï¿½Ê¾ï¿½Ð»ï¿½ï¿½ï¿½Í¼
 
 };
 
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-	static CMapSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CMapSet* _Instance; // ï¿½àµ±ï¿½Úµï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½Ô¼ï¿½ï¿½ï¿½×¡
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -90,7 +90,7 @@ protected:
             pInfo->nInitY = Str2Int(strList[1]);
         }
         
-        LG("map", "Read Map List [%d][%s]\n", pInfo->nID, pInfo->szDataName);
+        ToLogService("common", "Read Map List [{}][{}]", pInfo->nID, pInfo->szDataName);
             
         return TRUE;
     }

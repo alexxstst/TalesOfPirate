@@ -144,7 +144,6 @@ protected:
 
     void			_Login();
 	bool			_CheckAccount();
-	bool			_Bill();
 	void			_Connect();
 
 	//CSceneObj*	pObj;

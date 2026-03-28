@@ -176,7 +176,7 @@ public:
 			bSend = PostInfoSend(msg);
 		}
 		catch (...) {
-			LG("Store_data", "SendData Error!\n");
+			ToLogService("store", LogLevel::Error, "SendData Error!");
 		}
 
 		return bSend;

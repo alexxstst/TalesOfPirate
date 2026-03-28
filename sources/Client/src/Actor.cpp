@@ -329,7 +329,7 @@ CServerHarm* CActor::CreateHarmMgr()
 
     CServerHarm* tmp = new CServerHarm( this );
     _fights.push_back( tmp );
-	LG( _pCha->getLogName(), "CServerHarm CreateHarmMgr, Size[%d]\n", _fights.size() );
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm CreateHarmMgr, Size[{}]", _fights.size()));
     return tmp;
 }
 
@@ -408,7 +408,7 @@ void CMonsterItem::Exec()
 
     if( !pEffect->Create( nEffectID ) )
     {
-		LG("protocol", g_oLangRec.GetString(1), nEffectID );
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(1), nEffectID); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
         return;
     }
 	pEffect->setFollowObj((CSceneNode*)_pItem, NODE_ITEM);

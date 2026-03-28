@@ -1,4 +1,5 @@
 #include "pi_Memory.h"
+#include "logutil.h"
 
 using namespace std;
 
@@ -41,12 +42,14 @@ bool pi_Memory::wait()
 			ResumeThread(m_hThread);
 			if(TerminateThread(m_hThread, 1))
 			{
-				printf("TerminateThread OK!");
+				// Заменено printf → логирование
+				ToLogService("common", "TerminateThread OK!");
 			}
 			else
 			{
 				DWORD error = GetLastError();
-				printf("TerminateThread Error(%d)!", error);
+				// Заменено printf → логирование ошибки
+				ToLogService("errors", LogLevel::Error, "TerminateThread Error({})!", error);
 			}
 		}
 	}

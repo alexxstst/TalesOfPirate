@@ -25,20 +25,20 @@ BOOL CAuctionSystem::StartAuction(short sItemID, const string& strName, short sC
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.find(sItemID);
 	if(it != m_mapItemList.end())
 	{
-		//printf( "StartAuction:´æÔÚÖØ¸´µÄID(%d), name = %s!", sItemID, strName.c_str() );
-		printf( RES_STRING(GM_AUCTION_CPP_00001), sItemID, strName.c_str() );
-		//LG( "Auction_error", "StartAuction:´æÔÚÖØ¸´µÄID(%d), name = %s!", sItemID, strName.c_str() );
-		LG( "Auction_error", "StartAuction:exist repeat ID(%d), name = %s!", sItemID, strName.c_str() );
+		// Ð—Ð°Ð¼ÐµÐ½ÐµÐ½Ð¾ printf â†’ Ð»Ð¾Ð³Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ñ‡ÐµÑ€ÐµÐ· snprintf + InternalLog
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_AUCTION_CPP_00001), sItemID, strName.c_str()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		//LG( "Auction_error", "StartAuction:ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½ï¿½ID(%d), name = %s!", sItemID, strName.c_str() );
+		ToLogService("trade", LogLevel::Error, "StartAuction:exist repeat ID({}), name = {}!", sItemID, strName.c_str() );
 		return false;
 	}
 
 	CAuctionItem *pAucItem = new CAuctionItem(sItemID, strName, sCount, nBasePrice, nMinBid);
 	if(pAucItem == NULL)
 	{
-		//printf( "StartAuction:ÄÚ´æ·ÖÅä²»×ã,ID(%d), name = %s!", sItemID, strName.c_str() );
-		printf( RES_STRING(GM_AUCTION_CPP_00002), sItemID, strName.c_str() );
-		//LG( "Auction_error", "StartAuction:ÄÚ´æ·ÖÅä²»×ã,ID(%d), name = %s!", sItemID, strName.c_str() );
-		LG( "Auction_error", "StartAuction:memory allot not enough,ID(%d), name = %s!", sItemID, strName.c_str() );
+		// Ð—Ð°Ð¼ÐµÐ½ÐµÐ½Ð¾ printf â†’ Ð»Ð¾Ð³Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ñ‡ÐµÑ€ÐµÐ· snprintf + InternalLog
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_AUCTION_CPP_00002), sItemID, strName.c_str()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		//LG( "Auction_error", "StartAuction:ï¿½Ú´ï¿½ï¿½ï¿½ä²»ï¿½ï¿½,ID(%d), name = %s!", sItemID, strName.c_str() );
+		ToLogService("trade", LogLevel::Error, "StartAuction:memory allot not enough,ID({}), name = {}!", sItemID, strName.c_str() );
 		return false;
 	}
 
@@ -51,10 +51,10 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.find(sItemID);
 	if(it == m_mapItemList.end())
 	{
-		//printf( "EndAuction:²»´æÔÚµÄID(%d)!", sItemID );
-		printf( RES_STRING(GM_AUCTION_CPP_00003), sItemID );
-		//LG( "Auction_error", "EndAuction:²»´æÔÚµÄID(%d)!", sItemID );
-		LG( "Auction_error", "EndAuction:inexistent ID(%d)!", sItemID );
+		// Ð—Ð°Ð¼ÐµÐ½ÐµÐ½Ð¾ printf â†’ Ð»Ð¾Ð³Ð¸Ñ€Ð¾Ð²Ð°Ð½Ð¸Ðµ Ñ‡ÐµÑ€ÐµÐ· snprintf + InternalLog
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_AUCTION_CPP_00003), sItemID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		//LG( "Auction_error", "EndAuction:ï¿½ï¿½ï¿½ï¿½ï¿½Úµï¿½ID(%d)!", sItemID );
+		ToLogService("trade", LogLevel::Error, "EndAuction:inexistent ID({})!", sItemID );
 		return false;
 	}
 
@@ -75,8 +75,8 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 			game_db.IsChaOnline(pAucItem->GetCurChaID(), bOnline);
 			if(!bOnline)
 			{
-				//LG("Auction", "EndAuction: Íæ¼Ò %s ²»ÔÚÏß, µÀ¾ßid = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
-				LG("Auction", "EndAuction: player %s not online, item id = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
+				//LG("Auction", "EndAuction: ï¿½ï¿½ï¿½ %s ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½id = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
+				ToLogService("trade", "EndAuction: player {} not online, item id = {}, count = {}!", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
 			}
 			else
 			{
@@ -99,7 +99,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 							WRITE_CMD(WtPk, CMD_MM_AUCTION);
 							WRITE_LONG(WtPk, pChaOut->GetID());
 							WRITE_LONG(WtPk, pAucItem->GetCurChaID());
-							pChaOut->ReflectINFof(pChaOut, WtPk);//Í¨¸æ
+							pChaOut->ReflectINFof(pChaOut, WtPk);//Í¨ï¿½ï¿½
 
 							bFound = true;
 							break;
@@ -116,8 +116,8 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 	}
 	else
 	{
-		//LG("Auction", "EndAuction: ¾ºÅÄ½áÊø, Ã»ÓÐÍæ¼ÒÍ¶±ê!\n");
-		LG("Auction", "EndAuction: contest finish, no player to bid!\n");
+		//LG("Auction", "EndAuction: ï¿½ï¿½ï¿½Ä½ï¿½ï¿½ï¿½, Ã»ï¿½ï¿½ï¿½ï¿½ï¿½Í¶ï¿½ï¿½!\n");
+		ToLogService("trade", "EndAuction: contest finish, no player to bid!");
 	}
 	SAFE_DELETE(pAucItem);
 	m_mapItemList.erase(it);
@@ -180,7 +180,7 @@ BOOL CAuctionSystem::BidUp(CCharacter *pCha, short sItemID, uInt price)
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.find(sItemID);
 	if(it == m_mapItemList.end())
 	{
-		//pCha->SystemNotice("¾ºÅÄÒÑ½áÊø!");
+		//pCha->SystemNotice("ï¿½ï¿½ï¿½ï¿½ï¿½Ñ½ï¿½ï¿½ï¿½!");
 		pCha->SystemNotice(RES_STRING(GM_AUCTION_CPP_00004));
 		return false;
 	}

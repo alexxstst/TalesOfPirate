@@ -84,7 +84,7 @@ namespace GUI
 		frmBooth = mgr.Find("frmBooth", enumMainForm); // ���Ұ�̯����
 		if ( !frmBooth)
 		{
-			LG("gui", g_oLangRec.GetString(445));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(445));
 			return false;
 		}
 		frmBooth->evtEntrustMouseEvent = _MainMouseBoothEvent ; // ����Ϣ�¼��Ĵ���

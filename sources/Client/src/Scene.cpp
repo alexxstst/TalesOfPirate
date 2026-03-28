@@ -400,7 +400,7 @@ bool	CGameScene::_Clear()
 
     g_pGameApp->GetCursor()->SceneClear();
 
-    LG( "scene init", "CGameScene::_Clear\n" );
+    ToLogService("common", "CGameScene::_Clear");
 	return true;
 }
 
@@ -1305,8 +1305,8 @@ int CGameScene::GetValidSceneObjCnt()
 
 bool CGameScene::_CreateMemory()
 {
-    LG( "memory", "Create - Map %s, Eff: %d, Cha: %d, Obj: %d, Item: %d\n", _stInit.strMapFile.c_str(), _stInit.nMaxEff, _stInit.nMaxCha, _stInit.nMaxObj, _stInit.nMaxItem );
-	LG( "scene init", "Creatememory %s\n", _stInit.strMapFile.c_str() );
+    ToLogService("common", "Create - Map {}, Eff: {}, Cha: {}, Obj: {}, Item: {}", _stInit.strMapFile.c_str(), _stInit.nMaxEff, _stInit.nMaxCha, _stInit.nMaxObj, _stInit.nMaxItem);
+	ToLogService("common", "Creatememory {}", _stInit.strMapFile.c_str());
     _pMainCha = NULL;
 
     LoadMap( _stInit.strMapFile.c_str() );
@@ -1424,7 +1424,7 @@ bool CGameScene::_CreateMemory()
 				break;
 		}
 	}
-	LG( "scene init", "create array\n" );
+	ToLogService("common", "create array");
 
 	_CreateShadeArray(300);
 
@@ -1432,8 +1432,8 @@ bool CGameScene::_CreateMemory()
 	_pcPugMgr = std::make_unique<CPugMgr>();
 	_pcPugMgr->InitMemory(GetTerrain());
 
-	LG( "scene init", "CreateShadeArray\n" );
-	LG( "scene init", "init ok\n" );
+	ToLogService("common", "CreateShadeArray");
+	ToLogService("common", "init ok");
 
 	_ReadRBO();
 
@@ -1442,7 +1442,7 @@ bool CGameScene::_CreateMemory()
 
 bool CGameScene::_ClearMemory()
 {
-    LG( "memory", "\tClear - Map %s, Eff: %d, Cha: %d, Obj: %d, Item: %d\n", _stInit.strMapFile.c_str(), _stInit.nMaxEff, _stInit.nMaxCha, _stInit.nMaxObj, _stInit.nMaxItem );
+    ToLogService("common", "\tClear - Map {}, Eff: {}, Cha: {}, Obj: {}, Item: {}", _stInit.strMapFile.c_str(), _stInit.nMaxEff, _stInit.nMaxCha, _stInit.nMaxObj, _stInit.nMaxItem);
 
     _pMainCha = NULL;
     //if( CGameApp::IsMusicSystemValid() )	// music
@@ -1534,7 +1534,7 @@ long CGameScene::AddCharacterBlock(int nCurX, int nCurY, int nDist, BYTE *byBloc
 					}
 					else
 					{
-						LG( "pathfind", "msgCGameScene::AddCharacterBlock nRange[%d] isn't Valid, Cha name[%s], pos:[%d, %d]", nRange, pCha->getName().c_str(), pCha->GetCurX(), pCha->GetCurY() );
+						ToLogService("common", "msgCGameScene::AddCharacterBlock nRange[{}] isn't Valid, Cha name[{}], pos:[{}, {}]", nRange, pCha->getName().c_str(), pCha->GetCurX(), pCha->GetCurY());
 						return 0;
 					}
 				}
@@ -1787,7 +1787,7 @@ bool CGameScene::SwitchMap(int nMapID)
 	CMapInfo *pMapInfo = ::GetMapInfo(nMapID);
 	if( !pMapInfo ) 
 	{
-		LG( "switchmap", "msgCGameScene::SwitchMap - GetMapInfo(%d) return NULL", nMapID );
+		ToLogService("map", "msgCGameScene::SwitchMap - GetMapInfo({}) return NULL", nMapID);
 		return false;
 	}
 
@@ -1979,7 +1979,7 @@ void CGameScene::SetMainCha(int nChaID)
 bool CGameScene::_Init()
 {
     g_pGameApp->GetCursor()->SceneInit( this );
-    LG( "scene init", "3d cursor init\n" );
+    ToLogService("common", "3d cursor init");
 
     g_Render.SetDirectLightDir(g_Config.m_LightDir[0], g_Config.m_LightDir[1], g_Config.m_LightDir[2]);
     g_Render.SetDirectLightColor(g_Config.m_LightColor[0], g_Config.m_LightColor[1], g_Config.m_LightColor[2], 1.0f);
@@ -1998,7 +1998,7 @@ bool CGameScene::_Init()
     memset(_TranspObjStateSeq, 0, sizeof(SceneTranspObjStateDesc) * _dwTranspObjStateNum);
 
 	CBoxMgr::CloseAllBox();
-    LG( "scene init", "CGameScene::_Init\n" );
+    ToLogService("common", "CGameScene::_Init");
 	return true;
 }
 
@@ -2318,7 +2318,7 @@ CEffectObj* CGameScene::CreateEffect( int nEffectID, int nX, int nY, bool isLoop
 
 void CGameScene::LoadingCall()
 {
-	LG( "scene init", "LoadingCall:%s\t%d\n", _stInit.strMapFile.c_str(), GetTickCount() );
+	ToLogService("common", "LoadingCall:{}\t{}", _stInit.strMapFile.c_str(), GetTickCount());
 
     CCharacter *pObj = NULL;
 	for( int i = 0; i < _nChaCnt; i++) 
@@ -2364,7 +2364,7 @@ void CGameScene::LoadingCall()
 	_pLargerMap = new CLargerMap;
 	_pLargerMap->Create( g_Render.GetDevice(), rc, g_pGameApp->GetCurScene(), 500 );
 
-	LG( "scene init", "create small map\n" );
+	ToLogService("common", "create small map");
 //////////////////////////////////////////////////////////////////////////
 
 	   // ���辵ͷ

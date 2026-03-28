@@ -22,7 +22,6 @@ void GroupServerApp::CP_FRND_INVITE(Player *ply,net::TcpClient *client,net::RPac
 		if(!l_invited_ply || l_invited_ply->m_currcha <0 || l_invited_ply ==ply)
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"�����������ҡ�%s����ǰ�������ϡ�",l_invited_name.c_str());
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00002),l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
 		}else if(l_invited =l_invited_ply->FrndFindInvitedByInviterChaID(ply->m_chaid[ply->m_currcha]))
@@ -40,7 +39,6 @@ void GroupServerApp::CP_FRND_INVITE(Player *ply,net::TcpClient *client,net::RPac
 		}else if(l_invited_ply->m_CurrFriendNum >=const_frnd.FriendMax)
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"�����������ҡ�%s���ĺ�����Ŀ�Ѿ��ﵽ�����������ˡ�",l_invited_name.c_str());
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00006),l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
 		}
@@ -63,7 +61,6 @@ void GroupServerApp::CP_FRND_INVITE(Player *ply,net::TcpClient *client,net::RPac
 			if(l_ptinviter )
 			{
 				char l_buf[256];
-				//sprintf(l_buf,"��������ĺ�����ҡ�%s�����ڱ������������ڷ�æ״̬,�����������ѱ�ϵͳȡ����",l_invited_name.c_str());
 				sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00009),l_invited_name.c_str());
 				l_ptinviter->SendSysInfo(l_buf);
 
@@ -89,7 +86,6 @@ void GroupServerApp::CP_FRND_REFUSE(Player *ply,net::TcpClient *client,net::RPac
 	if(l_inviter && l_inviter->m_currcha >=0 && l_inviter.m_chaid ==l_inviter->m_chaid[l_inviter->m_currcha])
 	{
 		char l_buf[256];
-		//sprintf(l_buf,"��ҡ�%s���ܾ������ĺ������롣",ply->m_chaname[ply->m_currcha].c_str());
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00010),ply->m_chaname[ply->m_currcha].c_str());
 		l_inviter->SendSysInfo(l_buf);
 	}
@@ -263,7 +259,6 @@ void Player::FrndInvitedCheck(Invited	*invited)
 	}else if(GetTickCount() -invited->m_tick	>=g_gpsvr->const_frnd.PendTimeOut)
 	{
 		char l_buf[256];
-		//sprintf(l_buf,"��ԡ�%s���ĺ��������ѳ���%d����û�л�Ӧ��ϵͳ�Զ�ȡ����������롣",m_chaname[m_currcha].c_str(),g_gpsvr->const_frnd.PendTimeOut/1000);
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00022),m_chaname[m_currcha].c_str(),g_gpsvr->const_frnd.PendTimeOut/1000);
 		l_inviter->SendSysInfo(l_buf);
 

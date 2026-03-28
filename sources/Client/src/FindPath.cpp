@@ -13,7 +13,7 @@
 #include "UIBoxForm.h"
 #include "STMove.h"
 
-struct NODE_SHARED   //Ñ°Â·Ê±¹«ÓÃµÄÂ·¾¶ÐÅÏ¢
+struct NODE_SHARED   //Ñ°Â·Ê±ï¿½ï¿½ï¿½Ãµï¿½Â·ï¿½ï¿½ï¿½ï¿½Ï¢
 {
 	BYTE* buf_ptr;
 	BYTE			dire;
@@ -90,7 +90,7 @@ PATH_LINK* SearchPath(BYTE* block_buf, short width, short height, short sx, shor
 	BOOL  found_flag = FALSE;
 
 	UINT32 lMaxStep = (height -1) * (height -1);
-	if((long)lMaxStep>STEP_LIMIT) lMaxStep = STEP_LIMIT; //ÏÞÖÆ×î´ó²½Êý
+	if((long)lMaxStep>STEP_LIMIT) lMaxStep = STEP_LIMIT; //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 
 	BYTE const* end_block = &block_buf[STEP_LIMIT - 1];
 
@@ -463,7 +463,7 @@ BYTE* CFindPath::GetTempTerrain(CGameScene* pScene, CCharacter* pCha,int iCurX, 
 
                 *pValue = pTer->GetBlock()->IsGridBlock( tm, tn ); //jze
 
-                //¼ÓÈëÇøÓòÊôÐÔ
+                //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			    if(*pValue==0)
 			    {
 				    if( !g_IsMoveAble( pCha->getChaCtrlType(), Territory, (EAreaMask)pTer->GetBlock()->GetTileRegionAttr(tm  * 50/100, tn   *50/100) ) ) 
@@ -489,7 +489,6 @@ BYTE* CFindPath::GetTempTerrain(CGameScene* pScene, CCharacter* pCha,int iCurX, 
 	//{
 	//	for (int j = 0; j < _nWidth; j++)
 	//	{
-	//		sprintf(buf,"%d",_byTempBlock[i * _nWidth + j]);
 	//		fwrite(&buf,sizeof(char),1, pFile);
 	//	}
 	//	fwrite(&ss,sizeof(char),1, pFile);
@@ -504,13 +503,13 @@ bool	PointPointRange(int px1, int py1,int px2, int py2, int range)
 	return ((abs(px1 - px2) < range) &&
 		(abs(py1 - py2) < range));
 }
-// nCurX,nCurY,nTargetX,nTargetY µÄµ¥Î»¶¼ÊÇÀåÃ×
+// nCurX,nCurY,nTargetX,nTargetY ï¿½Äµï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSelfY, int nTargetX, int nTargetY, bool &IsWalkLine)
 { 
-    LG( "path_find", "Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY() );
+    ToLogService("map", "Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 	if(nSelfX < 0 || nSelfY < 0 || nTargetX < 0 || nTargetY < 0)
 	{
-		LG("path_find","msginput coordinate less than 0, Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY() );
+		ToLogService("map", "msginput coordinate less than 0, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 		return FALSE;
 	}
 	MPTerrain *pTerrain = pScene->GetTerrain();
@@ -535,12 +534,12 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 
 	if(!PointPointRange(nx, ny,showx, showy, m_iRange))
 	{
-		LG("path_find","input coordinate start is not in range, Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
+		ToLogService("map", "input coordinate start is not in range, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 		return FALSE;
 	}
 	if(!PointPointRange(ntx, nty,showx, showy, m_iRange))
 	{
-		LG("path_find","input coordinate target is not in range, Self[%u, %u], Target[%u, %u], ChaPos[%u, %u]\n", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
+		ToLogService("map", "input coordinate target is not in range, Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
 		return FALSE;
 	}
 	nCurX = nCurX/50;
@@ -612,7 +611,7 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 
 	if(pLink==NULL)  
 	{
-		LG("debug", "Path Not Found!\n");
+		ToLogService("common", "Path Not Found!");
 		GetTempTerrain(pScene,pCha,nCurX,nCurY);
 
 		SetTargetPos((_nWidth / 2),(_nWidth / 2),_nTargetX, _nTargetY,false);
@@ -644,8 +643,8 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 		n++;
 		if(n>=MAX_PATH_STEP)
 		{
-			LG("debug", "Path Searth Step = %d Overmax \n", n);
-			n = 0; // Â·¾¶Çå0
+			ToLogService("common", "Path Searth Step = {} Overmax ", n);
+			n = 0; // Â·ï¿½ï¿½ï¿½ï¿½0
 			break;
 		}
 	}
@@ -697,7 +696,7 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 			tvm.y = tvm.y - 0.5f;
 			break;
 		default:
-			LG("mag","msg:error");
+			ToLogService("common", "msg:error");
 			break;
 		}
 		if(*_vecDirSave[m-1] != *_vecDirSave[m])
@@ -772,7 +771,7 @@ bool CFindPath::Find( CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSel
 				_vecPathPoint.pop_front();
 			}else
 			{
-				LG("msg","msgok\n");
+				ToLogService("common", "msgok");
 			}
 		}
 
@@ -786,7 +785,7 @@ bool CFindPath::Find( CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSel
 			{
 				if( _vecPathPoint[i]->x == _vecPathPoint[i+1]->x && _vecPathPoint[i]->y == _vecPathPoint[i+1]->y)
 				{
-					LG("msg","msgfind path repeat!\n");
+					ToLogService("common", "msgfind path repeat!");
 					return true;
 				}
 			}

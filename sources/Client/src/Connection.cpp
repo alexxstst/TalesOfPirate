@@ -17,7 +17,7 @@ Connection::~Connection()
 
 bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
 {
-	LG("connect", "Connect: %s, %d\n", hostname, port);
+	ToLogService("connections", "Connect: {}, {}", hostname, port);
 
 	if (m_status == CNST_CONNECTING || m_status == CNST_CONNECTED || m_status == CNST_HANDSHAKE)
 		return false;
@@ -60,7 +60,7 @@ bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
 
 void Connection::Disconnect(int reason)
 {
-	LG("connect", "Disconnect\n");
+	ToLogService("connections", "Disconnect");
 	m_netif->GetClient().Disconnect(reason);
 }
 

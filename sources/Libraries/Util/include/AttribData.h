@@ -61,7 +61,7 @@ inline DWORD CAttribData::_ReadSectionIdx(DWORD dwSectionNo)
     if(_bDebug)
     {
         //LG(GetDataName(), "读取索引区数据[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
-		LG(GetDataName(), "read index data [%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+		g_logManager.LogDebug("common", "read index data [{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
     return dwOffset;
 }
@@ -73,6 +73,6 @@ inline void CAttribData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
     if(_bDebug)
     {
         //LG(GetDataName(), "写入索引区数据[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
-		LG(GetDataName(), "write index data [%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+		g_logManager.LogDebug("common", "write index data [{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
 }

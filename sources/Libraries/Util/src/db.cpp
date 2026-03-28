@@ -66,16 +66,16 @@ bool cfl_db::handle_err(SQLHANDLE h, SQLSMALLINT t,
 		//DBLOG(SQLERR_FORMAT, state, error, msg);
 
 		if (g_cchLogUtilDb == 1)
-			LG2("util_db", SQLERR_FORMAT, state, error, msg);
+			ToLogService("database", "SQL Error State:{}, Native Error Code: {:X}, ODBC Error: {}", (char const*)state, error, (char const*)msg);
 
-		LG2("util_db_error", SQLERR_FORMAT, state, error, msg);
+		ToLogService("database", LogLevel::Error, "SQL Error State:{}, Native Error Code: {:X}, ODBC Error: {}", (char const*)state, error, (char const*)msg);
 
 		if (sql != NULL)
 		{
 			if (g_cchLogUtilDb == 1)
-	            LG2("util_db", "[STMT:0x%x][SQLERR]: [%s]\n", h, sql);
+	            ToLogService("database", "[STMT:{}][SQLERR]: [{}]", (void*)h, sql);
 			
-			LG2("util_db_error", "[STMT:0x%x][SQLERR]: [%s]\n", h, sql);
+			ToLogService("database", LogLevel::Error, "[STMT:{}][SQLERR]: [{}]", (void*)h, sql);
 		}
 	}
 
@@ -106,14 +106,14 @@ bool cfl_db::_reconnt()
 	string err_info;
     cfl_rs* tmp = NULL;
 
-	printf( "connecting database ...\n" );
-	LG2("util_db_error", "connecting database...\n");
+
+	ToLogService("database", "connecting database...");
     vector<cfl_rs *>::iterator it = _rslist.begin();
     while (it != _rslist.end())
     {
         tmp = (cfl_rs *)*(it);
 		if (g_cchLogUtilDb == 1)
-	        LG2("util_db", "notify %p the disconn message\n", tmp);
+	        ToLogService("database", "notify {} the disconn message", (void*)tmp);
         tmp->notify_discon(this);
 
         ++ it;
@@ -121,37 +121,37 @@ bool cfl_db::_reconnt()
 
 	disconn();
 
-	printf( "ready connect database...\n" );
-	LG2("util_db_error", "ready connect database...\n");
+
+	ToLogService("database", "ready connect database...");
 	if (g_cchLogUtilDb == 1)
-		LG2("util_db", "begin to reconnect database\n");
+		ToLogService("database", "begin to reconnect database");
 	while (!_connect(err_info))
 	{
 		if (g_cchLogUtilDb == 1)
-			LG2("util_db", "reconnect database failed: %s\n", err_info.c_str());
+			ToLogService("database", "reconnect database failed: {}", err_info.c_str());
 		Sleep(1000);
-		printf( "reconnect database...\n" );
-		LG2("util_db_error", "reconnect database...\n");
+
+		ToLogService("database", "reconnect database...");
 	}
 
-	printf( "reconnect database success��\n" );
-	LG2("util_db_error", "reconnect database success!\n");
+
+	ToLogService("database", "reconnect database success!");
 	if (g_cchLogUtilDb == 1)
-		LG2("util_db", "reconnect database successfully\n");
+		ToLogService("database", "reconnect database successfully");
 
 	it = _rslist.begin();
 	while (it != _rslist.end())
 	{
 		tmp = (cfl_rs *)*(it);
 		if (g_cchLogUtilDb == 1)
-			LG2("util_db", "notify %p the reconnect message\n", tmp);
+			ToLogService("database", "notify {} the reconnect message", (void*)tmp);
 		tmp->notify_reconn(this);
 
 		++ it;
 	}
 
-	printf( "reconnect database ok��\n" );
-	LG2("util_db_error", "reconnect database ok!\n");
+
+	ToLogService("database", "reconnect database ok!");
 	return true;
 }
 
@@ -213,7 +213,6 @@ bool cfl_db::_connect(string& errinfo)
 
 		//char command[256];
 
-		//sprintf(command, "use %s", DATABASE);
 		//if (!SQL_SUCCEEDED(SQLExecDirect(_hdbc, (SQLCHAR *) command, SQL_NTS))) 
 		//{
 		//	handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
@@ -417,7 +416,7 @@ RECONNECT:
 
 		default:
 			if (g_cchLogUtilDb == 1)
-				LG2("util_db", "SQLExecDirect return %d\n", sqlret);
+				ToLogService("database", "SQLExecDirect return {}", sqlret);
 		}
 	}
 	while (0);
@@ -600,12 +599,12 @@ bool cfl_rs::_get_bin_field(char* field_text, int& len, char* param, char* filte
         }
     } catch (...) {
 		if (g_cchLogUtilDb == 1)
-	        LG2("util_db", "exception raised from _get_row exec\n");
+	        ToLogService("database", "exception raised from _get_row exec");
         return false;
     }
 
 	if (g_cchLogUtilDb == 1)
-	    LG2("util_db", "_get_row [SQL]: [%s]\n", sql);
+	    ToLogService("database", "_get_row [SQL]: [{}]", sql);
 
 RECONNECT:
 
@@ -624,7 +623,7 @@ RECONNECT:
                 handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
                 break;
             }
-            } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row alloc\n"); break;}
+            } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row alloc"); break;}
 
             try {
             sqlret = SQLSetStmtOption(hstmt, SQL_QUERY_TIMEOUT, 50);
@@ -643,7 +642,7 @@ RECONNECT:
 				}
 			    return false;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row exec\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row exec"); break;}
 
         try {
             sqlret = SQLNumResultCols(hstmt, &col_num);
@@ -653,20 +652,20 @@ RECONNECT:
             if (col_num <= 0)
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "col_num = 0 (<=0)\n", col_num);
+	                ToLogService("database", "col_num = {} (<=0)", col_num);
                 break;
             }
 
                 SQLBindCol(hstmt, UWORD(1), SQL_C_BINARY, _buf[0], len, &_buf_len[0]);
 
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row bind\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row bind"); break;}
 
         try {
             sqlret = SQLFetch(hstmt); // only fetch the next row
             if (DBNODATA(sqlret))
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "SQL didn't fetch any data [%s]\n", sql);
+	                ToLogService("database", "SQL didn't fetch any data [{}]", sql);
                 found = false;
             }
             else if (sqlret != SQL_SUCCESS)
@@ -677,7 +676,7 @@ RECONNECT:
                     break;
                 }
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row fetch\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row fetch"); break;}
 
         try {
             // ��������
@@ -703,7 +702,7 @@ RECONNECT:
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row copydata\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row copydata"); break;}
 
         ret = true;
 
@@ -717,7 +716,7 @@ RECONNECT:
             SQLFreeStmt(hstmt, SQL_UNBIND);
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row freestmt\n"); ret = false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row freestmt"); ret = false;}
 
     return ret;
 }
@@ -755,12 +754,12 @@ bool cfl_rs::_get_row(string field_text[], int field_max_cnt, const char* param,
         }
     } catch (...) {
 		if (g_cchLogUtilDb == 1)
-	        LG2("util_db", "exception raised from _get_row exec\n");
+	        ToLogService("database", "exception raised from _get_row exec");
         return false;
     }
 
 	if (g_cchLogUtilDb == 1)
-	    LG2("util_db", "_get_row [SQL]: [%s]\n", sql);
+	    ToLogService("database", "_get_row [SQL]: [{}]", sql);
 
 RECONNECT:
 
@@ -779,7 +778,7 @@ RECONNECT:
                 handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
                 break;
             }
-            } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row alloc\n"); break;}
+            } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row alloc"); break;}
 
             try {
             sqlret = SQLSetStmtOption(hstmt, SQL_QUERY_TIMEOUT, 50);
@@ -798,7 +797,7 @@ RECONNECT:
 				}
 			    return false;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row exec\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row exec"); break;}
 
         try {
             sqlret = SQLNumResultCols(hstmt, &col_num);
@@ -810,7 +809,7 @@ RECONNECT:
             if (col_num <= 0)
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "col_num = 0 (<=0)\n", col_num);
+	                ToLogService("database", "col_num = {} (<=0)", col_num);
                 break;
             }
 
@@ -819,14 +818,14 @@ RECONNECT:
                 SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i],
                         MAX_DATALEN, &_buf_len[i]);
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row bind\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row bind"); break;}
 
         try {
             sqlret = SQLFetch(hstmt); // only fetch the next row
             if (DBNODATA(sqlret))
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "SQL didn't fetch any data [%s]\n", sql);
+	                ToLogService("database", "SQL didn't fetch any data [{}]", sql);
                 found = false;
             }
             else if (sqlret != SQL_SUCCESS)
@@ -837,7 +836,7 @@ RECONNECT:
                     break;
                 }
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row fetch\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row fetch"); break;}
 
         try {
             // ��������
@@ -865,7 +864,7 @@ RECONNECT:
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row copydata\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row copydata"); break;}
 
         ret = true;
 
@@ -879,7 +878,7 @@ RECONNECT:
             SQLFreeStmt(hstmt, SQL_UNBIND);
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row freestmt\n"); ret = false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row freestmt"); ret = false;}
 
     return ret;
 }
@@ -915,10 +914,10 @@ bool cfl_rs::_get_row3(string field_text[], int field_max_cnt, const char* param
             strcat(sql, " where ");
             strcat(sql, filter);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 exec\n"); return false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 exec"); return false;}
 
 	if (g_cchLogUtilDb == 1)
-	    LG2("util_db", "_get_row3 [SQL]: [%s]\n", sql);
+	    ToLogService("database", "_get_row3 [SQL]: [{}]", sql);
 
 RECONNECT:
 
@@ -938,7 +937,7 @@ RECONNECT:
                 handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
                 break;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 alloc\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 alloc"); break;}
 
         try {
             sqlret = SQLSetStmtOption(hstmt, SQL_QUERY_TIMEOUT, 50);
@@ -957,7 +956,7 @@ RECONNECT:
 				}
                 return false;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 exec\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 exec"); break;}
 
         try {
             sqlret = SQLNumResultCols(hstmt, &col_num);
@@ -969,7 +968,7 @@ RECONNECT:
             if (col_num <= 0)
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "col_num = 0 (<=0)\n", col_num);
+	                ToLogService("database", "col_num = {} (<=0)", col_num);
                 break;
             }
 
@@ -978,14 +977,14 @@ RECONNECT:
                 SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i],
                     MAX_DATALEN, &_buf_len[i]);
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 bind\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 bind"); break;}
 
         try {
             sqlret = SQLFetch(hstmt); // only fetch the next row
             if (DBNODATA(sqlret))
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "SQL didn't fetch any data [%s]\n", sql);
+	                ToLogService("database", "SQL didn't fetch any data [{}]", sql);
                 found = false;
             }
             else if (sqlret != SQL_SUCCESS)
@@ -996,7 +995,7 @@ RECONNECT:
                     break;
                 }
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 fetch\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 fetch"); break;}
 
         try {
             // ��������
@@ -1030,7 +1029,7 @@ RECONNECT:
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 copydata\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 copydata"); break;}
 
         ret = true;
 
@@ -1045,7 +1044,7 @@ RECONNECT:
             SQLFreeStmt(hstmt, SQL_UNBIND);
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 freestmt\n"); ret = false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 freestmt"); ret = false;}
 
     return ret;
 }
@@ -1081,10 +1080,10 @@ bool cfl_rs::_get_rowOderby(string field_text[], int field_max_cnt, const char* 
             strcat(sql, " ");
             strcat(sql, filter);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 exec\n"); return false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 exec"); return false;}
 
 	if (g_cchLogUtilDb == 1)
-	    LG2("util_db", "_get_row3 [SQL]: [%s]\n", sql);
+	    ToLogService("database", "_get_row3 [SQL]: [{}]", sql);
 
 RECONNECT:
 
@@ -1104,7 +1103,7 @@ RECONNECT:
                 handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
                 break;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 alloc\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 alloc"); break;}
 
         try {
             sqlret = SQLSetStmtOption(hstmt, SQL_QUERY_TIMEOUT, 50);
@@ -1123,7 +1122,7 @@ RECONNECT:
 				}
                 return false;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 exec\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 exec"); break;}
 
         try {
             sqlret = SQLNumResultCols(hstmt, &col_num);
@@ -1135,7 +1134,7 @@ RECONNECT:
             if (col_num <= 0)
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "col_num = 0 (<=0)\n", col_num);
+	                ToLogService("database", "col_num = {} (<=0)", col_num);
                 break;
             }
 
@@ -1144,14 +1143,14 @@ RECONNECT:
                 SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i],
                     MAX_DATALEN, &_buf_len[i]);
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 bind\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 bind"); break;}
 
         try {
             sqlret = SQLFetch(hstmt); // only fetch the next row
             if (DBNODATA(sqlret))
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "SQL didn't fetch any data [%s]\n", sql);
+	                ToLogService("database", "SQL didn't fetch any data [{}]", sql);
                 found = false;
             }
             else if (sqlret != SQL_SUCCESS)
@@ -1162,7 +1161,7 @@ RECONNECT:
                     break;
                 }
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 fetch\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 fetch"); break;}
 
         try {
             // ��������
@@ -1196,7 +1195,7 @@ RECONNECT:
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 copydata\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 copydata"); break;}
 
         ret = true;
 
@@ -1211,7 +1210,7 @@ RECONNECT:
             SQLFreeStmt(hstmt, SQL_UNBIND);
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row3 freestmt\n"); ret = false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 freestmt"); ret = false;}
 
 	return ret;
 }
@@ -1222,7 +1221,7 @@ RECONNECT:
 
 	SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
-	//LG2("util_db", "SQL Statement Length: %d\n", strlen(sql));
+	//ToLogService("database", "SQL Statement Length: {}", strlen(sql));
 
 	do
 	{
@@ -1505,7 +1504,7 @@ bool cfl_rs::getalldata(const char* sql, vector< vector< string > >& data, unsig
     catch (...)
     {
 		if (g_cchLogUtilDb == 1)
-	        LG2("util_db", "Exception raised when get friend data:\n%s\n", sql);
+	        ToLogService("database", "Exception raised when get friend data:\n{}", sql);
     }
 
     if (hstmt != SQL_NULL_HSTMT)
@@ -1635,7 +1634,7 @@ bool cfl_rs::get_page_data(char* tablename, char* param, int pagesize, int pagei
     catch (...)
     {
 		if (g_cchLogUtilDb == 1)
-	        LG2("util_db", "Exception raised when get friend data:\n%s\n", "{call sys_Paging2(?,?,?,?,?,?,?,?,?)}");
+	        ToLogService("database", "Exception raised when get friend data:\n{}", "{call sys_Paging2(?,?,?,?,?,?,?,?,?)}");
     }
 
     if (hstmt != SQL_NULL_HSTMT)
@@ -1657,7 +1656,7 @@ RECONNECT:
     int i = 0;
 
 	if (g_cchLogUtilDb == 1)
-	    LG2("util_db", "get() [SQL]: [%s]\n", sql);
+	    ToLogService("database", "get() [SQL]: [{}]", sql);
 
     // ִ�в�ѯ����
     SQLRETURN sqlret;
@@ -1675,7 +1674,7 @@ RECONNECT:
                 handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
                 break;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from get() alloc\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from get() alloc"); break;}
 
         try {
             sqlret = SQLSetStmtOption(hstmt, SQL_QUERY_TIMEOUT, 50);
@@ -1694,14 +1693,14 @@ RECONNECT:
 				}
                 return false;
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from get() exec\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from get() exec"); break;}
 
         try {
             sqlret = SQLNumResultCols(hstmt, &col_num);
             if (col_num <= 0)
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "col_num = 0 (<=0)\n", col_num);
+	                ToLogService("database", "col_num = {} (<=0)", col_num);
                 break;
             }
 
@@ -1710,14 +1709,14 @@ RECONNECT:
                 SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i],
                     MAX_DATALEN, &_buf_len[i]);
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row bind\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row bind"); break;}
 
         try {
             sqlret = SQLFetch(hstmt); // only fetch the next row
             if (DBNODATA(sqlret))
             {
 				if (g_cchLogUtilDb == 1)
-	                LG2("util_db", "SQL didn't fetch any data [%s]\n", sql);
+	                ToLogService("database", "SQL didn't fetch any data [{}]", sql);
                 found = false;
             }
             else if (sqlret != SQL_SUCCESS)
@@ -1728,7 +1727,7 @@ RECONNECT:
                     break;
                 }
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row fetch\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row fetch"); break;}
 
         try {
             // ��������
@@ -1740,7 +1739,7 @@ RECONNECT:
             else
             {
             }
-        } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row copydata\n"); break;}
+        } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row copydata"); break;}
 
         ret = true;
     }
@@ -1754,7 +1753,7 @@ RECONNECT:
             SQLFreeStmt(hstmt, SQL_UNBIND);
             SQLFreeHandle(SQL_HANDLE_STMT, hstmt);
         }
-    } catch (...) {if (g_cchLogUtilDb == 1) LG2("util_db", "exception raised from _get_row freestmt\n"); ret = false;}
+    } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row freestmt"); ret = false;}
 
     return ret;
 }
@@ -1768,7 +1767,7 @@ RECONNECT:
 
     SQLRETURN sqlret;
 	if (g_cchLogUtilDb == 1)
-	    LG2("util_db", "SQL Statement Length: %d\n", strlen(sql));
+	    ToLogService("database", "SQL Statement Length: {}", strlen(sql));
 
     do
     {
@@ -1951,7 +1950,7 @@ bool friend_tbl::get_friend_dat(friend_dat* farray, int& array_num, unsigned int
     catch (...)
     {
 		if (g_cchLogUtilDb == 1)
-	        LG2("util_db", "Exception raised when get friend data:\n%s\n", sql);
+	        ToLogService("database", "Exception raised when get friend data:\n{}", sql);
     }
 
     if (hstmt != SQL_NULL_HSTMT)
@@ -2110,7 +2109,7 @@ bool friend_tbl::get_gm_dat(friend_dat* farray, int& array_num, bool* drop)
     catch (...)
     {
         if (g_cchLogUtilDb == 1)
-            LG2("util_db", "Exception raised when get GM data:\n%s\n", sql);
+            ToLogService("database", "Exception raised when get GM data:\n{}", sql);
     }
 
     if (hstmt != SQL_NULL_HSTMT)

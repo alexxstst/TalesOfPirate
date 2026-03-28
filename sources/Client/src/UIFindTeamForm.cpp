@@ -9,7 +9,7 @@
 #include "UIBoatForm.h"
 #include "UIGlobalVar.h"
 #include "Character.h"
-#include <jobtype.h>	// common ¿â
+#include <jobtype.h>	// common ï¿½ï¿½
 extern const char* g_szJobName[MAX_JOB_TYPE];
 
 using namespace std;
@@ -30,12 +30,12 @@ namespace GUI
 	bool CFindTeamMgr::Init()
 	{
 		//
-		// Ñ°ÕÒ×é¶Ó
+		// Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½
 		//
 		frmFindTeam = CFormMgr::s_Mgr.Find("frmFindTeam");
 		if(! frmFindTeam)
 		{
-			LG("gui", "frmFindTeam not found.");
+			ToLogService("common", "frmFindTeam not found.");
 			return false;
 		}
 		frmFindTeam->evtEntrustMouseEvent = _evtFindTeamMouseButton;
@@ -43,21 +43,21 @@ namespace GUI
 		labListPage = dynamic_cast<CLabelEx*>(frmFindTeam->Find("labListPage"));
 		if(! labListPage)
 		{
-			LG("gui", "frmFindTeam:labListPage not found.");
+			ToLogService("common", "frmFindTeam:labListPage not found.");
 			return false;
 		}
 
 		btnAddme = dynamic_cast<CTextButton*>(frmFindTeam->Find("btnAddme"));
 		if(! btnAddme)
 		{
-			LG("gui", "frmFindTeam:btnAddme not found.");
+			ToLogService("common", "frmFindTeam:btnAddme not found.");
 			return false;
 		}
 
 		btnDelme = dynamic_cast<CTextButton*>(frmFindTeam->Find("btnDelme"));
 		if(! btnDelme)
 		{
-			LG("gui", "frmFindTeam:btnDelme not found.");
+			ToLogService("common", "frmFindTeam:btnDelme not found.");
 			return false;
 		}
 
@@ -68,7 +68,7 @@ namespace GUI
 			labName[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labName[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -76,7 +76,7 @@ namespace GUI
 			labLevel[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labLevel[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -84,7 +84,7 @@ namespace GUI
 			labJob[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labJob[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -92,7 +92,7 @@ namespace GUI
 			labPlace[i] = dynamic_cast<CLabelEx*>(frmFindTeam->Find(szName));
 			if(! labPlace[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 
@@ -100,7 +100,7 @@ namespace GUI
 			btnSubmit[i] = dynamic_cast<CTextButton*>(frmFindTeam->Find(szName));
 			if(! btnSubmit[i])
 			{
-				LG("gui", "frmFindTeam:%s not found.", szName);
+				ToLogService("common", "frmFindTeam:{} not found.", szName);
 				return false;
 			}
 		}
@@ -209,7 +209,7 @@ namespace GUI
 	}
 
 
-	// Ñ°ÕÒ×é¶Ó½çÃæ°´Å¥ÏûÏ¢´¦Àí
+	// Ñ°ï¿½ï¿½ï¿½ï¿½Ó½ï¿½ï¿½æ°´Å¥ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½
 	void CFindTeamMgr::_evtFindTeamMouseButton(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		string strName = pSender->GetName();
@@ -230,12 +230,12 @@ namespace GUI
 		}
 		else if(strName == "btnAddme")
 		{
-			// Ìí¼Óµ½Ñ°Çó×é¶ÓÁÐ±íÖÐ
+			// ï¿½ï¿½ï¿½Óµï¿½Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½
 			CS_VolunteerAdd();
 		}
 		else if(strName == "btnDelme")
 		{
-			// ´ÓÑ°Çó×é¶ÓÁÐ±íÖÐÏû³ý
+			// ï¿½ï¿½Ñ°ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			CS_VolunteerDel();
 		}
 		else if(strName.substr(0, 10) == "btnSubmit_")
@@ -257,7 +257,7 @@ namespace GUI
 			int nSeq = strName[strName.size() - 1] - '0';
 			if(0 <= nSeq && nSeq < FINDTEAM_PAGE_SIZE)
 			{
-				// ·¢³ö×é¶ÓÇëÇó
+				// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 				if(g_stUIFindTeam.labName[nSeq]->GetIsShow())
 				{
 					CS_VolunteerSel(g_stUIFindTeam.labName[nSeq]->GetCaption());
@@ -267,7 +267,7 @@ namespace GUI
 	}
 
 
-	// ×é¶ÓÉêÇë»Øµ÷
+	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Øµï¿½
 	void CFindTeamMgr::_evtFindTeamCheckEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		CS_VolunteerAsr(nMsgType == CForm::mrYes, g_stUIFindTeam.m_strTeamLeader.c_str());

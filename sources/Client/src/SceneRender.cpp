@@ -392,7 +392,7 @@ void CGameScene::_Render()
 				}
 				catch(...)
 				{
-					LG("error", "pObj->Render()\n");
+					ToLogService("errors", LogLevel::Error, "pObj->Render()");
 				}
 
                 if(transp_flag)
@@ -810,7 +810,7 @@ void CGameScene::_Render()
 		}
 		catch(...)
 		{
-			LG("error", "RenderEffectMap\n");
+			ToLogService("errors", LogLevel::Error, "RenderEffectMap");
 		}
 
 		//lemon add@2005.2.17
@@ -1259,6 +1259,5 @@ void CGameScene::_RenderUI()
 	//}
 	//catch(...)
 	//{
-	//	printf( "dangji" );
 	//}
 }

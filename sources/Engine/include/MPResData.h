@@ -193,7 +193,7 @@ inline void* CRawDataSet::GetRawData(int nID, BOOL bRequest)
 	{
 	    if(bRequest && _bEnableRequest)
         {
-            LG("debug", "Push Request RawData!\n");
+            ToLogService("common", "Push Request RawData!");
             _RequestList.push_back(nID);
             return NULL;
         }
@@ -202,7 +202,7 @@ inline void* CRawDataSet::GetRawData(int nID, BOOL bRequest)
         pInfo->dwLoadCnt++;
 		if(pInfo->pData==NULL)
 		{
-			LG("error", "Load Raw Data [%s] Failed! (ID = %d)\n", pInfo->szDataName, nID);
+			ToLogService("errors", LogLevel::Error, "Load Raw Data [{}] Failed! (ID = {})", pInfo->szDataName, nID);
 		}
 		else
 		{
@@ -226,7 +226,7 @@ inline int CRawDataSet::GetRawDataID(const char *pszDataName) // ´ÓÃû×Ö»ñÈ¡ID, È
 	{
 		if(_nUnusedIndex >= _nIDCnt)
 		{
-			LG("error", "RawDataSet OverMax Dynamic ID, MaxIDCnt = %d, Index = %d\n", _nIDCnt, _nUnusedIndex);
+			ToLogService("errors", LogLevel::Error, "RawDataSet OverMax Dynamic ID, MaxIDCnt = {}, Index = {}", _nIDCnt, _nUnusedIndex);
 			return -1;
 		}
 		
@@ -319,7 +319,7 @@ inline void CRawDataSet::DynamicRelease(BOOL bClearAll)
 			_nLoadedRawDataCnt--;
 			if(_nLoadedRawDataCnt < 0)
 			{
-			    LG("error", "LoadedRawDataCnt = %d , < 0 ?\n", _nLoadedRawDataCnt);
+			    ToLogService("errors", LogLevel::Error, "LoadedRawDataCnt = {} , < 0 ?", _nLoadedRawDataCnt);
 			}
       	}
         return;
@@ -341,7 +341,7 @@ inline void CRawDataSet::DynamicRelease(BOOL bClearAll)
 			_nLoadedRawDataCnt--;
 			if(_nLoadedRawDataCnt < 0)
 			{
-				LG("error", "LoadedRawDataCnt = %d , < 0 ?\n", _nLoadedRawDataCnt);
+				ToLogService("errors", LogLevel::Error, "LoadedRawDataCnt = {} , < 0 ?", _nLoadedRawDataCnt);
 			}
 			// LG("debug", "Dynamic Release Raw Data [%s]\n", pInfo->szDataName);
 		}
@@ -362,7 +362,7 @@ inline void CRawDataSet::Release()
 		_nLoadedRawDataCnt--;
 		if(_nLoadedRawDataCnt < 0)
 		{
-			LG("error", "LoadedRawDataCnt = %d , < 0 ?\n", _nLoadedRawDataCnt);
+			ToLogService("errors", LogLevel::Error, "LoadedRawDataCnt = {} , < 0 ?", _nLoadedRawDataCnt);
 		}
 	}
 	_DeleteRawDataArray();
@@ -375,7 +375,7 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char *pszFileName)
 	FILE* fp = fopen(pszFileName, "rb");
 	if(fp==NULL) 
 	{
-		LG("error", "Load Raw Data Info Bin File [%s] Failed!\n", pszFileName);
+		ToLogService("errors", LogLevel::Error, "Load Raw Data Info Bin File [{}] Failed!", pszFileName);
 		return FALSE;
 	}
 	
@@ -401,7 +401,7 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char *pszFileName)
         memcpy(pCurInfo, pInfo, nInfoSize); // Ìæ´úÔ­ÓÐµÄÐÅÏ¢
         _IDIdx[pCurInfo->szDataName] = pCurInfo;
         vector<string> ParamList; _ReadRawDataInfo(pCurInfo, ParamList);
-        LG("debug", "Load Bin RawData [%s] = %d\n", pCurInfo->szDataName, pCurInfo->nID);
+        ToLogService("common", "Load Bin RawData [{}] = {}", pCurInfo->szDataName, pCurInfo->nID);
     }
     
     delete pbtResInfo;
@@ -440,7 +440,7 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Txt(const char *pszFileName)
 	ifstream in(pszFileName);
     if(in.is_open()==0)
     {
-        LG("error", "msgLoad Raw Data Info Txt File [%s] Fail!\n", pszFileName);
+        ToLogService("errors", LogLevel::Error, "Load Raw Data Info Txt File [{}] Fail!", pszFileName);
         return FALSE;
     }
 	
@@ -493,7 +493,7 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Txt(const char *pszFileName)
 		_IDIdx[pInfo->szDataName] = pInfo;
         if(!_ReadRawDataInfo(pInfo, ParamList))
         {
-            LG("error", "msg½âÎö×ÊÔ´ÎÄ¼þ[%s]Ê§°Ü, Çë¼ì²é¸ñÊ½ºÍ°æ±¾!\n", pszFileName);
+            ToLogService("errors", LogLevel::Error, "½âÎö×ÊÔ´ÎÄ¼þ[{}]Ê§°Ü, Çë¼ì²é¸ñÊ½ºÍ°æ±¾!", pszFileName);
             in.close();
 	        return FALSE;
         }
@@ -601,7 +601,7 @@ inline void	CRawDataSet::PackFromDirectory(list<string> &DirList, const char *ps
 			fwrite(pbtFileContent, dwFileSize, 1, fp);
 			delete pbtFileContent;
 		}
-        LG("debug", "Pack File (index = %d) ID = %d [%s]\n", pInfo->nIndex, pInfo->nID, pInfo->szDataName);
+        ToLogService("common", "Pack File (index = {}) ID = {} [{}]", pInfo->nIndex, pInfo->nID, pInfo->szDataName);
 	}
 	
 	fclose(fp);

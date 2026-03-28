@@ -832,7 +832,7 @@ inline int lua_FindNpc( lua_State* L )
 	const char* pszNpc = lua_tostring( L, 1 );
 	CNpc* pNpc = NULL;
 	try { pNpc = g_pGameApp->FindNpc( pszNpc ); }
-	catch(...) { LG( "find_npc", "findnpc error��exception!" ); }
+	catch(...) { ToLogService("common", "findnpc error��exception!" ); }
 
 	if( !pNpc )
 	{
@@ -851,7 +851,6 @@ inline int lua_ReloadNpcInfo( lua_State* L )
 	//LoadScript();
 	//if( g_pGameApp->ReloadNpcInfo( *this ) )
 	//{
-	//	printf( "NPC�Ի�������lua�ű����³ɹ���" );
 	//}
 	return 0;
 }

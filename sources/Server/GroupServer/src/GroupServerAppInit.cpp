@@ -32,7 +32,8 @@ void GroupServerApp::Initialize()
 		InitACTSvrConnect(*this);
 	}
 
-	LG("init", "init Lua Script...\n");
+	// Инициализация Lua-скриптов
+	ToLogService("common", "init Lua Script...");
 	if( !InitLuaScript() )
 	{
 		THROW_EXCP(excp, "init LUA script failed!");
@@ -97,20 +98,21 @@ void GroupServerApp::Initialize()
 
 void InitDBSvrConnect(GroupServerApp &gpapp)
 {
-	LG("group_sql", RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00030));
+	// Инициализация БД — строка из ресурсов
+	g_logManager.InternalLog(LogLevel::Debug, "db", RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00030));
 	string	l_errinfo;
 
 	const std::string	l_dsn = gpapp.m_cfg["Database"]["dsnGameDb"];
 	gpapp.m_cfg_db.enable_errinfo();
 
-	LG("group_sql", "begin connect database, dsn = [%s]\n", l_dsn.c_str());
+	ToLogService("db", "begin connect database, dsn = [{}]", l_dsn.c_str());
 	if(!gpapp.m_cfg_db.connect(l_dsn.c_str(), l_errinfo))
 	{
-		LG("group_sql", "connect database failed, error[%s]\n", l_errinfo.c_str());
+		ToLogService("db", LogLevel::Error, "connect database failed, error[{}]", l_errinfo.c_str());
 		THROW_EXCP(excpDB,l_errinfo.c_str());
 	}
 
-	LG("group_sql", "connect database ok, begin init datatable\n");
+	ToLogService("db", "connect database ok, begin init datatable");
 
 	gpapp.m_tblaccounts		=new TBLAccounts(&(gpapp.m_cfg_db));
 	gpapp.m_tblcharaters	=new TBLCharacters(&(gpapp.m_cfg_db));
@@ -120,25 +122,25 @@ void InitDBSvrConnect(GroupServerApp &gpapp)
 	gpapp.m_tblX1			=new friend_tbl(&(gpapp.m_cfg_db));
 	gpapp.m_tbLparam		=new TBLParam(&(gpapp.m_cfg_db));
 
-	LG("group_sql", "begin check table [account] \n");
+	ToLogService("db", "begin check table [account]");
 	if(!gpapp.m_tblaccounts->IsReady())
 	{
-		LG("group_sql", " check table [account] failed\n");
+		ToLogService("db", LogLevel::Error, "check table [account] failed");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00003));
 	}
 
-	LG("group_sql", "begin check table [guild]\n");
+	ToLogService("db", "begin check table [guild]");
 	if(!gpapp.m_tblguilds->IsReady())
 	{
-		LG("group_sql", " check table [guild] failed \n");
+		ToLogService("db", LogLevel::Error, "check table [guild] failed");
 		THROW_EXCP(excpDB,RES_STRING(GP_GROUPSERVERAPPINIT_CPP_00004));
 	}
 	gpapp.m_tblcharaters->ZeroAddr();
 
-	LG("group_sql", "begin check table [param]\n");
+	ToLogService("db", "begin check table [param]");
 
 	if(gpapp.m_tbLparam->InitParam())
-	LG("group_sql", "init database success\n");
+	ToLogService("db", "init database success");
 }
 
 void InitACTSvrConnect(GroupServerApp &gpapp)

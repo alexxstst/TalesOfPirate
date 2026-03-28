@@ -287,7 +287,7 @@ int CDrag::BeginMouseRun( CGuiData* gui, bool InRect, int x, int y, DWORD key )
                 _nDragX = x - _nStartX;
                 _nDragY = y - _nStartY;
 
-                // ¿ªÊ¼ÍÏ¶¯
+                // ï¿½ï¿½Ê¼ï¿½Ï¶ï¿½
                 if( (abs(_nStartX - x)>=(int)_nYareLen || abs(_nStartY - y)>=(int)_nYareLen) )
                 {
                     _eState = stDrag;
@@ -317,7 +317,7 @@ void CDrag::Reset()
 
 bool CDrag::MouseRun( int x, int y, DWORD key )
 {
-    // ÍÏ¶¯Íê±Ï
+    // ï¿½Ï¶ï¿½ï¿½ï¿½ï¿½
     if( key & Mouse_LUp )
     {
         if( _IsUseGrid )
@@ -444,13 +444,13 @@ HRESULT  UI_OnResetDevice()
 void	UIRender::OnLostDevice()
 {
     if(FAILED(_p2DSprite->OnLostDevice()))
-        LG("error","msglost");
+        ToLogService("errors", LogLevel::Error, "msglost");
 }
 
 void	UIRender::OnResetDevice()
 {
     if(FAILED(_p2DSprite->OnResetDevice()))
-        LG("error","msgreset");
+        ToLogService("errors", LogLevel::Error, "msgreset");
 }
 
 void	UIRender::RegisterFunc()
@@ -640,7 +640,7 @@ void UIRender::SetScreen( int w, int h, bool isFull )
 {
 	_IsFullScreen = isFull;
 
-    int sw, sh;     // Êµ¼ÊÏÔÊ¾ÇøÓò
+    int sw, sh;     // Êµï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
     RECT rc;
     ::GetClientRect( g_pGameApp->GetHWND(), &rc );
     sw = rc.right  - rc.left;	
@@ -668,8 +668,8 @@ void UIRender::SetScreen( int w, int h, bool isFull )
     _fDrawScaleX = 1.0f;
     _fDrawScaleY = 1.0f;
 
-    LG( "setscreen", "Screen:%f, %f Draw:%f, %f ScreenSize: %d, %d  ClientSize: %d, %d  IsFull: %d\n"
-        , _fScreenScaleX, _fScreenScaleY, _fDrawScaleX, _fDrawScaleY, w, h, sw, sh, isFull );
+    ToLogService("common", "Screen:{}, {} Draw:{}, {} ScreenSize: {}, {}  ClientSize: {}, {}  IsFull: {}",
+        _fScreenScaleX, _fScreenScaleY, _fDrawScaleX, _fDrawScaleY, w, h, sw, sh, isFull);
 
 	_fOldScreenScaleX = _fScreenScaleX;
 	_fOldScreenScaleY = _fScreenScaleY;
@@ -748,7 +748,7 @@ bool CGuiPic::LoadImage( int frame, int nTextureID, int tx, int ty, int tw, int 
 	pTex->nTexSY	= ty;
 	pTex->nTexW	= tw;
 	pTex->nTexH	= th;
-	if( scale_x<=0.000001f ) // ÌùÍ¼À­Éýµ½´°¿Ú³ß´ç
+	if( scale_x<=0.000001f ) // ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú³ß´ï¿½
 	{
 		if( _pParent )
 		{
@@ -1011,7 +1011,7 @@ bool CGuiFont::Clear()
 	{
 		(*it)->ReleaseFont();
 		//delete (*it);
-		SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+		SAFE_DELETE(*it); // UIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	}
 
 	_fonts.clear();
@@ -1033,7 +1033,7 @@ void CGuiFont::SetScreen( int nScrWidth, int nScrHeight )
 			p =  new CMPFont;
 #ifdef USE_RENDER
 			if(!p->CreateFont(&g_Render, (char*)it->strFont.c_str(), it->size800, FONTLEVEN, it->dwStyle ))
-				LG("ERROR","msgCreateFont");
+				ToLogService("errors", LogLevel::Error, "msgCreateFont");
 #else
 			p->CreateFont(g_Render.GetDevice(), (char*)it->strFont.c_str(), it->size800, FONTLEVEN, it->dwStyle );
 #endif
@@ -1051,7 +1051,7 @@ void CGuiFont::SetScreen( int nScrWidth, int nScrHeight )
 			p =  new CMPFont;
 #ifdef USE_RENDER
 			if(!p->CreateFont(&g_Render, (char*)it->strFont.c_str(), it->size1024, FONTLEVEN, it->dwStyle ))
-				LG("ERROR","msgCreateFont2");
+				ToLogService("errors", LogLevel::Error, "msgCreateFont2");
 
 #else
 			p->CreateFont(g_Render.GetDevice(), (char*)it->strFont.c_str(), it->size1024, FONTLEVEN, it->dwStyle );
@@ -1161,10 +1161,10 @@ void CEdit::ShowFocus()
 {
 	if( !IsNormal() ) return;
 
-	RefreshText();   // Ë¢ÐÂÎÄ×ÖÏÔÊ¾
-	RefreshCursor(); // Ë¢ÐÂ¹â±êÏÔÊ¾
+	RefreshText();   // Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾
+	RefreshCursor(); // Ë¢ï¿½Â¹ï¿½ï¿½ï¿½ï¿½Ê¾
 
-	// ÏÔÊ¾ÉÁË¸¹â±ê
+	// ï¿½ï¿½Ê¾ï¿½ï¿½Ë¸ï¿½ï¿½ï¿½
 	++_nCursorFlashCount;
 	if( _nCursorFlashCount>=10 )
 	{
@@ -1173,7 +1173,7 @@ void CEdit::ShowFocus()
 	}
 	if( _bCursorIsShow )
 	{
-		//²ÉÓÃ¾ø¶Ô×ø±êÈ·¶¨¹â±êµÄÎ»ÖÃ
+		//ï¿½ï¿½ï¿½Ã¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»ï¿½ï¿½
 		//GetRender().RenderTextureAbsRect( _nCursorX, _nCursorY, &_CursorImage );
 		GetRender().FillFrame( _nCursorX, _nCursorY, _nCursorX+2, _nCursorY+_nCursorHeight, _nCursorColor );
 	}
@@ -1354,7 +1354,7 @@ void CCursor::Init()
     {
         if( !_hCursor[i] )
         {
-            LG( "error", g_oLangRec.GetString(746), i );
+            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(746), i); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
         }
     }
     
@@ -1409,7 +1409,7 @@ bool CFormMgr::Init(HWND hWnd)
 		CLU_LoadScript("scripts/lua/font.bin", 0);
 		if( !CGuiFont::s_Font.Init() ) 
 		{
-			LG( "ui", g_oLangRec.GetString(747) );
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(747));
 			return false;
 		}
 
@@ -1481,7 +1481,7 @@ inline void UIRender::RenderSprite(LPTEXTURE tex, RECT* rc, VECTOR2* vscale, VEC
 
 		RECT* prc = &pCliper->GetClipRect();
 
-		// ¨ª?D??¨²2?????¨ªa¡ê?2???¨º?
+		// ï¿½ï¿½?D??ï¿½ï¿½2?????ï¿½ï¿½aï¿½ï¿½?2???ï¿½ï¿½?
 		if (vdest->x > prc->right || vdest->x < prc->left - w)
 		{
 			return;
@@ -1519,10 +1519,10 @@ inline void UIRender::RenderSprite(LPTEXTURE tex, RECT* rc, VECTOR2* vscale, VEC
 		_p2DSprite->SetTransform(&m);
 		switch (_p2DSprite->Draw(tex, rc, NULL, NULL, dwColor)) {
 		case D3DERR_INVALIDCALL:
-			LG("ERROR", "drawing texture failed - invalid call");
+			ToLogService("errors", LogLevel::Error, "drawing texture failed - invalid call");
 			break;
 		case D3DXERR_INVALIDDATA:
-			LG("ERROR", "drawing texture failed - invalid data");
+			ToLogService("errors", LogLevel::Error, "drawing texture failed - invalid data");
 			break;
 		case S_OK:
 			break;

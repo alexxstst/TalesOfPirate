@@ -96,7 +96,8 @@ inline static CCharacter* GetCharacter(unsigned int nID, const char* error = NUL
 		pCha = CGameApp::GetCurScene()->SearchByID(nID);
 	}
 	if (!pCha && error) {
-		LG("protocol", g_oLangRec.GetString(247), nID, error);
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(247), nID, error);
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 	}
 	return pCha;
 }
@@ -110,14 +111,14 @@ void NetLoginSuccess(char byPassword, uint8_t maxCharacters, std::span<const Net
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetLoginSuccess[%d] - CharNum:%d\n", i, iCharNum);
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
 	// ��¼�Ƿ��ж�������
 	g_Config.m_IsDoublePwd = byPassword ? true : false;
 
-	LG("select", "NetLoginSuccess - CharNum:%d\n", characters.size());
+	ToLogService("ui", "NetLoginSuccess - CharNum:{}", characters.size());
 
 	//for (const auto& cha : characters)
 	//{
@@ -128,7 +129,7 @@ void NetLoginSuccess(char byPassword, uint8_t maxCharacters, std::span<const Net
 
 	CLoginScene* pScene = dynamic_cast<CLoginScene*>(CGameApp::GetCurScene());
 	if (!pScene) {
-		LG("protocol", g_oLangRec.GetString(249));
+		g_logManager.InternalLog(LogLevel::Debug, "network", g_oLangRec.GetString(249));
 		return;
 	}
 	pScene->SetPasswordError(false);
@@ -143,15 +144,15 @@ void NetLoginFailure(unsigned short Errno) {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetLoginFailure[%d] - Errno:%d, Info:%s\n", i, Errno, g_GetServerError(Errno));
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
-	LG("select", "NetLoginFailure - Errno:%d, Info:%s\n", Errno, g_GetServerError(Errno));
+	ToLogService("ui", "NetLoginFailure - Errno:{}, Info:{}", Errno, g_GetServerError(Errno));
 
 	CLoginScene* pScene = dynamic_cast<CLoginScene*>(CGameApp::GetCurScene());
 	if (!pScene) {
-		LG("protocol", g_oLangRec.GetString(250));
+		g_logManager.InternalLog(LogLevel::Debug, "network", g_oLangRec.GetString(250));
 		return;
 	}
 
@@ -198,11 +199,11 @@ void NetBeginPlay(unsigned short Errno) // ��NetRetCode.h�ļ��в�ѯe
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetBeginPlay[%d] - Errno:%d, Info:%s\n", i, Errno, g_GetServerError(Errno));
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
-	LG("select", "NetBeginPlay - Errno:%d, Info:%s\n", Errno, g_GetServerError(Errno));
+	ToLogService("ui", "NetBeginPlay - Errno:{}, Info:{}", Errno, g_GetServerError(Errno));
 
 	CSelectChaScene& rkScene = CSelectChaScene::GetCurrScene();
 	rkScene.SelectChaError(Errno, "NetBeginPlay");
@@ -212,11 +213,11 @@ void NetEndPlay(uint8_t maxCharacters, std::span<const NetChaBehave> characters)
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetEndPlay[%d] - CharNum:%d\n", i, characters.size());
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
-	LG("select", "NetEndPlay - CharNum:%d\n", characters.size());
+	ToLogService("ui", "NetEndPlay - CharNum:{}", characters.size());
 
 	/* Not needed for production?
 	*/
@@ -254,11 +255,11 @@ void NetNewCha(unsigned short Errno) // ��NetRetCode.h�ļ��в�ѯerrn
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetNewCha[%d] - Errno:%d, Info:%s\n", i, Errno, g_GetServerError(Errno));
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
-	LG("select", "NetNewCha - Errno:%d, Info:%s\n", Errno, g_GetServerError(Errno));
+	ToLogService("ui", "NetNewCha - Errno:{}, Info:{}", Errno, g_GetServerError(Errno));
 
 	CCreateChaScene& rkScene = CCreateChaScene::GetCurrScene();
 
@@ -276,11 +277,11 @@ void NetDelCha(unsigned short Errno) //��NetRetCode.h�ļ��в�ѯerrno
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetDelCha[%d] - Errno:%d, Info:%s\n", i, Errno, g_GetServerError(Errno));
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
-	LG("select", "NetDelCha - Errno:%d, Info:%s\n", Errno, g_GetServerError(Errno));
+	ToLogService("ui", "NetDelCha - Errno:{}, Info:{}", Errno, g_GetServerError(Errno));
 
 	CSelectChaScene& rkScene = CSelectChaScene::GetCurrScene();
 
@@ -377,14 +378,15 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 		cha->SetServerPos(list.SPos[list.nPointNum - 1].x, list.SPos[list.nPointNum - 1].y);
 		g_state = cha->GetActor()->GetCurState();
 		if (!g_state) {
-			LG("protocol", g_oLangRec.GetString(258));
+			g_logManager.InternalLog(LogLevel::Debug, "network", g_oLangRec.GetString(258));
 			return;
 		}
 	}
 	else {
 		cha = CGameApp::GetCurScene()->SearchByID(id);
 		if (!cha) {
-			LG("protocol", g_oLangRec.GetString(259), id, list.nPointNum, list.SPos[0].x, list.SPos[0].y);
+			{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(259), id, list.nPointNum, list.SPos[0].x, list.SPos[0].y);
+			  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 			return;
 		}
 
@@ -393,16 +395,18 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 		if (!g_state) {
 			g_state = new CWaitMoveState(cha->GetActor());
 			if (!cha->GetActor()->SwitchState(g_state)) {
-				LG("protocol", g_oLangRec.GetString(260), cha->GetActor()->GetState(), cha->getLogName(),
+				{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(260), cha->GetActor()->GetState(), cha->getLogName(),
 				   list.nPointNum, list.sState, list.SPos[1].x, list.SPos[1].y, GetTickCount());
+				  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 				return;
 			}
 		}
 	}
 
 	if (!g_state) {
-		LG("protocol", g_oLangRec.GetString(261), cha->getLogName(), list.nPointNum, list.sState, list.SPos[1].x,
+		{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(261), cha->getLogName(), list.nPointNum, list.sState, list.SPos[1].x,
 		   list.SPos[1].y, GetTickCount());
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 		return;
 	}
 
@@ -416,8 +420,9 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 			g_state->MoveEnd(list.SPos[list.nPointNum - 1].x, list.SPos[list.nPointNum - 1].y, list.sState);
 		}
 		else {
-			LG("protocol", g_oLangRec.GetString(262), cha->getLogName(), list.nPointNum, list.sState, list.SPos[1].x,
+			{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(262), cha->getLogName(), list.nPointNum, list.sState, list.SPos[1].x,
 			   list.SPos[1].y, GetTickCount());
+			  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 		}
 	}
 }
@@ -449,16 +454,16 @@ void stNetActorCreate::SetValue(CCharacter* pCha) {
 #ifdef _LOG_NAME_
 	char pszLogName[256];
 	sprintf(pszLogName, "%s+%u", szName.c_str(), ulWorldID);
-	LG(pszLogName, "SeeType:%d, Create Cha:%s, Type:%s\n", chSeeType, pCha->getName().c_str(),
-	   pCha->GetDefaultChaInfo()->szName);
-	LG(pszLogName, "CommID:%u, CommName:%s, MottoName:%s\n", ulCommID, szCommName.c_str(), strMottoName.c_str());
-	LG(pszLogName, "SideID:[%d], sAngle:%d, GM:%d, Icon:%d\n", SSideInfo.chSideID, sAngle, chGMLv, sIcon);
-	LG(pszLogName, "GuildID:%u, Name:%s, Motto:%s\n", lGuildID, strGuildName.c_str(), strGuildMotto.c_str());
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SeeType:{}, Create Cha:{}, Type:{}", static_cast<int>(chSeeType), pCha->getName(),
+	   pCha->GetDefaultChaInfo()->szName));
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CommID:{}, CommName:{}, MottoName:{}", ulCommID, szCommName, strMottoName));
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("SideID:[{}], sAngle:{}, GM:{}, Icon:{}", static_cast<int>(SSideInfo.chSideID), sAngle, static_cast<int>(chGMLv), sIcon));
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("GuildID:{}, Name:{}, Motto:{}", lGuildID, strGuildName, strGuildMotto));
 #endif
 }
 
 CCharacter* stNetActorCreate::CreateCha() {
-	LG("SC_Cha", "Create WorldID:%u, ChaID = %d, Pos = [%d,%d]\n", ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y);
+	ToLogService("common", "Create WorldID:{}, ChaID = {}, Pos = [{},{}]", ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y);
 
 	if (chSeeType == enumENTITY_SEEN_SWITCH) {
 		CCharacter* pCha = g_stUIBoat.FindCha(ulWorldID);
@@ -470,14 +475,15 @@ CCharacter* stNetActorCreate::CreateCha() {
 			SPKCtrl.Exec(pCha);
 		}
 		else {
-			LG("NetActorCreate", g_oLangRec.GetString(263));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(263));
 		}
 		return pCha;
 	}
 
 	CCharacter* p = GetCharacter(ulWorldID);
 	if (p) {
-		LG("NetActorCreate", g_oLangRec.GetString(264), szName, ulWorldID, p->getLogName());
+		{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(264), szName.c_str(), ulWorldID, p->getLogName());
+		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 		p->SetValid(FALSE);
 	}
 
@@ -493,9 +499,9 @@ CCharacter* stNetActorCreate::CreateCha() {
 	}
 
 	if (!p) {
-		LG("protocol",
-		   "msgNetCreateActor CGameScene::GetCurScene()->AddCharacter Failed:chType[%d], chCtrlType[%d], MainType[%u], id[%u], type[%u], x[%u], y[%u], name[%s]\n",
-		   pChaRec->chModalType, chCtrlType, chMainCha, ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y, szName);
+		ToLogService("network", LogLevel::Error,
+		   "msgNetCreateActor AddCharacter Failed:chType[{}], chCtrlType[{}], MainType[{}], id[{}], type[{}], x[{}], y[{}], name[{}]",
+		   static_cast<int>(pChaRec->chModalType), static_cast<int>(chCtrlType), static_cast<int>(chMainCha), ulWorldID, ulChaID, SArea.centre.x, SArea.centre.y, szName);
 		return 0;
 	}
 
@@ -503,7 +509,7 @@ CCharacter* stNetActorCreate::CreateCha() {
 	p->SetMainType((eMainChaType)chMainCha); // ���ֵ��enumENTITY_SEEN_SWITCHʱΪ�㣬ֻ���ڳ�ʼ����ʱ����
 	SetValue(p);
 
-	LG(p->getLogName(), "MainChaType:%d\n\n", chMainCha);
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("MainChaType:{}", static_cast<int>(chMainCha)));
 
 	p->setChaModalType(pChaRec->chModalType);
 	if (SEvent.usEventID) {
@@ -594,7 +600,7 @@ CCharacter* stNetActorCreate::CreateCha() {
 }
 
 void stNetNPCShow::SetNpcShow(CCharacter* pCha) {
-	LG(pCha->getLogName(), "NpcType:%d\tNpcState:%d\n\n", byNpcType, byNpcState);
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("NpcType:{}\tNpcState:{}", static_cast<int>(byNpcType), static_cast<int>(byNpcState)));
 
 	if (pCha) {
 		pCha->setNpcState(byNpcState);
@@ -603,7 +609,7 @@ void stNetNPCShow::SetNpcShow(CCharacter* pCha) {
 }
 
 void NetActorDestroy(unsigned int nID, char chSeeType) {
-	LG("SC_Cha", "Destroy WorldID:%u\n", nID);
+	ToLogService("common", "Destroy WorldID:{}", nID);
 	g_stUIBooth.CloseBoothByOther(nID);
 
 	if (chSeeType == enumENTITY_SEEN_SWITCH) {
@@ -612,7 +618,7 @@ void NetActorDestroy(unsigned int nID, char chSeeType) {
 			pCha->SetHide(TRUE);
 		}
 		else {
-			LG("NetActorCreate", g_oLangRec.GetString(265));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(265));
 		}
 		return;
 	}
@@ -656,7 +662,8 @@ void NetSynSkillState(DWORD dwCharID, stNetSkillState* pSSkillState) {
 		pSynchro->Exec();
 	}
 	else {
-		LG("protocol", g_oLangRec.GetString(266), dwCharID);
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(266), dwCharID);
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 	}
 }
 
@@ -666,7 +673,8 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 	// ��������
 	CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(nID);
 	if (!pCha) {
-		LG("protocol", g_oLangRec.GetString(267), SSkillRep.lSkillID, nID);
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(267), SSkillRep.lSkillID, nID);
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 		return;
 	}
 
@@ -676,7 +684,7 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 	if (pCha->IsMainCha()) {
 		state = dynamic_cast<CAttackState*>(pCha->GetActor()->GetCurState());
 		if (!state) {
-			LG("protocol", g_oLangRec.GetString(268));
+			g_logManager.InternalLog(LogLevel::Debug, "network", g_oLangRec.GetString(268));
 			return;
 		}
 
@@ -689,7 +697,7 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 		if (!g_state) {
 			CSkillRecord* p = GetSkillRecordInfo(SSkillRep.lSkillID);
 			if (!p) {
-				LG("protocol", "NetActorSkillRep GetSkillRecordInfo(%d) return NULL\n", SSkillRep.lSkillID);
+				ToLogService("network", "NetActorSkillRep GetSkillRecordInfo({}) return NULL", SSkillRep.lSkillID);
 				return;
 			}
 
@@ -725,7 +733,7 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 		else {
 			state = dynamic_cast<CWaitAttackState*>(g_state);
 			if (!state) {
-				LG("protocol", "msgNetActorSkillRep g_state[%d] not is CWaitAttackState\n", SSkillRep.byFightID);
+				ToLogService("network", "msgNetActorSkillRep g_state[{}] not is CWaitAttackState", static_cast<int>(SSkillRep.byFightID));
 				return;
 			}
 		}
@@ -763,7 +771,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 	CSkillRecord *pSkill =  GetSkillRecordInfo( SkillEff.lSkillID );
 	if( !pSkill )
 	{
-		LG( "protocol", g_oLangRec.GetString(269), SkillEff.lSkillID );
+		{ char __lgbuf[256]; sprintf(__lgbuf, g_oLangRec.GetString(269), SkillEff.lSkillID); g_logManager.InternalLog(LogLevel::Debug, "common", __lgbuf); }
 		return;
 	}
 
@@ -771,7 +779,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 	CCharacter* pTarget = pScene->SearchByID( nID );
 	if( !pTarget )
 	{
-		LG( "protocol", "msgNetActorSkillEff Error, Target[%u] is Null, SkillID[%u]\n", nID, SkillEff.lSkillID );
+		ToLogService("common", LogLevel::Error, "NetActorSkillEff Error, Target[{}] is Null, SkillID[{}]", nID, SkillEff.lSkillID);
 		return;
 	}
 
@@ -1034,7 +1042,8 @@ void NetActorLean(unsigned int nID, stNetLeanInfo& lean) {
 		else {
 			cha = CGameApp::GetCurScene()->SearchByID(nID);
 			if (!cha) {
-				LG("protocol", g_oLangRec.GetString(270), nID);
+				{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(270), nID);
+				  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 				return;
 			}
 
@@ -1070,7 +1079,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	LG("test_client", "NetSwitchMap[%d]", i);
+	// Удалён dev-only лог test_client
 	return;
 #endif
 
@@ -1103,7 +1112,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 
 	CMapInfo* pInfo = GetMapInfo(switchmap.szMapName.c_str());
 	if (!pInfo) {
-		LG("switchmap", "msgNetSwitchMap - GetMapInfo(%s) return NULL\n", switchmap.szMapName.c_str());
+		ToLogService("map", LogLevel::Error, "msgNetSwitchMap - GetMapInfo({}) return NULL", switchmap.szMapName);
 		return;
 	}
 
@@ -1125,7 +1134,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 		init.nTypeID = enumWorldScene;
 		s = dynamic_cast<CWorldScene*>(g_pGameApp->CreateScene(&init));
 		if (!s) {
-			LG("switchmap", "msgNetSwitchMap(%s) CreateScene return NULL\n", switchmap.szMapName.c_str());
+			ToLogService("map", LogLevel::Error, "msgNetSwitchMap({}) CreateScene return NULL", switchmap.szMapName);
 			return;
 		}
 
@@ -1140,7 +1149,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 
 		if (switchmap.chEnterType == enumENTER_MAP_CARRY) {
 			if (!g_Config.IsPower()) {
-				LG_CloseAll();
+				g_logManager.Shutdown();
 			}
 		}
 
@@ -1152,12 +1161,12 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 			g_pGameApp->Loading();
 
 			if (!g_Config.IsPower()) {
-				LG_CloseAll();
+				g_logManager.Shutdown();
 			}
 		}
 
 		if (!s->SwitchMap(pInfo->nID)) {
-			LG("switchmap", "msgNetSwitchMap(%s) SwitchMap Failed\n", switchmap.szMapName.c_str());
+			ToLogService("map", LogLevel::Error, "msgNetSwitchMap({}) SwitchMap Failed", switchmap.szMapName);
 			return;
 		}
 	}
@@ -1185,13 +1194,14 @@ void NetSay(stNetSay& netsay, DWORD dwColour) //·��
 {
 	CCharacter* cha = GetCharacter(netsay.m_srcid, "NetSay");
 	if (!cha) {
-		LG("roadsay", "not find, ID:[%d], say:%s\n", netsay.m_srcid, netsay.m_content);
+		ToLogService("common", "roadsay not find, ID:[{}], say:{}", netsay.m_srcid, netsay.m_content);
 		return;
 	}
 
 	if (!cha->IsPlayer()) {
-		LG("roadsay", g_oLangRec.GetString(272), netsay.m_srcid, cha->getName().c_str(), cha->getLogName(),
+		{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(272), netsay.m_srcid, cha->getName().c_str(), cha->getLogName(),
 		   netsay.m_content);
+		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 	}
 
 	//g_stUICoze.OnRoadSay( cha, netsay.m_content );
@@ -1203,19 +1213,21 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 	return NULL;
 #endif
 
-	LG("item", "Create - ID:%d, Angle:%d, Pos:[%d, %d], WorldID:%u, EventID:%d \n", info.lID, info.sAngle, info.SPos.x,
+	ToLogService("common", "Create - ID:{}, Angle:{}, Pos:[{}, {}], WorldID:{}, EventID:{}", info.lID, info.sAngle, info.SPos.x,
 	   info.SPos.y, info.lWorldID, info.SEvent.usEventID);
 
 	CGameScene* pScene = CGameApp::GetCurScene();
 	CSceneItem* pItem = pScene->SearchItemByID(info.lWorldID);
 	if (pItem) {
-		LG("NetCreateItem", g_oLangRec.GetString(273), info.lID, pItem->GetItemInfo()->szName);
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(273), info.lID, pItem->GetItemInfo()->szName);
+		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 		pItem->SetValid(FALSE);
 	}
 
 	pItem = pScene->AddSceneItem(info.lID, 0);
 	if (pItem == NULL) {
-		LG("protocol", g_oLangRec.GetString(274), info.lID);
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(274), info.lID);
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 		return NULL;
 	}
 
@@ -1246,9 +1258,8 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 				if (pFromCha->IsResource())
 					break;
 
-				LG("item",
-				   "\tCreateItem, Type:%d - ID:%d, Name:%s, ItemPos:[%d, %d], WorldID:%u, ChaLogName:%s, ChaPos[%d, %d]\n",
-				   info.chAppeType, info.lID, pItem->GetItemInfo()->szName, info.SPos.x, info.SPos.y, info.lWorldID,
+				ToLogService("common", "\tCreateItem, Type:{} - ID:{}, Name:{}, ItemPos:[{}, {}], WorldID:{}, ChaLogName:{}, ChaPos[{}, {}]",
+				   static_cast<int>(info.chAppeType), info.lID, pItem->GetItemInfo()->szName, info.SPos.x, info.SPos.y, info.lWorldID,
 				   pFromCha->getLogName(), pFromCha->GetCurX(), pFromCha->GetCurY());
 
 				if (info.chAppeType == enumITEM_APPE_MONS) {
@@ -1271,7 +1282,7 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 }
 
 void NetItemDisappear(unsigned int nID) {
-	LG("item", "Disappear - WorldID:%u\n", nID);
+	ToLogService("common", "Disappear - WorldID:{}", nID);
 
 	// ������ʧ
 	if (!CGameApp::GetCurScene()) return;
@@ -1307,7 +1318,7 @@ void NetChangeChaPart(CCharacter* pCha, stNetLookInfo& SLookInfo) {
 			}
 			str << "\r\n";
 			str << '\0';
-			LG("select", str.str());
+			g_logManager.InternalLog(LogLevel::Debug, "ui", str.str());
 
 			if (SLookInfo.chSynType == enumSYN_LOOK_SWITCH) {
 				g_stUIStart.RefreshMainFace(SPart);
@@ -1329,11 +1340,10 @@ void NetChangeChaPart(unsigned int nID, stNetLookInfo& SLookInfo) {
 
 void NetChangeChaLookEnergy(unsigned int nID, stLookEnergy& SLookEnergy) {
 	const char* pszLogName = g_LogName.GetLogName(nID);
-	LG(pszLogName, g_oLangRec.GetString(275));
+	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(275));
 	for (int i = 0; i < enumEQUIP_NUM; i++) {
-		LG(pszLogName, "%d: %d\n", i, SLookEnergy.sEnergy[i]);
+		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("{}: {}", i, SLookEnergy.sEnergy[i]));
 	}
-	LG(pszLogName, "\n\n");
 
 	CItemCommand* pItem = NULL;
 	for (int i = 0; i < enumEQUIP_NUM; i++) {
@@ -1345,7 +1355,8 @@ void NetChangeChaLookEnergy(unsigned int nID, stLookEnergy& SLookEnergy) {
 }
 
 void NetQueryRelive(unsigned int nID, stNetQueryRelive& SQueryRelive) {
-	LG(g_LogName.GetMainLogName(), g_oLangRec.GetString(276), nID, GetTickCount());
+	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(276), nID, GetTickCount());
+	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 	g_stUIStart.ShowQueryReliveForm(SQueryRelive.chType, SQueryRelive.szSrcChaName.c_str());
 }
 
@@ -1384,9 +1395,9 @@ void NetActorChangeCha(unsigned int nID, stNetChangeCha& SChangeCha) {
 	const char* szLogName = g_LogName.GetLogName(SChangeCha.ulMainChaID);
 
 	// log
-	LG(szLogName, g_oLangRec.GetString(278), GetTickCount());
-	LG(szLogName, "New Character ID: %u\tOld Character ID: %u\n", SChangeCha.ulMainChaID, nID);
-	LG(szLogName, "\n");
+	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(278), GetTickCount());
+	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("New Character ID: {}\tOld Character ID: {}", SChangeCha.ulMainChaID, nID));
 	//
 
 	g_stUIBoat.ChangeMainCha(SChangeCha.ulMainChaID);
@@ -1707,7 +1718,8 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 	CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(dwWorldID);
 	if (!pCha) {
 		if (enumATTRSYN_INIT == chType)
-			LG("protocol", g_oLangRec.GetString(279), dwWorldID);
+			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(279), dwWorldID);
+			  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 		return;
 	}
 
@@ -1865,7 +1877,7 @@ void NetFace(DWORD dwCharID, stNetFace& netface, char chType) {
 				}
 			}
 			else {
-				LG("protocol", "msgNetSkillFace Error not InsertState!\n");
+				ToLogService("network", LogLevel::Error, "msgNetSkillFace Error not InsertState!");
 			}
 		}
 		else {
@@ -1963,7 +1975,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 	int count = SKitbag.nGridNum;
 	if (count > grd->GetMaxNum()) {
 		count = grd->GetMaxNum();
-		LG("protocol", g_oLangRec.GetString(280), SKitbag.nGridNum, grd->GetMaxNum());
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(280), SKitbag.nGridNum, grd->GetMaxNum());
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 	}
 
 	CItemRecord* item = NULL;
@@ -1976,7 +1989,7 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 	fill_n(fastCommandSlot, 36, -1);
 
 	for (int i = 0; i < count; i++) {
-		LG("kitbag", "ID:%u, GridID:%d, Num:%d\n", pGrid[i].SGridContent.sID, pGrid[i].sGridID,
+		ToLogService("common", "ID:{}, GridID:{}, Num:{}", pGrid[i].SGridContent.sID, pGrid[i].sGridID,
 		   pGrid[i].SGridContent.sNum);
 
 		if (pGrid[i].SGridContent.sID > 0) {
@@ -1991,7 +2004,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 			}
 			item = GetItemRecordInfo(pGrid[i].SGridContent.sID);
 			if (!item) {
-				LG("protocol", g_oLangRec.GetString(281), pGrid[i].SGridContent.sID);
+				{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(281), pGrid[i].SGridContent.sID);
+				  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 				continue;
 			}
 
@@ -2003,7 +2017,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 				nMarginNum = 0;
 				pObj = new CItemCommand(item);
 				if (!grd->SetItem(pGrid[i].sGridID, pObj)) {
-					LG("protocol", g_oLangRec.GetString(282), item->szName, pGrid[i].sGridID);
+					{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(282), item->szName, pGrid[i].sGridID);
+					  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 					continue;
 				}
 			}
@@ -2050,7 +2065,8 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 				case enumSYN_KITBAG_SWITCH:
 					break;
 				default:
-					LG("protocol", g_oLangRec.GetString(288), pGrid[i].sGridID);
+					{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(288), pGrid[i].sGridID);
+					  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 				}
 				continue;
 			}
@@ -2374,10 +2390,10 @@ void NetFailedAction(char chState) {
 	CCharacter* pCha = CGameScene::GetMainCha();
 	if (pCha) {
 		pCha->GetActor()->FailedAction();
-		LG(pCha->getLogName(), "FaliedAction[%d]\n", chState);
+		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("FaliedAction[{}]", static_cast<int>(chState)));
 	}
 	else {
-		LG("protocol", g_oLangRec.GetString(291));
+		g_logManager.InternalLog(LogLevel::Debug, "network", g_oLangRec.GetString(291));
 	}
 }
 
@@ -2430,14 +2446,15 @@ void stNetDefaultSkill::Exec(void) {
 	const char* szLogName = g_LogName.GetMainLogName();
 
 	// log
-	LG(szLogName, g_oLangRec.GetString(292), GetTickCount());
-	LG(szLogName, "Skill ID: %u\n", sSkillID);
-	LG(szLogName, "\n");
+	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(292), GetTickCount());
+	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Skill ID: {}", sSkillID));
 	//
 
 	CSkillRecord* pSkill = GetSkillRecordInfo(sSkillID);
 	if (!pSkill) {
-		LG("protocol", g_oLangRec.GetString(293), sSkillID);
+		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(293), sSkillID);
+		  g_logManager.InternalLog(LogLevel::Debug, "network", buf); }
 		return;
 	}
 

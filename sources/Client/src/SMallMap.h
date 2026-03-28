@@ -217,7 +217,7 @@ public:
 			D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC, 0,
 			D3DPOOL_DEFAULT, &_pVB ) ) )
 		{
-			LG("ERROR","msgCSMCha::CreateVertexBuffer");
+			ToLogService("errors", LogLevel::Error, "msgCSMCha::CreateVertexBuffer");
 			return FALSE;
 		}
 
@@ -260,7 +260,7 @@ public:
 #ifdef MGR
 			if(FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A4R4G4B4)))
 			{
-				LG("ERROR","msg%s",pszName[n]);
+				ToLogService("errors", LogLevel::Error, "msg{}", pszName[n]);
 				return FALSE;
 			}
 #else
@@ -280,7 +280,7 @@ public:
 				&_pTex[n]);//Ҫ����������
 			if(!_pTex[n])
 			{
-				LG("ERROR","msgCSMCha::no found file :texture\\minimap\\arraw.tga");
+				ToLogService("errors", LogLevel::Error, "msgCSMCha::no found file :texture\\minimap\\arraw.tga");
 				return FALSE;
 			}
 #endif
@@ -746,7 +746,7 @@ public:
 		{
 			if(FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A4R4G4B4)))
 			{
-				LG("ERROR",g_oLangRec.GetString(395),pszName[n]);
+				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(395), pszName[n]); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 				//return FALSE;
 				_pTex[n] = NULL;
 			}

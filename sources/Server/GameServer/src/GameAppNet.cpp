@@ -17,7 +17,7 @@ void CGameApp::ProcessNetMsg(int nMsgType, GateServer* pGate, RPACKET pkt)
 		{
 		case NETMSG_GATE_CONNECTED: // ??????Gate
 		{
-			LG("Connect", "Exec OnGateConnected()\n");
+			ToLogService("network", "Exec OnGateConnected()");
 			OnGateConnected(pGate, pkt);
 			break;}
 
@@ -78,7 +78,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 			{
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
-					LG("Store_data", "InfoServer Login Success!\n");
+					ToLogService("store", "InfoServer Login Success!");
 
 					pInfo->SetValid();
 					//g_StoreSystem.SetValid();
@@ -89,13 +89,13 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				}
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
-					LG("Store_data", "InfoServer Login Failed!\n");
+					ToLogService("store", "InfoServer Login Failed!");
 					pInfo->InValid();
 				}
 				else
 				{
-					//LG("Store_data", "??�InfoServer???????????!\n");
-					LG("Store_data", "enter InfoServer message data error!\n");
+					//ToLogService("store", "??�InfoServer???????????!");
+					ToLogService("store", "enter InfoServer message data error!");
 				}
 			}
 			break;
@@ -105,8 +105,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????????????!\n", lOrderID);
-					LG("Store_data", "[%I64i]succeed to obtain account information!\n", lOrderID);
+					//ToLogService("store", "[{}]????????????!", lOrderID);
+					ToLogService("store", "[{}]succeed to obtain account information!", lOrderID);
 
 					RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
 					g_StoreSystem.AcceptRoleInfo(lOrderID, ChaInfo);
@@ -114,23 +114,23 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????????????!\n", lOrderID);
-					LG("Store_data", "[%I64i]obtain account information failed!\n", lOrderID);
+					//ToLogService("store", "[{}]????????????!", lOrderID);
+					ToLogService("store", "[{}]obtain account information failed!", lOrderID);
 
 					g_StoreSystem.CancelRoleInfo(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "?????????????????!\n");
-					LG("Store_data", "account information message data error");
+					//ToLogService("store", "?????????????????!");
+					ToLogService("store", "account information message data error");
 				}
 			}
 			break;
 
 			case INFO_REQUEST_STORE:	// ?????????
 			{
-				//LG("Store_data", "?????????!\n");
-				LG("Store_data", "get store list!\n");
+				//ToLogService("store", "?????????!");
+				ToLogService("store", "get store list!");
 				if (msg->msgHead.subID == INFO_SUCCESS)		// ??????????
 				{
 					//???????
@@ -157,16 +157,16 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				}
 				else
 				{
-					//LG("Store_data", "?????????????????!\n");
-					LG("Store_data", "store list message data error!\n");
+					//ToLogService("store", "?????????????????!");
+					ToLogService("store", "store list message data error!");
 				}
 			}
 			break;
 
 			case INFO_REQUEST_AFFICHE:		// ??????????
 			{
-				//LG("Store_data", "??�??????!\n");
-				LG("Store_data", "get offiche information!\n");
+				//ToLogService("store", "??�??????!");
+				ToLogService("store", "get offiche information!");
 				if (msg->msgHead.subID == INFO_SUCCESS) // ???????????
 				{
 					//???????
@@ -183,8 +183,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				}
 				else
 				{
-					//LG("Store_data", "??????????????????!\n");
-					LG("Store_data", "offiche information message data error!\n");
+					//ToLogService("store", "??????????????????!");
+					ToLogService("store", "offiche information message data error!");
 				}
 			}
 			break;
@@ -194,8 +194,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS) // ??????
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]?????????!\n", lOrderID);
-					LG("Store_data", "[%I64i]succeed to buy item!\n", lOrderID);
+					//ToLogService("store", "[{}]?????????!", lOrderID);
+					ToLogService("store", "[{}]succeed to buy item!", lOrderID);
 
 					RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
 					g_StoreSystem.Accept(lOrderID, ChaInfo);
@@ -203,15 +203,15 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED) // ???????
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]??????????!\n", lOrderID);
-					LG("Store_data", "[%I64i]buy item failed!\n", lOrderID);
+					//ToLogService("store", "[{}]??????????!", lOrderID);
+					ToLogService("store", "[{}]buy item failed!", lOrderID);
 
 					g_StoreSystem.Cancel(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "????????????????????????!\n");
-					LG("Store_data", "confirm information that buy item message data error!\n");
+					//ToLogService("store", "????????????????????????!");
+					ToLogService("store", "confirm information that buy item message data error!");
 				}
 			}
 			break;
@@ -221,8 +221,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????VIP???!\n", lOrderID);
-					LG("Store_data", "[%I64i] buy VIP succeed !\n", lOrderID);
+					//ToLogService("store", "[{}]????VIP???!", lOrderID);
+					ToLogService("store", "[{}] buy VIP succeed !", lOrderID);
 
 					RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
 
@@ -231,15 +231,15 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????VIP???!\n", lOrderID);
-					LG("Store_data", "[%I64i] buy VIP failed !\n", lOrderID);
+					//ToLogService("store", "[{}]????VIP???!", lOrderID);
+					ToLogService("store", "[{}] buy VIP failed !", lOrderID);
 
 					g_StoreSystem.CancelVIP(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "????VIP?????????????????!\n");
-					LG("Store_data", "buy VIP confirm information message data error !\n");
+					//ToLogService("store", "????VIP?????????????????!");
+					ToLogService("store", "buy VIP confirm information message data error !");
 				}
 			}
 			break;
@@ -249,8 +249,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]?????????!\n", lOrderID);
-					LG("Store_data", "[%I64i]change token succeed !\n", lOrderID);
+					//ToLogService("store", "[{}]?????????!", lOrderID);
+					ToLogService("store", "[{}]change token succeed !", lOrderID);
 
 					RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
 					g_StoreSystem.AcceptChange(lOrderID, ChaInfo);
@@ -258,15 +258,15 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]??????????!\n", lOrderID);
-					LG("Store_data", "[%I64i]change token failed!\n", lOrderID);
+					//ToLogService("store", "[{}]??????????!", lOrderID);
+					ToLogService("store", "[{}]change token failed!", lOrderID);
 
 					g_StoreSystem.CancelChange(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "????????????????????????!\n");
-					LG("Store_data", "change token confirm information message data error !\n");
+					//ToLogService("store", "????????????????????????!");
+					ToLogService("store", "change token confirm information message data error !");
 				}
 			}
 			break;
@@ -276,8 +276,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????????�???!\n", lOrderID);
-					LG("Store_data", "[%I64i]succeed to query trade note!\n", lOrderID);
+					//ToLogService("store", "[{}]????????�???!", lOrderID);
+					ToLogService("store", "[{}]succeed to query trade note!", lOrderID);
 
 					HistoryInfo* pRecord = (HistoryInfo*)((char*)msg->msgBody + sizeof(long long));
 					g_StoreSystem.AcceptRecord(lOrderID, pRecord);
@@ -285,15 +285,15 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????????�???!\n", lOrderID);
-					LG("Store_data", "[%I64i]query trade note failed!\n", lOrderID);
+					//ToLogService("store", "[{}]????????�???!", lOrderID);
+					ToLogService("store", "[{}]query trade note failed!", lOrderID);
 
 					g_StoreSystem.CancelRecord(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "?????�????????????????????!\n");
-					LG("Store_data", "trade note query resoibsuib nessage data error!\n");
+					//ToLogService("store", "?????�????????????????????!");
+					ToLogService("store", "trade note query resoibsuib nessage data error!");
 				}
 			}
 			break;
@@ -303,8 +303,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????GM??????!\n", lOrderID);
-					LG("Store_data", "[%I64i]send GM mail success!\n", lOrderID);
+					//ToLogService("store", "[{}]????GM??????!", lOrderID);
+					ToLogService("store", "[{}]send GM mail success!", lOrderID);
 
 					long lMailID = msg->msgHead.msgExtend;
 					g_StoreSystem.AcceptGMSend(lOrderID, lMailID);
@@ -312,15 +312,15 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????GM??????!\n", lOrderID);
-					LG("Store_data", "[%I64i]send GM mail failed!\n", lOrderID);
+					//ToLogService("store", "[{}]????GM??????!", lOrderID);
+					ToLogService("store", "[{}]send GM mail failed!", lOrderID);
 
 					g_StoreSystem.CancelGMSend(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "????GM??????????????!\n");
-					LG("Store_data", "send GM mail message data error!\n");
+					//ToLogService("store", "????GM??????????????!");
+					ToLogService("store", "send GM mail message data error!");
 				}
 			}
 			break;
@@ -330,8 +330,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				if (msg->msgHead.subID == INFO_SUCCESS)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????GM??????!\n", lOrderID);
-					LG("Store_data", "[%I64i]receive GM mail success!\n", lOrderID);
+					//ToLogService("store", "[{}]????GM??????!", lOrderID);
+					ToLogService("store", "[{}]receive GM mail success!", lOrderID);
 
 					MailInfo* pMi = (MailInfo*)((char*)msg->msgBody + sizeof(long long));
 					g_StoreSystem.AcceptGMRecv(lOrderID, pMi);
@@ -339,23 +339,23 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 				else if (msg->msgHead.subID == INFO_FAILED)
 				{
 					long long lOrderID = *(long long*)msg->msgBody;
-					//LG("Store_data", "[%I64i]????GM??????!\n", lOrderID);
-					LG("Store_data", "[%I64i]reciveGMmail failed!\n", lOrderID);
+					//ToLogService("store", "[{}]????GM??????!", lOrderID);
+					ToLogService("store", "[{}]reciveGMmail failed!", lOrderID);
 
 					g_StoreSystem.CancelGMRecv(lOrderID);
 				}
 				else
 				{
-					//LG("Store_data", "????GM??????????????!\n");
-					LG("Store_data", "receive GM mail message data error!\n");
+					//ToLogService("store", "????GM??????????????!");
+					ToLogService("store", "receive GM mail message data error!");
 				}
 			}
 			break;
 
 			case INFO_EXCEPTION_SERVICE:	//???????
 			{
-				//LG("Store_data", "InfoServer???????!\n");
-				LG("Store_data", "InfoServer refuse serve!\n");
+				//ToLogService("store", "InfoServer???????!");
+				ToLogService("store", "InfoServer refuse serve!");
 				g_StoreSystem.InValid();
 				pInfo->InValid();
 			}
@@ -363,8 +363,8 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo)
 
 			default:
 			{
-				//LG("Store_data", "??�???????????!\n");
-				LG("Store_data", "get unknown information type!\n");
+				//ToLogService("store", "??�???????????!");
+				ToLogService("store", "get unknown information type!");
 			}
 			break;
 
@@ -383,7 +383,7 @@ void CGameApp::OnGateConnected(GateServer* pGate, RPACKET pkt)
 	WRITE_STRING(wpk, GETGMSVRNAME());
 	WRITE_STRING(wpk, g_pGameApp->m_strMapNameList.c_str());
 
-	LG("Connect", "[%s]\n", g_pGameApp->m_strMapNameList.c_str());
+	ToLogService("network", "[{}]", g_pGameApp->m_strMapNameList.c_str());
 
 	pGate->SendData(wpk);
 }
@@ -425,10 +425,10 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 		short	sErrCode;
 		if (sErrCode = READ_SHORT(pkt))
 		{
-			/*LG("GameLogin", "??� GateServer: %s:%d???[%s], ?????[%s]\n",
+			/*ToLogService("network", "??� GateServer: {}:{}???[{}], ?????[{}]",
 				pGate->GetIP().c_str(), pGate->GetPort(), g_GameGateConnError(sErrCode),
 				g_pGameApp->m_strMapNameList.c_str());*/
-			LG("GameLogin", "enter GateServer: %s:%d failed [%s], register map[%s]\n",
+			ToLogService("network", "enter GateServer: {}:{} failed [{}], register map[{}]",
 				pGate->GetIP().c_str(), pGate->GetPort(), g_GameGateConnError(sErrCode),
 				g_pGameApp->m_strMapNameList.c_str());
 			DISCONNECT(pGate);
@@ -438,10 +438,10 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			pGate->GetName() = READ_STRING(pkt);
 			if (!strcmp(pGate->GetName().c_str(), ""))
 			{
-				/*LG("GameLogin", "??� GateServer: [%s:%d]??? ??�???�???????????????????????\n",
+				/*ToLogService("network", "??� GateServer: [{}:{}]??? ??�???�???????????????????????",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());*/
-				LG("GameLogin", "entry GateServer: [%s:%d]success but do not get his name??so disconnection and entry again\n",
+				ToLogService("network", "entry GateServer: [{}:{}]success but do not get his name??so disconnection and entry again",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());
 
@@ -449,10 +449,10 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			}
 			else
 			{
-				/*LG("GameLogin", "??� GateServer: %s [%s:%d]??? [MapName:%s]\n",
+				/*ToLogService("network", "??� GateServer: {} [{}:{}]??? [MapName:{}]",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());*/
-				LG("GameLogin", "entry GateServer: %s [%s:%d]success [MapName:%s]\n",
+				ToLogService("network", "entry GateServer: {} [{}:{}]success [MapName:{}]",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());
 			}
@@ -465,7 +465,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 	//	{
 	//		int reason = READ_LONG(pkt);
 
-	//		LG("GameLogin", "Gate %s Ip %s %d deleted\r\n", pGate->GetName(), pGate->GetIP(), reason);
+	//		ToLogService("network", "Gate {} Ip {} {} deleted\r", pGate->GetName(), pGate->GetIP(), reason);
 
 	//		pGate->Invalid();
 
@@ -483,7 +483,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 		if (enterMsg.mapName.empty())
 			break;
 
-		LG("enter_map", "start entry map atorID = %d enter--------------------------\n", enterMsg.dbCharId);
+		ToLogService("map", "start entry map atorID = {} enter--------------------------", enterMsg.dbCharId);
 
 		l_player = CreateGamePlayer(enterMsg.password.c_str(), enterMsg.dbCharId, enterMsg.worldId,
 			enterMsg.mapName.c_str(), enterMsg.loginFlag == 0 ? 0 : 1);
@@ -496,7 +496,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			WRITE_LONG(pkret, enterMsg.gateAddr);
 			WRITE_SHORT(pkret, 1);
 			pGate->SendData(pkret);
-			LG("enter_map", "when create new palyer ID = %u assign memory failed \n", enterMsg.dbCharId);
+			ToLogService("map", LogLevel::Error, "when create new palyer ID = {} assign memory failed", enterMsg.dbCharId);
 			return;
 		}
 		l_player->SetActLoginID(enterMsg.actId);
@@ -520,7 +520,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 			}
 		}
 
-		LG("enter_map", "end up entry map  [%s]================\n\n", pCCha->GetLogName());
+		ToLogService("map", "end up entry map  [{}]================", pCCha->GetLogName());
 		break;
 	}
 	case CMD_TM_GOOUTMAP:
@@ -534,32 +534,32 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 		{
 			if (l_player->GetGateAddr() != l_gateaddr)
 			{
-				//LG("error", "?????ID: %u, ????????????:%x, gate:%x,cmd=%d, ?????(%d).\n", l_player->GetDBChaId(), l_player->GetGateAddr(), l_gateaddr,cmd, l_player->IsValidFlag());
-				LG("error", "DB ID: %u, address not matching??local :%x, gate:%x,cmd=%d, validity(%d).\n", l_player->GetDBChaId(), l_player->GetGateAddr(), l_gateaddr, cmd, l_player->IsValidFlag());
+				//ToLogService("errors", LogLevel::Error, "?????ID: {}, ????????????:{:x}, gate:{:x},cmd={}, ?????({}).", l_player->GetDBChaId(), l_player->GetGateAddr(), l_gateaddr,cmd, l_player->IsValidFlag());
+				ToLogService("errors", LogLevel::Error, "DB ID: {}, address not matching??local :{:x}, gate:{:x},cmd={}, validity({}).", l_player->GetDBChaId(), l_player->GetGateAddr(), l_gateaddr, cmd, l_player->IsValidFlag());
 				break;
 			}
 		}
 		catch (...)
 		{
-			//LG("error", "===========================??Gate?????????????%p,cmd =%d\n", l_player, cmd);
-			LG("error", "===========================from Gate plyaer's address error %p,cmd =%d\n", l_player, cmd);
+			//ToLogService("errors", LogLevel::Error, "===========================??Gate?????????????{},cmd ={}", l_player, cmd);
+			ToLogService("errors", LogLevel::Error, "===========================from Gate player's address error {},cmd ={}", static_cast<void*>(l_player), static_cast<int>(cmd));
 			break;
 		}
 		if (!l_player->IsValid())
 		{
 			//LG("enter_map", "???????????\n");
-			LG("enter_map", "this palyer already impotence\n");
+			ToLogService("map", "this palyer already impotence");
 			break;
 		}
 		if (l_player->GetMainCha()->GetPlayer() != l_player)
 		{
-			//LG("error", "????player????????????%s??Gate???[????%p, ????%p]????cmd=%u\n", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
-			LG("error", "two player not matching??character name??%s??Gate address [local %p, guest %p]????cmd=%u\n", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
+			//ToLogService("errors", LogLevel::Error, "????player????????????{}??Gate???[????{}, ????{}]????cmd={}", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
+			ToLogService("errors", LogLevel::Error, "two player not matching, character name: {}, Gate address [local {}, guest {}], cmd={}", l_player->GetMainCha()->GetLogName(), static_cast<void*>(l_player->GetMainCha()->GetPlayer()), static_cast<void*>(l_player), static_cast<int>(cmd));
 		}
-		LG("enter_map", "start leave map--------\n");
+		ToLogService("map", "start leave map--------");
 
 		char chOffLine = READ_CHAR(pkt); // ???????(0)
-		LG("enter_map", "Delete Player [%s]\n", l_player->GetMainCha()->GetLogName());
+		ToLogService("map", "Delete Player [{}]", l_player->GetMainCha()->GetLogName());
 
 		char	szLogName[512];
 		strncpy(szLogName, l_player->GetMainCha()->GetLogName(), 512 - 1);
@@ -568,7 +568,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 		GoOutGame(l_player, !chOffLine, false);
 
 		//LG("enter_map", "?????????========\n\n");
-		LG("enter_map", "end and leave the map========\n\n");
+		ToLogService("map", "end and leave the map========");
 
 		//LG("OutMap", "%s?????\n", szLogName);
 
@@ -864,25 +864,25 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 					DWORD	l_gateaddr = READ_LONG_R(pkt);
 					if (l_player->GetGateAddr() != l_gateaddr)
 					{
-						/*LG("error", "?????ID:%u, ????????????:%u, gate:%u,cmd=%d, ?????(%d)\n", l_player->GetDBChaId(), l_player->GetGateAddr(),
+						/*ToLogService("errors", LogLevel::Error, "?????ID:{}, ????????????:{}, gate:{},cmd={}, ?????({})", l_player->GetDBChaId(), l_player->GetGateAddr(),
 							l_gateaddr,cmd, l_player->IsValidFlag() );*/
-						LG("error", "DB ID:%u, address not matching??local :%u, gate:%u,cmd=%d, validity (%d)\n", l_player->GetDBChaId(), l_player->GetGateAddr(),
+						ToLogService("errors", LogLevel::Error, "DB ID:{}, address not matching??local :{}, gate:{},cmd={}, validity ({})", l_player->GetDBChaId(), l_player->GetGateAddr(),
 							l_gateaddr, cmd, l_player->IsValidFlag());
 						break;
 					}
 				}
 				catch (...)
 				{
-					//LG("error", "===========================??Gate?????????????%p,cmd =%d\n", l_player, cmd);
-					LG("error", "===========================Player address error that come from Gate %p,cmd =%d\n", l_player, cmd);
+					//ToLogService("errors", LogLevel::Error, "===========================??Gate?????????????{},cmd ={}", l_player, cmd);
+					ToLogService("errors", LogLevel::Error, "===========================Player address error that come from Gate {},cmd ={}", static_cast<void*>(l_player), static_cast<int>(cmd));
 					break;
 				}
 				if (!l_player->IsValid())
 					break;
 				if (l_player->GetMainCha()->GetPlayer() != l_player)
 				{
-					//LG("error", "????player????????????%s??Gate???[????%p, ????%p]????cmd=%u\n", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
-					LG("error", "two player not matching??character name??%s??Gate address [local %p, guest %p]????cmd=%u\n", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
+					//ToLogService("errors", LogLevel::Error, "????player????????????{}??Gate???[????{}, ????{}]????cmd={}", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
+					ToLogService("errors", LogLevel::Error, "two player not matching, character name: {}, Gate address [local {}, guest {}], cmd={}", l_player->GetMainCha()->GetLogName(), static_cast<void*>(l_player->GetMainCha()->GetPlayer()), static_cast<void*>(l_player), static_cast<int>(cmd));
 				}
 
 				CCharacter* pCCha = l_player->GetCtrlCha();
@@ -904,8 +904,8 @@ void CGameApp::ProcessPacket(GateServer* pGate, RPACKET pkt)
 				}
 				else
 				{
-					//LG("error", "???CMD_CM_BASE?????[%d]?, ??????pCCha???\n", cmd);
-					LG("error", "when receive CMD_CM_BASE message[%d], find character pCCha is null\n", cmd);
+					//ToLogService("errors", LogLevel::Error, "???CMD_CM_BASE?????[{}]?, ??????pCCha???", cmd);
+					ToLogService("errors", LogLevel::Error, "when receive CMD_CM_BASE message[{}], find character pCCha is null", cmd);
 				}
 				break;
 			}
@@ -929,14 +929,14 @@ void CGameApp::ProcessGuildChallMoney(GateServer* pGate, RPACKET pkt)
 		//pCha->AddMoney( "??", dwMoney );
 		pCha->AddMoney(RES_STRING(GM_GAMEAPPNET_CPP_00017), dwMoney);
 		/*pCha->SystemNotice( "??????????%s?????????%s????????????????(%u)????????????\n", pszGuild1, pszGuild2, dwMoney );
-		LG( "?????????", "??%s??????????%s?????????%s????????????????(%u)????????????\n", pCha->GetGuildName(), pszGuild1, pszGuild2, dwMoney );*/
+		ToLogService("common", "??{}??????????{}?????????{}????????????????({})????????????", pCha->GetGuildName(), pszGuild1, pszGuild2, dwMoney);*/
 		pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00009), pszGuild1.c_str(), pszGuild2.c_str(), dwMoney);
-		LG("challenge consortia result", "??%s??bidder and consortia??%s??battle was consortia??%s??replace??your consortia gold (%u)had back to you??\n", pCha->GetGuildName(), pszGuild1.c_str(), pszGuild2.c_str(), dwMoney);
+		ToLogService("common", "bidder and consortia [{}] battle was consortia [{}] replace, your consortia gold ({}) had back to you", pCha->GetGuildName(), pszGuild1.c_str(), pszGuild2.c_str(), dwMoney);
 	}
 	else
 	{
 		//LG( "?????????", "?????????????????????DBID[%u],???[%u].\n", dwChaDBID, dwMoney );
-		LG("challenge consortia result", "not find deacon information finger??cannot back gold DBID[%u],how much money[%u].\n", dwChaDBID, dwMoney);
+		ToLogService("common", "not find deacon information finger??cannot back gold DBID[{}],how much money[{}].", dwChaDBID, dwMoney);
 	}
 }
 
@@ -950,14 +950,14 @@ void CGameApp::ProcessGuildChallPrizeMoney(GateServer* pGate, RPACKET pkt)
 		CCharacter* pCha = pPlayer->GetMainCha();
 		pCha->AddMoney("??", dwMoney);
 		/*pCha->SystemNotice( "????????????%s????????????????????�?????%u????", pCha->GetGuildName(), dwMoney );
-		LG( "?????????", "????????????%s????????????????????�?????%u????", pCha->GetGuildName(), dwMoney );*/
+		ToLogService("common", "????????????{}????????????????????�?????{}????", pCha->GetGuildName(), dwMoney);*/
 		pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00010), pCha->GetGuildName(), dwMoney);
-		LG("challenge consortia result", "congratulate you have leading the consortia??%s??get win in consortia battle??gain bounty??%u????", pCha->GetGuildName(), dwMoney);
+		ToLogService("common", "congratulate you have leading the consortia??{}??get win in consortia battle??gain bounty??{}????", pCha->GetGuildName(), dwMoney);
 	}
 	else
 	{
 		//LG( "?????????", "??????????????????????DBID[%u],???[%u]", dwChaDBID, dwMoney );
-		LG("challenge consortia result", "cannot find deacon information finger??cannot hortation DBID[%u],how much money[%u]", dwChaDBID, dwMoney);
+		ToLogService("common", "cannot find deacon information finger??cannot hortation DBID[{}],how much money[{}]", dwChaDBID, dwMoney);
 	}
 }
 
@@ -982,22 +982,22 @@ void CGameApp::ProcessGuildMsg(GateServer* pGate, RPACKET pkt)
 // ?????????????
 void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 {
-		//LG("team", "?????????????\n");
+		//ToLogService("common", "?????????????");
 
 		char cTeamMsgType = READ_CHAR(pkt);
 
 	switch (cTeamMsgType)
 	{
-	case TEAM_MSG_ADD: {	/*LG("team", "?????? [?�???] ???\n");*/ break; }
-	case TEAM_MSG_LEAVE: {	/*LG("team", "?????? [??????] ???\n");*/ break; }
-	case TEAM_MSG_UPDATE: {	/*LG("team", "?????? [??????] ???\n");*/ break; }
+	case TEAM_MSG_ADD: {	/*ToLogService("common", "?????? [?�???] ???");*/ break; }
+	case TEAM_MSG_LEAVE: {	/*ToLogService("common", "?????? [??????] ???");*/ break; }
+	case TEAM_MSG_UPDATE: {	/*ToLogService("common", "?????? [??????] ???");*/ break; }
 	default:
-		//LG("team", "????????Team??? [%d]\n", cTeamMsgType);
+		//ToLogService("common", "????????Team??? [{}]", cTeamMsgType);
 		return;
 	}
 
 	char cMemberCnt = READ_CHAR(pkt);
-	//LG("team", "????????????[%d]\n", cMemberCnt); // ?????????? < 2????GroupServer????????????????.
+	//ToLogService("common", "????????????[{}]", cMemberCnt); // ?????????? < 2????GroupServer????????????????.
 
 	uplayer Team[MAX_TEAM_MEMBER];
 	CPlayer* PlayerList[MAX_TEAM_MEMBER];
@@ -1013,26 +1013,26 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 		Team[i].Init(pszGateName.c_str(), dwGateAddr, dwChaDBID);
 		if (!Team[i].pGate)
 		{
-			LG("team", "GameServer can't find matched Gate??%s, addr = 0x%X, chaid = %d.\n", pszGateName.c_str(), dwGateAddr, dwChaDBID);
-			LG("team", "\tGameServer all Gate:\n");
+			ToLogService("common", "GameServer can't find matched Gate??{}, addr = 0x{:X}, chaid = {}.", pszGateName.c_str(), dwGateAddr, dwChaDBID);
+			ToLogService("common", "\tGameServer all Gate:");
 			BEGINGETGATE();
 			GateServer* pGateServer;
 			while (pGateServer = GETNEXTGATE())
 			{
-				LG("team", "\t%s\n", pGateServer->GetName().c_str());
+				ToLogService("common", "\t{}", pGateServer->GetName().c_str());
 			}
 		}
 
 		PlayerList[i] = GetPlayerByDBID(dwChaDBID);
 
-		//LG("team", "???: %s, %d %d ????Gate [%s]\n", PlayerList[i]!=NULL ? PlayerList[i]->GetCtrlCha()->GetLogName():"(????????Server!)", dwChaDBID, dwGateAddr, pszGateName);
+		//ToLogService("common", "???: {}, {} {} ????Gate [{}]", PlayerList[i]!=NULL ? PlayerList[i]->GetCtrlCha()->GetLogName():"(????????Server!)", dwChaDBID, dwGateAddr, pszGateName);
 	}
 
 	//RefreshTeamEyeshot(PlayerList, cMemberCnt, cTeamMsgType);
 	CheckSeeWithTeamChange(CanSeenO, PlayerList, cMemberCnt);
 	//if(PlayerList[0]==NULL)
 	//{
-	//	LG("team", "????????game server????\n");
+	//	ToLogService("common", "????????game server????");
 	//}
 
 	int nLeftMember = cMemberCnt;
@@ -1116,7 +1116,7 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 			}();
 		}
 		catch (...) {
-			printf("\nException handling: newPly invalid\ncMemberCnt=%d", cMemberCnt);
+			ToLogService("errors", LogLevel::Error, "Exception handling: newPly invalid, cMemberCnt={}", cMemberCnt);
 		}
 	}
 	
@@ -1172,9 +1172,9 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, RPACKET pkt)
 		}
 	}
 
-	//if(nLeftMember==1) LG("team", "nLeftMember==1, ??????!\n");
+	//if(nLeftMember==1) ToLogService("common", "nLeftMember==1, ??????!");
 
-	//LG("team", "??????????????\n\n");
+	//ToLogService("common", "??????????????\n");
 }
 
 // ????????????
@@ -1433,7 +1433,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 					if (++nCount > GETPLAYERCOUNT(pGateServer))
 					{
 						//LG("???????????", "??????:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
-						LG("player list error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
+						ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
 						break;
 					}
 					pCha = pCPlayer->GetMainCha();
@@ -1469,7 +1469,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 					if (++nCount > GETPLAYERCOUNT(pGateServer))
 					{
 						//LG("???????????", "??????:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
-						LG("player list error", "player number:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
+						ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
 						break;
 					}
 					pCha = pCPlayer->GetMainCha();
@@ -1735,11 +1735,10 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, RPAC
 			CCharacter* pCha = pPlayer->GetMainCha();
 			/*pCha->AddMoney( "??", dwMoney );
 			pCha->SystemNotice( "????????????%s????????????????????�?????%u????", pCha->GetGuildName(), dwMoney );
-			LG( "?????????", "????????????%s??ID??%u????????????????????�?????%u????\n", pCha->GetGuildName(),
-				pCha->GetGuildID(), dwMoney );*/
+			ToLogService("common", "????????????{}??ID??{}????????????????????�?????{}????", pCha->GetGuildName(), pCha->GetGuildID(), dwMoney);*/
 			pCha->AddMoney(RES_STRING(GM_GAMEAPPNET_CPP_00017), dwMoney);
 			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00010), pCha->GetGuildName(), dwMoney);
-			LG("challenge consortia result", "congratulate you leading consortia??%s??ID??%u??get win in consortia battle??gain bounty??%u????\n", pCha->GetGuildName(),
+			ToLogService("common", "congratulate you leading consortia [{}] ID [{}] get win in consortia battle, gain bounty [{}]", pCha->GetGuildName(),
 				pCha->GetGuildID(), dwMoney);
 		}
 		//else
@@ -1886,7 +1885,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			Short	sLineNum = READ_SHORT_R(pkt);
 			if (g_cchLogMapEntry)
 				//LG("??????????", "????????????????? %s --> %s[%u, %u]????????? %d\n", szSrcMapN, szTarMapN, lPosX, lPosY, sLineNum);
-				LG("map entry flow", "receive request to create entry??position %s --> %s[%u, %u]??script line %d\n", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY, sLineNum);
+				ToLogService("common", "receive request to create entry??position {} --> {}[{}, {}]??script line {}", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY, sLineNum);
 			while (--sLineNum >= 0)
 			{
 				cszSctLine = READ_STRING(pkt);
@@ -1915,7 +1914,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 				{
 					if (g_cchLogMapEntry)
 						//LG("??????????", "?????????????? %s --> %s[%u, %u]?????? %u ???????\n", szSrcMapN, szTarMapN, lPosX, lPosY, SItemCont.sID);
-						LG("map entry flow", "create entry failed??position %s --> %s[%u, %u]??item %u create failed\n", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY, SItemCont.sID);
+						ToLogService("common", "create entry failed??position {} --> {}[{}, {}]??item {} create failed", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY, SItemCont.sID);
 					g_CDMapEntry.Del(pCEntry);
 					break;
 				}
@@ -1937,7 +1936,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			}
 			if (g_cchLogMapEntry)
 				//LG("??????????", "?????????????? %s --> %s[%u, %u] \n", szSrcMapN, szTarMapN, lPosX, lPosY);
-				LG("map entry flow", "create entry success??position %s --> %s[%u, %u] \n", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY);
+				ToLogService("common", "create entry success??position {} --> {}[{}, {}] ", szSrcMapN.c_str(), szTarMapN.c_str(), lPosX, lPosY);
 
 			g_CParser.DoString("after_create_entry", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCEntry, DOSTRING_PARAM_END);
 		}
@@ -1989,7 +1988,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 		CDynMapEntryCell* pCEntry = g_CDMapEntry.GetEntry(szSrcMapN.c_str());
 		if (g_cchLogMapEntry)
 			//LG("??????????", "????????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-			LG("map entry flow", "receive request to destroy entry??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
+			ToLogService("common", "receive request to destroy entry??position {} --> {}", szSrcMapN.c_str(), szTarMapN.c_str());
 		if (pCEntry)
 		{
 			string	strScript = "after_destroy_entry_";
@@ -2014,7 +2013,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			}
 			if (g_cchLogMapEntry)
 				//LG("??????????", "?????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-				LG("map entry flow", "destroy entry success??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
+				ToLogService("common", "destroy entry success??position {} --> {}", szSrcMapN.c_str(), szTarMapN.c_str());
 		}
 	}
 	break;
@@ -2060,14 +2059,14 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, RPACKET pkt)
 			pCMap->CheckEntryState(enumMAPENTRY_STATE_OPEN);
 			if (g_cchLogMapEntry)
 				//LG("??????????", "????????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-				LG("map entry flow", "receive entry create success ??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
+				ToLogService("common", "receive entry create success ??position {} --> {}", szSrcMapN.c_str(), szTarMapN.c_str());
 		}
 		break;
 		case	enumMAPENTRYO_DESTROY_SUC:
 		{
 			if (g_cchLogMapEntry)
 				//LG("??????????", "???????????????? %s --> %s\n", szSrcMapN, szTarMapN);
-				LG("map entry flow", "receive entry destroy success??position %s --> %s\n", szSrcMapN.c_str(), szTarMapN.c_str());
+				ToLogService("common", "receive entry destroy success??position {} --> {}", szSrcMapN.c_str(), szTarMapN.c_str());
 			pCMap->CheckEntryState(enumMAPENTRY_STATE_CLOSE_SUC);
 		}
 		break;

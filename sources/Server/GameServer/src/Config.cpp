@@ -52,10 +52,10 @@ void CGameConfig::SetDefault()
 	strcpy(m_szInfoPwd, "");
 	m_nSection = 0;
 
-	m_bLogAI		= FALSE;	// �Ƿ��AI��log
-	m_bLogCha		= FALSE;	// �Ƿ�򿪽�ɫ��log
-	m_bLogCal		= FALSE;	// �Ƿ����ֵ�����log
-	m_bLogMission	= FALSE;	// �Ƿ��Mission��log
+	m_bLogAI		= FALSE;	// �Ƿ��AI��log
+	m_bLogCha		= FALSE;	// �Ƿ�򿪽�ɫ��log
+	m_bLogCal		= FALSE;	// �Ƿ����ֵ�����log
+	m_bLogMission	= FALSE;	// �Ƿ��Mission��log
 
 	m_bSuperCmd     = FALSE;
 
@@ -80,12 +80,12 @@ void CGameConfig::SetDefault()
 
 bool CGameConfig::Load(char *pszFileName)
 {
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	
 	ifstream in(pszFileName);
 	if(in.is_open()==0)
 	{
-		LG("init", "msgLoad Game Config File(Text Mode) [%s] error! \n", pszFileName);
+		ToLogService("common", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
 		return false;
 	}
 	string strPair[2];
@@ -111,7 +111,8 @@ bool CGameConfig::Load(char *pszFileName)
 		if(strLine.size()==0) continue;
 		if(strLine[0]=='[') 
 		{
-			Log("\n%s\n", strLine.c_str());
+			// Секция конфигурационного файла
+			ToLogService("common", "{}", strLine);
 			continue;
 		}
 		
@@ -132,7 +133,7 @@ bool CGameConfig::Load(char *pszFileName)
 					m_nGateCnt++;
             }
         }
-        else if(strKey=="info") // ����InfoServer IP��port
+        else if(strKey=="info") // ����InfoServer IP��port
         {
             string strList[4];
             int nCnt = Util_ResolveTextLine(strValue.c_str(), strList, 4, ',');
@@ -169,9 +170,9 @@ bool CGameConfig::Load(char *pszFileName)
 		else if (strKey == "BaseID")
 		{
 			size_t stPos = 0;
-			if ((stPos = strValue.find("0x")) != std::string::npos || (stPos = strValue.find("0X")) != std::string::npos) // ʮ������ֵ
+			if ((stPos = strValue.find("0x")) != std::string::npos || (stPos = strValue.find("0X")) != std::string::npos) // ʮ������ֵ
 				sscanf(strValue.c_str(), "%x", &m_ulBaseID);
-			else // ʮ����ֵ
+			else // ʮ����ֵ
 				sscanf(strValue.c_str(), "%d", &m_ulBaseID);
 		}
 		else if(strKey=="max_ply")
@@ -261,7 +262,7 @@ bool CGameConfig::Load(char *pszFileName)
 		else if(strKey=="log_dir")
 		{
 			strcpy(m_szLogDir, strValue.c_str());
-			LG_SetDir(m_szLogDir);
+			g_logManager.InitLogger(m_szLogDir);
 		}
 		else if(strKey=="db_mapmask")
 		{
@@ -340,12 +341,12 @@ bool CGameConfig::Load(char *pszFileName)
 
 bool CGameConfig::Reload(char *pszFileName)
 {
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	
 	ifstream in(pszFileName);
 	if(in.is_open()==0)
 	{
-		LG("init", "msgLoad Game Config File(Text Mode) [%s] error! \n", pszFileName);
+		ToLogService("common", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
 		return false;
 	}
 	string strPair[2];
@@ -371,7 +372,8 @@ bool CGameConfig::Reload(char *pszFileName)
 		if(strLine.size()==0) continue;
 		if(strLine[0]=='[') 
 		{
-			Log("\n%s\n", strLine.c_str());
+			// Секция конфигурационного файла
+			ToLogService("common", "{}", strLine);
 			continue;
 		}
 		
@@ -452,13 +454,12 @@ void CGameCommand::SetDefault()
 
 bool CGameCommand::Load(const char *pszFileName)
 {
-	//printf("Loading %s ", pszFileName);
 
-	LG("init", "Load Game Config File(Text Mode) [%s]\n", pszFileName);
+	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	ifstream in(pszFileName);
 	if(in.is_open()==0)
 	{
-		LG("init", "msgLoad Game Config File(Text Mode) [%s] error! \n", pszFileName);
+		ToLogService("common", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
 		return false;
 	}
 	string strPair[2];
@@ -484,7 +485,8 @@ bool CGameCommand::Load(const char *pszFileName)
 			continue;
 		if(strLine[0]=='[')
 		{
-			Log("\n%s\n", strLine.c_str());
+			// Секция конфигурационного файла
+			ToLogService("common", "{}", strLine);
 			continue;
 		}
 		int n = Util_ResolveTextLine(strLine.c_str(), strPair, 2, '=');

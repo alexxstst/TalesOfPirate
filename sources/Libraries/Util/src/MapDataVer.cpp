@@ -27,7 +27,7 @@ void CheckMapFileVersion(const char *pszMapName)
     if(fp==NULL)
     {
         //LG("error", "无法打开地图文件[%s]\n", pszMapName);
-		LG("error", "can't open map [%s]\n", pszMapName);
+		ToLogService("errors", LogLevel::Error, "can't open map [{}]", pszMapName);
         return;
     }
 
@@ -39,13 +39,13 @@ void CheckMapFileVersion(const char *pszMapName)
     if(header.nMapFlag==780624)
     {
         //LG("map_version", "msg此旧版本的地图文件现已废弃使用!");
-		LG("map_version", "msg this version file is deprecated!");
+		ToLogService("common", LogLevel::Error, " this version file is deprecated!");
         return;
     }
     else if(header.nMapFlag==LAST_VERSION_NO)
     {
         //LG("map_version", "msg旧版本的地图文件, 现在开始更新版本!");
-		LG("map_version", "msg old version file, now update the version");
+		ToLogService("common", LogLevel::Error, " old version file, now update the version");
     }
     else
     {

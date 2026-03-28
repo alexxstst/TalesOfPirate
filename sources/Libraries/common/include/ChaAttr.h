@@ -78,7 +78,7 @@ inline long CChaAttr::SetAttr(long lNo, LONG32 lVal)
 		{
 			lVal = (int)g_lMaxChaAttr[lNo];
 			//LG("attr_error", "设置Cha[%s] Attrib[%d]超过最大值[%d]\n", m_szName, lNo, lVal); 
-			LG("attr_error", "set Cha[%s] Attrib[%d] greater than max value [%d]\n", m_szName, lNo, lVal); 
+			ToLogService("common", "set Cha[{}] Attrib[{}] greater than max value [{}]", m_szName, lNo, lVal); 
 		}
 	}
 	

@@ -15,13 +15,13 @@
 CEvent::CEvent( CGameScene* pScene ) 
 : _pScene(pScene)	
 { 
-	LG( "event", "new\n" );
+	ToLogService("common", "new");
 	Init();	
 }
 
 CEvent::~CEvent()
 {
-	LG( "event", "del\n" );
+	ToLogService("common", "del");
 }
 
 bool CEvent::DistanceTrigger( int x, int y )
@@ -39,7 +39,7 @@ bool CEvent::DistanceTrigger( int x, int y )
 		}
 		else
 		{
-			// Èç¹ûÒÑ¾­¼¤»îµÄ,¹ý10ÃëºóÈ¡Ïû¼¤»î
+			// ï¿½ï¿½ï¿½ï¿½Ñ¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½10ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 			if( CGameApp::GetCurTick()>_dwLastTime )
 			{
 				_IsActive = false;

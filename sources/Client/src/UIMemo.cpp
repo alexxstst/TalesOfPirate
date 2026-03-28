@@ -155,13 +155,13 @@ void CMemo::AddItemRowContent(int row ,const  char* szFunc, const char* szItemEx
 {
 	if( !szFunc )
 	{
-		LG( "errormemo", "msgCMemo::AddItemRowContent szFunc is null!\n" );
+		ToLogService("common", "msgCMemo::AddItemRowContent szFunc is null!");
 		return;
 	}
 
 	if( row>=MEMO_MAX_ITEM || row<0 )
 	{
-		LG( "errormemo", "msgCMemo::AddItemRowContent( %d, %s ) out of range!\n", row, szFunc );
+		ToLogService("common", "msgCMemo::AddItemRowContent( {}, {} ) out of range!", row, szFunc);
 		return;
 	}
 	//������
@@ -173,13 +173,13 @@ void CMemo::AddMisRowContent(int row ,const char *szFunc)
 {
 	if( !szFunc )
 	{
-		LG( "errormemo", "msgCMemo::AddMisRowContent szFunc is null!\n" );
+		ToLogService("common", "msgCMemo::AddMisRowContent szFunc is null!");
 		return;
 	}
 
 	if( row>=MEMO_MAX_ITEM || row<0 )
 	{
-		LG( "errormemo", "msgCMemo::AddMisRowContent( %d, %s ) out of range!\n", row, szFunc );
+		ToLogService("common", "msgCMemo::AddMisRowContent( {}, {} ) out of range!", row, szFunc);
 		return;
 	}
 
@@ -425,7 +425,7 @@ void CMemo::SetMisRowNum(int num )
 {
 	if( num<0 || num>=MEMO_MAX_ITEM )
 	{
-		LG( "errormemo", "msgCMemo::SetMisRowNum( %d ) out of range!\n", num );
+		ToLogService("common", "msgCMemo::SetMisRowNum( {} ) out of range!", num);
 		if( num<0 ) num=0;
 		if( num>=MEMO_MAX_ITEM ) num=MEMO_MAX_ITEM-1;
 	}

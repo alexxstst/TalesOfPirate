@@ -23,7 +23,7 @@ bool CPkDialog::Init()
 		frmTeamPkStart = mgr.Find("frmTeamPK");
 		if ( !frmTeamPkStart)
 		{
-			LG("gui", g_oLangRec.GetString(744));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(744));
 			return false;
 		}
 		frmTeamPkStart->evtEntrustMouseEvent = _MainMousePkStartEvent;
@@ -68,7 +68,6 @@ bool CPkDialog::Init()
 		//char szBuf[32];
 		//for (int i(0); i<TEAM_NUM; i++)
 		//{
-		//	sprintf(szBuf, "lvEndTeam%d", i);
 		//	lvEndTeams[i] = dynamic_cast<CListView*>(frmTeamPkEnd->Find(szBuf));
 		//	if (!lvEndTeams[i]) 
 		//		return Error("npc.clu����<%s>���Ҳ����ؼ�<%s>",

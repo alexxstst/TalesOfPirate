@@ -35,13 +35,11 @@ void GroupServerApp::CP_TEAM_INVITE(Player *ply,net::TcpClient *client,net::RPac
 		if(!l_invited_ply || l_invited_ply->m_currcha <0 ||l_invited_ply ==ply)
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"�����������ҡ�%s����ǰ�������ϡ�",l_invited_name.c_str());
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00003),l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
 		}else if(l_invited_ply->GetTeam())
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"�����������ҡ�%s����ǰ�������״̬��",l_invited_name.c_str());
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00004),l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
 		}
@@ -63,7 +61,6 @@ void GroupServerApp::CP_TEAM_INVITE(Player *ply,net::TcpClient *client,net::RPac
 			if(l_ptinviter )
 			{
 				char l_buf[256];
-				//sprintf(l_buf,"��������������ҡ�%s�����ڱ������������ڷ�æ״̬,�����������ѱ�ϵͳȡ����",l_invited_name.c_str());
 				sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00007),l_invited_name.c_str());
 				l_ptinviter->SendSysInfo(l_buf);
 
@@ -89,7 +86,6 @@ void GroupServerApp::CP_TEAM_REFUSE(Player *ply,net::TcpClient *client,net::RPac
 	if(l_inviter && l_inviter->m_currcha >=0 && l_inviter.m_chaid ==l_inviter->m_chaid[l_inviter->m_currcha])
 	{
 		char l_buf[256];
-		//sprintf(l_buf,"��ҡ�%s���ܾ�������������롣",ply->m_chaname[ply->m_currcha].c_str());
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00008),ply->m_chaname[ply->m_currcha].c_str());
 		l_inviter->SendSysInfo(l_buf);
 	}
@@ -139,13 +135,11 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 		if(!l_invited_ply || l_invited_ply->m_currcha <0 ||l_invited_ply == pPly)
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"��ҡ�%s����ǰ��������!",l_invited_name);
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00014),l_invited_name);
 			pPly->SendSysInfo(l_buf);
 		}else if(l_invited_ply->GetTeam())
 		{
 			char l_buf[256];
-			//sprintf(l_buf,"��ҡ�%s����ǰ�������״̬��",l_invited_name);
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00015),l_invited_name);
 			pPly->SendSysInfo(l_buf);
 		}else if(l_invited =l_invited_ply->TeamFindInvitedByInviterChaID(pPly->m_chaid[pPly->m_currcha]))
@@ -160,7 +154,6 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 			if(l_ptinviter )
 			{
 				char l_buf[256];
-				//sprintf(l_buf,"��ҡ�%s�����ڷ�æ״̬,�����������ѱ�ϵͳȡ����",l_invited_name);
 				sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00016),l_invited_name);
 				l_ptinviter->SendSysInfo(l_buf);
 			}
@@ -598,7 +591,6 @@ void Player::TeamInvitedCheck(Invited	*invited)
 	}else if(GetTeam() && GetTeam()->GetTotal()>1)
 	{
 		char l_buf[256];
-		//sprintf(l_buf,"������ġ�%s���Ѿ������˱����ӣ�������뱻ȡ����",m_chaname[m_currcha].c_str());
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00028),m_chaname[m_currcha].c_str());
 		l_inviter->SendSysInfo(l_buf);
 
@@ -611,7 +603,6 @@ void Player::TeamInvitedCheck(Invited	*invited)
 	}else if(GetTickCount() -invited->m_tick	>=g_gpsvr->const_team.PendTimeOut)
 	{
 		char l_buf[256];
-		//sprintf(l_buf,"��ԡ�%s������������ѳ���%d����û�л�Ӧ��ϵͳ�Զ�ȡ����������롣",m_chaname[m_currcha].c_str(),g_gpsvr->const_team.PendTimeOut/1000);
 		sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00029),m_chaname[m_currcha].c_str(),g_gpsvr->const_team.PendTimeOut/1000);
 		l_inviter->SendSysInfo(l_buf);
 

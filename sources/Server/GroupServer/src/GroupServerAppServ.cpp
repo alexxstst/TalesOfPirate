@@ -140,7 +140,8 @@ net::WPacket GroupServerApp::TP_REGISTER(net::TcpClient* client, net::RPacket& p
 void GroupServerApp::OnProcessData(net::TcpClient* client, net::RPacket& recvbuf) {
 	try {
 		uShort l_cmd = recvbuf.ReadCmd();
-		LG("OnProcessData", "CMD: %d, l_cmd");
+		// Логирование входящей команды
+		ToLogService("common", "CMD: {}, l_cmd", (int)l_cmd);
 		switch (l_cmd) {
 		case CMD_AP_KICKUSER:
 			recvbuf.ReadInt64();
@@ -453,7 +454,8 @@ void GroupServerApp::OnProcessData(net::TcpClient* client, net::RPacket& recvbuf
 		}
 	}
 	catch (...) {
-		LG("packetException", "Packet CMD [%d] from [%s] caused exception.\n", recvbuf.ReadCmd(),
+		// Ошибка обработки пакета
+		ToLogService("network", LogLevel::Error, "Packet CMD [{}] from [{}] caused exception.", (int)recvbuf.ReadCmd(),
 		   client->GetPeerIP().c_str());
 		return;
 	}
@@ -1453,8 +1455,9 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 			for (plyPointers = m_plylst.GetNextItem(); plyPointers; plyPointers = m_plylst.GetNextItem()) {
 				// Iterates over all players
 				if (ply != plyPointers && !plyPointers->m_bRefreshFlag && plyPointers->m_acctname == ply->m_acctname) {
-					printf("\nfound valid player, whose characters are %d, %d, %d\n", plyPointers->m_chaid[0],
-						   plyPointers->m_chaid[1], plyPointers->m_chaid[2]);
+					// Найден игрок с символами
+					ToLogService("common", "found valid player, whose characters are {}, {}, {}", (int)plyPointers->m_chaid[0],
+						   (int)plyPointers->m_chaid[1], (int)plyPointers->m_chaid[2]);
 					break;
 					// We found a Player object that has a char ID belonging to the account (which is not itself)
 					// Break out of the loop, send update packet to that player.
@@ -1471,7 +1474,8 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 
 				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_REFRESH_SELECT);
-				printf("\n ply->m-chanum:%d\n", ply->m_chanum);
+				// Количество персонажей игрока
+				ToLogService("common", "ply->m-chanum:{}", (int)ply->m_chanum);
 				l_wpk.WriteInt64(delChaSlot);
 				l_wpk.WriteInt64(ply->m_chanum);
 				char k = 0, j = 0;
@@ -1481,25 +1485,25 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 					plyPointers->m_chanum = ply->m_chanum;
 
 					if (!ply->m_chaid[k]) {
-						printf("\ninvalid player1\n");
+						ToLogService("common", "invalid player1");
 						l_wpk.WriteInt64(0);
 						k--;
 					}
 					else {
 						if ((l_row = m_tblcharaters->FetchRowByChaID(ply->m_chaid[k])) == 1) {
-							printf("\nfound char data\n");
+							ToLogService("common", "found char data");
 							// Row from character ID is valid (OK)
 							// Write char properties to packet and send them to client
 							// m_tblcharacters functions must be called only *after* FetchRowByChaID to "select" correct character.
 							l_wpk.WriteInt64(1);
 							char cRet = SendCharData(ply, l_wpk);
 							if (cRet == -1) {
-								printf("\nerror writing char data\n");
+								ToLogService("errors", LogLevel::Error, "error writing char data");
 							}
 							// This is essentially the same function, but it doesn't set player data, just gets it from DB and writes to packet.
 						}
 						else {
-							printf("\nerror writing char data\n");
+							ToLogService("errors", LogLevel::Error, "error writing char data");
 							if (l_row == 0) {
 								LogLine l_line(g_LogGrpServer);
 								//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";

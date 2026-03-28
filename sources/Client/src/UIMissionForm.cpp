@@ -9,7 +9,7 @@ using namespace std;
 
 using namespace GUI;
 //---------------------------------------------------------------------------
-// class CMissionMgr  ÓÃ»§ÈÎÎñ¹ÜÀíÀà
+// class CMissionMgr  ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 //---------------------------------------------------------------------------
 
 CMissionMgr::CMissionMgr()
@@ -28,13 +28,13 @@ CMissionMgr::~CMissionMgr()
 {
 }
 
-bool CMissionMgr::Init() // ÓÃ»§ÈÎÎñÐÅÏ¢³õÊ¼»¯
+bool CMissionMgr::Init() // ï¿½Ã»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢ï¿½ï¿½Ê¼ï¿½ï¿½
 {
-	//npcÈÎÎñ
+	//npcï¿½ï¿½ï¿½ï¿½
 	m_pMisForm = _FindForm("frmNPCMission" ); 
 	if( !m_pMisForm )
 	{	
-		LG("gui", g_oLangRec.GetString(740));
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(740));
 		return false;
 	}
 	
@@ -44,28 +44,28 @@ bool CMissionMgr::Init() // ÓÃ»§ÈÎÎñÐÅÏ¢³õÊ¼»¯
 
 	if( !m_pMisInfo )
 	{
-		Error(g_oLangRec.GetString(45), m_pMisForm->GetName(), "memMission");
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "memMission"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 
 	m_pMisBtn1 = dynamic_cast<CTextButton*>(m_pMisForm->Find( "btnYes" ) );
 	if( !m_pMisBtn1 )
 	{
-		Error(g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnYes");
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnYes"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 
 	m_pMisBtn2 = dynamic_cast<CTextButton*>(m_pMisForm->Find( "btnComplete" ) );
 	if( !m_pMisBtn2 )
 	{
-		Error(g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnComplete");
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnComplete"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 
 	m_pMisClose = dynamic_cast<CTextButton*>(m_pMisForm->Find( "btnClose" ) );
 	if( !m_pMisClose )
 	{
-		Error(g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnClose");
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnClose"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 
@@ -86,7 +86,7 @@ void CMissionMgr::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 	string strName = pSender->GetName();
 	if( stricmp( "frmNPCMission", pSender->GetForm()->GetName() ) ==  0 )
 	{
-		// Èç¹ûÊÇÍË³ö°´Å¥,Ôò¹Ø±Õ¸Ã±íµ¥
+		// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½Å¥,ï¿½ï¿½Ø±Õ¸Ã±ï¿½ï¿½ï¿½
 		if( strName == "btnNo" || strName == "btnClose" )
 		{
 			pSender->GetForm()->Close();
@@ -120,17 +120,17 @@ void CMissionMgr::ShowMissionPage( DWORD dwNpcID, BYTE byCmd, const NET_MISPAGE&
 	m_pMisBtn1->SetIsShow( false );
 	m_pMisBtn2->SetIsShow( false );
 
-	if (byCmd == ROLE_MIS_BTNACCEPT )  //½ÓÊÜ°´Å¥
+	if (byCmd == ROLE_MIS_BTNACCEPT )  //ï¿½ï¿½ï¿½Ü°ï¿½Å¥
 	{
 		m_pMisBtn1->SetIsShow( true );		
 	}
-	else if (byCmd == ROLE_MIS_BTNDELIVERY )  //Íê³É°´Å¥
+	else if (byCmd == ROLE_MIS_BTNDELIVERY )  //ï¿½ï¿½É°ï¿½Å¥
 	{		
 		m_pMisBtn2->SetIsShow( true );
 		m_pMisBtn2->SetIsEnabled( true );
 		m_pMisInfo->SetIsSelect( TRUE );
 	}
-	else if ( byCmd == ROLE_MIS_BTNPENDING )//ÒÑ½ÓÊÜ£¬µ«Î´Íê³É
+	else if ( byCmd == ROLE_MIS_BTNPENDING )//ï¿½Ñ½ï¿½ï¿½Ü£ï¿½ï¿½ï¿½Î´ï¿½ï¿½ï¿½
 	{
 		m_pMisBtn2->SetIsShow( true );
 		m_pMisBtn2->SetIsEnabled( false );

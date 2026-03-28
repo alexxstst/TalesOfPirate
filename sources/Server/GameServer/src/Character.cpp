@@ -227,10 +227,10 @@ void CCharacter::Finally()
 	{
 		if (!GetPlayer())
 			//LG("exception3", "��ɫ[%s]�ͷ�ʱ�����쳣, [CCharacter::Finally]\n", GetLogName());
-			LG("exception3", "when character[%s]release occured abnormity, [CCharacter::Finally]\n", GetLogName());
+			ToLogService("errors", LogLevel::Error, "when character[{}]release occured abnormity, [CCharacter::Finally]", GetLogName());
 		else
 			//LG("exception3", "��ҽ�ɫ[���� %s�����ݿ�ID %u]�ͷ�ʱ�����쳣, [CCharacter::Finally]\n", GetLogName(), GetPlayer()->GetDBActId());
-			LG("exception3", "character player[name %s��DatabaseID %u]release occured abnormity, [CCharacter::Finally]\n", GetLogName(), GetPlayer()->GetDBActId());
+			ToLogService("errors", LogLevel::Error, "character player[name {}��DatabaseID {}]release occured abnormity, [CCharacter::Finally]", GetLogName(), GetPlayer()->GetDBActId());
 		throw;
 	}
 }
@@ -363,7 +363,7 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 	{
 		if (GetPlayer())
 			//LG("enter_map", "SwitchMap(ͬ��ͼ�л������ƽ�ɫ�� %s[����ɫ�� %s]����ͼ�� %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
-			LG("enter_map", "SwitchMap(the same map switch��control player name %s[mainplayer %s]��mapname %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
+			ToLogService("map", "SwitchMap(the same map switch��control player name {}[mainplayer {}]��mapname {})--------", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
 		if (m_SMoveRedu.ulStartTick == 0xffffffff)
 			m_SMoveRedu.ulStartTick = GetTickCount();
 		if(!IsPlayerCha()) // ����ҽ�ɫ�������Լ��ĳ���������
@@ -406,10 +406,10 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 		SetSubMap(pCSrcMap);
 		pCSrcMap->BeforePlyOutMap(this);
 		//LG("enter_map", "SwitchMap(��ͬServer��ͼ�л������ƽ�ɫ�� %s[����ɫ�� %s]��ԭ��ͼ %s��Ŀ���ͼ %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
-		LG("enter_map", "SwitchMap(differ Server map switch��control player name %s[mainplayer %s]��formerly map %s��aimmap %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
+		ToLogService("map", "SwitchMap(differ Server map switch��control player name {}[mainplayer {}]��formerly map {}��aimmap {})--------", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
 		if (GetSubMap())
 			//LG("enter_map", "��ɫ��ͼ�� %s\n", GetSubMap()->GetName());
-			LG("enter_map", "character map name %s\n", GetSubMap()->GetName());
+			ToLogService("map", "character map name {}", GetSubMap()->GetName());
 		// ����д���ݿ�
 		CPlayer	*pPlayer = GetPlayer();
 		if(!pPlayer)
@@ -424,7 +424,7 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 
 		game_db.SavePlayer(pPlayer, enumSAVE_TYPE_SWITCH);
 		//LG("enter_map", "�������ݳɹ�\n");
-		LG("enter_map", "save data succeed\n");
+		ToLogService("map", "save data succeed");
 
 		// ��ɫ����NPCͬ����ͼ�л�
 		pPlayer->MisLogout();
@@ -456,7 +456,7 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 		pPlayer->OnLogoff();
         DELPLAYER(pPlayer);
 		//LG("enter_map", "���������ͼ\n\n");
-		LG("enter_map", "finish enter map\n\n");
+		ToLogService("map", "finish enter map");
 	}
 }
 
@@ -579,7 +579,6 @@ void CCharacter::OnBeginSeen(CCharacter *pCCha)
 	
 	pCCha->ReflectINFof(this,pk);//ͨ��
 
-	//printf("packet size = %d [%s]\n", pk.HasData(), GetName());
 }
 
 void CCharacter::OnEndSeen(CCharacter *pCCha)
@@ -589,7 +588,7 @@ void CCharacter::OnEndSeen(CCharacter *pCCha)
 
 	if (m_pCPlayer && pCCha->m_pCPlayer && (GetID() == pCCha->GetID()))
 		//LG("��Ұ����", "ͬ����ҽ�ɫ %s ����Ұ�����ǵ�socket��%p��%p.\n", pCCha->GetLogName(), m_pCPlayer->GetGate(), pCCha->m_pCPlayer->GetGate());
-		LG("eyeshot error", "the homonymy player %s out of eyeshot��their socket��%p��%p.\n", pCCha->GetLogName(), m_pCPlayer->GetGate(), pCCha->m_pCPlayer->GetGate());
+		ToLogService("errors", LogLevel::Error, "the homonymy player {} out of eyeshot, their socket: {}, {}.", pCCha->GetLogName(), static_cast<void*>(m_pCPlayer->GetGate()), static_cast<void*>(pCCha->m_pCPlayer->GetGate()));
 
 	WPACKET pk	=GETWPACKET();
 	WRITE_CMD(pk, CMD_MC_CHAENDSEE);		//����2�ֽ�
@@ -1289,7 +1288,7 @@ bool CCharacter::DoForgeLikeScript(dbc::cChar *cszFunc, dbc::Long &lRet)
 	int nState = lua_pcall(g_pLuaState, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", cszFunc);
+		ToLogService("lua", LogLevel::Error, "DoString {}", cszFunc);
 		lua_callalert(g_pLuaState, nState);
 		lua_settop(g_pLuaState, 0);
 		return false;
@@ -1333,7 +1332,7 @@ bool CCharacter::DoLifeSkillcript(dbc::cChar *cszFunc, dbc::Long &lRet)
 	int nState = lua_pcall(g_pLuaState, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", cszFunc);
+		ToLogService("lua", LogLevel::Error, "DoString {}", cszFunc);
 		lua_callalert(g_pLuaState, nState);
 		lua_settop(g_pLuaState, 0);
 		return false;
@@ -1369,7 +1368,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 		int nState = lua_pcall(g_pLuaState, nParamNum, LUA_MULTRET, 0);
 		if (nState != 0)
 		{
-			LG("lua_err", "DoString %s\n", cszFunc);
+			ToLogService("lua", LogLevel::Error, "DoString {}", cszFunc);
 			lua_callalert(g_pLuaState, nState);
 			lua_settop(g_pLuaState, 0);
 			return false;
@@ -1382,7 +1381,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 			{
 				memset(m_sTigerItemID, 0, sizeof(m_sTigerItemID));
 				memset(m_sTigerSel, 0, sizeof(m_sTigerSel));
-				LG("lua_err", "DoString %s\n", cszFunc);
+				ToLogService("lua", LogLevel::Error, "DoString {}", cszFunc);
 				lua_callalert(g_pLuaState, nState);
 				lua_settop(g_pLuaState, 0);
 				return false;
@@ -1416,7 +1415,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 		int nState = lua_pcall(g_pLuaState, nParamNum, LUA_MULTRET, 0);
 		if (nState != 0)
 		{
-			LG("lua_err", "DoString %s\n", cszFunc);
+			ToLogService("lua", LogLevel::Error, "DoString {}", cszFunc);
 			lua_callalert(g_pLuaState, nState);
 			lua_settop(g_pLuaState, 0);
 			return false;
@@ -1463,7 +1462,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
 								//LG("�����������", "��ɫ %s(%d)�����������HP�Ƿ�\n", GetLogName(), getAttr(ATTR_JOB));
-								LG("renascence compute error", "character %s(%d)after renascence compute HP is unlawful\n", GetLogName(), getAttr(ATTR_JOB));
+								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
 
 							m_chSelRelive = enumEPLAYER_RELIVE_NONE;
 							m_chReliveLv = 0;
@@ -1476,7 +1475,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
 								//LG("�����������", "��ɫ %s(%d)�����������HP�Ƿ�\n", GetLogName(), getAttr(ATTR_JOB));
-								LG("renascence compute error", "character %s(%d)after renascence compute HP is unlawful\n", GetLogName(), getAttr(ATTR_JOB));
+								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
 
 							m_chSelRelive = enumEPLAYER_RELIVE_NONE;
 							m_chReliveLv = 0;
@@ -1498,7 +1497,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 							g_CParser.DoString("Relive_now", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, m_chReliveLv, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
 								//LG("�����������", "��ɫ %s(%d)�����������HP�Ƿ�\n", GetLogName(), getAttr(ATTR_JOB));
-								LG("renascence compute error", "character %s(%d)after renascence compute HP is unlawful\n", GetLogName(), getAttr(ATTR_JOB));
+								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
 							SwitchMap(pCMap, pCMap->GetName(), GetPos().x, GetPos().y, false, enumSWITCHMAP_DIE, pCMap->GetCopyNO());
 						}
 					}
@@ -1544,7 +1543,7 @@ void CCharacter::AfterStepMove(void)
 				SrcPos.x = area.rbtm.x - clTarDist;
 				pMap->MoveTo(this, SrcPos);
 				//LG("enter_map", "��Ҵ�ֻ������garner�л���magicsea\n");
-				LG("enter_map", "character boat will switch garner to magicsea\n");
+				ToLogService("map", "character boat will switch garner to magicsea");
 			}
 		}
 		else if (!strcmp(pMap->GetName(), "magicsea"))
@@ -1557,7 +1556,7 @@ void CCharacter::AfterStepMove(void)
 				SrcPos.x = area.rbtm.x - clTarDist;
 				pMap->MoveTo(this, SrcPos);
 				//LG("enter_map", "��Ҵ�ֻ������magicsea�л���darkblue\n");
-				LG("enter_map", "character boat will switch magicsea to darkblue\n");
+				ToLogService("map", "character boat will switch magicsea to darkblue");
 			}
 			else if (GetPos().x <= area.ltop.x + clSwitchDist)
 			{
@@ -1567,7 +1566,7 @@ void CCharacter::AfterStepMove(void)
 				SrcPos.x = area.ltop.x + clTarDist;
 				pMap->MoveTo(this, SrcPos);
 				//LG("enter_map", "��Ҵ�ֻ������magicsea�л���garner\n");
-				LG("enter_map", "character boat will switch magicsea to garner\n");
+				ToLogService("map", "character boat will switch magicsea to garner");
 			}
 		}
 		else if (!strcmp(pMap->GetName(), "darkblue"))
@@ -1580,7 +1579,7 @@ void CCharacter::AfterStepMove(void)
 				SrcPos.x = area.ltop.x + clTarDist;
 				pMap->MoveTo(this, SrcPos);
 				//LG("enter_map", "��Ҵ�ֻ������darkblue�л���magicsea\n");
-				LG("enter_map", "character boat will switch darkblue to magicsea\n");
+				ToLogService("map", "character boat will switch darkblue to magicsea");
 			}
 		}
 
@@ -1807,10 +1806,10 @@ void CCharacter::MoveCity(cChar *szCityName, Long lMapCopyNO, Char chSwitchType)
 	{
 		if (GetSubMap())
 			//LG("script_time", "\t��ɫ %s ��ͼ�л���%s-->%s������ʱ����� time = %d\n", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
-			LG("script_time", "\tcharacter %s map switch(%s-->%s) expend much time:time = %d\n", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
+			ToLogService("lua", LogLevel::Trace, "\tcharacter {} map switch({}-->{}) expend much time:time = {}", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
 		else
 			//LG("script_time", "\t��ɫ %s ��ͼ�л���""-->%s������ʱ����� time = %d\n", GetLogName(), pSBirthP->szMapName, dwEndTime);
-			LG("script_time", "\tcharacter %s map switch(""-->%s) expend much time:time = %d\n", GetLogName(), pSBirthP->szMapName, dwEndTime);
+			ToLogService("lua", LogLevel::Trace, "\tcharacter {} map switch(\"\"-->{}) expend much time:time = {}", GetLogName(), pSBirthP->szMapName, dwEndTime);
 	}
 }
 
@@ -1856,7 +1855,7 @@ void CCharacter::BackToCity(bool bDie, cChar *szCityName, Long lMapCpyNO, Char c
 		if (g_CParser.DoString("RespawnAtPortal", enumSCRIPT_PARAM_STRING, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCMainCha, DOSTRING_PARAM_END))
 			city = g_CParser.GetReturnString(0);
 		else
-			printf("Error : RespawnAtPortal failed to execute");
+			ToLogService("errors", LogLevel::Error, "Error : RespawnAtPortal failed to execute");
 
 	}
 	//szCityName = g_CParser.GetReturnString(0);
@@ -1942,7 +1941,6 @@ void CCharacter::BickerNotice( const char szData[], ... )
 	va_list list;
 	va_start( list, szData );
 	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
-	//vsprintf( szTemp, szData, list );
 	// End
 	va_end( list );
 
@@ -1978,7 +1976,6 @@ void CCharacter::SystemNotice( const char szData[], ... )
 	va_list list;
 	va_start( list, szData );
 	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
-	//vsprintf( szTemp, szData, list );
 	// End
 	va_end( list );
 
@@ -1997,7 +1994,6 @@ void CCharacter::PopupNotice( const char szData[], ... )
 	va_list list;
 	va_start( list, szData );
 	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
-	//vsprintf( szTemp, szData, list );
 	// End
 	va_end( list );
 
@@ -2701,7 +2697,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName, dwMoney, dwCharMoney );
 	char szLog[128] = "";
 	sprintf( szLog, "%d��%s", byCount, pItem->szName );
-	TL( CHA_SELL, GetName(), "", szLog );
+	ToLogService("trade", "[CHA_SELL] {} : {}", GetName(), szLog);
 
 	// ����������Ʒ����
 	RefreshNeedItem( wItemID );
@@ -2911,7 +2907,7 @@ BOOL CCharacter::SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMon
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName, dwMoney, dwCharMoney );
 	char szLog[128] = "";
 	sprintf( szLog, "%d??%s", sNum, pItem->szName );
-	TL( CHA_BUY, GetName(), "", szLog );
+	ToLogService("trade", "[CHA_BUY] {} : {}", GetName(), szLog);
 
 	// Database save
 	SaveAssets();
@@ -3053,7 +3049,7 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 					//SystemNotice( "Failed to fetch% s cabin for sale!", pBoat->GetName() );
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00022), pBoat->GetName() );
 					//LG( "trade_error", "Failed to fetch character% s vessel% s cabin for sale of cargo!ID[%d], Count[%d]", GetName(), pBoat->GetName(), wItemID, byCount );
-					LG( "trade_error", "distill character %s boat %s cabin sale goods failed!ID[%d], Count[%d]", GetName(), pBoat->GetName(), wItemID, byCount );
+					ToLogService("trade", LogLevel::Error, "distill character {} boat {} cabin sale goods failed!ID[{}], Count[{}]", GetName(), pBoat->GetName(), wItemID, byCount );
 					return FALSE;
 				}
 
@@ -3079,7 +3075,7 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 				
 				char szLog[128] = "";
 				sprintf( szLog, "%d??%s", byCount, pItem->szName );
-				TL( BOAT_SYS, GetName(), "", szLog );
+				ToLogService("trade", "[BOAT_SYS] {} : {}", GetName(), szLog);
 				return TRUE;
 			}
 		}
@@ -3219,7 +3215,7 @@ BOOL CCharacter::SafeBuyGoods( DWORD dwBoatID, WORD wItemID, BYTE byCount, BYTE 
 				
 				char szLog[128] = "";
 				sprintf( szLog, "%d??%s", sNum, pItem->szName );
-				TL( SYS_BOAT, GetName(), "", szLog );
+				ToLogService("trade", "[SYS_BOAT] {} : {}", GetName(), szLog);
 
 				return TRUE;
 			}
@@ -3328,7 +3324,7 @@ BOOL CCharacter::MakeItem( USHORT sItemID, USHORT sCount, USHORT& sItemPos, BYTE
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), RES_STRING(GM_CHARACTER_CPP_00012), sCount, pItem->szName );
 	char szLog[128] = "";
 	sprintf( szLog, "%d��%s", sCount, pItem->szName );
-	TL( CHA_MIS, GetName(), "", szLog );
+	ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 
 	return TRUE;
 }
@@ -3495,9 +3491,8 @@ BOOL CCharacter::AddItem( USHORT sItemID, USHORT sCount, const char szName[], BY
 		//SystemNotice( "%s������%d����%s����Ʒ!", szName, sCount, szItem );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), szName, sCount, szItem );
 		char szLog[128] = "";
-		//sprintf( szLog, "%d��%s", sCount, szItem );
 		sprintf( szLog, RES_STRING(GM_CHARACTER_CPP_00096), sCount, szItem );
-		TL( CHA_MIS, GetName(), "", szLog );
+		ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 
 		return TRUE;
 	}
@@ -3560,7 +3555,7 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, const char sz
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00026), szName, sCount, szItem.c_str());
 		char szLog[255] = "";
 		sprintf(szLog, "%d %s", sCount, szItem.c_str());
-		TL( CHA_MIS, GetName(), "", szLog );
+		ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 		return TRUE;
 	}
 	else
@@ -3690,7 +3685,7 @@ BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szNam
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00038), szName, sCount, szItem );
 	char szLog[128] = "";
 	sprintf( szLog, "%d�%s", sCount, szItem );
-	TL( MIS_CHA, GetName(), "", szLog );
+	ToLogService("trade", "[MIS_CHA] {} : {}", GetName(), szLog);
 
 	// ˢ��������߼���
 	RefreshNeedItem( sItemID );
@@ -3779,7 +3774,7 @@ BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00038), szName, sCount, szItem );
 	char szLog[128] = "";
 	sprintf( szLog, "%d�%s", sCount, szItem );
-	TL( MIS_CHA, GetName(), "", szLog );
+	ToLogService("trade", "[MIS_CHA] {} : {}", GetName(), szLog);
 
 	// ˢ��������߼���
 	RefreshNeedItem( sItemID );
@@ -4004,7 +3999,7 @@ BOOL CCharacter::SetTradeItemLevel( BYTE byLevel )
 			{				
 				sPosID = m_CKitbag.GetPosIDByNum( i );
 				//LG( "TradeCess", "��ɫ%s����ó�׵ȼ�Level = %d, CurLevel = %d.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
-				LG( "TradeCess", "character %s add trade level:Level = %d, CurLevel = %d.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
+				ToLogService("common", "character {} add trade level:Level = {}, CurLevel = {}.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
 				m_CKitbag.SetChangeFlag(false);
 				m_CKitbag.SetEnergy(false, byLevel, sPosID);
 				m_CKitbag.SetSingleChangeFlag( sPosID );
@@ -4053,7 +4048,7 @@ BOOL CCharacter::AdjustTradeItemCess( USHORT sLowCess, USHORT sData )
 				sPosID = m_CKitbag.GetPosIDByNum( i );
 				m_CKitbag.SetChangeFlag(false);
 				//LG( "TradeCess", "��ɫ%s����ó��˰��LowCess = %d, sData = %d, CurData = %d.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
-				LG( "TradeCess", "character %s add trade lowCess:LowCess = %d, sData = %d, CurData = %d.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
+				ToLogService("common", "character {} add trade lowCess:LowCess = {}, sData = {}, CurData = {}.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
 				if( pGridCont->sEnergy[1] + sData >= sLowCess )
 				{
 					m_CKitbag.SetEnergy(true, sLowCess, sPosID);
@@ -5542,7 +5537,7 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00005), pGridCont->sID );
 					//LG( "boat_error", "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
 					//LG( "boat_error", "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
-					LG( "boat_error", "GridID error��can't find the gridID = %d", pGridCont->sID );
+					ToLogService("errors", LogLevel::Error, "GridID error��can't find the gridID = {}", pGridCont->sID );
 					continue;
 				}
 				if( pItem->sType == enumItemTypeBoat && dwBoatID == pGridCont->GetDBParam( enumITEMDBP_INST_ID ) )
@@ -5553,7 +5548,7 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 						//SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
 						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00005), pGridCont->sID );
 						//LG( "boat_error", "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
-						LG( "boat_error", "GridID error��can't find the gridID = %d", pGridCont->sID );
+						ToLogService("errors", LogLevel::Error, "GridID error��can't find the gridID = {}", pGridCont->sID );
 						continue;
 					}
 					if( KbClearItem(true, true, sPosID) != enumKBACT_SUCCESS )
@@ -5562,7 +5557,7 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 						//SystemNotice( "BoatDie:���ٴ���֤��ʧ��!ID[0x%X]", dwBoatID );
 						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00060), dwBoatID );
 						//LG( "boat_error", "BoatDie:���ٴ���֤��ʧ��!ID[0x%X]", dwBoatID );
-						LG( "boat_error", "BoatDie:destroy captain prove failed! ID[0x%X]", dwBoatID );
+						ToLogService("errors", LogLevel::Error, "BoatDie:destroy captain prove failed! ID[0x{:X}]", dwBoatID );
 						break;
 					}
 				}
@@ -5573,10 +5568,9 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 		if( !GetPlayer()->ClearBoat( dwBoatID ) )
 		{
 			char szData[128];
-			//sprintf( szData, "BoatDie:���ٴ�ֻ%sʧ��!ID[%d]", Boat.GetName(), Boat.getAttr( ATTR_BOAT_DBID ) );
 			sprintf( szData, RES_STRING(GM_CHARACTER_CPP_00061), Boat.GetName(), Boat.getAttr( ATTR_BOAT_DBID ) );
 			SystemNotice( szData );
-			LG( "boat_error", szData );
+			g_logManager.InternalLog(LogLevel::Error, "errors", szData );
 		}
 		return;
 	}
@@ -5740,7 +5734,7 @@ BOOL CCharacter::BoatLaunch( BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT
 		if(ret != 1)
 		{
 			//LG("RemoveYS_error", "RemoveYSʧ��!\n");
-			LG("RemoveYS_error", "RemoveYS failed\n");
+			ToLogService("errors", LogLevel::Error, "RemoveYS failed");
 		}
 	}
 
@@ -6067,7 +6061,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 			//SystemNotice( "BoatSelected:���̴�ֻ��ȡ���ݿ����ʧ��!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00089) );
 			//LG( "boat_error", "BoatSelected:���̴�ֻ��ȡ���ݿ����ʧ��!" );
-			LG( "boat_error", "BoatSelected:salve boat deposit data operator failed!" );
+			ToLogService("errors", LogLevel::Error, "BoatSelected:salve boat deposit data operator failed!" );
 		}
 		else
 		{
@@ -6146,7 +6140,6 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00091) );
 			return TRUE;
 		}
-	//	printf("Boat is here 1"); // test
 		if( byIndex >= byNumBoat )
 		{
 			//SystemNotice( "BoatSelected:ѡ�񲹸���ֻID[%d]����!", byIndex );
@@ -6155,20 +6148,18 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		}
 
 		CCharacter* pBoat = GetPlayer()->GetBoat( Data.byID[byIndex] );
-		//printf("Boat is here 2"); // test
 		if( !pBoat )
 		{
 			//SystemNotice( "BoatSelected:ѡ�񲹸���ֻID[%d]ָ�����!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00093), byIndex );
 			return FALSE;
 		}
-	//	printf("Boat");
 		// ��ֻ������������
 		lua_getglobal( g_pLuaState, "BoatLevelUp" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
 			lua_pop( g_pLuaState, 1 );
-			LG( "lua_invalidfunc", "BoatLevelUp" );
+			ToLogService("common", "BoatLevelUp" );
 			return FALSE;
 		}
 
@@ -6453,7 +6444,7 @@ BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
 		lua_pop( g_pLuaState, 1 );
-		LG( "lua_invalidfunc", "PackBagGoods" );
+		ToLogService("common", "PackBagGoods" );
 		return FALSE;
 	}
 
@@ -7132,7 +7123,7 @@ void CCharacter::LogAssets(Char chLType)
 		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
 	}
 	//LG("����ʲ�", "��ɫ%s(%s)��%s��������Ǯ %u������%s, ��ʱ����%s.\n", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), g_kitbag, g_kitbagTmp);
-	LG("character assets", "player %s(%s)��%s operator;coin %u,kitbag %s,Tempkitbag %s.\n", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), g_kitbag, g_kitbagTmp);
+	ToLogService("common", "player {}({}), {} operator; coin {}, kitbag {}, Tempkitbag {}.", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), static_cast<const char*>(g_kitbag), static_cast<const char*>(g_kitbagTmp));
 }
 
 bool CCharacter::SaveAssets(void)
@@ -7398,7 +7389,7 @@ void CCharacter::CheatConfirm()
 	else
 	{
 		//LG("Cheat", "��� %s ʹ�����,��������!\n", GetName());
-		LG("Cheat", "character %s use waigua,kick it!\n", GetName());
+		ToLogService("players", LogLevel::Warning, "character {} use waigua,kick it!", GetName());
 
 		GatePlayer *pGatePlyer = (GatePlayer *)GetPlayer();
 		g_gmsvr->KickPlayer2(pGatePlyer);
@@ -7522,7 +7513,6 @@ bool Strin2SStateData(CCharacter *pCCha, std::string &strData)
 
 				lOnTick = lOnTick - seconds;
 
-				//printf("ontick time = %d  s% \n", lOnTick, seconds);
 			}
 		}
 		pCCha->AddSkillState(0, g_pCSystemCha->GetID(), g_pCSystemCha->GetHandle(), 0, 0, 0, uchStateID, uchStateLv, lOnTick, enumSSTATE_ADD_EQUALORLARGER, false);
@@ -7813,7 +7803,7 @@ float CCharacter::GetExpRate() {
 		}
 	}
 	catch (...) {
-		printf("\nException handling: pMember was invalid\n partyCnt = %d", partyCnt);
+		ToLogService("common", "\nException handling: pMember was invalid\n partyCnt = {}", partyCnt);
 	}
 	switch (shareCnt) {
 	case 0: return ampBonus * fairyBonus * globalRate * 1.0;

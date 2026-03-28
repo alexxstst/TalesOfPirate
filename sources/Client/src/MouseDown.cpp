@@ -415,7 +415,7 @@ bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacte
 	
 	
 
-	LG( "mousedown", "actattackcha: self:%s, target:%s, pos[%d, %d], skill:%s\ttick:%u\n", pCha->getName().c_str(), pTarget->getName().c_str(), pTarget->GetCurX(), pTarget->GetCurY(), pSkill->szName, CGameApp::GetCurTick() );
+	ToLogService("common", "actattackcha: self:{}, target:{}, pos[{}, {}], skill:{}\ttick:{}", pCha->getName().c_str(), pTarget->getName().c_str(), pTarget->GetCurX(), pTarget->GetCurY(), pSkill->szName, CGameApp::GetCurTick());
 	
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
@@ -498,7 +498,7 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 		return true;
 	}
 
-	LG( "mousedown", "actattackarea: self:%s, skill:%s, pos[%d, %d]\ttick:%u\n", pCha->getName().c_str(), pSkill->szName, nScrX, nScrY, CGameApp::GetCurTick() );
+	ToLogService("common", "actattackarea: self:{}, skill:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(), pSkill->szName, nScrX, nScrY, CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
@@ -576,7 +576,7 @@ bool CMouseDown::ActTalkNpc( CCharacter* pCha, CCharacter* pNpc )
 		return true;
 	}
 
-	LG( "mousedown", "acttalknpc: self:%s, npc:%s, pos[%d, %d]\ttick:%u\n", pCha->getName().c_str(), pNpc->getName().c_str(), pNpc->GetCurX(), pNpc->GetCurY(), CGameApp::GetCurTick() );
+	ToLogService("common", "acttalknpc: self:{}, npc:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(), pNpc->getName().c_str(), pNpc->GetCurX(), pNpc->GetCurY(), CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
@@ -617,7 +617,7 @@ bool CMouseDown::ActPickItem( CCharacter* pCha, CSceneItem* pItem, bool IsMove )
 		return true;
 	}
 
-	LG( "mousedown", "actpicktime: self:%s, item:%s, pos[%d, %d]\ttick:%u\n", pCha->getName().c_str(), pItem->GetItemInfo()->szName, pItem->GetCurX(), pItem->GetCurY(), CGameApp::GetCurTick() );
+	ToLogService("common", "actpicktime: self:{}, item:{}, pos[{}, {}]\ttick:{}", pCha->getName().c_str(), pItem->GetItemInfo()->szName, pItem->GetCurX(), pItem->GetCurY(), CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
@@ -656,7 +656,7 @@ bool CMouseDown::ActEvent( CCharacter* pCha, CSceneNode* pNode, CEvent* pEvent )
 			return true;
 		}
 
-		LG( "mousedown", "actevent: self:%s, nodeid:%u, pos[%d, %d], event:%s\ttick:%u\n", pCha->getName().c_str(), pNode->getAttachID(), pNode->GetCurX(), pNode->GetCurY(), pEvent->GetInfo()->szName, CGameApp::GetCurTick() );
+		ToLogService("common", "actevent: self:{}, nodeid:{}, pos[{}, {}], event:{}\ttick:{}", pCha->getName().c_str(), pNode->getAttachID(), pNode->GetCurX(), pNode->GetCurY(), pEvent->GetInfo()->szName, CGameApp::GetCurTick());
 
 		dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 		pLastCha = pCha;
@@ -697,7 +697,7 @@ bool CMouseDown::ActDummyObj( CCharacter* pCha, int x, int y, int h, int t_angle
 		return true;
 	}
 
-	LG( "mousedown", "actdummyobj: self:%s, x:%d, y:%d, h:%d, angle:%d, action:%d\ttick:%u\n", pCha->getName().c_str(), x, y, h, t_angle, action, CGameApp::GetCurTick() );
+	ToLogService("common", "actdummyobj: self:{}, x:{}, y:{}, h:{}, angle:{}, action:{}\ttick:{}", pCha->getName().c_str(), x, y, h, t_angle, action, CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;
@@ -747,7 +747,7 @@ bool CMouseDown::ActCha( CCharacter* pCha, CCharacter* pTarget )
 		return true;
 	}
 
-	LG( "mousedown", "actcha: self:%s, target:%s\ttick:%u\n", pCha->getName().c_str(), pTarget->getName().c_str(), CGameApp::GetCurTick() );
+	ToLogService("common", "actcha: self:{}, target:{}\ttick:{}", pCha->getName().c_str(), pTarget->getName().c_str(), CGameApp::GetCurTick());
 
 	dwLastTime = CGameApp::GetCurTick() + DELAY_TIME;
 	pLastCha = pCha;

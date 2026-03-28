@@ -23,14 +23,14 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 {
 	if(pCha->m_CKitbag.IsPwdLocked())
 	{
-		//pCha->SystemNotice("µÀ¾ßÀ¸ÒÑËø¶¨,²»ÄÜ¾ºÅÄ!");
+		//pCha->SystemNotice("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Ü¾ï¿½ï¿½ï¿½!");
 		pCha->SystemNotice(RES_STRING(GM_AUCTIONITEM_CPP_00001));
 		return false;
 	}
 
 	if(pCha->IsReadBook())
 	{
-		//pCha->SystemNotice("¶ÁÊé×´Ì¬,²»ÄÜ¾ºÅÄ!");
+		//pCha->SystemNotice("ï¿½ï¿½ï¿½ï¿½×´Ì¬,ï¿½ï¿½ï¿½Ü¾ï¿½ï¿½ï¿½!");
 		pCha->SystemNotice(RES_STRING(GM_AUCTIONITEM_CPP_00002));
 		return false;
 	}
@@ -39,7 +39,7 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 	{
 		if(!pCha->HasMoney(GetBasePrice()))
 		{
-			//pCha->SystemNotice("ÄãµÄ×Ê½ð²»×ã!");
+			//pCha->SystemNotice("ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½!");
 			pCha->SystemNotice(RES_STRING(GM_AUCTIONITEM_CPP_00003));
 			return false;
 		}
@@ -49,21 +49,21 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 		SetCurChaName(pCha->GetName());
 		//if(pCha->TakeMoney("ÏµÍ³", GetCurPrice()))
 		if(pCha->TakeMoney(RES_STRING(GM_AUCTIONITEM_CPP_00004), GetCurPrice()))
-		//LG("Auction", "½ÇÉ« %s Í¶±ê %ld ³É¹¦!\n", GetCurChaName().c_str(),GetCurPrice());
-		LG("Auction", "character %s bid %ld success!\n", GetCurChaName().c_str(),GetCurPrice());
+		//LG("Auction", "ï¿½ï¿½É« %s Í¶ï¿½ï¿½ %ld ï¿½É¹ï¿½!\n", GetCurChaName().c_str(),GetCurPrice());
+		ToLogService("trade", "character {} bid {} success!", GetCurChaName().c_str(),GetCurPrice());
 		return true;
 	}
 
 	if((price < GetCurPrice()) || (price - GetCurPrice() < GetMinBid()))
 	{
-		//pCha->SystemNotice("Äã³ö¼ÛÌ«µÍ!");
+		//pCha->SystemNotice("ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½!");
 		pCha->SystemNotice(RES_STRING(GM_AUCTIONITEM_CPP_00005));
 		return false;
 	}
 
 	if(!pCha->HasMoney(price))
 	{
-		//pCha->SystemNotice("ÄãµÄ×Ê½ð²»×ã!");
+		//pCha->SystemNotice("ï¿½ï¿½ï¿½ï¿½Ê½ï¿½ï¿½ï¿½!");
 		pCha->SystemNotice(RES_STRING(GM_AUCTIONITEM_CPP_00003));
 		return false;
 	}
@@ -77,15 +77,15 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 	SetCurChaName(pCha->GetName());
 	//if(pCha->TakeMoney("ÏµÍ³", GetCurPrice()))
 	if(pCha->TakeMoney( RES_STRING(GM_AUCTIONITEM_CPP_00004), GetCurPrice()))
-		//LG("Auction", "½ÇÉ« %s Í¶±ê %ld ³É¹¦!\n", GetCurChaName().c_str(),GetCurPrice());
-		LG("Auction", "character %s bid %ld success!\n", GetCurChaName().c_str(),GetCurPrice());
+		//LG("Auction", "ï¿½ï¿½É« %s Í¶ï¿½ï¿½ %ld ï¿½É¹ï¿½!\n", GetCurChaName().c_str(),GetCurPrice());
+		ToLogService("trade", "character {} bid {} success!", GetCurChaName().c_str(),GetCurPrice());
 
-	//·µ»¹½ðÇ®
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç®
 	BOOL bOnline = false;
 	if(!game_db.IsChaOnline(dwPreChaID, bOnline))
 	{
-		//LG("Auction", "¶ÁÈ¡½ÇÉ« %s ÔÚÏß×´Ì¬Ê§°Ü!\n", strPreChaName.c_str());
-		LG("Auction", "get character %s online state failed!\n", strPreChaName.c_str());
+		//LG("Auction", "ï¿½ï¿½È¡ï¿½ï¿½É« %s ï¿½ï¿½ï¿½ï¿½×´Ì¬Ê§ï¿½ï¿½!\n", strPreChaName.c_str());
+		ToLogService("trade", "get character {} online state failed!", strPreChaName.c_str());
 	}
 	else
 	{
@@ -93,8 +93,8 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 		{
 			if(!game_db.AddMoney(dwPreChaID, nPrePrice))
 			{
-				//LG("Auction", "½ÇÉ« %s ·µ»¹½ðÇ® %ld Ê§°Ü!\n", strPreChaName.c_str(), nPrePrice);
-				LG("Auction", "character %s back money %ld failed!\n", strPreChaName.c_str(), nPrePrice);
+				//LG("Auction", "ï¿½ï¿½É« %s ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ç® %ld Ê§ï¿½ï¿½!\n", strPreChaName.c_str(), nPrePrice);
+				ToLogService("trade", "character {} back money {} failed!", strPreChaName.c_str(), nPrePrice);
 			}
 		}
 		else

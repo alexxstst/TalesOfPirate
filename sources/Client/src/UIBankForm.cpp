@@ -29,7 +29,7 @@ namespace GUI
 		frmBank = mgr.Find("frmNPCstorage");// ����NPC���д洢���� 
 		if ( !frmBank)
 		{
-			LG("gui", g_oLangRec.GetString(438));
+			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(438));
 			return false;
 		}
 		frmBank->evtClose = _evtOnClose; 
@@ -136,7 +136,6 @@ namespace GUI
 			CS_BeginAction(g_stUIBoat.GetHuman(), enumACTION_BANK, (void*)&(g_stUIBank.m_kNetBank));
 			return true;
 			//char buf[256] = { 0 };
-			//sprintf(buf, "��ȷ�Ϸ�������\n[%s]?", pkItemCmd->GetName());
 			//g_stUIBox.ShowSelectBox(_MoveAItemEvent, buf, true);
 			//return true;
 		}
@@ -174,7 +173,6 @@ namespace GUI
 			return true;
 
 			//char buf[256] = { 0 };
-			//sprintf(buf, "��ȷ��ȡ��\n[%s]?", pkItemCmd->GetName());
 			//g_stUIBox.ShowSelectBox(_MoveAItemEvent, buf, true);
 			//return true;
 		}

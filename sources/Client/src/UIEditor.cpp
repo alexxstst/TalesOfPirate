@@ -42,7 +42,7 @@ bool CEditor::Init()
     frmEditor = mgr.Find("frmEditor");
     if( !frmEditor ) 
     {
-        LG("gui", g_oLangRec.GetString(527));
+        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(527));
         return false;
     }
     frmEditor->evtShow = _ShowEditor;
@@ -252,13 +252,13 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
             if( press )
             {
                 lblSetIslandIndex->SetIsShow(true);
-                edtSetIslandIndex->SetCaption(""); // Çå¿Õ
-                edtSetIslandIndex->SetIsShow(true); // ÏÔÊ¾³öÀ´
-				CCompent::SetActive(edtSetIslandIndex); // Ä¬ÈÏÓµÓÐÊäÈë½¹µã
+                edtSetIslandIndex->SetCaption(""); // ï¿½ï¿½ï¿½
+                edtSetIslandIndex->SetIsShow(true); // ï¿½ï¿½Ê¾ï¿½ï¿½ï¿½ï¿½
+				CCompent::SetActive(edtSetIslandIndex); // Ä¬ï¿½ï¿½Óµï¿½ï¿½ï¿½ï¿½ï¿½ë½¹ï¿½ï¿½
             }
             else
             {
-                edtSetIslandIndex->SetIsShow(false); // Òþ²Ø
+                edtSetIslandIndex->SetIsShow(false); // ï¿½ï¿½ï¿½ï¿½
                 lblSetIslandIndex->SetIsShow(false);
                 g_Editor.cancelIsland();
             }

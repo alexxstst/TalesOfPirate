@@ -62,7 +62,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			if (!pBoat)
 			{
 				//LG("enter_map", "��� %s�Դ�ֻ��ID %u����̬��½ʱʧ�ܣ���ֻ�����ڣ������ж�����!\n", GetLogName(), pCPlayer->GetLoginChaID());
-				LG("enter_map", "character %s use boat(ID %u)form logging failed(boat is inexistence),be cut off connect!\n", GetLogName(), pCPlayer->GetLoginChaID());
+				ToLogService("map", "character {} use boat(ID {})form logging failed(boat is inexistence),be cut off connect!", GetLogName(), pCPlayer->GetLoginChaID());
 				sErrCode = ERR_MC_ENTER_POS;
 				goto Error;
 			}
@@ -70,7 +70,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			{
 				pBoat->SetToMainCha();
 				//LG("enter_map", "��� %s�Դ�ֻ��ID %u����̬��½ʱʧ�ܣ��Ŵ�ʧ�ܣ������ж�����!\n", GetLogName(), pCPlayer->GetLoginChaID());
-				LG("enter_map", "character %suse boat(ID %u)form logging failed(put boat failed),be cut off connect!\n", GetLogName(), pCPlayer->GetLoginChaID());
+				ToLogService("map", "character {}use boat(ID {})form logging failed(put boat failed),be cut off connect!", GetLogName(), pCPlayer->GetLoginChaID());
 				sErrCode = ERR_MC_ENTER_POS;
 				goto Error;
 			}
@@ -99,7 +99,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 					if (strcmp(l_map, pCCtrlCha->GetBirthMap()))
 					{
 						//LG("enter_map", "��� %s(%s) ��Ŀ���ͼ�� %s �ͽ����ɫ�ĵ�ͼ %s ����ƥ�䣬���ж�����!\n",
-						LG("enter_map", "character %s(%s)'s aim map %s is not matched to focus character %s��be cut off connect!\n",
+						ToLogService("map", "character {}({})'s aim map {} is not matched to focus character {}��be cut off connect!",
 							GetLogName(), pCCtrlCha->GetLogName(), l_map, pCCtrlCha->GetBirthMap());
 						sErrCode = ERR_MC_ENTER_POS;
 						goto Error;
@@ -124,7 +124,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			if (!pCMapRes)
 			{
 				//LG("enter_map", "��� %s(%s) �ĵ�ͼ����������Ƿ������ж�����!\n", GetLogName(), pCCtrlCha->GetLogName());
-				LG("enter_map", "player %s(%s)'s map name or city name is unlawful��be cut off connect!\n", GetLogName(), pCCtrlCha->GetLogName());
+				ToLogService("map", "player {}({})'s map name or city name is unlawful��be cut off connect!", GetLogName(), pCCtrlCha->GetLogName());
 				sErrCode = ERR_MC_ENTER_POS;
 				goto Error;
 			}
@@ -132,7 +132,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			if (!pCMap)
 			{
 				//LG("enter_map", "��� %s(%s) �ĵ�ͼ�����ŷǷ������ж�����!\n", GetLogName(), pCCtrlCha->GetLogName());
-				LG("enter_map", "character %s(%s) copy map ID is unlawful��be cut off connect!\n", GetLogName(), pCCtrlCha->GetLogName());
+				ToLogService("map", "character {}({}) copy map ID is unlawful��be cut off connect!", GetLogName(), pCCtrlCha->GetLogName());
 				sErrCode = ERR_MC_ENTER_POS;
 				goto Error;
 			}
@@ -145,7 +145,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			l_shape.radius = m_pCChaRecord->sRadii;
 			if (!pCMap->EnsurePos(&l_shape, pCCtrlCha))
 			{
-				LG("enter_map", "character %s(%s) 's map coordinate[%d, %d]is unlawful, fallback to birth point\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
+				ToLogService("map", "character {}({}) 's map coordinate[{}, {}]is unlawful, fallback to birth point", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
 				SBirthPoint* pFallback = GetRandBirthPoint(GetLogName(), pCCtrlCha->GetBirthCity());
 				if (pFallback)
 				{
@@ -166,15 +166,15 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 					l_shape.centre.y = l_y;
 					if (!pCMap || !pCMap->EnsurePos(&l_shape, pCCtrlCha))
 					{
-						LG("enter_map", "character %s(%s) birth point fallback also failed [%d, %d]\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
+						ToLogService("map", "character {}({}) birth point fallback also failed [{}, {}]", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y);
 						sErrCode = ERR_MC_ENTER_POS;
 						goto Error;
 					}
-					LG("enter_map", "character %s(%s) relocated to birth point [%d, %d] on map %s\n", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y, pCMap->GetName());
+					ToLogService("map", "character {}({}) relocated to birth point [{}, {}] on map {}", GetLogName(), pCCtrlCha->GetLogName(), l_x, l_y, pCMap->GetName());
 				}
 				else
 				{
-					LG("enter_map", "character %s(%s) no birth point found, disconnecting\n", GetLogName(), pCCtrlCha->GetLogName());
+					ToLogService("map", "character {}({}) no birth point found, disconnecting", GetLogName(), pCCtrlCha->GetLogName());
 					sErrCode = ERR_MC_ENTER_POS;
 					goto Error;
 				}
@@ -331,7 +331,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			ResetStoreTime();
 
 			//LG("enter_map", "����������Ϸ���� %s(%s)\n", GetLogName(), pCCtrlCha->GetLogName());
-			LG("enter_map", "finish enter game scene %s(%s)\n", GetLogName(), pCCtrlCha->GetLogName());
+			ToLogService("map", "finish enter game scene {}({})", GetLogName(), pCCtrlCha->GetLogName());
 			return true;
 		}
 	}
@@ -349,7 +349,7 @@ Error:
 	g_pGameApp->GoOutGame(pCPlayer, true);
 
 	//LG("enter_map", "������Ϸ����ʧ�� %s(%s)\n", GetLogName(), GetPlyCtrlCha()->GetLogName());
-	LG("enter_map", "enter game scene failed %s(%s)\n", GetLogName(), GetPlyCtrlCha()->GetLogName());
+	ToLogService("map", "enter game scene failed {}({})", GetLogName(), GetPlyCtrlCha()->GetLogName());
 	return false;
 }
 
@@ -508,7 +508,7 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 					{
 						BOOL bRet = GetPlayer()->GetMainCha()->LearnSkill( pSkill->sID, 1, true, false, true );
 						//LG("���߼���", "��ɫ��%s\tѧϰ�˵��߼���(SkillID: %u)\n", GetLogName(), pSkill->sID);
-						LG("Item skill", "character:%s\tstudy Item skill(SkillID: %u)\n", GetLogName(), pSkill->sID);
+						ToLogService("common", "character:{}\tstudy Item skill(SkillID: {})", GetLogName(), pSkill->sID);
 						if(bRet)
 						{
 							pSSkillCont = m_CSkillBag.GetSkillContByID(pSkill->sID);
@@ -529,7 +529,7 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 		if (!pSSkillCont)
 		{
 			//LG("���ܴ���", "��ɫ��%s\tû�иü���(SkillID: %u)\n", GetLogName(), pSkill->sID);
-			LG("skill error", "character:%s\t hasn't the skill(SkillID: %u)\n", GetLogName(), pSkill->sID);
+			ToLogService("errors", LogLevel::Error, "character:{}\t hasn't the skill(SkillID: {})", GetLogName(), pSkill->sID);
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
 			//m_CLog.Log("��ɫû�иü���[SkillID: %u] [PacketID: %u]\n", pSkill->sID, m_ulPacketID);
 			m_CLog.Log("character hasn't the skill[SkillID: %u] [PacketID: %u]\n", pSkill->sID, m_ulPacketID);
@@ -540,7 +540,7 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 	if (!pCSkillTData)
 	{
 		//LG("���ܴ���", "��ɫ��%s\tû��ȡ���ü���(SkillID: %u, SkillLv: %u)����ʱ����\n", GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
-		LG("skill error", "character:%s\t hasn't get the skill(SkillID: %u, SkillLv: %u)'s temp data\n", GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
+		ToLogService("errors", LogLevel::Error, "character:{}\t hasn't get the skill(SkillID: {}, SkillLv: {})'s temp data", GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
 		FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
 		//m_CLog.Log("��ɫû��ȡ���ü��ܵ���ʱ����[SkillID: %u, SkillLv: %u] [PacketID: %u]\n", pSSkillCont->sID, pSSkillCont->chLv, m_ulPacketID);
 		m_CLog.Log("character hasn't get the skill temp data[SkillID: %u, SkillLv: %u] [PacketID: %u]\n", pSSkillCont->sID, pSSkillCont->chLv, m_ulPacketID);
@@ -1066,9 +1066,8 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	//sprintf(szMsg, "���ĵ��ߣ����� %s[%u]������ %u.", pCItemRec->szName, SGridCont.sID, SGridCont.sNum);
 	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00001), pCItemRec->szName, SGridCont.sID, SGridCont.sNum);
-	TL(CHA_EXPEND, szPlyName, "", szMsg);
+	ToLogService("trade", "[CHA_EXPEND] {} : {}", szPlyName, szMsg);
 
 	if (bRefresh)
 	{
@@ -1217,9 +1216,8 @@ Short CCharacter::Cmd_UnfixItem(Char chLinkID, Short *psItemNum, Char chDir, Lon
 		else
 			sprintf(szPlyName, "%s", GetName());
 		char	szMsg[128];
-		//sprintf(szMsg, "�ӵ��ߣ�ж�����棩������ %s[%u]������ %u.", pCItemRec->szName, SUnfixCont.sID, *psItemNum);
 		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00002), pCItemRec->szName, SUnfixCont.sID, *psItemNum);
-		TL(CHA_SYS, szPlyName, "", szMsg);
+		ToLogService("trade", "[CHA_SYS] {} : {}", szPlyName, szMsg);
 	}
 	else // ɾ������
 	{
@@ -1407,14 +1405,14 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 			if( !game_db.SaveBoatTempData( dwBoatID, this->GetPlayer()->GetDBChaId() ) )
 			{
 				//LG( "ʰȡ��Ʒ����", "��ɫ��%s��ID[0x%X]ʰȡ�˴���֤�������Ǵ�ֻ���ݴ洢ʧ��!��ֻ����ID[0x%X]", 
-				LG( "pick up goods error", "character��%s��ID[0x%X]pick up captain prove��but boat data storage failed!boat data ID[0x%X]", 
+				ToLogService("errors", LogLevel::Error, "character��{}��ID[0x{:X}]pick up captain prove��but boat data storage failed!boat data ID[0x{:X}]", 
 					this->GetName(), this->GetPlayer()->GetDBChaId(), dwBoatID );
 			}
 		}
 		else
 		{
 			//LG( "ʰȡ��Ʒ����", "��ɫ��%s��ID[0x%X]ʰȡ�˴���֤�������Ǳ������ݴ洢ʧ��!��ֻ����ID[0x%X]", 
-			LG( "pick up goods error", "character��%s��ID[0x%X]pick up captain prove��but kitbag data storage failed!boat data ID[0x%X]", 
+			ToLogService("errors", LogLevel::Error, "character��{}��ID[0x{:X}]pick up captain prove��but kitbag data storage failed!boat data ID[0x{:X}]", 
 				this->GetName(), this->GetPlayer()->GetDBChaId(), dwBoatID );
 		}
 
@@ -1423,7 +1421,7 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 			//SystemNotice( "ʰȡ����֤�������Ӵ�ֻʧ��!ID[0x%X]", dwBoatID );
 			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00004), dwBoatID );
 			//LG( "ʰȡ��Ʒ����", "��ɫ��%s��ID[0x%X]ʰȡ�˴���֤�������Ӵ�ֻʧ��!��ֻ����ID[0x%X]", 
-			LG( "pick up goods error", "character��%s��ID[0x%X]pick up captain prove��add boat failed!boat dataID[0x%X]", 
+			ToLogService("errors", LogLevel::Error, "character��{}��ID[0x{:X}]pick up captain prove��add boat failed!boat dataID[0x{:X}]", 
 				this->GetName(), this->GetPlayer()->GetDBChaId(), dwBoatID );
 		}
 	}
@@ -1437,15 +1435,13 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	//sprintf(szMsg, "����ߣ����� %s[%u]������ %u.", pItem->szName, pCItem->m_SGridContent.sID, sPickupNum);
 	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00005), pItem->szName, pCItem->m_SGridContent.sID, sPickupNum);
-	TL(SYS_CHA, szPlyName, "", szMsg);
+	ToLogService("trade", "[SYS_CHA] {} : {}", szPlyName, szMsg);
 
 	//ColourNotice(0xb5eb8e, "Picked up x%d %s", sPickupNum, pItem->szName);
 
 	//��ȡ��Ʒ��֪ͨ����
 	char szTeamMsg[128];
-	//sprintf(szTeamMsg, "���Ķ���%s��%u��%s", szPlyName, sPickupNum, pItem->szName);
 
 	CFormatParameter param(3);
 	param.setString(0, szPlyName);
@@ -1454,7 +1450,6 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 
 	//char szParamMsg[255];
 	RES_FORMAT_STRING(GM_CHARACTERCMD_CPP_00006, param, szTeamMsg);
-	//sprintf(szTeamMsg, szParamMsg, szPlyName, sPickupNum, pItem->szName);
 
 	WPACKET WtPk = GETWPACKET();
 	WRITE_CMD(WtPk, CMD_MC_SYSINFO);
@@ -1611,9 +1606,8 @@ Short CCharacter::Cmd_ThrowItem(Short sKbPage, Short sKbGrid, Short *psThrowNum,
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	//sprintf(szMsg, "�ӵ��ߣ����� %s[%u]������ %u.", pItem->szName, GridCont.sID, GridCont.sNum);
 	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00009), pItem->szName, GridCont.sID, GridCont.sNum);
-	TL(CHA_SYS, szPlyName, "", szMsg);
+	ToLogService("trade", "[CHA_SYS] {} : {}", szPlyName, szMsg);
 
 	pCMap->ItemSpawn(&GridCont, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle(), 10 * 1000); // �ӳ��ĵ��߽���10��ʱ�䱣��
 
@@ -1757,9 +1751,8 @@ Short CCharacter::Cmd_DelItem(Short sKbPage, Short sKbGrid, dbc::Short *psThrowN
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	//sprintf(szMsg, "ɾ�����ߣ����� %s[%u]������ %u.", pItem->szName, sItemID, GridCont.sNum);
 	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00011), pItem->szName, sItemID, GridCont.sNum);
-	TL(CHA_DELETE, szPlyName, "", szMsg);
+	ToLogService("trade", "[CHA_DELETE] {} : {}", szPlyName, szMsg);
 
 	LogAssets(enumLASSETS_DELETE);
 
@@ -2024,9 +2017,8 @@ Short CCharacter::Cmd_BankOper(Char chSrcType, Short sSrcGridID, Short sSrcNum, 
 		else
 			sprintf(szPlyName, "%s", GetName());
 		char	szMsg[128];
-		//sprintf(szMsg, "���в���[%s-->%s]������ %s[%u]������ %u.", chSrcType == 0 ? "������" : "����", chTarType == 0 ? "������" : "����", pItem->szName, sSrcItemID, sLeftNum);
 		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00012), chSrcType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), chTarType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), pItem->szName, sSrcItemID, sLeftNum);
-		TL(CHA_BANK, szPlyName, "", szMsg);
+		ToLogService("trade", "[CHA_BANK] {} : {}", szPlyName, szMsg);
 	}
 
 	if (chSrcType == 0)
@@ -2800,7 +2792,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 	strPrint += szPrint;
 	strPrint += ".";
 	//LG("��ڸ�������", "%s\n", strPrint.c_str());
-	LG("entrance copy control", "%s\n", strPrint.c_str());
+	ToLogService("common", "{}", strPrint.c_str());
 	//
 	pCTeamFightEntry->SynCopyRun((Short)pCMCpyCell->GetPosID(), enumMAPCOPY_START_CDT_PLYNUM, lEnterChaNum);
 
@@ -3433,7 +3425,7 @@ void CCharacter::Cmd_LifeSkillItemAsR(long dwType, SLifeSkillItem *pSItem)
 	int nState = lua_pcall(g_pLuaState, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		LG("lua_err", "DoString %s\n", cszFunc);
+		ToLogService("lua", LogLevel::Error, "DoString {}", cszFunc);
 		lua_callalert(g_pLuaState, nState);
 		lua_settop(g_pLuaState, 0);
 		return ;
@@ -3443,7 +3435,6 @@ void CCharacter::Cmd_LifeSkillItemAsR(long dwType, SLifeSkillItem *pSItem)
 	short stime = (short)lua_tonumber(g_pLuaState, -2);
 	//---------
 	//char time[20];
-	//sprintf(time,"time == %d",stime);
 	//SystemNotice(time);
 	//----------
 	const char * cszContent = lua_tostring(g_pLuaState,-1);

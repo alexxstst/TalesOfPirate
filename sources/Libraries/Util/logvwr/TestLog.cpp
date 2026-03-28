@@ -52,7 +52,7 @@ void CTestLog::OnBnClickedOk()
     static char ctx[81] = "this is log context";
 
     // 输出调试信息
-    LG(type, ctx);
+    g_logManager.InternalLog(LogLevel::Debug, type, ctx);
     //GPL(type, 20, 100, ctx);
 
     OnOK();

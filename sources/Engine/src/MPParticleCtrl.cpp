@@ -500,7 +500,7 @@ void	CMPPartCtrl::CopyPartCtrl(CMPPartCtrl* pPart)
 		sprintf(psID,"%d",pModel->GetID());
 		if(!m_vecModel[n]->LoadScript(psID))
 		{
-			LG("error","msgLoadScript %s",psID);
+			ToLogService("errors", LogLevel::Error, "LoadScript {}",psID);
 		}
 		m_vecModel[n]->SetVel(pModel->GetVel());
 		m_vecModel[n]->SetPlayType(pModel->GetPlayType());
@@ -627,7 +627,7 @@ bool	CMPPartCtrl::SaveToFile(char* pszName)
 	t_pFile = fopen(pszName, "wb");
 	if(!t_pFile)
 	{
-		LG("error","msg %s,只读文件，打开失败",pszName);
+		ToLogService("errors", LogLevel::Error, " {},只读文件，打开失败",pszName);
 		return false;
 	}
 
@@ -667,7 +667,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	;
 	if ((t_pFile = fopen(pszName, "rb")) == NULL)
 	{
-		LG("error", "msg[%s] was not opened.(CMPPartCtrl::LoadFromFile)\n", pszName);
+		ToLogService("errors", LogLevel::Error, "[{}] was not opened.(CMPPartCtrl::LoadFromFile)", pszName);
 		return false;
 	}
 	if (strcmp(pszName, "no") == 0 || strcmp(pszName, "yes") == 0)
@@ -682,12 +682,12 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	fread(&t_dwVersion,sizeof(t_dwVersion),1,t_pFile);
 	if ( t_dwVersion > CMPPartCtrl::ParVersion)
 	{
-		LG("error", "msg[%s]的版本[%d]高于系统的版本[%d] (CMPPartCtrl::LoadFromFile)\n",pszName,t_dwVersion,CMPPartCtrl::ParVersion);
+		ToLogService("errors", LogLevel::Error, "[{}]的版本[{}]高于系统的版本[{}] (CMPPartCtrl::LoadFromFile)",pszName,t_dwVersion,CMPPartCtrl::ParVersion);
 		return false;
 	}
 	if(t_dwVersion < 2)
 	{
-		LG("error", "msg[%s]的版本[%d]低于系统能处理的版本[%d] (CMPPartCtrl::LoadFromFile)\n",pszName,t_dwVersion,2);
+		ToLogService("errors", LogLevel::Error, "[{}]的版本[{}]低于系统能处理的版本[{}] (CMPPartCtrl::LoadFromFile)",pszName,t_dwVersion,2);
 		return false;
 	}
 
@@ -713,7 +713,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	{
 		if (!m_vecPartSys[n]->LoadFromFile(t_pFile,t_dwVersion))
 		{
-			LG("error", "msg[%s]的第[%d]个子系统加载失败.(CMPPartCtrl::LoadFromFile)\n", pszName, n);
+			ToLogService("errors", LogLevel::Error, "[{}]的第[{}]个子系统加载失败.(CMPPartCtrl::LoadFromFile)", pszName, n);
 			return false;
 		}
 		if(t_dwVersion < 6)
@@ -734,7 +734,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 		{
 			if (!m_pcStrip[n].LoadFromFile(t_pFile,t_dwVersion))
 			{
-				LG("error", "msg[%s]的第[%d]个Strip加载失败.(CMPPartCtrl::LoadFromFile)\n", pszName, n);
+				ToLogService("errors", LogLevel::Error, "[{}]的第[{}]个Strip加载失败.(CMPPartCtrl::LoadFromFile)", pszName, n);
 				delete m_pcStrip;
 				return false;
 			}
@@ -761,12 +761,12 @@ bool	CMPPartCtrl::LoadFromMemory(CMemoryBuf*	pbuf)
 	pbuf->mread(&t_dwVersion,sizeof(t_dwVersion),1);
 	if ( t_dwVersion > CMPPartCtrl::ParVersion)
 	{
-		LG("error", "msg版本[%d]高于系统的版本[%d] (CMPPartCtrl::LoadFromFile)\n",t_dwVersion,CMPPartCtrl::ParVersion);
+		ToLogService("errors", LogLevel::Error, "版本[{}]高于系统的版本[{}] (CMPPartCtrl::LoadFromFile)",t_dwVersion,CMPPartCtrl::ParVersion);
 		return false;
 	}
 	if(t_dwVersion < 2)
 	{
-		LG("error", "msg版本[%d]低于系统能处理的版本[%d] (CMPPartCtrl::LoadFromFile)\n",t_dwVersion,2);
+		ToLogService("errors", LogLevel::Error, "版本[{}]低于系统能处理的版本[{}] (CMPPartCtrl::LoadFromFile)",t_dwVersion,2);
 		return false;
 	}
 

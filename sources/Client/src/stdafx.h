@@ -38,6 +38,9 @@ namespace GUI  //�������ֿռ�
 
 using namespace GUI;
 
+// ── Логирование ──────────────────────────────────────────────
+#include "logutil.h"
+
 // ── Engine + утилиты ─────────────────────────────────────────
 #include "Language.h"
 #include "util.h"
