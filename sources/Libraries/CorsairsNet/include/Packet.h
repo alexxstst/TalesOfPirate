@@ -138,7 +138,6 @@ public:
 
     // ── Обратное чтение (с конца пакета, по элементам) ────────
     int64_t  ReverseReadInt64();
-    int64_t  ReverseReadLegacyInt64();
 
     // ── LIBDBC-совместимые алиасы ─────────────────────────────
     uint16_t ReadCmd()              { return GetCmd(); }

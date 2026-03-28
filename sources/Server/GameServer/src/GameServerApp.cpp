@@ -238,10 +238,8 @@ void GameServerApp::HandlePendingEvents()
     if (ci >= 0 && ci < m_gtnum)
     {
         GateServer* gt = &m_gtarray[ci];
-        // Синтезируем CMD_MM_GATE_CONNECT → OnGateConnected
-        net::WPacket wpkt(64);
-        wpkt.WriteCmd(CMD_MM_GATE_CONNECT);
-        wpkt.WriteInt64(0);
+        // Типизированная сериализация: синтетический пакет подключения GateServer
+        auto wpkt = net::msg::serializeGmGateConnectCmd();
         net::RPacket rpkt(wpkt.Data(), wpkt.GetPacketSize(), false);
         g_pGameApp->ProcessNetMsg(NETMSG_GATE_CONNECTED, gt, rpkt);
     }
@@ -254,11 +252,8 @@ void GameServerApp::HandlePendingEvents()
         GateServer* gt = &m_gtarray[di];
         if (gt->IsValid() || gt->m_playerlist != nullptr)
         {
-            // Синтезируем CMD_MM_GATE_RELEASE → OnGateDisconnect
-            // playerlist передаётся через пакет (как в старом коде)
-            net::WPacket wpkt(64);
-            wpkt.WriteCmd(CMD_MM_GATE_RELEASE);
-            wpkt.WriteInt64(ToAddress(gt->m_playerlist));
+            // Типизированная сериализация: синтетический пакет отключения GateServer с указателем playerlist
+            auto wpkt = net::msg::serializeGmGateDisconnect(ToAddress(gt->m_playerlist));
             net::RPacket rpkt(wpkt.Data(), wpkt.GetPacketSize(), false);
             g_pGameApp->ProcessNetMsg(NETMSG_GATE_DISCONNECT, gt, rpkt);
         }
@@ -386,7 +381,9 @@ void GameServerApp::HandleServeCall(GateServer* gt, net::RPacket& pk)
     case CMD_TM_KICKCHA:
     {
         auto const m = std::lock_guard{m_mutdisconn};
-        long lChaDbID = pk.ReadInt64();
+        net::msg::TmKickChaMessage kickMsg;
+        net::msg::deserialize(pk, kickMsg);
+        long lChaDbID = static_cast<long>(kickMsg.charDbId);
         CPlayer* pCOldPly = g_pGameApp->FindPlayerByDBChaID(lChaDbID);
         if (!pCOldPly || !pCOldPly->IsValid())
         {
@@ -404,7 +401,9 @@ void GameServerApp::HandleServeCall(GateServer* gt, net::RPacket& pk)
     }
     case CMD_TM_OFFLINE_MODE:
     {
-        auto player = ToPointer<CPlayer>((pk.ReverseReadInt64()));
+        net::msg::TmOfflineModeMessage offlineMsg;
+        net::msg::deserialize(pk, offlineMsg);
+        auto player = ToPointer<CPlayer>(offlineMsg.playerPtr);
         CCharacter* pCCha{};
 
         const auto return_code = [&]
@@ -412,7 +411,7 @@ void GameServerApp::HandleServeCall(GateServer* gt, net::RPacket& pk)
             if (!player)
                 return ReturnCode::OfflineMode::Unknown;
 
-            if (player->GetGateAddr() != pk.ReverseReadInt64())
+            if (player->GetGateAddr() != static_cast<DWORD>(offlineMsg.gateAddr))
                 return ReturnCode::OfflineMode::Unknown;
 
             if (!player->IsValid())
@@ -582,11 +581,8 @@ bool GameServerApp::KickPlayer(GatePlayer* gtplayer, long lTimeSec)
 
 bool GameServerApp::KickPlayer2(GatePlayer *gtplayer)
 {
-	net::WPacket pkt(128);
-	pkt.WriteCmd(CMD_MT_KICKUSER);
-	pkt.WriteInt64(gtplayer->GetDBChaId());
-	pkt.WriteInt64(gtplayer->GetGateAddr());
-	pkt.WriteInt64(1);
+	// Типизированная сериализация: принудительное отключение игрока
+	auto pkt = net::msg::serialize(net::msg::MtKickUserMessage{gtplayer->GetDBChaId(), (int64_t)gtplayer->GetGateAddr(), 1});
 	gtplayer->GetGate()->SendData(pkt);
 	return true;
 }

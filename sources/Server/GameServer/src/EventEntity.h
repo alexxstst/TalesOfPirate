@@ -24,18 +24,18 @@ namespace mission
 
 		virtual void Clear();
 
-		// 设置实体模型显示信息
+		// 锟斤拷锟斤拷实锟斤拷模锟斤拷锟斤拷示锟斤拷息
 		virtual BOOL Create( SubMap& Submap, const char szName[], USHORT sID, USHORT sInfoID, DWORD dwxPos, DWORD dwyPos, USHORT sDir );
 
-		// 事件实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
+		// 锟铰硷拷实锟斤拷锟斤拷息锟斤拷锟斤拷
+		virtual HRESULT MsgProc( CCharacter& character, net::RPacket& packet );
 
-		// 获取实体状态信息
+		// 锟斤拷取实锟斤拷状态锟斤拷息
 		virtual void GetState( CCharacter& character, BYTE& byState ) { byState = ENTITY_DISABLE; }
 
 	protected:	
-		BYTE	m_byType;	// 实体类型
-		USHORT  m_sInfoID;  // 实体事件客户端表现信息ID
+		BYTE	m_byType;	// 实锟斤拷锟斤拷锟斤拷
+		USHORT  m_sInfoID;  // 实锟斤拷锟铰硷拷锟酵伙拷锟剿憋拷锟斤拷锟斤拷息ID
 	};
 
 	class CResourceEntity : public CEventEntity
@@ -47,19 +47,19 @@ namespace mission
 		virtual void Clear();
 		virtual void SetType() { m_byType = RESOURCE_ENTITY; }
 
-		// 设置资源实体数据信息
+		// 锟斤拷锟斤拷锟斤拷源实锟斤拷锟斤拷锟斤拷锟斤拷息
 		BOOL SetData( USHORT sItemID, USHORT sNum, USHORT sTime );
 
-		// 传送实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
+		// 锟斤拷锟斤拷实锟斤拷锟斤拷息锟斤拷锟斤拷
+		virtual HRESULT MsgProc( CCharacter& character, net::RPacket& packet );
 
-		// 获取实体状态信息
+		// 锟斤拷取实锟斤拷状态锟斤拷息
 		virtual void GetState( CCharacter& character, BYTE& byState );
 
 	private:
-		USHORT	m_sID;		// 资源信息ID
-		USHORT	m_sNum;		// 资源数量信息
-		USHORT	m_sTime;	// 资源采集时间
+		USHORT	m_sID;		// 锟斤拷源锟斤拷息ID
+		USHORT	m_sNum;		// 锟斤拷源锟斤拷锟斤拷锟斤拷息
+		USHORT	m_sTime;	// 锟斤拷源锟缴硷拷时锟斤拷
 	};
 
 	class CTransitEntity : public CEventEntity
@@ -71,17 +71,17 @@ namespace mission
 		virtual void Clear();
 		virtual void SetType() { m_byType = TRANSIT_ENTITY; }
 
-		// 设置传送实体数据信息
+		// 锟斤拷锟矫达拷锟斤拷实锟斤拷锟斤拷锟斤拷锟斤拷息
 		BOOL SetData( const char szMap[], USHORT sxPos, USHORT syPos );
 
-		// 传送实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
+		// 锟斤拷锟斤拷实锟斤拷锟斤拷息锟斤拷锟斤拷
+		virtual HRESULT MsgProc( CCharacter& character, net::RPacket& packet );
 
-		// 获取实体状态信息
+		// 锟斤拷取实锟斤拷状态锟斤拷息
 		virtual void GetState( CCharacter& character, BYTE& byState );
 
 	private:
-		// 被传送到的地图和位置信息
+		// 锟斤拷锟斤拷锟酵碉拷锟侥碉拷图锟斤拷位锟斤拷锟斤拷息
 		char	m_szMapName[MAX_MAPNAME_LENGTH];
 		USHORT  m_sxPos;
 		USHORT  m_syPos;
@@ -96,13 +96,13 @@ namespace mission
 		virtual void Clear();
 		virtual void SetType() { m_byType = BERTH_ENTITY; }
 
-		// 设置停泊船只实体数据信息
+		// 锟斤拷锟斤拷停锟斤拷锟斤拷只实锟斤拷锟斤拷锟斤拷锟斤拷息
 		BOOL SetData( USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT sDir );
 
-		// 传送实体消息处理
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
+		// 锟斤拷锟斤拷实锟斤拷锟斤拷息锟斤拷锟斤拷
+		virtual HRESULT MsgProc( CCharacter& character, net::RPacket& packet );
 
-		// 获取实体状态信息
+		// 锟斤拷取实锟斤拷状态锟斤拷息
 		virtual void GetState( CCharacter& character, BYTE& byState );
 
 	private:

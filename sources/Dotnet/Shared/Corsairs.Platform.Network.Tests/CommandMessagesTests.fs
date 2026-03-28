@@ -535,6 +535,13 @@ let ``PcTeamRefreshMessage roundtrip`` () =
     Assert.Equal("B", restored.Members[1].ChaName)
 
 [<Fact>]
+let ``PcTeamCancelMessage roundtrip`` () =
+    let original = { PcTeamCancelMessage.Reason = 3L; ChaId = 42L }
+    let restored = roundtrip Serialize.pcTeamCancelMessage Deserialize.pcTeamCancelMessage original
+    Assert.Equal(original.Reason, restored.Reason)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
 let ``PcFrndRefreshMessage roundtrip`` () =
     let original =
         { PcFrndRefreshMessage.Msg = 2L; Group = "Friends"; ChaId = 1L
@@ -542,6 +549,13 @@ let ``PcFrndRefreshMessage roundtrip`` () =
     let restored = roundtrip Serialize.pcFrndRefreshMessage Deserialize.pcFrndRefreshMessage original
     Assert.Equal(original.Group, restored.Group)
     Assert.Equal(original.ChaName, restored.ChaName)
+
+[<Fact>]
+let ``PcFrndCancelMessage roundtrip`` () =
+    let original = { PcFrndCancelMessage.Reason = 7L; ChaId = 99L }
+    let restored = roundtrip Serialize.pcFrndCancelMessage Deserialize.pcFrndCancelMessage original
+    Assert.Equal(original.Reason, restored.Reason)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 [<Fact>]
 let ``PcFrndRefreshInfoMessage roundtrip`` () =
@@ -552,10 +566,160 @@ let ``PcFrndRefreshInfoMessage roundtrip`` () =
     Assert.Equal(original.ChaId, restored.ChaId)
     Assert.Equal(original.GuildName, restored.GuildName)
 
+// ═══════════════════════════════════════════════════════════════
+//  PcGmInfoMessage — тегированное сообщение PC_GM_INFO
+// ═══════════════════════════════════════════════════════════════
+
+[<Fact>]
+let ``PcGmInfoMessage START roundtrip`` () =
+    let original =
+        { PcGmInfoMessage.Type = 1L; ChaId = 0L
+          Entries = [|
+            { GmFrndEntry.ChaId = 10L; ChaName = "GM_Alpha"; Motto = "Justice"; Icon = 5L; Status = 4L }
+            { GmFrndEntry.ChaId = 20L; ChaName = "GM_Beta"; Motto = "Order"; Icon = 6L; Status = 5L }
+          |]
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L } }
+    let restored = roundtrip Serialize.pcGmInfoMessage Deserialize.pcGmInfoMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.Entries.Length, restored.Entries.Length)
+    Assert.Equal(original.Entries.[0].ChaId, restored.Entries.[0].ChaId)
+    Assert.Equal(original.Entries.[0].ChaName, restored.Entries.[0].ChaName)
+    Assert.Equal(original.Entries.[0].Motto, restored.Entries.[0].Motto)
+    Assert.Equal(original.Entries.[0].Icon, restored.Entries.[0].Icon)
+    Assert.Equal(original.Entries.[0].Status, restored.Entries.[0].Status)
+    Assert.Equal(original.Entries.[1].ChaId, restored.Entries.[1].ChaId)
+    Assert.Equal(original.Entries.[1].ChaName, restored.Entries.[1].ChaName)
+
+[<Fact>]
+let ``PcGmInfoMessage ONLINE roundtrip`` () =
+    let original =
+        { PcGmInfoMessage.Type = 4L; ChaId = 42L; Entries = [||]
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L } }
+    let restored = roundtrip Serialize.pcGmInfoMessage Deserialize.pcGmInfoMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``PcGmInfoMessage OFFLINE roundtrip`` () =
+    let original =
+        { PcGmInfoMessage.Type = 5L; ChaId = 77L; Entries = [||]
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L } }
+    let restored = roundtrip Serialize.pcGmInfoMessage Deserialize.pcGmInfoMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``PcGmInfoMessage DEL roundtrip`` () =
+    let original =
+        { PcGmInfoMessage.Type = 3L; ChaId = 55L; Entries = [||]
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L } }
+    let restored = roundtrip Serialize.pcGmInfoMessage Deserialize.pcGmInfoMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``PcGmInfoMessage ADD roundtrip`` () =
+    let original =
+        { PcGmInfoMessage.Type = 2L; ChaId = 0L; Entries = [||]
+          AddEntry = { GmFrndAddEntry.Group = "GM"; ChaId = 99L; ChaName = "NewGM"; Motto = "Hi"; Icon = 8L } }
+    let restored = roundtrip Serialize.pcGmInfoMessage Deserialize.pcGmInfoMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.AddEntry.Group, restored.AddEntry.Group)
+    Assert.Equal(original.AddEntry.ChaId, restored.AddEntry.ChaId)
+    Assert.Equal(original.AddEntry.ChaName, restored.AddEntry.ChaName)
+    Assert.Equal(original.AddEntry.Motto, restored.AddEntry.Motto)
+    Assert.Equal(original.AddEntry.Icon, restored.AddEntry.Icon)
+
+// ═══════════════════════════════════════════════════════════════
+//  PcFrndRefreshFullMessage — тегированное сообщение PC_FRND_REFRESH
+// ═══════════════════════════════════════════════════════════════
+
+[<Fact>]
+let ``PcFrndRefreshFullMessage ONLINE roundtrip`` () =
+    let original =
+        { PcFrndRefreshFullMessage.Type = 4L; ChaId = 33L
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Self = { FrndSelfData.ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Groups = [||] }
+    let restored = roundtrip Serialize.pcFrndRefreshFullMessage Deserialize.pcFrndRefreshFullMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``PcFrndRefreshFullMessage OFFLINE roundtrip`` () =
+    let original =
+        { PcFrndRefreshFullMessage.Type = 5L; ChaId = 44L
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Self = { FrndSelfData.ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Groups = [||] }
+    let restored = roundtrip Serialize.pcFrndRefreshFullMessage Deserialize.pcFrndRefreshFullMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``PcFrndRefreshFullMessage DEL roundtrip`` () =
+    let original =
+        { PcFrndRefreshFullMessage.Type = 3L; ChaId = 55L
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Self = { FrndSelfData.ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Groups = [||] }
+    let restored = roundtrip Serialize.pcFrndRefreshFullMessage Deserialize.pcFrndRefreshFullMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``PcFrndRefreshFullMessage ADD roundtrip`` () =
+    let original =
+        { PcFrndRefreshFullMessage.Type = 2L; ChaId = 0L
+          AddEntry = { GmFrndAddEntry.Group = "Friends"; ChaId = 88L; ChaName = "Buddy"; Motto = "Yo"; Icon = 7L }
+          Self = { FrndSelfData.ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Groups = [||] }
+    let restored = roundtrip Serialize.pcFrndRefreshFullMessage Deserialize.pcFrndRefreshFullMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.AddEntry.Group, restored.AddEntry.Group)
+    Assert.Equal(original.AddEntry.ChaId, restored.AddEntry.ChaId)
+    Assert.Equal(original.AddEntry.ChaName, restored.AddEntry.ChaName)
+    Assert.Equal(original.AddEntry.Motto, restored.AddEntry.Motto)
+    Assert.Equal(original.AddEntry.Icon, restored.AddEntry.Icon)
+
+[<Fact>]
+let ``PcFrndRefreshFullMessage START roundtrip`` () =
+    let original =
+        { PcFrndRefreshFullMessage.Type = 1L; ChaId = 0L
+          AddEntry = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+          Self = { FrndSelfData.ChaId = 100L; ChaName = "Me"; Motto = "MyMotto"; Icon = 3L }
+          Groups = [|
+            { FrndGroupData.GroupName = "BestFriends"
+              Members = [|
+                { GmFrndEntry.ChaId = 1L; ChaName = "A"; Motto = "ma"; Icon = 1L; Status = 4L }
+                { GmFrndEntry.ChaId = 2L; ChaName = "B"; Motto = "mb"; Icon = 2L; Status = 5L }
+              |] }
+            { FrndGroupData.GroupName = "Others"
+              Members = [|
+                { GmFrndEntry.ChaId = 3L; ChaName = "C"; Motto = "mc"; Icon = 3L; Status = 4L }
+              |] }
+          |] }
+    let restored = roundtrip Serialize.pcFrndRefreshFullMessage Deserialize.pcFrndRefreshFullMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.Self.ChaId, restored.Self.ChaId)
+    Assert.Equal(original.Self.ChaName, restored.Self.ChaName)
+    Assert.Equal(original.Self.Motto, restored.Self.Motto)
+    Assert.Equal(original.Self.Icon, restored.Self.Icon)
+    Assert.Equal(original.Groups.Length, restored.Groups.Length)
+    Assert.Equal(original.Groups.[0].GroupName, restored.Groups.[0].GroupName)
+    Assert.Equal(original.Groups.[0].Members.Length, restored.Groups.[0].Members.Length)
+    Assert.Equal(original.Groups.[0].Members.[0].ChaId, restored.Groups.[0].Members.[0].ChaId)
+    Assert.Equal(original.Groups.[0].Members.[0].ChaName, restored.Groups.[0].Members.[0].ChaName)
+    Assert.Equal(original.Groups.[0].Members.[0].Status, restored.Groups.[0].Members.[0].Status)
+    Assert.Equal(original.Groups.[0].Members.[1].ChaId, restored.Groups.[0].Members.[1].ChaId)
+    Assert.Equal(original.Groups.[1].GroupName, restored.Groups.[1].GroupName)
+    Assert.Equal(original.Groups.[1].Members.Length, restored.Groups.[1].Members.Length)
+    Assert.Equal(original.Groups.[1].Members.[0].ChaId, restored.Groups.[1].Members.[0].ChaId)
+
 [<Fact>]
 let ``PcSessCreateMessage roundtrip`` () =
     let original =
-        { PcSessCreateMessage.SessId = 1L; NotiPlyCount = 3L
+        { PcSessCreateMessage.SessId = 1L; ErrorMsg = ""; NotiPlyCount = 3L
           Members = [|
             { SessMemberData.ChaId = 1L; ChaName = "A"; Motto = "m"; Icon = 1L }
           |] }
@@ -1374,47 +1538,53 @@ let ``CmItemAmphitheaterAskMessage roundtrip`` () =
 
 [<Fact>]
 let ``CmMasterInviteMessage roundtrip`` () =
-    // Приглашение мастера
-    let original = { CmMasterInviteMessage.MasterId = 11001L }
+    // Приглашение мастера (имя + ID персонажа)
+    let original = { CmMasterInviteMessage.Name = "TestMaster"; ChaId = 11001L }
     let restored = roundtrip Serialize.cmMasterInviteMessage Deserialize.cmMasterInviteMessage original
-    Assert.Equal(original.MasterId, restored.MasterId)
+    Assert.Equal(original.Name, restored.Name)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 [<Fact>]
 let ``CmMasterAsrMessage roundtrip`` () =
     // Ответ на приглашение мастера
-    let original = { CmMasterAsrMessage.Agree = 1L; MasterId = 11002L }
+    let original = { CmMasterAsrMessage.Agree = 1L; Name = "TestMaster"; ChaId = 11002L }
     let restored = roundtrip Serialize.cmMasterAsrMessage Deserialize.cmMasterAsrMessage original
     Assert.Equal(original.Agree, restored.Agree)
-    Assert.Equal(original.MasterId, restored.MasterId)
+    Assert.Equal(original.Name, restored.Name)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 [<Fact>]
 let ``CmMasterDelMessage roundtrip`` () =
     // Удаление мастера
-    let original = { CmMasterDelMessage.MasterId = 11003L }
+    let original = { CmMasterDelMessage.Name = "TestMaster"; ChaId = 11003L }
     let restored = roundtrip Serialize.cmMasterDelMessage Deserialize.cmMasterDelMessage original
-    Assert.Equal(original.MasterId, restored.MasterId)
+    Assert.Equal(original.Name, restored.Name)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 [<Fact>]
 let ``CmPrenticeInviteMessage roundtrip`` () =
-    // Приглашение ученика
-    let original = { CmPrenticeInviteMessage.PrenticeId = 22001L }
+    // Приглашение ученика (имя + ID персонажа)
+    let original = { CmPrenticeInviteMessage.Name = "TestPrentice"; ChaId = 22001L }
     let restored = roundtrip Serialize.cmPrenticeInviteMessage Deserialize.cmPrenticeInviteMessage original
-    Assert.Equal(original.PrenticeId, restored.PrenticeId)
+    Assert.Equal(original.Name, restored.Name)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 [<Fact>]
 let ``CmPrenticeAsrMessage roundtrip`` () =
     // Ответ на приглашение ученика
-    let original = { CmPrenticeAsrMessage.Agree = 0L; PrenticeId = 22002L }
+    let original = { CmPrenticeAsrMessage.Agree = 0L; Name = "TestPrentice"; ChaId = 22002L }
     let restored = roundtrip Serialize.cmPrenticeAsrMessage Deserialize.cmPrenticeAsrMessage original
     Assert.Equal(original.Agree, restored.Agree)
-    Assert.Equal(original.PrenticeId, restored.PrenticeId)
+    Assert.Equal(original.Name, restored.Name)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 [<Fact>]
 let ``CmPrenticeDelMessage roundtrip`` () =
     // Удаление ученика
-    let original = { CmPrenticeDelMessage.PrenticeId = 22003L }
+    let original = { CmPrenticeDelMessage.Name = "TestPrentice"; ChaId = 22003L }
     let restored = roundtrip Serialize.cmPrenticeDelMessage Deserialize.cmPrenticeDelMessage original
-    Assert.Equal(original.PrenticeId, restored.PrenticeId)
+    Assert.Equal(original.Name, restored.Name)
+    Assert.Equal(original.ChaId, restored.ChaId)
 
 // ─── NPC Talk составные команды (Client → GameServer) ───
 
@@ -1676,6 +1846,144 @@ let ``McItemLotteryAsrMessage roundtrip`` () =
     let original = { McItemLotteryAsrMessage.Success = 1L }
     let restored = roundtrip Serialize.mcItemLotteryAsrMessage Deserialize.mcItemLotteryAsrMessage original
     Assert.Equal(original.Success, restored.Success)
+
+// ═══════════════════════════════════════════════════════════════
+//  Геймплейные команды: Фаза 4 — простые MC/CM
+// ═══════════════════════════════════════════════════════════════
+
+[<Fact>]
+let ``McChaEmotionMessage roundtrip`` () =
+    let original = { McChaEmotionMessage.WorldId = 42L; Emotion = 7L }
+    let restored = roundtrip Serialize.mcChaEmotionMessage Deserialize.mcChaEmotionMessage original
+    Assert.Equal(original.WorldId, restored.WorldId)
+    Assert.Equal(original.Emotion, restored.Emotion)
+
+[<Fact>]
+let ``McStartExitMessage roundtrip`` () =
+    let original = { McStartExitMessage.ExitTime = 10000L }
+    let restored = roundtrip Serialize.mcStartExitMessage Deserialize.mcStartExitMessage original
+    Assert.Equal(original.ExitTime, restored.ExitTime)
+
+[<Fact>]
+let ``McGmRecvMessage roundtrip`` () =
+    let original = { McGmRecvMessage.NpcId = 555L }
+    let restored = roundtrip Serialize.mcGmRecvMessage Deserialize.mcGmRecvMessage original
+    Assert.Equal(original.NpcId, restored.NpcId)
+
+[<Fact>]
+let ``McStallDelGoodsMessage roundtrip`` () =
+    let original = { McStallDelGoodsMessage.CharId = 100L; Grid = 5L; Count = 3L }
+    let restored = roundtrip Serialize.mcStallDelGoodsMessage Deserialize.mcStallDelGoodsMessage original
+    Assert.Equal(original.CharId, restored.CharId)
+    Assert.Equal(original.Grid, restored.Grid)
+    Assert.Equal(original.Count, restored.Count)
+
+[<Fact>]
+let ``McStallCloseMessage roundtrip`` () =
+    let original = { McStallCloseMessage.CharId = 200L }
+    let restored = roundtrip Serialize.mcStallCloseMessage Deserialize.mcStallCloseMessage original
+    Assert.Equal(original.CharId, restored.CharId)
+
+[<Fact>]
+let ``McStallSuccessMessage roundtrip`` () =
+    let original = { McStallSuccessMessage.CharId = 300L }
+    let restored = roundtrip Serialize.mcStallSuccessMessage Deserialize.mcStallSuccessMessage original
+    Assert.Equal(original.CharId, restored.CharId)
+
+[<Fact>]
+let ``McUpdateGuildGoldMessage roundtrip`` () =
+    let original = { McUpdateGuildGoldMessage.Data = "12345678" }
+    let restored = roundtrip Serialize.mcUpdateGuildGoldMessage Deserialize.mcUpdateGuildGoldMessage original
+    Assert.Equal(original.Data, restored.Data)
+
+[<Fact>]
+let ``McQueryChaItemMessage roundtrip`` () =
+    let original = { McQueryChaItemMessage.ChaId = 9001L }
+    let restored = roundtrip Serialize.mcQueryChaItemMessage Deserialize.mcQueryChaItemMessage original
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``McDisconnectMessage roundtrip`` () =
+    let original = { McDisconnectMessage.Reason = 3L }
+    let restored = roundtrip Serialize.mcDisconnectMessage Deserialize.mcDisconnectMessage original
+    Assert.Equal(original.Reason, restored.Reason)
+
+[<Fact>]
+let ``McLifeSkillShowMessage roundtrip`` () =
+    let original = { McLifeSkillShowMessage.Type = 2L }
+    let restored = roundtrip Serialize.mcLifeSkillShowMessage Deserialize.mcLifeSkillShowMessage original
+    Assert.Equal(original.Type, restored.Type)
+
+[<Fact>]
+let ``McLifeSkillMessage roundtrip`` () =
+    let original = { McLifeSkillMessage.Type = 1L; Result = 0L; Text = "iron_ore,3,5" }
+    let restored = roundtrip Serialize.mcLifeSkillMessage Deserialize.mcLifeSkillMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.Result, restored.Result)
+    Assert.Equal(original.Text, restored.Text)
+
+[<Fact>]
+let ``McLifeSkillAsrMessage roundtrip`` () =
+    let original = { McLifeSkillAsrMessage.Type = 0L; Time = 5000L; Text = "composing..." }
+    let restored = roundtrip Serialize.mcLifeSkillAsrMessage Deserialize.mcLifeSkillAsrMessage original
+    Assert.Equal(original.Type, restored.Type)
+    Assert.Equal(original.Time, restored.Time)
+    Assert.Equal(original.Text, restored.Text)
+
+[<Fact>]
+let ``McDropLockAsrMessage roundtrip`` () =
+    let original = { McDropLockAsrMessage.Success = 1L }
+    let restored = roundtrip Serialize.mcDropLockAsrMessage Deserialize.mcDropLockAsrMessage original
+    Assert.Equal(original.Success, restored.Success)
+
+[<Fact>]
+let ``McUnlockItemAsrMessage roundtrip`` () =
+    let original = { McUnlockItemAsrMessage.Result = 2L }
+    let restored = roundtrip Serialize.mcUnlockItemAsrMessage Deserialize.mcUnlockItemAsrMessage original
+    Assert.Equal(original.Result, restored.Result)
+
+[<Fact>]
+let ``McStoreBuyAnswerMessage roundtrip`` () =
+    let original = { McStoreBuyAnswerMessage.Success = 1L; NewMoney = 50000L }
+    let restored = roundtrip Serialize.mcStoreBuyAnswerMessage Deserialize.mcStoreBuyAnswerMessage original
+    Assert.Equal(original.Success, restored.Success)
+    Assert.Equal(original.NewMoney, restored.NewMoney)
+
+[<Fact>]
+let ``McStoreChangeAnswerMessage roundtrip`` () =
+    let original = { McStoreChangeAnswerMessage.Success = 1L; MoBean = 100L; ReplMoney = 9999L }
+    let restored = roundtrip Serialize.mcStoreChangeAnswerMessage Deserialize.mcStoreChangeAnswerMessage original
+    Assert.Equal(original.Success, restored.Success)
+    Assert.Equal(original.MoBean, restored.MoBean)
+    Assert.Equal(original.ReplMoney, restored.ReplMoney)
+
+[<Fact>]
+let ``McDailyBuffInfoMessage roundtrip`` () =
+    let original = { McDailyBuffInfoMessage.ImgName = "buff_icon.png"; LabelInfo = "Daily EXP Boost +50%" }
+    let restored = roundtrip Serialize.mcDailyBuffInfoMessage Deserialize.mcDailyBuffInfoMessage original
+    Assert.Equal(original.ImgName, restored.ImgName)
+    Assert.Equal(original.LabelInfo, restored.LabelInfo)
+
+[<Fact>]
+let ``McRequestDropRateMessage roundtrip`` () =
+    let original = { McRequestDropRateMessage.Rate = 1.5f }
+    let restored = roundtrip Serialize.mcRequestDropRateMessage Deserialize.mcRequestDropRateMessage original
+    Assert.Equal(original.Rate, restored.Rate)
+
+[<Fact>]
+let ``McRequestExpRateMessage roundtrip`` () =
+    let original = { McRequestExpRateMessage.Rate = 2.0f }
+    let restored = roundtrip Serialize.mcRequestExpRateMessage Deserialize.mcRequestExpRateMessage original
+    Assert.Equal(original.Rate, restored.Rate)
+
+[<Fact>]
+let ``McTigerItemIdMessage roundtrip`` () =
+    let original = { McTigerItemIdMessage.Num = 3L; ItemId0 = 1001L; ItemId1 = 1002L; ItemId2 = 1003L }
+    let restored = roundtrip Serialize.mcTigerItemIdMessage Deserialize.mcTigerItemIdMessage original
+    Assert.Equal(original.Num, restored.Num)
+    Assert.Equal(original.ItemId0, restored.ItemId0)
+    Assert.Equal(original.ItemId1, restored.ItemId1)
+    Assert.Equal(original.ItemId2, restored.ItemId2)
 
 // ═══════════════════════════════════════════════════════════════
 //  Геймплейные команды: Фаза 3 — сложные
@@ -2175,17 +2483,26 @@ let ``McStoreOpenAnswerMessage roundtrip — invalid`` () =
 
 [<Fact>]
 let ``McStoreListAnswerMessage roundtrip`` () =
-    // Список товаров магазина: 1 товар с 2 вариантами и 5 атрибутами
+    // Список товаров магазина: 1 товар с 2 вариантами, каждый с 5 атрибутами
+    let attrs1 : AttrEntry[] =
+        [| { AttrEntry.AttrId = 1L; AttrVal = 100L }
+           { AttrEntry.AttrId = 2L; AttrVal = 50L }
+           { AttrEntry.AttrId = 3L; AttrVal = 25L }
+           { AttrEntry.AttrId = 0L; AttrVal = 0L }
+           { AttrEntry.AttrId = 0L; AttrVal = 0L } |]
+    let attrs2 : AttrEntry[] =
+        [| { AttrEntry.AttrId = 4L; AttrVal = 200L }
+           { AttrEntry.AttrId = 5L; AttrVal = 75L }
+           { AttrEntry.AttrId = 0L; AttrVal = 0L }
+           { AttrEntry.AttrId = 0L; AttrVal = 0L }
+           { AttrEntry.AttrId = 0L; AttrVal = 0L } |]
     let original =
         { McStoreListAnswerMessage.PageTotal = 3L; PageCurrent = 1L
           Products = [|
             { ComId = 1001L; ComName = "Меч тьмы"; Price = 5000L; Remark = "Легендарное оружие"
               IsHot = true; Time = 86400L; Quantity = 50L; Expire = 0L
-              Variants = [| { ItemId = 2001L; ItemNum = 1L; Flute = 0L }
-                            { ItemId = 2002L; ItemNum = 3L; Flute = 1L } |]
-              Attrs = [| { AttrId = 1L; AttrVal = 100L }; { AttrId = 2L; AttrVal = 50L }
-                         { AttrId = 3L; AttrVal = 25L }; { AttrId = 0L; AttrVal = 0L }
-                         { AttrId = 0L; AttrVal = 0L } |] }
+              Variants = [| { ItemId = 2001L; ItemNum = 1L; Flute = 0L; Attrs = attrs1 }
+                            { ItemId = 2002L; ItemNum = 3L; Flute = 1L; Attrs = attrs2 } |] }
           |] }
     let restored = roundtrip Serialize.mcStoreListAnswerMessage Deserialize.mcStoreListAnswerMessage original
     Assert.Equal(3L, restored.PageTotal)
@@ -2204,14 +2521,15 @@ let ``McStoreListAnswerMessage roundtrip`` () =
     Assert.Equal(2001L, p.Variants[0].ItemId)
     Assert.Equal(1L, p.Variants[0].ItemNum)
     Assert.Equal(0L, p.Variants[0].Flute)
+    Assert.Equal(5, p.Variants[0].Attrs.Length)
+    Assert.Equal(1L, p.Variants[0].Attrs[0].AttrId)
+    Assert.Equal(100L, p.Variants[0].Attrs[0].AttrVal)
     Assert.Equal(2002L, p.Variants[1].ItemId)
     Assert.Equal(3L, p.Variants[1].ItemNum)
     Assert.Equal(1L, p.Variants[1].Flute)
-    Assert.Equal(5, p.Attrs.Length)
-    Assert.Equal(1L, p.Attrs[0].AttrId)
-    Assert.Equal(100L, p.Attrs[0].AttrVal)
-    Assert.Equal(2L, p.Attrs[1].AttrId)
-    Assert.Equal(50L, p.Attrs[1].AttrVal)
+    Assert.Equal(5, p.Variants[1].Attrs.Length)
+    Assert.Equal(4L, p.Variants[1].Attrs[0].AttrId)
+    Assert.Equal(200L, p.Variants[1].Attrs[0].AttrVal)
 
 [<Fact>]
 let ``McStoreHistoryMessage roundtrip`` () =
@@ -2751,3 +3069,477 @@ let ``McCharacterAction CHANGE_CHA roundtrip`` () =
     match restored.Action with
     | ActionChangeCha mid -> Assert.Equal(777L, mid)
     | _ -> Assert.Fail("Ожидался ActionChangeCha")
+
+// ═══════════════════════════════════════════════════════════════
+//  Гильдейские команды (CM/MC)
+// ═══════════════════════════════════════════════════════════════
+
+[<Fact>]
+let ``CmGuildPutNameMessage roundtrip`` () =
+    let original = { CmGuildPutNameMessage.Confirm = 1L; GuildName = "Pirates"; Passwd = "secret" }
+    let restored = roundtrip Serialize.cmGuildPutNameMessage Deserialize.cmGuildPutNameMessage original
+    Assert.Equal(original.Confirm, restored.Confirm)
+    Assert.Equal(original.GuildName, restored.GuildName)
+    Assert.Equal(original.Passwd, restored.Passwd)
+
+[<Fact>]
+let ``CmGuildTryForMessage roundtrip`` () =
+    let original = { CmGuildTryForMessage.GuildId = 42L }
+    let restored = roundtrip Serialize.cmGuildTryForMessage Deserialize.cmGuildTryForMessage original
+    Assert.Equal(original.GuildId, restored.GuildId)
+
+[<Fact>]
+let ``CmGuildTryForCfmMessage roundtrip`` () =
+    let original = { CmGuildTryForCfmMessage.Confirm = 1L }
+    let restored = roundtrip Serialize.cmGuildTryForCfmMessage Deserialize.cmGuildTryForCfmMessage original
+    Assert.Equal(original.Confirm, restored.Confirm)
+
+[<Fact>]
+let ``CmGuildApproveMessage roundtrip`` () =
+    let original = { CmGuildApproveMessage.ChaId = 100L }
+    let restored = roundtrip Serialize.cmGuildApproveMessage Deserialize.cmGuildApproveMessage original
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``CmGuildRejectMessage roundtrip`` () =
+    let original = { CmGuildRejectMessage.ChaId = 200L }
+    let restored = roundtrip Serialize.cmGuildRejectMessage Deserialize.cmGuildRejectMessage original
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``CmGuildKickMessage roundtrip`` () =
+    let original = { CmGuildKickMessage.ChaId = 300L }
+    let restored = roundtrip Serialize.cmGuildKickMessage Deserialize.cmGuildKickMessage original
+    Assert.Equal(original.ChaId, restored.ChaId)
+
+[<Fact>]
+let ``CmGuildDisbandMessage roundtrip`` () =
+    let original = { CmGuildDisbandMessage.Passwd = "disband123" }
+    let restored = roundtrip Serialize.cmGuildDisbandMessage Deserialize.cmGuildDisbandMessage original
+    Assert.Equal(original.Passwd, restored.Passwd)
+
+[<Fact>]
+let ``CmGuildMottoMessage roundtrip`` () =
+    let original = { CmGuildMottoMessage.Motto = "Yo ho ho!" }
+    let restored = roundtrip Serialize.cmGuildMottoMessage Deserialize.cmGuildMottoMessage original
+    Assert.Equal(original.Motto, restored.Motto)
+
+[<Fact>]
+let ``CmGuildChallMessage roundtrip`` () =
+    let original = { CmGuildChallMessage.Level = 2L; Money = 5000L }
+    let restored = roundtrip Serialize.cmGuildChallMessage Deserialize.cmGuildChallMessage original
+    Assert.Equal(original.Level, restored.Level)
+    Assert.Equal(original.Money, restored.Money)
+
+[<Fact>]
+let ``CmGuildLeizhuMessage roundtrip`` () =
+    let original = { CmGuildLeizhuMessage.Level = 1L; Money = 3000L }
+    let restored = roundtrip Serialize.cmGuildLeizhuMessage Deserialize.cmGuildLeizhuMessage original
+    Assert.Equal(original.Level, restored.Level)
+    Assert.Equal(original.Money, restored.Money)
+
+[<Fact>]
+let ``McGuildTryForCfmMessage roundtrip`` () =
+    let original = { McGuildTryForCfmMessage.Name = "OldGuild" }
+    let restored = roundtrip Serialize.mcGuildTryForCfmMessage Deserialize.mcGuildTryForCfmMessage original
+    Assert.Equal(original.Name, restored.Name)
+
+[<Fact>]
+let ``McGuildMottoMessage roundtrip`` () =
+    let original = { McGuildMottoMessage.Motto = "For glory!" }
+    let restored = roundtrip Serialize.mcGuildMottoMessage Deserialize.mcGuildMottoMessage original
+    Assert.Equal(original.Motto, restored.Motto)
+
+[<Fact>]
+let ``McGuildInfoMessage roundtrip`` () =
+    let original =
+        { McGuildInfoMessage.CharId = 10L; GuildId = 20L
+          GuildName = "SeaDogs"; GuildMotto = "Sail on!"; GuildPermission = 7L }
+    let restored = roundtrip Serialize.mcGuildInfoMessage Deserialize.mcGuildInfoMessage original
+    Assert.Equal(original.CharId, restored.CharId)
+    Assert.Equal(original.GuildId, restored.GuildId)
+    Assert.Equal(original.GuildName, restored.GuildName)
+    Assert.Equal(original.GuildMotto, restored.GuildMotto)
+    Assert.Equal(original.GuildPermission, restored.GuildPermission)
+
+[<Fact>]
+let ``McGuildListChallMessage roundtrip — все уровни заполнены`` () =
+    let original : McGuildListChallMessage =
+        { IsLeader = 1L
+          Entries = [|
+            { Level = 1L; Start = 10L; GuildName = "Alpha"; ChallName = "Beta"; Money = 1000L }
+            { Level = 2L; Start = 20L; GuildName = "Gamma"; ChallName = "Delta"; Money = 2000L }
+            { Level = 3L; Start = 30L; GuildName = "Epsilon"; ChallName = "Zeta"; Money = 3000L }
+          |] }
+    let restored = roundtrip Serialize.mcGuildListChallMessage Deserialize.mcGuildListChallMessage original
+    Assert.Equal(original.IsLeader, restored.IsLeader)
+    for i in 0..2 do
+        Assert.Equal(original.Entries[i].Level, restored.Entries[i].Level)
+        Assert.Equal(original.Entries[i].Start, restored.Entries[i].Start)
+        Assert.Equal(original.Entries[i].GuildName, restored.Entries[i].GuildName)
+        Assert.Equal(original.Entries[i].ChallName, restored.Entries[i].ChallName)
+        Assert.Equal(original.Entries[i].Money, restored.Entries[i].Money)
+
+[<Fact>]
+let ``McGuildListChallMessage roundtrip — пустые уровни`` () =
+    let original : McGuildListChallMessage =
+        { IsLeader = 0L
+          Entries = [|
+            { Level = 0L; Start = 0L; GuildName = ""; ChallName = ""; Money = 0L }
+            { Level = 1L; Start = 5L; GuildName = "Only"; ChallName = "One"; Money = 500L }
+            { Level = 0L; Start = 0L; GuildName = ""; ChallName = ""; Money = 0L }
+          |] }
+    let restored = roundtrip Serialize.mcGuildListChallMessage Deserialize.mcGuildListChallMessage original
+    Assert.Equal(0L, restored.Entries[0].Level)
+    Assert.Equal(1L, restored.Entries[1].Level)
+    Assert.Equal("Only", restored.Entries[1].GuildName)
+    Assert.Equal(0L, restored.Entries[2].Level)
+
+// ═══════════════════════════════════════════════════════════════
+//  CMD_PC_GUILD — составное сообщение гильдии
+// ═══════════════════════════════════════════════════════════════
+
+/// Вспомогательная: пустая запись участника для тестов.
+let emptyGuildMember : GuildMemberEntry =
+    { Online = 0L; ChaId = 0L; ChaName = ""; Motto = ""; Job = ""; Degree = 0L; Icon = 0L; Permission = 0L }
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — ONLINE`` () =
+    let original : PcGuildMessage =
+        { Msg = 4L; ChaId = 42L; PacketIndex = 0L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = [||]; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(4L, restored.Msg)
+    Assert.Equal(42L, restored.ChaId)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — OFFLINE`` () =
+    let original : PcGuildMessage =
+        { Msg = 5L; ChaId = 99L; PacketIndex = 0L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = [||]; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(5L, restored.Msg)
+    Assert.Equal(99L, restored.ChaId)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — DEL`` () =
+    let original : PcGuildMessage =
+        { Msg = 3L; ChaId = 77L; PacketIndex = 0L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = [||]; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(3L, restored.Msg)
+    Assert.Equal(77L, restored.ChaId)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — STOP`` () =
+    let original : PcGuildMessage =
+        { Msg = 6L; ChaId = 0L; PacketIndex = 0L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = [||]; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(6L, restored.Msg)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — ADD`` () =
+    let addEntry : GuildMemberEntry =
+        { Online = 1L; ChaId = 10L; ChaName = "Pirate"; Motto = "Yarr!"
+          Job = "Captain"; Degree = 5L; Icon = 3L; Permission = 7L }
+    let original : PcGuildMessage =
+        { Msg = 2L; ChaId = 0L; PacketIndex = 0L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = [||]; AddMember = addEntry }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(2L, restored.Msg)
+    Assert.Equal(1L, restored.AddMember.Online)
+    Assert.Equal(10L, restored.AddMember.ChaId)
+    Assert.Equal("Pirate", restored.AddMember.ChaName)
+    Assert.Equal("Yarr!", restored.AddMember.Motto)
+    Assert.Equal("Captain", restored.AddMember.Job)
+    Assert.Equal(5L, restored.AddMember.Degree)
+    Assert.Equal(3L, restored.AddMember.Icon)
+    Assert.Equal(7L, restored.AddMember.Permission)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — START первый пакет с заголовком`` () =
+    let members = [|
+        { Online = 1L; ChaId = 10L; ChaName = "Alpha"; Motto = "Go!"; Job = "Warrior"; Degree = 5L; Icon = 1L; Permission = 15L }
+        { Online = 0L; ChaId = 20L; ChaName = "Beta"; Motto = "Wait"; Job = "Mage"; Degree = 3L; Icon = 2L; Permission = 3L }
+    |]
+    let original : PcGuildMessage =
+        { Msg = 1L; ChaId = 0L; PacketIndex = 0L
+          GuildId = 100L; GuildName = "SeaDogs"; LeaderId = 10L
+          Members = members; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(1L, restored.Msg)
+    Assert.Equal(0L, restored.PacketIndex)
+    Assert.Equal(100L, restored.GuildId)
+    Assert.Equal("SeaDogs", restored.GuildName)
+    Assert.Equal(10L, restored.LeaderId)
+    Assert.Equal(2, restored.Members.Length)
+    Assert.Equal(1L, restored.Members[0].Online)
+    Assert.Equal(10L, restored.Members[0].ChaId)
+    Assert.Equal("Alpha", restored.Members[0].ChaName)
+    Assert.Equal(0L, restored.Members[1].Online)
+    Assert.Equal(20L, restored.Members[1].ChaId)
+    Assert.Equal("Beta", restored.Members[1].ChaName)
+    Assert.Equal("Mage", restored.Members[1].Job)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — START второй пакет без заголовка`` () =
+    let members = [|
+        { Online = 1L; ChaId = 30L; ChaName = "Gamma"; Motto = ""; Job = "Thief"; Degree = 1L; Icon = 0L; Permission = 1L }
+    |]
+    let original : PcGuildMessage =
+        { Msg = 1L; ChaId = 0L; PacketIndex = 1L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = members; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(1L, restored.Msg)
+    Assert.Equal(1L, restored.PacketIndex)
+    // Заголовок не сериализуется при packetIndex>0
+    Assert.Equal(0L, restored.GuildId)
+    Assert.Equal(1, restored.Members.Length)
+    Assert.Equal(30L, restored.Members[0].ChaId)
+    Assert.Equal("Gamma", restored.Members[0].ChaName)
+
+[<Fact>]
+let ``PcGuildMessage roundtrip — START пустой пакет (count=0)`` () =
+    let original : PcGuildMessage =
+        { Msg = 1L; ChaId = 0L; PacketIndex = 0L
+          GuildId = 0L; GuildName = ""; LeaderId = 0L
+          Members = [||]; AddMember = emptyGuildMember }
+    let restored = roundtrip Serialize.pcGuildMessage Deserialize.pcGuildMessage original
+    Assert.Equal(1L, restored.Msg)
+    Assert.Equal(0L, restored.PacketIndex)
+    Assert.Equal(0, restored.Members.Length)
+
+// ═══════════════════════════════════════════════════════════════
+//  Логи банка гильдии (UPDATEGUILDLOGS / REQUESTGUILDLOGS)
+// ═══════════════════════════════════════════════════════════════
+
+[<Fact>]
+let ``McUpdateGuildLogsMessage roundtrip — с логами и стоппером`` () =
+    let original : McUpdateGuildLogsMessage =
+        { WorldId = 42L; PacketId = 7L; TotalSize = 100L
+          Logs = [|
+            { Type = 1L; Time = 1000L; Parameter = 50L; Quantity = 3L; UserId = 99L }
+            { Type = 2L; Time = 2000L; Parameter = 60L; Quantity = 1L; UserId = 77L }
+          |]
+          Terminated = true }
+    let restored = roundtrip Serialize.mcUpdateGuildLogsMessage Deserialize.mcUpdateGuildLogsMessage original
+    Assert.Equal(original.WorldId, restored.WorldId)
+    Assert.Equal(original.PacketId, restored.PacketId)
+    Assert.Equal(original.TotalSize, restored.TotalSize)
+    Assert.Equal(2, restored.Logs.Length)
+    Assert.Equal(1L, restored.Logs[0].Type)
+    Assert.Equal(1000L, restored.Logs[0].Time)
+    Assert.Equal(50L, restored.Logs[0].Parameter)
+    Assert.Equal(3L, restored.Logs[0].Quantity)
+    Assert.Equal(99L, restored.Logs[0].UserId)
+    Assert.Equal(2L, restored.Logs[1].Type)
+    Assert.Equal(2000L, restored.Logs[1].Time)
+    Assert.Equal(60L, restored.Logs[1].Parameter)
+    Assert.Equal(1L, restored.Logs[1].Quantity)
+    Assert.Equal(77L, restored.Logs[1].UserId)
+    Assert.True(restored.Terminated)
+
+[<Fact>]
+let ``McUpdateGuildLogsMessage roundtrip — без стоппера`` () =
+    let original : McUpdateGuildLogsMessage =
+        { WorldId = 10L; PacketId = 1L; TotalSize = 50L
+          Logs = [|
+            { Type = 3L; Time = 3000L; Parameter = 70L; Quantity = 5L; UserId = 111L }
+          |]
+          Terminated = false }
+    let restored = roundtrip Serialize.mcUpdateGuildLogsMessage Deserialize.mcUpdateGuildLogsMessage original
+    Assert.Equal(original.WorldId, restored.WorldId)
+    Assert.Equal(original.TotalSize, restored.TotalSize)
+    Assert.Equal(1, restored.Logs.Length)
+    Assert.Equal(3L, restored.Logs[0].Type)
+    Assert.Equal(3000L, restored.Logs[0].Time)
+    Assert.False(restored.Terminated)
+
+[<Fact>]
+let ``McUpdateGuildLogsMessage roundtrip — пустой список логов`` () =
+    let original : McUpdateGuildLogsMessage =
+        { WorldId = 5L; PacketId = 0L; TotalSize = 0L; Logs = [||]; Terminated = false }
+    let restored = roundtrip Serialize.mcUpdateGuildLogsMessage Deserialize.mcUpdateGuildLogsMessage original
+    Assert.Equal(0, restored.Logs.Length)
+    Assert.False(restored.Terminated)
+
+[<Fact>]
+let ``McRequestGuildLogsMessage roundtrip — с логами и стоппером`` () =
+    let original : McRequestGuildLogsMessage =
+        { WorldId = 100L; PacketId = 3L
+          Logs = [|
+            { Type = 5L; Time = 5000L; Parameter = 80L; Quantity = 2L; UserId = 55L }
+          |]
+          Terminated = true }
+    let restored = roundtrip Serialize.mcRequestGuildLogsMessage Deserialize.mcRequestGuildLogsMessage original
+    Assert.Equal(original.WorldId, restored.WorldId)
+    Assert.Equal(original.PacketId, restored.PacketId)
+    Assert.Equal(1, restored.Logs.Length)
+    Assert.Equal(5L, restored.Logs[0].Type)
+    Assert.Equal(5000L, restored.Logs[0].Time)
+    Assert.Equal(80L, restored.Logs[0].Parameter)
+    Assert.Equal(2L, restored.Logs[0].Quantity)
+    Assert.Equal(55L, restored.Logs[0].UserId)
+    Assert.True(restored.Terminated)
+
+[<Fact>]
+let ``McRequestGuildLogsMessage roundtrip — без стоппера`` () =
+    let original : McRequestGuildLogsMessage =
+        { WorldId = 20L; PacketId = 2L; Logs = [||]; Terminated = false }
+    let restored = roundtrip Serialize.mcRequestGuildLogsMessage Deserialize.mcRequestGuildLogsMessage original
+    Assert.Equal(20L, restored.WorldId)
+    Assert.Equal(0, restored.Logs.Length)
+    Assert.False(restored.Terminated)
+
+// ═══════════════════════════════════════════════════════════════
+//  Торговля предметами (McCharTradeItemMessage — единое сообщение)
+// ═══════════════════════════════════════════════════════════════
+
+[<Fact>]
+let ``McCharTradeItemMessage roundtrip — удаление предмета (Remove)`` () =
+    let original : McCharTradeItemMessage =
+        { MainChaId = 1001L; OpType = 3L // TRADE_DRAGTO_ITEM
+          Data = Remove { BagIndex = 5L; TradeIndex = 3L; Count = 10L } }
+    let restored = roundtrip Serialize.mcCharTradeItemMessage Deserialize.mcCharTradeItemMessage original
+    Assert.Equal(original.MainChaId, restored.MainChaId)
+    Assert.Equal(original.OpType, restored.OpType)
+    match restored.Data with
+    | Remove rem ->
+        Assert.Equal(5L, rem.BagIndex)
+        Assert.Equal(3L, rem.TradeIndex)
+        Assert.Equal(10L, rem.Count)
+    | Add _ -> Assert.Fail("Ожидался вариант Remove")
+
+[<Fact>]
+let ``McCharTradeItemMessage roundtrip — обычный предмет без instAttr`` () =
+    let item : TradeItemData =
+        { Endure0 = 100L; Endure1 = 90L; Energy0 = 50L; Energy1 = 40L
+          ForgeLv = 3L; Valid = 1L; Tradable = 1L; Expiration = 9999L
+          ForgeParam = 7L; InstId = 555L
+          HasInstAttr = false; InstAttr = [||] }
+    let original : McCharTradeItemMessage =
+        { MainChaId = 2001L; OpType = 4L // TRADE_DRAGTO_TRADE
+          Data = Add { ItemId = 300L; BagIndex = 2L; TradeIndex = 0L
+                       Count = 5L; ItemType = 1L; EquipData = Choice2Of2 item } }
+    let restored = roundtrip Serialize.mcCharTradeItemMessage Deserialize.mcCharTradeItemMessage original
+    Assert.Equal(original.MainChaId, restored.MainChaId)
+    Assert.Equal(original.OpType, restored.OpType)
+    match restored.Data with
+    | Add add ->
+        Assert.Equal(300L, add.ItemId)
+        Assert.Equal(2L, add.BagIndex)
+        Assert.Equal(0L, add.TradeIndex)
+        Assert.Equal(5L, add.Count)
+        Assert.Equal(1L, add.ItemType)
+        match add.EquipData with
+        | Choice2Of2 restoredItem ->
+            Assert.Equal(100L, restoredItem.Endure0)
+            Assert.Equal(90L, restoredItem.Endure1)
+            Assert.Equal(50L, restoredItem.Energy0)
+            Assert.Equal(40L, restoredItem.Energy1)
+            Assert.Equal(3L, restoredItem.ForgeLv)
+            Assert.Equal(1L, restoredItem.Valid)
+            Assert.Equal(1L, restoredItem.Tradable)
+            Assert.Equal(9999L, restoredItem.Expiration)
+            Assert.Equal(7L, restoredItem.ForgeParam)
+            Assert.Equal(555L, restoredItem.InstId)
+            Assert.False(restoredItem.HasInstAttr)
+        | Choice1Of2 _ -> Assert.Fail("Ожидался Choice2Of2 (предмет)")
+    | Remove _ -> Assert.Fail("Ожидался вариант Add")
+
+[<Fact>]
+let ``McCharTradeItemMessage roundtrip — обычный предмет с instAttr`` () =
+    let attrs = [| (10L, 20L); (30L, 40L); (50L, 60L); (70L, 80L); (90L, 100L) |]
+    let item : TradeItemData =
+        { Endure0 = 200L; Endure1 = 180L; Energy0 = 60L; Energy1 = 55L
+          ForgeLv = 5L; Valid = 1L; Tradable = 0L; Expiration = 5000L
+          ForgeParam = 11L; InstId = 777L
+          HasInstAttr = true; InstAttr = attrs }
+    let original : McCharTradeItemMessage =
+        { MainChaId = 3001L; OpType = 4L // TRADE_DRAGTO_TRADE
+          Data = Add { ItemId = 400L; BagIndex = 3L; TradeIndex = 1L
+                       Count = 1L; ItemType = 2L; EquipData = Choice2Of2 item } }
+    let restored = roundtrip Serialize.mcCharTradeItemMessage Deserialize.mcCharTradeItemMessage original
+    Assert.Equal(original.MainChaId, restored.MainChaId)
+    match restored.Data with
+    | Add add ->
+        Assert.Equal(2L, add.ItemType)
+        match add.EquipData with
+        | Choice2Of2 restoredItem ->
+            Assert.True(restoredItem.HasInstAttr)
+            Assert.Equal(ITEM_INSTANCE_ATTR_NUM, restoredItem.InstAttr.Length)
+            Assert.Equal((10L, 20L), restoredItem.InstAttr[0])
+            Assert.Equal((30L, 40L), restoredItem.InstAttr[1])
+            Assert.Equal((50L, 60L), restoredItem.InstAttr[2])
+            Assert.Equal((70L, 80L), restoredItem.InstAttr[3])
+            Assert.Equal((90L, 100L), restoredItem.InstAttr[4])
+            Assert.Equal(200L, restoredItem.Endure0)
+            Assert.Equal(777L, restoredItem.InstId)
+        | Choice1Of2 _ -> Assert.Fail("Ожидался Choice2Of2 (предмет)")
+    | Remove _ -> Assert.Fail("Ожидался вариант Add")
+
+[<Fact>]
+let ``McCharTradeItemMessage roundtrip — корабль (hasBoat=true)`` () =
+    let boat : TradeBoatData =
+        { HasBoat = true; Name = "BlackPearl"
+          Ship = 1L; Lv = 10L; Cexp = 500L
+          HP = 1000L; MxHP = 1500L; SP = 200L; MxSP = 300L
+          MnAtk = 50L; MxAtk = 100L; Def = 30L
+          MSpd = 15L; ASpd = 8L
+          UseGridNum = 4L; Capacity = 20L; Price = 99999L }
+    let original : McCharTradeItemMessage =
+        { MainChaId = 4001L; OpType = 4L // TRADE_DRAGTO_TRADE
+          Data = Add { ItemId = 500L; BagIndex = 0L; TradeIndex = 2L
+                       Count = 1L; ItemType = ITEM_TYPE_BOAT; EquipData = Choice1Of2 boat } }
+    let restored = roundtrip Serialize.mcCharTradeItemMessage Deserialize.mcCharTradeItemMessage original
+    Assert.Equal(original.MainChaId, restored.MainChaId)
+    match restored.Data with
+    | Add add ->
+        Assert.Equal(ITEM_TYPE_BOAT, add.ItemType)
+        match add.EquipData with
+        | Choice1Of2 restoredBoat ->
+            Assert.True(restoredBoat.HasBoat)
+            Assert.Equal("BlackPearl", restoredBoat.Name)
+            Assert.Equal(1L, restoredBoat.Ship)
+            Assert.Equal(10L, restoredBoat.Lv)
+            Assert.Equal(500L, restoredBoat.Cexp)
+            Assert.Equal(1000L, restoredBoat.HP)
+            Assert.Equal(1500L, restoredBoat.MxHP)
+            Assert.Equal(200L, restoredBoat.SP)
+            Assert.Equal(300L, restoredBoat.MxSP)
+            Assert.Equal(50L, restoredBoat.MnAtk)
+            Assert.Equal(100L, restoredBoat.MxAtk)
+            Assert.Equal(30L, restoredBoat.Def)
+            Assert.Equal(15L, restoredBoat.MSpd)
+            Assert.Equal(8L, restoredBoat.ASpd)
+            Assert.Equal(4L, restoredBoat.UseGridNum)
+            Assert.Equal(20L, restoredBoat.Capacity)
+            Assert.Equal(99999L, restoredBoat.Price)
+        | Choice2Of2 _ -> Assert.Fail("Ожидался Choice1Of2 (корабль)")
+    | Remove _ -> Assert.Fail("Ожидался вариант Add")
+
+[<Fact>]
+let ``McCharTradeItemMessage roundtrip — корабль (hasBoat=false)`` () =
+    let boat : TradeBoatData =
+        { HasBoat = false; Name = ""; Ship = 0L; Lv = 0L; Cexp = 0L
+          HP = 0L; MxHP = 0L; SP = 0L; MxSP = 0L
+          MnAtk = 0L; MxAtk = 0L; Def = 0L; MSpd = 0L; ASpd = 0L
+          UseGridNum = 0L; Capacity = 0L; Price = 0L }
+    let original : McCharTradeItemMessage =
+        { MainChaId = 5001L; OpType = 4L // TRADE_DRAGTO_TRADE
+          Data = Add { ItemId = 600L; BagIndex = 0L; TradeIndex = 0L
+                       Count = 1L; ItemType = ITEM_TYPE_BOAT; EquipData = Choice1Of2 boat } }
+    let restored = roundtrip Serialize.mcCharTradeItemMessage Deserialize.mcCharTradeItemMessage original
+    match restored.Data with
+    | Add add ->
+        match add.EquipData with
+        | Choice1Of2 restoredBoat -> Assert.False(restoredBoat.HasBoat)
+        | Choice2Of2 _ -> Assert.Fail("Ожидался Choice1Of2 (корабль)")
+    | Remove _ -> Assert.Fail("Ожидался вариант Add")

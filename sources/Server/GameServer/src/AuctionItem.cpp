@@ -112,11 +112,10 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 			}
 			else
 			{
-				WPACKET WtPk  = GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MM_ADDMONEY);
-				WRITE_LONG(WtPk, pCha->GetID());
-				WRITE_LONG(WtPk, dwPreChaID);
-				WRITE_LONG(WtPk, nPrePrice);
+				// Типизированная сериализация: возврат денег предыдущему покупателю через кросс-серверную ретрансляцию
+				auto WtPk = net::msg::serialize(net::msg::MmAddMoneyMessage{
+					static_cast<int64_t>(pCha->GetID()), static_cast<int64_t>(dwPreChaID), static_cast<int64_t>(nPrePrice)
+				});
 				pCha->ReflectINFof(pCha, WtPk);
 			}
 		}

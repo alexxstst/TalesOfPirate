@@ -35,9 +35,8 @@ bool	OuterServer::OnConnect(DataSocket *datasock)					//����ֵ:true-��
 	ToLogService("network", "GateServer Connected! IP = [{}] port = {}", datasock->GetPeerIP(), datasock->GetPeerPort());
 
     // ֪ͨӦ�ò㣬����һ�� GateServer
-    WPacket wpkt = g_gmsvr->GetWPacket();
-    wpkt.WriteCmd(CMD_MM_GATE_CONNECT);
-    wpkt.WriteChar(0);
+    // Типизированная сериализация: уведомление о подключении GateServer
+    auto wpkt = net::msg::serializeGmGateConnectCmd();
     AddPK(datasock, wpkt);
 
 	return true;
@@ -53,9 +52,8 @@ void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reasonֵ:0-�
 	if (gt->IsValid())
 	{
 		// ֪ͨ�߼������Gate�����ӶϿ�
-		WPacket WtPk=g_gmsvr->GetWPacket();
-		WtPk.WriteCmd(CMD_MM_GATE_RELEASE);
-		WtPk.WriteChar(0);
+		// Типизированная сериализация: уведомление об отключении GateServer
+		auto WtPk = net::msg::serializeGmGateReleaseCmd();
 		AddPK(datasock, WtPk);
 
         // ����GateServer

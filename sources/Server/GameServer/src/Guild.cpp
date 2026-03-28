@@ -13,8 +13,8 @@ BOOL Guild::lua_CreateGuild(CCharacter* pCha)//��������,1-��
 	{
 		pCha->GetPlayer()->m_GuildState.SetBit(emGuildGetName);
 
-		WPACKET	l_wpk =GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MC_GUILD_GETNAME);
+		// Типизированная сериализация: запрос имени для создания гильдии
+		auto l_wpk = net::msg::serializeMcGuildGetNameCmd();
 		pCha->ReflectINFof(pCha,l_wpk);
 	}
 	return TRUE;

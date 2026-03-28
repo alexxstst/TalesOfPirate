@@ -22,10 +22,12 @@ using namespace std;
 
 // Типы uChar, uShort, uLong, cChar определены в NetIF.h
 
+// Типизированная сериализация: заголовок CMD_CM_BEGINACTION + switch по типу действия
 void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CActionState* pState) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_BEGINACTION);
-	pk.WriteInt64(pCha->getAttachID());
+	auto pk = net::msg::serializeCmBeginActionHeader(
+		static_cast<int64_t>(pCha->getAttachID()),
+		static_cast<int64_t>(pCNetIf->m_ulPacketCount),
+		static_cast<int64_t>(type));
 
 	char szLogName[1024] = {"BeginAction"};
 
@@ -35,11 +37,6 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 	try {
 		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", pCNetIf->m_ulPacketCount));
-
-#ifdef defPROTOCOL_HAVE_PACKETID
-		pk.WriteInt64(pCNetIf->m_ulPacketCount); // без ++ — SendPacketMessage сам инкрементирует m_ulPacketCount
-#endif
-		pk.WriteInt64(type);
 		switch (type) {
 		case enumACTION_MOVE: {
 			stNetMoveInfo* pMove = (stNetMoveInfo*)param;
@@ -350,17 +347,14 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 // Э��C->S : ����ֹͣ�ж���Ϣ
 void CProCirculateCS::EndAction(CActionState* pState) {
-	WPacket pk = pCNetIf->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_ENDACTION); //�����ж�
+	// Остановка действия персонажа
+	auto pk = net::msg::serializeCmEndActionCmd();
 	pCNetIf->SendPacketMessage(pk);
 
-	// log
 	CCharacter* pMainCha = CGameApp::GetCurScene()->GetMainCha();
 	if (pMainCha) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(EndAction):\tTick:[{}]", GetTickCount()));
 	}
-	//
 }
 
 bool CProCirculate::Connect(const char* hostname, unsigned short port, unsigned long timeout) {
@@ -439,6 +433,7 @@ bool CProCirculate::SendPrivateKey() {
 	}
 
 	// 4. Отправка зашифрованного AES ключа серверу (сырые байты, без Base64)
+	// NOTE: WriteSequence с бинарными данными — не конвертируется в net::msg::serialize
 	WPacket pk = pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_SEND_PRIVATE_KEY);
 	pk.WriteSequence(reinterpret_cast<const char*>(encryptedKey.data()), static_cast<uShort>(resultLen));
@@ -478,77 +473,60 @@ void CProCirculate::Login(const char* accounts, const char* password, const char
 }
 
 void CProCirculate::Logout() {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_LOGOUT);
+	// Отправка запроса на выход из аккаунта
+	auto pk = net::msg::serializeCmLogoutCmd();
 	pCNetIf->SendPacketMessage(pk);
 	Sleep(1000); // Даём серверу время обработать logout
 }
 
 void CProCirculate::BeginPlay(char cha_index) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_BGNPLAY);
-	pk.WriteInt64(cha_index);
-
+	// Выбор персонажа для игры
+	auto pk = net::msg::serialize(net::msg::CmBgnPlayMessage{(int64_t)cha_index});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::EndPlay() {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_ENDPLAY);
+	// Возврат к экрану выбора персонажа
+	auto pk = net::msg::serializeCmEndPlayCmd();
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::NewCha(const char* chaname, const char* birth, int type, int hair, int face) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_NEWCHA);
-	pk.WriteString(chaname);
-	pk.WriteString(birth);
-	pk.WriteInt64(type);
-	pk.WriteInt64(hair);
-	pk.WriteInt64(face);
+	// Создание нового персонажа
+	auto pk = net::msg::serialize(net::msg::CmNewChaMessage{chaname, birth, (int64_t)type, (int64_t)hair, (int64_t)face});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::DelCha(uint8_t cha_index, const char szPassword2[]) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_DELCHA);
-	pk.WriteInt64(cha_index);
-	pk.WriteString(szPassword2);
-
+	// Удаление персонажа
+	auto pk = net::msg::serialize(net::msg::CmDelChaMessage{(int64_t)cha_index, szPassword2});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::OpenRankings() {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_RANK);
+	// Запрос рейтинга
+	auto pk = net::msg::serializeCmRankCmd();
 	pCNetIf->SendPacketMessage(pk);
 }
 
+// Типизированная сериализация: отправка сообщения (CMD_CM_SAY)
 void CProCirculate::Say(const char* content) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_SAY);
-	pk.WriteSequence(content, uShort(strlen(content)) + 1);
+	auto pk = net::msg::serialize(net::msg::CmSayMessage{content});
 	pCNetIf->SendPacketMessage(pk);
 }
 
+// Типизированная сериализация: синхронизация базовых атрибутов (CMD_CM_SYNATTR)
 void CProCirculate::SynBaseAttribute(CChaAttr* pCAttr) {
-	char chAttrNum = 0;
-	for (int i = ATTR_STR; i <= ATTR_LUK; i++)
+	net::msg::CmSynAttrMessage msg;
+	for (int i = ATTR_STR; i <= ATTR_LUK; i++) {
 		if (pCAttr->GetChangeBitFlag(i))
-			chAttrNum++;
+			msg.attrs.push_back({(int64_t)i, (int64_t)pCAttr->GetAttr(i)});
+	}
 
-	if (chAttrNum == 0)
+	if (msg.attrs.empty())
 		return;
 
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_SYNATTR);
-	pk.WriteInt64(chAttrNum);
-	for (int i = ATTR_STR; i <= ATTR_LUK; i++) {
-		if (pCAttr->GetChangeBitFlag(i)) {
-			pk.WriteInt64(i);
-			pk.WriteInt64(pCAttr->GetAttr(i));
-		}
-	}
+	auto pk = net::msg::serialize(msg);
 
 	// log
 	char szReqChangeAttr[256] = {0};
@@ -563,23 +541,14 @@ void CProCirculate::SynBaseAttribute(CChaAttr* pCAttr) {
 }
 
 void CProCirculate::RefreshChaData(long lWorldID, long lHandle) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_REFRESH_DATA);
-	pk.WriteInt64(lWorldID);
-	pk.WriteInt64(lHandle);
-
+	// Запрос обновления данных персонажа
+	auto pk = net::msg::serialize(net::msg::CmRefreshDataMessage{(int64_t)lWorldID, (int64_t)lHandle});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::SkillUpgrade(short sSkillID, char chAddLv) {
-	WPacket pk = pCNetIf->GetWPacket();
-	pk.WriteCmd(CMD_CM_SKILLUPGRADE);
-	pk.WriteInt64(sSkillID);
-	pk.WriteInt64(chAddLv);
-
-	// log
-	char szReqChangeAttr[256] = {0};
-	strcpy(szReqChangeAttr, g_oLangRec.GetString(327));
+	// Прокачка навыка
+	auto pk = net::msg::serialize(net::msg::CmSkillUpgradeMessage{(int64_t)sSkillID, (int64_t)chAddLv});
 
 	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(328), sSkillID, chAddLv); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 

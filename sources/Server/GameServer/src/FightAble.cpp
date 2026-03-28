@@ -76,29 +76,6 @@ void CFightAble::Finally()
 	CAttachable::Finally();
 }
 
-void CFightAble::WritePK(WPACKET& wpk)		//д����ұ����������и��ӽṹ(���ٻ��޵�)����������
-{
-	Entity::WritePK(wpk);
-	//ToDo:д���Լ�������
-    WRITE_SEQ(wpk, (cChar *)&m_CChaAttr, sizeof(m_CChaAttr));
-
-}
-
-void CFightAble::ReadPK(RPACKET rpk)		//�ع���ұ����������и��ӽṹ(���ٻ��޵�)
-{
-	Entity::ReadPK(rpk);
-	//ToDo:�����Լ�������
-	uShort usLen;
-	cChar *pData = READ_SEQ(rpk, usLen);
-	memcpy(&m_CChaAttr, pData, sizeof(m_CChaAttr));
-
-	m_SFightInit.chTarType = 0;
-	m_SFightProc.sState = enumFSTATE_TARGET_NO;
-	m_SFightProc.sRequestState = SFightProc::Request::None;
-
-	m_bOnFight = false;
-}
-
 void CFightAble::ResetFight()
 {
 	m_SFightInit.chTarType = 0;
@@ -115,9 +92,6 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 
 	if (!IsRightSkillSrc(pSFightInit->pCSkillRecord->chHelpful))
 	{
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("�ܾ�ս�����󣨷�ս����ʵ�壩\n\n");
-		m_CLog.Log("refuse battle request��isn't battle entity��\n\n");
 		memcpy(&m_SFightInit, pSFightInit, sizeof(SFightInit));
 		m_SFightProc.sState = enumFSTATE_OFF;
 		NotiSkillSrcToSelf();
@@ -126,9 +100,6 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 	}
 	if (m_SFightProc.sState == enumFSTATE_ON)
 	{
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("�ܾ�ս������ս���У�\n\n");
-		m_CLog.Log("refuse fight request��fighting..��\n\n");
 		EndFight();
 		return false;
 	}
@@ -143,9 +114,6 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 	}
 	else// if( m_SFightInit.pSSkillGrid != pSFightInit->pSSkillGrid )
 	{
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("����ս�����󣨼��ָܻ��У�\n\n");
-		m_CLog.Log("difer fight request��skill is resume��\n\n");
 		memcpy(&m_SFightInitCache, pSFightInit, sizeof(SFightInit));
 		m_SFightProc.sRequestState = SFightProc::Request::StartAttack;
 		OnFightBegin();
@@ -157,11 +125,6 @@ bool CFightAble::DesireFightBegin(SFightInit *pSFightInit)
 void CFightAble::BeginFight()
 {
 	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("===Recieve(Skill):\tTick %u\n", GetTickCount());
-	m_CLog.Log("SkillID:\t%3d\n", m_SFightInit.pCSkillRecord->sID);
-	m_CLog.Log("Target:\t%d, \t%d\n", m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
-	m_CLog.Log("\n");
 	//
 
 	m_SFightProc.sState = enumFSTATE_ON;
@@ -174,8 +137,6 @@ void CFightAble::BeginFight()
 		m_SFightProc.sState = enumFSTATE_TARGET_NO;
 		m_SFightInit.chTarType = 0;
 		NotiSkillSrcToEyeshot();
-		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight): Ŀ�겻����\n");
-		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight): aim inexistent\n");
 		SubsequenceFight();
 		
 		// add by ryan wang Ŀ�겻����, ҲӦ������lColdDownT, ���������ұ���ɱ����
@@ -220,7 +181,6 @@ void CFightAble::BeginFight()
 	}
 	if (m_SFightProc.sState)
 	{
-		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(BeginFight)\n");
 		SubsequenceFight();
 	}
 }
@@ -242,8 +202,6 @@ void CFightAble::OnFight(uLong ulCurTick)
 		{
 			m_SFightProc.sState = enumFSTATE_CANCEL; // ��Ҫ��ֹͣ
 			NotiSkillSrcToEyeshot();
-			//m_CLog.Log("���Ϸ��ļ������󣨴��ڲ���ʹ�ü��ܵ�״̬��[PacketID: %u]\n", m_ulPacketID);
-			m_CLog.Log("irregular skill request��exist cannot use skill state��[PacketID: %u]\n", m_ulPacketID);
 			EndFight();
 			return;
 		}
@@ -256,8 +214,6 @@ void CFightAble::OnFight(uLong ulCurTick)
 		m_SFightProc.sState = enumFSTATE_CANCEL; // ��Ҫ��ֹͣ
 		m_SFightProc.sRequestState = SFightProc::Request::None;
 		NotiSkillSrcToEyeshot();
-		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): �ͻ�Ҫ��ֹͣ\n");
-		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): client request cease\n");
 		SubsequenceFight();
 	}
 
@@ -268,8 +224,6 @@ void CFightAble::OnFight(uLong ulCurTick)
 		m_SFightProc.sState = enumFSTATE_TARGET_NO;
 		m_SFightInit.chTarType = 0;
 		NotiSkillSrcToEyeshot();
-		//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): Ŀ�겻����\n");
-		m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!OnEndFight(OnFight): aim inexistent\n");
 		SubsequenceFight();
 	}
 
@@ -320,9 +274,6 @@ void CFightAble::OnFight(uLong ulCurTick)
 					}
 					m_SFightInit.pSSkillGrid->lColdDownT += lResumeT * i;
 				}
-				else
-					//m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!��OnFight��ִ�еļ��ܲ�����ͨ���ܣ����������Ӧ�÷���\n");
-					m_CLog.Log("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!in OnFight uesed skill cannot is common skill��such state did't occur\n");
 			}
 		}
 
@@ -584,343 +535,258 @@ void CFightAble::SetMonsterFightObj(uLong ulObjWorldID, Long lObjHandle)
 
 void CFightAble::NotiSkillSrcToEyeshot(Short sExecTime)
 {
-	WPACKET pk	=GETWPACKET();
+	// Типизированная сериализация: SKILL_SRC в зону видимости
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::SKILL_SRC;
+	msg.data = net::msg::ActionSkillSrcData{};
 
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		// ����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				// ID
-	WRITE_LONG(pk, m_ulPacketID);
-	WRITE_CHAR(pk, enumACTION_SKILL_SRC);
-	WRITE_CHAR(pk, m_uchFightID);
-	WRITE_SHORT(pk, m_sAngle);
-	WRITE_SHORT(pk, m_SFightProc.sState);
+	auto& d = std::get<net::msg::ActionSkillSrcData>(msg.data);
+	d.fightId = m_uchFightID;
+	d.angle = m_sAngle;
+	d.state = m_SFightProc.sState;
 	if (m_SFightProc.sState & enumFSTATE_DIE)
-		WRITE_SHORT(pk, enumEXISTS_WITHERING);
+		d.stopState = enumEXISTS_WITHERING;
 	else if (m_SFightProc.sState != enumFSTATE_ON)
-		WRITE_SHORT(pk, m_SFightInit.sStopState);
-	WRITE_LONG(pk, m_SFightInit.pCSkillRecord->sID);
-	WRITE_LONG(pk, GetSkillTime(m_SFightInit.pCSkillTData));
-	WRITE_CHAR(pk, m_SFightInit.chTarType);
+		d.stopState = m_SFightInit.sStopState;
+	d.skillId = m_SFightInit.pCSkillRecord->sID;
+	d.skillSpeed = GetSkillTime(m_SFightInit.pCSkillTData);
+	d.targetType = m_SFightInit.chTarType;
 	if (m_SFightInit.chTarType == 1)
 	{
-		WRITE_LONG(pk, m_SFightInit.lTarInfo1);
+		d.targetId = m_SFightInit.lTarInfo1;
 		Entity *pEnt = g_pGameApp->GetEntity(m_SFightInit.lTarInfo2);
 		if (!pEnt)
 		{
-			WRITE_LONG(pk, GetShape().centre.x);
-			WRITE_LONG(pk, GetShape().centre.y);
+			d.targetX = GetShape().centre.x;
+			d.targetY = GetShape().centre.y;
 		}
 		else
 		{
-			WRITE_LONG(pk, pEnt->GetShape().centre.x);
-			WRITE_LONG(pk, pEnt->GetShape().centre.y);
+			d.targetX = pEnt->GetShape().centre.x;
+			d.targetY = pEnt->GetShape().centre.y;
 		}
 	}
 	else if (m_SFightInit.chTarType == 2)
 	{
-		WRITE_LONG(pk, m_SFightInit.lTarInfo1);
-		WRITE_LONG(pk, m_SFightInit.lTarInfo2);
+		d.targetX = m_SFightInit.lTarInfo1;
+		d.targetY = m_SFightInit.lTarInfo2;
 	}
-	WRITE_SHORT(pk, sExecTime);
+	d.execTime = sExecTime;
 
-	// ����
-	short sTempChangeNum = 0;
-	short sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
-	WRITE_SHORT(pk, sAttrChangeNum);
-	if (sAttrChangeNum > 0)
+	// Эффекты атрибутов (изменённые)
+	for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 	{
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
+		if (m_CChaAttr.GetChangeBitFlag(i))
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-			{
-				if (sTempChangeNum >= sAttrChangeNum)
-					//MessageBox(0, "���Ա仯����������ͳ��ֵ���Ǻ�", "����", MB_OK);
-					MessageBox(0, RES_STRING(GM_FIGHTALBE_CPP_00001), RES_STRING(GM_FIGHTALBE_CPP_00002), MB_OK);
-				WRITE_CHAR(pk, i);
-				if(i == ATTR_NLEXP ||i == ATTR_CLEXP||i == ATTR_CEXP)
-					WRITE_LONG(pk, m_CChaAttr.GetAttr(i));
-				else
-					WRITE_LONG(pk, (unsigned long)m_CChaAttr.GetAttr(i));
-				sTempChangeNum++;
-			}
+			net::msg::ActionEffectEntry e;
+			e.attrId = i;
+			if (i == ATTR_NLEXP || i == ATTR_CLEXP || i == ATTR_CEXP)
+				e.attrVal = m_CChaAttr.GetAttr(i);
+			else
+				e.attrVal = (unsigned long)m_CChaAttr.GetAttr(i);
+			d.effects.push_back(e);
 		}
 	}
-	// ״̬
-	sTempChangeNum = 0;
-	uChar uchStateChangeNum = m_CSkillState.GetChangeNum();
-	if (uchStateChangeNum > 0)
-	{
-		WRITE_CHAR(pk, uchStateChangeNum);
-		SSkillStateUnit	*pSStateUnit;
-		m_CSkillState.BeginGetState();
-		while (pSStateUnit = m_CSkillState.GetNextState())
-		{
-			//if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID())) // �����״̬�б䣬��ѹ��
-			{
-				//if (sTempChangeNum >= uchStateChangeNum)
-				//	MessageBox(0, "״̬�仯����������ͳ��ֵ���Ǻ�", "����", MB_OK);
-				WRITE_CHAR(pk, pSStateUnit->GetStateID());
-				WRITE_CHAR(pk, pSStateUnit->GetStateLv());
-				sTempChangeNum++;
-			}
-		}
-	}
-	else
-		WRITE_CHAR(pk, 0);
 
-	NotiChgToEyeshot(pk);//ͨ��
-
-	if (m_CLog.GetEnable())
+	// Состояния скиллов (все текущие)
+	SSkillStateUnit *pSStateUnit;
+	m_CSkillState.BeginGetState();
+	while (pSStateUnit = m_CSkillState.GetNextState())
 	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Skill Represent):\tFightID %u\tTick %u\n", m_uchFightID, GetTickCount());
-		m_CLog.Log("SkillID:\t%d\n", m_SFightInit.pCSkillRecord->sID);
-		if (m_SFightInit.chTarType == 1)
-			m_CLog.Log("Target(ID):\t%u\n", m_SFightInit.lTarInfo1);
-		else if (m_SFightInit.chTarType == 2)
-			m_CLog.Log("Target(Pos):\t%d, \t%d\n", m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
-		m_CLog.Log("Exec Time:\t%d\n", sExecTime);
-		//m_CLog.Log("����:[ID, Value]\n");
-		m_CLog.Log("attribute:[ID, Value]\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-			{
-				m_CLog.Log("\t%d, \t%d\n", i, m_CChaAttr.GetAttr(i));
-			}
-		}
-		//m_CLog.Log("״̬ %d:[ID, LV]\n", m_CSkillState.GetStateNum());
-		m_CLog.Log("state %d:[ID, LV]\n", m_CSkillState.GetStateNum());
-		SSkillStateUnit	*pSStateUnit;
-		m_CSkillState.BeginGetState();
-		while (pSStateUnit = m_CSkillState.GetNextState())
-			m_CLog.Log("\t%d, %d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		if (m_SFightProc.sState)
-			m_CLog.Log("@@@EndSkill\tState:%d\n", m_SFightProc.sState);
-		m_CLog.Log("\n");
-		//
+		net::msg::ActionStateEntry s;
+		s.stateId = pSStateUnit->GetStateID();
+		s.stateLv = pSStateUnit->GetStateLv();
+		d.states.push_back(s);
 	}
+
+	auto pk = net::msg::serialize(msg);
+	NotiChgToEyeshot(pk);
+
 }
 
 void CFightAble::NotiSkillSrcToSelf(Short sExecTime)
 {
-	WPACKET pk	=GETWPACKET();
+	// Типизированная сериализация: SKILL_SRC себе
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::SKILL_SRC;
+	msg.data = net::msg::ActionSkillSrcData{};
 
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WRITE_LONG(pk, m_ulPacketID);
-	WRITE_CHAR(pk, enumACTION_SKILL_SRC);
-	WRITE_CHAR(pk, m_uchFightID);
-	WRITE_SHORT(pk, m_sAngle);
-	WRITE_SHORT(pk, m_SFightProc.sState);
+	auto& d = std::get<net::msg::ActionSkillSrcData>(msg.data);
+	d.fightId = m_uchFightID;
+	d.angle = m_sAngle;
+	d.state = m_SFightProc.sState;
 	if (m_SFightProc.sState & enumFSTATE_DIE)
-		WRITE_SHORT(pk, enumEXISTS_WITHERING);
+		d.stopState = enumEXISTS_WITHERING;
 	else if (m_SFightProc.sState != enumFSTATE_ON)
-		WRITE_SHORT(pk, m_SFightInit.sStopState);
-	WRITE_LONG(pk, m_SFightInit.pCSkillRecord->sID);
-	WRITE_LONG(pk, GetSkillTime(m_SFightInit.pCSkillTData));
-	WRITE_CHAR(pk, m_SFightInit.chTarType);
+		d.stopState = m_SFightInit.sStopState;
+	d.skillId = m_SFightInit.pCSkillRecord->sID;
+	d.skillSpeed = GetSkillTime(m_SFightInit.pCSkillTData);
+	d.targetType = m_SFightInit.chTarType;
 	if (m_SFightInit.chTarType == 1)
 	{
-		WRITE_LONG(pk, m_SFightInit.lTarInfo1);
+		d.targetId = m_SFightInit.lTarInfo1;
 		Entity *pEnt = g_pGameApp->GetEntity(m_SFightInit.lTarInfo2);
-		WRITE_LONG(pk, pEnt->GetShape().centre.x);
-		WRITE_LONG(pk, pEnt->GetShape().centre.y);
+		d.targetX = pEnt->GetShape().centre.x;
+		d.targetY = pEnt->GetShape().centre.y;
 	}
 	else if (m_SFightInit.chTarType == 2)
 	{
-		WRITE_LONG(pk, m_SFightInit.lTarInfo1);
-		WRITE_LONG(pk, m_SFightInit.lTarInfo2);
+		d.targetX = m_SFightInit.lTarInfo1;
+		d.targetY = m_SFightInit.lTarInfo2;
 	}
-	WRITE_SHORT(pk, sExecTime);
+	d.execTime = sExecTime;
 
-	// ����
-	short sTempChangeNum = 0;
-	short sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
-	WRITE_SHORT(pk, sAttrChangeNum);
-	if (sAttrChangeNum > 0)
+	// Эффекты атрибутов (изменённые)
+	for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 	{
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
+		if (m_CChaAttr.GetChangeBitFlag(i))
 		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-			{
-				if (sTempChangeNum >= sAttrChangeNum)
-					//MessageBox(0, "���Ա仯����������ͳ��ֵ���Ǻ�", "����", MB_OK);
-					MessageBox(0, RES_STRING(GM_FIGHTALBE_CPP_00001), RES_STRING(GM_FIGHTALBE_CPP_00002), MB_OK);
-				WRITE_CHAR(pk, i);
-				if (i==ATTR_NLEXP ||i==ATTR_CLEXP||i ==ATTR_CEXP)
-				{
-					WRITE_LONG(pk, m_CChaAttr.GetAttr(i));
-				}else
-					WRITE_LONG(pk, (unsigned long)m_CChaAttr.GetAttr(i));
-				sTempChangeNum++;
-			}
+			net::msg::ActionEffectEntry e;
+			e.attrId = i;
+			if (i == ATTR_NLEXP || i == ATTR_CLEXP || i == ATTR_CEXP)
+				e.attrVal = m_CChaAttr.GetAttr(i);
+			else
+				e.attrVal = (unsigned long)m_CChaAttr.GetAttr(i);
+			d.effects.push_back(e);
 		}
 	}
-	// ״̬
-	sTempChangeNum = 0;
-	uChar uchStateChangeNum = m_CSkillState.GetChangeNum();
-	if (uchStateChangeNum > 0)
+
+	// Состояния скиллов (только изменённые)
 	{
-		WRITE_CHAR(pk, uchStateChangeNum);
-		SSkillStateUnit	*pSStateUnit;
+		SSkillStateUnit *pSStateUnit;
 		m_CSkillState.BeginGetState();
 		while (pSStateUnit = m_CSkillState.GetNextState())
 		{
-			if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID())) // �����״̬�б䣬��ѹ��
+			if (m_CSkillState.GetChangeBitFlag(pSStateUnit->GetStateID()))
 			{
-				if (sTempChangeNum >= uchStateChangeNum)
-					//MessageBox(0, "���Ա仯����������ͳ��ֵ���Ǻ�", "����", MB_OK);
-					MessageBox(0, RES_STRING(GM_FIGHTALBE_CPP_00001), RES_STRING(GM_FIGHTALBE_CPP_00002), MB_OK);
-				WRITE_CHAR(pk, pSStateUnit->GetStateID());
-				WRITE_CHAR(pk, pSStateUnit->GetStateLv());
-				sTempChangeNum++;
+				net::msg::ActionStateEntry s;
+				s.stateId = pSStateUnit->GetStateID();
+				s.stateLv = pSStateUnit->GetStateLv();
+				d.states.push_back(s);
 			}
 		}
 	}
-	else
-		WRITE_CHAR(pk, 0);
 
-	ReflectINFof(this,pk);//ͨ��
+	auto pk = net::msg::serialize(msg);
+	ReflectINFof(this,pk);
 
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Skill Represent):\tFightID %u\tTick %u\n", m_uchFightID, GetTickCount());
-		m_CLog.Log("SkillID:\t%d\n", m_SFightInit.pCSkillRecord->sID);
-		if (m_SFightInit.chTarType == 1)
-			m_CLog.Log("Target(ID):\t%u\n", m_SFightInit.lTarInfo1);
-		else if (m_SFightInit.chTarType == 2)
-			m_CLog.Log("Target(Pos):\t%d, \t%d\n", m_SFightInit.lTarInfo1, m_SFightInit.lTarInfo2);
-		m_CLog.Log("Exec Time:\t%d\n", sExecTime);
-		//m_CLog.Log("����:[ID, Value]\n");
-		m_CLog.Log("state:[ID, Value]\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-			{
-				m_CLog.Log("\t%d, \t%d\n", i, m_CChaAttr.GetAttr(i));
-			}
-		}
-		//m_CLog.Log("״̬ %d:[ID, LV]\n", m_CSkillState.GetStateNum());
-		m_CLog.Log("state  %d:[ID, LV]\n", m_CSkillState.GetStateNum());
-		SSkillStateUnit	*pSStateUnit;
-		m_CSkillState.BeginGetState();
-		while (pSStateUnit = m_CSkillState.GetNextState())
-			m_CLog.Log("\t%d, %d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		if (m_SFightProc.sState)
-			m_CLog.Log("@@@EndSkill\tState:%d\n", m_SFightProc.sState);
-		m_CLog.Log("\n");
-		//
-	}
 }
 
 void CFightAble::NotiSkillTarToEyeshot(SFireUnit *pSFireSrc)
 {
-	WPACKET pk	=GETWPACKET();
-
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);	//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  			//ID
+	// Типизированная сериализация: SKILL_TAR в зону видимости
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = m_ID;
 #ifdef defPROTOCOL_HAVE_PACKETID
-	WRITE_LONG(pk, pSFireSrc->ulPacketID);
+	msg.packetId = pSFireSrc->ulPacketID;
 #endif
-	WRITE_CHAR(pk, enumACTION_SKILL_TAR);
-	WRITE_CHAR(pk, pSFireSrc->uchFightID);
-	WRITE_SHORT(pk, m_SFightProc.sState);
-	WRITE_CHAR(pk, m_SFightProc.bCrt);
-	WRITE_CHAR(pk, m_SFightProc.bMiss);
+	msg.actionType = net::msg::ActionType::SKILL_TAR;
+	msg.data = net::msg::ActionSkillTarData{};
+
+	auto& d = std::get<net::msg::ActionSkillTarData>(msg.data);
+	d.fightId = pSFireSrc->uchFightID;
+	d.state = m_SFightProc.sState;
+	d.doubleAttack = m_SFightProc.bCrt;
+	d.miss = m_SFightProc.bMiss;
 	if (g_bBeatBack)
 	{
-		WRITE_CHAR(pk, 1);
-		WRITE_LONG(pk, GetPos().x);
-		WRITE_LONG(pk, GetPos().y);
+		d.beatBack = true;
+		d.beatBackX = GetPos().x;
+		d.beatBackY = GetPos().y;
 		g_bBeatBack = false;
 	}
-	else
-		WRITE_CHAR(pk, 0);
-	WRITE_LONG(pk, pSFireSrc->ulID);
-	WRITE_LONG(pk, pSFireSrc->SSrcPos.x);
-	WRITE_LONG(pk, pSFireSrc->SSrcPos.y);
-	WRITE_LONG(pk, pSFireSrc->pCSkillRecord->sID);
-	WRITE_LONG(pk, pSFireSrc->lTarInfo1);
-	WRITE_LONG(pk, pSFireSrc->lTarInfo2);
-	WRITE_SHORT(pk, pSFireSrc->sExecTime);
+	d.srcId = pSFireSrc->ulID;
+	d.srcPosX = pSFireSrc->SSrcPos.x;
+	d.srcPosY = pSFireSrc->SSrcPos.y;
+	d.skillId = pSFireSrc->pCSkillRecord->sID;
+	d.skillTargetX = pSFireSrc->lTarInfo1;
+	d.skillTargetY = pSFireSrc->lTarInfo2;
+	d.execTime = pSFireSrc->sExecTime;
 
-	WriteAttr(pk, enumATTRSYN_ATTACK);
+	// Эффекты цели (атрибуты)
+	d.synType = enumATTRSYN_ATTACK;
+	d.effects.clear();
+	for (int i = 0; i < ATTR_CLIENT_MAX; i++)
+	{
+		if (m_CChaAttr.GetChangeBitFlag(i))
+		{
+			net::msg::ActionEffectEntry e;
+			e.attrId = i;
+			e.attrVal = m_CChaAttr.GetAttr(i);
+			d.effects.push_back(e);
+		}
+	}
+
+	// Состояния цели
 	if (m_CSkillState.GetChangeNum() > 0)
 	{
-		WRITE_CHAR(pk, 1);
-		WriteSkillState(pk);
-	}
-	else
-		WRITE_CHAR(pk, 0);
-
-	if (pSFireSrc->pCFightSrc != this)
-	{
-		WRITE_CHAR(pk, 1);
-		WRITE_SHORT(pk, pSFireSrc->pCFightSrc->m_SFightProc.sState);
-		pSFireSrc->pCFightSrc->WriteAttr(pk, enumATTRSYN_ATTACK);
-		if (pSFireSrc->pCFightSrc->m_CSkillState.GetChangeNum() > 0)
-		{
-			WRITE_CHAR(pk, 1);
-			pSFireSrc->pCFightSrc->WriteSkillState(pk);
-		}
-		else
-			WRITE_CHAR(pk, 0);
-		//
-	}
-	else
-		WRITE_CHAR(pk, 0);
-
-	NotiChgToEyeshot(pk);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-	#ifdef defPROTOCOL_HAVE_PACKETID
-		m_CLog.Log("$$$PacketID:\t%u\n", pSFireSrc->ulPacketID);
-	#endif
-		m_CLog.Log("###Send(Skill Effect):\tTick %u\n", GetTickCount());
-		m_CLog.Log("SourceChaID:\t%u\n", pSFireSrc->ulID);
-		m_CLog.Log("SkillID:\t%d\n", pSFireSrc->pCSkillRecord->sID);
-		m_CLog.Log("Exec Time:\t%d\n", pSFireSrc->sExecTime);
-		//m_CLog.Log("����:[ID, Value]\n");
-		m_CLog.Log("state:[ID, Value]\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-			{
-				m_CLog.Log("\t%d, \t%d\n", i, m_CChaAttr.GetAttr(i));
-			}
-		}
-		//m_CLog.Log("״̬ %d:[ID, LV]\n", m_CSkillState.GetStateNum());
-		m_CLog.Log("state  %d:[ID, LV]\n", m_CSkillState.GetStateNum());
-		SSkillStateUnit	*pSStateUnit;
+		d.hasStates = true;
+		d.stateTime = GetTickCount();
+		SSkillStateUnit *pSStateUnit;
 		m_CSkillState.BeginGetState();
 		while (pSStateUnit = m_CSkillState.GetNextState())
-			m_CLog.Log("\t%d, %d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		if (m_SFightProc.sState == enumFSTATE_DIE)
-			m_CLog.Log("@@@Die\n");
-		//m_CLog.Log("����Դ����:[ID, Value]\n");
-		m_CLog.Log("skill attribute:[ID, Value]\n");
+		{
+			net::msg::ActionTarStateEntry s;
+			s.stateId = pSStateUnit->GetStateID();
+			s.stateLv = pSStateUnit->GetStateLv();
+			if (pSStateUnit->lOnTick < 1) {
+				s.duration = 0;
+				s.startTime = 0;
+			} else {
+				s.duration = pSStateUnit->lOnTick;
+				s.startTime = pSStateUnit->ulStartTick;
+			}
+			d.states.push_back(s);
+		}
+	}
+
+	// Эффекты источника (если источник != цель)
+	if (pSFireSrc->pCFightSrc != this)
+	{
+		d.hasSrcEffect = true;
+		d.srcState = pSFireSrc->pCFightSrc->m_SFightProc.sState;
+		d.srcSynType = enumATTRSYN_ATTACK;
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
-			if (pSFireSrc->pCFightSrc->m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
+			if (pSFireSrc->pCFightSrc->m_CChaAttr.GetChangeBitFlag(i))
 			{
-				m_CLog.Log("\t%d, \t%d\n", i, pSFireSrc->pCFightSrc->m_CChaAttr.GetAttr(i));
+				net::msg::ActionEffectEntry e;
+				e.attrId = i;
+				e.attrVal = pSFireSrc->pCFightSrc->m_CChaAttr.GetAttr(i);
+				d.srcEffects.push_back(e);
 			}
 		}
-		//m_CLog.Log("����Դ״̬ %d:[ID, LV]\n", pSFireSrc->pCFightSrc->m_CSkillState.GetStateNum());
-		m_CLog.Log("skill attribute %d:[ID, LV]\n", pSFireSrc->pCFightSrc->m_CSkillState.GetStateNum());
-		pSFireSrc->pCFightSrc->m_CSkillState.BeginGetState();
-		while (pSStateUnit = pSFireSrc->pCFightSrc->m_CSkillState.GetNextState())
-			m_CLog.Log("\t%d, %d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		if (pSFireSrc->pCFightSrc->m_SFightProc.sState == enumFSTATE_DIE)
-			m_CLog.Log("@@@Die\n");
-		m_CLog.Log("\n");
-		//
+		// Состояния источника
+		if (pSFireSrc->pCFightSrc->m_CSkillState.GetChangeNum() > 0)
+		{
+			d.srcHasStates = true;
+			d.srcStateTime = GetTickCount();
+			SSkillStateUnit *pSStateUnit;
+			pSFireSrc->pCFightSrc->m_CSkillState.BeginGetState();
+			while (pSStateUnit = pSFireSrc->pCFightSrc->m_CSkillState.GetNextState())
+			{
+				net::msg::ActionTarStateEntry s;
+				s.stateId = pSStateUnit->GetStateID();
+				s.stateLv = pSStateUnit->GetStateLv();
+				if (pSStateUnit->lOnTick < 1) {
+					s.duration = 0;
+					s.startTime = 0;
+				} else {
+					s.duration = pSStateUnit->lOnTick;
+					s.startTime = pSStateUnit->ulStartTick;
+				}
+				d.srcStates.push_back(s);
+			}
+		}
 	}
+
+	auto pk = net::msg::serialize(msg);
+	NotiChgToEyeshot(pk);
+
 }
 
 void CFightAble::SynAttr(Short sType)
@@ -929,27 +795,13 @@ void CFightAble::SynAttr(Short sType)
 	if (sAttrChangeNum == 0)
 		return;
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WriteAttr(pk, sType);
+	// Типизированная сериализация: синхронизация атрибутов в зону видимости
+	net::msg::McSynAttributeMessage msg;
+	msg.worldId = m_ID;
+	FillAttr(msg.attr, sType);
+	auto pk = net::msg::serialize(msg);
 
-	NotiChgToEyeshot(pk, true);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization Attribute):\tTick %u\n\n", GetTickCount());
-		//m_CLog.Log("\t���Ա��\t����ֵ\n");
-		m_CLog.Log("\t attribute number\t attribute value\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-				m_CLog.Log("\t%d\t%u\n", i, m_CChaAttr.GetAttr(i));
-		}
-		//
-	}
+	NotiChgToEyeshot(pk, true);
 }
 
 void CFightAble::SynAttrToSelf(Short sType)
@@ -958,56 +810,28 @@ void CFightAble::SynAttrToSelf(Short sType)
 	if (sAttrChangeNum == 0)
 		return;
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WriteAttr(pk, sType);
+	// Типизированная сериализация: синхронизация атрибутов себе
+	net::msg::McSynAttributeMessage msg;
+	msg.worldId = m_ID;
+	FillAttr(msg.attr, sType);
+	auto pk = net::msg::serialize(msg);
 
-	ReflectINFof(this,pk);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization Attribute):\tTick %u\n\n", GetTickCount());
-		//m_CLog.Log("\t���Ա��\t����ֵ\n");
-		m_CLog.Log("\tattribute number\tattribute value\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-				m_CLog.Log("\t%d\t%u\n", i, m_CChaAttr.GetAttr(i));
-		}
-		//
-	}
+	ReflectINFof(this,pk);
 }
 
-void CFightAble::SynAttrToEyeshot(Short sType) //�������Լ�
+void CFightAble::SynAttrToEyeshot(Short sType) // отправка всем кроме себя
 {
 	short	sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 	if (sAttrChangeNum == 0)
 		return;
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WriteAttr(pk, sType);
+	// Типизированная сериализация: синхронизация атрибутов в зону видимости (без себя)
+	net::msg::McSynAttributeMessage msg;
+	msg.worldId = m_ID;
+	FillAttr(msg.attr, sType);
+	auto pk = net::msg::serialize(msg);
 
-	NotiChgToEyeshot(pk, false);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization Attribute):\tTick %u\n\n", GetTickCount());
-		//m_CLog.Log("\t���Ա��\t����ֵ\n");
-		m_CLog.Log("\tattribute number\tattribute value\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-				m_CLog.Log("\t%d\t%u\n", i, m_CChaAttr.GetAttr(i));
-		}
-		//
-	}
+	NotiChgToEyeshot(pk, false);
 }
 
 // ��pCObj������ͨ����Լ�
@@ -1020,30 +844,16 @@ void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sType)
 	if (sAttrChangeNum == 0)
 		return;
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//����2�ֽ�
-	WRITE_LONG(pk, pCObj->GetID());		//ID
-	pCObj->WriteAttr(pk, sType);
+	// Типизированная сериализация: синхронизация атрибутов другого объекта себе
+	net::msg::McSynAttributeMessage msg;
+	msg.worldId = pCObj->GetID();
+	pCObj->FillAttr(msg.attr, sType);
+	auto pk = net::msg::serialize(msg);
 
-	ReflectINFof(this,pk);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization %s Attribute to own):\tTick %u\n\n", pCObj->m_CLog.GetLogName(), GetTickCount());
-		//m_CLog.Log("\t���Ա��\t����ֵ\n");
-		m_CLog.Log("\tattribute number\tattribute value\n");
-		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
-		{
-			if (pCObj->m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
-				m_CLog.Log("\t%d\t%u\n", i, pCObj->m_CChaAttr.GetAttr(i));
-		}
-		//
-	}
+	ReflectINFof(this,pk);
 }
 
-// ��pCObj������ͨ����Լ�
+// синхронизация диапазона атрибутов другого объекта себе
 void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sStartAttr, Short sEndAttr, Short sType)
 {
 	if (!pCObj)
@@ -1052,77 +862,42 @@ void CFightAble::SynAttrToUnit(CFightAble *pCObj, Short sStartAttr, Short sEndAt
 	if (sEndAttr >= ATTR_CLIENT_MAX)
 		return;
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNATTR);		//����2�ֽ�
-	WRITE_LONG(pk, pCObj->GetID());		//ID
-	pCObj->WriteAttr(pk, sStartAttr, sEndAttr, sType);
-
-	ReflectINFof(this,pk);//ͨ��
-
-	if (m_CLog.GetEnable())
+	// Типизированная сериализация: синхронизация диапазона атрибутов
+	net::msg::McSynAttributeMessage msg;
+	msg.worldId = pCObj->GetID();
+	msg.attr.synType = sType;
+	for (int i = sStartAttr; i <= sEndAttr; i++)
 	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization %s Attribute to own):\tTick %u\n\n", pCObj->m_CLog.GetLogName(), GetTickCount());
-		//m_CLog.Log("\t���Ա��\t����ֵ\n");
-		m_CLog.Log("\tattribute number\tattribute value\n");
-		for (int i = sStartAttr; i <= sEndAttr; i++)
-		{
-			m_CLog.Log("\t%d\t%u\n", i, pCObj->m_CChaAttr.GetAttr(i));
-		}
-		//
+		net::msg::AttrEntry e;
+		e.attrId = i;
+		e.attrVal = pCObj->m_CChaAttr.GetAttr(i);
+		msg.attr.attrs.push_back(e);
 	}
+	auto pk = net::msg::serialize(msg);
+
+	ReflectINFof(this,pk);
 }
 
 void CFightAble::SynSkillStateToSelf()
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WriteSkillState(pk);
+	// Типизированная сериализация: синхронизация состояний скиллов себе
+	net::msg::McSynSkillStateMessage msg;
+	msg.worldId = m_ID;
+	FillSkillState(msg.skillState);
+	auto pk = net::msg::serialize(msg);
 
-	ReflectINFof(this,pk);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization Skill State): StateNum[%d]\tTick %u\n", m_CSkillState.GetStateNum(), GetTickCount());
-		//m_CLog.Log("\t���\t�ȼ�\n");
-		m_CLog.Log("\tnumber\tgrade\n");
-		SSkillStateUnit	*pSStateUnit;
-		m_CSkillState.BeginGetState();
-		while (pSStateUnit = m_CSkillState.GetNextState())
-			m_CLog.Log("\t%4d\t%4d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		m_CLog.Log("\n");
-		//
-	}
+	ReflectINFof(this,pk);
 }
 
 void CFightAble::SynSkillStateToEyeshot()
 {
-	WPACKET pk	=GETWPACKET();
+	// Типизированная сериализация: синхронизация состояний скиллов в зону видимости
+	net::msg::McSynSkillStateMessage msg;
+	msg.worldId = m_ID;
+	FillSkillState(msg.skillState);
+	auto pk = net::msg::serialize(msg);
 
-	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WriteSkillState(pk);
-
-	NotiChgToEyeshot(pk, true);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization Skill State): StateNum[%d]\tTick %u\n", m_CSkillState.GetStateNum(), GetTickCount());
-		//m_CLog.Log("\t���\t�ȼ�\n");
-		m_CLog.Log("\tnumber\tgrade\n");;
-		SSkillStateUnit	*pSStateUnit;
-		m_CSkillState.BeginGetState();
-		while (pSStateUnit = m_CSkillState.GetNextState())
-			m_CLog.Log("\t%4d\t%4d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		m_CLog.Log("\n");
-		//
-	}
+	NotiChgToEyeshot(pk, true);
 }
 
 // ��pCObj�ļ���״̬ͨ����Լ�
@@ -1130,125 +905,123 @@ void CFightAble::SynSkillStateToUnit(CFightAble *pCObj)
 {
 	if (!pCObj)
 		return;
-	WPACKET pk	=GETWPACKET();
 
-	WRITE_CMD(pk, CMD_MC_SYNASKILLSTATE);	//����2�ֽ�
-	WRITE_LONG(pk, pCObj->GetID());		//ID
-	pCObj->WriteSkillState(pk);
+	// Типизированная сериализация: синхронизация состояний скиллов другого объекта себе
+	net::msg::McSynSkillStateMessage msg;
+	msg.worldId = pCObj->GetID();
+	pCObj->FillSkillState(msg.skillState);
+	auto pk = net::msg::serialize(msg);
 
-	ReflectINFof(this,pk);//ͨ��
-
-	if (m_CLog.GetEnable())
-	{
-		// log
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		m_CLog.Log("###Send(Synchronization %s SkillState to own): StateNum[%d]\tTick %u\n", pCObj->m_CLog.GetLogName(), pCObj->m_CSkillState.GetStateNum(), GetTickCount());
-		//m_CLog.Log("\t���\t�ȼ�\n");
-		m_CLog.Log("\tnumber\tgrade\n");;
-		SSkillStateUnit	*pSStateUnit;
-		pCObj->m_CSkillState.BeginGetState();
-		while (pSStateUnit = pCObj->m_CSkillState.GetNextState())
-			m_CLog.Log("\t%4d\t%4d\n", pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
-		m_CLog.Log("\n");
-		//
-	}
+	ReflectINFof(this,pk);
 }
 
 void CFightAble::SynLookEnergy(void)
 {
 	CCharacter	*pCMainCha = IsCharacter()->GetPlyMainCha();
 
-	WPACKET WtPk=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//ͨ���ж�
-	WRITE_LONG(WtPk, pCMainCha->GetID());
-	WRITE_LONG(WtPk, pCMainCha->m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_LOOK_ENERGY);
+	// Типизированная сериализация: энергия экипировки через std::variant
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = pCMainCha->GetID();
+	msg.packetId = pCMainCha->m_ulPacketID;
+	msg.actionType = net::msg::ActionType::LOOK_ENERGY;
+	msg.data = net::msg::ActionLookEnergyData{};
 
-	pCMainCha->WriteLookEnergy(WtPk);
-	pCMainCha->ReflectINFof(this,WtPk);//ͨ��
+	auto& energyData = std::get<net::msg::ActionLookEnergyData>(msg.data);
+	SItemGrid *pItem;
+	for (int i = 0; i < enumEQUIP_NUM; i++)
+	{
+		pItem = &pCMainCha->m_SChaPart.SLink[i];
+		if (!g_IsRealItemID(pItem->sID))
+			energyData.energy[i] = 0;
+		else
+			energyData.energy[i] = pItem->sEnergy[0];
+	}
+
+	auto WtPk = net::msg::serialize(msg);
+	pCMainCha->ReflectINFof(this,WtPk);
 }
 
-void CFightAble::WriteSkillState(WPACKET &pk)
+void CFightAble::WriteSkillState(net::WPacket &pk)
 {
-	WRITE_LONG(pk, GetTickCount());//current time
-	WRITE_CHAR(pk, m_CSkillState.GetStateNum());
+	pk.WriteInt64(GetTickCount());//current time
+	pk.WriteInt64(m_CSkillState.GetStateNum());
 	SSkillStateUnit	*pSStateUnit;
 	m_CSkillState.BeginGetState();
 	while (pSStateUnit = m_CSkillState.GetNextState())
 	{
-		WRITE_CHAR(pk, pSStateUnit->GetStateID());
-		WRITE_CHAR(pk, pSStateUnit->GetStateLv());
+		pk.WriteInt64(pSStateUnit->GetStateID());
+		pk.WriteInt64(pSStateUnit->GetStateLv());
 		// end time = pSStateUnit->lOnTick + pSStateUnit->ulStartTick
 		if (pSStateUnit->lOnTick < 1){
-			WRITE_LONG(pk, 0);//current time
-			WRITE_LONG(pk, 0);//current time
+			pk.WriteInt64(0);//current time
+			pk.WriteInt64(0);//current time
 		}else{
-			WRITE_LONG(pk, pSStateUnit->lOnTick);//duration
-			WRITE_LONG(pk, pSStateUnit->ulStartTick);//start time
+			pk.WriteInt64(pSStateUnit->lOnTick);//duration
+			pk.WriteInt64(pSStateUnit->ulStartTick);//start time
 		}
 		
 	}
 }
 
-void CFightAble::WriteAttr(WPACKET &pk, Short sSynType)
+void CFightAble::WriteAttr(net::WPacket &pk, Short sSynType)
 {
 	short	sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 
-	WRITE_CHAR(pk, (Char)sSynType);
-	WRITE_SHORT(pk, sAttrChangeNum);
+	pk.WriteInt64((Char)sSynType);
+	pk.WriteInt64(sAttrChangeNum);
 	if (sAttrChangeNum > 0)
 	{
 		for (int i = 0; i < ATTR_CLIENT_MAX; i++)
 		{
 			if (m_CChaAttr.GetChangeBitFlag(i)) // ����������б䣬��ѹ��
 			{
-				WRITE_CHAR(pk, i);
-				WRITE_LONG(pk, m_CChaAttr.GetAttr(i)); // 1.3x
+				pk.WriteInt64(i);
+				pk.WriteInt64(m_CChaAttr.GetAttr(i)); // 1.3x
 			}
 		}
 	}
 }
 
-void CFightAble::WriteMonsAttr(WPACKET &pk, Short sSynType)
+void CFightAble::WriteMonsAttr(net::WPacket &pk, Short sSynType)
 {
-	WRITE_CHAR(pk, (Char)sSynType);
-	WRITE_SHORT(pk, 5);
+	pk.WriteInt64((Char)sSynType);
+	pk.WriteInt64(5);
 
-	WRITE_CHAR(pk, ATTR_LV);
-	WRITE_LONG(pk, (long)m_CChaAttr.GetAttr(ATTR_LV));
-	WRITE_CHAR(pk, ATTR_HP);
-	WRITE_LONG(pk, (long)m_CChaAttr.GetAttr(ATTR_HP));
-	WRITE_CHAR(pk, ATTR_MXHP);
-	WRITE_LONG(pk, (long)m_CChaAttr.GetAttr(ATTR_MXHP));
-	WRITE_CHAR(pk, ATTR_ASPD);
-	WRITE_LONG(pk, (long)m_CChaAttr.GetAttr(ATTR_ASPD));
-	WRITE_CHAR(pk, ATTR_MSPD);
-	WRITE_LONG(pk, (long)m_CChaAttr.GetAttr(ATTR_MSPD));
+	pk.WriteInt64(ATTR_LV);
+	pk.WriteInt64((long)m_CChaAttr.GetAttr(ATTR_LV));
+	pk.WriteInt64(ATTR_HP);
+	pk.WriteInt64((long)m_CChaAttr.GetAttr(ATTR_HP));
+	pk.WriteInt64(ATTR_MXHP);
+	pk.WriteInt64((long)m_CChaAttr.GetAttr(ATTR_MXHP));
+	pk.WriteInt64(ATTR_ASPD);
+	pk.WriteInt64((long)m_CChaAttr.GetAttr(ATTR_ASPD));
+	pk.WriteInt64(ATTR_MSPD);
+	pk.WriteInt64((long)m_CChaAttr.GetAttr(ATTR_MSPD));
 }
 
-void CFightAble::WriteAttr(WPACKET &pk, dbc::Short sStartAttr, dbc::Short sEndAttr, Short sSynType)
+void CFightAble::WriteAttr(net::WPacket &pk, dbc::Short sStartAttr, dbc::Short sEndAttr, Short sSynType)
 {
 	short	sAttrChangeNum = m_CChaAttr.GetChangeNumClient();
 
-	WRITE_CHAR(pk, (Char)sSynType);
-	WRITE_SHORT(pk, sEndAttr - sStartAttr + 1);
+	pk.WriteInt64((Char)sSynType);
+	pk.WriteInt64(sEndAttr - sStartAttr + 1);
 	for (int i = sStartAttr; i <= sEndAttr; i++)
 	{
-		WRITE_CHAR(pk, i);
-		WRITE_LONG(pk, m_CChaAttr.GetAttr(i));
+		pk.WriteInt64(i);
+		pk.WriteInt64(m_CChaAttr.GetAttr(i));
 	}
 }
 
-void CFightAble::WriteLookEnergy(WPACKET &pk)
+void CFightAble::WriteLookEnergy(net::WPacket &pk)
 {
 	SItemGrid *pItem;
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
 		pItem = &IsCharacter()->m_SChaPart.SLink[i];
 		if (!g_IsRealItemID(pItem->sID))
-			WRITE_SHORT(pk, 0);
+			pk.WriteInt64(0);
 		else
-			WRITE_SHORT(pk, pItem->sEnergy[0]);
+			pk.WriteInt64(pItem->sEnergy[0]);
 	}
 }
 
@@ -1387,15 +1160,11 @@ void CFightAble::RangeEffect(SFireUnit *pSFireSrc, SubMap *pCMap, Long *plRangeB
 		pCFightObj->SkillTarEffect(pSFireSrc);
 		if (m_SFightProc.sState & enumFSTATE_DIE) // �Լ�����
 		{
-			//m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
-			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 			Die();
 			return;
 		}
 		if (pCFightObj->m_SFightProc.sState & enumFSTATE_DIE) // �Է��ܹ���������
 		{
-			pCFightObj->//m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
-			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 			pCFightObj->Die();
 
 			if (pSFireSrc->pCSkillRecord->chPlayTime && pSFireSrc->pCSkillRecord->chApplyType != 2)
@@ -1532,8 +1301,6 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ��ͨ����
 
 			if (m_SFightProc.sState & enumFSTATE_DIE) // �Լ�����
 			{
-				//m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
-			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 				Die();
 				return true;
 			}
@@ -1550,8 +1317,6 @@ bool CFightAble::SkillGeneral(Long lDist, Short sExecTime) // ��ͨ����
 					NotiSkillSrcToEyeshot();
 				}
 
-				pObjCha->//m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
-			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 				if (bTarIsLive)
 					pObjCha->Die();
 			}
@@ -1741,13 +1506,13 @@ bool CFightAble::SkillPushBoat(CCharacter* pCBoat, bool bFree) // �մ�
 
 void CFightAble::NotiChangeMainCha(uLong ulTargetID)
 {
-	WPACKET pk	=GETWPACKET();
-
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WRITE_LONG(pk, m_ulPacketID);
-	WRITE_CHAR(pk, enumACTION_CHANGE_CHA);
-	WRITE_LONG(pk, ulTargetID);
+	// Типизированная сериализация: смена управляемого персонажа через std::variant
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::CHANGE_CHA;
+	msg.data = net::msg::ActionChangeChaData{ static_cast<int64_t>(ulTargetID) };
+	auto pk = net::msg::serialize(msg);
 
 	ReflectINFof(this, pk);
 
@@ -1856,7 +1621,6 @@ void CFightAble::CountLevel()
 		pCLvRec = GetLevelRecordInfo((int)lCurLevel + 1);
 		if (!pCLvRec)
 		{
-			//m_CLog.Log("******can't find level %d record\n", lCurLevel + 1);
 			ToLogService("common", "Unable to find Lv{} record", lCurLevel + 1);
 			break;
 		}
@@ -1895,8 +1659,6 @@ void CFightAble::CountSailLevel()
 		pCLvRec = GetSailLvRecordInfo(lCurLevel + 1);
 		if (!pCLvRec)
 		{
-			//m_CLog.Log("******�Ҳ��������ȼ�%d�ļ�¼\n");
-			m_CLog.Log("******not find navigate grade %d note\n");
 			break;
 		}
 		if ((uLong)lCurExp >= pCLvRec->ulExp)
@@ -1934,8 +1696,6 @@ void CFightAble::CountLifeLevel()
 		pCLvRec = GetLifeLvRecordInfo(lCurLevel + 1);
 		if (!pCLvRec)
 		{
-			//m_CLog.Log("******�Ҳ�������ȼ�%d�ļ�¼\n");
-			m_CLog.Log("******not find live grade %d note\n");
 			break;
 		}
 		if (lCurExp >= pCLvRec->ulExp)
@@ -2185,8 +1945,6 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 		ToLogService("errors", LogLevel::Error, "character {} fall res number ({}) error", GetName(), lFallNum);
 	else
 	{
-		//m_CLog.Log("���ϸ�����%d\n", lFallNum);
-		m_CLog.Log("fall number��%d\n", lFallNum);
 		for (int i = 0; i < lFallNum; i++)
 			lItem[i] = g_chItemFall[i + 1];
 		for (int i = 0; i < lFallNum; i++)
@@ -2197,8 +1955,6 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 			if (itemID == 453)
 				continue;
 
-			//m_CLog.Log("��Ʒ��ţ�%d\n", m_pCChaRecord->lItem[lItem[i] - 1][0]);
-			m_CLog.Log("res number��%d\n", m_pCChaRecord->lItem[lItem[i] - 1][0]);
 			// ʵ����
 			SItemGrid GridContent((Short)m_pCChaRecord->lItem[lItem[i] - 1][0], 1);
 			ItemInstance(enumITEM_INST_MONS, &GridContent);
@@ -2259,14 +2015,10 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 		ToLogService("errors", LogLevel::Error, "roll {} fall task res number ({})error", GetName(), lFallNum);
 	else
 	{
-		//m_CLog.Log("������Ʒ���ϸ�����%d\n", lFallNum);
-		m_CLog.Log("task res fall number��%d\n", lFallNum);
 		for (int i = 0; i < lFallNum; i++)
 			lItem[i] = g_chItemFall[i + 1];
 		for (int i = 0; i < lFallNum; i++)
 		{
-			//m_CLog.Log("��Ʒ��ţ�%d\n", m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0]);
-			m_CLog.Log("res number��%d\n", m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0]);
 			// ʵ����
 			SItemGrid GridContent((Short)m_pCChaRecord->lTaskItem[lIndex[lItem[i] - 1]][0], 1);
 			ItemInstance(enumITEM_INST_MONS, &GridContent);
@@ -2475,15 +2227,11 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 			}
 			if (bIsDie) // ����
 			{
-				//m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
-			m_CLog.Log("!!!death\tTick %u\n", GetTickCount());
 				Die();
 				break;
 			}
 		}
 		// log
-		//m_CLog.Log("$$$��״̬����������ͬ��\n");
-		m_CLog.Log("$$$attribute in-phase cause by state\n");
 		//
 		SynSkillStateToEyeshot();
 		SynAttr(enumATTRSYN_SKILL_STATE);
@@ -2721,6 +2469,37 @@ void CFightAble::FillAttr(net::msg::ChaAttrInfo &a, Short sSynType)
 				a.attrs.push_back(e);
 			}
 		}
+	}
+}
+
+// Все атрибуты 0..ATTR_CLIENT_MAX-1 (для INIT-синхронизации)
+void CFightAble::FillAttrAll(net::msg::ChaAttrInfo &a, Short sSynType)
+{
+	a.synType = sSynType;
+	a.attrs.clear();
+	a.attrs.reserve(ATTR_CLIENT_MAX);
+	for (int i = 0; i < ATTR_CLIENT_MAX; i++)
+	{
+		net::msg::AttrEntry e;
+		e.attrId = i;
+		e.attrVal = m_CChaAttr.GetAttr(i);
+		a.attrs.push_back(e);
+	}
+}
+
+// 5 атрибутов монстра (LV, HP, MXHP, ASPD, MSPD)
+void CFightAble::FillMonsAttr(net::msg::ChaAttrInfo &a, Short sSynType)
+{
+	a.synType = sSynType;
+	a.attrs.clear();
+	a.attrs.reserve(5);
+	int monsAttrs[] = { ATTR_LV, ATTR_HP, ATTR_MXHP, ATTR_ASPD, ATTR_MSPD };
+	for (int id : monsAttrs)
+	{
+		net::msg::AttrEntry e;
+		e.attrId = id;
+		e.attrVal = (long)m_CChaAttr.GetAttr(id);
+		a.attrs.push_back(e);
 	}
 }
 

@@ -167,8 +167,7 @@ CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Cha
 
 	Char szLogName[defLOG_NAME_LEN] = "";
 	sprintf(szLogName, "%s+%u", pCItem->GetName(), pCItem->GetID());
-	pCItem->m_CLog.SetLogName(szLogName);
-	pCItem->m_CLog.SetEnable(g_bLogEntity);
+	pCItem->SetLogName(szLogName);
 
 	return pCItem;
 }
@@ -221,8 +220,7 @@ CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Poi
 
 	Char szLogName[defLOG_NAME_LEN] = "";
 	sprintf(szLogName, "Cha-%s+%u", pCCha->GetName(), pCCha->GetID());
-	pCCha->m_CLog.SetLogName(szLogName);
-	pCCha->m_CLog.SetEnable(g_bLogEntity);
+	pCCha->SetLogName(szLogName);
 
 	// pCCha->ResetLifeTime(5000);
 	
@@ -232,9 +230,8 @@ CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Poi
 // ͨ�渱���ڵ��������
 void SubMap::Notice(const char *szString)
 {
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-	WRITE_STRING(WtPk, szString);
+	// Типизированная сериализация: системное уведомление карты
+	auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{szString});
 
 	CPlayer	*pHeadPlayer = 0, *pLastPlayer = 0;
 	CEyeshotCell	*pCEyeCell;
@@ -1205,11 +1202,11 @@ void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
 	if (!m_pCStateCell[sCellY][sCellX])
 		return;
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_ASTATEBEGINSEE);
-	WRITE_SHORT(pk, sCellX);
-	WRITE_SHORT(pk, sCellY);
-	m_pCStateCell[sCellY][sCellX]->m_CSkillState.WriteState(pk);
+	// Типизированная сериализация: появление состояний ячейки
+	auto pk = net::msg::serialize(net::msg::McAStateBeginSeeMessage{
+		static_cast<int64_t>(sCellX), static_cast<int64_t>(sCellY),
+		m_pCStateCell[sCellY][sCellX]->m_CSkillState.BuildStateEntries()
+	});
 
 	Rect	l_rect = GetEyeshot(m_pCStateCell[sCellY][sCellX]->m_pCEyeshotCell->m_sPosX, m_pCStateCell[sCellY][sCellX]->m_pCEyeshotCell->m_sPosY);
 	Entity		*pCEnt;
@@ -1254,7 +1251,7 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 	{
 		Char	szMess[512];
 		sprintf(szMess, "character %s move originality coordinate error��last time position[%d, %d]��current position[%d, %d]��aim position[%d, %d]",
-			pCEnt->m_CLog.GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
+			pCEnt->GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
 		//::MessageBox(0,szMess,"�����!",MB_OK);
 		//LG("�ƶ�����", "%s\n", szMess);
 		ToLogService("errors", LogLevel::Error, "{}", szMess);

@@ -29,6 +29,7 @@
 #include "Character.h"
 #include "gameloading.h"
 #include "CaLua.h"
+#include "CrushSystem.h"
 
 #include "UdpClient.h"
 
@@ -117,7 +118,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	ToLogService("common", "Define __CATCH");
 	// SEHTranslator translator;
 	std::string strParam = lpCmdLine;
-	
+
+	::SetThreadName("main");
+	TalesOfPirate::Utils::Crush::SetGlobalCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetupDumpSetting("log\\game\\dumps");
+	g_logManager.InitLogger("log\\game");
+	g_logManager.EnableGlobalConsole(true);
+
 	if(strParam.find("editor")!= std::string::npos) // ����Ϸ�༭��
     {
         g_Config.m_bEditor = TRUE;

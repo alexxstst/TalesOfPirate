@@ -29,6 +29,7 @@
 #include "MapEntry.h"
 #include "lua_gamectrl.h"
 #include "CharStall.h"
+#include "CommandMessages.h"
 
 using namespace std;
 
@@ -314,26 +315,10 @@ bool CCharacter::IsPlayerOwnCha(void)
 	return IsPlayerCha() && (getAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER);
 }
 
-void CCharacter::WritePK(WPACKET& wpk) //д����ұ����������и��ӽṹ(���ٻ��޵�)����������
+void CCharacter::WriteInt64PartInfo(net::WPacket& packet)
 {
-	CMoveAble::WritePK(wpk);
-
-	//ToDo:д���Լ�������
-}
-
-void CCharacter::WriteInt64PartInfo(WPACKET& packet)
-{
-	WRITE_SEQ(packet, (cChar*)&this->m_SChaPart, sizeof(this->m_SChaPart));
-	WRITE_LONG(packet, m_pCChaRecord->lID );
-}
-
-void CCharacter::ReadPK(RPACKET rpk) //�ع���ұ����������и��ӽṹ(���ٻ��޵�)
-{
-	CMoveAble::ReadPK(rpk);
-
-	//ToDo:�����Լ�������
-	m_AITarget = 0;
-	m_CAction.Interrupt();
+	packet.WriteSequence((cChar*)&this->m_SChaPart, sizeof(this->m_SChaPart));
+	packet.WriteInt64(m_pCChaRecord->lID);
 }
 
 //=============================================================================
@@ -432,21 +417,24 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 		SetSubMap(pCBackM);
 
 		// ����Э��
-		WPACKET	l_wpk	=GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MT_SWITCHMAP);
-		WRITE_STRING(l_wpk, pCSrcMap->GetName());
-		WRITE_LONG(l_wpk, pCSrcMap->GetCopyNO());
-		WRITE_LONG(l_wpk, GetShape().centre.x);
-		WRITE_LONG(l_wpk, GetShape().centre.y);
-		WRITE_STRING(l_wpk, szTarMapName);
-		WRITE_LONG(l_wpk, lTMapCpyNO);
-		WRITE_LONG(l_wpk, lTarX);
-		WRITE_LONG(l_wpk, lTarY);
-		if (chSwitchType == enumSWITCHMAP_DIE) // �������µĵ�ͼ�л������Ŀ���ͼ���ɴ��gateǿ��������ߣ����᷵��Դ��ͼ��
-			WRITE_CHAR(l_wpk, 1);
-		else
-			WRITE_CHAR(l_wpk, 0);
-		ReflectINFof(this,l_wpk);
+		// Typed: map switch
+		{
+			net::msg::MtSwitchMapMessage msg;
+			msg.currentMapName = pCSrcMap->GetName();
+			msg.currentCopyNo = pCSrcMap->GetCopyNO();
+			msg.posX = GetShape().centre.x;
+			msg.posY = GetShape().centre.y;
+			msg.targetMapName = szTarMapName;
+			msg.targetCopyNo = lTMapCpyNO;
+			msg.targetX = lTarX;
+			msg.targetY = lTarY;
+			msg.switchType = (chSwitchType == enumSWITCHMAP_DIE) ? 1 : 0;
+			msg.playerDBID = GetPlayer()->GetDBChaId();
+			msg.gateAddr = GetPlayer()->GetGateAddr();
+			msg.aimNum = 1;
+			auto l_wpk = net::msg::serialize(msg);
+			m_pCPlayer->GetGate()->SendData(l_wpk);
+		}
 
         g_pGameApp->DelPlayerIdx(pPlayer->GetDBChaId());
         g_pGameApp->m_dwPlayerCnt--;
@@ -476,7 +464,7 @@ void CCharacter::OnEndSee(Entity *obj)
 	obj->OnEndSeen(this);	//ToDo:�ӿͻ���ɾ��Ŀ��
 }
 
-void CCharacter::ReflectINFof(Entity *srcent, WPACKET chginf)
+void CCharacter::ReflectINFof(Entity *srcent, net::WPacket chginf)
 {
 	if (!IsPlayerCha()) // �ý�ɫ���������
 		return;
@@ -484,9 +472,9 @@ void CCharacter::ReflectINFof(Entity *srcent, WPACKET chginf)
 	if(srcent ==this)
 	{
 	}
-	WRITE_LONG(chginf, GetPlayer()->GetDBChaId());
-	WRITE_LONG(chginf, GetPlayer()->GetGateAddr());
-	WRITE_SHORT(chginf, 1);
+	chginf.WriteInt64(GetPlayer()->GetDBChaId());
+	chginf.WriteInt64(GetPlayer()->GetGateAddr());
+	chginf.WriteInt64(1);
 
 	m_pCPlayer->GetGate()->SendData(chginf);
 }
@@ -507,26 +495,23 @@ void CCharacter::OnBeginSeen(CCharacter *pCCha)
 	MPTimer tt;
 	tt.Begin();
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_CHABEGINSEE);		//����2�ֽ�
+	net::msg::McChaBeginSeeMessage msg;
 	if (GetPlayer() && GetPlayer() == pCCha->GetPlayer())
-		WRITE_CHAR(pk, enumENTITY_SEEN_SWITCH);
+		msg.seeType = enumENTITY_SEEN_SWITCH;
 	else
-		WRITE_CHAR(pk, enumENTITY_SEEN_NEW);
+		msg.seeType = enumENTITY_SEEN_NEW;
 
 	mission::CEventEntity* pEntity = IsEvent();
 	if( pEntity )
 	{
 		uShort	usEventID = pEntity->GetInfoID();
-		
-		// ͬ���¼�ʵ��ļ���״̬��Ϣ
 		BYTE byData;
 		pEntity->GetState( *pCCha, byData );
 		usEventID |= byData<<12;
 		GetEvent().SetID(usEventID);
 	}
 
-	WriteBaseInfo(pk, LOOK_OTHER);
+	FillBaseInfo(msg.base, LOOK_OTHER);
 
 	BYTE byState = 0, byShowType = 0;
 	mission::CNpc* pNpc = IsNpc();
@@ -534,50 +519,39 @@ void CCharacter::OnBeginSeen(CCharacter *pCCha)
 	{
 		if( pNpc->GetType() == mission::CNpc::TALK )
 		{
-			// �Ȼ�ȡNPC״̬��Ϣ
 			mission::CTalkNpc* pTalk = (mission::CTalkNpc*)pNpc;
 			pTalk->MissionProc( *pCCha, byState );
 		}
 		byShowType = pNpc->GetShowType();
 	}
 
-	WRITE_CHAR( pk, byShowType );
-	WRITE_CHAR(pk,  byState );
-
-	// pose״̬����
-	WRITE_SHORT(pk, m_sPoseState);
+	msg.npcType = byShowType;
+	msg.npcState = byState;
+	msg.poseType = m_sPoseState;
 	switch (m_sPoseState)
 	{
 	case	enumPoseLean:
-		{
-			WRITE_CHAR(pk, m_SLean.chState);
-			WRITE_LONG(pk, m_SLean.lPose);
-			WRITE_LONG(pk, m_SLean.lAngle);
-			WRITE_LONG(pk, m_SLean.lPosX);
-			WRITE_LONG(pk, m_SLean.lPosY);
-			WRITE_LONG(pk, m_SLean.lHeight);
-			break;
-		}
+		msg.pose = net::msg::LeanInfo{
+			m_SLean.chState, m_SLean.lPose, m_SLean.lAngle,
+			m_SLean.lPosX, m_SLean.lPosY, m_SLean.lHeight
+		};
+		break;
 	case	enumPoseSeat:
-		{
-			WRITE_SHORT(pk, m_SSeat.sAngle);
-			WRITE_SHORT(pk, m_SSeat.sPose);
-			break;
-		}
+		msg.pose = net::msg::SeatInfo{ m_SSeat.sAngle, m_SSeat.sPose };
+		break;
 	default:
-		{
-			break;
-		}
+		msg.pose = std::monostate{};
+		break;
 	}
 
 	if (IsPlayerCha())
-		WriteAttr(pk, 0, ATTR_CLIENT_MAX - 1, enumATTRSYN_INIT);
+		FillAttrAll(msg.attr, enumATTRSYN_INIT);
 	else
-		WriteMonsAttr(pk, enumATTRSYN_INIT);
-	WriteSkillState(pk);
-	// WPacket www;
-	
-	pCCha->ReflectINFof(this,pk);//ͨ��
+		FillMonsAttr(msg.attr, enumATTRSYN_INIT);
+	FillSkillState(msg.skillState);
+
+	auto pk = net::msg::serialize(msg);
+	pCCha->ReflectINFof(this,pk);
 
 }
 
@@ -590,15 +564,13 @@ void CCharacter::OnEndSeen(CCharacter *pCCha)
 		//LG("��Ұ����", "ͬ����ҽ�ɫ %s ����Ұ�����ǵ�socket��%p��%p.\n", pCCha->GetLogName(), m_pCPlayer->GetGate(), pCCha->m_pCPlayer->GetGate());
 		ToLogService("errors", LogLevel::Error, "the homonymy player {} out of eyeshot, their socket: {}, {}.", pCCha->GetLogName(), static_cast<void*>(m_pCPlayer->GetGate()), static_cast<void*>(pCCha->m_pCPlayer->GetGate()));
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_CHAENDSEE);		//����2�ֽ�
-	if (GetPlayer() && GetPlayer() == pCCha->GetPlayer() && getAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER)
-		WRITE_CHAR(pk, enumENTITY_SEEN_SWITCH);
-	else
-		WRITE_CHAR(pk, enumENTITY_SEEN_NEW);
-
-	WRITE_LONG(pk, m_ID);					//ID
-	pCCha->ReflectINFof(this,pk);//ͨ��
+	// Типизированная сериализация: персонаж покинул зону видимости
+	auto pk = net::msg::serialize(net::msg::McChaEndSeeMessage{
+		(GetPlayer() && GetPlayer() == pCCha->GetPlayer() && getAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER)
+			? enumENTITY_SEEN_SWITCH : enumENTITY_SEEN_NEW,
+		m_ID
+	});
+	pCCha->ReflectINFof(this,pk);
 
 	// ����npc��Ϣ״̬ͬ��
 	mission::CNpc* pNpc = IsNpc();
@@ -661,14 +633,10 @@ void CCharacter::SetRelive(Char chType, Char chLv, const Char *szInfo)
 		GetPlyMainCha()->SetChaRelive();
 	}
 
-	WPACKET pk = GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_QUERY_RELIVE);
-	WRITE_LONG(pk, GetID());
-	if (szInfo)
-		WRITE_STRING(pk, szInfo);
-	else
-		WRITE_STRING(pk, "");
-	WRITE_CHAR(pk, chType);
+	// Типизированная сериализация: запрос воскрешения
+	auto pk = net::msg::serialize(net::msg::McQueryReliveMessage{
+		GetID(), szInfo ? szInfo : "", static_cast<int64_t>(chType)
+	});
 	ReflectINFof(this,pk);
 }
 
@@ -1640,12 +1608,8 @@ void CCharacter::SubsequenceFight()
 //=============================================================================
 void CCharacter::FailedActionNoti(Char chType, Char chReason)
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_FAILEDACTION);
-	WRITE_LONG(pk, GetID());
-	WRITE_CHAR(pk, chType);
-	WRITE_CHAR(pk, chReason);
-
+	// Типизированная сериализация: неудачное действие
+	auto pk = net::msg::serialize(net::msg::McFailedActionMessage{GetID(), chType, chReason});
 	ReflectINFof(this, pk);
 }
 
@@ -1653,17 +1617,12 @@ void CCharacter::EndAction(net::RPacket* pk)
 {
 	if (!IsLiveing())
 	{
-		m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-		//m_CLog.Log("�ܾ��ж��������������ڣ�\n\n");
-		m_CLog.Log("refuse action requset(oneself is inexistence)\n\n");return;
+		return;
 	}
 
 	m_CAction.End();
 
 	// log
-	m_CLog.Log("===Recieve(EndAction):\tTick %u\n", GetTickCount());
-	//m_CLog.Log("\tȫ���ж���Ŀ��%d����ǰ�ж��ţ�%d.\n", m_CAction.GetActionNum(), m_CAction.GetCurActionNo());
-	m_CLog.Log("\tall action numbers��%d,currently actionID%d.\n", m_CAction.GetActionNum(), m_CAction.GetCurActionNo());
 	//
 }
 
@@ -1944,10 +1903,8 @@ void CCharacter::BickerNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_BICKER_NOTICE );
-	WRITE_STRING(packet, szTemp);
-	
+	// Типизированная сериализация: уведомление-бикер
+	auto packet = net::msg::serialize(net::msg::McBickerNoticeMessage{szTemp});
 	this->ReflectINFof( this, packet );
 }
 
@@ -1960,11 +1917,8 @@ void CCharacter::ColourNotice( DWORD rgb, const char szData[], ... )
 	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	va_end( list );
 
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_COLOUR_NOTICE );
-	WRITE_LONG(packet, rgb);
-	WRITE_STRING(packet, szTemp);
-	
+	// Типизированная сериализация: цветное уведомление
+	auto packet = net::msg::serialize(net::msg::McColourNoticeMessage{static_cast<int64_t>(rgb), szTemp});
 	this->ReflectINFof( this, packet );
 }
 
@@ -1979,10 +1933,8 @@ void CCharacter::SystemNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_SYSINFO );
-	WRITE_STRING(packet, szTemp);
-
+	// Типизированная сериализация: системное уведомление
+	auto packet = net::msg::serialize(net::msg::McSysInfoMessage{szTemp});
 	this->ReflectINFof( this, packet );
 }
 
@@ -1997,10 +1949,8 @@ void CCharacter::PopupNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_POPUP_NOTICE );
-	WRITE_STRING(packet, szTemp);
-
+	// Типизированная сериализация: всплывающее уведомление
+	auto packet = net::msg::serialize(net::msg::McPopupNoticeMessage{szTemp});
 	this->ReflectINFof( this, packet );
 }
 
@@ -2119,11 +2069,10 @@ BOOL CCharacter::SetEntityState( DWORD dwEntityID, BYTE byState )
 {
 	if( GetPlayer() == NULL )
 		return FALSE;
-	// ͬ�����ͻ���
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_ENTITY_CHGSTATE );
-	WRITE_LONG(packet, dwEntityID );
-	WRITE_CHAR(packet, byState );
+	// Типизированная сериализация: смена состояния сущности
+	auto packet = net::msg::serialize(net::msg::McEntityStateChangeMessage{
+		static_cast<int64_t>(dwEntityID), static_cast<int64_t>(byState)
+	});
 	ReflectINFof( this, packet );
 	return TRUE;
 }
@@ -2138,11 +2087,10 @@ BOOL CCharacter::ResetMissionState( mission::CTalkNpc& npc )
 	BYTE byState = 0;
 	npc.MissionProc( *this, byState );
 
-	// ͬ�����ͻ���
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_NPCSTATECHG );
-	WRITE_LONG(packet, npc.GetID() );
-	WRITE_CHAR(packet, byState );
+	// Типизированная сериализация: смена состояния NPC
+	auto packet = net::msg::serialize(net::msg::McNpcStateChangeMessage{
+		static_cast<int64_t>(npc.GetID()), static_cast<int64_t>(byState)
+	});
 	ReflectINFof( this, packet );
 	return TRUE;
 }
@@ -2725,9 +2673,8 @@ BOOL CCharacter::ExchangeReq(short sSrcID, short sSrcNum, short sTarID, short sT
 		//SystemNotice("��û�жһ��������Ʒ!");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00013));
 
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_BLACKMARKET_EXCHANGE_ASR);
-		WRITE_CHAR(packet, 0);
+		// Типизированная сериализация: ответ обмена на чёрном рынке (неудача)
+		auto packet = net::msg::serialize(net::msg::McBlackMarketExchangeAsrMessage{0, 0, 0, 0, 0});
 		this->ReflectINFof( this, packet );
 
 		return FALSE;
@@ -2753,13 +2700,11 @@ BOOL CCharacter::ExchangeReq(short sSrcID, short sSrcNum, short sTarID, short sT
 	GetPlyMainCha()->AddItem( sTarID, sTarNum, szNpc );
 	//SystemNotice("�һ��ɹ�!");
 
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_BLACKMARKET_EXCHANGE_ASR);
-	WRITE_CHAR(packet, 1);
-	WRITE_SHORT(packet, sSrcID);
-	WRITE_SHORT(packet, sSrcNum);
-	WRITE_SHORT(packet, sTarID);
-	WRITE_SHORT(packet, sTarNum);
+	// Типизированная сериализация: ответ обмена на чёрном рынке (успех)
+	auto packet = net::msg::serialize(net::msg::McBlackMarketExchangeAsrMessage{
+		1, static_cast<int64_t>(sSrcID), static_cast<int64_t>(sSrcNum),
+		static_cast<int64_t>(sTarID), static_cast<int64_t>(sTarNum)
+	});
 	this->ReflectINFof( this, packet );
 
 	return TRUE;
@@ -4104,13 +4049,9 @@ BOOL CCharacter::HasLeaveBagTempGrid( USHORT sNum )
 // �����Ƿ�ѧϰ�ɹ�
 bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoint, bool bLimit)
 {
-	//m_CLog.Log("��ʼѧϰ���ܣ���� %d���ȼ� %d���Ƿ����õȼ� %d.\n", sSkillID, chLv, bSetLv);
-	m_CLog.Log("start study skill:skillID %d��level %d��whether set level %d.\n", sSkillID, chLv, bSetLv);
 	if (sSkillID > defMAX_SKILL_NO)
 	{
 		SystemNotice("���ܲ����ڣ�����������Χ.%d", sSkillID);
-		//m_CLog.Log("ѧϰʧ�ܣ���������� %d\n", defMAX_SKILL_NO);
-		m_CLog.Log("study failed:Max_skill_No %d\n", defMAX_SKILL_NO);
 		return false;
 	}
 
@@ -4119,16 +4060,12 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	{
 		//SystemNotice("���ܲ�����");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00044));
-		//m_CLog.Log("ѧϰʧ�ܣ��Ҳ����ü���\n");
-		m_CLog.Log("Study failed: can't find the skill\n");
 		return false;
 	}
 	if (chLv < 0)
 	{
 		//SystemNotice("ѧϰ�ļ��ܵȼ�[%d]����", chLv);
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00045), chLv);
-		//m_CLog.Log("ѧϰʧ�ܣ��ȼ��Ƿ�\n");
-		m_CLog.Log("Study failed:level unlawful\n");
 		return false;
 	}
 
@@ -4152,8 +4089,6 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 			{
 				//SystemNotice("�����Ѵ��ڣ��ҵȼ�����ѧϰֵ");
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00046));
-				//m_CLog.Log("ѧϰʧ�ܣ��ȼ��Ƿ�����ǰ�ȼ� %d��Ҫ���õĵȼ� %d.\n", chOldLv, chNewLv);
-				m_CLog.Log("Study failed:level unlawful,currently level %d,will set level: %d.\n", chOldLv, chNewLv);
 				return false;
 			}
 		}
@@ -4166,8 +4101,6 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 
 	if (bLimit && !CanLearnSkill(pCSkill, chNewLv)) // ����ѧϰ�ü���
 	{
-		//m_CLog.Log("ѧϰʧ�ܣ�����ѧϰ.\n");
-		m_CLog.Log("Study failed:can't study.\n");
 		return false;
 	}
 
@@ -4185,8 +4118,6 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 			{
 				//SystemNotice("����ܵ㲻�㣺��ǰ�� %d������� %d.", lCurLP, lPExpend);
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00047), lCurLP, lPExpend);
-				//m_CLog.Log("ѧϰʧ�ܣ����ܵ㲻��.\n");
-				m_CLog.Log("Study failed:Skillpoint not enough.\n");
 				return false;
 			}
 			setAttr(ATTR_LIFETP, lCurLP - lPExpend);
@@ -4198,8 +4129,6 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 			{
 				//SystemNotice("���ܵ㲻�㣺��ǰ�� %d������� %d.", lCurTP, lPExpend);
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00048), lCurTP, lPExpend);
-				//m_CLog.Log("ѧϰʧ�ܣ����ܵ㲻��.\n");
-				m_CLog.Log("Study failed:skillpoint not enough.\n");
 				return false;
 			}
 			setAttr(ATTR_TP, lCurTP - lPExpend);
@@ -4218,8 +4147,6 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	{
 		//SystemNotice("���뼼�ܰ�ʧ��");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00049));
-		//m_CLog.Log("ѧϰʧ�ܣ����뼼�ܰ�ʧ��.\n");
-		m_CLog.Log("Study failed:add skilpoint failed.\n");
 		return false;
 	}
 
@@ -4249,8 +4176,6 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	}
 	SynAttrToSelf(enumATTRSYN_REASSIGN);
 
-	//m_CLog.Log("ѧϰ�ɹ�.\n");
-	m_CLog.Log("study succeed.\n");
 	return true;
 }
 
@@ -4280,8 +4205,6 @@ bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 	{
 		//SystemNotice("ְҵ��������ѧϰ�ȼ�������ְҵ������");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00050));
-		//m_CLog.Log("����ѧϰ��ְҵ�����ܵȼ�������\n");
-		m_CLog.Log("can't study:profession,skill level is not accord\n");
 		return false;
 	}
 
@@ -4289,8 +4212,6 @@ bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 	{
 		//SystemNotice("��ɫ�ȼ���������ǰ�ȼ� %d������ȼ� %d.", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
 		SystemNotice("RES_STRING(GM_CHARACTER_CPP_00051)", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
-		//m_CLog.Log("����ѧϰ����ɫ�ȼ���������ǰ�ȼ� %d������ȼ� %d.\n", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
-		m_CLog.Log("can't study:character level not enough%d��remand level %d.\n", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
 		return false;
 	}
 
@@ -4314,8 +4235,6 @@ bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 
 		//SystemNotice("ǰ�ü��ܲ���");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00052));
-		//m_CLog.Log("����ѧϰ��ǰ�ü��ܲ����� .\n");
-		m_CLog.Log("can't study:bNeedSkill is not accord.\n");
 		return false;
 	}
 
@@ -4569,7 +4488,6 @@ bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHa
 
 	if (bDie) // ����
 	{
-		m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
 		Die();
 		return true;
 	}
@@ -4672,7 +4590,6 @@ bool CCharacter::DelSkillState(dbc::uChar uchStateID, bool bNotice)
 
 	if (bDie) // ����
 	{
-		m_CLog.Log("!!!����\tTick %u\n", GetTickCount());
 		Die();
 		return true;
 	}
@@ -4758,8 +4675,6 @@ long CCharacter::ExecuteEvent(Entity *pCObj, dbc::uShort usEventID)
 			if (usEventEType == enumEVENTE_SMAP_ENTRY)
 			{
 				CSwitchMapRecord *pCSwitchMapRecord = (CSwitchMapRecord *)pTableRec;
-				//m_CLog.Log("�ӵ�ǰ��ͼ[%s],�л���Ŀ���ͼ[%s]\n\n", m_submap->GetName(), pCSwitchMapRecord->szTarMapName);
-				m_CLog.Log("from currently map[%s],switch to aim map[%s]\n\n", m_submap->GetName(), pCSwitchMapRecord->szTarMapName);
 
 				SwitchMap(GetSubMap(), pCSwitchMapRecord->szTarMapName, pCSwitchMapRecord->STarPos.x, pCSwitchMapRecord->STarPos.y);
 			}
@@ -4867,9 +4782,10 @@ void CCharacter::OnLevelUp( USHORT sLevel )
 		if(sLevel == 41)
 		{
 			CCharacter *pMainCha = GetPlyMainCha();
-			WPACKET l_wpk = GETWPACKET();
-			WRITE_CMD(l_wpk,CMD_MP_MASTER_FINISH);
-			WRITE_LONG(l_wpk,pMainCha->GetPlayer()->GetDBChaId());
+			// Типизированная сериализация: ученик достиг 41 уровня — завершение обучения
+			auto l_wpk = net::msg::serialize(net::msg::MpMasterFinishMessage{
+				pMainCha->GetPlayer()->GetDBChaId()
+			});
 			pMainCha->ReflectINFof(pMainCha,l_wpk);
 		}
 		
@@ -5235,12 +5151,12 @@ void CCharacter::SynKitbagNew(Char chType)
 	if (!m_CKitbag.IsChange())
 		return;
 
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	// ͨ���ж�
-	WRITE_LONG(WtPk, GetID());
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_KITBAG);
-	WriteKitbag(m_CKitbag, WtPk, chType);
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = GetID();
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::KITBAG;
+	msg.data = BuildKitbagInfo(m_CKitbag, chType);
+	auto WtPk = net::msg::serialize(msg);
 	ReflectINFof(this, WtPk);
 
 	SynAppendLook();
@@ -5252,12 +5168,12 @@ void CCharacter::SynKitbagTmpNew(Char chType)
 	if (!m_pCKitbagTmp->IsChange())
 		return;
 
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	// ͨ���ж�
-	WRITE_LONG(WtPk, GetID());
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_KITBAGTMP);
-	WriteKitbag(*m_pCKitbagTmp, WtPk, chType);
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = GetID();
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::KITBAGTMP;
+	msg.data = BuildKitbagInfo(*m_pCKitbagTmp, chType);
+	auto WtPk = net::msg::serialize(msg);
 	ReflectINFof(this, WtPk);
 
 	//SynAppendLook();
@@ -5266,12 +5182,13 @@ void CCharacter::SynKitbagTmpNew(Char chType)
 // ͬ�������
 void CCharacter::SynShortcut()
 {
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//ͨ���ж�
-	WRITE_LONG(WtPk, GetID());
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_SHORTCUT);
-	WriteInt64cut(WtPk);
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = GetID();
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::SHORTCUT;
+	msg.data = net::msg::ChaShortcutInfo{};
+	FillShortcut(std::get<net::msg::ChaShortcutInfo>(msg.data));
+	auto WtPk = net::msg::serialize(msg);
 	ReflectINFof(this, WtPk);
 }
 
@@ -5281,18 +5198,19 @@ void CCharacter::SynLook(dbc::Char chSynType)
 	if (GetLookChangeNum() == 0)
 		return;
 
-	WPACKET WtPk=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//ͨ���ж�
-	WRITE_LONG(WtPk, GetID());
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_LOOK);
-	WriteLookData(WtPk, 0, chSynType);
-	
-
-	if (chSynType == enumSYN_LOOK_SWITCH)
-		NotiChgToEyeshot(WtPk);//ͨ��
-	else
-		ReflectINFof(this, WtPk);
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = GetID();
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::LOOK;
+	{ net::msg::ChaBaseInfo tmpBase; FillBaseInfo(tmpBase, 0); msg.data = tmpBase.look; }
+	std::get<net::msg::ChaLookInfo>(msg.data).synType = chSynType;
+	{
+		auto WtPk = net::msg::serialize(msg);
+		if (chSynType == enumSYN_LOOK_SWITCH)
+			NotiChgToEyeshot(WtPk);
+		else
+			ReflectINFof(this, WtPk);
+	}
 }
 
 // synching only to self [chaos argent]
@@ -5301,22 +5219,22 @@ void CCharacter::SynLook(dbc::Char chLookType, bool verbose)
 	if (GetLookChangeNum() == 0)
 		return;
 
-	WPACKET WtPk=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);
-	WRITE_LONG(WtPk, GetID());
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_LOOK);
-	WriteLookData(WtPk, chLookType);
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = GetID();
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::LOOK;
+	{ net::msg::ChaBaseInfo tmpBase; FillBaseInfo(tmpBase, chLookType); msg.data = tmpBase.look; }
+	auto WtPk = net::msg::serialize(msg);
 	ReflectINFof(this, WtPk);
 
 	if (verbose)
 	{
-		WPACKET WtPk=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_NOTIACTION);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_LONG(WtPk, m_ulPacketID);
-		WRITE_CHAR(WtPk, enumACTION_LOOK);
-		WriteLookData(WtPk, LOOK_OTHER);
+		net::msg::McCharacterActionMessage msg2;
+		msg2.worldId = GetID();
+		msg2.packetId = m_ulPacketID;
+		msg2.actionType = net::msg::ActionType::LOOK;
+		{ net::msg::ChaBaseInfo tmpBase; FillBaseInfo(tmpBase, LOOK_OTHER); msg2.data = tmpBase.look; }
+		auto WtPk = net::msg::serialize(msg2);
 		NotiChgToEyeshot(WtPk, false);
 	}
 }
@@ -5381,96 +5299,96 @@ bool CCharacter::ItemForge(SItemGrid *pItem, dbc::Char chAddLv)
 //=============================================================================
 void CCharacter::SynSkillBag(Char chType)
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_SYNSKILLBAG);
-	WRITE_LONG(pk, GetID());
-	WriteSkillbag(pk, chType);
+	net::msg::McSynSkillBagMessage msg;
+	msg.worldId = GetID();
+	FillSkillBag(msg.skillBag, chType);
+	auto pk = net::msg::serialize(msg);
 
 	ReflectINFof(this, pk);
 }
 
 void CCharacter::SynAddItemCha(CCharacter *pCItemCha)
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_ADD_ITEM_CHA);
-	WRITE_LONG(pk, GetPlayer()->GetMainCha()->GetID());
-	WriteItemChaBoat(pk, pCItemCha);
+	net::msg::McAddItemChaMessage msg;
+	msg.mainChaId = GetPlayer()->GetMainCha()->GetID();
+	pCItemCha->FillBaseInfo(msg.base);
+	pCItemCha->FillAttrAll(msg.attr, enumATTRSYN_INIT);
+	pCItemCha->m_CKitbag.SetChangeFlag(true);
+	msg.kitbag = pCItemCha->BuildKitbagInfo(pCItemCha->m_CKitbag, enumSYN_KITBAG_INIT);
+	pCItemCha->FillSkillState(msg.skillState);
+	auto pk = net::msg::serialize(msg);
 
 	ReflectINFof(this, pk);
 }
 
 void CCharacter::SynDelItemCha(CCharacter *pCItemCha)
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_DEL_ITEM_CHA);
-	WRITE_LONG(pk, GetPlayer()->GetMainCha()->GetID());
-	WRITE_LONG(pk, pCItemCha->GetID());
-
+	// Типизированная сериализация: удаление персонажа-предмета
+	auto pk = net::msg::serialize(net::msg::McDelItemChaMessage{
+		GetPlayer()->GetMainCha()->GetID(), pCItemCha->GetID()
+	});
 	ReflectINFof(this, pk);
 }
 
 void CCharacter::CheckPing(void)
 {
-	WPACKET WtPk	=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_CHECK_PING);	//ͨ���ж�
+	net::msg::McCheckPingMessage msg;
 	for (uLong i = 0; i < m_ulPingDataLen; i++)
-		WRITE_CHAR(WtPk, rand()/255);
-	ReflectINFof(this, WtPk);//ͨ��
+		msg.randomData.push_back(rand()/255);
+	auto WtPk = net::msg::serialize(msg);
+	ReflectINFof(this, WtPk);
 
 	m_dwPingSendTick = GetTickCount();
 }
 
 void CCharacter::SendPreMoveTime(void)
 {
-	WPACKET WtPk	=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_PREMOVE_TIME);	//ͨ���ж�
-	if (m_lSetPing >= 0)
-		WRITE_LONG(WtPk, m_lSetPing);
-	else
-		WRITE_LONG(WtPk, m_dwPing);
-	ReflectINFof(this, WtPk);//ͨ��
+	// Типизированная сериализация: время предварительного перемещения
+	auto WtPk = net::msg::serialize(net::msg::McPreMoveTimeMessage{
+		m_lSetPing >= 0 ? static_cast<int64_t>(m_lSetPing) : static_cast<int64_t>(m_dwPing)
+	});
+	ReflectINFof(this, WtPk);
 }
 
 void CCharacter::SynPKCtrl(void)
 {
-	WPACKET WtPk	=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//ͨ���ж�
-	WRITE_LONG(WtPk, m_ID);
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_PK_CTRL);
-	WritePKCtrl(WtPk);
-	NotiChgToEyeshot(WtPk);//ͨ��
-	//ReflectINFof(this, WtPk);//ͨ��
+	// Типизированная сериализация: PK-контроль через std::variant
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::PK_CTRL;
+	msg.data = net::msg::ActionPkCtrlData{ static_cast<int64_t>(m_chPKCtrl.to_ulong()) };
+	auto WtPk = net::msg::serialize(msg);
+	NotiChgToEyeshot(WtPk);
 }
 
 void CCharacter::SynSideInfo(void)
 {
-	WPACKET WtPk	=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_SIDE_INFO);	//ͨ���ж�
-	WRITE_LONG(WtPk, m_ID);
-	WriteSideInfo(WtPk);
-	NotiChgToEyeshot(WtPk);//ͨ��
+	// Типизированная сериализация: информация о стороне
+	net::msg::McSynSideInfoMessage msg;
+	msg.worldId = m_ID;
+	msg.side.sideId = (Char)GetSideID();
+	auto WtPk = net::msg::serialize(msg);
+	NotiChgToEyeshot(WtPk);
 }
 
 void CCharacter::TerminalMessage(Long lMessageID)
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_MESSAGE);
-	WRITE_LONG(pk, GetID());
-	WRITE_LONG(pk, lMessageID);
+	auto pk = net::msg::serialize(net::msg::McTerminalMessage{GetID(), static_cast<int64_t>(lMessageID)});
 
 	ReflectINFof(this, pk);
 }
 
 void CCharacter::ItemOprateFailed(Short sFailedID)
 {
-	WPACKET WtPk	=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	//ͨ���ж�
-	WRITE_LONG(WtPk, m_ID);
-	WRITE_LONG(WtPk, m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_ITEM_FAILED);
-	WRITE_SHORT(WtPk, sFailedID);
-	ReflectINFof(this, WtPk);//ͨ��
+	// Типизированная сериализация: ошибка операции с предметом через std::variant
+	net::msg::McCharacterActionMessage msg;
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::ITEM_FAILED;
+	msg.data = net::msg::ActionItemFailedData{ static_cast<int64_t>(sFailedID) };
+	auto WtPk = net::msg::serialize(msg);
+	ReflectINFof(this, WtPk);
 }
 
 void CCharacter::AreaChange(void)
@@ -6225,17 +6143,13 @@ BOOL CCharacter::BoatBerthList( DWORD dwNpcID, BYTE byType, USHORT sBerthID, USH
 		// ���ý�ɫ����������Ϣ
 		GetPlayer()->SetBerth( sBerthID, sxPos, syPos, sDir );
 
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD( packet, CMD_MC_BERTH_LIST );
-		WRITE_LONG( packet, dwNpcID );
-		WRITE_CHAR( packet, byType );
-		WRITE_CHAR( packet, byNumBoat );
-
+		net::msg::McBerthListMessage msg;
+		msg.npcId = dwNpcID;
+		msg.type = byType;
+		msg.count = byNumBoat;
 		for( BYTE i = 0;i < byNumBoat; i++ )
-		{
-			WRITE_STRING( packet, Data.szName[i] );
-		}
-
+			msg.names.push_back(Data.szName[i]);
+		auto packet = net::msg::serialize(msg);
 		ReflectINFof( this, packet );
 		return TRUE;
 	}
@@ -6245,22 +6159,17 @@ BOOL CCharacter::BoatBerthList( DWORD dwNpcID, BYTE byType, USHORT sBerthID, USH
 
 BOOL CCharacter::BoatAdd( CCharacter& Boat )
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BOAT_ADD );
-	WRITE_LONG( packet, Boat.GetID() );
-
+	// Типизированная сериализация: добавление корабля
+	auto packet = net::msg::serialize(net::msg::McBoatAddMessage{Boat.GetID()});
 	ReflectINFof( this, packet );
 	return TRUE;
 }
 
 BOOL CCharacter::BoatClear( CCharacter& Boat )
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BOAT_CLEAR );
-	WRITE_LONG( packet, Boat.GetID() );
-
+	// Типизированная сериализация: удаление корабля
+	auto packet = net::msg::serialize(net::msg::McBoatClearMessage{Boat.GetID()});
 	ReflectINFof( this, packet );
-
 	return TRUE;
 }
 
@@ -6309,17 +6218,13 @@ BOOL CCharacter::BoatPackBagList( USHORT sBerthID, BYTE byType, BYTE byLevel )
 		// ���ý�ɫ����������Ϣ
 		GetPlayer()->SetBerth( sBerthID, byType, byLevel, 0 );
 
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD( packet, CMD_MC_BERTH_LIST );
-		WRITE_LONG( packet, 0 );
-		WRITE_CHAR( packet, mission::BERTH_BAG_LIST );
-		WRITE_CHAR( packet, byNumBoat );
-
+		net::msg::McBerthListMessage msg;
+		msg.npcId = 0;
+		msg.type = mission::BERTH_BAG_LIST;
+		msg.count = byNumBoat;
 		for( BYTE i = 0;i < byNumBoat; i++ )
-		{
-			WRITE_STRING( packet, Data.szName[i] );
-		}
-
+			msg.names.push_back(Data.szName[i]);
+		auto packet = net::msg::serialize(msg);
 		ReflectINFof( this, packet );
 		return TRUE;
 	}
@@ -6639,192 +6544,201 @@ uLong CCharacter::GetGuildState()
 
 void CCharacter::SyncGuildInfo()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_GUILD_INFO );
-	WRITE_LONG( packet, this->GetID() );
-	WRITE_LONG( packet, this->GetPlayer()->m_lGuildID );
-	WRITE_STRING( packet, this->GetGuildName() );
-	WRITE_STRING( packet, this->GetGuildMotto() );
-	WRITE_LONG(packet, this->guildPermission);
+	// Типизированная сериализация: информация о гильдии
+	auto packet = net::msg::serialize(net::msg::McGuildInfoMessage{
+		this->GetID(),
+		static_cast<int64_t>(this->GetPlayer()->m_lGuildID),
+		this->GetGuildName(),
+		this->GetGuildMotto(),
+		static_cast<int64_t>(this->guildPermission)
+	});
 	this->NotiChgToEyeshot( packet );
 }
 
 void CCharacter::SynStallName()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_STALL_NAME );
-	WRITE_LONG( packet, GetID() );
-	WRITE_STRING( packet, GetStallName() );
+	// Типизированная сериализация: имя лавки
+	auto packet = net::msg::serialize(net::msg::McSynStallNameMessage{GetID(), GetStallName()});
 	NotiChgToEyeshot( packet );
 }
 
 void CCharacter::SynBeginItemRepair()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_REPAIR );
+	// Типизированная сериализация: открытие UI ремонта
+	auto packet = net::msg::serializeMcBeginItemRepairCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemForge()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_FORGE );
+	// Типизированная сериализация: открытие UI ковки
+	auto packet = net::msg::serializeMcBeginItemForgeCmd();
 	ReflectINFof(this, packet);
 }
 
 // Add by lark.li 20080514 begin
 void CCharacter::SynBeginItemLottery()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_LOTTERY );
+	// Типизированная сериализация: открытие UI лотереи
+	auto packet = net::msg::serializeMcBeginItemLotteryCmd();
 	ReflectINFof(this, packet);
 }
 // End
 
 void CCharacter::SynBeginItemUnite()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_UNITE );
+	// Типизированная сериализация: открытие UI объединения
+	auto packet = net::msg::serializeMcBeginItemUniteCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemMilling()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_MILLING );
+	// Типизированная сериализация: открытие UI помола
+	auto packet = net::msg::serializeMcBeginItemMillingCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemFusion()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_FUSION );
+	// Типизированная сериализация: открытие UI слияния
+	auto packet = net::msg::serializeMcBeginItemFusionCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemUpgrade()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_UPGRADE );
+	// Типизированная сериализация: открытие UI улучшения
+	auto packet = net::msg::serializeMcBeginItemUpgradeCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemEidolonMetempsychosis()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_EIDOLON_METEMPSYCHOSIS );
+	// Типизированная сериализация: открытие UI перерождения эйдолона
+	auto packet = net::msg::serializeMcBeginItemEidolonMetempsychosisCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemEidolonFusion()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_EIDOLON_FUSION );
+	// Типизированная сериализация: открытие UI слияния эйдолонов
+	auto packet = net::msg::serializeMcBeginItemEidolonFusionCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemPurify()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_PURIFY );
+	// Типизированная сериализация: открытие UI очистки
+	auto packet = net::msg::serializeMcBeginItemPurifyCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemFix()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_FIX );
+	// Типизированная сериализация: открытие UI починки
+	auto packet = net::msg::serializeMcBeginItemFixCmd();
 	ReflectINFof(this, packet);
-} 
+}
 
 void CCharacter::SynBeginItemEnergy()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_ITEM_ENERGY );
+	// Типизированная сериализация: открытие UI зарядки
+	auto packet = net::msg::serializeMcBeginItemEnergyCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginGMSend()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_GM_SEND );
+	// Типизированная сериализация: открытие UI отправки GM-почты
+	auto packet = net::msg::serializeMcGmSendCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginGMRecv(DWORD dwNpcID)
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_GM_RECV );
-	WRITE_LONG(packet, dwNpcID);
+	// Типизированная сериализация: открытие UI получения GM-почты
+	auto packet = net::msg::serialize(net::msg::McGmRecvMessage{static_cast<int64_t>(dwNpcID)});
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginGetStone()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_GET_STONE );
+	// Типизированная сериализация: открытие UI добычи камней
+	auto packet = net::msg::serializeMcBeginGetStoneCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginTiger()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD( packet, CMD_MC_BEGIN_TIGER );
+	// Типизированная сериализация: открытие UI тигрового автомата
+	auto packet = net::msg::serializeMcBeginTigerCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynAppendLook()
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_APPEND_LOOK);
-	WRITE_LONG(packet, GetID());
-	if (WriteAppendLook(m_CKitbag, packet))
+	net::msg::McAppendLookMessage msg;
+	msg.worldId = GetID();
+	bool bHasData = false;
+	for (int i = 0; i < defESPE_KBGRID_NUM; i++)
+	{
+		SItemGrid *pGridCont = m_CKitbag.GetGridContByID(i);
+		if (!bHasData && m_CKitbag.IsSingleChange(i))
+			bHasData = true;
+		if (!pGridCont || !ItemIsAppendLook(pGridCont))
+			msg.slots[i].lookId = 0;
+		else
+		{
+			msg.slots[i].lookId = pGridCont->sID;
+			msg.slots[i].valid = pGridCont->IsValid() ? 1 : 0;
+		}
+	}
+	if (bHasData)
+	{
+		auto packet = net::msg::serialize(msg);
 		NotiChgToEyeshot(packet);
+	}
 }
 
 void CCharacter::SynItemUseSuc(Short sItemID)
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_ITEM_USE_SUC);
-	WRITE_LONG(packet, GetID());
-	WRITE_SHORT(packet, sItemID);
+	// Типизированная сериализация: успешное использование предмета
+	auto packet = net::msg::serialize(net::msg::McItemUseSuccMessage{GetID(), static_cast<int64_t>(sItemID)});
 	NotiChgToEyeshot(packet);
 }
 
 void CCharacter::SynKitbagCapacity(void)
 {
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_KITBAG_CAPACITY);
-	WRITE_LONG(packet, GetID());
-	WRITE_SHORT(packet, m_CKitbag.GetCapacity());
+	// Типизированная сериализация: вместимость инвентаря
+	auto packet = net::msg::serialize(net::msg::McKitbagCapacityMessage{GetID(), static_cast<int64_t>(m_CKitbag.GetCapacity())});
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynEspeItem(void)
 {
-	
 	Short	sEspeGridID = 1;
 	SItemGrid *pGrid = m_CKitbag.GetGridContByID(sEspeGridID);
 	if (pGrid)
 	{
 		CItemRecord* pItem = GetItemRecordInfo(pGrid->sID);
-		if(pItem && pItem->sType == enumItemTypePet) // �������
+		if(pItem && pItem->sType == enumItemTypePet)
 			if (m_CKitbag.IsSingleChange(sEspeGridID))
 			{
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_ESPE_ITEM);
-				WRITE_LONG(packet, GetID());
-				WRITE_CHAR(packet, 1);
-				WRITE_SHORT(packet, sEspeGridID);
-				WRITE_SHORT(packet, pGrid->sEndure[0]);
-				WRITE_SHORT(packet, pGrid->sEnergy[0]);
-				WRITE_CHAR(packet, pGrid->bItemTradable);
-				WRITE_LONG(packet, pGrid->expiration);
-
+				// Типизированная сериализация: синхронизация специального предмета
+				net::msg::McEspeItemMessage msg;
+				msg.worldId = GetID();
+				net::msg::EspeItemEntry entry;
+				entry.position = sEspeGridID;
+				entry.endure = pGrid->sEndure[0];
+				entry.energy = pGrid->sEnergy[0];
+				entry.tradable = pGrid->bItemTradable;
+				entry.expiration = pGrid->expiration;
+				msg.items.push_back(entry);
+				auto packet = net::msg::serialize(msg);
 				ReflectINFof(this, packet);
 			}
 	}
-	
 }
 
 void CCharacter::SynVolunteerState(BOOL bState)
@@ -6832,9 +6746,8 @@ void CCharacter::SynVolunteerState(BOOL bState)
 	if (!GetPlayer())
 		return;
 	char chState = (bState ? 1 : 0);
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_VOLUNTER_STATE);
-	WRITE_CHAR(packet, chState);
+	// Типизированная сериализация: статус волонтёра
+	auto packet = net::msg::serialize(net::msg::McVolunteerStateMessage{static_cast<int64_t>(chState)});
 	ReflectINFof(this, packet);
 }
 
@@ -6842,9 +6755,8 @@ void CCharacter::SynTigerString(cChar *szString)
 {
 	if (!GetPlayer())
 		return;
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_TIGER_STOP);
-	WRITE_STRING(packet, szString);
+	// Типизированная сериализация: остановка тигрового автомата
+	auto packet = net::msg::serialize(net::msg::McTigerStopMessage{szString});
 	ReflectINFof(this, packet);
 }
 
@@ -6916,12 +6828,12 @@ CCharacter* CCharacter::GetBoat()
 	return GetPlayer()->GetMakingBoat(); 
 }
 
-BOOL CCharacter::ViewItemInfo( RPACKET pk )
+BOOL CCharacter::ViewItemInfo( const net::msg::CmActionViewItemData& msg )
 {
-	BYTE byType = READ_CHAR( pk );
+	BYTE byType = static_cast<BYTE>(msg.viewType);
 	if( byType == mission::VIEW_CHAR_BAG )
 	{
-		Short	sGridID = READ_SHORT(pk);
+		Short	sGridID = static_cast<Short>(msg.param);
 		CItemRecord* pItem = (CItemRecord*)GetItemRecordInfo( m_CKitbag.GetID( sGridID ) );
 		if( pItem == NULL )
 		{
@@ -6937,7 +6849,7 @@ BOOL CCharacter::ViewItemInfo( RPACKET pk )
 	}
 	else 
 	{
-		BYTE byIndex = (BYTE)READ_SHORT( pk );
+		BYTE byIndex = static_cast<BYTE>(msg.param);
 		USHORT sItemID;
 		DWORD dwBoatID;
 		CCharacter* pOwner = NULL;
@@ -7188,12 +7100,10 @@ void CCharacter::AddMasterCredit(long lCredit)
 	if(!pMaster)
 	{
 		//game_db.AddCreditByDBID(lMasterID, lCredit);
-		WPACKET WtPk	=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_ADDCREDIT);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_LONG(WtPk, lMasterID);
-		WRITE_LONG(WtPk, lCredit);
-		ReflectINFof(this, WtPk);//ͨ��
+		auto WtPk = net::msg::serialize(net::msg::MmAddCreditMessage{
+			static_cast<int64_t>(lMasterID), static_cast<int64_t>(lCredit)
+		});
+		ReflectINFof(this, WtPk);
 		return;
 	}
 
@@ -7279,20 +7189,18 @@ void CCharacter::CheatRun(DWORD dwCurTime)
 				buf[4] = '\0';
 				m_sCheatX.Xnum = buf;
 
-				WPACKET WtPk = GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_CHEAT_CHECK);
-				WRITE_SHORT(WtPk, 4);
+				net::msg::McCheatCheckMessage msg;
+				msg.count = 4;
 				for(int i = 0; i < 4; i++)
 				{
 					CPicture *pPic = g_pGameApp->m_PicSet->GetPicture(buf[i]);
+					net::msg::CheatPicture pic;
 					uInt nSize = pPic->GetSize();
-
-					WRITE_SHORT(WtPk, nSize);
 					for(int j = 0; (uInt)j < nSize; j++)
-					{
-						WRITE_CHAR(WtPk, pPic->GetImgByte(j));
-					}
+						pic.bytes.push_back(pPic->GetImgByte(j));
+					msg.pictures.push_back(pic);
 				}
+				auto WtPk = net::msg::serialize(msg);
 				ReflectINFof(this, WtPk);
 
 				m_sCheatX.dwInterval = GetCheatInterval(1);
@@ -7557,19 +7465,14 @@ bool		Strin2ChaExtendAttr(CCharacter *pCCha, std::string &strAttr)
 void CCharacter::SetIMP(int impVal, bool sync) {
 	chaIMP = impVal < 2000000 ? impVal : 2000000;
 	if (sync) {
-		WPACKET WtPk = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_UPDATEIMP);
-		WRITE_LONG(WtPk, chaIMP);
+		// Типизированная сериализация: обновление IMP
+		auto WtPk = net::msg::serialize(net::msg::McUpdateImpMessage{static_cast<int64_t>(chaIMP)});
 		ReflectINFof(this, WtPk);
-
 	}
-
 }
 
-void CCharacter::ItemUnlockRequest(RPACKET rpk) 
+void CCharacter::ItemUnlockRequest(const net::msg::CmItemUnlockAskMessage& msg)
 {
-	auto wpk = GETWPACKET();
-	WRITE_CMD(wpk, CMD_MC_ITEM_UNLOCK_ASR);
 	CCharacter* pMainCha = GetPlyMainCha();
 	if (!pMainCha)
 	{
@@ -7578,14 +7481,14 @@ void CCharacter::ItemUnlockRequest(RPACKET rpk)
 
 	CPlayer* pCPly = GetPlayer();
 
-	if (pMainCha->m_CKitbag.IsLock() || pMainCha->m_CKitbag.IsPwdLocked() || 
+	if (pMainCha->m_CKitbag.IsLock() || pMainCha->m_CKitbag.IsPwdLocked() ||
 		pCPly->GetStallData() || pCPly->GetMainCha()->GetTradeData()) {
 		SystemNotice("Bag is currently locked.");
 		return;
 	}
 
 	//NOTE: Sanitize password?
-	auto input_password = rpk.ReadString();
+	const auto& input_password = msg.password;
 	if (input_password.empty())
 	{
 		return;
@@ -7597,33 +7500,28 @@ void CCharacter::ItemUnlockRequest(RPACKET rpk)
 	const auto empty_password = database_password[0] == '\0';
 	if (empty_password || strcmp(input_password.c_str(), database_password))
 	{
-		WRITE_CHAR(wpk, 2);
+		auto wpk = net::msg::serialize(net::msg::McItemUnlockAsrMessage{2});
 		pMainCha->PopupNotice(RES_STRING(GM_CHARACTERPRL_CPP_00010));
 		return;
 	}
 
 
-	const auto chPosType = rpk.ReadInt64();
+	const auto chPosType = static_cast<dbc::Char>(msg.slot);
 	if (SItemGrid* item = pMainCha->m_CKitbag.GetGridContByID(chPosType); item) {
 		if (CItemRecord* pCItemRec = GetItemRecordInfo(item->sID); pCItemRec) {
 			if (CPlayer* pPlayer = pMainCha->GetPlayer(); pPlayer)
 			{
-				//if(	game_db.UnlockItem( item, pPlayer->GetDBChaId() )  )
-				//{
-				WRITE_CHAR(wpk, 1);
 				item->dwDBID = 0;
-				//}else{
-				//	WRITE_CHAR(	rpk,	0	); 
-				//}
 				this->m_CKitbag.SetChangeFlag();
 				this->SynKitbagNew(enumSYN_KITBAG_SWITCH);
+				auto wpk = net::msg::serialize(net::msg::McItemUnlockAsrMessage{1});
 				this->ReflectINFof(pMainCha, wpk);
 				return;
 			}
 		}
 	}
 
-	WRITE_CHAR(wpk, 0);
+	auto wpk = net::msg::serialize(net::msg::McItemUnlockAsrMessage{0});
 	pMainCha->ReflectINFof(pMainCha, wpk);
 }
 

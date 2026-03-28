@@ -52,7 +52,7 @@ namespace mission
 		return FALSE;
 	}
 
-	HRESULT CNpc::MsgProc( CCharacter& character, RPACKET pk )
+	HRESULT CNpc::MsgProc( CCharacter& character, net::RPacket& pk )
 	{
 		return EN_OK;
 	}
@@ -193,7 +193,7 @@ namespace mission
 		m_ID = g_pGameApp->m_Ident.GetID();
 		Char szLogName[defLOG_NAME_LEN] = "";
 		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
-		m_CLog.SetLogName(szLogName);
+		SetLogName(szLogName);
 
 		m_pCChaRecord = (CChaRecord*)&recChar;
 		m_cat = (short)m_pCChaRecord->lID;
@@ -217,7 +217,7 @@ namespace mission
 		return strcmp( szMap, GetSubMap()->GetName() ) == 0 && m_sNpcID == sID;
 	}
 
-	HRESULT CTalkNpc::MsgProc( CCharacter& character, RPACKET packet )
+	HRESULT CTalkNpc::MsgProc( CCharacter& character, net::RPacket& packet )
 	{
 		//if( m_sScriptID == INVALID_SCRIPT_NPCHANDLE )
 		//	return EN_OK;
@@ -518,12 +518,12 @@ namespace mission
 
 	}
 
-	BOOL CTradeNpc::Sale( CCharacter& character, RPACKET packet )
+	BOOL CTradeNpc::Sale( CCharacter& character, net::RPacket& packet )
 	{
 		return TRUE;
 	}
 
-	BOOL CTradeNpc::Buy( CCharacter& character, RPACKET packet )
+	BOOL CTradeNpc::Buy( CCharacter& character, net::RPacket& packet )
 	{
 		return TRUE;
 	}

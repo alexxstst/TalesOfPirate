@@ -8,6 +8,7 @@
 #include "Player.h"
 #include "GameDB.h"
 #include "lua_gamectrl.h"
+#include "CommandMessages.h"
 //---------------------------------------------------------
 using namespace std;
 
@@ -219,13 +220,10 @@ namespace mission
 			return FALSE;
 		}
 
-		// ���ͽ�������
-		WPACKET packet = GETWPACKET();
-        WRITE_CMD(packet, CMD_MC_CHARTRADE);
-        WRITE_SHORT(packet, CMD_MC_CHARTRADE_REQUEST);
-		WRITE_CHAR(packet, byType);
-		WRITE_LONG(packet, character.GetID());
-
+		// Типизированная сериализация: запрос на торговлю персонажей
+		auto packet = net::msg::serialize(net::msg::McCharTradeRequestMessage{
+			CMD_MC_CHARTRADE_REQUEST, static_cast<int64_t>(byType), character.GetID()
+		});
 		pChar->ReflectINFof( pChar, packet );
 		return TRUE;
 	}
@@ -470,13 +468,8 @@ namespace mission
 		ReqBag.Lock();
 		AcpBag.Lock();
 
-		// ���ͽ�ɫ����ҳ����
-		WPACKET packet = GETWPACKET();
-        WRITE_CMD(packet, CMD_MC_CHARTRADE);
-        WRITE_SHORT(packet, CMD_MC_CHARTRADE_PAGE);
-		WRITE_CHAR(packet, byType);
-        WRITE_LONG(packet, pMain->GetID());
-        WRITE_LONG(packet, pChar->GetID());
+		// Типизированная сериализация: открытие страницы торговли
+		auto packet = net::msg::serialize(net::msg::McCharTradePageMessage{CMD_MC_CHARTRADE_PAGE, (int64_t)byType, (int64_t)pMain->GetID(), (int64_t)pChar->GetID()});
 		pChar->ReflectINFof( pMain, packet );
 		pMain->ReflectINFof( pMain, packet );
 		return TRUE;
@@ -554,16 +547,14 @@ namespace mission
 		pTradeData1->pAccept->SetTradeData( NULL );
 		pTradeData1->pRequest->SetTradeData( NULL );
 
-		// ȡ����ɫ����
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_CHARTRADE );
-		WRITE_SHORT(packet, CMD_MC_CHARTRADE_CANCEL );
-		WRITE_LONG(packet, pMain->GetID() );
-
+		// Типизированная сериализация: отмена торговли
+		auto packet = net::msg::serialize(net::msg::McCharTradeCancelMessage{
+			CMD_MC_CHARTRADE_CANCEL, pMain->GetID()
+		});
 		pTradeData1->pAccept->ReflectINFof( pMain, packet );
 		pTradeData1->pRequest->ReflectINFof( pMain, packet );
 
-		// ȡ����ɫ����״̬
+		// Отмена состояния торговли персонажей
 		pTradeData1->pAccept->TradeAction( FALSE );
 		pTradeData1->pRequest->TradeAction( FALSE );
 
@@ -604,26 +595,24 @@ namespace mission
 
 		if( pTradeData->pRequest == pMain )
 		{
-			// ȡ����ɫ����
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_CHARTRADE );
-			WRITE_SHORT(packet, CMD_MC_CHARTRADE_CANCEL );
-			WRITE_LONG(packet, pMain->GetID() );
+			// Типизированная сериализация: отмена торговли (запрашивающий ушёл)
+			auto packet = net::msg::serialize(net::msg::McCharTradeCancelMessage{
+				CMD_MC_CHARTRADE_CANCEL, pMain->GetID()
+			});
 			pTradeData->pAccept->ReflectINFof( pMain, packet );
 			pTradeData->pAccept->SetTradeData( NULL );
 
-			// ���������λ����״̬
+			// Очистка состояния инвентаря
 			pTradeData->pAccept->m_CKitbag.UnLock();
 			pTradeData->pAccept->TradeAction( FALSE );
 			ResetItemState( *pTradeData->pAccept, *pTradeData );
 		}
 		else if( pTradeData->pAccept == pMain )
 		{
-			// ȡ����ɫ����
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_CHARTRADE );
-			WRITE_SHORT(packet, CMD_MC_CHARTRADE_CANCEL );
-			WRITE_LONG(packet, pMain->GetID() );
+			// Типизированная сериализация: отмена торговли (принимающий ушёл)
+			auto packet = net::msg::serialize(net::msg::McCharTradeCancelMessage{
+				CMD_MC_CHARTRADE_CANCEL, pMain->GetID()
+			});
 			pTradeData->pRequest->ReflectINFof( pMain, packet );
 			pTradeData->pRequest->SetTradeData( NULL );
 			
@@ -718,12 +707,11 @@ namespace mission
 			return FALSE;
 		}
 
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_CHARTRADE);
-		WRITE_SHORT(packet, CMD_MC_CHARTRADE_MONEY);
-		WRITE_LONG(packet, pMain->GetID());
-		WRITE_LONG(packet, pItemData->dwIMP);
-		WRITE_CHAR(packet, 1);
+		// Типизированная сериализация: обновление IMP в торговле
+		auto packet = net::msg::serialize(net::msg::McCharTradeMoneyMessage{
+			CMD_MC_CHARTRADE_MONEY, pMain->GetID(),
+			static_cast<int64_t>(pItemData->dwIMP), 1
+		});
 		pTradeData->pAccept->ReflectINFof(pMain, packet);
 		pTradeData->pRequest->ReflectINFof(pMain, packet);
 		return TRUE;
@@ -799,18 +787,17 @@ namespace mission
 			return FALSE;
 		}
 
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_CHARTRADE );
-		WRITE_SHORT(packet, CMD_MC_CHARTRADE_MONEY );
-		WRITE_LONG(packet, pMain->GetID() );
-		WRITE_LONG(packet, pItemData->dwMoney );
-		WRITE_CHAR(packet, 0);
+		// Типизированная сериализация: обновление денег в торговле
+		auto packet = net::msg::serialize(net::msg::McCharTradeMoneyMessage{
+			CMD_MC_CHARTRADE_MONEY, pMain->GetID(),
+			static_cast<int64_t>(pItemData->dwMoney), 0
+		});
 		pTradeData->pAccept->ReflectINFof( pMain, packet );
 		pTradeData->pRequest->ReflectINFof( pMain, packet );
 		return TRUE;
 	}
 
-	// ���û���ȡ����Ʒ��������
+	// Пользователь перетаскивает предмет для торговли
 	BOOL CTradeSystem::AddItem( BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, BYTE byIndex, BYTE byItemIndex, BYTE byCount )
 	{
 		CCharacter* pMain = &character;
@@ -931,14 +918,15 @@ namespace mission
 				return FALSE;
 			}
 
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_CHARTRADE );
-			WRITE_SHORT(packet, CMD_MC_CHARTRADE_ITEM );
-			WRITE_LONG(packet, pMain->GetID() );
-			WRITE_CHAR(packet, TRADE_DRAGTO_ITEM );
-			WRITE_CHAR(packet, pItemData->ItemArray[byIndex].byIndex );
-			WRITE_CHAR(packet, byIndex );
-			WRITE_CHAR(packet, byCount );
+			auto packet = net::msg::serialize(net::msg::McCharTradeItemMessage{
+				pMain->GetID(), TRADE_DRAGTO_ITEM,
+				net::msg::McCharTradeItemRemoveData{
+					static_cast<int64_t>(pItemData->ItemArray[byIndex].byIndex),
+					static_cast<int64_t>(byIndex), static_cast<int64_t>(byCount)
+				}
+			});
+
+
 
 			// ��������������Ʒ�״̬
 			Bag.Enable( pItemData->ItemArray[byIndex].byIndex );
@@ -948,7 +936,7 @@ namespace mission
 			pItemData->ItemArray[byIndex].byIndex = 0;
 			pItemData->byItemCount--;
 
-			pTradeData->pRequest->ReflectINFof( pMain, packet );
+						pTradeData->pRequest->ReflectINFof( pMain, packet );
 			pTradeData->pAccept->ReflectINFof( pMain, packet );
 		}
 		else if( byOpType == TRADE_DRAGTO_TRADE )
@@ -1094,84 +1082,74 @@ namespace mission
 			// ��ֹ��Ʒ��λ�״̬
 			Bag.Disable( byItemIndex );
 
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_CHARTRADE );
-			WRITE_SHORT(packet, CMD_MC_CHARTRADE_ITEM );
-			WRITE_LONG(packet, pMain->GetID() );
-			WRITE_CHAR(packet, TRADE_DRAGTO_TRADE );
-			WRITE_SHORT(packet, pItemData->ItemArray[byIndex].sItemID );
-			WRITE_CHAR(packet, pItemData->ItemArray[byIndex].byIndex );
-			WRITE_CHAR(packet, byIndex );
-			WRITE_CHAR(packet, byCount );
-			WRITE_SHORT(packet, pItem->sType );
-
+			net::msg::McCharTradeItemAddData addData;
+			addData.itemId = pItemData->ItemArray[byIndex].sItemID;
+			addData.bagIndex = pItemData->ItemArray[byIndex].byIndex;
+			addData.tradeIndex = byIndex;
+			addData.count = byCount;
+			addData.itemType = pItem->sType;
 			if( pItem->sType == enumItemTypeBoat )
 			{
+				net::msg::TradeBoatData boat;
 				CCharacter* pBoat = pMain->GetPlayer()->GetBoat( (DWORD)Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
 				if( pBoat )
 				{
-					WRITE_CHAR( packet, 1 );
-					WRITE_STRING( packet, pBoat->GetName() );
-					WRITE_SHORT( packet, (USHORT)pBoat->getAttr( ATTR_BOAT_SHIP ) );
-					WRITE_SHORT( packet, (USHORT)pBoat->getAttr( ATTR_LV ) );
-
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_CEXP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_HP ) );
-
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMXHP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_SP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMXSP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMNATK ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMXATK ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BDEF ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMSPD ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BASPD ) );
-					WRITE_CHAR( packet, (BYTE)pBoat->m_CKitbag.GetUseGridNum() );
-					WRITE_CHAR( packet, (BYTE)pBoat->m_CKitbag.GetCapacity() );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BOAT_PRICE ) );
+					boat.hasBoat = true;
+					boat.name = pBoat->GetName();
+					boat.ship = (USHORT)pBoat->getAttr( ATTR_BOAT_SHIP );
+					boat.lv = (USHORT)pBoat->getAttr( ATTR_LV );
+					boat.cexp = (long)pBoat->getAttr( ATTR_CEXP );
+					boat.hp = (long)pBoat->getAttr( ATTR_HP );
+					boat.mxhp = (long)pBoat->getAttr( ATTR_BMXHP );
+					boat.sp = (long)pBoat->getAttr( ATTR_SP );
+					boat.mxsp = (long)pBoat->getAttr( ATTR_BMXSP );
+					boat.mnatk = (long)pBoat->getAttr( ATTR_BMNATK );
+					boat.mxatk = (long)pBoat->getAttr( ATTR_BMXATK );
+					boat.def = (long)pBoat->getAttr( ATTR_BDEF );
+					boat.mspd = (long)pBoat->getAttr( ATTR_BMSPD );
+					boat.aspd = (long)pBoat->getAttr( ATTR_BASPD );
+					boat.useGridNum = (BYTE)pBoat->m_CKitbag.GetUseGridNum();
+					boat.capacity = (BYTE)pBoat->m_CKitbag.GetCapacity();
+					boat.price = (long)pBoat->getAttr( ATTR_BOAT_PRICE );
 				}
-				else
-				{
-					WRITE_CHAR( packet, 0 );
-				}
+				addData.equipData = std::move(boat);
 			}
 			else
 			{
-				// �õ��ߵ�ʵ������
+				net::msg::TradeItemData item;
 				SItemGrid* pGridCont = Bag.GetGridContByID( byItemIndex );
 				if( !pGridCont )
 				{
-					//pMain->SystemNotice( "ָ������Ʒ��λ��Ʒʵ����ϢΪ�գ�ID[%d]", byItemIndex );
 					pMain->SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00057), byItemIndex );
 					return FALSE;
 				}
-
-				WRITE_SHORT( packet, pGridCont->sEndure[0] );
-				WRITE_SHORT( packet, pGridCont->sEndure[1] );
-				WRITE_SHORT( packet, pGridCont->sEnergy[0] );
-				WRITE_SHORT( packet, pGridCont->sEnergy[1] );
-				WRITE_CHAR( packet, pGridCont->chForgeLv );
-				WRITE_CHAR( packet, pGridCont->IsValid() ? 1 : 0 );
-				WRITE_CHAR(packet, pGridCont->bItemTradable);
-				WRITE_LONG(packet, pGridCont->expiration);
-
-				WRITE_LONG(packet, pGridCont->GetDBParam(enumITEMDBP_FORGE));
-				WRITE_LONG(packet, pGridCont->GetDBParam(enumITEMDBP_INST_ID));
-				if( pGridCont->IsInstAttrValid() ) // ����ʵ������
+				item.endure0 = pGridCont->sEndure[0];
+				item.endure1 = pGridCont->sEndure[1];
+				item.energy0 = pGridCont->sEnergy[0];
+				item.energy1 = pGridCont->sEnergy[1];
+				item.forgeLv = pGridCont->chForgeLv;
+				item.valid = pGridCont->IsValid() ? 1 : 0;
+				item.tradable = pGridCont->bItemTradable;
+				item.expiration = pGridCont->expiration;
+				item.forgeParam = pGridCont->GetDBParam(enumITEMDBP_FORGE);
+				item.instId = pGridCont->GetDBParam(enumITEMDBP_INST_ID);
+				if( pGridCont->IsInstAttrValid() )
 				{
-					WRITE_CHAR( packet, 1 );
+					item.hasInstAttr = true;
 					for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 					{
-						WRITE_SHORT(packet, pGridCont->sInstAttr[j][0]);
-						WRITE_SHORT(packet, pGridCont->sInstAttr[j][1]);
+						item.instAttr[j][0] = pGridCont->sInstAttr[j][0];
+						item.instAttr[j][1] = pGridCont->sInstAttr[j][1];
 					}
 				}
-				else
-				{
-					WRITE_CHAR( packet, 0 ); // ������ʵ������
-				}
+				addData.equipData = std::move(item);
 			}
 
+			net::msg::McCharTradeItemMessage msg;
+			msg.mainChaId = pMain->GetID();
+			msg.opType = TRADE_DRAGTO_TRADE;
+			msg.data = std::move(addData);
+			auto packet = net::msg::serialize(msg);
 			pTradeData->pRequest->ReflectINFof( pMain, packet );
 			pTradeData->pAccept->ReflectINFof( pMain, packet );
 		}
@@ -1255,11 +1233,10 @@ namespace mission
 			return FALSE;
 		}
 	
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_CHARTRADE );
-		WRITE_SHORT(packet, CMD_MC_CHARTRADE_VALIDATEDATA );
-		WRITE_LONG(packet, pMain->GetID() );
-
+		// Типизированная сериализация: подтверждение данных торговли
+		auto packet = net::msg::serialize(net::msg::McCharTradeValidateDataMessage{
+			CMD_MC_CHARTRADE_VALIDATEDATA, pMain->GetID()
+		});
 		if( pMain == pTradeData->pRequest )
 		{
 			pTradeData->pAccept->ReflectINFof( pMain, packet );
@@ -1458,17 +1435,16 @@ namespace mission
 				pTradeData->pAccept->TradeAction( FALSE );
 				pTradeData->pRequest->TradeAction( FALSE );
 
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_CHARTRADE );
-				WRITE_SHORT(packet, CMD_MC_CHARTRADE_RESULT );
-				WRITE_CHAR(packet, TRADE_FAILER );
-
+				// Типизированная сериализация: результат торговли (неудача — недостаточно места)
+				auto packet = net::msg::serialize(net::msg::McCharTradeResultMessage{
+					CMD_MC_CHARTRADE_RESULT, TRADE_FAILER
+				});
 				pTradeData->pAccept->ReflectINFof( pMain, packet );
 				pTradeData->pRequest->ReflectINFof( pMain, packet );
 				return FALSE;
 			}
 
-			// ���߽��ײ���
+			// Проверка предметов торговли
 			for( int i = 0; i < ROLE_MAXNUM_TRADEDATA; i++ )
 			{
 				// 
@@ -1970,12 +1946,10 @@ namespace mission
 				pAccept->TradeAction( FALSE );
 				pRequest->TradeAction( FALSE );
 
-				// ��ɫ���׳ɹ�
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_CHARTRADE );
-				WRITE_SHORT(packet, CMD_MC_CHARTRADE_RESULT );
-				WRITE_CHAR(packet, TRADE_FAILER );
-
+				// Типизированная сериализация: результат торговли (неудача — ошибка сохранения)
+				auto packet = net::msg::serialize(net::msg::McCharTradeResultMessage{
+					CMD_MC_CHARTRADE_RESULT, TRADE_FAILER
+				});
 				pAccept->ReflectINFof( pMain, packet );
 				pRequest->ReflectINFof( pMain, packet );
 
@@ -2077,14 +2051,11 @@ namespace mission
 			pAccept->SynKitbagNew( enumSYN_KITBAG_TRADE );
 
 			if (pTradeData->AcpTradeData.dwIMP > 0 || pTradeData->ReqTradeData.dwIMP > 0){
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_UPDATEIMP);
-				WRITE_LONG(packet, pAccept->GetIMP());
+				// Типизированная сериализация: обновление IMP после торговли
+				auto packet = net::msg::serialize(net::msg::McUpdateImpMessage{static_cast<int64_t>(pAccept->GetIMP())});
 				pAccept->ReflectINFof(pMain, packet);
 
-				WPACKET packet2 = GETWPACKET();
-				WRITE_CMD(packet2, CMD_MC_UPDATEIMP);
-				WRITE_LONG(packet2, pRequest->GetIMP());
+				auto packet2 = net::msg::serialize(net::msg::McUpdateImpMessage{static_cast<int64_t>(pRequest->GetIMP())});
 				pRequest->ReflectINFof(pMain, packet2);
 			}
 
@@ -2092,21 +2063,19 @@ namespace mission
 			pAccept->TradeAction( FALSE );
 			pRequest->TradeAction( FALSE );
 
-			// ��ɫ���׳ɹ�
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_CHARTRADE );
-			WRITE_SHORT(packet, CMD_MC_CHARTRADE_RESULT );
-			WRITE_CHAR(packet, TRADE_SUCCESS );
-			
+			// Типизированная сериализация: результат торговли (успех)
+			auto packet = net::msg::serialize(net::msg::McCharTradeResultMessage{
+				CMD_MC_CHARTRADE_RESULT, TRADE_SUCCESS
+			});
 			pAccept->ReflectINFof( pMain, packet );
 			pRequest->ReflectINFof( pMain, packet );
 		}
 		else
 		{
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_CHARTRADE );
-			WRITE_SHORT(packet, CMD_MC_CHARTRADE_VALIDATE );
-			WRITE_LONG(packet, pMain->GetID() );
+			// Типизированная сериализация: подтверждение данных торговли (вторая сторона)
+			auto packet = net::msg::serialize(net::msg::McCharTradeValidateDataMessage{
+				CMD_MC_CHARTRADE_VALIDATE, pMain->GetID()
+			});
 			if( pMain == pTradeData->pRequest )
 			{
 				pTradeData->pAccept->ReflectINFof( pMain, packet );
@@ -2287,9 +2256,8 @@ namespace mission
 			//pCha->SystemNotice("������һ��������δ������!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00077));
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал покупки в магазине
+			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
 			return false;
@@ -2301,9 +2269,8 @@ namespace mission
 			//pCha->SystemNotice("����Ʒ�ѳ���!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00078));
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал покупки в магазине
+			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
 			return false;
@@ -2323,9 +2290,8 @@ namespace mission
 					//pCha->SystemNotice("ֻ�а׽��Ա�����������Ʒ!");
 					pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00080));
 
-					WPACKET WtPk	= GETWPACKET();
-					WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-					WRITE_CHAR(WtPk, 0);
+					// Типизированная сериализация: провал покупки в магазине
+					auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 					pCha->ReflectINFof(pCha, WtPk);
 
 					return false;
@@ -2343,9 +2309,8 @@ namespace mission
 				//pCha->SystemNotice( "Request: �������Ʒ�������ͣ�ID = %d", pItem->itemID );
 				pCha->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00081), pItem->itemID );
 
-				WPACKET WtPk	= GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-				WRITE_CHAR(WtPk, 0);
+				// Типизированная сериализация: провал покупки в магазине
+				auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
 
 				return false;
@@ -2388,9 +2353,8 @@ namespace mission
 			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number [ID:{}] repeat!", pNm->msgHead.msgOrder);
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал покупки в магазине
+			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
@@ -2406,15 +2370,14 @@ namespace mission
 		}
 		else
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал покупки в магазине
+			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 			//pCha->SystemNotice("�̳ǽ���ʧ��!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00084));
 
 			//LG("Store_msg", "Request: InfoServer����ʧ��!\n");
-		
+
 		ToLogService("store", "Request: InfoServer send failed!");}
 
 		SAFE_DELETE(pChaInfo);
@@ -2564,13 +2527,8 @@ namespace mission
 								pChaOut = pCPlayer->GetMainCha();
 								if(pChaOut)
 								{
-									WPACKET WtPk	=GETWPACKET();
-									WRITE_CMD(WtPk, CMD_MM_STORE_BUY);
-									WRITE_LONG(WtPk, pChaOut->GetID());
-									WRITE_LONG(WtPk, lChaID);
-									WRITE_LONG(WtPk, lComID);
-									//WRITE_LONG(WtPk, ChaInfo->moBean);
-									WRITE_LONG(WtPk, ChaInfo->rplMoney);
+									// Типизированная сериализация: ретрансляция покупки магазина (кросс-серверная)
+									auto WtPk = net::msg::serialize(net::msg::MmStoreBuyRelayMessage{(int64_t)pChaOut->GetID(), (int64_t)lChaID, (int64_t)lComID, (int64_t)ChaInfo->rplMoney});
 									pChaOut->ReflectINFof(pChaOut, WtPk);//ͨ��
 
 									bFound = true;
@@ -2592,11 +2550,8 @@ namespace mission
 				ToLogService("store", "��ɫ[{}][ID:{}]��������Ʒ[ID:{}], �ӵ��߲����ɹ�!", pCha->GetName(), lChaID, lComID);
 
 				//֪ͨ��ҽ��׳ɹ�
-				WPACKET WtPk	= GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-				WRITE_CHAR(WtPk, 1);
-				WRITE_LONG(WtPk, ChaInfo->rplMoney);
-
+				// Типизированная сериализация: успех покупки в магазине
+				auto WtPk = net::msg::serializeMcStoreBuySucc(ChaInfo->rplMoney);
 				pCha->ReflectINFof(pCha, WtPk);
 			}
 			else
@@ -2637,9 +2592,8 @@ namespace mission
 			{
 				pCha->SetStoreBuy(false);
 
-				WPACKET WtPk	= GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_STORE_BUY_ASR);
-				WRITE_CHAR(WtPk, 0);
+				// Типизированная сериализация: провал покупки в магазине
+				auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
 
 				//pCha->SystemNotice("�̳ǽ���ʧ��!");
@@ -2716,12 +2670,9 @@ namespace mission
 		map< long, vector<SItemData> >::iterator map_it = m_ItemList.find(lClsID);
 		if(map_it != m_ItemList.end())
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_LIST_ASR);
+			// Типизированная сериализация: список товаров магазина
 			short sItemNum = 0;
 			short sPageNum = static_cast<short>((m_ItemList[lClsID].size() % sNum == 0) ? (m_ItemList[lClsID].size() / sNum) : (m_ItemList[lClsID].size() / sNum + 1));
-			WRITE_SHORT(WtPk, sPageNum);
-			WRITE_SHORT(WtPk, sPage);
 			if(sPage > sPageNum)
 			{
 				sItemNum = 0;
@@ -2736,7 +2687,10 @@ namespace mission
 			{
 				sItemNum = sNum;
 			}
-			WRITE_SHORT(WtPk, sItemNum);
+
+			net::msg::McStoreListAnswerMessage msg;
+			msg.pageTotal = sPageNum;
+			msg.pageCurrent = sPage;
 			vector<SItemData>::iterator it = m_ItemList[lClsID].begin();
 			int i;
 			for(i = 0; i < (sPage - 1) * sNum; i++)
@@ -2760,41 +2714,44 @@ namespace mission
 					}
 				}
 
-				WRITE_LONG(WtPk, (*it).store_head.comID);
-				WRITE_SEQ(WtPk, (*it).store_head.comName, uShort(strlen((*it).store_head.comName) + 1));
-				WRITE_LONG(WtPk, (*it).store_head.comPrice);
-				WRITE_SEQ(WtPk, (*it).store_head.comRemark, USHORT(strlen((*it).store_head.comRemark) + 1));
-				WRITE_CHAR(WtPk, (*it).store_head.isHot);
-				WRITE_LONG(WtPk, static_cast<long>((*it).store_head.comTime));
-				WRITE_LONG(WtPk, static_cast<long>((*it).store_head.comNumber));
-				WRITE_LONG(WtPk, l_time);
+				net::msg::StoreProductEntry product;
+				product.comId = (*it).store_head.comID;
+				product.comName = (*it).store_head.comName;
+				product.price = (*it).store_head.comPrice;
+				product.remark = (*it).store_head.comRemark;
+				product.isHot = (*it).store_head.isHot != 0;
+				product.time = static_cast<long>((*it).store_head.comTime);
+				product.quantity = static_cast<long>((*it).store_head.comNumber);
+				product.expire = l_time;
 
-				WRITE_SHORT(WtPk, (*it).store_head.itemNum);
 				int j;
 				for(j = 0; j < (*it).store_head.itemNum; j++)
 				{
-					WRITE_SHORT(WtPk, (*it).pItemArray[j].itemID);
-					WRITE_SHORT(WtPk, (*it).pItemArray[j].itemNum);
-					WRITE_SHORT(WtPk, (*it).pItemArray[j].itemFlute);
+					net::msg::StoreVariantEntry variant;
+					variant.itemId = (*it).pItemArray[j].itemID;
+					variant.itemNum = (*it).pItemArray[j].itemNum;
+					variant.flute = (*it).pItemArray[j].itemFlute;
 					int k;
 					for(k = 0; k < 5; k++)
 					{
-						WRITE_SHORT(WtPk, (*it).pItemArray[j].itemAttrID[k]);
-						WRITE_SHORT(WtPk, (*it).pItemArray[j].itemAttrVal[k]);
+						variant.attrs[k].attrId = (*it).pItemArray[j].itemAttrID[k];
+						variant.attrs[k].attrVal = (*it).pItemArray[j].itemAttrVal[k];
 					}
+					product.variants.push_back(variant);
 				}
-
+				msg.products.push_back(product);
 				it++;
 			}
+			auto WtPk = net::msg::serialize(msg);
 			pCha->ReflectINFof(pCha, WtPk);
 		}
 		else
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_LIST_ASR);
-			WRITE_SHORT(WtPk, 0);
-			WRITE_SHORT(WtPk, sPage);
-			WRITE_SHORT(WtPk, 0);
+			// Типизированная сериализация: пустой список товаров
+			net::msg::McStoreListAnswerMessage emptyMsg;
+			emptyMsg.pageTotal = 0;
+			emptyMsg.pageCurrent = sPage;
+			auto WtPk = net::msg::serialize(emptyMsg);
 			pCha->ReflectINFof(pCha, WtPk);
 		}
 		
@@ -2824,9 +2781,8 @@ namespace mission
 			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number[ID:{}]repeat!", pNm->msgHead.msgOrder);
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_VIP);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал VIP
+			auto WtPk = net::msg::serializeMcStoreVipFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
@@ -2839,9 +2795,8 @@ namespace mission
 		}
 		else
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_VIP);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал VIP
+			auto WtPk = net::msg::serializeMcStoreVipFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
 		//	LG("Store_msg", "RequestVIP: InfoServer����ʧ��!\n");
@@ -2881,13 +2836,8 @@ namespace mission
 			pCha->GetPlayer()->SetRplMoney(ChaInfo->rplMoney);
 			pCha->GetPlayer()->SetVipType(ChaInfo->vip);
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_VIP);
-			WRITE_CHAR(WtPk, 1);
-			WRITE_SHORT(WtPk, HIWORD(dwVipParam));
-			WRITE_SHORT(WtPk, LOWORD(dwVipParam));
-			WRITE_LONG(WtPk, ChaInfo->rplMoney);
-			WRITE_LONG(WtPk, ChaInfo->moBean);
+			// Типизированная сериализация: успех VIP
+			auto WtPk = net::msg::serialize(net::msg::McStoreVipMessage{1, (int64_t)HIWORD(dwVipParam), (int64_t)LOWORD(dwVipParam), (int64_t)ChaInfo->rplMoney, (int64_t)ChaInfo->moBean});
 			pCha->ReflectINFof(pCha, WtPk);
 			//pCha->PopupNotice("����׽��Ա�ɹ�!");
 			pCha->PopupNotice(RES_STRING(GM_CHARTRADE_CPP_00086));
@@ -2914,9 +2864,8 @@ namespace mission
 			if(pCha)
 			{
 				pCha->ResetStoreTime();
-				WPACKET WtPk	= GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_STORE_VIP);
-				WRITE_CHAR(WtPk, 0);
+				// Типизированная сериализация: провал VIP
+				auto WtPk = net::msg::serializeMcStoreVipFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
 				//pCha->PopupNotice("����׽��Աʧ��!");
 				pCha->PopupNotice(RES_STRING(GM_CHARTRADE_CPP_00087));
@@ -2953,9 +2902,8 @@ namespace mission
 			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number [ID:{}] repeat!", pNm->msgHead.msgOrder);
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_CHANGE_ASR);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал обмена
+			auto WtPk = net::msg::serializeMcStoreChangeFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
@@ -2968,9 +2916,8 @@ namespace mission
 		}
 		else
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_CHANGE_ASR);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал обмена
+			auto WtPk = net::msg::serializeMcStoreChangeFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
 			//LG("Store_msg", "RequestChange: InfoServer����ʧ��!\n");
@@ -3010,11 +2957,8 @@ namespace mission
 			pCha->GetPlayer()->SetRplMoney(ChaInfo->rplMoney);
 			pCha->GetPlayer()->SetVipType(ChaInfo->vip);
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_CHANGE_ASR);
-			WRITE_CHAR(WtPk, 1);
-			WRITE_LONG(WtPk, ChaInfo->moBean);
-			WRITE_LONG(WtPk, ChaInfo->rplMoney);
+			// Типизированная сериализация: успех обмена
+			auto WtPk = net::msg::serialize(net::msg::McStoreChangeAnswerMessage{1, (int64_t)ChaInfo->moBean, (int64_t)ChaInfo->rplMoney});
 			pCha->ReflectINFof(pCha, WtPk);
 			//LG("Store_data", "[%s]�һ����ҳɹ�!\n", pCha->GetName());
 			ToLogService("store", "[{}]change token succeed!", pCha->GetName());
@@ -3040,9 +2984,8 @@ namespace mission
 			if(pCha)
 			{
 				pCha->ResetStoreTime();
-				WPACKET WtPk	= GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_STORE_CHANGE_ASR);
-				WRITE_CHAR(WtPk, 0);
+				// Типизированная сериализация: провал обмена
+				auto WtPk = net::msg::serializeMcStoreChangeFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
 				//LG("Store_data", "[%s]�һ�����ʧ��!\n", pCha->GetName());
 				ToLogService("store", "[{}]change token failed!", pCha->GetName());
@@ -3203,9 +3146,8 @@ namespace mission
 			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number[ID:{}]repeat!", pNm->msgHead.msgOrder);
 
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_QUERY);
-			WRITE_CHAR(WtPk, 0);
+			// Типизированная сериализация: провал запроса истории
+			auto WtPk = net::msg::serializeMcStoreQueryFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
@@ -3218,9 +3160,8 @@ namespace mission
 		}
 		else
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_QUERY);
-			WRITE_LONG(WtPk, 0);
+			// Типизированная сериализация: провал запроса истории
+			auto WtPk = net::msg::serializeMcStoreQueryFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
 			//LG("Store_msg", "RequestRecord: InfoServer����ʧ��!\n");
@@ -3256,18 +3197,19 @@ namespace mission
 		
 		if(pCha)
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_QUERY);
-			WRITE_LONG(WtPk, lNum);
-			int i;
-			for(i = 0; i < lNum; i++)
+			// Типизированная сериализация: история покупок магазина
+			net::msg::McStoreHistoryMessage histMsg;
+			for(int i = 0; i < lNum; i++)
 			{
-				WRITE_SEQ(WtPk, ctime(&pRecord->tradeTime), USHORT(strlen(ctime(&pRecord->tradeTime)) + 1));
-				WRITE_LONG(WtPk, pRecord->comID);
-				WRITE_SEQ(WtPk, pRecord->comName, USHORT(strlen(pRecord->comName) + 1));
-				WRITE_LONG(WtPk, pRecord->tradeMoney);
+				net::msg::StoreHistoryEntry entry;
+				entry.time = ctime(&pRecord->tradeTime);
+				entry.itemId = pRecord->comID;
+				entry.name = pRecord->comName;
+				entry.money = pRecord->tradeMoney;
+				histMsg.records.push_back(entry);
 				pRecord++;
 			}
+			auto WtPk = net::msg::serialize(histMsg);
 			pCha->ReflectINFof(pCha, WtPk);
 			//LG("Store_data", "[%s]��ѯ���׼�¼�ɹ�!\n", pCha->GetName());
 			ToLogService("store", "[{}]query trade note succeed!", pCha->GetName());
@@ -3297,9 +3239,8 @@ namespace mission
 
 		if(pCha)
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_STORE_QUERY);
-			WRITE_LONG(WtPk, 0);
+			// Типизированная сериализация: провал запроса истории
+			auto WtPk = net::msg::serializeMcStoreQueryFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 			//LG("Store_data", "[%s]��ѯ���׼�¼ʧ��!\n", pCha->GetName());
 			ToLogService("store", "[{}]query trade note failed!", pCha->GetName());
@@ -3477,11 +3418,10 @@ namespace mission
 
 		if(pCha)
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_GM_MAIL);
-			WRITE_STRING(WtPk, pMi->title);
-			WRITE_STRING(WtPk, pMi->description);
-			WRITE_LONG(WtPk, static_cast<long>(pMi->sendTime));
+			// Типизированная сериализация: GM-почта (успех)
+			auto WtPk = net::msg::serialize(net::msg::McGmMailMessage{
+				pMi->title, pMi->description, static_cast<int64_t>(pMi->sendTime)
+			});
 			pCha->ReflectINFof(pCha, WtPk);
 			/*pCha->SystemNotice("GM�ʼ��ظ�: [����ID: %ld]!", pMi->id);
 			ToLogService("common", "[{}]����GM�ʼ��ɹ�!", pCha->GetName());*/
@@ -3514,12 +3454,10 @@ namespace mission
 
 		if(pCha)
 		{
-			WPACKET WtPk	= GETWPACKET();
-			WRITE_CMD(WtPk, CMD_MC_GM_MAIL);
-			//WRITE_STRING(WtPk, "GMû���ʼ�����!");
-			WRITE_STRING(WtPk, "GM do not have mail send to you!");
-			WRITE_STRING(WtPk, "");
-			WRITE_LONG(WtPk, 0);
+			// Типизированная сериализация: GM-почта (нет писем)
+			auto WtPk = net::msg::serialize(net::msg::McGmMailMessage{
+				"GM do not have mail send to you!", "", 0
+			});
 			pCha->ReflectINFof(pCha, WtPk);
 
 			//LG("Store_data", "[%s]����GM�ʼ�ʧ��!\n", pCha->GetName());
@@ -3729,31 +3667,34 @@ namespace mission
 			pCha->ForgeAction();
 			pCha->SetStoreEnable(true);
 		}
-		WPACKET WtPk	= GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_STORE_OPEN_ASR);
-		WRITE_CHAR(WtPk, bValid);	// �̳��Ƿ���
+		// Типизированная сериализация: ответ на открытие магазина
+		net::msg::McStoreOpenAnswerMessage openMsg;
+		openMsg.isValid = (bValid == 1);
 
 		if(bValid == 1)
 		{
-			WRITE_LONG(WtPk, vip);
-			WRITE_LONG(WtPk, pCha->GetPlayer()->GetMoBean());	// Ħ��
-			WRITE_LONG(WtPk, pCha->GetPlayer()->GetRplMoney());	// Ԫ��
+			openMsg.vip = vip;
+			openMsg.moBean = pCha->GetPlayer()->GetMoBean();
+			openMsg.replMoney = pCha->GetPlayer()->GetRplMoney();
 
-			WRITE_LONG(WtPk, lAfficheNum);	// ��������
 			for(i = 0; i < lAfficheNum; i++)
 			{
-				WRITE_LONG(WtPk, m_AfficheList[i].affiID);
-				WRITE_SEQ(WtPk, m_AfficheList[i].affiTitle, uShort(strlen(m_AfficheList[i].affiTitle) + 1));
-				WRITE_SEQ(WtPk, m_AfficheList[i].comID, uShort(strlen(m_AfficheList[i].comID) + 1));
+				net::msg::StoreAfficheEntry affiche;
+				affiche.afficheId = m_AfficheList[i].affiID;
+				affiche.title = m_AfficheList[i].affiTitle;
+				affiche.comId = m_AfficheList[i].comID;
+				openMsg.affiches.push_back(affiche);
 			}
-			WRITE_LONG(WtPk, lClsNum);	// ��������
 			for(i = 0; i < lClsNum; i++)
 			{
-				WRITE_SHORT(WtPk, m_ItemClass[i].clsID);
-				WRITE_SEQ(WtPk, m_ItemClass[i].clsName, uShort(strlen(m_ItemClass[i].clsName) + 1));
-				WRITE_SHORT(WtPk, m_ItemClass[i].parentID);
+				net::msg::StoreClassEntry cls;
+				cls.classId = m_ItemClass[i].clsID;
+				cls.className = m_ItemClass[i].clsName;
+				cls.parentId = m_ItemClass[i].parentID;
+				openMsg.classes.push_back(cls);
 			}
-		}		
+		}
+		auto WtPk = net::msg::serialize(openMsg);
 		pCha->ReflectINFof(pCha, WtPk);
 
 		if(bValid != 1)

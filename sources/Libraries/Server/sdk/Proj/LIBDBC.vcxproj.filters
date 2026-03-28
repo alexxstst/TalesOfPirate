@@ -14,18 +14,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AcceptConnect.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Comm.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\CommRPC.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\DataSocket.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\DBCCommon.cpp">
       <Filter>src</Filter>
     </ClCompile>
@@ -35,28 +23,10 @@
     <ClCompile Include="..\src\LogStream.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Packet.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\PacketQueue.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Point.cpp">
       <Filter>src</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Receiver.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\RWMutex.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\Sender.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\TaskQueue.cpp">
-      <Filter>src</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ThreadPool.cpp">
       <Filter>src</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Timer.cpp">
@@ -64,13 +34,7 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\AcceptConnect.h">
-      <Filter>src</Filter>
-    </ClInclude>
     <ClInclude Include="EventMsgRC.h">
-      <Filter>src</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\RPCInfo.h">
       <Filter>src</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\BaseBuf.h">
@@ -137,15 +101,6 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include="..\include\EventMsgRC.h" />
-    <ClInclude Include="..\src\Receiver.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Thread.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\Sender.h">
-      <Filter>Include</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ReadMe.txt" />

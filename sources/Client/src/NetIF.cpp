@@ -7,6 +7,7 @@
 #pragma warning(default: 4018)
 #include "Algo.h"
 #include "procirculate.h"
+#include "CommandMessages.h"
 #include "GameConfig.h"
 #include "ProCirculate.h"
 //=============附加包含头文件BEGIN=============
@@ -41,7 +42,6 @@ bool g_logautobak = false;
 
 //End
 NetIF* g_NetIF;
-CLogName g_LogName;
 
 extern short g_sClientVer;
 
@@ -142,8 +142,12 @@ BOOL NetIF::HandlePacketMessage(LPRPACKET pk) {
 	case CMD_MC_STALLSEARCH: return SC_ShowStallSearch(pk);
 	case CMD_MC_UPDATEGUILDBANKGOLD: return SC_UpdateGuildGold(pk);
 
-	case CMD_MC_UPDATEIMP: g_stUIEquip.UpdateIMP(pk.ReadInt64());
+	case CMD_MC_UPDATEIMP: {
+		net::msg::McUpdateImpMessage msg;
+		net::msg::deserialize(pk, msg);
+		g_stUIEquip.UpdateIMP(msg.imp);
 		return true;
+	}
 
 	case CMD_MC_REQUESTPIN: {
 		CCursor::I()->SetCursor(CCursor::stNormal);
@@ -286,69 +290,6 @@ BOOL NetIF::HandlePacketMessage(LPRPACKET pk) {
 	}
 
 	return FALSE;
-}
-
-//---------------------------------------------------------------------------
-// class CLogName
-//---------------------------------------------------------------------------
-CLogName::CLogName() {
-	Init();
-}
-
-void CLogName::Init() {
-	memset(_dwWorldArray, 0, sizeof(_dwWorldArray));
-	memset(_szLogName, 0, sizeof(_szLogName));
-	memset(_szNoFind, 0, sizeof(_szNoFind));
-}
-
-const char* CLogName::SetLogName(DWORD dwWorlID, const char* szName) {
-	if (!g_pGameApp->GetLGConfig()->bEnableAll)
-		return "nolog";
-
-	for (int i = 0; i < LOG_MAX; i++) {
-		if (_dwWorldArray[i] == 0) {
-			_dwWorldArray[i] = dwWorlID;
-			sprintf(_szLogName[i], "%s+%u", szName, dwWorlID);
-			return _szLogName[i];
-		}
-	}
-
-	sprintf(_szNoFind, "nofind(s)-%u", dwWorlID);
-	return _szNoFind;
-}
-
-const char* CLogName::GetLogName(DWORD dwWorlID) {
-	if (!g_pGameApp->GetLGConfig()->bEnableAll)
-		return "nolog";
-
-	for (int i = 0; i < LOG_MAX; i++)
-		if (_dwWorldArray[i] == dwWorlID)
-			return _szLogName[i];
-
-	sprintf(_szNoFind, "nofind(g)-%u", dwWorlID);
-	return _szNoFind;
-}
-
-const char* CLogName::GetMainLogName() {
-	if (!g_pGameApp->GetLGConfig()->bEnableAll)
-		return "nolog";
-
-	CCharacter* pMain = CGameScene::GetMainCha();
-	if (pMain) {
-		return GetLogName(pMain->getAttachID());
-	}
-
-	sprintf(_szNoFind, "nofind(m)");
-	return _szNoFind;
-}
-
-bool CLogName::IsMainCha(DWORD dwWorlID) {
-	CCharacter* pMain = CGameScene::GetMainCha();
-	if (pMain) {
-		return pMain->getAttachID() == dwWorlID;
-	}
-
-	return false;
 }
 
 inline int lua_HandleNetMessage(lua_State* L) {

@@ -766,7 +766,7 @@ TEST(CommandMessages, PcFrndRefreshInfoMessage_Roundtrip) {
 
 TEST(CommandMessages, PcSessCreateMessage_Roundtrip) {
     PcSessCreateMessage original{
-        1,
+        1, "",
         {{10, "Hero", "Hi", 1}, {20, "Mage", "Hey", 2}},
         5
     };
@@ -2898,65 +2898,65 @@ TEST(GameplayPhase2, CmItemAmphitheaterAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmMasterInviteMessage_Roundtrip) {
-    // Приглашение мастера (система ученичества)
-    CmMasterInviteMessage original{777};
+    CmMasterInviteMessage original{"MasterName", 777};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     CmMasterInviteMessage restored;
     deserialize(r, restored);
-    ASSERT_EQ(original.masterId, restored.masterId);
+    ASSERT_EQ(original.name, restored.name);
+    ASSERT_EQ(original.chaId, restored.chaId);
 }
 
 TEST(GameplayPhase2, CmMasterAsrMessage_Roundtrip) {
-    // Ответ на приглашение мастера: согласие
-    CmMasterAsrMessage original{1, 777};
+    CmMasterAsrMessage original{1, "MasterName", 777};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     CmMasterAsrMessage restored;
     deserialize(r, restored);
     ASSERT_EQ(original.agree, restored.agree);
-    ASSERT_EQ(original.masterId, restored.masterId);
+    ASSERT_EQ(original.name, restored.name);
+    ASSERT_EQ(original.chaId, restored.chaId);
 }
 
 TEST(GameplayPhase2, CmMasterDelMessage_Roundtrip) {
-    // Удаление связи с мастером
-    CmMasterDelMessage original{777};
+    CmMasterDelMessage original{"MasterName", 777};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     CmMasterDelMessage restored;
     deserialize(r, restored);
-    ASSERT_EQ(original.masterId, restored.masterId);
+    ASSERT_EQ(original.name, restored.name);
+    ASSERT_EQ(original.chaId, restored.chaId);
 }
 
 TEST(GameplayPhase2, CmPrenticeInviteMessage_Roundtrip) {
-    // Приглашение ученика
-    CmPrenticeInviteMessage original{888};
+    CmPrenticeInviteMessage original{"PrenticeName", 888};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     CmPrenticeInviteMessage restored;
     deserialize(r, restored);
-    ASSERT_EQ(original.prenticeId, restored.prenticeId);
+    ASSERT_EQ(original.name, restored.name);
+    ASSERT_EQ(original.chaId, restored.chaId);
 }
 
 TEST(GameplayPhase2, CmPrenticeAsrMessage_Roundtrip) {
-    // Ответ на приглашение ученика: отказ
-    CmPrenticeAsrMessage original{0, 888};
+    CmPrenticeAsrMessage original{0, "PrenticeName", 888};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     CmPrenticeAsrMessage restored;
     deserialize(r, restored);
     ASSERT_EQ(original.agree, restored.agree);
-    ASSERT_EQ(original.prenticeId, restored.prenticeId);
+    ASSERT_EQ(original.name, restored.name);
+    ASSERT_EQ(original.chaId, restored.chaId);
 }
 
 TEST(GameplayPhase2, CmPrenticeDelMessage_Roundtrip) {
-    // Удаление связи с учеником
-    CmPrenticeDelMessage original{888};
+    CmPrenticeDelMessage original{"PrenticeName", 888};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     CmPrenticeDelMessage restored;
     deserialize(r, restored);
-    ASSERT_EQ(original.prenticeId, restored.prenticeId);
+    ASSERT_EQ(original.name, restored.name);
+    ASSERT_EQ(original.chaId, restored.chaId);
 }
 
 // -----------------------------------------------------------------
@@ -3299,6 +3299,204 @@ TEST(GameplayPhase2, McItemLotteryAsrMessage_Roundtrip) {
     McItemLotteryAsrMessage restored;
     deserialize(r, restored);
     ASSERT_EQ(original.success, restored.success);
+}
+
+// =================================================================
+//  Геймплейные команды: Фаза 4 — простые MC/CM
+// =================================================================
+
+TEST(GameplayPhase4, McChaEmotionMessage_Roundtrip) {
+    McChaEmotionMessage original{42, 7};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McChaEmotionMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.worldId, restored.worldId);
+    ASSERT_EQ(original.emotion, restored.emotion);
+}
+
+TEST(GameplayPhase4, McStartExitMessage_Roundtrip) {
+    McStartExitMessage original{10000};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McStartExitMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.exitTime, restored.exitTime);
+}
+
+TEST(GameplayPhase4, McGmRecvMessage_Roundtrip) {
+    McGmRecvMessage original{555};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McGmRecvMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.npcId, restored.npcId);
+}
+
+TEST(GameplayPhase4, McStallDelGoodsMessage_Roundtrip) {
+    McStallDelGoodsMessage original{100, 5, 3};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McStallDelGoodsMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.charId, restored.charId);
+    ASSERT_EQ(original.grid, restored.grid);
+    ASSERT_EQ(original.count, restored.count);
+}
+
+TEST(GameplayPhase4, McStallCloseMessage_Roundtrip) {
+    McStallCloseMessage original{200};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McStallCloseMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.charId, restored.charId);
+}
+
+TEST(GameplayPhase4, McStallSuccessMessage_Roundtrip) {
+    McStallSuccessMessage original{300};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McStallSuccessMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.charId, restored.charId);
+}
+
+TEST(GameplayPhase4, McUpdateGuildGoldMessage_Roundtrip) {
+    McUpdateGuildGoldMessage original{"12345678"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McUpdateGuildGoldMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.data, restored.data);
+}
+
+TEST(GameplayPhase4, McQueryChaItemMessage_Roundtrip) {
+    McQueryChaItemMessage original{9001};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McQueryChaItemMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.chaId, restored.chaId);
+}
+
+TEST(GameplayPhase4, McDisconnectMessage_Roundtrip) {
+    McDisconnectMessage original{3};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McDisconnectMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.reason, restored.reason);
+}
+
+TEST(GameplayPhase4, McLifeSkillShowMessage_Roundtrip) {
+    McLifeSkillShowMessage original{2};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McLifeSkillShowMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.type, restored.type);
+}
+
+TEST(GameplayPhase4, McLifeSkillMessage_Roundtrip) {
+    McLifeSkillMessage original{1, 0, "iron_ore,3,5"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McLifeSkillMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.type, restored.type);
+    ASSERT_EQ(original.result, restored.result);
+    ASSERT_EQ(original.text, restored.text);
+}
+
+TEST(GameplayPhase4, McLifeSkillAsrMessage_Roundtrip) {
+    McLifeSkillAsrMessage original{0, 5000, "composing..."};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McLifeSkillAsrMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.type, restored.type);
+    ASSERT_EQ(original.time, restored.time);
+    ASSERT_EQ(original.text, restored.text);
+}
+
+TEST(GameplayPhase4, McDropLockAsrMessage_Roundtrip) {
+    McDropLockAsrMessage original{1};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McDropLockAsrMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.success, restored.success);
+}
+
+TEST(GameplayPhase4, McUnlockItemAsrMessage_Roundtrip) {
+    McUnlockItemAsrMessage original{2};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McUnlockItemAsrMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.result, restored.result);
+}
+
+TEST(GameplayPhase4, McStoreBuyAnswerMessage_Roundtrip) {
+    McStoreBuyAnswerMessage original{1, 50000};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McStoreBuyAnswerMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.success, restored.success);
+    ASSERT_EQ(original.newMoney, restored.newMoney);
+}
+
+TEST(GameplayPhase4, McStoreChangeAnswerMessage_Roundtrip) {
+    McStoreChangeAnswerMessage original{1, 100, 9999};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McStoreChangeAnswerMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.success, restored.success);
+    ASSERT_EQ(original.moBean, restored.moBean);
+    ASSERT_EQ(original.replMoney, restored.replMoney);
+}
+
+TEST(GameplayPhase4, McDailyBuffInfoMessage_Roundtrip) {
+    McDailyBuffInfoMessage original{"buff_icon.png", "Daily EXP Boost +50%"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McDailyBuffInfoMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.imgName, restored.imgName);
+    ASSERT_EQ(original.labelInfo, restored.labelInfo);
+}
+
+TEST(GameplayPhase4, McRequestDropRateMessage_Roundtrip) {
+    McRequestDropRateMessage original{1.5f};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McRequestDropRateMessage restored;
+    deserialize(r, restored);
+    ASSERT_FLOAT_EQ(original.rate, restored.rate);
+}
+
+TEST(GameplayPhase4, McRequestExpRateMessage_Roundtrip) {
+    McRequestExpRateMessage original{2.0f};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McRequestExpRateMessage restored;
+    deserialize(r, restored);
+    ASSERT_FLOAT_EQ(original.rate, restored.rate);
+}
+
+TEST(GameplayPhase4, McTigerItemIdMessage_Roundtrip) {
+    McTigerItemIdMessage original{3, 1001, 1002, 1003};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McTigerItemIdMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(original.num, restored.num);
+    ASSERT_EQ(original.itemId0, restored.itemId0);
+    ASSERT_EQ(original.itemId1, restored.itemId1);
+    ASSERT_EQ(original.itemId2, restored.itemId2);
 }
 
 // =================================================================
@@ -3906,16 +4104,22 @@ TEST(TradeStoreStall, McStoreOpenAnswerMessage_Invalid_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreListAnswerMessage_Roundtrip) {
-    // Список товаров магазина: 1 товар с 2 вариантами и 5 атрибутами
+    // Список товаров магазина: 1 товар с 2 вариантами, каждый с 5 атрибутами
     McStoreListAnswerMessage original;
     original.pageTotal = 3; original.pageCurrent = 1;
     StoreProductEntry product;
     product.comId = 1001; product.comName = "Dark Sword"; product.price = 5000;
     product.remark = "Legendary weapon"; product.isHot = true;
     product.time = 86400; product.quantity = 50; product.expire = 0;
-    product.variants = { {2001, 1, 0}, {2002, 3, 1} };
-    product.attrs[0] = {1, 100}; product.attrs[1] = {2, 50};
-    product.attrs[2] = {3, 25}; product.attrs[3] = {0, 0}; product.attrs[4] = {0, 0};
+    // Вариант 1 с атрибутами
+    StoreVariantEntry v1; v1.itemId = 2001; v1.itemNum = 1; v1.flute = 0;
+    v1.attrs[0] = {1, 100}; v1.attrs[1] = {2, 50};
+    v1.attrs[2] = {3, 25}; v1.attrs[3] = {0, 0}; v1.attrs[4] = {0, 0};
+    // Вариант 2 с атрибутами
+    StoreVariantEntry v2; v2.itemId = 2002; v2.itemNum = 3; v2.flute = 1;
+    v2.attrs[0] = {4, 200}; v2.attrs[1] = {5, 75};
+    v2.attrs[2] = {0, 0}; v2.attrs[3] = {0, 0}; v2.attrs[4] = {0, 0};
+    product.variants = { v1, v2 };
     original.products = { product };
 
     auto w = serialize(original);
@@ -3936,16 +4140,19 @@ TEST(TradeStoreStall, McStoreListAnswerMessage_Roundtrip) {
     ASSERT_EQ(50, p.quantity);
     ASSERT_EQ(0, p.expire);
     ASSERT_EQ(2u, p.variants.size());
+    // Атрибуты теперь внутри каждого варианта
     ASSERT_EQ(2001, p.variants[0].itemId);
     ASSERT_EQ(1, p.variants[0].itemNum);
     ASSERT_EQ(0, p.variants[0].flute);
+    ASSERT_EQ(1, p.variants[0].attrs[0].attrId);
+    ASSERT_EQ(100, p.variants[0].attrs[0].attrVal);
+    ASSERT_EQ(2, p.variants[0].attrs[1].attrId);
+    ASSERT_EQ(50, p.variants[0].attrs[1].attrVal);
     ASSERT_EQ(2002, p.variants[1].itemId);
     ASSERT_EQ(3, p.variants[1].itemNum);
     ASSERT_EQ(1, p.variants[1].flute);
-    ASSERT_EQ(1, p.attrs[0].attrId);
-    ASSERT_EQ(100, p.attrs[0].attrVal);
-    ASSERT_EQ(2, p.attrs[1].attrId);
-    ASSERT_EQ(50, p.attrs[1].attrVal);
+    ASSERT_EQ(4, p.variants[1].attrs[0].attrId);
+    ASSERT_EQ(200, p.variants[1].attrs[0].attrVal);
 }
 
 TEST(TradeStoreStall, McStoreHistoryMessage_Roundtrip) {
@@ -4157,7 +4364,7 @@ TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_WithLean_Roundtrip) {
     original.base.name = "LeanPirate";
     original.base.look.typeId = 1;
     original.poseType = 1; // наклон
-    original.lean = {1, 2, 90, 100, 200, 50};
+    original.pose = LeanInfo{1, 2, 90, 100, 200, 50};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4165,8 +4372,9 @@ TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_WithLean_Roundtrip) {
     deserialize(r, restored);
 
     ASSERT_EQ(1, restored.poseType);
-    ASSERT_EQ(90, restored.lean.angle);
-    ASSERT_EQ(50, restored.lean.height);
+    auto& lean = std::get<LeanInfo>(restored.pose);
+    ASSERT_EQ(90, lean.angle);
+    ASSERT_EQ(50, lean.height);
 }
 
 TEST(GameplayPhase3Advanced, McAddItemChaMessage_Roundtrip) {
@@ -4203,11 +4411,13 @@ TEST(McCharacterAction, Move_Roundtrip) {
     original.worldId = 1000;
     original.packetId = 42;
     original.actionType = ActionType::MOVE;
-    original.move.moveState = 0x01; // не enumMSTATE_ON → пишем stopState
-    original.move.stopState = 0x02;
+    ActionMoveData moveData;
+    moveData.moveState = 0x01; // не enumMSTATE_ON → пишем stopState
+    moveData.stopState = 0x02;
     // 3 waypoint'а по 8 байт = 24 байта
-    original.move.waypoints.resize(24);
-    for (int i = 0; i < 24; ++i) original.move.waypoints[i] = static_cast<uint8_t>(i + 1);
+    moveData.waypoints.resize(24);
+    for (int i = 0; i < 24; ++i) moveData.waypoints[i] = static_cast<uint8_t>(i + 1);
+    original.data = moveData;
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4217,11 +4427,12 @@ TEST(McCharacterAction, Move_Roundtrip) {
     ASSERT_EQ(1000, restored.worldId);
     ASSERT_EQ(42, restored.packetId);
     ASSERT_EQ(ActionType::MOVE, restored.actionType);
-    ASSERT_EQ(0x01, restored.move.moveState);
-    ASSERT_EQ(0x02, restored.move.stopState);
-    ASSERT_EQ(24u, restored.move.waypoints.size());
-    ASSERT_EQ(1, restored.move.waypoints[0]);
-    ASSERT_EQ(24, restored.move.waypoints[23]);
+    auto& rm = std::get<ActionMoveData>(restored.data);
+    ASSERT_EQ(0x01, rm.moveState);
+    ASSERT_EQ(0x02, rm.stopState);
+    ASSERT_EQ(24u, rm.waypoints.size());
+    ASSERT_EQ(1, rm.waypoints[0]);
+    ASSERT_EQ(24, rm.waypoints[23]);
 }
 
 TEST(McCharacterAction, Move_MoveStateOn_NoStopState) {
@@ -4229,17 +4440,20 @@ TEST(McCharacterAction, Move_MoveStateOn_NoStopState) {
     original.worldId = 1;
     original.packetId = 2;
     original.actionType = ActionType::MOVE;
-    original.move.moveState = MSTATE_ON;
-    original.move.waypoints = {10, 20, 30, 40, 50, 60, 70, 80};
+    ActionMoveData moveData;
+    moveData.moveState = MSTATE_ON;
+    moveData.waypoints = {10, 20, 30, 40, 50, 60, 70, 80};
+    original.data = moveData;
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     McCharacterActionMessage restored;
     deserialize(r, restored);
 
-    ASSERT_EQ(MSTATE_ON, restored.move.moveState);
-    ASSERT_EQ(0, restored.move.stopState);
-    ASSERT_EQ(8u, restored.move.waypoints.size());
+    auto& rm = std::get<ActionMoveData>(restored.data);
+    ASSERT_EQ(MSTATE_ON, rm.moveState);
+    ASSERT_EQ(0, rm.stopState);
+    ASSERT_EQ(8u, rm.waypoints.size());
 }
 
 TEST(McCharacterAction, SkillSrc_Roundtrip_TargetType1) {
@@ -4247,7 +4461,8 @@ TEST(McCharacterAction, SkillSrc_Roundtrip_TargetType1) {
     original.worldId = 500;
     original.packetId = 10;
     original.actionType = ActionType::SKILL_SRC;
-    auto& d = original.skillSrc;
+    original.data = ActionSkillSrcData{};
+    auto& d = std::get<ActionSkillSrcData>(original.data);
     d.fightId = 1; d.angle = 90; d.state = 0x01; d.stopState = 0x02;
     d.skillId = 1001; d.skillSpeed = 200;
     d.targetType = 1; d.targetId = 999; d.targetX = 100; d.targetY = 200;
@@ -4261,19 +4476,20 @@ TEST(McCharacterAction, SkillSrc_Roundtrip_TargetType1) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::SKILL_SRC, restored.actionType);
-    ASSERT_EQ(1, restored.skillSrc.fightId);
-    ASSERT_EQ(90, restored.skillSrc.angle);
-    ASSERT_EQ(0x01, restored.skillSrc.state);
-    ASSERT_EQ(0x02, restored.skillSrc.stopState);
-    ASSERT_EQ(1001, restored.skillSrc.skillId);
-    ASSERT_EQ(1, restored.skillSrc.targetType);
-    ASSERT_EQ(999, restored.skillSrc.targetId);
-    ASSERT_EQ(100, restored.skillSrc.targetX);
-    ASSERT_EQ(2u, restored.skillSrc.effects.size());
-    ASSERT_EQ(5, restored.skillSrc.effects[0].attrId);
-    ASSERT_EQ(-30, restored.skillSrc.effects[0].attrVal);
-    ASSERT_EQ(1u, restored.skillSrc.states.size());
-    ASSERT_EQ(3, restored.skillSrc.states[0].stateId);
+    auto& rs = std::get<ActionSkillSrcData>(restored.data);
+    ASSERT_EQ(1, rs.fightId);
+    ASSERT_EQ(90, rs.angle);
+    ASSERT_EQ(0x01, rs.state);
+    ASSERT_EQ(0x02, rs.stopState);
+    ASSERT_EQ(1001, rs.skillId);
+    ASSERT_EQ(1, rs.targetType);
+    ASSERT_EQ(999, rs.targetId);
+    ASSERT_EQ(100, rs.targetX);
+    ASSERT_EQ(2u, rs.effects.size());
+    ASSERT_EQ(5, rs.effects[0].attrId);
+    ASSERT_EQ(-30, rs.effects[0].attrVal);
+    ASSERT_EQ(1u, rs.states.size());
+    ASSERT_EQ(3, rs.states[0].stateId);
 }
 
 TEST(McCharacterAction, SkillSrc_Roundtrip_StateOn_TargetType2) {
@@ -4281,7 +4497,8 @@ TEST(McCharacterAction, SkillSrc_Roundtrip_StateOn_TargetType2) {
     original.worldId = 1;
     original.packetId = 1;
     original.actionType = ActionType::SKILL_SRC;
-    auto& d = original.skillSrc;
+    original.data = ActionSkillSrcData{};
+    auto& d = std::get<ActionSkillSrcData>(original.data);
     d.fightId = 2; d.angle = 45; d.state = FSTATE_ON; d.stopState = 0;
     d.skillId = 100; d.skillSpeed = 100;
     d.targetType = 2; d.targetX = 50; d.targetY = 60;
@@ -4292,11 +4509,12 @@ TEST(McCharacterAction, SkillSrc_Roundtrip_StateOn_TargetType2) {
     McCharacterActionMessage restored;
     deserialize(r, restored);
 
-    ASSERT_EQ(FSTATE_ON, restored.skillSrc.state);
-    ASSERT_EQ(0, restored.skillSrc.stopState);
-    ASSERT_EQ(2, restored.skillSrc.targetType);
-    ASSERT_EQ(0, restored.skillSrc.targetId);
-    ASSERT_EQ(50, restored.skillSrc.targetX);
+    auto& rs = std::get<ActionSkillSrcData>(restored.data);
+    ASSERT_EQ(FSTATE_ON, rs.state);
+    ASSERT_EQ(0, rs.stopState);
+    ASSERT_EQ(2, rs.targetType);
+    ASSERT_EQ(0, rs.targetId);
+    ASSERT_EQ(50, rs.targetX);
 }
 
 TEST(McCharacterAction, SkillTar_Roundtrip_Full) {
@@ -4304,7 +4522,8 @@ TEST(McCharacterAction, SkillTar_Roundtrip_Full) {
     original.worldId = 777;
     original.packetId = 55;
     original.actionType = ActionType::SKILL_TAR;
-    auto& d = original.skillTar;
+    original.data = ActionSkillTarData{};
+    auto& d = std::get<ActionSkillTarData>(original.data);
     d.fightId = 3; d.state = 0x100; d.doubleAttack = true; d.miss = false;
     d.beatBack = true; d.beatBackX = 150; d.beatBackY = 250;
     d.srcId = 400; d.srcPosX = 10; d.srcPosY = 20;
@@ -4322,25 +4541,26 @@ TEST(McCharacterAction, SkillTar_Roundtrip_Full) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::SKILL_TAR, restored.actionType);
-    ASSERT_EQ(3, restored.skillTar.fightId);
-    ASSERT_EQ(0x100, restored.skillTar.state);
-    ASSERT_TRUE(restored.skillTar.doubleAttack);
-    ASSERT_FALSE(restored.skillTar.miss);
-    ASSERT_TRUE(restored.skillTar.beatBack);
-    ASSERT_EQ(150, restored.skillTar.beatBackX);
-    ASSERT_EQ(250, restored.skillTar.beatBackY);
-    ASSERT_EQ(400, restored.skillTar.srcId);
-    ASSERT_EQ(2001, restored.skillTar.skillId);
-    ASSERT_EQ(1u, restored.skillTar.effects.size());
-    ASSERT_EQ(1, restored.skillTar.effects[0].attrId);
-    ASSERT_TRUE(restored.skillTar.hasStates);
-    ASSERT_EQ(99999, restored.skillTar.stateTime);
-    ASSERT_EQ(1u, restored.skillTar.states.size());
-    ASSERT_EQ(7, restored.skillTar.states[0].stateId);
-    ASSERT_EQ(5000, restored.skillTar.states[0].duration);
-    ASSERT_TRUE(restored.skillTar.hasSrcEffect);
-    ASSERT_EQ(0x200, restored.skillTar.srcState);
-    ASSERT_EQ(1u, restored.skillTar.srcEffects.size());
+    auto& rt = std::get<ActionSkillTarData>(restored.data);
+    ASSERT_EQ(3, rt.fightId);
+    ASSERT_EQ(0x100, rt.state);
+    ASSERT_TRUE(rt.doubleAttack);
+    ASSERT_FALSE(rt.miss);
+    ASSERT_TRUE(rt.beatBack);
+    ASSERT_EQ(150, rt.beatBackX);
+    ASSERT_EQ(250, rt.beatBackY);
+    ASSERT_EQ(400, rt.srcId);
+    ASSERT_EQ(2001, rt.skillId);
+    ASSERT_EQ(1u, rt.effects.size());
+    ASSERT_EQ(1, rt.effects[0].attrId);
+    ASSERT_TRUE(rt.hasStates);
+    ASSERT_EQ(99999, rt.stateTime);
+    ASSERT_EQ(1u, rt.states.size());
+    ASSERT_EQ(7, rt.states[0].stateId);
+    ASSERT_EQ(5000, rt.states[0].duration);
+    ASSERT_TRUE(rt.hasSrcEffect);
+    ASSERT_EQ(0x200, rt.srcState);
+    ASSERT_EQ(1u, rt.srcEffects.size());
 }
 
 TEST(McCharacterAction, SkillTar_Roundtrip_Minimal) {
@@ -4348,7 +4568,8 @@ TEST(McCharacterAction, SkillTar_Roundtrip_Minimal) {
     original.worldId = 1;
     original.packetId = 1;
     original.actionType = ActionType::SKILL_TAR;
-    auto& d = original.skillTar;
+    original.data = ActionSkillTarData{};
+    auto& d = std::get<ActionSkillTarData>(original.data);
     d.fightId = 1; d.state = 0; d.doubleAttack = false; d.miss = true;
     d.beatBack = false;
     d.srcId = 10; d.srcPosX = 5; d.srcPosY = 6;
@@ -4360,10 +4581,11 @@ TEST(McCharacterAction, SkillTar_Roundtrip_Minimal) {
     McCharacterActionMessage restored;
     deserialize(r, restored);
 
-    ASSERT_TRUE(restored.skillTar.miss);
-    ASSERT_FALSE(restored.skillTar.beatBack);
-    ASSERT_FALSE(restored.skillTar.hasStates);
-    ASSERT_FALSE(restored.skillTar.hasSrcEffect);
+    auto& rt = std::get<ActionSkillTarData>(restored.data);
+    ASSERT_TRUE(rt.miss);
+    ASSERT_FALSE(rt.beatBack);
+    ASSERT_FALSE(rt.hasStates);
+    ASSERT_FALSE(rt.hasSrcEffect);
 }
 
 TEST(McCharacterAction, Lean_Roundtrip_LeanState0) {
@@ -4371,7 +4593,7 @@ TEST(McCharacterAction, Lean_Roundtrip_LeanState0) {
     original.worldId = 200;
     original.packetId = 5;
     original.actionType = ActionType::LEAN;
-    original.lean = {0, 1, 90, 100, 200, 50};
+    original.data = ActionLeanData{0, 1, 90, 100, 200, 50};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4379,12 +4601,13 @@ TEST(McCharacterAction, Lean_Roundtrip_LeanState0) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::LEAN, restored.actionType);
-    ASSERT_EQ(0, restored.lean.leanState);
-    ASSERT_EQ(1, restored.lean.pose);
-    ASSERT_EQ(90, restored.lean.angle);
-    ASSERT_EQ(100, restored.lean.posX);
-    ASSERT_EQ(200, restored.lean.posY);
-    ASSERT_EQ(50, restored.lean.height);
+    auto& rl = std::get<ActionLeanData>(restored.data);
+    ASSERT_EQ(0, rl.leanState);
+    ASSERT_EQ(1, rl.pose);
+    ASSERT_EQ(90, rl.angle);
+    ASSERT_EQ(100, rl.posX);
+    ASSERT_EQ(200, rl.posY);
+    ASSERT_EQ(50, rl.height);
 }
 
 TEST(McCharacterAction, Lean_Roundtrip_LeanStateNonZero) {
@@ -4392,15 +4615,16 @@ TEST(McCharacterAction, Lean_Roundtrip_LeanStateNonZero) {
     original.worldId = 201;
     original.packetId = 6;
     original.actionType = ActionType::LEAN;
-    original.lean.leanState = 1;
+    original.data = ActionLeanData{1, 0, 0, 0, 0, 0};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
     McCharacterActionMessage restored;
     deserialize(r, restored);
 
-    ASSERT_EQ(1, restored.lean.leanState);
-    ASSERT_EQ(0, restored.lean.pose);
+    auto& rl = std::get<ActionLeanData>(restored.data);
+    ASSERT_EQ(1, rl.leanState);
+    ASSERT_EQ(0, rl.pose);
 }
 
 TEST(McCharacterAction, Face_Roundtrip) {
@@ -4408,7 +4632,7 @@ TEST(McCharacterAction, Face_Roundtrip) {
     original.worldId = 300;
     original.packetId = 7;
     original.actionType = ActionType::FACE;
-    original.face = {180, 2};
+    original.data = ActionFaceData{180, 2};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4416,8 +4640,9 @@ TEST(McCharacterAction, Face_Roundtrip) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::FACE, restored.actionType);
-    ASSERT_EQ(180, restored.face.angle);
-    ASSERT_EQ(2, restored.face.pose);
+    auto& rf = std::get<ActionFaceData>(restored.data);
+    ASSERT_EQ(180, rf.angle);
+    ASSERT_EQ(2, rf.pose);
 }
 
 TEST(McCharacterAction, SkillPose_Roundtrip) {
@@ -4425,7 +4650,7 @@ TEST(McCharacterAction, SkillPose_Roundtrip) {
     original.worldId = 301;
     original.packetId = 8;
     original.actionType = ActionType::SKILL_POSE;
-    original.face = {270, 5};
+    original.data = ActionFaceData{270, 5};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4433,8 +4658,9 @@ TEST(McCharacterAction, SkillPose_Roundtrip) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::SKILL_POSE, restored.actionType);
-    ASSERT_EQ(270, restored.face.angle);
-    ASSERT_EQ(5, restored.face.pose);
+    auto& rf = std::get<ActionFaceData>(restored.data);
+    ASSERT_EQ(270, rf.angle);
+    ASSERT_EQ(5, rf.pose);
 }
 
 TEST(McCharacterAction, ItemFailed_Roundtrip) {
@@ -4442,7 +4668,7 @@ TEST(McCharacterAction, ItemFailed_Roundtrip) {
     original.worldId = 400;
     original.packetId = 9;
     original.actionType = ActionType::ITEM_FAILED;
-    original.itemFailedId = 42;
+    original.data = ActionItemFailedData{42};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4450,7 +4676,7 @@ TEST(McCharacterAction, ItemFailed_Roundtrip) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::ITEM_FAILED, restored.actionType);
-    ASSERT_EQ(42, restored.itemFailedId);
+    ASSERT_EQ(42, std::get<ActionItemFailedData>(restored.data).failedId);
 }
 
 TEST(McCharacterAction, Temp_Roundtrip) {
@@ -4458,8 +4684,7 @@ TEST(McCharacterAction, Temp_Roundtrip) {
     original.worldId = 500;
     original.packetId = 10;
     original.actionType = ActionType::TEMP;
-    original.tempItemId = 1001;
-    original.tempPartId = 2002;
+    original.data = ActionTempData{1001, 2002};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4467,8 +4692,9 @@ TEST(McCharacterAction, Temp_Roundtrip) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::TEMP, restored.actionType);
-    ASSERT_EQ(1001, restored.tempItemId);
-    ASSERT_EQ(2002, restored.tempPartId);
+    auto& rt = std::get<ActionTempData>(restored.data);
+    ASSERT_EQ(1001, rt.itemId);
+    ASSERT_EQ(2002, rt.partId);
 }
 
 TEST(McCharacterAction, ChangeCha_Roundtrip) {
@@ -4476,7 +4702,7 @@ TEST(McCharacterAction, ChangeCha_Roundtrip) {
     original.worldId = 600;
     original.packetId = 11;
     original.actionType = ActionType::CHANGE_CHA;
-    original.changeChaMainId = 777;
+    original.data = ActionChangeChaData{777};
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4484,5 +4710,175 @@ TEST(McCharacterAction, ChangeCha_Roundtrip) {
     deserialize(r, restored);
 
     ASSERT_EQ(ActionType::CHANGE_CHA, restored.actionType);
-    ASSERT_EQ(777, restored.changeChaMainId);
+    ASSERT_EQ(777, std::get<ActionChangeChaData>(restored.data).mainChaId);
+}
+
+// ═══════════════════════════════════════════════════════════════
+//  Гильдейские команды (CM/MC)
+// ═══════════════════════════════════════════════════════════════
+
+TEST(CommandMessages, CmGuildPutNameMessage_Roundtrip) {
+    CmGuildPutNameMessage original{1, "Pirates", "secret"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildPutNameMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(1, restored.confirm);
+    ASSERT_EQ("Pirates", restored.guildName);
+    ASSERT_EQ("secret", restored.passwd);
+}
+
+TEST(CommandMessages, CmGuildTryForMessage_Roundtrip) {
+    CmGuildTryForMessage original{42};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildTryForMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(42, restored.guildId);
+}
+
+TEST(CommandMessages, CmGuildTryForCfmMessage_Roundtrip) {
+    CmGuildTryForCfmMessage original{1};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildTryForCfmMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(1, restored.confirm);
+}
+
+TEST(CommandMessages, CmGuildApproveMessage_Roundtrip) {
+    CmGuildApproveMessage original{100};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildApproveMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(100, restored.chaId);
+}
+
+TEST(CommandMessages, CmGuildRejectMessage_Roundtrip) {
+    CmGuildRejectMessage original{200};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildRejectMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(200, restored.chaId);
+}
+
+TEST(CommandMessages, CmGuildKickMessage_Roundtrip) {
+    CmGuildKickMessage original{300};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildKickMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(300, restored.chaId);
+}
+
+TEST(CommandMessages, CmGuildDisbandMessage_Roundtrip) {
+    CmGuildDisbandMessage original{"disband123"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildDisbandMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ("disband123", restored.passwd);
+}
+
+TEST(CommandMessages, CmGuildMottoMessage_Roundtrip) {
+    CmGuildMottoMessage original{"Yo ho ho!"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildMottoMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ("Yo ho ho!", restored.motto);
+}
+
+TEST(CommandMessages, CmGuildChallMessage_Roundtrip) {
+    CmGuildChallMessage original{2, 5000};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildChallMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(2, restored.level);
+    ASSERT_EQ(5000, restored.money);
+}
+
+TEST(CommandMessages, CmGuildLeizhuMessage_Roundtrip) {
+    CmGuildLeizhuMessage original{1, 3000};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    CmGuildLeizhuMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(1, restored.level);
+    ASSERT_EQ(3000, restored.money);
+}
+
+TEST(CommandMessages, McGuildTryForCfmMessage_Roundtrip) {
+    McGuildTryForCfmMessage original{"OldGuild"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McGuildTryForCfmMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ("OldGuild", restored.name);
+}
+
+TEST(CommandMessages, McGuildMottoMessage_Roundtrip) {
+    McGuildMottoMessage original{"For glory!"};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McGuildMottoMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ("For glory!", restored.motto);
+}
+
+TEST(CommandMessages, McGuildInfoMessage_Roundtrip) {
+    McGuildInfoMessage original{10, 20, "SeaDogs", "Sail on!", 7};
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McGuildInfoMessage restored;
+    deserialize(r, restored);
+    ASSERT_EQ(10, restored.charId);
+    ASSERT_EQ(20, restored.guildId);
+    ASSERT_EQ("SeaDogs", restored.guildName);
+    ASSERT_EQ("Sail on!", restored.guildMotto);
+    ASSERT_EQ(7, restored.guildPermission);
+}
+
+TEST(CommandMessages, McGuildListChallMessage_AllFilled_Roundtrip) {
+    McGuildListChallMessage original;
+    original.isLeader = 1;
+    original.entries[0] = {1, 10, "Alpha", "Beta", 1000};
+    original.entries[1] = {2, 20, "Gamma", "Delta", 2000};
+    original.entries[2] = {3, 30, "Epsilon", "Zeta", 3000};
+
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McGuildListChallMessage restored;
+    deserialize(r, restored);
+
+    ASSERT_EQ(1, restored.isLeader);
+    for (int i = 0; i < 3; ++i) {
+        ASSERT_EQ(original.entries[i].level, restored.entries[i].level);
+        ASSERT_EQ(original.entries[i].start, restored.entries[i].start);
+        ASSERT_EQ(original.entries[i].guildName, restored.entries[i].guildName);
+        ASSERT_EQ(original.entries[i].challName, restored.entries[i].challName);
+        ASSERT_EQ(original.entries[i].money, restored.entries[i].money);
+    }
+}
+
+TEST(CommandMessages, McGuildListChallMessage_Empty_Roundtrip) {
+    McGuildListChallMessage original;
+    original.isLeader = 0;
+    original.entries[0] = {0, 0, "", "", 0};
+    original.entries[1] = {1, 5, "Only", "One", 500};
+    original.entries[2] = {0, 0, "", "", 0};
+
+    auto w = serialize(original);
+    RPacket r(w.Data(), w.GetPacketSize());
+    McGuildListChallMessage restored;
+    deserialize(r, restored);
+
+    ASSERT_EQ(0, restored.isLeader);
+    ASSERT_EQ(0, restored.entries[0].level);
+    ASSERT_EQ(1, restored.entries[1].level);
+    ASSERT_EQ("Only", restored.entries[1].guildName);
+    ASSERT_EQ(0, restored.entries[2].level);
 }

@@ -6,6 +6,7 @@ open Microsoft.Extensions.DependencyInjection
 open Microsoft.Extensions.Logging
 open Corsairs.GroupServer.Domain
 open Corsairs.GroupServer.Services
+open System.Collections.Concurrent
 open Corsairs.Platform.Network
 open Corsairs.Platform.Network.Protocol
 open Corsairs.Platform.Database
@@ -101,10 +102,12 @@ let handleMpGuildCreate (ctx: HandlerContext) (player: PlayerRecord) (packet: IR
         chaSlot.GuildId <- guildId
         chaSlot.GuildPermission <- PERM_MAX
 
-        // Ответ клиенту
+        // Ответ клиенту (count-first: count, packetIndex, затем данные)
         let mutable w = WPacket(256)
         w.WriteCmd(Commands.CMD_PC_GUILD)
         w.WriteInt64(int64 MSG_GUILD_START)
+        w.WriteInt64(1L) // count
+        w.WriteInt64(0L) // packetIndex
         w.WriteInt64(int64 guildId)
         w.WriteString(guildName)
         w.WriteInt64(int64 chaSlot.ChaId)
@@ -117,8 +120,6 @@ let handleMpGuildCreate (ctx: HandlerContext) (player: PlayerRecord) (packet: IR
         w.WriteInt64(0L) // degree
         w.WriteInt64(int64 chaSlot.Icon)
         w.WriteInt64(int64 PERM_MAX)
-        w.WriteInt64(0L) // packetNum
-        w.WriteInt64(1L) // count
         ctx.SendToSingleClient player w
 
         ctx.Logger.LogInformation("MP_GUILD_CREATE: гильдия {Name} ({Id}) создана лидером {Leader}",
@@ -334,12 +335,12 @@ let sendGuildInit (ctx: HandlerContext) (player: PlayerRecord) =
     match getCurrentSlot player with
     | None -> ()
     | Some chaSlot when chaSlot.GuildId = 0 ->
-        // Аналог C++: отправляем пустой пакет гильдии для игроков без гильдии
+        // Пустой пакет гильдии для игроков без гильдии (count-first)
         let mutable w = WPacket(32)
         w.WriteCmd(Commands.CMD_PC_GUILD)
         w.WriteInt64(int64 MSG_GUILD_START)
-        w.WriteInt64(0L) // guildId = 0
-        w.WriteInt64(0L) // 0
+        w.WriteInt64(0L) // count
+        w.WriteInt64(0L) // packetIndex
         ctx.SendToSingleClient player w
     | Some chaSlot ->
         match ctx.Guilds.TryGetValue(chaSlot.GuildId) with
@@ -379,6 +380,9 @@ let sendGuildInit (ctx: HandlerContext) (player: PlayerRecord) =
             let mutable w = WPacket(2048)
             w.WriteCmd(Commands.CMD_PC_GUILD)
             w.WriteInt64(int64 MSG_GUILD_START)
+            // Количество участников и индекс пакета — в начале (count-first)
+            w.WriteInt64(int64 memberDetails.Length) // count
+            w.WriteInt64(0L) // packetIndex
             w.WriteInt64(int64 guild.Id)
             w.WriteString(guild.Name)
             w.WriteInt64(int64 guild.LeaderId)
@@ -393,8 +397,6 @@ let sendGuildInit (ctx: HandlerContext) (player: PlayerRecord) =
                 w.WriteInt64(int64 icon)
                 w.WriteInt64(int64 m.Permission)
 
-            w.WriteInt64(0L) // packetNum
-            w.WriteInt64(int64 memberDetails.Length)
             ctx.SendToSingleClient player w
 
             // Уведомить онлайн-участников о входе (CMD_PC_GUILD/MSG_GUILD_ONLINE)
@@ -407,3 +409,136 @@ let sendGuildInit (ctx: HandlerContext) (player: PlayerRecord) =
                 |> Array.filter (fun p -> p.GpAddr <> player.GpAddr)
             if otherMembers.Length > 0 then
                 ctx.SendToClients otherMembers wOnline
+
+// ══════════════════════════════════════════════════════════
+//  CMD_CP_GUILDBANK — Операция с банком гильдии (от клиента)
+// ══════════════════════════════════════════════════════════
+
+let handleCpGuildBank (ctx: HandlerContext) (player: PlayerRecord) (packet: IRPacket) =
+    let guildId = player.CurrentGuildId
+    if guildId < 1 || guildId > 200 then () else
+
+    let mutable w = WPacket(packet)
+    w.WriteCmd(Commands.CMD_PM_GUILDBANK)
+
+    let queue = ctx.GuildBankQueues.GetOrAdd(guildId, fun _ -> ConcurrentQueue<GuildBankMsg>())
+    if queue.Count >= 10 then
+        let mutable err = WPacket(256)
+        err.WriteCmd(Commands.CMD_PC_ERRMSG)
+        err.WriteString("Guild Bank is currently busy. Try again later.")
+        ctx.SendToSingleClient player err
+    else
+        queue.Enqueue({ Player = player; Packet = w })
+        ctx.SendToSingleClient player w
+
+// ══════════════════════════════════════════════════════════
+//  CMD_MP_PUSHTOGUILDBANK — Пополнение банка гильдии (от GameServer)
+// ══════════════════════════════════════════════════════════
+
+let handleMpPushToGuildBank (ctx: HandlerContext) (player: PlayerRecord) (packet: IRPacket) =
+    let guildId = player.CurrentGuildId
+    if guildId < 1 || guildId > 200 then () else
+
+    let mutable w = WPacket(packet)
+    w.WriteCmd(Commands.CMD_PM_PUSHTOGUILDBANK)
+
+    let queue = ctx.GuildBankQueues.GetOrAdd(guildId, fun _ -> ConcurrentQueue<GuildBankMsg>())
+    if queue.Count >= 10 then
+        let mutable err = WPacket(256)
+        err.WriteCmd(Commands.CMD_PC_ERRMSG)
+        err.WriteString("Guild Bank is currently busy. Try again later.")
+        ctx.SendToSingleClient player err
+    else
+        queue.Enqueue({ Player = player; Packet = w })
+        ctx.SendToSingleClient player w
+
+// ══════════════════════════════════════════════════════════
+//  CMD_MP_GUILDBANK — Подтверждение обработки банка (от GameServer)
+// ══════════════════════════════════════════════════════════
+
+let handleMpGuildBankAck (ctx: HandlerContext) (_player: PlayerRecord) (packet: IRPacket) =
+    let guildId = int (packet.ReadInt64())
+    if guildId < 1 || guildId > 200 then () else
+
+    match ctx.GuildBankQueues.TryGetValue(guildId) with
+    | false, _ -> ()
+    | true, queue ->
+        let mutable _prev = Unchecked.defaultof<GuildBankMsg>
+        if queue.TryDequeue(&_prev) then
+            let mutable next = Unchecked.defaultof<GuildBankMsg>
+            if queue.TryPeek(&next) then
+                ctx.SendToSingleClient next.Player next.Packet
+
+// ══════════════════════════════════════════════════════════
+//  CMD_MP_GUILD_CHALLMONEY — Возврат денег за гильд-войну
+// ══════════════════════════════════════════════════════════
+
+let handleMpGuildChallMoney (ctx: HandlerContext) (packet: IRPacket) =
+    let challGuildId = int (packet.ReadInt64())
+    let money = int (packet.ReadInt64())
+    let guildName1 = packet.ReadString()
+    let guildName2 = packet.ReadString()
+
+    match ctx.Guilds.TryGetValue(challGuildId) with
+    | false, _ ->
+        ctx.Logger.LogWarning("MP_GUILD_CHALLMONEY: гильдия {Id} не найдена, money={Money}", challGuildId, money)
+    | true, guild when guild.LeaderId = 0 ->
+        ctx.Logger.LogWarning("MP_GUILD_CHALLMONEY: гильдия {Id} без лидера, money={Money}", challGuildId, money)
+    | true, guild ->
+        match ctx.Registry.TryGetByChaId(guild.LeaderId) with
+        | Some leader when leader.IsPlaying ->
+            let mutable w = WPacket(256)
+            w.WriteCmd(Commands.CMD_PM_GUILD_CHALLMONEY)
+            w.WriteInt64(int64 guild.LeaderId)
+            w.WriteInt64(int64 money)
+            w.WriteString(guildName1)
+            w.WriteString(guildName2)
+            w.WriteInt64(0L)
+            ctx.SendToSingleClient leader w
+            ctx.Logger.LogInformation("MP_GUILD_CHALLMONEY: {Money} → лидеру {Id} (онлайн)", money, guild.LeaderId)
+        | _ ->
+            try
+                use scope = ctx.ScopeFactory.CreateScope()
+                let db = scope.ServiceProvider.GetRequiredService<GameDbContext>()
+                let cha = db.Characters.Find(guild.LeaderId)
+                if not (isNull (box cha)) then
+                    cha.Gold <- cha.Gold + int64 money
+                    db.SaveChanges() |> ignore
+                ctx.Logger.LogInformation("MP_GUILD_CHALLMONEY: {Money} → лидеру {Id} (оффлайн, БД)", money, guild.LeaderId)
+            with ex ->
+                ctx.Logger.LogError(ex, "MP_GUILD_CHALLMONEY: ошибка БД для лидера {Id}", guild.LeaderId)
+
+// ══════════════════════════════════════════════════════════
+//  CMD_MP_GUILD_CHALL_PRIZEMONEY — Призовой фонд гильд-войны
+// ══════════════════════════════════════════════════════════
+
+let handleMpGuildChallPrizeMoney (ctx: HandlerContext) (packet: IRPacket) =
+    let challGuildId = int (packet.ReadInt64())
+    let money = int (packet.ReadInt64())
+
+    match ctx.Guilds.TryGetValue(challGuildId) with
+    | false, _ ->
+        ctx.Logger.LogWarning("MP_GUILD_CHALL_PRIZEMONEY: гильдия {Id} не найдена, money={Money}", challGuildId, money)
+    | true, guild when guild.LeaderId = 0 ->
+        ctx.Logger.LogWarning("MP_GUILD_CHALL_PRIZEMONEY: гильдия {Id} без лидера, money={Money}", challGuildId, money)
+    | true, guild ->
+        match ctx.Registry.TryGetByChaId(guild.LeaderId) with
+        | Some leader when leader.IsPlaying ->
+            let mutable w = WPacket(256)
+            w.WriteCmd(Commands.CMD_PM_GUILD_CHALL_PRIZEMONEY)
+            w.WriteInt64(int64 guild.LeaderId)
+            w.WriteInt64(int64 money)
+            w.WriteInt64(0L)
+            ctx.SendToSingleClient leader w
+            ctx.Logger.LogInformation("MP_GUILD_CHALL_PRIZEMONEY: {Money} → лидеру {Id} (онлайн)", money, guild.LeaderId)
+        | _ ->
+            try
+                use scope = ctx.ScopeFactory.CreateScope()
+                let db = scope.ServiceProvider.GetRequiredService<GameDbContext>()
+                let cha = db.Characters.Find(guild.LeaderId)
+                if not (isNull (box cha)) then
+                    cha.Gold <- cha.Gold + int64 money
+                    db.SaveChanges() |> ignore
+                ctx.Logger.LogInformation("MP_GUILD_CHALL_PRIZEMONEY: {Money} → лидеру {Id} (оффлайн, БД)", money, guild.LeaderId)
+            with ex ->
+                ctx.Logger.LogError(ex, "MP_GUILD_CHALL_PRIZEMONEY: ошибка БД для лидера {Id}", guild.LeaderId)

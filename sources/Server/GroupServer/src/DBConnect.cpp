@@ -1225,9 +1225,9 @@ bool TBLGuilds::InitGuildMember(Player *ply,uLong chaid,uLong gldid,int mode)
 		net::WPacket l_toSelf  =net::WPacket(256);
 		l_toSelf.WriteCmd(CMD_PC_GUILD);
 		l_toSelf.WriteInt64(MSG_GUILD_START);
-
-		l_toSelf.WriteInt64(0);
-		l_toSelf.WriteInt64(0);
+		// Количество участников и индекс пакета — в начале (count-first)
+		l_toSelf.WriteInt64(0);  // count
+		l_toSelf.WriteInt64(0);  // packetIndex
 
 		g_gpsvr->SendToClient(ply,l_toSelf);
 	}else
@@ -1285,40 +1285,23 @@ bool TBLGuilds::InitGuildMember(Player *ply,uLong chaid,uLong gldid,int mode)
 				l_toGuild.WriteInt64(chaid);
 			}
 
-			net::WPacket l_toSelf,l_wpk0;
-			if(ply)
-			{
-				l_wpk0  =net::WPacket(256);
-				l_wpk0.WriteCmd(CMD_PC_GUILD);
-				l_wpk0.WriteInt64(MSG_GUILD_START);
-			}
-			bool	l_hrd	=false;
+			// Буфер строк из БД: online, chaId, chaName, motto, job, degree, icon, permission
+			struct GuildMemberRow {
+				bool online; uLong chaId; std::string chaName; std::string motto;
+				std::string job; int degree; int icon; uint64_t permission;
+			};
+			std::vector<GuildMemberRow> l_rows;
 
 			Player *l_plylst[10240];
 			short	l_plynum	=0;
 
-			long lPacketNum = 0;
-
-			// Fetch each Row	int i; // ȡ��������
-			int f_row = 1;
-			for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; ++ f_row)
+			// Считываем все строки из БД и собираем online-список
+			for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; )
 			{
 				if (sqlret != SQL_SUCCESS)
-				{
 					handle_err(hstmt, SQL_HANDLE_STMT, sqlret);
-				}
-				if(ply && (f_row %20) ==1)
-				{
-					l_toSelf	=l_wpk0;
-				}
-				if(ply && !l_hrd)
-				{
-					l_hrd	=true;
-					l_toSelf.WriteInt64(ply->m_guild[ply->m_currcha]);	//����ID
-					l_toSelf.WriteString(ply->GetGuild()->m_name);		//����name
-					l_toSelf.WriteInt64(ply->GetGuild()->m_leaderID);	//�᳤ID
-				}
-				uLong l_memaddr		=atol((cChar *)_buf[0]);
+
+				uLong l_memaddr = atol((cChar *)_buf[0]);
 				if(l_memaddr)
 				{
 					l_plylst[l_plynum] = ToPointer<Player>(l_memaddr);
@@ -1326,51 +1309,76 @@ bool TBLGuilds::InitGuildMember(Player *ply,uLong chaid,uLong gldid,int mode)
 				}
 				if(mode && chaid ==atol((cChar*)_buf[1]))
 				{
-					l_toGuild.WriteInt64(l_memaddr?1:0);			//online
-					l_toGuild.WriteInt64(atol((cChar*)_buf[1]));	//chaid
-					l_toGuild.WriteString(	(cChar*)_buf[2]);	//chaname
-					l_toGuild.WriteString(	(cChar*)_buf[3]);	//motto
-					l_toGuild.WriteString(	(cChar*)_buf[4]);	//job
-					l_toGuild.WriteInt64(atoi((cChar*)_buf[5]));//degree
-					l_toGuild.WriteInt64(atoi((cChar*)_buf[6]));//icon
-					l_toGuild.WriteInt64(stoull((cChar*)_buf[7]));//permission
+					l_toGuild.WriteInt64(l_memaddr?1:0);
+					l_toGuild.WriteInt64(atol((cChar*)_buf[1]));
+					l_toGuild.WriteString(	(cChar*)_buf[2]);
+					l_toGuild.WriteString(	(cChar*)_buf[3]);
+					l_toGuild.WriteString(	(cChar*)_buf[4]);
+					l_toGuild.WriteInt64(atoi((cChar*)_buf[5]));
+					l_toGuild.WriteInt64(atoi((cChar*)_buf[6]));
+					l_toGuild.WriteInt64(stoull((cChar*)_buf[7]));
 				}
 				if(ply)
 				{
-					l_toSelf.WriteInt64(l_memaddr?1:0);			//online
-					l_toSelf.WriteInt64(atol((cChar*)_buf[1]));	//chaid
-					l_toSelf.WriteString(	(cChar*)_buf[2]);	//chaname
-					l_toSelf.WriteString(	(cChar*)_buf[3]);	//motto
-					l_toSelf.WriteString(	(cChar*)_buf[4]);	//job
-					l_toSelf.WriteInt64(atoi((cChar*)_buf[5]));	//degree
-					l_toSelf.WriteInt64(atoi((cChar*)_buf[6]));	//icon
-					l_toSelf.WriteInt64(stoull((cChar*)_buf[7]));	//permission
-				}
-				if(ply && !(f_row %20))
-				{
-					l_toSelf.WriteInt64(lPacketNum);
-					lPacketNum++;
-					l_toSelf.WriteInt64(((f_row-1)%20)+1);	//���ΰ���������
-					g_gpsvr->SendToClient(ply,l_toSelf);
+					GuildMemberRow row;
+					row.online     = l_memaddr ? true : false;
+					row.chaId      = atol((cChar*)_buf[1]);
+					row.chaName    = (cChar*)_buf[2];
+					row.motto      = (cChar*)_buf[3];
+					row.job        = (cChar*)_buf[4];
+					row.degree     = atoi((cChar*)_buf[5]);
+					row.icon       = atoi((cChar*)_buf[6]);
+					row.permission = stoull((cChar*)_buf[7]);
+					l_rows.push_back(std::move(row));
 				}
 			}
-			if(ply && (f_row%20) ==1)
-			{
-				l_toSelf	=l_wpk0;
-			}
-			if(ply && !l_hrd)
-			{
-				l_hrd	=true;
-				l_toSelf.WriteInt64(ply->m_guild[ply->m_currcha]);	//����ID
-				l_toSelf.WriteString(ply->GetGuild()->m_name);		//����name
-				l_toSelf.WriteInt64(ply->GetGuild()->m_leaderID);	//�᳤ID
-			}
+
+			// Отправляем игроку пагинированные пакеты с count-first
 			if(ply)
 			{
-				l_toSelf.WriteInt64(lPacketNum);
-				lPacketNum++;
-				l_toSelf.WriteInt64((f_row -1)%20);
-				g_gpsvr->SendToClient(ply,l_toSelf);
+				bool l_hrd = false;
+				long lPacketNum = 0;
+				const int PAGE_SIZE = 20;
+
+				for (size_t offset = 0; ; offset += PAGE_SIZE)
+				{
+					size_t remain = (offset < l_rows.size()) ? l_rows.size() - offset : 0;
+					size_t pageCount = (remain < (size_t)PAGE_SIZE) ? remain : (size_t)PAGE_SIZE;
+
+					net::WPacket l_toSelf(256);
+					l_toSelf.WriteCmd(CMD_PC_GUILD);
+					l_toSelf.WriteInt64(MSG_GUILD_START);
+					// Количество участников и индекс пакета — в начале (count-first)
+					l_toSelf.WriteInt64(static_cast<long>(pageCount));
+					l_toSelf.WriteInt64(lPacketNum);
+
+					if (!l_hrd)
+					{
+						l_hrd = true;
+						l_toSelf.WriteInt64(ply->m_guild[ply->m_currcha]);
+						l_toSelf.WriteString(ply->GetGuild()->m_name);
+						l_toSelf.WriteInt64(ply->GetGuild()->m_leaderID);
+					}
+
+					for (size_t i = offset; i < offset + pageCount; ++i)
+					{
+						const auto& r = l_rows[i];
+						l_toSelf.WriteInt64(r.online ? 1 : 0);
+						l_toSelf.WriteInt64(r.chaId);
+						l_toSelf.WriteString(r.chaName.c_str());
+						l_toSelf.WriteString(r.motto.c_str());
+						l_toSelf.WriteString(r.job.c_str());
+						l_toSelf.WriteInt64(r.degree);
+						l_toSelf.WriteInt64(r.icon);
+						l_toSelf.WriteInt64(r.permission);
+					}
+
+					g_gpsvr->SendToClient(ply, l_toSelf);
+					lPacketNum++;
+
+					// Если последняя страница — выходим
+					if (pageCount < PAGE_SIZE) break;
+				}
 			}
 			LogLine	l_line(g_LogGuild);
 			//l_line<<newln<<"����֪ͨ�Ļ�������"<<l_plynum<<endln;

@@ -12,7 +12,7 @@ namespace mission
 {
 	struct BOAT_SYNC_ATTR
 	{
-		char szName[BOAT_MAXSIZE_NAME];	// ´¬Ö»Ãû³Æ
+		char szName[BOAT_MAXSIZE_NAME];	// ï¿½ï¿½Ö»ï¿½ï¿½ï¿½ï¿½
 		USHORT	sBoatID;
 		BYTE	byHeader;
 		BYTE	byEngine;
@@ -30,17 +30,17 @@ namespace mission
 		CCharBoat();
 		~CCharBoat();
 		
-		// ×°ÔØ´¬Ö»½¨ÔìÊý¾Ý±íÐÅÏ¢
+		// ×°ï¿½Ø´ï¿½Ö»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý±ï¿½ï¿½ï¿½Ï¢
 		BOOL	Load( const char szBoat[], const char szPart[] );
 		CCharacter* SummonBoat( USHORT sBoatID );
 
-		// ½¨Ôì´¬Ö»
+		// ï¿½ï¿½ï¿½ì´¬Ö»
 		BOOL	LoadBoat( CCharacter& owner, char chType );
 		BOOL	CreateBoat( CCharacter& owner, DWORD dwBoatID, char chType );
 		BOOL	Create( CCharacter& owner, USHORT sBoatID, USHORT sBerthID );
 		void	Cancel( CCharacter& owner );
-		BOOL	Update( CCharacter& owner, RPACKET packet );
-		BOOL	MakeBoat( CCharacter& owner, RPACKET packet );
+		BOOL	Update( CCharacter& owner, const net::msg::CmUpdateBoatMessage& msg );
+		BOOL	MakeBoat( CCharacter& owner, const net::msg::CmCreateBoatMessage& msg );
 		void	GetBerthName( USHORT sBerthID, char szBerth[], USHORT sLen );
 		BOOL	GetBoatInfo( CCharacter& owner, DWORD dwBoatID );
 		BOOL	GetTradeBoatInfo( CCharacter& viewer, CCharacter& owner, DWORD dwBoatID );
@@ -63,5 +63,5 @@ namespace mission
 
 }
 
-// Ôì´¬³§È«¾ÖÀà
+// ï¿½ì´¬ï¿½ï¿½È«ï¿½ï¿½ï¿½ï¿½
 extern mission::CCharBoat g_CharBoat;

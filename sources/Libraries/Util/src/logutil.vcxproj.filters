@@ -36,7 +36,7 @@
     <ClCompile Include="LanguageRecord.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-<ClCompile Include="logutil.cpp">
+    <ClCompile Include="logutil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="md5c.c">
@@ -51,15 +51,6 @@
     <ClCompile Include="util2.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ErrorHandler.cpp">
-      <Filter>Header Files\exception</Filter>
-    </ClCompile>
-    <ClCompile Include="Stacktrace.cpp">
-      <Filter>Header Files\exception</Filter>
-    </ClCompile>
-    <ClCompile Include="sym_engine.cpp">
-      <Filter>Header Files\exception</Filter>
-    </ClCompile>
     <ClCompile Include="MapDataVer.cpp">
       <Filter>MapData</Filter>
     </ClCompile>
@@ -68,6 +59,18 @@
     </ClCompile>
     <ClCompile Include="SectionData.cpp">
       <Filter>MapData</Filter>
+    </ClCompile>
+    <ClCompile Include="newlogutil.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ObjectPools.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CrushSystem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ConsoleColor.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,7 +92,7 @@
     <ClInclude Include="..\include\LanguageRecord.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
-<ClInclude Include="..\include\matrix_stuff.h">
+    <ClInclude Include="..\include\matrix_stuff.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\include\pch.h">
@@ -110,28 +113,10 @@
     <ClInclude Include="..\include\AtlAux2.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\debug_stream.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\ErrorHandler.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\exception2.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\exception_trap.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
     <ClInclude Include="..\include\kbase.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
     <ClInclude Include="..\include\ReturnValues.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\Stacktrace.h">
-      <Filter>Header Files\exception</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\sym_engine.h">
       <Filter>Header Files\exception</Filter>
     </ClInclude>
     <ClInclude Include="..\include\AttribData.h">
@@ -152,8 +137,17 @@
     <ClInclude Include="..\include\TerrainData.h">
       <Filter>MapData</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt" />
+    <ClInclude Include="..\include\logutil.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ConsoleColor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ObjectPools.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CrushSystem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

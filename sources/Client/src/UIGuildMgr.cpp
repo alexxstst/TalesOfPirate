@@ -285,26 +285,20 @@ void CUIGuildMgr::_OnClickPerm(CGuiData *pSender, int x, int y, DWORD key){
 	}
 }
 
-void CUIGuildMgr::UpdateGuildLogs(LPRPACKET pk){
+void CUIGuildMgr::UpdateGuildLogs(const net::msg::ActionUpdateGuildLogsData& data){
 	g_stUIGuildMgr.banklogs.clear();
 	m_plistBankLog->GetList()->GetScroll()->Reset();
-	uShort logsize = pk.ReadInt64();
 
+	m_btnPrev->SetIsEnabled(false);
+	m_btnNext->SetIsEnabled(!data.terminated);
 
-	m_btnPrev->SetIsEnabled(false); 	// Can't fetch newer logs than what we currently have
-	m_btnNext->SetIsEnabled(true);		// If server doesnt send the end param (-1), then we can fetch older data
-
-	for (int i = 0; i < 13; i++){				// Let's register 13 new logs
+	for (const auto& entry : data.logs) {
 		BankLog l;
-		l.type = pk.ReadInt64();
-		if(l.type == 9){
-			m_btnNext->SetIsEnabled(false);
-			break;
-		}
-		l.time = pk.ReadInt64();
-		l.parameter = pk.ReadInt64();
-		l.quantity = pk.ReadInt64();
-		l.userID = pk.ReadInt64();
+		l.type = static_cast<int>(entry.type);
+		l.time = static_cast<int>(entry.time);
+		l.parameter = static_cast<int>(entry.parameter);
+		l.quantity = static_cast<int>(entry.quantity);
+		l.userID = static_cast<int>(entry.userId);
 		g_stUIGuildMgr.banklogs.push_back(l);
 	}
 
@@ -375,25 +369,22 @@ void CUIGuildMgr::UpdateLogList(){
 	
 }
 
-void CUIGuildMgr::RequestGuildLogs(LPRPACKET pk){
-	// curLogPage was already incremented, so just get the new data and update the list
-	for (int i = 0; i < 13; i++){				// Let's register the latest 13 logs
+void CUIGuildMgr::RequestGuildLogs(const net::msg::ActionRequestGuildLogsData& data){
+	if (data.terminated) {
+		m_btnNext->SetIsEnabled(false);
+	}
+
+	for (const auto& entry : data.logs) {
 		BankLog l;
-		l.type = pk.ReadInt64();
-		if(l.type == 9){
-			m_btnNext->SetIsEnabled(false);
-			break;
-		}
-		l.time = pk.ReadInt64();
-		l.parameter = pk.ReadInt64();
-		l.quantity = pk.ReadInt64();
-		l.userID = pk.ReadInt64();
+		l.type = static_cast<int>(entry.type);
+		l.time = static_cast<int>(entry.time);
+		l.parameter = static_cast<int>(entry.parameter);
+		l.quantity = static_cast<int>(entry.quantity);
+		l.userID = static_cast<int>(entry.userId);
 		g_stUIGuildMgr.banklogs.push_back(l);
 	}
 
-
 	UpdateLogList();
-	
 }
 
 void CUIGuildMgr::_OnClickNextLogs(CGuiData *pSender, int x, int y, DWORD key){

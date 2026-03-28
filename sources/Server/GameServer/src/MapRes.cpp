@@ -246,15 +246,14 @@ bool CMapRes::CreateEntry(void)
 		//LG("��ͼ�������", "���󴴽���ڣ�λ�� %s --> %s[%u, %u]\n", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
 		ToLogService("common", "ask for found entrance : position {} --> {}[{}, {}]", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
 	}
-	WPACKET	wpk	=GETWPACKET();
-	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
-	WRITE_STRING(wpk, m_szEntryMapName);
-	WRITE_STRING(wpk, GetName());
-	WRITE_CHAR(wpk, enumMAPENTRY_CREATE);
-	WRITE_LONG(wpk, m_SEntryPos.x);
-	WRITE_LONG(wpk, m_SEntryPos.y);
-	WRITE_SHORT(wpk, GetCopyNum());
-	WRITE_SHORT(wpk, GetCopyPlyNum());
+	// Типизированная сериализация: создание входа на карту со скриптом
+	net::msg::GmMapEntryCreateMessage entryMsg;
+	entryMsg.targetMapName = m_szEntryMapName;
+	entryMsg.srcMapName = GetName();
+	entryMsg.posX = m_SEntryPos.x;
+	entryMsg.posY = m_SEntryPos.y;
+	entryMsg.copyNum = GetCopyNum();
+	entryMsg.copyPlyNum = GetCopyPlyNum();
 	while (!feof(m_pfEntryFile))
 	{
 		szLine[0] = '\0';
@@ -262,7 +261,6 @@ bool CMapRes::CreateEntry(void)
 		{
 			if (!feof(m_pfEntryFile))
 			{
-				//LG("entry_error", "msg��ڽű���%s/entry.lua�����г��ȳ���Ԥ�賤�ȣ�%u��������ܵ�����ڴ���ʧ�ܣ�ȡ�����������.�ű��У�%s\n", GetName(), csLineCharNum, szLine);
 				{ char _buf[512]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00009), GetName(), csLineCharNum, szLine); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 				return false;
 			}
@@ -275,10 +273,9 @@ bool CMapRes::CreateEntry(void)
 			*pszPos = ' ';
 		if ((pszPos = strstr(szLine, "\x0d")) != NULL)
 			*pszPos = ' ';
-		WRITE_STRING(wpk, szLine);
-		sLineNum++;
+		entryMsg.scriptLines.push_back(szLine);
 	}
-	WRITE_SHORT(wpk, sLineNum);
+	auto wpk = net::msg::serialize(entryMsg);
 
 	BEGINGETGATE();
 	GateServer	*pGateServer;
@@ -297,11 +294,12 @@ bool CMapRes::DestroyEntry(void)
 	if (g_cchLogMapEntry)
 		//LG("��ͼ�������", "����ر���ڣ�λ�� %s --> %s\n", GetName(), m_szEntryMapName);
 		ToLogService("common", "ask for close entrance:position {} --> {}", GetName(), m_szEntryMapName);
-	WPACKET	wpk	=GETWPACKET();
-	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
-	WRITE_STRING(wpk, m_szEntryMapName);
-	WRITE_STRING(wpk, GetName());
-	WRITE_CHAR(wpk, enumMAPENTRY_DESTROY);
+	// Типизированная сериализация: закрытие входа на карту
+	net::msg::MapEntryMessage meMsg;
+	meMsg.srcMapName = m_szEntryMapName;
+	meMsg.targetMapName = GetName();
+	meMsg.subType = net::msg::MAPENTRY_DESTROY;
+	auto wpk = net::msg::serialize(meMsg, CMD_MT_MAPENTRY);
 
 	BEGINGETGATE();
 	GateServer	*pGateServer;
@@ -320,13 +318,14 @@ bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
-	WPACKET	wpk	=GETWPACKET();
-	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
-	WRITE_STRING(wpk, m_szEntryMapName);
-	WRITE_STRING(wpk, GetName());
-	WRITE_CHAR(wpk, enumMAPENTRY_SUBPLAYER);
-	WRITE_SHORT(wpk, sCopyNO);
-	WRITE_SHORT(wpk, 1);
+	// Типизированная сериализация: уменьшение счётчика игроков в копии
+	net::msg::MapEntryMessage meMsg;
+	meMsg.srcMapName = m_szEntryMapName;
+	meMsg.targetMapName = GetName();
+	meMsg.subType = net::msg::MAPENTRY_SUBPLAYER;
+	meMsg.copyNo = sCopyNO;
+	meMsg.numPlayers = 1;
+	auto wpk = net::msg::serialize(meMsg, CMD_MT_MAPENTRY);
 
 	BEGINGETGATE();
 	GateServer	*pGateServer;
@@ -348,12 +347,13 @@ bool CMapRes::SubEntryCopy(dbc::Short sCopyNO)
 	if (g_cchLogMapEntry)
 		//LG("��ͼ�������", "����رյ�ͼ������%s��%d��\n", GetName(), sCopyNO);
 		ToLogService("common", "ask for close copy map({}��{})", GetName(), sCopyNO);
-	WPACKET	wpk	=GETWPACKET();
-	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
-	WRITE_STRING(wpk, m_szEntryMapName);
-	WRITE_STRING(wpk, GetName());
-	WRITE_CHAR(wpk, enumMAPENTRY_SUBCOPY);
-	WRITE_SHORT(wpk, sCopyNO);
+	// Типизированная сериализация: удаление копии карты
+	net::msg::MapEntryMessage meMsg;
+	meMsg.srcMapName = m_szEntryMapName;
+	meMsg.targetMapName = GetName();
+	meMsg.subType = net::msg::MAPENTRY_SUBCOPY;
+	meMsg.copyNo = sCopyNO;
+	auto wpk = net::msg::serialize(meMsg, CMD_MT_MAPENTRY);
 
 	BEGINGETGATE();
 	GateServer	*pGateServer;

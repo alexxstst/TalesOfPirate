@@ -80,8 +80,8 @@ void CS_OfflineMode()
 
 void CS_CancelExit()
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_CANCELEXIT);	//�����ж�
+	// Отмена выхода из игры
+	auto pk = net::msg::serializeCmCancelExitCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -188,25 +188,17 @@ void CS_StallSearch(int ItemID)
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// ������������
+// Создание второго пароля
 void CS_CreatePassword2( const char szPassword[] )
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_CREATE_PASSWORD2);	//�����ж�
-	pk.WriteString(szPassword);
-
+	auto pk = net::msg::serialize(net::msg::CmCreatePassword2Message{szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
+// Обновление второго пароля
 void CS_UpdatePassword2( const char szOld[], const char szPassword[] )
 {
-	WPacket pk	=g_NetIF->GetWPacket();
-
-	pk.WriteCmd(CMD_CM_UPDATE_PASSWORD2);	//�����ж�
-	pk.WriteString(szOld);
-	pk.WriteString(szPassword);
-
+	auto pk = net::msg::serialize(net::msg::CmUpdatePassword2Message{szOld, szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
@@ -312,45 +304,24 @@ void CS_Buy(  DWORD dwNpcID, BYTE byItemType, BYTE byIndex1, BYTE byIndex2, BYTE
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Выбор торгового корабля
 void CS_SelectTradeBoat( DWORD dwNpcID, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTRADE );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_TRADEITEM );
-	packet.WriteInt64( ROLE_TRADE_SELECT_BOAT );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmSelectTradeBoatMessage{(int64_t)dwNpcID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Продажа товаров NPC (торговый корабль)
 void CS_SaleGoods( DWORD dwNpcID, DWORD dwBoatID, BYTE byIndex, BYTE byCount )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTRADE );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_TRADEITEM );
-	packet.WriteInt64( ROLE_TRADE_SALE_GOODS );
-	packet.WriteInt64( dwBoatID );
-	packet.WriteInt64( byIndex );
-	packet.WriteInt64( byCount );
-
+	auto packet = net::msg::serialize(net::msg::CmSaleGoodsMessage{(int64_t)dwNpcID, (int64_t)dwBoatID, (int64_t)byIndex, (int64_t)byCount});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Покупка товаров NPC (торговый корабль)
 void CS_BuyGoods( DWORD dwNpcID, DWORD dwBoatID, BYTE byItemType, BYTE byIndex1, BYTE byIndex2, BYTE byCount )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTRADE );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_TRADEITEM );
-	packet.WriteInt64( ROLE_TRADE_BUY_GOODS );
-	packet.WriteInt64( dwBoatID );
-	packet.WriteInt64( byItemType );
-	packet.WriteInt64( byIndex1 );
-	packet.WriteInt64( byIndex2 );
-	packet.WriteInt64( byCount );
-
+	auto packet = net::msg::serialize(net::msg::CmBuyGoodsMessage{(int64_t)dwNpcID, (int64_t)dwBoatID, (int64_t)byItemType, (int64_t)byIndex1, (int64_t)byIndex2, (int64_t)byCount});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -420,30 +391,17 @@ void CS_SelMission( DWORD dwNpcID, BYTE byIndex )
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Диалог миссии с NPC
 void CS_MissionTalk( DWORD dwNpcID, BYTE byCmd )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTALK );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_MISSION );
-	packet.WriteInt64( ROLE_MIS_TALK );
-	packet.WriteInt64( CMD_CM_TALKPAGE );
-	packet.WriteInt64( byCmd );
-
+	auto packet = net::msg::serialize(net::msg::CmMissionTalkMessage{(int64_t)dwNpcID, (int64_t)byCmd});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Выбор функции миссии у NPC
 void CS_SelMissionFunc( DWORD dwNpcID, BYTE byPageID, BYTE byIndex )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_REQUESTTALK );
-	packet.WriteInt64( dwNpcID );
-	packet.WriteInt64( CMD_CM_MISSION );
-	packet.WriteInt64( ROLE_MIS_TALK );
-	packet.WriteInt64( CMD_CM_FUNCITEM );
-	packet.WriteInt64( byPageID );
-	packet.WriteInt64( byIndex );
-
+	auto packet = net::msg::serialize(net::msg::CmSelMissionFuncMessage{(int64_t)dwNpcID, (int64_t)byPageID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -531,24 +489,21 @@ void CS_EntityEvent( DWORD dwEntityID )
 	auto packet = net::msg::serialize(net::msg::CmEntityEventMessage{(int64_t)dwEntityID});
 	g_NetIF->SendPacketMessage( packet );
 
-	const char* szLogName = g_LogName.GetMainLogName();
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Event-Entyty):\tTick:[{}]", GetTickCount()));
 
 }
 
+// Отправка данных лотка (все товары)
 void CS_StallInfo( const char szName[], mission::NET_STALL_ALLDATA& Data )
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_STALL_ALLDATA );
-	packet.WriteString( szName );
-	packet.WriteInt64( Data.byNum );
-	for( BYTE i = 0; i < Data.byNum; ++i )
-	{
-		packet.WriteInt64( Data.Info[i].byGrid );
-		packet.WriteInt64( Data.Info[i].dwMoney );
-		packet.WriteInt64( Data.Info[i].byCount );
-		packet.WriteInt64( Data.Info[i].byIndex );
+	net::msg::CmStallInfoMessage msg;
+	msg.name = szName;
+	msg.num = Data.byNum;
+	msg.items.resize(Data.byNum);
+	for (BYTE i = 0; i < Data.byNum; ++i) {
+		msg.items[i] = {Data.Info[i].byGrid, Data.Info[i].dwMoney, Data.Info[i].byCount, Data.Info[i].byIndex};
 	}
+	auto packet = net::msg::serialize(msg);
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -617,29 +572,21 @@ void CS_ItemRepairAnswer(bool bAccess)
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Типизированная сериализация: запрос ковки (с группами)
 void CS_ItemForgeAsk(bool bSure, stNetItemForgeAsk *pSForge)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd(CMD_CM_ITEM_FORGE_ASK);
-	if (!bSure)
-	{
-		packet.WriteInt64(0);
-	}
-	else
-	{
-		packet.WriteInt64(1);
-		packet.WriteInt64(pSForge->chType);
-		for (int i = 0; i < defMAX_FORGE_GROUP_NUM; i++)
-		{
-			packet.WriteInt64(pSForge->SGroup[i].sCellNum);
-			for (short j = 0; j < pSForge->SGroup[i].sCellNum; j++)
-			{
-				packet.WriteInt64(pSForge->SGroup[i].pCell->sPosID);
-				packet.WriteInt64(pSForge->SGroup[i].pCell->sNum);
+	net::msg::CmItemForgeGroupAskMessage msg;
+	msg.sure = bSure ? 1 : 0;
+	if (bSure) {
+		msg.type = pSForge->chType;
+		for (int i = 0; i < defMAX_FORGE_GROUP_NUM; i++) {
+			msg.groups[i].cells.resize(pSForge->SGroup[i].sCellNum);
+			for (short j = 0; j < pSForge->SGroup[i].sCellNum; j++) {
+				msg.groups[i].cells[j] = {pSForge->SGroup[i].pCell->sPosID, pSForge->SGroup[i].pCell->sNum};
 			}
 		}
 	}
-
+	auto packet = net::msg::serialize(msg);
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -656,80 +603,42 @@ void CS_ItemLotteryAnswer(bool bAccess)
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Типизированная сериализация: запрос лотереи (с группами)
 void CS_ItemLotteryAsk(bool bSure, stNetItemLotteryAsk *pSLottery)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd(CMD_CM_ITEM_LOTTERY_ASK);
-	if (!bSure)
-	{
-		packet.WriteInt64(0);
-	}
-	else
-	{
-		packet.WriteInt64(1);
-
-		for (int i = 0; i < defMAX_LOTTERY_GROUP_NUM; i++)
-		{
-			packet.WriteInt64(pSLottery->SGroup[i].sCellNum);
-			for (short j = 0; j < pSLottery->SGroup[i].sCellNum; j++)
-			{
-				packet.WriteInt64(pSLottery->SGroup[i].pCell->sPosID);
-				packet.WriteInt64(pSLottery->SGroup[i].pCell->sNum);
+	net::msg::CmItemLotteryGroupAskMessage msg;
+	msg.sure = bSure ? 1 : 0;
+	if (bSure) {
+		for (int i = 0; i < defMAX_LOTTERY_GROUP_NUM; i++) {
+			msg.groups[i].cells.resize(pSLottery->SGroup[i].sCellNum);
+			for (short j = 0; j < pSLottery->SGroup[i].sCellNum; j++) {
+				msg.groups[i].cells[j] = {pSLottery->SGroup[i].pCell->sPosID, pSLottery->SGroup[i].pCell->sNum};
 			}
 		}
 	}
-
+	auto packet = net::msg::serialize(msg);
 	g_NetIF->SendPacketMessage( packet );
 }
 // End
-//Add by sunny.sun 20080726
+// Запрос арены (амфитеатра)
 void CS_ItemAmphitheaterAsk(bool bSure,int ReID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd(CMD_CM_ITEM_AMPHITHEATER_ASK);
-	if(!bSure)
-	{
-		packet.WriteInt64(0);
-	}
-	else
-	{
-		packet.WriteInt64(1);
-		packet.WriteInt64( ReID );
-	}
+	auto packet = net::msg::serialize(net::msg::CmItemAmphitheaterAskMessage{bSure ? 1 : 0, (int64_t)ReID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Типизированная сериализация: запрос ковки (с массивом позиций)
 void CS_ItemForgeAsk(bool bSure, int nType, int arPacketPos[], int nPosCount)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_ITEM_FORGE_ASK );
-
-	if(! bSure)
-	{
-		packet.WriteInt64(0);
+	net::msg::CmItemForgePosAskMessage msg;
+	msg.sure = bSure ? 1 : 0;
+	if (bSure) {
+		msg.type = (int64_t)(char)(nType);
+		msg.posCount = (int64_t)nPosCount;
+		for (int i = 0; i < nPosCount && i < 6; ++i)
+			msg.positions[i] = (int64_t)arPacketPos[i];
 	}
-	else
-	{
-		packet.WriteInt64(1);
-		packet.WriteInt64((char)(nType)); // ����������
-
-		for(int i = 0; i < defMAX_FORGE_GROUP_NUM; ++i)
-		{
-			if(i < nPosCount)
-			{
-				packet.WriteInt64((short) 1);		// cellnum
-				packet.WriteInt64(arPacketPos[i]);	// ����λ��
-				packet.WriteInt64((short) 1);		// ����
-			}
-			else
-			{
-				packet.WriteInt64((short) 0);		// cellnum
-				packet.WriteInt64((short) 0);	// ����λ��
-				packet.WriteInt64((short) 0);		// ����
-			}
-		}
-	}
-
+	auto packet = net::msg::serialize(msg);
 	g_NetIF->SendPacketMessage( packet );
 }
 
@@ -857,102 +766,81 @@ void CS_CaptainConfirmAsr(short sRet, DWORD dwTeamID)
 }
 // End
 
+// Приглашение мастера
 void CS_MasterInvite(const char *szName, DWORD dwCharID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_MASTER_INVITE );
-	packet.WriteString(szName);
-	packet.WriteInt64(dwCharID);
+	auto packet = net::msg::serialize(net::msg::CmMasterInviteMessage{szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Ответ на приглашение мастера
 void CS_MasterAsr(short sRet, const char *szName, DWORD dwCharID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_MASTER_ASR );
-	packet.WriteInt64(sRet);
-	packet.WriteString(szName);
-	packet.WriteInt64(dwCharID);
+	auto packet = net::msg::serialize(net::msg::CmMasterAsrMessage{(int64_t)sRet, szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Приглашение ученика
 void CS_PrenticeInvite(const char *szName, DWORD dwCharID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_PRENTICE_INVITE );
-	packet.WriteString(szName);
-	packet.WriteInt64(dwCharID);
+	auto packet = net::msg::serialize(net::msg::CmPrenticeInviteMessage{szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Ответ на приглашение ученика
 void CS_PrenticeAsr(short sRet, const char *szName, DWORD dwCharID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_PRENTICE_ASR );
-	packet.WriteInt64(sRet);
-	packet.WriteString(szName);
-	packet.WriteInt64(dwCharID);
+	auto packet = net::msg::serialize(net::msg::CmPrenticeAsrMessage{(int64_t)sRet, szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Удаление мастера
 void CS_MasterDel(const char *szName, uLong ulChaID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_MASTER_DEL );
-	packet.WriteString(szName);
-	packet.WriteInt64(ulChaID);
+	auto packet = net::msg::serialize(net::msg::CmMasterDelMessage{szName, (int64_t)ulChaID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Удаление ученика
 void CS_PrenticeDel(const char *szName, uLong ulChaID)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd( CMD_CM_PRENTICE_DEL );
-	packet.WriteString(szName);
-	packet.WriteInt64(ulChaID);
+	auto packet = net::msg::serialize(net::msg::CmPrenticeDelMessage{szName, (int64_t)ulChaID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
+// Запрос обновления информации о мастере
 void CP_Master_Refresh_Info(unsigned long chaid)
 {
-	WPacket l_wpk	=g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CP_MASTER_REFRESH_INFO);
-	l_wpk.WriteInt64(chaid);
-	g_NetIF->SendPacketMessage(l_wpk);
+	auto pk = net::msg::serialize(net::msg::CmCpMasterRefreshInfoMessage{(int64_t)chaid});
+	g_NetIF->SendPacketMessage(pk);
 }
 
+// Запрос обновления информации об ученике
 void CP_Prentice_Refresh_Info(unsigned long chaid)
 {
-	WPacket l_wpk	=g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CP_PRENTICE_REFRESH_INFO);
-	l_wpk.WriteInt64(chaid);
-	g_NetIF->SendPacketMessage(l_wpk);
+	auto pk = net::msg::serialize(net::msg::CmCpPrenticeRefreshInfoMessage{(int64_t)chaid});
+	g_NetIF->SendPacketMessage(pk);
 }
 
+// Сообщение в чат лагеря
 void CS_Say2Camp(const char *szContent)
 {
-	WPacket l_wpk	=g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CM_SAY2CAMP);
-	l_wpk.WriteString(szContent);
-	g_NetIF->SendPacketMessage(l_wpk);
+	auto pk = net::msg::serialize(net::msg::CmSay2CampMessage{szContent});
+	g_NetIF->SendPacketMessage(pk);
 }
 
+// Отправка GM-почты
 void CS_GMSend(DWORD dwNPCID, const char *szTitle, const char *szContent)
 {
-	WPacket l_wpk	=g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CM_GM_SEND);
-	l_wpk.WriteInt64(dwNPCID);
-	l_wpk.WriteString(szTitle);
-	l_wpk.WriteString(szContent);
-	g_NetIF->SendPacketMessage(l_wpk);
+	auto pk = net::msg::serialize(net::msg::CmGmSendMessage{(int64_t)dwNPCID, szTitle, szContent});
+	g_NetIF->SendPacketMessage(pk);
 }
 
+// Получение GM-почты
 void CS_GMRecv(DWORD dwNPCID)
 {
-	WPacket l_wpk	=g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CM_GM_RECV);
-	l_wpk.WriteInt64(dwNPCID);
-	g_NetIF->SendPacketMessage(l_wpk);
+	auto pk = net::msg::serialize(net::msg::CmGmRecvMessage{(int64_t)dwNPCID});
+	g_NetIF->SendPacketMessage(pk);
 }
 
 //void CS_PKCtrl(bool bCanPK)
@@ -963,12 +851,11 @@ void CS_GMRecv(DWORD dwNPCID)
 //	g_NetIF->SendPacketMessage(l_wpk);
 //}
 
+// Ответ на проверку читов
 void CS_CheatCheck(cChar *answer)
 {
-	WPacket l_wpk = g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CM_CHEAT_CHECK);
-	l_wpk.WriteString(answer);
-	g_NetIF->SendPacketMessage(l_wpk);
+	auto pk = net::msg::serialize(net::msg::CmCheatCheckMessage{answer});
+	g_NetIF->SendPacketMessage(pk);
 }
 
 //  ���������ǣ�ˢ������
@@ -982,163 +869,130 @@ void CS_CheatCheck(cChar *answer)
 //}
 
 
+// Запрос жизненного навыка
 void CS_LifeSkill(long type, DWORD dwNPCID)
 {
-    WPacket packet = g_NetIF->GetWPacket();
-    packet.WriteCmd(CMD_CM_LIFESKILL_ASR);
-    packet.WriteInt64(type);
-    packet.WriteInt64(dwNPCID);
+    auto packet = net::msg::serialize(net::msg::CmLifeSkillMessage{(int64_t)type, (int64_t)dwNPCID});
     g_NetIF->SendPacketMessage(packet);
 }
 
 
+// Типизированная сериализация: синтез (Compose)
 void CS_Compose(DWORD dwNPCID, int* iPos, int iCount, bool asr /* = false */)
 {
-    WPacket packet = g_NetIF->GetWPacket();
-    if(asr)
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASR);
-    }
-    else
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASK);
-    }
-    packet.WriteInt64(0);    //  ��֧
-    packet.WriteInt64(dwNPCID);
-    for(int i = 0; i < iCount; i++)
-    {
-        packet.WriteInt64((short)iPos[i]);
-    }
+    net::msg::CmLifeSkillCraftMessage msg;
+    msg.isAnswer = asr;
+    msg.skillType = 0;
+    msg.npcId = (int64_t)dwNPCID;
+    msg.positions.resize(iCount);
+    for (int i = 0; i < iCount; i++)
+        msg.positions[i] = (int64_t)(short)iPos[i];
+    msg.hasExtra = false;
+    auto packet = net::msg::serialize(msg);
     g_NetIF->SendPacketMessage(packet);
 }
 
+// Типизированная сериализация: разборка (Break)
 void CS_Break(DWORD dwNPCID, int* iPos, int iCount, bool asr /* = false */)
 {
-    WPacket packet = g_NetIF->GetWPacket();
-    if(asr)
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASR);
-    }
-    else
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASK);
-    }
-    packet.WriteInt64(1);    //  ��֧
-    packet.WriteInt64(dwNPCID);
-    for(int i = 0; i < iCount; i++)
-    {
-        packet.WriteInt64((short)iPos[i]);
-    }
+    net::msg::CmLifeSkillCraftMessage msg;
+    msg.isAnswer = asr;
+    msg.skillType = 1;
+    msg.npcId = (int64_t)dwNPCID;
+    msg.positions.resize(iCount);
+    for (int i = 0; i < iCount; i++)
+        msg.positions[i] = (int64_t)(short)iPos[i];
+    msg.hasExtra = false;
+    auto packet = net::msg::serialize(msg);
     g_NetIF->SendPacketMessage(packet);
 }
 
+// Типизированная сериализация: плавка (Found)
 void CS_Found(DWORD dwNPCID, int* iPos, int iCount, short big, bool asr /* = false */)
 {
-    WPacket packet = g_NetIF->GetWPacket();
-    if(asr)
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASR);
-    }
-    else
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASK);
-    }
-    packet.WriteInt64(2);    //  ��֧
-    packet.WriteInt64(dwNPCID);
-    for(int i = 0; i < iCount; i++)
-    {
-        packet.WriteInt64((short)iPos[i]);
-    }
-    packet.WriteInt64(big);
+    net::msg::CmLifeSkillCraftMessage msg;
+    msg.isAnswer = asr;
+    msg.skillType = 2;
+    msg.npcId = (int64_t)dwNPCID;
+    msg.positions.resize(iCount);
+    for (int i = 0; i < iCount; i++)
+        msg.positions[i] = (int64_t)(short)iPos[i];
+    msg.hasExtra = true;
+    msg.extraParam = (int64_t)big;
+    auto packet = net::msg::serialize(msg);
     g_NetIF->SendPacketMessage(packet);
 }
 
+// Типизированная сериализация: кулинария (Cooking)
 void CS_Cooking(DWORD dwNPCID, int* iPos, int iCount, short percent, bool asr /* = false */)
 {
-    WPacket packet = g_NetIF->GetWPacket();
-    if(asr)
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASR);
-    }
-    else
-    {
-        packet.WriteCmd(CMD_CM_LIFESKILL_ASK);
-    }
-    packet.WriteInt64(3);    //  ��֧
-    packet.WriteInt64(dwNPCID);
-    for(int i = 0; i < iCount; i++)
-    {
-        packet.WriteInt64((short)iPos[i]);
-    }
-    packet.WriteInt64(percent);
+    net::msg::CmLifeSkillCraftMessage msg;
+    msg.isAnswer = asr;
+    msg.skillType = 3;
+    msg.npcId = (int64_t)dwNPCID;
+    msg.positions.resize(iCount);
+    for (int i = 0; i < iCount; i++)
+        msg.positions[i] = (int64_t)(short)iPos[i];
+    msg.hasExtra = true;
+    msg.extraParam = (int64_t)percent;
+    auto packet = net::msg::serialize(msg);
     g_NetIF->SendPacketMessage(packet);
 }
 
+// Разблокировка персонажа после крафта
 void CS_UnlockCharacter()
 {
-    WPacket packet = g_NetIF->GetWPacket();
-    packet.WriteCmd(CMD_CM_ITEM_FORGE_CANACTION);
-    packet.WriteInt64(0);
+    auto packet = net::msg::serialize(net::msg::CmUnlockCharacterMessage{0});
     g_NetIF->SendPacketMessage(packet);
 }
-//add by ALLEN 2007-10-19
+// Ставка на аукционе
 void CS_AutionBidup(DWORD dwNPCID, short sItemID, uLong price)
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd(CMD_CM_BIDUP);
-	packet.WriteInt64(dwNPCID);
-	packet.WriteInt64(sItemID);
-	packet.WriteInt64(price);
+	auto packet = net::msg::serialize(net::msg::CmBidUpMessage{(int64_t)dwNPCID, (int64_t)sItemID, (int64_t)price});
 	g_NetIF->SendPacketMessage(packet);
 }
 
+// Закрытие окна антизависимости
 void CS_AntiIndulgence_Close()
 {
-	WPacket packet = g_NetIF->GetWPacket();
-	packet.WriteCmd(CMD_CM_ANTIINDULGENCE);
+	auto packet = net::msg::serializeCmAntiIndulgenceCmd();
     g_NetIF->SendPacketMessage(packet);
 }
 
+// Блокировка предмета от выбрасывания
 void	CS_DropLock(int slot){
-	WPacket	pk	=	g_NetIF->GetWPacket();
-	pk.WriteCmd(	CMD_CM_ITEM_LOCK_ASK	);
-	pk.WriteInt64(	slot	);
-	g_NetIF->SendPacketMessage(	pk	);
+	auto pk = net::msg::serialize(net::msg::CmItemLockAskMessage{(int64_t)slot});
+	g_NetIF->SendPacketMessage(pk);
 }
 
+// Разблокировка предмета по паролю
 void CS_UnlockItem( const char szPassword[], int slot)	{
-    WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_ITEM_UNLOCK_ASK);
-    pk.WriteString(szPassword);
-	pk.WriteInt64(	slot	);
+	auto pk = net::msg::serialize(net::msg::CmItemUnlockAskMessage{szPassword, (int64_t)slot});
 	g_NetIF->SendPacketMessage(pk);
 }
 
+// Запрос PIN-кода
 void CS_SendGameRequest( const char szPassword[])	{
-    WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_GAME_REQUEST_PIN);
-	pk.WriteString(szPassword);
+	auto pk = net::msg::serialize(net::msg::CmGameRequestPinMessage{szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
 
+// Установка прав в гильдии
 void CS_SetGuildPerms( DWORD ID, uLong Perms ){
-    WPacket pk	=g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_GUILD_PERM);
-    pk.WriteInt64(ID);
-    pk.WriteInt64(Perms);
+	auto pk = net::msg::serialize(net::msg::CmGuildPermMessage{(int64_t)ID, (int64_t)Perms});
 	g_NetIF->SendPacketMessage(pk);
 }
 
+// Запрос текущего множителя дропа
 void CS_RequestDropRate() {
-	WPacket pk = g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_REQUEST_DROP_RATE);
+	auto pk = net::msg::serializeCmRequestDropRateCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
+// Запрос текущего множителя опыта
 void CS_RequestExpRate() {
-	WPacket pk = g_NetIF->GetWPacket();
-	pk.WriteCmd(CMD_CM_REQUEST_EXP_RATE);
+	auto pk = net::msg::serializeCmRequestExpRateCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 

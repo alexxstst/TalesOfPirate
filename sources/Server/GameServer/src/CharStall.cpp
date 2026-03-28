@@ -44,7 +44,7 @@ namespace mission
 	{
 	}
 
-	void CStallSystem::StartStall( CCharacter& staller, RPACKET packet )
+	void CStallSystem::StartStall( CCharacter& staller, const net::msg::CmStallInfoMessage& msg )
 	{
 		if (!staller.IsLiveing()){
 			return;
@@ -108,7 +108,7 @@ namespace mission
 
 		char szLog[2046] = "";
 		char szTemp[128] = "";
-		std::string pszName = packet.ReadString();
+		const std::string& pszName = msg.name;
 		if( pszName.empty() )
 		{
 			//staller.SystemNotice( "̯λ������Ч����" );
@@ -220,7 +220,7 @@ namespace mission
 		
 		strncpy( pData->m_szName, pszName.c_str(), ROLE_MAXNUM_STALL_NUM );
 		sprintf( szLog, RES_STRING(GM_CHARSTALL_CPP_00013), staller.GetName() );
-		pData->m_byNum = packet.ReadInt64();
+		pData->m_byNum = static_cast<BYTE>(msg.num);
 		if( pData->m_byNum == 0 || pData->m_byNum > byStallNum )
 		{
 			pData->Free();
@@ -237,10 +237,10 @@ namespace mission
 		for( BYTE i = 0;i < pData->m_byNum; i++ )
 		{
 
-			int grid = packet.ReadInt64();
-			int gold = packet.ReadInt64();
-			int count = packet.ReadInt64();
-			int index = packet.ReadInt64();
+			int grid = static_cast<short>(msg.items[i].grid);
+			int gold = static_cast<int>(msg.items[i].money);
+			int count = static_cast<BYTE>(msg.items[i].count);
+			int index = static_cast<short>(msg.items[i].index);
 
 			//validation for item stall.
 			if (gold > 2000000000){
@@ -394,9 +394,8 @@ return;
 		//staller.SystemNotice( "��̯�ɹ���" );
 		staller.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00026));
 
-		WPACKET wpk = GETWPACKET();
-		WRITE_CMD(wpk, CMD_MC_STALL_START);
-		WRITE_LONG(wpk, staller.GetID());
+		// Типизированная сериализация: торговая лавка открыта
+		auto wpk = net::msg::serialize(net::msg::McStallSuccessMessage{staller.GetID()});
 		staller.ReflectINFof(&staller, wpk);
 	}
 
@@ -412,13 +411,12 @@ return;
 		//staller.SystemNotice( "��̯�ɹ���" );
 		staller.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00027));
 
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_STALL_CLOSE );
-		WRITE_LONG(packet, staller.GetID() );
+		// Типизированная сериализация: торговая лавка закрыта
+		auto packet = net::msg::serialize(net::msg::McStallCloseMessage{staller.GetID()});
 		staller.NotiChgToEyeshot( packet );
 	}
 
-	void CStallSystem::OpenStall(CCharacter& character, RPACKET packet)
+	void CStallSystem::OpenStall(CCharacter& character, const net::msg::CmStallOpenMessage& msg)
 	{
 		if (character.GetBoat())
 		{
@@ -441,7 +439,7 @@ return;
 			return;
 		}
 
-		DWORD dwCharID = packet.ReadInt64();
+		DWORD dwCharID = static_cast<DWORD>(msg.charId);
 		CCharacter* pStaller = character.GetSubMap()->FindCharacter(dwCharID, character.GetShape().centre);
 		if (!pStaller)
 		{
@@ -501,21 +499,16 @@ return;
 			}
 		}
 
-		// Формат count-first: [count, data1, data2, ..., dataN]
-		WPACKET WtPk = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_STALLSEARCH);
-		WRITE_LONG(WtPk, (long)results.size());
-		for (size_t i = 0; i < results.size(); ++i){
-			WRITE_STRING(WtPk, results[i].name);
-			WRITE_STRING(WtPk, results[i].stallName);
-			WRITE_STRING(WtPk, results[i].location);
-			WRITE_LONG(WtPk, results[i].count);
-			WRITE_LONG(WtPk, results[i].cost);
+		net::msg::McShowStallSearchMessage stallMsg;
+		for (auto& r : results) {
+			stallMsg.entries.push_back({r.name, r.stallName, r.location,
+				static_cast<int64_t>(r.count), static_cast<int64_t>(r.cost)});
 		}
+		auto WtPk = net::msg::serialize(stallMsg);
 		ply.ReflectINFof(&ply, WtPk);
 	}
 
-	void CStallSystem::BuyGoods( CCharacter& character, RPACKET packet )
+	void CStallSystem::BuyGoods( CCharacter& character, const net::msg::CmStallBuyMessage& msg )
 	{
 		if( character.m_CKitbag.IsPwdLocked())
 		{
@@ -560,15 +553,15 @@ return;
 			return;
 		}
 
-		DWORD dwCharID = packet.ReadInt64();
+		DWORD dwCharID = static_cast<DWORD>(msg.charId);
 		CCharacter* pStaller = character.GetSubMap()->FindCharacter( dwCharID, character.GetShape().centre );
 		if( !pStaller || !pStaller->GetStallData() )
 		{
 			return;
 		}
 
-		BYTE byGrid = packet.ReadInt64();
-		BYTE byCount = packet.ReadInt64();
+		BYTE byGrid = static_cast<BYTE>(msg.index);
+		BYTE byCount = static_cast<BYTE>(msg.count);
 		if( byCount == 0 )
 		{
 			return;
@@ -610,7 +603,7 @@ return;
 				}
 				//check if char has item.
 				SItemGrid	*pSItem = 0;
-				int slot = packet.ReadInt64();
+				int slot = static_cast<dbc::Char>(msg.gridId);
 				pSItem = character.GetItem2(2, slot);
 				if (!pSItem->GetInstAttr(ITEMATTR_TRADABLE)) {
 					character.SystemNotice("Item is untradable!");
@@ -937,115 +930,101 @@ return;
 
 	void CStallSystem::DelGoods( CCharacter& staller, BYTE byGrid, BYTE byCount )
 	{
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_STALL_DELGOODS );
-		WRITE_LONG(packet, staller.GetID() );
-		WRITE_CHAR(packet, byGrid);
-		WRITE_CHAR(packet, byCount);
+		// Типизированная сериализация: удаление товара из лавки
+		auto packet = net::msg::serialize(net::msg::McStallDelGoodsMessage{staller.GetID(), (int64_t)byGrid, (int64_t)byCount});
 		staller.NotiChgToEyeshot( packet );
 	}
 
 	void CStallSystem::SyncData( CCharacter& character, CCharacter& staller )
 	{
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_STALL_ALLDATA );
-		WRITE_LONG(packet, staller.GetID() );
-
+		// Типизированная сериализация: полные данные лавки
 		mission::CStallData* pData = staller.GetStallData();
-		if( pData == NULL ) return;		
+		if( pData == NULL ) return;
 		CKitbag& Bag = staller.m_CKitbag;
 
-		WRITE_CHAR(packet, pData->m_byNum );
-		WRITE_STRING(packet, pData->m_szName );
+		net::msg::McStallSyncDataMessage stallMsg;
+		stallMsg.stallerId = staller.GetID();
+		stallMsg.num = pData->m_byNum;
+		stallMsg.name = pData->m_szName;
 
 		for( BYTE i = 0; i < pData->m_byNum; ++i )
 		{
-			WRITE_CHAR(packet, pData->m_Goods[i].byGrid );
-			WRITE_SHORT(packet, pData->m_Goods[i].sItemID );
-			WRITE_CHAR(packet, pData->m_Goods[i].byCount );
-			WRITE_LONG(packet, pData->m_Goods[i].dwMoney );
+			net::msg::StallSyncGoodsEntry entry{};
+			entry.grid = pData->m_Goods[i].byGrid;
+			entry.itemId = pData->m_Goods[i].sItemID;
+			entry.count = pData->m_Goods[i].byCount;
+			entry.money = pData->m_Goods[i].dwMoney;
 
 			CItemRecord* pItem = (CItemRecord*)GetItemRecordInfo( Bag.GetID( pData->m_Goods[i].byIndex ) );
 			if( pItem == NULL )
 			{
-				/*staller.SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = %d, Index = %d", 
+				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00056),
 					Bag.GetID( pData->m_Goods[i].byIndex ), pData->m_Goods[i].byIndex );
-				character.SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = %d, Index = %d", 
-					Bag.GetID( pData->m_Goods[i].byIndex ), pData->m_Goods[i].byIndex );*/
-				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00056), 
-					Bag.GetID( pData->m_Goods[i].byIndex ), pData->m_Goods[i].byIndex );
-				character.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00056), 
+				character.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00056),
 					Bag.GetID( pData->m_Goods[i].byIndex ), pData->m_Goods[i].byIndex );
 				return;
 			}
 
-			WRITE_SHORT(packet, pItem->sType );
+			entry.itemType = pItem->sType;
+			entry.isBoat = (pItem->sType == enumItemTypeBoat);
 
-			if( pItem->sType == enumItemTypeBoat )
+			if( entry.isBoat )
 			{
 				CCharacter* pBoat = staller.GetPlayer()->GetBoat( (DWORD)Bag.GetDBParam( enumITEMDBP_INST_ID, pData->m_Goods[i].byIndex ) );
 				if( pBoat )
 				{
-					WRITE_CHAR( packet, 1 );
-					WRITE_STRING( packet, pBoat->GetName() );
-					WRITE_SHORT( packet, (USHORT)pBoat->getAttr( ATTR_BOAT_SHIP ) );
-					WRITE_SHORT( packet, (USHORT)pBoat->getAttr( ATTR_LV ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_CEXP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_HP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMXHP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_SP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMXSP ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMNATK ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMXATK ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BDEF ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BMSPD ) );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BASPD ) );
-					WRITE_CHAR( packet, (BYTE)pBoat->m_CKitbag.GetUseGridNum() );
-					WRITE_CHAR( packet, (BYTE)pBoat->m_CKitbag.GetCapacity() );
-					WRITE_LONG( packet, (long)pBoat->getAttr( ATTR_BOAT_PRICE ) );
-				}
-				else
-				{
-					WRITE_CHAR( packet, 0 );
+					entry.hasBoat = true;
+					entry.boat = {
+						std::string(pBoat->GetName()),
+						static_cast<int64_t>((USHORT)pBoat->getAttr(ATTR_BOAT_SHIP)),
+						static_cast<int64_t>((USHORT)pBoat->getAttr(ATTR_LV)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_CEXP)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_HP)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BMXHP)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_SP)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BMXSP)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BMNATK)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BMXATK)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BDEF)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BMSPD)),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BASPD)),
+						static_cast<int64_t>((BYTE)pBoat->m_CKitbag.GetUseGridNum()),
+						static_cast<int64_t>((BYTE)pBoat->m_CKitbag.GetCapacity()),
+						static_cast<int64_t>((long)pBoat->getAttr(ATTR_BOAT_PRICE))
+					};
 				}
 			}
 			else
 			{
-				// �õ��ߵ�ʵ������
 				SItemGrid* pGridCont = Bag.GetGridContByID( pData->m_Goods[i].byIndex );
 				if( !pGridCont )
 				{
-					//staller.SystemNotice( "ָ������Ʒ��λ��Ʒʵ����ϢΪ�գ�ID[%d]", pData->m_Goods[i].byIndex );
 					staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00057), pData->m_Goods[i].byIndex );
 					return;
 				}
-
-				WRITE_SHORT( packet, pGridCont->sEndure[0] );
-				WRITE_SHORT( packet, pGridCont->sEndure[1] );
-				WRITE_SHORT( packet, pGridCont->sEnergy[0] );
-				WRITE_SHORT( packet, pGridCont->sEnergy[1] );
-				WRITE_CHAR( packet, pGridCont->chForgeLv );
-				WRITE_CHAR( packet, pGridCont->IsValid() ? 1 : 0 );
-				WRITE_CHAR(packet, pGridCont->bItemTradable);
-				WRITE_LONG(packet, pGridCont->expiration);
-
-				WRITE_LONG(packet, pGridCont->GetDBParam(enumITEMDBP_FORGE));
-				WRITE_LONG(packet, pGridCont->GetDBParam(enumITEMDBP_INST_ID));
-				if( pGridCont->IsInstAttrValid() ) // ����ʵ������
+				entry.item.endure0 = pGridCont->sEndure[0];
+				entry.item.endure1 = pGridCont->sEndure[1];
+				entry.item.energy0 = pGridCont->sEnergy[0];
+				entry.item.energy1 = pGridCont->sEnergy[1];
+				entry.item.forgeLv = pGridCont->chForgeLv;
+				entry.item.valid = pGridCont->IsValid() ? 1 : 0;
+				entry.item.tradable = pGridCont->bItemTradable;
+				entry.item.expiration = pGridCont->expiration;
+				entry.item.forgeParam = pGridCont->GetDBParam(enumITEMDBP_FORGE);
+				entry.item.instId = pGridCont->GetDBParam(enumITEMDBP_INST_ID);
+				if( pGridCont->IsInstAttrValid() )
 				{
-					WRITE_CHAR( packet, 1 );
+					entry.item.hasInstAttr = true;
 					for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 					{
-						WRITE_SHORT(packet, pGridCont->sInstAttr[j][0]);
-						WRITE_SHORT(packet, pGridCont->sInstAttr[j][1]);
+						entry.item.instAttr[j][0] = pGridCont->sInstAttr[j][0];
+						entry.item.instAttr[j][1] = pGridCont->sInstAttr[j][1];
 					}
 				}
-				else
-				{
-					WRITE_CHAR( packet, 0 ); // ������ʵ������
-				}
 			}
+			stallMsg.goods.push_back(std::move(entry));
 		}
+		auto packet = net::msg::serialize(stallMsg);
 		character.ReflectINFof( &staller, packet );
 	}
 }

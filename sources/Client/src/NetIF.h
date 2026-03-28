@@ -33,31 +33,6 @@ struct lua_State;
 
 extern inline int lua_HandleNetMessage(lua_State* L);
 
-// Класс записи логов
-class CLogName
-{
-public:
-	CLogName();
-	void Init();
-
-	const char* SetLogName(DWORD dwWorlID, const char* szName);
-	const char* GetLogName(DWORD dwWorlID);
-	const char* GetMainLogName();
-
-	bool IsMainCha(DWORD dwWorlID);
-
-private:
-	enum
-	{
-		LOG_NAME = 256,
-		LOG_MAX = 1000,
-	};
-
-	DWORD _dwWorldArray[LOG_MAX];
-	char  _szLogName[LOG_MAX][LOG_NAME];
-	char  _szNoFind[LOG_NAME];
-};
-
 class NetIF : public net::ITcpClientHandler, public net::ICryptoProvider {
 public:
 	// Обработка входящего пакета (Server → Client)
@@ -143,6 +118,5 @@ private:
 };
 
 extern NetIF*    g_NetIF;
-extern CLogName  g_LogName;
 
 #endif

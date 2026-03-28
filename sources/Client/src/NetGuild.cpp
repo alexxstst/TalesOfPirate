@@ -278,7 +278,6 @@ void NetMC_GUILD_MOTTO(cChar *motto)
 
 void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[], const char szGuildMotto[],uLong chGuildPermission)
 {
-	const char* pszLogName = g_LogName.GetLogName( dwCharID );
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Guild Info:{}, Name:{}, Motto:{}", dwGuildID, szGuildName, szGuildMotto));
 
 	if( !CGameApp::GetCurScene() )

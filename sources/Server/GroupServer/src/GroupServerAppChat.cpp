@@ -577,23 +577,10 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,net::TcpClient *client,net::RPac
 			l_sess	=AddSession();
 			l_sess->AddPlayer(ply);
 
-			l_wpk	= net::WPacket(256);
-			l_wpk.WriteCmd(CMD_PC_SESS_CREATE);
-			l_wpk.WriteInt64(l_sess->GetID());
-			l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);
-			l_wpk.WriteString(ply->m_chaname[ply->m_currcha].c_str());
-			l_wpk.WriteString(ply->m_motto[ply->m_currcha].c_str());
-			l_wpk.WriteInt64(ply->m_icon[ply->m_currcha]);
-
 			l_notiply[l_notiplycount]	=ply;
 			++l_notiplycount;
 		}
 		l_sess->AddPlayer(l_sessply);
-
-		l_wpk.WriteInt64(l_sessply->m_chaid[l_sessply->m_currcha]);
-		l_wpk.WriteString(l_sessply->m_chaname[l_sessply->m_currcha].c_str());
-		l_wpk.WriteString(l_sessply->m_motto[l_sessply->m_currcha].c_str());
-		l_wpk.WriteInt64(l_sessply->m_icon[l_sessply->m_currcha]);
 
 		l_notiply[l_notiplycount]	=l_sessply;
 		++l_notiplycount;
@@ -621,13 +608,13 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,net::TcpClient *client,net::RPac
 					RunChainGetArmor<Chat_Player> l(*l_sess);
 					while (l_ply2 = l_sess->GetNextPlayer())
 					{
-						if (l_ply1 == l_ply2) 
+						if (l_ply1 == l_ply2)
 						{
 							break;
 						}
 					}
 					l.unlock();
-					if (!l_ply2) 
+					if (!l_ply2)
 					{
 						break;
 					}
@@ -642,7 +629,19 @@ void	GroupServerApp::CP_SESS_CREATE(Player *ply,net::TcpClient *client,net::RPac
 		}
 		if(!l_isRepeat)
 		{
+			// Формируем пакет с count-first: sessId, count, [участники...]
+			l_wpk	= net::WPacket(256);
+			l_wpk.WriteCmd(CMD_PC_SESS_CREATE);
+			l_wpk.WriteInt64(l_sess->GetID());
 			l_wpk.WriteInt64(l_notiplycount);
+			for (int ni = 0; ni < l_notiplycount; ++ni)
+			{
+				Player* p = l_notiply[ni];
+				l_wpk.WriteInt64(p->m_chaid[p->m_currcha]);
+				l_wpk.WriteString(p->m_chaname[p->m_currcha].c_str());
+				l_wpk.WriteString(p->m_motto[p->m_currcha].c_str());
+				l_wpk.WriteInt64(p->m_icon[p->m_currcha]);
+			}
 			SendToClient(l_notiply,l_notiplycount,l_wpk);
 		}else
 		{
@@ -729,19 +728,12 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,net::TcpClient *client,net::RPacket
 	Player	*l_notiply[Player::emMaxSessPlayer];
 	Player	*l_sessply1;
 
-	net::WPacket l_toAdded(256);
-	l_toAdded.WriteCmd(CMD_PC_SESS_CREATE);
-	l_toAdded.WriteInt64(l_sess->GetID());
+	// Собираем участников сессии для формирования пакета с count-first
 	RunChainGetArmor<Chat_Player> ll(*l_sess);
 	while(l_sessply1 =l_sess->GetNextPlayer())
 	{
 		if(l_sessply1->m_currcha >=0)
 		{
-			l_toAdded.WriteInt64(l_sessply1->m_chaid[l_sessply1->m_currcha]);
-			l_toAdded.WriteString(l_sessply1->m_chaname[l_sessply1->m_currcha].c_str());
-			l_toAdded.WriteString(l_sessply1->m_motto[l_sessply1->m_currcha].c_str());
-			l_toAdded.WriteInt64(l_sessply1->m_icon[l_sessply1->m_currcha]);
-
 			l_notiply[l_notiplycount] =l_sessply1;
 			l_notiplycount ++;
 		}
@@ -749,7 +741,18 @@ void	GroupServerApp::CP_SESS_ADD(Player *ply,net::TcpClient *client,net::RPacket
 	ll.unlock();
 	if(l_notiplycount)
 	{
+		net::WPacket l_toAdded(256);
+		l_toAdded.WriteCmd(CMD_PC_SESS_CREATE);
+		l_toAdded.WriteInt64(l_sess->GetID());
 		l_toAdded.WriteInt64(l_notiplycount);
+		for (int ni = 0; ni < l_notiplycount; ++ni)
+		{
+			Player* p = l_notiply[ni];
+			l_toAdded.WriteInt64(p->m_chaid[p->m_currcha]);
+			l_toAdded.WriteString(p->m_chaname[p->m_currcha].c_str());
+			l_toAdded.WriteString(p->m_motto[p->m_currcha].c_str());
+			l_toAdded.WriteInt64(p->m_icon[p->m_currcha]);
+		}
 		SendToClient(l_sessply,l_toAdded);
 
 		net::WPacket l_wpk(256);

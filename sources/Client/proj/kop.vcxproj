@@ -21,12 +21,12 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>Application</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <EnableASAN>false</EnableASAN>
   </PropertyGroup>
@@ -577,9 +577,6 @@
     <ClInclude Include="..\src\UITradeForm.h" />
     <ClInclude Include="..\src\UITreeView.h" />
     <ClInclude Include="..\src\WorldScene.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\src\GameApp使用指南.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\src\kop.ico" />

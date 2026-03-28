@@ -1339,7 +1339,6 @@ void NetChangeChaPart(unsigned int nID, stNetLookInfo& SLookInfo) {
 }
 
 void NetChangeChaLookEnergy(unsigned int nID, stLookEnergy& SLookEnergy) {
-	const char* pszLogName = g_LogName.GetLogName(nID);
 	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(275));
 	for (int i = 0; i < enumEQUIP_NUM; i++) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("{}: {}", i, SLookEnergy.sEnergy[i]));
@@ -1392,8 +1391,6 @@ void NetTempChangeChaPart(unsigned int nID, stTempChangeChaPart& SPart) {
 }
 
 void NetActorChangeCha(unsigned int nID, stNetChangeCha& SChangeCha) {
-	const char* szLogName = g_LogName.GetLogName(SChangeCha.ulMainChaID);
-
 	// log
 	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(278), GetTickCount());
 	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
@@ -2443,8 +2440,6 @@ void stNetPKCtrl::Exec(unsigned long ulWorldID) {
 }
 
 void stNetDefaultSkill::Exec(void) {
-	const char* szLogName = g_LogName.GetMainLogName();
-
 	// log
 	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(292), GetTickCount());
 	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }

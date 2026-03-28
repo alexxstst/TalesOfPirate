@@ -120,14 +120,16 @@ public:
 	void	SynSkillStateToUnit(CFightAble *pCObj);
 	void	SynLookEnergy(void);
 	// ���ݱ���֯
-	void	WriteSkillState(WPACKET &pk);
-	void	WriteAttr(WPACKET &pk, dbc::Short sSynType);
-	void	WriteMonsAttr(WPACKET &pk, dbc::Short sSynType);
-	void	WriteAttr(WPACKET &pk, dbc::Short sStartAttr, dbc::Short sEndAttr, dbc::Short sSynType);
-	void	WriteLookEnergy(WPACKET &pk);
+	void	WriteSkillState(net::WPacket &pk);
+	void	WriteAttr(net::WPacket &pk, dbc::Short sSynType);
+	void	WriteMonsAttr(net::WPacket &pk, dbc::Short sSynType);
+	void	WriteAttr(net::WPacket &pk, dbc::Short sStartAttr, dbc::Short sEndAttr, dbc::Short sSynType);
+	void	WriteLookEnergy(net::WPacket &pk);
 	// Fill* — заполнение типизированных структур (CommandMessages.h)
 	void	FillSkillState(net::msg::ChaSkillStateInfo &s);
 	void	FillAttr(net::msg::ChaAttrInfo &a, dbc::Short sSynType);
+	void	FillAttrAll(net::msg::ChaAttrInfo &a, dbc::Short sSynType); // все атрибуты 0..ATTR_CLIENT_MAX-1
+	void	FillMonsAttr(net::msg::ChaAttrInfo &a, dbc::Short sSynType); // 5 атрибутов монстра
 
 	bool	IsRightSkill(CSkillRecord *pSkill);
 	bool	IsRightSkillSrc(dbc::Char chSkillEffType);
@@ -213,9 +215,6 @@ protected:
 	void	Finally();
 
 	CFightAble	*	IsFightAble(){return this;}
-	void	WritePK(WPACKET& wpk);			//д����ұ����������и��ӽṹ(���ٻ��޵�)����������
-	void	ReadPK(RPACKET rpk);			//�ع���ұ����������и��ӽṹ(���ٻ��޵�)
-
 	bool	GetFightTargetShape(Square *pSTarShape);
 
 	

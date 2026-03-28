@@ -29,9 +29,7 @@ Entity::Entity():m_cat(0),m_ID(0)
 	m_bActiveEyeshot = true;
 	m_bValid = false;
 
-	m_CLog.SetEnable(g_bLogEntity);
-	//m_CLog.SetLogName("δ����Log");
-	m_CLog.SetLogName("Unnamed Log");
+	SetLogName("Unnamed Log");
 }
 
 void Entity::Free()
@@ -41,9 +39,7 @@ void Entity::Free()
 
 void Entity::Initially()
 {
-	m_CLog.SetEnable(g_bLogEntity);
-	//m_CLog.SetLogName("δ����Log");
-m_CLog.SetLogName("Unnamed Log");
+	SetLogName("Unnamed Log");
 	m_bValid = true;
 	memset(&m_shape, 0, sizeof(Square));
 	memset(&m_STerritory, 0, sizeof(Circle));
@@ -79,38 +75,6 @@ void Entity::Finally()
 	m_SExistCtrl.sState = enumEXISTS_WITHERING;
 	m_bValid = false;
 	m_pCEyeshotHost = 0;
-}
-
-void Entity::WritePK(WPACKET& wpk)			//д����ұ����������и��ӽṹ(���ٻ��޵�)����������
-{
-	//ToDo:д���Լ�������
-	WRITE_LONG(wpk, m_cat);
-	WRITE_LONG(wpk, m_ID);
-	//WRITE_LONG(wpk, GetShape().centre.x);
-	//WRITE_LONG(wpk, GetShape().centre.y);
-	//WRITE_LONG(wpk, GetShape().radius);
-	WRITE_SEQ(wpk, m_name,uShort(strlen(m_name)+1));
-
-	Char *szLogName = m_CLog.GetLogName();
-	WRITE_SEQ(wpk, szLogName,uShort(strlen(szLogName)+1));
-}
-
-void Entity::ReadPK(RPACKET rpk)			//�ع���ұ����������и��ӽṹ(���ٻ��޵�)
-{
-	//ToDo:�����Լ�������
-	m_cat	=(short)(READ_LONG(rpk));
-	m_ID	= READ_LONG(rpk);
-	//Square	SShape;
-	//SShape.centre.x	=READ_LONG(rpk);
-	//SShape.centre.y	=READ_LONG(rpk);
-	//SShape.radius	=READ_LONG(rpk);
-	//SetInitShape(SShape);
-
-	strcpy(m_name, READ_STRING(rpk).c_str());
-
-	Char szLogName[1024];
-	strcpy(szLogName, READ_STRING(rpk).c_str());
-	m_CLog.SetLogName(szLogName);
 }
 
 Entity	*Entity::SearchByIDInEyeshot(cuLong culID)
@@ -173,7 +137,7 @@ void Entity::ActiveEyeshot(bool bActive)
 	}
 }
 
-void Entity::NotiChgToEyeshot(WPACKET chginf, bool bIncludeOwn)
+void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
 {
 	SubMap		*pCMap = GetSubMap();
 	Entity		*pCTarEnt;
@@ -741,21 +705,25 @@ bool Entity::IsInEyeshot(Entity *pCTarEnti)
 	return false;
 }
 
-void Entity::WriteEventInfo(WPACKET &pk)
+void Entity::WriteEventInfo(net::WPacket &pk)
 {
-	WRITE_LONG(pk, GetID());
+	pk.WriteInt64(GetID());
 	if (IsCharacter())
-		WRITE_CHAR(pk, 1);
+		pk.WriteInt64(1);
 	else
-		WRITE_CHAR(pk, 2);
+		pk.WriteInt64(2);
 	GetEvent().WriteInfo(pk);
 }
 
 void Entity::SynEventInfo(void)
 {
-	WPACKET WtPk	=GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_EVENT_INFO);	//ͨ���ж�
-	WriteEventInfo(WtPk);
+	// Типизированная сериализация: синхронизация информации о событии
+	auto WtPk = net::msg::serialize(net::msg::McSynEventInfoMessage{
+		static_cast<int64_t>(GetID()),
+		IsCharacter() ? 1LL : 2LL,
+		static_cast<int64_t>(GetEvent().GetID()),
+		std::string(GetEvent().GetName())
+	});
 	NotiChgToEyeshot(WtPk, false);
 }
 
@@ -778,7 +746,7 @@ SubMap* Entity::GetSubMapFar(void)
 	return pCMap;
 }
 
-void NotiPkToWorld(WPACKET chginf)
+void NotiPkToWorld(net::WPacket chginf)
 {
     SENDTOWORLD(chginf);
 }

@@ -9,6 +9,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <variant>
 #include <cstdint>
 #include <stdexcept>
 
@@ -684,6 +685,11 @@ namespace net {
 			uint32_t gpAddr;
 		};
 
+		/// CMD_PM_GARNER2_UPDATE (legacy C++ GroupServer): 6 chaId'ов (1 reverse + 5 forward).
+		struct PmGarner2UpdateLegacyMessage {
+			int64_t chaIds[6] = {};
+		};
+
 		struct MpGuildBankAckMessage {
 			int64_t guildId;
 			uint32_t gateAddr;
@@ -706,10 +712,22 @@ namespace net {
 			std::vector<TeamMemberData> members;
 		};
 
+		/// Отмена приглашения в команду (причина + chaId инициатора).
+		struct PcTeamCancelMessage {
+			int64_t reason;
+			int64_t chaId;
+		};
+
 		struct PcFrndInviteMessage {
 			std::string inviterName;
 			int64_t chaId;
 			int64_t icon;
+		};
+
+		/// Отмена приглашения в друзья (причина + chaId инициатора).
+		struct PcFrndCancelMessage {
+			int64_t reason;
+			int64_t chaId;
 		};
 
 		struct PcFrndRefreshMessage {
@@ -724,6 +742,79 @@ namespace net {
 		struct PcFrndRefreshDelMessage {
 			int64_t msg;
 			int64_t chaId;
+		};
+
+		// =================================================================
+		//  GM-информация — тегированное сообщение (switch по type)
+		//  MSG_FRND_REFRESH_START=1, ADD=2, DEL=3, ONLINE=4, OFFLINE=5
+		// =================================================================
+
+		/// Запись друга/GM: chaId, имя, девиз, иконка, статус.
+		struct GmFrndEntry {
+			int64_t chaId;
+			std::string chaName;
+			std::string motto;
+			int64_t icon;
+			int64_t status;
+		};
+
+		/// Запись добавления друга/GM: группа, chaId, имя, девиз, иконка.
+		struct GmFrndAddEntry {
+			std::string group;
+			int64_t chaId;
+			std::string chaName;
+			std::string motto;
+			int64_t icon;
+		};
+
+		/// Варианты данных GM-информации.
+		struct GmInfoStartData { std::vector<GmFrndEntry> entries; };
+		struct GmInfoChaIdData { int64_t chaId = 0; };
+
+		/// Вариант данных GM-информации (std::variant).
+		using GmInfoData = std::variant<
+			std::monostate,     // unknown
+			GmInfoStartData,    // START(1)
+			GmFrndAddEntry,     // ADD(2)
+			GmInfoChaIdData     // ONLINE(4) / OFFLINE(5) / DEL(3)
+		>;
+
+		/// Тегированное сообщение PC_GM_INFO (std::variant).
+		struct PcGmInfoMessage {
+			int64_t type = 0; // сохраняем для сериализации
+			GmInfoData data;
+		};
+
+		/// Данные о себе в списке друзей (FRND_REFRESH START).
+		struct FrndSelfData {
+			int64_t chaId;
+			std::string chaName;
+			std::string motto;
+			int64_t icon;
+		};
+
+		/// Группа друзей: имя группы + список участников.
+		struct FrndGroupData {
+			std::string groupName;
+			std::vector<GmFrndEntry> members;
+		};
+
+		/// Варианты данных обновления списка друзей.
+		struct FrndRefreshStartData { FrndSelfData self; std::vector<FrndGroupData> groups; };
+		struct FrndRefreshChaIdData { int64_t chaId = 0; };
+
+		/// Вариант данных обновления друзей (std::variant).
+		using FrndRefreshData = std::variant<
+			std::monostate,         // unknown
+			FrndRefreshStartData,   // START(1)
+			GmFrndAddEntry,         // ADD(2)
+			FrndRefreshChaIdData    // ONLINE(4) / OFFLINE(5) / DEL(3)
+		>;
+
+		/// Тегированное сообщение PC_FRND_REFRESH (std::variant).
+		struct PcFrndRefreshFullMessage {
+			int64_t type = 0; // сохраняем для сериализации
+			FrndRefreshData data;
 		};
 
 		struct PcFrndChangeGroupMessage {
@@ -787,6 +878,40 @@ namespace net {
 			int64_t permission;
 		};
 
+		/// Запись участника гильдии (CMD_PC_GUILD: MSG_GUILD_START / MSG_GUILD_ADD).
+		struct GuildMemberEntry {
+			int64_t online = 0; int64_t chaId = 0;
+			std::string chaName; std::string motto; std::string job;
+			int64_t degree = 0; int64_t icon = 0; int64_t permission = 0;
+		};
+
+		/// Варианты данных гильдейского сообщения.
+		struct GuildChaIdData { int64_t chaId = 0; };
+		struct GuildStopData {};
+		struct GuildStartData {
+			int64_t packetIndex = 0;
+			int64_t guildId = 0;       // только если packetIndex==0
+			std::string guildName;     // только если packetIndex==0
+			int64_t leaderId = 0;      // только если packetIndex==0
+			std::vector<GuildMemberEntry> members;
+		};
+		struct GuildAddData { GuildMemberEntry member; };
+
+		/// Вариант данных гильдии (std::variant).
+		using PcGuildData = std::variant<
+			std::monostate,    // unknown
+			GuildChaIdData,    // ONLINE / OFFLINE / DEL
+			GuildStopData,     // STOP
+			GuildStartData,    // START
+			GuildAddData       // ADD
+		>;
+
+		/// CMD_PC_GUILD — составное сообщение гильдии (std::variant).
+		struct PcGuildMessage {
+			int64_t msg = 0; // MSG_GUILD_* — сохраняем для сериализации
+			PcGuildData data;
+		};
+
 		struct PcMasterRefreshAddMessage {
 			int64_t msg;
 			std::string group;
@@ -802,8 +927,9 @@ namespace net {
 		};
 
 		struct PcSessCreateMessage {
-			int64_t sessId;
-			std::vector<SessMemberData> members;
+			int64_t sessId;          // 0 = ошибка, >0 = ID сессии
+			std::string errorMsg;    // если sessId == 0
+			std::vector<SessMemberData> members; // если sessId > 0
 			int64_t notiPlyCount;
 		};
 
@@ -886,6 +1012,15 @@ namespace net {
 		struct PmGuildChallPrizeMoneyMessage {
 			int64_t leaderId;
 			int64_t money;
+		};
+
+		/// CMD_PM_GUILDINFO: информация о гильдии персонажа (GroupServer → GameServer).
+		struct PmGuildInfoMessage {
+			int64_t chaId;
+			int64_t guildId;
+			int64_t leaderId;
+			std::string guildName;
+			std::string guildMotto;
 		};
 
 		struct PtKickUserMessage {
@@ -1189,12 +1324,14 @@ namespace net {
 
 		/// CMD_MM_ADDMONEY (4021): Добавление денег персонажу.
 		struct MmAddMoneyMessage {
+			int64_t srcId = 0;
 			int64_t charDbId = 0;
 			int64_t money = 0;
 		};
 
 		/// CMD_MM_AUCTION (4022): Завершение аукциона.
 		struct MmAuctionMessage {
+			int64_t srcId = 0;
 			int64_t charDbId = 0;
 		};
 
@@ -2178,6 +2315,179 @@ namespace net {
 			return w;
 		}
 
+		// --- Группа C (клиент): CP без gateAddr/gpAddr ---
+		// Клиент отправляет только полезные данные; gateAddr/gpAddr
+		// добавляет GateServer при пересылке на GroupServer.
+
+		inline WPacket serializeClient(const CpGm1SayMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_GM1SAY);
+			w.WriteString(msg.content);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpGm1Say1Message& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_GM1SAY1);
+			w.WriteString(msg.content);
+			w.WriteInt64(msg.color);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSay2TradeMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SAY2TRADE);
+			w.WriteString(msg.content);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSay2AllMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SAY2ALL);
+			w.WriteString(msg.content);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpRefuseToMeMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_REFUSETOME);
+			w.WriteInt64(msg.refuseFlag);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSay2YouMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SAY2YOU);
+			w.WriteString(msg.targetName);
+			w.WriteString(msg.content);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSay2TemMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SAY2TEM);
+			w.WriteString(msg.content);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSay2GudMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SAY2GUD);
+			w.WriteString(msg.content);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpTeamInviteMessage& msg) {
+			WPacket w(64);
+			w.WriteCmd(CMD_CP_TEAM_INVITE);
+			w.WriteString(msg.invitedName);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpTeamRefuseMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_TEAM_REFUSE);
+			w.WriteInt64(msg.inviterChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpTeamAcceptMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_TEAM_ACCEPT);
+			w.WriteInt64(msg.inviterChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpTeamKickMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_TEAM_KICK);
+			w.WriteInt64(msg.kickedChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpTeamLeaveMessage& /*msg*/) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_TEAM_LEAVE);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpFrndInviteMessage& msg) {
+			WPacket w(64);
+			w.WriteCmd(CMD_CP_FRND_INVITE);
+			w.WriteString(msg.invitedName);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpFrndRefuseMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_FRND_REFUSE);
+			w.WriteInt64(msg.inviterChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpFrndAcceptMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_FRND_ACCEPT);
+			w.WriteInt64(msg.inviterChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpFrndDeleteMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_FRND_DELETE);
+			w.WriteInt64(msg.deletedChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpFrndRefreshInfoMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_FRND_REFRESH_INFO);
+			w.WriteInt64(msg.friendChaId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpChangePersonInfoMessage& msg) {
+			WPacket w(128);
+			w.WriteCmd(CMD_CP_CHANGE_PERSONINFO);
+			w.WriteString(msg.motto);
+			w.WriteInt64(msg.icon);
+			w.WriteInt64(msg.refuseSess);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSessCreateMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SESS_CREATE);
+			w.WriteInt64(msg.chaNum);
+			for (const auto& name : msg.chaNames) {
+				w.WriteString(name);
+			}
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSessAddMessage& msg) {
+			WPacket w(128);
+			w.WriteCmd(CMD_CP_SESS_ADD);
+			w.WriteInt64(msg.sessId);
+			w.WriteString(msg.chaName);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSessLeaveMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_CP_SESS_LEAVE);
+			w.WriteInt64(msg.sessId);
+			return w;
+		}
+
+		inline WPacket serializeClient(const CpSessSayMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_CP_SESS_SAY);
+			w.WriteInt64(msg.sessId);
+			w.WriteString(msg.content);
+			return w;
+		}
+
 		// --- Группа D: MP ---
 
 		inline WPacket serialize(const MpEnterMapMessage& msg) {
@@ -2450,12 +2760,28 @@ namespace net {
 			return w;
 		}
 
+		inline WPacket serialize(const PcTeamCancelMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_PC_TEAM_CANCEL);
+			w.WriteInt64(msg.reason);
+			w.WriteInt64(msg.chaId);
+			return w;
+		}
+
 		inline WPacket serialize(const PcFrndInviteMessage& msg) {
 			WPacket w(128);
 			w.WriteCmd(CMD_PC_FRND_INVITE);
 			w.WriteString(msg.inviterName);
 			w.WriteInt64(msg.chaId);
 			w.WriteInt64(msg.icon);
+			return w;
+		}
+
+		inline WPacket serialize(const PcFrndCancelMessage& msg) {
+			WPacket w(32);
+			w.WriteCmd(CMD_PC_FRND_CANCEL);
+			w.WriteInt64(msg.reason);
+			w.WriteInt64(msg.chaId);
 			return w;
 		}
 
@@ -2476,6 +2802,76 @@ namespace net {
 			w.WriteCmd(CMD_PC_FRND_REFRESH);
 			w.WriteInt64(msg.msg);
 			w.WriteInt64(msg.chaId);
+			return w;
+		}
+
+		/// Сериализация тегированного сообщения PC_GM_INFO.
+		inline WPacket serialize(const PcGmInfoMessage& msg) {
+			WPacket w(1024);
+			w.WriteCmd(CMD_PC_GM_INFO);
+			w.WriteInt64(msg.type);
+			// Сериализация данных через std::visit
+			std::visit([&w](auto&& arg) {
+				using T = std::decay_t<decltype(arg)>;
+				if constexpr (std::is_same_v<T, GmInfoStartData>) {
+					w.WriteInt64(static_cast<int64_t>(arg.entries.size()));
+					for (const auto& e : arg.entries) {
+						w.WriteInt64(e.chaId);
+						w.WriteString(e.chaName);
+						w.WriteString(e.motto);
+						w.WriteInt64(e.icon);
+						w.WriteInt64(e.status);
+					}
+				} else if constexpr (std::is_same_v<T, GmInfoChaIdData>) {
+					w.WriteInt64(arg.chaId);
+				} else if constexpr (std::is_same_v<T, GmFrndAddEntry>) {
+					w.WriteString(arg.group);
+					w.WriteInt64(arg.chaId);
+					w.WriteString(arg.chaName);
+					w.WriteString(arg.motto);
+					w.WriteInt64(arg.icon);
+				}
+				// std::monostate — ничего
+			}, msg.data);
+			return w;
+		}
+
+		/// Сериализация тегированного сообщения PC_FRND_REFRESH.
+		inline WPacket serialize(const PcFrndRefreshFullMessage& msg) {
+			WPacket w(4096);
+			w.WriteCmd(CMD_PC_FRND_REFRESH);
+			w.WriteInt64(msg.type);
+			// Сериализация данных через std::visit
+			std::visit([&w](auto&& arg) {
+				using T = std::decay_t<decltype(arg)>;
+				if constexpr (std::is_same_v<T, FrndRefreshChaIdData>) {
+					w.WriteInt64(arg.chaId);
+				} else if constexpr (std::is_same_v<T, GmFrndAddEntry>) {
+					w.WriteString(arg.group);
+					w.WriteInt64(arg.chaId);
+					w.WriteString(arg.chaName);
+					w.WriteString(arg.motto);
+					w.WriteInt64(arg.icon);
+				} else if constexpr (std::is_same_v<T, FrndRefreshStartData>) {
+					w.WriteInt64(arg.self.chaId);
+					w.WriteString(arg.self.chaName);
+					w.WriteString(arg.self.motto);
+					w.WriteInt64(arg.self.icon);
+					w.WriteInt64(static_cast<int64_t>(arg.groups.size()));
+					for (const auto& g : arg.groups) {
+						w.WriteString(g.groupName);
+						w.WriteInt64(static_cast<int64_t>(g.members.size()));
+						for (const auto& m : g.members) {
+							w.WriteInt64(m.chaId);
+							w.WriteString(m.chaName);
+							w.WriteString(m.motto);
+							w.WriteInt64(m.icon);
+							w.WriteInt64(m.status);
+						}
+					}
+				}
+				// std::monostate — ничего
+			}, msg.data);
 			return w;
 		}
 
@@ -2570,6 +2966,40 @@ namespace net {
 			return w;
 		}
 
+		/// Вспомогательная: сериализация одного участника гильдии.
+		inline void serializeGuildMemberEntry(WPacket& w, const GuildMemberEntry& e) {
+			w.WriteInt64(e.online); w.WriteInt64(e.chaId);
+			w.WriteString(e.chaName); w.WriteString(e.motto); w.WriteString(e.job);
+			w.WriteInt64(e.degree); w.WriteInt64(e.icon); w.WriteInt64(e.permission);
+		}
+
+		/// CMD_PC_GUILD — составное сообщение (подкоманда в msg, std::variant).
+		inline WPacket serialize(const PcGuildMessage& msg) {
+			WPacket w(2048);
+			w.WriteCmd(CMD_PC_GUILD);
+			w.WriteInt64(msg.msg);
+			// Сериализация данных через std::visit
+			std::visit([&w](auto&& arg) {
+				using T = std::decay_t<decltype(arg)>;
+				if constexpr (std::is_same_v<T, GuildChaIdData>) {
+					w.WriteInt64(arg.chaId);
+				} else if constexpr (std::is_same_v<T, GuildStartData>) {
+					w.WriteInt64(static_cast<int64_t>(arg.members.size()));
+					w.WriteInt64(arg.packetIndex);
+					if (arg.packetIndex == 0 && !arg.members.empty()) {
+						w.WriteInt64(arg.guildId);
+						w.WriteString(arg.guildName);
+						w.WriteInt64(arg.leaderId);
+					}
+					for (const auto& m : arg.members) serializeGuildMemberEntry(w, m);
+				} else if constexpr (std::is_same_v<T, GuildAddData>) {
+					serializeGuildMemberEntry(w, arg.member);
+				}
+				// GuildStopData / std::monostate — ничего не пишем
+			}, msg.data);
+			return w;
+		}
+
 		inline WPacket serialize(const PcMasterRefreshAddMessage& msg) {
 			WPacket w(256);
 			w.WriteCmd(CMD_PC_MASTER_REFRESH);
@@ -2594,14 +3024,18 @@ namespace net {
 			WPacket w(256);
 			w.WriteCmd(CMD_PC_SESS_CREATE);
 			w.WriteInt64(msg.sessId);
-			w.WriteInt64(static_cast<int64_t>(msg.members.size()));
-			for (const auto& m : msg.members) {
-				w.WriteInt64(m.chaId);
-				w.WriteString(m.chaName);
-				w.WriteString(m.motto);
-				w.WriteInt64(m.icon);
+			if (msg.sessId == 0) {
+				w.WriteString(msg.errorMsg);
+			} else {
+				w.WriteInt64(static_cast<int64_t>(msg.members.size()));
+				for (const auto& m : msg.members) {
+					w.WriteInt64(m.chaId);
+					w.WriteString(m.chaName);
+					w.WriteString(m.motto);
+					w.WriteInt64(m.icon);
+				}
+				w.WriteInt64(msg.notiPlyCount);
 			}
-			w.WriteInt64(msg.notiPlyCount);
 			return w;
 		}
 
@@ -2727,6 +3161,17 @@ namespace net {
 			w.WriteCmd(CMD_PM_GUILD_CHALL_PRIZEMONEY);
 			w.WriteInt64(msg.leaderId);
 			w.WriteInt64(msg.money);
+			return w;
+		}
+
+		inline WPacket serialize(const PmGuildInfoMessage& msg) {
+			WPacket w(256);
+			w.WriteCmd(CMD_PM_GUILDINFO);
+			w.WriteInt64(msg.chaId);
+			w.WriteInt64(msg.guildId);
+			w.WriteInt64(msg.leaderId);
+			w.WriteString(msg.guildName);
+			w.WriteString(msg.guildMotto);
 			return w;
 		}
 
@@ -3092,16 +3537,16 @@ namespace net {
 		inline WPacket serialize(const MmAddMoneyMessage& msg) {
 			WPacket w(32);
 			w.WriteCmd(CMD_MM_ADDMONEY);
-			w.WriteInt64(0); // srcId = 0
+			w.WriteInt64(msg.srcId);
 			w.WriteInt64(msg.charDbId);
 			w.WriteInt64(msg.money);
 			return w;
 		}
 
 		inline WPacket serialize(const MmAuctionMessage& msg) {
-			WPacket w(16);
+			WPacket w(24);
 			w.WriteCmd(CMD_MM_AUCTION);
-			w.WriteInt64(0); // srcId = 0
+			w.WriteInt64(msg.srcId);
 			w.WriteInt64(msg.charDbId);
 			return w;
 		}
@@ -4181,6 +4626,10 @@ namespace net {
 			r.gateAddr = static_cast<uint32_t>(pk.ReadInt64());
 			r.gpAddr = static_cast<uint32_t>(pk.ReadInt64());
 		}
+		inline void deserialize(RPacket& pk, PmGarner2UpdateLegacyMessage& r) {
+			r.chaIds[0] = pk.ReverseReadInt64();
+			for (int i = 1; i < 6; ++i) r.chaIds[i] = pk.ReadInt64();
+		}
 
 		inline void deserialize(RPacket& pk, MpGuildBankAckMessage& r) {
 			r.guildId = pk.ReadInt64();
@@ -4208,10 +4657,20 @@ namespace net {
 			}
 		}
 
+		inline void deserialize(RPacket& pk, PcTeamCancelMessage& r) {
+			r.reason = pk.ReadInt64();
+			r.chaId = pk.ReadInt64();
+		}
+
 		inline void deserialize(RPacket& pk, PcFrndInviteMessage& r) {
 			r.inviterName = pk.ReadString();
 			r.chaId = pk.ReadInt64();
 			r.icon = pk.ReadInt64();
+		}
+
+		inline void deserialize(RPacket& pk, PcFrndCancelMessage& r) {
+			r.reason = pk.ReadInt64();
+			r.chaId = pk.ReadInt64();
 		}
 
 		inline void deserialize(RPacket& pk, PcFrndRefreshMessage& r) {
@@ -4226,6 +4685,93 @@ namespace net {
 		inline void deserialize(RPacket& pk, PcFrndRefreshDelMessage& r) {
 			r.msg = pk.ReadInt64();
 			r.chaId = pk.ReadInt64();
+		}
+
+		/// Десериализация тегированного сообщения PC_GM_INFO.
+		inline void deserialize(RPacket& pk, PcGmInfoMessage& r) {
+			r.type = pk.ReadInt64();
+			switch (r.type) {
+			case MSG_FRND_REFRESH_START: {
+				GmInfoStartData d;
+				int64_t count = pk.ReadInt64();
+				d.entries.resize(static_cast<size_t>(count));
+				for (int64_t i = 0; i < count; ++i) {
+					d.entries[static_cast<size_t>(i)].chaId = pk.ReadInt64();
+					d.entries[static_cast<size_t>(i)].chaName = pk.ReadString();
+					d.entries[static_cast<size_t>(i)].motto = pk.ReadString();
+					d.entries[static_cast<size_t>(i)].icon = pk.ReadInt64();
+					d.entries[static_cast<size_t>(i)].status = pk.ReadInt64();
+				}
+				r.data = std::move(d);
+				break;
+			}
+			case MSG_FRND_REFRESH_OFFLINE:
+			case MSG_FRND_REFRESH_ONLINE:
+			case MSG_FRND_REFRESH_DEL:
+				r.data = GmInfoChaIdData{ pk.ReadInt64() };
+				break;
+			case MSG_FRND_REFRESH_ADD: {
+				GmFrndAddEntry d;
+				d.group = pk.ReadString();
+				d.chaId = pk.ReadInt64();
+				d.chaName = pk.ReadString();
+				d.motto = pk.ReadString();
+				d.icon = pk.ReadInt64();
+				r.data = std::move(d);
+				break;
+			}
+			default:
+				r.data = std::monostate{};
+				break;
+			}
+		}
+
+		/// Десериализация тегированного сообщения PC_FRND_REFRESH в std::variant.
+		inline void deserialize(RPacket& pk, PcFrndRefreshFullMessage& r) {
+			r.type = pk.ReadInt64();
+			switch (r.type) {
+			case MSG_FRND_REFRESH_ONLINE:
+			case MSG_FRND_REFRESH_OFFLINE:
+			case MSG_FRND_REFRESH_DEL:
+				r.data = FrndRefreshChaIdData{ pk.ReadInt64() };
+				break;
+			case MSG_FRND_REFRESH_ADD: {
+				GmFrndAddEntry d;
+				d.group = pk.ReadString();
+				d.chaId = pk.ReadInt64();
+				d.chaName = pk.ReadString();
+				d.motto = pk.ReadString();
+				d.icon = pk.ReadInt64();
+				r.data = std::move(d);
+				break;
+			}
+			case MSG_FRND_REFRESH_START: {
+				FrndRefreshStartData d;
+				d.self.chaId = pk.ReadInt64();
+				d.self.chaName = pk.ReadString();
+				d.self.motto = pk.ReadString();
+				d.self.icon = pk.ReadInt64();
+				int64_t groupCount = pk.ReadInt64();
+				d.groups.resize(static_cast<size_t>(groupCount));
+				for (int64_t gi = 0; gi < groupCount; ++gi) {
+					d.groups[static_cast<size_t>(gi)].groupName = pk.ReadString();
+					int64_t memberCount = pk.ReadInt64();
+					d.groups[static_cast<size_t>(gi)].members.resize(static_cast<size_t>(memberCount));
+					for (int64_t mi = 0; mi < memberCount; ++mi) {
+						d.groups[static_cast<size_t>(gi)].members[static_cast<size_t>(mi)].chaId = pk.ReadInt64();
+						d.groups[static_cast<size_t>(gi)].members[static_cast<size_t>(mi)].chaName = pk.ReadString();
+						d.groups[static_cast<size_t>(gi)].members[static_cast<size_t>(mi)].motto = pk.ReadString();
+						d.groups[static_cast<size_t>(gi)].members[static_cast<size_t>(mi)].icon = pk.ReadInt64();
+						d.groups[static_cast<size_t>(gi)].members[static_cast<size_t>(mi)].status = pk.ReadInt64();
+					}
+				}
+				r.data = std::move(d);
+				break;
+			}
+			default:
+				r.data = std::monostate{};
+				break;
+			}
 		}
 
 		inline void deserialize(RPacket& pk, PcFrndChangeGroupMessage& r) {
@@ -4289,6 +4835,50 @@ namespace net {
 			r.permission = pk.ReadInt64();
 		}
 
+		/// Вспомогательная: десериализация одного участника гильдии.
+		inline GuildMemberEntry deserializeGuildMemberEntry(RPacket& pk) {
+			GuildMemberEntry e;
+			e.online = pk.ReadInt64(); e.chaId = pk.ReadInt64();
+			e.chaName = pk.ReadString(); e.motto = pk.ReadString(); e.job = pk.ReadString();
+			e.degree = pk.ReadInt64(); e.icon = pk.ReadInt64(); e.permission = pk.ReadInt64();
+			return e;
+		}
+
+		/// CMD_PC_GUILD — десериализация составного сообщения в std::variant.
+		inline void deserialize(RPacket& pk, PcGuildMessage& r) {
+			r.msg = pk.ReadInt64();
+			switch (r.msg) {
+			case MSG_GUILD_ONLINE:
+			case MSG_GUILD_OFFLINE:
+			case MSG_GUILD_DEL:
+				r.data = GuildChaIdData{ pk.ReadInt64() };
+				break;
+			case MSG_GUILD_START: {
+				GuildStartData d;
+				auto count = pk.ReadInt64();
+				d.packetIndex = pk.ReadInt64();
+				if (d.packetIndex == 0 && count > 0) {
+					d.guildId = pk.ReadInt64();
+					d.guildName = pk.ReadString();
+					d.leaderId = pk.ReadInt64();
+				}
+				d.members.resize(static_cast<size_t>(count));
+				for (auto& m : d.members) m = deserializeGuildMemberEntry(pk);
+				r.data = std::move(d);
+				break;
+			}
+			case MSG_GUILD_STOP:
+				r.data = GuildStopData{};
+				break;
+			case MSG_GUILD_ADD:
+				r.data = GuildAddData{ deserializeGuildMemberEntry(pk) };
+				break;
+			default:
+				r.data = std::monostate{};
+				break;
+			}
+		}
+
 		inline void deserialize(RPacket& pk, PcMasterRefreshAddMessage& r) {
 			r.msg = pk.ReadInt64();
 			r.group = pk.ReadString();
@@ -4305,15 +4895,19 @@ namespace net {
 
 		inline void deserialize(RPacket& pk, PcSessCreateMessage& r) {
 			r.sessId = pk.ReadInt64();
-			int64_t count = pk.ReadInt64();
-			r.members.resize(static_cast<size_t>(count));
-			for (int64_t i = 0; i < count; ++i) {
-				r.members[static_cast<size_t>(i)].chaId = pk.ReadInt64();
-				r.members[static_cast<size_t>(i)].chaName = pk.ReadString();
-				r.members[static_cast<size_t>(i)].motto = pk.ReadString();
-				r.members[static_cast<size_t>(i)].icon = pk.ReadInt64();
+			if (r.sessId == 0) {
+				r.errorMsg = pk.ReadString();
+			} else {
+				int64_t count = pk.ReadInt64();
+				r.members.resize(static_cast<size_t>(count));
+				for (int64_t i = 0; i < count; ++i) {
+					r.members[static_cast<size_t>(i)].chaId = pk.ReadInt64();
+					r.members[static_cast<size_t>(i)].chaName = pk.ReadString();
+					r.members[static_cast<size_t>(i)].motto = pk.ReadString();
+					r.members[static_cast<size_t>(i)].icon = pk.ReadInt64();
+				}
+				r.notiPlyCount = pk.ReadInt64();
 			}
-			r.notiPlyCount = pk.ReadInt64();
 		}
 
 		inline void deserialize(RPacket& pk, PcSessAddMessage& r) {
@@ -4400,6 +4994,14 @@ namespace net {
 			r.money = pk.ReadInt64();
 		}
 
+		inline void deserialize(RPacket& pk, PmGuildInfoMessage& r) {
+			r.chaId = pk.ReadInt64();
+			r.guildId = pk.ReadInt64();
+			r.leaderId = pk.ReadInt64();
+			r.guildName = pk.ReadString();
+			r.guildMotto = pk.ReadString();
+		}
+
 		inline void deserialize(RPacket& pk, PtKickUserMessage& r) {
 			r.gpAddr = pk.ReadInt64();
 			r.gtAddr = pk.ReadInt64();
@@ -4449,15 +5051,18 @@ namespace net {
 			r.targetMapName = pk.ReadString();
 			r.subType = pk.ReadInt64();
 			switch (r.subType) {
-			case MAPENTRY_CREATE:
+			case MAPENTRY_CREATE: {
 				r.posX = pk.ReadInt64();
 				r.posY = pk.ReadInt64();
-				r.copyPlayerNum = pk.ReadInt64();
 				r.mapCopyNum = pk.ReadInt64();
-				// Lua-скрипты: сначала строки, потом count
-				// Note: в CREATE count идёт после строк — при десериализации неизвестно количество заранее.
-				// GameServer читает поочерёдно до конца пакета. Для типизированной версии используем count в конце.
+				r.copyPlayerNum = pk.ReadInt64();
+				// Lua-скрипты: count через ReverseRead (в конце пакета), потом строки прямым чтением
+				int16_t lineNum = static_cast<int16_t>(pk.ReverseReadInt64());
+				r.luaScriptLines.reserve(static_cast<size_t>(lineNum));
+				for (int16_t i = 0; i < lineNum; ++i)
+					r.luaScriptLines.push_back(pk.ReadString());
 				break;
+			}
 			case MAPENTRY_DESTROY:
 				break;
 			case MAPENTRY_SUBPLAYER:
@@ -4578,9 +5183,31 @@ namespace net {
 			r.posY = pk.ReadInt64();
 			r.copyNo = pk.ReadInt64();
 		}
+		inline void deserializeBody(RPacket& pk, MmCallChaMessage& r) {
+			r.targetName = pk.ReadString();
+			r.isBoat = pk.ReadInt64();
+			r.mapName = pk.ReadString();
+			r.posX = pk.ReadInt64();
+			r.posY = pk.ReadInt64();
+			r.copyNo = pk.ReadInt64();
+		}
 
 		inline void deserialize(RPacket& pk, MmGotoChaMessage& r) {
 			r.srcId = pk.ReadInt64();
+			r.targetName = pk.ReadString();
+			r.mode = pk.ReadInt64();
+			if (r.mode == 1) {
+				r.srcName = pk.ReadString();
+			}
+			else if (r.mode == 2) {
+				r.isBoat = pk.ReadInt64();
+				r.mapName = pk.ReadString();
+				r.posX = pk.ReadInt64();
+				r.posY = pk.ReadInt64();
+				r.copyNo = pk.ReadInt64();
+			}
+		}
+		inline void deserializeBody(RPacket& pk, MmGotoChaMessage& r) {
 			r.targetName = pk.ReadString();
 			r.mode = pk.ReadInt64();
 			if (r.mode == 1) {
@@ -4600,6 +5227,10 @@ namespace net {
 			r.targetName = pk.ReadString();
 			r.kickDuration = pk.ReadInt64();
 		}
+		inline void deserializeBody(RPacket& pk, MmKickChaMessage& r) {
+			r.targetName = pk.ReadString();
+			r.kickDuration = pk.ReadInt64();
+		}
 
 		inline void deserialize(RPacket& pk, MmGuildRejectMessage& r) {
 			r.srcId = pk.ReadInt64();
@@ -4608,6 +5239,12 @@ namespace net {
 
 		inline void deserialize(RPacket& pk, MmGuildApproveMessage& r) {
 			r.srcId = pk.ReadInt64();
+			r.guildId = pk.ReadInt64();
+			r.guildName = pk.ReadString();
+			r.guildMotto = pk.ReadString();
+		}
+		/// Body-only: srcId уже прочитан в header ProcessInterGameMsg.
+		inline void deserializeBody(RPacket& pk, MmGuildApproveMessage& r) {
 			r.guildId = pk.ReadInt64();
 			r.guildName = pk.ReadString();
 			r.guildMotto = pk.ReadString();
@@ -4672,6 +5309,7 @@ namespace net {
 		}
 
 		inline void deserialize(RPacket& pk, MmAuctionMessage& r) {
+			r.srcId = pk.ReadInt64();
 			r.charDbId = pk.ReadInt64();
 		}
 
@@ -5141,8 +5779,18 @@ namespace net {
 		struct CmChangePassMessage { std::string pass; std::string pin; };
 		struct CmGuildBankOperMessage { int64_t op; int64_t srcType; int64_t srcId; int64_t srcNum; int64_t tarType; int64_t tarId; };
 		struct CmGuildBankGoldMessage { int64_t op; int64_t direction; int64_t gold; };
+		/// Под-данные CMD_PM_GUILDBANK после bankType (без поля op).
+		struct PmGuildBankOperData { int64_t srcType = 0; int64_t srcGrid = 0; int64_t srcNum = 0; int64_t tarType = 0; int64_t tarGrid = 0; };
+		struct PmGuildBankGoldData { int64_t direction = 0; int64_t gold = 0; };
+		/// CMD_PM_GUILDBANK: объединённое сообщение с variant по bankType.
+		using PmGuildBankData = std::variant<std::monostate, PmGuildBankOperData, PmGuildBankGoldData>;
+		struct PmGuildBankMessage { int64_t bankType = 0; PmGuildBankData data; };
 		struct CmUpdateHairMessage { int64_t scriptId; int64_t gridLoc0; int64_t gridLoc1; int64_t gridLoc2; int64_t gridLoc3; };
 		struct CmTeamFightAskMessage { int64_t type; int64_t worldId; int64_t handle; };
+		/// Участник боя (для CMD_MC_TEAM_FIGHT_ASK).
+		struct TeamFightPlayerEntry { std::string name; int64_t lv = 0; std::string job; int64_t fightNum = 0; int64_t victoryNum = 0; };
+		/// CMD_MC_TEAM_FIGHT_ASK: запрос на командный бой (count-first).
+		struct McTeamFightAskMessage { int64_t srcCount = 0; int64_t tarCount = 0; std::vector<TeamFightPlayerEntry> players; };
 		struct CmItemRepairAskMessage { int64_t repairmanId; int64_t repairmanHandle; int64_t posType; int64_t posId; };
 		struct CmRequestTradeMessage { int64_t type; int64_t charId; };
 		struct CmAcceptTradeMessage { int64_t type; int64_t charId; };
@@ -5166,12 +5814,12 @@ namespace net {
 		struct CmRefreshDataMessage { int64_t worldId; int64_t handle; };
 		struct CmPkCtrlMessage { int64_t ctrl; };
 		struct CmItemAmphitheaterAskMessage { int64_t sure; int64_t reId; };
-		struct CmMasterInviteMessage { int64_t masterId; };
-		struct CmMasterAsrMessage { int64_t agree; int64_t masterId; };
-		struct CmMasterDelMessage { int64_t masterId; };
-		struct CmPrenticeInviteMessage { int64_t prenticeId; };
-		struct CmPrenticeAsrMessage { int64_t agree; int64_t prenticeId; };
-		struct CmPrenticeDelMessage { int64_t prenticeId; };
+		struct CmMasterInviteMessage { std::string name; int64_t chaId; };
+		struct CmMasterAsrMessage { int64_t agree; std::string name; int64_t chaId; };
+		struct CmMasterDelMessage { std::string name; int64_t chaId; };
+		struct CmPrenticeInviteMessage { std::string name; int64_t chaId; };
+		struct CmPrenticeAsrMessage { int64_t agree; std::string name; int64_t chaId; };
+		struct CmPrenticeDelMessage { std::string name; int64_t chaId; };
 
 		// ─── NPC Talk составные команды ─────────────────────────────
 		struct CmRequestTalkMessage { int64_t npcId; int64_t cmd; };
@@ -5181,6 +5829,57 @@ namespace net {
 		struct CmMissionPageMessage { int64_t npcId; int64_t cmd; int64_t selItem; int64_t param; };
 		struct CmSelMissionMessage { int64_t npcId; int64_t index; };
 		struct CmBlackMarketExchangeReqMessage { int64_t npcId; int64_t timeNum; int64_t srcId; int64_t srcNum; int64_t tarId; int64_t tarNum; int64_t index; };
+
+		// ─── Фаза 5: оставшиеся CM-команды ──────────────────────────
+
+		// Логин/выбор персонажа
+		struct CmBgnPlayMessage { int64_t chaIndex; };
+		struct CmNewChaMessage { std::string chaName; std::string birth; int64_t type; int64_t hair; int64_t face; };
+		struct CmDelChaMessage { int64_t chaIndex; std::string password2; };
+
+		// Пароль
+		struct CmCreatePassword2Message { std::string password; };
+		struct CmUpdatePassword2Message { std::string oldPass; std::string newPass; };
+
+		// GM / утилиты
+		struct CmGmSendMessage { int64_t npcId; std::string title; std::string content; };
+		struct CmGmRecvMessage { int64_t npcId; };
+		struct CmCheatCheckMessage { std::string answer; };
+		struct CmGuildPermMessage { int64_t id; int64_t perms; };
+		struct CmGameRequestPinMessage { std::string password; };
+
+		// Предметы / замок
+		struct CmItemLockAskMessage { int64_t slot; };
+		struct CmItemUnlockAskMessage { std::string password; int64_t slot; };
+
+		// NPC торговля (составные CMD_CM_REQUESTTRADE)
+		struct CmSelectTradeBoatMessage { int64_t npcId; int64_t index; };
+		struct CmSaleGoodsMessage { int64_t npcId; int64_t boatId; int64_t index; int64_t count; };
+		struct CmBuyGoodsMessage { int64_t npcId; int64_t boatId; int64_t itemType; int64_t index1; int64_t index2; int64_t count; };
+
+		// Миссии (составные CMD_CM_REQUESTTALK)
+		struct CmMissionTalkMessage { int64_t npcId; int64_t cmd; };
+		struct CmSelMissionFuncMessage { int64_t npcId; int64_t pageId; int64_t index; };
+
+		// CP (клиент → GroupServer через GateServer)
+		struct CmCpMasterRefreshInfoMessage { int64_t chaId; };
+		struct CmCpPrenticeRefreshInfoMessage { int64_t chaId; };
+
+		// Стойла (лоток с товарами)
+		struct CmStallInfoEntry { int64_t grid; int64_t money; int64_t count; int64_t index; };
+		struct CmStallInfoMessage { std::string name; int64_t num; std::vector<CmStallInfoEntry> items; };
+
+		// Жизненные навыки
+		struct CmLifeSkillMessage { int64_t type; int64_t npcId; };
+
+		// Аукцион
+		struct CmBidUpMessage { int64_t npcId; int64_t itemId; int64_t price; };
+
+		// Разблокировка персонажа после крафта
+		struct CmUnlockCharacterMessage { int64_t flag; };
+
+		// Пинг (ответ клиента на MC_PING)
+		struct CmPingResponseMessage { int64_t v1; int64_t v2; int64_t v3; int64_t v4; int64_t v5; };
 
 		// ─── MC — средние ──────────────────────────────────────────
 		struct McSay2CampMessage { std::string chaName; std::string content; };
@@ -5204,6 +5903,77 @@ namespace net {
 		struct McPrenticeAskMessage { std::string name; int64_t chaId; };
 		struct McItemRepairAskMcMessage { std::string itemName; int64_t repairCost; };
 		struct McItemLotteryAsrMessage { int64_t success; };
+
+		// ─── MC/CM — Фаза 4: простые ────────────────────────────
+		struct McChaEmotionMessage { int64_t worldId; int64_t emotion; };
+		struct McStartExitMessage { int64_t exitTime; };
+		// CMD_MC_CANCELEXIT — cmd-only
+		// CMD_MC_OPENHAIR — cmd-only
+		// CMD_MC_BEGIN_ITEM_REPAIR — cmd-only
+		// CMD_MC_BEGIN_GM_SEND — cmd-only
+		struct McGmRecvMessage { int64_t npcId; };
+		struct McStallDelGoodsMessage { int64_t charId; int64_t grid; int64_t count; };
+		struct McStallCloseMessage { int64_t charId; };
+		struct McStallSuccessMessage { int64_t charId; };
+		struct McUpdateGuildGoldMessage { std::string data; };
+		struct McQueryChaItemMessage { int64_t chaId; };
+		struct McDisconnectMessage { int64_t reason; };
+		struct McLifeSkillShowMessage { int64_t type; };
+		struct McLifeSkillMessage { int64_t type; int64_t result; std::string text; };
+		struct McLifeSkillAsrMessage { int64_t type; int64_t time; std::string text; };
+		struct McDropLockAsrMessage { int64_t success; };
+		struct McUnlockItemAsrMessage { int64_t result; };
+		struct McStoreBuyAnswerMessage { int64_t success; int64_t newMoney; };
+		struct McStoreChangeAnswerMessage { int64_t success; int64_t moBean; int64_t replMoney; };
+		struct McDailyBuffInfoMessage { std::string imgName; std::string labelInfo; };
+		struct McRequestDropRateMessage { float rate; };
+		struct McRequestExpRateMessage { float rate; };
+		struct McTigerItemIdMessage { int64_t num; int64_t itemId0; int64_t itemId1; int64_t itemId2; };
+		struct McUpdateImpMessage { int64_t imp; };
+		struct McBoatAddMessage { int64_t worldId; };
+		struct McBoatClearMessage { int64_t worldId; };
+		struct McTigerStopMessage { std::string text; };
+
+		// ─── MC — торговля персонажей (CMD_MC_CHARTRADE + подкоманда) ──
+
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_REQUEST: запрос на торговлю
+		struct McCharTradeRequestMessage { int64_t subCmd; int64_t tradeType; int64_t chaId; };
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_CANCEL: отмена торговли
+		struct McCharTradeCancelMessage { int64_t subCmd; int64_t chaId; };
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_MONEY: обновление денег в торговле
+		struct McCharTradeMoneyMessage { int64_t subCmd; int64_t chaId; int64_t money; int64_t isIMP; };
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_VALIDATEDATA: подтверждение данных торговли
+		struct McCharTradeValidateDataMessage { int64_t subCmd; int64_t chaId; };
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_RESULT: результат торговли
+		struct McCharTradeResultMessage { int64_t subCmd; int64_t result; };
+
+		// ─── Гильдейские команды (CM/MC) ─────────────────────────────
+
+		// CM — клиент → сервер
+		struct CmGuildPutNameMessage { int64_t confirm; std::string guildName; std::string passwd; };
+		struct CmGuildTryForMessage { int64_t guildId; };
+		struct CmGuildTryForCfmMessage { int64_t confirm; };
+		// CMD_CM_GUILD_LISTTRYPLAYER — cmd-only, без полей
+		struct CmGuildApproveMessage { int64_t chaId; };
+		struct CmGuildRejectMessage { int64_t chaId; };
+		struct CmGuildKickMessage { int64_t chaId; };
+		// CMD_CM_GUILD_LEAVE — cmd-only, без полей
+		struct CmGuildDisbandMessage { std::string passwd; };
+		struct CmGuildMottoMessage { std::string motto; };
+		struct CmGuildChallMessage { int64_t level; int64_t money; };
+		struct CmGuildLeizhuMessage { int64_t level; int64_t money; };
+
+		// MC — сервер → клиент
+		// CMD_MC_GUILD_GETNAME — cmd-only, без полей
+		struct McGuildTryForCfmMessage { std::string name; };
+		struct McGuildMottoMessage { std::string motto; };
+		// CMD_MC_GUILD_LEAVE — cmd-only, без полей
+		// CMD_MC_GUILD_KICK — cmd-only, без полей
+		struct McGuildInfoMessage { int64_t charId; int64_t guildId; std::string guildName; std::string guildMotto; int64_t guildPermission; };
+
+		/// Запись уровня вызова гильдий (условная по level != 0).
+		struct GuildChallEntry { int64_t level; int64_t start; std::string guildName; std::string challName; int64_t money; };
+		struct McGuildListChallMessage { int64_t isLeader; GuildChallEntry entries[3]; };
 
 		// =================================================================
 		//  Геймплейные команды: Фаза 3 — сложные
@@ -5271,7 +6041,7 @@ namespace net {
 		};
 		struct McMisLogClearMcMessage { int64_t missionId; };
 		struct McMisLogAddMessage { int64_t missionId; int64_t state; };
-		struct McMisLogStateMessage { int64_t missionId; int64_t state; };
+		struct McMisLogStateMessage { int64_t index; int64_t missionId; int64_t state; };
 
 		// ─── NPC диалоги ───────────────────────────────────────────
 		struct FuncInfoFuncItem { std::string name; };
@@ -5330,15 +6100,15 @@ namespace net {
 			std::vector<StoreAfficheEntry> affiches; std::vector<StoreClassEntry> classes;
 		};
 
-		/// Вариант товара (предмет внутри товара магазина).
-		struct StoreVariantEntry { int64_t itemId = 0; int64_t itemNum = 0; int64_t flute = 0; };
 		/// Атрибут товара магазина.
 		struct StoreAttrEntry { int64_t attrId = 0; int64_t attrVal = 0; };
+		/// Вариант товара (предмет внутри товара магазина), включая 5 атрибутов.
+		struct StoreVariantEntry { int64_t itemId = 0; int64_t itemNum = 0; int64_t flute = 0; StoreAttrEntry attrs[5]; };
 		/// Товар магазина.
 		struct StoreProductEntry {
 			int64_t comId = 0; std::string comName; int64_t price = 0; std::string remark;
 			bool isHot = false; int64_t time = 0; int64_t quantity = 0; int64_t expire = 0;
-			std::vector<StoreVariantEntry> variants; StoreAttrEntry attrs[5];
+			std::vector<StoreVariantEntry> variants;
 		};
 		/// CMD_MC_STORE_LIST_ASR — список товаров магазина.
 		struct McStoreListAnswerMessage { int64_t pageTotal = 0; int64_t pageCurrent = 0; std::vector<StoreProductEntry> products; };
@@ -5366,15 +6136,17 @@ namespace net {
 		/// Информация о сидячей позе (poseType == 2).
 		struct SeatInfo { int64_t seatAngle = 0; int64_t seatPose = 0; };
 
+		/// Вариант данных позы персонажа (std::variant).
+		using PoseData = std::variant<std::monostate, LeanInfo, SeatInfo>;
+
 		/// CMD_MC_CHABEGINSEE — персонаж появился в зоне видимости.
 		struct McChaBeginSeeMessage {
 			int64_t seeType = 0;
 			ChaBaseInfo base;
 			int64_t npcType = 0;
 			int64_t npcState = 0;
-			int64_t poseType = 0;
-			LeanInfo lean;  // валидно при poseType == 1
-			SeatInfo seat;  // валидно при poseType == 2
+			int64_t poseType = 0; // сохраняем для сериализации
+			PoseData pose;
 			ChaAttrInfo attr;
 			ChaSkillStateInfo skillState;
 		};
@@ -5399,16 +6171,33 @@ namespace net {
 			constexpr int64_t SKILL_TAR  = 4;
 			constexpr int64_t LOOK       = 5;
 			constexpr int64_t KITBAG     = 6;
+			constexpr int64_t SKILLBAG   = 7;
+			constexpr int64_t ITEM_PICK  = 8;
+			constexpr int64_t ITEM_THROW = 9;
+			constexpr int64_t ITEM_UNFIX = 10;
+			constexpr int64_t ITEM_USE   = 11;
+			constexpr int64_t ITEM_POS   = 12;
+			constexpr int64_t ITEM_DELETE = 13;
+			constexpr int64_t ITEM_INFO  = 14;
 			constexpr int64_t ITEM_FAILED = 15;
 			constexpr int64_t LEAN       = 16;
 			constexpr int64_t CHANGE_CHA = 17;
+			constexpr int64_t EVENT      = 18;
 			constexpr int64_t FACE       = 19;
+			constexpr int64_t STOP_STATE = 20;
 			constexpr int64_t SKILL_POSE = 21;
+			constexpr int64_t PK_CTRL    = 22;
+			constexpr int64_t LOOK_ENERGY = 23;
 			constexpr int64_t TEMP       = 24;
 			constexpr int64_t SHORTCUT   = 25;
 			constexpr int64_t BANK       = 26;
+			constexpr int64_t CLOSE_BANK = 27;
 			constexpr int64_t KITBAGTMP  = 28;
+			constexpr int64_t KITBAGTMP_DRAG = 29;
 			constexpr int64_t GUILDBANK  = 30;
+			constexpr int64_t REQUESTGUILDBANK = 31;
+			constexpr int64_t REQUESTGUILDLOGS = 32;
+			constexpr int64_t UPDATEGUILDLOGS  = 33;
 		}
 
 		/// Константы состояний.
@@ -5484,6 +6273,9 @@ namespace net {
 			int64_t srcState = 0;
 			int64_t srcSynType = 0;
 			std::vector<ActionEffectEntry> srcEffects;
+			bool srcHasStates = false;
+			int64_t srcStateTime = 0;
+			std::vector<ActionTarStateEntry> srcStates;
 		};
 
 		/// Данные действия LEAN (наклон/присаживание).
@@ -5502,26 +6294,291 @@ namespace net {
 			int64_t pose = 0;
 		};
 
+		/// Данные действия TEMP (временная смена внешности).
+		struct ActionTempData { int64_t itemId = 0; int64_t partId = 0; };
+		/// Данные действия CHANGE_CHA (смена управляемого персонажа).
+		struct ActionChangeChaData { int64_t mainChaId = 0; };
+		/// Данные действия ITEM_FAILED (ошибка операции с предметом).
+		struct ActionItemFailedData { int64_t failedId = 0; };
+		/// Данные действия PK_CTRL (PK-контроль).
+		struct ActionPkCtrlData { int64_t pkCtrl = 0; };
+		/// Данные действия LOOK_ENERGY (энергия экипировки).
+		struct ActionLookEnergyData { int64_t energy[EQUIP_NUM] = {}; };
+
+		/// Запись лога банка гильдии (используется в ActionUpdateGuildLogsData/ActionRequestGuildLogsData).
+		struct GuildBankLogEntry { int64_t type = 0; int64_t time = 0; int64_t parameter = 0; int64_t quantity = 0; int64_t userId = 0; };
+
+		/// Данные действия UPDATEGUILDLOGS (обновление логов банка гильдии).
+		struct ActionUpdateGuildLogsData { int64_t totalSize = 0; std::vector<GuildBankLogEntry> logs; bool terminated = false; };
+
+		/// Данные действия REQUESTGUILDLOGS (запрос логов банка гильдии).
+		struct ActionRequestGuildLogsData { std::vector<GuildBankLogEntry> logs; bool terminated = false; };
+
+		/// Вариант данных действия персонажа (C++23 std::variant).
+		/// Каждый тип соответствует конкретному actionType.
+		using CharacterActionData = std::variant<
+			std::monostate,        // unknown / ITEM_INFO (пустое)
+			ActionMoveData,        // MOVE
+			ActionSkillSrcData,    // SKILL_SRC
+			ActionSkillTarData,    // SKILL_TAR
+			ActionLeanData,        // LEAN
+			ActionFaceData,        // FACE & SKILL_POSE
+			ChaLookInfo,           // LOOK
+			ChaKitbagInfo,         // KITBAG, BANK, GUILDBANK, KITBAGTMP
+			ChaShortcutInfo,       // SHORTCUT
+			ActionTempData,        // TEMP
+			ActionChangeChaData,   // CHANGE_CHA
+			ActionItemFailedData,  // ITEM_FAILED
+			ActionPkCtrlData,      // PK_CTRL
+			ActionLookEnergyData,  // LOOK_ENERGY
+			ActionUpdateGuildLogsData,  // UPDATEGUILDLOGS
+			ActionRequestGuildLogsData  // REQUESTGUILDLOGS
+		>;
+
 		/// CMD_MC_NOTIACTION — уведомление о действии персонажа.
-		/// actionType определяет, какое из полей-данных заполнено.
+		/// actionType определяет активный вариант в data.
 		struct McCharacterActionMessage {
 			int64_t worldId = 0;
 			int64_t packetId = 0;
-			int64_t actionType = 0;
-			// Одно из этих полей заполнено в зависимости от actionType:
-			ActionMoveData move;
-			ActionSkillSrcData skillSrc;
-			ActionSkillTarData skillTar;
-			ActionLeanData lean;
-			ActionFaceData face;
-			int64_t itemFailedId = 0;
-			int64_t tempItemId = 0;
-			int64_t tempPartId = 0;
-			int64_t changeChaMainId = 0;
-			ChaLookInfo look;
-			ChaKitbagInfo kitbag;
-			ChaShortcutInfo shortcut;
+			int64_t actionType = 0; // сохраняем для сериализации
+			CharacterActionData data;
 		};
+
+		// ─── Торговля персонажей: страница (CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_PAGE) ─
+
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_PAGE: открытие страницы торговли.
+		struct McCharTradePageMessage { int64_t subCmd = 0; int64_t tradeType = 0; int64_t mainChaId = 0; int64_t otherChaId = 0; };
+
+		// ─── Покупка из магазина (кросс-серверный MM) ─────────────────
+
+		/// CMD_MM_STORE_BUY (4020): ретрансляция покупки из магазина (кросс-серверный GameServer→GameServer).
+		struct MmStoreBuyRelayMessage { int64_t charId = 0; int64_t targetChaId = 0; int64_t comId = 0; int64_t money = 0; };
+
+		// ─── Межсерверные команды GameServer→Group (без gateAddr/gpAddr) ─
+
+		/// CMD_MP_GUILD_CREATE: создание гильдии (GameServer→GateServer→Group).
+		/// gateAddr/gpAddr добавляются ReflectINFof / маршрутизацией.
+		struct GmGuildCreateMessage { int64_t guildId = 0; std::string guildName; std::string job; int64_t degree = 0; };
+
+		/// CMD_MP_GUILD_APPROVE: одобрение заявки (GameServer→Group).
+		struct GmGuildApproveMessage { int64_t chaId = 0; };
+
+		/// CMD_MP_GUILD_KICK: исключение из гильдии (GameServer→Group).
+		struct GmGuildKickMessage { int64_t chaId = 0; };
+
+		/// CMD_MP_GUILD_MOTTO: смена девиза гильдии (GameServer→Group).
+		struct GmGuildMottoMessage { std::string motto; };
+
+		/// CMD_MP_GUILD_CHALLMONEY: возврат денег за отменённый вызов (GameServer→Group).
+		struct GmGuildChallMoneyMessage { int64_t guildId = 0; int64_t money = 0; std::string guildName1; std::string guildName2; };
+
+		/// CMD_MP_SAY2ALL: рассылка сообщения (GameServer→Group), success + имя + текст.
+		struct GmSay2AllMessage { int64_t success = 0; std::string chaName; std::string content; };
+
+		/// CMD_MP_SAY2TRADE: рассылка торгового сообщения (GameServer→Group).
+		struct GmSay2TradeMessage { int64_t success = 0; std::string chaName; std::string content; };
+
+		/// CMD_MM_GUILD_CHALL_PRIZEMONEY: призовые деньги гильдии (GameServer→GateServer broadcast).
+		struct GmGuildChallPrizeMoneyBroadcast { int64_t zero1 = 0; int64_t guildId = 0; int64_t money = 0; int64_t zero2 = 0; int64_t zero3 = 0; int64_t zero4 = 0; };
+
+		/// CMD_MT_MAPENTRY: ответ о создании/разрушении входа в карту (GameServer→GateServer).
+		struct GmMapEntryResultMessage { std::string srcMapName; std::string targetMapName; int64_t subType = 0; int64_t resultCode = 0; };
+
+		/// CMD_MP_GUILDNOTICE: уведомление гильдии (GameServer→Group без trailer).
+		struct GmGuildNoticeMessage { int64_t guildId = 0; std::string content; };
+
+		/// CMD_MP_GM1SAY1: прокрутка уведомления (GameServer→Group).
+		struct GmScrollNoticeMessage { std::string content; int64_t setNum = 0; int64_t color = 0; };
+
+		/// CMD_MP_GM1SAY: GM-уведомление (GameServer→Group).
+		struct GmGMNoticeMessage { std::string content; };
+
+		/// CMD_MM_CHA_NOTICE: уведомление конкретного персонажа (GameServer→GateServer broadcast).
+		struct GmChaNoticeMessage { int64_t zero = 0; std::string noticeText; std::string chaName; };
+
+		/// CMD_MP_GMBANACCOUNT: бан аккаунта (GameServer→Group).
+		struct GmBanAccountMessage { std::string actName; };
+
+		/// CMD_MP_GMUNBANACCOUNT: разбан аккаунта (GameServer→Group).
+		struct GmUnbanAccountMessage { std::string actName; };
+
+		/// CMD_MP_CANRECEIVEREQUESTS: флаг приёма запросов (GameServer→Group).
+		struct GmCanReceiveRequestsMessage { int64_t chaId = 0; int64_t canSend = 0; };
+
+		/// CMD_MP_MUTE_PLAYER: мьют игрока (GameServer→Group, без gateAddr/gpAddr — ReflectINFof добавит).
+		struct GmMutePlayerMessage { std::string chaName; int64_t time = 0; };
+
+		/// Запись предмета аукциона (CMD_MC_LISTAUCTION).
+		struct AuctionListEntry { int64_t itemId = 0; std::string name; std::string curChaName; int64_t itemCount = 0; int64_t basePrice = 0; int64_t minBid = 0; int64_t curPrice = 0; };
+		/// CMD_MC_LISTAUCTION: список предметов аукциона (count-first формат).
+		struct McListAuctionMessage { std::vector<AuctionListEntry> items; };
+
+		/// CMD_MT_MAPENTRY + MAPENTRY_CREATE: создание входа с Lua-скриптом (count-last).
+		struct GmMapEntryCreateMessage {
+			std::string targetMapName; std::string srcMapName;
+			int64_t posX = 0; int64_t posY = 0; int64_t copyNum = 0; int64_t copyPlyNum = 0;
+			std::vector<std::string> scriptLines;
+		};
+
+		/// CMD_MT_MAPENTRY + MAPENTRY_COPYPARAM: параметры копии карты.
+		struct GmMapEntryCopyParamMessage {
+			std::string targetMapName; std::string srcMapName;
+			int64_t copyId = 0;
+			int64_t params[16] = {};
+		};
+
+		/// Запись гильдии для CMD_MC_LISTGUILD (пагинация).
+		struct GuildListEntry { int64_t guildId = 0; std::string guildName; std::string motto; std::string leaderName; int64_t memberCount = 0; int64_t exp = 0; };
+		/// CMD_MC_LISTGUILD: список гильдий (страница с count-first).
+		struct McListGuildMessage { std::vector<GuildListEntry> entries; };
+
+		/// Запись кандидата в гильдию.
+		struct GuildTryPlayerEntry { int64_t chaId = 0; std::string name; std::string job; int64_t degree = 0; };
+		/// CMD_MC_GUILD_LISTTRYPLAYER: список кандидатов гильдии.
+		struct McGuildListTryPlayerMessage {
+			int64_t guildId = 0; std::string guildName; std::string motto; std::string leaderName;
+			int64_t memberTotal = 0; int64_t maxMembers = 0; int64_t exp = 0;
+			int64_t reserved = 0; int64_t level = 0;
+			std::vector<GuildTryPlayerEntry> players;
+		};
+
+		/// Предмет в лавке (stall sync data).
+		struct StallSyncBoatData {
+			std::string name; int64_t ship = 0; int64_t lv = 0; int64_t cexp = 0;
+			int64_t hp = 0; int64_t mxhp = 0; int64_t sp = 0; int64_t mxsp = 0;
+			int64_t mnatk = 0; int64_t mxatk = 0; int64_t def = 0; int64_t mspd = 0; int64_t aspd = 0;
+			int64_t useGridNum = 0; int64_t capacity = 0; int64_t price = 0;
+		};
+		struct StallSyncItemData {
+			int64_t endure0 = 0; int64_t endure1 = 0; int64_t energy0 = 0; int64_t energy1 = 0;
+			int64_t forgeLv = 0; int64_t valid = 0; int64_t tradable = 0; int64_t expiration = 0;
+			int64_t forgeParam = 0; int64_t instId = 0;
+			bool hasInstAttr = false;
+			int64_t instAttr[ITEM_INSTANCE_ATTR_NUM][2] = {};
+		};
+		struct StallSyncGoodsEntry {
+			int64_t grid = 0; int64_t itemId = 0; int64_t count = 0; int64_t money = 0;
+			int64_t itemType = 0;
+			bool isBoat = false;
+			bool hasBoat = false;
+			StallSyncBoatData boat;
+			StallSyncItemData item;
+		};
+		/// CMD_MC_STALL_ALLDATA: полные данные лавки (синхронизация клиенту).
+		struct McStallSyncDataMessage {
+			int64_t stallerId = 0; int64_t num = 0; std::string name;
+			std::vector<StallSyncGoodsEntry> goods;
+		};
+
+		/// Часть корабля для CMD_MC_CREATEBOAT / CMD_MC_BOATINFO / CMD_MC_UPDATEBOAT.
+		struct BoatPartEntry { int64_t partId = 0; int64_t model = 0; std::string name; };
+		/// CMD_MC_CREATEBOAT / CMD_MC_BOATINFO / CMD_MC_UPDATEBOAT: синхронизация данных корабля.
+		struct McBoatSyncAttrMessage {
+			int64_t cmd = 0; int64_t boatId = 0;
+			std::string boatName; std::string shipName; std::string shipDesc; std::string berthName;
+			int64_t isUpdate = 0;
+			BoatPartEntry body;
+			bool hasUpdateParts = false;
+			BoatPartEntry header; BoatPartEntry engine;
+			int64_t motorModels[4] = {};
+			int64_t cannonId = 0; std::string cannonName;
+			int64_t equipmentId = 0; std::string equipmentName;
+			int64_t money = 0; int64_t minAttack = 0; int64_t maxAttack = 0;
+			int64_t curEndure = 0; int64_t maxEndure = 0;
+			int64_t speed = 0; int64_t distance = 0; int64_t defence = 0;
+			int64_t curSupply = 0; int64_t maxSupply = 0;
+			int64_t consume = 0; int64_t attackTime = 0; int64_t boatCapacity = 0;
+		};
+
+		// ─── CM — под-данные BeginAction (sub-types внутри CMD_CM_BEGINACTION) ──
+
+		struct CmActionMoveInputData { std::string pathData; };
+		struct CmActionSkillInputData {
+			int64_t chMove = 0; int64_t fightId = 0;
+			std::string pathData; // бинарный blob Point[], только если chMove == 2
+			int64_t skillId = 0; int64_t tarInfo1 = 0; int64_t tarInfo2 = 0;
+		};
+		struct CmActionStopStateData { int64_t stateId = 0; };
+		struct CmActionLeanData { int64_t pose = 0; int64_t angle = 0; int64_t posX = 0; int64_t posY = 0; int64_t height = 0; };
+		struct CmActionItemPickData { int64_t worldId = 0; int64_t handle = 0; };
+		struct CmActionItemThrowData { int64_t gridId = 0; int64_t num = 0; int64_t posX = 0; int64_t posY = 0; };
+		struct CmActionItemUseData { int64_t fromGridId = 0; int64_t toGridId = 0; };
+		struct CmActionItemUnfixData { int64_t linkId = 0; int64_t gridId = 0; int64_t param1 = 0; int64_t param2 = 0; };
+		struct CmActionItemPosData { int64_t srcGrid = 0; int64_t srcNum = 0; int64_t tarGrid = 0; };
+		struct CmActionItemDeleteData { int64_t fromGridId = 0; };
+		struct CmActionBankData { int64_t srcType = 0; int64_t srcGrid = 0; int64_t srcNum = 0; int64_t tarType = 0; int64_t tarGrid = 0; };
+		struct CmActionShortcutData { int64_t index = 0; int64_t type = 0; int64_t grid = 0; };
+		struct CmActionTempData { int64_t itemId = 0; int64_t partId = 0; };
+		struct CmActionEventData { int64_t worldId = 0; int64_t handle = 0; int64_t eventId = 0; };
+		struct CmActionFaceData { int64_t angle = 0; int64_t pose = 0; };
+		struct CmActionPkCtrlData { int64_t ctrl = 0; };
+		struct CmActionRequestGuildLogsData { int64_t curSize = 0; };
+		struct CmActionViewItemData { int64_t viewType = 0; int64_t param = 0; };
+
+		/// CMD_CM_BEGINACTION: variant всех типов действий.
+		using CmBeginActionData = std::variant<
+			std::monostate,              // CLOSE_BANK, REQUESTGUILDBANK, UPDATEGUILDLOGS, LOOK и др.
+			CmActionMoveInputData,       // enumACTION_MOVE
+			CmActionSkillInputData,      // enumACTION_SKILL
+			CmActionStopStateData,       // enumACTION_STOP_STATE
+			CmActionLeanData,            // enumACTION_LEAN
+			CmActionItemPickData,        // enumACTION_ITEM_PICK
+			CmActionItemThrowData,       // enumACTION_ITEM_THROW
+			CmActionItemUseData,         // enumACTION_ITEM_USE
+			CmActionItemUnfixData,       // enumACTION_ITEM_UNFIX
+			CmActionItemPosData,         // enumACTION_ITEM_POS, KITBAGTMP_DRAG
+			CmActionItemDeleteData,      // enumACTION_ITEM_DELETE
+			CmActionViewItemData,        // enumACTION_ITEM_INFO
+			CmActionBankData,            // enumACTION_BANK
+			CmActionRequestGuildLogsData,// enumACTION_REQUESTGUILDLOGS
+			CmActionShortcutData,        // enumACTION_SHORTCUT
+			CmActionTempData,            // enumACTION_TEMP
+			CmActionEventData,           // enumACTION_EVENT
+			CmActionFaceData,            // enumACTION_FACE, SKILL_POSE
+			CmActionPkCtrlData           // enumACTION_PK_CTRL
+		>;
+
+		/// CMD_CM_BEGINACTION: полное сообщение.
+		struct CmBeginActionMessage {
+			int64_t worldId = 0;
+			int64_t packetId = 0;
+			int64_t actionType = 0;
+			CmBeginActionData data;
+		};
+
+		/// Устаревший хедер (для обратной совместимости).
+		using CmBeginActionHeader = CmBeginActionMessage;
+
+		// ─── CM — клиентские команды с динамическими массивами ────────
+
+		/// CMD_CM_SAY: отправка сообщения (клиент→сервер).
+		struct CmSayMessage { std::string content; };
+
+		/// CMD_CM_SYNATTR: синхронизация базовых атрибутов (клиент→сервер).
+		struct CmSynAttrEntry { int64_t attrId = 0; int64_t value = 0; };
+		struct CmSynAttrMessage { std::vector<CmSynAttrEntry> attrs; };
+
+		/// Группа/ячейка ковки (forge group).
+		struct ForgeGroupCell { int64_t posId = 0; int64_t num = 0; };
+		struct ForgeGroup { std::vector<ForgeGroupCell> cells; };
+
+		/// CMD_CM_ITEM_FORGE_CANACTION: подтверждение/отмена ковки.
+		struct CmItemForgeCanActionMessage { int64_t canAction = 0; };
+
+		/// CMD_CM_ITEM_FORGE_ASK: запрос ковки (с группами).
+		struct CmItemForgeGroupAskMessage { int64_t sure = 0; int64_t type = 0; ForgeGroup groups[6]; };
+
+		/// CMD_CM_ITEM_FORGE_ASK: запрос ковки (с массивом позиций).
+		struct CmItemForgePosAskMessage { int64_t sure = 0; int64_t type = 0; int64_t positions[6] = {}; int64_t posCount = 0; };
+
+		/// CMD_CM_ITEM_LOTTERY_ASK: запрос лотереи (с группами).
+		struct CmItemLotteryGroupAskMessage { int64_t sure = 0; ForgeGroup groups[3]; };
+
+		/// Количество слотов для каждого типа крафта (0..3).
+		constexpr short kLifeSkillNeedItemNum[4] = { 6, 4, 6, 6 };
+
+		/// CMD_CM_LIFESKILL_ASK / CMD_CM_LIFESKILL_ASR: запрос крафта (динамический массив позиций).
+		struct CmLifeSkillCraftMessage { bool isAnswer = false; int64_t skillType = 0; int64_t npcId = 0; std::vector<int64_t> positions; int64_t extraParam = 0; bool hasExtra = false; };
 
 		// ─── Serialize: cmd-only ───────────────────────────────────
 
@@ -5542,6 +6599,25 @@ namespace net {
 		inline WPacket serializeCmDailyBuffRequestCmd() { WPacket w(8); w.WriteCmd(CMD_CM_DailyBuffRequest); return w; }
 		inline WPacket serializeCmRequestDropRateCmd() { WPacket w(8); w.WriteCmd(CMD_CM_REQUEST_DROP_RATE); return w; }
 		inline WPacket serializeCmRequestExpRateCmd() { WPacket w(8); w.WriteCmd(CMD_CM_REQUEST_EXP_RATE); return w; }
+
+		// ─── Serialize: cmd-only (GameServer→GateServer/Group) ────
+
+		/// CMD_MP_GUILD_LEAVE: выход из гильдии (GameServer→Group). Только CMD.
+		inline WPacket serializeGmGuildLeaveCmd() { WPacket w(8); w.WriteCmd(CMD_MP_GUILD_LEAVE); return w; }
+		/// CMD_MP_GUILD_DISBAND: расформирование гильдии (GameServer→Group). Только CMD.
+		inline WPacket serializeGmGuildDisbandCmd() { WPacket w(8); w.WriteCmd(CMD_MP_GUILD_DISBAND); return w; }
+		/// CMD_MT_PALYEREXIT: выход игрока (GameServer→GateServer). Только CMD.
+		inline WPacket serializeGmPlayerExitCmd() { WPacket w(8); w.WriteCmd(CMD_MT_PALYEREXIT); return w; }
+		/// CMD_MC_STORE_BUY_ASR: ответ о провале покупки (только success=0).
+		inline WPacket serializeMcStoreBuyFailCmd() { WPacket w(16); w.WriteCmd(CMD_MC_STORE_BUY_ASR); w.WriteInt64(0); return w; }
+		/// CMD_MC_STORE_BUY_ASR: ответ об успехе покупки (success=1 + newMoney).
+		inline WPacket serializeMcStoreBuySucc(int64_t money) { WPacket w(24); w.WriteCmd(CMD_MC_STORE_BUY_ASR); w.WriteInt64(1); w.WriteInt64(money); return w; }
+		/// CMD_MC_STORE_VIP: ответ о провале VIP (только success=0).
+		inline WPacket serializeMcStoreVipFailCmd() { WPacket w(16); w.WriteCmd(CMD_MC_STORE_VIP); w.WriteInt64(0); return w; }
+		/// CMD_MC_STORE_CHANGE_ASR: ответ о провале обмена (только success=0).
+		inline WPacket serializeMcStoreChangeFailCmd() { WPacket w(16); w.WriteCmd(CMD_MC_STORE_CHANGE_ASR); w.WriteInt64(0); return w; }
+		/// CMD_MC_STORE_QUERY: ответ о провале запроса истории (только success=0).
+		inline WPacket serializeMcStoreQueryFailCmd() { WPacket w(16); w.WriteCmd(CMD_MC_STORE_QUERY); w.WriteInt64(0); return w; }
 
 		// ─── Serialize: CM с полями ────────────────────────────────
 
@@ -5609,6 +6685,16 @@ namespace net {
 		inline WPacket serialize(const CmGuildBankGoldMessage& m) { WPacket w(32); w.WriteCmd(CMD_CP_GUILDBANK); w.WriteInt64(m.op); w.WriteInt64(m.direction); w.WriteInt64(m.gold); return w; }
 		inline WPacket serialize(const CmUpdateHairMessage& m) { WPacket w(48); w.WriteCmd(CMD_CM_UPDATEHAIR); w.WriteInt64(m.scriptId); w.WriteInt64(m.gridLoc0); w.WriteInt64(m.gridLoc1); w.WriteInt64(m.gridLoc2); w.WriteInt64(m.gridLoc3); return w; }
 		inline WPacket serialize(const CmTeamFightAskMessage& m) { WPacket w(32); w.WriteCmd(CMD_CM_TEAM_FIGHT_ASK); w.WriteInt64(m.type); w.WriteInt64(m.worldId); w.WriteInt64(m.handle); return w; }
+		inline WPacket serialize(const McTeamFightAskMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_TEAM_FIGHT_ASK);
+			// Количество участников обеих сторон — в начале (count-first)
+			w.WriteInt64(m.srcCount); w.WriteInt64(m.tarCount);
+			for (const auto& p : m.players) {
+				w.WriteString(p.name); w.WriteInt64(p.lv); w.WriteString(p.job);
+				w.WriteInt64(p.fightNum); w.WriteInt64(p.victoryNum);
+			}
+			return w;
+		}
 		inline WPacket serialize(const CmItemRepairAskMessage& m) { WPacket w(40); w.WriteCmd(CMD_CM_ITEM_REPAIR_ASK); w.WriteInt64(m.repairmanId); w.WriteInt64(m.repairmanHandle); w.WriteInt64(m.posType); w.WriteInt64(m.posId); return w; }
 		inline WPacket serialize(const CmRequestTradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_REQUEST); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
 		inline WPacket serialize(const CmAcceptTradeMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_CHARTRADE_ACCEPT); w.WriteInt64(m.type); w.WriteInt64(m.charId); return w; }
@@ -5632,12 +6718,12 @@ namespace net {
 		inline WPacket serialize(const CmRefreshDataMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_REFRESH_DATA); w.WriteInt64(m.worldId); w.WriteInt64(m.handle); return w; }
 		inline WPacket serialize(const CmPkCtrlMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_PK_CTRL); w.WriteInt64(m.ctrl); return w; }
 		inline WPacket serialize(const CmItemAmphitheaterAskMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_ITEM_AMPHITHEATER_ASK); w.WriteInt64(m.sure); w.WriteInt64(m.reId); return w; }
-		inline WPacket serialize(const CmMasterInviteMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_MASTER_INVITE); w.WriteInt64(m.masterId); return w; }
-		inline WPacket serialize(const CmMasterAsrMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_MASTER_ASR); w.WriteInt64(m.agree); w.WriteInt64(m.masterId); return w; }
-		inline WPacket serialize(const CmMasterDelMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_MASTER_DEL); w.WriteInt64(m.masterId); return w; }
-		inline WPacket serialize(const CmPrenticeInviteMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_PRENTICE_INVITE); w.WriteInt64(m.prenticeId); return w; }
-		inline WPacket serialize(const CmPrenticeAsrMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_PRENTICE_ASR); w.WriteInt64(m.agree); w.WriteInt64(m.prenticeId); return w; }
-		inline WPacket serialize(const CmPrenticeDelMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_PRENTICE_DEL); w.WriteInt64(m.prenticeId); return w; }
+		inline WPacket serialize(const CmMasterInviteMessage& m) { WPacket w(80); w.WriteCmd(CMD_CM_MASTER_INVITE); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmMasterAsrMessage& m) { WPacket w(88); w.WriteCmd(CMD_CM_MASTER_ASR); w.WriteInt64(m.agree); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmMasterDelMessage& m) { WPacket w(80); w.WriteCmd(CMD_CM_MASTER_DEL); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmPrenticeInviteMessage& m) { WPacket w(80); w.WriteCmd(CMD_CM_PRENTICE_INVITE); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmPrenticeAsrMessage& m) { WPacket w(88); w.WriteCmd(CMD_CM_PRENTICE_ASR); w.WriteInt64(m.agree); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmPrenticeDelMessage& m) { WPacket w(80); w.WriteCmd(CMD_CM_PRENTICE_DEL); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
 
 		// ─── Serialize: NPC Talk составные (Фаза 2) ──────────────────
 
@@ -5701,6 +6787,173 @@ namespace net {
 		inline WPacket serialize(const McPrenticeAskMessage& m) { WPacket w(80); w.WriteCmd(CMD_MC_PRENTICE_ASK); w.WriteString(m.name); w.WriteInt64(m.chaId); return w; }
 		inline WPacket serialize(const McItemRepairAskMcMessage& m) { WPacket w(80); w.WriteCmd(CMD_MC_ITEM_REPAIR_ASK); w.WriteString(m.itemName); w.WriteInt64(m.repairCost); return w; }
 		inline WPacket serialize(const McItemLotteryAsrMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_ITEM_LOTTERY_ASR); w.WriteInt64(m.success); return w; }
+
+		// ─── Serialize: MC/CM — Фаза 4 ───────────────────────────
+		inline WPacket serialize(const McChaEmotionMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_CHA_EMOTION); w.WriteInt64(m.worldId); w.WriteInt64(m.emotion); return w; }
+		inline WPacket serialize(const McStartExitMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_STARTEXIT); w.WriteInt64(m.exitTime); return w; }
+		inline WPacket serializeMcCancelExitCmd() { WPacket w(8); w.WriteCmd(CMD_MC_CANCELEXIT); return w; }
+		inline WPacket serializeMcOpenHairCutCmd() { WPacket w(8); w.WriteCmd(CMD_MC_OPENHAIR); return w; }
+		inline WPacket serializeMcBeginItemRepairCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_REPAIR); return w; }
+		inline WPacket serializeMcGmSendCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_GM_SEND); return w; }
+		inline WPacket serializeMcBeginItemForgeCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_FORGE); return w; }
+		inline WPacket serializeMcBeginItemLotteryCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_LOTTERY); return w; }
+		inline WPacket serializeMcBeginItemUniteCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_UNITE); return w; }
+		inline WPacket serializeMcBeginItemMillingCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_MILLING); return w; }
+		inline WPacket serializeMcBeginItemFusionCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_FUSION); return w; }
+		inline WPacket serializeMcBeginItemUpgradeCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_UPGRADE); return w; }
+		inline WPacket serializeMcBeginItemEidolonMetempsychosisCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_EIDOLON_METEMPSYCHOSIS); return w; }
+		inline WPacket serializeMcBeginItemEidolonFusionCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_EIDOLON_FUSION); return w; }
+		inline WPacket serializeMcBeginItemPurifyCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_PURIFY); return w; }
+		inline WPacket serializeMcBeginItemFixCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_FIX); return w; }
+		inline WPacket serializeMcBeginItemEnergyCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_ITEM_ENERGY); return w; }
+		inline WPacket serializeMcBeginGetStoneCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_GET_STONE); return w; }
+		inline WPacket serializeMcBeginTigerCmd() { WPacket w(8); w.WriteCmd(CMD_MC_BEGIN_TIGER); return w; }
+		inline WPacket serializeMcGuildGetNameCmd() { WPacket w(8); w.WriteCmd(CMD_MC_GUILD_GETNAME); return w; }
+		inline WPacket serializeMcGuildLeaveCmd() { WPacket w(8); w.WriteCmd(CMD_MC_GUILD_LEAVE); return w; }
+		inline WPacket serializeMcGuildKickCmd() { WPacket w(8); w.WriteCmd(CMD_MC_GUILD_KICK); return w; }
+		inline WPacket serializeMcRequestPinCmd() { WPacket w(8); w.WriteCmd(CMD_MC_REQUESTPIN); return w; }
+		inline WPacket serialize(const McUpdateImpMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_UPDATEIMP); w.WriteInt64(m.imp); return w; }
+		inline WPacket serialize(const McBoatAddMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BOAT_ADD); w.WriteInt64(m.worldId); return w; }
+		inline WPacket serialize(const McBoatClearMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BOAT_CLEAR); w.WriteInt64(m.worldId); return w; }
+		inline WPacket serialize(const McTigerStopMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_TIGER_STOP); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McGmRecvMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_BEGIN_GM_RECV); w.WriteInt64(m.npcId); return w; }
+		inline WPacket serialize(const McStallDelGoodsMessage& m) { WPacket w(32); w.WriteCmd(CMD_MC_STALL_DELGOODS); w.WriteInt64(m.charId); w.WriteInt64(m.grid); w.WriteInt64(m.count); return w; }
+		inline WPacket serialize(const McStallCloseMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_STALL_CLOSE); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const McStallSuccessMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_STALL_START); w.WriteInt64(m.charId); return w; }
+		inline WPacket serialize(const McUpdateGuildGoldMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_UPDATEGUILDBANKGOLD); w.WriteString(m.data); return w; }
+		inline WPacket serialize(const McQueryChaItemMessage& m) { WPacket w(16); w.WriteCmd(CMD_MM_QUERY_CHAITEM); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const McDisconnectMessage& m) { WPacket w(16); w.WriteCmd(CMD_TC_DISCONNECT); w.WriteInt64(m.reason); return w; }
+		inline WPacket serialize(const McLifeSkillShowMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_LIFESKILL_BGING); w.WriteInt64(m.type); return w; }
+		inline WPacket serialize(const McLifeSkillMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_LIFESKILL_ASK); w.WriteInt64(m.type); w.WriteInt64(m.result); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McLifeSkillAsrMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_LIFESKILL_ASR); w.WriteInt64(m.type); w.WriteInt64(m.time); w.WriteString(m.text); return w; }
+		inline WPacket serialize(const McDropLockAsrMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ITEM_LOCK_ASR); w.WriteInt64(m.success); return w; }
+		inline WPacket serialize(const McUnlockItemAsrMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_ITEM_UNLOCK_ASR); w.WriteInt64(m.result); return w; }
+		inline WPacket serialize(const McStoreBuyAnswerMessage& m) { WPacket w(24); w.WriteCmd(CMD_MC_STORE_BUY_ASR); w.WriteInt64(m.success); w.WriteInt64(m.newMoney); return w; }
+		inline WPacket serialize(const McStoreChangeAnswerMessage& m) { WPacket w(32); w.WriteCmd(CMD_MC_STORE_CHANGE_ASR); w.WriteInt64(m.success); w.WriteInt64(m.moBean); w.WriteInt64(m.replMoney); return w; }
+		inline WPacket serialize(const McDailyBuffInfoMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_RecDailyBuffInfo); w.WriteString(m.imgName); w.WriteString(m.labelInfo); return w; }
+		inline WPacket serialize(const McRequestDropRateMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_REQUEST_DROP_RATE); w.WriteFloat32(m.rate); return w; }
+		inline WPacket serialize(const McRequestExpRateMessage& m) { WPacket w(16); w.WriteCmd(CMD_MC_REQUEST_EXP_RATE); w.WriteFloat32(m.rate); return w; }
+		inline WPacket serialize(const McTigerItemIdMessage& m) { WPacket w(40); w.WriteCmd(CMD_MC_TIGER_ITEM_ID); w.WriteInt64(m.num); w.WriteInt64(m.itemId0); w.WriteInt64(m.itemId1); w.WriteInt64(m.itemId2); return w; }
+
+		// ─── Serialize: гильдейские CM ───────────────────────────────
+
+		inline WPacket serialize(const CmGuildPutNameMessage& m) { WPacket w(128); w.WriteCmd(CMD_CM_GUILD_PUTNAME); w.WriteInt64(m.confirm); w.WriteString(m.guildName); w.WriteString(m.passwd); return w; }
+		inline WPacket serialize(const CmGuildTryForMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_GUILD_TRYFOR); w.WriteInt64(m.guildId); return w; }
+		inline WPacket serialize(const CmGuildTryForCfmMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_GUILD_TRYFORCFM); w.WriteInt64(m.confirm); return w; }
+		inline WPacket serializeCmGuildListTryPlayerCmd() { WPacket w(8); w.WriteCmd(CMD_CM_GUILD_LISTTRYPLAYER); return w; }
+		inline WPacket serialize(const CmGuildApproveMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_GUILD_APPROVE); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmGuildRejectMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_GUILD_REJECT); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmGuildKickMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_GUILD_KICK); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serializeCmGuildLeaveCmd() { WPacket w(8); w.WriteCmd(CMD_CM_GUILD_LEAVE); return w; }
+		inline WPacket serialize(const CmGuildDisbandMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_GUILD_DISBAND); w.WriteString(m.passwd); return w; }
+		inline WPacket serialize(const CmGuildMottoMessage& m) { WPacket w(128); w.WriteCmd(CMD_CM_GUILD_MOTTO); w.WriteString(m.motto); return w; }
+		inline WPacket serialize(const CmGuildChallMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_GUILD_CHALLENGE); w.WriteInt64(m.level); w.WriteInt64(m.money); return w; }
+		inline WPacket serialize(const CmGuildLeizhuMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_GUILD_LEIZHU); w.WriteInt64(m.level); w.WriteInt64(m.money); return w; }
+
+		// ─── Serialize: гильдейские MC ───────────────────────────────
+
+		inline WPacket serialize(const McGuildTryForCfmMessage& m) { WPacket w(64); w.WriteCmd(CMD_MC_GUILD_TRYFORCFM); w.WriteString(m.name); return w; }
+		inline WPacket serialize(const McGuildMottoMessage& m) { WPacket w(128); w.WriteCmd(CMD_MC_GUILD_MOTTO); w.WriteString(m.motto); return w; }
+		inline WPacket serialize(const McGuildInfoMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_GUILD_INFO);
+			w.WriteInt64(m.charId); w.WriteInt64(m.guildId); w.WriteString(m.guildName); w.WriteString(m.guildMotto); w.WriteInt64(m.guildPermission); return w;
+		}
+		inline WPacket serialize(const McGuildListChallMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_GUILD_LISTCHALL);
+			w.WriteInt64(m.isLeader);
+			for (int i = 0; i < 3; ++i) {
+				w.WriteInt64(m.entries[i].level);
+				if (m.entries[i].level) {
+					w.WriteInt64(m.entries[i].start);
+					w.WriteString(m.entries[i].guildName);
+					w.WriteString(m.entries[i].challName);
+					w.WriteInt64(m.entries[i].money);
+				}
+			}
+			return w;
+		}
+
+		// ─── Serialize/Deserialize: Фаза 5 — оставшиеся CM-команды ──
+
+		// Cmd-only
+		inline WPacket serializeCmLogoutCmd() { WPacket w(8); w.WriteCmd(CMD_CM_LOGOUT); return w; }
+		inline WPacket serializeCmEndPlayCmd() { WPacket w(8); w.WriteCmd(CMD_CM_ENDPLAY); return w; }
+		inline WPacket serializeCmEndActionCmd() { WPacket w(8); w.WriteCmd(CMD_CM_ENDACTION); return w; }
+		inline WPacket serializeCmRankCmd() { WPacket w(8); w.WriteCmd(CMD_CM_RANK); return w; }
+		inline WPacket serializeCmAntiIndulgenceCmd() { WPacket w(8); w.WriteCmd(CMD_CM_ANTIINDULGENCE); return w; }
+		inline WPacket serializeCpPingCmd() { WPacket w(8); w.WriteCmd(CMD_CP_PING); return w; }
+		inline WPacket serializeCmCheckPingCmd() { WPacket w(8); w.WriteCmd(CMD_CM_CHECK_PING); return w; }
+
+		// Логин/выбор персонажа
+		inline WPacket serialize(const CmBgnPlayMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_BGNPLAY); w.WriteInt64(m.chaIndex); return w; }
+		inline WPacket serialize(const CmNewChaMessage& m) { WPacket w(128); w.WriteCmd(CMD_CM_NEWCHA); w.WriteString(m.chaName); w.WriteString(m.birth); w.WriteInt64(m.type); w.WriteInt64(m.hair); w.WriteInt64(m.face); return w; }
+		inline WPacket serialize(const CmDelChaMessage& m) { WPacket w(80); w.WriteCmd(CMD_CM_DELCHA); w.WriteInt64(m.chaIndex); w.WriteString(m.password2); return w; }
+
+		// Пароль
+		inline WPacket serialize(const CmCreatePassword2Message& m) { WPacket w(64); w.WriteCmd(CMD_CM_CREATE_PASSWORD2); w.WriteString(m.password); return w; }
+		inline WPacket serialize(const CmUpdatePassword2Message& m) { WPacket w(128); w.WriteCmd(CMD_CM_UPDATE_PASSWORD2); w.WriteString(m.oldPass); w.WriteString(m.newPass); return w; }
+
+		// GM / утилиты
+		inline WPacket serialize(const CmGmSendMessage& m) { WPacket w(256); w.WriteCmd(CMD_CM_GM_SEND); w.WriteInt64(m.npcId); w.WriteString(m.title); w.WriteString(m.content); return w; }
+		inline WPacket serialize(const CmGmRecvMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_GM_RECV); w.WriteInt64(m.npcId); return w; }
+		inline WPacket serialize(const CmCheatCheckMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_CHEAT_CHECK); w.WriteString(m.answer); return w; }
+		inline WPacket serialize(const CmGuildPermMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_GUILD_PERM); w.WriteInt64(m.id); w.WriteInt64(m.perms); return w; }
+		inline WPacket serialize(const CmGameRequestPinMessage& m) { WPacket w(64); w.WriteCmd(CMD_CM_GAME_REQUEST_PIN); w.WriteString(m.password); return w; }
+
+		// Предметы / замок
+		inline WPacket serialize(const CmItemLockAskMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ITEM_LOCK_ASK); w.WriteInt64(m.slot); return w; }
+		inline WPacket serialize(const CmItemUnlockAskMessage& m) { WPacket w(72); w.WriteCmd(CMD_CM_ITEM_UNLOCK_ASK); w.WriteString(m.password); w.WriteInt64(m.slot); return w; }
+
+		// NPC торговля (составные CMD_CM_REQUESTTRADE)
+		inline WPacket serialize(const CmSelectTradeBoatMessage& m) {
+			WPacket w(40); w.WriteCmd(CMD_CM_REQUESTTRADE);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_TRADEITEM); w.WriteInt64(4) /*ROLE_TRADE_SELECT_BOAT*/; w.WriteInt64(m.index); return w;
+		}
+		inline WPacket serialize(const CmSaleGoodsMessage& m) {
+			WPacket w(56); w.WriteCmd(CMD_CM_REQUESTTRADE);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_TRADEITEM); w.WriteInt64(2) /*ROLE_TRADE_SALE_GOODS*/; w.WriteInt64(m.boatId); w.WriteInt64(m.index); w.WriteInt64(m.count); return w;
+		}
+		inline WPacket serialize(const CmBuyGoodsMessage& m) {
+			WPacket w(72); w.WriteCmd(CMD_CM_REQUESTTRADE);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_TRADEITEM); w.WriteInt64(3) /*ROLE_TRADE_BUY_GOODS*/; w.WriteInt64(m.boatId); w.WriteInt64(m.itemType); w.WriteInt64(m.index1); w.WriteInt64(m.index2); w.WriteInt64(m.count); return w;
+		}
+
+		// Миссии (составные CMD_CM_REQUESTTALK)
+		inline WPacket serialize(const CmMissionTalkMessage& m) {
+			WPacket w(48); w.WriteCmd(CMD_CM_REQUESTTALK);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_MISSION); w.WriteInt64(5) /*ROLE_MIS_TALK*/; w.WriteInt64(CMD_CM_TALKPAGE); w.WriteInt64(m.cmd); return w;
+		}
+		inline WPacket serialize(const CmSelMissionFuncMessage& m) {
+			WPacket w(56); w.WriteCmd(CMD_CM_REQUESTTALK);
+			w.WriteInt64(m.npcId); w.WriteInt64(CMD_CM_MISSION); w.WriteInt64(5) /*ROLE_MIS_TALK*/; w.WriteInt64(CMD_CM_FUNCITEM); w.WriteInt64(m.pageId); w.WriteInt64(m.index); return w;
+		}
+
+		// CP (клиент → GroupServer через GateServer)
+		inline WPacket serialize(const CmCpMasterRefreshInfoMessage& m) { WPacket w(16); w.WriteCmd(CMD_CP_MASTER_REFRESH_INFO); w.WriteInt64(m.chaId); return w; }
+		inline WPacket serialize(const CmCpPrenticeRefreshInfoMessage& m) { WPacket w(16); w.WriteCmd(CMD_CP_PRENTICE_REFRESH_INFO); w.WriteInt64(m.chaId); return w; }
+
+		// Стойла (лоток с товарами)
+		inline WPacket serialize(const CmStallInfoMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_CM_STALL_ALLDATA);
+			w.WriteString(m.name); w.WriteInt64(m.num);
+			for (int64_t i = 0; i < m.num; ++i) {
+				w.WriteInt64(m.items[i].grid); w.WriteInt64(m.items[i].money);
+				w.WriteInt64(m.items[i].count); w.WriteInt64(m.items[i].index);
+			}
+			return w;
+		}
+
+		// Жизненные навыки
+		inline WPacket serialize(const CmLifeSkillMessage& m) { WPacket w(24); w.WriteCmd(CMD_CM_LIFESKILL_ASR); w.WriteInt64(m.type); w.WriteInt64(m.npcId); return w; }
+
+		// Аукцион
+		inline WPacket serialize(const CmBidUpMessage& m) { WPacket w(32); w.WriteCmd(CMD_CM_BIDUP); w.WriteInt64(m.npcId); w.WriteInt64(m.itemId); w.WriteInt64(m.price); return w; }
+
+		// Разблокировка персонажа после крафта
+		inline WPacket serialize(const CmUnlockCharacterMessage& m) { WPacket w(16); w.WriteCmd(CMD_CM_ITEM_FORGE_CANACTION); w.WriteInt64(m.flag); return w; }
+
+		// Пинг (ответ клиента на MC_PING)
+		inline WPacket serialize(const CmPingResponseMessage& m) { WPacket w(48); w.WriteCmd(CMD_CM_PING); w.WriteInt64(m.v1); w.WriteInt64(m.v2); w.WriteInt64(m.v3); w.WriteInt64(m.v4); w.WriteInt64(m.v5); return w; }
 
 		// ─── Deserialize: CM с полями ──────────────────────────────
 
@@ -5766,6 +7019,15 @@ namespace net {
 		inline void deserialize(RPacket& pk, CmChangePassMessage& m) { m.pass = pk.ReadString(); m.pin = pk.ReadString(); }
 		inline void deserialize(RPacket& pk, CmGuildBankOperMessage& m) { m.op = pk.ReadInt64(); m.srcType = pk.ReadInt64(); m.srcId = pk.ReadInt64(); m.srcNum = pk.ReadInt64(); m.tarType = pk.ReadInt64(); m.tarId = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, CmGuildBankGoldMessage& m) { m.op = pk.ReadInt64(); m.direction = pk.ReadInt64(); m.gold = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, PmGuildBankOperData& m) { m.srcType = pk.ReadInt64(); m.srcGrid = pk.ReadInt64(); m.srcNum = pk.ReadInt64(); m.tarType = pk.ReadInt64(); m.tarGrid = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, PmGuildBankGoldData& m) { m.direction = pk.ReadInt64(); m.gold = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, PmGuildBankMessage& m) {
+			m.bankType = pk.ReadInt64();
+			switch (m.bankType) {
+			case 0: { PmGuildBankOperData d; deserialize(pk, d); m.data = d; break; }
+			case 1: { PmGuildBankGoldData d; deserialize(pk, d); m.data = d; break; }
+			}
+		}
 		inline void deserialize(RPacket& pk, CmUpdateHairMessage& m) { m.scriptId = pk.ReadInt64(); m.gridLoc0 = pk.ReadInt64(); m.gridLoc1 = pk.ReadInt64(); m.gridLoc2 = pk.ReadInt64(); m.gridLoc3 = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, CmTeamFightAskMessage& m) { m.type = pk.ReadInt64(); m.worldId = pk.ReadInt64(); m.handle = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, CmItemRepairAskMessage& m) { m.repairmanId = pk.ReadInt64(); m.repairmanHandle = pk.ReadInt64(); m.posType = pk.ReadInt64(); m.posId = pk.ReadInt64(); }
@@ -5791,12 +7053,46 @@ namespace net {
 		inline void deserialize(RPacket& pk, CmRefreshDataMessage& m) { m.worldId = pk.ReadInt64(); m.handle = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, CmPkCtrlMessage& m) { m.ctrl = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, CmItemAmphitheaterAskMessage& m) { m.sure = pk.ReadInt64(); m.reId = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, CmMasterInviteMessage& m) { m.masterId = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, CmMasterAsrMessage& m) { m.agree = pk.ReadInt64(); m.masterId = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, CmMasterDelMessage& m) { m.masterId = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, CmPrenticeInviteMessage& m) { m.prenticeId = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, CmPrenticeAsrMessage& m) { m.agree = pk.ReadInt64(); m.prenticeId = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, CmPrenticeDelMessage& m) { m.prenticeId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMasterInviteMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMasterAsrMessage& m) { m.agree = pk.ReadInt64(); m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMasterDelMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPrenticeInviteMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPrenticeAsrMessage& m) { m.agree = pk.ReadInt64(); m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPrenticeDelMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
+
+		// ─── Deserialize: Фаза 5 — оставшиеся CM-команды ──────────
+
+		inline void deserialize(RPacket& pk, CmBgnPlayMessage& m) { m.chaIndex = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmNewChaMessage& m) { m.chaName = pk.ReadString(); m.birth = pk.ReadString(); m.type = pk.ReadInt64(); m.hair = pk.ReadInt64(); m.face = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmDelChaMessage& m) { m.chaIndex = pk.ReadInt64(); m.password2 = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmCreatePassword2Message& m) { m.password = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmUpdatePassword2Message& m) { m.oldPass = pk.ReadString(); m.newPass = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGmSendMessage& m) { m.npcId = pk.ReadInt64(); m.title = pk.ReadString(); m.content = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGmRecvMessage& m) { m.npcId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmCheatCheckMessage& m) { m.answer = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGuildPermMessage& m) { m.id = pk.ReadInt64(); m.perms = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGameRequestPinMessage& m) { m.password = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmItemLockAskMessage& m) { m.slot = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemUnlockAskMessage& m) { m.password = pk.ReadString(); m.slot = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmCpMasterRefreshInfoMessage& m) { m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmCpPrenticeRefreshInfoMessage& m) { m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmStallInfoMessage& m) {
+			m.name = pk.ReadString(); m.num = pk.ReadInt64();
+			m.items.resize(m.num);
+			for (int64_t i = 0; i < m.num; ++i) {
+				m.items[i].grid = pk.ReadInt64(); m.items[i].money = pk.ReadInt64();
+				m.items[i].count = pk.ReadInt64(); m.items[i].index = pk.ReadInt64();
+			}
+		}
+		inline void deserialize(RPacket& pk, CmLifeSkillMessage& m) { m.type = pk.ReadInt64(); m.npcId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmBidUpMessage& m) { m.npcId = pk.ReadInt64(); m.itemId = pk.ReadInt64(); m.price = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmUnlockCharacterMessage& m) { m.flag = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmPingResponseMessage& m) { m.v1 = pk.ReadInt64(); m.v2 = pk.ReadInt64(); m.v3 = pk.ReadInt64(); m.v4 = pk.ReadInt64(); m.v5 = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmSelectTradeBoatMessage& m) { m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.index = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmSaleGoodsMessage& m) { m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.boatId = pk.ReadInt64(); m.index = pk.ReadInt64(); m.count = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmBuyGoodsMessage& m) { m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.boatId = pk.ReadInt64(); m.itemType = pk.ReadInt64(); m.index1 = pk.ReadInt64(); m.index2 = pk.ReadInt64(); m.count = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmMissionTalkMessage& m) { m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.cmd = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmSelMissionFuncMessage& m) { m.npcId = pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); pk.ReadInt64(); m.pageId = pk.ReadInt64(); m.index = pk.ReadInt64(); }
 
 		// ─── Deserialize: NPC Talk составные (Фаза 2) ────────────────
 
@@ -5846,6 +7142,251 @@ namespace net {
 		inline void deserialize(RPacket& pk, McPrenticeAskMessage& m) { m.name = pk.ReadString(); m.chaId = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, McItemRepairAskMcMessage& m) { m.itemName = pk.ReadString(); m.repairCost = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, McItemLotteryAsrMessage& m) { m.success = pk.ReadInt64(); }
+
+		// ─── Deserialize: MC/CM — Фаза 4 ─────────────────────────
+		inline void deserialize(RPacket& pk, McChaEmotionMessage& m) { m.worldId = pk.ReadInt64(); m.emotion = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McStartExitMessage& m) { m.exitTime = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McGmRecvMessage& m) { m.npcId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McStallDelGoodsMessage& m) { m.charId = pk.ReadInt64(); m.grid = pk.ReadInt64(); m.count = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McStallCloseMessage& m) { m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McStallSuccessMessage& m) { m.charId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McUpdateGuildGoldMessage& m) { m.data = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McQueryChaItemMessage& m) { m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McDisconnectMessage& m) { m.reason = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McLifeSkillShowMessage& m) { m.type = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McLifeSkillMessage& m) { m.type = pk.ReadInt64(); m.result = pk.ReadInt64(); m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McLifeSkillAsrMessage& m) { m.type = pk.ReadInt64(); m.time = pk.ReadInt64(); m.text = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McDropLockAsrMessage& m) { m.success = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McUnlockItemAsrMessage& m) { m.result = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McStoreBuyAnswerMessage& m) { m.success = pk.ReadInt64(); m.newMoney = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McStoreChangeAnswerMessage& m) { m.success = pk.ReadInt64(); m.moBean = pk.ReadInt64(); m.replMoney = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McDailyBuffInfoMessage& m) { m.imgName = pk.ReadString(); m.labelInfo = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McRequestDropRateMessage& m) { m.rate = pk.ReadFloat32(); }
+		inline void deserialize(RPacket& pk, McRequestExpRateMessage& m) { m.rate = pk.ReadFloat32(); }
+		inline void deserialize(RPacket& pk, McTigerItemIdMessage& m) { m.num = pk.ReadInt64(); m.itemId0 = pk.ReadInt64(); m.itemId1 = pk.ReadInt64(); m.itemId2 = pk.ReadInt64(); }
+
+		// ─── Deserialize: гильдейские CM ─────────────────────────────
+
+		inline void deserialize(RPacket& pk, CmGuildPutNameMessage& m) { m.confirm = pk.ReadInt64(); m.guildName = pk.ReadString(); m.passwd = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGuildTryForMessage& m) { m.guildId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildTryForCfmMessage& m) { m.confirm = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildApproveMessage& m) { m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildRejectMessage& m) { m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildKickMessage& m) { m.chaId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildDisbandMessage& m) { m.passwd = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGuildMottoMessage& m) { m.motto = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, CmGuildChallMessage& m) { m.level = pk.ReadInt64(); m.money = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmGuildLeizhuMessage& m) { m.level = pk.ReadInt64(); m.money = pk.ReadInt64(); }
+
+		// ─── Deserialize: сложные CM (динамические массивы) ──────────
+
+		inline void deserialize(RPacket& pk, CmSayMessage& m) {
+			unsigned short len;
+			const char* data = pk.ReadSequence(len);
+			if (data && len > 0) m.content.assign(data, len - 1); // без null-терминатора
+		}
+		inline void deserialize(RPacket& pk, CmSynAttrMessage& m) {
+			int64_t count = pk.ReadInt64();
+			m.attrs.reserve(static_cast<size_t>(count));
+			for (int64_t i = 0; i < count; ++i) {
+				CmSynAttrEntry e;
+				e.attrId = pk.ReadInt64();
+				e.value = pk.ReadInt64();
+				m.attrs.push_back(e);
+			}
+		}
+		inline void deserialize(RPacket& pk, CmItemForgeCanActionMessage& m) { m.canAction = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, CmItemForgeGroupAskMessage& m) {
+			m.sure = pk.ReadInt64();
+			if (m.sure) {
+				m.type = pk.ReadInt64();
+				for (int i = 0; i < 6; ++i) {
+					int64_t cnt = pk.ReadInt64();
+					m.groups[i].cells.reserve(static_cast<size_t>(cnt));
+					for (int64_t j = 0; j < cnt; ++j) {
+						ForgeGroupCell c;
+						c.posId = pk.ReadInt64();
+						c.num = pk.ReadInt64();
+						m.groups[i].cells.push_back(c);
+					}
+				}
+			}
+		}
+		inline void deserialize(RPacket& pk, CmItemLotteryGroupAskMessage& m) {
+			m.sure = pk.ReadInt64();
+			if (m.sure) {
+				for (int i = 0; i < 3; ++i) {
+					int64_t cnt = pk.ReadInt64();
+					m.groups[i].cells.reserve(static_cast<size_t>(cnt));
+					for (int64_t j = 0; j < cnt; ++j) {
+						ForgeGroupCell c;
+						c.posId = pk.ReadInt64();
+						c.num = pk.ReadInt64();
+						m.groups[i].cells.push_back(c);
+					}
+				}
+			}
+		}
+		/// CMD_CM_LIFESKILL_ASK
+		inline bool deserializeLifeSkillAsk(RPacket& pk, CmLifeSkillCraftMessage& m) {
+			m.isAnswer = false;
+			m.skillType = pk.ReadInt64();
+			long type = static_cast<long>(m.skillType);
+			if (type < 0 || type >= 4) return false;
+			m.npcId = pk.ReadInt64();
+			int posCount = kLifeSkillNeedItemNum[type];
+			m.positions.resize(posCount);
+			for (int i = 0; i < posCount; i++) {
+				m.positions[i] = pk.ReadInt64();
+			}
+			if (type == 2 || type == 3) {
+				m.hasExtra = true;
+				m.extraParam = pk.ReadInt64();
+			}
+			return true;
+		}
+		/// CMD_CM_LIFESKILL_ASR
+		inline bool deserializeLifeSkillAsr(RPacket& pk, CmLifeSkillCraftMessage& m) {
+			m.isAnswer = true;
+			m.skillType = pk.ReadInt64();
+			long type = static_cast<long>(m.skillType);
+			if (type < 0 || type >= 4) return false;
+			m.npcId = pk.ReadInt64();
+			int posCount = kLifeSkillNeedItemNum[type];
+			m.positions.resize(posCount);
+			for (int i = 0; i < posCount; i++) {
+				m.positions[i] = pk.ReadInt64();
+			}
+			if (type == 0) {
+				pk.ReadString(); // unused
+			}
+			m.hasExtra = true;
+			m.extraParam = pk.ReadInt64();
+			return true;
+		}
+
+		// ─── Deserialize: BeginAction sub-data ──────────────────────
+
+		inline void deserialize(RPacket& pk, CmBeginActionMessage& m) {
+			m.worldId = pk.ReadInt64();
+#ifdef defPROTOCOL_HAVE_PACKETID
+			m.packetId = pk.ReadInt64();
+#endif
+			m.actionType = pk.ReadInt64();
+			switch (m.actionType) {
+			case ActionType::MOVE: {
+				CmActionMoveInputData d;
+				unsigned short len; const char* p = pk.ReadSequence(len);
+				if (p && len > 0) d.pathData.assign(p, len);
+				m.data = std::move(d); break;
+			}
+			case ActionType::SKILL: {
+				CmActionSkillInputData d;
+				d.chMove = pk.ReadInt64(); d.fightId = pk.ReadInt64();
+				if (d.chMove == 2) {
+					unsigned short len; const char* p = pk.ReadSequence(len);
+					if (p && len > 0) d.pathData.assign(p, len);
+				}
+				d.skillId = pk.ReadInt64(); d.tarInfo1 = pk.ReadInt64(); d.tarInfo2 = pk.ReadInt64();
+				m.data = std::move(d); break;
+			}
+			case ActionType::STOP_STATE: { CmActionStopStateData d; d.stateId = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::LEAN: {
+				CmActionLeanData d;
+				d.pose = pk.ReadInt64(); d.angle = pk.ReadInt64(); d.posX = pk.ReadInt64(); d.posY = pk.ReadInt64(); d.height = pk.ReadInt64();
+				m.data = d; break;
+			}
+			case ActionType::ITEM_PICK: { CmActionItemPickData d; d.worldId = pk.ReadInt64(); d.handle = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::ITEM_THROW: {
+				CmActionItemThrowData d;
+				d.gridId = pk.ReadInt64(); d.num = pk.ReadInt64(); d.posX = pk.ReadInt64(); d.posY = pk.ReadInt64();
+				m.data = d; break;
+			}
+			case ActionType::ITEM_USE: { CmActionItemUseData d; d.fromGridId = pk.ReadInt64(); d.toGridId = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::ITEM_UNFIX: {
+				CmActionItemUnfixData d;
+				d.linkId = pk.ReadInt64(); d.gridId = pk.ReadInt64();
+				if (d.gridId == -2) { d.param1 = pk.ReadInt64(); d.param2 = pk.ReadInt64(); }
+				m.data = d; break;
+			}
+			case ActionType::ITEM_POS: case ActionType::KITBAGTMP_DRAG: {
+				CmActionItemPosData d; d.srcGrid = pk.ReadInt64(); d.srcNum = pk.ReadInt64(); d.tarGrid = pk.ReadInt64(); m.data = d; break;
+			}
+			case ActionType::ITEM_DELETE: { CmActionItemDeleteData d; d.fromGridId = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::ITEM_INFO: { CmActionViewItemData d; d.viewType = pk.ReadInt64(); d.param = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::BANK: {
+				CmActionBankData d;
+				d.srcType = pk.ReadInt64(); d.srcGrid = pk.ReadInt64(); d.srcNum = pk.ReadInt64(); d.tarType = pk.ReadInt64(); d.tarGrid = pk.ReadInt64();
+				m.data = d; break;
+			}
+			case ActionType::REQUESTGUILDLOGS: { CmActionRequestGuildLogsData d; d.curSize = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::SHORTCUT: { CmActionShortcutData d; d.index = pk.ReadInt64(); d.type = pk.ReadInt64(); d.grid = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::TEMP: { CmActionTempData d; d.itemId = pk.ReadInt64(); d.partId = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::EVENT: { CmActionEventData d; d.worldId = pk.ReadInt64(); d.handle = pk.ReadInt64(); d.eventId = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::FACE: case ActionType::SKILL_POSE: { CmActionFaceData d; d.angle = pk.ReadInt64(); d.pose = pk.ReadInt64(); m.data = d; break; }
+			case ActionType::PK_CTRL: { CmActionPkCtrlData d; d.ctrl = pk.ReadInt64(); m.data = d; break; }
+			default: break;
+			}
+		}
+
+		// ─── Deserialize: гильдейские MC ─────────────────────────────
+
+		inline void deserialize(RPacket& pk, McGuildTryForCfmMessage& m) { m.name = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McGuildMottoMessage& m) { m.motto = pk.ReadString(); }
+		inline void deserialize(RPacket& pk, McGuildInfoMessage& m) { m.charId = pk.ReadInt64(); m.guildId = pk.ReadInt64(); m.guildName = pk.ReadString(); m.guildMotto = pk.ReadString(); m.guildPermission = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McGuildListChallMessage& m) {
+			m.isLeader = pk.ReadInt64();
+			for (int i = 0; i < 3; ++i) {
+				m.entries[i] = {};
+				m.entries[i].level = pk.ReadInt64();
+				if (m.entries[i].level) {
+					m.entries[i].start = pk.ReadInt64();
+					m.entries[i].guildName = pk.ReadString();
+					m.entries[i].challName = pk.ReadString();
+					m.entries[i].money = pk.ReadInt64();
+				}
+			}
+		}
+
+		// ─── Deserialize: аукцион, гильдии, бои (count-first) ──────
+
+		inline void deserialize(RPacket& pk, McListAuctionMessage& m) {
+			auto count = pk.ReadInt64();
+			m.items.resize(static_cast<size_t>(count));
+			for (auto& e : m.items) {
+				e.itemId = pk.ReadInt64(); e.name = pk.ReadString(); e.curChaName = pk.ReadString();
+				e.itemCount = pk.ReadInt64(); e.basePrice = pk.ReadInt64(); e.minBid = pk.ReadInt64(); e.curPrice = pk.ReadInt64();
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McListGuildMessage& m) {
+			auto count = pk.ReadInt64();
+			m.entries.resize(static_cast<size_t>(count));
+			for (auto& e : m.entries) {
+				e.guildId = pk.ReadInt64(); e.guildName = pk.ReadString(); e.motto = pk.ReadString();
+				e.leaderName = pk.ReadString(); e.memberCount = pk.ReadInt64(); e.exp = pk.ReadInt64();
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McGuildListTryPlayerMessage& m) {
+			m.guildId = pk.ReadInt64(); m.guildName = pk.ReadString(); m.motto = pk.ReadString();
+			m.leaderName = pk.ReadString(); m.memberTotal = pk.ReadInt64(); m.maxMembers = pk.ReadInt64();
+			m.exp = pk.ReadInt64(); m.reserved = pk.ReadInt64(); m.level = pk.ReadInt64();
+			auto count = pk.ReadInt64();
+			m.players.resize(static_cast<size_t>(count));
+			for (auto& p : m.players) {
+				p.chaId = pk.ReadInt64(); p.name = pk.ReadString(); p.job = pk.ReadString(); p.degree = pk.ReadInt64();
+			}
+		}
+
+		inline void deserialize(RPacket& pk, McTeamFightAskMessage& m) {
+			m.srcCount = pk.ReadInt64(); m.tarCount = pk.ReadInt64();
+			m.players.resize(static_cast<size_t>(m.srcCount + m.tarCount));
+			for (auto& p : m.players) {
+				p.name = pk.ReadString(); p.lv = pk.ReadInt64(); p.job = pk.ReadString();
+				p.fightNum = pk.ReadInt64(); p.victoryNum = pk.ReadInt64();
+			}
+		}
 
 		// ─── Serialize: Фаза 3 ─────────────────────────────────────
 
@@ -5989,8 +7530,8 @@ namespace net {
 		}
 
 		inline WPacket serialize(const McMisLogStateMessage& m) {
-			WPacket w(24); w.WriteCmd(CMD_MC_MISLOG_CHANGE);
-			w.WriteInt64(m.missionId); w.WriteInt64(m.state); return w;
+			WPacket w(32); w.WriteCmd(CMD_MC_MISLOG_CHANGE);
+			w.WriteInt64(m.index); w.WriteInt64(m.missionId); w.WriteInt64(m.state); return w;
 		}
 
 		inline WPacket serialize(const McFuncInfoMessage& m) {
@@ -6113,9 +7654,11 @@ namespace net {
 				w.WriteString(p.remark); w.WriteInt64(p.isHot ? 1 : 0);
 				w.WriteInt64(p.time); w.WriteInt64(p.quantity); w.WriteInt64(p.expire);
 				w.WriteInt64(static_cast<int64_t>(p.variants.size()));
-				for (auto& v : p.variants) { w.WriteInt64(v.itemId); w.WriteInt64(v.itemNum); w.WriteInt64(v.flute); }
-				// Всегда ровно 5 атрибутов
-				for (int i = 0; i < 5; ++i) { w.WriteInt64(p.attrs[i].attrId); w.WriteInt64(p.attrs[i].attrVal); }
+				// Атрибуты записываются внутри каждого варианта (по 5 пар на вариант)
+				for (auto& v : p.variants) {
+					w.WriteInt64(v.itemId); w.WriteInt64(v.itemNum); w.WriteInt64(v.flute);
+					for (int i = 0; i < 5; ++i) { w.WriteInt64(v.attrs[i].attrId); w.WriteInt64(v.attrs[i].attrVal); }
+				}
 			}
 			return w;
 		}
@@ -6152,12 +7695,17 @@ namespace net {
 			w.WriteInt64(m.npcType);
 			w.WriteInt64(m.npcState);
 			w.WriteInt64(m.poseType);
-			if (m.poseType == 1) {
-				w.WriteInt64(m.lean.leanState); w.WriteInt64(m.lean.pose); w.WriteInt64(m.lean.angle);
-				w.WriteInt64(m.lean.posX); w.WriteInt64(m.lean.posY); w.WriteInt64(m.lean.height);
-			} else if (m.poseType == 2) {
-				w.WriteInt64(m.seat.seatAngle); w.WriteInt64(m.seat.seatPose);
-			}
+			// Сериализация позы через std::visit
+			std::visit([&w](auto&& arg) {
+				using T = std::decay_t<decltype(arg)>;
+				if constexpr (std::is_same_v<T, LeanInfo>) {
+					w.WriteInt64(arg.leanState); w.WriteInt64(arg.pose); w.WriteInt64(arg.angle);
+					w.WriteInt64(arg.posX); w.WriteInt64(arg.posY); w.WriteInt64(arg.height);
+				} else if constexpr (std::is_same_v<T, SeatInfo>) {
+					w.WriteInt64(arg.seatAngle); w.WriteInt64(arg.seatPose);
+				}
+				// std::monostate — ничего не пишем
+			}, m.pose);
 			serializeChaAttrInfo(w, m.attr);
 			serializeChaSkillStateInfo(w, m.skillState);
 			return w;
@@ -6238,6 +7786,18 @@ namespace net {
 				w.WriteInt64(d.srcSynType);
 				w.WriteInt64(static_cast<int64_t>(d.srcEffects.size()));
 				for (const auto& e : d.srcEffects) { w.WriteInt64(e.attrId); w.WriteInt64(e.attrVal); }
+				// Состояния источника
+				if (d.srcHasStates) {
+					w.WriteInt64(1);
+					w.WriteInt64(d.srcStateTime);
+					w.WriteInt64(static_cast<int64_t>(d.srcStates.size()));
+					for (const auto& s : d.srcStates) {
+						w.WriteInt64(s.stateId); w.WriteInt64(s.stateLv);
+						w.WriteInt64(s.duration); w.WriteInt64(s.startTime);
+					}
+				} else {
+					w.WriteInt64(0);
+				}
 			} else {
 				w.WriteInt64(0);
 			}
@@ -6250,34 +7810,43 @@ namespace net {
 			w.WriteInt64(m.worldId);
 			w.WriteInt64(m.packetId);
 			w.WriteInt64(m.actionType);
-			if (m.actionType == ActionType::MOVE) {
-				serializeActionMove(w, m.move);
-			} else if (m.actionType == ActionType::SKILL_SRC) {
-				serializeActionSkillSrc(w, m.skillSrc);
-			} else if (m.actionType == ActionType::SKILL_TAR) {
-				serializeActionSkillTar(w, m.skillTar);
-			} else if (m.actionType == ActionType::LEAN) {
-				w.WriteInt64(m.lean.leanState);
-				if (m.lean.leanState == 0) {
-					w.WriteInt64(m.lean.pose); w.WriteInt64(m.lean.angle);
-					w.WriteInt64(m.lean.posX); w.WriteInt64(m.lean.posY); w.WriteInt64(m.lean.height);
+			// Сериализация данных действия через std::visit
+			std::visit([&w, &m](auto&& arg) {
+				using T = std::decay_t<decltype(arg)>;
+				if constexpr (std::is_same_v<T, ActionMoveData>) {
+					serializeActionMove(w, arg);
+				} else if constexpr (std::is_same_v<T, ActionSkillSrcData>) {
+					serializeActionSkillSrc(w, arg);
+				} else if constexpr (std::is_same_v<T, ActionSkillTarData>) {
+					serializeActionSkillTar(w, arg);
+				} else if constexpr (std::is_same_v<T, ActionLeanData>) {
+					w.WriteInt64(arg.leanState);
+					if (arg.leanState == 0) {
+						w.WriteInt64(arg.pose); w.WriteInt64(arg.angle);
+						w.WriteInt64(arg.posX); w.WriteInt64(arg.posY); w.WriteInt64(arg.height);
+					}
+				} else if constexpr (std::is_same_v<T, ActionFaceData>) {
+					w.WriteInt64(arg.angle); w.WriteInt64(arg.pose);
+				} else if constexpr (std::is_same_v<T, ActionItemFailedData>) {
+					w.WriteInt64(arg.failedId);
+				} else if constexpr (std::is_same_v<T, ActionTempData>) {
+					w.WriteInt64(arg.itemId); w.WriteInt64(arg.partId);
+				} else if constexpr (std::is_same_v<T, ActionChangeChaData>) {
+					w.WriteInt64(arg.mainChaId);
+				} else if constexpr (std::is_same_v<T, ChaLookInfo>) {
+					serializeChaLookInfo(w, arg);
+				} else if constexpr (std::is_same_v<T, ChaKitbagInfo>) {
+					serializeChaKitbagInfo(w, arg);
+				} else if constexpr (std::is_same_v<T, ChaShortcutInfo>) {
+					serializeChaShortcutInfo(w, arg);
+				} else if constexpr (std::is_same_v<T, ActionPkCtrlData>) {
+					w.WriteInt64(arg.pkCtrl);
+				} else if constexpr (std::is_same_v<T, ActionLookEnergyData>) {
+					for (int i = 0; i < EQUIP_NUM; ++i)
+						w.WriteInt64(arg.energy[i]);
 				}
-			} else if (m.actionType == ActionType::FACE || m.actionType == ActionType::SKILL_POSE) {
-				w.WriteInt64(m.face.angle); w.WriteInt64(m.face.pose);
-			} else if (m.actionType == ActionType::ITEM_FAILED) {
-				w.WriteInt64(m.itemFailedId);
-			} else if (m.actionType == ActionType::TEMP) {
-				w.WriteInt64(m.tempItemId); w.WriteInt64(m.tempPartId);
-			} else if (m.actionType == ActionType::CHANGE_CHA) {
-				w.WriteInt64(m.changeChaMainId);
-			} else if (m.actionType == ActionType::LOOK) {
-				serializeChaLookInfo(w, m.look);
-			} else if (m.actionType == ActionType::KITBAG || m.actionType == ActionType::BANK
-					|| m.actionType == ActionType::GUILDBANK || m.actionType == ActionType::KITBAGTMP) {
-				serializeChaKitbagInfo(w, m.kitbag);
-			} else if (m.actionType == ActionType::SHORTCUT) {
-				serializeChaShortcutInfo(w, m.shortcut);
-			}
+				// std::monostate — ITEM_INFO и прочие пустые — ничего не пишем
+			}, m.data);
 			return w;
 		}
 
@@ -6395,7 +7964,7 @@ namespace net {
 		}
 		inline void deserialize(RPacket& pk, McMisLogClearMcMessage& m) { m.missionId = pk.ReadInt64(); }
 		inline void deserialize(RPacket& pk, McMisLogAddMessage& m) { m.missionId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
-		inline void deserialize(RPacket& pk, McMisLogStateMessage& m) { m.missionId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McMisLogStateMessage& m) { m.index = pk.ReadInt64(); m.missionId = pk.ReadInt64(); m.state = pk.ReadInt64(); }
 
 		inline void deserialize(RPacket& pk, McFuncInfoMessage& m) {
 			m.npcId = pk.ReadInt64(); m.page = pk.ReadInt64(); m.talkText = pk.ReadString();
@@ -6509,9 +8078,11 @@ namespace net {
 				p.time = pk.ReadInt64(); p.quantity = pk.ReadInt64(); p.expire = pk.ReadInt64();
 				auto variantCount = static_cast<size_t>(pk.ReadInt64());
 				p.variants.resize(variantCount);
-				for (auto& v : p.variants) { v.itemId = pk.ReadInt64(); v.itemNum = pk.ReadInt64(); v.flute = pk.ReadInt64(); }
-				// Всегда ровно 5 атрибутов
-				for (int i = 0; i < 5; ++i) { p.attrs[i].attrId = pk.ReadInt64(); p.attrs[i].attrVal = pk.ReadInt64(); }
+				// Атрибуты читаются внутри каждого варианта (по 5 пар на вариант)
+				for (auto& v : p.variants) {
+					v.itemId = pk.ReadInt64(); v.itemNum = pk.ReadInt64(); v.flute = pk.ReadInt64();
+					for (int i = 0; i < 5; ++i) { v.attrs[i].attrId = pk.ReadInt64(); v.attrs[i].attrVal = pk.ReadInt64(); }
+				}
 			}
 		}
 
@@ -6540,11 +8111,18 @@ namespace net {
 			m.npcType = pk.ReadInt64();
 			m.npcState = pk.ReadInt64();
 			m.poseType = pk.ReadInt64();
+			// Десериализация позы в std::variant по poseType
 			if (m.poseType == 1) {
-				m.lean.leanState = pk.ReadInt64(); m.lean.pose = pk.ReadInt64(); m.lean.angle = pk.ReadInt64();
-				m.lean.posX = pk.ReadInt64(); m.lean.posY = pk.ReadInt64(); m.lean.height = pk.ReadInt64();
+				LeanInfo lean;
+				lean.leanState = pk.ReadInt64(); lean.pose = pk.ReadInt64(); lean.angle = pk.ReadInt64();
+				lean.posX = pk.ReadInt64(); lean.posY = pk.ReadInt64(); lean.height = pk.ReadInt64();
+				m.pose = lean;
 			} else if (m.poseType == 2) {
-				m.seat.seatAngle = pk.ReadInt64(); m.seat.seatPose = pk.ReadInt64();
+				SeatInfo seat;
+				seat.seatAngle = pk.ReadInt64(); seat.seatPose = pk.ReadInt64();
+				m.pose = seat;
+			} else {
+				m.pose = std::monostate{};
 			}
 			deserializeChaAttrInfo(pk, m.attr);
 			deserializeChaSkillStateInfo(pk, m.skillState);
@@ -6624,42 +8202,1075 @@ namespace net {
 				auto srcCount = static_cast<size_t>(pk.ReadInt64());
 				d.srcEffects.resize(srcCount);
 				for (auto& e : d.srcEffects) { e.attrId = pk.ReadInt64(); e.attrVal = pk.ReadInt64(); }
+				// Состояния источника
+				d.srcHasStates = pk.ReadInt64() == 1;
+				if (d.srcHasStates) {
+					d.srcStateTime = pk.ReadInt64();
+					auto srcStCount = static_cast<size_t>(pk.ReadInt64());
+					d.srcStates.resize(srcStCount);
+					for (auto& s : d.srcStates) {
+						s.stateId = pk.ReadInt64(); s.stateLv = pk.ReadInt64();
+						s.duration = pk.ReadInt64(); s.startTime = pk.ReadInt64();
+					}
+				}
 			}
 		}
 
-		/// Десериализация CMD_MC_NOTIACTION — диспетчер по actionType.
+		/// Десериализация CMD_MC_NOTIACTION — диспетчер по actionType в std::variant.
 		inline void deserialize(RPacket& pk, McCharacterActionMessage& m) {
 			m.worldId = pk.ReadInt64();
 			m.packetId = pk.ReadInt64();
 			m.actionType = pk.ReadInt64();
 			if (m.actionType == ActionType::MOVE) {
-				deserializeActionMove(pk, m.move);
+				ActionMoveData d; deserializeActionMove(pk, d); m.data = std::move(d);
 			} else if (m.actionType == ActionType::SKILL_SRC) {
-				deserializeActionSkillSrc(pk, m.skillSrc);
+				ActionSkillSrcData d; deserializeActionSkillSrc(pk, d); m.data = std::move(d);
 			} else if (m.actionType == ActionType::SKILL_TAR) {
-				deserializeActionSkillTar(pk, m.skillTar);
+				ActionSkillTarData d; deserializeActionSkillTar(pk, d); m.data = std::move(d);
 			} else if (m.actionType == ActionType::LEAN) {
-				m.lean.leanState = pk.ReadInt64();
-				if (m.lean.leanState == 0) {
-					m.lean.pose = pk.ReadInt64(); m.lean.angle = pk.ReadInt64();
-					m.lean.posX = pk.ReadInt64(); m.lean.posY = pk.ReadInt64(); m.lean.height = pk.ReadInt64();
+				ActionLeanData d;
+				d.leanState = pk.ReadInt64();
+				if (d.leanState == 0) {
+					d.pose = pk.ReadInt64(); d.angle = pk.ReadInt64();
+					d.posX = pk.ReadInt64(); d.posY = pk.ReadInt64(); d.height = pk.ReadInt64();
 				}
+				m.data = d;
 			} else if (m.actionType == ActionType::FACE || m.actionType == ActionType::SKILL_POSE) {
-				m.face.angle = pk.ReadInt64(); m.face.pose = pk.ReadInt64();
+				ActionFaceData d;
+				d.angle = pk.ReadInt64(); d.pose = pk.ReadInt64();
+				m.data = d;
 			} else if (m.actionType == ActionType::ITEM_FAILED) {
-				m.itemFailedId = pk.ReadInt64();
+				m.data = ActionItemFailedData{ pk.ReadInt64() };
 			} else if (m.actionType == ActionType::TEMP) {
-				m.tempItemId = pk.ReadInt64(); m.tempPartId = pk.ReadInt64();
+				ActionTempData d; d.itemId = pk.ReadInt64(); d.partId = pk.ReadInt64();
+				m.data = d;
 			} else if (m.actionType == ActionType::CHANGE_CHA) {
-				m.changeChaMainId = pk.ReadInt64();
+				m.data = ActionChangeChaData{ pk.ReadInt64() };
 			} else if (m.actionType == ActionType::LOOK) {
-				deserializeChaLookInfo(pk, m.look);
+				ChaLookInfo d; deserializeChaLookInfo(pk, d); m.data = std::move(d);
 			} else if (m.actionType == ActionType::KITBAG || m.actionType == ActionType::BANK
 					|| m.actionType == ActionType::GUILDBANK || m.actionType == ActionType::KITBAGTMP) {
-				deserializeChaKitbagInfo(pk, m.kitbag);
+				ChaKitbagInfo d; deserializeChaKitbagInfo(pk, d); m.data = std::move(d);
 			} else if (m.actionType == ActionType::SHORTCUT) {
-				deserializeChaShortcutInfo(pk, m.shortcut);
+				ChaShortcutInfo d; deserializeChaShortcutInfo(pk, d); m.data = std::move(d);
+			} else if (m.actionType == ActionType::PK_CTRL) {
+				m.data = ActionPkCtrlData{ pk.ReadInt64() };
+			} else if (m.actionType == ActionType::LOOK_ENERGY) {
+				ActionLookEnergyData d;
+				for (int i = 0; i < EQUIP_NUM; ++i)
+					d.energy[i] = pk.ReadInt64();
+				m.data = d;
+			} else if (m.actionType == ActionType::UPDATEGUILDLOGS) {
+				ActionUpdateGuildLogsData d;
+				d.totalSize = pk.ReadInt64();
+				for (int i = 0; i < 13; ++i) {
+					GuildBankLogEntry e;
+					e.type = pk.ReadInt64();
+					if (e.type == 9) { d.terminated = true; break; }
+					e.time = pk.ReadInt64();
+					e.parameter = pk.ReadInt64();
+					e.quantity = pk.ReadInt64();
+					e.userId = pk.ReadInt64();
+					d.logs.push_back(std::move(e));
+				}
+				m.data = std::move(d);
+			} else if (m.actionType == ActionType::REQUESTGUILDLOGS) {
+				ActionRequestGuildLogsData d;
+				for (int i = 0; i < 13; ++i) {
+					GuildBankLogEntry e;
+					e.type = pk.ReadInt64();
+					if (e.type == 9) { d.terminated = true; break; }
+					e.time = pk.ReadInt64();
+					e.parameter = pk.ReadInt64();
+					e.quantity = pk.ReadInt64();
+					e.userId = pk.ReadInt64();
+					d.logs.push_back(std::move(e));
+				}
+				m.data = std::move(d);
+			} else {
+				m.data = std::monostate{};
 			}
 		}
+
+		// --- MC — торговля персонажей ---
+
+		inline WPacket serialize(const McCharTradeRequestMessage& m) {
+			WPacket w(32); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(m.subCmd); w.WriteInt64(m.tradeType); w.WriteInt64(m.chaId); return w;
+		}
+		inline WPacket serialize(const McCharTradeCancelMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(m.subCmd); w.WriteInt64(m.chaId); return w;
+		}
+		inline WPacket serialize(const McCharTradeMoneyMessage& m) {
+			WPacket w(40); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(m.subCmd); w.WriteInt64(m.chaId); w.WriteInt64(m.money); w.WriteInt64(m.isIMP); return w;
+		}
+		inline WPacket serialize(const McCharTradeValidateDataMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(m.subCmd); w.WriteInt64(m.chaId); return w;
+		}
+		inline WPacket serialize(const McCharTradeResultMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(m.subCmd); w.WriteInt64(m.result); return w;
+		}
+
+		// --- MC — торговля персонажей: открытие страницы ---
+
+		inline WPacket serialize(const McCharTradePageMessage& m) {
+			WPacket w(40); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(m.subCmd); w.WriteInt64(m.tradeType); w.WriteInt64(m.mainChaId); w.WriteInt64(m.otherChaId); return w;
+		}
+
+		// --- MM — ретрансляция покупки магазина ---
+
+		inline WPacket serialize(const MmStoreBuyRelayMessage& m) {
+			WPacket w(40); w.WriteCmd(CMD_MM_STORE_BUY);
+			w.WriteInt64(m.charId); w.WriteInt64(m.targetChaId); w.WriteInt64(m.comId); w.WriteInt64(m.money); return w;
+		}
+
+		// --- GameServer→Group (Gm*) — без gateAddr/gpAddr ---
+
+		inline WPacket serialize(const GmGuildCreateMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MP_GUILD_CREATE);
+			w.WriteInt64(m.guildId); w.WriteString(m.guildName); w.WriteString(m.job); w.WriteInt64(m.degree); return w;
+		}
+		inline WPacket serialize(const GmGuildApproveMessage& m) {
+			WPacket w(16); w.WriteCmd(CMD_MP_GUILD_APPROVE);
+			w.WriteInt64(m.chaId); return w;
+		}
+		inline WPacket serialize(const GmGuildKickMessage& m) {
+			WPacket w(16); w.WriteCmd(CMD_MP_GUILD_KICK);
+			w.WriteInt64(m.chaId); return w;
+		}
+		inline WPacket serialize(const GmGuildMottoMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MP_GUILD_MOTTO);
+			w.WriteString(m.motto); return w;
+		}
+		inline WPacket serialize(const GmGuildChallMoneyMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MP_GUILD_CHALLMONEY);
+			w.WriteInt64(m.guildId); w.WriteInt64(m.money); w.WriteString(m.guildName1); w.WriteString(m.guildName2); return w;
+		}
+		inline WPacket serialize(const GmSay2AllMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MP_SAY2ALL);
+			w.WriteInt64(m.success);
+			if (m.success) { w.WriteString(m.chaName); w.WriteString(m.content); }
+			return w;
+		}
+		inline WPacket serialize(const GmSay2TradeMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MP_SAY2TRADE);
+			w.WriteInt64(m.success);
+			if (m.success) { w.WriteString(m.chaName); w.WriteString(m.content); }
+			return w;
+		}
+		inline WPacket serialize(const GmGuildChallPrizeMoneyBroadcast& m) {
+			WPacket w(64); w.WriteCmd(CMD_MM_GUILD_CHALL_PRIZEMONEY);
+			w.WriteInt64(m.zero1); w.WriteInt64(m.guildId); w.WriteInt64(m.money);
+			w.WriteInt64(m.zero2); w.WriteInt64(m.zero3); w.WriteInt64(m.zero4); return w;
+		}
+		inline WPacket serialize(const GmMapEntryResultMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MT_MAPENTRY);
+			w.WriteString(m.srcMapName); w.WriteString(m.targetMapName);
+			w.WriteInt64(m.subType); w.WriteInt64(m.resultCode); return w;
+		}
+		inline WPacket serialize(const GmGuildNoticeMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MP_GUILDNOTICE);
+			w.WriteInt64(m.guildId); w.WriteString(m.content); return w;
+		}
+		inline WPacket serialize(const GmScrollNoticeMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MP_GM1SAY1);
+			w.WriteString(m.content); w.WriteInt64(m.setNum); w.WriteInt64(m.color); return w;
+		}
+		inline WPacket serialize(const GmGMNoticeMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MP_GM1SAY);
+			w.WriteString(m.content); return w;
+		}
+		inline WPacket serialize(const GmChaNoticeMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MM_CHA_NOTICE);
+			w.WriteInt64(m.zero); w.WriteString(m.noticeText); w.WriteString(m.chaName); return w;
+		}
+		inline WPacket serialize(const GmBanAccountMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MP_GMBANACCOUNT);
+			w.WriteString(m.actName); return w;
+		}
+		inline WPacket serialize(const GmUnbanAccountMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MP_GMUNBANACCOUNT);
+			w.WriteString(m.actName); return w;
+		}
+		inline WPacket serialize(const GmCanReceiveRequestsMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MP_CANRECEIVEREQUESTS);
+			w.WriteInt64(m.chaId); w.WriteInt64(m.canSend); return w;
+		}
+
+		// --- CM — клиентские команды ---
+
+		inline WPacket serialize(const CmSayMessage& m) {
+			WPacket w(static_cast<int>(m.content.size()) + 16); w.WriteCmd(CMD_CM_SAY);
+			w.WriteSequence(m.content.c_str(), static_cast<unsigned short>(m.content.size()) + 1); return w;
+		}
+		inline WPacket serialize(const CmSynAttrMessage& m) {
+			WPacket w(static_cast<int>(m.attrs.size()) * 16 + 16); w.WriteCmd(CMD_CM_SYNATTR);
+			w.WriteInt64(static_cast<int64_t>(m.attrs.size()));
+			for (const auto& a : m.attrs) { w.WriteInt64(a.attrId); w.WriteInt64(a.value); }
+			return w;
+		}
+		inline WPacket serialize(const CmItemForgeGroupAskMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_CM_ITEM_FORGE_ASK);
+			w.WriteInt64(m.sure);
+			if (m.sure) {
+				w.WriteInt64(m.type);
+				for (int i = 0; i < 6; ++i) {
+					w.WriteInt64(static_cast<int64_t>(m.groups[i].cells.size()));
+					for (const auto& c : m.groups[i].cells) { w.WriteInt64(c.posId); w.WriteInt64(c.num); }
+				}
+			}
+			return w;
+		}
+		inline WPacket serialize(const CmItemForgePosAskMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_CM_ITEM_FORGE_ASK);
+			w.WriteInt64(m.sure);
+			if (m.sure) {
+				w.WriteInt64(m.type);
+				for (int i = 0; i < 6; ++i) {
+					if (i < m.posCount) {
+						w.WriteInt64(1); w.WriteInt64(m.positions[i]); w.WriteInt64(1);
+					} else {
+						w.WriteInt64(0); w.WriteInt64(0); w.WriteInt64(0);
+					}
+				}
+			}
+			return w;
+		}
+		inline WPacket serialize(const CmItemLotteryGroupAskMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_CM_ITEM_LOTTERY_ASK);
+			w.WriteInt64(m.sure);
+			if (m.sure) {
+				for (int i = 0; i < 3; ++i) {
+					w.WriteInt64(static_cast<int64_t>(m.groups[i].cells.size()));
+					for (const auto& c : m.groups[i].cells) { w.WriteInt64(c.posId); w.WriteInt64(c.num); }
+				}
+			}
+			return w;
+		}
+		inline WPacket serialize(const CmLifeSkillCraftMessage& m) {
+			WPacket w(static_cast<int>(m.positions.size()) * 8 + 32);
+			w.WriteCmd(m.isAnswer ? CMD_CM_LIFESKILL_ASR : CMD_CM_LIFESKILL_ASK);
+			w.WriteInt64(m.skillType); w.WriteInt64(m.npcId);
+			for (const auto& p : m.positions) { w.WriteInt64(p); }
+			if (m.hasExtra) { w.WriteInt64(m.extraParam); }
+			return w;
+		}
+
+		// ─── Serialize: GameServer→Group (без trailer) ────────────────
+
+		inline WPacket serialize(const GmMutePlayerMessage& m) {
+			WPacket w(128); w.WriteCmd(CMD_MP_MUTE_PLAYER);
+			w.WriteString(m.chaName); w.WriteInt64(m.time); return w;
+		}
+
+		// ─── Serialize: внутренние cmd-only (GameServer) ──────────────
+
+		/// CMD_MM_GATE_CONNECT: уведомление о подключении GateServer (cmd-only, dummy-поле для совместимости).
+		inline WPacket serializeGmGateConnectCmd() { WPacket w(16); w.WriteCmd(CMD_MM_GATE_CONNECT); w.WriteInt64(0); return w; }
+		/// CMD_MM_GATE_RELEASE: уведомление об отключении GateServer (cmd-only, dummy-поле для совместимости).
+		inline WPacket serializeGmGateReleaseCmd() { WPacket w(16); w.WriteCmd(CMD_MM_GATE_RELEASE); w.WriteInt64(0); return w; }
+		/// CMD_MM_GATE_RELEASE: синтетический пакет отключения с указателем playerlist.
+		inline WPacket serializeGmGateDisconnect(int64_t playerListAddr) { WPacket w(16); w.WriteCmd(CMD_MM_GATE_RELEASE); w.WriteInt64(playerListAddr); return w; }
+		/// CMD_MP_GARNER2_CGETORDER: запрос заказа Garner2 (cmd-only, ReflectINFof добавит trailer).
+		inline WPacket serializeGmGarner2GetOrderCmd() { WPacket w(8); w.WriteCmd(CMD_MP_GARNER2_CGETORDER); return w; }
+
+		/// Пакет-шум (cmd=0xffff, случайные данные для античита).
+		inline WPacket serializeNoisePacket(uint32_t noiseLen) {
+			WPacket w(static_cast<int>(noiseLen * 8 + 16));
+			w.WriteCmd(static_cast<unsigned short>(0xffff));
+			for (uint32_t i = 0; i < noiseLen; i++)
+				w.WriteInt64(rand() / 255);
+			return w;
+		}
+
+		/// CMD_CM_BEGINACTION: заголовок действия клиента (данные конкретного действия дописываются отдельно).
+		inline WPacket serializeCmBeginActionHeader(int64_t attachId, int64_t packetId, int64_t actionType) {
+			WPacket w(4096); w.WriteCmd(CMD_CM_BEGINACTION);
+			w.WriteInt64(attachId);
+#ifdef defPROTOCOL_HAVE_PACKETID
+			w.WriteInt64(packetId);
+#endif
+			w.WriteInt64(actionType);
+			return w;
+		}
+
+		/// CMD_MC_ENTERMAP: ошибка входа на карту с ручным trailer маршрутизации.
+		inline WPacket serializeMcEnterMapError(int64_t errCode, int64_t dbCharId, int64_t gateAddr) {
+			WPacket w(40); w.WriteCmd(CMD_MC_ENTERMAP);
+			w.WriteInt64(errCode); w.WriteInt64(dbCharId); w.WriteInt64(gateAddr); w.WriteInt64(1);
+			return w;
+		}
+
+		/// CMD_MC_TEAM: заголовок данных участника команды (look-данные дописываются WriteLookData).
+		inline WPacket serializeMcTeamMemberData(int64_t chaId, int64_t hp, int64_t mxhp, int64_t sp, int64_t mxsp, int64_t level) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_TEAM);
+			w.WriteInt64(chaId); w.WriteInt64(hp); w.WriteInt64(mxhp); w.WriteInt64(sp); w.WriteInt64(mxsp);
+			w.WriteInt64(level);
+			return w;
+		}
+
+		// ─── Serialize: аукцион, гильдии, лавка, корабль ──────────────
+
+		inline WPacket serialize(const McListAuctionMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_LISTAUCTION);
+			// Количество элементов — в начале (count-first)
+			w.WriteInt64(static_cast<int64_t>(m.items.size()));
+			for (const auto& e : m.items) {
+				w.WriteInt64(e.itemId); w.WriteString(e.name); w.WriteString(e.curChaName);
+				w.WriteInt64(e.itemCount); w.WriteInt64(e.basePrice); w.WriteInt64(e.minBid); w.WriteInt64(e.curPrice);
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const GmMapEntryCreateMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MT_MAPENTRY);
+			w.WriteString(m.targetMapName); w.WriteString(m.srcMapName);
+			w.WriteInt64(2 /*enumMAPENTRY_CREATE*/);
+			w.WriteInt64(m.posX); w.WriteInt64(m.posY); w.WriteInt64(m.copyNum); w.WriteInt64(m.copyPlyNum);
+			for (const auto& line : m.scriptLines) w.WriteString(line);
+			w.WriteInt64(static_cast<int64_t>(m.scriptLines.size()));
+			return w;
+		}
+
+		inline WPacket serialize(const GmMapEntryCopyParamMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MT_MAPENTRY);
+			w.WriteString(m.targetMapName); w.WriteString(m.srcMapName);
+			w.WriteInt64(3 /*enumMAPENTRY_COPYPARAM*/); w.WriteInt64(m.copyId);
+			for (int i = 0; i < 16; ++i) w.WriteInt64(m.params[i]);
+			return w;
+		}
+
+		inline WPacket serialize(const McListGuildMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_LISTGUILD);
+			// Количество записей — в начале (count-first)
+			w.WriteInt64(static_cast<int64_t>(m.entries.size()));
+			for (const auto& e : m.entries) {
+				w.WriteInt64(e.guildId); w.WriteString(e.guildName); w.WriteString(e.motto);
+				w.WriteString(e.leaderName); w.WriteInt64(e.memberCount); w.WriteInt64(e.exp);
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McGuildListTryPlayerMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_GUILD_LISTTRYPLAYER);
+			w.WriteInt64(m.guildId); w.WriteString(m.guildName); w.WriteString(m.motto);
+			w.WriteString(m.leaderName); w.WriteInt64(m.memberTotal); w.WriteInt64(m.maxMembers);
+			w.WriteInt64(m.exp); w.WriteInt64(m.reserved); w.WriteInt64(m.level);
+			// Количество кандидатов — в начале массива (count-first)
+			w.WriteInt64(static_cast<int64_t>(m.players.size()));
+			for (const auto& p : m.players) {
+				w.WriteInt64(p.chaId); w.WriteString(p.name); w.WriteString(p.job); w.WriteInt64(p.degree);
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McStallSyncDataMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_STALL_ALLDATA);
+			w.WriteInt64(m.stallerId); w.WriteInt64(m.num); w.WriteString(m.name);
+			for (const auto& g : m.goods) {
+				w.WriteInt64(g.grid); w.WriteInt64(g.itemId); w.WriteInt64(g.count); w.WriteInt64(g.money);
+				w.WriteInt64(g.itemType);
+				if (g.isBoat) {
+					w.WriteInt64(g.hasBoat ? 1 : 0);
+					if (g.hasBoat) {
+						const auto& b = g.boat;
+						w.WriteString(b.name); w.WriteInt64(b.ship); w.WriteInt64(b.lv); w.WriteInt64(b.cexp);
+						w.WriteInt64(b.hp); w.WriteInt64(b.mxhp); w.WriteInt64(b.sp); w.WriteInt64(b.mxsp);
+						w.WriteInt64(b.mnatk); w.WriteInt64(b.mxatk); w.WriteInt64(b.def);
+						w.WriteInt64(b.mspd); w.WriteInt64(b.aspd);
+						w.WriteInt64(b.useGridNum); w.WriteInt64(b.capacity); w.WriteInt64(b.price);
+					}
+				} else {
+					const auto& it = g.item;
+					w.WriteInt64(it.endure0); w.WriteInt64(it.endure1);
+					w.WriteInt64(it.energy0); w.WriteInt64(it.energy1);
+					w.WriteInt64(it.forgeLv); w.WriteInt64(it.valid); w.WriteInt64(it.tradable); w.WriteInt64(it.expiration);
+					w.WriteInt64(it.forgeParam); w.WriteInt64(it.instId);
+					w.WriteInt64(it.hasInstAttr ? 1 : 0);
+					if (it.hasInstAttr) {
+						for (int j = 0; j < ITEM_INSTANCE_ATTR_NUM; ++j) {
+							w.WriteInt64(it.instAttr[j][0]); w.WriteInt64(it.instAttr[j][1]);
+						}
+					}
+				}
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McBoatSyncAttrMessage& m) {
+			WPacket w(4096); w.WriteCmd(static_cast<unsigned short>(m.cmd));
+			w.WriteInt64(m.boatId); w.WriteString(m.boatName); w.WriteString(m.shipName);
+			w.WriteString(m.shipDesc); w.WriteString(m.berthName); w.WriteInt64(m.isUpdate);
+			w.WriteInt64(m.body.partId); w.WriteInt64(m.body.model); w.WriteString(m.body.name);
+			if (m.hasUpdateParts) {
+				w.WriteInt64(m.header.partId); w.WriteInt64(m.header.model); w.WriteString(m.header.name);
+				w.WriteInt64(m.engine.partId); w.WriteInt64(m.engine.model); w.WriteString(m.engine.name);
+				for (int i = 0; i < 4; ++i) w.WriteInt64(m.motorModels[i]);
+			}
+			w.WriteInt64(m.cannonId); w.WriteString(m.cannonName);
+			w.WriteInt64(m.equipmentId); w.WriteString(m.equipmentName);
+			w.WriteInt64(m.money); w.WriteInt64(m.minAttack); w.WriteInt64(m.maxAttack);
+			w.WriteInt64(m.curEndure); w.WriteInt64(m.maxEndure);
+			w.WriteInt64(m.speed); w.WriteInt64(m.distance); w.WriteInt64(m.defence);
+			w.WriteInt64(m.curSupply); w.WriteInt64(m.maxSupply);
+			w.WriteInt64(m.consume); w.WriteInt64(m.attackTime); w.WriteInt64(m.boatCapacity);
+			return w;
+		}
+		// =================================================================
+		//  Фаза 6: оставшиеся 47 WriteCmd → serialize()
+		// =================================================================
+
+		// ─── Struct: CMD_MC_MESSAGE (формат worldId + messageId) ─────
+		/// CMD_MC_MESSAGE (вариант TerminalMessage): [worldId, messageId].
+		struct McTerminalMessage { int64_t worldId = 0; int64_t messageId = 0; };
+
+		// ─── Struct: CMD_MC_BERTH_LIST ───────────────────────────────
+		/// CMD_MC_BERTH_LIST: список кораблей на причале.
+		struct McBerthListMessage {
+			int64_t npcId = 0;
+			int64_t type = 0;
+			int64_t count = 0;
+			std::vector<std::string> names;
+		};
+
+		// ─── Struct: CMD_MC_APPEND_LOOK ──────────────────────────────
+		/// CMD_MC_APPEND_LOOK: обновление доп. внешнего вида.
+		struct McAppendLookMessage {
+			int64_t worldId = 0;
+			AppendLookSlot slots[ESPE_KBGRID_NUM];
+		};
+
+		// ─── Struct: CMD_MC_MAP_MASK ─────────────────────────────────
+		/// CMD_MC_MAP_MASK: маска карты (бинарные данные через WriteSequence).
+		struct McMapMaskMessage {
+			int64_t worldId = 0;
+			bool hasData = false;
+			std::vector<char> data; // бинарные данные карты
+		};
+
+		// ─── Struct: CMD_MC_CHECK_PING ───��───────────────────────────
+		/// CMD_MC_CHECK_PING: массив случайных чисел для проверки пинга.
+		struct McCheckPingMessage {
+			std::vector<int64_t> randomData;
+		};
+
+		// ─── Struct: CMD_MC_CHEAT_CHECK ──────────────────────────────
+		/// Картинка в проверке чита.
+		struct CheatPicture { std::vector<int64_t> bytes; };
+		/// CMD_MC_CHEAT_CHECK: отправка картинок для проверки.
+		struct McCheatCheckMessage {
+			int64_t count = 0;
+			std::vector<CheatPicture> pictures;
+		};
+
+		// ─── Struct: CMD_MC_ITEM_UNLOCK_ASR ──────────────────────────
+		/// CMD_MC_ITEM_UNLOCK_ASR: результат разблокировки предмета.
+		struct McItemUnlockAsrMessage { int64_t result = 0; };
+
+		// ─── Struct: CMD_CM_ITEM_LOCK_ASR ────────────────────────────
+		/// CMD_CM_ITEM_LOCK_ASR: результат блокировки предмета.
+		struct McItemLockAsrMessage { int64_t result = 0; };
+
+		// ─── Struct: CMD_MC_KITBAGTEMP_SYNC ──────────────────────────
+		/// CMD_MC_KITBAGTEMP_SYNC: синхронизация временного инвентаря.
+		struct McKitbagTempSyncMessage {
+			ChaKitbagInfo kitbag;
+		};
+
+		// ─── Struct: CMD_MC_QUERY_CHAPING (формат GameServer→GateServer→Client) ──
+		/// CMD_MC_QUERY_CHAPING: ответ на запрос пинга (с трейлером маршрутизации).
+		struct McQueryChaPingRouteMessage {
+			int64_t srcId = 0;
+			std::string chaName;
+			std::string mapName;
+			int64_t ping = 0;
+			// Маршрутизационный трейлер:
+			int64_t gatePlayerId = 0;
+			int64_t gatePlayerAddr = 0;
+			int64_t aimNum = 1;
+		};
+
+		// ─── Struct: CMD_MC_QUERY_CHA (формат kitbag + трейлер) ─────
+		/// CMD_MC_QUERY_CHA: ответ с инвентарём (кросс-серверный).
+		struct McQueryChaKitbagMessage {
+			int64_t srcId = 0;
+			ChaKitbagInfo kitbag;
+			// Маршрутизационный трейлер:
+			int64_t gatePlayerId = 0;
+			int64_t gatePlayerAddr = 0;
+			int64_t aimNum = 1;
+		};
+
+		// GuildBankLogEntry определён выше (перед CharacterActionData variant)
+
+		/// CMD_MC_NOTIACTION + enumACTION_UPDATEGUILDLOGS: обновление логов банка гильдии.
+		struct McUpdateGuildLogsMessage {
+			int64_t worldId = 0;
+			int64_t packetId = 0;
+			int64_t totalSize = 0;
+			std::vector<GuildBankLogEntry> logs;
+			bool terminated = false; // запись-стоппер 9
+		};
+
+		/// CMD_MC_NOTIACTION + enumACTION_REQUESTGUILDLOGS: запрос логов банка гильдии.
+		struct McRequestGuildLogsMessage {
+			int64_t worldId = 0;
+			int64_t packetId = 0;
+			std::vector<GuildBankLogEntry> logs;
+			bool terminated = false; // запись-стоппер 9
+		};
+
+		// ─── Struct: CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM ────────
+
+		/// Данные корабля в торговле.
+		struct TradeBoatData {
+			bool hasBoat = false;
+			std::string name;
+			int64_t ship = 0; int64_t lv = 0; int64_t cexp = 0;
+			int64_t hp = 0; int64_t mxhp = 0; int64_t sp = 0; int64_t mxsp = 0;
+			int64_t mnatk = 0; int64_t mxatk = 0; int64_t def = 0;
+			int64_t mspd = 0; int64_t aspd = 0;
+			int64_t useGridNum = 0; int64_t capacity = 0; int64_t price = 0;
+		};
+
+		/// Данные обычного предмета в торговле.
+		struct TradeItemData {
+			int64_t endure0 = 0; int64_t endure1 = 0;
+			int64_t energy0 = 0; int64_t energy1 = 0;
+			int64_t forgeLv = 0; int64_t valid = 0;
+			int64_t tradable = 0; int64_t expiration = 0;
+			int64_t forgeParam = 0; int64_t instId = 0;
+			bool hasInstAttr = false;
+			int64_t instAttr[ITEM_INSTANCE_ATTR_NUM][2] = {};
+		};
+
+		/// Данные удаления предмета из торговли (TRADE_DRAGTO_ITEM).
+		struct McCharTradeItemRemoveData {
+			int64_t bagIndex = 0;   // куда в инвентаре
+			int64_t tradeIndex = 0; // откуда в торговле
+			int64_t count = 0;
+		};
+
+		/// Вариант данных экипировки в торговле (std::variant).
+		using TradeEquipData = std::variant<TradeBoatData, TradeItemData>;
+
+		/// Данные добавления предмета в торговлю (TRADE_DRAGTO_TRADE).
+		struct McCharTradeItemAddData {
+			int64_t itemId = 0;
+			int64_t bagIndex = 0;
+			int64_t tradeIndex = 0;
+			int64_t count = 0;
+			int64_t itemType = 0;
+			TradeEquipData equipData = TradeItemData{}; // корабль или предмет
+		};
+
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM: единое сообщение торговли предметом.
+		/// opType определяет вариант данных: TRADE_DRAGTO_ITEM → Remove, TRADE_DRAGTO_TRADE → Add.
+		struct McCharTradeItemMessage {
+			int64_t mainChaId = 0;
+			int64_t opType = 0;
+			std::variant<McCharTradeItemRemoveData, McCharTradeItemAddData> data;
+		};
+
+		// ─── Serialize: Фаза 6 ──────────────────────────────────────
+
+		inline WPacket serialize(const McTerminalMessage& m) {
+			WPacket w(24); w.WriteCmd(CMD_MC_MESSAGE);
+			w.WriteInt64(m.worldId); w.WriteInt64(m.messageId);
+			return w;
+		}
+
+		inline WPacket serialize(const McBerthListMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_BERTH_LIST);
+			w.WriteInt64(m.npcId); w.WriteInt64(m.type); w.WriteInt64(m.count);
+			for (const auto& n : m.names) w.WriteString(n);
+			return w;
+		}
+
+		inline WPacket serialize(const McAppendLookMessage& m) {
+			WPacket w(64); w.WriteCmd(CMD_MC_APPEND_LOOK);
+			w.WriteInt64(m.worldId);
+			for (int i = 0; i < ESPE_KBGRID_NUM; ++i) {
+				w.WriteInt64(m.slots[i].lookId);
+				if (m.slots[i].lookId != 0) w.WriteInt64(m.slots[i].valid);
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McMapMaskMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_MAP_MASK);
+			w.WriteInt64(m.worldId);
+			if (!m.hasData) { w.WriteInt64(0); }
+			else {
+				w.WriteInt64(1);
+				w.WriteSequence(m.data.data(), static_cast<uint16_t>(m.data.size()));
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McCheckPingMessage& m) {
+			WPacket w(static_cast<int>(m.randomData.size() * 8 + 16));
+			w.WriteCmd(CMD_MC_CHECK_PING);
+			for (auto v : m.randomData) w.WriteInt64(v);
+			return w;
+		}
+
+		inline WPacket serialize(const McCheatCheckMessage& m) {
+			WPacket w(8192); w.WriteCmd(CMD_MC_CHEAT_CHECK);
+			w.WriteInt64(m.count);
+			for (const auto& pic : m.pictures) {
+				w.WriteInt64(static_cast<int64_t>(pic.bytes.size()));
+				for (auto b : pic.bytes) w.WriteInt64(b);
+			}
+			return w;
+		}
+
+		inline WPacket serialize(const McItemUnlockAsrMessage& m) {
+			WPacket w(16); w.WriteCmd(CMD_MC_ITEM_UNLOCK_ASR);
+			w.WriteInt64(m.result);
+			return w;
+		}
+
+		inline WPacket serialize(const McItemLockAsrMessage& m) {
+			WPacket w(16); w.WriteCmd(CMD_CM_ITEM_LOCK_ASR);
+			w.WriteInt64(m.result);
+			return w;
+		}
+
+		inline WPacket serialize(const McKitbagTempSyncMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_KITBAGTEMP_SYNC);
+			serializeChaKitbagInfo(w, m.kitbag);
+			return w;
+		}
+
+		inline WPacket serialize(const McQueryChaPingRouteMessage& m) {
+			WPacket w(256); w.WriteCmd(CMD_MC_QUERY_CHAPING);
+			w.WriteInt64(m.srcId); w.WriteString(m.chaName); w.WriteString(m.mapName);
+			w.WriteInt64(m.ping);
+			w.WriteInt64(m.gatePlayerId); w.WriteInt64(m.gatePlayerAddr); w.WriteInt64(m.aimNum);
+			return w;
+		}
+
+		inline WPacket serialize(const McQueryChaKitbagMessage& m) {
+			WPacket w(4096); w.WriteCmd(CMD_MC_QUERY_CHA);
+			w.WriteInt64(m.srcId);
+			serializeChaKitbagInfo(w, m.kitbag);
+			w.WriteInt64(m.gatePlayerId); w.WriteInt64(m.gatePlayerAddr); w.WriteInt64(m.aimNum);
+			return w;
+		}
+
+		inline WPacket serialize(const McUpdateGuildLogsMessage& m) {
+			WPacket w(1024); w.WriteCmd(CMD_MC_NOTIACTION);
+			w.WriteInt64(m.worldId); w.WriteInt64(m.packetId);
+			w.WriteInt64(ActionType::UPDATEGUILDLOGS);
+			w.WriteInt64(m.totalSize);
+			for (const auto& l : m.logs) {
+				w.WriteInt64(l.type); w.WriteInt64(l.time);
+				w.WriteInt64(l.parameter); w.WriteInt64(l.quantity); w.WriteInt64(l.userId);
+			}
+			if (m.terminated) w.WriteInt64(9);
+			return w;
+		}
+
+		inline WPacket serialize(const McRequestGuildLogsMessage& m) {
+			WPacket w(1024); w.WriteCmd(CMD_MC_NOTIACTION);
+			w.WriteInt64(m.worldId); w.WriteInt64(m.packetId);
+			w.WriteInt64(ActionType::REQUESTGUILDLOGS);
+			for (const auto& l : m.logs) {
+				w.WriteInt64(l.type); w.WriteInt64(l.time);
+				w.WriteInt64(l.parameter); w.WriteInt64(l.quantity); w.WriteInt64(l.userId);
+			}
+			if (m.terminated) w.WriteInt64(9);
+			return w;
+		}
+
+		inline WPacket serialize(const McCharTradeItemMessage& m) {
+			WPacket w(512); w.WriteCmd(CMD_MC_CHARTRADE);
+			w.WriteInt64(CMD_MC_CHARTRADE_ITEM);
+			w.WriteInt64(m.mainChaId); w.WriteInt64(m.opType);
+			// Сериализация варианта данных: Remove или Add
+			if (auto* rem = std::get_if<McCharTradeItemRemoveData>(&m.data)) {
+				w.WriteInt64(rem->bagIndex); w.WriteInt64(rem->tradeIndex); w.WriteInt64(rem->count);
+			} else if (auto* add = std::get_if<McCharTradeItemAddData>(&m.data)) {
+				w.WriteInt64(add->itemId); w.WriteInt64(add->bagIndex);
+				w.WriteInt64(add->tradeIndex); w.WriteInt64(add->count); w.WriteInt64(add->itemType);
+				// Сериализация экипировки через std::visit
+				std::visit([&w](auto&& arg) {
+					using T = std::decay_t<decltype(arg)>;
+					if constexpr (std::is_same_v<T, TradeBoatData>) {
+						if (arg.hasBoat) {
+							w.WriteInt64(1); w.WriteString(arg.name);
+							w.WriteInt64(arg.ship); w.WriteInt64(arg.lv);
+							w.WriteInt64(arg.cexp); w.WriteInt64(arg.hp);
+							w.WriteInt64(arg.mxhp); w.WriteInt64(arg.sp);
+							w.WriteInt64(arg.mxsp); w.WriteInt64(arg.mnatk);
+							w.WriteInt64(arg.mxatk); w.WriteInt64(arg.def);
+							w.WriteInt64(arg.mspd); w.WriteInt64(arg.aspd);
+							w.WriteInt64(arg.useGridNum); w.WriteInt64(arg.capacity);
+							w.WriteInt64(arg.price);
+						} else { w.WriteInt64(0); }
+					} else if constexpr (std::is_same_v<T, TradeItemData>) {
+						w.WriteInt64(arg.endure0); w.WriteInt64(arg.endure1);
+						w.WriteInt64(arg.energy0); w.WriteInt64(arg.energy1);
+						w.WriteInt64(arg.forgeLv); w.WriteInt64(arg.valid);
+						w.WriteInt64(arg.tradable); w.WriteInt64(arg.expiration);
+						w.WriteInt64(arg.forgeParam); w.WriteInt64(arg.instId);
+						if (arg.hasInstAttr) {
+							w.WriteInt64(1);
+							for (int j = 0; j < ITEM_INSTANCE_ATTR_NUM; ++j) {
+								w.WriteInt64(arg.instAttr[j][0]); w.WriteInt64(arg.instAttr[j][1]);
+							}
+						} else { w.WriteInt64(0); }
+					}
+				}, add->equipData);
+			}
+			return w;
+		}
+
+		// ─── CMD_MC_LIFESKILL_ASK (GameServer→Client) ────────────────
+		/// Используем McLifeSkillMessage {type, result, text} — result как money.
+		// Уже есть: McLifeSkillMessage { type, result, text }
+
+		// ─── CMD_MC_LIFESKILL_ASR (GameServer→Client) ────────────────
+		// Уже есть: McLifeSkillAsrMessage { type, time, text }
+
+		// ─── CMD_MC_STORE_LIST_ASR ───────────────────────────────────
+		// Уже есть: McStoreListAnswerMessage { pageTotal, pageCurrent, products }
+
+		// ─── CMD_MC_STORE_QUERY ──────────────────────────────────────
+		// Уже есть: McStoreHistoryMessage { records }
+
+		// ─── CMD_MC_STORE_OPEN_ASR ───────────────────────────────────
+		// Уже есть: McStoreOpenAnswerMessage { ... }
+
+		// =================================================================
+		//  Фаза 7: оставшиеся deserialize + новые struct для клиентских обработчиков
+		// =================================================================
+
+		// ─── Deserialize: McBerthListMessage ─────────────────────────
+		inline void deserialize(RPacket& pk, McBerthListMessage& m) {
+			m.npcId = pk.ReadInt64(); m.type = pk.ReadInt64(); m.count = pk.ReadInt64();
+			m.names.resize(static_cast<size_t>(m.count));
+			for (auto& n : m.names) n = pk.ReadString();
+		}
+
+		// ─── Deserialize: McAppendLookMessage ───────────────────────
+		inline void deserialize(RPacket& pk, McAppendLookMessage& m) {
+			m.worldId = pk.ReadInt64();
+			for (int i = 0; i < ESPE_KBGRID_NUM; ++i) {
+				m.slots[i].lookId = pk.ReadInt64();
+				if (m.slots[i].lookId != 0) m.slots[i].valid = pk.ReadInt64();
+			}
+		}
+
+		// ─── Deserialize: McMapMaskMessage ──────────────────────────
+		inline void deserialize(RPacket& pk, McMapMaskMessage& m) {
+			m.worldId = pk.ReadInt64();
+			m.hasData = pk.ReadInt64() != 0;
+			if (m.hasData) {
+				uint16_t len = 0;
+				auto* ptr = pk.ReadSequence(len);
+				m.data.assign(ptr, ptr + len);
+			}
+		}
+
+		// ─── Deserialize: McCheatCheckMessage ───────────────────────
+		inline void deserialize(RPacket& pk, McCheatCheckMessage& m) {
+			m.count = pk.ReadInt64();
+			m.pictures.resize(static_cast<size_t>(m.count));
+			for (auto& pic : m.pictures) {
+				auto sz = static_cast<size_t>(pk.ReadInt64());
+				pic.bytes.resize(sz);
+				for (auto& b : pic.bytes) b = pk.ReadInt64();
+			}
+		}
+
+		// ─── Deserialize: McKitbagTempSyncMessage ───────────────────
+		inline void deserialize(RPacket& pk, McKitbagTempSyncMessage& m) {
+			deserializeChaKitbagInfo(pk, m.kitbag);
+		}
+
+		// ─── Deserialize: McStallSyncDataMessage ────────────────────
+		inline void deserialize(RPacket& pk, McStallSyncDataMessage& m) {
+			m.stallerId = pk.ReadInt64(); m.num = pk.ReadInt64(); m.name = pk.ReadString();
+			m.goods.resize(static_cast<size_t>(m.num));
+			for (auto& g : m.goods) {
+				g.grid = pk.ReadInt64(); g.itemId = pk.ReadInt64(); g.count = pk.ReadInt64();
+				g.money = pk.ReadInt64(); g.itemType = pk.ReadInt64();
+				g.isBoat = (g.itemType == 26); // enumItemTypeBoat
+				if (g.isBoat) {
+					g.hasBoat = pk.ReadInt64() != 0;
+					if (g.hasBoat) {
+						g.boat.name = pk.ReadString(); g.boat.ship = pk.ReadInt64();
+						g.boat.lv = pk.ReadInt64(); g.boat.cexp = pk.ReadInt64();
+						g.boat.hp = pk.ReadInt64(); g.boat.mxhp = pk.ReadInt64();
+						g.boat.sp = pk.ReadInt64(); g.boat.mxsp = pk.ReadInt64();
+						g.boat.mnatk = pk.ReadInt64(); g.boat.mxatk = pk.ReadInt64();
+						g.boat.def = pk.ReadInt64(); g.boat.mspd = pk.ReadInt64();
+						g.boat.aspd = pk.ReadInt64(); g.boat.useGridNum = pk.ReadInt64();
+						g.boat.capacity = pk.ReadInt64(); g.boat.price = pk.ReadInt64();
+					}
+				} else {
+					g.item.endure0 = pk.ReadInt64(); g.item.endure1 = pk.ReadInt64();
+					g.item.energy0 = pk.ReadInt64(); g.item.energy1 = pk.ReadInt64();
+					g.item.forgeLv = pk.ReadInt64(); g.item.valid = pk.ReadInt64();
+					g.item.tradable = pk.ReadInt64(); g.item.expiration = pk.ReadInt64();
+					g.item.forgeParam = pk.ReadInt64(); g.item.instId = pk.ReadInt64();
+					g.item.hasInstAttr = pk.ReadInt64() != 0;
+					if (g.item.hasInstAttr) {
+						for (int j = 0; j < ITEM_INSTANCE_ATTR_NUM; ++j) {
+							g.item.instAttr[j][0] = pk.ReadInt64(); g.item.instAttr[j][1] = pk.ReadInt64();
+						}
+					}
+				}
+			}
+		}
+
+		// ─── Deserialize: McBoatSyncAttrMessage ─────────────────────
+		inline void deserialize(RPacket& pk, McBoatSyncAttrMessage& m) {
+			m.boatId = pk.ReadInt64(); m.boatName = pk.ReadString(); m.shipName = pk.ReadString();
+			m.shipDesc = pk.ReadString(); m.berthName = pk.ReadString(); m.isUpdate = pk.ReadInt64();
+			m.body.partId = pk.ReadInt64(); // sPosID для body — reuse
+			m.body.model = pk.ReadInt64(); m.body.name = pk.ReadString();
+			m.hasUpdateParts = (m.isUpdate != 0);
+			if (m.hasUpdateParts) {
+				m.header.partId = pk.ReadInt64(); m.header.model = pk.ReadInt64(); m.header.name = pk.ReadString();
+				m.engine.partId = pk.ReadInt64(); m.engine.model = pk.ReadInt64(); m.engine.name = pk.ReadString();
+				for (int i = 0; i < 4; ++i) m.motorModels[i] = pk.ReadInt64();
+			}
+			m.cannonId = pk.ReadInt64(); m.cannonName = pk.ReadString();
+			m.equipmentId = pk.ReadInt64(); m.equipmentName = pk.ReadString();
+			m.money = pk.ReadInt64(); m.minAttack = pk.ReadInt64(); m.maxAttack = pk.ReadInt64();
+			m.curEndure = pk.ReadInt64(); m.maxEndure = pk.ReadInt64();
+			m.speed = pk.ReadInt64(); m.distance = pk.ReadInt64(); m.defence = pk.ReadInt64();
+			m.curSupply = pk.ReadInt64(); m.maxSupply = pk.ReadInt64();
+			m.consume = pk.ReadInt64(); m.attackTime = pk.ReadInt64(); m.boatCapacity = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: McCharTradeItemMessage ────────────────────
+		inline void deserialize(RPacket& pk, McCharTradeItemMessage& m) {
+			m.mainChaId = pk.ReadInt64(); m.opType = pk.ReadInt64();
+			if (m.opType == 3) { // TRADE_DRAGTO_ITEM
+				McCharTradeItemRemoveData d;
+				d.bagIndex = pk.ReadInt64(); d.tradeIndex = pk.ReadInt64(); d.count = pk.ReadInt64();
+				m.data = std::move(d);
+			} else { // TRADE_DRAGTO_TRADE
+				McCharTradeItemAddData d;
+				d.itemId = pk.ReadInt64(); d.bagIndex = pk.ReadInt64();
+				d.tradeIndex = pk.ReadInt64(); d.count = pk.ReadInt64(); d.itemType = pk.ReadInt64();
+				bool isBoat = (d.itemType == 26); // enumItemTypeBoat
+				if (isBoat) {
+					TradeBoatData bd;
+					bd.hasBoat = pk.ReadInt64() != 0;
+					if (bd.hasBoat) {
+						bd.name = pk.ReadString(); bd.ship = pk.ReadInt64();
+						bd.lv = pk.ReadInt64(); bd.cexp = pk.ReadInt64();
+						bd.hp = pk.ReadInt64(); bd.mxhp = pk.ReadInt64();
+						bd.sp = pk.ReadInt64(); bd.mxsp = pk.ReadInt64();
+						bd.mnatk = pk.ReadInt64(); bd.mxatk = pk.ReadInt64();
+						bd.def = pk.ReadInt64(); bd.mspd = pk.ReadInt64();
+						bd.aspd = pk.ReadInt64(); bd.useGridNum = pk.ReadInt64();
+						bd.capacity = pk.ReadInt64(); bd.price = pk.ReadInt64();
+					}
+					d.equipData = std::move(bd);
+				} else {
+					TradeItemData td;
+					td.endure0 = pk.ReadInt64(); td.endure1 = pk.ReadInt64();
+					td.energy0 = pk.ReadInt64(); td.energy1 = pk.ReadInt64();
+					td.forgeLv = pk.ReadInt64(); td.valid = pk.ReadInt64();
+					td.tradable = pk.ReadInt64(); td.expiration = pk.ReadInt64();
+					td.forgeParam = pk.ReadInt64(); td.instId = pk.ReadInt64();
+					td.hasInstAttr = pk.ReadInt64() != 0;
+					if (td.hasInstAttr) {
+						for (int j = 0; j < ITEM_INSTANCE_ATTR_NUM; ++j) {
+							td.instAttr[j][0] = pk.ReadInt64(); td.instAttr[j][1] = pk.ReadInt64();
+						}
+					}
+					d.equipData = std::move(td);
+				}
+				m.data = std::move(d);
+			}
+		}
+
+		// ─── Deserialize: McCharTradeRequestMessage ─────────────────
+		inline void deserialize(RPacket& pk, McCharTradeRequestMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_REQUEST; m.tradeType = pk.ReadInt64(); m.chaId = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: McCharTradeCancelMessage ──────────────────
+		inline void deserialize(RPacket& pk, McCharTradeCancelMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_CANCEL; m.chaId = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: McCharTradeMoneyMessage ───────────────────
+		inline void deserialize(RPacket& pk, McCharTradeMoneyMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_MONEY; m.chaId = pk.ReadInt64(); m.money = pk.ReadInt64(); m.isIMP = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: McCharTradePageMessage ────────────────────
+		inline void deserialize(RPacket& pk, McCharTradePageMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_PAGE; m.tradeType = pk.ReadInt64(); m.mainChaId = pk.ReadInt64(); m.otherChaId = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: McCharTradeValidateDataMessage ────────────
+		inline void deserialize(RPacket& pk, McCharTradeValidateDataMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_VALIDATEDATA; m.chaId = pk.ReadInt64();
+		}
+
+		// ─── Deserialize: McCharTradeResultMessage ──────────────────
+		inline void deserialize(RPacket& pk, McCharTradeResultMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_RESULT; m.result = pk.ReadInt64();
+		}
+
+		// ─── Struct + Deserialize: McHelpInfoMessage ────────────────
+		/// CMD_MC_HELPINFO: информация помощи (NPC подсказки).
+		struct McHelpInfoMessage { int64_t type = 0; std::string desp; int64_t soundId = 0; };
+		inline void deserialize(RPacket& pk, McHelpInfoMessage& m) {
+			m.type = pk.ReadInt64();
+			// MIS_HELP_DESP=0, MIS_HELP_IMAGE=1, MIS_HELP_BICKER=3 — строка; MIS_HELP_SOUND=2 — число
+			if (m.type == 0 || m.type == 1 || m.type == 3) { m.desp = pk.ReadString(); }
+			else if (m.type == 2) { m.soundId = pk.ReadInt64(); }
+		}
+
+		// ─── Struct + Deserialize: McActInfoMessage ─────────────────
+		/// CMD_MC_ACTINFO: информация аккаунта (ответ).
+		struct McActInfoMessage { int64_t success = 0; int64_t moBean = 0; int64_t replMoney = 0; };
+		inline void deserialize(RPacket& pk, McActInfoMessage& m) {
+			m.success = pk.ReadInt64();
+			if (m.success) { m.moBean = pk.ReadInt64(); m.replMoney = pk.ReadInt64(); }
+		}
+
+		// ─── Struct + Deserialize: McItemRepairAskMessage ───────────
+		/// CMD_MC_ITEM_REPAIR_ASK: запрос на ремонт предмета (используем существующую McItemRepairAskMcMessage).
+		// Уже есть: McItemRepairAskMcMessage { itemName, repairCost }
+
+		// ─── Struct + Deserialize: McTigerStopMessage ───────────────
+		/// CMD_MC_TIGER_STOP: строка тигра (уже есть struct).
+		inline void deserialize(RPacket& pk, McTigerStopMessage& m) { m.text = pk.ReadString(); }
+
+		inline void deserialize(RPacket& pk, McUpdateImpMessage& m) { m.imp = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McBoatAddMessage& m) { m.worldId = pk.ReadInt64(); }
+		inline void deserialize(RPacket& pk, McBoatClearMessage& m) { m.worldId = pk.ReadInt64(); }
+
+		// ─── Struct + Deserialize: McRefreshSelectScreenMessage ─────
+		/// CMD_MC_REFRESH_SELECT_SCREEN: обновление экрана выбора персонажей.
+		struct McRefreshSelectScreenMessage {
+			int64_t chaDelSlot = -1;
+			int64_t maxChaNum = 0;
+			std::vector<ChaSlotData> characters;
+		};
+		inline void deserialize(RPacket& pk, McRefreshSelectScreenMessage& m) {
+			m.chaDelSlot = pk.ReadInt64();
+			auto count = static_cast<size_t>(pk.ReadInt64());
+			m.characters.resize(count);
+			for (auto& cha : m.characters) {
+				cha.valid = pk.ReadInt64() != 0;
+				if (cha.valid) {
+					cha.chaName = pk.ReadString(); cha.job = pk.ReadString();
+					cha.degree = pk.ReadInt64(); cha.typeId = pk.ReadInt64();
+					cha.equipIds.resize(EQUIP_NUM);
+					for (int i = 0; i < EQUIP_NUM; ++i) cha.equipIds[i] = pk.ReadInt64();
+				}
+			}
+		}
+
+		// ─── Struct + Deserialize: McPkSilverMessage ────────────────
+		/// CMD_PC_PKSILVER: данные рейтинга PK-серебра.
+		constexpr int MAX_PKSILVER_PLAYER_MSG = 10; // MAX_PKSILVER_PLAYER
+		struct PkSilverPlayerEntry { std::string name; int64_t level = 0; std::string profession; int64_t pkVal = 0; };
+		struct McPkSilverMessage { PkSilverPlayerEntry players[10]; };
+		inline void deserialize(RPacket& pk, McPkSilverMessage& m) {
+			for (int i = 0; i < 10; ++i) {
+				m.players[i].name = pk.ReadString(); m.players[i].level = pk.ReadInt64();
+				m.players[i].profession = pk.ReadString(); m.players[i].pkVal = pk.ReadInt64();
+			}
+		}
+
+		// ─── Struct + Deserialize: PcMasterRefreshMessage ───────────
+		/// Запись мастера/ученика при инициализации (MSG_*_REFRESH_START).
+		struct MasterPrenticeEntry {
+			std::string group; int64_t chaId = 0; std::string chaName;
+			std::string motto; int64_t icon = 0; int64_t status = 0;
+		};
+		/// Данные при MSG_*_REFRESH_START.
+		struct MasterStartData {
+			int64_t selfChaId = 0; std::string selfName; std::string selfMotto; int64_t selfIcon = 0;
+			std::vector<MasterPrenticeEntry> entries;
+		};
+		/// CMD_PC_MASTER (комбинированный): тип + данные.
+		struct PcMasterRefreshFullMessage {
+			int64_t type = 0;
+			// MSG_*_REFRESH_ONLINE / OFFLINE / DEL:
+			int64_t chaId = 0;
+			// MSG_*_REFRESH_ADD:
+			std::string group; std::string chaName; std::string motto; int64_t icon = 0;
+			// MSG_*_REFRESH_START:
+			MasterStartData startData;
+		};
+		inline void deserialize(RPacket& pk, PcMasterRefreshFullMessage& m) {
+			m.type = pk.ReadInt64();
+			// Типы 0-4: MASTER; 5-9: PRENTICE (смещение на 5)
+			int64_t localType = (m.type >= 5) ? (m.type - 5) : m.type;
+			if (localType == 0 || localType == 1 || localType == 2) { // ONLINE / OFFLINE / DEL
+				m.chaId = pk.ReadInt64();
+			} else if (localType == 3) { // ADD
+				m.group = pk.ReadString(); m.chaId = pk.ReadInt64();
+				m.chaName = pk.ReadString(); m.motto = pk.ReadString(); m.icon = pk.ReadInt64();
+			} else if (localType == 4) { // START
+				m.startData.selfChaId = pk.ReadInt64(); m.startData.selfName = pk.ReadString();
+				m.startData.selfMotto = pk.ReadString(); m.startData.selfIcon = pk.ReadInt64();
+				auto grpCount = static_cast<size_t>(pk.ReadInt64());
+				for (size_t gi = 0; gi < grpCount; ++gi) {
+					auto grpName = pk.ReadString();
+					auto memCount = static_cast<size_t>(pk.ReadInt64());
+					for (size_t mi = 0; mi < memCount; ++mi) {
+						MasterPrenticeEntry e;
+						e.group = grpName; e.chaId = pk.ReadInt64();
+						e.chaName = pk.ReadString(); e.motto = pk.ReadString();
+						e.icon = pk.ReadInt64(); e.status = pk.ReadInt64();
+						m.startData.entries.push_back(std::move(e));
+					}
+				}
+			}
+		}
+
+		// ─── Struct + Deserialize: PcMasterCancelMessage ────────────
+		/// CMD_PC_MASTER_CANCEL: отмена мастера.
+		struct PcMasterCancelMessage { int64_t reason = 0; int64_t chaId = 0; int64_t cancelId = 0; };
+		inline void deserialize(RPacket& pk, PcMasterCancelMessage& m) {
+			m.reason = pk.ReadInt64(); m.chaId = pk.ReadInt64(); m.cancelId = pk.ReadInt64();
+		}
+
+		// ─── Struct + Deserialize: PcMasterRefreshInfoFullMessage ───
+		/// CMD_PC_MASTER_REFRESHINFO / CMD_PC_PRENTICE_REFRESHINFO: обновление инфо мастера/ученика.
+		struct PcMasterRefreshInfoFullMessage {
+			int64_t chaId = 0; std::string motto; int64_t icon = 0;
+			int64_t degree = 0; std::string job; std::string guild;
+		};
+		inline void deserialize(RPacket& pk, PcMasterRefreshInfoFullMessage& m) {
+			m.chaId = pk.ReadInt64(); m.motto = pk.ReadString(); m.icon = pk.ReadInt64();
+			m.degree = pk.ReadInt64(); m.job = pk.ReadString(); m.guild = pk.ReadString();
+		}
+
+		// ─── Struct + Deserialize: McRegisterMessage ────────────────
+		/// CMD_PC_REGISTER (GateServer → Client): результат регистрации.
+		struct McRegisterResponseMessage { int64_t success = 0; std::string errorMessage; };
+		inline void deserialize(RPacket& pk, McRegisterResponseMessage& m) {
+			m.success = pk.ReadInt64();
+			if (!m.success) m.errorMessage = pk.ReadString();
+		}
+
+		// ─── Deserialize: McCharTradeValidateMessage (CMD_MC_CHARTRADE_VALIDATE) ─
+		/// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_VALIDATE: подтверждение валидации.
+		struct McCharTradeValidateMessage { int64_t subCmd = 0; int64_t chaId = 0; };
+		inline void deserialize(RPacket& pk, McCharTradeValidateMessage& m) {
+			m.subCmd = CMD_MC_CHARTRADE_VALIDATE; m.chaId = pk.ReadInt64();
+		}
+
 	}
 } // namespace net::msg

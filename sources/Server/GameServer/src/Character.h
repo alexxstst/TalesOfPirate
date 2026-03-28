@@ -149,14 +149,41 @@ public:
 	float		GetDropRate();
 	float       GetExpRate();
 
-	void ItemUnlockRequest(RPACKET rpk);
+	void ItemUnlockRequest(const net::msg::CmItemUnlockAskMessage& msg);
 
-	void	WritePK(WPACKET& wpk);			//д����ұ����������и��ӽṹ(���ٻ��޵�)����������
-	void	WriteInt64PartInfo(WPACKET& packet);
-	void	ReadPK(RPACKET rpk);			//�ع���ұ����������и��ӽṹ(���ٻ��޵�)
+	void	WriteInt64PartInfo(net::WPacket& packet);
 	void	SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Long lTarY, bool bNeedOutSrcMap = true, Char chSwitchType = enumSWITCHMAP_CARRY, Long lTMapCpyNO = -1);
 
-	virtual void	ProcessPacket(uShort usCmd, RPACKET pk);
+	virtual void	ProcessPacket(uShort usCmd, net::RPacket& pk);
+
+	// ─── Обработчики команд (вызываются из ProcessPacket) ─────────
+	void Handle_GuildBankCmd(const net::msg::PmGuildBankMessage& msg);
+	void Handle_PushToGuildBank(const std::string& strItem);
+	void Handle_Ping(const net::msg::CmPingResponseMessage& msg);
+	void Handle_Say(const net::msg::CmSayMessage& msg);
+	void Handle_RequestTalk(uLong npcId, net::RPacket& pk);
+	void Handle_DailyBuffRequest();
+	void Handle_RefreshData(const net::msg::CmRefreshDataMessage& msg);
+	void Handle_MapMask();
+	void Handle_ItemForgeAsk(const net::msg::CmItemForgeGroupAskMessage& msg);
+	void Handle_ItemLotteryAsk(const net::msg::CmItemLotteryGroupAskMessage& msg);
+	void Handle_LifeSkillAsk(const net::msg::CmLifeSkillCraftMessage& msg);
+	void Handle_LifeSkillAsr(const net::msg::CmLifeSkillCraftMessage& msg);
+	void Handle_StoreCommand(uShort usCmd, net::RPacket& pk);
+	void Handle_TigerStart(const net::msg::CmTigerStartMessage& msg);
+	void Handle_TigerStop(const net::msg::CmTigerStopMessage& msg);
+	void Handle_VolunteerOpen(const net::msg::CmVolunteerOpenMessage& msg);
+	void Handle_VolunteerList(const net::msg::CmVolunteerListMessage& msg);
+	void Handle_VolunteerSel(const net::msg::CmVolunteerSelMessage& msg);
+	void Handle_VolunteerAsr(const net::msg::CmVolunteerAsrMessage& msg);
+	void Handle_KitbagTempSync();
+	void Handle_ItemLockAsk(const net::msg::CmItemLockAskMessage& msg);
+	void Handle_GameRequestPin(const net::msg::CmGameRequestPinMessage& msg);
+	void Handle_MasterInvite(const net::msg::CmMasterInviteMessage& msg);
+	void Handle_MasterAsr(const net::msg::CmMasterAsrMessage& msg);
+	void Handle_MasterDel(const net::msg::CmMasterDelMessage& msg);
+	void Handle_PrenticeDel(const net::msg::CmPrenticeDelMessage& msg);
+
 	virtual void	Run(uLong ulCurTick);
 	virtual	void	RunEnd( DWORD dwCurTime );
 	virtual void	OnScriptTimer(DWORD dwExecTime, bool bNotice = false);
@@ -211,10 +238,10 @@ public:
 		m_chPKCtrl[2] = v;
 	}
 
-	void		Cmd_ReassignAttr(RPACKET pk);
+	void		Cmd_ReassignAttr(const net::msg::CmSynAttrMessage& msg);
 	dbc::Short	Cmd_RemoveItem(dbc::Long lItemID, dbc::Long lItemNum, dbc::Char chFromType, dbc::Short sFromID, dbc::Char chToType, dbc::Short sToID, bool bRefresh = true, bool bForcible = true);
 
-	void		Cmd_ChangeHair(RPACKET pk);											// ������������
+	void		Cmd_ChangeHair(net::RPacket& pk);											// ������������
 	void		Prl_ChangeHairResult(int nScriptID, const char* szReason, BOOL bNoticeAll = FALSE); // �������͵���Ϣ����
 	void		Prl_OpenHair();															// ֪ͨ�ͻ��˴���������	
 
@@ -249,7 +276,7 @@ public:
 	BOOL		Cmd_ApplyVolunteer(const char *szName);
 	CCharacter	*FindVolunteer(const char *szName);
 	
-	virtual void	ReflectINFof(Entity *srcent, WPACKET chginf);
+	virtual void	ReflectINFof(Entity *srcent, net::WPacket chginf);
 	virtual CCharacter *IsCharacter(){return this;}
 
 
@@ -415,7 +442,7 @@ public:
 	void	RestoreAllSp();
 	void	RestoreAll();
 
-	BOOL	ViewItemInfo( RPACKET pk );
+	BOOL	ViewItemInfo( const net::msg::CmActionViewItemData& msg );
 
 	BOOL	AddAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK ); // ��Ҫ����ATTR_CEXP���ԣ���ʹ��CFightAble::AddExp
 	BOOL	TakeAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK );
@@ -554,16 +581,18 @@ public:
 	//
 
 	// ��ɫ���ݱ���֯
-	void	WriteBaseInfo(WPACKET &pk, dbc::Char chLookType = LOOK_SELF);
-	void	WritePKCtrl(WPACKET &pk);
-	void	WriteSkillbag(WPACKET &pk, int nSynType);
-	void	WriteKitbag(CKitbag &CKb, WPACKET &pk, int nSynType);
-	void	WriteLookData(WPACKET &pk, dbc::Char chLookType = LOOK_SELF, dbc::Char chSynType = enumSYN_LOOK_SWITCH);
-	bool	WriteAppendLook(CKitbag &CKb, WPACKET &pk, bool bInit = false);
-	void	WriteInt64cut(WPACKET &pk);
-	void	WriteBoat(WPACKET &pk);
-	void	WriteItemChaBoat(WPACKET &pk, CCharacter *pCBoat);
-	void	WriteSideInfo(WPACKET &pk);
+	void	WriteBaseInfo(net::WPacket &pk, dbc::Char chLookType = LOOK_SELF);
+	void	WritePKCtrl(net::WPacket &pk);
+	void	WriteSkillbag(net::WPacket &pk, int nSynType);
+	void	WriteKitbag(CKitbag &CKb, net::WPacket &pk, int nSynType);
+	net::msg::ChaKitbagInfo BuildKitbagInfo(CKitbag &CKb, int nSynType);
+	void	WriteLookData(net::WPacket &pk, dbc::Char chLookType = LOOK_SELF, dbc::Char chSynType = enumSYN_LOOK_SWITCH);
+	net::msg::ChaLookInfo BuildLookInfo(dbc::Char chLookType = LOOK_SELF, dbc::Char chSynType = enumSYN_LOOK_SWITCH);
+	bool	WriteAppendLook(CKitbag &CKb, net::WPacket &pk, bool bInit = false);
+	void	WriteInt64cut(net::WPacket &pk);
+	void	WriteBoat(net::WPacket &pk);
+	void	WriteItemChaBoat(net::WPacket &pk, CCharacter *pCBoat);
+	void	WriteSideInfo(net::WPacket &pk);
 	// Fill* — заполнение типизированных структур (CommandMessages.h)
 	void	FillBaseInfo(net::msg::ChaBaseInfo &b, dbc::Char chLookType = LOOK_SELF);
 	void	FillSkillBag(net::msg::ChaSkillBagInfo &s, int nSynType);
@@ -745,7 +774,7 @@ public:
 	virtual void OnTeamNotice(DWORD dwCurTime);
     virtual void OnDBUpdate(DWORD dwCurTime);
 
-	virtual void BeginAction(RPACKET pk);
+	virtual void BeginAction(const net::msg::CmBeginActionMessage& msg);
 	virtual void AfterStepMove(void);
 	virtual void SubsequenceFight();
 	virtual void SubsequenceMove();

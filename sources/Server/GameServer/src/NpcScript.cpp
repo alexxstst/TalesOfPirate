@@ -14,12 +14,12 @@
 _DBC_USING
 using namespace mission;
 
-WPACKET g_WritePacket;
+net::WPacket g_WritePacket;
 
 // ���籨�Ķ�ȡ
 inline int lua_GetPacket( lua_State *L )
 {
-	g_WritePacket = GETWPACKET();
+	g_WritePacket = g_gmsvr->GetWPacket();
 	lua_pushlightuserdata( L, &g_WritePacket );
 	return 1;
 }
@@ -38,7 +38,7 @@ inline int lua_ReadByte( lua_State *L )
 	if( pPacket )
 	{
 		//byData = pPacket->ReadInt64();
-        byData = READ_CHAR((*pPacket));
+        byData = (*pPacket).ReadInt64();
 	}
 	else
 	{
@@ -62,7 +62,7 @@ inline int lua_ReadWord( lua_State *L )
 	if( pPacket )
 	{
 		//wData = pPacket->ReadInt64();
-        wData = READ_SHORT((*pPacket));
+        wData = (*pPacket).ReadInt64();
 	}
 	else
 	{
@@ -86,7 +86,7 @@ inline int lua_ReadDword( lua_State *L )
 	if( pPacket )
 	{
 		//dwData = pPacket->ReadInt64();
-        dwData = READ_LONG((*pPacket));
+        dwData = (*pPacket).ReadInt64();
 	}
 	else
 	{
@@ -110,7 +110,7 @@ inline int lua_ReadString( lua_State *L )
 	if( pPacket )
 	{
 		//pszData = pPacket->ReadString();
-        pszData = READ_STRING((*pPacket));
+        pszData = (*pPacket).ReadString();
 	}
 	else
 	{
@@ -135,7 +135,7 @@ inline int lua_ReadCmd( lua_State *L )
 	if( pPacket )
 	{
 		//wData = pPacket->ReadCmd();
-        wData = READ_CMD((*pPacket));
+        wData = (*pPacket).ReadCmd();
 	}
 	else
 	{
@@ -154,12 +154,12 @@ inline int lua_WriteByte( lua_State *L )
 		return 0;
 	}
 
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 1 );	
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 1 );	
 	if( pPacket )
 	{
 		BYTE byData = (BYTE)lua_tonumber( L, 2 );
 		//pPacket->WriteInt64( byData );
-        WRITE_CHAR((*pPacket), byData);
+        (*pPacket).WriteInt64(byData);
 	}
 	else
 	{
@@ -177,12 +177,12 @@ inline int lua_WriteWord( lua_State* L )
 		return 0;
 	}
 
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 1 );	
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 1 );	
 	if( pPacket )
 	{
 		WORD wData = (WORD)lua_tonumber( L, 2 );
 		//pPacket->WriteInt64( wData );
-        WRITE_SHORT((*pPacket), wData);
+        (*pPacket).WriteInt64(wData);
 	}
 	else
 	{
@@ -200,12 +200,12 @@ inline int lua_WriteDword( lua_State* L )
 		return 0;
 	}
 
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 1 );	
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 1 );	
 	if( pPacket )
 	{
 		DWORD dwData = (DWORD)lua_tonumber( L, 2 );
 		//pPacket->WriteInt64( dwData );
-        WRITE_LONG((*pPacket), dwData);
+        (*pPacket).WriteInt64(dwData);
 	}
 	else
 	{
@@ -224,12 +224,12 @@ inline int lua_WriteString( lua_State* L )
 		return 0;
 	}
 
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 1 );
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 1 );
 	const char* pszData = lua_tostring( L, 2 );
 	if( pPacket && pszData )
 	{
 		//pPacket->WriteString( pszData );
-        WRITE_STRING((*pPacket), pszData);
+        (*pPacket).WriteString(pszData);
 	}
 	else
 	{
@@ -247,12 +247,12 @@ inline int lua_WriteCmd( lua_State* L )
 		return 0;
 	}
 
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 1 );	
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 1 );	
 	if( pPacket )
 	{
 		WORD wData = (WORD)lua_tonumber( L, 2 );
 		//pPacket->WriteCmd( wData );
-        WRITE_CMD((*pPacket), wData);
+        (*pPacket).WriteCmd(wData);
 	}
 	else
 	{
@@ -271,7 +271,7 @@ inline int lua_SendPacket( lua_State* L )
 		return 0;
 	}
 	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 2 );
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 2 );
 	if( !pChar || !pPacket )
 	{
 		E_LUANULL;
@@ -291,7 +291,7 @@ inline int lua_SynPacket( lua_State* L )
 		return 0;
 	}
 	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	WPACKET* pPacket = (WPACKET *)lua_touserdata( L, 2 );
+	net::WPacket* pPacket = (net::WPacket *)lua_touserdata( L, 2 );
 	if( !pChar || !pPacket )
 	{
 		E_LUANULL;
@@ -1099,11 +1099,9 @@ BOOL lua_ChaPlayEffect(lua_State* L)
 		return 0;
 	}
 
-	WPACKET l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MC_CHAPLAYEFFECT);
-	WRITE_LONG(l_wpk, pChar->GetID());
-	WRITE_LONG(l_wpk, nEffectID);
-	
+	// Типизированная сериализация: визуальный эффект на персонаже
+	auto l_wpk = net::msg::serialize(net::msg::McChaPlayEffectMessage{pChar->GetID(), (int64_t)nEffectID});
+
 	pChar->NotiChgToEyeshot( l_wpk );
 	return 1;
 }

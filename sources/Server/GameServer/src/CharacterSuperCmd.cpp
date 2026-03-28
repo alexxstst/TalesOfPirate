@@ -124,13 +124,9 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	else if(strCmd==g_Command.m_cGoto) // ���Լ�����ĳ��ɫ����
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		WPACKET WtPk	=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_GOTO_CHA);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, strList[0].c_str());
-		WRITE_CHAR(WtPk, 1);
-		WRITE_STRING(WtPk, GetName());
-		ReflectINFof(this, WtPk);//ͨ��
+		// Типизированная сериализация: запрос телепорта к персонажу
+		auto WtPk = net::msg::serialize(net::msg::MmGotoChaMessage{GetID(), strList[0], 1, GetName()});
+		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
@@ -154,10 +150,8 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			return false;
 		}
 
-		WPACKET wpk = GETWPACKET();
-		WRITE_CMD(wpk, CMD_MP_MUTE_PLAYER);
-		WRITE_STRING(wpk, strList[0].c_str());
-		WRITE_LONG(wpk, Str2Int(strList[1]));
+		// Типизированная сериализация: мьют игрока (ReflectINFof добавит trailer маршрутизации)
+		auto wpk = net::msg::serialize(net::msg::GmMutePlayerMessage{strList[0], static_cast<int64_t>(Str2Int(strList[1]))});
 		ReflectINFof(this, wpk);
 	}
 
@@ -169,15 +163,8 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			SystemNotice("You did not input a player name!");
 			return FALSE;
 		}
-		WPACKET WtPk = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_KICK_CHA);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, strList[0].c_str());
-		if (n == 2)
-			WRITE_LONG(WtPk, Str2Int(strList[1]));
-		else
-			WRITE_LONG(WtPk, 0);
-
+		// Типизированная сериализация: кик персонажа (кросс-серверный)
+		auto WtPk = net::msg::serialize(net::msg::MmKickChaMessage{GetID(), strList[0], (n == 2) ? (int64_t)Str2Int(strList[1]) : 0LL});
 		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -247,41 +234,27 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	else if(!strcmp(szComHead, g_Command.m_cQcha)) // ��ѯ��ɫ��Ϣ(���ڵ�ͼ,����,ΨһID)
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		WPACKET WtPk	=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_QUERY_CHA);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, strList[0].c_str());
-		ReflectINFof(this, WtPk);//ͨ��
+		// Типизированная сериализация: запрос информации о персонаже
+		auto WtPk = net::msg::serialize(net::msg::MmQueryChaMessage{GetID(), strList[0]});
+		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
 	else if(!strcmp(szComHead, g_Command.m_cQitem)) // ��ѯ��ɫ����
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		WPACKET WtPk	=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_QUERY_CHAITEM);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, strList[0].c_str());
-		ReflectINFof(this, WtPk);//ͨ��
+		// Типизированная сериализация: запрос инвентаря персонажа
+		auto WtPk = net::msg::serialize(net::msg::MmQueryChaItemMessage{GetID(), strList[0]});
+		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
     if(!strcmp(szComHead, g_Command.m_cCall)) // ����һ��ɫ��������
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		WPACKET WtPk	=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_CALL_CHA);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, strList[0].c_str());
-		if (IsBoat())
-			WRITE_CHAR(WtPk, 1);
-		else
-			WRITE_CHAR(WtPk, 0);
-		WRITE_STRING(WtPk, GetSubMap()->GetName());
-		WRITE_LONG(WtPk, GetPos().x);
-		WRITE_LONG(WtPk, GetPos().y);
-		WRITE_LONG(WtPk, GetSubMap()->GetCopyNO());
-		ReflectINFof(this, WtPk);//ͨ��
+		// Типизированная сериализация: вызов персонажа к себе
+		auto WtPk = net::msg::serialize(net::msg::MmCallChaMessage{GetID(), strList[0], IsBoat() ? 1LL : 0LL, GetSubMap()->GetName(), (int64_t)GetPos().x, (int64_t)GetPos().y, (int64_t)GetSubMap()->GetCopyNO()});
+		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
@@ -885,8 +858,8 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00028));
 			return FALSE;
 		}
-		//SystemNotice("Ŀ��[%s]������Ϊ%d��ֵ��%d!", pCCha->m_CLog.GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
-		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00029), pCCha->m_CLog.GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
+		//SystemNotice("Ŀ��[%s]������Ϊ%d��ֵ��%d!", pCCha->GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
+		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00029), pCCha->GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
@@ -963,11 +936,9 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	}
 	else if (!strcmp(szComHead, g_Command.m_cLuaall)) // ����GameServerִ�нű�
 	{
-		WPACKET WtPk	=GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_DO_STRING);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, szComParam);
-		ReflectINFof(this, WtPk);//ͨ��
+		// Типизированная сериализация: выполнить Lua-скрипт на всех GameServer
+		auto WtPk = net::msg::serialize(net::msg::MmDoStringMessage{GetID(), szComParam});
+		ReflectINFof(this, WtPk);
 		C_PRINT("%s: lua_all %s\n", GetName(), pszParam);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -1272,11 +1243,9 @@ void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 	else if (strCmd=="ping_game") // ��ѯ��ɫ��GameServer�߼����pingֵ
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
-		WPACKET WtPk  = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_QUERY_CHAPING);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, strList[0].c_str());
-		ReflectINFof(this, WtPk);//ͨ��
+		// Типизированная сериализация: запрос пинга персонажа
+		auto WtPk = net::msg::serialize(net::msg::MmQueryChaPingMessage{GetID(), strList[0]});
+		ReflectINFof(this, WtPk);
 	}
 }
 
@@ -1284,10 +1253,8 @@ void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 // NPC������Լ�˽�˵�˵���� �����޷�������
 void NPC_PrivateTalk(CCharacter *pCha, CCharacter *pNPC, const char *pszText)
 {
-	WPACKET wpk	= GETWPACKET();
-	WRITE_CMD(wpk, CMD_MC_SAY);
-	WRITE_LONG(wpk, pNPC->m_ID);
-	WRITE_STRING(wpk, pszText);
+	// Типизированная сериализация: приватная реплика NPC
+	auto wpk = net::msg::serialize(net::msg::McSayMessage{pNPC->m_ID, pszText, 0});
 	pCha->ReflectINFof(pCha, wpk);
 }		
 

@@ -287,10 +287,6 @@ int64_t RPacket::ReverseReadInt64() {
 }
 
 
-int64_t RPacket::ReverseReadLegacyInt64() {
-    return ReverseReadInt64();
-}
-
 // ── Мутации ────────────────────────────────────────────────
 
 bool RPacket::DiscardLast(int count) {

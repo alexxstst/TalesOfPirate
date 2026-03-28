@@ -8,6 +8,11 @@ open Corsairs.GroupServer.Domain
 open Corsairs.Platform.Network
 open Corsairs.Platform.Network.Protocol
 
+/// Сообщение в очереди гильд-банка.
+type GuildBankMsg =
+    { Player: PlayerRecord
+      Packet: WPacket }
+
 /// Контекст для обработчиков команд (передаётся вместо конкретного GateServerSystem).
 type HandlerContext =
     { Registry: PlayerRegistry
@@ -22,6 +27,7 @@ type HandlerContext =
       ChatSessions: ConcurrentDictionary<uint32, ChatSessionData>
       MasterRelations: ConcurrentDictionary<struct (int * int), bool>
       Ranking: OrderInfo array
+      GuildBankQueues: ConcurrentDictionary<int, ConcurrentQueue<GuildBankMsg>>
       SendRpcResponse: GateServerIO -> uint32 -> WPacket -> unit
       SendToSingleClient: PlayerRecord -> WPacket -> unit
       SendToClients: PlayerRecord array -> WPacket -> unit

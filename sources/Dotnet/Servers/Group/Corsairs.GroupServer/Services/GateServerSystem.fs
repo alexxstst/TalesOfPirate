@@ -105,6 +105,7 @@ type GateServerSystem
                   ChatSessions = _chatSessions
                   MasterRelations = _masterRelations
                   Ranking = _ranking
+                  GuildBankQueues = ConcurrentDictionary<int, ConcurrentQueue<GuildBankMsg>>()
                   SendRpcResponse = fun ch sess wpk -> this.SendRpcResponse(ch, sess, wpk)
                   SendToSingleClient = fun player wpk -> this.SendToSingleClient(player, wpk)
                   SendToClients = fun players wpk -> this.SendToClients(players, wpk)
@@ -208,6 +209,7 @@ type GateServerSystem
         | Commands.CMD_MP_GUILD_DISBAND
         | Commands.CMD_MP_GUILD_MOTTO
         | Commands.CMD_MP_GUILD_PERM
+        | Commands.CMD_MP_GUILDBANK
         | Commands.CMD_MP_GARNER2_UPDATE
         | Commands.CMD_MP_GARNER2_CGETORDER ->
             match this.TryGetPlayerFromPacket(packet) with
@@ -231,6 +233,8 @@ type GateServerSystem
                     Guild.handleMpGuildMotto ctx player packet
                 | Commands.CMD_MP_GUILD_PERM ->
                     Guild.handleMpGuildPerm ctx player packet
+                | Commands.CMD_MP_GUILDBANK ->
+                    Guild.handleMpGuildBankAck ctx player packet
                 | Commands.CMD_MP_GARNER2_UPDATE ->
                     Ranking.handleMpGarner2Update ctx player packet
                 | Commands.CMD_MP_GARNER2_CGETORDER ->
@@ -257,6 +261,12 @@ type GateServerSystem
             Admin.handleMpCanreceiverequests ctx packet
         | Commands.CMD_MP_GUILDNOTICE ->
             Admin.handleMpGuildnotice ctx packet
+        | Commands.CMD_MP_GUILD_CHALLMONEY ->
+            Guild.handleMpGuildChallMoney ctx packet
+        | Commands.CMD_MP_GUILD_CHALL_PRIZEMONEY ->
+            Guild.handleMpGuildChallPrizeMoney ctx packet
+        | Commands.CMD_TP_ESTOPUSER_CHECK ->
+            Admin.handleTpEstopuserCheck ctx packet
 
         // ── CP_* от клиента (через trailer) ──
         | Commands.CMD_CP_TEAM_INVITE
@@ -284,6 +294,8 @@ type GateServerSystem
         | Commands.CMD_CP_SESS_ADD
         | Commands.CMD_CP_SESS_LEAVE
         | Commands.CMD_CP_REFUSETOME
+        | Commands.CMD_CP_GUILDBANK
+        | Commands.CMD_MP_PUSHTOGUILDBANK
         | Commands.CMD_CP_CHANGE_PERSONINFO
         | Commands.CMD_CP_PING
         | Commands.CMD_CP_REPORT_WG ->
@@ -352,6 +364,11 @@ type GateServerSystem
                     PInfo.handleCpChangePersoninfo ctx player packet
                 | Commands.CMD_CP_PING ->
                     PInfo.handleCpPing ctx player packet
+                // Guild Bank
+                | Commands.CMD_CP_GUILDBANK ->
+                    Guild.handleCpGuildBank ctx player packet
+                | Commands.CMD_MP_PUSHTOGUILDBANK ->
+                    Guild.handleMpPushToGuildBank ctx player packet
                 // Admin
                 | Commands.CMD_CP_REPORT_WG ->
                     Admin.handleCpReportWg ctx player packet

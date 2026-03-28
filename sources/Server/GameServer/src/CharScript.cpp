@@ -1936,10 +1936,8 @@ inline int lua_GetMissionTempInfo( lua_State* L )
 
 
 void ReAllPlayEffect(CCharacter* pChar) {
-	WPACKET l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MC_CHAPLAYEFFECT);
-	WRITE_LONG(l_wpk, pChar->GetID());
-	WRITE_LONG(l_wpk, 114);
+	// Типизированная сериализация: визуальный эффект восстановления
+	auto l_wpk = net::msg::serialize(net::msg::McChaPlayEffectMessage{pChar->GetID(), 114});
 	pChar->NotiChgToEyeshot(l_wpk);
 }
 
@@ -4755,8 +4753,8 @@ inline int lua_Garner2GetWiner(lua_State *L)
 		E_LUANULL;
 		return 0;
 	}
-	WPACKET 	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GARNER2_CGETORDER);
+	// Типизированная сериализация: запрос заказа Garner2 (ReflectINFof добавит trailer маршрутизации)
+	auto l_wpk = net::msg::serializeGmGarner2GetOrderCmd();
 	pChar->ReflectINFof(pChar,l_wpk);
 
 	lua_pushnumber( L, LUA_TRUE);
@@ -4816,7 +4814,7 @@ inline int lua_Garner2RequestReorder(lua_State *L)
 	else
 		pMainCha->Cmd_Garner2_Reorder(pos);
 
-	//WPACKET 	l_wpk	=GETWPACKET();
+	//net::WPacket 	l_wpk	=g_gmsvr->GetWPacket();
 
 	//pChar->ReflectINFof(pChar,l_wpk);
 
@@ -5467,9 +5465,8 @@ inline int lua_LifeSkillBegin(lua_State* L)
 	}
 
 	pChar->ForgeAction();
-	WPACKET 	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MC_LIFESKILL_BGING);
-	WRITE_LONG(l_wpk,ltype);
+	// Типизированная сериализация: начало жизненного навыка
+	auto l_wpk = net::msg::serialize(net::msg::McLifeSkillShowMessage{ltype});
 	pChar->ReflectINFof(pChar,l_wpk);
 	lua_pushnumber( L, LUA_TRUE );
 	return 1;
@@ -5835,8 +5832,8 @@ inline int lua_RequestClientPin(lua_State *L) {
 		pCha->requestType = action;
 		pCha->requestPos.centre.x = pCha->GetShape().centre.x;
 		pCha->requestPos.centre.y = pCha->GetShape().centre.y;
-		WPACKET l_wpk = GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MC_REQUESTPIN);
+		// Типизированная сериализация: запрос PIN-кода
+		auto l_wpk = net::msg::serializeMcRequestPinCmd();
 		pCha->ReflectINFof(pCha, l_wpk);
 		return 1;
 	}
@@ -6091,10 +6088,8 @@ inline int lua_SendDailyBuffInfo(lua_State* L) {
 		return 0;
 	}
 	//send info to client 
-	WPACKET l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MC_RecDailyBuffInfo);
-	WRITE_STRING(l_wpk, imgName);
-	WRITE_STRING(l_wpk, LabelInfo);
+	// Типизированная сериализация: информация о ежедневном бонусе
+	auto l_wpk = net::msg::serialize(net::msg::McDailyBuffInfoMessage{imgName, LabelInfo});
 	pChar->ReflectINFof(pChar, l_wpk);
 
 }

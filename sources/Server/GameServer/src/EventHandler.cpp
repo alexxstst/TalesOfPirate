@@ -7,14 +7,12 @@
 
 
 //-------------------------------------
-// �¼� : ��ɫ������
+// �¼� : ��ɫ������
 //-------------------------------------
 void CEventHandler::Event_ChaEmotion(CCharacter *pCha, short sEmotionNo)
 {
-	WPACKET	wpk = GETWPACKET();
-	WRITE_CMD(wpk, CMD_MC_CHA_EMOTION);
-	WRITE_LONG(wpk, pCha->GetID());
-	WRITE_SHORT(wpk, (short)sEmotionNo);
+	// Типизированная сериализация: анимация эмоции
+	auto wpk = net::msg::serialize(net::msg::McChaEmotionMessage{pCha->GetID(), (int64_t)(short)sEmotionNo});
 	pCha->NotiChgToEyeshot(wpk, false);
 }
 

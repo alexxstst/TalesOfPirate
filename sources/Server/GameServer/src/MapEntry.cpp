@@ -16,10 +16,10 @@ CDynMapEntry	g_CDMapEntry;
 char	g_szTFightMapName[MAX_MAPNAME_LENGTH] = "";	// ������ս��ͼ��
 
 //=============================================================================
-void CMapEntryCopyCell::WriteParamPacket(WPACKET &pk)
+void CMapEntryCopyCell::WriteParamPacket(net::WPacket &pk)
 {
 	for (dbc::Char i = 0; i < defMAPCOPY_INFO_PARAM_NUM; i++)
-		WRITE_LONG(pk, m_lParam[i]);
+		pk.WriteInt64(m_lParam[i]);
 }
 
 //=============================================================================
@@ -67,13 +67,14 @@ void CDynMapEntryCell::SynCopyParam(dbc::Short sCopyID)
 	if (!pCCopyCell)
 		return;
 
-	WPACKET	wpk	=GETWPACKET();
-	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
-	WRITE_STRING(wpk, GetTMapName());
-	WRITE_STRING(wpk, GetMapName());
-	WRITE_CHAR(wpk, enumMAPENTRY_COPYPARAM);
-	WRITE_SHORT(wpk, sCopyID);
-	pCCopyCell->WriteParamPacket(wpk);
+	// Типизированная сериализация: параметры копии карты
+	net::msg::GmMapEntryCopyParamMessage copyMsg;
+	copyMsg.targetMapName = GetTMapName();
+	copyMsg.srcMapName = GetMapName();
+	copyMsg.copyId = sCopyID;
+	for (dbc::Char i = 0; i < defMAPCOPY_INFO_PARAM_NUM; i++)
+		copyMsg.params[i] = pCCopyCell->GetParam(i);
+	auto wpk = net::msg::serialize(copyMsg);
 
 	BEGINGETGATE();
 	GateServer	*pGateServer = NULL;
@@ -89,14 +90,15 @@ void CDynMapEntryCell::SynCopyRun(dbc::Short sCopyID, dbc::Char chCdtType, dbc::
 	if (!pCCopyCell)
 		return;
 
-	WPACKET	wpk	=GETWPACKET();
-	WRITE_CMD(wpk, CMD_MT_MAPENTRY);
-	WRITE_STRING(wpk, GetTMapName());
-	WRITE_STRING(wpk, GetMapName());
-	WRITE_CHAR(wpk, enumMAPENTRY_COPYRUN);
-	WRITE_SHORT(wpk, sCopyID);
-	WRITE_CHAR(wpk, chCdtType);
-	WRITE_LONG(wpk, chCdtVal);
+	// Типизированная сериализация: запуск условия копии карты
+	net::msg::MapEntryMessage meMsg;
+	meMsg.srcMapName = GetTMapName();
+	meMsg.targetMapName = GetMapName();
+	meMsg.subType = net::msg::MAPENTRY_COPYRUN;
+	meMsg.copyId = sCopyID;
+	meMsg.condType = chCdtType;
+	meMsg.condValue = chCdtVal;
+	auto wpk = net::msg::serialize(meMsg, CMD_MT_MAPENTRY);
 
 	BEGINGETGATE();
 	GateServer	*pGateServer = NULL;

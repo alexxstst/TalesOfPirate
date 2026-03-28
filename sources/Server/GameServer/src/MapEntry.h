@@ -34,7 +34,7 @@ public:
 	dbc::Long	GetParam(dbc::Char chParamID) {if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return 0; return m_lParam[chParamID];}
 	bool		SetParam(dbc::Char chParamID, dbc::Long lParamVal) {if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return false; m_lParam[chParamID] = lParamVal; return true;}
 
-	void		WriteParamPacket(WPACKET &pk);
+	void		WriteParamPacket(net::WPacket &pk);
 
 	void		SetPosID(dbc::Long lPosID) {m_sPosID = (dbc::Short)lPosID;}
 	dbc::Long	GetPosID(void) {return m_sPosID;}
@@ -51,7 +51,7 @@ private:
 
 };
 
-// µØÍ¼¶¯Ì¬Èë¿Úµ¥Ôª
+// ï¿½ï¿½Í¼ï¿½ï¿½Ì¬ï¿½ï¿½Úµï¿½Ôª
 class	CDynMapEntryCell
 {
 public:
@@ -117,7 +117,7 @@ private:
 	void*		m_pPos;
 };
 
-// ¶¯Ì¬µØÍ¼Èë¿ÚÁ´±í£¬¼ÍÂ¼±¾½ø³ÌµÄËùÓÐµ±Ç°´æÔÚµÄ¶¯Ì¬Èë¿Ú
+// ï¿½ï¿½Ì¬ï¿½ï¿½Í¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½ï¿½ï¿½Ìµï¿½ï¿½ï¿½ï¿½Ðµï¿½Ç°ï¿½ï¿½ï¿½ÚµÄ¶ï¿½Ì¬ï¿½ï¿½ï¿½
 class	CDynMapEntry
 {
 public:
@@ -138,10 +138,10 @@ private:
 
 extern CDynMapEntry g_CDMapEntry;
 
-// ¶ÓÎéÌôÕ½µØÍ¼Èë¿Ú
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½Í¼ï¿½ï¿½ï¿½
 extern void	g_SetTeamFightMapName(const char *cszMapName);
 
-extern char	g_szTFightMapName[MAX_MAPNAME_LENGTH];	// ¶ÓÎéÌôÕ½µØÍ¼Ãû
+extern char	g_szTFightMapName[MAX_MAPNAME_LENGTH];	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Õ½ï¿½ï¿½Í¼ï¿½ï¿½
 //
 
 #endif // MAPENTRY_H

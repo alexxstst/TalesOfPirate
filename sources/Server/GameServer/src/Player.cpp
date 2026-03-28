@@ -143,10 +143,8 @@ void CPlayer::SetIMP(long imp,bool sync) {
 	if (sync){
 		char cmd[64];
 		sprintf(cmd, "SetIMPAcc('%s',%d)",GetActName(),GetIMP());
-		WPACKET WtPk = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MM_DO_STRING);
-		WRITE_LONG(WtPk, GetID());
-		WRITE_STRING(WtPk, cmd);
+		// Типизированная сериализация: синхронизация IMP через Lua
+		auto WtPk = net::msg::serialize(net::msg::MmDoStringMessage{(int64_t)GetID(), cmd});
 		GetMainCha()->ReflectINFof(GetMainCha(), WtPk);
 	}
 }
@@ -415,16 +413,16 @@ void CPlayer::NoticeTeamMemberData()
 	
 	//LG("team", "[%s]��Ϊ��Ա��������Ա�Ŀͻ���[%d��]֪ͨ������Ϣ\n", pCha->GetName(), nTMemberCnt);
 
-    WPACKET	wpk = GETWPACKET();
-	WRITE_CMD(wpk, CMD_MC_TEAM);
-	WRITE_LONG(wpk, pMainCha->GetID()); // ���͸��ͻ����Լ��Ľ�ɫΨһID��Ϊ��ʶ
-	WRITE_LONG(wpk, (long)pCha->getAttr(ATTR_HP));
-	WRITE_LONG(wpk, (long)pCha->getAttr(ATTR_MXHP));
-	WRITE_LONG(wpk, (long)pCha->getAttr(ATTR_SP));
-	WRITE_LONG(wpk, (long)pCha->getAttr(ATTR_MXSP));
-	
-	WRITE_LONG(wpk, pMainCha->getAttr(ATTR_LV)); // д���˵ļ�����Ϣ	
-	pMainCha->WriteLookData(wpk, LOOK_TEAM);	 // д���˵������Ϣ, ����Ӧ�ô���Ϊ��ʾ������ۺͼ���
+	// Типизированная сериализация: данные участника команды с внешним видом
+	auto wpk = net::msg::serializeMcTeamMemberData(
+		pMainCha->GetID(),
+		static_cast<int64_t>((long)pCha->getAttr(ATTR_HP)),
+		static_cast<int64_t>((long)pCha->getAttr(ATTR_MXHP)),
+		static_cast<int64_t>((long)pCha->getAttr(ATTR_SP)),
+		static_cast<int64_t>((long)pCha->getAttr(ATTR_MXSP)),
+		static_cast<int64_t>(pMainCha->getAttr(ATTR_LV))
+	);
+	pMainCha->WriteLookData(wpk, LOOK_TEAM);
 
 	SENDTOCLIENT2(wpk, nTMemberCnt, _Team);
 }
@@ -436,17 +434,13 @@ void CPlayer::NoticeTeamLeaderID(void)
 
 	CCharacter *pCha = GetCtrlCha();
 
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_TLEADER_ID);
-	WRITE_LONG(pk, pCha->GetID());
-	WRITE_LONG(pk, getTeamLeaderID());
+	// Типизированная сериализация: синхронизация ID лидера команды
+	auto pk = net::msg::serialize(net::msg::McSynTLeaderIdMessage{pCha->GetID(), getTeamLeaderID()});
 
 	SENDTOCLIENT2(pk, nTMemberCnt, _Team);
 	pCha->NotiChgToEyeshot(pk);
 	//pCha->ReflectINFof(pCha, pk);
 
-	//pCha->m_CLog.Log("ͬ�������ţ��ӳ� %d���Լ� %d.", getTeamLeaderID(), pCha->GetID());
-	pCha->m_CLog.Log("in phase teamID:header  %d,oneself %d.", getTeamLeaderID(), pCha->GetID());
 }
 
 // ������ͬ�ӵĳ�Ա��ɫ
@@ -748,13 +742,11 @@ void CPlayer::SystemNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	WPACKET packet = GETWPACKET();
-	WRITE_CMD(packet, CMD_MC_SYSINFO );
-	WRITE_STRING(packet, szTemp);
-	
-	WRITE_LONG(packet, GetDBChaId());
-	WRITE_LONG(packet, GetGateAddr());
-	WRITE_SHORT(packet, 1);
+	// Типизированная сериализация: уведомление игрока + ручной trailer для маршрутизации
+	auto packet = net::msg::serialize(net::msg::McSysInfoMessage{szTemp});
+	packet.WriteInt64(GetDBChaId());
+	packet.WriteInt64(GetGateAddr());
+	packet.WriteInt64(1);
 
 	GetGate()->SendData(packet);
 }
@@ -815,20 +807,19 @@ bool CPlayer::SetBankChangeFlag(char chBankNO, bool bChange)
 bool CPlayer::SynGuildBank(CKitbag * bag, char chType){
 	int canSeeBank = (m_pMainCha->guildPermission & emGldPermViewBank);
 	
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);
-	WRITE_LONG(WtPk, m_pMainCha->GetID());
-	WRITE_LONG(WtPk, m_pMainCha->m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_GUILDBANK);
-
-	if (canSeeBank != emGldPermViewBank){
+	// Типизированная сериализация: синхронизация гильдейского банка через std::variant
+	net::msg::McCharacterActionMessage msg{};
+	msg.worldId = m_pMainCha->GetID();
+	msg.packetId = m_pMainCha->m_ulPacketID;
+	msg.actionType = net::msg::ActionType::GUILDBANK;
+	if (canSeeBank != emGldPermViewBank) {
 		CKitbag emptyBag{};
 		emptyBag.SetCapacity(0);
-		m_pMainCha->WriteKitbag(emptyBag, WtPk, chType);
-	}else{
-		m_pMainCha->WriteKitbag(*bag, WtPk, chType);
+		msg.data = m_pMainCha->BuildKitbagInfo(emptyBag, chType);
+	} else {
+		msg.data = m_pMainCha->BuildKitbagInfo(*bag, chType);
 	}
-	
+	auto WtPk = net::msg::serialize(msg);
 	m_pMainCha->ReflectINFof(m_pMainCha, WtPk);
 	return true;
 }
@@ -851,20 +842,30 @@ bool CPlayer::SynBank(char chBankNO, char chType)
 		chStart = chEnd = chBankNO;
 	}
 
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_NOTIACTION);	// ͨ���ж�
-	WRITE_LONG(WtPk, m_pCtrlCha->GetID());
-	WRITE_LONG(WtPk, m_pCtrlCha->m_ulPacketID);
-	WRITE_CHAR(WtPk, enumACTION_BANK);
-
-	CKitbag	*pCBank;
+	// Типизированная сериализация: синхронизация банка через std::variant
+	net::msg::McCharacterActionMessage msg{};
+	msg.worldId = m_pCtrlCha->GetID();
+	msg.packetId = m_pCtrlCha->m_ulPacketID;
+	msg.actionType = net::msg::ActionType::BANK;
+	msg.data = net::msg::ChaKitbagInfo{};
+	// Объединение нескольких страниц банка: используем первую страницу как базу,
+	// дополнительные предметы добавляются в общий kitbag
+	bool firstBank = true;
 	for (char i = chStart; i <= chEnd; i++)
 	{
-		pCBank = GetBank(i);
+		CKitbag* pCBank = GetBank(i);
 		if (!pCBank)
 			continue;
-		m_pCtrlCha->WriteKitbag(*pCBank, WtPk, chType);
+		if (firstBank) {
+			msg.data = m_pCtrlCha->BuildKitbagInfo(*pCBank, chType);
+			firstBank = false;
+		} else {
+			auto extra = m_pCtrlCha->BuildKitbagInfo(*pCBank, chType);
+			auto& kitbag = std::get<net::msg::ChaKitbagInfo>(msg.data);
+			kitbag.items.insert(kitbag.items.end(), extra.items.begin(), extra.items.end());
+		}
 	}
+	auto WtPk = net::msg::serialize(msg);
 	m_pCtrlCha->ReflectINFof(m_pCtrlCha, WtPk);
 
 	return true;
@@ -943,9 +944,8 @@ bool CPlayer::GetGuildGold(){
 	int canSeeBank = (pCCtrlCha->guildPermission & emGldPermViewBank);
 	if (canSeeBank == emGldPermViewBank){
 		unsigned long long gold = game_db.GetGuildBankGold(guildID);
-		WPACKET WtPk = GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_UPDATEGUILDBANKGOLD);
-		WRITE_STRING(WtPk, to_string(gold).c_str());
+		// Типизированная сериализация: обновление золота банка гильдии
+		auto WtPk = net::msg::serialize(net::msg::McUpdateGuildGoldMessage{to_string(gold).c_str()});
 		pCCtrlCha->ReflectINFof(pCCtrlCha, WtPk);
 		return true;
 	}

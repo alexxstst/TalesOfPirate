@@ -71,10 +71,16 @@ extern char g_szRecvKey[4];
 
 static unsigned long g_ulWorldID = 0;
 
+// Forward declarations для хелперов конвертации sub-packet → клиентские структуры
+void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKitbag);
+void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut& SShortcut);
+
 using namespace std;
 
 BOOL SC_UpdateGuildGold(LPRPACKET pk) {
-	g_stUIGuildBank.UpdateGuildGold(pk.ReadString().c_str());
+	net::msg::McUpdateGuildGoldMessage msg;
+	net::msg::deserialize(pk, msg);
+	g_stUIGuildBank.UpdateGuildGold(msg.data.c_str());
 	return true;
 }
 
@@ -239,8 +245,9 @@ BOOL SC_Login(LPRPACKET pk) {
 }
 
 BOOL SC_Disconnect(LPRPACKET pk) {
-	auto reason = pk.ReadInt64();
-	g_NetIF->m_connect.Disconnect(reason);
+	net::msg::McDisconnectMessage msg;
+	net::msg::deserialize(pk, msg);
+	g_NetIF->m_connect.Disconnect(msg.reason);
 	return true;
 }
 
@@ -452,7 +459,6 @@ static void convertShortcut(const net::msg::ChaShortcutInfo& src, stNetShortCut&
 // CMD_MC_ENTERMAP — вход на карту (S->C)
 //--------------------
 BOOL SC_EnterMap(LPRPACKET pk) {
-	g_LogName.Init();
 	g_listguild_begin = false;
 
 	net::msg::McEnterMapMessage msg;
@@ -488,8 +494,6 @@ BOOL SC_EnterMap(LPRPACKET pk) {
 	SCreateInfo.CreateCha();
 	g_ulWorldID = SCreateInfo.ulWorldID;
 
-	const char* szLogName = g_LogName.GetLogName(SCreateInfo.ulWorldID);
-
 	stNetSkillBag SCurSkill;
 	convertSkillBag(d.skillBag, SCurSkill);
 	NetSynSkillBag(SCreateInfo.ulWorldID, &SCurSkill);
@@ -516,8 +520,6 @@ BOOL SC_EnterMap(LPRPACKET pk) {
 		SCreateInfo.chSeeType = enumENTITY_SEEN_NEW;
 		SCreateInfo.chMainCha = 2;
 		SCreateInfo.CreateCha();
-
-		szLogName = g_LogName.GetLogName(SCreateInfo.ulWorldID);
 
 		convertAttr(boat.attr, SChaAttr);
 		NetSynAttr(SCreateInfo.ulWorldID, SChaAttr.chType, SChaAttr.sNum, SChaAttr.SEff);
@@ -574,36 +576,6 @@ BOOL SC_EndPlay(LPRPACKET pk) {
 	return TRUE;
 }
 
-std::optional<NetChaBehave> ReadSelectCharacter(RPacket& rpk) {
-	if (!rpk.ReadInt64()) {
-		return {};
-	}
-
-	uShort looklen{0};
-	NetChaBehave cha;
-	cha.sCharName = rpk.ReadString();
-	cha.sJob = rpk.ReadString();
-	cha.iDegree = rpk.ReadInt64();
-
-	cha.look_minimal.typeID = rpk.ReadInt64();
-	for (auto& id : cha.look_minimal.equip_IDs) {
-		id = rpk.ReadInt64();
-	}
-
-	return cha;
-}
-
-std::vector<NetChaBehave> ReadSelectCharacters(RPacket& rpk) {
-	std::vector<NetChaBehave> characters;
-	characters.reserve(rpk.ReadInt64());
-	for (auto i = 0; i < characters.capacity(); ++i) {
-		if (auto cha = ReadSelectCharacter(rpk)) {
-			characters.emplace_back(cha.value());
-		}
-	}
-	return characters;
-}
-
 
 BOOL SC_NewCha(LPRPACKET pk) {
 	net::msg::McNewChaResponse resp;
@@ -636,54 +608,46 @@ BOOL SC_UpdatePassword2(LPRPACKET pk) {
 
 //mothannakh create account
 BOOL PC_REGISTER(LPRPACKET pk) {
+	// Десериализация через McRegisterResponseMessage
+	net::msg::McRegisterResponseMessage msg;
+	net::msg::deserialize(pk, msg);
+
 	CGameApp::Waiting(false);
-	char sucess = pk.ReadInt64();
 	if (g_NetIF->IsConnected()) {
 		CS_Disconnect(DS_DISCONN);
 	}
-	//register cooldown
 	_dwLastTime = CGameApp::GetCurTick();
 
 	if (_dwOverTime > _dwLastTime) {
 		g_pGameApp->MsgBox("Do Not Spam.");
 		return FALSE;
 	}
-	//test
-	if (sucess == 1) {
-		//mothannakh account register//
-		//CLoginScene* pkScene = dynamic_cast<CLoginScene*>(CGameApp::GetCurScene());
+
+	if (msg.success == 1) {
 		registerLogin = false;
-		//pkScene->LoginFlow();
-		//here end
 		_dwOverTime = _dwLastTime + 9000;
 		g_pGameApp->MsgBox("Account Created.");
 	}
 	else {
-		g_pGameApp->MsgBox(pk.ReadString().c_str());
+		g_pGameApp->MsgBox(msg.errorMessage.c_str());
 	}
 	return TRUE;
 }
 
+// Ответ на пинг от GroupServer
 BOOL PC_Ping(LPRPACKET pk) {
-	WPacket l_wpk = g_NetIF->GetWPacket();
-	l_wpk.WriteCmd(CMD_CP_PING);
+	auto l_wpk = net::msg::serializeCpPingCmd();
 	g_NetIF->SendPacketMessage(l_wpk);
 	return TRUE;
 }
 
+// Ответ на пинг от GameServer (эхо значений обратно)
 BOOL SC_Ping(LPRPACKET pk) {
 	net::msg::McPingMessage msg;
 	net::msg::deserialize(pk, msg);
 	{
 		auto const l = std::lock_guard{g_NetIF->m_mutmov};
-
-		WPacket wpk = g_NetIF->GetWPacket();
-		wpk.WriteCmd(CMD_CM_PING);
-		wpk.WriteInt64(msg.v1);
-		wpk.WriteInt64(msg.v2);
-		wpk.WriteInt64(msg.v3);
-		wpk.WriteInt64(msg.v4);
-		wpk.WriteInt64(msg.v5);
+		auto wpk = net::msg::serialize(net::msg::CmPingResponseMessage{msg.v1, msg.v2, msg.v3, msg.v4, msg.v5});
 		g_NetIF->SendPacketMessage(wpk);
 	}
 
@@ -694,9 +658,9 @@ BOOL SC_Ping(LPRPACKET pk) {
 	return TRUE;
 }
 
+// Ответ на проверочный пинг
 BOOL SC_CheckPing(LPRPACKET pk) {
-	WPacket wpk = g_NetIF->GetWPacket();
-	wpk.WriteCmd(CMD_CM_CHECK_PING);
+	auto wpk = net::msg::serializeCmCheckPingCmd();
 	g_NetIF->SendPacketMessage(wpk);
 
 	return TRUE;
@@ -769,41 +733,42 @@ BOOL SC_ColourNotice(LPRPACKET pk) {
 // Э��S->C : ������ɫ(���������)����
 //------------------------------------
 BOOL SC_ChaBeginSee(LPRPACKET pk) {
-	stNetActorCreate SCreateInfo;
-	char chSeeType = pk.ReadInt64();
+	// Десериализация через McChaBeginSeeMessage
+	net::msg::McChaBeginSeeMessage msg;
+	net::msg::deserialize(pk, msg);
 
-	ReadChaBasePacket(pk, SCreateInfo);
-	SCreateInfo.chSeeType = chSeeType;
+	stNetActorCreate SCreateInfo;
+	convertBaseInfo(msg.base, SCreateInfo);
+	SCreateInfo.chSeeType = static_cast<char>(msg.seeType);
 	SCreateInfo.chMainCha = 0;
 	CCharacter* pCha = SCreateInfo.CreateCha();
 	if (!pCha) return FALSE;
 
-	const char* szLogName = g_LogName.GetLogName(SCreateInfo.ulWorldID);
-
 	stNetNPCShow SNpcShow;
-	// NPC����״̬��Ϣ
-	SNpcShow.byNpcType = pk.ReadInt64();
-	SNpcShow.byNpcState = pk.ReadInt64();
+	// NPC тип и состояние
+	SNpcShow.byNpcType = static_cast<decltype(SNpcShow.byNpcType)>(msg.npcType);
+	SNpcShow.byNpcState = static_cast<decltype(SNpcShow.byNpcState)>(msg.npcState);
 	SNpcShow.SetNpcShow(pCha);
 
-
-	// �ж�����
-	switch (pk.ReadInt64()) {
+	// Поза персонажа через std::variant
+	switch (msg.poseType) {
 	case enumPoseLean: {
+		auto& lean = std::get<net::msg::LeanInfo>(msg.pose);
 		stNetLeanInfo SLean;
-		SLean.chState = pk.ReadInt64();
-		SLean.lPose = pk.ReadInt64();
-		SLean.lAngle = pk.ReadInt64();
-		SLean.lPosX = pk.ReadInt64();
-		SLean.lPosY = pk.ReadInt64();
-		SLean.lHeight = pk.ReadInt64();
+		SLean.chState = static_cast<decltype(SLean.chState)>(lean.leanState);
+		SLean.lPose = static_cast<long>(lean.pose);
+		SLean.lAngle = static_cast<long>(lean.angle);
+		SLean.lPosX = static_cast<long>(lean.posX);
+		SLean.lPosY = static_cast<long>(lean.posY);
+		SLean.lHeight = static_cast<long>(lean.height);
 		NetActorLean(SCreateInfo.ulWorldID, SLean);
 		break;
 	}
 	case enumPoseSeat: {
+		auto& seat = std::get<net::msg::SeatInfo>(msg.pose);
 		stNetFace SNetFace;
-		SNetFace.sAngle = pk.ReadInt64();
-		SNetFace.sPose = pk.ReadInt64();
+		SNetFace.sAngle = static_cast<short>(seat.seatAngle);
+		SNetFace.sPose = static_cast<short>(seat.seatPose);
 		NetFace(SCreateInfo.ulWorldID, SNetFace, enumACTION_SKILL_POSE);
 		break;
 	}
@@ -813,11 +778,11 @@ BOOL SC_ChaBeginSee(LPRPACKET pk) {
 	}
 
 	stNetChaAttr SChaAttr;
-	ReadChaAttrPacket(pk, SChaAttr, szLogName);
+	convertAttr(msg.attr, SChaAttr);
 	NetSynAttr(SCreateInfo.ulWorldID, SChaAttr.chType, SChaAttr.sNum, SChaAttr.SEff);
 
 	stNetSkillState SCurSState;
-	ReadChaSkillStatePacket(pk, SCurSState, szLogName);
+	convertSkillState(msg.skillState, SCurSState);
 	NetSynSkillState(SCreateInfo.ulWorldID, &SCurSState);
 
 	return TRUE;
@@ -908,10 +873,8 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 
 	NetAreaStateBeginSee(&SynAState);
 
-	// log
-	const char* szLogName = g_LogName.GetMainLogName();
-
-	{ // Лог состояния области
+	// Лог состояния области
+	{
 		char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum);
 		g_logManager.InternalLog(LogLevel::Debug, "common", buf);
 		for (char j = 0; j < SynAState.chStateNum; j++) {
@@ -942,28 +905,29 @@ BOOL SC_AStateEndSee(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Э��S->C : ���ӵ��߽�ɫ
+// Добавление предметного персонажа (item cha)
 BOOL SC_AddItemCha(LPRPACKET pk) {
-	long lMainChaID = pk.ReadInt64();
+	// Десериализация через McAddItemChaMessage
+	net::msg::McAddItemChaMessage msg;
+	net::msg::deserialize(pk, msg);
+
 	stNetActorCreate SCreateInfo;
-	ReadChaBasePacket(pk, SCreateInfo);
+	convertBaseInfo(msg.base, SCreateInfo);
 	SCreateInfo.chSeeType = enumENTITY_SEEN_NEW;
 	SCreateInfo.chMainCha = 2;
 	SCreateInfo.CreateCha();
 
-	const char* szLogName = g_LogName.GetLogName(SCreateInfo.ulWorldID);
-
 	stNetChaAttr SChaAttr;
-	ReadChaAttrPacket(pk, SChaAttr, szLogName);
+	convertAttr(msg.attr, SChaAttr);
 	NetSynAttr(SCreateInfo.ulWorldID, SChaAttr.chType, SChaAttr.sNum, SChaAttr.SEff);
 
 	stNetKitbag SKitbag;
-	ReadChaKitbagPacket(pk, SKitbag, szLogName);
+	convertKitbag(msg.kitbag, SKitbag);
 	SKitbag.chBagType = 0;
 	NetChangeKitbag(SCreateInfo.ulWorldID, SKitbag);
 
 	stNetSkillState SCurSState;
-	ReadChaSkillStatePacket(pk, SCurSState, szLogName);
+	convertSkillState(msg.skillState, SCurSState);
 	NetSynSkillState(SCreateInfo.ulWorldID, &SCurSState);
 
 	return TRUE;
@@ -983,8 +947,11 @@ BOOL SC_DelItemCha(LPRPACKET pk) {
 
 // �������
 BOOL SC_Cha_Emotion(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
-	uShort sEmotion = pk.ReadInt64();
+	net::msg::McChaEmotionMessage msg;
+	net::msg::deserialize(pk, msg);
+
+	uLong l_id = static_cast<uLong>(msg.worldId);
+	uShort sEmotion = static_cast<uShort>(msg.emotion);
 
 	NetChaEmotion(l_id, sEmotion);
 	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(297), sEmotion);
@@ -994,35 +961,33 @@ BOOL SC_Cha_Emotion(LPRPACKET pk) {
 
 // Э��S->C : ��ɫ�ж�ͨ��
 BOOL SC_CharacterAction(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	// Десериализация CMD_MC_NOTIACTION через McCharacterActionMessage
+	net::msg::McCharacterActionMessage msg;
+	net::msg::deserialize(pk, msg);
 
-	const char* szLogName = g_LogName.GetLogName(l_id);
+	uLong l_id = static_cast<uLong>(msg.worldId);
+	long lPacketId = static_cast<long>(msg.packetId);
+	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", lPacketId));
 
-	// try
 	{
-		long lPacketId = 0;
-#ifdef defPROTOCOL_HAVE_PACKETID
-		lPacketId = pk.ReadInt64();
-#endif
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("$$$PacketID:\t{}", lPacketId));
+		using namespace net::msg;
 
-		switch (pk.ReadInt64()) {
-		case enumACTION_MOVE: {
+		if (msg.actionType == ActionType::MOVE) {
+			auto& move = std::get<ActionMoveData>(msg.data);
 			stNetNotiMove SMoveInfo;
-			SMoveInfo.sState = pk.ReadInt64();
+			SMoveInfo.sState = static_cast<short>(move.moveState);
 			if (SMoveInfo.sState != enumMSTATE_ON)
-				SMoveInfo.sStopState = pk.ReadInt64();
-			Point* STurnPos;
-			uShort ulTurnNum;
-			STurnPos = (Point*)pk.ReadSequence(ulTurnNum);
-			SMoveInfo.nPointNum = ulTurnNum / sizeof(Point);
-			memcpy(SMoveInfo.SPos, STurnPos, ulTurnNum);
+				SMoveInfo.sStopState = static_cast<short>(move.stopState);
+			SMoveInfo.nPointNum = static_cast<int>(move.waypoints.size()) / sizeof(Point);
+			memcpy(SMoveInfo.SPos, move.waypoints.data(), move.waypoints.size());
 
 			// log
 			long lDistX, lDistY, lDist = 0;
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Move):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", SMoveInfo.nPointNum));
-			bool isMainCha = g_LogName.IsMainCha(l_id);
+			// Проверка: является ли персонаж главным (для отладочной визуализации)
+			CCharacter* pMainDbg = CGameScene::GetMainCha();
+			bool isMainCha = pMainDbg && pMainDbg->getAttachID() == l_id;
 			for (int i = 0; i < SMoveInfo.nPointNum; i++) {
 #ifdef _STATE_DEBUG
 				if (isMainCha) {
@@ -1060,53 +1025,48 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 
 			NetActorMove(l_id, SMoveInfo);
 		}
-		break;
-		case enumACTION_SKILL_SRC: {
+		else if (msg.actionType == ActionType::SKILL_SRC) {
+			auto& d = std::get<ActionSkillSrcData>(msg.data);
 			stNetNotiSkillRepresent SSkillInfo;
 			SSkillInfo.chCrt = 0;
 			SSkillInfo.sStopState = enumEXISTS_WAITING;
 
-			SSkillInfo.byFightID = pk.ReadInt64();
-			SSkillInfo.sAngle = pk.ReadInt64();
-			SSkillInfo.sState = pk.ReadInt64();
+			SSkillInfo.byFightID = static_cast<BYTE>(d.fightId);
+			SSkillInfo.sAngle = static_cast<short>(d.angle);
+			SSkillInfo.sState = static_cast<short>(d.state);
 			if (SSkillInfo.sState != enumFSTATE_ON)
-				SSkillInfo.sStopState = pk.ReadInt64();
-			SSkillInfo.lSkillID = pk.ReadInt64();
-			SSkillInfo.lSkillSpeed = pk.ReadInt64();
-			char chTarType = pk.ReadInt64();
-			if (chTarType == 1) {
-				SSkillInfo.lTargetID = pk.ReadInt64();
-				SSkillInfo.STargetPoint.x = pk.ReadInt64();
-				SSkillInfo.STargetPoint.y = pk.ReadInt64();
+				SSkillInfo.sStopState = static_cast<short>(d.stopState);
+			SSkillInfo.lSkillID = static_cast<long>(d.skillId);
+			SSkillInfo.lSkillSpeed = static_cast<long>(d.skillSpeed);
+			if (d.targetType == 1) {
+				SSkillInfo.lTargetID = static_cast<long>(d.targetId);
+				SSkillInfo.STargetPoint.x = static_cast<long>(d.targetX);
+				SSkillInfo.STargetPoint.y = static_cast<long>(d.targetY);
 			}
-			else if (chTarType == 2) {
+			else if (d.targetType == 2) {
 				SSkillInfo.lTargetID = 0;
-				SSkillInfo.STargetPoint.x = pk.ReadInt64();
-				SSkillInfo.STargetPoint.y = pk.ReadInt64();
+				SSkillInfo.STargetPoint.x = static_cast<long>(d.targetX);
+				SSkillInfo.STargetPoint.y = static_cast<long>(d.targetY);
 			}
-			SSkillInfo.sExecTime = pk.ReadInt64();
+			SSkillInfo.sExecTime = static_cast<short>(d.execTime);
 
-			// ͬ������
-			short lResNum = pk.ReadInt64();
+			// Эффекты атрибутов
+			short lResNum = static_cast<short>(d.effects.size());
 			if (lResNum > 0) {
 				SSkillInfo.SEffect.Resize(lResNum);
 				for (long i = 0; i < lResNum; i++) {
-					SSkillInfo.SEffect[i].lAttrID = pk.ReadInt64();
-					SSkillInfo.SEffect[i].lVal = pk.ReadInt64();
-					/*if(SSkillInfo.SEffect[i].lAttrID==ATTR_CEXP||SSkillInfo.SEffect[i].lAttrID==ATTR_NLEXP ||SSkillInfo.SEffect[i].lAttrID==ATTR_CLEXP)
-						SSkillInfo.SEffect[i].lVal= pk.ReadInt64();
-					else
-						SSkillInfo.SEffect[i].lVal = (long)pk.ReadInt64();*/
+					SSkillInfo.SEffect[i].lAttrID = static_cast<long>(d.effects[i].attrId);
+					SSkillInfo.SEffect[i].lVal = static_cast<long>(d.effects[i].attrVal);
 				}
 			}
 
-			// ͬ������״̬
-			short chSStateNum = pk.ReadInt64();
+			// Состояния скилла
+			short chSStateNum = static_cast<short>(d.states.size());
 			if (chSStateNum > 0) {
 				SSkillInfo.SState.Resize(chSStateNum);
 				for (short chNum = 0; chNum < chSStateNum; chNum++) {
-					SSkillInfo.SState[chNum].chID = pk.ReadInt64();
-					SSkillInfo.SState[chNum].chLv = pk.ReadInt64();
+					SSkillInfo.SState[chNum].chID = static_cast<char>(d.states[chNum].stateId);
+					SSkillInfo.SState[chNum].chLv = static_cast<char>(d.states[chNum].stateLv);
 				}
 			}
 
@@ -1128,38 +1088,34 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 
 			NetActorSkillRep(l_id, SSkillInfo);
 		}
-		break;
-		case enumACTION_SKILL_TAR: {
+		else if (msg.actionType == ActionType::SKILL_TAR) {
+			auto& d = std::get<ActionSkillTarData>(msg.data);
 			stNetNotiSkillEffect SSkillInfo{};
 
-			SSkillInfo.byFightID = pk.ReadInt64();
-			SSkillInfo.sState = pk.ReadInt64();
-			SSkillInfo.bDoubleAttack = pk.ReadInt64() ? true : false;
-			SSkillInfo.bMiss = pk.ReadInt64() ? true : false;
-			if (SSkillInfo.bBeatBack = pk.ReadInt64() ? true : false) {
-				SSkillInfo.SPos.x = pk.ReadInt64();
-				SSkillInfo.SPos.y = pk.ReadInt64();
+			SSkillInfo.byFightID = static_cast<BYTE>(d.fightId);
+			SSkillInfo.sState = static_cast<short>(d.state);
+			SSkillInfo.bDoubleAttack = d.doubleAttack;
+			SSkillInfo.bMiss = d.miss;
+			SSkillInfo.bBeatBack = d.beatBack;
+			if (SSkillInfo.bBeatBack) {
+				SSkillInfo.SPos.x = static_cast<long>(d.beatBackX);
+				SSkillInfo.SPos.y = static_cast<long>(d.beatBackY);
 			}
-			SSkillInfo.lSrcID = pk.ReadInt64();
-			SSkillInfo.SSrcPos.x = pk.ReadInt64();
-			SSkillInfo.SSrcPos.y = pk.ReadInt64();
-			SSkillInfo.lSkillID = pk.ReadInt64();
-			SSkillInfo.SSkillTPos.x = pk.ReadInt64();
-			SSkillInfo.SSkillTPos.y = pk.ReadInt64();
-			SSkillInfo.sExecTime = pk.ReadInt64();
+			SSkillInfo.lSrcID = static_cast<long>(d.srcId);
+			SSkillInfo.SSrcPos.x = static_cast<long>(d.srcPosX);
+			SSkillInfo.SSrcPos.y = static_cast<long>(d.srcPosY);
+			SSkillInfo.lSkillID = static_cast<long>(d.skillId);
+			SSkillInfo.SSkillTPos.x = static_cast<long>(d.skillTargetX);
+			SSkillInfo.SSkillTPos.y = static_cast<long>(d.skillTargetY);
+			SSkillInfo.sExecTime = static_cast<short>(d.execTime);
 
-			// ͬ������
-			pk.ReadInt64();
-			short lResNum = pk.ReadInt64();
+			// Эффекты цели
+			short lResNum = static_cast<short>(d.effects.size());
 			if (lResNum > 0) {
 				SSkillInfo.SEffect.Resize(lResNum);
 				for (long i = 0; i < lResNum; i++) {
-					SSkillInfo.SEffect[i].lAttrID = pk.ReadInt64();
-					SSkillInfo.SEffect[i].lVal = pk.ReadInt64();
-					/*if(SSkillInfo.SEffect[i].lAttrID==ATTR_CEXP||SSkillInfo.SEffect[i].lAttrID==ATTR_NLEXP ||SSkillInfo.SEffect[i].lAttrID==ATTR_CLEXP)
-						SSkillInfo.SEffect[i].lVal= pk.ReadInt64();
-					else
-						SSkillInfo.SEffect[i].lVal = (long)pk.ReadInt64();*/
+					SSkillInfo.SEffect[i].lAttrID = static_cast<long>(d.effects[i].attrId);
+					SSkillInfo.SEffect[i].lVal = static_cast<long>(d.effects[i].attrVal);
 
 					char val[32];
 					char buff[234];
@@ -1169,56 +1125,37 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 				}
 			}
 
-			short chSStateNum = 0;
-			// ͬ������״̬
-			if (pk.ReadInt64() == 1) {
-				pk.ReadInt64();
-				chSStateNum = pk.ReadInt64();
+			// Состояния цели
+			if (d.hasStates) {
+				short chSStateNum = static_cast<short>(d.states.size());
 				if (chSStateNum > 0) {
 					SSkillInfo.SState.Resize(chSStateNum);
 					for (short chNum = 0; chNum < chSStateNum; chNum++) {
-						SSkillInfo.SState[chNum].chID = pk.ReadInt64();
-						SSkillInfo.SState[chNum].chLv = pk.ReadInt64();
-
-						pk.ReadInt64();
-						pk.ReadInt64();
+						SSkillInfo.SState[chNum].chID = static_cast<char>(d.states[chNum].stateId);
+						SSkillInfo.SState[chNum].chLv = static_cast<char>(d.states[chNum].stateLv);
 					}
 				}
 			}
 
-			short lSrcResNum = 0;
-			short chSrcSStateNum = 0;
-			if (pk.ReadInt64()) {
-				// ����Դ״̬
-				SSkillInfo.sSrcState = pk.ReadInt64();
-				// ͬ������Դ����
-				pk.ReadInt64();
-				lSrcResNum = pk.ReadInt64();
+			// Эффекты источника
+			if (d.hasSrcEffect) {
+				SSkillInfo.sSrcState = static_cast<short>(d.srcState);
+				short lSrcResNum = static_cast<short>(d.srcEffects.size());
 				if (lSrcResNum > 0) {
 					SSkillInfo.SSrcEffect.Resize(lSrcResNum);
 					for (long i = 0; i < lSrcResNum; i++) {
-						SSkillInfo.SSrcEffect[i].lAttrID = pk.ReadInt64();
-						SSkillInfo.SSrcEffect[i].lVal = pk.ReadInt64();
-						/*if(SSkillInfo.SSrcEffect[i].lAttrID==ATTR_CEXP||SSkillInfo.SSrcEffect[i].lAttrID==ATTR_NLEXP ||SSkillInfo.SSrcEffect[i].lAttrID==ATTR_CLEXP)
-							SSkillInfo.SSrcEffect[i].lVal= pk.ReadInt64();
-						else
-							SSkillInfo.SSrcEffect[i].lVal = (long)pk.ReadInt64();*/
+						SSkillInfo.SSrcEffect[i].lAttrID = static_cast<long>(d.srcEffects[i].attrId);
+						SSkillInfo.SSrcEffect[i].lVal = static_cast<long>(d.srcEffects[i].attrVal);
 					}
 				}
-				NetActorSkillEff(l_id, SSkillInfo);
-				break;
-
-				if (pk.ReadInt64() == 1) {
-					// ͬ������Դ����״̬
-					pk.ReadInt64();
-					chSrcSStateNum = pk.ReadInt64();
-					if (chSrcSStateNum > 0) {
-						SSkillInfo.SSrcState.Resize(chSrcSStateNum);
-						for (short chNum = 0; chNum < chSrcSStateNum; chNum++) {
-							SSkillInfo.SSrcState[chNum].chID = pk.ReadInt64();
-							SSkillInfo.SSrcState[chNum].chLv = pk.ReadInt64();
-							pk.ReadInt64();
-							pk.ReadInt64();
+				// Состояния источника
+				if (d.srcHasStates) {
+					short chSrcStateNum = static_cast<short>(d.srcStates.size());
+					if (chSrcStateNum > 0) {
+						SSkillInfo.SSrcState.Resize(chSrcStateNum);
+						for (short chNum = 0; chNum < chSrcStateNum; chNum++) {
+							SSkillInfo.SSrcState[chNum].chID = static_cast<char>(d.srcStates[chNum].stateId);
+							SSkillInfo.SSrcState[chNum].chLv = static_cast<char>(d.srcStates[chNum].stateLv);
 						}
 					}
 				}
@@ -1226,17 +1163,16 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 
 			NetActorSkillEff(l_id, SSkillInfo);
 		}
-		break;
-		case enumACTION_LEAN: // �п�
-		{
+		else if (msg.actionType == ActionType::LEAN) {
+			auto& lean = std::get<ActionLeanData>(msg.data);
 			stNetLeanInfo SLean;
-			SLean.chState = pk.ReadInt64();
+			SLean.chState = static_cast<char>(lean.leanState);
 			if (!SLean.chState) {
-				SLean.lPose = pk.ReadInt64();
-				SLean.lAngle = pk.ReadInt64();
-				SLean.lPosX = pk.ReadInt64();
-				SLean.lPosY = pk.ReadInt64();
-				SLean.lHeight = pk.ReadInt64();
+				SLean.lPose = static_cast<long>(lean.pose);
+				SLean.lAngle = static_cast<long>(lean.angle);
+				SLean.lPosX = static_cast<long>(lean.posX);
+				SLean.lPosY = static_cast<long>(lean.posY);
+				SLean.lHeight = static_cast<long>(lean.height);
 			}
 
 			// log
@@ -1247,140 +1183,177 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 
 			NetActorLean(l_id, SLean);
 		}
-		break;
-		case enumACTION_ITEM_FAILED: {
+		else if (msg.actionType == ActionType::ITEM_FAILED) {
 			stNetSysInfo l_sysinfo;
-			short sFailedID = pk.ReadInt64();
+			short sFailedID = static_cast<short>(std::get<ActionItemFailedData>(msg.data).failedId);
 			l_sysinfo.m_sysinfo = g_GetUseItemFailedInfo(sFailedID);
 			NetSysInfo(l_sysinfo);
 		}
-		break;
-		case enumACTION_LOOK: // ���½�ɫ���
-		{
+		else if (msg.actionType == ActionType::LOOK) {
+			// LOOK использует конвертацию через std::variant -> stNetLookInfo
 			stNetLookInfo SLookInfo;
-			ReadChaLookPacket(pk, SLookInfo, szLogName);
-			CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(l_id);
+			memset(&SLookInfo, 0, sizeof(SLookInfo));
+			auto& lk = std::get<ChaLookInfo>(msg.data);
+			SLookInfo.chSynType = static_cast<char>(lk.synType);
+			stNetChangeChaPart& SChaPart = SLookInfo.SLook;
+			SChaPart.sTypeID = static_cast<short>(lk.typeId);
+			if (lk.isBoat) {
+				SChaPart.sPosID = static_cast<short>(lk.boatParts.posId);
+				SChaPart.sBoatID = static_cast<short>(lk.boatParts.boatId);
+				SChaPart.sHeader = static_cast<short>(lk.boatParts.header);
+				SChaPart.sBody = static_cast<short>(lk.boatParts.body);
+				SChaPart.sEngine = static_cast<short>(lk.boatParts.engine);
+				SChaPart.sCannon = static_cast<short>(lk.boatParts.cannon);
+				SChaPart.sEquipment = static_cast<short>(lk.boatParts.equipment);
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Look):\tTick:[{}]", GetTickCount()));
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TypeID:{}, PoseID:{}", SChaPart.sTypeID, SChaPart.sPosID));
+			} else {
+				SChaPart.sHairID = static_cast<short>(lk.hairId);
+				for (int i = 0; i < enumEQUIP_NUM; i++) {
+					SItemGrid* pItem = &SChaPart.SLink[i];
+					auto& eq = lk.equips[i];
+					pItem->sID = static_cast<short>(eq.id);
+					pItem->dwDBID = static_cast<DWORD>(eq.dbId);
+					pItem->sNeedLv = static_cast<short>(eq.needLv);
+					if (pItem->sID == 0) {
+						memset(pItem, 0, sizeof(SItemGrid));
+						continue;
+					}
+					if (SLookInfo.chSynType == enumSYN_LOOK_CHANGE) {
+						pItem->sEndure[0] = static_cast<short>(eq.endure0);
+						pItem->sEnergy[0] = static_cast<short>(eq.energy0);
+						pItem->SetValid(eq.valid != 0);
+						pItem->bItemTradable = static_cast<int>(eq.tradable);
+						pItem->expiration = static_cast<long>(eq.expiration);
+					} else {
+						pItem->sNum = static_cast<short>(eq.num);
+						pItem->sEndure[0] = static_cast<short>(eq.endure0);
+						pItem->sEndure[1] = static_cast<short>(eq.endure1);
+						pItem->sEnergy[0] = static_cast<short>(eq.energy0);
+						pItem->sEnergy[1] = static_cast<short>(eq.energy1);
+						pItem->chForgeLv = static_cast<char>(eq.forgeLv);
+						pItem->SetValid(eq.valid != 0);
+						pItem->bItemTradable = static_cast<int>(eq.tradable);
+						pItem->expiration = static_cast<long>(eq.expiration);
+						if (eq.hasExtra) {
+							pItem->SetDBParam(enumITEMDBP_FORGE, static_cast<long>(eq.forgeParam));
+							pItem->SetDBParam(enumITEMDBP_INST_ID, static_cast<long>(eq.instId));
+							if (eq.hasInstAttr) {
+								for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++) {
+									pItem->sInstAttr[j][0] = static_cast<short>(eq.instAttr[j][0]);
+									pItem->sInstAttr[j][1] = static_cast<short>(eq.instAttr[j][1]);
+								}
+							}
+						}
+					}
+				}
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Look)\tTick:[{}]", GetTickCount()));
+				g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TypeID:{}, HairID:{}", SChaPart.sTypeID, SChaPart.sHairID));
+				for (int i = 0; i < enumEQUIP_NUM; i++)
+					g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tLink: {}", SChaPart.SLink[i].sID));
+			}
 
+			CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(l_id);
 			if (!g_stUIMap.IsPKSilver() || pCha->GetMainType() == enumMainPlayer) {
 				NetChangeChaPart(l_id, SLookInfo);
 			}
 		}
-		break;
-		case enumACTION_LOOK_ENERGY: // ���½�ɫ��۵�����
-		{
+		else if (msg.actionType == ActionType::LOOK_ENERGY) {
+			// Типизированная десериализация: энергия экипировки через std::variant
+			auto& energyData = std::get<ActionLookEnergyData>(msg.data);
 			stLookEnergy SLookEnergy;
-			ReadChaLookEnergyPacket(pk, SLookEnergy, szLogName);
+			memset(&SLookEnergy, 0, sizeof(SLookEnergy));
+			for (int i = 0; i < enumEQUIP_NUM; i++)
+				SLookEnergy.sEnergy[i] = static_cast<short>(energyData.energy[i]);
 			NetChangeChaLookEnergy(l_id, SLookEnergy);
 		}
-		break;
-		case enumACTION_KITBAG: // ���½�ɫ������
-		{
+		else if (msg.actionType == ActionType::KITBAG) {
 			stNetKitbag SKitbag;
-			ReadChaKitbagPacket(pk, SKitbag, szLogName);
+			ReadChaKitbagFromMsg(std::get<ChaKitbagInfo>(msg.data), SKitbag);
 			SKitbag.chBagType = 0;
 			NetChangeKitbag(l_id, SKitbag);
 		}
-		break;
-		case enumACTION_ITEM_INFO: {
+		else if (msg.actionType == ActionType::ITEM_INFO) {
+			// Пустой обработчик
 		}
-		break;
-		case enumACTION_SHORTCUT: // ���¿����
-		{
+		else if (msg.actionType == ActionType::SHORTCUT) {
 			stNetShortCut SShortcut;
-			ReadChaShortcutPacket(pk, SShortcut, szLogName);
+			ReadChaShortcutFromMsg(std::get<ChaShortcutInfo>(msg.data), SShortcut);
 			NetShortCut(l_id, SShortcut);
 		}
-		break;
-		case enumACTION_TEMP: {
+		else if (msg.actionType == ActionType::TEMP) {
+			auto& temp = std::get<ActionTempData>(msg.data);
 			stTempChangeChaPart STempChaPart;
-			STempChaPart.dwItemID = pk.ReadInt64();
-			STempChaPart.dwPartID = pk.ReadInt64();
+			STempChaPart.dwItemID = static_cast<DWORD>(temp.itemId);
+			STempChaPart.dwPartID = static_cast<DWORD>(temp.partId);
 			NetTempChangeChaPart(l_id, STempChaPart);
 		}
-		break;
-		case enumACTION_CHANGE_CHA: {
+		else if (msg.actionType == ActionType::CHANGE_CHA) {
 			stNetChangeCha SChangeCha;
-			SChangeCha.ulMainChaID = pk.ReadInt64();
-
+			SChangeCha.ulMainChaID = static_cast<uLong>(std::get<ActionChangeChaData>(msg.data).mainChaId);
 			NetActorChangeCha(l_id, SChangeCha);
 		}
-		break;
-		case enumACTION_FACE: {
+		else if (msg.actionType == ActionType::FACE) {
+			auto& face = std::get<ActionFaceData>(msg.data);
 			stNetFace SNetFace;
-			SNetFace.sAngle = pk.ReadInt64();
-			SNetFace.sPose = pk.ReadInt64();
+			SNetFace.sAngle = static_cast<short>(face.angle);
+			SNetFace.sPose = static_cast<short>(face.pose);
 			NetFace(l_id, SNetFace, enumACTION_FACE);
 
-			// log
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Face):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
-			//
 		}
-		break;
-		case enumACTION_SKILL_POSE: {
+		else if (msg.actionType == ActionType::SKILL_POSE) {
+			auto& face = std::get<ActionFaceData>(msg.data);
 			stNetFace SNetFace;
-			SNetFace.sAngle = pk.ReadInt64();
-			SNetFace.sPose = pk.ReadInt64();
+			SNetFace.sAngle = static_cast<short>(face.angle);
+			SNetFace.sPose = static_cast<short>(face.pose);
 			NetFace(l_id, SNetFace, enumACTION_SKILL_POSE);
 
-			// log
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Skill Pos):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
-			//
 		}
-		break;
-		case enumACTION_PK_CTRL: {
+		else if (msg.actionType == ActionType::PK_CTRL) {
+			// Типизированная десериализация: PK-контроль через std::variant
 			stNetPKCtrl SNetPKCtrl;
-			ReadChaPKPacket(pk, SNetPKCtrl, szLogName);
-
+			char chPKCtrl = static_cast<char>(std::get<ActionPkCtrlData>(msg.data).pkCtrl);
+			std::bitset<8> states(chPKCtrl);
+			SNetPKCtrl.bInPK = states[0];
+			SNetPKCtrl.bInGymkhana = states[1];
+			SNetPKCtrl.pkGuild = states[2];
 			SNetPKCtrl.Exec(l_id);
 		}
-		break;
-		case enumACTION_BANK: // ������
-		{
+		else if (msg.actionType == ActionType::BANK) {
 			stNetKitbag SKitbag;
-			ReadChaKitbagPacket(pk, SKitbag, szLogName);
+			ReadChaKitbagFromMsg(std::get<ChaKitbagInfo>(msg.data), SKitbag);
 			SKitbag.chBagType = 1;
 			NetChangeKitbag(l_id, SKitbag);
 		}
-		break;
-		case enumACTION_GUILDBANK: // ������
-		{
+		else if (msg.actionType == ActionType::GUILDBANK) {
 			stNetKitbag SKitbag;
-			ReadChaKitbagPacket(pk, SKitbag, szLogName);
+			ReadChaKitbagFromMsg(std::get<ChaKitbagInfo>(msg.data), SKitbag);
 			SKitbag.chBagType = 3;
 			NetChangeKitbag(l_id, SKitbag);
 		}
-		break;
-		case enumACTION_KITBAGTMP: // ����ʱ����
-		{
+		else if (msg.actionType == ActionType::KITBAGTMP) {
 			stNetKitbag STempKitbag;
-			ReadChaKitbagPacket(pk, STempKitbag, szLogName);
+			ReadChaKitbagFromMsg(std::get<ChaKitbagInfo>(msg.data), STempKitbag);
 			STempKitbag.chBagType = 2;
 			NetChangeKitbag(l_id, STempKitbag);
-			break;
 		}
-		case enumACTION_REQUESTGUILDLOGS: {
-			g_stUIGuildMgr.RequestGuildLogs(pk);
-			break;
+		else if (msg.actionType == ActionType::REQUESTGUILDLOGS) {
+			auto& d = std::get<ActionRequestGuildLogsData>(msg.data);
+			g_stUIGuildMgr.RequestGuildLogs(d);
 		}
-		case enumACTION_UPDATEGUILDLOGS: {
-			g_stUIGuildMgr.UpdateGuildLogs(pk);
-			break;
-		}
-		default:
-			break;
+		else if (msg.actionType == ActionType::UPDATEGUILDLOGS) {
+			auto& d = std::get<ActionUpdateGuildLogsData>(msg.data);
+			g_stUIGuildMgr.UpdateGuildLogs(d);
 		}
 	}
-	//catch (...)
-	//{
-	//	MessageBox(0, "!!!!!!!!!!!!!!!!!!!!exception: Notice Action", "error", 0);
-	//}
 
 	return TRUE;
 }
 
-// Э��S->C : ��ɫ������ж�ʧ��
 BOOL SC_FailedAction(LPRPACKET pk) {
 	// Десериализация через типизированное сообщение
 	net::msg::McFailedActionMessage msg;
@@ -1394,7 +1367,6 @@ BOOL SC_SynAttribute(LPRPACKET pk) {
 	net::msg::McSynAttributeMessage msg;
 	net::msg::deserialize(pk, msg);
 	uLong l_id = static_cast<uLong>(msg.worldId);
-	const char* szLogName = g_LogName.GetLogName(l_id);
 
 	stNetChaAttr SChaAttr;
 	memset(&SChaAttr, 0, sizeof(SChaAttr));
@@ -1424,7 +1396,6 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 	net::msg::deserialize(pk, msg);
 
 	uLong l_id = static_cast<uLong>(msg.worldId);
-	const char* szLogName = g_LogName.GetLogName(l_id);
 
 	stNetSkillBag SCurSkill;
 	memset(&SCurSkill, 0, sizeof(SCurSkill));
@@ -1488,7 +1459,6 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 	net::msg::McSynSkillStateMessage msg;
 	net::msg::deserialize(pk, msg);
 	uLong l_id = static_cast<uLong>(msg.worldId);
-	const char* szLogName = g_LogName.GetLogName(l_id);
 
 	unsigned long currentClient = GetTickCount();
 	unsigned long currentServer = static_cast<unsigned long>(msg.skillState.currentTime) / 1000;
@@ -1525,28 +1495,30 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 }
 
 BOOL SC_SynTeam(LPRPACKET pk) {
-	stNetTeamState STeamState;
+	// Десериализация через McSynTeamMessage
+	net::msg::McSynTeamMessage msg;
+	net::msg::deserialize(pk, msg);
 
-	STeamState.ulID = pk.ReadInt64();
-	STeamState.lHP = pk.ReadInt64();
-	STeamState.lMaxHP = pk.ReadInt64();
-	STeamState.lSP = pk.ReadInt64();
-	STeamState.lMaxSP = pk.ReadInt64();
-	STeamState.lLV = pk.ReadInt64();
+	stNetTeamState STeamState;
+	STeamState.ulID = static_cast<decltype(STeamState.ulID)>(msg.memberId);
+	STeamState.lHP = static_cast<decltype(STeamState.lHP)>(msg.hp);
+	STeamState.lMaxHP = static_cast<decltype(STeamState.lMaxHP)>(msg.maxHP);
+	STeamState.lSP = static_cast<decltype(STeamState.lSP)>(msg.sp);
+	STeamState.lMaxSP = static_cast<decltype(STeamState.lMaxSP)>(msg.maxSP);
+	STeamState.lLV = static_cast<decltype(STeamState.lLV)>(msg.level);
 
 	ToLogService("players", "Refresh, ID[{}], HP[{}], MaxHP[{}], SP[{}], MaxSP[{}], LV[{}]", STeamState.ulID, STeamState.lHP,
 	   STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV);
 
-	stNetLookInfo SLookInfo;
-	ReadChaLookPacket(pk, SLookInfo, const_cast<char*>(g_oLangRec.GetString(299)));
-	stNetChangeChaPart& SFace = SLookInfo.SLook;
-	STeamState.SFace.sTypeID = SFace.sTypeID;
-	STeamState.SFace.sHairID = SFace.sHairID;
+	// Конвертация ChaLookInfo → stNetChangeChaPart для пати
+	STeamState.SFace.sTypeID = static_cast<short>(msg.look.typeId);
+	STeamState.SFace.sHairID = static_cast<short>(msg.look.hairId);
 	for (int i = 0; i < enumEQUIP_NUM; i++) {
-		STeamState.SFace.SLink[i].sID = SFace.SLink[i].sID;
-		STeamState.SFace.SLink[i].sNum = SFace.SLink[i].sNum;
-		STeamState.SFace.SLink[i].chForgeLv = SFace.SLink[i].chForgeLv;
-		STeamState.SFace.SLink[i].lFuseID = SFace.SLink[i].lDBParam[1] >> 16;
+		const auto& eq = msg.look.equips[i];
+		STeamState.SFace.SLink[i].sID = static_cast<short>(eq.id);
+		STeamState.SFace.SLink[i].sNum = static_cast<short>(eq.num);
+		STeamState.SFace.SLink[i].chForgeLv = static_cast<char>(eq.forgeLv);
+		STeamState.SFace.SLink[i].lFuseID = static_cast<long>(eq.instId) >> 16;
 	}
 
 	NetSynTeam(&STeamState);
@@ -1571,17 +1543,20 @@ BOOL SC_SynTLeaderID(LPRPACKET pk) {
 }
 
 BOOL SC_HelpInfo(LPRPACKET packet) {
+	// Десериализация через McHelpInfoMessage
+	net::msg::McHelpInfoMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	NET_HELPINFO Info;
 	memset(&Info, 0, sizeof(NET_HELPINFO));
 
-	Info.byType = packet.ReadInt64();
+	Info.byType = static_cast<decltype(Info.byType)>(msg.type);
 	if (Info.byType == mission::MIS_HELP_DESP || Info.byType == mission::MIS_HELP_IMAGE ||
 		Info.byType == mission::MIS_HELP_BICKER) {
-		std::string pszDesp = packet.ReadString();
-		strncpy(Info.szDesp, pszDesp.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
+		strncpy(Info.szDesp, msg.desp.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
 	}
 	else if (Info.byType == mission::MIS_HELP_SOUND) {
-		Info.sID = packet.ReadInt64();
+		Info.sID = static_cast<decltype(Info.sID)>(msg.soundId);
 	}
 	else {
 		return FALSE;
@@ -1648,115 +1623,58 @@ BOOL SC_TradeData(LPRPACKET packet) {
 	return TRUE;
 }
 
-BOOL SC_TradeAllData(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byType = packet.ReadInt64();
-	DWORD dwParam = packet.ReadInt64();
-	BYTE byCount = packet.ReadInt64();
-
-	NET_TRADEINFO Info;
-	for (BYTE i = 0; i < byCount; i++) {
-		BYTE byItemType = packet.ReadInt64();
-		switch (byItemType) {
-		case mission::TI_WEAPON:
-		case mission::TI_DEFENCE:
-		case mission::TI_OTHER:
-		case mission::TI_SYNTHESIS: {
-			Info.TradePage[byItemType].byCount = packet.ReadInt64();
-			if (Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM)
-				Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
-
-			for (BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++) {
-				Info.TradePage[byItemType].sItemID[n] = packet.ReadInt64();
-				if (byType == mission::TRADE_GOODS) {
-					Info.TradePage[byItemType].sCount[n] = packet.ReadInt64();
-					Info.TradePage[byItemType].dwPrice[n] = packet.ReadInt64();
-					Info.TradePage[byItemType].byLevel[n] = packet.ReadInt64();
-				}
+// Вспомогательная функция: конвертация McTradeAllDataMessage → NET_TRADEINFO
+static void convertTradeMsg(const net::msg::McTradeAllDataMessage& msg, NET_TRADEINFO& Info) {
+	memset(&Info, 0, sizeof(Info));
+	for (const auto& page : msg.pages) {
+		BYTE byItemType = static_cast<BYTE>(page.itemType);
+		if (byItemType > 3) continue; // TI_WEAPON..TI_SYNTHESIS
+		Info.TradePage[byItemType].byCount = static_cast<BYTE>(page.items.size());
+		if (Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM)
+			Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
+		for (BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++) {
+			Info.TradePage[byItemType].sItemID[n] = static_cast<USHORT>(page.items[n].itemId);
+			if (msg.tradeType == mission::TRADE_GOODS) {
+				Info.TradePage[byItemType].sCount[n] = static_cast<USHORT>(page.items[n].count);
+				Info.TradePage[byItemType].dwPrice[n] = static_cast<DWORD>(page.items[n].price);
+				Info.TradePage[byItemType].byLevel[n] = static_cast<BYTE>(page.items[n].level);
 			}
 		}
-		break;
-		default:
-			break;
-		}
 	}
-	NetUpdateTradeAllData(Info, byType, dwNpcID, dwParam);
+}
+
+BOOL SC_TradeAllData(LPRPACKET packet) {
+	// Десериализация через McTradeAllDataMessage
+	net::msg::McTradeAllDataMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	NET_TRADEINFO Info;
+	convertTradeMsg(msg, Info);
+	NetUpdateTradeAllData(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId), static_cast<DWORD>(msg.param));
 	return TRUE;
 }
 
 BOOL SC_TradeInfo(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byType = packet.ReadInt64();
-	DWORD dwParam = packet.ReadInt64();
-	BYTE byCount = packet.ReadInt64();
+	// Десериализация через McTradeAllDataMessage (тот же формат)
+	net::msg::McTradeAllDataMessage msg;
+	net::msg::deserialize(packet, msg);
 
 	NET_TRADEINFO Info;
-	for (BYTE i = 0; i < byCount; i++) {
-		BYTE byItemType = packet.ReadInt64();
-		switch (byItemType) {
-		case mission::TI_WEAPON:
-		case mission::TI_DEFENCE:
-		case mission::TI_OTHER:
-		case mission::TI_SYNTHESIS: {
-			Info.TradePage[byItemType].byCount = packet.ReadInt64();
-			if (Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM)
-				Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
-
-			for (BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++) {
-				Info.TradePage[byItemType].sItemID[n] = packet.ReadInt64();
-				if (byType == mission::TRADE_GOODS) {
-					Info.TradePage[byItemType].sCount[n] = packet.ReadInt64();
-					Info.TradePage[byItemType].dwPrice[n] = packet.ReadInt64();
-					Info.TradePage[byItemType].byLevel[n] = packet.ReadInt64();
-				}
-			}
-		}
-		break;
-		default:
-			break;
-		}
-	}
-	NetShowTrade(Info, byType, dwNpcID, dwParam);
+	convertTradeMsg(msg, Info);
+	NetShowTrade(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId), static_cast<DWORD>(msg.param));
 	return TRUE;
 }
 
 BOOL SC_TradeUpdate(LPRPACKET packet) {
-	//���н��׸���,ֻ���ڴ򿪺��н��׽�������²Ÿ���
-
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byType = packet.ReadInt64();
-	DWORD dwParam = packet.ReadInt64();
-	BYTE byCount = packet.ReadInt64();
+	// Десериализация через McTradeAllDataMessage (тот же формат)
+	net::msg::McTradeAllDataMessage msg;
+	net::msg::deserialize(packet, msg);
 
 	NET_TRADEINFO Info;
-	for (BYTE i = 0; i < byCount; i++) {
-		BYTE byItemType = packet.ReadInt64();
-		switch (byItemType) {
-		case mission::TI_WEAPON:
-		case mission::TI_DEFENCE:
-		case mission::TI_OTHER:
-		case mission::TI_SYNTHESIS: {
-			Info.TradePage[byItemType].byCount = packet.ReadInt64();
-			if (Info.TradePage[byItemType].byCount > ROLE_MAXNUM_TRADEITEM)
-				Info.TradePage[byItemType].byCount = ROLE_MAXNUM_TRADEITEM;
-
-			for (BYTE n = 0; n < Info.TradePage[byItemType].byCount; n++) {
-				Info.TradePage[byItemType].sItemID[n] = packet.ReadInt64();
-				if (byType == mission::TRADE_GOODS) {
-					Info.TradePage[byItemType].sCount[n] = packet.ReadInt64();
-					Info.TradePage[byItemType].dwPrice[n] = packet.ReadInt64();
-					Info.TradePage[byItemType].byLevel[n] = packet.ReadInt64();
-				}
-			}
-		}
-		break;
-		default:
-			break;
-		}
-	}
+	convertTradeMsg(msg, Info);
 
 	if (g_stUINpcTrade.GetIsShow()) {
-		NetShowTrade(Info, byType, dwNpcID, dwParam);
+		NetShowTrade(Info, static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.npcId), static_cast<DWORD>(msg.param));
 	}
 
 	return TRUE;
@@ -1778,107 +1696,93 @@ BOOL SC_TradeResult(LPRPACKET packet) {
 }
 
 BOOL SC_CharTradeInfo(LPRPACKET packet) {
+	// Десериализация через типизированные сообщения по подкоманде
 	USHORT usCmd = packet.ReadInt64();
 	switch (usCmd) {
 	case CMD_MC_CHARTRADE_REQUEST: {
-		BYTE byType = packet.ReadInt64();
-		DWORD dwRequestID = packet.ReadInt64();
-		NetShowCharTradeRequest(byType, dwRequestID);
+		net::msg::McCharTradeRequestMessage msg;
+		net::msg::deserialize(packet, msg);
+		NetShowCharTradeRequest(static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.chaId));
 	}
 	break;
 	case CMD_MC_CHARTRADE_CANCEL: {
-		DWORD dwCharID = packet.ReadInt64();
-		NetCancelCharTrade(dwCharID);
+		net::msg::McCharTradeCancelMessage msg;
+		net::msg::deserialize(packet, msg);
+		NetCancelCharTrade(static_cast<DWORD>(msg.chaId));
 	}
 	break;
 	case CMD_MC_CHARTRADE_MONEY: {
-		DWORD dwCharID = packet.ReadInt64();
-		DWORD dwMoney = packet.ReadInt64();
-		int currency = packet.ReadInt64();
-
-		if (currency == 0) {
-			NetTradeShowMoney(dwCharID, dwMoney);
+		net::msg::McCharTradeMoneyMessage msg;
+		net::msg::deserialize(packet, msg);
+		if (msg.isIMP == 0) {
+			NetTradeShowMoney(static_cast<DWORD>(msg.chaId), static_cast<DWORD>(msg.money));
 		}
-		else if (currency == 1) {
-			NetTradeShowIMP(dwCharID, dwMoney);
+		else if (msg.isIMP == 1) {
+			NetTradeShowIMP(static_cast<DWORD>(msg.chaId), static_cast<DWORD>(msg.money));
 		}
 	}
 	break;
 	case CMD_MC_CHARTRADE_ITEM: {
-		DWORD dwRequestID = packet.ReadInt64();
-		BYTE byOpType = packet.ReadInt64();
-		if (byOpType == mission::TRADE_DRAGTO_ITEM) {
-			BYTE byItemIndex = packet.ReadInt64();
-			BYTE byIndex = packet.ReadInt64();
-			BYTE byCount = packet.ReadInt64();
+		// Полная десериализация единого сообщения торговли предметом
+		net::msg::McCharTradeItemMessage msg;
+		net::msg::deserialize(packet, msg);
 
-			// ��Ʒʵ������
+		if (auto* remove = std::get_if<net::msg::McCharTradeItemRemoveData>(&msg.data)) {
+			// Перетаскивание из торговли в инвентарь
 			NET_CHARTRADE_ITEMDATA Data;
 			memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
-
-			NetTradeAddItem(dwRequestID, byOpType, 0, byIndex, byCount, byItemIndex, Data);
+			NetTradeAddItem(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType), 0,
+				static_cast<BYTE>(remove->tradeIndex), static_cast<BYTE>(remove->count),
+				static_cast<BYTE>(remove->bagIndex), Data);
 		}
-		else if (byOpType == mission::TRADE_DRAGTO_TRADE) {
-			USHORT sItemID = packet.ReadInt64();
-			BYTE byItemIndex = packet.ReadInt64();
-			BYTE byIndex = packet.ReadInt64();
-			BYTE byCount = packet.ReadInt64();
-			USHORT sType = packet.ReadInt64();
-
-			if (sType == enumItemTypeBoat) {
-				NET_CHARTRADE_BOATDATA Data;
-				memset(&Data, 0, sizeof(NET_CHARTRADE_BOATDATA));
-
-				if (packet.ReadInt64() == 0) {
-					// ��Ϣ����
-				}
-				else {
-					strncpy(Data.szName, packet.ReadString().c_str(), BOAT_MAXSIZE_BOATNAME - 1);
-					Data.sBoatID = packet.ReadInt64();
-					Data.sLevel = packet.ReadInt64();
-					Data.dwExp = packet.ReadInt64();
-					Data.dwHp = packet.ReadInt64();
-					Data.dwMaxHp = packet.ReadInt64();
-					Data.dwSp = packet.ReadInt64();
-					Data.dwMaxSp = packet.ReadInt64();
-					Data.dwMinAttack = packet.ReadInt64();
-					Data.dwMaxAttack = packet.ReadInt64();
-					Data.dwDef = packet.ReadInt64();
-					Data.dwSpeed = packet.ReadInt64();
-					Data.dwShootSpeed = packet.ReadInt64();
-					Data.byHasItem = packet.ReadInt64();
-					Data.byCapacity = packet.ReadInt64();
-					Data.dwPrice = packet.ReadInt64();
-					NetTradeAddBoat(dwRequestID, byOpType, sItemID, byIndex, byCount, byItemIndex, Data);
+		else if (auto* add = std::get_if<net::msg::McCharTradeItemAddData>(&msg.data)) {
+			bool isBoat = (add->itemType == enumItemTypeBoat);
+			if (isBoat) {
+				// Корабль
+				auto* boatPtr = std::get_if<net::msg::TradeBoatData>(&add->equipData);
+				if (boatPtr && boatPtr->hasBoat) {
+					NET_CHARTRADE_BOATDATA Data;
+					memset(&Data, 0, sizeof(NET_CHARTRADE_BOATDATA));
+					strncpy(Data.szName, boatPtr->name.c_str(), BOAT_MAXSIZE_BOATNAME - 1);
+					Data.sBoatID = static_cast<decltype(Data.sBoatID)>(boatPtr->ship);
+					Data.sLevel = static_cast<decltype(Data.sLevel)>(boatPtr->lv);
+					Data.dwExp = static_cast<DWORD>(boatPtr->cexp);
+					Data.dwHp = static_cast<DWORD>(boatPtr->hp); Data.dwMaxHp = static_cast<DWORD>(boatPtr->mxhp);
+					Data.dwSp = static_cast<DWORD>(boatPtr->sp); Data.dwMaxSp = static_cast<DWORD>(boatPtr->mxsp);
+					Data.dwMinAttack = static_cast<DWORD>(boatPtr->mnatk); Data.dwMaxAttack = static_cast<DWORD>(boatPtr->mxatk);
+					Data.dwDef = static_cast<DWORD>(boatPtr->def); Data.dwSpeed = static_cast<DWORD>(boatPtr->mspd);
+					Data.dwShootSpeed = static_cast<DWORD>(boatPtr->aspd);
+					Data.byHasItem = static_cast<BYTE>(boatPtr->useGridNum); Data.byCapacity = static_cast<BYTE>(boatPtr->capacity);
+					Data.dwPrice = static_cast<DWORD>(boatPtr->price);
+					NetTradeAddBoat(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType),
+						static_cast<USHORT>(add->itemId), static_cast<BYTE>(add->tradeIndex),
+						static_cast<BYTE>(add->count), static_cast<BYTE>(add->bagIndex), Data);
 				}
 			}
 			else {
-				// ��Ʒʵ������
-				NET_CHARTRADE_ITEMDATA Data;
-				memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
-
-				Data.sEndure[0] = packet.ReadInt64();
-				Data.sEndure[1] = packet.ReadInt64();
-				Data.sEnergy[0] = packet.ReadInt64();
-				Data.sEnergy[1] = packet.ReadInt64();
-				Data.byForgeLv = packet.ReadInt64();
-				Data.bValid = packet.ReadInt64() != 0 ? true : false;
-				Data.bItemTradable = packet.ReadInt64();
-				Data.expiration = packet.ReadInt64();
-
-				Data.lDBParam[enumITEMDBP_FORGE] = packet.ReadInt64();
-				Data.lDBParam[enumITEMDBP_INST_ID] = packet.ReadInt64();
-
-
-				Data.byHasAttr = packet.ReadInt64();
-				if (Data.byHasAttr) {
-					for (int i = 0; i < defITEM_INSTANCE_ATTR_NUM; i++) {
-						Data.sInstAttr[i][0] = packet.ReadInt64();
-						Data.sInstAttr[i][1] = packet.ReadInt64();
+				// Обычный предмет
+				auto* itemPtr = std::get_if<net::msg::TradeItemData>(&add->equipData);
+				if (itemPtr) {
+					NET_CHARTRADE_ITEMDATA Data;
+					memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
+					Data.sEndure[0] = static_cast<short>(itemPtr->endure0); Data.sEndure[1] = static_cast<short>(itemPtr->endure1);
+					Data.sEnergy[0] = static_cast<short>(itemPtr->energy0); Data.sEnergy[1] = static_cast<short>(itemPtr->energy1);
+					Data.byForgeLv = static_cast<BYTE>(itemPtr->forgeLv);
+					Data.bValid = itemPtr->valid != 0; Data.bItemTradable = static_cast<int>(itemPtr->tradable);
+					Data.expiration = static_cast<long>(itemPtr->expiration);
+					Data.lDBParam[enumITEMDBP_FORGE] = static_cast<long>(itemPtr->forgeParam);
+					Data.lDBParam[enumITEMDBP_INST_ID] = static_cast<long>(itemPtr->instId);
+					Data.byHasAttr = itemPtr->hasInstAttr ? 1 : 0;
+					if (itemPtr->hasInstAttr) {
+						for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; ++j) {
+							Data.sInstAttr[j][0] = static_cast<short>(itemPtr->instAttr[j][0]);
+							Data.sInstAttr[j][1] = static_cast<short>(itemPtr->instAttr[j][1]);
+						}
 					}
+					NetTradeAddItem(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType),
+						static_cast<USHORT>(add->itemId), static_cast<BYTE>(add->tradeIndex),
+						static_cast<BYTE>(add->count), static_cast<BYTE>(add->bagIndex), Data);
 				}
-
-				NetTradeAddItem(dwRequestID, byOpType, sItemID, byIndex, byCount, byItemIndex, Data);
 			}
 		}
 		else {
@@ -1888,25 +1792,27 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 	}
 	break;
 	case CMD_MC_CHARTRADE_PAGE: {
-		BYTE byType = packet.ReadInt64();
-		DWORD dwAcceptID = packet.ReadInt64();
-		DWORD dwRequestID = packet.ReadInt64();
-		NetShowCharTradeInfo(byType, dwAcceptID, dwRequestID);
+		net::msg::McCharTradePageMessage msg;
+		net::msg::deserialize(packet, msg);
+		NetShowCharTradeInfo(static_cast<BYTE>(msg.tradeType), static_cast<DWORD>(msg.mainChaId), static_cast<DWORD>(msg.otherChaId));
 	}
 	break;
 	case CMD_MC_CHARTRADE_VALIDATEDATA: {
-		DWORD dwCharID = packet.ReadInt64();
-		NetValidateTradeData(dwCharID);
+		net::msg::McCharTradeValidateDataMessage msg;
+		net::msg::deserialize(packet, msg);
+		NetValidateTradeData(static_cast<DWORD>(msg.chaId));
 	}
 	break;
 	case CMD_MC_CHARTRADE_VALIDATE: {
-		DWORD dwCharID = packet.ReadInt64();
-		NetValidateTrade(dwCharID);
+		net::msg::McCharTradeValidateMessage msg;
+		net::msg::deserialize(packet, msg);
+		NetValidateTrade(static_cast<DWORD>(msg.chaId));
 	}
 	break;
 	case CMD_MC_CHARTRADE_RESULT: {
-		BYTE byResult = packet.ReadInt64();
-		if (byResult == mission::TRADE_SUCCESS) {
+		net::msg::McCharTradeResultMessage msg;
+		net::msg::deserialize(packet, msg);
+		if (msg.result == mission::TRADE_SUCCESS) {
 			NetTradeSuccess();
 		}
 		else {
@@ -1922,18 +1828,18 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 }
 
 BOOL SC_DailyBuffInfo(LPRPACKET packet) {
-	const auto imgName = packet.ReadString();
-	if (imgName.empty()) {
+	net::msg::McDailyBuffInfoMessage msg;
+	net::msg::deserialize(packet, msg);
+	if (msg.imgName.empty()) {
 		ToLogService("errors", LogLevel::Error, "DailyBuffInfo: invalid reading image name");
 		return FALSE;
 	}
-	const auto labelInfo = packet.ReadString();
-	if (labelInfo.empty()) {
+	if (msg.labelInfo.empty()) {
 		ToLogService("errors", LogLevel::Error, "DailyBuffInfo: invalid reading labelInfo");
 		return FALSE;
 	}
 	//show the form
-	g_stUIMap.SetupDailyBuffForm(imgName.c_str(), labelInfo.c_str());
+	g_stUIMap.SetupDailyBuffForm(msg.imgName.c_str(), msg.labelInfo.c_str());
 	return TRUE;
 }
 
@@ -2186,8 +2092,9 @@ BOOL SC_GMSend(LPRPACKET packet) {
 }
 
 BOOL SC_GMRecv(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	CS_GMRecv(dwNpcID);
+	net::msg::McGmRecvMessage msg;
+	net::msg::deserialize(packet, msg);
+	CS_GMRecv(static_cast<DWORD>(msg.npcId));
 	return TRUE;
 }
 
@@ -2206,156 +2113,74 @@ BOOL SC_Tiger(LPRPACKET packet) {
 	return TRUE;
 }
 
-BOOL SC_CreateBoat(LPRPACKET packet) {
-	DWORD dwBoatID = packet.ReadInt64();
-	xShipBuildInfo Info;
+// Вспомогательная функция: конвертация McBoatSyncAttrMessage → xShipBuildInfo
+static void convertBoatMsg(const net::msg::McBoatSyncAttrMessage& msg, xShipBuildInfo& Info) {
 	memset(&Info, 0, sizeof(xShipBuildInfo));
-
-	char szBoat[BOAT_MAXSIZE_NAME] = {0}; // �����Զ���
-	strncpy(szBoat, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	strncpy(Info.szName, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	strncpy(Info.szDesp, packet.ReadString().c_str(), BOAT_MAXSIZE_DESP - 1);
-	strncpy(Info.szBerth, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	Info.byIsUpdate = packet.ReadInt64();
-	Info.sPosID = packet.ReadInt64();
-	Info.dwBody = packet.ReadInt64();
-	strncpy(Info.szBody, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
+	strncpy(Info.szName, msg.shipName.c_str(), BOAT_MAXSIZE_NAME - 1);
+	strncpy(Info.szDesp, msg.shipDesc.c_str(), BOAT_MAXSIZE_DESP - 1);
+	strncpy(Info.szBerth, msg.berthName.c_str(), BOAT_MAXSIZE_NAME - 1);
+	Info.byIsUpdate = static_cast<BYTE>(msg.isUpdate);
+	Info.sPosID = static_cast<decltype(Info.sPosID)>(msg.body.partId);
+	Info.dwBody = static_cast<DWORD>(msg.body.model);
+	strncpy(Info.szBody, msg.body.name.c_str(), BOAT_MAXSIZE_NAME - 1);
 	if (Info.byIsUpdate) {
-		Info.byHeader = packet.ReadInt64();
-		Info.dwHeader = packet.ReadInt64();
-		strncpy(Info.szHeader, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-		Info.byEngine = packet.ReadInt64();
-		Info.dwEngine = packet.ReadInt64();
-		strncpy(Info.szEngine, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-		for (int i = 0; i < BOAT_MAXNUM_MOTOR; i++) {
-			Info.dwMotor[i] = packet.ReadInt64();
-		}
+		Info.byHeader = static_cast<BYTE>(msg.header.partId);
+		Info.dwHeader = static_cast<DWORD>(msg.header.model);
+		strncpy(Info.szHeader, msg.header.name.c_str(), BOAT_MAXSIZE_NAME - 1);
+		Info.byEngine = static_cast<BYTE>(msg.engine.partId);
+		Info.dwEngine = static_cast<DWORD>(msg.engine.model);
+		strncpy(Info.szEngine, msg.engine.name.c_str(), BOAT_MAXSIZE_NAME - 1);
+		for (int i = 0; i < BOAT_MAXNUM_MOTOR && i < 4; i++)
+			Info.dwMotor[i] = static_cast<DWORD>(msg.motorModels[i]);
 	}
-	Info.byCannon = packet.ReadInt64();
-	strncpy(Info.szCannon, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
+	Info.byCannon = static_cast<BYTE>(msg.cannonId);
+	strncpy(Info.szCannon, msg.cannonName.c_str(), BOAT_MAXSIZE_NAME - 1);
+	Info.byEquipment = static_cast<BYTE>(msg.equipmentId);
+	strncpy(Info.szEquipment, msg.equipmentName.c_str(), BOAT_MAXSIZE_NAME - 1);
+	Info.dwMoney = static_cast<DWORD>(msg.money);
+	Info.dwMinAttack = static_cast<DWORD>(msg.minAttack);
+	Info.dwMaxAttack = static_cast<DWORD>(msg.maxAttack);
+	Info.dwCurEndure = static_cast<DWORD>(msg.curEndure);
+	Info.dwMaxEndure = static_cast<DWORD>(msg.maxEndure);
+	Info.dwSpeed = static_cast<DWORD>(msg.speed);
+	Info.dwDistance = static_cast<DWORD>(msg.distance);
+	Info.dwDefence = static_cast<DWORD>(msg.defence);
+	Info.dwCurSupply = static_cast<DWORD>(msg.curSupply);
+	Info.dwMaxSupply = static_cast<DWORD>(msg.maxSupply);
+	Info.dwConsume = static_cast<DWORD>(msg.consume);
+	Info.dwAttackTime = static_cast<DWORD>(msg.attackTime);
+	Info.sCapacity = static_cast<decltype(Info.sCapacity)>(msg.boatCapacity);
+}
 
-	Info.byEquipment = packet.ReadInt64();
-	strncpy(Info.szEquipment, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	Info.dwMoney = packet.ReadInt64();
-	Info.dwMinAttack = packet.ReadInt64();
-	Info.dwMaxAttack = packet.ReadInt64();
-	Info.dwCurEndure = packet.ReadInt64();
-	Info.dwMaxEndure = packet.ReadInt64();
-	Info.dwSpeed = packet.ReadInt64();
-	Info.dwDistance = packet.ReadInt64();
-	Info.dwDefence = packet.ReadInt64();
-	Info.dwCurSupply = packet.ReadInt64();
-	Info.dwMaxSupply = packet.ReadInt64();
-	Info.dwConsume = packet.ReadInt64();
-	Info.dwAttackTime = packet.ReadInt64();
-	Info.sCapacity = packet.ReadInt64();
-
+BOOL SC_CreateBoat(LPRPACKET packet) {
+	// Десериализация через McBoatSyncAttrMessage
+	net::msg::McBoatSyncAttrMessage msg;
+	net::msg::deserialize(packet, msg);
+	xShipBuildInfo Info;
+	convertBoatMsg(msg, Info);
 	NetCreateBoat(Info);
 	return TRUE;
 }
 
 BOOL SC_UpdateBoat(LPRPACKET packet) {
-	DWORD dwBoatID = packet.ReadInt64();
+	// Десериализация через McBoatSyncAttrMessage
+	net::msg::McBoatSyncAttrMessage msg;
+	net::msg::deserialize(packet, msg);
 	xShipBuildInfo Info;
-	memset(&Info, 0, sizeof(xShipBuildInfo));
-
-	char szBoat[BOAT_MAXSIZE_NAME] = {0}; // �����Զ���
-	strncpy(szBoat, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	strncpy(Info.szName, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	strncpy(Info.szDesp, packet.ReadString().c_str(), BOAT_MAXSIZE_DESP - 1);
-	strncpy(Info.szBerth, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	Info.byIsUpdate = packet.ReadInt64();
-	Info.sPosID = packet.ReadInt64();
-	Info.dwBody = packet.ReadInt64();
-	strncpy(Info.szBody, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	if (Info.byIsUpdate) {
-		Info.byHeader = packet.ReadInt64();
-		Info.dwHeader = packet.ReadInt64();
-		strncpy(Info.szHeader, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-		Info.byEngine = packet.ReadInt64();
-		Info.dwEngine = packet.ReadInt64();
-		strncpy(Info.szEngine, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-		for (int i = 0; i < BOAT_MAXNUM_MOTOR; i++) {
-			Info.dwMotor[i] = packet.ReadInt64();
-		}
-	}
-	Info.byCannon = packet.ReadInt64();
-	strncpy(Info.szCannon, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	Info.byEquipment = packet.ReadInt64();
-	strncpy(Info.szEquipment, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	Info.dwMoney = packet.ReadInt64();
-	Info.dwMinAttack = packet.ReadInt64();
-	Info.dwMaxAttack = packet.ReadInt64();
-	Info.dwCurEndure = packet.ReadInt64();
-	Info.dwMaxEndure = packet.ReadInt64();
-	Info.dwSpeed = packet.ReadInt64();
-	Info.dwDistance = packet.ReadInt64();
-	Info.dwDefence = packet.ReadInt64();
-	Info.dwCurSupply = packet.ReadInt64();
-	Info.dwMaxSupply = packet.ReadInt64();
-	Info.dwConsume = packet.ReadInt64();
-	Info.dwAttackTime = packet.ReadInt64();
-	Info.sCapacity = packet.ReadInt64();
-
+	convertBoatMsg(msg, Info);
 	NetUpdateBoat(Info);
 	return TRUE;
 }
 
 BOOL SC_BoatInfo(LPRPACKET packet) {
-	DWORD dwBoatID = packet.ReadInt64();
+	// Десериализация через McBoatSyncAttrMessage
+	net::msg::McBoatSyncAttrMessage msg;
+	net::msg::deserialize(packet, msg);
 	xShipBuildInfo Info;
-	memset(&Info, 0, sizeof(xShipBuildInfo));
-
-	char szBoat[BOAT_MAXSIZE_NAME] = {0}; // �����Զ���
-	strncpy(szBoat, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	strncpy(Info.szName, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	strncpy(Info.szDesp, packet.ReadString().c_str(), BOAT_MAXSIZE_DESP - 1);
-	strncpy(Info.szBerth, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-	Info.byIsUpdate = packet.ReadInt64();
-	Info.sPosID = packet.ReadInt64();
-	Info.dwBody = packet.ReadInt64();
-	strncpy(Info.szBody, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	if (Info.byIsUpdate) {
-		Info.byHeader = packet.ReadInt64();
-		Info.dwHeader = packet.ReadInt64();
-		strncpy(Info.szHeader, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-		Info.byEngine = packet.ReadInt64();
-		Info.dwEngine = packet.ReadInt64();
-		strncpy(Info.szEngine, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-		for (int i = 0; i < BOAT_MAXNUM_MOTOR; i++) {
-			Info.dwMotor[i] = packet.ReadInt64();
-		}
-	}
-	Info.byCannon = packet.ReadInt64();
-	strncpy(Info.szCannon, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	Info.byEquipment = packet.ReadInt64();
-	strncpy(Info.szEquipment, packet.ReadString().c_str(), BOAT_MAXSIZE_NAME - 1);
-
-	Info.dwMoney = packet.ReadInt64();
-	Info.dwMinAttack = packet.ReadInt64();
-	Info.dwMaxAttack = packet.ReadInt64();
-	Info.dwCurEndure = packet.ReadInt64();
-	Info.dwMaxEndure = packet.ReadInt64();
-	Info.dwSpeed = packet.ReadInt64();
-	Info.dwDistance = packet.ReadInt64();
-	Info.dwDefence = packet.ReadInt64();
-	Info.dwCurSupply = packet.ReadInt64();
-	Info.dwMaxSupply = packet.ReadInt64();
-	Info.dwConsume = packet.ReadInt64();
-	Info.dwAttackTime = packet.ReadInt64();
-	Info.sCapacity = packet.ReadInt64();
-
-	NetBoatInfo(dwBoatID, szBoat, Info);
+	convertBoatMsg(msg, Info);
+	char szBoat[BOAT_MAXSIZE_NAME] = {0};
+	strncpy(szBoat, msg.boatName.c_str(), BOAT_MAXSIZE_NAME - 1);
+	NetBoatInfo(static_cast<DWORD>(msg.boatId), szBoat, Info);
 	return TRUE;
 }
 
@@ -2364,16 +2189,18 @@ BOOL SC_UpdateBoatPart(LPRPACKET packet) {
 }
 
 BOOL SC_BoatList(LPRPACKET packet) {
-	DWORD dwNpcID = packet.ReadInt64();
-	BYTE byType = packet.ReadInt64();
-	BYTE byNumBoat = packet.ReadInt64();
+	// Десериализация через McBerthListMessage
+	net::msg::McBerthListMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	BOAT_BERTH_DATA Data;
 	memset(&Data, 0, sizeof(BOAT_BERTH_DATA));
-	for (BYTE i = 0; i < byNumBoat; i++) {
-		strncpy(Data.szName[i], packet.ReadString().c_str(), BOAT_MAXSIZE_BOATNAME + BOAT_MAXSIZE_DESP - 1);
+	BYTE byNumBoat = static_cast<BYTE>(msg.count);
+	for (BYTE i = 0; i < byNumBoat && i < static_cast<BYTE>(msg.names.size()); i++) {
+		strncpy(Data.szName[i], msg.names[i].c_str(), BOAT_MAXSIZE_BOATNAME + BOAT_MAXSIZE_DESP - 1);
 	}
 
-	NetShowBoatList(dwNpcID, byNumBoat, Data, byType);
+	NetShowBoatList(static_cast<DWORD>(msg.npcId), byNumBoat, Data, static_cast<BYTE>(msg.type));
 	return TRUE;
 }
 
@@ -2392,70 +2219,52 @@ BOOL SC_BoatList(LPRPACKET packet) {
 //}
 
 BOOL SC_StallInfo(LPRPACKET packet) {
-	DWORD dwCharID = packet.ReadInt64();
-	BYTE byNum = packet.ReadInt64();
-	std::string pszName = packet.ReadString();
-	if (pszName.empty()) return FALSE;
+	// Десериализация через McStallSyncDataMessage
+	net::msg::McStallSyncDataMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	NetStallInfo(dwCharID, byNum, pszName.c_str());
+	if (msg.name.empty()) return FALSE;
+	NetStallInfo(static_cast<DWORD>(msg.stallerId), static_cast<BYTE>(msg.num), msg.name.c_str());
 
-	for (BYTE i = 0; i < byNum; ++i) {
-		BYTE byGrid = packet.ReadInt64();
-		USHORT sItemID = packet.ReadInt64();
-		BYTE byCount = packet.ReadInt64();
-		DWORD dwMoney = packet.ReadInt64();
-		USHORT sType = packet.ReadInt64();
+	for (const auto& g : msg.goods) {
+		BYTE byGrid = static_cast<BYTE>(g.grid);
+		USHORT sItemID = static_cast<USHORT>(g.itemId);
+		BYTE byCount = static_cast<BYTE>(g.count);
+		DWORD dwMoney = static_cast<DWORD>(g.money);
 
-		if (sType == enumItemTypeBoat) {
+		if (g.isBoat) {
 			NET_CHARTRADE_BOATDATA Data;
 			memset(&Data, 0, sizeof(NET_CHARTRADE_BOATDATA));
-
-			if (packet.ReadInt64() == 0) {
-				// ��Ϣ����
-			}
-			else {
-				strncpy(Data.szName, packet.ReadString().c_str(), BOAT_MAXSIZE_BOATNAME - 1);
-				Data.sBoatID = packet.ReadInt64();
-				Data.sLevel = packet.ReadInt64();
-				Data.dwExp = packet.ReadInt64();
-				Data.dwHp = packet.ReadInt64();
-				Data.dwMaxHp = packet.ReadInt64();
-				Data.dwSp = packet.ReadInt64();
-				Data.dwMaxSp = packet.ReadInt64();
-				Data.dwMinAttack = packet.ReadInt64();
-				Data.dwMaxAttack = packet.ReadInt64();
-				Data.dwDef = packet.ReadInt64();
-				Data.dwSpeed = packet.ReadInt64();
-				Data.dwShootSpeed = packet.ReadInt64();
-				Data.byHasItem = packet.ReadInt64();
-				Data.byCapacity = packet.ReadInt64();
-				Data.dwPrice = packet.ReadInt64();
+			if (g.hasBoat) {
+				strncpy(Data.szName, g.boat.name.c_str(), BOAT_MAXSIZE_BOATNAME - 1);
+				Data.sBoatID = static_cast<decltype(Data.sBoatID)>(g.boat.ship);
+				Data.sLevel = static_cast<decltype(Data.sLevel)>(g.boat.lv);
+				Data.dwExp = static_cast<DWORD>(g.boat.cexp);
+				Data.dwHp = static_cast<DWORD>(g.boat.hp); Data.dwMaxHp = static_cast<DWORD>(g.boat.mxhp);
+				Data.dwSp = static_cast<DWORD>(g.boat.sp); Data.dwMaxSp = static_cast<DWORD>(g.boat.mxsp);
+				Data.dwMinAttack = static_cast<DWORD>(g.boat.mnatk); Data.dwMaxAttack = static_cast<DWORD>(g.boat.mxatk);
+				Data.dwDef = static_cast<DWORD>(g.boat.def); Data.dwSpeed = static_cast<DWORD>(g.boat.mspd);
+				Data.dwShootSpeed = static_cast<DWORD>(g.boat.aspd);
+				Data.byHasItem = static_cast<BYTE>(g.boat.useGridNum); Data.byCapacity = static_cast<BYTE>(g.boat.capacity);
+				Data.dwPrice = static_cast<DWORD>(g.boat.price);
 				NetStallAddBoat(byGrid, sItemID, byCount, dwMoney, Data);
 			}
 		}
 		else {
-			// ��Ʒʵ������
 			NET_CHARTRADE_ITEMDATA Data;
 			memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
-
-			Data.sEndure[0] = packet.ReadInt64();
-			Data.sEndure[1] = packet.ReadInt64();
-			Data.sEnergy[0] = packet.ReadInt64();
-			Data.sEnergy[1] = packet.ReadInt64();
-			Data.byForgeLv = packet.ReadInt64();
-			Data.bValid = packet.ReadInt64() != 0 ? true : false;
-			Data.bItemTradable = packet.ReadInt64();
-			Data.expiration = packet.ReadInt64();
-
-			Data.lDBParam[enumITEMDBP_FORGE] = packet.ReadInt64();
-			Data.lDBParam[enumITEMDBP_INST_ID] = packet.ReadInt64();
-
-
-			Data.byHasAttr = packet.ReadInt64();
-			if (Data.byHasAttr) {
-				for (int i = 0; i < defITEM_INSTANCE_ATTR_NUM; i++) {
-					Data.sInstAttr[i][0] = packet.ReadInt64();
-					Data.sInstAttr[i][1] = packet.ReadInt64();
+			Data.sEndure[0] = static_cast<short>(g.item.endure0); Data.sEndure[1] = static_cast<short>(g.item.endure1);
+			Data.sEnergy[0] = static_cast<short>(g.item.energy0); Data.sEnergy[1] = static_cast<short>(g.item.energy1);
+			Data.byForgeLv = static_cast<BYTE>(g.item.forgeLv);
+			Data.bValid = g.item.valid != 0; Data.bItemTradable = static_cast<int>(g.item.tradable);
+			Data.expiration = static_cast<long>(g.item.expiration);
+			Data.lDBParam[enumITEMDBP_FORGE] = static_cast<long>(g.item.forgeParam);
+			Data.lDBParam[enumITEMDBP_INST_ID] = static_cast<long>(g.item.instId);
+			Data.byHasAttr = g.item.hasInstAttr ? 1 : 0;
+			if (g.item.hasInstAttr) {
+				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; ++j) {
+					Data.sInstAttr[j][0] = static_cast<short>(g.item.instAttr[j][0]);
+					Data.sInstAttr[j][1] = static_cast<short>(g.item.instAttr[j][1]);
 				}
 			}
 			NetStallAddItem(byGrid, sItemID, byCount, dwMoney, Data);
@@ -2469,22 +2278,23 @@ BOOL SC_StallUpdateInfo(LPRPACKET packet) {
 }
 
 BOOL SC_StallDelGoods(LPRPACKET packet) {
-	DWORD dwCharID = packet.ReadInt64();
-	BYTE byGrid = packet.ReadInt64();
-	BYTE byCount = packet.ReadInt64();
-	NetStallDelGoods(dwCharID, byGrid, byCount);
+	net::msg::McStallDelGoodsMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetStallDelGoods(static_cast<DWORD>(msg.charId), static_cast<BYTE>(msg.grid), static_cast<BYTE>(msg.count));
 	return TRUE;
 }
 
 BOOL SC_StallClose(LPRPACKET packet) {
-	DWORD dwCharID = packet.ReadInt64();
-	NetStallClose(dwCharID);
+	net::msg::McStallCloseMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetStallClose(static_cast<DWORD>(msg.charId));
 	return TRUE;
 }
 
 BOOL SC_StallSuccess(LPRPACKET packet) {
-	DWORD dwCharID = packet.ReadInt64();
-	NetStallSuccess(dwCharID);
+	net::msg::McStallSuccessMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetStallSuccess(static_cast<DWORD>(msg.charId));
 	return TRUE;
 }
 
@@ -2497,8 +2307,9 @@ BOOL SC_SynStallName(LPRPACKET packet) {
 }
 
 BOOL SC_StartExit(LPRPACKET packet) {
-	DWORD dwExitTime = packet.ReadInt64();
-	NetStartExit(dwExitTime);
+	net::msg::McStartExitMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetStartExit(static_cast<DWORD>(msg.exitTime));
 	return TRUE;
 }
 
@@ -2525,20 +2336,21 @@ BOOL SC_OpenHairCut(LPRPACKET packet) {
 }
 
 BOOL SC_TeamFightAsk(LPRPACKET packet) {
-	char szLogName[128] = {0};
-	strcpy(szLogName, g_oLangRec.GetString(305));
+	// Десериализация через McTeamFightAskMessage (count-first)
+	net::msg::McTeamFightAskMessage msg;
+	net::msg::deserialize(packet, msg);
 
 	stNetTeamFightAsk SFightAsk;
-	SFightAsk.chSideNum2 = packet.ReverseReadInt64();
-	SFightAsk.chSideNum1 = packet.ReverseReadInt64();
+	SFightAsk.chSideNum1 = static_cast<char>(msg.srcCount);
+	SFightAsk.chSideNum2 = static_cast<char>(msg.tarCount);
 	{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(306), static_cast<int>(SFightAsk.chSideNum1), static_cast<int>(SFightAsk.chSideNum2));
 	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
-	for (char i = 0; i < SFightAsk.chSideNum1 + SFightAsk.chSideNum2; i++) {
-		SFightAsk.Info[i].szName = packet.ReadString();
-		SFightAsk.Info[i].chLv = packet.ReadInt64();
-		SFightAsk.Info[i].szJob = packet.ReadString();
-		SFightAsk.Info[i].usFightNum = packet.ReadInt64();
-		SFightAsk.Info[i].usVictoryNum = packet.ReadInt64();
+	for (size_t i = 0; i < msg.players.size(); i++) {
+		SFightAsk.Info[i].szName = msg.players[i].name;
+		SFightAsk.Info[i].chLv = static_cast<char>(msg.players[i].lv);
+		SFightAsk.Info[i].szJob = msg.players[i].job;
+		SFightAsk.Info[i].usFightNum = static_cast<unsigned short>(msg.players[i].fightNum);
+		SFightAsk.Info[i].usVictoryNum = static_cast<unsigned short>(msg.players[i].victoryNum);
 		{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(307), SFightAsk.Info[i].szName.c_str(), static_cast<int>(SFightAsk.Info[i].chLv),
 		   SFightAsk.Info[i].szJob.c_str());
 		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
@@ -2553,9 +2365,12 @@ BOOL SC_BeginItemRepair(LPRPACKET packet) {
 }
 
 BOOL SC_ItemRepairAsk(LPRPACKET packet) {
+	// Десериализация через McItemRepairAskMcMessage
+	net::msg::McItemRepairAskMcMessage msg;
+	net::msg::deserialize(packet, msg);
 	stNetItemRepairAsk SRepairAsk;
-	SRepairAsk.cszItemName = packet.ReadString();
-	SRepairAsk.lRepairMoney = packet.ReadInt64();
+	SRepairAsk.cszItemName = msg.itemName;
+	SRepairAsk.lRepairMoney = static_cast<long>(msg.repairCost);
 	SRepairAsk.Exec();
 
 	return TRUE;
@@ -2620,11 +2435,12 @@ BOOL SC_EspeItem(LPRPACKET packet) {
 }
 
 BOOL SC_MapCrash(LPRPACKET packet) {
-	std::string pszDesp = packet.ReadString();
-	if (pszDesp.empty())
+	net::msg::McMapCrashMessage msg;
+	net::msg::deserialize(packet, msg);
+	if (msg.text.empty())
 		return FALSE;
 
-	NetShowMapCrash(pszDesp.c_str());
+	NetShowMapCrash(msg.text.c_str());
 	return TRUE;
 }
 
@@ -2653,7 +2469,8 @@ BOOL SC_QueryCha(LPRPACKET pk) {
 }
 
 BOOL SC_QueryChaItem(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
+	net::msg::McQueryChaItemMessage msg;
+	net::msg::deserialize(pk, msg);
 
 	return TRUE;
 }
@@ -2692,16 +2509,13 @@ BOOL SC_PreMoveTime(LPRPACKET pk) {
 }
 
 BOOL SC_MapMask(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
-	uShort usLen = 0;
-	BYTE* pMapMask = 0;
-	if (pk.ReadInt64())
-		pMapMask = (BYTE*)pk.ReadSequence(usLen);
+	// Десериализация через McMapMaskMessage
+	net::msg::McMapMaskMessage msg;
+	net::msg::deserialize(pk, msg);
 
-	//char	*szMask = new char[usLen + 1];
-	//memcpy(szMask, pMapMask, usLen);
-	//szMask[usLen] = '\0';
-	//LG("���ͼ", "%s\n", szMask);
+	uLong l_id = static_cast<uLong>(msg.worldId);
+	BYTE* pMapMask = msg.hasData ? reinterpret_cast<BYTE*>(msg.data.data()) : nullptr;
+	uShort usLen = static_cast<uShort>(msg.data.size());
 
 	NetMapMask(l_id, pMapMask, usLen);
 
@@ -2726,7 +2540,6 @@ BOOL SC_SynSideInfo(LPRPACKET pk) {
 	net::msg::McSynSideInfoMessage msg;
 	net::msg::deserialize(pk, msg);
 	uLong l_id = static_cast<uLong>(msg.worldId);
-	const char* szLogName = g_LogName.GetLogName(l_id);
 
 	stNetChaSideInfo SNetSideInfo;
 	SNetSideInfo.chSideID = static_cast<decltype(SNetSideInfo.chSideID)>(msg.side.sideId);
@@ -2741,10 +2554,17 @@ BOOL SC_SynSideInfo(LPRPACKET pk) {
 }
 
 BOOL SC_SynAppendLook(LPRPACKET pk) {
-	uLong l_id = pk.ReadInt64();
-	const char* szLogName = g_LogName.GetLogName(l_id);
+	// Десериализация через McAppendLookMessage
+	net::msg::McAppendLookMessage msg;
+	net::msg::deserialize(pk, msg);
+
+	uLong l_id = static_cast<uLong>(msg.worldId);
 	stNetAppendLook SNetAppendLook;
-	ReadChaAppendLookPacket(pk, SNetAppendLook, szLogName);
+	for (int i = 0; i < defESPE_KBGRID_NUM; i++) {
+		SNetAppendLook.sLookID[i] = static_cast<short>(msg.slots[i].lookId);
+		if (SNetAppendLook.sLookID[i] != 0)
+			SNetAppendLook.bValid[i] = msg.slots[i].valid != 0;
+	}
 	SNetAppendLook.Exec(l_id);
 
 	return TRUE;
@@ -2760,46 +2580,26 @@ BOOL SC_KitbagCheckAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreOpenAnswer(LPRPACKET packet) {
-	bool bValid = packet.ReadInt64() ? true : false; // �̳��Ƿ���
-	if (bValid) {
+	// Десериализация через McStoreOpenAnswerMessage
+	net::msg::McStoreOpenAnswerMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	if (msg.isValid) {
 		g_stUIStore.ClearStoreTreeNode();
 		g_stUIStore.ClearStoreItemList();
-		//g_stUIStore.SetStoreBuyButtonEnable(true);
 
-		long lVip = packet.ReadInt64(); // VIP
-		long lMoBean = packet.ReadInt64(); // Ħ��
-		long lRplMoney = packet.ReadInt64(); // ���ң�ˮ����
-		g_stUIStore.SetStoreMoney(lMoBean, lRplMoney);
-		g_stUIStore.SetStoreVip(lVip);
+		g_stUIStore.SetStoreMoney(static_cast<long>(msg.moBean), static_cast<long>(msg.replMoney));
+		g_stUIStore.SetStoreVip(static_cast<long>(msg.vip));
 
-		long lAfficheNum = packet.ReadInt64(); // ��������
-		int i;
-		for (i = 0; i < lAfficheNum; i++) {
-			long lAfficheID = packet.ReadInt64(); // ����ID
-			uShort len;
-			cChar* szTitle = packet.ReadSequence(len); // �������
-			cChar* szComID = packet.ReadSequence(len); // ��Ӧ��ƷID,�ö��Ÿ���
-
-			// ���ӹ���
-		}
 		long lFirstClass = 0;
-		long lClsNum = packet.ReadInt64(); // ��������
-		for (i = 0; i < lClsNum; i++) {
-			short lClsID = packet.ReadInt64(); // ����ID
-			uShort len;
-			cChar* szClsName = packet.ReadSequence(len); // ������
-			short lParentID = packet.ReadInt64(); // ����ID
-
-			// �����̳������
-			g_stUIStore.AddStoreTreeNode(lParentID, lClsID, szClsName);
-
-			// �ύ��һ������
-			if (i == 0) {
-				lFirstClass = lClsID;
-			}
+		for (size_t i = 0; i < msg.classes.size(); i++) {
+			short lClsID = static_cast<short>(msg.classes[i].classId);
+			short lParentID = static_cast<short>(msg.classes[i].parentId);
+			g_stUIStore.AddStoreTreeNode(lParentID, lClsID, msg.classes[i].className.c_str());
+			if (i == 0) lFirstClass = lClsID;
 		}
 
-		g_stUIStore.AddStoreUserTreeNode(); // ���Ӹ��˹���
+		g_stUIStore.AddStoreUserTreeNode();
 		g_stUIStore.ShowStoreForm(true);
 
 		if (lFirstClass > 0) {
@@ -2807,7 +2607,6 @@ BOOL SC_StoreOpenAnswer(LPRPACKET packet) {
 		}
 	}
 	else {
-		// �̳�δ����,����ҳ
 		g_stUIStore.ShowStoreWebPage();
 	}
 
@@ -2818,67 +2617,47 @@ BOOL SC_StoreOpenAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreListAnswer(LPRPACKET packet) {
+	// Десериализация через McStoreListAnswerMessage
+	net::msg::McStoreListAnswerMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	g_stUIStore.ClearStoreItemList();
 
-	short sPageNum = packet.ReadInt64(); // ҳ��
-	short sPageCur = packet.ReadInt64(); // ��ǰҳ
-	short sComNum = packet.ReadInt64(); // ��Ʒ��
+	for (long i = 0; i < static_cast<long>(msg.products.size()); i++) {
+		const auto& p = msg.products[i];
+		g_stUIStore.AddStoreItemInfo(i, static_cast<long>(p.comId), p.comName.c_str(),
+			static_cast<long>(p.price), p.remark.c_str(), p.isHot,
+			static_cast<long>(p.time), static_cast<long>(p.quantity), static_cast<long>(p.expire));
 
-	long i;
-	for (i = 0; i < sComNum; i++) {
-		long lComID = packet.ReadInt64(); // ��ƷID
-		uShort len;
-		cChar* szComName = packet.ReadSequence(len); // ��Ʒ����
-		long lPrice = packet.ReadInt64(); // ��Ʒ�۸�
-		cChar* szRemark = packet.ReadSequence(len); // ��Ʒ��ע
-		bool isHot = packet.ReadInt64() ? true : false; // �Ƿ���������Ʒ
-		long nTime = packet.ReadInt64();
-		long lComNumber = packet.ReadInt64(); // ��Ʒʣ�������-1������
-		long lComExpire = packet.ReadInt64(); // ��Ʒ����ʱ��
-
-		// ���ӵ��̳�
-		g_stUIStore.AddStoreItemInfo(i, lComID, szComName, lPrice, szRemark, isHot, nTime, lComNumber, lComExpire);
-
-		short sItemClsNum = packet.ReadInt64(); // ������������
-		int j;
-		for (j = 0; j < sItemClsNum; j++) {
-			short sItemID = packet.ReadInt64(); // ����ID
-			short sItemNum = packet.ReadInt64(); // ��������
-			short sFlute = packet.ReadInt64(); // ��������
-			short pItemAttrID[5];
-			short pItemAttrVal[5];
-			int k;
-			for (k = 0; k < 5; k++) {
-				pItemAttrID[k] = packet.ReadInt64(); // ����ID
-				pItemAttrVal[k] = packet.ReadInt64(); // ����ֵ
+		for (int j = 0; j < static_cast<int>(p.variants.size()); j++) {
+			const auto& v = p.variants[j];
+			short pItemAttrID[5]; short pItemAttrVal[5];
+			for (int k = 0; k < 5; k++) {
+				pItemAttrID[k] = static_cast<short>(v.attrs[k].attrId);
+				pItemAttrVal[k] = static_cast<short>(v.attrs[k].attrVal);
 			}
-
-			// ��Ʒϸ������
-			g_stUIStore.AddStoreItemDetail(i, j, sItemID, sItemNum, sFlute, pItemAttrID, pItemAttrVal);
+			g_stUIStore.AddStoreItemDetail(i, j, static_cast<short>(v.itemId),
+				static_cast<short>(v.itemNum), static_cast<short>(v.flute), pItemAttrID, pItemAttrVal);
 		}
 	}
 
-	// ����ҳ��
-	g_stUIStore.SetStoreItemPage(sPageCur, sPageNum);
+	g_stUIStore.SetStoreItemPage(static_cast<short>(msg.pageCurrent), static_cast<short>(msg.pageTotal));
 
 	return TRUE;
 }
 
 BOOL SC_StoreBuyAnswer(LPRPACKET packet) {
-	bool bSucc = packet.ReadInt64() ? true : false; // �����Ƿ�ɹ�
-	long lMoBean = 0;
-	long lRplMoney = 0;
+	// Десериализация через McStoreBuyAnswerMessage
+	net::msg::McStoreBuyAnswerMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	// ֪ͨ��ҹ���ɹ�
-	// ...
-	if (bSucc) {
-		//lMoBean = packet.ReadInt64();
-		lRplMoney = packet.ReadInt64();
+	if (msg.success) {
+		long lRplMoney = static_cast<long>(msg.newMoney);
 		g_stUIEquip.UpdateIMP(lRplMoney);
 		g_stUIStore.SetStoreMoney(-1, lRplMoney);
 	}
 	else {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(907)); // �������ʧ��!
+		g_pGameApp->MsgBox(g_oLangRec.GetString(907));
 	}
 
 	g_stUIStore.SetStoreBuyButtonEnable(true);
@@ -2886,51 +2665,41 @@ BOOL SC_StoreBuyAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreChangeAnswer(LPRPACKET packet) {
-	bool bSucc = packet.ReadInt64() ? true : false; // �һ������Ƿ�ɹ�
-	if (bSucc) {
-		long lMoBean = packet.ReadInt64(); // ��ǰĦ������
-		long lRplMoney = packet.ReadInt64(); // ��ǰ��������
+	// Десериализация через McStoreChangeAnswerMessage
+	net::msg::McStoreChangeAnswerMessage msg;
+	net::msg::deserialize(packet, msg);
 
-		g_stUIStore.SetStoreMoney(lMoBean, lRplMoney);
+	if (msg.success) {
+		g_stUIStore.SetStoreMoney(static_cast<long>(msg.moBean), static_cast<long>(msg.replMoney));
 	}
 	else {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(908)); // ���Ҷһ�ʧ��!
+		g_pGameApp->MsgBox(g_oLangRec.GetString(908));
 	}
 	return TRUE;
 }
 
 BOOL SC_StoreHistory(LPRPACKET packet) {
-	long lNum = packet.ReadInt64(); // ��ȡ�Ľ��׼�¼����
-	int i;
-	for (i = 0; i < lNum; i++) {
-		uShort len;
-		cChar* szTime = packet.ReadSequence(len); // ����ʱ��
-		long lComID = packet.ReadInt64(); // ��ƷID
-		cChar* szName = packet.ReadSequence(len); // ��Ʒ����
-		long lMoney = packet.ReadInt64(); // ���׽��
-	}
+	// Десериализация через McStoreHistoryMessage
+	net::msg::McStoreHistoryMessage msg;
+	net::msg::deserialize(packet, msg);
 	return TRUE;
 }
 
 BOOL SC_ActInfo(LPRPACKET packet) {
-	bool bSucc = packet.ReadInt64() ? true : false; // �ʺ���Ϣ��ѯ�Ƿ�ɹ�
-	if (bSucc) {
-		long lMoBean = packet.ReadInt64(); // Ħ������
-		long lRplMoney = packet.ReadInt64(); // ��������
-	}
+	// Десериализация через McActInfoMessage
+	net::msg::McActInfoMessage msg;
+	net::msg::deserialize(packet, msg);
 	return TRUE;
 }
 
 BOOL SC_StoreVIP(LPRPACKET packet) {
-	bool bSucc = packet.ReadInt64() ? true : false;
-	if (bSucc) {
-		short sVipID = packet.ReadInt64();
-		short sMonth = packet.ReadInt64();
-		long lShuijing = packet.ReadInt64();
-		long lModou = packet.ReadInt64();
+	// Десериализация через McStoreVipMessage
+	net::msg::McStoreVipMessage msg;
+	net::msg::deserialize(packet, msg);
 
-		g_stUIStore.SetStoreVip(sVipID);
-		g_stUIStore.SetStoreMoney(lModou, lShuijing);
+	if (msg.success) {
+		g_stUIStore.SetStoreVip(static_cast<short>(msg.vipId));
+		g_stUIStore.SetStoreMoney(static_cast<long>(msg.modou), static_cast<long>(msg.shuijing));
 	}
 	return TRUE;
 }
@@ -3039,17 +2808,13 @@ BOOL SC_BlackMarketExchangeAsr(LPRPACKET packet) {
 }
 
 BOOL SC_TigerItemID(LPRPACKET packet) {
-	short sNum = packet.ReadInt64(); // ����
-	short sItemID[3] = {0};
+	net::msg::McTigerItemIdMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	for (int i = 0; i < 3; i++) {
-		sItemID[i] = packet.ReadInt64();
-	}
-
-	g_stUISpirit.UpdateErnieNumber(sNum, sItemID[0], sItemID[1], sItemID[2]);
+	short sNum = static_cast<short>(msg.num);
+	g_stUISpirit.UpdateErnieNumber(sNum, static_cast<short>(msg.itemId0), static_cast<short>(msg.itemId1), static_cast<short>(msg.itemId2));
 
 	if (sNum == 3) {
-		// ���һ��
 		g_stUISpirit.ShowErnieHighLight();
 	}
 
@@ -3117,27 +2882,23 @@ BOOL SC_VolunteerAsk(LPRPACKET packet) {
 }
 
 BOOL SC_SyncKitbagTemp(LPRPACKET packet) {
-	/*stNetActorCreate SCreateInfo;
-	ReadChaBasePacket(packet, SCreateInfo);
-	SCreateInfo.chSeeType = enumENTITY_SEEN_NEW;
-	SCreateInfo.chMainCha = 1;
-	SCreateInfo.CreateCha();*/
-	//g_ulWorldID = SCreateInfo.ulWorldID;
+	// Десериализация через McKitbagTempSyncMessage
+	net::msg::McKitbagTempSyncMessage msg;
+	net::msg::deserialize(packet, msg);
 
 	stNetKitbag SKitbagTemp;
-	ReadChaKitbagPacket(packet, SKitbagTemp, "KitbagTemp");
+	convertKitbag(msg.kitbag, SKitbagTemp);
 	SKitbagTemp.chBagType = 2;
 	NetChangeKitbag(g_ulWorldID, SKitbagTemp);
-
-	//CWorldScene* pWorldScene = dynamic_cast<CWorldScene*>(g_pGameApp->GetCurScene());
-	//if(pWorldScene)
 
 	return TRUE;
 }
 
 BOOL SC_SyncTigerString(LPRPACKET packet) {
-	std::string szString = packet.ReadString();
-	g_stUISpirit.UpdateErnieString(szString.c_str());
+	// Десериализация через McTigerStopMessage
+	net::msg::McTigerStopMessage msg;
+	net::msg::deserialize(packet, msg);
+	g_stUISpirit.UpdateErnieString(msg.text.c_str());
 
 	return TRUE;
 }
@@ -3157,136 +2918,79 @@ BOOL SC_PrenticeAsk(LPRPACKET packet) {
 }
 
 BOOL PC_MasterRefresh(LPRPACKET packet) {
-	unsigned char l_type = packet.ReadInt64();
-	switch (l_type) {
-	case MSG_MASTER_REFRESH_ONLINE: {
-		uLong ulChaID = packet.ReadInt64();
-		NetMasterOnline(ulChaID);
-	}
-	break;
-	case MSG_MASTER_REFRESH_OFFLINE: {
-		uLong ulChaID = packet.ReadInt64();
-		NetMasterOffline(ulChaID);
-	}
-	break;
-	case MSG_MASTER_REFRESH_DEL: {
-		uLong ulChaID = packet.ReadInt64();
-		NetMasterDel(ulChaID);
-	}
-	break;
-	case MSG_MASTER_REFRESH_ADD: {
-		std::string l_grp = packet.ReadString();
-		uLong l_chaid = packet.ReadInt64();
-		std::string l_chaname = packet.ReadString();
-		std::string l_motto = packet.ReadString();
-		uShort l_icon = packet.ReadInt64();
-		NetMasterAdd(l_chaid, l_chaname.c_str(), l_motto.c_str(), l_icon, l_grp.c_str());
-	}
-	break;
-	case MSG_MASTER_REFRESH_START: {
-		stNetFrndStart l_self;
-		l_self.lChaid = packet.ReadInt64();
-		l_self.szChaname = packet.ReadString();
-		l_self.szMotto = packet.ReadString();
-		l_self.sIconID = packet.ReadInt64();
-		stNetFrndStart l_nfs[100];
-		uShort l_nfnum = 0, l_grpnum = packet.ReadInt64();
-		for (uShort l_grpi = 0; l_grpi < l_grpnum; l_grpi++) {
-			std::string l_grp = packet.ReadString();
-			uShort l_grpmnum = packet.ReadInt64();
-			for (uShort l_grpmi = 0; l_grpmi < l_grpmnum; l_grpmi++) {
-				l_nfs[l_nfnum].szGroup = l_grp;
-				l_nfs[l_nfnum].lChaid = packet.ReadInt64();
-				l_nfs[l_nfnum].szChaname = packet.ReadString();
-				l_nfs[l_nfnum].szMotto = packet.ReadString();
-				l_nfs[l_nfnum].sIconID = packet.ReadInt64();
-				l_nfs[l_nfnum].cStatus = packet.ReadInt64();
-				l_nfnum++;
-			}
-		}
-		NetMasterStart(l_self, l_nfs, l_nfnum);
-	}
-	break;
+	// Десериализация через PcMasterRefreshFullMessage
+	net::msg::PcMasterRefreshFullMessage msg;
+	net::msg::deserialize(packet, msg);
 
-	case MSG_PRENTICE_REFRESH_ONLINE: {
-		uLong ulChaID = packet.ReadInt64();
-		NetPrenticeOnline(ulChaID);
+	// Определяем категорию: 0-4 = мастер, 5-9 = ученик
+	bool isMaster = (msg.type < 5);
+	int64_t localType = isMaster ? msg.type : (msg.type - 5);
+
+	if (localType == MSG_MASTER_REFRESH_ONLINE) {
+		if (isMaster) NetMasterOnline(static_cast<uLong>(msg.chaId));
+		else NetPrenticeOnline(static_cast<uLong>(msg.chaId));
 	}
-	break;
-	case MSG_PRENTICE_REFRESH_OFFLINE: {
-		uLong ulChaID = packet.ReadInt64();
-		NetPrenticeOffline(ulChaID);
+	else if (localType == MSG_MASTER_REFRESH_OFFLINE) {
+		if (isMaster) NetMasterOffline(static_cast<uLong>(msg.chaId));
+		else NetPrenticeOffline(static_cast<uLong>(msg.chaId));
 	}
-	break;
-	case MSG_PRENTICE_REFRESH_DEL: {
-		uLong ulChaID = packet.ReadInt64();
-		NetPrenticeDel(ulChaID);
+	else if (localType == MSG_MASTER_REFRESH_DEL) {
+		if (isMaster) NetMasterDel(static_cast<uLong>(msg.chaId));
+		else NetPrenticeDel(static_cast<uLong>(msg.chaId));
 	}
-	break;
-	case MSG_PRENTICE_REFRESH_ADD: {
-		std::string l_grp = packet.ReadString();
-		uLong l_chaid = packet.ReadInt64();
-		std::string l_chaname = packet.ReadString();
-		std::string l_motto = packet.ReadString();
-		uShort l_icon = packet.ReadInt64();
-		NetPrenticeAdd(l_chaid, l_chaname.c_str(), l_motto.c_str(), l_icon, l_grp.c_str());
+	else if (localType == MSG_MASTER_REFRESH_ADD) {
+		if (isMaster) NetMasterAdd(static_cast<uLong>(msg.chaId), msg.chaName.c_str(), msg.motto.c_str(), static_cast<uShort>(msg.icon), msg.group.c_str());
+		else NetPrenticeAdd(static_cast<uLong>(msg.chaId), msg.chaName.c_str(), msg.motto.c_str(), static_cast<uShort>(msg.icon), msg.group.c_str());
 	}
-	break;
-	case MSG_PRENTICE_REFRESH_START: {
+	else if (localType == MSG_MASTER_REFRESH_START) {
 		stNetFrndStart l_self;
-		l_self.lChaid = packet.ReadInt64();
-		l_self.szChaname = packet.ReadString();
-		l_self.szMotto = packet.ReadString();
-		l_self.sIconID = packet.ReadInt64();
+		l_self.lChaid = static_cast<uLong>(msg.startData.selfChaId);
+		l_self.szChaname = msg.startData.selfName;
+		l_self.szMotto = msg.startData.selfMotto;
+		l_self.sIconID = static_cast<uShort>(msg.startData.selfIcon);
 		stNetFrndStart l_nfs[100];
-		uShort l_nfnum = 0, l_grpnum = packet.ReadInt64();
-		for (uShort l_grpi = 0; l_grpi < l_grpnum; l_grpi++) {
-			std::string l_grp = packet.ReadString();
-			uShort l_grpmnum = packet.ReadInt64();
-			for (uShort l_grpmi = 0; l_grpmi < l_grpmnum; l_grpmi++) {
-				uShort index = l_grpmi % (sizeof(l_nfs) / sizeof(l_nfs[0]));
-				l_nfs[index].szGroup = l_grp;
-				l_nfs[index].lChaid = packet.ReadInt64();
-				l_nfs[index].szChaname = packet.ReadString();
-				l_nfs[index].szMotto = packet.ReadString();
-				l_nfs[index].sIconID = packet.ReadInt64();
-				l_nfs[index].cStatus = packet.ReadInt64();
-				l_nfnum++;
-			}
+		uShort l_nfnum = 0;
+		for (const auto& e : msg.startData.entries) {
+			if (l_nfnum >= 100) break;
+			l_nfs[l_nfnum].szGroup = e.group;
+			l_nfs[l_nfnum].lChaid = static_cast<uLong>(e.chaId);
+			l_nfs[l_nfnum].szChaname = e.chaName;
+			l_nfs[l_nfnum].szMotto = e.motto;
+			l_nfs[l_nfnum].sIconID = static_cast<uShort>(e.icon);
+			l_nfs[l_nfnum].cStatus = static_cast<char>(e.status);
+			l_nfnum++;
 		}
-		NetPrenticeStart(l_self, l_nfs,min(l_nfnum, (sizeof(l_nfs) / sizeof(l_nfs[0]))));
-	}
-	break;
+		if (isMaster) NetMasterStart(l_self, l_nfs, l_nfnum);
+		else NetPrenticeStart(l_self, l_nfs, l_nfnum);
 	}
 	return TRUE;
 }
 
 BOOL PC_MasterCancel(LPRPACKET packet) {
-	unsigned char reason = packet.ReadInt64();
-	uLong ulChaID = packet.ReadInt64();
-	NetMasterCancel(packet.ReadInt64(), reason);
+	// Десериализация через PcMasterCancelMessage
+	net::msg::PcMasterCancelMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetMasterCancel(static_cast<uLong>(msg.cancelId), static_cast<unsigned char>(msg.reason));
 	return TRUE;
 }
 
 BOOL PC_MasterRefreshInfo(LPRPACKET packet) {
-	unsigned long l_chaid = packet.ReadInt64();
-	std::string l_motto = packet.ReadString();
-	unsigned short l_icon = packet.ReadInt64();
-	unsigned short l_degr = packet.ReadInt64();
-	std::string l_job = packet.ReadString();
-	std::string l_guild = packet.ReadString();
-	NetMasterRefreshInfo(l_chaid, l_motto.c_str(), l_icon, l_degr, l_job.c_str(), l_guild.c_str());
+	// Десериализация через PcMasterRefreshInfoFullMessage
+	net::msg::PcMasterRefreshInfoFullMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetMasterRefreshInfo(static_cast<unsigned long>(msg.chaId), msg.motto.c_str(),
+		static_cast<unsigned short>(msg.icon), static_cast<unsigned short>(msg.degree),
+		msg.job.c_str(), msg.guild.c_str());
 	return TRUE;
 }
 
 BOOL PC_PrenticeRefreshInfo(LPRPACKET packet) {
-	unsigned long l_chaid = packet.ReadInt64();
-	std::string l_motto = packet.ReadString();
-	unsigned short l_icon = packet.ReadInt64();
-	unsigned short l_degr = packet.ReadInt64();
-	std::string l_job = packet.ReadString();
-	std::string l_guild = packet.ReadString();
-	NetPrenticeRefreshInfo(l_chaid, l_motto.c_str(), l_icon, l_degr, l_job.c_str(), l_guild.c_str());
+	// Десериализация через PcMasterRefreshInfoFullMessage
+	net::msg::PcMasterRefreshInfoFullMessage msg;
+	net::msg::deserialize(packet, msg);
+	NetPrenticeRefreshInfo(static_cast<unsigned long>(msg.chaId), msg.motto.c_str(),
+		static_cast<unsigned short>(msg.icon), static_cast<unsigned short>(msg.degree),
+		msg.job.c_str(), msg.guild.c_str());
 	return TRUE;
 }
 
@@ -3318,17 +3022,19 @@ BOOL SC_GMMail(LPRPACKET packet) {
 }
 
 BOOL SC_CheatCheck(LPRPACKET packet) {
-	short count = packet.ReadInt64(); // ͼƬ����
-	for (int i = 0; i < count; i++) {
-		char* picture = NULL;
-		short size = packet.ReadInt64(); // ͼƬ��С
-		picture = new char[size];
+	// Десериализация через McCheatCheckMessage
+	net::msg::McCheatCheckMessage msg;
+	net::msg::deserialize(packet, msg);
+
+	for (size_t i = 0; i < msg.pictures.size(); i++) {
+		auto& pic = msg.pictures[i];
+		short size = static_cast<short>(pic.bytes.size());
+		char* picture = new char[size];
 		for (int j = 0; j < size; j++) {
-			picture[j] = packet.ReadInt64();
+			picture[j] = static_cast<char>(pic.bytes[j]);
 		}
 
-		g_stUINumAnswer.SetBmp(i, (BYTE*)picture, size);
-
+		g_stUINumAnswer.SetBmp(static_cast<int>(i), (BYTE*)picture, size);
 		delete [] picture;
 	}
 
@@ -3339,25 +3045,19 @@ BOOL SC_CheatCheck(LPRPACKET packet) {
 }
 
 BOOL SC_ListAuction(LPRPACKET pk) {
-	short sNum = pk.ReverseReadInt64(); // ��������
+	// Десериализация через McListAuctionMessage (count-first)
+	net::msg::McListAuctionMessage msg;
+	net::msg::deserialize(pk, msg);
 	stChurchChallenge stInfo;
 
-	for (int i = 0; i < sNum; i++) {
-		short sItemID = pk.ReadInt64(); // id
-		std::string szName = pk.ReadString(); // name
-		std::string szChaName = pk.ReadString(); // ��ս��
-		short sCount = pk.ReadInt64(); // ����
-		long baseprice = pk.ReadInt64(); // �׼�
-		long minbid = pk.ReadInt64(); // ��ͳ���
-		long curprice = pk.ReadInt64(); // ��ǰ���ļ�
-
-		stInfo.sChurchID = sItemID;
-		stInfo.sCount = sCount;
-		stInfo.nBasePrice = baseprice;
-		stInfo.nMinbid = minbid;
-		stInfo.nCurPrice = curprice;
-		strncpy(stInfo.szChaName, szChaName.c_str(), sizeof(stInfo.szChaName) - 1);
-		strncpy(stInfo.szName, szName.c_str(), sizeof(stInfo.szName) - 1);
+	for (const auto& e : msg.items) {
+		stInfo.sChurchID = static_cast<short>(e.itemId);
+		stInfo.sCount = static_cast<short>(e.itemCount);
+		stInfo.nBasePrice = static_cast<long>(e.basePrice);
+		stInfo.nMinbid = static_cast<long>(e.minBid);
+		stInfo.nCurPrice = static_cast<long>(e.curPrice);
+		strncpy(stInfo.szChaName, e.curChaName.c_str(), sizeof(stInfo.szChaName) - 1);
+		strncpy(stInfo.szName, e.name.c_str(), sizeof(stInfo.szName) - 1);
 	}
 
 	NetChurchChallenge(&stInfo);
@@ -3366,8 +3066,9 @@ BOOL SC_ListAuction(LPRPACKET pk) {
 }
 
 BOOL SC_RequestDropRate(LPRPACKET pk) {
-	float rate = pk.ReadFloat32();
-	g_DropBonus = rate;
+	net::msg::McRequestDropRateMessage msg;
+	net::msg::deserialize(pk, msg);
+	g_DropBonus = msg.rate;
 	if (!g_stUIStart.frmMonsterInfo->GetIsShow()) {
 		g_stUIStart.frmMonsterInfo->Show();
 	}
@@ -3377,22 +3078,40 @@ BOOL SC_RequestDropRate(LPRPACKET pk) {
 }
 
 BOOL SC_RequestExpRate(LPRPACKET pk) {
-	float rate = pk.ReadFloat32();
-	g_ExpBonus = rate;
+	net::msg::McRequestExpRateMessage msg;
+	net::msg::deserialize(pk, msg);
+	g_ExpBonus = msg.rate;
 	return true;
 }
 
 BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
-	const char chaDelSlot = pk.ReadInt64();
-	const auto characters = ReadSelectCharacters(pk);
+	// Десериализация через McRefreshSelectScreenMessage
+	net::msg::McRefreshSelectScreenMessage msg;
+	net::msg::deserialize(pk, msg);
+
 	if (g_pGameApp->GetCurScene()->GetSceneTypeID() != enumSelectChaScene) {
 		return true;
 	}
 
-	if (chaDelSlot != -1) {
+	if (msg.chaDelSlot != -1) {
 		CSelectChaScene& rkScene = CSelectChaScene::GetCurrScene();
-		rkScene.m_nCurChaIndex = chaDelSlot;
+		rkScene.m_nCurChaIndex = static_cast<char>(msg.chaDelSlot);
 		rkScene.DelCurrentSelCha();
+	}
+
+	// Конвертируем ChaSlotData → NetChaBehave
+	std::vector<NetChaBehave> characters;
+	for (const auto& cha : msg.characters) {
+		if (cha.valid) {
+			NetChaBehave nb;
+			nb.sCharName = cha.chaName;
+			nb.sJob = cha.job;
+			nb.iDegree = static_cast<short>(cha.degree);
+			nb.look_minimal.typeID = static_cast<uint16_t>(cha.typeId);
+			for (size_t ei = 0; ei < cha.equipIds.size() && ei < nb.look_minimal.equip_IDs.size(); ++ei)
+				nb.look_minimal.equip_IDs[ei] = static_cast<uint16_t>(cha.equipIds[ei]);
+			characters.emplace_back(std::move(nb));
+		}
 	}
 
 	CSelectChaScene::GetCurrScene().SelectCharacters(characters);
@@ -3401,318 +3120,44 @@ BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
 }
 
 
-// �������ݱ�=======================================================================
-void ReadChaBasePacket(LPRPACKET pk, stNetActorCreate& SCreateInfo) {
-	// ��������
-	SCreateInfo.ulChaID = pk.ReadInt64();
-	SCreateInfo.ulWorldID = pk.ReadInt64();
-	SCreateInfo.ulCommID = pk.ReadInt64();
-	SCreateInfo.szCommName = pk.ReadString();
-	SCreateInfo.chGMLv = pk.ReadInt64();
-	SCreateInfo.lHandle = pk.ReadInt64();
-	SCreateInfo.chCtrlType = pk.ReadInt64(); // ��ɫ���ͣ��ο�CompCommand.h EChaCtrlType��
-	SCreateInfo.szName = pk.ReadString();
-	SCreateInfo.strMottoName = pk.ReadString(); // ����������
-	SCreateInfo.sIcon = pk.ReadInt64(); // ��ɫ����ͷ��
-	SCreateInfo.lGuildID = pk.ReadInt64();
-	SCreateInfo.strGuildName = pk.ReadString(); // ������
-	SCreateInfo.strGuildMotto = pk.ReadString(); // ����������
-	SCreateInfo.chGuildPermission = pk.ReadInt64(); // ����������
-	SCreateInfo.strStallName = pk.ReadString(); // ����������
-	SCreateInfo.sState = pk.ReadInt64();
-	SCreateInfo.SArea.centre.x = pk.ReadInt64();
-	SCreateInfo.SArea.centre.y = pk.ReadInt64();
-	SCreateInfo.SArea.radius = pk.ReadInt64();
-	SCreateInfo.sAngle = pk.ReadInt64();
-	SCreateInfo.ulTLeaderID = pk.ReadInt64(); // �ӳ�ID
+// ReadChaBasePacket/SkillBag/SkillState/Attr/Look/LookEnergy/PK/Side/AppendLook/EntEvent
+// — мёртвые pk-хелперы удалены, всё через net::msg::deserialize + convert*().
 
-	SCreateInfo.chIsPlayer = pk.ReadInt64();
-
-	const char* szLogName = g_LogName.SetLogName(SCreateInfo.ulWorldID, SCreateInfo.szName.c_str());
-	ReadChaSidePacket(pk, SCreateInfo.SSideInfo, szLogName);
-	ReadEntEventPacket(pk, SCreateInfo.SEvent, szLogName);
-	ReadChaLookPacket(pk, SCreateInfo.SLookInfo, szLogName);
-	ReadChaPKPacket(pk, SCreateInfo.SPKCtrl, szLogName);
-	ReadChaAppendLookPacket(pk, SCreateInfo.SAppendLook, szLogName);
-
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("+++++++++++++Create(State: {}\tPos: [{}, {}]", SCreateInfo.sState, SCreateInfo.SArea.centre.x,
-	   SCreateInfo.SArea.centre.y));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CtrlType:{}, TeamdID:{}", static_cast<int>(SCreateInfo.chCtrlType), SCreateInfo.ulTLeaderID));
-}
-
-BOOL ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag& SCurSkill, const char* szLogName) {
-	memset(&SCurSkill, 0, sizeof(SCurSkill));
-	stNetDefaultSkill SDefaultSkill;
-	SDefaultSkill.sSkillID = pk.ReadInt64();
-	SDefaultSkill.Exec();
-
-	SCurSkill.chType = pk.ReadInt64();
-	short sSkillNum = pk.ReadInt64();
-	if (sSkillNum <= 0)
-		return TRUE;
-
-	SCurSkill.SBag.Resize(sSkillNum);
-	SSkillGridEx* pSBag = SCurSkill.SBag.GetValue();
-	short i = 0;
-	for (; i < sSkillNum; i++) {
-		pSBag[i].sID = pk.ReadInt64();
-		pSBag[i].chState = pk.ReadInt64();
-		pSBag[i].chLv = pk.ReadInt64();
-		pSBag[i].sUseSP = pk.ReadInt64();
-		pSBag[i].sUseEndure = pk.ReadInt64();
-		pSBag[i].sUseEnergy = pk.ReadInt64();
-		pSBag[i].lResumeTime = pk.ReadInt64();
-		pSBag[i].sRange[0] = pk.ReadInt64();
-		if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
-			for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
-				pSBag[i].sRange[j] = pk.ReadInt64();
-	}
-
-	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Skill Bag, Type:{},\tTick:[{}]", static_cast<int>(SCurSkill.chType), GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(310));
-	char szRange[256];
-	for (i = 0; i < sSkillNum; i++) {
-		sprintf(szRange, "%d", pSBag[i].sRange[0]);
-		if (pSBag[i].sRange[0] != enumRANGE_TYPE_NONE)
-			for (short j = 1; j < defSKILL_RANGE_PARAM_NUM; j++)
-				sprintf(szRange + strlen(szRange), ",%d", pSBag[i].sRange[j]);
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{:4}\t{:4}\t{:4}\t{:6}\t{:6}\t{:6}\t{:18}\t{}", pSBag[i].sID, static_cast<int>(pSBag[i].chState), static_cast<int>(pSBag[i].chLv),
-		   pSBag[i].sUseSP, pSBag[i].sUseEndure, pSBag[i].sUseEnergy, pSBag[i].lResumeTime, szRange));
-	}
-	//
-
-	return TRUE;
-}
-
-void ReadChaSkillStatePacket(LPRPACKET pk, stNetSkillState& SCurSState, const char* szLogName) {
-	unsigned long currentClient = GetTickCount();
-	unsigned long currentServer = pk.ReadInt64() / 1000; //current server time
-	memset(&SCurSState, 0, sizeof(SCurSState));
-	SCurSState.chType = 0;
-	short sNum = pk.ReadInt64();
-	if (sNum > 0) {
-		SCurSState.SState.Resize(sNum);
-		for (int nNum = 0; nNum < sNum; nNum++) {
-			SCurSState.SState[nNum].chID = pk.ReadInt64();
-			SCurSState.SState[nNum].chLv = pk.ReadInt64();
-
-
-			unsigned long duration = pk.ReadInt64(); //duration
-			unsigned long start = pk.ReadInt64() / 1000; //start time
-
-
-			unsigned long dif = currentServer - currentClient;
-			unsigned long end = start - dif + duration;
-
-			SCurSState.SState[nNum].lTimeRemaining = duration == 0 ? 0 : end - currentClient;
-			//end time, corrected for client
-		}
-	}
-
-	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Skill State: Num[{}]\tTick[{}]", sNum, GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(311));
-	for (char i = 0; i < sNum; i++)
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{:8}\t{:4}", static_cast<int>(SCurSState.SState[i].chID), static_cast<int>(SCurSState.SState[i].chLv)));
-	//
-}
-
-void ReadChaAttrPacket(LPRPACKET pk, stNetChaAttr& SChaAttr, const char* szLogName) {
-	memset(&SChaAttr, 0, sizeof(SChaAttr));
-	SChaAttr.chType = pk.ReadInt64();
-	SChaAttr.sNum = pk.ReadInt64();
-	for (short i = 0; i < SChaAttr.sNum; i++) {
-		SChaAttr.SEff[i].lAttrID = pk.ReadInt64();
-		SChaAttr.SEff[i].lVal = (long)pk.ReadInt64();
-	}
-
-	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Character Attr: Count={}\t, Type:{}\tTick:[{}]", SChaAttr.sNum, static_cast<int>(SChaAttr.chType), GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(312));
-	for (short i = 0; i < SChaAttr.sNum; i++) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}\t{}", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal));
-	}
-	//
-}
-
-void ReadChaLookPacket(LPRPACKET pk, stNetLookInfo& SLookInfo, const char* szLogName) {
-	memset(&SLookInfo, 0, sizeof(SLookInfo));
-	SLookInfo.chSynType = pk.ReadInt64();
-	stNetChangeChaPart& SChaPart = SLookInfo.SLook;
-	SChaPart.sTypeID = pk.ReadInt64();
-	if (pk.ReadInt64() == 1) // �������
-	{
-		SChaPart.sPosID = pk.ReadInt64();
-		SChaPart.sBoatID = pk.ReadInt64();
-		SChaPart.sHeader = pk.ReadInt64();
-		SChaPart.sBody = pk.ReadInt64();
-		SChaPart.sEngine = pk.ReadInt64();
-		SChaPart.sCannon = pk.ReadInt64();
-		SChaPart.sEquipment = pk.ReadInt64();
-
-		// log
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Look):\tTick:[{}]", GetTickCount()));
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TypeID:{}, PoseID:{}", SChaPart.sTypeID, SChaPart.sPosID));
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tPart: Boat:{}, Header:{}, Body:{}, Engine:{}, Cannon:{}, Equipment:{}", SChaPart.sBoatID,
-		   SChaPart.sHeader, SChaPart.sBody, SChaPart.sEngine, SChaPart.sCannon, SChaPart.sEquipment));
-		//
-	}
-	else {
-		SChaPart.sHairID = pk.ReadInt64();
-		SItemGrid* pItem;
-		for (int i = 0; i < enumEQUIP_NUM; i++) {
-			pItem = &SChaPart.SLink[i];
-			pItem->sID = pk.ReadInt64();
-			pItem->dwDBID = pk.ReadInt64();
-			pItem->sNeedLv = pk.ReadInt64();
-			if (pItem->sID == 0) {
-				memset(pItem, 0, sizeof(SItemGrid));
-				continue;
-			}
-			if (SLookInfo.chSynType == enumSYN_LOOK_CHANGE) {
-				pItem->sEndure[0] = pk.ReadInt64();
-				pItem->sEnergy[0] = pk.ReadInt64();
-				pItem->SetValid(pk.ReadInt64() != 0 ? true : false);
-				pItem->bItemTradable = pk.ReadInt64();
-				pItem->expiration = pk.ReadInt64();
-				continue;
-			}
-			else {
-				pItem->sNum = pk.ReadInt64();
-				pItem->sEndure[0] = pk.ReadInt64();
-				pItem->sEndure[1] = pk.ReadInt64();
-				pItem->sEnergy[0] = pk.ReadInt64();
-				pItem->sEnergy[1] = pk.ReadInt64();
-				pItem->chForgeLv = pk.ReadInt64();
-				pItem->SetValid(pk.ReadInt64() != 0 ? true : false);
-				pItem->bItemTradable = pk.ReadInt64();
-				pItem->expiration = pk.ReadInt64();
-			}
-
-			if (pk.ReadInt64() == 0)
-				continue;
-
-			pItem->SetDBParam(enumITEMDBP_FORGE, pk.ReadInt64());
-			pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadInt64());
-			if (pk.ReadInt64()) // ����ʵ������
-			{
-				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++) {
-					pItem->sInstAttr[j][0] = pk.ReadInt64();
-					pItem->sInstAttr[j][1] = pk.ReadInt64();
-				}
-			}
-		}
-
-		// log
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Look)\tTick:[{}]", GetTickCount()));
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("TypeID:{}, HairID:{}", SChaPart.sTypeID, SChaPart.sHairID));
-		for (int i = 0; i < enumEQUIP_NUM; i++)
-			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tLink: {}", SChaPart.SLink[i].sID));
-		//
-	}
-}
-
-void ReadChaLookEnergyPacket(LPRPACKET pk, stLookEnergy& SLookEnergy, const char* szLogName) {
-	memset(&SLookEnergy, 0, sizeof(SLookEnergy));
-	for (int i = 0; i < enumEQUIP_NUM; i++) {
-		SLookEnergy.sEnergy[i] = pk.ReadInt64();
-	}
-}
-
-void ReadChaPKPacket(LPRPACKET pk, stNetPKCtrl& SNetPKCtrl, const char* szLogName) {
-	char chPKCtrl = pk.ReadInt64();
-	std::bitset<8> states(chPKCtrl);
-	SNetPKCtrl.bInPK = states[0];
-	SNetPKCtrl.bInGymkhana = states[1];
-	SNetPKCtrl.pkGuild = states[2];
-
-	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(PKCtrl)\tTick:[{}]", GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tInGymkhana: {}, InPK: {}", SNetPKCtrl.bInGymkhana, SNetPKCtrl.bInPK));
-	//
-}
-
-void ReadChaSidePacket(LPRPACKET pk, stNetChaSideInfo& SNetSideInfo, const char* szLogName) {
-	SNetSideInfo.chSideID = pk.ReadInt64();
-
-	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(SideInfo)\tTick:[{}]", GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tSideID: {}", static_cast<int>(SNetSideInfo.chSideID)));
-	//
-}
-
-void ReadChaAppendLookPacket(LPRPACKET pk, stNetAppendLook& SNetAppendLook, const char* szLogName) {
-	for (char i = 0; i < defESPE_KBGRID_NUM; i++) {
-		SNetAppendLook.sLookID[i] = pk.ReadInt64();
-		if (SNetAppendLook.sLookID[i] != 0)
-			SNetAppendLook.bValid[i] = pk.ReadInt64() != 0 ? true : false;
-	}
-
-	// log
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Append Look)\tTick:[{}]", GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tAppend Look:{}({}), {}({}), {}({}), {}({})",
-	   SNetAppendLook.sLookID[0], SNetAppendLook.bValid[0],
-	   SNetAppendLook.sLookID[1], SNetAppendLook.bValid[1],
-	   SNetAppendLook.sLookID[2], SNetAppendLook.bValid[2],
-	   SNetAppendLook.sLookID[3], SNetAppendLook.bValid[3]));
-	//
-}
-
-void ReadEntEventPacket(LPRPACKET pk, stNetEvent& SNetEvent, const char* szLogName) {
-	SNetEvent.lEntityID = pk.ReadInt64();
-	SNetEvent.chEntityType = pk.ReadInt64();
-	SNetEvent.usEventID = pk.ReadInt64();
-	SNetEvent.cszEventName = pk.ReadString();
-
-	// log
-	if (szLogName) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Event)\tTick:[{}]", GetTickCount()));
-		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\tEntityID: {}, EventID: {}, EventName: {}", SNetEvent.lEntityID, SNetEvent.usEventID,
-		   SNetEvent.cszEventName));
-	}
-	//
-}
-
-void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag& SKitbag, const char* szLogName) {
+// Конвертация msg.kitbag (ChaKitbagInfo) -> stNetKitbag (без чтения из pk)
+void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKitbag) {
 	memset(&SKitbag, 0, sizeof(SKitbag));
-	SKitbag.chType = pk.ReadInt64(); // ���ο�CompCommand.h��ESynKitbagType��
-	int nGridNum = 0;
-	if (SKitbag.chType == enumSYN_KITBAG_INIT) // ����������
-	{
-		SKitbag.nKeybagNum = pk.ReadInt64();
+	SKitbag.chType = static_cast<char>(info.synType);
+	if (SKitbag.chType == enumSYN_KITBAG_INIT) {
+		SKitbag.nKeybagNum = static_cast<int>(info.capacity);
 	}
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Update Kitbag):\tGridNum:{}\tType:{}\tTick:[{}]", SKitbag.nKeybagNum, static_cast<int>(SKitbag.chType),
 	   GetTickCount()));
 	stNetKitbag::stGrid* Grid = SKitbag.Grid;
 	SItemGrid* pItem;
 	CItemRecord* pItemRec;
-	while (1) {
-		short sGridID = pk.ReadInt64();
-		if (sGridID < 0) break;
-
-		Grid[nGridNum].sGridID = sGridID;
-
+	int nGridNum = 0;
+	for (size_t idx = 0; idx < info.items.size(); idx++) {
+		auto& it = info.items[idx];
+		Grid[nGridNum].sGridID = static_cast<short>(it.gridId);
 		pItem = &Grid[nGridNum].SGridContent;
-		pItem->sID = pk.ReadInt64();
+		pItem->sID = static_cast<short>(it.itemId);
 		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(313), Grid[nGridNum].sGridID, pItem->sID);
 		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
-		if (pItem->sID > 0) // ���ڵ���
-		{
-			pItem->dwDBID = pk.ReadInt64();
-			pItem->sNeedLv = pk.ReadInt64();
-			pItem->sNum = pk.ReadInt64();
-			pItem->sEndure[0] = pk.ReadInt64();
-			pItem->sEndure[1] = pk.ReadInt64();
-			pItem->sEnergy[0] = pk.ReadInt64();
-			pItem->sEnergy[1] = pk.ReadInt64();
+		if (pItem->sID > 0) {
+			pItem->dwDBID = static_cast<DWORD>(it.dbId);
+			pItem->sNeedLv = static_cast<short>(it.needLv);
+			pItem->sNum = static_cast<short>(it.num);
+			pItem->sEndure[0] = static_cast<short>(it.endure0);
+			pItem->sEndure[1] = static_cast<short>(it.endure1);
+			pItem->sEnergy[0] = static_cast<short>(it.energy0);
+			pItem->sEnergy[1] = static_cast<short>(it.energy1);
 			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1],
 			   pItem->sEnergy[0], pItem->sEnergy[1]);
 			  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
-			pItem->chForgeLv = pk.ReadInt64();
-			pItem->SetValid(pk.ReadInt64() != 0 ? true : false);
-			pItem->bItemTradable = pk.ReadInt64();
-			pItem->expiration = pk.ReadInt64();
+			pItem->chForgeLv = static_cast<char>(it.forgeLv);
+			pItem->SetValid(it.valid != 0);
+			pItem->bItemTradable = static_cast<int>(it.tradable);
+			pItem->expiration = static_cast<long>(it.expiration);
 
 			pItemRec = GetItemRecordInfo(pItem->sID);
 			if (pItemRec == NULL) {
@@ -3729,34 +3174,28 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag& SKitbag, const char* szLogNa
 				exit(0);
 			}
 
-			if (pItemRec->sType == enumItemTypeBoat) // �����ߣ�д�봬��WorldID�����ڿͻ��˽������봬��ɫ�ҹ�
-			{
-				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadInt64());
+			if (it.isBoat) {
+				pItem->SetDBParam(enumITEMDBP_INST_ID, static_cast<long>(it.boatWorldId));
 			}
 
-			pItem->SetDBParam(enumITEMDBP_FORGE, pk.ReadInt64());
-			if (pItemRec->sType == enumItemTypeBoat) {
-				pk.ReadInt64();
-			}
-			else {
-				pItem->SetDBParam(enumITEMDBP_INST_ID, pk.ReadInt64());
+			pItem->SetDBParam(enumITEMDBP_FORGE, static_cast<long>(it.forgeParam));
+			if (!it.isBoat) {
+				pItem->SetDBParam(enumITEMDBP_INST_ID, static_cast<long>(it.instId));
 			}
 
 			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(316), pItem->GetDBParam(enumITEMDBP_FORGE));
 			  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
-			if (pk.ReadInt64()) // ����ʵ������
-			{
+			if (it.hasInstAttr) {
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++) {
-					pItem->sInstAttr[j][0] = pk.ReadInt64();
-					pItem->sInstAttr[j][1] = pk.ReadInt64();
+					pItem->sInstAttr[j][0] = static_cast<short>(it.instAttr[j][0]);
+					pItem->sInstAttr[j][1] = static_cast<short>(it.instAttr[j][1]);
 					{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]);
 					  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 				}
 			}
 		}
 		nGridNum++;
-		if (nGridNum > defMAX_KBITEM_NUM_PER_TYPE) // ���ó��ֵ����
-		{
+		if (nGridNum > defMAX_KBITEM_NUM_PER_TYPE) {
 			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE);
 			  g_logManager.InternalLog(LogLevel::Error, "errors", buf); }
 			break;
@@ -3767,29 +3206,29 @@ void ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag& SKitbag, const char* szLogNa
 	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 }
 
-void ReadChaShortcutPacket(LPRPACKET pk, stNetShortCut& SShortcut, const char* szLogName) {
+// Конвертация msg.shortcut (ChaShortcutInfo) -> stNetShortCut (без чтения из pk)
+void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut& SShortcut) {
 	memset(&SShortcut, 0, sizeof(SShortcut));
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Update Shortcut):\tTick:[{}]", GetTickCount()));
 	for (int i = 0; i < SHORT_CUT_NUM; i++) {
-		SShortcut.chType[i] = pk.ReadInt64();
-		SShortcut.byGridID[i] = pk.ReadInt64();
+		SShortcut.chType[i] = static_cast<char>(info.entries[i].type);
+		SShortcut.byGridID[i] = static_cast<BYTE>(info.entries[i].gridId);
 		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(321), static_cast<int>(SShortcut.chType[i]), static_cast<int>(SShortcut.byGridID[i]));
 		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 	}
 }
 
 
+
 BOOL PC_PKSilver(LPRPACKET packet) {
-	std::string szName;
-	long sLevel;
-	std::string szProfession;
-	long lPkval;
+	// Десериализация через McPkSilverMessage
+	net::msg::McPkSilverMessage msg;
+	net::msg::deserialize(packet, msg);
+
 	for (int i = 0; i < MAX_PKSILVER_PLAYER; i++) {
-		szName = packet.ReadString();
-		sLevel = packet.ReadInt64();
-		szProfession = packet.ReadString();
-		lPkval = packet.ReadInt64();
-		g_stUIPKSilver.AddFormAttribute(i, szName, sLevel, szProfession, lPkval);
+		g_stUIPKSilver.AddFormAttribute(i, msg.players[i].name,
+			static_cast<long>(msg.players[i].level), msg.players[i].profession,
+			static_cast<long>(msg.players[i].pkVal));
 	}
 
 	g_stUIPKSilver.ShowPKSilverForm();
@@ -3798,7 +3237,9 @@ BOOL PC_PKSilver(LPRPACKET packet) {
 
 
 BOOL SC_LifeSkillShow(LPRPACKET packet) {
-	long lType = packet.ReadInt64();
+	net::msg::McLifeSkillShowMessage msg;
+	net::msg::deserialize(packet, msg);
+	long lType = static_cast<long>(msg.type);
 	switch (lType) {
 	case 0: //  �ϳ�
 	{
@@ -3826,9 +3267,11 @@ BOOL SC_LifeSkillShow(LPRPACKET packet) {
 
 
 BOOL SC_LifeSkill(LPRPACKET packet) {
-	long lType = packet.ReadInt64();
-	short ret = packet.ReadInt64();
-	std::string txt = packet.ReadString();
+	net::msg::McLifeSkillMessage msg;
+	net::msg::deserialize(packet, msg);
+	long lType = static_cast<long>(msg.type);
+	short ret = static_cast<short>(msg.result);
+	std::string txt = msg.text;
 
 	switch (lType) {
 	case 0: //  �ϳ�
@@ -3860,9 +3303,11 @@ BOOL SC_LifeSkill(LPRPACKET packet) {
 
 
 BOOL SC_LifeSkillAsr(LPRPACKET packet) {
-	long lType = packet.ReadInt64();
-	short tim = packet.ReadInt64();
-	std::string txt = packet.ReadString();
+	net::msg::McLifeSkillAsrMessage msg;
+	net::msg::deserialize(packet, msg);
+	long lType = static_cast<long>(msg.type);
+	short tim = static_cast<short>(msg.time);
+	std::string txt = msg.text;
 
 	switch (lType) {
 	case 0: //  �ϳ�
@@ -3891,21 +3336,24 @@ BOOL SC_LifeSkillAsr(LPRPACKET packet) {
 
 
 BOOL SC_DropLockAsr(LPRPACKET pk) {
-	const auto success = pk.ReadInt64();
-	if (success) {
+	net::msg::McDropLockAsrMessage msg;
+	net::msg::deserialize(pk, msg);
+	if (msg.success) {
 		g_pGameApp->SysInfo("Locking successful!");
 	}
 	else {
 		g_pGameApp->SysInfo("Locking failed!");
 	}
 	return TRUE;
-};
+}
 
 
 BOOL SC_UnlockItemAsr(LPRPACKET pk) {
+	net::msg::McUnlockItemAsrMessage msg;
+	net::msg::deserialize(pk, msg);
 	g_pGameApp->SysInfo(
 		[&] {
-			switch (pk.ReadInt64()) {
+			switch (msg.result) {
 			case 1:
 				return "Item Unlocked";
 			case 2:

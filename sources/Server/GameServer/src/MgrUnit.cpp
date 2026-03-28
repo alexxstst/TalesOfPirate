@@ -17,7 +17,7 @@ CEntityListNode* CMgrUnit::AddEntity(Entity *pCEnt, char chType)
 {
 #ifdef defMGRUNIT_LOG
 	if (chType == def_MGRUNIT_ENTITY_TYPE_CHAIN)
-		ToLogService("common", "[{}, {}]��ʼ����ʵ�� {}����ǰʵ���� {}��", m_sPosX, m_sPosY, pCEnt->m_CLog.GetLogName(), m_lEntityNum);
+		ToLogService("common", "[{}, {}]��ʼ����ʵ�� {}����ǰʵ���� {}��", m_sPosX, m_sPosY, pCEnt->GetLogName(), m_lEntityNum);
 #endif
 	bool	bAddState = false;
 	CEntityListNode	*pNode = g_pGameApp->m_EntityListHeap.Get();
@@ -75,7 +75,7 @@ CEntityListNode* CMgrUnit::AddEntity(Entity *pCEnt, char chType)
 		pNode = m_pCChaIn;
 		while (pNode)
 		{
-			strcat(szEntiList, pNode->m_pCEntity->m_CLog.GetLogName());
+			strcat(szEntiList, pNode->m_pCEntity->GetLogName());
 			strcat(szEntiList, ", ");
 			pNode = pNode->m_pCNext;
 			lCount++;
@@ -116,11 +116,11 @@ void CMgrUnit::DelEntity(CEntityListNode *pCEntNode)
 #ifdef defMGRUNIT_LOG
 	if (pCEntNode->m_chEntiType == def_MGRUNIT_ENTITY_TYPE_CHAIN)
 	{
-		ToLogService("common", "[{}, {}]��ʼɾ��ʵ�� {}����ǰʵ���� {}��", m_sPosX, m_sPosY, pCEntNode->m_pCEntity->m_CLog.GetLogName(), m_lEntityNum);
+		ToLogService("common", "[{}, {}]��ʼɾ��ʵ�� {}����ǰʵ���� {}��", m_sPosX, m_sPosY, pCEntNode->m_pCEntity->GetLogName(), m_lEntityNum);
 		if (pCEntNode->m_pCLast)
-			ToLogService("common", "��ɾʵ�����һʵ�� {}��", pCEntNode->m_pCLast->m_pCEntity->m_CLog.GetLogName());
+			ToLogService("common", "��ɾʵ�����һʵ�� {}��", pCEntNode->m_pCLast->m_pCEntity->GetLogName());
 		if (pCEntNode->m_pCNext)
-			ToLogService("common", "��ɾʵ�����һʵ�� {}��", pCEntNode->m_pCNext->m_pCEntity->m_CLog.GetLogName());
+			ToLogService("common", "��ɾʵ�����һʵ�� {}��", pCEntNode->m_pCNext->m_pCEntity->GetLogName());
 	}
 #endif
 	bool	bAddState = false;
@@ -166,7 +166,7 @@ void CMgrUnit::DelEntity(CEntityListNode *pCEntNode)
 		pNode = m_pCChaIn;
 		while (pNode)
 		{
-			strcat(szEntiList, pNode->m_pCEntity->m_CLog.GetLogName());
+			strcat(szEntiList, pNode->m_pCEntity->GetLogName());
 			strcat(szEntiList, ", ");
 			pNode = pNode->m_pCNext;
 			lCount++;

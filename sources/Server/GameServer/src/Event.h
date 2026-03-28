@@ -37,23 +37,23 @@ public:
 	void*	GetTableRec(void) {return m_pTableRec;}
 	const dbc::Char*	GetName(void) const {return m_szName;}
 
-	void	WriteInfo(WPACKET &pk);
+	void	WriteInfo(net::WPacket &pk);
 
 protected:
 
 private:
-	dbc::uShort	m_usID;			// ±àºÅ
-	dbc::uShort	m_usTouchType;	// ´¥·¢ÀàÐÍ
-	dbc::uShort	m_usExecType;	// Ö´ÐÐÀàÐÍ
+	dbc::uShort	m_usID;			// ï¿½ï¿½ï¿½
+	dbc::uShort	m_usTouchType;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	dbc::uShort	m_usExecType;	// Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	void		*m_pTableRec;
-	dbc::Char	m_szName[defMAX_EVENT_NAME_LEN];		// Ãû³Æ
+	dbc::Char	m_szName[defMAX_EVENT_NAME_LEN];		// ï¿½ï¿½ï¿½ï¿½
 
 };
 
-inline void CEvent::WriteInfo(WPACKET &pk)
+inline void CEvent::WriteInfo(net::WPacket &pk)
 {
-	WRITE_SHORT(pk, m_usID);
-	WRITE_STRING(pk, m_szName);
+	pk.WriteInt64(m_usID);
+	pk.WriteString(m_szName);
 }
 
 #endif // EVENT_H

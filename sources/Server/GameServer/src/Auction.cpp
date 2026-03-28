@@ -95,11 +95,8 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 						pChaOut = pCPlayer->GetMainCha();
 						if(pChaOut)
 						{
-							WPACKET WtPk	=GETWPACKET();
-							WRITE_CMD(WtPk, CMD_MM_AUCTION);
-							WRITE_LONG(WtPk, pChaOut->GetID());
-							WRITE_LONG(WtPk, pAucItem->GetCurChaID());
-							pChaOut->ReflectINFof(pChaOut, WtPk);//ͨ��
+							auto WtPk = net::msg::serialize(net::msg::MmAuctionMessage{pChaOut->GetID(), pAucItem->GetCurChaID()});
+							pChaOut->ReflectINFof(pChaOut, WtPk);
 
 							bFound = true;
 							break;
@@ -127,51 +124,35 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 
 void CAuctionSystem::ListAuction(CCharacter* pCha, CCharacter* pNpc)
 {
-	short sNum = 0;
-
-	WPACKET l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MC_LISTAUCTION);
-
-	map<short, CAuctionItem *>::iterator it = m_mapItemList.begin();
-	for(; it != m_mapItemList.end(); it++)
+	// Типизированная сериализация: список аукционных предметов (клиенту)
+	net::msg::McListAuctionMessage auctionMsg;
+	for (auto it = m_mapItemList.begin(); it != m_mapItemList.end(); ++it)
 	{
-		sNum++;
-		CAuctionItem *pAucItem = (CAuctionItem *)(it->second);
-		WRITE_SHORT(l_wpk, pAucItem->GetItemID());
-		WRITE_STRING(l_wpk, pAucItem->GetName().c_str());
-		WRITE_STRING(l_wpk, pAucItem->GetCurChaName().c_str());
-		WRITE_SHORT(l_wpk, pAucItem->GetItemCount());
-		WRITE_LONG(l_wpk, pAucItem->GetBasePrice());
-		WRITE_LONG(l_wpk, pAucItem->GetMinBid());
-		WRITE_LONG(l_wpk, pAucItem->GetCurPrice());
+		CAuctionItem *pAucItem = it->second;
+		auctionMsg.items.push_back({
+			static_cast<int64_t>(pAucItem->GetItemID()), pAucItem->GetName(), pAucItem->GetCurChaName(),
+			static_cast<int64_t>(pAucItem->GetItemCount()), static_cast<int64_t>(pAucItem->GetBasePrice()),
+			static_cast<int64_t>(pAucItem->GetMinBid()), static_cast<int64_t>(pAucItem->GetCurPrice())
+		});
 	}
-
-	WRITE_SHORT(l_wpk, sNum);
+	auto l_wpk = net::msg::serialize(auctionMsg);
 	pCha->ReflectINFof( pCha, l_wpk);
 }
 
 void CAuctionSystem::NotifyAuction( CCharacter* pCha, CCharacter* pNpc )
 {
-	short sNum = 0;
-
-	WPACKET l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MC_LISTAUCTION);
-
-	map<short, CAuctionItem *>::iterator it = m_mapItemList.begin();
-	for(; it != m_mapItemList.end(); it++)
+	// Типизированная сериализация: список аукционных предметов (окружению)
+	net::msg::McListAuctionMessage auctionMsg;
+	for (auto it = m_mapItemList.begin(); it != m_mapItemList.end(); ++it)
 	{
-		sNum++;
-		CAuctionItem *pAucItem = (CAuctionItem *)(it->second);
-		WRITE_SHORT(l_wpk, pAucItem->GetItemID());
-		WRITE_STRING(l_wpk, pAucItem->GetName().c_str());
-		WRITE_STRING(l_wpk, pAucItem->GetCurChaName().c_str());
-		WRITE_SHORT(l_wpk, pAucItem->GetItemCount());
-		WRITE_LONG(l_wpk, pAucItem->GetBasePrice());
-		WRITE_LONG(l_wpk, pAucItem->GetMinBid());
-		WRITE_LONG(l_wpk, pAucItem->GetCurPrice());
+		CAuctionItem *pAucItem = it->second;
+		auctionMsg.items.push_back({
+			static_cast<int64_t>(pAucItem->GetItemID()), pAucItem->GetName(), pAucItem->GetCurChaName(),
+			static_cast<int64_t>(pAucItem->GetItemCount()), static_cast<int64_t>(pAucItem->GetBasePrice()),
+			static_cast<int64_t>(pAucItem->GetMinBid()), static_cast<int64_t>(pAucItem->GetCurPrice())
+		});
 	}
-
-	WRITE_SHORT(l_wpk, sNum);
+	auto l_wpk = net::msg::serialize(auctionMsg);
 	pNpc->NotiChgToEyeshot(l_wpk, false);
 }
 

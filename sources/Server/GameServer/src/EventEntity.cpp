@@ -50,7 +50,7 @@ namespace mission
 		m_ID = g_pGameApp->m_Ident.GetID();
 		Char szLogName[defLOG_NAME_LEN] = "";
 		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
-		m_CLog.SetLogName(szLogName);
+		SetLogName(szLogName);
 
 		m_pCChaRecord = pRec;
 		m_cat = (short)m_pCChaRecord->lID;
@@ -71,7 +71,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CEventEntity::MsgProc( CCharacter& character, RPACKET packet )
+	HRESULT CEventEntity::MsgProc( CCharacter& character, net::RPacket& packet )
 	{
 		return 0;
 	}
@@ -107,7 +107,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CResourceEntity::MsgProc( CCharacter& character, RPACKET packet )
+	HRESULT CResourceEntity::MsgProc( CCharacter& character, net::RPacket& packet )
 	{
 		if( this->GetExistState() == enumEXISTS_WITHERING )
 		{
@@ -196,7 +196,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CTransitEntity::MsgProc( CCharacter& character, RPACKET packet )
+	HRESULT CTransitEntity::MsgProc( CCharacter& character, net::RPacket& packet )
 	{	
 		return 0;
 	}
@@ -238,7 +238,7 @@ namespace mission
 		return TRUE;
 	}
 
-	HRESULT CBerthEntity::MsgProc( CCharacter& character, RPACKET packet )
+	HRESULT CBerthEntity::MsgProc( CCharacter& character, net::RPacket& packet )
 	{
 		character.BoatBerth( m_sBerthID, m_sxPos, m_syPos, m_sDir );
 		return 0;

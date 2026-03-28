@@ -293,10 +293,11 @@ let handleCpSessCreate (ctx: HandlerContext) (player: PlayerRecord) (packet: IRP
                         | None -> ()
                     | None -> ()
 
-                // Формируем ответ
+                // Формируем ответ (count-first: sessId, count, участники)
                 let mutable w = WPacket(512)
                 w.WriteCmd(Commands.CMD_PC_SESS_CREATE)
                 w.WriteInt64(int64 sessId)
+                w.WriteInt64(int64 participants.Length) // count-first
                 w.WriteInt64(int64 chaSlot.ChaId)
                 w.WriteString(chaSlot.ChaName)
                 w.WriteString(chaSlot.Motto)
@@ -313,7 +314,6 @@ let handleCpSessCreate (ctx: HandlerContext) (player: PlayerRecord) (packet: IRP
                                 w.WriteInt64(int64 slot.Icon)
                             | None -> ()
                         | _ -> ()
-                w.WriteInt64(int64 participants.Length)
 
                 // Отправляем всем участникам
                 for (gpAddr, _) in participants do

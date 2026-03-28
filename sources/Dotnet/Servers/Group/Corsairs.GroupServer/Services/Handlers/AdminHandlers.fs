@@ -187,3 +187,21 @@ let handleCpReportWg (ctx: HandlerContext) (player: PlayerRecord) (_packet: IRPa
         playing.IsCheat <- true
         ctx.Logger.LogInformation("CP_REPORT_WG: {Name} помечен как читер", player.CurrentChaName)
     | None -> ()
+
+// ══════════════════════════════════════════════════════════
+//  TP_ESTOPUSER_CHECK — Проверка мута по actId
+// ══════════════════════════════════════════════════════════
+
+let handleTpEstopuserCheck (ctx: HandlerContext) (packet: IRPacket) =
+    let actId = uint32 (packet.ReadInt64())
+
+    match ctx.Registry.TryGetByActId(actId) with
+    | None -> ()
+    | Some player ->
+        match getCurrentSlot player with
+        | Some chaSlot when chaSlot.Estop ->
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_PT_ESTOPUSER)
+            ctx.SendToSingleClient player w
+            ctx.Logger.LogDebug("TP_ESTOPUSER_CHECK: actId={ActId} — estop активен", actId)
+        | _ -> ()

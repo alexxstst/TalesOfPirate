@@ -4,6 +4,7 @@
 #include "UIPage.h"
 #include "PacketCmd.h"
 #include "procirculate.h"
+#include "CommandMessages.h"
 
 namespace GUI
 {
@@ -20,8 +21,8 @@ public:
 	static void RefreshForm();
 	static void RemoveForm();
 
-	static void UpdateGuildLogs(LPRPACKET pk);
-	static void RequestGuildLogs(LPRPACKET pk);
+	static void UpdateGuildLogs(const net::msg::ActionUpdateGuildLogsData& data);
+	static void RequestGuildLogs(const net::msg::ActionRequestGuildLogsData& data);
 	static void UpdateLogList();
 	static void SetActivePerm(int perm);
 protected:

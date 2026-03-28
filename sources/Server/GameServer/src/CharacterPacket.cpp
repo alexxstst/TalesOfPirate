@@ -10,74 +10,74 @@
 #include "GameApp.h"
 #include "CommandMessages.h"
 
-void CCharacter::WriteBaseInfo(WPACKET &pkret, Char chLookType)
+void CCharacter::WriteBaseInfo(net::WPacket &pkret, Char chLookType)
 {
 	CPlayer	*pCPlayer = GetPlayer();
 
-	WRITE_LONG(pkret, GetCat());
-	WRITE_LONG(pkret, GetID());
+	pkret.WriteInt64(GetCat());
+	pkret.WriteInt64(GetID());
 	if (pCPlayer)
 	{
 		if (g_Config.m_bBlindChaos && IsPlayerCha() && LOOK_OTHER == chLookType && IsPKSilver())
 		{
-			WRITE_LONG(pkret, pCPlayer->GetMainCha()->GetID());
-			WRITE_STRING(pkret, "");
-			WRITE_CHAR(pkret, pCPlayer->GetGMLev());
+			pkret.WriteInt64(pCPlayer->GetMainCha()->GetID());
+			pkret.WriteString("");
+			pkret.WriteInt64(pCPlayer->GetGMLev());
 		}
 		else
 		{
-			WRITE_LONG(pkret, pCPlayer->GetMainCha()->GetID());
-			WRITE_STRING(pkret, pCPlayer->GetMainCha()->GetName());
-			WRITE_CHAR(pkret, pCPlayer->GetGMLev());
+			pkret.WriteInt64(pCPlayer->GetMainCha()->GetID());
+			pkret.WriteString(pCPlayer->GetMainCha()->GetName());
+			pkret.WriteInt64(pCPlayer->GetGMLev());
 		}
 	}
 	else
 	{
-		WRITE_LONG(pkret, GetID());
-		WRITE_STRING(pkret, "");
-		WRITE_CHAR(pkret, 0);
+		pkret.WriteInt64(GetID());
+		pkret.WriteString("");
+		pkret.WriteInt64(0);
 	}
 	if (g_Config.m_bBlindChaos && IsPlayerCha() && LOOK_OTHER == chLookType && IsPKSilver())
 	{
-		WRITE_LONG(pkret, GetHandle());
-		WRITE_CHAR(pkret, (Char)m_CChaAttr.GetAttr(ATTR_CHATYPE));
-		WRITE_STRING(pkret, "");
-		WRITE_STRING(pkret, "");
-		WRITE_SHORT(pkret, GetPlyMainCha()->GetIcon());
-		WRITE_LONG(pkret, 0);
-		WRITE_STRING(pkret, "");
-		WRITE_STRING(pkret, "");
-		WRITE_STRING(pkret, "");
+		pkret.WriteInt64(GetHandle());
+		pkret.WriteInt64((Char)m_CChaAttr.GetAttr(ATTR_CHATYPE));
+		pkret.WriteString("");
+		pkret.WriteString("");
+		pkret.WriteInt64(GetPlyMainCha()->GetIcon());
+		pkret.WriteInt64(0);
+		pkret.WriteString("");
+		pkret.WriteString("");
+		pkret.WriteString("");
 	}
 	else
 	{
-		WRITE_LONG(pkret, GetHandle());
-		WRITE_CHAR(pkret, (Char)m_CChaAttr.GetAttr(ATTR_CHATYPE));
-		WRITE_STRING(pkret, m_name);
-		WRITE_STRING(pkret, GetMotto());
-		WRITE_SHORT(pkret, GetPlyMainCha()->GetIcon());
-		WRITE_LONG(pkret, GetValidGuildID());
-		WRITE_STRING(pkret, GetValidGuildName());
-		WRITE_STRING(pkret, GetValidGuildMotto());
-		WRITE_LONG(pkret, guildPermission);
-		WRITE_STRING(pkret, GetStallName());
+		pkret.WriteInt64(GetHandle());
+		pkret.WriteInt64((Char)m_CChaAttr.GetAttr(ATTR_CHATYPE));
+		pkret.WriteString(m_name);
+		pkret.WriteString(GetMotto());
+		pkret.WriteInt64(GetPlyMainCha()->GetIcon());
+		pkret.WriteInt64(GetValidGuildID());
+		pkret.WriteString(GetValidGuildName());
+		pkret.WriteString(GetValidGuildMotto());
+		pkret.WriteInt64(guildPermission);
+		pkret.WriteString(GetStallName());
 	}
-	WRITE_SHORT(pkret, GetExistState());
-	WRITE_LONG(pkret, GetPos().x);
-	WRITE_LONG(pkret, GetPos().y);
-	WRITE_LONG(pkret, GetRadius());
-	WRITE_SHORT(pkret, GetAngle());
+	pkret.WriteInt64(GetExistState());
+	pkret.WriteInt64(GetPos().x);
+	pkret.WriteInt64(GetPos().y);
+	pkret.WriteInt64(GetRadius());
+	pkret.WriteInt64(GetAngle());
 	// �ӳ�ID
 	CPlayer	*pCPly = GetPlayer();
 	if (pCPly)
-		WRITE_LONG(pkret, pCPly->getTeamLeaderID());
+		pkret.WriteInt64(pCPly->getTeamLeaderID());
 	else
-		WRITE_LONG(pkret, 0);
+		pkret.WriteInt64(0);
 
 	if (IsPlayerCha()){
-		WRITE_CHAR(pkret, 1);
+		pkret.WriteInt64(1);
 	}else{
-		WRITE_CHAR(pkret, 0);
+		pkret.WriteInt64(0);
 	}
 	
 	//
@@ -89,24 +89,24 @@ void CCharacter::WriteBaseInfo(WPACKET &pkret, Char chLookType)
 	WriteAppendLook(m_CKitbag, pkret, true);
 }
 
-void CCharacter::WritePKCtrl(WPACKET &pkret)
+void CCharacter::WritePKCtrl(net::WPacket &pkret)
 {
-	WRITE_CHAR(pkret, m_chPKCtrl.to_ulong());
+	pkret.WriteInt64(m_chPKCtrl.to_ulong());
 }
 
-void CCharacter::WriteSideInfo(WPACKET &pkret)
+void CCharacter::WriteSideInfo(net::WPacket &pkret)
 {
-	WRITE_CHAR(pkret, (Char)GetSideID());
+	pkret.WriteInt64((Char)GetSideID());
 }
 
-void CCharacter::WriteSkillbag(WPACKET &pk, int nSynType)
+void CCharacter::WriteSkillbag(net::WPacket &pk, int nSynType)
 {
 	SSkillGrid	*pSkillGrid = 0;
 	CSkillTempData	*pSkillTData = 0;
 
-	WRITE_SHORT(pk, m_sDefSkillNo);
+	pk.WriteInt64(m_sDefSkillNo);
 
-	WRITE_CHAR(pk, nSynType);
+	pk.WriteInt64(nSynType);
 
 	short	sChangeSkillNum = m_CSkillBag.GetChangeSkillNum();
 	CCharacter	*pCCtrlCha = GetPlyCtrlCha();
@@ -125,21 +125,21 @@ void CCharacter::WriteSkillbag(WPACKET &pk, int nSynType)
 			}
 		}
 	}
-	WRITE_SHORT(pk, sChangeSkillNum);
+	pk.WriteInt64(sChangeSkillNum);
 	if (bAddBoatSkill)
 	{
-		WRITE_SHORT(pk, pSkillGrid->sID);
-		WRITE_CHAR(pk, pSkillGrid->chState);
-		WRITE_CHAR(pk, pSkillGrid->chLv);
-		WRITE_SHORT(pk, pSkillTData->sUseSP);
-		WRITE_SHORT(pk, pSkillTData->sUseEndure);
-		WRITE_SHORT(pk, pSkillTData->sUseEnergy);
-		WRITE_LONG(pk, pSkillTData->lResumeTime);
-		WRITE_SHORT(pk, pSkillTData->sRange[0]);
+		pk.WriteInt64(pSkillGrid->sID);
+		pk.WriteInt64(pSkillGrid->chState);
+		pk.WriteInt64(pSkillGrid->chLv);
+		pk.WriteInt64(pSkillTData->sUseSP);
+		pk.WriteInt64(pSkillTData->sUseEndure);
+		pk.WriteInt64(pSkillTData->sUseEnergy);
+		pk.WriteInt64(pSkillTData->lResumeTime);
+		pk.WriteInt64(pSkillTData->sRange[0]);
 		if (pSkillTData->sRange[0] != enumRANGE_TYPE_NONE)
 		{
 			for (short j = 1; j < defSKILL_RANGE_EXTEP_NUM; j++)
-				WRITE_SHORT(pk, pSkillTData->sRange[j]);
+				pk.WriteInt64(pSkillTData->sRange[j]);
 		}
 	}
 	for (short i = 0; i < sChangeSkillNum; i++)
@@ -150,87 +150,149 @@ void CCharacter::WriteSkillbag(WPACKET &pk, int nSynType)
 		pSkillTData = g_pGameApp->GetSkillTData(pSkillGrid->sID, pSkillGrid->chLv);
 		if (!pSkillTData)
 			return;
-		WRITE_SHORT(pk, pSkillGrid->sID);
-		WRITE_CHAR(pk, pSkillGrid->chState);
-		WRITE_CHAR(pk, pSkillGrid->chLv);
-		WRITE_SHORT(pk, pSkillTData->sUseSP);
-		WRITE_SHORT(pk, pSkillTData->sUseEndure);
-		WRITE_SHORT(pk, pSkillTData->sUseEnergy);
-		WRITE_LONG(pk, pSkillTData->lResumeTime);
-		WRITE_SHORT(pk, pSkillTData->sRange[0]);
+		pk.WriteInt64(pSkillGrid->sID);
+		pk.WriteInt64(pSkillGrid->chState);
+		pk.WriteInt64(pSkillGrid->chLv);
+		pk.WriteInt64(pSkillTData->sUseSP);
+		pk.WriteInt64(pSkillTData->sUseEndure);
+		pk.WriteInt64(pSkillTData->sUseEnergy);
+		pk.WriteInt64(pSkillTData->lResumeTime);
+		pk.WriteInt64(pSkillTData->sRange[0]);
 		if (pSkillTData->sRange[0] != enumRANGE_TYPE_NONE)
 		{
 			for (short j = 1; j < defSKILL_RANGE_EXTEP_NUM; j++)
-				WRITE_SHORT(pk, pSkillTData->sRange[j]);
+				pk.WriteInt64(pSkillTData->sRange[j]);
 		}
 	}
 }
 
-void CCharacter::WriteKitbag(CKitbag &CKb, WPACKET &WtPk, int nSynType)
+void CCharacter::WriteKitbag(CKitbag &CKb, net::WPacket &WtPk, int nSynType)
 {
 	SItemGrid	*pGridCont;
 	CItemRecord* pItemRec;
 
-	WRITE_CHAR(WtPk, nSynType);
+	WtPk.WriteInt64(nSynType);
 	Short sCapacity = CKb.GetCapacity();
 	if (nSynType == enumSYN_KITBAG_INIT)
-		WRITE_SHORT(WtPk, sCapacity);
+		WtPk.WriteInt64(sCapacity);
 	for (int i = 0; i < sCapacity; i++)
 	{
 		if (!CKb.IsSingleChange(i))
 			continue;
-		WRITE_SHORT(WtPk, i);
+		WtPk.WriteInt64(i);
 		pGridCont = CKb.GetGridContByID(i);
 		if (!pGridCont)
 		{
-			WRITE_SHORT(WtPk, 0);
+			WtPk.WriteInt64(0);
 			continue;
 		}
 		pItemRec = GetItemRecordInfo( pGridCont->sID );
 		if (!pItemRec)
 		{
-			WRITE_SHORT(WtPk, 0);
+			WtPk.WriteInt64(0);
 			continue;
 		}
 		// �е���
-		WRITE_SHORT(WtPk, pGridCont->sID);
-		WRITE_LONG(WtPk, pGridCont->dwDBID	);
-		WRITE_SHORT(WtPk, pGridCont->sNeedLv);
-		WRITE_SHORT(WtPk, pGridCont->sNum);
-		WRITE_SHORT(WtPk, pGridCont->sEndure[0]);
-		WRITE_SHORT(WtPk, pGridCont->sEndure[1]);
-		WRITE_SHORT(WtPk, pGridCont->sEnergy[0]);
-		WRITE_SHORT(WtPk, pGridCont->sEnergy[1]);
-		WRITE_CHAR(WtPk, pGridCont->chForgeLv);
-		WRITE_CHAR(WtPk, pGridCont->IsValid() ? 1 : 0);
-		WRITE_CHAR(WtPk, pGridCont->bItemTradable);
-		WRITE_LONG(WtPk, pGridCont->expiration);
+		WtPk.WriteInt64(pGridCont->sID);
+		WtPk.WriteInt64(pGridCont->dwDBID);
+		WtPk.WriteInt64(pGridCont->sNeedLv);
+		WtPk.WriteInt64(pGridCont->sNum);
+		WtPk.WriteInt64(pGridCont->sEndure[0]);
+		WtPk.WriteInt64(pGridCont->sEndure[1]);
+		WtPk.WriteInt64(pGridCont->sEnergy[0]);
+		WtPk.WriteInt64(pGridCont->sEnergy[1]);
+		WtPk.WriteInt64(pGridCont->chForgeLv);
+		WtPk.WriteInt64(pGridCont->IsValid() ? 1 : 0);
+		WtPk.WriteInt64(pGridCont->bItemTradable);
+		WtPk.WriteInt64(pGridCont->expiration);
 
 		pItemRec = GetItemRecordInfo( pGridCont->sID );
 		if( pItemRec->sType == enumItemTypeBoat ) // �����ߣ�д�봬��WorldID�����ڿͻ��˽������봬��ɫ�ҹ�
 		{
 			CCharacter	*pCBoat = GetPlayer()->GetBoat((DWORD)pGridCont->GetDBParam(enumITEMDBP_INST_ID));
 			if (pCBoat)
-				WRITE_LONG(WtPk, pCBoat->GetID());
+				WtPk.WriteInt64(pCBoat->GetID());
 			else
-				WRITE_LONG(WtPk, 0);
+				WtPk.WriteInt64(0);
 		}
 
-		WRITE_LONG(WtPk, pGridCont->GetDBParam(enumITEMDBP_FORGE));
-		WRITE_LONG(WtPk, pGridCont->GetDBParam(enumITEMDBP_INST_ID));
+		WtPk.WriteInt64(pGridCont->GetDBParam(enumITEMDBP_FORGE));
+		WtPk.WriteInt64(pGridCont->GetDBParam(enumITEMDBP_INST_ID));
 		if (pGridCont->IsInstAttrValid()) // ����ʵ������
 		{
-			WRITE_CHAR(WtPk, 1);
+			WtPk.WriteInt64(1);
 			for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 			{
-				WRITE_SHORT(WtPk, pGridCont->sInstAttr[j][0]);
-				WRITE_SHORT(WtPk, pGridCont->sInstAttr[j][1]);
+				WtPk.WriteInt64(pGridCont->sInstAttr[j][0]);
+				WtPk.WriteInt64(pGridCont->sInstAttr[j][1]);
 			}
 		}
 		else
-			WRITE_CHAR(WtPk, 0); // ������ʵ������
+			WtPk.WriteInt64(0); // ������ʵ������
 	}
-	WRITE_SHORT(WtPk, -1); // ������־
+	WtPk.WriteInt64(-1); // ������־
+}
+
+net::msg::ChaKitbagInfo CCharacter::BuildKitbagInfo(CKitbag &CKb, int nSynType)
+{
+	net::msg::ChaKitbagInfo info{};
+	info.synType = nSynType;
+	Short sCapacity = CKb.GetCapacity();
+	if (nSynType == enumSYN_KITBAG_INIT)
+		info.capacity = sCapacity;
+	for (int i = 0; i < sCapacity; i++)
+	{
+		if (!CKb.IsSingleChange(i))
+			continue;
+		net::msg::KitbagItem item{};
+		item.gridId = i;
+		SItemGrid* pGridCont = CKb.GetGridContByID(i);
+		if (!pGridCont)
+		{
+			item.itemId = 0;
+			info.items.push_back(item);
+			continue;
+		}
+		CItemRecord* pItemRec = GetItemRecordInfo(pGridCont->sID);
+		if (!pItemRec)
+		{
+			item.itemId = 0;
+			info.items.push_back(item);
+			continue;
+		}
+		item.itemId = pGridCont->sID;
+		item.dbId = pGridCont->dwDBID;
+		item.needLv = pGridCont->sNeedLv;
+		item.num = pGridCont->sNum;
+		item.endure0 = pGridCont->sEndure[0];
+		item.endure1 = pGridCont->sEndure[1];
+		item.energy0 = pGridCont->sEnergy[0];
+		item.energy1 = pGridCont->sEnergy[1];
+		item.forgeLv = pGridCont->chForgeLv;
+		item.valid = pGridCont->IsValid() ? 1 : 0;
+		item.tradable = pGridCont->bItemTradable;
+		item.expiration = pGridCont->expiration;
+		pItemRec = GetItemRecordInfo(pGridCont->sID);
+		if (pItemRec->sType == enumItemTypeBoat)
+		{
+			item.isBoat = true;
+			CCharacter* pCBoat = GetPlayer()->GetBoat((DWORD)pGridCont->GetDBParam(enumITEMDBP_INST_ID));
+			item.boatWorldId = pCBoat ? pCBoat->GetID() : 0;
+		}
+		item.forgeParam = pGridCont->GetDBParam(enumITEMDBP_FORGE);
+		item.instId = pGridCont->GetDBParam(enumITEMDBP_INST_ID);
+		if (pGridCont->IsInstAttrValid())
+		{
+			item.hasInstAttr = true;
+			for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
+			{
+				item.instAttr[j][0] = pGridCont->sInstAttr[j][0];
+				item.instAttr[j][1] = pGridCont->sInstAttr[j][1];
+			}
+		}
+		info.items.push_back(item);
+	}
+	return info;
 }
 
 // client: ReadChaLookPacket
@@ -300,20 +362,20 @@ Short GetChaosEquip(Long type, Long job) {
 	return 0;
 }
 
-void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
+void CCharacter::WriteLookData(net::WPacket &WtPk, Char chLookType, Char chSynType)
 {
-	WRITE_CHAR(WtPk, chSynType);
-	WRITE_SHORT(WtPk, m_SChaPart.sTypeID);
+	WtPk.WriteInt64(chSynType);
+	WtPk.WriteInt64(m_SChaPart.sTypeID);
 	if( m_CChaAttr.GetAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER && IsBoat() )
 	{
-		WRITE_CHAR( WtPk, 1); // �������
-		WRITE_SHORT( WtPk, m_SChaPart.sPosID );
-		WRITE_SHORT( WtPk, m_SChaPart.sBoatID );
-		WRITE_SHORT( WtPk, m_SChaPart.sHeader );
-		WRITE_SHORT( WtPk, m_SChaPart.sBody );
-		WRITE_SHORT( WtPk, m_SChaPart.sEngine );
-		WRITE_SHORT( WtPk, m_SChaPart.sCannon );
-		WRITE_SHORT( WtPk, m_SChaPart.sEquipment );
+		WtPk.WriteInt64(1); // �������
+		WtPk.WriteInt64(m_SChaPart.sPosID);
+		WtPk.WriteInt64(m_SChaPart.sBoatID);
+		WtPk.WriteInt64(m_SChaPart.sHeader);
+		WtPk.WriteInt64(m_SChaPart.sBody);
+		WtPk.WriteInt64(m_SChaPart.sEngine);
+		WtPk.WriteInt64(m_SChaPart.sCannon);
+		WtPk.WriteInt64(m_SChaPart.sEquipment);
 	}
 	else
 	{
@@ -321,8 +383,8 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 		long nJob = (long)getAttr(ATTR_JOB);
 		if (g_Config.m_bBlindChaos && IsPlayerCha() && LOOK_OTHER == chLookType && IsPKSilver())
 		{
-			WRITE_CHAR(WtPk, 0);
-			WRITE_SHORT(WtPk, 0); // Hair ID: 0 (according to client)
+			WtPk.WriteInt64(0);
+			WtPk.WriteInt64(0); // Hair ID: 0 (according to client)
 			SItemGrid *pItem;
 
 			int nItemCnt = enumEQUIP_NUM;
@@ -334,68 +396,68 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 				{
 					if (!pItem->IsChange())
 					{
-						WRITE_SHORT(WtPk, 0);
+						WtPk.WriteInt64(0);
 						continue;
 					}
 				}
 
 				Short eqID = GetChaosEquip(i, nJob);
-				//WRITE_LONG(WtPk, pItem->dwDBID);
-				WRITE_SHORT(WtPk, eqID); // pItem->sID
-				WRITE_LONG(WtPk, pItem->dwDBID);
-				WRITE_SHORT(WtPk, pItem->sNeedLv);
+				//WtPk.WriteInt64(pItem->dwDBID);
+				WtPk.WriteInt64(eqID); // pItem->sID
+				WtPk.WriteInt64(pItem->dwDBID);
+				WtPk.WriteInt64(pItem->sNeedLv);
 				if (eqID == 0)
 					continue;
 
 				if (chSynType == enumSYN_LOOK_CHANGE)
 				{
-					WRITE_SHORT(WtPk, pItem->sEndure[0]);
-					WRITE_SHORT(WtPk, pItem->sEnergy[0]);
-					WRITE_CHAR(WtPk, pItem->IsValid() ? 1 : 0);
-					WRITE_CHAR(WtPk, pItem->bItemTradable);
-					WRITE_LONG(WtPk, pItem->expiration);
+					WtPk.WriteInt64(pItem->sEndure[0]);
+					WtPk.WriteInt64(pItem->sEnergy[0]);
+					WtPk.WriteInt64(pItem->IsValid() ? 1 : 0);
+					WtPk.WriteInt64(pItem->bItemTradable);
+					WtPk.WriteInt64(pItem->expiration);
 
 					continue;
 				}
 				else
 				{
-					WRITE_SHORT(WtPk, pItem->sNum);
-					WRITE_SHORT(WtPk, pItem->sEndure[0]);
-					WRITE_SHORT(WtPk, pItem->sEndure[1]);
-					WRITE_SHORT(WtPk, pItem->sEnergy[0]);
-					WRITE_SHORT(WtPk, pItem->sEnergy[1]);
-					WRITE_CHAR(WtPk, pItem->chForgeLv);
-					WRITE_CHAR(WtPk, pItem->IsValid() ? 1 : 0);
-					WRITE_CHAR(WtPk, pItem->bItemTradable);
-					WRITE_LONG(WtPk, pItem->expiration);
+					WtPk.WriteInt64(pItem->sNum);
+					WtPk.WriteInt64(pItem->sEndure[0]);
+					WtPk.WriteInt64(pItem->sEndure[1]);
+					WtPk.WriteInt64(pItem->sEnergy[0]);
+					WtPk.WriteInt64(pItem->sEnergy[1]);
+					WtPk.WriteInt64(pItem->chForgeLv);
+					WtPk.WriteInt64(pItem->IsValid() ? 1 : 0);
+					WtPk.WriteInt64(pItem->bItemTradable);
+					WtPk.WriteInt64(pItem->expiration);
 
 				}
 				if(chLookType!=LOOK_SELF) // ����������֪ͨ, ������Ҫ�������Ϣ
 				{
-					WRITE_CHAR(WtPk, 0);
+					WtPk.WriteInt64(0);
 					continue;
 				}
-				WRITE_CHAR(WtPk, 1);
+				WtPk.WriteInt64(1);
 
-				WRITE_LONG(WtPk, pItem->GetDBParam(enumITEMDBP_FORGE));
-				WRITE_LONG(WtPk, pItem->GetDBParam(enumITEMDBP_INST_ID));
+				WtPk.WriteInt64(pItem->GetDBParam(enumITEMDBP_FORGE));
+				WtPk.WriteInt64(pItem->GetDBParam(enumITEMDBP_INST_ID));
 				if (pItem->IsInstAttrValid())
 				{
-					WRITE_CHAR(WtPk, 1);
+					WtPk.WriteInt64(1);
 					for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 					{
-						WRITE_SHORT(WtPk, pItem->sInstAttr[j][0]);
-						WRITE_SHORT(WtPk, pItem->sInstAttr[j][1]);
+						WtPk.WriteInt64(pItem->sInstAttr[j][0]);
+						WtPk.WriteInt64(pItem->sInstAttr[j][1]);
 					}
 				}
 				else
-					WRITE_CHAR(WtPk, 0);
+					WtPk.WriteInt64(0);
 			}
 			return;
 		} // modification [ends]
 
-		WRITE_CHAR( WtPk, 0); // The appearance of human characters
-		WRITE_SHORT(WtPk, m_SChaPart.sHairID);
+		WtPk.WriteInt64(0); // The appearance of human characters
+		WtPk.WriteInt64(m_SChaPart.sHairID);
 		SItemGrid *pItem;
 
 		int nItemCnt = enumEQUIP_NUM;
@@ -409,63 +471,63 @@ void CCharacter::WriteLookData(WPACKET &WtPk, Char chLookType, Char chSynType)
 			{
 				if (!pItem->IsChange())
 				{
-					WRITE_SHORT(WtPk, 0);
+					WtPk.WriteInt64(0);
 					continue;
 				}
 			}
-			WRITE_SHORT(WtPk, pItem->sID);
-			WRITE_LONG(WtPk, pItem->dwDBID);
-			WRITE_SHORT(WtPk, pItem->sNeedLv);
+			WtPk.WriteInt64(pItem->sID);
+			WtPk.WriteInt64(pItem->dwDBID);
+			WtPk.WriteInt64(pItem->sNeedLv);
 			if (pItem->sID == 0)
 				continue;
 			if (chSynType == enumSYN_LOOK_CHANGE)
 			{
-				WRITE_SHORT(WtPk, pItem->sEndure[0]);
-				WRITE_SHORT(WtPk, pItem->sEnergy[0]);
-				WRITE_CHAR(WtPk, pItem->IsValid() ? 1 : 0);
-				WRITE_CHAR(WtPk, pItem->bItemTradable);
-				WRITE_LONG(WtPk, pItem->expiration);
+				WtPk.WriteInt64(pItem->sEndure[0]);
+				WtPk.WriteInt64(pItem->sEnergy[0]);
+				WtPk.WriteInt64(pItem->IsValid() ? 1 : 0);
+				WtPk.WriteInt64(pItem->bItemTradable);
+				WtPk.WriteInt64(pItem->expiration);
 				continue;
 			}
 			else
 			{
-				WRITE_SHORT(WtPk, pItem->sNum);
-				WRITE_SHORT(WtPk, pItem->sEndure[0]);
-				WRITE_SHORT(WtPk, pItem->sEndure[1]);
-				WRITE_SHORT(WtPk, pItem->sEnergy[0]);
-				WRITE_SHORT(WtPk, pItem->sEnergy[1]);
-				WRITE_CHAR(WtPk, pItem->chForgeLv);
-				WRITE_CHAR(WtPk, pItem->IsValid() ? 1 : 0);
-				WRITE_CHAR(WtPk, pItem->bItemTradable);
-				WRITE_LONG(WtPk, pItem->expiration);
+				WtPk.WriteInt64(pItem->sNum);
+				WtPk.WriteInt64(pItem->sEndure[0]);
+				WtPk.WriteInt64(pItem->sEndure[1]);
+				WtPk.WriteInt64(pItem->sEnergy[0]);
+				WtPk.WriteInt64(pItem->sEnergy[1]);
+				WtPk.WriteInt64(pItem->chForgeLv);
+				WtPk.WriteInt64(pItem->IsValid() ? 1 : 0);
+				WtPk.WriteInt64(pItem->bItemTradable);
+				WtPk.WriteInt64(pItem->expiration);
 			}
 
 			//if(chLookType!=LOOK_SELF) // ����������֪ͨ, ������Ҫ�������Ϣ
 			//{
-			//	WRITE_CHAR(WtPk, 0);
+			//	WtPk.WriteInt64(0);
 			//	continue;
 			//}
-			WRITE_CHAR(WtPk, 1);
+			WtPk.WriteInt64(1);
 
-			WRITE_LONG(WtPk, pItem->GetDBParam(enumITEMDBP_FORGE));
-			WRITE_LONG(WtPk, pItem->GetDBParam(enumITEMDBP_INST_ID));
+			WtPk.WriteInt64(pItem->GetDBParam(enumITEMDBP_FORGE));
+			WtPk.WriteInt64(pItem->GetDBParam(enumITEMDBP_INST_ID));
 			if (pItem->IsInstAttrValid())
 			{
-				WRITE_CHAR(WtPk, 1);
+				WtPk.WriteInt64(1);
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
 				{
-					WRITE_SHORT(WtPk, pItem->sInstAttr[j][0]);
-					WRITE_SHORT(WtPk, pItem->sInstAttr[j][1]);
+					WtPk.WriteInt64(pItem->sInstAttr[j][0]);
+					WtPk.WriteInt64(pItem->sInstAttr[j][1]);
 				}
 			}
 			else
-				WRITE_CHAR(WtPk, 0);
+				WtPk.WriteInt64(0);
 		}
 	}
 }
 
 // ע��ú���ʹ�õ������ĸı��־��
-bool CCharacter::WriteAppendLook(CKitbag &CKb, WPACKET &pk, bool bInit)
+bool CCharacter::WriteAppendLook(CKitbag &CKb, net::WPacket &pk, bool bInit)
 {
 	SItemGrid	*pGridCont;
 	bool	bHasData = false;
@@ -476,35 +538,35 @@ bool CCharacter::WriteAppendLook(CKitbag &CKb, WPACKET &pk, bool bInit)
 		pGridCont = CKb.GetGridContByID(i);
 		if (!pGridCont || !ItemIsAppendLook(pGridCont))
 		{
-			WRITE_SHORT(pk, 0);
+			pk.WriteInt64(0);
 			continue;
 		}
-		WRITE_SHORT(pk, pGridCont->sID);
-		WRITE_CHAR(pk, pGridCont->IsValid() ? 1 : 0);
+		pk.WriteInt64(pGridCont->sID);
+		pk.WriteInt64(pGridCont->IsValid() ? 1 : 0);
 	}
 
 	if (bInit) return true;
 	else return bHasData;
 }
 
-void CCharacter::WriteInt64cut(WPACKET &WtPk)
+void CCharacter::WriteInt64cut(net::WPacket &WtPk)
 {
 	for (int i = 0; i < SHORT_CUT_NUM; i++)
 	{
-		WRITE_CHAR(WtPk, m_CShortcut.chType[i]);
-		WRITE_SHORT(WtPk, m_CShortcut.byGridID[i]);
+		WtPk.WriteInt64(m_CShortcut.chType[i]);
+		WtPk.WriteInt64(m_CShortcut.byGridID[i]);
 	}
 }
 
-void CCharacter::WriteBoat(WPACKET &WtPk)
+void CCharacter::WriteBoat(net::WPacket &WtPk)
 {
 	CPlayer	*pCPlayer = GetPlayer();
 	if (!pCPlayer)
 	{
-		WRITE_CHAR(WtPk, 0);
+		WtPk.WriteInt64(0);
 		return;
 	}
-	WRITE_CHAR(WtPk, pCPlayer->GetNumBoat());
+	WtPk.WriteInt64(pCPlayer->GetNumBoat());
 	CCharacter	*pCBoat;
 	for (BYTE i = 0; i < pCPlayer->GetNumBoat(); i++)
 	{
@@ -515,7 +577,7 @@ void CCharacter::WriteBoat(WPACKET &WtPk)
 	}
 }
 
-void CCharacter::WriteItemChaBoat(WPACKET &WtPk, CCharacter *pCBoat)
+void CCharacter::WriteItemChaBoat(net::WPacket &WtPk, CCharacter *pCBoat)
 {
 	pCBoat->WriteBaseInfo(WtPk);
 	pCBoat->WriteAttr(WtPk, enumATTRSYN_INIT);

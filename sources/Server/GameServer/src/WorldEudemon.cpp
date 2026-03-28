@@ -118,7 +118,7 @@ namespace mission
 		m_ID = ulID;
 		Char szLogName[defLOG_NAME_LEN] = "";
 		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
-		m_CLog.SetLogName(szLogName);
+		SetLogName(szLogName);
 
 		// Ĭ��ʹ�õ�һ����ɫ��Ϣ
 		m_pCChaRecord = (CChaRecord*)GetChaRecordInfo( 1 );
@@ -130,7 +130,7 @@ namespace mission
 		return TRUE;
 	}
     
-	HRESULT CWorldEudemon::MsgProc( CCharacter& character, RPACKET packet )
+	HRESULT CWorldEudemon::MsgProc( CCharacter& character, net::RPacket& packet )
 	{
 		// ����NPC�ű��Ի���������
 		lua_getglobal( g_pLuaState, "NpcProc" );

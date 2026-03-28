@@ -877,13 +877,11 @@ void CGameApp::SetEntityEnableLog(bool bValid)
 					pCEnt = pCSubMap->m_pCEyeshotCell[m][n].m_pCChaL;
 					while (pCEnt)
 					{
-						pCEnt->m_CLog.SetEnable(bValid);
 						pCEnt = pCEnt->m_pCEyeshotCellNext;
 					}
 					pCEnt = pCSubMap->m_pCEyeshotCell[m][n].m_pCItemL;
 					while (pCEnt)
 					{
-						pCEnt->m_CLog.SetEnable(bValid);
 						pCEnt = pCEnt->m_pCEyeshotCellNext;
 					}
 				}
@@ -988,7 +986,7 @@ CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uL
     return l_player;
 
     ToLogService("map", "atorID = {} ({}) end entermap", ulChaDBId, pCMainCha->GetName());
-    ToLogService("map", "atorID = {}, logname = [{}] end enter", ulChaDBId, pCMainCha->m_CLog.GetLogName());
+    ToLogService("map", "atorID = {}, logname = [{}] end enter", ulChaDBId, pCMainCha->GetLogName());
 }
 
 // ����������ϣ��黹�ڴ�
@@ -1084,18 +1082,16 @@ void CGameApp::NoticePlayerLogin(CPlayer *pCPlayer)
 	if (!pCPlayer || !pCPlayer->GetCtrlCha())
 		return;
 
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MM_LOGIN);
-	WRITE_LONG(WtPk, 0);
-	WRITE_STRING(WtPk, pCPlayer->GetCtrlCha()->GetName());
+	// Типизированная сериализация: уведомление о входе игрока + ручной trailer
+	auto WtPk = net::msg::serialize(net::msg::MmLoginMessage{pCPlayer->GetCtrlCha()->GetName()});
 
 	BEGINGETGATE();
 	GateServer	*pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		WRITE_LONG(WtPk, 0);
-		WRITE_LONG(WtPk, 0);
-		WRITE_SHORT(WtPk, 1);
+		WtPk.WriteInt64(0);
+		WtPk.WriteInt64(0);
+		WtPk.WriteInt64(1);
 		pGateServer->SendData(WtPk);
 		break;
 	}
@@ -1372,9 +1368,8 @@ void CGameApp::NotiGameReset(unsigned long ulLeftSec)
 
 	sprintf(szNotiMsg, RES_STRING(GM_GAMEAPP_CPP_00002), g_Config.m_szName, ulLeftSec, m_strMapNameList.c_str());
 
-	WPACKET wpk	= GETWPACKET();
-	WRITE_CMD(wpk, CMD_MC_SYSINFO);
-	WRITE_STRING(wpk, szNotiMsg);
+	// Типизированная сериализация: уведомление о перезапуске сервера
+	auto wpk = net::msg::serialize(net::msg::McSysInfoMessage{szNotiMsg});
 	NotiPkToWorld(wpk);
 }
 
@@ -1455,18 +1450,16 @@ void CGameApp::WorldNotice(const char *szString)
 	ToLogService("common", "WorldNotice: len = {}", strlen(szString));
 	ToLogService("common", "WorldNotice: contend = {}", szString);
 
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MM_NOTICE);
-	WRITE_LONG(WtPk, 0);
-	WRITE_STRING(WtPk, szString);
+	// Типизированная сериализация: мировое уведомление + ручной trailer
+	auto WtPk = net::msg::serialize(net::msg::MmNoticeMessage{szString});
 
 	BEGINGETGATE();
 	GateServer	*pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		WRITE_LONG(WtPk, 0);
-		WRITE_LONG(WtPk, 0);
-		WRITE_SHORT(WtPk, 1);
+		WtPk.WriteInt64(0);
+		WtPk.WriteInt64(0);
+		WtPk.WriteInt64(1);
 		pGateServer->SendData(WtPk);
 		break;
 	}
@@ -1477,10 +1470,8 @@ void CGameApp::GuildNotice(unsigned long guildID, const char *szString)
 	if (!szString)
 		return;
 
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MP_GUILDNOTICE);
-	WRITE_LONG(WtPk, guildID);
-	WRITE_STRING(WtPk, szString);
+	// Типизированная сериализация: уведомление гильдии (GameServer→Group)
+	auto WtPk = net::msg::serialize(net::msg::GmGuildNoticeMessage{(int64_t)guildID, szString});
 	SENDTOGROUP(WtPk);
 }
 
@@ -1489,11 +1480,8 @@ void CGameApp::ScrollNotice(const char * szString,int SetNum, DWORD color)
 {
 	if(!szString)
 		return;
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MP_GM1SAY1);
-	WRITE_STRING(WtPk, szString);
-	WRITE_LONG(WtPk, SetNum);
-	WRITE_LONG(WtPk, color);
+	// Типизированная сериализация: прокрутка уведомления (GameServer→Group)
+	auto WtPk = net::msg::serialize(net::msg::GmScrollNoticeMessage{szString, (int64_t)SetNum, (int64_t)color});
 	SENDTOGROUP(WtPk);
 }
 //add by sunny.sun20080821
@@ -1501,9 +1489,8 @@ void CGameApp::GMNotice( const char * szString )
 {
 	if(!szString)
 		return;
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MP_GM1SAY);
-	WRITE_STRING(WtPk, szString);
+	// Типизированная сериализация: GM-уведомление (GameServer→Group)
+	auto WtPk = net::msg::serialize(net::msg::GmGMNoticeMessage{szString});
 	SENDTOGROUP(WtPk);
 }
 
@@ -1513,9 +1500,8 @@ void CGameApp::LocalNotice(const char *szString)
 	if (!szString)
 		return;
 
-	WPACKET wpk	= GETWPACKET();
-	WRITE_CMD(wpk, CMD_MC_SYSINFO);
-	WRITE_STRING(wpk, szString);
+	// Типизированная сериализация: локальное уведомление
+	auto wpk = net::msg::serialize(net::msg::McSysInfoMessage{szString});
 	SENDTOWORLD(wpk);
 }
 
@@ -1525,19 +1511,16 @@ void CGameApp::ChaNotice(const char *szNotiString, const char *szChaName)
 	if (!szNotiString || !szChaName)
 		return;
 
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MM_CHA_NOTICE);
-	WRITE_LONG(WtPk, 0);
-	WRITE_STRING(WtPk, szNotiString);
-	WRITE_STRING(WtPk, szChaName);
+	// Типизированная се��иализация: уведомление персонажа (GameServer→GateServer)
+	auto WtPk = net::msg::serialize(net::msg::GmChaNoticeMessage{0, szNotiString, szChaName});
 
 	BEGINGETGATE();
 	GateServer	*pGateServer = NULL;
 	while (pGateServer = GETNEXTGATE())
 	{
-		WRITE_LONG(WtPk, 0);
-		WRITE_LONG(WtPk, 0);
-		WRITE_SHORT(WtPk, 1);
+		WtPk.WriteInt64(0);
+		WtPk.WriteInt64(0);
+		WtPk.WriteInt64(1);
 		pGateServer->SendData(WtPk);
 		break;
 	}
@@ -1547,9 +1530,8 @@ void CGameApp::BanAccount(const char* szString)
 {
 	if (!szString)
 		return;
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MP_GMBANACCOUNT);
-	WRITE_STRING(WtPk, szString);
+	// Типизированная сериализация: бан аккаунта (GameServer→Group)
+	auto WtPk = net::msg::serialize(net::msg::GmBanAccountMessage{szString});
 	SENDTOGROUP(WtPk);
 }
 
@@ -1557,16 +1539,13 @@ void CGameApp::UnbanAccount(const char* szString)
 {
 	if (!szString)
 		return;
-	WPACKET WtPk  = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MP_GMUNBANACCOUNT);
-	WRITE_STRING(WtPk, szString);
+	// Типизированная сериализация: разбан аккаунта (GameServer→Group)
+	auto WtPk = net::msg::serialize(net::msg::GmUnbanAccountMessage{szString});
 	SENDTOGROUP(WtPk);
 }
 
 void CGameApp::CanReceiveRequests(uLong chaID, bool CanSend) {
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MP_CANRECEIVEREQUESTS);
-	WRITE_LONG(WtPk, chaID);
-	WRITE_SHORT(WtPk, CanSend);
+	// Типизированная сериализация: флаг приёма запросов (GameServer→Group)
+	auto WtPk = net::msg::serialize(net::msg::GmCanReceiveRequestsMessage{(int64_t)chaID, (int64_t)CanSend});
 	SENDTOGROUP(WtPk);
 }

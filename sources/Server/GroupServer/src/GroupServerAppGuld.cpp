@@ -42,9 +42,12 @@ void GroupServerApp::MP_GUILD_CREATE(Player *ply,net::TcpClient *client,net::RPa
 	net::WPacket	l_wpk(256);
 	l_wpk.WriteCmd(CMD_PC_GUILD);
 	l_wpk.WriteInt64(MSG_GUILD_START);
-	l_wpk.WriteInt64(ply->m_guild[ply->m_currcha]);	//����ID
-	l_wpk.WriteString(ply->GetGuild()->m_name);		//����name
-	l_wpk.WriteInt64(ply->GetGuild()->m_leaderID);	//�᳤ID
+	// Количество участников и индекс пакета — в начале (count-first)
+	l_wpk.WriteInt64(1);									//count (один участник)
+	l_wpk.WriteInt64(0);									//packetIndex
+	l_wpk.WriteInt64(ply->m_guild[ply->m_currcha]);	//guildID
+	l_wpk.WriteString(ply->GetGuild()->m_name);		//guildName
+	l_wpk.WriteInt64(ply->GetGuild()->m_leaderID);	//leaderID
 
 	l_wpk.WriteInt64(1);									//online
 	l_wpk.WriteInt64(ply->m_chaid[ply->m_currcha]);		//chaid
@@ -54,9 +57,6 @@ void GroupServerApp::MP_GUILD_CREATE(Player *ply,net::TcpClient *client,net::RPa
 	l_wpk.WriteInt64(pk.ReadInt64());					//degree
 	l_wpk.WriteInt64(ply->m_icon[ply->m_currcha]);		//icon
 	l_wpk.WriteInt64(emGldPermMax);							//permission
-
-	l_wpk.WriteInt64(0);
-	l_wpk.WriteInt64(1);
 	g_gpsvr->SendToClient(ply,l_wpk);
 }
 void GroupServerApp::MP_GUILD_APPROVE(Player *ply,net::TcpClient *client,net::RPacket &pk)

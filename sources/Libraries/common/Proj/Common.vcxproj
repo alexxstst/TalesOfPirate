@@ -19,13 +19,13 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <EnableASAN>false</EnableASAN>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Release|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
-    <PlatformToolset>v143</PlatformToolset>
+    <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
@@ -114,7 +114,6 @@
     <ClCompile Include="..\src\Kitbag.cpp" />
     <ClCompile Include="..\src\LevelRecord.cpp" />
     <ClCompile Include="..\src\LifeLvRecord.cpp" />
-    <ClCompile Include="..\src\LogFile.cpp" />
     <ClCompile Include="..\src\MonRefRecord.cpp" />
     <ClCompile Include="..\src\NpcRecord.cpp" />
     <ClCompile Include="..\src\SailLvRecord.cpp" />
@@ -150,7 +149,6 @@
     <ClInclude Include="..\include\Kitbag.h" />
     <ClInclude Include="..\include\LevelRecord.h" />
     <ClInclude Include="..\include\LifeLvRecord.h" />
-    <ClInclude Include="..\include\LogFile.h" />
     <ClInclude Include="..\include\MonRefRecord.h" />
     <ClInclude Include="..\include\MountRecord.h" />
     <ClInclude Include="..\include\NetCommand.h" />

@@ -352,7 +352,15 @@ module CommandMessages =
     type PcTeamRefreshMessage =
         { Msg: int64; Count: int64; Members: TeamMemberData[] }
 
+    /// Отмена приглашения в команду (причина + chaId инициатора).
+    [<Struct>]
+    type PcTeamCancelMessage = { Reason: int64; ChaId: int64 }
+
     type PcFrndInviteMessage = { InviterName: string; ChaId: int64; Icon: int64 }
+
+    /// Отмена приглашения в друзья (причина + chaId инициатора).
+    [<Struct>]
+    type PcFrndCancelMessage = { Reason: int64; ChaId: int64 }
 
     type PcFrndRefreshMessage =
         { Msg: int64; Group: string; ChaId: int64; ChaName: string; Motto: string; Icon: int64 }
@@ -361,6 +369,42 @@ module CommandMessages =
     type PcFrndRefreshDelMessage = { Msg: int64; ChaId: int64 }
 
     type PcFrndChangeGroupMessage = { FriendChaId: int64; GroupName: string }
+
+    /// Запись друга/GM: chaId, имя, девиз, иконка, статус.
+    type GmFrndEntry =
+        { ChaId: int64; ChaName: string; Motto: string; Icon: int64; Status: int64 }
+
+    /// Запись добавления друга/GM: группа, chaId, имя, девиз, иконка.
+    type GmFrndAddEntry =
+        { Group: string; ChaId: int64; ChaName: string; Motto: string; Icon: int64 }
+
+    /// Тегированное сообщение PC_GM_INFO.
+    /// Type определяет, какие поля заполнены:
+    ///  START(1) — Entries; ONLINE(4)/OFFLINE(5)/DEL(3) — ChaId; ADD(2) — AddEntry.
+    type PcGmInfoMessage =
+        { Type: int64
+          Entries: GmFrndEntry[]
+          ChaId: int64
+          AddEntry: GmFrndAddEntry }
+
+    /// Данные о себе в списке друзей (FRND_REFRESH START).
+    [<Struct>]
+    type FrndSelfData =
+        { ChaId: int64; ChaName: string; Motto: string; Icon: int64 }
+
+    /// Группа друзей: имя группы + список участников.
+    type FrndGroupData =
+        { GroupName: string; Members: GmFrndEntry[] }
+
+    /// Тегированное сообщение PC_FRND_REFRESH.
+    /// Type определяет, какие поля заполнены:
+    ///  START(1) — Self + Groups; ONLINE(4)/OFFLINE(5)/DEL(3) — ChaId; ADD(2) — AddEntry.
+    type PcFrndRefreshFullMessage =
+        { Type: int64
+          ChaId: int64
+          AddEntry: GmFrndAddEntry
+          Self: FrndSelfData
+          Groups: FrndGroupData[] }
 
     type PcFrndRefreshInfoMessage =
         { ChaId: int64; Motto: string; Icon: int64; Degree: int64; Job: string; GuildName: string }
@@ -383,6 +427,20 @@ module CommandMessages =
     [<Struct>]
     type PcGuildPermMessage = { TargetChaId: int64; Permission: int64 }
 
+    /// Запись участника гильдии (CMD_PC_GUILD: MSG_GUILD_START / MSG_GUILD_ADD).
+    type GuildMemberEntry =
+        { Online: int64; ChaId: int64; ChaName: string; Motto: string
+          Job: string; Degree: int64; Icon: int64; Permission: int64 }
+
+    /// CMD_PC_GUILD — составное сообщение гильдии (подкоманда в Msg).
+    type PcGuildMessage =
+        { Msg: int64
+          ChaId: int64
+          PacketIndex: int64
+          GuildId: int64; GuildName: string; LeaderId: int64
+          Members: GuildMemberEntry[]
+          AddMember: GuildMemberEntry }
+
     type PcMasterRefreshAddMessage =
         { Msg: int64; Group: string; ChaId: int64; ChaName: string; Motto: string; Icon: int64 }
 
@@ -390,7 +448,7 @@ module CommandMessages =
     type PcMasterRefreshDelMessage = { Msg: int64; ChaId: int64 }
 
     type PcSessCreateMessage =
-        { SessId: int64; Members: SessMemberData[]; NotiPlyCount: int64 }
+        { SessId: int64; ErrorMsg: string; Members: SessMemberData[]; NotiPlyCount: int64 }
 
     type PcSessAddMessage =
         { SessId: int64; ChaId: int64; ChaName: string; Motto: string; Icon: int64 }
@@ -730,23 +788,17 @@ module CommandMessages =
     [<Struct>]
     type CmItemAmphitheaterAskMessage = { Sure: int64; ReId: int64 }
 
-    [<Struct>]
-    type CmMasterInviteMessage = { MasterId: int64 }
+    type CmMasterInviteMessage = { Name: string; ChaId: int64 }
 
-    [<Struct>]
-    type CmMasterAsrMessage = { Agree: int64; MasterId: int64 }
+    type CmMasterAsrMessage = { Agree: int64; Name: string; ChaId: int64 }
 
-    [<Struct>]
-    type CmMasterDelMessage = { MasterId: int64 }
+    type CmMasterDelMessage = { Name: string; ChaId: int64 }
 
-    [<Struct>]
-    type CmPrenticeInviteMessage = { PrenticeId: int64 }
+    type CmPrenticeInviteMessage = { Name: string; ChaId: int64 }
 
-    [<Struct>]
-    type CmPrenticeAsrMessage = { Agree: int64; PrenticeId: int64 }
+    type CmPrenticeAsrMessage = { Agree: int64; Name: string; ChaId: int64 }
 
-    [<Struct>]
-    type CmPrenticeDelMessage = { PrenticeId: int64 }
+    type CmPrenticeDelMessage = { Name: string; ChaId: int64 }
 
     // ─── Фаза 2: NPC Talk compound commands ────────────────────
 
@@ -834,6 +886,123 @@ module CommandMessages =
 
     [<Struct>]
     type McItemLotteryAsrMessage = { Success: int64 }
+
+    // ─── MC/CM — Фаза 4: простые ────────────────────────────────
+
+    [<Struct>]
+    type McChaEmotionMessage = { WorldId: int64; Emotion: int64 }
+
+    [<Struct>]
+    type McStartExitMessage = { ExitTime: int64 }
+
+    // CMD_MC_CANCELEXIT — cmd-only (без полей)
+    // CMD_MC_OPENHAIR — cmd-only (без полей)
+    // CMD_MC_BEGIN_ITEM_REPAIR — cmd-only (без полей)
+    // CMD_MC_BEGIN_GM_SEND — cmd-only (без полей)
+
+    [<Struct>]
+    type McGmRecvMessage = { NpcId: int64 }
+
+    [<Struct>]
+    type McStallDelGoodsMessage = { CharId: int64; Grid: int64; Count: int64 }
+
+    [<Struct>]
+    type McStallCloseMessage = { CharId: int64 }
+
+    [<Struct>]
+    type McStallSuccessMessage = { CharId: int64 }
+
+    type McUpdateGuildGoldMessage = { Data: string }
+
+    [<Struct>]
+    type McQueryChaItemMessage = { ChaId: int64 }
+
+    [<Struct>]
+    type McDisconnectMessage = { Reason: int64 }
+
+    [<Struct>]
+    type McLifeSkillShowMessage = { Type: int64 }
+
+    type McLifeSkillMessage = { Type: int64; Result: int64; Text: string }
+
+    type McLifeSkillAsrMessage = { Type: int64; Time: int64; Text: string }
+
+    [<Struct>]
+    type McDropLockAsrMessage = { Success: int64 }
+
+    [<Struct>]
+    type McUnlockItemAsrMessage = { Result: int64 }
+
+    [<Struct>]
+    type McStoreBuyAnswerMessage = { Success: int64; NewMoney: int64 }
+
+    [<Struct>]
+    type McStoreChangeAnswerMessage = { Success: int64; MoBean: int64; ReplMoney: int64 }
+
+    type McDailyBuffInfoMessage = { ImgName: string; LabelInfo: string }
+
+    [<Struct>]
+    type McRequestDropRateMessage = { Rate: float32 }
+
+    [<Struct>]
+    type McRequestExpRateMessage = { Rate: float32 }
+
+    [<Struct>]
+    type McTigerItemIdMessage = { Num: int64; ItemId0: int64; ItemId1: int64; ItemId2: int64 }
+
+    // ─── Гильдейские команды (CM/MC) ─────────────────────────────
+
+    // CM — клиент → сервер
+    type CmGuildPutNameMessage = { Confirm: int64; GuildName: string; Passwd: string }
+
+    [<Struct>]
+    type CmGuildTryForMessage = { GuildId: int64 }
+
+    [<Struct>]
+    type CmGuildTryForCfmMessage = { Confirm: int64 }
+
+    // CMD_CM_GUILD_LISTTRYPLAYER — cmd-only, без полей
+
+    [<Struct>]
+    type CmGuildApproveMessage = { ChaId: int64 }
+
+    [<Struct>]
+    type CmGuildRejectMessage = { ChaId: int64 }
+
+    [<Struct>]
+    type CmGuildKickMessage = { ChaId: int64 }
+
+    // CMD_CM_GUILD_LEAVE — cmd-only, без полей
+
+    type CmGuildDisbandMessage = { Passwd: string }
+
+    type CmGuildMottoMessage = { Motto: string }
+
+    [<Struct>]
+    type CmGuildChallMessage = { Level: int64; Money: int64 }
+
+    [<Struct>]
+    type CmGuildLeizhuMessage = { Level: int64; Money: int64 }
+
+    // MC — сервер → клиент
+    // CMD_MC_GUILD_GETNAME — cmd-only, без полей
+
+    type McGuildTryForCfmMessage = { Name: string }
+
+    type McGuildMottoMessage = { Motto: string }
+
+    // CMD_MC_GUILD_LEAVE — cmd-only, без полей
+    // CMD_MC_GUILD_KICK — cmd-only, без полей
+
+    type McGuildInfoMessage =
+        { CharId: int64; GuildId: int64; GuildName: string
+          GuildMotto: string; GuildPermission: int64 }
+
+    /// Запись уровня вызова гильдий (условная по Level <> 0).
+    type GuildChallEntry =
+        { Level: int64; Start: int64; GuildName: string; ChallName: string; Money: int64 }
+
+    type McGuildListChallMessage = { IsLeader: int64; Entries: GuildChallEntry[] }
 
     // ═══════════════════════════════════════════════════════════════
     //  Sub-packet типы (для вложенных структур)
@@ -1210,14 +1379,14 @@ module CommandMessages =
         { IsValid: bool; Vip: int64; MoBean: int64; ReplMoney: int64
           Affiches: StoreAfficheEntry[]; Classes: StoreClassEntry[] }
 
-    /// Вариант товара (предмет внутри товара магазина).
-    type StoreVariantEntry = { ItemId: int64; ItemNum: int64; Flute: int64 }
+    /// Вариант товара (предмет внутри товара магазина), включая 5 атрибутов.
+    type StoreVariantEntry = { ItemId: int64; ItemNum: int64; Flute: int64; Attrs: AttrEntry[] }
 
-    /// Товар магазина (Attrs — переиспользуем AttrEntry из ChaAttrInfo).
+    /// Товар магазина.
     type StoreProductEntry =
         { ComId: int64; ComName: string; Price: int64; Remark: string
           IsHot: bool; Time: int64; Quantity: int64; Expire: int64
-          Variants: StoreVariantEntry[]; Attrs: AttrEntry[] }
+          Variants: StoreVariantEntry[] }
 
     /// CMD_MC_STORE_LIST_ASR — список товаров магазина.
     type McStoreListAnswerMessage =
@@ -1238,6 +1407,68 @@ module CommandMessages =
     type McSynTeamMessage =
         { MemberId: int64; HP: int64; MaxHP: int64; SP: int64; MaxSP: int64; Level: int64
           Look: ChaLookInfo }
+
+    // ─── CMD_MC_NOTIACTION REQUESTGUILDLOGS/UPDATEGUILDLOGS ──────
+
+    /// Константы ActionType для логов банка гильдии.
+    [<Literal>]
+    let ACT_REQUESTGUILDLOGS = 32L
+    [<Literal>]
+    let ACT_UPDATEGUILDLOGS  = 33L
+
+    /// Константа типа предмета «корабль» (enumItemTypeBoat).
+    [<Literal>]
+    let ITEM_TYPE_BOAT = 26L
+
+    /// Запись лога банка гильдии.
+    type GuildBankLogEntry =
+        { Type: int64; Time: int64; Parameter: int64; Quantity: int64; UserId: int64 }
+
+    /// CMD_MC_NOTIACTION + enumACTION_UPDATEGUILDLOGS: обновление логов банка гильдии.
+    type McUpdateGuildLogsMessage =
+        { WorldId: int64; PacketId: int64; TotalSize: int64
+          Logs: GuildBankLogEntry[]; Terminated: bool }
+
+    /// CMD_MC_NOTIACTION + enumACTION_REQUESTGUILDLOGS: запрос логов банка гильдии.
+    type McRequestGuildLogsMessage =
+        { WorldId: int64; PacketId: int64
+          Logs: GuildBankLogEntry[]; Terminated: bool }
+
+    // ─── CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM ────────────────
+
+    /// Данные корабля в торговле.
+    type TradeBoatData =
+        { HasBoat: bool; Name: string
+          Ship: int64; Lv: int64; Cexp: int64
+          HP: int64; MxHP: int64; SP: int64; MxSP: int64
+          MnAtk: int64; MxAtk: int64; Def: int64
+          MSpd: int64; ASpd: int64
+          UseGridNum: int64; Capacity: int64; Price: int64 }
+
+    /// Данные обычного предмета в торговле.
+    type TradeItemData =
+        { Endure0: int64; Endure1: int64; Energy0: int64; Energy1: int64
+          ForgeLv: int64; Valid: int64; Tradable: int64; Expiration: int64
+          ForgeParam: int64; InstId: int64
+          HasInstAttr: bool; InstAttr: (int64 * int64)[] }
+
+    /// Данные удаления предмета из торговли (TRADE_DRAGTO_ITEM).
+    type McCharTradeItemRemoveData =
+        { BagIndex: int64; TradeIndex: int64; Count: int64 }
+
+    /// Данные добавления предмета в торговлю (TRADE_DRAGTO_TRADE).
+    type McCharTradeItemAddData =
+        { ItemId: int64; BagIndex: int64; TradeIndex: int64; Count: int64
+          ItemType: int64; EquipData: Choice<TradeBoatData, TradeItemData> }
+
+    /// Вариант данных торговли предметом.
+    type McCharTradeItemData =
+        | Remove of McCharTradeItemRemoveData
+        | Add of McCharTradeItemAddData
+
+    /// CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM: единое сообщение торговли предметом.
+    type McCharTradeItemMessage =
+        { MainChaId: int64; OpType: int64; Data: McCharTradeItemData }
 
     // ═══════════════════════════════════════════════════════════════
     //  Serialize — функции сериализации структур в WPacket
@@ -2078,12 +2309,26 @@ module CommandMessages =
                 w.WriteInt64(m.Icon)
             w
 
+        let pcTeamCancelMessage (msg: PcTeamCancelMessage) =
+            let mutable w = WPacket(32)
+            w.WriteCmd(Commands.CMD_PC_TEAM_CANCEL)
+            w.WriteInt64(msg.Reason)
+            w.WriteInt64(msg.ChaId)
+            w
+
         let pcFrndInviteMessage (msg: PcFrndInviteMessage) =
             let mutable w = WPacket(128)
             w.WriteCmd(Commands.CMD_PC_FRND_INVITE)
             w.WriteString(msg.InviterName)
             w.WriteInt64(msg.ChaId)
             w.WriteInt64(msg.Icon)
+            w
+
+        let pcFrndCancelMessage (msg: PcFrndCancelMessage) =
+            let mutable w = WPacket(32)
+            w.WriteCmd(Commands.CMD_PC_FRND_CANCEL)
+            w.WriteInt64(msg.Reason)
+            w.WriteInt64(msg.ChaId)
             w
 
         let pcFrndRefreshMessage (msg: PcFrndRefreshMessage) =
@@ -2102,6 +2347,63 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_PC_FRND_REFRESH)
             w.WriteInt64(msg.Msg)
             w.WriteInt64(msg.ChaId)
+            w
+
+        /// Сериализация тегированного сообщения PC_GM_INFO.
+        let pcGmInfoMessage (msg: PcGmInfoMessage) =
+            let mutable w = WPacket(1024)
+            w.WriteCmd(Commands.CMD_PC_GM_INFO)
+            w.WriteInt64(msg.Type)
+            match msg.Type with
+            | 1L -> // MSG_FRND_REFRESH_START
+                w.WriteInt64(int64 msg.Entries.Length)
+                for e in msg.Entries do
+                    w.WriteInt64(e.ChaId)
+                    w.WriteString(e.ChaName)
+                    w.WriteString(e.Motto)
+                    w.WriteInt64(e.Icon)
+                    w.WriteInt64(e.Status)
+            | 4L | 5L | 3L -> // ONLINE / OFFLINE / DEL
+                w.WriteInt64(msg.ChaId)
+            | 2L -> // MSG_FRND_REFRESH_ADD
+                w.WriteString(msg.AddEntry.Group)
+                w.WriteInt64(msg.AddEntry.ChaId)
+                w.WriteString(msg.AddEntry.ChaName)
+                w.WriteString(msg.AddEntry.Motto)
+                w.WriteInt64(msg.AddEntry.Icon)
+            | _ -> ()
+            w
+
+        /// Сериализация тегированного сообщения PC_FRND_REFRESH.
+        let pcFrndRefreshFullMessage (msg: PcFrndRefreshFullMessage) =
+            let mutable w = WPacket(4096)
+            w.WriteCmd(Commands.CMD_PC_FRND_REFRESH)
+            w.WriteInt64(msg.Type)
+            match msg.Type with
+            | 4L | 5L | 3L -> // ONLINE / OFFLINE / DEL
+                w.WriteInt64(msg.ChaId)
+            | 2L -> // MSG_FRND_REFRESH_ADD
+                w.WriteString(msg.AddEntry.Group)
+                w.WriteInt64(msg.AddEntry.ChaId)
+                w.WriteString(msg.AddEntry.ChaName)
+                w.WriteString(msg.AddEntry.Motto)
+                w.WriteInt64(msg.AddEntry.Icon)
+            | 1L -> // MSG_FRND_REFRESH_START
+                w.WriteInt64(msg.Self.ChaId)
+                w.WriteString(msg.Self.ChaName)
+                w.WriteString(msg.Self.Motto)
+                w.WriteInt64(msg.Self.Icon)
+                w.WriteInt64(int64 msg.Groups.Length)
+                for g in msg.Groups do
+                    w.WriteString(g.GroupName)
+                    w.WriteInt64(int64 g.Members.Length)
+                    for m in g.Members do
+                        w.WriteInt64(m.ChaId)
+                        w.WriteString(m.ChaName)
+                        w.WriteString(m.Motto)
+                        w.WriteInt64(m.Icon)
+                        w.WriteInt64(m.Status)
+            | _ -> ()
             w
 
         let pcFrndChangeGroupMessage (msg: PcFrndChangeGroupMessage) =
@@ -2195,6 +2497,35 @@ module CommandMessages =
             w.WriteInt64(msg.Permission)
             w
 
+        /// Вспомогательная: сериализация одного участника гильдии.
+        let inline private serializeGuildMemberEntry (w: byref<WPacket>) (e: GuildMemberEntry) =
+            w.WriteInt64(e.Online); w.WriteInt64(e.ChaId)
+            w.WriteString(e.ChaName); w.WriteString(e.Motto); w.WriteString(e.Job)
+            w.WriteInt64(e.Degree); w.WriteInt64(e.Icon); w.WriteInt64(e.Permission)
+
+        /// CMD_PC_GUILD — составное сообщение (подкоманда в Msg).
+        let pcGuildMessage (msg: PcGuildMessage) =
+            let mutable w = WPacket(2048)
+            w.WriteCmd(Commands.CMD_PC_GUILD)
+            w.WriteInt64(msg.Msg)
+            // MSG_GUILD_START=1, ADD=2, DEL=3, ONLINE=4, OFFLINE=5, STOP=6
+            match msg.Msg with
+            | 4L | 5L | 3L -> // ONLINE / OFFLINE / DEL
+                w.WriteInt64(msg.ChaId)
+            | 1L -> // START
+                w.WriteInt64(int64 msg.Members.Length)
+                w.WriteInt64(msg.PacketIndex)
+                if msg.PacketIndex = 0L && msg.Members.Length > 0 then
+                    w.WriteInt64(msg.GuildId)
+                    w.WriteString(msg.GuildName)
+                    w.WriteInt64(msg.LeaderId)
+                for m in msg.Members do serializeGuildMemberEntry &w m
+            | 6L -> () // STOP — нет данных
+            | 2L -> // ADD
+                serializeGuildMemberEntry &w msg.AddMember
+            | _ -> ()
+            w
+
         let pcMasterRefreshAddMessage (msg: PcMasterRefreshAddMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_PC_MASTER_REFRESH)
@@ -2217,13 +2548,16 @@ module CommandMessages =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_PC_SESS_CREATE)
             w.WriteInt64(msg.SessId)
-            w.WriteInt64(int64 msg.Members.Length)
-            for m in msg.Members do
-                w.WriteInt64(m.ChaId)
-                w.WriteString(m.ChaName)
-                w.WriteString(m.Motto)
-                w.WriteInt64(m.Icon)
-            w.WriteInt64(msg.NotiPlyCount)
+            if msg.SessId = 0L then
+                w.WriteString(msg.ErrorMsg)
+            else
+                w.WriteInt64(int64 msg.Members.Length)
+                for m in msg.Members do
+                    w.WriteInt64(m.ChaId)
+                    w.WriteString(m.ChaName)
+                    w.WriteString(m.Motto)
+                    w.WriteInt64(m.Icon)
+                w.WriteInt64(msg.NotiPlyCount)
             w
 
         let pcSessAddMessage (msg: PcSessAddMessage) =
@@ -3097,41 +3431,47 @@ module CommandMessages =
             w
 
         let cmMasterInviteMessage (msg: CmMasterInviteMessage) =
-            let mutable w = WPacket(16)
+            let mutable w = WPacket(80)
             w.WriteCmd(Commands.CMD_CM_MASTER_INVITE)
-            w.WriteInt64(msg.MasterId)
+            w.WriteString(msg.Name)
+            w.WriteInt64(msg.ChaId)
             w
 
         let cmMasterAsrMessage (msg: CmMasterAsrMessage) =
-            let mutable w = WPacket(24)
+            let mutable w = WPacket(88)
             w.WriteCmd(Commands.CMD_CM_MASTER_ASR)
             w.WriteInt64(msg.Agree)
-            w.WriteInt64(msg.MasterId)
+            w.WriteString(msg.Name)
+            w.WriteInt64(msg.ChaId)
             w
 
         let cmMasterDelMessage (msg: CmMasterDelMessage) =
-            let mutable w = WPacket(16)
+            let mutable w = WPacket(80)
             w.WriteCmd(Commands.CMD_CM_MASTER_DEL)
-            w.WriteInt64(msg.MasterId)
+            w.WriteString(msg.Name)
+            w.WriteInt64(msg.ChaId)
             w
 
         let cmPrenticeInviteMessage (msg: CmPrenticeInviteMessage) =
-            let mutable w = WPacket(16)
+            let mutable w = WPacket(80)
             w.WriteCmd(Commands.CMD_CM_PRENTICE_INVITE)
-            w.WriteInt64(msg.PrenticeId)
+            w.WriteString(msg.Name)
+            w.WriteInt64(msg.ChaId)
             w
 
         let cmPrenticeAsrMessage (msg: CmPrenticeAsrMessage) =
-            let mutable w = WPacket(24)
+            let mutable w = WPacket(88)
             w.WriteCmd(Commands.CMD_CM_PRENTICE_ASR)
             w.WriteInt64(msg.Agree)
-            w.WriteInt64(msg.PrenticeId)
+            w.WriteString(msg.Name)
+            w.WriteInt64(msg.ChaId)
             w
 
         let cmPrenticeDelMessage (msg: CmPrenticeDelMessage) =
-            let mutable w = WPacket(16)
+            let mutable w = WPacket(80)
             w.WriteCmd(Commands.CMD_CM_PRENTICE_DEL)
-            w.WriteInt64(msg.PrenticeId)
+            w.WriteString(msg.Name)
+            w.WriteInt64(msg.ChaId)
             w
 
         // ─── Фаза 2: NPC Talk compound commands ────────────────────
@@ -3377,6 +3717,276 @@ module CommandMessages =
             let mutable w = WPacket(16)
             w.WriteCmd(Commands.CMD_MC_ITEM_LOTTERY_ASR)
             w.WriteInt64(msg.Success)
+            w
+
+        // ─── MC/CM — Фаза 4: простые ────────────────────────────
+
+        let mcChaEmotionMessage (msg: McChaEmotionMessage) =
+            let mutable w = WPacket(24)
+            w.WriteCmd(Commands.CMD_MC_CHA_EMOTION)
+            w.WriteInt64(msg.WorldId)
+            w.WriteInt64(msg.Emotion)
+            w
+
+        let mcStartExitMessage (msg: McStartExitMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_STARTEXIT)
+            w.WriteInt64(msg.ExitTime)
+            w
+
+        let mcCancelExitCmd () =
+            let mutable w = WPacket(8)
+            w.WriteCmd(Commands.CMD_MC_CANCELEXIT)
+            w
+
+        let mcOpenHairCutCmd () =
+            let mutable w = WPacket(8)
+            w.WriteCmd(Commands.CMD_MC_OPENHAIR)
+            w
+
+        let mcBeginItemRepairCmd () =
+            let mutable w = WPacket(8)
+            w.WriteCmd(Commands.CMD_MC_BEGIN_ITEM_REPAIR)
+            w
+
+        let mcGmSendCmd () =
+            let mutable w = WPacket(8)
+            w.WriteCmd(Commands.CMD_MC_BEGIN_GM_SEND)
+            w
+
+        let mcGmRecvMessage (msg: McGmRecvMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_BEGIN_GM_RECV)
+            w.WriteInt64(msg.NpcId)
+            w
+
+        let mcStallDelGoodsMessage (msg: McStallDelGoodsMessage) =
+            let mutable w = WPacket(32)
+            w.WriteCmd(Commands.CMD_MC_STALL_DELGOODS)
+            w.WriteInt64(msg.CharId)
+            w.WriteInt64(msg.Grid)
+            w.WriteInt64(msg.Count)
+            w
+
+        let mcStallCloseMessage (msg: McStallCloseMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_STALL_CLOSE)
+            w.WriteInt64(msg.CharId)
+            w
+
+        let mcStallSuccessMessage (msg: McStallSuccessMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_STALL_START)
+            w.WriteInt64(msg.CharId)
+            w
+
+        let mcUpdateGuildGoldMessage (msg: McUpdateGuildGoldMessage) =
+            let mutable w = WPacket(64)
+            w.WriteCmd(Commands.CMD_MC_UPDATEGUILDBANKGOLD)
+            w.WriteString(msg.Data)
+            w
+
+        let mcQueryChaItemMessage (msg: McQueryChaItemMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MM_QUERY_CHAITEM)
+            w.WriteInt64(msg.ChaId)
+            w
+
+        let mcDisconnectMessage (msg: McDisconnectMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_TC_DISCONNECT)
+            w.WriteInt64(msg.Reason)
+            w
+
+        let mcLifeSkillShowMessage (msg: McLifeSkillShowMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_LIFESKILL_BGING)
+            w.WriteInt64(msg.Type)
+            w
+
+        let mcLifeSkillMessage (msg: McLifeSkillMessage) =
+            let mutable w = WPacket(128)
+            w.WriteCmd(Commands.CMD_MC_LIFESKILL_ASK)
+            w.WriteInt64(msg.Type)
+            w.WriteInt64(msg.Result)
+            w.WriteString(msg.Text)
+            w
+
+        let mcLifeSkillAsrMessage (msg: McLifeSkillAsrMessage) =
+            let mutable w = WPacket(128)
+            w.WriteCmd(Commands.CMD_MC_LIFESKILL_ASR)
+            w.WriteInt64(msg.Type)
+            w.WriteInt64(msg.Time)
+            w.WriteString(msg.Text)
+            w
+
+        let mcDropLockAsrMessage (msg: McDropLockAsrMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_CM_ITEM_LOCK_ASR)
+            w.WriteInt64(msg.Success)
+            w
+
+        let mcUnlockItemAsrMessage (msg: McUnlockItemAsrMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_ITEM_UNLOCK_ASR)
+            w.WriteInt64(msg.Result)
+            w
+
+        let mcStoreBuyAnswerMessage (msg: McStoreBuyAnswerMessage) =
+            let mutable w = WPacket(24)
+            w.WriteCmd(Commands.CMD_MC_STORE_BUY_ASR)
+            w.WriteInt64(msg.Success)
+            w.WriteInt64(msg.NewMoney)
+            w
+
+        let mcStoreChangeAnswerMessage (msg: McStoreChangeAnswerMessage) =
+            let mutable w = WPacket(32)
+            w.WriteCmd(Commands.CMD_MC_STORE_CHANGE_ASR)
+            w.WriteInt64(msg.Success)
+            w.WriteInt64(msg.MoBean)
+            w.WriteInt64(msg.ReplMoney)
+            w
+
+        let mcDailyBuffInfoMessage (msg: McDailyBuffInfoMessage) =
+            let mutable w = WPacket(128)
+            w.WriteCmd(Commands.CMD_MC_RecDailyBuffInfo)
+            w.WriteString(msg.ImgName)
+            w.WriteString(msg.LabelInfo)
+            w
+
+        let mcRequestDropRateMessage (msg: McRequestDropRateMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_REQUEST_DROP_RATE)
+            w.WriteFloat32(msg.Rate)
+            w
+
+        let mcRequestExpRateMessage (msg: McRequestExpRateMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_MC_REQUEST_EXP_RATE)
+            w.WriteFloat32(msg.Rate)
+            w
+
+        let mcTigerItemIdMessage (msg: McTigerItemIdMessage) =
+            let mutable w = WPacket(40)
+            w.WriteCmd(Commands.CMD_MC_TIGER_ITEM_ID)
+            w.WriteInt64(msg.Num)
+            w.WriteInt64(msg.ItemId0)
+            w.WriteInt64(msg.ItemId1)
+            w.WriteInt64(msg.ItemId2)
+            w
+
+        // ─── Serialize: гильдейские CM ──────────────────────────────
+
+        let cmGuildPutNameMessage (msg: CmGuildPutNameMessage) =
+            let mutable w = WPacket(128)
+            w.WriteCmd(Commands.CMD_CM_GUILD_PUTNAME)
+            w.WriteInt64(msg.Confirm)
+            w.WriteString(msg.GuildName)
+            w.WriteString(msg.Passwd)
+            w
+
+        let cmGuildTryForMessage (msg: CmGuildTryForMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_CM_GUILD_TRYFOR)
+            w.WriteInt64(msg.GuildId)
+            w
+
+        let cmGuildTryForCfmMessage (msg: CmGuildTryForCfmMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_CM_GUILD_TRYFORCFM)
+            w.WriteInt64(msg.Confirm)
+            w
+
+        let cmGuildListTryPlayerCmd () =
+            let mutable w = WPacket(8)
+            w.WriteCmd(Commands.CMD_CM_GUILD_LISTTRYPLAYER)
+            w
+
+        let cmGuildApproveMessage (msg: CmGuildApproveMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_CM_GUILD_APPROVE)
+            w.WriteInt64(msg.ChaId)
+            w
+
+        let cmGuildRejectMessage (msg: CmGuildRejectMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_CM_GUILD_REJECT)
+            w.WriteInt64(msg.ChaId)
+            w
+
+        let cmGuildKickMessage (msg: CmGuildKickMessage) =
+            let mutable w = WPacket(16)
+            w.WriteCmd(Commands.CMD_CM_GUILD_KICK)
+            w.WriteInt64(msg.ChaId)
+            w
+
+        let cmGuildLeaveCmd () =
+            let mutable w = WPacket(8)
+            w.WriteCmd(Commands.CMD_CM_GUILD_LEAVE)
+            w
+
+        let cmGuildDisbandMessage (msg: CmGuildDisbandMessage) =
+            let mutable w = WPacket(64)
+            w.WriteCmd(Commands.CMD_CM_GUILD_DISBAND)
+            w.WriteString(msg.Passwd)
+            w
+
+        let cmGuildMottoMessage (msg: CmGuildMottoMessage) =
+            let mutable w = WPacket(128)
+            w.WriteCmd(Commands.CMD_CM_GUILD_MOTTO)
+            w.WriteString(msg.Motto)
+            w
+
+        let cmGuildChallMessage (msg: CmGuildChallMessage) =
+            let mutable w = WPacket(24)
+            w.WriteCmd(Commands.CMD_CM_GUILD_CHALLENGE)
+            w.WriteInt64(msg.Level)
+            w.WriteInt64(msg.Money)
+            w
+
+        let cmGuildLeizhuMessage (msg: CmGuildLeizhuMessage) =
+            let mutable w = WPacket(24)
+            w.WriteCmd(Commands.CMD_CM_GUILD_LEIZHU)
+            w.WriteInt64(msg.Level)
+            w.WriteInt64(msg.Money)
+            w
+
+        // ─── Serialize: гильдейские MC ──────────────────────────────
+
+        let mcGuildTryForCfmMessage (msg: McGuildTryForCfmMessage) =
+            let mutable w = WPacket(64)
+            w.WriteCmd(Commands.CMD_MC_GUILD_TRYFORCFM)
+            w.WriteString(msg.Name)
+            w
+
+        let mcGuildMottoMessage (msg: McGuildMottoMessage) =
+            let mutable w = WPacket(128)
+            w.WriteCmd(Commands.CMD_MC_GUILD_MOTTO)
+            w.WriteString(msg.Motto)
+            w
+
+        let mcGuildInfoMessage (msg: McGuildInfoMessage) =
+            let mutable w = WPacket(256)
+            w.WriteCmd(Commands.CMD_MC_GUILD_INFO)
+            w.WriteInt64(msg.CharId)
+            w.WriteInt64(msg.GuildId)
+            w.WriteString(msg.GuildName)
+            w.WriteString(msg.GuildMotto)
+            w.WriteInt64(msg.GuildPermission)
+            w
+
+        let mcGuildListChallMessage (msg: McGuildListChallMessage) =
+            let mutable w = WPacket(512)
+            w.WriteCmd(Commands.CMD_MC_GUILD_LISTCHALL)
+            w.WriteInt64(msg.IsLeader)
+            for i in 0..2 do
+                let e = msg.Entries[i]
+                w.WriteInt64(e.Level)
+                if e.Level <> 0L then
+                    w.WriteInt64(e.Start)
+                    w.WriteString(e.GuildName)
+                    w.WriteString(e.ChallName)
+                    w.WriteInt64(e.Money)
             w
 
         // ─── Sub-packet helpers ────────────────────────────────────
@@ -4037,15 +4647,15 @@ module CommandMessages =
                 w.WriteInt64(p.Quantity)
                 w.WriteInt64(p.Expire)
                 w.WriteInt64(int64 p.Variants.Length)
+                // Атрибуты записываются внутри каждого варианта (по 5 пар на вариант)
                 for v in p.Variants do
                     w.WriteInt64(v.ItemId)
                     w.WriteInt64(v.ItemNum)
                     w.WriteInt64(v.Flute)
-                // Всегда ровно 5 атрибутов
-                for i in 0 .. 4 do
-                    let a = if i < p.Attrs.Length then p.Attrs[i] else { AttrEntry.AttrId = 0L; AttrVal = 0L }
-                    w.WriteInt64(a.AttrId)
-                    w.WriteInt64(a.AttrVal)
+                    for i in 0 .. 4 do
+                        let a = if i < v.Attrs.Length then v.Attrs[i] else { AttrEntry.AttrId = 0L; AttrVal = 0L }
+                        w.WriteInt64(a.AttrId)
+                        w.WriteInt64(a.AttrVal)
             w
 
         let mcStoreHistoryMessage (msg: McStoreHistoryMessage) =
@@ -4082,6 +4692,78 @@ module CommandMessages =
             w.WriteInt64(msg.MaxSP)
             w.WriteInt64(msg.Level)
             serializeChaLookInfo &w msg.Look
+            w
+
+        // ─── CMD_MC_NOTIACTION UPDATEGUILDLOGS/REQUESTGUILDLOGS ──
+
+        /// Сериализация CMD_MC_NOTIACTION + UPDATEGUILDLOGS.
+        let mcUpdateGuildLogsMessage (msg: McUpdateGuildLogsMessage) =
+            let mutable w = WPacket(1024)
+            w.WriteCmd(Commands.CMD_MC_NOTIACTION)
+            w.WriteInt64(msg.WorldId)
+            w.WriteInt64(msg.PacketId)
+            w.WriteInt64(ACT_UPDATEGUILDLOGS)
+            w.WriteInt64(msg.TotalSize)
+            for l in msg.Logs do
+                w.WriteInt64(l.Type); w.WriteInt64(l.Time)
+                w.WriteInt64(l.Parameter); w.WriteInt64(l.Quantity); w.WriteInt64(l.UserId)
+            if msg.Terminated then w.WriteInt64(9L)
+            w
+
+        /// Сериализация CMD_MC_NOTIACTION + REQUESTGUILDLOGS.
+        let mcRequestGuildLogsMessage (msg: McRequestGuildLogsMessage) =
+            let mutable w = WPacket(1024)
+            w.WriteCmd(Commands.CMD_MC_NOTIACTION)
+            w.WriteInt64(msg.WorldId)
+            w.WriteInt64(msg.PacketId)
+            w.WriteInt64(ACT_REQUESTGUILDLOGS)
+            for l in msg.Logs do
+                w.WriteInt64(l.Type); w.WriteInt64(l.Time)
+                w.WriteInt64(l.Parameter); w.WriteInt64(l.Quantity); w.WriteInt64(l.UserId)
+            if msg.Terminated then w.WriteInt64(9L)
+            w
+
+        // ─── CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM ───────────
+
+        /// Сериализация CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM (единое сообщение).
+        let mcCharTradeItemMessage (msg: McCharTradeItemMessage) =
+            let mutable w = WPacket(512)
+            w.WriteCmd(Commands.CMD_MC_CHARTRADE)
+            w.WriteInt64(int64 Commands.CMD_MC_CHARTRADE_ITEM)
+            w.WriteInt64(msg.MainChaId); w.WriteInt64(msg.OpType)
+            match msg.Data with
+            | Remove rem ->
+                w.WriteInt64(rem.BagIndex); w.WriteInt64(rem.TradeIndex); w.WriteInt64(rem.Count)
+            | Add add ->
+                w.WriteInt64(add.ItemId); w.WriteInt64(add.BagIndex)
+                w.WriteInt64(add.TradeIndex); w.WriteInt64(add.Count); w.WriteInt64(add.ItemType)
+                match add.EquipData with
+                | Choice1Of2 boat ->
+                    if boat.HasBoat then
+                        w.WriteInt64(1L); w.WriteString(boat.Name)
+                        w.WriteInt64(boat.Ship); w.WriteInt64(boat.Lv)
+                        w.WriteInt64(boat.Cexp); w.WriteInt64(boat.HP)
+                        w.WriteInt64(boat.MxHP); w.WriteInt64(boat.SP)
+                        w.WriteInt64(boat.MxSP); w.WriteInt64(boat.MnAtk)
+                        w.WriteInt64(boat.MxAtk); w.WriteInt64(boat.Def)
+                        w.WriteInt64(boat.MSpd); w.WriteInt64(boat.ASpd)
+                        w.WriteInt64(boat.UseGridNum); w.WriteInt64(boat.Capacity)
+                        w.WriteInt64(boat.Price)
+                    else
+                        w.WriteInt64(0L)
+                | Choice2Of2 item ->
+                    w.WriteInt64(item.Endure0); w.WriteInt64(item.Endure1)
+                    w.WriteInt64(item.Energy0); w.WriteInt64(item.Energy1)
+                    w.WriteInt64(item.ForgeLv); w.WriteInt64(item.Valid)
+                    w.WriteInt64(item.Tradable); w.WriteInt64(item.Expiration)
+                    w.WriteInt64(item.ForgeParam); w.WriteInt64(item.InstId)
+                    if item.HasInstAttr then
+                        w.WriteInt64(1L)
+                        for j in 0 .. ITEM_INSTANCE_ATTR_NUM - 1 do
+                            let (a, b) = item.InstAttr[j]
+                            w.WriteInt64(a); w.WriteInt64(b)
+                    else
+                        w.WriteInt64(0L)
             w
 
     // ═══════════════════════════════════════════════════════════════
@@ -4512,8 +5194,14 @@ module CommandMessages =
                   Motto = pk.ReadString(); Icon = pk.ReadInt64() })
             { Msg = msg; Count = count; Members = members }
 
+        let pcTeamCancelMessage (pk: IRPacket) : PcTeamCancelMessage =
+            { Reason = pk.ReadInt64(); ChaId = pk.ReadInt64() }
+
         let pcFrndInviteMessage (pk: IRPacket) : PcFrndInviteMessage =
             { InviterName = pk.ReadString(); ChaId = pk.ReadInt64(); Icon = pk.ReadInt64() }
+
+        let pcFrndCancelMessage (pk: IRPacket) : PcFrndCancelMessage =
+            { Reason = pk.ReadInt64(); ChaId = pk.ReadInt64() }
 
         let pcFrndRefreshMessage (pk: IRPacket) : PcFrndRefreshMessage =
             { Msg = pk.ReadInt64(); Group = pk.ReadString(); ChaId = pk.ReadInt64()
@@ -4521,6 +5209,56 @@ module CommandMessages =
 
         let pcFrndRefreshDelMessage (pk: IRPacket) : PcFrndRefreshDelMessage =
             { Msg = pk.ReadInt64(); ChaId = pk.ReadInt64() }
+
+        /// Десериализация тегированного сообщения PC_GM_INFO.
+        let pcGmInfoMessage (pk: IRPacket) : PcGmInfoMessage =
+            let ty = pk.ReadInt64()
+            let emptyAdd = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+            match ty with
+            | 1L -> // MSG_FRND_REFRESH_START
+                let count = int (pk.ReadInt64())
+                let entries = Array.init count (fun _ ->
+                    { GmFrndEntry.ChaId = pk.ReadInt64(); ChaName = pk.ReadString()
+                      Motto = pk.ReadString(); Icon = pk.ReadInt64(); Status = pk.ReadInt64() })
+                { Type = ty; Entries = entries; ChaId = 0L; AddEntry = emptyAdd }
+            | 4L | 5L | 3L -> // ONLINE / OFFLINE / DEL
+                { Type = ty; Entries = [||]; ChaId = pk.ReadInt64(); AddEntry = emptyAdd }
+            | 2L -> // MSG_FRND_REFRESH_ADD
+                let add =
+                    { GmFrndAddEntry.Group = pk.ReadString(); ChaId = pk.ReadInt64()
+                      ChaName = pk.ReadString(); Motto = pk.ReadString(); Icon = pk.ReadInt64() }
+                { Type = ty; Entries = [||]; ChaId = 0L; AddEntry = add }
+            | _ ->
+                { Type = ty; Entries = [||]; ChaId = 0L; AddEntry = emptyAdd }
+
+        /// Десериализация тегированного сообщения PC_FRND_REFRESH.
+        let pcFrndRefreshFullMessage (pk: IRPacket) : PcFrndRefreshFullMessage =
+            let ty = pk.ReadInt64()
+            let emptyAdd = { GmFrndAddEntry.Group = ""; ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+            let emptySelf = { FrndSelfData.ChaId = 0L; ChaName = ""; Motto = ""; Icon = 0L }
+            match ty with
+            | 4L | 5L | 3L -> // ONLINE / OFFLINE / DEL
+                { Type = ty; ChaId = pk.ReadInt64(); AddEntry = emptyAdd; Self = emptySelf; Groups = [||] }
+            | 2L -> // MSG_FRND_REFRESH_ADD
+                let add =
+                    { GmFrndAddEntry.Group = pk.ReadString(); ChaId = pk.ReadInt64()
+                      ChaName = pk.ReadString(); Motto = pk.ReadString(); Icon = pk.ReadInt64() }
+                { Type = ty; ChaId = 0L; AddEntry = add; Self = emptySelf; Groups = [||] }
+            | 1L -> // MSG_FRND_REFRESH_START
+                let self =
+                    { FrndSelfData.ChaId = pk.ReadInt64(); ChaName = pk.ReadString()
+                      Motto = pk.ReadString(); Icon = pk.ReadInt64() }
+                let groupCount = int (pk.ReadInt64())
+                let groups = Array.init groupCount (fun _ ->
+                    let gn = pk.ReadString()
+                    let mc = int (pk.ReadInt64())
+                    let members = Array.init mc (fun _ ->
+                        { GmFrndEntry.ChaId = pk.ReadInt64(); ChaName = pk.ReadString()
+                          Motto = pk.ReadString(); Icon = pk.ReadInt64(); Status = pk.ReadInt64() })
+                    { FrndGroupData.GroupName = gn; Members = members })
+                { Type = ty; ChaId = 0L; AddEntry = emptyAdd; Self = self; Groups = groups }
+            | _ ->
+                { Type = ty; ChaId = 0L; AddEntry = emptyAdd; Self = emptySelf; Groups = [||] }
 
         let pcFrndChangeGroupMessage (pk: IRPacket) : PcFrndChangeGroupMessage =
             { FriendChaId = pk.ReadInt64(); GroupName = pk.ReadString() }
@@ -4560,6 +5298,47 @@ module CommandMessages =
         let pcGuildPermMessage (pk: IRPacket) : PcGuildPermMessage =
             { TargetChaId = pk.ReadInt64(); Permission = pk.ReadInt64() }
 
+        /// Вспомогательная: десериализация одного участника гильдии.
+        let inline private deserializeGuildMemberEntry (pk: IRPacket) : GuildMemberEntry =
+            { Online = pk.ReadInt64(); ChaId = pk.ReadInt64()
+              ChaName = pk.ReadString(); Motto = pk.ReadString(); Job = pk.ReadString()
+              Degree = pk.ReadInt64(); Icon = pk.ReadInt64(); Permission = pk.ReadInt64() }
+
+        /// CMD_PC_GUILD — составное сообщение (подкоманда в Msg).
+        let pcGuildMessage (pk: IRPacket) : PcGuildMessage =
+            let emptyMember = { Online = 0L; ChaId = 0L; ChaName = ""; Motto = ""; Job = ""; Degree = 0L; Icon = 0L; Permission = 0L }
+            let msg = pk.ReadInt64()
+            match msg with
+            | 4L | 5L | 3L -> // ONLINE / OFFLINE / DEL
+                { Msg = msg; ChaId = pk.ReadInt64(); PacketIndex = 0L
+                  GuildId = 0L; GuildName = ""; LeaderId = 0L
+                  Members = [||]; AddMember = emptyMember }
+            | 1L -> // START
+                let count = int (pk.ReadInt64())
+                let packetIndex = pk.ReadInt64()
+                let guildId, guildName, leaderId =
+                    if packetIndex = 0L && count > 0 then
+                        pk.ReadInt64(), pk.ReadString(), pk.ReadInt64()
+                    else
+                        0L, "", 0L
+                let members = Array.init count (fun _ -> deserializeGuildMemberEntry pk)
+                { Msg = msg; ChaId = 0L; PacketIndex = packetIndex
+                  GuildId = guildId; GuildName = guildName; LeaderId = leaderId
+                  Members = members; AddMember = emptyMember }
+            | 6L -> // STOP — нет данных
+                { Msg = msg; ChaId = 0L; PacketIndex = 0L
+                  GuildId = 0L; GuildName = ""; LeaderId = 0L
+                  Members = [||]; AddMember = emptyMember }
+            | 2L -> // ADD
+                let addMember = deserializeGuildMemberEntry pk
+                { Msg = msg; ChaId = 0L; PacketIndex = 0L
+                  GuildId = 0L; GuildName = ""; LeaderId = 0L
+                  Members = [||]; AddMember = addMember }
+            | _ ->
+                { Msg = msg; ChaId = 0L; PacketIndex = 0L
+                  GuildId = 0L; GuildName = ""; LeaderId = 0L
+                  Members = [||]; AddMember = emptyMember }
+
         let pcMasterRefreshAddMessage (pk: IRPacket) : PcMasterRefreshAddMessage =
             { Msg = pk.ReadInt64(); Group = pk.ReadString(); ChaId = pk.ReadInt64()
               ChaName = pk.ReadString(); Motto = pk.ReadString(); Icon = pk.ReadInt64() }
@@ -4569,11 +5348,14 @@ module CommandMessages =
 
         let pcSessCreateMessage (pk: IRPacket) : PcSessCreateMessage =
             let sessId = pk.ReadInt64()
-            let count = int (pk.ReadInt64())
-            let members = Array.init count (fun _ ->
-                { SessMemberData.ChaId = pk.ReadInt64(); ChaName = pk.ReadString()
-                  Motto = pk.ReadString(); Icon = pk.ReadInt64() })
-            { SessId = sessId; Members = members; NotiPlyCount = pk.ReadInt64() }
+            if sessId = 0L then
+                { SessId = 0L; ErrorMsg = pk.ReadString(); Members = [||]; NotiPlyCount = 0L }
+            else
+                let count = int (pk.ReadInt64())
+                let members = Array.init count (fun _ ->
+                    { SessMemberData.ChaId = pk.ReadInt64(); ChaName = pk.ReadString()
+                      Motto = pk.ReadString(); Icon = pk.ReadInt64() })
+                { SessId = sessId; ErrorMsg = ""; Members = members; NotiPlyCount = pk.ReadInt64() }
 
         let pcSessAddMessage (pk: IRPacket) : PcSessAddMessage =
             { SessId = pk.ReadInt64(); ChaId = pk.ReadInt64()
@@ -4917,22 +5699,22 @@ module CommandMessages =
             { Sure = pk.ReadInt64(); ReId = pk.ReadInt64() }
 
         let cmMasterInviteMessage (pk: IRPacket) : CmMasterInviteMessage =
-            { MasterId = pk.ReadInt64() }
+            { Name = pk.ReadString(); ChaId = pk.ReadInt64() }
 
         let cmMasterAsrMessage (pk: IRPacket) : CmMasterAsrMessage =
-            { Agree = pk.ReadInt64(); MasterId = pk.ReadInt64() }
+            { Agree = pk.ReadInt64(); Name = pk.ReadString(); ChaId = pk.ReadInt64() }
 
         let cmMasterDelMessage (pk: IRPacket) : CmMasterDelMessage =
-            { MasterId = pk.ReadInt64() }
+            { Name = pk.ReadString(); ChaId = pk.ReadInt64() }
 
         let cmPrenticeInviteMessage (pk: IRPacket) : CmPrenticeInviteMessage =
-            { PrenticeId = pk.ReadInt64() }
+            { Name = pk.ReadString(); ChaId = pk.ReadInt64() }
 
         let cmPrenticeAsrMessage (pk: IRPacket) : CmPrenticeAsrMessage =
-            { Agree = pk.ReadInt64(); PrenticeId = pk.ReadInt64() }
+            { Agree = pk.ReadInt64(); Name = pk.ReadString(); ChaId = pk.ReadInt64() }
 
         let cmPrenticeDelMessage (pk: IRPacket) : CmPrenticeDelMessage =
-            { PrenticeId = pk.ReadInt64() }
+            { Name = pk.ReadString(); ChaId = pk.ReadInt64() }
 
         // ─── Фаза 2: NPC Talk compound commands ────────────────────
         // Десериализация составных команд: суб-команда читается и отбрасывается (|> ignore).
@@ -5047,6 +5829,125 @@ module CommandMessages =
 
         let mcItemLotteryAsrMessage (pk: IRPacket) : McItemLotteryAsrMessage =
             { Success = pk.ReadInt64() }
+
+        // ─── MC/CM — Фаза 4: простые ────────────────────────────
+
+        let mcChaEmotionMessage (pk: IRPacket) : McChaEmotionMessage =
+            { WorldId = pk.ReadInt64(); Emotion = pk.ReadInt64() }
+
+        let mcStartExitMessage (pk: IRPacket) : McStartExitMessage =
+            { ExitTime = pk.ReadInt64() }
+
+        let mcGmRecvMessage (pk: IRPacket) : McGmRecvMessage =
+            { NpcId = pk.ReadInt64() }
+
+        let mcStallDelGoodsMessage (pk: IRPacket) : McStallDelGoodsMessage =
+            { CharId = pk.ReadInt64(); Grid = pk.ReadInt64(); Count = pk.ReadInt64() }
+
+        let mcStallCloseMessage (pk: IRPacket) : McStallCloseMessage =
+            { CharId = pk.ReadInt64() }
+
+        let mcStallSuccessMessage (pk: IRPacket) : McStallSuccessMessage =
+            { CharId = pk.ReadInt64() }
+
+        let mcUpdateGuildGoldMessage (pk: IRPacket) : McUpdateGuildGoldMessage =
+            { Data = pk.ReadString() }
+
+        let mcQueryChaItemMessage (pk: IRPacket) : McQueryChaItemMessage =
+            { ChaId = pk.ReadInt64() }
+
+        let mcDisconnectMessage (pk: IRPacket) : McDisconnectMessage =
+            { Reason = pk.ReadInt64() }
+
+        let mcLifeSkillShowMessage (pk: IRPacket) : McLifeSkillShowMessage =
+            { Type = pk.ReadInt64() }
+
+        let mcLifeSkillMessage (pk: IRPacket) : McLifeSkillMessage =
+            { Type = pk.ReadInt64(); Result = pk.ReadInt64(); Text = pk.ReadString() }
+
+        let mcLifeSkillAsrMessage (pk: IRPacket) : McLifeSkillAsrMessage =
+            { Type = pk.ReadInt64(); Time = pk.ReadInt64(); Text = pk.ReadString() }
+
+        let mcDropLockAsrMessage (pk: IRPacket) : McDropLockAsrMessage =
+            { Success = pk.ReadInt64() }
+
+        let mcUnlockItemAsrMessage (pk: IRPacket) : McUnlockItemAsrMessage =
+            { Result = pk.ReadInt64() }
+
+        let mcStoreBuyAnswerMessage (pk: IRPacket) : McStoreBuyAnswerMessage =
+            { Success = pk.ReadInt64(); NewMoney = pk.ReadInt64() }
+
+        let mcStoreChangeAnswerMessage (pk: IRPacket) : McStoreChangeAnswerMessage =
+            { Success = pk.ReadInt64(); MoBean = pk.ReadInt64(); ReplMoney = pk.ReadInt64() }
+
+        let mcDailyBuffInfoMessage (pk: IRPacket) : McDailyBuffInfoMessage =
+            { ImgName = pk.ReadString(); LabelInfo = pk.ReadString() }
+
+        let mcRequestDropRateMessage (pk: IRPacket) : McRequestDropRateMessage =
+            { Rate = pk.ReadFloat32() }
+
+        let mcRequestExpRateMessage (pk: IRPacket) : McRequestExpRateMessage =
+            { Rate = pk.ReadFloat32() }
+
+        let mcTigerItemIdMessage (pk: IRPacket) : McTigerItemIdMessage =
+            { Num = pk.ReadInt64(); ItemId0 = pk.ReadInt64(); ItemId1 = pk.ReadInt64(); ItemId2 = pk.ReadInt64() }
+
+        // ─── Deserialize: гильдейские CM ─────────────────────────────
+
+        let cmGuildPutNameMessage (pk: IRPacket) : CmGuildPutNameMessage =
+            { Confirm = pk.ReadInt64(); GuildName = pk.ReadString(); Passwd = pk.ReadString() }
+
+        let cmGuildTryForMessage (pk: IRPacket) : CmGuildTryForMessage =
+            { GuildId = pk.ReadInt64() }
+
+        let cmGuildTryForCfmMessage (pk: IRPacket) : CmGuildTryForCfmMessage =
+            { Confirm = pk.ReadInt64() }
+
+        let cmGuildApproveMessage (pk: IRPacket) : CmGuildApproveMessage =
+            { ChaId = pk.ReadInt64() }
+
+        let cmGuildRejectMessage (pk: IRPacket) : CmGuildRejectMessage =
+            { ChaId = pk.ReadInt64() }
+
+        let cmGuildKickMessage (pk: IRPacket) : CmGuildKickMessage =
+            { ChaId = pk.ReadInt64() }
+
+        let cmGuildDisbandMessage (pk: IRPacket) : CmGuildDisbandMessage =
+            { Passwd = pk.ReadString() }
+
+        let cmGuildMottoMessage (pk: IRPacket) : CmGuildMottoMessage =
+            { Motto = pk.ReadString() }
+
+        let cmGuildChallMessage (pk: IRPacket) : CmGuildChallMessage =
+            { Level = pk.ReadInt64(); Money = pk.ReadInt64() }
+
+        let cmGuildLeizhuMessage (pk: IRPacket) : CmGuildLeizhuMessage =
+            { Level = pk.ReadInt64(); Money = pk.ReadInt64() }
+
+        // ─── Deserialize: гильдейские MC ─────────────────────────────
+
+        let mcGuildTryForCfmMessage (pk: IRPacket) : McGuildTryForCfmMessage =
+            { Name = pk.ReadString() }
+
+        let mcGuildMottoMessage (pk: IRPacket) : McGuildMottoMessage =
+            { Motto = pk.ReadString() }
+
+        let mcGuildInfoMessage (pk: IRPacket) : McGuildInfoMessage =
+            { CharId = pk.ReadInt64(); GuildId = pk.ReadInt64()
+              GuildName = pk.ReadString(); GuildMotto = pk.ReadString()
+              GuildPermission = pk.ReadInt64() }
+
+        let mcGuildListChallMessage (pk: IRPacket) : McGuildListChallMessage =
+            let isLeader = pk.ReadInt64()
+            let entries = Array.init 3 (fun _ ->
+                let level = pk.ReadInt64()
+                if level <> 0L then
+                    { Level = level; Start = pk.ReadInt64()
+                      GuildName = pk.ReadString(); ChallName = pk.ReadString()
+                      Money = pk.ReadInt64() }
+                else
+                    { Level = 0L; Start = 0L; GuildName = ""; ChallName = ""; Money = 0L })
+            { IsLeader = isLeader; Entries = entries }
 
         // ─── Sub-packet helpers ────────────────────────────────────
 
@@ -5470,14 +6371,17 @@ module CommandMessages =
                 let quantity = pk.ReadInt64()
                 let expire = pk.ReadInt64()
                 let variantCount = int (pk.ReadInt64())
+                // Атрибуты читаются внутри каждого варианта (по 5 пар на вариант)
                 let variants = Array.init variantCount (fun _ ->
-                    { ItemId = pk.ReadInt64(); ItemNum = pk.ReadInt64(); Flute = pk.ReadInt64() })
-                // Всегда ровно 5 атрибутов
-                let attrs = Array.init 5 (fun _ ->
-                    { AttrEntry.AttrId = pk.ReadInt64(); AttrVal = pk.ReadInt64() })
+                    let itemId = pk.ReadInt64()
+                    let itemNum = pk.ReadInt64()
+                    let flute = pk.ReadInt64()
+                    let attrs = Array.init 5 (fun _ ->
+                        { AttrEntry.AttrId = pk.ReadInt64(); AttrVal = pk.ReadInt64() })
+                    { ItemId = itemId; ItemNum = itemNum; Flute = flute; Attrs = attrs })
                 { ComId = comId; ComName = comName; Price = price; Remark = remark
                   IsHot = isHot; Time = time; Quantity = quantity; Expire = expire
-                  Variants = variants; Attrs = attrs })
+                  Variants = variants })
             { PageTotal = pageTotal; PageCurrent = pageCurrent; Products = products }
 
         let mcStoreHistoryMessage (pk: IRPacket) : McStoreHistoryMessage =
@@ -5665,3 +6569,130 @@ module CommandMessages =
                 | _ ->
                     ActionUnknown actionType
             { WorldId = worldId; PacketId = packetId; Action = action }
+
+        // ─── CMD_MC_NOTIACTION UPDATEGUILDLOGS/REQUESTGUILDLOGS ──
+
+        /// Десериализация CMD_MC_NOTIACTION + UPDATEGUILDLOGS.
+        /// Формат: worldId, packetId, actionType(=33), totalSize, {type,time,param,qty,userId}*, [9].
+        let mcUpdateGuildLogsMessage (pk: IRPacket) : McUpdateGuildLogsMessage =
+            let worldId = pk.ReadInt64()
+            let packetId = pk.ReadInt64()
+            let _actionType = pk.ReadInt64() // ACT_UPDATEGUILDLOGS = 33
+            let totalSize = pk.ReadInt64()
+            let logs = System.Collections.Generic.List<GuildBankLogEntry>()
+            let mutable terminated = false
+            while (pk.RemainingBytes > 0) do
+                let t = pk.ReadInt64()
+                if t = 9L && not ((pk.RemainingBytes > 0)) then
+                    terminated <- true
+                else
+                    let time = pk.ReadInt64()
+                    let param = pk.ReadInt64()
+                    let qty = pk.ReadInt64()
+                    let uid = pk.ReadInt64()
+                    logs.Add({ Type = t; Time = time; Parameter = param; Quantity = qty; UserId = uid })
+            { WorldId = worldId; PacketId = packetId; TotalSize = totalSize
+              Logs = logs.ToArray(); Terminated = terminated }
+
+        /// Десериализация CMD_MC_NOTIACTION + REQUESTGUILDLOGS.
+        /// Формат: worldId, packetId, actionType(=32), {type,time,param,qty,userId}*, [9].
+        let mcRequestGuildLogsMessage (pk: IRPacket) : McRequestGuildLogsMessage =
+            let worldId = pk.ReadInt64()
+            let packetId = pk.ReadInt64()
+            let _actionType = pk.ReadInt64() // ACT_REQUESTGUILDLOGS = 32
+            let logs = System.Collections.Generic.List<GuildBankLogEntry>()
+            let mutable terminated = false
+            while (pk.RemainingBytes > 0) do
+                let t = pk.ReadInt64()
+                if t = 9L && not ((pk.RemainingBytes > 0)) then
+                    terminated <- true
+                else
+                    let time = pk.ReadInt64()
+                    let param = pk.ReadInt64()
+                    let qty = pk.ReadInt64()
+                    let uid = pk.ReadInt64()
+                    logs.Add({ Type = t; Time = time; Parameter = param; Quantity = qty; UserId = uid })
+            { WorldId = worldId; PacketId = packetId
+              Logs = logs.ToArray(); Terminated = terminated }
+
+        // ─── CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM ───────────
+
+        /// Десериализация CMD_MC_CHARTRADE + CMD_MC_CHARTRADE_ITEM (единое сообщение).
+        /// Формат: subCmd(=814), mainChaId, opType, далее — данные Remove или Add в зависимости от opType.
+        let mcCharTradeItemMessage (pk: IRPacket) : McCharTradeItemMessage =
+            let _subCmd = pk.ReadInt64() // CMD_MC_CHARTRADE_ITEM = 814
+            let mainChaId = pk.ReadInt64()
+            let opType = pk.ReadInt64()
+            if opType = 3L then // TRADE_DRAGTO_ITEM
+                let bagIndex = pk.ReadInt64()
+                let tradeIndex = pk.ReadInt64()
+                let count = pk.ReadInt64()
+                { MainChaId = mainChaId; OpType = opType
+                  Data = Remove { BagIndex = bagIndex; TradeIndex = tradeIndex; Count = count } }
+            else // TRADE_DRAGTO_TRADE
+                let itemId = pk.ReadInt64()
+                let bagIndex = pk.ReadInt64()
+                let tradeIndex = pk.ReadInt64()
+                let count = pk.ReadInt64()
+                let itemType = pk.ReadInt64()
+                let isBoat = (itemType = ITEM_TYPE_BOAT)
+                if isBoat then
+                    let hasBoat = pk.ReadInt64() <> 0L
+                    let boat =
+                        if hasBoat then
+                            let name = pk.ReadString()
+                            let ship = pk.ReadInt64()
+                            let lv = pk.ReadInt64()
+                            let cexp = pk.ReadInt64()
+                            let hp = pk.ReadInt64()
+                            let mxhp = pk.ReadInt64()
+                            let sp = pk.ReadInt64()
+                            let mxsp = pk.ReadInt64()
+                            let mnatk = pk.ReadInt64()
+                            let mxatk = pk.ReadInt64()
+                            let def = pk.ReadInt64()
+                            let mspd = pk.ReadInt64()
+                            let aspd = pk.ReadInt64()
+                            let useGridNum = pk.ReadInt64()
+                            let capacity = pk.ReadInt64()
+                            let price = pk.ReadInt64()
+                            { HasBoat = true; Name = name; Ship = ship; Lv = lv; Cexp = cexp
+                              HP = hp; MxHP = mxhp; SP = sp; MxSP = mxsp
+                              MnAtk = mnatk; MxAtk = mxatk; Def = def
+                              MSpd = mspd; ASpd = aspd
+                              UseGridNum = useGridNum; Capacity = capacity; Price = price }
+                        else
+                            { HasBoat = false; Name = ""; Ship = 0L; Lv = 0L; Cexp = 0L
+                              HP = 0L; MxHP = 0L; SP = 0L; MxSP = 0L
+                              MnAtk = 0L; MxAtk = 0L; Def = 0L; MSpd = 0L; ASpd = 0L
+                              UseGridNum = 0L; Capacity = 0L; Price = 0L }
+                    { MainChaId = mainChaId; OpType = opType
+                      Data = Add { ItemId = itemId; BagIndex = bagIndex
+                                   TradeIndex = tradeIndex; Count = count; ItemType = itemType
+                                   EquipData = Choice1Of2 boat } }
+                else
+                    let endure0 = pk.ReadInt64()
+                    let endure1 = pk.ReadInt64()
+                    let energy0 = pk.ReadInt64()
+                    let energy1 = pk.ReadInt64()
+                    let forgeLv = pk.ReadInt64()
+                    let valid = pk.ReadInt64()
+                    let tradable = pk.ReadInt64()
+                    let expiration = pk.ReadInt64()
+                    let forgeParam = pk.ReadInt64()
+                    let instId = pk.ReadInt64()
+                    let hasInstAttr = pk.ReadInt64() <> 0L
+                    let instAttr =
+                        if hasInstAttr then
+                            Array.init ITEM_INSTANCE_ATTR_NUM (fun _ -> (pk.ReadInt64(), pk.ReadInt64()))
+                        else
+                            [||]
+                    let item =
+                        { Endure0 = endure0; Endure1 = endure1; Energy0 = energy0; Energy1 = energy1
+                          ForgeLv = forgeLv; Valid = valid; Tradable = tradable; Expiration = expiration
+                          ForgeParam = forgeParam; InstId = instId
+                          HasInstAttr = hasInstAttr; InstAttr = instAttr }
+                    { MainChaId = mainChaId; OpType = opType
+                      Data = Add { ItemId = itemId; BagIndex = bagIndex
+                                   TradeIndex = tradeIndex; Count = count; ItemType = itemType
+                                   EquipData = Choice2Of2 item } }

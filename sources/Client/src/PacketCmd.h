@@ -569,18 +569,6 @@ extern BOOL SC_CheatCheck(LPRPACKET pk);
 
 extern BOOL SC_ListAuction(LPRPACKET pk);
 
-extern void	ReadChaBasePacket(LPRPACKET pk, stNetActorCreate &SCreateInfo);
-extern BOOL	ReadChaSkillBagPacket(LPRPACKET pk, stNetSkillBag &SCurSkill, const char *szLogName);
-extern void	ReadChaSkillStatePacket(LPRPACKET pk, stNetSkillState &SCurSState, const char* szLogName);
-extern void	ReadChaAttrPacket(LPRPACKET pk, stNetChaAttr &SChaAttr, const char* szLogName);
-extern void	ReadChaLookPacket(LPRPACKET pk, stNetLookInfo &SLookInfo, const char *szLogName);
-extern void	ReadChaKitbagPacket(LPRPACKET pk, stNetKitbag &SKitbag, const  char *szLogName);
-extern void	ReadChaShortcutPacket(LPRPACKET pk, stNetShortCut &SShortcut, const char* szLogName);
-extern void	ReadChaLookEnergyPacket(LPRPACKET pk, stLookEnergy &SLookEnergy, const char *szLogName);
-extern void	ReadChaPKPacket(LPRPACKET pk, stNetPKCtrl &SNetPKCtrl, const char *szLogName);
-extern void	ReadEntEventPacket(LPRPACKET pk, stNetEvent &SNetEvent, const char *szLogName = 0);
-extern void	ReadChaSidePacket(LPRPACKET pk, stNetChaSideInfo &SNetSideInfo, const char *szLogName);
-extern void	ReadChaAppendLookPacket(LPRPACKET pk, stNetAppendLook &SNetAppendLook, const char *szLogName = 0);
 
 
 
@@ -609,6 +597,5 @@ extern BOOL SC_RequestDropRate(LPRPACKET pk);
 extern void CS_RequestExpRate();
 extern BOOL SC_RequestExpRate(LPRPACKET pk);
 extern BOOL SC_RefreshSelectScreen(LPRPACKET pk);
-extern std::vector<NetChaBehave> ReadSelectCharacters(RPacket& rpk);
 
 #endif		//PACKETCMD_H

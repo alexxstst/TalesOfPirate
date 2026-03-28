@@ -131,18 +131,26 @@ public:
     void	Run(DWORD dwCurTime);
 
 	// ��������Ϣ�йص�4�������ӿں���
-	void	ProcessNetMsg(int nMsgType, GateServer *pGate, RPACKET pkt);
-	void    OnGateConnected(GateServer *pGate, RPACKET pkt);
-	void	OnGateDisconnect(GateServer *pGate, RPACKET pkt);
-	void	ProcessPacket(GateServer* pGate, RPACKET pkt);
-	void	ProcessTeamMsg(GateServer *pGate, RPACKET pkt);
-	void	ProcessGuildMsg(GateServer *pGate, RPACKET pkt);
-	void	ProcessGuildChallMoney( GateServer *pGate, RPACKET pkt );
-	void	ProcessGuildChallPrizeMoney( GateServer *pGate, RPACKET pkt );
-	void	ProcessDynMapEntry(GateServer *pGate, RPACKET pkt);
-	void	ProcessInterGameMsg(unsigned short usCmd, GateServer *pGate, RPACKET pkt);
-	void	ProcessGroupBroadcast(unsigned short usCmd, GateServer *pGate, RPACKET pkt);
-	void	ProcessGarner2Update(RPACKET pkt);//�Ҷ�������
+	void	ProcessNetMsg(int nMsgType, GateServer *pGate, net::RPacket& pkt);
+	void    OnGateConnected(GateServer *pGate, net::RPacket& pkt);
+	void	OnGateDisconnect(GateServer *pGate, net::RPacket& pkt);
+	void	ProcessPacket(GateServer* pGate, net::RPacket& pkt);
+	void	ProcessTeamMsg(GateServer *pGate, const net::msg::PmTeamMessage& teamMsg);
+	void	ProcessGuildMsg(GateServer *pGate, const net::msg::PmGuildInfoMessage& msg);
+	void	ProcessGuildChallMoney(GateServer *pGate, const net::msg::PmGuildChallMoneyMessage& msg);
+	void	ProcessGuildChallPrizeMoney(GateServer *pGate, const net::msg::PmGuildChallPrizeMoneyMessage& msg);
+	void	ProcessDynMapEntry(GateServer *pGate, const net::msg::MapEntryMessage& mapMsg);
+	void	ProcessInterGameMsg(unsigned short usCmd, GateServer *pGate, net::RPacket& pkt);
+	void	Handle_GuildApprove(const net::msg::MmGuildApproveMessage& msg);
+	void	Handle_CallCha(const net::msg::MmCallChaMessage& msg);
+	void	Handle_GotoCha(GateServer* pGate, long lGatePlayerID, long lGatePlayerAddr, const net::msg::MmGotoChaMessage& msg);
+	void	Handle_KickCha(const net::msg::MmKickChaMessage& msg);
+	void	Handle_GuildChallPrizeMoney(const net::msg::MmGuildChallPrizeMoneyMessage& msg);
+	void	Handle_AddCredit(const net::msg::MmAddCreditMessage& msg);
+	void	Handle_StoreBuy(const net::msg::MmStoreBuyMessage& msg);
+	void	Handle_AddMoney(const net::msg::MmAddMoneyMessage& msg);
+	void	ProcessGroupBroadcast(unsigned short usCmd, GateServer *pGate, net::RPacket& pkt);
+	void	ProcessGarner2Update(const net::msg::PmGarner2UpdateLegacyMessage& msg);
     // ����InfoServer��Ϣ
     void    ProcessInfoMsg(pNetMessage msg, short sType, InfoServer *pInfo);
     void    ProcessMsg(pNetMessage msg, InfoServer *pInfo);

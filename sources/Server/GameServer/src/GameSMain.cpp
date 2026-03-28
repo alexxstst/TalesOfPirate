@@ -7,6 +7,7 @@
 #include "GameApp.h"
 #include "SystemDialog.h"
 #include "Config.h"
+#include "CrushSystem.h"
 #include "GameDB.h"
 
 
@@ -49,6 +50,13 @@ int main(int argc, char* argv[])
 
 	C_TITLE("GameServer.exe")
 	C_PRINT("Loading %s\n", szConfigFileN);
+
+	::SetThreadName("main");
+	TalesOfPirate::Utils::Crush::SetGlobalCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
+	TalesOfPirate::Utils::Crush::SetupDumpSetting("log\\game_server\\dumps");
+	g_logManager.InitLogger("log\\game_server");
+	g_logManager.EnableGlobalConsole(true);
 
 	DisableCloseButton();
 

@@ -266,18 +266,6 @@
     <ClInclude Include="..\src\GameServerApp.h">
       <Filter>Network1</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\cfl_iocp.h">
-      <Filter>Network2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cfl_lock.h">
-      <Filter>Network2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cfl_mempool.h">
-      <Filter>Network2</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\cfl_pkt.h">
-      <Filter>Network2</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\gmsvr.h">
       <Filter>Network2</Filter>
     </ClInclude>
@@ -465,12 +453,6 @@
     </ClCompile>
     <ClCompile Include="..\src\GameServerApp.cpp">
       <Filter>Network1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\cfl_iocp.cpp">
-      <Filter>Network2</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\cfl_lock.cpp">
-      <Filter>Network2</Filter>
     </ClCompile>
     <ClCompile Include="..\src\gmsvr.cpp">
       <Filter>Network2</Filter>

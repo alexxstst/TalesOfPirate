@@ -11,6 +11,7 @@
 #include "GameAppNet.h"
 #include "Player.h"
 #include "lua_gamectrl.h"
+#include "CommandMessages.h"
 
 //---------------------------------------------------------
 namespace mission
@@ -650,14 +651,12 @@ namespace mission
 					lua_settop(g_pLuaState, 0);
 					if( dwResult == LUA_TRUE )
 					{
-						// ���Ӵݻ��������
+						// Увеличиваем счётчик уничтожения
 						m_Trigger[i].wParam4++;
-						WPACKET packet = GETWPACKET();
-						WRITE_CMD(packet, CMD_MC_TRIGGER_ACTION );
-						WRITE_CHAR(packet, m_Trigger[i].byType );
-						WRITE_SHORT(packet, m_Trigger[i].wParam1 );
-						WRITE_SHORT(packet, m_Trigger[i].wParam2 );
-						WRITE_SHORT(packet, m_Trigger[i].wParam4 );
+						// Типизированная сериализация: прогресс триггера
+						auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
+							m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam4
+						});
 						m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 
 						// �ж������������Ϣ
@@ -799,15 +798,13 @@ namespace mission
 						}
 					}
 
-					WPACKET packet = GETWPACKET();
-					WRITE_CMD(packet, CMD_MC_TRIGGER_ACTION );
-					WRITE_CHAR(packet, m_Trigger[i].byType );
-					WRITE_SHORT(packet, m_Trigger[i].wParam1 );
-					WRITE_SHORT(packet, m_Trigger[i].wParam2 );
-					WRITE_SHORT(packet, m_Trigger[i].wParam4 );
+					// Типизированная сериализация: прогресс триггера получения предмета
+					auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
+						m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam4
+					});
 					m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
-					
-					// �ж������������Ϣ
+
+					// Проверяем завершение получения
 					if( m_Trigger[i].wParam4 >= m_Trigger[i].wParam2 )
 					{
 #ifdef ROLE_DEBUG_INFO
@@ -967,12 +964,10 @@ namespace mission
 						ToLogService("common", "GotoMap Complete!, ID={}, p1={}, p2={}, p3={}, p4={}", m_Trigger[i].wTriggerID, 
 							m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-						WPACKET packet = GETWPACKET();
-						WRITE_CMD(packet, CMD_MC_TRIGGER_ACTION );
-						WRITE_CHAR(packet, m_Trigger[i].byType );
-						WRITE_SHORT(packet, m_Trigger[i].wParam1 );
-						WRITE_SHORT(packet, m_Trigger[i].wParam2 );
-						WRITE_SHORT(packet, m_Trigger[i].wParam3 );
+						// Типизированная сериализация: прогресс триггера перехода на карту
+						auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
+							m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3
+						});
 						m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 
 						if( m_Trigger[i].wParam5 )
@@ -1039,15 +1034,13 @@ namespace mission
 					ToLogService("common", "LevelUp Complete!, ID={}, p1={}, p2={}, p3={}, p4={}", m_Trigger[i].wTriggerID, 
 						m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-					WPACKET packet = GETWPACKET();
-					WRITE_CMD(packet, CMD_MC_TRIGGER_ACTION );
-					WRITE_CHAR(packet, m_Trigger[i].byType );
-					WRITE_SHORT(packet, m_Trigger[i].wParam1 );
-					WRITE_SHORT(packet, m_Trigger[i].wParam2 );
-					WRITE_SHORT(packet, 0 );
+					// Типизированная сериализация: прогресс триггера повышения уровня
+					auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
+						m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, 0
+					});
 					m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 
-					// �����������رմ�����
+					// Условие завершения — закрываем триггер
 					if( m_Trigger[i].wParam2 )
 					{
 						ClearTrigger( i-- );
@@ -1092,12 +1085,10 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 		if( dwResult == LUA_TRUE )
 		{
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_TRIGGER_ACTION );
-			WRITE_CHAR(packet, TE_MAP_INIT );
-			WRITE_SHORT(packet, 0 );
-			WRITE_SHORT(packet, 0 );
-			WRITE_SHORT(packet, 0 );
+			// Типизированная сериализация: инициализация карты (CharBorn)
+			auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
+				TE_MAP_INIT, 0, 0, 0
+			});
 			m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 		}
 		else
@@ -1137,12 +1128,10 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 		if( dwResult == LUA_TRUE )
 		{
-			WPACKET packet = GETWPACKET();
-			WRITE_CMD(packet, CMD_MC_TRIGGER_ACTION );
-			WRITE_CHAR(packet, TE_EQUIP_ITEM );
-			WRITE_SHORT(packet, 0 );
-			WRITE_SHORT(packet, sItemID );
-			WRITE_SHORT(packet, 0 );
+			// Типизированная сериализация: экипировка предмета
+			auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
+				TE_EQUIP_ITEM, 0, static_cast<int64_t>(sItemID), 0
+			});
 			m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 		}
 		else
@@ -1616,15 +1605,14 @@ namespace mission
 
 	void CCharMission::MisGetMisLog()
 	{
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_MISLOG );
-		WRITE_CHAR(packet, m_byNumMission );
+		// Типизированная сериализация: журнал квестов
+		net::msg::McMisLogMessage msg;
+		msg.logs.reserve(m_byNumMission);
 		for( BYTE i = 0; i < m_byNumMission; i++ )
 		{
-			WRITE_SHORT(packet, m_Mission[i].wRoleID );	
-			WRITE_CHAR(packet, m_Mission[i].byState );
+			msg.logs.push_back({ m_Mission[i].wRoleID, m_Mission[i].byState });
 		}
-
+		auto packet = net::msg::serialize(msg);
 		m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 	}
 
@@ -1670,20 +1658,19 @@ namespace mission
 
 	void CCharMission::MisLogClear( WORD wMisID )
 	{
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_MISLOG_CLEAR );	
-		WRITE_SHORT(packet, wMisID );
-
+		// Типизированная сериализация: очистка записи квеста
+		auto packet = net::msg::serialize(net::msg::McMisLogClearMcMessage{
+			static_cast<int64_t>(wMisID)
+		});
 		m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 	}
 
 	void CCharMission::MisLogAdd( WORD wMisID, BYTE byState )
 	{
-		WPACKET packet = GETWPACKET();
-		WRITE_CMD(packet, CMD_MC_MISLOG_ADD );
-		WRITE_SHORT(packet, wMisID );
-		WRITE_CHAR(packet, byState );
-
+		// Типизированная сериализация: добавление записи квеста
+		auto packet = net::msg::serialize(net::msg::McMisLogAddMessage{
+			static_cast<int64_t>(wMisID), static_cast<int64_t>(byState)
+		});
 		m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 	}
 
@@ -1751,10 +1738,10 @@ namespace mission
 			{
 				m_Mission[i].byState = ROLE_MIS_COMPLETE_FLAG;
 
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_MISLOG_CHANGE );
-				WRITE_SHORT(packet, m_Mission[i].wRoleID );	
-				WRITE_CHAR(packet, m_Mission[i].byState );	
+				// Типизированная сериализация: квест завершён
+				auto packet = net::msg::serialize(net::msg::McMisLogStateMessage{
+					static_cast<int64_t>(i), static_cast<int64_t>(m_Mission[i].wRoleID), static_cast<int64_t>(m_Mission[i].byState)
+				});
 				m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 				return TRUE;
 			}
@@ -1771,10 +1758,10 @@ namespace mission
 			{
 				m_Mission[i].byState = ROLE_MIS_COMPLETE_FLAG;
 
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_MISLOG_CHANGE );
-				WRITE_SHORT(packet, m_Mission[i].wRoleID );	
-				WRITE_CHAR(packet, m_Mission[i].byState );	
+				// Типизированная сериализация: квест ожидает завершения
+				auto packet = net::msg::serialize(net::msg::McMisLogStateMessage{
+					static_cast<int64_t>(i), static_cast<int64_t>(m_Mission[i].wRoleID), static_cast<int64_t>(m_Mission[i].byState)
+				});
 				m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 				return TRUE;
 			}
@@ -1791,11 +1778,10 @@ namespace mission
 			{
 				m_Mission[i].byState = ROLE_MIS_FAILURE_FALG;
 
-				WPACKET packet = GETWPACKET();
-				WRITE_CMD(packet, CMD_MC_MISLOG_CHANGE );
-				WRITE_CHAR(packet, i );
-				WRITE_SHORT(packet, m_Mission[i].wRoleID );	
-				WRITE_CHAR(packet, m_Mission[i].byState );	
+				// Типизированная сериализация: квест провален
+				auto packet = net::msg::serialize(net::msg::McMisLogStateMessage{
+					static_cast<int64_t>(i), static_cast<int64_t>(m_Mission[i].wRoleID), static_cast<int64_t>(m_Mission[i].byState)
+				});
 				m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 				return TRUE;
 			}

@@ -62,32 +62,6 @@ void CMoveAble::Finally()
 	CFightAble::Finally();
 }
 
-void CMoveAble::WritePK(WPACKET& wpk)
-{
-	CFightAble::WritePK(wpk);
-	//ToDo:д���Լ�������
-
-}
-
-void CMoveAble::ReadPK(RPACKET rpk)
-{
-	CFightAble::ReadPK(rpk);
-
-	m_SMoveInit.STargetInfo.chType = 0;
-	m_SMoveProc.sState = enumMSTATE_ARRIVE;
-	m_SMoveProc.chRequestState = 0;
-	m_SMoveProc.chLagMove = 0;
-
-	m_SMoveProc.SNoticePoint.sNum = 2;
-	m_SMoveProc.SNoticePoint.SList[0] = GetShape().centre;
-	m_SMoveProc.SNoticePoint.SList[1] = GetShape().centre;
-
-	m_SMoveRedu.ulLeftTime = 0;
-	m_SMoveRedu.ulStartTick = 0;
-
-	m_bOnMove = false;
-}
-
 void CMoveAble::ResetMove()
 {
 	m_SMoveProc.sState = enumMSTATE_ARRIVE;
@@ -387,8 +361,6 @@ bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
 
 	if (ulNowTick >= m_SMoveRedu.ulStartTick)
 	{
-		//m_CLog.Log("�����ƶ�\t��ǰʱ�� %u��ʣ��ʱ�� %u������ʱ�� %u������ʱ�� %u��\n", ulNowTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulNowTick - m_SMoveRedu.ulStartTick);
-		m_CLog.Log("request move\t currently time %u��remain time %u��passes time %u��passes time %u��\n", ulNowTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulNowTick - m_SMoveRedu.ulStartTick);
 		SetExistState(enumEXISTS_MOVING);
 		if (ulNowTick - m_SMoveRedu.ulStartTick >= m_SMoveRedu.ulLeftTime)
 		{
@@ -406,17 +378,11 @@ bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
 			m_SMoveProc.chLagMove = 1;
 			memcpy(&m_SMoveInitCache, pSMoveInit, sizeof(SMoveInit));
 			OnMoveBegin();
-			m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-			//m_CLog.Log("DesireMoveBegin �����ƶ�����\tLeftTime: %u\tPing: %u\n\n",
 				//m_SMoveRedu.ulLeftTime - (ulNowTick - m_SMoveRedu.ulStartTick), m_SMoveInit.usPing);
-			m_CLog.Log("DesireMoveBegin memory move request\tLeftTime: %u\tPing: %u\n\n",
-				m_SMoveRedu.ulLeftTime - (ulNowTick - m_SMoveRedu.ulStartTick), m_SMoveInit.usPing);
-		}
+			}
 	}
 	else
 	{
-		//m_CLog.Log("Move Redundance Start Tick:%u, ���������Ӧ�ó���\n", m_SMoveRedu.ulStartTick);
-		m_CLog.Log("Move Redundance Start Tick:%u, this state should not appearance\n", m_SMoveRedu.ulStartTick);
 		return false;
 	}
 
@@ -440,12 +406,7 @@ void CMoveAble::BeginMove(uLong ulElapse)
 	}
 
 	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("===Recieve(Move):\tTick %u\n", GetTickCount());
-	m_CLog.Log("Point:\t%3d\n", m_SMoveInit.SInflexionInfo.sNum);
 	for (Short i = 0; i < m_SMoveInit.SInflexionInfo.sNum; i++)
-		m_CLog.Log("\t%d, \t%d\n", m_SMoveInit.SInflexionInfo.SList[i].x, m_SMoveInit.SInflexionInfo.SList[i].y);
-	m_CLog.Log("\n");
 	//
 
 	g_ulElapse = 0;
@@ -537,8 +498,6 @@ void CMoveAble::EndMove()
 {
 	m_SMoveProc.chRequestState = 1;
 	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("===Recieve(Stop Move):\tTick %u\n", GetTickCount());
 	//
 }
 
@@ -555,8 +514,6 @@ void CMoveAble::OnMove(uLong dwCurTime)
 
 	if (!IsCharacter()->GetActControl(enumACTCONTROL_MOVE) && m_SMoveProc.sState == enumMSTATE_ON)
 	{
-		//m_CLog.Log("���Ϸ����ƶ������󣨴��ڲ����ƶ���״̬��[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("irregular move request��exist didn't move state��[PacketID: %u]\n", m_ulPacketID);
 		EndMove();
 	}
 
@@ -613,13 +570,9 @@ void CMoveAble::OnMove(uLong dwCurTime)
 	if (m_SMoveProc.chLagMove == 1 && m_SMoveProc.sState != enumMSTATE_ON)
 	{
 		//LG("�ƶ�����", "�����ƶ�\t��ʼʱ�� %u��ʣ��ʱ�� %u������ʱ�� %u��\n", ulNowTick, m_SMoveRedu.ulLeftTime, ulNowTick - m_SMoveRedu.ulStartTick);
-		//m_CLog.Log("ִ�л����ƶ�\t��ǰʱ�� %u��ʣ��ʱ�� %u������ʱ�� %u������ʱ�� %u��\n", ulCurTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulCurTick - m_SMoveRedu.ulStartTick);
-		m_CLog.Log("execute memory move\t currently time %u��remain time %u��passes time %u��passes time %u��\n", ulCurTick, m_SMoveRedu.ulLeftTime, m_SMoveRedu.ulStartTick, ulCurTick - m_SMoveRedu.ulStartTick);
 		Long	lBal = Long(ulCurTick - m_SMoveRedu.ulStartTick) - (Long)m_SMoveRedu.ulLeftTime;
 		if (ulCurTick > m_SMoveRedu.ulStartTick && lBal >= 0)
 		{
-			//m_CLog.Log("ִ�л�����ƶ�����[Packet: %u]\n", m_ulPacketID);
-			m_CLog.Log("execute memory move request[Packet: %u]\n", m_ulPacketID);
 
 			m_SMoveProc.chLagMove = 0;
 			m_SMoveRedu.ulLeftTime = 0;
@@ -666,8 +619,6 @@ void CMoveAble::OnMove(uLong dwCurTime)
 	if (m_SMoveProc.sState != enumMSTATE_ON && m_SMoveProc.chLagMove == 0)
 	{
 		OnMoveEnd();
-		//m_CLog.Log("ִֹͣ��OnMove[State:%d]\n", m_SMoveProc.sState);
-		m_CLog.Log("cease execute OnMove[State:%d]\n", m_SMoveProc.sState);
 	}
 
 	if (bAttemptMove)
@@ -798,10 +749,6 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 
 	g_ulElapse += m_SMoveProc.ulElapse;
 	g_ulDist += lMoveDist;
-	/*m_CLog.Log("�ƶ�ͳ��\t��ǰʱ�� %u���ƶ����� %u����ʱ %u��\t�ۼƾ��� %u�� �ۼƺ�ʱ %u��\n",
-		GetTickCount(), lMoveDist, m_SMoveProc.ulElapse, g_ulDist, g_ulElapse);*/
-	m_CLog.Log("move stat\tcurrently time %u��move distance %u��cost time %u��\taccumulative distance %u��taccumulative cost time %u��\n",
-		GetTickCount(), lMoveDist, m_SMoveProc.ulElapse, g_ulDist, g_ulElapse);
 
 	return chRet;
 }
@@ -904,74 +851,40 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 	return l_retval;
 }
 
+// Типизированная сериализация: уведомление о движении (окружение)
 void CMoveAble::NotiMovToEyeshot()
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WRITE_LONG(pk, m_ulPacketID);
-	WRITE_CHAR(pk, enumACTION_MOVE);
-	WRITE_SHORT(pk, m_SMoveProc.sState);	//�ƶ�״̬
-	if (m_SMoveProc.sState != enumMSTATE_ON)
-		WRITE_SHORT(pk, m_SMoveInit.sStopState);
-	WRITE_SEQ(pk, (cChar *)m_SMoveProc.SNoticePoint.SList, sizeof(Point) * m_SMoveProc.SNoticePoint.sNum);
+	net::msg::McCharacterActionMessage msg{};
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::MOVE;
+	net::msg::ActionMoveData move;
+	move.moveState = m_SMoveProc.sState;
+	move.stopState = m_SMoveInit.sStopState;
+	auto* raw = reinterpret_cast<const uint8_t*>(m_SMoveProc.SNoticePoint.SList);
+	move.waypoints.assign(raw, raw + sizeof(Point) * m_SMoveProc.SNoticePoint.sNum);
+	msg.data = std::move(move);
+	auto pk = net::msg::serialize(msg);
 
-	NotiChgToEyeshot(pk);//ͨ��
-
-	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("###Send(Move):\tTick %u\n", GetTickCount());
-	m_CLog.Log("Point:\t%3d\n", m_SMoveProc.SNoticePoint.sNum);
-	long lDist = 0;
-	SPointList *pSPoint = &m_SMoveProc.SNoticePoint;
-	for (int i = 0; i < m_SMoveProc.SNoticePoint.sNum; i++)
-	{
-		m_CLog.Log("\t%d, \t%d\n", m_SMoveProc.SNoticePoint.SList[i].x, m_SMoveProc.SNoticePoint.SList[i].y);
-		if (i > 0)
-			lDist += (pSPoint->SList[i].x - pSPoint->SList[i - 1].x) * (pSPoint->SList[i].x - pSPoint->SList[i - 1].x)
-			+ (pSPoint->SList[i].y - pSPoint->SList[i - 1].y) * (pSPoint->SList[i].y - pSPoint->SList[i - 1].y);
-	}
-	m_CLog.Log("Elapse: %u\n", m_SMoveProc.ulElapse);
-	m_CLog.Log("Distance: %d\n", (long)sqrt(double(lDist)));
-	if (m_SMoveProc.sState)
-		m_CLog.Log("@@@End Move\tState:%d\n", m_SMoveProc.sState);
-	m_CLog.Log("\n");
-	//
+	NotiChgToEyeshot(pk);
 }
 
+// Типизированная сериализация: уведомление о движении (себе)
 void CMoveAble::NotiSelfMov()
 {
-	WPACKET pk	=GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_NOTIACTION);		//����2�ֽ�
-	WRITE_LONG(pk, m_ID);	  				//ID
-	WRITE_LONG(pk, m_ulPacketID);
-	WRITE_CHAR(pk, enumACTION_MOVE);
-	WRITE_SHORT(pk, m_SMoveProc.sState);	//�ƶ�״̬
-	if (m_SMoveProc.sState != enumMSTATE_ON)
-		WRITE_SHORT(pk, m_SMoveInit.sStopState);
-	WRITE_SEQ(pk, (cChar *)m_SMoveProc.SNoticePoint.SList, sizeof(Point) * m_SMoveProc.SNoticePoint.sNum);
+	net::msg::McCharacterActionMessage msg{};
+	msg.worldId = m_ID;
+	msg.packetId = m_ulPacketID;
+	msg.actionType = net::msg::ActionType::MOVE;
+	net::msg::ActionMoveData move;
+	move.moveState = m_SMoveProc.sState;
+	move.stopState = m_SMoveInit.sStopState;
+	auto* raw = reinterpret_cast<const uint8_t*>(m_SMoveProc.SNoticePoint.SList);
+	move.waypoints.assign(raw, raw + sizeof(Point) * m_SMoveProc.SNoticePoint.sNum);
+	msg.data = std::move(move);
+	auto pk = net::msg::serialize(msg);
 
-	ReflectINFof(this,pk);//ͨ��
-
-	// log
-	m_CLog.Log("$$$PacketID:\t%u\n", m_ulPacketID);
-	m_CLog.Log("###Send(Move):\tTick %u\n", GetTickCount());
-	m_CLog.Log("Point:\t%3d\n", m_SMoveProc.SNoticePoint.sNum);
-	long lDist = 0;
-	SPointList *pSPoint = &m_SMoveProc.SNoticePoint;
-	for (int i = 0; i < m_SMoveProc.SNoticePoint.sNum; i++)
-	{
-		m_CLog.Log("\t%d, \t%d\n", m_SMoveProc.SNoticePoint.SList[i].x, m_SMoveProc.SNoticePoint.SList[i].y);
-		if (i > 0)
-			lDist += (pSPoint->SList[i].x - pSPoint->SList[i - 1].x) * (pSPoint->SList[i].x - pSPoint->SList[i - 1].x)
-			+ (pSPoint->SList[i].y - pSPoint->SList[i - 1].y) * (pSPoint->SList[i].y - pSPoint->SList[i - 1].y);
-	}
-	m_CLog.Log("Elapse: %u\n", m_SMoveProc.ulElapse);
-	m_CLog.Log("Distance: %d\n", (long)sqrt(double(lDist)));
-	if (m_SMoveProc.sState)
-		m_CLog.Log("@@@End Move\tState:%d\n", m_SMoveProc.sState);
-	m_CLog.Log("\n");
-	//
+	ReflectINFof(this,pk);
 }
 
 bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)

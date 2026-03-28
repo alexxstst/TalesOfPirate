@@ -242,21 +242,15 @@ bool CTableCha::ShowExpRank(CCharacter* pCha, int count)
 			rows.push_back(r);
 		}
 
-		// Формат count-first, совместимый с McShowRankingMessage:
-		// [count, (name, guild, level, job, score) x N]
-		WPACKET		l_wpk = GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MC_RANK);
-		WRITE_LONG(l_wpk, (long)rows.size());
-		for (size_t i = 0; i < rows.size(); ++i)
+		// Типизированная сериализация: рейтинг персонажей
 		{
-			WRITE_STRING(l_wpk, rows[i].name);		// name — имя персонажа
-			WRITE_STRING(l_wpk, rows[i].job);		// guild — класс персонажа (в контексте рейтинга)
-			WRITE_LONG(l_wpk, rows[i].level);		// level — уровень
-			WRITE_LONG(l_wpk, 0);					// job — не используется в этом рейтинге
-			WRITE_LONG(l_wpk, 0);					// score — не используется в этом рейтинге
+			net::msg::McShowRankingMessage msg;
+			msg.entries.reserve(rows.size());
+			for (size_t i = 0; i < rows.size(); ++i)
+				msg.entries.push_back({rows[i].name, rows[i].job, static_cast<int64_t>(rows[i].level), 0, 0});
+			auto l_wpk = net::msg::serialize(msg);
+			pCha->ReflectINFof(pCha, l_wpk);
 		}
-
-		pCha->ReflectINFof(pCha, l_wpk);
 
 		SQLFreeStmt(hstmt, SQL_UNBIND);
 		ret = true;
@@ -324,7 +318,7 @@ bool CTableCha::ReadAllData(CPlayer *pPlayer, DWORD atorID)
 		pCha->SetName((char *)g_buf[nIndex++].c_str());
 		Char szLogName[defLOG_NAME_LEN] = "";
 		sprintf(szLogName, "Cha-%s+%u", pCha->GetName(), pCha->GetID());
-		pCha->m_CLog.SetLogName(szLogName);
+		pCha->SetLogName(szLogName);
 
 		pCha->SetMotto(g_buf[nIndex++].c_str());
 		pCha->SetIcon(Str2Int(g_buf[nIndex++]));
@@ -524,10 +518,6 @@ bool CTableCha::SaveAllData(CPlayer *pPlayer, char chSaveType)
 		//LG("enter_map", "%s ��ʼ���ñ�������.\n", pCha->GetLogName());
 		ToLogService("map", "{} start configure save data.", pCha->GetLogName());
 
-		//pCha->m_CLog.Log("^^^^^^^^^^^^�㿪ʼ�����ɫ\n");
-		pCha->m_CLog.Log("........... now you start save character\n");
-		//pCha->m_CLog.Log("�ȼ� %d����ͼ %s������ [%d,%d]�������� %s.\n", pCha->m_CChaAttr.GetAttr(ATTR_LV), pCha->GetBirthMap(), pCha->GetPos().x, pCha->GetPos().y, pCha->GetBirthCity());
-		pCha->m_CLog.Log("grade %d��map %s��coordinate [%d,%d]��birth city %s.\n", (int)pCha->m_CChaAttr.GetAttr(ATTR_LV), pCha->GetBirthMap(), pCha->GetPos().x, pCha->GetPos().y, pCha->GetBirthCity());
 	}
 
 	//char	szSaveCha[256] = "�����ɫ��ʱ";
@@ -768,11 +758,9 @@ bool CTableCha::SaveAllData(CPlayer *pPlayer, char chSaveType)
 	dwTotalTick += dwNowTick - dwOldTick;
 	sprintf(szLogMsg + strlen(szLogMsg), "\t%7u[%10u]", dwNowTick - dwOldTick, (unsigned long)strlen(g_sql));
 	sprintf(szLogMsg + strlen(szLogMsg), "\t%6u", dwTotalTick);
-	sprintf(szLogMsg + strlen(szLogMsg), "\t%s\n", pCha->m_CLog.GetLogName());
+	sprintf(szLogMsg + strlen(szLogMsg), "\t%s\n", pCha->GetLogName());
 	//LG(szSaveCha, szLogMsg);
 
-	//pCha->m_CLog.Log("^^^^^^^^^^^^�㱣���ɫ���\n");
-	pCha->m_CLog.Log("...............you finish save the character \n");
 	//pCha->SystemNotice("��Ľ�ɫ�ɹ����浽���ݿ⣬�ȼ� %d����ͼ %s������ [%d,%d]�������� %s.\n", pCha->m_CChaAttr.GetAttr(ATTR_LV), pCha->GetBirthMap(), pCha->GetPos().x, pCha->GetPos().y, pCha->GetBirthCity());
 	//LG("enter_map", "��������ɫȫ�����ݳɹ�.\n", pCha->GetLogName());
 	ToLogService("map", "save the main character whole data succeed!", pCha->GetLogName());
@@ -4261,12 +4249,8 @@ long CTableGuild::Create(CCharacter* pCha, char *guildname, cChar *passwd)
 								where atorID =%d", l_ret_guild_id, emGldPermMax, pCha->GetID());
 	exec_sql_direct(sql);
 
-	WPACKET l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GUILD_CREATE);
-	WRITE_LONG(l_wpk,l_ret_guild_id);	//����ID
-	WRITE_STRING(l_wpk,guildname);		//����Name
-	WRITE_STRING(l_wpk,g_GetJobName(uShort(pCha->getAttr(ATTR_JOB))));//ְҵ
-	WRITE_SHORT(l_wpk,uShort(pCha->getAttr(ATTR_LV)));		//�ȼ�
+	// Типизированная сериализация: создание гильдии (GameServer→Group)
+	auto l_wpk = net::msg::serialize(net::msg::GmGuildCreateMessage{(int64_t)l_ret_guild_id, guildname, g_GetJobName(uShort(pCha->getAttr(ATTR_JOB))), (int64_t)uShort(pCha->getAttr(ATTR_LV))});
 	pCha->ReflectINFof(pCha,l_wpk);
 
     return l_ret_guild_id;	//���ᴴ���ɹ�,���ع���ID
@@ -4324,40 +4308,31 @@ bool CTableGuild::ListAll(CCharacter* pCha ,char disband_days)
 			SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i], MAX_DATALEN, &_buf_len[i]);
 		}
 
-		WPACKET	l_wpk,l_wpk0 =GETWPACKET();
-		WRITE_CMD(l_wpk0, CMD_MC_LISTGUILD);
-
-		// Fetch each Row	int i; // ȡ��������
-		int f_row = 1;
-		for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; ++ f_row)
+		// Типизированная сериализация: список гильдий с пагинацией (20 строк на пакет)
 		{
-			if (sqlret != SQL_SUCCESS)
+			net::msg::McListGuildMessage page;
+			for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; )
 			{
-				handle_err(hstmt, SQL_HANDLE_STMT, sqlret);
+				if (sqlret != SQL_SUCCESS)
+					handle_err(hstmt, SQL_HANDLE_STMT, sqlret);
+				page.entries.push_back({
+					static_cast<int64_t>(atol((char const*)_buf[0])),
+					std::string((char const*)_buf[1]),
+					std::string((char const*)_buf[2]),
+					std::string((char const*)_buf[4]),
+					static_cast<int64_t>(atoi((const char*)_buf[6])),
+					std::atoll((const char*)_buf[5])
+				});
+				if (page.entries.size() == 20) {
+					auto l_wpk = net::msg::serialize(page);
+					pCha->ReflectINFof(pCha, l_wpk);
+					page.entries.clear();
+				}
 			}
-			if((f_row %20) ==1)
-			{
-				l_wpk	=l_wpk0;
-			}
-			WRITE_LONG(l_wpk, atol((char const*)_buf[0]));	// guild id
-			WRITE_STRING(l_wpk, (char const*)_buf[1]);		// guild name
-			WRITE_STRING(l_wpk, (char const*)_buf[2]);		// guild motto
-			WRITE_STRING(l_wpk, (char const*)_buf[4]);		// leader name
-			WRITE_SHORT(l_wpk, atoi((const char*)_buf[6]));	// guild member count
-			l_wpk.WriteInt64(std::atoll((const char*)_buf[5]));	// guild exp
-
-			if(!(f_row %20))
-			{
-				WRITE_CHAR(l_wpk,((f_row-1)%20)+1);	//���ΰ���������
-				pCha->ReflectINFof(pCha,l_wpk);
-			}
+			// Отправка оставшихся записей (или пустой страницы)
+			auto l_wpk = net::msg::serialize(page);
+			pCha->ReflectINFof(pCha, l_wpk);
 		}
-		if((f_row%20) ==1)
-		{
-			l_wpk	=l_wpk0;
-		}
-		WRITE_LONG(l_wpk,(f_row -1)%20);	//���ΰ���������
-		pCha->ReflectINFof(pCha,l_wpk);
 
 		SQLFreeStmt(hstmt, SQL_UNBIND);
 		ret = true;
@@ -4458,9 +4433,8 @@ void CTableGuild::TryFor(CCharacter* pCha, uLong guildid)
 		{
 			pCha->GetPlayer()->m_GuildState.SetBit(emGuildReplaceOldTry);
 			pCha->GetPlayer()->m_lTempGuildID = guildid;
-			WPACKET l_wpk =GETWPACKET();
-			WRITE_CMD(l_wpk,CMD_MC_GUILD_TRYFORCFM);
-			WRITE_STRING(l_wpk,buf[2].c_str());
+			// Типизированная сериализация: подтверждение замены заявки в гильдию
+			auto l_wpk = net::msg::serialize(net::msg::McGuildTryForCfmMessage{buf[2].c_str()});
 			pCha->ReflectINFof(pCha,l_wpk);
 			return;
 		}
@@ -4733,18 +4707,17 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days)
 	{
 		return ret;
 	}
-	WPACKET		l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MC_GUILD_LISTTRYPLAYER);
-	WRITE_LONG(l_wpk,	atol(buf[0].c_str()));	//guild_id 1
-	WRITE_STRING(l_wpk,		 buf[1].c_str());	//guild_name 2
-	WRITE_STRING(l_wpk,		 buf[2].c_str());	//motto 3
-	WRITE_STRING(l_wpk,		 buf[3].c_str());	//atorNome 4
-	WRITE_SHORT(l_wpk,	atoi(buf[4].c_str()));	//member_total 5
-	WRITE_SHORT(l_wpk,	g_Config.m_sGuildNum);		//6
-	l_wpk.WriteInt64(_atoi64(buf[5].c_str())); //7 exp
-
-	WRITE_LONG(l_wpk, 0); //8
-	WRITE_LONG(l_wpk, atol(buf[6].c_str())); //level 9
+	// Типизированная сериализация: список кандидатов в гильдию
+	net::msg::McGuildListTryPlayerMessage tryMsg;
+	tryMsg.guildId = atol(buf[0].c_str());
+	tryMsg.guildName = buf[1].c_str();
+	tryMsg.motto = buf[2].c_str();
+	tryMsg.leaderName = buf[3].c_str();
+	tryMsg.memberTotal = atoi(buf[4].c_str());
+	tryMsg.maxMembers = g_Config.m_sGuildNum;
+	tryMsg.exp = _atoi64(buf[5].c_str());
+	tryMsg.reserved = 0;
+	tryMsg.level = atol(buf[6].c_str());
 
 	sql_syntax =
 		"select c.atorID,c.atorNome,c.job,c.degree\
@@ -4754,7 +4727,6 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days)
 	char sql[SQL_MAXLEN];
 	sprintf(sql, sql_syntax, pCha->GetGuildID());
 
-	// ִ�в�ѯ����
 	SQLRETURN sqlret;
 	SQLHSTMT hstmt = SQL_NULL_HSTMT;
 	SQLSMALLINT col_num = 0;
@@ -4766,7 +4738,6 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days)
 		if ((sqlret != SQL_SUCCESS) && (sqlret != SQL_SUCCESS_WITH_INFO))
 		{
 			handle_err(_hdbc, SQL_HANDLE_DBC, sqlret);
-
 			throw 1;
 		}
 
@@ -4774,7 +4745,6 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days)
 		if (sqlret != SQL_SUCCESS)
 		{
 			handle_err(hstmt, SQL_HANDLE_STMT, sqlret);
-
 			if (sqlret != SQL_SUCCESS_WITH_INFO)
 				throw 2;
 		}
@@ -4783,29 +4753,23 @@ bool CTableGuild::ListTryPlayer(CCharacter* pCha, char disband_days)
 		col_num = min(col_num, MAX_COL);
 		col_num = min(col_num, _max_col);
 
-		// Bind Column
 		for (int i = 0; i < col_num; ++ i)
-		{
 			SQLBindCol(hstmt, UWORD(i + 1), SQL_C_CHAR, _buf[i], MAX_DATALEN, &_buf_len[i]);
-		}
 
-		// Fetch each Row	int i; // ȡ��������
-		int f_row;
-		for (f_row = 0; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; ++ f_row)
+		for (; (sqlret = SQLFetch(hstmt)) == SQL_SUCCESS || sqlret == SQL_SUCCESS_WITH_INFO; )
 		{
 			if (sqlret != SQL_SUCCESS)
-			{
 				handle_err(hstmt, SQL_HANDLE_STMT, sqlret);
-			}
-			//printf_s("trylist: %s ,%s ,%s , %s \n", (char const*)_buf[0] , (char const*)_buf[1], (char const*)_buf[2], (char const*)_buf[3]);
-			WRITE_LONG(l_wpk,atol(reinterpret_cast<char const*>(_buf[0])));	//ID
-			WRITE_STRING(l_wpk, reinterpret_cast<char const*>(_buf[1]));		//����
-			WRITE_STRING(l_wpk, reinterpret_cast<char const*>(_buf[2]));	//ְҵ
-			WRITE_SHORT(l_wpk, Str2Int(reinterpret_cast<char const*>(_buf[3])));
+			tryMsg.players.push_back({
+				static_cast<int64_t>(atol(reinterpret_cast<char const*>(_buf[0]))),
+				std::string(reinterpret_cast<char const*>(_buf[1])),
+				std::string(reinterpret_cast<char const*>(_buf[2])),
+				static_cast<int64_t>(Str2Int(reinterpret_cast<char const*>(_buf[3])))
+			});
 		}
 
-		WRITE_LONG(l_wpk,f_row);	//���ΰ���������
-		pCha->ReflectINFof(pCha,l_wpk);
+		auto l_wpk = net::msg::serialize(tryMsg);
+		pCha->ReflectINFof(pCha, l_wpk);
 
 		SQLFreeStmt(hstmt, SQL_UNBIND);
 		ret = true;
@@ -4900,17 +4864,12 @@ bool CTableGuild::Approve(CCharacter* pCha, uLong chaid)
 		return false;
 	}
 
-	WPACKET	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MM_GUILD_APPROVE);
-	WRITE_LONG(l_wpk,chaid);
-	WRITE_LONG(l_wpk,pCha->GetGuildID());
-	WRITE_STRING(l_wpk,pCha->GetValidGuildName());
-	WRITE_STRING(l_wpk,pCha->GetValidGuildMotto());
+	// Типизированная сериализация: одобрение заявки (кросс-серверный MM)
+	auto l_wpk = net::msg::serialize(net::msg::MmGuildApproveMessage{(int64_t)chaid, pCha->GetGuildID(), pCha->GetValidGuildName(), pCha->GetValidGuildMotto()});
 	pCha->ReflectINFof(pCha,l_wpk);
 
-	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GUILD_APPROVE);
-	WRITE_LONG(l_wpk,chaid);
+	// Типизированная сериализация: одобрение заявки (GameServer→Group)
+	l_wpk = net::msg::serialize(net::msg::GmGuildApproveMessage{(int64_t)chaid});
 	pCha->ReflectINFof(pCha,l_wpk);
 
 	const std::string cha_name = game_db.GetChaNameByID(chaid);
@@ -4993,10 +4952,8 @@ bool CTableGuild::Reject(CCharacter* pCha, uLong chaid)
 		return false;
 	}
 
-	WPACKET	l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MM_GUILD_REJECT);
-	WRITE_LONG(l_wpk, chaid);
-	WRITE_STRING(l_wpk, pCha->GetGuildName());
+	// Типизированная сериализация: отклонение заявки (кросс-серверный MM)
+	auto l_wpk = net::msg::serialize(net::msg::MmGuildRejectMessage{(int64_t)chaid, pCha->GetGuildName()});
 	pCha->ReflectINFof(pCha, l_wpk);
 	return true;
 }
@@ -5078,19 +5035,16 @@ bool CTableGuild::Kick(CCharacter* pCha, uLong chaid)
 		return false;
 	}
 
-	WPACKET	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MM_GUILD_KICK);
-	WRITE_LONG(l_wpk,chaid);
-	WRITE_STRING(l_wpk,pCha->GetGuildName());
+	// Типизированная сериализация: кик из гильдии (кросс-серверный MM)
+	auto l_wpk = net::msg::serialize(net::msg::MmGuildKickMessage{(int64_t)chaid, pCha->GetGuildName()});
 	pCha->ReflectINFof(pCha,l_wpk);
 
-	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GUILD_KICK);
-	WRITE_LONG(l_wpk,chaid);
+	// Типизированная сериализация: исключение из гильдии (GameServer→Group)
+	l_wpk = net::msg::serialize(net::msg::GmGuildKickMessage{(int64_t)chaid});
 	pCha->ReflectINFof(pCha,l_wpk);
 
-	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MC_GUILD_KICK);
+	// Типизированная сериализация: уведомление клиента о кике из гильдии
+	l_wpk = net::msg::serializeMcGuildKickCmd();
 	pCha->ReflectINFof(pCha,l_wpk);
 
 	return true;
@@ -5154,12 +5108,12 @@ bool CTableGuild::Leave(CCharacter* pCha)
 	//pCha->SystemNotice("�Ѿ��뿪����!");
 	pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00056));
 
-	WPACKET l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GUILD_LEAVE);
+	// Типизированная сериализация: выход из гильдии (GameServer→Group)
+	auto l_wpk = net::msg::serializeGmGuildLeaveCmd();
 	pCha->ReflectINFof(pCha,l_wpk);
 
-	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MC_GUILD_LEAVE);
+	// Типизированная сериализация: уведомление клиента о выходе из гильдии
+	l_wpk = net::msg::serializeMcGuildLeaveCmd();
 	pCha->ReflectINFof(pCha,l_wpk);
 	return true;
 }
@@ -5252,15 +5206,14 @@ bool CTableGuild::Disband(CCharacter* pCha,cChar *passwd)
 		return false;
 	}
 	pCha->guildPermission = 0;
-	WPACKET l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GUILD_DISBAND);
+	// Типизированная сериализация: расформирование гильдии (GameServer→Group)
+	auto l_wpk = net::msg::serializeGmGuildDisbandCmd();
 	pCha->ReflectINFof(pCha,l_wpk);
 
 	int guildID = pCha->GetGuildID();
 
-	l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MM_GUILD_DISBAND);
-	WRITE_LONG(l_wpk, guildID);
+	// Типизированная сериализация: расформирование гильдии (кросс-серверный MM)
+	l_wpk = net::msg::serialize(net::msg::MmGuildDisbandMessage{(int64_t)guildID});
 	pCha->ReflectINFof(pCha,l_wpk);
 
 	return true;
@@ -5290,15 +5243,12 @@ bool CTableGuild::Motto(CCharacter* pCha,cChar *motto)
 		return false;
 	}
 
-	WPACKET	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MM_GUILD_MOTTO);
-	WRITE_LONG(l_wpk,pCha->GetGuildID());
-	WRITE_STRING(l_wpk,motto);
+	// Типизированная сериализация: обновление девиза гильдии (кросс-серверный MM)
+	auto l_wpk = net::msg::serialize(net::msg::MmGuildMottoMessage{(int64_t)pCha->GetGuildID(), motto});
 	pCha->ReflectINFof(pCha,l_wpk);
 
-	l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MP_GUILD_MOTTO);
-	WRITE_STRING(l_wpk,motto);
+	// Типизированная сериализация: смена девиза гильдии (GameServer→Group)
+	l_wpk = net::msg::serialize(net::msg::GmGuildMottoMessage{motto});
 	pCha->ReflectINFof(pCha,l_wpk);
 
 	char msg[SQL_MAXLEN];
@@ -5647,12 +5597,8 @@ bool CTableGuild::Challenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
 	// ��֮ǰ����ս�����Ǯ����ȥ
 	if( dwChallID > 0 && dwChallMoney > 0 )
 	{
-		WPACKET	l_wpk	=GETWPACKET();
-		WRITE_CMD(l_wpk,CMD_MP_GUILD_CHALLMONEY);
-		WRITE_LONG(l_wpk, dwChallID);
-		WRITE_LONG(l_wpk, dwChallMoney);
-		WRITE_STRING( l_wpk, szGuild );
-		WRITE_STRING( l_wpk, pCha->GetGuildName() );
+		// Типизированная сериализация: возврат денег за вызов (GameServer→Group)
+		auto l_wpk = net::msg::serialize(net::msg::GmGuildChallMoneyMessage{(int64_t)dwChallID, (int64_t)dwChallMoney, szGuild, pCha->GetGuildName()});
 		pCha->ReflectINFof(pCha,l_wpk);		
 	}
 
@@ -5672,8 +5618,8 @@ void CTableGuild::ListChallenge( CCharacter* pCha )
 	DWORD dwLeaderID = 0;
 	BYTE  byStart = 0;
 
-	WPACKET l_wpk	=GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MC_GUILD_LISTCHALL);
+	// Типизированная сериализация: список вызовов гильдий
+	net::msg::McGuildListChallMessage challMsg{};
 
 	const char*param	="guild_id, guild_name, challid, challmoney, leader_id, challstart";
 	if( pCha->GetValidGuildID() > 0 )
@@ -5683,26 +5629,13 @@ void CTableGuild::ListChallenge( CCharacter* pCha )
 		bool l_ret = _get_row(buf1, 6, param, filter, &l_retrow);
 		if(l_retrow ==1)
 		{
-			if( pCha->GetID() == atoi(buf1[4].c_str()) )
-			{
-				// �ǹ���᳤��ѯ
-				WRITE_CHAR( l_wpk, 1 );
-			}
-			else
-			{
-				WRITE_CHAR( l_wpk, 0 );
-			}
+			challMsg.isLeader = (pCha->GetID() == atoi(buf1[4].c_str())) ? 1 : 0;
 		}
 		else
 		{
-			//pCha->SystemNotice( "��ѯ���Ĺ�����Ϣʧ��!���Ժ�����!" );
 			pCha->SystemNotice( RES_STRING(GM_GAMEDB_CPP_00066) );
 			return;
 		}
-	}
-	else
-	{
-		WRITE_CHAR( l_wpk, 0 );
 	}
 
 	for( int i = 1; i <= 3; ++i )
@@ -5711,43 +5644,26 @@ void CTableGuild::ListChallenge( CCharacter* pCha )
 		int	 l_retrow =0;
 		bool l_ret = _get_row(buf1, 6, param, filter, &l_retrow);
 		if(l_retrow ==1)
-		{			
+		{
 			dwGuildID = atoi(buf1[0].c_str());
 			dwChallID = atoi(buf1[2].c_str());
 			dwChallMoney = atoi(buf1[3].c_str());
 			byStart = (BYTE)atoi(buf1[5].c_str());
-			
+
 			if( dwChallID != 0 )
 			{
 				sprintf(filter, "guild_id =%d", dwChallID);
-				bool l_ret = _get_row(buf2, 6, param, filter, &l_retrow);
+				bool l_ret2 = _get_row(buf2, 6, param, filter, &l_retrow);
 				if(l_retrow ==1)
-				{
-					WRITE_CHAR( l_wpk, i );
-					WRITE_CHAR( l_wpk, byStart );
-					WRITE_STRING( l_wpk, buf1[1].c_str() );
-					WRITE_STRING( l_wpk, buf2[1].c_str() );
-					WRITE_LONG( l_wpk, dwChallMoney );
-				}
-				else
-				{
-					WRITE_CHAR( l_wpk, 0 );
-				}
+					challMsg.entries[i-1] = {static_cast<int64_t>(i), static_cast<int64_t>(byStart), std::string(buf1[1].c_str()), std::string(buf2[1].c_str()), static_cast<int64_t>(dwChallMoney)};
 			}
 			else
 			{
-				WRITE_CHAR( l_wpk, i );
-				WRITE_CHAR( l_wpk, byStart );
-				WRITE_STRING( l_wpk, buf1[1].c_str() );
-				WRITE_STRING( l_wpk, "" );
-				WRITE_LONG( l_wpk, dwChallMoney );
+				challMsg.entries[i-1] = {static_cast<int64_t>(i), static_cast<int64_t>(byStart), std::string(buf1[1].c_str()), std::string(""), static_cast<int64_t>(dwChallMoney)};
 			}
 		}
-		else
-		{
-			WRITE_CHAR( l_wpk, 0 );
-		}
 	}
+	auto l_wpk = net::msg::serialize(challMsg);
 	pCha->ReflectINFof(pCha,l_wpk);
 }
 
@@ -6019,10 +5935,8 @@ void CTableGuild::ChallMoney( BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD 
 		if( dwChallID != 0 )
 		{
 			dwMoney = DWORD(float(dwMoney*80)/100);
-			WPACKET	l_wpk	=GETWPACKET();
-			WRITE_CMD(l_wpk,CMD_MP_GUILD_CHALL_PRIZEMONEY);
-			WRITE_LONG(l_wpk, dwGuildID);
-			WRITE_LONG(l_wpk, dwMoney);
+			// Типизированная сериализация: призовые деньги гильдии (GameServer→Group)
+			auto l_wpk = net::msg::serialize(net::msg::MpGuildChallPrizeMoneyMessage{(int64_t)dwGuildID, (int64_t)dwMoney});
 			SENDTOGROUP(l_wpk);
 		}
 	}
@@ -6036,10 +5950,8 @@ void CTableGuild::ChallMoney( BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD 
 		}
 
 		dwMoney = DWORD(float(dwMoney*80)/100);
-		WPACKET	l_wpk	=GETWPACKET();
-		WRITE_CMD(l_wpk,CMD_MP_GUILD_CHALL_PRIZEMONEY);
-		WRITE_LONG(l_wpk, dwChallID);
-		WRITE_LONG(l_wpk, dwMoney);
+		// Типизированная сериализация: призовые деньги гильдии (GameServer→Group)
+		auto l_wpk = net::msg::serialize(net::msg::MpGuildChallPrizeMoneyMessage{(int64_t)dwChallID, (int64_t)dwMoney});
 		SENDTOGROUP(l_wpk);
 	}
 }

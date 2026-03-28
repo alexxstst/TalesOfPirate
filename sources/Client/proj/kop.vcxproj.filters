@@ -729,6 +729,7 @@
     <ClCompile Include="..\src\MusicThread.cpp" />
     <ClCompile Include="..\src\SoundCommon.cpp" />
     <ClCompile Include="..\src\LootFilter.cpp" />
+    <ClCompile Include="..\src\Point.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\CameraCtrl.h">
@@ -1379,6 +1380,7 @@
     <ClInclude Include="..\src\SoundInstance.h" />
     <ClInclude Include="..\src\SoundManager.h" />
     <ClInclude Include="..\src\LootFilter.h" />
+    <ClInclude Include="..\src\Point.h" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\src\GameApp使用指南.txt">

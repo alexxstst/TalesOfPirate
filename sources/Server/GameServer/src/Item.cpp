@@ -47,31 +47,23 @@ void CItem::Finally()
 
 void CItem::OnBeginSeen(CCharacter *pCMainCha)
 {
-	WPACKET pk =GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_ITEMBEGINSEE);
-	// ��������
-	WRITE_LONG(pk, m_ID);							// world ID
-	WRITE_LONG(pk, m_lHandle);
-	WRITE_LONG(pk, m_pCItemRecord->lID);			// ID
-	WRITE_LONG(pk, GetShape().centre.x);			// ��ǰxλ��
-	WRITE_LONG(pk, GetShape().centre.y);			// ��ǰyλ��
-	WRITE_SHORT(pk, m_sAngle);					// ����
-	WRITE_SHORT(pk, m_SGridContent.sNum);			// ����
-	//
-	WRITE_CHAR(pk, m_chSpawType);
-	WRITE_LONG(pk, m_lFromEntityID);
-	// �¼���Ϣ
-	WriteEventInfo(pk);
-
-	pCMainCha->ReflectINFof(this,pk);//ͨ��
+	// Типизированная сериализация: предмет появился в поле зрения
+	auto pk = net::msg::serialize(net::msg::McItemCreateMessage{
+		m_ID, static_cast<int64_t>(m_lHandle), static_cast<int64_t>(m_pCItemRecord->lID),
+		static_cast<int64_t>(GetShape().centre.x), static_cast<int64_t>(GetShape().centre.y),
+		static_cast<int64_t>(m_sAngle), static_cast<int64_t>(m_SGridContent.sNum),
+		static_cast<int64_t>(m_chSpawType), static_cast<int64_t>(m_lFromEntityID),
+		{static_cast<int64_t>(GetID()), IsCharacter() ? 1LL : 2LL,
+		 static_cast<int64_t>(GetEvent().GetID()), std::string(GetEvent().GetName())}
+	});
+	pCMainCha->ReflectINFof(this,pk);
 }
 
 void CItem::OnEndSeen(CCharacter *pCMainCha)
 {
-	WPACKET pk =GETWPACKET();
-	WRITE_CMD(pk, CMD_MC_ITEMENDSEE);
-	WRITE_LONG(pk, m_ID);				//ID
-	pCMainCha->ReflectINFof(this,pk);	//ͨ��
+	// Типизированная сериализация: предмет исчез из поля зрения
+	auto pk = net::msg::serialize(net::msg::McItemDestroyMessage{m_ID});
+	pCMainCha->ReflectINFof(this,pk);
 }
 
 void CItem::Run(dbc::uLong ulCurTick)

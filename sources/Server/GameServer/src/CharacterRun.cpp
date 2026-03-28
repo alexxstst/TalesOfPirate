@@ -168,12 +168,10 @@ void CCharacter::Run(DWORD dwCurTime)
 		if (m_timerPing.IsOK(dwCurTime))
 			CheckPing();
 
+		// Типизированная сериализация: пакет-шум (античит — случайные данные с фиктивным cmd)
 		if (m_timerNetSendFreq.IsOK(dwCurTime) && m_ulNetSendLen > 0)
 		{
-			WPACKET WtPk = GETWPACKET();
-			WRITE_CMD(WtPk, 0xffff);
-			for (uLong i = 0; i < m_ulNetSendLen; i++)
-				WRITE_CHAR(WtPk, rand() / 255);
+			auto WtPk = net::msg::serializeNoisePacket(m_ulNetSendLen);
 			ReflectINFof(this, WtPk);
 		}
 	}
@@ -200,9 +198,8 @@ void CCharacter::StartExit()
 		m_byExit = CHAEXIT_BEGIN;
 		m_timerExit.Begin(dwExitTime);
 
-		WPACKET	l_wpk = GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MC_STARTEXIT);
-		WRITE_LONG(l_wpk, dwExitTime);
+		// Типизированная сериализация: начало обратного отсчёта выхода
+		auto l_wpk = net::msg::serialize(net::msg::McStartExitMessage{(int64_t)dwExitTime});
 		ReflectINFof(this, l_wpk);
 	}
 }
@@ -216,8 +213,8 @@ void CCharacter::CancelExit()
 		m_byExit = CHAEXIT_NONE;
 		m_timerExit.Reset();
 
-		WPACKET	l_wpk = GETWPACKET();
-		WRITE_CMD(l_wpk, CMD_MC_CANCELEXIT);
+		// Типизированная сериализация: отмена выхода
+		auto l_wpk = net::msg::serializeMcCancelExitCmd();
 		ReflectINFof(this, l_wpk);
 	}
 }
@@ -227,8 +224,8 @@ void CCharacter::Exit()
 		// ��ʽ�˳�
 		//LG( "��ʱ�˳�", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("common", "Exit: Name = {}, exitcode = {}", this->GetName(), m_byExit);
-	WPACKET	l_wpk = GETWPACKET();
-	WRITE_CMD(l_wpk, CMD_MT_PALYEREXIT);
+	// Типизированная сериализация: выход игрока (GameServer→GateServer)
+	auto l_wpk = net::msg::serializeGmPlayerExitCmd();
 	ReflectINFof(this, l_wpk);
 	g_pGameApp->GoOutGame(this->GetPlayer(), true);
 

@@ -305,7 +305,7 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 
 			d.ctrlChaId = pCCtrlCha->GetID();
 
-			WPACKET pkret = net::msg::serialize(msg);
+			net::WPacket pkret = net::msg::serialize(msg);
 
 			// Trailing-поля для GateServer (loginFlag, playerCount, playerAddr).
 			// GateServer читает их из хвоста пакета и срезает через DiscardLast(6).
@@ -339,7 +339,7 @@ Error:
 	{
 		net::msg::McEnterMapMessage errMsg;
 		errMsg.errCode = sErrCode;
-		WPACKET pkret = net::msg::serialize(errMsg);
+		net::WPacket pkret = net::msg::serialize(errMsg);
 		ReflectINFof(this, pkret);
 	}
 
@@ -367,8 +367,6 @@ if (!IsLiveing()) {
 	{
 		
 		FailedActionNoti(enumACTION_MOVE, enumFACTION_ACTFORBID);
-		//m_CLog.Log("���Ϸ����ƶ������󣨴��ڲ����ƶ���״̬��[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful move request(being can't move state)[PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
@@ -376,16 +374,12 @@ if (!IsLiveing()) {
 	{
 		
 		FailedActionNoti(enumACTION_MOVE, enumFACTION_ACTFORBID);
-		//m_CLog.Log("���Ϸ����ƶ������󣨽�ɫ��׼�����ߣ�[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful move request(character is prepare dormancy)[PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
 	if (GetMoveState() == enumMSTATE_ON && GetMoveEndPos() == pPath[chPointNum - 1]) // �����ƶ������յ���ͬ
 	{
 		
-		//m_CLog.Log("�ƶ���Ŀ����뵱ǰ�ƶ���ͬ�����󱻺���[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("the aim point of move is currently move point,request be ignore [PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
@@ -393,8 +387,6 @@ if (!IsLiveing()) {
 	{
 		
 		FailedActionNoti(enumACTION_MOVE, enumFACTION_ACTFORBID);
-		//m_CLog.Log("���Ϸ����ƶ��������ƶ��ٶ�Ϊ0��[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful move request(move speed is zero)[PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
@@ -403,8 +395,6 @@ if (!IsLiveing()) {
 		{
 			
 			FailedActionNoti(enumACTION_MOVE, enumFACTION_MOVEPATH);
-			//m_CLog.Log("�ƶ�·������·�����зǷ�\n");
-			m_CLog.Log("move path error��pathID is unlawful\n");
 			return;
 		}
 
@@ -415,7 +405,6 @@ if (!IsLiveing()) {
 	MoveInit.STargetInfo.chType = 0;
 	MoveInit.sStopState = chStopState;
 
-	m_CLog.Log("Add action(Move) ActionData[%d, %d]\n", m_CAction.GetCurActionNo(), m_CAction.GetActionNum());
 	if (m_CAction.GetCurActionNo() >= 0)
 	{
 		m_CAction.End();
@@ -441,8 +430,6 @@ void CCharacter::Cmd_BeginMoveDirect(Entity *pTar)
 {
 	if (!pTar || !g_pGameApp->IsLiveingEntity(pTar->GetID(), pTar->GetHandle())) // ������Ч
 	{
-		//m_CLog.Log("ʵ�岻����\n");
-		m_CLog.Log("entity is inexistence\n");
 		return;
 	}
 	Point	Path[2] = {GetPos(), pTar->GetPos()};
@@ -469,24 +456,18 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 	if (GetMoveState() == enumMSTATE_ON && GetMoveStopState() == enumEXISTS_SLEEPING) // ��Ҫ����
 	{
 		FailedActionNoti(enumACTION_MOVE, enumFACTION_ACTFORBID);
-		//m_CLog.Log("���Ϸ����ƶ������󣨽�ɫ��׼�����ߣ�[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful move request(character is prepare dormancy)[PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
 	if (!GetActControl(enumACTCONTROL_MOVE) && pPath[0] != pPath[1])
 	{
 		FailedActionNoti(enumACTION_MOVE, enumFACTION_ACTFORBID);
-		//m_CLog.Log("���Ϸ��ļ������󣨴��ڲ����ƶ���״̬��[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful skill request(being can't move state)[PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
 	if (!IsRightSkill(pSkill))
 	{
 		FailedActionNoti(enumACTION_SKILL, enumFACTION_SKILL_NOTMATCH);
-		//m_CLog.Log("���Ϸ��ļ������󣨼���ʩ���߲�ƥ�䣩[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful skill request(skill discharge is not matching)[PacketID: %u]\n", m_ulPacketID);
 		return;
 	}
 
@@ -531,8 +512,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 			//LG("���ܴ���", "��ɫ��%s\tû�иü���(SkillID: %u)\n", GetLogName(), pSkill->sID);
 			ToLogService("errors", LogLevel::Error, "character:{}\t hasn't the skill(SkillID: {})", GetLogName(), pSkill->sID);
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
-			//m_CLog.Log("��ɫû�иü���[SkillID: %u] [PacketID: %u]\n", pSkill->sID, m_ulPacketID);
-			m_CLog.Log("character hasn't the skill[SkillID: %u] [PacketID: %u]\n", pSkill->sID, m_ulPacketID);
 			return;
 		}
 	}
@@ -542,8 +521,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 		//LG("���ܴ���", "��ɫ��%s\tû��ȡ���ü���(SkillID: %u, SkillLv: %u)����ʱ����\n", GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
 		ToLogService("errors", LogLevel::Error, "character:{}\t hasn't get the skill(SkillID: {}, SkillLv: {})'s temp data", GetLogName(), pSSkillCont->sID, pSSkillCont->chLv);
 		FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
-		//m_CLog.Log("��ɫû��ȡ���ü��ܵ���ʱ����[SkillID: %u, SkillLv: %u] [PacketID: %u]\n", pSSkillCont->sID, pSSkillCont->chLv, m_ulPacketID);
-		m_CLog.Log("character hasn't get the skill temp data[SkillID: %u, SkillLv: %u] [PacketID: %u]\n", pSSkillCont->sID, pSSkillCont->chLv, m_ulPacketID);
 
 		return;
 	}
@@ -553,8 +530,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 		|| (pCSkillTData->lResumeTime > 0 && !GetActControl(enumACTCONTROL_USE_MSKILL))) // ����ʹ��ħ������
 	{
 		FailedActionNoti(enumACTION_SKILL, enumFACTION_ACTFORBID);
-		//m_CLog.Log("���Ϸ��ļ������󣨴��ڲ���ʹ�ü��ܵ�״̬��[PacketID: %u]\n", m_ulPacketID);
-		m_CLog.Log("unlawful skill request(being can't use skill state)[PacketID: %u]\n", m_ulPacketID);
 
 		return;
 	}
@@ -563,8 +538,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 		if (!m_submap->IsValidPos(pPath[chPCount].x, pPath[chPCount].y))
 		{
 			FailedActionNoti(enumACTION_MOVE, enumFACTION_MOVEPATH);
-			//m_CLog.Log("�ƶ�·������·�����зǷ�\n");
-			m_CLog.Log("move path error��path ID is unlawful\n");
 
 			return;
 		}
@@ -588,8 +561,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 			&& GetFightState() == enumFSTATE_ON
 			&& IsRangePoint(pTarEnt->GetPos(), MoveInit.STargetInfo.ulDist)) // ��ͬ�ļ���
 		{
-			//m_CLog.Log("��ͬ�ļ������󣬱�����[PacketID: %u]\tTick %u\n", m_ulPacketID, GetTickCount());
-			m_CLog.Log("the same skill request��be ignore [PacketID: %u]\tTick %u\n", m_ulPacketID, GetTickCount());
 
 			return;
 		}
@@ -603,8 +574,6 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 			&& GetFightState() == enumFSTATE_ON
 			&& IsRangePoint(lTarInfo1, lTarInfo2, MoveInit.STargetInfo.ulDist)) // ��ͬ�ļ���
 		{
-			//m_CLog.Log("��ͬ�ļ������󣬱�����[PacketID: %u]\tTick %u\n", m_ulPacketID, GetTickCount());
-			m_CLog.Log("the same skill request��be ignore [PacketID: %u]\tTick %u\n", m_ulPacketID, GetTickCount());
 
 			return;
 		}
@@ -630,15 +599,12 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 	{
 		if (SetMoveOnInfo(&MoveInit))
 		{
-			//m_CLog.Log("��ͬ�ļ��ܺ�Ŀ�꣬�����ƶ�·��[PacketID: %u]\tTick %u\n", m_ulPacketID, GetTickCount());
-			m_CLog.Log("the same skill and aim��reset move path[PacketID: %u]\tTick %u\n", m_ulPacketID, GetTickCount());
 			return;
 		}
 	}
 
 	Show(); // ���������״̬�������
 
-	m_CLog.Log("Add action(Move&Skill) ActionData[%d, %d]\n", m_CAction.GetCurActionNo(), m_CAction.GetActionNum());
 	if (m_CAction.GetCurActionNo() >= 0)
 	{
 		m_CAction.End();
@@ -661,16 +627,12 @@ void CCharacter::Cmd_BeginSkillDirect(Long lSkillNo, Entity *pTar, bool bIntelli
 {
 	if (!pTar || !g_pGameApp->IsMapEntity(pTar->GetID(), pTar->GetHandle())) // ������Ч
 	{
-		//m_CLog.Log("ʵ�岻����\n");
-		m_CLog.Log("entity is inexistence\n");
 		return;
 	}
 
 	CSkillRecord *pSkill = GetSkillRecordInfo(lSkillNo);
 	if (pSkill == NULL)
 	{
-		//m_CLog.Log("���ܣ�ID: %u��������\n", lSkillNo);
-		m_CLog.Log("skill��ID: %u��is inexistence\n", lSkillNo);
 		return;
 	}
 
@@ -700,8 +662,6 @@ void CCharacter::Cmd_BeginSkillDirect2(Long lSkillNo, Long lSkillLv, Long lPosX,
 	CSkillRecord *pSkill = GetSkillRecordInfo(lSkillNo);
 	if (pSkill == NULL)
 	{
-		//m_CLog.Log("���ܣ�ID: %u��������\n", lSkillNo);
-		m_CLog.Log("skill(ID: %u)is inexistence\n", lSkillNo);
 		return;
 	}
 
@@ -711,8 +671,6 @@ void CCharacter::Cmd_BeginSkillDirect2(Long lSkillNo, Long lSkillLv, Long lPosX,
 	Path[1].y = lPosY;
 	if (SkillTarIsEntity(pSkill)) // ���ö�����ID
 	{
-		//m_CLog.Log("���ܣ�ID: %u���Ķ����������\n", lSkillNo);
-		m_CLog.Log("skill��ID: %u��'s object isn't the coordinate point\n", lSkillNo);
 		return;
 	}
 
@@ -1451,9 +1409,8 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 	//char szParamMsg[255];
 	RES_FORMAT_STRING(GM_CHARACTERCMD_CPP_00006, param, szTeamMsg);
 
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-	WRITE_STRING(WtPk, szTeamMsg);
+	// Типизированная сериализация: системное сообщение команде о подборе предмета
+	auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{ szTeamMsg });
 	SENDTOCLIENT2(WtPk, GetPlayer()->GetTeamMemberCnt(), GetPlayer()->_Team);
 
 	if (sPushRet == enumKBACT_SUCCESS)
@@ -1900,10 +1857,9 @@ Short CCharacter::Cmd_GuildBankOper(Char chSrcType, Short sSrcGridID, Short sSrc
 		game_db.UpdateGuildBank(guildID, &pCTarBag);
 	}
 	
-	WPACKET WtPk = GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MM_UPDATEGUILDBANK);
-	WRITE_LONG(WtPk, pCMainCha->m_ID);
-	WRITE_LONG(WtPk, guildID);
+	auto WtPk = net::msg::serialize(net::msg::MmUpdateGuildBankMessage{
+		static_cast<int64_t>(guildID)
+	});
 	ReflectINFof(this, WtPk);
 
 	return enumITEMOPT_SUCCESS;
@@ -2042,15 +1998,14 @@ Short CCharacter::Cmd_BankOper(Char chSrcType, Short sSrcGridID, Short sSrcNum, 
 	return enumITEMOPT_SUCCESS;
 }
 
-void CCharacter::Cmd_ReassignAttr(RPACKET pk)
+void CCharacter::Cmd_ReassignAttr(const net::msg::CmSynAttrMessage& msg)
 {
 	m_CChaAttr.ResetChangeFlag();
 	SetBoatAttrChangeFlag(false);
 
-	const char chAttrNum = READ_CHAR(pk);
+	const char chAttrNum = static_cast<char>(msg.attrs.size());
 	if (chAttrNum <= 0 || chAttrNum > 6)
 	{
-		//SystemNotice("�ٷ������Եĸ�������");
 		SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00015));
 		return;
 	}
@@ -2068,13 +2023,13 @@ void CCharacter::Cmd_ReassignAttr(RPACKET pk)
 	Long	lAttrPoint = 0;
 	bool	bSetCorrect = true;
 	Short	sAttrID{}, sAttrOppID{};
-	for (char i = 0; i <= chAttrNum; i++)
+	for (char i = 0; i < chAttrNum; i++)
 	{
-		sAttrID = READ_SHORT(pk);
+		sAttrID = static_cast<Short>(msg.attrs[i].attrId);
 		if (sAttrID < ATTR_STR || sAttrID > ATTR_LUK)
 			continue;
 		sAttrOppID = sAttrID - ATTR_STR;
-		lBaseAttr[sAttrOppID] = READ_LONG(pk);
+		lBaseAttr[sAttrOppID] = static_cast<Long>(msg.attrs[i].value);
 		if (lBaseAttr[sAttrOppID] < 0) // Ҫ���õ�ֵС��0
 		{
 			bSetCorrect = false;
@@ -2409,27 +2364,30 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 		}
 	}
 
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_TEAM_FIGHT_ASK);
+	// Типизированная сериализация: формирование пакета через McTeamFightAskMessage (count-first)
+	net::msg::McTeamFightAskMessage fightMsg;
+
+	// Лямбда: добавить игрока в сообщение и вернуть его данные для записи в пакет
+	auto addPlayer = [&](CCharacter* pCha) {
+		net::msg::TeamFightPlayerEntry entry;
+		entry.name = pCha->GetName();
+		entry.lv = static_cast<int64_t>((Char)pCha->getAttr(ATTR_LV));
+		entry.job = g_GetJobName((Short)pCha->getAttr(ATTR_JOB));
+		if (g_CParser.DoString("Get_ItemAttr_Join", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END))
+			entry.fightNum = g_CParser.GetReturnNumber(0);
+		if (g_CParser.DoString("Get_ItemAttr_Win", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END))
+			entry.victoryNum = g_CParser.GetReturnNumber(0);
+		fightMsg.players.push_back(std::move(entry));
+	};
 
 	Char	chObjStart = 2;
-	// ��������
+	// Исходная сторона
 	Char	chSrcObjNum = 0;
 	pCPly->SetChallengeType(chType);
 	pCPly->SetChallengeParam(chObjStart++, pCPly->GetID());
 	pCPly->SetChallengeParam(chObjStart++, pCPly->GetHandle());
 	pCPly->StartChallengeTimer();
-	WRITE_STRING(WtPk, GetName());
-	WRITE_CHAR(WtPk, (Char)getAttr(ATTR_LV));
-	WRITE_STRING(WtPk, g_GetJobName((Short)getAttr(ATTR_JOB)));
-	if (g_CParser.DoString("Get_ItemAttr_Join", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
-		WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-	else
-		WRITE_SHORT(WtPk, 0);
-	if (g_CParser.DoString("Get_ItemAttr_Win", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
-		WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-	else
-		WRITE_SHORT(WtPk, 0);
+	addPlayer(this);
 	chSrcObjNum++;
 	if (chType == enumFIGHT_TEAM)
 	{
@@ -2462,17 +2420,7 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 			pCTeamMem->SetChallengeParam(2, pCPly->GetID());
 			pCTeamMem->SetChallengeParam(3, pCPly->GetHandle());
 			pCTeamMem->StartChallengeTimer();
-			WRITE_STRING(WtPk, pCTeamCha->GetName());
-			WRITE_CHAR(WtPk, (Char)pCTeamCha->getAttr(ATTR_LV));
-			WRITE_STRING(WtPk, g_GetJobName((Short)pCTeamCha->getAttr(ATTR_JOB)));
-			if (g_CParser.DoString("Get_ItemAttr_Join", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCTeamCha, DOSTRING_PARAM_END))
-				WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-			else
-				WRITE_SHORT(WtPk, 0);
-			if (g_CParser.DoString("Get_ItemAttr_Win", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCTeamCha, DOSTRING_PARAM_END))
-				WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-			else
-				WRITE_SHORT(WtPk, 0);
+			addPlayer(pCTeamCha);
 			chSrcObjNum++;
 
 			pCPly->SetChallengeParam(chObjStart++, pCTeamMem->GetID());
@@ -2480,24 +2428,14 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 		}
 	}
 
-	// �Է�����
+	// Целевая сторона
 	Char	chTarObjNum = 0;
 	pCTarPly->SetChallengeType(chType);
 	pCTarPly->SetChallengeParam(0, 1);
 	pCTarPly->SetChallengeParam(2, pCPly->GetID());
 	pCTarPly->SetChallengeParam(3, pCPly->GetHandle());
 	pCTarPly->StartChallengeTimer();
-	WRITE_STRING(WtPk, pCTarCha->GetName());
-	WRITE_CHAR(WtPk, (Char)pCTarCha->getAttr(ATTR_LV));
-	WRITE_STRING(WtPk, g_GetJobName((Short)pCTarCha->getAttr(ATTR_JOB)));
-	if (g_CParser.DoString("Get_ItemAttr_Join", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCTarCha, DOSTRING_PARAM_END))
-		WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-	else
-		WRITE_SHORT(WtPk, 0);
-	if (g_CParser.DoString("Get_ItemAttr_Win", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCTarCha, DOSTRING_PARAM_END))
-		WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-	else
-		WRITE_SHORT(WtPk, 0);
+	addPlayer(pCTarCha);
 	chTarObjNum++;
 	if (chType == enumFIGHT_TEAM)
 	{
@@ -2530,17 +2468,7 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 			pCTeamMem->SetChallengeParam(2, pCPly->GetID());
 			pCTeamMem->SetChallengeParam(3, pCPly->GetHandle());
 			pCTeamMem->StartChallengeTimer();
-			WRITE_STRING(WtPk, pCTeamCha->GetName());
-			WRITE_CHAR(WtPk, (Char)pCTeamCha->getAttr(ATTR_LV));
-			WRITE_STRING(WtPk, g_GetJobName((Short)pCTeamCha->getAttr(ATTR_JOB)));
-			if (g_CParser.DoString("Get_ItemAttr_Join", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCTeamCha, DOSTRING_PARAM_END))
-				WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-			else
-				WRITE_SHORT(WtPk, 0);
-			if (g_CParser.DoString("Get_ItemAttr_Win", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCTeamCha, DOSTRING_PARAM_END))
-				WRITE_SHORT(WtPk, g_CParser.GetReturnNumber(0));
-			else
-				WRITE_SHORT(WtPk, 0);
+			addPlayer(pCTeamCha);
 			chTarObjNum++;
 
 			pCPly->SetChallengeParam(chObjStart++, pCTeamMem->GetID());
@@ -2550,8 +2478,10 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 	pCPly->SetChallengeParam(chObjStart++, pCTarPly->GetID());
 	pCPly->SetChallengeParam(chObjStart++, pCTarPly->GetHandle());
 
-	WRITE_CHAR(WtPk, chSrcObjNum);
-	WRITE_CHAR(WtPk, chTarObjNum);
+	// Финализация: сериализация пакета с count-first
+	fightMsg.srcCount = chSrcObjNum;
+	fightMsg.tarCount = chTarObjNum;
+	auto WtPk = net::msg::serialize(fightMsg);
 	if (chType == enumFIGHT_TEAM)
 	{
 		SENDTOCLIENT2(WtPk, pCPly->GetTeamMemberCnt(), pCPly->_Team);
@@ -2619,9 +2549,8 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 		std::string	strNoti = GetName();
 		//strNoti += " ȡ����PK����!";
 		strNoti += RES_STRING(GM_CHARACTERCMD_CPP_00033);
-		WPACKET WtPk	= GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_STRING(WtPk, strNoti.c_str());
+		// Типизированная сериализация: уведомление об отмене PK-вызова
+		auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{ strNoti });
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
 		{
@@ -2641,9 +2570,8 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 	{
 		//std::string	strNoti = "����ͼ������PK���󣬻��Ӧ��ͼû������!";
 		std::string	strNoti = RES_STRING(GM_CHARACTERCMD_CPP_00034);
-		WPACKET WtPk	= GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_STRING(WtPk, strNoti.c_str());
+		// Типизированная сериализация: PK-карта не найдена
+		auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{ strNoti });
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
 		{
@@ -2662,9 +2590,8 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 	{
 		//std::string	strNoti = "��ǰû�п��г��أ����Ժ����!";
 		std::string	strNoti = RES_STRING(GM_CHARACTERCMD_CPP_00035);
-		WPACKET WtPk	= GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_STRING(WtPk, strNoti.c_str());
+		// Типизированная сериализация: нет свободных копий
+		auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{ strNoti });
 		ReflectINFof(this, WtPk);
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
@@ -2680,9 +2607,8 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 	{
 		//std::string	strNoti = "���󳡵��������������Ժ����!";
 		std::string	strNoti = RES_STRING(GM_CHARACTERCMD_CPP_00036);
-		WPACKET WtPk	= GETWPACKET();
-		WRITE_CMD(WtPk, CMD_MC_SYSINFO);
-		WRITE_STRING(WtPk, strNoti.c_str());
+		// Типизированная сериализация: сцена переполнена
+		auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{ strNoti });
 		ReflectINFof(this, WtPk);
 		pCSrcPly->GetCtrlCha()->ReflectINFof(this, WtPk);
 		if (lFightType == enumFIGHT_TEAM)
@@ -2848,10 +2774,10 @@ void CCharacter::Cmd_ItemRepairAsk(dbc::Char chPosType, dbc::Char chPosID)
 	}
 	g_CParser.DoString("get_item_repair_money", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCPly->GetRepairItem(), DOSTRING_PARAM_END);
 
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_ITEM_REPAIR_ASK);
-	WRITE_STRING(WtPk, pCItemRec->szName);
-	WRITE_LONG(WtPk, g_CParser.GetReturnNumber(0));
+	// Типизированная сериализация: запрос на починку предмета
+	auto WtPk = net::msg::serialize(net::msg::McItemRepairAskMcMessage{
+		pCItemRec->szName, g_CParser.GetReturnNumber(0)
+	});
 	ReflectINFof(this, WtPk);
 
 	pCPly->SetInRepair();
@@ -3097,10 +3023,10 @@ void CCharacter::Cmd_ItemForgeAsk(dbc::Char chType, SForgeItem *pSItem)
 			}
 			else
 			{
-				WPACKET WtPk = GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_ITEM_FORGE_ASK);
-				WRITE_CHAR(WtPk, chType);
-				WRITE_LONG(WtPk, lOptMoney);
+				// Типизированная сериализация: запрос на ковку предмет��
+				auto WtPk = net::msg::serialize(net::msg::McItemForgeAskMessage{
+					static_cast<int64_t>(chType), static_cast<int64_t>(lOptMoney)
+				});
 				ReflectINFof(this, WtPk);
 			}
 
@@ -3121,11 +3047,11 @@ void CCharacter::Cmd_ItemForgeAsk(dbc::Char chType, SForgeItem *pSItem)
 	}
 
 EndItemForgeAsk:
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_ITEM_FORGE_ASR);
-	WRITE_CHAR(WtPk, chType);
-	WRITE_CHAR(WtPk, 0);
-	ReflectINFof(this, WtPk);
+	// Типизированная сериализация: отказ ковки (worldId=0 — ошибка)
+	{
+		auto WtPk = net::msg::serialize(net::msg::McItemForgeAnswerMessage{0, static_cast<int64_t>(chType), 0});
+		ReflectINFof(this, WtPk);
+	}
 
 	ForgeAction(false);
 }
@@ -3193,9 +3119,8 @@ void CCharacter::Cmd_ItemLotteryAsk(SLotteryItem *pSItem)
 		}
 	}
 EndItemLotteryAsk:
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_ITEM_LOTTERY_ASR);
-	WRITE_CHAR(WtPk, 0);
+	// Типизированная сериализация: результат лотереи (неудача)
+	auto WtPk = net::msg::serialize(net::msg::McItemLotteryAsrMessage{ 0 });
 	ReflectINFof(this, WtPk);
 }
 
@@ -3204,9 +3129,8 @@ void CCharacter::Cmd_ItemLotteryAnswer(bool bLottery)
 	SynKitbagNew(enumSYN_KITBAG_EQUIP);
 	SynAttrToSelf(enumATTRSYN_ITEM_EQUIP);
 
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_ITEM_LOTTERY_ASR);
-	WRITE_CHAR(WtPk, 0);
+	// Типизированная сериализация: результат лотереи (ответ)
+	auto WtPk = net::msg::serialize(net::msg::McItemLotteryAsrMessage{ 0 });
 	ReflectINFof(this, WtPk);
 }
 // End
@@ -3314,19 +3238,21 @@ void CCharacter::Cmd_LifeSkillItemAsk(long dwType, SLifeSkillItem *pSItem)
 
 EndItemForgeAsk:
 	pCPly->SetInLifeSkill(false);
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_LIFESKILL_ASK);
-	WRITE_LONG(WtPk, dwType);
-	WRITE_SHORT(WtPk, (short)lOptMoney);
-	if(1==dwType)
 	{
-		string	strVer[2];
-		Util_ResolveTextLine(strLifeSkillinfo.c_str(),strVer,2,',');
-		WRITE_STRING(WtPk,strVer[1].c_str());
+		std::string skillInfo;
+		if(1==dwType)
+		{
+			string	strVer[2];
+			Util_ResolveTextLine(strLifeSkillinfo.c_str(),strVer,2,',');
+			skillInfo = strVer[1];
+		}
+		else
+			skillInfo = strLifeSkillinfo;
+		auto WtPk = net::msg::serialize(net::msg::McLifeSkillMessage{
+			static_cast<int64_t>(dwType), static_cast<int64_t>((short)lOptMoney), skillInfo
+		});
+		ReflectINFof(this, WtPk);
 	}
-	else
-		WRITE_STRING(WtPk,strLifeSkillinfo.c_str());
-	ReflectINFof(this, WtPk);
 }
 
 void CCharacter::Cmd_LifeSkillItemAsR(long dwType, SLifeSkillItem *pSItem)
@@ -3445,19 +3371,19 @@ void CCharacter::Cmd_LifeSkillItemAsR(long dwType, SLifeSkillItem *pSItem)
 	if(stime != 0)
 		pCPly->SetInLifeSkill();
 
-	WPACKET	l_wpk =GETWPACKET();
-	WRITE_CMD(l_wpk,CMD_MC_LIFESKILL_ASR);
-	WRITE_LONG(l_wpk,dwType);
-	WRITE_SHORT(l_wpk,stime);
-	if(1==dwType)
 	{
-		string	strVer[2];
-		Util_ResolveTextLine(cszContent,strVer,2,',');
-		WRITE_STRING(l_wpk,strVer[0].c_str());
+		std::string skillInfo;
+		if(1==dwType)
+		{
+			string	strVer[2];
+			Util_ResolveTextLine(cszContent,strVer,2,',');
+			skillInfo = strVer[0];
+		}
+		auto l_wpk = net::msg::serialize(net::msg::McLifeSkillAsrMessage{
+			static_cast<int64_t>(dwType), static_cast<int64_t>(stime), skillInfo
+		});
+		ReflectINFof(this,l_wpk);
 	}
-	else
-		WRITE_STRING(l_wpk,"");
-	ReflectINFof(this,l_wpk);
 }
 //��������
 void CCharacter::Cmd_LockKitbag()
@@ -3469,16 +3395,15 @@ void CCharacter::Cmd_LockKitbag()
     }
     sState = m_CKitbag.IsPwdLocked() ? 1 : 0;
 
-    WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_KITBAG_CHECK_ASR);
-    WRITE_CHAR(WtPk, sState);
+    // Типизированная сериализация: статус блокировки сумки
+    auto WtPk = net::msg::serialize(net::msg::McKitbagCheckAnswerMessage{ static_cast<int64_t>(sState) });
 	ReflectINFof(this, WtPk);
 }
 
-//��������
+//Разблокировка
 void CCharacter::Cmd_UnlockKitbag( const char szPassword[] )
 {
-    Char sState;//0:δ���� 1:������
+    Char sState;//0:не заблокировано 1:заблокировано
 
     CPlayer	*pCply = GetPlayer();
     cChar *szPwd2 = pCply->GetPassword();
@@ -3489,21 +3414,19 @@ void CCharacter::Cmd_UnlockKitbag( const char szPassword[] )
     }
     sState = m_CKitbag.IsPwdLocked() ? 1 : 0;
 
-    WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_KITBAG_CHECK_ASR);
-    WRITE_CHAR(WtPk, sState);
+    // Типизированная сериализация: статус блокировки сумки
+    auto WtPk = net::msg::serialize(net::msg::McKitbagCheckAnswerMessage{ static_cast<int64_t>(sState) });
 	ReflectINFof(this, WtPk);
 }
 
-//��鱳��״̬
+//Проверка состояния сумки
 void CCharacter::Cmd_CheckKitbagState()
 {
-    Char sState;//0:δ���� 1:������
+    Char sState;//0:не заблокировано 1:заблокировано
     sState = m_CKitbag.IsPwdLocked() ? 1 : 0;
 
-    WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_KITBAG_CHECK_ASR);
-    WRITE_CHAR(WtPk, sState);
+    // Типизированная сериализация: статус блокировки сумки
+    auto WtPk = net::msg::serialize(net::msg::McKitbagCheckAnswerMessage{ static_cast<int64_t>(sState) });
 	ReflectINFof(this, WtPk);
 }
 
@@ -3720,11 +3643,10 @@ void CCharacter::Cmd_ItemForgeAnswer(bool bForge)
 				goto EndItemForge;
 			else
 			{
-				WPACKET WtPk = GETWPACKET();
-				WRITE_CMD(WtPk, CMD_MC_ITEM_FORGE_ASR);
-				WRITE_LONG(WtPk, GetID());
-				WRITE_CHAR(WtPk, chType);
-				WRITE_CHAR(WtPk, (Char)lBegin);
+				// Типизированная сериализация: результат ковки (успех)
+				auto WtPk = net::msg::serialize(net::msg::McItemForgeAnswerMessage{
+					GetID(), static_cast<int64_t>(chType), static_cast<int64_t>((Char)lBegin)
+				});
 				NotiChgToEyeshot(WtPk);
 
 				pCPly->SetInForge(false);
@@ -3735,11 +3657,11 @@ void CCharacter::Cmd_ItemForgeAnswer(bool bForge)
 	}
 
 EndItemForge:
-	WPACKET WtPk	= GETWPACKET();
-	WRITE_CMD(WtPk, CMD_MC_ITEM_FORGE_ASR);
-	WRITE_CHAR(WtPk, chType);
-	WRITE_CHAR(WtPk, 0);
-	ReflectINFof(this, WtPk);
+	// Типизированная сериализация: отказ ковки (worldId=0 — ошибка)
+	{
+		auto WtPk = net::msg::serialize(net::msg::McItemForgeAnswerMessage{0, static_cast<int64_t>(chType), 0});
+		ReflectINFof(this, WtPk);
+	}
 
 	pCPly->SetInForge(false);
 	ForgeAction(false);
@@ -3754,13 +3676,13 @@ void CCharacter::Cmd_Garner2_Reorder(short index)
 	}
 	else
 	{
-		WPACKET pk	=GETWPACKET();
-		WRITE_CMD(pk,CMD_MP_GARNER2_UPDATE);
-		WRITE_LONG(pk,GetPlayer()->GetDBChaId());
-		WRITE_STRING(pk,GetName());
-		WRITE_LONG(pk,GetLevel());
-		WRITE_STRING(pk,g_szJobName[getAttr( ATTR_JOB )]);
-		WRITE_SHORT(pk,pSGridCont->GetInstAttr(ITEMATTR_MAXENERGY));
+		auto pk = net::msg::serialize(net::msg::MpGarner2UpdateMessage{
+			static_cast<int64_t>(GetPlayer()->GetDBChaId()),
+			std::string(GetName()),
+			static_cast<int64_t>(GetLevel()),
+			std::string(g_szJobName[getAttr( ATTR_JOB )]),
+			static_cast<int64_t>(pSGridCont->GetInstAttr(ITEMATTR_MAXENERGY))
+		});
 		ReflectINFof(this,pk);
 	}
 }

@@ -18,26 +18,26 @@ namespace mission
 
 		virtual void SetType() { m_byType = EUDEMON; }
 
-		// 网络消息处理函数
-		virtual HRESULT MsgProc( CCharacter& character, RPACKET packet );
+		// 锟斤拷锟斤拷锟斤拷息锟斤拷锟斤拷锟斤拷锟斤拷
+		virtual HRESULT MsgProc( CCharacter& character, net::RPacket& packet );
 		
-		// 装载世界守护神配置信息
+		// 装锟斤拷锟斤拷锟斤拷锟截伙拷锟斤拷锟斤拷锟斤拷锟斤拷息
 		virtual BOOL Load( const char szMsgProc[], const char szName[], dbc::uLong ulID );
 
 	private:
-		// 装载脚本信息
+		// 装锟截脚憋拷锟斤拷息
 		virtual BOOL InitScript( const char szFunc[], const char szName[] );
 		
 	};
 
-	// 暂时未用
+	// 锟斤拷时未锟斤拷
 	class CEudemonManager
 	{
 	public:
 		CEudemonManager();
 		~CEudemonManager();
 
-		// 装载世界守护神列表，生成世界守护神
+		// 装锟斤拷锟斤拷锟斤拷锟截伙拷锟斤拷锟叫憋拷锟斤拷锟斤拷锟斤拷锟斤拷锟斤拷锟截伙拷锟斤拷
 		BOOL	Load( const char szTable[] );
 
 	private:

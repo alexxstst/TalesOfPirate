@@ -262,7 +262,6 @@ bool CGameConfig::Load(char *pszFileName)
 		else if(strKey=="log_dir")
 		{
 			strcpy(m_szLogDir, strValue.c_str());
-			g_logManager.InitLogger(m_szLogDir);
 		}
 		else if(strKey=="db_mapmask")
 		{

@@ -200,189 +200,119 @@ namespace mission
 		Data.sCapacity = pInfo->sCapacity;
 		GetBerthName( sBerthID, Data.szBerth, BOAT_MAXSIZE_NAME - 1 );
 
-		WPACKET packet = GETWPACKET();
-        WRITE_CMD( packet, sCmd );
-		WRITE_LONG( packet, dwBoatID );
-		WRITE_STRING( packet, AttrInfo.szName );
-        WRITE_STRING( packet, pInfo->szName );
-		WRITE_STRING( packet, pInfo->szDesp );
-		WRITE_STRING( packet, Data.szBerth );
-		WRITE_CHAR( packet, pInfo->byIsUpdate );
+		// Типизированная сериализация: синхронизация атрибутов корабля
+		net::msg::McBoatSyncAttrMessage boatMsg{};
+		boatMsg.cmd = sCmd;
+		boatMsg.boatId = dwBoatID;
+		boatMsg.boatName = AttrInfo.szName;
+		boatMsg.shipName = pInfo->szName;
+		boatMsg.shipDesc = pInfo->szDesp;
+		boatMsg.berthName = Data.szBerth;
+		boatMsg.isUpdate = pInfo->byIsUpdate;
 
 		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pInfo->sBody );
-		if( pData == NULL ) 
+		if( pData == NULL )
 		{
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�����ϢID[%d]!", pInfo->sBody );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00038), pInfo->sBody );
 			return FALSE;
 		}
-		Data.dwMoney += pData->dwPrice;
-		Data.dwMinAttack += pData->sMinAttack;
-		Data.dwMaxAttack += pData->sMaxAttack;
-		Data.dwCurEndure += pData->sEndure;
-		Data.dwMaxEndure += pData->sEndure;
-		Data.dwSpeed += pData->sSpeed;
-		Data.dwDistance += pData->sDistance;
-		Data.dwDefence += pData->sDefence;
-		Data.dwCurSupply += pData->sSupply;
-		Data.dwMaxSupply += pData->sSupply;
-		Data.dwConsume += pData->sConsume;
-		Data.dwAttackTime += pData->sTime;
-		//Data.sCapacity += pData->sCapacity;
+		Data.dwMoney += pData->dwPrice; Data.dwMinAttack += pData->sMinAttack; Data.dwMaxAttack += pData->sMaxAttack;
+		Data.dwCurEndure += pData->sEndure; Data.dwMaxEndure += pData->sEndure;
+		Data.dwSpeed += pData->sSpeed; Data.dwDistance += pData->sDistance; Data.dwDefence += pData->sDefence;
+		Data.dwCurSupply += pData->sSupply; Data.dwMaxSupply += pData->sSupply;
+		Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 
-		WRITE_SHORT( packet, pInfo->sPosID );
-		WRITE_LONG( packet, pData->dwModel );
-		WRITE_STRING( packet, pData->szName );
+		boatMsg.body = {static_cast<int64_t>(pInfo->sPosID), static_cast<int64_t>(pData->dwModel), std::string(pData->szName)};
 
 		if( pInfo->byIsUpdate )
 		{
+			boatMsg.hasUpdateParts = true;
 			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sHeader );
-			if( pData == NULL ) 
+			if( pData == NULL )
 			{
-				//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ͷ��ϢID[%d]!", AttrInfo.sHeader );
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00039), AttrInfo.sHeader );
 				return FALSE;
 			}
-			WRITE_CHAR( packet, AttrInfo.byHeader );
-			WRITE_LONG( packet, pData->dwModel );
-			WRITE_STRING( packet, pData->szName );
-			Data.dwMoney += pData->dwPrice;
-			Data.dwMinAttack += pData->sMinAttack;
-			Data.dwMaxAttack += pData->sMaxAttack;
-			Data.dwCurEndure += pData->sEndure;
-			Data.dwMaxEndure += pData->sEndure;
-			Data.dwSpeed += pData->sSpeed;
-			Data.dwDistance += pData->sDistance;
-			Data.dwDefence += pData->sDefence;
-			Data.dwCurSupply += pData->sSupply;
-			Data.dwMaxSupply += pData->sSupply;
-			Data.dwConsume += pData->sConsume;
-			Data.dwAttackTime += pData->sTime;
-			//Data.sCapacity += pData->sCapacity;
+			boatMsg.header = {static_cast<int64_t>(AttrInfo.byHeader), static_cast<int64_t>(pData->dwModel), std::string(pData->szName)};
+			Data.dwMoney += pData->dwPrice; Data.dwMinAttack += pData->sMinAttack; Data.dwMaxAttack += pData->sMaxAttack;
+			Data.dwCurEndure += pData->sEndure; Data.dwMaxEndure += pData->sEndure;
+			Data.dwSpeed += pData->sSpeed; Data.dwDistance += pData->sDistance; Data.dwDefence += pData->sDefence;
+			Data.dwCurSupply += pData->sSupply; Data.dwMaxSupply += pData->sSupply;
+			Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 
 			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sEngine );
-			if( pData == NULL ) 
+			if( pData == NULL )
 			{
-				//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�������ϢID[%d]!", AttrInfo.sEngine );
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00040), AttrInfo.sEngine );
 				return FALSE;
 			}
-			WRITE_CHAR( packet, AttrInfo.byEngine );
-			WRITE_LONG( packet, pData->dwModel );
-			WRITE_STRING( packet, pData->szName );
-			Data.dwMoney += pData->dwPrice;
-			Data.dwMinAttack += pData->sMinAttack;
-			Data.dwMaxAttack += pData->sMaxAttack;
-			Data.dwCurEndure += pData->sEndure;
-			Data.dwMaxEndure += pData->sEndure;
-			Data.dwSpeed += pData->sSpeed;
-			Data.dwDistance += pData->sDistance;
-			Data.dwDefence += pData->sDefence;
-			Data.dwCurSupply += pData->sSupply;
-			Data.dwMaxSupply += pData->sSupply;
-			Data.dwConsume += pData->sConsume;
-			Data.dwAttackTime += pData->sTime;
-			//Data.sCapacity += pData->sCapacity;
+			boatMsg.engine = {static_cast<int64_t>(AttrInfo.byEngine), static_cast<int64_t>(pData->dwModel), std::string(pData->szName)};
+			Data.dwMoney += pData->dwPrice; Data.dwMinAttack += pData->sMinAttack; Data.dwMaxAttack += pData->sMaxAttack;
+			Data.dwCurEndure += pData->sEndure; Data.dwMaxEndure += pData->sEndure;
+			Data.dwSpeed += pData->sSpeed; Data.dwDistance += pData->sDistance; Data.dwDefence += pData->sDefence;
+			Data.dwCurSupply += pData->sSupply; Data.dwMaxSupply += pData->sSupply;
+			Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 
 			for( int i = 0; i < BOAT_MAXNUM_MOTOR; i++ )
 			{
 				xShipPartInfo* pMotorData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pData->sMotor[i] );
-				if( pMotorData == NULL ) 
+				if( pMotorData == NULL )
 				{
-					WRITE_LONG( packet, 0 );
+					boatMsg.motorModels[i] = 0;
 				}
 				else
 				{
-					WRITE_LONG( packet, pMotorData->dwModel );
-					Data.dwMoney += pMotorData->dwPrice;
-					Data.dwMinAttack += pMotorData->sMinAttack;
-					Data.dwMaxAttack += pMotorData->sMaxAttack;
-					Data.dwCurEndure += pMotorData->sEndure;
-					Data.dwMaxEndure += pMotorData->sEndure;
-					Data.dwSpeed += pMotorData->sSpeed;
-					Data.dwDistance += pMotorData->sDistance;
-					Data.dwDefence += pMotorData->sDefence;
-					Data.dwCurSupply += pMotorData->sSupply;
-					Data.dwMaxSupply += pMotorData->sSupply;
-					Data.dwConsume += pMotorData->sConsume;
-					Data.dwAttackTime += pMotorData->sTime;
-					//Data.sCapacity += pMotorData->sCapacity;
+					boatMsg.motorModels[i] = pMotorData->dwModel;
+					Data.dwMoney += pMotorData->dwPrice; Data.dwMinAttack += pMotorData->sMinAttack; Data.dwMaxAttack += pMotorData->sMaxAttack;
+					Data.dwCurEndure += pMotorData->sEndure; Data.dwMaxEndure += pMotorData->sEndure;
+					Data.dwSpeed += pMotorData->sSpeed; Data.dwDistance += pMotorData->sDistance; Data.dwDefence += pMotorData->sDefence;
+					Data.dwCurSupply += pMotorData->sSupply; Data.dwMaxSupply += pMotorData->sSupply;
+					Data.dwConsume += pMotorData->sConsume; Data.dwAttackTime += pMotorData->sTime;
 				}
 			}
 		}
 
 		pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sCannon );
-		if( pData == NULL ) 
+		if( pData == NULL )
 		{
-			WRITE_CHAR( packet, AttrInfo.byCannon );
-			//WRITE_STRING( packet, "δװ�û���" );
-			WRITE_STRING( packet, RES_STRING(GM_CHARBOAT_CPP_00001) );
-
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�������ϢID[%d]!", AttrInfo.sCannon );
-			//return FALSE;
+			boatMsg.cannonId = AttrInfo.byCannon;
+			boatMsg.cannonName = RES_STRING(GM_CHARBOAT_CPP_00001);
 		}
 		else
 		{
-			WRITE_CHAR( packet, AttrInfo.byCannon );
-			WRITE_STRING( packet, pData->szName );
-			Data.dwMoney += pData->dwPrice;
-			Data.dwMinAttack += pData->sMinAttack;
-			Data.dwMaxAttack += pData->sMaxAttack;
-			Data.dwCurEndure += pData->sEndure;
-			Data.dwMaxEndure += pData->sEndure;
-			Data.dwSpeed += pData->sSpeed;
-			Data.dwDistance += pData->sDistance;
-			Data.dwDefence += pData->sDefence;
-			Data.dwCurSupply += pData->sSupply;
-			Data.dwMaxSupply += pData->sSupply;
-			Data.dwConsume += pData->sConsume;
-			Data.dwAttackTime += pData->sTime;
-			//Data.sCapacity += pData->sCapacity;
+			boatMsg.cannonId = AttrInfo.byCannon;
+			boatMsg.cannonName = pData->szName;
+			Data.dwMoney += pData->dwPrice; Data.dwMinAttack += pData->sMinAttack; Data.dwMaxAttack += pData->sMaxAttack;
+			Data.dwCurEndure += pData->sEndure; Data.dwMaxEndure += pData->sEndure;
+			Data.dwSpeed += pData->sSpeed; Data.dwDistance += pData->sDistance; Data.dwDefence += pData->sDefence;
+			Data.dwCurSupply += pData->sSupply; Data.dwMaxSupply += pData->sSupply;
+			Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 		}
 
 		pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sEquipment );
-		if( pData == NULL ) 
+		if( pData == NULL )
 		{
-			WRITE_CHAR( packet, 0 );
-			//WRITE_STRING( packet, "δװ�����" );
-			WRITE_STRING( packet, RES_STRING(GM_CHARBOAT_CPP_00002) );
-
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ������ϢID[%d]!", AttrInfo.sEquipment );
-			//return FALSE;
+			boatMsg.equipmentId = 0;
+			boatMsg.equipmentName = RES_STRING(GM_CHARBOAT_CPP_00002);
 		}
 		else
 		{
-			WRITE_CHAR( packet, AttrInfo.byEquipment );
-			WRITE_STRING( packet, pData->szName );
-			Data.dwMoney += pData->dwPrice;
-			Data.dwMinAttack += pData->sMinAttack;
-			Data.dwMaxAttack += pData->sMaxAttack;
-			Data.dwCurEndure += pData->sEndure;
-			Data.dwMaxEndure += pData->sEndure;
-			Data.dwSpeed += pData->sSpeed;
-			Data.dwDistance += pData->sDistance;
-			Data.dwDefence += pData->sDefence;
-			Data.dwCurSupply += pData->sSupply;
-			Data.dwMaxSupply += pData->sSupply;
-			Data.dwConsume += pData->sConsume;
-			Data.dwAttackTime += pData->sTime;
-			//Data.sCapacity += pData->sCapacity;
+			boatMsg.equipmentId = AttrInfo.byEquipment;
+			boatMsg.equipmentName = pData->szName;
+			Data.dwMoney += pData->dwPrice; Data.dwMinAttack += pData->sMinAttack; Data.dwMaxAttack += pData->sMaxAttack;
+			Data.dwCurEndure += pData->sEndure; Data.dwMaxEndure += pData->sEndure;
+			Data.dwSpeed += pData->sSpeed; Data.dwDistance += pData->sDistance; Data.dwDefence += pData->sDefence;
+			Data.dwCurSupply += pData->sSupply; Data.dwMaxSupply += pData->sSupply;
+			Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 		}
 
-		WRITE_LONG( packet, Data.dwMoney );
-		WRITE_LONG( packet, Data.dwMinAttack );
-		WRITE_LONG( packet, Data.dwMaxAttack );
-		WRITE_LONG( packet, Data.dwCurEndure );
-		WRITE_LONG( packet, Data.dwMaxEndure );
-		WRITE_LONG( packet, Data.dwSpeed );
-		WRITE_LONG( packet, Data.dwDistance );
-		WRITE_LONG( packet, Data.dwDefence );
-		WRITE_LONG( packet, Data.dwCurSupply );
-		WRITE_LONG( packet, Data.dwMaxSupply );
-		WRITE_LONG( packet, Data.dwConsume );
-		WRITE_LONG( packet, Data.dwAttackTime );
-		WRITE_SHORT( packet, Data.sCapacity );
+		boatMsg.money = Data.dwMoney; boatMsg.minAttack = Data.dwMinAttack; boatMsg.maxAttack = Data.dwMaxAttack;
+		boatMsg.curEndure = Data.dwCurEndure; boatMsg.maxEndure = Data.dwMaxEndure;
+		boatMsg.speed = Data.dwSpeed; boatMsg.distance = Data.dwDistance; boatMsg.defence = Data.dwDefence;
+		boatMsg.curSupply = Data.dwCurSupply; boatMsg.maxSupply = Data.dwMaxSupply;
+		boatMsg.consume = Data.dwConsume; boatMsg.attackTime = Data.dwAttackTime; boatMsg.boatCapacity = Data.sCapacity;
 
+		auto packet = net::msg::serialize(boatMsg);
 		owner.ReflectINFof( &owner, packet );
 		return TRUE;
 	}
@@ -570,7 +500,7 @@ namespace mission
 		return SyncAttr( viewer, pBoat->GetID(), CMD_MC_BOATINFO, sBerthID, AttrInfo );
 	}
 
-	BOOL CCharBoat::Update( CCharacter& owner, RPACKET packet )
+	BOOL CCharBoat::Update( CCharacter& owner, const net::msg::CmUpdateBoatMessage& msg )
 	{
 		CCharacter* pBoat = owner.GetBoat();
 		if( !pBoat ) 
@@ -579,10 +509,10 @@ namespace mission
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00016) );
 			return FALSE;
 		}
-		char szHeader = READ_CHAR( packet );
-		char szEngine = READ_CHAR( packet );
-		char szCannon = READ_CHAR( packet );
-		char szEquipment = READ_CHAR( packet );
+		char szHeader = static_cast<char>(msg.header);
+		char szEngine = static_cast<char>(msg.engine);
+		char szCannon = static_cast<char>(msg.cannon);
+		char szEquipment = static_cast<char>(msg.equipment);
 
 		USHORT sBoatID = (USHORT)owner.GetBoat()->getAttr( ATTR_BOAT_SHIP );
 		USHORT sBerthID = (USHORT)pBoat->getAttr( ATTR_BOAT_BERTH );
@@ -676,7 +606,7 @@ namespace mission
 		return SyncAttr( owner, 0, CMD_MC_UPDATEBOAT, sBerthID, AttrInfo );
 	}
 
-	BOOL CCharBoat::MakeBoat( CCharacter& owner, RPACKET packet )
+	BOOL CCharBoat::MakeBoat( CCharacter& owner, const net::msg::CmCreateBoatMessage& msg )
 	{
 		if( owner.GetPlayer()->IsLuanchOut() )
 		{
@@ -761,7 +691,7 @@ namespace mission
 
 		BOAT_DATA Data;
 		memset( &Data, 0, sizeof(BOAT_DATA) );
-		std::string pszData = READ_STRING( packet );
+		const std::string& pszData = msg.boat;
 		if( !pszData.empty() )
 		{
 			strncpy( Data.szName, pszData.c_str(), BOAT_MAXSIZE_BOATNAME - 1 );
@@ -796,10 +726,10 @@ namespace mission
 			return FALSE;			
 		}
 
-		char szHeader = READ_CHAR( packet );
-		char szEngine = READ_CHAR( packet );
-		char szCannon = READ_CHAR( packet );
-		char szEquipment = READ_CHAR( packet );
+		char szHeader = static_cast<char>(msg.header);
+		char szEngine = static_cast<char>(msg.engine);
+		char szCannon = static_cast<char>(msg.cannon);
+		char szEquipment = static_cast<char>(msg.equipment);
 
 		Data.dwOwnerID = owner.GetPlayer()->GetDBChaId();
 		Data.sBoat = (USHORT)owner.GetBoat()->getAttr( ATTR_BOAT_SHIP );		
@@ -1041,8 +971,7 @@ namespace mission
 		
 		Char szLogName[defLOG_NAME_LEN] = "";
 		sprintf(szLogName, "Cha-%s+%u", pBoat->GetName(), pBoat->GetID());
-		pBoat->m_CLog.SetLogName(szLogName);
-		pBoat->m_CLog.SetEnable(g_bLogEntity);
+		pBoat->SetLogName(szLogName);
 
 		return TRUE;
 	}
@@ -1397,8 +1326,7 @@ namespace mission
 
 		Char szLogName[defLOG_NAME_LEN] = "";
 		sprintf(szLogName, "Cha-%s+%u", pBoat->GetName(), pBoat->GetID());
-		pBoat->m_CLog.SetLogName(szLogName);
-		pBoat->m_CLog.SetEnable(g_bLogEntity);
+		pBoat->SetLogName(szLogName);
 
 		return TRUE;
 	}

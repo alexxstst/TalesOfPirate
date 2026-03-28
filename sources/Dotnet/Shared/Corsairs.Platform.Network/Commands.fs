@@ -258,6 +258,7 @@ module Commands =
     [<Literal>] let CMD_MC_SAY2CAMP         = 596us // Сообщение в чат фракции
     [<Literal>] let CMD_MC_GM_MAIL          = 597us // GM-почта
     [<Literal>] let CMD_MC_CHEAT_CHECK      = 598us // Античит-ответ
+    [<Literal>] let CMD_CM_ITEM_LOCK_ASR    = 599us // Результат блокировки предмета
     [<Literal>] let CMD_MC_LIFESKILL_BGING  = 600us // Крафт: процесс идёт
     [<Literal>] let CMD_MC_LIFESKILL_ASR    = 601us // Результат крафта
     [<Literal>] let CMD_MC_LIFESKILL_ASK    = 602us // Окно крафта
