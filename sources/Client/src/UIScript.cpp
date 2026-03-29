@@ -187,29 +187,55 @@ int UI_SetFormTempleteMax( int max )
 	return R_FAIL;
 }
 
-void CryptImage(bool encrypt, std::string filename, char* sinkbuffer) {
-	struct stat fileCheck;
-	if (stat(filename.c_str(), &fileCheck) != 0) {
-		return;
+// Resolve image path: prefer unencrypted original, decrypt .wsd → .dec if needed
+// Returns the path to use for loading (original or .dec)
+static std::string ResolveImagePath(const std::string& originalPath) {
+	// If original file exists (.png/.tga/.bmp/.dds) — use it directly
+	struct stat st;
+	if (stat(originalPath.c_str(), &st) == 0) {
+		return originalPath;
 	}
 
+	// Check if encrypted .wsd version exists
+	std::string wsdPath = originalPath;
+	if (wsdPath.length() > 3) {
+		wsdPath.replace(wsdPath.length() - 3, 3, "wsd");
+	}
+
+	if (stat(wsdPath.c_str(), &st) != 0) {
+		// Neither original nor .wsd exists — return original path, let engine handle the error
+		return originalPath;
+	}
+
+	// Decrypt .wsd → .dec
+	std::string decPath = originalPath;
+	if (decPath.length() > 3) {
+		decPath.replace(decPath.length() - 3, 3, "dec");
+	}
+
+	// If .dec already exists from a previous run — use it
+	if (stat(decPath.c_str(), &st) == 0) {
+		return decPath;
+	}
+
+	// Decrypt
 	const unsigned char imgTableKey[] = { 0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5 };
 	const unsigned char imgTableIV[] = { 0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72 };
 
-	if (encrypt) {
-		std::string encFilename = filename;
-		encFilename.replace(encFilename.length() - 3, 3, "wsd");
-		CryptoPP::GCM<CryptoPP::AES>::Encryption e;
-		e.SetKeyWithIV(imgTableKey, 16, imgTableIV, 16);
-		CryptoPP::FileSource(filename.c_str(), true, new CryptoPP::AuthenticatedEncryptionFilter(e, new CryptoPP::FileSink(encFilename.c_str())));
-		return;
-	}
+	try {
+		CryptoPP::GCM<CryptoPP::AES>::Decryption d;
+		d.SetKeyWithIV(imgTableKey, 16, imgTableIV, 16);
+		CryptoPP::FileSource(wsdPath.c_str(), true,
+			new CryptoPP::AuthenticatedDecryptionFilter(d,
+				new CryptoPP::FileSink(decPath.c_str())));
 
-	CryptoPP::GCM<CryptoPP::AES>::Decryption d;
-	d.SetKeyWithIV(imgTableKey, 16, imgTableIV, 16);
-	std::string buffer;
-	CryptoPP::FileSource(filename.c_str(), true, new CryptoPP::AuthenticatedDecryptionFilter(d, new CryptoPP::StringSink(buffer)));
-	memcpy(sinkbuffer, buffer.data(), buffer.size());
+		// Delete encrypted .wsd after successful decryption
+		remove(wsdPath.c_str());
+		return decPath;
+	} catch (...) {
+		ToLogService("lua", LogLevel::Error, "Failed to decrypt '{}'", wsdPath);
+		return originalPath;
+	}
 }
 
 int UI_AddAllFormTemplete( int form_id )
@@ -301,55 +327,8 @@ int UI_SetIsDrag( int id, int isDrag )
 
 int UI_LoadFormImage( int id, const std::string& client_in, int cw, int ch, int tx, int ty, const std::string& file_in, int w, int h )
 {
-	char client[260];
-	char framefile[260];
-	strncpy(client, client_in.c_str(), sizeof(client) - 1); client[sizeof(client) - 1] = 0;
-	strncpy(framefile, file_in.c_str(), sizeof(framefile) - 1); framefile[sizeof(framefile) - 1] = 0;
-
-	std::string s(client);
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-		s.replace(s.length() - 3, 3, "wsd");
-	}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-	struct stat buffer;
-	if (stat(s.c_str(), &buffer) != 0) {
-		CryptImage(true, client, NULL);
-	}
-	strcpy(client, s.c_str());
-	// Change file extension and send to UIRender for loading.
-
-	
-	if (strcmp(client, framefile)) {
-		if (strlen(framefile) > 4) {
-			std::string s2(framefile);
-			// Check the type of file
-			if (s2.find(".png") != std::string::npos || s2.find(".tga") != std::string::npos || s2.find(".bmp") != std::string::npos ||
-				s2.find(".dds") != std::string::npos) {
-				s2.replace(s2.length() - 3, 3, "wsd");
-			}
-			// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-			struct stat buffer2;
-			if (stat(s2.c_str(), &buffer2) != 0) {
-				CryptImage(true, framefile, NULL);
-			}
-			strcpy(framefile, s2.c_str());
-			// Change file extension and send to UIRender for loading.
-			size_t len2 = strlen(framefile);
-			framefile[len2 - 1] = 'd';
-			framefile[len2 - 2] = 's';
-			framefile[len2 - 3] = 'w';
-		}
-
-	}
-	else {
-		size_t len3 = strlen(framefile);
-		framefile[len3 - 1] = 'd';
-		framefile[len3 - 2] = 's';
-		framefile[len3 - 3] = 'w';
-	}
-
+	std::string resolvedClient = ResolveImagePath(client_in);
+	std::string resolvedFrame = ResolveImagePath(file_in);
 
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
@@ -357,7 +336,7 @@ int UI_LoadFormImage( int id, const std::string& client_in, int cw, int ch, int 
 	CForm *f = dynamic_cast<CForm*>(p);
 	if( !f ) return R_FAIL;
 
-	f->GetFrameImage()->LoadImage( client, cw, ch, tx, ty, framefile, w, h );
+	f->GetFrameImage()->LoadImage( resolvedClient.c_str(), cw, ch, tx, ty, resolvedFrame.c_str(), w, h );
 	return R_OK;
 }
 
@@ -611,22 +590,7 @@ int UI_ComboSetTextColor( int id, unsigned int color )
 
 int UI_LoadButtonImage( int id, const std::string& file, int w, int h, int sx, int sy, int isHorizontal )
 {
-	char buf[260];
-	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
-
-	std::string s(file);
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-		s.replace(s.length() - 3, 3, "wsd");
-	}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-	struct stat buffer;
-	if (stat(s.c_str(), &buffer) != 0) {
-		CryptImage(true, file, NULL);
-	}
-	strcpy(buf, s.c_str());
-	// Change file extension and send to UIRender for loading.
+	std::string resolved = ResolveImagePath(file);
 
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
@@ -634,7 +598,7 @@ int UI_LoadButtonImage( int id, const std::string& file, int w, int h, int sx, i
 	CTextButton * b = dynamic_cast<CTextButton*>(p);
 	if( !b ) return R_FAIL;
 
-	b->LoadImage( buf, w, h, sx, sy, isHorizontal!=0 ? true: false );
+	b->LoadImage( resolved.c_str(), w, h, sx, sy, isHorizontal!=0 ? true: false );
 	//b->GetImage()->TintColour( 131, 188, 225 );
 	return R_OK;
 }
@@ -657,74 +621,38 @@ int UI_LoadImageUnencrypted(int id, const std::string& file, int frame, int w, i
 
 int UI_LoadImage( int id, const std::string& file, int frame, int w, int h, int tx, int ty )
 {
-	char buf[260];
-	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
-
-	std::string s(file);
-
-	if (s.empty())
+	if (file.empty())
 	{
 		return R_FAIL;
 	}
 
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-			s.replace(s.length() - 3, 3, "wsd");
-		}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-		struct stat buffer;
-		if (stat(s.c_str(), &buffer) != 0) {
-			CryptImage(true, file, NULL);
-		}
-		strcpy(buf, s.c_str());
-	// Change file extension and send to UIRender for loading.
-		size_t len = strlen(buf);
-		buf[len - 1] = 'd';
-		buf[len - 2] = 's';
-		buf[len - 3] = 'w';
-		CGuiData* p = CGuiData::GetGui(id);
-		if (!p) return R_FAIL;
+	std::string resolved = ResolveImagePath(file);
 
-		CGuiPic* img = p->GetImage();
-		if (!img) return R_FAIL;
+	CGuiData* p = CGuiData::GetGui(id);
+	if (!p) return R_FAIL;
 
-		if (img->LoadImage(buf, w, h, frame, tx, ty)) {
-			//img->TintColour( 131, 188, 225 );
-			return R_OK;
-		}
-		return R_FAIL;
+	CGuiPic* img = p->GetImage();
+	if (!img) return R_FAIL;
 
-
+	if (img->LoadImage(resolved.c_str(), w, h, frame, tx, ty)) {
+		//img->TintColour( 131, 188, 225 );
+		return R_OK;
+	}
+	return R_FAIL;
 }
 
 // Load scaled image
 int UI_LoadScaleImage( int id, const std::string& file, int frame, int w, int h, int tx, int ty, float scalex, float scaley )
 {
-	char buf[260];
-	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+	std::string resolved = ResolveImagePath(file);
 
-	std::string s(file);
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-		s.replace(s.length() - 3, 3, "wsd");
-	}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-	struct stat buffer;
-	if (stat(s.c_str(), &buffer) != 0) {
-		CryptImage(true, file, NULL);
-	}
-	strcpy(buf, s.c_str());
-	// Change file extension and send to UIRender for loading.
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
 
 	CGuiPic* img = p->GetImage();
 	if( !img ) return R_FAIL;
 
-
-	if( img->LoadImage( buf, w, h, frame, tx, ty, scalex, scaley ) ) return R_OK;
+	if( img->LoadImage( resolved.c_str(), w, h, frame, tx, ty, scalex, scaley ) ) return R_OK;
 
 	return R_FAIL;
 }
@@ -1290,23 +1218,8 @@ int UI_TreeLoadImage( int nTreeID, int nType, const std::string& imagefile, int 
 
 	if (pic)
 	{
-		char buf[260];
-		strncpy(buf, imagefile.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
-
-		std::string s(imagefile);
-		// Check the type of file
-		if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-			s.find(".dds") != std::string::npos) {
-			s.replace(s.length() - 3, 3, "wsd");
-		}
-		// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-		struct stat buffer;
-		if (stat(s.c_str(), &buffer) != 0) {
-			CryptImage(true, imagefile, NULL);
-		}
-		strcpy(buf, s.c_str());
-		// Change file extension and send to UIRender for loading.
-		pic->LoadImage(buf, w, h, 0, sx, sy);
+		std::string resolved = ResolveImagePath(imagefile);
+		pic->LoadImage(resolved.c_str(), w, h, 0, sx, sy);
 		pic->SetScale(itemw, itemh);
 		return R_OK;
 	}
@@ -1354,24 +1267,9 @@ int UI_CreateGraphItemTex( int tx, int ty, int tw, int th, float scale_x, float 
 int UI_CreateNoteGraphItem( const std::string& file, int w, int h, int sx, int sy, int frame, const std::string& text, int TextX, int TextY )
 {
 	CNoteGraph * item =  new CNoteGraph( frame );
-	char buf[260];
-	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+	std::string resolved = ResolveImagePath(file);
 
-	std::string s(file);
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-		s.replace(s.length() - 3, 3, "wsd");
-	}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-	struct stat buffer;
-	if (stat(s.c_str(), &buffer) != 0) {
-		CryptImage(true, file, NULL);
-	}
-	strcpy(buf, s.c_str());
-	// Change file extension and send to UIRender for loading.
-
-	item->GetImage()->LoadAllImage( buf, w, h, sx, sy );
+	item->GetImage()->LoadAllImage( resolved.c_str(), w, h, sx, sy );
 	item->GetImage()->SetScale( w, h );
 	item->SetString( text.c_str() );
 	item->SetTextX( TextX );
@@ -1813,27 +1711,12 @@ int UI_SetFormStyleEx(int id ,int index, int offWidth, int offHeight)
 // Menu
 int UI_MenuLoadSelect( int id, const std::string& imagefile, int w, int h, int sx, int sy )
 {
-	char buf[260];
-	strncpy(buf, imagefile.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
-
-	std::string s(imagefile);
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-		s.replace(s.length() - 3, 3, "wsd");
-	}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-	struct stat buffer;
-	if (stat(s.c_str(), &buffer) != 0) {
-		CryptImage(true, imagefile, NULL);
-	}
-	strcpy(buf, s.c_str());
-	// Change file extension and send to UIRender for loading.
+	std::string resolved = ResolveImagePath(imagefile);
 
 	CMenu *f = dynamic_cast<CMenu*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
 
-	f->GetSelectImage()->LoadImage(buf, w, h, 0, sx, sy);
+	f->GetSelectImage()->LoadImage(resolved.c_str(), w, h, 0, sx, sy);
 	return R_OK;
 }
 
@@ -1842,59 +1725,13 @@ int UI_MenuLoadImage( int id, int IsShowFrame, int IsTitle, const std::string& c
 	CMenu *f = dynamic_cast<CMenu*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
 
-	char clientbuf[260];
-	strncpy(clientbuf, clientfile.c_str(), sizeof(clientbuf) - 1); clientbuf[sizeof(clientbuf) - 1] = 0;
-	char framebuf[260];
-	strncpy(framebuf, framefile.c_str(), sizeof(framebuf) - 1); framebuf[sizeof(framebuf) - 1] = 0;
-
-	std::string s(clientfile);
-	// Check the type of file
-	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
-		s.find(".dds") != std::string::npos) {
-		s.replace(s.length() - 3, 3, "wsd");
-	}
-	// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-	struct stat buffer;
-	if (stat(s.c_str(), &buffer) != 0) {
-		CryptImage(true, clientfile, NULL);
-	}
-	strcpy(clientbuf, s.c_str());
-	// Change file extension and send to UIRender for loading.
-
-	if (strcmp(clientbuf, framebuf)) {
-		if (strlen(framebuf) > 4) {
-			std::string s2(framefile);
-			// Check the type of file
-			if (s2.find(".png") != std::string::npos || s2.find(".tga") != std::string::npos || s2.find(".bmp") != std::string::npos ||
-				s2.find(".dds") != std::string::npos) {
-				s2.replace(s2.length() - 3, 3, "wsd");
-			}
-			// Quickest way to check if file exists. If it doesn't, encrypt the original file.
-			struct stat buffer2;
-			if (stat(s2.c_str(), &buffer2) != 0) {
-				CryptImage(true, framefile, NULL);
-			}
-			strcpy(framebuf, s2.c_str());
-			// Change file extension and send to UIRender for loading.
-			size_t len2 = strlen(framebuf);
-			framebuf[len2 - 1] = 'd';
-			framebuf[len2 - 2] = 's';
-			framebuf[len2 - 3] = 'w';
-		}
-
-	}
-	else {
-		size_t len3 = strlen(framebuf);
-		framebuf[len3 - 1] = 'd';
-		framebuf[len3 - 2] = 's';
-		framebuf[len3 - 3] = 'w';
-	}
-
+	std::string resolvedClient = ResolveImagePath(clientfile);
+	std::string resolvedFrame = ResolveImagePath(framefile);
 
 	CFramePic* frame = f->GetBkgImage();
 	frame->SetIsTitle( IsTitle ? true : false );
 	frame->SetIsShowFrame( IsShowFrame ? true : false );
-	frame->LoadImage( clientbuf, cw, ch, tx, ty, framebuf, w, h );
+	frame->LoadImage( resolvedClient.c_str(), cw, ch, tx, ty, resolvedFrame.c_str(), w, h );
 	return R_OK;
 }
 

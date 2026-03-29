@@ -37,11 +37,8 @@ inline void camSetAngle(float fAngle)
     //g_pGameApp->GetMainCam()->InitAngle(fAngle);
 }
 
-// --- lua_CFunction (-  LuaBridge  ) ---
-
-inline int camGetCenter(lua_State *L)
+inline std::tuple<float, float> camGetCenter()
 {
-    lua_pushnumber(L, g_pGameApp->GetMainCam()->m_RefPos.x);
-    lua_pushnumber(L, g_pGameApp->GetMainCam()->m_RefPos.y);
-    return 2;
+    auto* cam = g_pGameApp->GetMainCam();
+    return {cam->m_RefPos.x, cam->m_RefPos.y};
 }

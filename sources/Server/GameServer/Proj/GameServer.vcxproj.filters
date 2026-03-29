@@ -125,7 +125,7 @@
     <ClInclude Include="..\src\NpcScript.h">
       <Filter>Script System</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\Parser.h">
+    <ClInclude Include="..\src\LuaAPI.h">
       <Filter>Script System</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Script.h">
@@ -251,13 +251,7 @@
     <ClInclude Include="..\src\SystemDialog.h">
       <Filter>SystemReport</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\CallStack.h">
-      <Filter>Other</Filter>
-    </ClInclude>
     <ClInclude Include="resource.h">
-      <Filter>Other</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\StackWalker.h">
       <Filter>Other</Filter>
     </ClInclude>
     <ClInclude Include="..\src\stdafx.h">
@@ -304,7 +298,7 @@
     <ClCompile Include="..\src\NpcScript.cpp">
       <Filter>Script System</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Parser.cpp">
+    <ClCompile Include="..\src\LuaAPI.cpp">
       <Filter>Script System</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Script.cpp">
@@ -445,9 +439,6 @@
     <ClCompile Include="..\src\SystemDialog.cpp">
       <Filter>SystemReport</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\StackWalker.cpp">
-      <Filter>Other</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\stdafx.cpp">
       <Filter>Other</Filter>
     </ClCompile>
@@ -472,15 +463,13 @@
     <ClCompile Include="..\src\AuctionItem.cpp">
       <Filter>Bidding</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\Expand.cpp">
+      <Filter>Other</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GameServer.rc">
       <Filter>Other</Filter>
     </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="ReadMe.txt">
-      <Filter>Other</Filter>
-    </Text>
   </ItemGroup>
 </Project>

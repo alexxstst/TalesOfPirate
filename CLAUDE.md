@@ -9,8 +9,10 @@ All documentation, comments, and communication — in Russian. Technical terms a
 ## Project Overview
 
 Tales of Pirate — MMORPG with two codebases:
-- **Legacy C++** (VS 2022, C++14, Win32): client (DirectX 9 engine MindPower3D), 4 servers (Account/Gate/Group/Game)
+- **C++23** (VS 2022, `/std:c++latest`, Win32): client (DirectX 9 engine MindPower3D), 4 servers (Account/Gate/Group/Game)
 - **Modern .NET 10** (F# + C#): replacement server infrastructure (Corsairs.*), Blazor admin panel
+
+**C++ standard: C++23.** Prefer modern C++ constructs: `std::string`/`std::string_view` over `char*`, `std::format` over `sprintf`, `std::filesystem` over Win32 file API, structured bindings, `auto`, range-based for, `std::optional`, `std::span`, smart pointers. Avoid raw `new`/`delete` where possible.
 
 Main solution: `sources/TalesOfPirates.sln` — contains both C++ and .NET projects.
 
@@ -102,9 +104,10 @@ Client: NetActorSkillRep → state->ServerEnd(sState) / NetFailedAction → Fail
 
 ## Key Libraries (C++)
 - `Common` — shared utilities (all projects depend on this)
-- `CaLua` — Lua 5.0 scripting (depends on `lua50`, `lualib`)
+- `LuaJIT` (`lua51.lib`) — Lua 5.1 JIT compiler, used by client and GameServer
+- `LuaBridge` (header-only) — C++17 Lua binding, auto-marshaling for typed C++ functions
 - `EncLib` — encryption utilities
-- `Cryptopp` — Crypto++ library (3 build targets: cryptlib, cryptdll, dlltest)
+- `Cryptopp` — Crypto++ library (AES-GCM for UI textures, BLAKE2s for password hashing)
 - `InfoNet` — network transport layer
 - `AudioSDL` — SDL-based audio (client only)
 - `ICUHelper` — Unicode support
@@ -115,5 +118,5 @@ Client: NetActorSkillRep → state->ServerEnd(sState) / NetFailedAction → Fail
 - **RC files**: Edit tool corrupts GBK encoding in `.rc` files — use `sed -i` for resource file edits
 - **PCH**: All 5 main C++ projects use `stdafx.h` with forced include (`/FI`). Don't add `#include "stdafx.h"` manually to source files
 - **Platform**: Win32 only for C++ (no x64 configuration). .NET targets `net10.0`
-- **Client launch**: `Game.exe pKcfT0PcaX` (password argument required), add `clu_bin` for CLU compiler mode
+- **Client launch**: `Game.exe pKcfT0PcaX` (password argument required)
 - **F# compilation order**: File order matters in .fsproj — new files must be added in dependency order

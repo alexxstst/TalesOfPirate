@@ -3,8 +3,8 @@
 #include "GameApp.h"
 #include "GameAppNet.h"
 #include "CharTrade.h"
-#include "Parser.h"
 #include "NPC.h"
+#include "LuaAPI.h"
 #include "WorldEudemon.h"
 #include "Player.h"
 #include "LevelRecord.h"
@@ -241,9 +241,8 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		else if (GetPlayer()->GetBankNpc()) {
 			break;
 		}
-		else if (g_CParser.DoString("IsSailNpc", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-									enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END)) {
-			if (!g_CParser.GetReturnNumber(0)) {
+		else if (auto ret = g_luaAPI.CallR<int>("IsSailNpc", static_cast<CCharacter*>(this), pCha)) {
+			if (!ret.value()) {
 				break;
 			}
 		}
@@ -259,9 +258,8 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		if (pCha == NULL) {
 			break;
 		}
-		if (g_CParser.DoString("IsSailBoatNpc", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-							   enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END)) {
-			if (!g_CParser.GetReturnNumber(0)) {
+		if (auto ret = g_luaAPI.CallR<int>("IsSailBoatNpc", static_cast<CCharacter*>(this), pCha)) {
+			if (!ret.value()) {
 				break;
 			}
 		}
@@ -631,7 +629,6 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		cChar* szPwd2 = pCply->GetPassword();
 
 		if ((szPwd2[0] == 0) || (!strcmp(szPwd.c_str(), szPwd2)) || g_Config.m_bInstantIGS) {
-			//g_StoreSystem.RequestRoleInfo(pMainCha);
 			pMainCha->SetStoreEnable(true);
 		}
 		else {
@@ -889,39 +886,10 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		//}
 	}
 	break;
-	case CMD_CM_GM_SEND: {
-		CCharacter* pMainCha = GetPlyMainCha();
-
-		net::msg::CmGmSendMessage cmMsg;
-		net::msg::deserialize(pk, cmMsg);
-		DWORD dwNpcID = static_cast<DWORD>(cmMsg.npcId);
-		CCharacter* pCha = m_submap->FindCharacter(dwNpcID, GetShape().centre);
-		if (pCha == NULL)
-			break;
-
-		std::string szTitle = cmMsg.title;
-		std::string szContent = cmMsg.content;
-		if (szTitle.length() > 32 || szContent.length() > 512) {
-			//pMainCha->SystemNotice("!");
-			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00033));
-			break;
-		}
-		g_StoreSystem.RequestGMSend(pMainCha, szTitle.c_str(), szContent.c_str());
-	}
-	break;
-	case CMD_CM_GM_RECV: {
-		CCharacter* pMainCha = GetPlyMainCha();
-
-		net::msg::CmGmRecvMessage cmMsg;
-		net::msg::deserialize(pk, cmMsg);
-		DWORD dwNpcID = static_cast<DWORD>(cmMsg.npcId);
-		CCharacter* pCha = m_submap->FindCharacter(dwNpcID, GetShape().centre);
-		if (pCha == NULL)
-			break;
-
-		g_StoreSystem.RequestGMRecv(pMainCha);
-	}
-	break;
+	case CMD_CM_GM_SEND:
+	case CMD_CM_GM_RECV:
+		// GM mail   InfoServer (Trade Server) --
+		break;
 	case CMD_CM_PK_CTRL: {
 		CCharacter* pMainCha = GetPlyMainCha();
 
@@ -947,9 +915,8 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	{
 		//
 		CCharacter* pMainCha = GetPlyMainCha();
-		if (g_CParser.DoString("YORN", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pMainCha,
-							   DOSTRING_PARAM_END)) {
-			if (g_CParser.GetReturnNumber(0)) {
+		if (auto yornRet = g_luaAPI.CallR<int>("YORN", pMainCha)) {
+			if (yornRet.value()) {
 				net::msg::CmBidUpMessage cmMsg;
 				net::msg::deserialize(pk, cmMsg);
 				DWORD dwNpcID = static_cast<DWORD>(cmMsg.npcId);
@@ -1202,9 +1169,8 @@ void CCharacter::Handle_Say(const net::msg::CmSayMessage& sayMsg) {
 		DoCommand_CheckStatus(sayMsg.content.c_str() + 3, static_cast<uLong>(sayMsg.content.size() - 2));
 	}
 	else {
-		g_CParser.DoString("HandleChat", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-						   enumSCRIPT_PARAM_STRING, 1, sayMsg.content.c_str(), DOSTRING_PARAM_END);
-		if (!g_CParser.GetReturnNumber(0))
+		auto chatRet = g_luaAPI.CallR<int>("HandleChat", static_cast<CCharacter*>(this), sayMsg.content.c_str());
+		if (!chatRet.value_or(0))
 			return;
 		if (g_Config.m_bBlindChaos && IsPlayerCha() && IsPKSilver()) {
 			SystemNotice("Unable to chat in this map!");
@@ -1237,9 +1203,9 @@ void CCharacter::Handle_RequestTalk(uLong npcId, net::RPacket& pk) {
 			return;
 		}
 
-		lua_pushlightuserdata(g_pLuaState, (void*)this);
-		lua_pushlightuserdata(g_pLuaState, (void*)pCha);
-		lua_pushlightuserdata(g_pLuaState, (void*)&pk);
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCha));
+		luabridge::push(g_pLuaState, &pk);
 
 		int nStatus = lua_pcall(g_pLuaState, 3, 0, 0);
 		lua_settop(g_pLuaState, 0);
@@ -1263,8 +1229,7 @@ void CCharacter::Handle_DailyBuffRequest() {
 		return;
 	}
 
-	g_CParser.DoString("DailyBuffRequest", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-					   DOSTRING_PARAM_END);
+	g_luaAPI.Call("DailyBuffRequest", static_cast<CCharacter*>(this));
 }
 
 void CCharacter::Handle_RefreshData(const net::msg::CmRefreshDataMessage& msg) {
@@ -1427,8 +1392,8 @@ void CCharacter::Handle_StoreCommand(uShort usCmd, net::RPacket& pk) {
 		return;
 	}
 
-	lua_pushlightuserdata(g_pLuaState, (void*)this);
-	lua_pushlightuserdata(g_pLuaState, (void*)&pk);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
+	luabridge::push(g_pLuaState, &pk);
 	int nStatus = lua_pcall(g_pLuaState, 2, 0, 0);
 	lua_settop(g_pLuaState, 0);
 
@@ -1618,13 +1583,6 @@ void CCharacter::Handle_KitbagTempSync() {
 	msg.kitbag = pMainCha->BuildKitbagInfo(*(pMainCha->m_pCKitbagTmp), enumSYN_KITBAG_INIT);
 	auto pkret = net::msg::serialize(msg);
 	pMainCha->ReflectINFof(pMainCha, pkret);
-
-	long lStoreItemID = pMainCha->GetStoreItemID();
-	if (lStoreItemID > 0) {
-		if (g_StoreSystem.Accept(pMainCha, lStoreItemID)) {
-			pMainCha->SetStoreItemID(0);
-		}
-	}
 }
 
 void CCharacter::Handle_ItemLockAsk(const net::msg::CmItemLockAskMessage& cmMsg) {
@@ -1679,9 +1637,8 @@ void CCharacter::Handle_GameRequestPin(const net::msg::CmGameRequestPinMessage& 
 	CPlayer* pCply = pMainCha->GetPlayer();
 	cChar* szPwd2 = pCply->GetPassword();
 	if ((szPwd2[0] == 0) || (!strcmp(szPwd.c_str(), szPwd2))) {
-		g_CParser.DoString("HandlePinRequest", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-						   enumSCRIPT_PARAM_NUMBER, 1, requestType, DOSTRING_PARAM_END);
-		if (!g_CParser.GetReturnNumber(0))
+		auto pinRet = g_luaAPI.CallR<int>("HandlePinRequest", static_cast<CCharacter*>(this), (int)requestType);
+		if (!pinRet.value_or(0))
 			return;
 	}
 	else {
@@ -2365,14 +2322,12 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			m_SSeat.chIsSeat = 1;
 			m_SSeat.sAngle = sAngle;
 			m_SSeat.sPose = sPose;
-			g_CParser.DoString(pCSkill->szActive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-							   enumSCRIPT_PARAM_NUMBER, 1, 1, DOSTRING_PARAM_END);
+			g_luaAPI.Call(pCSkill->szActive, static_cast<CCharacter*>(this), 1);
 		}
 		else // 
 		{
 			m_SSeat.chIsSeat = 0;
-			g_CParser.DoString(pCSkill->szInactive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
-							   enumSCRIPT_PARAM_NUMBER, 1, 1, DOSTRING_PARAM_END);
+			g_luaAPI.Call(pCSkill->szInactive, static_cast<CCharacter*>(this), 1);
 		}
 		if (bToSeat)
 			m_sPoseState = enumPoseSeat;

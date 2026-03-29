@@ -4,7 +4,7 @@
 #include "GameApp.h"
 #include "GameAppNet.h"
 #include "CharTrade.h"
-#include "Parser.h"
+#include "LuaAPI.h"
 #include "NPC.h"
 #include "WorldEudemon.h"
 #include "Player.h"
@@ -246,11 +246,11 @@ bool CCharacter::Cmd_EnterMap(cChar* l_map, Long lMapCopyNO, uLong l_x, uLong l_
 			FillSkillBag(d.skillBag, enumSYN_SKILLBAG_INIT);
 			FillSkillState(d.skillState);
 
-			// 
+			//
 			if (bNewCha)
-				g_CParser.DoString("CreatCha", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+				g_luaAPI.Call("CreatCha", static_cast<CCharacter*>(this));
 			else
-				g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+				g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 			{
 				CLevelRecord* pCLvRec = 0, * pNLvRec = 0;
 				pCLvRec = GetLevelRecordInfo((long)m_CChaAttr.GetAttr(ATTR_LV));
@@ -902,7 +902,7 @@ Short CCharacter::Cmd_UseEquipItem(Short sKbPage, Short sKbGrid, bool bRefresh, 
 
 		SynKitbagNew(enumSYN_KITBAG_EQUIP);
 
-		g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+		g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 		if (GetPlayer())
 		{
 			GetPlayer()->RefreshBoatAttr();
@@ -985,7 +985,7 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 		g_chUseItemGiveMission[0] = 0;
 		// End
 
-		g_CParser.DoString(pCItemRec->szAttrEffect, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 3, this, pSGridCont, pSTarGridCont, DOSTRING_PARAM_END);
+		g_luaAPI.Call(pCItemRec->szAttrEffect, static_cast<CCharacter*>(this), pSGridCont, pSTarGridCont);
 		
 		if (g_chUseItemFailed[0] == 1) // 
 			bUseSuccess = false;
@@ -1036,7 +1036,7 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 		SynKitbagNew(enumSYN_KITBAG_SYSTEM);
 
 		// 
-		g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+		g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 		if (GetPlayer())
 		{
 			GetPlayer()->RefreshBoatAttr();
@@ -1226,7 +1226,7 @@ Short CCharacter::Cmd_UnfixItem(Char chLinkID, Short *psItemNum, Char chDir, Lon
 			SynLook();
 
 		// 
-		g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+		g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 		if (GetPlayer())
 		{
 			GetPlayer()->RefreshBoatAttr();
@@ -1787,8 +1787,8 @@ Short CCharacter::Cmd_GuildBankOper(Char chSrcType, Short sSrcGridID, Short sSrc
 			if (pGridCont->dwDBID){
 				return enumITEMOPT_ERROR_TYPE;
 			}
-			if (g_CParser.DoString("OnBankItem", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCMainCha, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pGridCont, DOSTRING_PARAM_END)) {
-				if (!g_CParser.GetReturnNumber(0))
+			if (auto ret = g_luaAPI.CallR<int>("OnBankItem", pCMainCha, pGridCont)) {
+				if (!ret.value())
 					return enumITEMOPT_ERROR_TYPE;
 			}
 			if (!pItem->chIsTrade || !pCSrcBag.GetGridContByID(sSrcGridID)->GetInstAttr(ITEMATTR_TRADABLE)){
@@ -1926,8 +1926,8 @@ Short CCharacter::Cmd_BankOper(Char chSrcType, Short sSrcGridID, Short sSrcNum, 
 
 			// kong@pkodev.net 09.22.2017
 			SItemGrid *pGridCont = pCSrcBag->GetGridContByID(sSrcGridID);
-			if (g_CParser.DoString("OnBankItem", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCMainCha, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pGridCont, DOSTRING_PARAM_END)) {
-				if(!g_CParser.GetReturnNumber(0))
+			if (auto ret = g_luaAPI.CallR<int>("OnBankItem", pCMainCha, pGridCont)) {
+				if (!ret.value())
 					return enumITEMOPT_ERROR_TYPE;
 			}
 		}
@@ -2054,7 +2054,7 @@ void CCharacter::Cmd_ReassignAttr(const net::msg::CmSynAttrMessage& msg)
 			setAttr(i, m_CChaAttr.GetAttr(i) + lBaseAttr[i - ATTR_BSTR]);
 		}
 	}
-	g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 	if (GetPlayer())
 	{
 		GetPlayer()->RefreshBoatAttr();
@@ -2242,7 +2242,7 @@ ItemRemoveEnd:
 				SynLook();
 
 			// 
-			g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+			g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 			if (GetPlayer())
 			{
 				GetPlayer()->RefreshBoatAttr();
@@ -2349,14 +2349,14 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 
 	string	strScript = "check_can_enter_";
 	strScript += pCTeamFightEntry->GetTMapName();
-	if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, this, pCTeamFightEntry, DOSTRING_PARAM_END))
+	if (auto ret = g_luaAPI.CallR<int>(strScript.c_str(), static_cast<CCharacter*>(this), pCTeamFightEntry))
 	{
-		if (!g_CParser.GetReturnNumber(0))
+		if (!ret.value())
 			return;
 	}
-	if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCTarCha, pCTeamFightEntry, DOSTRING_PARAM_END))
+	if (auto ret = g_luaAPI.CallR<int>(strScript.c_str(), pCTarCha, pCTeamFightEntry))
 	{
-		if (!g_CParser.GetReturnNumber(0))
+		if (!ret.value())
 		{
 			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00028));
@@ -2373,10 +2373,10 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 		entry.name = pCha->GetName();
 		entry.lv = static_cast<int64_t>((Char)pCha->getAttr(ATTR_LV));
 		entry.job = g_GetJobName((Short)pCha->getAttr(ATTR_JOB));
-		if (g_CParser.DoString("Get_ItemAttr_Join", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END))
-			entry.fightNum = g_CParser.GetReturnNumber(0);
-		if (g_CParser.DoString("Get_ItemAttr_Win", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END))
-			entry.victoryNum = g_CParser.GetReturnNumber(0);
+		if (auto ret = g_luaAPI.CallR<int>("Get_ItemAttr_Join", static_cast<CCharacter*>(pCha)))
+			entry.fightNum = ret.value_or(0);
+		if (auto ret = g_luaAPI.CallR<int>("Get_ItemAttr_Win", static_cast<CCharacter*>(pCha)))
+			entry.victoryNum = ret.value_or(0);
 		fightMsg.players.push_back(std::move(entry));
 	};
 
@@ -2409,9 +2409,9 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 				pCTeamCha->SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00029));
 				continue;
 			}
-			if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCTeamCha, pCTeamFightEntry, DOSTRING_PARAM_END))
+			if (auto ret = g_luaAPI.CallR<int>(strScript.c_str(), pCTeamCha, pCTeamFightEntry))
 			{
-				if (!g_CParser.GetReturnNumber(0))
+				if (!ret.value())
 					continue;
 			}
 
@@ -2457,9 +2457,9 @@ void CCharacter::Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTar
 				pCTeamCha->SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00019));
 				continue;
 			}
-			if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCTeamCha, pCTeamFightEntry, DOSTRING_PARAM_END))
+			if (auto ret = g_luaAPI.CallR<int>(strScript.c_str(), pCTeamCha, pCTeamFightEntry))
 			{
-				if (!g_CParser.GetReturnNumber(0))
+				if (!ret.value())
 					continue;
 			}
 
@@ -2624,7 +2624,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 
 	string	strScript1 = "after_get_map_copy_";
 	strScript1 += pCTeamFightEntry->GetTMapName();
-	g_CParser.DoString(strScript1.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 3, pCMCpyCell, pCSrcPly, pCTarPly, enumSCRIPT_PARAM_NUMBER, 1, lFightType, DOSTRING_PARAM_END);
+	g_luaAPI.Call(strScript1.c_str(), pCMCpyCell, pCSrcPly, pCTarPly, static_cast<int>(lFightType));
 	pCTeamFightEntry->SynCopyParam((Short)pCMCpyCell->GetPosID());
 	// PK
 	CPlayer	*pCFightMem;
@@ -2657,9 +2657,9 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 			pCFightCha->SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00038));
 			continue;
 		}
-		if (g_CParser.DoString(strScript2.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCFightCha, pCTeamFightEntry, DOSTRING_PARAM_END))
+		if (auto ret = g_luaAPI.CallR<int>(strScript2.c_str(), pCFightCha, pCTeamFightEntry))
 		{
-			if (!g_CParser.GetReturnNumber(0))
+			if (!ret.value())
 				continue;
 		}
 		if (lFightType == enumFIGHT_TEAM)
@@ -2702,7 +2702,7 @@ void CCharacter::Cmd_FightAnswer(bool bFight)
 		return;
 	}
 	for (Long i = 0; i < lEnterChaNum; i++)
-		g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCEnterCha[i], pCMCpyCell, DOSTRING_PARAM_END);
+		g_luaAPI.Call(strScript.c_str(), pCEnterCha[i], pCMCpyCell);
 	pCMCpyCell->AddCurPlyNum((Short)lEnterChaNum);
 
 	// temp for test
@@ -2760,23 +2760,23 @@ void CCharacter::Cmd_ItemRepairAsk(dbc::Char chPosType, dbc::Char chPosID)
 		SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00046));
 		return;
 	}
-	if (g_CParser.StringIsFunction("can_repair_item"))
+	if (g_luaAPI.HasFunction("can_repair_item"))
 	{
-		g_CParser.DoString("can_repair_item", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 3, pCRepairman, this, pCPly->GetRepairItem(), DOSTRING_PARAM_END);
-		if (g_CParser.GetReturnNumber(0) == 0)
+		auto ret = g_luaAPI.CallR<int>("can_repair_item", pCRepairman, static_cast<CCharacter*>(this), pCPly->GetRepairItem());
+		if (ret.value_or(0) == 0)
 			return;
 	}
-	if (!g_CParser.StringIsFunction("get_item_repair_money"))
+	if (!g_luaAPI.HasFunction("get_item_repair_money"))
 	{
 		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00047));
 		return;
 	}
-	g_CParser.DoString("get_item_repair_money", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCPly->GetRepairItem(), DOSTRING_PARAM_END);
+	auto repairMoney = g_luaAPI.CallR<int>("get_item_repair_money", pCPly->GetRepairItem());
 
-	//  :    
+	//  :
 	auto WtPk = net::msg::serialize(net::msg::McItemRepairAskMcMessage{
-		pCItemRec->szName, g_CParser.GetReturnNumber(0)
+		pCItemRec->szName, repairMoney.value_or(0)
 	});
 	ReflectINFof(this, WtPk);
 
@@ -2813,10 +2813,10 @@ void CCharacter::Cmd_ItemRepairAnswer(bool bRepair)
 			SystemNotice(RES_STRING(GM_CHARACTERCMD_CPP_00049));
 			goto EndItemRepair;
 		}
-		if (g_CParser.StringIsFunction("can_repair_item"))
+		if (g_luaAPI.HasFunction("can_repair_item"))
 		{
-			g_CParser.DoString("can_repair_item", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 3, pCRepairman, this, pCPly->GetRepairItem(), DOSTRING_PARAM_END);
-			if (g_CParser.GetReturnNumber(0) == 0)
+			auto ret = g_luaAPI.CallR<int>("can_repair_item", pCRepairman, static_cast<CCharacter*>(this), pCPly->GetRepairItem());
+			if (ret.value_or(0) == 0)
 				goto EndItemRepair;
 		}
 		bool	bEquipValid = true;
@@ -2834,9 +2834,9 @@ void CCharacter::Cmd_ItemRepairAnswer(bool bRepair)
 			m_CSkillState.ResetChangeFlag();
 			SetLookChangeFlag();
 		}
-		if (g_CParser.StringIsFunction("begin_repair_item"))
+		if (g_luaAPI.HasFunction("begin_repair_item"))
 		{
-			g_CParser.DoString("begin_repair_item", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 3, pCRepairman, this, pCPly->GetRepairItem(), DOSTRING_PARAM_END);
+			g_luaAPI.Call("begin_repair_item", pCRepairman, static_cast<CCharacter*>(this), pCPly->GetRepairItem());
 			if (!pCPly->IsRepairEquipPos())
 			{
 				CheckItemValid(pCPly->GetRepairItem());
@@ -2847,7 +2847,7 @@ void CCharacter::Cmd_ItemRepairAnswer(bool bRepair)
 			{
 				if (!bEquipValid)
 					SetEquipValid(pCPly->GetRepairPosID(), true, false);
-				g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+				g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 				SynSkillBag(enumSYN_SKILLBAG_MODI);
 				SynSkillStateToEyeshot();
 				GetPlayer()->RefreshBoatAttr();
@@ -3335,7 +3335,7 @@ void CCharacter::Cmd_LifeSkillItemAsR(long dwType, SLifeSkillItem *pSItem)
 	int	nParamNum = 0;
 	int nRetNum = 1;
 
-	lua_pushlightuserdata(g_pLuaState, this);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 	nParamNum++;
 	lua_pushnumber(g_pLuaState,pSItem->sbagCount);
 	nParamNum++;

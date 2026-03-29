@@ -1,4 +1,4 @@
-﻿#include "Character.h"
+#include "Character.h"
 #include "script.h"
 #include "GameApp.h"
 #include "HarmRec.h"
@@ -21,20 +21,6 @@
 #define CHECK_MAP          { if(g_pScriptMap==NULL) { MAP_NULL_ERROR return 0; }				    }
 #define PARAM_LG_ERROR		 THROW_EXCP( excp, RES_STRING(GM_LUA_GAMECTRL_H_00001) );
 
-extern std::list<std::string> g_luaFNList;
-
-#define REGFN_INIT g_luaFNList.clear();
-
-#define REGFN(fn) \
-{ \
-	lua_pushstring(L, "" #fn ""); \
-	lua_pushcfunction(L, lua_##fn); \
-	lua_settable(L, LUA_GLOBALSINDEX); \
-	if(find(g_luaFNList.begin(), g_luaFNList.end(), ""#fn"") != g_luaFNList.end()) \
-		ToLogService("lua", LogLevel::Warning, "msgind register lua the same functing[{}]", ""#fn""); \
-	else \
-	  g_luaFNList.push_back(""#fn""); \
-} 
 
 
 //--------------------------NPC-----------------------------
@@ -52,10 +38,11 @@ struct SHelpNPC
 extern std::list<CCharacter*> g_HelpNPCList;
 const char* FindHelpInfo(const char *pszKey);
 void  AddHelpInfo(const char *pszKey, const char *pszInfo);
+void  AddHelpInfo(const std::string& key, const std::string& text);
+void  AddHelpNPC_typed(const std::string& name);
 void  AddMonsterHelp(int nScriptID, int x, int y);
 void  AddHelpNPC(CCharacter *pNPC);
 //--------------------------------------------------------------------
-
 
 
 
@@ -81,236 +68,134 @@ inline void lua_callalert(lua_State* L, int status)
 
 //------------------------------------------------------------------------------------------------------------
 //------------------------------------------------------------------------------------------------------------
-inline int lua_EnableAI(lua_State *L)
+inline void EnableAI(int flag)
 {
-	BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
-	if(!bValid)
-	{
-		PARAM_ERROR
-		return 0;
-	}
 	extern BOOL g_bEnableAI;
-	g_bEnableAI = (BOOL)(lua_tonumber(L, 1));
-	return 0;
+	g_bEnableAI = (BOOL)flag;
 }
 
-// 
-inline int lua_SetCurMap(lua_State *L)
+//
+inline int SetCurMap(const std::string& name)
 {
-	BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
-	if(!bValid)
-	{
-		PARAM_ERROR
-		return 0;
-	}
-
-	const char *pszName = (const char*)lua_tostring(L, 1);
-	CMapRes *pMap = g_pGameApp->FindMapByName(pszName);
+	CMapRes *pMap = g_pGameApp->FindMapByName(name.c_str());
 	if(pMap==NULL)
 	{
-		//LG("lua_ai", "[%s], !\n", pszName);
-		ToLogService("lua", "can't find pointer map[{}], keep former map!", pszName);
-		lua_pushnumber(L, 0);
-		return 1;
+		ToLogService("lua", "can't find pointer map[{}], keep former map!", name.c_str());
+		return 0;
 	}
-	lua_pushnumber(L, 1);
 	g_pScriptMap = pMap->GetCopy();
 	return 1;
 }
 
-inline int lua_GetChaID(lua_State *L)
+inline int GetChaID(CCharacter* pCha)
 {
-	BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
 	if(!pCha)
-	{
-		E_LUANULL
 		return 0;
-	}
-
-	long id = pCha->m_CChaAttr.m_lID;
-	lua_pushnumber(L, id);
-
-	return 1;
+	return (int)pCha->m_CChaAttr.m_lID;
 }
 
 
-inline int lua_CreateChaNearPlayer(lua_State *L){ CHECK_MAP
-	BOOL bValid = (lua_gettop(L) == 2 && lua_isuserdata(L, 1) && lua_isnumber(L, 2));
-	if (!bValid){
-		PARAM_ERROR
-		return 0;
-	}
-	CCharacter* pCha = (CCharacter*)lua_touserdata(L, 1);
-	int		nScriptID = (int)lua_tonumber(L, 2);
-	Point	Pos;
+inline CCharacter* CreateChaNearPlayer(CCharacter* pCha, int nScriptID)
+{
+	if(!g_pScriptMap) return nullptr;
+	if(!pCha) return nullptr;
+	Point Pos;
 	Pos.x = (int)pCha->GetPos().x;
 	Pos.y = (int)pCha->GetPos().y;
-   
+
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
 
 	CCharacter *pCCha = pCha->GetSubMap()->ChaSpawn(nScriptID, enumCHACTRL_NONE, 0, &Pos);
 	if (pCCha){
-		//pCCha->SetResumeTime(-1);
-		lua_pushlightuserdata(L, pCCha);
-		return 1;
+		return pCCha;
 	}else{
-		//LG("lua_ai", "\n");
 		ToLogService("lua", "create character near role failed");
-		return 0;
+		return nullptr;
 	}
 }
 
 
-// 
-inline int lua_CreateCha(lua_State *L)
+//
+inline CCharacter* CreateCha(int nScriptID, int x, int y, int sAngle, int lReliveTime)
 {
-	CHECK_MAP
+	if(!g_pScriptMap) return nullptr;
 
-	// 
-    BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 1) && lua_isnumber (L, 2) && 
-	              lua_isnumber (L, 3) && lua_isnumber (L, 4) && lua_isnumber(L, 5));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    int		nScriptID = (int)lua_tonumber(L, 1);
-	Point	Pos;
-    Pos.x = (int)lua_tonumber(L, 2);               // 
-	Pos.y = (int)lua_tonumber(L, 3);
-	short sAngle = (short)lua_tonumber(L, 4);      // 
-	long  lReliveTime = (int)lua_tonumber(L, 5);   // 
+	Point Pos;
+	Pos.x = x;
+	Pos.y = y;
 
-	//LG("create_cha", "%d  pos = %d %d, angle = %d, rTime = %d\n", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 	ToLogService("common", "create bugbear{}  pos = {} {}, angle = {}, rTime = {}", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
-    
+
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
 
-	CCharacter *pCCha = g_pScriptMap->ChaSpawn(nScriptID, enumCHACTRL_NONE, sAngle, &Pos);
+	CCharacter *pCCha = g_pScriptMap->ChaSpawn(nScriptID, enumCHACTRL_NONE, (short)sAngle, &Pos);
 	if (pCCha)
 	{
 		pCCha->SetResumeTime(lReliveTime * 1000);
-		lua_pushlightuserdata(L, pCCha);
-		return 1;
+		return pCCha;
 	}
 	else
 	{
-		//LG("lua_ai", "\n");
 		ToLogService("lua", "create character failed");
-		return 0;
+		return nullptr;
 	}
 }
 
-inline int lua_CreateChaX(lua_State *L)
+inline CCharacter* CreateChaX(int nScriptID, int x, int y, int sAngle, int lReliveTime, CCharacter* pMainCha)
 {
-	// 
-	BOOL bValid = (lua_gettop (L)==6 && lua_isnumber(L, 1) && lua_isnumber (L, 2)
-				&& lua_isnumber (L, 3) && lua_isnumber (L, 4) && lua_isnumber(L, 5)
-				&& lua_islightuserdata(L, 6));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-			return 0;
-	}
+	if(!pMainCha) return nullptr;
+	Point Pos;
+	Pos.x = x;
+	Pos.y = y;
 
-	int		nScriptID = (int)lua_tonumber(L, 1);
-	Point	Pos;
-	Pos.x = (int)lua_tonumber(L, 2);               // 
-	Pos.y = (int)lua_tonumber(L, 3);
-	short sAngle = (short)lua_tonumber(L, 4);      // 
-	long  lReliveTime = (int)lua_tonumber(L, 5);   // 
-	CCharacter *pMainCha = (CCharacter *)lua_touserdata(L, 6);
-
-	//LG("create_chaX", "%d  pos = %d %d, angle = %d, rTime = %d\n", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 	ToLogService("common", "create bugbearX{}  pos = {} {}, angle = {}, rTime = {}", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
 
-	CCharacter *pCCha = pMainCha->m_submap->ChaSpawn(nScriptID, enumCHACTRL_NONE, sAngle, &Pos);
+	CCharacter *pCCha = pMainCha->m_submap->ChaSpawn(nScriptID, enumCHACTRL_NONE, (short)sAngle, &Pos);
 	if (pCCha)
 	{
 		pCCha->SetResumeTime(lReliveTime * 1000);
-		lua_pushlightuserdata(L, pCCha);
-		return 1;
+		return pCCha;
 	}
 	else
 	{
-		//LG("lua_ai", "\n");
 		ToLogService("lua", "create character failed");
-		return 0;
+		return nullptr;
 	}
 }
 
-inline int lua_CreateChaEx(lua_State *L)
+inline CCharacter* CreateChaEx(int nScriptID, int x, int y, int sAngle, int lReliveTime, SubMap* pMap)
 {
-	// 
-	CHECK_MAP
+	if(!g_pScriptMap) return nullptr;
+	if(!pMap) return nullptr;
 
-	// 
-	BOOL bValid = (lua_gettop (L)==6 && lua_isnumber(L, 1) && lua_isnumber (L, 2) && 
-	lua_isnumber (L, 3) && lua_isnumber (L, 4) && lua_isnumber(L, 5) && lua_islightuserdata(L,6));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-			return 0;
-	}
+	Point Pos;
+	Pos.x = x;
+	Pos.y = y;
 
-	int		nScriptID = (int)lua_tonumber(L, 1);
-	Point	Pos;
-	Pos.x = (int)lua_tonumber(L, 2);               // 
-	Pos.y = (int)lua_tonumber(L, 3);
-	short sAngle = (short)lua_tonumber(L, 4);      // 
-	long  lReliveTime = (int)lua_tonumber(L, 5);   // 
-	SubMap * pMap = (SubMap *)lua_touserdata(L,6);
-	if(!pMap)
-	{
-		E_LUANULL
-		return 0;
-	}
-	//LG("create_chaex", "%d  pos = %d %d, angle = %d, rTime = %d\n", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 	ToLogService("common", "create bugbearEx{}  pos = {} {}, angle = {}, rTime = {}", nScriptID, Pos.x, Pos.y, sAngle, lReliveTime);
 
 	AddMonsterHelp(nScriptID, Pos.x, Pos.y);
 
-	CCharacter *pCCha = pMap->ChaSpawn(nScriptID, enumCHACTRL_NONE, sAngle, &Pos);
+	CCharacter *pCCha = pMap->ChaSpawn(nScriptID, enumCHACTRL_NONE, (short)sAngle, &Pos);
 	if (pCCha)
 	{
 		pCCha->SetResumeTime(lReliveTime * 1000);
-		lua_pushlightuserdata(L, pCCha);
-		return 1;
+		return pCCha;
 	}
 	else
 	{
-		//LG("lua_ai", "\n");
 		ToLogService("lua", "create character failed");
-		return 0;
+		return nullptr;
 	}
 }
 
-// 
-inline int lua_ChaMove(lua_State *L)
+//
+inline void ChaMove(CCharacter* pCCha, int x, int y)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCCha)
     {
-		int x = (int)lua_tonumber(L, 2);
-		int y = (int)lua_tonumber(L, 3);
 		Point	Path[2] = {pCCha->GetPos(), {x, y}};
 		pCCha->m_CActCache.AddCommand(enumCACHEACTION_MOVE);
 		short	sPing = 0;
@@ -318,29 +203,14 @@ inline int lua_ChaMove(lua_State *L)
 		pCCha->m_CActCache.PushParam(&sPing, sizeof(short));
 		pCCha->m_CActCache.PushParam(&chPointNum, sizeof(char));
 		pCCha->m_CActCache.PushParam(Path, sizeof(Point) * 2);
-		//pCCha->Cmd_BeginMove(0, Path, 2);
 	}
-
-	return 0;
 }
 
-// 
-inline int lua_ChaMoveToSleep(lua_State *L)
+//
+inline void ChaMoveToSleep(CCharacter* pCCha, int x, int y)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCCha)
     {
-		// g_pGameApp->WorldNotice(szInfo);
-		int x = (int)lua_tonumber(L, 2);
-		int y = (int)lua_tonumber(L, 3);
 		Point	Path[2] = {pCCha->GetPos(), {x, y}};
 		pCCha->m_CActCache.AddCommand(enumCACHEACTION_MOVE);
 		short	sPing = 0;
@@ -350,103 +220,54 @@ inline int lua_ChaMoveToSleep(lua_State *L)
 		pCCha->m_CActCache.PushParam(&chPointNum, sizeof(char));
 		pCCha->m_CActCache.PushParam(Path, sizeof(Point) * 2);
 		pCCha->m_CActCache.PushParam(&chStopState, sizeof(char));
-		//pCCha->Cmd_BeginMove(0, Path, 2, enumEXISTS_SLEEPING);
     }
-
-	return 0;
 }
 
-// 
-inline int lua_GetChaSpawnPos(lua_State *L)
+//
+inline std::tuple<int, int> GetChaSpawnPos(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
     {
-		int x = pCha->GetTerritory().centre.x;
-		int y = pCha->GetTerritory().centre.y;
-		lua_pushnumber(L, x);
-		lua_pushnumber(L, y);
-		return 2;	
+		return std::make_tuple(pCha->GetTerritory().centre.x, pCha->GetTerritory().centre.y);
     }
-	return 0;
+	return std::make_tuple(0, 0);
 }
 
 
-// 
-inline int lua_GetChaPatrolPos(lua_State *L)
+//
+inline std::tuple<int, int> GetChaPatrolPos(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
     {
-		int x = pCha->m_nPatrolX;
-		int y = pCha->m_nPatrolY;
-		lua_pushnumber(L, x);
-		lua_pushnumber(L, y);
-		return 2;	
+		return std::make_tuple(pCha->m_nPatrolX, pCha->m_nPatrolY);
     }
-	return 0;
+	return std::make_tuple(0, 0);
 }
 
 // , AI
-inline int lua_SetChaPatrolState(lua_State *L)
+inline void SetChaPatrolState(CCharacter* pCha, int state)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-		pCha->m_btPatrolState = ((BYTE)lua_tonumber(L,2));
-
-	return 0;
+		pCha->m_btPatrolState = (BYTE)state;
 }
 
 // , AI
-inline int lua_GetChaPatrolState(lua_State *L)
+inline int GetChaPatrolState(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	lua_pushnumber(L,(BYTE)(pCha->m_btPatrolState));
-	return 1;
+	if (!pCha) return 0;
+	return (int)(BYTE)(pCha->m_btPatrolState);
 }
 
 
 
-// 
+//
 // []
-// 
-inline int lua_ChaUseSkill(lua_State *L)
+//
+// Varargs: optional 4th param for immediate execution
+inline int ChaUseSkill_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_islightuserdata(L, 1) && lua_islightuserdata (L, 2) &&  lua_isnumber (L, 3));
-    if(!bValid) 
+    if(!bValid)
     {
         PARAM_ERROR
         return 0;
@@ -458,7 +279,7 @@ inline int lua_ChaUseSkill(lua_State *L)
         return 0;
     }
 	bool	bExecNow = false;
-	if (nParamNum == 4 && ((int)lua_tonumber(L, 4) != 0)) // 
+	if (nParamNum == 4 && ((int)lua_tonumber(L, 4) != 0))
 		bExecNow = true;
 
 	CCharacter *pCha    = (CCharacter*)lua_touserdata(L, 1);
@@ -481,14 +302,14 @@ inline int lua_ChaUseSkill(lua_State *L)
 	return 0;
 }
 
-// 
+//
 // [x,y][]
-// 
-inline int lua_ChaUseSkill2(lua_State *L)
+//
+// Varargs: optional 6th param for immediate execution
+inline int ChaUseSkill2_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3) &&  lua_isnumber (L, 4) &&  lua_isnumber (L, 5));
-    if(!bValid) 
+    if(!bValid)
     {
         PARAM_ERROR
         return 0;
@@ -500,7 +321,7 @@ inline int lua_ChaUseSkill2(lua_State *L)
         return 0;
     }
 	bool	bExecNow = false;
-	if (nParamNum == 6 && ((int)lua_tonumber(L, 6) != 0)) // 
+	if (nParamNum == 6 && ((int)lua_tonumber(L, 6) != 0))
 		bExecNow = true;
 
 	CCharacter *pCha    = (CCharacter*)lua_touserdata(L, 1);
@@ -527,270 +348,118 @@ inline int lua_ChaUseSkill2(lua_State *L)
 	return 0;
 }
 
-// 
-inline int lua_QueryChaAttr(lua_State *L)
+//
+inline int QueryChaAttr(CCharacter* pCha, int nAttr)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-    {
-		int nAttr = (int)lua_tonumber(L, 2);
-		lua_pushnumber(L, (LONG64)pCha->getAttr(nAttr));
-    }
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;
+		return (int)(LONG64)pCha->getAttr(nAttr);
+	return 0;
 }
 
 // ID
-inline int lua_GetChaType(lua_State *L)
+inline int GetChaType(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-		lua_pushnumber(L, pCha->m_pCChaRecord->nID);
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;
-}
-
-// , AI
-inline int lua_GetChaBlockCnt(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-		lua_pushnumber(L, pCha->GetBlockCnt());
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;
-}
-
-// , AI
-inline int lua_SetChaBlockCnt(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-		pCha->SetBlockCnt((BYTE)lua_tonumber(L,2));
-
+		return pCha->m_pCChaRecord->nID;
 	return 0;
+}
+
+// , AI
+inline int GetChaBlockCnt(CCharacter* pCha)
+{
+	if (pCha)
+		return pCha->GetBlockCnt();
+	return 0;
+}
+
+// , AI
+inline void SetChaBlockCnt(CCharacter* pCha, int cnt)
+{
+	if (pCha)
+		pCha->SetBlockCnt((BYTE)cnt);
 }
 
 // AI
-inline int lua_GetChaAIType(lua_State *L)
+inline int GetChaAIType(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-		lua_pushnumber(L, pCha->m_AIType);
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;
-}
-
-// 
-inline int lua_GetChaChaseRange(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-		lua_pushnumber(L, pCha->m_sChaseRange);
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;
-}
-
-// 
-inline int lua_SetChaChaseRange(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-	{
-		pCha->m_sChaseRange = (short)lua_tonumber(L, 2);
-	}
+		return pCha->m_AIType;
 	return 0;
+}
+
+//
+inline int GetChaChaseRange(CCharacter* pCha)
+{
+	if (pCha)
+		return pCha->m_sChaseRange;
+	return 0;
+}
+
+//
+inline void SetChaChaseRange(CCharacter* pCha, int range)
+{
+	if (pCha)
+		pCha->m_sChaseRange = (short)range;
 }
 
 
 // AI
-inline int lua_SetChaAIType(lua_State *L)
+inline void SetChaAIType(CCharacter* pCha, int nType)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
     {
-		int nType = (int)lua_tonumber(L, 2);
 		pCha->m_AIType = nType;
-		//LG("lua_ai", "[%s]ai%d\n", pCha->GetName(), nType);
 		ToLogService("lua", "character[{}] be set ai type is {}", pCha->GetName(), nType);
     }
-
-	return 0;
 }
 
-// 
-// 
-inline int lua_GetChaTypeID(lua_State *L)
+//
+//
+inline int GetChaTypeID(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-	{
-		if (pCha->m_pCChaRecord)
-			lua_pushnumber(L, pCha->m_pCChaRecord->lID);
-		else
-			lua_pushnumber(L, 0);
-		return 1;
-	}
-	else
-		return 0;
+	if (pCha && pCha->m_pCChaRecord)
+		return (int)pCha->m_pCChaRecord->lID;
+	return 0;
 }
 
 // ()
-inline int lua_GetChaVision(lua_State *L)
+inline int GetChaVision(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-	{
-		lua_pushnumber(L, pCha->m_pCChaRecord->lVision);
-	}
-	return 1;
+		return (int)pCha->m_pCChaRecord->lVision;
+	return 0;
 }
 
 // , AI
-inline int lua_GetChaSkillNum(lua_State *L)
+inline int GetChaSkillNum(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-	{
-		lua_pushnumber(L, pCha->m_CSkillBag.GetSkillNum());
-		return 1;
-	}
+		return pCha->m_CSkillBag.GetSkillNum();
 	return 0;
 }
 
 // ID
-inline int lua_GetChaSkillInfo(lua_State *L)
+inline std::tuple<int, int> GetChaSkillInfo(CCharacter* pCha, int nLoc)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	int nLoc = (int)lua_tonumber(L, 2);
 	if (pCha)
-	{
-		lua_pushnumber(L, pCha->m_pCChaRecord->lSkill[nLoc][0]);
-		lua_pushnumber(L, pCha->m_pCChaRecord->lSkill[nLoc][1]);
-		return 2;
-	}
-	return 0;
+		return std::make_tuple((int)pCha->m_pCChaRecord->lSkill[nLoc][0], (int)pCha->m_pCChaRecord->lSkill[nLoc][1]);
+	return std::make_tuple(0, 0);
 }
 
 
-// 
-inline int lua_SetChaTarget(lua_State *L)
+//
+// Dynamic type checking on arg 2 (number = clear target, lightuserdata = set target)
+inline int SetChaTarget_raw(lua_State *L)
 {
-	// , target0, 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1));
-	if(!bValid) 
+	if(!bValid)
     {
         PARAM_ERROR
         return 0;
     }
 
 	CCharacter *pCha    = (CCharacter*)lua_touserdata(L, 1);
-	CCharacter *pTarget = NULL; 
+	CCharacter *pTarget = NULL;
 	if(lua_isnumber(L, 2))
 	{
 		pTarget = NULL;
@@ -822,60 +491,35 @@ inline int lua_SetChaTarget(lua_State *L)
 	return 0;
 }
 
-// 
-inline int lua_GetChaTarget(lua_State *L)
+//
+inline CCharacter* GetChaTarget(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha && pCha->m_AITarget)
-	{
-		lua_pushlightuserdata(L, pCha->m_AITarget);
-		return 1;
-	}
-	return 0;
+		return pCha->m_AITarget;
+	return nullptr;
 }
 
-// 
-inline int lua_GetChaHost(lua_State *L)
+//
+inline CCharacter* GetChaHost(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha && pCha->m_HostCha)
-	{
-		lua_pushlightuserdata(L, pCha->m_HostCha);
-		return 1;
-	}
-	return 0;
+		return pCha->m_HostCha;
+	return nullptr;
 }
 
-// 
-inline int lua_SetChaHost(lua_State *L)
+//
+// Dynamic type checking on arg 2 (number = clear host, lightuserdata = set host)
+inline int SetChaHost_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1));
-	if(!bValid) 
+	if(!bValid)
     {
         PARAM_ERROR
         return 0;
     }
 
-	
 	CCharacter *pCha  = (CCharacter*)lua_touserdata(L, 1);
-	CCharacter *pHost = NULL; 
+	CCharacter *pHost = NULL;
 	if(lua_isnumber(L, 2))
 	{
 		pHost = NULL;
@@ -896,67 +540,28 @@ inline int lua_SetChaHost(lua_State *L)
 	return 0;
 }
 
-inline int lua_GetPetNum(lua_State *L)
+inline int GetPetNum(CCharacter* pCha)
 {
-	// 
-	BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-		return 0;
-	}
-
-
-	CCharacter *pCha  = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha && pCha->GetPlyMainCha())
-	{
-		int nPetNum = pCha->GetPlyMainCha()->GetPetNum();
-		lua_pushnumber(L, nPetNum);
-	}
-	else
-	{
-		lua_pushnumber(L, 0);
-	}
-	return 1;
+		return pCha->GetPlyMainCha()->GetPetNum();
+	return 0;
 }
 
-// 
-inline int lua_GetChaFirstTarget(lua_State *L)
+//
+inline CCharacter* GetChaFirstTarget(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha)
 	{
 		CCharacter *pTarget = pCha->m_pHate->GetCurTarget();
 		if(pTarget)
-		{
-			lua_pushlightuserdata(L, pTarget);
-			// LG("lua_ai", "[%s]\n", pTarget->GetName());
-			return 1;
-		}
+			return pTarget;
 	}
-	return 0;
+	return nullptr;
 }
 
-// 
-inline int lua_GetFirstAtker(lua_State *L)
+//
+inline CCharacter* GetFirstAtker(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha)
 	{
 		CCharacter *pFirst = NULL;
@@ -977,20 +582,17 @@ inline int lua_GetFirstAtker(lua_State *L)
 			}
 		}
 		if(pFirst)
-		{
-			lua_pushlightuserdata(L, pFirst);
-			return 1;
-		}
+			return pFirst;
 	}
-	return 0;
+	return nullptr;
 }
 
-// , 
-inline int lua_GetChaHarmByNo(lua_State *L)
+// ,
+// Dynamic return: first value is either lightuserdata or number 0
+inline int GetChaHarmByNo_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
+	if(!bValid)
     {
         PARAM_ERROR
         return 0;
@@ -999,14 +601,13 @@ inline int lua_GetChaHarmByNo(lua_State *L)
 	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha)
 	{
-		// LG("harm", ": [%s]\n", pCha->GetName());
 		int nNo = (int)(lua_tonumber(L, 2));
 	    SHarmRec *pHarm = pCha->m_pHate->GetHarmRec(nNo);
 		if(pHarm->btValid > 0)
 		{
 			if(pHarm->IsChaValid())
 			{
-				lua_pushlightuserdata(L, pHarm->pAtk);
+				luabridge::push(L, static_cast<CCharacter*>(pHarm->pAtk));
 			}
 			else
 			{
@@ -1021,12 +622,12 @@ inline int lua_GetChaHarmByNo(lua_State *L)
 	return 2;
 }
 
-// 
-inline int lua_GetChaHateByNo(lua_State *L)
+//
+// Dynamic return: first value is either lightuserdata or number 0
+inline int GetChaHateByNo_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
+	if(!bValid)
     {
         PARAM_ERROR
         return 0;
@@ -1035,14 +636,13 @@ inline int lua_GetChaHateByNo(lua_State *L)
 	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha)
 	{
-		// LG("harm", ": [%s]\n", pCha->GetName());
 		int nNo = (int)(lua_tonumber(L, 2));
 	    SHarmRec *pHarm = pCha->m_pHate->GetHarmRec(nNo);
 		if(pHarm->btValid > 0)
 		{
 			if(pHarm->IsChaValid())
 			{
-				lua_pushlightuserdata(L, pHarm->pAtk);
+				luabridge::push(L, static_cast<CCharacter*>(pHarm->pAtk));
 			}
 			else
 			{
@@ -1057,150 +657,81 @@ inline int lua_GetChaHateByNo(lua_State *L)
 	return 2;
 }
 
-// 
-inline int lua_AddHate(lua_State *L)
+//
+inline void AddHate(CCharacter* pTarget, CCharacter* pAtk, int sHate)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_islightuserdata(L, 2) && lua_isnumber(L, 3));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pTarget = (CCharacter*)lua_touserdata(L, 1);
-	CCharacter *pAtk    = (CCharacter*)lua_touserdata(L, 2);
-	short sHate         = (short)lua_tonumber(L, 3);
-	if(pTarget)
-	{
-		pTarget->m_pHate->AddHate(pAtk, sHate, pAtk->GetID());
-	} 
-	return 0;
+	if(pTarget && pAtk)
+		pTarget->m_pHate->AddHate(pAtk, (short)sHate, pAtk->GetID());
 }
 
 
 
-inline int lua_GetChaPos(lua_State *L)
+inline std::tuple<int, int> GetChaPos(CCharacter* pCha)
 {
-	// 
-	int nPNum = lua_gettop (L);
-    BOOL bValid = (nPNum==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-    {
-		int x = pCha->GetShape().centre.x;
-		int y = pCha->GetShape().centre.y;
-		lua_pushnumber(L, x);
-		lua_pushnumber(L, y);
-		return 2;	
-    }
+		return std::make_tuple(pCha->GetShape().centre.x, pCha->GetShape().centre.y);
+	return std::make_tuple(0, 0);
+}
+
+//
+inline int IsChaFighting(CCharacter* pCha)
+{
+	if(pCha && pCha->GetFightState()==enumFSTATE_ON)
+		return 1;
 	return 0;
 }
 
-// 
-inline int lua_IsChaFighting(lua_State *L)
+//
+inline int IsChaSleeping(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if(pCha && pCha->GetFightState()==enumFSTATE_ON)
-		lua_pushnumber(L, 1);
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;	
-}
-
-// 
-inline int lua_IsChaSleeping(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if(pCha && pCha->GetExistState() == enumEXISTS_SLEEPING)
-		lua_pushnumber(L, 1);
-	else
-		lua_pushnumber(L, 0);
-
-	return 1;	
+		return 1;
+	return 0;
 }
 
 
 
-
-
-// 
+//
 // 10
-inline int lua_ChaActEyeshot(lua_State *L)
+inline void ChaActEyeshot(CCharacter* pCha, int bActive)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	BOOL bActive = (int)lua_tonumber(L, 2);
 	if(pCha)
 		pCha->ActiveEyeshot((bool)bActive);
-
-	return 0;
 }
 
-// 
-inline int lua_GetChaByRange(lua_State *L)
+//
+// First arg can be nil (pSelf=nullptr), uses global map fallback + complex search logic
+inline int GetChaByRange_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
-    if(!bValid) 
+    if(!bValid)
     {
         PARAM_ERROR
         return 0;
     }
 
 	CCharacter *pSelf = (CCharacter*)lua_touserdata(L, 1);
-	
+
 	SubMap *pMap = NULL;
-	
-	// 
-	int x = (int)lua_tonumber(L, 2); // 
+
+	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
-	if(pSelf) // , 
+	if(pSelf)
 	{
 		x = pSelf->GetShape().centre.x;
 		y = pSelf->GetShape().centre.y;
-		pMap = pSelf->GetSubMap(); 
+		pMap = pSelf->GetSubMap();
 	}
-	else // 
+	else
 	{
 		CHECK_MAP
 		pMap = g_pScriptMap;
 	}
-	
-	int r = (int)lua_tonumber(L, 4);    // 
-	int flag = (int)lua_tonumber(L, 5); // , 0  1
-	
-	
+
+	int r = (int)lua_tonumber(L, 4);
+	int flag = (int)lua_tonumber(L, 5);
+
+
 	CCharacter *pCTarget = NULL;
 
 	unsigned long	ulMinDist2 = r * r, ulTempDist2;
@@ -1212,23 +743,22 @@ inline int lua_GetChaByRange(lua_State *L)
 	while (pCTempCha = pMap->GetNextCharacterInRange())
 	{
 		if(pCTempCha==pSelf) continue;
-		
-		if (flag==0) // 
+
+		if (flag==0)
 		{
 			if(!pCTempCha->IsPlayerCha()) continue;
-			if(pCTempCha->IsGMCha())      continue; // GM
-			if(!pCTempCha->IsLiveing())   continue; //    
-			if(!pCTempCha->GetActControl(enumACTCONTROL_BEUSE_SKILL)) continue; // 		
+			if(pCTempCha->IsGMCha())      continue;
+			if(!pCTempCha->IsLiveing())   continue;
+			if(!pCTempCha->GetActControl(enumACTCONTROL_BEUSE_SKILL)) continue;
 		}
-		
+
 		if (flag==1 && pCTempCha->IsPlayerCha()) continue;
 
-		// , pk
 		if(pSelf && pCTempCha->IsFriend(pSelf))
 		{
 			continue;
 		}
-		
+
 		lDistX = pCTempCha->GetShape().centre.x - x;
 		lDistY = pCTempCha->GetShape().centre.y - y;
 		ulTempDist2 = lDistX * lDistX + lDistY * lDistY;
@@ -1238,50 +768,48 @@ inline int lua_GetChaByRange(lua_State *L)
 			ulMinDist2 = ulTempDist2;
 		}
 	}
-	//...
 	if(pCTarget)
 	{
-		lua_pushlightuserdata(L, pCTarget);
+		luabridge::push(L, static_cast<CCharacter*>(pCTarget));
 		return 1;
 	}
 
 	return 0;
 }
 
-// 
-inline int lua_ClearHideChaByRange(lua_State *L)
+//
+// First arg can be nil (pSelf=nullptr), uses global map fallback
+inline int ClearHideChaByRange_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
-    if(!bValid) 
+    if(!bValid)
     {
         PARAM_ERROR
         return 0;
     }
 
 	CCharacter *pSelf = (CCharacter*)lua_touserdata(L, 1);
-	
+
 	SubMap *pMap = NULL;
-	
-	// 
-	int x = (int)lua_tonumber(L, 2); // 
+
+	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
-	if(pSelf) // , 
+	if(pSelf)
 	{
 		x = pSelf->GetShape().centre.x;
 		y = pSelf->GetShape().centre.y;
-		pMap = pSelf->GetSubMap(); 
+		pMap = pSelf->GetSubMap();
 	}
-	else // 
+	else
 	{
 		CHECK_MAP
 		pMap = g_pScriptMap;
 	}
-	
-	int r = (int)lua_tonumber(L, 4);    // 
-	int flag = (int)lua_tonumber(L, 5); // , 0  1
-	
-	
+
+	int r = (int)lua_tonumber(L, 4);
+	int flag = (int)lua_tonumber(L, 5);
+
+
 	CCharacter *pCTarget = NULL;
 
 	unsigned long	ulMinDist2 = r * r, ulTempDist2;
@@ -1293,16 +821,16 @@ inline int lua_ClearHideChaByRange(lua_State *L)
 	while (pCTempCha = pMap->GetNextCharacterInRange())
 	{
 		if(pCTempCha==pSelf) continue;
-		
-		if (flag==0) // 
+
+		if (flag==0)
 		{
 			if(!pCTempCha->IsPlayerCha()) continue;
-			if(pCTempCha->IsGMCha())      continue; // GM
-			if(!pCTempCha->IsLiveing())   continue; //    
+			if(pCTempCha->IsGMCha())      continue;
+			if(!pCTempCha->IsLiveing())   continue;
 		}
-		
+
 		if (flag==1 && pCTempCha->IsPlayerCha()) continue;
-		
+
 		lDistX = pCTempCha->GetShape().centre.x - x;
 		lDistY = pCTempCha->GetShape().centre.y - y;
 		ulTempDist2 = lDistX * lDistX + lDistY * lDistY;
@@ -1311,7 +839,6 @@ inline int lua_ClearHideChaByRange(lua_State *L)
 			pCTarget = pCTempCha;
 			if(pCTarget->m_CSkillState.HasState(SSTATE_HIDE))
 			{
-				//pCTarget->SystemNotice("!");
 				pCTarget->SystemNotice(RES_STRING(GM_LUA_GAMECTRL_H_00002));
 				pCTarget->Show();
 			}
@@ -1321,48 +848,47 @@ inline int lua_ClearHideChaByRange(lua_State *L)
 }
 
 
-// 
-inline int lua_GetChaSetByRange(lua_State *L)
+//
+// Variable number of returns (up to 12)
+inline int GetChaSetByRange_raw(lua_State *L)
 {
-	// 
     BOOL bValid = (lua_gettop (L)==5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
-    if(!bValid) 
+    if(!bValid)
     {
         PARAM_ERROR
         return 0;
     }
 
 	CCharacter *pSelf = (CCharacter*)lua_touserdata(L, 1);
-	
+
 	SubMap *pMap = NULL;
-	
-	// 
-	int x = (int)lua_tonumber(L, 2); // 
+
+	int x = (int)lua_tonumber(L, 2);
 	int y = (int)lua_tonumber(L, 3);
-	if(pSelf) // , 
+	if(pSelf)
 	{
 		x = pSelf->GetShape().centre.x;
 		y = pSelf->GetShape().centre.y;
-		pMap = pSelf->GetSubMap(); 
+		pMap = pSelf->GetSubMap();
 	}
-	else // 
+	else
 	{
 		CHECK_MAP
 		pMap = g_pScriptMap;
 	}
-	
-	int r = (int)lua_tonumber(L, 4);            // 
-	int nMonsterType = (int)lua_tonumber(L, 5); // 
-	
+
+	int r = (int)lua_tonumber(L, 4);
+	int nMonsterType = (int)lua_tonumber(L, 5);
+
 	if (!pMap)
 		return 0;
-	
+
 	CCharacter *pCTarget = NULL;
 
 	unsigned long	ulMinDist2 = r * r, ulTempDist2;
 	long	lDistX, lDistY;
 	CCharacter  *pCTempCha = NULL;
-	CCharacter	*ChaList[12]; // 12, idle, 412
+	CCharacter	*ChaList[12];
 	Long	lRangeB[] = {x, y, 0};
 	Long	lRangeE[] = {enumRANGE_TYPE_CIRCLE, r};
 	pMap->BeginSearchInRange(lRangeB, lRangeE);
@@ -1372,8 +898,8 @@ inline int lua_GetChaSetByRange(lua_State *L)
 		if(pCTempCha==pSelf) continue;
 		if (pCTempCha->IsPlayerCha()) continue;
 
-		if(nMonsterType!=0 && nMonsterType!=pCTempCha->GetCat()) continue; // 
-		
+		if(nMonsterType!=0 && nMonsterType!=pCTempCha->GetCat()) continue;
+
 		lDistX = pCTempCha->GetShape().centre.x - x;
 		lDistY = pCTempCha->GetShape().centre.y - y;
 		ulTempDist2 = lDistX * lDistX + lDistY * lDistY;
@@ -1384,116 +910,52 @@ inline int lua_GetChaSetByRange(lua_State *L)
 			if(n>=12) break;
 		}
 	}
-	
+
 	for(int i = 0; i < n; i++)
 	{
-		lua_pushlightuserdata(L, ChaList[i]);
+		luabridge::push(L, static_cast<CCharacter*>(ChaList[i]));
 	}
 	return n;
 }
 
 
-// 
-inline int lua_FindItem(lua_State *L)
+//
+inline int FindItem(int x, int y, int r)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_isnumber(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-        return 0;
-	}
-
-	int x = (int)lua_tonumber(L, 1);
-	int y = (int)lua_tonumber(L, 2);
-	int r = (int)lua_tonumber(L, 3);
-	Long lRangeB[] = { x, y, 0 };				  // 
-	Long lRangeE[] = {enumRANGE_TYPE_CIRCLE, r};  // 
-	SubMap *pMap = g_pScriptMap;
-	//pMap->BeginSearchInRange(lRangeB, lRangeE);
-	//CItem* pCItem;
-	//pCItem = pMap->GetNextItemInRange();
-	//if(pCItem)
-	//{
-	//	lua_pushlightuserdata(L, (void*)pCItem);
-	//	return 1;
-	//}
+	// Commented out in original - always returns 0
 	return 0;
 }
 
-// 
-inline int lua_PickItem(lua_State *L)
+//
+inline void PickItem(CCharacter* pCha, CItem* pItem)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_islightuserdata(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha  = (CCharacter*)lua_touserdata(L, 1);
-	CItem      *pItem = (CItem*)lua_touserdata(L, 2);
-
-	pCha->Cmd_PickupItem(pItem->GetID(), pItem->GetHandle());
-	return 0;
+	if(pCha && pItem)
+		pCha->Cmd_PickupItem(pItem->GetID(), pItem->GetHandle());
 }
 
-// 
-inline int lua_GetItemPos(lua_State *L)
+//
+inline std::tuple<int, int> GetItemPos(CItem* pItem)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CItem  *pItem = (CItem*)lua_touserdata(L, 1);
+	if(!pItem)
+		return std::make_tuple(0, 0);
 	const Point &p = pItem->GetPos();
-	lua_pushnumber(L, p.x);
-	lua_pushnumber(L, p.y);
-	return 2;
+	return std::make_tuple(p.x, p.y);
 }
 
-// 
-inline int lua_IsPosValid(lua_State *L)
+//
+inline int IsPosValid(CCharacter* pCha, int x, int y)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	bool bCanMove = false;
 	if (pCha)
-		bCanMove = pCha->GetSubMap()->IsMoveAble(pCha, (int)lua_tonumber(L, 2), (int)lua_tonumber(L, 3));
-	if(bCanMove)
-		lua_pushnumber(L, 1);	
-	else
-		lua_pushnumber(L, 0);	
-
-	return 1;
+		bCanMove = pCha->GetSubMap()->IsMoveAble(pCha, x, y);
+	return bCanMove ? 1 : 0;
 }
 
 
-// 
+//
 #define PI 3.1415926
-inline int lua_GetChaFacePos(lua_State *L)
+inline std::tuple<int, int> GetChaFacePos(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
     {
 		int x = pCha->GetShape().centre.x;
@@ -1502,117 +964,55 @@ inline int lua_GetChaFacePos(lua_State *L)
 		float fAngle = (float) sAngle / 53.3f;
 		int xOff = (int)(600.0 * cos(PI / 2 - fAngle));
 		int yOff = (int)(600.0 * sin( PI / 2 - fAngle));
-		lua_pushnumber(L, x + xOff);
-		lua_pushnumber(L, y - yOff);
-		return 2;
+		return std::make_tuple(x + xOff, y - yOff);
     }
-	return 0;
+	return std::make_tuple(0, 0);
 }
 
-// 
-inline int lua_SetChaFaceAngle(lua_State *L)
+//
+inline void SetChaFaceAngle(CCharacter* pCha, int angle)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
+	if (pCha)
+		pCha->SetAngle((short)angle);
+}
 
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
+//
+inline void SetChaPatrolPos(CCharacter* pCha, int x, int y)
+{
 	if (pCha)
     {
-		pCha->SetAngle((short)lua_tonumber(L, 2));
+		pCha->m_nPatrolX = x;
+		pCha->m_nPatrolY = y;
 	}
-	return 0;
 }
 
-// 
-inline int lua_SetChaPatrolPos(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
 
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
+//
+inline void SetChaEmotion(CCharacter* pCha, int emotion)
+{
 	if (pCha)
-    {
-		pCha->m_nPatrolX = (int)lua_tonumber(L,2);
-		pCha->m_nPatrolY = (int)lua_tonumber(L,3);
-	}
-	return 0;
+		g_EventHandler.Event_ChaEmotion(pCha, emotion);
 }
 
-
-//  
-inline int lua_SetChaEmotion(lua_State *L)
+inline void SetChaLifeTime(CCharacter* pCha, int time)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-    {
-		g_EventHandler.Event_ChaEmotion(pCha, (int)lua_tonumber(L, 2));
-	}
-	return 0;
+		pCha->ResetLifeTime(time);
 }
 
-inline int lua_SetChaLifeTime(lua_State *L)
+//
+inline void HarmLog(int log)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-    {
-		pCha->ResetLifeTime((int)lua_tonumber(L, 2));
-	}
-	return 0;
-}
-
-// 
-inline  int lua_HarmLog(lua_State *L)
-{
-	// 
-    int log = (int)lua_tonumber(L, 1);
-	if(log) 
-	{
+	if(log)
 		g_bLogHarmRec = TRUE;
-	}
 	g_bLogHarmRec = FALSE;
-	return 0;
 }
 
-// 
+//
 extern const char* GetResPath(const char*);
-inline int lua_GetResPath(lua_State *L)
+inline std::string GetResPath_typed(const std::string& path)
 {
-	// 
-    BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
-	if(!bValid) 
-    {
-		PARAM_ERROR;
-		return 0;
-	}
-	char *pszPath = (char*)lua_tostring(L, 1);
-	lua_pushstring(L, GetResPath(pszPath));
-	return 1;
+	return std::string(GetResPath(path.c_str()));
 }
 
 
@@ -1623,111 +1023,75 @@ inline void lua_FrameMove()
  	luaL_dostring(g_pLuaState, "RunTimer()");
 }
 
-// 
-inline int lua_view(lua_State *L)
+//
+inline void view(int x, int y)
 {
-	// 
-    BOOL bValid = (lua_gettop(L)==2 && lua_isnumber(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-	
 	extern long g_lViewAtMapX;
 	extern long g_lViewAtMapY;
-	g_lViewAtMapX = (long)lua_tonumber(L, 1);
-	g_lViewAtMapY = (long)lua_tonumber(L, 2);
-	return 0;
+	g_lViewAtMapX = (long)x;
+	g_lViewAtMapY = (long)y;
 }
 
 inline void lua_AIRun(CCharacter *pCha, DWORD dwResumeExecTime)
 {
-	
+
 	static int g_test[20];
 	lua_getglobal(g_pLuaState, "ai_timer");
-	if (!lua_isfunction(g_pLuaState, -1)) // 
+	if (!lua_isfunction(g_pLuaState, -1))
 	{
 		lua_pop(g_pLuaState, 1);
 		return;
 	}
-	lua_pushlightuserdata(g_pLuaState, (void *)pCha);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCha));
 	lua_pushnumber(g_pLuaState, (DWORD) defCHA_SCRIPT_TIMER / 1000);
 	lua_pushnumber(g_pLuaState, (DWORD) dwResumeExecTime);
-	int r = lua_pcall(g_pLuaState, 3, 0, 0); 
-	if(r!=0) // 
+	int r = lua_pcall(g_pLuaState, 3, 0, 0);
+	if(r!=0)
 	{
-		lua_callalert(g_pLuaState, r); 	
+		lua_callalert(g_pLuaState, r);
 	}
 	lua_settop(g_pLuaState, 0);
-	
-	/*
-	static map<CCharacter*, int> g_ChaItem;
-
-	if(g_ChaItem[pCha]==0)
-	{
-		pCha->ItemCount(pCha);
-		g_ChaItem[pCha] = 1;
-	}*/
-
-	
-	// clua, 
-	/*
-	ToLogService("common", "begin:");
-	for(int i = 0; i < 3; i++)
-	{
-		// if(lua_isnumber(g_pLuaState, - 1 - i))
-		{
-			ToLogService("common", "return  = {}", (int)(lua_tonumber(g_pLuaState, - 1 - i))); 
-		}
-	}
-	g_test[-1] = 0;
-	lua_pop(g_pLuaState, 3);
-	ToLogService("common", "end\n");
-*/
 }
 
 inline void lua_NPCRun(CCharacter *pCha)
 {
-	
+
 	static int g_test[20];
 	lua_getglobal(g_pLuaState, "npc_timer");
-	if (!lua_isfunction(g_pLuaState, -1)) // 
+	if (!lua_isfunction(g_pLuaState, -1))
 	{
 		lua_pop(g_pLuaState, 1);
 		return;
 	}
-	lua_pushlightuserdata(g_pLuaState, (void *)pCha);
-	int r = lua_pcall(g_pLuaState, 1, 0, 0); 
-	if(r!=0) // 
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCha));
+	int r = lua_pcall(g_pLuaState, 1, 0, 0);
+	if(r!=0)
 	{
-		lua_callalert(g_pLuaState, r); 	
+		lua_callalert(g_pLuaState, r);
 	}
 	lua_settop(g_pLuaState, 0);
 }
 
-inline int lua_GetTickCount(lua_State *L)
+inline int GetTickCount_typed()
 {
-    lua_pushnumber(L, GetTickCount());
-    return 1;
+    return (int)GetTickCount();
 }
 
-inline int lua_Msg(lua_State *L)
+inline void Msg(const std::string& content)
 {
-    const char *pszContent = lua_tostring(L, 1);
-    MessageBox(NULL, pszContent, "msg", 0);
-    return 0;
+    MessageBox(NULL, content.c_str(), "msg", 0);
 }
 
 
-inline int lua_Exit(lua_State *L)
+inline int Exit_typed()
 {
 	extern BOOL g_bGameEnd;
 	g_bGameEnd = TRUE;
 	return 1;
 }
 
-inline int lua_PRINT( lua_State* L )
+// Varargs: variable number of params with dynamic type checking
+inline int PRINT_raw( lua_State* L )
 {
 	if( g_Config.m_bLogMission == FALSE )
 	{
@@ -1735,7 +1099,7 @@ inline int lua_PRINT( lua_State* L )
 	}
 
     int count = lua_gettop(L);
-    if( count < 1 ) 
+    if( count < 1 )
     {
 		return 0;
     }
@@ -1747,7 +1111,7 @@ inline int lua_PRINT( lua_State* L )
 		{
 		case LUA_TNIL:
 			{
-				str << "nil"; 
+				str << "nil";
 			}
 			break;
 		case LUA_TBOOLEAN:
@@ -1765,9 +1129,9 @@ inline int lua_PRINT( lua_State* L )
 			break;
 		case LUA_TNUMBER:
 		case LUA_TSTRING:
-			{			
-				const char* pszData = lua_tostring( L, i );		
-				str << ( pszData ) ? pszData : "nil"; 
+			{
+				const char* pszData = lua_tostring( L, i );
+				str << ( pszData ) ? pszData : "nil";
 			}
 			break;
 		case LUA_TTABLE:
@@ -1783,9 +1147,9 @@ inline int lua_PRINT( lua_State* L )
 				const void* p = lua_topointer( L, i );
 				( p ) ? str << p : str << "nil";
 			}
-			break;		
+			break;
 		case LUA_TTHREAD:
-			{			
+			{
 				str << "thread:";
 				str << lua_tothread( L, i );
 			}
@@ -1793,7 +1157,7 @@ inline int lua_PRINT( lua_State* L )
 		}
 		str << "  ";
     }
-    
+
     str << "\r\n";
     str << '\0';
 
@@ -1802,10 +1166,11 @@ inline int lua_PRINT( lua_State* L )
     return 0;
 }
 
-inline int lua_LG(lua_State *L)
+// Varargs: variable number of params with dynamic type checking
+inline int LG_raw(lua_State *L)
 {
 	int count = lua_gettop(L);
-	if( count<=1 ) 
+	if( count<=1 )
 	{
 		PARAM_ERROR;
 		return 0;
@@ -1842,7 +1207,7 @@ inline int lua_LG(lua_State *L)
 		{
 		case LUA_TNIL:
 			{
-				str << "nil"; 
+				str << "nil";
 			}
 			break;
 		case LUA_TBOOLEAN:
@@ -1860,9 +1225,9 @@ inline int lua_LG(lua_State *L)
 			break;
 		case LUA_TNUMBER:
 		case LUA_TSTRING:
-			{			
-				const char* pszData = lua_tostring( L, i );		
-				str << ( pszData ) ? pszData : "nil"; 
+			{
+				const char* pszData = lua_tostring( L, i );
+				str << ( pszData ) ? pszData : "nil";
 			}
 			break;
 		case LUA_TTABLE:
@@ -1878,9 +1243,9 @@ inline int lua_LG(lua_State *L)
 				const void* p = lua_topointer( L, i );
 				( p ) ? str << p : str << "nil";
 			}
-			break;		
+			break;
 		case LUA_TTHREAD:
-			{			
+			{
 				str << "thread:";
 				str << lua_tothread( L, i );
 			}
@@ -1895,15 +1260,16 @@ inline int lua_LG(lua_State *L)
 	return 0;
 }
 
-inline int lua_EXLG(lua_State *L)
+// Varargs: format string + dynamic params
+inline int EXLG_raw(lua_State *L)
 {
 	int nNumParam = lua_gettop(L);
-	if( nNumParam <=1 ) 
+	if( nNumParam <=1 )
 	{
 		PARAM_ERROR;
 		return 0;
 	}
-	
+
 	const char* pszFile = lua_tostring(L, 1);
 	const char* pszTemp = lua_tostring(L, 2);
 	if( !pszFile || !pszTemp )
@@ -1936,10 +1302,10 @@ inline int lua_EXLG(lua_State *L)
 		case 'd':
 		case 's':
 			{
-				const char* pszData = lua_tostring( L, i );		
-				( pszData ) ? str << pszData : str << "nil"; 
+				const char* pszData = lua_tostring( L, i );
+				( pszData ) ? str << pszData : str << "nil";
 			}
-			break;		
+			break;
 		case 'b':
 			{
 				( lua_toboolean( L, i ) == 0 ) ? str << "FALSE" : str << "TRUE";
@@ -1968,9 +1334,8 @@ inline int lua_EXLG(lua_State *L)
 			break;
 		default:
 			{
-				//str << "[(" << *(pszPos + 1) << ")]";
 				str << "[noneffective signal(" << *(pszPos + 1) << ")]";
-				
+
 			}
 			break;
 		}
@@ -1979,7 +1344,7 @@ inline int lua_EXLG(lua_State *L)
 
 	str << "\r\n";
 	str << '\0';
-	
+
 	ToLogService("lua", "{}", str.str());
 	str.freeze(false);
 	return 0;
@@ -1987,40 +1352,17 @@ inline int lua_EXLG(lua_State *L)
 
 
 
-inline int lua_GetRoleID(lua_State *L)
+inline int GetRoleID(CCharacter* pCha)
 {
-	BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha)
-	{
-		E_LUANULL
-		return 0;
-	}
-
-    long id = pCha->GetPlayer()->GetID();
-	lua_pushnumber(L, id);
-
-	return 1;
+	if(!pCha) return 0;
+	CPlayer* pPlayer = pCha->GetPlayer();
+	if(!pPlayer) return 0;
+    return (int)pPlayer->GetID();
 }
 
-inline	int	lua_UnlockItem(	lua_State*	L)
+inline void UnlockItem(const std::string& chaName, int iItemDBID)
 {
-	BOOL bValid = (lua_gettop(L)==2 && lua_isstring(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-	{
-		PARAM_ERROR
-		return 0;
-	}
-	char	*pszChaName =	(char*)lua_tostring(	L,	1	);
-	int		iItemDBID	=	(long)lua_tonumber(		L,	2	);
-
-	CPlayer*	pPlayer	=	g_pGameApp->GetPlayerByMainChaName(	pszChaName	);
+	CPlayer*	pPlayer	=	g_pGameApp->GetPlayerByMainChaName(chaName.c_str());
 	if(	pPlayer	)
 	{
 		int		iCapacity	=	pPlayer->GetMainCha()->m_CKitbag.GetCapacity();
@@ -2041,24 +1383,13 @@ inline	int	lua_UnlockItem(	lua_State*	L)
 			};
 		};
 	};
-	return	0;
 }
 
-inline int lua_SetMonsterAttr(lua_State* L)
+inline void SetMonsterAttr(CCharacter* pCha, int AttrType, int AttrVal)
 {
-	BOOL bValid = (lua_gettop(L) == 3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
-	if (!bValid)
-	{
-		PARAM_ERROR
-		return 0;
-	}
-
-	CCharacter* pCha = static_cast<CCharacter*> (lua_touserdata(L, 1));
-	int AttrType = lua_tonumber(L, 2);
-	int AttrVal = lua_tonumber(L, 3);
+	if (!pCha) return;
 	int bRet = pCha->setAttr(AttrType, AttrVal);
 	if (bRet) {
-		//g_CParser.DoString("ALLExAttrSet", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END);
 		pCha->SynAttr(enumATTRSYN_TASK);
 	}
 }
@@ -2069,32 +1400,22 @@ inline int lua_SetMonsterAttr(lua_State* L)
 void RegisterLuaAI(lua_State *L);
 void ReloadAISdk();
 
-#define CHA_CHA     0 //  
+#define CHA_CHA     0 //
 #define CHA_SYS     1 //     (, )
 #define SYS_CHA     2 //  1  (, )
 #define CHA_BUY     3 //  2  (NPC)
 #define CHA_SELL    4 //  NPC    ()
 #define CHA_MIS     5 //  3  ()
-#define MIS_CHA     6 //     
+#define MIS_CHA     6 //
 #define SYS_BOAT    7 //   ()
 #define BOAT_SYS    8 //   ()
-#define CHA_ENTER   9 //  
-#define CHA_OUT    10 //  
-#define CHA_VENDOR 11 //   
-#define CHA_EXPEND 12 //  
-#define CHA_DELETE 13 //  
-#define CHA_BANK   14 //  
-#define CHA_EQUIP  15 //  
+#define CHA_ENTER   9 //
+#define CHA_OUT    10 //
+#define CHA_VENDOR 11 //
+#define CHA_EXPEND 12 //
+#define CHA_DELETE 13 //
+#define CHA_BANK   14 //
+#define CHA_EQUIP  15 //
 
 // Log
 void TL(int nType, const char *pszCha1, const char *pszCha2, const char *pszTrade);
-
-
-
-
-
-
-
-
-
-

@@ -2,7 +2,6 @@
 #include "EventHandler.h"
 #include "Character.h"
 #include "Player.h"
-#include "Parser.h"
 #include "lua_gamectrl.h"
 
 
@@ -39,10 +38,10 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 			return;
 		}
 
-		lua_pushlightuserdata(g_pLuaState, (void *)pDead);
-		lua_pushlightuserdata(g_pLuaState, (void *)pAtk);
-		int r = lua_pcall(g_pLuaState, 2, 0, 0); 
-		if(r!=0) // 
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(pDead));
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(pAtk));
+		int r = lua_pcall(g_pLuaState, 2, 0, 0);
+		if(r!=0) //
 		{
 			//LG("lua_err", "GetExp_New, ()[%s], [%s]!\n", pAtk->GetName(), pDead->GetName());
 			ToLogService("lua", LogLevel::Error, "GetExp_New transact error, attacker(bugbear)[{}], people was bring down[{}]!", pAtk->GetName(), pDead->GetName());
@@ -134,9 +133,9 @@ void CEventHandler::Event_ChaDie(CCharacter *pDead, CCharacter *pAtk)
 	}
 
 	MPTimer tLua; tLua.Begin();
-	lua_pushlightuserdata(g_pLuaState, (void *)pDead);
-	lua_pushlightuserdata(g_pLuaState, (void *)pAtk);
-	int r = lua_pcall(g_pLuaState, 2, 0, 0); 
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pDead));
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pAtk));
+	int r = lua_pcall(g_pLuaState, 2, 0, 0);
 	if(r!=0) // 
 	{
 		//LG("lua_err", "GetExp_New, [%s], [%s]!\n", pAtk->GetName(), pDead->GetName());

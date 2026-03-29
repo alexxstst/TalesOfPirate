@@ -1,29 +1,13 @@
-﻿#include "netprotocol.h"
+#include "netprotocol.h"
 #include "EffectObj.h"
 
 //-----------------------------
 // , ID
 //-----------------------------
-inline int sceAddObj(lua_State * L)
+inline CSceneNode* sceAddObj(CGameScene* pScene, int nType, int nScriptID)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CGameScene *pScene = (CGameScene*)lua_touserdata(L, 1);
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
+    if (!pScene) return nullptr;
 
-    int nType     = (int)lua_tonumber(L, 2);
-    int nScriptID = (int)lua_tonumber(L, 3);
-    
     CSceneNode *pNode = NULL;
     switch(nType)
     {
@@ -39,7 +23,7 @@ inline int sceAddObj(lua_State * L)
             info.SPos.x   = 0;
             info.SPos.y   = 0;
             info.lWorldID = 0;
-            info.lID      = nScriptID;  
+            info.lID      = nScriptID;
             pNode = NetCreateItem(info);
             break;
         }
@@ -49,153 +33,63 @@ inline int sceAddObj(lua_State * L)
             break;
         }
     }
-    lua_pushlightuserdata (L, pNode);
-    return 1;
+    return pNode;
 }
 
 //-------------------
 // ID
 //-------------------
-inline int sceGetObj(lua_State *L)
+inline CSceneNode* sceGetObj(CGameScene* pScene, int nType, int nArrayID)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L,2) && lua_isnumber(L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CGameScene *pScene = (CGameScene*)lua_touserdata(L, 1);
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
-    
-    int nType    = (int)lua_tonumber(L, 2);
-    int nArrayID = (int)lua_tonumber(L, 3);
-    
+    if (!pScene) return nullptr;
+
     CSceneNode *pNode = NULL;
     switch(nType)
     {
         case 0: { pNode = pScene->GetCha(nArrayID); break;       }
         case 1: { pNode = pScene->GetSceneItem(nArrayID); break; }
     }
-    lua_pushlightuserdata(L, pNode);
-    return 1;
+    return pNode;
 }
 
 //---------
-// 
+//
 //---------
-inline int sceRemoveObj(lua_State *L)
+inline void sceRemoveObj(CSceneNode* pNode)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
+    if (!pNode) return;
     pNode->SetValid(FALSE);
-    return 0;
 }
 
 
 //-----------------
-// 
+//
 //-----------------
-inline int sceSetMainCha(lua_State *L)
+inline void sceSetMainCha(CGameScene* pScene, CCharacter* pCha)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_islightuserdata(L, 2)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CGameScene *pScene = (CGameScene*)lua_touserdata(L, 1);
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-        
-    }
-    
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 2);
-    if(!pCha) return 0;
-
+    if (!pScene) return;
+    if (!pCha) return;
     pScene->SetMainCha(pCha->getID());
-    return 0;
 }
 
 //-----------------
-// 
+//
 //-----------------
-inline int sceGetMainCha(lua_State *L)
+inline CCharacter* sceGetMainCha(CGameScene* pScene)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CGameScene *pScene = (CGameScene*)lua_touserdata(L, 1);
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
-    CCharacter *pCha = pScene->GetMainCha();
-    if(!pCha) return 0;
-
-    lua_pushlightuserdata(L, pCha);
-    return 1;
+    if (!pScene) return nullptr;
+    return pScene->GetMainCha();
 }
 
-inline int sceGetHoverCha(lua_State *L)
+inline CCharacter* sceGetHoverCha(CGameScene* pScene)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CGameScene *pScene = (CGameScene*)lua_touserdata(L, 1);
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
-    CCharacter *pCha = pScene->GetSelectCha();
-    if(!pCha) return 0;
-
-    lua_pushlightuserdata(L, pCha);
-    return 1;
+    if (!pScene) return nullptr;
+    return pScene->GetSelectCha();
 }
 
-inline int sceEnableDefaultMouse(lua_State *L)
+inline void sceEnableDefaultMouse(CGameScene* pScene, int bEnable)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CGameScene *pScene = (CGameScene*)lua_touserdata(L, 1);
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
-    BOOL bEnable = (BOOL)lua_tonumber(L, 2);
+    if (!pScene) return;
     if(bEnable)
     {
         pScene->GetUseLevel().SetTrue(LEVEL_MOUSE_RUN);
@@ -204,6 +98,4 @@ inline int sceEnableDefaultMouse(lua_State *L)
     {
         pScene->GetUseLevel().SetFalse(LEVEL_MOUSE_RUN);
     }
-    return 0;
 }
-

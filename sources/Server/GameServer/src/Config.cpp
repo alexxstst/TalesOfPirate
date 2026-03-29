@@ -47,11 +47,6 @@ void CGameConfig::SetDefault()
 	strcpy(m_szResDir, "");
 	strcpy(m_szLogDir, "log\\");
 
-	strcpy(m_szInfoIP, "");
-	m_nInfoPort = 0;
-	strcpy(m_szInfoPwd, "");
-	m_nSection = 0;
-
 	m_bLogAI		= FALSE;	// AIlog
 	m_bLogCha		= FALSE;	// log
 	m_bLogCal		= FALSE;	// log
@@ -131,18 +126,6 @@ bool CGameConfig::Load(char *pszFileName)
                 m_nGatePort[m_nGateCnt] = Str2Int(strList[1]);
 				if (m_nGateCnt < MAX_GATE)
 					m_nGateCnt++;
-            }
-        }
-        else if(strKey=="info") // InfoServer IPport
-        {
-            string strList[4];
-            int nCnt = Util_ResolveTextLine(strValue.c_str(), strList, 4, ',');
-            if(nCnt==4)
-            {
-                strcpy(m_szInfoIP, strList[0].c_str());
-                m_nInfoPort = Str2Int(strList[1]);
-				strcpy(m_szInfoPwd, strList[2].c_str());
-				m_nSection = Str2Int(strList[3].c_str());
             }
         }
 		else if(strKey == "persist_state")

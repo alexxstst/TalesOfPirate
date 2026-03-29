@@ -1,6 +1,2 @@
-﻿
 
-inline int Connect(lua_State *L)
-{
-    return 1;
-}
+// lua_network.h —

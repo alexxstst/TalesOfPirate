@@ -10,7 +10,6 @@
 #include "GameApp.h"
 #include "GameAppNet.h"
 #include "SubMap.h"
-#include "Parser.h"
 #include "LevelRecord.h"
 #include "SailLvRecord.h"
 #include "LifeLvRecord.h"
@@ -22,6 +21,7 @@
 #include "SkillState.h"
 #include "HarmRec.h"
 #include "lua_gamectrl.h"
+#include "LuaAPI.h"
 #include "CommandMessages.h"
 
 using namespace std;
@@ -341,9 +341,10 @@ void CFightAble::SkillTarEffect(SFireUnit *pSFireSrc)
 	Long	lOldHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 	Long	lNowHP;
 	Long	lSrcOldHP = (long)pSrcCha->m_CChaAttr.GetAttr(ATTR_HP);
-	// 
+	//
 	for (int i = 0; i < pSFireSrc->sExecTime; i++)
-		g_CParser.DoString(pSFireSrc->pCSkillRecord->szEffect, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pSrcCha, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSrcCha->m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
+		//g_CParser.DoString(pSFireSrc->pCSkillRecord->szEffect, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pSrcCha, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSrcCha->m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
+		g_luaAPI.Call(pSFireSrc->pCSkillRecord->szEffect, pSrcCha, this->IsCharacter(), (int)pSrcCha->m_SFightInit.pSSkillGrid->chLv);
 	lNowHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 	BeUseSkill(lOldHP, lNowHP, pSrcCha, pSFireSrc->pCSkillRecord->chHelpful);
 
@@ -491,7 +492,8 @@ void CFightAble::SetDie(CCharacter *pCSkillSrcCha)
 
 	if (pCDieCha->IsPlayerOwnCha() && pCSkillSrcCha && pCSkillSrcCha->IsPlayerOwnCha())
 	{
-		g_CParser.DoString("after_player_kill_player", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCSkillSrcCha, pCDieCha, DOSTRING_PARAM_END);
+		//g_CParser.DoString("after_player_kill_player", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCSkillSrcCha, pCDieCha, DOSTRING_PARAM_END);
+		g_luaAPI.Call("after_player_kill_player", pCSkillSrcCha, pCDieCha);
 	}
 }
 
@@ -1121,9 +1123,10 @@ bool CFightAble::SkillExpend(Short sExecTime)
 		}
 	}
 
-	// 
+	//
 	if (strcmp(m_SFightInit.pCSkillRecord->szUse, "0"))
-		g_CParser.DoString(m_SFightInit.pCSkillRecord->szUse, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
+		//g_CParser.DoString(m_SFightInit.pCSkillRecord->szUse, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
+		g_luaAPI.Call(m_SFightInit.pCSkillRecord->szUse, this->IsCharacter(), (int)m_SFightInit.pSSkillGrid->chLv);
 	if (m_SFightProc.sState == enumFSTATE_NO_EXPEND)
 	{
 		NotiSkillSrcToEyeshot(sExecTime);
@@ -1580,10 +1583,12 @@ inline bool CFightAble::IsTeammate(CFightAble *pCTar)
 	if (pCTar)
 		pCCha2 = pCTar->IsCharacter();
 
-	if (g_CParser.DoString("is_teammate", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha1, pCCha2, DOSTRING_PARAM_END))
-		return g_CParser.GetReturnNumber(0) != 0 ? true : false;
-	else
-		return false;
+	//if (g_CParser.DoString("is_teammate", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha1, pCCha2, DOSTRING_PARAM_END))
+	//	return g_CParser.GetReturnNumber(0) != 0 ? true : false;
+	//else
+	//	return false;
+	auto val = g_luaAPI.CallR<int>("is_teammate", pCCha1, pCCha2);
+	return val.value_or(0) != 0;
 }
 
 inline bool CFightAble::IsFriend(CFightAble *pCTar)
@@ -1597,10 +1602,12 @@ inline bool CFightAble::IsFriend(CFightAble *pCTar)
 	if (pCTar)
 		pCCha2 = pCTar->IsCharacter();
 
-	if (g_CParser.DoString("is_friend", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha1, pCCha2, DOSTRING_PARAM_END))
-		return g_CParser.GetReturnNumber(0) != 0 ? true : false;
-	else
-		return false;
+	//if (g_CParser.DoString("is_friend", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha1, pCCha2, DOSTRING_PARAM_END))
+	//	return g_CParser.GetReturnNumber(0) != 0 ? true : false;
+	//else
+	//	return false;
+	auto val = g_luaAPI.CallR<int>("is_friend", pCCha1, pCCha2);
+	return val.value_or(0) != 0;
 }
 
 //=============================================================================
@@ -1634,7 +1641,8 @@ void CFightAble::CountLevel()
 			{
 				setAttr(ATTR_NLEXP, pNLvRec->ulExp);
 			}
-			g_CParser.DoString("Shengji_Shuxingchengzhang", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // 
+			//g_CParser.DoString("Shengji_Shuxingchengzhang", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); //
+			g_luaAPI.Call("Shengji_Shuxingchengzhang", this->IsCharacter());
 			OnLevelUp( (USHORT)lCurLevel );
 		}
 		else
@@ -1671,7 +1679,8 @@ void CFightAble::CountSailLevel()
 			{
 				setAttr(ATTR_NLV_SAILEXP, pNLvRec->ulExp);
 			}
-			g_CParser.DoString("Saillv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // 
+			//g_CParser.DoString("Saillv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); //
+			g_luaAPI.Call("Saillv_Up", this->IsCharacter());
 			OnSailLvUp( (USHORT)lCurLevel );
 		}
 		else
@@ -1708,7 +1717,8 @@ void CFightAble::CountLifeLevel()
 			{
 				setAttr(ATTR_NLV_LIFEEXP, pNLvRec->ulExp);
 			}
-			g_CParser.DoString("Lifelv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); // 
+			//g_CParser.DoString("Lifelv_Up", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), DOSTRING_PARAM_END); //
+			g_luaAPI.Call("Lifelv_Up", this->IsCharacter());
 			OnLifeLvUp( (USHORT)lCurLevel );
 		}
 		else
@@ -1798,8 +1808,8 @@ void CFightAble::SpawnResource(CCharacter* pCAtk, dbc::Long lSkillLv)
 		return;
 	}
 
-	lua_pushlightuserdata( g_pLuaState, pCAtk);
-	lua_pushlightuserdata( g_pLuaState, this->IsCharacter() );
+	luabridge::push( g_pLuaState, static_cast<CCharacter*>(pCAtk) );
+	luabridge::push( g_pLuaState, this->IsCharacter() );
 	lua_pushnumber( g_pLuaState, lSkillLv );
 	lua_pushnumber( g_pLuaState, i ); // 
 	for( int n = 0; n < i; n++ )
@@ -1910,8 +1920,8 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 		lua_pop(g_pLuaState, 1);
 		return;
 	}
-	lua_pushlightuserdata(g_pLuaState, pCItemHCha);
-	lua_pushlightuserdata(g_pLuaState, pThis);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCItemHCha));
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pThis));
 	lItemNum = 0;
 	for (Long i = 0; i < defCHA_INIT_ITEM_NUM; i++)
 	{
@@ -1976,8 +1986,8 @@ void CFightAble::ItemCount(CCharacter* pAtk)
 		lua_pop(g_pLuaState, 1);
 		return;
 	}
-	lua_pushlightuserdata(g_pLuaState, pCItemHCha);
-	lua_pushlightuserdata(g_pLuaState, pThis);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCItemHCha));
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(pThis));
 	lItemNum = 0;
 	for (Long i = 0; i < defCHA_INIT_ITEM_NUM; i++)
 	{
@@ -2057,19 +2067,25 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 		goto ItemInstanceEnd;
 	{
 		int	nAttrPos = 0;
-		int nRetNum = 15;
-		if (!g_CParser.DoString("Creat_Item", enumSCRIPT_RETURN_NUMBER, nRetNum, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pGridContent, enumSCRIPT_PARAM_NUMBER, 3, pCItemRec->sType, pCItemRec->sNeedLv, chType, DOSTRING_PARAM_END))
+		//int nRetNum = 15;
+		//if (!g_CParser.DoString("Creat_Item", enumSCRIPT_RETURN_NUMBER, nRetNum, enumSCRIPT_PARAM_ITEMGRID_PTR, 1, pGridContent, enumSCRIPT_PARAM_NUMBER, 3, pCItemRec->sType, pCItemRec->sNeedLv, chType, DOSTRING_PARAM_END))
+		//	goto ItemInstanceEnd;
+		auto creatResult = g_luaAPI.CallMulti("Creat_Item", pGridContent, (int)pCItemRec->sType, (int)pCItemRec->sNeedLv, (int)chType);
+		if (creatResult.hasFailed() || creatResult.size() == 0)
 			goto ItemInstanceEnd;
 
 		short sMin, sMax;
 		int nRetID = 0;
-		int nAttrNum = g_CParser.GetReturnNumber(0);
+		//int nAttrNum = g_CParser.GetReturnNumber(0);
+		int nAttrNum = creatResult[0].cast<int>().value();
 		int	nAttrID, nAttr;
 		for (int i = 0; i < nAttrNum; i++)
 		{
 			nRetID = i * 2 + 1;
-			nAttrID = g_CParser.GetReturnNumber(nRetID);
-			nAttr = g_CParser.GetReturnNumber(nRetID + 1);
+			//nAttrID = g_CParser.GetReturnNumber(nRetID);
+			//nAttr = g_CParser.GetReturnNumber(nRetID + 1);
+			nAttrID = creatResult[nRetID].cast<int>().value();
+			nAttr = creatResult[nRetID + 1].cast<int>().value();
 			sMin = g_pCItemAttr[pGridContent->sID].GetAttr(nAttrID, false);
 			sMax = g_pCItemAttr[pGridContent->sID].GetAttr(nAttrID, true);
 			if (nAttrID == ITEMATTR_MAXURE)
@@ -2180,28 +2196,30 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 						sExecTime = Short(dwCurTick - pSStateUnit->ulLastTick) / (pCSStateRec->sFrequency * 1000);
 						for (int j = 0; j < sExecTime; j++)
 						{
-							g_CParser.DoString(pCSStateRec->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSStateUnit->GetStateLv(), DOSTRING_PARAM_END);
+							//g_CParser.DoString(pCSStateRec->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSStateUnit->GetStateLv(), DOSTRING_PARAM_END);
+							g_luaAPI.Call(pCSStateRec->szAddState, this->IsCharacter(), (int)pSStateUnit->GetStateLv());
 						}
 						pSStateUnit->ulLastTick += pCSStateRec->sFrequency * sExecTime * 1000;
 					}
-					else if (pCSStateRec->sFrequency < 0) // 
+					else if (pCSStateRec->sFrequency < 0) //
 					{
 						pSStateUnit->ulLastTick = dwCurTick;
 					}
 				}
 			}
-			else if (pSStateUnit->lOnTick < 0) // 
+			else if (pSStateUnit->lOnTick < 0) //
 			{
 				if (pCSStateRec->sFrequency > 0) // 
 				{
 					sExecTime = Short(dwCurTick - pSStateUnit->ulLastTick) / (pCSStateRec->sFrequency * 1000);
 					for (int j = 0; j < sExecTime; j++)
 					{
-						g_CParser.DoString(pCSStateRec->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSStateUnit->GetStateLv(), DOSTRING_PARAM_END);
+						//g_CParser.DoString(pCSStateRec->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSStateUnit->GetStateLv(), DOSTRING_PARAM_END);
+						g_luaAPI.Call(pCSStateRec->szAddState, this->IsCharacter(), (int)pSStateUnit->GetStateLv());
 					}
 					pSStateUnit->ulLastTick += pCSStateRec->sFrequency * sExecTime * 1000;
 				}
-				else if (pCSStateRec->sFrequency < 0) // 
+				else if (pCSStateRec->sFrequency < 0) //
 				{
 					pSStateUnit->ulLastTick = dwCurTick;
 				}

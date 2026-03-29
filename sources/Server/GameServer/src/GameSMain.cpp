@@ -156,11 +156,6 @@ ToLogService("common", "game map server [{}] startup...", g_Config.m_szName);
 	ToLogService("common", "startup Gate server connect thread...");
 #endif
 
-    //InfoServer
-	//LG("init", "...\n");
-	//LG("init", "startup information server connect thread...\n");
-    //l_comm->AddTask(new ToInfoServer(g_gmsvr));
-	
 	// 
 	//LG("init", "...\n");
 	ToLogService("common", "startup game thread...");

@@ -133,28 +133,46 @@ protected:
 	{
 		return sizeof(MPTexInfo);
 	}
-	void CryptImage(bool encrypt, char* filename, char* sinkbuffer) {
-		const unsigned char imgTableKey[] = { 0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5 };
-		const unsigned char imgTableIV[] = { 0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72 };
-		try {
-			if (encrypt) {
-				std::string encFilename = filename;
-				encFilename.replace(encFilename.length() - 3, 3, "wsd");
-				CryptoPP::GCM<CryptoPP::AES>::Encryption e;
-				e.SetKeyWithIV(imgTableKey, 16, imgTableIV, 16);
-				CryptoPP::FileSource(filename, true, new CryptoPP::AuthenticatedEncryptionFilter(e, new CryptoPP::FileSink(encFilename.c_str())));
-				return;
+	// Resolve texture path: prefer original, decrypt .wsd → .dec if needed
+	std::string ResolveTexturePath(const char* filename) {
+		struct stat st;
+		std::string path(filename);
+
+		// If this is a .wsd file, check if original exists
+		size_t len = path.length();
+		if (len > 3 && path[len-1] == 'd' && path[len-2] == 's' && path[len-3] == 'w') {
+			// Try common image extensions
+			const char* exts[] = {"tga", "png", "bmp", "dds"};
+			for (auto ext : exts) {
+				std::string origPath = path.substr(0, len - 3) + ext;
+				if (stat(origPath.c_str(), &st) == 0) {
+					return origPath;
+				}
 			}
-			else {
-				CryptoPP::GCM<CryptoPP::AES>::Decryption d;
-				d.SetKeyWithIV(imgTableKey, 16, imgTableIV, 16);
-				std::string buffer;
-				CryptoPP::FileSource(filename, true, new CryptoPP::AuthenticatedDecryptionFilter(d, new CryptoPP::StringSink(buffer)));
-				memcpy(sinkbuffer, buffer.data(), buffer.size());
-				return;
+
+			// Check if .dec already exists
+			std::string decPath = path.substr(0, len - 3) + "dec";
+			if (stat(decPath.c_str(), &st) == 0) {
+				return decPath;
+			}
+
+			// Decrypt .wsd → .dec
+			if (stat(path.c_str(), &st) == 0) {
+				const unsigned char key[] = { 0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5 };
+				const unsigned char iv[] = { 0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72 };
+				try {
+					CryptoPP::GCM<CryptoPP::AES>::Decryption d;
+					d.SetKeyWithIV(key, 16, iv, 16);
+					CryptoPP::FileSource(path.c_str(), true,
+						new CryptoPP::AuthenticatedDecryptionFilter(d,
+							new CryptoPP::FileSink(decPath.c_str())));
+					remove(path.c_str());
+					return decPath;
+				} catch (...) {}
 			}
 		}
-		catch (...) {}
+
+		return path;
 	}
 
 
@@ -187,40 +205,14 @@ protected:
 			lwTexInfo tex_info;
 			lwTexInfo_Construct(&tex_info);
 
-			_tcscpy(tex_info.file_name, pTexInfo->szDataName);
+			// Resolve path: prefer original image, decrypt .wsd → .dec if needed
+			std::string resolved = ResolveTexturePath(pTexInfo->szDataName);
+			_tcscpy(tex_info.file_name, resolved.c_str());
 			_tcslwr(tex_info.file_name);
 			tex_info.pool = D3DPOOL_MANAGED;
 			tex_info.usage = 0;
 			tex_info.level = D3DX_DEFAULT;
-
-			size_t len = strlen(pTexInfo->szDataName);
-			if (pTexInfo->szDataName[len - 1] == 'd' &&
-				pTexInfo->szDataName[len - 2] == 's' &&
-				pTexInfo->szDataName[len - 3] == 'w') {
-				std::ifstream data(pTexInfo->szDataName, std::ios::binary);
-				data.seekg(0, std::ios::end);
-				int size = data.tellg();
-				// Data is a pointer towards the decrypted image data
-				// Inside a try/catch to avoid bad_alloc when size = 0 bytes (nonexistent UI file)
-				try {
-					tex_info.data = new char[size - 16];
-				}
-				catch (...) {
-					return 0;
-				}
-				// Decrypt image
-				CryptImage(false, pTexInfo->szDataName, (char*)tex_info.data);
-				// LoadTexInfo will take care of our data if we specify the type and width (size) correctly
-				tex_info.type = TEX_TYPE_DATA;
-				tex_info.width = size - 16;
-				// According to docs, D3DFMT_UNKNOWN will make sure the DirectX method chooses the correct format according to the file.
-				tex_info.format = D3DFMT_UNKNOWN;
-
-			}
-			else {
-				// Not loading from memory (basically any LoadImage that is not called by UI_LoadImage)
-				tex_info.type = TEX_TYPE_FILE;
-			}
+			tex_info.type = TEX_TYPE_FILE;
 
 
 

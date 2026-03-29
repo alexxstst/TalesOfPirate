@@ -4,8 +4,8 @@
 #include "CommandMessages.h"
 #include "SubMap.h"
 #include "MapEntry.h"
-#include "CharTrade.h"
 #include "GameDB.h"
+#include "LuaAPI.h"
 
 using namespace std;
 
@@ -34,309 +34,6 @@ void CGameApp::ProcessNetMsg(int nMsgType, GateServer* pGate, net::RPacket& pkt)
 	}
 }
 
-void CGameApp::ProcessInfoMsg(pNetMessage msg, short sType, InfoServer* pInfo) {
-	switch (sType) {
-	case InfoServer::CMD_FM_CONNECTED:
-		OnInfoConnected(pInfo);
-		break;
-
-	case InfoServer::CMD_FM_DISCONNECTED:
-		OnInfoDisconnected(pInfo);
-		break;
-
-	case InfoServer::CMD_FM_MSG:
-		ProcessMsg(msg, pInfo);
-		break;
-
-	default:
-		break;
-	}
-}
-
-void CGameApp::OnInfoConnected(InfoServer* pInfo) {
-	//??InfoServer
-	pInfo->Login();
-}
-
-void CGameApp::OnInfoDisconnected(InfoServer* pInfo) {
-	// ????????
-	g_StoreSystem.InValid();
-	pInfo->InValid();
-}
-
-void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
-	if (msg) {
-		switch (msg->msgHead.msgID) {
-		case INFO_LOGIN: // ??InfoServer
-		{
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				ToLogService("store", "InfoServer Login Success!");
-
-				pInfo->SetValid();
-				//g_StoreSystem.SetValid();
-
-				//??InfoServer?????????????????
-				g_StoreSystem.GetItemList();
-				g_StoreSystem.GetAfficheList();
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				ToLogService("store", "InfoServer Login Failed!");
-				pInfo->InValid();
-			}
-			else {
-				//ToLogService("store", "??InfoServer???????????!");
-				ToLogService("store", "enter InfoServer message data error!");
-			}
-		}
-		break;
-
-		case INFO_REQUEST_ACCOUNT: // ?????????
-		{
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????????????!", lOrderID);
-				ToLogService("store", "[{}]succeed to obtain account information!", lOrderID);
-
-				RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
-				g_StoreSystem.AcceptRoleInfo(lOrderID, ChaInfo);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????????????!", lOrderID);
-				ToLogService("store", "[{}]obtain account information failed!", lOrderID);
-
-				g_StoreSystem.CancelRoleInfo(lOrderID);
-			}
-			else {
-				//ToLogService("store", "?????????????????!");
-				ToLogService("store", "account information message data error");
-			}
-		}
-		break;
-
-		case INFO_REQUEST_STORE: // ?????????
-		{
-			//ToLogService("store", "?????????!");
-			ToLogService("store", "get store list!");
-			if (msg->msgHead.subID == INFO_SUCCESS) // ??????????
-			{
-				//???????
-				short lComNum = LOWORD(msg->msgHead.msgExtend);
-				//???????
-				short lClassNum = HIWORD(msg->msgHead.msgExtend);
-				//?????????
-				g_StoreSystem.SetItemClass((ClassInfo*)(msg->msgBody), lClassNum);
-				//??????????
-				g_StoreSystem.SetItemList((StoreStruct*)((char*)msg->msgBody + lClassNum * sizeof(ClassInfo)), lComNum);
-
-				g_StoreSystem.SetValid();
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) // ??????????
-			{
-				//???????
-				short lComNum = LOWORD(msg->msgHead.msgExtend);
-				//???????
-				short lClassNum = HIWORD(msg->msgHead.msgExtend);
-				//?????????
-				g_StoreSystem.SetItemClass((ClassInfo*)(msg->msgBody), lClassNum);
-				//??????????
-				g_StoreSystem.SetItemList((StoreStruct*)((char*)msg->msgBody + lClassNum * sizeof(ClassInfo)), lComNum);
-			}
-			else {
-				//ToLogService("store", "?????????????????!");
-				ToLogService("store", "store list message data error!");
-			}
-		}
-		break;
-
-		case INFO_REQUEST_AFFICHE: // ??????????
-		{
-			//ToLogService("store", "????????!");
-			ToLogService("store", "get offiche information!");
-			if (msg->msgHead.subID == INFO_SUCCESS) // ???????????
-			{
-				//???????
-				long lAfficheNum = msg->msgHead.msgExtend;
-				//?????????
-				g_StoreSystem.SetAfficheList((AfficheInfo*)msg->msgBody, lAfficheNum);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) // ???????????
-			{
-				//???????
-				long lAfficheNum = msg->msgHead.msgExtend;
-				//?????????
-				g_StoreSystem.SetAfficheList((AfficheInfo*)msg->msgBody, lAfficheNum);
-			}
-			else {
-				//ToLogService("store", "??????????????????!");
-				ToLogService("store", "offiche information message data error!");
-			}
-		}
-		break;
-
-		case INFO_STORE_BUY: // ???????
-		{
-			if (msg->msgHead.subID == INFO_SUCCESS) // ??????
-			{
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]?????????!", lOrderID);
-				ToLogService("store", "[{}]succeed to buy item!", lOrderID);
-
-				RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
-				g_StoreSystem.Accept(lOrderID, ChaInfo);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) // ???????
-			{
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]??????????!", lOrderID);
-				ToLogService("store", "[{}]buy item failed!", lOrderID);
-
-				g_StoreSystem.Cancel(lOrderID);
-			}
-			else {
-				//ToLogService("store", "????????????????????????!");
-				ToLogService("store", "confirm information that buy item message data error!");
-			}
-		}
-		break;
-
-		case INFO_REGISTER_VIP: {
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????VIP???!", lOrderID);
-				ToLogService("store", "[{}] buy VIP succeed !", lOrderID);
-
-				RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
-
-				g_StoreSystem.AcceptVIP(lOrderID, ChaInfo, msg->msgHead.msgExtend);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????VIP???!", lOrderID);
-				ToLogService("store", "[{}] buy VIP failed !", lOrderID);
-
-				g_StoreSystem.CancelVIP(lOrderID);
-			}
-			else {
-				//ToLogService("store", "????VIP?????????????????!");
-				ToLogService("store", "buy VIP confirm information message data error !");
-			}
-		}
-		break;
-
-		case INFO_EXCHANGE_MONEY: // ???????
-		{
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]?????????!", lOrderID);
-				ToLogService("store", "[{}]change token succeed !", lOrderID);
-
-				RoleInfo* ChaInfo = (RoleInfo*)((char*)msg->msgBody + sizeof(long long));
-				g_StoreSystem.AcceptChange(lOrderID, ChaInfo);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]??????????!", lOrderID);
-				ToLogService("store", "[{}]change token failed!", lOrderID);
-
-				g_StoreSystem.CancelChange(lOrderID);
-			}
-			else {
-				//ToLogService("store", "????????????????????????!");
-				ToLogService("store", "change token confirm information message data error !");
-			}
-		}
-		break;
-
-		case INFO_REQUEST_HISTORY: // ????????
-		{
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]???????????!", lOrderID);
-				ToLogService("store", "[{}]succeed to query trade note!", lOrderID);
-
-				HistoryInfo* pRecord = (HistoryInfo*)((char*)msg->msgBody + sizeof(long long));
-				g_StoreSystem.AcceptRecord(lOrderID, pRecord);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]???????????!", lOrderID);
-				ToLogService("store", "[{}]query trade note failed!", lOrderID);
-
-				g_StoreSystem.CancelRecord(lOrderID);
-			}
-			else {
-				//ToLogService("store", "?????????????????????????!");
-				ToLogService("store", "trade note query resoibsuib nessage data error!");
-			}
-		}
-		break;
-
-		case INFO_SND_GM_MAIL: {
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????GM??????!", lOrderID);
-				ToLogService("store", "[{}]send GM mail success!", lOrderID);
-
-				long lMailID = msg->msgHead.msgExtend;
-				g_StoreSystem.AcceptGMSend(lOrderID, lMailID);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????GM??????!", lOrderID);
-				ToLogService("store", "[{}]send GM mail failed!", lOrderID);
-
-				g_StoreSystem.CancelGMSend(lOrderID);
-			}
-			else {
-				//ToLogService("store", "????GM??????????????!");
-				ToLogService("store", "send GM mail message data error!");
-			}
-		}
-		break;
-
-		case INFO_RCV_GM_MAIL: {
-			if (msg->msgHead.subID == INFO_SUCCESS) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????GM??????!", lOrderID);
-				ToLogService("store", "[{}]receive GM mail success!", lOrderID);
-
-				MailInfo* pMi = (MailInfo*)((char*)msg->msgBody + sizeof(long long));
-				g_StoreSystem.AcceptGMRecv(lOrderID, pMi);
-			}
-			else if (msg->msgHead.subID == INFO_FAILED) {
-				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????GM??????!", lOrderID);
-				ToLogService("store", "[{}]reciveGMmail failed!", lOrderID);
-
-				g_StoreSystem.CancelGMRecv(lOrderID);
-			}
-			else {
-				//ToLogService("store", "????GM??????????????!");
-				ToLogService("store", "receive GM mail message data error!");
-			}
-		}
-		break;
-
-		case INFO_EXCEPTION_SERVICE: //???????
-		{
-			//ToLogService("store", "InfoServer???????!");
-			ToLogService("store", "InfoServer refuse serve!");
-			g_StoreSystem.InValid();
-			pInfo->InValid();
-		}
-		break;
-
-		default: {
-			//ToLogService("store", "?????????????!");
-			ToLogService("store", "get unknown information type!");
-		}
-		break;
-		}
-
-		FreeNetMessage(msg);
-	}
-}
 
 // ??Gate??????????????
 void CGameApp::OnGateConnected(GateServer* pGate, net::RPacket& pkt) {
@@ -1569,8 +1266,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 			pCha = pPlayer->GetMainCha();
 		}
 		if (pCha) {
-			g_CParser.DoString("AuctionEnd", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha,
-							   DOSTRING_PARAM_END);
+			g_luaAPI.Call("AuctionEnd", pCha);
 		}
 
 		break;
@@ -1582,12 +1278,7 @@ void CGameApp::ProcessGroupBroadcast(unsigned short usCmd, GateServer* pGate, ne
 }
 
 void CGameApp::Handle_StoreBuy(const net::msg::MmStoreBuyMessage& msg) {
-	CPlayer* pPlayer = GetPlayerByDBID(static_cast<DWORD>(msg.charDbId));
-	if (pPlayer) {
-		CCharacter* pCha = pPlayer->GetMainCha();
-		g_StoreSystem.Accept(pCha, static_cast<long>(msg.commodityId));
-		pCha->GetPlayer()->SetRplMoney(static_cast<long>(msg.money));
-	}
+	// Trade Server (InfoNet)  -- CStoreSystem
 }
 
 void CGameApp::Handle_AddMoney(const net::msg::MmAddMoneyMessage& msg) {
@@ -1737,8 +1428,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMes
 				strScript += " ";
 			}
 			luaL_dostring(g_pLuaState, strScript.c_str());
-			g_CParser.DoString("config_entry", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCEntry,
-							   DOSTRING_PARAM_END);
+			g_luaAPI.Call("config_entry", pCEntry);
 
 			if (pCEntry->GetEntiID() > 0) {
 				SItemGrid SItemCont;
@@ -1779,8 +1469,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMes
 				ToLogService("common", "create entry success??position {} --> {}[{}, {}] ", szSrcMapN.c_str(),
 							 szTarMapN.c_str(), lPosX, lPosY);
 
-			g_CParser.DoString("after_create_entry", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1,
-							   pCEntry, DOSTRING_PARAM_END);
+			g_luaAPI.Call("after_create_entry", pCEntry);
 		}
 	}
 	break;
@@ -1829,8 +1518,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMes
 		if (pCEntry) {
 			string strScript = "after_destroy_entry_";
 			strScript += szSrcMapN;
-			g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCEntry,
-							   DOSTRING_PARAM_END);
+			g_luaAPI.Call(strScript.c_str(), pCEntry);
 			g_CDMapEntry.Del(pCEntry);
 
 			//  :     

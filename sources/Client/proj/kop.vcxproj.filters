@@ -709,9 +709,6 @@
     <ClCompile Include="..\src\PacketCmd_SC.cpp">
       <Filter>NetIF</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\Algo.cpp">
-      <Filter>NetIF\Connection</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\Connection.cpp">
       <Filter>NetIF\Connection</Filter>
     </ClCompile>
@@ -730,6 +727,7 @@
     <ClCompile Include="..\src\SoundCommon.cpp" />
     <ClCompile Include="..\src\LootFilter.cpp" />
     <ClCompile Include="..\src\Point.cpp" />
+    <ClCompile Include="..\src\CryptoUtils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\CameraCtrl.h">
@@ -1381,11 +1379,7 @@
     <ClInclude Include="..\src\SoundManager.h" />
     <ClInclude Include="..\src\LootFilter.h" />
     <ClInclude Include="..\src\Point.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\src\GameApp使用指南.txt">
-      <Filter>App\GameApp</Filter>
-    </Text>
+    <ClInclude Include="..\src\CryptoUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\src\kop.ico">

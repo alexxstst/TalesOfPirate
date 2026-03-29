@@ -9,6 +9,7 @@
 #include "GameApp.h"
 #include "GameDB.h"
 #include "CharStall.h"
+#include "LuaAPI.h"
 
 using namespace std;
 
@@ -308,7 +309,7 @@ void CPlayer::RefreshBoatAttr(void)
 	for (BYTE i = 0; i < m_byNumBoat; i++)
 	{
 		if (m_Boat[i])
-			g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, GetMainCha(), m_Boat[i], DOSTRING_PARAM_END );
+			g_luaAPI.Call("Ship_ExAttrCheck", GetMainCha(), m_Boat[i]);
 	}
 }
 
@@ -688,18 +689,6 @@ bool CPlayer::OpenEnergy(CCharacter *pCNpc)
 	m_pCForgeman = pCNpc;
 	GetCtrlCha()->SynBeginItemEnergy();
 	GetCtrlCha()->ForgeAction();
-	return true;
-}
-
-bool CPlayer::OpenGMSend(CCharacter *pCNpc)
-{
-	GetCtrlCha()->SynBeginGMSend();
-	return true;
-}
-
-bool CPlayer::OpenGMRecv(CCharacter *pCNpc)
-{
-	GetCtrlCha()->SynBeginGMRecv(pCNpc->GetID());
 	return true;
 }
 
@@ -1135,11 +1124,11 @@ void CPlayer::CheckChaItemFinalData()
 		if (g_IsRealItemID(pCMainCha->m_SChaPart.SLink[i].sID))
 		{
 			pCMainCha->m_SChaPart.SLink[i].InitAttr();
-			g_CParser.DoString(szScript, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, &pCMainCha->m_SChaPart.SLink[i], DOSTRING_PARAM_END);
+			g_luaAPI.Call(szScript, &pCMainCha->m_SChaPart.SLink[i]);
 		}
 	}
 
-	// 
+	//
 	SItemGrid	*pGridCont;
 	Short	sUseNum = pCMainCha->m_CKitbag.GetUseGridNum();
 	for (int i = 0; i < sUseNum; i++)
@@ -1148,10 +1137,10 @@ void CPlayer::CheckChaItemFinalData()
 		if (!pGridCont)
 			continue;
 		pGridCont->InitAttr();
-		g_CParser.DoString(szScript, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pGridCont, DOSTRING_PARAM_END);
+		g_luaAPI.Call(szScript, pGridCont);
 	}
 
-	// 
+	//
 	for (int j = 0; j < MAX_BANK_NUM; j++)
 	{
 		sUseNum = m_CBank[j].GetUseGridNum();
@@ -1161,7 +1150,7 @@ void CPlayer::CheckChaItemFinalData()
 			if (!pGridCont)
 				continue;
 			pGridCont->InitAttr();
-			g_CParser.DoString(szScript, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pGridCont, DOSTRING_PARAM_END);
+			g_luaAPI.Call(szScript, pGridCont);
 		}
 	}
 

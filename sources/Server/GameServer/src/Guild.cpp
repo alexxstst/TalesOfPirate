@@ -2,9 +2,9 @@
 #include "Guild.h"
 #include "GameDB.h"
 #include "util.h"
-#include "parser.h"
 #include "GameCommon.h"
 #include "GameApp.h"
+#include "LuaAPI.h"
 
 
 BOOL Guild::lua_CreateGuild(CCharacter* pCha)//,1-,2-
@@ -70,14 +70,10 @@ void Guild::cmd_CreateGuild(CCharacter* pCha, bool confirm, cChar *guildname, cC
 		//	return;
 		//}
 	}
-	if (g_CParser.DoString("AskGuildItem", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END))
 	{
-		if (!g_CParser.GetReturnNumber(0))	//
+		auto result = g_luaAPI.CallR<int>("AskGuildItem", pCha);
+		if (!result.value_or(0))
 			return;
-	}
-	else
-	{
-		return;
 	}
 	char l_guildname[32];
 	strcpy(l_guildname,guildname);
@@ -99,7 +95,7 @@ void Guild::cmd_CreateGuild(CCharacter* pCha, bool confirm, cChar *guildname, cC
 	//pCha->setAttr(ATTR_GUILD_STATE,0);			//
 
 	//luaBegin
-	g_CParser.DoString("DeductGuildItem", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END);
+	g_luaAPI.Call("DeductGuildItem", pCha);
 	//luaEnd
 	
 	//pCha->SystemNotice(".");
@@ -131,14 +127,10 @@ void Guild::cmd_GuildTryFor(CCharacter* pCha, uLong guildid)			//
 		pCha->SystemNotice(RES_STRING(GM_GUILD_CPP_00008));
 	}else
 	{
-		if (g_CParser.DoString("AskJoinGuild", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END))
 		{
-			if (!g_CParser.GetReturnNumber(0))	//
+			auto result = g_luaAPI.CallR<int>("AskJoinGuild", pCha);
+			if (!result.value_or(0))
 				return;
-		}
-		else
-		{
-			return;
 		}
 		game_db.GuildTryFor(pCha,guildid);
 	}

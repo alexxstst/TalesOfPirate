@@ -10,7 +10,6 @@
 
 #include "PreAlloc.h"
 #include "GameApp.h"
-#include "Parser.h"
 
 #define def_MGRUNIT_ENTITY_TYPE_CHAIN		1
 #define def_MGRUNIT_ENTITY_TYPE_CHACROSS	2

@@ -12,10 +12,7 @@
 #include "CommandMessages.h"
 
 using namespace std;
-// Crypto++  BLAKE2s     
-#include "blake2.h"
-#include "hex.h"
-#include "filters.h"
+#include "CryptoUtils.h"
 #ifdef _TEST_CLIENT
 #include "..\..\TestClient\testclient.h"
 #endif
@@ -452,18 +449,12 @@ void CProCirculate::Login(const char* accounts, const char* password, const char
 
 	extern short g_sClientVer;
 
-	string digest;
-	string hexencoded;
-	CryptoPP::BLAKE2s d;
-	CryptoPP::StringSource ss(password, true, new CryptoPP::HashFilter(d, new CryptoPP::StringSink(digest)));
-	CryptoPP::StringSource ss2(digest, true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(hexencoded)));
-
 	string strMac = GetMacString();
 	if (strMac.empty()) strMac = "Unknown";
 
 	net::msg::CmLoginRequest msg;
 	msg.acctName = accounts;
-	msg.passwordHash = hexencoded;
+	msg.passwordHash = HashPassword(password);
 	msg.mac = strMac;
 	msg.cheatMarker = 911;
 	msg.clientVersion = g_sClientVer;

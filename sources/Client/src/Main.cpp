@@ -31,8 +31,6 @@
 #include "script.h"
 #include "CrushSystem.h"
 
-#include "UdpClient.h"
-
 #include "GlobalVar.h"
 
 #include "SelectChaScene.h"
@@ -40,7 +38,6 @@
 #include "LootFilter.h"
 
 
-using namespace client_udp;
 
 std::string g_serverset;
 
@@ -487,8 +484,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	UnmapViewOfFile(pClientLogNO);
 	CloseHandle(hFile);
-	GetRegionMgr()->Exit();
-
 	if( g_IsAutoUpdate )  	// If auto-updating, launch the updater
 	{
 		::WinExec( "Launcher.exe", SW_SHOWNORMAL );
@@ -676,8 +671,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	if( g_pGameApp ) 
 	{
 		g_pGameApp->HandleWindowMsg(message, (DWORD)wParam, (DWORD)lParam);
-		if( GetRegionMgr()->OnMessage( message, wParam, lParam ) )
-			return 0;
 	}
 
 	switch (message) 

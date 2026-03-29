@@ -13,7 +13,6 @@
 #include "Item.h"
 #include "Script.h"
 #include "CharTrade.h"
-#include "Parser.h"
 #include "GameDB.h"
 #include "CommFunc.h"
 #include "Player.h"
@@ -30,6 +29,7 @@
 #include "lua_gamectrl.h"
 #include "CharStall.h"
 #include "CommandMessages.h"
+#include "LuaAPI.h"
 
 using namespace std;
 
@@ -761,7 +761,7 @@ bool CCharacter::SetEquipValid(dbc::Char chEquipPos, bool bValid, bool bSyn)
 	{
 		GetPlyMainCha()->SynSkillBag(enumSYN_SKILLBAG_MODI);
 		SynSkillStateToEyeshot();
-		g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+		g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 		GetPlayer()->RefreshBoatAttr();
 		SyncBoatAttr(enumATTRSYN_ITEM_EQUIP);
 		SynAttrToSelf(enumATTRSYN_ITEM_EQUIP);
@@ -803,7 +803,7 @@ bool CCharacter::SetKitbagItemValid(dbc::Short sPosID, bool bValid, bool bRechec
 			ChangeItem(bValid, pSEspeGrid, enumEQUIP_HEAD);
 			if (bRecheckAttr || bSyn)
 			{
-				g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+				g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 				if (GetPlayer())
 					GetPlayer()->RefreshBoatAttr();
 			}
@@ -911,8 +911,8 @@ void CCharacter::CheckItemValid(SItemGrid* pCItem)
 	pCItem->CheckValid();
 	if (pCItem->IsValid())
 	{
-		g_CParser.DoString("check_item_valid", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, this, pCItem, DOSTRING_PARAM_END);
-		pCItem->SetValid(g_CParser.GetReturnNumber(0) != 0 ? true : false);
+		auto checkResult = g_luaAPI.CallR<int>("check_item_valid", static_cast<CCharacter*>(this), pCItem);
+		pCItem->SetValid(checkResult.value_or(0) != 0);
 	}
 }
 
@@ -957,7 +957,7 @@ Short CCharacter::KbPushItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid,
 				//ChangeItem(true, pGrid, enumEQUIP_HEAD);
 				if (bRecheckAttr || bSynAttr)
 				{
-					g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+					g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 					if (GetPlayer())
 						GetPlayer()->RefreshBoatAttr();
 				}
@@ -999,7 +999,7 @@ Short CCharacter::KbPopItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid, 
 				ChangeItem(false, pGrid, enumEQUIP_HEAD);
 				if (bRecheckAttr || bSynAttr)
 				{
-					g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+					g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 					if (GetPlayer())
 						GetPlayer()->RefreshBoatAttr();
 				}
@@ -1042,7 +1042,7 @@ Short CCharacter::KbClearItem(bool bRecheckAttr, bool bSynAttr, Short sPosID, Sh
 				ChangeItem(false, &SGrid, enumEQUIP_HEAD);
 				if (bRecheckAttr || bSynAttr)
 				{
-					g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+					g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 					if (GetPlayer())
 						GetPlayer()->RefreshBoatAttr();
 				}
@@ -1090,7 +1090,7 @@ Short CCharacter::KbClearItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid
 					ChangeItem(false, &SGrid, enumEQUIP_HEAD);
 					if (bRecheckAttr || bSynAttr)
 					{
-						g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+						g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 						if (GetPlayer())
 							GetPlayer()->RefreshBoatAttr();
 					}
@@ -1147,7 +1147,7 @@ Short CCharacter::KbRegroupItem(bool bRecheckAttr, bool bSynAttr, Short sSrcPosI
 
 		if (bRecheckAttr || bSynAttr)
 		{
-			g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+			g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 			if (GetPlayer())
 				GetPlayer()->RefreshBoatAttr();
 		}
@@ -1240,7 +1240,7 @@ bool CCharacter::DoForgeLikeScript(dbc::cChar *cszFunc, dbc::Long &lRet)
 		lua_pop(g_pLuaState, 1);
 		return false;
 	}
-	lua_pushlightuserdata(g_pLuaState, this);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 	nParamNum++;
 	for (int i = 0; i < defMAX_ITEM_FORGE_GROUP; i++)
 	{
@@ -1284,7 +1284,7 @@ bool CCharacter::DoLifeSkillcript(dbc::cChar *cszFunc, dbc::Long &lRet)
 		return false;
 	}
 
-	lua_pushlightuserdata(g_pLuaState, this);
+	luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 	nParamNum++;
 	lua_pushnumber(g_pLuaState,pSItem->sbagCount);
 	nParamNum++;
@@ -1326,7 +1326,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 			lua_pop(g_pLuaState, 1);
 			return false;
 		}
-		lua_pushlightuserdata(g_pLuaState, this);
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 		nParamNum++;
 		for(int i = 0; i < 3; i++)
 		{
@@ -1368,7 +1368,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 			lua_pop(g_pLuaState, 1);
 			return false;
 		}
-		lua_pushlightuserdata(g_pLuaState, this);
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 		nParamNum++;
 		for(int i = 0; i < 9; i++)
 		{
@@ -1427,7 +1427,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 						{
 							BackToCity(true);
 
-							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+							g_luaAPI.Call("Relive", static_cast<CCharacter*>(this));
 							if (getAttr(ATTR_HP) <= 0)
 								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
@@ -1439,8 +1439,8 @@ void CCharacter::OnDie(DWORD dwCurTime)
 						else
 						{
 							BackToCity(true);
-							
-							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+
+							g_luaAPI.Call("Relive", static_cast<CCharacter*>(this));
 							if (getAttr(ATTR_HP) <= 0)
 								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
@@ -1462,7 +1462,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 							m_chSelRelive = enumEPLAYER_RELIVE_NONE;
 							m_chReliveLv = 0;
 
-							g_CParser.DoString("Relive_now", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, m_chReliveLv, DOSTRING_PARAM_END);
+							g_luaAPI.Call("Relive_now", static_cast<CCharacter*>(this), (int)m_chReliveLv);
 							if (getAttr(ATTR_HP) <= 0)
 								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
@@ -1475,8 +1475,9 @@ void CCharacter::OnDie(DWORD dwCurTime)
 						{
 							std::string	strScript = "get_repatriate_city_";
 							strScript += GetSubMap()->GetName();
-							if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_STRING, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
-								BackToCity(true, g_CParser.GetReturnString(0));
+							auto repatCity = g_luaAPI.CallR<std::string>(strScript.c_str(), static_cast<CCharacter*>(this));
+							if (repatCity)
+								BackToCity(true, repatCity.value().c_str());
 						}
 					}
 				}
@@ -1652,14 +1653,16 @@ void CCharacter::Die()
 	{
 		std::string	strScript = "check_repatriate_";
 		strScript += pCMap->GetName();
-		if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
+		auto checkRepat = g_luaAPI.CallR<int>(strScript.c_str(), static_cast<CCharacter*>(this));
+		if (checkRepat)
 		{
-			if (!g_CParser.GetReturnNumber(0))
+			if (!checkRepat.value())
 			{
 				std::string	strScript = "get_repatriate_hint_";
 				strScript += pCMap->GetName();
-				if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_STRING, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
-					SetRelive(enumEPLAYER_RELIVE_MAP, 0, g_CParser.GetReturnString(0));
+				auto hintResult = g_luaAPI.CallR<std::string>(strScript.c_str(), static_cast<CCharacter*>(this));
+				if (hintResult)
+					SetRelive(enumEPLAYER_RELIVE_MAP, 0, hintResult.value().c_str());
 			}
 		}
 	}
@@ -1808,14 +1811,14 @@ void CCharacter::BackToCity(bool bDie, cChar *szCityName, Long lMapCpyNO, Char c
 			szCityName = "guildwarnavyside2";
 		}
 	}
-	char* city = "";
-	if (g_CParser.StringIsFunction("RespawnAtPortal"))
+	std::string city;
+	if (g_luaAPI.HasFunction("RespawnAtPortal"))
 	{
-		if (g_CParser.DoString("RespawnAtPortal", enumSCRIPT_PARAM_STRING, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCMainCha, DOSTRING_PARAM_END))
-			city = g_CParser.GetReturnString(0);
+		auto respawnResult = g_luaAPI.CallR<std::string>("RespawnAtPortal", pCMainCha);
+		if (respawnResult)
+			city = respawnResult.value();
 		else
 			ToLogService("errors", LogLevel::Error, "Error : RespawnAtPortal failed to execute");
-
 	}
 	//szCityName = g_CParser.GetReturnString(0);
 
@@ -1841,8 +1844,9 @@ void CCharacter::BackToCity(bool bDie, cChar *szCityName, Long lMapCpyNO, Char c
 	//pCMainCha->m_timerScripts.Reset();
 
 	// angelix@pkodev.net 7/31/2019
-	if (g_CParser.DoString("MapRespawnOnDeath", enumSCRIPT_RETURN_STRING, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCMainCha, enumSCRIPT_PARAM_STRING, 1, pCMap->GetName(), DOSTRING_PARAM_END))
-		szCityName = g_CParser.GetReturnString(0);
+	auto respawnResult = g_luaAPI.CallR<std::string>("MapRespawnOnDeath", static_cast<CCharacter*>(pCMainCha), pCMap->GetName());
+	if (respawnResult)
+		szCityName = respawnResult.value().c_str();
 	//
 	if (!szCityName || !strcmp(szCityName, ""))
 		pCMainCha->ResetBirthInfo();
@@ -2681,9 +2685,10 @@ BOOL CCharacter::ExchangeReq(short sSrcID, short sSrcNum, short sTarID, short sT
 	}
 
 	//add by jilinlee 2007.8.3  0
-	if (g_CParser.DoString("Can_Exchange", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 4, sSrcID, sSrcNum, sTarID, sTarNum, DOSTRING_PARAM_END))
+	auto canExchange = g_luaAPI.CallR<int>("Can_Exchange", (int)sSrcID, (int)sSrcNum, (int)sTarID, (int)sTarNum);
+	if (canExchange)
 	{
-		if(!g_CParser.GetReturnNumber(0))
+		if(!canExchange.value())
 		{
 			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00014));
@@ -4160,15 +4165,15 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	{
 		if (SAddSkill.chState == enumSUSTATE_ACTIVE) // 
 		{
-			g_CParser.DoString(pCSkill->szInactive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, chOldLv, DOSTRING_PARAM_END);
-			g_CParser.DoString(pCSkill->szActive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, chNewLv, DOSTRING_PARAM_END);
+			g_luaAPI.Call(pCSkill->szInactive, static_cast<CCharacter*>(this), (int)chOldLv);
+			g_luaAPI.Call(pCSkill->szActive, static_cast<CCharacter*>(this), (int)chNewLv);
 		}
 		GetPlyMainCha()->SynSkillBag(enumSYN_SKILLBAG_MODI);
 	}
 
 	ChangeItem(true,&m_SChaPart.SLink[ enumEQUIP_LHAND], enumEQUIP_LHAND);
 
-	g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 	if (GetPlayer())
 	{
 		GetPlayer()->RefreshBoatAttr();
@@ -4455,14 +4460,14 @@ bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHa
 	{
 		if (uchOldLv != uchStateLv)
 		{
-			g_CParser.DoString(pSSkillState->szSubState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, uchOldLv, DOSTRING_PARAM_END);
-			g_CParser.DoString(pSSkillState->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, uchStateLv, DOSTRING_PARAM_END);
+			g_luaAPI.Call(pSSkillState->szSubState, static_cast<CCharacter*>(this), (int)uchOldLv);
+			g_luaAPI.Call(pSSkillState->szAddState, static_cast<CCharacter*>(this), (int)uchStateLv);
 		}
 		else
 			return false;
 	}
 	else
-		g_CParser.DoString(pSSkillState->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, uchStateLv, DOSTRING_PARAM_END);
+		g_luaAPI.Call(pSSkillState->szAddState, static_cast<CCharacter*>(this), (int)uchStateLv);
 	BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, chEffType);
 
 	if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // 
@@ -4572,7 +4577,7 @@ bool CCharacter::DelSkillState(dbc::uChar uchStateID, bool bNotice)
 
 		Long	lOldHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 
-		g_CParser.DoString(pSSkillState->szSubState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, uchStateLv, DOSTRING_PARAM_END);
+		g_luaAPI.Call(pSSkillState->szSubState, static_cast<CCharacter*>(this), (int)uchStateLv);
 
 		BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, chEffType);
 		if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // 
@@ -4696,11 +4701,12 @@ long CCharacter::ExecuteEvent(Entity *pCObj, dbc::uShort usEventID)
 				}
 				string	strScript = "check_can_enter_";
 				strScript += pCEntry->GetTMapName();
-				if (g_CParser.StringIsFunction(strScript.c_str()))
+				if (g_luaAPI.HasFunction(strScript.c_str()))
 				{
-					if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, this, pCCopyInfo, DOSTRING_PARAM_END))
+					auto canEnter = g_luaAPI.CallR<int>(strScript.c_str(), static_cast<CCharacter*>(this), pCCopyInfo);
+					if (canEnter)
 					{
-						if (!g_CParser.GetReturnNumber(0))
+						if (!canEnter.value())
 							break;
 					}
 				}
@@ -4709,7 +4715,7 @@ long CCharacter::ExecuteEvent(Entity *pCObj, dbc::uShort usEventID)
 				string	strScript1 = "begin_enter_";
 				strScript1 += pCEntry->GetTMapName();
 
-				g_CParser.DoString(strScript1.c_str(), enumSCRIPT_RETURN_NUMBER, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, this, pCCopyInfo, DOSTRING_PARAM_END);
+				g_luaAPI.Call(strScript1.c_str(), static_cast<CCharacter*>(this), pCCopyInfo);
 			}
 		}
 		break;
@@ -4727,8 +4733,8 @@ void CCharacter::AfterObjDie(CCharacter *pCAtk, CCharacter *pCDead)
 		bool	bExecProc = true;
 		if (pCAtk != this)
 		{
-			g_CParser.DoString("CheckExpShare", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, this, pCAtk, DOSTRING_PARAM_END);
-			if (g_CParser.GetReturnNumber(0) == 0)
+			auto expShare = g_luaAPI.CallR<int>("CheckExpShare", static_cast<CCharacter*>(this), pCAtk);
+			if (expShare.value_or(0) == 0)
 				bExecProc = false;
 		}
 		if (bExecProc)
@@ -5098,7 +5104,7 @@ void CCharacter::SkillRefresh()
 						pCExecCha = pCMainCha;
 					else
 						pCExecCha = pCCtrlCha;
-					g_CParser.DoString(pCSkillRecord->szActive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCExecCha, enumSCRIPT_PARAM_NUMBER, 1, pSkillGrid->chLv, DOSTRING_PARAM_END);
+					g_luaAPI.Call(pCSkillRecord->szActive, pCExecCha, (int)pSkillGrid->chLv);
 				}
 				pCSkillBag->SetState(pSkillGrid->sID, enumSUSTATE_ACTIVE);
 			}
@@ -5113,7 +5119,7 @@ void CCharacter::SkillRefresh()
 						pCExecCha = pCMainCha;
 					else
 						pCExecCha = pCCtrlCha;
-					g_CParser.DoString(pCSkillRecord->szInactive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCExecCha, enumSCRIPT_PARAM_NUMBER, 1, pSkillGrid->chLv, DOSTRING_PARAM_END);
+					g_luaAPI.Call(pCSkillRecord->szInactive, pCExecCha, (int)pSkillGrid->chLv);
 				}
 				pCSkillBag->SetState(pSkillGrid->sID, enumSUSTATE_INACTIVE);
 			}
@@ -5135,7 +5141,7 @@ BOOL CCharacter::SetProfession( BYTE byPf )
 	m_CChaAttr.ResetChangeFlag();
 	setAttr(ATTR_JOB, byPf);
 	SetBoatAttrChangeFlag(false);
-	g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call("AttrRecheck", static_cast<CCharacter*>(this));
 	if (GetPlayer())
 	{
 		GetPlayer()->RefreshBoatAttr();
@@ -5558,7 +5564,7 @@ BOOL CCharacter::BoatBerth( USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT 
 	if (!pBoat->SkillOutBoat(sxPos * 100, syPos * 100, sDir))
 		return FALSE;
 
-	g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pBoat->GetPlayer()->GetMainCha(), pBoat, DOSTRING_PARAM_END );
+	g_luaAPI.Call("Ship_ExAttrCheck", pBoat->GetPlayer()->GetMainCha(), pBoat);
 
 	//	2008-8-21	yangyinyu	add	begin!
 	CCharacter*	c	=	this->GetBoat();
@@ -5646,9 +5652,10 @@ BOOL CCharacter::BoatLaunch( BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT
 	//	SystemNotice( "!" );
 	//}
 
-	if(g_CParser.DoString("RemoveYS", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
+	auto removeYS = g_luaAPI.CallR<int>("RemoveYS", static_cast<CCharacter*>(this));
+	if(removeYS)
 	{
-		int ret = g_CParser.GetReturnNumber(0);
+		int ret = removeYS.value();
 		if(ret != 1)
 		{
 			//LG("RemoveYS_error", "RemoveYS!\n");
@@ -5807,7 +5814,7 @@ void CCharacter::RepairBoat()
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
 		//SystemNotice( "%s%d!", pBoat->GetName(), dwReHp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00077), pBoat->GetName(), dwReHp );
-		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
+		g_luaAPI.Call("Ship_ExAttrCheck", pChar, pBoat);
 	}
 }
 
@@ -5853,8 +5860,8 @@ void CCharacter::SupplyBoat()
 		//SystemNotice( "%s%d!", pBoat->GetName(), dwReSp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00081), pBoat->GetName(), dwReSp );
 
-		// 
-		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, GetPlayer()->GetMainCha(), pBoat, DOSTRING_PARAM_END );
+		//
+		g_luaAPI.Call("Ship_ExAttrCheck", GetPlayer()->GetMainCha(), pBoat);
 	}
 }
 
@@ -5933,7 +5940,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
 		//SystemNotice( "%s%d!", pBoat->GetName(), dwReHp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00077), pBoat->GetName(), dwReHp );
-		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
+		g_luaAPI.Call("Ship_ExAttrCheck", pChar, pBoat);
 	}
 	else if( byType == mission::BERTH_SALVAGE_LIST )
 	{
@@ -5986,7 +5993,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 			//SystemNotice( "%s!", pBoat->GetName() );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00090), pBoat->GetName() );
 		}
-		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
+		g_luaAPI.Call("Ship_ExAttrCheck", pChar, pBoat);
 	}
 	else if( byType == mission::BERTH_SUPPLY_LIST )
 	{
@@ -6044,7 +6051,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
 		//SystemNotice( "%s%d!", pBoat->GetName(), dwReSp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00081), pBoat->GetName(), dwReSp );
-		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
+		g_luaAPI.Call("Ship_ExAttrCheck", pChar, pBoat);
 	}
 	else if( byType == mission::BERTH_BOATLEVEL_LIST )
 	{
@@ -6081,8 +6088,8 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 			return FALSE;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, (void*)this );
-		lua_pushlightuserdata( g_pLuaState, (void*)pBoat );
+		luabridge::push( g_pLuaState, static_cast<CCharacter*>(this) );
+		luabridge::push( g_pLuaState, static_cast<CCharacter*>(pBoat) );
 		lua_pushnumber( g_pLuaState, pBoat->getAttr( ATTR_LV ) + 1 );
 		int nStatus = lua_pcall( g_pLuaState, 3, 1, 0 );
 		if( nStatus )
@@ -6182,7 +6189,7 @@ BOOL CCharacter::BoatAdd( DWORD dwDBID )
 		CCharacter* pBoat = GetPlayer()->GetBoat( dwDBID );
 		if( pBoat )
 		{
-			g_CParser.DoString("Ship_Tran", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, this, pBoat, DOSTRING_PARAM_END);
+			g_luaAPI.Call("Ship_Tran", static_cast<CCharacter*>(this), pBoat);
 		}
 		return TRUE;
 	}
@@ -6353,8 +6360,8 @@ BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 		return FALSE;
 	}
 
-	lua_pushlightuserdata( g_pLuaState, (void*)this );
-	lua_pushlightuserdata( g_pLuaState, (void*)&boat );
+	luabridge::push( g_pLuaState, static_cast<CCharacter*>(this) );
+	luabridge::push( g_pLuaState, &boat );
 	lua_pushnumber( g_pLuaState, byType );
 	lua_pushnumber( g_pLuaState, byLevel );
 	int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
@@ -6645,20 +6652,6 @@ void CCharacter::SynBeginItemEnergy()
 {
 	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemEnergyCmd();
-	ReflectINFof(this, packet);
-}
-
-void CCharacter::SynBeginGMSend()
-{
-	//  :  UI  GM-
-	auto packet = net::msg::serializeMcGmSendCmd();
-	ReflectINFof(this, packet);
-}
-
-void CCharacter::SynBeginGMRecv(DWORD dwNpcID)
-{
-	//  :  UI  GM-
-	auto packet = net::msg::serialize(net::msg::McGmRecvMessage{static_cast<int64_t>(dwNpcID)});
 	ReflectINFof(this, packet);
 }
 
@@ -7259,7 +7252,7 @@ void CCharacter::CheatCheck(cChar *answer)
 		if(m_sCheatX.Xcount > 1)
 		{
 			//
-			g_CParser.DoString("WGPrizeBegin", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, m_sCheatX.Xright, DOSTRING_PARAM_END);
+			g_luaAPI.Call("WGPrizeBegin", static_cast<CCharacter*>(this), (int)m_sCheatX.Xright);
 		}
 	}
 	else

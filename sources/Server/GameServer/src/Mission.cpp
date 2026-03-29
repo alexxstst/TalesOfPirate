@@ -631,7 +631,7 @@ namespace mission
 						return;
 					}
 
-					lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+					luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 					lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
 					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 ); // ID
 					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 ); // 
@@ -763,7 +763,7 @@ namespace mission
 							return;
 						}
 
-						lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+						luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 						lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
 						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 ); // ID
 						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 ); // 
@@ -842,7 +842,7 @@ namespace mission
 					return;
 				}
 
-				lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+				luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 				lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
 				lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 );
 				lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 );
@@ -941,7 +941,7 @@ namespace mission
 						return;
 					}
 
-					lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+					luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 					lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
 					lua_pushnumber( g_pLuaState, 0 );
 					lua_pushnumber( g_pLuaState, 0 );
@@ -1011,7 +1011,7 @@ namespace mission
 					return;
 				}
 
-				lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+				luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 				lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
 				lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 );
 				lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 );
@@ -1066,7 +1066,7 @@ namespace mission
 			return;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+		luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 		lua_pushnumber( g_pLuaState, 88888 );
 		lua_pushnumber( g_pLuaState, 0 );
 		lua_pushnumber( g_pLuaState, 0 );
@@ -1109,7 +1109,7 @@ namespace mission
 			return;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+		luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 		lua_pushnumber( g_pLuaState, sTriID );
 		lua_pushnumber( g_pLuaState, 0 );
 		lua_pushnumber( g_pLuaState, sItemID );
@@ -1643,7 +1643,7 @@ namespace mission
 			return;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+		luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 		lua_pushnumber( g_pLuaState, m_Mission[nIndex].wParam1 );
 
 		int nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
@@ -1814,7 +1814,7 @@ namespace mission
 			return FALSE;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
+		luabridge::push( g_pLuaState, static_cast<CCharacter*>(m_pRoleChar) );
 		lua_pushnumber( g_pLuaState, wRoleID );
 		lua_pushnumber( g_pLuaState, wScriptID );
 

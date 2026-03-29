@@ -23,7 +23,7 @@
 #include "AreaRecord.h"
 #include "SkillTemp.h"
 #include "StateCell.h"
-#include "Parser.h"
+#include "LuaAPI.h"
 #include "CommFunc.h"
 #include "EntityAlloc.h"
 #include "MapRes.h"
@@ -151,11 +151,6 @@ public:
 	void	Handle_AddMoney(const net::msg::MmAddMoneyMessage& msg);
 	void	ProcessGroupBroadcast(unsigned short usCmd, GateServer *pGate, net::RPacket& pkt);
 	void	ProcessGarner2Update(const net::msg::PmGarner2UpdateLegacyMessage& msg);
-    // InfoServer
-    void    ProcessInfoMsg(pNetMessage msg, short sType, InfoServer *pInfo);
-    void    ProcessMsg(pNetMessage msg, InfoServer *pInfo);
-    void    OnInfoConnected(InfoServer *pInfo);
-    void    OnInfoDisconnected(InfoServer *pInfo);
     
 	//------------------------------------
 	
@@ -419,40 +414,36 @@ inline CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv)
 		// SP
 		if (strcmp(pCSkillRec->szUseSP, "0"))
 		{
-			if (g_CParser.DoString(pCSkillRec->szUseSP, enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END))
-				m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_CParser.GetReturnNumber(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseSP, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = 0;
-		// 
+		//
 		if (strcmp(pCSkillRec->szUseEndure, "0"))
 		{
-			if (g_CParser.DoString(pCSkillRec->szUseEndure, enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END))
-				m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_CParser.GetReturnNumber(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEndure, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = 0;
-		// 
+		//
 		if (strcmp(pCSkillRec->szUseEnergy, "0"))
 		{
-			if (g_CParser.DoString(pCSkillRec->szUseEnergy, enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END))
-				m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_CParser.GetReturnNumber(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEnergy, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = 0;
-		// 
+		//
 		m_pCSkillTData[sSkillNo][chSkillLv]->sRange[0] = enumRANGE_TYPE_NONE;
 		if (strcmp(pCSkillRec->szSetRange, "0"))
-			g_CParser.DoString(pCSkillRec->szSetRange, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END);
-		// 
+			g_luaAPI.Call(pCSkillRec->szSetRange, (int)chSkillLv);
+		//
 		m_pCSkillTData[sSkillNo][chSkillLv]->sStateParam[0] = SSTATE_NONE;
 		if (strcmp(pCSkillRec->szRangeState, "0"))
-			g_CParser.DoString(pCSkillRec->szRangeState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END);
-		// 
+			g_luaAPI.Call(pCSkillRec->szRangeState, (int)chSkillLv);
+		//
 		if (strcmp(pCSkillRec->szFireSpeed, "0"))
 		{
-			if (g_CParser.DoString(pCSkillRec->szFireSpeed, enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END))
-				m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = g_CParser.GetReturnNumber(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = g_luaAPI.CallR<int>(pCSkillRec->szFireSpeed, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = 0;
@@ -493,10 +484,14 @@ inline void CGameApp::InitSStateTraOnTime()
 			continue;
 		if (!strcmp(pSStateR->szOnTransfer, "0"))
 			continue;
+		if (!g_luaAPI.HasFunction(pSStateR->szOnTransfer))
+		{
+			ToLogService("lua", LogLevel::Warning, "Skill state {} has szOnTransfer='{}' but function not found", i, pSStateR->szOnTransfer);
+			continue;
+		}
 		for (int j = 1; j <= SKILL_STATE_LEVEL; j++)
 		{
-			if (g_CParser.DoString(pSStateR->szOnTransfer, enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 1, j, DOSTRING_PARAM_END))
-				m_lSStateTraOnTime[i][j] = g_CParser.GetReturnNumber(0);
+			m_lSStateTraOnTime[i][j] = g_luaAPI.CallR<int>(pSStateR->szOnTransfer, (int)j).value_or(0);
 		}
 	}
 }
@@ -622,13 +617,11 @@ inline bool CGameApp::DealAllInGuild(int guildID, const char* luaFunc, const cha
 			if (!pCha)
 				continue;
 			if (pCha->GetPlayer()->GetMainCha()->GetValidGuildID() == guildID) {
-				//g_CParser.DoString(luaFunc, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha,enumSCRIPT_PARAM_STRING,1,luaParam, DOSTRING_PARAM_END);
-				// angelix@pkodev.net 8/11/2019
 				if (luaParam != "") {
-					g_CParser.DoString(luaFunc, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, enumSCRIPT_PARAM_STRING, 1, luaParam, DOSTRING_PARAM_END);
+					g_luaAPI.Call(luaFunc, pCha, luaParam);
 				}
 				else {
-					g_CParser.DoString(luaFunc, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END);
+					g_luaAPI.Call(luaFunc, pCha);
 				}
 			}
 		}

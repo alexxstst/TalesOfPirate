@@ -1,283 +1,122 @@
-﻿//-----------------
-// 
 //-----------------
-inline int objIsValid(lua_State *L)
+//
+//-----------------
+inline int objIsValid(CSceneNode* pNode)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-
-    lua_pushnumber(L, pNode->IsValid());
-    return 1;
+    if (!pNode) return 0;
+    return pNode->IsValid();
 }
 
 //-----------
 // ID
 //-----------
-inline int objGetID(lua_State *L)
+inline int objGetID(CSceneNode* pNode)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    lua_pushnumber(L, pNode->getID());
-    return 1;
+    if (!pNode) return 0;
+    return pNode->getID();
 }
 
 
 //--------------------
 // ()
 //--------------------
-inline int objSetPos (lua_State * L)
+inline void objSetPos(CSceneNode* pNode, int x, int y)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-
-    pNode->setPos((int)lua_tonumber(L, 2), (int)lua_tonumber(L,3));
-    return 0;
+    if (!pNode) return;
+    pNode->setPos(x, y);
 }
 
 //-------------
-// 
-//-------------
-inline int objGetPos(lua_State *L)
+inline std::tuple<float, float> objGetPos(CSceneNode* pNode)
 {
-   // 
-    BOOL bValid = (lua_gettop (L)==1); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-    lua_pushnumber(L, pNode->GetCurX());
-    lua_pushnumber(L, pNode->GetCurY());
-    return 2;
+    if (!pNode) return {0.0f, 0.0f};
+    return {pNode->GetCurX(), pNode->GetCurY()};
 }
 
 //-------------
-// 
+//
 //-------------
-inline int objGetFaceAngle(lua_State *L)
+inline float objGetFaceAngle(CSceneNode* pNode)
 {
-   // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-    lua_pushnumber(L, pNode->getYaw());
-    return 1;
+    if (!pNode) return 0.0f;
+    return pNode->getYaw();
 }
 
 //-------------
-// 
+//
 //-------------
-inline int objSetFaceAngle(lua_State *L)
+inline void objSetFaceAngle(CSceneNode* pNode, int angle)
 {
-   // 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-    pNode->setYaw((int)lua_tonumber(L, 2));
-    return 0;
+    if (!pNode) return;
+    pNode->setYaw(angle);
 }
 
 //---------
-// 
+//
 //---------
-inline int objGetAttr(lua_State* L)
+inline int objGetAttr(CSceneNode* pNode, int sType)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-
-    short sType = (short)lua_tonumber(L, 2);
-    
-    lua_pushnumber(L, pNode->getGameAttr()->get(sType));
-    return 1;
+    if (!pNode) return 0;
+    return pNode->getGameAttr()->get((short)sType);
 }
 
 //---------
-// 
+//
 //---------
-inline int objSetAttr(lua_State* L)
+inline void objSetAttr(CSceneNode* pNode, int sType, int lValue)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    CSceneNode *pNode = (CSceneNode*)lua_touserdata(L, 1);
-    if(!pNode) return 0;
-
-    short sType  = (short)lua_tonumber(L, 2);
-    long  lValue = (long)lua_tonumber(L, 3);
-    
-    pNode->getGameAttr()->set(sType, lValue);
+    if (!pNode) return;
+    pNode->getGameAttr()->set((short)sType, (long)lValue);
     pNode->RefreshUI();
-    return 0;
 }
 
 //--------------------
 // ,
 //--------------------
-inline int chaSay(lua_State *L)
+inline void chaSay(CCharacter* pCha, const std::string& text)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isstring(L, 2));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
+    if (!pCha) return;
     CGameScene *pScene = g_pGameApp->GetCurScene();
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
-    // 
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-    const char *pszText = lua_tostring(L, 2);
-	if( pCha )
-	{
-		//extern CCozeMgr g_stUICoze;
-		//g_stUICoze.OnRoadSay( pCha, pszText );
-		CCozeForm::GetInstance()->OnSightMsg(pCha, pszText);
-	}
-    return 0;
+    if (!pScene) return;
+    CCozeForm::GetInstance()->OnSightMsg(pCha, text.c_str());
 }
 
 //-------------------------
 // ()
 //-------------------------
-inline int chaMoveTo(lua_State *L)
+inline void chaMoveTo(CCharacter* pCha, int x, int y)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
+    if (!pCha) return;
     CGameScene *pScene = g_pGameApp->GetCurScene();
-    if(pScene==NULL)
-    {
-        SCENE_NULL_ERROR
-        return 0;
-    }
-    
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-    if(!pCha) return 0;
-
-	CWorldScene* pWorld = dynamic_cast<CWorldScene*>(pScene);
-	if( pWorld ) pWorld->GetMouseDown().ActMove( pCha, (int)lua_tonumber(L, 2), (int)lua_tonumber(L, 3) );
-    return 0;
+    if (!pScene) return;
+    CWorldScene* pWorld = dynamic_cast<CWorldScene*>(pScene);
+    if (pWorld) pWorld->GetMouseDown().ActMove(pCha, x, y);
 }
 
 //-------------
-// 
+//
 //-------------
-inline int chaStop(lua_State *L)
+inline void chaStop(CCharacter* pCha)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-    if(!pCha) return 0;
-
+    if (!pCha) return;
     pCha->GetActor()->Stop();
-    return 0;
 }
 
 
 //-----------------
-// 
+//
 //-----------------
-inline int chaChangePart(lua_State *L)
+inline int chaChangePart(CCharacter* pCha, int nTabID)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-    if(!pCha) return 0;
-
-    int nTabID = (int)lua_tonumber(L, 2);
-    BOOL bOK = pCha->ChangePart(nTabID);
-    lua_pushnumber(L, bOK);
-    return 1;
+    if (!pCha) return 0;
+    return pCha->ChangePart(nTabID);
 }
 
 //-------------
-// 
+//
 //-------------
-inline int chaPlayPose(lua_State *L)
+inline void chaPlayPose(CCharacter* pCha, int nPoseID, int bHold)
 {
-    // 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) && lua_isnumber(L,3));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-    if(!pCha) return 0;
-
-    
-    int nPoseID = (int)lua_tonumber(L, 2);
-    BOOL bHold = (BOOL)lua_tonumber(L, 3); 
-    pCha->GetActor()->PlayPose( nPoseID, bHold!=FALSE );
-    return 0;
+    if (!pCha) return;
+    pCha->GetActor()->PlayPose(nPoseID, bHold != 0);
 }
-
-
-

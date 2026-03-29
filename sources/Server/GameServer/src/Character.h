@@ -416,6 +416,16 @@ public:
 	BOOL	HasItemBagTemp(USHORT sItemID, USHORT sCount);
 	BOOL	TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szName[]);
 
+	//  (   InfoNet.h)
+	struct ItemInfo
+	{
+		short       itemID;
+		unsigned char itemNum;
+		unsigned char itemFlute;
+		short       itemAttrID[5];
+		short       itemAttrVal[5];
+	};
+
 	//
 	BOOL	AddItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *pItemAttr, BYTE bySoundType = enumSYN_KITBAG_FROM_NPC );
 	BOOL	AddItem2KitbagTemp( USHORT sItemID, USHORT sCount, const char szName[], BYTE byAddType = enumITEM_INST_TASK, BYTE bySoundType = enumSYN_KITBAG_FROM_NPC );
@@ -575,8 +585,6 @@ public:
 	void	SynEspeItem(void);
 	void	SynVolunteerState(BOOL bState);
 	void	SynTigerString(cChar *szString);
-	void	SynBeginGMSend();
-	void	SynBeginGMRecv(DWORD dwNpcID);
 
 	//
 

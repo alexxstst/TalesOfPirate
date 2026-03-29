@@ -5,7 +5,7 @@
 #include "MoveAble.h"
 #include "GameApp.h"
 #include "CommFunc.h"
-#include "Parser.h"
+#include "LuaAPI.h"
 
 using namespace std;
 _DBC_USING
@@ -1568,7 +1568,7 @@ void SubMap::ClearPlayerCha()
 				ToLogService("map", "map {} closeclean out {}[{}]!", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				if (!pCProcCha->IsLiveing())
 				{
-					g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCProcCha, DOSTRING_PARAM_END);
+					g_luaAPI.Call("Relive", pCProcCha);
 
 					pCProcCha->m_chSelRelive = enumEPLAYER_RELIVE_NONE;
 					pCProcCha->m_chReliveLv = 0;
@@ -1700,7 +1700,7 @@ void SubMap::ClearAllCha()
 				ToLogService("map", "map {} close,clean out character {}[{}]!", GetName(), pCProcCha->GetName(), pCProcCha->GetPlyMainCha()->GetName());
 				if (!pCProcCha->IsLiveing())
 				{
-					g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCProcCha, DOSTRING_PARAM_END);
+					g_luaAPI.Call("Relive", pCProcCha);
 
 					pCProcCha->m_chSelRelive = enumEPLAYER_RELIVE_NONE;
 					pCProcCha->m_chReliveLv = 0;
@@ -1744,14 +1744,14 @@ void SubMap::Run(DWORD dwCurTime)
 	{
 		string	strScript = "map_copy_run_";
 		strScript += GetName();
-		g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+		g_luaAPI.Call(strScript.c_str(), this);
 	}
 
 	if (m_timeSpecialRun.IsOK(dwCurTime))
 	{
 		string	strScript = "map_copy_run_special_";
 		strScript += GetName();
-		g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+		g_luaAPI.Call(strScript.c_str(), this);
 
 	}
 
@@ -1763,7 +1763,7 @@ void SubMap::Close()
 		return;
 	string	strScript = "map_copy_before_close_";
 	strScript += GetName();
-	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call(strScript.c_str(), this);
 
 	ClearSurfaceState();
 
@@ -1773,7 +1773,7 @@ void SubMap::Close()
 
 	strScript = "map_copy_close_";
 	strScript += GetName();
-	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call(strScript.c_str(), this);
 
 	m_bIsRun = false;
 }
@@ -1784,14 +1784,14 @@ void SubMap::BeforePlyOutMap(CCharacter *pCCha)
 
 	string	strScript = "before_leave_";
 	strScript += GetName();
-	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call(strScript.c_str(), pCCha, this);
 }
 
 void SubMap::AfterPlyEnterMap(CCharacter *pCCha)
 {
 	string	strScript = "after_enter_";
 	strScript += GetName();
-	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pCCha, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call(strScript.c_str(), pCCha, this);
 }
 
 void SubMap::BeginGetPlyCha(void)
@@ -1845,7 +1845,7 @@ bool SubMap::CheckRun(void)
 
 				string	strScript = "map_copy_first_run_";
 				strScript += GetName();
-				g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+				g_luaAPI.Call(strScript.c_str(), this);
 
 				return true;
 			}
@@ -1864,10 +1864,10 @@ void SubMap::DealActivePlayer(string& function)
 	{
 		if(pCha->IsPlayerCha() && pCha->IsLiveing())
 		{
-			g_CParser.DoString(function.c_str(),enumSCRIPT_RETURN_NONE, 0,enumSCRIPT_PARAM_LIGHTUSERDATA, 1,pCha,DOSTRING_PARAM_END);
+			g_luaAPI.Call(function.c_str(), pCha);
 		}
 	}
-	
+
 
 }
 
@@ -1880,7 +1880,7 @@ void SubMap::DealPlayer(string& function)
 	{
 		if(pCha->IsPlayerCha())
 		{
-			g_CParser.DoString(function.c_str(),enumSCRIPT_RETURN_NONE, 0,enumSCRIPT_PARAM_LIGHTUSERDATA, 1,pCha,DOSTRING_PARAM_END);
+			g_luaAPI.Call(function.c_str(), pCha);
 		}
 	}
 }

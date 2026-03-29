@@ -6,7 +6,7 @@
 //=============================================================================
 #include "stdafx.h"
 #include "MapEntry.h"
-#include "Parser.h"
+#include "LuaAPI.h"
 #include "NetCommand.h"
 
 using namespace std;
@@ -178,7 +178,7 @@ void CDynMapEntry::AfterPlayerLogin(const char *cszName)
 	{
 		string	strScript = "after_player_login_";
 		strScript += pCCell->GetTMapName();
-		g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCell, enumSCRIPT_PARAM_STRING, 1, cszName, DOSTRING_PARAM_END);
+		g_luaAPI.Call(strScript.c_str(), pCCell, cszName);
 	}
 }
 

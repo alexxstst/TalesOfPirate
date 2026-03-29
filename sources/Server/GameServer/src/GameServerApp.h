@@ -13,13 +13,6 @@
 #include "gtplayer.h"
 #include "util.h"
 
-#pragma pack( push, before_InfoNet )
-#pragma pack( 8 )
-#include "InfoNet.h"
-#pragma pack( pop, before_InfoNet )
-
-#include "MsgQueue.h"
-#include "Task.h"
 #include "CorsairsNet.h"
 
 #include <mutex>
@@ -97,128 +90,6 @@ protected:
 };
 
 
-// InfoServer   
-class NetMessageQueue : public MsgQueue<pNetMessage> {
-public:
-	~NetMessageQueue() {
-		Clear();
-	}
-
-	void Clear() {
-		std::deque<pNetMessage>::iterator it;
-
-		m_lock.lock();
-		for (it = m_queue.begin(); it != m_queue.end(); it++) {
-			FreeNetMessage(*it);
-		}
-		m_queue.clear();
-		m_lock.unlock();
-	}
-};
-
-// InfoServer  
-class InfoServer : public InfoNetBase {
-public:
-	enum {
-		CMD_FM_CONNECTED,
-		CMD_FM_DISCONNECTED,
-		CMD_FM_MSG,
-
-		CMD_INFO_MSG_MAX
-	};
-
-	InfoServer() : m_usPort(0), m_strIp(""), m_strPwd(""), bValid(false), m_nSection(0) {
-	}
-
-	~InfoServer() {
-	}
-
-	bool IsValid() {
-		return bValid;
-	}
-
-	void SetValid() {
-		bValid = true;
-	}
-
-	void InValid() {
-		bValid = false;
-	}
-
-	std::string GetIP() {
-		return m_strIp;
-	}
-
-	std::string GetPwd() {
-		return m_strPwd;
-	}
-
-	unsigned short GetPort() {
-		return m_usPort;
-	}
-
-	void SetInfoServer(std::string strIP, unsigned short usPort, std::string strPwd, int nSection) {
-		if (usPort) {
-			m_strIp = strIP;
-			m_usPort = usPort;
-			m_strPwd = strPwd;
-			m_nSection = nSection;
-		}
-	}
-
-	void Login();
-
-	virtual bool SendData(pNetMessage msg) {
-		bool bSend = false;
-		msg->msgHead.msgSection = m_nSection;
-
-		try {
-			bSend = PostInfoSend(msg);
-		}
-		catch (...) {
-			ToLogService("store", LogLevel::Error, "SendData Error!");
-		}
-
-		return bSend;
-	}
-
-	virtual long PeekMsg(unsigned long ms);
-
-	virtual void OnConnect(bool result);
-
-	virtual void OnNetMessage(pNetMessage msg) {
-		m_MsgQueue.Push(msg);
-	}
-
-	virtual void OnResend(pNetMessage msg) {
-	}
-
-	virtual void OnDisconnect();
-
-protected:
-	std::string m_strIp;
-	unsigned short m_usPort;
-	std::string m_strPwd;
-	int m_nSection;
-	bool bValid;
-	NetMessageQueue m_MsgQueue;
-};
-
-//   InfoServer    ( dbc::Task  ThreadPool)
-class ToInfoServer : public dbc::Task {
-public:
-	ToInfoServer(GameServerApp* gmsvr) {
-		m_gmsvr = gmsvr;
-		m_dwTimeOut = 30000;
-	}
-
-private:
-	virtual long Process();
-	GameServerApp* m_gmsvr;
-	DWORD m_dwTimeOut;
-};
-
-
 // Callback-   GateServer
 class GateHandler : public net::ITcpClientHandler {
 public:
@@ -241,8 +112,6 @@ private:
 
 //      (CorsairsNet)
 class GameServerApp {
-	friend class ToInfoServer;
-	friend class InfoServer;
 	friend class GateHandler;
 
 public:
@@ -256,13 +125,6 @@ public:
 
 	bool IsValidGate(int i);
 	GateServer* FindGate(char const* gt_name);
-
-	bool ConnectInfo(InfoServer* pInfo);
-	void DisconnectInfo(InfoServer* pInfo);
-
-	InfoServer* GetInfoServer() {
-		return &m_IfServer;
-	}
 
 	// Player  (GateServer  GatePlayer   )
 	bool AddPlayer(GatePlayer* gtplayer, GateServer* gt, unsigned long gtaddr);
@@ -294,8 +156,6 @@ public:
 
 	//   (  GateHandler::OnPacket  game thread)
 	void ProcessData(GateServer* gt, net::RPacket& pk);
-	//  InfoServer 
-	void ProcessData(pNetMessage msg, short sType);
 
 	//  OnServeCall- (CMD_TM_KICKCHA, CMD_TM_OFFLINE_MODE)  SESS-echo
 	void HandleServeCall(GateServer* gt, net::RPacket& pk);
@@ -323,8 +183,6 @@ private:
 	// -1 =  , >= 0 =  
 	std::atomic<int> m_pendingConnect{-1};
 	std::atomic<int> m_pendingDisconnect{-1};
-
-	InfoServer m_IfServer;
 
 	std::string m_strGameName;
 };

@@ -1,299 +1,164 @@
-﻿#include "lua_gamectrl.h"
+#include "lua_gamectrl.h"
 
 
 // , 0
-inline int lua_IsChaInTeam(lua_State *L)
+inline int IsChaInTeam(CCharacter* pCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
     {
 		CPlayer *pPlayer = pCha->GetPlayer();
 		if(pPlayer)
-		{
-			lua_pushnumber(L, pPlayer->GetTeamMemberCnt());
-			return 1;
-		}
+			return pPlayer->GetTeamMemberCnt();
 	}
-	lua_pushnumber(L, 0);
-	return 1;
+	return 0;
 }
 
 // , 0
-inline int lua_GetTeamCha(lua_State *L)
+inline CCharacter* GetTeamCha(CCharacter* pCha, int nNo)
 {
-	// 
-	BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (!pCha) 
-	{
-		return 0;
-	}
+	if (!pCha)
+		return nullptr;
 	CPlayer *pPlayer = pCha->GetPlayer();
-	if(pPlayer==NULL) return 0;
+	if(pPlayer==NULL) return nullptr;
 
-	int nNo = (int)lua_tonumber(L, 2);
-	
 	if(nNo>=pPlayer->GetTeamMemberCnt())
-	{
-		return 0;
-	}
+		return nullptr;
 
 	CPlayer *pMember = g_pGameApp->GetPlayerByDBID(pPlayer->GetTeamMemberDBID(nNo));
 	if (!pMember)
-	{
-		// LG("harm", "[%d], !\n", nNo); 
-		return 0;
-	}
-	
-	if(pMember->GetCtrlCha()->IsLiveing()==false) // , nil
-	{
-		return 0;
-	}
+		return nullptr;
 
-	lua_pushlightuserdata(L, pMember->GetCtrlCha());
-	// LG("harm", "[%d] = [%s]\n", nNo, pMember->GetCtrlCha()->GetName());
-	return 1;
+	if(pMember->GetCtrlCha()->IsLiveing()==false)
+		return nullptr;
+
+	return pMember->GetCtrlCha();
 }
 
-// 
-inline int lua_IsChaInRegion(lua_State *L)
+//
+inline int IsChaInRegion(CCharacter* pCha, int nRegionDef)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
 	if (pCha)
-	{	
-		int nRegionDef = (int)lua_tonumber(L, 2);
+	{
 		if(pCha->IsInArea(nRegionDef))
-		{
-			lua_pushnumber(L, 1);
-		}
-	}
-	else
-	{
-		lua_pushnumber(L, 0);
-	}
-	return 1; 
-}
-
-
-// 
-inline int lua_GetChaDefaultName(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha)
-	{	
-		lua_pushstring(L, pCha->GetName());
-		return 1;
+			return 1;
+		return 0;
 	}
 	return 0;
 }
 
-extern int lua_GetChaAttr(lua_State *pLS);
-extern int lua_SetChaAttr(lua_State *pLS);
-// 
-inline int lua_GetChaAttrI(lua_State *L)
+
+//
+inline std::string GetChaDefaultName(CCharacter* pCha)
 {
-	return lua_GetChaAttr(L);
+	if (pCha)
+		return std::string(pCha->GetName());
+	return std::string();
 }
 
-// 
-inline int lua_SetChaAttrI(lua_State *L)
+extern int GetChaAttr_raw(lua_State *pLS);
+//
+// Delegates to raw GetChaAttr_raw from Expand.h
+inline int GetChaAttrI_raw(lua_State *L)
 {
-	return lua_SetChaAttr(L);
+	return GetChaAttr_raw(L);
 }
 
-// 
-inline int lua_IsPlayer(lua_State *L)
+//
+// Inlined version of SetChaAttr logic (original lua_SetChaAttr was removed)
+inline int SetChaAttrI_raw(lua_State *L)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
+	int nParaNum = lua_gettop(L);
+	if (nParaNum > 3) return 0;
 
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if(pCha->GetPlayer())
-	{
-		lua_pushnumber(L, 1);
-	}
-	else
-	{
-		lua_pushnumber(L, 0);
-	}
+	CCharacter* pCCha = static_cast<CCharacter*>(lua_touserdata(L, 1));
+	short sAttrIndex = static_cast<int64_t>(lua_tonumber(L, 2));
+	LONG32 lValue = static_cast<int64_t>(lua_tonumber(L, 3));
+
+	if (!pCCha) return 0;
+	if (sAttrIndex < 0 || sAttrIndex >= ATTR_MAX_NUM) return 0;
+
+	long lSetRet = pCCha->setAttr(sAttrIndex, lValue);
+	if (lSetRet == 0) return 0;
 	return 1;
 }
 
-// , 
-inline int lua_SetChaAttrMax(lua_State *L)
+//
+inline int IsPlayer(CCharacter* pCha)
 {
+	if(!pCha) return 0;
+	if(pCha->GetPlayer())
+		return 1;
+	return 0;
+}
 
-	// 
-    BOOL bValid = (lua_gettop(L)==2 && lua_isnumber(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-		PARAM_ERROR;
-		return 0;
-	}
-
-	int  nNo    = (unsigned __int64)lua_tonumber(L, 1);
-	
+// ,
+inline void SetChaAttrMax(int nNo, unsigned int lValue)
+{
 	if(nNo < ATTR_MAX_NUM)
 	{
-		LONG32 lValue = (unsigned __int64)lua_tonumber(L, 2);
-		g_lMaxChaAttr[nNo] = lValue;
+		g_lMaxChaAttr[nNo] = (LONG32)lValue;
 		g_pGameApp->ChaAttrMaxValInit(true);
 	}
-	return 0;
 }
 
-// , , 
-inline int lua_AddWeatherRegion(lua_State *L)
+// , ,
+inline void AddWeatherRegion(int btType, int dwFre, int dwLastTime, int sx, int sy, int w, int h)
 {
-	// 
-    BOOL bValid = (lua_gettop(L)==7 && lua_isnumber(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3) 
-		                            && lua_isnumber(L, 4) && lua_isnumber(L, 5) && lua_isnumber(L, 6)
-									&& lua_isnumber(L, 7));
-	if(!bValid) 
-    {
-		PARAM_ERROR;
-		return 0;
-	}
-
-	BYTE btType      = (BYTE)lua_tonumber(L, 1);
-	DWORD dwFre      = (DWORD)lua_tonumber(L, 2);
-	DWORD dwLastTime = (DWORD)lua_tonumber(L, 3);
-	int sx = (int)lua_tonumber(L, 4);
-	int sy = (int)lua_tonumber(L, 5);
-	int w  = (int)lua_tonumber(L, 6);
-	int h  = (int)lua_tonumber(L, 7);
-
 	sx = sx / 2;
 	sy = sy / 2;
 
 	w = w / 2 + w%2;
 	h = h / 2 + h%2;
 
-	CWeather *pNew = new CWeather(btType);
+	CWeather *pNew = new CWeather((BYTE)btType);
 	pNew->SetFrequence(dwFre + 10 + rand()%20);
 	pNew->SetRange(sx, sy, w, h);
 	pNew->SetStateLastTime(dwLastTime);
-	
+
 	g_pScriptMap->m_WeatherMgr.AddWeatherRange(pNew);
 
-	//LG("weather", "[%d],  = %d,  = %d, location = %d %d, %d %d\n", btType, dwFre, dwLastTime, sx, sy, w, h);
 	ToLogService("common", "add weather area[{}], occur time limit = {}, duration = {}, location = {} {}, {} {}", btType, dwFre, dwLastTime, sx, sy, w, h);
-	return 0;
 }
 
 
-// 
-inline int lua_ClearMapWeather(lua_State *L)
+//
+inline void ClearMapWeather()
 {
-	if(!g_pScriptMap) return 0;
+	if(!g_pScriptMap) return;
 
 	g_pScriptMap->m_WeatherMgr.ClearAll();
-	//LG("weather", "[%s]!\n", g_pScriptMap->GetName());
 	ToLogService("common", "weed out map[{}] upon all weather area!", g_pScriptMap->GetName());
+}
+
+//
+inline void SetBoatCtrlTick(CCharacter* pCha, int tick)
+{
+	if(pCha)
+		pCha->m_dwBoatCtrlTick = tick;
+}
+
+//
+inline int GetBoatCtrlTick(CCharacter* pCha)
+{
+	if(pCha)
+		return (int)pCha->m_dwBoatCtrlTick;
 	return 0;
 }
 
-// 
-inline int lua_SetBoatCtrlTick(lua_State *L)
+// ,
+//  : , (1   2),
+//
+inline CCharacter* SummonCha(CCharacter* pHost, int sType, int sChaInfoID)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
+	if(!pHost) return nullptr;
 
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if(pCha)
-	{
-		pCha->m_dwBoatCtrlTick = (int)lua_tonumber(L, 2);
-	}
-	return 0;
-}
-
-// 
-inline int lua_GetBoatCtrlTick(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if(pCha)
-	{
-		lua_pushnumber(L, pCha->m_dwBoatCtrlTick);
-	}
-	else
-	{
-		lua_pushnumber(L, 0);
-	}
-	return 1;
-}
-
-// ,    
-//  : , (1   2), 
-//  
-inline int lua_SummonCha(lua_State *L)
-{
-	// 
-    BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pHost = (CCharacter*)lua_touserdata(L, 1); 
-	short sType       = (short)lua_tonumber(L ,2);
-	short sChaInfoID  = (short)lua_tonumber(L, 3);
-	
 	Point	Pos = pHost->GetPos();
-	
-	int nChaType = enumCHACTRL_NONE;
+
 	CCharacter *pCha = NULL;
-	
-	if(sType==1)		// 
+
+	if(sType==1)		//
 	{
-		pCha = pHost->GetSubMap()->ChaSpawn(sChaInfoID, enumCHACTRL_PLAYER_PET, rand()%360, &Pos);
+		pCha = pHost->GetSubMap()->ChaSpawn((short)sChaInfoID, enumCHACTRL_PLAYER_PET, rand()%360, &Pos);
 		if (pCha)
 		{
 			pCha->m_HostCha = pHost;
@@ -301,10 +166,10 @@ inline int lua_SummonCha(lua_State *L)
 			pCha->m_AIType = 0;
 		}
 	}
-	else if(sType==2)		// 
+	else if(sType==2)		//
 	{
 		Pos.move(rand() % 360, 3 * 100);
-		pCha = pHost->GetSubMap()->ChaSpawn(sChaInfoID, enumCHACTRL_PLAYER_PET, rand()%360, &Pos);
+		pCha = pHost->GetSubMap()->ChaSpawn((short)sChaInfoID, enumCHACTRL_PLAYER_PET, rand()%360, &Pos);
 		if (pCha)
 		{
 			pCha->m_HostCha = pHost;
@@ -312,38 +177,24 @@ inline int lua_SummonCha(lua_State *L)
 			pCha->m_AIType = 5;
 		}
 	}
-	
+
 	if(pCha==NULL)
 	{
-		//pHost->SystemNotice( "[%d %d]", sType, sChaInfoID );
 		pHost->SystemNotice( "call character[%d %d]failed", sType, sChaInfoID );
-		return 0;
+		return nullptr;
 	}
 
-	lua_pushlightuserdata(L, pCha);
-	return 1;
+	return pCha;
 }
 
-// 
-//  : 
-//  
-inline int lua_DelCha(lua_State *L)
+//
+//  :
+//
+inline void DelCha(CCharacter* pCTarCha)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	CCharacter *pCTarCha = (CCharacter*)lua_touserdata(L, 1);
 	if (!pCTarCha)
-		return 0;
-	if (pCTarCha->IsPlayerCtrlCha()) // 
-		return 0;
+		return;
+	if (pCTarCha->IsPlayerCtrlCha())
+		return;
 	pCTarCha->Free();
-
-	return 0;
 }
-

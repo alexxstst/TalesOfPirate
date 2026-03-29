@@ -7,6 +7,7 @@
 #include "GameDB.h"
 #include "SubMap.h"
 #include "lua_gamectrl.h"
+#include "LuaAPI.h"
 
 //---------------------------------------------------------
 mission::CCharBoat g_CharBoat;
@@ -1053,7 +1054,7 @@ namespace mission
 		if (bLoadState)
 			Strin2SStateData(&boat, g_strChaState[1]);
 
-		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, &owner, &boat, DOSTRING_PARAM_END );
+		g_luaAPI.Call("Ship_ExAttrCheck", &owner, &boat);
 
 		return TRUE;
 	}

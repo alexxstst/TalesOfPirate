@@ -73,6 +73,8 @@
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
     </ClCompile>
     <Link>
       <AdditionalDependencies>util_D.lib;Common_D.lib;legacy_stdio_definitions.lib;cryptlib.lib;%(AdditionalDependencies)</AdditionalDependencies>

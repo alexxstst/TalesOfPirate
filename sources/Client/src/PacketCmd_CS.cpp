@@ -8,11 +8,7 @@
 #include "UIBoothForm.h"
 #include "UIStoreForm.h"
 #include "CommandMessages.h"
-//  uChar, uShort, uLong, cChar   NetIF.h
-// Crypto++  BLAKE2s   
-#include "blake2.h"
-#include "hex.h"
-#include "filters.h"
+#include "CryptoUtils.h"
 //------------------------
 // C->S : 
 //------------------------
@@ -169,14 +165,7 @@ void CS_Register(const char *user,const char *pass,const char *email)
 	pk.WriteCmd(CMD_CM_REGISTER);
 	pk.WriteString(user);
 	
-	//char szBuf[33]={ 0 };
-	//md5string(pass, szBuf);
-	std::string digest;
-	std::string hexencoded;
-	CryptoPP::BLAKE2s d;
-	CryptoPP::StringSource(pass, true, new CryptoPP::HashFilter(d, new CryptoPP::StringSink(digest)));
-	CryptoPP::StringSource(digest, true, new CryptoPP::HexEncoder(new CryptoPP::StringSink(hexencoded)));
-	pk.WriteString(hexencoded.c_str());
+	pk.WriteString(HashPassword(pass));
 	pk.WriteString(email);
 	g_NetIF->SendPacketMessage(pk);
 	*/

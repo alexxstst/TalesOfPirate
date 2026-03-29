@@ -61,7 +61,7 @@
     <ClCompile>
       <AdditionalOptions>/GR /EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\Status\Include;$(ProjectDir)..\..\Libraries\EncLib\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\EncLib\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -79,12 +79,13 @@
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <SDLCheck>false</SDLCheck>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>AudioSDL_D.lib;MindPower3D_D8D.lib;Ws2_32.lib;lua51.lib;CorsairsNet_D.lib;util_D.lib;Common_D.lib;dxguid.lib;ddraw.lib;atls.lib;PAI.lib;Status_D.lib;SDL.lib;SDL_mixer.lib;SDLmain.lib;ICUHelper_D.lib;icudt.lib;icuucd.lib;icuind.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AudioSDL_D.lib;MindPower3D_D8D.lib;Ws2_32.lib;lua51.lib;CorsairsNet_D.lib;util_D.lib;Common_D.lib;dxguid.lib;ddraw.lib;atls.lib;PAI.lib;SDL.lib;SDL_mixer.lib;SDLmain.lib;ICUHelper_D.lib;icudt.lib;icuucd.lib;icuind.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib;$(ProjectDir)..\..\Libraries\Common\lib;$(ProjectDir)..\..\Libraries\Status\Lib;$(ProjectDir)..\..\Libraries\Util\lib;$(ProjectDir)..\..\Libraries\EncLib\lib;$(ProjectDir)..\..\Libraries\CorsairsNet\lib;$(ProjectDir)..\..\Libraries\Ipss\lib;$(ProjectDir)..\..\Libraries\AudioSDL\lib;$(ProjectDir)..\..\Libraries\SDL-1.2.7\LIB;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\AudioDll\lib;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib;$(ProjectDir)..\..\Libraries\ICUHelper\Lib;$(ProjectDir)..\..\Libraries\icu\lib;$(ProjectDir)..\..\Libraries\Discord\lib;$(ProjectDir)..\..\Libraries\Cryptopp\Win32\Output\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib;$(ProjectDir)..\..\Libraries\Common\lib;$(ProjectDir)..\..\Libraries\Util\lib;$(ProjectDir)..\..\Libraries\EncLib\lib;$(ProjectDir)..\..\Libraries\CorsairsNet\lib;$(ProjectDir)..\..\Libraries\Ipss\lib;$(ProjectDir)..\..\Libraries\AudioSDL\lib;$(ProjectDir)..\..\Libraries\SDL-1.2.7\LIB;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\AudioDll\lib;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib;$(ProjectDir)..\..\Libraries\ICUHelper\Lib;$(ProjectDir)..\..\Libraries\icu\lib;$(ProjectDir)..\..\Libraries\Discord\lib;$(ProjectDir)..\..\Libraries\Cryptopp\Win32\Output\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>libci.lib;MSVCRT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,7 +107,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\Status\Include;$(ProjectDir)..\..\Libraries\EncLib\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\EncLib\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;NARROW;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <MinimalRebuild>false</MinimalRebuild>
@@ -128,11 +129,11 @@
     </ClCompile>
     <Link>
       <RegisterOutput>false</RegisterOutput>
-      <AdditionalDependencies>AudioSDL.lib;MindPower3D_D8R.lib;lua51.lib;Ws2_32.lib;CorsairsNet.lib;util.lib;Common.lib;dxguid.lib;atls.lib;PAI.lib;Status.lib;SDL.lib;SDL_mixer.lib;SDLmain.lib;ddraw.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AudioSDL.lib;MindPower3D_D8R.lib;lua51.lib;Ws2_32.lib;CorsairsNet.lib;util.lib;Common.lib;dxguid.lib;atls.lib;PAI.lib;SDL.lib;SDL_mixer.lib;SDLmain.lib;ddraw.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;ICUHelper.lib;icudt.lib;icuuc.lib;icuin.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib;$(ProjectDir)..\..\Libraries\Common\lib;$(ProjectDir)..\..\Libraries\Status\Lib;$(ProjectDir)..\..\Libraries\Util\lib;$(ProjectDir)..\..\Libraries\EncLib\lib;$(ProjectDir)..\..\Libraries\CorsairsNet\lib;$(ProjectDir)..\..\Libraries\Ipss\lib;$(ProjectDir)..\..\Libraries\AudioSDL\lib;$(ProjectDir)..\..\Libraries\SDL-1.2.7\LIB;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\AudioDll\lib;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib;$(ProjectDir)..\..\Libraries\ICUHelper\Lib;$(ProjectDir)..\..\Libraries\icu\lib;$(ProjectDir)..\..\Libraries\Discord\lib;$(ProjectDir)..\..\Libraries\Cryptopp\Win32\Output\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib;$(ProjectDir)..\..\Libraries\Common\lib;$(ProjectDir)..\..\Libraries\Util\lib;$(ProjectDir)..\..\Libraries\EncLib\lib;$(ProjectDir)..\..\Libraries\CorsairsNet\lib;$(ProjectDir)..\..\Libraries\Ipss\lib;$(ProjectDir)..\..\Libraries\AudioSDL\lib;$(ProjectDir)..\..\Libraries\SDL-1.2.7\LIB;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\AudioDll\lib;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib;$(ProjectDir)..\..\Libraries\ICUHelper\Lib;$(ProjectDir)..\..\Libraries\icu\lib;$(ProjectDir)..\..\Libraries\Discord\lib;$(ProjectDir)..\..\Libraries\Cryptopp\Win32\Output\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;LIBCI.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
@@ -156,6 +157,7 @@
     <ClCompile Include="..\src\AudioThread.cpp" />
     <ClCompile Include="..\src\AutoAttack.cpp" />
     <ClCompile Include="..\src\CameraCtrl.cpp" />
+    <ClCompile Include="..\src\CryptoUtils.cpp" />
     <ClCompile Include="..\src\Character.cpp" />
     <ClCompile Include="..\src\CharacterAction.cpp" />
     <ClCompile Include="..\src\CharacterModel.cpp" />
@@ -362,6 +364,7 @@
     <ClInclude Include="..\src\AutoAttack.h" />
     <ClInclude Include="..\src\BoolSet.h" />
     <ClInclude Include="..\src\CameraCtrl.h" />
+    <ClInclude Include="..\src\CryptoUtils.h" />
     <ClInclude Include="..\src\ChaClientAttr.h" />
     <ClInclude Include="..\src\ChaCreateSet.h" />
     <ClInclude Include="..\src\Character.h" />

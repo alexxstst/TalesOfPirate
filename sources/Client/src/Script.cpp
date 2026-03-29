@@ -152,12 +152,12 @@ bool CScriptMgr::Init() {
 	MPInitLua_App(g_LuaState);
 	MPInitLua_Cha(g_LuaState);
 
-	// Load Lua scripts
+	// Load Lua scripts (debug.lua first — defines utility functions)
+	LoadLuaScript(g_LuaState, "scripts/lua/debug.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/scene.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/scene/face.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/CameraConf.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/CharacterConf.lua");
-
 	LoadLuaScript(g_LuaState, "scripts/lua/mission/mission.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/mission/missioninfo.lua");
 

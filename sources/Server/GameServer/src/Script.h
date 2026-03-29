@@ -6,13 +6,27 @@
 #define _SCRIPT_H_
 
 #include "lua.hpp"
+#include <LuaBridge.h>
 
 void print_error(lua_State* state);
 
-#define lua_dofile(L, fn) \
-	if ((luaL_loadfile(L, fn) || lua_pcall(L, 0, LUA_MULTRET, 0)) != 0) { \
-		print_error(L); \
-	}
+// luaL_dofile / luaL_dostring with built-in error logging
+#undef luaL_dofile
+#define luaL_dofile(L, fn) \
+	((luaL_loadfile(L, fn) || lua_pcall(L, 0, LUA_MULTRET, 0)) != 0 ? (print_error(L), 1) : 0)
+
+#undef luaL_dostring
+#define luaL_dostring(L, s) \
+	((luaL_loadstring(L, s) || lua_pcall(L, 0, LUA_MULTRET, 0)) != 0 ? (print_error(L), 1) : 0)
+
+// Legacy compat
+#define lua_dofile(L, fn) luaL_dofile(L, fn)
+
+// Register a C++ function in Lua via LuaBridge (name matches symbol)
+#define LUABRIDGE_REGISTER_FUNC(fn) .addFunction(#fn, fn)
+
+// Register a raw lua_CFunction directly
+#define LUA_REGISTER_CFUNC(L, fn) lua_register(L, #fn, fn)
 
 #include "dbccommon.h"
 #include "Character.h"

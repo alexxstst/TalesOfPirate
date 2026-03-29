@@ -143,8 +143,6 @@ public:
 	bool		OpenEnergy(CCharacter *pCNpc);
 	bool		OpenGetStone(CCharacter *pCNpc);
 	bool		OpenTiger(CCharacter *pCNpc);
-	bool		OpenGMSend(CCharacter *pCNpc);
-	bool		OpenGMRecv(CCharacter *pCNpc);
 
 	CCharacter*	GetForgeman(void) {return m_pCForgeman;}
 	bool		IsInForge(void) {return m_bInForge;}

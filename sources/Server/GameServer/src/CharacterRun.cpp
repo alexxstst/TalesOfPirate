@@ -4,6 +4,7 @@
 #include "GameDB.h"
 #include "GameApp.h"
 #include "SubMap.h"
+#include "LuaAPI.h"
 
 //----------------------------------------------
 //       Character
@@ -40,8 +41,8 @@ void CCharacter::Run(DWORD dwCurTime)
 				if (nPetNum > 0)
 					m_HostCha->GetPlyMainCha()->SetPetNum(nPetNum - 1);
 			}
-			//  
-			g_CParser.DoString("event_cha_lifetime", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+			//
+			g_luaAPI.Call("event_cha_lifetime", static_cast<CCharacter*>(this));
 			Free(); // , 
 			// char szLua[255];
 			// lua_dostring(g_pLuaState, szLua);
@@ -67,9 +68,9 @@ void CCharacter::Run(DWORD dwCurTime)
 			}
 
 			static DWORD dwReadBookTime = 0;
-			if (dwReadBookTime == 0 && g_CParser.DoString("ReadBookTime", enumSCRIPT_RETURN_NUMBER, 1, DOSTRING_PARAM_END))
+			if (dwReadBookTime == 0)
 			{
-				dwReadBookTime = g_CParser.GetReturnNumber(0);
+				dwReadBookTime = g_luaAPI.CallR<int>("ReadBookTime").value_or(0);
 			}
 			//else 
 			//	dwReadBookTime = 600*1000;   //
@@ -78,15 +79,15 @@ void CCharacter::Run(DWORD dwCurTime)
 				//
 				char chSkillLv = 0;
 				static short sSkillID = 0;
-				if (sSkillID == 0 && g_CParser.DoString("ReadBookSkillId", enumSCRIPT_RETURN_NUMBER, 1, DOSTRING_PARAM_END))
+				if (sSkillID == 0)
 				{
-					sSkillID = g_CParser.GetReturnNumber(0);
+					sSkillID = static_cast<short>(g_luaAPI.CallR<int>("ReadBookSkillId").value_or(0));
 				}
 				SSkillGrid* pSkill = this->m_CSkillBag.GetSkillContByID(sSkillID); //ID
 				if (pSkill)
 				{
 					chSkillLv = pSkill->chLv;
-					g_CParser.DoString("Reading_Book", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, chSkillLv, DOSTRING_PARAM_END);
+					g_luaAPI.Call("Reading_Book", static_cast<CCharacter*>(this), (int)chSkillLv);
 				}
 				m_SReadBook.dwLastReadCallTick = dwCurTime;
 			}
@@ -282,7 +283,7 @@ void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 	m_CChaAttr.ResetChangeFlag();
 	if (IsPlayerCha())
 		m_CKitbag.SetChangeFlag(false);
-	g_CParser.DoString("cha_timer", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 2, defCHA_SCRIPT_TIMER / 1000, dwExecTime, DOSTRING_PARAM_END);
+	g_luaAPI.Call("cha_timer", static_cast<CCharacter*>(this), (int)(defCHA_SCRIPT_TIMER / 1000), (int)dwExecTime);
 
 	// 
 	if (lOldHP > 0 && getAttr(ATTR_HP) <= 0)

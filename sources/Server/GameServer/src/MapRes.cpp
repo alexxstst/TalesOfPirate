@@ -8,8 +8,8 @@
 
 #include "MapRes.h"
 #include "Script.h"
-#include "Parser.h"
 #include "SubMap.h"
+#include "LuaAPI.h"
 
 using namespace std;
 
@@ -198,8 +198,8 @@ bool CMapRes::InitCtrl(void)
 	SetType();
 	SetCopyStartType();
 
-	g_CParser.DoString("init_entry", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
-	g_CParser.DoString("config", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call("init_entry", this);
+	g_luaAPI.Call("config", this);
 
 	// 
 	m_pCMapCopy = new SubMap[m_sMapCpyNum];
@@ -226,10 +226,13 @@ bool CMapRes::CreateEntry(void)
 
 	string	strScript = "get_map_entry_pos_";
 	strScript += GetName();
-	if (g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 2, DOSTRING_PARAM_END))
+	auto result = g_luaAPI.CallMulti(strScript.c_str());
+	if (!result.hasFailed() && result.size() >= 2)
 	{
-		m_SEntryPos.x = g_CParser.GetReturnNumber(0) * 100;
-		m_SEntryPos.y = g_CParser.GetReturnNumber(1) * 100;
+		auto rx = result[0].cast<int>();
+		auto ry = result[1].cast<int>();
+		m_SEntryPos.x = (rx ? rx.value() : 0) * 100;
+		m_SEntryPos.y = (ry ? ry.value() : 0) * 100;
 	}
 
 	cShort	csLineCharNum = 2048;
@@ -435,7 +438,7 @@ void CMapRes::Run(DWORD dwCurTime)
 
 	string	strScript = "map_run_";
 	strScript += GetName();
-	g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
+	g_luaAPI.Call(strScript.c_str(), this);
 
 	if (!HasDynEntry())
 		return;
@@ -472,10 +475,10 @@ void CMapRes::Run(DWORD dwCurTime)
 	{
 		string	strScript = "can_open_entry_";
 		strScript += GetName();
-		if (g_CParser.StringIsFunction(strScript.c_str()))
+		if (g_luaAPI.HasFunction(strScript.c_str()))
 		{
-			g_CParser.DoString(strScript.c_str(), enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
-			if (g_CParser.GetReturnNumber(0) == 0)
+			auto val = g_luaAPI.CallR<int>(strScript.c_str(), this);
+			if (val.value_or(0) == 0)
 				bOpenEntry = false;
 		}
 	}

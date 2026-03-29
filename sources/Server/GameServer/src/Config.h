@@ -67,10 +67,6 @@ public:
 	char    m_szGateIP[MAX_GATE][64];  // GateIP
     int     m_nGatePort[MAX_GATE];     // Gate Port
     int     m_nGateCnt;                // Gate
-    char    m_szInfoIP[64];            // InfoServer IP
-    int     m_nInfoPort;               // InfoServer Port
-	char	m_szInfoPwd[33];		   // InfoServer
-	int		m_nSection;				   // 
     char    m_szMapList[MAX_MAP][MAX_MAPNAME_LENGTH];
 	BYTE	m_btMapOK[MAX_MAP];		   // 
 	int     m_nMapCnt;				   // 

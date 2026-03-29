@@ -12,6 +12,7 @@
 #include "GameAppNet.h"
 #include "SkillStateRecord.h"
 #include "lua_gamectrl.h"
+#include "LuaAPI.h"
 #include <fstream>
 #include <iostream>
 
@@ -653,7 +654,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			lua_pop(g_pLuaState, 1);
 			return FALSE;
 		}
-		lua_pushlightuserdata(g_pLuaState, (void*)this);
+		luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 		lua_pushnumber(g_pLuaState, atol(szComParam));
 		int ret = lua_pcall(g_pLuaState, 2, 0, 0);
 		lua_settop(g_pLuaState, 0);
@@ -772,13 +773,13 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		if (pCCha->IsPlayerOwnCha())
 		{
 			if (pCCha->IsBoat())
-				g_CParser.DoString("ShipAttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCha, DOSTRING_PARAM_END);
+				g_luaAPI.Call("ShipAttrRecheck", pCCha);
 			else
-				g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCha, DOSTRING_PARAM_END);
+				g_luaAPI.Call("AttrRecheck", pCCha);
 		}
 		else
 		{
-			g_CParser.DoString("ALLExAttrSet", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCha, DOSTRING_PARAM_END);
+			g_luaAPI.Call("ALLExAttrSet", pCCha);
 		}
 		if (pCCha->GetPlayer())
 		{

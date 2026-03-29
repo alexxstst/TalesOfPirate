@@ -3,6 +3,7 @@
 #include "Auction.h"
 #include "GameApp.h"
 #include "GameDB.h"
+#include "LuaAPI.h"
 
 CAuctionSystem g_AuctionSystem;
 
@@ -68,7 +69,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 			pCha = pPlayer->GetMainCha();
 		if(pCha)
 		{
-			g_CParser.DoString("AuctionEnd", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCha, DOSTRING_PARAM_END);
+			g_luaAPI.Call("AuctionEnd", pCha);
 		}
 		else
 		{

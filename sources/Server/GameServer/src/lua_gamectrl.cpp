@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "lua_gamectrl.h"
 #include "Birthplace.h"
 
@@ -6,33 +6,16 @@ using namespace std;
 
 std::list<CCharacter*> g_HelpNPCList;
 
-// 
-int lua_AddBirthPoint(lua_State *L)
+//
+void AddBirthPoint(const std::string& location, const std::string& mapName, int x, int y)
 {
-	// 
-    BOOL bValid = (lua_gettop(L)==4 && lua_isstring(L, 1) && lua_isstring(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4));
-	if(!bValid) 
-    {
-		PARAM_ERROR;
-		return 0;
-	}
-
-	const char *pszLocation = lua_tostring(L, 1);
-	const char *pszMapName  = lua_tostring(L, 2);
-	int x = (int)lua_tonumber(L, 3);
-	int y = (int)lua_tonumber(L, 4);
-
-	g_BirthMgr.AddBirthPoint(pszLocation, pszMapName, x, y);
-	//LG("birth", "[%s] [%s] %d %d\n", pszLocation, pszMapName, x, y);
-	return 0;
+	g_BirthMgr.AddBirthPoint(location.c_str(), mapName.c_str(), x, y);
 }
 
-// 
-int lua_ClearAllBirthPoint(lua_State *L)
+//
+void ClearAllBirthPoint()
 {
 	g_BirthMgr.ClearAll();
-	//LG("birth", "\n");
-	return 0;
 }
 
 extern const char* GetResPath(const char *pszRes);
@@ -41,26 +24,7 @@ void ReloadAISdk()
 	luaL_dofile( g_pLuaState, GetResPath("script/ai/ai.lua"));
 }
 
-//char g_TradeName[][32] = 
-//{
-//	"",
-//	"",	
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	"",
-//	""
-//};
-const char* g_TradeName[] = 
+const char* g_TradeName[] =
 {
 RES_STRING(GM_LUA_GAMECTRL_CPP_00001),
 RES_STRING(GM_LUA_GAMECTRL_CPP_00002),
@@ -106,37 +70,22 @@ void TL(int nType, const char *pszCha1, const char *pszCha2, const char *pszTrad
 		}
 
 		ToLogService("trade", "{:>7} [{:>17}] [{:>17}] [{}]", g_TradeName[nType], pszCha1, pszCha2, pszTrade);
-		g_pGameApp->Log(g_TradeName[nType], pszCha1, "", pszCha2, "", pszTrade); 
+		g_pGameApp->Log(g_TradeName[nType], pszCha1, "", pszCha2, "", pszTrade);
 		sInit = 0;
 	}
 	else
 	{
 		// Add by lark.li 20080324 begin
-		//static CThrdLock lock;
-		//lock.Lock();
-		//g_pGameApp->TradeLog(g_TradeName[nType], pszCha1, pszCha2,pszTrade);
-		//lock.Unlock();
 		// End
 	}
 }
 
 map<string, string> g_HelpList;
 
-// , 2:  
-int lua_AddHelpInfo(lua_State *L)
+// , 2:
+void AddHelpInfo(const std::string& key, const std::string& text)
 {
-	BOOL bValid = (lua_gettop(L)==2  && lua_isstring(L, 1) && lua_isstring(L, 2));
-	if(!bValid)
-	{
-		return 0;
-	}
-	
-	const char *pszKey  = (const char*)lua_tostring(L, 1);
-	const char *pszText = (const char*)lua_tostring(L, 2);
-
-	g_HelpList[pszKey] = pszText;
-	
-	return 0;
+	g_HelpList[key] = text;
 }
 
 const char* FindHelpInfo(const char *pszKey)
@@ -156,14 +105,13 @@ void AddHelpInfo(const char *pszKey, const char *pszInfo)
 
 	g_HelpList[pszKey] = pszInfo;
 
-	//LG("help", " = %d\n", g_HelpList.size());
 	ToLogService("common", "now helplist amount = {}", g_HelpList.size());
 }
 
 void AddMonsterHelp(int nScriptID, int x, int y)
 {
 	CChaRecord	*pCChaRecord = GetChaRecordInfo(nScriptID);
-	if (pCChaRecord == NULL) return;	
+	if (pCChaRecord == NULL) return;
 
 	char szHelp[255]; sprintf(szHelp, RES_STRING(GM_LUA_GAMECTRL_CPP_00019), x/100, y/100);
 
@@ -172,353 +120,164 @@ void AddMonsterHelp(int nScriptID, int x, int y)
 
 void AddHelpNPC(CCharacter *pNPC)
 {
-	//LG("init", "NPC[%s]\n", pNPC->GetName());
 	ToLogService("common", "Succeed add HelpNPC[{}]", pNPC->GetName());
 	g_HelpNPCList.push_back(pNPC);
 }
 
 
 // NPC
-int lua_AddHelpNPC(lua_State *L)
+void AddHelpNPC_typed(const std::string& name)
 {
-	BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
-	if(!bValid)
-	{
-		return 0;
-	}
-	
-	const char *pszName  = (const char*)lua_tostring(L, 1); // NPC
-	
 	// NPC
 	g_pGameApp->BeginGetTNpc();
 	mission::CTalkNpc*	pCTNpc;
 	while (pCTNpc = g_pGameApp->GetNextTNpc())
 	{
-		if (!strcmp(pCTNpc->GetName(), pszName))
+		if (!strcmp(pCTNpc->GetName(), name.c_str()))
 			AddHelpNPC(pCTNpc);
 	}
-	
-	return 0;
 }
 
-int lua_ClearHelpNPC(lua_State *L)
+void ClearHelpNPC()
 {
 	g_HelpNPCList.clear();
-	return 0;
 }
 
 // DBLog
-int lua_TestDBLog(lua_State *L)
+void TestDBLog(int nCnt)
 {
-	// 
-    BOOL bValid = (lua_gettop (L)==1 && lua_isnumber(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-	int nCnt = (int)lua_tonumber(L, 1);
-
 	MPTimer t; t.Begin();
 	for(int i = 0; i < nCnt; i++)
 	{
 		g_pGameApp->Log("newtest", "abcdefg", "1234567", "000000", "qqqppp", "abcdefghijklmnopqrstuvwxyz");
 	}
 	ToLogService("common", "Add Time = {}", t.End());
-	
-	return 0;
 }
 
-int lua_GetMapDataByName(lua_State *L)
+CMapRes* GetMapDataByName(const std::string& mpName)
 {
-	BOOL bValid = (lua_gettop(L) == 1 && lua_isstring(L, 1));
-	if (!bValid)
-	{
-		PARAM_ERROR
-			return 0;
-	}
-	const char* mpName = lua_tostring(L, 1);
-	if (mpName == NULL)
-	{
-		PARAM_ERROR;
-		return 0;
-	}
-	CMapRes *pMap = g_pGameApp->FindMapByName(mpName);
-	if (pMap) {
-		lua_pushlightuserdata(L, (CMapRes*)pMap);
-		return 1;
-	}
-	return 0;
-
+	CMapRes *pMap = g_pGameApp->FindMapByName(mpName.c_str());
+	if (pMap)
+		return pMap;
+	return nullptr;
 }
 
 void RegisterLuaAI(lua_State *L)
 {
-	
-	// 
-	REGFN(view);
-	REGFN(EXLG);
-	REGFN(PRINT);
-	REGFN(GetResPath);
+	// Raw lua_CFunction registrations (varargs / dynamic type checking)
+	lua_register(L, "EXLG", EXLG_raw);
+	lua_register(L, "PRINT", PRINT_raw);
+	lua_register(L, "ChaUseSkill", ChaUseSkill_raw);
+	lua_register(L, "ChaUseSkill2", ChaUseSkill2_raw);
+	lua_register(L, "GetChaByRange", GetChaByRange_raw);
+	lua_register(L, "GetChaSetByRange", GetChaSetByRange_raw);
+	lua_register(L, "ClearHideChaByRange", ClearHideChaByRange_raw);
+	lua_register(L, "GetChaHarmByNo", GetChaHarmByNo_raw);
+	lua_register(L, "GetChaHateByNo", GetChaHateByNo_raw);
+	lua_register(L, "SetChaTarget", SetChaTarget_raw);
+	lua_register(L, "SetChaHost", SetChaHost_raw);
+	lua_register(L, "GetChaAttrI", GetChaAttrI_raw);
+	lua_register(L, "SetChaAttrI", SetChaAttrI_raw);
+	lua_register(L, "LG", LG_raw);
 
-	// For AI
-	
-	REGFN(SetCurMap);
-	REGFN(GetChaID);
-	REGFN(CreateChaNearPlayer);
-	REGFN(CreateCha);
-	REGFN(CreateChaX);
-	REGFN(CreateChaEx);
-	REGFN(QueryChaAttr); 
-	REGFN(GetChaAIType);
-	REGFN(SetChaAIType);
-	REGFN(GetChaTypeID);
-	REGFN(GetChaVision);
-	REGFN(GetChaTarget);
-	REGFN(SetChaTarget);
-	REGFN(GetChaHost);
-	REGFN(SetChaHost);
-	REGFN(GetPetNum);
-	REGFN(GetChaFirstTarget);
-	REGFN(GetChaPos);
-	REGFN(GetChaBlockCnt);
-	REGFN(SetChaBlockCnt);
-	REGFN(ChaMove);
-	REGFN(ChaMoveToSleep);
-	REGFN(GetChaSpawnPos);
-	REGFN(SetChaPatrolState);
-	REGFN(GetChaPatrolState);
-	REGFN(GetChaPatrolPos);
-	REGFN(SetChaPatrolPos);
-	REGFN(SetChaFaceAngle);
-	REGFN(GetChaChaseRange);
-	REGFN(SetChaChaseRange);
-	REGFN(ChaUseSkill);
-	REGFN(ChaUseSkill2);
-	REGFN(GetChaByRange);
-	REGFN(GetChaSetByRange);
-	REGFN(ClearHideChaByRange);
-	REGFN(IsChaFighting);
-	REGFN(IsPosValid);
-	REGFN(IsChaSleeping);
-	REGFN(ChaActEyeshot);
-	REGFN(GetChaFacePos);
-	REGFN(SetChaEmotion);
-	REGFN(FindItem);
-	REGFN(PickItem);
-	REGFN(GetItemPos);
-	REGFN(EnableAI);
-	REGFN(GetChaSkillNum);
-	REGFN(GetChaSkillInfo);
-	REGFN(GetChaHarmByNo);
-	REGFN(GetFirstAtker);
-	REGFN(AddHate);
-	REGFN(GetChaHateByNo);
-	REGFN(HarmLog);
-	REGFN(SummonCha);
-	REGFN(DelCha);
-	REGFN(SetChaLifeTime);
-	
-	// 
-	REGFN(SetChaAttrMax);
-	REGFN(GetChaDefaultName);
-	REGFN(SetChaAttrI);
-	REGFN(GetChaAttrI);
-	REGFN(IsPlayer);
-	REGFN(IsChaInRegion);
-	
-	// 
-	REGFN(IsChaInTeam);
-	REGFN(GetTeamCha);
+	// LuaBridge auto-marshaled function registrations
+	luabridge::getGlobalNamespace(L)
+		// Utilities
+		.addFunction("GetResPath", GetResPath_typed)
 
-	// 
-	REGFN(AddBirthPoint);
-	REGFN(ClearAllBirthPoint);
+		// AI
+		.addFunction("SetCurMap", SetCurMap)
+		.addFunction("GetChaID", GetChaID)
+		.addFunction("CreateChaNearPlayer", CreateChaNearPlayer)
+		.addFunction("CreateCha", CreateCha)
+		.addFunction("CreateChaX", CreateChaX)
+		.addFunction("CreateChaEx", CreateChaEx)
+		.addFunction("QueryChaAttr", QueryChaAttr)
+		.addFunction("GetChaAIType", GetChaAIType)
+		.addFunction("SetChaAIType", SetChaAIType)
+		.addFunction("GetChaTypeID", GetChaTypeID)
+		.addFunction("GetChaVision", GetChaVision)
+		.addFunction("GetChaTarget", GetChaTarget)
+		// SetChaTarget registered as raw above
+		.addFunction("GetChaHost", GetChaHost)
+		// SetChaHost registered as raw above
+		.addFunction("GetPetNum", GetPetNum)
+		.addFunction("GetChaFirstTarget", GetChaFirstTarget)
+		.addFunction("GetChaPos", GetChaPos)
+		.addFunction("GetChaBlockCnt", GetChaBlockCnt)
+		.addFunction("SetChaBlockCnt", SetChaBlockCnt)
+		.addFunction("ChaMove", ChaMove)
+		.addFunction("ChaMoveToSleep", ChaMoveToSleep)
+		.addFunction("GetChaSpawnPos", GetChaSpawnPos)
+		.addFunction("SetChaPatrolState", SetChaPatrolState)
+		.addFunction("GetChaPatrolState", GetChaPatrolState)
+		.addFunction("GetChaPatrolPos", GetChaPatrolPos)
+		.addFunction("SetChaPatrolPos", SetChaPatrolPos)
+		.addFunction("SetChaFaceAngle", SetChaFaceAngle)
+		.addFunction("GetChaChaseRange", GetChaChaseRange)
+		.addFunction("SetChaChaseRange", SetChaChaseRange)
+		// ChaUseSkill registered as raw above
+		// ChaUseSkill2 registered as raw above
+		// GetChaByRange registered as raw above
+		// GetChaSetByRange registered as raw above
+		// ClearHideChaByRange registered as raw above
+		.addFunction("IsChaFighting", IsChaFighting)
+		.addFunction("IsPosValid", IsPosValid)
+		.addFunction("IsChaSleeping", IsChaSleeping)
+		.addFunction("ChaActEyeshot", ChaActEyeshot)
+		.addFunction("GetChaFacePos", GetChaFacePos)
+		.addFunction("SetChaEmotion", SetChaEmotion)
+		.addFunction("FindItem", FindItem)
+		.addFunction("PickItem", PickItem)
+		.addFunction("GetItemPos", GetItemPos)
+		.addFunction("EnableAI", EnableAI)
+		.addFunction("GetChaSkillNum", GetChaSkillNum)
+		.addFunction("GetChaSkillInfo", GetChaSkillInfo)
+		// GetChaHarmByNo registered as raw above
+		.addFunction("GetFirstAtker", GetFirstAtker)
+		.addFunction("AddHate", AddHate)
+		// GetChaHateByNo registered as raw above
+		.addFunction("HarmLog", HarmLog)
+		.addFunction("SummonCha", SummonCha)
+		.addFunction("DelCha", DelCha)
+		.addFunction("SetChaLifeTime", SetChaLifeTime)
 
-	// 
-	REGFN(AddWeatherRegion);
-	REGFN(ClearMapWeather);
+		//
+		.addFunction("SetChaAttrMax", SetChaAttrMax)
+		.addFunction("GetChaDefaultName", GetChaDefaultName)
+		// GetChaAttrI registered as raw above
+		// SetChaAttrI registered as raw above
+		.addFunction("IsPlayer", IsPlayer)
+		.addFunction("IsChaInRegion", IsChaInRegion)
 
-	// NPC
-	REGFN(AddHelpInfo);
-	REGFN(AddHelpNPC);
-	REGFN(ClearHelpNPC);
+		//
+		.addFunction("IsChaInTeam", IsChaInTeam)
+		.addFunction("GetTeamCha", GetTeamCha)
 
-	// 
-	REGFN(SetBoatCtrlTick);
-	REGFN(GetBoatCtrlTick);
+		//
+		.addFunction("AddBirthPoint", AddBirthPoint)
+		.addFunction("ClearAllBirthPoint", ClearAllBirthPoint)
 
-    REGFN(GetRoleID);
-	REGFN(UnlockItem);
-	REGFN(SetMonsterAttr);
-	// 
-	REGFN(TestDBLog);
-	
+		//
+		.addFunction("AddWeatherRegion", AddWeatherRegion)
+		.addFunction("ClearMapWeather", ClearMapWeather)
+
+		// NPC
+		.addFunction("AddHelpInfo", static_cast<void(*)(const std::string&, const std::string&)>(AddHelpInfo))
+		.addFunction("AddHelpNPC", AddHelpNPC_typed)
+		.addFunction("ClearHelpNPC", ClearHelpNPC)
+
+		//
+		.addFunction("SetBoatCtrlTick", SetBoatCtrlTick)
+		.addFunction("GetBoatCtrlTick", GetBoatCtrlTick)
+
+		.addFunction("GetRoleID", GetRoleID)
+		.addFunction("UnlockItem", UnlockItem)
+		.addFunction("SetMonsterAttr", SetMonsterAttr)
+		//
+		.addFunction("TestDBLog", TestDBLog)
+
+		// Utility (not in RegisterLuaAI originally but defined in gamectrl)
+		.addFunction("GetMapDataByName", GetMapDataByName)
+		.addFunction("view", view);
 }
-
-
-/*
-				
-  
-:	, summon
-
-: summon, 
-
-: summon, 
-
-: , summon
-	
-:	AI
-
-    function() 
-	
-		if()
-		{
-			
-		}
-		else
-		{
-			, 
-		}
-
-		
-		if()
-		{
-			
-		}
-		
-	end
-
-  
-	function() 
-		
-		if( ||  || )
-		{
-			
-		}
-		else
-		{
-			
-		}
-	end
-
- 
-: 
-
-    1: 
-    2: 
-    3: 
-
-    1, 23
-
-
-
-*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

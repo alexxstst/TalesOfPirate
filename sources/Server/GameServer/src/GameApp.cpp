@@ -34,7 +34,7 @@
 #include "CharForge.h"
 #include "HairRecord.h"
 
-#include "Parser.h"
+#include "LuaAPI.h"
 #include "WorldEudemon.h"
 #include "Birthplace.h"
 #include "CharBoat.h"
@@ -180,13 +180,6 @@ DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 		dwCurTick = GetTickCount();
 		dwRunTick += dwCurTick - dwLastTick;
 
-		//InfoServer
-		dwLastTick = dwCurTick;
-        g_gmsvr->GetInfoServer()->PeekMsg(50 > dwRunTick ? 50 - dwRunTick : 0);
-		g_StoreSystem.Run(dwCurTick, 10000, 10000);
-		dwCurTick = GetTickCount();
-		dwRunTick += dwCurTick - dwLastTick;
-		    
 		g_pGameApp->m_dwRunStep = 104;
 
 	}
@@ -1010,7 +1003,7 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
 		if (bIsDie || !bSavePos) // 
 		{
 			if (bIsDie)
-				g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCha, DOSTRING_PARAM_END);
+				g_luaAPI.Call("Relive", pCCha);
 
 			SSrcPos = pCCha->GetPos();
 			if (pCCha->IsBoat()) // 

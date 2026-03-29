@@ -11,114 +11,7 @@
 
 extern BOOL	g_bGameEnd;
 
-// 
-//  InfoServer (    InfoNet,  LIBDBC )
-// 
-
-long ToInfoServer::Process()
-{
-	if(m_gmsvr->m_IfServer.GetPort() == 0)
-	{
-		ToLogService("store", "not configure InfoServer!");
-		return 0;
-	}
-
-	m_gmsvr->m_IfServer.InValid();
-	ToLogService("store", "Connect InfoServer({}, {})...", m_gmsvr->m_IfServer.GetIP().c_str(), m_gmsvr->m_IfServer.GetPort());
-	g_gmsvr->ConnectInfo(&m_gmsvr->m_IfServer);
-
-	DWORD	dwCurTick;
-	DWORD	dwInterval = m_dwTimeOut;
-
-	dwCurTick = GetTickCount();
-
-	while(!GetExitFlag())
-	{
-		dwCurTick = GetTickCount();
-
-		static DWORD dwLastRunTick = 0;
-		if(dwCurTick - dwLastRunTick < dwInterval)
-		{
-			Sleep(10);
-			continue;
-		}
-
-		try
-		{
-			if(!m_gmsvr->m_IfServer.IsValid() && m_gmsvr->m_IfServer.IsConnect())
-			{
-				ToLogService("store", "Login InfoServer...");
-				m_gmsvr->m_IfServer.Login();
-			}
-		}
-		catch(...)
-		{
-			ToLogService("store", "Process Error!");
-		}
-
-		dwLastRunTick = dwCurTick;
-	}
-
-	ToLogService("store", "ToInfoServer Process Out!");
-
-	return 0;
-}
-
-void InfoServer::Login()
-{
-	pNetMessage pNm = new NetMessage();
-	char szPwd[33];
-	cChar *szPassword = (cChar *)GetPassword();
-	if(strlen(szPassword) > 32)
-	{
-		ToLogService("store", "Login password too long!");
-		return;
-	}
-	strcpy(szPwd, szPassword);
-	BuildNetMessage(pNm, INFO_LOGIN, 0, 0, 0, (unsigned char*)szPwd, long(strlen(szPwd) + 1));
-	g_gmsvr->GetInfoServer()->SendData(pNm);
-	FreeNetMessage(pNm);
-}
-
-long InfoServer::PeekMsg(unsigned long ms)
-{
-    if(ms < 10)
-        ms = 10;
-
-    while(ms-- > 0)
-    {
-        if(!m_MsgQueue.IsEmpty())
-        {
-            pNetMessage msg = m_MsgQueue.Pop();
-            g_gmsvr->ProcessData(msg, CMD_FM_MSG);
-        }
-        else
-            break;
-    }
-	return 0;
-}
-
-void InfoServer::OnConnect(bool result)
-{
-	if(result)
-	{
-		ToLogService("store", "InfoServer Connected!");
-		g_gmsvr->ProcessData(NULL, CMD_FM_CONNECTED);
-	}
-	else
-	{
-		ToLogService("store", "InfoServer Connect Failed!");
-	}
-}
-
-void InfoServer::OnDisconnect()
-{
-    InValid();
-	ToLogService("store", "InfoServer Disconnected!");
-    g_gmsvr->ProcessData(NULL, CMD_FM_DISCONNECTED);
-}
-
-// 
+//
 //  GateHandler  callback'  TcpClient (CorsairsNet)
 // 
 
@@ -159,10 +52,7 @@ GameServerApp::GameServerApp()
         m_gateClients[i].SetHandler(&m_gateHandlers[i]);
     }
 
-    //  InfoServer
-    m_IfServer.SetInfoServer(g_Config.m_szInfoIP, g_Config.m_nInfoPort, g_Config.m_szInfoPwd, g_Config.m_nSection);
-
-    //    
+    //
     m_connectThread = std::thread(&GameServerApp::ConnectGateLoop, this);
 
 	ToLogService("common", "ServerApp init over");
@@ -170,13 +60,7 @@ GameServerApp::GameServerApp()
 
 GameServerApp::~GameServerApp()
 {
-	if(m_IfServer.IsConnect())
-	{
-		DisconnectInfo(&m_IfServer);
-		ToLogService("store", "Disconnect InfoServer!");
-	}
-
-    //   
+    //
     m_exitFlag.store(true);
     if (m_connectThread.joinable())
         m_connectThread.join();
@@ -344,27 +228,7 @@ void GameServerApp::ProcessData(GateServer* gt, net::RPacket& pk)
     g_pGameApp->ProcessNetMsg(msg_id, gt, pk);
 }
 
-void GameServerApp::ProcessData(pNetMessage msg, short sType)
-{
-    switch (sType)
-    {
-    case InfoServer::CMD_FM_CONNECTED:
-        break;
-
-    case InfoServer::CMD_FM_DISCONNECTED:
-        break;
-
-    case InfoServer::CMD_FM_MSG:
-        break;
-
-    default:
-        break;
-    }
-
-    g_pGameApp->ProcessInfoMsg(msg, sType, GetInfoServer());
-}
-
-// 
+//
 //  HandleServeCall   sync-  SESS-echo
 // 
 
@@ -459,22 +323,7 @@ void GameServerApp::HandleServeCall(GateServer* gt, net::RPacket& pk)
     gt->SendData(retpk);
 }
 
-// 
-//  InfoServer  
-// 
-
-bool GameServerApp::ConnectInfo(InfoServer *pInfo)
-{
-    pInfo->RunInfoService(pInfo->GetIP().c_str(), pInfo->GetPort());
-	return true;
-}
-
-void GameServerApp::DisconnectInfo(InfoServer *pInfo)
-{
-    pInfo->StopInfoService();
-}
-
-// 
+//
 //  GateServer  
 // 
 

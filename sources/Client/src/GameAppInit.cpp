@@ -322,9 +322,7 @@ BOOL CGameApp::_Init() {
 	g_Editor.Init(1);
 
 	// Load initial scene
-	ToLogService("lua", "LoadScriptScene: m_nCreateScene={}", g_Config.m_nCreateScene);
 	LoadScriptScene((eSceneType)g_Config.m_nCreateScene);
-	ToLogService("lua", "LoadScriptScene done, curScene={}", (void*)g_pGameApp->GetCurScene());
 
 	//LoadRes4();
 

@@ -35,8 +35,8 @@ namespace mission
 			return FALSE;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, this );
-		lua_pushstring( g_pLuaState, szName );		
+		luabridge::push( g_pLuaState, static_cast<mission::CNpc*>(this) );
+		lua_pushstring( g_pLuaState, szName );
 
 		int nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
@@ -82,7 +82,7 @@ namespace mission
 			return FALSE;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, this );
+		luabridge::push( g_pLuaState, static_cast<mission::CNpc*>(this) );
 		lua_pushstring( g_pLuaState, szName );
 
 		nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
@@ -141,9 +141,9 @@ namespace mission
 			return FALSE;
 		}
 
-		lua_pushlightuserdata( g_pLuaState, (void*)&character );
-		lua_pushlightuserdata( g_pLuaState, (void*)this );
-		lua_pushlightuserdata( g_pLuaState, (void*)&packet );
+		luabridge::push( g_pLuaState, &character );
+		luabridge::push( g_pLuaState, static_cast<mission::CNpc*>(this) );
+		luabridge::push( g_pLuaState, &packet );
 		lua_pushnumber( g_pLuaState, m_sScriptID );
 
 		int nStatus = lua_pcall( g_pLuaState, 4, 0, 0 );

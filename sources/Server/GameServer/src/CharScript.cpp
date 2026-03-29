@@ -1,4 +1,4 @@
-﻿// CharScript.cpp Created by knight-gongjian 2004.12.13.
+// CharScript.cpp Created by knight-gongjian 2004.12.13.
 //---------------------------------------------------------
 #include "stdafx.h"//add by alfred.shi 20080202
 #include "CharScript.h"
@@ -8,1253 +8,536 @@
 #include <assert.h>
 #include "lua_gamectrl.h"
 #include "Expand.h"
+#include "LuaAPI.h"
 #include "CharBoat.h"
 #include "Guild.h"
 #include "Auction.h"
 
 using namespace std;
 
-list<string> g_luaFNList;
 
 //---------------------------------------------------------
 _DBC_USING
 using namespace mission;
 
 // Add by lark.li 20080310 begin
-inline int lua_GetResString( lua_State *L )
+std::string GetResString(const std::string& pszID)
 {
-	BOOL bValid = lua_gettop( L ) == 1 && lua_isstring( L, 1 );
-	if( !bValid )
-	{
-		PARAM_ERROR;
-		return 0;
-	}
-
-	const char* pszID = lua_tostring( L, 1 );
-	if( pszID == NULL )
-	{
-		PARAM_ERROR;
-		return 0;
-	}
-
-	const char* text = const_cast<char*>(g_ResourceBundleManage.LoadResString(pszID));
-
-	lua_pushstring(L, text);
-
-	return 1;
+	const char* text = const_cast<char*>(g_ResourceBundleManage.LoadResString(pszID.c_str()));
+	return std::string(text ? text : "");
 }
 // End
 
-inline int lua_SetMap( lua_State* L )
+int SetMap(const std::string& pszMap, int byID)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_isstring( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	const char* pszMap = lua_tostring( L, 1 );
-	if( pszMap == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byID = (BYTE)lua_tonumber( L, 2 );
-	BOOL bRet = g_MapID.AddInfo( pszMap, byID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	BOOL bRet = g_MapID.AddInfo(pszMap.c_str(), (BYTE)byID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_SetMapGuildWar( lua_State* L )
+void SetMapGuildWar(CMapRes* pCMap, int nGuildWar)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CMapRes *pCMap = (CMapRes *)lua_touserdata(L, 1);
-	if( pCMap == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	int nGuildWar = (int)lua_tonumber( L, 2 );
-	if(nGuildWar > 0)
-	{
-		pCMap->SetGuildWar(true);
-	}
-	else
-	{
-		pCMap->SetGuildWar(false);
-	}
-
-	return 1;
+	if (!pCMap) return;
+	pCMap->SetGuildWar(nGuildWar > 0);
 }
 
-inline int lua_AddTrigger( lua_State* L )
+int AddTrigger(CCharacter* pChar, int wMissionID, int wTriggerID, int byType, int wParam1, int wParam2, int wParam3, int wParam4, int wParam5, int wParam6)
 {
-	BOOL bValid = ( lua_gettop( L ) == 10 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
-					lua_isnumber( L, 3 ) &&	lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) &&
-					lua_isnumber( L, 6 ) && lua_isnumber( L, 7 ) && lua_isnumber( L, 8 ) &&
-					lua_isnumber( L, 9 ) && lua_isnumber( L, 10 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
 	TRIGGER_DATA Data;
-	memset( &Data, 0, sizeof(TRIGGER_DATA) );
-	Data.wMissionID = (WORD)lua_tonumber( L, 2 );
-	Data.wTriggerID = (WORD)lua_tonumber( L, 3 );
-	Data.byType     = (BYTE)lua_tonumber( L, 4 );
-	Data.wParam1    = (WORD)lua_tonumber( L, 5 );
-	Data.wParam2    = (WORD)lua_tonumber( L, 6 );
-	Data.wParam3    = (WORD)lua_tonumber( L, 7 );
-	Data.wParam4    = (WORD)lua_tonumber( L, 8 );
-	Data.wParam5    = (WORD)lua_tonumber( L, 9 );
-	Data.wParam6    = (WORD)lua_tonumber( L, 10 );
+	memset(&Data, 0, sizeof(TRIGGER_DATA));
+	Data.wMissionID = (WORD)wMissionID;
+	Data.wTriggerID = (WORD)wTriggerID;
+	Data.byType     = (BYTE)byType;
+	Data.wParam1    = (WORD)wParam1;
+	Data.wParam2    = (WORD)wParam2;
+	Data.wParam3    = (WORD)wParam3;
+	Data.wParam4    = (WORD)wParam4;
+	Data.wParam5    = (WORD)wParam5;
+	Data.wParam6    = (WORD)wParam6;
 
-	BOOL bRet = pChar->AddTrigger( Data );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	
-	return 1;
+	BOOL bRet = pChar->AddTrigger(Data);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_ClearTrigger( lua_State* L )
+int ClearTrigger(CCharacter* pChar, int wTriggerID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wTriggerID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->ClearTrigger( wTriggerID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ClearTrigger((WORD)wTriggerID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_DeleteTrigger( lua_State* L )
+int DeleteTrigger(CCharacter* pChar, int wTriggerID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wTriggerID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->DeleteTrigger( wTriggerID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	
-	return 1;	
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->DeleteTrigger((WORD)wTriggerID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_AddMission( lua_State* L )
+int AddMission(CCharacter* pChar, int wID, int wParam)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ));
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	WORD wParam = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->AddRole( wID, wParam );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->AddRole((WORD)wID, (WORD)wParam);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_HasMission( lua_State* L )
+int HasMission(CCharacter* pChar, int wID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->HasRole( wID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasRole((WORD)wID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_ClearMission( lua_State* L )
+int ClearMission(CCharacter* pChar, int wID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->ClearRole( wID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ClearRole((WORD)wID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_GetMisScriptID( lua_State* L )
+std::tuple<int, int> GetMisScriptID(CCharacter* pChar, int wID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 &&lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
 	WORD wScriptID;
-	BOOL bRet = pChar->GetMisScriptID( wID, wScriptID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, wScriptID );
-
-	return 2;
+	BOOL bRet = pChar->GetMisScriptID((WORD)wID, wScriptID);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)wScriptID);
 }
 
-inline int lua_SetMissionComplete( lua_State* L )
+int SetMissionComplete(CCharacter* pChar, int wID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->SetMissionComplete( wID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetMissionComplete((WORD)wID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_SetMissionFailure( lua_State* L )
+int SetMissionFailure(CCharacter* pChar, int wID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->SetMissionFailure( wID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetMissionFailure((WORD)wID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_HasMisssionFailure( lua_State* L )
+int HasMisssionFailure(CCharacter* pChar, int wID)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->HasMissionFailure( wID );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasMissionFailure((WORD)wID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_IsMissionFull( lua_State* L )
+int IsMissionFull(CCharacter* pChar)
 {
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
+	if (!pChar) return LUA_FALSE;
 	BOOL bRet = pChar->IsRoleFull();
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_SetFlag( lua_State* L )
+int SetFlag(CCharacter* pChar, int wID, int wFlag)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	WORD wFlag = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->SetFlag( wID, wFlag );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetFlag((WORD)wID, (WORD)wFlag);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_ClearFlag( lua_State* L )
+int ClearFlag(CCharacter* pChar, int wID, int wFlag)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	WORD wFlag = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->ClearFlag( wID, wFlag );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ClearFlag((WORD)wID, (WORD)wFlag);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_IsFlag( lua_State* L )
+int IsFlag(CCharacter* pChar, int wID, int wFlag)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	WORD wFlag = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->IsFlag( wID, wFlag );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsFlag((WORD)wID, (WORD)wFlag);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_IsValidFlag( lua_State* L )
+int IsValidFlag(CCharacter* pChar, int wFlag)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wFlag = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->IsValidFlag( wFlag );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsValidFlag((WORD)wFlag);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_SetRecord( lua_State* L )
+int SetRecord(CCharacter* pChar, int wRec)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRec = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->SetRecord( wRec );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetRecord((WORD)wRec);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_ClearRecord( lua_State* L )
+int ClearRecord(CCharacter* pChar, int wRec)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRec = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->ClearRecord( wRec );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ClearRecord((WORD)wRec);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_IsRecord( lua_State* L )
+int IsRecord(CCharacter* pChar, int wRec)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRec = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->IsRecord( wRec );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsRecord((WORD)wRec);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_IsValidRecord( lua_State* L )
+int IsValidRecord(CCharacter* pChar, int wRec)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRec = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->IsValidRecord( wRec );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsValidRecord((WORD)wRec);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_AddSkill( lua_State* L )
+int AddSkill(CCharacter* pChar, CTalkNpc* pTalk, int wSkillID, int byLevel)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) && */
-					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
-	//char* szNpc = const_cast<char*>( RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
 	if (pChar->GetPlayer())
-		pChar = pChar->GetPlayer()->GetMainCha(); // 
+		pChar = pChar->GetPlayer()->GetMainCha();
 
-	WORD  wSkillID = (WORD)lua_tonumber( L, 3 );
-	BYTE  byLevel   = (BYTE)lua_tonumber( L, 4 );
-	BOOL bRet = pChar->GetPlyMainCha()->LearnSkill( wSkillID, byLevel );	
-	lua_pushnumber( L, LUA_TRUE );
+	BOOL bRet = pChar->GetPlyMainCha()->LearnSkill((WORD)wSkillID, (BYTE)byLevel);
 
-	if( bRet )
+	if (bRet)
 	{
-		//char szSkill[defSKILL_NAME_LEN] = "";
-		//char* szSkill = const_cast<char*>( RES_STRING(GM_CHARSCRIPT_CPP_00002));
 		char szSkill[defENTITY_NAME_LEN];
-		strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00002), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00002), defENTITY_NAME_LEN - 1);
 
-		CSkillRecord* pSkill = GetSkillRecordInfo( wSkillID );
-		if( pSkill )
+		CSkillRecord* pSkill = GetSkillRecordInfo((WORD)wSkillID);
+		if (pSkill)
 		{
-			strncpy( szSkill, pSkill->szName, defSKILL_NAME_LEN - 1 );
+			strncpy(szSkill, pSkill->szName, defSKILL_NAME_LEN - 1);
 		}
 
 		char szData[128];
-		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00003), szNpc, szSkill );
-		pChar->SystemNotice( szData );
+		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00003), szNpc, szSkill);
+		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
 
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_AddLevel( lua_State* L )
+int AddLevel()
 {
 	return 0;
 }
 
-inline int lua_AddSailExp( lua_State* L )
+int AddSailExp(CCharacter* pChar, CTalkNpc* pTalk, int dwMinExp, int dwMaxExp)
 {
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) && */
-					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
 	DWORD dwValue;
-	DWORD dwMinExp = (DWORD)lua_tonumber( L, 3 );
-	DWORD dwMaxExp = (DWORD)lua_tonumber( L, 4 );
-	if( dwMinExp >= dwMaxExp )
+	if ((DWORD)dwMinExp >= (DWORD)dwMaxExp)
 	{
-		dwValue = dwMinExp;
+		dwValue = (DWORD)dwMinExp;
 	}
 	else
 	{
-		dwValue = rand()%(dwMaxExp - dwMinExp) + dwMinExp;
+		dwValue = rand() % ((DWORD)dwMaxExp - (DWORD)dwMinExp) + (DWORD)dwMinExp;
 	}
 
-	pChar->GetPlyMainCha()->AddAttr( ATTR_CSAILEXP, dwValue );
+	pChar->GetPlyMainCha()->AddAttr(ATTR_CSAILEXP, dwValue);
 	char szData[128];
-	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue );
-	pChar->SystemNotice( szData );
+	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue);
+	pChar->SystemNotice(szData);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_AddLifeExp( lua_State* L )
+int AddLifeExp(CCharacter* pChar, CTalkNpc* pTalk, int dwMinExp, int dwMaxExp)
 {
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) && */
-					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
 	DWORD dwValue;
-	DWORD dwMinExp = (DWORD)lua_tonumber( L, 3 );
-	DWORD dwMaxExp = (DWORD)lua_tonumber( L, 4 );
-	if( dwMinExp >= dwMaxExp )
+	if ((DWORD)dwMinExp >= (DWORD)dwMaxExp)
 	{
-		dwValue = dwMinExp;
+		dwValue = (DWORD)dwMinExp;
 	}
 	else
 	{
-		dwValue = rand()%(dwMaxExp - dwMinExp) + dwMinExp;
+		dwValue = rand() % ((DWORD)dwMaxExp - (DWORD)dwMinExp) + (DWORD)dwMinExp;
 	}
-	
-	pChar->GetPlyMainCha()->AddAttr( ATTR_CLIFEEXP, dwValue );
+
+	pChar->GetPlyMainCha()->AddAttr(ATTR_CLIFEEXP, dwValue);
 	char szData[128];
-	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue );
-	pChar->SystemNotice( szData );
+	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue);
+	pChar->SystemNotice(szData);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_AddExp( lua_State* L )
+int AddExp(CCharacter* pChar, CTalkNpc* pTalk, int dwMinExp, int dwMaxExp)
 {
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/ 
-					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
 	DWORD dwValue;
-	DWORD dwMinExp = (DWORD)lua_tonumber( L, 3 );
-	DWORD dwMaxExp = (DWORD)lua_tonumber( L, 4 );
-	if( dwMinExp >= dwMaxExp )
+	if ((DWORD)dwMinExp >= (DWORD)dwMaxExp)
 	{
-		dwValue = dwMinExp;
+		dwValue = (DWORD)dwMinExp;
 	}
 	else
 	{
-		dwValue = rand()%(dwMaxExp - dwMinExp) + dwMinExp;
+		dwValue = rand() % ((DWORD)dwMaxExp - (DWORD)dwMinExp) + (DWORD)dwMinExp;
 	}
-	
-	BOOL bRet = pChar->GetPlyMainCha()->AddExpAndNotic( dwValue );	
+
+	BOOL bRet = pChar->GetPlyMainCha()->AddExpAndNotic(dwValue);
 	char szData[128];
-	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue );
-	pChar->SystemNotice( szData );
+	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue);
+	pChar->SystemNotice(szData);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_AddExpAndType( lua_State* L )
+int AddExpAndType(CCharacter* pChar, CTalkNpc* pTalk, int byType, int dwMinExp, int dwMaxExp)
 {
-	BOOL bValid = ( lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) && */
-					lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
 	DWORD dwValue;
-	BYTE byType = (BYTE)lua_tonumber( L, 3 );
-	DWORD dwMinExp = (DWORD)lua_tonumber( L, 4 );
-	DWORD dwMaxExp = (DWORD)lua_tonumber( L, 5 );
-	if( dwMinExp >= dwMaxExp )
+	if ((DWORD)dwMinExp >= (DWORD)dwMaxExp)
 	{
-		dwValue = dwMinExp;
+		dwValue = (DWORD)dwMinExp;
 	}
 	else
 	{
-		dwValue = rand()%(dwMaxExp - dwMinExp) + dwMinExp;
+		dwValue = rand() % ((DWORD)dwMaxExp - (DWORD)dwMinExp) + (DWORD)dwMinExp;
 	}
-	
+
 	BOOL bRet;
-	if( byType == mission::MIS_EXP_NOMAL )// 
+	if ((BYTE)byType == mission::MIS_EXP_NOMAL)
 	{
-		bRet = pChar->GetPlyMainCha()->AddExpAndNotic( dwValue );
+		bRet = pChar->GetPlyMainCha()->AddExpAndNotic(dwValue);
 		char szData[128];
-		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue );
-		pChar->SystemNotice( szData );
+		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue);
+		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
-	else if( byType == MIS_EXP_SAIL ) 	// 
+	else if ((BYTE)byType == MIS_EXP_SAIL)
 	{
-		bRet = pChar->GetPlyMainCha()->AddAttr( ATTR_CSAILEXP, dwValue );
+		bRet = pChar->GetPlyMainCha()->AddAttr(ATTR_CSAILEXP, dwValue);
 		char szData[128];
-		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue );
-		pChar->SystemNotice( szData );
+		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue);
+		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
-	else if( byType == MIS_EXP_LIFE	)	// 
+	else if ((BYTE)byType == MIS_EXP_LIFE)
 	{
-		bRet = pChar->GetPlyMainCha()->AddAttr( ATTR_CLIFEEXP, dwValue );
+		bRet = pChar->GetPlyMainCha()->AddAttr(ATTR_CLIFEEXP, dwValue);
 		char szData[128];
-		sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue );
-		pChar->SystemNotice( szData );
+		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue);
+		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
 	else
 	{
-		//pChar->SystemNotice( "Name[%s], Type[%d], Exp[%d]", szNpc, byType, dwValue );
-		pChar->SystemNotice( RES_STRING(GM_CHARSCRIPT_CPP_00007), szNpc, byType, dwValue );
+		pChar->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00007), szNpc, (BYTE)byType, dwValue);
 		bRet = FALSE;
 	}
 
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );	
-
-	return 1;
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_AddMoney( lua_State* L )
+int AddMoney(CCharacter* pChar, CTalkNpc* pTalk, int dwMoney)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] ="";
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy( szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-	
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
-	DWORD dwMoney = (DWORD)lua_tonumber( L, 3 );
-	pChar->GetPlyMainCha()->AddMoney( szNpc, dwMoney );
+	pChar->GetPlyMainCha()->AddMoney(szNpc, (DWORD)dwMoney);
 	char szData[128];
-	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00008), szNpc, dwMoney );
+	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00008), szNpc, (DWORD)dwMoney);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
-	lua_pushnumber( L, LUA_TRUE );
 
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_TakeMoney( lua_State* L )
+int TakeMoney(CCharacter* pChar, CTalkNpc* pTalk, int dwMoney)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
-	DWORD dwMoney = (DWORD)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->GetPlyMainCha()->TakeMoney( szNpc, dwMoney );
+	BOOL bRet = pChar->GetPlyMainCha()->TakeMoney(szNpc, (DWORD)dwMoney);
 	char szData[128];
-	sprintf( szData, RES_STRING(GM_CHARSCRIPT_CPP_00009), szNpc, dwMoney );
+	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00009), szNpc, (DWORD)dwMoney);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_HasMoney( lua_State* L )
+int HasMoney(CCharacter* pChar, int dwMoney)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwMoney = (DWORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->GetPlyMainCha()->HasMoney( dwMoney );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlyMainCha()->HasMoney((DWORD)dwMoney);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_HasCancelMissionMoney( lua_State* L )
+int HasCancelMissionMoney(CCharacter* pChar)
 {
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwMoney = (long)pChar->getAttr( ATTR_LV ) * (long)pChar->getAttr( ATTR_LV ) + 100;
-	BOOL bRet = pChar->GetPlyMainCha()->HasMoney( dwMoney );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	DWORD dwMoney = (long)pChar->getAttr(ATTR_LV) * (long)pChar->getAttr(ATTR_LV) + 100;
+	BOOL bRet = pChar->GetPlyMainCha()->HasMoney(dwMoney);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_TakeCancelMissionMoney( lua_State* L )
+int TakeCancelMissionMoney(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) /*&& lua_islightuserdata( L, 2 )*/);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
 
-	DWORD dwMoney = (long)pChar->getAttr( ATTR_LV ) * (long)pChar->getAttr( ATTR_LV ) + 100;
-	BOOL bRet = pChar->GetPlyMainCha()->TakeMoney( szNpc, dwMoney );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	DWORD dwMoney = (long)pChar->getAttr(ATTR_LV) * (long)pChar->getAttr(ATTR_LV) + 100;
+	BOOL bRet = pChar->GetPlyMainCha()->TakeMoney(szNpc, dwMoney);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_CheckFusionItem( lua_State* L )
+int CheckFusionItem(SItemGrid* pItem1, SItemGrid* pItem2)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	SItemGrid* pItem1 = (SItemGrid*)lua_touserdata( L, 1 );	
-	SItemGrid* pItem2 = (SItemGrid*)lua_touserdata( L, 2 );	
-	if( !pItem1 || !pItem2 )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( pItem1->FusionCheck( *pItem2 ) ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
+	if (!pItem1 || !pItem2) return LUA_FALSE;
+	return pItem1->FusionCheck(*pItem2) ? LUA_TRUE : LUA_FALSE;
 }
 
-	//Add by sunny.sun 20080529
-	//Begin
-	inline int lua_GetTicketIssue( lua_State * L)//
-	{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		PARAM_ERROR;
-		return 0;
-	}
-	SItemGrid * pItem = (SItemGrid*)lua_touserdata( L, 1 );
-
+//Add by sunny.sun 20080529
+//Begin
+int GetTicketIssue(SItemGrid* pItem)
+{
+	if (!pItem) return 0;
 	int issue = pItem->sInstAttr[0][1] % 1000;
-
-	lua_pushnumber( L, (long)issue );
-
-	return 1;
-	}
-
-	inline int lua_GetTicketItemno( lua_State * L)//
-	{
-		BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-		if( !bValid )
-		{
-			E_LUAPARAM;
-			return 0;
-		}
-		
-		SItemGrid * pItem1 = (SItemGrid*)lua_touserdata( L, 1 );
-		int index = (int)lua_tonumber( L, 2 );
-
-		if( floor( (float)pItem1->sInstAttr[0][1] / 1000) > 0)
-		{
-			if(index >= 0 && index < 7)
-			{
-				short c1 = (short)floor( (float)pItem1->sInstAttr[2][1] / 100);
-				short c2 = pItem1->sInstAttr[2][1] % 100;
-
-				short c3 = (short)floor( (float)pItem1->sInstAttr[3][1] / 100);
-				short c4 = pItem1->sInstAttr[3][1] % 100;
-
-				short c5 = (short)floor( (float)pItem1->sInstAttr[4][1] / 100);
-				short c6 = pItem1->sInstAttr[4][1] % 100;
-				
-				char buffer[7];
-				sprintf( buffer, "%c%c%c%c%c%c", c1, c2, c3, c4, c5, c6);
-				string Ticketno = buffer;	
-				
-				if( index == 0)
-				{	
-					lua_pushstring(L, Ticketno.c_str());
-				}
-				else
-				{
-					lua_pushstring( L, Ticketno.substr(index - 1, 1).c_str());
-				}
-			} 
-			return 1;
-		}
-		else
-			return 0;
-	}
-
-inline int lua_GetSItemGrid( lua_State * L)//
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	int index = (int)lua_tonumber( L, 2 );
-	SItemGrid * pGrid = pChar->m_CKitbag.GetGridContByID( index );
-	lua_pushlightuserdata( L, pGrid );
-	return 1;
+	return issue;
 }
-	//End
-inline int lua_FusionItem( lua_State* L )
+
+// GetTicketItemno uses pushstring with variable logic -- keep as raw
+int GetTicketItemno_raw(lua_State* L)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) );
-	if( !bValid )
+	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
+	if (!bValid)
 	{
 		E_LUAPARAM;
 		return 0;
 	}
 
-	SItemGrid* pItem1 = (SItemGrid*)lua_touserdata( L, 1 );	
-	SItemGrid* pItem2 = (SItemGrid*)lua_touserdata( L, 2 );	
-	if( !pItem1 || !pItem2 )
-	{
-		E_LUANULL;
-		return 0;
-	}
+	SItemGrid* pItem1 = (SItemGrid*)lua_touserdata(L, 1);
+	int index = (int)lua_tonumber(L, 2);
 
-	//
-	//Modify by ning.yan 20080821  begin
-	//if(pItem2->sID >= CItemRecord::enumItemFusionStart)
-	CItemRecord * pItem = GetItemRecordInfo(pItem2->sID);
-	if(CItemRecord::IsVaildFusionID(pItem))  //end  ning.yan
+	if (floor((float)pItem1->sInstAttr[0][1] / 1000) > 0)
+	{
+		if (index >= 0 && index < 7)
+		{
+			short c1 = (short)floor((float)pItem1->sInstAttr[2][1] / 100);
+			short c2 = pItem1->sInstAttr[2][1] % 100;
+
+			short c3 = (short)floor((float)pItem1->sInstAttr[3][1] / 100);
+			short c4 = pItem1->sInstAttr[3][1] % 100;
+
+			short c5 = (short)floor((float)pItem1->sInstAttr[4][1] / 100);
+			short c6 = pItem1->sInstAttr[4][1] % 100;
+
+			char buffer[7];
+			sprintf(buffer, "%c%c%c%c%c%c", c1, c2, c3, c4, c5, c6);
+			string Ticketno = buffer;
+
+			if (index == 0)
+			{
+				lua_pushstring(L, Ticketno.c_str());
+			}
+			else
+			{
+				lua_pushstring(L, Ticketno.substr(index - 1, 1).c_str());
+			}
+		}
+		return 1;
+	}
+	else
+		return 0;
+}
+
+SItemGrid* GetSItemGrid(CCharacter* pChar, int index)
+{
+	if (!pChar) return nullptr;
+	return pChar->m_CKitbag.GetGridContByID(index);
+}
+//End
+
+int FusionItem(SItemGrid* pItem1, SItemGrid* pItem2)
+{
+	if (!pItem1 || !pItem2) return LUA_FALSE;
+
+	CItemRecord* pItem = GetItemRecordInfo(pItem2->sID);
+	if (CItemRecord::IsVaildFusionID(pItem))
 	{
 		pItem1->lDBParam = pItem2->lDBParam;
 	}
-	pItem1->CopyInstAttr( *pItem2 );
+	pItem1->CopyInstAttr(*pItem2);
 
-	//10
 	pItem1->SetItemLevel(10);
-	
-	lua_pushnumber( L, LUA_TRUE );
 
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_MakeItem( lua_State* L )
+std::tuple<int, int> MakeItem(CCharacter* pChar, int sItemID, int sCount, int byType)
 {
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) &&
-		lua_isnumber( L, 2 ) && lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 3 );
-	BYTE byType    = (BYTE)lua_tonumber( L, 4 );
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
 
 	USHORT sItemPos = 0;
-	BOOL bRet = pChar->GetPlyMainCha()->MakeItem( sItemID, sCount, sItemPos, byType );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, sItemPos );
-
-	return 2;
+	BOOL bRet = pChar->GetPlyMainCha()->MakeItem((USHORT)sItemID, (USHORT)sCount, sItemPos, (BYTE)byType);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)sItemPos);
 }
 
-inline int lua_GiveItem( lua_State* L )
+// GiveItem has variable args (5-7) -- keep as raw
+int GiveItem_raw(lua_State* L)
 {
-	BOOL bValid = (( lua_gettop( L ) >= 5 && lua_gettop(L) <= 7) && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/
-		lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) ) ;
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
-	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
-	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 3 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 4 );
-	BYTE byType    = (BYTE)lua_tonumber( L, 5 );
-	BOOL isTradable = 1;
-	LONG expiration = 0;
-
-	if (lua_gettop(L) >= 6 && lua_isnumber(L,6)) {
-		isTradable = static_cast<BOOL> (lua_tonumber(L, 6));
-	}
-	if(lua_gettop(L) == 7 && lua_isnumber(L,7)) {
-		expiration = std::time(0) + static_cast<LONG> (lua_tonumber(L, 7));
-	}
-
-	BOOL bRet = pChar->GetPlyMainCha()->AddItem( sItemID, sCount, szNpc, byType ,'\a', isTradable, expiration );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GiveItemX( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/
-				lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[defENTITY_NAME_LEN] = "";
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
-	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
-	if( pTalk )
-	{
-		strncpy( szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1 );
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 3 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 4 );
-	BYTE byType    = (BYTE)lua_tonumber( L, 5 );
-
-	BOOL bRet = pChar->GetPlyMainCha()->AddItem2KitbagTemp( sItemID, sCount, szNpc, byType );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GiveItemY(lua_State* L)
-// similar to lua_GiveItem, but returns a pointer to the SItemGrid.
-{
-		BOOL bValid = ((lua_gettop(L) >= 5 && lua_gettop(L) <= 7) && lua_islightuserdata(L, 1) && /*lua_islightuserdata( L, 2 ) &&*/
-			lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
+	BOOL bValid = ((lua_gettop(L) >= 5 && lua_gettop(L) <= 7) && lua_islightuserdata(L, 1) &&
+		lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
 	if (!bValid)
 	{
 		E_LUAPARAM;
@@ -1267,7 +550,6 @@ inline int lua_GiveItemY(lua_State* L)
 		E_LUANULL;
 		return 0;
 	}
-
 
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
@@ -1284,3032 +566,38 @@ inline int lua_GiveItemY(lua_State* L)
 	LONG expiration = 0;
 
 	if (lua_gettop(L) >= 6 && lua_isnumber(L, 6)) {
-		isTradable = static_cast<BOOL> (lua_tonumber(L, 6));
+		isTradable = static_cast<BOOL>(lua_tonumber(L, 6));
 	}
 	if (lua_gettop(L) == 7 && lua_isnumber(L, 7)) {
-		expiration = std::time(0) + static_cast<LONG> (lua_tonumber(L, 7));
+		expiration = std::time(0) + static_cast<LONG>(lua_tonumber(L, 7));
 	}
-	short posID = defKITBAG_DEFPUSH_POS;
-	BOOL bRet = (pChar->GetPlyMainCha()->AddItem(sItemID, sCount, szNpc, byType, '\a', isTradable, expiration, &posID));
-	SItemGrid* pItem = pChar->GetItem2(2, posID);
-	lua_pushlightuserdata(L, pItem);
+
+	BOOL bRet = pChar->GetPlyMainCha()->AddItem(sItemID, sCount, szNpc, byType, '\a', isTradable, expiration);
+	lua_pushnumber(L, (bRet) ? LUA_TRUE : LUA_FALSE);
 
 	return 1;
 }
 
-inline int lua_HasLeaveBagTempGrid( lua_State* L )
+int GiveItemX(CCharacter* pChar, CTalkNpc* pTalk, int sItemID, int sCount, int byType)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sNum = (USHORT)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->HasLeaveBagTempGrid( sNum );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_TakeItemBagTemp( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/
-				lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[128] = "";
-	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc*   pNpc  = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( pNpc )
-	{
-		strcpy( szNpc, pNpc->GetName() );
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 3 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 4 );
-
-	BOOL bRet = pChar->GetPlyMainCha()->TakeItemBagTemp( sItemID, sCount, szNpc );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_TakeItem( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && /*lua_islightuserdata( L, 2 ) &&*/
-		lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	//char szNpc[128] = "";
-	char szNpc[defENTITY_NAME_LEN];
-	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
-
-	CTalkNpc*   pNpc  = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( pNpc )
-	{
-		strcpy( szNpc, pNpc->GetName() );
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 3 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 4 );
-
-	BOOL bRet = pChar->GetPlyMainCha()->TakeItem( sItemID, sCount, szNpc );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasItem( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->GetPlyMainCha()->HasItem( sItemID, sCount );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_BagTempHasItem( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->GetPlyMainCha()->HasItemBagTemp( sItemID, sCount );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_BankHasItem( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->GetPlayer()->BankHasItem( sItemID, sCount );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_EquipHasItem( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 3 );
-
-	short sItemCount = 0;
-	for(int i = 0; i < enumEQUIP_NUM; i++)
-	{
-		SItemGrid *pItem = &(pChar->m_SChaPart.SLink[i]);
-		if(pItem->sID == sItemID && pItem->sNum > 0)
-		{
-			sItemCount += pItem->sNum;
-		}
-	}
-
-	BOOL bRet = (sItemCount >= sCount) ? true : false;
-	
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_IsEquip( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = false;
-	for(int i = 0; i < enumEQUIP_NUM; i++)
-	{
-		SItemGrid *pItem = &(pChar->m_SChaPart.SLink[i]);
-		if(pItem->sID > 0 && pItem->sNum > 0)
-		{
-			bRet = true;
-			break;
-		}
-	}
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_KitbagLock( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	USHORT sLock = (USHORT)lua_tonumber( L, 2 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sKitbagLock = pChar->GetPlyMainCha()->m_CKitbag.IsPwdLocked() ? 1 : 0;
-	BOOL bRet = (sLock == sKitbagLock) ? true : false;
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetNumItem( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->GetPlyMainCha()->GetNumItem( sItemID, sCount );
-	
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, sCount );
-
-	return 2;
-}
-
-inline int lua_GetNeedItemCount( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (USHORT)lua_tonumber( L, 2 );
-	USHORT sItemID = (USHORT)lua_tonumber( L, 3 );
-	USHORT sCount = 0;
-
-	BOOL bRet = pChar->GetMisNeedItemCount( wRoleID, sItemID, sCount );
-	
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, sCount );
-
-	return 2;
-}
-
-inline int lua_AddMissionState( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
-		lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE  byID = (BYTE)lua_tonumber( L, 3 );
-	BYTE  byState = (BYTE)lua_tonumber( L, 4 );
-	BOOL bRet = pChar->AddMissionState( dwNpcID, byID, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_ResetMissionState( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	mission::CTalkNpc* pTalk = (mission::CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->ResetMissionState( *pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetMissionState( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE  byState;
-	BOOL bRet = pChar->GetMissionState( dwNpcID, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byState );	
-
-	return 2;
-}
-
-inline int lua_GetNumMission( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE  byNum = 0;
-	BOOL  bRet = pChar->GetNumMission( dwNpcID, byNum );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byNum );
-
-	return 2;
-}
-
-inline int lua_GetMissionInfo( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE  byIndex = (BYTE)lua_tonumber( L, 3 );
-
-	BYTE byID, byState;
-	BOOL bRet = pChar->GetMissionInfo( dwNpcID, byIndex, byID, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byID );
-	lua_pushnumber( L, byState );
-
-	return 3;
-}
-
-inline int lua_GetCharMission( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE  byID = (BYTE)lua_tonumber( L, 3 );
-
-	BYTE byState;
-	BOOL bRet = pChar->GetCharMission( dwNpcID, byID, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byState );
-
-	return 2;
-}
-
-inline int lua_GetNextMission( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-
-	BYTE byIndex, byID, byState;
-	BOOL bRet = pChar->GetNextMission( dwNpcID, byIndex, byID, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byIndex );
-	lua_pushnumber( L, byID );
-	lua_pushnumber( L, byState );
-
-	return 4;
-}
-
-inline int lua_IsMissionState( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_isnumber( L , 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	BYTE byState = (BYTE)lua_tonumber( L, 1 );
-	BYTE byFlag  = (BYTE)lua_tonumber( L, 2 );
-	lua_pushnumber( L, ( byFlag&byState ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_SetMissionPage( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE byPrev = (BYTE)lua_tonumber( L, 3 );
-	BYTE byNext = (BYTE)lua_tonumber( L, 4 );
-	BYTE byState = (BYTE)lua_tonumber( L, 5 );
-
-	BOOL bRet = pChar->SetMissionPage( dwNpcID, byPrev, byNext, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetMissionPage( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE byPrev, byNext, byState;
-	BOOL bRet = pChar->GetMissionPage( dwNpcID, byPrev, byNext, byState );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byPrev );
-	lua_pushnumber( L, byNext );
-	lua_pushnumber( L, byState );
-
-	return 4;
-}
-
-inline int lua_SetMissionTempInfo( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-		lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	WORD  wID = (WORD)lua_tonumber( L, 3 );
-	BYTE  byState = (BYTE)lua_tonumber( L, 4 );
-	BYTE  byType = (BYTE)lua_tonumber( L, 5 );
-
-	BOOL  bRet = pChar->SetTempData( dwNpcID, wID, byState, byType );
-	
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetMissionTempInfo( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE byState, byType;
-	WORD wID;
-	BOOL bRet = pChar->GetTempData( dwNpcID, wID, byState, byType );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, wID );
-	lua_pushnumber( L, byState );
-	lua_pushnumber( L, byType );
-	return 4;
-}
-
-
-void ReAllPlayEffect(CCharacter* pChar) {
-	//  :   
-	auto l_wpk = net::msg::serialize(net::msg::McChaPlayEffectMessage{pChar->GetID(), 114});
-	pChar->NotiChgToEyeshot(l_wpk);
-}
-
-// 
-inline int lua_ReAll( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	// 
-	pChar->RestoreAll();
-	ReAllPlayEffect(pChar);
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
-}
-
-inline int lua_ReAllHp( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	// 
-	pChar->RestoreAllHp();
-	ReAllPlayEffect(pChar);
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
-}
-
-inline int lua_ReHp( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byRate = (BYTE)lua_tonumber( L, 2 );
-	// 
-	pChar->RestoreHp( byRate );
-	ReAllPlayEffect(pChar);
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
-}
-
-inline int lua_ReAllSp( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	// 
-	pChar->RestoreAllSp();
-	ReAllPlayEffect(pChar);
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
-}
-
-inline int lua_ReSp( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byRate = (BYTE)lua_tonumber( L, 2 );
-	// 
-	pChar->RestoreSp( byRate );
-	ReAllPlayEffect(pChar);
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
-}
-
-inline int lua_LvCheck( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wLevel = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet;
-	if( pszData[0] == '=' )
-	{
-		bRet = pChar->getAttr( ATTR_LV ) == wLevel;
-	}
-	else if( pszData[0] == '>' )
-	{
-		bRet = pChar->getAttr( ATTR_LV ) > wLevel;
-	}
-	else if( pszData[0] == '<' )
-	{
-		bRet = pChar->getAttr( ATTR_LV ) < wLevel;
-	}
-	else
-	{
-		E_LUACOMPARE;
-		return 0;
-	}
-	
-	lua_pushnumber( L, bRet );
-	return 1;
-}
-
-inline int lua_LvEqual( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wLevel = (WORD)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_LV ) == wLevel );
-	return 1;
-}
-
-inline int lua_LvThan( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wLevel = (WORD)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_LV ) > wLevel );
-	return 1;
-}
-
-inline int lua_GetCharMissionLevel( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wLevel = (WORD)pChar->getAttr( ATTR_LV );
-
-	lua_pushnumber( L, wLevel );
-	
-	return 1;
-}
-
-inline int lua_PfEqual( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byPf = (BYTE)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_JOB ) == byPf );
-	return 1;
-}
-
-inline int lua_HpCheck( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wHp = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet;
-	if( pszData[0] == '=' )
-	{
-		bRet = pChar->getAttr( ATTR_HP ) == wHp;
-	}
-	else if( pszData[0] == '>' )
-	{
-		bRet = pChar->getAttr( ATTR_HP ) > wHp;
-	}
-	else if( pszData[0] == '<' )
-	{
-		bRet = pChar->getAttr( ATTR_HP ) < wHp;
-	}
-	else
-	{
-		E_LUACOMPARE;
-		return 0;
-	}
-
-	lua_pushnumber( L, bRet );
-	return 1;
-}
-
-inline int lua_HpEqual( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wHP = (WORD)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_HP ) == wHP );
-	return 1;
-}
-
-inline int lua_HpThan( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wHP = (WORD)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_HP ) > wHP );
-	return 1;
-}
-
-inline int lua_SpCheck( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
-		lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wSp = (WORD)lua_tonumber( L, 3 );
-	BOOL bRet;
-	if( pszData[0] == '=' )
-	{
-		bRet = pChar->getAttr( ATTR_SP ) == wSp;
-	}
-	else if( pszData[0] == '>' )
-	{
-		bRet = pChar->getAttr( ATTR_SP ) > wSp;
-	}
-	else if( pszData[0] == '<' )
-	{
-		bRet = pChar->getAttr( ATTR_SP ) < wSp;
-	}
-	else
-	{
-		E_LUACOMPARE;
-		return 0;
-	}
-
-	lua_pushnumber( L, bRet );
-	return 1;
-}
-
-inline int lua_SpEqual( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wSP = (WORD)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_SP ) == wSP );
-	return 1;
-}
-
-inline int lua_SpThan( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wSP = (WORD)lua_tonumber( L, 2 );
-	lua_pushnumber( L, pChar->getAttr( ATTR_SP ) > wSP );
-	return 1;
-}
-
-//inline int lua_HasRandMission( lua_State* L )
-//{
-//	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 );
-//	if( !bValid )
-//	{
-//		E_LUAPARAM;
-//		return 0;
-//	}
-//
-//	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-//	if( !pChar )
-//	{
-//		E_LUANULL;
-//		return 0;
-//	}
-//
-//	lua_pushnumber( L, ( pChar->HasRandMission() ) ? LUA_TRUE : LUA_FALSE );
-//	
-//	return 1;
-//}
-
-inline int lua_HasRandMission( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->HasRandMission( wID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	
-	return 1;
-}
-
-inline int lua_AddRandMission( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 10 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 ) &&
-				  lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && lua_isnumber( L, 6 ) && lua_isnumber( L, 7 ) &&
-				  lua_isnumber( L, 8 ) && lua_isnumber( L, 9 ) && lua_isnumber( L, 10 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID	= (WORD)lua_tonumber( L, 2 );
-	WORD wScriptID = (WORD)lua_tonumber( L, 3 );
-	BYTE byType = (BYTE)lua_tonumber( L, 4 );
-	BYTE byLevel = (BYTE)lua_tonumber( L, 5 );
-	DWORD dwExp = (DWORD)lua_tonumber( L, 6 );
-	DWORD dwMoney = (DWORD)lua_tonumber( L, 7 );
-	USHORT sPrizeData = (USHORT)lua_tonumber( L, 8 );
-	USHORT sPrizeType = (USHORT)lua_tonumber( L, 9 );
-	BYTE byNumData = (BYTE)lua_tonumber( L, 10 );
-	BOOL bRet = pChar->AddRandMission( wID, wScriptID, byType, byLevel, dwExp, dwMoney, sPrizeData, sPrizeType, byNumData );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	
-	return 1;
-}
-
-inline int lua_SetRandMissionData( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 9 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
-				  lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && 
-				  lua_isnumber( L, 6 ) && lua_isnumber( L, 7 ) && lua_isnumber( L, 8 ) &&
-				  lua_isnumber( L, 9 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	BYTE byIndex = (BYTE)lua_tonumber( L, 3 );
-
-	MISSION_DATA data;
-	data.wParam1 = (WORD)lua_tonumber( L, 4 );
-	data.wParam2 = (WORD)lua_tonumber( L, 5 );
-	data.wParam3 = (WORD)lua_tonumber( L, 6 );
-	data.wParam4 = (WORD)lua_tonumber( L, 7 );
-	data.wParam5 = (WORD)lua_tonumber( L, 8 );
-	data.wParam6 = (WORD)lua_tonumber( L, 9 );
-
-	BOOL bRet = pChar->SetRandMissionData( wRoleID, byIndex, data );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetRandMission( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wID = (WORD)lua_tonumber( L, 2 );
-
-	BYTE  byType, byLevel, byNumData;
-	DWORD dwExp, dwMoney;
-	USHORT sPrizeData, sPrizeType;
-	BOOL bRet = pChar->GetRandMission( wID, byType, byLevel, dwExp, dwMoney, sPrizeData, sPrizeType, byNumData );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byType );
-	lua_pushnumber( L, byLevel );
-	lua_pushnumber( L, dwExp );
-	lua_pushnumber( L, dwMoney );
-	lua_pushnumber( L, sPrizeData );
-	lua_pushnumber( L, sPrizeType );
-	lua_pushnumber( L, byNumData );		
-	
-	return 8;
-}
-
-inline int lua_GetRandMissionData( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	BYTE byIndex = (BYTE)lua_tonumber( L, 3 );
-	MISSION_DATA data;
-	BOOL bRet = pChar->GetRandMissionData( wRoleID, byIndex, data );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, data.wParam1 );
-	lua_pushnumber( L, data.wParam2 );
-	lua_pushnumber( L, data.wParam3 );
-	lua_pushnumber( L, data.wParam4 );
-	lua_pushnumber( L, data.wParam5 );
-	lua_pushnumber( L, data.wParam6 );
-
-	return 7;
-}
-
-inline int lua_TakeAllRandItem( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->TakeAllRandItem( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_TakeRandNpcItem( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 ) &&
-				  lua_isstring( L, 4 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wNpcID = (WORD)lua_tonumber( L, 3 );
-	const char* pszNpc = (char*)lua_tostring( L, 4 );
-	if( !pszNpc )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->TakeRandNpcItem( wRoleID, wNpcID, pszNpc );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasRandMissionNpc( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 ) &&
-				  lua_isnumber( L, 4 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wNpcID  = (WORD)lua_tonumber( L, 3 );
-	WORD wAreaID  = (WORD)lua_tonumber( L, 4 );
-
-	BOOL bRet = pChar->HasRandMissionNpc( wRoleID, wNpcID, wAreaID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasRandNpcItemFlag( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wNpcID  = (WORD)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->HasSendNpcItemFlag( wRoleID, wNpcID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_NoRandNpcItemFlag( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wNpcID  = (WORD)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->NoSendNpcItemFlag( wRoleID, wNpcID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_IsMisNeedItem( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->IsMisNeedItem( sItemID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_CompleteRandMissionCount( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->CompleteRandMission( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_FailureRandMissionCount( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->FailureRandMission( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_ResetRandMissionCount( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->ResetRandMission( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-
-inline int lua_ResetRandMissionNum( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->ResetRandMissionNum( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasRandMissionCount( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				  lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wCount  = (WORD)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->HasRandMissionCount( wRoleID, wCount );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_AddRandMissionNum( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->AddRandMissionNum( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetRandMissionCount( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wCount = 0;
-	BOOL bRet = pChar->GetRandMissionCount( wRoleID, wCount );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, wCount );
-
-	return 2;
-}
-
-inline int lua_GetRandMissionNum( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	WORD wNum = 0;
-	BOOL bRet = pChar->GetRandMissionNum( wRoleID, wNum );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, wNum );
-
-	return 2;
-}
-
-inline int lua_Hide( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	pChar->Hide();
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_Show( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	pChar->Show();
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_ConvoyNpc( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				  lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	BYTE byIndex = (BYTE)lua_tonumber( L, 3 );
-	WORD wNpcID = (WORD)lua_tonumber( L, 4 );
-	BYTE byAiType = (BYTE)lua_tonumber( L, 5 );
-
-	BOOL bRet = pChar->ConvoyNpc( wRoleID, byIndex, wNpcID, byAiType );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_ClearConvoyNpc( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	BYTE byIndex = (BYTE)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->ClearConvoyNpc( wRoleID, byIndex );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_ClearAllConvoyNpc( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	
-	BOOL bRet = pChar->ClearAllConvoyNpc( wRoleID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_HasConvoyNpc( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) &&
-					lua_isnumber( L, 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-		
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	BYTE byIndex = (BYTE)lua_tonumber( L, 3 );
-	BOOL bRet = pChar->HasConvoyNpc( wRoleID, byIndex );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_IsConvoyNpc( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && lua_isnumber( L, 3 ) &&
-				  lua_isnumber( L, 4 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( pChar == NULL )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	WORD wRoleID = (WORD)lua_tonumber( L, 2 );
-	BYTE byIndex = (BYTE)lua_tonumber( L, 3 );
-	WORD wNpcID = (WORD)lua_tonumber( L, 4 );
-	BOOL bRet = pChar->IsConvoyNpc( wRoleID, byIndex, wNpcID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_SetSpawnPos( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	const char* pszCity = lua_tostring( L, 2 );
-	if( !pszCity )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	pChar->SetBirthCity( pszCity );
-	//pChar->SystemNotice( "%s%s", pChar->GetName(), pszCity );
-	pChar->SystemNotice( RES_STRING(GM_CHARSCRIPT_CPP_00010), pChar->GetName(), pszCity );
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_IsSpawnPos( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	const char* pszCity = lua_tostring( L, 2 );
-	if( !pszCity )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = strcmp( pszCity, pChar->GetBirthCity() ) == 0;
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_SetProfession( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BYTE byPf = (BYTE)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->SetProfession( byPf );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetProfession( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L  ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byPf = (BYTE)pChar->getAttr( ATTR_JOB );
-
-	lua_pushnumber( L, LUA_TRUE );
-	lua_pushnumber( L, byPf );
-
-	return 2;
-}
-
-inline int lua_GetCategory( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BYTE byCat = (BYTE)pChar->GetCat();
-
-	lua_pushnumber( L, LUA_TRUE );
-	lua_pushnumber( L, byCat );
-
-	return 2;
-}
-
-inline int lua_GetCatAndPf( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BYTE byCat = (BYTE)pChar->GetCat();
-	BYTE byPf  = (BYTE)pChar->getAttr( ATTR_JOB );
-	lua_pushnumber( L, LUA_TRUE );
-	lua_pushnumber( L, byCat );
-	lua_pushnumber( L, byPf );
-
-	return 3;
-}
-
-inline int lua_IsCategory( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BYTE byCat = (BYTE)lua_tonumber( L, 2 );
-
-	lua_pushnumber( L, ( byCat == pChar->GetCat() ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_SaveMissionData( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->SaveMissionData();
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-//==========Begin=========================================================
-inline int lua_HasFame( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwFame = (DWORD)lua_tonumber( L, 2 );
-
-	lua_pushnumber( L, (DWORD)pChar->getAttr( ATTR_FAME ) >= dwFame ? LUA_TRUE : LUA_FALSE);
-
-	return 1;	
-}
-
-inline int lua_HasGuild( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( pChar->HasGuild() ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_HasNavyGuild( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( pChar->HasGuild() ? (pChar->GetValidGuildID() > 1 && pChar->GetValidGuildID() < 100) : FALSE ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_NoNavyGuild( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( pChar->HasGuild() ? (pChar->GetValidGuildID() < 1 || pChar->GetValidGuildID() >= 100) : TRUE ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_HasPirateGuild( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( pChar->HasGuild() ? (pChar->GetValidGuildID() > 99 && pChar->GetValidGuildID() < 200) : FALSE ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_NoPirateGuild( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( pChar->HasGuild() ? (pChar->GetValidGuildID() <= 99) : TRUE ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_CreateGuild( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ); 
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = Guild::lua_CreateGuild(pChar);
-	
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-inline int lua_ListAllGuild( lua_State* L )
-{
-BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = Guild::lua_ListAllGuild( pChar);
-	
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-//===========End========================================================
-inline int lua_SetPkState( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	BYTE byPk = (BYTE)lua_tonumber( L, 2 );
-
-	pChar->SetEnterGymkhana( (BOOL)byPk );
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;	
-}
-
-inline int lua_IsBoatFull( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = ( pChar->GetPlayer() ) ? pChar->GetPlayer()->IsBoatFull() : FALSE;
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;	
-}
-
-inline int lua_CreateBoat( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				  lua_isnumber( L, 3 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBoat = (USHORT)lua_tonumber( L, 2 );
-	USHORT sBerth = (USHORT)lua_tonumber( L, 3 );
-	BOOL bRet = g_CharBoat.Create( *pChar, sBoat, sBerth );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetBoatID( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );;
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byIndex = (BYTE)lua_tonumber( L, 2 );
-	DWORD dwBoatID;
-	BOOL bRet = pChar->GetBoatID( byIndex, dwBoatID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, dwBoatID );
-
-	return 2;
-}
-
-inline int lua_IsNeedRepair( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	BOOL bRet = pChar->IsNeedRepair();
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_IsNeedSupply( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	BOOL bRet = pChar->IsNeedSupply();
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_RepairBoat( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	pChar->RepairBoat();
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_SupplyBoat( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	pChar->SupplyBoat();
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_BoatLuanchOut( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 6 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				  lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && 
-				  lua_isnumber( L, 6 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pTalk)
 	{
-		E_LUANULL;
-		return 0;
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
 	}
-
-	BYTE byIndex = (BYTE)lua_tonumber( L, 2 );
-	USHORT sBerth = (USHORT)lua_tonumber( L, 3 );
-	USHORT sxPos = (USHORT)lua_tonumber( L, 4 );
-	USHORT syPos = (USHORT)lua_tonumber( L, 5 );
-	USHORT sDir = (USHORT)lua_tonumber( L, 6 );
-	BOOL bRet = pChar->BoatLaunch( byIndex, sBerth, sxPos, syPos, sDir );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_BoatBerth( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				  lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBerth = (USHORT)lua_tonumber( L, 2 );
-	USHORT sxPos = (USHORT)lua_tonumber( L, 3 );
-	USHORT syPos = (USHORT)lua_tonumber( L, 4 );
-	USHORT sDir = (USHORT)lua_tonumber( L, 5 );
-	BOOL bRet = pChar->BoatBerth( sBerth, sxPos, syPos, sDir );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_BoatBerthList( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 7 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				  lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 ) && 
-				  lua_isnumber( L, 6 ) && lua_isnumber( L, 7 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	DWORD dwNpcID = (DWORD)lua_tonumber( L, 2 );
-	BYTE byType = (BYTE)lua_tonumber( L, 3 );
-	USHORT sBerth = (USHORT)lua_tonumber( L, 4 );
-	USHORT sxPos = (USHORT)lua_tonumber( L, 5 );
-	USHORT syPos = (USHORT)lua_tonumber( L, 6 );
-	USHORT sDir = (USHORT)lua_tonumber( L, 7 );
-	//
-	//BOOL bRet = pChar->BoatBerthList( dwNpcID, byType, sBerth, sxPos, syPos, sDir );
-	BOOL bRet;
-
-	//if(byType == mission::BERTH_TRADE_LIST)
-	//{
-	//	bRet = FALSE;
-	//}
-	//else
-		bRet = pChar->BoatBerthList( dwNpcID, byType, sBerth, sxPos, syPos, sDir );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_BoatTrade( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBerth = (USHORT)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->BoatTrade( sBerth );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_BoatBuildCheck( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBoatID = (USHORT)lua_tonumber( L, 2 );
-	BOOL bRet = !g_CharBoat.BoatLimit( *pChar, sBoatID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasAllBoatInBerth( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBerthID = (USHORT)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->HasAllBoatInBerth( sBerthID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-
-inline int lua_HasBoatInBerth( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBerthID = (USHORT)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->HasBoatInBerth( sBerthID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasDeadBoatInBerth( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBerthID = (USHORT)lua_tonumber( L, 2 );
-	BOOL bRet = pChar->HasDeadBoatInBerth( sBerthID );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasLuanchOut( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid ) 
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = ( pChar->GetPlayer() ) ? pChar->GetPlayer()->IsLuanchOut() : LUA_FALSE;
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetSection( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_isnumber( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	USHORT sData1 = (USHORT)lua_tonumber( L, 1 );
-	USHORT sData2 = (USHORT)lua_tonumber( L, 2 );
-
-	lua_pushnumber( L, sData1/sData2 );
-
-	return 1;
-}
-
-inline int lua_ToDword( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_isnumber( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	DWORD dwData = (DWORD)lua_tonumber( L, 1 );
-
-	lua_pushnumber( L, dwData );
-
-	return 1;
-}
-
-inline int lua_PackBag( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 5 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) && 
-				lua_isnumber( L, 3 ) && lua_isnumber( L, 4 ) && lua_isnumber( L, 5 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CCharacter* pBoat = (CCharacter*)lua_touserdata( L, 2 );
-	if( !pChar || !pBoat )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sItemID = (USHORT)lua_tonumber( L, 3 );
-	USHORT sCount  = (USHORT)lua_tonumber( L, 4 );
-	USHORT sPileID = (USHORT)lua_tonumber( L, 5 );
-	USHORT sNumPack = 0;
-	BOOL bRet = pChar->PackBag( *pBoat, sItemID, sCount, sPileID, sNumPack );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, sNumPack );
-
-	return 2;
-}
-
-inline int lua_PackBagList( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 4 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-				lua_isnumber( L, 3 ) && lua_isnumber( L, 4 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sBerthID = (USHORT)lua_tonumber( L, 2 );
-	BYTE byType = (BYTE)lua_tonumber( L, 3 );
-	BYTE byLevel = (BYTE)lua_tonumber( L, 4 );
-
-	BOOL bRet = pChar->BoatPackBagList( sBerthID, byType, byLevel );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_HasLeaveBagGrid( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sNum = (USHORT)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->HasLeaveBagGrid( sNum );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_AdjustTradeItemCess( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-					lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sCess = (USHORT)lua_tonumber( L, 2 );
-	USHORT sData = (USHORT)lua_tonumber( L, 3 );
-
-	BOOL bRet = pChar->AdjustTradeItemCess( sCess, sData );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_SetTradeItemLevel( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byData = (BYTE)lua_tonumber( L, 2 );
-
-	BOOL bRet = pChar->SetTradeItemLevel( byData );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-// 20050730
-inline int lua_TradeItemLevelCheck( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
-					lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byData = (BYTE)lua_tonumber( L, 3 );
-	BOOL bRet = FALSE;
-	BYTE byLevel;
-	if( pChar->GetTradeItemLevel( byLevel ) )
-	{		
-		if( pszData[0] == '>' )
-		{
-			bRet = byLevel > byData;
-		}
-		else if( pszData[0] == '<' )
-		{
-			bRet = byLevel < byData;
-		}
-		else if( pszData[0] == '=' )
-		{
-			bRet = byData == byLevel;
-		}
-		else
-		{
-			E_LUAPARAM;
-			return 0;
-		}
-	}
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-/* 
-inline int lua_TradeItemLevelCheck( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
-					lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byData = (BYTE)lua_tonumber( L, 3 );
-
-	BOOL bRet;
-	if( pszData[0] == '>' )
-	{
-		bRet = pChar->HasTradeItemLevel( byData );
-	}
-	else if( pszData[0] == '<' )
-	{
-		bRet = !pChar->HasTradeItemLevel( byData );
-	}
-	else if( pszData[0] == '=' )
-	{
-		BYTE byLevel;
-		if( pChar->GetTradeItemLevel( byLevel ) )
-		{
-			bRet = byData == byLevel;
-		}
-		else
-		{
-			bRet = FALSE;
-		}
-	}
-	else
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}*/
-
-inline int lua_TradeItemDataCheck( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
-					lua_isnumber( L, 3 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	USHORT sData = (USHORT)lua_tonumber( L, 3 );
-	BYTE byLevel;
-	USHORT sCess;
-	BOOL bRet = pChar->GetTradeItemData( byLevel, sCess );
-	if( bRet )
-	{
-		if( pszData[0] == '>' )
-		{
-			bRet = sCess > sData;
-		}
-		else if( pszData[0] == '<' )
-		{
-			bRet = sCess < sData;
-		}
-		else if( pszData[0] == '=' )
-		{
-			bRet = sCess == sData;
-		}
-		else
-		{
-			E_LUAPARAM;
-			return 0;
-		}
-	}
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-
-	return 1;
-}
-
-inline int lua_GetTradeItemData( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byLevel;
-	USHORT sCess;
-	BOOL bRet = pChar->GetTradeItemData( byLevel, sCess );
-
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	lua_pushnumber( L, byLevel );
-	lua_pushnumber( L, sCess );
-
-	return 3;
-}
-
-inline int lua_SetAttrChangeFlag( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	pChar->m_CChaAttr.ResetChangeFlag();
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_SyncBoat( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pBoat = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pBoat )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byType = (BYTE)lua_tonumber( L, 2 );
-
-	pBoat->SyncBoatAttr( byType , false );
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
-}
-
-inline int lua_SyncChar( lua_State* L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BYTE byType = (BYTE)lua_tonumber( L, 2 );
-
-	pChar->SynAttr( byType );
-
-	lua_pushnumber( L, LUA_TRUE );
 
-	return 1;
+	BOOL bRet = pChar->GetPlyMainCha()->AddItem2KitbagTemp((USHORT)sItemID, (USHORT)sCount, szNpc, (BYTE)byType);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenGuildBank(lua_State* L)
+// GiveItemY has variable args (5-7) and returns lightuserdata -- keep as raw
+int GiveItemY_raw(lua_State* L)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
+	BOOL bValid = ((lua_gettop(L) >= 5 && lua_gettop(L) <= 7) && lua_islightuserdata(L, 1) &&
+		lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5));
 	if (!bValid)
 	{
 		E_LUAPARAM;
@@ -4317,894 +605,1295 @@ inline int lua_OpenGuildBank(lua_State* L)
 	}
 
 	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	
-	if (!pChar )
+	if (pChar == NULL)
 	{
 		E_LUANULL;
 		return 0;
 	}
 
+	char szNpc[defENTITY_NAME_LEN];
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata(L, 2);
+	if (pTalk)
+	{
+		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
+	}
+
+	USHORT sItemID = (USHORT)lua_tonumber(L, 3);
+	USHORT sCount = (USHORT)lua_tonumber(L, 4);
+	BYTE byType = (BYTE)lua_tonumber(L, 5);
+	BOOL isTradable = 1;
+	LONG expiration = 0;
+
+	if (lua_gettop(L) >= 6 && lua_isnumber(L, 6)) {
+		isTradable = static_cast<BOOL>(lua_tonumber(L, 6));
+	}
+	if (lua_gettop(L) == 7 && lua_isnumber(L, 7)) {
+		expiration = std::time(0) + static_cast<LONG>(lua_tonumber(L, 7));
+	}
+	short posID = defKITBAG_DEFPUSH_POS;
+	BOOL bRet = (pChar->GetPlyMainCha()->AddItem(sItemID, sCount, szNpc, byType, '\a', isTradable, expiration, &posID));
+	SItemGrid* pItem = pChar->GetItem2(2, posID);
+	luabridge::push(L, pItem);
+
+	return 1;
+}
+
+int HasLeaveBagTempGrid(CCharacter* pChar, int sNum)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasLeaveBagTempGrid((USHORT)sNum);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int TakeItemBagTemp(CCharacter* pChar, CTalkNpc* pNpc, int sItemID, int sCount)
+{
+	if (!pChar) return LUA_FALSE;
+
+	char szNpc[defENTITY_NAME_LEN];
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pNpc)
+	{
+		strcpy(szNpc, pNpc->GetName());
+	}
+
+	BOOL bRet = pChar->GetPlyMainCha()->TakeItemBagTemp((USHORT)sItemID, (USHORT)sCount, szNpc);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int TakeItem(CCharacter* pChar, CTalkNpc* pNpc, int sItemID, int sCount)
+{
+	if (!pChar) return LUA_FALSE;
+
+	char szNpc[defENTITY_NAME_LEN];
+	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
+	if (pNpc)
+	{
+		strcpy(szNpc, pNpc->GetName());
+	}
+
+	BOOL bRet = pChar->GetPlyMainCha()->TakeItem((USHORT)sItemID, (USHORT)sCount, szNpc);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasItem(CCharacter* pChar, int sItemID, int sCount)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlyMainCha()->HasItem((USHORT)sItemID, (USHORT)sCount);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int BagTempHasItem(CCharacter* pChar, int sItemID, int sCount)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlyMainCha()->HasItemBagTemp((USHORT)sItemID, (USHORT)sCount);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int BankHasItem(CCharacter* pChar, int sItemID, int sCount)
+{
+	if (!pChar) return LUA_FALSE;
+	USHORT sCountVal = (USHORT)sCount;
+	BOOL bRet = pChar->GetPlayer()->BankHasItem((USHORT)sItemID, sCountVal);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int EquipHasItem(CCharacter* pChar, int sItemID, int sCount)
+{
+	if (!pChar) return LUA_FALSE;
+
+	short sItemCount = 0;
+	for (int i = 0; i < enumEQUIP_NUM; i++)
+	{
+		SItemGrid* pItem = &(pChar->m_SChaPart.SLink[i]);
+		if (pItem->sID == (USHORT)sItemID && pItem->sNum > 0)
+		{
+			sItemCount += pItem->sNum;
+		}
+	}
+
+	BOOL bRet = (sItemCount >= (USHORT)sCount) ? true : false;
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int IsEquip(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+
+	BOOL bRet = false;
+	for (int i = 0; i < enumEQUIP_NUM; i++)
+	{
+		SItemGrid* pItem = &(pChar->m_SChaPart.SLink[i]);
+		if (pItem->sID > 0 && pItem->sNum > 0)
+		{
+			bRet = true;
+			break;
+		}
+	}
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int KitbagLock(CCharacter* pChar, int sLock)
+{
+	if (!pChar) return LUA_FALSE;
+	USHORT sKitbagLock = pChar->GetPlyMainCha()->m_CKitbag.IsPwdLocked() ? 1 : 0;
+	BOOL bRet = ((USHORT)sLock == sKitbagLock) ? true : false;
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int> GetNumItem(CCharacter* pChar, int sItemID, int sCount)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	USHORT sCountOut = (USHORT)sCount;
+	BOOL bRet = pChar->GetPlyMainCha()->GetNumItem((USHORT)sItemID, sCountOut);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)sCountOut);
+}
+
+std::tuple<int, int> GetNeedItemCount(CCharacter* pChar, int wRoleID, int sItemID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	USHORT sCount = 0;
+	BOOL bRet = pChar->GetMisNeedItemCount((WORD)wRoleID, (USHORT)sItemID, sCount);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)sCount);
+}
+
+int AddMissionState(CCharacter* pChar, int dwNpcID, int byID, int byState)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->AddMissionState((DWORD)dwNpcID, (BYTE)byID, (BYTE)byState);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int ResetMissionState(CCharacter* pChar, CTalkNpc* pTalk)
+{
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->ResetMissionState(*pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int> GetMissionState(CCharacter* pChar, int dwNpcID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	BYTE byState;
+	BOOL bRet = pChar->GetMissionState((DWORD)dwNpcID, byState);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byState);
+}
+
+std::tuple<int, int> GetNumMission(CCharacter* pChar, int dwNpcID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	BYTE byNum = 0;
+	BOOL bRet = pChar->GetNumMission((DWORD)dwNpcID, byNum);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byNum);
+}
+
+std::tuple<int, int, int> GetMissionInfo(CCharacter* pChar, int dwNpcID, int byIndex)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0);
+	BYTE byID, byState;
+	BOOL bRet = pChar->GetMissionInfo((DWORD)dwNpcID, (BYTE)byIndex, byID, byState);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byID, (int)byState);
+}
+
+std::tuple<int, int> GetCharMission(CCharacter* pChar, int dwNpcID, int byID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	BYTE byState;
+	BOOL bRet = pChar->GetCharMission((DWORD)dwNpcID, (BYTE)byID, byState);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byState);
+}
+
+std::tuple<int, int, int, int> GetNextMission(CCharacter* pChar, int dwNpcID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0, 0);
+	BYTE byIndex, byID, byState;
+	BOOL bRet = pChar->GetNextMission((DWORD)dwNpcID, byIndex, byID, byState);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byIndex, (int)byID, (int)byState);
+}
+
+int IsMissionState(int byState, int byFlag)
+{
+	return ((BYTE)byFlag & (BYTE)byState) ? LUA_TRUE : LUA_FALSE;
+}
+
+int SetMissionPage(CCharacter* pChar, int dwNpcID, int byPrev, int byNext, int byState)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetMissionPage((DWORD)dwNpcID, (BYTE)byPrev, (BYTE)byNext, (BYTE)byState);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int, int, int> GetMissionPage(CCharacter* pChar, int dwNpcID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0, 0);
+	BYTE byPrev, byNext, byState;
+	BOOL bRet = pChar->GetMissionPage((DWORD)dwNpcID, byPrev, byNext, byState);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byPrev, (int)byNext, (int)byState);
+}
+
+int SetMissionTempInfo(CCharacter* pChar, int dwNpcID, int wID, int byState, int byType)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetTempData((DWORD)dwNpcID, (WORD)wID, (BYTE)byState, (BYTE)byType);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int, int, int> GetMissionTempInfo(CCharacter* pChar, int dwNpcID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0, 0);
+	BYTE byState, byType;
+	WORD wID;
+	BOOL bRet = pChar->GetTempData((DWORD)dwNpcID, wID, byState, byType);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)wID, (int)byState, (int)byType);
+}
+
+
+void ReAllPlayEffect(CCharacter* pChar) {
+	auto l_wpk = net::msg::serialize(net::msg::McChaPlayEffectMessage{pChar->GetID(), 114});
+	pChar->NotiChgToEyeshot(l_wpk);
+}
+
+int ReAll(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->RestoreAll();
+	ReAllPlayEffect(pChar);
+	return LUA_TRUE;
+}
+
+int ReAllHp(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->RestoreAllHp();
+	ReAllPlayEffect(pChar);
+	return LUA_TRUE;
+}
+
+int ReHp(CCharacter* pChar, int byRate)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->RestoreHp((BYTE)byRate);
+	ReAllPlayEffect(pChar);
+	return LUA_TRUE;
+}
+
+int ReAllSp(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->RestoreAllSp();
+	ReAllPlayEffect(pChar);
+	return LUA_TRUE;
+}
+
+int ReSp(CCharacter* pChar, int byRate)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->RestoreSp((BYTE)byRate);
+	ReAllPlayEffect(pChar);
+	return LUA_TRUE;
+}
+
+int LvCheck(CCharacter* pChar, const std::string& pszData, int wLevel)
+{
+	if (!pChar || pszData.empty()) return LUA_FALSE;
+
+	BOOL bRet;
+	if (pszData[0] == '=')
+	{
+		bRet = pChar->getAttr(ATTR_LV) == (WORD)wLevel;
+	}
+	else if (pszData[0] == '>')
+	{
+		bRet = pChar->getAttr(ATTR_LV) > (WORD)wLevel;
+	}
+	else if (pszData[0] == '<')
+	{
+		bRet = pChar->getAttr(ATTR_LV) < (WORD)wLevel;
+	}
+	else
+	{
+		return LUA_FALSE;
+	}
+
+	return bRet;
+}
+
+int LvEqual(CCharacter* pChar, int wLevel)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_LV) == (WORD)wLevel;
+}
+
+int LvThan(CCharacter* pChar, int wLevel)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_LV) > (WORD)wLevel;
+}
+
+int GetCharMissionLevel(CCharacter* pChar)
+{
+	if (!pChar) return 0;
+	return (int)(WORD)pChar->getAttr(ATTR_LV);
+}
+
+int PfEqual(CCharacter* pChar, int byPf)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_JOB) == (BYTE)byPf;
+}
+
+int HpCheck(CCharacter* pChar, const std::string& pszData, int wHp)
+{
+	if (!pChar || pszData.empty()) return LUA_FALSE;
+
+	BOOL bRet;
+	if (pszData[0] == '=')
+	{
+		bRet = pChar->getAttr(ATTR_HP) == (WORD)wHp;
+	}
+	else if (pszData[0] == '>')
+	{
+		bRet = pChar->getAttr(ATTR_HP) > (WORD)wHp;
+	}
+	else if (pszData[0] == '<')
+	{
+		bRet = pChar->getAttr(ATTR_HP) < (WORD)wHp;
+	}
+	else
+	{
+		return LUA_FALSE;
+	}
+
+	return bRet;
+}
+
+int HpEqual(CCharacter* pChar, int wHP)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_HP) == (WORD)wHP;
+}
+
+int HpThan(CCharacter* pChar, int wHP)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_HP) > (WORD)wHP;
+}
+
+int SpCheck(CCharacter* pChar, const std::string& pszData, int wSp)
+{
+	if (!pChar || pszData.empty()) return LUA_FALSE;
+
+	BOOL bRet;
+	if (pszData[0] == '=')
+	{
+		bRet = pChar->getAttr(ATTR_SP) == (WORD)wSp;
+	}
+	else if (pszData[0] == '>')
+	{
+		bRet = pChar->getAttr(ATTR_SP) > (WORD)wSp;
+	}
+	else if (pszData[0] == '<')
+	{
+		bRet = pChar->getAttr(ATTR_SP) < (WORD)wSp;
+	}
+	else
+	{
+		return LUA_FALSE;
+	}
+
+	return bRet;
+}
+
+int SpEqual(CCharacter* pChar, int wSP)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_SP) == (WORD)wSP;
+}
+
+int SpThan(CCharacter* pChar, int wSP)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->getAttr(ATTR_SP) > (WORD)wSP;
+}
+
+int HasRandMission(CCharacter* pChar, int wID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasRandMission((WORD)wID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int AddRandMission(CCharacter* pChar, int wID, int wScriptID, int byType, int byLevel, int dwExp, int dwMoney, int sPrizeData, int sPrizeType, int byNumData)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->AddRandMission((WORD)wID, (WORD)wScriptID, (BYTE)byType, (BYTE)byLevel, (DWORD)dwExp, (DWORD)dwMoney, (USHORT)sPrizeData, (USHORT)sPrizeType, (BYTE)byNumData);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int SetRandMissionData(CCharacter* pChar, int wRoleID, int byIndex, int p1, int p2, int p3, int p4, int p5, int p6)
+{
+	if (!pChar) return LUA_FALSE;
+
+	MISSION_DATA data;
+	data.wParam1 = (WORD)p1;
+	data.wParam2 = (WORD)p2;
+	data.wParam3 = (WORD)p3;
+	data.wParam4 = (WORD)p4;
+	data.wParam5 = (WORD)p5;
+	data.wParam6 = (WORD)p6;
+
+	BOOL bRet = pChar->SetRandMissionData((WORD)wRoleID, (BYTE)byIndex, data);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int, int, int, int, int, int, int> GetRandMission(CCharacter* pChar, int wID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0, 0, 0, 0, 0, 0);
+
+	BYTE byType, byLevel, byNumData;
+	DWORD dwExp, dwMoney;
+	USHORT sPrizeData, sPrizeType;
+	BOOL bRet = pChar->GetRandMission((WORD)wID, byType, byLevel, dwExp, dwMoney, sPrizeData, sPrizeType, byNumData);
+
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byType, (int)byLevel, (int)dwExp, (int)dwMoney, (int)sPrizeData, (int)sPrizeType, (int)byNumData);
+}
+
+std::tuple<int, int, int, int, int, int, int> GetRandMissionData(CCharacter* pChar, int wRoleID, int byIndex)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0, 0, 0, 0, 0);
+
+	MISSION_DATA data;
+	BOOL bRet = pChar->GetRandMissionData((WORD)wRoleID, (BYTE)byIndex, data);
+
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)data.wParam1, (int)data.wParam2, (int)data.wParam3, (int)data.wParam4, (int)data.wParam5, (int)data.wParam6);
+}
+
+int TakeAllRandItem(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->TakeAllRandItem((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int TakeRandNpcItem(CCharacter* pChar, int wRoleID, int wNpcID, const std::string& pszNpc)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->TakeRandNpcItem((WORD)wRoleID, (WORD)wNpcID, pszNpc.c_str());
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasRandMissionNpc(CCharacter* pChar, int wRoleID, int wNpcID, int wAreaID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasRandMissionNpc((WORD)wRoleID, (WORD)wNpcID, (WORD)wAreaID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasRandNpcItemFlag(CCharacter* pChar, int wRoleID, int wNpcID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasSendNpcItemFlag((WORD)wRoleID, (WORD)wNpcID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int NoRandNpcItemFlag(CCharacter* pChar, int wRoleID, int wNpcID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->NoSendNpcItemFlag((WORD)wRoleID, (WORD)wNpcID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int IsMisNeedItem(CCharacter* pChar, int sItemID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsMisNeedItem((USHORT)sItemID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int CompleteRandMissionCount(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->CompleteRandMission((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int FailureRandMissionCount(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->FailureRandMission((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int ResetRandMissionCount(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ResetRandMission((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int ResetRandMissionNum(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ResetRandMissionNum((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasRandMissionCount(CCharacter* pChar, int wRoleID, int wCount)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasRandMissionCount((WORD)wRoleID, (WORD)wCount);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int AddRandMissionNum(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->AddRandMissionNum((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int> GetRandMissionCount(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	WORD wCount = 0;
+	BOOL bRet = pChar->GetRandMissionCount((WORD)wRoleID, wCount);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)wCount);
+}
+
+std::tuple<int, int> GetRandMissionNum(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	WORD wNum = 0;
+	BOOL bRet = pChar->GetRandMissionNum((WORD)wRoleID, wNum);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)wNum);
+}
+
+int Hide(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->Hide();
+	return LUA_TRUE;
+}
+
+int Show(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->Show();
+	return LUA_TRUE;
+}
+
+int ConvoyNpc(CCharacter* pChar, int wRoleID, int byIndex, int wNpcID, int byAiType)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ConvoyNpc((WORD)wRoleID, (BYTE)byIndex, (WORD)wNpcID, (BYTE)byAiType);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int ClearConvoyNpc(CCharacter* pChar, int wRoleID, int byIndex)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ClearConvoyNpc((WORD)wRoleID, (BYTE)byIndex);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int ClearAllConvoyNpc(CCharacter* pChar, int wRoleID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->ClearAllConvoyNpc((WORD)wRoleID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasConvoyNpc(CCharacter* pChar, int wRoleID, int byIndex)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasConvoyNpc((WORD)wRoleID, (BYTE)byIndex);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int IsConvoyNpc(CCharacter* pChar, int wRoleID, int byIndex, int wNpcID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsConvoyNpc((WORD)wRoleID, (BYTE)byIndex, (WORD)wNpcID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int SetSpawnPos(CCharacter* pChar, const std::string& pszCity)
+{
+	if (!pChar) return LUA_FALSE;
+
+	pChar->SetBirthCity(pszCity.c_str());
+	pChar->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00010), pChar->GetName(), pszCity.c_str());
+
+	return LUA_TRUE;
+}
+
+int IsSpawnPos(CCharacter* pChar, const std::string& pszCity)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = strcmp(pszCity.c_str(), pChar->GetBirthCity()) == 0;
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int SetProfession(CCharacter* pChar, int byPf)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetProfession((BYTE)byPf);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int> GetProfession(CCharacter* pChar)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	BYTE byPf = (BYTE)pChar->getAttr(ATTR_JOB);
+	return std::make_tuple(LUA_TRUE, (int)byPf);
+}
+
+std::tuple<int, int> GetCategory(CCharacter* pChar)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	BYTE byCat = (BYTE)pChar->GetCat();
+	return std::make_tuple(LUA_TRUE, (int)byCat);
+}
+
+std::tuple<int, int, int> GetCatAndPf(CCharacter* pChar)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0);
+	BYTE byCat = (BYTE)pChar->GetCat();
+	BYTE byPf = (BYTE)pChar->getAttr(ATTR_JOB);
+	return std::make_tuple(LUA_TRUE, (int)byCat, (int)byPf);
+}
+
+int IsCategory(CCharacter* pChar, int byCat)
+{
+	if (!pChar) return LUA_FALSE;
+	return ((BYTE)byCat == pChar->GetCat()) ? LUA_TRUE : LUA_FALSE;
+}
+
+int SaveMissionData(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SaveMissionData();
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+//==========Begin=========================================================
+int HasFame(CCharacter* pChar, int dwFame)
+{
+	if (!pChar) return LUA_FALSE;
+	return (DWORD)pChar->getAttr(ATTR_FAME) >= (DWORD)dwFame ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	return pChar->HasGuild() ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasNavyGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	return (pChar->HasGuild() ? (pChar->GetValidGuildID() > 1 && pChar->GetValidGuildID() < 100) : FALSE) ? LUA_TRUE : LUA_FALSE;
+}
+
+int NoNavyGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	return (pChar->HasGuild() ? (pChar->GetValidGuildID() < 1 || pChar->GetValidGuildID() >= 100) : TRUE) ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasPirateGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	return (pChar->HasGuild() ? (pChar->GetValidGuildID() > 99 && pChar->GetValidGuildID() < 200) : FALSE) ? LUA_TRUE : LUA_FALSE;
+}
+
+int NoPirateGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	return (pChar->HasGuild() ? (pChar->GetValidGuildID() <= 99) : TRUE) ? LUA_TRUE : LUA_FALSE;
+}
+
+int CreateGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = Guild::lua_CreateGuild(pChar);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int ListAllGuild(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = Guild::lua_ListAllGuild(pChar);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+//===========End========================================================
+int SetPkState(CCharacter* pChar, int byPk)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->SetEnterGymkhana((BOOL)(BYTE)byPk);
+	return LUA_TRUE;
+}
+
+int IsBoatFull(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = (pChar->GetPlayer()) ? pChar->GetPlayer()->IsBoatFull() : FALSE;
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int CreateBoat(CCharacter* pChar, int sBoat, int sBerth)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = g_CharBoat.Create(*pChar, (USHORT)sBoat, (USHORT)sBerth);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int> GetBoatID(CCharacter* pChar, int byIndex)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0);
+	DWORD dwBoatID;
+	BOOL bRet = pChar->GetBoatID((BYTE)byIndex, dwBoatID);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)dwBoatID);
+}
+
+int IsNeedRepair(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsNeedRepair();
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int IsNeedSupply(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->IsNeedSupply();
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int RepairBoat(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->RepairBoat();
+	return LUA_TRUE;
+}
+
+int SupplyBoat(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->SupplyBoat();
+	return LUA_TRUE;
+}
+
+int BoatLuanchOut(CCharacter* pChar, int byIndex, int sBerth, int sxPos, int syPos, int sDir)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->BoatLaunch((BYTE)byIndex, (USHORT)sBerth, (USHORT)sxPos, (USHORT)syPos, (USHORT)sDir);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int BoatBerth(CCharacter* pChar, int sBerth, int sxPos, int syPos, int sDir)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->BoatBerth((USHORT)sBerth, (USHORT)sxPos, (USHORT)syPos, (USHORT)sDir);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int BoatBerthList(CCharacter* pChar, int dwNpcID, int byType, int sBerth, int sxPos, int syPos, int sDir)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet;
+	bRet = pChar->BoatBerthList((DWORD)dwNpcID, (BYTE)byType, (USHORT)sBerth, (USHORT)sxPos, (USHORT)syPos, (USHORT)sDir);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int BoatTrade(CCharacter* pChar, int sBerth)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->BoatTrade((USHORT)sBerth);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int BoatBuildCheck(CCharacter* pChar, int sBoatID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = !g_CharBoat.BoatLimit(*pChar, (USHORT)sBoatID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasAllBoatInBerth(CCharacter* pChar, int sBerthID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasAllBoatInBerth((USHORT)sBerthID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasBoatInBerth(CCharacter* pChar, int sBerthID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasBoatInBerth((USHORT)sBerthID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasDeadBoatInBerth(CCharacter* pChar, int sBerthID)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasDeadBoatInBerth((USHORT)sBerthID);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasLuanchOut(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = (pChar->GetPlayer()) ? pChar->GetPlayer()->IsLuanchOut() : LUA_FALSE;
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int GetSection(int sData1, int sData2)
+{
+	return (USHORT)sData1 / (USHORT)sData2;
+}
+
+int ToDword(int dwData)
+{
+	return (int)(DWORD)dwData;
+}
+
+std::tuple<int, int> PackBag(CCharacter* pChar, CCharacter* pBoat, int sItemID, int sCount, int sPileID)
+{
+	if (!pChar || !pBoat) return std::make_tuple(LUA_FALSE, 0);
+	USHORT sNumPack = 0;
+	BOOL bRet = pChar->PackBag(*pBoat, (USHORT)sItemID, (USHORT)sCount, (USHORT)sPileID, sNumPack);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)sNumPack);
+}
+
+int PackBagList(CCharacter* pChar, int sBerthID, int byType, int byLevel)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->BoatPackBagList((USHORT)sBerthID, (BYTE)byType, (BYTE)byLevel);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int HasLeaveBagGrid(CCharacter* pChar, int sNum)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->HasLeaveBagGrid((USHORT)sNum);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int AdjustTradeItemCess(CCharacter* pChar, int sCess, int sData)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->AdjustTradeItemCess((USHORT)sCess, (USHORT)sData);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int SetTradeItemLevel(CCharacter* pChar, int byData)
+{
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = pChar->SetTradeItemLevel((BYTE)byData);
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int TradeItemLevelCheck(CCharacter* pChar, const std::string& pszData, int byData)
+{
+	if (!pChar || pszData.empty()) return LUA_FALSE;
+
+	BOOL bRet = FALSE;
+	BYTE byLevel;
+	if (pChar->GetTradeItemLevel(byLevel))
+	{
+		if (pszData[0] == '>')
+		{
+			bRet = byLevel > (BYTE)byData;
+		}
+		else if (pszData[0] == '<')
+		{
+			bRet = byLevel < (BYTE)byData;
+		}
+		else if (pszData[0] == '=')
+		{
+			bRet = (BYTE)byData == byLevel;
+		}
+		else
+		{
+			return LUA_FALSE;
+		}
+	}
+
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+int TradeItemDataCheck(CCharacter* pChar, const std::string& pszData, int sData)
+{
+	if (!pChar || pszData.empty()) return LUA_FALSE;
+
+	BYTE byLevel;
+	USHORT sCess;
+	BOOL bRet = pChar->GetTradeItemData(byLevel, sCess);
+	if (bRet)
+	{
+		if (pszData[0] == '>')
+		{
+			bRet = sCess > (USHORT)sData;
+		}
+		else if (pszData[0] == '<')
+		{
+			bRet = sCess < (USHORT)sData;
+		}
+		else if (pszData[0] == '=')
+		{
+			bRet = sCess == (USHORT)sData;
+		}
+		else
+		{
+			return LUA_FALSE;
+		}
+	}
+
+	return bRet ? LUA_TRUE : LUA_FALSE;
+}
+
+std::tuple<int, int, int> GetTradeItemData(CCharacter* pChar)
+{
+	if (!pChar) return std::make_tuple(LUA_FALSE, 0, 0);
+	BYTE byLevel;
+	USHORT sCess;
+	BOOL bRet = pChar->GetTradeItemData(byLevel, sCess);
+	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)byLevel, (int)sCess);
+}
+
+int SetAttrChangeFlag(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->m_CChaAttr.ResetChangeFlag();
+	return LUA_TRUE;
+}
+
+int SyncBoat(CCharacter* pBoat, int byType)
+{
+	if (!pBoat) return LUA_FALSE;
+	pBoat->SyncBoatAttr((BYTE)byType, false);
+	return LUA_TRUE;
+}
+
+int SyncChar(CCharacter* pChar, int byType)
+{
+	if (!pChar) return LUA_FALSE;
+	pChar->SynAttr((BYTE)byType);
+	return LUA_TRUE;
+}
+
+int OpenGuildBank(CCharacter* pChar)
+{
+	if (!pChar) return LUA_FALSE;
 	BOOL bRet = pChar->GetPlayer()->OpenGuildBank();
-	lua_pushnumber(L, (bRet) ? LUA_TRUE : LUA_FALSE);
-	return 1;
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenBank( lua_State* L )
+int OpenBank(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenBank( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenBank((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenRepair( lua_State* L )
+int OpenRepair(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenRepair( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenRepair((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenForge( lua_State* L )
+int OpenForge(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenForge( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenForge((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
 // Add by lark.li 20080514 begin
-inline int lua_OpenLottery( lua_State* L )
+int OpenLottery(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenLottery( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenLottery((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 // End
 
-inline int lua_OpenUnite( lua_State* L )
+int OpenUnite(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenUnite( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenUnite((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenMilling( lua_State* L )
+int OpenMilling(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenMilling( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenMilling((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenFusion( lua_State* L )
+int OpenFusion(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenFusion( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenFusion((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenUpgrade( lua_State* L )
+int OpenUpgrade(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenUpgrade( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenUpgrade((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenEidolonMetempsychosis( lua_State *L )
+int OpenEidolonMetempsychosis(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BOOL bRet = pChar->GetPlayer()->OpenEidolonMetempsychosis( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenEidolonMetempsychosis((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenEidolonFusion( lua_State *L )
+int OpenEidolonFusion(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenEidolonFusion( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenEidolonFusion((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenItemTiChun( lua_State *L )
+int OpenItemTiChun(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenPurify( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenPurify((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenItemFix( lua_State *L )
+int OpenItemFix(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenFix( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenFix((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenItemEnergy( lua_State *L )
+int OpenItemEnergy(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenEnergy( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenEnergy((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenGMSend( lua_State *L )
+int OpenGetStone(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenGMSend( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenGetStone((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenGMRecv( lua_State *L )
+int OpenTiger(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenGMRecv( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	BOOL bRet = pChar->GetPlayer()->OpenTiger((CCharacter*)pTalk);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_OpenGetStone( lua_State *L )
+int OpenHair(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar || !pTalk) return LUA_FALSE;
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
+	if (pChar->HasTradeAction())
 	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenGetStone( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
-}
-
-inline int lua_OpenTiger( lua_State *L )
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	BOOL bRet = pChar->GetPlayer()->OpenTiger( (CCharacter*)pTalk );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
-}
-
-// 
-inline int lua_OpenHair(lua_State *L)
-{
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	if(pChar->HasTradeAction()) // 
-	{
-		//LG("hair", "[%s], !\n", pChar->GetName());
 		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_CHARSCRIPT_CPP_00011), pChar->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
-		lua_pushnumber( L, LUA_FALSE);
-		return 1;
+		return LUA_FALSE;
 	}
 
 	pChar->Prl_OpenHair();
-	pChar->TradeAction(true); // 
-	
-	lua_pushnumber( L, LUA_TRUE);
-	return 1;
+	pChar->TradeAction(true);
+
+	return LUA_TRUE;
 }
 
-inline int lua_Garner2GetWiner(lua_State *L)
+int Garner2GetWiner(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	//  :   Garner2 (ReflectINFof  trailer )
+	if (!pChar || !pTalk) return LUA_FALSE;
 	auto l_wpk = net::msg::serializeGmGarner2GetOrderCmd();
-	pChar->ReflectINFof(pChar,l_wpk);
-
-	lua_pushnumber( L, LUA_TRUE);
-	return 1;
+	pChar->ReflectINFof(pChar, l_wpk);
+	return LUA_TRUE;
 }
 
-inline int lua_Garner2RequestReorder(lua_State *L)
+int Garner2RequestReorder(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
+	if (!pChar || !pTalk) return LUA_FALSE;
+
+	CCharacter* pCha = pChar->m_submap->FindCharacter(pTalk->GetID(), pChar->GetShape().centre);
+	if (pCha == NULL)
 	{
-		E_LUAPARAM;
-		return 0;
+		return LUA_FALSE;
 	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
+
+	CCharacter* pMainCha = pChar->GetPlyMainCha();
+	if (!pMainCha)
 	{
-		E_LUANULL;
-		return 0;
-	}
-	if(pTalk)
-	{
-		CCharacter* pCha = pChar->m_submap->FindCharacter( pTalk->GetID(), pChar->GetShape().centre );
-		if( pCha == NULL )
-		{
-			E_LUAPARAM;
-			return 0;
-		}
-	}
-	CCharacter *pMainCha = pChar->GetPlyMainCha();
-	if(!pMainCha)
-	{
-		E_LUAPARAM;
-		return 0;
+		return LUA_FALSE;
 	}
 
 	short sItemID = 3849;
 	short pos = -1;
 	USHORT sNum = pMainCha->m_CKitbag.GetCapacity();
-	SItemGrid *pGridCont;
-	for( short i = 0; i < sNum; i++ )
+	SItemGrid* pGridCont;
+	for (short i = 0; i < sNum; i++)
 	{
-		pGridCont = pMainCha->m_CKitbag.GetGridContByID( i );
-		if( pGridCont )
+		pGridCont = pMainCha->m_CKitbag.GetGridContByID(i);
+		if (pGridCont)
 		{
-			if( sItemID == pGridCont->sID )
+			if (sItemID == pGridCont->sID)
 			{
 				pos = i;
 				break;
 			}
 		}
 	}
-	if(-1 == pos)
-		//pMainCha->SystemNotice(",,");
+	if (-1 == pos)
 		pMainCha->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00012));
 	else
 		pMainCha->Cmd_Garner2_Reorder(pos);
 
-	//net::WPacket 	l_wpk	=g_gmsvr->GetWPacket();
-
-	//pChar->ReflectINFof(pChar,l_wpk);
-
-	lua_pushnumber( L, LUA_TRUE);
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_ListAuction(lua_State* L)
+int ListAuction(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-//add by ALLEN 2007-10-19
+	if (!pChar || !pTalk) return LUA_FALSE;
 	g_AuctionSystem.ListAuction(pChar, pTalk);
-	lua_pushnumber( L, LUA_TRUE);
-
-	return 1;
+	return LUA_TRUE;
 }
 
 //add by ALLEN 2007-10-19
-inline int lua_StartAuction(lua_State* L)
+int StartAuction(int sItemID, const std::string& szName, int sCount, int lBasePrice, int lMinBid)
 {
+	if (szName.empty()) return LUA_FALSE;
 
-	BOOL bValid = lua_gettop( L ) == 5 && lua_isnumber( L, 1 ) && lua_isstring( L, 2 ) && lua_isnumber(L, 3) && lua_isnumber(L, 4) && lua_isnumber(L, 5);
-	if( !bValid )
+	if (!g_AuctionSystem.StartAuction((short)sItemID, szName, (short)sCount, (uInt)lBasePrice, (uInt)lMinBid))
 	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	short sItemID = (short)lua_tonumber(L, 1);
-	cChar *szName = (cChar *)lua_tostring(L, 2);
-	short sCount = (short)lua_tonumber(L, 3);
-	long lBasePrice = (long)lua_tonumber(L, 4);
-	long lMinBid = (long)lua_tonumber(L, 5);
-
-	if( szName == NULL )
-	{
-		lua_pushnumber( L, LUA_FALSE);
-		return 1;
-	}
-
-	if(!g_AuctionSystem.StartAuction(sItemID, std::string(szName), sCount, (uInt)lBasePrice, (uInt)lMinBid))
-	{
-		lua_pushnumber( L, LUA_FALSE);
+		return LUA_FALSE;
 	}
 	else
 	{
-		lua_pushnumber( L, LUA_TRUE);
+		return LUA_TRUE;
 	}
-		
-	return 1;
 }
+
 //add by ALLEN 2007-10-19
-inline int lua_EndAuction(lua_State* L)
-{BOOL bValid = lua_gettop( L ) == 1 && lua_isnumber( L, 1 );
-	if( !bValid )
+int EndAuction(int sItemID)
+{
+	if (!g_AuctionSystem.EndAuction((short)sItemID))
 	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	short sItemID = (short)lua_tonumber(L, 1);
-
-	if(!g_AuctionSystem.EndAuction(sItemID))
-	{
-		lua_pushnumber( L, LUA_FALSE);
+		return LUA_FALSE;
 	}
 	else
 	{
-		lua_pushnumber( L, LUA_TRUE);
+		return LUA_TRUE;
 	}
-	return 1;
 }
 
-// 
-inline int lua_ListChallenge( lua_State* L )
+int ListChallenge(CCharacter* pChar, CTalkNpc* pTalk)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	game_db.ListChallenge( pChar );	
-	lua_pushnumber( L, LUA_TRUE);
-	return 1;
+	if (!pChar || !pTalk) return LUA_FALSE;
+	game_db.ListChallenge(pChar);
+	return LUA_TRUE;
 }
 
-// 
-inline int lua_HasGuildLevel( lua_State* L )
+int HasGuildLevel(CCharacter* pChar, int byLevel)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	BYTE byLevel = (BYTE)lua_tonumber( L, 2 );
-
-	BOOL bRet = game_db.HasGuildLevel( pChar, byLevel );
-	lua_pushnumber( L, ( bRet ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	BOOL bRet = game_db.HasGuildLevel(pChar, (BYTE)byLevel);
+	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_IsTeamLeader( lua_State* L )
+int IsTeamLeader(CCharacter* pChar)
 {
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	
-	lua_pushnumber( L, ( pChar->IsTeamLeader() ) ? LUA_TRUE : LUA_FALSE );
-	return 1;
+	if (!pChar) return LUA_FALSE;
+	return pChar->IsTeamLeader() ? LUA_TRUE : LUA_FALSE;
 }
 
-inline int lua_GetChaBody( lua_State* L )
+int GetChaBody(CCharacter* pChar)
 {
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber( L, pChar->m_SChaPart.sTypeID );
-	return 1;
+	if (!pChar) return 0;
+	return (int)pChar->m_SChaPart.sTypeID;
 }
 
-inline int lua_GetMapActivePlayer( lua_State* L )//2006.10.12wsj
+int GetMapActivePlayer(SubMap* pSubMap)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	SubMap * pSubMap = (SubMap *)lua_touserdata(L,1);
-	if(!pSubMap)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	lua_pushnumber(L,pSubMap->GetActivePlayer());
-	return 1;
+	if (!pSubMap) return 0;
+	return (int)pSubMap->GetActivePlayer();
 }
-inline int lua_DealAllActivePlayerInMap( lua_State* L )//2006.10.12wsj
+
+int DealAllActivePlayerInMap(SubMap* pSubMap, const std::string& pfunctionname)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring(L,2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	SubMap * pSubMap = (SubMap *)lua_touserdata(L,1);
-	if(!pSubMap)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	const char * pfunctionname = lua_tostring(L,2);
+	if (!pSubMap) return LUA_FALSE;
 	string strfun(pfunctionname);
-
 	pSubMap->DealActivePlayer(strfun);
-	lua_pushnumber(L,LUA_TRUE);
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_GetMapPlayer( lua_State* L )
+int GetMapPlayer(SubMap* pSubMap)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	SubMap * pSubMap = (SubMap *)lua_touserdata(L,1);
-	if(!pSubMap)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	lua_pushnumber(L,pSubMap->GetPlayerNum());
-	return 1;
+	if (!pSubMap) return 0;
+	return (int)pSubMap->GetPlayerNum();
 }
-inline int lua_DealAllPlayerInMap( lua_State* L )
+
+int DealAllPlayerInMap(SubMap* pSubMap, const std::string& pfunctionname)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring(L,2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	SubMap * pSubMap = (SubMap *)lua_touserdata(L,1);
-	if(!pSubMap)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	const char * pfunctionname = lua_tostring(L,2);
+	if (!pSubMap) return LUA_FALSE;
 	string strfun(pfunctionname);
-
 	pSubMap->DealPlayer(strfun);
-	lua_pushnumber(L,LUA_TRUE);
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_IsGarnerWiner( lua_State* L )
+int IsGarnerWiner(CCharacter* pChar)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L,1);
-	if(!bValid)
+	if (!pChar) return 0;
+	if (pChar->IsPlayerCha())
 	{
-		E_LUAPARAM;
-		return 0;
+		return (int)pChar->GetPlayer()->IsGarnerWiner();
 	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	if(pChar->IsPlayerCha())
-	{
-		lua_pushnumber(L,pChar->GetPlayer()->IsGarnerWiner());
-	}
-
-	return 1;
+	return 0;
 }
 
-inline int lua_IsItemValid( lua_State* L )
+int IsItemValid(int sItemID)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_isnumber(L, 1);
-	if( !bValid )
+	CItemRecord* pItem = GetItemRecordInfo((short)sItemID);
+	if (pItem == NULL)
 	{
-		E_LUAPARAM;
-		return 0;
+		return LUA_FALSE;
 	}
-
-	short sItemID = (short)lua_tonumber(L, 1);
-
-	CItemRecord* pItem = GetItemRecordInfo( sItemID );
-	if( pItem == NULL )
-	{
-		lua_pushnumber(L,LUA_FALSE);
-		return 0;
-	}
-
-	lua_pushnumber(L,LUA_TRUE);
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_GetItemP( lua_State* L )
+SItemGrid* GetItemP(CCharacter* pCha, int sPosID)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	short sPosID = (short)lua_tonumber(L, 2);
-
-	if( !pCha )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	SItemGrid *pItem = pCha->m_CKitbag.GetGridContByID(sPosID);
-	lua_pushlightuserdata(L, pItem);
-
-	return 1;
+	if (!pCha) return nullptr;
+	return pCha->m_CKitbag.GetGridContByID((short)sPosID);
 }
 
-inline int lua_GetEquipItemP( lua_State* L )
+SItemGrid* GetEquipItemP(CCharacter* pCha, int sPosID)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	const short sPosID = (short)lua_tonumber(L, 2);
-
-	if( !pCha )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	SItemGrid* pItem = pCha->GetEquipItem(sPosID);
-	if (!pItem)
-	{
-		return 0;
-	}
-	
-	lua_pushlightuserdata(L, pItem);
-
-	return 1;
+	if (!pCha) return nullptr;
+	SItemGrid* pItem = pCha->GetEquipItem((short)sPosID);
+	return pItem;
 }
 
-inline int lua_IsInTeam(lua_State* L)
+int IsInTeam(CCharacter* pChar)
 {
-	BOOL bValid = (lua_gettop(L) == 1 && lua_islightuserdata(L,1));
-	if(!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );	
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	int ret = pChar->GetPlayer()->HasTeam() ? 1 : 0;
-
-	lua_pushnumber(L, ret);
-	return 1;
+	if (!pChar) return 0;
+	return pChar->GetPlayer()->HasTeam() ? 1 : 0;
 }
 
-inline int lua_HasTeammate(lua_State* L)
+int HasTeammate(CCharacter* pChar, int bHigherArg, int dLevel)
 {
-	BOOL bValid = (lua_gettop(L) == 3 && lua_islightuserdata(L,1) && lua_isnumber(L,2) && lua_isnumber(L,3));
-	if(!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	bool bHigher = (((int)lua_tonumber(L,2) == 1) ? true : false);
-	short dLevel = (short)lua_tonumber(L,3);
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
+	if (!pChar) return 0;
+	bool bHigher = (bHigherArg == 1);
 
 	int ret = 0;
 	if (!pChar->GetPlayer()->HasTeam())
@@ -5213,14 +1902,14 @@ inline int lua_HasTeammate(lua_State* L)
 	}
 	else
 	{
-		CPlayer *pTeamMember = NULL;
+		CPlayer* pTeamMember = NULL;
 		short sLevel = (short)(pChar->GetLevel());
 		pChar->GetPlayer()->BeginGetTeamPly();
-		while(pTeamMember = pChar->GetPlayer()->GetNextTeamPly())
+		while (pTeamMember = pChar->GetPlayer()->GetNextTeamPly())
 		{
-			if(bHigher)
+			if (bHigher)
 			{
-				if(pTeamMember->GetMainCha()->GetLevel() >= (sLevel + dLevel))
+				if (pTeamMember->GetMainCha()->GetLevel() >= (sLevel + (short)dLevel))
 				{
 					ret = 1;
 					break;
@@ -5228,7 +1917,7 @@ inline int lua_HasTeammate(lua_State* L)
 			}
 			else
 			{
-				if(pTeamMember->GetMainCha()->GetLevel() <= (sLevel - dLevel))
+				if (pTeamMember->GetMainCha()->GetLevel() <= (sLevel - (short)dLevel))
 				{
 					ret = 1;
 					break;
@@ -5237,173 +1926,60 @@ inline int lua_HasTeammate(lua_State* L)
 		}
 	}
 
-	lua_pushnumber(L, ret);
-	return 1;
+	return ret;
 }
 
-inline int lua_SetCopySpecialInter( lua_State* L )//2006.10.12wsj
+int SetCopySpecialInter(SubMap* pSubMap, int Interal)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	SubMap * pSubMap = (SubMap *)lua_touserdata(L,1);
-	if(!pSubMap)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	int Interal = (int)lua_tonumber(L, 2);
-
+	if (!pSubMap) return LUA_FALSE;
 	pSubMap->SetSpecialInter(Interal);
-
-	lua_pushnumber(L,LUA_TRUE);
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_AddCreditX(lua_State* L)
+int AddCreditX(CCharacter* pCha, int lCredit)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	long lCredit = (int)lua_tonumber(L, 2);
-	pCha->SetCredit((long)pCha->GetCredit() + lCredit);
+	if (!pCha) return LUA_FALSE;
+	pCha->SetCredit((long)pCha->GetCredit() + (long)lCredit);
 	pCha->SynAttr(enumATTRSYN_TASK);
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_AddMasterCredit(lua_State* L)
+int AddMasterCredit(CCharacter* pCha, int nCredit)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	int nCredit = (int)lua_tonumber(L, 2);
+	if (!pCha) return LUA_FALSE;
 	pCha->AddMasterCredit(nCredit);
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_DelCredit(lua_State* L)
+int DelCredit(CCharacter* pCha, int lCredit)
 {
-	BOOL bValid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	long lCredit = (long)lua_tonumber(L, 2);
-	long lCreditFinal = ((long)pCha->GetCredit() - lCredit >= 0) ? ((long)pCha->GetCredit() - lCredit) : 0;
+	if (!pCha) return LUA_FALSE;
+	long lCreditFinal = ((long)pCha->GetCredit() - (long)lCredit >= 0) ? ((long)pCha->GetCredit() - (long)lCredit) : 0;
 	pCha->SetCredit(lCreditFinal);
 	pCha->SynAttr(enumATTRSYN_TASK);
-
-	lua_pushnumber( L, LUA_TRUE );
-
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_GetCredit(lua_State* L)
+int GetCredit(CCharacter* pCha)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	long lCredit = (long)pCha->GetCredit();
-
-	lua_pushnumber( L, lCredit );
-
-	return 1;
+	if (!pCha) return 0;
+	return (int)(long)pCha->GetCredit();
 }
 
-inline int lua_HasMaster(lua_State* L)
+int HasMaster(CCharacter* pCha)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	int ret = (pCha->GetMasterDBID() == 0) ? LUA_FALSE : LUA_TRUE;
-
-	lua_pushnumber( L, ret );
-
-	return 1;
+	if (!pCha) return LUA_FALSE;
+	return (pCha->GetMasterDBID() == 0) ? LUA_FALSE : LUA_TRUE;
 }
 
-inline int lua_GetMasterID(lua_State* L)
+int GetMasterID(CCharacter* pCha)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if (!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if (!pCha)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	lua_pushnumber(L, pCha->GetMasterDBID());
-	return 1;
+	if (!pCha) return 0;
+	return (int)pCha->GetMasterDBID();
 }
 
-inline int lua_GetRoleByID(lua_State* L)
+// GetRoleByID returns lightuserdata -- keep as raw
+int GetRoleByID_raw(lua_State* L)
 {
 	BOOL bValid = lua_gettop(L) == 1 && lua_isnumber(L, 1);
 	if (!bValid)
@@ -5416,157 +1992,89 @@ inline int lua_GetRoleByID(lua_State* L)
 	if (pPlayer)
 	{
 		CCharacter* pCha = (CCharacter*)pPlayer->GetMainCha();
-		lua_pushlightuserdata(L, (CCharacter*)pCha);
+		luabridge::push(L, static_cast<CCharacter*>(pCha));
 		return 1;
 	}
-	//lua_pushlightuserdata(L, NULL);
 	return 0;
 }
 
-inline int lua_LifeSkillBegin(lua_State* L)
+int LifeSkillBegin(CCharacter* pChar, CTalkNpc* pTalk, int ltype)
 {
-	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 ) && lua_isnumber(L,3);
-	if( !bValid )
+	if (!pChar || !pTalk) return LUA_FALSE;
+
+	CCharacter* pCha = pChar->m_submap->FindCharacter(pTalk->GetID(), pChar->GetShape().centre);
+	if (pCha == NULL)
 	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata( L, 2 );
-	long  ltype = (long)lua_tonumber(L,3);
-	if( !pChar || !pTalk )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	if(pTalk)
-	{
-		CCharacter* pCha = pChar->m_submap->FindCharacter( pTalk->GetID(), pChar->GetShape().centre );
-		if( pCha == NULL )
-		{
-			E_LUAPARAM;
-			return 0;
-		}
+		return LUA_FALSE;
 	}
 
-	if(pChar->m_CKitbag.IsPwdLocked())
+	if (pChar->m_CKitbag.IsPwdLocked())
 	{
-		//pChar->SystemNotice("");
 		pChar->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00013));
-		return 1;
+		return LUA_TRUE;
 	}
 
-	//add by ALLEN 2007-10-16
-		if(pChar->IsReadBook())
+	if (pChar->IsReadBook())
 	{
-		//pChar->SystemNotice("");
 		pChar->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00014));
-		return 1;
+		return LUA_TRUE;
 	}
 
 	pChar->ForgeAction();
-	//  :   
-	auto l_wpk = net::msg::serialize(net::msg::McLifeSkillShowMessage{ltype});
-	pChar->ReflectINFof(pChar,l_wpk);
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
+	auto l_wpk = net::msg::serialize(net::msg::McLifeSkillShowMessage{(long)ltype});
+	pChar->ReflectINFof(pChar, l_wpk);
+	return LUA_TRUE;
 }
 
-inline int lua_ClearAllSubMapCha(lua_State* L)
+int ClearAllSubMapCha(SubMap* pSubmap)
 {
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	SubMap* pSubmap = (SubMap*)lua_touserdata( L, 1 );
-	if(pSubmap)
+	if (pSubmap)
 	{
 		pSubmap->ClearAllCha();
 	}
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
+	return LUA_TRUE;
 }
 
-inline int lua_ClearAllSubMapMonster(lua_State* L)
+int ClearAllSubMapMonster(SubMap* pSubmap)
 {
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	SubMap* pSubmap = (SubMap*)lua_touserdata( L, 1 );
-	if(pSubmap)
+	if (pSubmap)
 	{
 		pSubmap->ClearAllMonster();
 	}
-	lua_pushnumber( L, LUA_TRUE );
-	return 1;
+	return LUA_TRUE;
 }
 
-
-inline int lua_ClearFightSkill(lua_State* L)
+int ClearFightSkill(CCharacter* pChar, int skillID)
 {
-	const auto valid = lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2);
-	if (!valid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return 0;
 
-	auto pChar = static_cast<CCharacter*>(lua_touserdata(L, 1));
-	if (!pChar)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	const auto skillID = static_cast<int>(lua_tonumber(L, 2));
 	pChar->m_CSkillBag.SetChangeFlag(false);
 	CSkillRecord* pCSkill = GetSkillRecordInfo(skillID);
 	if (!pCSkill || (pCSkill->chFightType != enumSKILL_FIGHT) || !pCSkill->IsShow())
 	{
-		lua_pushnumber(L, 0);
 		return 0;
 	}
 
 	SSkillGrid* pSkillGrid = pChar->m_CSkillBag.GetSkillContByID(skillID);
 	if (!pSkillGrid)
 	{
-		lua_pushnumber(L, 0);
 		return 0;
 	}
 
 	const auto skillPoint = pSkillGrid->chLv;
 	if (!pChar->m_CSkillBag.Del(skillID))
 	{
-		lua_pushnumber(L, 0);
 		return 0;
 	}
 
 	pChar->SkillRefresh();
 	pChar->SynSkillBag(enumSYN_SKILLBAG_MODI);
-	lua_pushnumber(L, skillPoint);
-	return 1;
+	return (int)skillPoint;
 }
 
-inline int lua_ClearAllFightSkill(lua_State* L)
+int ClearAllFightSkill(CCharacter* pChar)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if (!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	if (!pChar)
-	{
-		E_LUANULL;
-		return 0;
-	}
+	if (!pChar) return 0;
 
 	pChar->m_CSkillBag.SetChangeFlag(false);
 
@@ -5596,359 +2104,186 @@ inline int lua_ClearAllFightSkill(lua_State* L)
 
 	pChar->SkillRefresh();
 	pChar->SynSkillBag(enumSYN_SKILLBAG_MODI);
-	lua_pushnumber(L, nSkillPoint);
-	return 1;
+	return nSkillPoint;
 }
 
-inline int lua_RefreshCha(lua_State* L)
+void RefreshCha(CCharacter* pChar)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if (!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	if (!pChar)
-	{
-		E_LUANULL;
-		return 0;
-	}
+	if (!pChar) return;
 
 	pChar->SynSkillStateToEyeshot();
 	pChar->SynKitbagNew(enumSYN_KITBAG_EQUIP);
 
-	g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pChar, DOSTRING_PARAM_END);
+	g_luaAPI.Call("AttrRecheck", pChar);
 	if (pChar->GetPlayer())
 	{
 		pChar->GetPlayer()->RefreshBoatAttr();
 		pChar->SyncBoatAttr(enumATTRSYN_ITEM_MEDICINE);
 	}
 	pChar->SynAttrToSelf(enumATTRSYN_ITEM_MEDICINE);
-
-	return 1;
 }
 
-inline int lua_ChangeJob(lua_State* L)
+void ChangeJob(CCharacter* pChar, int lJob)
 {
-	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber(L, 2);
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	long lJob = (long)lua_tonumber(L,2);
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
+	if (!pChar) return;
 
 	pChar->m_CChaAttr.ResetChangeFlag();
-	pChar->setAttr(ATTR_JOB, lJob);
+	pChar->setAttr(ATTR_JOB, (long)lJob);
 	pChar->SetBoatAttrChangeFlag(false);
-	g_CParser.DoString("AttrRecheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pChar, DOSTRING_PARAM_END);
+	g_luaAPI.Call("AttrRecheck", pChar);
 	if (pChar->GetPlayer())
 	{
 		pChar->GetPlayer()->RefreshBoatAttr();
 		pChar->SyncBoatAttr(enumATTRSYN_CHANGE_JOB);
 	}
 	pChar->SynAttrToSelf(enumATTRSYN_CHANGE_JOB);
-	return 1;
 }
 
-inline int lua_IsChaStall(lua_State* L)
+int IsChaStall(CCharacter* pChar)
 {
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
+	if (!pChar) return LUA_FALSE;
+	return pChar->GetStallData() ? LUA_TRUE : LUA_FALSE;
+}
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
+std::string GetActName(CCharacter* pChar)
+{
+	if (!pChar) return "";
+	return std::string(pChar->GetPlayer()->GetActName());
+}
 
-	if(pChar->GetStallData())
+int GetActID(CCharacter* pChar)
+{
+	if (!pChar) return 0;
+	return (int)pChar->GetPlayer()->GetDBActId();
+}
+
+int GetExpState(CCharacter* pCha)
+{
+	if (!pCha) return 0;
+	return (int)pCha->GetExpScale();
+}
+
+int KillCha(CCharacter* pCha)
+{
+	if (!pCha) return 0;
+	if (pCha->IsPlayerCha())
 	{
-		lua_pushnumber( L, LUA_TRUE );
+		return 0;
 	}
 	else
 	{
-		lua_pushnumber( L, LUA_FALSE );
+		pCha->Free();
+		return 1;
 	}
-	
-	return 1;
-}
-
-inline int lua_GetActName(lua_State* L)
-{
-	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L, 1 );
-	if( !pChar )
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushstring(L, pChar->GetPlayer()->GetActName());
-
-	return 1;
-}
-
-
-inline int lua_GetActID(lua_State* L)
-{
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if (!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	if (!pChar)
-	{
-		E_LUANULL;
-		return 0;
-	}
-
-	lua_pushnumber(L, pChar->GetPlayer()->GetDBActId());
-
-	return 1;
-}
-
-//  
-inline int lua_GetExpState(lua_State *L)
-{
-    // 
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-
-    if(pCha)
-    {
-        lua_pushnumber(L, pCha->GetExpScale());
-        return 1;
-    }
-
-    return 0;
-
-}
-
-
-inline int lua_KillCha( lua_State *L )
-{
-    BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
-	if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-    CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-
-    if(pCha)
-    {
-        if(pCha->IsPlayerCha())
-        {
-            lua_pushnumber(L, 0);
-        }
-        else
-        {
-            pCha->Free();
-            lua_pushnumber(L, 1);
-        }
-    }
-    else
-    {
-        lua_pushnumber(L, 0);
-    }
-
-    return 1;
 }
 
 // kong@pkodev.net 09.22.2017
-inline int lua_GetGmLv(lua_State *L) {
-	BOOL bValid = (lua_gettop(L) == 1 && lua_islightuserdata(L, 1));
-	if (!bValid) {
-		PARAM_ERROR
-		return 0;
-	}
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha) {
-		lua_pushnumber(L, pCha->GetPlayer()->GetGMLev());
-		return 1;
-	}
-	return 0;
- }
-
-inline int lua_SetGmLv(lua_State *L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if (!bValid) {
-		PARAM_ERROR
-		return 0;
-	}
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	int gmLv = (int)lua_tonumber(L, 2);
-	if (pCha) {
-		pCha->GetPlayer()->SetGMLev(gmLv);
-		Square& chaPos = (Square&)pCha->GetShape();
-		pCha->GetPlayer()->GetMainCha()->Cmd_EnterMap(pCha->GetBirthMap(), -1, chaPos.centre.x, chaPos.centre.y, 0);
-
-		game_db.SaveGmLv(pCha->GetPlayer());
-		return 1;
-	}
-	return 0;
- }
-
-inline int lua_RequestClientPin(lua_State *L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if (!bValid) {
-		PARAM_ERROR
-		return 0;
-	}
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	char action = lua_tonumber(L, 2);
-	if (pCha) {
-		pCha->requestType = action;
-		pCha->requestPos.centre.x = pCha->GetShape().centre.x;
-		pCha->requestPos.centre.y = pCha->GetShape().centre.y;
-		//  :  PIN-
-		auto l_wpk = net::msg::serializeMcRequestPinCmd();
-		pCha->ReflectINFof(pCha, l_wpk);
-		return 1;
-	}
-	return 0;
+int GetGmLv(CCharacter* pCha)
+{
+	if (!pCha) return 0;
+	return (int)pCha->GetPlayer()->GetGMLev();
 }
 
-inline int lua_DealAllInGuild(lua_State *L) {
+void SetGmLv(CCharacter* pCha, int gmLv)
+{
+	if (!pCha) return;
+	pCha->GetPlayer()->SetGMLev(gmLv);
+	Square& chaPos = (Square&)pCha->GetShape();
+	pCha->GetPlayer()->GetMainCha()->Cmd_EnterMap(pCha->GetBirthMap(), -1, chaPos.centre.x, chaPos.centre.y, 0);
+	game_db.SaveGmLv(pCha->GetPlayer());
+}
+
+void RequestClientPin(CCharacter* pCha, int action)
+{
+	if (!pCha) return;
+	pCha->requestType = (char)action;
+	pCha->requestPos.centre.x = pCha->GetShape().centre.x;
+	pCha->requestPos.centre.y = pCha->GetShape().centre.y;
+	auto l_wpk = net::msg::serializeMcRequestPinCmd();
+	pCha->ReflectINFof(pCha, l_wpk);
+}
+
+// DealAllInGuild has variable args (2 or 3) with dynamic type checking -- keep as raw
+int DealAllInGuild_raw(lua_State* L) {
 	BOOL bValid = ((lua_gettop(L) == 3 && lua_isstring(L, 3)) || lua_gettop(L) == 2) && lua_isstring(L, 2) && lua_isnumber(L, 1);
 	if (!bValid) {
 		PARAM_ERROR
 		return 0;
 	}
-	int guildID = lua_tonumber(L, 1);
+	int guildID = (int)lua_tonumber(L, 1);
 	const char* luaFunc = lua_tostring(L, 2);
-	
-	if (lua_isstring(L, 3)){
+
+	if (lua_isstring(L, 3)) {
 		const char* luaParam = lua_tostring(L, 3);
 		g_pGameApp->DealAllInGuild(guildID, luaFunc, luaParam);
-	}else{
+	}
+	else {
 		g_pGameApp->DealAllInGuild(guildID, luaFunc, "");
 	}
-	
+
 	return 0;
 }
 
-inline int lua_GetPlayerByName(lua_State *L) {
+// GetPlayerByName returns lightuserdata -- keep as raw
+int GetPlayerByName_raw(lua_State* L) {
 	BOOL bValid = (lua_gettop(L) == 1 && lua_isstring(L, 1));
 	if (!bValid) {
 		PARAM_ERROR
 		return 0;
 	}
 	const char* chaName = lua_tostring(L, 1);
-	CCharacter *pCha = g_pGameApp->FindPlayerChaByNameLua(chaName);
-	if(pCha) {
-		lua_pushlightuserdata(L, (CCharacter*) pCha);
+	CCharacter* pCha = g_pGameApp->FindPlayerChaByNameLua(chaName);
+	if (pCha) {
+		luabridge::push(L, static_cast<CCharacter*>(pCha));
 		return 1;
 	}
 	return 0;
 }
 
-inline int lua_GetPlayerByActName(lua_State *L) {
-		BOOL bValid = (lua_gettop(L) == 1 && lua_isstring(L, 1));
+// GetPlayerByActName returns variable number of lightuserdata (1-3) -- keep as raw
+int GetPlayerByActName_raw(lua_State* L) {
+	BOOL bValid = (lua_gettop(L) == 1 && lua_isstring(L, 1));
 	if (!bValid) {
 		PARAM_ERROR
-			return 0;
+		return 0;
 	}
 	const char* chaName = lua_tostring(L, 1);
-	CCharacter *pChas[3];
+	CCharacter* pChas[3];
 	int count = g_pGameApp->FindPlayerChaByActNameLua(chaName, pChas);
 	if (count > 0) {
-		for (int i = 0; i < count; i++){
-			lua_pushlightuserdata(L, (CCharacter*)pChas[i]);
+		for (int i = 0; i < count; i++) {
+			luabridge::push(L, static_cast<CCharacter*>(pChas[i]));
 		}
 		return count;
 	}
 	return 0;
 }
 
+int GetItemQuantity(SItemGrid* pSItem)
+{
+	if (!pSItem) return 0;
+	return (int)pSItem->sNum;
+}
 
-inline int lua_GetItemQuantity(lua_State* pLS) {
-		bool bSuccess = true;
-	long ret = 0; 
-	int nParaNum = lua_gettop(pLS);
-	if (nParaNum != 1) {
-		bSuccess = false;
-		goto End;
-	}
-	{
-		SItemGrid* pSItem = (SItemGrid*)lua_touserdata(pLS, 1);
-		if (!pSItem) {
-			bSuccess = false;
-			goto End;
-		}
-		ret = pSItem->sNum;
-	}
-End:
-	if (bSuccess)
-		lua_pushnumber(pLS, ret);
-	else
-		lua_pushnumber(pLS, 0);
-	return 1;
- }
+int GetOriginalChaTypeID(CCharacter* pCha)
+{
+	if (!pCha) return 0;
+	return (int)pCha->GetIcon();
+}
 
-int lua_GetOriginalChaTypeID(lua_State *L) {
-	BOOL bValid = (lua_gettop(L) == 1 && lua_islightuserdata(L, 1));
-	if (!bValid) {
-		PARAM_ERROR;
-		return 0;
-	}
-	CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
-	if (pCha) {
-		lua_pushnumber(L, pCha->GetIcon());
-		return 1;
-	}
-	return 0;
- }
-
-int lua_TransformCha(lua_State *L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if (!bValid) {
-		PARAM_ERROR;
-		return 0;
-	}
-	CCharacter *pAtt = (CCharacter*)lua_touserdata(L, 1);
-	short mID = (short)lua_tonumber(L, 2);
+void TransformCha(CCharacter* pAtt, int mID)
+{
+	if (!pAtt) return;
 	Square& chaPos = (Square&)pAtt->GetShape();
-	pAtt->m_SChaPart.sTypeID = mID;
-	pAtt->m_cat = mID;
+	pAtt->m_SChaPart.sTypeID = (short)mID;
+	pAtt->m_cat = (short)mID;
 	pAtt->GetPlayer()->GetMainCha()->Cmd_EnterMap(pAtt->GetBirthMap(), -1, chaPos.centre.x, chaPos.centre.y, 0);
-	return 1;
- }
+}
 
-int lua_GetOnlineCount(lua_State *pLS) {
+// GetOnlineCount uses BEGINGETGATE / GETNEXTGATE macros -- keep as raw
+int GetOnlineCount_raw(lua_State* pLS) {
 	BEGINGETGATE();
-	GateServer *pGateServer;
+	GateServer* pGateServer;
 
 	int nCount = 0;
 	while (pGateServer = GETNEXTGATE())
@@ -5956,168 +2291,57 @@ int lua_GetOnlineCount(lua_State *pLS) {
 
 	lua_pushnumber(pLS, nCount);
 	return 1;
- }
-
-int lua_PopupNotice( lua_State* L )
-{
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isstring( L , 2 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	const char* pszData = lua_tostring( L, 2 );
-	if( !pChar || !pszData )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	pChar->PopupNotice( pszData );
-	return 0;
 }
 
-int lua_BanActRole( lua_State* L)
+void PopupNotice(CCharacter* pChar, const std::string& pszData)
 {
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L , 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
+	if (!pChar) return;
+	pChar->PopupNotice(pszData.c_str());
+}
+
+void BanActRole(CCharacter* pChar)
+{
+	if (!pChar) return;
 	const char* actName = pChar->GetPlayer()->GetActName();
-	if (actName == NULL)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	//pChar->PopupNotice("Ban! Reason: Violation of server rules.");
+	if (actName == NULL) return;
 	KICKPLAYER(pChar->GetPlayer(), 1);
 	g_pGameApp->BanAccount(actName);
-	return 0;
 }
 
-int lua_BanActName( lua_State* L)
+void BanActName(const std::string& actName)
 {
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_isstring( L , 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	const char* actName = lua_tostring(L, 1);
-	if (actName == NULL)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	g_pGameApp->BanAccount(actName);
-	return 0;
+	g_pGameApp->BanAccount(actName.c_str());
 }
 
-int lua_UnbanAct( lua_State* L)
+void UnbanAct(const std::string& actName)
 {
-	BOOL bValid = ( lua_gettop( L ) == 1 && lua_isstring( L , 1 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	const char* actName = lua_tostring(L, 1);
-	if (actName == NULL)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	g_pGameApp->UnbanAccount(actName);
-	return 0;
+	g_pGameApp->UnbanAccount(actName.c_str());
 }
 
-int lua_MuteCha( lua_State* L)
+void ColourNotice(CCharacter* pChar, int rgb, const std::string& pszData)
 {
-	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L , 1 ) && lua_isnumber( L, 2) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pCCha = (CCharacter*)lua_touserdata( L,  1 );
-	long lmuteTime = (long)lua_tonumber(L, 2);
-	if (!pCCha || !lmuteTime)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	//g_pGameApp->UnbanAccount(pCCha->GetPlyMainCha(), );
-	return 0;
+	if (!pChar) return;
+	pChar->ColourNotice((DWORD)rgb, pszData.c_str());
 }
 
-inline int lua_ColourNotice( lua_State* L )
+//send daily buff packet info to client
+void SendDailyBuffInfo(CCharacter* pChar, const std::string& imgName, const std::string& LabelInfo)
 {
-	BOOL bValid = ( lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber(L, 2) && lua_isstring( L , 3 ) );
-	if( !bValid )
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata( L,  1 );
-	DWORD rgb = (DWORD)lua_tonumber( L, 2);
-	const char* pszData = lua_tostring( L, 3 );
-	if( !pChar || !pszData || !rgb )
-	{
-		E_LUANULL;
-		return 0;
-	}
-	pChar->ColourNotice( rgb, pszData );
-	return 0;
-}
-//send daily buff packet info to client 
-inline int lua_SendDailyBuffInfo(lua_State* L) {
-	if (BOOL bValid = (lua_gettop(L) == 3 && lua_islightuserdata(L, 1) && lua_isstring(L, 2) && lua_isstring(L, 3)); !bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	const auto imgName = lua_tostring(L, 2);
-	const auto LabelInfo = lua_tostring(L, 3);
-	if (!pChar || !imgName || !LabelInfo)
-	{
-		E_LUANULL;
-		return 0;
-	}
-	//send info to client 
-	//  :    
-	auto l_wpk = net::msg::serialize(net::msg::McDailyBuffInfoMessage{imgName, LabelInfo});
+	if (!pChar) return;
+	auto l_wpk = net::msg::serialize(net::msg::McDailyBuffInfoMessage{imgName.c_str(), LabelInfo.c_str()});
 	pChar->ReflectINFof(pChar, l_wpk);
-
 }
 
-// 
 //force data save @mothannakh
-inline int lua_ForcePlayerSave(lua_State* L) {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if (!bValid)
-	{
-		E_LUAPARAM;
-		return 0;
-	}
-
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	if (!pChar)
-	{
-		E_LUANULL;
-		return 0;
-	}
+void ForcePlayerSave(CCharacter* pChar)
+{
+	if (!pChar) return;
 	game_db.SavePlayer(pChar->GetPlayer(), enumSAVE_TYPE_TIMER);
-	return 0;
 }
-//end
 
-
-inline int lua_String2Item(lua_State* L){
-	if (!((lua_gettop(L) == 2 || (lua_gettop(L) == 3 && lua_isnumber(L, 3))) && lua_islightuserdata(L, 1) && lua_isstring(L, 2))){
+// String2Item has variable args (2 or 3) with different behavior -- keep as raw
+int String2Item_raw(lua_State* L) {
+	if (!((lua_gettop(L) == 2 || (lua_gettop(L) == 3 && lua_isnumber(L, 3))) && lua_islightuserdata(L, 1) && lua_isstring(L, 2))) {
 		return 0;
 	}
 	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
@@ -6126,395 +2350,372 @@ inline int lua_String2Item(lua_State* L){
 	String2Item(pszData, &SGridCont);
 	short gridID = defKITBAG_DEFPUSH_POS;
 
-	if (lua_gettop(L) == 3 && lua_tonumber(L,3) == 1){
+	if (lua_gettop(L) == 3 && lua_tonumber(L, 3) == 1) {
 		pChar->m_pCKitbagTmp->SetChangeFlag(false);
 		Short sPushPos = defKITBAG_DEFPUSH_POS;
 		Short sPushRet = pChar->m_pCKitbagTmp->Push(&SGridCont, sPushPos);
 		pChar->SynKitbagTmpNew(enumSYN_KITBAG_SYSTEM);
-	}else{
+	}
+	else {
 		pChar->KbPushItem(true, true, &SGridCont, gridID);
 		pChar->SynKitbagNew(enumSYN_KITBAG_SYSTEM);
 	}
 	return 1;
 }
 
-inline int lua_SetGlobalRates(lua_State* L) {
-	if (lua_gettop(L) != 2 || !lua_isnumber(L,1) || !lua_isnumber(L,2)) {
-		return 0;
-	}
-	float droprate = lua_tonumber(L, 1);
-	float exprate = lua_tonumber(L, 2);
-	if (droprate && exprate) {
-		g_pGameApp->SetGlobalRates(droprate, exprate);
-		return 1;
-	}
-	return 0;
-}
-
-inline int lua_GetPlyDropRate(lua_State* L) {
-	if (lua_gettop(L) != 1 || !lua_islightuserdata(L, 1)) {
-		return 0;
-	}
-	CCharacter* pCha = (CCharacter*)lua_touserdata(L, 1);
-	lua_pushnumber(L, pCha->GetDropRate());
-	return 1;
-}
-
-inline int lua_GetPlyExpRate(lua_State* L) {
-		if (lua_gettop(L) != 1 || !lua_islightuserdata(L, 1)) {
-			return 0;
-		}
-	CCharacter* pCha = (CCharacter*)lua_touserdata(L, 1);
-	lua_pushnumber(L, pCha->GetExpRate());
-	return 1;
-}
-
-inline int lua_RemoveOfflineMode(lua_State* L)
+int SetGlobalRates(int droprate, int exprate)
 {
-	BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
-	if(!bValid) {
-		E_LUAPARAM;
-		return 0;
+	if (droprate && exprate) {
+		g_pGameApp->SetGlobalRates((float)droprate, (float)exprate);
+		return LUA_TRUE;
 	}
-	
-	CCharacter *pCha = (CCharacter *)lua_touserdata(L, 1);
-	if(!pCha) {
-		lua_pushnumber(L, LUA_FALSE);
-		return 0;
-	}
+	return LUA_FALSE;
+}
 
-	CPlayer *pPly = pCha->GetPlayer();
-	if(!pPly) {
-		lua_pushnumber(L, LUA_FALSE);
-		return 0;
-	}
+int GetPlyDropRate(CCharacter* pCha)
+{
+	if (!pCha) return 0;
+	return (int)pCha->GetDropRate();
+}
 
-	if(!pCha->IsOfflineMode()) {
-		lua_pushnumber(L, LUA_FALSE);
-		return 0;		
-	}
+int GetPlyExpRate(CCharacter* pCha)
+{
+	if (!pCha) return 0;
+	return (int)pCha->GetExpRate();
+}
+
+int RemoveOfflineMode(CCharacter* pCha)
+{
+	if (!pCha) return LUA_FALSE;
+
+	CPlayer* pPly = pCha->GetPlayer();
+	if (!pPly) return LUA_FALSE;
+
+	if (!pCha->IsOfflineMode()) return LUA_FALSE;
 
 	g_pGameApp->ReleaseGamePlayer(pPly);
-	lua_pushnumber(L, LUA_TRUE);
-	return 1;
+	return LUA_TRUE;
 }
 
 BOOL RegisterCharScript()
 {
-	lua_State *L = g_pLuaState;
+	lua_State* L = g_pLuaState;
 
-	// 
-	REGFN(GetTickCount);
-	REGFN(Msg);
-	REGFN(Exit);
-	REGFN(LG);
-	REGFN(GetSection);
-	REGFN(ToDword);
+	// Raw lua_CFunction registrations (varargs / special return)
+	// LG is defined in lua_gamectrl.h as LG_raw
+	lua_register(L, "LG", LG_raw);
+	lua_register(L, "GetTicketItemno", GetTicketItemno_raw);
+	lua_register(L, "GiveItem", GiveItem_raw);
+	lua_register(L, "GiveItemY", GiveItemY_raw);
+	lua_register(L, "GetRoleByID", GetRoleByID_raw);
+	lua_register(L, "DealAllInGuild", DealAllInGuild_raw);
+	lua_register(L, "GetPlayerByName", GetPlayerByName_raw);
+	lua_register(L, "GetPlayerByActName", GetPlayerByActName_raw);
+	lua_register(L, "GetOnlineCount", GetOnlineCount_raw);
+	lua_register(L, "String2Item", String2Item_raw);
 
-	// 
-	REGFN(SetMap);
-	REGFN(SetMapGuildWar);
-	REGFN(AddTrigger);
-	REGFN(AddMission);
-	REGFN(HasMission);
-	REGFN(GetMisScriptID);
-	REGFN(SetMissionComplete);
-	REGFN(SetMissionFailure);
-	REGFN(HasMisssionFailure);
-	REGFN(IsMissionFull);
-	REGFN(DeleteTrigger);
-	REGFN(ClearTrigger);
-	REGFN(ClearMission);
-	REGFN(SetFlag);
-	REGFN(ClearFlag);
-	REGFN(IsFlag);
-	REGFN(IsValidFlag);
-	REGFN(SetRecord);
-	REGFN(ClearRecord);
-	REGFN(IsRecord);
-	REGFN(IsValidRecord);
-	
-	REGFN(IsMissionState);
-	REGFN(GetNumMission);
-	REGFN(GetMissionInfo);
-	REGFN(GetCharMission);
-	REGFN(GetNextMission);
-	REGFN(AddMissionState);
-	REGFN(ResetMissionState);
-	REGFN(GetMissionState);
-	REGFN(SetMissionPage);
-	REGFN(GetMissionPage);
-	REGFN(SetMissionTempInfo);
-	REGFN(GetMissionTempInfo);
+	// LuaBridge auto-marshaled function registrations
+	// GetTickCount, Msg, Exit are defined in lua_gamectrl.h
+	luabridge::getGlobalNamespace(L)
+		.addFunction("GetTickCount", GetTickCount_typed)
+		.addFunction("Msg", Msg)
+		.addFunction("Exit", Exit_typed)
 
-	REGFN(AddSkill);
-	REGFN(AddExp);
-	REGFN(AddLifeExp);
-	REGFN(AddSailExp);
-	REGFN(AddExpAndType);
-	REGFN(AddMoney);
-	REGFN(TakeMoney);
-	REGFN(HasMoney);
-	REGFN(HasCancelMissionMoney);
-	REGFN(TakeCancelMissionMoney);
-	REGFN(MakeItem);
-	REGFN(GiveItem);
-	REGFN(GiveItemX);
-	REGFN(GiveItemY);
-	REGFN(HasLeaveBagTempGrid);
-	REGFN(TakeItem);
-	REGFN(TakeItemBagTemp);
-	REGFN(HasItem);
-	REGFN(BankHasItem);
-	REGFN(BagTempHasItem);
-	REGFN(EquipHasItem);
-	REGFN(IsEquip);
-	REGFN(KitbagLock);
-	REGFN(GetNumItem);
-	REGFN(GetNeedItemCount);
-	REGFN(IsMisNeedItem);
-	REGFN(HasLeaveBagGrid);
-	REGFN(IsItemValid);
-	REGFN(GetItemP);
-	REGFN(GetEquipItemP);
+		LUABRIDGE_REGISTER_FUNC(GetResString)
 
-	// 
-	REGFN(HasRandMission);
-	REGFN(AddRandMission);
-	REGFN(SetRandMissionData);
-	REGFN(GetRandMission);
-	REGFN(GetRandMissionData);
-	REGFN(HasRandMissionNpc);
-	REGFN(HasRandNpcItemFlag);
-	REGFN(NoRandNpcItemFlag);
-	REGFN(TakeRandNpcItem);
-	REGFN(TakeAllRandItem);
+		LUABRIDGE_REGISTER_FUNC(GetSection)
+		LUABRIDGE_REGISTER_FUNC(ToDword)
 
-	// 
-	REGFN(CompleteRandMissionCount);
-	REGFN(FailureRandMissionCount);
-	REGFN(AddRandMissionNum);
-	REGFN(ResetRandMissionCount);
-	REGFN(ResetRandMissionNum);
-	REGFN(HasRandMissionCount);
-	REGFN(GetRandMissionCount);
-	REGFN(GetRandMissionNum);
+		// Map
+		LUABRIDGE_REGISTER_FUNC(SetMap)
+		LUABRIDGE_REGISTER_FUNC(SetMapGuildWar)
+		LUABRIDGE_REGISTER_FUNC(AddTrigger)
+		LUABRIDGE_REGISTER_FUNC(AddMission)
+		LUABRIDGE_REGISTER_FUNC(HasMission)
+		LUABRIDGE_REGISTER_FUNC(GetMisScriptID)
+		LUABRIDGE_REGISTER_FUNC(SetMissionComplete)
+		LUABRIDGE_REGISTER_FUNC(SetMissionFailure)
+		LUABRIDGE_REGISTER_FUNC(HasMisssionFailure)
+		LUABRIDGE_REGISTER_FUNC(IsMissionFull)
+		LUABRIDGE_REGISTER_FUNC(DeleteTrigger)
+		LUABRIDGE_REGISTER_FUNC(ClearTrigger)
+		LUABRIDGE_REGISTER_FUNC(ClearMission)
+		LUABRIDGE_REGISTER_FUNC(SetFlag)
+		LUABRIDGE_REGISTER_FUNC(ClearFlag)
+		LUABRIDGE_REGISTER_FUNC(IsFlag)
+		LUABRIDGE_REGISTER_FUNC(IsValidFlag)
+		LUABRIDGE_REGISTER_FUNC(SetRecord)
+		LUABRIDGE_REGISTER_FUNC(ClearRecord)
+		LUABRIDGE_REGISTER_FUNC(IsRecord)
+		LUABRIDGE_REGISTER_FUNC(IsValidRecord)
 
-	// 
-	REGFN(ReAll);
-	REGFN(ReAllHp);
-	REGFN(ReHp);
-	REGFN(ReAllSp);
-	REGFN(ReSp);
+		LUABRIDGE_REGISTER_FUNC(IsMissionState)
+		LUABRIDGE_REGISTER_FUNC(GetNumMission)
+		LUABRIDGE_REGISTER_FUNC(GetMissionInfo)
+		LUABRIDGE_REGISTER_FUNC(GetCharMission)
+		LUABRIDGE_REGISTER_FUNC(GetNextMission)
+		LUABRIDGE_REGISTER_FUNC(AddMissionState)
+		LUABRIDGE_REGISTER_FUNC(ResetMissionState)
+		LUABRIDGE_REGISTER_FUNC(GetMissionState)
+		LUABRIDGE_REGISTER_FUNC(SetMissionPage)
+		LUABRIDGE_REGISTER_FUNC(GetMissionPage)
+		LUABRIDGE_REGISTER_FUNC(SetMissionTempInfo)
+		LUABRIDGE_REGISTER_FUNC(GetMissionTempInfo)
 
-	// 
-	REGFN(SetSpawnPos);
-	
-	// 
-	REGFN(IsSpawnPos);
+		LUABRIDGE_REGISTER_FUNC(AddSkill)
+		LUABRIDGE_REGISTER_FUNC(AddExp)
+		LUABRIDGE_REGISTER_FUNC(AddLifeExp)
+		LUABRIDGE_REGISTER_FUNC(AddSailExp)
+		LUABRIDGE_REGISTER_FUNC(AddExpAndType)
+		LUABRIDGE_REGISTER_FUNC(AddMoney)
+		LUABRIDGE_REGISTER_FUNC(TakeMoney)
+		LUABRIDGE_REGISTER_FUNC(HasMoney)
+		LUABRIDGE_REGISTER_FUNC(HasCancelMissionMoney)
+		LUABRIDGE_REGISTER_FUNC(TakeCancelMissionMoney)
+		LUABRIDGE_REGISTER_FUNC(MakeItem)
+		// GiveItem registered as raw above
+		LUABRIDGE_REGISTER_FUNC(GiveItemX)
+		// GiveItemY registered as raw above
+		LUABRIDGE_REGISTER_FUNC(HasLeaveBagTempGrid)
+		LUABRIDGE_REGISTER_FUNC(TakeItem)
+		LUABRIDGE_REGISTER_FUNC(TakeItemBagTemp)
+		LUABRIDGE_REGISTER_FUNC(HasItem)
+		LUABRIDGE_REGISTER_FUNC(BankHasItem)
+		LUABRIDGE_REGISTER_FUNC(BagTempHasItem)
+		LUABRIDGE_REGISTER_FUNC(EquipHasItem)
+		LUABRIDGE_REGISTER_FUNC(IsEquip)
+		LUABRIDGE_REGISTER_FUNC(KitbagLock)
+		LUABRIDGE_REGISTER_FUNC(GetNumItem)
+		LUABRIDGE_REGISTER_FUNC(GetNeedItemCount)
+		LUABRIDGE_REGISTER_FUNC(IsMisNeedItem)
+		LUABRIDGE_REGISTER_FUNC(HasLeaveBagGrid)
+		LUABRIDGE_REGISTER_FUNC(IsItemValid)
+		LUABRIDGE_REGISTER_FUNC(GetItemP)
+		LUABRIDGE_REGISTER_FUNC(GetEquipItemP)
 
-	// 
-	REGFN(SetProfession);
+		// Random missions
+		LUABRIDGE_REGISTER_FUNC(HasRandMission)
+		LUABRIDGE_REGISTER_FUNC(AddRandMission)
+		LUABRIDGE_REGISTER_FUNC(SetRandMissionData)
+		LUABRIDGE_REGISTER_FUNC(GetRandMission)
+		LUABRIDGE_REGISTER_FUNC(GetRandMissionData)
+		LUABRIDGE_REGISTER_FUNC(HasRandMissionNpc)
+		LUABRIDGE_REGISTER_FUNC(HasRandNpcItemFlag)
+		LUABRIDGE_REGISTER_FUNC(NoRandNpcItemFlag)
+		LUABRIDGE_REGISTER_FUNC(TakeRandNpcItem)
+		LUABRIDGE_REGISTER_FUNC(TakeAllRandItem)
 
-	// 
-	REGFN(Hide);
-	REGFN(Show);
+		// Random mission counts
+		LUABRIDGE_REGISTER_FUNC(CompleteRandMissionCount)
+		LUABRIDGE_REGISTER_FUNC(FailureRandMissionCount)
+		LUABRIDGE_REGISTER_FUNC(AddRandMissionNum)
+		LUABRIDGE_REGISTER_FUNC(ResetRandMissionCount)
+		LUABRIDGE_REGISTER_FUNC(ResetRandMissionNum)
+		LUABRIDGE_REGISTER_FUNC(HasRandMissionCount)
+		LUABRIDGE_REGISTER_FUNC(GetRandMissionCount)
+		LUABRIDGE_REGISTER_FUNC(GetRandMissionNum)
 
-	// 
-	REGFN(GetCharMissionLevel);
-	REGFN(LvEqual);
-	REGFN(LvThan);
-	REGFN(HpEqual);
-	REGFN(HpThan);
-	REGFN(SpEqual);
-	REGFN(SpThan);
-	REGFN(PfEqual);
-	REGFN(LvCheck);
-	REGFN(HpCheck);
-	REGFN(SpCheck);
-	REGFN(IsCategory);
-	REGFN(HasFame);	
+		// Restore
+		LUABRIDGE_REGISTER_FUNC(ReAll)
+		LUABRIDGE_REGISTER_FUNC(ReAllHp)
+		LUABRIDGE_REGISTER_FUNC(ReHp)
+		LUABRIDGE_REGISTER_FUNC(ReAllSp)
+		LUABRIDGE_REGISTER_FUNC(ReSp)
 
-	// 
-	REGFN(GetProfession);
-	REGFN(GetCategory);
-	REGFN(GetCatAndPf);
-	REGFN(GetChaBody);
-	
-	// NPC
-	REGFN(ConvoyNpc);
-	REGFN(ClearConvoyNpc);
-	REGFN(ClearAllConvoyNpc);
-	REGFN(HasConvoyNpc);
-	REGFN(IsConvoyNpc);
+		// Spawn
+		LUABRIDGE_REGISTER_FUNC(SetSpawnPos)
+		LUABRIDGE_REGISTER_FUNC(IsSpawnPos)
 
-	REGFN(SetPkState);
+		// Profession
+		LUABRIDGE_REGISTER_FUNC(SetProfession)
 
-	// 
-	REGFN(SaveMissionData); 
+		// Visibility
+		LUABRIDGE_REGISTER_FUNC(Hide)
+		LUABRIDGE_REGISTER_FUNC(Show)
 
-	// 
-	REGFN(HasGuild);
-	REGFN(CreateGuild);
-	REGFN(ListAllGuild);
-	REGFN(ListChallenge);
-	REGFN(HasGuildLevel);
-	REGFN(HasPirateGuild);
-	REGFN(NoPirateGuild);
-	REGFN(HasNavyGuild);
-	REGFN(NoNavyGuild);
+		// Checks
+		LUABRIDGE_REGISTER_FUNC(GetCharMissionLevel)
+		LUABRIDGE_REGISTER_FUNC(LvEqual)
+		LUABRIDGE_REGISTER_FUNC(LvThan)
+		LUABRIDGE_REGISTER_FUNC(HpEqual)
+		LUABRIDGE_REGISTER_FUNC(HpThan)
+		LUABRIDGE_REGISTER_FUNC(SpEqual)
+		LUABRIDGE_REGISTER_FUNC(SpThan)
+		LUABRIDGE_REGISTER_FUNC(PfEqual)
+		LUABRIDGE_REGISTER_FUNC(LvCheck)
+		LUABRIDGE_REGISTER_FUNC(HpCheck)
+		LUABRIDGE_REGISTER_FUNC(SpCheck)
+		LUABRIDGE_REGISTER_FUNC(IsCategory)
+		LUABRIDGE_REGISTER_FUNC(HasFame)
 
-	// 
-	REGFN(IsBoatFull);
-	REGFN(CreateBoat);
-	REGFN(BoatLuanchOut);
-	REGFN(BoatBerth);
-	REGFN(BoatBerthList);
-	REGFN(BoatTrade);
-	REGFN(BoatBuildCheck);
-	REGFN(HasAllBoatInBerth);
-	REGFN(HasBoatInBerth);
-	REGFN(HasDeadBoatInBerth);
-	REGFN(HasLuanchOut);
-	REGFN(GetBoatID);
-	REGFN(RepairBoat);
-	REGFN(SupplyBoat);
-	REGFN(IsNeedSupply);
-	REGFN(IsNeedRepair);
+		// Info
+		LUABRIDGE_REGISTER_FUNC(GetProfession)
+		LUABRIDGE_REGISTER_FUNC(GetCategory)
+		LUABRIDGE_REGISTER_FUNC(GetCatAndPf)
+		LUABRIDGE_REGISTER_FUNC(GetChaBody)
 
-	// 
-	REGFN(AdjustTradeItemCess);
-	REGFN(SetTradeItemLevel);
-	REGFN(TradeItemLevelCheck);
-	REGFN(GetTradeItemData);
-	REGFN(TradeItemDataCheck);
+		// NPC
+		LUABRIDGE_REGISTER_FUNC(ConvoyNpc)
+		LUABRIDGE_REGISTER_FUNC(ClearConvoyNpc)
+		LUABRIDGE_REGISTER_FUNC(ClearAllConvoyNpc)
+		LUABRIDGE_REGISTER_FUNC(HasConvoyNpc)
+		LUABRIDGE_REGISTER_FUNC(IsConvoyNpc)
 
-	// 
-	REGFN(PackBag);
-	REGFN(PackBagList);
+		LUABRIDGE_REGISTER_FUNC(SetPkState)
 
-	// 
-	REGFN(SetAttrChangeFlag);
-	REGFN(SyncBoat);
-	REGFN(SyncChar);
+		// Save
+		LUABRIDGE_REGISTER_FUNC(SaveMissionData)
 
-	// 
-	REGFN(OpenBank);
+		// Guild
+		LUABRIDGE_REGISTER_FUNC(HasGuild)
+		LUABRIDGE_REGISTER_FUNC(CreateGuild)
+		LUABRIDGE_REGISTER_FUNC(ListAllGuild)
+		LUABRIDGE_REGISTER_FUNC(ListChallenge)
+		LUABRIDGE_REGISTER_FUNC(HasGuildLevel)
+		LUABRIDGE_REGISTER_FUNC(HasPirateGuild)
+		LUABRIDGE_REGISTER_FUNC(NoPirateGuild)
+		LUABRIDGE_REGISTER_FUNC(HasNavyGuild)
+		LUABRIDGE_REGISTER_FUNC(NoNavyGuild)
 
-	REGFN(OpenRepair);
-	REGFN(OpenForge);
-	// Add by lark.li 20080514
-	REGFN(OpenLottery);
-	//Add by sunny.sun 20080529
-	//Begin
-	REGFN(GetTicketItemno);
-	REGFN(GetTicketIssue);
-	REGFN(GetSItemGrid);
-	//End
-	REGFN(OpenUnite);
-	REGFN(OpenMilling);
-	REGFN(OpenFusion);
-	REGFN(OpenUpgrade);
-	REGFN(OpenEidolonMetempsychosis);
-	REGFN(OpenEidolonFusion);
-	REGFN(OpenItemTiChun);
-	REGFN(OpenItemFix);
-	REGFN(OpenItemEnergy);
-	REGFN(OpenGetStone);
-	REGFN(OpenTiger);
-	REGFN(OpenGMSend);
-	REGFN(OpenGMRecv);
+		// Boat
+		LUABRIDGE_REGISTER_FUNC(IsBoatFull)
+		LUABRIDGE_REGISTER_FUNC(CreateBoat)
+		LUABRIDGE_REGISTER_FUNC(BoatLuanchOut)
+		LUABRIDGE_REGISTER_FUNC(BoatBerth)
+		LUABRIDGE_REGISTER_FUNC(BoatBerthList)
+		LUABRIDGE_REGISTER_FUNC(BoatTrade)
+		LUABRIDGE_REGISTER_FUNC(BoatBuildCheck)
+		LUABRIDGE_REGISTER_FUNC(HasAllBoatInBerth)
+		LUABRIDGE_REGISTER_FUNC(HasBoatInBerth)
+		LUABRIDGE_REGISTER_FUNC(HasDeadBoatInBerth)
+		LUABRIDGE_REGISTER_FUNC(HasLuanchOut)
+		LUABRIDGE_REGISTER_FUNC(GetBoatID)
+		LUABRIDGE_REGISTER_FUNC(RepairBoat)
+		LUABRIDGE_REGISTER_FUNC(SupplyBoat)
+		LUABRIDGE_REGISTER_FUNC(IsNeedSupply)
+		LUABRIDGE_REGISTER_FUNC(IsNeedRepair)
 
-	// 
-	REGFN(OpenHair);
+		// Trade
+		LUABRIDGE_REGISTER_FUNC(AdjustTradeItemCess)
+		LUABRIDGE_REGISTER_FUNC(SetTradeItemLevel)
+		LUABRIDGE_REGISTER_FUNC(TradeItemLevelCheck)
+		LUABRIDGE_REGISTER_FUNC(GetTradeItemData)
+		LUABRIDGE_REGISTER_FUNC(TradeItemDataCheck)
 
+		// Pack
+		LUABRIDGE_REGISTER_FUNC(PackBag)
+		LUABRIDGE_REGISTER_FUNC(PackBagList)
 
-	// 
-	REGFN(CheckFusionItem);
-	REGFN(FusionItem);
-	
-	// 
-	REGFN(IsTeamLeader);
-	REGFN(IsInTeam);
-	REGFN(HasTeammate);
+		// Sync
+		LUABRIDGE_REGISTER_FUNC(SetAttrChangeFlag)
+		LUABRIDGE_REGISTER_FUNC(SyncBoat)
+		LUABRIDGE_REGISTER_FUNC(SyncChar)
 
-	//
-	REGFN(AddCreditX);
-	REGFN(AddMasterCredit);
-	REGFN(DelCredit);
-	REGFN(GetCredit);
-	REGFN(HasMaster);
+		// Open UI
+		LUABRIDGE_REGISTER_FUNC(OpenBank)
+		LUABRIDGE_REGISTER_FUNC(OpenRepair)
+		LUABRIDGE_REGISTER_FUNC(OpenForge)
+		LUABRIDGE_REGISTER_FUNC(OpenLottery)
+		LUABRIDGE_REGISTER_FUNC(GetTicketIssue)
+		// GetTicketItemno registered as raw above
+		LUABRIDGE_REGISTER_FUNC(GetSItemGrid)
+		LUABRIDGE_REGISTER_FUNC(OpenUnite)
+		LUABRIDGE_REGISTER_FUNC(OpenMilling)
+		LUABRIDGE_REGISTER_FUNC(OpenFusion)
+		LUABRIDGE_REGISTER_FUNC(OpenUpgrade)
+		LUABRIDGE_REGISTER_FUNC(OpenEidolonMetempsychosis)
+		LUABRIDGE_REGISTER_FUNC(OpenEidolonFusion)
+		LUABRIDGE_REGISTER_FUNC(OpenItemTiChun)
+		LUABRIDGE_REGISTER_FUNC(OpenItemFix)
+		LUABRIDGE_REGISTER_FUNC(OpenItemEnergy)
+		LUABRIDGE_REGISTER_FUNC(OpenGetStone)
+		LUABRIDGE_REGISTER_FUNC(OpenTiger)
 
-	//
-	REGFN(GetMapPlayer);
-	REGFN(DealAllPlayerInMap);
-	REGFN(GetMapActivePlayer);
-	REGFN(DealAllActivePlayerInMap);
-	REGFN(SetCopySpecialInter);
+		// Hair
+		LUABRIDGE_REGISTER_FUNC(OpenHair)
 
-	//
-	REGFN(Garner2GetWiner);
-	REGFN(Garner2RequestReorder);
-	REGFN(ClearAllSubMapCha);
-	REGFN(ClearAllSubMapMonster);
-	REGFN(IsGarnerWiner);
-	//
-	REGFN(LifeSkillBegin);
-	REGFN(ClearAllFightSkill);
-	REGFN(ClearFightSkill);
+		// Fusion
+		LUABRIDGE_REGISTER_FUNC(CheckFusionItem)
+		LUABRIDGE_REGISTER_FUNC(FusionItem)
 
-	REGFN(RefreshCha);
-	REGFN(IsChaStall);
-	REGFN(ChangeJob);
+		// Team
+		LUABRIDGE_REGISTER_FUNC(IsTeamLeader)
+		LUABRIDGE_REGISTER_FUNC(IsInTeam)
+		LUABRIDGE_REGISTER_FUNC(HasTeammate)
 
-	REGFN(ListAuction);
-	REGFN(StartAuction);
-	REGFN(EndAuction);
+		// Credit
+		LUABRIDGE_REGISTER_FUNC(AddCreditX)
+		LUABRIDGE_REGISTER_FUNC(AddMasterCredit)
+		LUABRIDGE_REGISTER_FUNC(DelCredit)
+		LUABRIDGE_REGISTER_FUNC(GetCredit)
+		LUABRIDGE_REGISTER_FUNC(HasMaster)
 
-	REGFN(GetActName);
-	REGFN(GetActID);
-    //  , 
-    REGFN(GetExpState);
+		// Map player
+		LUABRIDGE_REGISTER_FUNC(GetMapPlayer)
+		LUABRIDGE_REGISTER_FUNC(DealAllPlayerInMap)
+		LUABRIDGE_REGISTER_FUNC(GetMapActivePlayer)
+		LUABRIDGE_REGISTER_FUNC(DealAllActivePlayerInMap)
+		LUABRIDGE_REGISTER_FUNC(SetCopySpecialInter)
 
-    REGFN(KillCha);
+		// Garner
+		LUABRIDGE_REGISTER_FUNC(Garner2GetWiner)
+		LUABRIDGE_REGISTER_FUNC(Garner2RequestReorder)
+		LUABRIDGE_REGISTER_FUNC(ClearAllSubMapCha)
+		LUABRIDGE_REGISTER_FUNC(ClearAllSubMapMonster)
+		LUABRIDGE_REGISTER_FUNC(IsGarnerWiner)
 
-	// 
-	REGFN(GetResString);
+		// Skills
+		LUABRIDGE_REGISTER_FUNC(LifeSkillBegin)
+		LUABRIDGE_REGISTER_FUNC(ClearAllFightSkill)
+		LUABRIDGE_REGISTER_FUNC(ClearFightSkill)
 
-	REGFN(GetGmLv);
-	REGFN(SetGmLv);
-	REGFN(GetPlayerByName);
-	REGFN(GetMasterID);
-	REGFN(GetRoleByID);
-	REGFN(DealAllInGuild);
-	REGFN(GetItemQuantity);
-	REGFN(GetOriginalChaTypeID);
-	REGFN(TransformCha);
-	REGFN(GetOnlineCount); // kong@pkodev.net 09.22.2017 end
-	REGFN(PopupNotice); // kong@pkodev.net 10.10.2017
-	REGFN(BanActRole);
-	REGFN(BanActName);
-	REGFN(UnbanAct);
-	REGFN(ColourNotice);
-	REGFN(RequestClientPin);
+		LUABRIDGE_REGISTER_FUNC(RefreshCha)
+		LUABRIDGE_REGISTER_FUNC(IsChaStall)
+		LUABRIDGE_REGISTER_FUNC(ChangeJob)
 
-	REGFN(OpenGuildBank);
-	
-	REGFN(String2Item);
+		LUABRIDGE_REGISTER_FUNC(ListAuction)
+		LUABRIDGE_REGISTER_FUNC(StartAuction)
+		LUABRIDGE_REGISTER_FUNC(EndAuction)
 
-	REGFN(GetPlayerByActName);
-	REGFN(ForcePlayerSave);	// @mothannakh
-	REGFN(SendDailyBuffInfo) //@mothannakh
-	REGFN(SetGlobalRates);
-	REGFN(GetPlyDropRate);
-	REGFN(GetPlyExpRate);
+		LUABRIDGE_REGISTER_FUNC(GetActName)
+		LUABRIDGE_REGISTER_FUNC(GetActID)
+		LUABRIDGE_REGISTER_FUNC(GetExpState)
 
-	REGFN(RemoveOfflineMode);
+		LUABRIDGE_REGISTER_FUNC(KillCha)
+
+		LUABRIDGE_REGISTER_FUNC(GetGmLv)
+		LUABRIDGE_REGISTER_FUNC(SetGmLv)
+		// GetPlayerByName registered as raw above
+		LUABRIDGE_REGISTER_FUNC(GetMasterID)
+		// GetRoleByID registered as raw above
+		// DealAllInGuild registered as raw above
+		LUABRIDGE_REGISTER_FUNC(GetItemQuantity)
+		LUABRIDGE_REGISTER_FUNC(GetOriginalChaTypeID)
+		LUABRIDGE_REGISTER_FUNC(TransformCha)
+		// GetOnlineCount registered as raw above
+		LUABRIDGE_REGISTER_FUNC(PopupNotice)
+		LUABRIDGE_REGISTER_FUNC(BanActRole)
+		LUABRIDGE_REGISTER_FUNC(BanActName)
+		LUABRIDGE_REGISTER_FUNC(UnbanAct)
+		LUABRIDGE_REGISTER_FUNC(ColourNotice)
+		LUABRIDGE_REGISTER_FUNC(RequestClientPin)
+
+		LUABRIDGE_REGISTER_FUNC(OpenGuildBank)
+
+		// String2Item registered as raw above
+		// GetPlayerByActName registered as raw above
+		LUABRIDGE_REGISTER_FUNC(ForcePlayerSave)
+		LUABRIDGE_REGISTER_FUNC(SendDailyBuffInfo)
+		LUABRIDGE_REGISTER_FUNC(SetGlobalRates)
+		LUABRIDGE_REGISTER_FUNC(GetPlyDropRate)
+		LUABRIDGE_REGISTER_FUNC(GetPlyExpRate)
+
+		LUABRIDGE_REGISTER_FUNC(RemoveOfflineMode);
+
 	// AI
 	RegisterLuaAI(g_pLuaState);
-	
 
-	// 
+	// Game logic
 	RegisterLuaGameLogic(g_pLuaState);
 
 	return TRUE;

@@ -2,6 +2,7 @@
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "Script.h"
+#include "LuaAPI.h"
 #include "NpcScript.h"
 #include "CharScript.h"
 #include "EntityScript.h"
@@ -9,12 +10,20 @@
 //---------------------------------------------------------
 extern const char* GetResPath(const char *pszRes);
 
+#include "Npc.h"
+#include "WorldEudemon.h"
+#include "SubMap.h"
+#include "GameAppNet.h"
+#include "Player.h"
+#include "MapEntry.h"
+namespace mission { class CEventEntity; }
+
 CCharacter* g_pNoticeChar = NULL;
 lua_State* g_pLuaState = NULL;
 
 void print_error(lua_State* state) {
 	const char* message = lua_tostring(state, -1);
-	ToLogService("lua", LogLevel::Error, "Lua error: {}", message ? message : "unknown");
+	ToLogService("lua_error", LogLevel::Error, "Lua error: {}", message ? message : "unknown");
 	lua_pop(state, 1);
 }
 
@@ -25,6 +34,26 @@ BOOL InitLuaScript()
 		return 1;
 
 	luaL_openlibs(g_pLuaState);
+
+	// Register C++ class stubs for LuaBridge pointer passing
+	// Order matters: base classes first, then derived
+	luabridge::getGlobalNamespace(g_pLuaState)
+		.beginClass<CCharacter>("CCharacter").endClass()
+		.beginClass<SubMap>("SubMap").endClass()
+		.deriveClass<mission::CEventEntity, CCharacter>("CEventEntity").endClass()
+		.deriveClass<mission::CNpc, CCharacter>("CNpc").endClass()
+		.deriveClass<mission::CTalkNpc, mission::CNpc>("CTalkNpc").endClass()
+		.deriveClass<mission::CWorldEudemon, mission::CNpc>("CWorldEudemon").endClass()
+		.beginClass<net::RPacket>("RPacket").endClass()
+		.beginClass<net::WPacket>("WPacket").endClass()
+		.beginClass<CMapRes>("CMapRes").endClass()
+		.beginClass<SItemGrid>("SItemGrid").endClass()
+		.beginClass<CItem>("CItem").endClass()
+		.beginClass<CPlayer>("CPlayer").endClass()
+		.beginClass<CDynMapEntryCell>("CDynMapEntryCell").endClass()
+		.beginClass<CMapEntryCopyCell>("CMapEntryCopyCell").endClass();
+
+	g_luaAPI.Init(g_pLuaState);
 
 	if( !RegisterScript() )
 		return FALSE;
