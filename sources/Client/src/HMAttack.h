@@ -1,18 +1,18 @@
-#pragma once
+ï»¿#pragma once
 #include "HMSynchroObj.h"
 #include "Tools.h"
 #include "NetProtocol.h"
 
-enum eAttackEffectType   // ÌØÐ§ÏÔÊ¾·½Ê½
+enum eAttackEffectType   // 
 {    
-	enumAddLife=0,		// "¼ÓÑª.tga";
-	enumSubLife,		// "¼õÑª.tga";
-	enumAddSp,			// "¼Ósp.tga";
-	enumSubSp,			// "¼õsp.tga";
-	enumAddLifeMonster,	// "¼ÓÑª¹ÖÊÞ.tga";
-	enumSubLifeMonster, // "¼õÑª¹ÖÊÞ.tga";
-	enumDoubleAttack,	// "±©.tga";
-	enumMiss,			// "¼õÑªMiss.tga";
+	enumAddLife=0,		// ".tga";
+	enumSubLife,		// ".tga";
+	enumAddSp,			// "sp.tga";
+	enumSubSp,			// "sp.tga";
+	enumAddLifeMonster,	// ".tga";
+	enumSubLifeMonster, // ".tga";
+	enumDoubleAttack,	// ".tga";
+	enumMiss,			// "Miss.tga";
 };
 
 struct stEffect;
@@ -73,17 +73,17 @@ protected:
 protected:
 
 protected:
-	CAttackRepSynchro*	_pRepSynchro;	// ÓÃÓÚÖ´ÐÐÊ±Í¨Öª±íÏÖ°ü
-	CCharacter*     _pTarget;	// ±»¹¥»÷·½
-	CCharacter*     _pAttack;	// ¹¥»÷·½
+	CAttackRepSynchro*	_pRepSynchro;	// 
+	CCharacter*     _pTarget;	// 
+	CCharacter*     _pAttack;	// 
     CSkillRecord*   _pSkill;
     
-    // ÉËº¦°ü
+    // 
 	bool	_isDoubleAttack;
     bool    _IsMiss;
     bool	_isTargetDied;
-    bool    _isBeatBack;        // ÊÇ·ñ±»»÷ÍË
-    int     _nBeatX, _nBeatY;   // ±»»÷ÍËµ½µÄÎ»ÖÃ
+    bool    _isBeatBack;        // 
+    int     _nBeatX, _nBeatY;   // 
     CSizeArray<stEffect>		_HarmValue;
     CSizeArray<stSkillState>	_HarmState;
 
@@ -110,12 +110,12 @@ protected:
 	virtual void _Exec();
 
 private:
-	CAttackEffect*	_pAttackEffect;		// ÓÃÓÚÉ¾³ýÊ±Í¨ÖªÊÜ»÷°ü
-	CCharacter*     _pTarget;			// ±»¹¥»÷·½
-	CCharacter*     _pAttack;			// ¹¥»÷·½
+	CAttackEffect*	_pAttackEffect;		// 
+	CCharacter*     _pTarget;			// 
+	CCharacter*     _pAttack;			// 
     CSkillRecord*   _pSkill;
 
-    // ±íÏÖ°ü
+    // 
     bool    _IsAttackDied;
     CSizeArray<stSkillState>	_RepState;
     CSizeArray<stEffect>		_RepValue;
@@ -172,7 +172,7 @@ private:
 
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void CAttackRepSynchro::SetAttackEffect( CAttackEffect* p )					
 { 
 	_pAttackEffect = p;

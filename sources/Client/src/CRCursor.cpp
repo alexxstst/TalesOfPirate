@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CRCursor.h"
 #include "GameApp.h"
 #include "effectobj.h"

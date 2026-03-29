@@ -1,4 +1,4 @@
-/* this ALWAYS GENERATED file contains the definitions for the interfaces */
+﻿/* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
 /* File created by MIDL compiler version 3.01.75 */

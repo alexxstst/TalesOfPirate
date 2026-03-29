@@ -1,4 +1,4 @@
-// CharStall.h Created by knight-gongjian 2005.8.29.
+﻿// CharStall.h Created by knight-gongjian 2005.8.29.
 //---------------------------------------------------------
 #pragma once
 

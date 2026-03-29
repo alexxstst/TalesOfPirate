@@ -1,13 +1,13 @@
-#ifndef MPEffectAsmMath_H
+ï»¿#ifndef MPEffectAsmMath_H
 #define MPEffectAsmMath_H
 
 #include <stdlib.h>
 
-/* rand()ÄÜ·µ»ØµÄ×î´óÖµ. */
+/* rand(). */
 #define RAND_MAX 0x7fff
 
 
-// ·µ»ØÒ»¸öËæ»úÊı
+// 
 __forceinline float asm_rand()
 {
 #if 0
@@ -30,13 +30,13 @@ __forceinline float asm_rand()
 	return float( q );
 	#endif
 #else
-	// VC6 ²»Ö§³Ö pshufw
+	// VC6  pshufw
 	return float( rand() );
 #endif
 
 }
 
-// ·µ»Ø×î´óµÄËæ»úÊı
+// 
 __forceinline float asm_rand_max()
 {
 #if 0
@@ -46,7 +46,7 @@ __forceinline float asm_rand_max()
 	return 9223372036854775807.0f;
 	#endif
 #else
-	// VC6 ²»Ö§³Ö unsigned __int64
+	// VC6  unsigned __int64
 	return float( RAND_MAX );
 #endif
 

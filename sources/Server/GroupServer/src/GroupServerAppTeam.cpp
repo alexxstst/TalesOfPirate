@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <iostream>
 #include "GroupServerApp.h"
 #include "GameCommon.h"
@@ -17,11 +17,11 @@ void GroupServerApp::CP_TEAM_INVITE(Player *ply,net::TcpClient *client,net::RPac
 
 	if(ply->GetTeam() && ply->GetLeader() !=ply)
 	{
-		//ply->SendSysInfo("ֻ�жӳ����ܷ���������롣");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00001));
 	}else if(ply->GetTeam() && ply->GetTeam()->GetTotal() >=const_team.MemberMax)
 	{
-		//ply->SendSysInfo("��Ķ����Ա���Ѿ��ﵽ��ϵͳ�����������ˡ�");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00002));
 	}else
 	{
@@ -45,7 +45,7 @@ void GroupServerApp::CP_TEAM_INVITE(Player *ply,net::TcpClient *client,net::RPac
 		}
 		else if (l_invited = l_invited_ply->TeamFindInvitedByInviterChaID(ply->m_chaid[ply->m_currcha]))
 		{
-			//ply->SendSysInfo(dstring("����ǰ�ԡ�")<<l_invited_name<<"���Ѿ���һ��δ����������룬���԰����ꡣ");
+			//ply->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00005), l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
@@ -93,8 +93,8 @@ void GroupServerApp::CP_TEAM_REFUSE(Player *ply,net::TcpClient *client,net::RPac
 void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPacket &pk)
 {
 	bool bInvited = false;
-	auto szName1 = pk.ReadString(); // ��Ա
-	auto szName2 = pk.ReadString(); // �ӳ�
+	auto szName1 = pk.ReadString(); // 
+	auto szName2 = pk.ReadString(); // 
 
 	Player *pPly = FindPlayerByChaName(szName2.c_str());
 	Player *pPly2 = FindPlayerByChaName(szName1.c_str());
@@ -102,21 +102,21 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 	if(!pPly || !pPly2)
 	{
 		LogLine	l_line(g_LogMaster);
-		//l_line<<newln<<"MP_TEAM_CREATE()��Ա������!";
+		//l_line<<newln<<"MP_TEAM_CREATE()!";
 		l_line<<newln<<"MP_TEAM_CREATE() member is offline!";
 		return;
 	}
 
-	//����
+	//
 	if(pPly->GetTeam() && pPly->GetLeader() !=pPly)
 	{
-		//pPly->SendSysInfo("�����Ƕӳ�!");
+		//pPly->SendSysInfo("!");
 		pPly->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00010));
-		//pPly2->SendSysInfo("�Է����Ƕӳ�!");
+		//pPly2->SendSysInfo("!");
 		pPly2->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00011));
 	}else if(pPly->GetTeam() && pPly->GetTeam()->GetTotal() >=const_team.MemberMax)
 	{
-		//pPly->SendSysInfo("��Ķ����Ա���Ѿ��ﵽ��ϵͳ������������!");
+		//pPly->SendSysInfo("!");
 		pPly->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00002));
 		pPly2->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00012));
 	}else
@@ -127,7 +127,7 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 		if(!l_invited_name ||l_len >16)
 		{
 			LogLine	l_line(g_LogMaster);
-			//l_line<<newln<<"MP_TEAM_CREATE()�������ȷǷ�!";
+			//l_line<<newln<<"MP_TEAM_CREATE()!";
 			l_line<<newln<<"MP_TEAM_CREATE() name length is invalid!";
 			return;
 		}
@@ -144,7 +144,7 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 			pPly->SendSysInfo(l_buf);
 		}else if(l_invited =l_invited_ply->TeamFindInvitedByInviterChaID(pPly->m_chaid[pPly->m_currcha]))
 		{
-			//pPly->SendSysInfo(dstring("����ǰ�ԡ�")<<l_invited_name<<"���Ѿ���һ��δ����������룬���԰����ꡣ");
+			//pPly->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00005),l_invited_name);
 			pPly->SendSysInfo(l_buf);
@@ -162,7 +162,7 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 		}
 	}
 
-	//��������
+	//
 	if(bInvited)
 	{
 		cChar *szInviterName = szName2.c_str();
@@ -170,14 +170,14 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 		if(l_count &&(l_count >const_team.MemberMax))
 		{
 			pPly2->LeaveTeam();
-			//pPly2->SendSysInfo("��Ҫ�������ӳ�Ա���Ѵﵽ���������ޡ�");
+			//pPly2->SendSysInfo("");
 			pPly2->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00017));
 		}else if(l_count)
 		{
 			LogLine	l_line(g_LogMaster);
-			//l_line<<newln<<"���"<<pPly2->m_chaname[pPly2->m_currcha]<<"���������"<<pPly2->GetLeader()->m_chaname[pPly2->GetLeader()->m_currcha]<<endln;
+			//l_line<<newln<<""<<pPly2->m_chaname[pPly2->m_currcha]<<""<<pPly2->GetLeader()->m_chaname[pPly2->GetLeader()->m_currcha]<<endln;
 			l_line<<newln<<"player "<<pPly2->m_chaname[pPly2->m_currcha]<<" add team "<<pPly2->GetLeader()->m_chaname[pPly2->GetLeader()->m_currcha]<<endln;
-			//֪ͨClient���Ա�仯
+			//Client
 			{
 				Team		*	l_team	=pPly2->GetTeam();
 
@@ -208,7 +208,7 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 
 				SendToClient(l_plylst,l_plynum,l_wpk);
 			}
-			//֪ͨGameServer���Ա�仯
+			//GameServer
 			{
 				Team		*	l_team	=pPly2->GetTeam();
 				Player		*	l_plyr;
@@ -250,7 +250,7 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 						l_gate[j]->SendData(l_wpk);
 					}
 					LogLine	l_line(g_LogMaster);
-					//l_line<<newln<<"MP_TEAM_CREATE()ȷ��ToGameServer�ļ�����Ӳ������������ݵ�GateServer";
+					//l_line<<newln<<"MP_TEAM_CREATE()ToGameServerGateServer";
 					l_line<<newln<<"MP_TEAM_CREATE() send ToGameServer data to GateServer";
 				}
 			}
@@ -259,7 +259,7 @@ void GroupServerApp::MP_TEAM_CREATE(Player *ply,net::TcpClient *client,net::RPac
 	else
 	{
 		LogLine l_line(g_LogMaster);
-		//l_line<<newln<<"MP_TEAM_CREATE()����ʧ��";
+		//l_line<<newln<<"MP_TEAM_CREATE()";
 		l_line<<newln<<"MP_TEAM_CREATE() invite failed";
 	}
 }
@@ -270,14 +270,14 @@ void GroupServerApp::CP_TEAM_ACCEPT(Player *ply,net::TcpClient *client,net::RPac
 	if(l_count &&(l_count >const_team.MemberMax))
 	{
 		ply->LeaveTeam();
-		//ply->SendSysInfo("��Ҫ�������ӳ�Ա���Ѵﵽ���������ޡ�");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPTEAM_CPP_00017));
 	}else if(l_count)
 	{
 		LogLine	l_line(g_LogTeam);
-		//l_line<<newln<<"���"<<ply->m_chaname[ply->m_currcha]<<"���������"<<ply->GetLeader()->m_chaname[ply->GetLeader()->m_currcha]<<endln;
+		//l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<""<<ply->GetLeader()->m_chaname[ply->GetLeader()->m_currcha]<<endln;
 		l_line<<newln<<"player "<<ply->m_chaname[ply->m_currcha]<<"add team"<<ply->GetLeader()->m_chaname[ply->GetLeader()->m_currcha]<<endln;
-		//֪ͨClient���Ա�仯
+		//Client
 		{
 			Team		*	l_team	=ply->GetTeam();
 
@@ -308,7 +308,7 @@ void GroupServerApp::CP_TEAM_ACCEPT(Player *ply,net::TcpClient *client,net::RPac
 
 			SendToClient(l_plylst,l_plynum,l_wpk);
 		}
-		//֪ͨGameServer���Ա�仯
+		//GameServer
 		{
 			Team		*	l_team	=ply->GetTeam();
 			Player		*	l_plyr;
@@ -350,7 +350,7 @@ void GroupServerApp::CP_TEAM_ACCEPT(Player *ply,net::TcpClient *client,net::RPac
 					l_gate[j]->SendData(l_wpk);
 				}
 				LogLine	l_line(g_LogTeam);
-				//l_line<<newln<<"ȷ��ToGameServer�ļ�����Ӳ������������ݵ�GateServer";
+				//l_line<<newln<<"ToGameServerGateServer";
 				l_line<<newln<<"MP_TEAM_CREATE() send ToGameServer data to GateServer";
 			}
 		}
@@ -364,7 +364,7 @@ void GroupServerApp::CP_TEAM_LEAVE(Player *ply,net::TcpClient *client,net::RPack
 	long	l_count		=ply->LeaveTeam();
 	if(l_count)
 	{
-		//֪ͨClient���Ա�仯
+		//Client
 		{
 			net::WPacket	l_wpk	=net::WPacket(256);
 			l_wpk.WriteCmd(CMD_PC_TEAM_REFRESH);
@@ -392,7 +392,7 @@ void GroupServerApp::CP_TEAM_LEAVE(Player *ply,net::TcpClient *client,net::RPack
 			l.unlock();
 			SendToClient(l_plylst,l_plynum,l_wpk);
 		}
-		//֪ͨGameServer���Ա�仯
+		//GameServer
 		{
 			Player		*	l_plyr;
 			GateServer	*	l_gate[30];for(int i=0;i<30;i++)l_gate[i]=0;
@@ -439,8 +439,8 @@ void GroupServerApp::CP_TEAM_LEAVE(Player *ply,net::TcpClient *client,net::RPack
 				l_team->GetLeader()->LeaveTeam();
 			}
 			LogLine	l_line(g_LogTeam);
-			/*l_line<<newln<<"���"<<ply->m_chaname[ply->m_currcha]<<"�뿪�����"
-				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",�����ɢ��":"��")
+			/*l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<""
+				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",":"")
 				<<endln;
 			*/
 			l_line<<newln<<"player "<<ply->m_chaname[ply->m_currcha]<<"leave team "
@@ -464,7 +464,7 @@ void GroupServerApp::CP_TEAM_KICK(Player *ply,net::TcpClient *client,net::RPacke
 	if( !pKicker ) 
 	{
 		LogLine	l_line(g_LogTeam);
-		//l_line<<newln<<"�ӳ�"<<ply->m_chaname[ply->m_currcha]<<"�߳���Ա�����ڣ�ID["
+		//l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<"ID["
 		//	<<dwKickedID<<"]"<<endln;
 		l_line<<newln<<"captain "<<ply->m_chaname[ply->m_currcha]<<"killed member not exsit! ID["
 			<<dwKickedID<<"]"<<endln;
@@ -473,7 +473,7 @@ void GroupServerApp::CP_TEAM_KICK(Player *ply,net::TcpClient *client,net::RPacke
 	long	l_count		=pKicker->LeaveTeam();
 	if(l_count)
 	{
-		//֪ͨClient���Ա�仯
+		//Client
 		{
 			net::WPacket	l_wpk	=net::WPacket(256);
 			l_wpk.WriteCmd(CMD_PC_TEAM_REFRESH);
@@ -501,7 +501,7 @@ void GroupServerApp::CP_TEAM_KICK(Player *ply,net::TcpClient *client,net::RPacke
 			l.unlock();
 			SendToClient(l_plylst,l_plynum,l_wpk);
 		}
-		//֪ͨGameServer���Ա�仯
+		//GameServer
 		{
 			Player		*	l_plyr;
 			GateServer	*	l_gate[30];for(int i=0;i<30;i++)l_gate[i]=0;
@@ -548,8 +548,8 @@ void GroupServerApp::CP_TEAM_KICK(Player *ply,net::TcpClient *client,net::RPacke
 				l_team->GetLeader()->LeaveTeam();
 			}
 			LogLine	l_line(g_LogTeam);
-			/*l_line<<newln<<"���"<<pKicker->m_chaname[ply->m_currcha]<<"���ӳ��߳������"
-				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",�����ɢ��":"��")
+			/*l_line<<newln<<""<<pKicker->m_chaname[ply->m_currcha]<<""
+				<<l_leader->m_chaname[l_leader->m_currcha]<<(l_count ==2?",":"")
 				<<endln;
 			*/
 			l_line<<newln<<"player"<<pKicker->m_chaname[ply->m_currcha]<<"killed by captain"
@@ -662,7 +662,7 @@ void GroupServerApp::MP_SWITCH(Player *ply)
 		}
 
 		LogLine	l_line(g_LogTeam);
-		//l_line<<newln<<"���"<<ply->m_chaname[ply->m_currcha]<<"��Ϊ��ת��ͼˢ�������"<<l_leader->m_chaname[l_leader->m_currcha];
+		//l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<""<<l_leader->m_chaname[l_leader->m_currcha];
 		l_line<<newln<<"player"<<ply->m_chaname[ply->m_currcha]<<"refresh team by switch map"<<l_leader->m_chaname[l_leader->m_currcha];
 	}
 }

@@ -1,4 +1,4 @@
-// NpcScript.h Created by knight-gongjian 2004.11.30.
+﻿// NpcScript.h Created by knight-gongjian 2004.11.30.
 //---------------------------------------------------------
 #pragma once
 

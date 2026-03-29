@@ -1,4 +1,4 @@
-// channels.cpp - originally written and placed in the public domain by Wei Dai
+﻿// channels.cpp - originally written and placed in the public domain by Wei Dai
 //                CryptoPP::Test namespace added by JW in February 2017
 
 #include "pch.h"

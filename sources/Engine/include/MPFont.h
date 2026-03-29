@@ -1,17 +1,17 @@
-#pragma once
+﻿#pragma once
 
 #include <algorithm>
 
 inline bool	GetIntersectRect(RECT* pdest, RECT* psrc,RECT* pclip)
 {
 	int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
-	// ͼ���ڲü����⣬����ʾ
+	// 
 	if( psrc->left >= pclip->right || psrc->right <= pclip->left\
 		||psrc->top >= pclip->bottom || psrc->bottom <= pclip->top)
 	{
 		return false;
 	}
-	// ���вü�
+	// 
 	if( psrc->left < pclip->left )
 	{
 		x1 = psrc->left - pclip->left;
@@ -69,7 +69,7 @@ namespace ui
 		{
 			int x1 = 0, x2 = 0, y1 = 0, y2 = 0;
 			RECT* prc = &GetClipRect();
-			// ͼ���ڲü����⣬����ʾ
+			// 
 			if( psrc->left >= prc->right || psrc->right <= prc->left\
 				||psrc->top >= prc->bottom || psrc->bottom <= prc->top)
 			{
@@ -84,7 +84,7 @@ namespace ui
 					return true;
 				}
 			}
-			// ���вü�
+			// 
 
 			if( psrc->left < prc->left )
 			{
@@ -123,30 +123,30 @@ namespace ui
 
 /*
 	bool CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char* szFontName, int nSize = 16, int nLevel = 3 );
-	\param1		3D�豸
-	\param2		��������
-	\param3		�����С������ʹ��16��24����
-	\param4		������С�ȼ�������Ϊ1 -- 5.�ֱ�Ϊ1=64 2=128 3=256 4=512 5=1024��
+	\param1		3D
+	\param2		
+	\param3		1624
+	\param4		1 -- 5.1=64 2=128 3=256 4=512 5=1024
 				NOTE: 
-				1.���ʹ��С��256��������ʱ����ʹ��֣�����뷨ʱ��ʱһ�����������������ڻ�����Ŀ��
-				��������Ĭ��������СΪ256.���ھ�������Կ���˵����һ��256������Ӧ�ò�������ɣ�:)
-				2.����ʹ��16�����С������,���Ҫʹ�ô�������Ըı�����ֵ
-				3.��ͬ��������Сһ�ο�����Ⱦ����������Ҳ�ǲ�һ���ģ�64��С����������һ����Ⱦ������������16����
-				128��С����64����256����256��,512��С��1024,1024��С��4096,����ԽС���ٶ�Խ�졣������˵��
-				����16�����С�����壬�����24����Ļ�Ҫ��һЩ��
+				1.256
+				256.256:)
+				2.16,
+				3.6416
+				12864256256,5121024,10244096,
+				1624
 
 
 	bool DrawText( char* szText, int x, int y, D3DCOLOR color = 0xFFFFFFFF,float fScale = 1.0f );
-	\param1		Ҫ��Ⱦ������
-				��NOTE:����Ⱦ�����ֵĸ������ܴ��ڻ�����Ŀ��
-	\param2		��Ļ�ϵ�X����
-	\param3		��Ļ�ϵ�Y����
-	\param4		���ֵ���ɫ
-	\param5		���Զ����ִ�С��������
-	return		�ɹ�����true;
+	\param1		
+				NOTE:
+	\param2		X
+	\param3		Y
+	\param4		
+	\param5		
+	return		true;
  */
 //===================================================================
-//!���������fvf
+//!fvf
 #define D3DFVF_FONT (D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 #define D3DFVF_3DFONT (D3DFVF_XYZB1 | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
@@ -449,7 +449,7 @@ private:
 
 	float					_fyu;
 
-///////�Ż���Ⱦ///////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 	S_FVector<WORD>			_vecValidID;
 	std::vector<MPFontRect>	_vecFontRect;
 //////////////////////////////////////////////////////////////////////////

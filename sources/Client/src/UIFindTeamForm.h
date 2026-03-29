@@ -1,4 +1,4 @@
-
+ï»¿
 
 #pragma once
 
@@ -28,8 +28,8 @@ namespace GUI
 		void SetOwnFindTeamState(bool bState);
 		void FindTeamAsk(const char* szName);
 
-		static const int FINDTEAM_PAGE_SIZE = 10;	// Ñ°Çó×é¶ÓÒ»Ò³ÏÔÊ¾ÌõÊý
-		static const int FINDTEAM_INTERVAL  = 60;	// Á½´ÎÉêÇë¼ä¸ôÊ±¼ä£º60Ãë
+		static const int FINDTEAM_PAGE_SIZE = 10;	// 
+		static const int FINDTEAM_INTERVAL  = 60;	// 60
 
 	protected:
 		virtual bool Init();
@@ -38,27 +38,27 @@ namespace GUI
 	private:
 
 		//
-		// Ñ°ÕÒ×é¶Ó
+		// 
 		//
 		CForm*		frmFindTeam;
 
-		CLabelEx*		labName[FINDTEAM_PAGE_SIZE];	// ½ÇÉ«ÐÕÃû
-		CLabelEx*		labLevel[FINDTEAM_PAGE_SIZE];	// ½ÇÉ«µÈ¼¶
-		CLabelEx*		labJob[FINDTEAM_PAGE_SIZE];		// ½ÇÉ«Ö°Òµ
-		CLabelEx*		labPlace[FINDTEAM_PAGE_SIZE];	// ½ÇÉ«ËùÔÚµØ
-		CTextButton*	btnSubmit[FINDTEAM_PAGE_SIZE];	// Ìá½»°´Å¥
+		CLabelEx*		labName[FINDTEAM_PAGE_SIZE];	// 
+		CLabelEx*		labLevel[FINDTEAM_PAGE_SIZE];	// 
+		CLabelEx*		labJob[FINDTEAM_PAGE_SIZE];		// 
+		CLabelEx*		labPlace[FINDTEAM_PAGE_SIZE];	// 
+		CTextButton*	btnSubmit[FINDTEAM_PAGE_SIZE];	// 
 
 		CTextButton*	btnAddme;
 		CTextButton*	btnDelme;
-		CLabelEx*		labListPage;		// ÏÔÊ¾Ò³Êý
+		CLabelEx*		labListPage;		// 
 
-		int				m_nCurPage;			// µ±Ç°Ò³
-		int				m_nPageNum;			// ×ÜÒ³Êý
-		DWORD			m_dwLastTick;		// ÉÏÒ»´ÎÉêÇë×é¶ÓµÄÊ±¼ä
-		std::string		m_strTeamLeader;	// ÉêÇëµÄ¶Ó³¤
+		int				m_nCurPage;			// 
+		int				m_nPageNum;			// 
+		DWORD			m_dwLastTick;		// 
+		std::string		m_strTeamLeader;	// 
 
-		static void _evtFindTeamMouseButton(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);// Êó±êµã»÷°´Å¥ÊÂ¼þ
-		static void	_evtFindTeamCheckEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey); // ×é¶ÓÉêÇë
+		static void _evtFindTeamMouseButton(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);// 
+		static void	_evtFindTeamCheckEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey); // 
 
 	};
 

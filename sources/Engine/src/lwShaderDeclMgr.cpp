@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "lwShaderDeclMgr.h"
 
 LW_BEGIN

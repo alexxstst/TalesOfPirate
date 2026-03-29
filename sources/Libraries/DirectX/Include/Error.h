@@ -1,4 +1,4 @@
-/***
+﻿/***
 *error.h - DOS error codes
 *
 *   Copyright (c) 1987-1999, Microsoft Corporation.  All rights reserved.

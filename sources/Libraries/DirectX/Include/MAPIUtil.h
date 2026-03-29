@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I U T I L . H
  *
  *  Definitions and prototypes for utility functions provided by MAPI

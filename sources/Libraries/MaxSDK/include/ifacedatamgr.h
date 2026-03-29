@@ -1,4 +1,4 @@
- /**********************************************************************
+ï»¿ /**********************************************************************
  
 	FILE: IFaceDataMgr.h
 
@@ -21,7 +21,7 @@
 // GUID that identifies this ifc (interface)
 #define FACEDATAMGR_INTERFACE Interface_ID(0x1b454148, 0x6a066927)
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // Interface for managing face-data channels. 
 // Objects that want to have face-data channels should implement this ifc
 //

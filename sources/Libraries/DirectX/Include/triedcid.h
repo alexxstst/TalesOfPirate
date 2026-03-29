@@ -1,4 +1,4 @@
-// triedcid.h : Command IDs for TriEdit's IOleCommandTarget
+﻿// triedcid.h : Command IDs for TriEdit's IOleCommandTarget
 // Copyright 1998-1999 Microsoft Corporation.  All rights reserved.
 
 #ifndef __TRIEDCID_H__

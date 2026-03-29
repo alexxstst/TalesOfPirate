@@ -1,4 +1,4 @@
-
+﻿
 /*****************************************************************************\
 *                                                                             *
 * shlwapi.h - Interface for the Windows light-weight utility APIs             *

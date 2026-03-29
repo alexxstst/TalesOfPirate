@@ -1,4 +1,4 @@
-print("-- [Loading] Init Type")
+﻿print("-- [Loading] Init Type")
 
 function Init_attr()
     for i = 0, 240, 1 do

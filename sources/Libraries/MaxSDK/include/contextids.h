@@ -1,4 +1,4 @@
-// 3DS MAX context-sensitive help items
+﻿// 3DS MAX context-sensitive help items
 // Help Contents (help menu IDs are in the menu section)
 
 #ifndef _CONTEXTIDS_H_

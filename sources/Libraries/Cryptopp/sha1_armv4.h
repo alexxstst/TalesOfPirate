@@ -1,4 +1,4 @@
-/* Header file for use with Cryptogam's ARMv4 SHA1.    */
+﻿/* Header file for use with Cryptogam's ARMv4 SHA1.    */
 /* Also see http://www.openssl.org/~appro/cryptogams/  */
 /* https://wiki.openssl.org/index.php/Cryptogams_SHA.  */
 

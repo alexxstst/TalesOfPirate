@@ -1,5 +1,5 @@
-// CommandMessagesTests.cpp — roundtrip тесты CommandMessages.h
-// Паттерн: serialize → WPacket → RPacket → deserialize → assert fields equal
+﻿// CommandMessagesTests.cpp  roundtrip  CommandMessages.h
+// : serialize  WPacket  RPacket  deserialize  assert fields equal
 
 #include "TestFramework.h"
 #include "CommandMessages.h"
@@ -10,7 +10,7 @@ using namespace net;
 using namespace net::msg;
 
 // =================================================================
-//  Группа A: TP/PT — GateServer <-> GroupServer
+//   A: TP/PT  GateServer <-> GroupServer
 // =================================================================
 
 TEST(CommandMessages, TpLoginRequest_Roundtrip) {
@@ -322,7 +322,7 @@ TEST(CommandMessages, TpDiscMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Группа B: PA/AP — GroupServer <-> AccountServer
+//   B: PA/AP  GroupServer <-> AccountServer
 // =================================================================
 
 TEST(CommandMessages, PaLoginRequest_Roundtrip) {
@@ -479,7 +479,7 @@ TEST(CommandMessages, ApExpScaleMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Группа C: CP — Client -> GroupServer
+//   C: CP  Client -> GroupServer
 // =================================================================
 
 TEST(CommandMessages, CpTeamInviteMessage_Roundtrip) {
@@ -589,7 +589,7 @@ TEST(CommandMessages, CpChangePassMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Группа D: MP — GameServer -> GroupServer
+//   D: MP  GameServer -> GroupServer
 // =================================================================
 
 TEST(CommandMessages, MpEnterMapMessage_Roundtrip) {
@@ -682,7 +682,7 @@ TEST(CommandMessages, MpGarner2UpdateMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Группа E: PC — GroupServer -> Client
+//   E: PC  GroupServer -> Client
 // =================================================================
 
 TEST(CommandMessages, PcSay2AllMessage_Roundtrip) {
@@ -802,7 +802,7 @@ TEST(CommandMessages, PcRegisterMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Группа F: PM — GroupServer -> GameServer
+//   F: PM  GroupServer -> GameServer
 // =================================================================
 
 TEST(CommandMessages, PmTeamMessage_Roundtrip) {
@@ -884,9 +884,9 @@ TEST(CommandMessages, PtKickUserMessage_Roundtrip) {
     ASSERT_EQ(original.gtAddr, restored.gtAddr);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа D: MC — GateServer → Client
-// ═══════════════════════════════════════════════════════════════
+// 
+//   D: MC  GateServer  Client
+// 
 
 TEST(CommandMessages, McLoginResponse_Success_Roundtrip) {
     McLoginResponse original;
@@ -1023,7 +1023,7 @@ TEST(CommandMessages, McUpdatePassword2Response_Roundtrip) {
 }
 
 // =================================================================
-//  CMD_MC_ENTERMAP — roundtrip тесты
+//  CMD_MC_ENTERMAP  roundtrip 
 // =================================================================
 
 TEST(CommandMessages, McEnterMapMessage_Error_Roundtrip) {
@@ -1037,7 +1037,7 @@ TEST(CommandMessages, McEnterMapMessage_Error_Roundtrip) {
     ASSERT_FALSE(restored.data.has_value());
 }
 
-// testIsBoatItem больше не нужен — isBoat читается из потока
+// testIsBoatItem     isBoat   
 
 TEST(CommandMessages, McEnterMapMessage_Success_Roundtrip) {
     McEnterMapMessage original;
@@ -1077,12 +1077,12 @@ TEST(CommandMessages, McEnterMapMessage_Success_Roundtrip) {
     b.isPlayer = 1;
     b.side.sideId = 2;
     b.event = {0, 0, 0, ""};
-    // Look — player, not boat
+    // Look  player, not boat
     b.look.synType = 0; // SWITCH
     b.look.typeId = 1;
     b.look.isBoat = false;
     b.look.hairId = 2001;
-    // Equip slot 0 — с полными данными
+    // Equip slot 0    
     b.look.equips[0].id = 5001;
     b.look.equips[0].dbId = 10001;
     b.look.equips[0].needLv = 10;
@@ -1103,7 +1103,7 @@ TEST(CommandMessages, McEnterMapMessage_Success_Roundtrip) {
     b.look.equips[0].instAttr[0][1] = 100;
     b.look.equips[0].instAttr[1][0] = 2;
     b.look.equips[0].instAttr[1][1] = 200;
-    // equips[1..33] — id=0, пустые
+    // equips[1..33]  id=0, 
     b.pkCtrl = 3;
     b.appendLook[0].lookId = 8001;
     b.appendLook[0].valid = 1;
@@ -1124,7 +1124,7 @@ TEST(CommandMessages, McEnterMapMessage_Success_Roundtrip) {
     d.attr.synType = 0;
     d.attr.attrs = {{1, 50}, {2, 30}, {5, 100}};
 
-    // Kitbag — обычный предмет + предмет-корабль + пустой слот
+    // Kitbag    + - +  
     d.kitbag.synType = SYN_KITBAG_INIT;
     d.kitbag.capacity = 24;
     KitbagItem normalItem;
@@ -1147,7 +1147,7 @@ TEST(CommandMessages, McEnterMapMessage_Success_Roundtrip) {
     normalItem.hasInstAttr = false;
     KitbagItem boatItem;
     boatItem.gridId = 5;
-    boatItem.itemId = 9999; // testIsBoatItem → true
+    boatItem.itemId = 9999; // testIsBoatItem  true
     boatItem.dbId = 50002;
     boatItem.needLv = 1;
     boatItem.num = 1;
@@ -1275,7 +1275,7 @@ TEST(CommandMessages, McEnterMapMessage_Success_Roundtrip) {
 
     ASSERT_EQ(0u, rd.boats.size());
     ASSERT_EQ(200, rd.ctrlChaId);
-    // loginFlag, playerCount, playerAddr — GateServer-only, клиент не читает
+    // loginFlag, playerCount, playerAddr  GateServer-only,   
 }
 
 TEST(CommandMessages, McEnterMapMessage_WithBoats_Roundtrip) {
@@ -1290,7 +1290,7 @@ TEST(CommandMessages, McEnterMapMessage_WithBoats_Roundtrip) {
     d.canTeam = 0;
     d.imp = 0;
 
-    // Минимальный BaseInfo для основного персонажа
+    //  BaseInfo   
     d.baseInfo.chaId = 1;
     d.baseInfo.worldId = 2;
     d.baseInfo.name = "Sailor";
@@ -1301,7 +1301,7 @@ TEST(CommandMessages, McEnterMapMessage_WithBoats_Roundtrip) {
     d.kitbag.synType = SYN_KITBAG_INIT;
     d.kitbag.capacity = 24;
 
-    // Один корабль
+    //  
     BoatData boat;
     boat.baseInfo.chaId = 1000;
     boat.baseInfo.worldId = 1001;
@@ -1318,7 +1318,7 @@ TEST(CommandMessages, McEnterMapMessage_WithBoats_Roundtrip) {
     d.boats.push_back(std::move(boat));
 
     d.ctrlChaId = 2;
-    // loginFlag, playerCount, playerAddr — GateServer-only
+    // loginFlag, playerCount, playerAddr  GateServer-only
 
     original.data = std::move(d);
     auto w = serialize(original);
@@ -1343,13 +1343,13 @@ TEST(CommandMessages, McEnterMapMessage_WithBoats_Roundtrip) {
     ASSERT_EQ(100000, rb.skillState.currentTime);
 
     ASSERT_EQ(2, restored.data->ctrlChaId);
-    // loginFlag, playerCount — GateServer-only
+    // loginFlag, playerCount  GateServer-only
 }
 
-// Тест на основе реального пакета пользователя (item 9621 — НЕ корабль).
-// Воспроизводит структуру: 7 скиллов, 74 атрибута, 4 предмета + пустые слоты,
-// 36 шорткатов, 0 лодок. До фикса isBoat-флага вызывал ошибку десериализации
-// на loginFlag (позиция 633), если клиент и сервер по-разному определяли isBoat.
+//       (item 9621   ).
+//  : 7 , 74 , 4  +  ,
+// 36 , 0 .   isBoat-   
+//  loginFlag ( 633),     -  isBoat.
 TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     McEnterMapMessage original;
     original.errCode = 0;
@@ -1362,7 +1362,7 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     d.canTeam = 1;
     d.imp = 0;
 
-    // BaseInfo (из дампа: chaId=4, name=masha, gmLv=99)
+    // BaseInfo ( : chaId=4, name=masha, gmLv=99)
     auto& b = d.baseInfo;
     b.chaId = 4;
     b.worldId = 1;
@@ -1388,54 +1388,54 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     b.isPlayer = 1;
     b.side.sideId = 0;
     b.event = {1, 1, 0, ""};
-    // Look — humanoid, typeId=4 (Lance)
+    // Look  humanoid, typeId=4 (Lance)
     b.look.synType = 0;
     b.look.typeId = 4;
     b.look.isBoat = false;
     b.look.hairId = 2291;
-    // Equips: slot 0..3 с предметами, остальные пустые
+    // Equips: slot 0..3  ,  
     b.look.equips[0].id = 2554;    // face
     b.look.equips[0].dbId = 0;
     b.look.equips[0].needLv = 0;
-    // Все остальные слоты пустые (id=0)
+    //     (id=0)
     b.pkCtrl = 1;
-    // appendLook — все пустые
+    // appendLook   
     b.appendLook[0].lookId = 0;
 
-    // SkillBag (7 скиллов из дампа)
+    // SkillBag (7   )
     d.skillBag.defSkillId = 28;
     d.skillBag.synType = 0;
     d.skillBag.skills = {
-        {28, 1, 1, 0, 0, 0, 0, {0, 0, 0, 0}},    // базовая атака
+        {28, 1, 1, 0, 0, 0, 0, {0, 0, 0, 0}},    //  
         {29, 0, 1, 0, 0, 0, 0, {0, 0, 0, 0}},
         {34, 0, 1, 0, 0, 0, 0, {0, 0, 0, 0}},
         {35, 0, 1, 0, 0, 0, 0, {0, 0, 0, 0}},
         {36, 0, 1, 0, 0, 0, 0, {0, 0, 0, 0}},
         {37, 0, 1, 0, 0, 0, 0, {0, 0, 0, 0}},
-        {36660109, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}}  // системный скилл
+        {36660109, 0, 0, 0, 0, 0, 0, {0, 0, 0, 0}}  //  
     };
 
-    // SkillState — пусто
+    // SkillState  
     d.skillState.currentTime = 0;
 
-    // Attr — 74 атрибута (из дампа)
+    // Attr  74  ( )
     d.attr.synType = 0;
     d.attr.attrs.resize(74);
-    // Ключевые значения из дампа
+    //    
     int64_t attrVals[74] = {
         1, 45, 2, 23, 3, 0, 4, 0, 5, 0, 6, 4, 7, 0, 8, 0, 9, 0, 10, 1,
         11, 1, 12, 1, 13, 0, 14, 0, 15, 0, 16, 5, 17, 0, 18, 0, 19, 0, 20, 0,
         21, 625, 22, 0, 23, 0, 24, 1500, 25, 5, 26, 5, 27, 5, 28, 5, 29, 5, 30, 5,
         31, 100, 32, 23, 33, 21, 34, 25, 35, 6, 36, 10, 37, 11
     };
-    // Заполняем как пары attrId/attrVal
+    //    attrId/attrVal
     for (int i = 0; i < 74; i += 2) {
         d.attr.attrs[i / 2].attrId = attrVals[i];
         d.attr.attrs[i / 2].attrVal = attrVals[i + 1];
     }
-    d.attr.attrs.resize(37); // 37 пар
+    d.attr.attrs.resize(37); // 37 
 
-    // Kitbag — 4 предмета + пустые слоты (item 9621 — НЕ корабль!)
+    // Kitbag  4  +   (item 9621   !)
     d.kitbag.synType = SYN_KITBAG_INIT;
     d.kitbag.capacity = 24;
 
@@ -1460,7 +1460,7 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     item3.forgeLv = 0; item3.valid = 1; item3.tradable = 1; item3.expiration = 0;
     item3.isBoat = false; item3.forgeParam = 0; item3.instId = 0; item3.hasInstAttr = false;
 
-    // Item 9621 — ключевой: это НЕ корабль, но до фикса клиент мог считать его кораблём
+    // Item 9621  :   ,        
     KitbagItem item4;
     item4.gridId = 4; item4.itemId = 9621;
     item4.dbId = 0; item4.needLv = 0; item4.num = 1;
@@ -1468,7 +1468,7 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     item4.forgeLv = 1; item4.valid = 1; item4.tradable = 1; item4.expiration = 0;
     item4.isBoat = false; item4.forgeParam = 0; item4.instId = 0; item4.hasInstAttr = false;
 
-    // Пустые слоты 2, 5..23
+    //   2, 5..23
     KitbagItem emptyGrid2; emptyGrid2.gridId = 2; emptyGrid2.itemId = 0;
 
     d.kitbag.items = {item0, item1, emptyGrid2, item3, item4};
@@ -1477,14 +1477,14 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
         d.kitbag.items.push_back(empty);
     }
 
-    // Shortcut — все пустые
+    // Shortcut   
     for (int i = 0; i < SHORT_CUT_NUM; i++) {
         d.shortcut.entries[i] = {0, 0};
     }
 
-    // Без лодок
+    //  
     d.ctrlChaId = 4;
-    // loginFlag, playerCount, playerAddr — GateServer-only
+    // loginFlag, playerCount, playerAddr  GateServer-only
 
     original.data = std::move(d);
     auto w = serialize(original);
@@ -1503,20 +1503,20 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     ASSERT_EQ(209392, rd.baseInfo.posX);
     ASSERT_EQ(277335, rd.baseInfo.posY);
 
-    // Проверка скиллов
+    //  
     ASSERT_EQ(28, rd.skillBag.defSkillId);
     ASSERT_EQ(7u, rd.skillBag.skills.size());
     ASSERT_EQ(28, rd.skillBag.skills[0].id);
     ASSERT_EQ(36660109, rd.skillBag.skills[6].id);
 
-    // Проверка атрибутов
+    //  
     ASSERT_EQ(37u, rd.attr.attrs.size());
     ASSERT_EQ(1, rd.attr.attrs[0].attrId);
     ASSERT_EQ(45, rd.attr.attrs[0].attrVal);
 
-    // Проверка kitbag — item 9621 НЕ корабль
+    //  kitbag  item 9621  
     ASSERT_EQ(24, rd.kitbag.capacity);
-    // item 9621 (grid 4) — isBoat=false
+    // item 9621 (grid 4)  isBoat=false
     bool found9621 = false;
     for (const auto& item : rd.kitbag.items) {
         if (item.itemId == 9621) {
@@ -1528,13 +1528,13 @@ TEST(CommandMessages, McEnterMapMessage_RealPacket_Roundtrip) {
     }
     ASSERT_TRUE(found9621);
 
-    // loginFlag — GateServer-only, клиент не читает
+    // loginFlag  GateServer-only,   
     ASSERT_EQ(4, rd.ctrlChaId);
     ASSERT_EQ(0u, rd.boats.size());
 }
 
 // =================================================================
-//  Группа H: TM/MT — GateServer <-> GameServer
+//   H: TM/MT  GateServer <-> GameServer
 // =================================================================
 
 TEST(CommandMessages, MtLoginMessage_Roundtrip) {
@@ -1762,7 +1762,7 @@ TEST(CommandMessages, MapEntryMessage_CopyParam_Roundtrip) {
 }
 
 // =================================================================
-//  Группа I: MM — GameServer <-> GameServer
+//   I: MM  GameServer <-> GameServer
 // =================================================================
 
 TEST(CommandMessages, MmQueryChaMessage_Roundtrip) {
@@ -1872,7 +1872,7 @@ TEST(CommandMessages, MmNoticeMessage_Roundtrip) {
     original.content = "Server maintenance in 10 minutes!";
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
-    // Десериализация пропускает srcId=0
+    //   srcId=0
     r.ReadInt64(); // skip srcId
     MmNoticeMessage restored;
     deserialize(r, restored);
@@ -1907,121 +1907,121 @@ TEST(CommandMessages, MmStoreBuyMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Геймплейные команды: Фаза 1 — простые
+//   :  1  
 // =================================================================
 
 // -----------------------------------------------------------------
-//  Cmd-only команды (только код команды, без полей)
+//  Cmd-only  (  ,  )
 // -----------------------------------------------------------------
 
 TEST(GameplayPhase1, CmOfflineMode_Cmd) {
-    // Проверяем, что пакет создаётся и имеет ненулевой размер
+    // ,       
     auto w = serializeCmOfflineModeCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmCancelExit_Cmd) {
-    // Отмена выхода из игры — только код команды
+    //        
     auto w = serializeCmCancelExitCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmKitbagLock_Cmd) {
-    // Запрос блокировки инвентаря
+    //   
     auto w = serializeCmKitbagLockCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmKitbagCheck_Cmd) {
-    // Запрос проверки состояния инвентаря
+    //    
     auto w = serializeCmKitbagCheckCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmKitbagTempSync_Cmd) {
-    // Синхронизация временного инвентаря
+    //   
     auto w = serializeCmKitbagTempSyncCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmReadBookStart_Cmd) {
-    // Начало чтения книги
+    //   
     auto w = serializeCmReadBookStartCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmReadBookClose_Cmd) {
-    // Закрытие книги
+    //  
     auto w = serializeCmReadBookCloseCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmBoatCancel_Cmd) {
-    // Отмена управления лодкой
+    //   
     auto w = serializeCmBoatCancelCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmBoatGetInfo_Cmd) {
-    // Запрос информации о лодке
+    //    
     auto w = serializeCmBoatGetInfoCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmVolunteerAdd_Cmd) {
-    // Добавление в список добровольцев
+    //    
     auto w = serializeCmVolunteerAddCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmVolunteerDel_Cmd) {
-    // Удаление из списка добровольцев
+    //    
     auto w = serializeCmVolunteerDelCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmStoreClose_Cmd) {
-    // Закрытие магазина
+    //  
     auto w = serializeCmStoreCloseCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmStallClose_Cmd) {
-    // Закрытие прилавка
+    //  
     auto w = serializeCmStallCloseCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmMisLog_Cmd) {
-    // Запрос лога миссий
+    //   
     auto w = serializeCmMisLogCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmDailyBuffRequest_Cmd) {
-    // Запрос ежедневного баффа
+    //   
     auto w = serializeCmDailyBuffRequestCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmRequestDropRate_Cmd) {
-    // Запрос текущего шанса дропа
+    //    
     auto w = serializeCmRequestDropRateCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 TEST(GameplayPhase1, CmRequestExpRate_Cmd) {
-    // Запрос текущего множителя опыта
+    //    
     auto w = serializeCmRequestExpRateCmd();
     ASSERT_TRUE(w.GetPacketSize() > 0);
 }
 
 // -----------------------------------------------------------------
-//  CM — клиентские команды с полями (Client -> Server)
+//  CM      (Client -> Server)
 // -----------------------------------------------------------------
 
 TEST(GameplayPhase1, CmDieReturnMessage_Roundtrip) {
-    // Выбор типа воскрешения (2 — воскрешение в городе)
+    //    (2    )
     CmDieReturnMessage original{2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2031,7 +2031,7 @@ TEST(GameplayPhase1, CmDieReturnMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmAutoKitbagLockMessage_Roundtrip) {
-    // Автоматическая блокировка инвентаря (1 = включено)
+    //    (1 = )
     CmAutoKitbagLockMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2041,7 +2041,7 @@ TEST(GameplayPhase1, CmAutoKitbagLockMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStallSearchMessage_Roundtrip) {
-    // Поиск предмета на прилавках по itemId
+    //      itemId
     CmStallSearchMessage original{55001};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2051,7 +2051,7 @@ TEST(GameplayPhase1, CmStallSearchMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmForgeItemMessage_Roundtrip) {
-    // Ковка предмета по индексу слота
+    //     
     CmForgeItemMessage original{7};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2061,7 +2061,7 @@ TEST(GameplayPhase1, CmForgeItemMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmEntityEventMessage_Roundtrip) {
-    // Взаимодействие с сущностью по её entityId
+    //      entityId
     CmEntityEventMessage original{0xFFFF00};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2071,7 +2071,7 @@ TEST(GameplayPhase1, CmEntityEventMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStallOpenMessage_Roundtrip) {
-    // Открытие прилавка персонажа
+    //   
     CmStallOpenMessage original{12345};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2081,7 +2081,7 @@ TEST(GameplayPhase1, CmStallOpenMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmMisLogInfoMessage_Roundtrip) {
-    // Запрос информации о записи в логе миссий
+    //       
     CmMisLogInfoMessage original{42};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2091,7 +2091,7 @@ TEST(GameplayPhase1, CmMisLogInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmMisLogClearMessage_Roundtrip) {
-    // Очистка записи из лога миссий
+    //     
     CmMisLogClearMessage original{99};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2101,7 +2101,7 @@ TEST(GameplayPhase1, CmMisLogClearMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStoreBuyAskMessage_Roundtrip) {
-    // Запрос на покупку товара (commodityId)
+    //     (commodityId)
     CmStoreBuyAskMessage original{777};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2111,7 +2111,7 @@ TEST(GameplayPhase1, CmStoreBuyAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStoreChangeAskMessage_Roundtrip) {
-    // Запрос на обмен в магазине (количество)
+    //      ()
     CmStoreChangeAskMessage original{5};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2121,7 +2121,7 @@ TEST(GameplayPhase1, CmStoreChangeAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStoreQueryMessage_Roundtrip) {
-    // Запрос страницы магазина
+    //   
     CmStoreQueryMessage original{10};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2131,7 +2131,7 @@ TEST(GameplayPhase1, CmStoreQueryMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmTeamFightAnswerMessage_Roundtrip) {
-    // Ответ на приглашение в командный бой (1 = принять)
+    //       (1 = )
     CmTeamFightAnswerMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2141,7 +2141,7 @@ TEST(GameplayPhase1, CmTeamFightAnswerMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmItemRepairAnswerMessage_Roundtrip) {
-    // Подтверждение ремонта предмета (1 = да)
+    //    (1 = )
     CmItemRepairAnswerMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2151,7 +2151,7 @@ TEST(GameplayPhase1, CmItemRepairAnswerMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmItemForgeAnswerMessage_Roundtrip) {
-    // Подтверждение ковки предмета (0 = отказ)
+    //    (0 = )
     CmItemForgeAnswerMessage original{0};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2161,7 +2161,7 @@ TEST(GameplayPhase1, CmItemForgeAnswerMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmItemLotteryAnswerMessage_Roundtrip) {
-    // Подтверждение лотереи предметов (1 = участвовать)
+    //    (1 = )
     CmItemLotteryAnswerMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2171,7 +2171,7 @@ TEST(GameplayPhase1, CmItemLotteryAnswerMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmVolunteerOpenMessage_Roundtrip) {
-    // Открытие списка добровольцев с указанным количеством
+    //      
     CmVolunteerOpenMessage original{25};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2181,7 +2181,7 @@ TEST(GameplayPhase1, CmVolunteerOpenMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmVolunteerListMessage_Roundtrip) {
-    // Запрос списка добровольцев: страница 3, по 20 записей
+    //   :  3,  20 
     CmVolunteerListMessage original{3, 20};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2192,7 +2192,7 @@ TEST(GameplayPhase1, CmVolunteerListMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStoreListAskMessage_Roundtrip) {
-    // Запрос списка товаров: класс 5, страница 2, по 15 записей
+    //   :  5,  2,  15 
     CmStoreListAskMessage original{5, 2, 15};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2204,7 +2204,7 @@ TEST(GameplayPhase1, CmStoreListAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmCaptainConfirmAsrMessage_Roundtrip) {
-    // Подтверждение назначения капитана: ret=1, teamId=4096
+    //   : ret=1, teamId=4096
     CmCaptainConfirmAsrMessage original{1, 4096};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2215,7 +2215,7 @@ TEST(GameplayPhase1, CmCaptainConfirmAsrMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmMapMaskMessage_Roundtrip) {
-    // Запрос маски карты по имени
+    //     
     CmMapMaskMessage original{"MapForest01"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2225,7 +2225,7 @@ TEST(GameplayPhase1, CmMapMaskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmStoreOpenAskMessage_Roundtrip) {
-    // Запрос открытия магазина с паролем
+    //     
     CmStoreOpenAskMessage original{"test_password_123"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2235,7 +2235,7 @@ TEST(GameplayPhase1, CmStoreOpenAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmVolunteerSelMessage_Roundtrip) {
-    // Выбор добровольца по имени
+    //    
     CmVolunteerSelMessage original{"Pirate"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2245,7 +2245,7 @@ TEST(GameplayPhase1, CmVolunteerSelMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, CmKitbagUnlockMessage_Roundtrip) {
-    // Разблокировка инвентаря паролем
+    //   
     CmKitbagUnlockMessage original{"s3cret_key!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2255,11 +2255,11 @@ TEST(GameplayPhase1, CmKitbagUnlockMessage_Roundtrip) {
 }
 
 // -----------------------------------------------------------------
-//  MC — серверные команды с полями (Server -> Client)
+//  MC      (Server -> Client)
 // -----------------------------------------------------------------
 
 TEST(GameplayPhase1, McFailedActionMessage_Roundtrip) {
-    // Уведомление о неудачном действии: worldId + тип действия + причина
+    //    : worldId +   + 
     McFailedActionMessage original{8001, 2, 7};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2271,7 +2271,7 @@ TEST(GameplayPhase1, McFailedActionMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McChaEndSeeMessage_Roundtrip) {
-    // Персонаж вышел из зоны видимости: тип 1, worldId 5050
+    //     :  1, worldId 5050
     McChaEndSeeMessage original{1, 5050};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2282,7 +2282,7 @@ TEST(GameplayPhase1, McChaEndSeeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McItemDestroyMessage_Roundtrip) {
-    // Предмет уничтожен (worldId предмета)
+    //   (worldId )
     McItemDestroyMessage original{3003};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2292,7 +2292,7 @@ TEST(GameplayPhase1, McItemDestroyMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McForgeResultMessage_Roundtrip) {
-    // Результат ковки: 1 = успех
+    //  : 1 = 
     McForgeResultMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2302,7 +2302,7 @@ TEST(GameplayPhase1, McForgeResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McUniteResultMessage_Roundtrip) {
-    // Результат объединения: 0 = неудача
+    //  : 0 = 
     McUniteResultMessage original{0};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2312,7 +2312,7 @@ TEST(GameplayPhase1, McUniteResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McMillingResultMessage_Roundtrip) {
-    // Результат переработки: 2 = критический успех
+    //  : 2 =  
     McMillingResultMessage original{2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2322,7 +2322,7 @@ TEST(GameplayPhase1, McMillingResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McFusionResultMessage_Roundtrip) {
-    // Результат синтеза: 1 = успех
+    //  : 1 = 
     McFusionResultMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2332,7 +2332,7 @@ TEST(GameplayPhase1, McFusionResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McUpgradeResultMessage_Roundtrip) {
-    // Результат улучшения: 3 = выдающийся успех
+    //  : 3 =  
     McUpgradeResultMessage original{3};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2342,7 +2342,7 @@ TEST(GameplayPhase1, McUpgradeResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McPurifyResultMessage_Roundtrip) {
-    // Результат очистки: -1 = провал
+    //  : -1 = 
     McPurifyResultMessage original{-1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2352,7 +2352,7 @@ TEST(GameplayPhase1, McPurifyResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McFixResultMessage_Roundtrip) {
-    // Результат починки: 1 = успешно
+    //  : 1 = 
     McFixResultMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2362,7 +2362,7 @@ TEST(GameplayPhase1, McFixResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McEidolonMetempsychosisMessage_Roundtrip) {
-    // Результат перерождения эйдолона: 100 = особый результат
+    //   : 100 =  
     McEidolonMetempsychosisMessage original{100};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2372,7 +2372,7 @@ TEST(GameplayPhase1, McEidolonMetempsychosisMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McEidolonFusionMessage_Roundtrip) {
-    // Результат слияния эйдолонов: 42
+    //   : 42
     McEidolonFusionMessage original{42};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2382,7 +2382,7 @@ TEST(GameplayPhase1, McEidolonFusionMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McMessageMessage_Roundtrip) {
-    // Текстовое сообщение от сервера
+    //    
     McMessageMessage original{"Hello World!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2392,7 +2392,7 @@ TEST(GameplayPhase1, McMessageMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McBickerNoticeMessage_Roundtrip) {
-    // Уведомление о перебранке в чате
+    //     
     McBickerNoticeMessage original{"Pirate was silenced for spam"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2402,7 +2402,7 @@ TEST(GameplayPhase1, McBickerNoticeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McColourNoticeMessage_Roundtrip) {
-    // Цветное уведомление: красный цвет (0xFF0000) + текст
+    //  :   (0xFF0000) + 
     McColourNoticeMessage original{0xFF0000, "Server restarting soon!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2413,7 +2413,7 @@ TEST(GameplayPhase1, McColourNoticeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McTriggerActionMessage_Roundtrip) {
-    // Триггер серверного действия: тип + ID + количество + счётчик
+    //   :  + ID +  + 
     McTriggerActionMessage original{3, 256, 10, 5};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2426,7 +2426,7 @@ TEST(GameplayPhase1, McTriggerActionMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McNpcStateChangeMessage_Roundtrip) {
-    // Изменение состояния NPC: npcId 1001, новое состояние 3
+    //   NPC: npcId 1001,   3
     McNpcStateChangeMessage original{1001, 3};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2437,7 +2437,7 @@ TEST(GameplayPhase1, McNpcStateChangeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McEntityStateChangeMessage_Roundtrip) {
-    // Изменение состояния сущности: entityId 7070, state 2
+    //   : entityId 7070, state 2
     McEntityStateChangeMessage original{7070, 2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2448,7 +2448,7 @@ TEST(GameplayPhase1, McEntityStateChangeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McCloseTalkMessage_Roundtrip) {
-    // Закрытие диалога с NPC
+    //    NPC
     McCloseTalkMessage original{555};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2458,7 +2458,7 @@ TEST(GameplayPhase1, McCloseTalkMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McKitbagCheckAnswerMessage_Roundtrip) {
-    // Ответ на проверку инвентаря: 1 = заблокирован
+    //    : 1 = 
     McKitbagCheckAnswerMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2468,7 +2468,7 @@ TEST(GameplayPhase1, McKitbagCheckAnswerMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McPreMoveTimeMessage_Roundtrip) {
-    // Время до начала перемещения (мс)
+    //     ()
     McPreMoveTimeMessage original{1500};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2478,7 +2478,7 @@ TEST(GameplayPhase1, McPreMoveTimeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McItemUseSuccMessage_Roundtrip) {
-    // Предмет успешно использован: worldId 9001, itemId 300
+    //   : worldId 9001, itemId 300
     McItemUseSuccMessage original{9001, 300};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2489,7 +2489,7 @@ TEST(GameplayPhase1, McItemUseSuccMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McChaPlayEffectMessage_Roundtrip) {
-    // Воспроизведение эффекта на персонаже: worldId 4040, effectId 15
+    //    : worldId 4040, effectId 15
     McChaPlayEffectMessage original{4040, 15};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2500,7 +2500,7 @@ TEST(GameplayPhase1, McChaPlayEffectMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McSynDefaultSkillMessage_Roundtrip) {
-    // Синхронизация умения по умолчанию: worldId 6060, skillId 88
+    //    : worldId 6060, skillId 88
     McSynDefaultSkillMessage original{6060, 88};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2511,7 +2511,7 @@ TEST(GameplayPhase1, McSynDefaultSkillMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McSayMessage_Roundtrip) {
-    // Сообщение в чате: sourceId 777, зелёный цвет
+    //   : sourceId 777,  
     McSayMessage original{777, "Ahoy, matey!", 0x00FF00};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2523,7 +2523,7 @@ TEST(GameplayPhase1, McSayMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McSysInfoMessage_Roundtrip) {
-    // Системное информационное сообщение
+    //   
     McSysInfoMessage original{"Server maintenance in 30 minutes"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2533,7 +2533,7 @@ TEST(GameplayPhase1, McSysInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McPopupNoticeMessage_Roundtrip) {
-    // Всплывающее уведомление
+    //  
     McPopupNoticeMessage original{"You have been rewarded 100 gold!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2543,7 +2543,7 @@ TEST(GameplayPhase1, McPopupNoticeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase1, McPingMessage_Roundtrip) {
-    // Пинг с пятью значениями для проверки задержки
+    //       
     McPingMessage original{100, 200, 300, 400, 500};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2557,15 +2557,15 @@ TEST(GameplayPhase1, McPingMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Геймплейные команды: Фаза 2 — средние
+//   :  2  
 // =================================================================
 
 // -----------------------------------------------------------------
-//  CM — Client → GameServer
+//  CM  Client  GameServer
 // -----------------------------------------------------------------
 
 TEST(GameplayPhase2, CmChangePassMessage_Roundtrip) {
-    // Смена пароля аккаунта с PIN-кодом
+    //     PIN-
     CmChangePassMessage original{"secret123", "pin456"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2576,7 +2576,7 @@ TEST(GameplayPhase2, CmChangePassMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmGuildBankOperMessage_Roundtrip) {
-    // Операция с гильд-банком: перемещение предметов между слотами
+    //   -:    
     CmGuildBankOperMessage original{1, 2, 1001, 50, 3, 2002};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2591,7 +2591,7 @@ TEST(GameplayPhase2, CmGuildBankOperMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmGuildBankGoldMessage_Roundtrip) {
-    // Вложение золота в гильд-банк: направление 1 = вклад, 50000 золота
+    //    -:  1 = , 50000 
     CmGuildBankGoldMessage original{2, 1, 50000};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2603,7 +2603,7 @@ TEST(GameplayPhase2, CmGuildBankGoldMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmUpdateHairMessage_Roundtrip) {
-    // Смена причёски через NPC-парикмахера: scriptId и 4 слота сетки
+    //    NPC-: scriptId  4  
     CmUpdateHairMessage original{3001, 10, 20, 30, 40};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2617,7 +2617,7 @@ TEST(GameplayPhase2, CmUpdateHairMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmTeamFightAskMessage_Roundtrip) {
-    // Запрос на командный бой: тип PvP, ID мира и хэндл арены
+    //    :  PvP, ID    
     CmTeamFightAskMessage original{2, 1001, 5555};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2629,7 +2629,7 @@ TEST(GameplayPhase2, CmTeamFightAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmItemRepairAskMessage_Roundtrip) {
-    // Запрос на ремонт предмета: NPC-кузнец, слот экипировки
+    //    : NPC-,  
     CmItemRepairAskMessage original{700, 7001, 1, 3};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2642,7 +2642,7 @@ TEST(GameplayPhase2, CmItemRepairAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmRequestTradeMessage_Roundtrip) {
-    // Запрос на торговлю с другим игроком
+    //      
     CmRequestTradeMessage original{1, 42};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2653,7 +2653,7 @@ TEST(GameplayPhase2, CmRequestTradeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmAcceptTradeMessage_Roundtrip) {
-    // Принятие предложения торговли
+    //   
     CmAcceptTradeMessage original{1, 99};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2664,7 +2664,7 @@ TEST(GameplayPhase2, CmAcceptTradeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmCancelTradeMessage_Roundtrip) {
-    // Отмена торговли
+    //  
     CmCancelTradeMessage original{1, 99};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2675,7 +2675,7 @@ TEST(GameplayPhase2, CmCancelTradeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmValidateTradeDataMessage_Roundtrip) {
-    // Валидация данных торговли перед подтверждением
+    //     
     CmValidateTradeDataMessage original{2, 150};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2686,7 +2686,7 @@ TEST(GameplayPhase2, CmValidateTradeDataMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmValidateTradeMessage_Roundtrip) {
-    // Финальное подтверждение торговой сделки
+    //    
     CmValidateTradeMessage original{2, 150};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2697,7 +2697,7 @@ TEST(GameplayPhase2, CmValidateTradeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmAddItemMessage_Roundtrip) {
-    // Добавление предмета в окно торговли: тип, ID персонажа, операция, индексы, количество
+    //     : , ID , , , 
     CmAddItemMessage original{1, 42, 0, 5, 3001, 10};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2712,7 +2712,7 @@ TEST(GameplayPhase2, CmAddItemMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmAddMoneyMessage_Roundtrip) {
-    // Добавление денег в торговлю: обычная валюта, 25000 золотых
+    //    :  , 25000 
     CmAddMoneyMessage original{1, 42, 0, 0, 25000};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2726,7 +2726,7 @@ TEST(GameplayPhase2, CmAddMoneyMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmTigerStartMessage_Roundtrip) {
-    // Запуск игры «Тигр» (азартная мини-игра): NPC и три выбора
+    //    ( -): NPC   
     CmTigerStartMessage original{500, 1, 2, 3};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2739,7 +2739,7 @@ TEST(GameplayPhase2, CmTigerStartMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmTigerStopMessage_Roundtrip) {
-    // Остановка мини-игры «Тигр»
+    //  - 
     CmTigerStopMessage original{500, 7};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2750,7 +2750,7 @@ TEST(GameplayPhase2, CmTigerStopMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmVolunteerAsrMessage_Roundtrip) {
-    // Ответ на запрос волонтёра: согласие, имя персонажа
+    //    : ,  
     CmVolunteerAsrMessage original{1, "VolunteerHero"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2761,7 +2761,7 @@ TEST(GameplayPhase2, CmVolunteerAsrMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmCreateBoatMessage_Roundtrip) {
-    // Создание корабля: имя, части (корпус, двигатель, пушка, оборудование)
+    //  : ,  (, , , )
     CmCreateBoatMessage original{"BlackPearl", 101, 202, 303, 404};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2775,7 +2775,7 @@ TEST(GameplayPhase2, CmCreateBoatMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmUpdateBoatMessage_Roundtrip) {
-    // Обновление компонентов корабля
+    //   
     CmUpdateBoatMessage original{111, 222, 333, 444};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2788,7 +2788,7 @@ TEST(GameplayPhase2, CmUpdateBoatMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmSelectBoatListMessage_Roundtrip) {
-    // Выбор корабля из списка в доке
+    //      
     CmSelectBoatListMessage original{600, 2, 5};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2800,7 +2800,7 @@ TEST(GameplayPhase2, CmSelectBoatListMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmBoatLaunchMessage_Roundtrip) {
-    // Спуск корабля на воду через NPC дока
+    //      NPC 
     CmBoatLaunchMessage original{600, 3};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2811,7 +2811,7 @@ TEST(GameplayPhase2, CmBoatLaunchMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmBoatBagSelMessage_Roundtrip) {
-    // Выбор трюма корабля
+    //   
     CmBoatBagSelMessage original{600, 7};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2822,7 +2822,7 @@ TEST(GameplayPhase2, CmBoatBagSelMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmReportWgMessage_Roundtrip) {
-    // Отправка репорта о нарушителе (античит)
+    //     ()
     CmReportWgMessage original{"Speedhack detected near coords 1200,3400"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2832,7 +2832,7 @@ TEST(GameplayPhase2, CmReportWgMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmSay2CampMessage_Roundtrip) {
-    // Сообщение в лагерный чат
+    //    
     CmSay2CampMessage original{"All hands on deck!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2842,7 +2842,7 @@ TEST(GameplayPhase2, CmSay2CampMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmStallBuyMessage_Roundtrip) {
-    // Покупка товара с прилавка другого игрока
+    //      
     CmStallBuyMessage original{42, 3, 5, 1001};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2855,7 +2855,7 @@ TEST(GameplayPhase2, CmStallBuyMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmSkillUpgradeMessage_Roundtrip) {
-    // Прокачка навыка: ID скилла и количество добавляемых уровней
+    //  : ID     
     CmSkillUpgradeMessage original{5001, 2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2866,7 +2866,7 @@ TEST(GameplayPhase2, CmSkillUpgradeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmRefreshDataMessage_Roundtrip) {
-    // Запрос обновления данных персонажа по worldId и handle
+    //      worldId  handle
     CmRefreshDataMessage original{1001, 8888};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2877,7 +2877,7 @@ TEST(GameplayPhase2, CmRefreshDataMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmPkCtrlMessage_Roundtrip) {
-    // Переключение PK-режима: 1 = включить, 0 = выключить
+    //  PK-: 1 = , 0 = 
     CmPkCtrlMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2887,7 +2887,7 @@ TEST(GameplayPhase2, CmPkCtrlMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmItemAmphitheaterAskMessage_Roundtrip) {
-    // Запрос на арену (амфитеатр): подтверждение и ID записи
+    //    ():   ID 
     CmItemAmphitheaterAskMessage original{1, 2001};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2960,11 +2960,11 @@ TEST(GameplayPhase2, CmPrenticeDelMessage_Roundtrip) {
 }
 
 // -----------------------------------------------------------------
-//  CM — NPC Talk (диалоги с NPC)
+//  CM  NPC Talk (  NPC)
 // -----------------------------------------------------------------
 
 TEST(GameplayPhase2, CmRequestTalkMessage_Roundtrip) {
-    // Начало диалога с NPC: ID NPC и команда
+    //    NPC: ID NPC  
     CmRequestTalkMessage original{300, 1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2975,7 +2975,7 @@ TEST(GameplayPhase2, CmRequestTalkMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmSelFunctionMessage_Roundtrip) {
-    // Выбор функции в диалоге NPC: страница и индекс
+    //     NPC:   
     CmSelFunctionMessage original{300, 2, 5};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2987,7 +2987,7 @@ TEST(GameplayPhase2, CmSelFunctionMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmSaleMessage_Roundtrip) {
-    // Продажа предмета NPC: 15 штук из слота 4
+    //   NPC: 15    4
     CmSaleMessage original{300, 4, 15};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -2999,7 +2999,7 @@ TEST(GameplayPhase2, CmSaleMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmBuyMessage_Roundtrip) {
-    // Покупка предмета у NPC: тип, два индекса и количество
+    //    NPC: ,    
     CmBuyMessage original{300, 1, 2, 7, 20};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3013,7 +3013,7 @@ TEST(GameplayPhase2, CmBuyMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmMissionPageMessage_Roundtrip) {
-    // Навигация по страницам квестов у NPC
+    //      NPC
     CmMissionPageMessage original{300, 2, 3, 100};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3026,7 +3026,7 @@ TEST(GameplayPhase2, CmMissionPageMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmSelMissionMessage_Roundtrip) {
-    // Выбор квеста из списка у NPC
+    //      NPC
     CmSelMissionMessage original{300, 2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3037,7 +3037,7 @@ TEST(GameplayPhase2, CmSelMissionMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, CmBlackMarketExchangeReqMessage_Roundtrip) {
-    // Обмен на чёрном рынке: NPC, время, ресурсы источника и цели
+    //    : NPC, ,    
     CmBlackMarketExchangeReqMessage original{400, 3, 5001, 10, 6001, 5, 2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3053,11 +3053,11 @@ TEST(GameplayPhase2, CmBlackMarketExchangeReqMessage_Roundtrip) {
 }
 
 // -----------------------------------------------------------------
-//  MC — GameServer → Client
+//  MC  GameServer  Client
 // -----------------------------------------------------------------
 
 TEST(GameplayPhase2, McSay2CampMessage_Roundtrip) {
-    // Сообщение в лагерном чате: имя отправителя и текст
+    //    :    
     McSay2CampMessage original{"CaptainHook", "Set sail for adventure!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3068,7 +3068,7 @@ TEST(GameplayPhase2, McSay2CampMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McTalkInfoMessage_Roundtrip) {
-    // Ответ NPC на запрос диалога: ID NPC, команда и текст
+    //  NPC   : ID NPC,   
     McTalkInfoMessage original{300, 1, "Welcome to my shop, sailor!"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3080,7 +3080,7 @@ TEST(GameplayPhase2, McTalkInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McTradeDataMessage_Roundtrip) {
-    // Данные товара у NPC: страница, позиция, ID предмета, количество, цена
+    //    NPC: , , ID , , 
     McTradeDataMessage original{300, 1, 5, 4001, 99, 1500};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3095,7 +3095,7 @@ TEST(GameplayPhase2, McTradeDataMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McTradeResultMessage_Roundtrip) {
-    // Результат торговой сделки: тип операции, позиция, количество, предмет, деньги
+    //   :  , , , , 
     McTradeResultMessage original{1, 3, 10, 4001, 15000};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3109,7 +3109,7 @@ TEST(GameplayPhase2, McTradeResultMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McUpdateHairResMessage_Roundtrip) {
-    // Результат смены причёски: worldId, новый скрипт и причина (если ошибка)
+    //   : worldId,     ( )
     McUpdateHairResMessage original{1001, 3001, "Success"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3121,7 +3121,7 @@ TEST(GameplayPhase2, McUpdateHairResMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McSynTLeaderIdMessage_Roundtrip) {
-    // Синхронизация ID лидера группы
+    //  ID  
     McSynTLeaderIdMessage original{1001, 42};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3132,7 +3132,7 @@ TEST(GameplayPhase2, McSynTLeaderIdMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McKitbagCapacityMessage_Roundtrip) {
-    // Обновление ёмкости инвентаря персонажа
+    //    
     McKitbagCapacityMessage original{1001, 48};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3143,7 +3143,7 @@ TEST(GameplayPhase2, McKitbagCapacityMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McItemForgeAskMessage_Roundtrip) {
-    // Запрос кузницы предметов: тип ковки и стоимость
+    //   :    
     McItemForgeAskMessage original{2, 7500};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3154,7 +3154,7 @@ TEST(GameplayPhase2, McItemForgeAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McItemForgeAnswerMessage_Roundtrip) {
-    // Результат ковки: worldId, тип и результат (успех/провал)
+    //  : worldId,    (/)
     McItemForgeAnswerMessage original{1001, 2, 1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3166,7 +3166,7 @@ TEST(GameplayPhase2, McItemForgeAnswerMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McQueryChaMessage_Roundtrip) {
-    // Информация о найденном персонаже: координаты, карта, два ID
+    //    : , ,  ID
     McQueryChaMessage original{42, "SeaDog", "ArgentCity", 1200, 3400, 43};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3181,7 +3181,7 @@ TEST(GameplayPhase2, McQueryChaMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McQueryChaPingMessage_Roundtrip) {
-    // Пинг-информация о персонаже: имя, карта, задержка
+    // -  : , , 
     McQueryChaPingMessage original{42, "SeaDog", "MagicOcean", 85};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3194,7 +3194,7 @@ TEST(GameplayPhase2, McQueryChaPingMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McQueryReliveMessage_Roundtrip) {
-    // Запрос на воскрешение: кто воскрешает и тип воскрешения
+    //   :     
     McQueryReliveMessage original{42, "Healer", 1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3206,7 +3206,7 @@ TEST(GameplayPhase2, McQueryReliveMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McGmMailMessage_Roundtrip) {
-    // GM-рассылка: заголовок, текст и время отправки
+    // GM-: ,    
     McGmMailMessage original{"Server Update", "Maintenance scheduled at 03:00 UTC", 1711500000};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3218,7 +3218,7 @@ TEST(GameplayPhase2, McGmMailMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McSynStallNameMessage_Roundtrip) {
-    // Синхронизация названия прилавка: ID персонажа + название
+    //   : ID  + 
     McSynStallNameMessage original{12345, "Captain's Rare Goods"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3229,7 +3229,7 @@ TEST(GameplayPhase2, McSynStallNameMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McMapCrashMessage_Roundtrip) {
-    // Уведомление о краше карты
+    //    
     McMapCrashMessage original{"Map instance 'DeadIsland' crashed unexpectedly"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3239,7 +3239,7 @@ TEST(GameplayPhase2, McMapCrashMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McVolunteerStateMessage_Roundtrip) {
-    // Состояние волонтёра: 1 = активен
+    //  : 1 = 
     McVolunteerStateMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3249,7 +3249,7 @@ TEST(GameplayPhase2, McVolunteerStateMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McVolunteerAskMessage_Roundtrip) {
-    // Запрос от волонтёра: имя запрашивающего
+    //   :  
     McVolunteerAskMessage original{"HelpfulPirate"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3259,7 +3259,7 @@ TEST(GameplayPhase2, McVolunteerAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McMasterAskMessage_Roundtrip) {
-    // Запрос от мастера: имя и ID персонажа мастера
+    //   :   ID  
     McMasterAskMessage original{"GrandMaster", 777};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3270,7 +3270,7 @@ TEST(GameplayPhase2, McMasterAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McPrenticeAskMessage_Roundtrip) {
-    // Запрос от ученика: имя и ID персонажа ученика
+    //   :   ID  
     McPrenticeAskMessage original{"YoungSailor", 888};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3281,7 +3281,7 @@ TEST(GameplayPhase2, McPrenticeAskMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McItemRepairAskMcMessage_Roundtrip) {
-    // Стоимость ремонта предмета: имя предмета и цена
+    //   :    
     McItemRepairAskMcMessage original{"Enchanted Cutlass", 3500};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3292,7 +3292,7 @@ TEST(GameplayPhase2, McItemRepairAskMcMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase2, McItemLotteryAsrMessage_Roundtrip) {
-    // Результат лотереи предметов: 1 = выигрыш
+    //   : 1 = 
     McItemLotteryAsrMessage original{1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3302,7 +3302,7 @@ TEST(GameplayPhase2, McItemLotteryAsrMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Геймплейные команды: Фаза 4 — простые MC/CM
+//   :  4   MC/CM
 // =================================================================
 
 TEST(GameplayPhase4, McChaEmotionMessage_Roundtrip) {
@@ -3500,11 +3500,11 @@ TEST(GameplayPhase4, McTigerItemIdMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Геймплейные команды: Фаза 3 — сложные
+//   :  3  
 // =================================================================
 
 TEST(GameplayPhase3, McSynAttributeMessage_Roundtrip) {
-    // Синхронизация атрибутов персонажа: worldId + 2 атрибута
+    //   : worldId + 2 
     McSynAttributeMessage original;
     original.worldId = 42;
     original.attr.synType = 1;
@@ -3523,7 +3523,7 @@ TEST(GameplayPhase3, McSynAttributeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McSynSkillStateMessage_Roundtrip) {
-    // Синхронизация состояний скиллов: worldId + 2 состояния
+    //   : worldId + 2 
     McSynSkillStateMessage original;
     original.worldId = 55;
     original.skillState.currentTime = 9999;
@@ -3544,7 +3544,7 @@ TEST(GameplayPhase3, McSynSkillStateMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McAStateEndSeeMessage_Roundtrip) {
-    // Конец видимости area-состояний: только координаты области (без массива)
+    //   area-:    ( )
     McAStateEndSeeMessage original{100, 200};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3555,12 +3555,12 @@ TEST(GameplayPhase3, McAStateEndSeeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McAStateBeginSeeMessage_Roundtrip) {
-    // Начало видимости area-состояний: запись с stateId=0 (без доп. полей) и stateId=5 (полная)
+    //   area-:   stateId=0 ( . )  stateId=5 ()
     McAStateBeginSeeMessage original;
     original.areaX = 300;
     original.areaY = 400;
-    AStateBeginSeeEntry e0{0, 0, 0, 0};   // stateId=0 — сериализуется без stateLv/worldId/fightId
-    AStateBeginSeeEntry e1{5, 10, 77, 88}; // stateId=5 — полная запись
+    AStateBeginSeeEntry e0{0, 0, 0, 0};   // stateId=0    stateLv/worldId/fightId
+    AStateBeginSeeEntry e1{5, 10, 77, 88}; // stateId=5   
     original.states = {e0, e1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3569,12 +3569,12 @@ TEST(GameplayPhase3, McAStateBeginSeeMessage_Roundtrip) {
     ASSERT_EQ(original.areaX, restored.areaX);
     ASSERT_EQ(original.areaY, restored.areaY);
     ASSERT_EQ(2u, restored.states.size());
-    // Запись с stateId=0: поля обнуляются при десериализации
+    //   stateId=0:    
     ASSERT_EQ(0, restored.states[0].stateId);
     ASSERT_EQ(0, restored.states[0].stateLv);
     ASSERT_EQ(0, restored.states[0].worldId);
     ASSERT_EQ(0, restored.states[0].fightId);
-    // Запись с stateId=5: полные данные
+    //   stateId=5:  
     ASSERT_EQ(5, restored.states[1].stateId);
     ASSERT_EQ(10, restored.states[1].stateLv);
     ASSERT_EQ(77, restored.states[1].worldId);
@@ -3582,7 +3582,7 @@ TEST(GameplayPhase3, McAStateBeginSeeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McDelItemChaMessage_Roundtrip) {
-    // Удаление предмета персонажа: mainChaId + worldId
+    //   : mainChaId + worldId
     McDelItemChaMessage original{1001, 2002};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3593,7 +3593,7 @@ TEST(GameplayPhase3, McDelItemChaMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McSynEventInfoMessage_Roundtrip) {
-    // Синхронизация информации о событии сущности
+    //     
     McSynEventInfoMessage original{50, 2, 100, "TreasureHunt"};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3606,7 +3606,7 @@ TEST(GameplayPhase3, McSynEventInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McSynSideInfoMessage_Roundtrip) {
-    // Синхронизация стороны (фракции) персонажа
+    //   () 
     McSynSideInfoMessage original;
     original.worldId = 77;
     original.side.sideId = 3;
@@ -3619,7 +3619,7 @@ TEST(GameplayPhase3, McSynSideInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McMissionInfoMessage_Roundtrip) {
-    // Информация о квестах: NPC + параметры списка + массив строк-функций
+    //   : NPC +   +  -
     McMissionInfoMessage original;
     original.npcId = 9001; original.listType = 1;
     original.prev = 0; original.next = 1;
@@ -3641,7 +3641,7 @@ TEST(GameplayPhase3, McMissionInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McMisPageMessage_Roundtrip_ItemKill) {
-    // Страница квеста: потребности ITEM и KILL (условная сериализация)
+    //  :  ITEM  KILL ( )
     McMisPageMessage original;
     original.cmd = 1; original.npcId = 5001; original.name = "Kill the Pirates";
     original.needs = {
@@ -3672,7 +3672,7 @@ TEST(GameplayPhase3, McMisPageMessage_Roundtrip_ItemKill) {
 }
 
 TEST(GameplayPhase3, McMisPageMessage_Roundtrip_Desp) {
-    // Страница квеста: потребность-описание (MIS_NEED_DESP = 5)
+    //  : - (MIS_NEED_DESP = 5)
     McMisPageMessage original;
     original.cmd = 2; original.npcId = 6001; original.name = "Explore the Island";
     original.needs = {
@@ -3693,7 +3693,7 @@ TEST(GameplayPhase3, McMisPageMessage_Roundtrip_Desp) {
 }
 
 TEST(GameplayPhase3, McMisLogMessage_Roundtrip) {
-    // Журнал миссий: 2 записи (id миссии + состояние)
+    //  : 2  (id  + )
     McMisLogMessage original;
     original.logs = {{10, 1}, {20, 3}};
     auto w = serialize(original);
@@ -3708,7 +3708,7 @@ TEST(GameplayPhase3, McMisLogMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McMisLogInfoMessage_Roundtrip) {
-    // Детали записи журнала квестов: формат аналогичен MisPage
+    //    :   MisPage
     McMisLogInfoMessage original;
     original.misId = 7001; original.name = "Skeleton Hunt";
     original.needs = {
@@ -3734,7 +3734,7 @@ TEST(GameplayPhase3, McMisLogInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McMisLogClearMcMessage_Roundtrip) {
-    // Очистка записи журнала миссий по ID миссии
+    //      ID 
     McMisLogClearMcMessage original{42};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3744,7 +3744,7 @@ TEST(GameplayPhase3, McMisLogClearMcMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McMisLogAddMessage_Roundtrip) {
-    // Добавление записи в журнал миссий: ID миссии + состояние
+    //     : ID  + 
     McMisLogAddMessage original{99, 1};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3755,7 +3755,7 @@ TEST(GameplayPhase3, McMisLogAddMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McMisLogStateMessage_Roundtrip) {
-    // Изменение состояния журнала миссий: ID миссии + новое состояние
+    //    : ID  +  
     McMisLogStateMessage original{3001, 7};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3766,7 +3766,7 @@ TEST(GameplayPhase3, McMisLogStateMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McFuncInfoMessage_Roundtrip) {
-    // Информация NPC-функции: 2 функции + 1 квестовый пункт
+    //  NPC-: 2  + 1  
     McFuncInfoMessage original;
     original.npcId = 500;
     original.page = 1;
@@ -3789,7 +3789,7 @@ TEST(GameplayPhase3, McFuncInfoMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McVolunteerListMessage_Roundtrip) {
-    // Список волонтёров: 2 записи с пагинацией
+    //  : 2   
     McVolunteerListMessage original;
     original.pageTotal = 5;
     original.page = 2;
@@ -3810,7 +3810,7 @@ TEST(GameplayPhase3, McVolunteerListMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McVolunteerOpenMessage_Roundtrip) {
-    // Открытие панели волонтёров: состояние + 2 записи
+    //   :  + 2 
     McVolunteerOpenMessage original;
     original.state = 1;
     original.pageTotal = 3;
@@ -3831,7 +3831,7 @@ TEST(GameplayPhase3, McVolunteerOpenMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McShowStallSearchMessage_Roundtrip) {
-    // Результаты поиска прилавков: 2 записи
+    //   : 2 
     McShowStallSearchMessage original;
     original.entries = {
         {"CaptainJack", "Jack's Stall", "Harbor", 5, 1500},
@@ -3855,7 +3855,7 @@ TEST(GameplayPhase3, McShowStallSearchMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McShowRankingMessage_Roundtrip) {
-    // Таблица рейтинга: 2 записи
+    //  : 2 
     McShowRankingMessage original;
     original.entries = {
         {"PirateKing", "SeaWolves", 80, 5, 99999},
@@ -3879,7 +3879,7 @@ TEST(GameplayPhase3, McShowRankingMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McEspeItemMessage_Roundtrip) {
-    // Специальные предметы: worldId + 3 записи
+    //  : worldId + 3 
     McEspeItemMessage original;
     original.worldId = 123;
     original.items = {
@@ -3906,7 +3906,7 @@ TEST(GameplayPhase3, McEspeItemMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McBlackMarketExchangeDataMessage_Roundtrip) {
-    // Данные обмена чёрного рынка: npcId + 2 записи обменов
+    //    : npcId + 2  
     McBlackMarketExchangeDataMessage original;
     original.npcId = 900;
     original.exchanges = {
@@ -3932,7 +3932,7 @@ TEST(GameplayPhase3, McBlackMarketExchangeDataMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McExchangeDataMessage_Roundtrip) {
-    // Данные обмена (обычный): npcId + 2 записи без timeValue
+    //   (): npcId + 2   timeValue
     McExchangeDataMessage original;
     original.npcId = 800;
     original.exchanges = {
@@ -3956,7 +3956,7 @@ TEST(GameplayPhase3, McExchangeDataMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McBlackMarketExchangeUpdateMessage_Roundtrip) {
-    // Обновление обменов чёрного рынка: npcId + 2 записи
+    //    : npcId + 2 
     McBlackMarketExchangeUpdateMessage original;
     original.npcId = 950;
     original.exchanges = {
@@ -3982,7 +3982,7 @@ TEST(GameplayPhase3, McBlackMarketExchangeUpdateMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McBlackMarketExchangeAsrMessage_Roundtrip) {
-    // Результат обмена на чёрном рынке: все 5 полей
+    //     :  5 
     McBlackMarketExchangeAsrMessage original{1, 7001, 4, 8001, 2};
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -3996,11 +3996,11 @@ TEST(GameplayPhase3, McBlackMarketExchangeAsrMessage_Roundtrip) {
 }
 
 // =================================================================
-//  Торговля, магазин, лавки, пати — сложные команды
+//  , , ,    
 // =================================================================
 
 TEST(TradeStoreStall, McTradeAllDataMessage_TradeGoods_Roundtrip) {
-    // Полные данные торговли NPC: tradeType=1 (TRADE_GOODS) — с count/price/level
+    //    NPC: tradeType=1 (TRADE_GOODS)   count/price/level
     McTradeAllDataMessage original;
     original.npcId = 5001; original.tradeType = 1; original.param = 42;
     TradePage page1; page1.itemType = 10;
@@ -4018,7 +4018,7 @@ TEST(TradeStoreStall, McTradeAllDataMessage_TradeGoods_Roundtrip) {
     ASSERT_EQ(1, restored.tradeType);
     ASSERT_EQ(42, restored.param);
     ASSERT_EQ(2u, restored.pages.size());
-    // Первая страница
+    //  
     ASSERT_EQ(10, restored.pages[0].itemType);
     ASSERT_EQ(2u, restored.pages[0].items.size());
     ASSERT_EQ(100, restored.pages[0].items[0].itemId);
@@ -4029,7 +4029,7 @@ TEST(TradeStoreStall, McTradeAllDataMessage_TradeGoods_Roundtrip) {
     ASSERT_EQ(10, restored.pages[0].items[1].count);
     ASSERT_EQ(350, restored.pages[0].items[1].price);
     ASSERT_EQ(5, restored.pages[0].items[1].level);
-    // Вторая страница
+    //  
     ASSERT_EQ(20, restored.pages[1].itemType);
     ASSERT_EQ(1u, restored.pages[1].items.size());
     ASSERT_EQ(200, restored.pages[1].items[0].itemId);
@@ -4037,7 +4037,7 @@ TEST(TradeStoreStall, McTradeAllDataMessage_TradeGoods_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McTradeAllDataMessage_NonGoods_Roundtrip) {
-    // Полные данные торговли NPC: tradeType=0 — без count/price/level
+    //    NPC: tradeType=0   count/price/level
     McTradeAllDataMessage original;
     original.npcId = 6001; original.tradeType = 0; original.param = 7;
     TradePage page; page.itemType = 30;
@@ -4059,7 +4059,7 @@ TEST(TradeStoreStall, McTradeAllDataMessage_NonGoods_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreOpenAnswerMessage_Valid_Roundtrip) {
-    // Ответ на открытие магазина: valid=true с объявлениями и категориями
+    //    : valid=true    
     McStoreOpenAnswerMessage original;
     original.isValid = true; original.vip = 1; original.moBean = 500; original.replMoney = 100;
     original.affiches = { {1, "Summer Sale", "SALE01"}, {2, "New Arrivals", "NEW02"} };
@@ -4089,7 +4089,7 @@ TEST(TradeStoreStall, McStoreOpenAnswerMessage_Valid_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreOpenAnswerMessage_Invalid_Roundtrip) {
-    // Ответ на открытие магазина: valid=false — пустые данные
+    //    : valid=false   
     McStoreOpenAnswerMessage original;
     original.isValid = false;
 
@@ -4104,18 +4104,18 @@ TEST(TradeStoreStall, McStoreOpenAnswerMessage_Invalid_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreListAnswerMessage_Roundtrip) {
-    // Список товаров магазина: 1 товар с 2 вариантами, каждый с 5 атрибутами
+    //   : 1   2 ,   5 
     McStoreListAnswerMessage original;
     original.pageTotal = 3; original.pageCurrent = 1;
     StoreProductEntry product;
     product.comId = 1001; product.comName = "Dark Sword"; product.price = 5000;
     product.remark = "Legendary weapon"; product.isHot = true;
     product.time = 86400; product.quantity = 50; product.expire = 0;
-    // Вариант 1 с атрибутами
+    //  1  
     StoreVariantEntry v1; v1.itemId = 2001; v1.itemNum = 1; v1.flute = 0;
     v1.attrs[0] = {1, 100}; v1.attrs[1] = {2, 50};
     v1.attrs[2] = {3, 25}; v1.attrs[3] = {0, 0}; v1.attrs[4] = {0, 0};
-    // Вариант 2 с атрибутами
+    //  2  
     StoreVariantEntry v2; v2.itemId = 2002; v2.itemNum = 3; v2.flute = 1;
     v2.attrs[0] = {4, 200}; v2.attrs[1] = {5, 75};
     v2.attrs[2] = {0, 0}; v2.attrs[3] = {0, 0}; v2.attrs[4] = {0, 0};
@@ -4140,7 +4140,7 @@ TEST(TradeStoreStall, McStoreListAnswerMessage_Roundtrip) {
     ASSERT_EQ(50, p.quantity);
     ASSERT_EQ(0, p.expire);
     ASSERT_EQ(2u, p.variants.size());
-    // Атрибуты теперь внутри каждого варианта
+    //     
     ASSERT_EQ(2001, p.variants[0].itemId);
     ASSERT_EQ(1, p.variants[0].itemNum);
     ASSERT_EQ(0, p.variants[0].flute);
@@ -4156,7 +4156,7 @@ TEST(TradeStoreStall, McStoreListAnswerMessage_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreHistoryMessage_Roundtrip) {
-    // История покупок магазина: 2 записи
+    //   : 2 
     McStoreHistoryMessage original;
     original.records = {
         {"2026-03-27 10:00", 3001, "HP Potion", 100},
@@ -4180,7 +4180,7 @@ TEST(TradeStoreStall, McStoreHistoryMessage_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreVipMessage_Success_Roundtrip) {
-    // VIP-данные магазина: success=1
+    // VIP- : success=1
     McStoreVipMessage original;
     original.success = 1; original.vipId = 5; original.months = 3;
     original.shuijing = 1000; original.modou = 500;
@@ -4198,7 +4198,7 @@ TEST(TradeStoreStall, McStoreVipMessage_Success_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McStoreVipMessage_Failure_Roundtrip) {
-    // VIP-данные магазина: success=0 — пустые данные
+    // VIP- : success=0   
     McStoreVipMessage original;
     original.success = 0;
 
@@ -4212,7 +4212,7 @@ TEST(TradeStoreStall, McStoreVipMessage_Failure_Roundtrip) {
 }
 
 TEST(TradeStoreStall, McSynTeamMessage_Character_Roundtrip) {
-    // Синхронизация члена пати: HP/SP/Level + ChaLookInfo (персонаж, не лодка)
+    //   : HP/SP/Level + ChaLookInfo (,  )
     McSynTeamMessage original;
     original.memberId = 7001; original.hp = 500; original.maxHP = 1000;
     original.sp = 200; original.maxSP = 400; original.level = 45;
@@ -4242,11 +4242,11 @@ TEST(TradeStoreStall, McSynTeamMessage_Character_Roundtrip) {
 }
 
 // =================================================================
-//  Новые сложные команды: McItemCreate, McSynSkillBag
+//    : McItemCreate, McSynSkillBag
 // =================================================================
 
 TEST(GameplayPhase3, McItemCreateMessage_Roundtrip) {
-    // Предмет на земле: 9 полей + ChaEventInfo
+    //   : 9  + ChaEventInfo
     McItemCreateMessage original;
     original.worldId = 1001; original.handle = 2002; original.itemId = 3003;
     original.posX = 500; original.posY = 600; original.angle = 45;
@@ -4272,7 +4272,7 @@ TEST(GameplayPhase3, McItemCreateMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3, McSynSkillBagMessage_Roundtrip_WithRange) {
-    // Сумка скиллов: 2 скилла, один с range (условная сериализация)
+    //  : 2 ,   range ( )
     McSynSkillBagMessage original;
     original.worldId = 9001;
     original.skillBag.defSkillId = 100;
@@ -4292,21 +4292,21 @@ TEST(GameplayPhase3, McSynSkillBagMessage_Roundtrip_WithRange) {
     ASSERT_EQ(original.skillBag.defSkillId, restored.skillBag.defSkillId);
     ASSERT_EQ(original.skillBag.synType, restored.skillBag.synType);
     ASSERT_EQ(2u, restored.skillBag.skills.size());
-    // Первый скилл: range[0] != 0 → range полностью
+    //  : range[0] != 0  range 
     ASSERT_EQ(10, restored.skillBag.skills[0].id);
     ASSERT_EQ(5, restored.skillBag.skills[0].level);
     ASSERT_EQ(1, restored.skillBag.skills[0].range[0]);
     ASSERT_EQ(50, restored.skillBag.skills[0].range[1]);
     ASSERT_EQ(100, restored.skillBag.skills[0].range[2]);
     ASSERT_EQ(150, restored.skillBag.skills[0].range[3]);
-    // Второй скилл: range[0] == 0 → range[1..3] = 0
+    //  : range[0] == 0  range[1..3] = 0
     ASSERT_EQ(20, restored.skillBag.skills[1].id);
     ASSERT_EQ(0, restored.skillBag.skills[1].range[0]);
     ASSERT_EQ(0, restored.skillBag.skills[1].range[1]);
 }
 
 TEST(GameplayPhase3, McSynSkillBagMessage_Roundtrip_Empty) {
-    // Пустая сумка скиллов
+    //   
     McSynSkillBagMessage original;
     original.worldId = 9002;
     original.skillBag.defSkillId = 0;
@@ -4320,10 +4320,10 @@ TEST(GameplayPhase3, McSynSkillBagMessage_Roundtrip_Empty) {
     ASSERT_EQ(0u, restored.skillBag.skills.size());
 }
 
-// ─── McChaBeginSee / McAddItemCha ──────────────────────────────
+//  McChaBeginSee / McAddItemCha 
 
 TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_Roundtrip) {
-    // Базовый roundtrip без позы (poseType == 0)
+    //  roundtrip   (poseType == 0)
     McChaBeginSeeMessage original;
     original.seeType = 1;
     original.base.chaId = 42;
@@ -4333,16 +4333,16 @@ TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_Roundtrip) {
     original.base.posX = 500;
     original.base.posY = 600;
     original.base.isPlayer = 1;
-    // look: не-корабль, все equip id == 0
+    // look: -,  equip id == 0
     original.base.look.synType = 0;
     original.base.look.typeId = 1;
     original.base.look.isBoat = false;
     original.base.look.hairId = 5;
-    // equips уже инициализированы нулями
+    // equips   
     original.npcType = 0;
     original.npcState = 0;
-    original.poseType = 0; // без позы
-    // attr/skillState пустые по умолчанию
+    original.poseType = 0; //  
+    // attr/skillState   
 
     auto w = serialize(original);
     RPacket r(w.Data(), w.GetPacketSize());
@@ -4358,12 +4358,12 @@ TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_Roundtrip) {
 }
 
 TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_WithLean_Roundtrip) {
-    // Roundtrip с наклоном (poseType == 1)
+    // Roundtrip   (poseType == 1)
     McChaBeginSeeMessage original;
     original.seeType = 1;
     original.base.name = "LeanPirate";
     original.base.look.typeId = 1;
-    original.poseType = 1; // наклон
+    original.poseType = 1; // 
     original.pose = LeanInfo{1, 2, 90, 100, 200, 50};
 
     auto w = serialize(original);
@@ -4378,7 +4378,7 @@ TEST(GameplayPhase3Advanced, McChaBeginSeeMessage_WithLean_Roundtrip) {
 }
 
 TEST(GameplayPhase3Advanced, McAddItemChaMessage_Roundtrip) {
-    // Roundtrip предметного персонажа с атрибутами и инвентарём
+    // Roundtrip      
     McAddItemChaMessage original;
     original.mainChaId = 42;
     original.base.name = "ItemCha";
@@ -4387,7 +4387,7 @@ TEST(GameplayPhase3Advanced, McAddItemChaMessage_Roundtrip) {
     original.attr.attrs = {{1, 100}, {2, 200}};
     original.kitbag.synType = 0;
     original.kitbag.capacity = 24;
-    // предметов нет, только sentinel
+    //  ,  sentinel
     original.skillState.currentTime = 12345;
 
     auto w = serialize(original);
@@ -4403,7 +4403,7 @@ TEST(GameplayPhase3Advanced, McAddItemChaMessage_Roundtrip) {
 }
 
 // =================================================================
-//  McCharacterAction (CMD_MC_NOTIACTION) — roundtrip тесты
+//  McCharacterAction (CMD_MC_NOTIACTION)  roundtrip 
 // =================================================================
 
 TEST(McCharacterAction, Move_Roundtrip) {
@@ -4412,9 +4412,9 @@ TEST(McCharacterAction, Move_Roundtrip) {
     original.packetId = 42;
     original.actionType = ActionType::MOVE;
     ActionMoveData moveData;
-    moveData.moveState = 0x01; // не enumMSTATE_ON → пишем stopState
+    moveData.moveState = 0x01; //  enumMSTATE_ON   stopState
     moveData.stopState = 0x02;
-    // 3 waypoint'а по 8 байт = 24 байта
+    // 3 waypoint'  8  = 24 
     moveData.waypoints.resize(24);
     for (int i = 0; i < 24; ++i) moveData.waypoints[i] = static_cast<uint8_t>(i + 1);
     original.data = moveData;
@@ -4713,9 +4713,9 @@ TEST(McCharacterAction, ChangeCha_Roundtrip) {
     ASSERT_EQ(777, std::get<ActionChangeChaData>(restored.data).mainChaId);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Гильдейские команды (CM/MC)
-// ═══════════════════════════════════════════════════════════════
+// 
+//    (CM/MC)
+// 
 
 TEST(CommandMessages, CmGuildPutNameMessage_Roundtrip) {
     CmGuildPutNameMessage original{1, "Pirates", "secret"};

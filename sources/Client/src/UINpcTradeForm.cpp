@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uinpctradeform.h"
 #include "uiequipform.h"
 #include "uigoodsgrid.h"
@@ -23,24 +23,24 @@ bool CNpcTradeMgr::Init()
 	_dwNpcID = 0;
 	_IsShow = false;
 
-	// NPC���ױ��� 
-	frmNPCtrade = _FindForm("frmNPCtrade");   // ���߱���
+	// NPC 
+	frmNPCtrade = _FindForm("frmNPCtrade");   // 
 	if ( !frmNPCtrade ) return false;
 
 	CPage* pgeNPCtrade = (CPage*)frmNPCtrade->Find( "pgeNPCtrade" );
 	if ( !pgeNPCtrade) return Error( g_oLangRec.GetString(45), frmNPCtrade->GetName(), "pgeNPCtrade" );
 		
-	// ���׵�������
+	// 
 	grdNPCtradeWeapon = dynamic_cast<CGoodsGrid*>(frmNPCtrade->Find("grdNPCtradeWeapon"));
 	if( !grdNPCtradeWeapon ) return Error(g_oLangRec.GetString(45), frmNPCtrade->GetName(), "grdNPCtradeWeapon");
     grdNPCtradeWeapon->evtBeforeAccept = _evtDragToGoodsEvent;
 
-	// ���׵�װ����
+	// 
 	grdNPCtradeEquip = dynamic_cast<CGoodsGrid*>(frmNPCtrade->Find("grdNPCtradeEquip"));
 	if( !grdNPCtradeEquip )	return Error(g_oLangRec.GetString(45), frmNPCtrade->GetName(), "grdNPCtradeEquip");
     grdNPCtradeEquip->evtBeforeAccept = _evtDragToGoodsEvent;
 
-	// ���׵�ҩƷ��
+	// 
 	grdNPCtradeOther = dynamic_cast<CGoodsGrid*>(frmNPCtrade->Find("grdNPCtradeOther"));
 	if( !grdNPCtradeOther )	return Error(g_oLangRec.GetString(45), frmNPCtrade->GetName(), "grdNPCtradeOther");
     grdNPCtradeOther->evtBeforeAccept = _evtDragToGoodsEvent;
@@ -55,7 +55,7 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 {	
 	_dwNpcID = dwNpcID;
 
-	if ( frmNPCtrade )   //�򿪽���ǰ��ɾ�����еĵ��ߣ����ߺ�����
+	if ( frmNPCtrade )   //
 	{
 		grdNPCtradeWeapon->Clear();
 		grdNPCtradeEquip->Clear();
@@ -79,7 +79,7 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 		if( !grdNPCtradeWeapon->SetItem( j, pObj ) )
 		{			
 			//delete pObj;
-			SAFE_DELETE(pObj); // UI��������
+			SAFE_DELETE(pObj); // UI
 			ToLogService("errors", LogLevel::Error, "msgShowTradePage grdNPCtradeWeapon out of range");
 		}
 	}
@@ -99,7 +99,7 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 		if( !grdNPCtradeEquip->SetItem( j, pObj ) )
 		{				
 			//delete pObj;
-			SAFE_DELETE(pObj); // UI��������
+			SAFE_DELETE(pObj); // UI
 			ToLogService("errors", LogLevel::Error, "msgShowTradePage grdNPCtradeEquip out of range");
 		}
 	}
@@ -119,7 +119,7 @@ void CNpcTradeMgr::ShowTradePage(  const NET_TRADEINFO& TradeInfo , BYTE byCmd, 
 		if( !grdNPCtradeOther->SetItem( j, pObj ) )
 		{				
 			//delete pObj;
-			SAFE_DELETE(pObj); // UI��������
+			SAFE_DELETE(pObj); // UI
 			ToLogService("errors", LogLevel::Error, "msgShowTradePage grdNPCtradeEquip out of range");
 		}
 	}
@@ -177,9 +177,9 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 	data.expiration = 0;
 	data.bItemTradable = true;
 
-    if( pInfo->sType>=1 && pInfo->sType<=10 )          // ����
+    if( pInfo->sType>=1 && pInfo->sType<=10 )          // 
 	{
-		// �;ö�
+		// 
 		data.sEndure[0] = pInfo->sEndure[0];
 		data.sEndure[1] = pInfo->sEndure[0];
 
@@ -195,7 +195,7 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 
 		switch( pInfo->sType )
 		{
-		case 1:	// ���ֽ�
+		case 1:	// 
 			i++;
 			data.sInstAttr[i][0] = ITEMATTR_COE_ASPD;
 			data.sInstAttr[i][1] = pInfo->sASpdCoef;
@@ -204,7 +204,7 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 			data.sInstAttr[i][0] = ITEMATTR_VAL_HIT;
 			data.sInstAttr[i][1] = pInfo->sHitValu[0];
 			break;
-		case 2:	// �޽�
+		case 2:	// 
 			i++;
 			data.sInstAttr[i][0] = ITEMATTR_VAL_DEF;
 			data.sInstAttr[i][1] = pInfo->sDefValu[0];
@@ -214,8 +214,8 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 			data.sInstAttr[i][0] = ITEMATTR_VAL_MXHP;
 			data.sInstAttr[i][1] = pInfo->sMxHpValu[0];
 			break;
-		case 3:	// ��
-		case 4:	// ��ǹ
+		case 3:	// 
+		case 4:	// 
 			i++;
 			data.sInstAttr[i][0] = ITEMATTR_COE_ASPD;
 			data.sInstAttr[i][1] = pInfo->sASpdCoef;
@@ -224,7 +224,7 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 			data.sInstAttr[i][0] = ITEMATTR_VAL_HIT;
 			data.sInstAttr[i][1] = pInfo->sHitValu[0];
 			break;
-		case 7: // ذ��
+		case 7: // 
 			i++;
 			data.sInstAttr[i][0] = ITEMATTR_COE_MXSP;
 			data.sInstAttr[i][1] = pInfo->sMxSpCoef;
@@ -237,7 +237,7 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 			data.sInstAttr[i][0] = ITEMATTR_COE_MSPD;
 			data.sInstAttr[i][1] = pInfo->sMSpdCoef;
 			break;
-		case 9: // ����
+		case 9: // 
 			i++;
 			data.sInstAttr[i][0] = ITEMATTR_VAL_STA;
 			data.sInstAttr[i][1] = pInfo->sStaValu[0];
@@ -256,23 +256,23 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
     }
     else if( pInfo->sType==22 || pInfo->sType==11 || pInfo->sType==27 ) 
     {
-		// ������
+		// 
 		int i = 0;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_DEF;
 		data.sInstAttr[i][1] = pInfo->sDefValu[0];
 
-		// �;ö�
+		// 
 		data.sEndure[0] = pInfo->sEndure[0];
 		data.sEndure[1] = pInfo->sEndure[0];
 
-		// �����ֿ�
+		// 
 		i++;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_PDEF;
 		data.sInstAttr[i][1] = pInfo->sPDef[0];
 
 		pItem->SetData( data );
 	}
-	else if( pInfo->sType==25 )	// ����
+	else if( pInfo->sType==25 )	// 
 	{
 		int i = 0;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_MXHP;
@@ -296,7 +296,7 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 
 		pItem->SetData( data );
 	}
-	else if( pInfo->sType==26 )	// ��ָ
+	else if( pInfo->sType==26 )	// 
 	{
 		int i = 0;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_MXATK;
@@ -320,56 +320,56 @@ void CNpcTradeMgr::_NpcItemRefresh( CItemCommand* pItem )
 
 		pItem->SetData( data );
 	}
-    else if( pInfo->sType==23 )	//����
+    else if( pInfo->sType==23 )	//
     {
-		// ������
+		// 
 		int i = 0;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_DEF;
 		data.sInstAttr[i][1] = pInfo->sDefValu[0];
 
-		// �;ö�
+		// 
 		data.sEndure[0] = pInfo->sEndure[0];
 		data.sEndure[1] = pInfo->sEndure[0];
 
-		// ������
+		// 
 		i++;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_HIT;
 		data.sInstAttr[i][1] = pInfo->sHitValu[0];
 
 		pItem->SetData( data );
 	}
-    else if( pInfo->sType==24 )	// Ь��
+    else if( pInfo->sType==24 )	// 
     {
-		// ������
+		// 
 		int i = 0;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_DEF;
 		data.sInstAttr[i][1] = pInfo->sDefValu[0];
 
-		// �;ö�
+		// 
 		data.sEndure[0] = pInfo->sEndure[0];
 		data.sEndure[1] = pInfo->sEndure[0];
 
-		// ������
+		// 
 		i++;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_FLEE;
 		data.sInstAttr[i][1] = pInfo->sFleeValu[0];
 
 		pItem->SetData( data );
 	}
-    else if( pInfo->sType==20 )	// ñ��
+    else if( pInfo->sType==20 )	// 
     {
-		// ������
+		// 
 		int i = 0;
 		data.sInstAttr[i][0] = ITEMATTR_VAL_DEF;
 		data.sInstAttr[i][1] = pInfo->sDefValu[0];
 
-		// �;ö�
+		// 
 		data.sEndure[0] = pInfo->sEndure[0];
 		data.sEndure[1] = pInfo->sEndure[0];
 
 		pItem->SetData( data );
 	}
-	else if( pInfo->sType==29 ) // ����
+	else if( pInfo->sType==29 ) // 
 	{
 		data.sEnergy[0] = pInfo->sEnergy[0];
 		data.sEnergy[1] = pInfo->sEnergy[1];

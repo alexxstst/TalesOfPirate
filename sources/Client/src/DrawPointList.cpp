@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "DrawPointList.h"
 #include "EffectObj.h"
 #include "GameApp.h"

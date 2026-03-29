@@ -1,4 +1,4 @@
-// hmqv.h - written and placed in the public domain by Uri Blumenthal
+﻿// hmqv.h - written and placed in the public domain by Uri Blumenthal
 //          Shamelessly based upon Wei Dai's MQV source files
 
 #ifndef CRYPTOPP_HMQV_H

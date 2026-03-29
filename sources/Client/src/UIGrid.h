@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:·­Ò³±í¸ñ
-// ×÷Õß:lh 2004-07-29
-// ÓÃÍ¾:ÄÚ²¿ÏÔÊ¾Í¼ÔªÎªCGraph,°´·­Ò³Êý×Ö¿É·­Ò³,¿É¸Ä±ä±í¸ñ´óÐ¡
-// ×îºóÐÞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-29
+// :CGraph,,
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uicompent.h"
@@ -59,7 +59,7 @@ public:
     int             GetSelectIndex(){ return _nSelectIndex; }
 
 public:
-	GuiEvent		evtSelectChange;				// Ñ¡Ôñ·¢ÉúÁË±ä»¯
+	GuiEvent		evtSelectChange;				// 
 
 protected:
 	void			_SetSelf();
@@ -93,30 +93,30 @@ protected:
 
 protected:
 	CGuiPic*		_pImage;
-	CImage*			_pSelectImage;		// ÓÃÓÚ»­Ñ¡Ôñ¿ò
+	CImage*			_pSelectImage;		// 
 
 	CDragTitle*		_pSizeImg;
 
-	CTextButton*	_pNextPage;			// ·­µ½ÏÂÒ»Ò³
-	CTextButton*	_pPriorPage;		// ·­µ½ÉÏÒ»Ò³	
+	CTextButton*	_pNextPage;			// 
+	CTextButton*	_pPriorPage;		// 	
 
-	char			_strPage[10];		// ÓÃÓÚÏÔÊ¾µ±Ç°¶àÉÙÒ³£¬×Ü¹²¶àÉÙÒ³
+	char			_strPage[10];		// 
 	int				_nStrX, _nStrY;
 	int				_nStrWidth;
 
-	int				_nUnitHeight, _nUnitWidth;  // µ¥Ôª¿í¸ß
-    int             _nSpaceX, _nSpaceY; // ÐÐ¼ä¾à
+	int				_nUnitHeight, _nUnitWidth;  // 
+    int             _nSpaceX, _nSpaceY; // 
 
 	typedef std::vector<CGraph*>		memory;
 	memory		_memory;
 	int			_nSize;			
-	int			_nFirst, _nLast;		// ÔÚÏÔÊ¾ÇøµÄµÚÒ»¸öIDºÍ×îºóÒ»¸öID
-	int			_nPage, _nMaxPage;		// µ±Ç°Ò³Êý£¬×î´óÒ³Êý
-	int			_nColNum;				// Ò»ÐÐ¿ÉÒÔÏÔÊ¾¶àÉÙÁÐ
-	int			_nRowNum;				// Ò»Ò³¿ÉÒÔÏÔÊ¾¶àÉÙÐÐ
-	int			_nPageNum;				// Ò»Ò³¿ÉÒÔÏÔÊ¾¶àÉÙ¸ö
+	int			_nFirst, _nLast;		// IDID
+	int			_nPage, _nMaxPage;		// 
+	int			_nColNum;				// 
+	int			_nRowNum;				// 
+	int			_nPageNum;				// 
 
-	int			_nMargin;				// ÓëÖÜÎ§±ß¿òµÄ¾àÀë
+	int			_nMargin;				// 
 	int			_nStartX, _nStartY;
 
 private:
@@ -130,7 +130,7 @@ private:
 	
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void CGrid::SetUnitSize(int w, int h) 
 { 
 	if( w>0 ) _nUnitWidth=w; 

@@ -1,12 +1,12 @@
-#include "Packet.h"
+﻿#include "Packet.h"
 #include "MsgpackUtil.h"
 #include <algorithm>
 
 namespace net {
 
-// ═══════════════════════════════════════════════════════════════
-//  RPacket — реализация (msgpack payload)
-// ═══════════════════════════════════════════════════════════════
+// 
+//  RPacket   (msgpack payload)
+// 
 
 RPacket::RPacket()
     : _data(nullptr), _dataLen(0), _pos(0), _ownsBuffer(false),
@@ -75,7 +75,7 @@ RPacket::~RPacket() {
     }
 }
 
-// ── Вспомогательные ────────────────────────────────────────
+//   
 
 int RPacket::packetSize() const {
     if (!_data || _dataLen < 2) return 0;
@@ -96,7 +96,7 @@ void RPacket::UpdateReverseIndex() {
             reinterpret_cast<const char*>(_data + 8), PayloadLength()));
 }
 
-// ── Заголовок ──────────────────────────────────────────────
+//   
 
 uint32_t RPacket::GetSess() const {
     if (!_data || _dataLen < 6) return 0;
@@ -116,7 +116,7 @@ int RPacket::PayloadLength() const {
     return packetSize() - 8;
 }
 
-// ── Состояние чтения ───────────────────────────────────────
+//    
 
 int RPacket::RemainingBytes() const {
     if (!_data) return 0;
@@ -127,7 +127,7 @@ bool RPacket::HasData() const {
     return _data != nullptr && _reader.data < _reader.end;
 }
 
-// ── Последовательное чтение payload ────────────────────────
+//    payload 
 
 int64_t RPacket::ReadInt64() {
     mpack_tag_t tag = mpack_read_tag(&_reader);
@@ -225,7 +225,7 @@ std::string RPacket::ReadString() {
         auto length = mpack_tag_str_length(&tag);
         auto data = mpack_read_bytes_inplace(&_reader, length);
         mpack_done_str(&_reader);
-        // length включает null-terminator — убираем его
+        // length  null-terminator   
         auto strLen = length > 0 ? length - 1 : 0;
         return std::string(data, strLen);
     }
@@ -245,7 +245,7 @@ std::string RPacket::ReadString() {
     }
 }
 
-// ── Обратное чтение ────────────────────────────────────────
+//    
 
 int64_t RPacket::ReverseReadInt64() {
     if (_reverseCurrentIndex == -1) {
@@ -287,7 +287,7 @@ int64_t RPacket::ReverseReadInt64() {
 }
 
 
-// ── Мутации ────────────────────────────────────────────────
+//   
 
 bool RPacket::DiscardLast(int count) {
     int payloadLen = PayloadLength();
@@ -300,7 +300,7 @@ bool RPacket::DiscardLast(int count) {
     if (newSize >= 8) {
         writeUInt16(_data, static_cast<uint16_t>(newSize));
         _reverseCurrentIndex = -1; // invalidate
-        // Обновить end указатель reader для корректного HasData()
+        //  end  reader   HasData()
         _reader.end = reinterpret_cast<const char*>(_data + 8 + newLen);
         return true;
     }
@@ -317,7 +317,7 @@ void RPacket::DiscardLastByReverseIndex() {
         uint32_t newLen = mpack_discard_last(
             reinterpret_cast<char*>(_data + 8), PayloadLength(), toDiscard);
         writeUInt16(_data, static_cast<uint16_t>(8 + newLen));
-        // Обновить end указатель reader для корректного HasData()
+        //  end  reader   HasData()
         _reader.end = reinterpret_cast<const char*>(_data + 8 + newLen);
     }
 
@@ -325,7 +325,7 @@ void RPacket::DiscardLastByReverseIndex() {
 }
 
 void RPacket::Skip(int count) {
-    // Пропустить count msgpack-элементов
+    //  count msgpack-
     for (int i = 0; i < count; ++i) {
         mpack_tag_t tag = mpack_read_tag(&_reader);
         if (mpack_reader_error(&_reader) != mpack_ok) {

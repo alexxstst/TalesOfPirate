@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "STStateObj.h"
 
 namespace GUI

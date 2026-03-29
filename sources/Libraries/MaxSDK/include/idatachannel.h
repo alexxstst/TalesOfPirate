@@ -1,4 +1,4 @@
- /**********************************************************************
+ï»¿ /**********************************************************************
  
 	FILE: IDataChannel.h
 
@@ -28,7 +28,7 @@
 // forward declaration
 class FPInterface;
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // A data channel is a homogeneous collection of objects of a user defined 
 // type (data objects). Data channels are uniquely identified by a Class_ID.
 //
@@ -52,7 +52,7 @@ class IDataChannel : public InterfaceServer
 #define DATACHANNEL_INTERFACE Interface_ID(0x38a718a8, 0x14685b4b)
 #define GetDataChannelInterface(obj) ((IDataChannel*)obj->GetInterface(DATACHANNEL_INTERFACE)) 
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // Face-data channel interface
 // 
 // This is an abstraction of a collection of data objects that is 
@@ -149,7 +149,7 @@ class IFaceDataChannel : public IDataChannel
 #define FACEDATACHANNEL_INTERFACE Interface_ID(0x181358d5, 0x3cab1bc9)
 #define GetFaceDataChannelInterface(obj) ((IFaceDataChannel*)obj->GetInterface(FACEDATACHANNEL_INTERFACE)) 
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // Interface class that allows to execute a callback method (Proc) for all 
 // face-data channels of an object.
 //

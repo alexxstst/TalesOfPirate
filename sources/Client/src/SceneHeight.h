@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 
 #include "Scene.h"
 
-// ÓÃÓÚÔÚ½ÇÉ«»òµÀ¾ßÀàµÄFrameMoveÀï¸üĞÂ¸ß¶È
+// FrameMove
 class CSceneHeight
 {
 public:

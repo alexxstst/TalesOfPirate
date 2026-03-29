@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: MapRes.cpp
 // Creater: ZhangXuedong
 // Date: 2005.09.05
@@ -72,24 +72,24 @@ bool CMapRes::Init()
 
 	if( !g_MapID.GetID( m_strMapName.c_str(), m_byMapID ) )
 	{
-		//LG("initmap", "���õ�ͼ��%s����ID��Ϣ����!", m_strMapName.c_str() );
-		ToLogService("common", "configure map({})��ID info error", m_strMapName.c_str() );
+		//LG("initmap", "%sID!", m_strMapName.c_str() );
+		ToLogService("common", "configure map({})ID info error", m_strMapName.c_str() );
 		char szData[128];
 		sprintf( szData, RES_STRING(GM_MAPRES_CPP_00001), m_strMapName.c_str() );
-		//MessageBox( NULL, szData, "����", IDOK );
+		//MessageBox( NULL, szData, "", IDOK );
 		MessageBox( NULL, szData, RES_STRING(GM_MAPRES_CPP_00002), IDOK );
 		return false;
 	}
 	else
 	{
-		//LG("initmap", "���õ�ͼ��%s����ID = %d!", m_strMapName.c_str(), m_byMapID );
-		ToLogService("common", "set makp ({})��ID = {}!", m_strMapName.c_str(), m_byMapID );
+		//LG("initmap", "%sID = %d!", m_strMapName.c_str(), m_byMapID );
+		ToLogService("common", "set makp ({})ID = {}!", m_strMapName.c_str(), m_byMapID );
 	}
 	g_MapID.SetMap( m_byMapID, this );	
 
 	if (m_CBlock.Load(GetResPath(m_szObstacleFile)) == 0)
 	{
-		//LG("init", "����ϰ��ļ�[%s]�������, ����!\n", m_szObstacleFile);
+		//LG("init", "[%s], !\n", m_szObstacleFile);
 		ToLogService("common", " Loa object obstacle file[{}] error,continue!", m_szObstacleFile);
 		return false;
 	}
@@ -99,17 +99,17 @@ bool CMapRes::Init()
 	m_SRange.ltop.y = 0;
 	m_SRange.rbtm.x = nMapWidth * 100;
 	m_SRange.rbtm.y = nMapHeight * 100;
-	//������ͼ��Χ�ĺϷ���
+	//
 	if((m_SRange.width() % m_csEyeshotCellWidth) || (m_SRange.height() % m_csEyeshotCellHeight))
 	{
-		//LG("init", "��ͼ[%s]�ĳ��Ȼ���Ȳ��ǹ�����Ԫ���ȵı���\n", m_strMapName);
+		//LG("init", "[%s]\n", m_strMapName);
 		ToLogService("common", "the map[{}]'s length or width isn't the multiple of manage cell", m_strMapName);
 		return false;
 	}
 
 	if (m_CTerrain.Init((_TCHAR*)GetResPath(m_szSectionFile)) == 0)
 	{
-		//LG("init", "��ͼ�����ļ�[%s]�������!", m_szSectionFile);
+		//LG("init", "[%s]!", m_szSectionFile);
 		ToLogService("common", "Load the map section file [{}]error !", m_szSectionFile);
 		//return false;
 	}
@@ -122,27 +122,27 @@ bool CMapRes::Init()
 	m_pCMonsterSpawn = new CChaSpawn();
 	if (!m_pCMonsterSpawn->Init(m_szMonsterSpawnFile, 200))
 	{
-		//THROW_EXCP( excpMem, "װ�ص�ͼ�����ļ�����!" );
+		//THROW_EXCP( excpMem, "!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00003) );
 	}
 	m_pCMapSwitchEntitySpawn = new CMapSwitchEntitySpawn();
 	if (!m_pCMapSwitchEntitySpawn->Init(m_szMapSwitchFile, 100))
 	{
-		//THROW_EXCP( excpMem, "װ�ص�ͼ��ת���ļ�����!" );
+		//THROW_EXCP( excpMem, "!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00004) );
 	}
 	m_pNpcSpawn = new CNpcSpawn();
 	if (!m_pNpcSpawn->Init(m_szNpcSpawnFile, 200))
 	{
-		//THROW_EXCP( excpMem, "װ�ص�ͼ����NPC������!" );
+		//THROW_EXCP( excpMem, "NPC!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00005) );
 	}
 
 	if (!InitCtrl())
-		//THROW_EXCP( excpMem, "��ʼ����ͼ���ô���!" );
+		//THROW_EXCP( excpMem, "!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00006) );
 
-	//LG("init", "��ͼ %s ��Դ��ʼ���ɹ�\n", m_strMapName.c_str());
+	//LG("init", " %s \n", m_strMapName.c_str());
 	ToLogService("common", "map {} init resource succeed", m_strMapName.c_str());
 
 	m_chCopyStartCdtType = enumMAPCOPY_START_CDT_UNKN;
@@ -155,7 +155,7 @@ bool CMapRes::SetCopyNum(dbc::Short sCpyNum)
 {
 	if (m_pCMapCopy || sCpyNum < 1 || sCpyNum > defMAX_MAP_COPY_NUM)
 	{
-		//LG("������Ŀ����", "msg�趨�ĸ�����Ŀ %d �������ֵ %d!\n", sCpyNum, defMAX_MAP_COPY_NUM);
+		//LG("", "msg %d  %d!\n", sCpyNum, defMAX_MAP_COPY_NUM);
 		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00008), sCpyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
@@ -175,7 +175,7 @@ BOOL CMapRes::SummonNpc( USHORT sAreaID, const char szNpc[], USHORT sTime )
 	return m_pNpcSpawn->SummonNpc( szNpc, sAreaID, sTime );
 }
 
-// ���ݵ�ͼ���ƽű���ʼ��һЩ������Ϣ
+// 
 bool CMapRes::InitCtrl(void)
 {
 	if (g_IsFileExist(GetResPath(m_szCtrlFile)))
@@ -201,10 +201,10 @@ bool CMapRes::InitCtrl(void)
 	g_CParser.DoString("init_entry", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 	g_CParser.DoString("config", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 
-	// ��ʼ������
+	// 
 	m_pCMapCopy = new SubMap[m_sMapCpyNum];
 	if (!m_pCMapCopy)
-		//THROW_EXCP(excpMem,"��ͼ��������������з����ڴ�ʧ��");
+		//THROW_EXCP(excpMem,"");
 		THROW_EXCP(excpMem,RES_STRING(GM_MAPRES_CPP_00007));
 	for (Short i = 0; i < m_sMapCpyNum; i++)
 	{
@@ -217,7 +217,7 @@ bool CMapRes::InitCtrl(void)
 	return true;
 }
 
-// ������ڣ���Ŀ���ͼ������ڵĴ����ű��ļ�.
+// .
 bool CMapRes::CreateEntry(void)
 {
 	if(!m_pfEntryFile)
@@ -241,12 +241,12 @@ bool CMapRes::CreateEntry(void)
 
 	if (g_cchLogMapEntry)
 	{
-		//LG("��ͼ�������", "\n");
+		//LG("", "\n");
 		ToLogService("common", "");
-		//LG("��ͼ�������", "���󴴽���ڣ�λ�� %s --> %s[%u, %u]\n", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
+		//LG("", " %s --> %s[%u, %u]\n", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
 		ToLogService("common", "ask for found entrance : position {} --> {}[{}, {}]", GetName(), m_szEntryMapName, m_SEntryPos.x, m_SEntryPos.y);
 	}
-	// Типизированная сериализация: создание входа на карту со скриптом
+	//  :      
 	net::msg::GmMapEntryCreateMessage entryMsg;
 	entryMsg.targetMapName = m_szEntryMapName;
 	entryMsg.srcMapName = GetName();
@@ -288,13 +288,13 @@ bool CMapRes::CreateEntry(void)
 	return true;
 }
 
-// �ͷ���ڣ���Ŀ���ͼ������ڹر�����
+// 
 bool CMapRes::DestroyEntry(void)
 {
 	if (g_cchLogMapEntry)
-		//LG("��ͼ�������", "����ر���ڣ�λ�� %s --> %s\n", GetName(), m_szEntryMapName);
+		//LG("", " %s --> %s\n", GetName(), m_szEntryMapName);
 		ToLogService("common", "ask for close entrance:position {} --> {}", GetName(), m_szEntryMapName);
-	// Типизированная сериализация: закрытие входа на карту
+	//  :    
 	net::msg::MapEntryMessage meMsg;
 	meMsg.srcMapName = m_szEntryMapName;
 	meMsg.targetMapName = GetName();
@@ -312,13 +312,13 @@ bool CMapRes::DestroyEntry(void)
 	return true;
 }
 
-// ������ڵ�����ǰ�����Ŀ
+// 
 bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
 {
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
-	// Типизированная сериализация: уменьшение счётчика игроков в копии
+	//  :     
 	net::msg::MapEntryMessage meMsg;
 	meMsg.srcMapName = m_szEntryMapName;
 	meMsg.targetMapName = GetName();
@@ -338,16 +338,16 @@ bool CMapRes::SubEntryPlayer(dbc::Short sCopyNO)
 	return true;
 }
 
-// ������ڹرո���
+// 
 bool CMapRes::SubEntryCopy(dbc::Short sCopyNO)
 {
 	if (!strcmp(m_szEntryMapName, ""))
 		return true;
 
 	if (g_cchLogMapEntry)
-		//LG("��ͼ�������", "����رյ�ͼ������%s��%d��\n", GetName(), sCopyNO);
-		ToLogService("common", "ask for close copy map({}��{})", GetName(), sCopyNO);
-	// Типизированная сериализация: удаление копии карты
+		//LG("", "%s%d\n", GetName(), sCopyNO);
+		ToLogService("common", "ask for close copy map({}{})", GetName(), sCopyNO);
+	//  :   
 	net::msg::MapEntryMessage meMsg;
 	meMsg.srcMapName = m_szEntryMapName;
 	meMsg.targetMapName = GetName();
@@ -390,7 +390,7 @@ bool CMapRes::Close(void)
 	if (m_chState == enumMAP_STATE_CLOSE)
 	{
 		if (g_cchLogMapEntry)
-			//LG("��ͼ�������", "�Ѿ��رյ�ͼ��%s\n", GetName());
+			//LG("", "%s\n", GetName());
 			ToLogService("common", "already close the map:{}", GetName());
 		return true;
 	}
@@ -404,7 +404,7 @@ bool CMapRes::Close(void)
 		CopyClose();
 
 		if (g_cchLogMapEntry)
-			//LG("��ͼ�������", "�ɹ��رյ�ͼ��%s\n", GetName());
+			//LG("", "%s\n", GetName());
 			ToLogService("common", "close map succeed :{}", GetName());
 		return true;
 	}
@@ -413,14 +413,14 @@ bool CMapRes::Close(void)
 	{
 		m_chState = enumMAP_STATE_ASK_CLOSE;
 		if (g_cchLogMapEntry)
-			//LG("��ͼ�������", "����رյ�ͼ��%s\n", GetName());
+			//LG("", "%s\n", GetName());
 			ToLogService("common", "ask for close map:{}", GetName());
 	}
 
 	return false;
 }
 
-// ������ڵ�������̬
+// 
 void CMapRes::Run(DWORD dwCurTime)
 {
 	if (!m_timeRun.IsOK(dwCurTime))
@@ -447,24 +447,24 @@ void CMapRes::Run(DWORD dwCurTime)
 	time_t	tDist = tNowTime - m_tEntryFirstTm;
 	if (m_tEntryTmDis != 0)
 		tDist = tDist % m_tEntryTmDis;
-	if (m_tEntryOutTmDis == 0) // ������ʧ
+	if (m_tEntryOutTmDis == 0) // 
 		bOpenEntry = true;
 	else
 	{
-		if (tDist < m_tEntryOutTmDis) // ����
+		if (tDist < m_tEntryOutTmDis) // 
 			bOpenEntry = true;
 	}
 
-	if (tDist >= m_tEntryOutTmDis) // ��ʧ
+	if (tDist >= m_tEntryOutTmDis) // 
 	{
 		bCloseEntry = true;
-		if (m_tEntryOutTmDis == 0) // ������ʧ
+		if (m_tEntryOutTmDis == 0) // 
 			bCloseEntry = false;
 	}
-	if (tDist >= m_tMapClsTmDis) // �رյ�ͼ
+	if (tDist >= m_tMapClsTmDis) // 
 	{
 		bClose = true;
-		if (m_tMapClsTmDis == 0) // �����ر�
+		if (m_tMapClsTmDis == 0) // 
 			bClose = false;
 	}
 
@@ -496,7 +496,7 @@ void CMapRes::Run(DWORD dwCurTime)
 
 }
 
-// �����
+// 
 bool CMapRes::OpenEntry(void)
 {
 	if (m_chEntryState == enumMAPENTRY_STATE_OPEN)
@@ -519,7 +519,7 @@ bool CMapRes::OpenEntry(void)
 	return true;
 }
 
-// �ر����
+// 
 bool CMapRes::CloseEntry(void)
 {
 	if (m_chEntryState == enumMAPENTRY_STATE_ASK_OPEN)
@@ -539,15 +539,15 @@ bool CMapRes::CloseEntry(void)
 	return true;
 }
 
-// �˺��������������رղ���Ҫ�ȵ���ڵ���ز����ɹ����غ����ִ�У�
+// 
 bool CMapRes::CopyClose(dbc::Short sCopyNO)
 {
 	if (sCopyNO >= GetCopyNum())
 		return false;
 
 	if (g_cchLogMapEntry)
-		//LG("��ͼ�������", "�رյ�ͼ������%s��%d��\n", GetName(), sCopyNO);
-		ToLogService("common", "close map copy ��{}��{}��", GetName(), sCopyNO);
+		//LG("", "%s%d\n", GetName(), sCopyNO);
+		ToLogService("common", "close map copy {}{}", GetName(), sCopyNO);
 	if (sCopyNO < 0)
 	{
 		for (Short i = 0; i < m_sMapCpyNum; i++)
@@ -577,7 +577,7 @@ bool CMapRes::CopyNotice(const char *szString, dbc::Short sCopyNO)
 	return true;
 }
 
-// �رո���
+// 
 bool CMapRes::ReleaseCopy(dbc::Short sCopyNO)
 {
 	return SubEntryCopy(sCopyNO);
@@ -592,7 +592,7 @@ void CMapRes::CheckEntryState(dbc::Char chState)
 			m_chEntryState = chState;
 			Open();
 		}
-		else // �����ܳ��ֵ����
+		else // 
 		{
 		}
 
@@ -608,7 +608,7 @@ void CMapRes::CheckEntryState(dbc::Char chState)
 		{
 			m_chEntryState = chState;
 		}
-		else // �����ܳ��ֵ����
+		else // 
 		{
 		}
 
@@ -619,7 +619,7 @@ void CMapRes::CheckEntryState(dbc::Char chState)
 	}
 }
 
-// ȡ��һ���������еĸ���
+// 
 SubMap* CMapRes::GetNextUsedCopy(void)
 {
 	if (!m_pCMapCopy)

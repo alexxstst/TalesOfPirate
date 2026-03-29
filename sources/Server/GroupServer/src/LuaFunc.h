@@ -1,4 +1,4 @@
-// LuaFunc.h Created by knight-gongjian 2006.9.20.
+﻿// LuaFunc.h Created by knight-gongjian 2006.9.20.
 //---------------------------------------------------------
 #pragma once
 

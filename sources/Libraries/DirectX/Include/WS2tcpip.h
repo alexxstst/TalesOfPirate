@@ -1,4 +1,4 @@
-/*
+﻿/*
 **  WS2TCPIP.H - WinSock2 Extension for TCP/IP protocols
 **
 **  This file contains TCP/IP specific information for use

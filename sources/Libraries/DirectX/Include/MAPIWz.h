@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I W Z . H
  *
  *	Definitions for the Profile Wizard.	 Includes all prototypes

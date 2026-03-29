@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: SkillStateRecord.cpp
 // Creater: ZhangXuedong
 // Date: 2005.02.04
@@ -41,56 +41,56 @@ BOOL CSkillStateRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<s
     string strList[80];
 	string strLine;
 
-	// ±àºÅ
+	// 
 	pInfo->chID = (char)pInfo->nID;
-	// Ãû³Æ
+	// 
 	strncpy(pInfo->szName, pInfo->szDataName, defSKILLSTATE_NAME_LEN);
 	pInfo->szName[defSKILLSTATE_NAME_LEN - 1] = '\0';
-	// ´¥·¢µÄÊ±¼ä¼ä¸ô£¨µ¥Î»£ºÃë£©
+	// 
 	pInfo->sFrequency = Str2Int(ParamList[m++]);
-	// ×´Ì¬µ½´«µÝÄ¿±êÉÏµÄ×÷ÓÃÊ±¼ä½Å±¾
+	// 
 	strncpy(pInfo->szOnTransfer, ParamList[m++].c_str(), defSKILLSTATE_SCRIPT_NAME);
 	pInfo->szOnTransfer[defSKILLSTATE_SCRIPT_NAME - 1] = '\0';
-	// Ê¹ÓÃÐ§¹û½Å±¾
+	// 
 	strncpy(pInfo->szAddState, ParamList[m++].c_str(), defSKILLSTATE_SCRIPT_NAME);
 	pInfo->szAddState[defSKILLSTATE_SCRIPT_NAME - 1] = '\0';
-	// ÒÆ³ýÐ§¹û½Å±¾
+	// 
 	strncpy(pInfo->szSubState, ParamList[m++].c_str(), defSKILLSTATE_SCRIPT_NAME);
 	pInfo->szSubState[defSKILLSTATE_SCRIPT_NAME - 1] = '\0';
-	// Ìæ»»²ßÂÔ
+	// 
 	pInfo->chAddType = Str2Int(ParamList[m++]);
-	// ÊÇ·ñ¿ÉÓÉÖÕ¶ËÈ¡Ïû
+	// 
 	pInfo->bCanCancel = Str2Int(ParamList[m++]) != 0 ? true : false;
-	// ÊÇ·ñÄÜ¹»ÒÆ¶¯
+	// 
 	pInfo->bCanMove = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÄÜ¹»Ê¹ÓÃÄ§·¨¼¼ÄÜ
+	// 
 	pInfo->bCanMSkill = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÄÜ¹»Ê¹ÓÃÆÕÍ¨¼¼ÄÜ
+	// 
 	pInfo->bCanGSkill = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÄÜ¹»½»Ò×
+	// 
 	pInfo->bCanTrade = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÄÜ¹»Ê¹ÓÃÎïÆ·
+	// 
 	pInfo->bCanItem = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÎÞµÐ
+	// 
 	pInfo->bCanUnbeatable = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÄÜ¹»±»Ê¹ÓÃÎïÆ·
+	// 
 	pInfo->bCanItemmed = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÄÜ¹»±»Ê¹ÓÃ¼¼ÄÜ
+	// 
 	pInfo->bCanSkilled = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñÒþÉí
+	// 
 	pInfo->bNoHide = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñ±»Ç¿ÖÆÏÔÐÎ
+	// 
 	pInfo->bNoShow = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñ¿É²Ù×÷µÀ¾ß
+	// 
 	pInfo->bOptItem = Str2Int(ParamList[m++]) ? true : false;
-	// ÊÇ·ñ¿É²Ù×÷µÀ¾ß
+	// 
 	pInfo->bTalkToNPC = Str2Int(ParamList[m++]) ? true : false;
-	// ½â³ýµÄÐ§¹û±àºÅ
+	// 
 	pInfo->bFreeStateID = Str2Int(ParamList[m++]);
 
-	// ÆÁÄ»Ð§¹û
+	// 
 	pInfo->chScreen = Str2Int(ParamList[m++]);
-	// ³öÉú±íÏÖ
+	// 
 	memset( pInfo->nActBehave, 0, sizeof(pInfo->nActBehave) );
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -100,24 +100,24 @@ BOOL CSkillStateRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<s
 		pInfo->nActBehave[i] = Str2Int(strList[i]);
 	}
 
-	//¿Í»§¶Ë±íÏÖ±êÊ¶
+	//
     pInfo->sChargeLink = Str2Int(ParamList[m++]);
 
-    // µØÃæ³ÖÐøÌØÐ§
+    // 
     pInfo->sAreaEffect = Str2Int(ParamList[m++]);
-	// µØÃæ×´Ì¬ÌØÐ§,ÊÇ·ñ½öÏÔÊ¾ÖÐÐÄµã
+	// ,
     pInfo->IsShowCenter = Str2Int(ParamList[m++]) ? true : false;
-	// ¹ÒÐ§¹û·½POSE
+	// POSE
 	pInfo->IsDizzy = Str2Int(ParamList[m++]) ? true : false;
-	// ¹ÒÐ§¹û·½ÌØÐ§±íÏÖ
+	// 
 	pInfo->sEffect = Str2Int(ParamList[m++]);
-	// ¹ÒÌØÐ§Íæ¼ÒµÄ²¥·Ådummyµã
+	// dummy
 	pInfo->sDummy1 = Str2Int(ParamList[m++]);
-	// ¸Ã×´Ì¬ÏÂÊÜ»÷ÌØÐ§±íÏÖ
+	// 
 	pInfo->sBitEffect = Str2Int(ParamList[m++]);
-	// ÌØÐ§²¥·Ådummyµã
+	// dummy
 	pInfo->sDummy2 = Str2Int(ParamList[m++]);
-	// ÖÐ¸ÃÐ§¹û¹ÒÔÚÉíÉÏµÄICON±íÏÖ
+	// ICON
 	pInfo->sIcon = Str2Int(ParamList[m++]);
 
 	memset(pInfo->szIcon, 0, sizeof(pInfo->szIcon));
@@ -142,6 +142,6 @@ void CSkillStateRecordSet::_ProcessRawDataInfo(CRawDataInfo *pInfo)
 {
 	CSkillStateRecord *pState = (CSkillStateRecord*)pInfo;
 
-    // ¸üÐÂ¶¯Ì¬ÊôÐÔ
+    // 
 	pState->RefreshPrivateData();	
 }

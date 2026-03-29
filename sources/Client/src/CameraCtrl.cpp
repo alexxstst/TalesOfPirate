@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+ï»¿#include "Stdafx.h"
 #include "cameractrl.h"
 #include "GameConfig.h"
 #include "GameApp.h"
@@ -504,7 +504,7 @@ void	CCameraCtrl::ScrollToDefault()
 	m_fLastAngle = m_fAngle;
 }
 
-//×óÓÒĞı×ª
+//
 void CCameraCtrl::RotationCameraLR(float Angle)
 {
 	if(!m_bEnableRota)
@@ -533,7 +533,7 @@ void CCameraCtrl::RotationCameraLR(float Angle)
 	}
 
 }
-//ÉÏÏÂĞı×ª
+//
 void CCameraCtrl::RotationCameraUD(float Angle)
 {
 }
@@ -711,7 +711,7 @@ void	CCameraCtrl::AddPoint(float fX,float fY,float fZ)
 }
 void	CCameraCtrl::Update()
 {
-	//¸üĞÂ¸ß¶È
+	//
 	if(m_fLastHei != m_listHei)
 	{
 		float dist = m_fLastHei - m_listHei;
@@ -723,7 +723,7 @@ void	CCameraCtrl::Update()
 
 
 
-	////¸Ä±äËÙ¶ÈºÍ¼ÓËÙ¶È
+	////
 	//if(m_fTotalLen >= 1.0f) 
 	//{
 	//		//m_fStackAccel += 0.4f;
@@ -748,7 +748,7 @@ void	CCameraCtrl::Update()
 	//		m_fStackVel =   m_maxVel/10;
 
 	//}
-	////¸üĞÂÎ»ÖÃ
+	////
 	//D3DXVECTOR2 vpos, vnext;
 	//if(m_listDir.size() > 0)
 	//{
@@ -1013,7 +1013,7 @@ namespace Ninja
 		{
 			_myTarget = _my_targetController->GetValue(_myTarget, v, 0.15f);
 		}
-		else	// ¾àÀë¹ı³¤£¬Ä¿±êÎ»ÖÃÖ±½Ó¸ü¸Ä
+		else	// 
 		{
 			_myTarget = v;
 		}

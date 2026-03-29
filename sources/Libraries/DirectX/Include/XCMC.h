@@ -1,4 +1,4 @@
-  /*BEGIN CMC INTERFACE */
+﻿  /*BEGIN CMC INTERFACE */
 
 #ifndef _XCMC_H
 #define _XCMC_H

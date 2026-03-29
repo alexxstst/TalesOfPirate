@@ -1,4 +1,4 @@
-/*
+﻿/*
 Created By DBZHANG IN 8.25.2004
 For RunTime Thread
 */
@@ -26,7 +26,7 @@ protected:
 	virtual ~RunBiDirectItem()	{_EndRun();}
 	virtual void Initially()	{m_chain	=0;m_last	=0;m_next	=0;}
 	virtual void Finally()		{_EndRun();}
-	virtual	void Free()			{delete this;}//���������������delete����Ҫoverride��
+	virtual	void Free()			{delete this;}//deleteoverride
 
 	long	_BeginRun(RunBiDirectChain<T> *chain)
 	{

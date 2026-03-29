@@ -1,4 +1,4 @@
-#ifndef __GB18030_H
+﻿#ifndef __GB18030_H
 #define __GB18030_H
 
 //

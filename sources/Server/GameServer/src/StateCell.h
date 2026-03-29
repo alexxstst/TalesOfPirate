@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: StateCell.h
 // Creater: ZhangXuedong
 // Date: 2005.04.29
@@ -21,7 +21,7 @@ public:
 		m_pCLast = 0;
 	}
 
-	bool			m_bIn{ false };	// �ڵ�Ԫ��
+	bool			m_bIn{ false };	// 
 	CCharacter* m_pCCha{  };
 	CStateCellNode* m_pCEntStateNode{  };
 
@@ -46,7 +46,7 @@ inline void CChaListNode::Finally()
 
 class CEyeshotCell;
 
-// ״̬��Ԫ��
+// 
 class CStateCell : public dbc::PreAllocStru
 {
 public:
@@ -87,19 +87,19 @@ public:
 	void			StateBeginSeen(Entity *pCEnt);
 	void			StateEndSeen(Entity *pCEnt);
 
-	short			m_sPosX;		// λ��
-	short			m_sPosY;		// λ��
-	long			m_lActNum;		// �������
-	long			m_lChaNum;		// ��ɫ����
+	short			m_sPosX;		// 
+	short			m_sPosY;		// 
+	long			m_lActNum;		// 
+	long			m_lChaNum;		// 
 
-	CChaListNode	*m_pCChaIn;		// ��¼���ĵ��ڷ�Χ�ڵĽ�ɫ
-	CChaListNode	*m_pCChaCross;	// ��¼���ĵ㲻�ڷ�Χ�ڣ����뷶Χ�ཻ�Ľ�ɫ
+	CChaListNode	*m_pCChaIn;		// 
+	CChaListNode	*m_pCChaCross;	// 
 
-	CSkillState		m_CSkillState;	// �ر��ļ���״̬
+	CSkillState		m_CSkillState;	// 
 
-	CEyeshotCell	*m_pCEyeshotCell;	// ���ڵ���Ұ��Ԫָ��
+	CEyeshotCell	*m_pCEyeshotCell;	// 
 
-	CStateCell		*m_pCNext;		// ָ�򡰼����״̬��Ԫ��������ָ��
+	CStateCell		*m_pCNext;		// 
 	CStateCell		*m_pCLast;
 
 protected:
@@ -127,7 +127,7 @@ inline void CStateCell::Finally()
 {
 }
 
-class CActStateCell // �����״̬��Ԫ����
+class CActStateCell // 
 {
 public:
 	CActStateCell()
@@ -159,7 +159,7 @@ inline void CActStateCell::Add(CStateCell *pObj)
 {
 	if (pObj->m_pCLast || pObj->m_pCNext)
 	{
-		//LG("״̬��Ԫ��������", "��״̬��Ԫ����ʵ�� [%d,%d] ʱ��������û��������ǰ�ĵ�Ԫ", pObj->m_sPosX, pObj->m_sPosY);
+		//LG("", " [%d,%d] ", pObj->m_sPosX, pObj->m_sPosY);
 		ToLogService("errors", LogLevel::Error, "when add entity[{},{}] to state cell, find it is not break away foregone manage cell", pObj->m_sPosX, pObj->m_sPosY);
 		return;
 	}

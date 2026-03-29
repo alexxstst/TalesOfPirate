@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 
 #include "uiGuildChallengeForm.h"
 #include "uiformmgr.h"
@@ -37,7 +37,7 @@ namespace GUI
 	bool CGuildChallengeMgr::Init()
 	{
 		CFormMgr &mgr = CFormMgr::s_Mgr;
-		//��ʼ��npc�Ի�����
+		//npc
 		frmGuildPK  = mgr.Find("frmGuildPK" );
 		if ( !frmGuildPK )
 		{	
@@ -49,7 +49,7 @@ namespace GUI
 		//frmNPCforge->evtClose = _OnClose;
 		//lstGuildPK = dynamic_cast<CList*>(frmGuildPK->Find("lstGuildPK"));
 		//if (!lstGuildPK)
-		//	return Error("NPC.clu����<%s>���Ҳ����ؼ�<%s>",
+		//	return Error("NPC.clu<%s><%s>",
 		//				 frmGuildPK->GetName(), 
 		//				 "lstGuildPK");
 		char szBuf[32];
@@ -196,7 +196,7 @@ namespace GUI
 	//-------------------------------------------------------------------------
 	void CGuildChallengeMgr::_ChargeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
-		if( nMsgType!=CForm::mrYes )	// �������ĵ�ȡ��Ҳ��Ǯ�� BUG  add by Philip.Wu  2006-07-25
+		if( nMsgType!=CForm::mrYes )	//  BUG  add by Philip.Wu  2006-07-25
 		{
 			g_stGuildChallenge.m_iSelIndex = -1;
 			return;

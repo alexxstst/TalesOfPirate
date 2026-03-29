@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiboatform.h"
 #include "uiform.h"
 #include "uiedit.h"
@@ -18,7 +18,7 @@
 using namespace GUI;
 
 //---------------------------------------------------------------------------
-// class CBoat  �û�����
+// class CBoat  
 //---------------------------------------------------------------------------
 CBoat::CBoat() 
 : _chtBoat(0), _frmShipRoom(0)
@@ -26,7 +26,7 @@ CBoat::CBoat()
 {
 }
 
-bool CBoat::Init( int n, CForm* ship, GuiDragInGridEvent evt )  // �û�����Ϣ��ʼ��
+bool CBoat::Init( int n, CForm* ship, GuiDragInGridEvent evt )  // 
 {
 	_frmShipRoom = ship;
 	if( !_frmShipRoom ) return false;
@@ -42,9 +42,9 @@ bool CBoat::Init( int n, CForm* ship, GuiDragInGridEvent evt )  // �û���
 
 	_grdHold->SetIsHint(false);
 	_grdHold->SetParent(ship);
-	_frmShipRoom->evtEscClose = _evtEscClose;	// �� ESC �ر��¼� add by Philip.Wu  2006-06-22
+	_frmShipRoom->evtEscClose = _evtEscClose;	//  ESC  add by Philip.Wu  2006-06-22
 
-	// ���û���¼�����Ϊ��ʱ�����������κβ���
+	// 
 	if( evt )
 	{
 		_grdHold->evtBeforeAccept = evt;
@@ -59,7 +59,7 @@ void CBoat::_evtHoldGridRMouse(CGuiData *pSender,CCommandObj* pItem,int nGridID)
 {
 	if (!pItem) return;  
 
-	//�������Ҽ�
+	//
 	if (g_stUIBourse.GetForm()->GetIsShow())
 	{
 		CItemCommand* pkItemCmd = dynamic_cast<CItemCommand*>(pItem);
@@ -69,14 +69,14 @@ void CBoat::_evtHoldGridRMouse(CGuiData *pSender,CCommandObj* pItem,int nGridID)
 	}
 }
 
-void CBoat::Reset()  //  �����ɫ�����ھ�����û�����Ϣ
+void CBoat::Reset()  //  
 {
 	_chtBoat = NULL;
 	_grdHold->Clear();
 }
 
 
-// �� ESC �رմ����¼�����������Ҳ����Ϊ����ʾ  add by Philip.Wu  2006-06-22
+//  ESC   add by Philip.Wu  2006-06-22
 void CBoat::_evtEscClose( CForm* pForm )
 {
 	if(pForm)
@@ -92,12 +92,12 @@ void CBoat::_evtEscClose( CForm* pForm )
 
 
 //---------------------------------------------------------------------------
-// class CBoatMgr �û���������
+// class CBoatMgr 
 //---------------------------------------------------------------------------
-bool CBoatMgr::Init() // �û���������Ϣ��ʼ��
+bool CBoatMgr::Init() // 
 {
 	CForm* frm[defMaxBoat+1] = { 0 }; 
-	CForm* frmShipRoom = _FindForm("frmShipRoom"); // ���Ҵ�����
+	CForm* frmShipRoom = _FindForm("frmShipRoom"); // 
 	if(!frmShipRoom) return false;
 	frm[0] = frmShipRoom;
 
@@ -138,22 +138,22 @@ void CBoatMgr::End()
 bool CBoatMgr::AddBoat( CCharacter* pBoat )
 {
 	CBoat* p = GetFreeBoat();
-	if( !p ) return false; //�Ѿ��õ�������� �����ٻ����ѵĴ�ֻ
+	if( !p ) return false; // 
 
 	p->Link( pBoat );
 	return true;
 }
 
-CBoat*	CBoatMgr::GetFreeBoat()   // �����Ѵ�ֻ
+CBoat*	CBoatMgr::GetFreeBoat()   // 
 { 
-	for( int i=0; i<defMaxBoat; i++ ) // ������ô�ֻ
+	for( int i=0; i<defMaxBoat; i++ ) // 
 		if( !_cBoats[i].GetIsValid() )
 			return &_cBoats[i];
 
 	return NULL;
 }
 
-CBoat* CBoatMgr::FindBoat( unsigned int ulWorldID )  // �����û��е�ȫ����
+CBoat* CBoatMgr::FindBoat( unsigned int ulWorldID )  // 
 {
 	for( int i=0; i<defMaxBoat; i++ )
 	{
@@ -166,7 +166,7 @@ CBoat* CBoatMgr::FindBoat( unsigned int ulWorldID )  // �����û���
 	return NULL;
 }
 
-CGoodsGrid*	CBoatMgr::FindGoodsGrid( unsigned int ulWorldID ) // ���Ҵ���Ʒ
+CGoodsGrid*	CBoatMgr::FindGoodsGrid( unsigned int ulWorldID ) // 
 {
 	if( _pHuman && _pHuman->getAttachID()==ulWorldID )
 		return g_stUIEquip.GetGoodsGrid();
@@ -177,7 +177,7 @@ CGoodsGrid*	CBoatMgr::FindGoodsGrid( unsigned int ulWorldID ) // ���Ҵ��
 	return NULL;
 }
 
-CCharacter*	CBoatMgr::FindCha( unsigned int ulWorldID ) // ���Ҵ�ֻ����
+CCharacter*	CBoatMgr::FindCha( unsigned int ulWorldID ) // 
 {
 	if( _pHuman && _pHuman->getAttachID()==ulWorldID ) return _pHuman;
 
@@ -187,7 +187,7 @@ CCharacter*	CBoatMgr::FindCha( unsigned int ulWorldID ) // ���Ҵ�ֻ��
 	return NULL;
 }
 
-CCharacter* CBoatMgr::ChangeMainCha( unsigned int ulWorldID ) // �л�����
+CCharacter* CBoatMgr::ChangeMainCha( unsigned int ulWorldID ) // 
 {
 	CCharacter* pCha = FindCha( ulWorldID );
 	if( pCha ) 
@@ -200,7 +200,7 @@ CCharacter* CBoatMgr::ChangeMainCha( unsigned int ulWorldID ) // �л����
 			pScene->SetMainCha( pCha->getID() );
 			g_stUIStart.ShowShipSailForm( pCha->IsBoat() );
 
-			// add by Philip.Wu  2006-07-03  �л���ͼʱ�رս��׺�װ�����壨BUG������
+			// add by Philip.Wu  2006-07-03  BUG
 			g_stUITrade.CloseAllForm();
 			g_stUIEquip.CloseAllForm();
 		}
@@ -212,7 +212,7 @@ CCharacter* CBoatMgr::ChangeMainCha( unsigned int ulWorldID ) // �л����
 	return pCha;
 }
 
-void CBoatMgr::Clear()  //  ����û����д���Ϣ
+void CBoatMgr::Clear()  //  
 {
 	_pHuman = NULL;
 	for( int i=0; i<defMaxBoat; i++ )
@@ -221,7 +221,7 @@ void CBoatMgr::Clear()  //  ����û����д���Ϣ
 	}
 }
 
-CCharacter* CBoatMgr::FindCha( CGoodsGrid* pGoods ) // ��װ��ƥ����Ҵ�ֻ������
+CCharacter* CBoatMgr::FindCha( CGoodsGrid* pGoods ) // 
 {
 	if( pGoods==g_stUIEquip.GetGoodsGrid() )
 		return _pHuman;

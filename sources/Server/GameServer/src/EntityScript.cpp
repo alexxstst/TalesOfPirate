@@ -1,4 +1,4 @@
-//---------------------------------------------------------
+﻿//---------------------------------------------------------
 // EntityScript.cpp Created by knight-gong in 2005.5.12.
 #include "stdafx.h"//add by alfred.shi 20080203
 
@@ -16,9 +16,9 @@ inline int lua_GetCurSubmap( lua_State* L )
 {
 	if( !g_pScriptMap )
 	{
-		//LG( "entity_error", "��ͼָ��Ϊ�գ�" );
+		//LG( "entity_error", "" );
 		g_logManager.InternalLog(LogLevel::Error, "errors", RES_STRING(GM_ENTITYSCRIPT_CPP_00001) );
-		// Заменено printf → логирование
+		//  printf  
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_ENTITYSCRIPT_CPP_00001));
 		E_LUANULL;
 		return 0;
@@ -78,12 +78,12 @@ int lua_SetEntityData( lua_State* L )
 	mission::CEventEntity* pEntity = (mission::CEventEntity*)lua_touserdata( L, 1 );
 	switch( pEntity->GetType() )
 	{
-	case BASE_ENTITY:			// ����ʵ��
+	case BASE_ENTITY:			// 
 		{
 		}
 		break;
 
-	case RESOURCE_ENTITY:		// ��Դʵ��
+	case RESOURCE_ENTITY:		// 
 		{
 			bValid = lua_gettop( L ) >= 4;
 			if( !bValid )
@@ -98,12 +98,12 @@ int lua_SetEntityData( lua_State* L )
 		}
 		break;
 
-	case TRANSIT_ENTITY:		// ����ʵ��
+	case TRANSIT_ENTITY:		// 
 		{
 		}
 		break;
 
-	case BERTH_ENTITY:			// ͣ��ʵ��
+	case BERTH_ENTITY:			// 
 		{
 			BOOL bValid = lua_gettop( L ) >= 5;
 			if( !bValid )

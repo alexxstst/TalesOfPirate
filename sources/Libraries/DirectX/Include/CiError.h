@@ -1,4 +1,4 @@
-#ifndef _CIERROR_H_
+﻿#ifndef _CIERROR_H_
 #define _CIERROR_H_
 #ifndef FACILITY_WINDOWS
 //

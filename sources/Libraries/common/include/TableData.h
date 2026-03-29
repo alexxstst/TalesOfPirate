@@ -1,30 +1,30 @@
-#pragma once
+﻿#pragma once
 
-// Raw Data : ԭʼ����
-// Raw Data Set : ������ʵ������ֻ��һ��, ʹ�ø����ݵ�ʵ��ȴ���Դ��������Ӧ�ó���
-// ���� : Meshģ������, ��ͼ����, �Ǽ����ݵȵ�,  Ҳ�������ڷ���Ϸ�ĸ���������
+// Raw Data : 
+// Raw Data Set : , 
+//  : Mesh, , ,  
 
-// RawDataSet�����Ҫ����
-//1. ԭʼ���ݵ���Դ��������(�ı�,������)
-//2. ͨ��ID��������
-//3. ��̬�ͷ�
-//4  ��Դ����Ͱ����ݴ�ȡ
+// RawDataSet
+//1. (,)
+//2. ID
+//3. 
+//4  
 
-// Ŀǰ��Ӧ�û�ֻ��ΪһЩ��Դ������ʽ��Ϊ�򵥵�����������ӿ�
-// ����:  ID  ������Դ(�ļ���) �򵥲������� ����ĸ�ʽ
+// 
+// :  ID  ()  
 
-// ������ʽ:
-// ����ID = �����±�
-// ͨ������ID������ԭʼ����
+// :
+// ID = 
+// ID
 
 
-// ������ʹ��ǰ, ����̳����µķ���
-// virtual int				_GetRawDataInfoSize()										      // ÿ�������RawDataInfo���в�ͬ, ȡ��RawDataInfo�����ݳߴ�
-// virtual void*			_CreateNewRawData(CRawDataInfo *pRawInfo)		    		      // ȡ���µ�RawData����, ����ģ������ָ�룬Ҳ��������ͼ����ָ��
-// virtual void				_ReadRawDataInfo(CRawDataInfo *pRawInfo, list<string> &ParamList) // ��Դ�ļ�ÿ�����µ�һ��, ������Եõ��Ļص�����
-// virtual void				_DeleteRawData(void *pData);								      // ɾ����Դ, ��Դ��ɾ����ʽ����������в�ͬ	
+// , 
+// virtual int				_GetRawDataInfoSize()										      // RawDataInfo, RawDataInfo
+// virtual void*			_CreateNewRawData(CRawDataInfo *pRawInfo)		    		      // RawData, 
+// virtual void				_ReadRawDataInfo(CRawDataInfo *pRawInfo, list<string> &ParamList) // , 
+// virtual void				_DeleteRawData(void *pData);								      // , 	
 
-// ����, ����������Լ��Ĺ��������_Init()����
+// , _Init()
 
 
 #include <fstream>
@@ -39,16 +39,16 @@
 class CRawDataInfo
 {
 public:
-	BOOL	bExist{ false };				// ��Դ�Ƿ����
-	int		nIndex{ 0 };				// ��Array�е�λ��				
-	char	szDataName[72]{ "" };		// ������Դ(ͨ���������ļ���)
-	DWORD	dwLastUseTick{ 0 };		// �ϴ�ʹ�õ�ʱ��
-	BOOL	bEnable{ true };			// �Ƿ���Ч, ���Զ�̬����
-	void* pData{ nullptr };				// ʵ������
-	DWORD   dwPackOffset{ 0 };		// �ڰ��ļ��е�����ƫ��
-	DWORD   dwDataSize{ 0 };			// ԭʼ���ݳߴ�(�ļ��ߴ�)
+	BOOL	bExist{ false };				// 
+	int		nIndex{ 0 };				// Array				
+	char	szDataName[72]{ "" };		// ()
+	DWORD	dwLastUseTick{ 0 };		// 
+	BOOL	bEnable{ true };			// , 
+	void* pData{ nullptr };				// 
+	DWORD   dwPackOffset{ 0 };		// 
+	DWORD   dwDataSize{ 0 };			// ()
 	int     nID{ 0 };				// ID
-	DWORD   dwLoadCnt{ 0 };          // ��Դ��ȡ����
+	DWORD   dwLoadCnt{ 0 };          // 
 };
 
 
@@ -58,7 +58,7 @@ class CRawDataSet
 
 protected:
 
-	CRawDataSet(int nIDStart, int nIDCnt, int nFieldCnt = DEFAULT_FIELD_CNT) // һ��Ҫ�̳�ʹ��
+	CRawDataSet(int nIDStart, int nIDCnt, int nFieldCnt = DEFAULT_FIELD_CNT) // 
 	:_nIDStart(nIDStart),
 	_nIDCnt(nIDCnt),
     _nIDLast(nIDCnt)
@@ -81,7 +81,7 @@ public:
 	BOOL			IsValidID(int nID);
     int             GetLastID() const {return _nIDLast;}
 	
-	// ���ڶ�̬�ͷŵĲ�������
+	// 
     void			SetReleaseInterval(DWORD dwInterval)	{ _dwReleaseInterval = dwInterval;	}
 	void			SetMaxRawData(int nDataCnt)				{ _nMaxRawDataCnt	 = nDataCnt;	}
 	
@@ -90,13 +90,13 @@ public:
 	void			Release();
     void            FrameLoad(int nFrameLoad = 2);
 
-	// ����й�
-    void			EnablePack(const char *pszPackName);	// ���ڶ����������Դ�����ļ�����Ч
+	// 
+    void			EnablePack(const char *pszPackName);	// 
 	void            Pack(const char *pszPackName, const char *pszBinName);
     void			PackFromDirectory(std::list<std::string> &DirList, const char *pszPackName, const char *pszBinName);
     BOOL            IsEnablePack()              { return _bEnablePack; } 
 	
-    // ��Դ��ȡ
+    // 
     LPBYTE			LoadRawFileData(CRawDataInfo *pInfo);
 	
     void            EnableRequest(BOOL bEnable)   { _bEnableRequest = bEnable; }
@@ -121,7 +121,7 @@ protected:
 	BOOL		_LoadRawDataInfo_Txt(const char *pszFileName, int nSep = '\t');
 	void		_WriteRawDataInfo_Bin(const char *pszFileName);
     void        _Init();
-    CRawDataInfo*	_GetRawDataInfo(int nID); // ����������Χ���
+    CRawDataInfo*	_GetRawDataInfo(int nID); // 
 
 protected:
 	
@@ -170,7 +170,7 @@ inline CRawDataInfo* CRawDataSet::GetRawDataInfo(int nID)
     else return NULL;
 }
 
-// ����������Χ��⣬��Ҫ��������
+// 
 inline CRawDataInfo* CRawDataSet::_GetRawDataInfo(int nID)
 {
     LPBYTE pbtData = (LPBYTE)_RawDataArray;
@@ -183,7 +183,7 @@ inline CRawDataInfo* CRawDataSet::GetRawDataInfo(const char *pszDataName)
 {
 	std::map<std::string, CRawDataInfo*>::iterator it = _IDIdx.find(pszDataName);
 
-	if(it!=_IDIdx.end()) // ��ID�Ѿ�����
+	if(it!=_IDIdx.end()) // ID
 	{
 		return (*it).second;
     }
@@ -219,13 +219,13 @@ inline void* CRawDataSet::GetRawData(int nID, BOOL bRequest)
 	return pInfo->pData;
 }
 
-inline int CRawDataSet::GetRawDataID(const char *pszDataName) // �����ֻ�ȡID, ���û�������һ��
+inline int CRawDataSet::GetRawDataID(const char *pszDataName) // ID, 
 {
 	CRawDataInfo *pInfo;
 
     std::map<std::string, CRawDataInfo*>::iterator it = _IDIdx.find(pszDataName);
 
-	if(it!=_IDIdx.end()) // ��ID�Ѿ�����
+	if(it!=_IDIdx.end()) // ID
 	{
 		pInfo = (*it).second;
 	}
@@ -392,12 +392,12 @@ inline void CRawDataSet::DynamicRelease(BOOL bClearAll)
 
 inline void CRawDataSet::Release()
 {
-	if( _nLoadedRawDataCnt > 0 ) //��ȫ�ͷ��ڴ� by Waiting 2009-06-18
+	if( _nLoadedRawDataCnt > 0 ) // by Waiting 2009-06-18
 	{
 		for(int i = 0; i < _nIDCnt; i++)
 		{
 			CRawDataInfo *pInfo = GetRawDataInfo(_nIDStart + i);
-			if( NULL==pInfo || NULL==pInfo->pData )  //��ȫ�ͷ��ڴ� by Waiting 2009-06-18
+			if( NULL==pInfo || NULL==pInfo->pData )  // by Waiting 2009-06-18
 				continue;
 
 			_DeleteRawData(pInfo);
@@ -409,7 +409,7 @@ inline void CRawDataSet::Release()
 			}
 		}
 	}
-    //��ȫ�ͷ��ڴ� by Waiting 2009-06-18
+    // by Waiting 2009-06-18
 	if( _RawDataArray )
 	{
 		_DeleteRawDataArray();
@@ -430,7 +430,7 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char *pszFileName)
 	if(fp==NULL) 
 	{
 		ToLogService("errors", LogLevel::Error, "Load Raw Data Info Bin File [{}] Failed!", pszFileName);
-		//MessageBox(NULL, szMsg, "����", MB_OK | MB_ICONERROR);
+		//MessageBox(NULL, szMsg, "", MB_OK | MB_ICONERROR);
 		sprintf(szMsg, "Open table file failed:%s\nProgram will exit!\n", pszFileName);
 		MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 		return FALSE;
@@ -448,10 +448,10 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char *pszFileName)
 	if(dwInfoSize!=_GetRawDataInfoSize())
 	{
 		//MessageBox(NULL, szMsg, "Error2", MB_OK | MB_ICONERROR);
-		//LG2("table", "msg��ȡ�����ļ�[%s]ʱ, ���ְ汾��һ��!\n", pszFileName);
+		//LG2("table", "msg[%s], !\n", pszFileName);
 		ToLogService("common", LogLevel::Error, " read table file [{}], version can't match!", pszFileName);
 		fclose(fp);
-		//MessageBox(NULL, szMsg, "����", MB_OK | MB_ICONERROR);
+		//MessageBox(NULL, szMsg, "", MB_OK | MB_ICONERROR);
 		sprintf(szMsg, "Open table file failed:%s\nProgram will exit!\n", pszFileName);
 		MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 		exit(0);
@@ -488,7 +488,7 @@ inline BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char *pszFileName)
         if(!pInfo->bExist) continue;
 		if(IsValidID(i)==FALSE) continue;
 		CRawDataInfo* pCurInfo = _GetRawDataInfo(pInfo->nID);
-		memcpy(pCurInfo, pInfo, nInfoSize); // ���ԭ�е���Ϣ
+		memcpy(pCurInfo, pInfo, nInfoSize); // 
          _IDIdx[pCurInfo->szDataName] = pCurInfo;
         //vector<string> ParamList; _ReadRawDataInfo(pCurInfo, ParamList);
         _ProcessRawDataInfo(pCurInfo);
@@ -580,22 +580,22 @@ const int LINE_SIZE = 2048;
 		if (n < 2) continue;
 		if (n > _nMaxFieldCnt)
 			{
-			//LG2("error", "msg����Դ�ļ�[%s]�У�ʵ���ֶ�������Ԥ�����ֶ���\n", pszFileName);
+			//LG2("error", "msg[%s]\n", pszFileName);
 				ToLogService("errors", LogLevel::Error, " in resource [{}], the field num is greater than predefine count ", pszFileName);
 			bRet = FALSE;
             break;}
 
-		// ��¼�������ֶ���Ŀ
+		// 
 		if (!bSaveFieldCnt)
 			{
 			nFieldCnt = n;
             bSaveFieldCnt = TRUE;}
 		else {
-			// �Ƚϴ����ֶ���Ŀ���һ���ֶ���Ŀ�Ƿ���ͬ
+			// 
 			if (nFieldCnt != n)
 				{
-				// �����ͬ��˵������Դ�ļ��������ݴ���
-				//LG2("error", "msg������Դ�ļ�[%s]ʧ��,���[%s], �����ʽ�Ͱ汾!\n",
+				// 
+				//LG2("error", "msg[%s],[%s], !\n",
 					ToLogService("errors", LogLevel::Error, " parse resource file [{}] failed ,No [{}], please chech format and version!", pszFileName, pstrList[0].c_str());
 
 				bRet = FALSE;
@@ -605,7 +605,7 @@ const int LINE_SIZE = 2048;
         int	nID = Str2Int(pstrList[0]);
         if (!IsValidID(nID))
             {
-            //LG2("error", "msg����[%d]����Ԥ����Χ��������Դ�ļ�[%s]\n", nID, pszFileName);
+            //LG2("error", "msg[%d][%s]\n", nID, pszFileName);
 				ToLogService("errors", LogLevel::Error, " index [{}] overflow,please check resource file [{}]", nID, pszFileName);
             bRet = FALSE;
             break;}
@@ -622,10 +622,10 @@ const int LINE_SIZE = 2048;
 			ParamList.push_back(pstrList[i + 2]);
 		}
 		for(i = 0; i < 15; i++)
-			ParamList.push_back(""); // ���ÿմ�,���������������, ��ʾ��ʽ����
+			ParamList.push_back(""); // ,, 
 
 		//Util_TrimString(pstrList[1]);
-		Util_TrimTabString(pstrList[1]); // ����Ӣ�� MAKEBIN �ո�ʧ����  modify by Philip.Wu  2006-07-31
+		Util_TrimTabString(pstrList[1]); //  MAKEBIN   modify by Philip.Wu  2006-07-31
 
 		strcpy(pInfo->szDataName, pstrList[1].c_str());
 		// char *pszDataName = _strupr( _strdup( pInfo->szDataName ) );
@@ -644,12 +644,12 @@ const int LINE_SIZE = 2048;
 		}
         //catch (...)
         {
-		//	LG2("error", "msg������Դ�ļ�[%s]����δ֪���쳣,����ʧ�ܣ����[%s], �����ʽ!\n", pszFileName, pstrList[0].c_str());
+		//	LG2("error", "msg[%s],[%s], !\n", pszFileName, pstrList[0].c_str());
 		//	bRet = FALSE; break;
     	}        
         if(!bRet)
         {
-            //LG2("error", "msg������Դ�ļ�[%s]ʧ��,���[%s], �����ʽ�Ͱ汾!\n",
+            //LG2("error", "msg[%s],[%s], !\n",
 			ToLogService("errors", LogLevel::Error, " parse resource file [{}] failed ,No [{}], please chech format and version!", pszFileName, pstrList[0].c_str());
 			bRet = FALSE; break;
         }
@@ -662,7 +662,7 @@ const int LINE_SIZE = 2048;
 
 
 //----------------------------------------------------------------------------------------------------------
-//												�����ش���
+//												
 //----------------------------------------------------------------------------------------------------------
 inline LPBYTE Util_LoadFile(const char *pszFileName, DWORD* pdwFileSize)
 {
@@ -717,13 +717,13 @@ inline void CRawDataSet::Pack(const char *pszPackName, const char *pszBinName)
 	}
 	fclose(fp);
 	
-	_WriteRawDataInfo_Bin(pszBinName); // ���֮����дRawDataSet Bin�ļ�
+	_WriteRawDataInfo_Bin(pszBinName); // RawDataSet Bin
 }
 
 
 //--------------------------------------------
-//  ��Ŀ¼�ж�ȡ�ļ�, ÿ���ļ���Ϊһ����Դ, ��
-//  ������Դ������Ϣ�ļ� xxx.bin
+//  , , 
+//   xxx.bin
 //--------------------------------------------
 inline void	CRawDataSet::PackFromDirectory(std::list<std::string> &DirList, const char *pszPackName, const char *pszBinName)
 {
@@ -764,7 +764,7 @@ inline void	CRawDataSet::PackFromDirectory(std::list<std::string> &DirList, cons
 	
 	fclose(fp);
 	
-	_WriteRawDataInfo_Bin(pszBinName); // ���֮����дRawDataSet Bin�ļ�
+	_WriteRawDataInfo_Bin(pszBinName); // RawDataSet Bin
 }	
 
 inline void CRawDataSet::EnablePack(const char *pszPackName)
@@ -783,14 +783,14 @@ inline void CRawDataSet::EnablePack(const char *pszPackName)
 
 
 //-----------------------------------------------------------------------------
-// ��ȡRawData���ݵ��ڴ�(һ�����ڰ������ļ�����, ��Ӱ���ȡ�������ļ����ݵĳ���
-// ������������Ҫ��ʹ�ô˺���, Ҳ������ȫ����)
+// RawData(, 
+// , )
 //-----------------------------------------------------------------------------
 inline LPBYTE CRawDataSet::LoadRawFileData(CRawDataInfo *pInfo)
 {
 	LPBYTE pbtBuf    = NULL;
 	DWORD  dwBufSize = 0;
-	if(_bEnablePack) // �Ӱ��ж�ȡ
+	if(_bEnablePack) // 
 	{
 		pbtBuf    = Util_LoadFilePart(_szPackName, pInfo->dwPackOffset, pInfo->dwDataSize);
 		dwBufSize = pInfo->dwDataSize;

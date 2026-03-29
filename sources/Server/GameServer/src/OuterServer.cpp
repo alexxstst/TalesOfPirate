@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 #include <time.h>
 #include "DataSocket.h"
 #include "GameCommon.h"
@@ -28,21 +28,21 @@ OuterServer::~OuterServer()
 	ShutDown(12*1000);
 }
 
-bool	OuterServer::OnConnect(DataSocket *datasock)					//����ֵ:true-��������,false-����������
+bool	OuterServer::OnConnect(DataSocket *datasock)					//:true-,false-
 {
 	datasock->SetRecvBuf(32*1024); 
 	datasock->SetSendBuf(32*1024);
 	ToLogService("network", "GateServer Connected! IP = [{}] port = {}", datasock->GetPeerIP(), datasock->GetPeerPort());
 
-    // ֪ͨӦ�ò㣬����һ�� GateServer
-    // Типизированная сериализация: уведомление о подключении GateServer
+    //  GateServer
+    //  :    GateServer
     auto wpkt = net::msg::serializeGmGateConnectCmd();
     AddPK(datasock, wpkt);
 
 	return true;
 }
 
-void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reasonֵ:0-���س��������˳���-3-���类�Է��رգ�-1-Socket����;-5-�����ȳ������ơ�
+void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reason:0--3--1-Socket;-5-
 {
 	ToLogService("network", "GateServer Disconnect! IP = [{}] port = {}, reason = [{}]", datasock->GetPeerIP(), datasock->GetPeerPort(), reason);
 
@@ -51,12 +51,12 @@ void	OuterServer::OnDisconnect(DataSocket *datasock,int reason)		//reasonֵ:0-�
 
 	if (gt->IsValid())
 	{
-		// ֪ͨ�߼������Gate�����ӶϿ�
-		// Типизированная сериализация: уведомление об отключении GateServer
+		// Gate
+		//  :    GateServer
 		auto WtPk = net::msg::serializeGmGateReleaseCmd();
 		AddPK(datasock, WtPk);
 
-        // ����GateServer
+        // GateServer
         gt->Invalid();      
     }
 }
@@ -112,7 +112,7 @@ long ToGateServer::Process()
 	DWORD	dwConnectTick = 0;
 	
 	dwTick = dwCurTick = GetTickCount();
-	dwTick -= dwConnectTick; // ��֤�߳����к�����ִ������GateServer�Ĳ���
+	dwTick -= dwConnectTick; // GateServer
 
 	while (!GetExitFlag())
     {
@@ -127,7 +127,7 @@ long ToGateServer::Process()
 		
 		dwLastRunTick = dwCurTick;
 
-		// ��δ���ӵ� GateServer ��������
+		//  GateServer 
 		if (dwCurTick - dwTick >= dwConnectTick)
 	    {
 			dwTick = dwCurTick;

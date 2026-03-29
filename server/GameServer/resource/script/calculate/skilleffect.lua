@@ -1,4 +1,4 @@
-print("--------------------------------------------------")
+﻿print("--------------------------------------------------")
 print("[**] Calculate Files [**]")
 print("-- [Loading] SkillEffect")
 
@@ -16,7 +16,7 @@ dofile(GetResPath("script\\calculate\\forge.lua"))
 dofile(GetResPath("script\\calculate\\ItemGetMission.lua"))
 
 CheckDmgChaNameTest = {}
-CheckDmgChaNameTest[0] = "Re�Y�K�ɩ���"
+CheckDmgChaNameTest[0] = "ReYK"
 CheckDmgChaNameTest[1] = "Carsise"
 CheckDmgChaNameTest[2] = "I am rubbish"
 CheckDmgChaNameTest[3] = "CG mao mao"
@@ -6547,12 +6547,12 @@ end
 function Skill_PKXL_End(ATKER, DEFER, sklv)
     local i = CheckBagItem(ATKER, 4661)
     if i <= 0 then
-        SystemNotice(ATKER, "Does not have wood to repair��what do you use?")
+        SystemNotice(ATKER, "Does not have wood to repairwhat do you use?")
         return
     end
     local j = DelBagItem(ATKER, 4661, 1)
     if j == 1 then
-        SystemNotice(ATKER, "Repairing��")
+        SystemNotice(ATKER, "Repairing")
         local hpdmg = 200 + sklv * 20
         local hp = Hp(DEFER) + hpdmg
         SetCharaAttr(hp, DEFER, ATTR_HP)

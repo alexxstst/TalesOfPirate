@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:µÀ¾ßÀ¸
-// ×÷Õß:lh 2004-10-27
-// ÓÃÍ¾:µÀ¾ßÀ¸ÖÐÃ¿Ò»¸öµÀ¾ß,×°±¸¾ù¿ÉÍÏ¶¯,Ã¿Ò»×°±¸ÏÂ¶¼ÓÐÊý×Ö´ú±í¸öÊý
-// ×îºóÐÞ¸ÄÈÕÆÚ:
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-10-27
+// :,,
+// :
 //----------------------------------------------------------------------
 #pragma once
 #include "UICommandCompent.h"
@@ -22,9 +22,9 @@ class CGoodsGrid : public CCommandCompent
 public:
 	enum eShowStyle
 	{
-		enumSmall,		// Õý³£ÏÔÊ¾Í¼±ê·½Ê½
-		enumSale,		// ÏÔÊ¾ÊÛ³ö
-		enumOwnDef		// ×Ô¶¨ÒåÏÔÊ¾
+		enumSmall,		// 
+		enumSale,		// 
+		enumOwnDef		// 
 	};
 
 
@@ -79,7 +79,7 @@ public:
 	void ResetItemSelections();
 
 	int				GetFreeIndex();
-    void            GetFreeIndex( int* nFree, int& nCount, int nSize );     // nFreeÎªintÊý×é,nCountÎªÊý×éÖÐ¶àÉÙ¸öÖµÓÐÐ§,nSizeÎªnFreeµÄ»º³å¸öÊý
+    void            GetFreeIndex( int* nFree, int& nCount, int nSize );     // nFreeint,nCount,nSizenFree
 	bool			DelItem( int nIndex );
 	bool			SetItem( unsigned int nIndex, CCommandObj* pItem );
 	bool			SwapItem( unsigned int nFirst, unsigned int nSecond );
@@ -97,16 +97,16 @@ public:
 	int				GetMaxNum() const { return _nMaxNum; }
 	int				GetCurNum()	const { return _nCurNum; }
 
-    int             FindCommand( CCommandObj* p );  // ·µ»Ø´óÓÚÁã³É¹¦,Ê§°Ü·µ»Ø-1 
+    int             FindCommand( CCommandObj* p );  // ,-1 
 
 	void			SetItemValid( bool v );
 
 	int				GetFirstShow() const { return _nFirst; }
 
-	int				GetEmptyGridCount();	// ±í¸ñÖÐ¿Õ¸ñ¸ñ×Ó¸öÊý
-	int				GetUsedGridCount();		// ±í¸ñÖÐÒÑÊ¹ÓÃ¸ñ×Ó¸öÊý
+	int				GetEmptyGridCount();	// 
+	int				GetUsedGridCount();		// 
 
-public:	// ÊÂ¼þ
+public:	// 
     GuiThrowItemEvent   evtThrowItem;
     GuiSwapItemEvent    evtSwapItem;
     GuiDragInGridEvent	evtBeforeAccept;
@@ -118,7 +118,7 @@ private:
 	void			_Copy( const CGoodsGrid& rhs );
 	void			_SetSelf();
 	void			_ClearItem();
-	int				_GetHitItem( int x, int y );		// ·µ»Ø-1Ê§°Ü£¬·ñÔò·µ»ØË÷Òý
+	int				_GetHitItem( int x, int y );		// -1
 
 protected:
 	static void		_OnScrollChange(CGuiData *pSender) {
@@ -127,22 +127,22 @@ protected:
 	void			_OnScrollChange();
 
 protected:
-	CGuiPic*		_pImage;					// ±³¾°
+	CGuiPic*		_pImage;					// 
 	CScroll*		_pScroll;
-	CGuiPic*		_pUnit;						// µ¥Ôª¸ñÍ¼Æ¬
+	CGuiPic*		_pUnit;						// 
 
 	CCommandObj**	_pItems;
 
 protected:
 	eShowStyle		_eShowStyle;
 
-	int				_nUnitHeight, _nUnitWidth;	// µ¥Ôª¿í¸ß 
-	int				_nSpaceX, _nSpaceY;			// µ¥Ôª¼ä¾à
+	int				_nUnitHeight, _nUnitWidth;	//  
+	int				_nSpaceX, _nSpaceY;			// 
 
-	int				_nRow, _nCol;				// ÏÔÊ¾µÄÐÐÁÐ
-	int				_nMaxNum;					// ¸ñ×ÓÊý,ÐÐÁÐµÄÕûÊý±¶
+	int				_nRow, _nCol;				// 
+	int				_nMaxNum;					// ,
 
-	// ÓëÖÜÎ§±ß¿òµÄ¾àÀë
+	// 
 	int				_nLeftMargin;
 	int				_nTopMargin;
 	int				_nRightMargin;
@@ -156,17 +156,17 @@ private:
 
 private:
 	int				_nStartX, _nStartY;
-	int				_nPageShowNum;				// Ò»Ò³ÄÜÏÔÊ¾µÄ¸öÊý
+	int				_nPageShowNum;				// 
 	int				_nTotalW, _nTotalH;
 
-	int				_nFirst, _nLast;			// ÏÔÊ¾Ê±µÄµÚÒ»¸öºÍ×îºóÒ»¸ö
+	int				_nFirst, _nLast;			// 
 
 	CCommandObj*	_pDragItem;
-	int				_nDragIndex;				// ÍÏ¶¯Ê±µÄË÷Òý
+	int				_nDragIndex;				// 
 	int				_nDragOffX, _nDragOffY;
 	int				_nDragRow,	_nDragCol;
 
-	int				_nCurNum;					// µ±Ç°ÎïÆ·ÊýÁ¿
+	int				_nCurNum;					// 
 	bool			_IsShowHint;
 
 private:
@@ -181,7 +181,7 @@ private:
 
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void CGoodsGrid::SetSpace( int x, int y )	
 { 
 	if( x >= 0 )	_nSpaceX=x; 

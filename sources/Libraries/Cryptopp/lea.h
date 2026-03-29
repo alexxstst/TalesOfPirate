@@ -1,4 +1,4 @@
-// lea.h - written and placed in the public domain by Kim Sung Hee and Jeffrey Walton
+﻿// lea.h - written and placed in the public domain by Kim Sung Hee and Jeffrey Walton
 //         Based on "LEA: A 128-Bit Block Cipher for Fast Encryption on Common
 //         Processors" by Deukjo Hong, Jung-Keun Lee, Dong-Chan Kim, Daesung Kwon,
 //         Kwon Ho Ryu, and Dong-Geon Lee.

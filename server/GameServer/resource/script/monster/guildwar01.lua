@@ -1,4 +1,4 @@
-local cha=CreateCha(999, 49533, 11381, 145, 600)
+锘縧ocal cha=CreateCha(999, 49533, 11381, 145, 600)
 SetChaSideID(cha, 1)
 local cha=CreateCha(999, 52777, 12540, 175, 600)
 SetChaSideID(cha, 1)
@@ -8,12 +8,12 @@ local cha=CreateCha(999, 49834, 9023, 175, 600)
 SetChaSideID(cha, 1)
 local cha=CreateCha(1005, 50920, 10472, 145, 20000)
 SetChaSideID(cha, 1)
-local cha=CreateCha(1006, 52023, 10362, 145, 20000)--海军吸魔
+local cha=CreateCha(1006, 52023, 10362, 145, 20000)--
 SetChaSideID(cha, 1)
 local cha=CreateCha(1003, 51498, 11119, 190, 20000)
 SetChaSideID(cha, 1)
 --local cha=CreateCha(48, 51495, 10602, 175, 60)
-local cha=CreateCha(1003, 10400, 10800, 190, 20000)----箭塔
+local cha=CreateCha(1003, 10400, 10800, 190, 20000)----
 SetChaSideID(cha, 1)
 local cha=CreateCha(1003, 11200, 10300, 190, 20000)
 SetChaSideID(cha, 1)
@@ -122,9 +122,9 @@ local cha=CreateCha(1003, 30725, 22373, 145, 20000)
 SetChaSideID(cha, 1)
 local cha=CreateCha(1003, 31813, 22044, 145, 20000)
 SetChaSideID(cha, 1)
---local cha=CreateCha(1004, 30117, 52848, 355, 20000)--海盗高级
+--local cha=CreateCha(1004, 30117, 52848, 355, 20000)--
 --SetChaSideID(cha, 2)
---local cha=CreateCha(1004, 31576, 52807, 355, 20000)--海盗高级
+--local cha=CreateCha(1004, 31576, 52807, 355, 20000)--
 --SetChaSideID(cha, 2)
 --local cha=CreateCha(65, 30842, 53224, 355, 60)
 
@@ -182,7 +182,7 @@ local cha=CreateCha(1004, 39326, 39649, 355, 20000)
 SetChaSideID(cha, 2)
 local cha=CreateCha(1004, 39636, 46013, 355, 20000)
 SetChaSideID(cha, 2)
---local cha=CreateCha(1003, 29924, 9911, 145, 20000)--高级
+--local cha=CreateCha(1003, 29924, 9911, 145, 20000)--
 --SetChaSideID(cha, 1)
 local cha=CreateCha(1004, 26453, 48379, 310, 20000)
 SetChaSideID(cha, 2)
@@ -190,7 +190,7 @@ local cha=CreateCha(1004, 34946, 47830, 145, 20000)
 SetChaSideID(cha, 2)
 local cha=CreateCha(1004, 36367, 47877, 145, 20000)
 SetChaSideID(cha, 2)
---local cha=CreateCha(1003, 31413, 9925, 145, 20000)--高级
+--local cha=CreateCha(1003, 31413, 9925, 145, 20000)--
 --SetChaSideID(cha, 1)
 local cha=CreateCha(999, 29931, 10698, 145, 600)
 SetChaSideID(cha, 1)
@@ -322,43 +322,43 @@ local cha=CreateCha(1000, 30762, 35501, 145, 600)
 SetChaSideID(cha, 2)
 
 
-----海军雕像
+----
 haijunSide_BaseRole = CreateCha(954, 30726, 9792, 180, 20000)
 haijunSide_JDNotice = 0
 SetChaSideID(haijunSide_BaseRole, 1)
 
-----海军粮仓
+----
 haijunSide_LCRole = CreateCha(993, 11137, 11078, 145, 20000)
 haijunSide_LCNotice = 0
 SetChaSideID( haijunSide_LCRole, 1)
 
 
------海军军火库
+-----
 haijunSide_DYKRole =CreateCha(995, 51495, 10602, 175, 20000)
 haijunSide_DYKNotice =0
 SetChaSideID(haijunSide_DYKRole, 1)
 
 
------海盗雕像
+-----
 haidaoSide_BaseRole = CreateCha(955, 30869, 52799, 355, 20000)
 haidaoSide_JDNotice = 0
 SetChaSideID(haidaoSide_BaseRole, 2)
 
 
------海盗粮仓
+-----
 haidaoSide_LCRole=CreateCha(994, 51739, 51899, 310, 20000)
 haidaoSide_LCNotice = 0
 SetChaSideID(haidaoSide_LCRole, 2)
 
 
 
------海盗军火库
+-----
 haidaoSide_DYKRole=CreateCha(996, 11618, 51702, 355, 20000)
 haidaoSide_DYKNotice= 0
 SetChaSideID(haidaoSide_DYKRole, 2)
 
 
------海军高级箭塔
+-----
 haijunSide_JTRole_1=CreateCha(1010, 29924, 9911, 145, 20000)
 SetChaSideID(haijunSide_JTRole_1, 1)
 
@@ -366,7 +366,7 @@ haijunSide_JTRole_2=CreateCha(1010, 31413, 9925, 145, 20000)
 SetChaSideID(haijunSide_JTRole_2, 1)
 
 
------海盗高级箭塔
+-----
 haidaoSide_JTRole_1=CreateCha(1011, 30117, 52848, 355, 20000)
 SetChaSideID(haidaoSide_JTRole_1, 2)
 

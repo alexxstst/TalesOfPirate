@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//	2005/3/24	Arcol	¼ÓÈë¶¨Ê±Æ÷
+ï»¿//------------------------------------------------------------------------
+//	2005/3/24	Arcol	
 //------------------------------------------------------------------------
 #include "StdAfx.h"
 #include "uicompent.h"
@@ -175,7 +175,7 @@ void CCompent::OnActive()
 
 void CCompent::SetActive(CCompent* v) 
 { 
-    // ÅÐ¶Ï¼¤»î×´Ì¬
+    // 
     if(_pActive==v ) return;
 
     if( _pActive ) _pActive->OnLost();
@@ -194,7 +194,7 @@ void CCompent::SetParent( CGuiData* p )
 
 void CCompent::SetIsDrag( bool v )
 {
-	// ×Ó¿Ø¼þÎÞÍÏ¶¯
+	// 
 	if( _isChild ) return;
 
 	CGuiData::SetIsDrag(v);
@@ -298,7 +298,7 @@ bool CContainer::AddCompent( CCompent* p )
 	{
 		_items.push_back(p);
 
-		// ´Ë´¦½ö¸Ä±ä_pParnet,²»¸Ä±ä_isChild,ËùÒÔ²»µ÷ÓÃSetParent
+		// _pParnet,_isChild,SetParent
 		p->_pParent = this;		
 
 		if( p->IsHandleMouse() || p->GetIsFocus() ) _mouse.push_back( p );

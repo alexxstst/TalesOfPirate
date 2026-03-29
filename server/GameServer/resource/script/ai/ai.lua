@@ -1,4 +1,4 @@
-print("--------------------------------------------------")
+﻿print("--------------------------------------------------")
 print("[**] AI Files [**]")
 print("-- [Loading] AI")
 dofile(GetResPath("script/ai/ai_sdk.lua"))

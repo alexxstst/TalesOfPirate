@@ -1,4 +1,4 @@
-// Logvwr.cpp : ����Ӧ�ó��������Ϊ��
+﻿// Logvwr.cpp : 
 //
 
 #include "stdafx.h"
@@ -20,24 +20,24 @@ BEGIN_MESSAGE_MAP(CLogvwrApp, CWinApp)
 END_MESSAGE_MAP()
 
 
-// CLogvwrApp ����
+// CLogvwrApp 
 
 CLogvwrApp::CLogvwrApp()
     {
-    // TODO: �ڴ˴����ӹ�����룬
-    // ��������Ҫ�ĳ�ʼ�������� InitInstance ��
+    // TODO: 
+    //  InitInstance 
     }
 
 
-// Ψһ��һ�� CLogvwrApp ����
+//  CLogvwrApp 
 
 CLogvwrApp theApp;
 
-// CLogvwrApp ��ʼ��
+// CLogvwrApp 
 
 BOOL CLogvwrApp::InitInstance()
     {
-    // ��ֻ֤����һ��ʵ��
+    // 
     HANDLE hPrevMutex;
     HANDLE hMutex;
     LPCTSTR pszMutex = "mUtEx Of kOp";
@@ -52,12 +52,12 @@ BOOL CLogvwrApp::InitInstance()
         return FALSE;
         }
 
-    // ����������
+    // 
     hMutex = ::CreateMutex(NULL, 0, pszMutex);
 
-    // ���һ�������� Windows XP �ϵ�Ӧ�ó����嵥ָ��Ҫ
-    // ʹ�� ComCtl32.dll �汾 6 ����߰汾�����ÿ��ӻ���ʽ��
-    //����Ҫ InitCommonControls()�����򣬽��޷��������ڡ�
+    //  Windows XP 
+    //  ComCtl32.dll  6 
+    // InitCommonControls()
     InitCommonControls();
 
     CWinApp::InitInstance();
@@ -79,18 +79,18 @@ BOOL CLogvwrApp::InitInstance()
 	}
 	else
 	{
-		// Заменено printf → логирование
+		//  printf  
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(VW_LOGVWR_CPP_00001));
 	}
 
-    // ��׼��ʼ��
-    // ���δʹ����Щ���ܲ�ϣ����С
-    // ���տ�ִ���ļ��Ĵ�С����Ӧ�Ƴ�����
-    // ����Ҫ���ض���ʼ������
-    // �������ڴ洢���õ�ע�����
-    // TODO: Ӧ�ʵ��޸ĸ��ַ�����
-    // �����޸�Ϊ��˾����֯��
-    //SetRegistryKey(_T("Ӧ�ó��������ɵı���Ӧ�ó���"));
+    // 
+    // 
+    // 
+    // 
+    // 
+    // TODO: 
+    // 
+    //SetRegistryKey(_T(""));
     if (!::mus_mgr_init(true))
         {
         AfxMessageBox("mus_mgr_init failed!");
@@ -101,17 +101,17 @@ BOOL CLogvwrApp::InitInstance()
     INT_PTR nResponse = dlg.DoModal();
     if (nResponse == IDOK)
         {
-        // TODO: �ڴ˷��ô�����ʱ�á�ȷ�������ر�
-        //�Ի���Ĵ���
+        // TODO: 
+        //
         }
     else if (nResponse == IDCANCEL)
         {
-        // TODO: �ڴ˷��ô�����ʱ�á�ȡ�������ر�
-        //�Ի���Ĵ���
+        // TODO: 
+        //
         }
 
-    // ���ڶԻ����ѹرգ����Խ����� FALSE �Ա��˳�Ӧ�ó���
-    // ����������Ӧ�ó������Ϣ�á�
+    //  FALSE 
+    // 
     ::mus_mgr_exit();
     ::CloseHandle(hMutex);
     return FALSE;

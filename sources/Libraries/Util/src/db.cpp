@@ -1,4 +1,4 @@
-#include "util.h"
+﻿#include "util.h"
 #include "db.h"
 using namespace std;
 
@@ -541,10 +541,10 @@ int cfl_rs::get_affected_rows()
 	_tbl_name			=l_tbl_name;
 	if(!l_ret)
 	{
-		return -1;	//SQL����
+		return -1;	//SQL
 	}else if(l_affected_rows !=1)
 	{
-		return -2;	//��ȡֵ��������
+		return -2;	//
 	}
 	return atoi(l_buf[0].c_str());
 }
@@ -559,10 +559,10 @@ int cfl_rs::get_identity()
 	_tbl_name			=l_tbl_name;
 	if(!l_ret)
 	{
-		return -1;	//SQL����
+		return -1;	//SQL
 	}else if(l_affected_rows !=1)
 	{
-		return -2;	//��ȡֵ��������
+		return -2;	//
 	}
 	return atoi(l_buf[0].c_str());
 }
@@ -608,7 +608,7 @@ bool cfl_rs::_get_bin_field(char* field_text, int& len, char* param, char* filte
 
 RECONNECT:
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -679,10 +679,10 @@ RECONNECT:
         } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row fetch"); break;}
 
         try {
-            // ��������
+            // 
             if (found)
             {
-                // ȡ����
+                // 
 				len = _buf_len[0];
                 if (len == SQL_NULL_DATA)
                 {
@@ -698,7 +698,7 @@ RECONNECT:
             }
             else
             {
-                // û��ȡ������
+                // 
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
@@ -763,7 +763,7 @@ bool cfl_rs::_get_row(string field_text[], int field_max_cnt, const char* param,
 
 RECONNECT:
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -839,10 +839,10 @@ RECONNECT:
         } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row fetch"); break;}
 
         try {
-            // ��������
+            // 
             if (found)
             {
-                // ȡ����
+                // 
                 for (i = 0; i < col_num; ++ i)
                 {
                     if (_buf_len[i] == SQL_NULL_DATA)
@@ -860,7 +860,7 @@ RECONNECT:
             }
             else
             {
-                // û��ȡ������
+                // 
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
@@ -921,7 +921,7 @@ bool cfl_rs::_get_row3(string field_text[], int field_max_cnt, const char* param
 
 RECONNECT:
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -998,10 +998,10 @@ RECONNECT:
         } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 fetch"); break;}
 
         try {
-            // ��������
+            // 
             if (found)
             {
-                // ȡ����
+                // 
                 for (i = 0; i < col_num; ++ i)
                 {
                     if (_buf_len[i] == SQL_NULL_DATA)
@@ -1025,7 +1025,7 @@ RECONNECT:
             }
             else
             {
-                // û��ȡ������
+                // 
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
@@ -1087,7 +1087,7 @@ bool cfl_rs::_get_rowOderby(string field_text[], int field_max_cnt, const char* 
 
 RECONNECT:
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -1164,10 +1164,10 @@ RECONNECT:
         } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row3 fetch"); break;}
 
         try {
-            // ��������
+            // 
             if (found)
             {
-                // ȡ����
+                // 
                 for (i = 0; i < col_num; ++ i)
                 {
                     if (_buf_len[i] == SQL_NULL_DATA)
@@ -1191,7 +1191,7 @@ RECONNECT:
             }
             else
             {
-                // û��ȡ������
+                // 
                 if (affect_rows != NULL)
                     *affect_rows = 0;
             }
@@ -1437,7 +1437,7 @@ bool cfl_rs::getalldata(const char* sql, vector< vector< string > >& data, unsig
 {
 	bool ret;
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -1522,7 +1522,7 @@ bool cfl_rs::get_page_data(char* tablename, char* param, int pagesize, int pagei
 {
 	bool ret;
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -1658,7 +1658,7 @@ RECONNECT:
 	if (g_cchLogUtilDb == 1)
 	    ToLogService("database", "get() [SQL]: [{}]", sql);
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -1730,10 +1730,10 @@ RECONNECT:
         } catch (...) {if (g_cchLogUtilDb == 1) ToLogService("database", "exception raised from _get_row fetch"); break;}
 
         try {
-            // ��������
+            // 
             if (found)
             {
-                // ȡ����
+                // 
                 memcpy((void *)pdata, _buf[0], len);
             }
             else
@@ -1870,7 +1870,7 @@ bool friend_tbl::get_friend_dat(friend_dat* farray, int& array_num, unsigned int
     char sql[SQL_MAXLEN];
 	sprintf(sql, query_friend_format, atorID, atorID, atorID, atorID);
 
-    // ִ�в�ѯ����
+    // 
     SQLRETURN sqlret;
     SQLHSTMT hstmt = SQL_NULL_HSTMT;
     SQLSMALLINT col_num = 0;
@@ -1972,7 +1972,7 @@ bool friend_tbl::get_friend_dat(friend_dat* farray, int& array_num, unsigned int
 	char sql[SQL_MAXLEN];
 	sprintf(sql, query_friend_format, atorID, atorID, atorID);
 
-	// ִ�в�ѯ����
+	// 
 	SQLRETURN sqlret = exec_sql_direct(sql, false);
 	if (DBOK(sqlret))
 	{
@@ -2097,7 +2097,7 @@ bool friend_tbl::get_gm_dat(friend_dat* farray, int& array_num, bool* drop)
                 farray[i].motto = (char const*)_buf[4];
             }
 
-            array_num = i; // ȡ��������
+            array_num = i; // 
 
             SQLFreeStmt(hstmt, SQL_CLOSE);
             SQLFreeStmt(hstmt, SQL_RESET_PARAMS);

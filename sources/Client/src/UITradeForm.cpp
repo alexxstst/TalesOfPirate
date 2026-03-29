@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uitradeform.h"
 #include "gameapp.h"
 #include "scene.h"
@@ -26,8 +26,8 @@ using namespace std;
 bool CTradeMgr::Init()
 {
 	m_bTradeType = 0;
-	m_dwAcceptID = 0;         // ���׽��ܷ�
-	m_dwRequestID = 0;        // �������뷽
+	m_dwAcceptID = 0;         // 
+	m_dwRequestID = 0;        // 
 	m_dwMainID = 0;
 
 	frmRequest = NULL;				
@@ -35,7 +35,7 @@ bool CTradeMgr::Init()
 
 	CFormMgr &mgr = CFormMgr::s_Mgr;
 
-    //��ɫ���׽���Ϳؼ�
+    //
 	frmPlayertrade =  mgr.Find("frmPlayertrade");
 	if ( !frmPlayertrade)
 	{
@@ -44,7 +44,7 @@ bool CTradeMgr::Init()
 	}
 	frmPlayertrade->evtEntrustMouseEvent = _MainMousePlayerTradeEvent ;
 
-	// �����Լ�װ����
+	// 
 	grdSale = dynamic_cast<CGoodsGrid*>(frmPlayertrade->Find("grdSale"));
 	if( !grdSale )		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "grdSale" );
 	GetPlayertradeSaleGrid()->evtBeforeAccept = _evtDragToGoodsEvent;
@@ -55,7 +55,7 @@ bool CTradeMgr::Init()
     GetPlayertradeBuyGrid()->evtBeforeAccept = _evtDragToGoodsEvent;
 	GetPlayertradeBuyGrid()->evtRMouseEvent = _evtOtherRMouseGridEvent;
 
-	//��ɫ���׵Ľ��
+	//
 	labOtherGold =  dynamic_cast<CLabelEx*>(frmPlayertrade->Find("labOtherGold") ); 
 	if ( !labOtherGold)		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "labOtherGold" );
 	
@@ -113,7 +113,7 @@ void CTradeMgr::ShowCharTradeRequest( BYTE byType, DWORD dwRequestID )
 	CGameScene *pScene = CGameApp::GetCurScene();
 	if(!pScene) return;
 
-	CCharacter * pCha = pScene->SearchByID( dwRequestID );  //���뷽
+	CCharacter * pCha = pScene->SearchByID( dwRequestID );  //
 	if( !pCha)	
 	{
 		if( !pCha ) return;
@@ -126,8 +126,8 @@ void CTradeMgr::ShowCharTradeRequest( BYTE byType, DWORD dwRequestID )
 		sprintf( szBuf, g_oLangRec.GetString(780), pCha->getHumanName() );
 
 
-	// add by Philip.Wu  2006-06-11  ��ֹ�򵯳������ѡ����µ���
-	//                               �޸�Ϊһ���н������룬�͹ر�֮ǰ��ȷ����
+	// add by Philip.Wu  2006-06-11  
+	//                               
 	g_stUIBox.CloseAllBox();
 
 	stSelectBox* pBox = g_stUIBox.ShowSelectBox( _evtSelectYesNoEvent, szBuf );
@@ -153,7 +153,7 @@ void CTradeMgr::_evtSelectYesNoEvent(CCompent *pSender, int nMsgType, int x, int
 void CTradeMgr::_MainMousePlayerTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string name = pSender->GetName();
-	if( name=="btnNo"  || name == "btnClose" )  //������˳���ť,��رոñ���
+	if( name=="btnNo"  || name == "btnClose" )  //,
 	{	
 		if ( g_stUITrade.m_dwMainID==g_stUITrade.m_dwAcceptID )
 			::CS_CancelTrade( g_stUITrade.m_bTradeType, g_stUITrade.m_dwRequestID );
@@ -232,7 +232,7 @@ void CTradeMgr::_evtGoldFormEvent(CCompent *pSender, int nMsgType, int x, int y,
 
 void CTradeMgr::ShowCharTrade( BYTE byType, DWORD dwAcceptID, DWORD dwRequestID )
 {
-	if( !frmPlayertrade ) return;			//���׽���
+	if( !frmPlayertrade ) return;			//
 
 	CGameScene *pScene = g_pGameApp->GetCurScene();
 	if(!pScene) return;
@@ -243,15 +243,15 @@ void CTradeMgr::ShowCharTrade( BYTE byType, DWORD dwAcceptID, DWORD dwRequestID 
 	CCharacter* pRequestCha(NULL);
 	CCharacter* pAcceptCha(NULL);
 
-	if (mission::TRADE_CHAR == byType)		//�������֮��Ľ���
+	if (mission::TRADE_CHAR == byType)		//
 	{
 		frmRequest = g_stUIEquip.GetItemForm();
-		grdRequest = g_stUIEquip.GetGoodsGrid();  //��������Grid�ؼ�
+		grdRequest = g_stUIEquip.GetGoodsGrid();  //Grid
 
 		pRequestCha = pScene->SearchByHumanID( dwRequestID );
 		pAcceptCha =  pScene->SearchByHumanID( dwAcceptID );
 	} 
-	else if (mission::TRADE_BOAT == byType)	//��Ҵ�ֻ֮��Ľ���,��ʱ���˶��Ǵ�,������ID����
+	else if (mission::TRADE_BOAT == byType)	//,,ID
 	{		
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if( !pMain ) return;
@@ -274,7 +274,7 @@ void CTradeMgr::ShowCharTrade( BYTE byType, DWORD dwAcceptID, DWORD dwRequestID 
 		{
 			return;			
 		}
-		// �жϴ�ֻ����ҳ���Ƿ��,�����,�ر���
+		// ,,
 		CForm* pBoatRoom = pBoat->GetForm();
 		if (!pBoatRoom) return;
 		CForm* pForm = dynamic_cast<CForm*>(pBoatRoom->GetParent());
@@ -303,7 +303,7 @@ void CTradeMgr::ShowCharTrade( BYTE byType, DWORD dwAcceptID, DWORD dwRequestID 
 	else
 		m_dwMainID = dwAcceptID;
 
-	//���ñ�����λ�ò���ʾ,�Լ����ױ����ؼ���ʼ��
+	//,
 	frmRequest->SetParent( NULL );
 	frmRequest->SetPos( 0, 100 );
 	frmRequest->Refresh();	
@@ -328,12 +328,12 @@ void CTradeMgr::ShowCharTrade( BYTE byType, DWORD dwAcceptID, DWORD dwRequestID 
 	btnIMP->SetIsEnabled( m_bTradeType==mission::TRADE_CHAR );
 	btnTrade->SetIsEnabled( false );	
 
-	string strPlayTradeLabName("");			//labPlayertradeName�ؼ�Caption
+	string strPlayTradeLabName("");			//labPlayertradeNameCaption
 	strPlayTradeLabName = pRequestCha->getHumanName();
 	strPlayTradeLabName +=  "/";
 	strPlayTradeLabName += pAcceptCha->getHumanName();
 
-	// �տ�ʼ�����Է�����Ľ������Ʒ��ֻ�жԷ�ȷ���Ժ���ܿ���
+	// 
 	labOtherGold->SetIsShow( false );
 	GetPlayertradeBuyGrid()->SetIsShow( false );
 
@@ -372,7 +372,7 @@ void  CTradeMgr::DragItemToTrade(DWORD dwCharID,USHORT sItemID,BYTE byIndex,BYTE
 	{
 		tradeGrd = g_stUITrade.GetPlayertradeSaleGrid();
 
-		//�������иõ��߱��
+		//
 		CCommandObj* pSelf = grdRequest->GetItem( byItemIndex );
 		if (pSelf)
 		{
@@ -573,13 +573,13 @@ void CTradeMgr::Clear()
 		}
 	}
 
-	//�ر���߱���
+	//
 	if ( frmRequest ) frmRequest->Close();
 
-	//�ر��ұ߱���
+	//
 	if ( frmPlayertrade) frmPlayertrade->Close();
 
-	//����
+	//
 	frmRequest = NULL;
 	grdRequest = NULL;
 
@@ -592,7 +592,7 @@ void CTradeMgr::Clear()
 		CDrag::GetDrag()->Reset();
 	}
 
-    // ���׺�رճ���
+    // 
 	CWorldScene* pWorldScene = dynamic_cast<CWorldScene*>(g_pGameApp->GetCurScene());
 	if(pWorldScene && pWorldScene->GetShipMgr())
 	{
@@ -645,16 +645,16 @@ void CTradeMgr::_evtOtherRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,in
 }
 
 
-// add by Philip.Wu  2006-07-04  ֹͣ���ײ��رս��׿�
+// add by Philip.Wu  2006-07-04  
 void CTradeMgr::CloseAllForm()
 {
-	// ��ֹͣ����
+	// 
 	if(IsTrading())
 	{
 		::CS_CancelTrade( g_stUITrade.m_bTradeType, g_stUITrade.m_dwRequestID );
 	}
 
-	// �رմ���
+	// 
 	if(frmPlayertrade && frmPlayertrade->GetIsShow())
 	{
 		frmPlayertrade->SetIsShow(false);

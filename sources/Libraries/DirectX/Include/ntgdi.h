@@ -1,4 +1,4 @@
-/******************************Module*Header*******************************\
+﻿/******************************Module*Header*******************************\
 * Module Name: ntgdi.h
 *
 * Structures defining kernel-mode entry points for GDI.

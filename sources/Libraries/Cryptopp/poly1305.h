@@ -1,4 +1,4 @@
-// poly1305.h - written and placed in the public domain by Jeffrey Walton and Jean-Pierre Munch
+﻿// poly1305.h - written and placed in the public domain by Jeffrey Walton and Jean-Pierre Munch
 //              Based on Andy Polyakov's Base-2^26 scalar multiplication implementation.
 //              For more information, see https://www.openssl.org/~appro/cryptogams/.
 

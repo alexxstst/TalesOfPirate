@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 //#include "../../../proj/EffectEditer.h"
 //#include <mindpower.h>
 #include "GlobalInc.h"
@@ -332,7 +332,7 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 
 	if(!CScriptFile::m_ctScript.OpenFileRead("effect/model.txt"))
 	{
-		ToLogService("errors", LogLevel::Error, "ȱ�� effect/model.txt");
+		ToLogService("errors", LogLevel::Error, " effect/model.txt");
 		return false;
 	}
 
@@ -409,7 +409,7 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 int		CMPResManger::GetTextureID(const s_string &sName)
 {
 #if RESOURCE_SCRIPT == 1
-	// ��Դ�ű�����ʱ���Զ������ļ���
+	// 
 	StrMapIter iter = _mapTexture.find(sName);
 	if (iter == _mapTexture.end())
 		_mapTexture.insert(sName);
@@ -432,13 +432,13 @@ int		CMPResManger::GetTextureID(const s_string &sName)
 	//}
 	
 #if RESOURCE_SCRIPT == 2
-	// ��Դ�ű�ʹ�ò���ʱ����������δ������Ч�ű���
+	// 
 	ToLogService("errors", LogLevel::Error, ": CMPResManger::GetTextureID(),TextureName={}", sName.c_str());
 #endif
 
 	// Failure
 	char szMsg[64];
-	sprintf(szMsg,"ȱ����Ч��ͼ[%s](�ļ������ڻ���Ч��Դ�����ļ�����)",
+	sprintf(szMsg,"[%s]()",
 		sName.c_str());
 	ToLogService("errors", LogLevel::Error, "{}",szMsg);
 	return -1;
@@ -471,7 +471,7 @@ lwITex*		CMPResManger::GetTextureByIDlw( int iID)
 		if(LW_FAILED(lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, 0, D3DFMT_A4R4G4B4)))
 		{
 			char szMsg[64];
-			sprintf(szMsg, "������Ч��ͼ[id=%d]����", iID);
+			sprintf(szMsg, "[id=%d]", iID);
 			ToLogService("errors", LogLevel::Error, "{}",szMsg);
 			return 0;
 		}
@@ -524,7 +524,7 @@ int		CMPResManger::GetMeshID(const s_string &sName)
 
 	// Failure
 	//char szMsg[64];
-	//sprintf(szMsg,"ȱ����Чģ��[%s](�ļ������ڻ���Ч��Դ�����ļ�����)",
+	//sprintf(szMsg,"[%s]()",
 	//	sName.c_str());
 	//LG("ERROR","msg%s",szMsg);
 	return -1;
@@ -539,7 +539,7 @@ CEffectModel* CMPResManger::GetMeshByID( int iID)
 	if(iID >=7)
 	{
 		if(!_vecMeshList[iID])
-		{	// ��һ����Ҫģ�Ͷ��󣬴���
+		{	// 
 			_vecMeshList[iID] = new CEffectModel;
 
 			_vecMeshList[iID]->InitDevice(m_pDev);
@@ -554,7 +554,7 @@ CEffectModel* CMPResManger::GetMeshByID( int iID)
 				path_info->SetPath( PATH_TYPE_MODEL_ITEM, szOldPath );
 
 				char szMsg[64];
-				sprintf(szMsg,"������Чģ��[id=%d]ʧ��", iID);
+				sprintf(szMsg,"[id=%d]", iID);
 				ToLogService("errors", LogLevel::Error, "{}",szMsg);
 				return 0;
 			}
@@ -567,40 +567,40 @@ CEffectModel* CMPResManger::GetMeshByID( int iID)
 			pRetMesh = _vecMeshList[iID];
 		}
 		else
-		{	// ֮����Ҫģ�Ͷ��󣬴���
+		{	// 
 			if (_vecMeshList[iID]->IsUsing())
 			{
 				int n = _iMeshNum;
 				for (; n < MAXMESH_COUNT; ++n)
 				{
 					if (_vecMeshList[n] && _vecMeshList[n]->IsUsing())
-					{	// ����б������λ���Ѿ���ģ���ˣ�����ģ������ʹ�ã��������һ��λ��
+					{	// 
 						continue;
 					}
 					if(!_vecMeshList[n])	
-					{	//���Ϊ���´���һ��ģ�Ͷ��󣨳�ʼģ��Ϊδʹ��״̬��
+					{	//
 						_vecMeshList[n] = new CEffectModel;
 					}
 
-					// ������λ�õ�ģ��û�б�ʹ�ã���ʹ�����ģ�Ͷ���
+					// 
 					if (_vecMeshList[n]->m_iID != iID)
-					{	// �����ģ������Ҫ��ģ�Ͳ�ͬ�򿽱�һ��
+					{	// 
 						if (!_vecMeshList[n]->Copy(*_vecMeshList[iID]))
 						{
 							SAFE_DELETE(_vecMeshList[n]);
 							char szMsg[64];
-							sprintf(szMsg,"ȱ����Чģ��[id=%d]��������", iID);
+							sprintf(szMsg,"[id=%d]", iID);
 							ToLogService("errors", LogLevel::Error, "{}",szMsg);
 							return 0;
 						}
 					}
 
-					//�������ʾ�Ѿ��ҵ����õ�ģ�Ͷ����������ȽϹ��죬ע�⿼����֮ǰ�����ԣ�
+					//
 					break;
 				}
 				if(n >= MAXMESH_COUNT)
 				{
-					ToLogService("errors", LogLevel::Error, "��Чģ������");
+					ToLogService("errors", LogLevel::Error, "");
 					return 0;
 				}
 				pRetMesh =_vecMeshList[n];
@@ -845,7 +845,7 @@ bool	CMPResManger::LoadTotalTexture()
 			if(!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 			{
 				//sprintf(t_pszFile, "%s\\%s",_pszTexPath,t_sfd.cFileName);
-				////ȫ��ת����Сд
+				////
 				//memset(pszname,0,32);
 				//char *pszDataName = _strlwr( _strdup( t_sfd.cFileName ) );
 				//int len = lstrlen(pszDataName);
@@ -916,7 +916,7 @@ void CMPResManger::LoadTotalData()
 	HANDLE  t_hFind = NULL;
 
 
-	// װ�ض���
+	// 
 	lstrcpy(t_Path,"animation\\");
 	lstrcat(t_Path,"\\*.lab");
 
@@ -935,10 +935,10 @@ void CMPResManger::LoadTotalData()
 			char path[ LW_MAX_PATH ];
 			sprintf( path, "%s%s", "animation\\", t_sfd.cFileName );
 
-			//ȫ��ת����Сд
+			//
 			if( !g_GeomManager.LoadBoneData( t_sfd.cFileName ) )
 			{
-				//LG("error","msg:װ��ģ�Ͷ���ʧ��(%s)��", path );
+				//LG("error","msg:(%s)", path );
 			}
 			count ++;
 			if( count == 50 )
@@ -997,7 +997,7 @@ void CMPResManger::LoadTotalRes()
 //			{
 //				continue; 
 //			}
-//			//ȫ��ת����Сд
+//			//
 //			sFileName = t_sfd.cFileName;
 //			transform(sFileName.begin(), sFileName.end(),
 //				sFileName.begin(),
@@ -1019,7 +1019,7 @@ void CMPResManger::LoadTotalRes()
 //	path_info->SetPath( PATH_TYPE_MODEL_ITEM, szOldPath );
 
 #ifndef _UNLOADRES
-	//// ����
+	//// 
 	//lstrcpy(t_Path,"model\\item");
 	//lstrcat(t_Path,"\\*.lgo");
 
@@ -1035,17 +1035,17 @@ void CMPResManger::LoadTotalRes()
 	//			continue; 
 	//		}
 
-	//		//ȫ��ת����Сд
+	//		//
 	//		if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
 	//		{
-	//			//LG("error","msg:װ��itemģ��ʧ��(%s)��", t_sfd.cFileName );
+	//			//LG("error","msg:item(%s)", t_sfd.cFileName );
 	//		}
 	//	}
 
 	//}while(FindNextFile(t_hFind,&t_sfd));
 	//FindClose(t_hFind);
 
-	// ��ɫģ��
+	// 
 	lstrcpy(t_Path,"model\\character");
 	lstrcat(t_Path,"\\*.lgo");
 
@@ -1066,10 +1066,10 @@ void CMPResManger::LoadTotalRes()
 			if( nNum++ >= 900 )
 				break;
 
-			//ȫ��ת����Сд
+			//
 			if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
 			{
-				//LG("error","msg:װ��ģ��ʧ��(%s)��", t_sfd.cFileName );
+				//LG("error","msg:(%s)", t_sfd.cFileName );
 			}
 		}
 
@@ -1173,7 +1173,7 @@ bool	CMPResManger::LoadTotalMesh()
 				{
 					continue; 
 				}
-				//ȫ��ת����Сд
+				//
 				sFileName = t_sfd.cFileName;
 				transform(sFileName.begin(), sFileName.end(),
 					sFileName.begin(),
@@ -1192,7 +1192,7 @@ bool	CMPResManger::LoadTotalMesh()
 		FindClose(t_hFind);
 		path_info->SetPath( PATH_TYPE_MODEL_ITEM, szOldPath );
 
-		// ����
+		// 
 		lstrcpy(t_Path,"model\\item");
 		lstrcat(t_Path,"\\*.lgo");
 
@@ -1208,17 +1208,17 @@ bool	CMPResManger::LoadTotalMesh()
 					continue; 
 				}
 
-				//ȫ��ת����Сд
+				//
 				if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
 				{
-					//LG("error","msg:װ��itemģ��ʧ��(%s)��", t_sfd.cFileName );
+					//LG("error","msg:item(%s)", t_sfd.cFileName );
 				}
 			}
 
 		}while(FindNextFile(t_hFind,&t_sfd));
 		FindClose(t_hFind);
 
-		//// ��ɫģ��
+		//// 
 		//lstrcpy(t_Path,"model\\character");
 		//lstrcat(t_Path,"\\*.lgo");
 
@@ -1234,10 +1234,10 @@ bool	CMPResManger::LoadTotalMesh()
 		//			continue; 
 		//		}
 
-		//		//ȫ��ת����Сд
+		//		//
 		//		if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
 		//		{
-		//			//LG("error","msg:װ��ģ��ʧ��(%s)��", t_sfd.cFileName );
+		//			//LG("error","msg:(%s)", t_sfd.cFileName );
 		//		}
 		//	}
 
@@ -1303,14 +1303,14 @@ void	CMPResManger::AddUniteEffectToMgr(std::vector<I_Effect>& vecEffArray)
 }
 
 
-//!װ�����Ч�����ļ�
+//!
 bool	CMPResManger::LoadEffectFromFile(int idx, char* pszFileName)
 {
 	FILE* t_pFile;
 	t_pFile = fopen(pszFileName, "rb");
 	if(!t_pFile)
 		return false;
-	//!�汾
+	//!
 	DWORD t_dwVersion;
 	int   t_temp;
 	fread(&t_dwVersion,sizeof(t_dwVersion),1,t_pFile);
@@ -1369,10 +1369,10 @@ bool	CMPResManger::LoadTotalEffect()
 				char *sname = &t_sfd.cFileName[length - 4];
 				if(stricmp(sname,".eff") != 0)
 				{
-					//LG(t_sfd.cFileName, "���Ǳ�׼��.eff�ļ�,��ӱ���Ŀ¼ɾ��");
+					//LG(t_sfd.cFileName, ".eff,");
 					continue;
 				}
-				////ȫ��ת����Сд
+				////
 				string sFileName;
 				sFileName = t_sfd.cFileName;
 				transform(sFileName.begin(), sFileName.end(),
@@ -1387,7 +1387,7 @@ bool	CMPResManger::LoadTotalEffect()
 				if(!LoadEffectFromFile(_iEffectNum, t_pszFile))
 				{
 					char szData[1024];
-					sprintf( szData, "װ����Ч�ļ�(%s)ʧ�ܣ�", t_pszFile );
+					sprintf( szData, "(%s)", t_pszFile );
 					MessageBox( NULL, szData, "Error", MB_OK );
 					//return false;
 				}
@@ -1398,7 +1398,7 @@ bool	CMPResManger::LoadTotalEffect()
 
 				_vecEffectName[_iEffectNum] = t_sfd.cFileName;
 
-				//�����Ч���ĵ�һ����Ч����������Ϊ�ļ�����
+				//
 				_vecEffectList[_iEffectNum][0].setEffectName(_vecEffectName[_iEffectNum]);
 
 				_iEffectNum++;
@@ -1431,7 +1431,7 @@ bool	CMPResManger::LoadTotalEffect()
 				_vecEffectName[_iEffectNum] = pResInfo->szDataName;
 				//SAFE_DELETE_ARRAY(pszDataName);
 
-				//�����Ч���ĵ�һ����Ч����������Ϊ�ļ�����
+				//
 				//_vecEffectList[_iEffectNum][0].setEffectName(_vecEffectName[_iEffectNum]);
 
 				_iEffectNum++;
@@ -2063,7 +2063,7 @@ bool	CMPResManger::LoadDefaultText(const char* pszFileName)
 
 int		CMPResManger::GetPartCtrlID(const s_string& pszName)
 {
-	// _strdup����malloc�����ڴ棬��ɾ����delete,������
+	// _strdupmallocdelete,
 	//pszName.lo
 
 	//char *pszDataName = _strlwr( _strdup( pszName.c_str() ) );
@@ -2101,12 +2101,12 @@ int		CMPResManger::GetPartCtrlID(const s_string& pszName)
 //{
 //	if(iID > MAXPART_COUNT)
 //	{
-//		LG("error", "msg��Ч����̫�࣬��lemon");
+//		LG("error", "msglemon");
 //		return NULL;
 //	}
 //	if(iID < 0)
 //	{
-//		LG("error","msg��ЧID[%d]",iID);
+//		LG("error","msgID[%d]",iID);
 //		return NULL;
 //	}
 //	_vecPartCtrl[iID].mseek(0,SEEK_SET);
@@ -2119,12 +2119,12 @@ CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 	//	(*_vecPartCtrl[iID])->GetModelNum()<=0)
 	if(iID > MAXPART_COUNT)
 	{
-		ToLogService("errors", LogLevel::Error, "��Ч����̫�࣬��lemon");
+		ToLogService("errors", LogLevel::Error, "lemon");
 		return NULL;
 	}
 	if(iID < 0)
 	{
-		ToLogService("errors", LogLevel::Error, "��ЧID[{}]",iID);
+		ToLogService("errors", LogLevel::Error, "ID[{}]",iID);
 		return NULL;
 	}
 	if((*_vecPartCtrl[iID]) == NULL)
@@ -2152,7 +2152,7 @@ CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 void	CMPResManger::LoadTotalPartCtrl()
 {
 #if RESOURCE_SCRIPT == 0 || RESOURCE_SCRIPT == 1
-	//�����ļ�Ŀ¼����
+	//
 	{
 		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
@@ -2202,7 +2202,7 @@ void	CMPResManger::LoadTotalPartCtrl()
 		//#endif
 	}
 #else
-	//�ӽű��ļ��м���
+	//
 	{
 		MPResourceInfo* pResInfo(0);
 		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() +1; i++)
@@ -2345,8 +2345,8 @@ BOOL CMPResManger::OnResetDevice()
 
 	D3DXMatrixOrthoLH(&_Mat2dViewProj, float(m_d3dBackBuffer.Width), float(m_d3dBackBuffer.Height), 0.0f, 1.0f);
 
-	// ��ResetDevice��call back�����У�g_Render��GetScrWidth ��û����������
-    // �������lwDeviceObject�Ľӿ�
+	// ResetDevicecall backg_RenderGetScrWidth 
+    // lwDeviceObject
 	_iFontBkWidth = /*m_pDev->GetScrWidth()/2;//*/m_d3dBackBuffer.Width/2;
 	_iFontBkHeight= /*m_pDev->GetScrHeight()/2;//*/m_d3dBackBuffer.Height/2;
     //RECT rc_client;

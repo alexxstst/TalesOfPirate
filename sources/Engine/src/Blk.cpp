@@ -1,4 +1,4 @@
-#include "stdafx.h"
+О╩©#include "stdafx.h"
 #include "blk.h"
 #include <stdio.h>
 
@@ -75,12 +75,12 @@ BOOL CBlk::Compress_BLK_RLE(const char* filename, DWORD* pARGB, int width, int h
 	if(UseRect.top >= UseRect.bottom)
 	{
 		memset(&UseRect,0,sizeof(UseRect));
-		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\nё║ё║ё║>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ЁЖ╢Макё║       уБуем╪жпц╩спхн╨н╤╚╤╚ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
+		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
 	}
 	else if(UseRect.left >= UseRect.right)
 	{
 		memset(&UseRect,0,sizeof(UseRect));
-		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\nё║ё║ё║>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ЁЖ╢Макё║       уБуем╪жпц╩спхн╨н╤╚╤╚ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
+		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
 	}
 
 	int w,h;
@@ -275,12 +275,12 @@ BOOL CBlk::Compress_BLK(const char* filename, DWORD* pARGB, int width, int heigh
 	if(UseRect.top >= UseRect.bottom)
 	{
 		memset(&UseRect,0,sizeof(UseRect));
-		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\nё║ё║ё║>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ЁЖ╢Макё║       уБуем╪жпц╩спхн╨н╤╚╤╚ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
+		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
 	}
 	else if(UseRect.left >= UseRect.right)
 	{
 		memset(&UseRect,0,sizeof(UseRect));
-		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\nё║ё║ё║>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ЁЖ╢Макё║       уБуем╪жпц╩спхн╨н╤╚╤╚ <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
+		//((CmakegtfDlg*)AfxGetMainWnd())->OutMsg("\n>>>>>>>>>>>>>>>>>>>>>>>>>>>>>         <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<\n\n");
 	}
 
 	int w,h;
@@ -451,7 +451,7 @@ BOOL CBlk::Compress_BLK(const char* filename, DWORD* pARGB, int width, int heigh
 
 BOOL CBlk::CompressPal(const DWORD* pARGB, int width, int height, _RGB* pPal, int & nCount)
 {
-	//а╒яуи╚кВрЩ╠М
+	//
 
 	_RGB* pPalTmp=new _RGB[width * height];
 	int	* pColorCount= new int [width * height];
@@ -474,7 +474,7 @@ BOOL CBlk::CompressPal(const DWORD* pARGB, int width, int height, _RGB* pPal, in
 			int index;
 			if((index = SearchPal(pPalTmp,nPalTmpCount,crTmp)) == -1)
 			{
-				//хГ╧Шур╡╩╣╫
+				//
 				pPalTmp[nPalTmpCount]=crTmp;
 				pColorCount[nPalTmpCount]=1;
 				nPalTmpCount++;
@@ -489,7 +489,7 @@ BOOL CBlk::CompressPal(const DWORD* pARGB, int width, int height, _RGB* pPal, in
 
 	if(nPalTmpCount > 256)
 	{
-		//хГ╧Шяуи╚йЩ╢Ссз 256 ,тРх║й╧сцвН╤Ю╣д 256 жж
+		// 256 , 256 
 		for(i=1; i<nPalTmpCount; i++)
 		{
 			crTmp=pPalTmp[i];
@@ -544,7 +544,7 @@ int CBlk::SearchPal(_RGB* pPal, int nCount,_RGB color)
 
 int CBlk::GetColorIndex(_RGB* pPal, int nCount, _RGB color)
 {
-	//тзяуи╚кВрЩ╠Мжп╤╗н╩ж╦╤╗яуи╚╣дкВрЩ
+	//
 	unsigned int min_diff=100000;
 	int min_index=-1;
 	unsigned int diff;

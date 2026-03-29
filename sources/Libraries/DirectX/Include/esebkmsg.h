@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	ESEBKMSG.H
  *
  *	Microsoft Exchange Information Store

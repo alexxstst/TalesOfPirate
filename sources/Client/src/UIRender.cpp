@@ -1,5 +1,5 @@
-#include "StdAfx.h"
-#include "caLua.h"
+﻿#include "StdAfx.h"
+#include "script.h"
 #include "UIRender.h"
 //#include <typeinfo>
 #include <cstdlib>
@@ -287,7 +287,7 @@ int CDrag::BeginMouseRun( CGuiData* gui, bool InRect, int x, int y, DWORD key )
                 _nDragX = x - _nStartX;
                 _nDragY = y - _nStartY;
 
-                // ��ʼ�϶�
+                // Begin drag
                 if( (abs(_nStartX - x)>=(int)_nYareLen || abs(_nStartY - y)>=(int)_nYareLen) )
                 {
                     _eState = stDrag;
@@ -317,7 +317,7 @@ void CDrag::Reset()
 
 bool CDrag::MouseRun( int x, int y, DWORD key )
 {
-    // �϶����
+    // Drag ended
     if( key & Mouse_LUp )
     {
         if( _IsUseGrid )
@@ -640,7 +640,7 @@ void UIRender::SetScreen( int w, int h, bool isFull )
 {
 	_IsFullScreen = isFull;
 
-    int sw, sh;     // ʵ����ʾ����
+    int sw, sh;     // Actual display dimensions
     RECT rc;
     ::GetClientRect( g_pGameApp->GetHWND(), &rc );
     sw = rc.right  - rc.left;	
@@ -748,7 +748,7 @@ bool CGuiPic::LoadImage( int frame, int nTextureID, int tx, int ty, int tw, int 
 	pTex->nTexSY	= ty;
 	pTex->nTexW	= tw;
 	pTex->nTexH	= th;
-	if( scale_x<=0.000001f ) // ��ͼ���������ڳߴ�
+	if( scale_x<=0.000001f ) // Scale texture to fit parent dimensions
 	{
 		if( _pParent )
 		{
@@ -1011,7 +1011,7 @@ bool CGuiFont::Clear()
 	{
 		(*it)->ReleaseFont();
 		//delete (*it);
-		SAFE_DELETE(*it); // UI��������
+		SAFE_DELETE(*it); // UI font cleanup
 	}
 
 	_fonts.clear();
@@ -1161,10 +1161,10 @@ void CEdit::ShowFocus()
 {
 	if( !IsNormal() ) return;
 
-	RefreshText();   // ˢ��������ʾ
-	RefreshCursor(); // ˢ�¹����ʾ
+	RefreshText();   // Refresh text display
+	RefreshCursor(); // Refresh cursor display
 
-	// ��ʾ��˸���
+	// Show blinking cursor
 	++_nCursorFlashCount;
 	if( _nCursorFlashCount>=10 )
 	{
@@ -1173,7 +1173,7 @@ void CEdit::ShowFocus()
 	}
 	if( _bCursorIsShow )
 	{
-		//���þ�������ȷ������λ��
+		// Use rectangle to accurately set cursor position
 		//GetRender().RenderTextureAbsRect( _nCursorX, _nCursorY, &_CursorImage );
 		GetRender().FillFrame( _nCursorX, _nCursorY, _nCursorX+2, _nCursorY+_nCursorHeight, _nCursorColor );
 	}
@@ -1406,8 +1406,8 @@ bool CFormMgr::Init(HWND hWnd)
 	{
 		CEdit::InitCursor( "texture/ui/editcursor.tga" );
 
-		CLU_LoadScript("scripts/lua/font.bin", 0);
-		if( !CGuiFont::s_Font.Init() ) 
+		LoadLuaScript(g_LuaState, "scripts/lua/font.lua");
+		if( !CGuiFont::s_Font.Init() )
 		{
 			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(747));
 			return false;
@@ -1415,9 +1415,9 @@ bool CFormMgr::Init(HWND hWnd)
 
 		GetRender().SetScreen( g_Render.GetScrWidth(), g_Render.GetScrHeight(), (g_Render.IsFullScreen()!=0 ? true: false) );
 
-		CLU_LoadScript("scripts/lua/gui.bin", 0);
+		LoadLuaScript(g_LuaState, "scripts/lua/gui.lua");
 
-		if( g_Config.m_bEditor ) CLU_LoadScript("scripts/lua/forms/editor.bin", 0); 
+		if( g_Config.m_bEditor ) LoadLuaScript(g_LuaState, "scripts/lua/forms/editor.lua"); 
 
 		CImeInput::s_Ime.Init();
 		CCursor::I()->Init();
@@ -1481,7 +1481,7 @@ inline void UIRender::RenderSprite(LPTEXTURE tex, RECT* rc, VECTOR2* vscale, VEC
 
 		RECT* prc = &pCliper->GetClipRect();
 
-		// ��?D??��2?????��a��?2???��?
+		// Skip rendering if completely outside clip rect
 		if (vdest->x > prc->right || vdest->x < prc->left - w)
 		{
 			return;

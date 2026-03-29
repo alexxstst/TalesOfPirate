@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "UITeam.h"
 #include "UIChat.h"
 #include "GuildMemberData.h"
@@ -51,7 +51,7 @@ CMember::~CMember()
     //{
     //    delete _pData;
     //}
-	SAFE_DELETE(_pData); // UIµ±»ú´¦Àí
+	SAFE_DELETE(_pData); // UI
 }
 
 void CMember::Refresh()
@@ -224,7 +224,7 @@ bool CTeam::Del( unsigned long nID )
         {
 			_nCount--;
             //delete *it;
-			SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*it); // UI
             _member.erase( it );
 
 		    g_stUIChat.TeamSend( enumSTM_AFTER_DEL_MEMBER, NULL, GetStyle() );
@@ -242,7 +242,7 @@ bool CTeam::DelByName( const char* szName )
         {
 			_nCount--;
             //delete *it;
-			SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*it); // UI
             _member.erase( it );
 
 		    g_stUIChat.TeamSend( enumSTM_AFTER_DEL_MEMBER, NULL, GetStyle() );
@@ -258,7 +258,7 @@ void CTeam::Clear()
     for( members::iterator it=_member.begin(); it!=_member.end(); it++ )
 	{
 		//  delete *it;
-		SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+		SAFE_DELETE(*it); // UI
 	}
 
     _member.clear();

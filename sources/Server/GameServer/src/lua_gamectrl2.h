@@ -1,10 +1,10 @@
-#include "lua_gamectrl.h"
+﻿#include "lua_gamectrl.h"
 
 
-// ��ý�ɫ����ӳ�Ա����, �������0��ʾδ���
+// , 0
 inline int lua_IsChaInTeam(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
     {
@@ -26,10 +26,10 @@ inline int lua_IsChaInTeam(lua_State *L)
 	return 1;
 }
 
-// ��ý�ɫ����ӳ�Ա����, �������0��ʾδ���
+// , 0
 inline int lua_GetTeamCha(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
 	BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2));
 	if(!bValid) 
     {
@@ -55,24 +55,24 @@ inline int lua_GetTeamCha(lua_State *L)
 	CPlayer *pMember = g_pGameApp->GetPlayerByDBID(pPlayer->GetTeamMemberDBID(nNo));
 	if (!pMember)
 	{
-		// LG("harm", "��λ��[%d], ��Ա������!\n", nNo); 
+		// LG("harm", "[%d], !\n", nNo); 
 		return 0;
 	}
 	
-	if(pMember->GetCtrlCha()->IsLiveing()==false) // ����Ѿ�����, ����nil
+	if(pMember->GetCtrlCha()->IsLiveing()==false) // , nil
 	{
 		return 0;
 	}
 
 	lua_pushlightuserdata(L, pMember->GetCtrlCha());
-	// LG("harm", "���ظ�λ��[%d]��Ա = [%s]\n", nNo, pMember->GetCtrlCha()->GetName());
+	// LG("harm", "[%d] = [%s]\n", nNo, pMember->GetCtrlCha()->GetName());
 	return 1;
 }
 
-// ȡ�ý�ɫ���µ��������Ա��
+// 
 inline int lua_IsChaInRegion(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
     {
@@ -96,10 +96,10 @@ inline int lua_IsChaInRegion(lua_State *L)
 }
 
 
-// ȡ�ý�ɫ����������
+// 
 inline int lua_GetChaDefaultName(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
     {
@@ -118,22 +118,22 @@ inline int lua_GetChaDefaultName(lua_State *L)
 
 extern int lua_GetChaAttr(lua_State *pLS);
 extern int lua_SetChaAttr(lua_State *pLS);
-// ȡ�ý�ɫ��ָ������
+// 
 inline int lua_GetChaAttrI(lua_State *L)
 {
 	return lua_GetChaAttr(L);
 }
 
-// ���ý�ɫ��ָ������
+// 
 inline int lua_SetChaAttrI(lua_State *L)
 {
 	return lua_SetChaAttr(L);
 }
 
-// ȡ�ý�ɫ��ָ������
+// 
 inline int lua_IsPlayer(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
     {
@@ -153,11 +153,11 @@ inline int lua_IsPlayer(lua_State *L)
 	return 1;
 }
 
-// ���ý�ɫ��ֵ���Ե����ֵ, ����Ϸ����ʱӦ��ȫ���������
+// , 
 inline int lua_SetChaAttrMax(lua_State *L)
 {
 
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop(L)==2 && lua_isnumber(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
     {
@@ -176,10 +176,10 @@ inline int lua_SetChaAttrMax(lua_State *L)
 	return 0;
 }
 
-// Ϊ��ǰ��ͼ������������, ��ͼ��ʼ��ʱ�ᱻ����, ��Ϸ��Ҳ���Ե���
+// , , 
 inline int lua_AddWeatherRegion(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop(L)==7 && lua_isnumber(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3) 
 		                            && lua_isnumber(L, 4) && lua_isnumber(L, 5) && lua_isnumber(L, 6)
 									&& lua_isnumber(L, 7));
@@ -210,27 +210,27 @@ inline int lua_AddWeatherRegion(lua_State *L)
 	
 	g_pScriptMap->m_WeatherMgr.AddWeatherRange(pNew);
 
-	//LG("weather", "������������[%d], ����ʱ���� = %d, ����ʱ�� = %d, location = %d %d, %d %d\n", btType, dwFre, dwLastTime, sx, sy, w, h);
+	//LG("weather", "[%d],  = %d,  = %d, location = %d %d, %d %d\n", btType, dwFre, dwLastTime, sx, sy, w, h);
 	ToLogService("common", "add weather area[{}], occur time limit = {}, duration = {}, location = {} {}, {} {}", btType, dwFre, dwLastTime, sx, sy, w, h);
 	return 0;
 }
 
 
-// �����ǰ��ͼ�ϵ�������������
+// 
 inline int lua_ClearMapWeather(lua_State *L)
 {
 	if(!g_pScriptMap) return 0;
 
 	g_pScriptMap->m_WeatherMgr.ClearAll();
-	//LG("weather", "�����ͼ[%s]�ϵ�������������!\n", g_pScriptMap->GetName());
+	//LG("weather", "[%s]!\n", g_pScriptMap->GetName());
 	ToLogService("common", "weed out map[{}] upon all weather area!", g_pScriptMap->GetName());
 	return 0;
 }
 
-// ���ô�ֻ�������ȼ�ʱ
+// 
 inline int lua_SetBoatCtrlTick(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
 	if(!bValid) 
     {
@@ -246,10 +246,10 @@ inline int lua_SetBoatCtrlTick(lua_State *L)
 	return 0;
 }
 
-// ȡ����ֻ�������ȼ�ʱ
+// 
 inline int lua_GetBoatCtrlTick(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
     {
@@ -269,12 +269,12 @@ inline int lua_GetBoatCtrlTick(lua_State *L)
 	return 1;
 }
 
-// �ٻ�ĳ���ɫ, ���� ˮ��  ����
-// ���� : �ٻ���, �ٻ�����(1 ˮ��  2����), ��ɫ�����
-// ���� �ٻ������Ľ�ɫָ��
+// ,    
+//  : , (1   2), 
+//  
 inline int lua_SummonCha(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
 	if(!bValid) 
     {
@@ -291,7 +291,7 @@ inline int lua_SummonCha(lua_State *L)
 	int nChaType = enumCHACTRL_NONE;
 	CCharacter *pCha = NULL;
 	
-	if(sType==1)		// ����ˮ��
+	if(sType==1)		// 
 	{
 		pCha = pHost->GetSubMap()->ChaSpawn(sChaInfoID, enumCHACTRL_PLAYER_PET, rand()%360, &Pos);
 		if (pCha)
@@ -301,7 +301,7 @@ inline int lua_SummonCha(lua_State *L)
 			pCha->m_AIType = 0;
 		}
 	}
-	else if(sType==2)		// ���ó���
+	else if(sType==2)		// 
 	{
 		Pos.move(rand() % 360, 3 * 100);
 		pCha = pHost->GetSubMap()->ChaSpawn(sChaInfoID, enumCHACTRL_PLAYER_PET, rand()%360, &Pos);
@@ -315,7 +315,7 @@ inline int lua_SummonCha(lua_State *L)
 	
 	if(pCha==NULL)
 	{
-		//pHost->SystemNotice( "�ٻ���ɫ[%d %d]ʧ��", sType, sChaInfoID );
+		//pHost->SystemNotice( "[%d %d]", sType, sChaInfoID );
 		pHost->SystemNotice( "call character[%d %d]failed", sType, sChaInfoID );
 		return 0;
 	}
@@ -324,12 +324,12 @@ inline int lua_SummonCha(lua_State *L)
 	return 1;
 }
 
-// ɾ����ɫ
-// ���� : ��ɫ����
-// ���� ��
+// 
+//  : 
+//  
 inline int lua_DelCha(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
     {
@@ -340,7 +340,7 @@ inline int lua_DelCha(lua_State *L)
 	CCharacter *pCTarCha = (CCharacter*)lua_touserdata(L, 1);
 	if (!pCTarCha)
 		return 0;
-	if (pCTarCha->IsPlayerCtrlCha()) // ��ҵ�ǰ���ƽ�ɫ����ɾ��
+	if (pCTarCha->IsPlayerCtrlCha()) // 
 		return 0;
 	pCTarCha->Free();
 

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "GameApp.h"
 
 #include "Character.h"
@@ -70,7 +70,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 		delete pAdd;
 	}
 
-	// �����������
+	// 
 	if(_bCameraFollow)
 	{
 		if(pCha)
@@ -94,7 +94,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 			pTerr->SetShowCenter(vecCha.x, vecCha.y);
 		}
 	}
-	//!Ҫ���������ú�VIEW MATRIX��
+	//!VIEW MATRIX
 	pCam->SetViewTransform();
 
 	//if( IsKeyDown( DIK_K ) )
@@ -122,7 +122,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 	//test
 
 	// Added by CLP
-	//if ( pCha )	// ���������
+	//if ( pCha )	// 
 	//{
 	//	static bool initial = true;
 	//	if ( initial )
@@ -152,7 +152,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 	ResMgr.FrameMove(dwTimeParam);
 
-	//  1s ִ��һ��
+	//  1s 
 	static DWORD tick = 0;
 	if( GetCurTick() - tick > 1000 )
 	{
@@ -168,7 +168,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 	g_pTestDemo->FrameMove();
 #endif
 
-	// �����̣߳����������
+	// 
 #ifdef USE_DSOUND
 //	if( m_pAudioPlayer )
 //		m_pAudioPlayer->Update( TRUE );
@@ -176,7 +176,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 	g_AudioThread.FrameMove();
 #endif
 
-	// �л���������
+	// 
 	switch( _eSwitchMusic )
 	{
 	case enumOldMusic:
@@ -197,7 +197,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 
 				//AudioSDL::get_instance()->play(g_dwCurMusicID, true);
 
-				// �����̣߳����������
+				// 
 #ifndef USE_DSOUND
 				g_AudioThread.play(g_dwCurMusicID, true);
 #else

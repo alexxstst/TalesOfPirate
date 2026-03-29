@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:ÓÃÓÚ¸ôÀëÍ¼Æ¬ÏÔÊ¾µ×²ã
-// ×÷Õß:lh 2004-07-15
-// ×îºóÐÞ¸ÄÈÕÆÚ:2004-10-20
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-15
+// :2004-10-20
 //----------------------------------------------------------------------
 #pragma once
 #include "UIRender.h"
@@ -13,11 +13,11 @@ namespace GUI
 class CGuiData;
 class CGuiPic
 {
-public:	// ÒÔÏÂ×ø±êÎªÆÁÄ»ÉÏµÄ×ø±ê
+public:	// 
 	CGuiPic( CGuiData* pParent=NULL, unsigned int max=1 );
 	CGuiPic( const CGuiPic& rhs );
-	CGuiPic& operator=( const CGuiPic& rhs );		// ¸³Öµ²»¸Ä±ä_pOwn
-	~CGuiPic() { SAFE_DELETE_ARRAY(_pImage); } // UIµ±»ú´¦Àí //delete [] _pImage; }
+	CGuiPic& operator=( const CGuiPic& rhs );		// _pOwn
+	~CGuiPic() { SAFE_DELETE_ARRAY(_pImage); } // UI //delete [] _pImage; }
 
 	void	SetMax( int v );
 
@@ -30,11 +30,11 @@ public:	// ÒÔÏÂ×ø±êÎªÆÁÄ»ÉÏµÄ×ø±ê
 	void	RenderAll( int x, int y , BYTE bAlpha);	
 	void	RenderAll( int x, int y , DWORD dwColor );	
 
-	void		SetFrame( unsigned int num )	{ if( num < _max ) _frame = num; }	// ÉèÖÃµ±Ç°ÏÔÊ¾µÄÖ¡Êý
+	void		SetFrame( unsigned int num )	{ if( num < _max ) _frame = num; }	// 
 	MPTexRect*	GetImage( unsigned int v=0 )	{ 	if( v < _max ) return &_pImage[v]; return NULL;	}
 
-	void	Next()		{ _frame++; if( _frame >= _max ) _frame=0;			}	// ÏÂÒ»ÕÅ
-	void	Prior()		{ _frame--; if( _frame >= _max ) _frame=_max-1;		}	// ÉÏÒ»ÕÅ
+	void	Next()		{ _frame++; if( _frame >= _max ) _frame=0;			}	// 
+	void	Prior()		{ _frame--; if( _frame >= _max ) _frame=_max-1;		}	// 
 
 	void	SetScale(int w, int h);
 	void	SetScale(unsigned int frame, int w, int h);
@@ -77,36 +77,36 @@ private:
 	unsigned int	_frame;
 	unsigned int	_max;
 	CGuiData*		_pParent;
-	bool			_bIsScale;		// Ëõ·Åµ½´°¿ÚÍ¬Ñù´óÐ¡
+	bool			_bIsScale;		// 
 
 };
 
-// ´ø±ß¿òµÄÍ¼Æ¬
+// 
 class CFramePic
 {
 public:
 	enum ePicPos
 	{
-		ppLeft=0,			// ·ÅÖÃÔÚ×ó±ß
+		ppLeft=0,			// 
 		ppUp,
 		ppRight,
 		ppBottom,
 		ppRightBottom,
 		ppLeftBottom,	
 		ppRightUp,
-		ppLeftUp,			// ·ÅÖÃÔÚ×î×óÉÏ½Ç
-		ppClient,			// ÖÐ¼äµÄÍ¼Æ¬£¬À­Éì³äÂúÈ«²¿
+		ppLeftUp,			// 
+		ppClient,			// 
 		ppEnd,
 	};
 
-	// Æ½ÆÌÎ´Íê³É
+	// 
 
 public:
 	CFramePic( CGuiData *pOwn );
 	CFramePic( const CFramePic& rhs );
 	CFramePic& operator=( const CFramePic& rhs );
 
-	~CFramePic() { SAFE_DELETE_ARRAY(_pImage); } // UIµ±»ú´¦Àí //delete [] _pImage; }
+	~CFramePic() { SAFE_DELETE_ARRAY(_pImage); } // UI //delete [] _pImage; }
 
 	void		Render();
 	void		Render( BYTE bAplha );
@@ -116,7 +116,7 @@ public:
 	void		SetAlpha( BYTE alpha );
 	bool		LoadImage( ePicPos p, int nTextureID, int tx, int ty, int tw, int th );
 
-	// w,hÊÇÖ¸±ß¿òµ¥ÔªµÄ¿í¸ß£¬clientÊÇÆ½ÆÌµ¥ÔªÎÄ¼þ£¬cw,chÊÇÆ½ÆÌµ¥Ôª¿í¸ß£¬µ¥Î»£ºÏñËØ
+	// w,hclientcw,ch
 	bool		LoadImage( const char* client, int cw, int ch, int tx, int ty, const char * file, int w, int h );	
 
 	void		SetIsTitle( bool v )		{ _bIsTitle = v;	}
@@ -131,18 +131,18 @@ public:
 	}
 
 private:
-	void			_ClientShow( int x, int y, DWORD color);	// ÏÔÊ¾ÖÐ¼äµÄÍ¼Æ¬
+	void			_ClientShow( int x, int y, DWORD color);	// 
 
 private:
 	MPTexRect*		_pImage;
 	CGuiData*		_pOwn;
 	int				_nX[ppEnd], _nY[ppEnd];
-	bool			_bIsTitle;			// ppClientÊÇ·ñÆ½ÆÌ
-	bool			_bIsShowFrame;		// ÊÇ·ñÏÔÊ¾±ßÏß
+	bool			_bIsTitle;			// ppClient
+	bool			_bIsShowFrame;		// 
 
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void CGuiPic::SetScale(unsigned int frame, int w, int h) 
 {
 	if( frame < _max )

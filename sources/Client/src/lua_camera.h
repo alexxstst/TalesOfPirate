@@ -1,102 +1,47 @@
-//-----------------
-// »ñÈ¡µ±Ç°¾µÍ·½¹µã
-//-----------------
-inline int lua_camGetCenter(lua_State *L)
-{
-    lua_pushnumber(L, g_pGameApp->GetMainCam()->m_RefPos.x);
-    lua_pushnumber(L, g_pGameApp->GetMainCam()->m_RefPos.y);
-    return 2;
-}
+ï»¿// ---   (LuaBridge ) ---
 
-inline int lua_camSetCenter(lua_State *L)
+inline void camSetCenter(float x, float y)
 {
-    // ²ÎÊýºÏ·¨ÐÔÅÐ±ð
-    BOOL bValid = (lua_gettop (L)==2 && lua_isnumber(L, 1) && lua_isnumber(L,2)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    float x = (float)lua_tonumber(L, 1);
-    float y = (float)lua_tonumber(L, 2);
     float ref_x = g_pGameApp->GetMainCam()->m_RefPos.x;
     float ref_y = g_pGameApp->GetMainCam()->m_RefPos.y;
     float dis_x = x - ref_x;
     float dis_y = y - ref_y;
-    g_pGameApp->GetMainCam()->m_RefPos.x = x; 
+    g_pGameApp->GetMainCam()->m_RefPos.x = x;
     g_pGameApp->GetMainCam()->m_RefPos.y = y;
-    g_pGameApp->GetMainCam()->m_EyePos.x += dis_x; 
+    g_pGameApp->GetMainCam()->m_EyePos.x += dis_x;
     g_pGameApp->GetMainCam()->m_EyePos.y += dis_y;
-    return 0;
 }
 
-inline int lua_camFollow(lua_State *L)
+inline void camFollow(int bEnable)
 {
-    // ²ÎÊýºÏ·¨ÐÔÅÐ±ð
-    BOOL bValid = (lua_gettop (L)==1 && lua_isnumber(L, 1)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-
-    BOOL bEnable = (BOOL)(lua_tonumber(L, 1));
-    g_pGameApp->EnableCameraFollow(bEnable);
-    return 0;
+    g_pGameApp->EnableCameraFollow((BOOL)bEnable);
 }
 
-inline int lua_camMoveForward(lua_State *L)
+inline void camMoveForward(float fStep, int bHang)
 {
-    BOOL bValid = (lua_gettop (L)==2 && lua_isnumber(L, 1) && lua_isnumber(L,2)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    float fStep = (float)lua_tonumber(L, 1);
-    BOOL bHang = (BOOL)lua_tonumber(L, 2);
-
-    g_pGameApp->GetMainCam()->MoveForward(fStep, bHang);
-    return 0;
+    g_pGameApp->GetMainCam()->MoveForward(fStep, (BOOL)bHang);
 }
 
-inline int lua_camMoveLeft(lua_State *L)
+inline void camMoveLeft(float fStep, int bHang)
 {
-    BOOL bValid = (lua_gettop (L)==2 && lua_isnumber(L, 1) && lua_isnumber(L,2)); 
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    float fStep = (float)lua_tonumber(L, 1);
-    BOOL bHang = (BOOL)lua_tonumber(L, 2);
-
-    g_pGameApp->GetMainCam()->MoveRight(fStep, bHang);
-    return 0;
+    g_pGameApp->GetMainCam()->MoveRight(fStep, (BOOL)bHang);
 }
 
-inline int lua_camSetAngle(lua_State *L)
+inline void camMoveUp(float fStep)
 {
-    BOOL bValid = (lua_gettop (L)==1 && lua_isnumber(L, 1));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    float fAngle = (float)lua_tonumber(L, 1);
+    g_pGameApp->GetMainCam()->m_RefPos.z -= fStep;
+}
+
+inline void camSetAngle(float fAngle)
+{
     //g_pGameApp->GetMainCam()->InitAngle(fAngle);
-    return 0;
 }
 
-inline int lua_camMoveUp(lua_State *L)
+// --- lua_CFunction (-  LuaBridge  ) ---
+
+inline int camGetCenter(lua_State *L)
 {
-    BOOL bValid = (lua_gettop (L)==1 && lua_isnumber(L, 1));
-    if(!bValid) 
-    {
-        PARAM_ERROR
-        return 0;
-    }
-    float fStep = (float)lua_tonumber(L, 1);
-    g_pGameApp->GetMainCam()->m_RefPos.z-=fStep;
-    return 0;
+    lua_pushnumber(L, g_pGameApp->GetMainCam()->m_RefPos.x);
+    lua_pushnumber(L, g_pGameApp->GetMainCam()->m_RefPos.y);
+    return 2;
 }

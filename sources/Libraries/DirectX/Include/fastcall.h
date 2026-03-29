@@ -1,4 +1,4 @@
-#ifdef WIN32
+﻿#ifdef WIN32
 #if defined(FASTCALL_IN_STORE)
 #define __FORCENONFASTCALL __stdcall //-Gz used in xmake1.mak
 #else

@@ -1,4 +1,4 @@
-print("-- [Loading] Exp And Level")
+﻿print("-- [Loading] Exp And Level")
 function AskGuildItem(role)
     local gold = GetChaAttr(role, ATTR_GD)
     local fame = GetChaAttr(role, ATTR_FAME)

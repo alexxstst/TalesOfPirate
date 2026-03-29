@@ -1,4 +1,4 @@
-//
+ï»¿//
 #pragma once
 
 #include "lwHeader.h"
@@ -52,9 +52,9 @@ private:
     lwAnimDataBone _data;
     lwMatrix44* _bone_rtmat_seq;
     lwMatrix44* _bone_rtmat_blend_seq;
-    //ÕâÀïÓÃlwIndexMatrix44¶ø²»ÊÇlwMatrix44ÊÇ´Ó½Ó¿Ú½Ç¶È¿¼ÂÇ
-    //Íâ²¿ĞèÒªSetDummyRTM()À´µÃµ½ÔËĞĞÊ±¿ÌµÄdummyĞÅÏ¢£¬Õâ¸öĞÅÏ¢
-    //ĞèÒª°üº¬dummyµÄindex
+    //lwIndexMatrix44lwMatrix44
+    //SetDummyRTM()dummy
+    //dummyindex
     lwIndexMatrix44* _dummy_rtmat_seq;
     lwRTBD* _rtbuf_seq;
     lwMatrix44* _rtmat_ptr;

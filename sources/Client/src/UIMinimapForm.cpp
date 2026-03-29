@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiminimapform.h"
 #include "uiForm.h"
 #include "uicompent.h"
@@ -57,21 +57,21 @@ bool CMiniMapMgr::Init()
 	{
 		sprintf( szName, "labMapPos%d", i );
 
-		labMapPosRand[i] = dynamic_cast<CLabelEx*>(frmMinimap->Find( szName )); //��ͼ���� 
+		labMapPosRand[i] = dynamic_cast<CLabelEx*>(frmMinimap->Find( szName )); // 
 		if( !labMapPosRand[i] ) return Error(g_oLangRec.GetString(45), frmMinimap->GetName(), szName);
 	}
-	//labMapPos = dynamic_cast<CLabelEx*>(frmMinimap->Find( "labMapPos" )); //��ͼ���� 
-	//if( !labMapPos ) return Error("msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMinimap->GetName(), "labMapPos");
+	//labMapPos = dynamic_cast<CLabelEx*>(frmMinimap->Find( "labMapPos" )); // 
+	//if( !labMapPos ) return Error("msgui.clu<%s><%s>", frmMinimap->GetName(), "labMapPos");
 	labMapPos = labMapPosRand[0];
 	
-	labMapName = dynamic_cast<CLabelEx*>(frmMinimap->Find( "labMapName" ));   //��ͼ����
+	labMapName = dynamic_cast<CLabelEx*>(frmMinimap->Find( "labMapName" ));   //
 	if( !labMapName ) return Error(g_oLangRec.GetString(45), frmMinimap->GetName(), "labMapName");
 
 	//server timer
 	labClock = dynamic_cast<CLabelEx*>(frmMinimap->Find("labClock"));
 	if (!labClock) return Error(g_oLangRec.GetString(45), frmMinimap->GetName(), "labClock");
 		
-	// ���ͼ
+	// 
 	frmBigmap =  _FindForm("frmBigmap");
 	if( !frmBigmap ) return false;
 	frmBigmap->Refresh();
@@ -125,7 +125,7 @@ bool CMiniMapMgr::Init()
 		};
 	}
 
-	//�״�
+	//
 	frmRadar = _FindForm("frmSearch");
 	if( !frmRadar ) return false;
 	frmRadar->evtEntrustMouseEvent = _RadarFormEvent;
@@ -201,7 +201,7 @@ void CMiniMapMgr::_evtShowbigmap(CGuiData *pSender)
 	g_pGameApp->Waiting();
 	CS_MapMask();
 
-	// Э�鷢�ͻ���ʱ������ʾ
+	// 
 	//if( CGameApp::GetCurScene() && CGameApp::GetCurScene()->GetLargerMap() )
 	//{
 	//	CGameApp::GetCurScene()->GetLargerMap()->Show( true );
@@ -279,7 +279,7 @@ void CMiniMapMgr::_MiniFormMouseEvent(CCompent *pSender, int nMsgType, int x, in
 
 	if (name == "btnOpen")
 	{
-		//�򿪻�رմ��ͼ
+		//
 		if (!g_stUIMap.frmBigmap->GetIsShow())
 			g_stUIMap.frmBigmap->Show();
 		else
@@ -302,7 +302,7 @@ void CMiniMapMgr::_MiniFormMouseEvent(CCompent *pSender, int nMsgType, int x, in
 	}
 	else if(name == "btnOpenTempBag")
 	{
-		// ����ʱ����
+		// 
 		CUIInterface::MainChaMove();
 		//g_stUIStore.ShowTempKitbag();
 	}
@@ -363,7 +363,7 @@ void CMiniMapMgr::_MiniFormMouseEvent(CCompent *pSender, int nMsgType, int x, in
 	//		if( memCtrl )
 	//		{
 	//			memCtrl->Init();
-	//			memCtrl->SetCaption( "��������Online������ָ��_��    �ߣ������������ס���ſɳ�������_ս    �����ڳ���Թ��ﵥ�������ս��_NPC�Ի�������������NPC�ɽ��жԻ�_�ӽ�ת������ס�Ҽ���ˮƽ��ת���������ֿ���_    ����Զ��˫���Ҽ��ص�Ĭ�ϵ��ӽ�_��    �ӣ���������ҵ��Ҽ���ѡ��������ӣ�_    ��Ӻ�ֻ�жӳ���������������Ҽ���_��    �죺Alt+F���������·���ť�ɴ�_     ������������ͷ�񣬻���ֶԻ���_��    �ף���������ҵ���Ҽ���ѡ�����뽻��_     ��Է�ͬ��󣬵�����Ҽ佻�׽���" );
+	//			memCtrl->SetCaption( "Online_    _    _NPCNPC__    _    _    _    Alt+F_     _    _     " );
 	//			memCtrl->ProcessCaption();
 	//		}
 	//		frmHelp->Refresh();
@@ -390,7 +390,7 @@ void CMiniMapMgr::_RadarFormBeforeShowEvent(CForm* pForm, bool& IsShow)
 
 	IsShow = true;
 
-	//�õ����Ŀǰ���ڵĵ�ͼ����
+	//
 	CMapInfo* pMapInfo = GetMapInfo(CGameApp::GetCurScene()->GetInitParam()->strMapFile.c_str());
 	if (!pMapInfo)
 		cboAddr->GetList()->GetItems()->Select(0);
@@ -440,7 +440,7 @@ int CMiniMapMgr::CheckCoordinateEdit(const char* input)
 
 	while(*input)
 	{
-		if (0x30 <= (*input) && (*input) <= 0x39)	//�ж�������
+		if (0x30 <= (*input) && (*input) <= 0x39)	//
 		{
 			input ++;
 		}
@@ -604,7 +604,7 @@ void CMiniMapMgr::CloseRadar()
 bool CMiniMapMgr::IsPKSilver()
 {
 	return false; // Disables blind CA.
-	if(0 == strcmp(GetMapName(), g_oLangRec.GetString(900))) // �Ҷ������� //"������"))
+	if(0 == strcmp(GetMapName(), g_oLangRec.GetString(900))) //  //""))
 		return true;
 
 	return false;
@@ -612,7 +612,7 @@ bool CMiniMapMgr::IsPKSilver()
 
 bool CMiniMapMgr::IsGuildWar()
 {
-	if(0 == strcmp(GetMapName(), g_oLangRec.GetString(934)) || 0 == strcmp(GetMapName(), g_oLangRec.GetString(934)))	// "ʥս" "Сʥս"
+	if(0 == strcmp(GetMapName(), g_oLangRec.GetString(934)) || 0 == strcmp(GetMapName(), g_oLangRec.GetString(934)))	// "" ""
 		return true;
 
 	return false;
@@ -625,35 +625,35 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 	//CMPFont				g_CFont
 	if(/*!pfont ||*/ !CGameApp::GetCurScene() || !CGameApp::GetCurScene()->GetLargerMap()) return;
 
-    POINT ptMouse;  // ������꣨�������꣩
+    POINT ptMouse;  // 
     GetCursorPos(&ptMouse);
     ScreenToClient(g_pGameApp->GetHWND(), &ptMouse);
 
-    RECT rcBigMap;  // ���ͼ���Σ��������꣩
+    RECT rcBigMap;  // 
     rcBigMap.left   = GetBigmapForm()->GetLeft() + GetBigmapRect()->GetLeft();
     rcBigMap.top    = GetBigmapForm()->GetTop()  + GetBigmapRect()->GetTop();
     rcBigMap.right  = rcBigMap.left + GetBigmapRect()->GetWidth();
     rcBigMap.bottom = rcBigMap.top  + GetBigmapRect()->GetHeight();
 
-    POINT ptBigMapCenter;   // ���ͼ�������꣨�������꣩
+    POINT ptBigMapCenter;   // 
     ptBigMapCenter.x = (rcBigMap.right  - rcBigMap.left) >> 1;
     ptBigMapCenter.y = (rcBigMap.bottom - rcBigMap.top)  >> 1;
 
-    POINT ptCenter; // ���ͼ�������꣨��Ϸ���꣩
+    POINT ptCenter; // 
     ptCenter.x = CGameApp::GetCurScene()->GetLargerMap()->GetCenterX() / 100;
     ptCenter.y = CGameApp::GetCurScene()->GetLargerMap()->GetCenterY() / 100;
 
-	constexpr auto MAP_SCALE = 1.25f;   // ���ͼ���ر�����һ���Ʋ�� magic number  :)
+	constexpr auto MAP_SCALE = 1.25f;   //  magic number  :)
 	const auto map_scale_modifier = CGameApp::GetCurScene()->GetLargerMap()->GetScale();
 
-    // �������ǺͲ���վ���үҪ��
+    // 
     if(0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "garner") 
 		||0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "magicsea")
 		||0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "darkblue"))
     {
         struct SApplyInfo
         {
-            int nAreaID;    // ��Ӧ AreaSet ����� ID
+            int nAreaID;    //  AreaSet  ID
             int x, y;
         };
 
@@ -661,21 +661,21 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 
    //     static SApplyInfo stApply[] = 
    //     {
-			//{	1,	2218,	2759	},	//������				
-			//{	55,	1891,	2800	},	//�Ͽ󲹸�վ			
-			//{	58,	1509,	3093	},	//���￩������վ		
-			//{	53,	1002,	2972	},	//����ɭ�ֲ���վ		
-			//{	61,	1114,	2773	},	//�߶�ŵ����վ		
-			//{	63,	526,	2440	},	//���ò���վ			
-			//{	8,	736,	1511	},	//������				
-			//{	13,	855,	3568	},	//ɳ��³�			
-			//{	57,	781,	3118	},	//ɳȪ����վ			
-			//{	62,	1204,	3204	},	//�Ͳ�����վ			
-			//{	20,	1319,	521		},	//���Ǳ��³�			
-			//{	56,	794,	353		},	//��������վ			
-			//{	59,	1048,	648		},	//������˹����վ		
-			//{	60,	2137,	551		},	//����Ӫ�ز���վ
-			//{	54,	611,	2097	},	//�����ӵ²���վ
+			//{	1,	2218,	2759	},	//				
+			//{	55,	1891,	2800	},	//			
+			//{	58,	1509,	3093	},	//		
+			//{	53,	1002,	2972	},	//		
+			//{	61,	1114,	2773	},	//		
+			//{	63,	526,	2440	},	//			
+			//{	8,	736,	1511	},	//				
+			//{	13,	855,	3568	},	//			
+			//{	57,	781,	3118	},	//			
+			//{	62,	1204,	3204	},	//			
+			//{	20,	1319,	521		},	//			
+			//{	56,	794,	353		},	//			
+			//{	59,	1048,	648		},	//		
+			//{	60,	2137,	551		},	//
+			//{	54,	611,	2097	},	//
    //     };
 
 		if(0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "garner"))
@@ -782,7 +782,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 			stApply[7].y = 0;
 		}
 
-        RECT rcBigMapArea;  // ���ͼ������Ϸ���꣩
+        RECT rcBigMapArea;  // 
 		rcBigMapArea.left   = ptCenter.x - ((int)((rcBigMap.right - rcBigMap.left) * MAP_SCALE * map_scale_modifier) >> 1);
 		rcBigMapArea.right  = ptCenter.x + ((int)((rcBigMap.right - rcBigMap.left) * MAP_SCALE * map_scale_modifier) >> 1);
 		rcBigMapArea.top    = ptCenter.y - ((int)((rcBigMap.bottom - rcBigMap.top) * MAP_SCALE * map_scale_modifier) >> 1);
@@ -797,11 +797,11 @@ void CMiniMapMgr::_RenderBigMapHint(void)
                 CAreaInfo* pInfo = GetAreaInfo(stApply[i].nAreaID);
                 if(! pInfo) continue;
 
-                POINT ptRender; // ���� ����վ�����꣨��Ϸ����->��Ļ���꣩
+                POINT ptRender; //  ->
                 ptRender.x = rcBigMap.left + (LONG)((stApply[i].x - rcBigMapArea.left) / MAP_SCALE);
                 ptRender.y = rcBigMap.top  +(LONG)((stApply[i].y - rcBigMapArea.top)  / MAP_SCALE);
 
-                //SIZE size;    // ����������ĵ�ƫ��
+                //SIZE size;    // 
                 //pfont->GetTextSize(pInfo->szDataName, &size);
                 //ptRender.x -= size.cx >> 1;
                 //ptRender.y -= size.cy >> 1;
@@ -812,7 +812,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
     }
 
 
-    // ���������ڴ��ͼ�����ڣ��������ʾ
+    // 
     if(rcBigMap.left < ptMouse.x && ptMouse.x < rcBigMap.right &&
         rcBigMap.top < ptMouse.y && ptMouse.y < rcBigMap.bottom)
     {
@@ -853,23 +853,23 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 
         if(pInfo)
         {
-            RECT rcMonster; // ˢ�ַ�Χ����Ϸ���꣩
+            RECT rcMonster; // 
             SetRect(&rcMonster, pInfo->ptStart.x, pInfo->ptStart.y, 
                                 pInfo->ptEnd.x,   pInfo->ptEnd.y);
 
-            // �������飨��Ϸ����->��Ļ���꣩
+            // ->
             rcMonster.left   = rcBigMap.left + ptBigMapCenter.x + (int)((rcMonster.left   - ptCenter.x) / MAP_SCALE);
             rcMonster.top    = rcBigMap.top  + ptBigMapCenter.y + (int)((rcMonster.top    - ptCenter.y) / MAP_SCALE);
             rcMonster.right  = rcBigMap.left + ptBigMapCenter.x + (int)((rcMonster.right  - ptCenter.x) / MAP_SCALE);
             rcMonster.bottom = rcBigMap.top  + ptBigMapCenter.y + (int)((rcMonster.bottom - ptCenter.y) / MAP_SCALE);
 
-            // ������Χ�ü�
+            // 
             if(rcMonster.left   < rcBigMap.left  ) rcMonster.left   = rcBigMap.left;
             if(rcMonster.top    < rcBigMap.top   ) rcMonster.top    = rcBigMap.top;
             if(rcMonster.right  > rcBigMap.right ) rcMonster.right  = rcBigMap.right;
             if(rcMonster.bottom > rcBigMap.bottom) rcMonster.bottom = rcBigMap.bottom;
 
-           // ��ø����������Ϣ
+           // 
             CChaRecord* pMonsterInfo[MONSTER_LIST_MAX] = {0};
             string      strMonsterName[MONSTER_LIST_MAX];
             int         nMonCount = 0;
@@ -899,7 +899,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
             {
                 //	int nLevelCha = g_pGameApp->GetCurScene()->GetMainCha()->getGameAttr()->get(ATTR_LV);
 				int nLevelCha = (int)g_pGameApp->GetCurScene()->GetMainCha()->getGameAttr()->get(ATTR_LV);
-                int nLevelAvg = nLevelSum / nMonCount;  // ������ֵ�ƽ���ȼ�
+                int nLevelAvg = nLevelSum / nMonCount;  // 
 
                 DWORD dwAreaColor = 0;
                 if     (nLevelAvg > nLevelCha + 15) dwAreaColor = 0x00FF0000;
@@ -914,7 +914,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 
                 GetRender().FillFrame(rcMonster.left, rcMonster.top, rcMonster.right, rcMonster.bottom, dwAreaColor);
 
-				// �����б�
+				// 
                 RECT rcRender = rcBigMap;
                 GetRender().FillFrame(rcBigMap.left, rcRender.top, rcRender.left + sizeNameMax.cx, rcRender.top + (sizeNameMax.cy *nMonCount)); //*nMonCount
                 for(int i = 0; i < nMonCount; ++i)
@@ -925,7 +925,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
             }
         }
 
-//        // �������ָ�������
+//        // 
         char szBuf[256] = {0};
        sprintf( szBuf," Point: %d, %d ", mouse_map_coordinate.x, mouse_map_coordinate.y);
 

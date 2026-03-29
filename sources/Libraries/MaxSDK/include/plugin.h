@@ -1,4 +1,4 @@
-
+﻿
 #ifndef PLUGIN_H_DEFINED
 #define PLUGIN_H_DEFINED
 

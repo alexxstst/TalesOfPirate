@@ -1,4 +1,4 @@
-#ifndef NETIF_H
+﻿#ifndef NETIF_H
 #define NETIF_H
 
 #include "CorsairsNet.h"
@@ -10,22 +10,22 @@
 
 class CProCirculate;
 
-// Типы совместимости (ранее из dbc:: namespace)
+//   (  dbc:: namespace)
 using uChar  = uint8_t;
 using uShort = uint16_t;
 using uLong  = unsigned long;
 using cChar  = const char;
 using LLong  = __int64;
 
-// Константы совместимости
+//  
 #ifndef DS_DISCONN
 #define DS_DISCONN  (0xFFFE)
 #endif
 
-// Типы пакетов (ранее dbc::RPacket& / dbc::WPacket&)
+//   ( dbc::RPacket& / dbc::WPacket&)
 typedef net::RPacket&  LPRPACKET;
 typedef net::WPacket&  LPWPACKET;
-// Глобальные имена без квалификации
+//    
 using WPacket = net::WPacket;
 using RPacket = net::RPacket;
 
@@ -35,41 +35,41 @@ extern inline int lua_HandleNetMessage(lua_State* L);
 
 class NetIF : public net::ITcpClientHandler, public net::ICryptoProvider {
 public:
-	// Обработка входящего пакета (Server → Client)
+	//    (Server  Client)
 	BOOL HandlePacketMessage(LPRPACKET pk);
-	// Отправка пакета (Client → Server)
+	//   (Client  Server)
 	void SendPacketMessage(LPWPACKET pk);
 
 	NetIF();
 	virtual ~NetIF();
 
-	// ── ITcpClientHandler ────────────────────────────────────
+	//  ITcpClientHandler 
 	void OnPacket(net::RPacket& packet) override;
 	void OnDisconnected(int reason) override;
 
-	// ── ICryptoProvider ──────────────────────────────────────
+	//  ICryptoProvider 
 	bool IsActive() const override;
 	bool Encrypt(uint8_t* ciphertext, int ciphertext_len,
 	             const uint8_t* plaintext, int& len) override;
 	bool Decrypt(uint8_t* data, int& len) override;
 
-	// ── Публичный API ────────────────────────────────────────
+	//   API 
 
 	bool IsConnected() { return m_connect.IsConnected(); }
 	int  GetConnStat() { return m_connect.GetConnStat(); }
 	std::string GetDisconnectErrText(int reason) const;
 
-	// Создание WPacket для отправки
+	//  WPacket  
 	net::WPacket GetWPacket() { return net::WPacket(256); }
 
-	// Обработка входящих пакетов из очереди (вызывать в game loop)
+	//      (  game loop)
 	void PollPackets(int maxPackets = 1) { _client.PollPackets(maxPackets); }
 
 	unsigned long GetAveragePing();
 	CProCirculate* GetProCir() { return m_pCProCir; }
 	void SwitchNet(bool isConnected);
 
-	// Доступ к TcpClient (для Connection)
+	//   TcpClient ( Connection)
 	net::TcpClient& GetClient() { return _client; }
 
 	Connection       m_connect;
@@ -103,11 +103,6 @@ public:
 
 	bool _enc;
 	int  _comm_enc;
-	char _key[12];
-	int  _key_len;
-
-	lua_State* g_rLvm;
-	lua_State* g_sLvm;
 
 private:
 	bool EncryptAES(char* ciphertext, unsigned long ciphertext_len,

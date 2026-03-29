@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "UIGlobalVar.h"
 #include <array>
-//2006-1-8 By Arcol:�µĿ��������Ϣ���CCharMsg��ɣ������δʹ��Ҳδ�����ԣ���ԭ�ṹ�Ƚϻ��ң�����ʹ�ô������
+//2006-1-8 By Arcol:CCharMsg
 class CCharMsg
 {
 public:
@@ -17,7 +17,7 @@ public:
 		CHANNEL_GUILD			= 64,
 		CHANNEL_SYSTEM			= 128,
 		CHANNEL_PUBLISH			= 256,
-		CHANNEL_SIDE			= 512,	// ��Ӫ
+		CHANNEL_SIDE			= 512,	// 
 	};
 
 	struct sTextInfo
@@ -73,7 +73,7 @@ private:
 
 private:
 
-	static const WORD			m_wTotalChannelsCount = 12;	// ������Ӫ�޸� 10 -> 11
+	static const WORD			m_wTotalChannelsCount = 12;	//  10 -> 11
 	static const DWORD			m_dwChannelBufferSize = 100;
 	static sChannelInfo			m_sChannelInfo[m_wTotalChannelsCount];
 	static lstTextInfoType		m_lstMsgLink;

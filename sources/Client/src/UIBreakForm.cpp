@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "UIBreakForm.h"
 #include "uiformmgr.h"
@@ -81,18 +81,18 @@ namespace GUI
                     {
                         switch(pItemCommand->GetItemInfo()->sType)
                         {
-                        case 1:     //  ��
-                        case 2:     //  �޽�
-                        case 3:     //  ��
-                        case 4:     //  ��ǹ
-                        case 7:     //  ذ��
-                        case 9:     //  ����
-                        case 11:     //  ����
-                        case 20:     //  ñ��
-                        case 22:     //  �·�
-                        case 23:     //  ����
-                        case 24:     //  Ь��
-                        case 27:     //  ����
+                        case 1:     //  
+                        case 2:     //  
+                        case 3:     //  
+                        case 4:     //  
+                        case 7:     //  
+                        case 9:     //  
+                        case 11:     //  
+                        case 20:     //  
+                        case 22:     //  
+                        case 23:     //  
+                        case 24:     //  
+                        case 27:     //  
                             {
                                 PushItem(i, *pItemCommand, true);
                             }  break;
@@ -246,26 +246,26 @@ namespace GUI
 
     void CBreakMgr::PopItem(int iIndex, bool bRetry/* = false*/)
     {
-        //  �Ƿ�����
+        //  
         if(bLock)
         {
             return;
         }
-        // ɾ��Cmd�е�Item����Item����PushItem()����new����
+        // CmdItemItemPushItem()new
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdBreak[iIndex]->GetCommand());
 		if (! pItemCommand)
             return;
 
-		cmdBreak[iIndex]->DelCommand();	// �ú�����ɾ��delete Item
+		cmdBreak[iIndex]->DelCommand();	// delete Item
 
-		// ��Item��Ӧ����Ʒ���ָ��ɿ���
+		// Item
 		CCommandObj* pItem = g_stUIEquip.GetGoodsGrid()->GetItem(iBreakPos[iIndex]);
 		if (pItem)
 		{
 			pItem->SetIsValid(true);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
         if(!bRetry)
         {
             iBreakPos[iIndex] = NO_USE;
@@ -274,34 +274,34 @@ namespace GUI
 
     void CBreakMgr::PushItem(int iIndex, CItemCommand& rItem, bool bRetry/* = false*/)
     {
-        //  �Ƿ�����
+        //  
         if(bLock)
         {
             return;
         }
-        // �жϵ����Ƿ������
+        // 
 		if(! rItem.GetIsValid())
 		{
 			return;
 		}
 
-		// �鿴ԭ����Cmd���Ƿ��Ѿ���Item�ˣ���������Ƴ�
+		// CmdItem
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdBreak[iIndex]->GetCommand());
 		if (pItemCommand)
 		{
 			PopItem(iIndex);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
         if(!bRetry)
         {
             iBreakPos[iIndex] = g_stUIEquip.GetGoodsGrid()->GetDragIndex();
         }
 
-		// ��Item��Ӧ����Ʒ���ҵ�
+		// Item
 		rItem.SetIsValid(false);
 
-		// ��������Item����Cmd�У�������new������PopItem()��ɾ��
+		// ItemCmdnewPopItem()
 		CItemCommand* pItemCmd = new CItemCommand(rItem);
 		pItemCmd->SetIsValid(true);
 		cmdBreak[iIndex]->AddCommand(pItemCmd);
@@ -413,18 +413,18 @@ namespace GUI
             return;
         switch(pItemCommand->GetItemInfo()->sType)
         {
-        case 1:     //  ��
-        case 2:     //  �޽�
-        case 3:     //  ��
-        case 4:     //  ��ǹ
-        case 7:     //  ذ��
-        case 9:     //  ����
-        case 11:     //  ����
-        case 20:     //  ñ��
-        case 22:     //  �·�
-        case 23:     //  ����
-        case 24:     //  Ь��
-        case 27:     //  ����
+        case 1:     //  
+        case 2:     //  
+        case 3:     //  
+        case 4:     //  
+        case 7:     //  
+        case 9:     //  
+        case 11:     //  
+        case 20:     //  
+        case 22:     //  
+        case 23:     //  
+        case 24:     //  
+        case 27:     //  
             {}  break;
         default:
             {

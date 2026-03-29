@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "lwHeader.h"
 #include "lwStdInc.h"

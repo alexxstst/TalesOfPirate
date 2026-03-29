@@ -1,4 +1,4 @@
-#include "uiguidata.h"
+﻿#include "uiguidata.h"
 #include "sceneobjset.h"
 #include "EffectSet.h"
 

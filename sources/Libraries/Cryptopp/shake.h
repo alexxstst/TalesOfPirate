@@ -1,4 +1,4 @@
-// shake.h - written and placed in the public domain by Jeffrey Walton
+﻿// shake.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file shake.h
 /// \brief Classes for SHAKE message digests

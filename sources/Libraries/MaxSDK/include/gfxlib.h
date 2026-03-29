@@ -1,4 +1,4 @@
-#ifndef _GFXLIB_H_
+﻿#ifndef _GFXLIB_H_
 
 #define _GFXLIB_H_
 

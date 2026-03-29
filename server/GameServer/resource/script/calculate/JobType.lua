@@ -1,4 +1,4 @@
-print("-- [Loading] Job Type")
+﻿print("-- [Loading] Job Type")
 
 JOB_TYPE_XINSHOU		= 0;  -- Newbie
 JOB_TYPE_JIANSHI		= 1;  -- Swordsman

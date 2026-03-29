@@ -1,4 +1,4 @@
-//
+Ôªø//
 #pragma once
 
 #include "lwHeader.h"
@@ -139,7 +139,7 @@ private:
     lwStreamObjVB* _stream_vb_seq[MAX_STREAM_SEQ_SIZE];
     lwStreamObjIB* _stream_ib_seq[MAX_STREAM_SEQ_SIZE];
     DWORD _index_entry_offset;
-    DWORD _vertex_entry_offset; // dx9 ø…“‘÷±Ω”‘⁄SetStreamSource÷–◊ˆ∆´“∆…Ë÷√
+    DWORD _vertex_entry_offset; // dx9 SetStreamSource
 
     DWORD _entity_vb_num;
     DWORD _entity_vb_seq_size;

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "UIGlobalVar.h"
 #include "ChaState.h"//add by alfred.shi 20080709
 #include "uipage.h"	//add by alfred.shi 20080709
@@ -16,7 +16,7 @@ class CImage;
 class CItemCommand;
 class COneCommand;
 
-// ��ʼ�˵�
+// 
 class CStartMgr : public CUIInterface
 {
 public:
@@ -84,7 +84,7 @@ public:
 	void			CheckMouseDown(int x, int y);
 	void			ShowBigText( const char* str );
 
-	void			ShowQueryReliveForm( int nType, const char* str );				// ��ʾ�Ƿ�ԭ�ظ����
+	void			ShowQueryReliveForm( int nType, const char* str );				// 
 
 	void			ShowShipSailForm( bool isShow = true );
 	void			UpdateShipSailForm();
@@ -121,21 +121,21 @@ private:
 
 	static void		_evtTaskMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	// ���鵥���ĶԻ���ص�
+	// 
 	static void		_evtAskTeamFightMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	static void		_evtChaActionChange(CGuiData *pSender);       //�ı��ɫ�Ķ���
-	static void		_evtChaHeartChange(CGuiData *pSender);         //�ı��ɫ������
+	static void		_evtChaActionChange(CGuiData *pSender);       //
+	static void		_evtChaHeartChange(CGuiData *pSender);         //
 
 	static void		_evtMobPageIndexChange(CGuiData* pSender);
 
 	static void		_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key);
 
-	static void		_evtSelfMouseDown(CGuiData *pSender,int x,int y ,DWORD key);	// ���Լ���Ѫ�¼�
+	static void		_evtSelfMouseDown(CGuiData *pSender,int x,int y ,DWORD key);	// 
 
 	static void		_evtOriginReliveFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	static void		_evtShowBoatAttr(CGuiData *pSender,int x,int y ,DWORD key);		// ��ʾ��ֻ����
+	static void		_evtShowBoatAttr(CGuiData *pSender,int x,int y ,DWORD key);		// 
 
 	static void		_NewFrmMainMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
@@ -146,8 +146,8 @@ private:
 	static void 	_evtShowMonsterInfo(CGuiData* pSender, int x, int y, DWORD key);
 	static void 	_evtCheckLootFilter(CGuiData* pSender);
 
-	static const int HELP_PICTURE_COUNT = 68;	// ���ְ����������
-	static const int HELP_LV1_BEGIN     = 28;	// Level1��ͼƬ�±�
+	static const int HELP_PICTURE_COUNT = 68;	// 
+	static const int HELP_LV1_BEGIN     = 28;	// Level1
 
 private:
 	CForm*			frmMain800;
@@ -156,7 +156,7 @@ private:
 	//CTextButton*	btnStart;
 	static CTextButton*	btnQQ;
 
-	//����Լ���Ѫ����sp�� exp������
+	//sp exp
 	
 	CForm*			frmDetail;
 	CProgressBar*	proMainHP;
@@ -167,68 +167,68 @@ private:
 	CLabel*			labMainLevel;
 	CImage*		    imgLeader;
 
- //   CProgressBar*	proMainHP1;		//��ɫ������ֵ
-	//CProgressBar*	proMainHP2;		//��ɫ������ֵ
-	//CProgressBar*	proMainHP3;		//��ɫ������ֵ
-	//CProgressBar*	proMainSP;		//��ɫ������ֵ   	
+ //   CProgressBar*	proMainHP1;		//
+	//CProgressBar*	proMainHP2;		//
+	//CProgressBar*	proMainHP3;		//
+	//CProgressBar*	proMainSP;		//   	
 
-	// ��Ҿ��飬�ȼ�
+	// 
 	//CLabel*			_pShowExp;
 	//CLabel*			_pShowLevel;
 
-	CForm*			frmMainChaRelive;			// ���Ǹ������
+	CForm*			frmMainChaRelive;			// 
 
-	// ����,����
+	// ,
 	CGrid*			grdAction;
 	CGrid*			grdHeart;
 
-	// ��ʾ�����
+	// 
 	CTitle*			tlCity;
 	CTitle*			tlField;
 
-	// �����е��Ҽ��˵�
+	// 
 	static CMenu*	mainMouseRight;
 
-	//��ֻ����ʱ�Ľ���
+	//
 	CForm*			frmShipSail;
 	CLabelEx*		labCanonShow;
 	CLabelEx*		labSailorShow;
 	CLabelEx*		labLevelShow;
 	CLabelEx*		labExpShow;
-	CProgressBar*	proSailor;				//�;ù�����
-	CProgressBar*	proCanon;				//����������
+	CProgressBar*	proSailor;				//
+	CProgressBar*	proCanon;				//
 
-	bool			_IsNewer;				// �Ƿ�Ϊ����
+	bool			_IsNewer;				// 
 
-	// ��ʾ�Զ�������ʾ
+	// 
 	CForm*			frmFollow;
 	CLabel*			labFollow;
 
 	CMenu*			mnuSelf;
 
-	bool			_IsCanTeam;				// �Ƿ��ܹ�ʹ�������ӵ��������صĲ���
+	bool			_IsCanTeam;				// 
 
-	// �������
+	// 
 	CForm*			frmMainPet;
 	CImage*			imgPetHead;
 	CLabel*			labPetLv;
 	CProgressBar*	proPetHP;
 	CProgressBar*	proPetSP;
 
-	// ���ְ�������
-	CForm*			frmHelpSystem;			// ��������
-	CTextButton*	btnLevelUpHelp;			// ����������ť
-	CList*			lstHelpList;			// �����б�
+	// 
+	CForm*			frmHelpSystem;			// 
+	CTextButton*	btnLevelUpHelp;			// 
+	CList*			lstHelpList;			// 
 
-	CImage*			imgHelpShow1[HELP_PICTURE_COUNT];		// ͼƬ
-	CImage*			imgHelpShow2[HELP_PICTURE_COUNT];		// ͼƬ
-	CImage*			imgHelpShow3[HELP_PICTURE_COUNT];		// ͼƬ
-	CImage*			imgHelpShow4[HELP_PICTURE_COUNT];		// ͼƬ
+	CImage*			imgHelpShow1[HELP_PICTURE_COUNT];		// 
+	CImage*			imgHelpShow2[HELP_PICTURE_COUNT];		// 
+	CImage*			imgHelpShow3[HELP_PICTURE_COUNT];		// 
+	CImage*			imgHelpShow4[HELP_PICTURE_COUNT];		// 
 
-	// ������ť����
+	// 
 	CForm*			frmBag;
 
-	// �罻��ť����
+	// 
 	CForm*			frmSociliaty;
 
 	//NPC form by Mdr
@@ -258,7 +258,7 @@ private:
 
 
 private:
-	// ��Ӧ���������
+	// 
 	static CCharacter2D*	pMainCha;				
 	static CCharacter2D*	pTarget;
 	static CCharacter*		pLastTarget;

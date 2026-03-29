@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "GameApp.h"
 #include "MPEditor.h"
 #include "Scene.h"
@@ -71,7 +71,7 @@ BOOL RenderHintFrame(const RECT* rc, DWORD color)
 };
 
 //CMinimap* minimap = NULL;
-// Game SDK ��ܺ���, ���û����
+// Game SDK , 
 void CGameApp::_Render()
 {
 
@@ -89,7 +89,7 @@ void CGameApp::_Render()
 	}
 	
 
-	// Scene�Ļ���------------------------------------------------------------
+	// Scene------------------------------------------------------------
 	MPTimer tScene; tScene.Begin();
 	_pCurScene->_Render();
 	m_dwRenderSceneTime = tScene.End();
@@ -97,18 +97,18 @@ void CGameApp::_Render()
 #ifdef TESTDEMO
 	g_pTestDemo->Render();
 #endif
-	// ��Χ���ߵ���Ⱦ(��Scene���, ��Ҫ�ڽ���֮ǰ)-------------------------------------------
+	// (Scene, )-------------------------------------------
 	_pDrawPoints->Reader();
 	g_Editor.Render();
 	g_Render.RenderAllLines();
 
-	// ����ؼ�����Ⱦ-----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 	MPTimer tUI; tUI.Begin();
 
 	_stCursorMgr.Render();
 	_pCurScene->_RenderUI();
 
-	// С��ͼ��Ⱦ----------------------------------------------------------------------------
+	// ----------------------------------------------------------------------------
 	CCharacter *pMainCha =_pCurScene->GetMainCha();
 	MPTimer mpt; mpt.Begin();
 	if( CGameScene::_bShowMinimap && CGameScene::_pSmallMap )
@@ -145,7 +145,7 @@ void CGameApp::_Render()
 	if(CGameScene::_pBigMap)
 		CGameScene::_pBigMap->Render();
 
-	// ��Ļ��ʾ����Ⱦ-----------------------------------------------------------------------
+	// -----------------------------------------------------------------------
 	if(_IsRenderTipText) _RenderTipText();
 
 	//if(!_qCQueueStrColour.empty())
@@ -171,7 +171,7 @@ void CGameApp::_Render()
 		_MidFont.DrawText(_stMidFont.szText, (GetWindowWidth() - size.cx) / 2, (GetWindowHeight() - size.cy) / 3, dwColor);
 	}
 
-	//������Ļ, ��Ҫ�����-------------------------------------------------------------
+	//, -------------------------------------------------------------
 	if(IsEnableSpAvi())  
 		_CreateAviScreen();
 	

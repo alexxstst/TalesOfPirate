@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
-// Система логирования на основе LogManager.
-// Использует std::format (C++20), потоковую запись в файлы и цветной вывод в консоль.
+//     LogManager.
+//  std::format (C++20),         .
 
 #define  WIN32_LEAN_AND_MEAN
 
@@ -14,7 +14,7 @@
 #include <windows.h>
 
 namespace TalesOfPirate::Utils::Logs {
-	// Уровни логирования — от самого детального до критического
+	//        
 	enum class LogLevel {
 		Trace,
 		Debug,
@@ -24,7 +24,7 @@ namespace TalesOfPirate::Utils::Logs {
 		Fatal
 	};
 
-	// Запись лога с меткой времени, уровнем и именем подсистемы
+	//     ,    
 	struct LogUtilEntry {
 		char MessageTime[23]{};
 		std::string Message{};
@@ -34,8 +34,8 @@ namespace TalesOfPirate::Utils::Logs {
 		LogUtilEntry();
 	};
 
-	// Файловый поток для одного канала логирования.
-	// Автоматически ротирует файлы при смене даты.
+	//      .
+	//      .
 	class LogStream {
 		std::ofstream _logStream{};
 		std::string _path{};
@@ -53,9 +53,9 @@ namespace TalesOfPirate::Utils::Logs {
 		LogLevel MinimumLogLevel{LogLevel::Trace};
 	};
 
-	// Менеджер логирования: управляет каналами, очередью сообщений и фоновым потоком записи.
-	// Все сообщения дублируются в канал "common".
-	// При включённой консоли — выводит цветные сообщения в stdout.
+	//  :  ,      .
+	//      "common".
+	//         stdout.
 	class LogManager {
 		std::map<std::string, std::shared_ptr<LogStream>> _channels{};
 		std::mutex _queueMutex{};
@@ -65,7 +65,7 @@ namespace TalesOfPirate::Utils::Logs {
 		std::string _filePath{};
 		bool _enabledGlobalConsole;
 
-		// Вывод сообщения в консоль с цветовой раскраской по уровню
+		//         
 		static void PrintConsoleMessage(const LogUtilEntry& logEntry);
 
 	public:
@@ -78,7 +78,7 @@ namespace TalesOfPirate::Utils::Logs {
 		bool IsLogLevel(const std::string& logSystem, LogLevel logLevel);
 		void EnableGlobalConsole(bool status);
 
-		// Путь к каталогу логов
+		//    
 		const std::string& GetLogDirectory() const { return _filePath; }
 
 		void Shutdown();
@@ -129,23 +129,23 @@ namespace TalesOfPirate::Utils::Logs {
 		}
 	};
 
-	// Глобальный экземпляр менеджера логов
+	//    
 	extern LogManager g_logManager;
 
-	// Быстрый лог в канал "common" на уровне Debug
+	//     "common"   Debug
 	template <class... _Types>
 	void ToLog(std::format_string<std::remove_cvref_t<_Types>...> _Fmt, _Types&&... _Args) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", vformat(_Fmt.get(), std::make_format_args(_Args...)));
 	}
 
-	// Быстрый лог в произвольный канал на уровне Debug
+	//        Debug
 	template <class... _Types>
 	void ToLogService(const std::string& logger, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
 					  _Types&&... _Args) {
 		g_logManager.InternalLog(LogLevel::Debug, logger, vformat(_Fmt.get(), std::make_format_args(_Args...)));
 	}
 
-	// Быстрый лог в произвольный канал с указанием уровня
+	//        
 	template <class... _Types>
 	void ToLogService(const std::string& logger, LogLevel level,
 					  std::format_string<std::remove_cvref_t<_Types>...> _Fmt, _Types&&... _Args) {
@@ -153,10 +153,10 @@ namespace TalesOfPirate::Utils::Logs {
 	}
 }
 
-// Оператор вывода LogLevel в ostream (для записи в файл)
+//   LogLevel  ostream (   )
 std::ostream& operator<<(std::ostream& stream, const TalesOfPirate::Utils::Logs::LogLevel& io);
 
-// Специализация std::formatter для LogLevel (для std::format)
+//  std::formatter  LogLevel ( std::format)
 template <>
 struct std::formatter<TalesOfPirate::Utils::Logs::LogLevel> : std::formatter<std::string> {
 	template <class format_context>

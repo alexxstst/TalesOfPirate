@@ -1,4 +1,4 @@
-#include "English.h"
+﻿#include "English.h"
 
 CEnglish::CEnglish(void)
 {

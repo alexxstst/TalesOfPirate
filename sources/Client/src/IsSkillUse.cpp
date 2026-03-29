@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "isskilluse.h"
 #include "skillrecord.h"
 #include "character.h"

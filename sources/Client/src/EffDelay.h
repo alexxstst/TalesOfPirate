@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "SkillRecord.h"
 
 #define ACTION_BEGIN_HIT	-1
@@ -10,7 +10,7 @@ class CActor;
 class CSkillRecord;
 class CServerHarm;
 
-// һ���Ե��ܻ���Ч,�������Ч,�ܻ���Ч,�����ܻ���Ч��
+// ,,,
 class CHitRepresent 
 {
 public:
@@ -26,24 +26,24 @@ public:
 
 private:
 	CSkillRecord*	_pSkill;
-	CCharacter*		_pTarget;				// ��������ʱ��Ŀ��
-	int				_nAttackX,  _nAttackY;	// ����ʱ�������ĵ�
-	CCharacter*		_pAttack;				// ������, ������ʾ�ܻ��ķ���,����Ϊ��
+	CCharacter*		_pTarget;				// 
+	int				_nAttackX,  _nAttackY;	// 
+	CCharacter*		_pAttack;				// , ,
 
 private:
 	void	Exec( CServerHarm* pHarm );
 
 };
 
-// ���ڷ�����ЧʧЧ�󲥷��ӳٵ��ܻ���Ч,�ӳ���Ч,�����˺�����
+// ,,
 class CEffDelay
 {
 public:
     enum ePlayStyle
     {
-        enumNone,       // ʲô�¶����� 
-        enumPos,        // ��ĳ�ص㲥��
-        enumHitEffect,  // �ܻ���Ч
+        enumNone,       //  
+        enumPos,        // 
+        enumHitEffect,  // 
     };
 
 public:
@@ -70,7 +70,7 @@ private:
 
 };
 
-// ��������
+// 
 inline void CHitRepresent::EffectExec( CServerHarm* pHarm )
 {
 	if( !_pSkill->IsEffectHarm() ) return;

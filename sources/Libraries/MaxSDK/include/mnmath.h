@@ -1,4 +1,4 @@
-// MN Math.h
+﻿// MN Math.h
 // Collection of headers for MNMath library
 
 #ifndef __MNMATH_H_

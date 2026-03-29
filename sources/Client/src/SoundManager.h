@@ -1,4 +1,4 @@
-#ifndef __SOUNDMANAGER_H__
+﻿#ifndef __SOUNDMANAGER_H__
 #define __SOUNDMANAGER_H__
 
 #include "SoundCommon.h"

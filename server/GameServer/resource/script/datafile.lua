@@ -1,4 +1,4 @@
-DataFile = {
+﻿DataFile = {
     file = "",
     tab = {}
 }

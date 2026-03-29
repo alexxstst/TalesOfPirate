@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
-// CorsairsNet — сетевая библиотека клиента.
-// Единый include для всех компонентов.
+// CorsairsNet    .
+//  include   .
 
 #include "mpack.h"
 #include "BinaryIO.h"

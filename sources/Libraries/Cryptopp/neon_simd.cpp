@@ -1,4 +1,4 @@
-
+﻿
 // crc_simd.cpp - written and placed in the public domain by
 //                Jeffrey Walton, Uri Blumenthal and Marcel Raad.
 //

@@ -1,4 +1,4 @@
-#include <direct.h>
+﻿#include <direct.h>
 #include "LogStream.h"
 
 _DBC_USING

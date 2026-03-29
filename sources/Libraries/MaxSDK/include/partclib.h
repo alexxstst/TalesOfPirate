@@ -1,4 +1,4 @@
-#ifndef _PARTICLELIB_H_
+﻿#ifndef _PARTICLELIB_H_
 
 #define _PARTICLELIB_H_
 

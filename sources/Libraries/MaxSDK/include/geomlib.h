@@ -1,4 +1,4 @@
-#ifndef _GEOMLIB_H_
+﻿#ifndef _GEOMLIB_H_
 
 #define _GEOMLIB_H_
 

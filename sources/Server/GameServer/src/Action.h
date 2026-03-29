@@ -1,4 +1,4 @@
-//=============================================================================
+Ôªø//=============================================================================
 // FileName: Action.h
 // Creater: ZhangXuedong
 // Date: 2004.10.08
@@ -85,8 +85,8 @@ protected:
 private:
 	CCharacter	*m_pCOwn;
 
-	SAction	*m_pSExecQueue;	// ÷¥––∂”¡–
-	SAction	*m_pSFreeQueue;	// ø’œ–∂”¡–
+	SAction	*m_pSExecQueue;	// 
+	SAction	*m_pSFreeQueue;	// 
 
 };
 

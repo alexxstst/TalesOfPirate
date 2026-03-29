@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "event.h"
 #include "eventrecord.h"
 #include "character.h"
@@ -39,7 +39,7 @@ bool CEvent::DistanceTrigger( int x, int y )
 		}
 		else
 		{
-			// ����Ѿ������,��10���ȡ������
+			// ,10
 			if( CGameApp::GetCurTick()>_dwLastTime )
 			{
 				_IsActive = false;

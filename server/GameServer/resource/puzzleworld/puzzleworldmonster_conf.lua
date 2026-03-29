@@ -1,4 +1,4 @@
-print("-- [Loading] puzzleworldMonster.lua")
+﻿print("-- [Loading] puzzleworldMonster.lua")
 
 BossDW = {}
 BossDW[1] = CreateCha(679, 26627, 24540, 355, 10800)

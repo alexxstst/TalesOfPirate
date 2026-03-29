@@ -1,4 +1,4 @@
-print("-- [Loading] jialebiEntity.lua")
+﻿print("-- [Loading] jialebiEntity.lua")
 
 function InitjialebiEntity()
 	CreateBerthEntity("Docked", 455, 2, 63614, 91411, -10, 12, 631, 927, 0)

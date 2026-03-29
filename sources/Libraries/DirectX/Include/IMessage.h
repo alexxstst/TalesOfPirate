@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	I M E S S A G E . H
  *
  *	External definitions for MAPI's IMessage-on-IStorage facility

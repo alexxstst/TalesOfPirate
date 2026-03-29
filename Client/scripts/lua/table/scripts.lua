@@ -1,4 +1,4 @@
---精炼效果表示
+-- Item stone effect display
 function Item_Stoneeffect(Stone_Type1, Stone_Type2, Stone_Type3)
     if Stone_Type1 == Stone_Type2 then
         Stone_Type1 = -1
@@ -54,7 +54,7 @@ end
 
 ---------------------------------------------------------------------------------------------------------------------
 
---解析精炼内容
+-- Read number parts
 
 function GetNum_Part1(Num)
     local a = 0
@@ -117,7 +117,7 @@ function GetNum_Fixed(Num)
     return a
 end
 
---写入部分
+-- Write number parts
 
 function SetNum_Part1(Num, Part_Num)
     local a = 0
@@ -184,14 +184,14 @@ end
 
 -------------------------------------------------------------------------------------------------------------------
 
---读取洞数
+-- Get number of holes
 
 function Get_HoleNum(Num)
     local a = GetNum_Part1(Num)
     return a
 end
 
---读取宝石信息
+-- Get gem/stone info
 function Get_Stone_1(Num)
     local Stone_1 = 0
     Stone_1 = GetNum_Part2(Num)
@@ -229,7 +229,7 @@ function Get_StoneLv_3(Num)
 end
 
 ------------------------------
---Hint对应函数
+-- Hint corresponding functions
 function ItemHint_LieYanS(Lv)
     local eff = Lv * 4
     local Hint = "Gem Bonus Attack +" .. eff
@@ -278,7 +278,7 @@ function ItemHint_ShengGuangS(Lv)
     return Hint
 end
 
----2006-02-23 添加
+---2006-02-23 added
 
 function ItemHint_FengLingS(Lv)
     local eff = Lv * 5
@@ -321,13 +321,13 @@ function ItemHint_LongZhiXin(Lv)
     local Hint = "Gem Bonus Max HP +" .. eff
     return Hint
 end
---2006-09-18添加
+--2006-09-18 added
 function ItemHint_GaNaZhiShen(Lv)
     local eff = Lv * 5
     local Hint = "Gem Bonus Spirit +" .. eff
     return Hint
 end
---2008-02-20 dina添加
+--2008-02-20 dina added
 function ItemHint_HuangYu(Lv)
     local eff = Lv * 10
     local Hint = "Gem Bonus Defense +" .. eff
@@ -345,7 +345,7 @@ function ItemHint_QingYu(Lv)
     local Hint = "Gem Bonus Max SP +" .. eff
     return Hint
 end
---2008-04-24 晓玮添加
+--2008-04-24 new gem types
 
 function ItemHint_XTLingGuang(Lv)
     local eff = Lv * 10
@@ -376,7 +376,7 @@ function ItemHint_XKQiangHua(Lv)
     local Hint = "Gem Bonus Max HP +" .. eff
     return Hint
 end
--------高超加
+------- High-level gems
 function ItemHint_SShuiyao(Lv)
     local eff = Lv * 8
     local Hint = "Gem Bonus Strength +" .. eff
@@ -403,7 +403,7 @@ function ItemHint_SSxuanwu(Lv)
     local Hint = "Gem Bonus Agility +" .. eff
     return Hint
 end
---------------------------罂粟花开“金木水火土”石头------------------------
+-------------------------- Newbie metal/wood/water/fire/earth element stones ------------------------
 function ItemHint_JinYanS(Lv)
     local eff = Lv * 2
     local Hint = "Gem Bonus Strength +" .. eff
@@ -429,26 +429,26 @@ function ItemHint_TuYanS(Lv)
     local Hint = "Gem Bonus Constitution +" .. eff
     return Hint
 end
---------------------------罂粟花开“金木水火土”石头------------------------
+-------------------------- Newbie metal/wood/water/fire/earth element stones ------------------------
 ------- by Peter
 function ItemHint_ABOLUO(Lv)
-    local Hint = "可以解开宙斯的黑匣"
+    local Hint = "锟斤拷锟皆解开锟斤拷斯锟侥猴拷匣"
     return Hint
 end
 
 function ItemHint_QIUBITE(Lv)
-    local Hint = "可以解开宙斯的黑匣"
+    local Hint = "锟斤拷锟皆解开锟斤拷斯锟侥猴拷匣"
     return Hint
 end
 
 function ItemHint_YADIANNA(Lv)
-    local Hint = "可以解开宙斯的黑匣"
+    local Hint = "锟斤拷锟皆解开锟斤拷斯锟侥猴拷匣"
     return Hint
 end
 
-----------------------------获取精灵特殊能力----------------------------------------------
+---------------------------- Get fairy/elf skill data ----------------------------------------------
 function GetElfSkill(Num)
-    --local Part1 = GetNum_Part1 ( Num )	--Get Num Part 1 到 Part 7
+    --local Part1 = GetNum_Part1 ( Num )	--Get Num Part 1 to Part 7
     local Part2 = GetNum_Part2(Num)
     local Part3 = GetNum_Part3(Num)
     local Part4 = GetNum_Part4(Num)

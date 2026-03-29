@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 class CSceneItem;
 class CCharacter;
@@ -23,7 +23,7 @@ public:
 
 	void	FrameMove();
 
-	// ÉèÖÃÊó±êÒÆ¶¯Ê±µÄ±äÁ¿
+	// 
 	void	SetPickItem( CSceneItem* pItem, DWORD dwTime );
 	void	SetAttackCha( CSkillRecord* pSkill, CCharacter* pCha, DWORD dwTime );
 
@@ -34,24 +34,24 @@ public:
 	void	SetDummyObj( int x, int y, int h, int t_angle, int action );
 	void	SetFollow( CCharacter* pCha );
 
-	// ³¡¾°²Ù×÷
+	// 
 	bool	ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd=false, bool isLine=false, bool IsCompart=true );
 	bool	ActAttackCha( CCharacter* pMain, CSkillRecord* pSkill, CCharacter* pTarget, bool isTrace=true, bool IsForce=false, bool IsCompart=true );
 	bool	ActTalkNpc( CCharacter* pCha, CCharacter* pNpc );
 	bool	ActPickItem( CCharacter* pCha, CSceneItem* pItem, bool IsMove=true );
 	bool	ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScrX, int nScrY, bool IsForce=false, bool IsCompart=true );
 	bool	ActEvent( CCharacter* pCha, CSceneNode* pNode, CEvent* pEvent );
-    bool    ActDummyObj( CCharacter* pCha, int x, int y, int h, int t_angle, int action );      // ×ø¿¿ÐéÄâÎï¼þ
+    bool    ActDummyObj( CCharacter* pCha, int x, int y, int h, int t_angle, int action );      // 
 
-	// ×ÛºÏ²Ù×÷
+	// 
 	bool	ActCha( CCharacter* pCha, CCharacter* pTarget );
 
-	// Âò¶«Î÷
+	// 
 	bool	ActShop( CCharacter* pCha, CCharacter* pTarget );
 
 	bool	PickItem( CCharacter* pMain );
 
-	// ²âÊÔ²Ù×÷
+	// 
 	bool	ActBackMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd=false );
 
 	CAutoAttack*	GetAutoAttack()	{ return _pAutoAttack;	}
@@ -77,7 +77,7 @@ private:
 		eLastNpc,
 		eLastArea,
 		eLastMove,
-		eLastDummy,		// ÐéÄâÎï¼þ
+		eLastDummy,		// 
 		eLastFollow,
 	};
 	eLastType		_eLastType;

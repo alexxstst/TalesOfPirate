@@ -1,4 +1,4 @@
-print("[**] SDK Files [**]")
+﻿print("[**] SDK Files [**]")
 print("-- [Loading] NPC SDK")
 
 dofile(GetResPath("script/MisSdk/SystemSDK.lua"))

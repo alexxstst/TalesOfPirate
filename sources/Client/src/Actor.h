@@ -1,16 +1,16 @@
-#pragma once
+ï»¿#pragma once
 #include "STStateObj.h"
 #include "CharacterAction.h"
 
 enum eActorState
 {
-	enumNormal,		// Õı³£×´Ì¬
-	enumDied,		// ËÀÍö×´Ì¬
-	enumRemains,	// ²Ğº¡
+	enumNormal,		// 
+	enumDied,		// 
+	enumRemains,	// 
 };
 
 
-// ËÀÍöÊ±Ö´ĞĞ
+// 
 class CActorDie
 {
 public:
@@ -18,7 +18,7 @@ public:
 	virtual void Exec()	 {}
 };
 
-// ¹ÖÎïµôÁÏ
+// 
 class CSceneItem;
 class CMonsterItem : public CActorDie
 {
@@ -38,7 +38,7 @@ private:
 
 };
 
-// ÈÎÎñÌáÊ¾
+// 
 struct stNetNpcMission;
 class CMissionTrigger : public CActorDie
 {
@@ -80,15 +80,15 @@ public:
     void            PlayPose( int poseid, bool isKeep=false, bool isSend=false );
 	void			SetSleep()					{ _nWaitingTime = -1;			}
 
-public:		// CActionState Ê¹ÓÃ
-	bool	        SwitchState( CActionState* pState );						// Çå³ıÏÖÓĞ¶ÓÁĞ,ÖĞ¶Ïµ±Ç°²Ù×÷,Ö´ĞĞÏÖÓĞ²Ù×÷
-	bool	        InsertState( CActionState* pState, bool IsFront=false );	// ½«ÏÖÓĞ²Ù×÷Ñ¹Èë¶ÓÁĞ,ÒÔºóÖ´ĞĞ
+public:		// CActionState 
+	bool	        SwitchState( CActionState* pState );						// ,,
+	bool	        InsertState( CActionState* pState, bool IsFront=false );	// ,
     bool            AddState( CActionState* pState );
 
-    CActionState*   FindStateClass( const type_info& info );            // Ñ°ÕÒÍ¬Àà×´Ì¬
-    void            OverAllState();                                     // ½áÊøËùÓĞ×´Ì¬,ÓÃÓÚËÀÍöÊ±·şÎñÆ÷²»·¢ËÍ½áÊø
+    CActionState*   FindStateClass( const type_info& info );            // 
+    void            OverAllState();                                     // ,
 
-	void			CancelState();										// ÖĞ¶Ïµ±Ç°×´Ì¬
+	void			CancelState();										// 
 	void			FrameMove(DWORD dwTimeParam);
 
 	CActionState*   GetServerState();
@@ -99,7 +99,7 @@ public:		// CActionState Ê¹ÓÃ
 
 	void			FailedAction();
 
-public:	// ¼¼ÄÜ
+public:	// 
     void	        ActionBegin( DWORD pose_id );
 	void			ActionKeyFrame( DWORD pose_id, int key_frame );
 	void			ActionEnd( DWORD pose_id );
@@ -107,7 +107,7 @@ public:	// ¼¼ÄÜ
 	void			Stop();
     void	        IdleState();
 
-	void			ExecAllNet();			// Ö´ĞĞµôËùÓĞÍøÂçµÄ×ÊÔ´°ü£¬ÓÃÓÚÍøÂçÉ¾³ıÍæ¼ÒÊ±
+	void			ExecAllNet();			// 
 
 	void			ExecDied();
 	bool			AddDieExec( CActorDie* pDieExec );
@@ -122,31 +122,31 @@ protected:
     void            _ClearSynchro( synchro& s );
 
 protected:
-	CActionState*	_pCurState;				// µ±Ç°×´Ì¬
+	CActionState*	_pCurState;				// 
 	typedef std::list<CActionState*> states;
 	states			_statelist;
 
-	CCharacter*		_pCha;					// µ±Ç°¶¯×÷ËùÊô½ÇÉ«
+	CCharacter*		_pCha;					// 
 
 public:
     CServerHarm*    CreateHarmMgr();
     CServerHarm*    FindHarm( int nFightID );
-    CServerHarm*    FindHarm();				// ²éÕÒµ½Ò»¸ö¿ÉÓÃµÄ
+    CServerHarm*    FindHarm();				// 
 
 private:
     typedef std::vector<CServerHarm*>    fights;
     fights          _fights;
 
-	typedef std::vector<CActorDie*>		dies;	// ÍøÂç°ü£º¹ÖÎïµôÁÏ
+	typedef std::vector<CActorDie*>		dies;	// 
 	dies			_dies;
 
 protected:
-    int             _nWaitingTime;     // Wait¶àÉÙÊ±¼äºó,Ëæ»úÒ»¸ö¸ãĞ¦Pose
+    int             _nWaitingTime;     // Wait,Pose
 	eActorState		_eState;
 
 };
 
-// ÄÚÁªº¯Êı
+// 
 inline void	CActor::ActionKeyFrame( DWORD pose_id, int key_frame )	
 { 
 	if( _pCurState ) _pCurState->ActionFrame(pose_id, key_frame);	
@@ -212,7 +212,7 @@ inline void CActor::_ClearSynchro( synchro& s )
     for( synchro::iterator it=s.begin(); it!=s.end(); ++it )
     {
         //delete *it;
-		SAFE_DELETE(*it);// UIµ±»ú´¦Àí
+		SAFE_DELETE(*it);// UI
     }
     s.clear();
 }

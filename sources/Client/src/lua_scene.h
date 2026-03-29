@@ -1,12 +1,12 @@
-#include "netprotocol.h"
+ï»¿#include "netprotocol.h"
 #include "EffectObj.h"
 
 //-----------------------------
-// Îª³¡¾°Ìí¼ÓÎïÌå, ²ÎÊıÎª±í¸ñID
+// , ID
 //-----------------------------
-inline int lua_sceAddObj(lua_State * L)
+inline int sceAddObj(lua_State * L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
     if(!bValid) 
     {
@@ -54,11 +54,11 @@ inline int lua_sceAddObj(lua_State * L)
 }
 
 //-------------------
-// ¸ù¾İIDÈ¡µÃÎïÌåÖ¸Õë
+// ID
 //-------------------
-inline int lua_sceGetObj(lua_State *L)
+inline int sceGetObj(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L,2) && lua_isnumber(L, 3));
     if(!bValid) 
     {
@@ -87,11 +87,11 @@ inline int lua_sceGetObj(lua_State *L)
 }
 
 //---------
-// É¾³ıÎïÌå
+// 
 //---------
-inline int lua_sceRemoveObj(lua_State *L)
+inline int sceRemoveObj(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
     if(!bValid) 
     {
@@ -106,11 +106,11 @@ inline int lua_sceRemoveObj(lua_State *L)
 
 
 //-----------------
-// ÉèÖÃµ±Ç°¿ØÖÆ½ÇÉ«
+// 
 //-----------------
-inline int lua_sceSetMainCha(lua_State *L)
+inline int sceSetMainCha(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_islightuserdata(L, 2)); 
     if(!bValid) 
     {
@@ -134,11 +134,11 @@ inline int lua_sceSetMainCha(lua_State *L)
 }
 
 //-----------------
-// »ñÈ¡µ±Ç°¿ØÖÆ½ÇÉ«
+// 
 //-----------------
-inline int lua_sceGetMainCha(lua_State *L)
+inline int sceGetMainCha(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
     if(!bValid) 
     {
@@ -158,9 +158,9 @@ inline int lua_sceGetMainCha(lua_State *L)
     return 1;
 }
 
-inline int lua_sceGetHoverCha(lua_State *L)
+inline int sceGetHoverCha(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
     if(!bValid) 
     {
@@ -180,9 +180,9 @@ inline int lua_sceGetHoverCha(lua_State *L)
     return 1;
 }
 
-inline int lua_sceEnableDefaultMouse(lua_State *L)
+inline int sceEnableDefaultMouse(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L,2)); 
     if(!bValid) 
     {

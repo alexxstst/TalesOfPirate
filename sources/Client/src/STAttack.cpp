@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "STAttack.h"
 #include "Actor.h"
 #include "NetProtocol.h"
@@ -83,7 +83,7 @@ void CWaitAttackState::SetSkill( CSkillRecord* p )
 
 void CWaitAttackState::CalcSkillSpeed()
 {
-	// ���㶯���ٶ�
+	// 
 	if( !_pSkillInfo->IsPlayRand() )
 	{
 		static int nCount = 0;
@@ -113,7 +113,7 @@ void CWaitAttackState::CalcSkillSpeed()
 
 bool CWaitAttackState::_Start()
 {
-	// ״̬��ʼִ��
+	// 
 	CalcSkillSpeed();
 	_StartActor();
 	return true;
@@ -216,10 +216,10 @@ void CWaitAttackState::_UseSkill()
 
 void CWaitAttackState::ActionFrame( DWORD pose_id, int key_frame )
 {	
-	// �ؼ�֡���ã�����key_frame��ֵ�������£�
-	// ACTION_BEGIN_HIT = -1 ������ʼ
-	// ACTION_END_HIT = -2 ��������
-	// �����㣬�ؼ�֡
+	// key_frame
+	// ACTION_BEGIN_HIT = -1 
+	// ACTION_END_HIT = -2 
+	// 
 
 	//if( !_IsPoseValid(pose_id) )
 	//{
@@ -228,13 +228,13 @@ void CWaitAttackState::ActionFrame( DWORD pose_id, int key_frame )
 	
 	if( key_frame>0 ) key_frame=0;
 
-	// �ض����ܵľ�ͷ����Ч��
+	// 
 	if( _pSkillInfo->nID==83 && key_frame>=0 )
 	{
 		g_pGameApp->GetMainCam()->SetCameraDither( TRUE );
 	}
 
-	// �����ؼ�֡
+	// 
 	if( _pSkillInfo->sActionKeyFrme==key_frame ) 
 	{
 		if( _pSkillInfo->sWhop!=-1 )	CGameScene::PlayEnvSound( _pSkillInfo->sWhop, _pSelf->GetCurX(), _pSelf->GetCurY() );
@@ -262,7 +262,7 @@ void CWaitAttackState::ActionFrame( DWORD pose_id, int key_frame )
 	if( _pSkillInfo->sItemEffect1[0]>0 && _pSkillInfo->sItemEffect1[1]==key_frame )	_pSelf->ItemEffect( _pSkillInfo->sItemEffect1[0], _pSkillInfo->sItemDummyLink, _pSelf->getYaw() );
 	if( _pSkillInfo->sItemEffect2[0]>0 && _pSkillInfo->sItemEffect2[1]==key_frame )	_pSelf->ItemEffect( _pSkillInfo->sItemEffect2[0], _pSkillInfo->sItemDummyLink, _pSelf->getYaw() );
 
-	// ������Ч
+	// 
 	if( _pSkillInfo->sSkyEffect!=0 && _pSkillInfo->sSkyEffectActionKeyFrame==key_frame ) 
 	{
 		int nTargetID = -1;
@@ -285,21 +285,21 @@ void CWaitAttackState::ActionFrame( DWORD pose_id, int key_frame )
 
 		if( CEffectObj* pEff = _pSelf->SkyEffect( _pSkillInfo->sSkyEffect, _pSkillInfo->sSkyEffectActionDummyLink, _pSkillInfo->sSkyEffectItemDummyLink, _pSkillInfo->sSkySpd, &pos, nTargetID, _pSkillInfo ) )
 		{
-			// ������һ��������Ч,����һ����Ӧ���ŵص���ЧЧ��
-			// ������Ч�������ʱҪִ�е��˺���
+			// ,
+			// 
 			pEff->GetEffDelay()->SetServerHarm( _cHit, _pHarm );
 		}
 		else
 		{
-			// ��Ч����ʧ�ܣ�ֱ�Ӳ�����Ч�˺���
+			// 
 			_cHit.EffectExec( _pHarm );
 		}
 	}
 
-	// ִ�ж����˺���
+	// 
 	_cHit.ActionExec( _pHarm, key_frame );
 
-	// ����ǿ���
+	// 
 	if( _pTarget && key_frame>=0 && _pTarget->getChaCtrlType()==enumCHACTRL_MONS_TREE )
 	{
 		_pTarget->PlayPose( 7, PLAY_ONCE_SMOOTH );
@@ -313,7 +313,7 @@ void CWaitAttackState::ActionFrame( DWORD pose_id, int key_frame )
 
 void CWaitAttackState::ActionBegin( DWORD pose_id )
 {
-	// ������ʼ
+	// 
 
     //if( !_IsPoseValid(pose_id) )
     //{
@@ -341,7 +341,7 @@ void CWaitAttackState::_PopThis()
 
 void CWaitAttackState::ActionEnd( DWORD pose_id )
 {
-	// ��������
+	// 
 
     //if( !_IsPoseValid(pose_id) )
 	//{
@@ -412,7 +412,7 @@ void CWaitAttackState::FrameMove()
 
 void CWaitAttackState::MoveEnd(int x, int y, int nState)
 {
-	// �����˲���ӦMoveEnd
+	// MoveEnd
 }
 
 void CWaitAttackState::ServerEnd(int nState)
@@ -480,7 +480,7 @@ bool CAttackState::_Start()
 	
 	if( _pSelf->IsMainCha() )
 	{
-		// ���ü���cooldown����ʼ������׼������Ϊ��
+		// cooldown
         _pSelf->ResetReadySkill();
 	}
 
@@ -496,7 +496,7 @@ bool CAttackState::_Start()
 			return false;
 		}
 
-		// ��̲����
+		// 
 		g_stUIBooth.ShowSetupBoothForm( _pSkillInfo->GetLevel() );
 		PopState();
 		return true;
@@ -526,7 +526,7 @@ bool CAttackState::_Start()
 		return false;
 	}
 
-	// ���㼼�ܹ�������
+	// 
     if( _pSkillInfo->GetDistance()>0 )
     {
         _nTotalDis = _pSelf->GetDefaultChaInfo()->sRadii + _pSkillInfo->GetDistance();
@@ -537,7 +537,7 @@ bool CAttackState::_Start()
         _nTotalDis = 0;
     }
 
-	// ���ü��ܶ����ٶ�
+	// 
 	if( strcmp( _pSkillInfo->szFireSpeed, "0" )==0 )
 	{
 		SetSkillSpeed( _pSelf->getAttackSpeed() );
@@ -556,7 +556,7 @@ bool CAttackState::_Start()
 	param.lSkillID = _pSkillInfo->sID;
     bool isFindPath = false;
 
-	// ��������,����Ϊ��,ֱ���ͷ�
+	// ,,
 	if( _pSkillInfo->GetDistance()==0 )
 	{
         _nAttackX = _pSelf->GetServerX();
@@ -569,7 +569,7 @@ bool CAttackState::_Start()
 		{
 			if( _pSkillInfo->IsAttackArea() )
 			{
-				// ����ǹ�����Χ��ȡĿ���ߵ�ǰ��
+				// 
 				int dis = GetDistance( _pTarget->GetCurX(), _pTarget->GetCurY(), _pTarget->GetServerX(), _pTarget->GetServerY() );
 				int PRE_ATTACK = 100;
 				if( dis <= PRE_ATTACK )
@@ -636,12 +636,12 @@ bool CAttackState::_Start()
 	CS_BeginAction( _pSelf, enumACTION_SKILL, (void*)&param, this );
 
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("FireSpeed:{}", _nSkillSpeed));
-	_pSkillInfo->SetAttackTime( CGameApp::GetCurTick() + _nSkillSpeed );	// ���õ�ǰ������һ�ο��õ�ʱ��
+	_pSkillInfo->SetAttackTime( CGameApp::GetCurTick() + _nSkillSpeed );	// 
 	CalcSkillSpeed();
 
 	_dwLastAttackTime = CGameApp::GetCurTick();
 
-	// �ж��ǹ�����Χ�ڣ�ת��Ϊ����״̬
+	// 
 	if( _pSkillInfo->IsAttackArea() )
 	{
 		if( GetDistance(_nAttackX, _nAttackY, _pSelf->GetServerX(), _pSelf->GetServerY())<=_nTotalDis )
@@ -657,7 +657,7 @@ bool CAttackState::_Start()
 		}
 	}
 
-	// ������ڹ��������ڣ���ʼ�ƶ�
+	// 
 	if( _eUseSkill==enumInit )
 	{
 		_pMove->ChaRun();
@@ -670,7 +670,7 @@ void CAttackState::FrameMove()
 {
 	if( !_pMove->GetIsExecEnd() )
 	{
-		// ��������ƶ�
+		// 
 		_pMove->FrameMove();
 		if( _pMove->GetIsExecEnd() )
 		{
@@ -734,7 +734,7 @@ void CAttackState::FrameMove()
 
 void CAttackState::PushPoint( int x, int y )
 {
-	// �����ƶ�
+	// 
 	if( _eUseSkill==enumInit )
 	{
 		_pMove->PushPoint( x, y );
@@ -787,7 +787,7 @@ void CAttackState::MoveEnd(int x, int y, int nState)
 {
     _pMove->MoveEnd(x, y, nState);
 
-    // ���ҽ�������enumMSTATE_INRANGEʱ,�ſ�ʼת�빥��״̬,���κ�����״̬,ֹͣ��ǰ״̬ 
+    // enumMSTATE_INRANGE,,, 
     if( nState==enumMSTATE_INRANGE )
     {
 		_pSkillInfo->SetAttackTime( CGameApp::GetCurTick() + _nSkillSpeed );
@@ -880,7 +880,7 @@ void CTraceAttackState::StartFailed()
 
 void CTraceAttackState::_End()
 { 
-	// ����״̬����ʱ������Ƿ�Ҫ�����µĹ���״̬����׷��
+	// 
 	CAttackState::_End();
 	CheckTrace();
 }
@@ -889,7 +889,7 @@ void CTraceAttackState::CheckTrace()
 {
 	if( _pSelf->GetDefaultSkillInfo()==_pSkillInfo && _IsTrace && _pTarget && _pTarget->IsEnabled() && _pTarget->IsValid() )
 	{
-		// ����������Ʋ�ͬ���Ҳ����ߣ���׷��
+		// 
 		if( _pSelf->GetDefaultChaInfo()->chTerritory != _pTarget->GetDefaultChaInfo()->chTerritory )
 		{	
 			if( !g_IsMoveAble( _pSelf->getChaCtrlType()

@@ -1,4 +1,4 @@
-// Mission.cpp Created by knight-gongjian 2004.12.13.
+﻿// Mission.cpp Created by knight-gongjian 2004.12.13.
 //---------------------------------------------------------
 #include "stdafx.h"   //add by alfred.shi 20080312
 
@@ -44,13 +44,13 @@ namespace mission
 		memset( m_MissionCount, 0, sizeof(RAND_MISSION_COUNT)*ROLE_MAXNUM_MISSIONCOUNT );
 		m_byNumMisCount = 0;
 
-		// Ĭ�Ͻ�ɫΪ����״̬
+		// 
 		m_byOnline = 1;
 	}
 
 	void CCharMission::Finally()
 	{
-		// ��ɫ�˳���ͼʱ���Ѿ�������MisClear
+		// MisClear
 		/*
 		m_byNumTrigger = 0;
 		m_byNumMission = 0;
@@ -66,7 +66,7 @@ namespace mission
 		memset( m_MissionCount, 0, sizeof(RAND_MISSION_COUNT)*ROLE_MAXNUM_MISSIONCOUNT );
 		m_byNumMisCount = 0;
 
-		// Ĭ�Ͻ�ɫΪ����״̬
+		// 
 		m_byOnline = 1;
 		*/
 	}
@@ -123,7 +123,7 @@ namespace mission
 				m_Mission[i].wParam1, m_Mission[i].wParam2, m_Mission[i].dwExp, m_Mission[i].dwMoney,	m_Mission[i].byNumData );
 #endif
 
-			// ���������ǿ�ʼ��Ϣͷ
+			// 
 			for( int n = 0; n < 11; n++  )
 			{
 				pTemp = strstr( pTemp, "," );
@@ -131,7 +131,7 @@ namespace mission
 				pTemp++;
 			}
 
-			// �������������Ϣ
+			// 
 			for( int j = 0; j < ROLE_MAXNUM_RAND_DATA; j++ )
 			{
 				sscanf( pTemp, "%d,%d,%d,%d,%d,%d,", &nData1, &nData2, &nData3, &nData4, &nData5, &nData6 );
@@ -152,7 +152,7 @@ namespace mission
 					m_Mission[i].RandData[j].wParam6 );
 #endif
 
-				// ������һ����¼ͷ
+				// 
 				for( int n = 0; n < 6; n++  )
 				{
 					pTemp = strstr( pTemp, "," );
@@ -165,7 +165,7 @@ namespace mission
 			ToLogService("common", "" );
 #endif
 
-			// ��������Ϣ
+			// 
 			for( int j = 0; j < ROLE_MAXNUM_FLAGSIZE; j++ )
 			{
 				sscanf( pTemp, "%d,", &nData1 );
@@ -231,7 +231,7 @@ namespace mission
 				m_Mission[i].wParam1, m_Mission[i].wParam2, m_Mission[i].dwExp, m_Mission[i].dwMoney,	m_Mission[i].byNumData );
 #endif
 
-			// �������������Ϣ
+			// 
 			for( int j = 0; j < ROLE_MAXNUM_RAND_DATA; j++ )
 			{
 				sprintf( pszBuf + strlen( pszBuf ), "%d,%d,%d,%d,%d,%d,", 
@@ -462,7 +462,7 @@ namespace mission
 
 	BOOL CCharMission::MisInitMissionCount( char* pszBuf )
 	{
-		// ��ɫ���߲����������Ϣ
+		// 
 		//if( m_byOnline == 0 )
 		//	return TRUE;
 
@@ -523,7 +523,7 @@ namespace mission
 
 	BOOL CCharMission::MisGetMissionCount( char* pszBuf, DWORD dwSize )
 	{
-		// ��ɫ���߲���洢����Ϣ
+		// 
 		//if( m_byOnline == 0 )
 		//	return TRUE;
 
@@ -587,7 +587,7 @@ namespace mission
 		m_byNumTrigger = 0;
 		memset( m_Trigger, 0, sizeof(TRIGGER_DATA)*ROLE_MAXNUM_CHARTRIGGER );
 
-		// �������������ͬ�����ͻ���
+		// 
 		MISSION_INFO Info[ROLE_MAXNUM_MISSION];
 		memset( Info, 0, sizeof(MISSION_INFO)*ROLE_MAXNUM_MISSION);
 		memcpy( Info, m_Mission, sizeof(MISSION_INFO)*m_byNumMission ); 
@@ -609,7 +609,7 @@ namespace mission
 		memset( m_MissionCount, 0, sizeof(RAND_MISSION_COUNT)*ROLE_MAXNUM_MISSIONCOUNT );
 		m_byNumMisCount = 0;
 
-		// Ĭ�Ͻ�ɫΪ����״̬
+		// 
 		m_byOnline = 1;
 	}
 
@@ -619,10 +619,10 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_KILL )
 			{
-				// �ض��ı��ݻ��������ID
+				// ID
 				if( sWareID == m_Trigger[i].wParam1 )
 				{
-					// lua�ű�������������Ϣ
+					// lua
 					lua_getglobal( g_pLuaState, "TriggerProc" );
 					if( !lua_isfunction( g_pLuaState, -1 ) )
 					{
@@ -633,15 +633,15 @@ namespace mission
 
 					lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
 					lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
-					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 ); // ����ID
-					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 ); // ��Ҫ�ݻٹ�������
-					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam3 ); // �ݻ������Ǽ�¼��ʼ��
+					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 ); // ID
+					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 ); // 
+					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam3 ); // 
 					lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 );
 
 					int nStatus = lua_pcall( g_pLuaState, 6, 1, 0 );
 					if( nStatus )
 					{
-						m_pRoleChar->SystemNotice( "CCharMission::KillWare:����������[TriggerProc]����ʧ�ܣ�" );
+						m_pRoleChar->SystemNotice( "CCharMission::KillWare:[TriggerProc]" );
 						lua_callalert( g_pLuaState, nStatus );
 						lua_settop(g_pLuaState, 0);
 						return;
@@ -651,15 +651,15 @@ namespace mission
 					lua_settop(g_pLuaState, 0);
 					if( dwResult == LUA_TRUE )
 					{
-						// Увеличиваем счётчик уничтожения
+						//   
 						m_Trigger[i].wParam4++;
-						// Типизированная сериализация: прогресс триггера
+						//  :  
 						auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
 							m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam4
 						});
 						m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 
-						// �ж������������Ϣ
+						// 
 						if( m_Trigger[i].wParam4 >= m_Trigger[i].wParam2 )
 						{
 #ifdef ROLE_DEBUG_INFO
@@ -671,7 +671,7 @@ namespace mission
 					}
 					else
 					{
-						//m_pRoleChar->SystemNotice( "CCharMission::KillWare:����������[TriggerProc]���÷���ʧ�ܣ�" );
+						//m_pRoleChar->SystemNotice( "CCharMission::KillWare:[TriggerProc]" );
 						//m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00001) );
 					}
 
@@ -687,7 +687,7 @@ namespace mission
 		{
 			if( m_Trigger[i].wMissionID == wRoleID && m_Trigger[i].byType == TE_GET_ITEM )
 			{
-				// �ض��ı��ݻ��������ID
+				// ID
 				if( sItemID == m_Trigger[i].wParam1 )
 				{
 					sCount = m_Trigger[i].wParam4;
@@ -719,7 +719,7 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_GET_ITEM )
 			{
-				// �ض��ı��ݻ��������ID
+				// ID
 				if( sItemID == m_Trigger[i].wParam1 )
 				{
 					if( sCount >= m_Trigger[i].wParam2 )
@@ -743,10 +743,10 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_GET_ITEM )
 			{
-				// �ض��ı��ݻ��������ID
+				// ID
 				if( sItemID == m_Trigger[i].wParam1 )
 				{
-					// ��������������
+					// 
 					if( m_Trigger[i].wParam4 >= m_Trigger[i].wParam2 )
 					{
 						continue;
@@ -754,7 +754,7 @@ namespace mission
 
 					for( int n = 0; n < sCount; n++ )
 					{
-						// lua�ű�������������Ϣ
+						// lua
 						lua_getglobal( g_pLuaState, "TriggerProc" );
 						if( !lua_isfunction( g_pLuaState, -1 ) )
 						{
@@ -765,15 +765,15 @@ namespace mission
 
 						lua_pushlightuserdata( g_pLuaState, (void*)m_pRoleChar );
 						lua_pushnumber( g_pLuaState, m_Trigger[i].wTriggerID );
-						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 ); // ���ID
-						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 ); // �����������
-						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam3 ); // ��������Ǽ�¼��ʼ��
+						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam1 ); // ID
+						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 ); // 
+						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam3 ); // 
 						lua_pushnumber( g_pLuaState, m_Trigger[i].wParam2 );
 
 						int nStatus = lua_pcall( g_pLuaState, 6, 1, 0 );
 						if( nStatus )
 						{
-							//m_pRoleChar->SystemNotice( "CCharMission::GetItem:����������[TriggerProc]����ʧ�ܣ�" );
+							//m_pRoleChar->SystemNotice( "CCharMission::GetItem:[TriggerProc]" );
 							m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00002) );
 							lua_callalert( g_pLuaState, nStatus );
 							lua_settop(g_pLuaState, 0);
@@ -786,32 +786,32 @@ namespace mission
 						{
 							if( ++m_Trigger[i].wParam4 >= m_Trigger[i].wParam2 )
 							{
-								// ���µ���Ʒ��������������ȡ��Ʒ����������
+								// 
 								sCount -= n;
 								break;
 							}
 						}
 						else
 						{
-							//m_pRoleChar->SystemNotice( "CCharMission::GetItem:����������[TriggerProc]���÷���ʧ�ܣ�" );
+							//m_pRoleChar->SystemNotice( "CCharMission::GetItem:[TriggerProc]" );
 							m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00004) );
 						}
 					}
 
-					// Типизированная сериализация: прогресс триггера получения предмета
+					//  :    
 					auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
 						m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam4
 					});
 					m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 
-					// Проверяем завершение получения
+					//   
 					if( m_Trigger[i].wParam4 >= m_Trigger[i].wParam2 )
 					{
 #ifdef ROLE_DEBUG_INFO
 						ToLogService("common", "GetItem Complete!, ID={}, p1={}, p2={}, p3={}, p4={}", m_Trigger[i].wTriggerID, 
 							m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-						// ��ȡ������Ʒ�������������Զ�������ȴ�����������
+						// 
 						// ClearTrigger( i-- );
 					}
 					return;
@@ -829,11 +829,11 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_GAME_TIME )
 			{
-				// �ж��Ƿ񵽴�ʱ��������
+				// 
 				if( ++m_Trigger[i].wParam4 < m_Trigger[i].wParam2 )
 					continue;
 
-				// lua�ű�������������Ϣ
+				// lua
 				lua_getglobal( g_pLuaState, "TriggerProc" );
 				if( !lua_isfunction( g_pLuaState, -1 ) )
 				{
@@ -850,7 +850,7 @@ namespace mission
 				int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 				if( nStatus )
 				{
-					//m_pRoleChar->SystemNotice( "CCharMission::TimeOut:����������[TriggerProc]����ʧ�ܣ�" );
+					//m_pRoleChar->SystemNotice( "CCharMission::TimeOut:[TriggerProc]" );
 					m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00003) );
 					lua_callalert( g_pLuaState, nStatus );
 					lua_settop(g_pLuaState, 0);
@@ -861,12 +861,12 @@ namespace mission
 				lua_settop(g_pLuaState, 0);
 				if( dwResult == LUA_TRUE )
 				{
-					// �ж������������Ϣ
+					// 
 					switch( m_Trigger[i].wParam1 )
 					{
 					case TT_CYCLETIME:
 						{
-							// �����������
+							// 
 							m_Trigger[i].wParam4 = 0;
 						}
 						break;
@@ -876,7 +876,7 @@ namespace mission
 							{
 								m_Trigger[i].wParam3--;
 
-								// �����������
+								// 
 								m_Trigger[i].wParam4 = 0;
 							}
 							else
@@ -885,16 +885,16 @@ namespace mission
 								ToLogService("common", "TimeOut Complete!, ID={}, p1={}, p2={}, p3={}, p4={}", m_Trigger[i].wTriggerID, 
 									m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-								// ���������
+								// 
 								ClearTrigger( i-- );
 							}
 						}
 						break;
 					default:
 						{
-							//LG( "trigger_error", "δ֪��ʱ�䴥����ʱ�������ͣ�" );
-							ToLogService("errors", LogLevel::Error, "unknown time trigger time slot type��" );
-							//m_pRoleChar->SystemNotice( "δ֪��ʱ�䴥����ʱ�������ͣ�TID = %d, Type = %d", m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
+							//LG( "trigger_error", "" );
+							ToLogService("errors", LogLevel::Error, "unknown time trigger time slot type" );
+							//m_pRoleChar->SystemNotice( "TID = %d, Type = %d", m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
 							m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00005), m_Trigger[i].wTriggerID, m_Trigger[i].wParam1 );
 							ClearTrigger( i-- );
 						}
@@ -903,7 +903,7 @@ namespace mission
 				}
 				else
 				{
-					//m_pRoleChar->SystemNotice( "CCharMission::TimeOut:����������[TriggerProc]���÷���ʧ�ܣ�" );
+					//m_pRoleChar->SystemNotice( "CCharMission::TimeOut:[TriggerProc]" );
 					m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00004) );
 				}
 			}
@@ -916,23 +916,23 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_GOTO_MAP )
 			{
-				// ����ͬһ��ͼ
+				// 
 				if( byMapID != m_Trigger[i].wParam1 )
 				{
-					// �Ѿ�����Ŀ������
+					// 
 					m_Trigger[i].wParam6 = 0;
 					continue;
 				}
-				// ����������
+				// 
 				if( wxPos > m_Trigger[i].wParam2 && wyPos > m_Trigger[i].wParam3 && 
 					wxPos < m_Trigger[i].wParam2 + m_Trigger[i].wParam4 && 
 					wyPos < m_Trigger[i].wParam3 + m_Trigger[i].wParam4 )
 				{
-					// �Ѿ�������Ŀ������
+					// 
 					if( m_Trigger[i].wParam6 )
 						continue;					
 
-					// lua�ű�������������Ϣ
+					// lua
 					lua_getglobal( g_pLuaState, "TriggerProc" );
 					if( !lua_isfunction( g_pLuaState, -1 ) )
 					{
@@ -949,7 +949,7 @@ namespace mission
 					int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 					if( nStatus )
 					{
-						//m_pRoleChar->SystemNotice( "CCharMission::GotoMap:����������[TriggerProc]����ʧ�ܣ�" );
+						//m_pRoleChar->SystemNotice( "CCharMission::GotoMap:[TriggerProc]" );
 						m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00006) );
 						lua_callalert( g_pLuaState, nStatus );
 						lua_settop(g_pLuaState, 0);
@@ -964,7 +964,7 @@ namespace mission
 						ToLogService("common", "GotoMap Complete!, ID={}, p1={}, p2={}, p3={}, p4={}", m_Trigger[i].wTriggerID, 
 							m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-						// Типизированная сериализация: прогресс триггера перехода на карту
+						//  :     
 						auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
 							m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3
 						});
@@ -977,16 +977,16 @@ namespace mission
 					}
 					else
 					{
-						//m_pRoleChar->SystemNotice( "CCharMission::GotoMap:����������[TriggerProc]���÷���ʧ�ܣ�" );
+						//m_pRoleChar->SystemNotice( "CCharMission::GotoMap:[TriggerProc]" );
 						m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00007) );
 					}
 
-					// �����Ѿ������������
+					// 
 					m_Trigger[i].wParam6 = 1;
 				}
 				else
 				{
-					// �Ѿ�����Ŀ������
+					// 
 					m_Trigger[i].wParam6 = 0;
 				}
 			}
@@ -1002,7 +1002,7 @@ namespace mission
 				if( m_Trigger[i].wParam2 == 1 && sLevel < m_Trigger[i].wParam1 )
 					continue;
 
-				// lua�ű�������������Ϣ
+				// lua
 				lua_getglobal( g_pLuaState, "TriggerProc" );
 				if( !lua_isfunction( g_pLuaState, -1 ) )
 				{
@@ -1019,7 +1019,7 @@ namespace mission
 				int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 				if( nStatus )
 				{
-					//m_pRoleChar->SystemNotice( "CCharMission::LevelUp:����������[TriggerProc]����ʧ�ܣ�" );
+					//m_pRoleChar->SystemNotice( "CCharMission::LevelUp:[TriggerProc]" );
 					m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00008) );
 					lua_callalert( g_pLuaState, nStatus );
 					lua_settop(g_pLuaState, 0);
@@ -1034,13 +1034,13 @@ namespace mission
 					ToLogService("common", "LevelUp Complete!, ID={}, p1={}, p2={}, p3={}, p4={}", m_Trigger[i].wTriggerID, 
 						m_Trigger[i].wParam1, m_Trigger[i].wParam2, m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-					// Типизированная сериализация: прогресс триггера повышения уровня
+					//  :    
 					auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
 						m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, 0
 					});
 					m_pRoleChar->ReflectINFof( m_pRoleChar, packet );
 
-					// Условие завершения — закрываем триггер
+					//     
 					if( m_Trigger[i].wParam2 )
 					{
 						ClearTrigger( i-- );
@@ -1048,7 +1048,7 @@ namespace mission
 				}
 				else
 				{
-					//m_pRoleChar->SystemNotice( "CCharMission::LevelUp:����������[TriggerProc]���÷���ʧ�ܣ�" );
+					//m_pRoleChar->SystemNotice( "CCharMission::LevelUp:[TriggerProc]" );
 					m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00009) );
 				}
 			}
@@ -1057,7 +1057,7 @@ namespace mission
 
 	void CCharMission::CharBorn()
 	{
-		// lua�ű�������������Ϣ
+		// lua
 		lua_getglobal( g_pLuaState, "TriggerProc" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -1074,7 +1074,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 		if( nStatus )
 		{
-			//m_pRoleChar->SystemNotice( "CCharMission::CharBorn:����������[TriggerProc]����ʧ�ܣ�" );
+			//m_pRoleChar->SystemNotice( "CCharMission::CharBorn:[TriggerProc]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00010) );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -1085,7 +1085,7 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 		if( dwResult == LUA_TRUE )
 		{
-			// Типизированная сериализация: инициализация карты (CharBorn)
+			//  :   (CharBorn)
 			auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
 				TE_MAP_INIT, 0, 0, 0
 			});
@@ -1093,14 +1093,14 @@ namespace mission
 		}
 		else
 		{
-			//m_pRoleChar->SystemNotice( "CCharMission::CharBorn:����������[TriggerProc]���÷���ʧ�ܣ�" );
+			//m_pRoleChar->SystemNotice( "CCharMission::CharBorn:[TriggerProc]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00011) );
 		}
 	}
 
 	void CCharMission::EquipItem( USHORT sItemID, USHORT sTriID )
 	{
-		// lua�ű�������������Ϣ
+		// lua
 		lua_getglobal( g_pLuaState, "TriggerProc" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -1117,7 +1117,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 		if( nStatus )
 		{
-			//m_pRoleChar->SystemNotice( "CCharMission::EquipItem:����������[TriggerProc]����ʧ�ܣ�" );
+			//m_pRoleChar->SystemNotice( "CCharMission::EquipItem:[TriggerProc]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00012) );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -1128,7 +1128,7 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 		if( dwResult == LUA_TRUE )
 		{
-			// Типизированная сериализация: экипировка предмета
+			//  :  
 			auto packet = net::msg::serialize(net::msg::McTriggerActionMessage{
 				TE_EQUIP_ITEM, 0, static_cast<int64_t>(sItemID), 0
 			});
@@ -1136,12 +1136,12 @@ namespace mission
 		}
 		else
 		{
-			//m_pRoleChar->SystemNotice( "CCharMission::EquipItem:����������[TriggerProc]���÷���ʧ�ܣ�" );
+			//m_pRoleChar->SystemNotice( "CCharMission::EquipItem:[TriggerProc]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00013) );
 		}
 	}
 
-	// �������¼�����
+	// 
 	BOOL CCharMission::MisEventProc( TRIGGER_EVENT e, WPARAM wParam, LPARAM lParam )
 	{
 		switch( e )
@@ -1202,7 +1202,7 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_GET_ITEM && sItemID == m_Trigger[i].wParam1)
 			{
-				// �ж��Ƿ�������Ʒ�����Ѿ��㹻
+				// 
 				return !(m_Trigger[i].wParam4 >= m_Trigger[i].wParam2);
 			}
 		}
@@ -1249,7 +1249,7 @@ namespace mission
 		//}
 		//else
 		//{
-		//	m_pRoleChar->SystemNotice( "δ֪������״̬���ͣ�npcid = 0x%X, state = %d", dwNpcID, byState );
+		//	m_pRoleChar->SystemNotice( "npcid = 0x%X, state = %d", dwNpcID, byState );
 		//	return FALSE;
 		//}
 
@@ -1283,7 +1283,7 @@ namespace mission
 
 		if( nIndex == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "GetMissionState:δ���ֽ�ɫ��Ӧ��NPC����״̬��Ϣ����npc�Ƿ�Я������" );
+			//m_pRoleChar->SystemNotice( "GetMissionState:NPCnpc" );
 			return FALSE;
 		}
 
@@ -1312,7 +1312,7 @@ namespace mission
 
 		if( nIndex == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "GetNumMission:δ֪��NPC��Ϣ��" );
+			//m_pRoleChar->SystemNotice( "GetNumMission:NPC" );
 			return FALSE;
 		}
 		
@@ -1341,14 +1341,14 @@ namespace mission
 
 		if( nIndex == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "GetMissionInfo:δ֪��NPC��Ϣ��" );
+			//m_pRoleChar->SystemNotice( "GetMissionInfo:NPC" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00014) );
 			return FALSE;
 		}
 
 		if( byIndex >= m_MissionState[nIndex].byMisNum )
 		{
-			//m_pRoleChar->SystemNotice( "GetMissionInfo:����Ĳ�ѯNPCЯ�������¼����������Ϣ��" );
+			//m_pRoleChar->SystemNotice( "GetMissionInfo:NPC" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00015) );
 			return FALSE;
 		}
@@ -1379,7 +1379,7 @@ namespace mission
 
 		if( nIndex == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "GetMissionInfo:δ֪��NPC��Ϣ��dwNpcID = %d", dwNpcID );
+			//m_pRoleChar->SystemNotice( "GetMissionInfo:NPCdwNpcID = %d", dwNpcID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00016), dwNpcID );
 			return FALSE;
 		}
@@ -1465,7 +1465,7 @@ namespace mission
 
 		if( m_MissionState[m_byStateIndex].dwNpcID != dwNpcID )
 		{
-			//m_pRoleChar->SystemNotice( "ClearMissionState:δ֪��NPC������Ϣ��" );
+			//m_pRoleChar->SystemNotice( "ClearMissionState:NPC" );
 			return FALSE;
 		}
 
@@ -1591,7 +1591,7 @@ namespace mission
 		if( dwIndex >= m_byNumTrigger )
 			return;
 
-		// ���������������Ϣ��¼
+		// 
 		if( m_Trigger[dwIndex].byType == TE_GOTO_MAP ) 
 			m_byNumGotoMap--;
 
@@ -1605,7 +1605,7 @@ namespace mission
 
 	void CCharMission::MisGetMisLog()
 	{
-		// Типизированная сериализация: журнал квестов
+		//  :  
 		net::msg::McMisLogMessage msg;
 		msg.logs.reserve(m_byNumMission);
 		for( BYTE i = 0; i < m_byNumMission; i++ )
@@ -1630,11 +1630,11 @@ namespace mission
 
 		if( nIndex == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "MisGetMisLogInfo:����Ĳ�ѯ������־������ID = %d", wMisID );
+			//m_pRoleChar->SystemNotice( "MisGetMisLogInfo:ID = %d", wMisID );
 			return;
 		}
 
-		// lua�ű�������������Ϣ
+		// lua
 		lua_getglobal( g_pLuaState, "MissionLog" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -1649,7 +1649,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//m_pRoleChar->SystemNotice( "CCharMission::MisGetMisLogInfo:������־��������[MissionLog]����ʧ�ܣ�" );
+			//m_pRoleChar->SystemNotice( "CCharMission::MisGetMisLogInfo:[MissionLog]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00017) );
 			lua_callalert( g_pLuaState, nStatus );
 		}
@@ -1658,7 +1658,7 @@ namespace mission
 
 	void CCharMission::MisLogClear( WORD wMisID )
 	{
-		// Типизированная сериализация: очистка записи квеста
+		//  :   
 		auto packet = net::msg::serialize(net::msg::McMisLogClearMcMessage{
 			static_cast<int64_t>(wMisID)
 		});
@@ -1667,7 +1667,7 @@ namespace mission
 
 	void CCharMission::MisLogAdd( WORD wMisID, BYTE byState )
 	{
-		// Типизированная сериализация: добавление записи квеста
+		//  :   
 		auto packet = net::msg::serialize(net::msg::McMisLogAddMessage{
 			static_cast<int64_t>(wMisID), static_cast<int64_t>(byState)
 		});
@@ -1695,7 +1695,7 @@ namespace mission
 		m_Mission[m_byNumMission].byMisType = MIS_TYPE_NOMAL;
 		m_Mission[m_byNumMission].wParam1 = wScriptID;
 		
-		// ͬ��������־��Ϣ���ͻ���
+		// 
 		MisLogAdd( wRoleID, ROLE_MIS_PENDING_FLAG );
 
 		m_byNumMission++;
@@ -1738,7 +1738,7 @@ namespace mission
 			{
 				m_Mission[i].byState = ROLE_MIS_COMPLETE_FLAG;
 
-				// Типизированная сериализация: квест завершён
+				//  :  
 				auto packet = net::msg::serialize(net::msg::McMisLogStateMessage{
 					static_cast<int64_t>(i), static_cast<int64_t>(m_Mission[i].wRoleID), static_cast<int64_t>(m_Mission[i].byState)
 				});
@@ -1758,7 +1758,7 @@ namespace mission
 			{
 				m_Mission[i].byState = ROLE_MIS_COMPLETE_FLAG;
 
-				// Типизированная сериализация: квест ожидает завершения
+				//  :   
 				auto packet = net::msg::serialize(net::msg::McMisLogStateMessage{
 					static_cast<int64_t>(i), static_cast<int64_t>(m_Mission[i].wRoleID), static_cast<int64_t>(m_Mission[i].byState)
 				});
@@ -1778,7 +1778,7 @@ namespace mission
 			{
 				m_Mission[i].byState = ROLE_MIS_FAILURE_FALG;
 
-				// Типизированная сериализация: квест провален
+				//  :  
 				auto packet = net::msg::serialize(net::msg::McMisLogStateMessage{
 					static_cast<int64_t>(i), static_cast<int64_t>(m_Mission[i].wRoleID), static_cast<int64_t>(m_Mission[i].byState)
 				});
@@ -1805,7 +1805,7 @@ namespace mission
 
 	BOOL CCharMission::CancelRole( WORD wRoleID, WORD wScriptID )
 	{
-		// lua�ű�������������Ϣ
+		// lua
 		lua_getglobal( g_pLuaState, "CancelMission" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -1821,7 +1821,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 3, 1, 0 );
 		if( nStatus )
 		{
-			//m_pRoleChar->SystemNotice( "CCharMission::CancelRole:ȡ������������[CancelMission]����ʧ�ܣ�" );
+			//m_pRoleChar->SystemNotice( "CCharMission::CancelRole:[CancelMission]" );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00018) );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -1839,7 +1839,7 @@ namespace mission
 		{
 			if( m_Mission[i].wRoleID == wRoleID )
 			{
-				// ������͵�npc�����ڴ�
+				// npc
 				if( m_Mission[i].byType == MIS_RAND_CONVOY )
 				{
 					for( int j = 0; j < ROLE_MAXNUM_RAND_DATA; j++ )
@@ -1852,10 +1852,10 @@ namespace mission
 					}
 				}
 
-				// ִ��ȡ������ű���Ϣ
+				// 
 				if( CancelRole( wRoleID, m_Mission[i].wParam1 ) == FALSE )
 				{
-					//m_pRoleChar->SystemNotice( "ȡ������ʧ�ܣ�ID[%d], SID[%d]", wRoleID, m_Mission[i].wParam1 );
+					//m_pRoleChar->SystemNotice( "ID[%d], SID[%d]", wRoleID, m_Mission[i].wParam1 );
 					m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00019), wRoleID, m_Mission[i].wParam1 );
 					return FALSE;
 				}
@@ -1864,7 +1864,7 @@ namespace mission
 			}
 		}
 
-		//m_pRoleChar->SystemNotice( "MisCancelRole:δ����ָ��������ID[%d]", wRoleID );
+		//m_pRoleChar->SystemNotice( "MisCancelRole:ID[%d]", wRoleID );
 		m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00020), wRoleID );
 		return FALSE;
 	}
@@ -1875,7 +1875,7 @@ namespace mission
 		{
 			if( m_Mission[i].wRoleID == wRoleID )
 			{
-				// ������͵�npc�����ڴ�
+				// npc
 				if( m_Mission[i].byType == MIS_RAND_CONVOY )
 				{
 					for( int j = 0; j < ROLE_MAXNUM_RAND_DATA; j++ )
@@ -1888,7 +1888,7 @@ namespace mission
 					}
 				}
 
-				// ���������¼��Ϣ
+				// 
 				MISSION_INFO Info[ROLE_MAXNUM_MISSION];
 				memset( Info, 0, sizeof(MISSION_INFO)*ROLE_MAXNUM_MISSION);
 				memcpy( Info, m_Mission, sizeof(MISSION_INFO)*m_byNumMission ); 
@@ -1896,16 +1896,16 @@ namespace mission
 				memcpy( m_Mission + i, Info + i + 1, sizeof(MISSION_INFO)*( m_byNumMission - i - 1 ) );
 				m_byNumMission--;
 
-				// ��������񴥷���
+				// 
 				ClearRoleTrigger( wRoleID );
 
-				// ͬ��������־��Ϣ���ͻ���
+				// 
 				MisLogClear( wRoleID );
 				return TRUE;
 			}
 		}
 
-		//m_pRoleChar->SystemNotice( "MisClearRole:δ����ָ��������ID[%d]", wRoleID );
+		//m_pRoleChar->SystemNotice( "MisClearRole:ID[%d]", wRoleID );
 		m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00021), wRoleID );
 		return FALSE;
 	}
@@ -1985,7 +1985,7 @@ namespace mission
 	{
 		if( byIndex >= ROLE_MAXNUM_RAND_DATA )
 		{
-			//m_pRoleChar->SystemNotice( "MisIsFollowNpc:�ٻ�NPC������������byInex = %d", byIndex );
+			//m_pRoleChar->SystemNotice( "MisIsFollowNpc:NPCbyInex = %d", byIndex );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00022), byIndex );
 			return FALSE;
 		}
@@ -2002,7 +2002,7 @@ namespace mission
 
 		if( index == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "MisAddFollowNpc:δ��������ID=%d", wRoleID );
+			//m_pRoleChar->SystemNotice( "MisAddFollowNpc:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00023), wRoleID );
 			return FALSE;
 		}
@@ -2028,7 +2028,7 @@ namespace mission
 
 		if( index == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "MisClearFollowNpc:δ��������ID=%d", wRoleID );
+			//m_pRoleChar->SystemNotice( "MisClearFollowNpc:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00024), wRoleID );
 			return FALSE;
 		}
@@ -2052,7 +2052,7 @@ namespace mission
 	{
 		if( byIndex >= ROLE_MAXNUM_RAND_DATA )
 		{
-			//m_pRoleChar->SystemNotice( "MisClearFollowNpc:�ٻ�NPC������������byInex = %d", byIndex );
+			//m_pRoleChar->SystemNotice( "MisClearFollowNpc:NPCbyInex = %d", byIndex );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00025), byIndex );
 			return FALSE;
 		}
@@ -2069,7 +2069,7 @@ namespace mission
 
 		if( index == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "MisClearFollowNpc:δ��������ID=%d", wRoleID );
+			//m_pRoleChar->SystemNotice( "MisClearFollowNpc:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00024), wRoleID );
 			return FALSE;
 		}
@@ -2088,7 +2088,7 @@ namespace mission
 	{
 		if( byIndex >= ROLE_MAXNUM_RAND_DATA )
 		{
-			//m_pRoleChar->SystemNotice( "MisHasFollowNpc:�ٻ�NPC������������byInex = %d", byIndex );
+			//m_pRoleChar->SystemNotice( "MisHasFollowNpc:NPCbyInex = %d", byIndex );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00026), byIndex );
 			return FALSE;
 		}
@@ -2105,7 +2105,7 @@ namespace mission
 
 		if( index == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "MisHasFollowNpc:δ��������ID=%d", wRoleID );
+			//m_pRoleChar->SystemNotice( "MisHasFollowNpc:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00027), wRoleID );
 			return FALSE;
 		}
@@ -2120,7 +2120,7 @@ namespace mission
 	{
 		if( byIndex >= ROLE_MAXNUM_RAND_DATA )
 		{
-			//m_pRoleChar->SystemNotice( "MisIsFollowNpc:�ٻ�NPC������������byInex = %d", byIndex );
+			//m_pRoleChar->SystemNotice( "MisIsFollowNpc:NPCbyInex = %d", byIndex );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00022), byIndex );
 			return FALSE;
 		}
@@ -2137,7 +2137,7 @@ namespace mission
 
 		if( index == -1 )
 		{
-			//m_pRoleChar->SystemNotice( "MisIsFollowNpc:δ��������ID=%d", wRoleID );
+			//m_pRoleChar->SystemNotice( "MisIsFollowNpc:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00028), wRoleID );
 			return FALSE;
 		}
@@ -2168,7 +2168,7 @@ namespace mission
 		m_Mission[m_byNumMission].byNumData = byNumData;
 		m_byNumMission++;
 
-		// ͬ����־���ͻ���
+		// 
 		MisLogAdd( wRoleID, ROLE_MIS_PENDING_FLAG );
 
 		return TRUE;
@@ -2201,7 +2201,7 @@ namespace mission
 
 		if( index == -1 ) 
 		{
-			//m_pRoleChar->SystemNotice( "SetRandMissionData:δ�����������ID=%d", wRoleID );
+			//m_pRoleChar->SystemNotice( "SetRandMissionData:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00029), wRoleID );
 			return FALSE;
 		}
@@ -2224,13 +2224,13 @@ namespace mission
 
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "GetRandMission:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "GetRandMission:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00030), wRoleID );
 			return FALSE;
 		}
 
 		wRoleID = m_Mission[index].wRoleID;
-		byType = m_Mission[index].byType; // ��ȡ��7λ������������Ϣ
+		byType = m_Mission[index].byType; // 7
 		byLevel = m_Mission[index].byLevel;
 		dwExp = m_Mission[index].dwExp;
 		dwMoney = m_Mission[index].dwMoney;
@@ -2256,7 +2256,7 @@ namespace mission
 
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "GetRandMissionData:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "GetRandMissionData:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00031), wRoleID );
 			return FALSE;
 		}
@@ -2279,7 +2279,7 @@ namespace mission
 			
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "SetRandMissionNpcItemFlag:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "SetRandMissionNpcItemFlag:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00032), wRoleID );
 			return FALSE;
 		}
@@ -2308,7 +2308,7 @@ namespace mission
 			
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "SetRandMissionNpcItemFlag:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "SetRandMissionNpcItemFlag:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00032), wRoleID );
 			return FALSE;
 		}
@@ -2337,7 +2337,7 @@ namespace mission
 		
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "GetRandMissionNpcItem:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "GetRandMissionNpcItem:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00033), wRoleID );
 			return FALSE;
 		}
@@ -2346,8 +2346,8 @@ namespace mission
 		{
 			if( m_Mission[index].RandData[i].wParam4 != 1 )
 			{
-				m_pRoleChar->GetPlyMainCha()->TakeItem( m_Mission[index].RandData[i].wParam2, 1, "ϵͳ" );
-				m_Mission[index].RandData[i].wParam4 = 1; // ������Ʒ�ѱ�ȡ��				
+				m_pRoleChar->GetPlyMainCha()->TakeItem( m_Mission[index].RandData[i].wParam2, 1, "" );
+				m_Mission[index].RandData[i].wParam4 = 1; // 				
 			}
 		}
 		return TRUE;
@@ -2367,7 +2367,7 @@ namespace mission
 			
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "GetRandMissionNpcItem:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "GetRandMissionNpcItem:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00033), wRoleID );
 			return FALSE;
 		}
@@ -2377,7 +2377,7 @@ namespace mission
 			if( m_Mission[index].RandData[i].wParam1 == wNpcID )
 			{
 				sItemID = m_Mission[index].RandData[i].wParam2;
-				m_Mission[index].RandData[i].wParam4 = 1; // ������Ʒ�ѱ�ȡ��
+				m_Mission[index].RandData[i].wParam4 = 1; // 
 				return TRUE;
 			}
 		}
@@ -2398,7 +2398,7 @@ namespace mission
 
 		if( index == -1 || m_Mission[index].byMisType != MIS_TYPE_RAND ) 
 		{
-			//m_pRoleChar->SystemNotice( "HasRandMissionNpc:δ�����������ID=%d����������������������ͣ�", wRoleID );
+			//m_pRoleChar->SystemNotice( "HasRandMissionNpc:ID=%d", wRoleID );
 			m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00034), wRoleID );
 			return FALSE;
 		}
@@ -2430,8 +2430,8 @@ namespace mission
 		{
 			if( m_byNumMisCount >= ROLE_MAXNUM_MISSIONCOUNT )
 			{
-				//LG( "randmission", "CCharMission::CompleteRandMission:������������¼�����������������µ����������ɴ�����¼��" );
-				ToLogService("common", "CCharMission::CompleteRandMission:random task take count of note has full��cannot add new random task note of compelete number��" );
+				//LG( "randmission", "CCharMission::CompleteRandMission:" );
+				ToLogService("common", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task note of compelete number" );
 				return FALSE;
 			}
 			m_MissionCount[m_byNumMisCount].wRoleID = wRoleID;
@@ -2461,8 +2461,8 @@ namespace mission
 		{
 			if( m_byNumMisCount >= ROLE_MAXNUM_MISSIONCOUNT )
 			{
-				//LG( "randmission", "CCharMission::CompleteRandMission:������������¼�����������������µ����������ɴ�����¼��" );
-				ToLogService("common", "CCharMission::CompleteRandMission:random task take count of note has full��cannot add new random task compelete note ��" );
+				//LG( "randmission", "CCharMission::CompleteRandMission:" );
+				ToLogService("common", "CCharMission::CompleteRandMission:random task take count of note has fullcannot add new random task compelete note " );
 				return FALSE;
 			}
 			m_MissionCount[m_byNumMisCount].wRoleID = wRoleID;
@@ -2584,14 +2584,14 @@ namespace mission
 	void CCharMission::MisLogout()
 	{
 		m_byOnline = 0;
-		//TL(CHA_OUT, m_pRoleChar->GetName(), "", "��ɫ����");
+		//TL(CHA_OUT, m_pRoleChar->GetName(), "", "");
 		ToLogService("trade", "[CHA_OUT] {} : {}", m_pRoleChar->GetName(), RES_STRING(GM_MISSION_CPP_00035));
 	}
 
 	void CCharMission::MisLogin()
 	{
 		m_byOnline = 1;
-		//TL(CHA_ENTER, m_pRoleChar->GetName(), "", "��ɫ����");
+		//TL(CHA_ENTER, m_pRoleChar->GetName(), "", "");
 		ToLogService("trade", "[CHA_ENTER] {} : {}", m_pRoleChar->GetName(), RES_STRING(GM_MISSION_CPP_00036));
 	}
 
@@ -2603,13 +2603,13 @@ namespace mission
 
 			if(pMain)
 			{
-				//const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : "δ֪";
+				//const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : "";
 				const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : RES_STRING(GM_MISSION_CPP_00037);
 				char szData[128];
 				sprintf( szData, RES_STRING(GM_MISSION_CPP_00038), pszMap, pMain->GetPos().x, pMain->GetPos().y );
 				ToLogService("trade", "[CHA_ENTER] {} : {}", m_pRoleChar->GetName(), szData);
 
-				// �����ͼʱ�ٻ�������npc
+				// npc
 				for( int i = 0; i < m_byNumMission; i++ )
 				{
 					if( m_Mission[i].byType == MIS_RAND_CONVOY )
@@ -2621,7 +2621,7 @@ namespace mission
 								if( !m_pRoleChar->ConvoyNpc( m_Mission[i].wRoleID, j, m_Mission[i].RandData[0].wParam1, 
 									(BYTE)m_Mission[i].RandData[0].wParam2 ) )
 								{
-									//m_pRoleChar->SystemNotice( "�ٻ����������NPCʧ�ܣ���֪ͨ������Ա��лл��	MID(%d),NID(%d)", 
+									//m_pRoleChar->SystemNotice( "NPC	MID(%d),NID(%d)", 
 									m_pRoleChar->SystemNotice( RES_STRING(GM_MISSION_CPP_00039), 
 										m_Mission[i].wRoleID, m_Mission[i].RandData[0].wParam1 );					
 								}
@@ -2641,12 +2641,12 @@ namespace mission
 	void CCharMission::MisGooutMap() 
 	{
 		CCharacter* pMain = m_pRoleChar->GetPlyCtrlCha();
-		const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : "δ֪";
+		const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : "";
 		char szData[128];
 		sprintf( szData, RES_STRING(GM_MISSION_CPP_00040), pszMap, pMain->GetPos().x, pMain->GetPos().y );
 		ToLogService("trade", "[CHA_OUT] {} : {}", m_pRoleChar->GetName(), szData);
 
-		// ����ͼʱ��ո���npc
+		// npc
 		for( int i = 0; i < m_byNumMission; i++ )
 		{
 			if( m_Mission[i].byType == MIS_RAND_CONVOY )

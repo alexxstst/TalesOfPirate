@@ -1,4 +1,4 @@
-/**********************************************************************/
+﻿/**********************************************************************/
 /*      imm.h - Input Method Manager definitions                      */
 /*                                                                    */
 /*      Copyright (c) Microsoft Corporation. All rights reserved.     */

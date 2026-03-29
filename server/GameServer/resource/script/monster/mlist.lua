@@ -1,4 +1,4 @@
-function PM(monster)
+﻿function PM(monster)
     local filename = "script/monster/"..monster..".lua"
     dofile(GetResPath(filename))
 end

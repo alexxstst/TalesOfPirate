@@ -61,7 +61,7 @@
     <ClCompile>
       <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\..\..\Libraries\Server\sdk\include;$(ProjectDir)..\..\..\Libraries\Common\include;$(ProjectDir)..\..\..\Libraries\Util\include;$(ProjectDir)..\..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\..\Libraries\icu\include;$(ProjectDir)..\..\..\Libraries\InfoNet\include;$(ProjectDir)..\..\..\Libraries\cryptopp\;$(ProjectDir)..\..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\..\..\Libraries\Server\sdk\include;$(ProjectDir)..\..\..\Libraries\Common\include;$(ProjectDir)..\..\..\Libraries\Util\include;$(ProjectDir)..\..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\..\Libraries\icu\include;$(ProjectDir)..\..\..\Libraries\InfoNet\include;$(ProjectDir)..\..\..\Libraries\cryptopp\;$(ProjectDir)..\..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;__INFO_NET__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -82,7 +82,7 @@
     <Link>
       <AdditionalDependencies>Ws2_32.lib;winmm.lib;LIBDBC_D.lib;util_D.lib;icuucd.lib;icuind.lib;ICUHelper_D.lib;Common_D.lib;Psapi.lib;lua51.lib;InfoNet_D.lib;CorsairsNet_D.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\Libraries\Server\sdk\lib;$(ProjectDir)..\..\..\Libraries\Common\lib;$(ProjectDir)..\..\..\Libraries\Util\lib;$(ProjectDir)..\..\..\Libraries\LuaJIT\lib;$(ProjectDir)..\..\..\Libraries\icu\lib;$(ProjectDir)..\..\..\Libraries\ICUHelper\lib;$(ProjectDir)..\..\..\Libraries\InfoNet\lib;$(ProjectDir)..\..\..\Libraries\CorsairsNet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\Libraries\Server\sdk\lib;$(ProjectDir)..\..\..\Libraries\Common\lib;$(ProjectDir)..\..\..\Libraries\Util\lib;$(ProjectDir)..\..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\..\Libraries\icu\lib;$(ProjectDir)..\..\..\Libraries\ICUHelper\lib;$(ProjectDir)..\..\..\Libraries\InfoNet\lib;$(ProjectDir)..\..\..\Libraries\CorsairsNet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
       <SubSystem>Console</SubSystem>
@@ -94,7 +94,7 @@
     <ClCompile>
       <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\..\..\Libraries\Server\sdk\include;$(ProjectDir)..\..\..\Libraries\Common\include;$(ProjectDir)..\..\..\Libraries\Util\include;$(ProjectDir)..\..\..\Libraries\InfoNet\include;$(ProjectDir)..\..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\..\Libraries\icu\include;$(ProjectDir)..\..\..\Libraries\cryptopp\;$(ProjectDir)..\..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\..\..\Libraries\Server\sdk\include;$(ProjectDir)..\..\..\Libraries\Common\include;$(ProjectDir)..\..\..\Libraries\Util\include;$(ProjectDir)..\..\..\Libraries\InfoNet\include;$(ProjectDir)..\..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\..\Libraries\icu\include;$(ProjectDir)..\..\..\Libraries\cryptopp\;$(ProjectDir)..\..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -111,7 +111,7 @@
     <Link>
       <AdditionalDependencies>Ws2_32.lib;winmm.lib;LIBDBC.lib;util.lib;icuuc.lib;icuin.lib;ICUHelper.lib;Common.lib;Psapi.lib;lua51.lib;InfoNet.lib;CorsairsNet.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\Libraries\Server\sdk\lib;$(ProjectDir)..\..\..\Libraries\Common\lib;$(ProjectDir)..\..\..\Libraries\Util\lib;$(ProjectDir)..\..\..\Libraries\InfoNet\lib;$(ProjectDir)..\..\..\Libraries\LuaJIT\lib;$(ProjectDir)..\..\..\Libraries\ICUHelper\lib;$(ProjectDir)..\..\..\Libraries\icu\lib;$(ProjectDir)..\..\..\Libraries\CorsairsNet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\..\Libraries\Server\sdk\lib;$(ProjectDir)..\..\..\Libraries\Common\lib;$(ProjectDir)..\..\..\Libraries\Util\lib;$(ProjectDir)..\..\..\Libraries\InfoNet\lib;$(ProjectDir)..\..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\..\Libraries\ICUHelper\lib;$(ProjectDir)..\..\..\Libraries\icu\lib;$(ProjectDir)..\..\..\Libraries\CorsairsNet\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -129,7 +129,6 @@
     <ClInclude Include="..\src\Auction.h" />
     <ClInclude Include="..\src\AuctionItem.h" />
     <ClInclude Include="..\src\Birthplace.h" />
-    <ClInclude Include="..\src\CallStack.h" />
     <ClInclude Include="..\src\Character.h" />
     <ClInclude Include="..\src\CharBoat.h" />
     <ClInclude Include="..\src\CharForge.h" />
@@ -177,7 +176,6 @@
     <ClInclude Include="..\src\Script.h" />
     <ClInclude Include="..\src\SkillState.h" />
     <ClInclude Include="..\src\SkillTemp.h" />
-    <ClInclude Include="..\src\StackWalker.h" />
     <ClInclude Include="..\src\StateCell.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\SubMap.h" />
@@ -249,7 +247,6 @@
     <ClCompile Include="..\src\Picture.cpp" />
     <ClCompile Include="..\src\Player.cpp" />
     <ClCompile Include="..\src\Script.cpp" />
-    <ClCompile Include="..\src\StackWalker.cpp" />
     <ClCompile Include="..\src\StateCell.cpp" />
     <ClCompile Include="..\src\stdafx.cpp">
       <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>

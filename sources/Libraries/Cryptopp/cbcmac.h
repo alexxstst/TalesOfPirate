@@ -1,4 +1,4 @@
-// cbcmac.h - originally written and placed in the public domain by Wei Dai
+﻿// cbcmac.h - originally written and placed in the public domain by Wei Dai
 
 /// \file
 /// \brief Classes for CBC MAC

@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: SkillTemp.h
 // Creater: ZhangXuedong
 // Date: 2005.03.03
@@ -10,9 +10,9 @@
 
 #include "PreAlloc.h"
 
-#define defSKILL_RANGE_BASEP_NUM	3	// ÇøÓò»ù±¾²ÎÊı¸öÊı£¨·¶Î§ÖĞĞÄ×ø±ê£¬·½Ïò£©
-#define defSKILL_RANGE_EXTEP_NUM	4	// ÇøÓòÀ©Õ¹²ÎÊı¸öÊı£¨·¶Î§ÀàĞÍ£¬ÀàĞÍ²ÎÊı£©
-#define defSKILL_STATE_PARAM_NUM	3	// ÇøÓò×´Ì¬²ÎÊı¸öÊı£¨±àºÅ£¬µÈ¼¶£¬³ÖĞøÊ±¼ä£©
+#define defSKILL_RANGE_BASEP_NUM	3	// 
+#define defSKILL_RANGE_EXTEP_NUM	4	// 
+#define defSKILL_STATE_PARAM_NUM	3	// 
 
 class CSkillTempData : public dbc::PreAllocStru
 {
@@ -23,13 +23,13 @@ public:
 		sStateParam[0] = SSTATE_NONE;
 	}
 
-	short	sUseEndure{};	// ¶Ô¡°ÄÍ¾Ã¶È¡°µÄÏûºÄ
-	short	sUseEnergy{};	// ¶Ô¡°ÄÜÁ¿¡°µÄÏûºÄ
-	short	sUseSP{};		// ¶Ô¡°SP¡°µÄÏûºÄ
+	short	sUseEndure{};	// 
+	short	sUseEnergy{};	// 
+	short	sUseSP{};		// SP
 
-	long	lResumeTime{};// ÔÙÊÍ·ÅĞèÒªµÄÊ±¼ä£¨ºÁÃë£©
-	short	sRange[defSKILL_RANGE_EXTEP_NUM];	// ÇøÓòÃèÊö£¨ÀàĞÍ+²ÎÊı£©
-	short	sStateParam[defSKILL_STATE_PARAM_NUM];	// ×´Ì¬±àºÅ£¬µÈ¼¶£¬³ÖĞøÊ±¼ä
+	long	lResumeTime{};// 
+	short	sRange[defSKILL_RANGE_EXTEP_NUM];	// +
+	short	sStateParam[defSKILL_STATE_PARAM_NUM];	// 
 
 protected:
 

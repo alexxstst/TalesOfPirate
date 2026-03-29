@@ -1,4 +1,4 @@
-// EXPAND_H//=============================================================================
+﻿// EXPAND_H//=============================================================================
 // FileName: Expand.h
 // Creater: ZhangXuedong
 // Date: 2004.11.22
@@ -118,7 +118,7 @@ inline int lua_EquipStringItem(lua_State *pLS){
 
 inline int lua_GetChaGuildPermission(lua_State *pLS)
 {
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	if (nParaNum != 1){
 		return 0;
 	}
@@ -160,7 +160,7 @@ inline int lua_GetChaAttr(lua_State *pLS)
 	int		nAttrVal;
 	LONG32  lAttrVal;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	short sAttrIndex = -1;
 	if (nParaNum > 2)
 	{
@@ -211,12 +211,12 @@ inline int lua_GetChaAttr(lua_State *pLS)
 		return 0;
 }
 
-// ���ý�ɫ��Ӧ���Ե�ֵ
+// 
 inline int lua_SetChaAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	if (nParaNum > 3)
 	{
 		bSuccess = false;
@@ -254,14 +254,14 @@ inline int lua_SetChaAttr(lua_State *pLS)
 	return 0;
 }
 
-// ���ؽ�ɫ���ͣ�0������ҡ�1����ҡ�
+// 01
 inline int lua_CheckChaRole(lua_State *pLS)
 {
 bool	bSuccess = true;
 int		nType = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum > 1)
 {
@@ -290,16 +290,16 @@ else
 return 0;
 }
 
-// ȡ��ɫ����Ҷ���
-// ��������ɫ����
-// ���أ���Ҷ��󣨷���Ҷ��󷵻�0��
+// 
+// 
+// 0
 inline int lua_GetChaPlayer(lua_State *pLS)
 {
 bool	bSuccess = true;
 CPlayer	*pCPly = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum > 1)
 {
@@ -330,9 +330,9 @@ else
 return 0;
 }
 
-// ȡ��ҵĶ�����
-// ��������Ҷ���
-// ���أ�������
+// 
+// 
+// 
 inline int lua_GetPlayerTeamID(lua_State* pLS)
 {
 	{
@@ -360,15 +360,15 @@ inline int lua_GetPlayerTeamID(lua_State* pLS)
 	}
 }
 
-// ȡ��ҵı��
-// ��������Ҷ���
-// ���أ����
+// 
+// 
+// 
 inline int lua_GetPlayerID(lua_State *pLS)
 {
 bool	bSuccess = true;
 short ret = 0;
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -393,15 +393,15 @@ lua_pushnumber(pLS, ret);
 return 1;
 }
 
-// ���ü�������
-// �������������ͱ�ţ���Ӧ�����͵Ĳ������μ�CompCommand.h ERangeType��
-// ����ֵ����
+// 
+// CompCommand.h ERangeType
+// 
 inline int lua_SetSkillRange(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum < 1 || nParaNum >= defSKILL_RANGE_EXTEP_NUM)
 {
@@ -427,15 +427,15 @@ if (bSuccess)
 return 0;
 }
 
-// ���ü�������״̬
-// ������״̬��ţ��ȼ���ʱ�䣨�룩
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_SetRangeState(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 3)
 {
@@ -456,15 +456,15 @@ if (bSuccess)
 return 0;
 }
 
-// ȡ�ü��ܵ��λ�ã���λ�����ף�
-// ��������
-// ����ֵ��λ��[x,y]
+// 
+// 
+// [x,y]
 inline int lua_GetSkillPos(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -484,17 +484,17 @@ else
 return 0;
 }
 
-// ȡ�ö���ļ��ܵȼ�
-// ��������ɫ����
-//       ���ܱ��
-// ����ֵ�����ܵȼ�
+// 
+// 
+//       
+// 
 inline int lua_GetSkillLv(lua_State *pLS)
 {
 bool	bSuccess = true;
 char chSkillLv = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -531,17 +531,17 @@ else
 return 0;
 }
 
-// ȡ�ý�ɫ��Ӧ��״̬�ȼ�
-// ��������ɫ����
-//       ״̬���
-// ����ֵ��״̬�ȼ�
+// 
+// 
+//       
+// 
 inline int lua_GetChaStateLv(lua_State *pLS)
 {
 bool	bSuccess = true;
 unsigned char uchStateLv = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -575,16 +575,16 @@ else
 return 0;
 }
 
-// ȡ�ü��ܶ���ķ���
-// ��������ɫ����
-// ����ֵ�����򣨵�λ���ȣ�
+// 
+// 
+// 
 inline int lua_GetObjDire(lua_State *pLS)
 {
 bool	bSuccess = true;
 int ret = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -611,16 +611,16 @@ else
 return 0;
 }
 
-// ���Ӽ��ܶ����״̬
-// ������ʹ�÷����󣬱��÷�����
-//       ״̬��ţ�״̬�ȼ���״̬����ʱ��
-// ����ֵ����
+// 
+// 
+//       
+// 
 inline int lua_AddState(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 5)
 {
@@ -655,15 +655,15 @@ if (bSuccess)
 return 0;
 }
 
-// ɾ�����ܶ����״̬
-// ��������ɫ����״̬���
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_RemoveState(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -694,15 +694,15 @@ if (bSuccess)
 return 0;
 }
 
-// ��ɫ���ڵر���ĳ��״̬�ĵȼ�
-// ��������ɫ����״̬���
-// ����ֵ��״̬�ȼ���0��ʾû�и�״̬��
+// 
+// 
+// 0
 inline int lua_GetAreaStateLevel(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	unsigned char	uchStateLv = 0;
 
 	if (nParaNum != 2)
@@ -733,15 +733,15 @@ End:
 	return 1;
 }
 
-// ����Miss
-// ��������ɫ����
-// ����ֵ����
+// Miss
+// 
+// 
 inline int lua_SkillMiss(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -766,15 +766,15 @@ if (bSuccess)
 return 0;
 }
 
-// ����Crt
-// ��������ɫ����
-// ����ֵ����
+// Crt
+// 
+// 
 inline int lua_SkillCrt(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -799,16 +799,16 @@ if (bSuccess)
 return 0;
 }
 
-// ���ܲ���ʹ��
-// ��������ɫ����
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_SkillUnable(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -835,15 +835,15 @@ if (bSuccess)
 return 0;
 }
 
-// ���Ӽ���
-// ��������ɫ���󣬼��ܱ�ţ��ȼ����ȼ������û�����ԭ���Ļ��������ӣ�1�����á�0�����ӣ����Ƿ�۳���Ҫ�ļ��ܵ㣨�����۳����������۳���
-// ����ֵ��1���ɹ���0�����ɹ�
+// 
+// 10
+// 10
 inline int lua_AddChaSkill(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum < 5)
 {
@@ -888,13 +888,13 @@ lua_pushnumber(pLS, 0);
 return 1;
 }
 
-// ʹ�õ���ʧ��
+// 
 inline int lua_UseItemFailed(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -914,13 +914,13 @@ if (bSuccess)
 return 0;
 }
 
-//// ������ʱʹ�õ���ʧ��
+//// 
 //inline int lua_UseItemGiveMission(lua_State *pLS)
 //{
 //	bool	bSuccess = true;
 //
 //
-//	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+//	int nParaNum = lua_gettop(pLS); // 
 //
 //	if (nParaNum != 1)
 //	{
@@ -939,15 +939,15 @@ return 0;
 //	return 0;
 //}
 
-// ������Ʒ����
-// �����������������Ʒ�������Ի���1���б�ţ�
-// ����ֵ����
+// 
+// 1
+// 
 inline int lua_SetItemFall(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum < 1)
 {
@@ -972,15 +972,15 @@ if (bSuccess)
 return 0;
 }
 
-// ����
-// �����������������ܻ������󣬻��˳��ȣ����ף�
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_BeatBack(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 3)
 {
@@ -1021,16 +1021,16 @@ if (bSuccess)
 return 0;
 }
 
-// �Ƿ��ھ���
-// ��������ɫ����
-// ����ֵ��1���ǡ�0������
+// 
+// 
+// 10
 inline int lua_IsInGymkhana(lua_State *pLS)
 {
 bool	bSuccess = true;
 char chRet = 0; 
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -1058,16 +1058,16 @@ else
 return 0;
 }
 
-// �Ƿ���PK
-// ��������ɫ����
-// ����ֵ��1���ǡ�0������
+// PK
+// 
+// 10
 inline int lua_IsInPK(lua_State *pLS)
 {
 bool	bSuccess = true;
 char chRet = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -1095,15 +1095,15 @@ else
 return 0;
 }
 
-// �õ�������ĳһ���ߵ���Ŀ
-// ��������ɫ�����߱��
-// ����ֵ�����ߵ���Ŀ
+// 
+// 
+// 
 inline int lua_CheckBagItem(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	short sItemNum = 0;
 
 	if (nParaNum != 2)
@@ -1142,15 +1142,15 @@ End:
 	return 1;
 }
 
-// �õ����������õĸ�����
-// ��������ɫ����
-// ����ֵ�����õĸ�����
+// 
+// 
+// 
 inline int lua_GetChaFreeTempBagGridNum(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	short sFreeNum = 0;
 
 	if (nParaNum != 1)
@@ -1183,7 +1183,7 @@ inline int lua_GetChaFreeBagGridNum(lua_State *pLS)
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	short sFreeNum = 0;
 
 	if (nParaNum != 1)
@@ -1211,9 +1211,9 @@ End:
 	return 1;
 }
 
-// ɾ�������еĵ��ߡ�
-// ��������ɫ�����߱�ţ�������Ŀ
-// ����ֵ��1 �ɹ���0 ʧ��
+// 
+// 
+// 1 0 
 inline int lua_DelBagItem(lua_State *pLS)
 {
 	bool	bSuccess = true;
@@ -1221,7 +1221,7 @@ inline int lua_DelBagItem(lua_State *pLS)
 
 	SItemGrid *pGridCont, DelCont;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -1289,15 +1289,15 @@ End:
 	return 1;
 }
 
-// ɾ�������еĵ��ߡ�
-// ��������ɫ�����߶��󣬵�����Ŀ��0��Ϊɾ���ø��ϵ����е��ߣ�
-// ����ֵ��1 �ɹ���0 ʧ��
+// 
+// 0
+// 1 0 
 inline int lua_DelBagItem2(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -1344,22 +1344,22 @@ End:
 	return 1;
 }
 
-// �Ƴ���ɫ����
-// ��������ɫ����
-//       ���߱��
-//       ������Ŀ��0Ϊ��Ӧλ�õ�ȫ����Ŀ��
-//       �Ƴ���λ��1����װ�����Ƴ���2���ӵ������Ƴ���0����װ�����͵������Ƴ���
-//       �Ƴ�λ�ã�-1Ϊ��Ӧ��λ��ȫ��λ�ã�
-//       Ŀ�겿λ��0���Ƴ������档1������������2��ɾ����
-//       �Ƿ�ǿ���Ƴ���1��ǿ���Ƴ���0����ǿ���Ƴ���������������������ڲ��ܲ������ߵ�״̬ʱ��ʹ�ô˲����ɺ�����Щ����
-//       �Ƿ���Ҫͬ����Ϣ��ȱʡֵΪ1��
-// ����ֵ��1 �ɹ���0 ʧ��
+// 
+// 
+//       
+//       0
+//       120
+//       -1
+//       012
+//       10
+//       1
+// 1 0 
 inline int lua_RemoveChaItem(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum < 7)
 	{
@@ -1410,16 +1410,16 @@ End:
 	return 1;
 }
 
-// ȡ��ɫ���ڵ�ͼ������
-// ��������ɫ
-// ����ֵ����ͼ��
+// 
+// 
+// 
 inline int lua_GetChaMapName(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	const char* ret = "";
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -1453,16 +1453,16 @@ End:
 	return 0;
 }
 
-// ȡ��ɫ���ڵĵ�ͼ������
-// ��������ɫ
-// ����ֵ�������ţ�С�ڵ���0Ϊ��Ч�ı�ţ�
+// 
+// 
+// 0
 inline int lua_GetChaMapCopyNO(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short ret = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -1494,16 +1494,16 @@ End:
 	return 1;
 }
 
-// ȡ��ɫ���ڵĵ�ͼ��������
-// ��������ɫ
-// ����ֵ����������
+// 
+// 
+// 
 inline int lua_GetChaMapCopy(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	SubMap	*pCMapCopy = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -1534,16 +1534,16 @@ End:
 		return 0;
 }
 
-// ȡ��ɫ������
-// ��������ɫ
-// ����ֵ������
+// 
+// 
+// 
 inline int lua_GetMainCha(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	CCharacter	*pCMainCha = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -1573,16 +1573,16 @@ End:
 	return 1;
 }
 
-// ȡ����ɫ
-// ����������ɫ
-// ����ֵ������ɫ����������ڣ�����0
+// 
+// 
+// 0
 inline int lua_GetCtrlBoat(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	CCharacter	*pCCtrlBoat = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -1614,15 +1614,15 @@ End:
 	return 1;
 }
 
-// �ж��Ƿ񴬽�ɫ
-// ��������ɫ
-// ����ֵ��1 ����ɫ��0 ����
+// 
+// 
+// 1 0 
 inline int lua_ChaIsBoat(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	char	chIsBoat = 0;
 
 	if (nParaNum != 1)
@@ -1651,16 +1651,16 @@ End:
 	return 1;
 }
 
-// ȡ��ɫ�ĵ���
-// ��ɫ���󣻵�������1��װ������2����������λ�ñ��
-// ����ֵ������ָ��
+// 
+// 12
+// 
 inline int lua_GetChaItem(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	SItemGrid	*pSItem = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -1692,16 +1692,16 @@ End:
 		return 0;
 }
 
-// ȡ��ɫ�ĵ���
-// ��ɫ���󣻵�������1��װ������2�������������߱��
-// ����ֵ������ָ��
+// 
+// 12
+// 
 inline int lua_GetChaItem2(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	SItemGrid	*pSItem = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -1734,7 +1734,7 @@ End:
 }
 
 inline int lua_MoveToTemp(lua_State *pLS){
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2){
 		lua_pushnumber(pLS,  LUA_FALSE);
@@ -1793,7 +1793,7 @@ inline int lua_GetItemAttr(lua_State *pLS)
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	long	lItemAttr = 0;
 
 	if (nParaNum != 2)
@@ -1875,15 +1875,15 @@ inline int lua_IsItemLocked(lua_State *pLS){
 }
 
 
-// ����ʵ����������
-// ���߶��󣻵������Ա�ţ�����ֵ
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_SetItemAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -1935,15 +1935,15 @@ End:
 	return 1;
 }
 
-// ���ӵ���ʵ������
-// ���߶��󣻵������Ա�ţ�����ֵ
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_AddItemAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -1994,15 +1994,15 @@ End:
 	return 1;
 }
 
-// ȡ��������
-// ���߶��󣻵������Ա��
-// ����ֵ����������ֵ
+// 
+// 
+// 
 inline int lua_GetItemFinalAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	long	lItemAttr = 0;
 
 	if (nParaNum != 2)
@@ -2034,15 +2034,15 @@ End:
 	return 0;
 }
 
-// ���õ�������
-// ���߶��󣻵������Ա�ţ�����ֵ
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_SetItemFinalAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -2075,15 +2075,15 @@ End:
 	return 1;
 }
 
-// ���ӵ�������
-// ���߶��󣻵������Ա�ţ�����ֵ
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_AddItemFinalAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -2116,15 +2116,15 @@ End:
 	return 1;
 }
 
-// ��λ��������
-// ���߶���
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_ResetItemFinalAttr(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -2163,7 +2163,7 @@ inline int lua_GetItemAttrRange(lua_State* pLS)
 	bool	bSuccess = true;
 	short sValue = 0;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	if (nParaNum != 3)
 	{
 		bSuccess = false;
@@ -2196,16 +2196,16 @@ End:
 	return 1;
 }
 
-// ȡ���߾�������
-// ���߶��󣻲������ͣ�0�������ȼ���1���������ݣ�
-// ����ֵ����������
+// 
+// 01
+// 
 inline int lua_GetItemForgeParam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	long	lForgeP = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2238,15 +2238,15 @@ End:
 	return 1;
 }
 
-// ���õ��߾�������
-// ���߶��󣻲������ͣ�0�������ȼ���1���������ݣ�������ֵ
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 01
+// 
 inline int lua_SetItemForgeParam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -2284,15 +2284,15 @@ End:
 	return 1;
 }
 
-// ����װ�����ߵ�����
-// ��������ɫ�����λ�ã��������ͣ�����
-// ����ֵ��1 �ɹ���0 ʧ��
+// 
+// 
+// 1 0 
 inline int lua_AddEquipEnergy(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 4)
 	{
@@ -2339,15 +2339,15 @@ End:
 	return 1;
 }
 
-// ���÷���Ȼ������Ϣ
-// ������Դ����ɫ��Ŀ���ɫ������ȼ����ն���ʾ��Ϣ
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_SetRelive(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 4)
 	{
@@ -2365,13 +2365,13 @@ inline int lua_SetRelive(lua_State *pLS)
 		}
 		if (pCTarCha->GetChaRelive())
 		{
-			//pCSrcCha->SystemNotice("Ŀ�����ڽ��������˵ĸ�������!");  
+			//pCSrcCha->SystemNotice("!");  
 			pCSrcCha->SystemNotice(RES_STRING(GM_EXPAND_H_00007));
 			bSuccess = false;
 			goto End;
 		}
 
-		if (!pCTarCha->IsBoat()) // �����ܸ���
+		if (!pCTarCha->IsBoat()) // 
 		{
 			pCTarCha->SetRelive(enumEPLAYER_RELIVE_ORIGIN, (int)lua_tonumber(pLS, 3), lua_tostring(pLS, 4));
 		}
@@ -2398,7 +2398,7 @@ g_pGameApp->m_ulLeftSec = (int)lua_tonumber(pLS, 1);
 return 0;
 }
 
-// ȫ��ͨ��
+// 
 inline int lua_Notice(lua_State *pLS)
 {
 if (!lua_isstring(pLS, 1))
@@ -2407,10 +2407,10 @@ return 0;
 const char	*cszNotiStr = lua_tostring(pLS, 1);
 g_pGameApp->WorldNotice(cszNotiStr);
 
-//if (strstr(cszNotiStr, "�����㲥"))
+//if (strstr(cszNotiStr, ""))
 if (strstr(cszNotiStr, RES_STRING(GM_EXPAND_H_00102)))
 if (g_cchLogMapEntry)
-//LG("��ͼ�������", "ϵͳͨ�棺%s\n", cszNotiStr);
+//LG("", "%s\n", cszNotiStr);
 ToLogService("common", "system notice : {}", cszNotiStr);
 
 return 0;
@@ -2430,7 +2430,7 @@ inline int lua_GuildNotice(lua_State *pLS)
 //Add by sunny.sun20080804
 inline int lua_ScrollNotice( lua_State* L )
 {
-int nParaNum = lua_gettop(L); // ȡ�ò�������
+int nParaNum = lua_gettop(L); // 
 if(	nParaNum != 3 )
 {
 	return 0;
@@ -2443,10 +2443,10 @@ DWORD color = (DWORD)lua_tonumber(L, 3);
 const char	*cszNotiStr = lua_tostring(L, 1);
 g_pGameApp->ScrollNotice(cszNotiStr,SetNum, color);
 
-//if (strstr(cszNotiStr, "�����㲥"))
+//if (strstr(cszNotiStr, ""))
 if (strstr(cszNotiStr, RES_STRING(GM_EXPAND_H_00102)))
 if (g_cchLogMapEntry)
-//LG("��ͼ�������", "ϵͳͨ�棺%s\n", cszNotiStr);
+//LG("", "%s\n", cszNotiStr);
 ToLogService("common", "system notice : {}", cszNotiStr);
 
 return 0;
@@ -2460,14 +2460,14 @@ inline int lua_GMNotice( lua_State *pLS )
 	g_pGameApp->GMNotice( gmNotice );
 	if (strstr(gmNotice, RES_STRING(GM_EXPAND_H_00102)))
 	if (g_cchLogMapEntry)
-	//LG("��ͼ�������", "ϵͳͨ�棺%s\n", cszNotiStr);
+	//LG("", "%s\n", cszNotiStr);
 	ToLogService("common", "system notice : {}", gmNotice);
 
 	return 0;
 
 }
 
-// ���ͨ��
+// 
 inline int lua_ChaNotice(lua_State *pLS)
 {
 if (!lua_isstring(pLS, 1) || !lua_isstring(pLS, 2))
@@ -2476,18 +2476,18 @@ return 0;
 const char	*cszChaName = lua_tostring(pLS, 1);
 const char	*cszNotiStr = lua_tostring(pLS, 2);
 g_pGameApp->ChaNotice(cszNotiStr, cszChaName);
-//if (strstr(cszNotiStr, "�����㲥"))
+//if (strstr(cszNotiStr, ""))
 if (strstr(cszNotiStr, RES_STRING(GM_EXPAND_H_00102)))
 if (g_cchLogMapEntry)
-//LG("��ͼ�������", "ϵͳͨ�棺%s\n", cszNotiStr);
+//LG("", "%s\n", cszNotiStr);
 ToLogService("common", "system notice : {}", cszNotiStr);
 
 return 0;
 }
 
-// ��ͼ����ͨ��
-// ��������ͼ��������ͨ������
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_MapCopyNotice(lua_State *pLS)
 {
 if (!lua_islightuserdata(pLS, 1) || !lua_isstring(pLS, 2))
@@ -2500,9 +2500,9 @@ pCMapCopy->Notice(cszNotiStr);
 return 0;
 }
 
-// ��ͼ����ͨ��
-// ��������ͼ���󣬸�����ţ���Ϊ���и�������ͨ������
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_MapCopyNotice2(lua_State *pLS)
 {
 if (!lua_islightuserdata(pLS, 1) || !lua_isnumber(pLS, 2) || !lua_isstring(pLS, 3))
@@ -2519,15 +2519,15 @@ inline int lua_MapChaLight(lua_State *pLS)
 	return 0;
 }
 
-// ���ý�ɫ���ϵ�����
-// ���������϶�����������
-// ����ֵ���ɹ�1��ʧ��0
+// 
+// 
+// 10
 inline int lua_SetItemHost(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -2555,16 +2555,16 @@ lua_pushnumber(pLS, 0);
 return 1;
 }
 
-// ȡ�ý�ɫ����
-// ��������ɫ����
-// ����ֵ����ɫ����
+// 
+// 
+// 
 inline int lua_GetChaName(lua_State *pLS)
 {
 bool	bSuccess = true;
 const char* ret = "";
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -2591,16 +2591,16 @@ if (bSuccess)
 return 0;
 }
 
-// ���õ�ͼ��ڵĿ���ʱ��
-// ��������ͼָ�룬�״�ִ��ʱ�䣬����ִ�м����ִ�к����ʧ�����ִ�к�ĵ�ͼ�رռ��
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_SetMapEntryTime(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
 	std::string	strList[5];
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 5)
 	{
@@ -2614,7 +2614,7 @@ inline int lua_SetMapEntryTime(lua_State *pLS)
 			bSuccess = false;
 			goto End;
 		}
-		// �״ο���ʱ��
+		// 
 		struct tm	time_set, * time_get;
 		time_t	timep;
 		time(&timep);
@@ -2623,7 +2623,7 @@ inline int lua_SetMapEntryTime(lua_State *pLS)
 		int n = Util_ResolveTextLine(szTime, strList, 5, '/');
 		if (n != 5)
 		{
-			//MessageBox(0, szTime, "���õ�ͼ��ڿ���ʱ�䣬���ʽ����", MB_OK);
+			//MessageBox(0, szTime, "", MB_OK);
 			MessageBox(0, szTime, RES_STRING(GM_EXPAND_H_00111), MB_OK);
 			bSuccess = false;
 			goto End;
@@ -2637,36 +2637,36 @@ inline int lua_SetMapEntryTime(lua_State *pLS)
 		time_set.tm_isdst = time_get->tm_isdst;
 		pCMap->m_tEntryFirstTm = mktime(&time_set);
 
-		// ����ִ�м��
+		// 
 		szTime = (const char*)lua_tostring(pLS, 3);
 		n = Util_ResolveTextLine(szTime, strList, 4, '/');
 		if (n != 3)
 		{
-			//MessageBox(0, szTime, "���õ�ͼ��ڿ���ʱ�䣬���ʽ����", MB_OK);
+			//MessageBox(0, szTime, "", MB_OK);
 			MessageBox(0, szTime, RES_STRING(GM_EXPAND_H_00111), MB_OK);
 			bSuccess = false;
 			goto End;
 		}
 		pCMap->m_tEntryTmDis = ((Str2Int(strList[0]) * 24 + Str2Int(strList[1])) * 60 + Str2Int(strList[2])) * 60;
 
-		// ִ�к����ʧ���
+		// 
 		szTime = (const char*)lua_tostring(pLS, 4);
 		n = Util_ResolveTextLine(szTime, strList, 4, '/');
 		if (n != 3)
 		{
-			//MessageBox(0, szTime, "���õ�ͼ��ڿ���ʱ�䣬���ʽ����", MB_OK);
+			//MessageBox(0, szTime, "", MB_OK);
 			MessageBox(0, szTime, RES_STRING(GM_EXPAND_H_00111), MB_OK);
 			bSuccess = false;
 			goto End;
 		}
 		pCMap->m_tEntryOutTmDis = ((Str2Int(strList[0]) * 24 + Str2Int(strList[1])) * 60 + Str2Int(strList[2])) * 60;
 
-		// ִ�к�ĵ�ͼ�رռ��
+		// 
 		szTime = (const char*)lua_tostring(pLS, 5);
 		n = Util_ResolveTextLine(szTime, strList, 4, '/');
 		if (n != 3)
 		{
-			//MessageBox(0, szTime, "���õ�ͼ��ڿ���ʱ�䣬���ʽ����", MB_OK);
+			//MessageBox(0, szTime, "", MB_OK);
 			MessageBox(0, szTime, RES_STRING(GM_EXPAND_H_00111), MB_OK);
 			bSuccess = false;
 			goto End;
@@ -2685,15 +2685,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ�Ƿ񱣴�λ��
-// ��������ͼָ�룬�Ƿ񱣴�λ��
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_MapCanSavePos(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2721,15 +2721,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ�Ƿ�Ҫǲ��������ɫ
-// ��������ͼָ�룬�Ƿ�ǲ��
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_RepatriateDie(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2753,15 +2753,15 @@ End:
 	return 0;
 }
 
-// ���õ�ͼ�Ƿ�PK
-// ��������ͼָ�룬�Ƿ�PK
-// ����ֵ��1���ɹ���0��ʧ��
+// PK
+// PK
+// 10
 inline int lua_MapCanPK(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2789,15 +2789,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ�Ƿ���Բ�������
-// ��������ͼָ�룬�Ƿ�ɲ�����1���ɲ�����0�����ɲ�����
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 10
+// 10
 inline int lua_MapCanTeam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2825,15 +2825,15 @@ End:
 	return 1;
 }
 
-// ��ͼ�Ƿ���԰�̯��
-// ��������ͼָ�룬�Ƿ�ɲ�����1���ɲ�����0�����ɲ�����
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 10
+// 10
 inline int lua_MapCanStall(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2866,7 +2866,7 @@ inline int lua_MapCanGuild(lua_State *pLS)
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2895,15 +2895,15 @@ End:
 	return 1;
 }
 
-//��ҿ���ɱ���Լ����ٻ���
-//��������ҽ�ɫָ�룬��ָ��
-//����ֵ��1���ɹ���0��ʧ��
+//
+//
+//10
 inline int lua_KillMyMonster(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2935,15 +2935,15 @@ End:
 
 }
 
-//���ݹ�ָ��ɱ���ض����ٻ���
-//��������ͼָ�룬������
-//����ֵ��1���ɹ���0��ʧ��
+//
+//
+//10
 inline int lua_KillMonsterInMapByName(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -2980,15 +2980,15 @@ End:
 
 }
 
-// ���õ�ͼ������Ŀ
-// ��������ͼָ�룬������
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_MapCopyNum(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3016,15 +3016,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ�����Ŀ�ʼ����
-// ��������ͼָ�룬��ʼ���ͣ�1��������ʼ��2�������ʱ��ʼ��3���ֶ���ʼ��Ĭ��ֵΪ2��
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 1232
+// 10
 inline int lua_MapCopyStartType(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3052,15 +3052,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ����
-// ��������ͼ�������ͣ�1����ͨ��ͼ��2������ս��ͼ��3������ս��ͼ��
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 123
+// 10
 inline int lua_MapType(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3088,15 +3088,15 @@ End:
 	return 1;
 }
 
-// ���õ�����ͼ�����������Ŀ����
-// ��������ڶ��������
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_SingleMapCopyPlyNum(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3124,15 +3124,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ������ڵĵ�ͼ��
-// ��������ͼָ�룬��ͼ����
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_SetMapEntryMapName(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3160,15 +3160,15 @@ End:
 	return 1;
 }
 
-// ���õ�ͼ���ʵ��ı��
-// ��������ڶ���ʵ���ţ��¼����
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_SetMapEntryEntiID(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -3197,9 +3197,9 @@ End:
 	return 1;
 }
 
-// ȡ��ͼ��ڵ�λ����Ϣ
-// ��������ڶ���
-// ����ֵ����ͼ�������꣬Ŀ���ͼ��
+// 
+// 
+// 
 inline int lua_GetMapEntryPosInfo(lua_State *pLS)
 {
 	bool	bSuccess = true;
@@ -3207,11 +3207,11 @@ inline int lua_GetMapEntryPosInfo(lua_State *pLS)
 	long lPosX = 0, lPosY = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
-		//LG("���err", "\t��������[%d]�Ƿ�������ʧ��\n", nParaNum);
+		//LG("err", "\t[%d]\n", nParaNum);
 		ToLogService("errors", LogLevel::Error, "\tThe parameter numbers [{}] is unlawful, transfer failed!", nParaNum);
 		bSuccess = false;
 		goto End;
@@ -3220,7 +3220,7 @@ inline int lua_GetMapEntryPosInfo(lua_State *pLS)
 		CDynMapEntryCell* pEntry = (CDynMapEntryCell*)lua_touserdata(pLS, 1);
 		if (!pEntry)
 		{
-			//LG("���err", "\t��ڶ��󲻴��ڣ�����ʧ��\n"); 
+			//LG("err", "\t\n"); 
 			ToLogService("errors", LogLevel::Error, "\t entrance object is inexistence, transfer failed");
 			bSuccess = false;
 			goto End;
@@ -3240,15 +3240,15 @@ End:
 	return 0;
 }
 
-// ���õ�ͼ����¼���
-// ��������ڶ����¼���
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_SetMapEntryEventName(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3277,15 +3277,15 @@ End:
 	return 1;
 }
 
-// �����ͼ���
-// ��������ͼ��
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_CallMapEntry(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -3316,16 +3316,16 @@ End:
 	return 1;
 }
 
-// ȡ��ɫ�ֱ߱��
-// ��������ɫ����
-// ����ֵ���ֱ߱��
+// 
+// 
+// 
 inline int lua_GetChaSideID(lua_State *pLS)
 {
 bool	bSuccess = true;
 int		nSideID = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -3356,15 +3356,15 @@ if (bSuccess)
 return 0;
 }
 
-// ���ý�ɫ�ֱ߱��
-// ��������ɫ���󣬷ֱ߱��
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_SetChaSideID(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -3394,16 +3394,16 @@ lua_pushnumber(pLS, 0);
 return 1;
 }
 
-// ȡ��ɫ������
-// ��������ɫ����
-// ����ֵ�������ţ���Ϊ��Ч���ᣩ
+// 
+// 
+// 
 inline int lua_GetChaGuildID(lua_State *pLS)
 {
 bool	bSuccess = true;
 int		nGuildID = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -3430,16 +3430,16 @@ lua_pushnumber(pLS, nGuildID);
 return 1;
 }
 
-// ȡ��ɫ������
-// ��������ɫ����
-// ����ֵ�������ţ���Ϊ��Ч���飩
+// 
+// 
+// 
 inline int lua_GetChaTeamID(lua_State *pLS)
 {
 bool	bSuccess = true;
 int		nTeamID = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -3466,16 +3466,16 @@ lua_pushnumber(pLS, nTeamID);
 return 1;
 }
 
-// �жϽ�ɫ�Ƿ���PK״̬
-// ��������ɫ����
-// ���ؽ�ɫPK״̬��1������PK��0�������ԡ�
+// PK
+// 
+// PK1PK0
 inline int lua_CheckChaPKState(lua_State *pLS)
 {
 bool	bSuccess = true;
 int		nPKState = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -3502,16 +3502,16 @@ lua_pushnumber(pLS, nPKState);
 return 1;
 }
 
-// ȡ������
-// ����������ID
-// ���أ�������
+// 
+// ID
+// 
 inline int lua_GetGuildName(lua_State *pLS)
 {
 bool	bSuccess = true;
 std::string	strGuildName;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -3534,15 +3534,15 @@ if (bSuccess)
 return 0;
 }
 
-// �رյ�ͼ���
-// ��������ͼ����
-// ����ֵ��1���ɹ��رա�0���ر�ʧ��
+// 
+// 
+// 10
 inline int lua_CloseMapEntry(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -3569,15 +3569,15 @@ End:
 	return 1;
 }
 
-// �رյ�ͼ����
-// ��������ͼ���ƣ��������
-// ����ֵ��1���ɹ��رա�0���ر�ʧ��
+// 
+// 
+// 10
 inline int lua_CloseMapCopy(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2 && nParaNum != 1)
 	{
@@ -3608,15 +3608,15 @@ End:
 	return 1;
 }
 
-// ���ý�ɫ������
-// ��������ɫ����������
-// ����ֵ�������ɹ�������ʧ��
+// 
+// 
+// 
 inline int lua_SetChaMotto(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -3646,16 +3646,16 @@ lua_pushnumber(pLS, 0);
 return 1;
 }
 
-// ��ɫ�Ƿ���½������
-// ��������ɫ����
-// ����ֵ������½�ء���������
+// 
+// 
+// 
 inline int lua_IsChaInLand(lua_State *pLS)
 {
 bool	bSuccess = true;
 char	chIsLand = 0;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -3689,15 +3689,15 @@ else
 return 0;
 }
 
-// ���ö�����ս��ͼ��
-// ��������ͼ��
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_SetTeamFightMapName(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -3726,16 +3726,16 @@ End:
 	return 1;
 }
 
-// ȡ�����Ĳ���
-// �����������������󣬲������
-// ����ֵ������ֵ
+// 
+// 
+// 
 inline int lua_GetMapCopyParam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short ret = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3763,15 +3763,15 @@ End:
 	return 0;
 }
 
-// ȡ�����Ĳ���
-// �������������󣬲������
-// ����ֵ������ֵ
+// 
+// 
+// 
 inline int lua_GetMapCopyParam2(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	long ret = 0;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3799,15 +3799,15 @@ End:
 	return 0;
 }
 
-// ȡ�������
-// ������������������
-// ����ֵ����ţ�С�ڵ���0Ϊ��Чֵ��
+// 
+// 
+// 0
 inline int lua_GetMapCopyID(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	long ret = 0;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -3832,16 +3832,16 @@ End:
 	return 1;
 }
 
-// ȡ�������
-// ��������������
-// ����ֵ����ţ�С�ڵ���0Ϊ��Чֵ��
+// 
+// 
+// 0
 inline int lua_GetMapCopyID2(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short ret = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -3867,15 +3867,15 @@ End:
 	return 1;
 }
 
-// ���ø����Ĳ���
-// �����������������󣬲�������������ֵ
-// ����ֵ��1���ɹ���0��ʧ�ܡ�
+// 
+// 
+// 10
 inline int lua_SetMapCopyParam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -3907,15 +3907,15 @@ End:
 	return 1;
 }
 
-// ���ø����Ĳ���
-// �������������󣬲�������������ֵ
-// ����ֵ��1���ɹ���0��ʧ�ܡ�
+// 
+// 
+// 10
 inline int lua_SetMapCopyParam2(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -3948,16 +3948,16 @@ End:
 	return 1;
 }
 
-// ȡ��ڸ�������
-// ��������ڶ��󣬸�����ţ�С�ڵ���0��Ϊȡ�µĿ��и���������0��Ϊȡָ���ĸ������������ڣ���������
-// ����ֵ����ڸ�������
+// 
+// 00
+// 
 inline int lua_GetMapEntryCopyObj(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	CMapEntryCopyCell	*pCCopyCell = NULL;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -3995,16 +3995,16 @@ End:
 	return 0;
 }
 
-// ȡ�����������Ŀ
-// ��������������
-// ����ֵ�������Ŀ
+// 
+// 
+// 
 inline int lua_GetMapCopyPlayerNum(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	long ret = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4029,15 +4029,15 @@ End:
 	return 1;
 }
 
-// ��ʼȡ��������ҽ�ɫ
-// ��������������
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_BeginGetMapCopyPlayerCha(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4062,15 +4062,15 @@ End:
 	return 0;
 }
 
-// ȡ��������ҽ�ɫ
-// ��������������
-// ����ֵ����ҽ�ɫ
+// 
+// 
+// 
 inline int lua_GetMapCopyNextPlayerCha(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 	CCharacter	*pCCha = 0;
 
 	if (nParaNum != 1)
@@ -4100,16 +4100,16 @@ End:
 	return 0;
 }
 
-// ȡ�ý�ɫ�ĵ�ͼ����
-// ��������ɫ����
-// ����ֵ����ͼ����
+// 
+// 
+// 
 inline int lua_GetChaMapType(lua_State *pLS)
 {
 bool	bSuccess = true;
 char chMapType = enumMAPTYPE_NORMAL;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -4150,15 +4150,15 @@ return 0;
 
 }
 
-// ���ý�ɫ�����ĸĶ���־
-// ��������ɫ���󣬸Ķ���1������ʵ�ʸĶ�������Ϊȫ�����Ķ���0��������ʵ�ʸĶ��ı�־��
-// ����ֵ����
+// 
+// 10
+// 
 inline int lua_SetChaKitbagChange(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -4183,15 +4183,15 @@ if (bSuccess)
 return 0;
 }
 
-// ͬ����ɫ����
-// ��������ɫ����ͬ������
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_SynChaKitbag(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -4216,15 +4216,15 @@ if (bSuccess)
 return 0;
 }
 
-// ȡ�ý�ɫ��ǰ��ͼ��̽����
-// ��������ɫ����
-// ����ֵ����ͼ̽����
+// 
+// 
+// 
 inline int lua_GetChaMapOpenScale(lua_State *pLS)
 {
 bool	bSuccess = true;
 float ret = 0.0;
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 1)
 {
@@ -4256,15 +4256,15 @@ lua_pushnumber(pLS, ret);
 return 1;
 }
 
-// ��ɵ�ͼ��ڵĸ�������
-// ��������ͼ��ڶ��󣬸������
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_FinishSetMapEntryCopy(lua_State *pLS)
 {
 bool	bSuccess = true;
 
 
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 2)
 {
@@ -4289,16 +4289,16 @@ if (bSuccess)
 return 0;
 }
 
-// ȡ��������
-// ���߶���
-// ����ֵ����������
+// 
+// 
+// 
 inline int lua_GetItemType(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short	sItemType = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4331,16 +4331,16 @@ End:
 	return 1;
 }
 
-// ȡ��������
-// ����ID
-// ����ֵ����������
+// 
+// ID
+// 
 inline int lua_GetItemType2(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short	sItemType = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4367,9 +4367,9 @@ End:
 	return 1;
 }
 
-// ȡ���ߵȼ�
-// ���߶���
-// ����ֵ�����ߵȼ�
+// 
+// 
+// 
 
 // lua param: item datatype
 inline int lua_GetItemLv(lua_State *pLS)
@@ -4378,7 +4378,7 @@ inline int lua_GetItemLv(lua_State *pLS)
 	short	sItemLv = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4452,7 +4452,7 @@ inline int lua_SetItemLv(lua_State *pLS)
 	bool	bSuccess = true;
 	short	sItemLv = 0;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -4475,9 +4475,9 @@ End:
 	return 1;
 }
 
-// ȡ���ߵȼ�
-// ���߱��
-// ����ֵ�����ߵȼ�
+// 
+// 
+// 
 // lua param: itemid
 inline int lua_GetItemLv2(lua_State *pLS)
 {
@@ -4485,7 +4485,7 @@ inline int lua_GetItemLv2(lua_State *pLS)
 	short	sItemLv = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4511,16 +4511,16 @@ End:
 	return 1;
 }
 
-// ȡ���߱��
-// ���߶���
-// ����ֵ�����߱��
+// 
+// 
+// 
 inline int lua_GetItemID(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short	sItemID = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4547,16 +4547,16 @@ End:
 	return 1;
 }
 
-// ȡ���߱��
-// ���߱��
-// ����ֵ�����߶���
+// 
+// 
+// 
 inline int lua_GetItemHoleNum(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short	sHoleNum = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4581,16 +4581,16 @@ End:
 	return 1;
 }
 
-// ���ý�ɫװ����Ч��
-// ��������ɫ����װ��λ�ã��Ƿ���Ч��1����Ч��0����Ч��
-// ����ֵ��1�����óɹ���0������ʧ��
+// 
+// 10
+// 10
 inline int lua_SetChaEquipValid(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	char	chSetSuc = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -4606,7 +4606,7 @@ inline int lua_SetChaEquipValid(lua_State *pLS)
 		}
 
 		//add by ALLEN 2007-10-16	
-		if (pCCha->IsReadBook())    //����״̬
+		if (pCCha->IsReadBook())    //
 		{
 			bSuccess = false;
 			goto End;
@@ -4626,16 +4626,16 @@ End:
 	return 1;
 }
 
-// ���ý�ɫ�������ߵ���Ч��
-// ��������ɫ���󣬱���λ�ã��Ƿ���Ч��1����Ч��0����Ч�����Ƿ���Ҫͬ����1����Ҫ[���ڵ��߻ָ�]��0������Ҫ[����ʹ�õ���]��
-// ����ֵ��1�����óɹ���0������ʧ��
+// 
+// 101[]0[]
+// 10
 inline int lua_SetChaKbItemValid(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	char	chSetSuc = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 4)
 	{
@@ -4665,16 +4665,16 @@ End:
 	return 1;
 }
 
-// ���ý�ɫ�������ߵ���Ч��
-// ��������ɫ���󣬵��߶����Ƿ���Ч��1����Ч��0����Ч�����Ƿ���Ҫͬ����1����Ҫ[���ڵ��߻ָ�]��0������Ҫ[����ʹ�õ���]��
-// ����ֵ��1�����óɹ���0������ʧ��
+// 
+// 101[]0[]
+// 10
 inline int lua_SetChaKbItemValid2(lua_State* pLS)
 {
 	bool	bSuccess = true;
 	char	chSetSuc = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 4)
 	{
@@ -4705,9 +4705,9 @@ End:
 	return 1;
 }
 
-// ȡ������ս����˫������ID
-// ��������ս�ȼ�
-// ����ֵ����������ID����ս������ID
+// ID
+// 
+// IDID
 inline int lua_GetChallengeGuildID(lua_State *pLS)
 {
 	bool	bSuccess = true;
@@ -4715,7 +4715,7 @@ inline int lua_GetChallengeGuildID(lua_State *pLS)
 	DWORD	dwHostID = 0, dwReqID = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4742,15 +4742,15 @@ End:
 		return 0;
 }
 
-// ֹͣ����������
-// ��������ս�ȼ�
-// ����ֵ����
+// 
+// 
+// 
 inline int lua_EndGuildBid(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4777,15 +4777,15 @@ End:
 	return 0;
 }
 
-// ����������
-// ��������������ID����ս������ID�������Ƿ��ʤ
-// ����ֵ����
+// 
+// IDID
+// 
 inline int lua_EndGuildChallenge(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -4803,15 +4803,15 @@ End:
 	return 0;
 }
 
-// ���ӱ�������
-// ��������ɫ��������������
-// ����ֵ��1���ɹ���0��ʧ��
+// 
+// 
+// 10
 inline int lua_AddKbCap(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -4845,16 +4845,16 @@ End:
 	return 1;
 }
 
-// ȡ��������
-// ��������ɫ����
-// ����ֵ����������
+// 
+// 
+// 
 inline int lua_GetKbCap(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	short	sCap = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4880,16 +4880,16 @@ End:
 	return 1;
 }
 
-// ������ɫ�Ƿ���ͬһ��ͼ
-// ��������ɫ����1����ɫ����2
-// ����ֵ��1��ͬһ��ͼ��0����ͬ��ͼ��
+// 
+// 12
+// 10
 inline int lua_IsInSameMap(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	char	chSameMap = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -4920,16 +4920,16 @@ End:
 	return 1;
 }
 
-// ������ɫ�Ƿ���ͬһ��ͼ����
-// ��������ɫ����1����ɫ����2
-// ����ֵ��1��ͬһ������0����ͬ������
+// 
+// 12
+// 10
 inline int lua_IsInSameMapCopy(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	char	chSameCopy = 0;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -4960,16 +4960,16 @@ End:
 	return 1;
 }
 
-// ��ɫ�Ƿ����
-// ��������ɫ����
-// ����ֵ��1�����ģ�2�������ġ�
+// 
+// 
+// 12
 inline int lua_IsChaLiving(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	bool	bIsLiving = false;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{
@@ -4995,15 +4995,15 @@ End:
 	return 1;
 }
 
-// ���ý�ɫ�Ĳ���
-// ��������ɫ���󣬲�������������ֵ
-// ����ֵ��1���ɹ���0��ʧ�ܡ�
+// 
+// 
+// 10
 inline int lua_SetChaParam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -5035,15 +5035,15 @@ End:
 	return 1;
 }
 
-// ȡ��ɫ�Ĳ���
-// ��������ɫ���󣬲������
-// ����ֵ������ֵ
+// 
+// 
+// 
 inline int lua_GetChaParam(lua_State *pLS)
 {
 	bool	bSuccess = true;
 	long ret = 0;
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -5070,15 +5070,15 @@ End:
 	return 0;
 }
 
-// ���ӵ���Ӱ��
-// ��������ɫ���󣬵��߶��󣬷���1������Ӱ�졣0���Ƴ�Ӱ�죩
-// ����ֵ��1���ɹ���0��ʧ�ܡ�
+// 
+// 10
+// 10
 inline int lua_AddItemEffect(lua_State *pLS)
 {
 	bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 3)
 	{
@@ -5161,7 +5161,7 @@ inline void ReloadCal()
 
 inline int lua_GetWinLotteryItemno(lua_State *pLS)
 {
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 2)
 	{
@@ -5189,10 +5189,10 @@ inline int lua_GetWinLotteryItemno(lua_State *pLS)
 	return 0;
 }
 
-// �����н�����
+// 
 inline int lua_CalWinLottery(lua_State *pLS)
 {
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 if (nParaNum != 2)
 {
 	return 0;
@@ -5221,7 +5221,7 @@ if(index >=0 && index <7)
 return 0;	
 }
 
-// ��ȡ��ǰ�ں�
+// 
 inline int lua_GetLotteryIssue(lua_State *pLS)
 {
 int issue;
@@ -5236,7 +5236,7 @@ if(game_db.GetLotteryIssue(issue))
 return 0;
 }
 
-// ׷�Ӳ�Ʊ��
+// 
 inline int lua_AddLotteryIssue(lua_State *pLS)
 {
 int issue = (int)lua_tonumber(pLS, 1);
@@ -5245,7 +5245,7 @@ game_db.AddIssue(issue);
 return 1;
 }
 
-// ���Ĳ�Ʊ��״̬
+// 
 inline int lua_DisuseLotteryIssue(lua_State *pLS)
 {
 int issue = (int)lua_tonumber(pLS, 1);
@@ -5255,7 +5255,7 @@ game_db.DisuseIssue(issue, state);
 return 1;
 }
 
-// �ж��Ƿ���ע��ĺϷ�����
+// 
 inline int lua_IsValidRegTeam(lua_State *pLS)
 {
 int teamID =(int)lua_tonumber(pLS, 1);
@@ -5275,17 +5275,17 @@ else
 return 1;
 }
 
-// �жϺϷ��Ķ���
-// -1 ���Ƕӳ�
-// -2 ���鲻��3����
-// -3  ����ʦͽ
-// -4 �����ڽ�ɫ
+// 
+// -1 
+// -2 3
+// -3  
+// -4 
 // 1 OK
 inline int lua_IsValidTeam(lua_State *pLS)
 {
-// �Ƿ��ڶ�����
-// �Ƿ���3���˵Ķ���
-// �Ƿ���ʦͽ��ϵ
+// 
+// 3
+// 
 //int masterID = (int)lua_tonumber(pLS, 1);
 CCharacter *pCCha = (CCharacter*)lua_touserdata(pLS, 1);
 CPlayer*	pTeamPlayer = pCCha->GetPlayer();
@@ -5327,7 +5327,7 @@ lua_pushnumber(pLS, (long)-3);
 return 1;
 }
 
-// ��ȡ��ǰ������������
+// 
 inline int lua_GetAmphitheaterSeason(lua_State *pLS)
 {
 int season = -1;
@@ -5347,7 +5347,7 @@ else
 return 0;
 }
 
-// ��ȡ��ǰ�������ִ�
+// 
 inline int lua_GetAmphitheaterRound(lua_State *pLS)
 {
 int season = -1;
@@ -5367,7 +5367,7 @@ else
 return 0;
 }
 
-// ׷�Ӿ����������ź��ִ�
+// 
 inline int lua_AddAmphitheaterSeason(lua_State *pLS)
 {
 int season  = (int)lua_tonumber(pLS, 1);
@@ -5377,7 +5377,7 @@ game_db.AddAmphitheaterSeason(season);
 return 1;
 }
 
-// ��������״̬
+// 
 inline int lua_DisuseAmphitheaterSeason(lua_State *pLS)
 {
 int season = (int)lua_tonumber(pLS, 1);
@@ -5390,7 +5390,7 @@ return 1;
 return 0;
 }
 
-// ���������ִ�
+// 
 inline int lua_UpdateAmphitheaterRound(lua_State *pLS)
 {
 int season = (int)lua_tonumber(pLS, 1);
@@ -5402,7 +5402,7 @@ return 1;
 return 0;
 }
 
-// ȡ�þ����������������
+// 
 inline int lua_GetAmphitheaterTeamCount(lua_State *pLS)
 {
 int count = 0;
@@ -5416,7 +5416,7 @@ lua_pushnumber(pLS, (long)0);
 return 0;
 }
 
-// ȡ�ò�������ID
+// ID
 inline int lua_GetAmphitheaterNoUseTeamID(lua_State *pLS)
 {
 int teamID = 0;
@@ -5430,7 +5430,7 @@ lua_pushnumber(pLS, (long)0);
 return 1;
 }
 
-// ����ע��
+// 
 inline int lua_AmphitheaterTeamSignUP(lua_State *pLS)
 {
 int teamID = (int)lua_tonumber(pLS, 1);
@@ -5444,7 +5444,7 @@ return 1;
 return 0;
 }
 
-// �����ɢ
+// 
 inline int lua_AmphitheaterTeamCancel(lua_State *pLS)
 {
 int teamID = (int)lua_tonumber(pLS, 1);
@@ -5456,9 +5456,9 @@ return 0;
 }
 
 //Add by sunny.sun 20080723
-//�жϵ�ǰ�����Ƿ��Ѿ�ע��
-//���� ��ɫ
-//����ֵ ע�᷵��1��û�з���0
+//
+// 
+// 10
 inline int lua_IsAmphitheaterLogin(lua_State *pLS)
 {
 //int characterid = (int)lua_tonumber(pLS,1);
@@ -5472,9 +5472,9 @@ lua_pushnumber(pLS,(long)1);
 return 1;
 }
 
-//�жϵ�ͼ�����Ѿ�ע�����
-//������ͼid
-//����ֵ �õ�ͼע��������0��1��2
+//
+//id
+// 012
 inline int lua_IsMapFull(lua_State *pLS)
 {
 int PActorIDNum = 0;
@@ -5488,8 +5488,8 @@ if(game_db.IsMapFull(MapID,PActorIDNum))
 return 0;
 }
 
-//���½����ͼ��map�ֶε�ֵΪ��ͼid
-// ���� �ӳ���ɫ����ͼid
+//mapid
+//  id
 inline int lua_UpdateMapAfterEnter(lua_State *pLS)
 {
 	CCharacter *  Captain = (CCharacter*)lua_touserdata(pLS, 1);
@@ -5501,7 +5501,7 @@ inline int lua_UpdateMapAfterEnter(lua_State *pLS)
 	return 0;
 }
 
-//���±���������map�ֶ�
+//map
 inline int lua_UpdateMap(lua_State *pLS)
 {
 int Mapid = (int)lua_tonumber(pLS, 1);
@@ -5511,11 +5511,11 @@ if(game_db.UpdateMap(Mapid))
 }
 return 0;
 }
-//���µ�ͼ������mapflagֵ
-//���� ����id����ͼid��Ҫ�趨��mapflagֵ
+//mapflag
+// ididmapflag
 inline int lua_UpdateMapNum(lua_State *pLS)
 {
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 
 if (nParaNum != 3)
 {
@@ -5533,8 +5533,8 @@ if(game_db.UpdateMapNum(Teamid,Mapid,MapFlag))
 return 0;
 
 }
-//���mapflag��ֵ
-//���� ����id
+//mapflag
+// id
 inline int lua_GetMapFlag(lua_State *pLS)
 {
 int Mapflag = 0;
@@ -5546,7 +5546,7 @@ if(game_db.GetMapFlag(Teamid,Mapflag))
 }
 return 0;
 }
-//����Ʊ����ߵĸ�����飬������ʹ�临��
+//
 inline int lua_SetMaxBallotTeamRelive( lua_State *pLS)
 {
 if(game_db.SetMaxBallotTeamRelive())
@@ -5556,10 +5556,10 @@ if(game_db.SetMaxBallotTeamRelive())
 return 0;
 }
 
-//���ö���state״̬
+//state
 inline int lua_SetMatchResult(lua_State *pLS)
 {
-int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+int nParaNum = lua_gettop(pLS); // 
 if (nParaNum != 4)
 {
 	return 0;
@@ -5576,7 +5576,7 @@ if(game_db.SetMatchResult(Teamid1,Teamid2,Id1state,Id2state))
 return 0;
 
 }
-//���ݵ�ͼidȡ��ͼ�еĶ���Ķӳ�id
+//idid
 inline int lua_GetCaptainByMapId(lua_State *pLS)
 {
 int Mapid = (int)lua_tonumber(pLS,1);
@@ -5627,7 +5627,7 @@ if(game_db.GetCaptainByMapId(Mapid,Captainid1,Captainid2))
 return 0;
 }
 
-//����û�μӵĶ���Ϊ����
+//
 inline int lua_UpdateAbsentTeamRelive(lua_State *pLS)
 {
 if(game_db.UpdateAbsentTeamRelive())
@@ -5635,7 +5635,7 @@ if(game_db.UpdateAbsentTeamRelive())
 return 0;
 }
 
-// ����ʤ������winnumֵ
+// winnum
 inline int lua_UpdateWinnum( lua_State *pLS )
 {
 	int teamid = (int)lua_tonumber(pLS,1);
@@ -5644,7 +5644,7 @@ inline int lua_UpdateWinnum( lua_State *pLS )
 	return 0;
 }
 
-//ȡwinnum��Ψһ����ֵ�Ķ���
+//winnum
 inline int lua_GetUniqueMaxWinnum( lua_State *pLS )
 {
 	int teamid = 0;
@@ -5656,7 +5656,7 @@ inline int lua_GetUniqueMaxWinnum( lua_State *pLS )
 	return 0;
 }
 
-// ����matchno״̬���������¶����Ƿ�����ͼ
+// matchno
 inline int lua_SetMatchnoState( lua_State *pLS )
 {
 	int teamid = (int)lua_tonumber(pLS,1);
@@ -5665,7 +5665,7 @@ inline int lua_SetMatchnoState( lua_State *pLS )
 	return 0;
 }
 
-// ������һ�ֱ���ǰstate״̬
+// state
 inline int lua_UpdateState( lua_State *pLS )
 {
 	if(game_db.UpdateState())	
@@ -5673,7 +5673,7 @@ inline int lua_UpdateState( lua_State *pLS )
 	return 0;
 }
 
-//����state=1ʱ�Ķ�����������жϸ�������
+//state=1
 inline int lua_CloseReliveByState( lua_State *pLS )
 {
 	int statenum = 0;
@@ -5685,7 +5685,7 @@ inline int lua_CloseReliveByState( lua_State *pLS )
 	return 0;
 }
 
-//���ݶ������mapflagΪ��
+//mapflag
 inline int lua_CleanMapFlag( lua_State *pLS )
 {
 	int teamid1 = (int)lua_tonumber(pLS,1);
@@ -5695,7 +5695,7 @@ inline int lua_CleanMapFlag( lua_State *pLS )
 	return 0;
 }
 
-//���ݶ���id�õ�����״̬
+//id
 inline int lua_GetStateByTeamid( lua_State *pLS )
 {
 	int teamid = (int)lua_tonumber(pLS,1);
@@ -5713,7 +5713,7 @@ inline int lua_LookEnergy(lua_State* pLS)
 		bool	bSuccess = true;
 
 
-	int nParaNum = lua_gettop(pLS); // ȡ�ò�������
+	int nParaNum = lua_gettop(pLS); // 
 
 	if (nParaNum != 1)
 	{

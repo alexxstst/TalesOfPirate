@@ -1,4 +1,4 @@
-
+﻿
 
 
 #if !defined __LOG_H__

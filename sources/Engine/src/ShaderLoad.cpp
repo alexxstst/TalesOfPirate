@@ -1,4 +1,4 @@
-//
+ï»¿//
 #include "stdafx.h"
 
 #include "ShaderLoad.h"
@@ -248,7 +248,7 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
     decl_mgr->CreateShaderDeclSet(VDT_PNT0,  8);
     decl_mgr->CreateShaderDeclSet(VDT_PNDT0, 8);
 
-    // tamb¨¦m deixe est¨¢tico o sdci_num e o array sdci
+    // tambm deixe esttico o sdci_num e o array sdci
     static const DWORD sdci_num = 4;
     static lwShaderDeclCreateInfo sdci[sdci_num] = {
         SDCI_VALUE(VST_PNT0_LD_TT0,  VDT_PNT0,  VSLT_DIRECTIONAL, VSAT_TEXTURETRANSFORM0, "vs_pnt0_ld_t0uvmat.vsh"),
@@ -311,7 +311,7 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
 
 #if (defined LW_USE_DX9)
 
-    // ÓÐ¹Ødx9²¿·ÖÃ»ÓÐ¸üÐÂ
+    // dx9
     //const char* shader_file[] = 
     //{
     //    "skinmesh9_1.vsh",

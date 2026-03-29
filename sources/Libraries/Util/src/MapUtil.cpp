@@ -1,15 +1,15 @@
-#include "util.h"
+ï»¿#include "util.h"
 #include "MapUtil.h"
 #include "TerrainData.h"
 #include "ObjectData.h"
 using namespace std;
 
-// µØÍ¼¹¤¾ßº¯Êý, ¸ù¾ÝÎÄ¼þÃû, ¶ÁÈëµØÍ¼Êý¾Ý
+// , , 
 BOOL MU_LoadMapData(CSectionDataMgr *pData, const char *pszDataName)
 {
 	if(!pData->CreateFromFile(pszDataName, TRUE)) 
     {
-        ToLogService("common", LogLevel::Error, "¶ÁÈ¡Êý¾ÝÎÄ¼þ{}Ê§°Ü!", pszDataName);
+        ToLogService("common", LogLevel::Error, "{}!", pszDataName);
         return FALSE;
     }
     
@@ -19,13 +19,13 @@ BOOL MU_LoadMapData(CSectionDataMgr *pData, const char *pszDataName)
 
 
 
-// µØÍ¼²¹¶¡¹¤¾ß
-// Ö÷Òª¹¤×÷Ô­Àí:
-// 1 .±éÀúÁ½ÕÅµØÍ¼, ÕÒ³ö²»Í¬µÄsection, °ÑÕâÐ©sectionÊý¾ÝÉú³ÉµØÍ¼²¹¶¡ÎÄ¼þ
-// 2. ÓÎÏ·¿Í»§¶ËÆô¶¯Ê±, ·¢ÏÖ´æÔÚµØÍ¼²¹¶¡ÎÄ¼þ, Ôò¶ÁÈë²¢ÎüÊÕ½øµØÍ¼ÎÄ¼þ, È»ºóÉ¾³ýµØÍ¼²¹¶¡ÎÄ¼þ
+// 
+// :
+// 1 ., section, section
+// 2. , , , 
 BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 {
-	// ´ò¿ªÀÏµÄµØÍ¼ÎÄ¼þ
+	// 
 	MPTerrainData oldmap, newmap;
  
 	if(!MU_LoadMapData(&oldmap, pszOld))
@@ -33,7 +33,7 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
         return FALSE;
     }
 
-	// ´ò¿ªÐÂµÄµØÍ¼ÎÄ¼þ
+	// 
 	if(!MU_LoadMapData(&newmap, pszNew))
     {
         return FALSE;
@@ -41,7 +41,7 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 
 	if(oldmap.GetSectionCntX()!=newmap.GetSectionCntX() || oldmap.GetSectionCntY()!=newmap.GetSectionCntY())
 	{
-		//LG("mappatch", "msgµØÍ¼³ß´ç²»Æ¥Åä, ÎÞ·¨¼ÌÐøÉú³É²¹¶¡!\n");
+		//LG("mappatch", "msg, !\n");
 		ToLogService("common", LogLevel::Error, " map size can't match, can't go on!");
 		return FALSE;
 	}
@@ -67,17 +67,17 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 			
 			if(pOld==NULL && pNew==NULL) continue;
 			
-			BYTE btType = 0; // ²»¸üÐÂ
+			BYTE btType = 0; // 
 			
 			if(pNew==NULL && pOld!=NULL)
 			{
-				btType = 2;  // Çå³ýÔ­µØÍ¼µÄÉÏ´Ësection
+				btType = 2;  // section
 			}
 			else
 			{
 				if(pOld==NULL || memcmp(pOld->pData, pNew->pData, oldmap.GetSectionDataSize())!=0)
 				{
-					btType = 1; // ÐèÒª¸üÐÂ
+					btType = 1; // 
 				}
 			}
 			if(btType > 0)
@@ -102,26 +102,26 @@ BOOL MU_CreateMapPatch(const char *pszOld, const char *pszNew)
 
 	if(dwCnt==0)
 	{
-		//LG("mappatch", "msg´ËÁ½ÕÅµØÍ¼ÍêÈ«ÏàÍ¬, ÎÞÐèÉú³É²¹¶¡ÎÄ¼þ!\n");
+		//LG("mappatch", "msg, !\n");
 		ToLogService("common", LogLevel::Error, " the two file is the same!");
 		DeleteFile(szPatchName);
 	}
 	else
 	{
-		//LG("mappatch", "msgµØÍ¼²¹¶¡ÎÄ¼þ´´½¨³É¹¦, ×Ü¼ÆÐèÒª¸üÐÂ%d¸öÇøÓò, ²¹¶¡ÎÄ¼þÎª[%s]\n", dwCnt, szPatchName); 
+		//LG("mappatch", "msg, %d, [%s]\n", dwCnt, szPatchName); 
 		ToLogService("common", LogLevel::Error, " map patch create ok, totle update {} area, patch file is [{}]", dwCnt, szPatchName); 
 	}
 	return TRUE;
 }
 
-// ¸øÒ»¸öµØÍ¼ÎÄ¼þ´òÈë²¹¶¡
+// 
 BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 {
-	// ´ò¿ª²¹¶¡ÎÄ¼þ
+	// 
 	FILE *fp = fopen(pszPatch, "rb");
 	if(fp==NULL)
 	{
-		//LG("mappatch", "msg´ò¿ªµØÍ¼²¹¶¡ÎÄ¼þ[%s]Ê§°Ü!\n", pszPatch);
+		//LG("mappatch", "msg[%s]!\n", pszPatch);
 		ToLogService("common", LogLevel::Error, " open patch map file [{}] failed!", pszPatch);
 		return FALSE;
 	}
@@ -129,7 +129,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 	SMapPatchHeader header;
 	fread(&header,sizeof SMapPatchHeader, 1, fp);
 
-	//LG("mappatch", "msg×Ü¼ÆÐèÒª¸üÐÂÇøÓò[%d]¸ö\n", header.dwUpdateCnt);
+	//LG("mappatch", "msg[%d]\n", header.dwUpdateCnt);
 	ToLogService("common", LogLevel::Error, " totle update [{}] area", header.dwUpdateCnt);
 
 	MPTerrainData oldmap; MU_LoadMapData(&oldmap, pszMap);
@@ -144,7 +144,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 		fread(&y, 4, 1, fp);
 		
 		SDataSection *pSec = oldmap.GetSectionData(x, y);
-		if(btType==1) // ÓÐÊý¾ÝµÄ¸üÐÂ
+		if(btType==1) // 
 		{
 			fread(pBuf, dwDataSize, 1, fp);
 			if(pSec==NULL)
@@ -157,7 +157,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 			}
 			memcpy(pSec->pData, pBuf, dwDataSize);
 		}
-		else if(btType==2) // Çå¿ÕSection
+		else if(btType==2) // Section
 		{
 			oldmap.ClearSectionData(x, y);
 		}
@@ -168,7 +168,7 @@ BOOL MU_PatchMapFile(const char *pszMap, const char *pszPatch)
 	fclose(fp);
 	delete[] pBuf;
 
-	//LG("mappatch", "msgµØÍ¼²¹¶¡³É¹¦Ö´ÐÐ, ×Ü¼Æ¸üÐÂÇøÓò[%d]¸ö\n", dwCnt);
+	//LG("mappatch", "msg, [%d]\n", dwCnt);
 	ToLogService("common", LogLevel::Error, " map patch create ok, totle update [{}] area", dwCnt);
 	return TRUE;
 }

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "MPGUI.h"
 #include <algorithm>
 
@@ -84,7 +84,7 @@ int CGuiMgr::HandleMsg(unsigned long dwMsgType, DWORD dwParam1, DWORD dwParam2)
         {
 			int nMouseX = dwParam1;
 			int nMouseY = dwParam2;
-			if(_bEditor && _pFocusObj) // && �������
+			if(_bEditor && _pFocusObj) // && 
             {
 				_pFocusObj->SetPos(_pFocusObj->GetX() + nMouseX - _nLastMouseX, _pFocusObj->GetY() + nMouseY - _nLastMouseY);
             }
@@ -253,7 +253,7 @@ void CGuiMgr::_Add(CGuiObj* pGuiObj)
             }
             else
             {
-                // Родительский GUI-объект не найден
+                //  GUI-  
                 g_logManager.InternalLog(LogLevel::Error, "common", std::format("ERR, GuiObj ID = <{}>, No Parent Found!", pGuiObj->GetID()));
             }
         }
@@ -269,7 +269,7 @@ void CGuiMgr::_Remove(CGuiObj *pGuiObj)
     if(pGuiObj!=NULL)
     {
         _GuiObjList.remove(pGuiObj);
-        // Удаление GUI-объекта
+        //  GUI-
         g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Remove Obj [{}]", pGuiObj->GetID()));
     }
 }
@@ -359,7 +359,7 @@ BOOL CGuiMgr::LoadFromResource(const char *pszFile)
 
 void CGuiMgr::SendMessage(int nMsgType, int nGuiObjID, DWORD dwParam1, DWORD dwParam2)
 {
-	// �ڲ���Ϊ����
+	// 
 	if(nMsgType==MSG_GUI_BUTTON_CHECK && dwParam1==1) 
 	{
 		CGuiButton *pButton = (CGuiButton*)GetGuiObj(nGuiObjID);
@@ -478,7 +478,7 @@ void CGuiObj::Show(BOOL bShow)
 }
 
 //--------------
-//  �����ڵ����
+//  
 //--------------
 void CGuiObj::SetLayer(int nLayer)
 {
@@ -519,7 +519,7 @@ CGuiObj::~CGuiObj()
         for(unsigned int i = 0; i < ObjList.size(); i++)
         {
             CGuiObj *pObj = ObjList[i];
-            delete pObj; // ����ᴥ��'���Parent��ϵ'
+            delete pObj; // 'Parent'
         }
         ObjList.clear();
         _ChildList.clear();

@@ -1,80 +1,80 @@
-#pragma once
+ï»¿#pragma once
 
 enum EActionNumber
 {
-    POSE_WAITING =       01,//	ÆÕÍ¨waiting	
-    POSE_SHOW =          02,//	°Ú¿ápose	
-    POSE_SLEEP =         03,//	ÐÝÃß
-    POSE_WAITING2 =      04,//	½ä±¸waiting	
-    POSE_RUN =           05,//	ÆÕÍ¨±¼ÅÜ	
-    POSE_RUN2 =          06,//	½ä±¸±¼ÅÜ	
-    POSE_ATTACK =        07,//	ÆÕÍ¨¹¥»÷1
-    POSE_ATTACK1 =       8, //	ÆÕÍ¨¹¥»÷2
-    POSE_ATTACK2 =       9, //	ÆÕÍ¨¹¥»÷3
-    POSE_POWER_ATTACK =  10,//  ÖØ»÷
-    POSE_SKILL1 =        11,//	¼¼ÄÜ£±
-    POSE_SKILL2 =        12,//	¼¼ÄÜ£²
-    POSE_SKILL3 =        13,//	¼¼ÄÜ£³
-    POSE_SKILL4 =        14,//	¼¼ÄÜ£´	011	
-    POSE_SKILL5 =        15,//	¼¼ÄÜ£µ	012	
-    POSE_SEAT =          16,//	ÆÕÍ¨×øÏÂ	
-    POSE_DIE =           17,//	ËÀÍö(Í¨ÓÃ)	
-    POSE_WAVE =          18,//	»ÓÊÖ(Í¨ÓÃ)	
-    POSE_CRY =           19,//	´ó¿Þ(Í¨ÓÃ)	
-    POSE_JUMP =          20,//	È¸Ô¾(Í¨ÓÃ)	
-    POSE_ANGER =         21,//	ÉúÆø(Í¨ÓÃ)	
-    POSE_DARE =          22,//	ÌôÐÆ(Í¨ÓÃ)	
-    POSE_GAY =           23,//	×ÔÁµ(ÄÐÍ¨ÓÃ)
-    POSE_EMOTE7 =        24,//	±íÇé¶¯×÷7	
-    POSE_EMOTE8 =        25,//	±íÇé¶¯×÷8	
-    POSE_EMOTE9 =        26,//	±íÇé¶¯×÷9	
-    POSE_EMOTE10 =       27,//	±íÇé¶¯×÷10	
-    POSE_MINE =          28,//	ÍÚ¿ó(³¡¾°»¥¶¯
-    POSE_COLLECT =       29,//	²É¼¯(³¡¾°»¥¶¯
-    POSE_SEAT2 =         30,//	×øµÊ×Ó(³¡¾°»¥
-    POSE_LEAN =          31,//	¿¿Ç½(³¡¾°»¥¶¯
-    POSE_LEAN2 =         32,//	¿¿Ê÷(³¡¾°»¥¶¯
-    POSE_HAPPY =         33,//	½ÇÉ«»¥¶¯(³¡¾°»¥¶¯)
-    POSE_HAPPY7 =        34,//	³¡¾°»¥¶¯¶¯×÷7
-    POSE_HAPPY8 =        35,//	³¡¾°»¥¶¯¶¯×÷8
-    POSE_HAPPY9 =        36,//	³¡¾°»¥¶¯¶¯×÷9
-    POSE_HAPPY10 =       37,//	³¡¾°»¥¶¯¶¯×÷10
-    POSE_RESERVED1 =     38,//	±¸ÓÃ¶¯×÷1	
-    POSE_FALLDOWN =      39,//	±¸ÓÃ¶¯×÷2	
-    POSE_SKILL6 =        40,//	¼¼ÄÜ¶¯×÷6	
-    POSE_SKILL7 =        41,//	¼¼ÄÜ¶¯×÷7	
-    POSE_FLY_WAITING =   42,//	·ÉÐÐ				//POSE_SKILL8 =        42,//	¼¼ÄÜ¶¯×÷8	
-    POSE_FLY_RUN =       43,//	·ÉÐÐÒÆ¶¯			//POSE_SKILL9 =        43,//	¼¼ÄÜ¶¯×÷9	
-    POSE_FLY_SHOW =      44,//	¿ÕÖÐ°Ú¿á			//POSE_SKILL10 =       44,//	¼¼ÄÜ¶¯×÷10	
-    POSE_FLY_SEAT =      45,//	Ðü¿Õ×øÏÂ			//POSE_SKILL11 =       45,//	¼¼ÄÜ¶¯×÷11	
-    POSE_SKILL12 =       46,//	¼¼ÄÜ¶¯×÷12	
-    POSE_SKILL13 =       47,//	¼¼ÄÜ¶¯×÷13	
-    POSE_SKILL14 =       48,//	¼¼ÄÜ¶¯×÷14	
-    POSE_SKILL15 =       49,//	¼¼ÄÜ¶¯×÷15	
-    POSE_SKILL16 =       50,//	¼¼ÄÜ¶¯×÷16	
-    POSE_SKILL17 =       51,//	¼¼ÄÜ¶¯×÷17	
-    POSE_SKILL18 =       52,//	¼¼ÄÜ¶¯×÷18	
-    POSE_SKILL19 =       53,//	¼¼ÄÜ¶¯×÷19	
-    POSE_SKILL20 =       54,//	¼¼ÄÜ¶¯×÷20	
+    POSE_WAITING =       01,//	waiting	
+    POSE_SHOW =          02,//	pose	
+    POSE_SLEEP =         03,//	
+    POSE_WAITING2 =      04,//	waiting	
+    POSE_RUN =           05,//		
+    POSE_RUN2 =          06,//		
+    POSE_ATTACK =        07,//	1
+    POSE_ATTACK1 =       8, //	2
+    POSE_ATTACK2 =       9, //	3
+    POSE_POWER_ATTACK =  10,//  
+    POSE_SKILL1 =        11,//	
+    POSE_SKILL2 =        12,//	
+    POSE_SKILL3 =        13,//	
+    POSE_SKILL4 =        14,//		011	
+    POSE_SKILL5 =        15,//		012	
+    POSE_SEAT =          16,//		
+    POSE_DIE =           17,//	()	
+    POSE_WAVE =          18,//	()	
+    POSE_CRY =           19,//	()	
+    POSE_JUMP =          20,//	()	
+    POSE_ANGER =         21,//	()	
+    POSE_DARE =          22,//	()	
+    POSE_GAY =           23,//	()
+    POSE_EMOTE7 =        24,//	7	
+    POSE_EMOTE8 =        25,//	8	
+    POSE_EMOTE9 =        26,//	9	
+    POSE_EMOTE10 =       27,//	10	
+    POSE_MINE =          28,//	(
+    POSE_COLLECT =       29,//	(
+    POSE_SEAT2 =         30,//	(
+    POSE_LEAN =          31,//	(
+    POSE_LEAN2 =         32,//	(
+    POSE_HAPPY =         33,//	()
+    POSE_HAPPY7 =        34,//	7
+    POSE_HAPPY8 =        35,//	8
+    POSE_HAPPY9 =        36,//	9
+    POSE_HAPPY10 =       37,//	10
+    POSE_RESERVED1 =     38,//	1	
+    POSE_FALLDOWN =      39,//	2	
+    POSE_SKILL6 =        40,//	6	
+    POSE_SKILL7 =        41,//	7	
+    POSE_FLY_WAITING =   42,//					//POSE_SKILL8 =        42,//	8	
+    POSE_FLY_RUN =       43,//				//POSE_SKILL9 =        43,//	9	
+    POSE_FLY_SHOW =      44,//				//POSE_SKILL10 =       44,//	10	
+    POSE_FLY_SEAT =      45,//				//POSE_SKILL11 =       45,//	11	
+    POSE_SKILL12 =       46,//	12	
+    POSE_SKILL13 =       47,//	13	
+    POSE_SKILL14 =       48,//	14	
+    POSE_SKILL15 =       49,//	15	
+    POSE_SKILL16 =       50,//	16	
+    POSE_SKILL17 =       51,//	17	
+    POSE_SKILL18 =       52,//	18	
+    POSE_SKILL19 =       53,//	19	
+    POSE_SKILL20 =       54,//	20	
 };
 
 struct SActionInfo
 {
-	short		m_sActionNO;	// ¶¯×÷±àºÅ
-	//short		m_sStartFrame;	// ÆðÊ¼Ö¡
-	//short		m_sEndFrame;	// ½áÊøÖ¡
+	short		m_sActionNO;	// 
+	//short		m_sStartFrame;	// 
+	//short		m_sEndFrame;	// 
 
-	//short		m_sKeyFrameNum;	// ¹Ø¼üÖ¡¸öÊý
-	//short		*m_sKeyFrame;	// ¹Ø¼üÖ¡¼¯
+	//short		m_sKeyFrameNum;	// 
+	//short		*m_sKeyFrame;	// 
     lwPoseInfo info;
 };
 
 struct SCharacterAction
 {
-	short		m_iCharacterType;	// ½ÇÉ«ÀàÐÍ
-	short		m_iMaxActionNum;	// ½ÇÉ«µÄ×î´ó¶¯×÷Êý(´ÓÎÄ¼þÖÐ¶Áµ½µÄ½ÇÉ«µÄ×î´ó¶¯×÷ºÅ)
-	short		m_iActualActionNum;	// ½ÇÉ«µÄÓÐÐ§¶¯×÷Êý(´ÓÎÄ¼þÖÐ¶Áµ½µÄ½ÇÉ«µÄ¶¯×÷¸öÊý)
-	SActionInfo	*m_SActionInfo;		// ½ÇÉ«µ¥¸ö¶¯×÷ÐÅÏ¢
+	short		m_iCharacterType;	// 
+	short		m_iMaxActionNum;	// ()
+	short		m_iActualActionNum;	// ()
+	SActionInfo	*m_SActionInfo;		// 
 };
 
 class	CGameCharacterAction
@@ -94,8 +94,8 @@ public:
 	bool		GetCharAction(int iCharType, SCharacterAction *SCharAct);
 
 protected:
-	short		m_iMaxCharacterType;		// ×î´ó½ÇÉ«ÀàÐÍÊý(´ÓÎÄ¼þÖÐ¶Áµ½µÄ×î´óµÄ½ÇÉ«ÀàÐÍºÅ)
-	short		m_iActualCharacterType;		// ÓÐÐ§½ÇÉ«ÀàÐÍÊý(´ÓÎÄ¼þÖÐ¶Áµ½µÄ½ÇÉ«¸öÊý)
+	short		m_iMaxCharacterType;		// ()
+	short		m_iActualCharacterType;		// ()
 	SCharacterAction	*m_SCharacterAction;
 };
 

@@ -1,4 +1,4 @@
-// polynomi.h - originally written and placed in the public domain by Wei Dai
+﻿// polynomi.h - originally written and placed in the public domain by Wei Dai
 
 /// \file polynomi.h
 /// \brief Classes for polynomial basis and operations

@@ -1,13 +1,10 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "ShipFactory.h"
 #include "GameApp.h"
 #include "EffectObj.h"
 #include "GameConfig.h"
 #include "MPEditor.h"
 #include "Character.h"
-#include "caLua.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "UITemplete.h"
 #include "PacketCmd.h"
 #include "UIBoatForm.h"
@@ -72,7 +69,7 @@ void xShipFactory::__ProcShipName(CGuiData *pSender)
 }
 
 //---------------------------------------------------------------------------
-//�򿪹رմ�ֻ����UI�¼�(Michael Chen 2005-05-26)
+// Open/close ship cabin UI event (Michael Chen 2005-05-26)
 void xShipFactory::__ButtonOpenRoom(CGuiData *pSender, int x, int y, DWORD dwKey)
 {
 	if( !__xsf ) 
@@ -86,7 +83,7 @@ void xShipFactory::__ButtonOpenRoom(CGuiData *pSender, int x, int y, DWORD dwKey
 	__xsf->sbf.btn_room_close->SetIsShow(true);
 }
 
-//�촬ʱ�رձ���֪ͨȡ���촬(Michael Chen 2005-06-06)
+// When form is closed, notify server to cancel ship creation (Michael Chen 2005-06-06)
 void xShipFactory::__HideForm(CGuiData *pSender)
 {
 	if (STATE_CREATE == __xsf->m_state)
@@ -238,7 +235,7 @@ BOOL xShipFactory::Init(CGameScene* s)
     ERR_CHK(sbf.btn_cancel, "btnNo");
     sbf.btn_cancel->evtMouseClick = __ButtonYesNo;
 
-	/*�򿪹رմ��ս���--Michael Chen 2005-05-25*/
+	/* Open/close ship cabin panel -- Michael Chen 2005-05-25 */
 	sbf.btn_room_open = (CTextButton*)sbf.wnd->Find("btnROpen");
 	ERR_CHK(sbf.btn_room_open, "btnROpen");
 	sbf.btn_room_open->evtMouseClick = __ButtonOpenRoom;
@@ -519,7 +516,7 @@ BOOL xShipFactory::CheckShipName()
         return 0;
 	}
 
-	// ��鴬�����Ƿ�����Ƿ�����
+	// Check if ship name contains illegal characters
 	string sBoatName(sbf.name->GetCaption());
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sBoatName) || 
 		!IsValidName(sBoatName.c_str(), (unsigned short)sBoatName.length()) )
@@ -536,24 +533,24 @@ BOOL xShipFactory::CheckShipName()
 //---------------------------------------------------------------------------
 BOOL xShipFactory::GetCabinByID()
 {
-	// �����ҵĴ�ID��
+	// Use our boat ID
 	if (m_dwBoatID == -1) return FALSE;
 
-	/*���ݴ�ID���Ҵ��� Michael Chen (2005-05-26).*/
+	/* Find boat by boat ID. Michael Chen (2005-05-26). */
 	CBoat *pkBoat = g_stUIBoat.FindBoat(m_dwBoatID);
 	if (! pkBoat)
 	{
-		//���û�ҵ����Ǿ��������˵Ĵ���Ŀǰ���ڲ鿴�����˵Ĵ�
+		// If not found, it is another player's boat; currently viewing other player's boat
 		pkBoat = g_stUIBoat.GetOtherBoat();
 		m_state = STATE_INFO_OTHER;
 
 	}
 
-	//�жϽ���ҳ���Ƿ��,�����֪ͨ�û���Ҫ�رս���ҳ����ܴ�
+	// Check if trade form is open; if so, notify user to close it before opening cabin
 	CForm* pBoatRoom = pkBoat->GetForm();
 	if (!pBoatRoom) return FALSE;
 	CForm* pForm = dynamic_cast<CForm*>(pBoatRoom->GetParent());
-	// ���ڴ��Ļ����ǹ��õģ����Ա��������������Ƿ����û���
+	// The boat cabin form is shared, so check whether it is in use by the user
 	CForm* pTradeForm = g_stUIBourse.GetForm();
 	if (pTradeForm && pTradeForm->GetIsShow() && pForm == pTradeForm)
 	{
@@ -567,7 +564,7 @@ BOOL xShipFactory::GetCabinByID()
 		return FALSE;
 	}
 
-	//��ǰ�����Ƿ��Ѿ�����
+	// Check if current cabin form is already open
 	if (sbf.wnd_boat_room)
 	{
 		sbf.wnd_boat_room->SetIsShow(false);
@@ -653,7 +650,7 @@ BOOL xShipFactory::Update(xShipBuildInfo* info, BOOL flag, const char* name)
 
 	char buf[128];
 
-	//���ô���ģ������
+	// Set ship model info
 	if (!SetShipModelInfo(info->dwBuf, sizeof(info->dwBuf)))
 		return 0;
 
@@ -698,7 +695,7 @@ BOOL xShipFactory::UpdateBoatCreate(xShipBuildInfo* info, BOOL flag, const char*
 	ClearBoatAttr();
 
 	Update(info, flag, name);
-	/*��ֻ����ʱ��ʾ��Ǯ*/
+	/* Show price when creating ship */
 	sbf.imgMoneyTitle->SetIsShow(true);
 	sbf.imgSpaceTitle->SetIsShow(false);
 
@@ -715,7 +712,7 @@ BOOL xShipFactory::UpdateBoatCreate(xShipBuildInfo* info, BOOL flag, const char*
 //---------------------------------------------------------------------------
 BOOL xShipFactory::UpdateBoatInfo(xShipBuildInfo* info, BOOL flag, const char* name)
 {
-	//�õ�����
+	// Get cabin info
 	if (!GetCabinByID())
 		return FALSE;
 
@@ -734,7 +731,7 @@ BOOL xShipFactory::UpdateBoatInfo(xShipBuildInfo* info, BOOL flag, const char* n
 
 	UpdateBoatAttr();
 
-	/*��ֻ����ʱ��ʾͣ����*/
+	/* Show berth info when viewing ship */
 	sbf.imgMoneyTitle->SetIsShow(false);
 	sbf.imgSpaceTitle->SetIsShow(true);
 	sbf.lbl_prop[SBF_TEXT_MONEY]->SetCaption(info->szBerth);
@@ -747,7 +744,7 @@ BOOL xShipFactory::UpdateBoatInfo(xShipBuildInfo* info, BOOL flag, const char* n
 //---------------------------------------------------------------------------
 BOOL xShipFactory::UpdateBoatFreedomTrade(const char* name, DWORD* dwModelInfo, size_t size)
 {
-	//���ԭ����������
+	// Clear original boat attributes
 	ClearBoatAttr();
 
 	sbf.chkShip->SetIsShow(false);
@@ -758,14 +755,14 @@ BOOL xShipFactory::UpdateBoatFreedomTrade(const char* name, DWORD* dwModelInfo, 
 	if (sbf.wnd_boat_room)
 		sbf.wnd_boat_room->SetIsShow(true);
 
-	//���ô���ģ������
+	// Set ship model info
 	if (!SetShipModelInfo(dwModelInfo, sizeof(size)))
 		return 0;
 
-	//���ô���
-	ShowFlipBtn(0, name);		//������ʱ��1, ����ʱ����0
+	// Set ship name
+	ShowFlipBtn(0, name);		// 1 when creating, 0 when viewing
 
-	//���ô�������
+	// Set ship attributes
 	UpdateBoatAttr();
 
 	return 1;
@@ -815,7 +812,7 @@ BOOL xShipFactory::Close(CGuiData* sender)
 		}
         else
         {
-			//g_pGameApp->MsgBox( "��Ч�Ĵ���" );
+			// g_pGameApp->MsgBox( "Invalid ship name" );
 			goto __ret;
         }
     }
@@ -914,7 +911,7 @@ void xShipFactory::UpdateBoatAttr()
 
 	char buf[128];
 	if (sbf.chkShip->GetIsChecked())
-	{ /*��ʾ��ֻԭʼ����*/
+	{ /* Show ship base attributes */
 		sprintf(buf, "%d/%d", pkAttr->get(ATTR_BMNATK), pkAttr->get(ATTR_BMXATK));
 		sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
 		sprintf(buf, "%d/%d", pkAttr->get(ATTR_HP), pkAttr->get(ATTR_BMXHP));
@@ -927,7 +924,7 @@ void xShipFactory::UpdateBoatAttr()
 		sbf.lbl_prop[SBF_TEXT_DISTANCE]->SetCaption(itoa(pkAttr->get(ATTR_BSREC), buf, 10));
 	}
 	else
-	{ /*��ʾ��ֻ����(������Ӱ��)*/
+	{ /* Show ship actual attributes (affected by sailors) */
 		sprintf(buf, "%d/%d", pkAttr->get(ATTR_MNATK), pkAttr->get(ATTR_MXATK));
 		sbf.lbl_prop[SBF_TEXT_ATTACK]->SetCaption(buf);
 		sprintf(buf, "%d/%d", pkAttr->get(ATTR_HP), pkAttr->get(ATTR_MXHP));
@@ -944,9 +941,9 @@ void xShipFactory::UpdateBoatAttr()
 	int nCurCapacity = grd->GetCurNum();
 	int nMaxCapacity = grd->GetMaxNum();
 	sprintf(buf, "%d/%d", nCurCapacity, nMaxCapacity);
-	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(buf); //��������
+	sbf.lbl_prop[SBF_TEXT_CAPACITY]->SetCaption(buf); // Cargo capacity
 
-	// �������
+	// Attack cooldown
 	int v = pkAttr->get(ATTR_ASPD);
 	if( v==0 )
 		sprintf( buf , "-1" );
@@ -954,7 +951,7 @@ void xShipFactory::UpdateBoatAttr()
 		sprintf( buf , "%d" , 100000 / v);
 	sbf.lbl_prop[SBF_TEXT_COOLDOWN]->SetCaption(buf);
 
-	//��ֻ�ȼ���������
+	// Ship level and experience
 	sbf.lbl_ship_level->SetCaption(itoa(pkAttr->get(ATTR_LV), buf, 10));
 	sbf.lbl_ship_exp->SetCaption(itoa(pkAttr->get(ATTR_CEXP), buf, 10));
 
@@ -1110,7 +1107,7 @@ void xShipLaunchList::Test()
 
 //---------------------------------------------------------------------------
 //  add by Philip.Wu  2006-06-02
-//  �ر�ѡ��ֻ���棬���� xShipMgr �ڲ�����
+//  Close ship selection form, called from xShipMgr internally
 //
 void xShipLaunchList::CloseForm()
 {
@@ -1159,7 +1156,7 @@ void xShipMgr::FrameMove()
 
 //---------------------------------------------------------------------------
 //  add by Philip.Wu  2006-06-02
-//  �ر�ѡ��ֻ���棬�����ⲿ����
+//  Close ship selection form, called externally
 //
 void xShipMgr::CloseForm()
 {

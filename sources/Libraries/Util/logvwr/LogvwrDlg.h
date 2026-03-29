@@ -1,4 +1,4 @@
-// LogvwrDlg.h : Í·ÎÄ¼ş
+ï»¿// LogvwrDlg.h : 
 //
 
 #pragma once
@@ -6,39 +6,39 @@
 #include "afxcmn.h"
 
 
-// CLogvwrDlg ¶Ô»°¿ò
+// CLogvwrDlg 
 class CLogPacket;
 class CLogTypeData;
 class CGplTypeData;
 class CGplViewDlg;
 class CLogvwrDlg : public CDialog
     {
-    // ¹¹Ôì
+    // 
 public:
-    CLogvwrDlg(CWnd* pParent = NULL);   // ±ê×¼¹¹Ôìº¯Êı
+    CLogvwrDlg(CWnd* pParent = NULL);   // 
 	~CLogvwrDlg();
 
-    // ¶Ô»°¿òÊı¾İ
+    // 
     enum {IDD = IDD_LOGVWR_DIALOG};
 
-	// Ö÷²Ëµ¥¶ÔÏóÖ¸Õë
+	// 
 	CMenu* m_pMainMenu;
 
 protected:
-    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV Ö§³Ö
+    virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 
 
 
-    // ÊµÏÖ
+    // 
 protected:
     HICON m_hIcon;
 
-    // Éú³ÉµÄÏûÏ¢Ó³Éäº¯Êı
+    // 
     virtual BOOL OnInitDialog();
     afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
     afx_msg void OnPaint();
     afx_msg HCURSOR OnQueryDragIcon();
 
-    // ×ÔÌí¼ÓÏûÏ¢Ó³Éäº¯Êı
+    // 
     afx_msg void OnSize(UINT nType, int cx, int cy);
     afx_msg BOOL OnCopyData(CWnd* pWnd, COPYDATASTRUCT* pCopyDataStruct);
 	afx_msg BOOL OnCommand(WPARAM wParam, LPARAM lParam);
@@ -46,38 +46,38 @@ protected:
     DECLARE_MESSAGE_MAP()
 
 private:
-	// ÓÒ¼üµ¯³ö²Ëµ¥¶ÔÏó
+	// 
 	CMenu m_PopMenu;
 
-    // ·ÅÖÃËùÓĞÏÔÊ¾ÔªËØµÄÈİÆ÷
+    // 
     CStatic m_Container;
 
-	// µ±Ç°¼¤»îµÄ´°¿Ú
+	// 
 	CWnd* m_pActiveWnd;
 
-    // ÏÔÊ¾ËùÓĞLOGµÄÁĞ±í
+    // LOG
     CListCtrl m_LogList;
 
-	// ´æ·Å¸÷ÖÖÀà±ğLOGµÄListCtrl¶ÔÏó¼°Àà±ğ±êÊ¶´®
+	// LOGListCtrl
 	std::vector<CLogTypeData*> m_LGData;
 
-	// ÏÔÊ¾ËùÓĞGPLµÄ¶Ô»°¿ò
+	// GPL
 	CGplViewDlg* m_pGplDlg;
 
-	// ´æ·Å¸÷ÖÖÀà±ğGPLµÄÀà±ğ¶ÔÏó
+	// GPL
 	std::vector<CGplTypeData*> m_GPLData;
 
-	// ²âÊÔ¡¢Çå³ı°´Å¥
+	// 
     CButton m_btnTestLog;
     CButton m_btnClearLog;
 
-    // ÏÔÊ¾ÓëÇå³ı¼°·ÀÖ¹ÖØÈëµÄÍ¬²½¶ÔÏó
+    // 
     CCriticalSection m_CS;
 
-    // LOG°ü¶ÔÏó
+    // LOG
     CLogPacket* m_pLogPacket;
 
-    // ½ÓÊÕËùÓĞ°ü¼ÆÊı
+    // 
     DWORD m_dwPacketCnt;
 
 public:

@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:×éºÏ¿ò
-// ×÷Õß:lh 2004-07-08
-// Éè¼ÆË¼Ïë:ÓÉCEdit,CTextButton,CList×éºÏ
-// ×îºóĞŞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-08
+// :CEdit,CTextButton,CList
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uicompent.h"
@@ -17,8 +17,8 @@ class CCombo : public CCompent
 public:
 	enum eListStyle
 	{
-		lsUp,		// ListÔÚÉÏÃæ
-		lsDown,		// ListÔÚÏÂÃæ
+		lsUp,		// List
+		lsDown,		// List
 	};
 
 	CCombo(CForm& frmOwn);
@@ -52,8 +52,8 @@ public:
 	const char*		GetText()				{ return _pEdit->GetCaption();	}
 
 public:
-	GuiEvent		evtSelectChange;	// Ñ¡Ôñ·¢ÉúÁË±ä»¯
-	GuiMouseEvent	evtMouseClick;		// Êó±êµã»÷°´Å¥ÊÂ¼ş
+	GuiEvent		evtSelectChange;	// 
+	GuiMouseEvent	evtMouseClick;		// 
 
 protected:
 	static void		_OnButtonClick(CGuiData *pSender, int x, int y, DWORD key) {

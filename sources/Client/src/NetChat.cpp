@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "NetChat.h"
 #include "UITeam.h"
 #include "UIChat.h"
@@ -28,13 +28,13 @@ void stNetTeamChaPart::Convert( const stNetChangeChaPart& stPart )
 	}
 }
 
-void NetSay2You(stNetSay2You &say2you,DWORD dwColour)	//˽��
+void NetSay2You(stNetSay2You &say2you,DWORD dwColour)	//
 {
 	//g_stUICoze.OnPrivateSay( say2you.m_src, say2you.m_dst, say2you.m_content );
 	CCozeForm::GetInstance()->OnPrivateMsg(say2you.m_src, say2you.m_dst, say2you.m_content,dwColour);
 }
 
-void NetSay2Team(unsigned long chaid,const char *word,DWORD dwColour)	//����
+void NetSay2Team(unsigned long chaid,const char *word,DWORD dwColour)	//
 {
 	//g_stUICoze.OnTeamSay(chaid,word);
 	CCozeForm::GetInstance()->OnTeamMsg(chaid, word,dwColour);
@@ -46,24 +46,24 @@ void NetSay2Gud(const char* src, const char* word,DWORD dwColour)
 	CCozeForm::GetInstance()->OnGuildMsg(src, word, dwColour);
 }
 
-void NetSay2All(stNetSay2All &say2all,DWORD dwColour)	//����
+void NetSay2All(stNetSay2All &say2all,DWORD dwColour)	//
 {
 	//g_stUICoze.OnWorldSay( say2all.m_src, say2all.m_content );
 	CCozeForm::GetInstance()->OnWorldMsg(say2all.m_src, say2all.m_content,dwColour);
 }
-extern void NetSay2Trade(stNetSay2All &say2all,DWORD dwColour)	//����Ƶ��
+extern void NetSay2Trade(stNetSay2All &say2all,DWORD dwColour)	//
 {
 	//g_stUICoze.OnTradeSay( say2all.m_src, say2all.m_content );
 	CCozeForm::GetInstance()->OnTradeMsg(say2all.m_src, say2all.m_content,dwColour);
 }
-extern void NetGM1Say(stNetSay2All &say2all)	//GM����
+extern void NetGM1Say(stNetSay2All &say2all)	//GM
 {
 	//g_stUICoze.OnGmSay( say2all.m_src, say2all.m_content );
 	CCozeForm::GetInstance()->OnPublishMsg(say2all.m_src, say2all.m_content);
 }
 
 //add by sunny.sun20080804
-extern void NetGM1Say1(stNetScrollSay &say2all)	//GM����
+extern void NetGM1Say1(stNetScrollSay &say2all)	//GM
 {
 	CCozeForm::GetInstance()->OnPublishMsg1(say2all.m_content,say2all.setnum, say2all.color);
 }
@@ -128,7 +128,7 @@ void NetPCTeam(stNetPCTeam  &pcteam)
 
     switch( pcteam.kind )
     {
-    case TEAM_MSG_GROUP_ADD:    // ��������
+    case TEAM_MSG_GROUP_ADD:    // 
         {			
             g_pGameApp->SysInfo( g_oLangRec.GetString(219), pcteam.cha_name[0] );
 			//g_pGameApp->ShowBottomText(0x8FC944, "Joined party");
@@ -151,7 +151,7 @@ void NetPCTeam(stNetPCTeam  &pcteam)
 			}
         }
         break;
-    case TEAM_MSG_GROUP_BREAK:  // ��ɢ����
+    case TEAM_MSG_GROUP_BREAK:  // 
         {
             pTeamMgr->Del( enumTeamGroup );
 			pTeamMgr->SetTeamLeaderID( 0 );
@@ -175,7 +175,7 @@ void NetPCTeam(stNetPCTeam  &pcteam)
         g_pGameApp->SysInfo( g_oLangRec.GetString(220) );
 		//g_pGameApp->ShowBottomText(0x8FC944, "Party disbanded");
         break;
-    case TEAM_MSG_ADD:          // ������:�����¶�Ա
+    case TEAM_MSG_ADD:          // :
         {
             CTeam* pTeam = pTeamMgr->Find( enumTeamGroup );
             if( pTeam )
@@ -193,8 +193,8 @@ void NetPCTeam(stNetPCTeam  &pcteam)
 			}
         }
         break;
-    //case TEAM_MSG_OFFLINE:      // ������:��Ա����
-    case TEAM_MSG_LEAVE:        // ������:��Ա�뿪
+    //case TEAM_MSG_OFFLINE:      // :
+    case TEAM_MSG_LEAVE:        // :
         g_pGameApp->SysInfo( g_oLangRec.GetString(222), pcteam.cha_name[pcteam.count-1] );
 		//g_pGameApp->ShowBottomText(0x8FC944, "%s has left the party", pcteam.cha_name[pcteam.count-1] );
 	case TEAM_MSG_KICK:
@@ -220,13 +220,13 @@ void NetPCTeam(stNetPCTeam  &pcteam)
 
 void NetTeamInvite(const char *inviter_name, unsigned long inviter_chaid,unsigned short icon)
 {
-	// Удалён dev-only лог test_group
+	//  dev-only  test_group
 	g_stTeamInviteFormMgr.AddInviteForm(inviter_chaid,inviter_name);
 }
 
 void NetTeamCancel(unsigned long inviter_chaid,char reason)
 {
-	// Удалён dev-only лог test_group
+	//  dev-only  test_group
 	switch(reason)
 	{
 	case MSG_TEAM_CANCLE_BUSY:
@@ -250,13 +250,13 @@ void NetTeamCancel(unsigned long inviter_chaid,char reason)
 
 void NetFrndInvite(const char *inviter_name, unsigned long inviter_chaid,unsigned short icon)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	g_stFrndInviteFormMgr.AddInviteForm(inviter_chaid,inviter_name);
 }
 
 void NetFrndCancel(unsigned long  inviter_chaid,char reason)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	switch(reason)
 	{
 	case MSG_FRND_CANCLE_BUSY:
@@ -284,7 +284,7 @@ void NetFrndCancel(unsigned long  inviter_chaid,char reason)
 
 void NetFrndOnline(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamFrnd)->Find(cha_id);
 	if (pMember)
 	{
@@ -296,7 +296,7 @@ void NetFrndOnline(unsigned long cha_id)
 
 void NetFrndOffline(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamFrnd)->Find(cha_id);
 	if (pMember)
 	{
@@ -308,14 +308,14 @@ void NetFrndOffline(unsigned long cha_id)
 
 void NetFrndDel(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	g_stUIChat.GetTeamMgr()->Find( enumTeamFrnd )->Del(cha_id);
 	//g_stUIChat.ReceiveMsg(enumSCM_FRND_DEL,0,cha_id);
 }
 
 void NetFrndAdd(unsigned long cha_id,const char * cha_name,const char * motto,unsigned short icon_id,const char *grp)
-{//grp-�������ѷ���
-	// Удалён dev-only лог test_frnd
+{//grp-
+	//  dev-only  test_frnd
 	g_stUIChat.GetTeamMgr()->Find( enumTeamFrnd )->Add(cha_id,cha_name,motto,icon_id);
 	//g_stUIChat.ReceiveMsg( enumSCM_FRND_ADD,(void*)cha_name,cha_id,icon_id,(void*)motto);
 }
@@ -379,7 +379,7 @@ void NetFrndStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned short ar
 
 	for (int i=0;i<arrnum;i++)
 	{
-		// Удалён dev-only лог test_frnd
+		//  dev-only  test_frnd
 
 		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamFrnd )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 
@@ -390,7 +390,7 @@ void NetFrndStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned short ar
 
 void NetFrndRefreshInfo(unsigned long cha_id,const char * motto,unsigned short icon,unsigned short degree,const char * job,const char *guildname)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamFrnd)->Find(cha_id);
 	if (pMember)
 	{
@@ -415,7 +415,7 @@ void NetChangePersonInfo(const char *motto,unsigned short icon,bool refuse_sess)
 	g_stUIChat._UpdateSelfInfo();
 }
 
-void NetSessCreate(const char *chaname)		//�����Ựʧ��
+void NetSessCreate(const char *chaname)		//
 {
 	CTalkSessionForm* pSession;
 	for (int i=0;true;i++)
@@ -532,11 +532,11 @@ extern void NetSessSay(unsigned long sessid,unsigned long chaid,const char *word
 
 
 //
-//  ʦ�����
+//  
 //
 void NetMasterOnline(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamMaster)->Find(cha_id);
 	if (pMember)
 	{
@@ -547,7 +547,7 @@ void NetMasterOnline(unsigned long cha_id)
 
 void NetMasterOffline(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamMaster)->Find(cha_id);
 	if (pMember)
 	{
@@ -558,13 +558,13 @@ void NetMasterOffline(unsigned long cha_id)
 
 void NetMasterDel(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	g_stUIChat.GetTeamMgr()->Find( enumTeamMaster )->Del(cha_id);
 }
 
 void NetMasterAdd(unsigned long cha_id,const char * cha_name,const char * motto,unsigned short icon_id,const char *grp)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	g_stUIChat.GetTeamMgr()->Find( enumTeamMaster )->Add(cha_id,cha_name,motto,icon_id);
 }
 
@@ -575,7 +575,7 @@ void NetMasterStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned short 
 	g_stUIChat._dwSelfID=self.lChaid;
 	for (int i=0;i<arrnum;i++)
 	{
-		// Удалён dev-only лог test_frnd
+		//  dev-only  test_frnd
 		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamMaster )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 		pMember->SetOnline(arrCha[i].cStatus!=0);
 	}
@@ -584,7 +584,7 @@ void NetMasterStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned short 
 
 void NetMasterCancel(unsigned long  inviter_chaid,char reason)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	switch(reason)
 	{
 	case MSG_FRND_CANCLE_BUSY:
@@ -611,7 +611,7 @@ void NetMasterCancel(unsigned long  inviter_chaid,char reason)
 
 void NetMasterRefreshInfo(unsigned long cha_id,const char * motto,unsigned short icon,unsigned short degree,const char * job,const char *guildname)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamMaster)->Find(cha_id);
 	if (pMember)
 	{
@@ -626,11 +626,11 @@ void NetMasterRefreshInfo(unsigned long cha_id,const char * motto,unsigned short
 }
 
 //
-//  ѧͽ���
+//  
 //
 void NetPrenticeOnline(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamPrentice)->Find(cha_id);
 	if (pMember)
 	{
@@ -641,7 +641,7 @@ void NetPrenticeOnline(unsigned long cha_id)
 
 void NetPrenticeOffline(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamPrentice)->Find(cha_id);
 	if (pMember)
 	{
@@ -652,13 +652,13 @@ void NetPrenticeOffline(unsigned long cha_id)
 
 void NetPrenticeDel(unsigned long cha_id)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	g_stUIChat.GetTeamMgr()->Find( enumTeamPrentice )->Del(cha_id);
 }
 
 void NetPrenticeAdd(unsigned long cha_id,const char * cha_name,const char * motto,unsigned short icon_id,const char *grp)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	g_stUIChat.GetTeamMgr()->Find( enumTeamPrentice )->Add(cha_id,cha_name,motto,icon_id);
 }
 
@@ -669,7 +669,7 @@ void NetPrenticeStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned shor
 	g_stUIChat._dwSelfID=self.lChaid;
 	for (int i=0;i<arrnum;i++)
 	{
-		// Удалён dev-only лог test_frnd
+		//  dev-only  test_frnd
 		CMember *pMember=g_stUIChat.GetTeamMgr()->Find( enumTeamPrentice )->Add(arrCha[i].lChaid,arrCha[i].szChaname.c_str(),arrCha[i].szMotto.c_str(),arrCha[i].sIconID);
 		pMember->SetOnline(arrCha[i].cStatus!=0);
 	}
@@ -678,7 +678,7 @@ void NetPrenticeStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned shor
 
 void NetPrenticeCancel(unsigned long  inviter_chaid,char reason)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	switch(reason)
 	{
 	case MSG_FRND_CANCLE_BUSY:
@@ -705,7 +705,7 @@ void NetPrenticeCancel(unsigned long  inviter_chaid,char reason)
 
 void NetPrenticeRefreshInfo(unsigned long cha_id,const char * motto,unsigned short icon,unsigned short degree,const char * job,const char *guildname)
 {
-	// Удалён dev-only лог test_frnd
+	//  dev-only  test_frnd
 	CMember *pMember=g_stUIChat.GetTeamMgr()->Find(enumTeamPrentice)->Find(cha_id);
 	if (pMember)
 	{

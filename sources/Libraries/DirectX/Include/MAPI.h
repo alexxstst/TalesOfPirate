@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I . H
  *
  *  Messaging Applications Programming Interface.

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 
 #include "MPRender.h"
@@ -35,10 +35,10 @@ struct MPLineVertex
 	DWORD		dwColor;
 };
 
-struct MPTileTex  // µ¥Ò»ÌùÍ¼²ã  
+struct MPTileTex  //   
 {
-	BYTE	btTexNo;	 // ÌùÍ¼±àºÅ
-	BYTE	btAlphaNo;	 // AlphaÍ¼±àºÅ
+	BYTE	btTexNo;	 // 
+	BYTE	btAlphaNo;	 // Alpha
 	MPTileTex()
 		:btTexNo(0), btAlphaNo(0)	{}
 	
@@ -60,8 +60,8 @@ inline float _getObjHeight(BYTE btValue, int no)
 {
     BYTE btLevel = btValue & 63;
     float f = (float)btLevel;
-    f*=5.0f; // Ã¿¸ö¼¶±ð´ú±í5ÀåÃ×
-    if(btValue & 64) // ¸ºÊý
+    f*=5.0f; // 5
+    if(btValue & 64) // 
     {
         return f / 100.0f * -1.0f;
     }
@@ -83,7 +83,7 @@ inline BYTE _setObjHeight(BYTE btOldValue, float fHeight, int no)
          btOldValue&=191;
      }
      BYTE btLevel = (BYTE)(fHeight / 0.05f);
-     btOldValue&=192; // Çå³ý6Î»¸ß¶È
+     btOldValue&=192; // 6
      btOldValue|=btLevel;
      return btOldValue;
 }
@@ -93,17 +93,17 @@ struct MINDPOWER_API MPTile
 {
 	static	int		Offset[4][2];
 
-    MPTileTex		TexLayer[4]; // ×î¶à4²ãÖØµþ
-	DWORD			dwColor;	 // ×óÉÏ½ÇµÚÒ»¸ö¶¥µãµÄÑÕÉ«
-    short           sRegion;     // ÇøÓòÊôÐÔ
-    BYTE            btIsland;    // µºÓìÊôÐÔ
-    BYTE            btBlock[4];  // 4¸ö·Ö¸ñµÄÕÏ°­¼ÇÂ¼
+    MPTileTex		TexLayer[4]; // 4
+	DWORD			dwColor;	 // 
+    short           sRegion;     // 
+    BYTE            btIsland;    // 
+    BYTE            btBlock[4];  // 4
     
-	float			fHeight;     // ×óÉÏ½ÇµÚÒ»¸ö¶¥µãµÄ¸ß¶È
+	float			fHeight;     // 
 	
     //lemon add@2004.10.18
-	DWORD			dwTColor;	 // ÁÙÊ±¶¥µãµÄÑÕÉ«
-    DWORD           dwXColor;    // »ìºÏºóµÄÑÕÉ«
+	DWORD			dwTColor;	 // 
+    DWORD           dwXColor;    // 
 
 public:
     
@@ -118,7 +118,7 @@ public:
 			TexLayer[i].btTexNo = TexLayer[i].btAlphaNo = 0;
 		    btBlock[i] = 0;
         }
-		sRegion  = 0; // Ä¬ÈÏÎªº£Ë®, ÇøÓòÊôÐÔ = 0
+		sRegion  = 0; // ,  = 0
         btIsland = 0;
     }
 

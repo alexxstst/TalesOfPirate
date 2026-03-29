@@ -1,4 +1,4 @@
-// GameServer.cpp : Defines the entry point for the console application.
+﻿// GameServer.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"                           
@@ -11,7 +11,7 @@
 #include "GameDB.h"
 
 
-// #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) // ������ڵ�ַ 
+// #pragma comment( linker, "/subsystem:\"windows\" /entry:\"mainCRTStartup\"" ) //  
 
 extern BOOL GameServer_Begin();
 extern void GameServer_End();
@@ -122,7 +122,7 @@ int main(int argc, char* argv[])
 #ifdef USE_IOCP
 
 #else
-// CorsairsNet: ThreadPool больше не нужен — TcpClient создаёт собственные потоки
+// CorsairsNet: ThreadPool     TcpClient   
 #endif
 
 
@@ -131,13 +131,13 @@ BOOL GameServer_Begin()
 {
 	_setmaxstdio(2048);
 
-	//LG("init", "��Ϸ��ͼ������[%s]����...\n", g_Config.m_szName);
+	//LG("init", "[%s]...\n", g_Config.m_szName);
 ToLogService("common", "game map server [{}] startup...", g_Config.m_szName);
 
 	g_pGameApp = new CGameApp();
 	if(!g_pGameApp->Init())
 	{
-		//LG("init", "GameApp ��ʼ��ʧ��, �˳�!\n");
+		//LG("init", "GameApp , !\n");
 		ToLogService("common", "GameApp initialization failed, exit!");
 		return FALSE;
 	}
@@ -152,29 +152,29 @@ ToLogService("common", "game map server [{}] startup...", g_Config.m_szName);
     net::InitWinSock();
 
 	g_gmsvr	= new GameServerApp();
-	// connect thread запускается в конструкторе GameServerApp
+	// connect thread    GameServerApp
 	ToLogService("common", "startup Gate server connect thread...");
 #endif
 
-    //���Ӳ�����InfoServer
-	//LG("init", "������Ϣ�����������߳�...\n");
+    //InfoServer
+	//LG("init", "...\n");
 	//LG("init", "startup information server connect thread...\n");
     //l_comm->AddTask(new ToInfoServer(g_gmsvr));
 	
-	// ������Ϸ�߳�
-	//LG("init", "������Ϸ�߳�...\n");
+	// 
+	//LG("init", "...\n");
 	ToLogService("common", "startup game thread...");
 	DWORD	dwThreadID;
 	hGameT = CreateThread(NULL, 0, g_GameLogicProcess, 0, 0, &dwThreadID);
 	ToLogService("common", "Game Thread ID = {}", dwThreadID);
 	//
 
-	//LG("init",  "��ʼ����Win32 ���ƶԻ���\n");
+	//LG("init",  "Win32 \n");
 	ToLogService("common", "start create Win32 control dialog box");
 	HINSTANCE hInst = GetModuleHandle(0);
 	CreateMainDialog(hInst, NULL);
 
-	// Лог перезапуска в БД через метод CGameApp::Log
+	//       CGameApp::Log
 	g_pGameApp->Log("restart", "GameServer restart", g_Config.m_szMapList[0], "", "", "");
 	
 	return TRUE;
@@ -183,7 +183,7 @@ ToLogService("common", "game map server [{}] startup...", g_Config.m_szName);
 
 void GameServer_End()
 {
-	//LG("init", "��ʼ������Ϸ��ͼ������\n");
+	//LG("init", "\n");
 	ToLogService("common", "start to exit game map server");
 	CloseHandle(hGameT);
 
@@ -239,46 +239,46 @@ void AppExit(void)
 }
 
 /*
- GameServer���
+ GameServer
 
- GameServer������Ϸ�߼��Ĵ���
+ GameServer
 
- ��������Ҫģ���� 
+  
  
 [GameData]
-������������ 
-Map        ��ͼ 
-MgrUnit    ��ͼ����Ԫ
-Player     ���
-Character  ��ɫ
-Item       ����
-Skill      ����
-SkillState ����״̬
-Mission    ����
+ 
+Map         
+MgrUnit    
+Player     
+Character  
+Item       
+Skill      
+SkillState 
+Mission    
 
  
-GameDataӦ�õ�������Ϊ��������
+GameData
 
 [GameControl]
-App       Ӧ�ó����� 
-TimerMgr  ��ʱ������
-AI        AI����
+App        
+TimerMgr  
+AI        AI
 
-[EventHandler] �¼�������
+[EventHandler] 
 
-GameServer��������ʽΪ 
+GameServer 
 
-��GameControl����Ӧ�ó���, ����AI��ʱ��, ������ײ��ⶨʱ��
+GameControl, AI, 
 
-GameControl �� EventHandler ����Event, ����AI�¼�, ����ת����ײ
-�ͻ��� �� EventHandler ����Event, ������������, ����ʹ�ü���, ����ʹ�õ���
+GameControl  EventHandler Event, AI, 
+  EventHandler Event, , , 
 
-EventHandler��Event�Ĵ���ΪӦ��ʽ, ����ʱ���ؽ��, ���κ��м�״̬
+EventHandlerEvent, , 
 
-EventHandler�ڶ�Event�Ĵ��������, ����Modify GameData�Ĳ���
+EventHandlerEvent, Modify GameData
 
-��ʱEventHandler���ڷ������ڲ��߼������Կͻ��˵����� ����Ϊһ��˫���ͷ, ������
-Ψһ�Ľ��Modify GameData
+EventHandler , 
+Modify GameData
 
 
 Control -> Event 

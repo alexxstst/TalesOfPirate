@@ -1,4 +1,4 @@
-
+﻿
 #include "lwDirectX.h"
 #define LPSURFACE IDirect3DSurfaceX*
 #define LPTEXTURE IDirect3DTextureX*

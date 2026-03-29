@@ -1,4 +1,4 @@
-// xts.h - written and placed in the public domain by Jeffrey Walton
+﻿// xts.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file xts.h
 /// \brief Classes for XTS block cipher mode of operation

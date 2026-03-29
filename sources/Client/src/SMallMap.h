@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define MGR
 #include "EffectObj.h"
 #include "MindPower.h"
@@ -265,19 +265,19 @@ public:
 			}
 #else
 			D3DXCreateTextureFromFileEx(m_pDev,
-				pszName[n], //�ļ���
+				pszName[n], //
 				0, 
 				0, 
-				1, //��Ҫ���ټ�mipmap��������Ϊ1  
-				0, //����������;
-				D3DFMT_UNKNOWN, //�Զ�����ļ���ʽ
-				D3DPOOL_MANAGED, //��DXGraphics����
-				D3DX_FILTER_LINEAR, //�������˷���
-				D3DX_FILTER_NONE, //mipmap�������˷���
-				0x00000000, //͸��ɫ��ɫ
-				NULL, //������ͼ���ʽ�洢�ںα�����
-				NULL, //�����ĵ�ɫ��洢�ںα�����
-				&_pTex[n]);//Ҫ����������
+				1, //mipmap1  
+				0, //
+				D3DFMT_UNKNOWN, //
+				D3DPOOL_MANAGED, //DXGraphics
+				D3DX_FILTER_LINEAR, //
+				D3DX_FILTER_NONE, //mipmap
+				0x00000000, //
+				NULL, //
+				NULL, //
+				&_pTex[n]);//
 			if(!_pTex[n])
 			{
 				ToLogService("errors", LogLevel::Error, "msgCSMCha::no found file :texture\\minimap\\arraw.tga");
@@ -427,7 +427,7 @@ public:
 		//g_Render.SetTextureStageState( 0, D3DTSS_MAGFILTER, D3DTEXF_POINT );
 		//g_Render.SetTextureStageState( 0, D3DTSS_MINFILTER, D3DTEXF_POINT );
 		//g_Render.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff );
-		g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+		g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 		//g_Render.SetTextureStageState( 0, D3DTSS_ADDRESSU , D3DTADDRESS_CLAMP);		
 		//g_Render.SetTextureStageState( 0, D3DTSS_ADDRESSV , D3DTADDRESS_CLAMP);
 		g_Render.SetVertexShader(NULL);
@@ -552,7 +552,7 @@ private:
 
 
 /************************************************************************/
-/*�������ڣ�������ʾ����ɳ©ʲô��*/
+/**/
 /************************************************************************/
 class CAniWnd: public CSMallWnd
 {
@@ -599,7 +599,7 @@ private:
 };
 
 /************************************************************************/
-/*�������ڣ�������ʾ����ɳ©ʲô��*/
+/**/
 /************************************************************************/
 #define D3DFVF_CLOCK2 (D3DFVF_XYZRHW | D3DFVF_DIFFUSE)
 
@@ -608,8 +608,8 @@ class CCharacterModel;
 
 //struct SClientAttr
 //{
-//	short sTeamAngle; // ���ʱ��ͷ��Ƕ�
-//	float fTeamDis;   // ���ʱ��ͷ�����
+//	short sTeamAngle; // 
+//	float fTeamDis;   // 
 //	SClientAttr()
 //		:sTeamAngle(0),
 //		fTeamDis(0)
@@ -617,10 +617,10 @@ class CCharacterModel;
 //	}
 //};
 //
-//inline SClientAttr* GetClientAttr(int nScriptID)��
-//�÷���ȡcharacterinfoһ��
+//inline SClientAttr* GetClientAttr(int nScriptID)
+//characterinfo
 
-//����̨�� ����>dofile("scripts/cameraconf.clu")�Ϳ��Զ�̬reload
+// >dofile("scripts/cameraconf.clu")reload
 
 class CCharacter2D//: public CSMallWnd
 {
@@ -946,7 +946,7 @@ public:
 		if(p[potion] & (1 << pos))
 			return true;
 		//Add by sunny.sun 20080903
-        return true;    // ���ͼȡ������
+        return true;    // 
 		//return false;
 	}
 	//void	SetMask(int x, int y)

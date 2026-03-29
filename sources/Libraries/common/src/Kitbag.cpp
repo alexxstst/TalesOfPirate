@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: Kitbag.cpp
 // Creater: ZhangXuedong
 // Date: 2004.12.17
@@ -818,7 +818,7 @@ short CKitbag::Push(SItemGrid* pGrid, short& sPosID, short sType, bool bCommit, 
 
 			{
 				short	sSearchPos = 0;
-				while (sLeftNum > 0) // ???????û????£????????????
+				while (sLeftNum > 0) // ???????????????????????
 				{
 					if (sSearchPos >= m_sCapacity)
 					{

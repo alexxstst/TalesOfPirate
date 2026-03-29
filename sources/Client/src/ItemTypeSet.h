@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "TableData.h"
 
 class CItemTypeInfo : public CRawDataInfo
@@ -24,7 +24,7 @@ public:
 
 protected:
 
-	static CItemTypeSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CItemTypeSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

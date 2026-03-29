@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 
@@ -21,7 +21,7 @@
 #define WM_GRAPHNOTIFY WM_USER + 1024
 
 
-// ¼òµ¥ÊÓÆµ²¥·Å
+// 
 class CGameMovie
 {
 public:
@@ -30,19 +30,19 @@ public:
 
 public:
 
-	// ²¥·Å
+	// 
 	bool Play(HWND hWnd, const char* pszFileName);
 
-	// Í£Ö¹²¥·Å
+	// 
 	void Stop(void);
 
-	// ÊÇ·ñÕýÔÚ²¥·Å
+	// 
 	bool IsPlaying(void);
 
-	// Çå³ý
+	// 
 	void Cleanup(void);
 
-	// »ñµÃ×îºóµÄ´íÎóÂë
+	// 
 	HRESULT GetLastError(void) { return _hResult; }
 
 	IMediaEventEx* GetEvent() { return _pEvent; }

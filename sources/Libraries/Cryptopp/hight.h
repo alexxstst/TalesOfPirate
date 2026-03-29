@@ -1,4 +1,4 @@
-// hight.h - written and placed in the public domain by Kim Sung Hee and Jeffrey Walton
+﻿// hight.h - written and placed in the public domain by Kim Sung Hee and Jeffrey Walton
 //           Based on "HIGHT: A New Block Cipher Suitable for Low-Resource Device"
 //           by Deukjo Hong, Jaechul Sung, Seokhie Hong, Jongin Lim, Sangjin Lee,
 //           Bon-Seok Koo, Changhoon Lee, Donghoon Chang, Jesang Lee, Kitae Jeong,

@@ -1,4 +1,4 @@
-#ifndef MPScriptLoader_h
+﻿#ifndef MPScriptLoader_h
 #define MPScriptLoader_h
 
 #include "MPEffPrerequisites.h"

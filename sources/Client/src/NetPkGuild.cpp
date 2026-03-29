@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "netguild.h"
 #include "netcommand.h"
 #include "uiguildmgr.h"
@@ -20,7 +20,7 @@ void CM_GUILD_PUTNAME(bool confirm, cChar* guildname, cChar* passwd) {
 bool g_listguild_begin = false;
 
 BOOL MC_LISTGUILD(LPRPACKET pk) {
-	// Десериализация через McListGuildMessage (count-first)
+	//   McListGuildMessage (count-first)
 	net::msg::McListGuildMessage msg;
 	net::msg::deserialize(pk, msg);
 	if (!g_listguild_begin) {
@@ -38,7 +38,7 @@ BOOL MC_LISTGUILD(LPRPACKET pk) {
 	return TRUE;
 }
 
-void CM_GUILD_TRYFOR(uLong guildid) // Подать заявку в гильдию
+void CM_GUILD_TRYFOR(uLong guildid) //    
 {
 	auto pk = net::msg::serialize(net::msg::CmGuildTryForMessage{(int64_t)guildid});
 	g_NetIF->SendPacketMessage(pk);
@@ -51,20 +51,20 @@ BOOL MC_GUILD_TRYFORCFM(LPRPACKET pk) {
 	return TRUE;
 }
 
-void CM_GUILD_TRYFORCFM(bool confirm) // Подтвердить заявку в гильдию
+void CM_GUILD_TRYFORCFM(bool confirm) //    
 {
 	auto pk = net::msg::serialize(net::msg::CmGuildTryForCfmMessage{confirm ? 1 : 0});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-void CM_GUILD_LISTTRYPLAYER() // Запросить список заявок
+void CM_GUILD_LISTTRYPLAYER() //   
 {
 	auto pk = net::msg::serializeCmGuildListTryPlayerCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
 BOOL MC_GUILD_LISTTRYPLAYER(LPRPACKET pk) {
-	// Десериализация через McGuildListTryPlayerMessage (count-first)
+	//   McGuildListTryPlayerMessage (count-first)
 	net::msg::McGuildListTryPlayerMessage msg;
 	net::msg::deserialize(pk, msg);
 	uChar l_stat = CGuildData::eState::normal;
@@ -102,7 +102,7 @@ BOOL PC_GUILD_PERM(LPRPACKET pk) {
 }
 
 BOOL PC_GUILD(LPRPACKET pk) {
-	// Десериализация через PcGuildMessage (std::variant)
+	//   PcGuildMessage (std::variant)
 	net::msg::PcGuildMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -121,7 +121,7 @@ BOOL PC_GUILD(LPRPACKET pk) {
 		uLong lPacketIndex = static_cast<uLong>(startData.packetIndex);
 		static int nGuildCount = 0;
 
-		if (lPacketIndex == 0 && l_num > 0) // первый пакет
+		if (lPacketIndex == 0 && l_num > 0) //  
 		{
 			NetPC_GUILD_START_BEGIN(static_cast<uLong>(startData.guildId),
 								   startData.guildName.c_str(),
@@ -143,7 +143,7 @@ BOOL PC_GUILD(LPRPACKET pk) {
 
 			g_vecGuildInfo.push_back(info);
 		}
-		if (l_num < 20) // последний пакет данных
+		if (l_num < 20) //   
 		{
 			nGuildCount = 20 * lPacketIndex + l_num;
 		}
@@ -254,7 +254,7 @@ BOOL MC_GUILD_LISTCHALL(LPRPACKET pk) {
 	net::msg::McGuildListChallMessage msg;
 	net::msg::deserialize(pk, msg);
 
-	// Конвертируем в legacy-структуру для UI
+	//   legacy-  UI
 	NET_GUILD_CHALLINFO Info;
 	memset(&Info, 0, sizeof(Info));
 	Info.byIsLeader = (BYTE)msg.isLeader;

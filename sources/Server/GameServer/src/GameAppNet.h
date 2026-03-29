@@ -1,8 +1,8 @@
-
+﻿
 #ifndef _GAMEAPPNET_H_
 #define _GAMEAPPNET_H_
 
-// ͨ������
+// 
 
 #include "stdafx.h" //add by alfred.shi 20080313
 
@@ -16,17 +16,17 @@
 #define NETMSG_GATE_DISCONNECT  101
 #define NETMSG_PACKET           200
 
-// Макрос логирования исключений — пишет файл и строку в канал ошибок
+//           
 #define EXCEPTION()	ToLogService("errors", LogLevel::Error, "Exception: File {}, Line {}", __FILE__, __LINE__)
 
 inline const char* g_GameGateConnError( int error_code )
 {
     switch( error_code )
     {
-    /*case ERR_TM_OVERNAME:	return "GameServer���ظ�";
-    case ERR_TM_OVERMAP:	return "GameServer�ϵ�ͼ���ظ�";
-    case ERR_TM_MAPERR:		return "GameServer��ͼ�����﷨����";
-    default:                return "δ֪����";*/
+    /*case ERR_TM_OVERNAME:	return "GameServer";
+    case ERR_TM_OVERMAP:	return "GameServer";
+    case ERR_TM_MAPERR:		return "GameServer";
+    default:                return "";*/
 	case ERR_TM_OVERNAME:	return RES_STRING(GM_GAMEAPPNET_H_00001);
     case ERR_TM_OVERMAP:	return RES_STRING(GM_GAMEAPPNET_H_00002);
     case ERR_TM_MAPERR:		return RES_STRING(GM_GAMEAPPNET_H_00003);
@@ -36,7 +36,7 @@ inline const char* g_GameGateConnError( int error_code )
 
 
 
-// ��ͬ����ײ����ݽṹ�����ͳ���
+// 
 
 #ifdef USE_IOCP
 

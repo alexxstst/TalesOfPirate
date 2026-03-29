@@ -1,38 +1,38 @@
-
+ï»¿
 #pragma once
 
 #include <unordered_set>
 #include <string>
 
 
-// ÓÎÏ·Íâ¹ÒÀà  add by Philip.Wu  2006-07-06
+//   add by Philip.Wu  2006-07-06
 class CGameWG
 {
 public:
 	CGameWG(void);
 	~CGameWG(void);
 
-	// Ë¢ĞÂµ±Ç°½ø³ÌÀïµÄÄ£¿é
+	// 
 	bool RefreshModule(void);
 
-	// ÊÇ·ñÊ¹ÓÃÁË¡°º£µÁÌìÊ¹¡±Íâ¹Ò
+	// 
 	bool IsUseHdts(void);
 
-	// Æô¶¯Ïß³Ì
+	// 
 	void BeginThread(void);
 
-	// °²È«ÖÕÖ¹Ïß³Ì
+	// 
 	void SafeTerminateThread();
 
 private:
 
-	// ´æ·ÅÄ£¿éÁĞ±í
+	// 
 	std::unordered_set<std::string> m_lstModule;
 
-	// Ïß³Ì¾ä±ú
+	// 
 	HANDLE m_hThread;
 
-	// Ïß³Ì»Øµ÷
+	// 
 	static UINT CALLBACK Run(void* param);
 
 };

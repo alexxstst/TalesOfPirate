@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UIMisLogForm.h"
 #include "uiform.h"
 #include "UITreeView.h"
@@ -7,7 +7,6 @@
 #include "UIItem.h"
 #include "Script.h"
 #include "lua_platform.h"
-#include "caLua.h"
 #include "uiboxform.h"
 #include "uiboatform.h"
 #include "MapSet.h"
@@ -97,7 +96,7 @@ void CMisLogForm::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 	string strName = pSender->GetName();
 	if( stricmp( "frmMission", pSender->GetForm()->GetName() ) ==  0 )
 	{
-		// ������˳���ť,��رոñ���
+		// If exit or close button pressed, close the form
 		if( strName == "btnNo"  || strName == "btnClose" )
 		{	
 			pSender->GetForm()->Close();						
@@ -105,7 +104,7 @@ void CMisLogForm::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 		}
 		else if( strName == "btnBreak" )
 		{
-			// ȡ��һ������
+			// Cancel a mission
 			CTreeNodeObj* pNode = g_stUIMisLog.m_pMisTree->GetSelectNode();
 			if( pNode == NULL ) return;
 			
@@ -113,7 +112,7 @@ void CMisLogForm::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 			BYTE byType = 0;
 			sprintf( szData,g_oLangRec.GetString(722), g_stUIMisLog.m_wMisID );
 
-			// ��ȡ������Ϣ
+			// Get mission info
 			g_stUIMisLog.GetMisData( g_stUIMisLog.m_wMisID, byType, szData, 32 );
 
 			char szBuf[256] = { 0 };
@@ -200,15 +199,15 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 	sprintf( szData,g_oLangRec.GetString(722), wMisID );
 	CTreeNodeObj* pNode = m_pMisTree->GetRootNode();
 
-	// ��ȡ������Ϣ
+	// Get mission info
 	GetMisData( wMisID, byType, szData, 32 );
 	
-	// �ü�������
+	// Calculate display length
 	USHORT sNum = 0;
 	char* pszTemp = szData;
 	while( pszTemp[0] )
 	{
-		// �ж��Ƿ�һ��GBK
+		// Check if this is a GBK double-byte character
 		BOOL bFlag1 = 0x81 <= (BYTE)pszTemp[0] && (BYTE)pszTemp[0] <= 0xFE;
 		BOOL bFlag2 = (0x40 <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0x7E) || (0x7E <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0xFE);
 		if( bFlag1 && bFlag2 )
@@ -262,14 +261,14 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 		strData += g_oLangRec.GetString(727);
 	}
 
-	// ����������Ϣ�������ӵķ���ڵ���
+	// Add mission info to the appropriate category tree node
 	CColorItem* pItem = new CColorItem;
 	pItem->SetString( strData.c_str() );
 	CTreeNodeObj* pTreeNode = new CTreeNode( m_pMisTree, pItem );
 	DWORD dwData = wMisID;
 	pTreeNode->SetTag( dwData );
 
-	// ������ʾ�ڵ�����
+	// Determine which display node category
 	if( byType == mission::MIS_TREENODE_NORMAL )
 	{
 		if( m_pNormal == NULL )
@@ -363,31 +362,42 @@ void CMisLogForm::MissionLog( WORD wMisID, const NET_MISPAGE& page )
 
 void CMisLogForm::GetMisData( WORD wMisID, BYTE& byType, char szBuf[], USHORT sBufLen )
 {
-	typedef struct RetType
+	lua_State* L = g_LuaState;
+	lua_getglobal(L, "GetMisData");
+	if (!lua_isfunction(L, -1))
 	{
-		BYTE byRet;
-		BYTE byType;
-		char* pszName;
-	} RetType;
-
-	RetType* pRet = (RetType*)CLU_CallScriptFunction( "GetMisData", "uchar,uchar,char*", "ushort", wMisID );
-	if( pRet == NULL )
-	{
+		lua_pop(L, 1);
 		return;
 	}
-	
-	if( pRet->byRet != LUA_TRUE )
+
+	lua_pushnumber(L, (double)wMisID);
+	if (lua_pcall(L, 1, 3, 0) != 0)
 	{
+		const char* err = lua_tostring(L, -1);
+		ToLogService("lua", LogLevel::Error, "GetMisData error: {}", err ? err : "unknown");
+		lua_pop(L, 1);
 		return;
 	}
-	
-	byType = pRet->byType;
-	if( pRet->pszName )
+
+	// : byRet, byType, pszName (3   )
+	int byRet = (int)lua_tonumber(L, -3);
+	if (byRet != 1) // LUA_TRUE
 	{
-		strncpy( szBuf, pRet->pszName, sBufLen - 1 );
+		lua_pop(L, 3);
+		return;
 	}
 
-	CLU_DllFree( pRet );
+	byType = (BYTE)lua_tonumber(L, -2);
+	if (lua_isstring(L, -1))
+	{
+		const char* pszName = lua_tostring(L, -1);
+		if (pszName)
+		{
+			strncpy(szBuf, pszName, sBufLen - 1);
+		}
+	}
+
+	lua_pop(L, 3);
 }
 
 void CMisLogForm::MisClear( WORD wMisID )
@@ -511,7 +521,7 @@ void CMisLogForm::MisLogState( WORD wMisID, BYTE byState )
 			if( m_LogList.MisLog[i].byState == byState )
 				return;
 			
-			// ��������״̬
+			// Update mission state
 			m_LogList.MisLog[i].byState = byState;
 			break;
 		}
@@ -564,7 +574,7 @@ void CMisLogForm::MisLogState( WORD wMisID, BYTE byState )
 
 	CColorItem* pItem = dynamic_cast<CColorItem*>(pFind->GetItem());
 
-	// ��ȡ������Ϣ
+	// Get mission info
 	char szData[128];
 	BYTE byType = 0;
 	sprintf( szData,g_oLangRec.GetString(722), wMisID );

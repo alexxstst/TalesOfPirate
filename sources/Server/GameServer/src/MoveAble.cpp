@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: MoveAble.cpp
 // Creater: ZhangXuedong
 // Date: 2004.11.03
@@ -108,7 +108,7 @@ void CMoveAble::ResetMove()
 //	}
 //
 //	bool	bIs45Dir = false;
-//	// ��Ϊ��������
+//	// 
 //	if (xdist == ydist)
 //	{
 //		Short	sModelX = Short(SPos.x % sUnitWidth);
@@ -250,7 +250,7 @@ bool CMoveAble::AreaOverlap(long &xdist, long &ydist)
 	}
 
 	bool	bIs45Dir = false;
-	// ��Ϊ��������
+	// 
 	if (xdist == ydist)
 	{
 		Short	sModelX = Short(SPos.x % sUnitWidth);
@@ -392,7 +392,7 @@ bool CMoveAble::DesireMoveBegin(SMoveInit *pSMoveInit)
 void CMoveAble::BeginMove(uLong ulElapse)
 {
 	if (GetPos() != m_SMoveInit.SInflexionInfo.SList[0]
-	&& IsCharacter()->IsRangePoint2(m_SMoveInit.SInflexionInfo.SList[0], 25 * 25 * 2)) // �ͻ��˻�ѵ�ǰλ�õ�������Ԫ�е�
+	&& IsCharacter()->IsRangePoint2(m_SMoveInit.SInflexionInfo.SList[0], 25 * 25 * 2)) // 
 	{
 		if (m_SMoveInit.SInflexionInfo.sNum < defMOVE_INFLEXION_NUM)
 		{
@@ -420,9 +420,9 @@ void CMoveAble::BeginMove(uLong ulElapse)
 
 	Square	STarShape = {{0, 0}, 0};
 	uLong	ulDistXY2 = 0;
-	if (m_SMoveInit.STargetInfo.chType > 0) // ��ҪĿ���ж�
+	if (m_SMoveInit.STargetInfo.chType > 0) // 
 	{
-		if (!GetMoveTargetShape(&STarShape)) // Ŀ�겻����
+		if (!GetMoveTargetShape(&STarShape)) // 
 		{
 			m_SMoveInit.STargetInfo.chType = 0;
 			m_SMoveProc.chRequestState = 0;
@@ -456,7 +456,7 @@ void CMoveAble::BeginMove(uLong ulElapse)
 		return;
 	}
 
-	if (m_CChaAttr.GetAttr(ATTR_MSPD) == 0) // �����ƶ�
+	if (m_CChaAttr.GetAttr(ATTR_MSPD) == 0) // 
 	{
 		m_SMoveProc.sState |= enumMSTATE_CANTMOVE;
 
@@ -517,8 +517,8 @@ void CMoveAble::OnMove(uLong dwCurTime)
 		EndMove();
 	}
 
-	if (m_SMoveProc.chRequestState == 1 // �ն�Ҫ��ֹͣ����Լ��������
-			&& m_SMoveProc.chLagMove == 0 // ���ڻ����ƶ�ʱ��Ӧ����ִ��һ�Σ���Ϊ�ն��Ѿ�ִ����һ��Ԥ�ƶ���
+	if (m_SMoveProc.chRequestState == 1 // 
+			&& m_SMoveProc.chLagMove == 0 // 
 			)
 	{
 		ulAttemptDist = ulWillElapse * (long)m_CChaAttr.GetAttr(ATTR_MSPD) / 1000;
@@ -539,16 +539,16 @@ void CMoveAble::OnMove(uLong dwCurTime)
 		m_SMoveProc.chRequestState = 0;
 		m_SMoveProc.sState |= enumMSTATE_CANCEL;
 
-		m_SMoveProc.chLagMove = 0; //���������ƶ���
+		m_SMoveProc.chLagMove = 0; //
 
 		NotiMovToEyeshot();
 		SubsequenceMove();
 	}
 
 	Square	STarShape = {{0, 0}, 0};
-	if (m_SMoveInit.STargetInfo.chType > 0) // ��ҪĿ���ж�
+	if (m_SMoveInit.STargetInfo.chType > 0) // 
 	{
-		if (!GetMoveTargetShape(&STarShape)) // Ŀ�겻����
+		if (!GetMoveTargetShape(&STarShape)) // 
 		{
 			m_SMoveProc.chRequestState = 0;
 			m_SMoveProc.sState |= enumMSTATE_NOTARGET;
@@ -569,7 +569,7 @@ void CMoveAble::OnMove(uLong dwCurTime)
 
 	if (m_SMoveProc.chLagMove == 1 && m_SMoveProc.sState != enumMSTATE_ON)
 	{
-		//LG("�ƶ�����", "�����ƶ�\t��ʼʱ�� %u��ʣ��ʱ�� %u������ʱ�� %u��\n", ulNowTick, m_SMoveRedu.ulLeftTime, ulNowTick - m_SMoveRedu.ulStartTick);
+		//LG("", "\t %u %u %u\n", ulNowTick, m_SMoveRedu.ulLeftTime, ulNowTick - m_SMoveRedu.ulStartTick);
 		Long	lBal = Long(ulCurTick - m_SMoveRedu.ulStartTick) - (Long)m_SMoveRedu.ulLeftTime;
 		if (ulCurTick > m_SMoveRedu.ulStartTick && lBal >= 0)
 		{
@@ -600,7 +600,7 @@ void CMoveAble::OnMove(uLong dwCurTime)
 		}
 	}
 
-	if (bAttemptMove) // �������ƶ�
+	if (bAttemptMove) // 
 	{
 		NotiMovToEyeshot();
 		if (m_SMoveProc.sState != enumMSTATE_ON)
@@ -622,13 +622,13 @@ void CMoveAble::OnMove(uLong dwCurTime)
 	}
 
 	if (bAttemptMove)
-		AfterStepMove(); // ������������λ�õ��¼������ͼ�л�
+		AfterStepMove(); // 
 
 }
 
 //=============================================================================
-// ���ܣ��ƶ�distance��·�̡�
-// ����ֵͬSMoveProc.sState
+// distance
+// SMoveProc.sState
 //=============================================================================
 Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 {
@@ -652,7 +652,7 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 	dCurStep = dLeftDist;
 	Square	SReqShape = {{0, 0}, 0};
 	Long	lReqDist = 0;
-	if (m_SMoveInit.STargetInfo.chType > 0) // ��Ҫ�����ж�
+	if (m_SMoveInit.STargetInfo.chType > 0) // 
 	{
 		dCurStep = csStep;
 
@@ -678,25 +678,25 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 		lDistY2 = (SSrc.y - GetPos().y) * (SSrc.y - GetPos().y);
 		lMoveDist += (Long)sqrt((double)lDistX2 + lDistY2);
 		SPos = GetShape().centre;
-		if (m_SMoveInit.STargetInfo.chType > 0) // ��Ҫ�����ж�
+		if (m_SMoveInit.STargetInfo.chType > 0) // 
 		{
 			long	lDistX2 = (SPos.x - SReqShape.centre.x)
 				* (SPos.x - SReqShape.centre.x);
 			long	lDistY2 = (SPos.y - SReqShape.centre.y)
 				* (SPos.y - SReqShape.centre.y);
-			if (lDistX2 + lDistY2 < lReqDist * lReqDist) // �ﵽ�����λ��
+			if (lDistX2 + lDistY2 < lReqDist * lReqDist) // 
 			{
 				chRet |= enumMSTATE_INRANGE;
 				break;
 			}
 		}
 
-		if (chAttemptMove == -2) // �����ϰ�
+		if (chAttemptMove == -2) // 
 		{
 			chRet |= enumMSTATE_BLOCK;
 			break;
 		}
-		else if (chAttemptMove == -1) // �򵽴�Ŀ����δ�ɹ��ƶ�
+		else if (chAttemptMove == -1) // 
 		{
 			m_SMoveProc.sCurInflexion ++;
 
@@ -734,7 +734,7 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 		m_sAngle = arctan(SSrc, SPos);
 		m_SMoveProc.SNoticePoint.SList[m_SMoveProc.SNoticePoint.sNum++] = SPos;
 	}
-	if (m_SMoveProc.SNoticePoint.sNum == 1) // ֻ��һ����
+	if (m_SMoveProc.SNoticePoint.sNum == 1) // 
 		m_SMoveProc.SNoticePoint.SList[m_SMoveProc.SNoticePoint.sNum++] = SPos;
 	DWORD dwMoveTime = t.End();
 
@@ -744,8 +744,8 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 	DWORD dwEyeMoveTime = t.End();
 
 	if (dwMoveTime + dwEyeMoveTime >= 60 )
-		//LG("map_time", "\t\t��ɫ[%s]�ƶ����ѵ�ʱ����� time = %u������λ�û���%u����Ұ����%u��\n", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
-		ToLogService("common", "\t\troll[{}]move cost time too long, time = {}��thereinto position cost{}��eye shot cost{}��", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
+		//LG("map_time", "\t\t[%s] time = %u%u%u\n", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
+		ToLogService("common", "\t\troll[{}]move cost time too long, time = {}thereinto position cost{}eye shot cost{}", GetLogName(), dwMoveTime + dwEyeMoveTime, dwMoveTime, dwEyeMoveTime);
 
 	g_ulElapse += m_SMoveProc.ulElapse;
 	g_ulDist += lMoveDist;
@@ -754,9 +754,9 @@ Char CMoveAble::AttemptMove(double dPreMoveDist, bool bNotiInflexion)
 }
 
 //=============================================================================
-// ���ܣ���Ŀ���STar�ƶ�distance��·�̡�*ulElapse����ʵ���ƶ�������ʱ��
-// ����ֵ��1���ɹ��ƶ�distance���롣
-//        -1���򵽴�Ŀ����δ�ƶ��ɹ���-2���������ϰ���δ�ƶ��ɹ�
+// STardistance*ulElapse
+// 1distance
+//        -1-2
 //=============================================================================
 Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 {
@@ -768,14 +768,14 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 	}
 
 	Char	l_retval = 1;
-	long	l_elapse = long((distance * 1000) / m_CChaAttr.GetAttr(ATTR_MSPD));	//������ƶ�distance���׾�������ĺ���ʱ�䡣
+	long	l_elapse = long((distance * 1000) / m_CChaAttr.GetAttr(ATTR_MSPD));	//distance
 	double	l_dist2 = distance * distance;
 
 	const Point l_src = GetShape().centre;
 	cLong	lc_xdist = STar.x - l_src.x;
 	cLong	lc_ydist = STar.y - l_src.y;
-	long	l_xdist	=lc_xdist;							//����x�������ƶ��ľ��룬���ż���ᱻ�޸�
-	long	l_ydist	=lc_ydist;							//����y�������ƶ��ľ��룬���ż���ᱻ�޸�
+	long	l_xdist	=lc_xdist;							//x
+	long	l_ydist	=lc_ydist;							//y
 	double	l_xdist2 = double(l_xdist) * l_xdist;
 	double	l_ydist2 = double(l_ydist) * l_ydist;
 	double	l_xydist2 = l_xdist2 + l_ydist2;
@@ -783,13 +783,13 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 
 	if ((l_dist2 > l_xydist2) || (abs(l_xydist2 - l_dist2) < 0.0001))
 	{
-		l_arraim = true; //�ѵ���Ŀ���
+		l_arraim = true; //
 	}
 	else
 	{
-		l_arraim = false; //δ����Ŀ���
+		l_arraim = false; //
 	}
-	if(l_arraim) //����Ŀ�����Ŀ������ָʾ�ƶ���Ŀ��
+	if(l_arraim) //
 	{
 		if (l_xdist || l_ydist)
 		{
@@ -797,7 +797,7 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 			l_tmp /= ulMoveSpd;
 			l_tmp /= ulMoveSpd;
 			l_elapse = long(sqrt(l_tmp));
-			if (l_elapse ==0) //�ٶ̵ľ��붼Ҫ��������һ��ʱ�侫������
+			if (l_elapse ==0) //
 			{
 				l_elapse	=1;
 			}
@@ -813,7 +813,7 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 	bool	bIs45Dir = abs(lc_xdist) == abs(lc_ydist) ? true : false;
 	char	chDirX = l_xdist < 0 ? -1 : 1;
 	char	chDirY = l_ydist < 0 ? -1 : 1;
-	if (!l_arraim) //(l_dist2 <l_xydist2)û�е���Ŀ��㣬��x��y������ƶ�������о�����
+	if (!l_arraim) //(l_dist2 <l_xydist2)xy
 	{
 		l_xdist = long(sqrt((l_dist2 * l_xdist2) / l_xydist2)) * chDirX;
 		l_ydist = long(sqrt((l_dist2 * l_ydist2) / l_xydist2)) * chDirY;
@@ -825,19 +825,19 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 		l_ydist = abs(l_xdist) * chDirY;
 	}
 
-	if (l_elapse > 0) //�����ײ���
+	if (l_elapse > 0) //
 	{
 		bool l_lap = overlap(l_xdist, l_ydist);
 		m_shape.centre.x = l_src.x + l_xdist;
 		m_shape.centre.y = l_src.y + l_ydist;
-		if (l_lap) //�ص�
+		if (l_lap) //
 		{
 			long l_x2y2 = l_xdist * l_xdist + l_ydist * l_ydist;
 			double l_tmp = double(l_x2y2) * 1000 * 1000;
 			l_tmp /= ulMoveSpd;
 			l_tmp /= ulMoveSpd;
 			l_elapse = long(sqrt(l_tmp));
-			if ((l_elapse ==0) && (l_x2y2 >0)) //�ٶ̵ľ��붼Ҫ��������һ��ʱ�侫������
+			if ((l_elapse ==0) && (l_x2y2 >0)) //
 			{
 				l_elapse = 1;
 			}
@@ -851,7 +851,7 @@ Char CMoveAble::LinearAttemptMove(Point STar, double distance, uLong *ulElapse)
 	return l_retval;
 }
 
-// Типизированная сериализация: уведомление о движении (окружение)
+//  :    ()
 void CMoveAble::NotiMovToEyeshot()
 {
 	net::msg::McCharacterActionMessage msg{};
@@ -869,7 +869,7 @@ void CMoveAble::NotiMovToEyeshot()
 	NotiChgToEyeshot(pk);
 }
 
-// Типизированная сериализация: уведомление о движении (себе)
+//  :    ()
 void CMoveAble::NotiSelfMov()
 {
 	net::msg::McCharacterActionMessage msg{};
@@ -889,7 +889,7 @@ void CMoveAble::NotiSelfMov()
 
 bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)
 {
-	if (m_SMoveInit.STargetInfo.chType == 1) // Ŀ��������
+	if (m_SMoveInit.STargetInfo.chType == 1) // 
 	{
 		Entity	*pTarObj = g_pGameApp->IsMapEntity(m_SMoveInit.STargetInfo.lInfo1, m_SMoveInit.STargetInfo.lInfo2);
 		if (!pTarObj)
@@ -899,7 +899,7 @@ bool CMoveAble::GetMoveTargetShape(Square *pSTarShape)
 			*pSTarShape = pTarObj->GetShape();
 		}
 	}
-	else if (m_SMoveInit.STargetInfo.chType == 2) // Ŀ��������
+	else if (m_SMoveInit.STargetInfo.chType == 2) // 
 	{
 		if (pSTarShape)
 		{
@@ -931,7 +931,7 @@ bool CMoveAble::SetMoveOnInfo(SMoveInit* pSMoveI)
 }
 
 //=============================================================================
-// ���߶Σ�pSPort1��pSPort2���Ͼ����pSReference����ĵ�
+// pSPort1pSPort2pSReference
 //=============================================================================
 Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *pSPort2, const Point *pSReference)
 {
@@ -947,7 +947,7 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 	else
 		lMaxY = pSPort2->y, lMinY = pSPort1->y;
 
-	if (pSPort1->x == pSPort2->x) // �߶κ�Y��ƽ��
+	if (pSPort1->x == pSPort2->x) // Y
 	{
 		SNearlyPoint.x = pSPort1->x;
 		if (pSReference->y < lMinY)
@@ -957,7 +957,7 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 		else
 			SNearlyPoint.y = pSReference->y;
 	}
-	else if (pSPort1->y == pSPort2->y) // �߶κ�X��ƽ��
+	else if (pSPort1->y == pSPort2->y) // X
 	{
 		SNearlyPoint.y = pSPort1->y;
 		if (pSReference->x < lMinX)
@@ -967,17 +967,17 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 		else
 			SNearlyPoint.x = pSReference->x;
 	}
-	else // �߶δ���б�ʣ��Ҳ�Ϊ0
+	else // 0
 	{
 		double dSlope;
-		// �߶ε�б��
+		// 
 		dSlope = double(pSPort2->y - pSPort1->y) / double(pSPort2->x - pSPort1->x);
-		// ����
+		// 
 		SNearlyPoint.x = Long((dSlope * dSlope * pSPort1->x + dSlope * (pSReference->y - pSPort1->y) + pSReference->x) / (dSlope * dSlope + 1));
 		SNearlyPoint.y = Long(dSlope * (SNearlyPoint.x - pSPort1->x) + pSPort1->y);
-		// �������
+		// 
 		if (SNearlyPoint.x < lMinX || SNearlyPoint.x > lMaxX
-			|| SNearlyPoint.y < lMinY && SNearlyPoint.y > lMaxY) // ���㲻���߶��ϣ���ȡ���봹������Ķ˵�
+			|| SNearlyPoint.y < lMinY && SNearlyPoint.y > lMaxY) // 
 		{
 			if (double(SNearlyPoint.x - pSPort1->x) * double(SNearlyPoint.x - pSPort1->x)
 				+ double(SNearlyPoint.y - pSPort1->y) * double(SNearlyPoint.y - pSPort1->y)
@@ -993,13 +993,13 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 }
 
 //=============================================================================
-// ��ӵ�pSPort1����pSPort2�Ĺ����У��״ν���ԲpSCircle�ĵ�
-// ����ֵ��false�������ڡ�true�����ڣ���ͨ��pResult���أ�
+// pSPort1pSPort2pSCircle
+// falsetruepResult
 //=============================================================================
 //bool CMoveAble::SegmentEnterCircle(Point *pSPort1, Point *pSPort2, Circle *pSCircle, Point *pResult)
 //{
 //	bool	bRet;
-//	double	dDistP1C2, dDistP2C2; // ���˵㵽Բ�ĵľ���ƽ��
+//	double	dDistP1C2, dDistP2C2; // 
 //	double	dRadius2;
 //	Long	lDist;
 //
@@ -1009,14 +1009,14 @@ Point CMoveAble::NearlyPointFromPointToLine(const Point *pSPort1, const Point *p
 //		+ double(pSPort2->y - pSCircle->centre.y) * double(pSPort2->y - pSCircle->centre.y);
 //	dRadius2 = pSCircle->radius * pSCircle->radius;
 //
-//	if (dDistP1C2 <= dRadius2) // �����Բ��
+//	if (dDistP1C2 <= dRadius2) // 
 //	{
 //		bRet = true;
 //		pResult = pSPort1;
 //	}
-//	else // �ҽ���
+//	else // 
 //	{
-//		if (pSPort1->x == pSPort2->x) // �߶κ�y��ƽ��
+//		if (pSPort1->x == pSPort2->x) // y
 //		{
 //			lDist = abs(pSPort1->x - pSCircle->centre.x);
 //			if (lDist < pSCircle->radius)

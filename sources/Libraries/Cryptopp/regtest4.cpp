@@ -1,4 +1,4 @@
-// regtest4.cpp - originally written and placed in the public domain by Wei Dai
+﻿// regtest4.cpp - originally written and placed in the public domain by Wei Dai
 //                regtest.cpp split into 3 files due to OOM kills by JW
 //                in April 2017. A second split occurred in July 2018.
 

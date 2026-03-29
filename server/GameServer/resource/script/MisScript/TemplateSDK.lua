@@ -1,4 +1,4 @@
-print("-- [Loading] TemplateSDK")
+﻿print("-- [Loading] TemplateSDK")
 
 function MisKillMonster(Talk, Param, Prize)
     DefineMission(Param.CurMissionID, Param.MissionName, Param.CurMissionID)

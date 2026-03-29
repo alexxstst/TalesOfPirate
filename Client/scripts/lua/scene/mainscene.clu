@@ -1,4 +1,0 @@
--- 创建主场景
-local nMainScene = SN_CreateScene( enumWorldScene, "主场景", "garner", FORM_MAIN, 300, 400, 400, 600)
-GP_GotoScene( nMainScene )
-

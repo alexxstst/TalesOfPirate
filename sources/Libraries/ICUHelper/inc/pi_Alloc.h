@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #ifndef _INC_STDDEF
 #include <stddef.h>	// declares size_t

@@ -1,4 +1,4 @@
-//================================================================
+﻿//================================================================
 // It must be permitted by Dabo.Zhang that this program is used for
 // any purpose in any situation.
 // Copyright (C) Dabo.Zhang 2000-2003
@@ -8,8 +8,8 @@
 //=================================================================
 #pragma once
 
-#ifndef USING_TAO			//ʹ��Win32����Platform SDK
-#include <winsock2.h>		//ȷ�������µ�WinSock2.2�汾
+#ifndef USING_TAO			//Win32Platform SDK
+#include <winsock2.h>		//WinSock2.2
 #include <windows.h>
 #else
 #include "TAOSpecial.h"
@@ -22,7 +22,7 @@
 #include <iostream>
 #include <mutex>
 
-//===Ԥ����ṹ========
+//===========
 
 _DBC_BEGIN
 #pragma pack(push)
@@ -45,7 +45,7 @@ protected:
 public:
 	bool			IsFree(){return !__preAllocHeap;}
 	virtual	void	Free();
-	virtual	uLong	Size();//������Override���ص�ǰ�ṹ�����Ļ���ߴ�
+	virtual	uLong	Size();//Override
 
 	template<class T>	friend class PreAllocHeap;
 	template<class T>	friend class PreAllocHeapPtr;
@@ -61,7 +61,7 @@ struct __FIFOQu_
 {
 	PreAllocStru	*	volatile head;
 	PreAllocStru	*	volatile tail;
-	uLong				volatile free;		//������;
+	uLong				volatile free;		//
 };
 template <class T>
 class PreAllocHeap
@@ -81,7 +81,7 @@ public:
 	{}
 	virtual ~PreAllocHeap(){Finally();*const_cast<uLong*>(&m_unitflag)=0;};
 
-	void Init(uLong bufnumlist[])		//bufnumlistΪһ0��β����
+	void Init(uLong bufnumlist[])		//bufnumlist0
 	{
 		auto const l_lock = std::lock_guard{m_mtxfreeacc};
 		PreAllocStru *t;
@@ -104,7 +104,7 @@ public:
 			m_freestru =new __FIFOQu_[m_numptr];
 			if(!m_freestru)
 			{
-				THROW_EXCP(excpMem,"Ԥ������ڴ����ʧ��");
+				THROW_EXCP(excpMem,"");
 			}
 			m_freestru[0].head	=m_freestru[0].tail =0;
 			m_freestru[0].free	=0;
@@ -212,10 +212,10 @@ private:
 			__FIFOQu_* l_ptr =new __FIFOQu_[l_num*=16];
 			if(!l_ptr)
 			{
-				THROW_EXCP(excpMem,"Ԥ������ڴ����ʧ��");
+				THROW_EXCP(excpMem,"");
 			}
 			MemCpy((char*)l_ptr,(char*)m_freestru,m_numptr*sizeof(__FIFOQu_));
-			MemSet((char*)(l_ptr+m_numptr),0,(l_num-m_numptr)*sizeof(__FIFOQu_));//�¿��ٵĿռ���Ϊ0;
+			MemSet((char*)(l_ptr+m_numptr),0,(l_num-m_numptr)*sizeof(__FIFOQu_));//0;
 			delete []m_freestru;
 			m_freestru =l_ptr;
 			m_numptr =l_num;
@@ -273,7 +273,7 @@ private:
 						delete l_struct;
 					}catch(...)
 					{
-						throw;//��ǰû��
+						throw;//
 					}
 				}
 				m_freestru[i].tail	=0;
@@ -341,7 +341,7 @@ public:
 			if(!m_ptr)
 			{
 				PreAllocHeap<T> *l_ptr =new PreAllocHeap<T>(m_unitsize);
-				if(!l_ptr)THROW_EXCP(excpMem,"Ԥ������ڴ����ʧ��");
+				if(!l_ptr)THROW_EXCP(excpMem,"");
 				l_ptr->Init(bufnumlist);
 				m_ptr	=l_ptr;
 			}
@@ -395,7 +395,7 @@ private:
 			if(!m_ptr)
 			{
 				PreAllocHeap<T> *l_ptr =new PreAllocHeap<T>(m_unitsize,m_initnum);
-				if(!l_ptr)THROW_EXCP(excpMem,"Ԥ������ڴ����ʧ��"); 
+				if(!l_ptr)THROW_EXCP(excpMem,""); 
 				l_ptr->Init();
 				m_ptr	=l_ptr;
 			}

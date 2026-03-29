@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "MPStringUtil.h"
 
 //-----------------------------------------------------------------------------
@@ -6,9 +6,9 @@ void MPStringUtil::trim( String& str, bool left, bool right)
 {
 	static const String delims = " \t\r";
 	if(right)
-		str.erase(str.find_last_not_of(delims)+1); // ÒÆÈ¥ÓÒ²àµÄ
+		str.erase(str.find_last_not_of(delims)+1); // 
 	if(left)
-		str.erase(0, str.find_first_not_of(delims)); // ÒÆÈ¥×ó²àµÄ
+		str.erase(0, str.find_first_not_of(delims)); // 
 }
 //-----------------------------------------------------------------------------
 MPStringVector MPStringUtil::split( const std::string& str, const std::string& delims, unsigned int maxSplits)
@@ -16,7 +16,7 @@ MPStringVector MPStringUtil::split( const std::string& str, const std::string& d
 	std::vector<std::string> ret;
 	unsigned int numSplits = 0;
 
-	// Ê¹ÓÃSTL·½·¨
+	// STL
 	size_t start, pos;
 	start = 0;
 	do 
@@ -24,22 +24,22 @@ MPStringVector MPStringUtil::split( const std::string& str, const std::string& d
 		pos = str.find_first_of(delims, start);
 		if (pos == start)
 		{
-			// ²»×öÈÎºÎÊÂ
+			// 
 			start = pos + 1;
 		}
 		else if (pos == std::string::npos || (maxSplits && numSplits == maxSplits))
 		{
-			// ¿½±´Ê£ÏÂµÄ×Ö·û´®
+			// 
 			ret.push_back( str.substr(start) );
 			break;
 		}
 		else
 		{
-			// ¿½±´µ½·Ö¸ô·û
+			// 
 			ret.push_back( str.substr(start, pos - start) );
 			start = pos + 1;
 		}
-		// ²éÕÒÏÂÒ»¸öĞèÒªµÄ×Ö·û´®
+		// 
 		start = str.find_first_not_of(delims, start);
 		++numSplits;
 

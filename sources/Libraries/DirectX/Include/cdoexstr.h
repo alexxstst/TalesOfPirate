@@ -1,4 +1,4 @@
-#ifndef __cdostr_h_
+﻿#ifndef __cdostr_h_
 #define __cdostr_h_
 //	__CdoBusyStatusValues_MODULE_DEFINED__
 #define cdoBusy	L"Busy"

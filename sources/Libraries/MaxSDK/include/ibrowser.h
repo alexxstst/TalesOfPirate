@@ -1,10 +1,10 @@
-/*	
+ï»¿/*	
  *	IBrowser.h - Browser Manager public interface
  *
  *		contains public interface defintions for the global manager 
  *		and individual browsers
  *
- *			Copyright © Autodesk, Inc, 2000.  John Wainwright.
+ *			Copyright  Autodesk, Inc, 2000.  John Wainwright.
  *
  */
 

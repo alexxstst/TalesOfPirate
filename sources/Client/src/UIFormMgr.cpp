@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiformmgr.h"
 #include "uiedit.h"
 #include "UIRender.h"
@@ -17,12 +17,12 @@ CFormMgr CFormMgr::s_Mgr;
 
 eMouseAction CFormMgr::_eMouseAction=enumMA_Gui;
 
-bool CFormMgr::_IsDebugMode = false;			// �Ƿ��ڵ���ģʽ -added by Arcol
-bool CFormMgr::_IsDrawFrameInDebugMode=true;	// �����ڵ���ģʽ -added by Arcol
-bool CFormMgr::_IsDrawBackgroundInDebugMode=true;	// �����ڵ���ģʽ -added by Arcol
+bool CFormMgr::_IsDebugMode = false;			//  -added by Arcol
+bool CFormMgr::_IsDrawFrameInDebugMode=true;	//  -added by Arcol
+bool CFormMgr::_IsDrawBackgroundInDebugMode=true;	//  -added by Arcol
 
 CFormMgr::CFormMgr()
-: _bEnabled(false), _bInit(false), _nEnableHotKey(0xFFFFFFFF), _nTempleteNo(-1), /*_nMouseHover(0),*/ _pHintGui(NULL)	// �����ĵ��޸�
+: _bEnabled(false), _bInit(false), _nEnableHotKey(0xFFFFFFFF), _nTempleteNo(-1), /*_nMouseHover(0),*/ _pHintGui(NULL)	// 
 {
 	_forms = &_defaulttemplete;
 }
@@ -65,7 +65,7 @@ bool CFormMgr::SetFormTempleteMax(int n)
 		for( frmtemplete::iterator it=_showforms.begin(); it!=_showforms.end(); ++it )
 		{
 			//delete *it;
-			SAFE_DELETE(*it); // UI��������
+			SAFE_DELETE(*it); // UI
 		}
 		_showforms.resize( n );
 		for( int i=0; i<n; i++ )
@@ -137,7 +137,7 @@ void CFormMgr::_DelForm( vfrm& list, CForm* frm )
 
 bool CFormMgr::_AddMemory( CForm* form )
 {
-	// ����Ƿ��н��������ظ�
+	// 
 	for( vfrm::iterator it=_allForms.begin(); it!=_allForms.end(); ++it )
 	{
 		if( stricmp( form->GetName(), (*it)->GetName() )==0 )
@@ -147,7 +147,7 @@ bool CFormMgr::_AddMemory( CForm* form )
 		}
 	}
 
-	// �����б�
+	// 
 	if( _allForms.end() == find( _allForms.begin(), _allForms.end(), form ) )
 	{
 		_allForms.push_back(form);
@@ -278,7 +278,7 @@ bool CFormMgr::_MouseRun( int x, int y, DWORD mouse )
     {
 		static CForm *p = NULL;
 
-		// ��ģ̬����ִ��
+		// 
         p = _modal.back();
         p->MouseRun( x, y, mouse );
         if( CForm::mrNone != p->GetModalResult() )
@@ -448,7 +448,7 @@ void CFormMgr::Render()
 {
 	if( !_bEnabled )
 	{
-		ShowDebugInfo();	//��ʾ������Ϣ	-added by Arcol
+		ShowDebugInfo();	//	-added by Arcol
 		return;
 	}
 	
@@ -463,7 +463,7 @@ void CFormMgr::Render()
 
     CImeInput::s_Ime.Render();
 
-	ShowDebugInfo();	//��ʾ������Ϣ	-added by Arcol
+	ShowDebugInfo();	//	-added by Arcol
 }
 
 bool CFormMgr::OnHotKey( char key, int control )
@@ -889,7 +889,7 @@ void CFormMgr::ShowDebugInfo()
 	}
 
 	GetRender().FillFrame(0,16,600,27);
-	//CGuiFont::s_Font.Render("����ID       ��������      ��ʾ  ��ֹ          ����            ������        �ؼ���    ��",0,16,COLOR_WHITE);
+	//CGuiFont::s_Font.Render("ID                                                 ",0,16,COLOR_WHITE);
 	CGuiFont::s_Font.Render(g_oLangRec.GetString(575),0,16,COLOR_WHITE);
 	for( i=0;i<(int)_forms->size();i++ )
 	{
@@ -898,7 +898,7 @@ void CFormMgr::ShowDebugInfo()
 		//pInfo[i].isShow=pForm->GetIsShow()?"Y":"N";
 		//pInfo[i].isEnable=pForm->GetIsEnabled()?"N":"Y";
 		//pInfo[i].coordinate=buf;
-		//pInfo[i].parent=pForm->GetParent()?pForm->GetParent()->GetName():"û�и�����";
+		//pInfo[i].parent=pForm->GetParent()?pForm->GetParent()->GetName():"";
 		//pInfo[i].totalCompents=pForm->_allCompents.size();
 		//pInfo[i].hotkey=pForm->GetHotKey();
 		//pInfo[i].hasPopMenu=(pForm->_pPopMenu)"Y":"N";
@@ -906,7 +906,7 @@ void CFormMgr::ShowDebugInfo()
 		//DWORD color=COLOR_WHITE;
 
 		DWORD color=COLOR_WHITE;
-		//"����ID       ��������          ����            ��ʾ  ����  �˵�   ��   �ؼ���    �ȼ�     ��Ⱦʱ��"
+		//"ID                                                "
 		sprintf(buf,"%-6d %-20s %s   %s     %s     %s     %3s    %3d    %2s     %4s",i,pInfo[i].formName.c_str(),pInfo[i].coordinate.c_str(),pInfo[i].isShow.c_str(),pInfo[i].isEnable.c_str(),pInfo[i].hasPopMenu.c_str(),(pInfo[i].layer>=0)?itoa(pInfo[i].layer,temp,10):"N/A",
 			pInfo[i].totalCompents,pInfo[i].hotkey.c_str(),pInfo[i].renderTime.c_str());
 
@@ -925,22 +925,22 @@ void CFormMgr::ShowDebugInfo()
 		CGuiFont::s_Font.Render(buf,0,30+i*11,color);
 	}
 	//delete[] pInfo;
-	SAFE_DELETE_ARRAY(pInfo); // UI��������
+	SAFE_DELETE_ARRAY(pInfo); // UI
 
 
-	data0=GetFormTempleteMax();			//ģ������
+	data0=GetFormTempleteMax();			//
 	for (i=0;i<(int)GetFormTempleteMax();i++)
 	{
 		if (_showforms[i]->size()>0)
 		{
-			data1++;					//��Чģ����
+			data1++;					//
 		}
 	}
-	data2=GetFormTempletetNum();				//��ǰģ����
-	data3=(int)_allForms.size();				//��������
-	data4=(int)_forms->size();					//��ǰģ�崰������
-	data5=(int)_show.size()+(int)_modal.size();	//��ǰģ����ʾ����
-	data6=(int)_modal.size();					//��ǰģ��ģ̬������
+	data2=GetFormTempletetNum();				//
+	data3=(int)_allForms.size();				//
+	data4=(int)_forms->size();					//
+	data5=(int)_show.size()+(int)_modal.size();	//
+	data6=(int)_modal.size();					//
 	data7=(int)CGuiTime::_times.size();
 	sprintf(buf,g_oLangRec.GetString(576),data0,data1,data2,data3,data4,data5,data6,data7,totalTick);
 	GetRender().FillFrame(0,0,CGuiFont::s_Font.GetWidth(buf),11);
@@ -951,13 +951,13 @@ void CFormMgr::ShowDebugInfo()
 	{
 		GetRender().FillFrame(help_sx,help_sy,785,511);
 	}
-	CGuiFont::s_Font.Render("      ����̨UI�������\n1.��ʾ����:\n  show ��������\n2.���ش���:\n  hide ��������\n3.��ʾ/���ش��ڱ߿�\n  frame 1 //��ʾ\n  frame 0 //����\n3.����ģʽ��ɫ����\n  background 1 //��ʾ\n  background 0 //�ر�",help_sx,help_sy,COLOR_WHITE);
+	CGuiFont::s_Font.Render("      UI\n1.:\n  show \n2.:\n  hide \n3./\n  frame 1 //\n  frame 0 //\n3.\n  background 1 //\n  background 0 //",help_sx,help_sy,COLOR_WHITE);
 }
 
 
 void CFormMgr::SetEnableHotKey(int flag, bool v)
 {
-	// �����ĵ��޸�
+	// 
 	if(v)
 	{
 		_nEnableHotKey |= flag;

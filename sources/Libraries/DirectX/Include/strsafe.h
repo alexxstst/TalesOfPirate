@@ -1,4 +1,4 @@
-/******************************************************************
+﻿/******************************************************************
 *                                                                 *
 *  strsafe.h -- This module defines safer C library string        *
 *               routine replacements. These are meant to make C   *

@@ -1,4 +1,4 @@
-#include "mygraph.h"
+О╩©#include "mygraph.h"
 // #include "pos_state.h"
 #include "i_effect.h"
 
@@ -22,7 +22,7 @@ class MINDPOWER_API MPCameraNOLEECH
 { 
 public:
 	
-	// йс╫г
+	// 
 	D3DXVECTOR3	m_EyePos;
 	D3DXVECTOR3	m_RefPos;
 	

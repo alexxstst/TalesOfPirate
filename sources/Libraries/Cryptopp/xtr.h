@@ -1,4 +1,4 @@
-#ifndef CRYPTOPP_XTR_H
+﻿#ifndef CRYPTOPP_XTR_H
 #define CRYPTOPP_XTR_H
 
 /// \file xtr.h

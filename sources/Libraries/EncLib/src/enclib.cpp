@@ -1,4 +1,4 @@
-
+ï»¿
 #include <stdio.h>
 #include <time.h>
 #include <string.h>
@@ -11,7 +11,7 @@
 __byte g_key[8] = {0};
 
 
-/* ----------------×Ö·û´®×ª»»------------------ */
+/* ---------------------------------- */
 __byte mapstr(__byte ch)
 {
     if(ch >= '0' && ch <= '9')
@@ -55,7 +55,7 @@ int str2bin(__byte* buf, int len, const __byte* str, int slen)
 /* -------------------------------------------- */
 
 
-/* -----------------ÉèÖÃÃÜÔ¿------------------- */
+/* ------------------------------------ */
 int SetEncKey(const __byte* key)
 {
     memcpy(g_key, key, 8);
@@ -65,24 +65,24 @@ int SetEncKey(const __byte* key)
 /* -------------------------------------------- */
 
 
-/* -------------------¼ÓÃÜ--------------------- */
+/* ---------------------------------------- */
 int Encrypt(__byte* buf, int len, const __byte* pwd, int plen)
 {
-    int size = plen + 4;    //  ½«»áÉú³É4¸öÔëÒô×Ö½Ú
+    int size = plen + 4;    //  4
     int apd = size % 8;
     if(apd)
     {
         apd = 8 - apd;
         size += apd;
     }
-    size = size * 2 + 1;  //  ¶þ½øÖÆ->×Ö·û´®£¬³¤¶È·­±¶
+    size = size * 2 + 1;  //  ->
 
     __byte* tmp = new __byte[size];
     memset(tmp, 0, size);
     memcpy((tmp + 4), pwd, plen);
 
     __byte* ptr = tmp;
-    //  Éú³É4¸öÔëÒô×Ö½Ú
+    //  4
     tmp[0] = (__byte)rand() & 0xFF;
     tmp[1] = (__byte)rand() & 0xFF;
     tmp[2] = (__byte)rand() & 0xFF;
@@ -132,7 +132,7 @@ int Encrypt(__byte* buf, int len, const __byte* pwd, int plen)
 /* -------------------------------------------- */
 
 
-/* -------------------½âÃÜ--------------------- */
+/* ---------------------------------------- */
 int Decrypt(__byte* buf, int len, const __byte* enc, int elen)
 {
     int size = (int)(elen / 2);

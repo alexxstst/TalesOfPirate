@@ -1,4 +1,4 @@
-#if !defined( _MSFS_H )
+﻿#if !defined( _MSFS_H )
 #define _MSFS_H
 
 /*

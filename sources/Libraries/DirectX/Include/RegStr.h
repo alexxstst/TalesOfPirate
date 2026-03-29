@@ -1,4 +1,4 @@
- /*** regstr.h - Registry string definitions
+﻿ /*** regstr.h - Registry string definitions
  *
  *  This module contains public registry string definitions.
  *

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GameApp.h"
 #include "uigoodsgrid.h"
 #include "UIItem.h"
@@ -49,7 +49,7 @@ CGoodsGrid::CGoodsGrid(const CGoodsGrid& rhs)
 	_pUnit = new CGuiPic(*rhs._pUnit);
 
 	//if( _pDrag ) delete _pDrag;
-	SAFE_DELETE(_pDrag); // UI��������
+	SAFE_DELETE(_pDrag); // UI
     _pDrag = new CDrag;
 
 	_Copy(rhs);
@@ -137,8 +137,8 @@ CGoodsGrid::~CGoodsGrid()
 	//delete _pImage;
 	//delete _pUnit;
 
-	SAFE_DELETE(_pImage);	// UI��������
-	SAFE_DELETE(_pImage);	// UI��������
+	SAFE_DELETE(_pImage);	// UI
+	SAFE_DELETE(_pImage);	// UI
 }
 
 void CGoodsGrid::SetAlpha( BYTE alpha )
@@ -408,7 +408,7 @@ void CGoodsGrid::Init()
 
 	_pScroll->SetPos( GetWidth() - _nRightMargin - _pScroll->GetWidth(), _nTopMargin );
 
-    //// ������
+    //// 
     //for( int i=0; i<100; i++ )
     //{
     //    if( rand() % 3 )
@@ -449,9 +449,9 @@ bool CGoodsGrid::SetContent( int nRow, int nCol )
 	_nCurNum = 0;
 	if( nCol==_nCol && nRow==_nRow ) return true;
 
-    // ��������:
-    // 1.��ʼ��,��ʱ_pItemsΪ��
-    // 2.����,��ʱ_pItems��Ϊ��,Ҫ����ԭ������,���ಿ��ɾ��
+    // :
+    // 1.,_pItems
+    // 2.,_pItems,,
 
 	// _ClearItem();
 
@@ -478,7 +478,7 @@ bool CGoodsGrid::SetContent( int nRow, int nCol )
             //    delete pOldItems[i];
             //}
 
-			SAFE_DELETE(pOldItems[i]);	// UI��������
+			SAFE_DELETE(pOldItems[i]);	// UI
         }
     }
 	Init();
@@ -492,7 +492,7 @@ bool CGoodsGrid::SetItem( unsigned int nIndex, CCommandObj* pItem )
 	if( _pItems[nIndex] ) 
 	{
 		delete _pItems[nIndex];
-		_pItems[nIndex] = 0;	// UI��������
+		_pItems[nIndex] = 0;	// UI
 	}
 	else
 	{
@@ -563,12 +563,12 @@ void CGoodsGrid::_ClearItem()
 		{
 			//if( _pItems[i] ) 
 			//	delete _pItems[i];
-			SAFE_DELETE(_pItems[i]); // UI��������
+			SAFE_DELETE(_pItems[i]); // UI
 		}
 
 		//delete [] _pItems;
 		//_pItems = NULL;
-		SAFE_DELETE_ARRAY(_pItems); // UI��������
+		SAFE_DELETE_ARRAY(_pItems); // UI
 
 		_nMaxNum = 0;
 		_nRow = 0;

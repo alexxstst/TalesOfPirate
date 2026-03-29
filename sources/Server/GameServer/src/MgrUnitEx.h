@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: MgrUnitEx.h
 // Creater: ZhangXuedong
 // Date: 2005.03.04
@@ -31,7 +31,7 @@ public:
 
 	char			m_chEntiType;
 	Entity			*m_pCEntity;
-	CMgrNode		*m_pCEntMgrNode; // ����Ӧ�ù�����Ԫ��ʵ�嵥Ԫ��������ָ��
+	CMgrNode		*m_pCEntMgrNode; // 
 
 	CEntityListNode	*m_pCNext;
 	CEntityListNode	*m_pCLast;
@@ -93,21 +93,21 @@ public:
 
 	void				StateRun(unsigned long ulCurTick, SubMap *pCMap);
 
-	short			m_sPosX;		// λ��
-	short			m_sPosY;		// λ��
-	short			m_sAreaAttr;	// ��������
-	char			m_chIslandID;	// ������
-	long			m_lActiveNum;	// �������
-	long			m_lEntityNum;	// ʵ������
+	short			m_sPosX;		// 
+	short			m_sPosY;		// 
+	short			m_sAreaAttr;	// 
+	char			m_chIslandID;	// 
+	long			m_lActiveNum;	// 
+	long			m_lEntityNum;	// 
 
-	CEntityListNode	*m_pCChaIn;		// ��¼���ĵ��ڷ�Χ�ڵĽ�ɫ
-	CEntityListNode	*m_pCChaCross;	// ��¼���ĵ㲻�ڷ�Χ�ڣ����뷶Χ�ཻ�Ľ�ɫ
-	CEntityListNode	*m_pCItemIn;		// ��¼���ĵ��ڷ�Χ�ڵ���Ʒ
-	CEntityListNode	*m_pCItemCross;	// ��¼���ĵ㲻�ڷ�Χ�ڣ����뷶Χ�ཻ����Ʒ
+	CEntityListNode	*m_pCChaIn;		// 
+	CEntityListNode	*m_pCChaCross;	// 
+	CEntityListNode	*m_pCItemIn;		// 
+	CEntityListNode	*m_pCItemCross;	// 
 
-	CSkillState		m_CSkillState;	// �ر��ļ���״̬
+	CSkillState		m_CSkillState;	// 
 
-	CMgrUnit		*m_pCNext;		// ָ�򡰼���Ĺ�����Ԫ��������ָ��
+	CMgrUnit		*m_pCNext;		// 
 	CMgrUnit		*m_pCLast;
 
 protected:
@@ -306,7 +306,7 @@ inline void CMgrUnit::StateBeginSeen(Entity *pCEnt)
 
 	if (!pCCha)
 		return;
-	if(!pCCha->IsPlayerFocusCha()) // �ý�ɫ������ҵ�ǰ�Ŀ��ƽ���
+	if(!pCCha->IsPlayerFocusCha()) // 
 		return;
 
 	net::WPacket pk	=g_gmsvr->GetWPacket();
@@ -315,7 +315,7 @@ inline void CMgrUnit::StateBeginSeen(Entity *pCEnt)
 	pk.WriteInt64(m_sPosY);
 	m_CSkillState.WriteState(pk);
 
-	pCCha->ReflectINFof(pCCha, pk);//ͨ��
+	pCCha->ReflectINFof(pCCha, pk);//
 }
 
 inline void CMgrUnit::StateEndSeen(Entity *pCEnt)
@@ -324,7 +324,7 @@ inline void CMgrUnit::StateEndSeen(Entity *pCEnt)
 
 	if (!pCCha)
 		return;
-	if(!pCCha->IsPlayerFocusCha()) // �ý�ɫ������ҵ�ǰ�Ŀ��ƽ���
+	if(!pCCha->IsPlayerFocusCha()) // 
 		return;
 
 	if (m_CSkillState.m_chStateNum <= 0)
@@ -335,7 +335,7 @@ inline void CMgrUnit::StateEndSeen(Entity *pCEnt)
 	pk.WriteInt64(m_sPosX);
 	pk.WriteInt64(m_sPosY);
 
-	pCCha->ReflectINFof(pCCha, pk);//ͨ��
+	pCCha->ReflectINFof(pCCha, pk);//
 }
 
 inline void CMgrUnit::Initially()
@@ -356,7 +356,7 @@ inline void CMgrUnit::Finally()
 {
 }
 
-class CActiveMgrUnitL // ����Ĺ�����Ԫ����
+class CActiveMgrUnitL // 
 {
 public:
 	CActiveMgrUnitL()

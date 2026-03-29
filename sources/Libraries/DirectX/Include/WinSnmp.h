@@ -1,4 +1,4 @@
-/* WinSNMP.h */
+﻿/* WinSNMP.h */
 /* Copyright (C) 1993-1999 Microsoft Corporation */
 /* v1.0 - Sep 13, 1993 */
 /* v1.1 - Jun 12, 1994 */

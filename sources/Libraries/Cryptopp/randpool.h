@@ -1,4 +1,4 @@
-// randpool.h - originally written and placed in the public domain by Wei Dai
+﻿// randpool.h - originally written and placed in the public domain by Wei Dai
 //              OldRandPool added by JW in August, 2017.
 
 /// \file randpool.h

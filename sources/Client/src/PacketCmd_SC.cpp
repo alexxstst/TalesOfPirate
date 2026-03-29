@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "Character.h"
 #include "Scene.h"
 #include "GameApp.h"
@@ -51,19 +51,19 @@
 #include "Scene.h"
 #include "CommandMessages.h"
 
-// Типы uChar, uShort, uLong, cChar определены в NetIF.h
+//  uChar, uShort, uLong, cChar   NetIF.h
 
 
 //--------------------------------------------------
-// ����Э�鴦���淶
-// ������������
+// 
+// 
 //      PacketCmd_DoSomething(LPPacket pk)
 //
-// ������������
-//      ��ɫ CCharacter *pCha
-//      ���� CCharacter* pMainCha
-//      ��� CSceneItem* pItem
-//      ���� CGameScene* pScene
+// 
+//       CCharacter *pCha
+//       CCharacter* pMainCha
+//       CSceneItem* pItem
+//       CGameScene* pScene
 //      APP  CGameApp*   g_pGameApp
 //--------------------------------------------------
 extern char g_szSendKey[4];
@@ -71,7 +71,7 @@ extern char g_szRecvKey[4];
 
 static unsigned long g_ulWorldID = 0;
 
-// Forward declarations для хелперов конвертации sub-packet → клиентские структуры
+// Forward declarations    sub-packet   
 void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKitbag);
 void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut& SShortcut);
 
@@ -85,7 +85,7 @@ BOOL SC_UpdateGuildGold(LPRPACKET pk) {
 }
 
 BOOL SC_ShowStallSearch(LPRPACKET pk) {
-	// Формат count-first: десериализуем через McShowStallSearchMessage
+	//  count-first:   McShowStallSearchMessage
 	net::msg::McShowStallSearchMessage msg;
 	net::msg::deserialize(pk, msg);
 	NetMC_LISTGUILD_BEGIN();
@@ -98,7 +98,7 @@ BOOL SC_ShowStallSearch(LPRPACKET pk) {
 }
 
 BOOL SC_ShowRanking(LPRPACKET pk) {
-	// Формат count-first: десериализуем через McShowRankingMessage
+	//  count-first:   McShowRankingMessage
 	net::msg::McShowRankingMessage msg;
 	net::msg::deserialize(pk, msg);
 	NetMC_LISTGUILD_BEGIN();
@@ -112,9 +112,9 @@ BOOL SC_ShowRanking(LPRPACKET pk) {
 	return TRUE;
 }
 
-// CryptImportPublicKeyInfoEx2 доступна в crypt32.dll (Vista+),
-// но объявлена в wincrypt.h только при _WIN32_WINNT >= 0x0600.
-// Проект использует 0x0500 — объявляем вручную.
+// CryptImportPublicKeyInfoEx2   crypt32.dll (Vista+),
+//    wincrypt.h   _WIN32_WINNT >= 0x0600.
+//   0x0500   .
 typedef BOOL (WINAPI *PFN_CryptImportPublicKeyInfoEx2)(
 	DWORD dwCertEncodingType,
 	PCERT_PUBLIC_KEY_INFO pInfo,
@@ -124,16 +124,16 @@ typedef BOOL (WINAPI *PFN_CryptImportPublicKeyInfoEx2)(
 );
 
 BOOL SC_SendPublicKey(LPRPACKET pk) {
-	// Читаем SPKI DER публичный ключ из пакета (WriteSequence = [uint16 len][data])
+	//  SPKI DER     (WriteSequence = [uint16 len][data])
 	uShort keySize = 0;
 	const char* keyData = pk.ReadSequence(keySize);
 	if (keySize == 0) {
-		// Сервер сообщил что шифрование выключено — пропускаем RSA/AES
+		//        RSA/AES
 		ToLogService("connections", "SC_SendPublicKey: server encryption disabled (empty key)");
 		g_NetIF->handshakeDone = true;
 		g_NetIF->_comm_enc = 0;
-		g_NetIF->m_connect.CHAPSTR(); // CONNECTING → HANDSHAKE
-		g_NetIF->m_connect.CHAPSTR(false); // HANDSHAKE → CONNECTED
+		g_NetIF->m_connect.CHAPSTR(); // CONNECTING  HANDSHAKE
+		g_NetIF->m_connect.CHAPSTR(false); // HANDSHAKE  CONNECTED
 		return TRUE;
 	}
 	if (!keyData) {
@@ -141,7 +141,7 @@ BOOL SC_SendPublicKey(LPRPACKET pk) {
 		return FALSE;
 	}
 
-	// Выводим полученный SPKI DER ключ в hex
+	//   SPKI DER   hex
 	{
 		std::string hex;
 		hex.reserve(keySize * 2);
@@ -153,7 +153,7 @@ BOOL SC_SendPublicKey(LPRPACKET pk) {
 		ToLogService("connections", "SC_SendPublicKey: received SPKI DER key ({} bytes): {}", keySize, hex);
 	}
 
-	// Декодируем SPKI DER → CERT_PUBLIC_KEY_INFO
+	//  SPKI DER  CERT_PUBLIC_KEY_INFO
 	CERT_PUBLIC_KEY_INFO* pubKeyInfo = NULL;
 	DWORD pubKeyInfoSize = 0;
 	if (!CryptDecodeObjectEx(
@@ -166,7 +166,7 @@ BOOL SC_SendPublicKey(LPRPACKET pk) {
 		return FALSE;
 	}
 
-	// Загружаем CryptImportPublicKeyInfoEx2 динамически
+	//  CryptImportPublicKeyInfoEx2 
 	static PFN_CryptImportPublicKeyInfoEx2 pfnImport = NULL;
 	if (!pfnImport) {
 		HMODULE hCrypt32 = GetModuleHandleA("crypt32.dll");
@@ -179,7 +179,7 @@ BOOL SC_SendPublicKey(LPRPACKET pk) {
 		return FALSE;
 	}
 
-	// Импортируем в BCrypt RSA handle
+	//   BCrypt RSA handle
 	if (g_NetIF->hRsaPubKey) {
 		BCryptDestroyKey(g_NetIF->hRsaPubKey);
 		g_NetIF->hRsaPubKey = NULL;
@@ -220,7 +220,7 @@ BOOL SC_Login(LPRPACKET pk) {
 	}
 	else {
 		const auto& d = resp.data.value();
-		// Конвертируем ChaSlotData → NetChaBehave
+		//  ChaSlotData  NetChaBehave
 		std::vector<NetChaBehave> characters;
 		for (const auto& cha : d.characters) {
 			if (cha.valid) {
@@ -253,10 +253,10 @@ BOOL SC_Disconnect(LPRPACKET pk) {
 
 
 // =================================================================
-//  CMD_MC_ENTERMAP — конвертеры net::msg → stNet* (клиентские)
+//  CMD_MC_ENTERMAP   net::msg  stNet* ()
 // =================================================================
 
-// clientIsBoatItem больше не нужен — isBoat читается из потока
+// clientIsBoatItem     isBoat   
 
 static void convertBaseInfo(const net::msg::ChaBaseInfo& src, stNetActorCreate& dst) {
 	dst.ulChaID = static_cast<unsigned long>(src.chaId);
@@ -456,7 +456,7 @@ static void convertShortcut(const net::msg::ChaShortcutInfo& src, stNetShortCut&
 }
 
 //--------------------
-// CMD_MC_ENTERMAP — вход на карту (S->C)
+// CMD_MC_ENTERMAP     (S->C)
 //--------------------
 BOOL SC_EnterMap(LPRPACKET pk) {
 	g_listguild_begin = false;
@@ -608,7 +608,7 @@ BOOL SC_UpdatePassword2(LPRPACKET pk) {
 
 //mothannakh create account
 BOOL PC_REGISTER(LPRPACKET pk) {
-	// Десериализация через McRegisterResponseMessage
+	//   McRegisterResponseMessage
 	net::msg::McRegisterResponseMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -634,14 +634,14 @@ BOOL PC_REGISTER(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Ответ на пинг от GroupServer
+//     GroupServer
 BOOL PC_Ping(LPRPACKET pk) {
 	auto l_wpk = net::msg::serializeCpPingCmd();
 	g_NetIF->SendPacketMessage(l_wpk);
 	return TRUE;
 }
 
-// Ответ на пинг от GameServer (эхо значений обратно)
+//     GameServer (  )
 BOOL SC_Ping(LPRPACKET pk) {
 	net::msg::McPingMessage msg;
 	net::msg::deserialize(pk, msg);
@@ -658,7 +658,7 @@ BOOL SC_Ping(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Ответ на проверочный пинг
+//    
 BOOL SC_CheckPing(LPRPACKET pk) {
 	auto wpk = net::msg::serializeCmCheckPingCmd();
 	g_NetIF->SendPacketMessage(wpk);
@@ -678,7 +678,7 @@ BOOL SC_Say(LPRPACKET pk) {
 }
 
 //--------------------
-// Э��S->C : ϵͳ��Ϣ��ʾ
+// S->C : 
 //--------------------
 BOOL SC_SysInfo(LPRPACKET pk) {
 #ifdef _TEST_CLIENT
@@ -730,10 +730,10 @@ BOOL SC_ColourNotice(LPRPACKET pk) {
 }
 
 //------------------------------------
-// Э��S->C : ������ɫ(���������)����
+// S->C : ()
 //------------------------------------
 BOOL SC_ChaBeginSee(LPRPACKET pk) {
-	// Десериализация через McChaBeginSeeMessage
+	//   McChaBeginSeeMessage
 	net::msg::McChaBeginSeeMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -745,12 +745,12 @@ BOOL SC_ChaBeginSee(LPRPACKET pk) {
 	if (!pCha) return FALSE;
 
 	stNetNPCShow SNpcShow;
-	// NPC тип и состояние
+	// NPC   
 	SNpcShow.byNpcType = static_cast<decltype(SNpcShow.byNpcType)>(msg.npcType);
 	SNpcShow.byNpcState = static_cast<decltype(SNpcShow.byNpcState)>(msg.npcState);
 	SNpcShow.SetNpcShow(pCha);
 
-	// Поза персонажа через std::variant
+	//    std::variant
 	switch (msg.poseType) {
 	case enumPoseLean: {
 		auto& lean = std::get<net::msg::LeanInfo>(msg.pose);
@@ -789,7 +789,7 @@ BOOL SC_ChaBeginSee(LPRPACKET pk) {
 }
 
 //------------------------------------
-// Э��S->C : ������ɫ(���������)��ʧ
+// S->C : ()
 //------------------------------------
 BOOL SC_ChaEndSee(LPRPACKET pk) {
 #ifdef _TEST_CLIENT
@@ -810,7 +810,7 @@ BOOL SC_ChaEndSee(LPRPACKET pk) {
 }
 
 BOOL SC_ItemCreate(LPRPACKET pk) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McItemCreateMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -873,7 +873,7 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 
 	NetAreaStateBeginSee(&SynAState);
 
-	// Лог состояния области
+	//   
 	{
 		char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum);
 		g_logManager.InternalLog(LogLevel::Debug, "common", buf);
@@ -887,7 +887,7 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 }
 
 BOOL SC_AStateEndSee(LPRPACKET pk) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McAStateEndSeeMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -905,9 +905,9 @@ BOOL SC_AStateEndSee(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Добавление предметного персонажа (item cha)
+//    (item cha)
 BOOL SC_AddItemCha(LPRPACKET pk) {
-	// Десериализация через McAddItemChaMessage
+	//   McAddItemChaMessage
 	net::msg::McAddItemChaMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -933,7 +933,7 @@ BOOL SC_AddItemCha(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Э��S->C : ɾ�����߽�ɫ
+// S->C : 
 BOOL SC_DelItemCha(LPRPACKET pk) {
 	net::msg::McDelItemChaMessage msg;
 	net::msg::deserialize(pk, msg);
@@ -945,7 +945,7 @@ BOOL SC_DelItemCha(LPRPACKET pk) {
 	return TRUE;
 }
 
-// �������
+// 
 BOOL SC_Cha_Emotion(LPRPACKET pk) {
 	net::msg::McChaEmotionMessage msg;
 	net::msg::deserialize(pk, msg);
@@ -959,9 +959,9 @@ BOOL SC_Cha_Emotion(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Э��S->C : ��ɫ�ж�ͨ��
+// S->C : 
 BOOL SC_CharacterAction(LPRPACKET pk) {
-	// Десериализация CMD_MC_NOTIACTION через McCharacterActionMessage
+	//  CMD_MC_NOTIACTION  McCharacterActionMessage
 	net::msg::McCharacterActionMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -985,7 +985,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			long lDistX, lDistY, lDist = 0;
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Move):\tTick:[{}]", GetTickCount()));
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Point:\t{:3}", SMoveInfo.nPointNum));
-			// Проверка: является ли персонаж главным (для отладочной визуализации)
+			// :     (  )
 			CCharacter* pMainDbg = CGameScene::GetMainCha();
 			bool isMainCha = pMainDbg && pMainDbg->getAttachID() == l_id;
 			for (int i = 0; i < SMoveInfo.nPointNum; i++) {
@@ -1050,7 +1050,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			}
 			SSkillInfo.sExecTime = static_cast<short>(d.execTime);
 
-			// Эффекты атрибутов
+			//  
 			short lResNum = static_cast<short>(d.effects.size());
 			if (lResNum > 0) {
 				SSkillInfo.SEffect.Resize(lResNum);
@@ -1060,7 +1060,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 				}
 			}
 
-			// Состояния скилла
+			//  
 			short chSStateNum = static_cast<short>(d.states.size());
 			if (chSStateNum > 0) {
 				SSkillInfo.SState.Resize(chSStateNum);
@@ -1109,7 +1109,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			SSkillInfo.SSkillTPos.y = static_cast<long>(d.skillTargetY);
 			SSkillInfo.sExecTime = static_cast<short>(d.execTime);
 
-			// Эффекты цели
+			//  
 			short lResNum = static_cast<short>(d.effects.size());
 			if (lResNum > 0) {
 				SSkillInfo.SEffect.Resize(lResNum);
@@ -1125,7 +1125,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 				}
 			}
 
-			// Состояния цели
+			//  
 			if (d.hasStates) {
 				short chSStateNum = static_cast<short>(d.states.size());
 				if (chSStateNum > 0) {
@@ -1137,7 +1137,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 				}
 			}
 
-			// Эффекты источника
+			//  
 			if (d.hasSrcEffect) {
 				SSkillInfo.sSrcState = static_cast<short>(d.srcState);
 				short lSrcResNum = static_cast<short>(d.srcEffects.size());
@@ -1148,7 +1148,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 						SSkillInfo.SSrcEffect[i].lVal = static_cast<long>(d.srcEffects[i].attrVal);
 					}
 				}
-				// Состояния источника
+				//  
 				if (d.srcHasStates) {
 					short chSrcStateNum = static_cast<short>(d.srcStates.size());
 					if (chSrcStateNum > 0) {
@@ -1190,7 +1190,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			NetSysInfo(l_sysinfo);
 		}
 		else if (msg.actionType == ActionType::LOOK) {
-			// LOOK использует конвертацию через std::variant -> stNetLookInfo
+			// LOOK    std::variant -> stNetLookInfo
 			stNetLookInfo SLookInfo;
 			memset(&SLookInfo, 0, sizeof(SLookInfo));
 			auto& lk = std::get<ChaLookInfo>(msg.data);
@@ -1259,7 +1259,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			}
 		}
 		else if (msg.actionType == ActionType::LOOK_ENERGY) {
-			// Типизированная десериализация: энергия экипировки через std::variant
+			//  :    std::variant
 			auto& energyData = std::get<ActionLookEnergyData>(msg.data);
 			stLookEnergy SLookEnergy;
 			memset(&SLookEnergy, 0, sizeof(SLookEnergy));
@@ -1274,7 +1274,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			NetChangeKitbag(l_id, SKitbag);
 		}
 		else if (msg.actionType == ActionType::ITEM_INFO) {
-			// Пустой обработчик
+			//  
 		}
 		else if (msg.actionType == ActionType::SHORTCUT) {
 			stNetShortCut SShortcut;
@@ -1314,7 +1314,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Angle[{}]\tPose[{}]", SNetFace.sAngle, SNetFace.sPose));
 		}
 		else if (msg.actionType == ActionType::PK_CTRL) {
-			// Типизированная десериализация: PK-контроль через std::variant
+			//  : PK-  std::variant
 			stNetPKCtrl SNetPKCtrl;
 			char chPKCtrl = static_cast<char>(std::get<ActionPkCtrlData>(msg.data).pkCtrl);
 			std::bitset<8> states(chPKCtrl);
@@ -1355,14 +1355,14 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 }
 
 BOOL SC_FailedAction(LPRPACKET pk) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McFailedActionMessage msg;
 	net::msg::deserialize(pk, msg);
 	NetFailedAction(static_cast<char>(msg.reason));
 	return TRUE;
 }
 
-// ͬ����ɫ����
+// 
 BOOL SC_SynAttribute(LPRPACKET pk) {
 	net::msg::McSynAttributeMessage msg;
 	net::msg::deserialize(pk, msg);
@@ -1377,7 +1377,7 @@ BOOL SC_SynAttribute(LPRPACKET pk) {
 		SChaAttr.SEff[i].lVal = static_cast<long>(msg.attr.attrs[i].attrVal);
 	}
 
-	// Лог синхронизации атрибутов
+	//   
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Character Attr: Count={}\t, Type:{}\tTick:[{}]", SChaAttr.sNum, static_cast<int>(SChaAttr.chType), GetTickCount()));
 	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(312));
 	for (short i = 0; i < SChaAttr.sNum; i++) {
@@ -1389,9 +1389,9 @@ BOOL SC_SynAttribute(LPRPACKET pk) {
 	return TRUE;
 }
 
-// Синхронизация сумки скиллов
+//   
 BOOL SC_SynSkillBag(LPRPACKET pk) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McSynSkillBagMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -1400,7 +1400,7 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 	stNetSkillBag SCurSkill;
 	memset(&SCurSkill, 0, sizeof(SCurSkill));
 
-	// Установка default skill
+	//  default skill
 	stNetDefaultSkill SDefaultSkill;
 	SDefaultSkill.sSkillID = static_cast<decltype(SDefaultSkill.sSkillID)>(msg.skillBag.defSkillId);
 	SDefaultSkill.Exec();
@@ -1441,7 +1441,7 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 	return TRUE;
 }
 
-// ͬ��������
+// 
 BOOL SC_SynDefaultSkill(LPRPACKET pk) {
 	net::msg::McSynDefaultSkillMessage msg;
 	net::msg::deserialize(pk, msg);
@@ -1495,7 +1495,7 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 }
 
 BOOL SC_SynTeam(LPRPACKET pk) {
-	// Десериализация через McSynTeamMessage
+	//   McSynTeamMessage
 	net::msg::McSynTeamMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -1510,7 +1510,7 @@ BOOL SC_SynTeam(LPRPACKET pk) {
 	ToLogService("players", "Refresh, ID[{}], HP[{}], MaxHP[{}], SP[{}], MaxSP[{}], LV[{}]", STeamState.ulID, STeamState.lHP,
 	   STeamState.lMaxHP, STeamState.lSP, STeamState.lMaxSP, STeamState.lLV);
 
-	// Конвертация ChaLookInfo → stNetChangeChaPart для пати
+	//  ChaLookInfo  stNetChangeChaPart  
 	STeamState.SFace.sTypeID = static_cast<short>(msg.look.typeId);
 	STeamState.SFace.sHairID = static_cast<short>(msg.look.hairId);
 	for (int i = 0; i < enumEQUIP_NUM; i++) {
@@ -1543,7 +1543,7 @@ BOOL SC_SynTLeaderID(LPRPACKET pk) {
 }
 
 BOOL SC_HelpInfo(LPRPACKET packet) {
-	// Десериализация через McHelpInfoMessage
+	//   McHelpInfoMessage
 	net::msg::McHelpInfoMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1566,7 +1566,7 @@ BOOL SC_HelpInfo(LPRPACKET packet) {
 	return TRUE;
 }
 
-// NPC �Ի���Ϣ����
+// NPC 
 BOOL SC_TalkInfo(LPRPACKET packet) {
 	net::msg::McTalkInfoMessage msg;
 	net::msg::deserialize(packet, msg);
@@ -1623,7 +1623,7 @@ BOOL SC_TradeData(LPRPACKET packet) {
 	return TRUE;
 }
 
-// Вспомогательная функция: конвертация McTradeAllDataMessage → NET_TRADEINFO
+//  :  McTradeAllDataMessage  NET_TRADEINFO
 static void convertTradeMsg(const net::msg::McTradeAllDataMessage& msg, NET_TRADEINFO& Info) {
 	memset(&Info, 0, sizeof(Info));
 	for (const auto& page : msg.pages) {
@@ -1644,7 +1644,7 @@ static void convertTradeMsg(const net::msg::McTradeAllDataMessage& msg, NET_TRAD
 }
 
 BOOL SC_TradeAllData(LPRPACKET packet) {
-	// Десериализация через McTradeAllDataMessage
+	//   McTradeAllDataMessage
 	net::msg::McTradeAllDataMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1655,7 +1655,7 @@ BOOL SC_TradeAllData(LPRPACKET packet) {
 }
 
 BOOL SC_TradeInfo(LPRPACKET packet) {
-	// Десериализация через McTradeAllDataMessage (тот же формат)
+	//   McTradeAllDataMessage (  )
 	net::msg::McTradeAllDataMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1666,7 +1666,7 @@ BOOL SC_TradeInfo(LPRPACKET packet) {
 }
 
 BOOL SC_TradeUpdate(LPRPACKET packet) {
-	// Десериализация через McTradeAllDataMessage (тот же формат)
+	//   McTradeAllDataMessage (  )
 	net::msg::McTradeAllDataMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1696,7 +1696,7 @@ BOOL SC_TradeResult(LPRPACKET packet) {
 }
 
 BOOL SC_CharTradeInfo(LPRPACKET packet) {
-	// Десериализация через типизированные сообщения по подкоманде
+	//      
 	USHORT usCmd = packet.ReadInt64();
 	switch (usCmd) {
 	case CMD_MC_CHARTRADE_REQUEST: {
@@ -1723,12 +1723,12 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 	}
 	break;
 	case CMD_MC_CHARTRADE_ITEM: {
-		// Полная десериализация единого сообщения торговли предметом
+		//      
 		net::msg::McCharTradeItemMessage msg;
 		net::msg::deserialize(packet, msg);
 
 		if (auto* remove = std::get_if<net::msg::McCharTradeItemRemoveData>(&msg.data)) {
-			// Перетаскивание из торговли в инвентарь
+			//     
 			NET_CHARTRADE_ITEMDATA Data;
 			memset(&Data, 0, sizeof(NET_CHARTRADE_ITEMDATA));
 			NetTradeAddItem(static_cast<DWORD>(msg.mainChaId), static_cast<BYTE>(msg.opType), 0,
@@ -1738,7 +1738,7 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 		else if (auto* add = std::get_if<net::msg::McCharTradeItemAddData>(&msg.data)) {
 			bool isBoat = (add->itemType == enumItemTypeBoat);
 			if (isBoat) {
-				// Корабль
+				// 
 				auto* boatPtr = std::get_if<net::msg::TradeBoatData>(&add->equipData);
 				if (boatPtr && boatPtr->hasBoat) {
 					NET_CHARTRADE_BOATDATA Data;
@@ -1760,7 +1760,7 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 				}
 			}
 			else {
-				// Обычный предмет
+				//  
 				auto* itemPtr = std::get_if<net::msg::TradeItemData>(&add->equipData);
 				if (itemPtr) {
 					NET_CHARTRADE_ITEMDATA Data;
@@ -1844,7 +1844,7 @@ BOOL SC_DailyBuffInfo(LPRPACKET packet) {
 }
 
 BOOL SC_MissionInfo(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McMissionInfoMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1868,7 +1868,7 @@ BOOL SC_MissionInfo(LPRPACKET packet) {
 }
 
 BOOL SC_MisPage(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McMisPageMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1883,7 +1883,7 @@ BOOL SC_MisPage(LPRPACKET packet) {
 	case ROLE_MIS_BTNACCEPT:
 	case ROLE_MIS_BTNDELIVERY:
 	case ROLE_MIS_BTNPENDING: {
-		// Потребности квеста
+		//  
 		page.byNeedNum = static_cast<decltype(page.byNeedNum)>(msg.needs.size());
 		for (int i = 0; i < page.byNeedNum; i++) {
 			page.MisNeed[i].byType = static_cast<decltype(page.MisNeed[i].byType)>(msg.needs[i].needType);
@@ -1901,7 +1901,7 @@ BOOL SC_MisPage(LPRPACKET packet) {
 			}
 		}
 
-		// Награды квеста
+		//  
 		page.byPrizeSelType = static_cast<decltype(page.byPrizeSelType)>(msg.prizeSelType);
 		page.byPrizeNum = static_cast<decltype(page.byPrizeNum)>(msg.prizes.size());
 		for (int i = 0; i < page.byPrizeNum; i++) {
@@ -1910,7 +1910,7 @@ BOOL SC_MisPage(LPRPACKET packet) {
 			page.MisPrize[i].wParam2 = static_cast<decltype(page.MisPrize[i].wParam2)>(msg.prizes[i].param2);
 		}
 
-		// Описание квеста
+		//  
 		strncpy(page.szDesp, msg.description.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
 	}
 	break;
@@ -1926,7 +1926,7 @@ BOOL SC_MisLog(LPRPACKET packet) {
 #ifdef _TEST_CLIENT
 	return TRUE;
 #endif
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McMisLogMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1944,7 +1944,7 @@ BOOL SC_MisLog(LPRPACKET packet) {
 }
 
 BOOL SC_MisLogInfo(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McMisLogInfoMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -1954,7 +1954,7 @@ BOOL SC_MisLogInfo(LPRPACKET packet) {
 
 	strncpy(page.szName, msg.name.c_str(), ROLE_MAXSIZE_MISNAME - 1);
 
-	// Потребности квеста
+	//  
 	page.byNeedNum = static_cast<decltype(page.byNeedNum)>(msg.needs.size());
 	for (int i = 0; i < page.byNeedNum; i++) {
 		page.MisNeed[i].byType = static_cast<decltype(page.MisNeed[i].byType)>(msg.needs[i].needType);
@@ -1972,7 +1972,7 @@ BOOL SC_MisLogInfo(LPRPACKET packet) {
 		}
 	}
 
-	// Награды квеста
+	//  
 	page.byPrizeSelType = static_cast<decltype(page.byPrizeSelType)>(msg.prizeSelType);
 	page.byPrizeNum = static_cast<decltype(page.byPrizeNum)>(msg.prizes.size());
 	for (int i = 0; i < page.byPrizeNum; i++) {
@@ -1981,7 +1981,7 @@ BOOL SC_MisLogInfo(LPRPACKET packet) {
 		page.MisPrize[i].wParam2 = static_cast<decltype(page.MisPrize[i].wParam2)>(msg.prizes[i].param2);
 	}
 
-	// Описание квеста
+	//  
 	strncpy(page.szDesp, msg.description.c_str(), ROLE_MAXNUM_DESPSIZE - 1);
 
 	NetShowMisLog(wMisID, page);
@@ -1997,7 +1997,7 @@ BOOL SC_MisLogClear(LPRPACKET packet) {
 }
 
 BOOL SC_MisLogAdd(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McMisLogAddMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetMisLogAdd(static_cast<WORD>(msg.missionId), static_cast<BYTE>(msg.state));
@@ -2005,7 +2005,7 @@ BOOL SC_MisLogAdd(LPRPACKET packet) {
 }
 
 BOOL SC_MisLogState(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McMisLogStateMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetMisLogState(static_cast<WORD>(msg.missionId), static_cast<BYTE>(msg.state));
@@ -2013,7 +2013,7 @@ BOOL SC_MisLogState(LPRPACKET packet) {
 }
 
 BOOL SC_TriggerAction(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McTriggerActionMessage msg;
 	net::msg::deserialize(packet, msg);
 	stNetNpcMission info;
@@ -2113,7 +2113,7 @@ BOOL SC_Tiger(LPRPACKET packet) {
 	return TRUE;
 }
 
-// Вспомогательная функция: конвертация McBoatSyncAttrMessage → xShipBuildInfo
+//  :  McBoatSyncAttrMessage  xShipBuildInfo
 static void convertBoatMsg(const net::msg::McBoatSyncAttrMessage& msg, xShipBuildInfo& Info) {
 	memset(&Info, 0, sizeof(xShipBuildInfo));
 	strncpy(Info.szName, msg.shipName.c_str(), BOAT_MAXSIZE_NAME - 1);
@@ -2153,7 +2153,7 @@ static void convertBoatMsg(const net::msg::McBoatSyncAttrMessage& msg, xShipBuil
 }
 
 BOOL SC_CreateBoat(LPRPACKET packet) {
-	// Десериализация через McBoatSyncAttrMessage
+	//   McBoatSyncAttrMessage
 	net::msg::McBoatSyncAttrMessage msg;
 	net::msg::deserialize(packet, msg);
 	xShipBuildInfo Info;
@@ -2163,7 +2163,7 @@ BOOL SC_CreateBoat(LPRPACKET packet) {
 }
 
 BOOL SC_UpdateBoat(LPRPACKET packet) {
-	// Десериализация через McBoatSyncAttrMessage
+	//   McBoatSyncAttrMessage
 	net::msg::McBoatSyncAttrMessage msg;
 	net::msg::deserialize(packet, msg);
 	xShipBuildInfo Info;
@@ -2173,7 +2173,7 @@ BOOL SC_UpdateBoat(LPRPACKET packet) {
 }
 
 BOOL SC_BoatInfo(LPRPACKET packet) {
-	// Десериализация через McBoatSyncAttrMessage
+	//   McBoatSyncAttrMessage
 	net::msg::McBoatSyncAttrMessage msg;
 	net::msg::deserialize(packet, msg);
 	xShipBuildInfo Info;
@@ -2189,7 +2189,7 @@ BOOL SC_UpdateBoatPart(LPRPACKET packet) {
 }
 
 BOOL SC_BoatList(LPRPACKET packet) {
-	// Десериализация через McBerthListMessage
+	//   McBerthListMessage
 	net::msg::McBerthListMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2219,7 +2219,7 @@ BOOL SC_BoatList(LPRPACKET packet) {
 //}
 
 BOOL SC_StallInfo(LPRPACKET packet) {
-	// Десериализация через McStallSyncDataMessage
+	//   McStallSyncDataMessage
 	net::msg::McStallSyncDataMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2299,7 +2299,7 @@ BOOL SC_StallSuccess(LPRPACKET packet) {
 }
 
 BOOL SC_SynStallName(LPRPACKET packet) {
-	// Десериализация через типизированное сообщение
+	//    
 	net::msg::McSynStallNameMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetStallName(static_cast<DWORD>(msg.charId), msg.name.c_str());
@@ -2336,7 +2336,7 @@ BOOL SC_OpenHairCut(LPRPACKET packet) {
 }
 
 BOOL SC_TeamFightAsk(LPRPACKET packet) {
-	// Десериализация через McTeamFightAskMessage (count-first)
+	//   McTeamFightAskMessage (count-first)
 	net::msg::McTeamFightAskMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2365,7 +2365,7 @@ BOOL SC_BeginItemRepair(LPRPACKET packet) {
 }
 
 BOOL SC_ItemRepairAsk(LPRPACKET packet) {
-	// Десериализация через McItemRepairAskMcMessage
+	//   McItemRepairAskMcMessage
 	net::msg::McItemRepairAskMcMessage msg;
 	net::msg::deserialize(packet, msg);
 	stNetItemRepairAsk SRepairAsk;
@@ -2509,7 +2509,7 @@ BOOL SC_PreMoveTime(LPRPACKET pk) {
 }
 
 BOOL SC_MapMask(LPRPACKET pk) {
-	// Десериализация через McMapMaskMessage
+	//   McMapMaskMessage
 	net::msg::McMapMaskMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -2554,7 +2554,7 @@ BOOL SC_SynSideInfo(LPRPACKET pk) {
 }
 
 BOOL SC_SynAppendLook(LPRPACKET pk) {
-	// Десериализация через McAppendLookMessage
+	//   McAppendLookMessage
 	net::msg::McAppendLookMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -2580,7 +2580,7 @@ BOOL SC_KitbagCheckAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreOpenAnswer(LPRPACKET packet) {
-	// Десериализация через McStoreOpenAnswerMessage
+	//   McStoreOpenAnswerMessage
 	net::msg::McStoreOpenAnswerMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2617,7 +2617,7 @@ BOOL SC_StoreOpenAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreListAnswer(LPRPACKET packet) {
-	// Десериализация через McStoreListAnswerMessage
+	//   McStoreListAnswerMessage
 	net::msg::McStoreListAnswerMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2647,7 +2647,7 @@ BOOL SC_StoreListAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreBuyAnswer(LPRPACKET packet) {
-	// Десериализация через McStoreBuyAnswerMessage
+	//   McStoreBuyAnswerMessage
 	net::msg::McStoreBuyAnswerMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2665,7 +2665,7 @@ BOOL SC_StoreBuyAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreChangeAnswer(LPRPACKET packet) {
-	// Десериализация через McStoreChangeAnswerMessage
+	//   McStoreChangeAnswerMessage
 	net::msg::McStoreChangeAnswerMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2679,21 +2679,21 @@ BOOL SC_StoreChangeAnswer(LPRPACKET packet) {
 }
 
 BOOL SC_StoreHistory(LPRPACKET packet) {
-	// Десериализация через McStoreHistoryMessage
+	//   McStoreHistoryMessage
 	net::msg::McStoreHistoryMessage msg;
 	net::msg::deserialize(packet, msg);
 	return TRUE;
 }
 
 BOOL SC_ActInfo(LPRPACKET packet) {
-	// Десериализация через McActInfoMessage
+	//   McActInfoMessage
 	net::msg::McActInfoMessage msg;
 	net::msg::deserialize(packet, msg);
 	return TRUE;
 }
 
 BOOL SC_StoreVIP(LPRPACKET packet) {
-	// Десериализация через McStoreVipMessage
+	//   McStoreVipMessage
 	net::msg::McStoreVipMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2882,7 +2882,7 @@ BOOL SC_VolunteerAsk(LPRPACKET packet) {
 }
 
 BOOL SC_SyncKitbagTemp(LPRPACKET packet) {
-	// Десериализация через McKitbagTempSyncMessage
+	//   McKitbagTempSyncMessage
 	net::msg::McKitbagTempSyncMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -2895,7 +2895,7 @@ BOOL SC_SyncKitbagTemp(LPRPACKET packet) {
 }
 
 BOOL SC_SyncTigerString(LPRPACKET packet) {
-	// Десериализация через McTigerStopMessage
+	//   McTigerStopMessage
 	net::msg::McTigerStopMessage msg;
 	net::msg::deserialize(packet, msg);
 	g_stUISpirit.UpdateErnieString(msg.text.c_str());
@@ -2918,11 +2918,11 @@ BOOL SC_PrenticeAsk(LPRPACKET packet) {
 }
 
 BOOL PC_MasterRefresh(LPRPACKET packet) {
-	// Десериализация через PcMasterRefreshFullMessage
+	//   PcMasterRefreshFullMessage
 	net::msg::PcMasterRefreshFullMessage msg;
 	net::msg::deserialize(packet, msg);
 
-	// Определяем категорию: 0-4 = мастер, 5-9 = ученик
+	//  : 0-4 = , 5-9 = 
 	bool isMaster = (msg.type < 5);
 	int64_t localType = isMaster ? msg.type : (msg.type - 5);
 
@@ -2967,7 +2967,7 @@ BOOL PC_MasterRefresh(LPRPACKET packet) {
 }
 
 BOOL PC_MasterCancel(LPRPACKET packet) {
-	// Десериализация через PcMasterCancelMessage
+	//   PcMasterCancelMessage
 	net::msg::PcMasterCancelMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetMasterCancel(static_cast<uLong>(msg.cancelId), static_cast<unsigned char>(msg.reason));
@@ -2975,7 +2975,7 @@ BOOL PC_MasterCancel(LPRPACKET packet) {
 }
 
 BOOL PC_MasterRefreshInfo(LPRPACKET packet) {
-	// Десериализация через PcMasterRefreshInfoFullMessage
+	//   PcMasterRefreshInfoFullMessage
 	net::msg::PcMasterRefreshInfoFullMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetMasterRefreshInfo(static_cast<unsigned long>(msg.chaId), msg.motto.c_str(),
@@ -2985,7 +2985,7 @@ BOOL PC_MasterRefreshInfo(LPRPACKET packet) {
 }
 
 BOOL PC_PrenticeRefreshInfo(LPRPACKET packet) {
-	// Десериализация через PcMasterRefreshInfoFullMessage
+	//   PcMasterRefreshInfoFullMessage
 	net::msg::PcMasterRefreshInfoFullMessage msg;
 	net::msg::deserialize(packet, msg);
 	NetPrenticeRefreshInfo(static_cast<unsigned long>(msg.chaId), msg.motto.c_str(),
@@ -3022,7 +3022,7 @@ BOOL SC_GMMail(LPRPACKET packet) {
 }
 
 BOOL SC_CheatCheck(LPRPACKET packet) {
-	// Десериализация через McCheatCheckMessage
+	//   McCheatCheckMessage
 	net::msg::McCheatCheckMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -3045,7 +3045,7 @@ BOOL SC_CheatCheck(LPRPACKET packet) {
 }
 
 BOOL SC_ListAuction(LPRPACKET pk) {
-	// Десериализация через McListAuctionMessage (count-first)
+	//   McListAuctionMessage (count-first)
 	net::msg::McListAuctionMessage msg;
 	net::msg::deserialize(pk, msg);
 	stChurchChallenge stInfo;
@@ -3085,7 +3085,7 @@ BOOL SC_RequestExpRate(LPRPACKET pk) {
 }
 
 BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
-	// Десериализация через McRefreshSelectScreenMessage
+	//   McRefreshSelectScreenMessage
 	net::msg::McRefreshSelectScreenMessage msg;
 	net::msg::deserialize(pk, msg);
 
@@ -3099,7 +3099,7 @@ BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
 		rkScene.DelCurrentSelCha();
 	}
 
-	// Конвертируем ChaSlotData → NetChaBehave
+	//  ChaSlotData  NetChaBehave
 	std::vector<NetChaBehave> characters;
 	for (const auto& cha : msg.characters) {
 		if (cha.valid) {
@@ -3121,9 +3121,9 @@ BOOL SC_RefreshSelectScreen(LPRPACKET pk) {
 
 
 // ReadChaBasePacket/SkillBag/SkillState/Attr/Look/LookEnergy/PK/Side/AppendLook/EntEvent
-// — мёртвые pk-хелперы удалены, всё через net::msg::deserialize + convert*().
+//   pk- ,   net::msg::deserialize + convert*().
 
-// Конвертация msg.kitbag (ChaKitbagInfo) -> stNetKitbag (без чтения из pk)
+//  msg.kitbag (ChaKitbagInfo) -> stNetKitbag (   pk)
 void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKitbag) {
 	memset(&SKitbag, 0, sizeof(SKitbag));
 	SKitbag.chType = static_cast<char>(info.synType);
@@ -3206,7 +3206,7 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
 }
 
-// Конвертация msg.shortcut (ChaShortcutInfo) -> stNetShortCut (без чтения из pk)
+//  msg.shortcut (ChaShortcutInfo) -> stNetShortCut (   pk)
 void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut& SShortcut) {
 	memset(&SShortcut, 0, sizeof(SShortcut));
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("===Recieve(Update Shortcut):\tTick:[{}]", GetTickCount()));
@@ -3221,7 +3221,7 @@ void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut
 
 
 BOOL PC_PKSilver(LPRPACKET packet) {
-	// Десериализация через McPkSilverMessage
+	//   McPkSilverMessage
 	net::msg::McPkSilverMessage msg;
 	net::msg::deserialize(packet, msg);
 
@@ -3241,22 +3241,22 @@ BOOL SC_LifeSkillShow(LPRPACKET packet) {
 	net::msg::deserialize(packet, msg);
 	long lType = static_cast<long>(msg.type);
 	switch (lType) {
-	case 0: //  �ϳ�
+	case 0: //  
 	{
 		g_stUICompose.ShowComposeForm();
 	}
 	break;
-	case 1: //  �ֽ�
+	case 1: //  
 	{
 		g_stUIBreak.ShowBreakForm();
 	}
 	break;
-	case 2: //  ����
+	case 2: //  
 	{
 		g_stUIFound.ShowFoundForm();
 	}
 	break;
-	case 3: //  ���
+	case 3: //  
 	{
 		g_stUICooking.ShowCookingForm();
 	}
@@ -3274,24 +3274,24 @@ BOOL SC_LifeSkill(LPRPACKET packet) {
 	std::string txt = msg.text;
 
 	switch (lType) {
-	case 0: //  �ϳ�
+	case 0: //  
 	{
 		g_stUICompose.CheckResult(ret, txt.c_str());
 	}
 	break;
-	case 1: //  �ֽ�
+	case 1: //  
 	{
 		g_stUIBreak.CheckResult(ret, txt.c_str());
 	}
 	break;
-	case 2: //  ����
+	case 2: //  
 	{
 		std::string strVer[3];
 		Util_ResolveTextLine(txt.c_str(), strVer, 3, ',');
 		g_stUIFound.CheckResult(ret, strVer[0].c_str(), strVer[1].c_str(), strVer[2].c_str());
 	}
 	break;
-	case 3: //  ���
+	case 3: //  
 	{
 		g_stUICooking.CheckResult(ret);
 	}
@@ -3310,22 +3310,22 @@ BOOL SC_LifeSkillAsr(LPRPACKET packet) {
 	std::string txt = msg.text;
 
 	switch (lType) {
-	case 0: //  �ϳ�
+	case 0: //  
 	{
 		g_stUICompose.StartTime(tim);
 	}
 	break;
-	case 1: //  �ֽ�
+	case 1: //  
 	{
 		g_stUIBreak.StartTime(tim, txt.c_str());
 	}
 	break;
-	case 2: //  ����
+	case 2: //  
 	{
 		g_stUIFound.StartTime(tim);
 	}
 	break;
-	case 3: //  ���
+	case 3: //  
 	{
 		g_stUICooking.StartTime(tim);
 	}

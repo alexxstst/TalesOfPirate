@@ -1,7 +1,7 @@
-
+Ôªø
 //---------------------------
 //
-//  “Ù∆µ◊ ‘¥π‹¿Ì
+//  
 //  by Jampe
 //  2007/03/28
 //
@@ -45,7 +45,7 @@ public:
     void close(ulong id);
     void release();
 
-    void checkResValid(ulong timeout = 300);     //  «Â≥˛≥¨ ±◊ ‘¥(√Î),ƒ¨»œ5∑÷÷”
+    void checkResValid(ulong timeout = 300);     //  (),5
 
 protected:
     AudioInfo* _addRes(const char* resource, int type);

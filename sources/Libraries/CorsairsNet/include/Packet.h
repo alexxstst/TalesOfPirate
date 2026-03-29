@@ -1,9 +1,9 @@
-#pragma once
+﻿#pragma once
 
-// Packet.h — WPacket (запись) и RPacket (чтение) пакетов с msgpack payload.
-// Формат кадра: [2b size BE][4b SESS BE][2b CMD BE][msgpack payload]
-// Размер в первых 2 байтах — единственный source of truth.
-// Буферы выделяются из PacketPool::Shared().
+// Packet.h  WPacket ()  RPacket ()   msgpack payload.
+//  : [2b size BE][4b SESS BE][2b CMD BE][msgpack payload]
+//    2    source of truth.
+//    PacketPool::Shared().
 
 #include "BinaryIO.h"
 #include "PacketPool.h"
@@ -20,9 +20,9 @@ namespace net {
 // Forward declaration
 class RPacket;
 
-// ═══════════════════════════════════════════════════════════════
-//  WPacket — запись пакетов (msgpack payload)
-// ═══════════════════════════════════════════════════════════════
+// 
+//  WPacket    (msgpack payload)
+// 
 
 class WPacket {
 public:
@@ -35,30 +35,30 @@ public:
     WPacket& operator=(WPacket&& other) noexcept;
     ~WPacket();
 
-    // ── Заголовок (фиксированные позиции) ───────────────────
+    //   ( ) 
     void     WriteCmd(uint16_t cmd);
     void     WriteSess(uint32_t sess);
     uint16_t GetCmd() const;
     uint32_t GetSess() const;
 
-    // ── Размеры ─────────────────────────────────────────────
+    //   
     int  GetPacketSize() const;
     void SetPacketSize(int size);
     int  PayloadLength() const;
 
-    // ── Запись payload (все целочисленные делегируют к WriteInt64) ──
+    //   payload (    WriteInt64) 
     void WriteInt64(int64_t v);
     void WriteUInt64(uint64_t v);
     void WriteFloat32(float v);
 
-    // Бинарная последовательность → msgpack bin
+    //    msgpack bin
     void WriteSequence(const uint8_t* data, uint16_t len);
     void WriteSequence(const char* data, uint16_t len);
 
-    // Строка → msgpack str (с null-terminator внутри для zero-copy чтения)
+    //   msgpack str ( null-terminator   zero-copy )
     void WriteString(const std::string& str);
 
-    // ── Доступ к буферу ─────────────────────────────────────
+    //     
     uint8_t*       Data()       { return _data; }
     const uint8_t* Data() const { return _data; }
     int            Capacity() const { return _capacity; }
@@ -66,7 +66,7 @@ public:
     void Reset();
     explicit operator bool() const { return _data != nullptr; }
 
-    // ── Печать содержимого команды ────────────────────────────
+    //     
     std::string PrintCommand() const {
         if (!_data || GetPacketSize() < 8)
             return "WPacket[Empty]";
@@ -99,9 +99,9 @@ private:
     mpack_writer_t _writer;
 };
 
-// ═══════════════════════════════════════════════════════════════
-//  RPacket — чтение пакетов (msgpack payload)
-// ═══════════════════════════════════════════════════════════════
+// 
+//  RPacket    (msgpack payload)
+// 
 
 class RPacket {
 public:
@@ -114,51 +114,51 @@ public:
     RPacket& operator=(RPacket&& other) noexcept;
     ~RPacket();
 
-    // ── Заголовок ────────────────────────────────────────────
+    //   
     uint32_t GetSess() const;
     uint16_t GetCmd() const;
     int      GetPacketSize() const;
     int      PayloadLength() const;
 
-    // ── Состояние чтения ────────────────────────────────────
+    //    
     int  RemainingBytes() const;
     int  Position() const { return _pos; }
     bool HasData() const;
 
-    // ── Последовательное чтение (все целочисленные делегируют к ReadInt64) ──
+    //    (    ReadInt64) 
     int64_t  ReadInt64();
     uint64_t ReadUInt64();
     float    ReadFloat32();
 
-    // Бинарная последовательность (msgpack bin). Возвращает указатель внутрь буфера.
+    //   (msgpack bin).    .
     const char* ReadSequence(uint16_t& outLen);
 
-    // Строка (msgpack str с null-terminator). Возвращает std::string.
+    //  (msgpack str  null-terminator).  std::string.
     std::string ReadString();
 
-    // ── Обратное чтение (с конца пакета, по элементам) ────────
+    //    (  ,  ) 
     int64_t  ReverseReadInt64();
 
-    // ── LIBDBC-совместимые алиасы ─────────────────────────────
+    //  LIBDBC-  
     uint16_t ReadCmd()              { return GetCmd(); }
     float    ReadFloat()            { return ReadFloat32(); }
     int      RemainData() const     { return RemainingBytes(); }
 
-    // ── Мутации ─────────────────────────────────────────────
-    // count = количество msgpack-элементов для удаления с конца (НЕ байт!)
+    //   
+    // count =  msgpack-     ( !)
     bool DiscardLast(int count);
-    // Отбросить все элементы, прочитанные через ReverseRead*
+    //   ,   ReverseRead*
     void DiscardLastByReverseIndex();
     void Skip(int count);
     void Reset();
     void ResetPosition();
 
-    // ── Доступ к буферу ─────────────────────────────────────
+    //     
     uint8_t*       Data()       { return _data; }
     const uint8_t* Data() const { return _data; }
     explicit operator bool() const { return _data != nullptr && _dataLen >= 8; }
 
-    // ── Печать содержимого команды ────────────────────────────
+    //     
     std::string PrintCommand() const {
         if (!_data || _dataLen < 8)
             return "RPacket[Empty]";
@@ -185,12 +185,12 @@ private:
 
     uint8_t* _data;
     int _dataLen;
-    int _pos;               // совместимость (отслеживает позицию reader)
+    int _pos;               //  (  reader)
     bool _ownsBuffer;
 
     mpack_reader_t _reader;
     int _parameterForwardIterator;
-    int _reverseCurrentIndex;   // -1 = не инициализирован
+    int _reverseCurrentIndex;   // -1 =  
     int _allParameters;
 };
 

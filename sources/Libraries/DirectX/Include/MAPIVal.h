@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I V A L . H
  *	
  *	Macros used to validate parameters on standard MAPI object methods.

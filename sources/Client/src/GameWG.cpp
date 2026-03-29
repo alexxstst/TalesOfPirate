@@ -1,4 +1,4 @@
-
+Ôªø
 #include "stdafx.h"
 #include "GameWG.h"
 #include "PacketCmd.h"
@@ -22,7 +22,7 @@ CGameWG::~CGameWG(void)
 }
 
 
-// À¢–¬µ±«∞Ω¯≥Ã¿Ôµƒƒ£øÈ
+// 
 bool CGameWG::RefreshModule(void)
 {
     bool          bRet        = false;
@@ -40,7 +40,7 @@ bool CGameWG::RefreshModule(void)
 
 		if(Module32First(hModuleSnap.get(), &me32)) 
 		{
-			// ±È¿˙µ±«∞Ω¯≥Ã¿ÔµƒÀ˘”–ƒ£øÈ
+			// 
 			do
 			{
 				strModule = me32.szModule;
@@ -52,7 +52,7 @@ bool CGameWG::RefreshModule(void)
 		}
 		else
 		{
-			// √∂æŸ ß∞‹
+			// 
 			bRet = false;
 		}
 	}
@@ -65,7 +65,7 @@ bool CGameWG::RefreshModule(void)
 }
 
 
-//  «∑Ò π”√¡À°∞∫£µ¡ÃÏ π°±Õ‚π“
+// 
 bool CGameWG::IsUseHdts(void)
 {
 	if (m_lstModule.contains("hookit.dll"))
@@ -77,14 +77,14 @@ bool CGameWG::IsUseHdts(void)
 }
 
 
-// ∆Ù∂Øœﬂ≥Ã
+// 
 void CGameWG::BeginThread(void)
 {
     m_hThread = (HANDLE)_beginthreadex(0, 0, Run, this, 0, 0);
 }
 
 
-// ∞≤»´÷’÷πœﬂ≥Ã
+// 
 void CGameWG::SafeTerminateThread()
 {
 	if(m_hThread)
@@ -97,30 +97,30 @@ void CGameWG::SafeTerminateThread()
 }
 
 
-// œﬂ≥Ãªÿµ˜
+// 
 UINT CALLBACK CGameWG::Run(void* param)
 {
 	CGameWG* pGameWG = (CGameWG*)(param);
 
 	for(;;)
 	{
-		Sleep(60 * 1000);	// “ª∑÷÷”À¢“ª¥Œ
+		Sleep(60 * 1000);	// 
 
 		if(! g_NetIF || ! g_NetIF->IsConnected())
 		{
-			// Õ¯¬ÁŒ¥¡¨Ω”
+			// 
 			continue;
 		}
 
 		if(! pGameWG->RefreshModule())
 		{
-			// À¢–¬ƒ£øÈ¡–±Ì
+			// 
 			continue;
 		}
 
 		if(pGameWG->IsUseHdts())
 		{
-			//  π”√¡ÀÕ‚π“°∞∫£µ¡ÃÏ π°±
+			// 
 
 			CS_ReportWG(g_oLangRec.GetString(143));
 			break;

@@ -1,4 +1,4 @@
-//
+﻿//
 //  NDDESEC.H
 //  Copyright (c) 1994-1999, Microsoft Corp. All rights reserved.
 //

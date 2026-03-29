@@ -1,4 +1,4 @@
-print("-- [Loading] Item Attr Type")
+﻿print("-- [Loading] Item Attr Type")
 
 ITEMATTR_COUNT_BASE0 = 0
 ITEMATTR_COE_STR = ITEMATTR_COUNT_BASE0 + 1

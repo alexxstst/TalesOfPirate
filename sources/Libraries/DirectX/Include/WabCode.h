@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  WABCODE.H
  *
  *  Status Codes returned by WAB routines

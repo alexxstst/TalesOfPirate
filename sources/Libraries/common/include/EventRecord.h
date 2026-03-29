@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: EventRecord.h
 // Creater: ZhangXuedong
 // Date: 2004.11.24
@@ -13,16 +13,16 @@
 #include "TableData.h"
 #include "point.h"
 
-// ÊÂ¼þ´¥·¢ÀàÐÍ
+// 
 enum EEventTouchType
 {
-	enumEVENTT_RANGE	= 1,		// °´°ë¾¶´¥·¢
+	enumEVENTT_RANGE	= 1,		// 
 };
 
 enum EEventExecType
 {
-	enumEVENTE_SMAP_ENTRY	= 1,	// µØÍ¼¾²Ì¬ÇÐ»»µã
-	enumEVENTE_DMAP_ENTRY	= 2,	// µØÍ¼¶¯Ì¬ÇÐ»»µã
+	enumEVENTE_SMAP_ENTRY	= 1,	// 
+	enumEVENTE_DMAP_ENTRY	= 2,	// 
 };
 
 enum EEventType
@@ -31,11 +31,11 @@ enum EEventType
 	enumEVENT_TYPE_ENTITY,
 };
 
-// ´¥·¢ÀàÐÍ,¾ö¶¨¿Í»§¶ËÔõÑù´¥·¢
+// ,
 enum EEventArouseType
 {
-	enumEVENT_AROUSE_DISTANCE,		// °´°ë¾¶´¥·¢
-	enumEVENT_AROUSE_CLICK,			// µã»÷´¥·¢
+	enumEVENT_AROUSE_DISTANCE,		// 
+	enumEVENT_AROUSE_CLICK,			// 
 };
 
 const char cchEventRecordKeyValue = (char)0xff;
@@ -47,16 +47,16 @@ class CEventRecord : public CRawDataInfo
 public:
 	//CEventRecord();
 
-	long	lID;						// ±àºÅ
-	char	szName[defEVENT_NAME_LEN];	// Ãû³Æ
-    short   sEventType;                 // ÊÂ¼þÀàÐÍ,ÓÃÓÚÇø·Ö·¢ËÍÐ­Òé·½Ê½,²Î¿´EEventType
-	short	sArouseType;				// ´¥·¢ÀàÐÍ
-	short	sArouseRadius;				// ´¥·¢°ë¾¶
-	short	sEffect;					// ´¥·¢ÌØÐ§
-	short	sMusic;						// ´¥·¢ÒôÐ§
-	short   sBornEffect;				// ³öÉúÊ±µÄÌØÐ§
-	short	sCursor;					// ÊÂ¼þÏÔÊ¾µÄ¹â±ê
-	char	chMainChaType;				// ÊÂ¼þµã»÷Ê±Ê²Ã´Çé¿öÓÐÐ§(0-¶¼ÓÐÐ§,1-ÈË£¬2-´¬)
+	long	lID;						// 
+	char	szName[defEVENT_NAME_LEN];	// 
+    short   sEventType;                 // ,,EEventType
+	short	sArouseType;				// 
+	short	sArouseRadius;				// 
+	short	sEffect;					// 
+	short	sMusic;						// 
+	short   sBornEffect;				// 
+	short	sCursor;					// 
+	char	chMainChaType;				// (0-,1-2-)
 
 	bool	IsValid( int MainChaType )	{ return chMainChaType==0 || MainChaType==chMainChaType;	}
 };
@@ -76,7 +76,7 @@ public:
 
 protected:
 
-	static CEventRecordSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CEventRecordSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

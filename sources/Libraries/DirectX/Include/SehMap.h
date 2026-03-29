@@ -1,4 +1,4 @@
-/*
+﻿/*
 
   SEHMAP.H - Map old-style structured exception handling to correct names.
 

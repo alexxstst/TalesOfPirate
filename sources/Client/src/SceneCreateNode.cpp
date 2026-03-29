@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "Scene.h"
 #include "GameApp.h"
 #include "CharacterPoseSet.h"
@@ -14,7 +14,7 @@
 #include "NetProtocol.h"
 
 //-----------------------
-// SceneNode ����
+// SceneNode 
 // Add Character to scene
 //----------------------- 
 CCharacter* CGameScene::AddBoat( stNetChangeChaPart& part )
@@ -23,7 +23,7 @@ CCharacter* CGameScene::AddBoat( stNetChangeChaPart& part )
     CChaRecord* pInfo = GetChaRecordInfo( nScriptID );
 	if( !pInfo ) return NULL;
 
-    CCharacter *pCha = _GetFirstInvalidCha(); // �˴���Ҫ�Ż�Ϊ������һ��ͬ����Cha	
+    CCharacter *pCha = _GetFirstInvalidCha(); // Cha	
 	if( !pCha ) 
 	{
         g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(341));
@@ -205,7 +205,7 @@ __ret:
 }
 
 //-----------------------
-// SceneNode ����
+// SceneNode 
 // Add SceneObj to scene
 //----------------------- 
 CSceneObj* CGameScene::AddSceneObj(int nScriptID)
@@ -280,7 +280,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
         const DWORD no_transp_num = 1;
         DWORD no_transp[no_transp_num] =
         {
-            449, // ���ھư�
+            449, // 
         };
 
         for(DWORD i = 0; i < no_transp_num; i++)
@@ -319,7 +319,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 
 
 //-----------------------
-// SceneNode ����
+// SceneNode 
 // Add EffectObj to scene
 //----------------------- 
 CEffectObj* CGameScene::AddSceneEffect(int nEffectTypeID)
@@ -344,7 +344,7 @@ CEffectObj* CGameScene::AddSceneEffect(int nEffectTypeID)
 }
 
 //-----------------------
-// SceneNode ����
+// SceneNode 
 // Add SceneItem to scene
 //----------------------- 
 CSceneItem* CGameScene::AddSceneItem(int nScriptID, int nType)

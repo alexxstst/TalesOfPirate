@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 typedef std::map<int, std::string> MY_MAP;
 

@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TableData.h"
 
@@ -12,7 +12,7 @@ public:
 	{
         for(int i=0; i<7; i++)  sRealPoseID[i] = 0;
     }
-    short sRealPoseID[7]; // 5�ֶ�������, ����, ��������, ˫������, ����.....
+    short sRealPoseID[7]; // 5, , , , .....
 };
 
 
@@ -32,7 +32,7 @@ public:
 
 protected:
 
-	static CPoseSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CPoseSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

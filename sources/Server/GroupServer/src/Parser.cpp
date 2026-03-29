@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Parser.cpp
 // Creater: ZhangXuedong
 // Date: 2004.11.22
@@ -15,7 +15,7 @@ using namespace std;
 CParser	g_CParser;
 list<string> g_luaFNList;
 
-// ʹ��lua pcall�Ĵ��󱨸溯��
+// lua pcall
 void lua_callalert(lua_State* L, int status)
 {
 	if (status != 0)
@@ -27,7 +27,7 @@ void lua_callalert(lua_State* L, int status)
 			lua_call(L, 1, 0);
 		}
 		else
-		{ // no _ALERT function; выводим ошибку в лог
+		{ // no _ALERT function;    
 			g_logManager.InternalLog(LogLevel::Error, "lua", lua_tostring(L, -2));
 			lua_pop(L, 2);
 		}
@@ -47,7 +47,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 {
 	MPTimer t; t.Begin();
 	lua_getglobal(m_pSLua, csString);
-	if (!lua_isfunction(m_pSLua, -1)) // ���Ǻ�����
+	if (!lua_isfunction(m_pSLua, -1)) // 
 	{
 		lua_pop(m_pSLua, 1);
 		if (nRetNum == 1 && chRetType == enumSCRIPT_RETURN_NUMBER)
@@ -55,14 +55,14 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			m_nDoStringRet[0] = atoi(csString);
 			return 1;
 		}
-		// Lua-функция не определена
+		// Lua-  
 		ToLogService("lua", LogLevel::Error, "no define DoString({})", csString);
 		return 0;
 	}
 
 	if (nRetNum > DOSTRING_RETURN_NUM)
 	{
-		// Слишком много возвращаемых значений
+		//    
 		ToLogService("lua", LogLevel::Error, "msgDoString({}) return wrong num !!!", csString);
 
 		lua_settop(m_pSLua, 0);
@@ -107,7 +107,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 				lua_pushstring(m_pSLua, va_arg(list, char *));
 			break;
 		default:
-			//LG("lua_err", "msgDoString(%s) �������ʹ��󣡣���\n", csString);
+			//LG("lua_err", "msgDoString(%s) \n", csString);
 			ToLogService("lua", LogLevel::Error, "msgDoString({}) parameter type is wrong!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
@@ -119,7 +119,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	int nState = lua_pcall(m_pSLua, nParamNum, LUA_MULTRET, 0);
 	if (nState != 0)
 	{
-		// Ошибка выполнения скрипта
+		//   
 		ToLogService("lua", LogLevel::Error, "DoString {}", csString);
 		lua_callalert(m_pSLua, nState);
 
@@ -135,7 +135,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		{
 			if (!lua_isnumber(m_pSLua, -1 - i))
 			{
-				//LG("lua����ֵ����", "���ýű� %s������%d��������ֵ%d���� ʱ���䷵��ֵ���Ͳ�ƥ�䣡\n", csString, nParamNum, nRetNum);
+				//LG("lua", " %s%d%d \n", csString, nParamNum, nRetNum);
 				ToLogService("lua", LogLevel::Error, "call {}(parameter {}, return {}), return type cant matched!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
@@ -146,7 +146,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		{
 			if (!lua_isstring(m_pSLua, -1 - i))
 			{
-				//LG("lua����ֵ����", "���ýű� %s������%d��������ֵ%d���� ʱ���䷵��ֵ���Ͳ�ƥ�䣡\n", csString, nParamNum, nRetNum);
+				//LG("lua", " %s%d%d \n", csString, nParamNum, nRetNum);
 				ToLogService("lua", LogLevel::Error, "call {}(parameter {}, return {}), return type cant matched!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
@@ -155,7 +155,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		}
 		else
 		{
-			//LG("lua_err", "msgDoString(%s) ����ֵ���ʹ��󣡣���\n", csString);
+			//LG("lua_err", "msgDoString(%s) \n", csString);
 			ToLogService("lua", LogLevel::Error, "msgDoString({}) return type is wrong!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
@@ -167,8 +167,8 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	DWORD dwEndTime = t.End();
 	if(dwEndTime > 20)
 	{
-		//LG("script_time", "�ű�[%s]����ʱ����� time = %d\n", csString, dwEndTime);
-		// Скрипт выполнялся слишком долго
+		//LG("script_time", "[%s] time = %d\n", csString, dwEndTime);
+		//    
 		ToLogService("lua", LogLevel::Trace, "script [{}] too long time = {}", csString, dwEndTime);
 	}
 	return nRet;

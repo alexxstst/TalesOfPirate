@@ -1,4 +1,4 @@
-// functions to get shell special folders/
+﻿// functions to get shell special folders/
 // shfolder.dll supports these on all platforms including Win95, Win98, NT4 and IE4 shell
 
 // all CSIDL values referred to here are supported natively by shfolder.dll, that is they

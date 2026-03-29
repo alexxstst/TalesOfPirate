@@ -1,4 +1,4 @@
-// NpcScript.cpp Created by knight-gongjian 2004.11.30.
+﻿// NpcScript.cpp Created by knight-gongjian 2004.11.30.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "NpcScript.h"
@@ -16,7 +16,7 @@ using namespace mission;
 
 net::WPacket g_WritePacket;
 
-// ���籨�Ķ�ȡ
+// 
 inline int lua_GetPacket( lua_State *L )
 {
 	g_WritePacket = g_gmsvr->GetWPacket();
@@ -116,8 +116,8 @@ inline int lua_ReadString( lua_State *L )
 	{
 		E_LUANULL;
 	}
-	//lua_pushstring( L, ( pszData ) ? pszData : "��Ч�ַ�ָ�룡" );
-	lua_pushstring( L, ( !pszData.empty() ) ? pszData.c_str() : "Ineffective char pointer��" );
+	//lua_pushstring( L, ( pszData ) ? pszData : "" );
+	lua_pushstring( L, ( !pszData.empty() ) ? pszData.c_str() : "Ineffective char pointer" );
 	return 1;
 }
 
@@ -350,7 +350,7 @@ inline int lua_GetMonsterName( lua_State* L )
 
 	USHORT sMonsterID = (USHORT)lua_tonumber( L, 1 );
 	
-	//char szName[64] = "δ֪";
+	//char szName[64] = "";
 	char szName[64];
 	strncpy( szName, RES_STRING(GM_NPCSCRIPT_CPP_00001), 64 - 1 );
 
@@ -376,7 +376,7 @@ inline int lua_GetItemName( lua_State* L )
 
 	USHORT sItemID = (USHORT)lua_tonumber( L, 1 );
 
-	//char szItem[64] = "δ֪";
+	//char szItem[64] = "";
 	char szItem[64];
 	strncpy( szItem, RES_STRING(GM_NPCSCRIPT_CPP_00001), 64 - 1 );
 
@@ -402,7 +402,7 @@ inline int lua_GetAreaName( lua_State* L )
 	}
 
 	USHORT sAreaID = (USHORT)lua_tonumber( L, 1 );
-	//char szArea[128] = "δ֪����";
+	//char szArea[128] = "";
 	char szArea[128];
 	strncpy( szArea, RES_STRING(GM_NPCSCRIPT_CPP_00002), 128 - 1 );
 
@@ -529,7 +529,7 @@ inline int lua_Rand( lua_State* L )
 	return 1;
 }
 
-// �ű����Ժ���
+// 
 inline int lua_DebugInfo( lua_State* L )
 {
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_isnumber( L, 1 ) );
@@ -832,7 +832,7 @@ inline int lua_FindNpc( lua_State* L )
 	const char* pszNpc = lua_tostring( L, 1 );
 	CNpc* pNpc = NULL;
 	try { pNpc = g_pGameApp->FindNpc( pszNpc ); }
-	catch(...) { ToLogService("common", "findnpc error��exception!" ); }
+	catch(...) { ToLogService("common", "findnpc errorexception!" ); }
 
 	if( !pNpc )
 	{
@@ -1099,7 +1099,7 @@ BOOL lua_ChaPlayEffect(lua_State* L)
 		return 0;
 	}
 
-	// Типизированная сериализация: визуальный эффект на персонаже
+	//  :    
 	auto l_wpk = net::msg::serialize(net::msg::McChaPlayEffectMessage{pChar->GetID(), (int64_t)nEffectID});
 
 	pChar->NotiChgToEyeshot( l_wpk );
@@ -1113,7 +1113,7 @@ inline int RegisterNpcScript()
 	REGFN(ReloadNpcInfo);
 	REGFN(FindNpc);
 
-	// npc���纯��ע��
+	// npc
 	REGFN(ReadCmd);
 	REGFN(ReadByte);
 	REGFN(ReadWord);

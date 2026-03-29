@@ -1,4 +1,4 @@
-
+﻿
 #include "Timer.h"
 
 _DBC_USING

@@ -1,4 +1,4 @@
-// ppc_power9.cpp - written and placed in the public domain by
+﻿// ppc_power9.cpp - written and placed in the public domain by
 //                  Jeffrey Walton, Uri Blumenthal and Marcel Raad.
 //
 //    This source file uses intrinsics and built-ins to gain access to

@@ -1,4 +1,4 @@
-#ifdef DllExport
+﻿#ifdef DllExport
 #undef DllExport
 #endif
 

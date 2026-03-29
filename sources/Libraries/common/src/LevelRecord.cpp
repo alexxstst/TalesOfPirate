@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: LevelRecord.cpp
 // Creater: ZhangXuedong
 // Date: 2004.12.10
@@ -20,11 +20,11 @@ BOOL CLevelRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string
     string strList[80];
 	string strLine;
 
-	// ±àºÅ
+	// 
 	pInfo->lID = pInfo->nID;
-	// µÈ¼¶
+	// 
 	pInfo->sLevel = Str2Int(pInfo->szDataName);
-	// ¾­ÑéÖµ
+	// 
 	pInfo->ulExp = _atoi64(ParamList[m++].c_str()); //Str2Int(ParamList[m++]);
 
 	return TRUE;

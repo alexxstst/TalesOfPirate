@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
-// Auto-generated from NetCommand.h — маппинг номеров команд в мнемоники.
-// Не редактировать вручную.
+// Auto-generated from NetCommand.h      .
+//   .
 
 #include <unordered_map>
 #include <string>

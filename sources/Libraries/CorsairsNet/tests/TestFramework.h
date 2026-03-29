@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
-// TestFramework.h — минимальный фреймворк для тестирования.
-// Макросы TEST, ASSERT_EQ, ASSERT_TRUE, ASSERT_STREQ, ASSERT_THROW.
+// TestFramework.h     .
+//  TEST, ASSERT_EQ, ASSERT_TRUE, ASSERT_STREQ, ASSERT_THROW.
 
 #include <cmath>
 #include <cstring>
@@ -51,7 +51,7 @@ inline int runAll() {
         }
     }
 
-    std::cout << "\n--- Итог: " << passed << " passed, " << failed << " failed ---\n";
+    std::cout << "\n--- : " << passed << " passed, " << failed << " failed ---\n";
     return failed > 0 ? 1 : 0;
 }
 
@@ -72,7 +72,7 @@ public:
     if (_e != _a) { \
         std::ostringstream _ss; \
         _ss << "ASSERT_EQ failed at " << __FILE__ << ":" << __LINE__ \
-            << " — expected: " << _e << ", actual: " << _a; \
+            << "  expected: " << _e << ", actual: " << _a; \
         throw test::AssertionError(_ss.str()); \
     } \
 } while(0)
@@ -81,7 +81,7 @@ public:
     if (!(expr)) { \
         std::ostringstream _ss; \
         _ss << "ASSERT_TRUE failed at " << __FILE__ << ":" << __LINE__ \
-            << " — expression: " #expr; \
+            << "  expression: " #expr; \
         throw test::AssertionError(_ss.str()); \
     } \
 } while(0)
@@ -90,7 +90,7 @@ public:
     if (expr) { \
         std::ostringstream _ss; \
         _ss << "ASSERT_FALSE failed at " << __FILE__ << ":" << __LINE__ \
-            << " — expression: " #expr; \
+            << "  expression: " #expr; \
         throw test::AssertionError(_ss.str()); \
     } \
 } while(0)
@@ -100,7 +100,7 @@ public:
     if (std::strcmp(_e, _a) != 0) { \
         std::ostringstream _ss; \
         _ss << "ASSERT_STREQ failed at " << __FILE__ << ":" << __LINE__ \
-            << " — expected: \"" << _e << "\", actual: \"" << _a << "\""; \
+            << "  expected: \"" << _e << "\", actual: \"" << _a << "\""; \
         throw test::AssertionError(_ss.str()); \
     } \
 } while(0)
@@ -110,7 +110,7 @@ public:
     if (std::abs(_e - _a) > 1e-6f) { \
         std::ostringstream _ss; \
         _ss << "ASSERT_FLOAT_EQ failed at " << __FILE__ << ":" << __LINE__ \
-            << " — expected: " << _e << ", actual: " << _a; \
+            << "  expected: " << _e << ", actual: " << _a; \
         throw test::AssertionError(_ss.str()); \
     } \
 } while(0)
@@ -123,7 +123,7 @@ public:
     if (!_caught) { \
         std::ostringstream _ss; \
         _ss << "ASSERT_THROW failed at " << __FILE__ << ":" << __LINE__ \
-            << " — expected " #exception_type " was not thrown"; \
+            << "  expected " #exception_type " was not thrown"; \
         throw test::AssertionError(_ss.str()); \
     } \
 } while(0)

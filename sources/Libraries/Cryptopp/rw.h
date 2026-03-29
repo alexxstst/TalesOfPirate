@@ -1,11 +1,11 @@
-// rw.h - originally written and placed in the public domain by Wei Dai
+﻿// rw.h - originally written and placed in the public domain by Wei Dai
 
 /// \file rw.h
 /// \brief Classes for Rabin-Williams signature scheme
 /// \details The implementation provides Rabin-Williams signature schemes as defined in
 ///   IEEE P1363. It uses Bernstein's tweaked square roots in place of square roots to
 ///   speedup calculations.
-/// \sa <A HREF="http://cr.yp.to/sigs/rwsota-20080131.pdf">RSA signatures and Rabin–Williams
+/// \sa <A HREF="http://cr.yp.to/sigs/rwsota-20080131.pdf">RSA signatures and RabinWilliams
 ///   signatures: the state of the art (20080131)</A>, Section 6, <em>The tweaks e and f</em>.
 /// \since Crypto++ 3.0
 

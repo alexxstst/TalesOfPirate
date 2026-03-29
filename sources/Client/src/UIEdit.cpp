@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "UIEdit.h"
 #include "uiimeinput.h"
 #include "uitextparse.h"
@@ -46,7 +46,7 @@ CEdit& CEdit::operator=(const CEdit& rhs)
 CEdit::~CEdit(void)
 {
 	//delete _pImage;
-	SAFE_DELETE(_pImage); // UI��������
+	SAFE_DELETE(_pImage); // UI
 }
 
 void CEdit::_Copy( const CEdit& rhs )
@@ -94,7 +94,7 @@ bool CEdit::OnKeyDown( int key )
 	{
 	case VK_LEFT:
 		{
-			//begin:��������		
+			//begin:		
 			if ( _nCursorCol >=3 )
 			{
 				if (! (s[_nCursorCol-1] & 0x80) )
@@ -109,7 +109,7 @@ bool CEdit::OnKeyDown( int key )
 					}
 				}
 			}
-			//end:��������
+			//end:
 
 			--_nCursorCol;
 			if( _str[_nCursorCol] & 0x80 )	--_nCursorCol;
@@ -124,7 +124,7 @@ bool CEdit::OnKeyDown( int key )
 			if( _nCursorCol <= 0 ) 
 			{
 				_nCursorCol = 0;				
-				if ( (int)_str.length() >=_nMaxNumVisible  ) //�ƶ������ַ�
+				if ( (int)_str.length() >=_nMaxNumVisible  ) //
 				{	
 					_strVisible = GetSelfString(_str , _nMaxNumVisible , true ) ;
 				}
@@ -136,7 +136,7 @@ bool CEdit::OnKeyDown( int key )
 		if( _str.length() ==0 )		return false ;
 
 		/*
-		// begin:��������		
+		// begin:		
 		if (  (s[_nCursorCol]=='#') && _nCursorCol >=0)
 		{
 			if ( isdigit( s[_nCursorCol+1])  &&isdigit( s[_nCursorCol+2])) 
@@ -161,7 +161,7 @@ bool CEdit::OnKeyDown( int key )
 			if( _nCursorCol >=_nMaxNumVisible  )
 			{
 				_nCursorCol = _nMaxNumVisible ;						
-				_strVisible = GetSelfString( _str, _nMaxNumVisible , false );//���������ֵ�һ���֣���������ж�
+				_strVisible = GetSelfString( _str, _nMaxNumVisible , false );//
 			}
 		}*/
 		break;
@@ -177,9 +177,9 @@ bool CEdit::OnKeyDown( int key )
 		{
 			RefreshCursor();
 			/*_nCursorCol = 0;
-			if ( (int)_str.length() >_nMaxNumVisible  ) //�ƶ������ַ�
+			if ( (int)_str.length() >_nMaxNumVisible  ) //
 			{	
-				_strVisible = GetSelfString(_str , _nMaxNumVisible , true ) ;  //���������ֵ�һ���֣���������ж�
+				_strVisible = GetSelfString(_str , _nMaxNumVisible , true ) ;  //
 			}*/
 		}
 		break;
@@ -187,10 +187,10 @@ bool CEdit::OnKeyDown( int key )
 	{
 		RefreshCursor();
 		/*_nCursorCol = (int)_str.length();
-		if ( (int)_str.length() >_nMaxNumVisible  ) //�ƶ������ַ�
+		if ( (int)_str.length() >_nMaxNumVisible  ) //
 		{
 			_nCursorCol = _nMaxNumVisible;
-			_strVisible = GetSelfString(_str , _nMaxNumVisible , false ) ; //���������ֵ�һ���֣���������ж�
+			_strVisible = GetSelfString(_str , _nMaxNumVisible , false ) ; //
 		}*/
 		break;
 	}
@@ -249,7 +249,7 @@ bool CEdit::OnChar( char c )
 	switch( c )
 	{
 	case  0: return true;
-	case '\r':		// �س�
+	case '\r':		// 
 		if( _pEnterButton )
 		{
 			_pEnterButton->DoClick();
@@ -258,7 +258,7 @@ bool CEdit::OnChar( char c )
 
 		if( !GetIsMulti() )
 		{			
-			if( evtEnter && !_str.empty() ) evtEnter(this);  // ����Edit,ִ��Ĭ�Ϸ���
+			if( evtEnter && !_str.empty() ) evtEnter(this);  // Edit,
 		}
 		else
 		{
@@ -268,7 +268,7 @@ bool CEdit::OnChar( char c )
 		//ClearText();
 		break;
 	/*
-	case '\b':		// �˸�
+	case '\b':		// 
 		{
 			/*try
 			{
@@ -281,7 +281,7 @@ bool CEdit::OnChar( char c )
 				bool bHasPic = false;
 				if( (int) _str.length() <=_nMaxNumVisible )
 				{
-					//begin:�����Ƿ�ɾ��ͼԪ
+					//begin:
 					if ( _nCursorCol >=3 )
 					{
 						if (! (s[_nCursorCol-1] & 0x80) )
@@ -306,7 +306,7 @@ bool CEdit::OnChar( char c )
 							}
 						}
 					}
-					//end�����Ƿ�ɾ��ͼԪ
+					//end
 					
 					string right =   GetSelfString( _str, (int)_str.length() - _nCursorCol , false  );
 					-- _nCursorCol ;
@@ -325,7 +325,7 @@ bool CEdit::OnChar( char c )
 				}
 				else if ( (int) _str.length()>=_nMaxNumVisible )
 				{						
-					if (_nCursorCol == _nMaxNumVisible)   //�����ڵ�8���ַ���
+					if (_nCursorCol == _nMaxNumVisible)   //8
 					{
 						if( (s[len] & 0x80) )
 						{
@@ -342,7 +342,7 @@ bool CEdit::OnChar( char c )
 					}
 					else 	//added by billy 
 					{
-						//�����ߵ��ַ�ɾ��һ�����ұߵ��ַ��������仯
+						//
 						string right = _str.substr( _nCursorCol + _str.length() - _nMaxNumVisible, _nMaxNumVisible - _nCursorCol ); 
 						string left = _str.substr( 0 , _nCursorCol + _str.length() - _nMaxNumVisible  -1 ); 
 						_str = left + right;               
@@ -372,7 +372,7 @@ bool CEdit::OnChar( char c )
 		break;
 	case 27:		// ESC
 		break ;
-	case '�':
+	//case '':
 	case 'ff':
 	case '{':
 	case '}':
@@ -406,11 +406,11 @@ bool CEdit::OnChar( char c )
 		{
 			RefreshText();
 			
-			// ���ڿɼ��ַ���������Ȼ��Ҫ����
+			// 
 			
 			if( GetMaxNum()-1 <= (int)_str.length() ) return false;		
 			if( GetIsDigit() && !isdigit( c ) ) return false;		
-			if( GetIsPassWord() && !isprint( c ) ) return false;	// �����������ɼ��ַ������ֲ�����
+			if( GetIsPassWord() && !isprint( c ) ) return false;	// 
 			
 
 			if( (int)_str.length()  < _nMaxNumVisible )
@@ -455,8 +455,8 @@ void CEdit::_Copy()
 {
 	RefreshCursor();
 	
-	int len = (int)_str.length();	// Ҫ�������ַ�������
-	// ���Ҫ�������ַ������ȣ�δ����
+	int len = (int)_str.length();	// 
+	// 
 
 	if( !OpenClipboard( GetHWND() ) ) return;
 
@@ -469,7 +469,7 @@ void CEdit::_Copy()
 		char* pData = (char*)GlobalLock(hData);
 		if (!pData) goto error;
 
-		// �����ַ���
+		// 
 		strncpy(pData, _str.c_str(), len);
 		pData[len] = 0;
 
@@ -538,14 +538,14 @@ void CEdit::_Cut()
 	//_Delete();
 }
 
-void CEdit::_Delete()    //ɾ����ǰ�ַ�
+void CEdit::_Delete()    //
 {
 	//RefreshText();
 	/*int len = (int)_str.length() ;
 	const char* s = _str.c_str() ;
 	string left,right ;
 
-	//begin:�����Ƿ�ɾ��ͼԪ
+	//begin:
 	bool bHasPic = false;
 	if ( (s[_nCursorCol]=='#') && (_nCursorCol+3 <= len) )
 	{
@@ -565,7 +565,7 @@ void CEdit::_Delete()    //ɾ����ǰ�ַ�
 
 	if(  (int)_str.length() <=_nMaxNumVisible  )
 	{
-		//�������Ĳ���
+		//
 		if ( _nCursorCol  >0 )
 			left = _str.substr (0, _nCursorCol) ;
 		else
@@ -691,7 +691,7 @@ void CEdit::Render()
 	}
 	else
 	{
-		// �����ַ�����������ʾ��ͬ������*��  added by billy 
+		// *  added by billy 
 		char *cPassWord = new char[_nMaxNum + 1];
 		memset( cPassWord, 0, _nMaxNum + 1 );
 		int  length = (int)strlen ( (char*)_str.c_str() ) ;
@@ -703,7 +703,7 @@ void CEdit::Render()
 	//	_pImage->Render( GetX(), GetY() );
 
 		//delete [] cPassWord;
-		SAFE_DELETE_ARRAY(cPassWord); // UI��������
+		SAFE_DELETE_ARRAY(cPassWord); // UI
 	}
 
 	GetRender().Reset();
@@ -712,7 +712,7 @@ void CEdit::Render()
 
 void CEdit::Init()
 {
-	_nCursorHeight = CGuiFont::s_Font.GetHeight( "��" ) - 2;
+	_nCursorHeight = CGuiFont::s_Font.GetHeight( "" ) - 2;
 
 	if( _pEnterButton && _pEnterButton->GetForm()!=GetForm() )
 	{
@@ -737,7 +737,7 @@ void CEdit::Refresh()
 //	int cx = 0;
 //	if( GetIsMulti() )
 //	{
-//		_nCursorY = GetY() + _nCursorRow * _nFontHeight;	// δ�������õ���ǰ�еĿ���
+//		_nCursorY = GetY() + _nCursorRow * _nFontHeight;	// 
 //	}
 //	else
 //	{

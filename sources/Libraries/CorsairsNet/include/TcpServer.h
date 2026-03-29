@@ -1,14 +1,14 @@
-#pragma once
+﻿#pragma once
 
-// TcpServer — TCP listener с accept потоком.
+// TcpServer  TCP listener  accept .
 //
-// Архитектура:
-//   Accept Thread: accept() → pending queue (потокобезопасная)
-//   Game Thread:   PollAll() → обработка pending accepts → TcpClient::Attach()
-//                  → проверка pendingDisconnect → OnDisconnected
-//                  → PollPackets() для каждого подключения → OnPacket
+// :
+//   Accept Thread: accept()  pending queue ()
+//   Game Thread:   PollAll()   pending accepts  TcpClient::Attach()
+//                    pendingDisconnect  OnDisconnected
+//                   PollPackets()     OnPacket
 //
-// Каждое принятое подключение — TcpClient в Attach-режиме.
+//     TcpClient  Attach-.
 
 #include "TcpClient.h"
 #include <memory>
@@ -17,26 +17,26 @@
 
 namespace net {
 
-// ═══════════════════════════════════════════════════════════════
-//  ITcpServerHandler — callback'и серверных событий
-// ═══════════════════════════════════════════════════════════════
+// 
+//  ITcpServerHandler  callback'  
+// 
 
 struct ITcpServerHandler {
     virtual ~ITcpServerHandler() = default;
 
-    // Новое подключение принято. Вернуть false чтобы отклонить (закроет сокет).
+    //   .  false   ( ).
     virtual bool OnAccepted(TcpClient* client) = 0;
 
-    // Пакет от подключения. Вызывается из PollAll → PollPackets.
+    //   .   PollAll  PollPackets.
     virtual void OnPacket(TcpClient* client, RPacket& pkt) = 0;
 
-    // Подключение разорвано. После вызова client будет удалён.
+    //  .   client  .
     virtual void OnDisconnected(TcpClient* client, int reason) = 0;
 };
 
-// ═══════════════════════════════════════════════════════════════
-//  TcpServer — TCP listener + accept thread
-// ═══════════════════════════════════════════════════════════════
+// 
+//  TcpServer  TCP listener + accept thread
+// 
 
 class TcpServer {
 public:
@@ -46,33 +46,33 @@ public:
     TcpServer(const TcpServer&) = delete;
     TcpServer& operator=(const TcpServer&) = delete;
 
-    // Начать слушать порт. maxConns — максимум одновременных подключений.
+    //   . maxConns    .
     bool Listen(const std::string& ip, uint16_t port, int maxConns = 16);
 
-    // Остановить сервер: закрыть listen socket, дождаться accept thread, отключить всех.
+    //  :  listen socket,  accept thread,  .
     void Shutdown();
 
-    // Обработать все события: pending accepts, disconnects, incoming packets.
-    // maxPktsPerConn — сколько пакетов обработать за раз для каждого подключения.
-    // Возвращает общее количество обработанных пакетов.
+    //   : pending accepts, disconnects, incoming packets.
+    // maxPktsPerConn         .
+    //     .
     int PollAll(int maxPktsPerConn = 50);
 
     void SetHandler(ITcpServerHandler* handler) { _handler = handler; }
 
-    // Отключить конкретного клиента
+    //   
     void DisconnectClient(TcpClient* client, int reason = 0);
 
-    // Отключить всех
+    //  
     void DisconnectAll();
 
-    // Текущее количество подключений
+    //   
     int GetConnectionCount() const;
 
-    // Слушает ли сервер
+    //   
     bool IsListening() const { return _listening.load(); }
 
 private:
-    // Accept thread: блокирующий accept() → pending queue
+    // Accept thread:  accept()  pending queue
     void AcceptThreadProc();
 
     SOCKET _listenSocket;
@@ -81,7 +81,7 @@ private:
     int _maxConns;
     ITcpServerHandler* _handler;
 
-    // Handler-адаптер: перенаправляет ITcpClientHandler::OnPacket → ITcpServerHandler::OnPacket(client, pkt)
+    // Handler-:  ITcpClientHandler::OnPacket  ITcpServerHandler::OnPacket(client, pkt)
     struct ClientHandlerAdapter : ITcpClientHandler {
         ITcpServerHandler* serverHandler = nullptr;
         TcpClient* client = nullptr;
@@ -90,11 +90,11 @@ private:
             if (serverHandler) serverHandler->OnPacket(client, packet);
         }
         void OnDisconnected(int) override {
-            // Не используется: disconnect обрабатывается через HasPendingDisconnect в PollAll
+            //  : disconnect   HasPendingDisconnect  PollAll
         }
     };
 
-    // Подключение = TcpClient + его handler-адаптер
+    //  = TcpClient +  handler-
     struct Connection {
         std::unique_ptr<TcpClient> client;
         std::unique_ptr<ClientHandlerAdapter> adapter;
@@ -102,7 +102,7 @@ private:
 
     std::vector<Connection> _connections;
 
-    // Pending accepts (accept thread → main thread)
+    // Pending accepts (accept thread  main thread)
     struct PendingAccept {
         SOCKET sock;
         std::string peerIP;

@@ -1,4 +1,4 @@
-print("-- [Loading] DreamIslandHook.lua")
+﻿print("-- [Loading] DreamIslandHook.lua")
 
 function dream_PKM(dead, atk)
 	local MobID = GetChaTypeID(dead)

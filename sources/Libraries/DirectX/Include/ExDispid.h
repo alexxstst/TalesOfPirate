@@ -1,4 +1,4 @@
-#ifndef EXDISPID_H_
+﻿#ifndef EXDISPID_H_
 //+-------------------------------------------------------------------------
 //
 //  Microsoft Windows

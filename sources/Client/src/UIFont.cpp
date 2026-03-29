@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uifont.h"
 #include "gameapp.h"
 
@@ -205,7 +205,7 @@ void CTextHint::ReadyForHint( int x, int y )
 {
     if( _hint.empty() ) return;
 
-    // ���㿪ʼ��ʾλ�ã��Լ��������
+    // 
     _nStartX = x + 40;
     _nStartY = y;
     _nHintW = 0;
@@ -234,7 +234,7 @@ void CTextHint::ReadyForHint( int x, int y )
         }        
     }
 
-    // ���hint�Ƿ�Խ�磨�ң��£�
+    // hint
     int off = GetRender().GetScreenWidth() - _nStartX - _nHintW - 10;
     if( off<0 )
     {
@@ -248,13 +248,13 @@ void CTextHint::ReadyForHint( int x, int y )
     }
 }
 
-//Add by sunny.sun 20080912Ϊ����GM����͵���˵����ʾ
+//Add by sunny.sun 20080912GM
 //Begin
 void CTextHint::ReadyForHintGM(int x, int y)
 {
 	    if( _hint.empty() ) return;
 
-    // ���㿪ʼ��ʾλ�ã��Լ��������
+    // 
     _nStartX = x + 40;
     _nStartY = y;
     _nHintW = 0;
@@ -289,7 +289,7 @@ void CTextHint::ReadyForHintGM(int x, int y)
         }        
     }
 
-    // ���hint�Ƿ�Խ�磨�ң��£�
+    // hint
     int off = GetRender().GetScreenWidth() - _nStartX - _nHintW - 10;
     if( off<0 )
     {
@@ -311,7 +311,7 @@ void CTextHint::Clear()
     for( ; it!=_hint.end(); ++it )
     {
         //delete *it;
-		SAFE_DELETE(*it); // UI��������
+		SAFE_DELETE(*it); // UI
     }
     _hint.clear();
 }
@@ -471,7 +471,7 @@ void CTextScrollHint::ReadyForHint( int x, int y ,int SetNum )
 {
 	if( _hint.empty() ) return;
 
-	// ���㿪ʼ��ʾλ�ã��Լ��������
+	// 
 	_nStartX = x + 40;			// Was 40
 	_nStartY = y;
 	_nHintW = 0;
@@ -500,7 +500,7 @@ void CTextScrollHint::ReadyForHint( int x, int y ,int SetNum )
 		}        
 	}
 
-	// ���hint�Ƿ�Խ�磨�ң��£�
+	// hint
 	int off = GetRender().GetScreenWidth() - _nStartX - _nHintW - 10;
 	if( off<0 )
 	{
@@ -524,7 +524,7 @@ void CTextScrollHint::Clear()
 	for( ; it!=_hint.end(); ++it )
 	{
 		//delete *it;
-		SAFE_DELETE(*it); // UI��������
+		SAFE_DELETE(*it); // UI
 	}
 	_hint.clear();
 }

@@ -52,7 +52,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 	static stChaState* stTmp[SKILL_STATE_MAXID] = { nullptr };
 	static unsigned int nTmpCount = 0;
 
-	// 用于确认是否已经修改
+	// 
 	static bool IsExist[SKILL_STATE_MAXID] = {};
 	memset(IsExist, 0, sizeof(IsExist));
 

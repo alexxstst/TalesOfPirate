@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  M S P S T . H
  *	
  *  This file lists internal properties of the Microsoft Personal

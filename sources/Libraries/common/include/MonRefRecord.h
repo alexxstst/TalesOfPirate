@@ -1,4 +1,4 @@
-//======================================================================================================================
+ï»¿//======================================================================================================================
 // FileName: MonRefRecord.h
 // Creater: ZhangXuedong
 // Date: 2004.09.05
@@ -16,17 +16,17 @@ using	namespace	GAME;
 
 const char cchMonRefRecordKeyValue = (char)0xff;
 
-#define defMAX_REGION_MONSTER_TYPE	15	// Ã¿¸öÇøÓòµÄ×î¶à¹ÖÎïÀàÐÍ
+#define defMAX_REGION_MONSTER_TYPE	15	// 
 
 class CMonRefRecord : public CRawDataInfo
 {
 public:
 	//CMonRefRecord();
 
-	long	lID;		// ÇøÓò±àºÅ
-	Point	SRegion[2];	// ÇøÓòµÄ×óÉÏ½ÇºÍÓÒÏÂ½Ç
-	short	sAngle;		// ³öÉú·½Ïò
-	long	lMonster[defMAX_REGION_MONSTER_TYPE][4]; // ID£¬ÊýÁ¿£¬Ë¢ÐÂ¸ÅÂÊ£¬Ë¢ÐÂ¼ä¸ô
+	long	lID;		// 
+	Point	SRegion[2];	// 
+	short	sAngle;		// 
+	long	lMonster[defMAX_REGION_MONSTER_TYPE][4]; // ID
 };
 
 class CMonRefRecordSet : public CRawDataSet
@@ -44,7 +44,7 @@ public:
 
 protected:
 
-	static CMonRefRecordSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CMonRefRecordSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

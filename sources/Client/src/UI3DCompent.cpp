@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "ui3dcompent.h"
 
 C3DCompent::C3DCompent(CForm& frmOwn)

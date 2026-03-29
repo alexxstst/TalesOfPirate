@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SectionData.h"
 #include "MPMapDef.h"
@@ -34,15 +34,15 @@ protected:
 };
 
 //-------------------------
-// ÎÄ¼þÍ·µÄ¶ÁÈ¡
-// ×ÓÀà¿ÉÒÔ×öÒ»Ð©ºÏ·¨ÐÔÅÐ¶Ï
+// 
+// 
 //-------------------------
 inline BOOL MPTerrainData::_ReadFileHeader()
 {
     fread(&_header, sizeof(_header), 1, _fp);
     if(_header.nMapFlag<780624 || _header.nMapFlag>780630) 
 	{
-		g_logManager.LogDebug("common", "msg²»ÊÇºÏ·¨µÄmapÎÄ¼þ!");
+		g_logManager.LogDebug("common", "msgmap!");
         return FALSE;
 	}
 
@@ -60,7 +60,7 @@ inline BOOL MPTerrainData::_ReadFileHeader()
 }
 
 //-----------------------------------
-// ÎÄ¼þÍ·µÄÐ´Èë, ÓÃÓÚÐÂ´´½¨ÎÄ¼þµÈ³¡ºÏ
+// , 
 //-----------------------------------
 inline void MPTerrainData::_WriteFileHeader()
 {
@@ -80,7 +80,7 @@ inline DWORD MPTerrainData::_ReadSectionIdx(DWORD dwSectionNo)
     DWORD dwOffset = 0; fread(&dwOffset, sizeof(DWORD), 1, _fp);
     if(_bDebug)
     {
-        g_logManager.LogDebug("common", "¶ÁÈ¡Ë÷ÒýÇøÊý¾Ý[{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+        g_logManager.LogDebug("common", "[{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
     return dwOffset;
 }
@@ -91,7 +91,7 @@ inline void MPTerrainData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
     fwrite(&dwOffset, sizeof(DWORD), 1, _fp);
     if(_bDebug)
     {
-        g_logManager.LogDebug("common", "Ð´ÈëË÷ÒýÇøÊý¾Ý[{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+        g_logManager.LogDebug("common", "[{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
 }
 
@@ -126,7 +126,7 @@ inline float MPTerrainData::GetHeight(int nX, int nY)
 }
 
 
-// µÃµ½Ö¸¶¨¾«È·×ø±êµÄHeight
+// Height
 inline float MPTerrainData::GetHeight(float fX, float fY)
 {
 	int nX = (int)fX;
@@ -174,14 +174,14 @@ inline float MPTerrainData::GetHeight(float fX, float fY)
 	return 0.0f;
 }*/
  
-// ËõÐ¡µØÍ¼ÎÄ¼þ
+// 
 inline void MPTerrainData::TrimFile(const char *pszTarget)
 {
 	FILE *fp = fopen(pszTarget, "wb");
 	
 	fwrite(&_header, sizeof(_header), 1, fp);
 	
-	// Ð´ÈëÄÚÈÝ
+	// 
 	DWORD *pdwOffset = new DWORD[_nSectionCntX * _nSectionCntY];
 	DWORD *pdwCur = pdwOffset;
 	memset(pdwOffset, 0, sizeof(DWORD) * _nSectionCntX * _nSectionCntY);
@@ -200,7 +200,7 @@ inline void MPTerrainData::TrimFile(const char *pszTarget)
         }
     }
 	
-	// Ð´ÈëË÷ÒýÇø
+	// 
 	fseek(fp, sizeof(_header), SEEK_SET);
 	fwrite(pdwOffset, sizeof(DWORD) * _nSectionCntX * _nSectionCntY, 1, fp);
 
@@ -212,11 +212,11 @@ inline void MPTerrainData::TrimFile(const char *pszTarget)
 
 struct SPackFileHeader
 {
-	DWORD	dwFlag;				// ÎÄ¼þ±êÊ¶
-	DWORD	dwMaxFileCnt;		// ÄÜÈÝÄÉµÄ×î´óÎÄ¼þÊýÁ¿
-	DWORD   dwSectionSize;		// Ã¿¸öÊý¾ÝÇøµÄ³ß´ç, Ò»°ãÎª32k
-	DWORD	dwMaxFileSection;	// Ã¿¸öÎÄ¼þ×î¶àSectionÊýÁ¿, ±ÈÈç20¸ö
-	DWORD   dwFileIdxSize;		// ÎÄ¼þË÷ÒýµÄ³ß´ç
+	DWORD	dwFlag;				// 
+	DWORD	dwMaxFileCnt;		// 
+	DWORD   dwSectionSize;		// , 32k
+	DWORD	dwMaxFileSection;	// Section, 20
+	DWORD   dwFileIdxSize;		// 
 };
 
 
@@ -252,7 +252,7 @@ inline void PackDirection(const char *pszDir, const char *pszPackFile)
 		FILE *fpTmp = fopen(pszFile, "rb");
 		if(fpTmp==NULL)
 		{
-			ToLogService("common", "±»´ò°üµÄÎÄ¼þ[{}]ÎÞ·¨´ò¿ª!", pszFile);
+			ToLogService("common", "[{}]!", pszFile);
 			continue;
 		}
 		fseek(fpTmp, 0, SEEK_END);
@@ -260,7 +260,7 @@ inline void PackDirection(const char *pszDir, const char *pszPackFile)
 
 		if(dwSize>=dwMaxFileSize)
 		{
-			ToLogService("common", "±»´ò°üµÄÎÄ¼þ[{}]ÎÄ¼þ³ß´ç³¬±ê, ÂÔ¹ý!", pszFile);
+			ToLogService("common", "[{}], !", pszFile);
 			fclose(fpTmp);
 			continue;
 		}
@@ -291,7 +291,7 @@ inline void PackDirection(const char *pszDir, const char *pszPackFile)
 	delete pbtIdx;
 	fclose(fp);
 
-	ToLogService("common", LogLevel::Error, "Ö¸¶¨Ä¿Â¼ÎÄ¼þÒÑ¾­±»´ò°ü³É[{}]", pszPackFile);
+	ToLogService("common", LogLevel::Error, "[{}]", pszPackFile);
 }
 
 

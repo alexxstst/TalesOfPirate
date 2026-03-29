@@ -1,4 +1,4 @@
-print("-- [Loading] Item Get Mission")
+﻿print("-- [Loading] Item Get Mission")
 
 function CheckMisChaBoat(role, ChaType)
     local Cha_Boat = GetCtrlBoat(role)

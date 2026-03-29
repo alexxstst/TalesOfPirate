@@ -1,46 +1,46 @@
-#pragma once
+﻿#pragma once
 
-// CharacterModel Ϊֱ����MPCharacter�򽻵�����
-// ������Ҫ���ð���ģ�͵Ĵ���, �������йص����в����ӿ�
-// �Լ�������ݵı���, ͬʱҲ�ж����Ĳ��ź͹���
-// Character���̳�CharacterModel
-// Character�����ִ���Ϸ�߼��������
-// ��̳й�ϵΪ: 
+// CharacterModel MPCharacter
+// , 
+// , 
+// CharacterCharacterModel
+// Character
+// : 
 
 // CCharacter: public CCharacterModel, public CActor
-// �������Ҫ������ΪJack Li
+// Jack Li
 
 
 
-// �������ṩ�Ľӿڰ���
+// 
 
-// Load(����ID)
+// Load(ID)
 
 // ChangePart(PartInfo)
 
 // PlayPose(PoseID, LoopFlag)
 
-// AttachItem(����ID, ��λ���)
+// AttachItem(ID, )
 
-// AttachEffect(EffectID, ��λ���)
+// AttachEffect(EffectID, )
 
 /*
-	dummy_0		�Ż���
-	dummy_1		ͷ��
-	dummy_2		�ز�
-	dummy_3		����
-	dummy_4		���
-	dummy_5		���
-	dummy_6		����
-	dummy_7		�Ҽ�
-	dummy_8		�ұ�
-	dummy_9		����
-	dummy_10	����
-	dummy_11	��ϥ
-	dummy_12	���
-	dummy_13	����
-	dummy_14	��ϥ
-	dummy_15	�ҽ�
+	dummy_0		
+	dummy_1		
+	dummy_2		
+	dummy_3		
+	dummy_4		
+	dummy_5		
+	dummy_6		
+	dummy_7		
+	dummy_8		
+	dummy_9		
+	dummy_10	
+	dummy_11	
+	dummy_12	
+	dummy_13	
+	dummy_14	
+	dummy_15	
 */
 
 enum
@@ -156,11 +156,11 @@ protected:
     int _UIPitch;
     BYTE  _UIColor[3]; // r, g, b
     
-    DWORD _TypeID;  // �ˣ��������������ж�
+    DWORD _TypeID;  // 
     DWORD _BoneID;
     DWORD _PartID[8];
     const char* _PartFile[8];
-    DWORD _ShipType; //�����������䴬�����ж�
+    DWORD _ShipType; //
     DWORD _SmallPoseID;
 	DWORD _PoseType;
     DWORD _PoseTabID;
@@ -208,18 +208,18 @@ public:
     virtual int LoadTower( DWORD type_id, DWORD* part_buf );
 
     int LoadPose( int cha_type );
-	void PlayPose( DWORD pose, DWORD type = PLAY_ONCE, int time=-1, int fps = 32, DWORD blend_flag = 1, DWORD blend_src_num = 5, bool IsGlitched = false );   // LoopSpeed,���ٺ���Poseѭ��һ��
+	void PlayPose( DWORD pose, DWORD type = PLAY_ONCE, int time=-1, int fps = 32, DWORD blend_flag = 1, DWORD blend_src_num = 5, bool IsGlitched = false );   // LoopSpeed,Pose
     void PlayPose( const MPPlayPoseInfo* info );
     void PlayPosePause();
     void PlayPoseContinue();
-    DWORD GetCurPoseID(); // ʵ�ʵ�pose �� Сpose
-    DWORD GetCurPoseType(); // pose������, �ο� enum EActionNumber
+    DWORD GetCurPoseID(); // pose  pose
+    DWORD GetCurPoseType(); // pose,  enum EActionNumber
 
     int IsPosePlaying( DWORD pose );
     int IsCurPosePlaying();
 
-    // link_id:�ο������LINK_ID_XXX; obj:���߶�����Ҫ��ͨ��Scene->AddSceneItem��
-    // part_type������Ϊ-1����ֻΪ��λ����
+    // link_id:LINK_ID_XXX; obj:Scene->AddSceneItem
+    // part_type-1
     int AttachItem( DWORD link_id, CSceneItem* obj, DWORD part_type, DWORD item_link_id = 0 );
     int AttachItem( DWORD link_id, const ItemLinkInfo* info );
     CSceneItem* DetachItem( CSceneItem* obj );
@@ -253,7 +253,7 @@ public:
     MPIPoseCtrl* GetPoseCtrl();
     MPPoseInfo* GetPoseInfo(DWORD pose_id);
     MPPoseInfo* GetPoseInfoBig(DWORD big_pose_id);
-    float GetPoseVelocity(); // ��ֵԽ��Խ��, default: 1.0f
+    float GetPoseVelocity(); // , default: 1.0f
     void SetEmiColorFLag(BOOL flag) { _EmiColor = flag; }
     BOOL GetEmiColorFlag() { return _EmiColor; }
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameApp.h"
 #include "Character.h"
 #include "SubMap.h"
@@ -47,19 +47,19 @@ void CCharacter::DoCommand(cChar *cszCommand, uLong ulLen)
 	}
 
 	
-	// ���ִ��GMָ��
+	// GM
 	if(DoGMCommand(szComHead, szComParam))
-		//LG("DoCommand", "[ִ�гɹ�]%s��%s\n", GetLogName(), strPrint.c_str());
-		ToLogService("commands", "[operator succeed]{}��{}", GetLogName(), strPrint.c_str());
+		//LG("DoCommand", "[]%s%s\n", GetLogName(), strPrint.c_str());
+		ToLogService("commands", "[operator succeed]{}{}", GetLogName(), strPrint.c_str());
 	else
-		//LG("DoCommand", "[ִ��ʧ��]%s��%s\n", GetLogName(), strPrint.c_str());
-		ToLogService("commands", "[operator succeed]{}��{}", GetLogName(), strPrint.c_str());
+		//LG("DoCommand", "[]%s%s\n", GetLogName(), strPrint.c_str());
+		ToLogService("commands", "[operator succeed]{}{}", GetLogName(), strPrint.c_str());
 	
 }
 
 
 //--------------------------------------------------------------------------------
-// GM ָ����, ��ȱ���ʺ�Ȩ���ж�
+// GM , 
 //--------------------------------------------------------------------------------
 //TODO(Ogge): Extract method for each GM-level
 BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
@@ -70,7 +70,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	uChar uchGMLv = pPlayer->GetGMLev();
 	if (uchGMLv == 0)
 	{
-		//SystemNotice("Ȩ�޲���!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00001));
 		return FALSE;
 	}
@@ -80,9 +80,9 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 	C_PRINT("%s: %s %s\n", GetName(), strCmd.c_str(), pszParam);
 	//-----------------------
-	// ����GM������ִ�е�ָ��
+	// GM
 	//-----------------------
-	if (strCmd==g_Command.m_cMove) // ��ͼ��ת����ʽ��move x,y,��ͼ��
+	if (strCmd==g_Command.m_cMove) // move x,y,
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
 		Point l_aim;
@@ -103,28 +103,28 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		// End
 		return TRUE;
 	}
-	else if(strCmd==g_Command.m_cNotice) // ϵͳͨ��
+	else if(strCmd==g_Command.m_cNotice) // 
 	{
 		g_pGameApp->WorldNotice(pszParam);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if(strCmd==g_Command.m_cHide) // ����
+	else if(strCmd==g_Command.m_cHide) // 
 	{
 		AddSkillState(m_uchFightID, GetID(), GetHandle(), enumSKILL_TYPE_SELF, enumSKILL_TAR_LORS, enumSKILL_EFF_HELPFUL, SSTATE_HIDE, 1, -1, enumSSTATE_ADD);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if(strCmd==g_Command.m_cUnhide) // ����
+	else if(strCmd==g_Command.m_cUnhide) // 
 	{
 		DelSkillState(SSTATE_HIDE);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if(strCmd==g_Command.m_cGoto) // ���Լ�����ĳ��ɫ����
+	else if(strCmd==g_Command.m_cGoto) // 
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		// Типизированная сериализация: запрос телепорта к персонажу
+		//  :    
 		auto WtPk = net::msg::serialize(net::msg::MmGotoChaMessage{GetID(), strList[0], 1, GetName()});
 		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
@@ -133,13 +133,13 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 	if(uchGMLv <= 1)
 	{
-		//SystemNotice("Ȩ�޲���!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00001));
 		return FALSE;
 	}
 
 	//-----------------------
-	// 1������GM������ִ�е�ָ��
+	// 1GM
 	//-----------------------
 	
 	if (strCmd == g_Command.m_cMute)
@@ -150,12 +150,12 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			return false;
 		}
 
-		// Типизированная сериализация: мьют игрока (ReflectINFof добавит trailer маршрутизации)
+		//  :   (ReflectINFof  trailer )
 		auto wpk = net::msg::serialize(net::msg::GmMutePlayerMessage{strList[0], static_cast<int64_t>(Str2Int(strList[1]))});
 		ReflectINFof(this, wpk);
 	}
 
-	if (strCmd==g_Command.m_cKick) // �����������
+	if (strCmd==g_Command.m_cKick) // 
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
 		if (n < 1)
@@ -163,7 +163,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			SystemNotice("You did not input a player name!");
 			return FALSE;
 		}
-		// Типизированная сериализация: кик персонажа (кросс-серверный)
+		//  :   (-)
 		auto WtPk = net::msg::serialize(net::msg::MmKickChaMessage{GetID(), strList[0], (n == 2) ? (int64_t)Str2Int(strList[1]) : 0LL});
 		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
@@ -194,7 +194,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 	if(uchGMLv != 99)
 	{
-		//SystemNotice("Ȩ�޲���!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00001));
 		return FALSE;
 	}
@@ -204,9 +204,9 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	cChar	*szComHead = pszCmd;
 	cChar	*szComParam = pszParam;
 	//-----------------------
-	// 99��GM������ִ�е�ָ��
+	// 99GM
 	//-----------------------
-	if (!strcmp(szComHead, g_Command.m_cReload)) // ���¶���
+	if (!strcmp(szComHead, g_Command.m_cReload)) // 
 	{
 		cChar *pszChaInfo = "characterinfo";
 		cChar *pszSkillInfo = "skillinfo";
@@ -226,51 +226,51 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-    else if(!strcmp(szComHead, g_Command.m_cRelive)) // ԭ�ظ���
+    else if(!strcmp(szComHead, g_Command.m_cRelive)) // 
 	{	
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if(!strcmp(szComHead, g_Command.m_cQcha)) // ��ѯ��ɫ��Ϣ(���ڵ�ͼ,����,ΨһID)
+	else if(!strcmp(szComHead, g_Command.m_cQcha)) // (,,ID)
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		// Типизированная сериализация: запрос информации о персонаже
+		//  :    
 		auto WtPk = net::msg::serialize(net::msg::MmQueryChaMessage{GetID(), strList[0]});
 		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if(!strcmp(szComHead, g_Command.m_cQitem)) // ��ѯ��ɫ����
+	else if(!strcmp(szComHead, g_Command.m_cQitem)) // 
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		// Типизированная сериализация: запрос инвентаря персонажа
+		//  :   
 		auto WtPk = net::msg::serialize(net::msg::MmQueryChaItemMessage{GetID(), strList[0]});
 		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-    if(!strcmp(szComHead, g_Command.m_cCall)) // ����һ��ɫ��������
+    if(!strcmp(szComHead, g_Command.m_cCall)) // 
 	{
 		int n = Util_ResolveTextLine(pszParam, strList, 10, ',');
-		// Типизированная сериализация: вызов персонажа к себе
+		//  :    
 		auto WtPk = net::msg::serialize(net::msg::MmCallChaMessage{GetID(), strList[0], IsBoat() ? 1LL : 0LL, GetSubMap()->GetName(), (int64_t)GetPos().x, (int64_t)GetPos().y, (int64_t)GetSubMap()->GetCopyNO()});
 		ReflectINFof(this, WtPk);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cGamesvrstop)) // ������Ϸ����������
+	else if (!strcmp(szComHead, g_Command.m_cGamesvrstop)) // 
 	{
 		g_pGameApp->m_CTimerReset.Begin(1000);
 		g_pGameApp->m_ulLeftSec = atol(szComParam);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, g_Command.m_cUpdateall) ) // �ű�lua����
+	else if( !strcmp(szComHead, g_Command.m_cUpdateall) ) // lua
 	{
 		LoadScript();
 		if ( g_pGameApp->ReloadNpcInfo( *this ) )
 		{
-			//SystemNotice( "NPC�Ի�������lua�ű����³ɹ�!" );
+			//SystemNotice( "NPClua!" );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00002) );
 		}
 		else
@@ -292,24 +292,24 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "harmlog=1") ) // �˺��ۼƼ���Log����
+	else if( !strcmp(szComHead, "harmlog=1") ) // Log
 	{
 		g_bLogHarmRec = TRUE;
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "harmlog=0") ) // �˺��ۼƼ���Log����
+	else if( !strcmp(szComHead, "harmlog=0") ) // Log
 	{
 		g_bLogHarmRec = FALSE;
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, g_Command.m_cMisreload) ) // ����ű�����
+	else if( !strcmp(szComHead, g_Command.m_cMisreload) ) // 
 	{
 		LoadScript();
 		if( g_pGameApp->ReloadNpcInfo( *this ) )
 		{
-			//SystemNotice( "NPC�Ի�������lua�ű����³ɹ�!" );
+			//SystemNotice( "NPClua!" );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00002) );
 		}
 		else
@@ -325,169 +325,169 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "setrecord" ) ) // ���ý�ɫ������ʷ���
+	else if( !strcmp(szComHead, "setrecord" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');		
 		USHORT sID   = Str2Int(strList[0]);
 		if( GetPlayer()->MisSetRecord( sID ) )
 		{
-			//SystemNotice( "����������ʷ��ǳɹ�!ID[%d]", sID );
+			//SystemNotice( "!ID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00003), sID );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "����������ʷ���ʧ��!ID[%d]", sID );
+			//SystemNotice( "!ID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00003), sID );
 			return FALSE;
 		}
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "clearrecord" ) ) // ���ý�ɫ������ʷ���
+	else if( !strcmp(szComHead, "clearrecord" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');		
 		USHORT sID   = Str2Int(strList[0]);
 		if( GetPlayer()->MisClearRecord( sID ) )
 		{
-			//SystemNotice( "���������ʷ��ǳɹ�!ID[%d]", sID );
+			//SystemNotice( "!ID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00004), sID );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "���������ʷ���ʧ��!ID[%d]", sID );
+			//SystemNotice( "!ID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00005), sID );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "setflag" ) ) // ����������
+	else if( !strcmp(szComHead, "setflag" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');		
 		USHORT sID   = Str2Int(strList[0]);
 		USHORT sFlag = Str2Int(strList[1]);
 		if( GetPlayer()->MisSetFlag( sID, sFlag ) )
 		{
-			//SystemNotice( "���������ǳɹ�!ID[%d], FLAG[%d]", sID, sFlag );
+			//SystemNotice( "!ID[%d], FLAG[%d]", sID, sFlag );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00006), sID, sFlag );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "����������ʧ��!ID[%d], FLAG[%d]", sID, sFlag );
+			//SystemNotice( "!ID[%d], FLAG[%d]", sID, sFlag );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00007), sID, sFlag );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "clearflag" ) ) // ���������
+	else if( !strcmp(szComHead, "clearflag" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');		
 		USHORT sID   = Str2Int(strList[0]);
 		USHORT sFlag = Str2Int(strList[1]);
 		if( GetPlayer()->MisClearFlag( sID, sFlag ) )
 		{
-			//SystemNotice( "��������ǳɹ�!ID[%d], FLAG[%d]", sID, sFlag );
+			//SystemNotice( "!ID[%d], FLAG[%d]", sID, sFlag );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00008), sID, sFlag );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "���������ʧ��!ID[%d], FLAG[%d]", sID, sFlag );
+			//SystemNotice( "!ID[%d], FLAG[%d]", sID, sFlag );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00009), sID, sFlag );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "addmission" ) ) // ����������
+	else if( !strcmp(szComHead, "addmission" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');		
 		USHORT sMID   = Str2Int(strList[0]);
 		USHORT sSID   = Str2Int(strList[1]);
 		if( GetPlayer()->MisAddRole( sMID, sSID ) )
 		{
-			//SystemNotice( "��������ɹ�!MID[%d], SID[%d]", sMID, sSID );
+			//SystemNotice( "!MID[%d], SID[%d]", sMID, sSID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00010), sMID, sSID );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "��������ʧ��!MID[%d], SID[%d]", sMID, sSID );
+			//SystemNotice( "!MID[%d], SID[%d]", sMID, sSID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00011), sMID, sSID );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "clearmission" ) ) // ���������
+	else if( !strcmp(szComHead, "clearmission" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		USHORT sID   = Str2Int(strList[0]);
 		if( GetPlayer()->MisCancelRole( sID ) )
 		{
-			//SystemNotice( "�������ɹ�!MID[%d]", sID );
+			//SystemNotice( "!MID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00012), sID );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "�������ʧ��!MID[%d]", sID );
+			//SystemNotice( "!MID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00013), sID );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "delmission" ) ) // ���������
+	else if( !strcmp(szComHead, "delmission" ) ) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		USHORT sID   = Str2Int(strList[0]);
 		if( GetPlayer()->MisClearRole( sID ) )
 		{
-			//SystemNotice( "ɾ������ɹ�!MID[%d]", sID );
+			//SystemNotice( "!MID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00014), sID );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 		else
 		{
-			//SystemNotice( "ɾ������ʧ��!MID[%d]", sID );
+			//SystemNotice( "!MID[%d]", sID );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00015), sID );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if( !strcmp(szComHead, "missdk" ) )	 // ����ű�����
+	else if( !strcmp(szComHead, "missdk" ) )	 // 
 	{
 		ReloadLuaSdk();
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if( !strcmp( szComHead, "misclear") ) // �����ɫ�����ǩ��Ϣ�ʹ�������Ϣ
+	else if( !strcmp( szComHead, "misclear") ) // 
 	{
 		GetPlayer()->MisClear();
-		//SystemNotice( "�����ɫ�����ǩ��Ϣ�ʹ�������Ϣ�ɹ�!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00016) );
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, "isblock")) // �Ƿ����ϰ���
+	else if (!strcmp(szComHead, "isblock")) // 
 	{
 		if (m_submap->IsBlock(GetPos().x / m_submap->GetBlockCellWidth(), GetPos().y / m_submap->GetBlockCellHeight()))
-			//SystemNotice("�ϰ�");
+			//SystemNotice("");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00017));
 		else
-			//SystemNotice("���ϰ�");
+			//SystemNotice("");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00018));
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, "pet")) // �ٻ�����
+	else if (!strcmp(szComHead, "pet")) // 
 	{
 		Long	lChaInfoID = Str2Int(strList[0]);
 		Point	Pos = GetPos();
@@ -503,13 +503,13 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		}
 		else
 		{
-			//SystemNotice( "�ٻ�����ʧ��" );
+			//SystemNotice( "" );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00019) );
 			return FALSE;
 		}
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cSummon)) // �ٻ�����
+	else if (!strcmp(szComHead, g_Command.m_cSummon)) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n >= 1)
@@ -528,12 +528,12 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 				if( n==3 )
 				{
 					int nAIType = Str2Int(strList[2]);
-					pCha->m_AIType  = (BYTE)nAIType; // ���ù����AI����
+					pCha->m_AIType  = (BYTE)nAIType; // AI
 				}
 			}
 			else
 			{
-				//SystemNotice( "��������ʧ��!" );
+				//SystemNotice( "!" );
 				SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00020) );
 				return FALSE;
 			}
@@ -542,7 +542,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		}
 		return FALSE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cSummonex)) // �ٻ�������չָ���ʽ����ɫ��ţ��������Ƿ񼤻���Ұ����������
+	else if (!strcmp(szComHead, g_Command.m_cSummonex)) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n >= 1)
@@ -567,11 +567,11 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 				if (pCha)
 				{
 					if( n > 3 )
-						pCha->m_AIType = (BYTE)nAIType; // ���ù����AI����
+						pCha->m_AIType = (BYTE)nAIType; // AI
 				}
 				else
 				{
-					//SystemNotice( "������ɫʧ��!" );
+					//SystemNotice( "!" );
 					SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00021 ));
 				}
 			}
@@ -580,7 +580,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		}
 		return FALSE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cKill)) // ɱ���ٻ����ָ���ʽ���������ƣ���Χ���ף�Ĭ��ֵ8�ף���������Ĭ��Ϊ��Χ�ڵ����й��
+	else if (!strcmp(szComHead, g_Command.m_cKill)) // 8
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n >= 1)
@@ -619,7 +619,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			if (pCFreeCha)
 				pCFreeCha->Free();
 
-			//SystemNotice( "ɾ��������Ŀ��%u.!", lKillNum );
+			//SystemNotice( "%u.!", lKillNum );
 			SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00022), lKillNum );
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
@@ -629,17 +629,17 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	
 	if(g_Config.m_bSuperCmd==FALSE)
 	{
-		//SystemNotice("Ȩ�޲���!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00001));
 		return FALSE;
 	}
 	
 	//-----------------------------------
-	// ��������ָ��, ��GMָ��Ҫ�ϸ����ֿ�
+	// , GM
 	//-----------------------------------
 	if( !strcmp( szComHead, g_Command.m_cAddmoney ) )
 	{
-		//AddMoney( "ϵͳ", atol(szComParam) );
+		//AddMoney( "", atol(szComParam) );
 		AddMoney( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00023), atol(szComParam) );
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -668,7 +668,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	else if( !strcmp( szComHead, "addlifeexp" ) )
 	{
 		AddAttr( ATTR_CLIFEEXP, atol(szComParam) );
-		//SystemNotice( "ϵͳ������%ld�����!", atol(szComParam) );
+		//SystemNotice( "%ld!", atol(szComParam) );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00024), atol(szComParam) );
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -676,7 +676,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	else if( !strcmp( szComHead, "addsailexp" ) )
 	{
 		AddAttr( ATTR_CSAILEXP, atol(szComParam) );
-		//SystemNotice( "ϵͳ������%ldת������!", atol(szComParam) );
+		//SystemNotice( "%ld!", atol(szComParam) );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00025), atol(szComParam) );
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -684,7 +684,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	else if( !strcmp( szComHead, "addcess" ) )
 	{
 		AdjustTradeItemCess( 60000, (USHORT)atol(szComParam) );
-		//SystemNotice( "����%ldó��˰��!", atol(szComParam) );
+		//SystemNotice( "%ld!", atol(szComParam) );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00026), atol(szComParam) );
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -692,12 +692,12 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	else if( !strcmp( szComHead, "setcesslevel" ) )
 	{
 		SetTradeItemLevel( (BYTE)atol(szComParam) );
-		//SystemNotice( "����ó�׵ȼ�%ld!", atol(szComParam) );
+		//SystemNotice( "%ld!", atol(szComParam) );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00027), atol(szComParam) );
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cMake)) // �ٻ����ߣ���ʽ�����߱�ţ�����[��ʵ��������][������1��������.����Ϊ���棩]
+	else if (!strcmp(szComHead, g_Command.m_cMake)) // [][1.]
 	{
 		ToLogService("commands", "begin make");
 		int n = Util_ResolveTextLine(szComParam, strList, 20, ',');
@@ -705,7 +705,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		{
 			short	sID = Str2Int(strList[0]);
 			short	sNum = Str2Int(strList[1]);
-			short	sTo = 1; // ���������
+			short	sTo = 1; // 
 			char	chSpawnType = enumITEM_INST_MONS;
 			if (sNum < 0 || sNum > 100)
 				sNum = 10;
@@ -745,7 +745,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		ToLogService("commands", "make failed! because the param is less than 2!");
 		return FALSE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cAttr)) // ��ɫ���ԣ���ʽ�����Ա�ţ�����ֵ.
+	else if (!strcmp(szComHead, g_Command.m_cAttr)) // .
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n < 2)
@@ -762,7 +762,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			pCCha = g_pGameApp->FindChaByID(Str2Int(strList[2]));
 		if (!pCCha)
 		{
-			//SystemNotice("û��������Ŀ���Ŀ�겻�ǽ�ɫ�����!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00028));
 			return FALSE;
 		}
@@ -789,7 +789,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cItemattr)) // ��ɫ�������ԣ���ʽ��λ�����ͣ�1��װ����.2������������λ�ñ�ţ����Ա�ţ�����ֵ.
+	else if (!strcmp(szComHead, g_Command.m_cItemattr)) // 1.2.
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 4)
@@ -830,7 +830,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 	}
 
-	else if (!strcmp(szComHead, "light")) // ��ɫ���ͼ�ƹⷶΧ����ʽ����Χ���ף�.
+	else if (!strcmp(szComHead, "light")) // .
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 1)
@@ -843,7 +843,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, "seeattr")) // �鿴��ɫ���ԣ���ʽ��WorldID�����Ա��.
+	else if (!strcmp(szComHead, "seeattr")) // WorldID.
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 2)
@@ -854,16 +854,16 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		CCharacter	*pCCha = g_pGameApp->FindChaByID(ulWorldID);
 		if (!pCCha)
 		{
-			//SystemNotice("û��������Ŀ���Ŀ�겻�ǽ�ɫ�����!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00028));
 			return FALSE;
 		}
-		//SystemNotice("Ŀ��[%s]������Ϊ%d��ֵ��%d!", pCCha->GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
+		//SystemNotice("[%s]%d%d!", pCCha->GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
 		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00029), pCCha->GetLogName(), sAttrID, pCCha->getAttr(sAttrID));
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, "forge")) // ���߾�������ʽ�������ȼ�����ֵ��������λ��
+	else if (!strcmp(szComHead, "forge")) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		char	chAddLv = Str2Int(strList[0]);
@@ -887,7 +887,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		}
 		return FALSE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cSkill)) // ���Ӽ��ܣ���ʽ����ţ��ȼ�
+	else if (!strcmp(szComHead, g_Command.m_cSkill)) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		short	sID = Str2Int(strList[0]);
@@ -898,7 +898,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 		if (!GetPlayer()->GetMainCha()->LearnSkill(sID, chLv, true, false, bLimit))
 		{
-			//SystemNotice("ѧϰ����ʧ�ܣ�����ѧϰ�ȼ���ְҵ���ƣ�ǰ�ü������Ƶȣ������ %d���ȼ� %d.!", sID, chLv);
+			//SystemNotice(" %d %d.!", sID, chLv);
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00030), sID, chLv);
 			return FALSE;
 		}
@@ -918,7 +918,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			char	chForcible = Str2Int(strList[5]);
 			if (Cmd_RemoveItem(lItemID, lItemNum, chFromType, sFromID, chToType, 0, true, chForcible) != enumITEMOPT_SUCCESS)
 			{
-				//SystemNotice("ɾ������ʧ��!");
+				//SystemNotice("!");
 				SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00031));
 				return FALSE;
 			}
@@ -927,16 +927,16 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		}
 		return FALSE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cLua)) // ��GameServerִ�нű�
+	else if (!strcmp(szComHead, g_Command.m_cLua)) // GameServer
 	{
 		luaL_dostring(g_pLuaState, szComParam);
 		//C_PRINT("%s: lua %s\n", GetName(), pszParam);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cLuaall)) // ����GameServerִ�нű�
+	else if (!strcmp(szComHead, g_Command.m_cLuaall)) // GameServer
 	{
-		// Типизированная сериализация: выполнить Lua-скрипт на всех GameServer
+		//  :  Lua-   GameServer
 		auto WtPk = net::msg::serialize(net::msg::MmDoStringMessage{GetID(), szComParam});
 		ReflectINFof(this, WtPk);
 		C_PRINT("%s: lua_all %s\n", GetName(), pszParam);
@@ -948,7 +948,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 1)
 		{
-			//SystemNotice("��������");
+			//SystemNotice("");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00032));
 			return FALSE;
 		}
@@ -960,7 +960,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	}
 	else if (!strcmp(szComHead, "getping"))
 	{
-		//SystemNotice("��ǰping��%d", m_SMoveInit.usPing);
+		//SystemNotice("ping%d", m_SMoveInit.usPing);
 		SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00033), m_SMoveInit.usPing);
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
@@ -970,7 +970,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 2)
 		{
-			//SystemNotice("��������");
+			//SystemNotice("");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00032));
 			return FALSE;
 		}
@@ -985,7 +985,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 2)
 		{
-			//SystemNotice("��������");
+			//SystemNotice("");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00032));
 			return FALSE;
 		}
@@ -995,7 +995,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 		return TRUE;
 	}
-	else if (!strcmp(szComHead, g_Command.m_cAddkb)) // ���ӱ�����������ʽ������������[,WorldID]
+	else if (!strcmp(szComHead, g_Command.m_cAddkb)) // [,WorldID]
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		short	sAddCap = Str2Int(strList[0]);
@@ -1004,34 +1004,34 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			pCCha = g_pGameApp->FindChaByID(Str2Int(strList[1]));
 		if (!pCCha)
 		{
-			//SystemNotice("���ӱ�������ʧ�ܣ��Ҳ����ý�ɫ��.!");
+			//SystemNotice(".!");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00034));
 			return FALSE;
 		}
 
 		if (!pCCha->AddKitbagCapacity(sAddCap))
 		{
-			//SystemNotice("���� %s �ı�������ʧ�ܣ������Ƿ���.!", pCCha->GetName());
+			//SystemNotice(" %s .!", pCCha->GetName());
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00035), pCCha->GetName());
 			return FALSE;
 		}
 		else
 		{
-			//pCCha->SystemNotice("���ӱ��������ɹ�����ǰ���� %d.!", pCCha->m_CKitbag.GetCapacity());
+			//pCCha->SystemNotice(" %d.!", pCCha->m_CKitbag.GetCapacity());
 			pCCha->SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00036), pCCha->m_CKitbag.GetCapacity());
 			if (pCCha != this)
-				//SystemNotice("���� %s �ı��������ɹ�����ǰ���� %d.!", pCCha->GetName(), pCCha->m_CKitbag.GetCapacity());
+				//SystemNotice(" %s  %d.!", pCCha->GetName(), pCCha->m_CKitbag.GetCapacity());
 				SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00037), pCCha->GetName(), pCCha->m_CKitbag.GetCapacity());
 			ToLogService("common", "ChaID: {}, ChaName: {}, CMD: {}, Param: {}", GetPlayer()->GetID(), GetName(), pszCmd, pszParam);
 			return TRUE;
 		}
 	}
-	else if (!strcmp(szComHead, "itemvalid")) // ���ñ���������Ч��
+	else if (!strcmp(szComHead, "itemvalid")) // 
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
 		if (n != 2)
 		{
-			//SystemNotice("��ʽ����!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00038));
 			return FALSE;
 		}
@@ -1040,7 +1040,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 
 		if (!SetKitbagItemValid(sPosID, bValid))
 		{
-			//SystemNotice("���ñ���������Ч��ʧ��!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00039));
 			return FALSE;
 		}
@@ -1219,7 +1219,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	return FALSE;
 }
 
-// ��ѯ������״̬
+// 
 void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 {
 	Char szComHead[256], szComParam[256];
@@ -1232,7 +1232,7 @@ void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 	string strCmd   = szComHead;
 	string strParam = szComParam;
 
-	if(strCmd=="game_status")	 // ����gameserver��״̬
+	if(strCmd=="game_status")	 // gameserver
 	{
 		char szInfo[255];
 		sprintf(szInfo, "fps:%d tick:%d player:%d mgr:%d\n", g_pGameApp->m_dwFPS, 
@@ -1240,37 +1240,37 @@ void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 								 g_pGameApp->m_dwActiveMgrUnit);
 		SystemNotice(szInfo);
 	}
-	else if (strCmd=="ping_game") // ��ѯ��ɫ��GameServer�߼����pingֵ
+	else if (strCmd=="ping_game") // GameServerping
 	{
 		int n = Util_ResolveTextLine(szComParam, strList, 10, ',');
-		// Типизированная сериализация: запрос пинга персонажа
+		//  :   
 		auto WtPk = net::msg::serialize(net::msg::MmQueryChaPingMessage{GetID(), strList[0]});
 		ReflectINFof(this, WtPk);
 	}
 }
 
 	
-// NPC������Լ�˽�˵�˵���� �����޷�������
+// NPC 
 void NPC_PrivateTalk(CCharacter *pCha, CCharacter *pNPC, const char *pszText)
 {
-	// Типизированная сериализация: приватная реплика NPC
+	//  :   NPC
 	auto wpk = net::msg::serialize(net::msg::McSayMessage{pNPC->m_ID, pszText, 0});
 	pCha->ReflectINFof(pCha, wpk);
 }		
 
-// ������������ѯ
+// 
 void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 {
 	if(!pszCommand)           return;
 	
 	if(ulLen==0 || strlen(pszCommand)==0) 
 	{
-		//SystemNotice( "�������ʲô?" );
+		//SystemNotice( "?" );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00040) );
 		return;
 	}
 
-	// �����Ҿ���npc̫Զ, Ҳ������
+	// npc, 
 	if(GetSubMap()==NULL) return;
 	if(strcmp(GetSubMap()->GetName(), "garner")!=0) return;
 
@@ -1282,14 +1282,14 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 	CCharacter *pNPC1 = g_HelpNPCList.front();
 	if(pNPC1==NULL)
 	{
-		//LG("error", "��ѯNPCΪ��\n");
+		//LG("error", "NPC\n");
 		ToLogService("errors", LogLevel::Error, "inquire NPC is empty");
 		return;
 	}
 
 	if(! ( abs(x - 2222) < 4 && abs(y - 2888) < 4) )
 	{
-		//SystemNotice( "����û�п��Իش��������!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTERSUPERCMD_CPP_00041) );
 		return;
 	}
@@ -1302,13 +1302,13 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 	
 	char szTip[128]; 
 	sprintf(szTip, RES_STRING(GM_CHARACTERSUPERCMD_CPP_00042), strList[0].c_str()); 
-	if(strList[0]=="time")	// ��ǰʱ���ѯ
+	if(strList[0]=="time")	// 
 	{
 		//SystemNotice( szTip );
 		//GetCurrentTime()
 		//SystemNotice( "force is strong with this one!");
 	}
-	//else if(strList[0]=="ryan" || strList[0]=="��һ����ͷר��")
+	//else if(strList[0]=="ryan" || strList[0]=="")
 	else if(strList[0]=="ryan" || strList[0]==RES_STRING(GM_CHARACTERSUPERCMD_CPP_00043))
 	{
 		SystemNotice( szTip );
@@ -1319,18 +1319,18 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 	if(pszHelp==NULL)
 	{
 		SystemNotice( szTip );
-		//NPC_PrivateTalk(this, pNPC1, "�����,��������ʹ���,���ʵ�����!");
+		//NPC_PrivateTalk(this, pNPC1, ",,!");
 		NPC_PrivateTalk(this, pNPC1, RES_STRING(GM_CHARACTERSUPERCMD_CPP_00044));
 	}
 	else
 	{
-		//if(strcmp(GetName(), "��һ����ͷר��")==0) // �˽�ɫ������Ϣ����Ǯ,��Ӱ����Ϸƽ��
-		if(strcmp(GetName(), RES_STRING(GM_CHARACTERSUPERCMD_CPP_00043))==0) // �˽�ɫ������Ϣ����Ǯ,��Ӱ����Ϸƽ��
+		//if(strcmp(GetName(), "")==0) // ,
+		if(strcmp(GetName(), RES_STRING(GM_CHARACTERSUPERCMD_CPP_00043))==0) // ,
 		{
 			SystemNotice( szTip );
 			NPC_PrivateTalk(this, pNPC1, pszHelp);
 		}
-		//else if(TakeMoney("����ͨ", 100))
+		//else if(TakeMoney("", 100))
 		else if(TakeMoney(RES_STRING(GM_CHARACTERSUPERCMD_CPP_00045), 100))
 		{
 			SystemNotice( szTip );
@@ -1339,7 +1339,7 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 		else
 		{
 			SystemNotice( szTip );
-			//NPC_PrivateTalk(this, pNPC1, "�Բ���, Money Talk!" );
+			//NPC_PrivateTalk(this, pNPC1, ", Money Talk!" );
 			NPC_PrivateTalk(this, pNPC1, RES_STRING(GM_CHARACTERSUPERCMD_CPP_00046) );
 		}
 	}

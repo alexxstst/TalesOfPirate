@@ -1,4 +1,4 @@
-//================================================================
+﻿//================================================================
 // It must be permitted by Dabo.Zhang that this program is used for
 // any purpose in any situation.
 // Copyright (C) Dabo.Zhang 2000-2003
@@ -15,7 +15,7 @@ _DBC_BEGIN
 #pragma pack(push)
 #pragma pack(4)
 
-//���������ݻ�����
+//
 class BaseBuf :public PreAllocStru {
 public:
 	BaseBuf(uLong size) :PreAllocStru(size), m_size(size), m_buf(std::make_unique<char[]>(size)) {}
@@ -26,7 +26,7 @@ private:
 	std::unique_ptr<char[]> m_buf;
 	uLong					m_size;
 };
-//�����Ļ������ü����ڴ���������ݻ�����
+//
 class rbuf :public BaseBuf, public robject<true> {
 public:
 	rbuf(uLong size) :BaseBuf(size) {}

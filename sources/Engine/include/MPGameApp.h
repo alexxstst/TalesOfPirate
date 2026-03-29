@@ -1,4 +1,4 @@
-//#################################
+ï»¿//#################################
 // MindPower GameApp Header File
 // Render & GameApp Routines
 //
@@ -29,7 +29,7 @@ class MPConsole;
 #define M_LDown		0x0001
 #define M_MDown		0x0002
 #define M_RDown		0x0004
-#define M_Down		0x0008	// ÓÐ¼ü°´ÏÂ
+#define M_Down		0x0008	// 
 #define M_LUp		0x0010
 #define M_MUp		0x0020
 #define M_RUp		0x0040
@@ -37,7 +37,7 @@ class MPConsole;
 #define M_LDB		0x0100
 #define M_MDB		0x0200
 #define M_RDB		0x0400
-#define M_LClick	0x0800 // Êó±ê×ó¼üµã»÷
+#define M_LClick	0x0800 // 
 #define M_MClick	0x1000
 #define M_RClick	0x2000
 
@@ -58,7 +58,7 @@ public:
 	~MPGameApp();
     virtual void _PreMouseRun( DWORD dwMouseKey) {}
 
-	// camMove ±êÊ¶ÊÇ·ñ½øÈëVim 3D VisionµÄäÖÈ¾Ñ­»·
+	// camMove Vim 3D Vision
     virtual void _FrameMove(DWORD dwTimeParam, bool camMove=false)	{            }
     virtual void _Render()                     {            }
     virtual BOOL _Init()                       {return TRUE;}       
@@ -83,9 +83,9 @@ public:
 	DWORD			GetMouseKey(){ return _dwMouseKey;}
 
 	// input interface
-	BOOL IsKeyContinue(BYTE btDIKey);		// ¼ì²é°´¼üÊÇ·ñÁ¬Ðø°´ÏÂ
+	BOOL IsKeyContinue(BYTE btDIKey);		// 
 	BOOL IsKeyDown(BYTE btDIKey);
-	BOOL IsMouseButtonPress(int nButtonNo);  // ¼ì²éÄ³¸öÊó±ê°´Å¥ÊÇ·ñ°´ÏÂ
+	BOOL IsMouseButtonPress(int nButtonNo);  // 
 	BOOL IsCtrlPress()
 	{
 		return (GetKeyState(VK_CONTROL) & 0xff00);
@@ -145,7 +145,7 @@ protected:
 	BOOL		_InitInput();
 	void		_RenderAxis();
 	void		_ReadKeyboardInput();
-	void		_SetupView(MPCameraNOLEECH *pCamera);	// Í¨¹ý¾µÍ·µÄÐÅÏ¢ÉèÖÃD3D ViewMatrix
+	void		_SetupView(MPCameraNOLEECH *pCamera);	// D3D ViewMatrix
 
 	// UI
 	void		_RenderUI();
@@ -230,7 +230,7 @@ protected:
 	// ----- Added by CLP ----- //
 };
 
-// ¼ì²éÄ³¸ö°´¼üÊÇ·ñ±»Á¬Ðø°´ÏÂ
+// 
 inline BOOL MPGameApp::IsKeyContinue(BYTE dikey)
 {
 	return isKeyHold ( dikey );

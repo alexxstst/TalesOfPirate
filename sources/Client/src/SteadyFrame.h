@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 #include "UISystemForm.h"
-// �����ȶ�֡��,���Ҳ���֡
-// ʵ�ַ���:������Ⱦ����
+// ,
+// :
 class CSteadyFrame
 {
 public:
@@ -52,7 +52,7 @@ private:
 	void	_Sleep();
 
 private:
-	static DWORD	_dwFPS;			// �趨��FPS,һ��Ҫ��Ⱦ����֡
+	static DWORD	_dwFPS;			// FPS,
 
 	long	_lRun;
 

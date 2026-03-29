@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "excp.h"
 
 _DBC_BEGIN
@@ -10,7 +10,7 @@ struct TLSIndex
 	{
 		if(index ==TLS_OUT_OF_INDEXES)
 		{
-			THROW_EXCP(excpThrd,"·ÖÅäÏß³Ì±¾µØ´æ´¢Ë÷Òý³¬¹ý×î´óÊý");
+			THROW_EXCP(excpThrd,"");
 		}
 	}
 	~TLSIndex()

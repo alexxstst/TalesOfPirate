@@ -1,4 +1,4 @@
-print("-- [Loading] darkblueEntity.lua")
+﻿print("-- [Loading] darkblueEntity.lua")
 
 function InitdarkblueEntity()
 	CreateBerthEntity("Docked", 455, 2, 121219, 65899, -10, 4, 1239, 623, 0)

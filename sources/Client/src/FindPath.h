@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include <stack>
 
 #define GUIDE_RANDGE 150

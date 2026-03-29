@@ -1,4 +1,4 @@
-
+﻿
 #include "AudioResource.h"
 #include "SDL_Wrapper.h"
 #include <string.h>

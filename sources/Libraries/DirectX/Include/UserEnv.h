@@ -1,4 +1,4 @@
-
+﻿
 //=============================================================================
 //  userenv.h   -   Header file for user environment API.
 //                  User Profiles, environment variables, and Group Policy

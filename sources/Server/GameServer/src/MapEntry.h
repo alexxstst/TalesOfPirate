@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: MapEntry.h
 // Creater: ZhangXuedong
 // Date: 2005.10.21
@@ -51,7 +51,7 @@ private:
 
 };
 
-// ��ͼ��̬��ڵ�Ԫ
+// 
 class	CDynMapEntryCell
 {
 public:
@@ -117,7 +117,7 @@ private:
 	void*		m_pPos;
 };
 
-// ��̬��ͼ�����������¼�����̵����е�ǰ���ڵĶ�̬���
+// 
 class	CDynMapEntry
 {
 public:
@@ -138,10 +138,10 @@ private:
 
 extern CDynMapEntry g_CDMapEntry;
 
-// ������ս��ͼ���
+// 
 extern void	g_SetTeamFightMapName(const char *cszMapName);
 
-extern char	g_szTFightMapName[MAX_MAPNAME_LENGTH];	// ������ս��ͼ��
+extern char	g_szTFightMapName[MAX_MAPNAME_LENGTH];	// 
 //
 
 #endif // MAPENTRY_H

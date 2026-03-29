@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 class CGameScene;
 class CSceneItem;
 class CCharacter;
 class CShadeEff;
 
-// ³¡¾°µÄÓÃ»§±êÖ¾
+// 
 class CSceneSign
 {
 public:
@@ -35,10 +35,10 @@ private:
 
 	CGameScene*		_pScene;
 
-	CSceneItem*		_pAttack;		// ¹¥»÷Ê±ÏÔÊ¾µÄ¹â»·
+	CSceneItem*		_pAttack;		// 
 	CShadeEff*		_pAttackShade;
-	CSceneItem*		_pMove;         // ÒÆ¶¯»òÊ°È¡Ê±ÏÔÊ¾µÄ¹â»·
-	CCharacter*		_pCha;			// ±»¹¥»÷µÄ½ÇÉ«
+	CSceneItem*		_pMove;         // 
+	CCharacter*		_pCha;			// 
 
 	int	_nX, nY, _nH;	
 

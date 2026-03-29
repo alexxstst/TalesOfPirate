@@ -1,4 +1,4 @@
-#ifndef MPParticleAffectorFactory_H
+ï»¿#ifndef MPParticleAffectorFactory_H
 #define MPParticleAffectorFactory_H
 
 #include "MPEffPrerequisites.h"
@@ -10,13 +10,13 @@ protected:
 public:
 	MPParticleAffectorFactory() {};
 	virtual ~MPParticleAffectorFactory();
-	/** ·µ»Ø¹¤³§µÄÃû×Ö, Õâ¸öÃû×Ö±êÊ¶ÁËÕâ¸ö¹¤³§´´½¨µÄÁ£×ÓÓ°ÏìÒò×ÓµÄÀàĞÍ */
+	/** ,  */
 	virtual string getName() const = 0;
 
-	/** ´´½¨Ò»¸öĞÂµÄÓ°ÏìÒò×Ó¶ÔÏó.*/
+	/** .*/
 	virtual MPParticleAffector* createAffector(MPParticleSystem* psys) = 0;
 
-	/** Îö¹¹Ó°ÏìÒò×Ó¶ÔÏó. */
+	/** . */
 	virtual void destroyAffector(MPParticleAffector* e);
 };
 #endif

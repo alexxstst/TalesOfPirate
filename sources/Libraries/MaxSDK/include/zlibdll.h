@@ -1,4 +1,4 @@
-/* zlibdll.h -- interface of the 'zlib' general purpose compression library
+﻿/* zlibdll.h -- interface of the 'zlib' general purpose compression library
   version 1.0.4, Jul 24th, 1996.
 
   Copyright (C) 1995-1996 Jean-loup Gailly and Mark Adler

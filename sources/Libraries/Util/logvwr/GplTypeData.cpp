@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "GplTypeData.h"
 
 CGplTypeData::CGplTypeData(LPSTR pszTypeName)

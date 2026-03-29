@@ -1,4 +1,4 @@
-#ifndef CONNECTION_H
+﻿#ifndef CONNECTION_H
 #define CONNECTION_H
 
 #include <cstdint>
@@ -19,20 +19,20 @@ public:
 
 	void Clear() { m_status = CNST_INVALID; }
 
-	// Асинхронный запуск подключения (возвращает сразу, подключение идёт в потоке)
+	//    ( ,    )
 	bool Connect(const char* hostname, uint16_t port, uint32_t timeout = 0);
 
-	// Отключение
+	// 
 	void Disconnect(int reason);
 
-	// Вызывается при потере соединения (из OnDisconnected)
+	//     ( OnDisconnected)
 	void OnDisconnect();
 
 	bool IsConnected() { return (m_status == CNST_CONNECTED || m_status == CNST_HANDSHAKE); }
 	int  GetConnStat();
 	const char* GetPeerHost() const { return m_hostname; }
 
-	// Переход состояния: handshake=true → CNST_HANDSHAKE, false → CNST_CONNECTED
+	//  : handshake=true  CNST_HANDSHAKE, false  CNST_CONNECTED
 	void CHAPSTR(bool handshake = true);
 
 private:

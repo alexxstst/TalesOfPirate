@@ -1,4 +1,4 @@
-#ifndef __MUSICINTERFACE_H__
+﻿#ifndef __MUSICINTERFACE_H__
 #define __MUSICINTERFACE_H__
 
 #include "SoundCommon.h"

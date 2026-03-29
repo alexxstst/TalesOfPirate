@@ -1,4 +1,4 @@
-// words.h - originally written and placed in the public domain by Wei Dai
+﻿// words.h - originally written and placed in the public domain by Wei Dai
 
 /// \file words.h
 /// \brief Support functions for word operations

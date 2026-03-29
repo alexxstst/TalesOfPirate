@@ -1,4 +1,4 @@
-#ifndef _FILTERR_H_
+﻿#ifndef _FILTERR_H_
 #define _FILTERR_H_
 #ifndef FACILITY_WINDOWS
 //

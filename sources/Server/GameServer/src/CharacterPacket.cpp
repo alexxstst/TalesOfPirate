@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: CharacterPacket.cpp
 // Creater: ZhangXuedong
 // Date: 2005.05.09
@@ -67,7 +67,7 @@ void CCharacter::WriteBaseInfo(net::WPacket &pkret, Char chLookType)
 	pkret.WriteInt64(GetPos().y);
 	pkret.WriteInt64(GetRadius());
 	pkret.WriteInt64(GetAngle());
-	// �ӳ�ID
+	// ID
 	CPlayer	*pCPly = GetPlayer();
 	if (pCPly)
 		pkret.WriteInt64(pCPly->getTeamLeaderID());
@@ -112,7 +112,7 @@ void CCharacter::WriteSkillbag(net::WPacket &pk, int nSynType)
 	CCharacter	*pCCtrlCha = GetPlyCtrlCha();
 	bool	bIsBoatCtrl = pCCtrlCha->IsBoat();
 	bool	bAddBoatSkill = false;
-	if (bIsBoatCtrl) // �����Ǵ���ɫ������봬��Ĭ�ϼ���
+	if (bIsBoatCtrl) // 
 	{
 		pSkillGrid = pCCtrlCha->m_CSkillBag.GetSkillContByNum(0);
 		if (pSkillGrid)
@@ -192,7 +192,7 @@ void CCharacter::WriteKitbag(CKitbag &CKb, net::WPacket &WtPk, int nSynType)
 			WtPk.WriteInt64(0);
 			continue;
 		}
-		// �е���
+		// 
 		WtPk.WriteInt64(pGridCont->sID);
 		WtPk.WriteInt64(pGridCont->dwDBID);
 		WtPk.WriteInt64(pGridCont->sNeedLv);
@@ -207,7 +207,7 @@ void CCharacter::WriteKitbag(CKitbag &CKb, net::WPacket &WtPk, int nSynType)
 		WtPk.WriteInt64(pGridCont->expiration);
 
 		pItemRec = GetItemRecordInfo( pGridCont->sID );
-		if( pItemRec->sType == enumItemTypeBoat ) // �����ߣ�д�봬��WorldID�����ڿͻ��˽������봬��ɫ�ҹ�
+		if( pItemRec->sType == enumItemTypeBoat ) // WorldID
 		{
 			CCharacter	*pCBoat = GetPlayer()->GetBoat((DWORD)pGridCont->GetDBParam(enumITEMDBP_INST_ID));
 			if (pCBoat)
@@ -218,7 +218,7 @@ void CCharacter::WriteKitbag(CKitbag &CKb, net::WPacket &WtPk, int nSynType)
 
 		WtPk.WriteInt64(pGridCont->GetDBParam(enumITEMDBP_FORGE));
 		WtPk.WriteInt64(pGridCont->GetDBParam(enumITEMDBP_INST_ID));
-		if (pGridCont->IsInstAttrValid()) // ����ʵ������
+		if (pGridCont->IsInstAttrValid()) // 
 		{
 			WtPk.WriteInt64(1);
 			for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++)
@@ -228,9 +228,9 @@ void CCharacter::WriteKitbag(CKitbag &CKb, net::WPacket &WtPk, int nSynType)
 			}
 		}
 		else
-			WtPk.WriteInt64(0); // ������ʵ������
+			WtPk.WriteInt64(0); // 
 	}
-	WtPk.WriteInt64(-1); // ������־
+	WtPk.WriteInt64(-1); // 
 }
 
 net::msg::ChaKitbagInfo CCharacter::BuildKitbagInfo(CKitbag &CKb, int nSynType)
@@ -368,7 +368,7 @@ void CCharacter::WriteLookData(net::WPacket &WtPk, Char chLookType, Char chSynTy
 	WtPk.WriteInt64(m_SChaPart.sTypeID);
 	if( m_CChaAttr.GetAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER && IsBoat() )
 	{
-		WtPk.WriteInt64(1); // �������
+		WtPk.WriteInt64(1); // 
 		WtPk.WriteInt64(m_SChaPart.sPosID);
 		WtPk.WriteInt64(m_SChaPart.sBoatID);
 		WtPk.WriteInt64(m_SChaPart.sHeader);
@@ -432,7 +432,7 @@ void CCharacter::WriteLookData(net::WPacket &WtPk, Char chLookType, Char chSynTy
 					WtPk.WriteInt64(pItem->expiration);
 
 				}
-				if(chLookType!=LOOK_SELF) // ����������֪ͨ, ������Ҫ�������Ϣ
+				if(chLookType!=LOOK_SELF) // , 
 				{
 					WtPk.WriteInt64(0);
 					continue;
@@ -462,7 +462,7 @@ void CCharacter::WriteLookData(net::WPacket &WtPk, Char chLookType, Char chSynTy
 
 		int nItemCnt = enumEQUIP_NUM;
 
-		//if(chLookType==LOOK_TEAM) nItemCnt = 3; // ������͵����֪ͨ, ֻ��Ҫ�ϰ�����Ϣ
+		//if(chLookType==LOOK_TEAM) nItemCnt = 3; // , 
 
 		for (int i = 0; i < nItemCnt; i++)
 		{
@@ -502,7 +502,7 @@ void CCharacter::WriteLookData(net::WPacket &WtPk, Char chLookType, Char chSynTy
 				WtPk.WriteInt64(pItem->expiration);
 			}
 
-			//if(chLookType!=LOOK_SELF) // ����������֪ͨ, ������Ҫ�������Ϣ
+			//if(chLookType!=LOOK_SELF) // , 
 			//{
 			//	WtPk.WriteInt64(0);
 			//	continue;
@@ -526,7 +526,7 @@ void CCharacter::WriteLookData(net::WPacket &WtPk, Char chLookType, Char chSynTy
 	}
 }
 
-// ע��ú���ʹ�õ������ĸı��־��
+// 
 bool CCharacter::WriteAppendLook(CKitbag &CKb, net::WPacket &pk, bool bInit)
 {
 	SItemGrid	*pGridCont;
@@ -582,12 +582,12 @@ void CCharacter::WriteItemChaBoat(net::WPacket &WtPk, CCharacter *pCBoat)
 	pCBoat->WriteBaseInfo(WtPk);
 	pCBoat->WriteAttr(WtPk, enumATTRSYN_INIT);
 	pCBoat->m_CKitbag.SetChangeFlag(true);
-	pCBoat->WriteKitbag(pCBoat->m_CKitbag, WtPk, enumSYN_KITBAG_INIT); // ������
+	pCBoat->WriteKitbag(pCBoat->m_CKitbag, WtPk, enumSYN_KITBAG_INIT); // 
 	pCBoat->WriteSkillState(WtPk);
 }
 
 // =====================================================================
-//  Fill* — заполнение типизированных структур (CommandMessages.h)
+//  Fill*     (CommandMessages.h)
 // =====================================================================
 
 void CCharacter::FillBaseInfo(net::msg::ChaBaseInfo &b, Char chLookType)
@@ -784,7 +784,7 @@ void CCharacter::FillSkillBag(net::msg::ChaSkillBagInfo &s, int nSynType)
 	CCharacter *pCCtrlCha = GetPlyCtrlCha();
 	bool bIsBoatCtrl = pCCtrlCha->IsBoat();
 
-	// Если управляемый — корабль, добавить скилл корабля первым
+	//    ,    
 	if (bIsBoatCtrl)
 	{
 		pSkillGrid = pCCtrlCha->m_CSkillBag.GetSkillContByNum(0);

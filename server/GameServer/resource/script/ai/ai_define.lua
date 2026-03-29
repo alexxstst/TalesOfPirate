@@ -1,4 +1,4 @@
-print("-- [Loading] AI Define")
+﻿print("-- [Loading] AI Define")
 
 CHANGE_TARGET_RATIO = 50
 

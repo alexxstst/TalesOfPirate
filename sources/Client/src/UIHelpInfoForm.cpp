@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "uihelpinfoform.h"
 #include "helpinfoset.h"
 #include "npchelper.h"

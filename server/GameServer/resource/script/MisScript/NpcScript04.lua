@@ -1,13 +1,13 @@
-print("-- [Loading] NPC Script [04]")
+锘縫rint("-- [Loading] NPC Script [04]")
 
 ------------------------------------------------------------
--- 春风镇 铁匠·武鑫
+--  
 ------------------------------------------------------------
 
 function b_talk1()
 
 
-	Talk( 1, "Wu Xin: \"Emerald Blade on my left, Galiant Sword on my right, Dragon Crown on my head…Nothing can stop me!\"" )
+	Talk( 1, "Wu Xin: \"Emerald Blade on my left, Galiant Sword on my right, Dragon Crown on my headNothing can stop me!\"" )
 	Text( 1, "Trade", BuyPage )
 	Text( 1, "Repair", OpenRepair)
 	Text( 1, "Regarding Forging", JumpPage, 2)
@@ -17,7 +17,7 @@ function b_talk1()
 
 	Talk( 3, "Wu Xin: You wish to combine something? From what I understand, you need a combination scroll and it will list the required items. Collect the items needed and talk to Grocer - Amos in Shaitan City. He is the only person who knows how to combine." )
 	
-	Talk( 4, "Blacksmith - Wu Xin: \"………………^$&#&^%………………\"" )
+	Talk( 4, "Blacksmith - Wu Xin: \"^$&#&^%\"" )
 
 
 
@@ -51,14 +51,14 @@ function b_talk1()
 	AddNpcMission ( 393 )
         AddNpcMission ( 567 )
 
-	-------------铁匠·武鑫-------巨蟹
+	--------------------
 	AddNpcMission	(5817)
 	AddNpcMission	(5818)
 end
 
 
 ------------------------------------------------------------
--- 春风镇 客栈老板·龙女（卖回复品)
+--  )
 ------------------------------------------------------------
 
 function b_talk2()
@@ -72,7 +72,7 @@ function b_talk2()
 	TriggerAction(2, JumpPage, 2)
 	Start(GetMultiTrigger(), 2)
 	
-	Talk(2, "Long Er: \"………………^$&#&^%………………\"" )
+	Talk(2, "Long Er: \"^$&#&^%\"" )
 
    	InitTrade()
 	Other(1078) -- Steam Bun
@@ -91,15 +91,15 @@ function b_talk2()
 end
 
 ------------------------------------------------------------
--- 春风镇 杂货商人·鲁娜儿(卖飞机票)
+--  ()
 ------------------------------------------------------------
 
 function b_talk3()
 
 
-	Talk( 1, "Luna: \"Hmm…Someone seems be have the same name as me….I might sue that person for copyrights infringement!\"" )
+	Talk( 1, "Luna: \"HmmSomeone seems be have the same name as me.I might sue that person for copyrights infringement!\"" )
 	Text( 1, "Trade", BuyPage )
-	Talk( 2, "Luna: \"………………^$&#&^%………………\"" )
+	Talk( 2, "Luna: \"^$&#&^%\"" )
 
 
 
@@ -126,7 +126,7 @@ function b_talk3()
 	--AddNpcMission ( 535 )
         AddNpcMission ( 564 )
 
-	-------------杂货商人·鲁娜儿-------巨蟹
+	--------------------
 	AddNpcMission	(5821)
 	AddNpcMission	(5822)
 
@@ -134,13 +134,13 @@ function b_talk3()
 end
 
 ------------------------------------------------------------
--- 春风镇 贸易商人·油李（航海贸易品
+--  
 ------------------------------------------------------------
 
 function b_talk4()
 
 
-	Talk( 1, "Yuri: \"Have you heard of Fountain of Life before?Devil Beast? What! You know nothing? How about Mahjong? Oh man…What sort of adventurer are you?\"" )
+	Talk( 1, "Yuri: \"Have you heard of Fountain of Life before?Devil Beast? What! You know nothing? How about Mahjong? Oh manWhat sort of adventurer are you?\"" )
 	--Text( 1, "Trade", BuyPage )
 	InitTrigger()
 	TriggerCondition( 1, HasBoatInBerth, 13 )
@@ -162,7 +162,7 @@ function b_talk4()
 	Talk( 5, "When you reaches Lv 40 and reduces your tax rate to 20%, you can go to Shaitan Trading Post and obtain a Mid Lv Commerce Permit.")
 	Talk( 6, "When you have reached level 60 and possess a Commerce Permit with 10% tax, you can activate the quest for High Lv Commerce.")
 	Talk( 7, "Check your Commerce Permit to see the current Tax Rate imposed on your product when you sell it to any trader. Complete some quest at Shaitan Trading Post to reduce the Tax Rate.")
-	Talk( 8, "Yuri: \"………………^$&#&^%………………\"" )
+	Talk( 8, "Yuri: \"^$&#&^%\"" )
 
 
 
@@ -220,7 +220,7 @@ function b_talk4()
 	AddNpcMission ( 547 )
         AddNpcMission ( 572 )
 
-	-------------贸易商人·油李-------巨蟹
+	--------------------
 	AddNpcMission	(5825)
 	AddNpcMission	(5826)
 
@@ -228,34 +228,34 @@ function b_talk4()
 end
 
 ------------------------------------------------------------
--- 春风镇 传送使·春莉
+--  
 ------------------------------------------------------------
 
 function b_talk5()
-	--取消传送返回选择传送地点的对话内容和页面编号
-	local ReSelectTalk = "I need to reconsider…"
+	--
+	local ReSelectTalk = "I need to reconsider"
 	local ReSelectPage = 1
 
-	--取消传送和退出传送的对话和页面编号
-	local CancelSelectTalk = "Forget it…I will stay here"
+	--
+	local CancelSelectTalk = "Forget itI will stay here"
 	local CancelSelectPage = 7
 
-	--地图名称信息
+	--
 	local CurMapName1 = "garner"
 	local CurMapName2 = "magicsea"
 	local CurMapName5 = "darkblue"
 
-	--白银之城坐标
+	--
 	local GoTo01X = 2231
 	local GoTo01Y = 2788
 	local GoTo01M = CurMapName1
 
-	--沙岚之城坐标
+	--
 	local GoTo02X = 890
 	local GoTo02Y = 3575
 	local GoTo02M = CurMapName2
 
-	--冰狼堡坐标
+	--
 	local GoTo04X = 1318
 	local GoTo04Y = 510
 	local GoTo04M = CurMapName5
@@ -308,7 +308,7 @@ function b_talk5()
 	Talk( 6, "Sorry! You do not have enough gold to teleport." )
 
 	Talk( 7, "Remember to look for me if you need teleportation services", CloseTalk )
-	Talk( 8, "Chun Li: \"………………^$&#&^%………………\"" )
+	Talk( 8, "Chun Li: \"^$&#&^%\"" )
 
 
 
@@ -323,14 +323,14 @@ function b_talk5()
 	 AddNpcMission ( 559 )
 	MisListPage(8)
 
-	------------- 传送使·春莉-------巨蟹
+	------------- -------
 	AddNpcMission	(5827)
 	AddNpcMission	(5828)	
 
 end
 
 ------------------------------------------------------------
--- 春风镇 算命先生·算破天
+--  
 ------------------------------------------------------------
 
 function b_talk6()
@@ -342,7 +342,7 @@ function b_talk6()
 	Other(3086) -- Career Lot
 	Other(3087) -- Fortune Lot
 	
-	Talk(5, "Hocus Pocus: '………………^$&#&^%%………………'")
+	Talk(5, "Hocus Pocus: '^$&#&^%%'")
 
 	Talk(2, "Hocus Pocus: Darkness is the mask of Death... What do you want to redeem?")
 	Text(2, "Silhouette of Death", AbaddonExchange, 2934)
@@ -389,7 +389,7 @@ function b_talk6()
 	AddNpcMission(5830)	
 end
 ------------------------------------------------------------
--- 春风镇 酒店老板·裴蒂
+--  
 ------------------------------------------------------------
 
 function b_talk7()
@@ -398,7 +398,7 @@ function b_talk7()
 	Talk( 1, "Sang Di: \"Hey guys! Come to receive the guest!\"" )
    	--Text( 1, "Trade", BuyPage )
 	
-	Talk( 2, "Sang Di: \"………………^$&#&^%………………\"" )
+	Talk( 2, "Sang Di: \"^$&#&^%\"" )
 
 	InitTrade()
 	Other(	1084	)
@@ -428,7 +428,7 @@ function b_talk7()
 	AddNpcMission ( 551 )
        AddNpcMission ( 558 )
        AddNpcMission ( 571 )
-------------新增历史任务
+------------
 	AddNpcMission(	592	)
 	AddNpcMission(	5004	)
 	AddNpcMission(	5005	)
@@ -439,14 +439,14 @@ function b_talk7()
 	AddNpcMission(	5054	)
 	AddNpcMission(	5055	)
 
-	------------- 酒店老板·裴蒂-------巨蟹
+	------------- -------
 	AddNpcMission	(5831)
 	AddNpcMission	(5832)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 港口指挥·霜奇
+--  
 ------------------------------------------------------------
 
 function b_talk8()
@@ -482,24 +482,24 @@ function b_talk8()
 	Talk( 4, "Sorry! I only repair ships docked in this harbor. Please pay 1000G." )
 	Talk( 5, "Sorry, you need to dock your ship in our harbor in order to refuel. Please pay 200G" )
 	Talk( 6, "Sorry! We only salvage ships docked in our harbor. You have to pay a fee of 1000G." )
-	Talk( 7, "Shuang: \"………………^$&#&^%………………\"" )
+	Talk( 7, "Shuang: \"^$&#&^%\"" )
 
 
 	AddNpcMission ( 398 )
 	AddNpcMission ( 565 )
 
-	------------- 港口指挥·霜奇-------巨蟹
+	------------- -------
 	AddNpcMission	(5833)
 	AddNpcMission	(5834)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 银行总管·王墨
+--  
 ------------------------------------------------------------
 
 function b_talk9()
-	Talk( 1, "Wang Mo: \"You…look familiar? Do you have anything that requires storage?\"" )
+	Talk( 1, "Wang Mo: \"Youlook familiar? Do you have anything that requires storage?\"" )
 	InitTrigger()
 	TriggerCondition(1, HasMoney, 200)
 	TriggerAction(1, TakeMoney, 200)
@@ -508,7 +508,7 @@ function b_talk9()
 	Text(1, "Vault (200G Fee)", MultiTrigger, GetMultiTrigger(), 1)
 	Talk(2, "Sorry, you do not have sufficient gold to pay for vault usage")
 	Talk( 2, "Sorry! You do not have enough gold to pay the fee to access the bank." )
-	Talk( 3, "Wang Mo: \"………………^$&#&^%………………\"" )
+	Talk( 3, "Wang Mo: \"^$&#&^%\"" )
 
 
 
@@ -530,20 +530,20 @@ function b_talk9()
 	AddNpcMission ( 544 )
         AddNpcMission ( 570 )
 
-	------------- 银行总管·王墨-------巨蟹
+	------------- -------
 	AddNpcMission	(5839)
 	AddNpcMission	(5840)
 end
 
 ------------------------------------------------------------
--- 春风镇 卫兵·赵钱孙
+--  
 ------------------------------------------------------------
 
 function b_talk10()
 
 
-	Talk( 1, "Zhao: \"So hungry…What time is my dinner arriving…?\"" )
-	Talk( 2, "Zhao: \"………………^$&#&^%………………\"" )
+	Talk( 1, "Zhao: \"So hungryWhat time is my dinner arriving?\"" )
+	Talk( 2, "Zhao: \"^$&#&^%\"" )
 
 
 
@@ -554,21 +554,21 @@ function b_talk10()
 	TriggerAction( 2, JumpPage, 2 )
 	Start( GetMultiTrigger(), 2 )
 
-	------------- 卫兵·赵钱孙-------巨蟹
+	------------- -------
 	AddNpcMission	(5835)
 	AddNpcMission	(5836)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 卫兵·周吴郑
+--  
 ------------------------------------------------------------
 
 function b_talk11()
 
 
-	Talk( 1, "Zhou: \"1 plus 1equals 2? Not 2? 2? Actually I am only talking to myself. You don't have to be so worked up. Equals 2? Not equals 2…? \"" )
-	Talk( 2, "Zhou: \"………………^$&#&^%………………\"" )
+	Talk( 1, "Zhou: \"1 plus 1equals 2? Not 2? 2? Actually I am only talking to myself. You don't have to be so worked up. Equals 2? Not equals 2? \"" )
+	Talk( 2, "Zhou: \"^$&#&^%\"" )
 
 
 
@@ -584,21 +584,21 @@ function b_talk11()
 	AddNpcMission ( 533 )
 	AddNpcMission ( 534 )
 
-	------------- 卫兵·周吴郑-------巨蟹
+	------------- -------
 	AddNpcMission	(5837)
 	AddNpcMission	(5838)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 青年男子·流云
+--  
 ------------------------------------------------------------
 
 function b_talk12()
 
 
 	Talk( 1, "Cloud: \"Have you seen Misty? She is my girlfriend.\"" )
-	Talk( 2, "Cloud: \"………………^$&#&^%………………\"" )
+	Talk( 2, "Cloud: \"^$&#&^%\"" )
 
 
 
@@ -612,21 +612,21 @@ function b_talk12()
 	 AddNpcMission ( 533 )
 	 AddNpcMission ( 563 )
 
-	------------- 青年男子·流云-------巨蟹
+	------------- -------
 	AddNpcMission	(5841)
 	AddNpcMission	(5842)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 青年女子·水雾
+--  
 ------------------------------------------------------------
 
 function b_talk13()
 
 
 	Talk( 1, "Misty: \"Have you seen Cloud? He is my boyfriend\"" )
-	Talk( 2, "Misty: \"………………^$&#&^%………………\"" )
+	Talk( 2, "Misty: \"^$&#&^%\"" )
 
 
 
@@ -637,21 +637,21 @@ function b_talk13()
 	TriggerAction( 2, JumpPage, 2 )
 	Start( GetMultiTrigger(), 2 )
 
-	------------- 青年女子·水雾-------巨蟹
+	------------- -------
 	AddNpcMission	(5843)
 	AddNpcMission	(5844)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 中年男子·比盖
+--  
 ------------------------------------------------------------
 
 function b_talk14()
 
 
 	Talk( 1, "Bill: \"Trouble? No trouble? I am earning millions each second! Do not disturb me!\"" )
-	Talk( 2, "Bill: \"………………^$&#&^%………………\"" )
+	Talk( 2, "Bill: \"^$&#&^%\"" )
 
 
 
@@ -664,7 +664,7 @@ function b_talk14()
 
         AddNpcMission ( 568 )
 
-	------------- 中年男子·比盖-------巨蟹
+	------------- -------
 	AddNpcMission	(5847)
 	AddNpcMission	(5848)
 
@@ -672,14 +672,14 @@ function b_talk14()
 end
 
 ------------------------------------------------------------
--- 春风镇 中年女子·王蓉
+--  
 ------------------------------------------------------------
 
 function b_talk15()
 
 
-	Talk( 1, "Wang Rong: \"I does not know any martial art. Don't bully me…\"" )
-	Talk( 2, "Wang Rong: \"………………^$&#&^%………………\"" )
+	Talk( 1, "Wang Rong: \"I does not know any martial art. Don't bully me\"" )
+	Talk( 2, "Wang Rong: \"^$&#&^%\"" )
 
 
 
@@ -690,21 +690,21 @@ function b_talk15()
 	TriggerAction( 2, JumpPage, 2 )
 	Start( GetMultiTrigger(), 2 )
 
-	------------- 中年女子·王蓉-------巨蟹
+	------------- -------
 	AddNpcMission	(5845)
 	AddNpcMission	(5846)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 东方海盗·铃佐田山
+--  
 ------------------------------------------------------------
 
 function b_talk16()
 
 
-	Talk( 1, "Yakamoto: \"Seriously…can't you see that we are robbers? \"" )
-	Talk( 2, "Yakamoto: \"………………^$&#&^%………………\"" )
+	Talk( 1, "Yakamoto: \"Seriouslycan't you see that we are robbers? \"" )
+	Talk( 2, "Yakamoto: \"^$&#&^%\"" )
 
 
 
@@ -714,24 +714,24 @@ function b_talk16()
 	TriggerCondition( 2, NoRecord, 330 )
 	TriggerAction( 2, JumpPage, 2 )
 	Start( GetMultiTrigger(), 2 )
------------------东方海盗·铃佐田山---------金牛
+--------------------------
 	AddNpcMission	(5641)
 	AddNpcMission	(5642)
 
-	------------- 东方海盗·铃佐田山-------巨蟹
+	------------- -------
 	AddNpcMission	(5849)
 	AddNpcMission	(5850)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 潮流理发师
+--  
 ------------------------------------------------------------
 
 function b_talk17()
 
 
-	Talk( 1, "Hairstylist: \"Braid……\"" )
+	Talk( 1, "Hairstylist: \"Braid\"" )
         Text( 1, "I want to change my hairstyle", JumpPage, 2)
 	InitTrigger()
 	TriggerCondition( 1, HasItem, 1807, 1 )
@@ -742,7 +742,7 @@ function b_talk17()
 	Text( 2, "Forget it, let me think it over.", CloseTalk )
 
 	Talk( 3, "Hairstylist: You don't seem to possess Hairstyling Voucher. I cannot style your hair.")
-	Talk( 4, "Hairstylist: \"………………^$&#&^%………………\"" )
+	Talk( 4, "Hairstylist: \"^$&#&^%\"" )
 
 
 
@@ -762,21 +762,21 @@ function b_talk17()
 	AddNpcMission	(6009)
 
 
-	-------------海港指挥·夏云-------巨蟹
+	--------------------
 	AddNpcMission	(5851)
 	AddNpcMission	(5852)
 
 end
 
 ------------------------------------------------------------
--- 春风镇 僵尸·裴永军
+--  
 ------------------------------------------------------------
 
 function b_talk18()
 
 
-	Talk( 1, "Hami: \"……\"" )
-	Talk( 2, "Hami: \"………………^$&#&^%………………\"" )
+	Talk( 1, "Hami: \"\"" )
+	Talk( 2, "Hami: \"^$&#&^%\"" )
 
 
 
@@ -793,7 +793,7 @@ function b_talk18()
 end
 
 ------------------------------------------------------------
---黑龙巢穴 一层to二层
+-- to
 ------------------------------------------------------------
 
 function b_talk21()
@@ -822,7 +822,7 @@ function b_talk21()
 	Text( 2, "Teleport",MultiTrigger, GetMultiTrigger(), 2 ) 
 	Text( 2, CancelSelectTalk, JumpPage , CancelSelectPage )
 	
-	Talk( 3, "Guardian Statue: \"………………^$&#&^%………………\"" )
+	Talk( 3, "Guardian Statue: \"^$&#&^%\"" )
 
 	InitTrigger()
 	TriggerCondition( 1, HasRecord, 330 )
@@ -837,7 +837,7 @@ function b_talk21()
 end
 
 ------------------------------------------------------------
---黑龙巢穴 二层to一层
+-- to
 ------------------------------------------------------------
 
 function b_talk22()
@@ -859,7 +859,7 @@ function b_talk22()
 	Text( 2, "Teleport",MultiTrigger, GetMultiTrigger(), 2 ) 
 	Text( 2, CancelSelectTalk, JumpPage , CancelSelectPage )
 	
-	Talk( 3, "Guardian Statue: \"………………^$&#&^%………………\"" )
+	Talk( 3, "Guardian Statue: \"^$&#&^%\"" )
 
 	InitTrigger()
 	TriggerCondition( 1, HasRecord, 330 )
@@ -872,7 +872,7 @@ function b_talk22()
 end
 
 ------------------------------------------------------------
---黑龙巢穴 二层to三层
+-- to
 ------------------------------------------------------------
 
 function b_talk23()
@@ -892,7 +892,7 @@ function b_talk23()
 end
 
 ------------------------------------------------------------
---黑龙宝箱
+--
 ------------------------------------------------------------
 
 function b_talk24()
@@ -909,7 +909,7 @@ function b_talk24()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  铁匠
+--  -----  
 ------------------------------------------------------------
 
 function l_talk01()
@@ -928,7 +928,7 @@ function l_talk01()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  杰克史派罗
+--  -----  
 ------------------------------------------------------------
 
 function l_talk02()
@@ -945,13 +945,13 @@ function l_talk02()
 	AddNpcMission(585)
 	AddNpcMission(586)
 
-	----海港指挥·布纽--------杰克史派罗
+	------------
 	
 	AddNpcMission	(5676)
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  诺灵顿将军
+--  -----  
 ------------------------------------------------------------
 
 function l_talk03()
@@ -973,11 +973,11 @@ function l_talk03()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  伊丽莎白
+--  -----  
 ------------------------------------------------------------
 
 function l_talk04()
-	Talk(1, "Where am I? How did I ended up here? Mark! Sob…Sob…")
+	Talk(1, "Where am I? How did I ended up here? Mark! SobSob")
 	Text( 1, "Trade", BuyPage )
 
 	InitTrade()
@@ -995,21 +995,21 @@ function l_talk04()
 	AddNpcMission(588)
 	AddNpcMission(591)
 
-	---------------白羊
+	---------------
 	AddNpcMission	(5573)
 	AddNpcMission	(5574)
 
-	-----------------伊丽莎白---------金牛
+	--------------------------
 	AddNpcMission	(5661)
 	AddNpcMission	(5662)
 
-	-----------------勇者试炼
+	-----------------
 	AddNpcMission( 6171 )
 	AddNpcMission( 6172 )
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  藏宝海湾北海港指挥·彭尼
+--  -----  
 ------------------------------------------------------------
 function mmm_talk06()
 
@@ -1043,7 +1043,7 @@ function mmm_talk06()
 	Talk( 4, "Sorry! I only repair ships docked in this harbor. Please pay 1000G." )
 	Talk( 5, "Sorry, you need to dock your ship in our harbor in order to refuel. Please pay 200G" )
 	Talk( 6, "Sorry! We only salvage ships docked in our harbor. You have to pay a fee of 1000G." )
-	Talk( 7, "Shuang: \"………………^$&#&^%………………\"" )
+	Talk( 7, "Shuang: \"^$&#&^%\"" )
 
 
 
@@ -1051,7 +1051,7 @@ function mmm_talk06()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  藏宝海湾南海港指挥·凯奇
+--  -----  
 ------------------------------------------------------------
 function mmm_talk05()
 
@@ -1092,7 +1092,7 @@ function mmm_talk05()
 
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  骷髅海港指挥
+--  -----  
 ------------------------------------------------------------
 function mmm_talk07()
 Talk( 1, "Seaport Commander: Dock? Set sail? Salvage? Repair? Refuel?" )
@@ -1128,7 +1128,7 @@ Talk( 1, "Seaport Commander: Dock? Set sail? Salvage? Repair? Refuel?" )
 	Talk( 7, "Seaport Commander: ..................^$&#&^%.................." )
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  神秘人出海人
+--  -----  
 ------------------------------------------------------------
 function mmm_talk08()
 Talk( 1, "Mysterious Sailor: Dock? Set sail? Salvage? Repair? Refuel?" )
@@ -1164,7 +1164,7 @@ Talk( 1, "Mysterious Sailor: Dock? Set sail? Salvage? Repair? Refuel?" )
 	Talk( 7, "Mysterious Sailor: ..................^$&#&^%.................." )
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  海军基地海港指挥
+--  -----  
 ------------------------------------------------------------
 function mmm_talk09()
 Talk( 1, "Seaport Commander: Dock? Set sail? Salvage? Repair? Refuel?" )
@@ -1197,10 +1197,10 @@ Talk( 1, "Seaport Commander: Dock? Set sail? Salvage? Repair? Refuel?" )
 	Talk( 4, "Sorry! I only repair ships docked in this harbor. Please pay 1000G." )
 	Talk( 5, "Sorry, you need to dock your ship in our harbor in order to refuel. Please pay 200G" )
 	Talk( 6, "Sorry! We only salvage ships docked in our harbor. You have to pay a fee of 1000G." )
-	Talk( 7, "Seaport Commander: ………………^$&#&^%………………" )
+	Talk( 7, "Seaport Commander: ^$&#&^%" )
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  打包人·戴普
+--  -----  
 ------------------------------------------------------------
 function mmm_talk10()
 Talk( 1, "Zabu: Hi! I am the Freights NPC here. I can help you load the products up your ship if it is docked in this harbor" )
@@ -1220,13 +1220,13 @@ Talk( 1, "Zabu: Hi! I am the Freights NPC here. I can help you load the products
 
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  地狱传送使
+--  -----  
 ------------------------------------------------------------
 function mmm_talk11()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi" 
 
-	--黑龙巢穴三层坐标
+	--
 	local GoTo01X = 190
 	local GoTo01Y = 815
 	local GoTo01M = CurMapName
@@ -1244,7 +1244,7 @@ function mmm_talk11()
 	Talk( 1, "Abaddon Teleporter: Want to go to Abaddon? Be prepared. Bring me 20 <Gold Coins>, 15 <Pirate's Bones> and 15 <Souls of Undead> and I will send you down." )
 	Text( 1, "Go to Abaddon 1", MultiTrigger, GetMultiTrigger(), 1 )
 
-	--Talk( 3, "Guardian Statue: \"………………^$&#&^%………………\"" )
+	--Talk( 3, "Guardian Statue: \"^$&#&^%\"" )
 
 --InitTrigger()
 --	TriggerCondition( 1, HasRecord, 330 )
@@ -1257,19 +1257,19 @@ function mmm_talk11()
 
 --	Talk( 4, "The statue emits a energy shield to keep me away. Looks like I am not strong enough to break it yet. I must think of other ways." )
 
----------------白羊
+---------------
 	AddNpcMission	(5593)
 	AddNpcMission	(5594)
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  天堂传送使
+--  -----  
 ------------------------------------------------------------
 function mmm_talk12()
---地图名称信息
+--
 	local CurMapName = "jialebi" 
 
 
-	--黑龙巢穴三层坐标
+	--
 	local GoTo01X = 1604
 	local GoTo01Y = 906
 	local GoTo01M = CurMapName
@@ -1320,7 +1320,7 @@ function mmm_talk12()
 	Text( 7, "Obtained Angelic Dice", MultiTrigger, GetMultiTrigger(), 1)
 
 	Talk( 8, "Heaven Teleporter: Come back again after you have the required items" )
----------------白羊
+---------------
 	AddNpcMission	(5595)
 	AddNpcMission	(5596)
 
@@ -1329,13 +1329,13 @@ function mmm_talk12()
 	AddNpcMission ( 6058 )
 	AddNpcMission ( 6059 )
 	AddNpcMission ( 6060 )
-----------天堂传送使-------双子-------------------04
+------------------------------------04
 	AddNpcMission	(5726)
 	AddNpcMission	(5727)
 
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  迷失的考古队成员A
+--  -----  A
 ------------------------------------------------------------
 function mmm_talk13()
 	Talk( 1, "Bewildered Researcher A: Hi, I have been lost for a long time. I got some good stuff with me, do you wish to do an exchange?" )
@@ -1418,7 +1418,7 @@ function mmm_talk13()
 	Talk(7,"Sorry, you do not have the required items to redeem")
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  迷失的考古队成员B
+--  -----  B
 ------------------------------------------------------------
 function mmm_talk14()
 	Talk( 1, "Bewildered Researcher B: Hi, I have been lost for a long time. I got some good stuff with me, do you wish to do an exchange?" )
@@ -1501,7 +1501,7 @@ function mmm_talk14()
 	Talk(7,"Sorry, you do not have the required items to redeem")
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  迷失的考古队成员C
+--  -----  C
 ------------------------------------------------------------
 function mmm_talk15()
 	Talk( 1, "Bewildered Researcher C: Hi, I have been lost for a long time. I got some good stuff with me, do you wish to do an exchange?" )
@@ -1661,7 +1661,7 @@ function mmm_talk15()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  迷失的考古队成员D
+--  -----  D
 ------------------------------------------------------------
 function mmm_talk26()
 	Talk( 1, "Bewildered Researcher D: Hi, I have been lost for a long time. I got some good stuff with me, do you wish to do an exchange?" )
@@ -1821,7 +1821,7 @@ function mmm_talk26()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  迷失的考古队成员E
+--  -----  E
 ------------------------------------------------------------
 function mmm_talk27()
 	Talk( 1, "Bewildered Researcher E: Hi, I have been lost for a long time. I got some good stuff with me. Do you wish to do an exchange?" )
@@ -1981,7 +1981,7 @@ function mmm_talk27()
 end
 
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  迷失的考古队成员F
+--  -----  F
 ------------------------------------------------------------
 function mmm_talk28()
 	Talk( 1, "Bewildered Researcher F: Hi, I have been lost for a long time. I got some good stuff with me, do you wish to do an exchange?" )
@@ -2064,14 +2064,14 @@ function mmm_talk28()
 	Talk(7,"Sorry, you do not have the required items to redeem")
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  陆地一层传送使
+--  -----  
 ------------------------------------------------------------
 function mmm_talk16()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--海军码头坐标
+	--
 	local GoTo01X = 1250
 	local GoTo01Y = 1010
 	local GoTo01M = CurMapName
@@ -2092,13 +2092,13 @@ function mmm_talk16()
 	Talk( 4, "You do not have enough gold", CloseTalk)
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  实验室看守人A
+--  -----  A
 ------------------------------------------------------------
 function mmm_talk17()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
-	--实验室A坐标
+	--A
 	local GoTo01X = 968
 	local GoTo01Y = 828
 	local GoTo01M = CurMapName
@@ -2120,14 +2120,14 @@ function mmm_talk17()
 	Talk( 4, "You do not have enough gold", CloseTalk)
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  实验室看守人B2386
+--  -----  B2386
 ------------------------------------------------------------
 function mmm_talk18()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--实验室B坐标
+	--B
 	local GoTo01X = 968
 	local GoTo01Y = 906
 	local GoTo01M = CurMapName
@@ -2149,14 +2149,14 @@ function mmm_talk18()
 	Talk( 4, "You have not collect 20 Souls of Undead", CloseTalk)
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  实验室看守人C
+--  -----  C
 ------------------------------------------------------------
 function mmm_talk19()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--实验室C坐标
+	--C
 	local GoTo01X = 968
 	local GoTo01Y = 993
 	local GoTo01M = CurMapName
@@ -2178,14 +2178,14 @@ function mmm_talk19()
 	Talk( 4, "You do not have enough gold", CloseTalk)
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  地下船坞守卫
+--  -----  
 ------------------------------------------------------------
 function mmm_talk20()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--实验室坐标
+	--
 	local GoTo01X = 1076
 	local GoTo01Y = 869
 	local GoTo01M = CurMapName
@@ -2216,14 +2216,14 @@ function mmm_talk20()
 	Talk( 4, "You have not finish collecting all the Passwords", CloseTalk)
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  地狱一层炼狱人
+--  -----  
 ------------------------------------------------------------
 function mmm_talk22()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--地狱二层坐标
+	--
 	local GoTo01X = 79
 	local GoTo01Y = 823
 	local GoTo01M = CurMapName
@@ -2258,19 +2258,19 @@ function mmm_talk22()
 	Talk( 6, "Abaddon 1 Warden: Come back again after you have the required items" )
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  地狱二层炼狱人
+--  -----  
 ------------------------------------------------------------
 function mmm_talk23()
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--地狱一层坐标
+	--
 	local GoTo01X = 199
 	local GoTo01Y = 824
 	local GoTo01M = CurMapName
 
-	--地狱三层坐标
+	--
 	local GoTo02X = 70
 	local GoTo02Y = 952
 	local GoTo02M = CurMapName
@@ -2310,20 +2310,20 @@ function mmm_talk23()
 	Talk( 6, "Abaddon 2 Warden: Come back again after you have the required items" )
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  地狱三层炼狱人
+--  -----  
 ------------------------------------------------------------
 function mmm_talk24()
 
-	--地图名称信息
+	--
 	local CurMapName = "jialebi"
 
 
-	--地狱二层坐标
+	--
 	local GoTo01X = 79
 	local GoTo01Y = 823
 	local GoTo01M = CurMapName
 
-	--地狱四层坐标
+	--
 	local GoTo02X = 209
 	local GoTo02Y = 955
 	local GoTo02M = CurMapName
@@ -2363,20 +2363,20 @@ function mmm_talk24()
 	Talk( 6, "Abaddon 3 Warden: Come back again after you have the required items" )
 end
 ------------------------------------------------------------
--- 加勒比海盗版本 -----  地狱四层炼狱人
+--  -----  
 ------------------------------------------------------------
 function mmm_talk25()
 
-		--地图名称信息
+		--
 	local CurMapName = "jialebi"
 
 
-	--地狱三层坐标
+	--
 	local GoTo01X = 70
 	local GoTo01Y = 952
 	local GoTo01M = CurMapName
 
-	--藏宝海湾坐标
+	--
 	local GoTo02X = 690
 	local GoTo02Y = 1043
 	local GoTo02M = CurMapName
@@ -2418,34 +2418,34 @@ end
 
 
 ------------------------------------------------------------
--- 藏宝海湾 传送使
+--  
 ------------------------------------------------------------
 
 function mmm_talk29()
-	--取消传送返回选择传送地点的对话内容和页面编号
-	local ReSelectTalk = "I need to reconsider…"
+	--
+	local ReSelectTalk = "I need to reconsider"
 	local ReSelectPage = 1
 
-	--取消传送和退出传送的对话和页面编号
-	local CancelSelectTalk = "Forget it…I will stay here"
+	--
+	local CancelSelectTalk = "Forget itI will stay here"
 	local CancelSelectPage = 7
 
-	--地图名称信息
+	--
 	local CurMapName1 = "garner"
 	local CurMapName2 = "magicsea"
 	local CurMapName5 = "darkblue"
 
-	--白银之城坐标
+	--
 	local GoTo01X = 2231
 	local GoTo01Y = 2788
 	local GoTo01M = CurMapName1
 
-	--沙岚之城坐标
+	--
 	local GoTo02X = 890
 	local GoTo02Y = 3575
 	local GoTo02M = CurMapName2
 
-	--冰狼堡坐标
+	--
 	local GoTo04X = 1318
 	local GoTo04Y = 510
 	local GoTo04M = CurMapName5
@@ -2515,7 +2515,7 @@ function jjsj_talk1 ()
 	Talk(1, "Lana: Hello! My name is Lana, I am the nurse of PKmap. Please come here when you need. It will charge you 2000 Gold, if your level is higher than 40. It is free if your level is below 40!")
 	Text(1, "Greater Heal", MultiTrigger,GetMultiTrigger(),2) 
 
-	Talk(2, "Lana：Sorry, Greater Heal will cost you 2000 Gold, it seems you don’t have enough Gold…")	
+	Talk(2, "LanaSorry, Greater Heal will cost you 2000 Gold, it seems you dont have enough Gold")	
 
 end 
 function mmm_talk30()
@@ -2632,7 +2632,7 @@ function dydz_talk()
 	Talk( 4, "Don't think that your boat will be repaired for free here. Dock your boat and prepare a fee of 1000G." )
 	Talk( 5, "Don't think you can refuel your ship here for free. Dock your ship and prepare a fee of 200G." )
 	Talk( 6, "Sorry! We only salvage ships docked in our harbor. You have to pay a fee of 1000G." )
-	Talk( 7, "Abaddon Vagabond: \"………………^$&#&^%………………\"" )
+	Talk( 7, "Abaddon Vagabond: \"^$&#&^%\"" )
 
 end
 
@@ -2690,33 +2690,33 @@ end
 function k_talk002()
 
 
-	Talk( 1, "百慕大守护者:“海的那边是更遥远的海,山的尽头是更苍翠的山,我早已忘却何年何月何日流落到此!来自远方的朋友,如果你能找到一个叫春风镇的地方,请捎上一枚思乡者的祝福.”" )
-	Text( 1, "兑换百慕大宝箱", JumpPage, 2)
+	Talk( 1, ":,,!,,." )
+	Text( 1, "", JumpPage, 2)
 
-	Talk( 2, "百慕大守护者:我是百慕大的守护者,我流浪到这里已经很多年了,这么多年在岛上没有食物充饥,请给我一张“蛋糕品尝券”吧!")	
+	Talk( 2, ":,,,!")	
 	InitTrigger()
-	TriggerCondition( 1, HasItem, 1097, 1)             ------------蛋糕品尝券
+	TriggerCondition( 1, HasItem, 1097, 1)             ------------
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0 )
 	TriggerAction(1, TakeItem, 1097, 1)
-	TriggerAction(1, GiveItem, 1104, 1, 4)              ----------百慕大宝箱
+	TriggerAction(1, GiveItem, 1104, 1, 4)              ----------
 	TriggerFailure(1, JumpPage, 3)
 	Text(2,"Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1) 	
 
-	Talk( 3, "你连一个流浪者的心愿都不满足,我一定要!!要惩罚你!呜呜呜... ...年轻人,如果你背包格已满或是锁上了,我也无法品尝到美味的蛋糕!")
+	Talk( 3, ",!!!... ...,,!")
 
-	Text( 1, "兑换10个成长快餐", JumpPage, 4)
+	Text( 1, "10", JumpPage, 4)
 
-	Talk( 4, "百慕大守护者:我是百慕大的守护者,我流浪到这里已经很多年了,这么多年在岛上没有可口的食物,请给我一个“超级寿司”品尝一下吧!")
+	Talk( 4, ":,,,!")
 	InitTrigger()
-	TriggerCondition( 1, HasItem, 2989, 1)             ------------超级寿司
+	TriggerCondition( 1, HasItem, 2989, 1)             ------------
 	TriggerCondition(1, HasLeaveBagGrid, 1)
 	TriggerCondition(1, KitbagLock, 0 )
 	TriggerAction(1, TakeItem, 2989, 1)
-	TriggerAction(1, GiveItem, 0992, 10, 4)              ----------成长快餐10个
+	TriggerAction(1, GiveItem, 0992, 10, 4)              ----------10
 	TriggerFailure(1, JumpPage, 5)
 	Text(4,"Confirm to redeem", MultiTrigger, GetMultiTrigger(), 1) 	
 
-	Talk( 5, "现在的年轻人喔,咳咳... ...怎么身上一样好吃的也不带?请仔细检查下你的背包是否有空位或是背包已上锁!")
+	Talk( 5, ",... ...?!")
 
 end

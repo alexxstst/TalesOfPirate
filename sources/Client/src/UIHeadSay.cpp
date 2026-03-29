@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiheadsay.h"
 #include "GameApp.h"
 #include "Character.h"
@@ -49,23 +49,23 @@ CGuiPic CHeadSay::_ImgShop2[3];
 int		CHeadSay::_nShopFrameWidth = 0; 
 int		CHeadSay::_nShopFontYOff = 0;
 
-//������ʾ��ʽ (ǰ׺) �� ��ɫ�� + (������) �� [����]
+// ()   + ()  []
 char CHeadSay::s_sNamePart[NAME_PART_NUM][64] = { 0 };
 
 
 char CHeadSay::s_szName[1024] = {0};
 
-DWORD CHeadSay::s_dwNamePartsColors[NAME_PART_NUM][2] =			//	ǰһ����ǰ��ɫ,��һ������Ӱ��ɫ
+DWORD CHeadSay::s_dwNamePartsColors[NAME_PART_NUM][2] =			//	,
 	{
 		COLOR_WHITE,			COLOR_BLACK,		//	(
-		0,						COLOR_BLACK,		//	ǰ׺��
+		0,						COLOR_BLACK,		//	
 		COLOR_WHITE,			COLOR_BLACK,		//	)
-		0,						COLOR_BLACK,		//	��ɫ��
+		0,						COLOR_BLACK,		//	
 		COLOR_BLACK,			0,		//	(
-		COLOR_BLACK,			0,		//	������
+		COLOR_BLACK,			0,		//	
 		COLOR_BLACK,			0,		//	)
 		COLOR_WHITE,			COLOR_BLACK,		//	[
-		COLOR_SHIP_NAME,		COLOR_BLACK,		//	����
+		COLOR_SHIP_NAME,		COLOR_BLACK,		//	
 		COLOR_WHITE,			COLOR_BLACK,		//	]
 	};
 
@@ -256,7 +256,7 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 void CHeadSay::Render( D3DXVECTOR3& pos )
 {
     static int x=0, y=0;
-    static int nSayTotalWidth =  32 * CGuiFont::s_Font.GetWidth("a") ; //32���ַ��ĳ���
+    static int nSayTotalWidth =  32 * CGuiFont::s_Font.GetWidth("a") ; //32
     g_Render.WorldToScreen( pos.x, pos.y, pos.z + _pOwn->GetDefaultChaInfo()->fHeight, &x, &y );    
 
 	/*
@@ -267,7 +267,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 	}	
 	*/
 
-	if( _ShowBars && (_IsShowLife || (_pOwn->IsPlayer() && _ShowInfo) ) && !_fLifeW <= 0 ) //Ѫ��
+	if( _ShowBars && (_IsShowLife || (_pOwn->IsPlayer() && _ShowInfo) ) && !_fLifeW <= 0 ) //
     {
 		static int x1 = 0, y1 =0;
 		g_Render.WorldToScreen( pos.x, pos.y, pos.z , &x1, &y1 );
@@ -349,7 +349,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 	
 	if(g_stUIMap.IsPKSilver())
 	{
-		// ���Ҷ������������ͷ�ϲ���ʾ�κ����ݣ�����ʾ��һ�ֵ�Ѫ��
+		// 
 		return;
 	}
 
@@ -382,11 +382,11 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 
     if ( _nShowTime <= 0 )
     {
-#ifdef _LOG_NAME_                     //��ɫ����
-		const int LINE_HEIGHT_STEP = 14;		//һ�еĸ߶�
-		int iNameHeightStep = LINE_HEIGHT_STEP;	//��ɫ�������ĸ߶�
+#ifdef _LOG_NAME_                     //
+		const int LINE_HEIGHT_STEP = 14;		//
+		int iNameHeightStep = LINE_HEIGHT_STEP;	//
 
-		// ������־��
+		// 
         if( CCharacter::IsShowLogName )
         {
             int  nNameLength =  0 - CGuiFont::s_Font.GetWidth( _pOwn->getLogName() )/2;
@@ -397,13 +397,13 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
         else if( _IsShowName || g_IsShowNames || (_pOwn->GetIsPK() && _ShowEnemyNames ) || (_ShowInfo && _pOwn->IsPlayer()) )
         {
 		
-			// ����������
+			// 
 			if ( *(_pOwn->getGuildName()) )
 			{
-				iNameHeightStep += LINE_HEIGHT_STEP;	//��������һ��
+				iNameHeightStep += LINE_HEIGHT_STEP;	//
 				int iGuildNameHeightStep = LINE_HEIGHT_STEP;
 
-				//������
+				//
 				if ( *(_pOwn->getGuildName()) )
 				{
 					strncpy( s_szConsortiaNamePart[0], _pOwn->getGuildName(), NAME_LENGTH );					
@@ -412,7 +412,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				{
 					strncpy( s_szConsortiaNamePart[0], "", NAME_LENGTH );					
 				}
-				//����������
+				//
 				if ( *(_pOwn->getGuildMotto()) )
 				{
 					strncpy( s_szConsortiaNamePart[1], "(", strlen("(") );
@@ -435,7 +435,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				int nNameLength = 0 - CGuiFont::s_Font.GetWidth(s_szConsortiaName)/2;
 				int iStartPosX = 0 - CGuiFont::s_Font.GetWidth(s_szConsortiaName)/2;
 
-				// renderÿһ������
+				// render
 				int perm = (_pOwn->getGuildPermission()&emGldPermLeader);
 				if( perm == emGldPermLeader){
 					//GetGuildLeaderPic()->TintColour( 255, 0, 0 );
@@ -450,7 +450,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 
 			}
 
-			// ǰ׺��
+			// 
 			if ( *(_pOwn->GetPreName()) )
 			{
 				strncpy( s_sNamePart[PRENAME_SEP1_INDEX], "(", strlen("(") );
@@ -466,7 +466,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				s_dwNamePartsColors[PRENAME_INDEX][0] = 0;
 			}
 
-			//������
+			//
 			if ( *(_pOwn->getSecondName()) )
 			{
 				strncpy( s_sNamePart[MOTTO_NAME_SEP1_INDEX], "(", strlen("(") );
@@ -480,9 +480,9 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				strncpy( s_sNamePart[MOTTO_NAME_SEP2_INDEX], "", NAME_LENGTH );
 			}
 
-			//��ɫ������
+			//
 
-			// Added by NINJAツ#5684 June 2021 credits to Igor Silva#2195
+			// Added by NINJA#5684 June 2021 credits to Igor Silva#2195
 			if (_ShowEnemyNames == true && _pOwn->IsPlayer() && CGameScene::GetMainCha()) {
 			  if (!_pOwn->IsMainCha() && _pOwn->GetIsPK()) {
 			    if (_pOwn->GetTeamLeaderID() && _pOwn->GetTeamLeaderID() == CGameApp::GetCurScene()->GetMainCha()->GetTeamLeaderID())
@@ -524,23 +524,23 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				strncpy( s_sNamePart[NAME_INDEX], _pOwn->getName().c_str(), NAME_LENGTH );
 
 				if (_pOwn->IsMonster() )
-				{	//����ǹ���ҵȼ���������10������ʾ����ȼ�
+				{	//10
 					if( _ShowInfo && !_IsShowName) {return;}
 
-					// �����ȼ�
+					// 
 					static int nMainLevel(0);
 					if( g_stUIBoat.GetHuman() )
 					{
 						nMainLevel = g_stUIBoat.GetHuman()->getGameAttr()->get(ATTR_LV);
 					}
 
-					// ����ȼ�
+					// 
 					static int nMonsterLevel(0);
 					nMonsterLevel = _pOwn->getGameAttr()->get(ATTR_LV);
 
 					static char szBuf[NAME_LENGTH] = { 0 };
 					if (nMonsterLevel - nMainLevel <= 10)
-					{	//��ʾ�ȼ�
+					{	//
 						sprintf(szBuf, "Lv%d %s", nMonsterLevel, _pOwn->getName().c_str());
 					}
 					else
@@ -556,7 +556,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				s_dwNamePartsColors[NAME_INDEX][0] = 0xFF9BA1E9; // D3DXCOLOR(109,87,218,1); 
 			}*/
 
-			// �õ����ֵ��ܳ�
+			// 
 			s_szName[0] = '\0';
 			//ZeroMemory( s_szName, sizeof(s_szName) );
 			for (int i(0); i<NAME_PART_NUM; i++)
@@ -577,7 +577,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				}
 			}
 
-			// renderÿһ������
+			// render
 			
 			
 	
@@ -598,7 +598,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 #else
         if( _IsShowName )  
         {
-			if (_pOwn->IsBoat())	//��ʾ��ɫ��+����
+			if (_pOwn->IsBoat())	//+
 			{
 				static string sNameBuf;
 				sNameBuf = _pOwn->getHumanName();
@@ -618,7 +618,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 					}
 				}
 			}
-			else	//��ʾ��ɫ��
+			else	//
 			{
 				int  nNameLength =  0 - CGuiFont::s_Font.GetWidth( _pOwn->getName() )/2;
 				CGuiFont::s_Font.BRender( _pOwn->getName().c_str(), x +  nNameLength ,   y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
@@ -637,7 +637,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 		}		
 #endif
     }
-    else if( _nShowTime > 0 )                        //����
+    else if( _nShowTime > 0 )                        //
     {
         _nShowTime--;   
 
@@ -700,7 +700,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
         }
     }
 
-    if( _pCurFace && _nFaceTime > 0 )   //����
+    if( _pCurFace && _nFaceTime > 0 )   //
     {
         _nFaceTime--;
         y -= 20;
@@ -719,7 +719,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
         _pCurFace->Render( x-_pCurFace->GetWidth()/2, y - 20 );
     }
 
-#ifdef _LOG_NAME_                     //��ɫ����
+#ifdef _LOG_NAME_                     //
     if( CCharacter::IsShowLogName )
     {
 		CChaStateMgr* pState = _pOwn->GetStateMgr();

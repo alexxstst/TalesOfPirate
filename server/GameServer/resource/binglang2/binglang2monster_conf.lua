@@ -1,4 +1,4 @@
-print("-- [Loading] binglang2Monster.lua")
+﻿print("-- [Loading] binglang2Monster.lua")
 
 CreateCha(961, 7466, 11771, 145, 60)
 CreateCha(960, 6844, 10565, 145, 60)

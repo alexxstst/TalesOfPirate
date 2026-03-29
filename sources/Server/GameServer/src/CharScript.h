@@ -1,4 +1,4 @@
-// CharScript.h Created by knight-gongjian 2004.12.13.
+﻿// CharScript.h Created by knight-gongjian 2004.12.13.
 //---------------------------------------------------------
 #pragma once
 

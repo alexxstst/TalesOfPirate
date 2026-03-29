@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "procirculate.h"
 #include "GameApp.h"
 #include "PacketCmd.h"
@@ -12,7 +12,7 @@
 #include "CommandMessages.h"
 
 using namespace std;
-// Crypto++ — BLAKE2s для хеширования пароля при логине
+// Crypto++  BLAKE2s     
 #include "blake2.h"
 #include "hex.h"
 #include "filters.h"
@@ -20,9 +20,9 @@ using namespace std;
 #include "..\..\TestClient\testclient.h"
 #endif
 
-// Типы uChar, uShort, uLong, cChar определены в NetIF.h
+//  uChar, uShort, uLong, cChar   NetIF.h
 
-// Типизированная сериализация: заголовок CMD_CM_BEGINACTION + switch по типу действия
+//  :  CMD_CM_BEGINACTION + switch   
 void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CActionState* pState) {
 	auto pk = net::msg::serializeCmBeginActionHeader(
 		static_cast<int64_t>(pCha->getAttachID()),
@@ -116,7 +116,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			//
 			break;
 		}
-		case enumACTION_LEAN: // �п�
+		case enumACTION_LEAN: // 
 		{
 			stNetLeanInfo* pSLean = (stNetLeanInfo*)param;
 			pk.WriteInt64(pSLean->lPose);
@@ -132,7 +132,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			//
 			break;
 		}
-		case enumACTION_ITEM_PICK: // �����
+		case enumACTION_ITEM_PICK: // 
 		{
 			stNetItemPick* pPick = (stNetItemPick*)param;
 			pk.WriteInt64(pPick->lWorldID);
@@ -143,7 +143,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 			break;
 		}
-		case enumACTION_ITEM_THROW: // ������
+		case enumACTION_ITEM_THROW: // 
 		{
 			stNetItemThrow* pThrow = (stNetItemThrow*)param;
 			pk.WriteInt64(pThrow->sGridID);
@@ -167,12 +167,12 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 			break;
 		}
-		case enumACTION_ITEM_UNFIX: // жװ����
+		case enumACTION_ITEM_UNFIX: // 
 		{
 			stNetItemUnfix* pUnfix = (stNetItemUnfix*)param;
 			pk.WriteInt64(pUnfix->chLinkID);
 			pk.WriteInt64(pUnfix->sGridID);
-			if (pUnfix->sGridID < 0) // ��������
+			if (pUnfix->sGridID < 0) // 
 			{
 				pk.WriteInt64(pUnfix->lPosX);
 				pk.WriteInt64(pUnfix->lPosY);
@@ -216,7 +216,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			break;
 			break;
 		}
-		case enumACTION_SHORTCUT: // ���¿����
+		case enumACTION_SHORTCUT: // 
 		{
 			stNetShortCutChange* pShortcutChange = (stNetShortCutChange*)param;
 			pk.WriteInt64(pShortcutChange->chIndex);
@@ -227,7 +227,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 			break;
 		}
-		case enumACTION_LOOK: // ������ۣ��紬�Ļ�װ��
+		case enumACTION_LOOK: // 
 		{
 			stNetChangeChaPart* pSChaPart = (stNetChangeChaPart*)param;
 			pk.WriteInt64(pSChaPart->sTypeID);
@@ -240,7 +240,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 			break;
 		}
-		case enumACTION_TEMP: //��ʱ��װЭ��
+		case enumACTION_TEMP: //
 		{
 			stTempChangeChaPart* pSTempChaPart = (stTempChangeChaPart*)param;
 			pk.WriteInt64(pSTempChaPart->dwItemID);
@@ -251,7 +251,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 			break;
 		}
-		case enumACTION_EVENT: // �����¼�
+		case enumACTION_EVENT: // 
 		{
 			stNetActivateEvent* pEvent = (stNetActivateEvent*)param;
 			pk.WriteInt64(pEvent->lTargetID);
@@ -325,7 +325,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 
 			break;
 		}
-		case enumACTION_KITBAGTMP_DRAG: // �϶���ʱ����
+		case enumACTION_KITBAGTMP_DRAG: // 
 		{
 			stNetTempKitbag* pNetTempKitbag = (stNetTempKitbag*)param;
 
@@ -345,9 +345,9 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 	}
 }
 
-// Э��C->S : ����ֹͣ�ж���Ϣ
+// C->S : 
 void CProCirculateCS::EndAction(CActionState* pState) {
-	// Остановка действия персонажа
+	//   
 	auto pk = net::msg::serializeCmEndActionCmd();
 	pCNetIf->SendPacketMessage(pk);
 
@@ -366,20 +366,20 @@ void CProCirculate::Disconnect(int reason) {
 }
 
 bool CProCirculate::SendPrivateKey() {
-	// 1. Генерация 32-байт AES-256 ключа
+	// 1.  32- AES-256 
 	NTSTATUS status = BCryptGenRandom(NULL, g_NetIF->cliAesKey, 32, BCRYPT_USE_SYSTEM_PREFERRED_RNG);
 	if (!BCRYPT_SUCCESS(status)) {
 		ToLogService("connections", "BCryptGenRandom (AES key) failed: 0x{:08X}", status);
 		return false;
 	}
 
-	// 2. RSA-OAEP-SHA256 шифрование AES ключа публичным ключом сервера
+	// 2. RSA-OAEP-SHA256  AES    
 	BCRYPT_OAEP_PADDING_INFO oaepInfo = {};
 	oaepInfo.pszAlgId = BCRYPT_SHA256_ALGORITHM;
 	oaepInfo.pbLabel = NULL;
 	oaepInfo.cbLabel = 0;
 
-	// Определяем размер зашифрованных данных
+	//    
 	ULONG encryptedLen = 0;
 	status = BCryptEncrypt(
 		g_NetIF->hRsaPubKey,
@@ -393,7 +393,7 @@ bool CProCirculate::SendPrivateKey() {
 		return false;
 	}
 
-	// Шифруем
+	// 
 	std::vector<BYTE> encryptedKey(encryptedLen);
 	ULONG resultLen = 0;
 	status = BCryptEncrypt(
@@ -408,7 +408,7 @@ bool CProCirculate::SendPrivateKey() {
 		return false;
 	}
 
-	// Логируем AES ключ и зашифрованные данные
+	//  AES    
 	{
 		std::string aesHex, encHex;
 		aesHex.reserve(64);
@@ -426,14 +426,14 @@ bool CProCirculate::SendPrivateKey() {
 		ToLogService("connections", "SendPrivateKey: RSA-encrypted key ({} bytes):\n{}", resultLen, encHex.c_str());
 	}
 
-	// 3. Инициализация BCrypt AES ключа для симметричного шифрования
+	// 3.  BCrypt AES    
 	if (!g_NetIF->InitAesKey()) {
 		ToLogService("connections", "InitAesKey failed");
 		return false;
 	}
 
-	// 4. Отправка зашифрованного AES ключа серверу (сырые байты, без Base64)
-	// NOTE: WriteSequence с бинарными данными — не конвертируется в net::msg::serialize
+	// 4.   AES   ( ,  Base64)
+	// NOTE: WriteSequence        net::msg::serialize
 	WPacket pk = pCNetIf->GetWPacket();
 	pk.WriteCmd(CMD_CM_SEND_PRIVATE_KEY);
 	pk.WriteSequence(reinterpret_cast<const char*>(encryptedKey.data()), static_cast<uShort>(resultLen));
@@ -473,49 +473,49 @@ void CProCirculate::Login(const char* accounts, const char* password, const char
 }
 
 void CProCirculate::Logout() {
-	// Отправка запроса на выход из аккаунта
+	//      
 	auto pk = net::msg::serializeCmLogoutCmd();
 	pCNetIf->SendPacketMessage(pk);
-	Sleep(1000); // Даём серверу время обработать logout
+	Sleep(1000); //     logout
 }
 
 void CProCirculate::BeginPlay(char cha_index) {
-	// Выбор персонажа для игры
+	//    
 	auto pk = net::msg::serialize(net::msg::CmBgnPlayMessage{(int64_t)cha_index});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::EndPlay() {
-	// Возврат к экрану выбора персонажа
+	//     
 	auto pk = net::msg::serializeCmEndPlayCmd();
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::NewCha(const char* chaname, const char* birth, int type, int hair, int face) {
-	// Создание нового персонажа
+	//   
 	auto pk = net::msg::serialize(net::msg::CmNewChaMessage{chaname, birth, (int64_t)type, (int64_t)hair, (int64_t)face});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::DelCha(uint8_t cha_index, const char szPassword2[]) {
-	// Удаление персонажа
+	//  
 	auto pk = net::msg::serialize(net::msg::CmDelChaMessage{(int64_t)cha_index, szPassword2});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::OpenRankings() {
-	// Запрос рейтинга
+	//  
 	auto pk = net::msg::serializeCmRankCmd();
 	pCNetIf->SendPacketMessage(pk);
 }
 
-// Типизированная сериализация: отправка сообщения (CMD_CM_SAY)
+//  :   (CMD_CM_SAY)
 void CProCirculate::Say(const char* content) {
 	auto pk = net::msg::serialize(net::msg::CmSayMessage{content});
 	pCNetIf->SendPacketMessage(pk);
 }
 
-// Типизированная сериализация: синхронизация базовых атрибутов (CMD_CM_SYNATTR)
+//  :    (CMD_CM_SYNATTR)
 void CProCirculate::SynBaseAttribute(CChaAttr* pCAttr) {
 	net::msg::CmSynAttrMessage msg;
 	for (int i = ATTR_STR; i <= ATTR_LUK; i++) {
@@ -541,13 +541,13 @@ void CProCirculate::SynBaseAttribute(CChaAttr* pCAttr) {
 }
 
 void CProCirculate::RefreshChaData(long lWorldID, long lHandle) {
-	// Запрос обновления данных персонажа
+	//    
 	auto pk = net::msg::serialize(net::msg::CmRefreshDataMessage{(int64_t)lWorldID, (int64_t)lHandle});
 	pCNetIf->SendPacketMessage(pk);
 }
 
 void CProCirculate::SkillUpgrade(short sSkillID, char chAddLv) {
-	// Прокачка навыка
+	//  
 	auto pk = net::msg::serialize(net::msg::CmSkillUpgradeMessage{(int64_t)sSkillID, (int64_t)chAddLv});
 
 	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(328), sSkillID, chAddLv); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }

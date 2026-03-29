@@ -1,4 +1,4 @@
-//=============================================================================
+Ôªø//=============================================================================
 // FileName: EntityAlloc.h
 // Creater: ZhangXuedong
 // Date: 2005.01.18
@@ -23,10 +23,10 @@
 
 #define defENTI_ENTEVENT 0x06000000
 #define defENTI_ENTBASE(n) (defENTI_ENTEVENT + (n<<24))
-#define defENTI_ALLOC_TYPE_ENTBASE			defENTI_ENTBASE(1)	// ª˘±æ¿‡–Õ ¬º˛ µÃÂ
-#define defENTI_ALLOC_TYPE_ENTRESOURCE		defENTI_ENTBASE(2)	// ◊ ‘¥¿‡–Õ ¬º˛ µÃÂ
-#define defENTI_ALLOC_TYPE_ENTTRANSIT		defENTI_ENTBASE(3)	// ¥´ÀÕ¿‡–Õ ¬º˛ µÃÂ
-#define defENTI_ALLOC_TYPE_ENTBERTH			defENTI_ENTBASE(4)	// Õ£≤¥¿‡–Õ ¬º˛ µÃÂ
+#define defENTI_ALLOC_TYPE_ENTBASE			defENTI_ENTBASE(1)	// 
+#define defENTI_ALLOC_TYPE_ENTRESOURCE		defENTI_ENTBASE(2)	// 
+#define defENTI_ALLOC_TYPE_ENTTRANSIT		defENTI_ENTBASE(3)	// 
+#define defENTI_ALLOC_TYPE_ENTBERTH			defENTI_ENTBASE(4)	// 
 
 template <class T>
 class CAlloc
@@ -37,18 +37,18 @@ public:
 
 	void  clear();
 
-	// ªÒ»°∑÷≈‰º∆ ˝
+	// 
 	LONG getHoldSize()  const { return m_lHoldSize; }
 	LONG getMaxHoldSize()  const { return m_lMaxHoldSize; }
 	LONG getAllocSize() const { return m_lAllocSize; }
 	
-	// ∑÷≈‰÷∏∂®¿‡–Õ ˝æ›
+	// 
 	bool  create( LONG lSize, LONG lFlag = 0 );
 	T*	  alloc();
 	void  destroy( T* pData );
 	void  destroy( LONG lID );
 
-	// —≠ª∑À—À˜∑÷≈‰ ˝æ›–≈œ¢
+	// 
 	void  begin();
 	T*	  end();
 	T*    next();
@@ -136,7 +136,7 @@ T* CAlloc< T >::alloc()
 template<class T>
 void CAlloc< T >::destroy( T* pData )
 {
-	// ‘›Œ¥ µœ÷£¨ª˙÷∆‘≠“Úƒø«∞÷ß≥÷œ¬√ÊµƒΩ”ø⁄
+	// 
 }
 
 template<class T>

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  S M P A B . H
  *  
  *  Definitions used by the Microsoft Sample Address Book

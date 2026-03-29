@@ -1,14 +1,14 @@
-#ifndef XSTRING_H
+ï»¿#ifndef XSTRING_H
 #define XSTRING_H
 
 #include "TChar.h"
 
-// ´Ó¸ø¶¨×Ö·û´Ü(_TCHAR *in)µÄ¸ø¶¨Î»ÖÃ(long *in_from)»ñÈ¡×Ö·û´Ü£¬
-// Ö±µ½Óöµ½×Ö·û´ÜÁÐ±í(_TCHAR *end_list)ÖÐµÄÈÎÒ»×Ö·ûÊ±½áÊø
+// (_TCHAR *in)(long *in_from)
+// (_TCHAR *end_list)
 long StringGet(_TCHAR *out, long out_max, _TCHAR *in, long *in_from, _TCHAR *end_list, long end_len);
 
 
-// ´Ó¸ø¶¨×Ö·û´Ü(_TCHAR *in)µÄ¸ø¶¨Î»ÖÃ(long *in_from)ÌÞ³ý×Ö·û´ÜÁÐ±í(_TCHAR *end_list)ÖÐµÄÈÎÒ»×Ö·û
+// (_TCHAR *in)(long *in_from)(_TCHAR *end_list)
 void StringSkipCompartment(_TCHAR *in, long *in_from, _TCHAR *skip_list, long skip_len);
 
 

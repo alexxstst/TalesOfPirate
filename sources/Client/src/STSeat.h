@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "STStateObj.h"
 
 class CSeatState : public CActionState

@@ -1,5 +1,5 @@
-// Система создания минидампов при аварийном завершении.
-// Перехватывает необработанные исключения и сохраняет полный дамп памяти.
+﻿//      .
+//        .
 
 #include "CrushSystem.h"
 
@@ -21,7 +21,7 @@ namespace TalesOfPirate::Utils::Crush {
 		return EXCEPTION_EXECUTE_HANDLER;
 	}
 
-	// Создание полного минидампа с информацией о потоках, хэндлах и памяти
+	//       ,   
 	void CreateMiniDump(EXCEPTION_POINTERS* pep) {
 		SYSTEMTIME st{};
 		GetLocalTime(&st);
@@ -99,7 +99,7 @@ namespace TalesOfPirate::Utils::Crush {
 
 typedef HRESULT (__stdcall *SET_THREAD_NAME)(HANDLE, PCWSTR);
 
-// Установка имени потока через SetThreadDescription (Windows 10+)
+//     SetThreadDescription (Windows 10+)
 void SetThreadName(const std::string& name) {
 	const std::wstring wsTmp(name.begin(), name.end());
 	const auto hinstLib = LoadLibrary(TEXT("KernelBase.dll"));

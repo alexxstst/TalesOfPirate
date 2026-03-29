@@ -1,4 +1,4 @@
-#include "PacketPool.h"
+﻿#include "PacketPool.h"
 #include <algorithm>
 #include <cassert>
 #include <iostream>
@@ -29,7 +29,7 @@ int PacketPool::FindBucketIndex(int size) const {
     for (int i = 0; i < BUCKET_COUNT; ++i) {
         if (BUCKET_SIZES[i] >= size) return i;
     }
-    return -1; // Больше максимального бакета
+    return -1; //   
 }
 
 int PacketPool::BucketSize(int size) const {
@@ -56,7 +56,7 @@ uint8_t* PacketPool::Allocate(int size) {
         return new uint8_t[bucket.bufSize];
     }
 
-    // Больше максимального бакета — аллокация напрямую
+    //      
     return new uint8_t[size];
 }
 
@@ -73,7 +73,7 @@ void PacketPool::Free(uint8_t* buf, int allocatedSize) {
         return;
     }
 
-    // Нестандартный размер — просто удаляем
+    //     
     delete[] buf;
 }
 

@@ -1,4 +1,4 @@
-// allocate.h - written and placed in the public domain by Jeffrey Walton
+﻿// allocate.h - written and placed in the public domain by Jeffrey Walton
 
 // The functions in allocate.h and allocate.cpp were originally in misc.h
 // and misc.cpp. They were extracted in September 2019 to sidestep a circular

@@ -1,4 +1,4 @@
-/*++
+﻿/*++
 
   Copyright (c) Microsoft Corporation. All rights reserved.
   Copyright (c) 1996-1999 Highground Systems

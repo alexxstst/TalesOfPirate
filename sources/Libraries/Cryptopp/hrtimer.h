@@ -1,4 +1,4 @@
-// hrtimer.h - originally written and placed in the public domain by Wei Dai
+﻿// hrtimer.h - originally written and placed in the public domain by Wei Dai
 
 /// \file hrtimer.h
 /// \brief Classes for timers

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 //#include "i_effect.h"
 #include "MindPowerAPI.h"
 
@@ -130,35 +130,35 @@ public:
 		}
 		pCModel->Unlock();
 	}
-	////Ä£ÐÍ±ä»»¿ØÖÆ//////////////////////////////////////////////////////////////////////
-	//!µ±Ç°Ê±¼ä
+	//////////////////////////////////////////////////////////////////////////
+	//!
 	float				m_fCurTime;
-	//!µ±Ç°Ö¡
+	//!
 	WORD				m_wCurFrame;
-	//!µ±Ç°DiffuseÑÕÉ«
+	//!Diffuse
 	D3DXCOLOR			m_dwCurColor;
-	//!µ±Ç°Ëõ·Å±¶Êý
+	//!
 	D3DXVECTOR3			m_SCurSize;
-	//!µ±Ç°Ðý×ª½Ç¶È
+	//!
 	D3DXVECTOR3		m_SCurAngle;
-	//!µ±Ç°Î»ÖÃ	
+	//!	
 	D3DXVECTOR3			m_SCurPos;
 
-	///×ø±ê±ä»»¿ØÖÆ//////////////////////////////////////////////////////////////////////
-	//!µ±Ç°×ø±êË÷Òý
+	/////////////////////////////////////////////////////////////////////////
+	//!
 	WORD					m_wCurCoordIndex;
-	//!µ±Ç°Ê±¼ä
+	//!
 	float					m_fCurCoordTime;
-	//!µ±Ç°×ø±ê
+	//!
 	S_BVECTOR<D3DXVECTOR2>	m_vecCurCoord;
-	//ÎÆÀí±ä»»¿ØÖÆÌ¨//////////////////////////////////////////////////////////////////
-	//!µ±Ç°ÎÆÀíË÷Òý
+	////////////////////////////////////////////////////////////////////
+	//!
 	WORD					m_wCurTexIndex;
-	//!µ±Ç°Ê±¼ä
+	//!
 	float					m_fCurTexTime;
-	//!µ±Ç°µÄÎÆÀíÖ¸Õë
+	//!
 	S_BVECTOR<D3DXVECTOR2>	m_lpCurTex;
-	//£¡¿ØÖÆ²¥·Å´ÎÊý//////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////
 	int						m_iCurTimes;
 
 	bool					m_bPlay;
@@ -334,13 +334,13 @@ public:
 	CMPModelEff(void);
 	~CMPModelEff(void);
 public:
-	//!	ÊÍ·ÅÈ«²¿×ÊÔ´
+	//!	
 	virtual void ReleaseAll();
-	//!ÖØÉè
+	//!
 	virtual void Reset();
-	//!¸üÐÂèå
+	//!
 	virtual void FrameMove(DWORD	dwDailTime);
-	//!äÖÈ¾
+	//!
 	virtual void Render();
 	virtual void RenderVS();
 	virtual void RenderSoft();
@@ -356,9 +356,9 @@ public:
 		D3DXVECTOR3& pScale, D3DXVECTOR3& pRotating, D3DXVECTOR3& pTranslate,
 		D3DXCOLOR& pColor,TEXCOORD& vecCoord, IDirect3DTextureX* lpTex);
 
-	//!±£´æÐ§¹ûµ½ÎÄ¼þ
+	//!
 	bool		 SaveToFile(char* pszFileName);
-	//!×°ÈëÐ§¹û´ÓÎÄ¼þ
+	//!
 	bool		 LoadFromFile(char* pszFileName);
 
 	bool		 IsLoop()					{ return m_bLoop; }
@@ -373,7 +373,7 @@ public:
 		return false;
 	}
 
-	//!²¥·Å¿ØÖÆ
+	//!
 	void		 Play(int iTime = 0)	/*iTime: 0 == loop, */	
 	{
 		//Reset();
@@ -482,7 +482,7 @@ public:
 		if( idx == -1 )
 		{
 			char szData[128];
-			sprintf( szData, "»ñÈ¡ÌØÐ§ÐÅÏ¢(ID%d)Ãû³ÆÊ§°Ü£¡", idx );
+			sprintf( szData, "(ID%d)", idx );
 			MessageBox( NULL, szData, "Error", MB_OK );
 		}
 
@@ -545,7 +545,7 @@ public:
 	float		GetScalingY()		{ return m_SVerScale.y;}
 	float		GetScalingZ()		{ return m_SVerScale.z;}
 
-	void		RotatingYaw(float fDeg)//£¡Ë®Æ½ÏòÓÒÐý×ª
+	void		RotatingYaw(float fDeg)//
 	{
 		if(m_bRotating)
 			return;
@@ -556,7 +556,7 @@ public:
 	}
 	float		GetRotaingYaw()		{ return m_SVerRota.z;}
 
-	void		RotatingPitch(float fDeg)//!Ïòºó¹ö¶¯Ðý×ª
+	void		RotatingPitch(float fDeg)//!
 	{
 		if(m_bRotating)
 			return;
@@ -568,7 +568,7 @@ public:
 	}
 	float		GetRotaingPitch()		{ return m_SVerRota.x;}
 
-	void		RotatingRoll(float fDeg)//!Ïò×ó¹ö¶¯Ðý×ª
+	void		RotatingRoll(float fDeg)//!
 	{
 		if(m_bRotating)
 			return;
@@ -591,8 +591,8 @@ public:
 		m_SVerTrans.y = y;
 		m_SVerTrans.z = z;
 	}
-	//¼ÓÈëÕâ¸öÊÇÎªÁËÊ¹ÓÃÁ£×Ó¿ØÖÆµÄÊ±ºòÊ¹ÓÃÍ¸Ã÷¶È
-	//ÔÚFrameMoveÒÔºó,ÔÚRenderÖ®Ç°Ê¹ÓÃ¡£
+	//
+	//FrameMove,Render
 	void		SetAlpha(float fAlpha)
 	{
 		for(int n = 0; n < m_iEffNum; ++n)
@@ -629,20 +629,20 @@ public:
 	}
 
 
-	void		RotatingYawPart(float fDeg)//£¡Ë®Æ½ÏòÓÒÐý×ª
+	void		RotatingYawPart(float fDeg)//
 	{
 		m_SVerPartRota.z = fDeg;
 		D3DXMatrixRotationYawPitchRoll(&m_SMatTempRota,
 			m_SVerPartRota.y,m_SVerPartRota.x,m_SVerPartRota.z);
 	}
-	void		RotatingPitchPart(float fDeg)//!Ïòºó¹ö¶¯Ðý×ª
+	void		RotatingPitchPart(float fDeg)//!
 	{
 		m_SVerPartRota.x = fDeg;
 		D3DXMatrixRotationYawPitchRoll(&m_SMatTempRota,
 			m_SVerPartRota.y,m_SVerPartRota.x,m_SVerPartRota.z);
 	}
 
-	void		RotatingRollPart(float fDeg)//!Ïò×ó¹ö¶¯Ðý×ª
+	void		RotatingRollPart(float fDeg)//!
 	{
 		m_SVerPartRota.y = fDeg;
 		D3DXMatrixRotationYawPitchRoll(&m_SMatTempRota,
@@ -691,7 +691,7 @@ public:
 
 	float*								m_pfDailTime;
 
-	//·½±ãÔÚ³ÌÐòÖÐ¿ØÖÆ///////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////
 	D3DXMATRIX							m_SmatScale;
 	D3DXVECTOR3							m_SVerScale;
 
@@ -971,7 +971,7 @@ protected:
 
 	MPCharacter*		_pCha;
 	MPSceneItem*		_pItem;
-	int					_iDummy[2];//ÐèÒª¼Ç×¡µÄÁ½¸öDUMY
+	int					_iDummy[2];//DUMY
 
 	D3DXCOLOR			_dwColor;
 	float				_fLife;

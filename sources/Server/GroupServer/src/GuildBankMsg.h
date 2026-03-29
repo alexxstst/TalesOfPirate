@@ -1,4 +1,4 @@
-#include "Player.h"
+﻿#include "Player.h"
 #include <deque>
 struct GuildBankMsg{
 	Player* player;

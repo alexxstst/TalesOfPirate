@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: EntityAlloc.cpp
 // Creater: ZhangXuedong
 // Date: 2005.01.18
@@ -13,7 +13,7 @@ char g_szEntiAlloc[256] = "EntityAlloc";
 
 CEntityAlloc::CEntityAlloc(long lChaNum, long lItemNum, long lTNpcNum)
 {
-	// ����ʵ���ڴ�
+	// 
 	m_ChaAlloc.create( lChaNum, defENTI_ALLOC_TYPE_CHA );
 	m_ItemAlloc.create( lItemNum, defENTI_ALLOC_TYPE_ITEM );
 	m_TalkNpcAlloc.create( lTNpcNum, defENTI_ALLOC_TYPE_TNPC );
@@ -31,14 +31,14 @@ CEntityAlloc::~CEntityAlloc()
 }
 
 //=============================================================================
-// ȡһ�����õĽ�ɫ��
+// 
 //=============================================================================
 CCharacter* CEntityAlloc::GetNewCha()
 {
 	CCharacter* pChar = m_ChaAlloc.alloc();
 	if( !pChar )
 	{		
-		//LG(g_szEntiAlloc, "msg�����ɫ�ڴ�ʱ����,�����ӽ�ɫ�ڴ棡����");
+		//LG(g_szEntiAlloc, "msg,");
 		ToLogService("common", LogLevel::Error, "Character memory alloc error, need to add character memory!");
 		return NULL;
 	}
@@ -46,14 +46,14 @@ CCharacter* CEntityAlloc::GetNewCha()
 }
 
 //=============================================================================
-// ȡһ�����õĵ��ߡ�
+// 
 //=============================================================================
 CItem* CEntityAlloc::GetNewItem()
 {
 	CItem* pItem = m_ItemAlloc.alloc();
 	if( !pItem )
 	{
-		//LG( g_szEntiAlloc, "msg��������ڴ�ʱ����,�����ӵ����ڴ棡����");
+		//LG( g_szEntiAlloc, "msg,");
 		ToLogService("common", LogLevel::Error, "Item memory alloc error, need to add item memory!");
 		return NULL;
 	}
@@ -61,14 +61,14 @@ CItem* CEntityAlloc::GetNewItem()
 }
 
 //=============================================================================
-// ȡһ�����õĶԻ�NPC��
+// NPC
 //=============================================================================
 mission::CTalkNpc* CEntityAlloc::GetNewTNpc()
 {
 	mission::CTalkNpc* pNpc = m_TalkNpcAlloc.alloc();
 	if( !pNpc )
 	{
-		//LG(g_szEntiAlloc, "msg����Ի�NPC�ڴ�ʱ����,�����ӶԻ�NPC�ڴ棡����");
+		//LG(g_szEntiAlloc, "msgNPC,NPC");
 		ToLogService("common", LogLevel::Error, "TalkNPC memory alloc error, need to add TalkNPC memory!");
 		return NULL;
 	}
@@ -76,48 +76,48 @@ mission::CTalkNpc* CEntityAlloc::GetNewTNpc()
 }
 
 //=============================================================================
-// ȡһ�����õĶԻ��¼�ʵ�塣
+// 
 //=============================================================================
 mission::CEventEntity* CEntityAlloc::GetEventEntity( BYTE byType )
 {
 	switch( byType )
 	{
-	case mission::BASE_ENTITY:			// ����ʵ��
+	case mission::BASE_ENTITY:			// 
 		{
 		}
 		break;
 
-	case mission::RESOURCE_ENTITY:		// ��Դʵ��
+	case mission::RESOURCE_ENTITY:		// 
 		{
 			return m_ResourceAlloc.alloc();
 		}
 		break;
 
-	case mission::TRANSIT_ENTITY:		// ����ʵ��
+	case mission::TRANSIT_ENTITY:		// 
 		{
 		}
 		break;
 
-	case mission::BERTH_ENTITY:			// ͣ��ʵ��
+	case mission::BERTH_ENTITY:			// 
 		{
 			return m_BerthAlloc.alloc();
 		}
 		break;
 	default:
 		{
-			//LG(g_szEntiAlloc, "msgδ֪�������¼�ʵ�崴�����ͣ�Type[%d]", byType);
+			//LG(g_szEntiAlloc, "msgType[%d]", byType);
 			ToLogService("common", LogLevel::Error, "Unknown event entity creation type, Type[{}]", byType);
 			return NULL;
 		}
 		break;
 	}
-	//LG(g_szEntiAlloc, "msg�����¼�ʵ���ڴ�ʱ����������Type[%d]", byType);
+	//LG(g_szEntiAlloc, "msgType[%d]", byType);
 	ToLogService("common", LogLevel::Error, "Event entity memory alloc error, Type[{}]", byType);
 	return NULL;
 }
 
 //=============================================================================
-// ȡһ����Чʵ��
+// 
 //=============================================================================
 Entity* CEntityAlloc::GetEntity(long lID)
 {
@@ -149,7 +149,7 @@ Entity* CEntityAlloc::GetEntity(long lID)
 }
 
 //=============================================================================
-// �ͷ�һ����Чʵ��
+// 
 //=============================================================================
 void CEntityAlloc::ReturnEntity(long lID)
 {
@@ -182,14 +182,14 @@ void CEntityAlloc::ReturnEntity(long lID)
 //=============================================================================
 
 //=============================================================================
-// ȡһ�����õ���ҡ�
+// 
 //=============================================================================
 CPlayer* CPlayerAlloc::GetNewPly()
 {
 	CPlayer* pCPly = m_PlyAlloc.alloc();
 	if( !pCPly )
 	{		
-		//LG(g_szEntiAlloc, "msg��������ڴ�ʱ����,����������ڴ棡����");
+		//LG(g_szEntiAlloc, "msg,");
 		ToLogService("common", LogLevel::Error, "Player memory alloc error, need to add player memory!");
 		return NULL;
 	}

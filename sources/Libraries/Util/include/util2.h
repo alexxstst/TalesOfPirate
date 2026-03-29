@@ -1,4 +1,4 @@
-#ifndef TAG_UTIL
+﻿#ifndef TAG_UTIL
 #define TAG_UTIL
 
 #ifdef WIN32
@@ -107,7 +107,7 @@ inline void Util_ClearStrEndline(std::string& str) {
 	if (p == std::string::npos) {
 		p = str.find('\n');
 	}
-	if (p != std::string::npos) // �����ַ���
+	if (p != std::string::npos) // 
 	{
 		str[p] = '\0';
 	}
@@ -201,7 +201,7 @@ protected:
 };
 
 
-class CBlockData // �Ѱ�λ��������ݱ�Ϊ�ֽ�, ��ߴ�ȡ�ٶ�
+class CBlockData // , 
 {
 public:
 	CBlockData() {

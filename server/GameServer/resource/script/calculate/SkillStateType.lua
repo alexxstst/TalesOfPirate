@@ -1,4 +1,4 @@
-print("-- [Loading] Skill State Type")
+﻿print("-- [Loading] Skill State Type")
 
 SSTATE_CUT = 1
 SSTATE_FERVOR_ARROR = 2

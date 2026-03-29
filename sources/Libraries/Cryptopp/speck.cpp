@@ -1,4 +1,4 @@
-// speck.cpp - written and placed in the public domain by Jeffrey Walton
+﻿// speck.cpp - written and placed in the public domain by Jeffrey Walton
 
 #include "pch.h"
 #include "config.h"

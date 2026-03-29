@@ -1,4 +1,4 @@
-/**********************************************************************
+ï»¿/**********************************************************************
  *<
 	FILE: osnap.h
 
@@ -97,8 +97,8 @@ public:
 	virtual int NumCallbacks(){return 0;}
 	virtual DllExport BOOL GetSupportedObject(INode *iNode, TimeValue t, ObjectState *os);
 
-	virtual TSTR *snapname(int index)=0; // the snap’s name to be displayed in the UI
-	virtual TSTR *tooltip(int index){return NULL;} // the snap’s name to be displayed in the UI
+	virtual TSTR *snapname(int index)=0; // the snaps name to be displayed in the UI
+	virtual TSTR *tooltip(int index){return NULL;} // the snaps name to be displayed in the UI
 	virtual boolean ValidInput(SClass_ID scid, Class_ID cid)=0;//the objects it supports 
 	virtual OsnapMarker *GetMarker(int index)=0; // single object might contain subsnaps
 	virtual WORD HiliteMode(){return HILITE_NORMAL;}

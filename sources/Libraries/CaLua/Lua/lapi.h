@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: lapi.h,v 1.1.1.1 2004/01/13 09:02:36 justin_reynen Exp $
 ** Auxiliary functions from Lua API
 ** See Copyright Notice in lua.h

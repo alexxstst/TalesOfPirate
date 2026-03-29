@@ -1,1 +1,1 @@
-print("-- [Loading] garner2Entity.lua")
+﻿print("-- [Loading] garner2Entity.lua")

@@ -1,4 +1,4 @@
-
+﻿
 /*****************************************************************************\
 *                                                                             *
 * msi.h - - Interface for external access to Installer Service                *

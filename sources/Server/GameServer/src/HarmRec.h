@@ -1,6 +1,6 @@
-#pragma once
+﻿#pragma once
 
-// ��޶�ϵͳ - �˺�ֵ����
+//  - 
 class CCharacter;
 
 #define MAX_HARM_REC    5
@@ -9,21 +9,21 @@ class CCharacter;
 
 extern BOOL g_bLogHarmRec;
 
-struct SHarmRec // �˺���¼
+struct SHarmRec // 
 {
-	CCharacter *pAtk;		// ������ָ��
-	DWORD		sHarm;		// �ۼ��˺�ֵ
-	DWORD       sHate;      // ��޶�
-	BYTE		btValid;	// �Ƿ���Ч
+	CCharacter *pAtk;		// 
+	DWORD		sHarm;		// 
+	DWORD       sHate;      // 
+	BYTE		btValid;	// 
 	DWORD		dwID;
-	DWORD		dwTime;		// ��һ�ι�����ʱ��
+	DWORD		dwTime;		// 
 
 	SHarmRec(): pAtk(0), sHarm(0), sHate(0), btValid(0), dwID(0), dwTime(0)
 	{
 	
 	}
 	
-	bool IsChaValid() // ����һ����ɫ�Ƿ���Ч
+	bool IsChaValid() // 
 	{
 		if (!pAtk)
 		{
@@ -79,7 +79,7 @@ inline CCharacter* CHateMgr::GetCurTarget()
 
 inline void CHateMgr::ClearHarmRec()
 {
-	// ���н�ɫ�ۼ��˺�
+	// 
 	for(int i = 0; i < MAX_HARM_REC; i++)
 	{
 		SHarmRec *pHarm = &_HarmRec[i];
@@ -114,23 +114,23 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 {
 	if(g_bLogHarmRec)
 	{
-		//LG("harm", "��ʼ�����˺�, ������[%s], �˺�%d\n", pAtk->GetName(), sHarm);
+		//LG("harm", ", [%s], %d\n", pAtk->GetName(), sHarm);
 		ToLogService("common", "begin to add harm, attacker[{}], harm{}", pAtk->GetName(), sHarm);
 	}
-	// ���н�ɫ�ۼ��˺�
+	// 
 	for(int i = 0; i < MAX_HARM_REC; i++)
 	{
 		SHarmRec *pHarm = &_HarmRec[i];
 		if(pHarm->pAtk==pAtk && pHarm->pAtk->GetID()==dwID)
 		{
 			pHarm->sHarm+=sHarm;
-			pHarm->sHate+=sHarm; // ��ͨ�˺�ʱ, �˺��ͳ��ͬ������
+			pHarm->sHate+=sHarm; // , 
 			if(pHarm->btValid < MAX_VALID_CNT)
 			{
 				pHarm->btValid++;
 				if(g_bLogHarmRec)
 				{
-					//LG("harm", "������[%s], �ۼ��˺�=%d��valid=%d\n", pAtk->GetName(), pHarm->sHarm, pHarm->btValid);
+					//LG("harm", "[%s], =%dvalid=%d\n", pAtk->GetName(), pHarm->sHarm, pHarm->btValid);
 					ToLogService("common", "attacker[{}], accunulative harm={}, valid={}", pAtk->GetName(), pHarm->sHarm, pHarm->btValid);
 				}
 			}
@@ -138,7 +138,7 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 		}
 	}
 
-	// �����µ��˺�
+	// 
 	for(int i = 0; i < MAX_HARM_REC; i++)
 	{
 		SHarmRec *pHarm = &_HarmRec[i];
@@ -152,7 +152,7 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 			pHarm->dwTime  = g_pGameApp->m_dwRunCnt;
 			if(g_bLogHarmRec)
 			{
-				//LG("harm", "�����µĹ�����[%s], �˺� = %d\n", pAtk->GetName(), pHarm->sHarm);
+				//LG("harm", "[%s],  = %d\n", pAtk->GetName(), pHarm->sHarm);
 				ToLogService("common", "add new attacker[{}], harm = {}", pAtk->GetName(), pHarm->sHarm);
 			}
 			break;
@@ -160,7 +160,7 @@ inline void CHateMgr::AddHarm(CCharacter *pAtk, short sHarm, DWORD dwID)
 	}
 }
 
-// �������˺��������ӳ��
+// 
 inline void CHateMgr::AddHate(CCharacter *pAtk, short sHate, DWORD dwID)
 {
 	for(int i = 0; i < MAX_HARM_REC; i++)
@@ -195,7 +195,7 @@ inline void CHateMgr::AddHate(CCharacter *pAtk, short sHate, DWORD dwID)
 
 	if(sHate > 0)
 	{
-		// �����µ�hate
+		// hate
 		for(int i = 0; i < MAX_HARM_REC; i++)
 		{
 			SHarmRec *pHarm = &_HarmRec[i];
@@ -228,7 +228,7 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 {
 	DWORD dwCurTick = GetTickCount();
 	
-	// ���¼�¼��Ч��HarmRec
+	// HarmRec
 	int nValid = 0;
 	for(int i = 0; i < MAX_HARM_REC; i++)
 	{
@@ -240,7 +240,7 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 		}
 	}
 
-	// ʣ�µĶ����, ��֤HarmRec�ǽ��յ�, û�п�λ
+	// , HarmRec, 
 	for(int j = nValid; j < MAX_HARM_REC; j++)
 	{
 		SHarmRec *pHarm = &_HarmRec[j];
@@ -252,7 +252,7 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 		pHarm->dwTime  = 0;
 	}
 	
-	// ÿ 2 ����,����һ��
+	//  2 ,
 	if((dwCurTick - _dwLastSortTick) > 2000)
 	{
 		_dwLastSortTick = dwCurTick;
@@ -264,7 +264,7 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 		}
 	}
 
-	// ÿ 5 ���� btValid - 1
+	//  5  btValid - 1
 	if((dwCurTick - _dwLastDecValid) > 5000)
 	{
 		_dwLastDecValid = dwCurTick;	
@@ -274,17 +274,17 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 			if(pHarm->btValid > 0)
 			{
 				pHarm->btValid--;
-				if(pHarm->btValid==0) // ������
+				if(pHarm->btValid==0) // 
 				{
-					pHarm->sHarm  = 0;		// �˺����ۼ�
-					pHarm->sHate  = 0;		// ��޲��ۼ�
-					pHarm->dwTime = 0;		// ʱ����0
+					pHarm->sHarm  = 0;		// 
+					pHarm->sHate  = 0;		// 
+					pHarm->dwTime = 0;		// 0
 					pHarm->pAtk   = NULL;
 					pHarm->dwID   = 0;
 				}
 				if(g_bLogHarmRec)
 				{
-					//LG("harm", "������[%s]��valid--, valid = %d\n", pHarm->pAtk->GetName(), pHarm->btValid);
+					//LG("harm", "[%s]valid--, valid = %d\n", pHarm->pAtk->GetName(), pHarm->btValid);
 					ToLogService("common", "attacker[{}], valid--, valid = {}", pHarm->pAtk->GetName(), pHarm->btValid);
 				}
 			}
@@ -295,7 +295,7 @@ inline void CHateMgr::UpdateHarmRec(CCharacter *pSelf)
 inline void CHateMgr::DebugNotice(CCharacter *pSelf)
 {
 	std::string strNotice = pSelf->GetName();
-	//strNotice+="Ŀ���б�:";
+	//strNotice+=":";
 	strNotice+=RES_STRING(GM_HARMREC_H_00001);
 	BOOL bSend = FALSE;
 	char szHate[64];

@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 #include "lwFileStream.h"
 #include "lwGuidObj.h"

@@ -1,4 +1,4 @@
-/*	
+﻿/*	
 **	wsrm.h - winsock extension for Reliable Multicast (RMCast) Transport
 **
 **	This file contains PGM specific information for use by WinSock2 compatible

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  XCMCMSX2.H
  *  
  *  Purpose:

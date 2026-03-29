@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  M A P I O I D . H
  *
  *  MAPI OID definition header file

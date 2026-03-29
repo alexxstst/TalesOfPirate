@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 //#include "MPMap.h"
 /************************************************************************/
@@ -60,7 +60,7 @@ public:
 
 	EFF_Param()
 	{
-		strcpy(szName, "ÎÞÃûÌØÐ§");
+		strcpy(szName, "");
 		nModelNum = 0;
 		memset(strModel,0,sizeof(char) * 8 * 24);
 		nVel = 0;
@@ -106,7 +106,7 @@ public:
 
 protected:
 
-	static CEff_ParamSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CEff_ParamSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -193,7 +193,7 @@ public:
 
 	Group_Param()
 	{
-		strcpy(szName, "ÎÞÃûÌØÐ§");
+		strcpy(szName, "");
 		nTypeNum = 0;
 		memset(&nTypeID,-1,sizeof(int) * 8);
 		memset(&nNum,0,sizeof(int) * 8);
@@ -227,7 +227,7 @@ public:
 
 protected:
 
-	static CGroup_ParamSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CGroup_ParamSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -363,7 +363,7 @@ public:
 public:
 	CMPPartCtrl*	GetPartCtrl(){ return &_CPartCtrl;}
 public:
-	//Ò»°ãÊÇÎª³¡¾°»ò°ó¶¨¹Ç÷ÀµÄÌØÐ§Ëù×ö¡£
+	//
 	CMPPartCtrl		_CPartCtrl;
 };
 
@@ -436,7 +436,7 @@ public:
 
 
 	void				Reset();
-	//´òÖÐ¶ÔÏóºó¼Ì³Ð
+	//
 	virtual		void	HitObj(){}
 
 
@@ -494,7 +494,7 @@ public:
 	int			m_iIdx;
 	CMPResManger*	m_pCResMagr;
 protected:
-	//ÕâÁ½¸ö¶«Î÷ÊÇÎªÁË×öÄ§·¨ÌØÐ§ËùÓÃ
+	//
 	int				_iModelNum;
 	std::vector<CMPModelEff*>	_CpModel;
 	int				_iPartNum;
@@ -521,8 +521,8 @@ protected:
 	D3DXVECTOR3							_vPos;
 	D3DXVECTOR3							_vDir;
 	float								_fVel;
-	D3DXVECTOR3							_vTarget;//Ä¿±ê
-	float								_fDirXZ[2];//ÔÚXZ·½ÏòÉÏµÄ½Ç¶È
+	D3DXVECTOR3							_vTarget;//
+	float								_fDirXZ[2];//XZ
 
 	float								_fStartDist;
 	float								_fCurDist;

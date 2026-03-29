@@ -1,4 +1,4 @@
-/**
+﻿/**
  *  @file matrix_stuff.h
  *
  *  matrix_stuff.h, v 1.0 2004/9/22 13:14:05 shanghai China

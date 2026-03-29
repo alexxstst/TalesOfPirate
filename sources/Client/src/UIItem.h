@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:¾²Ì¬ÎÄ×Ö
-// ×÷Õß:lh 2004-07-19
-// ×îºóÐÞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-19
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uiguidata.h"
@@ -16,7 +16,7 @@
 	
 namespace GUI
 {
-// ¹Ì¶¨ÁÐÊýµÄItemObj
+// ItemObj
 class CItemRow
 {
 public:
@@ -53,7 +53,7 @@ private:
 
 };
 
-// ÎÄ×Ö
+// 
 class CItem : public CItemObj
 {
 public:
@@ -107,14 +107,14 @@ private:
 		std::string strData;
 	};
 
-	// ·Ö¶ÎÏÔÊ¾²»Í¨ÑÕÉ«µÄÎÄ×ÖÐÅÏ¢
+	// 
 	typedef std::vector<ITEM_TEXT_DATA> ITEM_TEXT_ARRAY;
 		ITEM_TEXT_ARRAY m_TextArray;
 
 	void ParseScript( const char szScript[], USHORT sStartCom, DWORD dwDefColor );
 };
 
-// ´ø½ø¶ÈÌõµÄÎÄ×Ö
+// 
 class CItemBar : public CItem
 {
 public:
@@ -131,7 +131,7 @@ protected:
 
 };
 
-// ¿É»»ÐÐÎÄ×Ö
+// 
 class CItemEx : public CItemObj
 {
 public:
@@ -173,7 +173,7 @@ public:
 	void		SetItemName(const char* name)	{ _strItemName=name;		}
 	const char*	GetItemName()					{ return _strItemName.c_str();		}
 
-	void		ProcessString( int length );	// ²ÎÊý£º½ÇÉ«Ãû³ÆµÄ³¤¶È
+	void		ProcessString( int length );	// 
 
 	
 
@@ -192,28 +192,28 @@ public:
 protected:
 	std::string		_str;
 	std::string		_strItemName;
-	bool		_bParseText;					// ÊÇ·ñÐèÒª½âÎöÍ¼Ôª
-	bool        _bMultiLine;                    //ÊÇ·ñ¶àÐÐÏÔÊ¾
-	std::string      _strLine[3];					//×î¶à3ÐÐ 
+	bool		_bParseText;					// 
+	bool        _bMultiLine;                    //
+	std::string      _strLine[3];					//3 
 	DWORD		_HeadLen;
 	DWORD		_HeadColor;
 
 	DWORD		_dwColor;
 	int			_nWidth;
 	int			_nHeight;
-	int         _nLineNum;						//ÏÔÊ¾ÔÚÍ·ÏñÉÏµÄÐÐÊý
-	int         _nMaxWidth;                     //¶àÐÐÖÐ×î´óµÄ¿í¶È
+	int         _nLineNum;						//
+	int         _nMaxWidth;                     //
 	ALLIGN		m_Allign;
 
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void CItemRow::SetIndex( unsigned int v, CItemObj* p )		
 { 
 	if( _items[v]!=_GetNullItem() && _items[v]!=p ) 
 	{
 		//delete _items[v]; 
-		SAFE_DELETE(_items[v]); // UIµ±»ú´¦Àí
+		SAFE_DELETE(_items[v]); // UI
 	}
 	_items[v]=p; 
 }

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * porting macros for c runtimes - use these to let 16 bit crt calls work
  * properly on 32 bit code.
  */

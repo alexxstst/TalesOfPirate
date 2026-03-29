@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "effdelay.h"
 #include "EffectObj.h"
 #include "Scene.h"

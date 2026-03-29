@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "HMAttack.h"
 #include "UIGuiData.h"
 #include "GameApp.h"
@@ -123,7 +123,7 @@ void CAttackEffect::ChaDied( CCharacter* pTarget, CCharacter* pAttack )
 	// pTarget->getGameAttr()->set( ATTR_HP, 0 );
 	// pTarget->RefreshUI();
 
-    // ������,���ܲ�����EndAction
+    // ,EndAction
     pTarget->GetActor()->OverAllState();
 
     CReadyDieState* st = new CReadyDieState(pTarget->GetActor());
@@ -194,14 +194,14 @@ void CAttackEffect::ExecHarm( CSizeArray<stEffect>& Value, CCharacter* pTarget, 
 					{
 						//g_pGameApp->SysInfo( g_oLangRec.GetString(145), val );
 
-						// ������80��þ�����ʾ����BUG����
+						// 80BUG
 						DWORD dwLastExp	 = g_stUIBoat.GetHuman()->getGameAttr()->get(ATTR_CEXP);
-						DWORD dwLv80Exp  = 2425349810;	// ���ֵ�ǲ߻�������
+						DWORD dwLv80Exp  = 2425349810;	// 
 						if(dwLastExp < dwLv80Exp && dwLv80Exp <= (DWORD)p[i].lVal)
 						{
 							DWORD dwObtainExp;
-							dwObtainExp  = ((DWORD)p[i].lVal - dwLv80Exp) * LEVEL80_EXP;// 80 ���Ժ�ľ���
-							dwObtainExp += (dwLv80Exp - dwLastExp);						// 79 ���ľ���
+							dwObtainExp  = ((DWORD)p[i].lVal - dwLv80Exp) * LEVEL80_EXP;// 80 
+							dwObtainExp += (dwLv80Exp - dwLastExp);						// 79 
 
 							g_pGameApp->SysInfo( g_oLangRec.GetString(145), dwObtainExp );
 						}
@@ -219,7 +219,7 @@ void CAttackEffect::ExecHarm( CSizeArray<stEffect>& Value, CCharacter* pTarget, 
         }
     }
 
-	// ����ǿ�ʯ�����ݲ�ͬ��Ѫ����ʾ��ͬ�Ŀ�ʯpose
+	// pose
 	if( Change.GetChangeBitFlag(ATTR_HP) )
 	{
 		pTarget->RefreshFog();
@@ -337,7 +337,7 @@ CStateSynchro* CAttackEffect::Gouge( float fRate )
         pAttack->_pAttack = _pAttack;
         pAttack->_HarmValue.Resize( 1 );
 
-        // �ָ�����
+        // 
         stEffect* pNew = pAttack->_HarmValue.GetValue();
 		pNew[0].lAttrID = ATTR_HP;
 		pNew[0].lVal = hp;
@@ -364,7 +364,7 @@ CAttackRepSynchro::~CAttackRepSynchro()
 
 void CAttackRepSynchro::_Exec()
 {
-    // ���ְ�
+    // 
     if( _pAttack )
     {
         if( !_RepState.IsEmpty() )
@@ -413,7 +413,7 @@ void CAttribSynchro::_Exec()
 
 	if( enumATTRSYN_SKILL_STATE==_nType )
 	{
-		// ���ܹ�����������ͬ����Ҫ���˺�
+		// 
 		if( !_Value.IsEmpty() )	CAttackEffect::ExecHarm( _Value, pCha );
 
 		if( pCha->getGameAttr()->get(ATTR_HP)<=0 ) 
@@ -446,14 +446,14 @@ void CAttribSynchro::_Exec()
 				{
 					//g_pGameApp->SysInfo( g_oLangRec.GetString(145), val );
 
-					// ������80��þ�����ʾ����BUG����
+					// 80BUG
 					DWORD dwLastExp	 = g_stUIBoat.GetHuman()->getGameAttr()->get(ATTR_CEXP);
-					DWORD dwLv80Exp  = 2425349810;	// ���ֵ�ǲ߻�������
+					DWORD dwLv80Exp  = 2425349810;	// 
 					if(dwLastExp < dwLv80Exp && dwLv80Exp <= (DWORD)p[i].lVal)
 					{
 						DWORD dwObtainExp;
-						dwObtainExp  = ((DWORD)p[i].lVal - dwLv80Exp) * LEVEL80_EXP;// 80 ���Ժ�ľ���
-						dwObtainExp += (dwLv80Exp - dwLastExp);						// 79 ���ľ���
+						dwObtainExp  = ((DWORD)p[i].lVal - dwLv80Exp) * LEVEL80_EXP;// 80 
+						dwObtainExp += (dwLv80Exp - dwLastExp);						// 79 
 
 						g_pGameApp->SysInfo( g_oLangRec.GetString(145), dwObtainExp );
 					}
@@ -506,7 +506,7 @@ void CAttribSynchro::_Exec()
 		CAttackEffect::ChaDied( pCha );
 	}
 
-	// 3D����,��Ϊ�ٶ��Ѿ������ı䣬����ͷҲҪ���Ÿı�
+	// 3D,
 	if( Change.GetChangeBitFlag(ATTR_MSPD) && pCha==CGameScene::GetMainCha() )
 	{        
         g_pGameApp->GetMainCam()->SetBufVel( pCha->getMoveSpeed(), pCha->getID() );
@@ -519,7 +519,7 @@ void CAttribSynchro::_Exec()
 
 		if( _nType==enumATTRSYN_ITEM_MEDICINE )
 		{
-			// ��Ѫ
+			// 
 			if( Change.GetChangeBitFlag(ATTR_HP) || Change.GetChangeBitFlag(ATTR_SP) )
 			{
 				pCha->SelfEffect( 133 );
@@ -538,13 +538,13 @@ void CAttribSynchro::_Exec()
 			{
 				if( enumATTRSYN_INIT!=_nType )
 				{
-					// ��ҽ�ɫ����
+					// 
 					g_pGameApp->PlaySound(21);
 					g_pGameApp->ShowBigText( g_oLangRec.GetString(146), pCha->getGameAttr()->get(ATTR_LV) );
 
 					if(g_stUISystem.m_sysProp.m_gameOption.bHelpMode && pCha->getGameAttr()->get(ATTR_LV) <= 50)//	Modify by alfred.shi 20080905
 					{
-						// ��ʾ����������Ϣ
+						// 
 						g_stUIStart.ShowLevelUpHelpButton(true);
 					}
 
@@ -570,7 +570,7 @@ void CAttribSynchro::_Exec()
 				if( enumATTRSYN_INIT!=_nType )
 				{
 					g_pGameApp->PlaySound(21);
-					//g_pGameApp->ShowBigText( "ת���ȼ�%d", pCha->getGameAttr()->get(ATTR_SAILLV) );
+					//g_pGameApp->ShowBigText( "%d", pCha->getGameAttr()->get(ATTR_SAILLV) );
 					g_pGameApp->ShowBigText("reborn level %d", pCha->getGameAttr()->get(ATTR_SAILLV) );
 					pCha->SelfEffect( 132, -1 );
 				}
@@ -589,7 +589,7 @@ void CAttribSynchro::_Exec()
 
 	if( pCha->getChaCtrlType()==enumCHACTRL_MONS_MINE )
 	{
-		// ��ʯ��Ѫ
+		// 
 		float f = (float)pCha->getGameAttr()->get(ATTR_HP) / (float)pCha->getGameAttr()->get(ATTR_MXHP);
 		if( f>0.67f )
 			pCha->PlayPose( 1, PLAY_ONCE_SMOOTH );

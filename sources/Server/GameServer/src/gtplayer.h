@@ -1,4 +1,4 @@
-/********************************************************************
+ï»¿/********************************************************************
 	created:	2005/02/28
 	created:	28:2:2005   9:23
 	filename: 	d:\project\Server\GameServer\src\gtplayer.h
@@ -31,11 +31,11 @@ struct uplayer
         return *this;
     }
 
-    DWORD m_dwDBChaId; // Î¨Ò»ID
+    DWORD m_dwDBChaId; // ID
 
-    // È·¶¨Õâ¸öPlayer
+    // Player
     GateServer* pGate;
-    unsigned long m_ulGateAddr; // ÔÚ GateServer ½ø³ÌÖĞµÄĞéÄâµØÖ·
+    unsigned long m_ulGateAddr; //  GateServer 
 };
 
 struct GatePlayer
@@ -66,7 +66,7 @@ private:
 
     uplayer ply;
 
-    GatePlayer* m_tmplist; // ÌØ¶¨·¢°ü½Ó¿ÚÖ®ÓÃ£¬Ãû³ÆÒÔºó¿ÉÄÜ»áµ÷Õû
+    GatePlayer* m_tmplist; // 
 };
 
 

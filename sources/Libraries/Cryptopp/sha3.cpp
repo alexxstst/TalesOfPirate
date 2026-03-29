@@ -1,4 +1,4 @@
-// sha3.cpp - modified by Wei Dai from Ronny Van Keer's public domain
+﻿// sha3.cpp - modified by Wei Dai from Ronny Van Keer's public domain
 //            Keccak-simple.c. All modifications here are placed in the
 //            public domain by Wei Dai.
 //            Keccack core function moved to keccakc.cpp in AUG 2018

@@ -1,4 +1,4 @@
-ClearHelpNPC()  
+﻿ClearHelpNPC()  
 AddHelpNPC("Drunkyard - Anthony")
 dofile(GetResPath("script/help/monsterhelp.lua"))
 
@@ -46,28 +46,28 @@ AddHelpInfo("Sashimi",   "Fishing can obtain Sashimi, but you must be patience!"
 
 
 
---������Ա������
+--
 
---��Ŀ���ʽ���
+--
 AddHelpInfo("mindwave",  "Specialise in Pirate King constructions!")
 AddHelpInfo("mindpower", "Graphics engine used to develop this game!")
 AddHelpInfo("Cola",      "If you commit an error, you wil need to buy cola!")
 AddHelpInfo("PaPa John's Pizza",    "If you work overtime, eat PaPa John's Pizza!")
-AddHelpInfo("World of Warcraft",  "That is really a mysterious world��.")
+AddHelpInfo("World of Warcraft",  "That is really a mysterious world.")
 AddHelpInfo("Lol" ,       "Name of Mastermind")
 
---�߻���
-AddHelpInfo("paco",      "Secret society leader��heard he has a wife who also belong to the secret society!")
-AddHelpInfo("robin",     "A mini bee! Flying��flying..flying��")
+--
+AddHelpInfo("paco",      "Secret society leaderheard he has a wife who also belong to the secret society!")
+AddHelpInfo("robin",     "A mini bee! Flyingflying..flying")
 AddHelpInfo("sk",        "He is a Designer,Not a Planner!")
-AddHelpInfo("aki",       "Those guys wearing flowery shirts��")
+AddHelpInfo("aki",       "Those guys wearing flowery shirts")
 AddHelpInfo("baby",      "Ignore me, I never wear a shirt and I am not Rob!")
 AddHelpInfo("sage",      "Nothing to say!")
 AddHelpInfo("idle",      "Nothing to say!")
 AddHelpInfo("mars",      "Sorry, the user you have searched for is not in this server. Please try again later!")
 AddHelpInfo("koyo",      "force is weak with this one!, but good pp!")
 
---������
+--
 AddHelpInfo("Ryan",      "force is strong with this one!")
 AddHelpInfo("jerry",     "PK Update!")
 AddHelpInfo("claude",    "Today is Friday, he is not around in the afternoon!")
@@ -78,12 +78,12 @@ AddHelpInfo("knight",    "Nothing to say!")
 AddHelpInfo("michael",   "He is a good man!")
 AddHelpInfo("jack",      "Welcome to Black Jack Pirate Organisation ^_^")
 AddHelpInfo("lemon",     "Getting married!")
-AddHelpInfo("david",     "崻�������,OK?")
-AddHelpInfo("philip",    "�糵С����")
-AddHelpInfo("mikcal",    "��,�ɵ���̨������.")
-AddHelpInfo("jampe",     "Ǯ��Ǯ��,��ҪǮ��!")
+AddHelpInfo("david",     ",OK?")
+AddHelpInfo("philip",    "")
+AddHelpInfo("mikcal",    ",.")
+AddHelpInfo("jampe",     ",!")
 
---������
+--
 AddHelpInfo("Thirteen",     "Leader of Sakura 13 Pirates!")
 AddHelpInfo("gsc",       "Throw!")
 AddHelpInfo("gooncoo",   "Cloud! Cloud!")
@@ -95,8 +95,8 @@ AddHelpInfo("Hyperactive Little Mo", "Everything will be fine!")
 AddHelpInfo("paul",      "Friends! Listen to Paul! Let's work hard for a life of luxury!")
 AddHelpInfo("Take note",      "What! You still alive!")
 
---��ʳ����
-AddHelpInfo("Delicacy", "Shanghai: Lobsters��High Tea��Pizza��Chilli Crab��so delicious!")
+--
+AddHelpInfo("Delicacy", "Shanghai: LobstersHigh TeaPizzaChilli Crabso delicious!")
 
---����
-AddHelpInfo("Car", "Polo Turbo��Hrv Fit Turbo�� New racing SRV...., which do you select?")
+--
+AddHelpInfo("Car", "Polo TurboHrv Fit Turbo New racing SRV...., which do you select?")

@@ -1,4 +1,4 @@
-// iterhash.h - originally written and placed in the public domain by Wei Dai
+﻿// iterhash.h - originally written and placed in the public domain by Wei Dai
 
 /// \file iterhash.h
 /// \brief Base classes for iterated hashes

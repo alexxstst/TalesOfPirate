@@ -1,5 +1,5 @@
-//------------------------------------------------------------------------
-//	2005.3.25	Arcol	�����ַ���Ϊ�й���½����
+﻿//------------------------------------------------------------------------
+//	2005.3.25	Arcol	Default locale set to Chinese Mainland
 //------------------------------------------------------------------------
 
 
@@ -28,7 +28,7 @@
 #include "d3des.h"
 #include "Character.h"
 #include "gameloading.h"
-#include "CaLua.h"
+#include "script.h"
 #include "CrushSystem.h"
 
 #include "UdpClient.h"
@@ -59,8 +59,8 @@ LRESULT CALLBACK	WndProc(HWND, UINT, WPARAM, LPARAM);
 HBRUSH	g_bk_brush;
 
 void StdoutRedirect(); 
-int InstallFont(const char* pszPath); // ���尲װ
-void CenterWindow(HWND hWnd); //����λ������
+int InstallFont(const char* pszPath); // Font installation
+void CenterWindow(HWND hWnd); // Center window on screen
 
 
 BOOL CheckDxVersion(DWORD &ver) // 
@@ -84,21 +84,21 @@ BOOL CheckDxVersion(DWORD &ver) //
     return ret;
 }
 
-bool	g_IsAutoUpdate = false;				// ����?�Զ�����ʱ��Ҫ�ȴ������˳�ʱ�����Զ�����
+bool	g_IsAutoUpdate = false;				// Flag: when auto-updating, wait for the process to exit before launching updater
 long	g_nCurrentLogNo = 0;
 
 
 ////////////////////////////////////////
 //
 //  By Jampe
-//  �����̽��ܹ���
+//  Cooperative login encryption
 //  2006/5/22
 //
 const unsigned char key[] = {0xda, 0x15, 0x1c, 0x10, 0x4f, 0x8c, 0x7a, 0x4a};
 
 //////////////////////////////////////////////////////////////////////
 
-DWORD WINAPI LoadRes(LPVOID lpvThreadParam) // ����Դ
+DWORD WINAPI LoadRes(LPVOID lpvThreadParam) // Load resources
 {
 	g_bLoadRes = 1;
 
@@ -126,7 +126,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_logManager.InitLogger("log\\game");
 	g_logManager.EnableGlobalConsole(true);
 
-	if(strParam.find("editor")!= std::string::npos) // ����Ϸ�༭��
+	if(strParam.find("editor")!= std::string::npos) // Launch game editor
     {
         g_Config.m_bEditor = TRUE;
 		//g_Config.m_IsShowConsole = true;
@@ -145,15 +145,15 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	}
 	
 /*	yangyinyu	2008-10-14	close!
-	//  ��ʾloading����
+	//  Show loading screen
 	GameLoading::Init(strParam)->Create();
 */
-	::_setmaxstdio( 2048 ); //   ���������ļ���
+	::_setmaxstdio( 2048 ); //   Increase max open file handles
 
-	//setlocale(LC_CTYPE, g_oLangRec.GetString(0)); // �Ĵ��ַ�����Դ�ļ�����?  Add by Philip.Wu  2006-07-19  
-	setlocale(LC_CTYPE, g_oLangRec.GetString(0)); // �Ĵ��ַ�����Դ�ļ�����?  Add by Philip.Wu  2006-07-19  
+	//setlocale(LC_CTYPE, g_oLangRec.GetString(0)); // Set locale from language resource file  Add by Philip.Wu  2006-07-19
+	setlocale(LC_CTYPE, g_oLangRec.GetString(0)); // Set locale from language resource file  Add by Philip.Wu  2006-07-19
 
-	InstallFont(".\\Font");	// �Զ���װ���� Add by Philip.Wu  2006-08-07
+	InstallFont(".\\Font");	// Auto-install fonts  Add by Philip.Wu  2006-08-07
 
 	if(CheckDxVersion(dx_ver) == 0) 
     {
@@ -161,7 +161,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         return 0;
     }
 
-	// ����ͻ���ʹ�ò��?��log�ļ���
+	// Determine which client instance number to use for log files
 	HANDLE	hFile = CreateFileMapping(INVALID_HANDLE_VALUE, 0, PAGE_READWRITE, 0, sizeof(long), "KopClinetNO");
 	if (!hFile) 
 	{
@@ -171,7 +171,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	LGInfo lg_info;
 	memset( &lg_info, 0, sizeof(lg_info) );
 
-	if( !g_Config.IsPower() ) // ���Ǳ༭��ģʽʱlog�ر�
+	if( !g_Config.IsPower() ) // Disable logging when not in editor mode
 	{
 		lg_info.bCloseAll = true;
 	}
@@ -193,9 +193,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	lg_info.bMsgBox = g_Config.m_bEnableLGMsg!=0;
 	lg_info.bEraseMode = true;
 
-	// ɾ���Զ����³���ĸ���?
+	// Delete the auto-update program copy
 	char szUpdateFileName[] = "Launcher_d.exe";
-	SetFileAttributes(szUpdateFileName, FILE_ATTRIBUTE_NORMAL); //  �����Զ����¸���������
+	SetFileAttributes(szUpdateFileName, FILE_ATTRIBUTE_NORMAL); //  Remove read-only from updater copy
   	DeleteFile(szUpdateFileName);
 
 	// for trim obj file
@@ -221,9 +221,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	LoadString(hInstance, IDS_APP_TITLE, szTitle, MAX_LOADSTRING);
 	LoadString(hInstance, IDC_KOP, szWindowClass, MAX_LOADSTRING);
 
-	MyRegisterClass(hInstance, brush);// ע�ᶨ�����?
+	MyRegisterClass(hInstance, brush);// Register custom window class
 
-	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_KOP); // ���ؿ�ݼ���? ��ñ���?
+	hAccelTable = LoadAccelerators(hInstance, (LPCTSTR)IDC_KOP); // Load accelerator table (hotkeys)
 
 	if(strParam.find("pack") != std::string::npos)
 	{
@@ -296,7 +296,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	auto nTomPos = strParam.find("tom:");
 	if(nTomPos!= std::string::npos)
 	{
-		// ����Tom�ַ���,����Ϊ:"tom:������IP,�˿�,�û���,����"
+		// Parse Tom string, format: "tom:ServerIP,Port,Username,Password"
 		std::string strTom = strParam.substr( nTomPos + 4, strParam.length() );
 		auto nEnd = strTom.length();
 		nEnd = strTom.find( " " );
@@ -317,12 +317,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     ////////////////////////////////////////
     //
     //  By Jampe
-    //  �����̲�������
+    //  Cooperative login parameters
     //  2006/5/19
     //
     memset(&g_cooperate, 0, sizeof(g_cooperate));
 	auto nCopPos = strParam.find("/login:");
-    //  /login:�̼Ҵ���&����/��������&�û���&����
+    //  /login:VendorCode&ServerName&Username&Password
     if(std::string::npos != nCopPos)
     {
         SetEncKey(key);
@@ -337,7 +337,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         Decrypt(buff, 128, (unsigned char*)tmp[3].c_str(), (int)tmp[3].length());
         g_cooperate.pwd = (char*)buff;
     }
-    switch(g_cooperate.code) // ��ͬ�����̶�Ӧ��ͬ������
+    switch(g_cooperate.code) // Different vendors map to different server lists
     {
     case COP_OURGAME:
         {
@@ -367,52 +367,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_pGameApp->LG_Config( lg_info );
 	g_lootFilter = new LootFilter();
 
-	if(strParam.find("table_bin") != std::string::npos) //�����������table_bin �����ɶ����Ʊ�
+	if(strParam.find("table_bin") != std::string::npos) // If command line contains table_bin, generate binary tables
 	{
 		extern void MakeBinTable();
 		MakeBinTable();
 		return FALSE;
 	}
 
-	if(strParam.find("clu_bin")!= std::string::npos){
-		// CLU/LUA obfuscation
-		CLU_LoadScript("scripts/lua/CameraConf.clu", 1);
-		CLU_LoadScript("scripts/lua/scene.clu",1);
-		CLU_LoadScript("scripts/lua/scene/face.clu",1);
-		CLU_LoadScript("scripts/lua/CharacterConf.clu",1);
-		CLU_LoadScript("scripts/lua/mission/mission.lua",1);
-		CLU_LoadScript("scripts/lua/mission/missioninfo.lua",1);
-		CLU_LoadScript("scripts/lua/font.clu",1);
-		CLU_LoadScript("scripts/lua/gui.clu",1);
-		
-		CLU_LoadScript("scripts/lua/scene/loginscene.clu", 1);
-		CLU_LoadScript("scripts/lua/scene/selectchascene.clu", 1);
-		CLU_LoadScript("scripts/lua/scene/createchascene.clu", 1);
-		CLU_LoadScript("scripts/lua/scene/mainscene.clu",1);
-		CLU_LoadScript("scripts/lua/table/scripts.lua",1);
-		// Forms
-		CLU_LoadScript("scripts/lua/forms/main.clu",1);
-		CLU_LoadScript("scripts/lua/forms/login.clu",1);
-		CLU_LoadScript("scripts/lua/forms/loading.clu",1);
-		CLU_LoadScript("scripts/lua/forms/NPC.clu",1);
-		CLU_LoadScript("scripts/lua/forms/Player.clu",1);
-		CLU_LoadScript("scripts/lua/forms/minimap.clu",1);
-		CLU_LoadScript("scripts/lua/forms/help.clu",1);
-		CLU_LoadScript("scripts/lua/forms/system.clu",1);
-		CLU_LoadScript("scripts/lua/forms/equip.clu",1);
-		CLU_LoadScript("scripts/lua/forms/chat.clu",1);
-		CLU_LoadScript("scripts/lua/forms/preperty.clu",1);
-		CLU_LoadScript("scripts/lua/forms/mission.clu",1);
-		CLU_LoadScript("scripts/lua/forms/coze.clu",1);
-		CLU_LoadScript("scripts/lua/forms/dialog.clu",1);
-		CLU_LoadScript("scripts/lua/forms/ship.clu",1);
-		CLU_LoadScript("scripts/lua/forms/traderoom.clu",1);
-		CLU_LoadScript("scripts/lua/forms/manage.clu",1);
-		CLU_LoadScript("scripts/lua/forms/select.clu",1);
-		CLU_LoadScript("scripts/lua/filter.clu",1);
-		CLU_LoadScript("scripts/lua/forms/editor.clu",1);
-		return FALSE;
-	}
+	//  clu_bin      
 
 	if (!g_stUISystem.m_isLoad)
 	{
@@ -509,7 +471,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	DWORD st_dwtick	   = GetTickCount();
 	DWORD st_tickcount = (GetTickCount()-st_dwtick)/unsigned long(g_NetIF->m_framedelay);
 
-	g_NetIF->m_framedelay = 40; // ֡�ӳ�
+	g_NetIF->m_framedelay = 40; // Frame delay
 
     //string str( "Micro" );
     //string rstr( "soft" );
@@ -527,11 +489,11 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	CloseHandle(hFile);
 	GetRegionMgr()->Exit();
 
-	if( g_IsAutoUpdate )  	// ����?�Զ�����ʱ ��ʾԭʼ���� ����kop.exe
+	if( g_IsAutoUpdate )  	// If auto-updating, launch the updater
 	{
 		::WinExec( "Launcher.exe", SW_SHOWNORMAL );
 	}
-	// �Զ�����ʱ �쳣�������?
+	// Auto-update exception handling
 
 	return 0;
 }
@@ -830,7 +792,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			if( g_pGameApp ) g_pGameApp->SetIsRun( false );
 			break; 
 		}
-	case WM_MUSICEND: // ���ֲ���ϵͳ
+	case WM_MUSICEND: // Music playback system
 		{
 			if( g_pGameApp ) g_pGameApp->PlayMusic(0);
 			break;
@@ -877,7 +839,7 @@ void MakeBinTable()
 //	MessageBox( NULL, g_oLangRec.GetString(193), "Info", 0 );
 }
 
-// ��printf�������������ǰӦ�ó����edit�ؼ���
+// Display error message to debug output (formerly printf to edit control)
 void DisplayError(const char* szMsg)
 {
 	OutputDebugString( szMsg );
@@ -919,11 +881,11 @@ DWORD WINAPI ReadStdout(LPVOID lpvThreadParam)
    // 
    //  if (nBytesRead >0 )
    //  {
-   //      //��ȡ��printf�����?
+   //      // Read printf output
    //      lpBuffer[nBytesRead] = 0;
 		 ////if(theApp.m_pMainWnd)
 		 ////{
-			////CMyIDEDlg *pDlg = (CMyIDEDlg*)theApp.m_pMainWnd; //��Edit�ؼ�д����ܵ����ַ������
+			////CMyIDEDlg *pDlg = (CMyIDEDlg*)theApp.m_pMainWnd; // Write pipe string to Edit control
 			////pDlg->m_edit1.ReplaceSel(lpBuffer);
 	  //   //}
 		 //if( g_pGameApp )
@@ -953,20 +915,20 @@ void StdoutRedirect()
 
       // Launch the thread that gets the input and sends it to the child.
     DWORD ThreadID;
-    HANDLE hThread = ::CreateThread(NULL,0,ReadStdout, //�����߳�
+    HANDLE hThread = ::CreateThread(NULL,0,ReadStdout, // Create reader thread
                               0,0,&ThreadID);
 }
 
 
-// ��װ����
+// Install fonts
 int InstallFont(const char* pszPath)
 {
 	int nRet = 0;
 	char szWindow[256] = {0};
 	char szBuffer[256] = {0};
 
-	// �ж��Ƿ��Ѿ���װ�������壬���û�а�װ���Զ����?
-	GetWindowsDirectory(szWindow, sizeof(szWindow) / sizeof(szWindow[0]));// ��ȡWindowsĿ¼������·����
+	// Check if the font is already installed; if not, install automatically
+	GetWindowsDirectory(szWindow, sizeof(szWindow) / sizeof(szWindow[0]));// Get Windows directory full path
 	sprintf(szBuffer, "%s\\fonts\\simsun.ttc", szWindow); 
 	if(-1 !=access(szBuffer, 0))
 	{
@@ -988,8 +950,8 @@ int InstallFont(const char* pszPath)
 	//	return 0;
 	//}
 
-	//// �����������Ŀ�?
-	//while(FindNextFile(hFind, &oFinder) != 0) 
+	//// Iterate over font directory
+	//while(FindNextFile(hFind, &oFinder) != 0)
 	//{
 	//	if(oFinder.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
 	//	{
@@ -1003,19 +965,19 @@ int InstallFont(const char* pszPath)
 
 	if(nRet)
 	{
-		SendMessage(HWND_BROADCAST,WM_FONTCHANGE,0,0);  // �㲥֪ͨϵͳ
+		SendMessage(HWND_BROADCAST,WM_FONTCHANGE,0,0);  // Broadcast font change to the system
 	}
 
 	return nRet;
 }
 
 
-void CenterWindow(HWND hWnd)  // ��������Ļ��ʾλ������
+void CenterWindow(HWND hWnd)  // Center window display position on screen
 {
 	RECT rc;
-	GetWindowRect(hWnd, &rc); // ������������Ļ�е�����
+	GetWindowRect(hWnd, &rc); // Get window rect to center on screen
 
-	int x = (GetSystemMetrics(SM_CXSCREEN) - (rc.right - rc.left)) / 2; // ������߽�?
-	int y = (GetSystemMetrics(SM_CYSCREEN) - (rc.bottom - rc.top)) / 2; // �����߽�
-	MoveWindow(hWnd, x, y, rc.right - rc.left, rc.bottom - rc.top, TRUE); // ָ�����ڵ�λ�úͳߴ�
+	int x = (GetSystemMetrics(SM_CXSCREEN) - (rc.right - rc.left)) / 2; // Calculate left edge
+	int y = (GetSystemMetrics(SM_CYSCREEN) - (rc.bottom - rc.top)) / 2; // Calculate top edge
+	MoveWindow(hWnd, x, y, rc.right - rc.left, rc.bottom - rc.top, TRUE); // Set window position and size
 }

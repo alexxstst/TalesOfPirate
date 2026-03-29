@@ -1,4 +1,4 @@
-// base32.h - written and placed in the public domain by Frank Palazzolo, based on hex.cpp by Wei Dai
+﻿// base32.h - written and placed in the public domain by Frank Palazzolo, based on hex.cpp by Wei Dai
 //              extended hex alphabet added by JW in November, 2017.
 
 /// \file base32.h

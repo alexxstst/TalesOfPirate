@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "Scene.h"
 #include "uiguidata.h"
@@ -57,11 +57,11 @@ class CCharacter;
 		bool	bEnable;
 	};
 
-//  �����̱��
+//  
 //  By Jampe
-#define COP_OURGAME                 1001        //  ����
-#define COP_SINA                    1002        //  ����
-#define COP_CGA                     1003        //  �Ʒ�
+#define COP_OURGAME                 1001        //  
+#define COP_SINA                    1002        //  
+#define COP_CGA                     1003        //  
 
 #define NUM_REGIN_LIST				2
 #define NUM_SERVR_LIST				2
@@ -93,8 +93,8 @@ public:
 
     static void BeginPlay();
 
-	static int nSelectChaType;      // ����ѡ�н�ɫ����Ϣ
-    static int nSelectChaPart[5];   // �����5����λ
+	static int nSelectChaType;      // 
+    static int nSelectChaPart[5];   // 5
 
 
 	static void ShowPathLogo(int isShow);
@@ -153,20 +153,20 @@ private:
 	static CForm*			frmAccount;
 	static CForm*           frmLOGO;
 	static CForm*           frmAnnounce;
-	static CForm*           frmKeyboard;	// add by Philip.Wu  �����̽���  2006-06-05
-	static CForm*           frmRegister;	// add by Philip.Wu  �����̽���  2006-06-05
-	static CForm*			frmPathLogo;	// ���½�����Ƭ LOGO
+	static CForm*           frmKeyboard;	// add by Philip.Wu    2006-06-05
+	static CForm*           frmRegister;	// add by Philip.Wu    2006-06-05
+	static CForm*			frmPathLogo;	//  LOGO
 	static CList*			lstRegion[NUM_REGIN_LIST];
 	static CListView*		lstServer[NUM_SERVR_LIST];
 
 	static CEdit*			edtID;
 	static CEdit*           edtPassword;
 	static CCheckBox*		chkID;
-	static CEdit*			edtFocus;		// add by Philip.Wu  ��꼤��ı༭��  2006-06-07
-	static CCheckBox*       chkShift;		// add by Philip.Wu  �������ϵ� Shift  2006-06-09
+	static CEdit*			edtFocus;		// add by Philip.Wu    2006-06-07
+	static CCheckBox*       chkShift;		// add by Philip.Wu   Shift  2006-06-09
 
-	static CImage*          imgLogo1;		// add by Philip.Wu  LOGOͼ1     2006-06-20
-	static CImage*          imgLogo2;		// add by Philip.Wu  LOGOͼ2     2006-06-20
+	static CImage*          imgLogo1;		// add by Philip.Wu  LOGO1     2006-06-20
+	static CImage*          imgLogo2;		// add by Philip.Wu  LOGO2     2006-06-20
 	static CImage*			imgBigLogo;
 	static CImage*			imgBigLogo2;
 	static const int		ServIconNum = 4;
@@ -201,10 +201,10 @@ private:
 	static void  CallbackUIEvent_LoginScene( CCompent *pSender, int state, int x, int y, DWORD key);
 
 	// add by Philip.Wu  2006-06-05
-	// �����̽��������¼�
+	// 
 	static void _evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
-	// �༭�򼤻��¼��������¼���ı༭��
+	// 
 	static void _evtAccountFocus(CGuiData* pSender);
 
 
@@ -214,7 +214,7 @@ private:
     BYTE            _loadtex_flag;
     BYTE            _loadmesh_flag;
 
-	bool			m_bPasswordError;	//�ж������Ƿ����
+	bool			m_bPasswordError;	//
 
 	static const int IMAGE_INDEX = 0;
 	static const int TEXT_INDEX = 1;

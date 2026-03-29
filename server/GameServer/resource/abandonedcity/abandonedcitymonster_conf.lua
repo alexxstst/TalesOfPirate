@@ -1,4 +1,4 @@
-print("-- [Loading] abandonedcityMonster.lua")
+﻿print("-- [Loading] abandonedcityMonster.lua")
 
 BossFC = {}
 BossFC[1] = CreateCha(690, 15333, 13602, 325, 1800)

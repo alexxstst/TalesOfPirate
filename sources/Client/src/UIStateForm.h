@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "UIGlobalVar.h"
 
 
@@ -18,7 +18,7 @@
 
 namespace GUI
 {
-// Íæ¼ÒÊôÐÔ
+// 
 class CStateMgr : public CUIInterface
 {
 public:
@@ -36,17 +36,17 @@ private:
 	static void MainMouseDown(CGuiData *pSender, int x, int y, DWORD key);
 
 private:
-	//frmState½çÃæµÄ¿Ø¼þ
+	//frmState
 	CForm*			frmState;
-	CLabelEx*		labName;                    //´´½¨½ÇÉ«Ãû³Æ
-	CLabelEx*		labGuildName;               //´´½¨¹«»áÃû³Æ
-	CLabelEx*		labStateLevel;              //´´½¨µÈ¼¶
-	CLabelEx*		labStatePoint;              //´´½¨ÊôÐÔµãÊý 
-	CLabelEx*  		labSkillPoint;              //´´½¨¼¼ÄÜµãÊý
-	CLabelEx*		labJobShow;					//Ö°Òµ
-	CLabelEx *      labFameShow;				//´´½¨ÃûÉù
+	CLabelEx*		labName;                    //
+	CLabelEx*		labGuildName;               //
+	CLabelEx*		labStateLevel;              //
+	CLabelEx*		labStatePoint;              // 
+	CLabelEx*  		labSkillPoint;              //
+	CLabelEx*		labJobShow;					//
+	CLabelEx *      labFameShow;				//
 
-	//6¸ö»ù±¾ÊôÐÔ
+	//6
 	CLabelEx*		labStrshow;
 	CLabelEx*		labDexshow;
 	CLabelEx*		labAgishow;
@@ -56,7 +56,7 @@ private:
 	CLabelEx*		labSailLevel;
 	CLabelEx*		labSailEXP;
 
-	//8¸ö¸½¼ÓÊôÐÔ
+	//8
 	CLabelEx*		labMinAtackShow;
 	CLabelEx*		labMaxAtackShow;
 	CLabelEx*		labFleeShow;
@@ -68,19 +68,19 @@ private:
 	//CLabelEx*		labMfShow;
 	CLabelEx*		labPhysDefineShow;
 
-	//6 ¸ö»ù±¾ÊôÐÔ°´Å¥
-	CTextButton*   btnStr;						//´´½¨Á¦Á¿À¸
-	CTextButton*   btnAgi;						//´´½¨Ãô½ÝÀ¸
-	CTextButton*   btnCon;						//´´½¨ÌåÖÊÀ¸
-	CTextButton*   btnSta;						//´´½¨¾«ÉñÀ¸
-	//CTextButton*   btnLuk;						//´´½¨ÐÒÔËÀ¸
-	CTextButton*   btnDex;						//´´½¨×¨×¢À¸     
+	//6 
+	CTextButton*   btnStr;						//
+	CTextButton*   btnAgi;						//
+	CTextButton*   btnCon;						//
+	CTextButton*   btnSta;						//
+	//CTextButton*   btnLuk;						//
+	CTextButton*   btnDex;						//     
 
 	CLabelEx*		labStateEXP;
 	CLabelEx*		labStateHP;
 	CLabelEx*		labStateSP;
 
-	CLabelEx*		labFameSho;              //´´½¨ÃûÉù
+	CLabelEx*		labFameSho;              //
 	CLabelEx*		labStateName;
 	CLabelEx*		labStateJob;
 

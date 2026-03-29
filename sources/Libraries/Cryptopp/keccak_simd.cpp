@@ -1,4 +1,4 @@
-// keccak_simd.cpp - written and placed in the public domain by Jeffrey Walton.
+﻿// keccak_simd.cpp - written and placed in the public domain by Jeffrey Walton.
 //
 //    This source file uses intrinsics to gain access to SSE and
 //    NEON instructions. A separate source file is needed because

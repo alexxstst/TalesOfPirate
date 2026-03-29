@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Scene.h"
 #include "Character.h"
 #include "SceneObj.h"
@@ -155,7 +155,7 @@ void CGameScene::_RecordRBO()
 
 void CGameScene::_ReadRBO()
 {
-	// �޸��ش󳡾��������ʾ�޳�bug��//by clp
+	// bug//by clp
 	_reallyBigObjectList.clear();
 	ifstream file ( ( "map\\" + _stInit.strMapFile + ".rbo" ).c_str() );
 	struct ReallyBigObjectInfo info;
@@ -177,7 +177,7 @@ void CGameScene::_ReadRBO()
 		CSceneObjInfo *pInfo = GetSceneObjInfo(info.typeID);
 		CSceneObj *pObj = AddSceneObj(info.typeID);
 
-		// ��¼�ش����
+		// 
 		if(pObj)
 		{
 			AddRBO( pObj );
@@ -490,7 +490,7 @@ _pEventMgr(std::make_unique<CEventMgr>(this)),
 	//LogFont.lfClipPrecision		= CLIP_DEFAULT_PRECIS; 
 	//LogFont.lfQuality			= ANTIALIASED_QUALITY;
 	//LogFont.lfPitchAndFamily	= VARIABLE_PITCH;
-	//lstrcpy( LogFont.lfFaceName, "������" );
+	//lstrcpy( LogFont.lfFaceName, "" );
 
 	//D3DXCreateFontIndirect(g_Render.GetDevice(),&LogFont,&temFont);
 
@@ -949,7 +949,7 @@ int CGameScene::HitTestSceneObjTerrainForInfluence( D3DXVECTOR3* t_pos, const D3
     }
 
     
-    if( s && h.z < fHeight - 0.3f ) // ��Ϊ������ƴ���ʱ��ͨ���Ὣ����������һ�ξ���
+    if( s && h.z < fHeight - 0.3f ) // 
     {
         //h.z = 0;
         s = 0;
@@ -1007,7 +1007,7 @@ int CGameScene::HitTestSceneObjTerrain( D3DXVECTOR3* t_pos, const D3DXVECTOR3* o
     }
 
     
-    if( s && h.z < fHeight - 0.3f ) // ��Ϊ������ƴ���ʱ��ͨ���Ὣ����������һ�ξ���
+    if( s && h.z < fHeight - 0.3f ) // 
     {
         h.z = 0;
         s = 0;
@@ -1453,7 +1453,7 @@ bool CGameScene::_ClearMemory()
 	_pTerrain.reset();
 
 	_ClearAllShade();
-	_ClearAllEff();	// ��ЧҪ�����,��Ϊ������������,���
+	_ClearAllEff();	// ,,
 
 	_ClearAllCha();
 	_ClearAllSceneObj();
@@ -1479,7 +1479,7 @@ bool CGameScene::_ClearMemory()
 	return true;
 }
 
-// ���ܣ������루nCurX, nCurY��С��nDist���׵Ľ�ɫ�����뵽Ѱ�����ϰ���
+// nCurX, nCurYnDist
 long CGameScene::AddCharacterBlock(int nCurX, int nCurY, int nDist, BYTE *byBlockBuff, int nBuffWidth, int sRadii )
 {
     return 0;
@@ -1491,7 +1491,7 @@ long CGameScene::AddCharacterBlock(int nCurX, int nCurY, int nDist, BYTE *byBloc
 	int		nStartX, nEndX, nStartY, nEndY;
 	int		i, j, k;
 	int		nBuffHeight = nBuffWidth;
-	int		nCharacterBlockRadius = 40;		//����
+	int		nCharacterBlockRadius = 40;		//
 	const int		nBlockUnitWidth = 50, nBlockUnitHeight = 50;
 	int     nRange;
 
@@ -1576,19 +1576,19 @@ bool CGameScene::_HandleSuperKey()
 		this->ShowSceneObj(1 - this->IsSceneObjVisible());
 		TipI(this->IsSceneObjVisible(), g_oLangRec.GetString(336), g_oLangRec.GetString(337));
 	}
-	else if (g_pGameApp->IsKeyDown(DIK_F9)) //���е�ǰactive��section���߶Ⱥ��赲���㲢����
+	else if (g_pGameApp->IsKeyDown(DIK_F9)) //activesection
 	{
 		/*
-        // �޸Ĵ˴�һ��Ҫ�ǳ�С�ģ�
-		// ��ο�MPMap::DynamicLoading()��������ò���ȷ���ᵼ����Ҫ��sectionû�ж����ڴ棻
-		const int	ciSectionWidth = 8;			// ��λ��tile���ף�
-		const int	ciSectionHeight = 8;		// ��λ��tile
-		const int	ciRefreshWidth = 3;			// ��Ҫˢ�µ�section������λ��section
-		const int	ciRefreshHeight = 3;		// ��Ҫˢ�µ�section�ߣ���λ��section
-		const int	ciMaxObjWidth = 2;			// ���������ȣ���λ��section
-		const int	ciMaxObjHeight = 2;			// �������߶ȣ���λ��section
-		int			iShowSizeX, iShowSizeY;		// ��λ��tile
-		int			iShowCenterX, iShowCenterY;	// ��λ��tile
+        // 
+		// MPMap::DynamicLoading()section
+		const int	ciSectionWidth = 8;			// tile
+		const int	ciSectionHeight = 8;		// tile
+		const int	ciRefreshWidth = 3;			// sectionsection
+		const int	ciRefreshHeight = 3;		// sectionsection
+		const int	ciMaxObjWidth = 2;			// section
+		const int	ciMaxObjHeight = 2;			// section
+		int			iShowSizeX, iShowSizeY;		// tile
+		int			iShowCenterX, iShowCenterY;	// tile
 		int			iSaveSectionBuffer;
 		int			iOriginalWidth, iOriginalHeight;
 		float		fOriginalCenterX, fOriginalCenterY;
@@ -1952,7 +1952,7 @@ void CGameScene::SetMainCha(int nChaID)
 
     _UserLeve.AllTrue();
 
- //   // ���辵ͷ
+ //   // 
  //   CCameraCtrl *pCam = g_pGameApp->GetMainCam();
  //   MPTerrain *pTerr = GetTerrain();
 
@@ -2154,7 +2154,7 @@ void CGameScene::PlayEnvSound( char* szFile, int nX, int nY )
 	AudioSDL::get_instance()->volume(musid, dis);
 	//AudioSDL::get_instance()->play(musid);
 
-	// ��Ч���������������
+	// 
 	g_AudioThread.play(musid, false);
 #endif
 	}
@@ -2367,7 +2367,7 @@ void CGameScene::LoadingCall()
 	ToLogService("common", "create small map");
 //////////////////////////////////////////////////////////////////////////
 
-	   // ���辵ͷ
+	   // 
 	   CCameraCtrl *pCam = g_pGameApp->GetMainCam();
 
 	   D3DXVECTOR3 vecCha = pObj->GetPos();

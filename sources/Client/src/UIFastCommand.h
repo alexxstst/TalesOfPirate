@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// ����:�������ؼ�
-// ����:lh 2004-11-02
-// ��;:��������һ����������ֻ��һ��ָ���ⲿʵ��Ŀ�ݷ�ʽ
-// ����޸�����:
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2004-11-02
+// :
+// :
 //----------------------------------------------------------------------
 
 #pragma once
@@ -34,8 +34,8 @@ public:
 
 	static void			DelCommand( CCommandObj* p );
 
-	static CFastCommand*	GetFastCommand( int index );		// ���Ҷ�Ӧ�Ŀ�ݿؼ�
-	static CFastCommand*	FintFastCommand( CCommandObj* p,bool checkSecondary = false );		// ���Ҷ�Ӧ�Ŀ�ݿؼ�
+	static CFastCommand*	GetFastCommand( int index );		// 
+	static CFastCommand*	FintFastCommand( CCommandObj* p,bool checkSecondary = false );		// 
 	static void				FindFastCommandIndexes( CCommandObj* p,int arr[36] );
 	void Exec(bool rightclick = false);
     CCommandObj*		GetCommand()					{ return _pCommand;		}
@@ -45,7 +45,7 @@ public:
     void                AddCommand2( CCommandObj* p );
 
 public:
-    GuiComEvent         evtChange;      // ����������仯
+    GuiComEvent         evtChange;      // 
 
 protected:
     void				_SetSelf();
@@ -63,14 +63,14 @@ protected:
 
 };
 
-// ��������һ������ʵ��
+// 
 class COneCommand : public CCommandCompent
 {
 public:
 	enum eShowStyle
 	{
-		enumSmall,		// ������ʾͼ�귽ʽ
-		enumSale,		// ��ʾ�۳�
+		enumSmall,		// 
+		enumSale,		// 
 	};
 	COneCommand(CForm& frmOwn);
 	COneCommand(const COneCommand& rhs);
@@ -115,11 +115,11 @@ protected:
 	eShowStyle			_eShowStyle;
 	bool				_IsShowActive;
 
-    CGuiPic*			_pActive;			// ����ͼ��
+    CGuiPic*			_pActive;			// 
 
 };
 
-// ��������
+// 
 
 
 }

@@ -1,4 +1,4 @@
-print("-- [Loading] Mission Script [04]")
+锘縫rint("-- [Loading] Mission Script [04]")
 
 ----------------------------------------------------------
 --														--
@@ -550,7 +550,7 @@ function CenterMission001()
 	MisResultAction(AddExp, 1000, 1000)
 	MisResultAction(AddMoney, 700, 700)
 
-----------------------------Naval office report！
+----------------------------Naval office report
 	DefineMission( 438, "Navy Registration Now Open!", 419 )
 	
 	MisBeginTalk( "<t>Aye my friend. Have you not been to sea before? I guess its about time you did.<n><t>Let me introduce you to <pArgent City>'s <bMaritime Assistant - Alena>. She can teach you all you need to know about sailing.")
@@ -569,7 +569,7 @@ function CenterMission001()
 	MisHelpTalk("<bAlena> is at Argent Harbor. Please go to her now.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------Naval office report！
+-----------------------------------Naval office report
 	DefineMission( 439, "Navy Registration Now Open!", 419, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -788,7 +788,7 @@ function CenterMission001()
 	
 	MisBeginCondition(AlwaysFailure )
 		
-	MisResultTalk("<t>Oh…Since Waala cannot make it, I will find other people.<n><t>Thank you for sending the letter over.")
+	MisResultTalk("<t>OhSince Waala cannot make it, I will find other people.<n><t>Thank you for sending the letter over.")
 	MisResultCondition(NoRecord, 426)
 	MisResultCondition(HasMission, 426 )
 	MisResultAction(ClearMission, 426 )
@@ -1351,7 +1351,7 @@ function CenterMission001()
 	MisResultAction(ClearMission, 442)
 	MisResultAction(SetRecord, 442)
 
--- 杰克船长 >> 杰克又见杰克
+--  >> 
 	DefineMission(484, "Jack Vs Jack", 443)
 
 	MisBeginTalk("<t>This is the challenge letter I have written. Bring it to Jack Arrow.<n><t>Tell him that I will be waiting for him at the pavilion on the midnight of the full month of the eighth month. ")

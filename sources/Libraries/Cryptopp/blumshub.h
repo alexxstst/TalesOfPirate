@@ -1,4 +1,4 @@
-// blumshub.h - originally written and placed in the public domain by Wei Dai
+﻿// blumshub.h - originally written and placed in the public domain by Wei Dai
 
 /// \file blumshub.h
 /// \brief Classes for Blum Blum Shub generator

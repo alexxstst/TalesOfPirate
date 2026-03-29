@@ -1,4 +1,4 @@
-//
+ï»¿//
 #pragma once
 
 #include <math.h>
@@ -926,7 +926,7 @@ LW_FRONT_API int lwGetVecNormalAxisMapping(int* i1,int* i2,const lwVector3* vec)
 // remarks: vec and normal must be normalized first
 LW_FRONT_API int lwGetVec3WeightWithNormal(lwVector3* face,lwVector3* up,const lwVector3* vec,const lwVector3* normal);
 
-// lwGetEquation2 Òª±È lwGetEquation2f¿ìÒ»Ð©
+// lwGetEquation2  lwGetEquation2f
 // ret[out]: x, y
 // e1,e2[in]: coefficient x, y and equation result
 LW_FRONT_API void lwGetEquation2(float* ret, const float* e1, const float* e2);

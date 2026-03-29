@@ -1,8 +1,8 @@
-#pragma once
-#include "unicode/resbund.h"		//×ÊÔ´¹ÜÀíĞÅÏ¢
-#include "unicode/ucnv.h"			//×Ö·û±àÂë×ª»»
-#include "unicode/uclean.h"			//×Ö·û±àÂë×ª»»
-#include "unicode/msgfmt.h"			//¸ñÊ½»¯×Ö·û´®
+ï»¿#pragma once
+#include "unicode/resbund.h"		//
+#include "unicode/ucnv.h"			//
+#include "unicode/uclean.h"			//
+#include "unicode/msgfmt.h"			//
 	
 //#include "pi_Alloc.h"
 
@@ -76,7 +76,7 @@ private:
 	bool Init();
 
 public:
-	int GetSize(void);			// È¡µÃ×ÊÔ´¸öÊı
+	int GetSize(void);			// 
 	
 	void Release(void);
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * isguids.h - Internet Shortcut GUID definitions.
  *
  * Copyright (c) Microsoft Corporation. All rights reserved.

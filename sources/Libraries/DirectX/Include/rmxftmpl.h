@@ -1,4 +1,4 @@
-/* D3DRM XFile templates in binary form */
+﻿/* D3DRM XFile templates in binary form */
 
 #ifndef _RMXFTMPL_H_
 #define _RMXFTMPL_H_

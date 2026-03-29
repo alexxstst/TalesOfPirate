@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SectionData.h"
 
@@ -6,12 +6,12 @@
 
 struct SSceneObjInfo
 {
-    short	sTypeID;	// ¸ß2Î»ÊÇtype(0: ³¡¾°Îï¼þ, 1: ÌØÐ§Îï¼þ), ÆäÓàÊÇID
+    short	sTypeID;	// 2type(0: , 1: ), ID
 	unsigned long nX;
 	unsigned long nY;
 	short	sHeightOff;
 	short	sYawAngle;
-    short	sScale;		// ±£ÁôÎ´Ê¹ÓÃ
+    short	sScale;		// 
 
 	short GetType()
 	{
@@ -37,11 +37,11 @@ class CSceneObjData : public CSectionDataMgr
 		int		lVersion;
 		long	lFileSize;
 
-		int		iSectionCntX;	// µØÍ¼µÄºáÏòÇøÓòÊý
-		int		iSectionCntY;	// µØÍ¼µÄ×ÝÏòÇøÓòÊý
-		int		iSectionWidth;	// ÇøÓòµÄ¿í¶È£¨µ¥Î»£ºTile£©
-		int		iSectionHeight; // ÇøÓòµÄ¸ß¶È£¨µ¥Î»£ºTile£©
-		int		iSectionObjNum;	// ÇøÓòÔÊÐíµÄ×î´óÎï¼þÊý
+		int		iSectionCntX;	// 
+		int		iSectionCntY;	// 
+		int		iSectionWidth;	// Tile
+		int		iSectionHeight; // Tile
+		int		iSectionObjNum;	// 
 
         SFileHead()
         {
@@ -69,7 +69,7 @@ public:
         if(_fp) _WriteFileHeader();
         if(_bDebug)
         {
-            //LG(GetDataName(), "Êý¾ÝÎÄ¼þ²Ù×÷½áÊø!\n");
+            //LG(GetDataName(), "!\n");
 			g_logManager.InternalLog(LogLevel::Debug, "common", "data file operate over!");
         }
     }
@@ -89,15 +89,15 @@ protected:
 };
 
 //-------------------------
-// ÎÄ¼þÍ·µÄ¶ÁÈ¡
-// ×ÓÀà¿ÉÒÔ×öÒ»Ð©ºÏ·¨ÐÔÅÐ¶Ï
+// 
+// 
 //-------------------------
 inline BOOL CSceneObjData::_ReadFileHeader()
 {
     fread(&_header, sizeof(_header), 1, _fp);
     if(_header.lVersion!=600)
 	{
-		//LG(GetDataName(), "msg²»ÊÇºÏ·¨µÄobjÎÄ¼þ!\n");
+		//LG(GetDataName(), "msgobj!\n");
 		g_logManager.InternalLog(LogLevel::Error, "common", "not legitimacy obj file!");
         return FALSE;
 	}
@@ -109,7 +109,7 @@ inline BOOL CSceneObjData::_ReadFileHeader()
 }
 
 //-----------------------------------
-// ÎÄ¼þÍ·µÄÐ´Èë, ÓÃÓÚÐÂ´´½¨ÎÄ¼þµÈ³¡ºÏ
+// , 
 //-----------------------------------
 inline void CSceneObjData::_WriteFileHeader()
 {
@@ -125,7 +125,7 @@ inline void CSceneObjData::_WriteFileHeader()
 
     if(_bDebug)
     {
-        //LG(GetDataName(), "Ð´ÈëÎÄ¼þÍ·ÐÅÏ¢, lFileSize = %d\n", _header.lFileSize);
+        //LG(GetDataName(), ", lFileSize = %d\n", _header.lFileSize);
 		g_logManager.LogDebug("common", "write file head info, lFileSize = {}", _header.lFileSize);
     }
 }
@@ -164,7 +164,7 @@ inline void CSceneObjData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
 		idx.iObjNum = pSection->dwParam;
 		if(idx.iObjNum > MAX_SECTION_OBJ) idx.iObjNum = MAX_SECTION_OBJ;
 	}
-	if(dwOffset==0) idx.iObjNum = 0; // ±»Çå³ý¼ÇÂ¼
+	if(dwOffset==0) idx.iObjNum = 0; // 
     fseek(_fp, sizeof(SFileHead) + sizeof(idx) * dwSectionNo, SEEK_SET);
     fwrite(&idx, sizeof(idx), 1, _fp);
     if(_bDebug)
@@ -186,7 +186,7 @@ inline void CSceneObjData::_AfterReadSectionData(SDataSection *pSection, int nSe
 			short sID = (pObjInfo + i)->GetID();
 			if(sID==1398 || sID==0)
 			{
-				//LG("maptoolerr", "·¢ÏÖ²»Õý³£ID %d\n", sID);
+				//LG("maptoolerr", "ID %d\n", sID);
 				ToLogService("common", "find unnormal ID {}", sID);
 			}
 		}
@@ -200,7 +200,7 @@ inline void CSceneObjData::TrimFile(const char *pszTarget)
 	
 	fwrite(&_header, sizeof(_header), 1, fp);
 	
-	// Ð´ÈëÄÚÈÝ
+	// 
 	SSectionIndex *pIdx = new SSectionIndex[_nSectionCntX * _nSectionCntY];
 	memset(pIdx, 0, sizeof(SSectionIndex) * _nSectionCntX * _nSectionCntY);
 	SSectionIndex *pCurIdx = pIdx;
@@ -238,7 +238,7 @@ inline void CSceneObjData::TrimFile(const char *pszTarget)
 	fwrite(&_header, sizeof(_header), 1, fp);
 	_header.lFileSize = nLastSize;
 	
-	// Ð´ÈëË÷ÒýÇø
+	// 
 	fseek(fp, sizeof(_header), SEEK_SET);
 	fwrite(pIdx, sizeof(SSectionIndex), _nSectionCntX * _nSectionCntY, fp);
 

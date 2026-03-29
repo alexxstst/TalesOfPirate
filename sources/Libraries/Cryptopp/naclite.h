@@ -1,4 +1,4 @@
-// naclite.h - written and placed in the public domain by Jeffrey Walton
+﻿// naclite.h - written and placed in the public domain by Jeffrey Walton
 //          based on public domain NaCl source code written by
 //          Daniel J. Bernstein, Bernard van Gastel, Wesley Janssen,
 //          Tanja Lange, Peter Schwabe and Sjaak Smetsers.

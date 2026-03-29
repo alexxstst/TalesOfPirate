@@ -1,16 +1,16 @@
-#pragma once
+﻿#pragma once
 
 
-// Макросы проверки загрузки UI-форм и контролов — логируют ошибку через g_logManager
+//    UI-       g_logManager
 #define FORM_LOADING_CHECK(a,b,c) a=CFormMgr::s_Mgr.Find(c); if (!a) { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(577),b,c); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); return false;}
 #define FORM_CONTROL_LOADING_CHECK(a,b,c,d,e) a=dynamic_cast<c*>(b->Find(e)); if (!a) { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(578),d,b->GetName(),e); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); return false;}
 
 
-// �ȼ�����FLAG��SetEnableHotKey����
-#define HOTKEY_STORE		(1 << 0)	// �̳�
-#define HOTKEY_BANK			(1 << 1)	// ����
-#define HOTKEY_BOOTH		(1 << 2)	// ��̯
-#define HOTKEY_TRADE		(1 << 3)	// ����
+// FLAGSetEnableHotKey
+#define HOTKEY_STORE		(1 << 0)	// 
+#define HOTKEY_BANK			(1 << 1)	// 
+#define HOTKEY_BOOTH		(1 << 2)	// 
+#define HOTKEY_TRADE		(1 << 3)	// 
 
 
 class CCharacter;
@@ -112,7 +112,7 @@ namespace GUI
 	class CChurchChallengeMgr;
 	extern CTextParse		g_TextParse;
 
-class CUIInterface // �û�������Ϣ
+class CUIInterface // 
 {
 public:
 	CUIInterface();
@@ -134,7 +134,7 @@ protected:
 	virtual void CloseForm() {}
 	virtual void SwitchMap() {}
 
-    static void		_evtDragToGoodsEvent(CGuiData *pSender, CCommandObj* pItem, int nGridID, bool& isAccept);  // �϶���������
+    static void		_evtDragToGoodsEvent(CGuiData *pSender, CCommandObj* pItem, int nGridID, bool& isAccept);  // 
 
 protected:
 	bool Error(const char* strInfo, const char* strFormName, const char* strCompentName);

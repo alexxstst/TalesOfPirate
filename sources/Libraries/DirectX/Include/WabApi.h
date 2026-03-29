@@ -1,4 +1,4 @@
-#ifndef _WABAPI_H_
+﻿#ifndef _WABAPI_H_
 #define _WABAPI_H_
 
 #ifdef __cplusplus

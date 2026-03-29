@@ -1,29 +1,29 @@
-// Scene ������Ϸ����, �����ر�, ��ɫ, ���, ��Ч, ��ؽ������ϷԪ�صļ���, 
-// �����ֱ����Ե���Ϸ���ܵĻ�����λ, �����¼Scene, ѡ��ɫScene, ��Ϸ����Scene
-// GameApp����SwitchScene(),  ��Scene����SwitchMap
+﻿// Scene , , , , , , 
+// , Scene, Scene, Scene
+// GameAppSwitchScene(),  SceneSwitchMap
 #pragma once
 #include "Script.h"
 #include "MusicSet.h"
 #include "BoolSet.h"
 #include "SceneSign.h"
 
-#define SCENEMSG_CHA_CREATE             1	// ����1:����ID,����2:��ɫ����
-#define SCENEMSG_CHA_DESTROY            2	//  ����1:����ID,����2:��ɫ����
-#define SCENEMSG_CHA_BEGINMOVE          3	// ����1:��ɫ����,����2:����ID
-#define SCENEMSG_CHA_ENDMOVE            4	// ����ͬ��
+#define SCENEMSG_CHA_CREATE             1	// 1:ID,2:
+#define SCENEMSG_CHA_DESTROY            2	//  1:ID,2:
+#define SCENEMSG_CHA_BEGINMOVE          3	// 1:,2:ID
+#define SCENEMSG_CHA_ENDMOVE            4	// 
 
-#define SCENEMSG_SCENEOBJ_CREATE        6	// ����1:����ID,����2:�������
-#define SCENEMSG_SCENEOBJ_DESTROY       7	// ����1:����ID,����2:�������
-#define SCENEMSG_SCENEOBJ_MOVE	        8	// ����1:����ID,����2:�������
+#define SCENEMSG_SCENEOBJ_CREATE        6	// 1:ID,2:
+#define SCENEMSG_SCENEOBJ_DESTROY       7	// 1:ID,2:
+#define SCENEMSG_SCENEOBJ_MOVE	        8	// 1:ID,2:
 
-#define SCENEMSG_EFFECT_HIT		        9	// ����Ŀ��
-#define SCENEMSG_EFFECT_VALID	        10	// ��Ч��Ч,����1:����ID,
-#define SCENEMSG_EFFECT_CREATE	        11	// ��Ч��Ч
+#define SCENEMSG_EFFECT_HIT		        9	// 
+#define SCENEMSG_EFFECT_VALID	        10	// ,1:ID,
+#define SCENEMSG_EFFECT_CREATE	        11	// 
 
-#define SCENEMSG_SCENEITEM_CREATE       12	// ����1:����ID,����2:item����
-#define SCENEMSG_SCENEITEM_DESTROY      13	// ����1:����ID,����2:item����
+#define SCENEMSG_SCENEITEM_CREATE       12	// 1:ID,2:item
+#define SCENEMSG_SCENEITEM_DESTROY      13	// 1:ID,2:item
 
-#define SCENEMSG_SCENEOBJ_UPDATEVALID   15  // ���²�ͬ���͵ĳ��������Ч����
+#define SCENEMSG_SCENEOBJ_UPDATEVALID   15  // 
 
 struct SceneTranspObjStateDesc
 {
@@ -51,15 +51,15 @@ struct stSceneInitParam
 {
 	stSceneInitParam() : nUITemplete(-1), nMaxCha(0), nMaxObj(0), nMaxItem(0), nMaxEff(0), nTypeID(0) {}
 
-	std::string  strName;		// ��������
-	int		nTypeID;		// ��Ӧ�ĵ�ͼ����
-	std::string	strMapFile;		// ��ͼ����
-	int		nUITemplete;	// ������Ӧ��UIģ���
+	std::string  strName;		// 
+	int		nTypeID;		// 
+	std::string	strMapFile;		// 
+	int		nUITemplete;	// UI
 
-	int		nMaxCha;		// ���Ľ�ɫ����,С����,û�н�ɫ
-	int		nMaxObj;		// ��������
-	int		nMaxItem;		// ��������
-	int		nMaxEff;		// ���Ч����
+	int		nMaxCha;		// ,,
+	int		nMaxObj;		// 
+	int		nMaxItem;		// 
+	int		nMaxEff;		// 
 };
 
 
@@ -72,23 +72,23 @@ enum
     SCENEOBJ_TYPE_ENVLIGHT   ,
     SCENEOBJ_TYPE_FOG        ,
     SCENEOBJ_TYPE_ENVSOUND	 ,
-	MAX_SCENEOBJ_TYPE		 ,		// ��Ϊõ�����ֵ
+	MAX_SCENEOBJ_TYPE		 ,		// 
 };
 
 enum e3DMouseState
 {
-	enum3DNone,						// ������
-	enumFollow,						// �������״̬
-	enumClick,						// �������״̬
+	enum3DNone,						// 
+	enumFollow,						// 
+	enumClick,						// 
 };
 
-enum eUserLevel						// ��������
+enum eUserLevel						// 
 {
-	LEVEL_CHA_RUN		= 0,		// �ɲ�����ɫ�ж�
-    LEVEL_MOUSE_RUN,                // �Ƿ���Բ��������·
+	LEVEL_CHA_RUN		= 0,		// 
+    LEVEL_MOUSE_RUN,                // 
 };
 
-// �����Ѿ��ͷŵĶ��������´β��ҿ��ж���ʱֱ�ӷ���
+// 
 template <class T>
 class FreeArray
 {
@@ -157,7 +157,7 @@ class CMapInfo;
 
 class CGameScene : public CScript
 {
-protected:	// CGameApp ʹ��
+protected:	// CGameApp 
 	friend class CGameApp;
 
 	CGameScene(stSceneInitParam& param);
@@ -180,11 +180,11 @@ protected:	// CGameApp ʹ��
 	virtual void		_KeyDownEvent( int key ){}
 	virtual void		_KeyUpEvent( int key ){}
 
-private:        // �����ڴ�
+private:        // 
     bool		_CreateMemory();        
     bool		_ClearMemory();
 
-protected:      // ����ʱ�л�
+protected:      // 
     virtual bool		_Init();
     virtual bool		_Clear();
 
@@ -193,7 +193,7 @@ public:
     const int			GetSceneTypeID() const		{ return _stInit.nTypeID;	}
 
 public:	
-    virtual void        LoadingCall();          // ��װ��loading��,ˢ��
+    virtual void        LoadingCall();          // loading,
 	virtual void		SetMainCha(int nChaID);
 	virtual void		SetScreen( int w, int h, bool IsFull ){}
 
@@ -222,7 +222,7 @@ public:
 	stSceneInitParam*	GetInitParam()    { return &_stInit;                      }
     const char*			GetTerrainName()  { return _stInit.strMapFile.c_str();    }   
 
-	bool				GetIsBlockWalk( CCharacter* pCha, int nX, int nY );	// �жϽ�ɫ��X,Y�Ƿ񲻿���
+	bool				GetIsBlockWalk( CCharacter* pCha, int nX, int nY );	// X,Y
 
 	CEventMgr* GetEventMgr() { return _pEventMgr.get(); }
 
@@ -239,8 +239,8 @@ public:
 	CCharacter*		SelectCharacter();
     CCharacter*     AddCharacter( const LoadChaInfo* info );
 	CCharacter*		AddBoat( stNetChangeChaPart& part );
-	CCharacter*		AddCharacter(int nScriptID);	// ���ӽ�ɫ
-	CCharacter*		GetCha(int nArrayID);			// ͨ��ID(�����±�) ȡ�ý�ɫ����ָ��
+	CCharacter*		AddCharacter(int nScriptID);	// 
+	CCharacter*		GetCha(int nArrayID);			// ID() 
 	int				GetChaCnt()		    { return _nChaCnt;		}
 
 	static void		ResetMainCha()		{ _pMainCha = NULL;		}
@@ -248,8 +248,8 @@ public:
 
 	CSceneObj*		AddSceneObj(int nScriptID);
 
-    // nType: ���߱���ģ���ļ���������Ҫ���ݲ�ͬ�Ľ�ɫ������������
-    // Ŀǰ���� 0:�����ϵ�ģ��; 1:������1�ţ�2��������2�ţ�3��Ů����1�ţ�4��Ů����2��
+    // nType: 
+    //  0:; 1:1223142
     CSceneItem*     AddSceneItem(int nScriptID, int nType);
     CSceneItem*     AddSceneItem( const char* file );
 
@@ -259,7 +259,7 @@ public:
 	int				GetSceneObjCnt() { return _nSceneObjCnt; }
 	int				GetSceneItemCnt() { return _nSceneItemCnt; }
 
-    CSceneItem*     HitSceneItemText( int nScrX, int nScry );   // �õ�����ĵ������ֵĵ���
+    CSceneItem*     HitSceneItemText( int nScrX, int nScry );   // 
     CSceneItem*     HitTestSceneItem( int nScrX, int nScry );
     CSceneObj*      HitTestSceneObj( int nScrX, int nScrY );
     CCharacter*     HitTestCharacter( int nScrX, int nScrY );
@@ -324,10 +324,10 @@ public:
 	int				GetMouseX()			{ return _nMouseX;	   }
 	int				GetMouseY()			{ return _nMouseY;	   }
 
-    float           GetTerrainHeight(float fX, float fY);       // ���Ƚϸ�,����,���ھ�̬����
-    float           GetGridHeight(float fX, float fY);          // ���Ƚϵ�,�Ͽ�,����ÿ֡�����õĺ���
+    float           GetTerrainHeight(float fX, float fY);       // ,,
+    float           GetGridHeight(float fX, float fY);          // ,,
 
-	int				GetGridRegion( int x, int y );				// �õ���������,��λ:��
+	int				GetGridRegion( int x, int y );				// ,:
     
     BOOL            IsPointVisible(float fX, float fY);
     void            EnableSceneObjCulling(BOOL bEnable) { _bEnableSceneObjCulling = bEnable; }
@@ -335,11 +335,11 @@ public:
 
 	void			SetFrameMove(DWORD dwTime);
 
-	void			PlayEnvSound( int nX, int nY );					// ������x,y���괦�Ļ�����,֡����
-	static void		PlayEnvSound( char* szFile, int nX, int nY );	// �¼�����
-	static void 	PlayEnvSound( int nSoundNo, int nX, int nY );   // �¼�����
+	void			PlayEnvSound( int nX, int nY );					// x,y,
+	static void		PlayEnvSound( char* szFile, int nX, int nY );	// 
+	static void 	PlayEnvSound( int nSoundNo, int nX, int nY );   // 
 
-    static void     SetSoundSize( float fVol );         // 0~1,0������,1�������
+    static void     SetSoundSize( float fVol );         // 0~1,0,1
     static float    GetSoundSize()                      { return (float)_fSoundSize / 128.0f;   }
 
 	void			OnLostDevice();
@@ -349,7 +349,7 @@ public:
 
     void            RefreshLevel();
 
-    // ����һ���ڵ����ϵ���Ч
+    // 
     CEffectObj*     CreateEffect( int nEffectID, int nX, int nY, bool isLoop=false );
 	CPugMgr* GetPugMgr() { return _pcPugMgr.get(); }
 
@@ -367,9 +367,9 @@ public:
 	//CCharacter2D*	GetTeamList(int idx){ return _pCha2D[idx]; }
 
     void            AddAreaEff( CEffectObj* pEffectObj );
-    bool            DelAreaEff( long nAreaID, int nEffectID=0 );    // ���nEffectID=0,����������������Ч
+    bool            DelAreaEff( long nAreaID, int nEffectID=0 );    // nEffectID=0,
 
-public:				// ���泡��״̬
+public:				// 
     DWORD           m_dwValidChaCnt;
     DWORD           m_dwChaPolyCnt;
     DWORD           m_dwChaRenderTime;
@@ -388,11 +388,11 @@ public:				// ���泡��״̬
 
 	bool			m_bShowTerrain;
 protected:
-	void			_CreateChaArray(int nChaCnt);		// ������ɫ����
-	void			_CreateSceneObjArray(int nObjCnt);	// ���������������
-	void			_CreateSceneItemArray(int nObjCnt);	// �����������߼���
+	void			_CreateChaArray(int nChaCnt);		// 
+	void			_CreateSceneObjArray(int nObjCnt);	// 
+	void			_CreateSceneItemArray(int nObjCnt);	// 
 	void			_CreateEffectArray(int nEffCnt);
-	void			_CreateShadeArray(int nShadeCnt);		// ����Ӱ�Ӽ���
+	void			_CreateShadeArray(int nShadeCnt);		// 
 	void			_ClearAllCha();
 	void			_ClearAllSceneObj();
 	void			_ClearAllSceneItem();
@@ -439,7 +439,7 @@ public:
 	std::size_t _nSceneLightCnt{};
 
 	D3DXVECTOR3		    _vMousePos;
-	int					_nMouseX,	_nMouseY;		// �������Ļ�ϵ�����,����
+	int					_nMouseX,	_nMouseY;		// ,
 
 	static e3DMouseState	_e3DMouseState;
 	static BOOL			_bShowMinimap;
@@ -450,7 +450,7 @@ public:
 	static	CLargerMap	*_pLargerMap;
 //#endif
 	static bool			_IsShowPath;
-    static float        _fSoundSize;                // ��Ч����
+    static float        _fSoundSize;                // 
     static bool         _IsUseSound;            
 
     BOOL            _bShowTerrain;
@@ -462,7 +462,7 @@ public:
     int             _nShowChair;
     POINT           _HitBuf;
 
-protected:	// �����л�����
+protected:	// 
 	stSceneInitParam	_stInit;
 	int					_nSceneTypeID;	
 
@@ -472,12 +472,12 @@ protected:
 	//static CCharacter2D*	_pCha2D[4];
 
 	CCharacter*			_pSelCha;
-	CBoolSet			_UserLeve;				// �û����Բ����ļ���
+	CBoolSet			_UserLeve;				// 
 
-    BOOL                _IsShowItemName;    // �Ƿ���ʾ��������
-    CSceneItem*         _pMouseInItem;      // ����ƶ������������,�������Ҫ��ʾ����
+    BOOL                _IsShowItemName;    // 
+    CSceneItem*         _pMouseInItem;      // ,
 
-    // �������Ч
+    // 
     typedef std::list<CEffectObj*>   areaeffs;
     areaeffs            _areaeffs;
 
@@ -485,7 +485,7 @@ protected:
 	std::unique_ptr<CEventMgr> _pEventMgr;//std::make_unique<CEventMgr>(this)
 	CMapInfo*			_pMapInfo;
 
-protected:	// ��ʱ����
+protected:	// 
 	D3DXVECTOR3			org, ray;
 
 	IDirect3DSurfaceX * windowRenderTarget;
@@ -520,7 +520,7 @@ private:
 	void _ReadRBO();
 };
 
-// ��������
+// 
 inline void CGameScene::PlayEnvSound( int nSoundNo, int nX, int nY )
 {
 	if( nSoundNo==-1 ) return;

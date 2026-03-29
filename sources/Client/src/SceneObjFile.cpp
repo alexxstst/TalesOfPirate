@@ -1,4 +1,4 @@
-#include	"Stdafx.h"
+﻿#include	"Stdafx.h"
 #include	<sys/stat.h>
 #include	<sys/timeb.h>
 #include	<time.h>
@@ -158,10 +158,10 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 		lRet = 0;
 		goto end;
 	}
-	if (m_SFileHead.lVersion == OBJ_FILE_VER500) //��Ҫ�汾ת��
+	if (m_SFileHead.lVersion == OBJ_FILE_VER500) //
 	{
 		fclose(fFile);
-		if (ConvertObjFileVer(ptcsFileName) <= 0) //�汾ת��ʧ��
+		if (ConvertObjFileVer(ptcsFileName) <= 0) //
 		{
 			lRet = 0;
 			goto end;
@@ -323,7 +323,7 @@ long CSceneObjFile::CreateFile(const char* ptcsFileName,
 	return 1;
 }
 
-long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) // �Ӱ汾500ת����600(����ľ�������ת�������section���������)
+long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) // 500600(section)
 {
 	long			lRet = 2;
 	char			tcsBackUpName[_MAX_FNAME] = "";
@@ -351,19 +351,19 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 	}
 	if (i >= _MAX_FNAME - (long)_tcslen(ptcsFileName))
 	{
-		lRet = -1; // ������ʱ�ļ�ʧ��
+		lRet = -1; // 
 		goto end;
 	}
 	if (_trename(ptcsFileName, tcsBackUpName) != 0) // 
 	{
-		lRet = -2; // �ļ�������ʧ��
+		lRet = -2; // 
 		goto end;
 	}
 
 	fFileOld = _tfopen(tcsBackUpName, "rb");
 	if (fFileOld == NULL)
 	{
-		lRet = -3; // ��Դ�ļ�ʧ��
+		lRet = -3; // 
 		goto end;
 	}
 
@@ -373,7 +373,7 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 		fFileNew = _tfopen(ptcsFileName, "rb");
 	if (fFileNew == NULL)
 	{
-		lRet = -1; // �������ļ�ʧ��
+		lRet = -1; // 
 		goto end;
 	}
 
@@ -381,7 +381,7 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 	ulFileSize = ftell(fFileOld);
 	fseek(fFileOld, 0, SEEK_SET);
 	fread(&SHead, sizeof(SFileHead), 1, fFileOld);
-	if (SHead.lVersion != OBJ_FILE_VER500) // ����Ҫת��
+	if (SHead.lVersion != OBJ_FILE_VER500) // 
 	{
 		lRet = 1;
 		goto end;
@@ -394,7 +394,7 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 	pSSectionIndex = new (SSectionIndex[lMaxSectionNum]);
 	if (pSSectionIndex == NULL)
 	{
-		lRet = -4; // �ڴ�������
+		lRet = -4; // 
 		goto end;
 	}
 
@@ -411,7 +411,7 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 	int nSectionX, nSectionY;
 	for (i = 0; i < lMaxSectionNum && ulFileSize >= (unsigned long)ftell(fFileOld); i ++)
 	{
-	    if (pSSectionIndex[i].iObjNum > 0) //������Ч����
+	    if (pSSectionIndex[i].iObjNum > 0) //
 		{
 			fseek(fFileOld, pSSectionIndex[i].lObjInfoPos, SEEK_SET);
 			fread(pSObjInfo, sizeof(SSceneObjInfo) * SHead.iSectionObjNum, 1, fFileOld);
@@ -479,7 +479,7 @@ long CSceneObjFile::ReadSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj,
 		fseek(m_fRdWr, m_SSectionIndex[nSectionNO].lObjInfoPos, SEEK_SET);
         ToLogService("common", "Seek Offset [{} {}] = {}", nSectionNO % m_SFileHead.iSectionCntX, nSectionNO / m_SFileHead.iSectionCntX, m_SSectionIndex[nSectionNO].lObjInfoPos);
         fread(SSceneObj, sizeof(SSceneObjInfo), m_SSectionIndex[nSectionNO].iObjNum, m_fRdWr);
-		// ת���ɾ�������
+		// 
 		int nSectionX, nSectionY;
 		for (int i = 0; i < m_SSectionIndex[nSectionNO].iObjNum; i++)
 		{
@@ -532,7 +532,7 @@ long CSceneObjFile::WriteSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj
 
 			fFile = m_fAppend;
 		}
-		// ת�����������
+		// 
 		int nSectionX, nSectionY;
 		for (int j = 0; j < m_SSectionIndex[nSectionNO].iObjNum; j++)
 		{
@@ -542,7 +542,7 @@ long CSceneObjFile::WriteSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj
 			SSceneObj[j].nY -= nSectionY;
 		}
 		//
-		// д��obj��Ϣ
+		// obj
 		fwrite((const void *)SSceneObj, sizeof(SSceneObjInfo), m_SFileHead.iSectionObjNum, fFile);
 		fflush(fFile);
 	}
@@ -555,7 +555,7 @@ long CSceneObjFile::WriteSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj
 	fwrite((const void *)(m_SSectionIndex + nSectionNO), sizeof(SSectionIndex), 1, m_fRdWr);
 	fflush(m_fRdWr);
 
-	// ��ʱ���롣����
+	// 
 	// 
 	long	lFileSize;
 	fseek(m_fRdWr, 0, SEEK_END);
@@ -597,19 +597,19 @@ long CSceneObjFile::TrimFile(const char* ptcsFileName, bool bBackUp)
 	}
 	if (i >= _MAX_FNAME - (long)_tcslen(ptcsFileName))
 	{
-		lRet = -1; // ������ʱ�ļ�ʧ��
+		lRet = -1; // 
 		goto end;
 	}
 	if (_trename(ptcsFileName, tcsBackUpName) != 0) // 
 	{
-		lRet = -2; // �ļ�������ʧ��
+		lRet = -2; // 
 		goto end;
 	}
 
 	fFileOld = _tfopen(tcsBackUpName, _TEXT("rb"));
 	if (fFileOld == NULL)
 	{
-		lRet = -3; // ���ļ�ʧ��
+		lRet = -3; // 
 		goto end;
 	}
 
@@ -619,7 +619,7 @@ long CSceneObjFile::TrimFile(const char* ptcsFileName, bool bBackUp)
 		fFileNew = _tfopen(ptcsFileName, _TEXT("rb"));
 	if (fFileNew == NULL)
 	{
-		lRet = -3; // ���ļ�ʧ��
+		lRet = -3; // 
 		goto end;
 	}
 
@@ -630,7 +630,7 @@ long CSceneObjFile::TrimFile(const char* ptcsFileName, bool bBackUp)
 	if (_tcscmp(SHead.tcsTitle, _TEXT("HF Object File!")) != 0
 		|| SHead.lVersion != OBJ_FILE_VER600)// || SHead.lFileSize != i)
 	{
-		lRet = -4; // Դ�ļ��ѱ��ƻ���汾����
+		lRet = -4; // 
 		goto end;
 	}
 
@@ -638,7 +638,7 @@ long CSceneObjFile::TrimFile(const char* ptcsFileName, bool bBackUp)
 	pSSectionIndex = new (SSectionIndex[lMaxSectionNum]);
 	if (pSSectionIndex == NULL)
 	{
-		lRet = -5; // �ڴ�������
+		lRet = -5; // 
 		goto end;
 	}
 	fread((void *)pSSectionIndex, sizeof(SSectionIndex), lMaxSectionNum, fFileOld);
@@ -653,7 +653,7 @@ long CSceneObjFile::TrimFile(const char* ptcsFileName, bool bBackUp)
 
 	for (i = 0; i < lMaxSectionNum && ulFileSize >= (unsigned long)ftell(fFileOld); i ++)
 	{
-	    if (pSSectionIndex[i].iObjNum > 0) //������Ч����
+	    if (pSSectionIndex[i].iObjNum > 0) //
 		{
 			fseek(fFileOld, pSSectionIndex[i].lObjInfoPos, SEEK_SET);
 			fread(pszSectionInfo, sizeof(SSceneObjInfo) * SHead.iSectionObjNum, 1, fFileOld);

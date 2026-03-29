@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "UIFont.h"
 
@@ -10,10 +10,10 @@ class CGraph;
 class CTextParse
 {
 public :
-	struct node //½Úµã
+	struct node //
 	{
-	    std::string    str; //½ÚµãÊı¾İ
-	    node    * next; //Ö¸ÏòÏÂÒ»¸ö½ÚµãµÄÖ¸Õë
+	    std::string    str; //
+	    node    * next; //
 	};
 
 public:
@@ -39,7 +39,7 @@ public:
 	void			SetCaption( const char * str ) {  _str = str;};
 	const char *	GetCaption()		{              return _str.c_str();		}
 
-	// ÉèÖÃ±íÇé¶ÔÓ¦µÄË÷ÒıºÅ
+	// 
 	void AddFace( int nIndex, CGraph* pGraph );
 	CGraph* GetFace( DWORD nIndex );
 	int GetFaceCount()	{ return (int)_files.size();}
@@ -54,7 +54,7 @@ private:
 	};
 	typedef std::vector<stFaceIndex> files;
 
-	char	_cBoxOff;		// ·Ö¸ô·û,Ä¬ÈÏÎª'#'
+	char	_cBoxOff;		// ,'#'
 	files	_files;
 	int     _scaleX;
 	int     _scaleY;
@@ -65,9 +65,9 @@ extern CTextParse	g_TextParse;
 
 
 
-//Ëã·¨ 
-//»ñÈ¡Ò»¸ö×Ö·û´®µÄÇ°Ãæn¸ö×Ö·û»òÕßºóÃæµÄn¸ö×Ö·û
-//flag ==true ,Ôò±íÊ¾»ñÈ¡Ç°ÃæµÄ×Ö·û 
+// 
+//nn
+//flag ==true , 
 inline std::string  GetSelfString(std::string str , int n , bool flag )
 {	
 	std::string strReturn;

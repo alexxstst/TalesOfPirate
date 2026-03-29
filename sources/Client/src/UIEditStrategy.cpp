@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "uieditstrategy.h"
 #include "uieditdata.h"
 #include "uirichedit.h"
@@ -33,7 +33,7 @@ void CEditRow::Clear()
 	for( units::iterator it=_units.begin(); it!=_units.end(); it++ )
 	{
 		//delete (*it);
-		SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+		SAFE_DELETE(*it); // UI
 	}
 	_units.clear();
 	_atoms.clear();
@@ -84,7 +84,7 @@ void CEditStrategy::Clear()
 	for( items::iterator it=_items.begin(); it!=_items.end(); it++ )
 	{
 		//delete (*it);
-		SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+		SAFE_DELETE(*it); // UI
 	}
 	_items.clear();
 }
@@ -112,10 +112,10 @@ void CEditStrategy::RefreshPos( int x, int y )
 
 void CEditStrategy::ParseText( CEditTextObj* pText )
 {
-	// ºÏ²¢ÎÄ±¾
+	// 
 	CEditRow* pRow = _AppendToBackRow( pText );
 
-	CEditSentence*	pSentence = NULL;	// µ±Ç°ÕýÔÚ²Ù×÷µÄ¾ä×Ó
+	CEditSentence*	pSentence = NULL;	// 
 	if( pRow->GetObjNum()>0 ) 
 	{
 		pSentence = dynamic_cast<CEditSentence*>( pRow->GetObj( pRow->GetObjNum()-1 ) );

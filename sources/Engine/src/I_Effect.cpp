@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 #include "GlobalInc.h"
 //#include "MPModelEff.h"
@@ -55,7 +55,7 @@ void I_Effect::DestroyTobMesh(CMPResManger* resMgr)
 }
 
 
-//£¡³õÊ¼»¯
+//
 #ifdef USE_RENDER
 void	I_Effect::Init(MPRender*	 pDev,EFFECT_TYPE  eType, WPARAM wParam, LPARAM lParam)	
 #else
@@ -64,8 +64,8 @@ void	I_Effect::Init(LPDIRECT3DDEVICE8	 pDev,EFFECT_TYPE  eType, WPARAM wParam, L
 { 
 	m_pDev = pDev; 
 	_eEffectType		= eType;
-	_fLength			= 5.0f;//!2Ãë
-	_wFrameCount		= (WORD)wParam;	//!Ö¡
+	_fLength			= 5.0f;//!2
+	_wFrameCount		= (WORD)wParam;	//!
 
 	_vecFrameTime.resize(_wFrameCount);
 
@@ -91,7 +91,7 @@ void	I_Effect::Init(LPDIRECT3DDEVICE8	 pDev,EFFECT_TYPE  eType, WPARAM wParam, L
 		_vecFrameColor[n]	= /*D3DCOLOR_ARGB((int)(255 - 255/(n + 1)),255,255,255);
 		//*/D3DCOLOR_ARGB(255,255,255,255);
 	}
-	//!Ñ¡ÔñVSÀàÐÍ
+	//!VS
 	_bBillBoard = (bool)lParam;
 	if(_bBillBoard)
 		_iVSIndex = 2;
@@ -176,10 +176,10 @@ void	I_Effect::BindingResInit(CMPResManger	*m_CResMagr)
 //-----------------------------------------------------------------------------
 int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 {
-	//!·µ»Ø0±íÊ¾Õý³£×°Èë£¬1±íÊ¾È±ÉÙÌûÍ¼£¬2±íÊ¾È±ÉÙÄ£ÐÍ¡£3±íÊ¾ÉÙshade
+	//!0123shade
 	int t_iID = 0;
 
-	// ×°ÈëÎÆÀí
+	// 
 	if(_eEffectType == EFFECT_FRAMETEX)
 	{
 		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n)
@@ -189,7 +189,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 			if(!m_CTexFrame.m_vecTexs[n])
 			{
 				char pszMsg[64];
-				sprintf(pszMsg,"ÌØÐ§ÎÄ¼þ[%s]¼ÓÔØÌûÍ¼[%s]Ê±³ö´í",
+				sprintf(pszMsg,"[%s][%s]",
 					pszParentName,m_CTextruelist.m_vecTexName.c_str());
 				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 				return 1;
@@ -203,7 +203,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 		if (!m_CTextruelist.m_pTex)
 		{
 			char pszMsg[64];
-			sprintf(pszMsg,"ÌØÐ§ÎÄ¼þ[%s]¼ÓÔØÌûÍ¼[%s]Ê±³ö´í",
+			sprintf(pszMsg,"[%s][%s]",
 			pszParentName,m_CTextruelist.m_vecTexName.c_str());
 			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 			return 1;
@@ -215,7 +215,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 	
 	_SpmatBBoard = m_CResMagr->GetBBoardMat();
 
-	// ×°ÈëÄ£ÐÍ
+	// 
 	if (m_pCModel && m_pCModel->m_strName == m_strModelName)
 	{
 		return 0;
@@ -243,7 +243,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 			if(!m_pCModel->CreateTob(m_strModelName, m_nSegments,m_rHeight,m_rRadius,m_rBotRadius))
 			{
 				char pszMsg[64];
-				sprintf(pszMsg,"ÌØÐ§ÎÄ¼þ[%s]È±ÉÙ¿É±äÄ£ÐÍ[%s]",
+				sprintf(pszMsg,"[%s][%s]",
 					pszParentName,m_strModelName.c_str());
 				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 				return 2;
@@ -256,7 +256,7 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 		if (!m_pCModel)
 		{
 			char pszMsg[64];
-			sprintf(pszMsg,"ÌØÐ§ÎÄ¼þ[%s]¼ÓÔØÄ£ÐÍ[%s]Ê±³ö´í",
+			sprintf(pszMsg,"[%s][%s]",
 				pszParentName,m_CTextruelist.m_vecTexName.c_str());
 			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 			return 2;
@@ -431,7 +431,7 @@ void	I_Effect::ChangeModel(CEffectModel*	pCModel,CMPResManger	*pCResMagr)
 	}
 
 }
-//!±£´æÐ§¹ûµ½ÎÄ¼þ
+//!
 bool	I_Effect::SaveToFile(FILE* pFile)	
 {
 
@@ -440,7 +440,7 @@ bool	I_Effect::SaveToFile(FILE* pFile)
 	fwrite(t_pszName, sizeof(char),32,pFile);
 
 	int t_temp;
-	//!ÀàÐÍ
+	//!
 	t_temp = (int)_eEffectType;
 	fwrite(&t_temp,sizeof(int),1,pFile);
 
@@ -449,38 +449,38 @@ bool	I_Effect::SaveToFile(FILE* pFile)
 	t_temp = (int)_eDestBlend;
 	fwrite(&t_temp,sizeof(int),1,pFile);
 
-	///////////////!±£´æÄ£ÐÍ±ä»»
-	//!Ê±¼ä³¤¶È
+	///////////////!
+	//!
 	fwrite(&_fLength,sizeof(float),1,pFile);
-	//!Ö¡ÊýÁ¿
+	//!
 	fwrite(&_wFrameCount,sizeof(WORD),1,pFile);
-	//!Ã¿Ò»Ö¡Ê±¼ä
+	//!
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fwrite(&_vecFrameTime[n],sizeof(float),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡´óÐ¡
+	//!
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fwrite(&_vecFrameSize[n],sizeof(D3DXVECTOR3),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡½Ç¶È
+	//!
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fwrite(&_vecFrameAngle[n],sizeof(D3DXVECTOR3),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡Î»ÖÃ
+	//!
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fwrite(&_vecFramePos[n],sizeof(D3DXVECTOR3),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡ÑÕÉ«
+	//!
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fwrite(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
 	}
-	///////////////!±£´æ×ø±ê±ä»»
-	//!¶¥µãÊýÁ¿
+	///////////////!
+	//!
 	fwrite(&m_CTexCoordlist.m_wVerCount,  sizeof(WORD), 1, pFile);
 	fwrite(&m_CTexCoordlist.m_wCoordCount,sizeof(WORD), 1, pFile);
 	fwrite(&m_CTexCoordlist.m_fFrameTime, sizeof(float),1, pFile);
@@ -490,11 +490,11 @@ bool	I_Effect::SaveToFile(FILE* pFile)
 		fwrite(&m_CTexCoordlist.m_vecCoordList[n].front(), 
 			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
 	}
-	///////////////!±£´æÎÆÀíÖ¡±ä»»
+	///////////////!
 	//m_CTextruelist.GetTextureFromModel(m_pCModel);
-	//!ÎÆÀíÊýÁ¿				   ntn
+	//!				   ntn
 	fwrite(&m_CTextruelist.m_wTexCount,sizeof(WORD),1,pFile);
-	//!Ã¿Ò»Ö¡×ø±ê±ä»»Ê±¼ä
+	//!
 	fwrite(&m_CTextruelist.m_fFrameTime,sizeof(float),1,pFile);
 
 	lstrcpy(t_pszName,m_CTextruelist.m_vecTexName.c_str());
@@ -505,7 +505,7 @@ bool	I_Effect::SaveToFile(FILE* pFile)
 		fwrite(&m_CTextruelist.m_vecTexList[n].front(), 
 			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
 	}
-	//!±£´æÄ£ÐÍÃû³Æ
+	//!
 	lstrcpy(t_pszName,m_pCModel->m_strName.c_str());
 	fwrite(t_pszName, sizeof(char),32,pFile);
 
@@ -513,7 +513,7 @@ bool	I_Effect::SaveToFile(FILE* pFile)
 	fwrite(&_iVSIndex, sizeof(int),1,pFile);
 
 
-	//±£´æ¿É±ä»»Ä£ÐÍ
+	//
 	fwrite(&m_pCModel->m_nSegments, sizeof(int),1,pFile);
 	fwrite(&m_pCModel->m_rHeight, sizeof(float),1,pFile);
 	fwrite(&m_pCModel->m_rRadius, sizeof(float),1,pFile);
@@ -548,7 +548,7 @@ bool	I_Effect::SaveToFile(FILE* pFile)
 
 	return true;
 }
-//!×°ÈëÐ§¹û´ÓÎÄ¼þ 
+//! 
 bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)	
 {
 
@@ -559,7 +559,7 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 	m_strEffectName = t_pszName;
 
 	int t_temp;
-	//!ÀàÐÍ
+	//!
 	fread(&t_temp,sizeof(int),1,pFile);
 	_eEffectType = (EFFECT_TYPE)t_temp;
 
@@ -568,48 +568,48 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 	fread(&t_temp,sizeof(int),1,pFile);
 	_eDestBlend = (D3DBLEND)t_temp;
 
-	///////////////!¶ÁÈ¡Ä£ÐÍ±ä»»
-	//!Ê±¼ä³¤¶È
+	///////////////!
+	//!
 	fread(&_fLength,sizeof(float),1,pFile);
-	//!Ö¡ÊýÁ¿
+	//!
 	fread(&_wFrameCount,sizeof(WORD),1,pFile);
 
-	//!Ã¿Ò»Ö¡Ê±¼ä
+	//!
 	_vecFrameTime.resize(_wFrameCount);
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fread(&_vecFrameTime[n],sizeof(float),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡´óÐ¡
+	//!
 	_vecFrameSize.resize(_wFrameCount);
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fread(&_vecFrameSize[n],sizeof(D3DXVECTOR3),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡½Ç¶È
+	//!
 	_vecFrameAngle.resize(_wFrameCount);
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fread(&_vecFrameAngle[n],sizeof(D3DXVECTOR3),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡Î»ÖÃ
+	//!
 	_vecFramePos.resize(_wFrameCount);
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fread(&_vecFramePos[n],sizeof(D3DXVECTOR3),1,pFile);
 	}
-	//!Ã¿Ò»Ö¡ÑÕÉ«
+	//!
 	_vecFrameColor.resize(_wFrameCount);
 	for(WORD n = 0; n < _wFrameCount; n++)
 	{
 		fread(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
 	}
-	///////////////!±£´æ×ø±ê±ä»»
-	//!¶¥µãÊýÁ¿
+	///////////////!
+	//!
 	fread(&m_CTexCoordlist.m_wVerCount,sizeof(WORD),1,pFile);
-	//!×ø±êÊýÁ¿
+	//!
 	fread(&m_CTexCoordlist.m_wCoordCount,sizeof(WORD),1,pFile);
-	//!Ã¿Ò»Ö¡×ø±ê±ä»»Ê±¼ä
+	//!
 	fread(&m_CTexCoordlist.m_fFrameTime,sizeof(float),1,pFile);
 	m_CTexCoordlist.m_vecCoordList.resize(m_CTexCoordlist.m_wCoordCount);
 	for(WORD  n = 0; n < m_CTexCoordlist.m_wCoordCount; n++)
@@ -618,15 +618,15 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 		fread(&m_CTexCoordlist.m_vecCoordList[n].front(), 
 			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
 	}
-	///////////////!±£´æÎÆÀíÖ¡Í¼±ä»»
-	//!ÎÆÀíÊýÁ¿
+	///////////////!
+	//!
 	fread(&m_CTextruelist.m_wTexCount,sizeof(WORD),1,pFile);
-	//!Ã¿Ò»Ö¡×ø±ê±ä»»Ê±¼ä
+	//!
 	fread(&m_CTextruelist.m_fFrameTime,sizeof(float),1,pFile);
 
 	fread(t_pszName, sizeof(char),32,pFile);
 	//s_string str = t_pszName;
-	//È«²¿×ª»»³ÉÐ¡Ð´
+	//
 	char psname[32];
 	memset(psname,0,32);
 	char *pszDataName = _strlwr( _strdup( t_pszName ) );
@@ -661,7 +661,7 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 
 	if(dwVersion > 1)
 	{
-		//¶ÁÈ¡¿É±ä»»Ä£ÐÍ
+		//
 		fread(&m_nSegments, sizeof(int),1,pFile);
 		fread(&m_rHeight, sizeof(float),1,pFile);
 		fread(&m_rRadius, sizeof(float),1,pFile);
@@ -748,11 +748,11 @@ void	I_Effect::CopyEffect(I_Effect* pEff)
 {
 	m_pDev = pEff->m_pDev;;
 
-	//!ÎÆÀí×ø±êÁÐ±í
+	//!
 	m_CTexCoordlist.Copy(&pEff->m_CTexCoordlist);
-	//!ÎÆÀíÁÐ±í
+	//!
 	m_CTextruelist.Copy(&pEff->m_CTextruelist);
-	//!ÎÆÀíÖ¡
+	//!
 	m_CTexFrame.Copy(&pEff->m_CTexFrame);
 
 	if (m_pCModel && !IsTobMesh(m_pCModel->m_strName))
@@ -1101,8 +1101,8 @@ bool	CEffectModel::CreateTriangle()
 	//lsvb->Lock(0, 0, (void**)&buf, D3DLOCK_DISCARD);
 	//buf->dif = D3DCOLOR_XRGB(255, 0, 0);
 	//lsvb->Unlock();
-	//Èç¹ûÊÇÒ»´´½¨ºÃ¾ÍÒªlockµÄ»°£¬ÐèÒªÏÈµ÷ÓÃg_mesh0->LoadVideoMemory();
-	//ÒòÎªÎÒÃÇµÄvb´´½¨ÊÇÔÚrenderµÄÊ±ºò
+	//lockg_mesh0->LoadVideoMemory();
+	//vbrender
 	_dwVerCount = 3;
 	_dwFaceCount= 1;
 	
@@ -1995,11 +1995,11 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
     mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.index_num = wFaceNum * 6;
 	mi.index_seq = LW_NEW(DWORD[mi.index_num ]);
-	int nIndex = 9;//!ÉèÖÃµÄVS³£Á¿´Ó9¿ªÊ¼
+	int nIndex = 9;//!VS9
 	for( DWORD n = 0; n < mi.vertex_num; n++)
 	{
 		mi.vercol_seq[n] = 0xffffffff;
-		mi.vertex_seq[n] = lwVector3(0,0,0);//!±ØÐëÈ«²¿ÎªÁã
+		mi.vertex_seq[n] = lwVector3(0,0,0);//!
 		mi.texcoord0_seq[n]  = lwVector2(0,0);
 		mi.texcoord1_seq[n].x = (float)nIndex;
 		nIndex++;
@@ -2066,11 +2066,11 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
 	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
 
 
-	int nIndex = 9;//!ÉèÖÃµÄVS³£Á¿´Ó9¿ªÊ¼
+	int nIndex = 9;//!VS9
 	for( int n = 0; n < MAX_SHADER_VERNUM; n++)
 	{
 		pVertex[n].m_dwDiffuse = 0xffffffff;
-		pVertex[n].m_SPos = D3DXVECTOR3(0,0,0);//!±ØÐëÈ«²¿ÎªÁã
+		pVertex[n].m_SPos = D3DXVECTOR3(0,0,0);//!
 		pVertex[n].m_SUV  = D3DXVECTOR2(0,0);
 		pVertex[n].m_SUV2.x = (float)nIndex;
 		nIndex++;
@@ -2149,7 +2149,7 @@ void	CEffectModel::FrameMove(DWORD dwDailTime)
 
 void	CEffectModel::Begin()
 {
-	//ÒªÓÃvsÖ¸ÁîÀ´´úÌæ
+	//vs
 	//m_pDev->SetVertexShader(EFFECT_VER_FVF);
 #ifdef USE_MGR
 	if(_lwMesh)
@@ -2295,16 +2295,16 @@ CTexCoordList::~CTexCoordList()
 void	CTexCoordList::Clear()
 {
 	m_wVerCount		= 0;
-	//ÎÆÀí×ø±êÊý
+	//
 	m_wCoordCount	= 0;
-	//ÎÆÀí×ø±ê±ä»»Ê±¼ä
+	//
 	m_fFrameTime	= 0.0f;
-	//ÎÆÀí×ø±ê±ä»»ÐòÁÐ
+	//
 	m_vecCoordList.clear();
 
-	////!µ±Ç°×ø±êË÷Òý
+	////!
 	//m_wCurIndex = 0;
-	////!µ±Ç°Ê±¼ä
+	////!
 	//m_fCurTime = 0.0f;
 }
 
@@ -2374,9 +2374,9 @@ void	CTexCoordList::GetCoordFromModel(CEffectModel *pCModel)
 
 void	CTexCoordList::Reset()
 {
-	////!µ±Ç°×ø±êË÷Òý
+	////!
 	//m_wCurIndex = 0;
-	////!µ±Ç°Ê±¼ä
+	////!
 	//m_fCurTime = 0.0f;
 	
 	//for(WORD i = 0; i < m_wVerCount; ++i)
@@ -2465,14 +2465,14 @@ void	CTexList::SetTextureName(const s_string&  pszName)
 
 void	CTexList::Reset()
 {
-	////!µ±Ç°×ø±êË÷Òý
+	////!
 	//m_wCurIndex = 0;
-	////!µ±Ç°Ê±¼ä
+	////!
 	//m_fCurTime = 0.0f;
 	
 	//m_lpCurTex = m_vecTexList[0];
 }
-//!ÕâÖÖ·½·¨Ö»ÊÊÓÃÓÚËÄ¸ö¶¥µãµÄÃæÆ¬
+//!
 void	CTexList::CreateSpliteTexture(int iRow, int iColnum)
 {
 	m_wTexCount = iRow * iColnum;
@@ -2724,25 +2724,25 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	//switch(_iTextureID)
 	//{
 	//case 0:
-	//	m_vecTexName = "¼ÓÑª.tga";
+	//	m_vecTexName = ".tga";
 	//	break;
 	//case 1:
-	//	m_vecTexName = "¼õÑª.tga";
+	//	m_vecTexName = ".tga";
 	//	break;
 	//case 2:
-	//	m_vecTexName = "¼Ósp.tga";
+	//	m_vecTexName = "sp.tga";
 	//	break;
 	//case 3:
-	//	m_vecTexName = "¼õsp.tga";
+	//	m_vecTexName = "sp.tga";
 	//	break;
 	//case 4:
-	//	m_vecTexName = "¼ÓÑª¹ÖÊÞ.tga";
+	//	m_vecTexName = ".tga";
 	//	break;
 	//case 5:
-	//	m_vecTexName = "¼õÑª¹ÖÊÞ.tga";
+	//	m_vecTexName = ".tga";
 	//	break;
 	//case 6:
-	//	m_vecTexName = "±©.tga";
+	//	m_vecTexName = ".tga";
 	//	break;
 	//}
 	int id = pCResMagr->GetTextureID(m_vecTexName);
@@ -3002,9 +3002,9 @@ void	CEffectFont::RenderEffectFont(D3DXMATRIX* pmat)
 CScriptFile		CScriptFile::m_ctScript;
 CScriptFile::CScriptFile()
 {
-	// ÎÄ¼þÖ¸Õë
+	// 
 	m_fp = NULL;
-	// ÊÇ·ñÊÇ¶ÁÄ£Ê½
+	// 
 	m_bRead = true;
 	m_bOpen = false;
 	m_SCharacterAction = NULL;
@@ -3040,7 +3040,7 @@ bool CScriptFile::OpenFileRead( const char *filename )
 
 	return true;
 }
-// ¹Ø±ÕÎÄ¼þ
+// 
 void CScriptFile::CloseFile()
 {
 	if(m_bOpen)
@@ -3374,17 +3374,17 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 		goto end;
 	}
 
-	// »ñµÃ"½ÇÉ«¶¯×÷ÀàÐÍµÄ×î´óÖµ"(m_iMaxCharacterType),ÒÔ¼°"½ÇÉ«¶¯×÷ÀàÐÍµÄÓÐÐ§ÊýÄ¿"(m_iActualCharacterType);
+	// ""(m_iMaxCharacterType),""(m_iActualCharacterType);
 	while (!feof(fFile))
 	{
 		lIndex = 0;
 		_fgetts(tcsLine, 1023, fFile);
 		StringSkipCompartmentT(tcsLine, &lIndex, " ", 1);
-		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
 			continue;
-		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
 			continue;
-		if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü (ÔÚ¸ÃÎÄ±¾ÖÐÓÃÓÚ"½ÇÉ«ÀàÐÍµÄÒ»¸ö¶¯×÷"ÐÐµÄ¿ªÊ¼·ûºÅ)
+		if (tcsLine[lIndex] == _TEXT('\t')) // tab ("")
 			continue;
 
 		m_iActualCharacterType ++;
@@ -3410,25 +3410,25 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 	}
 	memset((void *)m_SCharacterAction, 0, sizeof(SChaAction) * m_iMaxCharacterType);
 
-	// »ñµÃµ¥¸ö½ÇÉ«ÐÅÏ¢
+	// 
 	fseek(fFile, 0, SEEK_SET);
 	while (!feof(fFile))
 	{
 		lIndex = 0;
 		_fgetts(tcsLine, 1023, fFile);
 		StringSkipCompartmentT(tcsLine, &lIndex, _TEXT(" "), 1);
-		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
 			continue;
-		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
 			continue;
-		if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü (ÔÚ¸ÃÎÄ±¾ÖÐÓÃÓÚ"½ÇÉ«ÀàÐÍµÄÒ»¸ö¶¯×÷ÐÐµÄ¿ªÊ¼·ûºÅ)
+		if (tcsLine[lIndex] == _TEXT('\t')) // tab (")
 			continue;
 
 		StringGetT(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5);
 		iCurType = _ttoi(tcsTemp) - 1;
 		if (iCurType < 0)
 			continue;
-		// ½ÇÉ«µÄ¶¯×÷ÊýÄ¿
+		// 
 		m_SCharacterAction[iCurType].m_SActionInfo = NULL;
 		m_SCharacterAction[iCurType].m_iActualActionNum = 0;
 		m_SCharacterAction[iCurType].m_iCharacterType = iCurType + 1;
@@ -3439,21 +3439,21 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 			lIndex = 0;
 			_fgetts(tcsLine, 1023, fFile);
 			StringSkipCompartmentT(tcsLine, &lIndex, " ", 1);
-			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
 				continue;
-			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
 				continue;
-			if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü
+			if (tcsLine[lIndex] == _TEXT('\t')) // tab
 			{
 				m_SCharacterAction[iCurType].m_iActualActionNum ++;
 
 				StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
 				StringGetT(tcsTemp, 1023, tcsLine, &lIndex, " ,\x09\x0a\x0d", 5);
 
-				// ÁÙÊ±´úÂë£¬ ÓÃÓÚÌáÊ¾¸üÐÂÎÄ¼þ°æ±¾¡£
+				//  
 				if (_ttoi(tcsTemp) < 1)
 				{
-					MessageBox(NULL, _TEXT("Çë¸üÐÂ .\\scripts\\CharacterAction.tx"), _TEXT("´íÎó"), 0);
+					MessageBox(NULL, _TEXT(" .\\scripts\\CharacterAction.tx"), _TEXT(""), 0);
 					goto end;
 				}
 				//
@@ -3476,7 +3476,7 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 		}
 		memset((void *)(m_SCharacterAction[iCurType].m_SActionInfo), 0, sizeof(ActionInfo) * m_SCharacterAction[iCurType].m_iMaxActionNum);
 
-		// µ¥¸ö¶¯×÷ÐÅÏ¢
+		// 
 		fseek(fFile, lFilePos, SEEK_SET);
 		while (!feof(fFile))
 		{
@@ -3484,11 +3484,11 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 			lIndex = 0;
 			_fgetts(tcsLine, 1023, fFile);
 			StringSkipCompartmentT(tcsLine, &lIndex, " ", 1);
-			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //»Ø³µ, »»ÐÐ
+			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
 				continue;
-			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // ×¢ÊÍ
+			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
 				continue;
-			if (tcsLine[lIndex] == _TEXT('\t')) // tab¼ü
+			if (tcsLine[lIndex] == _TEXT('\t')) // tab
 			{
 				StringSkipCompartmentT(tcsLine, &lIndex, "\x09", 1);
 				StringGetT(tcsTemp, 1023, tcsLine, &lIndex, " ,\x09\x0a\x0d", 5);
@@ -3508,7 +3508,7 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 
 				StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
 				lOldIndex = lIndex;
-				// ¹Ø¼üÖ¡ÊýÄ¿
+				// 
 				iCurKeyFrame = 0;
 				while (StringGetT(tcsTemp, 1023, tcsLine, &lIndex," ,\x09\x0a\x0d", 5))
 				{
@@ -3529,7 +3529,7 @@ bool	CScriptFile::InitAction(const char *ptcsFileName)
 				}
 
 				lIndex = lOldIndex;
-				// ¹Ø¼üÖ¡
+				// 
 				iCurKeyFrame = 0;
 				while (StringGetT(tcsTemp, 1023, tcsLine, &lIndex," ,\x09\x0a\x0d", 5))
 				{

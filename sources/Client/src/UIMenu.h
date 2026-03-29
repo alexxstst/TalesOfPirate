@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:²Ëµ¥
-// ×÷Õß:lh 2005-03-25
-// ×îºóĞŞ¸ÄÈÕÆÚ:
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2005-03-25
+// :
 //----------------------------------------------------------------------
 #pragma once
 #include "uiguidata.h"
@@ -12,7 +12,7 @@ namespace GUI
 
 class CMenu;
 
-// ²Ëµ¥Ìõ
+// 
 class CMenuItem : public CItemObj
 {
 public:
@@ -54,14 +54,14 @@ protected:
 
 };
 
-// ²Ëµ¥Àà
+// 
 class CMenu : public CGuiData
 {
 public:
-	enum eShowStyle		// ²Ëµ¥ÏûÊ§·½Ê½
+	enum eShowStyle		// 
 	{
-		enumMouseFollow,	// Àë¿ªÊ±ÏûÊ§
-		enumMouseClick,		// µã»÷Ê±ÏûÊ§
+		enumMouseFollow,	// 
+		enumMouseClick,		// 
 	};
 
 	CMenu( CForm* pForm );
@@ -99,20 +99,20 @@ public:
 	CFramePic*			GetBkgImage()				{ return _pImage;		}
 	CMenuItem*			GetSelectMenu()				{ return _pSelectMenu;	}
 
-public:	// ÊÂ¼ş
-	GuiEvent			evtSelectChange;			// Ñ¡Ôñ·¢ÉúÁË±ä»¯
-	GuiMouseEvent		evtListMouseDown;			// Êó±êÔÚÎÄ×ÖÇø°´ÏÂ
+public:	// 
+	GuiEvent			evtSelectChange;			// 
+	GuiMouseEvent		evtListMouseDown;			// 
 
 protected:
-	CFramePic*			_pImage;		// ±³¾°
-	CGuiPic*			_pSelect;		// Ñ¡ÔñÌõ
+	CFramePic*			_pImage;		// 
+	CGuiPic*			_pSelect;		// 
 
 	typedef std::vector<CMenuItem*>	menus;
-	menus				_menus;			// ËùÓĞ²Ëµ¥Ïî
+	menus				_menus;			// 
 
-	int					_nRowSpace;		// ĞĞ¾à
+	int					_nRowSpace;		// 
 
-	int					_nLeftMargin;	// ÓëÖÜÎ§±ß¿òµÄ¾àÀë
+	int					_nLeftMargin;	// 
 	int					_nTopMargin;
 	int					_nRightMargin;
 	int					_nBottomMargin;
@@ -123,18 +123,18 @@ private:
 	void				_MenusClear();
 
 private:
-	CMenuItem*			_pSelectMenu;	// µ±Ç°Ñ¡ÔñµÄ²Ëµ¥Ìõ
+	CMenuItem*			_pSelectMenu;	// 
 
 	int		_nStartX, _nStartX2;
 	int		_nStartY, _nStartY2;
 
-	// ÓÃÓÚÄÚ´æ¹ÜÀí
+	// 
 	typedef std::vector<CMenu*>	allmenus;
 	static allmenus		_allmenus;
 
 };
 
-// ÄÚÁªº¯Êı
+// 
 inline void CMenu::SetMargin( int left, int top, int right, int bottom ) 
 { 
 	_nLeftMargin = left;

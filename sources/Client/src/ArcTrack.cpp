@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "arctrack.h"
 #include "GameApp.h"
 

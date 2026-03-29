@@ -1,4 +1,4 @@
-//
+﻿//
 #pragma once
 
 #if(!defined USE_DX_VERSION)

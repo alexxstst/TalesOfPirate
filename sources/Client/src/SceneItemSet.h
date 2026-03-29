@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TableData.h"
 class CSceneItemInfo : public CRawDataInfo
@@ -17,12 +17,12 @@ public:
 	int		nAttachEffectID;
     int     nCharacterID;
     BYTE    btWeaponType;  
-    //  ��������
-    //  0   ���ֽ�ս����(ͬͽ�ֹ���)	
-    //  1   ˫�ֽ�ս����	
-    //  2   �ֳ����ѽ�ս����	
-    //  3   ���ֳ�ǹе����	
-    //  4   ˫�ֳֹ���������
+    //  
+    //  0   ()	
+    //  1   	
+    //  2   	
+    //  3   	
+    //  4   
 
     //int     nShipLinkID;
     //int     nItemLinkID;
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-	static CSceneItemSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CSceneItemSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

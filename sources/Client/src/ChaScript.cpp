@@ -1,18 +1,18 @@
-#include "stdafx.h"
-#include "caLua.h"
+﻿#include "stdafx.h"
 #include "script.h"
 #include "scene.h"
 #include "GameApp.h"
 #include "Character.h"
-//#include "SelChaScene.h"
 #include "CharacterRecord.h"
+#include <LuaBridge.h>
+
 
 int GetChaPhotoTexID(int nTypeID)
 {
 	CChaRecord *pInfo = GetChaRecordInfo(nTypeID);
     if(pInfo)
 	{
-    	char szPhoto[80] = { 0 }; 
+    	char szPhoto[80] = { 0 };
 		sprintf(szPhoto, "texture/photo/%s.bmp", pInfo->szIconName);
 		return GetTextureID(szPhoto);
 	}
@@ -59,10 +59,11 @@ int CH_PlayPos( int id, int pose, int posetype )
 //---------------------------------------------------------------------------
 // ScriptRegedit
 //---------------------------------------------------------------------------
-void MPInitLua_Cha()
+void MPInitLua_Cha(lua_State* L)
 {
-	CLU_RegisterFunction("CH_Create", "int", "int,int", CLU_CDECL, CLU_CAST(CH_Create));	
-	CLU_RegisterFunction("CH_SetPos", "int", "int,int,int", CLU_CDECL, CLU_CAST(CH_SetPos));	
-	CLU_RegisterFunction("CH_SetYaw", "int", "int,int", CLU_CDECL, CLU_CAST(CH_SetYaw));	
-	CLU_RegisterFunction("CH_PlayPos", "int", "int,int,int", CLU_CDECL, CLU_CAST(CH_PlayPos));	
+	luabridge::getGlobalNamespace(L)
+		LUABRIDGE_REGISTER_FUNC(CH_Create)
+		LUABRIDGE_REGISTER_FUNC(CH_SetPos)
+		LUABRIDGE_REGISTER_FUNC(CH_SetYaw)
+		LUABRIDGE_REGISTER_FUNC(CH_PlayPos);
 }

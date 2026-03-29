@@ -1,20 +1,20 @@
-#pragma once
+ï»¿#pragma once
 
 #include "NetIF.h"
 #include "PacketCmd.h"
 
 /****************************************************************
-		·¢ËÍPacket´ò°üº¯ÊıÉùÃ÷¶Î
-		Ìí¼Ó:·şÎñÆ÷¿ª·¢ÈËÔ±
-		ĞŞ¸Ä:·şÎñÆ÷¿ª·¢ÈËÔ±
-		µ÷ÓÃ:¿Í»§¶Ë¿ª·¢ÈËÔ±
-		´úÂëÌåÇëÌîÈëÎÄ¼ş"NetPkXXX.cpp"(×¢Òâ:ÓĞPk,ÒâÎªÍøÂç°ü´¦ÀíµÄcppÎÄ¼ş)
+		Packet
+		:
+		:
+		:
+		"NetPkXXX.cpp"(:Pk,cpp)
 *****************************************************************/
-extern void	CM_GUILD_PUTNAME(bool confirm,cChar *guildname,cChar *passwd);	//·¢ËÍ´´½¨¹«»áµÄÃû×Ö
-extern void CM_GUILD_TRYFOR(uLong	guildid);	//ÉêÇë¼ÓÈë¹«»á
-extern void CM_GUILD_TRYFORCFM(bool confirm);	//È·ÈÏ¼ÓÈëconfirm =true;
-extern void CM_GUILD_LISTTRYPLAYER();			//¹ÜÀíCMD_CM_GUILD_LISTTRYMEMBER
-extern void CM_GUILD_APPROVE(uLong	chaid);		//¹ÜÀíÈËÔ±Åú×¼ÉêÇëÈË¼ÓÈë
+extern void	CM_GUILD_PUTNAME(bool confirm,cChar *guildname,cChar *passwd);	//
+extern void CM_GUILD_TRYFOR(uLong	guildid);	//
+extern void CM_GUILD_TRYFORCFM(bool confirm);	//confirm =true;
+extern void CM_GUILD_LISTTRYPLAYER();			//CMD_CM_GUILD_LISTTRYMEMBER
+extern void CM_GUILD_APPROVE(uLong	chaid);		//
 extern void CM_GUILD_REJECT(uLong	chaid);
 extern void CM_GUILD_KICK(uLong		chaid);
 extern void CM_GUILD_LEAVE();
@@ -26,11 +26,11 @@ extern void CM_GUILD_LEIZHU( BYTE byLevel, DWORD dwMoney );
 
 
 /****************************************************************
-		½ÓÊÕPacketºóµ÷ÓÃµÄ±¾µØ½Ó¿ÚÉùÃ÷¶Î
-		Ìí¼Ó:·şÎñÆ÷¿ª·¢ÈËÔ±
-		ĞŞ¸Ä:¿Í»§¶Ë¿ª·¢ÈËÔ±
-		µ÷ÓÃ:¡°½ÓÊÕµÄPacket½âÎöº¯ÊıÉùÃ÷¶Î¡±¶ÔÓ¦º¯Êı
-		´úÂëÌåÇëÌîÈëÎÄ¼ş"NetXXX.cpp"(×¢Òâ:Ã»ÓĞPk,Ïà¶ÔÓÚNetPkXXX,Ã»ÓĞ°ü´¦Àí)
+		Packet
+		:
+		:
+		:Packet
+		"NetXXX.cpp"(:Pk,NetPkXXX,)
 *****************************************************************/
 extern void NetMC_GUILD_GETNAME();
 extern void NetMC_LISTGUILD_BEGIN();
@@ -61,11 +61,11 @@ extern void NetMC_GUILD_CHALLINFO( const NET_GUILD_CHALLINFO& Info );
 
 
 /****************************************************************
-		½ÓÊÕµÄPacket½âÎöº¯ÊıÉùÃ÷¶Î
-		Ìí¼Ó:·şÎñÆ÷¿ª·¢ÈËÔ±
-		ĞŞ¸Ä:·şÎñÆ÷¿ª·¢ÈËÔ±
-		µ÷ÓÃ:NetIF::HandlePacketMessage
-		´úÂëÌåÇëÌîÈëÎÄ¼ş"NetPkXXX.cpp"(×¢Òâ:ÓĞPk,ÒâÎªÍøÂç°ü´¦ÀíµÄcppÎÄ¼ş)
+		Packet
+		:
+		:
+		:NetIF::HandlePacketMessage
+		"NetPkXXX.cpp"(:Pk,cpp)
 *****************************************************************/
 extern BOOL	MC_GUILD_GETNAME(LPRPACKET pk);
 extern bool	g_listguild_begin;

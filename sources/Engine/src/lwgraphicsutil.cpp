@@ -1,4 +1,4 @@
-//
+ï»¿//
 #include "stdafx.h"
 #include "lwgraphicsutil.h"
 
@@ -844,7 +844,7 @@ __ret:
 
 LW_RESULT _ConvertMeshDataIB(void** data, DWORD* size, DWORD* stride, const lwMeshInfo* info)
 {
-    // Ä¿Ç°ÓÃD3DFMT_INDEX16
+    // D3DFMT_INDEX16
     WORD* buf = LW_NEW(WORD[info->index_num]);
 
     for(DWORD i = 0; i < info->index_num; i++)

@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------
 //	2005.4.27	Arcol	create this file
 //------------------------------------------------------------------------
 
@@ -419,7 +419,7 @@ void CUIGuildMgr::_OnClickPrevLogs(CGuiData *pSender, int x, int y, DWORD key){
 void CUIGuildMgr::ShowForm()
 {
 	RefreshForm();
-	m_pGuildMgrForm->nTag = 1;		// nTag==0ʱ���ڿ�ݼ�����ʾ
+	m_pGuildMgrForm->nTag = 1;		// nTag==0
 	m_pGuildMgrForm->Show();
 }
 
@@ -631,7 +631,7 @@ void CUIGuildMgr::_OnClickSelectPage(CGuiData *pSender)
 	m_pbtnMemberPerms->SetIsShow(true);
 
 	int n=m_ppgeClass->GetIndex();
-	if (n==0)	//��Ա�б�
+	if (n==0)	//
 	{
 		// Members page
 		m_pbtnMemberKick->SetIsEnabled(true);
@@ -642,14 +642,14 @@ void CUIGuildMgr::_OnClickSelectPage(CGuiData *pSender)
 		CTextButton* chkSortClass = dynamic_cast<CTextButton*>(m_pGuildMgrForm->Find("chkSortClass"));
 		CTextButton* chkSortLevel = dynamic_cast<CTextButton*>(m_pGuildMgrForm->Find("chkSortLevel"));
 	}
-	else if (n==1)	//�������б�
+	else if (n==1)	//
 	{
 		//Apply page
 		m_pbtnMemberRecruit->SetIsEnabled(true);
 		m_pbtnMemberRefuse->SetIsEnabled(true);
 		m_pbtnMemberKick->SetIsEnabled(false);
 	}
-	else if (n==2)	//�������б�
+	else if (n==2)	//
 	{
 		//guildbank
 		m_pbtnMemberRecruit->SetIsEnabled(false);

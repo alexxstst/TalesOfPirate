@@ -1,9 +1,9 @@
-//----------------------------------------------------------------------
-//	2005/4/13	Arcol	��չ�޸ı������ӿڣ�UI_SetFormStyleEx
+﻿//----------------------------------------------------------------------
+//	2005/4/13	Arcol	Extended and added interface: UI_SetFormStyleEx
 //----------------------------------------------------------------------
 #include "stdafx.h"
-#include "caLua.h"
 #include "script.h"
+#include <LuaBridge.h>
 #include "uiguidata.h"
 #include "UIScript.h"
 #include "UIEdit.h"
@@ -43,7 +43,7 @@
 #include "uiequipform.h"
 #include "uirichedit.h"
 
-// Crypto++ — шифрование UI таблиц (AES-128-GCM)
+// Crypto++   UI  (AES-128-GCM)
 #include "cryptlib.h"
 #include "filters.h"
 #include "files.h"
@@ -51,7 +51,7 @@
 #include "aes.h"
 #include <fstream>
 
-#include <Windows.h>  //Lark.li 
+#include <Windows.h>  //Lark.li
 
 using namespace GUI;
 
@@ -79,14 +79,9 @@ static CList* GetList( int list_id )
 //---------------------------------------------------------------------------
 // UI_Script
 //---------------------------------------------------------------------------
-int UI_LoadScript( char * file)
+int UI_LoadScript( const std::string& file)
 {
-	CLU_LoadScript(file, 0); 
-	//extern  lua_State *L;
-
-	//lua_dofile( L, file );
-	//lua_pcall(L, 0, 0, 0);
-	
+	LoadLuaScript(g_LuaState, file.c_str());
 	return R_OK;
 }
 
@@ -137,7 +132,7 @@ enum eHotKey
 	SHIFT_KEY
 };
 
-int UI_CreateCompent( int formId, int type, char *pszName, int w, int h, int x, int y )
+int UI_CreateCompent( int formId, int type, const std::string& pszName, int w, int h, int x, int y )
 {
 	CForm *f = dynamic_cast<CForm*>(CGuiData::GetGui( formId ));
 	if( !f ) return R_FAIL;
@@ -178,7 +173,7 @@ int UI_CreateCompent( int formId, int type, char *pszName, int w, int h, int x, 
 	default: return R_FAIL;
 	}
 
-	g->SetName( pszName );
+	g->SetName( pszName.c_str() );
 	g->SetPos( x, y );
 	g->SetSize( w, h );
 	return g->GetID();
@@ -248,10 +243,10 @@ int UI_SwitchTemplete( int nTempleteNo )
 	return R_FAIL;
 }
 
-int UI_CreateForm(char *pszName, int isModal, int w, int h, int x, int y, int isTitle, int isShowFrame )
+int UI_CreateForm(const std::string& pszName, int isModal, int w, int h, int x, int y, int isTitle, int isShowFrame )
 {
 	CForm *f = new CForm();
-	f->SetName( pszName );
+	f->SetName( pszName.c_str() );
 	f->SetSize( w, h );
 	f->SetPos( x, y );
 	f->GetFrameImage()->SetIsTitle( isTitle!=0 ? true: false );
@@ -304,9 +299,13 @@ int UI_SetIsDrag( int id, int isDrag )
 	return R_OK;
 }
 
-int UI_LoadFormImage( int id, char* client, int cw, int ch, int tx, int ty, char * file, int w, int h )
+int UI_LoadFormImage( int id, const std::string& client_in, int cw, int ch, int tx, int ty, const std::string& file_in, int w, int h )
 {
-	
+	char client[260];
+	char framefile[260];
+	strncpy(client, client_in.c_str(), sizeof(client) - 1); client[sizeof(client) - 1] = 0;
+	strncpy(framefile, file_in.c_str(), sizeof(framefile) - 1); framefile[sizeof(framefile) - 1] = 0;
+
 	std::string s(client);
 	// Check the type of file
 	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
@@ -322,9 +321,9 @@ int UI_LoadFormImage( int id, char* client, int cw, int ch, int tx, int ty, char
 	// Change file extension and send to UIRender for loading.
 
 	
-	if (strcmp(client, file)) {
-		if (strlen(file) > 4) {
-			std::string s2(file);
+	if (strcmp(client, framefile)) {
+		if (strlen(framefile) > 4) {
+			std::string s2(framefile);
 			// Check the type of file
 			if (s2.find(".png") != std::string::npos || s2.find(".tga") != std::string::npos || s2.find(".bmp") != std::string::npos ||
 				s2.find(".dds") != std::string::npos) {
@@ -333,22 +332,22 @@ int UI_LoadFormImage( int id, char* client, int cw, int ch, int tx, int ty, char
 			// Quickest way to check if file exists. If it doesn't, encrypt the original file.
 			struct stat buffer2;
 			if (stat(s2.c_str(), &buffer2) != 0) {
-				CryptImage(true, file, NULL);
+				CryptImage(true, framefile, NULL);
 			}
-			strcpy(file, s2.c_str());
+			strcpy(framefile, s2.c_str());
 			// Change file extension and send to UIRender for loading.
-			size_t len2 = strlen(file);
-			file[len2 - 1] = 'd';
-			file[len2 - 2] = 's';
-			file[len2 - 3] = 'w';
+			size_t len2 = strlen(framefile);
+			framefile[len2 - 1] = 'd';
+			framefile[len2 - 2] = 's';
+			framefile[len2 - 3] = 'w';
 		}
 
 	}
 	else {
-		size_t len3 = strlen(file);
-		file[len3 - 1] = 'd';
-		file[len3 - 2] = 's';
-		file[len3 - 3] = 'w';
+		size_t len3 = strlen(framefile);
+		framefile[len3 - 1] = 'd';
+		framefile[len3 - 2] = 's';
+		framefile[len3 - 3] = 'w';
 	}
 
 
@@ -358,11 +357,11 @@ int UI_LoadFormImage( int id, char* client, int cw, int ch, int tx, int ty, char
 	CForm *f = dynamic_cast<CForm*>(p);
 	if( !f ) return R_FAIL;
 
-	f->GetFrameImage()->LoadImage( client, cw, ch, tx, ty, file, w, h );
+	f->GetFrameImage()->LoadImage( client, cw, ch, tx, ty, framefile, w, h );
 	return R_OK;
 }
 
-int UI_LoadFrameImage( int id, const char* client, int cw, int ch, int tx, int ty, const char * file, int w, int h )
+int UI_LoadFrameImage( int id, const std::string& client, int cw, int ch, int tx, int ty, const std::string& file, int w, int h )
 {
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
@@ -370,7 +369,7 @@ int UI_LoadFrameImage( int id, const char* client, int cw, int ch, int tx, int t
 	CFrameImage *f = dynamic_cast<CFrameImage*>(p);
 	if( !f ) return R_FAIL;
 
-	f->GetFrameImage()->LoadImage( client, cw, ch, tx, ty, file, w, h );
+	f->GetFrameImage()->LoadImage( client.c_str(), cw, ch, tx, ty, file.c_str(), w, h );
 	return R_OK;
 }
 
@@ -386,27 +385,27 @@ int UI_ShowForm(int id, int show)
 	return R_OK;
 }
 
-int UI_CreateListView( int formId, char *pszName, int w, int h, int x, int y, int col, int style )
+int UI_CreateListView( int formId, const std::string& pszName, int w, int h, int x, int y, int col, int style )
 {
 	CForm *f = dynamic_cast<CForm*>(CGuiData::GetGui( formId ));
 	if( !f ) return R_FAIL;
 
 	CListView * g = new CListView(*f, col, (CListView::eStyle)style);
-	g->SetName( pszName );
+	g->SetName( pszName.c_str() );
 	g->SetPos( x, y );
 	g->SetSize( w, h );
 
 	return g->GetID();
 }
 
-int UI_ListViewSetTitle( int listviewid, int index, int width, const char* titleimage, int w, int h, int sx, int sy )
+int UI_ListViewSetTitle( int listviewid, int index, int width, const std::string& titleimage, int w, int h, int sx, int sy )
 {
 	CListView *f = dynamic_cast<CListView*>(CGuiData::GetGui( listviewid ));
 	if( !f ) return R_FAIL;
 
 	f->GetTitle()->SetColumnWidth( index, width );
 	CImage* p = dynamic_cast<CImage*>(f->GetColumnImage(index));
-	if( p ) p->GetImage()->LoadImage( titleimage, w, h, 0, sx, sy );
+	if( p ) p->GetImage()->LoadImage( titleimage.c_str(), w, h, 0, sx, sy );
 
 	CListItems *pItem = f->GetList()->GetItems();
 	pItem->SetColumnWidth( index, width );
@@ -433,7 +432,7 @@ int UI_SetListIsMouseFollow( int list, int IsFollow )
     return R_FAIL;
 }
 
-int UI_SetListFontColor( int list, int nBackColor, int nSelectColor )
+int UI_SetListFontColor( int list, unsigned int nBackColor, unsigned int nSelectColor )
 {	
 	CList* l = GetList( list );
 	if( l )
@@ -445,24 +444,24 @@ int UI_SetListFontColor( int list, int nBackColor, int nSelectColor )
     return R_FAIL;
 }
 
-int UI_LoadListFixSelect( int id, const char* imagefile, int w, int h, int sx, int sy )
+int UI_LoadListFixSelect( int id, const std::string& imagefile, int w, int h, int sx, int sy )
 {
 	CFixList *f = dynamic_cast<CFixList*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
 
-	f->GetSelectImage()->LoadImage(imagefile, w, h, 0, sx, sy);
+	f->GetSelectImage()->LoadImage(imagefile.c_str(), w, h, 0, sx, sy);
 	return R_OK;
 }
 
-// װ��CheckFixList��Checkͼ��
-int UI_LoadCheckFixListCheck( int id, const char* checkimage, int cw, int ch, int csx, int csy
-							 , const char* uncheckimage, int uw, int uh, int usx, int usy )
+// Load CheckFixList check images
+int UI_LoadCheckFixListCheck( int id, const std::string& checkimage, int cw, int ch, int csx, int csy
+							 , const std::string& uncheckimage, int uw, int uh, int usx, int usy )
 {
 	CCheckFixList *f = dynamic_cast<CCheckFixList*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
 
-	f->GetCheckImage()->LoadImage(checkimage, cw, ch, 0, csx, csy);
-	f->GetUnCheckImage()->LoadImage(uncheckimage, uw, uh, 0, usx, usy);
+	f->GetCheckImage()->LoadImage(checkimage.c_str(), cw, ch, 0, csx, csy);
+	f->GetUnCheckImage()->LoadImage(uncheckimage.c_str(), uw, uh, 0, usx, usy);
 	return R_OK;
 }
 
@@ -577,7 +576,7 @@ int UI_GetScrollObj( int id, int scrolltype )
 	return R_FAIL;
 }
 
-int UI_LoadComboImage( int id, char* edit, int ew, int eh, int ex, int ey, char* button, int bw, int bh, int bx, int by, int isHorizontal )
+int UI_LoadComboImage( int id, const std::string& edit, int ew, int eh, int ex, int ey, const std::string& button, int bw, int bh, int bx, int by, int isHorizontal )
 {
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
@@ -585,9 +584,9 @@ int UI_LoadComboImage( int id, char* edit, int ew, int eh, int ex, int ey, char*
 	CCombo * combo = dynamic_cast<CCombo*>(p);
 	if( !combo ) return R_FAIL;
 
-	combo->GetEdit()->GetImage()->LoadImage( edit, ew, eh, 0, ex, ey );
+	combo->GetEdit()->GetImage()->LoadImage( edit.c_str(), ew, eh, 0, ex, ey );
 	combo->GetEdit()->SetSize(ew,eh);
-	combo->GetButton()->LoadImage( button, bw, bh, bx, by, isHorizontal!=0 );
+	combo->GetButton()->LoadImage( button.c_str(), bw, bh, bx, by, isHorizontal!=0 );
 	combo->GetButton()->SetSize(bw,bh);
 	return R_OK;
 }
@@ -601,7 +600,7 @@ int UI_ComboSetStyle( int id, int style )
 	return R_OK;
 }
 
-int UI_ComboSetTextColor( int id, int color )
+int UI_ComboSetTextColor( int id, unsigned int color )
 {
 	CCombo * combo = dynamic_cast<CCombo*>(CGuiData::GetGui( id ));
 	if( !combo ) return R_FAIL;
@@ -610,8 +609,11 @@ int UI_ComboSetTextColor( int id, int color )
 	return R_OK;
 }
 
-int UI_LoadButtonImage( int id, char* file, int w, int h, int sx, int sy, int isHorizontal )
+int UI_LoadButtonImage( int id, const std::string& file, int w, int h, int sx, int sy, int isHorizontal )
 {
+	char buf[260];
+	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+
 	std::string s(file);
 	// Check the type of file
 	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
@@ -623,7 +625,7 @@ int UI_LoadButtonImage( int id, char* file, int w, int h, int sx, int sy, int is
 	if (stat(s.c_str(), &buffer) != 0) {
 		CryptImage(true, file, NULL);
 	}
-	strcpy(file, s.c_str());
+	strcpy(buf, s.c_str());
 	// Change file extension and send to UIRender for loading.
 
 	CGuiData* p = CGuiData::GetGui( id );
@@ -632,12 +634,12 @@ int UI_LoadButtonImage( int id, char* file, int w, int h, int sx, int sy, int is
 	CTextButton * b = dynamic_cast<CTextButton*>(p);
 	if( !b ) return R_FAIL;
 
-	b->LoadImage( file, w, h, sx, sy, isHorizontal!=0 ? true: false );
+	b->LoadImage( buf, w, h, sx, sy, isHorizontal!=0 ? true: false );
 	//b->GetImage()->TintColour( 131, 188, 225 );
 	return R_OK;
 }
 
-int UI_LoadImageUnencrypted(int id, char* file, int frame, int w, int h, int tx, int ty)
+int UI_LoadImageUnencrypted(int id, const std::string& file, int frame, int w, int h, int tx, int ty)
 {
 	CGuiData* p = CGuiData::GetGui(id);
 	if (!p) return R_FAIL;
@@ -645,7 +647,7 @@ int UI_LoadImageUnencrypted(int id, char* file, int frame, int w, int h, int tx,
 	CGuiPic* img = p->GetImage();
 	if (!img) return R_FAIL;
 
-	if (img->LoadImage(file, w, h, frame, tx, ty)) {
+	if (img->LoadImage(file.c_str(), w, h, frame, tx, ty)) {
 		//img->TintColour( 131, 188, 225 );
 		return R_OK;
 	}
@@ -653,8 +655,11 @@ int UI_LoadImageUnencrypted(int id, char* file, int frame, int w, int h, int tx,
 }
 
 
-int UI_LoadImage( int id, char * file, int frame, int w, int h, int tx, int ty )
+int UI_LoadImage( int id, const std::string& file, int frame, int w, int h, int tx, int ty )
 {
+	char buf[260];
+	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+
 	std::string s(file);
 
 	if (s.empty())
@@ -672,30 +677,33 @@ int UI_LoadImage( int id, char * file, int frame, int w, int h, int tx, int ty )
 		if (stat(s.c_str(), &buffer) != 0) {
 			CryptImage(true, file, NULL);
 		}
-		strcpy(file, s.c_str());
+		strcpy(buf, s.c_str());
 	// Change file extension and send to UIRender for loading.
-		size_t len = strlen(file);
-		file[len - 1] = 'd';
-		file[len - 2] = 's';
-		file[len - 3] = 'w';
+		size_t len = strlen(buf);
+		buf[len - 1] = 'd';
+		buf[len - 2] = 's';
+		buf[len - 3] = 'w';
 		CGuiData* p = CGuiData::GetGui(id);
 		if (!p) return R_FAIL;
 
 		CGuiPic* img = p->GetImage();
 		if (!img) return R_FAIL;
 
-		if (img->LoadImage(file, w, h, frame, tx, ty)) {
+		if (img->LoadImage(buf, w, h, frame, tx, ty)) {
 			//img->TintColour( 131, 188, 225 );
 			return R_OK;
 		}
 		return R_FAIL;
-	
-	
+
+
 }
 
-// װ�ش�������ͼ��
-int UI_LoadScaleImage( int id, char * file, int frame, int w, int h, int tx, int ty, float scalex, float scaley )
+// Load scaled image
+int UI_LoadScaleImage( int id, const std::string& file, int frame, int w, int h, int tx, int ty, float scalex, float scaley )
 {
+	char buf[260];
+	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+
 	std::string s(file);
 	// Check the type of file
 	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
@@ -707,21 +715,21 @@ int UI_LoadScaleImage( int id, char * file, int frame, int w, int h, int tx, int
 	if (stat(s.c_str(), &buffer) != 0) {
 		CryptImage(true, file, NULL);
 	}
-	strcpy(file, s.c_str());
+	strcpy(buf, s.c_str());
 	// Change file extension and send to UIRender for loading.
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
-	
+
 	CGuiPic* img = p->GetImage();
 	if( !img ) return R_FAIL;
 
-	
-	if( img->LoadImage( file, w, h, frame, tx, ty, scalex, scaley ) ) return R_OK;
+
+	if( img->LoadImage( buf, w, h, frame, tx, ty, scalex, scaley ) ) return R_OK;
 
 	return R_FAIL;
 }
-// װ�ش�������ͼ��
-int UI_LoadFlashScaleImage( int id,int flash , char * file, int frame, int w, int h, int tx, int ty, float scalex, float scaley )
+// Load flash scaled image
+int UI_LoadFlashScaleImage( int id,int flash , const std::string& file, int frame, int w, int h, int tx, int ty, float scalex, float scaley )
 {
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
@@ -733,7 +741,7 @@ int UI_LoadFlashScaleImage( int id,int flash , char * file, int frame, int w, in
 	CGuiPic* img = p->GetImage();
 	if( !img ) return R_FAIL;
 	
-	if( img->LoadImage( file, w, h, frame, tx, ty, scalex, scaley ) ) return R_OK;
+	if( img->LoadImage( file.c_str(), w, h, frame, tx, ty, scalex, scaley ) ) return R_OK;
 	return R_FAIL;
 }
 
@@ -824,7 +832,7 @@ int UI_SetButtonModalResult( int id, int modal )
     return R_OK;
 }
 
-int UI_SetLabelExFont( int id, int nFontIndex, int IsShadow, int dwShadowColor )
+int UI_SetLabelExFont( int id, int nFontIndex, int IsShadow, unsigned int dwShadowColor )
 {
 	CLabelEx* g = dynamic_cast<CLabelEx*>(CGuiData::GetGui( id ));
 	if( !g ) return R_FAIL;
@@ -835,7 +843,7 @@ int UI_SetLabelExFont( int id, int nFontIndex, int IsShadow, int dwShadowColor )
 	return R_OK;
 }
 
-int UI_SetTitleFont( int id, int nFontIndex, int color, int h )
+int UI_SetTitleFont( int id, int nFontIndex, unsigned int color, int h )
 {
 	CTitle* g = dynamic_cast<CTitle*>(CGuiData::GetGui( id ));
 	if( !g ) return R_FAIL;
@@ -846,12 +854,12 @@ int UI_SetTitleFont( int id, int nFontIndex, int color, int h )
 	return R_OK;
 }
 
-int UI_ButtonSetHint( int id, char* hint )
+int UI_ButtonSetHint( int id, const std::string& hint )
 {
 	CTextButton * b = dynamic_cast<CTextButton*>( CGuiData::GetGui( id ) );
 	if( !b ) return R_FAIL;
 
-	b->SetHint( hint );
+	b->SetHint( hint.c_str() );
 	return R_OK;
 }
 
@@ -868,12 +876,12 @@ int UI_SetMaxImage( int id, int max )
     return R_OK;
 }
 
-int UI_SetHint( int id, char* hint )
+int UI_SetHint( int id, const std::string& hint )
 {
     CGuiData* t = CGuiData::GetGui( id );
     if( !t ) return R_FAIL;
 
-    t->SetHint( hint );
+    t->SetHint( hint.c_str() );
     return R_OK;
 }
 
@@ -889,12 +897,12 @@ int UI_SetProgressStyle( int id, int style )
 	return R_OK;
 }
 
-int UI_AddListText( int id, char *text )
+int UI_AddListText( int id, const std::string& text )
 {
 	CList* s = GetList( id );
 	if( !s ) return R_FAIL;
 	
-	s->Add( text );
+	s->Add( text.c_str() );
 	return R_OK;
 }
 
@@ -916,14 +924,14 @@ int UI_ListSetItemImageMargin( int id,  int left, int top )
 	return R_OK;
 }
 
-int UI_AddListBarText( int id, char *text, float prgress )
+int UI_AddListBarText( int id, const std::string& text, float prgress )
 {
 	CList* s = GetList( id );
 	if( !s ) return R_FAIL;
 
 	CItemRow* item = s->GetItems()->NewItem();
 	CItemBar* bar = new CItemBar;
-	bar->SetString( text );
+	bar->SetString( text.c_str() );
 	item->SetBegin( bar );
 	bar->SetScale( prgress );
 	return R_OK;
@@ -960,7 +968,7 @@ int UI_SetEditEnterButton( int nEditID, int nButtonID )
 	return R_OK;
 }
 
-int UI_SetEditCursorColor( int nEditID, int color )
+int UI_SetEditCursorColor( int nEditID, unsigned int color )
 {
 	CEdit* t = dynamic_cast<CEdit*>(CGuiData::GetGui( nEditID ));
 	if( !t ) return R_FAIL;
@@ -989,7 +997,7 @@ int UI_SetEditMaxNumVisible( int id, int num )
 }
 
 
-int UI_SetTextColor( int id, int color )
+int UI_SetTextColor( int id, unsigned int color )
 {
 	CGuiData* t = CGuiData::GetGui( id );
 	if( !t ) return R_FAIL;
@@ -1033,7 +1041,7 @@ int UI_SetListRowHeight( int id, int height )
 	return R_FAIL;
 }
 
-int UI_ListLoadSelectImage( int id, char* file, int w, int h, int sx, int sy )
+int UI_ListLoadSelectImage( int id, const std::string& file, int w, int h, int sx, int sy )
 {
 	CGuiData* p = CGuiData::GetGui( id );
 	if( !p ) return R_FAIL;
@@ -1048,40 +1056,40 @@ int UI_ListLoadSelectImage( int id, char* file, int w, int h, int sx, int sy )
 	if( !lst ) lst = dynamic_cast<CList*>(p);
 	if( lst ) 
 	{
-		lst->GetItems()->GetSelect()->GetImage()->LoadImage( file, w, h, 0, sx, sy, 1.0f, 1.0f );
+		lst->GetItems()->GetSelect()->GetImage()->LoadImage( file.c_str(), w, h, 0, sx, sy, 1.0f, 1.0f );
 		return R_OK;
 	}
 
     CSkillList* skill = dynamic_cast<CSkillList*>(p);
-    if( skill ) 
+    if( skill )
     {
-        skill->GetSelect()->LoadImage ( file, w, h, 0, sx, sy, 1.0f, 1.0f );
+        skill->GetSelect()->LoadImage ( file.c_str(), w, h, 0, sx, sy, 1.0f, 1.0f );
         return R_OK;
     }
     return R_FAIL;
 }
 
-int UI_LoadSkillListButtonImage( int id, char* file, int w, int h, int sx, int sy, int item_w, int item_h )
+int UI_LoadSkillListButtonImage( int id, const std::string& file, int w, int h, int sx, int sy, int item_w, int item_h )
 {
 	CSkillList* p = dynamic_cast<CSkillList*>( CGuiData::GetGui( id ) );
 	if( !p ) return R_FAIL;
 
 	CGuiPic* pic = p->GetButtonImage();
-    pic->LoadImage( file, w, h, 0, sx, sy, 1.0f, 1.0f );
-    pic->LoadImage( file, w, h, 1, sx + w, sy, 1.0f, 1.0f );
-    pic->LoadImage( file, w, h, 2, sx + 2 * w, sy, 1.0f, 1.0f );
-    pic->LoadImage( file, w, h, 3, sx + 3 * w, sy, 1.0f, 1.0f );
+    pic->LoadImage( file.c_str(), w, h, 0, sx, sy, 1.0f, 1.0f );
+    pic->LoadImage( file.c_str(), w, h, 1, sx + w, sy, 1.0f, 1.0f );
+    pic->LoadImage( file.c_str(), w, h, 2, sx + 2 * w, sy, 1.0f, 1.0f );
+    pic->LoadImage( file.c_str(), w, h, 3, sx + 3 * w, sy, 1.0f, 1.0f );
 
 	pic->SetScale( item_w, item_h );
 	return R_OK;
 }
 
-int UI_LoadListItemImage( int id, char* file, int w, int h, int sx, int sy, int item_w, int item_h )
+int UI_LoadListItemImage( int id, const std::string& file, int w, int h, int sx, int sy, int item_w, int item_h )
 {
 	CList* lst = GetList( id );
 	if( !lst ) return R_FAIL;
 
-	lst->GetItemImage()->LoadImage( file, w, h, 0, sx, sy );
+	lst->GetItemImage()->LoadImage( file.c_str(), w, h, 0, sx, sy );
 	lst->GetItemImage()->SetScale( item_w, item_h );
 	return R_OK;
 }
@@ -1098,7 +1106,7 @@ int UI_FixListSetRowSpace( int id, int height )
 	return R_FAIL;
 }
 
-// ����CheckFixList��Check����ʾ�߾�
+// Set CheckFixList check display margin
 int UI_CheckFixListSetCheckMargin( int id, int left, int top )
 {
 	CCheckFixList* fls = dynamic_cast<CCheckFixList*>(CGuiData::GetGui( id ));
@@ -1139,12 +1147,12 @@ int UI_SetAlpha( int id, int alpha )
 	return R_OK;
 }
 
-int UI_GridLoadSelectImage( int id, char * file, int w, int h, int tx, int ty )
+int UI_GridLoadSelectImage( int id, const std::string& file, int w, int h, int tx, int ty )
 {
 	CGrid* g = dynamic_cast<CGrid*>( CGuiData::GetGui( id ) );
 	if( !g ) return R_FAIL;
 
-	g->GetSelectImage()->GetImage()->LoadImage( file, w, h, 0, tx, ty );
+	g->GetSelectImage()->GetImage()->LoadImage( file.c_str(), w, h, 0, tx, ty );
 	return R_OK;
 }
 
@@ -1216,21 +1224,21 @@ int UI_SetGridUnitSize( int id, int w, int h )
 	return R_FAIL;
 }
 
-int UI_GoodGridLoadUnitImage( int id, char * file, int w, int h, int tx, int ty )
+int UI_GoodGridLoadUnitImage( int id, const std::string& file, int w, int h, int tx, int ty )
 {
 	CGoodsGrid* g = dynamic_cast<CGoodsGrid*>( CGuiData::GetGui( id ) );
 	if( !g ) return R_FAIL;
 
-	g->GetUnitImage()->LoadImage( file, w, h, 0, tx, ty );
+	g->GetUnitImage()->LoadImage( file.c_str(), w, h, 0, tx, ty );
 	return R_OK;
 }
 
-int UI_AddFaceToGrid( int id, char* file, int w, int h, int sx, int sy, int frame, int nTag )
+int UI_AddFaceToGrid( int id, const std::string& file, int w, int h, int sx, int sy, int frame, int nTag )
 {
 	CGrid* g = dynamic_cast<CGrid*>(CGuiData::GetGui( id ));
 	if( !g ) return R_FAIL;
 
-	CGraph *p = new CGraph(file, w, h, sx, sy, frame);
+	CGraph *p = new CGraph(file.c_str(), w, h, sx, sy, frame);
 	p->GetImage()->SetScale( g->GetUnitWidth(), g->GetUnitHeight() );
 
 
@@ -1239,7 +1247,7 @@ int UI_AddFaceToGrid( int id, char* file, int w, int h, int sx, int sy, int fram
 	return R_OK;
 }
 
-// �����������
+// Set maximum item count
 int UI_FixListSetMaxNum( int id, int num )
 {
 	CFixList* g = dynamic_cast<CFixList*>(CGuiData::GetGui( id ));
@@ -1249,13 +1257,13 @@ int UI_FixListSetMaxNum( int id, int num )
 	return R_OK;
 }
 
-// ����ÿһ�ж�Ӧ���ı�
-int UI_FixListSetText( int id, int index, const char* text )
+// Set text corresponding to each row
+int UI_FixListSetText( int id, int index, const std::string& text )
 {
 	CFixList* g = dynamic_cast<CFixList*>(CGuiData::GetGui( id ));
 	if( !g ) return R_FAIL;
 
-	g->SetString( index, text );
+	g->SetString( index, text.c_str() );
 	return R_OK;
 }
 
@@ -1265,7 +1273,7 @@ enum eTreeImage
 	enumTreeSubImage,
 	enumTreeNodeImage,
 };
-int UI_TreeLoadImage( int nTreeID, int nType, char* imagefile, int w, int h, int sx, int sy, int itemw, int itemh )
+int UI_TreeLoadImage( int nTreeID, int nType, const std::string& imagefile, int w, int h, int sx, int sy, int itemw, int itemh )
 {
 	CTreeView *f = dynamic_cast<CTreeView*>(CGuiData::GetGui( nTreeID ));
 	if( !f ) return R_FAIL;
@@ -1282,6 +1290,9 @@ int UI_TreeLoadImage( int nTreeID, int nType, char* imagefile, int w, int h, int
 
 	if (pic)
 	{
+		char buf[260];
+		strncpy(buf, imagefile.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+
 		std::string s(imagefile);
 		// Check the type of file
 		if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
@@ -1293,9 +1304,9 @@ int UI_TreeLoadImage( int nTreeID, int nType, char* imagefile, int w, int h, int
 		if (stat(s.c_str(), &buffer) != 0) {
 			CryptImage(true, imagefile, NULL);
 		}
-		strcpy(imagefile, s.c_str());
+		strcpy(buf, s.c_str());
 		// Change file extension and send to UIRender for loading.
-		pic->LoadImage(imagefile, w, h, 0, sx, sy);
+		pic->LoadImage(buf, w, h, 0, sx, sy);
 		pic->SetScale(itemw, itemh);
 		return R_OK;
 	}
@@ -1313,15 +1324,15 @@ int UI_TreeSetNodeTextXY(int treeID, int textX, int textY)
 	return R_OK;
 }
 
-int UI_CreateTextItem( const char* text, int color )
+int UI_CreateTextItem( const std::string& text, unsigned int color )
 {
-	CItem * item =  new CItem( text, color );
+	CItem * item =  new CItem( text.c_str(), color );
 	return g_ItemScript.AddObj( item );
 }
 
-int UI_CreateGraphItem( char* file, int w, int h, int sx, int sy, int frame )
+int UI_CreateGraphItem( const std::string& file, int w, int h, int sx, int sy, int frame )
 {
-	CGraph* item =  new CGraph( file, w, h, sx, sy, frame );
+	CGraph* item =  new CGraph( file.c_str(), w, h, sx, sy, frame );
 	return g_ItemScript.AddObj( item );
 }
 
@@ -1340,9 +1351,12 @@ int UI_CreateGraphItemTex( int tx, int ty, int tw, int th, float scale_x, float 
 	return g_ItemScript.AddObj( item );
 }
 
-int UI_CreateNoteGraphItem( char* file, int w, int h, int sx, int sy, int frame, const char* text, int TextX, int TextY )
+int UI_CreateNoteGraphItem( const std::string& file, int w, int h, int sx, int sy, int frame, const std::string& text, int TextX, int TextY )
 {
 	CNoteGraph * item =  new CNoteGraph( frame );
+	char buf[260];
+	strncpy(buf, file.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+
 	std::string s(file);
 	// Check the type of file
 	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
@@ -1354,12 +1368,12 @@ int UI_CreateNoteGraphItem( char* file, int w, int h, int sx, int sy, int frame,
 	if (stat(s.c_str(), &buffer) != 0) {
 		CryptImage(true, file, NULL);
 	}
-	strcpy(file, s.c_str());
+	strcpy(buf, s.c_str());
 	// Change file extension and send to UIRender for loading.
 
-	item->GetImage()->LoadAllImage( file, w, h, sx, sy );
+	item->GetImage()->LoadAllImage( buf, w, h, sx, sy );
 	item->GetImage()->SetScale( w, h );
-	item->SetString( text );
+	item->SetString( text.c_str() );
 	item->SetTextX( TextX );
 	item->SetTextY( TextY );
 	return g_ItemScript.AddObj( item );
@@ -1420,7 +1434,7 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
 
 	obj->AddItem(item);
 
-    // ��ʼ����ʾ
+    // Initialize hint display
     CHintGraph* pHint = dynamic_cast<CHintGraph*>(item);
     if( pHint )
     {
@@ -1475,9 +1489,9 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
 	return R_OK;
 }
 
-int UI_SetChatColor(int world, int road, int team, int guild, int gm, int system, int trade, int person)
+int UI_SetChatColor(unsigned int world, unsigned int road, unsigned int team, unsigned int guild, unsigned int gm, unsigned int system, unsigned int trade, unsigned int person)
 {
-	// ����,·��,����,����,GM,ϵͳ,����,˽��
+	// World, Road, Team, Guild, GM, System, Trade, Private
 	//g_stUICoze.chatColor.road = road;
 	//g_stUICoze.chatColor.person = person;
 	//g_stUICoze.chatColor.team = team;
@@ -1545,12 +1559,12 @@ int UI_AddCompent( int container_id, int compent_id )
 	return R_OK;
 }
 
-int UI_CreateFont( char* font, int size800, int size1024, int nStyle )
+int UI_CreateFont( const std::string& font, int size800, int size1024, int nStyle )
 {	
-	return CGuiFont::s_Font.CreateFont( font, size800, size1024, (DWORD)nStyle );
+	return CGuiFont::s_Font.CreateFont( const_cast<char*>(font.c_str()), size800, size1024, (DWORD)nStyle );
 }
 
-int UI_SetLabelExShadowColor( int label_id, int color )
+int UI_SetLabelExShadowColor( int label_id, unsigned int color )
 {
 	CLabelEx* g = dynamic_cast<CLabelEx*>(CGuiData::GetGui( label_id ));
 	if( !g ) return R_FAIL;
@@ -1559,9 +1573,9 @@ int UI_SetLabelExShadowColor( int label_id, int color )
 	return R_OK;
 }
 
-int UI_ItemBarLoadImage( char * file, int w, int h, int tx, int ty )
+int UI_ItemBarLoadImage( const std::string& file, int w, int h, int tx, int ty )
 {
-	CItemBar::LoadImage( file, w, h, tx, ty );
+	CItemBar::LoadImage( file.c_str(), w, h, tx, ty );
 	return R_OK;
 }
 
@@ -1586,7 +1600,7 @@ int UI_SetProgressActiveMouse( int id, int style )
     return R_OK;
 }
 
-//�趨ÿ����ʾ��Ӣ������
+// Set max English characters displayed per row
 int UI_SetMemoMaxNumPerRow( int id, int num  )
 {
 	CGuiData* p = CGuiData::GetGui( id );
@@ -1610,7 +1624,7 @@ int UI_SetMemoMaxNumPerRow( int id, int num  )
 	return R_OK;
 }
 
-//�趨Memoÿҳ��ʵ������
+// Set actual lines per page for Memo
 int UI_SetMemoPageShowNum( int id, int num )
 {
 	CGuiData* p = CGuiData::GetGui( id );
@@ -1631,7 +1645,7 @@ int UI_SetMemoPageShowNum( int id, int num )
 	return R_OK;
 }
 
-//�趨Memoÿҳ��ʵ������
+// Set row height for Memo
 int UI_SetMemoRowHeight( int id, int num )
 {
 	CGuiData* p = CGuiData::GetGui( id );
@@ -1675,7 +1689,7 @@ int UI_RichSetClipRect( int id, int x0, int y0, int x1, int y1 )
 //---------------------------------------------------------------------------
 // CHeadSay
 //---------------------------------------------------------------------------
-int UI_LoadHeadSayFaceImage( int num, int maxframe, int w, int h, char* file, int cw, int ch, int tx, int ty )
+int UI_LoadHeadSayFaceImage( int num, int maxframe, int w, int h, const std::string& file, int cw, int ch, int tx, int ty )
 {
 	CGuiPic* p = CHeadSay::GetFacePic(num);
 	if( !p )  return R_FAIL;
@@ -1689,27 +1703,27 @@ int UI_LoadHeadSayFaceImage( int num, int maxframe, int w, int h, char* file, in
 		return R_FAIL;
 	}
 
-	p->LoadAllImage( file, cw, ch, tx, ty );
+	p->LoadAllImage( file.c_str(), cw, ch, tx, ty );
 	p->SetScale( w, h );
 	return R_OK;
 }
 
-int UI_LoadHeadSayShopImage( int num, int w, int h, char* file, int cw, int ch, int tx, int ty )
+int UI_LoadHeadSayShopImage( int num, int w, int h, const std::string& file, int cw, int ch, int tx, int ty )
 {
 	CGuiPic* p = CHeadSay::GetShopPic(num);
 	if( !p )  return R_FAIL;
 
-	p->LoadImage( file, cw, ch, 0, tx, ty );
+	p->LoadImage( file.c_str(), cw, ch, 0, tx, ty );
 	p->SetScale( w, h );
 	return R_OK;
 }
 
-int UI_LoadHeadSayShopImage2( int num, int w, int h, char* file, int cw, int ch, int tx, int ty )
+int UI_LoadHeadSayShopImage2( int num, int w, int h, const std::string& file, int cw, int ch, int tx, int ty )
 {
 	CGuiPic* p = CHeadSay::GetShopPic2(num);
 	if( !p )  return R_FAIL;
 
-	p->LoadImage( file, cw, ch, 0, tx, ty );
+	p->LoadImage( file.c_str(), cw, ch, 0, tx, ty );
 	p->SetScale( w, h );
 	return R_OK;
 }
@@ -1726,7 +1740,7 @@ int UI_SetLabelExAlign( int label_id, int Align )
 }
 
 
-int UI_LoadHeadSayLifeImage( int uw, int uh, char *file, int w, int h, int tx, int ty, int isHorizontal )
+int UI_LoadHeadSayLifeImage( int uw, int uh, const std::string& file, int w, int h, int tx, int ty, int isHorizontal )
 {
 	CGuiPic* hp = CHeadSay::GetLifePic();
 	CGuiPic* sp = CHeadSay::GetManaPic();
@@ -1734,19 +1748,19 @@ int UI_LoadHeadSayLifeImage( int uw, int uh, char *file, int w, int h, int tx, i
 
 	if( isHorizontal==TRUE )
 	{
-		hp->LoadImage( file, w, h, 0, tx, ty );
-		hp->LoadImage( file, w, h, 1, tx + w, ty );
+		hp->LoadImage( file.c_str(), w, h, 0, tx, ty );
+		hp->LoadImage( file.c_str(), w, h, 1, tx + w, ty );
 		
-		sp->LoadImage( file, w, h, 0, tx, ty );
-		sp->LoadImage( file, w, h, 1, tx + w, ty );
+		sp->LoadImage( file.c_str(), w, h, 0, tx, ty );
+		sp->LoadImage( file.c_str(), w, h, 1, tx + w, ty );
 	}
 	else
 	{
-		hp->LoadImage( file, w, h, 0, tx, ty );
-		hp->LoadImage( file, w, h, 1, tx, ty + h );
+		hp->LoadImage( file.c_str(), w, h, 0, tx, ty );
+		hp->LoadImage( file.c_str(), w, h, 1, tx, ty + h );
 		
-		sp->LoadImage( file, w, h, 0, tx, ty );
-		sp->LoadImage( file, w, h, 1, tx, ty + h );
+		sp->LoadImage( file.c_str(), w, h, 0, tx, ty );
+		sp->LoadImage( file.c_str(), w, h, 1, tx, ty + h );
 	}
 	hp->SetScale( uw, uh );
 	sp->SetScale( uw, uh );
@@ -1762,9 +1776,9 @@ int UI_SetDragSnapToGrid( int nGridWidth, int nGridHeight )
 }
 
 
-int UI_SetTextParse( int nIndex, char* file, int w, int h, int sx, int sy, int frame )//����������ͼ���ӳ��
+int UI_SetTextParse( int nIndex, const std::string& file, int w, int h, int sx, int sy, int frame )// Load text parse image mapping
 {
-	CGraph *p = new CGraph(file, w, h, sx, sy, frame);
+	CGraph *p = new CGraph(file.c_str(), w, h, sx, sy, frame);
 	g_TextParse.AddFace( nIndex, p );
 	return R_OK;
 }
@@ -1796,9 +1810,12 @@ int UI_SetFormStyleEx(int id ,int index, int offWidth, int offHeight)
 
 }
 
-// �˵�
-int UI_MenuLoadSelect( int id, char* imagefile, int w, int h, int sx, int sy )
+// Menu
+int UI_MenuLoadSelect( int id, const std::string& imagefile, int w, int h, int sx, int sy )
 {
+	char buf[260];
+	strncpy(buf, imagefile.c_str(), sizeof(buf) - 1); buf[sizeof(buf) - 1] = 0;
+
 	std::string s(imagefile);
 	// Check the type of file
 	if (s.find(".png") != std::string::npos || s.find(".tga") != std::string::npos || s.find(".bmp") != std::string::npos ||
@@ -1810,20 +1827,25 @@ int UI_MenuLoadSelect( int id, char* imagefile, int w, int h, int sx, int sy )
 	if (stat(s.c_str(), &buffer) != 0) {
 		CryptImage(true, imagefile, NULL);
 	}
-	strcpy(imagefile, s.c_str());
+	strcpy(buf, s.c_str());
 	// Change file extension and send to UIRender for loading.
 
 	CMenu *f = dynamic_cast<CMenu*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
 
-	f->GetSelectImage()->LoadImage(imagefile, w, h, 0, sx, sy);
+	f->GetSelectImage()->LoadImage(buf, w, h, 0, sx, sy);
 	return R_OK;
 }
 
-int UI_MenuLoadImage( int id, int IsShowFrame, int IsTitle, char* clientfile, int cw, int ch, int tx, int ty, char* framefile, int w, int h )
+int UI_MenuLoadImage( int id, int IsShowFrame, int IsTitle, const std::string& clientfile, int cw, int ch, int tx, int ty, const std::string& framefile, int w, int h )
 {
 	CMenu *f = dynamic_cast<CMenu*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
+
+	char clientbuf[260];
+	strncpy(clientbuf, clientfile.c_str(), sizeof(clientbuf) - 1); clientbuf[sizeof(clientbuf) - 1] = 0;
+	char framebuf[260];
+	strncpy(framebuf, framefile.c_str(), sizeof(framebuf) - 1); framebuf[sizeof(framebuf) - 1] = 0;
 
 	std::string s(clientfile);
 	// Check the type of file
@@ -1836,11 +1858,11 @@ int UI_MenuLoadImage( int id, int IsShowFrame, int IsTitle, char* clientfile, in
 	if (stat(s.c_str(), &buffer) != 0) {
 		CryptImage(true, clientfile, NULL);
 	}
-	strcpy(clientfile, s.c_str());
+	strcpy(clientbuf, s.c_str());
 	// Change file extension and send to UIRender for loading.
 
-	if (strcmp(clientfile, framefile)) {
-		if (strlen(framefile) > 4) {
+	if (strcmp(clientbuf, framebuf)) {
+		if (strlen(framebuf) > 4) {
 			std::string s2(framefile);
 			// Check the type of file
 			if (s2.find(".png") != std::string::npos || s2.find(".tga") != std::string::npos || s2.find(".bmp") != std::string::npos ||
@@ -1852,82 +1874,82 @@ int UI_MenuLoadImage( int id, int IsShowFrame, int IsTitle, char* clientfile, in
 			if (stat(s2.c_str(), &buffer2) != 0) {
 				CryptImage(true, framefile, NULL);
 			}
-			strcpy(framefile, s2.c_str());
+			strcpy(framebuf, s2.c_str());
 			// Change file extension and send to UIRender for loading.
-			size_t len2 = strlen(framefile);
-			framefile[len2 - 1] = 'd';
-			framefile[len2 - 2] = 's';
-			framefile[len2 - 3] = 'w';
+			size_t len2 = strlen(framebuf);
+			framebuf[len2 - 1] = 'd';
+			framebuf[len2 - 2] = 's';
+			framebuf[len2 - 3] = 'w';
 		}
 
 	}
 	else {
-		size_t len3 = strlen(framefile);
-		framefile[len3 - 1] = 'd';
-		framefile[len3 - 2] = 's';
-		framefile[len3 - 3] = 'w';
+		size_t len3 = strlen(framebuf);
+		framebuf[len3 - 1] = 'd';
+		framebuf[len3 - 2] = 's';
+		framebuf[len3 - 3] = 'w';
 	}
 
 
 	CFramePic* frame = f->GetBkgImage();
 	frame->SetIsTitle( IsTitle ? true : false );
 	frame->SetIsShowFrame( IsShowFrame ? true : false );
-	frame->LoadImage( clientfile, cw, ch, tx, ty, framefile, w, h );
+	frame->LoadImage( clientbuf, cw, ch, tx, ty, framebuf, w, h );
 	return R_OK;
 }
 
-int UI_MenuAddText( int id, const char* text )
+int UI_MenuAddText( int id, const std::string& text )
 {
 	CMenu *f = dynamic_cast<CMenu*>(CGuiData::GetGui( id ));
 	if( !f ) return R_FAIL;
 
-	f->AddMenu( text );
+	f->AddMenu( text.c_str() );
 	return R_OK;
 }
 
-int UI_AddFilterTextToNameTable(const char* text )
+int UI_AddFilterTextToNameTable(const std::string& text )
 {
-	return CTextFilter::Add(CTextFilter::NAME_TABLE,text);
+	return CTextFilter::Add(CTextFilter::NAME_TABLE,text.c_str());
 }
 
-int UI_AddFilterTextToDialogTable(const char* text )
+int UI_AddFilterTextToDialogTable(const std::string& text )
 {
-	return CTextFilter::Add(CTextFilter::DIALOG_TABLE,text);
+	return CTextFilter::Add(CTextFilter::DIALOG_TABLE,text.c_str());
 }
 
-int UI_SetHeadSayBkgColor( int color )
+int UI_SetHeadSayBkgColor( unsigned int color )
 {
 	CHeadSay::SetBkgColor( color );
 	return R_OK;
 }
 
-int UI_LoadSkillActiveImage( char* file, int maxframe, int w, int h, int sx, int sy )
+int UI_LoadSkillActiveImage( const std::string& file, int maxframe, int w, int h, int sx, int sy )
 {
 	CGuiPic* pic = CSkillCommand::GetActiveImage();
 	pic->SetMax( maxframe );
-	pic->LoadAllImage( file, w, h, sx, sy );
+	pic->LoadAllImage( file.c_str(), w, h, sx, sy );
 	return R_OK;
 }
 
-int UI_LoadChargeImage( int link, char* file, int maxframe, int w, int h, int sx, int sy )
+int UI_LoadChargeImage( int link, const std::string& file, int maxframe, int w, int h, int sx, int sy )
 {
 	CGuiPic* pic = CEquipMgr::GetChargePic( link );
 	if( pic )
 	{
 		pic->SetMax( maxframe );
-		pic->LoadAllImage( file, w, h, sx, sy );
+		pic->LoadAllImage( file.c_str(), w, h, sx, sy );
 		return R_OK;
 	}
 	return R_FAIL;
 }
 
-int UI_SetCaption( int id, char* caption )
+int UI_SetCaption( int id, const std::string& caption )
 {
 	CGuiData* p = CGuiData::GetGui( id );
 
 	if( !p ) return R_FAIL;
 
-	p->SetCaption( caption );
+	p->SetCaption( caption.c_str() );
 	return R_OK;
 }
 
@@ -1938,168 +1960,165 @@ int UI_SetCaption( int id, char* caption )
 //---------------------------------------------------------------------------
 // ScriptRegedit
 //---------------------------------------------------------------------------
-void MPInitLua_Gui()
+void MPInitLua_Gui(lua_State* L)
 {
-
-
-	CLU_RegisterFunction("GetChaPhotoTexID",      "int", "int", CLU_CDECL, CLU_CAST(GetChaPhotoTexID));
-	CLU_RegisterFunction("GetSceneObjPhotoTexID", "int", "int", CLU_CDECL, CLU_CAST(GetSceneObjPhotoTexID));
-	CLU_RegisterFunction("GetEffectPhotoTexID",   "int", "int", CLU_CDECL, CLU_CAST(GetEffectPhotoTexID));
-
-	CLU_RegisterFunction("GetTextureID", "int", "char*", CLU_CDECL, CLU_CAST(GetTextureID));
-	CLU_RegisterFunction("GetTerrainTextureID", "int", "int", CLU_CDECL, CLU_CAST(GetTerrainTextureID));
-	CLU_RegisterFunction("GetTerrainTextureType", "int", "int", CLU_CDECL, CLU_CAST(GetTerrainTextureType));	
-	CLU_RegisterFunction("GetSceneObjPhotoTexType", "int", "int", CLU_CDECL, CLU_CAST(GetSceneObjPhotoTexType));	
-
-	// gui
-	CLU_RegisterFunction("UI_LoadScript", "int", "char*", CLU_CDECL, CLU_CAST(UI_LoadScript));
-	CLU_RegisterFunction("UI_SetDragSnapToGrid", "int", "int,int", CLU_CDECL, CLU_CAST(UI_SetDragSnapToGrid));
-
-    CLU_RegisterFunction("UI_SetMaxImage", "int", "int,int", CLU_CDECL, CLU_CAST(UI_SetMaxImage));
-
-	CLU_RegisterFunction("UI_SetFormTempleteMax", "int", "int", CLU_CDECL, CLU_CAST(UI_SetFormTempleteMax));
-	CLU_RegisterFunction("UI_SwitchTemplete", "int", "int", CLU_CDECL, CLU_CAST(UI_SwitchTemplete));
-	CLU_RegisterFunction("UI_AddAllFormTemplete", "int", "int", CLU_CDECL, CLU_CAST(UI_AddAllFormTemplete));
-	CLU_RegisterFunction("UI_AddFormToTemplete", "int", "int,int", CLU_CDECL, CLU_CAST(UI_AddFormToTemplete));
-
-	CLU_RegisterFunction("UI_CreateForm", "int", "char*, int, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_CreateForm));
-	CLU_RegisterFunction("UI_FormSetIsEscClose", "int", "int, int", CLU_CDECL, CLU_CAST(UI_FormSetIsEscClose));
-	CLU_RegisterFunction("UI_FormSetEnterButton", "int", "int, int", CLU_CDECL, CLU_CAST(UI_FormSetEnterButton));
-	CLU_RegisterFunction("UI_FormSetHotKey", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_FormSetHotKey));
-	CLU_RegisterFunction("UI_LoadFormImage", "int", "int, char*, int, int, int, int, char*, int, int", CLU_CDECL, CLU_CAST(UI_LoadFormImage));
-	CLU_RegisterFunction("UI_ShowForm", "int", "int, int", CLU_CDECL, CLU_CAST(UI_ShowForm));
-	CLU_RegisterFunction("UI_SetIsDrag", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetIsDrag));
-	CLU_RegisterFunction("UI_SetIsKeyFocus", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetIsKeyFocus));
-	CLU_RegisterFunction("UI_CreateCompent", "int", "int, int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_CreateCompent));
-	CLU_RegisterFunction("UI_SetCaption", "int", "int, char*", CLU_CDECL, CLU_CAST(UI_SetCaption));
-	CLU_RegisterFunction("UI_CopyImage", "int", "int, int", CLU_CDECL, CLU_CAST(UI_CopyImage));
-	CLU_RegisterFunction("UI_SetSize", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_SetSize));
-	CLU_RegisterFunction("UI_SetPos", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_SetPos));
-	CLU_RegisterFunction("UI_SetTag", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetTag));
-	CLU_RegisterFunction("UI_SetAlign", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetAlign));
-	CLU_RegisterFunction("UI_LoadImage", "int", "int, char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadImage));
-	CLU_RegisterFunction("UI_LoadImageUnencrypted", "int", "int, char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadImageUnencrypted));
-	CLU_RegisterFunction("UI_LoadScaleImage", "int", "int, char*, int, int, int, int, int, float, float", CLU_CDECL, CLU_CAST(UI_LoadScaleImage));	
-    CLU_RegisterFunction("UI_SetHint", "int", "int, char*", CLU_CDECL, CLU_CAST(UI_SetHint));
-    CLU_RegisterFunction("UI_LoadFlashScaleImage", "int", "int, int ,char*, int, int, int, int, int, float, float", CLU_CDECL, CLU_CAST(UI_LoadFlashScaleImage));	
-	CLU_RegisterFunction("UI_SetImageAlpha", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetImageAlpha));
-	CLU_RegisterFunction("UI_ComboSetTextColor", "int", "int, int", CLU_CDECL, CLU_CAST(UI_ComboSetTextColor));
-	CLU_RegisterFunction("UI_ComboSetStyle", "int", "int, int", CLU_CDECL, CLU_CAST(UI_ComboSetStyle));
-	CLU_RegisterFunction("UI_LoadComboImage", "int", "int, char*, int, int, int, int, char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadComboImage));
-	CLU_RegisterFunction("UI_LoadButtonImage", "int", "int, char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadButtonImage));
-	CLU_RegisterFunction("UI_GetScroll", "int", "int", CLU_CDECL, CLU_CAST(UI_GetScroll));
-	CLU_RegisterFunction("UI_CopyCompent", "int", "int, int", CLU_CDECL, CLU_CAST(UI_CopyCompent));
-	CLU_RegisterFunction("UI_GetList", "int", "int", CLU_CDECL, CLU_CAST(UI_GetList));	
-	CLU_RegisterFunction("UI_AddListText", "int", "int, char*", CLU_CDECL, CLU_CAST(UI_AddListText));
-	CLU_RegisterFunction("UI_ListLoadSelectImage", "int", "int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_ListLoadSelectImage));
-	CLU_RegisterFunction("UI_LoadListItemImage", "int", "int, char*, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadListItemImage));
-	CLU_RegisterFunction("UI_ListSetItemMargin", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_ListSetItemMargin));	
-	CLU_RegisterFunction("UI_ListSetItemImageMargin", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_ListSetItemImageMargin));	
-	CLU_RegisterFunction("UI_SetListFontColor", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_SetListFontColor));
-	CLU_RegisterFunction("UI_SetProgressStyle", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetProgressStyle));
-	CLU_RegisterFunction("UI_SetScrollStyle", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetScrollStyle));
-    
-	CLU_RegisterFunction("UI_AddGroupBox", "int", "int, int", CLU_CDECL, CLU_CAST(UI_AddGroupBox));
-	CLU_RegisterFunction("UI_CreateListView", "int", "int, char*, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_CreateListView));
-	CLU_RegisterFunction("UI_ListViewSetTitle", "int", "int, int, int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_ListViewSetTitle));
-    CLU_RegisterFunction("UI_ListViewSetTitleHeight", "int", "int, int", CLU_CDECL, CLU_CAST(UI_ListViewSetTitleHeight));
-    CLU_RegisterFunction("UI_GoodGridLoadUnitImage", "int", "int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_GoodGridLoadUnitImage));
-
-	CLU_RegisterFunction("UI_SetChatColor", "int", "int, int, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_SetChatColor));
-	CLU_RegisterFunction("UI_SetListRowHeight", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetListRowHeight));
-	CLU_RegisterFunction("UI_SetAlpha", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetAlpha));
-	CLU_RegisterFunction("UI_GridLoadSelectImage", "int", "int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_GridLoadSelectImage));
-    CLU_RegisterFunction("UI_SetGridIsDragSize", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetGridIsDragSize));
-	CLU_RegisterFunction("UI_GetScrollObj", "int", "int, int", CLU_CDECL, CLU_CAST(UI_GetScrollObj));
-	CLU_RegisterFunction("UI_SetGridUnitSize", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_SetGridUnitSize));
-	CLU_RegisterFunction("UI_AddFaceToGrid", "int", "int, char*, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_AddFaceToGrid));
-	CLU_RegisterFunction("UI_SetIsShow", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetIsShow));
-	CLU_RegisterFunction("UI_SetIsEnabled", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetIsEnabled));
-	CLU_RegisterFunction("UI_SetMargin", "int", "int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_SetMargin));
-	CLU_RegisterFunction("UI_LoadListFixSelect", "int", "int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadListFixSelect));
-	CLU_RegisterFunction("UI_FixListSetMaxNum", "int", "int, int", CLU_CDECL, CLU_CAST(UI_FixListSetMaxNum));
-	CLU_RegisterFunction("UI_FixListSetText", "int", "int, int, char*", CLU_CDECL, CLU_CAST(UI_FixListSetText));
-	CLU_RegisterFunction("UI_FixListSetRowSpace", "int", "int, int", CLU_CDECL, CLU_CAST(UI_FixListSetRowSpace));
-    CLU_RegisterFunction("UI_SetListIsMouseFollow", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetListIsMouseFollow));
-   
-	CLU_RegisterFunction("UI_CheckFixListSetCheckMargin", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_CheckFixListSetCheckMargin));
-	CLU_RegisterFunction("UI_LoadCheckFixListCheck", "int", "int, char*, int, int, int, int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadCheckFixListCheck));
-
-	CLU_RegisterFunction("UI_SetEditCursorColor", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetEditCursorColor));
-	CLU_RegisterFunction("UI_SetEditMaxNum", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetEditMaxNum));
-	CLU_RegisterFunction("UI_SetEditEnterButton", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetEditEnterButton));
-	CLU_RegisterFunction("UI_SetEditMaxNumVisible", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetEditMaxNumVisible));
-    CLU_RegisterFunction("UI_SetProgressHintStyle", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetProgressHintStyle));
-
-    CLU_RegisterFunction("UI_SetButtonModalResult", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetButtonModalResult));
-	CLU_RegisterFunction("UI_SetTextColor", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetTextColor));
-	CLU_RegisterFunction("UI_LoadFrameImage", "int", "int, char*, int, int, int, int, char*, int, int", CLU_CDECL, CLU_CAST(UI_LoadFrameImage));
-	CLU_RegisterFunction("UI_CreatePageItem", "int", "int", CLU_CDECL, CLU_CAST(UI_CreatePageItem));
-	CLU_RegisterFunction("UI_GetPageItemObj", "int", "int, int", CLU_CDECL, CLU_CAST(UI_GetPageItemObj));
-
-	CLU_RegisterFunction("UI_AddCompent", "int", "int, int", CLU_CDECL, CLU_CAST(UI_AddCompent));
-	CLU_RegisterFunction("UI_SetLabelExShadowColor", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetLabelExShadowColor));
-	CLU_RegisterFunction("UI_SetPageButton", "int", "int, int, int, int", CLU_CDECL, CLU_CAST(UI_SetPageButton));
-	CLU_RegisterFunction("UI_ButtonSetHint", "int", "int, char*", CLU_CDECL, CLU_CAST(UI_ButtonSetHint));
-
-	CLU_RegisterFunction("UI_TreeLoadImage", "int", "int, int, char*, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_TreeLoadImage));
-	CLU_RegisterFunction("UI_TreeSetNodeTextXY", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_TreeSetNodeTextXY));
-	CLU_RegisterFunction("UI_CreateTextItem", "int", "char*, int", CLU_CDECL, CLU_CAST(UI_CreateTextItem));
-	CLU_RegisterFunction("UI_CreateNoteGraphItem", "int", "char*, int, int, int, int, int, char*, int, int", CLU_CDECL, CLU_CAST(UI_CreateNoteGraphItem));
-	CLU_RegisterFunction("UI_CreateGraphItem", "int", "char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_CreateGraphItem));
-	CLU_RegisterFunction("UI_CreateSingleNode", "int", "int, int, int", CLU_CDECL, CLU_CAST(UI_CreateSingleNode));
-	CLU_RegisterFunction("UI_CreateGridNode", "int", "int,int,int,int,int,int", CLU_CDECL, CLU_CAST(UI_CreateGridNode));
-	CLU_RegisterFunction("UI_GridNodeAddItem", "int", "int,int", CLU_CDECL, CLU_CAST(UI_GridNodeAddItem));
-	CLU_RegisterFunction("UI_CreateGraphItemTex", "int", "int,int,int,int,float,float,int,int", CLU_CDECL, CLU_CAST(UI_CreateGraphItemTex));
-	CLU_RegisterFunction("UI_SetLabelExFont", "int", "int,int,int,int", CLU_CDECL, CLU_CAST(UI_SetLabelExFont));
-	CLU_RegisterFunction("UI_SetGridSpace", "int", "int,int,int", CLU_CDECL, CLU_CAST(UI_SetGridSpace));
-	CLU_RegisterFunction("UI_SetGridContent", "int", "int,int,int", CLU_CDECL, CLU_CAST(UI_SetGridContent));
-
-	CLU_RegisterFunction("UI_ItemBarLoadImage", "int", "char*,int,int,int,int", CLU_CDECL, CLU_CAST(UI_ItemBarLoadImage));	
-	CLU_RegisterFunction("UI_AddListBarText", "int", "int,char*,float", CLU_CDECL, CLU_CAST(UI_AddListBarText));	
-
-	// headsay
-	CLU_RegisterFunction("UI_LoadHeadSayFaceImage", "int", "int,int,int,int,char*,int,int,int,int", CLU_CDECL, CLU_CAST(UI_LoadHeadSayFaceImage));
-	CLU_RegisterFunction("UI_LoadHeadSayShopImage", "int", "int,int,int,char*,int,int,int,int", CLU_CDECL, CLU_CAST(UI_LoadHeadSayShopImage));
-	CLU_RegisterFunction("UI_LoadHeadSayShopImage2", "int", "int,int,int,char*,int,int,int,int", CLU_CDECL, CLU_CAST(UI_LoadHeadSayShopImage2));
-	CLU_RegisterFunction("UI_SetLabelExAlign", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetLabelExAlign));
-	CLU_RegisterFunction("UI_LoadHeadSayLifeImage", "int", "int,int,char*,int,int,int,int,int", CLU_CDECL, CLU_CAST(UI_LoadHeadSayLifeImage));
-	
-	//from style
-	CLU_RegisterFunction("UI_SetFormStyle", "int", "int,int", CLU_CDECL, CLU_CAST(UI_SetFormStyle));
-	CLU_RegisterFunction("UI_SetFormStyleEx", "int", "int,int,int,int", CLU_CDECL, CLU_CAST(UI_SetFormStyleEx));
-
-	// font
-	CLU_RegisterFunction("UI_CreateFont", "int", "char*,int,int,int", CLU_CDECL, CLU_CAST(UI_CreateFont));
-
-	//add graph to text
-	CLU_RegisterFunction("UI_SetTextParse", "int", "int,  char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_SetTextParse));
-	
-	// memo
-	CLU_RegisterFunction("UI_SetMemoMaxNumPerRow", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetMemoMaxNumPerRow));	
-	CLU_RegisterFunction("UI_SetMemoPageShowNum", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetMemoPageShowNum));	
-	CLU_RegisterFunction("UI_SetMemoRowHeight", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetMemoRowHeight));	
-
-	// Rich
-	CLU_RegisterFunction("UI_RichSetClipRect", "int", "int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_RichSetClipRect));
-	CLU_RegisterFunction("UI_RichSetMaxLine", "int", "int, int", CLU_CDECL, CLU_CAST(UI_RichSetMaxLine));
-
-	CLU_RegisterFunction("UI_SetProgressActiveMouse", "int", "int, int", CLU_CDECL, CLU_CAST(UI_SetProgressActiveMouse));
-	CLU_RegisterFunction("UI_LoadSkillListButtonImage", "int", "int, char*, int, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadSkillListButtonImage));
-
-	// �˵�
-	CLU_RegisterFunction("UI_MenuLoadSelect", "int", "int, char*, int, int, int, int", CLU_CDECL, CLU_CAST(UI_MenuLoadSelect));
-	CLU_RegisterFunction("UI_MenuLoadImage", "int", "int, int, int, char*, int, int, int, int, char*, int, int", CLU_CDECL, CLU_CAST(UI_MenuLoadImage));
-	CLU_RegisterFunction("UI_MenuAddText", "int", "int, char*", CLU_CDECL, CLU_CAST(UI_MenuAddText));
-	CLU_RegisterFunction("UI_AddFilterTextToNameTable", "int", "char*", CLU_CDECL, CLU_CAST(UI_AddFilterTextToNameTable));
-	CLU_RegisterFunction("UI_AddFilterTextToDialogTable", "int", "char*", CLU_CDECL, CLU_CAST(UI_AddFilterTextToDialogTable));
-
-	CLU_RegisterFunction("UI_SetHeadSayBkgColor", "int", "int", CLU_CDECL, CLU_CAST(UI_SetHeadSayBkgColor));
-
-	CLU_RegisterFunction("UI_SetTitleFont", "int", "int, int, int, int", CLU_CDECL, CLU_CAST(UI_SetTitleFont));
-
-	CLU_RegisterFunction("UI_LoadSkillActiveImage", "int", "char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadSkillActiveImage));
-	CLU_RegisterFunction("UI_LoadChargeImage", "int", "int, char*, int, int, int, int, int", CLU_CDECL, CLU_CAST(UI_LoadChargeImage));
+	luabridge::getGlobalNamespace(L)
+		// texture
+		LUABRIDGE_REGISTER_FUNC(GetChaPhotoTexID)
+		LUABRIDGE_REGISTER_FUNC(GetSceneObjPhotoTexID)
+		LUABRIDGE_REGISTER_FUNC(GetEffectPhotoTexID)
+		LUABRIDGE_REGISTER_FUNC(GetTextureID)
+		LUABRIDGE_REGISTER_FUNC(GetTerrainTextureID)
+		LUABRIDGE_REGISTER_FUNC(GetTerrainTextureType)
+		LUABRIDGE_REGISTER_FUNC(GetSceneObjPhotoTexType)
+		// gui
+		LUABRIDGE_REGISTER_FUNC(UI_LoadScript)
+		LUABRIDGE_REGISTER_FUNC(UI_SetDragSnapToGrid)
+		LUABRIDGE_REGISTER_FUNC(UI_SetMaxImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetFormTempleteMax)
+		LUABRIDGE_REGISTER_FUNC(UI_SwitchTemplete)
+		LUABRIDGE_REGISTER_FUNC(UI_AddAllFormTemplete)
+		LUABRIDGE_REGISTER_FUNC(UI_AddFormToTemplete)
+		// form
+		LUABRIDGE_REGISTER_FUNC(UI_CreateForm)
+		LUABRIDGE_REGISTER_FUNC(UI_FormSetIsEscClose)
+		LUABRIDGE_REGISTER_FUNC(UI_FormSetEnterButton)
+		LUABRIDGE_REGISTER_FUNC(UI_FormSetHotKey)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadFormImage)
+		LUABRIDGE_REGISTER_FUNC(UI_ShowForm)
+		LUABRIDGE_REGISTER_FUNC(UI_SetIsDrag)
+		LUABRIDGE_REGISTER_FUNC(UI_SetIsKeyFocus)
+		// components
+		LUABRIDGE_REGISTER_FUNC(UI_CreateCompent)
+		LUABRIDGE_REGISTER_FUNC(UI_SetCaption)
+		LUABRIDGE_REGISTER_FUNC(UI_CopyImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetSize)
+		LUABRIDGE_REGISTER_FUNC(UI_SetPos)
+		LUABRIDGE_REGISTER_FUNC(UI_SetTag)
+		LUABRIDGE_REGISTER_FUNC(UI_SetAlign)
+		// image
+		LUABRIDGE_REGISTER_FUNC(UI_LoadImage)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadImageUnencrypted)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadScaleImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetHint)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadFlashScaleImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetImageAlpha)
+		// combo
+		LUABRIDGE_REGISTER_FUNC(UI_ComboSetTextColor)
+		LUABRIDGE_REGISTER_FUNC(UI_ComboSetStyle)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadComboImage)
+		// button
+		LUABRIDGE_REGISTER_FUNC(UI_LoadButtonImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetButtonModalResult)
+		LUABRIDGE_REGISTER_FUNC(UI_ButtonSetHint)
+		// scroll/list
+		LUABRIDGE_REGISTER_FUNC(UI_GetScroll)
+		LUABRIDGE_REGISTER_FUNC(UI_CopyCompent)
+		LUABRIDGE_REGISTER_FUNC(UI_GetList)
+		LUABRIDGE_REGISTER_FUNC(UI_AddListText)
+		LUABRIDGE_REGISTER_FUNC(UI_ListLoadSelectImage)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadListItemImage)
+		LUABRIDGE_REGISTER_FUNC(UI_ListSetItemMargin)
+		LUABRIDGE_REGISTER_FUNC(UI_ListSetItemImageMargin)
+		LUABRIDGE_REGISTER_FUNC(UI_SetListFontColor)
+		LUABRIDGE_REGISTER_FUNC(UI_SetListRowHeight)
+		LUABRIDGE_REGISTER_FUNC(UI_SetListIsMouseFollow)
+		// progress/scroll style
+		LUABRIDGE_REGISTER_FUNC(UI_SetProgressStyle)
+		LUABRIDGE_REGISTER_FUNC(UI_SetScrollStyle)
+		LUABRIDGE_REGISTER_FUNC(UI_SetProgressHintStyle)
+		LUABRIDGE_REGISTER_FUNC(UI_SetProgressActiveMouse)
+		// group/listview
+		LUABRIDGE_REGISTER_FUNC(UI_AddGroupBox)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateListView)
+		LUABRIDGE_REGISTER_FUNC(UI_ListViewSetTitle)
+		LUABRIDGE_REGISTER_FUNC(UI_ListViewSetTitleHeight)
+		LUABRIDGE_REGISTER_FUNC(UI_GoodGridLoadUnitImage)
+		// chat/alpha
+		LUABRIDGE_REGISTER_FUNC(UI_SetChatColor)
+		LUABRIDGE_REGISTER_FUNC(UI_SetAlpha)
+		// grid
+		LUABRIDGE_REGISTER_FUNC(UI_GridLoadSelectImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetGridIsDragSize)
+		LUABRIDGE_REGISTER_FUNC(UI_GetScrollObj)
+		LUABRIDGE_REGISTER_FUNC(UI_SetGridUnitSize)
+		LUABRIDGE_REGISTER_FUNC(UI_AddFaceToGrid)
+		LUABRIDGE_REGISTER_FUNC(UI_SetGridSpace)
+		LUABRIDGE_REGISTER_FUNC(UI_SetGridContent)
+		// show/enable
+		LUABRIDGE_REGISTER_FUNC(UI_SetIsShow)
+		LUABRIDGE_REGISTER_FUNC(UI_SetIsEnabled)
+		LUABRIDGE_REGISTER_FUNC(UI_SetMargin)
+		// fix list
+		LUABRIDGE_REGISTER_FUNC(UI_LoadListFixSelect)
+		LUABRIDGE_REGISTER_FUNC(UI_FixListSetMaxNum)
+		LUABRIDGE_REGISTER_FUNC(UI_FixListSetText)
+		LUABRIDGE_REGISTER_FUNC(UI_FixListSetRowSpace)
+		// check fix list
+		LUABRIDGE_REGISTER_FUNC(UI_CheckFixListSetCheckMargin)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadCheckFixListCheck)
+		// edit
+		LUABRIDGE_REGISTER_FUNC(UI_SetEditCursorColor)
+		LUABRIDGE_REGISTER_FUNC(UI_SetEditMaxNum)
+		LUABRIDGE_REGISTER_FUNC(UI_SetEditEnterButton)
+		LUABRIDGE_REGISTER_FUNC(UI_SetEditMaxNumVisible)
+		// text
+		LUABRIDGE_REGISTER_FUNC(UI_SetTextColor)
+		// frame/page
+		LUABRIDGE_REGISTER_FUNC(UI_LoadFrameImage)
+		LUABRIDGE_REGISTER_FUNC(UI_CreatePageItem)
+		LUABRIDGE_REGISTER_FUNC(UI_GetPageItemObj)
+		LUABRIDGE_REGISTER_FUNC(UI_AddCompent)
+		LUABRIDGE_REGISTER_FUNC(UI_SetLabelExShadowColor)
+		LUABRIDGE_REGISTER_FUNC(UI_SetLabelExAlign)
+		LUABRIDGE_REGISTER_FUNC(UI_SetLabelExFont)
+		LUABRIDGE_REGISTER_FUNC(UI_SetPageButton)
+		// tree
+		LUABRIDGE_REGISTER_FUNC(UI_TreeLoadImage)
+		LUABRIDGE_REGISTER_FUNC(UI_TreeSetNodeTextXY)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateTextItem)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateNoteGraphItem)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateGraphItem)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateSingleNode)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateGridNode)
+		LUABRIDGE_REGISTER_FUNC(UI_GridNodeAddItem)
+		LUABRIDGE_REGISTER_FUNC(UI_CreateGraphItemTex)
+		// item bar
+		LUABRIDGE_REGISTER_FUNC(UI_ItemBarLoadImage)
+		LUABRIDGE_REGISTER_FUNC(UI_AddListBarText)
+		// headsay
+		LUABRIDGE_REGISTER_FUNC(UI_LoadHeadSayFaceImage)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadHeadSayShopImage)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadHeadSayShopImage2)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadHeadSayLifeImage)
+		LUABRIDGE_REGISTER_FUNC(UI_SetHeadSayBkgColor)
+		// form style
+		LUABRIDGE_REGISTER_FUNC(UI_SetFormStyle)
+		LUABRIDGE_REGISTER_FUNC(UI_SetFormStyleEx)
+		// font
+		LUABRIDGE_REGISTER_FUNC(UI_CreateFont)
+		// text parse
+		LUABRIDGE_REGISTER_FUNC(UI_SetTextParse)
+		// memo
+		LUABRIDGE_REGISTER_FUNC(UI_SetMemoMaxNumPerRow)
+		LUABRIDGE_REGISTER_FUNC(UI_SetMemoPageShowNum)
+		LUABRIDGE_REGISTER_FUNC(UI_SetMemoRowHeight)
+		// rich
+		LUABRIDGE_REGISTER_FUNC(UI_RichSetClipRect)
+		LUABRIDGE_REGISTER_FUNC(UI_RichSetMaxLine)
+		// skill
+		LUABRIDGE_REGISTER_FUNC(UI_LoadSkillListButtonImage)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadSkillActiveImage)
+		LUABRIDGE_REGISTER_FUNC(UI_LoadChargeImage)
+		// menu
+		LUABRIDGE_REGISTER_FUNC(UI_MenuLoadSelect)
+		LUABRIDGE_REGISTER_FUNC(UI_MenuLoadImage)
+		LUABRIDGE_REGISTER_FUNC(UI_MenuAddText)
+		// filter
+		LUABRIDGE_REGISTER_FUNC(UI_AddFilterTextToNameTable)
+		LUABRIDGE_REGISTER_FUNC(UI_AddFilterTextToDialogTable)
+		// title
+		LUABRIDGE_REGISTER_FUNC(UI_SetTitleFont);
 }
 
 

@@ -1,4 +1,4 @@
-// MapTrigger.h Created by knight-gongjian 2005.1.28.
+﻿// MapTrigger.h Created by knight-gongjian 2005.1.28.
 //---------------------------------------------------------
 #pragma once
 

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Character.cpp
 // Creater: ZhangXuedong
 // Date: 2004.10.19
@@ -35,7 +35,7 @@ using namespace std;
 
 #pragma warning(disable: 4355)
 
-// ������ű�֮��Ľ���
+// 
 Point			g_SSkillPoint;
 bool			g_bBeatBack = false;
 unsigned char	g_uchFightID;
@@ -164,7 +164,7 @@ void CCharacter::Initially()
 
     m_ExpScale = 100;
 
-    m_noticeState = 0;//�����Գ�ʼ֪ͨ״̬Ϊ0
+    m_noticeState = 0;//0
 	m_retry3 = 0;
 	m_retry4 = 0;
 	m_retry5 = 0;
@@ -227,18 +227,18 @@ void CCharacter::Finally()
 	catch (...)
 	{
 		if (!GetPlayer())
-			//LG("exception3", "��ɫ[%s]�ͷ�ʱ�����쳣, [CCharacter::Finally]\n", GetLogName());
+			//LG("exception3", "[%s], [CCharacter::Finally]\n", GetLogName());
 			ToLogService("errors", LogLevel::Error, "when character[{}]release occured abnormity, [CCharacter::Finally]", GetLogName());
 		else
-			//LG("exception3", "��ҽ�ɫ[���� %s�����ݿ�ID %u]�ͷ�ʱ�����쳣, [CCharacter::Finally]\n", GetLogName(), GetPlayer()->GetDBActId());
-			ToLogService("errors", LogLevel::Error, "character player[name {}��DatabaseID {}]release occured abnormity, [CCharacter::Finally]", GetLogName(), GetPlayer()->GetDBActId());
+			//LG("exception3", "[ %sID %u], [CCharacter::Finally]\n", GetLogName(), GetPlayer()->GetDBActId());
+			ToLogService("errors", LogLevel::Error, "character player[name {}DatabaseID {}]release occured abnormity, [CCharacter::Finally]", GetLogName(), GetPlayer()->GetDBActId());
 		throw;
 	}
 }
 
 void CCharacter::TradeClear( CPlayer& player )
 {
-	// ������Ľ�����Ϣ���ߴ�ֻ����ȡ��
+	// 
 	if( m_pTradeData )
 	{
 		g_TradeSystem.Clear( mission::TRADE_CHAR, *this );
@@ -322,8 +322,8 @@ void CCharacter::WriteInt64PartInfo(net::WPacket& packet)
 }
 
 //=============================================================================
-// ���Լ��ӵ�ǰ��ͼpCSrcMap���л���Ŀ���ͼszTarMapName��[lTarX,lTarY]�ǵ�Ŀ���ͼ���λ��(ϵͳ�������ײ��Ϣ���е�������һ����ȷ����)
-// bNeedOutSrcMap ��ʾ�Ƿ���Ҫ��ԭ��ͼGoOut
+// pCSrcMapszTarMapName[lTarX,lTarY]()
+// bNeedOutSrcMap GoOut
 //=============================================================================
 void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Long lTarY, bool bNeedOutSrcMap, Char chSwitchType, Long lTMapCpyNO)
 {
@@ -344,14 +344,14 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 
 	
 
-	if (!strcmp(pCSrcMap->GetName(), szTarMapName)) // ͬ��ͼ���л�
+	if (!strcmp(pCSrcMap->GetName(), szTarMapName)) // 
 	{
 		if (GetPlayer())
-			//LG("enter_map", "SwitchMap(ͬ��ͼ�л������ƽ�ɫ�� %s[����ɫ�� %s]����ͼ�� %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
-			ToLogService("map", "SwitchMap(the same map switch��control player name {}[mainplayer {}]��mapname {})--------", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
+			//LG("enter_map", "SwitchMap( %s[ %s] %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
+			ToLogService("map", "SwitchMap(the same map switchcontrol player name {}[mainplayer {}]mapname {})--------", GetLogName(), GetPlyMainCha()->GetLogName(), szTarMapName);
 		if (m_SMoveRedu.ulStartTick == 0xffffffff)
 			m_SMoveRedu.ulStartTick = GetTickCount();
-		if(!IsPlayerCha()) // ����ҽ�ɫ�������Լ��ĳ���������
+		if(!IsPlayerCha()) // 
 		{
 			m_SFightInit.chTarType = 0;
 			m_CChaAttr.Init(GetCat());
@@ -369,7 +369,7 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 				g_strChaState[0] = g_skillstate;
 			Square SSrcShape = GetShape();
 			Square STarShape = {{lTarX, lTarY}, SSrcShape.radius};
-			if (!pCSrcMap->EnsurePos(&STarShape, this)) // ����ʧ��
+			if (!pCSrcMap->EnsurePos(&STarShape, this)) // 
 			{
 				lTarX = SSrcShape.centre.x;
 				lTarY = SSrcShape.centre.y;
@@ -377,7 +377,7 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 
 			GetPlayer()->GetMainCha()->Cmd_EnterMap(szTarMapName, lTMapCpyNO, lTarX, lTarY);
 
-			// ��ɫ����NPCͬ����ͼ�л�			
+			// NPC			
 			GetPlayer()->MisEnterMap();
 		}
 
@@ -390,17 +390,17 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 		SubMap	*pCBackM = GetSubMap();
 		SetSubMap(pCSrcMap);
 		pCSrcMap->BeforePlyOutMap(this);
-		//LG("enter_map", "SwitchMap(��ͬServer��ͼ�л������ƽ�ɫ�� %s[����ɫ�� %s]��ԭ��ͼ %s��Ŀ���ͼ %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
-		ToLogService("map", "SwitchMap(differ Server map switch��control player name {}[mainplayer {}]��formerly map {}��aimmap {})--------", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
+		//LG("enter_map", "SwitchMap(Server %s[ %s] %s %s)--------\n", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
+		ToLogService("map", "SwitchMap(differ Server map switchcontrol player name {}[mainplayer {}]formerly map {}aimmap {})--------", GetLogName(), GetPlyMainCha()->GetLogName(), pCSrcMap->GetName(), szTarMapName);
 		if (GetSubMap())
-			//LG("enter_map", "��ɫ��ͼ�� %s\n", GetSubMap()->GetName());
+			//LG("enter_map", " %s\n", GetSubMap()->GetName());
 			ToLogService("map", "character map name {}", GetSubMap()->GetName());
-		// ����д���ݿ�
+		// 
 		CPlayer	*pPlayer = GetPlayer();
 		if(!pPlayer)
 			return;
 
-		//�������޸�
+		//
 		if(GetPlyMainCha()->IsVolunteer())
 		{
 			bVolunteer = true;
@@ -408,15 +408,15 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 		}
 
 		game_db.SavePlayer(pPlayer, enumSAVE_TYPE_SWITCH);
-		//LG("enter_map", "�������ݳɹ�\n");
+		//LG("enter_map", "\n");
 		ToLogService("map", "save data succeed");
 
-		// ��ɫ����NPCͬ����ͼ�л�
+		// NPC
 		pPlayer->MisLogout();
 
 		SetSubMap(pCBackM);
 
-		// ����Э��
+		// 
 		// Typed: map switch
 		{
 			net::msg::MtSwitchMapMessage msg;
@@ -440,33 +440,33 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
         g_pGameApp->m_dwPlayerCnt--;
 
 		pPlayer->Free();
-		// ɾ��gate server��Ӧ��ά����Ϣ
+		// gate server
 		pPlayer->OnLogoff();
         DELPLAYER(pPlayer);
-		//LG("enter_map", "���������ͼ\n\n");
+		//LG("enter_map", "\n\n");
 		ToLogService("map", "finish enter map");
 	}
 }
 
 void CCharacter::OnBeginSee(Entity *obj)
 {
-	if(!IsPlayerFocusCha()) // �ý�ɫ������ҵ�ǰ�Ŀ��ƽ���
+	if(!IsPlayerFocusCha()) // 
 		return;
 
-	obj->OnBeginSeen(this);	//ToDo:����Ŀ���������Ϣ�Է�ӳ���ͻ���
+	obj->OnBeginSeen(this);	//ToDo:
 }
 
 void CCharacter::OnEndSee(Entity *obj)
 {
-	if(!IsPlayerFocusCha()) // �ý�ɫ������ҵ�ǰ�Ŀ��ƽ���
+	if(!IsPlayerFocusCha()) // 
 		return;
 
-	obj->OnEndSeen(this);	//ToDo:�ӿͻ���ɾ��Ŀ��
+	obj->OnEndSeen(this);	//ToDo:
 }
 
 void CCharacter::ReflectINFof(Entity *srcent, net::WPacket chginf)
 {
-	if (!IsPlayerCha()) // �ý�ɫ���������
+	if (!IsPlayerCha()) // 
 		return;
 
 	if(srcent ==this)
@@ -489,7 +489,7 @@ bool CCharacter::IsPKSilver()
 
 void CCharacter::OnBeginSeen(CCharacter *pCCha)
 {
-	if (!pCCha->IsPlayerCha()) // �ý�ɫ���������
+	if (!pCCha->IsPlayerCha()) // 
 		return;
 
 	MPTimer tt;
@@ -557,14 +557,14 @@ void CCharacter::OnBeginSeen(CCharacter *pCCha)
 
 void CCharacter::OnEndSeen(CCharacter *pCCha)
 {
-	if (!pCCha->IsPlayerCha()) // �ý�ɫ���������
+	if (!pCCha->IsPlayerCha()) // 
 		return;
 
 	if (m_pCPlayer && pCCha->m_pCPlayer && (GetID() == pCCha->GetID()))
-		//LG("��Ұ����", "ͬ����ҽ�ɫ %s ����Ұ�����ǵ�socket��%p��%p.\n", pCCha->GetLogName(), m_pCPlayer->GetGate(), pCCha->m_pCPlayer->GetGate());
+		//LG("", " %s socket%p%p.\n", pCCha->GetLogName(), m_pCPlayer->GetGate(), pCCha->m_pCPlayer->GetGate());
 		ToLogService("errors", LogLevel::Error, "the homonymy player {} out of eyeshot, their socket: {}, {}.", pCCha->GetLogName(), static_cast<void*>(m_pCPlayer->GetGate()), static_cast<void*>(pCCha->m_pCPlayer->GetGate()));
 
-	// Типизированная сериализация: персонаж покинул зону видимости
+	//  :    
 	auto pk = net::msg::serialize(net::msg::McChaEndSeeMessage{
 		(GetPlayer() && GetPlayer() == pCCha->GetPlayer() && getAttr(ATTR_CHATYPE) == enumCHACTRL_PLAYER)
 			? enumENTITY_SEEN_SWITCH : enumENTITY_SEEN_NEW,
@@ -572,13 +572,13 @@ void CCharacter::OnEndSeen(CCharacter *pCCha)
 	});
 	pCCha->ReflectINFof(this,pk);
 
-	// ����npc��Ϣ״̬ͬ��
+	// npc
 	mission::CNpc* pNpc = IsNpc();
 	if( pNpc )
 	{
 		if( pNpc->GetType() == mission::CNpc::TALK )
 		{
-			// �Ȼ�ȡNPC״̬��Ϣ
+			// NPC
 			mission::CTalkNpc* pTalk = (mission::CTalkNpc*)pNpc;
 			pCCha->ClearMissionState( GetID() );
 		}
@@ -627,13 +627,13 @@ void CCharacter::SetRelive(Char chType, Char chLv, const Char *szInfo)
 		if (m_chReliveLv == 0)
 			return;
 
-		if (IsBoat()) // ������ԭ�ظ���
+		if (IsBoat()) // 
 			return;
 
 		GetPlyMainCha()->SetChaRelive();
 	}
 
-	// Типизированная сериализация: запрос воскрешения
+	//  :  
 	auto pk = net::msg::serialize(net::msg::McQueryReliveMessage{
 		GetID(), szInfo ? szInfo : "", static_cast<int64_t>(chType)
 	});
@@ -680,7 +680,7 @@ void CCharacter::SetSideID(Long lSideID)
 	 }
 }
 
-// chPosType 1��װ����.2��������
+// chPosType 1.2
 SItemGrid* CCharacter::GetItem(Char chPosType, Long lItemID)
 {
 	SItemGrid	*pSItemCont = 0;
@@ -712,7 +712,7 @@ SItemGrid* CCharacter::GetItem(Char chPosType, Long lItemID)
 	return pSItemCont;
 }
 
-// chPosType 1��װ����.2��������
+// chPosType 1.2
 SItemGrid* CCharacter::GetItem2(Char chPosType, Long lPosID)
 {
 	SItemGrid	*pSItemCont = 0;
@@ -729,7 +729,7 @@ SItemGrid* CCharacter::GetItem2(Char chPosType, Long lPosID)
 	return pSItemCont;
 }
 
-// ����װ������Ч�ԣ��漰��������������ֵ�ӳɣ��Ѿ�����Լ��ܵ�Ӱ��
+// 
 bool CCharacter::SetEquipValid(dbc::Char chEquipPos, bool bValid, bool bSyn)
 {
 	if (!GetPlayer() || IsBoat())
@@ -772,7 +772,7 @@ bool CCharacter::SetEquipValid(dbc::Char chEquipPos, bool bValid, bool bSyn)
 	return true;
 }
 
-// ���ñ������ߵ���Ч�ԣ�����õ�������������������������������λ�ã������漰���õ�����Ϊװ���Խ�ɫ�ļӳ�
+// 
 bool CCharacter::SetKitbagItemValid(dbc::Short sPosID, bool bValid, bool bRecheckAttr, bool bSyn)
 {
 	SItemGrid *pSEspeGrid = m_CKitbag.GetGridContByID(sPosID);
@@ -792,7 +792,7 @@ bool CCharacter::SetKitbagItemValid(dbc::Short sPosID, bool bValid, bool bRechec
 		CItemRecord* pItem = GetItemRecordInfo(pSEspeGrid->sID);
 		if(pItem == NULL)
 			return false;
-		if (pItem->sType == enumItemTypePet) // ����
+		if (pItem->sType == enumItemTypePet) // 
 		{
 			if (bSyn)
 			{
@@ -822,7 +822,7 @@ bool CCharacter::SetKitbagItemValid(dbc::Short sPosID, bool bValid, bool bRechec
 	return true;
 }
 
-// ���ñ������ߵ���Ч�ԣ�����õ�������������������������������λ�ã������漰���õ�����Ϊװ���Խ�ɫ�ļӳ�
+// 
 bool CCharacter::SetKitbagItemValid(SItemGrid* pSItem, bool bValid, bool bRecheckAttr, bool bSyn)
 {
 	Short	sPosID;
@@ -831,7 +831,7 @@ bool CCharacter::SetKitbagItemValid(SItemGrid* pSItem, bool bValid, bool bRechec
 	return SetKitbagItemValid(sPosID, bValid, bRecheckAttr, bSyn);
 }
 
-// Ӱ����۵ĵ��ߣ����򣬳����.
+// .
 bool CCharacter::ItemIsAppendLook(SItemGrid* pSItem)
 {
 	if (!pSItem)
@@ -855,7 +855,7 @@ void CCharacter::SetEspeItemChangeFlag(bool bChange)
 	if (pGrid)
 	{
 		CItemRecord* pItem = GetItemRecordInfo(pGrid->sID);
-		if(pItem && pItem->sType == enumItemTypePet) // �������
+		if(pItem && pItem->sType == enumItemTypePet) // 
 			m_CKitbag.SetSingleChangeFlag(sEspeGridID);
 	}
 }
@@ -881,7 +881,7 @@ bool CCharacter::AddKitbagCapacity(dbc::Short sAddVal)
 		return false;
 }
 
-// ��龫�������Ƿ�Ϸ���������Ч��
+// 
 bool CCharacter::CheckForgeItem(SForgeItem *pSItem)
 {
 	CPlayer	*pCPly = GetPlayer();
@@ -903,7 +903,7 @@ bool CCharacter::CheckForgeItem(SForgeItem *pSItem)
 	return true;
 }
 
-// �����ߵ���Ч��
+// 
 void CCharacter::CheckItemValid(SItemGrid* pCItem)
 {
 	if (!pCItem)
@@ -916,7 +916,7 @@ void CCharacter::CheckItemValid(SItemGrid* pCItem)
 	}
 }
 
-// �����������
+// 
 void CCharacter::CheckEspeItemGrid(void)
 {
 	Short	sEspeGridID = 1;
@@ -924,12 +924,12 @@ void CCharacter::CheckEspeItemGrid(void)
 	if (pGrid)
 	{
 		CItemRecord* pItem = GetItemRecordInfo(pGrid->sID);
-		if(pItem && pItem->sType == enumItemTypePet) // �������
+		if(pItem && pItem->sType == enumItemTypePet) // 
 			ChangeItem(true, pGrid, enumEQUIP_HEAD);
 	}
 }
 
-// ���¼��������Ĳ�������������������ߣ�װ����������
+// 
 Short CCharacter::KbPushItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid, Short &sPosID, Short sType, bool bCommit, bool bSureOpr)
 {
 	if (!pGrid)
@@ -940,7 +940,7 @@ Short CCharacter::KbPushItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid,
 	Short sPushRet = m_CKitbag.Push(pGrid, sPosID, sType, bCommit, bSureOpr);
 	if (sPushRet == enumKBACT_SUCCESS || sPushRet == enumKBACT_ERROR_FULL)
 	{
-		if (!b2HasItem && sPosID == sEspeGridID) // �����ԭ���ǿյģ������е�����.
+		if (!b2HasItem && sPosID == sEspeGridID) // .
 		{
 			CItemRecord* pItem = GetItemRecordInfo(pGrid->sID);
 			if(pItem == NULL)
@@ -980,10 +980,10 @@ Short CCharacter::KbPopItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid, 
 		return enumKBACT_ERROR_PUSHITEMID;
 	Short	sEspeGridID = 1;
 	Short sPushRet = m_CKitbag.Pop(pGrid, sPosID, sType, bCommit);
-	if (sPosID == sEspeGridID && sPushRet == enumKBACT_SUCCESS) // �ɹ����������
+	if (sPosID == sEspeGridID && sPushRet == enumKBACT_SUCCESS) // 
 	{
 		bool b2HasItem = m_CKitbag.GetGridContByID(sEspeGridID) ? true : false;
-		if (!b2HasItem) // �����û�е�����.
+		if (!b2HasItem) // .
 		{
 			CItemRecord* pItem = GetItemRecordInfo(pGrid->sID);
 			if(pItem == NULL)
@@ -1019,7 +1019,7 @@ Short CCharacter::KbPopItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid, 
 Short CCharacter::KbClearItem(bool bRecheckAttr, bool bSynAttr, Short sPosID, Short sType)
 {
 	Short	sEspeGridID = 1;
-	if (sPosID == sEspeGridID) // �����
+	if (sPosID == sEspeGridID) // 
 	{
 		SItemGrid SGrid;
 		SItemGrid *pGrid = m_CKitbag.GetGridContByID(sEspeGridID);
@@ -1032,7 +1032,7 @@ Short CCharacter::KbClearItem(bool bRecheckAttr, bool bSynAttr, Short sPosID, Sh
 		/* //disabled pet slot
 		if (sRet == enumKBACT_SUCCESS)
 		{
-			if (pItem->sType == enumItemTypePet) // ����
+			if (pItem->sType == enumItemTypePet) // 
 			{
 				if (bSynAttr)
 				{
@@ -1068,7 +1068,7 @@ Short CCharacter::KbClearItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid
 	if(pItem == NULL)
 		return enumKBACT_ERROR_PUSHITEMID;
 	
-	if (pItem->sType == enumItemTypePet) // ����
+	if (pItem->sType == enumItemTypePet) // 
 	{
 		
 		Short sEspeGridID = 1;
@@ -1078,7 +1078,7 @@ Short CCharacter::KbClearItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid
 		/* disabled pet slot
 		if (sRet == enumKBACT_SUCCESS)
 		{
-			if (sPosID == sEspeGridID) // �����
+			if (sPosID == sEspeGridID) // 
 			{
 				if (m_CKitbag.GetNum(sEspeGridID) <= 0)
 				{
@@ -1133,7 +1133,7 @@ Short CCharacter::KbRegroupItem(bool bRecheckAttr, bool bSynAttr, Short sSrcPosI
 			CItemRecord* pItem = GetItemRecordInfo(SEspeGridOld.sID);
 			if(pItem == NULL)
 				return enumKBACT_ERROR_PUSHITEMID;
-			if (pItem->sType == enumItemTypePet) // ����
+			if (pItem->sType == enumItemTypePet) // 
 				ChangeItem(false, &SEspeGridOld, enumEQUIP_HEAD);
 		}
 		if (pSEspeGridNew)
@@ -1141,7 +1141,7 @@ Short CCharacter::KbRegroupItem(bool bRecheckAttr, bool bSynAttr, Short sSrcPosI
 			CItemRecord* pItem = GetItemRecordInfo(pSEspeGridNew->sID);
 			if(pItem == NULL)
 				return enumKBACT_ERROR_PUSHITEMID;
-			if (pItem->sType == enumItemTypePet) // ����
+			if (pItem->sType == enumItemTypePet) // 
 				ChangeItem(true, pSEspeGridNew, enumEQUIP_HEAD);
 		}
 
@@ -1224,7 +1224,7 @@ bool CCharacter::String2KitbagTmpData(std::string &strData)
 	return false;
 }
 
-// ִ�о����ű�
+// 
 bool CCharacter::DoForgeLikeScript(dbc::cChar *cszFunc, dbc::Long &lRet)
 {
 	CPlayer	*pCPly = GetPlayer();
@@ -1235,7 +1235,7 @@ bool CCharacter::DoForgeLikeScript(dbc::cChar *cszFunc, dbc::Long &lRet)
 	int	nParamNum = 0;
 	int nRetNum = 1;
 	lua_getglobal(g_pLuaState, cszFunc);
-	if (!lua_isfunction(g_pLuaState, -1)) // ���Ǻ�����
+	if (!lua_isfunction(g_pLuaState, -1)) // 
 	{
 		lua_pop(g_pLuaState, 1);
 		return false;
@@ -1278,7 +1278,7 @@ bool CCharacter::DoLifeSkillcript(dbc::cChar *cszFunc, dbc::Long &lRet)
 	int	nParamNum = 0;
 	int nRetNum = 1;
 	lua_getglobal(g_pLuaState, cszFunc);
-	if (!lua_isfunction(g_pLuaState, -1)) // ���Ǻ�����
+	if (!lua_isfunction(g_pLuaState, -1)) // 
 	{
 		lua_pop(g_pLuaState, 1);
 		return false;
@@ -1321,7 +1321,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 		int	nParamNum = 0;
 		short sRet = 0;
 		lua_getglobal(g_pLuaState, cszFunc);
-		if (!lua_isfunction(g_pLuaState, -1)) // ���Ǻ�����
+		if (!lua_isfunction(g_pLuaState, -1)) // 
 		{
 			lua_pop(g_pLuaState, 1);
 			return false;
@@ -1363,7 +1363,7 @@ bool CCharacter::DoTigerScript(dbc::cChar *cszFunc)
 	{
 		int	nParamNum = 0;
 		lua_getglobal(g_pLuaState, cszFunc);
-		if (!lua_isfunction(g_pLuaState, -1)) // ���Ǻ�����
+		if (!lua_isfunction(g_pLuaState, -1)) // 
 		{
 			lua_pop(g_pLuaState, 1);
 			return false;
@@ -1403,13 +1403,13 @@ void CCharacter::Reset()
 		SetActControl(i);
 	m_SSeat.chIsSeat = 0;
 
-	setAttr(ATTR_HP, m_CChaAttr.GetAttr(ATTR_MXHP));	// ��ǰHP
-	setAttr(ATTR_SP, m_CChaAttr.GetAttr(ATTR_MXSP));	// ��ǰSP
+	setAttr(ATTR_HP, m_CChaAttr.GetAttr(ATTR_MXHP));	// HP
+	setAttr(ATTR_SP, m_CChaAttr.GetAttr(ATTR_MXSP));	// SP
 }
 
 void CCharacter::OnDie(DWORD dwCurTime)
 {
-	if (GetExistState() >= enumEXISTS_WITHERING) // ��ʧ
+	if (GetExistState() >= enumEXISTS_WITHERING) // 
 	{
 		if (m_SExistCtrl.lWitherTime == -1)
 		{
@@ -1417,19 +1417,19 @@ void CCharacter::OnDie(DWORD dwCurTime)
 		}
 		else if (dwCurTime - m_SExistCtrl.ulTick >= (uLong)m_SExistCtrl.lWitherTime)
 		{
-			if (IsPlayerCha()) // ��ҽ�ɫ�������ڵ�ͼ��ȴ�
+			if (IsPlayerCha()) // 
 			{
 				if (m_chSelRelive != enumEPLAYER_RELIVE_NONE)
 				{
-					if (m_chSelRelive == enumEPLAYER_RELIVE_CITY) // �سǸ���
+					if (m_chSelRelive == enumEPLAYER_RELIVE_CITY) // 
 					{
-						if (IsBoat()) // ��ֻ
+						if (IsBoat()) // 
 						{
 							BackToCity(true);
 
 							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
-								//LG("�����������", "��ɫ %s(%d)�����������HP�Ƿ�\n", GetLogName(), getAttr(ATTR_JOB));
+								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
 
 							m_chSelRelive = enumEPLAYER_RELIVE_NONE;
@@ -1442,7 +1442,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 							
 							g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
-								//LG("�����������", "��ɫ %s(%d)�����������HP�Ƿ�\n", GetLogName(), getAttr(ATTR_JOB));
+								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
 
 							m_chSelRelive = enumEPLAYER_RELIVE_NONE;
@@ -1464,7 +1464,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 
 							g_CParser.DoString("Relive_now", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, m_chReliveLv, DOSTRING_PARAM_END);
 							if (getAttr(ATTR_HP) <= 0)
-								//LG("�����������", "��ɫ %s(%d)�����������HP�Ƿ�\n", GetLogName(), getAttr(ATTR_JOB));
+								//LG("", " %s(%d)HP\n", GetLogName(), getAttr(ATTR_JOB));
 								ToLogService("errors", LogLevel::Error, "character {}({})after renascence compute HP is unlawful", GetLogName(), getAttr(ATTR_JOB));
 							SwitchMap(pCMap, pCMap->GetName(), GetPos().x, GetPos().y, false, enumSWITCHMAP_DIE, pCMap->GetCopyNO());
 						}
@@ -1488,7 +1488,7 @@ void CCharacter::OnDie(DWORD dwCurTime)
 
 void CCharacter::AfterStepMove(void)
 {
-	// ������ֻ�л���ͼ
+	// 
 	if (IsBoat())
 	{
 		const long	clSwitchDist = 50 * 100;
@@ -1510,7 +1510,7 @@ void CCharacter::AfterStepMove(void)
 				lTarX = clTarDist;
 				SrcPos.x = area.rbtm.x - clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "��Ҵ�ֻ������garner�л���magicsea\n");
+				//LG("enter_map", "garnermagicsea\n");
 				ToLogService("map", "character boat will switch garner to magicsea");
 			}
 		}
@@ -1523,7 +1523,7 @@ void CCharacter::AfterStepMove(void)
 				lTarX = clTarDist;
 				SrcPos.x = area.rbtm.x - clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "��Ҵ�ֻ������magicsea�л���darkblue\n");
+				//LG("enter_map", "magicseadarkblue\n");
 				ToLogService("map", "character boat will switch magicsea to darkblue");
 			}
 			else if (GetPos().x <= area.ltop.x + clSwitchDist)
@@ -1533,7 +1533,7 @@ void CCharacter::AfterStepMove(void)
 				lTarX = area.rbtm.x - clTarDist;
 				SrcPos.x = area.ltop.x + clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "��Ҵ�ֻ������magicsea�л���garner\n");
+				//LG("enter_map", "magicseagarner\n");
 				ToLogService("map", "character boat will switch magicsea to garner");
 			}
 		}
@@ -1546,7 +1546,7 @@ void CCharacter::AfterStepMove(void)
 				lTarX = area.rbtm.x - clTarDist;
 				SrcPos.x = area.ltop.x + clTarDist;
 				pMap->MoveTo(this, SrcPos);
-				//LG("enter_map", "��Ҵ�ֻ������darkblue�л���magicsea\n");
+				//LG("enter_map", "darkbluemagicsea\n");
 				ToLogService("map", "character boat will switch darkblue to magicsea");
 			}
 		}
@@ -1561,7 +1561,7 @@ void CCharacter::SubsequenceMove()
 	if (!IsLiveing())
 	{
 		m_SMoveRedu.ulStartTick = GetTickCount();
-		return; // �ƶ������������������к�״̬������������������˷�֧
+		return; // 
 	}
 
 	if (GetMoveState() != enumMSTATE_ON)
@@ -1591,7 +1591,7 @@ void CCharacter::SubsequenceFight()
 
 	if (!IsLiveing())
 	{
-		return; // ��ս��������������������˷�֧
+		return; // 
 	}
 	else if (GetFightState() != enumFSTATE_ON)
 	{
@@ -1602,13 +1602,13 @@ void CCharacter::SubsequenceFight()
 }
 
 //=============================================================================
-// ͨ���ж�ʧ��ԭ��
-// chType �ж�����
-// chReason ʧ��ԭ�򣬲μ�.\client\scripts\table\NotifySet.txt
+// 
+// chType 
+// chReason .\client\scripts\table\NotifySet.txt
 //=============================================================================
 void CCharacter::FailedActionNoti(Char chType, Char chReason)
 {
-	// Типизированная сериализация: неудачное действие
+	//  :  
 	auto pk = net::msg::serialize(net::msg::McFailedActionMessage{GetID(), chType, chReason});
 	ReflectINFof(this, pk);
 }
@@ -1674,7 +1674,7 @@ void CCharacter::Die()
 		GetPlyMainCha()->ResetChaRelive();
 	}
 
-	if(IsPlayerFocusCha()) // ��ҵ�ǰ�Ŀ��ƽ��㣬����ʱ�����
+	if(IsPlayerFocusCha()) // 
 	{
 		SetWitherTime(0);
 		if (IsBoat())
@@ -1683,7 +1683,7 @@ void CCharacter::Die()
 			SetResumeTime(-1);
 	}
 
-	// ȡ�����Ľ�����Ϣ���ߴ�ֻ����ȡ��
+	// 
 
 	g_StallSystem.CloseStall(*this);
 
@@ -1716,7 +1716,7 @@ void CCharacter::Die()
 	{
 		if (this->InOutMapQueue())
 		{
-			//LG("�ظ���ͼ���ɫ", "��ɫ%s���Ѿ������ڵ�ͼ�����!\n", GetLogName());
+			//LG("", "%s!\n", GetLogName());
 		}
 		else
 		{
@@ -1746,7 +1746,7 @@ void CCharacter::JustDie(CCharacter *pCSrcCha)
 }
 
 //=============================================================================
-// ֻ����ͬ�ֽ�ɫ��̬��λ���л�
+// 
 //=============================================================================
 void CCharacter::MoveCity(cChar *szCityName, Long lMapCopyNO, Char chSwitchType)
 {
@@ -1764,16 +1764,16 @@ void CCharacter::MoveCity(cChar *szCityName, Long lMapCopyNO, Char chSwitchType)
 	if(dwEndTime > 20)
 	{
 		if (GetSubMap())
-			//LG("script_time", "\t��ɫ %s ��ͼ�л���%s-->%s������ʱ����� time = %d\n", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
+			//LG("script_time", "\t %s %s-->%s time = %d\n", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
 			ToLogService("lua", LogLevel::Trace, "\tcharacter {} map switch({}-->{}) expend much time:time = {}", GetLogName(), GetSubMap()->GetName(), pSBirthP->szMapName, dwEndTime);
 		else
-			//LG("script_time", "\t��ɫ %s ��ͼ�л���""-->%s������ʱ����� time = %d\n", GetLogName(), pSBirthP->szMapName, dwEndTime);
+			//LG("script_time", "\t %s ""-->%s time = %d\n", GetLogName(), pSBirthP->szMapName, dwEndTime);
 			ToLogService("lua", LogLevel::Trace, "\tcharacter {} map switch(\"\"-->{}) expend much time:time = {}", GetLogName(), pSBirthP->szMapName, dwEndTime);
 	}
 }
 
 //=============================================================================
-// ���س���
+// 
 //=============================================================================
 
 /*
@@ -1903,7 +1903,7 @@ void CCharacter::BickerNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	// Типизированная сериализация: уведомление-бикер
+	//  : -
 	auto packet = net::msg::serialize(net::msg::McBickerNoticeMessage{szTemp});
 	this->ReflectINFof( this, packet );
 }
@@ -1917,7 +1917,7 @@ void CCharacter::ColourNotice( DWORD rgb, const char szData[], ... )
 	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	va_end( list );
 
-	// Типизированная сериализация: цветное уведомление
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McColourNoticeMessage{static_cast<int64_t>(rgb), szTemp});
 	this->ReflectINFof( this, packet );
 }
@@ -1933,7 +1933,7 @@ void CCharacter::SystemNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	// Типизированная сериализация: системное уведомление
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McSysInfoMessage{szTemp});
 	this->ReflectINFof( this, packet );
 }
@@ -1949,7 +1949,7 @@ void CCharacter::PopupNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	// Типизированная сериализация: всплывающее уведомление
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McPopupNoticeMessage{szTemp});
 	this->ReflectINFof( this, packet );
 }
@@ -2069,7 +2069,7 @@ BOOL CCharacter::SetEntityState( DWORD dwEntityID, BYTE byState )
 {
 	if( GetPlayer() == NULL )
 		return FALSE;
-	// Типизированная сериализация: смена состояния сущности
+	//  :   
 	auto packet = net::msg::serialize(net::msg::McEntityStateChangeMessage{
 		static_cast<int64_t>(dwEntityID), static_cast<int64_t>(byState)
 	});
@@ -2087,7 +2087,7 @@ BOOL CCharacter::ResetMissionState( mission::CTalkNpc& npc )
 	BYTE byState = 0;
 	npc.MissionProc( *this, byState );
 
-	// Типизированная сериализация: смена состояния NPC
+	//  :   NPC
 	auto packet = net::msg::serialize(net::msg::McNpcStateChangeMessage{
 		static_cast<int64_t>(npc.GetID()), static_cast<int64_t>(byState)
 	});
@@ -2128,7 +2128,7 @@ void CCharacter::MisLogClear( WORD wMisID )
 		{
 			if( GetPlayer()->GetLuanchOut()->m_pTradeData ) 
 			{
-				//SystemNotice( "��ǰ����״̬,�������ж�����!" );
+				//SystemNotice( ",!" );
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00001) );
 				return;
 			}
@@ -2136,7 +2136,7 @@ void CCharacter::MisLogClear( WORD wMisID )
 
 		if( m_pTradeData )
 		{
-			//SystemNotice( "��ǰ����״̬,�������ж�����!" );
+			//SystemNotice( ",!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00001) );
 			return;
 		}
@@ -2158,7 +2158,7 @@ BOOL CCharacter::ConvoyNpc( WORD wRoleID, BYTE byIndex, WORD wNpcCharID, BYTE by
 			return FALSE;
 		}
 
-		// �������������
+		// 
 		pNpc->m_AIType = byAiType;
 		pNpc->m_AITarget = this;
 
@@ -2526,7 +2526,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 {
 	if(GetPlyMainCha()->m_CKitbag.IsPwdLocked())
 	{
-		//SystemNotice("������������!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00002));
 		return FALSE;
 	}
@@ -2540,7 +2540,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 			//check if player stalling
 	if (GetStallData())
 	{
-		//character.SystemNotice( "���ڰ�̯�������Խ���" );
+		//character.SystemNotice( "" );
 		SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00003));
 		return FALSE;
 	}
@@ -2549,7 +2549,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	//add by ALLEN 2007-10-16
 		if(GetPlyMainCha()->IsReadBook())
 	{
-		//SystemNotice("���ڶ��飬�����Խ���!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00003));
 		return FALSE;
 	}
@@ -2557,7 +2557,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	USHORT sSize = m_CKitbag.GetCapacity();
 	if( byIndex >= sSize )
 	{
-		//SystemNotice( "��Ʒ��λ��������!ID = %d", byIndex );
+		//SystemNotice( "!ID = %d", byIndex );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00004), byIndex );
 		return FALSE;
 	}
@@ -2566,14 +2566,14 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	CItemRecord* pItem = GetItemRecordInfo( wItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", wItemID );
+		//SystemNotice( "ID!ID = %d", wItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00005), wItemID );
 		return FALSE;
 	}
 
 	if( !pItem->chIsTrade || !m_CKitbag.GetGridContByID(byIndex)->GetInstAttr(ITEMATTR_TRADABLE))
 	{
-		//SystemNotice( "����Ʒ��%s�����ɽ���!", pItem->szName );
+		//SystemNotice( "%s!", pItem->szName );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00006), pItem->szName );
 		return FALSE;
 	}
@@ -2591,19 +2591,19 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 
 	if( !m_CKitbag.HasItem( byIndex ) )
 	{
-		//SystemNotice( "δ���ָ���Ʒ������λ(%d)����Ʒ��Ϣ!", byIndex );
+		//SystemNotice( "(%d)!", byIndex );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00007), byIndex );
 		return FALSE;
 	}
 
 	if( m_CKitbag.GetNum(byIndex) < byCount )
 	{
-		//SystemNotice( "������Ʒ��%s������(%d)���㣬����(%d)!", pItem->szName, byCount, wItemID );
+		//SystemNotice( "%s(%d)(%d)!", pItem->szName, byCount, wItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00008), pItem->szName, byCount, wItemID );
 		return FALSE;
 	}
 	
-	// �ж϶�������֤��
+	// 
 	DWORD dwPrice = pItem->lPrice;
 	if( pItem->sType == enumItemTypeBoat )
 	{
@@ -2611,7 +2611,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 		CCharacter* pBoat = GetPlayer()->GetBoat( dwBoatID );
 		if( !pBoat )
 		{
-			//SystemNotice( "��ȡ��ֻ�۸���Ϣʧ��!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00009) );
 			return FALSE;
 		}
@@ -2619,7 +2619,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 
 		if( !BoatClear( m_CKitbag.GetDBParam( enumITEMDBP_INST_ID, byIndex ) ) )
 		{
-			//SystemNotice( "���ۡ�%s��ʧ�ܣ�������ʹ�øô�!", pItem->szName );			
+			//SystemNotice( "%s!", pItem->szName );			
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00010), pItem->szName );			
 			return enumITEMOPT_ERROR_UNUSE;
 		}
@@ -2641,19 +2641,19 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	SynAttr( enumATTRSYN_TRADE );
 	SyncBoatAttr(enumATTRSYN_TRADE);
 	
-	//SystemNotice( "�������%d����%s����Ʒ�������(%d)��Ǯ���ܶ�(%d)!", byCount, pItem->szName, dwMoney, dwCharMoney );
+	//SystemNotice( "%d%s(%d)(%d)!", byCount, pItem->szName, dwMoney, dwCharMoney );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName, dwMoney, dwCharMoney );
 	char szLog[128] = "";
-	sprintf( szLog, "%d��%s", byCount, pItem->szName );
+	sprintf( szLog, "%d%s", byCount, pItem->szName );
 	ToLogService("trade", "[CHA_SELL] {} : {}", GetName(), szLog);
 
-	// ����������Ʒ����
+	// 
 	RefreshNeedItem( wItemID );
 
-	// ͬ����Ʒ����
+	// 
 	SynKitbagNew( enumSYN_KITBAG_FROM_NPC );
 
-	// ���ݿⱣ��
+	// 
 	SaveAssets();
 	LogAssets(enumLASSETS_TRADE);
 
@@ -2664,28 +2664,28 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 
 BOOL CCharacter::ExchangeReq(short sSrcID, short sSrcNum, short sTarID, short sTarNum)
 {
-	//char szNpc[128] = "ϵͳ";
+	//char szNpc[128] = "";
 	char szNpc[128];
 	strncpy( szNpc, RES_STRING(GM_CHARACTER_CPP_00012), 128 - 1 );
 
 	if (!GetPlyMainCha()->HasItem( sSrcID, sSrcNum ))
 	{
-		//SystemNotice("��û�жһ��������Ʒ!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00013));
 
-		// Типизированная сериализация: ответ обмена на чёрном рынке (неудача)
+		//  :      ()
 		auto packet = net::msg::serialize(net::msg::McBlackMarketExchangeAsrMessage{0, 0, 0, 0, 0});
 		this->ReflectINFof( this, packet );
 
 		return FALSE;
 	}
 
-	//add by jilinlee 2007.8.3  ��ֹ��Ҵ���Դ��������Ϊ0�����и���
+	//add by jilinlee 2007.8.3  0
 	if (g_CParser.DoString("Can_Exchange", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_NUMBER, 4, sSrcID, sSrcNum, sTarID, sTarNum, DOSTRING_PARAM_END))
 	{
 		if(!g_CParser.GetReturnNumber(0))
 		{
-			//SystemNotice("���ݴ��󣬶һ�ʧ��!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00014));
 			return FALSE;
 		}
@@ -2698,9 +2698,9 @@ BOOL CCharacter::ExchangeReq(short sSrcID, short sSrcNum, short sTarID, short sT
 
 	GetPlyMainCha()->TakeItem( sSrcID, sSrcNum, szNpc );
 	GetPlyMainCha()->AddItem( sTarID, sTarNum, szNpc );
-	//SystemNotice("�һ��ɹ�!");
+	//SystemNotice("!");
 
-	// Типизированная сериализация: ответ обмена на чёрном рынке (успех)
+	//  :      ()
 	auto packet = net::msg::serialize(net::msg::McBlackMarketExchangeAsrMessage{
 		1, static_cast<int64_t>(sSrcID), static_cast<int64_t>(sSrcNum),
 		static_cast<int64_t>(sTarID), static_cast<int64_t>(sTarNum)
@@ -2878,7 +2878,7 @@ BOOL CCharacter::GetSaleGoodsItem( DWORD dwBoatID, BYTE byIndex, WORD& wItemID )
 				USHORT sSize = Bag.GetCapacity();
 				if( byIndex >= sSize )
 				{
-        			//SystemNotice( "��Ʒ��λ��������!ID = %d", byIndex );
+        			//SystemNotice( "!ID = %d", byIndex );
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00004), byIndex );
 					return FALSE;
 				}
@@ -3194,9 +3194,9 @@ void CCharacter::AddMoney( const char szName[], DWORD dwMoney )
 	dwCharMoney += dwMoney;
 	setAttr( ATTR_GD, dwCharMoney );
 
-	// ͬ����Ǯ
+	// 
 	SynAttr( enumATTRSYN_TASK );
-	//SystemNotice( "%s������%d��Ǯ���ܶ�(%d)!", szName, dwMoney, dwCharMoney );
+	//SystemNotice( "%s%d(%d)!", szName, dwMoney, dwCharMoney );
 	//ColourNotice(0xb5eb8e, "Received %dg (Total: %dg)", dwMoney, dwCharMoney );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00023), szName, dwMoney, dwCharMoney );
 }
@@ -3210,9 +3210,9 @@ BOOL CCharacter::TakeMoney( const char szName[], DWORD dwMoney )
 	dwCharMoney -= dwMoney;
 	setAttr( ATTR_GD, dwCharMoney );
 
-	// ͬ����Ǯ
+	// 
 	SynAttr( enumATTRSYN_TASK );
-	//SystemNotice( "%sȡ������%d��Ǯ�����(%d)!", szName, dwMoney, dwCharMoney );
+	//SystemNotice( "%s%d(%d)!", szName, dwMoney, dwCharMoney );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00024), szName, dwMoney, dwCharMoney );
 	return TRUE;
 }
@@ -3228,7 +3228,7 @@ BOOL CCharacter::MakeItem( USHORT sItemID, USHORT sCount, USHORT& sItemPos, BYTE
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "MakeItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "MakeItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00025), sItemID );
 		return FALSE;
 	}
@@ -3238,37 +3238,37 @@ BOOL CCharacter::MakeItem( USHORT sItemID, USHORT sCount, USHORT& sItemPos, BYTE
 	SGridCont.sNum = sCount;
 	ItemInstance( byAddType, &SGridCont );
 	
-	// ����ʵ������Ʒ
+	// 
 	m_CKitbag.SetChangeFlag(false);
 	Short sPushPos = defKITBAG_DEFPUSH_POS;
 	Short sPushRet = KbPushItem( true, true, &SGridCont, sPushPos );
-	if( sPushRet == enumKBACT_ERROR_LOCK ) // ������������
+	if( sPushRet == enumKBACT_ERROR_LOCK ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_KBLOCK );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // ���߲�����
+	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_NONE );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+	else if( sPushRet == enumKBACT_ERROR_FULL ) // 
 	{
 		ItemOprateFailed( enumKBACT_ERROR_FULL );
 		return FALSE;
 	}
 	else if( sPushRet == enumKBACT_SUCCESS )
 	{
-		// �����Ʒ�����¼�
+		// 
 		AfterPeekItem( sItemID, sCount );
 	}
 
 	sItemPos = sPushPos;
 	SynKitbagNew( enumSYN_KITBAG_SYSTEM );
-	//SystemNotice( "%s������%d����%s����Ʒ!", "ϵͳ", sCount, pItem->szName );
+	//SystemNotice( "%s%d%s!", "", sCount, pItem->szName );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), RES_STRING(GM_CHARACTER_CPP_00012), sCount, pItem->szName );
 	char szLog[128] = "";
-	sprintf( szLog, "%d��%s", sCount, pItem->szName );
+	sprintf( szLog, "%d%s", sCount, pItem->szName );
 	ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 
 	return TRUE;
@@ -3280,7 +3280,7 @@ BOOL CCharacter::GiveItem( USHORT sItemID, USHORT sCount, BYTE byAddType, BYTE b
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "GiveItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "GiveItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00027), sItemID );
 		return FALSE;
 	}
@@ -3292,7 +3292,7 @@ BOOL CCharacter::GiveItem( USHORT sItemID, USHORT sCount, BYTE byAddType, BYTE b
 	ItemInstance( byAddType, &SGridCont , isTradable, expiration );
 	
 
-	// ����ʵ������Ʒ
+	// 
 	m_CKitbag.SetChangeFlag(false);
 
 	Short sPushPos;
@@ -3308,19 +3308,19 @@ BOOL CCharacter::GiveItem( USHORT sItemID, USHORT sCount, BYTE byAddType, BYTE b
 	}
 	
 
-	if( sPushRet == enumKBACT_ERROR_LOCK ) // ������������
+	if( sPushRet == enumKBACT_ERROR_LOCK ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_KBLOCK );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // ���߲�����
+	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_NONE );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+	else if( sPushRet == enumKBACT_ERROR_FULL ) // 
 	{
-		// �����Ʒ�����¼�
+		// 
 		
 		USHORT sNum = sCount - SGridCont.sNum;
 		if( sNum > 0 ) AfterPeekItem( sItemID, sNum );
@@ -3334,7 +3334,7 @@ BOOL CCharacter::GiveItem( USHORT sItemID, USHORT sCount, BYTE byAddType, BYTE b
 	}
 	else if( sPushRet == enumKBACT_SUCCESS )
 	{
-		// �����Ʒ�����¼�
+		// 
 		AfterPeekItem( sItemID, sCount );
 	}
 
@@ -3350,7 +3350,7 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *p
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "GiveItem2KitbagTemp:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "GiveItem2KitbagTemp:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00028), sItemID );
 		return FALSE;
 	}
@@ -3373,30 +3373,30 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *p
 			SGridCont.sInstAttr[i][1] = (short)pItemAttr->itemAttrVal[i];
 		}
 
-		//���ò���
+		//
 		unsigned long ulForgeP = SGridCont.GetDBParam(enumITEMDBP_FORGE);
 		short sHole = static_cast<short>(ulForgeP / 1000000000);
 		ulForgeP = ulForgeP + (pItemAttr->itemFlute - sHole) * 1000000000;
 		SGridCont.SetDBParam(enumITEMDBP_FORGE, static_cast<long>(ulForgeP));
 	}
 
-	// ����ʵ������Ʒ
+	// 
 	m_pCKitbagTmp->SetChangeFlag(false);
 	Short sPushPos = defKITBAG_DEFPUSH_POS;
 	Short sPushRet = m_pCKitbagTmp->Push(&SGridCont, sPushPos);
-	if( sPushRet == enumKBACT_ERROR_LOCK ) // ������������
+	if( sPushRet == enumKBACT_ERROR_LOCK ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_KBLOCK );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // ���߲�����
+	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_NONE );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+	else if( sPushRet == enumKBACT_ERROR_FULL ) // 
 	{
-		// �����Ʒ�����¼�
+		// 
 		USHORT sNum = sCount - SGridCont.sNum;
 		if( sNum > 0 ) AfterPeekItem( sItemID, sNum );
 
@@ -3408,7 +3408,7 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *p
 	}
 	else if( sPushRet == enumKBACT_SUCCESS )
 	{
-		// �����Ʒ�����¼�
+		// 
 		AfterPeekItem( sItemID, sCount );
 	}
 
@@ -3419,21 +3419,21 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *p
 
 BOOL CCharacter::AddItem( USHORT sItemID, USHORT sCount, const char szName[], BYTE byAddType, BYTE bySoundType, BOOL isTradable, LONG expiration, short* posID )
 {
-	//char szItem[128] = "δ֪";
+	//char szItem[128] = "";
 	char szItem[128] = "";
 
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "AddItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "AddItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00029), sItemID );
 		return FALSE;
 	}
-	strncpy( szItem, pItem->szName,128 - 1 );//�˴�Ҫע�⣬szItem����Ҫ����������汾���е�������������ɵ��ߣ�����Ϊ128
+	strncpy( szItem, pItem->szName,128 - 1 );//szItem128
 
 	if( GiveItem( sItemID, sCount, byAddType, bySoundType, isTradable, expiration, posID ) )
 	{
-		//SystemNotice( "%s������%d����%s����Ʒ!", szName, sCount, szItem );
+		//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), szName, sCount, szItem );
 		char szLog[128] = "";
 		sprintf( szLog, RES_STRING(GM_CHARACTER_CPP_00096), sCount, szItem );
@@ -3443,7 +3443,7 @@ BOOL CCharacter::AddItem( USHORT sItemID, USHORT sCount, const char szName[], BY
 	}
 	else
 	{
-		//SystemNotice( "%s����%d����%s����Ʒ������ʧ��!", szName, sCount, szItem );
+		//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00030), szName, sCount, szItem );
 	}
 
@@ -3458,7 +3458,7 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, ItemInfo* pIt
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "AddItem2KitbagTemp:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "AddItem2KitbagTemp:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00032), sItemID );
 		return FALSE;
 	}
@@ -3466,14 +3466,14 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, ItemInfo* pIt
 
 	if( GiveItem2KitbagTemp( sItemID, sCount, pItemAttr, bySoundType ) )
 	{
-		//SystemNotice( "�㹺����%d����%s����Ʒ!", sCount, szItem );
+		//SystemNotice( "%d%s!", sCount, szItem );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00033), sCount, szItem.c_str() );		
 
 		return TRUE;
 	}
 	else
 	{
-		//SystemNotice( "�㹺��%d����%s����Ʒ������ʧ��!", sCount, szItem );
+		//SystemNotice( "%d%s!", sCount, szItem );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00034), sCount, szItem.c_str() );
 	}
 
@@ -3487,7 +3487,7 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, const char sz
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "AddItem2KitbagTemp:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "AddItem2KitbagTemp:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00032), sItemID );
 		return FALSE;
 	}
@@ -3496,7 +3496,7 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, const char sz
 
 	if( GiveItem2KitbagTemp( sItemID, sCount, byAddType, bySoundType ) )
 	{
-		//SystemNotice( "%s������%d����%s����Ʒ!", szName, sCount, szItem );
+		//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00026), szName, sCount, szItem.c_str());
 		char szLog[255] = "";
 		sprintf(szLog, "%d %s", sCount, szItem.c_str());
@@ -3505,7 +3505,7 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, const char sz
 	}
 	else
 	{
-		//SystemNotice( "%s����%d����%s����Ʒ������ʧ��!", szName, sCount, szItem );
+		//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00030), szName, sCount, szItem.c_str());
 	}
 
@@ -3518,7 +3518,7 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, BYTE byAddT
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "GiveItem2KitbagTemp:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "GiveItem2KitbagTemp:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00028), sItemID );
 		return FALSE;
 	}
@@ -3528,23 +3528,23 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, BYTE byAddT
 	SGridCont.sNum = sCount;
 	ItemInstance( byAddType, &SGridCont );
 
-	// ����ʵ������Ʒ
+	// 
 	m_pCKitbagTmp->SetChangeFlag(false);
 	Short sPushPos = defKITBAG_DEFPUSH_POS;
 	Short sPushRet = m_pCKitbagTmp->Push(&SGridCont, sPushPos);
-	if( sPushRet == enumKBACT_ERROR_LOCK ) // ������������
+	if( sPushRet == enumKBACT_ERROR_LOCK ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_KBLOCK );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // ���߲�����
+	else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // 
 	{
 		ItemOprateFailed( enumITEMOPT_ERROR_NONE );
 		return FALSE;
 	}
-	else if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+	else if( sPushRet == enumKBACT_ERROR_FULL ) // 
 	{
-		// �����Ʒ�����¼�
+		// 
 		USHORT sNum = sCount - SGridCont.sNum;
 		if( sNum > 0 ) AfterPeekItem( sItemID, sNum );
 
@@ -3556,7 +3556,7 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, BYTE byAddT
 	}
 	else if( sPushRet == enumKBACT_SUCCESS )
 	{
-		// �����Ʒ�����¼�
+		// 
 		AfterPeekItem( sItemID, sCount );
 	}
 
@@ -3567,14 +3567,14 @@ BOOL CCharacter::GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, BYTE byAddT
 BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szName[])
 {
 	int nNum = 0, nCount = 0;
-	//char szItem[32] = "δ֪";
+	//char szItem[32] = "";
 	char szItem[128];
 	strncpy( szItem, RES_STRING(GM_CHARACTER_CPP_00031), 128 - 1 );
 
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "TakeItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "TakeItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00035), sItemID );
 		return FALSE;
 	}
@@ -3607,7 +3607,7 @@ BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szNam
 
 	if( nCount < sCount )
 	{
-		//SystemNotice( "��Ҫ��ȡ%d����%s����Ʒ����������(%d)����!", sCount, szItem, nCount );
+		//SystemNotice( "%d%s(%d)!", sCount, szItem, nCount );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00036), sCount, szItem, nCount );
 		return FALSE;
 	}
@@ -3619,20 +3619,20 @@ BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szNam
 		m_pCKitbagTmp->Pop(&SGridCont, sIndex[i][0]);
 		/*if( KbPopItem(true, true, &SGridCont, sIndex[i][0]) != enumKBACT_SUCCESS )
 		{
-			SystemNotice( "%s����ȡ�����%d����%s����Ʒ!GridID = %d, NumItem = %d", szName, sCount, szItem, sIndex[i][0], sIndex[i][1] );
+			SystemNotice( "%s%d%s!GridID = %d, NumItem = %d", szName, sCount, szItem, sIndex[i][0], sIndex[i][1] );
 			return FALSE;
 		}*/
 	}
 
-	// ͬ��������Ϣ
+	// 
 	SynKitbagTmpNew( enumSYN_KITBAG_SYSTEM );
-	//SystemNotice( "%sȡ�������%d����%s����Ʒ!", szName, sCount, szItem );
+	//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00038), szName, sCount, szItem );
 	char szLog[128] = "";
-	sprintf( szLog, "%d�%s", sCount, szItem );
+	sprintf( szLog, "%d%s", sCount, szItem );
 	ToLogService("trade", "[MIS_CHA] {} : {}", GetName(), szLog);
 
-	// ˢ��������߼���
+	// 
 	RefreshNeedItem( sItemID );
 	return TRUE;
 }
@@ -3640,7 +3640,7 @@ BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szNam
 BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 {
 	int nNum = 0, nCount = 0;
-	//char szItem[32] = "δ֪";
+	//char szItem[32] = "";
 	char szItem[128];	
 	//char szItem[100] = { 0 };
 	//strncpy(szItem, RES_STRING(GM_CHARACTER_CPP_00031), 46 - 1);
@@ -3656,7 +3656,7 @@ BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "TakeItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "TakeItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00035), sItemID );
 		return FALSE;
 	}
@@ -3696,7 +3696,7 @@ BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 
 	if( nCount < sCount )
 	{
-		//SystemNotice( "��Ҫ��ȡ%d����%s����Ʒ����������(%d)����!", sCount, szItem, nCount );
+		//SystemNotice( "%d%s(%d)!", sCount, szItem, nCount );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00036), sCount, szItem, nCount );
         		return FALSE;
 	}
@@ -3707,21 +3707,21 @@ BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 		SGridCont.sNum = sIndex[i][1];
 		if( KbPopItem(true, true, &SGridCont, sIndex[i][0]) != enumKBACT_SUCCESS )
 		{
-			//SystemNotice( "%s����ȡ�����%d����%s����Ʒ!GridID = %d, NumItem = %d", szName, sCount, szItem, sIndex[i][0], sIndex[i][1] );
+			//SystemNotice( "%s%d%s!GridID = %d, NumItem = %d", szName, sCount, szItem, sIndex[i][0], sIndex[i][1] );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00037), szName, sCount, szItem, sIndex[i][0], sIndex[i][1] );
 			return FALSE;
 		}
 	}
 
-	// ͬ��������Ϣ
+	// 
 	SynKitbagNew( enumSYN_KITBAG_SYSTEM );
-	//SystemNotice( "%sȡ�������%d����%s����Ʒ!", szName, sCount, szItem );
+	//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00038), szName, sCount, szItem );
 	char szLog[128] = "";
-	sprintf( szLog, "%d�%s", sCount, szItem );
+	sprintf( szLog, "%d%s", sCount, szItem );
 	ToLogService("trade", "[MIS_CHA] {} : {}", GetName(), szLog);
 
-	// ˢ��������߼���
+	// 
 	RefreshNeedItem( sItemID );
 	return TRUE;
 }
@@ -3742,12 +3742,12 @@ BOOL CCharacter::TakeRandNpcItem( WORD wRoleID, WORD wNpcID, const char szNpc[] 
 		USHORT sItemID;
 		if( !GetPlayer()->MisTakeRandMissionNpcItem( wRoleID, wNpcID, sItemID ) )
 		{
-			//SystemNotice( "TakeRandItem:��ȡ���������Ʒ��Ϣʧ��!RoleID = %d, NpcID = %d", wRoleID, wNpcID );
+			//SystemNotice( "TakeRandItem:!RoleID = %d, NpcID = %d", wRoleID, wNpcID );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00039), wRoleID, wNpcID );
 			return FALSE;
 		}
 
-		//char szNpc[NPC_MAXSIZE_NAME] = "δ֪";
+		//char szNpc[NPC_MAXSIZE_NAME] = "";
 		//if( this->m_submap )
 		//{
 		//	CNpcRecord* pRec = m_submap->GetNpcInfo( wNpcID );
@@ -3759,7 +3759,7 @@ BOOL CCharacter::TakeRandNpcItem( WORD wRoleID, WORD wNpcID, const char szNpc[] 
 
 		if( !GetPlyMainCha()->TakeItem( sItemID, 1, szNpc ) )
 		{
-			//SystemNotice( "TakeRandItem:%sȡ�����������Ʒ����ʧ��!sItemID = %d", szNpc, sItemID );
+			//SystemNotice( "TakeRandItem:%s!sItemID = %d", szNpc, sItemID );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00040), szNpc, sItemID );
 			return FALSE;
 		}
@@ -3792,7 +3792,7 @@ BOOL CCharacter::HasItem( USHORT sItemID, USHORT sCount )
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "HasItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "HasItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00041), sItemID );
 		return FALSE;
 	}
@@ -3841,14 +3841,14 @@ BOOL CCharacter::HasItemBagTemp(USHORT sItemID, USHORT sCount)
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "HasItemBagTemp:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "HasItemBagTemp:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00042), sItemID );
 		return FALSE;
 	}
 
 	if(!m_pCKitbagTmp)
 	{
-		//SystemNotice( "HasItemBagTemp: û����ʱ����!" );
+		//SystemNotice( "HasItemBagTemp: !" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00043) );
 		return FALSE;
 	}
@@ -3943,7 +3943,7 @@ BOOL CCharacter::SetTradeItemLevel( BYTE byLevel )
 			if( pItem && pItem->sType == enumItemTypeTrade )
 			{				
 				sPosID = m_CKitbag.GetPosIDByNum( i );
-				//LG( "TradeCess", "��ɫ%s����ó�׵ȼ�Level = %d, CurLevel = %d.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
+				//LG( "TradeCess", "%sLevel = %d, CurLevel = %d.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
 				ToLogService("common", "character {} add trade level:Level = {}, CurLevel = {}.", GetName(), byLevel, m_CKitbag.GetEnergy( false, sPosID ) );
 				m_CKitbag.SetChangeFlag(false);
 				m_CKitbag.SetEnergy(false, byLevel, sPosID);
@@ -3992,7 +3992,7 @@ BOOL CCharacter::AdjustTradeItemCess( USHORT sLowCess, USHORT sData )
 			{
 				sPosID = m_CKitbag.GetPosIDByNum( i );
 				m_CKitbag.SetChangeFlag(false);
-				//LG( "TradeCess", "��ɫ%s����ó��˰��LowCess = %d, sData = %d, CurData = %d.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
+				//LG( "TradeCess", "%sLowCess = %d, sData = %d, CurData = %d.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
 				ToLogService("common", "character {} add trade lowCess:LowCess = {}, sData = {}, CurData = {}.", GetName(), sLowCess, sData, m_CKitbag.GetEnergy( true, sPosID ) );
 				if( pGridCont->sEnergy[1] + sData >= sLowCess )
 				{
@@ -4044,27 +4044,27 @@ BOOL CCharacter::HasLeaveBagTempGrid( USHORT sNum )
 	return sNum <= m_pCKitbagTmp->GetCapacity() - m_pCKitbagTmp->GetUseGridNum();
 }
 
-// ѧϰ���������ܲ�ͨ��
-// sSkillID�����ܱ��.chLv���ȼ�.bSetLv�����õȼ���true�����õȼ� false�����ӵȼ���.bUsePoint���Ƿ����ļ��ܵ�
-// �����Ƿ�ѧϰ�ɹ�
+// 
+// sSkillID.chLv.bSetLvtrue false.bUsePoint
+// 
 bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoint, bool bLimit)
 {
 	if (sSkillID > defMAX_SKILL_NO)
 	{
-		SystemNotice("���ܲ����ڣ�����������Χ.%d", sSkillID);
+		SystemNotice(".%d", sSkillID);
 		return false;
 	}
 
 	CSkillRecord *pCSkill = GetSkillRecordInfo(sSkillID);
 	if (!pCSkill)
 	{
-		//SystemNotice("���ܲ�����");
+		//SystemNotice("");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00044));
 		return false;
 	}
 	if (chLv < 0)
 	{
-		//SystemNotice("ѧϰ�ļ��ܵȼ�[%d]����", chLv);
+		//SystemNotice("[%d]", chLv);
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00045), chLv);
 		return false;
 	}
@@ -4073,7 +4073,7 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	Char		chOldLv, chNewLv;
 	bool		bIsNewSkill = false;
 	pSkillGrid = m_CSkillBag.GetSkillContByID(sSkillID);
-	if (!pSkillGrid) // �µļ���
+	if (!pSkillGrid) // 
 	{
 		bIsNewSkill = true;
 		chOldLv = 0;
@@ -4082,24 +4082,24 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	else
 	{
 		chOldLv = pSkillGrid->chLv;
-		if (bSetLv) // ���õȼ�
+		if (bSetLv) // 
 		{
 			chNewLv = chLv;
 			if (chNewLv <= chOldLv)
 			{
-				//SystemNotice("�����Ѵ��ڣ��ҵȼ�����ѧϰֵ");
+				//SystemNotice("");
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00046));
 				return false;
 			}
 		}
-		else // ���ӵȼ�
+		else // 
 		{
 			chNewLv = chOldLv + chLv;
 		}
 		SAddSkill.chState = pSkillGrid->chState;
 	}
 
-	if (bLimit && !CanLearnSkill(pCSkill, chNewLv)) // ����ѧϰ�ü���
+	if (bLimit && !CanLearnSkill(pCSkill, chNewLv)) // 
 	{
 		return false;
 	}
@@ -4111,12 +4111,12 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	if (bUsePoint)
 	{
 		Long	lPExpend = pCSkill->chPointExpend * (chNewLv - chOldLv);
-		if (pCSkill->chFightType == enumSKILL_LAND_LIVE || pCSkill->chFightType == enumSKILL_SEE_LIVE) // ����ܣ���������ܵ�.
+		if (pCSkill->chFightType == enumSKILL_LAND_LIVE || pCSkill->chFightType == enumSKILL_SEE_LIVE) // .
 		{
 			Long	lCurLP = (long)m_CChaAttr.GetAttr(ATTR_LIFETP);
-			if (lPExpend > lCurLP) // ���ܵ㲻��
+			if (lPExpend > lCurLP) // 
 			{
-				//SystemNotice("����ܵ㲻�㣺��ǰ�� %d������� %d.", lCurLP, lPExpend);
+				//SystemNotice(" %d %d.", lCurLP, lPExpend);
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00047), lCurLP, lPExpend);
 				return false;
 			}
@@ -4125,9 +4125,9 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 		else
 		{
 			Long	lCurTP = (long)m_CChaAttr.GetAttr(ATTR_TP);
-			if (lPExpend > lCurTP) // ���ܵ㲻��
+			if (lPExpend > lCurTP) // 
 			{
-				//SystemNotice("���ܵ㲻�㣺��ǰ�� %d������� %d.", lCurTP, lPExpend);
+				//SystemNotice(" %d %d.", lCurTP, lPExpend);
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00048), lCurTP, lPExpend);
 				return false;
 			}
@@ -4145,7 +4145,7 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 		pSkillGrid->lColdDownT = lLastSkillTick;
 	if (!bAddResult)
 	{
-		//SystemNotice("���뼼�ܰ�ʧ��");
+		//SystemNotice("");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00049));
 		return false;
 	}
@@ -4158,7 +4158,7 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	}
 	else
 	{
-		if (SAddSkill.chState == enumSUSTATE_ACTIVE) // ����ļ��ܣ�����ֹͣ�ı�ȼ���ǰ�ļ��ܣ��ټ���ı�ȼ���ļ���
+		if (SAddSkill.chState == enumSUSTATE_ACTIVE) // 
 		{
 			g_CParser.DoString(pCSkill->szInactive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, chOldLv, DOSTRING_PARAM_END);
 			g_CParser.DoString(pCSkill->szActive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, chNewLv, DOSTRING_PARAM_END);
@@ -4179,7 +4179,7 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	return true;
 }
 
-// ְҵ���ȼ���ǰ�ü��ܣ��ȼ������ж�
+// 
 bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 {
 	bool	bJobOk = false;
@@ -4201,16 +4201,16 @@ bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 			break;
 		}
 	}
-	if (!bJobOk) // ְҵ�����ܵȼ�������
+	if (!bJobOk) // 
 	{
-		//SystemNotice("ְҵ��������ѧϰ�ȼ�������ְҵ������");
+		//SystemNotice("");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00050));
 		return false;
 	}
 
-	if (pCSkill->sLevelDemand > m_CChaAttr.GetAttr(ATTR_LV)) // �ȼ�����
+	if (pCSkill->sLevelDemand > m_CChaAttr.GetAttr(ATTR_LV)) // 
 	{
-		//SystemNotice("��ɫ�ȼ���������ǰ�ȼ� %d������ȼ� %d.", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
+		//SystemNotice(" %d %d.", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
 		SystemNotice("RES_STRING(GM_CHARACTER_CPP_00051)", m_CChaAttr.GetAttr(ATTR_LV), pCSkill->sLevelDemand);
 		return false;
 	}
@@ -4230,10 +4230,10 @@ bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 			break;
 		}
 	}
-	if (!bNeedSkill) // ǰ�ü��ܲ�����
+	if (!bNeedSkill) // 
 	{
 
-		//SystemNotice("ǰ�ü��ܲ���");
+		//SystemNotice("");
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00052));
 		return false;
 	}
@@ -4241,7 +4241,7 @@ bool CCharacter::CanLearnSkill(CSkillRecord *pCSkill, Char chToLv)
 	return true;
 }
 
-// �޸ģ����������ۺϵ���װ���������
+// 
 dbc::Short CCharacter::CanEquipItemNew(dbc::Short sItemID1, dbc::Short sItemID2 )
 {
 	CItemRecord* pItem1 = GetItemRecordInfo( sItemID1 );
@@ -4370,7 +4370,7 @@ Short CCharacter::CanEquipItem(dbc::Short sItemID)
 	return enumITEMOPT_ERROR_EQUIPJOB;
 }
 
-// ���Ӽ���״̬
+// 
 bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle, Char chObjType, Char chObjHabitat, Char chEffType,
 							   uChar uchStateID, uChar uchStateLv, Long lOnTick, dbc::Char chType, bool bNotice)
 {
@@ -4465,7 +4465,7 @@ bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHa
 		g_CParser.DoString(pSSkillState->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, uchStateLv, DOSTRING_PARAM_END);
 	BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, chEffType);
 
-	if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // ����
+	if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // 
 	{
 		SetDie(pCCha);
 		bDie = true;
@@ -4486,7 +4486,7 @@ bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHa
 		}
 	}
 
-	if (bDie) // ����
+	if (bDie) // 
 	{
 		Die();
 		return true;
@@ -4495,7 +4495,7 @@ bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHa
 	return true;
 }
 
-// ɾ��״̬
+// 
 bool CCharacter::DelSkillState(dbc::uChar uchStateID, bool bNotice)
 {
 	if (bNotice)
@@ -4575,7 +4575,7 @@ bool CCharacter::DelSkillState(dbc::uChar uchStateID, bool bNotice)
 		g_CParser.DoString(pSSkillState->szSubState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, uchStateLv, DOSTRING_PARAM_END);
 
 		BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, chEffType);
-		if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // ����
+		if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // 
 		{
 			SetDie(pCCha);
 			bDie = true;
@@ -4588,7 +4588,7 @@ bool CCharacter::DelSkillState(dbc::uChar uchStateID, bool bNotice)
 		SynAttr(enumATTRSYN_SKILL_STATE);
 	}
 
-	if (bDie) // ����
+	if (bDie) // 
 	{
 		Die();
 		return true;
@@ -4609,7 +4609,7 @@ void CCharacter::RestoreHp( BYTE byHpRate )
 	DWORD dwHp = dwCharHp - (long)getAttr( ATTR_HP );
 	setAttr( ATTR_HP, dwCharHp );
 	SynAttr( enumATTRSYN_TASK );
-	//SystemNotice( "�ָ�HPֵ(%d)�㣬��ǰHP(%d).", dwHp, dwCharHp );
+	//SystemNotice( "HP(%d)HP(%d).", dwHp, dwCharHp );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00053), dwHp, dwCharHp );
 }
 
@@ -4625,7 +4625,7 @@ void CCharacter::RestoreSp( BYTE bySpRate )
 	DWORD dwSp = dwCharSp - (DWORD)getAttr( ATTR_SP );
 	setAttr( ATTR_SP, dwCharSp );
 	SynAttr( enumATTRSYN_TASK );
-	//SystemNotice( "�ָ�SPֵ(%d)�㣬��ǰSP(%d).", dwSp, dwCharSp );
+	//SystemNotice( "SP(%d)SP(%d).", dwSp, dwCharSp );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00054), dwSp, dwCharSp );
 }
 
@@ -4634,7 +4634,7 @@ void CCharacter::RestoreAllHp()
 	m_CChaAttr.ResetChangeFlag();
 	setAttr( ATTR_HP, (long)getAttr( ATTR_MXHP ) );
 	SynAttr( enumATTRSYN_TASK );
-	//SystemNotice( "�ָ�����HPֵ����ǰHP(%d).", getAttr( ATTR_HP ) );
+	//SystemNotice( "HPHP(%d).", getAttr( ATTR_HP ) );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00055), getAttr( ATTR_HP ) );
 }
 
@@ -4643,7 +4643,7 @@ void CCharacter::RestoreAllSp()
 	m_CChaAttr.ResetChangeFlag();
 	setAttr( ATTR_SP, (long)getAttr( ATTR_MXSP ) );
 	SynAttr( enumATTRSYN_TASK ); 
-	//SystemNotice( "�ָ�����SPֵ����ǰSP(%d).", getAttr( ATTR_SP ) );
+	//SystemNotice( "SPSP(%d).", getAttr( ATTR_SP ) );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00056), getAttr( ATTR_SP ) );
 }
 
@@ -4653,9 +4653,9 @@ void CCharacter::RestoreAll()
 	setAttr( ATTR_HP, (long)getAttr( ATTR_MXHP ) );
 	setAttr( ATTR_SP, (long)getAttr( ATTR_MXSP ) );
 	SynAttr( enumATTRSYN_TASK );
-	//SystemNotice( "�ָ�����HPֵ����ǰHP(%d).", getAttr( ATTR_HP ) );
+	//SystemNotice( "HPHP(%d).", getAttr( ATTR_HP ) );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00055), getAttr( ATTR_HP ) );
-	//SystemNotice( "�ָ�����SPֵ����ǰSP(%d).", getAttr( ATTR_SP ) );
+	//SystemNotice( "SPSP(%d).", getAttr( ATTR_SP ) );
 	SystemNotice(RES_STRING(GM_CHARACTER_CPP_00056), getAttr( ATTR_SP ) );
 }
 
@@ -4684,13 +4684,13 @@ long CCharacter::ExecuteEvent(Entity *pCObj, dbc::uShort usEventID)
 				CMapEntryCopyCell	*pCCopyInfo = pCEntry->GetCopy(0);
 				if (!pCCopyInfo)
 				{
-					//SystemNotice("����������");
+					//SystemNotice("");
 					SystemNotice(RES_STRING(GM_CHARACTER_CPP_00057));
 					break;
 				}
-				if (!pCCopyInfo->HasFreePlyCount(1)) // ��������
+				if (!pCCopyInfo->HasFreePlyCount(1)) // 
 				{
-					//SystemNotice("��������");
+					//SystemNotice("");
 					SystemNotice(RES_STRING(GM_CHARACTER_CPP_00058));
 					break;
 				}
@@ -4778,11 +4778,11 @@ void CCharacter::OnLevelUp( USHORT sLevel )
 	if( GetPlayer() )
 	{
 		
-		//֪ͨGroupServer
+		//GroupServer
 		if(sLevel == 41)
 		{
 			CCharacter *pMainCha = GetPlyMainCha();
-			// Типизированная сериализация: ученик достиг 41 уровня — завершение обучения
+			//  :   41    
 			auto l_wpk = net::msg::serialize(net::msg::MpMasterFinishMessage{
 				pMainCha->GetPlayer()->GetDBChaId()
 			});
@@ -4930,9 +4930,9 @@ int GetApparelSlot(Char chLinkID, SItemGrid *pItemCont){
 }
 
 //=============================================================================
-// ������װ���仯�����Ľ�ɫ���Եı仯
-// bEquip��0��ж��װ��.1��װ��.
-// lItemID��װ�����
+// 
+// bEquip0.1.
+// lItemID
 //=============================================================================
 void CCharacter::ChangeItem(bool bEquip, SItemGrid *pItemCont, Char chLinkID)
 {
@@ -4946,7 +4946,7 @@ void CCharacter::ChangeItem(bool bEquip, SItemGrid *pItemCont, Char chLinkID)
 
 
 	CItemRecord	*pCItemRec = GetItemRecordInfo(pItemCont->sID);
-	if (!pCItemRec) // ���߱���û�иõ���
+	if (!pCItemRec) // 
 		return;
 
 	if (chLinkID >= enumEQUIP_HEADAPP && chLinkID <= enumEQUIP_SHIELDAPP){
@@ -4985,7 +4985,7 @@ void CCharacter::ChangeItem(bool bEquip, SItemGrid *pItemCont, Char chLinkID)
 
 	appCheck[chLinkID] = bEquip;
 	char	chType = 1;
-	if (!bEquip) // ж��װ��
+	if (!bEquip) // 
 		chType = -1;
 
 	float	fBalance;
@@ -5070,14 +5070,14 @@ void CCharacter::SkillRefresh()
 		pCSkillRecord = GetSkillRecordInfo(pSkillGrid->sID);
 		if (!pCSkillRecord)
 			continue;
-		if (pCSkillRecord->chFightType == enumSKILL_SEE_LIVE) // ���������
+		if (pCSkillRecord->chFightType == enumSKILL_SEE_LIVE) // 
 			nActive = g_IsUseSeaLiveSkill((long)getAttr(ATTR_BOAT_PART), pCSkillRecord);
 		else
 			nActive = g_IsUseSkill(pCLook, pCSkillRecord);
 
-		if (pCSkillRecord->chType == enumSKILL_ACTIVE || pCSkillRecord->chType == enumSKILL_INBORN) // �������ܻ�Ĭ�ϼ��ܣ����ݽ�ɫ��̬�������Ƿ񼤻�
+		if (pCSkillRecord->chType == enumSKILL_ACTIVE || pCSkillRecord->chType == enumSKILL_INBORN) // 
 		{
-			//if (IsPlayerCha()) // �����ɫ������м���ˢ��
+			//if (IsPlayerCha()) // 
 			{
 				if (bIsBoat && (pCSkillRecord->chSrcType == enumSKILL_SRC_HUMAN))
 					nActive = 0;
@@ -5094,7 +5094,7 @@ void CCharacter::SkillRefresh()
 			{
 				if (strcmp(pCSkillRecord->szActive, "0"))
 				{
-					if (pCSkillRecord->chType == enumSKILL_PASSIVE) // ��������,�����ν�ɫ����
+					if (pCSkillRecord->chType == enumSKILL_PASSIVE) // ,
 						pCExecCha = pCMainCha;
 					else
 						pCExecCha = pCCtrlCha;
@@ -5109,7 +5109,7 @@ void CCharacter::SkillRefresh()
 			{
 				if (strcmp(pCSkillRecord->szInactive, "0"))
 				{
-					if (pCSkillRecord->chType == enumSKILL_PASSIVE) // ��������,�����ν�ɫ����
+					if (pCSkillRecord->chType == enumSKILL_PASSIVE) // ,
 						pCExecCha = pCMainCha;
 					else
 						pCExecCha = pCCtrlCha;
@@ -5120,7 +5120,7 @@ void CCharacter::SkillRefresh()
 		}
 	}
 
-	if (bIsBoat) // ����ɫ
+	if (bIsBoat) // 
 	{
 		pSkillGrid = pCCtrlCha->m_CSkillBag.GetSkillContByNum(0);
 		if (pSkillGrid)
@@ -5129,7 +5129,7 @@ void CCharacter::SkillRefresh()
 	}
 }
 
-// תְ
+// 
 BOOL CCharacter::SetProfession( BYTE byPf )
 {
 	m_CChaAttr.ResetChangeFlag();
@@ -5145,7 +5145,7 @@ BOOL CCharacter::SetProfession( BYTE byPf )
 	return TRUE;
 }
 
-// ͬ��������
+// 
 void CCharacter::SynKitbagNew(Char chType)
 {
 	if (!m_CKitbag.IsChange())
@@ -5162,7 +5162,7 @@ void CCharacter::SynKitbagNew(Char chType)
 	SynAppendLook();
 }
 
-//ͬ����ʱ����
+//
 void CCharacter::SynKitbagTmpNew(Char chType)
 {
 	if (!m_pCKitbagTmp->IsChange())
@@ -5179,7 +5179,7 @@ void CCharacter::SynKitbagTmpNew(Char chType)
 	//SynAppendLook();
 }
 
-// ͬ�������
+// 
 void CCharacter::SynShortcut()
 {
 	net::msg::McCharacterActionMessage msg;
@@ -5192,7 +5192,7 @@ void CCharacter::SynShortcut()
 	ReflectINFof(this, WtPk);
 }
 
-// ͬ����ɫ���(��ɫ�����Ϣд��)
+// ()
 void CCharacter::SynLook(dbc::Char chSynType)
 {
 	if (GetLookChangeNum() == 0)
@@ -5274,11 +5274,11 @@ void CCharacter::NewChaInit(void)
 	EnrichSkillBag();
 }
 
-// �������߲�ͬ��
+// 
 bool CCharacter::ItemForge(SItemGrid *pItem, dbc::Char chAddLv)
 {
 	bool	bForge = false;
-	// ���ݵ��߰���ֵ���ж��Ƿ����ɹ�
+	// 
 	bForge = true;
 
 	if (bForge)
@@ -5292,10 +5292,10 @@ bool CCharacter::ItemForge(SItemGrid *pItem, dbc::Char chAddLv)
 }
 
 //=============================================================================
-// ͬ��������
-// chType ͬ������.
-// ��chType == enumSYN_SKILLBAG_MODIʱ��sModiSkillID��ʾ�޸ĵļ���ID(-1Ϊȫ���޸�).
-// chTypeΪ��������ʱ��sModiSkillID������
+// 
+// chType .
+// chType == enumSYN_SKILLBAG_MODIsModiSkillIDID(-1).
+// chTypesModiSkillID
 //=============================================================================
 void CCharacter::SynSkillBag(Char chType)
 {
@@ -5323,7 +5323,7 @@ void CCharacter::SynAddItemCha(CCharacter *pCItemCha)
 
 void CCharacter::SynDelItemCha(CCharacter *pCItemCha)
 {
-	// Типизированная сериализация: удаление персонажа-предмета
+	//  :  -
 	auto pk = net::msg::serialize(net::msg::McDelItemChaMessage{
 		GetPlayer()->GetMainCha()->GetID(), pCItemCha->GetID()
 	});
@@ -5343,7 +5343,7 @@ void CCharacter::CheckPing(void)
 
 void CCharacter::SendPreMoveTime(void)
 {
-	// Типизированная сериализация: время предварительного перемещения
+	//  :   
 	auto WtPk = net::msg::serialize(net::msg::McPreMoveTimeMessage{
 		m_lSetPing >= 0 ? static_cast<int64_t>(m_lSetPing) : static_cast<int64_t>(m_dwPing)
 	});
@@ -5352,7 +5352,7 @@ void CCharacter::SendPreMoveTime(void)
 
 void CCharacter::SynPKCtrl(void)
 {
-	// Типизированная сериализация: PK-контроль через std::variant
+	//  : PK-  std::variant
 	net::msg::McCharacterActionMessage msg;
 	msg.worldId = m_ID;
 	msg.packetId = m_ulPacketID;
@@ -5364,7 +5364,7 @@ void CCharacter::SynPKCtrl(void)
 
 void CCharacter::SynSideInfo(void)
 {
-	// Типизированная сериализация: информация о стороне
+	//  :   
 	net::msg::McSynSideInfoMessage msg;
 	msg.worldId = m_ID;
 	msg.side.sideId = (Char)GetSideID();
@@ -5381,7 +5381,7 @@ void CCharacter::TerminalMessage(Long lMessageID)
 
 void CCharacter::ItemOprateFailed(Short sFailedID)
 {
-	// Типизированная сериализация: ошибка операции с предметом через std::variant
+	//  :      std::variant
 	net::msg::McCharacterActionMessage msg;
 	msg.worldId = m_ID;
 	msg.packetId = m_ulPacketID;
@@ -5412,8 +5412,8 @@ void CCharacter::SetEnterGymkhana(bool bEnter)
 	SynPKCtrl();
 }
 
-// ��ֻ�����ӿں���
-// ���鴬ֻ�����͸��������Ƿ����Ҫ��,���������ݿ�
+// 
+// ,
 BOOL CCharacter::BoatCreate( const BOAT_DATA& Data )
 {	
 
@@ -5425,22 +5425,22 @@ BOOL CCharacter::BoatUpdate( BYTE byIndex, const BOAT_DATA& Data )
 	return FALSE;
 }
 
-// ��ɫ��ֻװ�ش���
+// 
 BOOL CCharacter::BoatLoad( const BOAT_LOAD_INFO& Info )
 {
 	return FALSE;
 }
 
-// ��ֻ��������
+// 
 void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 {
 	GetPlayer()->SetLuanchOut( -1 );
 	if( Boat.OnBoatDie( Attacker ) )
 	{
-		//BickerNotice( "��ֻ%s�������޷��޲��ѱ�����!", Boat.GetName() );
+		//BickerNotice( "%s!", Boat.GetName() );
 		BickerNotice( RES_STRING(GM_CHARACTER_CPP_00059), Boat.GetName() );
 		
-		// ���ٴ���֤��
+		// 
 		DWORD dwBoatID = (long)Boat.getAttr( ATTR_BOAT_DBID );
 		USHORT sNumGird = m_CKitbag.GetUseGridNum();
 		for( int i = 0; i < sNumGird; i++ )
@@ -5451,11 +5451,11 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 				CItemRecord* pItem = GetItemRecordInfo( pGridCont->sID );
 				if( pItem == NULL )
 				{
-					//SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
+					//SystemNotice( "ID!ID = %d", pGridCont->sID );
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00005), pGridCont->sID );
-					//LG( "boat_error", "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
-					//LG( "boat_error", "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
-					ToLogService("errors", LogLevel::Error, "GridID error��can't find the gridID = {}", pGridCont->sID );
+					//LG( "boat_error", "ID!ID = %d", pGridCont->sID );
+					//LG( "boat_error", "ID!ID = %d", pGridCont->sID );
+					ToLogService("errors", LogLevel::Error, "GridID errorcan't find the gridID = {}", pGridCont->sID );
 					continue;
 				}
 				if( pItem->sType == enumItemTypeBoat && dwBoatID == pGridCont->GetDBParam( enumITEMDBP_INST_ID ) )
@@ -5463,18 +5463,18 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 					short sPosID = m_CKitbag.GetPosIDByNum(i);
 					if (sPosID < 0)
 					{
-						//SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
+						//SystemNotice( "ID!ID = %d", pGridCont->sID );
 						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00005), pGridCont->sID );
-						//LG( "boat_error", "��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d", pGridCont->sID );
-						ToLogService("errors", LogLevel::Error, "GridID error��can't find the gridID = {}", pGridCont->sID );
+						//LG( "boat_error", "ID!ID = %d", pGridCont->sID );
+						ToLogService("errors", LogLevel::Error, "GridID errorcan't find the gridID = {}", pGridCont->sID );
 						continue;
 					}
 					if( KbClearItem(true, true, sPosID) != enumKBACT_SUCCESS )
 					{
-						// ���ٴ���֤��ʧ��
-						//SystemNotice( "BoatDie:���ٴ���֤��ʧ��!ID[0x%X]", dwBoatID );
+						// 
+						//SystemNotice( "BoatDie:!ID[0x%X]", dwBoatID );
 						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00060), dwBoatID );
-						//LG( "boat_error", "BoatDie:���ٴ���֤��ʧ��!ID[0x%X]", dwBoatID );
+						//LG( "boat_error", "BoatDie:!ID[0x%X]", dwBoatID );
 						ToLogService("errors", LogLevel::Error, "BoatDie:destroy captain prove failed! ID[0x{:X}]", dwBoatID );
 						break;
 					}
@@ -5482,7 +5482,7 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 			}
 		}
 		
-		// ���ٴ�ֻ
+		// 
 		if( !GetPlayer()->ClearBoat( dwBoatID ) )
 		{
 			char szData[128];
@@ -5494,7 +5494,7 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 	}
 
 	//g_CParser.DoString( "Ship_ShipDieAttr", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, &Boat, DOSTRING_PARAM_END );
-	//BickerNotice( "��ֻ%s�𻵳��뺣�ף����ҳ���NPC����!", Boat.GetName() );
+	//BickerNotice( "%sNPC!", Boat.GetName() );
 	BickerNotice( RES_STRING(GM_CHARACTER_CPP_00062), Boat.GetName() );
 }
 
@@ -5519,14 +5519,14 @@ BOOL CCharacter::GetBoatID( BYTE byIndex, DWORD& dwBoatID )
 		GetPlayer()->GetBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "BoatSelected:��û��ͣ���ڸøۿڵ�������ֻ!" );
+			//SystemNotice( "BoatSelected:!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00063) );
 			return TRUE;
 		}
 
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ��������ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00064), byIndex );
 			return FALSE;
 		}
@@ -5542,17 +5542,17 @@ BOOL CCharacter::GetBoatID( BYTE byIndex, DWORD& dwBoatID )
 	return FALSE;
 }
 
-// ��ֻͣ��
+// 
 BOOL CCharacter::BoatBerth( USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT sDir )
 {
 	CCharacter* pBoat = GetPlayer()->GetLuanchOut();
 	if( !pBoat || pBoat != this ) {
-		//SystemNotice( "�Ҳ�����ĳ�����ֻ!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00065) );
 		return FALSE;
 	}
 
-	// ���ô�ֻλ���µĸۿ�
+	// 
 	this->setAttr( ATTR_BOAT_BERTH, sBerthID );
 
 	if (!pBoat->SkillOutBoat(sxPos * 100, syPos * 100, sDir))
@@ -5568,25 +5568,25 @@ BOOL CCharacter::BoatBerth( USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT 
 
 	pBoat->SkillPushBoat(pBoat, false);
 
-	// ����������
+	// 
 	m_pCPlayer->SetLuanchOut( -1 );
 
 	return TRUE;
 }
 
-// ��ֻ����
+// 
 BOOL CCharacter::BoatEnterMap( CCharacter& Boat, DWORD dwxPos, DWORD dwyPos, USHORT sDir )
 {
-	// ��ֻ�����ͼ
+	// 
 	if (!SkillPopBoat(&Boat, dwxPos, dwyPos, sDir))
 	{
-		//SystemNotice( "��ֻ�����ͼʧ��!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00066) );
 		return FALSE;
 	}
 	SkillInBoat(&Boat);
 
-	// ���ó�����ֻ
+	// 
 	DWORD dwBoatID = (DWORD)Boat.getAttr( ATTR_BOAT_DBID );
 	m_pCPlayer->SetLuanchOut( dwBoatID );
 
@@ -5599,13 +5599,13 @@ BOOL CCharacter::BoatEnterMap( CCharacter& Boat, DWORD dwxPos, DWORD dwyPos, USH
 	return TRUE;
 }
 
-// ��ֻ����
+// 
 BOOL CCharacter::BoatLaunch( BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT syPos, USHORT sDir )
 {
-	// �Ѿ�����
+	// 
 	if( m_pCPlayer->IsLuanchOut() )
 	{
-		//SystemNotice( "��Ĵ�ֻ�Ѿ�������!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00067) );
 		return FALSE;
 	}
@@ -5618,12 +5618,12 @@ BOOL CCharacter::BoatLaunch( BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT
 
 	if( pBoat->getAttr( ATTR_BOAT_ISDEAD ) != 0 )
 	{
-		//SystemNotice( "��ֻ%s�Ѿ���û�����ȴ���!", pBoat->GetName() );
+		//SystemNotice( "%s!", pBoat->GetName() );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00068), pBoat->GetName() );
 		return TRUE;
 	}
 
-	// �ж��Ƿ������������
+	// 
 	if( g_CharBoat.BoatLimit( *GetPlayer()->GetMainCha(), (USHORT)pBoat->getAttr( ATTR_BOAT_SHIP ) ) )
 	{
 		return TRUE;
@@ -5631,19 +5631,19 @@ BOOL CCharacter::BoatLaunch( BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT
 
 	if( pBoat->getAttr( ATTR_HP ) <= 0 )
 	{
-		//SystemNotice( "��ֻ�����أ���Ҫ��������ܳ���!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00069) );
 		return TRUE;
 	}
 
 	//if( pBoat->getAttr( ATTR_HP ) < pBoat->getAttr( ATTR_MXHP ) )
 	//{
-	//	SystemNotice( "��ֻ�𻵣���Ҫ����!" );
+	//	SystemNotice( "!" );
 	//}
 
 	//if( pBoat->getAttr( ATTR_SP ) < pBoat->getAttr( ATTR_MXSP ) )
 	//{
-	//	SystemNotice( "��ֻ��Ҫ����!" );
+	//	SystemNotice( "!" );
 	//}
 
 	if(g_CParser.DoString("RemoveYS", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END))
@@ -5651,15 +5651,15 @@ BOOL CCharacter::BoatLaunch( BYTE byIndex, USHORT sBerthID, USHORT sxPos, USHORT
 		int ret = g_CParser.GetReturnNumber(0);
 		if(ret != 1)
 		{
-			//LG("RemoveYS_error", "RemoveYSʧ��!\n");
+			//LG("RemoveYS_error", "RemoveYS!\n");
 			ToLogService("errors", LogLevel::Error, "RemoveYS failed");
 		}
 	}
 
-	// ��ֻ�����ͼ
+	// 
 	if( !BoatEnterMap( *pBoat, sxPos * 100, syPos * 100, sDir ) )
 	{
-		//SystemNotice( "��ֻ�����ͼʧ��!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00070) );
 		return FALSE;
 	}
@@ -5673,18 +5673,18 @@ BOOL CCharacter::BoatSelLuanch( BYTE byIndex )
 	{
         if(m_CKitbag.IsLock())
         {
-           // SystemNotice( "��������ʱ����������!" );
+           // SystemNotice( "!" );
 			 SystemNotice( RES_STRING(GM_CHARACTER_CPP_00071) );
             return FALSE;
         }
-		// ���ý�ɫ����������Ϣ
+		// 
 		USHORT sBerthID, sxPos, syPos, sDir;
 		GetPlayer()->GetBerth( sBerthID, sxPos, syPos, sDir );
 		
-		// ����ɫ�Ƿ���npc20�׷�Χ��
+		// npc20
 		//if( !IsDist( GetShape().centre.x, GetShape().centre.y, sxPos*100, syPos*100, 40 ) )
 		//{
-		//	SystemNotice( "�����ڳ�����λ�ò��ڸۿ�!" );
+		//	SystemNotice( "!" );
 		//	return FALSE;
 		//}
 
@@ -5694,14 +5694,14 @@ BOOL CCharacter::BoatSelLuanch( BYTE byIndex )
 		GetPlayer()->GetAllBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "��û��ͣ���ڸøۿڵĴ�ֻ!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00072) );
 			return TRUE;
 		}
 
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatSelLuance:ѡ�������ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatSelLuance:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00073), byIndex );
 			return FALSE;
 		}
@@ -5711,10 +5711,10 @@ BOOL CCharacter::BoatSelLuanch( BYTE byIndex )
 	return TRUE;
 }
 
-// ��ֻ�������ݽ���
+// 
 BOOL CCharacter::BoatTrade( USHORT sBerthID )
 {
-	// ���ý�ɫ����������Ϣ
+	// 
 	if( m_pCPlayer )
 	{
 		m_pCPlayer->SetBerth( sBerthID, 0, 0, 0 );
@@ -5775,14 +5775,14 @@ void CCharacter::RepairBoat()
 		CCharacter* pBoat = GetPlayer()->GetLuanchOut();
 		if( pBoat == NULL )
 		{
-			//SystemNotice( "��Ĵ�ֻ��û�г�������������ʧ��!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00074) );
 			return;
 		}
 		DWORD dwMaxHp = (DWORD)pBoat->getAttr( ATTR_MXHP );		
 		if( dwMaxHp - pBoat->getAttr( ATTR_HP ) == 0 || dwMaxHp <= (DWORD)pBoat->getAttr( ATTR_HP ) )
 		{
-			//SystemNotice( "��ֻ%s״���ܺã�����Ҫ����.", pBoat->GetName() );
+			//SystemNotice( "%s.", pBoat->GetName() );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00075), pBoat->GetName() );
 			return;
 		}
@@ -5793,10 +5793,10 @@ void CCharacter::RepairBoat()
 		{
 			DWORD dwCharMoney = (long)pChar->getAttr( ATTR_GD );			
 			DWORD dwMoney = DWORD(float(dwReHp)*0.05) + sLv * 20;
-			//if( !pChar->TakeMoney( "ϵͳ", dwMoney ) )
+			//if( !pChar->TakeMoney( "", dwMoney ) )
 			if( !pChar->TakeMoney( RES_STRING(GM_CHARACTER_CPP_00012), dwMoney ) )
 			{
-				//SystemNotice( "������ֻ%s��Ҫ��Ǯ(%d)G����Ľ�Ǯ(%d)����.", pBoat->GetName(), dwMoney, dwCharMoney );
+				//SystemNotice( "%s(%d)G(%d).", pBoat->GetName(), dwMoney, dwCharMoney );
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00076), pBoat->GetName(), dwMoney, dwCharMoney );
 				return;
 			}
@@ -5805,7 +5805,7 @@ void CCharacter::RepairBoat()
 		pBoat->m_CChaAttr.ResetChangeFlag();
 		pBoat->setAttr( ATTR_HP, dwMaxHp );
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
-		//SystemNotice( "��ֻ��%s��������ϣ��ָ��;�%d��!", pBoat->GetName(), dwReHp );
+		//SystemNotice( "%s%d!", pBoat->GetName(), dwReHp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00077), pBoat->GetName(), dwReHp );
 		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
 	}
@@ -5819,7 +5819,7 @@ void CCharacter::SupplyBoat()
 		CCharacter* pBoat = GetPlayer()->GetLuanchOut();
 		if( pBoat == NULL )
 		{
-			//SystemNotice( "��Ĵ�ֻ��û�г��������ٲ���ʧ��!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00078) );
 			return;
 		}
@@ -5827,7 +5827,7 @@ void CCharacter::SupplyBoat()
 		DWORD dwMaxSp = (DWORD)pBoat->getAttr( ATTR_MXSP );		
 		if( dwMaxSp - pBoat->getAttr( ATTR_SP ) == 0  || dwMaxSp <= (DWORD)pBoat->getAttr( ATTR_SP ) )
 		{
-			//SystemNotice( "��ֻ%s��������!", pBoat->GetName() );
+			//SystemNotice( "%s!", pBoat->GetName() );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00079), pBoat->GetName() );
 			return;
 		}
@@ -5838,10 +5838,10 @@ void CCharacter::SupplyBoat()
 		{
 			DWORD dwCharMoney = (long)pChar->getAttr( ATTR_GD );
 			DWORD dwMoney = dwReSp + sLv * 20;
-			//if( !pChar->TakeMoney( "ϵͳ", dwMoney ) )
+			//if( !pChar->TakeMoney( "", dwMoney ) )
 			if( !pChar->TakeMoney( RES_STRING(GM_CHARACTER_CPP_00012), dwMoney ) )
 			{
-				//SystemNotice( "������ֻ%s��Ҫ��Ǯ(%d)G����Ľ�Ǯ(%d)����.", pBoat->GetName(), dwMoney, dwCharMoney );
+				//SystemNotice( "%s(%d)G(%d).", pBoat->GetName(), dwMoney, dwCharMoney );
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00080), pBoat->GetName(), dwMoney, dwCharMoney );
 				return;
 			}
@@ -5850,10 +5850,10 @@ void CCharacter::SupplyBoat()
 		pBoat->m_CChaAttr.ResetChangeFlag();
 		pBoat->setAttr( ATTR_SP, dwMaxSp );
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
-		//SystemNotice( "��ֻ��%s��������ϣ��������%d��!", pBoat->GetName(), dwReSp );
+		//SystemNotice( "%s%d!", pBoat->GetName(), dwReSp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00081), pBoat->GetName(), dwReSp );
 
-		// ���贬ֻ����
+		// 
 		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, GetPlayer()->GetMainCha(), pBoat, DOSTRING_PARAM_END );
 	}
 }
@@ -5864,15 +5864,15 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		return FALSE;
 	}
 
-	// �ж��Ƿ��ڽ���״̬
+	// 
 	if( GetTradeData() )
 	{
-		//SystemNotice( "�����ں�������ɫ���ף������Ժ�npc�Ի�!" );
+		//SystemNotice( "npc!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00082) );
 		return FALSE;
 	}
 
-	// ���ý�ɫ����������Ϣ
+	// 
 	USHORT sBerthID, sxPos, syPos, sDir;
 	GetPlayer()->GetBerth( sBerthID, sxPos, syPos, sDir );
 	CCharacter* pChar = GetPlayer()->GetMainCha();
@@ -5885,14 +5885,14 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		GetPlayer()->GetBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "BoatSelected:��û��ͣ���ڸøۿڵ�������ֻ!" );
+			//SystemNotice( "BoatSelected:!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00083) );
 			return TRUE;
 		}
 		
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ��������ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00064), byIndex );
 			return FALSE;
 		}
@@ -5900,7 +5900,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		CCharacter* pBoat = GetPlayer()->GetBoat( Data.byID[byIndex] );
 		if( !pBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ��������ֻID[%d]ָ�����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00084), byIndex );
 			return FALSE;
 		}
@@ -5908,7 +5908,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		DWORD dwMaxHp = (DWORD)pBoat->getAttr( ATTR_MXHP );		
 		if( dwMaxHp - pBoat->getAttr( ATTR_HP ) == 0 || dwMaxHp <= (DWORD)pBoat->getAttr( ATTR_HP ) )
 		{
-			//SystemNotice( "��ֻ%s״���ܺã�����Ҫ����.", pBoat->GetName() );
+			//SystemNotice( "%s.", pBoat->GetName() );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00075), pBoat->GetName() );
 			return TRUE;
 		}
@@ -5919,10 +5919,10 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		{
 			DWORD dwCharMoney = (long)pChar->getAttr( ATTR_GD );			
 			DWORD dwMoney = DWORD(float(dwReHp)*0.05) + sLv * 20;
-			//if( !pChar->TakeMoney( "ϵͳ", dwMoney ) )
+			//if( !pChar->TakeMoney( "", dwMoney ) )
 			if( !pChar->TakeMoney( RES_STRING(GM_CHARACTER_CPP_00012), dwMoney ) )
 			{
-				//SystemNotice( "������ֻ%s��Ҫ��Ǯ(%d)G����Ľ�Ǯ(%d)����.", pBoat->GetName(), dwMoney, dwCharMoney );
+				//SystemNotice( "%s(%d)G(%d).", pBoat->GetName(), dwMoney, dwCharMoney );
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00076), pBoat->GetName(), dwMoney, dwCharMoney );
 				return TRUE;
 			}
@@ -5931,7 +5931,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		pBoat->m_CChaAttr.ResetChangeFlag();
 		pBoat->setAttr( ATTR_HP, dwMaxHp );
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
-		//SystemNotice( "��ֻ��%s��������ϣ��ָ��;�%d��!", pBoat->GetName(), dwReHp );
+		//SystemNotice( "%s%d!", pBoat->GetName(), dwReHp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00077), pBoat->GetName(), dwReHp );
 		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
 	}
@@ -5943,14 +5943,14 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		GetPlayer()->GetDeadBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "BoatSelected:��û��ͣ���ڸøۿڵĳ�û��ֻ!" );
+			//SystemNotice( "BoatSelected:!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00085) );
 			return TRUE;
 		}
 
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ����̳�û��ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00086), byIndex );
 			return FALSE;
 		}
@@ -5958,17 +5958,17 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		CCharacter* pBoat = GetPlayer()->GetBoat( Data.byID[byIndex] );
 		if( !pBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ����̳�û��ֻID[%d]ָ�����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00087), byIndex );
 			return FALSE;
 		}
 		
 		DWORD dwCharMoney = (long)pChar->getAttr( ATTR_GD );
 		DWORD dwMoney = 1000;
-		//if( !pChar->TakeMoney( "ϵͳ", dwMoney ) )
+		//if( !pChar->TakeMoney( "", dwMoney ) )
 		if( !pChar->TakeMoney( RES_STRING(GM_CHARACTER_CPP_00012), dwMoney ) )
 		{
-			//SystemNotice( "���̴�ֻ%s��Ҫ��Ǯ(%d)G����Ľ�Ǯ(%d)����.", pBoat->GetName(), dwMoney, dwCharMoney );
+			//SystemNotice( "%s(%d)G(%d).", pBoat->GetName(), dwMoney, dwCharMoney );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00088), pBoat->GetName(), dwMoney, dwCharMoney );
 			return FALSE;
 		}
@@ -5976,14 +5976,14 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		pBoat->setAttr( ATTR_BOAT_ISDEAD, 0 );
 		if( !game_db.SaveBoatTempData( *pBoat ) )
 		{
-			//SystemNotice( "BoatSelected:���̴�ֻ��ȡ���ݿ����ʧ��!" );
+			//SystemNotice( "BoatSelected:!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00089) );
-			//LG( "boat_error", "BoatSelected:���̴�ֻ��ȡ���ݿ����ʧ��!" );
+			//LG( "boat_error", "BoatSelected:!" );
 			ToLogService("errors", LogLevel::Error, "BoatSelected:salve boat deposit data operator failed!" );
 		}
 		else
 		{
-			//SystemNotice( "��ֻ��%s���ѱ��ɹ�����!", pBoat->GetName() );
+			//SystemNotice( "%s!", pBoat->GetName() );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00090), pBoat->GetName() );
 		}
 		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
@@ -5996,14 +5996,14 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		GetPlayer()->GetBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "BoatSelected:��û��ͣ���ڸøۿڵĲ�����ֻ!" );
+			//SystemNotice( "BoatSelected:!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00091) );
 			return TRUE;
 		}
 
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ�񲹸���ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00092), byIndex );
 			return FALSE;
 		}
@@ -6011,7 +6011,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		CCharacter* pBoat = GetPlayer()->GetBoat( Data.byID[byIndex] );
 		if( !pBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ�񲹸���ֻID[%d]ָ�����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00093), byIndex );
 			return FALSE;
 		}
@@ -6019,7 +6019,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		DWORD dwMaxSp = (DWORD)pBoat->getAttr( ATTR_MXSP );		
 		if( dwMaxSp - pBoat->getAttr( ATTR_SP ) == 0  || dwMaxSp <= (DWORD)pBoat->getAttr( ATTR_SP ))
 		{
-			//SystemNotice( "��ֻ%s��������!", pBoat->GetName() );
+			//SystemNotice( "%s!", pBoat->GetName() );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00079), pBoat->GetName() );
 			return TRUE;
 		}
@@ -6030,10 +6030,10 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		{
 			DWORD dwCharMoney = (long)pChar->getAttr( ATTR_GD );
 			DWORD dwMoney = dwReSp + sLv * 20;
-			//if( !pChar->TakeMoney( "ϵͳ", dwMoney ) )
+			//if( !pChar->TakeMoney( "", dwMoney ) )
 			if( !pChar->TakeMoney( RES_STRING(GM_CHARACTER_CPP_00012), dwMoney ) )
 			{
-				//SystemNotice( "������ֻ%s��Ҫ��Ǯ%dG����Ľ�Ǯ(%d)����.", pBoat->GetName(), dwMoney, dwCharMoney );
+				//SystemNotice( "%s%dG(%d).", pBoat->GetName(), dwMoney, dwCharMoney );
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00080), pBoat->GetName(), dwMoney, dwCharMoney );
 				return TRUE;
 			}
@@ -6042,7 +6042,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		pBoat->m_CChaAttr.ResetChangeFlag();
 		pBoat->setAttr( ATTR_SP, dwMaxSp );
 		pBoat->SyncBoatAttr( enumATTRSYN_TASK, FALSE );
-		//SystemNotice( "��ֻ��%s��������ϣ��������%d��!", pBoat->GetName(), dwReSp );
+		//SystemNotice( "%s%d!", pBoat->GetName(), dwReSp );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00081), pBoat->GetName(), dwReSp );
 		g_CParser.DoString( "Ship_ExAttrCheck", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pChar, pBoat, DOSTRING_PARAM_END );
 	}
@@ -6054,13 +6054,13 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		GetPlayer()->GetBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "BoatSelected:��û��ͣ���ڸøۿڵĲ�����ֻ!" );
+			//SystemNotice( "BoatSelected:!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00091) );
 			return TRUE;
 		}
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ�񲹸���ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00092), byIndex );
 			return FALSE;
 		}
@@ -6068,11 +6068,11 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		CCharacter* pBoat = GetPlayer()->GetBoat( Data.byID[byIndex] );
 		if( !pBoat )
 		{
-			//SystemNotice( "BoatSelected:ѡ�񲹸���ֻID[%d]ָ�����!", byIndex );
+			//SystemNotice( "BoatSelected:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00093), byIndex );
 			return FALSE;
 		}
-		// ��ֻ������������
+		// 
 		lua_getglobal( g_pLuaState, "BoatLevelUp" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -6087,7 +6087,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		int nStatus = lua_pcall( g_pLuaState, 3, 1, 0 );
 		if( nStatus )
 		{
-			//SystemNotice( "��ɫ[%s]�Ľű���ֻ������������[BoatLevelUp]����ʧ��!", m_name );
+			//SystemNotice( "[%s][BoatLevelUp]!", m_name );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00094), m_name );
 			lua_settop(g_pLuaState, 0);
 			return FALSE;
@@ -6097,7 +6097,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		lua_settop(g_pLuaState, 0);
 		if( dwResult != LUA_TRUE )
 		{
-			//SystemNotice( "��ɫ[%s]�Ľű���ֻ������������[BoatLevelUp]����ʧ��!", m_name );
+			//SystemNotice( "[%s][BoatLevelUp]!", m_name );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00095), m_name );
 			return FALSE;
 		}
@@ -6106,7 +6106,7 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 	}
 	else
 	{
-		//SystemNotice( "BoatSelected:��ֻѡ����������Type[%d]", byType );
+		//SystemNotice( "BoatSelected:Type[%d]", byType );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00096), byType );
 		return FALSE;
 	}
@@ -6135,12 +6135,12 @@ BOOL CCharacter::BoatBerthList( DWORD dwNpcID, BYTE byType, USHORT sBerthID, USH
 		}
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "��û��ͣ���ڸøۿڵĴ�ֻ!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00072) );
 			return TRUE;
 		}
 
-		// ���ý�ɫ����������Ϣ
+		// 
 		GetPlayer()->SetBerth( sBerthID, sxPos, syPos, sDir );
 
 		net::msg::McBerthListMessage msg;
@@ -6159,7 +6159,7 @@ BOOL CCharacter::BoatBerthList( DWORD dwNpcID, BYTE byType, USHORT sBerthID, USH
 
 BOOL CCharacter::BoatAdd( CCharacter& Boat )
 {
-	// Типизированная сериализация: добавление корабля
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McBoatAddMessage{Boat.GetID()});
 	ReflectINFof( this, packet );
 	return TRUE;
@@ -6167,7 +6167,7 @@ BOOL CCharacter::BoatAdd( CCharacter& Boat )
 
 BOOL CCharacter::BoatClear( CCharacter& Boat )
 {
-	// Типизированная сериализация: удаление корабля
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McBoatClearMessage{Boat.GetID()});
 	ReflectINFof( this, packet );
 	return TRUE;
@@ -6210,12 +6210,12 @@ BOOL CCharacter::BoatPackBagList( USHORT sBerthID, BYTE byType, BYTE byLevel )
 		GetPlayer()->GetBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "��û��ͣ���ڸøۿڵĴ�ֻ!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00072) );
 			return TRUE;
 		}
 
-		// ���ý�ɫ����������Ϣ
+		// 
 		GetPlayer()->SetBerth( sBerthID, byType, byLevel, 0 );
 
 		net::msg::McBerthListMessage msg;
@@ -6238,7 +6238,7 @@ BOOL CCharacter::PackBag( CCharacter& Boat, USHORT sItemID, USHORT sCount, USHOR
 	if( sTemp == 0 )
 	{
 		sNumPack = 0;
-		//SystemNotice( "��ֻ%s��������!", Boat.GetName() );
+		//SystemNotice( "%s!", Boat.GetName() );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00097), Boat.GetName() );
 		return TRUE;
 	}
@@ -6280,7 +6280,7 @@ BOOL CCharacter::PackBag( CCharacter& Boat, USHORT sItemID, USHORT sCount, USHOR
 	}
 	if( sNumPack == 0 )
 	{
-		//SystemNotice( "��Ʒ�����������!" );
+		//SystemNotice( "!" );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00098) );
 		return TRUE;
 	}
@@ -6293,19 +6293,19 @@ BOOL CCharacter::PackBag( CCharacter& Boat, USHORT sItemID, USHORT sCount, USHOR
 			SItemGrid g;
 			if( Data[n].sNum >= sNum )
 			{
-				// ���һ����
+				// 
 				g.sNum = sNum;
 				if( KbPopItem( true, false, &g, Data[n].byIndex ) != enumKBACT_SUCCESS )
 				{
-					//SystemNotice( "���󣺴����ȡ��Ʒ��λID[%d]��%d����Ʒʧ��!" );
-					//SystemNotice( "���󣺴����ȡ��Ʒʧ��!" );
+					//SystemNotice( "ID[%d]%d!" );
+					//SystemNotice( "!" );
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00099) );
 					return FALSE;
 				}
-				//if( !Boat.AddItem( sPileID, 1, "ϵͳ" ) )
+				//if( !Boat.AddItem( sPileID, 1, "" ) )
 				if( !Boat.AddItem( sPileID, 1, RES_STRING(GM_CHARACTER_CPP_00012) ) )
 				{
-					//SystemNotice( "����ϵͳ����%d�����Ʒʧ��!ID[%d]", 1, sPileID );
+					//SystemNotice( "%d!ID[%d]", 1, sPileID );
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00100), 1, sPileID );
 					return FALSE;
 				}
@@ -6325,8 +6325,8 @@ BOOL CCharacter::PackBag( CCharacter& Boat, USHORT sItemID, USHORT sCount, USHOR
 				g.sNum = Data[n].sNum;
 				if( KbPopItem( true, false, &g, Data[n].byIndex ) != enumKBACT_SUCCESS )
 				{
-					//SystemNotice( "���󣺴����ȡ��Ʒ��λID[%d]��%d����Ʒʧ��!" );
-					//SystemNotice( "���󣺴����ȡ��Ʒʧ��!" );
+					//SystemNotice( "ID[%d]%d!" );
+					//SystemNotice( "!" );
 					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00099) );
 					return FALSE;
 				}
@@ -6344,7 +6344,7 @@ BOOL CCharacter::PackBag( CCharacter& Boat, USHORT sItemID, USHORT sCount, USHOR
 
 BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 {
-	// ���ýű���������������
+	// 
 	lua_getglobal( g_pLuaState, "PackBagGoods" );
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
@@ -6360,7 +6360,7 @@ BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 	int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 	if( nStatus )
 	{
-		//SystemNotice( "��ɫ[%s]�Ľű������������[PackBagGoods]����ʧ��!", m_name );
+		//SystemNotice( "[%s][PackBagGoods]!", m_name );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00101), m_name );
 		lua_callalert( g_pLuaState, nStatus );
 		lua_settop(g_pLuaState, 0);
@@ -6371,7 +6371,7 @@ BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 	lua_settop(g_pLuaState, 0);
 	if( dwResult != LUA_TRUE )
 	{
-		//SystemNotice( "��ɫ[%s]�Ľű������������[PackBagGoods]����ʧ��!", m_name );
+		//SystemNotice( "[%s][PackBagGoods]!", m_name );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00102), m_name );
 		return FALSE;
 	}
@@ -6385,12 +6385,12 @@ BOOL CCharacter::BoatPackBag( BYTE byIndex )
 	{
         if(GetPlyMainCha()->m_CKitbag.IsPwdLocked())
         {
-            //GetPlyMainCha()->SystemNotice( "������������!" );
+            //GetPlyMainCha()->SystemNotice( "!" );
 			GetPlyMainCha()->SystemNotice( RES_STRING(GM_CHARACTER_CPP_00002) );
 			return FALSE;
         }
         
-		// ���ý�ɫ����������Ϣ
+		// 
 		USHORT sBerthID, sType, sLevel, sDir;
 		GetPlayer()->GetBerth( sBerthID, sType, sLevel, sDir );
 
@@ -6400,22 +6400,22 @@ BOOL CCharacter::BoatPackBag( BYTE byIndex )
 		GetPlayer()->GetBerthBoat( sBerthID, byNumBoat, Data );
 		if( byNumBoat == 0 )
 		{
-			//SystemNotice( "��û��ͣ���ڸøۿڵĿ��Դ����Ʒ�Ĵ�ֻ!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00103) );
 			return TRUE;
 		}
 
 		if( byIndex >= byNumBoat )
 		{
-			//SystemNotice( "BoatPackBag:ѡ�������ֻID[%d]����!", byIndex );
+			//SystemNotice( "BoatPackBag:ID[%d]!", byIndex );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00104), byIndex );
 			return FALSE;
 		}
 
-		// �������		
+		// 		
 		if( m_pCPlayer->IsLuanchOut() )
 		{
-			//SystemNotice( "��Ĵ�ֻ�Ѿ�������!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00067) );
 			return FALSE;
 		}
@@ -6428,7 +6428,7 @@ BOOL CCharacter::BoatPackBag( BYTE byIndex )
 
 		if( pBoat->m_CKitbag.IsFull() )
 		{
-			//SystemNotice( "��ѡ��Ĵ�ֻ������������ѡ��������ֻ���!" );
+			//SystemNotice( "!" );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00105) );
 			return FALSE;
 		}
@@ -6544,7 +6544,7 @@ uLong CCharacter::GetGuildState()
 
 void CCharacter::SyncGuildInfo()
 {
-	// Типизированная сериализация: информация о гильдии
+	//  :   
 	auto packet = net::msg::serialize(net::msg::McGuildInfoMessage{
 		this->GetID(),
 		static_cast<int64_t>(this->GetPlayer()->m_lGuildID),
@@ -6557,21 +6557,21 @@ void CCharacter::SyncGuildInfo()
 
 void CCharacter::SynStallName()
 {
-	// Типизированная сериализация: имя лавки
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McSynStallNameMessage{GetID(), GetStallName()});
 	NotiChgToEyeshot( packet );
 }
 
 void CCharacter::SynBeginItemRepair()
 {
-	// Типизированная сериализация: открытие UI ремонта
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemRepairCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemForge()
 {
-	// Типизированная сериализация: открытие UI ковки
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemForgeCmd();
 	ReflectINFof(this, packet);
 }
@@ -6579,7 +6579,7 @@ void CCharacter::SynBeginItemForge()
 // Add by lark.li 20080514 begin
 void CCharacter::SynBeginItemLottery()
 {
-	// Типизированная сериализация: открытие UI лотереи
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemLotteryCmd();
 	ReflectINFof(this, packet);
 }
@@ -6587,91 +6587,91 @@ void CCharacter::SynBeginItemLottery()
 
 void CCharacter::SynBeginItemUnite()
 {
-	// Типизированная сериализация: открытие UI объединения
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemUniteCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemMilling()
 {
-	// Типизированная сериализация: открытие UI помола
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemMillingCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemFusion()
 {
-	// Типизированная сериализация: открытие UI слияния
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemFusionCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemUpgrade()
 {
-	// Типизированная сериализация: открытие UI улучшения
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemUpgradeCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemEidolonMetempsychosis()
 {
-	// Типизированная сериализация: открытие UI перерождения эйдолона
+	//  :  UI  
 	auto packet = net::msg::serializeMcBeginItemEidolonMetempsychosisCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemEidolonFusion()
 {
-	// Типизированная сериализация: открытие UI слияния эйдолонов
+	//  :  UI  
 	auto packet = net::msg::serializeMcBeginItemEidolonFusionCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemPurify()
 {
-	// Типизированная сериализация: открытие UI очистки
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemPurifyCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemFix()
 {
-	// Типизированная сериализация: открытие UI починки
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemFixCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginItemEnergy()
 {
-	// Типизированная сериализация: открытие UI зарядки
+	//  :  UI 
 	auto packet = net::msg::serializeMcBeginItemEnergyCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginGMSend()
 {
-	// Типизированная сериализация: открытие UI отправки GM-почты
+	//  :  UI  GM-
 	auto packet = net::msg::serializeMcGmSendCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginGMRecv(DWORD dwNpcID)
 {
-	// Типизированная сериализация: открытие UI получения GM-почты
+	//  :  UI  GM-
 	auto packet = net::msg::serialize(net::msg::McGmRecvMessage{static_cast<int64_t>(dwNpcID)});
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginGetStone()
 {
-	// Типизированная сериализация: открытие UI добычи камней
+	//  :  UI  
 	auto packet = net::msg::serializeMcBeginGetStoneCmd();
 	ReflectINFof(this, packet);
 }
 
 void CCharacter::SynBeginTiger()
 {
-	// Типизированная сериализация: открытие UI тигрового автомата
+	//  :  UI  
 	auto packet = net::msg::serializeMcBeginTigerCmd();
 	ReflectINFof(this, packet);
 }
@@ -6703,14 +6703,14 @@ void CCharacter::SynAppendLook()
 
 void CCharacter::SynItemUseSuc(Short sItemID)
 {
-	// Типизированная сериализация: успешное использование предмета
+	//  :   
 	auto packet = net::msg::serialize(net::msg::McItemUseSuccMessage{GetID(), static_cast<int64_t>(sItemID)});
 	NotiChgToEyeshot(packet);
 }
 
 void CCharacter::SynKitbagCapacity(void)
 {
-	// Типизированная сериализация: вместимость инвентаря
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McKitbagCapacityMessage{GetID(), static_cast<int64_t>(m_CKitbag.GetCapacity())});
 	ReflectINFof(this, packet);
 }
@@ -6725,7 +6725,7 @@ void CCharacter::SynEspeItem(void)
 		if(pItem && pItem->sType == enumItemTypePet)
 			if (m_CKitbag.IsSingleChange(sEspeGridID))
 			{
-				// Типизированная сериализация: синхронизация специального предмета
+				//  :   
 				net::msg::McEspeItemMessage msg;
 				msg.worldId = GetID();
 				net::msg::EspeItemEntry entry;
@@ -6746,7 +6746,7 @@ void CCharacter::SynVolunteerState(BOOL bState)
 	if (!GetPlayer())
 		return;
 	char chState = (bState ? 1 : 0);
-	// Типизированная сериализация: статус волонтёра
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McVolunteerStateMessage{static_cast<int64_t>(chState)});
 	ReflectINFof(this, packet);
 }
@@ -6755,7 +6755,7 @@ void CCharacter::SynTigerString(cChar *szString)
 {
 	if (!GetPlayer())
 		return;
-	// Типизированная сериализация: остановка тигрового автомата
+	//  :   
 	auto packet = net::msg::serialize(net::msg::McTigerStopMessage{szString});
 	ReflectINFof(this, packet);
 }
@@ -6765,7 +6765,7 @@ void CCharacter::SyncBoatAttr(Short sSynType, bool bAllBoat)
 	if (!GetPlayer())
 		return;
 
-	if (!bAllBoat) // ֻͬ���Լ�
+	if (!bAllBoat) // 
 	{
 		SynAttrToSelf(sSynType);
 		return;
@@ -6837,7 +6837,7 @@ BOOL CCharacter::ViewItemInfo( const net::msg::CmActionViewItemData& msg )
 		CItemRecord* pItem = (CItemRecord*)GetItemRecordInfo( m_CKitbag.GetID( sGridID ) );
 		if( pItem == NULL )
 		{
-			//SystemNotice( "ViewItemInfo::��ƷID�����޷��ҵ�����Ʒ��Ϣ!ID = %d, grid = %d", m_CKitbag.GetID( sGridID ), sGridID );
+			//SystemNotice( "ViewItemInfo::ID!ID = %d, grid = %d", m_CKitbag.GetID( sGridID ), sGridID );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00106), m_CKitbag.GetID( sGridID ), sGridID );
 			return FALSE;
 		}
@@ -6929,7 +6929,7 @@ BOOL CCharacter::ViewItemInfo( const net::msg::CmActionViewItemData& msg )
 		CItemRecord* pItem = (CItemRecord*)GetItemRecordInfo( sItemID );
 		if( pItem == NULL )
 		{
-			//SystemNotice( "ViewItemInfo:��ƷID�����޷��ҵ�����Ʒ��Ϣ!Index = %d, ID = %d", byIndex, sItemID );
+			//SystemNotice( "ViewItemInfo:ID!Index = %d, ID = %d", byIndex, sItemID );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00107), byIndex, sItemID );
 			return FALSE;
 		}
@@ -6940,7 +6940,7 @@ BOOL CCharacter::ViewItemInfo( const net::msg::CmActionViewItemData& msg )
 		}
 		else
 		{
-			//SystemNotice( "viewiteminfo:����Ʒû�д�ֻ��Ϣ!Index[%d], ID[%d]", byIndex, sItemID );
+			//SystemNotice( "viewiteminfo:!Index[%d], ID[%d]", byIndex, sItemID );
 			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00108), byIndex, sItemID );
 			return FALSE;
 		}
@@ -6966,7 +6966,7 @@ mission::CStallData* CCharacter::GetStallData()
 
 BYTE CCharacter::GetStallNum()
 {
-	if (!GetActControl(enumACTCONTROL_USE_MSKILL)) // ����ʹ�ð�̯����
+	if (!GetActControl(enumACTCONTROL_USE_MSKILL)) // 
 		return 0;
 
 	Char	chLv;
@@ -6981,7 +6981,7 @@ BYTE CCharacter::GetStallNum()
 }
 
 //add by jilinlee 2007/4/20
-//����
+//
 BOOL CCharacter::IsReadBook()
 {
 	return m_SReadBook.bIsReadState;
@@ -6997,7 +6997,7 @@ extern char g_kitbagTmp[];
 void CCharacter::LogAssets(Char chLType)
 {
 	return;
-	//char	*szLTypeStr[] = {"��ʼ��", "����", "����", "ʰȡ", "����", "ɾ��"};
+	//char	*szLTypeStr[] = {"", "", "", "", "", ""};
 	const char	*szLTypeStr[] = {
 		RES_STRING(GM_CHARACTER_CPP_00109), 
 		RES_STRING(GM_CHARACTER_CPP_00110),
@@ -7034,7 +7034,7 @@ void CCharacter::LogAssets(Char chLType)
 			continue;
 		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
 	}
-	//LG("����ʲ�", "��ɫ%s(%s)��%s��������Ǯ %u������%s, ��ʱ����%s.\n", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), g_kitbag, g_kitbagTmp);
+	//LG("", "%s(%s)%s %u%s, %s.\n", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), g_kitbag, g_kitbagTmp);
 	ToLogService("common", "player {}({}), {} operator; coin {}, kitbag {}, Tempkitbag {}.", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), static_cast<const char*>(g_kitbag), static_cast<const char*>(g_kitbagTmp));
 }
 
@@ -7140,13 +7140,13 @@ DWORD CCharacter::GetCheatInterval(int state)
 	
 	switch(state)
 	{
-	case 0://������
+	case 0://
 		ret = 20 * MS_IN_ONE_SECOND + 100 * RAND_IN_NUM(MS_IN_ONE_SECOND);
 		break;
-	case 1://�ش�������ʱ
+	case 1://
 		ret = 65 * MS_IN_ONE_SECOND;
 		break;
-	case 3://���ʼ��
+	case 3://
 		ret = (m_sCheatX.Xn > 3) ? (40 * MS_IN_ONE_MINUTE) : (60 * RAND_IN_NUM(MS_IN_ONE_SECOND) + 10 * m_sCheatX.Xn * MS_IN_ONE_MINUTE);
 		break;
 	default:
@@ -7165,7 +7165,7 @@ void CCharacter::CheatRun(DWORD dwCurTime)
 
 	switch(m_sCheatX.Xtype)
 	{
-	case 1://������ɺ�
+	case 1://
 		{
 			if(GetStallData() || IsStoreEnable())
 			{
@@ -7211,7 +7211,7 @@ void CCharacter::CheatRun(DWORD dwCurTime)
 		}
 		break;
 
-	case 2://���ʺ�
+	case 2://
 		{
 			m_sCheatX.Xn = (m_sCheatX.Xn > 0) ? (m_sCheatX.Xn - 1) : 0;
 			m_sCheatX.dwInterval = GetCheatInterval(3);
@@ -7227,7 +7227,7 @@ void CCharacter::CheatRun(DWORD dwCurTime)
 			}
 			else
 			{
-				//SystemNotice("��û�д�,�㻹��%d�λ���!", 3 - m_sCheatX.Xerror);
+				//SystemNotice(",%d!", 3 - m_sCheatX.Xerror);
 				SystemNotice(RES_STRING(GM_CHARACTER_CPP_00115), 3 - m_sCheatX.Xerror);
 			}
 		}
@@ -7258,7 +7258,7 @@ void CCharacter::CheatCheck(cChar *answer)
 
 		if(m_sCheatX.Xcount > 1)
 		{
-			//����
+			//
 			g_CParser.DoString("WGPrizeBegin", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 1, m_sCheatX.Xright, DOSTRING_PARAM_END);
 		}
 	}
@@ -7278,7 +7278,7 @@ void CCharacter::CheatCheck(cChar *answer)
 		}
 		else
 		{
-			//SystemNotice("������,�㻹��%d�λ���!", 3 - m_sCheatX.Xerror);
+			//SystemNotice(",%d!", 3 - m_sCheatX.Xerror);
 			SystemNotice(RES_STRING(GM_CHARACTER_CPP_00116), 3 - m_sCheatX.Xerror);
 		}
 	}
@@ -7296,7 +7296,7 @@ void CCharacter::CheatConfirm()
 	}
 	else
 	{
-		//LG("Cheat", "��� %s ʹ�����,��������!\n", GetName());
+		//LG("Cheat", " %s ,!\n", GetName());
 		ToLogService("players", LogLevel::Warning, "character {} use waigua,kick it!", GetName());
 
 		GatePlayer *pGatePlyer = (GatePlayer *)GetPlayer();
@@ -7321,7 +7321,7 @@ bool IsPersistStateID(unsigned char uchStateID)
     return bFound;
 }
 
-// ����״̬����ת��Ϊ�ַ���
+// 
 char* SStateData2String(CCharacter *pCCha, char *szSStateBuf, int nLen, char chSaveType)
 {
 	if (!pCCha || !szSStateBuf) return NULL;
@@ -7355,7 +7355,7 @@ char* SStateData2String(CCharacter *pCCha, char *szSStateBuf, int nLen, char chS
 
 		if (lOnTick > lOverTick)
 			lOnTick -= lOverTick;
-		else // ʱ���Ѿ�����
+		else // 
 			continue;
 
 		if (chSaveType == enumSAVE_TYPE_OFFLINE) {
@@ -7373,7 +7373,7 @@ char* SStateData2String(CCharacter *pCCha, char *szSStateBuf, int nLen, char chS
 	return szSStateBuf;
 }
 
-// �ַ���ת��Ϊ����״̬����
+// 
 bool Strin2SStateData(CCharacter *pCCha, std::string &strData)
 {
 	if (!pCCha)
@@ -7386,7 +7386,7 @@ bool Strin2SStateData(CCharacter *pCCha, std::string &strData)
 	if (nSegNum < 1)
 		return false;
 
-	Util_ResolveTextLine(strList[0].c_str(), strSubList, 3, ','); // ״̬����
+	Util_ResolveTextLine(strList[0].c_str(), strSubList, 3, ','); // 
 	uChar	uchStateNum = Str2Int(strSubList[0]);
 	uChar	uchStateID, uchStateLv;
 	Long	lOnTick;
@@ -7429,7 +7429,7 @@ bool Strin2SStateData(CCharacter *pCCha, std::string &strData)
 	return true;
 }
 
-// ��չ����ת�����ַ���
+// 
 char*	ChaExtendAttr2String(CCharacter *pCCha, char *szAttrBuf, int nLen)
 {
 	if (!pCCha || !szAttrBuf)
@@ -7443,7 +7443,7 @@ char*	ChaExtendAttr2String(CCharacter *pCCha, char *szAttrBuf, int nLen)
 	return szAttrBuf;
 }
 
-// �ַ���ת������չ����
+// 
 bool		Strin2ChaExtendAttr(CCharacter *pCCha, std::string &strAttr)
 {
 	if (!pCCha || strAttr.length() < 19)
@@ -7465,7 +7465,7 @@ bool		Strin2ChaExtendAttr(CCharacter *pCCha, std::string &strAttr)
 void CCharacter::SetIMP(int impVal, bool sync) {
 	chaIMP = impVal < 2000000 ? impVal : 2000000;
 	if (sync) {
-		// Типизированная сериализация: обновление IMP
+		//  :  IMP
 		auto WtPk = net::msg::serialize(net::msg::McUpdateImpMessage{static_cast<int64_t>(chaIMP)});
 		ReflectINFof(this, WtPk);
 	}

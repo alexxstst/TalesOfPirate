@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TableData.h"
 
@@ -23,28 +23,28 @@ public:
 	
     char	szName[16];
 	
-    int     nType;              // ����
-   	BYTE    btPointColor[3];    // ���Դ����ɫ
-    BYTE    btEnvColor[3];      // ���������ɫ
-    BYTE    btFogColor[3];      // ������ɫ
+    int     nType;              // 
+   	BYTE    btPointColor[3];    // 
+    BYTE    btEnvColor[3];      // 
+    BYTE    btFogColor[3];      // 
     int     nRange;
     float   Attenuation1;
-    int     nAnimCtrlID;        //���Դ��������id
-    // .... ��������
+    int     nAnimCtrlID;        //id
+    // .... 
     
 
-    int     nStyle;             //  ���
+    int     nStyle;             //  
     int		nAttachEffectID;
-    BOOL    bEnablePointLight;  //  �Ƿ��յ��ԴӰ��
-	BOOL    bEnableEnvLight;    //  �Ƿ��ջ�����Ӱ��    
-    int		nFlag;              //  �������
-    int     nSizeFlag;          //  �ߴ���, �������ǳ���ߴ�, ��ɼ����ж�����
+    BOOL    bEnablePointLight;  //  
+	BOOL    bEnableEnvLight;    //      
+    int		nFlag;              //  
+    int     nSizeFlag;          //  , , 
 
     char    szEnvSound[11];	
-	int		nEnvSoundDis;		// ��λ:����
-	int		nPhotoTexID;        //  ͼ����ͼID
+	int		nEnvSoundDis;		// :
+	int		nPhotoTexID;        //  ID
     BOOL    bShadeFlag;
-	BOOL	bIsReallyBig;		// �Ƿ��ش����,Added by clp
+	BOOL	bIsReallyBig;		// ,Added by clp
 
     int     nFadeObjNum;
     int     nFadeObjSeq[16];
@@ -68,7 +68,7 @@ public:
 
 protected:
 
-	static CSceneObjSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CSceneObjSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -103,10 +103,10 @@ protected:
 		
 		strncpy(pInfo->szName, ParamList[0].c_str(), sizeof(pInfo->szName));
 
-        // ���������� 0 ��ͨ���� 1 ������������ 2 �ϰ��������....
+        //  0  1  2 ....
         pInfo->nType             = Str2Int(ParamList[1]);
         
-        // ���Ͳ���1 = ParamList[2];
+        // 1 = ParamList[2];
         std::string strList1[16], strList2[16];
         int n1 = Util_ResolveTextLine(ParamList[2].c_str(), strList1, 16+1, ',');
         int n2 = Util_ResolveTextLine(ParamList[3].c_str(), strList2, 16+1, ',');
@@ -127,7 +127,7 @@ protected:
             pInfo->btEnvColor[1] = Str2Int(strList1[1]);
             pInfo->btEnvColor[2] = Str2Int(strList1[2]);
             break;
-        case 6: // ������Ч
+        case 6: // 
 			strcpy(pInfo->szEnvSound, strList1[0].c_str());
 			pInfo->nEnvSoundDis = Str2Int( strList2[0] );
             ToLogService("ui", "Read Enviroment Sound [{}]", pInfo->szEnvSound);
@@ -147,7 +147,7 @@ protected:
             break;
         }
 
-        // ���Ͳ���2 = ParamList[3];
+        // 2 = ParamList[3];
 
 	    pInfo->nAttachEffectID   = Str2Int(ParamList[4]);
        	pInfo->bEnableEnvLight   = Str2Int(ParamList[5]);

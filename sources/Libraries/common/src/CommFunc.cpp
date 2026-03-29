@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: CommFunc.cpp
 // Creater: Jerry Li
 // Date: 2005.02.23
@@ -47,58 +47,58 @@ const char	*g_szCityName[defMAX_CITY_NUM] =
 
 const long g_PartIdRange[PLAY_NUM][enumEQUIP_NUM + 1][2] = 
 {
-						/*��ʼ���*/		/*�������*/
-	//����˹
-		/*ͷ*/			0,					0,
-		/*HEAD ����*/	2554,				2561,
-		/*BODY ����*/	0,					0,
-		/*GLOVE����*/	0,					0,
-		/*SHOESЬ��*/	0,					0,
-		/*NECK ����*/	0,					0,
-		/*LHAND����*/	0,					0,
-		/*HAND1����*/	0,					0,
-		/*HAND2����*/	0,					0,
-		/*RHAND����*/	0,					0,
-		/*FACE ͷ��*/	2000,				2007,
+						/**/		/**/
+	//
+		/**/			0,					0,
+		/*HEAD */	2554,				2561,
+		/*BODY */	0,					0,
+		/*GLOVE*/	0,					0,
+		/*SHOES*/	0,					0,
+		/*NECK */	0,					0,
+		/*LHAND*/	0,					0,
+		/*HAND1*/	0,					0,
+		/*HAND2*/	0,					0,
+		/*RHAND*/	0,					0,
+		/*FACE */	2000,				2007,
 
-	//����
-		/*ͷ*/			0,					0,
-		/*HEAD ����*/	2554,				2561,
-		/*BODY ����*/	0,					0,
-		/*GLOVE����*/	0,					0,
-		/*SHOESЬ��*/	0,					0,
-		/*NECK ����*/	0,					0,
-		/*LHAND����*/	0,					0,
-		/*HAND1����*/	0,					0,
-		/*HAND2����*/	0,					0,
-		/*RHAND����*/	0,					0,
-		/*FACE ͷ��*/	2062,				2069,
+	//
+		/**/			0,					0,
+		/*HEAD */	2554,				2561,
+		/*BODY */	0,					0,
+		/*GLOVE*/	0,					0,
+		/*SHOES*/	0,					0,
+		/*NECK */	0,					0,
+		/*LHAND*/	0,					0,
+		/*HAND1*/	0,					0,
+		/*HAND2*/	0,					0,
+		/*RHAND*/	0,					0,
+		/*FACE */	2062,				2069,
 
-	//������
-		/*ͷ*/			0,					0,
-		/*HEAD ����*/	2554,				2561,
-		/*BODY ����*/	0,					0,
-		/*GLOVE����*/	0,					0,
-		/*SHOESЬ��*/	0,					0,
-		/*NECK ����*/	0,					0,
-		/*LHAND����*/	0,					0,
-		/*HAND1����*/	0,					0,
-		/*HAND2����*/	0,					0,
-		/*RHAND����*/	0,					0,
-		/*FACE ͷ��*/	2124,				2131,
+	//
+		/**/			0,					0,
+		/*HEAD */	2554,				2561,
+		/*BODY */	0,					0,
+		/*GLOVE*/	0,					0,
+		/*SHOES*/	0,					0,
+		/*NECK */	0,					0,
+		/*LHAND*/	0,					0,
+		/*HAND1*/	0,					0,
+		/*HAND2*/	0,					0,
+		/*RHAND*/	0,					0,
+		/*FACE */	2124,				2131,
 
-	//����
-		/*ͷ*/			0,					0,
-		/*HEAD ����*/	2554,				2561,
-		/*BODY ����*/	0,					0,
-		/*GLOVE����*/	0,					0,
-		/*SHOESЬ��*/	0,					0,
-		/*NECK ����*/	0,					0,
-		/*LHAND����*/	0,					0,
-		/*HAND1����*/	0,					0,
-		/*HAND2����*/	0,					0,
-		/*RHAND����*/	0,					0,
-		/*FACE ͷ��*/	2291,				2294,
+	//
+		/**/			0,					0,
+		/*HEAD */	2554,				2561,
+		/*BODY */	0,					0,
+		/*GLOVE*/	0,					0,
+		/*SHOES*/	0,					0,
+		/*NECK */	0,					0,
+		/*LHAND*/	0,					0,
+		/*HAND1*/	0,					0,
+		/*HAND2*/	0,					0,
+		/*RHAND*/	0,					0,
+		/*FACE */	2291,				2294,
 };
 
 bool g_IsValidLook( int nType, int nPart, long nValue )
@@ -124,13 +124,13 @@ const char* g_GetAreaName( int nValue )
 {
     switch( nValue )
     {
-    case 1:  return "Land / Sea"; //"½��/����";
-    case 2:  return "safe zone"; //"��ս����";
-    case 3:  return "Non PK zone"; //"��PK��";
-    case 4:  return "Bridge"; //"��";
-    case 5:  return "Forbid monster zone"; //"������";
-    case 6:  return "Mining Area"; //"����";
-    default: return "Unknown"; //"δ֪";
+    case 1:  return "Land / Sea"; //"/";
+    case 2:  return "safe zone"; //"";
+    case 3:  return "Non PK zone"; //"PK";
+    case 4:  return "Bridge"; //"";
+    case 5:  return "Forbid monster zone"; //"";
+    case 6:  return "Mining Area"; //"";
+    default: return "Unknown"; //"";
     }
 }
 
@@ -163,7 +163,7 @@ int g_GetItemSkill( int nLeftItemID, int nRightItemID )
 	int nLeftType = GetItemType( nLeftItemID );
 
 	const int nLRSkill[][3] = {
-		// ˫��
+		// 
 		0,		0,		25,
 		1,		1,		38,
 		11,		1,		28,
@@ -171,7 +171,7 @@ int g_GetItemSkill( int nLeftItemID, int nRightItemID )
 		9999,	6,		33
 	};
 
-		// ����
+		// 
 	const int nRSkill[][3] = {
 		-1,		1,		28,
 		-1,		4,		31,
@@ -184,7 +184,7 @@ int g_GetItemSkill( int nLeftItemID, int nRightItemID )
 		-1,		19,		201
 	};
 
-		// ����
+		// 
 	const int nLSkill[][3] = {
 		11,		-1,		25,
 		3,		-1,		30
@@ -253,7 +253,7 @@ int g_IsUseSkill( stNetChangeChaPart *pSEquip, int nSkillID )
 	bool IsBody = false;
 	bool IsConch = false;
 
-	// ����
+	// 
 	for( int i=0; i<defSKILL_ITEM_NEED_NUM; i++ )
 	{	
 		if( p->sItemNeed[0][i][0] == cchSkillRecordKeyValue )
@@ -279,7 +279,7 @@ int g_IsUseSkill( stNetChangeChaPart *pSEquip, int nSkillID )
 	if (!IsLeft)
 		return 0;
 
-	// ����
+	// 
 	for( int i=0; i<defSKILL_ITEM_NEED_NUM; i++ )
 	{	
 		if( p->sItemNeed[1][i][0] == cchSkillRecordKeyValue )
@@ -305,7 +305,7 @@ int g_IsUseSkill( stNetChangeChaPart *pSEquip, int nSkillID )
 	if (!IsRight)
 		return 0;
 
-	// ����
+	// 
 	for( int i = 0; i < defSKILL_ITEM_NEED_NUM; i++ )
 	{	
 		if( p->sItemNeed[2][i][0] == cchSkillRecordKeyValue )
@@ -331,13 +331,13 @@ int g_IsUseSkill( stNetChangeChaPart *pSEquip, int nSkillID )
 	if (!IsBody)
 		return 0;
 
-	// ���ǵ���
+	// 
 	for (int i = 0; i < defSKILL_ITEM_NEED_NUM; i++)
 	{
 		if (p->sConchNeed[i][0] == cchSkillRecordKeyValue)
 			break;
 
-		if (p->sConchNeed[i][0] == -1) // ����Ҫ����
+		if (p->sConchNeed[i][0] == -1) // 
 		{
 			IsConch = true;
 			break;
@@ -372,17 +372,17 @@ int g_IsUseSkill( stNetChangeChaPart *pSEquip, int nSkillID )
 }
 
 //=============================================================================
-// �Ƿ���ȷ�ļ���Ŀ��
-// nTChaCtrlType Ŀ��Ŀ������ͣ�EChaCtrlType����
-// bTIsDie Ŀ���Ƿ�������
-// bTChaBeSkilled Ŀ���Ƿ��ܱ�ʹ�ü��ܣ�
-// nTChaArea Ŀ�������EAreaMask����
-// nSSkillObjType Դ���ܵ�Ŀ�����ͣ�ESkillObjType����
-// nSSkillObjHabitat Դ���ܵ��������ͣ�ESkillTarHabitatType����
-// nSSkillEffType Դ���ܵ�Ч�����ͣ�ESkillEffType����
-// bIsTeammate Դ��Ŀ���Ƿ���ѹ�ϵ��
-// bIsTeammate Դ��Ŀ���Ƿ��ѷ���ϵ��
-// bIsSelf Դ��Ŀ���Ƿ���ͬ
+// 
+// nTChaCtrlType EChaCtrlType
+// bTIsDie 
+// bTChaBeSkilled 
+// nTChaArea EAreaMask
+// nSSkillObjType ESkillObjType
+// nSSkillObjHabitat ESkillTarHabitatType
+// nSSkillEffType ESkillEffType
+// bIsTeammate 
+// bIsTeammate 
+// bIsSelf 
 //=============================================================================
 int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int nTChaArea,
 					  int nSChaCtrlType, int nSSkillObjType, int nSSkillObjHabitat, int nSSkillEffType,
@@ -392,30 +392,30 @@ int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int 
 
 	if (g_IsNPCCtrlCha(nTChaCtrlType)) // NPC
 		return enumESKILL_FAILD_NPC;
-	if (!bTChaBeSkilled) // ���ܱ�ʹ�ü���
+	if (!bTChaBeSkilled) // 
 		return enumESKILL_FAILD_NOT_SKILLED;
 
-	if (nTChaArea & enumAREA_TYPE_NOT_FIGHT) // ��ȫ��
+	if (nTChaArea & enumAREA_TYPE_NOT_FIGHT) // 
 	{
 		if (nSSkillEffType != enumSKILL_EFF_HELPFUL)
 			return enumESKILL_FAILD_SAFETY_BELT;
 	}
-	if (nTChaArea & enumSKILL_TAR_LAND || nTChaArea & enumAREA_TYPE_BRIDGE ) // ½��
+	if (nTChaArea & enumSKILL_TAR_LAND || nTChaArea & enumAREA_TYPE_BRIDGE ) // 
 	{
 		if (nSSkillObjHabitat == enumSKILL_TAR_SEA)
 			return enumESKILL_FAILD_NOT_LAND;
 	}
-	else if (!(nTChaArea & enumSKILL_TAR_LAND)) // ����
+	else if (!(nTChaArea & enumSKILL_TAR_LAND)) // 
 	{
 		if (nSSkillObjHabitat == enumSKILL_TAR_LAND)
 			return enumESKILL_FAILD_NOT_SEA;
 	}
 
-	if (!bIsSelf) // ����
+	if (!bIsSelf) // 
 	{
 		if (nSSkillObjType == enumSKILL_TYPE_SELF)
 			return enumESKILL_FAILD_ONLY_SELF;
-		else if(nSSkillObjType == enumSKILL_TYPE_EXCEPT_SELF) // �����Լ���������н�ɫ�͹���
+		else if(nSSkillObjType == enumSKILL_TYPE_EXCEPT_SELF) // 
 		{
 			return enumESKILL_SUCCESS;
 		}
@@ -426,7 +426,7 @@ int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int 
 			return enumESKILL_FAILD_SELF;
 	}
 
-	if (bTIsDie) // ʬ��
+	if (bTIsDie) // 
 	{
 		if (!bTIsPlayer)
 			return enumESKILL_FAILD_ONLY_DIEPLY;
@@ -434,22 +434,22 @@ int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int 
 			return enumESKILL_FAILD_ONLY_DIEPLY;
 	}
 
-	if (nTChaCtrlType == enumCHACTRL_MONS_TREE) // ��
+	if (nTChaCtrlType == enumCHACTRL_MONS_TREE) // 
 	{
 		if (nSSkillObjType != enumSKILL_TYPE_TREE)
 			return enumESKILL_FAILD_ESP_MONS;
 	}
-	else if (nTChaCtrlType == enumCHACTRL_MONS_MINE) // ��
+	else if (nTChaCtrlType == enumCHACTRL_MONS_MINE) // 
 	{
 		if (nSSkillObjType != enumSKILL_TYPE_MINE)
 			return enumESKILL_FAILD_ESP_MONS;
 	}
-	else if(nTChaCtrlType == enumCHACTRL_MONS_FISH) // ��
+	else if(nTChaCtrlType == enumCHACTRL_MONS_FISH) // 
 	{
 		if (nSSkillObjType != enumSKILL_TYPE_FISH)
 			return enumESKILL_FAILD_ESP_MONS;
 	}
-	else if (nTChaCtrlType == enumCHACTRL_MONS_DBOAT) // ����
+	else if (nTChaCtrlType == enumCHACTRL_MONS_DBOAT) // 
 	{
 		if (nSSkillObjType != enumSKILL_TYPE_SALVAGE)
 			return enumESKILL_FAILD_ESP_MONS;
@@ -493,7 +493,7 @@ int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int 
 	}
 	else if(nSSkillObjType == enumSKILL_TYPE_ALL )
 	{
-		if (nSSkillEffType == enumSKILL_EFF_HELPFUL) // ���漼�ܣ�ֻ���ѷ���Ч
+		if (nSSkillEffType == enumSKILL_EFF_HELPFUL) // 
 		{
 			if (!bIsFriend)
 				return enumESKILL_FAILD_NOT_FRIEND;
@@ -509,7 +509,7 @@ int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int 
 }
 
 //------------------------------------------------------------------------
-//	CTextFilter �ඨ��
+//	CTextFilter 
 //------------------------------------------------------------------------
 
 BYTE CTextFilter::m_NowSign[eTableMax][8];
@@ -656,7 +656,7 @@ void String2Item(const char* pszData, SItemGrid* SGridCont) {
 	{
 		SGridCont->SetDBParam(m, Str2Int(strSubList[sTCount++]));
 	}
-	if (Str2Int(strSubList[sTCount++]) > 0) // ´æÔÚÊµÀýÊôÐÔ
+	if (Str2Int(strSubList[sTCount++]) > 0) // 
 	{
 		for (int k = 0; k < defITEM_INSTANCE_ATTR_NUM; k++)
 		{
@@ -669,7 +669,7 @@ void String2Item(const char* pszData, SItemGrid* SGridCont) {
 }
 
 
-// Вспомогательная функция: разбить строку по разделителю
+//  :    
 static std::vector<std::string_view> SplitView(std::string_view sv, char delim)
 {
 	std::vector<std::string_view> result;
@@ -707,7 +707,7 @@ bool LookData2String(const stNetChangeChaPart &pLook, std::string &strData)
 	strData.clear();
 	strData.reserve(4096);
 
-	// Версия
+	// 
 	strData += "112#";
 
 	// TypeID, HairID
@@ -716,7 +716,7 @@ bool LookData2String(const stNetChangeChaPart &pLook, std::string &strData)
 	strData += std::to_string(pLook.sHairID);
 	checkSum += pLook.sTypeID + pLook.sHairID;
 
-	// 34 слота экипировки
+	// 34  
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
 		const auto &item = pLook.SLink[i];
@@ -741,14 +741,14 @@ bool LookData2String(const stNetChangeChaPart &pLook, std::string &strData)
 			+ item.sID + item.sNum + item.sEndure[0] + item.sEndure[1]
 			+ item.sEnergy[0] + item.sEnergy[1] + item.chForgeLv;
 
-		// DB параметры
+		// DB 
 		for (int m = 0; m < enumITEMDBP_MAXNUM; m++)
 		{
 			strData += ','; strData += std::to_string(item.GetDBParam(m));
 			checkSum += item.GetDBParam(m);
 		}
 
-		// Instance-атрибуты
+		// Instance-
 		if (item.IsInstAttrValid())
 		{
 			strData += ",1";
@@ -765,7 +765,7 @@ bool LookData2String(const stNetChangeChaPart &pLook, std::string &strData)
 		}
 	}
 
-	// Контрольная сумма
+	//  
 	strData += ';';
 	strData += std::to_string(checkSum);
 
@@ -779,7 +779,7 @@ bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 
 	int64_t checkSum = 0;
 
-	// Определяем версию: "version#data" или просто "data"
+	//  : "version#data"   "data"
 	int version = 0;
 	std::string_view dataView(strData);
 	auto hashPos = dataView.find('#');
@@ -789,10 +789,10 @@ bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 		dataView.remove_prefix(hashPos + 1);
 	}
 
-	// Разбиваем по ';': section[0]=header, section[1..34]=slots, section[35]=checksum
+	//   ';': section[0]=header, section[1..34]=slots, section[35]=checksum
 	auto sections = SplitView(dataView, ';');
 
-	// Простой F# формат: "typeID;hairID;faceID" (2-3 секции, без запятых в header)
+	//  F# : "typeID;hairID;faceID" (2-3 ,    header)
 	if (sections.size() < static_cast<size_t>(enumEQUIP_NUM) + 1)
 	{
 		if (sections.size() >= 2 && sections[0].find(',') == std::string_view::npos)
@@ -814,7 +814,7 @@ bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 	pLook.sHairID = static_cast<short>(ParseInt(headerFields[1]));
 	checkSum += pLook.sTypeID + pLook.sHairID;
 
-	// Sections 1..34: слоты экипировки
+	// Sections 1..34:  
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
 		auto fields = SplitView(sections[i + 1], ',');
@@ -859,14 +859,14 @@ bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 		}
 		checkSum += item.bItemTradable;
 
-		// DB параметры
+		// DB 
 		for (int m = 0; m < enumITEMDBP_MAXNUM; m++)
 		{
 			item.SetDBParam(m, nextLong());
 			checkSum += item.GetDBParam(m);
 		}
 
-		// Instance-атрибуты
+		// Instance-
 		bool hasInstAttr = version >= defLOOK_CUR_VER && hashPos != std::string_view::npos;
 		if (hasInstAttr)
 		{
@@ -895,7 +895,7 @@ bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 		}
 	}
 
-	// Проверка контрольной суммы (только для новых форматов с версией)
+	//    (     )
 	if (hashPos != std::string_view::npos)
 	{
 		auto checksumIdx = static_cast<size_t>(enumEQUIP_NUM) + 1;
@@ -916,7 +916,7 @@ bool String2LookData(stNetChangeChaPart &pLook, const std::string &strData)
 	return true;
 }
 
-// ���������ת��Ϊ�ַ���
+// 
 char* ShortcutData2String(const stNetShortCut *pShortcut, char *szShortcutBuf, int nLen)
 {
 	if (!pShortcut || !szShortcutBuf) return NULL;
@@ -937,7 +937,7 @@ char* ShortcutData2String(const stNetShortCut *pShortcut, char *szShortcutBuf, i
 	return szShortcutBuf;
 }
 
-// �ַ���ת��Ϊ���������
+// 
 bool String2ShortcutData(stNetShortCut *pShortcut, std::string &strData)
 {
 	if (!pShortcut)

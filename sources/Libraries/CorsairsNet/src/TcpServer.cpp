@@ -1,4 +1,4 @@
-#include "TcpServer.h"
+﻿#include "TcpServer.h"
 #include <iostream>
 #include <algorithm>
 
@@ -6,9 +6,9 @@
 
 namespace net {
 
-	// ═══════════════════════════════════════════════════════════════
-	//  TcpServer — реализация
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  TcpServer  
+	// 
 
 	TcpServer::TcpServer()
 		: _listenSocket(INVALID_SOCKET), _listening(false), _maxConns(16), _handler(nullptr) {
@@ -18,21 +18,21 @@ namespace net {
 		Shutdown();
 	}
 
-	// ── Listen ─────────────────────────────────────────────────
+	//  Listen 
 
 	bool TcpServer::Listen(const std::string& ip, uint16_t port, int maxConns) {
 		if (_listening) {
-			std::cout << "[TcpServer] Listen: уже слушаем, вызов игнорируется" << std::endl;
+			std::cout << "[TcpServer] Listen:  ,  " << std::endl;
 			return false;
 		}
 
 		_maxConns = maxConns;
 
-		// Создаём listen socket
+		//  listen socket
 		_listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if (_listenSocket == INVALID_SOCKET) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpServer] socket() ОШИБКА: WSA=" << err << std::endl;
+			std::cout << "[TcpServer] socket() : WSA=" << err << std::endl;
 			return false;
 		}
 
@@ -53,7 +53,7 @@ namespace net {
 
 		if (bind(_listenSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpServer] bind() ОШИБКА: WSA=" << err << " на " << ip << ":" << port << std::endl;
+			std::cout << "[TcpServer] bind() : WSA=" << err << "  " << ip << ":" << port << std::endl;
 			closesocket(_listenSocket);
 			_listenSocket = INVALID_SOCKET;
 			return false;
@@ -62,7 +62,7 @@ namespace net {
 		// Listen
 		if (listen(_listenSocket, SOMAXCONN) == SOCKET_ERROR) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpServer] listen() ОШИБКА: WSA=" << err << std::endl;
+			std::cout << "[TcpServer] listen() : WSA=" << err << std::endl;
 			closesocket(_listenSocket);
 			_listenSocket = INVALID_SOCKET;
 			return false;
@@ -71,11 +71,11 @@ namespace net {
 		_listening = true;
 		_acceptThread = std::thread(&TcpServer::AcceptThreadProc, this);
 
-		std::cout << "[TcpServer] Слушаем " << ip << ":" << port << " (maxConns=" << maxConns << ")" << std::endl;
+		std::cout << "[TcpServer]  " << ip << ":" << port << " (maxConns=" << maxConns << ")" << std::endl;
 		return true;
 	}
 
-	// ── Shutdown ───────────────────────────────────────────────
+	//  Shutdown 
 
 	void TcpServer::Shutdown() {
 		if (!_listening.exchange(false)) {
@@ -84,7 +84,7 @@ namespace net {
 
 		std::cout << "[TcpServer] Shutdown..." << std::endl;
 
-		// Закрыть listen socket → accept thread разблокируется
+		//  listen socket  accept thread 
 		if (_listenSocket != INVALID_SOCKET) {
 			closesocket(_listenSocket);
 			_listenSocket = INVALID_SOCKET;
@@ -94,7 +94,7 @@ namespace net {
 			_acceptThread.join();
 		}
 
-		// Закрыть pending accepts
+		//  pending accepts
 		{
 			std::lock_guard<std::mutex> lock(_pendingMtx);
 			for (auto& pa : _pendingAccepts) {
@@ -103,16 +103,16 @@ namespace net {
 			_pendingAccepts.clear();
 		}
 
-		// Отключить всех
+		//  
 		for (auto& conn : _connections) {
 			conn.client->Disconnect(0);
 		}
 		_connections.clear();
 
-		std::cout << "[TcpServer] Shutdown завершён" << std::endl;
+		std::cout << "[TcpServer] Shutdown " << std::endl;
 	}
 
-	// ── DisconnectClient ───────────────────────────────────────
+	//  DisconnectClient 
 
 	void TcpServer::DisconnectClient(TcpClient* client, int reason) {
 		for (auto it = _connections.begin(); it != _connections.end(); ++it) {
@@ -127,7 +127,7 @@ namespace net {
 		}
 	}
 
-	// ── DisconnectAll ──────────────────────────────────────────
+	//  DisconnectAll 
 
 	void TcpServer::DisconnectAll() {
 		for (auto& conn : _connections) {
@@ -136,18 +136,18 @@ namespace net {
 		_connections.clear();
 	}
 
-	// ── GetConnectionCount ─────────────────────────────────────
+	//  GetConnectionCount 
 
 	int TcpServer::GetConnectionCount() const {
 		return static_cast<int>(_connections.size());
 	}
 
-	// ── PollAll ────────────────────────────────────────────────
+	//  PollAll 
 
 	int TcpServer::PollAll(int maxPktsPerConn) {
 		int totalProcessed = 0;
 
-		// 1. Обработать pending accepts
+		// 1.  pending accepts
 		{
 			std::vector<PendingAccept> accepts;
 			{
@@ -157,8 +157,8 @@ namespace net {
 
 			for (auto& pa : accepts) {
 				if (_maxConns > 0 && static_cast<int>(_connections.size()) >= _maxConns) {
-					std::cout << "[TcpServer] PollAll: лимит подключений ("
-						<< _maxConns << "), отклоняем " << pa.peerIP << ":" << pa.peerPort << std::endl;
+					std::cout << "[TcpServer] PollAll:   ("
+						<< _maxConns << "),  " << pa.peerIP << ":" << pa.peerPort << std::endl;
 					closesocket(pa.sock);
 					continue;
 				}
@@ -169,11 +169,11 @@ namespace net {
 				conn.adapter->serverHandler = _handler;
 				conn.adapter->client = conn.client.get();
 
-				// Устанавливаем handler-адаптер: PollPackets → adapter->OnPacket → serverHandler->OnPacket(client, pkt)
+				//  handler-: PollPackets  adapter->OnPacket  serverHandler->OnPacket(client, pkt)
 				conn.client->SetHandler(conn.adapter.get());
 
 				if (!conn.client->Attach(pa.sock, pa.peerIP, pa.peerPort)) {
-					std::cout << "[TcpServer] PollAll: Attach неудачен для "
+					std::cout << "[TcpServer] PollAll: Attach   "
 						<< pa.peerIP << ":" << pa.peerPort << std::endl;
 					closesocket(pa.sock);
 					continue;
@@ -192,11 +192,11 @@ namespace net {
 			}
 		}
 
-		// 2. Проверить disconnects + обработать пакеты
+		// 2.  disconnects +  
 		for (auto it = _connections.begin(); it != _connections.end(); ) {
 			TcpClient* client = it->client.get();
 
-			// Проверить pending disconnect
+			//  pending disconnect
 			if (client->HasPendingDisconnect() || !client->IsConnected()) {
 				if (_handler) {
 					_handler->OnDisconnected(client, -1);
@@ -205,7 +205,7 @@ namespace net {
 				continue;
 			}
 
-			// PollPackets: RPC dispatch + таймауты + обычные пакеты → adapter → serverHandler
+			// PollPackets: RPC dispatch +  +    adapter  serverHandler
 			int processed = client->PollPackets(maxPktsPerConn);
 			totalProcessed += processed;
 
@@ -215,10 +215,10 @@ namespace net {
 		return totalProcessed;
 	}
 
-	// ── AcceptThreadProc ───────────────────────────────────────
+	//  AcceptThreadProc 
 
 	void TcpServer::AcceptThreadProc() {
-		std::cout << "[TcpServer] AcceptThread: запущен" << std::endl;
+		std::cout << "[TcpServer] AcceptThread: " << std::endl;
 
 		while (_listening) {
 			sockaddr_in clientAddr{};
@@ -229,7 +229,7 @@ namespace net {
 			if (clientSock == INVALID_SOCKET) {
 				if (_listening) {
 					int err = WSAGetLastError();
-					std::cout << "[TcpServer] AcceptThread: accept() ОШИБКА: WSA=" << err << std::endl;
+					std::cout << "[TcpServer] AcceptThread: accept() : WSA=" << err << std::endl;
 				}
 				break;
 			}
@@ -238,7 +238,7 @@ namespace net {
 			inet_ntop(AF_INET, &clientAddr.sin_addr, ipBuf, sizeof(ipBuf));
 			uint16_t port = ntohs(clientAddr.sin_port);
 
-			std::cout << "[TcpServer] AcceptThread: подключение от "
+			std::cout << "[TcpServer] AcceptThread:   "
 				<< ipBuf << ":" << port << std::endl;
 
 			{
@@ -247,7 +247,7 @@ namespace net {
 			}
 		}
 
-		std::cout << "[TcpServer] AcceptThread: завершён" << std::endl;
+		std::cout << "[TcpServer] AcceptThread: " << std::endl;
 	}
 
 } // namespace net

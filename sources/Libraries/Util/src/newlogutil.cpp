@@ -1,5 +1,5 @@
-// Реализация системы логирования LogManager.
-// Фоновый поток забирает сообщения из очереди и пишет в файлы + консоль.
+﻿//    LogManager.
+//           + .
 
 #include <filesystem>
 #include <algorithm>
@@ -16,10 +16,10 @@
 #pragma comment(lib, "dbghelp.lib")
 
 namespace TalesOfPirate::Utils::Logs {
-	// Мьютекс для синхронизации вывода в консоль из разных потоков
+	//         
 	std::mutex _consoleLock{};
 
-	// Глобальный экземпляр менеджера логов
+	//    
 	LogManager g_logManager{};
 
 	LogStream::LogStream(const std::string& path, const std::string& logSystem) : _logSystem(logSystem) {
@@ -37,7 +37,7 @@ namespace TalesOfPirate::Utils::Logs {
 		}
 	}
 
-	// Запись записи лога в файл; при смене даты — ротация файла
+	//     ;      
 	void LogStream::Write(const LogUtilEntry& entry, const SYSTEMTIME& sysTime) {
 		if (sysTime.wYear > _currentSystemTime.wYear || sysTime.wMonth > _currentSystemTime.wMonth ||
 			sysTime.wDay > _currentSystemTime.wDay) {
@@ -60,7 +60,7 @@ namespace TalesOfPirate::Utils::Logs {
 		}
 	}
 
-	// Генерация имени файла вида "system_2026_03_27.log"
+	//     "system_2026_03_27.log"
 	std::string LogStream::GenerateFileName() const {
 		SYSTEMTIME st;
 		GetLocalTime(&st);
@@ -78,7 +78,7 @@ namespace TalesOfPirate::Utils::Logs {
 		}
 	}
 
-	// Конструктор записи: запоминает текущее локальное время
+	//  :    
 	LogUtilEntry::LogUtilEntry() {
 		SYSTEMTIME st;
 		GetLocalTime(&st);
@@ -104,7 +104,46 @@ namespace TalesOfPirate::Utils::Logs {
 		return true;
 	}
 
-	// Инициализация: создание каналов и запуск фонового потока записи
+	// Archive old log files into a timestamped subdirectory
+	static void ArchiveOldLogs(const std::string& logDir) {
+		namespace fs = std::filesystem;
+
+		if (!fs::exists(logDir) || fs::is_empty(logDir)) {
+			return;
+		}
+
+		// Check if there are any .log files to archive
+		bool hasLogs = false;
+		for (const auto& entry : fs::directory_iterator(logDir)) {
+			if (entry.is_regular_file() && entry.path().extension() == ".log") {
+				hasLogs = true;
+				break;
+			}
+		}
+
+		if (!hasLogs) {
+			return;
+		}
+
+		// Generate archive directory name: logs.DD.MM.YYYY.HH.MM.SS
+		SYSTEMTIME st;
+		GetLocalTime(&st);
+		auto archiveName = std::format("logs.{:02}.{:02}.{:04}.{:02}.{:02}.{:02}",
+			st.wDay, st.wMonth, st.wYear, st.wHour, st.wMinute, st.wSecond);
+
+		fs::path archivePath = fs::path(logDir) / archiveName;
+		fs::create_directories(archivePath);
+
+		// Move all .log files to the archive directory
+		for (const auto& entry : fs::directory_iterator(logDir)) {
+			if (entry.is_regular_file() && entry.path().extension() == ".log") {
+				auto dest = archivePath / entry.path().filename();
+				std::error_code ec;
+				fs::rename(entry.path(), dest, ec);
+			}
+		}
+	}
+
 	void LogManager::InitLogger(const std::string& filePath) {
 		if (!_channels.empty()) {
 			throw std::logic_error("Logger is already init!");
@@ -116,7 +155,10 @@ namespace TalesOfPirate::Utils::Logs {
 
 		_filePath = std::filesystem::canonical(filePath).string();
 
-		// Регистрация всех каналов логирования
+		// Archive old logs before starting new session
+		ArchiveOldLogs(_filePath);
+
+		// Create default log channels
 		AddLogger("common");
 		AddLogger("network");
 		AddLogger("connections");
@@ -133,7 +175,7 @@ namespace TalesOfPirate::Utils::Logs {
 		AddLogger("ui");
 		AddLogger("terrain");
 
-		// Фоновый поток: забирает из очереди и пишет в файлы
+		//  :       
 		_logThread = std::thread([this]() {
 			Crush::SetPerThreadCRTExceptionBehavior();
 			::SetThreadName("logger");
@@ -149,7 +191,7 @@ namespace TalesOfPirate::Utils::Logs {
 					while (!_logsQueue.empty()) {
 						lg = _logsQueue.front();
 
-						// Удаление недопустимых символов из имени подсистемы
+						//      
 						std::erase_if(lg.LogSystem,
 									  [](auto const& c) -> bool {
 										  return !std::isalnum(c) && c != '_' && c != '-';
@@ -161,12 +203,12 @@ namespace TalesOfPirate::Utils::Logs {
 							continue;
 						}
 
-						// Вывод в консоль, если включён глобальный режим
+						//   ,    
 						if (_enabledGlobalConsole) {
 							PrintConsoleMessage(lg);
 						}
 
-						// Дублирование всех записей в канал "common"
+						//      "common"
 						if (lg.LogSystem != "common") {
 							_channels["common"]->Write(lg, lt);
 						}
@@ -209,7 +251,7 @@ namespace TalesOfPirate::Utils::Logs {
 		_channels.find(logSystem)->second->MinimumLogLevel = logLevel;
 	}
 
-	// Добавление записи в очередь (потокобезопасно)
+	//     ()
 	void LogManager::InternalLog(const LogUtilEntry& logEntry) {
 		if (logEntry.Message.empty()) {
 			return;
@@ -232,7 +274,7 @@ namespace TalesOfPirate::Utils::Logs {
 		_enabledGlobalConsole = status;
 	}
 
-	// Цветной вывод сообщения в консоль в зависимости от уровня
+	//         
 	void LogManager::PrintConsoleMessage(const LogUtilEntry& logEntry) {
 		std::scoped_lock lock(_consoleLock);
 
@@ -265,7 +307,7 @@ namespace TalesOfPirate::Utils::Logs {
 	}
 }
 
-// Оператор вывода LogLevel в ostream
+//   LogLevel  ostream
 std::ostream& operator<<(std::ostream& stream, const LogLevel& io) {
 	switch (io) {
 	case LogLevel::Trace:

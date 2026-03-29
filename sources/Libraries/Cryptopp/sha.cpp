@@ -1,4 +1,4 @@
-// sha.cpp - modified by Wei Dai from Steve Reid's public domain sha1.c
+﻿// sha.cpp - modified by Wei Dai from Steve Reid's public domain sha1.c
 
 //    Steve Reid implemented SHA-1. Wei Dai implemented SHA-2. Jeffrey
 //    Walton implemented Intel SHA extensions based on Intel articles and code

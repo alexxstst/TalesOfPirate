@@ -1,4 +1,4 @@
-#ifndef VEDGE_H_DEFINED
+﻿#ifndef VEDGE_H_DEFINED
 #define  VEDGE_H_DEFINED
 
 class VEdge {

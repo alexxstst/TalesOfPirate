@@ -1,4 +1,4 @@
-// NpcRecord.h Created by knight-gongjian 2004.11.24.
+ï»¿// NpcRecord.h Created by knight-gongjian 2004.11.24.
 //---------------------------------------------------------
 #pragma once
 
@@ -11,23 +11,23 @@
 
 //---------------------------------------------------------
 
-#define NPC_MAXSIZE_NAME			128 // npcÃû³Æ³¤¶È
-#define NPC_MAXSIZE_MSGPROC			16	// npcÏûÏ¢´¦Àíº¯ÊýÃû³Æ³¤¶È
+#define NPC_MAXSIZE_NAME			128 // npc
+#define NPC_MAXSIZE_MSGPROC			16	// npc
 
 class CNpcRecord : public CRawDataInfo
 {
 public:	
-	char szName[NPC_MAXSIZE_NAME];		// µØÍ¼ÖÐÏÔÊ¾npcÃû³Æ
-	USHORT sNpcType;					// npcÀàÐÍ
-	USHORT sCharID;						// ½ÇÉ«ÁÐ±í±àºÅË÷Òý
-	BYTE byShowType;					// ¿Í»§¶ËÏÔÊ¾ÑÕÉ«ÀàÐÍ
-	DWORD dwxPos0, dwyPos0;				// npcÎ»ÖÃÐÅÏ¢
+	char szName[NPC_MAXSIZE_NAME];		// npc
+	USHORT sNpcType;					// npc
+	USHORT sCharID;						// 
+	BYTE byShowType;					// 
+	DWORD dwxPos0, dwyPos0;				// npc
 	DWORD dwxPos1, dwyPos1;
 	USHORT sDir;
 	USHORT sParam1, sParam2;
-	char szNpc[NPC_MAXSIZE_NAME];		// npcÎÄ¼þÃû
-	char szMsgProc[NPC_MAXSIZE_MSGPROC];// npcÏûÏ¢´¦Àíº¯Êý
-	char szMisProc[NPC_MAXSIZE_MSGPROC];// npcÈÎÎñ×´Ì¬´¦Àíº¯Êý
+	char szNpc[NPC_MAXSIZE_NAME];		// npc
+	char szMsgProc[NPC_MAXSIZE_MSGPROC];// npc
+	char szMisProc[NPC_MAXSIZE_MSGPROC];// npc
 };
 
 class CNpcRecordSet : public CRawDataSet

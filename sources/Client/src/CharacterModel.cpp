@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 //#include "CharacterSet.h"
 #include "CharacterAction.h"
 #include "CharacterPoseSet.h"
@@ -13,31 +13,31 @@
 
 enum
 {
-    S_MELEE =               0, // ���ֽ�ս ���֣�ȭ�ף�Ǯ��
-    S_MELEE2 =              1, // ���ֽ�ս ���������������ܣ���
-    D_MELEE =               2, // ˫�ֽ�ս
-    D_WEAPON =              3, // ˫������
-    S_GUN =                 4, // ���ֳ�ǹ
-    D_BOW =                 5, // ˫�ֹ���
-    S_DAGGER =              6, // ذ��
+    S_MELEE =               0, //  
+    S_MELEE2 =              1, //  
+    D_MELEE =               2, // 
+    D_WEAPON =              3, // 
+    S_GUN =                 4, // 
+    D_BOW =                 5, // 
+    S_DAGGER =              6, // 
 };
 
 enum
 {
-    LINK_ITEM_NULL =            0, // ��
-    LINK_ITEM_SWORD =           1, // ��
-    LINK_ITEM_HUGESWORD =       2, // �޽�
-    LINK_ITEM_BOW =             3, // ��
-    LINK_ITEM_GUN =             4, // ǹ
-    LINK_ITEM_BLADE =           5, // ��
-    LINK_ITEM_GLOVE =           6, // ȭ��
-    LINK_ITEM_DAGGER =          7, // ذ��
-    LINK_ITEM_BURSE =           8, // Ǯ��
-    LINK_ITEM_STICK =           9, // �̰�
-    LINK_ITEM_HAMMER =          10,// ��
-    LINK_ITEM_SHIELD =          11,// ��
-    LINK_ITEM_AX =              18, //��ͷ
-    LINK_ITEM_SHOVEL =          19, //����
+    LINK_ITEM_NULL =            0, // 
+    LINK_ITEM_SWORD =           1, // 
+    LINK_ITEM_HUGESWORD =       2, // 
+    LINK_ITEM_BOW =             3, // 
+    LINK_ITEM_GUN =             4, // 
+    LINK_ITEM_BLADE =           5, // 
+    LINK_ITEM_GLOVE =           6, // 
+    LINK_ITEM_DAGGER =          7, // 
+    LINK_ITEM_BURSE =           8, // 
+    LINK_ITEM_STICK =           9, // 
+    LINK_ITEM_HAMMER =          10,// 
+    LINK_ITEM_SHIELD =          11,// 
+    LINK_ITEM_AX =              18, //
+    LINK_ITEM_SHOVEL =          19, //
 };
 
 struct wield_state
@@ -283,7 +283,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
     if( pInfo->chModalType == enumMODAL_MAIN_CHA )
     {
-#if 1 // ��id�ı���
+#if 1 // id
         DWORD part_buf[5] =
         { 
             pInfo->sSkinInfo[0],
@@ -299,8 +299,8 @@ int CCharacterModel::ReCreate( DWORD type_id )
             return NULL;
         }
 #endif
-#if 0  // ������ı���
-        // ���Ǵ���
+#if 0  // 
+        // 
         MPChaLoadInfo load_info;
 
         sprintf( load_info.bone, "%04d.lab", pInfo->sModel );        
@@ -354,7 +354,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
     }
     else
     {
-        // ���Ǵ���
+        // 
         MPChaLoadInfo load_info;
 
         sprintf( load_info.bone, "%04d.lab", pInfo->sModel );        
@@ -504,7 +504,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
     switch( _ModelType )
     {
     case MODEL_CHARACTER:
-        // �����⣬��robin
+        // robin
         sx = ir->chModule[_BoneID +1];
         break;
     case MODEL_WARSHIP:
@@ -552,7 +552,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
         }
         else if( part_id == 2 )
         {
-            // ������!!!
+            // !!!
             for( DWORD i = 0; i < 4; i++ )
             {
                 DestroyPart( 4 + i );
@@ -585,7 +585,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
         if( (_ModelType == MODEL_WARSHIP && part_id == 0) ||
             (_ModelType == MODEL_TOWER && part_id == 1))
         {
-            //��Ҫ����load pose
+            //load pose
             LoadPose(_PoseTabID);
             SetPoseKeyFrameProc(_KeyFrameProc, _ProcParam);
             CCharacterModel::PlayPose(POSE_WAITING, PLAY_LOOP);
@@ -626,7 +626,7 @@ int CCharacterModel::LoadPose()
         return 1;
 
     SCharacterAction SCharAct;
-    if (false == GetCharacterAction(cha_type, &SCharAct)) // û�����ļ����ҵ���Ӧ��ID
+    if (false == GetCharacterAction(cha_type, &SCharAct)) // ID
     {
         ToLogService("common", "msgInvalid LoadPose call");
         return 0;
@@ -660,7 +660,7 @@ int CCharacterModel::LoadPose()
 
     //delete[] buf;
     //buf = 0;
-	SAFE_DELETE_ARRAY(buf); // UI��������
+	SAFE_DELETE_ARRAY(buf); // UI
 
     // if this object is main character, then we use pose bone matrices buffer
 #if 1
@@ -786,7 +786,7 @@ void CCharacterModel::PlayPose( DWORD pose, DWORD type, int time, int fps, DWORD
     }
     if(pi->end - pi->start <= 0)
     {
-        //LG("pose", "msgpose[%d]-Сpose[%d],����֡[%d, %d]�Ƿ�\n", pose, _SmallPoseID, pi->start, pi->end );
+        //LG("pose", "msgpose[%d]-pose[%d],[%d, %d]\n", pose, _SmallPoseID, pi->start, pi->end );
         return;
     }
 
@@ -811,7 +811,7 @@ void CCharacterModel::PlayPose( DWORD pose, DWORD type, int time, int fps, DWORD
             //LG("xXx","msgPlay[CHARACTER:%d] pose error:%d, type:%d\n", _TypeID, p, _TypeID);
         }
         break;
-    case MODEL_WARSHIP://��ֻֻ��obj_0���ⲿpose�����ಿ�ֶ�Ϊdefault pose
+    case MODEL_WARSHIP://obj_0posedefault pose
         if(FAILED(MPCharacter::PlayObjImpPose( 0, ANIM_CTRL_TYPE_MAT, p, type, 0.0f, velocity )))
         {
             //LG("xXx","msgPlay[SHIP] pose error:%d, type:%d\n", p, _TypeID);
@@ -830,7 +830,7 @@ void CCharacterModel::PlayPose( DWORD pose, DWORD type, int time, int fps, DWORD
         //MPCharacter::PlayObjImpPose( 3, ANIM_CTRL_TYPE_TEXTURE2, 0, type, 0.0f, 1.0f );
         //MPCharacter::PlayObjImpPose( 3, ANIM_CTRL_TYPE_TEXTURE3, 0, type, 0.0f, 1.0f );
         break;
-    case MODEL_TOWER: //����ֻ��obj_1���ⲿ�����pose�����ಿ�ֶ�Ϊdefault pose
+    case MODEL_TOWER: //obj_1posedefault pose
         MPCharacter::PlayObjImpPose( 0, ANIM_CTRL_TYPE_MAT, 0, type, 0.0f, velocity );
         MPCharacter::PlayObjImpPose( 1, ANIM_CTRL_TYPE_MAT, p, type, 0.0f, velocity );
         MPCharacter::PlayObjImpPose( 2, ANIM_CTRL_TYPE_MAT, 0, type, 0.0f, velocity );
@@ -1409,7 +1409,7 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id)
         lwPrimitiveTexLitA(p, l->mask, l->str_buf[lit_id], ".\\texture\\lit\\", l->anim_type);
         DWORD vst = p->GetRenderCtrlAgent()->GetVertexShader();
 
-		// Modified by clp �������ַ�װ��ʧbug
+		// Modified by clp bug
 		lwPrimitiveSetVertexShader(p, vst);
 
 		//DWORD new_vst;
@@ -1426,7 +1426,7 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id)
 		//}
 
 		//lwPrimitiveSetVertexShader(p, new_vst);
-		// Modified by clp �������ַ�װ��ʧbug
+		// Modified by clp bug
     }
 
     return 1;

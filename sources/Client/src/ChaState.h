@@ -1,6 +1,6 @@
-//----------------------------------------------------------------------
-// ����:������Ҽ���״̬
-// ����:lh 2005-05-31
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2005-05-31
 //----------------------------------------------------------------------
 #pragma once
 
@@ -17,10 +17,10 @@ class CChaStateMgr
 public:
 	CChaStateMgr(CCharacter* pCha);
 
-	void		ChaDestroy();									// ��ɫ��Чʱ����
-	void		ChaDied()	{ ChaDestroy();	}					// ��ɫ����ʱ����
+	void		ChaDestroy();									// 
+	void		ChaDied()	{ ChaDestroy();	}					// 
 
-	CBoolSet&	Synchro(const stSkillState* pState, int nCount );	// ͬ��״̬ʱ����
+	CBoolSet&	Synchro(const stSkillState* pState, int nCount );	// 
 
 	int					GetSkillStateNum()					{ return static_cast<int>(_states.size());	}
 	CSkillStateRecord*	GetSkillState( unsigned int nID )	{ return _states[nID]->pInfo;	}
@@ -53,8 +53,8 @@ private:
 	static	bool		_IsInit;
 	static stChaState	_sInitState[SKILL_STATE_MAXID];
 
-	static CSkillStateRecord*	_pLastActInfo;		// ����ͬ��ʱ�������һ���ж������ֵ�����
-	static int					_nShopLevel;		// ����ʱ���ذ�̯״̬�ȼ�
+	static CSkillStateRecord*	_pLastActInfo;		// 
+	static int					_nShopLevel;		// 
 
 		
 

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 
 #include "GameApp.h"
 #include "cameractrl.h"
@@ -14,7 +14,7 @@
 #include "Track.h"
 #include "MPFont.h"
 #include "SmallMap.h"
-#include "UIFormMgr.h" 
+#include "UIFormMgr.h"
 #include "script.h"
 #include "GlobalVar.h"
 #include "DrawPointList.h"
@@ -39,76 +39,75 @@ extern CGameMovie g_GameMovie;
 #endif
 
 
-DWORD		CGameApp::_dwMouseDownTime[2]	= { 0 };
-int			CGameApp::_nMusicSize			= 64;
-char		CGameApp::_szOutBuf[256]		= { 0 };
-bool		CGameApp::_IsMusicSystemValid	= false;
-CGameScene*	CGameApp::_pCurScene			= NULL;
-DWORD		CGameApp::_dwCurTick			= 0;
-DWORD		CGameApp::m_dwLoginTime			= 0;
-CAniClock*	CGameApp::_AniClock = NULL;
+DWORD CGameApp::_dwMouseDownTime[2] = {0};
+int CGameApp::_nMusicSize = 64;
+char CGameApp::_szOutBuf[256] = {0};
+bool CGameApp::_IsMusicSystemValid = false;
+CGameScene* CGameApp::_pCurScene = NULL;
+DWORD CGameApp::_dwCurTick = 0;
+DWORD CGameApp::m_dwLoginTime = 0;
+CAniClock* CGameApp::_AniClock = NULL;
 
 
-const BYTE verifyName[]={0xf8,0x05,0x1a,0xe4,0x98,0x5e,0xb8,0x9e};
+const BYTE verifyName[] = {0xf8, 0x05, 0x1a, 0xe4, 0x98, 0x5e, 0xb8, 0x9e};
 
-const BYTE verifyDialog[]={0xf0, 0xdc, 0xea, 0x7b, 0x40, 0xeb, 0xc4, 0x47};
+const BYTE verifyDialog[] = {0xf0, 0xdc, 0xea, 0x7b, 0x40, 0xeb, 0xc4, 0x47};
 
-static  CSteadyFrame steady;
+static CSteadyFrame steady;
 CSteadyFrame* CGameApp::_pSteady = &steady;
 
 extern void LimitCurrentProc();
 
 
 CGameApp::CGameApp()
-:_bEnableSuperKey(FALSE),
- _pCamTrack(NULL),
- _IsRenderTipText(false),
- _IsInit(false),
- _nSwitchScene(1),
- _IsUserEnabled(true),
- _eSwitchMusic(enumNoMusic), 
- _nCurMusicSize(1)
-{
+	: _bEnableSuperKey(FALSE),
+	  _pCamTrack(NULL),
+	  _IsRenderTipText(false),
+	  _IsInit(false),
+	  _nSwitchScene(1),
+	  _IsUserEnabled(true),
+	  _eSwitchMusic(enumNoMusic),
+	  _nCurMusicSize(1) {
 	LimitCurrentProc();
 	_pDrawPoints = new CDrawPointList;
 	_pMainCam = new CCameraCtrl;
-  
+
 	xp = SHOWRSIZE / 2;
 	yp = SHOWRSIZE / 2;
 
-    _rsm = 0;
+	_rsm = 0;
 
-    memset( _szBkgMusic, 0, sizeof(_szBkgMusic) );
+	memset(_szBkgMusic, 0, sizeof(_szBkgMusic));
 
 #if(defined USE_TIMERPERIOD)
-    _TimerPeriod = 0;
+	_TimerPeriod = 0;
 #endif
 
 	btest = false;
 	ihei = 0;
 	_pNotify = new CTextHint;
 
-	_pNotify->SetHintIsCenter( false );
-	_pNotify->SetFixWidth( 430 );
-	_pNotify->SetBkgColor( 0x60000000 );
-	_pNotify->SetIsHeadShadow( false );
+	_pNotify->SetHintIsCenter(false);
+	_pNotify->SetFixWidth(430);
+	_pNotify->SetBkgColor(0x60000000);
+	_pNotify->SetIsHeadShadow(false);
 
 	//Add by sunny.sun20080804
 	//Begin
 	_pNotify1 = new CTextScrollHint;
-	_pNotify1->SetFixWidth( 430 );
-	_pNotify1->SetBkgColor( 0x60000000 );
+	_pNotify1->SetFixWidth(430);
+	_pNotify1->SetBkgColor(0x60000000);
 	//End
-	_dwNotifyTime = 0;	
+	_dwNotifyTime = 0;
 	_dwNotifyTime1 = 0;
 
 	//_ctrl = new Ninja::LinearController < D3DXVECTOR3 >;
 	//_pNinjaCamera = new Ninja::Camera( _ctrl );
 
 	// Added by CLP
-	_camera_target_ctrl = new Ninja::LinearController < D3DXVECTOR3 >;
-	_camera_eye_ctrl = new Ninja::LinearController < Ninja::SphereCoord >;
-	_pNinjaCamera = new Ninja::Camera( _camera_target_ctrl, _camera_eye_ctrl );
+	_camera_target_ctrl = new Ninja::LinearController<D3DXVECTOR3>;
+	_camera_eye_ctrl = new Ninja::LinearController<Ninja::SphereCoord>;
+	_pNinjaCamera = new Ninja::Camera(_camera_target_ctrl, _camera_eye_ctrl);
 
 #ifdef USE_DSOUND
 	mSoundManager = NULL;
@@ -116,143 +115,135 @@ CGameApp::CGameApp()
 }
 
 
-CGameApp::~CGameApp()
-{
+CGameApp::~CGameApp() {
 	delete _pNotify;
 
 #ifdef USE_DSOUND
 	delete mSoundManager;
 #endif
 
-    SAFE_DELETE( _pMainCam );
-	SAFE_DELETE( _pNinjaCamera );
-	SAFE_DELETE( _camera_target_ctrl );
-	SAFE_DELETE( _camera_eye_ctrl );
+	SAFE_DELETE(_pMainCam);
+	SAFE_DELETE(_pNinjaCamera);
+	SAFE_DELETE(_camera_target_ctrl);
+	SAFE_DELETE(_camera_eye_ctrl);
 }
 
-void CGameApp::End()
-{
+void CGameApp::End() {
 	_IsInit = false;
 
 	delete _pDrawPoints;
 
-	SAFE_DELETE( _pCamTrack );
+	SAFE_DELETE(_pCamTrack);
 
 	CNavigationBar::g_cNaviBar.Clear();
 
 	_stCursorMgr.ClearMemory();
-    if( _pCurScene )
-    {
-        _pCurScene->_Clear();
-        _pCurScene->_ClearMemory();
-        delete _pCurScene;
-        _pCurScene = NULL;
-    }
+	if (_pCurScene) {
+		_pCurScene->_Clear();
+		_pCurScene->_ClearMemory();
+		delete _pCurScene;
+		_pCurScene = NULL;
+	}
 
 	CGameScene::_ClearScene();
 
-    // CCharacterSet *pCharSet = CCharacterSet::I();
+	// CCharacterSet *pCharSet = CCharacterSet::I();
 	// SAFE_DELETE( pCharSet );
 
-    //CSceneItemSet* pItemSet = CSceneItemSet::I();
-    //SAFE_DELETE( pItemSet );
+	//CSceneItemSet* pItemSet = CSceneItemSet::I();
+	//SAFE_DELETE( pItemSet );
 
 	ReleaseAllTable();
 
 	_stScriptMgr.Clear();
 
-    SAFE_DELETE( _pMainCam );    
-	
-    g_CFont.ReleaseFont();
-    _MidFont.ReleaseFont();
+	SAFE_DELETE(_pMainCam);
+
+	g_CFont.ReleaseFont();
+	_MidFont.ReleaseFont();
 	_BottomFont.ReleaseFont();
 
-    g_CEffBox.ReleaseBox();
-    CPathBox.ReleaseBox();
+	g_CEffBox.ReleaseBox();
+	CPathBox.ReleaseBox();
 
 	CGuiFont::s_Font.Clear();
 
-    SAFE_DELETE(_rsm);
+	SAFE_DELETE(_rsm);
 
 	// Add by lark.li 20080923 begin
 	_pSteady->Exit();
 	// End
 
 #ifdef TESTDEMO
-    ReleaseTestDemo();
+	ReleaseTestDemo();
 #endif
 
-    MPGameApp::End();
+	MPGameApp::End();
 }
 
 
-BOOL CGameApp::_Init()
-{
+BOOL CGameApp::_Init() {
 	_AniClock = new CAniClock[MAX_ANI_CLOCK];
-	for (int i = 0; i < MAX_ANI_CLOCK; i++) 
-	{
-	    _AniClock[i].Create(32, 0xa0000000);
+	for (int i = 0; i < MAX_ANI_CLOCK; i++) {
+		_AniClock[i].Create(32, 0xa0000000);
 	}
-	
+
 	CCozeForm::GetInstance();
 	//InitAllTable();
 
 #ifdef _LUA_GAME
 	extern HINSTANCE g_hInstance;
-	extern void CreateScriptDebugWindow(HINSTANCE hInst, HWND hParent);
-	CreateScriptDebugWindow(g_hInstance, g_pGameApp->GetHWND());
 #endif
 
-	if(!LoadTerrainSet("scripts/table/TerrainInfo", FALSE))
-        return 0;
-
-	// �ڳ�ʼ����Դ����󣬳�ʼ����Դ -- Michael Chen
-	if(!LoadResourceSet("scripts/table/ResourceInfo", g_Config.m_nMaxResourceNum, FALSE))
+	if (!LoadTerrainSet("scripts/table/TerrainInfo", FALSE))
 		return 0;
-	if (!LoadResource() || !LoadRes2() /*|| !LoadRes3()*/)
-	{
+
+	// After initializing the resource list, initialize resources -- Michael Chen
+	if (!LoadResourceSet("scripts/table/ResourceInfo", g_Config.m_nMaxResourceNum, FALSE))
+		return 0;
+	if (!LoadResource() || !LoadRes2() /*|| !LoadRes3()*/) {
 		return 0;
 	}
 
-	if( g_Config.m_bEditor  )
-	{
-		if( !LoadRes3() )
+	if (g_Config.m_bEditor) {
+		if (!LoadRes3())
 			return 0;
 	}
 
 	_IsInit = false;
 
-	{ // init loading res mt flag
-        lwIByteSet* res_bs = g_Render.GetInterfaceMgr()->res_mgr->GetByteSet();
-        res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, g_Config.m_bMThreadRes);
-        res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, 0 );//g_Config.m_bMThreadRes);
+	{
+		// init loading res mt flag
+		lwIByteSet* res_bs = g_Render.GetInterfaceMgr()->res_mgr->GetByteSet();
+		res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, g_Config.m_bMThreadRes);
+		res_bs->SetValue(OPT_RESMGR_LOADMESH_MT, 0); //g_Config.m_bMThreadRes);
 
-        // tex encoder
-        res_bs->SetValue(OPT_RESMGR_TEXENCODE, 1);
-    }
+		// tex encoder
+		res_bs->SetValue(OPT_RESMGR_TEXENCODE, 1);
+	}
 
-    { // init loading helper object instance flag
-        lwIOptionMgr* opt_mgr = g_Render.GetInterfaceMgr()->sys->GetOptionMgr();
-        opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, g_Config.m_bEditor);
-    }
+	{
+		// init loading helper object instance flag
+		lwIOptionMgr* opt_mgr = g_Render.GetInterfaceMgr()->sys->GetOptionMgr();
+		opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, g_Config.m_bEditor);
+	}
 
 	//_IsMusicSystemValid = ::mus_mgr_init( g_Config.m_bEnableMusic!=0 );	// music
 #ifdef USE_DSOUND
-	if( mSoundManager == NULL )
-		mSoundManager = new DSoundManager( GetHWND() );
+	if (mSoundManager == NULL)
+		mSoundManager = new DSoundManager(GetHWND());
 #endif
-    AudioSDL::get_instance()->init();
+	AudioSDL::get_instance()->init();
 
 	_IsMusicSystemValid = true;
-    if( !_IsMusicSystemValid && g_Config.m_bEnableMusic!=0 )
-    {
-        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(65));
-    }
+	if (!_IsMusicSystemValid && g_Config.m_bEnableMusic != 0) {
+		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(65));
+	}
 
 	_bConnected = FALSE;
-	
-	// Consoleϵͳʹ�õĻص�����
-	extern const char* ConsoleCallback(const char *pszCmd);
+
+	// Console system callback function
+	extern const char* ConsoleCallback(const char* pszCmd);
 	_pConsole->SetCmdFN(ConsoleCallback);
 
 	g_Render.EnablePrint(INFO_GAME, TRUE);
@@ -262,57 +253,57 @@ BOOL CGameApp::_Init()
 	// #define MPFONT_UNLINE      0x0004
 
 #ifdef USE_RENDER
-	g_CFont.CreateFont(&g_Render,const_cast<char*>(g_oLangRec.GetString(66)), 12);
-    _MidFont.CreateFont(&g_Render,const_cast<char*>(g_oLangRec.GetString(67)), 16, 3, MPFONT_BOLD);
-	_BottomFont.CreateFont(&g_Render,const_cast<char*>(g_oLangRec.GetString(67)), 12, 3, MPFONT_BOLD);
+	g_CFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(66)), 12);
+	_MidFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 16, 3, MPFONT_BOLD);
+	_BottomFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 12, 3, MPFONT_BOLD);
 #else
-	g_CFont.CreateFont(g_Render.GetDevice(),const_cast<char*>(g_oLangRec.GetString(66)), 12);
-    _MidFont.CreateFont(&g_Render,const_cast<char*>(g_oLangRec.GetString(67)), 16, 3, MPFONT_BOLD);
-	_BottomFont.CreateFont(&g_Render,const_cast<char*>(g_oLangRec.GetString(67)), 12, 3, MPFONT_BOLD);
+	g_CFont.CreateFont(g_Render.GetDevice(), const_cast<char*>(g_oLangRec.GetString(66)), 12);
+	_MidFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 16, 3, MPFONT_BOLD);
+	_BottomFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 12, 3, MPFONT_BOLD);
 #endif
 	g_CFont.BindingRes(&ResMgr);
-    _MidFont.BindingRes(&ResMgr);
+	_MidFont.BindingRes(&ResMgr);
 	_BottomFont.BindingRes(&ResMgr);
 
 	//SIZE sizes;
-	//g_CFont.GetTextSize("IDE\nokdote\n��ǹ���������� ���ȷ�",&sizes);
+	//g_CFont.GetTextSize("IDE\nokdote\n ",&sizes);
 
-    memset( _stMidFont.szText, 0, sizeof(_stMidFont.szText) );
-    _stMidFont.dwBeginTime = 0;
+	memset(_stMidFont.szText, 0, sizeof(_stMidFont.szText));
+	_stMidFont.dwBeginTime = 0;
 
-	if( !_stScriptMgr.Init() )
-	{
+	if (!_stScriptMgr.Init()) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(68));
 		return FALSE;
 	}
-   
+
 	string curr_ver = __TIME__;
-	curr_ver += " "; curr_ver += __DATE__;
+	curr_ver += " ";
+	curr_ver += __DATE__;
 	// cout << curr_ver.c_str() << endl;
-    
-   	_pCamTrack = new CPointTrack;
-	
+
+	_pCamTrack = new CPointTrack;
+
 	InitAllTable();
 
-    GetCursor()->InitMemory();
+	GetCursor()->InitMemory();
 
-    extern void InitPoseData();
-    InitPoseData();
-    
+	extern void InitPoseData();
+	InitPoseData();
+
 #if 1
-    // by lsh
-    // ������CSceneObjInfo��������
-    extern void LoadResModelBuf(MPIResourceMgr* res_mgr);
-    MPTimer t;
-    t.Begin();
-    LoadResModelBuf(g_Render.GetInterfaceMgr()->res_mgr);
-    DWORD res_t = t.End();
+	// by lsh
+	// Load CSceneObjInfo model data
+	extern void LoadResModelBuf(MPIResourceMgr* res_mgr);
+	MPTimer t;
+	t.Begin();
+	LoadResModelBuf(g_Render.GetInterfaceMgr()->res_mgr);
+	DWORD res_t = t.End();
 #endif
-	
-	extern bool UIMainInit( CFormMgr* pSender );
-	CFormMgr::s_Mgr.AddFormInit( UIMainInit );				// ����ű���,��ʼ��ʱ�¼�
 
-	if( !CFormMgr::s_Mgr.Init( g_pGameApp->GetHWND() ) )    // by lh ִ�����CLU_LoadScript�����
+	extern bool UIMainInit(CFormMgr* pSender);
+	CFormMgr::s_Mgr.AddFormInit(UIMainInit); // Register script event, initialization event
+
+	if (!CFormMgr::s_Mgr.Init(g_pGameApp->GetHWND())) // by lh Executes CLU_LoadScript and others
 	{
 		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(69));
 		return FALSE;
@@ -320,64 +311,64 @@ BOOL CGameApp::_Init()
 
 	GetRender().RegisterFunc();
 
-	CFormMgr::s_Mgr.SetEnabled( true );
+	CFormMgr::s_Mgr.SetEnabled(true);
 
-	if( !_stScriptMgr.LoadScript() )
-	{
+	if (!_stScriptMgr.LoadScript()) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(70));
 		return FALSE;
 	}
 
-	g_NetIF	= new NetIF;
+	g_NetIF = new NetIF;
 	g_Editor.Init(1);
 
-	// װ�س�ʼ����
-	LoadScriptScene( (eSceneType)g_Config.m_nCreateScene );
+	// Load initial scene
+	ToLogService("lua", "LoadScriptScene: m_nCreateScene={}", g_Config.m_nCreateScene);
+	LoadScriptScene((eSceneType)g_Config.m_nCreateScene);
+	ToLogService("lua", "LoadScriptScene done, curScene={}", (void*)g_pGameApp->GetCurScene());
 
 	//LoadRes4();
 
-    GetRender().Init();
+	GetRender().Init();
 
 #ifdef FLOAT_INVALID
-	int i = _controlfp(0,0);
+	int i = _controlfp(0, 0);
 	i &= ~(EM_ZERODIVIDE | EM_OVERFLOW | EM_INVALID);
 	_controlfp(i, MCW_EM);
 #endif
 
 	SetFocus(GetHWND());
 
-    if(g_Config.m_bEditor) SetIsRenderTipText(true);
+	if (g_Config.m_bEditor) SetIsRenderTipText(true);
 
-    _rsm = new RenderStateMgr;
-    _rsm->Init(g_Render.GetInterfaceMgr()->dev_obj);
+	_rsm = new RenderStateMgr;
+	_rsm->Init(g_Render.GetInterfaceMgr()->dev_obj);
 
-    _IsInit = true;
-    
+	_IsInit = true;
+
 	ResetCaption();
 
-	if( !CGameScene::_InitScene() )
-	{
+	if (!CGameScene::_InitScene()) {
 		ToLogService("common", "msgCGameScene::_InitScene() return false");
 		return false;
 	}
 
 #if(defined USE_TIMERPERIOD)
-    extern void CALLBACK __timer_period_proc(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
+	extern void CALLBACK __timer_period_proc(UINT uTimerID, UINT uMsg, DWORD_PTR dwUser, DWORD_PTR dw1, DWORD_PTR dw2);
 
-    //DWORD fps = (DWORD)((1.0f / 30.0f) * 1000);
-    DWORD fps = _dwFPSInterval;
-    HWND hwnd = g_pGameApp->GetHWND();
-    MPGUIDCreateObject((LW_VOID**)&_TimerPeriod, LW_GUID_TIMERPERIOD);
-    _TimerPeriod->SetEvent(fps, fps, __timer_period_proc, (DWORD_PTR)hwnd, TIME_PERIODIC|TIME_CALLBACK_FUNCTION);
+	//DWORD fps = (DWORD)((1.0f / 30.0f) * 1000);
+	DWORD fps = _dwFPSInterval;
+	HWND hwnd = g_pGameApp->GetHWND();
+	MPGUIDCreateObject((LW_VOID**)&_TimerPeriod, LW_GUID_TIMERPERIOD);
+	_TimerPeriod->SetEvent(fps, fps, __timer_period_proc, (DWORD_PTR)hwnd, TIME_PERIODIC | TIME_CALLBACK_FUNCTION);
 #endif
-	
-    lwIOptionMgr* opt_mgr = g_Render.GetInterfaceMgr()->sys->GetOptionMgr();
+
+	lwIOptionMgr* opt_mgr = g_Render.GetInterfaceMgr()->sys->GetOptionMgr();
 #if(defined OPT_CULL_1)
 #pragma message("-------------Primitive Culling Opened-------------")
-    opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 1);
+	opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 1);
 #else
 #pragma message("-------------Primitive Culling Closed-------------")
-    opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 0);
+	opt_mgr->SetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL, 0);
 #endif
 
 	//LPD3DXEFFECT peff,peff2;
@@ -389,22 +380,25 @@ BOOL CGameApp::_Init()
 	//	INT EF = 0;
 	//}
 
-    // ��������Զ������Ƶ����(Modify by Michael Chen 2005-04-27)
-    if ( !g_stUISystem.m_isLoad)
-    {
-        g_stUISystem.LoadCustomProp();
-    }
-	g_pGameApp->GetCurScene()->SetTextureLOD(
-		g_stUISystem.m_sysProp.m_videoProp.nTexture);
+	// Load user-customized video settings (Modify by Michael Chen 2005-04-27)
+	if (!g_stUISystem.m_isLoad) {
+		g_stUISystem.LoadCustomProp();
+	}
+
+	auto currentScene = g_pGameApp->GetCurScene();
+	if (currentScene) {
+		currentScene->SetTextureLOD(g_stUISystem.m_sysProp.m_videoProp.nTexture);
+	}
+
 	GetRender().SetIsChangeResolution(true);
 
-    g_stUISystem.m_sysProp.ApplyAudio();
+	g_stUISystem.m_sysProp.ApplyAudio();
 
-	// ��������Զ������Ϸ����(Modify by Michael Chen 2006-01-17)
+	// Load user-customized game options (Modify by Michael Chen 2006-01-17)
 	g_stUISystem.m_sysProp.ApplyGameOption();
 
 #ifdef TESTDEMO
-    InitTestDemo();
+	InitTestDemo();
 #endif
 
 	//std::list<int> listtest;
@@ -416,9 +410,9 @@ BOOL CGameApp::_Init()
 
 	//listtest.remove(NULL);
 
-	// ��¼���߳�ID�������Ժ����
+	// Record main thread ID for future use
 	//DWORD id = GetCurrentThreadId();
-	//LG( "threadid", "%d:%s\n", id, "WinMain" );		
+	//LG( "threadid", "%d:%s\n", id, "WinMain" );
 
 	//_pConsole->Show(TRUE);
 
@@ -426,100 +420,92 @@ BOOL CGameApp::_Init()
 }
 
 
-void CGameApp::_End()
-{
-    CFormMgr::s_Mgr.SetEnabled( false );
+void CGameApp::_End() {
+	CFormMgr::s_Mgr.SetEnabled(false);
 
-    extern bool UIClear();
-    UIClear();
+	extern bool UIClear();
+	UIClear();
 
-	SAFE_DELETE( _pCurScene );
+	SAFE_DELETE(_pCurScene);
 
-    ToLogService("common", "NetIF release start");
-    SAFE_DELETE( g_NetIF );
-    ToLogService("common", "NetIF release end");
+	ToLogService("common", "NetIF release start");
+	SAFE_DELETE(g_NetIF);
+	ToLogService("common", "NetIF release end");
 
 	CFormMgr::s_Mgr.Clear();
 
 	UnloadResourceSet();
-    UnloadTerrainSet();
+	UnloadTerrainSet();
 
-    //::mus_mgr_exit();	// music
+	//::mus_mgr_exit();	// music
 #ifdef USE_DSOUND
-	if( g_dwCurMusicID )
-	{
-		AudioSDL::get_instance()->stop( g_dwCurMusicID );
+	if (g_dwCurMusicID) {
+		AudioSDL::get_instance()->stop(g_dwCurMusicID);
 		g_dwCurMusicID = 0;
-		Sleep( 60 );
+		Sleep(60);
 	}
 #endif
 
-    AudioSDL::get_instance()->release();
+	AudioSDL::get_instance()->release();
 
 #if(defined USE_TIMERPERIOD)
-    if(_TimerPeriod)
-    {
-        _TimerPeriod->KillEvent();
-        SAFE_RELEASE(_TimerPeriod);
-    }
+	if (_TimerPeriod) {
+		_TimerPeriod->KillEvent();
+		SAFE_RELEASE(_TimerPeriod);
+	}
 #endif
 }
 
-void	CGameApp::OnLostDevice()
-{
-	 _pDrawPoints->OnLostDevice();
-
+void CGameApp::OnLostDevice() {
+	_pDrawPoints->OnLostDevice();
 }
-void	CGameApp::OnResetDevice()
-{
+
+void CGameApp::OnResetDevice() {
 	_pDrawPoints->OnResetDevice();
 }
 
 #ifdef USE_DSOUND
 
-void CGameApp::PlaySample( string SoundName )
-{
-	int SoundChannel = mSoundManager->LoadSound( SoundName );
-	if( SoundChannel == -1 )
+void CGameApp::PlaySample(string SoundName) {
+	int SoundChannel = mSoundManager->LoadSound(SoundName);
+	if (SoundChannel == -1)
 		return;
-	
-	SoundInstance* aSoundInstance = mSoundManager->GetSoundInstance( SoundChannel );
-	if( aSoundInstance )
-		aSoundInstance->Play( false, true );
+
+	SoundInstance* aSoundInstance = mSoundManager->GetSoundInstance(SoundChannel);
+	if (aSoundInstance)
+		aSoundInstance->Play(false, true);
 }
 
 #endif
 
-CAniClock::CAniClock()
-{
+CAniClock::CAniClock() {
 	_bUpdate = false;
 	_pVBWnd = NULL;
 }
-CAniClock::~CAniClock()
-{
+
+CAniClock::~CAniClock() {
 	SAFE_RELEASE(_pVBWnd);
 }
 
-bool CAniClock::Create(int width,DWORD	dwColor)
-{
+bool CAniClock::Create(int width, DWORD dwColor) {
 	_rcWnd.left = 0;
-	_rcWnd.top  = 0;
+	_rcWnd.top = 0;
 	_rcWnd.right = width;
 	_rcWnd.bottom = width;
 
 	int len = _rcWnd.right - _rcWnd.left;
 	int hei = _rcWnd.bottom - _rcWnd.top;
-	
-	_vVertex[0].vPos =  D3DXVECTOR4(float(_rcWnd.left + len / 2),float(_rcWnd.top + hei / 2),0.9f,1);
-	_vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x,float(_rcWnd.top),0.9f,1);
-	_vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right),float(_rcWnd.top),0.9f,1);
-	_vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right),float(_rcWnd.top + hei / 2),0.9f,1);
-	_vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right),float(_rcWnd.bottom),0.9f,1);
-	_vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x,float(_rcWnd.bottom),0.9f,1);
-	_vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left),float(_rcWnd.bottom),0.9f,1);
-	_vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left),float(_rcWnd.top + hei / 2),0.9f,1);
-	_vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left),float(_rcWnd.top),0.9f,1);
-	_vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x,float(_rcWnd.top),0.9f,1);
+
+	_vVertex[0].vPos = D3DXVECTOR4(float(_rcWnd.left + len / 2), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
+	_vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
 
 	_vVertex[0].dwColor = dwColor;
 	_vVertex[1].dwColor = dwColor;
@@ -532,8 +518,7 @@ bool CAniClock::Create(int width,DWORD	dwColor)
 	_vVertex[8].dwColor = dwColor;
 	_vVertex[9].dwColor = dwColor;
 
-	for (int n = 0; n < 10; n++)
-	{
+	for (int n = 0; n < 10; n++) {
 		_vSave[n] = _vVertex[n].vPos;
 		_vTempVer[n] = _vVertex[n];
 	}
@@ -541,229 +526,231 @@ bool CAniClock::Create(int width,DWORD	dwColor)
 	//_vVertex[362]
 }
 
-void CAniClock::MoveTo(int x, int y)
-{
+void CAniClock::MoveTo(int x, int y) {
 	int len = _rcWnd.right - _rcWnd.left;
 	int hei = _rcWnd.bottom - _rcWnd.top;
 
 	_rcWnd.left = x;
-	_rcWnd.top	= y;
+	_rcWnd.top = y;
 	_rcWnd.right = _rcWnd.left + len;
 	_rcWnd.bottom = _rcWnd.top + hei;
 
-	_vVertex[0].vPos =  D3DXVECTOR4(float(_rcWnd.left + len / 2),float(_rcWnd.top + hei / 2),0.9f,1);
-	_vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x,float(_rcWnd.top),0.9f,1);
-	_vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right),float(_rcWnd.top),0.9f,1);
-	_vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right),float(_rcWnd.top + hei / 2),0.9f,1);
-	_vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right),float(_rcWnd.bottom),0.9f,1);
-	_vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x,float(_rcWnd.bottom),0.9f,1);
-	_vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left),float(_rcWnd.bottom),0.9f,1);
-	_vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left),float(_rcWnd.top + hei / 2),0.9f,1);
-	_vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left),float(_rcWnd.top),0.9f,1);
-	_vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x,float(_rcWnd.top),0.9f,1);
+	_vVertex[0].vPos = D3DXVECTOR4(float(_rcWnd.left + len / 2), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
+	_vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
 
-	for (int n = 0; n < 10; n++)
-	{
+	for (int n = 0; n < 10; n++) {
 		_vSave[n] = _vVertex[n].vPos;
 	}
 }
 
-float CAniClock::RemainingTime() const
-{
+float CAniClock::RemainingTime() const {
 	if (!_bUpdate) return {};
 	return _fPlayTime - _fCurTime;
 }
 
-void CAniClock::Play(DWORD dwPlayTime)
-{
-	if(_bUpdate)
+void CAniClock::Play(DWORD dwPlayTime) {
+	if (_bUpdate)
 		return;
-		
+
 	_bUpdate = true;
 	ResetTime(dwPlayTime);
 }
 
-void CAniClock::ResetTime(DWORD dwTime) 
-{
-    _fPlayTime = (float) dwTime / 1000;
+void CAniClock::ResetTime(DWORD dwTime) {
+	_fPlayTime = (float)dwTime / 1000;
 
-    int len = _rcWnd.right - _rcWnd.left;
-    int hei = _rcWnd.bottom - _rcWnd.top;
+	int len = _rcWnd.right - _rcWnd.left;
+	int hei = _rcWnd.bottom - _rcWnd.top;
 
-    _vVertex[0].vPos = D3DXVECTOR4(float(_rcWnd.left + len / 2), float(_rcWnd.top + hei / 2), 0.9f, 1);
-    _vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
-    _vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top), 0.9f, 1);
-    _vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top + hei / 2), 0.9f, 1);
-    _vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.bottom), 0.9f, 1);
-    _vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.bottom), 0.9f, 1);
-    _vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.bottom), 0.9f, 1);
-    _vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top + hei / 2), 0.9f, 1);
-    _vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top), 0.9f, 1);
-    _vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
+	_vVertex[0].vPos = D3DXVECTOR4(float(_rcWnd.left + len / 2), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
+	_vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
 
-   for (int n = 0; n < 10; n++) {
-        _vSave[n] = _vVertex[n].vPos;
-    }
-    _fCurAngle = 0; // 6.283185f / (float)_dwTime;
-    _fCurTime = 0;
+	for (int n = 0; n < 10; n++) {
+		_vSave[n] = _vVertex[n].vPos;
+	}
+	_fCurAngle = 0; // 6.283185f / (float)_dwTime;
+	_fCurTime = 0;
 }
 
-void CAniClock::FrameMove(DWORD dwDailTime) 
-{
-    _fCurTime += * ResMgr.GetDailTime();
-    _fCurAngle = (_fCurTime / _fPlayTime) * 6.283185f;
+void CAniClock::FrameMove(DWORD dwDailTime) {
+	_fCurTime += *ResMgr.GetDailTime();
+	_fCurAngle = (_fCurTime / _fPlayTime) * 6.283185f;
 
-    //_fCurAngle = 0.02f;
+	//_fCurAngle = 0.02f;
 
-   float flerp = 0;
+	float flerp = 0;
 
-    int len = (_rcWnd.right - _rcWnd.left) / 2;
-    if (_fCurAngle < 0.7853981f) {
-       flerp = _fCurAngle / 0.7853981f;
-        _vVertex[1].vPos.x = _vSave[1].x + (float) len *flerp;
+	int len = (_rcWnd.right - _rcWnd.left) / 2;
+	if (_fCurAngle < 0.7853981f) {
+		flerp = _fCurAngle / 0.7853981f;
+		_vVertex[1].vPos.x = _vSave[1].x + (float)len * flerp;
+	}
+	else if (_fCurAngle >= 0.7853981f && _fCurAngle < 1.570796f) {
+		flerp = (_fCurAngle - 0.7853981f) / 0.7853981f;
+		_vVertex[1].vPos.y = _vSave[2].y + (float)len * flerp;
 
-    } else if (_fCurAngle >= 0.7853981f && _fCurAngle < 1.570796f) {
-       flerp = (_fCurAngle - 0.7853981f) / 0.7853981f;
-        _vVertex[1].vPos.y = _vSave[2].y + (float) len *flerp;
+		_vVertex[2].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 1.570796f && _fCurAngle < 3.141592f - 0.7853981f) {
+		flerp = (_fCurAngle - 1.570796f) / 0.7853981f;
+		_vVertex[1].vPos.y = _vSave[3].y + (float)len * flerp;
 
-        _vVertex[2].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 1.570796f && _fCurAngle < 3.141592f - 0.7853981f) {
-       flerp = (_fCurAngle - 1.570796f) / 0.7853981f;
-        _vVertex[1].vPos.y = _vSave[3].y + (float) len *flerp;
+		_vVertex[2].vPos = _vVertex[1].vPos;
+		_vVertex[3].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 3.141592f - 0.7853981f && _fCurAngle < 3.141592f) {
+		flerp = (_fCurAngle - (3.141592f - 0.7853981f)) / 0.7853981f;
+		_vVertex[1].vPos.x = _vSave[4].x - (float)len * flerp;
 
-        _vVertex[2].vPos = _vVertex[1].vPos;
-        _vVertex[3].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 3.141592f - 0.7853981f && _fCurAngle < 3.141592f) {
-       flerp = (_fCurAngle - (3.141592f - 0.7853981f)) / 0.7853981f;
-        _vVertex[1].vPos.x = _vSave[4].x - (float) len *flerp;
+		_vVertex[2].vPos = _vVertex[1].vPos;
+		_vVertex[3].vPos = _vVertex[1].vPos;
+		_vVertex[4].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 3.141592f && _fCurAngle < 3.141592f + 0.7853981f) {
+		flerp = (_fCurAngle - 3.141592f) / 0.7853981f;
+		_vVertex[1].vPos.x = _vSave[5].x - (float)len * flerp;
 
-        _vVertex[2].vPos = _vVertex[1].vPos;
-        _vVertex[3].vPos = _vVertex[1].vPos;
-        _vVertex[4].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 3.141592f && _fCurAngle < 3.141592f + 0.7853981f) {
-       flerp = (_fCurAngle - 3.141592f) / 0.7853981f;
-        _vVertex[1].vPos.x = _vSave[5].x - (float) len *flerp;
+		_vVertex[2].vPos = _vVertex[1].vPos;
+		_vVertex[3].vPos = _vVertex[1].vPos;
+		_vVertex[4].vPos = _vVertex[1].vPos;
+		_vVertex[5].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 3.141592f + 0.7853981f && _fCurAngle < 3.141592f + 1.570796f) {
+		flerp = (_fCurAngle - (3.141592f + 0.7853981f)) / 0.7853981f;
 
-        _vVertex[2].vPos = _vVertex[1].vPos;
-        _vVertex[3].vPos = _vVertex[1].vPos;
-        _vVertex[4].vPos = _vVertex[1].vPos;
-        _vVertex[5].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 3.141592f + 0.7853981f && _fCurAngle < 3.141592f + 1.570796f) {
-       flerp = (_fCurAngle - (3.141592f + 0.7853981f)) / 0.7853981f;
+		_vVertex[1].vPos.x = _vSave[6].x;
+		_vVertex[1].vPos.y = _vSave[6].y - (float)len * flerp;
 
-        _vVertex[1].vPos.x = _vSave[6].x;
-        _vVertex[1].vPos.y = _vSave[6].y - (float) len *flerp;
+		_vVertex[2].vPos = _vVertex[1].vPos;
+		_vVertex[3].vPos = _vVertex[1].vPos;
+		_vVertex[4].vPos = _vVertex[1].vPos;
+		_vVertex[5].vPos = _vVertex[1].vPos;
+		_vVertex[6].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 3.141592f + 1.570796f && _fCurAngle < 6.283185f - 0.7853981f) {
+		flerp = (_fCurAngle - (3.141592f + 1.570796f)) / 0.7853981f;
+		_vVertex[1].vPos.y = _vSave[7].y - (float)len * flerp;
 
-        _vVertex[2].vPos = _vVertex[1].vPos;
-        _vVertex[3].vPos = _vVertex[1].vPos;
-        _vVertex[4].vPos = _vVertex[1].vPos;
-        _vVertex[5].vPos = _vVertex[1].vPos;
-        _vVertex[6].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 3.141592f + 1.570796f && _fCurAngle < 6.283185f - 0.7853981f) {
-       flerp = (_fCurAngle - (3.141592f + 1.570796f)) / 0.7853981f;
-        _vVertex[1].vPos.y = _vSave[7].y - (float) len *flerp;
+		_vVertex[2].vPos = _vVertex[1].vPos;
+		_vVertex[3].vPos = _vVertex[1].vPos;
+		_vVertex[4].vPos = _vVertex[1].vPos;
+		_vVertex[5].vPos = _vVertex[1].vPos;
+		_vVertex[6].vPos = _vVertex[1].vPos;
+		_vVertex[7].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 6.283185f - 0.7853981f && _fCurAngle < 6.283185f) {
+		flerp = (_fCurAngle - (6.283185f - 0.7853981f)) / 0.7853981f;
 
-        _vVertex[2].vPos = _vVertex[1].vPos;
-        _vVertex[3].vPos = _vVertex[1].vPos;
-        _vVertex[4].vPos = _vVertex[1].vPos;
-        _vVertex[5].vPos = _vVertex[1].vPos;
-        _vVertex[6].vPos = _vVertex[1].vPos;
-        _vVertex[7].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 6.283185f - 0.7853981f && _fCurAngle < 6.283185f) {
-       flerp = (_fCurAngle - (6.283185f - 0.7853981f)) / 0.7853981f;
+		_vVertex[1].vPos.y = _vSave[9].y;
+		_vVertex[1].vPos.x = _vSave[8].x + (float)len * flerp;
 
-        _vVertex[1].vPos.y = _vSave[9].y;
-        _vVertex[1].vPos.x = _vSave[8].x + (float) len *flerp;
-
-        _vVertex[2].vPos = _vVertex[1].vPos;
-        _vVertex[3].vPos = _vVertex[1].vPos;
-        _vVertex[4].vPos = _vVertex[1].vPos;
-        _vVertex[5].vPos = _vVertex[1].vPos;
-        _vVertex[6].vPos = _vVertex[1].vPos;
-        _vVertex[7].vPos = _vVertex[1].vPos;
-        _vVertex[8].vPos = _vVertex[1].vPos;
-    } else if (_fCurAngle >= 6.283185f) {
-        _bUpdate =false;
-    }
+		_vVertex[2].vPos = _vVertex[1].vPos;
+		_vVertex[3].vPos = _vVertex[1].vPos;
+		_vVertex[4].vPos = _vVertex[1].vPos;
+		_vVertex[5].vPos = _vVertex[1].vPos;
+		_vVertex[6].vPos = _vVertex[1].vPos;
+		_vVertex[7].vPos = _vVertex[1].vPos;
+		_vVertex[8].vPos = _vVertex[1].vPos;
+	}
+	else if (_fCurAngle >= 6.283185f) {
+		_bUpdate = false;
+	}
 }
 
-void CAniClock::Update() 
-{
-    if (!_bUpdate)
-        return;
+void CAniClock::Update() {
+	if (!_bUpdate)
+		return;
 
-    //if(	_rcWnd.left != x || _rcWnd.top	!= y)
-    //	MoveTo(x, y);
-    FrameMove(0);
+	//if(	_rcWnd.left != x || _rcWnd.top	!= y)
+	//	MoveTo(x, y);
+	FrameMove(0);
 }
 
-void CAniClock::Render(int x, int y) 
-{
-    if (!_bUpdate)
-        return;
+void CAniClock::Render(int x, int y) {
+	if (!_bUpdate)
+		return;
 
-    g_Render.SetRenderState(D3DRS_ZENABLE, FALSE);
-    g_Render.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-    g_Render.SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
-    g_Render.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
-    g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
-    g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
-    g_Render.SetRenderState(D3DRS_DITHERENABLE, FALSE);
-    g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
+	g_Render.SetRenderState(D3DRS_ZENABLE, FALSE);
+	g_Render.SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
+	g_Render.SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+	g_Render.SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
+	g_Render.SetRenderState(D3DRS_DITHERENABLE, FALSE);
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW);
 
-    //commenting these out seems to fix model texture issues.
+	//commenting these out seems to fix model texture issues.
 
-    //g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-    //g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG2);
-    //g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);  
-    //g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_SELECTARG2);  
+	//g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
+	//g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG2);
+	//g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);
+	//g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_SELECTARG2);
 
-    g_Render.SetRenderState(D3DRS_LIGHTING, FALSE);
-    g_Render.SetTexture(0, NULL);
+	g_Render.SetRenderState(D3DRS_LIGHTING, FALSE);
+	g_Render.SetTexture(0, NULL);
 
-    g_Render.SetVertexShader(NULL);
+	g_Render.SetVertexShader(NULL);
 	g_Render.SetFVF(D3DFVF_CLOCK2);
-    for (int n = 0; n < 10; ++n) {
-        _vTempVer[n].vPos.x = _vVertex[n].vPos.x + x;
-        _vTempVer[n].vPos.y = _vVertex[n].vPos.y + y;
-    }
+	for (int n = 0; n < 10; ++n) {
+		_vTempVer[n].vPos.x = _vVertex[n].vPos.x + x;
+		_vTempVer[n].vPos.y = _vVertex[n].vPos.y + y;
+	}
 
-    g_Render.GetDevice() -> DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 8, & _vTempVer, sizeof(ClockVer));
+	g_Render.GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 8, &_vTempVer, sizeof(ClockVer));
 
-    char txt[3];
-    sprintf(txt, "%.0f%", RemainingTime());
-    const int check = int(RemainingTime());
-    if (check < 10) {
-        CGuiFont::s_Font.BRender(2, txt, x + 10, y + 10, COLOR_WHITE, COLOR_BLACK);
-    } else if (check > 100) {
-        CGuiFont::s_Font.BRender(2, txt, x + 5, y + 10, COLOR_WHITE, COLOR_BLACK);
-    } else {
+	char txt[3];
+	sprintf(txt, "%.0f%", RemainingTime());
+	const int check = int(RemainingTime());
+	if (check < 10) {
+		CGuiFont::s_Font.BRender(2, txt, x + 10, y + 10, COLOR_WHITE, COLOR_BLACK);
+	}
+	else if (check > 100) {
+		CGuiFont::s_Font.BRender(2, txt, x + 5, y + 10, COLOR_WHITE, COLOR_BLACK);
+	}
+	else {
 		CGuiFont::s_Font.BRender(2, txt, x + 9, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 }
 
-void CAniClock::Resume(DWORD dwStartTime, DWORD dwPlayTime)
-{
-    if (_bUpdate) return;
-    _bUpdate = true;
+void CAniClock::Resume(DWORD dwStartTime, DWORD dwPlayTime) {
+	if (_bUpdate) return;
+	_bUpdate = true;
 
-    _fPlayTime = (float)dwStartTime / 1000;
+	_fPlayTime = (float)dwStartTime / 1000;
 
-    int len = _rcWnd.right - _rcWnd.left;
-    int hei = _rcWnd.bottom - _rcWnd.top;
+	int len = _rcWnd.right - _rcWnd.left;
+	int hei = _rcWnd.bottom - _rcWnd.top;
 
-    _vVertex[0].vPos = D3DXVECTOR4(float(_rcWnd.left + len / 2), float(_rcWnd.top + hei / 2), 0.9f, 1);
-    _vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
-    _vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top), 0.9f, 1);
-    _vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top + hei / 2), 0.9f, 1);
-    _vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.bottom), 0.9f, 1);
-    _vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.bottom), 0.9f, 1);
-    _vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.bottom), 0.9f, 1);
-    _vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top + hei / 2), 0.9f, 1);
-    _vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top), 0.9f, 1);
-    _vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
+	_vVertex[0].vPos = D3DXVECTOR4(float(_rcWnd.left + len / 2), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[1].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
+	_vVertex[2].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[3].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[4].vPos = D3DXVECTOR4(float(_rcWnd.right), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[5].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[6].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.bottom), 0.9f, 1);
+	_vVertex[7].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top + hei / 2), 0.9f, 1);
+	_vVertex[8].vPos = D3DXVECTOR4(float(_rcWnd.left), float(_rcWnd.top), 0.9f, 1);
+	_vVertex[9].vPos = D3DXVECTOR4(_vVertex[0].vPos.x, float(_rcWnd.top), 0.9f, 1);
 
-    for (int n = 0; n < 10; n++) { _vSave[n] = _vVertex[n].vPos; }
-    _fCurTime = (float)dwPlayTime / 1000;
-    _fCurAngle = (_fCurTime / _fPlayTime) * 6.283185f;
+	for (int n = 0; n < 10; n++) {
+		_vSave[n] = _vVertex[n].vPos;
+	}
+	_fCurTime = (float)dwPlayTime / 1000;
+	_fCurAngle = (_fCurTime / _fPlayTime) * 6.283185f;
 }

@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 
 
@@ -370,7 +370,7 @@ LW_RESULT lwItem::GetObjDummyRunTimeMatrix( lwMatrix44* mat, DWORD id )
 
     //lwMatrix44Multiply( mat, &mat_dummy, &_mat_base );
     lwMatrix44Multiply(mat, &mat_dummy, _obj->GetMatrixGlobal());
-    // ���ﶨ�����û�й�������
+    // 
     //lwIHelperObject* ho = _obj->GetHelperObject();
     //if(ho == 0)
     //    goto __ret;

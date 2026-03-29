@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// ����:���ڸ���������ʾ�ײ�
-// ����:lh 2004-07-15
-// ����޸�����:2004-10-20
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-15
+// :2004-10-20
 //----------------------------------------------------------------------
 #pragma once
 #include "UIRender.h"
@@ -31,16 +31,16 @@ public:
 	CGuiFont();
 	~CGuiFont();
 
-	// ����nStyle: 0x0001-����,0x0002-б��,0x0004-���»���
+	// nStyle: 0x0001-,0x0002-,0x0004-
 	int		CreateFont( char* font, int size800, int size1024, DWORD dwStyle=0 );
 	bool	Init()							{ return !_stfonts.empty();				}
 	bool	Clear();
 
 	void	SetScreen( int nScrWidth, int nScrHeight );
 	void	SetIndex( unsigned int n );
-	void	Render( const char* str, int x, int y, DWORD color ,float size = 1.0f);					// ������ʾ		
-	void    RenderScale(const char *str, int x ,int y , DWORD color , float scale);  //������ʾ
-	void	BRender( const char* str, int x, int y, DWORD color, DWORD shadow );	// ��Ӱ��ʾ
+	void	Render( const char* str, int x, int y, DWORD color ,float size = 1.0f);					// 		
+	void    RenderScale(const char *str, int x ,int y , DWORD color , float scale);  //
+	void	BRender( const char* str, int x, int y, DWORD color, DWORD shadow );	// 
 	void	Render3d( const char* str, D3DXVECTOR3& pos, DWORD color=COLOR_RED );
 
 	void    FrameRender( const char* str, int x, int y );
@@ -48,7 +48,7 @@ public:
 
 	int		GetWidth( const std::string& );
 	int		GetHeight( const char* );
-	void	GetSize( const char* str, int& w, int &h );					// �Ѿ��Զ���������Ļת��
+	void	GetSize( const char* str, int& w, int &h );					// 
 	bool	GetSize( unsigned int dwIndex, const char* str, int& w, int &h );
 
 	void	Begin();
@@ -58,7 +58,7 @@ public:
 public:
 	CMPFont*		GetFont( unsigned int index=0 );
 	void			Render( unsigned int nIndex, const char* str, int x, int y, DWORD color ,float size = 1.0f);
-	void			BRender( unsigned int nIndex, const char* str, int x, int y, DWORD color, DWORD shadow );	// ��Ӱ��ʾ
+	void			BRender( unsigned int nIndex, const char* str, int x, int y, DWORD color, DWORD shadow );	// 
 
 public:		
 	static CGuiFont	s_Font;
@@ -85,12 +85,12 @@ private:
 };
 
 
-// ��ʾ�ɾ��е�hint list
-// ʹ�÷���:
-// 1.Clear���ԭ�е������б�
-// 2.PushHint,AddHintHeight,������б�
-// 3.ReadyForHint( x, y ) - ׼�����Ƕ���ʾ
-// 4.Render - ��ʾhint
+// hint list
+// :
+// 1.Clear
+// 2.PushHint,AddHintHeight,
+// 3.ReadyForHint( x, y ) - 
+// 4.Render - hint
 class CTextHint
 {
 public:
@@ -99,10 +99,10 @@ public:
 	void	ReadyForHintGM(int x, int y);//Add by sunny.sun 20080912
 	void	Render();
 
-    void    PushHint( const char* str, DWORD color=COLOR_WHITE, int height=5, int font=0, int index = -1, bool shadow = false, DWORD scolor = 0 ); // height:�۳��ָߺ�ĸ߶�
-    void    AddHintHeight( int height=6 );													// ���һ������
+    void    PushHint( const char* str, DWORD color=COLOR_WHITE, int height=5, int font=0, int index = -1, bool shadow = false, DWORD scolor = 0 ); // height:
+    void    AddHintHeight( int height=6 );													// 
 
-	int		WriteText( const char* file );		// ����ǰhintд���ı�������д�������
+	int		WriteText( const char* file );		// hint
 
 public:
     struct stHint 
@@ -122,7 +122,7 @@ public:
 
 	CTextHint();
 
-	// ��������Hint�Ƿ����
+	// Hint
     void    SetHintIsCenter( bool v )		{ _IsCenter = v;			}
 	bool	GetHintIsCenter()				{ return _IsCenter;			}
 
@@ -177,7 +177,7 @@ public:
 	void	ReadyForHint( int x, int y,int SetNum);
 	void	Render();
 
-    void    PushHint( const char* str, DWORD color=COLOR_WHITE, int height=5, int font=0 ); // height:�۳��ָߺ�ĸ߶�
+    void    PushHint( const char* str, DWORD color=COLOR_WHITE, int height=5, int font=0 ); // height:
 public:
     struct stHint 
     {
@@ -326,7 +326,7 @@ inline CMPFont*	CGuiFont::GetFont( unsigned int index )
 	if( index<_nMaxFont) return _fonts[index]; return NULL;
 }
 
-// ��������
+// 
 inline void CTextHint::PushHint( const char* str, DWORD color, int height, int font, int index, bool shadow, DWORD scolor )
 { 
     if( str && strlen(str)>0 )
@@ -358,7 +358,7 @@ inline void CTextHint::SetFixWidth( int w )
 		_eStyle = enumFixWidth;
 	}
 }
-// ��������//Add by sunny.sun20080804
+// //Add by sunny.sun20080804
 //Begin
 inline void CTextScrollHint::PushHint( const char* str, DWORD color, int height, int font )       
 { 

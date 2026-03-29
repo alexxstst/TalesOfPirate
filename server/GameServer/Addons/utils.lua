@@ -1,4 +1,4 @@
-function SendMoney(cha, amount)
+﻿function SendMoney(cha, amount)
     if (type(cha) ~= "userdata") then
         cha = GetPlayerByName(cha)
     end

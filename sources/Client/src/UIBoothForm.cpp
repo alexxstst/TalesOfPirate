@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 
 #include "UIBoothForm.h"
 
@@ -45,14 +45,14 @@ namespace GUI
 
 	struct CBoothMgr::SBoothItem
 	{
-		long lId;   // ����ID
-		int  iPrice; // ������ʾ�۸�
-		int  iNum;   // ���߸���
-		int	 iTotal; // ����Ŀ
-		int  iEquipIndex; // װ������
-		int	 iBoothIndex; // ��̯����
-		CGoodsGrid* pkEquipGrid;	//����Ҫ���
-		CGoodsGrid* pkBoothGrid;	//����Ҫ���
+		long lId;   // ID
+		int  iPrice; // 
+		int  iNum;   // 
+		int	 iTotal; // 
+		int  iEquipIndex; // 
+		int	 iBoothIndex; // 
+		CGoodsGrid* pkEquipGrid;	//
+		CGoodsGrid* pkBoothGrid;	//
 
 		int itemTotalNum;
 		int itemGetIsPile;
@@ -77,17 +77,17 @@ namespace GUI
 
 
 	//~ ------------------------------------------------------------------
-	bool CBoothMgr::Init() // ��̯��Ϣ��ʼ��
+	bool CBoothMgr::Init() // 
 	{
 		CFormMgr &mgr = CFormMgr::s_Mgr;
 
-		frmBooth = mgr.Find("frmBooth", enumMainForm); // ���Ұ�̯����
+		frmBooth = mgr.Find("frmBooth", enumMainForm); // 
 		if ( !frmBooth)
 		{
 			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(445));
 			return false;
 		}
-		frmBooth->evtEntrustMouseEvent = _MainMouseBoothEvent ; // ����Ϣ�¼��Ĵ���
+		frmBooth->evtEntrustMouseEvent = _MainMouseBoothEvent ; // 
 		frmBooth->evtClose = _MainBoothOnCloseEvent;
 
 		lblOwnerName = dynamic_cast<CLabel*>(frmBooth->Find("lblOwnerName"));
@@ -129,7 +129,7 @@ namespace GUI
 	{
 	}
 
-	void CBoothMgr::CloseForm() // �رհ�̯����
+	void CBoothMgr::CloseForm() // 
 	{
 		CCharacter* pkCha = g_stUIBoat.GetHuman();
 		if (!pkCha)
@@ -177,21 +177,21 @@ namespace GUI
 
 	
 	//~ ------------------------------------------------------------------
-	void CBoothMgr::ShowSetupBoothForm(int iLevel)  // ��ʾ���ð�̯����
+	void CBoothMgr::ShowSetupBoothForm(int iLevel)  // 
 	{
 		frmBooth->SetIsShow(!frmBooth->GetIsShow());
 
-		//�����ǰ����Ʒ
+		//
 		ClearBoothItems();
 
-		//���ݵȼ�ȡ�ð�̯��λ��
+		//
 		m_iBoothItemMaxNum = GetItemNumByLevel(iLevel);
 		m_kBoothItems.reserve(m_iBoothItemMaxNum);
 		for (int i(0); i<m_iBoothItemMaxNum; i++)
 		{
 			m_kBoothItems[i] = 0;
 		}
-		//���ð�̯�����UI�ؼ�
+		//UI
 		int col = grdBoothItem->GetCol();
 		int row = m_iBoothItemMaxNum / col;
 		if( m_iBoothItemMaxNum % col ) row++;
@@ -201,7 +201,7 @@ namespace GUI
 		grdBoothItem->Init();
 		grdBoothItem->Refresh();
 
-		//����̯��ID
+		//ID
 		CCharacter* pkCha = g_stUIBoat.GetHuman();
 		m_dwOwnerId = pkCha->getAttachID();
 
@@ -211,7 +211,7 @@ namespace GUI
 		edtBoothName->SetCaption("");
 		edtBoothName->SetIsEnabled(true);
 
-		//�����ð�̯�������ҵ���Ʒ��
+		//
 		OpenBoothUI();
 	}
 
@@ -223,14 +223,14 @@ namespace GUI
 
 		ClearBoothItems();
 
-		//ֱ�ӵ���󼶣�����Ҫ֪���ȼ�
+		//
 		m_iBoothItemMaxNum = GetItemNumByLevel(3);
 		m_kBoothItems.resize(m_iBoothItemMaxNum, nullptr);
 		for (auto* item : m_kBoothItems)
 		{
 			item = nullptr;
 		}
-		//���ð�̯�����UI�ؼ�
+		//UI
 		int col = grdBoothItem->GetCol();
 		int row = m_iBoothItemMaxNum / col;
 		if( m_iBoothItemMaxNum % col ) row++;
@@ -240,7 +240,7 @@ namespace GUI
 		grdBoothItem->Init();
 		grdBoothItem->Refresh();
 
-		// ���ý��׽����UI�ؼ�
+		// UI
 		btnSetupBooth->SetIsShow(false);
 		btnPullStakes->SetIsShow(false);
 		CGameScene* pScene = CGameApp::GetCurScene();
@@ -251,7 +251,7 @@ namespace GUI
 		edtBoothName->SetCaption(szBoothName);
 		edtBoothName->SetIsEnabled(false);
 
-		//�򿪽��װ�̯�������ҵ���Ʒ��
+		//
 		OpenBoothUI();
 	}
 
@@ -311,7 +311,7 @@ namespace GUI
 	//~ ------------------------------------------------------------------
 	int CBoothMgr::GetItemNumByLevel(int iLevel)
 	{
-		//���ݰ�̯���ܵȼ��õ����԰�̯����λ��,����ĵ�
+		//,
 		return iLevel * 6;
 	}
 
@@ -321,7 +321,7 @@ namespace GUI
 		for (size_t i(0); i<m_kBoothItems.size(); ++i)
 		{
 			//delete m_kBoothItems[i];
-			SAFE_DELETE(m_kBoothItems[i]); // UI��������
+			SAFE_DELETE(m_kBoothItems[i]); // UI
 			m_kBoothItems[i] = 0;
 		}
 	}
@@ -332,27 +332,27 @@ namespace GUI
 		if (!pBoothItem)
 			return ;
 
-		//�����ǰʱ̯��,����Ҫ��������װ����
+		//,
 		CCharacter* pkCha = g_stUIBoat.GetHuman();
 		if (!pkCha)
 			return ;
 
 		if (pkCha->getAttachID() == GetOwnerId())
 		{
-			//��������ӵ�����λ�Ѿ�������λ��,��ô�����Ʒ���滻��ǰ����Ʒ
+			//,
 			SBoothItem* pSourceBoothItem = m_kBoothItems[pBoothItem->iBoothIndex];
 			if (pSourceBoothItem)
 			{
 				RemoveBoothItemByNum(pSourceBoothItem, pSourceBoothItem->iNum);
 			}
 
-			// װ������λ������Ϊ������״̬
+			// 
 			pBoothItem->pkEquipGrid->GetItem(pBoothItem->iEquipIndex)->SetIsValid(false);
 		}
 
 		m_kBoothItems[pBoothItem->iBoothIndex] = pBoothItem;
 
-		// grdBoothItem������ʾ
+		// grdBoothItem
 		CItemRecord* pInfo = GetItemRecordInfo( pBoothItem->lId);
 		if (pBoothItem->pkEquipGrid)
 		{
@@ -383,8 +383,8 @@ namespace GUI
 
 		int iBoothIndex = pBoothItem->iBoothIndex;
 		if (iNum == pBoothItem->iNum)
-		{	//��ȥ���еĸ���Ʒ
-			//�����ǰʱ̯��,����Ҫ��������װ����
+		{	//
+			//,
 			CCharacter* pkCha = g_stUIBoat.GetHuman();
 			if (!pkCha)
 				return ;
@@ -406,15 +406,15 @@ namespace GUI
 			if (m_kBoothItems[iBoothIndex])
 			{
 				//delete m_kBoothItems[iBoothIndex];
-				SAFE_DELETE(m_kBoothItems[iBoothIndex]); // UI��������
+				SAFE_DELETE(m_kBoothItems[iBoothIndex]); // UI
 				m_kBoothItems[iBoothIndex] = 0;
 			}
 		}
 		else
-		{	//�����ֵĸ���Ʒ�϶���װ����
+		{	//
 			pBoothItem->iNum -= iNum;
 
-			//����UI�е�����
+			//UI
 			pBoothItem->pkBoothGrid->GetItem(iBoothIndex)->SetTotalNum(pBoothItem->iNum);
 
 		}
@@ -423,7 +423,7 @@ namespace GUI
 	//~ ------------------------------------------------------------------
 	void CBoothMgr::SetupBoothSuccess()
 	{
-		//�޸�UI
+		//UI
 		btnSetupBooth->SetIsShow(false);
 		btnPullStakes->SetIsShow(true);
 		edtBoothName->SetIsEnabled(false);
@@ -432,11 +432,11 @@ namespace GUI
 
 		g_stUIEquip.GetItemForm()->SetIsShow(m_isOldEquipFormShow);
 
-		//���Ű�̯����
+		//
 	}
 
 	void CBoothMgr::PullBoothSuccess() const {
-		//终止摆摊动画
+		//
 
 		for (int i(0); i < g_stUIBooth.m_iBoothItemMaxNum; i++) {
 			if (g_stUIBooth.m_kBoothItems[i]) {
@@ -446,7 +446,7 @@ namespace GUI
 		}
 		g_stUIBooth.ClearBoothItems();
 
-		//关闭表单
+		//
 		g_stUIBooth.CloseBoothUI();
 	}
 
@@ -458,7 +458,7 @@ namespace GUI
 		frmBooth->Refresh();
 		frmBooth->Show();
 
-		//ͬʱ����ҵ�װ����
+		//
 		int x = frmBooth->GetX() + frmBooth->GetWidth();
 		int y = frmBooth->GetY();
 		g_stUIEquip.GetItemForm()->SetPos(x, y);
@@ -493,11 +493,11 @@ namespace GUI
 	{
 		string name = pSender->GetName();
 		if( name=="btnNo"  || name == "btnClose" )  
-		{ ///�رձ���
+		{ ///
 			return;
 		}
 		else if ( name == "btnSetupBooth")
-		{	/// ���¡����ð�̯����
+		{	/// 
 
 			if (strlen(g_stUIBooth.edtBoothName->GetCaption()) == 0)
 			{
@@ -505,7 +505,7 @@ namespace GUI
 				return;
 			}
 			
-			//����̯���Ƿ��зǷ��ַ�
+			//
 			string sName(g_stUIBooth.edtBoothName->GetCaption());
 			if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sName))
 			{
@@ -513,9 +513,9 @@ namespace GUI
 				return ;
 			}
 
-			//������Ϣ����
+			//
 			mission::NET_STALL_ALLDATA netCreateBoothData;
-			int iNum(0);	//̯λ�ڵ�����
+			int iNum(0);	//
 			for (int i(0); i<g_stUIBooth.m_iBoothItemMaxNum; i++)
 			{
 				if (g_stUIBooth.m_kBoothItems[i])
@@ -530,7 +530,7 @@ namespace GUI
 			netCreateBoothData.byNum = BYTE(iNum);
 			if (netCreateBoothData.byNum > 0)
 			{
-				//���ʹ���̯λЭ��
+				//
 				if( CCharacter* pCha = CGameScene::GetMainCha() )
 				{
 					pCha->GetActor()->Stop();
@@ -542,7 +542,7 @@ namespace GUI
 			return ;			
 		}
 		else if (name == "btnPullStakes")
-		{	/// ���¡���̯����
+		{	/// 
 			g_stUIBooth.CloseBoothUI();
 		}
 
@@ -620,11 +620,11 @@ namespace GUI
 			return;
 		}
 
-		g_stUIBooth.m_pkCurrSetupBooth->iNum = kItemNumBox->GetNumber();	// ������������
+		g_stUIBooth.m_pkCurrSetupBooth->iNum = kItemNumBox->GetNumber();	// 
 		g_stUIBooth.m_pkCurrSetupBooth->iTotal = kItemNumBox->GetNumber();
 		
 
-		//ѯ�ʼ۸�
+		//
 		g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, g_oLangRec.GetString(450), false);
 
 	}
@@ -657,7 +657,7 @@ namespace GUI
 			return;
 		}
 
-		g_stUIBooth.m_pkCurrSetupBooth->iPrice = kItemPriceBox->GetNumber();	// �������ĵ���
+		g_stUIBooth.m_pkCurrSetupBooth->iPrice = kItemPriceBox->GetNumber();	// 
 
 		g_stUIBooth.AddBoothItem(g_stUIBooth.m_pkCurrSetupBooth);
 
@@ -752,9 +752,9 @@ namespace GUI
 			return false;
 
 		if (pkCha->getAttachID() == GetOwnerId())
-		{	///��ǰ�򿪽���ľ���̯��
+		{	///
 
-			//�ж���Ʒ�Ƿ�ɽ���
+			//
 			CItemRecord* pItemRecord = pkItemCmd->GetItemInfo();
 			if (!pItemRecord)
 				return false;
@@ -763,7 +763,7 @@ namespace GUI
 				return PushToBoothSetup(rkDrag, rkSelf, nGridID, *pkItemCmd);
 		}
 		else
-		{	///��ǰ�򿪽���Ĳ���̯���������Ϊ�ǽ���
+		{	///
 			return PushToBoothTrade(rkDrag, rkSelf, nGridID, *pkItemCmd);
 		}
 		return true;
@@ -785,11 +785,11 @@ namespace GUI
 			return false;
 
 		if (pkCha->getAttachID() == GetOwnerId())
-		{	///��ǰ�򿪽���ľ���̯���������Ϊ������̯λ
+		{	///
 			return PopFromBoothSetup(rkDrag, rkSelf, nGridID, *pkItemCmd);
 		}
 		else
-		{	///��ǰ�򿪽���Ĳ���̯���������Ϊ�ǽ���
+		{	///
 			return PopFromBoothTrade(rkDrag, rkSelf, nGridID, *pkItemCmd);
 		}
 
@@ -804,10 +804,10 @@ namespace GUI
 			return false;
 
 		if (pkCha->getAttachID() == GetOwnerId())
-		{	///��ǰ�򿪽���ľ���̯���������Ϊ������̯λ
+		{	///
 		}
 		else
-		{	///��ǰ�򿪽���Ĳ���̯���������Ϊ�ǽ���
+		{	///
 
 		}
 
@@ -817,7 +817,7 @@ namespace GUI
 	//~ ------------------------------------------------------------------
 	bool CBoothMgr::PushToBoothSetup(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CItemCommand& rkItemCmd)
 	{
-		// ����Ѿ��ڰ�̯״̬,���ܼ��������϶�
+		// ,
 		CCharacter *pMainCha = g_stUIBoat.GetHuman();
 		if (pMainCha && pMainCha->IsShop())
 		{
@@ -834,7 +834,7 @@ namespace GUI
 		m_pkCurrSetupBooth->itemTotalNum = rkItemCmd.GetTotalNum();
 		m_pkCurrSetupBooth->itemGetIsPile = rkItemCmd.GetIsPile();
 
-		//�ж��϶���Item�Ƿ���ص�����������һ��
+		//Item
 		
 		//selectedItem = rkItemCmd;
 		//g_stUIBox.ShowSelectBox(_PushItemCurrencyType,"Use gold as currency?");
@@ -844,7 +844,7 @@ namespace GUI
 			}
 			else
 			{
-				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//����Ϊ1
+				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//1
 				g_stUIBooth.m_pkCurrSetupBooth->iTotal = 1;
 				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, g_oLangRec.GetString(450), false);
 			}
@@ -863,7 +863,7 @@ namespace GUI
 			}
 			else
 			{
-				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//����Ϊ1
+				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//1
 				g_stUIBooth.m_pkCurrSetupBooth->iTotal = 1;
 				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, g_oLangRec.GetString(450), false);
 			}
@@ -877,7 +877,7 @@ namespace GUI
 			}
 			else
 			{
-				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//����Ϊ1
+				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//1
 				g_stUIBooth.m_pkCurrSetupBooth->iTotal = 1;
 				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_PushItemTradeID, -1, "Enter Item Name", false);
 			}
@@ -906,11 +906,11 @@ namespace GUI
 			return;
 		}
 
-		g_stUIBooth.m_pkCurrSetupBooth->iNum = kItemNumBox->GetNumber();	// ������������
+		g_stUIBooth.m_pkCurrSetupBooth->iNum = kItemNumBox->GetNumber();	// 
 		g_stUIBooth.m_pkCurrSetupBooth->iTotal = kItemNumBox->GetNumber();
 		
 
-		//ѯ�ʼ۸�
+		//
 		g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_PushItemTradeID, -1,  "Enter Item Name", false);
 
 	}
@@ -992,7 +992,7 @@ namespace GUI
 	//~ ------------------------------------------------------------------
 	bool CBoothMgr::PushToBoothTrade(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CItemCommand& rkItemCmd)
 	{
-		// ����ʱ�����ܽ�Item�϶���Booth��
+		// ItemBooth
 		return false;
 	}
 
@@ -1004,9 +1004,9 @@ namespace GUI
 		if (!m_pkCurrSetupBooth)
 			return false;
 
-		//�ж��϶���Item�Ƿ���ص�����������һ��
+		//Item
 		if (rkItemCmd.GetIsPile() && rkItemCmd.GetTotalNum() > 1)
-		{/// ѯ��������Ȼ����ִ�н��׵Ĳ���
+		{/// 
 			m_TradeBox = g_stUIBox.ShowTradeBox(_BuyGoodsEvent, 
 								   (float)m_pkCurrSetupBooth->iPrice, 
 								   m_pkCurrSetupBooth->iNum, 
@@ -1014,7 +1014,7 @@ namespace GUI
 
 		}
 		else
-		{/// ֱ��ִ�н��ײ���
+		{/// 
 			char buf[256] = { 0 };
 
 			/*sprintf(buf, g_oLangRec.GetString(455),
@@ -1065,12 +1065,12 @@ namespace GUI
 	{
 		_pCha = pCha;
 
-		// �ж϶��������
+		// 
 		CItemCommand* pRHand = g_stUIEquip.GetEquipItem(enumEQUIP_RHAND);
 		CItemCommand* pNeck  = g_stUIEquip.GetEquipItem(enumEQUIP_NECK);
 		if(!pRHand || !pNeck)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(941));	// "����װ��ѧ��֤����"
+			g_pGameApp->MsgBox(g_oLangRec.GetString(941));	// ""
 			return false;
 		}
 
@@ -1088,7 +1088,7 @@ namespace GUI
 
 	bool CReadBookMgr::ShowReadBookForm()
 	{
-		CBoxMgr::ShowSelectBox(_evtSelectBox, g_oLangRec.GetString(942), true);	// "ȷ���Ƿ�Ҫ���飿"
+		CBoxMgr::ShowSelectBox(_evtSelectBox, g_oLangRec.GetString(942), true);	// ""
 		return true;
 	}
 
@@ -1106,7 +1106,7 @@ namespace GUI
 			return;
 		}
 
-		stMsgBox* pMsgBox = CBoxMgr::ShowMsgBox(_evtMsgBox, g_oLangRec.GetString(943), false);	// "�� \"ȷ��\" ֹͣ���顣"
+		stMsgBox* pMsgBox = CBoxMgr::ShowMsgBox(_evtMsgBox, g_oLangRec.GetString(943), false);	// " \"\" "
 		pMsgBox->frmDialog->SetIsEscClose(false);
 
 		CS_ReadBookStart();

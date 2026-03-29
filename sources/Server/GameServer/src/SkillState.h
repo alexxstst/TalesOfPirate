@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: SkillState.h
 // Creater: ZhangXuedong
 // Date: 2005.01.13
@@ -19,19 +19,19 @@ struct SSkillStateUnit
 	unsigned char	uchStateID;
 	unsigned char	uchStateLv;
 
-	char			chCenter;		// ���ڱ�ʾ�Ƿ�������״̬�����ģ������ڵر�״̬������
-	unsigned char	uchFightID;		// �����ڿͻ��˽���˳��ʶ��
-	char			chObjType;		// ״̬���õ�Ŀ�����ͣ��������з��������ڵ���״̬�����õ�Ŀ�����ѡ��
-	char			chObjHabitat;	// ״̬���õ�Ŀ����Ϣ�����ͣ�½�أ��������ܣ������ڵ���״̬�����õ�Ŀ�����ѡ��
-	char			chEffType;		// ״̬���õ�Ч�����ͣ�����ģ��к��ģ������ڵ���״̬�����õ�Ŀ�����ѡ��
-	// ״̬�ͷ��ߵı�ʾ
+	char			chCenter;		// 
+	unsigned char	uchFightID;		// 
+	char			chObjType;		// 
+	char			chObjHabitat;	// 
+	char			chEffType;		// 
+	// 
 	unsigned long	ulSrcWorldID;
 	long			lSrcHandle;
 	//
 
-	long			lOnTick;		// �롣-1��ʾ���޳���ʱ�䣬>0��ʾ���޳���ʱ�䣬0δʹ��
-	unsigned long	ulStartTick;	// ����
-	unsigned long	ulLastTick;		// ����
+	long			lOnTick;		// -1>00
+	unsigned long	ulStartTick;	// 
+	unsigned long	ulLastTick;		// 
 
 	unsigned char	GetStateID() {return uchStateID;}
 	unsigned char	GetStateLv() {return uchStateLv;}
@@ -69,7 +69,7 @@ public:
 
 	bool	WriteState(net::WPacket &pk);
 
-	/// Построение вектора записей состояний для типизированной сериализации.
+	///       .
 	std::vector<net::msg::AStateBeginSeeEntry> BuildStateEntries();
 
 	SSkillStateUnit	*m_pSState[SKILL_STATE_MAXID + 1];
@@ -81,8 +81,8 @@ private:
 	unsigned char	m_uchMaxState;
 	SSkillStateUnit	m_SState[SKILL_STATE_MAXID + 1];
 
-	char			m_szChangeFlag[SSTATE_SIGN_BYTE_NUM]; // ��ʶ�ı�ļ���״̬
-	unsigned char	m_uchChangeNum; // ����״̬�ı�ĸ���
+	char			m_szChangeFlag[SSTATE_SIGN_BYTE_NUM]; // 
+	unsigned char	m_uchChangeNum; // 
 	unsigned char	m_uchCurGetNo;
 };
 
@@ -237,9 +237,9 @@ inline SSkillStateUnit* CSkillState::GetSStateByNum(unsigned char uchNum)
 
 	if (m_pSState[uchNum]->uchStateLv > 0)
 		return m_pSState[uchNum];
-	else // �÷�֧��Ӧ��ִ��
+	else // 
 	{
-		//LG("״̬��������", "msg״̬������ͳ�Ƹ�����ʵ�ʸ���������!");
+		//LG("", "msg!");
 		return 0;
 	}
 }

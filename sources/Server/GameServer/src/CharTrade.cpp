@@ -1,4 +1,4 @@
-// CharTrade.cpp Created by knight-gongjian 2004.12.7.
+﻿// CharTrade.cpp Created by knight-gongjian 2004.12.7.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "CharTrade.h"
@@ -45,12 +45,12 @@ namespace mission
 
 	}
 
-	// ���ײ���
+	// 
 	BOOL CTradeSystem::Request( BYTE byType, CCharacter& character, DWORD dwAcceptID )
 	{
 		if(character.GetPlyMainCha()->IsStoreEnable())
 		{
-			//character.SystemNotice("�޷�����!");
+			//character.SystemNotice("!");
 			character.SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00001));
 			return FALSE;
 		}
@@ -63,7 +63,7 @@ namespace mission
 
 		if( character.GetStallData() )
 		{
-			//character.SystemNotice( "���ڰ�̯�������Խ���" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00003) );
 			return FALSE;
 		}
@@ -71,28 +71,28 @@ namespace mission
 		//add by ALLEN 2007-10-16
 		if(character.IsReadBook())
 		{
-			//character.SystemNotice("���ڶ��飬�����Խ���");
+			//character.SystemNotice("");
 			character.SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00004));
 			return FALSE;
 		}
 
 		if( character.m_CKitbag.IsLock() || !character.GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//character.SystemNotice( "�����ѱ������������Խ��ף�" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00005) );
 			return FALSE;
 		}
 
 		if( character.GetPlyMainCha() && character.GetPlyMainCha()->m_CKitbag.IsLock() )
 		{
-			//character.SystemNotice( "�����ѱ������������Խ��ף�" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00005) );
 			return FALSE;
 		}
 
         if( character.GetPlyMainCha() && character.GetPlyMainCha()->m_CKitbag.IsPwdLocked() )
         {
-            //character.SystemNotice( "�����ѱ����������������Խ��ף�" );
+            //character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00006) );
 			return FALSE;
         }
@@ -101,50 +101,50 @@ namespace mission
 		CCharacter* pChar = pMain->GetSubMap()->FindCharacter( dwAcceptID, pMain->GetShape().centre );
 		if( pChar == NULL || !pChar->IsPlayerCha() ) 
 		{
-			//pMain->SystemNotice( "����������Ѿ��뿪!" );
+			//pMain->SystemNotice( "!" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00007) );
 			return FALSE;
 		}
 
         if(pChar->GetPlayer()->GetBankNpc())
         {
-            //pMain->SystemNotice( "�Է�����ʹ�����У����Ժ����ԣ�" );
+            //pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00008)  );
             return FALSE;
         }
 
 		if(pChar->GetPlyMainCha()->IsStoreEnable())
 		{
-			//character.SystemNotice("�޷�����!");
+			//character.SystemNotice("!");
 			character.SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00001));
 			return FALSE;
 		}
 
 		if( !pMain->GetPlyMainCha() || !pChar->GetPlyMainCha() )
 		{
-			/*pMain->SystemNotice( "���׽�ɫ�����ڣ�" );
-			pChar->SystemNotice( "���׽�ɫ�����ڣ�" );*/
+			/*pMain->SystemNotice( "" );
+			pChar->SystemNotice( "" );*/
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 			pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 		}
 
 		if(pMain->GetPlyMainCha()->GetLevel() < 6)
 		{
-			//pMain->SystemNotice("���ĵȼ�����,�޷�����!");
+			//pMain->SystemNotice(",!");
 			pMain->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00011));
 			return FALSE;
 		}
 
 		if( pChar->GetBoat() )
 		{
-			//character.SystemNotice( "��ɫ%s�����촬�������Խ���", pChar->GetName() );
+			//character.SystemNotice( "%s", pChar->GetName() );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00012), pChar->GetName() );
 			return FALSE;
 		}
 
 		if( pChar->GetStallData() )
 		{
-			//character.SystemNotice( "��ɫ%s���ڰ�̯�������Խ���", pChar->GetName() );
+			//character.SystemNotice( "%s", pChar->GetName() );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00013), pChar->GetName() );
 			return FALSE;
 		}
@@ -152,21 +152,21 @@ namespace mission
 		//add by ALLEN 2007-10-16
 		if( pChar->IsReadBook() )
 		{
-			//character.SystemNotice( "��ɫ%s���ڶ��飬�����Խ���", pChar->GetName() );
+			//character.SystemNotice( "%s", pChar->GetName() );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00014), pChar->GetName() );
 			return FALSE;
 		}
 
 		if( pChar->m_CKitbag.IsLock() || !pChar->GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//character.SystemNotice( "��ɫ%s�����ѱ������������Խ��ף�", pChar->GetName() );
+			//character.SystemNotice( "%s", pChar->GetName() );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00015), pChar->GetName() );
 			return FALSE;
 		}
 
         if( pChar->GetPlyMainCha()->m_CKitbag.IsPwdLocked() )
         {
-           // character.SystemNotice( "��ɫ%s�����ѱ����������������Խ��ף�", pChar->GetName() );
+           // character.SystemNotice( "%s", pChar->GetName() );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00016), pChar->GetName() );
 			return FALSE;
         }
@@ -180,8 +180,8 @@ namespace mission
 		{
 			if( pChar == pChar->GetPlyMainCha() || pMain == pMain->GetPlyMainCha() )
 			{
-				/*pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
-				pChar->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );*/
+				/*pMain->SystemNotice( "" );
+				pChar->SystemNotice( "" );*/
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
@@ -190,18 +190,18 @@ namespace mission
 
 		if( pMain->GetPlayer()->IsLuanchOut() || pChar->GetPlayer()->IsLuanchOut() )
 		{
-			//pMain->SystemNotice( "���Ͻ�ֹ���ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00018) );
 			return FALSE;
 		}
 		/*else if( pMain->GetPlayer()->IsLuanchOut() && !pChar->GetPlayer()->IsLuanchOut() )
 		{
-			pMain->SystemNotice( "���Ѿ����������ڲ����������������ף�" );
+			pMain->SystemNotice( "" );
 			return FALSE;
 		}*/
 		else if( pMain->GetPlayer()->IsInForge() )
 		{
-			//pMain->SystemNotice( "�����ڲ����������������˽��ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00019) );
 			return FALSE;
 		}
@@ -209,7 +209,7 @@ namespace mission
 		CTradeData* pTradeData1 = pChar->GetTradeData();
 		if( pTradeData1 )
 		{
-			//pMain->SystemNotice( "%s���ڽ����У�", pChar->GetName() );
+			//pMain->SystemNotice( "%s", pChar->GetName() );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00020), pChar->GetName() );
 			return FALSE;
 		}
@@ -220,7 +220,7 @@ namespace mission
 			return FALSE;
 		}
 
-		// Типизированная сериализация: запрос на торговлю персонажей
+		//  :    
 		auto packet = net::msg::serialize(net::msg::McCharTradeRequestMessage{
 			CMD_MC_CHARTRADE_REQUEST, static_cast<int64_t>(byType), character.GetID()
 		});
@@ -241,14 +241,14 @@ namespace mission
 	{
 		if( character.GetBoat() )
 		{
-			//character.SystemNotice( "���ڽ��촬ֻ�������Խ��ף�" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00002) );
 			return FALSE;
 		}
 
 		if( character.GetStallData() )
 		{
-			//character.SystemNotice( "���ڰ�̯�������Խ���" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00003) );
 			return FALSE;
 		}
@@ -256,28 +256,28 @@ namespace mission
 		//add by ALLEN 2007-10-16
 				if( character.IsReadBook() )
 		{
-			//character.SystemNotice("���ڶ��飬�����Խ���");
+			//character.SystemNotice("");
 			character.SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00004));
 			return FALSE;
 		}
 
 		if( character.m_CKitbag.IsLock() || !character.GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//character.SystemNotice( "�����ѱ������������Խ��ף�" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00005) );
 			return FALSE;
 		}
 
 		if( character.GetPlyMainCha() && character.GetPlyMainCha()->m_CKitbag.IsLock() )
 		{
-			//character.SystemNotice( "�����ѱ������������Խ��ף�" );
+			//character.SystemNotice( "" );
 			character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00005) );
 			return FALSE;
 		}
 
         if( character.GetPlyMainCha() && character.GetPlyMainCha()->m_CKitbag.IsPwdLocked() )
         {
-           // character.SystemNotice( "�����ѱ����������������Խ��ף�" );
+           // character.SystemNotice( "" );
 			 character.SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00006) );
 			return FALSE;
         }
@@ -289,7 +289,7 @@ namespace mission
 		CCharacter* pMain = &character;
 		if( pMain->GetID() == dwRequestID )
 		{
-			//pMain->SystemNotice( "������������Լ����ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00021) );
 			return FALSE;
 		}
@@ -297,7 +297,7 @@ namespace mission
 		CCharacter* pChar = pMain->GetSubMap()->FindCharacter( dwRequestID, pMain->GetShape().centre );
 		if( pChar == NULL ) 
 		{
-			//pMain->SystemNotice( "����֪ͨ�ý�ɫ�Ѿ��뿪!" );
+			//pMain->SystemNotice( "!" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00022) );
 			return FALSE;
 		}
@@ -308,17 +308,17 @@ namespace mission
 
         if(character.GetPlyMainCha()->GetPlayer()->GetBankNpc())
         {
-           // character.SystemNotice("������ʹ�����У������Խ���");
+           // character.SystemNotice("");
 			character.SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00023));
-           // pChar->SystemNotice( "�Է�����ʹ�����У����Ժ����ԣ�" );
+           // pChar->SystemNotice( "" );
            pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00008) );
 			return FALSE;
         }
 
 		if(character.GetPlyMainCha()->IsStoreEnable() || pChar->GetPlyMainCha()->IsStoreEnable())
 		{
-			/*character.SystemNotice("�޷�����!");
-			pChar->SystemNotice("�޷�����!");*/
+			/*character.SystemNotice("!");
+			pChar->SystemNotice("!");*/
 			character.SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00001));
 			pChar->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00001));
 			return FALSE;
@@ -326,28 +326,28 @@ namespace mission
 
 		if( !pChar->IsLiveing() )
 		{
-			//pMain->SystemNotice( "�����׷����������ɽ��ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00025) );
 			return FALSE;
 		}
 
 		if( !pMain->IsLiveing() )
 		{
-			//pMain->SystemNotice( "�����������ɽ��ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00026) );
 			return FALSE;
 		}
 
 		if( pChar->GetBoat() )
 		{
-			//pChar->SystemNotice( "���ڽ��촬ֻ�������Խ��ף�" );
+			//pChar->SystemNotice( "" );
 			pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00002) );
 			return FALSE;
 		}
 
 		if( pChar->GetStallData() )
 		{
-			//pChar->SystemNotice( "���ڰ�̯�������Խ��ף�" );
+			//pChar->SystemNotice( "" );
 			pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00003) );
 			return FALSE;
 		}
@@ -355,28 +355,28 @@ namespace mission
 		//add by ALLEN 2007-10-16
 				if( pChar->IsReadBook() )
 		{
-			//pChar->SystemNotice( "���ڶ��飬�����Խ��ף�" );
+			//pChar->SystemNotice( "" );
 			pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00004) );
 			return FALSE;
 		}
 
 		if( pChar->m_CKitbag.IsLock() || !pChar->GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//pChar->SystemNotice( "�����ѱ������������Խ��ף�" );
+			//pChar->SystemNotice( "" );
 			pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00005) );
 			return FALSE;
 		}
 
         if( pChar->GetPlyMainCha()->m_CKitbag.IsPwdLocked() )
         {
-            //pChar->SystemNotice( "�����ѱ����������������Խ��ף�" );
+            //pChar->SystemNotice( "" );
 			pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00006) );
 			return FALSE;
         }
 
         if(pChar->GetPlayer()->GetBankNpc())
         {
-           // pChar->SystemNotice("���д�ʱ�����������ף�");
+           // pChar->SystemNotice("");
 			 pChar->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00027));
             return FALSE;
         }
@@ -390,8 +390,8 @@ namespace mission
 		{
 			if( pChar == pChar->GetPlyMainCha() || pMain == pMain->GetPlyMainCha() )
 			{
-				/*pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
-				pChar->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );*/
+				/*pMain->SystemNotice( "" );
+				pChar->SystemNotice( "" );*/
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				pChar->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
@@ -400,33 +400,33 @@ namespace mission
 
 		if( !pMain->GetPlayer()->IsLuanchOut() && pChar->GetPlayer()->IsLuanchOut() )
 		{
-			//pMain->SystemNotice( "�Է��Ѿ������������ڲ����Խ��������������ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00029) );
 			return FALSE;
 		}
 		else if( pMain->GetPlayer()->IsLuanchOut() && !pChar->GetPlayer()->IsLuanchOut() )
 		{
-			//pMain->SystemNotice( "���Ѿ����������ڲ����Խ��������������ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00024) );
 			return FALSE;
 		}
 		else if( pMain->GetPlayer()->IsInForge() )
 		{
-			//pMain->SystemNotice( "�����ڲ������������������˽��ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00030) );
 			return FALSE;
 		}
 
 		//if( !IsTradeDist( *pMain, *pChar, ROLE_MAXSIZE_TRADEDIST - 400 ) )
 		//{
-		//	// ������ɫ���׾��룬���ͽ�ɫ���뿪��Ϣ��
+		//	// 
 		//	return FALSE;
 		//}
 
 		CTradeData* pTradeData1 = pChar->GetTradeData();
 		if( pTradeData1 )
 		{
-			//pMain->SystemNotice( "%s���ڽ����У�", pChar->GetName() );
+			//pMain->SystemNotice( "%s", pChar->GetName() );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00020), pChar->GetName() );
 			return FALSE;
 		}
@@ -434,15 +434,15 @@ namespace mission
 		CTradeData* pTradeData2 = pMain->GetTradeData();
 		if( pTradeData2 )
 		{
-			// �Լ��������������ҽ��н�����
+			// 
 			return FALSE;
 		}
 
-		// �������Դ�ɽ����������ͷ�
+		// 
 		CTradeData* pData = g_pGameApp->m_TradeDataHeap.Get();
 		if( pData == NULL ) 
 		{
-			//pMain->SystemNotice( "���佻�����ݻ���ʧ�ܣ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00031) );
 			return FALSE;
 		}
@@ -452,15 +452,15 @@ namespace mission
 		pData->dwTradeTime = GetTickCount();
 		pData->bTradeStart = ROLE_TRADE_START;
 
-		//// ������֤�ص�
+		//// 
 		//pData->sxPos = (USHORT)pMain->GetShape().centre.x;
 		//pData->syPos = (USHORT)pMain->GetShape().centre.y;
 
-		// ���ý��׽�����Ϣ����
+		// 
 		pMain->SetTradeData( pData );
 		pChar->SetTradeData( pData );
 		
-		// �������׽�ɫ״̬
+		// 
 		pMain->TradeAction( TRUE );
 		pChar->TradeAction( TRUE );
 		CKitbag& ReqBag = pData->pRequest->m_CKitbag;
@@ -468,7 +468,7 @@ namespace mission
 		ReqBag.Lock();
 		AcpBag.Lock();
 
-		// Типизированная сериализация: открытие страницы торговли
+		//  :   
 		auto packet = net::msg::serialize(net::msg::McCharTradePageMessage{CMD_MC_CHARTRADE_PAGE, (int64_t)byType, (int64_t)pMain->GetID(), (int64_t)pChar->GetID()});
 		pChar->ReflectINFof( pMain, packet );
 		pMain->ReflectINFof( pMain, packet );
@@ -480,7 +480,7 @@ namespace mission
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
-			//pMain->SystemNotice( "���׽�ɫ�����ڣ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 		}
 
@@ -492,7 +492,7 @@ namespace mission
 		{
 			if( pMain == pMain->GetPlyMainCha() )
 			{
-				//pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
 			}
@@ -510,7 +510,7 @@ namespace mission
 		CCharacter* pChar;
 		if( pMain->GetID() == dwCharID )
 		{
-			// Заменено printf → логирование
+			//  printf  
 			g_logManager.InternalLog(LogLevel::Debug, "store", RES_STRING(GM_CHARTRADE_CPP_00033));
 			return FALSE;
 		}
@@ -524,7 +524,7 @@ namespace mission
 		}
 		else
 		{
-			//pMain->SystemNotice( "�ͻ�������Ľ��׶�����Ϣ����ID = 0x%x", dwCharID );
+			//pMain->SystemNotice( "ID = 0x%x", dwCharID );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00034), dwCharID );
 			return FALSE;
 		}
@@ -532,12 +532,12 @@ namespace mission
 		CTradeData* pTradeData1 = pChar->GetTradeData();
 		if( pTradeData1 == NULL || pTradeData2 != pTradeData1 )
 		{
-			//pMain->SystemNotice( "����:���%sδ������н��ף�", pChar->GetName() );
+			//pMain->SystemNotice( ":%s", pChar->GetName() );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00009), pChar->GetName() );
 			return FALSE;
 		}
 		
-		// ���������λ����״̬
+		// 
 		pTradeData1->pAccept->m_CKitbag.UnLock();
 		pTradeData1->pRequest->m_CKitbag.UnLock();
 
@@ -547,14 +547,14 @@ namespace mission
 		pTradeData1->pAccept->SetTradeData( NULL );
 		pTradeData1->pRequest->SetTradeData( NULL );
 
-		// Типизированная сериализация: отмена торговли
+		//  :  
 		auto packet = net::msg::serialize(net::msg::McCharTradeCancelMessage{
 			CMD_MC_CHARTRADE_CANCEL, pMain->GetID()
 		});
 		pTradeData1->pAccept->ReflectINFof( pMain, packet );
 		pTradeData1->pRequest->ReflectINFof( pMain, packet );
 
-		// Отмена состояния торговли персонажей
+		//    
 		pTradeData1->pAccept->TradeAction( FALSE );
 		pTradeData1->pRequest->TradeAction( FALSE );
 
@@ -568,7 +568,7 @@ namespace mission
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
-			//pMain->SystemNotice( "���׽�ɫ�����ڣ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 		}
 
@@ -580,7 +580,7 @@ namespace mission
 		{
 			if( pMain == pMain->GetPlyMainCha() )
 			{
-				//pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
 			}
@@ -589,42 +589,42 @@ namespace mission
 		CTradeData* pTradeData = pMain->GetTradeData();
 		if( !pTradeData )
 		{
-			// �ý�ɫ����������!
+			// !
 			return FALSE;
 		}
 
 		if( pTradeData->pRequest == pMain )
 		{
-			// Типизированная сериализация: отмена торговли (запрашивающий ушёл)
+			//  :   ( )
 			auto packet = net::msg::serialize(net::msg::McCharTradeCancelMessage{
 				CMD_MC_CHARTRADE_CANCEL, pMain->GetID()
 			});
 			pTradeData->pAccept->ReflectINFof( pMain, packet );
 			pTradeData->pAccept->SetTradeData( NULL );
 
-			// Очистка состояния инвентаря
+			//   
 			pTradeData->pAccept->m_CKitbag.UnLock();
 			pTradeData->pAccept->TradeAction( FALSE );
 			ResetItemState( *pTradeData->pAccept, *pTradeData );
 		}
 		else if( pTradeData->pAccept == pMain )
 		{
-			// Типизированная сериализация: отмена торговли (принимающий ушёл)
+			//  :   ( )
 			auto packet = net::msg::serialize(net::msg::McCharTradeCancelMessage{
 				CMD_MC_CHARTRADE_CANCEL, pMain->GetID()
 			});
 			pTradeData->pRequest->ReflectINFof( pMain, packet );
 			pTradeData->pRequest->SetTradeData( NULL );
 			
-			// ���������λ����״̬
+			// 
 			pTradeData->pRequest->m_CKitbag.UnLock();
 			pTradeData->pRequest->TradeAction( FALSE );
 			ResetItemState( *pTradeData->pRequest, *pTradeData );
 		}
 		else
 		{
-			//LG( "Trade", "ɾ����ɫʱ������佻����Ϣ���ִ���(��ƥ��Ľ�ɫָ��)��"  );
-			ToLogService("common", "when delete character��it find error while clear trade information,the error is:(unsuited charcter pointer)��"  );
+			//LG( "Trade", "()"  );
+			ToLogService("common", "when delete characterit find error while clear trade information,the error is:(unsuited charcter pointer)"  );
 			return FALSE;
 		}
 
@@ -707,7 +707,7 @@ namespace mission
 			return FALSE;
 		}
 
-		// Типизированная сериализация: обновление IMP в торговле
+		//  :  IMP  
 		auto packet = net::msg::serialize(net::msg::McCharTradeMoneyMessage{
 			CMD_MC_CHARTRADE_MONEY, pMain->GetID(),
 			static_cast<int64_t>(pItemData->dwIMP), 1
@@ -787,7 +787,7 @@ namespace mission
 			return FALSE;
 		}
 
-		// Типизированная сериализация: обновление денег в торговле
+		//  :    
 		auto packet = net::msg::serialize(net::msg::McCharTradeMoneyMessage{
 			CMD_MC_CHARTRADE_MONEY, pMain->GetID(),
 			static_cast<int64_t>(pItemData->dwMoney), 0
@@ -797,7 +797,7 @@ namespace mission
 		return TRUE;
 	}
 
-	// Пользователь перетаскивает предмет для торговли
+	//     
 	BOOL CTradeSystem::AddItem( BYTE byType, CCharacter& character, DWORD dwCharID, BYTE byOpType, BYTE byIndex, BYTE byItemIndex, BYTE byCount )
 	{
 		CCharacter* pMain = &character;
@@ -808,7 +808,7 @@ namespace mission
 
 		if( !pMain->GetPlyMainCha() )
 		{
-			//pMain->SystemNotice( "���׽�ɫ�����ڣ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 		}
 
@@ -820,7 +820,7 @@ namespace mission
 		{
 			if( pMain == pMain->GetPlyMainCha() )
 			{
-				//pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
 			}
@@ -841,27 +841,27 @@ namespace mission
 
 		if( pMain->GetID() == dwCharID )
 		{
-			//pMain->SystemNotice( "������Ϣ���󣬲���������Ʒ���Լ�ID��ͬ�Ľ��ײ�����" );
+			//pMain->SystemNotice( "ID" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00041) );
 			return FALSE;
 		}		
 		else if( pTradeData->pRequest->GetID() != dwCharID && pTradeData->pAccept->GetID() != dwCharID )
 		{
-			//pMain->SystemNotice( "���׶�����Ϣ����" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00036) );
 			return FALSE;
 		}
 
 		CCharacter* pChar = NULL;
 		TRADE_DATA* pItemData = NULL;
-		// ��֤�Ƿ����������Ʒ��ȡ����Ʒ����
+		// 
 		if( pMain == pTradeData->pRequest )
 		{
-			// �ж��Ƿ���Բ�����Ʒ
+			// 
 			if( pTradeData->bReqTrade == 1 )
 			{
 				
-				//pMain->SystemNotice( "�ý�ɫ������Ʒ��֤��ť�Ѿ����£�������������Ʒ�϶�������" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00042) );
 				return FALSE;
 			}
@@ -872,7 +872,7 @@ namespace mission
 		{
 			if( pTradeData->bAcpTrade == 1 )
 			{
-				//pMain->SystemNotice( "�ý�ɫ������Ʒ��֤��ť�Ѿ����£�������������Ʒ�϶�������" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00042) );
 				return FALSE;
 			}
@@ -881,37 +881,37 @@ namespace mission
 		}
 		else
 		{
-			//pMain->SystemNotice( "�ý�ɫδ�ڽ��ף�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00038) );
 			return FALSE;
 		}
 		
-		// ���ý�������Ʒ�����ҷ���֪ͨ��Ϣ���ͻ���
+		// 
 		if( byOpType == TRADE_DRAGTO_ITEM )
 		{
 			if( byIndex >= ROLE_MAXNUM_TRADEDATA )
 			{
-				//pMain->SystemNotice( "δ֪�Ľ�����λ������Ϣ��" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00043));
 				return FALSE;
 			}
 			int nCapacity = pMain->m_CKitbag.GetCapacity();
 			if( byItemIndex >= nCapacity )
 			{
-				//pMain->SystemNotice( "δ֪�ĵ�����λ������Ϣ��" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00044) );
 				return FALSE;
 			}
 			if( pItemData->ItemArray[byIndex].sItemID == 0 )
 			{
-				//pMain->SystemNotice( "�ý�ɫ�϶��Ľ�����λ��Ʒ�����ڣ�" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00045) );
 				return FALSE;
 			}
 			if( Bag.GetNum( pItemData->ItemArray[byIndex].byIndex ) > 0 && 
 				Bag.GetID( pItemData->ItemArray[byIndex].byIndex ) != pItemData->ItemArray[byIndex].sItemID )
 			{
-				//pMain->SystemNotice( "ϵͳ��Ʒ�����׼�¼������֪ͨ������Ա��лл��ID1= %d, ID2 = %d", 
+				//pMain->SystemNotice( "ID1= %d, ID2 = %d", 
 				//	Bag.GetID( pItemData->ItemArray[byIndex].byIndex ), pItemData->ItemArray[byIndex].sItemID );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00046), 
 					Bag.GetID( pItemData->ItemArray[byIndex].byIndex ), pItemData->ItemArray[byIndex].sItemID );
@@ -928,7 +928,7 @@ namespace mission
 
 
 
-			// ��������������Ʒ�״̬
+			// 
 			Bag.Enable( pItemData->ItemArray[byIndex].byIndex );
 			pItemData->ItemArray[byIndex].sItemID = 0;
 			pItemData->ItemArray[byIndex].byCount = 0;
@@ -943,27 +943,27 @@ namespace mission
 		{
 			if( byIndex >= ROLE_MAXNUM_TRADEDATA )
 			{
-				//pMain->SystemNotice( "δ֪�Ľ�����λ������Ϣ��" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00043) );
 				return FALSE;
 			}
 			int nCapacity = pMain->m_CKitbag.GetCapacity();
 			if( byItemIndex >= nCapacity )
 			{
-				//pMain->SystemNotice( "δ֪�ĵ�����λ������Ϣ��" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00044) );
 				return FALSE;
 			}
 
 			if( !Bag.HasItem( byItemIndex ) || !Bag.IsEnable( byItemIndex ) )
 			{
-				//pMain->SystemNotice( "����Ʒ��λ�ѱ���ֹ�϶���" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00047) );
 				return FALSE;
 			}
 			if( pItemData->ItemArray[byIndex].sItemID != 0 )
 			{
-				//pMain->SystemNotice( "�ý�����Ʒ��λ�Ѵ�����Ʒ������ѡλ�ðڷţ�" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00048) );
 				return FALSE;
 			}
@@ -972,14 +972,14 @@ namespace mission
 			CItemRecord* pItem = (CItemRecord*)GetItemRecordInfo( Bag.GetID( byItemIndex ) );
 			if( pItem == NULL )
 			{
-				//pMain->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = %d", Bag.GetID( byItemIndex ) );
+				//pMain->SystemNotice( "IDID = %d", Bag.GetID( byItemIndex ) );
 				pMain->SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00041), Bag.GetID( byItemIndex ) );
 				return FALSE;
 			}
 
 			if( !pItem->chIsTrade || !Bag.GetGridContByID(byItemIndex)->GetInstAttr(ITEMATTR_TRADABLE))
 			{
-				//pMain->SystemNotice( "��Ʒ��%s�����ɽ��ף�", pItem->szName );
+				//pMain->SystemNotice( "%s", pItem->szName );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00049), pItem->szName );
 				return FALSE;
 			}
@@ -992,7 +992,7 @@ namespace mission
 
 			//if( pItem->sType == enumItemTypeMission )
 			//{
-			//	pMain->SystemNotice( "������ߡ�%s�������Խ��ף�", pItem->szName );
+			//	pMain->SystemNotice( "%s", pItem->szName );
 			//	return FALSE;
 			//}
 			//else 
@@ -1002,7 +1002,7 @@ namespace mission
 				{
 					if( Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) == pMain->GetPlayer()->GetLuanchID() )
 					{
-						//pMain->SystemNotice( "������ʹ�øô�ֻ�������Խ��׸ô�ֻ����֤����" );
+						//pMain->SystemNotice( "" );
 						pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00050) );
 						return FALSE;
 					}
@@ -1020,7 +1020,7 @@ namespace mission
 							sNum++;
 							if( sNum >= MAX_CHAR_BOAT )
 							{
-								//pMain->SystemNotice( "�Է��Ѿ�ӵ�����㹻�����Ĵ�ֻ����������ӵ���´�ֻ��" );
+								//pMain->SystemNotice( "" );
 								pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00051) );
 								return FALSE;
 							}
@@ -1029,7 +1029,7 @@ namespace mission
 				}
 				else
 				{
-					//pMain->SystemNotice( "�Է��Ѿ�ӵ�����㹻�����Ĵ�ֻ����������ӵ���´�ֻ��" );
+					//pMain->SystemNotice( "" );
 					pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00051) );
 					return FALSE;
 				}
@@ -1037,23 +1037,23 @@ namespace mission
 				CCharacter* pBoat = pMain->GetPlayer()->GetBoat( (DWORD)Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
 				if( !pBoat )
 				{
-					/*pMain->SystemNotice( "�ô����ݴ��󣬲��ɽ��ף�ID[0x%X]", 
+					/*pMain->SystemNotice( "ID[0x%X]", 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
-					ToLogService("trade", LogLevel::Error, "�ô����ݴ��󣬲��ɽ��ף�ID[0x{:X}]", Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ));*/
+					ToLogService("trade", LogLevel::Error, "ID[0x{:X}]", Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ));*/
 					pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00052), 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
-					ToLogService("trade", LogLevel::Error, "The data error of this boat��cannot trade��ID[0x{:X}]", 
+					ToLogService("trade", LogLevel::Error, "The data error of this boatcannot tradeID[0x{:X}]", 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
 					return FALSE;
 				}
 				if( !game_db.SaveBoat( *pBoat, enumSAVE_TYPE_OFFLINE ) )
 				{
-					/*pMain->SystemNotice( "AddItem:���洬ֻ����ʧ�ܣ���ֻ��%s��ID[0x%X]��", pBoat->GetName(), 
+					/*pMain->SystemNotice( "AddItem:%sID[0x%X]", pBoat->GetName(), 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
-					ToLogService("trade", LogLevel::Error, "AddItem:���洬ֻ����ʧ�ܣ���ֻ��{}��ID[0x{:X}]��", pBoat->GetName(), Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ));*/
+					ToLogService("trade", LogLevel::Error, "AddItem:{}ID[0x{:X}]", pBoat->GetName(), Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ));*/
 					pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00053), pBoat->GetName(), 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
-					ToLogService("trade", LogLevel::Error, "AddItem:it failed to save boat data��boat��{}��ID[0x{:X}]��", pBoat->GetName(), 
+					ToLogService("trade", LogLevel::Error, "AddItem:it failed to save boat databoat{}ID[0x{:X}]", pBoat->GetName(), 
 						Bag.GetDBParam( enumITEMDBP_INST_ID, byItemIndex ) );
 					return FALSE;
 				}
@@ -1079,7 +1079,7 @@ namespace mission
 			pItemData->ItemArray[byIndex].byIndex = byItemIndex;
 			pItemData->byItemCount++;
 
-			// ��ֹ��Ʒ��λ�״̬
+			// 
 			Bag.Disable( byItemIndex );
 
 			net::msg::McCharTradeItemAddData addData;
@@ -1155,7 +1155,7 @@ namespace mission
 		}
 		else
 		{
-			//pMain->SystemNotice( "δ֪����Ʒ�϶�����ָ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00054) );
 			return FALSE;
 		}
@@ -1168,7 +1168,7 @@ namespace mission
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
-			//pMain->SystemNotice( "���׽�ɫ�����ڣ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 		}
 
@@ -1180,7 +1180,7 @@ namespace mission
 		{
 			if( pMain == pMain->GetPlyMainCha() )
 			{
-				//pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
 			}
@@ -1204,18 +1204,18 @@ namespace mission
 
 		if( pMain->GetID() == dwCharID )
 		{
-			//pMain->SystemNotice( "������Ϣ���󣬲���ȡ�����Լ�ID��ͬ�Ľ��ײ�����" );
+			//pMain->SystemNotice( "ID" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00033) );
 			return FALSE;
 		}		
 		else if( pTradeData->pRequest->GetID() != dwCharID && pTradeData->pAccept->GetID() != dwCharID )
 		{
-			//pMain->SystemNotice( "���׶�����Ϣ����" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00036) );
 			return FALSE;
 		}
 
-		// ����ȷ����Ʒ��Ϣ״̬
+		// 
 		if( pMain == pTradeData->pRequest )
 		{
 			pTradeData->bReqTrade = 1;
@@ -1226,14 +1226,14 @@ namespace mission
 		}
 		else
 		{
-			/*pMain->SystemNotice( "���׶�����Ϣ�ڲ�����" );
-			ToLogService("common", "���׶�����Ϣ�ڲ�����");*/
+			/*pMain->SystemNotice( "" );
+			ToLogService("common", "");*/
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00056) );
 			ToLogService("trade", LogLevel::Error, "information of trade object  inside error" );
 			return FALSE;
 		}
 	
-		// Типизированная сериализация: подтверждение данных торговли
+		//  :   
 		auto packet = net::msg::serialize(net::msg::McCharTradeValidateDataMessage{
 			CMD_MC_CHARTRADE_VALIDATEDATA, pMain->GetID()
 		});
@@ -1253,7 +1253,7 @@ namespace mission
 		CCharacter* pMain = &character;
 		if( !pMain->GetPlyMainCha() )
 		{
-			//pMain->SystemNotice( "���׽�ɫ�����ڣ�" );
+			//pMain->SystemNotice( "" );
 			pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00010) );
 		}
 
@@ -1265,7 +1265,7 @@ namespace mission
 		{
 			if( pMain == pMain->GetPlyMainCha() )
 			{
-				//pMain->SystemNotice( "���׽�ɫ���Ͳ�ƥ�䣡" );
+				//pMain->SystemNotice( "" );
 				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00017) );
 				return FALSE;
 			}
@@ -1288,18 +1288,18 @@ namespace mission
 
 		if( pMain->GetID() == dwCharID )
 		{
-			// Заменено printf → логирование
+			//  printf  
 			g_logManager.InternalLog(LogLevel::Debug, "store", RES_STRING(GM_CHARTRADE_CPP_00033));
 			return FALSE;
 		}
 		else if( pTradeData->pRequest->GetID() != dwCharID && pTradeData->pAccept->GetID() != dwCharID )
 		{
-			// Заменено printf → логирование
+			//  printf  
 			g_logManager.InternalLog(LogLevel::Debug, "store", RES_STRING(GM_CHARTRADE_CPP_00036));
 			return FALSE;
 		}
 
-		// ���ý���״̬��������Ƿ�˫����������
+		// 
 		if( pMain == pTradeData->pRequest )
 		{
 			if( pTradeData->bReqTrade != 1 || pTradeData->bAcpTrade != 1 )
@@ -1358,11 +1358,11 @@ namespace mission
 			}
 
 
-			// �ٴ�У�齻�׽�Ǯ������Ϣ
+			// 
 			if( pTradeData->ReqTradeData.dwMoney > dwReqMoney )
 			{
-				/*pAccept->SystemNotice( "��ɫ��%s�����׽�Ǯ���ݲ���ȷ�������Լ������ף�", pRequest->GetName() );
-				pRequest->SystemNotice( "��ɫ��%s�����׽�Ǯ���ݲ���ȷ�������Լ������ף�", pRequest->GetName() );*/
+				/*pAccept->SystemNotice( "%s", pRequest->GetName() );
+				pRequest->SystemNotice( "%s", pRequest->GetName() );*/
 				pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00058), pRequest->GetName() );
 				pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00058), pRequest->GetName() );
 				return FALSE;
@@ -1370,20 +1370,20 @@ namespace mission
 
 			if( pTradeData->AcpTradeData.dwMoney > dwAcpMoney )
 			{
-				/*pAccept->SystemNotice( "��ɫ��%s�����׽�Ǯ���ݲ���ȷ�������Լ������ף�", pAccept->GetName() );
-				pRequest->SystemNotice( "��ɫ��%s�����׽�Ǯ���ݲ���ȷ�������Լ������ף�", pAccept->GetName() );*/
+				/*pAccept->SystemNotice( "%s", pAccept->GetName() );
+				pRequest->SystemNotice( "%s", pAccept->GetName() );*/
 				pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00058), pRequest->GetName() );
 				pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00058), pRequest->GetName() );
 				return FALSE;
 			}
 
-			// ���������λ����״̬
+			// 
 			ReqBag.UnLock();
 			AcpBag.UnLock();
 			ResetItemState( *pAccept, *pTradeData );
 			ResetItemState( *pRequest, *pTradeData );
 
-			// ���ݽ���˫�������ͽ�Ǯ������Ϣ
+			// 
 			CKitbag ReqBagData, AcpBagData;
 			ReqBagData = ReqBag;
 			AcpBagData = AcpBag;	
@@ -1396,31 +1396,31 @@ namespace mission
 			pAccept->m_CChaAttr.ResetChangeFlag();
 			pAccept->SetBoatAttrChangeFlag(false);
 
-			// ��ɽ�����Ϣ����
+			// 
 			int nAcpCapacity = pAccept->m_CKitbag.GetCapacity();
 			int nReqCapacity = pRequest->m_CKitbag.GetCapacity();
 			SItemGrid AcpGrid[ROLE_MAXNUM_TRADEDATA];
 			SItemGrid ReqGrid[ROLE_MAXNUM_TRADEDATA];
 
-			// ������߽����Ƿ���Խ���
+			// 
 			char szTemp[128] = "";
 			char szTrade[2046] = "";
 			sprintf( szTrade, RES_STRING(GM_CHARTRADE_CPP_00059), pAccept->GetName() );
 
-			//�ж�˫������
+			//
 			BOOL bBagSucc = true;
 			if(!pTradeData->pAccept->HasLeaveBagGrid(pTradeData->ReqTradeData.byItemCount))
 			{
-				/*pTradeData->pRequest->SystemNotice("�Է������ռ䲻��,����ʧ��!");
-				pTradeData->pAccept->SystemNotice("�����ռ䲻��,����ʧ��!");*/
+				/*pTradeData->pRequest->SystemNotice(",!");
+				pTradeData->pAccept->SystemNotice(",!");*/
 				pTradeData->pRequest->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00060));
 				pTradeData->pAccept->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00061));
 				bBagSucc = false;
 			}
 			else if(!pTradeData->pRequest->HasLeaveBagGrid(pTradeData->AcpTradeData.byItemCount))
 			{
-				/*pTradeData->pAccept->SystemNotice("�Է������ռ䲻��,����ʧ��!");
-				pTradeData->pRequest->SystemNotice("�����ռ䲻��,����ʧ��!");*/
+				/*pTradeData->pAccept->SystemNotice(",!");
+				pTradeData->pRequest->SystemNotice(",!");*/
 				pTradeData->pAccept->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00060));
 				pTradeData->pRequest->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00061));
 				bBagSucc = false;	
@@ -1431,11 +1431,11 @@ namespace mission
 				pRequest->SetTradeData( NULL );
 				pTradeData->Free();
 
-				// ȡ����ɫ����״̬
+				// 
 				pTradeData->pAccept->TradeAction( FALSE );
 				pTradeData->pRequest->TradeAction( FALSE );
 
-				// Типизированная сериализация: результат торговли (неудача — недостаточно места)
+				//  :   (   )
 				auto packet = net::msg::serialize(net::msg::McCharTradeResultMessage{
 					CMD_MC_CHARTRADE_RESULT, TRADE_FAILER
 				});
@@ -1444,7 +1444,7 @@ namespace mission
 				return FALSE;
 			}
 
-			// Проверка предметов торговли
+			//   
 			for( int i = 0; i < ROLE_MAXNUM_TRADEDATA; i++ )
 			{
 				// 
@@ -1453,10 +1453,10 @@ namespace mission
 					CItemRecord* pItem = GetItemRecordInfo( pTradeData->AcpTradeData.ItemArray[i].sItemID );
 					if( pItem == NULL )
 					{
-						/*pMain->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = %d", pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("common", "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
+						/*pMain->SystemNotice( "IDID = %d", pTradeData->AcpTradeData.ItemArray[i].sItemID );
+						ToLogService("common", "IDID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
 						pMain->SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00041), pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "res ID error��it cannot find this res information��ID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID );
+						ToLogService("trade", LogLevel::Error, "res ID errorit cannot find this res informationID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						return FALSE;
 					}
 					else
@@ -1464,16 +1464,16 @@ namespace mission
 						AcpGrid[i].sNum = pTradeData->AcpTradeData.ItemArray[i].byCount;
 						if( pAccept->KbPopItem( true, false, AcpGrid  + i, pTradeData->AcpTradeData.ItemArray[i].byIndex ) != enumKBACT_SUCCESS )
 						{
-							/*pAccept->SystemNotice( "�ӽ��׽����ߡ�%s��������ȡ��Ʒ��%d����Ʒʧ�ܣ�ID = %d", 
+							/*pAccept->SystemNotice( "%s%dID = %d", 
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
-							pRequest->SystemNotice( "�ӽ��׽����ߡ�%s��������ȡ��Ʒ��%d����Ʒʧ�ܣ�ID = %d", 
+							pRequest->SystemNotice( "%s%dID = %d", 
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
-							ToLogService("trade", LogLevel::Error, "�ӽ��������ߡ�{}��������ȡ��Ʒ��{}����Ʒʧ�ܣ�ID = {}", pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
+							ToLogService("trade", LogLevel::Error, "{}{}ID = {}", pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00062), 
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00062), 
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
-							ToLogService("trade", LogLevel::Error, "it failed to get trade res ��d%�� from trade asker ��d%����ID = {}", 
+							ToLogService("trade", LogLevel::Error, "it failed to get trade res d% from trade asker d%ID = {}", 
 								pAccept->GetName(), pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							return FALSE;
 						}
@@ -1496,16 +1496,16 @@ namespace mission
 
 							if( !pAccept->BoatClear( AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 							{
-								/*pAccept->SystemNotice( "ɾ��%sӵ�еĴ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								/*pAccept->SystemNotice( "%sID[0x%X]", 
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								pRequest->SystemNotice( "ɾ��%sӵ�еĴ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								pRequest->SystemNotice( "%sID[0x%X]", 
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "ɾ��{}�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+								ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 								pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00065), 
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00065), 
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "it failed to delete captain confirm boat that {} have ��DBID[0x{:X}]", 
+								ToLogService("trade", LogLevel::Error, "it failed to delete captain confirm boat that {} have DBID[0x{:X}]", 
 									pAccept->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
@@ -1528,10 +1528,10 @@ namespace mission
 					CItemRecord* pItem = GetItemRecordInfo( pTradeData->ReqTradeData.ItemArray[i].sItemID );
 					if( pItem == NULL )
 					{
-						/*pMain->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = %d", pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						ToLogService("common", "��ƷID�����޷��ҵ�����Ʒ��Ϣ��ID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID);*/
+						/*pMain->SystemNotice( "IDID = %d", pTradeData->ReqTradeData.ItemArray[i].sItemID );
+						ToLogService("common", "IDID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID);*/
 						pMain->SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00041), pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "res ID error��it cannot find this res information��ID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID );
+						ToLogService("trade", LogLevel::Error, "res ID errorit cannot find this res informationID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						return FALSE;
 					}
 					else
@@ -1539,16 +1539,16 @@ namespace mission
 						ReqGrid[i].sNum = pTradeData->ReqTradeData.ItemArray[i].byCount;
 						if( pRequest->KbPopItem( true, false, ReqGrid + i, pTradeData->ReqTradeData.ItemArray[i].byIndex ) != enumKBACT_SUCCESS )
 						{
-							/*pAccept->SystemNotice( "�ӽ��������ߡ�%s��������ȡ��Ʒ��%d����Ʒʧ�ܣ�ID = %d", 
+							/*pAccept->SystemNotice( "%s%dID = %d", 
 								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
-							pRequest->SystemNotice( "�ӽ��������ߡ�%s��������ȡ��Ʒ��%d����Ʒʧ�ܣ�ID = %d", 
+							pRequest->SystemNotice( "%s%dID = %d", 
 								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
-							ToLogService("trade", LogLevel::Error, "�ӽ��������ߡ�{}��������ȡ��Ʒ��{}����Ʒʧ�ܣ�ID = {}", pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID);*/
+							ToLogService("trade", LogLevel::Error, "{}{}ID = {}", pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID);*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00067), 
 								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00067), 
 								pRequest->GetName(), pTradeData->ReqTradeData.ItemArray[i].sItemID );
-							ToLogService("trade", LogLevel::Error, "it failed get res from trade asker ��{}����ID = {}",
+							ToLogService("trade", LogLevel::Error, "it failed get res from trade asker {}ID = {}",
 								pRequest->GetName(), static_cast<int>(pTradeData->ReqTradeData.ItemArray[i].sItemID) );
 							return FALSE;
 						}
@@ -1558,7 +1558,7 @@ namespace mission
 							CCharacter* pBoat = pRequest->GetPlayer()->GetBoat( (DWORD)ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							if( pBoat )
 							{
-								/*sprintf( szTemp, "%d�Ҵ�ֻ��%s��ID[0x%X]��", ReqGrid[i].sNum, pBoat->GetName(),
+								/*sprintf( szTemp, "%d%sID[0x%X]", ReqGrid[i].sNum, pBoat->GetName(),
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );*/
 								sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00063), ReqGrid[i].sNum, pBoat->GetName(),
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
@@ -1566,7 +1566,7 @@ namespace mission
 							}
 							else
 							{
-								/*sprintf( szTemp, "%d�Ҵ�ֻ��δ֪��ֻ����ID[0x%X]��", ReqGrid[i].sNum, 
+								/*sprintf( szTemp, "%dID[0x%X]", ReqGrid[i].sNum, 
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );*/
 								sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00063), ReqGrid[i].sNum, 
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
@@ -1575,22 +1575,22 @@ namespace mission
 
 							if( !pRequest->BoatClear( ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 							{
-								/*pAccept->SystemNotice( "ɾ��%s�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								/*pAccept->SystemNotice( "%sID[0x%X]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								pRequest->SystemNotice( "ɾ��%s�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								pRequest->SystemNotice( "%sID[0x%X]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "ɾ��{}�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+								ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 								pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "it failed to delete boat that captain confirm of {} have��DBID[0x{:X}]", 
+								ToLogService("trade", LogLevel::Error, "it failed to delete boat that captain confirm of {} haveDBID[0x{:X}]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
 						else
 						{
-							sprintf( szTemp, "%d��%s��", ReqGrid[i].sNum, pItem->szName );
+							sprintf( szTemp, "%d%s", ReqGrid[i].sNum, pItem->szName );
 							strcat( szTrade, szTemp );
 						}
 					}
@@ -1605,28 +1605,28 @@ namespace mission
 					CItemRecord* pItem = GetItemRecordInfo( pTradeData->AcpTradeData.ItemArray[i].sItemID );
 					if( pItem == NULL )
 					{
-						/*pRequest->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+						/*pRequest->SystemNotice( "IDID = %d", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						pAccept->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+						pAccept->SystemNotice( "IDID = %d", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
+						ToLogService("trade", LogLevel::Error, "IDID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "res ID error��it cannot find res information��it cannot give you this res��ID = {}", 
+						ToLogService("trade", LogLevel::Error, "res ID errorit cannot find res informationit cannot give you this resID = {}", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						continue;
 					}
 
-					// �������߸��Ķ�������������					
+					// 					
 					USHORT sCount = AcpGrid[i].sNum;
 					Short sPushPos = defKITBAG_DEFPUSH_POS;
 					Short sPushRet = pRequest->KbPushItem( true, false, AcpGrid + i, sPushPos );
 
-					if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+					if( sPushRet == enumKBACT_ERROR_FULL ) // 
 					{
-						// �����Ʒ�����¼�
+						// 
 						USHORT sNum = sCount - AcpGrid[i].sNum;
 
 						CCharacter	*pCCtrlCha = pRequest->GetPlyCtrlCha(), *pCMainCha = pRequest->GetPlyMainCha();
@@ -1634,31 +1634,31 @@ namespace mission
 						pCCtrlCha->GetTrowItemPos(&lPosX, &lPosY);
 						if( pCCtrlCha->GetSubMap()->ItemSpawn( AcpGrid + i, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle() ) == NULL )
 						{
-							/*pAccept->SystemNotice( "����ʱ��%s����װ���µ���Ʒ��%s���ŵ�����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", 
+							/*pAccept->SystemNotice( "%s%sID[%d], Num[%d]", 
 								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
-							pRequest->SystemNotice( "����ʱ��%s����װ���µ���Ʒ��%s���ŵ�����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", 
+							pRequest->SystemNotice( "%s%sID[%d], Num[%d]", 
 								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
-							ToLogService("trade", LogLevel::Error, "Error code[{}],����ʱ��{}����װ���µ���Ʒ��{}���ŵ�����ʧ�ܣ�������Ʒ��ʧ��ID[{}], Num[{}]", sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum);*/
+							ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum);*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
 								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
 								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
-							ToLogService("trade", LogLevel::Error, "Error code[{}],when trading,{} bag is full,��{}��failed to put on floor��trade res failed��ID[{}], Num[{}]", 
+							ToLogService("trade", LogLevel::Error, "Error code[{}],when trading,{} bag is full,{}failed to put on floortrade res failedID[{}], Num[{}]", 
 								sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
 						}
 					}
 					else if( sPushRet != enumKBACT_SUCCESS )
 					{						
-						/*pAccept->SystemNotice( "����ʱ����Ʒ��%s������%s����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", pItem->szName, pRequest->GetName(), 
+						/*pAccept->SystemNotice( "%s%sID[%d], Num[%d]", pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
-						pRequest->SystemNotice( "����ʱ����Ʒ��%s������%s����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", pItem->szName, pRequest->GetName(), 
+						pRequest->SystemNotice( "%s%sID[%d], Num[%d]", pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
-						ToLogService("trade", LogLevel::Error, "Error code[{}],����ʱ����Ʒ��{}������{}����ʧ�ܣ�������Ʒ��ʧ��ID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), AcpGrid[i].sID, ReqGrid[i].sNum);*/
+						ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), AcpGrid[i].sID, ReqGrid[i].sNum);*/
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
-						ToLogService("trade", LogLevel::Error, "Error code[{}],it failed to put res in {} bag when trading res ��{}����trade res failed��ID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), 
+						ToLogService("trade", LogLevel::Error, "Error code[{}],it failed to put res in {} bag when trading res {}trade res failedID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
 					}
 					else
@@ -1670,16 +1670,16 @@ namespace mission
 					{
 						if( !pRequest->BoatAdd( AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 						{
-							/*pAccept->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+							/*pAccept->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							pRequest->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+							pRequest->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "���Ӹ�{}����֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+							ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failed��DBID[0x{:X}]", 
+							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failedDBID[0x{:X}]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 						}
 					}
@@ -1691,28 +1691,28 @@ namespace mission
 					CItemRecord* pItem = GetItemRecordInfo( pTradeData->ReqTradeData.ItemArray[i].sItemID );
 					if( pItem == NULL )
 					{
-						/*pRequest->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+						/*pRequest->SystemNotice( "IDID = %d", 
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						pAccept->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+						pAccept->SystemNotice( "IDID = %d", 
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID);*/
+						ToLogService("trade", LogLevel::Error, "IDID = {}", pTradeData->ReqTradeData.ItemArray[i].sItemID);*/
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "res ID error��cannot find this res information��this res cannot give you��ID = {}", 
+						ToLogService("trade", LogLevel::Error, "res ID errorcannot find this res informationthis res cannot give youID = {}", 
 							pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						continue;
 					}
 
-					// �������߸��Ķ������������
+					// 
 					USHORT sCount = ReqGrid[i].sNum;
 					Short sPushPos = defKITBAG_DEFPUSH_POS;
 					Short sPushRet = pAccept->KbPushItem( true, false, ReqGrid + i, sPushPos );
 					
-					if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+					if( sPushRet == enumKBACT_ERROR_FULL ) // 
 					{
-						// �����Ʒ�����¼�
+						// 
 						USHORT sNum = sCount - ReqGrid[i].sNum;
 
 						CCharacter	*pCCtrlCha = pAccept->GetPlyCtrlCha(), *pCMainCha = pAccept->GetPlyMainCha();
@@ -1720,31 +1720,31 @@ namespace mission
 						pCCtrlCha->GetTrowItemPos(&lPosX, &lPosY);
 						if( pCCtrlCha->GetSubMap()->ItemSpawn( ReqGrid + i, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle() ) == NULL )
 						{
-							/*pAccept->SystemNotice( "����ʱ��%s����װ���µ���Ʒ��%s���ŵ�����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", 
+							/*pAccept->SystemNotice( "%s%sID[%d], Num[%d]", 
 								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
-							pRequest->SystemNotice( "����ʱ��%s����װ���µ���Ʒ��%s���ŵ�����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", 
+							pRequest->SystemNotice( "%s%sID[%d], Num[%d]", 
 								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
-							ToLogService("trade", LogLevel::Error, "Error code[{}],����ʱ��{}����װ���µ���Ʒ��{}���ŵ�����ʧ�ܣ�������Ʒ��ʧ��ID[{}], Num[{}]", sPushRet, pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum);*/
+							ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum);*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
 								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
 								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
-							ToLogService("trade", LogLevel::Error, "Error code[{}],when trading,{} bag is full,��{}��failed to put on floor��trade res failed��ID[{}], Num[{}]", 
+							ToLogService("trade", LogLevel::Error, "Error code[{}],when trading,{} bag is full,{}failed to put on floortrade res failedID[{}], Num[{}]", 
 								sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
 						}
 					}
 					else if( sPushRet != enumKBACT_SUCCESS )
 					{						
-						/*pAccept->SystemNotice( "����ʱ����Ʒ��%s������%s����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", pItem->szName, pAccept->GetName(), 
+						/*pAccept->SystemNotice( "%s%sID[%d], Num[%d]", pItem->szName, pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
-						pRequest->SystemNotice( "����ʱ����Ʒ��%s������%s����ʧ�ܣ�������Ʒ��ʧ��ID[%d], Num[%d]", pItem->szName, pAccept->GetName(), 
+						pRequest->SystemNotice( "%s%sID[%d], Num[%d]", pItem->szName, pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
-						ToLogService("trade", LogLevel::Error, "Error code[{}],����ʱ����Ʒ��{}������{}����ʧ�ܣ�������Ʒ��ʧ��ID[{}], Num[{}]", sPushRet, pItem->szName, pAccept->GetName(), ReqGrid[i].sID, ReqGrid[i].sNum);*/
+						ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pItem->szName, pAccept->GetName(), ReqGrid[i].sID, ReqGrid[i].sNum);*/
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
-						ToLogService("trade", LogLevel::Error, "Error code[{}],it failed to put res in {} bag when trading res ��{}����trade res failed��ID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), 
+						ToLogService("trade", LogLevel::Error, "Error code[{}],it failed to put res in {} bag when trading res {}trade res failedID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
 					}
 					else 
@@ -1756,23 +1756,23 @@ namespace mission
 					{
 						if( !pAccept->BoatAdd( ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 						{
-							/*pAccept->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+							/*pAccept->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							pRequest->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+							pRequest->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "���Ӹ�{}����֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+							ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failed��DBID[0x{:X}]", 
+							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failedDBID[0x{:X}]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 						}
 					}
 				}
 			}
 
-			// ��Ǯ
+			// 
 			if( pTradeData->ReqTradeData.dwMoney > 0 )
 			{				
 				pRequest->setAttr( ATTR_GD, pRequest->getAttr( ATTR_GD ) - pTradeData->ReqTradeData.dwMoney );
@@ -1806,19 +1806,19 @@ namespace mission
 			pRequest->SetTradeData( NULL );
 			pTradeData->Free();	
 
-			// ���ݿ�洢
+			// 
 			game_db.BeginTran();
 			if( !pRequest->SaveAssets() || !pAccept->SaveAssets() )
 			{
 				game_db.RollBack();
 
-				// �������ݿ�洢ʧ�ܣ����ݻָ�
+				// 
 				ReqBag = ReqBagData;
 				AcpBag = AcpBagData;
 				pRequest->setAttr( ATTR_GD, dwReqMoney );
 				pAccept->setAttr( ATTR_GD, dwAcpMoney );
 
-				// �ָ���ֻ������Ϣ
+				// 
 				for( int i = 0; i < ROLE_MAXNUM_TRADEDATA; i++ )
 				{
 					if( pTradeData->AcpTradeData.ItemArray[i].sItemID != 0 )
@@ -1826,51 +1826,51 @@ namespace mission
 						CItemRecord* pItem = GetItemRecordInfo( pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						if( pItem == NULL )
 						{
-							/*pRequest->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+							/*pRequest->SystemNotice( "IDID = %d", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						pAccept->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+						pAccept->SystemNotice( "IDID = %d", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
+						ToLogService("trade", LogLevel::Error, "IDID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "res ID error��it cannot find res information��it cannot give you this res��ID = {}", 
+						ToLogService("trade", LogLevel::Error, "res ID errorit cannot find res informationit cannot give you this resID = {}", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							continue;
 						}
 
-						// �������߸��Ķ�������������					
+						// 					
 						if( pItem->sType == enumItemTypeBoat )
 						{
 							if( !pRequest->BoatClear( AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 							{
 								
-								/*pAccept->SystemNotice( "ɾ��%s�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								/*pAccept->SystemNotice( "%sID[0x%X]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								pRequest->SystemNotice( "ɾ��%s�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								pRequest->SystemNotice( "%sID[0x%X]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "ɾ��{}�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+								ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 								pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "it failed to delete boat that captain confirm of {} have��DBID[0x{:X}]", 
+								ToLogService("trade", LogLevel::Error, "it failed to delete boat that captain confirm of {} haveDBID[0x{:X}]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 
 							if( !pAccept->BoatAdd( AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 							{
-								/*pAccept->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								/*pAccept->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							pRequest->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+							pRequest->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "���Ӹ�{}����֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+							ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failed��DBID[0x{:X}]", 
+							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failedDBID[0x{:X}]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
@@ -1882,71 +1882,71 @@ namespace mission
 						CItemRecord* pItem = GetItemRecordInfo( pTradeData->ReqTradeData.ItemArray[i].sItemID );
 						if( pItem == NULL )
 						{
-							/*pRequest->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+							/*pRequest->SystemNotice( "IDID = %d", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						pAccept->SystemNotice( "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = %d", 
+						pAccept->SystemNotice( "IDID = %d", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "��ƷID�����޷��ҵ�����Ʒ��Ϣ�����ܸ��������Ʒ��ID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
+						ToLogService("trade", LogLevel::Error, "IDID = {}", pTradeData->AcpTradeData.ItemArray[i].sItemID);*/
 						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00069), 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
-						ToLogService("trade", LogLevel::Error, "res ID error��it cannot find res information��it cannot give you this res��ID = {}", 
+						ToLogService("trade", LogLevel::Error, "res ID errorit cannot find res informationit cannot give you this resID = {}", 
 							pTradeData->AcpTradeData.ItemArray[i].sItemID );
 							continue;
 						}
 
-						// �������߸��Ķ������������
+						// 
 						if( pItem->sType == enumItemTypeBoat )
 						{
 							if( !pAccept->BoatClear( ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 							{
 								
-								/*pAccept->SystemNotice( "ɾ��%s�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								/*pAccept->SystemNotice( "%sID[0x%X]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								pRequest->SystemNotice( "ɾ��%s�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								pRequest->SystemNotice( "%sID[0x%X]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "ɾ��{}�Ĵ���֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+								ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 								pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00068), 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-								ToLogService("trade", LogLevel::Error, "it failed to delete boat that captain confirm of {} have��DBID[0x{:X}]", 
+								ToLogService("trade", LogLevel::Error, "it failed to delete boat that captain confirm of {} haveDBID[0x{:X}]", 
 									pRequest->GetName(), ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 
 							if( !pRequest->BoatAdd( ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) ) )
 							{
-								/*pAccept->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+								/*pAccept->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							pRequest->SystemNotice( "���Ӹ�%s����֤��ӵ�еĴ�ֻʧ�ܣ�ID[0x%X]", 
+							pRequest->SystemNotice( "%sID[0x%X]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "���Ӹ�{}����֤��ӵ�еĴ�ֻʧ�ܣ�DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
+							ToLogService("trade", LogLevel::Error, "{}DBID[0x{:X}]", pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ));*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00072), 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
-							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failed��DBID[0x{:X}]", 
+							ToLogService("trade", LogLevel::Error, "add to {}captain confirm it hold boat failedDBID[0x{:X}]", 
 								pRequest->GetName(), AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							}
 						}
 					}
 				}
 
-				// ֪ͨ�ͻ��˲��Ҽ�¼��־
-				/*pRequest->SystemNotice( "����ʧ�ܣ����ݴ洢����" );
-				pAccept->SystemNotice( "����ʧ�ܣ����ݴ洢����" );
-				ToLogService("trade", LogLevel::Error, "�������ݴ洢���ݿ�ʧ�ܣ��������ݻָ���ɣ����ף����󷽡�{}��ID[0x{:X}]�����ܷ���{}��ID[0x{:X}]��", pRequest->GetName(), pRequest->GetPlayer()->GetDBChaId(), pAccept->GetName(), pAccept->GetPlayer()->GetDBChaId());*/
+				// 
+				/*pRequest->SystemNotice( "" );
+				pAccept->SystemNotice( "" );
+				ToLogService("trade", LogLevel::Error, "{}ID[0x{:X}]{}ID[0x{:X}]", pRequest->GetName(), pRequest->GetPlayer()->GetDBChaId(), pAccept->GetName(), pAccept->GetPlayer()->GetDBChaId());*/
 				pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00074) );
 				pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00074) );
-				ToLogService("trade", LogLevel::Error, "the trade data failed to memory in DB��trade data resume complete��trade��request one��{}��ID[0x{:X}]��accept one��{}��ID[0x{:X}]��",
+				ToLogService("trade", LogLevel::Error, "the trade data failed to memory in DBtrade data resume completetraderequest one{}ID[0x{:X}]accept one{}ID[0x{:X}]",
 					pRequest->GetName(), pRequest->GetPlayer()->GetDBChaId(), pAccept->GetName(), pAccept->GetPlayer()->GetDBChaId() );
 
-				// ȡ����ɫ����״̬
+				// 
 				pAccept->TradeAction( FALSE );
 				pRequest->TradeAction( FALSE );
 
-				// Типизированная сериализация: результат торговли (неудача — ошибка сохранения)
+				//  :   (   )
 				auto packet = net::msg::serialize(net::msg::McCharTradeResultMessage{
 					CMD_MC_CHARTRADE_RESULT, TRADE_FAILER
 				});
@@ -1957,7 +1957,7 @@ namespace mission
 			}
 			else
 			{
-				// �������ݴ洢�ɹ�
+				// 
 				game_db.CommitTran();
 				if( pRequest->IsBoat() )
 				{
@@ -1976,7 +1976,7 @@ namespace mission
 				pAccept->LogAssets(enumLASSETS_TRADE);
 			}
 
-			// ������Ʒ�ɹ����ȡ����
+			// 
 			for( int i = 0; i < ROLE_MAXNUM_TRADEDATA; i++ )
 			{
 				if( pTradeData->AcpTradeData.ItemArray[i].sItemID != 0 )
@@ -2000,12 +2000,12 @@ namespace mission
 				}
 			}
 
-			// ֪ͨ���׽�Ǯ������Ϣ
+			// 
 			char szNotice[255];
 
 			if( pTradeData->ReqTradeData.dwMoney )
 			{
-				//pAccept->SystemNotice( "���(%s)���õ���%d��Ǯ��", pRequest->GetName(), pTradeData->ReqTradeData.dwMoney );
+				//pAccept->SystemNotice( "(%s)%d", pRequest->GetName(), pTradeData->ReqTradeData.dwMoney );
 				CFormatParameter param(2);
 				param.setString(0, pRequest->GetName());
 				param.setLong(1, pTradeData->ReqTradeData.dwMoney);
@@ -2041,7 +2041,7 @@ namespace mission
 
 			
 
-			// ͬ����Ǯ���ݺͱ�������
+			// 
 			pAccept->SynAttr( enumATTRSYN_TRADE );
 			pAccept->SyncBoatAttr(enumATTRSYN_TRADE);
 			pRequest->SynAttr( enumATTRSYN_TRADE );	
@@ -2051,7 +2051,7 @@ namespace mission
 			pAccept->SynKitbagNew( enumSYN_KITBAG_TRADE );
 
 			if (pTradeData->AcpTradeData.dwIMP > 0 || pTradeData->ReqTradeData.dwIMP > 0){
-				// Типизированная сериализация: обновление IMP после торговли
+				//  :  IMP  
 				auto packet = net::msg::serialize(net::msg::McUpdateImpMessage{static_cast<int64_t>(pAccept->GetIMP())});
 				pAccept->ReflectINFof(pMain, packet);
 
@@ -2059,11 +2059,11 @@ namespace mission
 				pRequest->ReflectINFof(pMain, packet2);
 			}
 
-			// ȡ����ɫ����״̬
+			// 
 			pAccept->TradeAction( FALSE );
 			pRequest->TradeAction( FALSE );
 
-			// Типизированная сериализация: результат торговли (успех)
+			//  :   ()
 			auto packet = net::msg::serialize(net::msg::McCharTradeResultMessage{
 				CMD_MC_CHARTRADE_RESULT, TRADE_SUCCESS
 			});
@@ -2072,7 +2072,7 @@ namespace mission
 		}
 		else
 		{
-			// Типизированная сериализация: подтверждение данных торговли (вторая сторона)
+			//  :    ( )
 			auto packet = net::msg::serialize(net::msg::McCharTradeValidateDataMessage{
 				CMD_MC_CHARTRADE_VALIDATE, pMain->GetID()
 			});
@@ -2253,10 +2253,10 @@ namespace mission
     {
 		if(pCha->IsStoreBuy())
 		{
-			//pCha->SystemNotice("������һ��������δ������!");
+			//pCha->SystemNotice("!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00077));
 
-			// Типизированная сериализация: провал покупки в магазине
+			//  :    
 			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
@@ -2266,10 +2266,10 @@ namespace mission
 		SItemData *pComData = GetItemData(lComID);
 		if(!pComData || pComData->store_head.comNumber == 0)
 		{
-			//pCha->SystemNotice("����Ʒ�ѳ���!");
+			//pCha->SystemNotice("!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00078));
 
-			// Типизированная сериализация: провал покупки в магазине
+			//  :    
 			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
@@ -2279,7 +2279,7 @@ namespace mission
 		cChar *szClsName = GetClassName(pComData->store_head.comClass);
 		if(szClsName)
 		{
-			//if(!strcmp(szClsName, "�׽��Ա"))
+			//if(!strcmp(szClsName, ""))
 			if(!strcmp(szClsName, RES_STRING(GM_CHARTRADE_CPP_00079)))
 			{
 				// Modify by lark.li 20080919 begin
@@ -2287,10 +2287,10 @@ namespace mission
 				if(pCha->GetPlayer()->GetVipType() == 0 || pCha->m_SChaPart.sTypeID == 1 || pCha->m_SChaPart.sTypeID == 2  )
 				// End
 				{
-					//pCha->SystemNotice("ֻ�а׽��Ա�����������Ʒ!");
+					//pCha->SystemNotice("!");
 					pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00080));
 
-					// Типизированная сериализация: провал покупки в магазине
+					//  :    
 					auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 					pCha->ReflectINFof(pCha, WtPk);
 
@@ -2306,10 +2306,10 @@ namespace mission
 			CItemRecord* pItemRec = GetItemRecordInfo( pItem->itemID );
 			if( pItemRec == NULL )
 			{
-				//pCha->SystemNotice( "Request: �������Ʒ�������ͣ�ID = %d", pItem->itemID );
+				//pCha->SystemNotice( "Request: ID = %d", pItem->itemID );
 				pCha->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00081), pItem->itemID );
 
-				// Типизированная сериализация: провал покупки в магазине
+				//  :    
 				auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
 
@@ -2329,7 +2329,7 @@ namespace mission
 
 		if (!pCha->HasLeaveBagTempGrid(sGridNum))
 		{
-			//pCha->PopupNotice("������ʱ�����ռ䲻��!");
+			//pCha->PopupNotice("!");
 			pCha->PopupNotice(RES_STRING(GM_CHARTRADE_CPP_00082));
 			return false;
 		}
@@ -2350,13 +2350,13 @@ namespace mission
 		{
 			SAFE_DELETE(pChaInfo);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number [ID:{}] repeat!", pNm->msgHead.msgOrder);
 
-			// Типизированная сериализация: провал покупки в магазине
+			//  :    
 			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
-			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
 
 			return false;
@@ -2365,18 +2365,18 @@ namespace mission
 		{
 			pCha->SetStoreBuy(true);
 			PushOrder(pCha, pNm->msgHead.msgOrder, lComID, 1);
-			//LG("Store_record", "��ɫ[%s][ID:%ld]��������Ʒ[ID:%ld]!\n", pChaInfo->chaName, pChaInfo->chaID, lComID);
+			//LG("Store_record", "[%s][ID:%ld][ID:%ld]!\n", pChaInfo->chaName, pChaInfo->chaID, lComID);
 			ToLogService("store", "character [{}][ID:{}] order merchandise [ID:{}]!", pChaInfo->chaName, pChaInfo->chaID, lComID);
 		}
 		else
 		{
-			// Типизированная сериализация: провал покупки в магазине
+			//  :    
 			auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
-			//pCha->SystemNotice("�̳ǽ���ʧ��!");
+			//pCha->SystemNotice("!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00084));
 
-			//LG("Store_msg", "Request: InfoServer����ʧ��!\n");
+			//LG("Store_msg", "Request: InfoServer!\n");
 
 		ToLogService("store", "Request: InfoServer send failed!");}
 
@@ -2401,7 +2401,7 @@ namespace mission
 				pItem++;
 			}
 
-			//LG("Store_record", "��ɫ[%s][ID:%ld]��������Ʒ[ID:%ld], �ӵ��߲����ɹ�!\n", pCha->GetName(), pCha->GetPlayer()->GetDBChaId(), lComID);
+			//LG("Store_record", "[%s][ID:%ld][ID:%ld], !\n", pCha->GetName(), pCha->GetPlayer()->GetDBChaId(), lComID);
 			{ char _buf[256]; sprintf(_buf, RES_STRING(GM_CHARTRADE_CPP_00085), pCha->GetName(), pCha->GetPlayer()->GetDBChaId(), lComID); g_logManager.InternalLog(LogLevel::Debug, "store", _buf); }
 
 			if(pComData->store_head.comNumber > 0)
@@ -2409,7 +2409,7 @@ namespace mission
 				pComData->store_head.comNumber--;
 			}
 
-			//ɾ����Ʒ
+			//
 			if(pComData->store_head.comNumber <= 0 && pComData->store_head.comNumber != -1)
 			{
 				DelItemData(lComID);
@@ -2417,7 +2417,7 @@ namespace mission
 		}
 		else
 		{
-			//LG("Store_msg", "Accept2: �Ҳ�����Ʒ[ID:%ld]!\n", lComID);
+			//LG("Store_msg", "Accept2: [ID:%ld]!\n", lComID);
 			ToLogService("store", "Accept2: cannot find merchandise [ID:{}]!", lComID);
 			return false;
 		}
@@ -2441,7 +2441,7 @@ namespace mission
 				pCha = pPlayer->GetMainCha();
 			}
 
-			//LG("Store_record", "��ɫ[%s][ID:%ld]��������Ʒ[ID:%ld], �ѿۿ�!\n", ChaInfo->chaName, lChaID, lComID);
+			//LG("Store_record", "[%s][ID:%ld][ID:%ld], !\n", ChaInfo->chaName, lChaID, lComID);
 			ToLogService("store", "character[{}][ID:{}] has buy res[ID:{}], has buckle money!", ChaInfo->chaName, lChaID, lComID);
 			SItemData *pCData = GetItemData(lComID);
 			if(pCData->store_head.comNumber > 0)
@@ -2451,11 +2451,11 @@ namespace mission
 
 			if(!pCha)
 			{
-				//LG("Store_msg", "��ɫ[%s][ID:%ld]���뿪!\n", ChaInfo->chaName, lChaID);
+				//LG("Store_msg", "[%s][ID:%ld]!\n", ChaInfo->chaName, lChaID);
 				ToLogService("store", "character[{}][ID:{}] has leava!", ChaInfo->chaName, lChaID);
 			}
 
-			//�ӵ���
+			//
 			if(pCha)
 			{
 				pCha->SetStoreBuy(false);
@@ -2479,37 +2479,37 @@ namespace mission
 				}
 				else
 				{
-					//LG("Store_msg", "�Ҳ�����Ʒ[ID:%ld]!\n", lComID);
+					//LG("Store_msg", "[ID:%ld]!\n", lComID);
 					ToLogService("store", "cannot finde merchandise[ID:{}]!", lComID);
 				}
 			}
 			else
 			{
-				//LG("Store_msg", "��ɫ[%s][ID:%ld]���ڱ���ͼ!\n", ChaInfo->chaName, lChaID);
+				//LG("Store_msg", "[%s][ID:%ld]!\n", ChaInfo->chaName, lChaID);
 				ToLogService("store", "character[{}][ID:{}] don't in this map!", ChaInfo->chaName, lChaID);
 
 				BOOL bOnline;
 				if(!game_db.IsChaOnline(lChaID, bOnline))
 				{
-					//LG("Store_msg", "��ȡ��ɫ����״̬ʧ�ܡ�\n");
-					ToLogService("store", "it failed to get character online state��");
+					//LG("Store_msg", "\n");
+					ToLogService("store", "it failed to get character online state");
 				}
 				else
 				{
 					if(!bOnline)
 					{
-						//LG("Store_msg", "��ɫ�����ߡ�\n");
-						ToLogService("store", "character didn't online��");
+						//LG("Store_msg", "\n");
+						ToLogService("store", "character didn't online");
 
 						if(!game_db.SaveStoreItemID(lChaID, lComID))
 						{
-							//LG("Store_msg", "�������߽�ɫ��Ʒ��Ϣʧ�ܡ�\n");
-							ToLogService("store", "it failed to memory merchandise information who did not online character��");
+							//LG("Store_msg", "\n");
+							ToLogService("store", "it failed to memory merchandise information who did not online character");
 						}
 					}
 					else
 					{
-						//LG("Store_msg", "��ɫ[%s][ID:%ld]��������ͼ!\n", ChaInfo->chaName, lChaID);
+						//LG("Store_msg", "[%s][ID:%ld]!\n", ChaInfo->chaName, lChaID);
 						ToLogService("store", "character[{}][ID:{}]is in other map!", ChaInfo->chaName, lChaID);
 
 						BEGINGETGATE();
@@ -2527,9 +2527,9 @@ namespace mission
 								pChaOut = pCPlayer->GetMainCha();
 								if(pChaOut)
 								{
-									// Типизированная сериализация: ретрансляция покупки магазина (кросс-серверная)
+									//  :    (-)
 									auto WtPk = net::msg::serialize(net::msg::MmStoreBuyRelayMessage{(int64_t)pChaOut->GetID(), (int64_t)lChaID, (int64_t)lComID, (int64_t)ChaInfo->rplMoney});
-									pChaOut->ReflectINFof(pChaOut, WtPk);//ͨ��
+									pChaOut->ReflectINFof(pChaOut, WtPk);//
 
 									bFound = true;
 									break;
@@ -2544,13 +2544,13 @@ namespace mission
 					}
 				}
 			}
-			//��¼
+			//
 			if(bSucc)
 			{
-				ToLogService("store", "��ɫ[{}][ID:{}]��������Ʒ[ID:{}], �ӵ��߲����ɹ�!", pCha->GetName(), lChaID, lComID);
+				ToLogService("store", "[{}][ID:{}][ID:{}], !", pCha->GetName(), lChaID, lComID);
 
-				//֪ͨ��ҽ��׳ɹ�
-				// Типизированная сериализация: успех покупки в магазине
+				//
+				//  :    
 				auto WtPk = net::msg::serializeMcStoreBuySucc(ChaInfo->rplMoney);
 				pCha->ReflectINFof(pCha, WtPk);
 			}
@@ -2558,7 +2558,7 @@ namespace mission
 			{
 			}
 
-			//ɾ����Ʒ
+			//
 			if(pCData->store_head.comNumber <= 0 && pCData->store_head.comNumber != -1)
 			{
 				DelItemData(lComID);
@@ -2566,7 +2566,7 @@ namespace mission
 		}
 		else
 		{
-			//LG("Store_msg", "Accept:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "Accept:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "Accept:not find order form[ID:{}]!", lOrderID);
 		}
         return true;
@@ -2587,24 +2587,24 @@ namespace mission
 
 		if(OrderInfo.lOrderID != 0)
 		{
-			//֪ͨ��ҽ���ʧ��
+			//
 			if(pCha)
 			{
 				pCha->SetStoreBuy(false);
 
-				// Типизированная сериализация: провал покупки в магазине
+				//  :    
 				auto WtPk = net::msg::serializeMcStoreBuyFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
 
-				//pCha->SystemNotice("�̳ǽ���ʧ��!");
+				//pCha->SystemNotice("!");
 				pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00084));
-				//LG("Store_data", "[%s]�������[ComID:%ld]ʧ��!\n", pCha->GetName(), OrderInfo.lComID);
+				//LG("Store_data", "[%s][ComID:%ld]!\n", pCha->GetName(), OrderInfo.lComID);
 				ToLogService("store", "[{}]failed to buy prop [ComID:{}]!", pCha->GetName(), OrderInfo.lComID);
 			}
 		}
 		else
 		{
-			//LG("Store_msg", "Cancel:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "Cancel:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "Cancel:not find order form[ID:{}]!", lOrderID);
 		}
         return true;
@@ -2641,7 +2641,7 @@ namespace mission
 					}
 					if(pCha)
 					{
-						//pCha->SystemNotice("�̳ǲ�����ʱ,�ѱ�ȡ��!");
+						//pCha->SystemNotice(",!");
 						pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00095));
 					}
 
@@ -2656,7 +2656,7 @@ namespace mission
 
 	BOOL CStoreSystem::GetItemList()
 	{
-		//LG("Store_msg", "�����̳��б�!\n");
+		//LG("Store_msg", "!\n");
 		ToLogService("store", "ask for store list!");
 		pNetMessage pNm = new NetMessage();
 		BuildNetMessage(pNm, INFO_REQUEST_STORE, 0, 0, 0, NULL, 0);
@@ -2670,13 +2670,13 @@ namespace mission
 		map< long, vector<SItemData> >::iterator map_it = m_ItemList.find(lClsID);
 		if(map_it != m_ItemList.end())
 		{
-			// Типизированная сериализация: список товаров магазина
+			//  :   
 			short sItemNum = 0;
 			short sPageNum = static_cast<short>((m_ItemList[lClsID].size() % sNum == 0) ? (m_ItemList[lClsID].size() / sNum) : (m_ItemList[lClsID].size() / sNum + 1));
 			if(sPage > sPageNum)
 			{
 				sItemNum = 0;
-				//LG("Store_msg", "��������ҳ�泬���˷�Χ!\n");
+				//LG("Store_msg", "!\n");
 				ToLogService("store", "player open-eared page layout over range!");
 			}
 			else if(sPage == sPageNum)
@@ -2747,7 +2747,7 @@ namespace mission
 		}
 		else
 		{
-			// Типизированная сериализация: пустой список товаров
+			//  :   
 			net::msg::McStoreListAnswerMessage emptyMsg;
 			emptyMsg.pageTotal = 0;
 			emptyMsg.pageCurrent = sPage;
@@ -2778,13 +2778,13 @@ namespace mission
 		{
 			SAFE_DELETE(pChaInfo);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number[ID:{}]repeat!", pNm->msgHead.msgOrder);
 
-			// Типизированная сериализация: провал VIP
+			//  :  VIP
 			auto WtPk = net::msg::serializeMcStoreVipFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
-			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
 
 			return false;
@@ -2795,11 +2795,11 @@ namespace mission
 		}
 		else
 		{
-			// Типизированная сериализация: провал VIP
+			//  :  VIP
 			auto WtPk = net::msg::serializeMcStoreVipFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
-		//	LG("Store_msg", "RequestVIP: InfoServer����ʧ��!\n");
+		//	LG("Store_msg", "RequestVIP: InfoServer!\n");
 			ToLogService("store", "RequestVIP: InfoServer send failed!");
 		}
 
@@ -2817,7 +2817,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "AcceptVIP:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "AcceptVIP:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "AcceptVIP: cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -2836,12 +2836,12 @@ namespace mission
 			pCha->GetPlayer()->SetRplMoney(ChaInfo->rplMoney);
 			pCha->GetPlayer()->SetVipType(ChaInfo->vip);
 
-			// Типизированная сериализация: успех VIP
+			//  :  VIP
 			auto WtPk = net::msg::serialize(net::msg::McStoreVipMessage{1, (int64_t)HIWORD(dwVipParam), (int64_t)LOWORD(dwVipParam), (int64_t)ChaInfo->rplMoney, (int64_t)ChaInfo->moBean});
 			pCha->ReflectINFof(pCha, WtPk);
-			//pCha->PopupNotice("����׽��Ա�ɹ�!");
+			//pCha->PopupNotice("!");
 			pCha->PopupNotice(RES_STRING(GM_CHARTRADE_CPP_00086));
-			//LG("Store_data", "[%s]����VIP�ɹ�!\n", pCha->GetName());
+			//LG("Store_data", "[%s]VIP!\n", pCha->GetName());
 			ToLogService("store", "[{}] purchase VIP succeed!", pCha->GetName());
 		}
 		return true;
@@ -2864,18 +2864,18 @@ namespace mission
 			if(pCha)
 			{
 				pCha->ResetStoreTime();
-				// Типизированная сериализация: провал VIP
+				//  :  VIP
 				auto WtPk = net::msg::serializeMcStoreVipFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
-				//pCha->PopupNotice("����׽��Աʧ��!");
+				//pCha->PopupNotice("!");
 				pCha->PopupNotice(RES_STRING(GM_CHARTRADE_CPP_00087));
-				//LG("Store_data", "[%s]����VIPʧ��!\n", pCha->GetName());
+				//LG("Store_data", "[%s]VIP!\n", pCha->GetName());
 				ToLogService("store", "[{}]perchase VIP failed!", pCha->GetName());
 			}
 		}
 		else
 		{
-			//LG("Store_msg", "CancelVIP:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "CancelVIP:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "CancelVIP:cannot find order form[ID:{}]!", lOrderID);
 		}
 		return true;
@@ -2899,13 +2899,13 @@ namespace mission
 		{
 			SAFE_DELETE(pChaInfo);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number [ID:{}] repeat!", pNm->msgHead.msgOrder);
 
-			// Типизированная сериализация: провал обмена
+			//  :  
 			auto WtPk = net::msg::serializeMcStoreChangeFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
-			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
 
 			return false;
@@ -2916,11 +2916,11 @@ namespace mission
 		}
 		else
 		{
-			// Типизированная сериализация: провал обмена
+			//  :  
 			auto WtPk = net::msg::serializeMcStoreChangeFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
-			//LG("Store_msg", "RequestChange: InfoServer����ʧ��!\n");
+			//LG("Store_msg", "RequestChange: InfoServer!\n");
 			ToLogService("store", "RequestChange: InfoServer send failed!");
 		}
 
@@ -2938,7 +2938,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "AcceptChange:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "AcceptChange:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "AcceptChange:cannot find order form [ID:{}]!", lOrderID);
 			return false;
 		}
@@ -2957,10 +2957,10 @@ namespace mission
 			pCha->GetPlayer()->SetRplMoney(ChaInfo->rplMoney);
 			pCha->GetPlayer()->SetVipType(ChaInfo->vip);
 
-			// Типизированная сериализация: успех обмена
+			//  :  
 			auto WtPk = net::msg::serialize(net::msg::McStoreChangeAnswerMessage{1, (int64_t)ChaInfo->moBean, (int64_t)ChaInfo->rplMoney});
 			pCha->ReflectINFof(pCha, WtPk);
-			//LG("Store_data", "[%s]�һ����ҳɹ�!\n", pCha->GetName());
+			//LG("Store_data", "[%s]!\n", pCha->GetName());
 			ToLogService("store", "[{}]change token succeed!", pCha->GetName());
 		}
 		return true;
@@ -2973,7 +2973,7 @@ namespace mission
 		SOrderData OrderInfo = PopOrder(lOrderID);
 		if(OrderInfo.lOrderID != 0)
 		{
-			//֪ͨ��Ҷһ�����ʧ��
+			//
 			CCharacter *pCha = NULL;
 			CPlayer *pPlayer = g_pGameApp->GetPlayerByDBID(OrderInfo.ChaID);
 			if(pPlayer)
@@ -2984,10 +2984,10 @@ namespace mission
 			if(pCha)
 			{
 				pCha->ResetStoreTime();
-				// Типизированная сериализация: провал обмена
+				//  :  
 				auto WtPk = net::msg::serializeMcStoreChangeFailCmd();
 				pCha->ReflectINFof(pCha, WtPk);
-				//LG("Store_data", "[%s]�һ�����ʧ��!\n", pCha->GetName());
+				//LG("Store_data", "[%s]!\n", pCha->GetName());
 				ToLogService("store", "[{}]change token failed!", pCha->GetName());
 			}
 		}
@@ -3013,9 +3013,9 @@ namespace mission
 		{
 			SAFE_DELETE(pChaInfo);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number[ID:{}]repeat!", pNm->msgHead.msgOrder);
-			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
 
 			return false;
@@ -3042,7 +3042,7 @@ namespace mission
 				SetValid();
 			}
 
-			//LG("Store_msg", "RequestRoleInfo: InfoServer����ʧ��!\n");
+			//LG("Store_msg", "RequestRoleInfo: InfoServer!\n");
 			ToLogService("store", "RequestRoleInfo: InfoServer send failed!");
 		}
 
@@ -3060,7 +3060,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "AcceptRoleInfo:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "AcceptRoleInfo:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "AcceptRoleInfo:cannot find order form [ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3084,7 +3084,7 @@ namespace mission
 			pCha->GetPlayer()->SetVipType(lVip);
 
 			g_StoreSystem.Open(pCha, lVip);
-			//LG("Store_data", "[%s]��ȡ�ʻ���Ϣ�ɹ�!\n", pCha->GetName());
+			//LG("Store_data", "[%s]!\n", pCha->GetName());
 			ToLogService("store", "[{}]get account information succeed!", pCha->GetName());
 		}
 		return true;
@@ -3097,7 +3097,7 @@ namespace mission
 		SOrderData OrderInfo = PopOrder(lOrderID);
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "CancelRoleInfo:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "CancelRoleInfo:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "CancelRoleInfo:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3117,8 +3117,8 @@ namespace mission
 			pCha->GetPlayer()->SetVipType(0);
 			pCha->ResetStoreTime();
 			//g_StoreSystem.Open(pCha, 0);
-			/*pCha->SystemNotice("�޷��鵽�����˺�,���̳�ʧ��!");
-			ToLogService("common", "[{}]��ȡ�ʻ���Ϣʧ��!", pCha->GetName());*/
+			/*pCha->SystemNotice(",!");
+			ToLogService("common", "[{}]!", pCha->GetName());*/
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00088));
 			ToLogService("store", "[{}]get account information failed!", pCha->GetName());
 		}
@@ -3143,13 +3143,13 @@ namespace mission
 		{
 			SAFE_DELETE(pChaInfo);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number[ID:{}]repeat!", pNm->msgHead.msgOrder);
 
-			// Типизированная сериализация: провал запроса истории
+			//  :   
 			auto WtPk = net::msg::serializeMcStoreQueryFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
-			//pCha->SystemNotice("�̳ǲ���ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00083));
 
 			return false;
@@ -3160,11 +3160,11 @@ namespace mission
 		}
 		else
 		{
-			// Типизированная сериализация: провал запроса истории
+			//  :   
 			auto WtPk = net::msg::serializeMcStoreQueryFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
 
-			//LG("Store_msg", "RequestRecord: InfoServer����ʧ��!\n");
+			//LG("Store_msg", "RequestRecord: InfoServer!\n");
 			ToLogService("store", "RequestRecord: InfoServer send failed!");
 		}
 
@@ -3181,7 +3181,7 @@ namespace mission
 		SOrderData OrderInfo = PopOrder(lOrderID);
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "AcceptRecord:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "AcceptRecord:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "AcceptRecord:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3197,7 +3197,7 @@ namespace mission
 		
 		if(pCha)
 		{
-			// Типизированная сериализация: история покупок магазина
+			//  :   
 			net::msg::McStoreHistoryMessage histMsg;
 			for(int i = 0; i < lNum; i++)
 			{
@@ -3211,7 +3211,7 @@ namespace mission
 			}
 			auto WtPk = net::msg::serialize(histMsg);
 			pCha->ReflectINFof(pCha, WtPk);
-			//LG("Store_data", "[%s]��ѯ���׼�¼�ɹ�!\n", pCha->GetName());
+			//LG("Store_data", "[%s]!\n", pCha->GetName());
 			ToLogService("store", "[{}]query trade note succeed!", pCha->GetName());
 		}
 		return true;
@@ -3225,7 +3225,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "CancelRecord:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "CancelRecord:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "CancelRecord:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3239,10 +3239,10 @@ namespace mission
 
 		if(pCha)
 		{
-			// Типизированная сериализация: провал запроса истории
+			//  :   
 			auto WtPk = net::msg::serializeMcStoreQueryFailCmd();
 			pCha->ReflectINFof(pCha, WtPk);
-			//LG("Store_data", "[%s]��ѯ���׼�¼ʧ��!\n", pCha->GetName());
+			//LG("Store_data", "[%s]!\n", pCha->GetName());
 			ToLogService("store", "[{}]query trade note failed!", pCha->GetName());
 		}
 		return true;
@@ -3266,9 +3266,9 @@ namespace mission
 		{
 			SAFE_DELETE(pMi);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number[ID:{}]repeat!", pNm->msgHead.msgOrder);
-			//pCha->SystemNotice("�ʼ�����ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00089));
 
 			return false;
@@ -3279,8 +3279,8 @@ namespace mission
 		}
 		else
 		{
-			/*pCha->SystemNotice("GM�ʼ�����ʧ�ܣ�������Ѿ����͹�һ���ʼ�����ȴ�GM�ظ�֮���ٴη���!");
-			ToLogService("common", "RequestGMSend: InfoServer����ʧ��!");*/
+			/*pCha->SystemNotice("GMGM!");
+			ToLogService("common", "RequestGMSend: InfoServer!");*/
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00090));
 			ToLogService("store", "RequestGMSend: InfoServer send failed!");
 		}
@@ -3299,7 +3299,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "AcceptGMSend:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "AcceptGMSend:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "AcceptGMSend:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3313,8 +3313,8 @@ namespace mission
 
 		if(pCha)
 		{
-			/*pCha->SystemNotice("GM�ʼ����ͳɹ�, [����ID: %ld]!", lMailID);
-			ToLogService("common", "[{}]����GM�ʼ��ɹ�!", pCha->GetName());*/
+			/*pCha->SystemNotice("GM, [ID: %ld]!", lMailID);
+			ToLogService("common", "[{}]GM!", pCha->GetName());*/
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00091), lMailID);
 			ToLogService("store", "[{}]send GM mail succeed !", pCha->GetName());
 		}
@@ -3330,7 +3330,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "CancelGMSend:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "CancelGMSend:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "CancelGMSend:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3344,8 +3344,8 @@ namespace mission
 
 		if(pCha)
 		{
-			/*pCha->SystemNotice("GM�ʼ�����ʧ�ܣ�������Ѿ����͹�һ���ʼ�����ȴ�GM�ظ�֮���ٴη���!");
-			ToLogService("common", "[{}]����GM�ʼ�ʧ��!", pCha->GetName());*/
+			/*pCha->SystemNotice("GMGM!");
+			ToLogService("common", "[{}]GM!", pCha->GetName());*/
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00090));
 			ToLogService("store", "[{}]send GM mail failed!", pCha->GetName());
 		}
@@ -3371,9 +3371,9 @@ namespace mission
 		{
 			SAFE_DELETE(pChaInfo);
 			FreeNetMessage(pNm);
-			//LG("Store_msg", "������[ID:%I64i]�ظ�!\n", pNm->msgHead.msgOrder);
+			//LG("Store_msg", "[ID:%I64i]!\n", pNm->msgHead.msgOrder);
 			ToLogService("store", "order form number [ID:{}]repeat!", pNm->msgHead.msgOrder);
-			//pCha->SystemNotice("�ʼ�����ʧ��, �������ظ�!");
+			//pCha->SystemNotice(", !");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00089));
 
 			return false;
@@ -3384,9 +3384,9 @@ namespace mission
 		}
 		else
 		{
-			//pCha->SystemNotice("GM�ʼ�����ʧ��!");
+			//pCha->SystemNotice("GM!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00092));
-			//LG("Store_msg", "RequestGMRecv: InfoServer����ʧ��!\n");
+			//LG("Store_msg", "RequestGMRecv: InfoServer!\n");
 			ToLogService("store", "RequestGMRecv: InfoServersend failed!");
 		}
 
@@ -3404,7 +3404,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "AcceptGMRecv:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "AcceptGMRecv:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "AcceptGMRecv:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3418,13 +3418,13 @@ namespace mission
 
 		if(pCha)
 		{
-			// Типизированная сериализация: GM-почта (успех)
+			//  : GM- ()
 			auto WtPk = net::msg::serialize(net::msg::McGmMailMessage{
 				pMi->title, pMi->description, static_cast<int64_t>(pMi->sendTime)
 			});
 			pCha->ReflectINFof(pCha, WtPk);
-			/*pCha->SystemNotice("GM�ʼ��ظ�: [����ID: %ld]!", pMi->id);
-			ToLogService("common", "[{}]����GM�ʼ��ɹ�!", pCha->GetName());*/
+			/*pCha->SystemNotice("GM: [ID: %ld]!", pMi->id);
+			ToLogService("common", "[{}]GM!", pCha->GetName());*/
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00093), pMi->id);
 			ToLogService("store", "[{}] receive GM mail succeed!", pCha->GetName());
 		}
@@ -3440,7 +3440,7 @@ namespace mission
 
 		if(OrderInfo.lOrderID == 0)
 		{
-			//LG("Store_msg", "CancelGMRecv:�Ҳ�������[ID:%I64i]!\n", lOrderID);
+			//LG("Store_msg", "CancelGMRecv:[ID:%I64i]!\n", lOrderID);
 			ToLogService("store", "CancelGMRecv:cannot find order form[ID:{}]!", lOrderID);
 			return false;
 		}
@@ -3454,13 +3454,13 @@ namespace mission
 
 		if(pCha)
 		{
-			// Типизированная сериализация: GM-почта (нет писем)
+			//  : GM- ( )
 			auto WtPk = net::msg::serialize(net::msg::McGmMailMessage{
 				"GM do not have mail send to you!", "", 0
 			});
 			pCha->ReflectINFof(pCha, WtPk);
 
-			//LG("Store_data", "[%s]����GM�ʼ�ʧ��!\n", pCha->GetName());
+			//LG("Store_data", "[%s]GM!\n", pCha->GetName());
 		
 			ToLogService("store", "[{}]receive GM mail failed!", pCha->GetName());
 		}
@@ -3470,7 +3470,7 @@ namespace mission
 
 	BOOL CStoreSystem::GetAfficheList()
 	{
-		//LG("Store_msg", "���󹫸��б�!\n");
+		//LG("Store_msg", "!\n");
 		ToLogService("store", "ask for affiche list!");
 		pNetMessage pNm = new NetMessage();
 		BuildNetMessage(pNm, INFO_REQUEST_AFFICHE, 0, 0, 0, NULL, 0);
@@ -3483,7 +3483,7 @@ namespace mission
 	{
 		try
 		{
-			//LG("Store_msg", "�����̳ǵ����б�!\n");
+			//LG("Store_msg", "!\n");
 			ToLogService("store", "set store item list!");
 
 			ClearItemList();
@@ -3498,7 +3498,7 @@ namespace mission
 				long lItemNum = pStore->itemNum;
 				time_t lComTime = pStore->comTime;
 
-				//������Ʒ�ڵ�
+				//
 				SItemData ItemNode;
 				memcpy(&ItemNode.store_head, pStore, sizeof(StoreInfo));
 				if(lItemNum > 0)
@@ -3509,7 +3509,7 @@ namespace mission
 				else
 					ItemNode.pItemArray = NULL;
 
-				//������Ʒ�б�
+				//
 				map< long, vector<SItemData> >::iterator map_it = m_ItemList.find(lClsID);
 				if(map_it != m_ItemList.end())
 				{
@@ -3531,7 +3531,7 @@ namespace mission
 			}
 
 			//for test
-			//LG("Store_info", "�̳���Ʒ:\n");
+			//LG("Store_info", ":\n");
 			ToLogService("common", "store merchandise:");
 			vector<ClassInfo>::iterator cls_it = m_ItemClass.begin();
 			{
@@ -3566,7 +3566,7 @@ namespace mission
 		}
 		catch(...)
 		{
-			//LG("Store_error", "CStoreSystem::SetItemList() δ֪�쳣!\n");
+			//LG("Store_error", "CStoreSystem::SetItemList() !\n");
 			ToLogService("errors", LogLevel::Error, "CStoreSystem::SetItemList() unknown abnormity!");
 		}
 
@@ -3582,7 +3582,7 @@ namespace mission
 
 	BOOL CStoreSystem::SetItemClass(ClassInfo *pClassList, long lNum)
 	{
-		//LG("Store_msg", "�����̳ǵ��߷���!\n");
+		//LG("Store_msg", "!\n");
 		ToLogService("store", "set store item sort!");
 		ClearItemClass();
 		while(lNum-- > 0)
@@ -3592,7 +3592,7 @@ namespace mission
 		}
 
 		//for test
-		//LG("Store_info", "�̳Ƿ���:\n");
+		//LG("Store_info", ":\n");
 		ToLogService("common", "store sort:");
 		vector<ClassInfo>::iterator it = m_ItemClass.begin();
 		while(it != m_ItemClass.end())
@@ -3613,7 +3613,7 @@ namespace mission
 
 	BOOL CStoreSystem::SetAfficheList(AfficheInfo *pAfficheList, long lNum)
 	{
-		//LG("Store_msg", "�����̳ǹ����б�!\n");
+		//LG("Store_msg", "!\n");
 		ToLogService("store", "set stroe affiche list!");
 		ClearAfficheList();
 		while(lNum > 0)
@@ -3624,7 +3624,7 @@ namespace mission
 		}
 
 		//for test
-		//LG("Store_info", "�̳ǹ���:\n");
+		//LG("Store_info", ":\n");
 		ToLogService("common", "store affiche:");
 		vector<AfficheInfo>::iterator it = m_AfficheList.begin();
 		while(it != m_AfficheList.end())
@@ -3667,7 +3667,7 @@ namespace mission
 			pCha->ForgeAction();
 			pCha->SetStoreEnable(true);
 		}
-		// Типизированная сериализация: ответ на открытие магазина
+		//  :    
 		net::msg::McStoreOpenAnswerMessage openMsg;
 		openMsg.isValid = (bValid == 1);
 
@@ -3699,7 +3699,7 @@ namespace mission
 
 		if(bValid != 1)
 		{
-			//pCha->SystemNotice("�����̳ǻ�δ����,���ڴ��̳���ҳ!");
+			//pCha->SystemNotice(",!");
 			pCha->SystemNotice(RES_STRING(GM_CHARTRADE_CPP_00094));
 		}
 

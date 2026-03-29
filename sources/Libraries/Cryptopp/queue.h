@@ -1,4 +1,4 @@
-// queue.h - originally written and placed in the public domain by Wei Dai
+﻿// queue.h - originally written and placed in the public domain by Wei Dai
 
 /// \file
 /// \brief Classes for an unlimited queue to store bytes

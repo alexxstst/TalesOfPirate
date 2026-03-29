@@ -1,4 +1,4 @@
-/*
+﻿/*
  * WAB.H
  *
  * Top level public header for WAB API functions.

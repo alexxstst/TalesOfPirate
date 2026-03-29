@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "uifastcommand.h"
 #include "UICommand.h"
 #include "uigoodsgrid.h"
@@ -317,7 +317,7 @@ COneCommand& COneCommand::operator=(const COneCommand& rhs)
 COneCommand::~COneCommand()
 {
 	//if( _pCommand ) delete _pCommand;
-	SAFE_DELETE(_pCommand);	// UI��������
+	SAFE_DELETE(_pCommand);	// UI
 }
 
 void COneCommand::_SetSelf()

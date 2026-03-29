@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
-// PacketPool — потокобезопасный пул буферов для пакетов.
-// Аналог F# RangedPool. Бакеты по степеням двойки от 64 до 65536 байт.
-// Используется из recv thread и game thread.
+// PacketPool      .
+//  F# RangedPool.      64  65536 .
+//   recv thread  game thread.
 
 #include <cstdint>
 #include <atomic>
@@ -13,7 +13,7 @@ namespace net {
 
 class PacketPool {
 public:
-    // Глобальный пул (singleton)
+    //   (singleton)
     static PacketPool& Shared();
 
     PacketPool();
@@ -22,17 +22,17 @@ public:
     PacketPool(const PacketPool&) = delete;
     PacketPool& operator=(const PacketPool&) = delete;
 
-    // Выделить буфер >= size байт. Возвращает указатель на буфер.
-    // Реальный размер аллокации — ближайший бакет.
+    //   >= size .    .
+    //      .
     uint8_t* Allocate(int size);
 
-    // Вернуть буфер в пул. allocatedSize — размер, который вернул Allocate.
+    //    . allocatedSize  ,   Allocate.
     void Free(uint8_t* buf, int allocatedSize);
 
-    // Размер бакета для данного размера (для передачи в Free)
+    //      (   Free)
     int BucketSize(int size) const;
 
-    // Вывод статистики пула в std::cout
+    //     std::cout
     void PrintStats() const;
 
 private:

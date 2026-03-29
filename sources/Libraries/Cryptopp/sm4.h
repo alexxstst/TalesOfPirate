@@ -1,4 +1,4 @@
-// sm4.h - written and placed in the public domain by Jeffrey Walton and Han Lulu
+﻿// sm4.h - written and placed in the public domain by Jeffrey Walton and Han Lulu
 
 /// \file sm4.h
 /// \brief Classes for the SM4 block cipher

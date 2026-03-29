@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "uistoreform.h"
 #include "uidoublepwdform.h"
@@ -66,7 +66,7 @@ namespace GUI
 		grdTempBag->evtBeforeAccept = CUIInterface::_evtDragToGoodsEvent;
 		
 		//
-		// �̳ǽ���
+		// 
 		//
 		frmStore = mgr.Find("frmStore");
 		if(!frmStore)
@@ -77,7 +77,7 @@ namespace GUI
 		frmStore->evtEntrustMouseEvent = _evtStoreFormMouseEvent;
 		frmStore->evtClose             = _evtStoreFormClose;
 
-		// �̳���
+		// 
 		trvStore = dynamic_cast<CTreeView*>(frmStore->Find("trvStore"));
 		if(!trvStore)
 		{
@@ -87,7 +87,7 @@ namespace GUI
 		trvStore->SetSelectColor( 0 );
 		trvStore->evtMouseDown = _evtStoreTreeMouseClick;
 
-		// ��Ǯʣ��
+		// 
 		labMoneyLeft = dynamic_cast<CLabelEx*>(frmStore->Find("labMoneyLeft"));
 		if(!labMoneyLeft)
 		{
@@ -95,7 +95,7 @@ namespace GUI
 			return false;
 		}
 
-		// ����ʣ��
+		// 
 		labBeanLeft = dynamic_cast<CLabelEx*>(frmStore->Find("labBeanLeft"));
 		if(!labBeanLeft)
 		{
@@ -103,7 +103,7 @@ namespace GUI
 			return false;
 		}
 
-		// ��Ա����
+		// 
 		labMemberStyle = dynamic_cast<CLabelEx*>(frmStore->Find("labMemberStyle"));
 		if(! labMemberStyle)
 		{
@@ -143,7 +143,7 @@ namespace GUI
 
 
 
-		// �̳�ҳ��ǩ
+		// 
 		labListPage = dynamic_cast<CLabelEx*>(frmStore->Find("labListPage"));
 		if(!labListPage)
 		{
@@ -151,7 +151,7 @@ namespace GUI
 			return false;
 		}
 
-		// �̳�ҳ��Ŧ
+		// 
 		btnLeftPage = dynamic_cast<CTextButton*>(frmStore->Find("btnLeftPage"));
 		if(! btnLeftPage)
 		{
@@ -159,7 +159,7 @@ namespace GUI
 			return false;
 		}
 
-		// �̳�ҳ�Ұ�Ŧ
+		// 
 		btnRightPage = dynamic_cast<CTextButton*>(frmStore->Find("btnRightPage"));
 		if(! btnRightPage)
 		{
@@ -167,7 +167,7 @@ namespace GUI
 			return false;
 		}
 
-		// ���װ�Ŧ
+		// 
 		btnTrade = dynamic_cast<CTextButton*>(frmStore->Find("btnTrade"));
 		if(! btnTrade)
 		{
@@ -176,7 +176,7 @@ namespace GUI
 		}
 		btnTrade->SetIsEnabled(false);
 
-		// �Դ���ť
+		// 
 		btnTryon = dynamic_cast<CTextButton*>(frmStore->Find("btnTryon"));
 		if(! btnTryon)
 		{
@@ -193,7 +193,7 @@ namespace GUI
 		}
 		btnViewAll->SetIsEnabled(false);
 
-		// ���װ�ť��
+		// 
 		labTrade = dynamic_cast<CLabelEx*>(frmStore->Find("labTrade"));
 		if(! labTrade)
 		{
@@ -201,7 +201,7 @@ namespace GUI
 			return false;
 		}
 
-		// �Դ���ť��
+		// 
 		labTryon = dynamic_cast<CLabelEx*>(frmStore->Find("labTryon"));
 		if(! labTryon)
 		{
@@ -209,7 +209,7 @@ namespace GUI
 			return false;
 		}
 
-		// ȫ����ʾ��ť��
+		// 
 		labViewAll = dynamic_cast<CLabelEx*>(frmStore->Find("labViewAll"));
 		if(! labViewAll)
 		{
@@ -217,7 +217,7 @@ namespace GUI
 			return false;
 		}
 
-		// ������Ϣ����
+		// 
 		memStoreHelp = dynamic_cast<CMemo*>(frmStore->Find("memStoreHelp"));
 		if(! memStoreHelp)
 		{
@@ -226,14 +226,14 @@ namespace GUI
 		}
 
 
-		// ��ʾ���֣�������
+		// 
 		//CLabelEx* labNotice = dynamic_cast<CLabelEx*>(frmStore->Find("labNotice"));
 		//if(labNotice)
 		//{
 		//	labNotice->SetIsFlash(true);
 		//}
 
-		// ���壨��Ʒ����ʱ��ʾ���Զ�����Ϣʱ����ʾ��
+		// 
 		imgBackGround10 = dynamic_cast<CImage*>(frmStore->Find("imgBackGround10"));
 		if(! imgBackGround10)
 		{
@@ -241,7 +241,7 @@ namespace GUI
 			return false;
 		}
 
-		// �̳���Ʒ�б�
+		// 
 		char szName[32] = {0};
 		for(int i = 0; i < STORE_PAGE_SIZE; ++i)
 		{
@@ -300,7 +300,7 @@ namespace GUI
 				ToLogService("common", "frmStore:{} not found. ", szName);
 				return false;
 			}
-			m_stStoreGui[i].cmdStore->SetIsDrag(false);	// �������϶�
+			m_stStoreGui[i].cmdStore->SetIsDrag(false);	// 
 
 			sprintf(szName, "imgSquare_%d", i);
 			m_stStoreGui[i].imgSquare = dynamic_cast<CImage*>(frmStore->Find(szName));
@@ -358,7 +358,7 @@ namespace GUI
 
 
 		//
-		// �̳ǽ�����
+		// 
 		//
 		frmStoreLoad = CFormMgr::s_Mgr.Find("frmStoreLoad");
 		if(!frmStoreLoad) return false;
@@ -370,7 +370,7 @@ namespace GUI
 
 
 		//
-		// �鿴��ϸ
+		// 
 		//
 		frmViewAll = CFormMgr::s_Mgr.Find("frmViewAll");
 		if(! frmViewAll)
@@ -410,7 +410,7 @@ namespace GUI
 
 
 		//
-		// �Դ�����
+		// 
 		//
 		frmTryon = mgr.Find("frmTryon");
 		if(!frmTryon)
@@ -420,7 +420,7 @@ namespace GUI
 		}
 		frmTryon->evtClose = _evtTryonFormClose;
 
-		// ���ƽ�ɫ3D�ؼ�
+		// 3D
 		ui3dplayer = dynamic_cast<C3DCompent*>(frmTryon->Find("ui3dplayer"));
 		if(! ui3dplayer)
 		{
@@ -515,7 +515,7 @@ namespace GUI
 	}
 
 
-	// ���̳�ѯ��
+	// 
 	void CStoreMgr::OpenStoreAsk()
 	{
 		//CBoxMgr::ShowSelectBox(_evtStoreOpenCheckEvent, g_oLangRec.GetString(858), true);
@@ -526,10 +526,10 @@ namespace GUI
 	void CStoreMgr::ShowStoreForm(bool bShow)
 	{
 		g_stUIDoublePwd.CloseAllForm();
-		CFormMgr::s_Mgr.SetEnableHotKey(HOTKEY_STORE, ! bShow);		// �����ĵ��޸�
+		CFormMgr::s_Mgr.SetEnableHotKey(HOTKEY_STORE, ! bShow);		// 
 		_SetIsShowCozeForm(! bShow);
 
-		// �ر�Loading...
+		// Loading...
 		ShowStoreLoad(false);
 
 		if(bShow)
@@ -537,7 +537,7 @@ namespace GUI
 			StoreTreeRefresh();
 			_SetIsShowUserInfo(false);
 
-			// ������ʱ���� ESC ����
+			//  ESC 
 			//frmTempBag->SetIsEscClose(false);
 			frmStore->SetIsEscClose(true);
 			frmStore->SetPos(0, 0);
@@ -546,11 +546,11 @@ namespace GUI
 
 			if(! frmTryon->GetIsShow())
 			{
-				// ��ʾ�Դ�����
+				// 
 				ShowTryonForm(true);
 			}
 
-			// ��ʾ��ʱ����
+			// 
 			ShowTempKitbag(true);
 
 			CUIInterface::MainChaMove();
@@ -622,7 +622,7 @@ namespace GUI
 					oItemGrid.sInstAttr[j][1] = m_stStoreInfo[m_nCurSel].comItemInfo[i].itemAttrVal[j];
 				}
 
-				// ��Ʒ����
+				// 
 				unsigned long ulForgeP = oItemGrid.GetDBParam(enumITEMDBP_FORGE);
 				short sFlute = (short)(m_stStoreInfo[m_nCurSel].comItemInfo[i].itemFlute);
 				short sHole  = (short)(ulForgeP / 1000000000);
@@ -639,7 +639,7 @@ namespace GUI
 		memViewAll->ProcessCaption();
 		memViewAll->Refresh();
 
-		// ������ʾ
+		// 
 		frmViewAll->SetPos((g_pGameApp->GetWindowWidth()  - frmViewAll->GetWidth())  >> 1 , 
 						   (g_pGameApp->GetWindowHeight() - frmViewAll->GetHeight()) >> 1);
 		frmViewAll->Refresh();
@@ -647,11 +647,11 @@ namespace GUI
 	}
 
 
-	// ��ʾ��ҳ�̳�
+	// 
 	void CStoreMgr::ShowStoreWebPage()
 	{
 		extern Cooperate g_cooperate;
-		if(g_cooperate.code == COP_CGA) // �Ʒ����⴦��
+		if(g_cooperate.code == COP_CGA) // 
 		{
             string strURL = "http://pv.cga.com.cn/counter.asp?id=720";
 
@@ -668,7 +668,7 @@ namespace GUI
 	}
 
 
-	// ��ʾ�Դ�
+	// 
 	void CStoreMgr::ShowTryonForm(bool bShow)
 	{
 		if(bShow)
@@ -679,7 +679,7 @@ namespace GUI
 
 			if(false == frmTryon->GetIsShow())
 			{
-				// ��һ����ʾʱ������������
+				// 
 				m_nChaRotate = 0;
 
 				m_pCurrMainCha = g_pGameApp->GetCurScene()->AddCharacter(pMainCha->getTypeID());
@@ -692,7 +692,7 @@ namespace GUI
 				m_sCurLookInfo = m_sLookInfo;
 
 				m_isFight = m_pCurrMainCha->GetIsFight();
-				m_pCurrMainCha->FightSwitch(true);	// ǿ�ƴ򿪵�ǰ��ɫս��״̬
+				m_pCurrMainCha->FightSwitch(true);	// 
 				_ChangeChaPart(m_sCurLookInfo);
 
 				frmTryon->SetPos(frmStore->GetX2(), frmStore->GetY());
@@ -702,7 +702,7 @@ namespace GUI
 			}
 
 			//
-			// װ���Դ�
+			// 
 			bool bAllowEquip = false;
 			DWORD dwBodyType = m_pCurrMainCha->GetDefaultChaInfo()->lID;
 
@@ -719,7 +719,7 @@ namespace GUI
 						continue;
 
 					short sType = pItem->sType;
-					if(1 <= sType && sType <= 11)	// ����
+					if(1 <= sType && sType <= 11)	// 
 					{
 						
 						if(! pItem->IsAllowEquip(dwBodyType)){
@@ -805,7 +805,7 @@ namespace GUI
 						}
 						
 					}
-					else if(sType == 20)	// ñ��
+					else if(sType == 20)	// 
 					{
 						if(! pItem->IsAllowEquip(dwBodyType))
 						{
@@ -817,7 +817,7 @@ namespace GUI
 						m_sCurLookInfo.SLook.SLink[enumEQUIP_HEADAPP].sNum = 0;
 						bAllowEquip = true;
 					}			
-					else if(sType == 22 || sType == 27)	// �·�
+					else if(sType == 22 || sType == 27)	// 
 					{
 						if(! pItem->IsAllowEquip(dwBodyType))
 						{
@@ -829,7 +829,7 @@ namespace GUI
 						m_sCurLookInfo.SLook.SLink[enumEQUIP_BODYAPP].sNum = 0;
 						bAllowEquip = true;
 					}
-					else if(sType == 23)	// ����
+					else if(sType == 23)	// 
 					{
 						if(! pItem->IsAllowEquip(dwBodyType))
 						{
@@ -841,7 +841,7 @@ namespace GUI
 						m_sCurLookInfo.SLook.SLink[enumEQUIP_GLOVEAPP].sNum = 0;
 						bAllowEquip = true;
 					}
-					else if(sType == 24)	// Ь��
+					else if(sType == 24)	// 
 					{
 						if(! pItem->IsAllowEquip(dwBodyType))
 						{
@@ -862,7 +862,7 @@ namespace GUI
 				_ChangeChaPart(g_stUIStore.m_sCurLookInfo);
 
 				m_pCurrMainCha->PlayPose(1, PLAY_LOOP_SMOOTH );
-				m_pCurrMainCha->FightSwitch(true);	// ǿ�ƽ�ɫս��״̬
+				m_pCurrMainCha->FightSwitch(true);	// 
 			}
 			else
 			{
@@ -876,7 +876,7 @@ namespace GUI
 	}
 
 
-	// ��ʾ͸������
+	// 
 	void CStoreMgr::ShowAlphaMatteForm(bool bShow)
 	{
 		CForm* frmAlphaMatte = CFormMgr::s_Mgr.Find("frmAlphaMatte");
@@ -891,7 +891,7 @@ namespace GUI
 	}
 
 
-	// �������
+	// 
 	void CStoreMgr::DarkScene(bool bDark)
 	{
 		CForm* frmStoreDark = CFormMgr::s_Mgr.Find("frmStoreDark");
@@ -901,19 +901,19 @@ namespace GUI
 	}
 
 
-	// ����ʱ����ȡ��
+	// 
 	bool CStoreMgr::PopFromTempKitbag(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem)
 	{
 		g_stUIStore.m_NetTempKitbag.sSrcGridID = rkDrag.GetDragIndex();
 		g_stUIStore.m_NetTempKitbag.sTarGridID = nGridID;
 
-		// �ж���Ʒ�Ƿ��ǿ��ص�����Ʒ
+		// 
 		CItemCommand* pkItemCmd = dynamic_cast<CItemCommand*>(&rkItem);
 		if (!pkItemCmd)	return false;
 
 		if ( pkItemCmd->GetItemInfo()->GetIsPile() && pkItemCmd->GetTotalNum() > 1 )
 		{
-			// ȡ�����Ե��ŵ���Ʒ
+			// 
 			m_pkNumberBox = 
 				g_stUIBox.ShowNumberBox( _evtDragItemsEvent, pkItemCmd->GetTotalNum(), g_oLangRec.GetString(442), false);
 
@@ -924,7 +924,7 @@ namespace GUI
 		}
 		else
 		{
-			// ȡ��������Ʒ
+			// 
 			g_stUIStore.m_NetTempKitbag.sSrcNum = 1;
 			CS_BeginAction(g_stUIBoat.GetHuman(), enumACTION_KITBAGTMP_DRAG, (void*)&(g_stUIStore.m_NetTempKitbag));
 			return true;
@@ -948,7 +948,7 @@ namespace GUI
 	}
 
 
-	// �����̳�����㣨�����Ϊ���ʾ����㣩
+	// 
 	void CStoreMgr::AddStoreTreeNode(long nParentID, long nID, const char* szCaption)
 	{
 		m_mapNode[nID] = string(szCaption);
@@ -992,7 +992,7 @@ namespace GUI
 	}
 
 
-	// �����̳���Ʒ��Ϣ
+	// 
 	void CStoreMgr::AddStoreItemInfo(long nSeq, long nID, const char* szName, long nPrice, const char* szRemark, bool isHot, long nTime, long nRemainNum, long nRemainTime)
 	{
 		if(0 > nSeq || nSeq >= STORE_PAGE_SIZE)
@@ -1001,25 +1001,25 @@ namespace GUI
 		}
 
 		char szTemp[128] = {0};
-		m_stStoreGui[nSeq].labName->SetCaption(szName);		// ��Ʒ��
+		m_stStoreGui[nSeq].labName->SetCaption(szName);		// 
 		m_stStoreGui[nSeq].labName->SetIsShow(true);
 
-		m_stStoreGui[nSeq].labPrice->SetCaption(StringSplitNum(nPrice, 3, ','));	// ��Ʒ�۸�
+		m_stStoreGui[nSeq].labPrice->SetCaption(StringSplitNum(nPrice, 3, ','));	// 
 		m_stStoreGui[nSeq].labPrice->SetIsShow(true);
 
 		sprintf(szTemp, "%s", StringLimit(szRemark, 25).c_str());
-		m_stStoreGui[nSeq].labRemark->SetCaption(strlen(szRemark) > 0 ? szTemp : szRemark);  // ��Ʒ����
+		m_stStoreGui[nSeq].labRemark->SetCaption(strlen(szRemark) > 0 ? szTemp : szRemark);  // 
 		m_stStoreGui[nSeq].labRemark->SetIsShow(true);
 
-		sprintf(szTemp, "Quantity: %d", nRemainNum); // "%d��"
+		sprintf(szTemp, "Quantity: %d", nRemainNum); // "%d"
 		m_stStoreGui[nSeq].labLeftNum->SetCaption(nRemainNum >= 0 ? szTemp : "No Limit");
 		m_stStoreGui[nSeq].labLeftNum->SetIsShow(true);
 
-		sprintf(szTemp, g_oLangRec.GetString(911), nRemainTime);// "%dСʱ"
+		sprintf(szTemp, g_oLangRec.GetString(911), nRemainTime);// "%d"
 		m_stStoreGui[nSeq].labLeftTime->SetCaption(nRemainTime >= 0 ? szTemp : "No Limit");
 		m_stStoreGui[nSeq].labLeftTime->SetIsShow(true);
 
-		m_stStoreGui[nSeq].btnBlue->SetIsShow(true);			// ��ѡ��ť
+		m_stStoreGui[nSeq].btnBlue->SetIsShow(true);			// 
 		m_stStoreGui[nSeq].labRightClickView->SetIsShow(true);
 		
 		//m_stStoreGui[nSeq].labLeftNum->SetIsShow(false);
@@ -1027,7 +1027,7 @@ namespace GUI
 
 		if(isHot)
 		{
-			// ������Ʒ
+			// 
 			m_stStoreGui[nSeq].imgHot->SetIsShow(true);
 		}
 		else
@@ -1038,7 +1038,7 @@ namespace GUI
 
 			if(nDay < 15)
 			{
-				// ����Ʒ
+				// 
 				m_stStoreGui[nSeq].imgNew->SetIsShow(true);
 			}
 		}
@@ -1049,18 +1049,18 @@ namespace GUI
 		m_stStoreInfo[nSeq].comTime   = nTime;
 		m_stStoreInfo[nSeq].isHot     = isHot;
 
-		m_stStoreInfo[nSeq].comExpire = nRemainNum;	// ��ʱ
-		m_stStoreInfo[nSeq].itemNum   = nRemainTime;// ����
+		m_stStoreInfo[nSeq].comExpire = nRemainNum;	// 
+		m_stStoreInfo[nSeq].itemNum   = nRemainTime;// 
 
-		strncpy(m_stStoreInfo[nSeq].comName, szName, 20);	// ��Ʒ��
+		strncpy(m_stStoreInfo[nSeq].comName, szName, 20);	// 
 		m_stStoreInfo[nSeq].comName[21] = 0;
 
-		strncpy(m_stStoreInfo[nSeq].comRemark, szRemark, 128);	// ��Ʒ��ע
+		strncpy(m_stStoreInfo[nSeq].comRemark, szRemark, 128);	// 
 		m_stStoreInfo[nSeq].comRemark[129] = 0;
 	}
 
 
-	// �����̳���Ʒϸ����Ϣ
+	// 
 	void CStoreMgr::AddStoreItemDetail(long nSeq, long nSubSeq, short sItemID, short sItemNum, short sFlute, short pItemAttrID[], short pItemAttrVal[])
 	{
 		if(0 > nSeq || nSeq >= STORE_PAGE_SIZE)
@@ -1079,23 +1079,23 @@ namespace GUI
 		pInfo = GetItemRecordInfo(sItemID);
 		if (!pInfo) return;
 
-		// ���̳��ڲ�Ҳ����һ����Ʒ����ϸ����
+		// 
 		m_stStoreInfo[nSeq].comItemInfo[nSubSeq].itemID = sItemID;
 		m_stStoreInfo[nSeq].comItemInfo[nSubSeq].itemNum = sItemNum;
 		m_stStoreInfo[nSeq].comItemInfo[nSubSeq].itemFlute = sFlute;
 		memcpy(m_stStoreInfo[nSeq].comItemInfo[nSubSeq].itemAttrID,  pItemAttrID,  sizeof(short) * 5);
 		memcpy(m_stStoreInfo[nSeq].comItemInfo[nSubSeq].itemAttrVal, pItemAttrVal, sizeof(short) * 5);
 
-		if(nSubSeq != 0)	// ֻ���ӵ�һ�������ǵ�һ��������
+		if(nSubSeq != 0)	// 
 		{
 			return;
 		}
 
 		pItem = new CItemCommand(pInfo);
-		//pItem->GetData().sNum = sItemNum;	// ��ǰ��Ʒ�������ӵĸ���
-		pItem->SetOwnDefText("");			// ����ʾ�κ��Զ�������
+		//pItem->GetData().sNum = sItemNum;	// 
+		pItem->SetOwnDefText("");			// 
 
-		// ����
+		// 
 		SItemGrid& oItemGrid = pItem->GetData();
 		for(int i = 0; i < defITEM_INSTANCE_ATTR_NUM; ++i)
 		{
@@ -1103,7 +1103,7 @@ namespace GUI
 			oItemGrid.sInstAttr[i][1] = pItemAttrVal[i];
 		}
 
-		// ��Ʒ����
+		// 
 		unsigned long ulForgeP = oItemGrid.GetDBParam(enumITEMDBP_FORGE);
 		short sHole = (short)(ulForgeP / 1000000000);
 		ulForgeP = ulForgeP + (sFlute - sHole) * 1000000000;
@@ -1115,7 +1115,7 @@ namespace GUI
 	}
 
 
-	// �����û����ý��
+	// 
 	void CStoreMgr::AddStoreUserTreeNode(void)
 	{
 		//disabled help / management
@@ -1124,7 +1124,7 @@ namespace GUI
 	}
 
 
-	// �����̳��б�ҳ
+	// 
 	void CStoreMgr::SetStoreItemPage(long nCurPage, long nMaxPage)
 	{
 		m_nCurPage = nCurPage;
@@ -1149,7 +1149,7 @@ namespace GUI
 	}
 
 
-	// ����ħ������
+	// 
 	void CStoreMgr::SetStoreMoney(long nMoBean, long nRplMoney)
 	{
 		char szBuffer[32] = {0};
@@ -1168,26 +1168,26 @@ namespace GUI
 	}
 
 
-	// ����VIPֵ
+	// VIP
 	void CStoreMgr::SetStoreVip(long nVip)
 	{
 		//CTextButton* btnToVip = dynamic_cast<CTextButton*>(frmStore->Find("btnToVIP"));
 		if(nVip)
 		{
 			//if(btnToVip) btnToVip->SetIsEnabled(false);
-			labMemberStyle->SetCaption(g_oLangRec.GetString(902)); // �׽��Ա
+			labMemberStyle->SetCaption(g_oLangRec.GetString(902)); // 
 		}
 		else
 		{
 			//if(btnToVip) btnToVip->SetIsEnabled(true);
-			labMemberStyle->SetCaption(g_oLangRec.GetString(903)); // ��ͨ��Ա
+			labMemberStyle->SetCaption(g_oLangRec.GetString(903)); // 
 		}
 
 		m_nVip = nVip;
 	}
 
 
-	// ���ȫ�����̳������
+	// 
 	void CStoreMgr::ClearStoreTreeNode()
 	{
 		m_mapNode.clear();
@@ -1197,7 +1197,7 @@ namespace GUI
 	}
 
 
-	// ���ȫ���̳���Ʒ�б�
+	// 
 	void CStoreMgr::ClearStoreItemList()
 	{
 		for(int i = 0; i < STORE_PAGE_SIZE; ++i)
@@ -1216,14 +1216,14 @@ namespace GUI
 	}
 
 
-	// �����̳ǰ�ť�Ƿ����
+	// 
 	void CStoreMgr::SetStoreBuyButtonEnable(bool b)
 	{
 		btnTrade->SetIsEnabled(b);
 	}
 
 
-	// ��õ�ǰѡ��ID
+	// ID
 	int CStoreMgr::GetCurSelItemID()
 	{
 		if(0 <= m_nCurSel && m_nCurSel < STORE_PAGE_SIZE)
@@ -1235,7 +1235,7 @@ namespace GUI
 	}
 
 
-	// ����������ʱ�䣬10 ��������
+	// 10 
 	bool CStoreMgr::ResetLastOperate(bool bSilent)
 	{
 		static DWORD dwLast = 0;
@@ -1244,7 +1244,7 @@ namespace GUI
 		{
 			if(! bSilent)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(895));	// �̳ǲ�������Ƶ�������Ժ����ԣ�
+				g_pGameApp->MsgBox(g_oLangRec.GetString(895));	// 
 			}
 
 			return false;
@@ -1255,7 +1255,7 @@ namespace GUI
 	}
 
 
-	// ˢ���̳���
+	// 
 	void CStoreMgr::StoreTreeRefresh()
 	{
 
@@ -1264,14 +1264,14 @@ namespace GUI
 	}
 
 
-	// �Ƿ���ʾ�û���Ϣ
+	// 
 	void CStoreMgr::_SetIsShowUserInfo(bool bShow)
 	{
 		if(bShow)
 		{
-			labListPage->SetIsShow(! bShow);	// �̳�ҳ��ǩ
-			btnLeftPage->SetIsShow(! bShow);	// �̳�ҳ��Ŧ
-			btnRightPage->SetIsShow(! bShow);	// �̳�ҳ�Ұ�Ŧ
+			labListPage->SetIsShow(! bShow);	// 
+			btnLeftPage->SetIsShow(! bShow);	// 
+			btnRightPage->SetIsShow(! bShow);	// 
 
 			for(int i = 0; i < STORE_PAGE_SIZE; ++i)
 			{
@@ -1279,11 +1279,11 @@ namespace GUI
 			}
 		}
 
-		btnTrade->SetIsShow(! bShow);		// ���װ�Ŧ
-		btnTryon->SetIsShow(! bShow);		// �Դ���ť
+		btnTrade->SetIsShow(! bShow);		// 
+		btnTryon->SetIsShow(! bShow);		// 
 		btnViewAll->SetIsShow(! bShow);
-		labTrade->SetIsShow(! bShow);		// ���װ�ť��
-		labTryon->SetIsShow(! bShow);		// �Դ���ť��
+		labTrade->SetIsShow(! bShow);		// 
+		labTryon->SetIsShow(! bShow);		// 
 		labViewAll->SetIsShow(! bShow);
 
 		labNameTitle->SetIsShow(! bShow);
@@ -1293,16 +1293,16 @@ namespace GUI
 
 		memStoreHelp->SetIsShow(false);
 
-		imgBackGround10->SetIsShow(! bShow);	// �ؼ��İ�ɫ����
+		imgBackGround10->SetIsShow(! bShow);	// 
 	}
 
 	void CStoreMgr::_SetIsShowHelpInfo(bool bShow)
 	{
 		if(bShow)
 		{
-			labListPage->SetIsShow(! bShow);	// �̳�ҳ��ǩ
-			btnLeftPage->SetIsShow(! bShow);	// �̳�ҳ��Ŧ
-			btnRightPage->SetIsShow(! bShow);	// �̳�ҳ�Ұ�Ŧ
+			labListPage->SetIsShow(! bShow);	// 
+			btnLeftPage->SetIsShow(! bShow);	// 
+			btnRightPage->SetIsShow(! bShow);	// 
 
 			for(int i = 0; i < STORE_PAGE_SIZE; ++i)
 			{
@@ -1310,11 +1310,11 @@ namespace GUI
 			}
 		}
 
-		btnTrade->SetIsShow(! bShow);		// ���װ�Ŧ
-		btnTryon->SetIsShow(! bShow);		// �Դ���ť
+		btnTrade->SetIsShow(! bShow);		// 
+		btnTryon->SetIsShow(! bShow);		// 
 		btnViewAll->SetIsShow(! bShow);
-		labTrade->SetIsShow(! bShow);		// ���װ�ť��
-		labTryon->SetIsShow(! bShow);		// �Դ���ť��
+		labTrade->SetIsShow(! bShow);		// 
+		labTryon->SetIsShow(! bShow);		// 
 		labViewAll->SetIsShow(! bShow);
 
 		labNameTitle->SetIsShow(! bShow);
@@ -1325,7 +1325,7 @@ namespace GUI
 		_LoadStoreHelpInfo();
 		memStoreHelp->SetIsShow(bShow);
 
-		imgBackGround10->SetIsShow(bShow);	// �ؼ��İ�ɫ����
+		imgBackGround10->SetIsShow(bShow);	// 
 	}
 
 	void CStoreMgr::_SetIsShowCozeForm(bool bShow)
@@ -1375,7 +1375,7 @@ namespace GUI
 		{
 			if(0 == m_nVip && _IsCurSelVipNode())
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(913)); // VIPר������VIP�߼��û�����
+				g_pGameApp->MsgBox(g_oLangRec.GetString(913)); // VIPVIP
 				return;
 			}
 
@@ -1391,7 +1391,7 @@ namespace GUI
 
 	void CStoreMgr::_LoadStoreHelpInfo()
 	{
-		// ����
+		// 
 		static bool IsFirst = true;
 		if( IsFirst )
 		{
@@ -1441,7 +1441,7 @@ namespace GUI
 			if(strName.size() > 3)
 			{
 				strName = strName.substr(0, 3);
-				if(0 == _stricmp(strName.c_str(), g_oLangRec.GetString(902))) // �׽��Ա
+				if(0 == _stricmp(strName.c_str(), g_oLangRec.GetString(902))) // 
 				{
 					return true;
 				}
@@ -1452,7 +1452,7 @@ namespace GUI
 	}
 
 
-	// �̳�����������¼�
+	// 
 	void CStoreMgr::_evtStoreTreeMouseClick(CGuiData *pSender, int x, int y, DWORD key)
 	{
 		CItemObj* pSelItem = g_stUIStore.trvStore->GetHitItem(x, y);
@@ -1466,15 +1466,15 @@ namespace GUI
 					g_stUIStore.m_nCurClass = it->first;
 					g_stUIStore.m_nCurPage  = 1;
 
-					if(strItem == g_oLangRec.GetString(906))	// ���˹���
+					if(strItem == g_oLangRec.GetString(906))	// 
 					{
 						g_stUIStore._SetIsShowUserInfo(true);
 					}
-					else if(strItem == g_oLangRec.GetString(921))	// �̳ǰ���
+					else if(strItem == g_oLangRec.GetString(921))	// 
 					{
 						g_stUIStore._SetIsShowHelpInfo(true);
 					}
-					else	// ��Ʒ����
+					else	// 
 					{
 						g_stUIStore._SetIsShowUserInfo(false);
 						CS_StoreListAsk(g_stUIStore.m_nCurClass, (short)g_stUIStore.m_nCurPage, STORE_PAGE_SIZE);
@@ -1504,7 +1504,7 @@ namespace GUI
 						CTreeNodeObj* pChild = pRoot->GetChildNode(i);
 						if(strcmp(pChild->GetCaption(), strItem.c_str()))
 						{
-							pChild->SetIsExpand(false);	// �����Ѵ򿪵Ľ��
+							pChild->SetIsExpand(false);	// 
 						}
 						else
 						{
@@ -1518,48 +1518,48 @@ namespace GUI
 	}
 
 
-	// �̳ǰ�ť����¼�
+	// 
 	void CStoreMgr::_evtStoreFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		string strName = pSender->GetName();
-		if(strName == "btnLeftPage")	// ǰһҳ
+		if(strName == "btnLeftPage")	// 
 		{
 			if(g_stUIStore.m_nCurPage > 1 && g_stUIStore.m_nCurClass > 0)
 			{
 				CS_StoreListAsk(g_stUIStore.m_nCurClass, (short)g_stUIStore.m_nCurPage - 1, STORE_PAGE_SIZE);
 			}
 		}
-		else if(strName == "btnRightPage")	// ��һҳ
+		else if(strName == "btnRightPage")	// 
 		{
 			if(g_stUIStore.m_nCurPage < g_stUIStore.m_nMaxPage && g_stUIStore.m_nCurClass > 0)
 			{
 				CS_StoreListAsk(g_stUIStore.m_nCurClass, (short)g_stUIStore.m_nCurPage + 1, STORE_PAGE_SIZE);
 			}
 		}
-		else if(strName == "btnTrade")	// ������
+		else if(strName == "btnTrade")	// 
 		{
 			g_stUIStore._ShowTradeSelectBox();
 		}
-		else if(strName == "btnTryon")	// �Դ�
+		else if(strName == "btnTryon")	// 
 		{
 			g_stUIStore.ShowTryonForm(true);
 		}
-		else if(strName == "btnViewAll")	// ��ʾȫ������
+		else if(strName == "btnViewAll")	// 
 		{
 			g_stUIStore.ShowViewAllForm(true);
 		}
-		else if(strName == "btnReceiveMoney")	// �һ���ť
+		else if(strName == "btnReceiveMoney")	// 
 		{
 			if(g_stUIStore.imgBackGround10->GetIsShow()) return;
 			g_stUIStore.m_pkExchangeNum = 
-				g_stUIBox.ShowNumberBox( _evtExchangeEvent, -1, g_oLangRec.GetString(904), false); // ������һ�����
+				g_stUIBox.ShowNumberBox( _evtExchangeEvent, -1, g_oLangRec.GetString(904), false); // 
 		}
-		//else if(strName == "btnToVIP")	// ��ΪVIP
+		//else if(strName == "btnToVIP")	// VIP
 		//{
 		//	if(g_stUIStore.imgBackGround10->GetIsShow()) return;
-		//	CBoxMgr::ShowSelectBox(_evtStoreToVipEvent, g_oLangRec.GetString(915), true); // ȷ��Ҫ��ΪVIP�߼���Ա��
+		//	CBoxMgr::ShowSelectBox(_evtStoreToVipEvent, g_oLangRec.GetString(915), true); // VIP
 		//}
-		else if(strName == "btnReceiveMoDou") // �һ�Ħ��
+		else if(strName == "btnReceiveMoDou") // 
 		{
 			if(g_stUIStore.imgBackGround10->GetIsShow()) return;
 
@@ -1587,7 +1587,7 @@ namespace GUI
 					NULL, NULL, SW_SHOW);	
 		}
 		else if(strName.size() > 0 && strName.substr(0, 8) == "btnBlue_" &&
-				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// ѡ����Ʒ
+				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// 
 		{
 			g_stUIStore.m_nCurSel = strName[strName.size() - 1] - '0';
 			g_stUIStore._RefreshStoreListHighLight();
@@ -1598,12 +1598,12 @@ namespace GUI
 	{
 		string strName = pSender->GetName();
 		if(strName.size() > 0 && strName.substr(0, 8) == "btnBlue_" &&
-				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// ѡ����Ʒ
+				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// 
 		{
 			g_stUIStore.m_nCurSel = strName[strName.size() - 1] - '0';
 			g_stUIStore._RefreshStoreListHighLight();
 
-			g_stUIStore.ShowViewAllForm();		// ��ʾȫ��
+			g_stUIStore.ShowViewAllForm();		// 
 		}
 	}
 
@@ -1612,18 +1612,18 @@ namespace GUI
 	{
 		string strName = pSender->GetName();
 		if(strName.size() > 0 && strName.substr(0, 8) == "btnBlue_" &&
-				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// ѡ����Ʒ
+				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// 
 		{
 			g_stUIStore.m_nCurSel = strName[strName.size() - 1] - '0';
 			g_stUIStore._RefreshStoreListHighLight();
 
-			//g_stUIStore.ShowTryonForm();		// �Դ�
-			g_stUIStore._ShowTradeSelectBox();	// ����
+			//g_stUIStore.ShowTryonForm();		// 
+			g_stUIStore._ShowTradeSelectBox();	// 
 		}
 	}
 
 
-	// �̳Ǵ�ѯ�ʴ����������ϣ����ö����������֮��
+	// 
 	void CStoreMgr::_evtStoreOpenCheckEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		if(nMsgType != CForm::mrYes)
@@ -1636,7 +1636,7 @@ namespace GUI
 	}
 
 
-	// ��ΪVIP ȷ��
+	// VIP 
 	void CStoreMgr::_evtStoreToVipEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		//if(nMsgType != CForm::mrYes)
@@ -1651,7 +1651,7 @@ namespace GUI
 	}
 
 
-	// ���Ҷһ��¼�����
+	// 
 	void CStoreMgr::_evtExchangeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		if(nMsgType != CForm::mrYes)
@@ -1666,12 +1666,12 @@ namespace GUI
 			g_stUIStore.m_nExchangeNum = num;
 
 			char szBuffer[MAX_PATH] ={0};
-			sprintf(szBuffer, g_oLangRec.GetString(905), g_stUIStore.m_nExchangeNum); // ȷ�϶һ�����: %d
+			sprintf(szBuffer, g_oLangRec.GetString(905), g_stUIStore.m_nExchangeNum); // : %d
 			CBoxMgr::ShowSelectBox(_evtExchangeCheckEvent, szBuffer, true);
 		}
 	}
 
-	// ���Ҷһ�ȷ��
+	// 
 	void CStoreMgr::_evtExchangeCheckEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		if(nMsgType != CForm::mrYes)
@@ -1682,10 +1682,10 @@ namespace GUI
 		if(! g_stUIStore.ResetLastOperate())
 			return;
 
-		CS_StoreChangeAsk(g_stUIStore.m_nExchangeNum);	// ֪ͨ������
+		CS_StoreChangeAsk(g_stUIStore.m_nExchangeNum);	// 
 	}
 
-	// ȷ�Ϲ�����
+	// 
 	void CStoreMgr::_evtTradeCheckEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		if(nMsgType != CForm::mrYes)
@@ -1704,25 +1704,25 @@ namespace GUI
 
 	void CStoreMgr::_evtStoreFormClose(CForm* pForm, bool& IsClose)
 	{
-		// ���ȼ�����
-		CFormMgr::s_Mgr.SetEnableHotKey(HOTKEY_STORE, true);	// �����ĵ��޸�
+		// 
+		CFormMgr::s_Mgr.SetEnableHotKey(HOTKEY_STORE, true);	// 
 
-		// ������ʱ���� ESC ����
+		//  ESC 
 		//g_stUIStore.frmTempBag->SetIsEscClose(true);
 
-		// δѡ��
+		// 
 		g_stUIStore.m_nCurSel = -1;
 
-		// �ر��Դ�����
+		// 
 		g_stUIStore.ShowTryonForm(false);
 
-		// ��ʱ�������̳ǹرպ�����϶�
+		// 
 		//g_stUIStore.frmTempBag->SetIsDrag(true);
 
-		// ��ʾ���½�������Ϣ
+		// 
 		g_stUIStore._SetIsShowCozeForm(true);
 
-		// �ر���ʱ����
+		// 
 		
 		if(! g_stUIEquip.GetItemForm()->GetIsShow())
 		{
@@ -1770,15 +1770,15 @@ namespace GUI
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-	// ��ԭ�Դ�
+	// 
 	void CStoreMgr::ChaEquipClearAll()
 	{
 		m_sCurLookInfo = m_sLookInfo;
 		_ChangeChaPart(m_sCurLookInfo);
-		m_pCurrMainCha->FightSwitch(true);	// ǿ�ƽ�ɫս��״̬
+		m_pCurrMainCha->FightSwitch(true);	// 
 	}
 
-	// �Դ� 3D ��ɫ������ת
+	//  3D 
 	void CStoreMgr::ChaLeftRotate()
 	{
 		m_nChaRotate += 180;
@@ -1787,7 +1787,7 @@ namespace GUI
 		m_nChaRotate -= 180;
 	}
 
-	// �Դ� 3D ��ɫ������ת
+	//  3D 
 	void CStoreMgr::ChaRightRotate()
 	{
 		m_nChaRotate += 180;
@@ -1796,7 +1796,7 @@ namespace GUI
 		m_nChaRotate -= 180;
 	}
 
-	// �����Դ� 3D ��ɫ
+	//  3D 
 	void CStoreMgr::RenderChaTryon(int x,int y)
 	{
 		if( !m_pCurrMainCha ) return;
@@ -1804,20 +1804,20 @@ namespace GUI
 		g_Render.LookAt( D3DXVECTOR3( 11.0f, 36.0f, 10.0f ), D3DXVECTOR3( 8.70f, 12.0f, 8.0f ), MPRender::VIEW_3DUI );
 		y += 100;
 
-		MPMatrix44 matCha = *m_pCurrMainCha->GetMatrix();	// �����ɫ����
+		MPMatrix44 matCha = *m_pCurrMainCha->GetMatrix();	// 
 
 		m_pCurrMainCha->SetScale( D3DXVECTOR3( 0.8f, 0.8f, 0.8f ) );
 		m_pCurrMainCha->SetUIYaw(180 + m_nChaRotate);
 		m_pCurrMainCha->SetUIScaleDis(9.0f * g_Render.GetScrWidth()/SMALL_RES_X );
 		m_pCurrMainCha->RenderForUI(x, y, true);
 
-		m_pCurrMainCha->SetMatrix(& matCha);	// �ָ���ɫ����
+		m_pCurrMainCha->SetMatrix(& matCha);	// 
 
 		g_Render.SetTransformView(&g_Render.GetWorldViewMatrix());
 	}
 
 
-	// ����3D��ɫ���ص���
+	// 3D
 	void CStoreMgr::_evtChaTryonRenderEvent(C3DCompent *pSender, int x, int y)
 	{
 		g_stUIStore.RenderChaTryon(x, y);

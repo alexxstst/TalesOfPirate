@@ -1,4 +1,4 @@
-//=============================================================================
+Ôªø//=============================================================================
 // FileName: ToolClass.h
 // Creater: ZhangXuedong
 // Date: 2005.10.19
@@ -146,7 +146,7 @@ T* CListArray<T>::Add(T* pCObj)
 	long	lPosID = pCObj->GetPosID();
 	if (lPosID < 0 || lPosID >= m_lCapacity)
 		lPosID = m_ppArray[m_lUsed]->lPosID;
-	if (m_pArray[lPosID].lPosReverse < m_lUsed) // ∏√Œª÷√“—æ≠”–ƒ⁄»›
+	if (m_pArray[lPosID].lPosReverse < m_lUsed) // 
 		return NULL;
 
 	pCObj->SetPosID(lPosID);
@@ -182,7 +182,7 @@ bool CListArray<T>::Del(long lPosID)
 		return false;
 	if (lPosID < 0 || lPosID >= m_lCapacity)
 		return false;
-	if (m_pArray[lPosID].lPosReverse >= m_lUsed) // ∏√Œª÷√“—æ≠Œ™ø’
+	if (m_pArray[lPosID].lPosReverse >= m_lUsed) // 
 		return true;
 
 	m_lUsed--;
@@ -201,7 +201,7 @@ T* CListArray<T>::Get(long lPosID)
 {
 	if (lPosID < 0 || lPosID >= m_lCapacity)
 		return NULL;
-	if (m_pArray[lPosID].lPosReverse >= m_lUsed) // ∏√Œª÷√“—æ≠Œ™ø’
+	if (m_pArray[lPosID].lPosReverse >= m_lUsed) // 
 		return NULL;
 	return &m_pArray[lPosID].CContent;
 }
@@ -316,14 +316,14 @@ T* CResidentList<T>::Add(T* pCObj)
 		return NULL;
 
 	SUnit	*pSCarrier;
-	if (m_pSFreeQueue) // ”–ø’œ–µƒ‘ÿÃÂ
+	if (m_pSFreeQueue) // 
 	{
 		pSCarrier = m_pSFreeQueue;
 		m_pSFreeQueue = pSCarrier->pSNext;
 		if (m_pSFreeQueue)
 			m_pSFreeQueue->pSLast = 0;
 	}
-	else // ∑÷≈‰–¬µƒ‘ÿÃÂ
+	else // 
 	{
 		pSCarrier = new SUnit;
 		if (!pSCarrier)

@@ -1,4 +1,4 @@
-// xts.cpp - written and placed in the public domain by Jeffrey Walton
+﻿// xts.cpp - written and placed in the public domain by Jeffrey Walton
 
 // Aarch32, Aarch64, Altivec and X86_64 include SIMD as part of the
 // base architecture. We can use the SIMD code below without an

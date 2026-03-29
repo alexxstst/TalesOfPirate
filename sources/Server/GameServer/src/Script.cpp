@@ -1,4 +1,4 @@
-// Script.cpp Created by knight-gongjian 2004.12.1.
+ï»¿// Script.cpp Created by knight-gongjian 2004.12.1.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "Script.h"
@@ -12,15 +12,9 @@ extern const char* GetResPath(const char *pszRes);
 CCharacter* g_pNoticeChar = NULL;
 lua_State* g_pLuaState = NULL;
 
-HANDLE lConsole = NULL;
-
 void print_error(lua_State* state) {
-	// The error message is on top of the stack.
-	// Fetch it, print it and then pop it off the stack.
-	SetConsoleTextAttribute(lConsole, 14);
 	const char* message = lua_tostring(state, -1);
-	puts(message);
-	SetConsoleTextAttribute(lConsole, 10);
+	ToLogService("lua", LogLevel::Error, "Lua error: {}", message ? message : "unknown");
 	lua_pop(state, 1);
 }
 
@@ -31,9 +25,6 @@ BOOL InitLuaScript()
 		return 1;
 
 	luaL_openlibs(g_pLuaState);
-
-	if (lConsole == NULL)
-		lConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 
 	if( !RegisterScript() )
 		return FALSE;
@@ -76,7 +67,7 @@ void ReloadLuaSdk()
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/NpcDefine.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/templatesdk.lua") );
 
-	// ÓÉupdateall»á´¥·¢ai_sdk¸üÐÂ
+	// updateallai_sdk
 	luaL_dofile( g_pLuaState, GetResPath("script/birth/birth_conf.lua"));
 	luaL_dofile( g_pLuaState, GetResPath("script/ai/ai.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/calculate/skilleffect.lua"));
@@ -84,7 +75,7 @@ void ReloadLuaSdk()
 
 void ReloadNpcScript()
 {
-	// ×°ÔØNPCÈÎÎñÊý¾ÝÐÅÏ¢
+	// NPC
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/MissionScript01.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/MissionScript02.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/MissionScript03.lua") );
@@ -97,7 +88,7 @@ void ReloadNpcScript()
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/EudemonScript.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/CharBornScript.lua") );
 
-	// ×°ÔØNPC¶Ô»°Êý¾ÝÐÅÏ¢
+	// NPC
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/NpcScript01.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/NpcScript02.lua") );
 	luaL_dofile( g_pLuaState, GetResPath("script/MisScript/NpcScript03.lua") );

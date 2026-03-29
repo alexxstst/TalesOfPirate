@@ -1,4 +1,4 @@
-Hook = {hookList = {}, enabled = true}
+﻿Hook = {hookList = {}, enabled = true}
 
 function Hook:AddReplacementHook(originalFctName, newFct)
     local hookDef = self.hookList[originalFctName]

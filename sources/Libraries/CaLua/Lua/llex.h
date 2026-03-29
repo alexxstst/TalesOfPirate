@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: llex.h,v 1.1.1.1 2004/01/13 09:02:38 justin_reynen Exp $
 ** Lexical Analyzer
 ** See Copyright Notice in lua.h

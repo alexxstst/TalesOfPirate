@@ -1,4 +1,4 @@
-// Timer.h — Менеджер таймеров (standalone, без зависимости от ThreadPool)
+﻿// Timer.h    (standalone,    ThreadPool)
 #pragma once
 
 #include "DBCCommon.h"
@@ -11,7 +11,7 @@ _DBC_BEGIN
 #pragma pack(push)
 #pragma pack(4)
 
-// Высокоточный таймер (GetTickCount или QueryPerformanceCounter)
+//   (GetTickCount  QueryPerformanceCounter)
 class Timekeeper
 {
 public:
@@ -82,7 +82,7 @@ private:
 	uLong         m_ulTimeCount;
 };
 
-// Базовый класс таймера — наследники переопределяют Process()
+//       Process()
 class Timer
 {
 	friend class TimerMgr;
@@ -99,7 +99,7 @@ private:
 	uLong m_interval;
 };
 
-// Менеджер таймеров — запускает все таймеры в одном потоке
+//         
 class TimerMgr
 {
 	friend class Timer;

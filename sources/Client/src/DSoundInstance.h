@@ -1,4 +1,4 @@
-#ifndef __DSOUNDINSTANCE_H__
+﻿#ifndef __DSOUNDINSTANCE_H__
 #define __DSOUNDINSTANCE_H__
 
 #include "SoundInstance.h"

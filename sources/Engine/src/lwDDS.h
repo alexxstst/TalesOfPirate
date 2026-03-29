@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 // dds.h
 //
 // This header defines constants and structures that are useful when parsing 

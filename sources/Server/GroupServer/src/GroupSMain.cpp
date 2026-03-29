@@ -1,4 +1,4 @@
-// GroupServerApp.cpp : Defines the entry point for the console application.
+﻿// GroupServerApp.cpp : Defines the entry point for the console application.
 //
 
 #include "stdafx.h"
@@ -10,7 +10,7 @@ extern dbc::TimerMgr g_timermgr;
 
 HANDLE hConsole = NULL;
 
-// ��ʼ��˳��
+// 
 #pragma init_seg( lib )
 pi_LeakReporter pi_leakReporter("groupememleak.log");
 CResourceBundleManage g_ResourceBundleManage("GroupServer.loc"); //Add by alfred.shi 20080130
@@ -40,10 +40,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		return -1;
 	}
 
-	// Запуск таймеров (AddStatLog, DisableCloseButton, GMBBS) в отдельном потоке
+	//   (AddStatLog, DisableCloseButton, GMBBS)   
 	g_timermgr.Start();
 
-	// stdin в отдельном потоке, чтобы не блокировать main loop
+	// stdin   ,    main loop
 	std::thread consoleThread([&]() {
 		while (!g_exit) {
 			std::string str;

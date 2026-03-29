@@ -1,4 +1,4 @@
-/*
+﻿/*
         @doc ADVANCED QUEUEING DATA TYPES
         @module aqadmtyp.h | Data types used in advanced queueing interfaces
 */

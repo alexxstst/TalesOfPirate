@@ -1,4 +1,4 @@
-/*
+﻿/*
  *   wsipx.h
  *
  *   Microsoft Windows

@@ -1,4 +1,4 @@
-// hc128.cpp - written and placed in the public domain by Jeffrey Walton
+﻿// hc128.cpp - written and placed in the public domain by Jeffrey Walton
 //             based on public domain code by Hongjun Wu.
 //
 //             The reference materials and source files are available at

@@ -1,4 +1,4 @@
-/* File: .streams.include.src/mod  wshisotp.h            Version: Initial */
+﻿/* File: .streams.include.src/mod  wshisotp.h            Version: Initial */
 /*
  *   wshisotp.h
  *   Copyright (c) 1994-1999, Microsoft Corp. All rights reserved.

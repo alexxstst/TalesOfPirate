@@ -1,4 +1,4 @@
- /**********************************************************************
+ï»¿ /**********************************************************************
  
 	FILE: IPipelineClient.h
 
@@ -20,7 +20,7 @@
 // GUID that identifies this ifc (interface)
 #define PIPELINECLIENT_INTERFACE Interface_ID(0x62383d51, 0x2d0f7d6a)
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // This interface should be implemented by objects that flow up the 
 // geometry pipeline and have data members that belong to the pipeline
 // channels (geometry, topology, texmap, etc)

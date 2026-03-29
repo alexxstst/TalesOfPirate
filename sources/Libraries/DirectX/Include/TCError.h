@@ -1,4 +1,4 @@
-/* Copyright (c) 1997-1999, Microsoft Corporation, all rights reserved
+﻿/* Copyright (c) 1997-1999, Microsoft Corporation, all rights reserved
 **
 ** tcerror.h
 ** Traffic Control external API

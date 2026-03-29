@@ -1,4 +1,4 @@
-#include <TableData.h>
+﻿#include <TableData.h>
 
 BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 {
@@ -12,7 +12,7 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 	if (fp == NULL)
 	{
 		ToLogService("errors", LogLevel::Error, "Load Raw Data Info Bin File [{}] Failed!", pszFileName);
-		//MessageBox(NULL, szMsg, "����", MB_OK | MB_ICONERROR);
+		//MessageBox(NULL, szMsg, "", MB_OK | MB_ICONERROR);
 		sprintf(szMsg, "Open table file failed:%s\nProgram will exit!\n", pszFileName);
 		MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 		return FALSE;
@@ -31,10 +31,10 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 	if(dwInfoSize!=_GetRawDataInfoSize())
 	{
 		//MessageBox(NULL, szMsg, "Error2", MB_OK | MB_ICONERROR);
-		//LG2("table", "msg��ȡ�����ļ�[%s]ʱ, ���ְ汾��һ��!\n", pszFileName);
+		//LG2("table", "msg[%s], !\n", pszFileName);
 		ToLogService("common", LogLevel::Error, " read table file [{}], version can't match!", pszFileName);
 		fclose(fp);
-		//MessageBox(NULL, szMsg, "����", MB_OK | MB_ICONERROR);
+		//MessageBox(NULL, szMsg, "", MB_OK | MB_ICONERROR);
 		sprintf(szMsg, "Open table file failed:%s\nProgram will exit!\n", pszFileName);
 		MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
 		exit(0);
@@ -68,7 +68,7 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 		if (IsValidID(i) == FALSE) continue;
 
 		CRawDataInfo* pCurInfo = _GetRawDataInfo(pInfo->nID);
-		memcpy(pCurInfo, pInfo, nInfoSize); // ���ԭ�е���Ϣ
+		memcpy(pCurInfo, pInfo, nInfoSize); // 
 		_IDIdx[pCurInfo->szDataName] = pCurInfo;
 		//vector<string> ParamList; _ReadRawDataInfo(pCurInfo, ParamList);
 		_ProcessRawDataInfo(pCurInfo);

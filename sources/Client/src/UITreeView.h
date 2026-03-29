@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:Ê÷ÐÍ¿Ø¼þ
-// ×÷Õß:lh 2004-07-19
-// Éè¼ÆË¼Ïë:CTreeViewÖÐ¼¯ºÏCTreeNodeObj
-// ×îºóÐÞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-19
+// :CTreeViewCTreeNodeObj
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uicompent.h"
@@ -25,10 +25,10 @@ public:
 	void			Render();
 	void			Refresh();
 
-	// ½ÚµãÑ¡Ôñ·¢Éú±ä»¯,½Úµã²»Í¬,·µ»Øtrue
+	// ,,true
 	bool			SetItem( CTreeNodeObj* parent, CItemObj* item );			
 
-	// ½ÚµãµÄ×Ó½ÚµãÑ¡Ôñ·¢Éú±ä»¯,²»ÏàÍ¬²Å¸³Öµ,ÏàÍ¬ÔòÎª¿Õ,½Úµã²»Í¬,·µ»Øtrue
+	// ,,,,true
 	bool			SetDifferItem( CTreeNodeObj* parent, CItemObj* item );		
 
 	void			CancelSelect()			{ _pItem=NULL; _pParent=NULL;}
@@ -38,13 +38,13 @@ public:
 	CTreeView*		GetOwn()				{ return _pOwn;				}
 
 private:	
-	bool			_SetParent( CTreeNodeObj *node );		// ÏàÍ¬·µ»Øfalse
+	bool			_SetParent( CTreeNodeObj *node );		// false
 
 	CTreeView*		_pOwn;
 	CTreeNodeObj*	_pParent;
 	CItemObj*		_pItem;
 
-private:    // Î´ÊµÏÖ
+private:    // 
     CTreeSelectItem( const CTreeSelectItem& rhs );
 	CTreeSelectItem& operator=(const CTreeSelectItem& rhs);
 
@@ -67,7 +67,7 @@ public:
     virtual const char* GetCaption()                        { return "";    }
 	virtual void		SetCaption( const char* str )		{}
 
-	// µÃµ½¼¤»îµãµÄÎ»ÖÃ
+	// 
 	virtual int			GetFocusX()							{ return _nX;	}		
 	virtual int			GetFocusY()							{ return _nY;	}
 
@@ -77,7 +77,7 @@ public:
 	// xuqin added
 	void				GetNumItems( int& Items );
 
-	// ¶ÔÏÂ¼¶Í¬¼¶½Úµã
+	// 
 	int					GetChildCount()						{ return (int)_ndChilds.size();		}
 	CTreeNodeObj*		GetChildNode( unsigned int v )		{ if(v<_ndChilds.size()) return _ndChilds[v]; return NULL;	}
 
@@ -109,7 +109,7 @@ public:
 	void				SetTag( DWORD v )					{ _dwTag = v;					}
 	DWORD				GetTag()							{ return _dwTag;				}
 
-public:	// ÓÃÓÚÍâ²¿½Å±¾
+public:	// 
 	int							GetID()						{ return (int)_nodes.size() - 1;}
 	static CTreeNodeObj*		GetNode( unsigned int id )  { 
 		if( id < _nodes.size() ) return _nodes[id];
@@ -125,7 +125,7 @@ protected:
 
 protected:
 	int					_nX, _nY, _nX2, _nY2;
-	bool				_IsExpand;		// ÊÇ·ñÒÑÕ¹¿ª
+	bool				_IsExpand;		// 
 	TreeNodes			_ndChilds;
 
 	CTreeView*			_pOwn;
@@ -135,7 +135,7 @@ protected:
 
 	static TreeNodes	_nodes;
 
-private:    // Î´ÊµÏÖ
+private:    // 
     CTreeNodeObj( const CTreeNodeObj& rhs );
 	CTreeNodeObj& operator=(const CTreeNodeObj& rhs);
 
@@ -150,18 +150,18 @@ public:
 	void	RootRefresh(int x, int& y, int colwidth, int rowheight);
 	bool	RootMouseRun( int x, int y, DWORD key );
 
-private:    // Î´ÊµÏÖ
+private:    // 
     CTreeNodeRoot( const CTreeNodeRoot& rhs );
 	CTreeNodeRoot& operator=(const CTreeNodeRoot& rhs);
 
 };
 
-// µ¥¸önode
+// node
 class CTreeNode : public CTreeNodeObj
 {
 public:
 	CTreeNode( CTreeView *own, CItemObj* item ) : CTreeNodeObj(own), _pItem(item) {}
-	~CTreeNode() { SAFE_DELETE(_pItem); } // UIµ±»ú´¦Àí //delete _pItem; }
+	~CTreeNode() { SAFE_DELETE(_pItem); } // UI //delete _pItem; }
 
 	virtual void	RenderSelf();
 	virtual void	MouseRunSelf( int x, int y, DWORD key );
@@ -180,13 +180,13 @@ protected:
 protected:
 	CItemObj*		_pItem;
 
-private:    // Î´ÊµÏÖ
+private:    // 
     CTreeNode( const CTreeNode& rhs );
 	CTreeNode& operator=(const CTreeNode& rhs);
 
 };
 
-// Ò»ÖÖÌØÊâµÄnode,½«×Ó½Úµã°´±í¸ñÅÅÁÐ
+// node,
 class CTreeGridNode : public CTreeNodeObj
 {
 public:
@@ -234,14 +234,14 @@ protected:
     virtual CItemObj*   _GetSelfHitItem( int x, int y );
 
 protected:
-	CItemObj*		_pItem;					        // ÏÔÊ¾ÔÚ±í¸ñÉÏÃæ,Ïàµ±ÓÚ±í¸ñµÄ×¢ÊÍ
+	CItemObj*		_pItem;					        // ,
 
 	typedef std::vector<CItemObj*> vitems;
 	vitems			_items;
 
-	int				_nUnitWidth,	_nUnitHeight;	// µ¥¸öµ¥Ôª¿í¸ß
-	int				_nColMaxNum;					// Ã¿ÁÐ×î´óÏÔÊ¾¸öÊý
-	int				_nRowNum;						// ÏÖÔÚµÄÐÐÊý
+	int				_nUnitWidth,	_nUnitHeight;	// 
+	int				_nColMaxNum;					// 
+	int				_nRowNum;						// 
 
 private:
 	void			_CaclRowNum();
@@ -252,7 +252,7 @@ private:
 	int		_nFocusCol,	_nFocusRow;
 	bool		_IsShowFocus;
 
-private:    // Î´ÊµÏÖ
+private:    // 
     CTreeGridNode( const CTreeGridNode& rhs );
 	CTreeGridNode& operator=(const CTreeGridNode& rhs);
 
@@ -282,7 +282,7 @@ public:
 	virtual bool		IsHandleMouse()				{ return true;					}
 	virtual bool		OnKeyDown( int key );
 	virtual void		SetAlpha( BYTE alpha );
-    virtual CCompent*   GetHintCompent( int x, int y );                       // ·µ»ØÓÐÌáÊ¾µÄ¿Ø¼þ
+    virtual CCompent*   GetHintCompent( int x, int y );                       // 
 	virtual void		DragRender();
 
 public:
@@ -322,13 +322,13 @@ public:
 	DWORD				GetSelectColor()			{ return _dwSelectColor;		}
 
 public:
-	GuiEvent			evtSelectChange;		// Ñ¡Ôñ·¢ÉúÁË±ä»¯
-	GuiEvent			evtSelectLost;			// ÉÏÒ»´ÎÑ¡ÔñµÄ½Úµã¶ªÊ§ÁË½¹µã
-	GuiEvent			evtItemLost;			// ÉÏÒ»¸öItem¶ªÊ§ÁË½¹µã
-	GuiEvent			evtItemChange;			// Item·¢ÉúÁË±ä»¯
-	GuiMouseEvent		evtMouseDown;			// Êó±êÔÚÓÐÐ§ÇøÄÚ°´ÏÂ
+	GuiEvent			evtSelectChange;		// 
+	GuiEvent			evtSelectLost;			// 
+	GuiEvent			evtItemLost;			// Item
+	GuiEvent			evtItemChange;			// Item
+	GuiMouseEvent		evtMouseDown;			// 
 	GuiMouseEvent		evtMouseDB;				//
-	GuiTreeDragEvent	evtMouseDragEnd;		// ÍÏ¶¯µ½ÁË±íµ¥ÉÏ
+	GuiTreeDragEvent	evtMouseDragEnd;		// 
 
 protected:
 	static void			_ScrollChange(CGuiData *pSender) {
@@ -346,21 +346,21 @@ private:
 	void			_Copy( const CTreeView& rhs );
 
 protected:
-	CScroll*			_pScroll;		// ¹ö¶¯Öá
-	CGuiPic*			_pImage;		// ±³¾°Í¼
+	CScroll*			_pScroll;		// 
+	CGuiPic*			_pImage;		// 
 
-	CGuiPic*			_pAddImage;		// ¼ÓºÅ
-	CGuiPic*			_pSubImage;		// ¼õºÅ
+	CGuiPic*			_pAddImage;		// 
+	CGuiPic*			_pSubImage;		// 
 	std::unique_ptr<CGuiPic> _nodeImage = std::make_unique<CGuiPic>();
 	NodeOptions nodeOptions{};
 
-	int					_nColSpace, _nRowSpace;		// ÁÐ¾à,ÐÐ¾à
-	bool				_IsAutoExpand;	// ×Ô¶¯Õ¹¿ª
+	int					_nColSpace, _nRowSpace;		// ,
+	bool				_IsAutoExpand;	// 
 
-	CTreeNodeRoot*		_pRoot;			// ¸ù½Úµã
-	CTreeSelectItem*	_pSelectItem;	// ±»Êó±êÑ¡ÔñµÄitem
+	CTreeNodeRoot*		_pRoot;			// 
+	CTreeSelectItem*	_pSelectItem;	// item
 
-	CItemObj*			_pDragItem;		// ±»ÍÏ¶¯µÄitem
+	CItemObj*			_pDragItem;		// item
 	CTreeNodeObj*		_pDragNode;
 	int					_nDragOffX, _nDragOffY;
 
@@ -374,11 +374,11 @@ private:
 	int					_nItemsHeight;
 	float				_nScrollMax;
 
-	DWORD				_dwSelectColor;	// Ñ¡ÖÐµÄ±³¾°É«
+	DWORD				_dwSelectColor;	// 
 
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void CTreeSelectItem::Render()
 {
 	if( _pItem ) 

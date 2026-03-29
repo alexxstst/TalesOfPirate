@@ -1,4 +1,4 @@
-//  Copyright (C) 1995-1999 Microsoft Corporation.  All rights reserved.
+﻿//  Copyright (C) 1995-1999 Microsoft Corporation.  All rights reserved.
 /* ----------------------------------------------------------------------------
 Microsoft	D.T.C (Distributed Transaction Coordinator)
 

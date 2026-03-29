@@ -1,4 +1,4 @@
-// NMCrypt.h : header file
+﻿// NMCrypt.h : header file
 //
 
 #if !defined(_NMCRYPT_H_)

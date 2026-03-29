@@ -1,4 +1,4 @@
-// drbg.h - written and placed in public domain by Jeffrey Walton.
+﻿// drbg.h - written and placed in public domain by Jeffrey Walton.
 
 /// \file drbg.h
 /// \brief Classes for NIST DRBGs from SP 800-90A

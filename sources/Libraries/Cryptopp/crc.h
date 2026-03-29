@@ -1,4 +1,4 @@
-// crc.h - originally written and placed in the public domain by Wei Dai
+﻿// crc.h - originally written and placed in the public domain by Wei Dai
 
 /// \file crc.h
 /// \brief Classes for CRC-32 and CRC-32C checksum algorithm

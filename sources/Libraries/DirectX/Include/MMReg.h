@@ -1,4 +1,4 @@
-/*++
+ï»¿/*++
 
 Copyright (C) Microsoft Corporation, 1991 - 1999
 
@@ -264,7 +264,7 @@ extern "C" {            /* Assume C declarations for C++ */
 #define   MM_RZS                        216         /* Ring Zero Systems, Inc */
 #define   MM_AUDIOSCIENCE               217         /* AudioScience Inc. */
 #define   MM_PINNACLE                   218         /* Pinnacle Systems, Inc. */
-#define   MM_EES                        219         /* EES Technik für Musik GmbH */
+#define   MM_EES                        219         /* EES Technik fr Musik GmbH */
 #define   MM_HAFTMANN                   220         /* haftmann#software */
 #define   MM_LUCID                      221         /* Lucid Technology, Symetrix Inc. */
 #define   MM_HEADSPACE                  222         /* Headspace, Inc */

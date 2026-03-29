@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "Character.h"
 #include "SubMap.h"
 #include "NPC.h"
@@ -6,19 +6,19 @@
 #include "HarmRec.h"
 
 //--------------------------------------------------------
-//                       AI◊¥Ã¨øÿ÷∆
+//                       AI
 //--------------------------------------------------------
 
 
 //-----------
-// AI◊‹øÿ∫Ø ˝
+// AI
 //-----------
 BOOL  g_bEnableAI  = TRUE;
 
 void CCharacter::OnAI(DWORD dwCurTime)
 {
 	
-	m_pHate->UpdateHarmRec(this); // π÷ŒÔ∫ÕÕÊº“∂º“™º∆À„…À∫¶¿€º∆
+	m_pHate->UpdateHarmRec(this); // 
 
 	if (IsPlayerCha() && getAttr(ATTR_CHATYPE) != enumCHACTRL_PLAYER_PET)	return;
 
@@ -47,7 +47,7 @@ void CCharacter::OnAI(DWORD dwCurTime)
 		m_AITarget = 0;
 	}
 
-	if (!IsLiveing())         return; // ∂‘œÛ≤ª¥Ê‘⁄
+	if (!IsLiveing())         return; // 
 
 
 	if (IsNpc())

@@ -1,4 +1,4 @@
-// bench1.cpp - originally written and placed in the public domain by Wei Dai
+﻿// bench1.cpp - originally written and placed in the public domain by Wei Dai
 //              CryptoPP::Test namespace added by JW in February 2017
 
 #include "cryptlib.h"

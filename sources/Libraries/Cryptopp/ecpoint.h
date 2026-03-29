@@ -1,4 +1,4 @@
-// ecpoint.h - written and placed in the public domain by Jeffrey Walton
+﻿// ecpoint.h - written and placed in the public domain by Jeffrey Walton
 //             Data structures moved from ecp.h and ec2n.h. Added EncodedPoint interface
 
 /// \file ecpoint.h

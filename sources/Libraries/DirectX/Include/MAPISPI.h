@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I S P I . H
  *
  *  Defines the calls and structures exchanged between MAPI or the spooler

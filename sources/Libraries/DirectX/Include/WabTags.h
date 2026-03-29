@@ -1,4 +1,4 @@
-/*
+ï»¿/*
  *  WABTAGS.H
  *
  *  Property tag definitions for standard properties of WAB
@@ -460,35 +460,35 @@
 /* These are the bits that show up in PR_SEND_INTERNET_ENCODING */
 
 /* whether or not an encoding preference is specified
-   1 - pay attention to the rest of the bits for the encoding preferences
-   0 - let the mail system choose what's best for it
- */
+ 1 - pay attention to the rest of the bits for the encoding preferences
+ 0 - let the mail system choose what's best for it
+*/
 #define ENCODING_PREFERENCE                     ((ULONG) 0x00020000)
 
 /*
-   1 - message in MIME;
-   0 - plain text/uuencode attachments
- */
+ 1 - message in MIME;
+ 0 - plain text/uuencode attachments
+*/
 #define ENCODING_TEXT                           ((ULONG) 0x00000000)
 #define ENCODING_MIME                           ((ULONG) 0x00040000)
 
 
-/*  Specifies how the body of the message is encoded.
-    00 - Body encoded as text
-        01 - body encoded as HTML (only valid if message in MIME)
-        10 - (actualy 1X) Text and HTML as multipart alternative (only valid if message in MIME)
- */
+/* Specifies how the body of the message is encoded.
+ 00 - Body encoded as text
+ 01 - body encoded as HTML (only valid if message in MIME)
+ 10 - (actualy 1X) Text and HTML as multipart alternative (only valid if message in MIME)
+*/
 #define BODY_ENCODING_MASK                      ((ULONG) 0x00180000)
 #define BODY_ENCODING_TEXT                      ((ULONG) 0x00000000) /* for completeness */
 #define BODY_ENCODING_HTML                      ((ULONG) 0x00080000)
 #define BODY_ENCODING_TEXT_AND_HTML             ((ULONG) 0x00100000)
 
-/*  Specifies how to handle Mac attachments
-    00 - BinHex
-        01 - UUENCODED (not valid if message in MIME - will be ignored, BinHex used instead)
-        10 - Apple Single (only valid if message in MIME)
-        11 - Apple Double (only valid if message in MIME)
- */
+/* Specifies how to handle Mac attachments
+ 00 - BinHex
+ 01 - UUENCODED (not valid if message in MIME - will be ignored, BinHex used instead)
+ 10 - Apple Single (only valid if message in MIME)
+ 11 - Apple Double (only valid if message in MIME)
+*/
 #define MAC_ATTACH_ENCODING_MASK                ((ULONG) 0x00600000)
 #define MAC_ATTACH_ENCODING_BINHEX              ((ULONG) 0x00000000)
 #define MAC_ATTACH_ENCODING_UUENCODE            ((ULONG) 0x00200000)

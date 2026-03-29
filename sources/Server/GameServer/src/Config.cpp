@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Config.h"
 #include <fstream>
 #include "Util.h"
@@ -52,10 +52,10 @@ void CGameConfig::SetDefault()
 	strcpy(m_szInfoPwd, "");
 	m_nSection = 0;
 
-	m_bLogAI		= FALSE;	// �Ƿ��AI��log
-	m_bLogCha		= FALSE;	// �Ƿ�򿪽�ɫ��log
-	m_bLogCal		= FALSE;	// �Ƿ����ֵ�����log
-	m_bLogMission	= FALSE;	// �Ƿ��Mission��log
+	m_bLogAI		= FALSE;	// AIlog
+	m_bLogCha		= FALSE;	// log
+	m_bLogCal		= FALSE;	// log
+	m_bLogMission	= FALSE;	// Missionlog
 
 	m_bSuperCmd     = FALSE;
 
@@ -111,7 +111,7 @@ bool CGameConfig::Load(char *pszFileName)
 		if(strLine.size()==0) continue;
 		if(strLine[0]=='[') 
 		{
-			// Секция конфигурационного файла
+			//   
 			ToLogService("common", "{}", strLine);
 			continue;
 		}
@@ -133,7 +133,7 @@ bool CGameConfig::Load(char *pszFileName)
 					m_nGateCnt++;
             }
         }
-        else if(strKey=="info") // ����InfoServer IP��port
+        else if(strKey=="info") // InfoServer IPport
         {
             string strList[4];
             int nCnt = Util_ResolveTextLine(strValue.c_str(), strList, 4, ',');
@@ -170,9 +170,9 @@ bool CGameConfig::Load(char *pszFileName)
 		else if (strKey == "BaseID")
 		{
 			size_t stPos = 0;
-			if ((stPos = strValue.find("0x")) != std::string::npos || (stPos = strValue.find("0X")) != std::string::npos) // ʮ������ֵ
+			if ((stPos = strValue.find("0x")) != std::string::npos || (stPos = strValue.find("0X")) != std::string::npos) // 
 				sscanf(strValue.c_str(), "%x", &m_ulBaseID);
-			else // ʮ����ֵ
+			else // 
 				sscanf(strValue.c_str(), "%d", &m_ulBaseID);
 		}
 		else if(strKey=="max_ply")
@@ -371,7 +371,7 @@ bool CGameConfig::Reload(char *pszFileName)
 		if(strLine.size()==0) continue;
 		if(strLine[0]=='[') 
 		{
-			// Секция конфигурационного файла
+			//   
 			ToLogService("common", "{}", strLine);
 			continue;
 		}
@@ -484,7 +484,7 @@ bool CGameCommand::Load(const char *pszFileName)
 			continue;
 		if(strLine[0]=='[')
 		{
-			// Секция конфигурационного файла
+			//   
 			ToLogService("common", "{}", strLine);
 			continue;
 		}

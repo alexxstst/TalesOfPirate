@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TableData.h"
 
@@ -24,7 +24,7 @@ public:
     int   nInitY;
     float fLightDir[3];
     BYTE  btLightColor[3];
-	bool  IsShowSwitch;		// �Ƿ�Ҫ��ʾ�л���ͼ
+	bool  IsShowSwitch;		// 
 
 };
 
@@ -45,7 +45,7 @@ public:
 
 protected:
 
-	static CMapSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CMapSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

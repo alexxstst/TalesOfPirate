@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  M A P I H O O K . H
  *
  *  Defines the SpoolerMsgHook provider interface.

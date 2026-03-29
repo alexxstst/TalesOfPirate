@@ -1,4 +1,4 @@
-// blake2.h - written and placed in the public domain by Jeffrey Walton
+﻿// blake2.h - written and placed in the public domain by Jeffrey Walton
 //            and Zooko Wilcox-O'Hearn. Based on Aumasson, Neves,
 //            Wilcox-O'Hearn and Winnerlein's reference BLAKE2
 //            implementation at http://github.com/BLAKE2/BLAKE2.

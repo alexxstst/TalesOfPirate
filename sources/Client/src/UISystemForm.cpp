@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uisystemform.h"
 #include <stdio.h> 
 #include <windows.h> 
@@ -39,7 +39,7 @@ extern bool g_IsCameraMode;
 //---------------------------------------------------------
 
 /**
-* ��ϵͳ����Ƶ��������Ϸ����Ч.
+* .
 * @return: success Return 0.
 */
 
@@ -56,13 +56,13 @@ int CSystemProperties::ApplyVideo()
 	//bCameraRotate
 	g_pGameApp->GetMainCam()->EnableRotation( m_videoProp.bCameraRotate );
 	//bViewFar
-	//g_pGameApp->GetMainCam()->EnableUpdown( m_videoProp.bViewFar ) ;//ȡ����ҰԶ��(Michael Chen 2005-04-22
+	//g_pGameApp->GetMainCam()->EnableUpdown( m_videoProp.bViewFar ) ;//(Michael Chen 2005-04-22
 	//nTexture-bGroundMark-nQuality
 	g_pGameApp->GetCurScene()->SetTextureLOD(m_videoProp.nTexture);
 
 	GetRender().SetIsChangeResolution(true);
 
-	//��δʹ��
+	//
 	//bAnimation
 
 	//bDepth32-bFullScreen-bResolution
@@ -110,7 +110,7 @@ int CSystemProperties::ApplyVideo()
 	return 0;
 }
 /**
-* ��ϵͳ��Ƶ��������Ϸ����Ч.
+* .
 * @return: success Return 0.
 */
 int CSystemProperties::ApplyAudio()
@@ -134,7 +134,7 @@ int CSystemProperties::ApplyGameOption()
 
 
 /**
-* ��ϵͳ��������Ϸ����Ч.
+* .
 * @return: success Return 0.
 *          video failure Return -1.
 *          audio failure Return -2.
@@ -392,7 +392,7 @@ int	CSystemProperties::bool2int(bool b)
 
 
 
-//video����Ĳ���
+//video
 static int     	g_nCbxTexture;
 static int		g_nCbxMovie;
 static int		g_nCbxCamera;
@@ -402,9 +402,9 @@ static int     	g_nCbxColor;
 static int     	g_nCboResolution;
 static int     	g_nCbxModel;
 static int     	g_bCbxQuality;
-static float   	g_fPosMusic = -1.0f;           //�������ֺͼ�ʱ��Ч
+static float   	g_fPosMusic = -1.0f;           //
 static float   	g_fPosMidi =  -1.0f;
-static bool    	g_bChangeAudio = false;        //�Ƿ�ı���Ƶ
+static bool    	g_bChangeAudio = false;        //
 
 //---------------------------------------------------------------------------
 // class CVideoMgr
@@ -421,17 +421,17 @@ frmAskExit(0), frmAskOfflineMode(0), frmAskChange(0)
 
 void CSystemMgr::LoadCustomProp()
 {
-	//��ȡϵͳ���ò�Ӧ��(Michael Chen 2005-04-27)
+	//(Michael Chen 2005-04-27)
 
 	if (!m_isLoad)
 	{
 		if (m_sysProp.Load("user\\system.ini"))
 		{
-			//��ȡ�����ļ�ʧ��,��Ĭ��ֵ���
+			//,
 			m_sysProp.m_videoProp.nTexture=0;
 			m_sysProp.m_videoProp.bAnimation=true;
 			m_sysProp.m_videoProp.bCameraRotate=true;
-			//m_sysProp.m_videoProp.bViewFar=true;      //ȡ����ҰԶ��(Michael Chen 2005-04-22
+			//m_sysProp.m_videoProp.bViewFar=true;      //(Michael Chen 2005-04-22
 			m_sysProp.m_videoProp.bGroundMark=true;
 			m_sysProp.m_videoProp.bDepth32=true;
 			m_sysProp.m_videoProp.nQuality=0;
@@ -454,7 +454,7 @@ void CSystemMgr::LoadCustomProp()
 			m_sysProp.m_gameOption.bFramerate = true;
 			m_sysProp.m_gameOption.bShowMounts = true;
 		}
-	//	m_sysProp.m_gameOption.bRunMode = true;	//�����ļ���������Σ���һ�Ϊtrue����ʱ
+	//	m_sysProp.m_gameOption.bRunMode = true;	//true
 		m_isLoad = true;
 	}
 	CCharacter::SetIsShowShadow(m_sysProp.m_videoProp.bGroundMark);
@@ -472,73 +472,73 @@ void CSystemMgr::LoadCustomProp()
 bool CSystemMgr::Init()
 {
 
-	frmSystem = _FindForm("frmSystem");//ϵͳ���� 
+	frmSystem = _FindForm("frmSystem");// 
 	if(!frmSystem ) 		return false;
 	frmSystem->evtEntrustMouseEvent = _evtSystemFromMouseEvent;
 
 
-	LoadCustomProp();       //��ȡ�û��Զ��������
+	LoadCustomProp();       //
 
-	///////////// Videoϵ��
+	///////////// Video
 	frmVideo = _FindForm("frmVideo");
 	if( !frmVideo )		return false;
 	frmVideo->evtEntrustMouseEvent = _evtVideoFormMouseEvent;
 
-	cbxTexture = ( CCheckGroup *)frmVideo->Find( "cbxTexture" ); //��ͼ����
-	if (! cbxTexture)	return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmVideo->GetName(), "cbxTexture" );
-	cbxTexture->SetActiveIndex(m_sysProp.m_videoProp.nTexture); //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxTexture = ( CCheckGroup *)frmVideo->Find( "cbxTexture" ); //
+	if (! cbxTexture)	return Error( "msgui.clu<%s><%s>", frmVideo->GetName(), "cbxTexture" );
+	cbxTexture->SetActiveIndex(m_sysProp.m_videoProp.nTexture); // Michael Chen 2005-04-22
 
-	cbxMovie = ( CCheckGroup *)frmVideo->Find( "cbxMovie" ); //��ͼ����
-	if (! cbxMovie )	return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmVideo->GetName(), "cbxMovie" );
-	cbxMovie->SetActiveIndex(m_sysProp.m_videoProp.bAnimation ? 0 : 1); //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxMovie = ( CCheckGroup *)frmVideo->Find( "cbxMovie" ); //
+	if (! cbxMovie )	return Error( "msgui.clu<%s><%s>", frmVideo->GetName(), "cbxMovie" );
+	cbxMovie->SetActiveIndex(m_sysProp.m_videoProp.bAnimation ? 0 : 1); // Michael Chen 2005-04-22
 
-	cbxCamera = ( CCheckGroup *)frmVideo->Find( "cbxCamera" ); //��ͼ����
-	if (! cbxCamera )	return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmVideo->GetName(), "cbxCamera" );
-	cbxCamera->SetActiveIndex(m_sysProp.m_videoProp.bCameraRotate ? 0 : 1); //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxCamera = ( CCheckGroup *)frmVideo->Find( "cbxCamera" ); //
+	if (! cbxCamera )	return Error( "msgui.clu<%s><%s>", frmVideo->GetName(), "cbxCamera" );
+	cbxCamera->SetActiveIndex(m_sysProp.m_videoProp.bCameraRotate ? 0 : 1); // Michael Chen 2005-04-22
 
-	/** ȡ����ҰԶ��(Michael Chen 2005-04-22
-	cbxView = ( CCheckGroup *)frmVideo->Find( "cbxView" ); //��ͼ����
-	if (! cbxView )		return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmVideo->GetName(), "cbxView" );
-	cbxView->SetActiveIndex(m_sysProp.m_videoProp.bViewFar ? 0 : 1);    //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	/** (Michael Chen 2005-04-22
+	cbxView = ( CCheckGroup *)frmVideo->Find( "cbxView" ); //
+	if (! cbxView )		return Error( "msgui.clu<%s><%s>", frmVideo->GetName(), "cbxView" );
+	cbxView->SetActiveIndex(m_sysProp.m_videoProp.bViewFar ? 0 : 1);    // Michael Chen 2005-04-22
 	*/
 
-	cbxTrail = ( CCheckGroup *)frmVideo->Find( "cbxTrail" ); //��ͼ����
+	cbxTrail = ( CCheckGroup *)frmVideo->Find( "cbxTrail" ); //
 	if (! cbxTrail )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxTrail" );
-	cbxTrail->SetActiveIndex(m_sysProp.m_videoProp.bGroundMark ? 0 : 1);    //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxTrail->SetActiveIndex(m_sysProp.m_videoProp.bGroundMark ? 0 : 1);    // Michael Chen 2005-04-22
 
-	cbxColor = ( CCheckGroup *)frmVideo->Find( "cbxColor" ); //��ͼ����
+	cbxColor = ( CCheckGroup *)frmVideo->Find( "cbxColor" ); //
 	if (! cbxColor )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxColor" );
-	cbxColor->SetActiveIndex(m_sysProp.m_videoProp.bDepth32 ? 1 : 0);   //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxColor->SetActiveIndex(m_sysProp.m_videoProp.bDepth32 ? 1 : 0);   // Michael Chen 2005-04-22
 
-	cboResolution = (CCombo*)frmVideo->Find("cboResolution"); //贴图精度
+	cboResolution = (CCombo*)frmVideo->Find("cboResolution"); //
 	if (!cboResolution)		return Error(g_oLangRec.GetString(45), frmVideo->GetName(), "cboResolution");
 	cboResolution->GetList()->GetItems()->Select(m_sysProp.m_videoProp.bResolution);
 
-	cbxModel = ( CCheckGroup *)frmVideo->Find( "cbxModel" ); //��ͼ����
+	cbxModel = ( CCheckGroup *)frmVideo->Find( "cbxModel" ); //
 	if (! cbxModel )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxModel" );	
-	cbxModel->SetActiveIndex(m_sysProp.m_videoProp.bFullScreen ? 0 : 1);    //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxModel->SetActiveIndex(m_sysProp.m_videoProp.bFullScreen ? 0 : 1);    // Michael Chen 2005-04-22
 
-	cbxQuality = ( CCheckGroup *)frmVideo->Find( "cbxQuality" ); //��ͼ����
+	cbxQuality = ( CCheckGroup *)frmVideo->Find( "cbxQuality" ); //
 	if (! cbxQuality )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxQuality" );
-	cbxQuality->SetActiveIndex(m_sysProp.m_videoProp.nQuality); //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	cbxQuality->SetActiveIndex(m_sysProp.m_videoProp.nQuality); // Michael Chen 2005-04-22
 	cbxQuality->evtSelectChange  = _evtVideoChangeChange;
 
-	//////////Audioϵ��
+	//////////Audio
 	frmAudio = _FindForm("frmAudio");
 	if( !frmAudio )         return false;
 	frmAudio->evtEntrustMouseEvent = _evtAudioFormMouseEvent;
 
 	proAudioMusic  = dynamic_cast<CProgressBar *>(frmAudio->Find("proAudioMusic"));    
 	if( !proAudioMusic )		return Error( g_oLangRec.GetString(45), frmAudio->GetName(), "proAudioMusic" );
-	proAudioMusic->SetPosition( static_cast<float>(m_sysProp.m_audioProp.nMusicSound) );    //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	proAudioMusic->SetPosition( static_cast<float>(m_sysProp.m_audioProp.nMusicSound) );    // Michael Chen 2005-04-22
 	proAudioMusic->evtMouseDown = _evtMainMusicMouseDown;
 
 	proAudioMidi  = dynamic_cast<CProgressBar *>(frmAudio->Find("proAudioMidi"));    
 	if( !proAudioMidi )			return Error( g_oLangRec.GetString(45), frmAudio->GetName(), "proAudioMidi" );
-	proAudioMidi->SetPosition( static_cast<float>(m_sysProp.m_audioProp.nMusicEffect) );    //�������ļ���������ʾ�ڿؼ��� Michael Chen 2005-04-22
+	proAudioMidi->SetPosition( static_cast<float>(m_sysProp.m_audioProp.nMusicEffect) );    // Michael Chen 2005-04-22
 	proAudioMidi->evtMouseDown = _evtMainMusicMouseDown;
 
-	//////// GameOptionϵ��
+	//////// GameOption
 	frmGameOption = _FindForm("frmGame");
 	if (!frmGameOption) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "frmGame");
 	frmGameOption->evtEntrustMouseEvent = _evtGameOptionFormMouseDown;
@@ -591,7 +591,7 @@ bool CSystemMgr::Init()
 
 
 
-	//////// ����
+	//////// 
 	frmAskRelogin = _FindForm("frmAskRelogin");
 	if( frmAskRelogin ) frmAskRelogin->evtEntrustMouseEvent = _evtAskReloginFormMouseDown;
 
@@ -636,14 +636,14 @@ void CSystemMgr::End()
 		setResolution = 5;
 	} 
 
-	//��ϵͳ���ñ��浽�ļ�(Michael Chen 2005-04-19)
+	//(Michael Chen 2005-04-19)
 	if (cbxTexture)
 		m_sysProp.m_videoProp.nTexture = cbxTexture->GetActiveIndex();
 	if (cbxMovie)
 		m_sysProp.m_videoProp.bAnimation = cbxMovie->GetActiveIndex() == 0 ? true : false;
 	if (cbxCamera)
 		m_sysProp.m_videoProp.bCameraRotate = cbxCamera->GetActiveIndex() == 0 ? true : false;
-	//m_sysProp.m_videoProp.bViewFar = cbxView->GetActiveIndex() == 0 ? true : false;ȡ����ҰԶ��(Michael Chen 2005-04-22
+	//m_sysProp.m_videoProp.bViewFar = cbxView->GetActiveIndex() == 0 ? true : false;(Michael Chen 2005-04-22
 	if (cbxTrail)
 		m_sysProp.m_videoProp.bGroundMark = cbxTrail->GetActiveIndex() == 0 ? true : false;
 	if (cbxColor)
@@ -682,7 +682,7 @@ void CSystemMgr::_evtVideoChangeChange(CGuiData *pSender)
 		g_stUISystem.cbxTexture->SetActiveIndex(0);
 		g_stUISystem.cbxMovie->SetActiveIndex(0);
 		g_stUISystem.cbxCamera->SetActiveIndex(0);
-		//g_stUISystem.cbxView->SetActiveIndex(0);//ȡ����ҰԶ��(Michael Chen 2005-04-22
+		//g_stUISystem.cbxView->SetActiveIndex(0);//(Michael Chen 2005-04-22
 		g_stUISystem.cbxTrail->SetActiveIndex(0);
 		g_stUISystem.cbxColor->SetActiveIndex(0);			
 	}
@@ -691,7 +691,7 @@ void CSystemMgr::_evtVideoChangeChange(CGuiData *pSender)
 		g_stUISystem.cbxTexture->SetActiveIndex(1);
 		g_stUISystem.cbxMovie->SetActiveIndex(0);
 		g_stUISystem.cbxCamera->SetActiveIndex(1);
-		//g_stUISystem.cbxView->SetActiveIndex(0);//ȡ����ҰԶ��(Michael Chen 2005-04-22
+		//g_stUISystem.cbxView->SetActiveIndex(0);//(Michael Chen 2005-04-22
 		g_stUISystem.cbxTrail->SetActiveIndex(0);
 		g_stUISystem.cbxColor->SetActiveIndex(1);	
 	}
@@ -700,7 +700,7 @@ void CSystemMgr::_evtVideoChangeChange(CGuiData *pSender)
 		g_stUISystem.cbxTexture->SetActiveIndex(2);
 		g_stUISystem.cbxMovie->SetActiveIndex(1);
 		g_stUISystem.cbxCamera->SetActiveIndex(1);
-		//g_stUISystem.cbxView->SetActiveIndex(1);//ȡ����ҰԶ��(Michael Chen 2005-04-22
+		//g_stUISystem.cbxView->SetActiveIndex(1);//(Michael Chen 2005-04-22
 		g_stUISystem.cbxTrail->SetActiveIndex(1);
 		g_stUISystem.cbxColor->SetActiveIndex(1);	
 	}
@@ -714,7 +714,7 @@ void CSystemMgr::_evtVideoFormMouseEvent(CCompent * pSender, int nMsgType, int x
         int nTextureHigh = g_stUISystem.cbxTexture->GetActiveIndex();
         bool bMovieOn = g_stUISystem.cbxMovie->GetActiveIndex() == 0 ? true : false;
         bool bCameraOn = g_stUISystem.cbxCamera->GetActiveIndex() == 0 ? true : false;
-        //bool bViewFar     = g_stUISystem.cbxView->GetActiveIndex()==0?true:false;//ȡ����ҰԶ��(Michael Chen 2005-04-22
+        //bool bViewFar     = g_stUISystem.cbxView->GetActiveIndex()==0?true:false;//(Michael Chen 2005-04-22
         bool bTrailOn = g_stUISystem.cbxTrail->GetActiveIndex() == 0 ? true : false;
         CCharacter::SetIsShowShadow(bTrailOn);
         D3DFORMAT format = g_stUISystem.cbxColor->GetActiveIndex() == 0 ? D3DFMT_D24X8 : D3DFMT_D16;
@@ -767,7 +767,7 @@ void CSystemMgr::_evtVideoFormMouseEvent(CCompent * pSender, int nMsgType, int x
 		{
             g_Render.EnableClearTarget(TRUE);
         }
-        //g_pGameApp->GetMainCam()->EnableUpdown( bViewFar ) ;//ȡ����ҰԶ��(Michael Chen 2005-04-22
+        //g_pGameApp->GetMainCam()->EnableUpdown( bViewFar ) ;//(Michael Chen 2005-04-22
         g_pGameApp->GetCurScene()->SetTextureLOD(nTextureHigh);
 
         g_Config.m_bFullScreen = FALSE;
@@ -797,7 +797,7 @@ void CSystemMgr::_evtVideoFormMouseEvent(CCompent * pSender, int nMsgType, int x
         g_stUISystem.cbxTexture->SetActiveIndex(g_nCbxTexture);
         g_stUISystem.cbxMovie->SetActiveIndex(g_nCbxMovie);
         g_stUISystem.cbxCamera->SetActiveIndex(g_nCbxCamera);
-        //g_stUISystem.cbxView->SetActiveIndex(g_nCbxView);//ȡ����ҰԶ��(Michael Chen 2005-04-22
+        //g_stUISystem.cbxView->SetActiveIndex(g_nCbxView);//(Michael Chen 2005-04-22
         g_stUISystem.cbxTrail->SetActiveIndex(g_nCbxTrail);
         g_stUISystem.cbxColor->SetActiveIndex(g_nCbxColor);
         g_stUISystem.cbxModel->SetActiveIndex(g_nCbxModel);
@@ -812,7 +812,7 @@ void CSystemMgr::_evtSystemFromMouseEvent(CCompent *pSender, int nMsgType, int x
 {
 	string name = pSender->GetName();
 
-	//frmSystem�����Ĵ���
+	//frmSystem
 	if( name=="btnClose" || name == "btnNo" )
 	{
 		pSender->GetForm()->Close();
@@ -893,7 +893,7 @@ void CSystemMgr::_evtSystemFromMouseEvent(CCompent *pSender, int nMsgType, int x
 		g_nCbxTexture = g_stUISystem.cbxTexture->GetActiveIndex();
 		g_nCbxMovie   = g_stUISystem.cbxMovie->GetActiveIndex();
 		g_nCbxCamera  = g_stUISystem.cbxCamera->GetActiveIndex();
-		//g_nCbxView    = g_stUISystem.cbxView->GetActiveIndex();//ȡ����ҰԶ��(Michael Chen 2005-04-22
+		//g_nCbxView    = g_stUISystem.cbxView->GetActiveIndex();//(Michael Chen 2005-04-22
 		g_nCbxTrail   = g_stUISystem.cbxTrail->GetActiveIndex();
 		g_nCbxColor   = g_stUISystem.cbxColor->GetActiveIndex();
 		g_nCboResolution    = g_stUISystem.cboResolution->GetList()->GetItems()->GetSelect()->GetIndex();
@@ -908,8 +908,8 @@ void CSystemMgr::_evtAudioFormMouseEvent(CCompent *pSender, int nMsgType, int x,
 {
 	string name=pSender->GetName();
 
-	//frmAudio�����Ĵ���
-	if (name=="btnYes")						//ֱ�ӹرձ���
+	//frmAudio
+	if (name=="btnYes")						//
 	{
 		g_fPosMusic = g_stUISystem.proAudioMusic->GetPosition();				
 		g_fPosMidi  = g_stUISystem.proAudioMidi->GetPosition();
@@ -921,7 +921,7 @@ void CSystemMgr::_evtAudioFormMouseEvent(CCompent *pSender, int nMsgType, int x,
 		pSender->GetForm()->SetIsShow(false) ;  
 		return  ;
 	}
-	else if (name=="btnNo")                   // ���ص�ԭ�������������رձ���
+	else if (name=="btnNo")                   // 
 	{
 		g_stUISystem.proAudioMusic->SetPosition(g_fPosMusic);	
 		g_stUISystem.proAudioMidi->SetPosition(g_fPosMidi);
@@ -1002,7 +1002,7 @@ void CSystemMgr::_evtAskChangeFormMouseDown(CCompent *pSender, int nMsgType, int
 	string name = pSender->GetName();
 	pSender->GetForm()->SetIsShow(false);
 
-	if (name== "btnYes")	// ��ɫ
+	if (name== "btnYes")	// 
 	{
 		g_ChaExitOnTime.ChangeCha();
 	}
@@ -1024,7 +1024,7 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 		}
 	}
 
-	// �Զ�����״̬
+	// 
 	pGroup = g_stUISystem.cbxLockMode;
 	if(pGroup)
 	{
@@ -1036,7 +1036,7 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 		}
 	}
 
-	// ��ʾ����״̬
+	// 
 	pGroup = g_stUISystem.cbxHelpMode;
 	if(pGroup)
 	{
@@ -1311,7 +1311,7 @@ void CChaExitOnTime::ChangeCha()
 
 	_dwEndTime = 0;
 
-	g_stUIMap.CloseRadar();	// �˳�ʱ�ر��״��ͷ  add by Philip.Wu  2006-06-21
+	g_stUIMap.CloseRadar();	//   add by Philip.Wu  2006-06-21
 
 	g_pGameApp->ClearAllSkillClocks();
 	CS_EndPlay();
@@ -1372,7 +1372,7 @@ void CChaExitOnTime::Relogin()
 
 	_dwEndTime = 0;
 
-	g_stUIMap.CloseRadar();	// �˳�ʱ�ر��״��ͷ  add by Philip.Wu  2006-06-21
+	g_stUIMap.CloseRadar();	//   add by Philip.Wu  2006-06-21
 	g_pGameApp->ClearAllSkillClocks();
 	CS_Logout();
 

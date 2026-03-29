@@ -10,7 +10,7 @@
 
 using namespace std;
 
-// CorsairsNet: OnConnect/OnDisconnect → GroupServerApp.cpp (OnAccepted/OnDisconnected)
+// CorsairsNet: OnConnect/OnDisconnect  GroupServerApp.cpp (OnAccepted/OnDisconnected)
 
 void GroupServerApp::HandleServeCall(net::TcpClient* client, net::RPacket& pk) {
 	uint32_t sess = pk.GetSess();
@@ -53,7 +53,7 @@ void GroupServerApp::HandleServeCall(net::TcpClient* client, net::RPacket& pk) {
 		}
 		return net::WPacket(256);
 	}();
-	// SESS-echo: отвечаем с тем же SESS | FLAG
+	// SESS-echo:     SESS | FLAG
 	retpk.WriteSess(sess | 0x80000000);
 	client->Send(retpk);
 }
@@ -140,14 +140,14 @@ net::WPacket GroupServerApp::TP_REGISTER(net::TcpClient* client, net::RPacket& p
 void GroupServerApp::OnProcessData(net::TcpClient* client, net::RPacket& recvbuf) {
 	try {
 		uShort l_cmd = recvbuf.ReadCmd();
-		// Логирование входящей команды
+		//   
 		ToLogService("common", "CMD: {}, l_cmd", (int)l_cmd);
 		switch (l_cmd) {
 		case CMD_AP_KICKUSER:
 			recvbuf.ReadInt64();
 			AP_KICKUSER(client, recvbuf);
 			return;
-		case CMD_AP_EXPSCALE: //  ·à3á??
+		case CMD_AP_EXPSCALE: //  3??
 			AP_EXPSCALE(client, recvbuf);
 			return;
 		case CMD_TP_DISC:
@@ -445,7 +445,7 @@ void GroupServerApp::OnProcessData(net::TcpClient* client, net::RPacket& recvbuf
 		case CMD_MP_GARNER2_CGETORDER:
 			CP_GARNER2_GETORDER(l_ply, client, recvbuf);
 			return;
-		case CMD_MP_GARNER2_UPDATE: //·′?·°×ò?￡??üD?×?D?μ?????
+		case CMD_MP_GARNER2_UPDATE: //????D??D??????
 			MP_GARNER2_UPDATE(l_ply, client, recvbuf);
 			return;
 		case CMD_MP_MUTE_PLAYER:
@@ -454,7 +454,7 @@ void GroupServerApp::OnProcessData(net::TcpClient* client, net::RPacket& recvbuf
 		}
 	}
 	catch (...) {
-		// Ошибка обработки пакета
+		//   
 		ToLogService("network", LogLevel::Error, "Packet CMD [{}] from [{}] caused exception.", (int)recvbuf.ReadCmd(),
 		   client->GetPeerIP().c_str());
 		return;
@@ -481,7 +481,7 @@ net::WPacket GroupServerApp::TP_SYNC_PLYLST(net::TcpClient* client, net::RPacket
 				uLong l_acctLoginID = pk.ReadInt64();
 				uLong l_acctid = pk.ReadInt64();
 
-				// Поиск существующего Player по gtAddr на этом GateServer
+				//   Player  gtAddr   GateServer
 				Player* l_ply = nullptr;
 				bool l_found = false;
 				for (auto l_p = g_gpsvr->m_plylst.GetNextItem(); l_p; l_p = g_gpsvr->m_plylst.GetNextItem()) {
@@ -493,7 +493,7 @@ net::WPacket GroupServerApp::TP_SYNC_PLYLST(net::TcpClient* client, net::RPacket
 				}
 
 				if (!l_ply) {
-					// Игрок не найден — создаём нового
+					//      
 					l_ply = g_gpsvr->m_plyheap.Get();
 				}
 
@@ -578,19 +578,19 @@ void GroupServerApp::CP_PING(Player* ply, net::TcpClient* client, net::RPacket& 
 	Player* l_ply = ply->m_pingply;
 	if (!l_ply) return;
 	ply->m_pingply = 0;
-	//l_ply->SendSysInfo(dstring("·t???÷μ?í??ò??")<<ply->m_chaname[ply->m_currcha].c_str()<<"??μ?ping?μ?a:"<<pk.ReadInt64()<<"oá??");
+	//l_ply->SendSysInfo(dstring("t????????")<<ply->m_chaname[ply->m_currcha].c_str()<<"???ping??a:"<<pk.ReadInt64()<<"o??");
 	char l_buf[256];
 	sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001), ply->m_chaname[ply->m_currcha].c_str(), pk.ReadInt64());
 	l_ply->SendSysInfo(l_buf);
 }
 
 void GroupServerApp::CP_REPORT_WG(Player* ply, net::TcpClient* client, net::RPacket& pk) {
-	// í3??í??òê1ó?ía1òêyá?
+	// 3????1?a1y?
 	if (!ply->m_bWG) {
 		ply->m_bWG = TRUE;
 		m_curWGChaNum++;
 	}
-	//ply->SendSysInfo( "±¨??á???é?ê1ó?ía1ò￡?" );
+	//ply->SendSysInfo( "??????1?a1?" );
 }
 
 void GroupServerApp::KickUser(net::TcpClient* client, uLong gpaddr, uLong gtaddr) {
@@ -616,13 +616,13 @@ net::WPacket GroupServerApp::TP_LOGIN(net::TcpClient* client, net::RPacket& pk) 
 		if (l_gate) {
 			if (l_gate->SetClient(client)) {
 				l_retpk.WriteInt64(ERR_SUCCESS);
-				//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"??μ???3é1|￡?"<<std::endl;
+				//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"?????31|?"<<std::endl;
 				std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() <<
 					"re login success!" << std::endl;
 			}
 			else {
 				l_retpk.WriteInt64(ERR_PT_SAMEGATENAME);
-				//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"μ???ê§°ü:ó?ò?μ???GateServer?????￡"<<std::endl;
+				//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"???:?????GateServer?????"<<std::endl;
 				std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() <<
 					"login failed: exsit the same name's GateServer " << std::endl;
 				m_server.DisconnectClient(client);
@@ -633,14 +633,14 @@ net::WPacket GroupServerApp::TP_LOGIN(net::TcpClient* client, net::RPacket& pk) 
 			m_gate[m_gatenum].m_name = l_gatename;
 			m_gate[m_gatenum].SetClient(client);
 			++m_gatenum;
-			//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"μ???3é1|￡?"<<std::endl;
+			//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"???31|?"<<std::endl;
 			std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "login success"
 				<<
 				std::endl;
 		}
 		else {
 			l_retpk.WriteInt64(ERR_PT_LOGFAIL);
-			//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"μ???ê§°ü￡?"<<std::endl;
+			//std::cout<<"GateServer:"<<client->GetPeerIP().c_str()<<","<<client->GetPeerPort()<<"????"<<std::endl;
 			std::cout << "GateServer:" << client->GetPeerIP().c_str() << "," << client->GetPeerPort() << "login failed!"
 				<<
 				std::endl;
@@ -678,7 +678,7 @@ int GroupServerApp::GetChaCount(Player* player) {
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	int l_row = 0;
 	int k = -1;
-	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0) //D??¤???êo?
+	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0) //D?????o?
 	{
 		// New account, so no chars.
 		return 0;
@@ -696,7 +696,7 @@ int GroupServerApp::GetChaCount(Player* player) {
 			}
 			else {
 				if ((l_row = m_tblcharaters->FetchRowByChaID(player->m_chaid[i])) == 1) {
-					char* l_look = const_cast<char*>(m_tblcharaters->GetLook()); //??è?ía1?êy?Y
+					char* l_look = const_cast<char*>(m_tblcharaters->GetLook()); //???a1?y?Y
 					LOOK look;
 					MemSet((char*)&look, 0, sizeof(LOOK));
 					try {
@@ -705,7 +705,7 @@ int GroupServerApp::GetChaCount(Player* player) {
 					}
 					catch (...) {
 						LogLine l_line(g_LogGrpServer);
-						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúía1?êy?Y?a??òì3￡?￡"<<endln;
+						//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]oa1?y?Y?a??3?"<<endln;
 						l_line << newln << "enum account [" << player->m_acctname << "]'s char[ID:" << player->m_chaid[
 							i] << "] find appearance data exception." << endln;
 						i--;
@@ -715,13 +715,13 @@ int GroupServerApp::GetChaCount(Player* player) {
 				else {
 					if (l_row == 0) {
 						LogLine l_line(g_LogGrpServer);
-						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";
+						//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]o?character?????D??????????y?Y";
 						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
 							<< "] can't find data in table character.";
 					}
 					else {
 						LogLine l_line(g_LogGrpServer);
-						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúêy?Y?a2ù×÷′í?ó?￡";
+						//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]oy?Y?a2??";
 						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
 							<< "] databse exception.";
 					}
@@ -778,7 +778,7 @@ char GroupServerApp::SendCharData(Player* player, net::WPacket& wpk) {
 	int l_row = 0;
 	char l_chanum;
 	std::string l_chaid[Player::emMaxCharacters];
-	char* l_look = const_cast<char*>(m_tblcharaters->GetLook()); //??è?ía1?êy?Y
+	char* l_look = const_cast<char*>(m_tblcharaters->GetLook()); //???a1?y?Y
 	LOOK look;
 	MemSet((char*)&look, 0, sizeof(LOOK));
 	try {
@@ -809,7 +809,7 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 	// A small section of this function was moved to GroupServerApp::SendCharData()
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	int l_row = 0;
-	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0) //D??¤???êo?
+	if ((l_row = m_tblaccounts->FetchRowByActName(player->m_acctname.c_str())) == 0) //D?????o?
 	{
 		// Player doesn't have a row yet
 
@@ -820,7 +820,7 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 		if (!m_tblaccounts->FetchRowByActName(player->m_acctname.c_str()))
 			return false;
 		player->m_acctid = m_tblaccounts->GetActID();
-		wpk.WriteInt64(0); //??é???êy
+		wpk.WriteInt64(0); //?????y
 	}
 	else if (l_row == 1) {
 		// Player already has a row, fill the data to memory.
@@ -834,7 +834,7 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 		std::string l_chaid[Player::emMaxCharacters];
 		player->m_chanum =
 			char(Util_ResolveTextLine(m_tblaccounts->GetChaIDs(), l_chaid, Player::emMaxCharacters, ';'));
-		wpk.WriteInt64(player->m_chanum); //??é???êy
+		wpk.WriteInt64(player->m_chanum); //?????y
 
 		char i = 0, j = 0;
 		for (; j < player->m_chanum; i++, j++) {
@@ -848,7 +848,7 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 					// Row from character ID is valid (OK)
 					// Write char properties to packet and send them to client
 					// m_tblcharacters functions must be called only *after* FetchRowByChaID to "select" correct character.
-					wpk.WriteInt64(1); //±ê???a????é?êy?Yê?óDD§μ?
+					wpk.WriteInt64(1); //???a?????y?Y?DD?
 					player->m_chaname[i] = m_tblcharaters->GetChaName();
 					player->m_motto[i] = m_tblcharaters->GetMotto();
 					player->m_icon[i] = m_tblcharaters->GetIcon();
@@ -864,17 +864,17 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 				else {
 					if (l_row == 0) {
 						LogLine l_line(g_LogGrpServer);
-						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";
+						//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]o?character?????D??????????y?Y";
 						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
 							<< "] can't find data in table character.";
 					}
 					else {
 						LogLine l_line(g_LogGrpServer);
-						//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúêy?Y?a2ù×÷′í?ó?￡";
+						//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]oy?Y?a2??";
 						l_line << newln << "enum account[" << player->m_acctname << "]'s char[ID:" << player->m_chaid[i]
 							<< "] databse exception.";
 					}
-					wpk.WriteInt64(0); //±ê???a????é?êy?Yê??TD§μ?
+					wpk.WriteInt64(0); //???a?????y?Y??TD?
 					i--;
 				}
 			}
@@ -885,7 +885,7 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 	}
 	else {
 		LogLine l_line(g_LogGrpServer);
-		//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?ê±oò·￠éúaccount±íμ?êy?Y?a2ù×÷′í?ó?￡";
+		//l_line<<newln<<"????o?["<<player->m_acctname<<"]????oaccount?y?Y?a2??";
 		l_line << newln << "enum account[" << player->m_acctname << "] operate table account failed";
 	}
 	return true;
@@ -893,7 +893,7 @@ bool GroupServerApp::GetCHAsFromDBByPlayer(Player* player, net::WPacket& wpk) {
 
 net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket& pk) {
 	uLong l_ulMilliseconds = 25 * 1000;
-	uLong l_tick = 0; // net::RPacket не хранит tick приёма пакета
+	uLong l_tick = 0; // net::RPacket   tick  
 
 	if (!(l_ulMilliseconds > l_tick)) {
 		auto l_retpk = net::WPacket(256);
@@ -941,7 +941,7 @@ net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket&
 	//if(strchr(l_acctname,'\'') || !IsValidName(l_acctname,l_len))
 	//{
 	//	LogLine l_line(g_LogGrpServer);
-	//	l_line<<newln<<"("<<l_ply->m_clientip<<"):["<<l_ply->m_acctname<<"]μ???×??Dòò°üà¨·?·¨μ?μ￥òyo?'×?·???±??ü??μ???";
+	//	l_line<<newln<<"("<<l_ply->m_clientip<<"):["<<l_ply->m_acctname<<"]?????D??yo?'???????????";
 	//	l_line<<endln;
 	//	l_ply->Free();
 	//	l_retpk =net::WPacket(256);
@@ -959,7 +959,7 @@ net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket&
 	net::WPacket l_wpk(pk);
 	l_wpk.WriteCmd(CMD_PA_USER_LOGIN);
 
-	// AsyncCall + busy-wait (замена SyncCall к AccountServer)
+	// AsyncCall + busy-wait ( SyncCall  AccountServer)
 	volatile bool gotAcctResp = false;
 	net::RPacket rpkFromAccountServer;
 	m_acctClient.AsyncCall(l_wpk, l_ulMilliseconds, [&](net::RPacket& rpk) {
@@ -973,7 +973,7 @@ net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket&
 
 	if (!rpkFromAccountServer) {
 		auto l_retpk = net::WPacket(256);
-		l_retpk.WriteInt64(ERR_PT_NETEXCP); //′í?ó??
+		l_retpk.WriteInt64(ERR_PT_NETEXCP); //???
 		LogLine l_line(g_LogGrpServer);
 		l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "] login net failed" << endln;
 		l_ply->Free();
@@ -1005,19 +1005,19 @@ net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket&
 	l_ply->m_sessid = rpkFromAccountServer.ReadInt64();
 
 	auto l_retpk = net::WPacket(256);
-	l_retpk.WriteInt64(ERR_SUCCESS); //3é1|·μ???μ
-	//l_retpk.WriteSequence(l_key,l_keylen);		//·μ???ó?ükey
+	l_retpk.WriteInt64(ERR_SUCCESS); //31|???
+	//l_retpk.WriteSequence(l_key,l_keylen);		//????key
 
 	l_retpk.WriteInt64(const_cha.MaxChaNum);
-	GetCHAsFromDBByPlayer(l_ply, l_retpk); //??è?êy?Y?aè???é?áD±í
+	GetCHAsFromDBByPlayer(l_ply, l_retpk); //???y?Y?a????D
 
 	if (l_ply->m_password.length() < 32) {
 		LogLine l_line(g_LogErrServer);
-		//l_line<<newln<<"?ê?§:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;
+		//l_line<<newln<<"??:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;
 		//l_line<<newln<<"account:"<<l_ply->m_acctname<<"ID:"<<l_ply->m_acctid<<"Key:("<<l_key<<")"<<"len"<<l_keylen<<"PW2:"<<l_ply->m_password<<endln;
 	}
 
-	//l_retpk.WriteSequence(l_text,l_textlen);	//·μ???÷??key
+	//l_retpk.WriteSequence(l_text,l_textlen);	//?????key
 	//l_retpk.WriteInt64(l_textlen);
 
 	if (l_ply->m_password.length() > 0 && !l_ply->m_bNew) {
@@ -1029,10 +1029,10 @@ net::WPacket GroupServerApp::TP_USER_LOGIN(net::TcpClient* client, net::RPacket&
 
 	l_retpk.WriteInt64(l_ply->m_acctid);
 	l_retpk.WriteInt64(l_ply->m_acctLoginID);
-	l_retpk.WriteInt64(ToAddress(l_ply)); //??′?é?×??oμ?μ??·
+	l_retpk.WriteInt64(ToAddress(l_ply)); //??????o???
 	l_ply->BeginRun();
 	LogLine l_line(g_LogGrpServer);
-	//l_line<<newln<<"("<<l_ply->m_clientip<<"):["<<l_ply->m_acctname<<"]μ???3é1|￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)<<endln;
+	//l_line<<newln<<"("<<l_ply->m_clientip<<"):["<<l_ply->m_acctname<<"]???31|?\t????/????y:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)<<endln;
 	l_line << newln << "(" << l_ply->m_clientip << "):[" << l_ply->m_acctname << "]login success, \t nline/total:" <<
 		m_plylst.GetTotal() << "/" << long(m_curChaNum) << endln;
 
@@ -1062,25 +1062,25 @@ void GroupServerApp::AP_KICKUSER2(net::TcpClient* client, uLong acctid) {
 		l_ply->EndPlay(client);
 		if (l_ply->EndRun()) {
 			if (l_ply->m_currcha != -1) {
-				//?òAccountServer·￠?í?áê???·??üá?
+				//?AccountServer????????
 				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 				l_wpk.WriteString(l_ply->m_acctname.c_str());
 				m_acctClient.Send(l_wpk);
 			}
-			////?òAccountServer·￠?íLogOut?üá?
+			////?AccountServer?LogOut??
 			net::WPacket l_wpk(256);
 			//l_wpk.WriteCmd(CMD_PA_USER_LOGOUT);
 			//l_wpk.WriteInt64(l_ply->m_acctid);
 			//l_wpk.WriteInt64(l_ply->m_sessid);
 			//SendData(m_acctsock,l_wpk);
-			//?òGateServer·￠?íì?è??üá?
+			//?GateServer?????
 			//l_wpk	=net::WPacket(256);
 			l_wpk.WriteCmd(CMD_AP_KICKUSER);
 			SendToClient(l_ply, l_wpk);
-			//ì?è?3é1|
+			//??31|
 			LogLine l_line(g_LogGrpServer);
-			//l_line<<newln<<"ê?μ?ò???Tμ?acctid/acctname:["<<l_acctid<<"]/["<<l_ply->m_acctname<<"]μ??üá?!"<<endln;
+			//l_line<<newln<<"?????T?acctid/acctname:["<<l_acctid<<"]/["<<l_ply->m_acctname<<"]???!"<<endln;
 			l_line << newln << "recieved killed acctid/acctname:[" << l_acctid << "]/[" << l_ply->m_acctname <<
 				"] command!" << endln;
 		}
@@ -1089,7 +1089,7 @@ void GroupServerApp::AP_KICKUSER2(net::TcpClient* client, uLong acctid) {
 	else {
 		l.unlock();
 		LogLine l_line(g_LogGrpServer);
-		//l_line<<newln<<"ê?μ?ò???Tμ??úí??òáD±í?D???òμ?acctid:["<<l_acctid<<"]μ??üá?!";
+		//l_line<<newln<<"?????T????D?D????acctid:["<<l_acctid<<"]???!";
 		l_line << newln << "recieved kill acctid:[" << l_acctid << "] command(not in play list)!";
 	}
 }
@@ -1107,25 +1107,25 @@ void GroupServerApp::AP_KICKUSER(net::TcpClient* client, net::RPacket& pk) {
 		l_ply->EndPlay(client);
 		if (l_ply->EndRun()) {
 			if (l_ply->m_currcha != -1) {
-				//?òAccountServer·￠?í?áê???·??üá?
+				//?AccountServer????????
 				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 				l_wpk.WriteString(l_ply->m_acctname.c_str());
 				m_acctClient.Send(l_wpk);
 			}
-			//?òAccountServer·￠?íLogOut?üá?
+			//?AccountServer?LogOut??
 			//WPacket l_wpk	=net::WPacket(256);
 			//l_wpk.WriteCmd(CMD_PA_USER_LOGOUT);
 			//l_wpk.WriteInt64(l_ply->m_acctid);
 			//l_wpk.WriteInt64(l_ply->m_sessid);
 			//SendData(m_acctsock,l_wpk);
-			//?òGateServer·￠?íì?è??üá?
+			//?GateServer?????
 			net::WPacket l_wpk(256);
 			l_wpk.WriteCmd(CMD_AP_KICKUSER);
 			SendToClient(l_ply, l_wpk);
-			//ì?è?3é1|
+			//??31|
 			LogLine l_line(g_LogGrpServer);
-			//l_line<<newln<<"ê?μ?ò???Tμ?acctid/acctname:["<<l_ply->m_acctid<<"]/["<<l_ply->m_acctname<<"]μ??üá?!"<<endln;
+			//l_line<<newln<<"?????T?acctid/acctname:["<<l_ply->m_acctid<<"]/["<<l_ply->m_acctname<<"]???!"<<endln;
 			l_line << newln << "recieved killed acctid/acctname:[" << l_ply->m_acctid << "]/[" << l_ply->m_acctname <<
 				"] command!" << endln;
 		}
@@ -1134,13 +1134,13 @@ void GroupServerApp::AP_KICKUSER(net::TcpClient* client, net::RPacket& pk) {
 	else {
 		l.unlock();
 		LogLine l_line(g_LogGrpServer);
-		//l_line<<newln<<"ê?μ?ò???Tμ??úí??òáD±í?D???òμ?acctid:["<<l_acctid<<"]μ??üá?!";
+		//l_line<<newln<<"?????T????D?D????acctid:["<<l_acctid<<"]???!";
 		l_line << newln << "recieved kill acctid:[" << l_acctid << "] command(not in play list)!";
 	}
 }
 
 void GroupServerApp::AP_EXPSCALE(net::TcpClient* client, net::RPacket& pk) {
-	//  ·à3á??
+	//  3??
 	Player* l_ply = 0;
 	uLong ulChaID = pk.ReadInt64();
 	uLong ulTime = pk.ReadInt64();
@@ -1204,22 +1204,22 @@ net::WPacket GroupServerApp::TP_USER_LOGOUT(Player* ply, net::TcpClient* client,
 
 	if (ply->EndRun()) {
 		if (ply->m_currcha != -1) {
-			//·￠?í?áê???·??üá?
+			//????????
 			net::WPacket l_wpk(256);
 			l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 			l_wpk.WriteString(ply->m_acctname.c_str());
 			m_acctClient.Send(l_wpk);
 		}
 
-		//?òAccountServer·￠?íLogOut?üá?
+		//?AccountServer?LogOut??
 		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PA_USER_LOGOUT);
 		l_wpk.WriteInt64(ply->m_acctLoginID);
 		l_wpk.WriteInt64(ply->m_sessid);
 		m_acctClient.Send(l_wpk);
-		//μ?3?3é1|
+		//?3?31|
 		LogLine l_line(g_LogGrpServer);
-		//l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]μ?3?á?￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
+		//l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]?3???\t????/????y:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum);
 		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]logout,\t online/total:" << m_plylst.
 			GetTotal() << "/" << long(m_curChaNum);
 	}
@@ -1235,7 +1235,7 @@ net::WPacket GroupServerApp::TP_USER_LOGOUT(Player* ply, net::TcpClient* client,
 
 	ply->Free();
 	l.unlock();
-	//·μ??3é1|′í?ó??
+	//??31|???
 	l_retpk.WriteInt64(ERR_SUCCESS);
 	return l_retpk;
 }
@@ -1243,7 +1243,7 @@ net::WPacket GroupServerApp::TP_USER_LOGOUT(Player* ply, net::TcpClient* client,
 net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	net::WPacket l_retpk(256);
 	if (ply->m_currcha >= 0) {
-		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??ú2?′í?ó
+		l_retpk.WriteInt64(ERR_PT_INERR); //|??????2??
 		return l_retpk;
 	}
 
@@ -1271,7 +1271,7 @@ net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net
 		wpk.WriteCmd(CMD_PT_KICKPLAYINGPLAYER);
 		wpk.WriteInt64(playing_player->m_gtAddr);
 
-		// AsyncCall + busy-wait (замена SyncCall)
+		// AsyncCall + busy-wait ( SyncCall)
 		volatile bool gotKickResp = false;
 		volatile bool kickOk = false;
 		auto* gateClient = playing_player->m_gate->GetClient();
@@ -1312,7 +1312,7 @@ net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net
 		l_retpk.WriteInt64(ERR_PT_BADBOY);
 		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_MC_SYSINFO);
-		//l_wpk.WriteString(dstring("??í¨±¨?ú?à??ò??-·￠??ò???BTo￠×ó[?êo?:")<<ply->m_acctname.c_str()<<",??é?:"<< ply->m_chaname[ply->m_bp_currcha].c_str()<<"]?￡");
+		//l_wpk.WriteString(dstring("????????-?????BTo[?o?:")<<ply->m_acctname.c_str()<<",???:"<< ply->m_chaname[ply->m_bp_currcha].c_str()<<"]?");
 		char l_buf[256];
 		sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPSERV_CPP_00002), ply->m_acctname.c_str(),
 				ply->m_chaname[ply->m_bp_currcha].c_str());
@@ -1333,12 +1333,12 @@ net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net
 	}
 
 	short swiner = 0;
-	//·μ??3é1|?à1?D??￠
-	l_retpk.WriteInt64(ERR_SUCCESS); //????é?3é1|·μ??
+	//??31|?1?D??
+	l_retpk.WriteInt64(ERR_SUCCESS); //?????31|??
 	l_retpk.WriteString(ply->m_password.c_str());
-	l_retpk.WriteInt64(ply->m_chaid[ply->m_bp_currcha]); //??é?ID
+	l_retpk.WriteInt64(ply->m_chaid[ply->m_bp_currcha]); //???ID
 	l_retpk.WriteInt64(ply->m_chaid[ply->m_bp_currcha]); //WorldID
-	l_retpk.WriteString(m_tblcharaters->GetMap()); //é?′?????μ?μ?í???
+	l_retpk.WriteString(m_tblcharaters->GetMap()); //???????????
 	for (int i = 0; i < MAXORDERNUM; i++) {
 		if (ply->m_chaid[ply->m_bp_currcha] == m_tbLparam->GetOrderData(i)->nid) {
 			swiner = i + 1;
@@ -1348,13 +1348,13 @@ net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net
 	l_retpk.WriteInt64(swiner);
 	LogLine l_line(g_LogGrpServer);
 	/*
-	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]??????é?["<<l_cha
-		<<"]×?±??aê?ó??·á?...￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"
+	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]???????["<<l_cha
+		<<"]???a????...?\t????/????y:"<<m_plylst.GetTotal()<<"/"
 		<<long(m_curChaNum);
 	*/
 	l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]select char[" << ply->m_chaname[ply->
 			m_bp_currcha]
-		<< "]begin paly...￡?\t online/total:" << m_plylst.GetTotal() << "/"
+		<< "]begin paly...?\t online/total:" << m_plylst.GetTotal() << "/"
 		<< long(m_curChaNum);
 
 	return l_retpk;
@@ -1363,27 +1363,27 @@ net::WPacket GroupServerApp::TP_BGNPLAY(Player* ply, net::TcpClient* client, net
 net::WPacket GroupServerApp::TP_ENDPLAY(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	net::WPacket l_retpk(256);
 	if (ply->m_currcha < 0) {
-		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??μí32?ò???′í?ó
+		l_retpk.WriteInt64(ERR_PT_INERR); //|??????32?????
 	}
 	else {
-		l_retpk.WriteInt64(ERR_SUCCESS); //??????é?3é1|·μ??
+		l_retpk.WriteInt64(ERR_SUCCESS); //???????31|??
 		ply->EndPlay(client);
 
 		LogLine l_line(g_LogGrpServer);
 		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]exit char["
-			<< ply->m_chaname[ply->m_currcha] << "]begin entry select char UI...￡?\t online/total:"
+			<< ply->m_chaname[ply->m_currcha] << "]begin entry select char UI...?\t online/total:"
 			<< m_plylst.GetTotal() << "/" << long(m_curChaNum);
 		l_line << endln;
 
-		ply->m_currcha = -1; //???a?TD§μ?μ±?°??é?
+		ply->m_currcha = -1; //???a?TD?????
 		ply->EndPlayReset();
-		//·￠?í?áê???·??üá?
+		//????????
 		net::WPacket l_wpk(256);
 		l_wpk.WriteCmd(CMD_PA_USER_BILLEND);
 		l_wpk.WriteString(ply->m_acctname.c_str());
 		m_acctClient.Send(l_wpk);
 
-		//′óêy?Y?aà???è?3???é?±í
+		//y?Y?a????3????
 
 		l_retpk.WriteInt64(const_cha.MaxChaNum);
 		GetCHAsFromDBByPlayer(ply, l_retpk);
@@ -1410,7 +1410,7 @@ void GroupServerApp::MP_ONLINE(Player* ply) {
 	++m_curChaNum;
 	LogLine l_line(g_LogGrpServer);
 	l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "] char ["
-		<< ply->m_chaname[ply->m_currcha] << "]entry map server begin play...￡?\t online/total:"
+		<< ply->m_chaname[ply->m_currcha] << "]entry map server begin play...?\t online/total:"
 		<< m_plylst.GetTotal() << "/" << long(m_curChaNum);
 	l_line << endln;
 
@@ -1436,7 +1436,7 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 	Player* validPlayers[Player::emMaxCharacters];
 	int validCount = 0;
 
-	if ((l_row = m_tblaccounts->FetchRowByActName(ply->m_acctname.c_str())) == 0) //D??¤???êo?
+	if ((l_row = m_tblaccounts->FetchRowByActName(ply->m_acctname.c_str())) == 0) //D?????o?
 	{
 		// Player doesn't have a row yet
 		return;
@@ -1455,7 +1455,7 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 			for (plyPointers = m_plylst.GetNextItem(); plyPointers; plyPointers = m_plylst.GetNextItem()) {
 				// Iterates over all players
 				if (ply != plyPointers && !plyPointers->m_bRefreshFlag && plyPointers->m_acctname == ply->m_acctname) {
-					// Найден игрок с символами
+					//    
 					ToLogService("common", "found valid player, whose characters are {}, {}, {}", (int)plyPointers->m_chaid[0],
 						   (int)plyPointers->m_chaid[1], (int)plyPointers->m_chaid[2]);
 					break;
@@ -1474,7 +1474,7 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 
 				net::WPacket l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_REFRESH_SELECT);
-				// Количество персонажей игрока
+				//   
 				ToLogService("common", "ply->m-chanum:{}", (int)ply->m_chanum);
 				l_wpk.WriteInt64(delChaSlot);
 				l_wpk.WriteInt64(ply->m_chanum);
@@ -1506,17 +1506,17 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 							ToLogService("errors", LogLevel::Error, "error writing char data");
 							if (l_row == 0) {
 								LogLine l_line(g_LogGrpServer);
-								//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò?úcharacter±íà?????óD·￠????????é?μ?êy?Y";
+								//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]o?character?????D??????????y?Y";
 								l_line << newln << "enum account[" << ply->m_acctname << "]'s char[ID:" << ply->m_chaid[
 									k] << "] can't find data in table character.";
 							}
 							else {
 								LogLine l_line(g_LogGrpServer);
-								//l_line<<newln<<"???ù?êo?["<<player->m_acctname<<"]μ???é?[ID:"<<player->m_chaid[i]<<"]ê±oò·￠éúêy?Y?a2ù×÷′í?ó?￡";
+								//l_line<<newln<<"????o?["<<player->m_acctname<<"]????[ID:"<<player->m_chaid[i]<<"]oy?Y?a2??";
 								l_line << newln << "enum account[" << ply->m_acctname << "]'s char[ID:" << ply->m_chaid[
 									k] << "] databse exception.";
 							}
-							l_wpk.WriteInt64(0); //±ê???a????é?êy?Yê??TD§μ?
+							l_wpk.WriteInt64(0); //???a?????y?Y??TD?
 							k--;
 						}
 					}
@@ -1538,12 +1538,12 @@ void GroupServerApp::RefreshClients(Player* ply, char delChaSlot) {
 net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	net::WPacket l_retpk(256);
 	if (ply->m_currcha >= 0) {
-		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??μí32?ò???′í?ó
+		l_retpk.WriteInt64(ERR_PT_INERR); //|??????32?????
 		return l_retpk;
 	}
 	auto const l_lockCha = std::lock_guard{ply->m_mtxCha};
 	int chaNum = GetChaCount(ply);
-	if (ply->m_chanum >= const_cha.MaxChaNum) //ò?′?μ??μí3?T??×?′ó??é?êy
+	if (ply->m_chanum >= const_cha.MaxChaNum) //????3?T??????y
 	{
 		l_retpk.WriteInt64(ERR_PT_TOMAXCHA);
 		return l_retpk;
@@ -1566,9 +1566,9 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 		return l_retpk;
 	}
 	else if (!isAlphanumeric(l_chaname) || !IsValidName(l_chaname.c_str(), l_chaname.size()) || !
-		CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, l_chaname.c_str())) //(strchr(l_chaname,'\''))//??é????D2??üóDμ￥òyo?'
+		CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, l_chaname.c_str())) //(strchr(l_chaname,'\''))//??????D2??Dyo?'
 	{
-		l_retpk.WriteInt64(ERR_PT_ERRCHANAME); //??é???2?o?·¨
+		l_retpk.WriteInt64(ERR_PT_ERRCHANAME); //?????2?o?
 		return l_retpk;
 	}
 	//cChar	*	l_birth			=pk.ReadString(&l_len);
@@ -1579,7 +1579,7 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 	//	l_birth1	=dstring("/")<<l_birth<<"/";
 
 	//	try{
-	//		l_birth2		=this->m_cfg["??é?"]["3?éúμ?"];
+	//		l_birth2		=this->m_cfg["???"]["3??"];
 	//	}catch(...)
 	//	{
 	//		l_birth2		=0;
@@ -1590,7 +1590,7 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 	//}
 	//if(!l_birth2 ||!strstr(l_birth2,l_birth1))
 	//{
-	//	l_retpk.WriteInt64(ERR_PT_INVALIDBIRTH);		//3?éúμ?·?·¨
+	//	l_retpk.WriteInt64(ERR_PT_INVALIDBIRTH);		//3???
 	//}else
 	//{
 	auto l_birth = pk.ReadString();
@@ -1618,7 +1618,7 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 	}
 
 	if (!l_map) {
-		l_retpk.WriteInt64(ERR_PT_INVALIDBIRTH); //3?éúμ?·?·¨
+		l_retpk.WriteInt64(ERR_PT_INVALIDBIRTH); //3???
 		return l_retpk;
 	}
 
@@ -1702,7 +1702,7 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 			return l_retpk;
 		}
 
-		if (!m_tblcharaters->InsertRow(l_chaname.c_str(), ply->m_acctid, l_birth.c_str(), l_map, l_lookStr.c_str())) //??é??????′
+		if (!m_tblcharaters->InsertRow(l_chaname.c_str(), ply->m_acctid, l_birth.c_str(), l_map, l_lookStr.c_str())) //????????
 		{
 			LogLine l_line(g_LogGrpServer);
 
@@ -1740,12 +1740,12 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 	}
 	LogLine l_line(g_LogGrpServer);
 	/*
-	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]D??¨á???é?["
-		<<l_chaname<<"]￡?\tμ±?°μ???/ó??·í??òêy:"
+	l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]D??????["
+		<<l_chaname<<"]?\t????/????y:"
 		<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)<<endln;
 	*/
 	l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]create char ["
-		<< l_chaname << "]￡?\t online/total:"
+		<< l_chaname << "]?\t online/total:"
 		<< m_plylst.GetTotal() << "/" << long(m_curChaNum) << endln;
 	return l_retpk;
 }
@@ -1753,7 +1753,7 @@ net::WPacket GroupServerApp::TP_NEWCHA(Player* ply, net::TcpClient* client, net:
 net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net::RPacket& pk) {
 	net::WPacket l_retpk(256);
 	if (ply->m_currcha >= 0) {
-		l_retpk.WriteInt64(ERR_PT_INERR); //ó|??è??μμ??μí32?ò???′í?ó
+		l_retpk.WriteInt64(ERR_PT_INERR); //|??????32?????
 		return l_retpk;
 	}
 
@@ -1780,7 +1780,7 @@ net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net:
 		return l_retpk;
 	}
 
-	if (FindGuildByLeadID(ply->m_chaid[cha_index])) //o?·¨μ???é?
+	if (FindGuildByLeadID(ply->m_chaid[cha_index])) //o?????
 	{
 		l_retpk.WriteInt64(ERR_PT_ISGLDLEADER);
 		return l_retpk;
@@ -1799,7 +1799,7 @@ net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net:
 	}
 
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
-	// ?D????é?ê?·?1??á3é?±￡?·??òé?3y1??ááD±íD??￠
+	// ?D???????1??3?????3y1??DD??
 	if (m_tblaccounts->begin_tran()) {
 		if (!m_tblaccounts->UpdateRow(ply->m_acctid, l_CharIDs) || !m_tblcharaters->BackupRow(l_chaid) || !m_tblaccounts
 			->commit_tran()) {
@@ -1812,7 +1812,7 @@ net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net:
 
 
 	if (bFlag) {
-		l_retpk.WriteInt64(ERR_SUCCESS); //é?3y??é?3é1|·μ??
+		l_retpk.WriteInt64(ERR_SUCCESS); //?3y???31|??
 		--ply->m_chanum;
 		for (auto i = cha_index; i < ply->m_chanum; ++i) {
 			ply->m_chaid[i] = ply->m_chaid[i + 1];
@@ -1843,8 +1843,8 @@ net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net:
 		RefreshClients(ply, cha_index);
 		LogLine l_line(g_LogGrpServer);
 		/*
-		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]é?3yá???é?["
-			<<l_cha<<"]￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)
+		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]?3y????["
+			<<l_cha<<"]?\t????/????y:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)
 			<<endln;
 	   */
 		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << RES_STRING(
@@ -1854,15 +1854,15 @@ net::WPacket GroupServerApp::TP_DELCHA(Player* ply, net::TcpClient* client, net:
 			<< endln;
 	}
 	else {
-		l_retpk.WriteInt64(ERR_PT_SERVERBUSY); //·t???÷?|?μ￡???é?oó
+		l_retpk.WriteInt64(ERR_PT_SERVERBUSY); //t????|?????o
 		LogLine l_line(g_LogGrpServer);
 		/*
-		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]é?3y??é?ê§°ü["
-			<<l_cha<<"]￡?\tμ±?°μ???/ó??·í??òêy:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)
+		l_line<<newln<<"("<<ply->m_clientip<<"):["<<ply->m_acctname<<"]?3y???["
+			<<l_cha<<"]?\t????/????y:"<<m_plylst.GetTotal()<<"/"<<long(m_curChaNum)
 			<<endln;
 		*/
 		l_line << newln << "(" << ply->m_clientip << "):[" << ply->m_acctname << "]delete char failed["
-			<< cha_name.c_str() << "]￡?\t GetTotal/m_curChaNum:" << m_plylst.GetTotal() << "/" << long(m_curChaNum)
+			<< cha_name.c_str() << "]?\t GetTotal/m_curChaNum:" << m_plylst.GetTotal() << "/" << long(m_curChaNum)
 			<< endln;
 	}
 	return l_retpk;
@@ -1986,7 +1986,7 @@ void GroupServerApp::MP_GARNER2_UPDATE(Player* ply, net::TcpClient* client, net:
 
 	if (strChaName.length() > 19) {
 		LogLine l_line(g_LogGarner2);
-		//l_line<<newln<<"·′?·°×ò?????êy?Y3?′í";
+		//l_line<<newln<<"??????y?Y3?";
 		l_line << newln << "order data exception";
 		return;
 	}
@@ -1994,7 +1994,7 @@ void GroupServerApp::MP_GARNER2_UPDATE(Player* ply, net::TcpClient* client, net:
 
 	if (strjob.length() > 99) {
 		LogLine l_line(g_LogGarner2);
-		//l_line<<newln<<"·′?·°×ò?????êy?Y3?′í";
+		//l_line<<newln<<"??????y?Y3?";
 		l_line << newln << "order data exception";
 		return;
 	}

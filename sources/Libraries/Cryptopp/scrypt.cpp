@@ -1,4 +1,4 @@
-// scrypt.cpp - written and placed in public domain by Jeffrey Walton.
+﻿// scrypt.cpp - written and placed in public domain by Jeffrey Walton.
 //              Based on reference source code by Colin Percival for
 //              Scrypt and Daniel Bernstein for Salsa20 core.
 

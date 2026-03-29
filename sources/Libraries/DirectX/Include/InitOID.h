@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  I N I T O I D . H
  *
  *  Define macros to be used for initializing MAPI OID's

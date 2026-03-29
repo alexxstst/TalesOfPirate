@@ -1,4 +1,4 @@
-ClearHelpNPC()
+﻿ClearHelpNPC()
 AddHelpNPC("Drunkyard - Anthony")
 print("--------------------------------------------------")
 print("[End] ** Loading Map Files **")

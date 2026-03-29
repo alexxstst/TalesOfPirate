@@ -1,4 +1,4 @@
-//
+ï»¿//
 #include "stdafx.h"
 
 
@@ -461,7 +461,7 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
     anim_agent->AddAnimCtrlObj(ctrl_obj);
     
 
-    // ÉèÖÃ¸¸×Ó¹ØÏµ
+    // 
     imp->SetID(info->id);
     imp->SetParentID( info->parent_id );
 
@@ -479,7 +479,7 @@ LW_RESULT lwPhysique::LoadPrimitive(DWORD part_id, lwIGeomObjInfo* geom_info)
         imp->SetHelperObject(h);
     }
 
-    // ÕâÀï°ÑObjImpµÄ¶¯»­Êý¾ÝÔØÈëÒ²·ÅÔÚLoadMeshÖÐÖ´ÐÐ
+    // ObjImpLoadMesh
     if( info->anim_size > 0 )
     {
         imp->LoadAnimData( &info->anim_data, tex_path, 0 );
@@ -648,7 +648,7 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
     anim_agent->AddAnimCtrlObj(ctrl_obj);
     
 
-    // ÉèÖÃ¸¸×Ó¹ØÏµ
+    // 
     imp->SetID(pInfo->id);
     imp->SetParentID( pInfo->parent_id );
 
@@ -666,7 +666,7 @@ LW_RESULT lwPhysique::LoadPrimitive( DWORD part_id, const char* file )
         imp->SetHelperObject(h);
     }
 
-    // ÕâÀï°ÑObjImpµÄ¶¯»­Êý¾ÝÔØÈëÒ²·ÅÔÚLoadMeshÖÐÖ´ÐÐ
+    // ObjImpLoadMesh
     if( pInfo->anim_size > 0 )
     {
         imp->LoadAnimData( &pInfo->anim_data, tex_path, &res );
@@ -736,7 +736,7 @@ LW_RESULT lwPhysique::Update()
             continue;
 
 
-        // ÓÐ¸¸×Ó²ã´Î½á¹¹µÄ¾ØÕóÁ¬³Ë£¬ÒÔºó¿ÉÒÔ¸Ä½ø
+        // 
         lwMatrix44 mat( _mat_base );
         pp = imp;
         while( pp->GetParentID() != LW_INVALID_INDEX )

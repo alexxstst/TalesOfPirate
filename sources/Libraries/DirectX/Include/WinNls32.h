@@ -1,4 +1,4 @@
-/*++ BUILD Version: 0003    // Increment this if a change has global effects
+﻿/*++ BUILD Version: 0003    // Increment this if a change has global effects
 
 Copyright (c) 1985-1998, Microsoft Corporation
 

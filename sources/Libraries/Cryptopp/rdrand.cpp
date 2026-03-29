@@ -1,4 +1,4 @@
-// rdrand.cpp - written and placed in public domain by Jeffrey Walton and Uri Blumenthal.
+﻿// rdrand.cpp - written and placed in public domain by Jeffrey Walton and Uri Blumenthal.
 
 #include "pch.h"
 #include "config.h"

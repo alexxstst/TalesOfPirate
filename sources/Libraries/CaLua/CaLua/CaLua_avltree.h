@@ -1,4 +1,4 @@
-/*
+﻿/*
 	Serpent Engine
 	Dan Carter, 2003
 */

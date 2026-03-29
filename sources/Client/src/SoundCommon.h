@@ -1,4 +1,4 @@
-#ifndef SOUND_COMMON_H
+﻿#ifndef SOUND_COMMON_H
 #define SOUND_COMMON_H
 
 #include <math.h>

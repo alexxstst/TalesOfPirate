@@ -1,4 +1,4 @@
-// rdrand.h - written and placed in public domain by Jeffrey Walton and Uri Blumenthal.
+﻿// rdrand.h - written and placed in public domain by Jeffrey Walton and Uri Blumenthal.
 
 /// \file rdrand.h
 /// \brief Classes for RDRAND and RDSEED

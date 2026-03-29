@@ -1,4 +1,4 @@
-// gfpcrypt.h - originally written and placed in the public domain by Wei Dai
+﻿// gfpcrypt.h - originally written and placed in the public domain by Wei Dai
 //              RFC6979 deterministic signatures added by Douglas Roark
 //              ECGDSA added by Jeffrey Walton
 
@@ -972,7 +972,7 @@ public:
 ///     DLIES<SHA1,NoCofactorMultiplication,true,true>::Encryptor encryptor(decryptor);
 /// </pre>
 /// \sa ECIES, <a href="http://www.weidai.com/scan-mirror/ca.html#DLIES">Discrete Log Integrated Encryption Scheme (DLIES)</a>,
-///   Martínez, Encinas, and Ávila's <A HREF="http://digital.csic.es/bitstream/10261/32671/1/V2-I2-P7-13.pdf">A Survey of the Elliptic
+///   Martnez, Encinas, and vila's <A HREF="http://digital.csic.es/bitstream/10261/32671/1/V2-I2-P7-13.pdf">A Survey of the Elliptic
 ///   Curve Integrated Encryption Schemes</A>
 /// \since Crypto++ 4.0, Crypto++ 5.7 for Bouncy Castle and Botan compatibility
 template <class HASH = SHA1, class COFACTOR_OPTION = NoCofactorMultiplication, bool DHAES_MODE = true, bool LABEL_OCTETS=false>

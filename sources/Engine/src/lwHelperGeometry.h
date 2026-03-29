@@ -1,4 +1,4 @@
-//
+﻿//
 #include "lwHeader.h"
 #include "lwPrimitive.h"
 #include "lwClassDecl.h"

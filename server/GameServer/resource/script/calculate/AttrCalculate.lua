@@ -1,4 +1,4 @@
-print("-- [Loading] AttrCalculate")
+﻿print("-- [Loading] AttrCalculate")
 
 attr = {}
 attr[1] = {0, 0}

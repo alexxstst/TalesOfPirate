@@ -1,4 +1,4 @@
-#ifndef IMUSICTHREAD_H
+﻿#ifndef IMUSICTHREAD_H
 #define IMUSICTHREAD_H
 
 enum EThreadPriority

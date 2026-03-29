@@ -1,4 +1,4 @@
-print("-- [Loading] Ai_Event.lua")
+﻿print("-- [Loading] Ai_Event.lua")
 
 function ai_event_find_target(c, t)
     SetChaTarget(c, t)

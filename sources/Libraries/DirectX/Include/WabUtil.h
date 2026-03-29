@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	WABUTIL.H
  *
  *  Definitions and prototypes for utility functions provided by MAPI

@@ -1,4 +1,4 @@
-// threefish.h - written and placed in the public domain by Jeffrey Walton
+﻿// threefish.h - written and placed in the public domain by Jeffrey Walton
 //               Based on public domain code by Keru Kuro. Kuro's code is
 //               available at http://cppcrypto.sourceforge.net/.
 

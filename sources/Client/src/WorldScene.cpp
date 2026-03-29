@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "worldscene.h"
 #include "Character.h"
 #include "SceneObj.h"
@@ -58,7 +58,7 @@
 #include "UIBoothForm.h"
 
 //---------------------------------------------------------------------------
-// ���������任ʹ�õ���������
+// 
 //---------------------------------------------------------------------------
 inline bool	_HaveEventCursor( CEvent* pEvent, int nMainType )
 {
@@ -169,13 +169,13 @@ bool CWorldScene::_Init()
 	 // end
 
 
-    // Ϊ��������ʾ����һ��Character�Լ���صĿؼ�
+    // Character
 	_InitUI() ;
 	 
-    // �༭��ģʽ
+    // 
 	if(g_Config.m_bEditor)
 	{		
-		// ������ؿؼ������ò���    
+		//     
         CCharacter *pCha = NULL;
 		for(int i = 0; i < g_Config.m_nChaCnt; i++)
 		{
@@ -350,7 +350,7 @@ void CWorldScene::_FrameMove( DWORD dwTimeParam )
 			CSkillRecord* pSkill = CGameScene::GetMainCha()->GetReadySkillInfo();
 			if( pSkill && pSkill->IsAttackArea() )
 			{
-				// �ı����Ϊ��������
+				// 
 				CGameScene::Set3DMouseState( enumFollow );
 				g_pGameApp->GetCursor()->SetCursor( csCircleCursor );
 				CCursor::I()->SetFrame( CCursor::stSkillAttack );
@@ -360,7 +360,7 @@ void CWorldScene::_FrameMove( DWORD dwTimeParam )
 				g_pGameApp->GetCursor()->SetCursor( csNormalCursor );
 				CGameScene::Set3DMouseState( enumClick );
 		        
-				// ���弼��,��⹥�������Ƿ���ȷ
+				// ,
 				if( pSkill )
 				{
 					CCursor::I()->SetFrame( CCursor::stSkillAttack );
@@ -459,7 +459,7 @@ void CWorldScene::_FrameMove( DWORD dwTimeParam )
 			}
 			else if( key & M_RDown )
 			{
-				// �ı����Ϊ��������
+				// 
 				g_pGameApp->GetCursor()->SetCursor( csNormalCursor );
 				CGameScene::Set3DMouseState( enumClick );
 				CCursor::I()->Restore();
@@ -612,7 +612,7 @@ BOOL CWorldScene::_InitUI()
 	{
 		form->Show();
 
-		CEdit* edit = dynamic_cast<CEdit*>(form->Find( "edtSay" ));  //�Ƿ�������ͼԪ
+		CEdit* edit = dynamic_cast<CEdit*>(form->Find( "edtSay" ));  //
 		if( edit ) edit->SetIsParseText(true ); 
 	} 
 
@@ -720,10 +720,10 @@ void CWorldScene::_SceneCursor()
 		return;
 	}
 
-	// ���ݼ���������ʾhint
-	// 1.��Χ����,���й�����ʾΪ��ɫ
-	// 2.���弼��,��⹥�������Ƿ���ȷ
-	// 3.û�м���ʱ����npc�Ի�,����Ʒ��               
+	// hint
+	// 1.,
+	// 2.,
+	// 3.npc,               
     pCha = _pChaArray;
 	
 	 for(int i = 0; i < _nChaCnt; i++){
@@ -740,7 +740,7 @@ void CWorldScene::_SceneCursor()
 		
     if( g_pGameApp->IsShiftPress() )
     {
-		// ��סshift��ʾ���й�������
+		// shift
         for(int i = 0; i < _nChaCnt; i++)
         {
             if( pCha->IsValid() ) 
@@ -766,7 +766,7 @@ void CWorldScene::_SceneCursor()
 	// and once done, will be re-render
 	else if( g_pGameApp->IsAltPress() )
 	{
-		// ��ʾ���жӳ�������
+		// 
         for(int i = 0; i < _nChaCnt; i++)
         {
             if( pCha->IsValid() ) 
@@ -853,7 +853,7 @@ void CWorldScene::_SceneCursor()
 
 	if( pSkill && pSkill->IsAttackArea() )
 	{
-		// �ı����Ϊ��������
+		// 
 		CGameScene::Set3DMouseState( enumFollow );
 		g_pGameApp->GetCursor()->SetCursor( csCircleCursor );
 		CCursor::I()->SetFrame( CCursor::stSkillAttack );
@@ -862,7 +862,7 @@ void CWorldScene::_SceneCursor()
         {
     		g_pGameApp->GetCursor()->GetCursor()->SetRadius( pSkill->GetRange() * 2 );
 
-			// ��Χ����,���й�����ʾΪ��ɫ
+			// ,
 			int dis = pSkill->GetRange();
             CCharacter* pCha = _pChaArray;
             for(int i = 0; i < _nChaCnt; i++)
@@ -889,14 +889,14 @@ void CWorldScene::_SceneCursor()
 	}
 	else
 	{
-		// �ı����Ϊ��������
+		// 
 		g_pGameApp->GetCursor()->SetCursor( csNormalCursor );
 		CGameScene::Set3DMouseState( enumClick );
 
 		static bool IsDefault = false;
 		IsDefault = false;
 
-		// ���弼��,��⹥�������Ƿ���ȷ
+		// ,
 		if( pSkill )
 		{
 			CCursor::I()->SetFrame( CCursor::stSkillAttack );
@@ -1183,10 +1183,10 @@ void CWorldScene::_KeyDownEvent( int key )
 			}
 
 
-            // �༭���ã���װ��ų��� 99 ����       modify by Philip.Wu   2007-09-11
+            //  99        modify by Philip.Wu   2007-09-11
             //
-            // �أأأ� �أأأ� �أء��̣ǣ�
-            // �Ǽܺ�   ʮ����ǧ
+            //   
+            //    
             //
 			DWORD part = 0;
             if(group_id <= 99)
@@ -1195,8 +1195,8 @@ void CWorldScene::_KeyDownEvent( int key )
             }
             else
             {
-                int thousand = (group_id / 1000) % 10; // ǧλ
-                int hundred  = (group_id /  100) % 10; // ��λ
+                int thousand = (group_id / 1000) % 10; // 
+                int hundred  = (group_id /  100) % 10; // 
 
                 group_id = group_id % 100;
                 part = info->sModel* 1000000 + group_id * 10000 + part_id;
@@ -1213,7 +1213,7 @@ void CWorldScene::_KeyDownEvent( int key )
 				fclose( fp );
 				c->LoadPart( part_id, part );
 
-				//// ������۸���
+				//// 
 				stTempChangeChaPart stPart;
 				memset( &stPart, 0, sizeof(stPart) );
 				if( part_id>=0 && part_id<5 )
@@ -1281,7 +1281,7 @@ void CWorldScene::_KeyDownEvent( int key )
 			}
 		}
 
-		if( g_pGameApp->IsAltPress() && (key=='c' || key=='C') )	// ��ӡ�����
+		if( g_pGameApp->IsAltPress() && (key=='c' || key=='C') )	// 
 			_IsShowCameraInfo = !_IsShowCameraInfo;			
 
 		if( g_pGameApp->IsAltPress() && (key=='k' || key=='K') )
@@ -1292,7 +1292,7 @@ void CWorldScene::_KeyDownEvent( int key )
 			g_Config.SetMoveClient( !g_Config.m_IsMoveClient );
 		}
 
-#ifdef _DEBUG	// ������
+#ifdef _DEBUG	// 
 		if( g_pGameApp->IsAltPress() && (key=='f' || key=='F'))
 		{
 			static bool ken = true;
@@ -1409,10 +1409,10 @@ bool CWorldScene::_MouseButtonDown(int nButton)
 	{
 		if( _e3DMouseState==enumClick ) g_pGameApp->GetCursor()->MoveTo( _vMousePos );
 
-		// ��ȫ���Ľ�����Ϊ����ʾ
+		// 
 		CUIInterface::MainChaMove();
 
-		// ��ɫ�ƶ���رմ�ֻѡ�����  add by Philip.Wu  2006-06-02
+		//   add by Philip.Wu  2006-06-02
 		_pShipMgr->CloseForm();
 
 		return true;
@@ -1462,7 +1462,7 @@ void CWorldScene::SetMainCha(int nChaID)
 	_cMouseDown.Reset();
     _UserLeve.AllTrue();
 
-    // ���辵ͷ
+    // 
     CCameraCtrl *pCam = g_pGameApp->GetMainCam();
     MPTerrain *pTerr = GetTerrain();
 
@@ -1668,7 +1668,7 @@ CCharacter* CWorldScene::HitSelectCharacter( int nScrX, int nScrY, int nSelect )
 			}
 			break;
 		}
-		case enumSC_ENEMY:	// �ж��Ƿ��PK,��PK�����+��ͬ�����,�����Ϊ����
+		case enumSC_ENEMY:	// PK,PK+,
 		{			
 			CCharacter* pMain = CGameScene::GetMainCha();
 			if( pMain && pMain->GetIsPK() )
@@ -2010,21 +2010,21 @@ void CWorldScene::SetScreen( int w, int h, bool IsFull )
 }
 
 
-// ��װ��loading��,ˢ��
+// loading,
 void CWorldScene::LoadingCall()
 {
 	CGameScene::LoadingCall();
 
-	// �����Ƿ񱳰�������ѯ��Ϣ
+	// 
 	//::CS_KitbagCheck();
 
-	if(g_Config.m_bEditor)	// �༭��ģʽ ���⴦��
+	if(g_Config.m_bEditor)	//  
 	{
 		static bool firstTime = true;
 		if( firstTime )
 		{
 			char szMap[32] = {0};
-			char szAppName[] = {(char)0xB1, (char)0xE0, (char)0xBC, (char)0xAD, (char)0xC6, (char)0xF7, (char)0};	// ��ֹ����Ϊ�����Ķ���ȡ�ɶ�����
+			char szAppName[] = {(char)0xB1, (char)0xE0, (char)0xBC, (char)0xAD, (char)0xC6, (char)0xF7, (char)0};	// 
 			GetPrivateProfileString(szAppName, "MapName", "", szMap, 32, "./scripts/kop.cfg");
 
 			CMapInfo* pMap = GetMapInfo(szMap);
@@ -2057,7 +2057,7 @@ void CWorldScene::LoadingCall()
 
 	if(nLevel <= 1)
 	{
-		// һ��ǿ�ƴ����ְ���
+		// 
 		g_stUISystem.m_sysProp.m_gameOption.bHelpMode = true;
 		::WritePrivateProfileString("gameOption", "helpMode", "1", "./user/system.ini");
 
@@ -2075,7 +2075,7 @@ void CWorldScene::LoadingCall()
 		g_stUIStart.ShowLevelUpHelpButton(nLevel == 1 ? true : false);
 	}
 
-	// ͬ����ʱ������ѯ��Ϣ
+	// 
 	CS_SyncKitbagTemp();
 
 	//CSceneItem* pItem = _pSceneItemArray;

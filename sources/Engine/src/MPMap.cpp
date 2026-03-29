@@ -1,4 +1,4 @@
-// Map & MapSection 
+﻿// Map & MapSection 
 // Created By Ryan
 // 2004/01/31
 
@@ -66,7 +66,7 @@ MPMap::MPMap()
 	
 	_pDefaultTile->TexLayer[0].btTexNo	 = UNDERWATER_TEXNO;
 	_pDefaultTile->TexLayer[0].btAlphaNo = 15;
-	_pDefaultTile->TexLayer[1].btTexNo   = 255; // ��ʾΪDefaultTile
+	_pDefaultTile->TexLayer[1].btTexNo   = 255; // DefaultTile
 	_pDefaultTile->fHeight				 = UNDERWATER_HEIGHT;
 	_pDefaultTile->dwColor				 = 0xffffffff;
     // _pDefaultTile->TexLayer
@@ -147,14 +147,14 @@ void MPMap::Render()
     {
        if(_pLandVB==NULL)
         {
-            int nVertexCnt = MAX_RENDER_TILE * 6; // ���ߴ�
+            int nVertexCnt = MAX_RENDER_TILE * 6; // 
 	        _dwLandVBSize = nVertexCnt * sizeof(MPTileVertex);
             HRESULT hr = g_Render.GetDevice()->CreateVertexBuffer(_dwLandVBSize, 
 		        0, FVF_LAND, D3DPOOL_MANAGED, &_pLandVB, NULL);
 
 	        if(FAILED(hr)) 
 	        {
-                ToLogService("errors", LogLevel::Error, " MPMap::Render() ����Land Terrain Vertex Bufferʧ��!");
+                ToLogService("errors", LogLevel::Error, " MPMap::Render() Land Terrain Vertex Buffer!");
                 _pLandVB = NULL;
             }
         }
@@ -172,7 +172,7 @@ void MPMap::Render()
 
 	        if(FAILED(hr)) 
 	        {
-                ToLogService("errors", LogLevel::Error, " MPMap::Render() ����Sea Vertex Bufferʧ��!");
+                ToLogService("errors", LogLevel::Error, " MPMap::Render() Sea Vertex Buffer!");
                 _pVB = NULL;
             }
         }
@@ -212,7 +212,7 @@ void MPMap::Render()
 	
 	g_Render.GetDevice()->SetMaterial(&material);
 
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 	
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1);
@@ -375,7 +375,7 @@ void MPMap::RenderSmMap()
 	
 	g_Render.GetDevice()->SetMaterial(&material);
 
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 	
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
@@ -561,7 +561,7 @@ void MPMap::RenderSea()
 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE); 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 	
 	g_Render.SetRenderState(D3DRS_SRCBLEND,  D3DBLEND_SRCALPHA);	 // blend the colors based on the
 	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);	 // alpha value
@@ -952,7 +952,7 @@ BOOL MPMap::GetPickPosEditor(int nPosX, int nPosY, D3DXVECTOR3 &vPickPos)
 }
 
 
-float MPMap::GetHeight(float fX, float fY)  // ? �������⣬ ����������˼��
+float MPMap::GetHeight(float fX, float fY)  // ?  
 {
 	int nX = (int)fX;
 	int nY = (int)fY;
@@ -1059,12 +1059,12 @@ BOOL MPMap::_AddRenderGroup(BYTE btLayer, int nTexNo, MPTile *pTile, short sTile
 
    if(nTexNo>=MAX_RENDER_GROUP) 
    {
-		ToLogService("errors", LogLevel::Error, "AddRenderGroup��ͼ��ͼ�������������ֵ{}", MAX_RENDER_GROUP);
+		ToLogService("errors", LogLevel::Error, "AddRenderGroup{}", MAX_RENDER_GROUP);
 		return FALSE;
    }
    if(btLayer>=4)
    {
-		ToLogService("errors", LogLevel::Error, "AddRenderGroup��ͼ��ͼ�����������ֵ{}", 3);
+		ToLogService("errors", LogLevel::Error, "AddRenderGroup{}", 3);
 		return FALSE;
    }
    
@@ -1089,7 +1089,7 @@ BOOL MPMap::_AddRenderGroup(BYTE btLayer, int nTexNo, MPTile *pTile, short sTile
 
 void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 {
-    // ��Ҫ��������Terrain Texture Group����Ӧ��VB
+    // Terrain Texture GroupVB
     for(int i = 0; i < nRenderGroupCnt; i++)
     {
         RenderGroup[i]->sTileCnt = 0;
@@ -1122,7 +1122,7 @@ void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 
 			if(pTile->fHeight < (SEA_LEVEL - 0.05f)) 
 			{
-				_bRenderSea = TRUE; // ��Ҫ��Ⱦ��ˮ
+				_bRenderSea = TRUE; // 
 			}
 
 			_fTileHeightBuffer[y][x] = pTile->fHeight;
@@ -1211,7 +1211,7 @@ void MPMap::_GenerateTerrainGroup(int nTileStartX, int nTileStartY)
 	}
 groupend:
 
-    if(bFull) ToLogService("errors", LogLevel::Error, "��ͼ��Ⱦ����(����>{})�������ֵ", MAX_RENDER_TILE * 2);
+    if(bFull) ToLogService("errors", LogLevel::Error, "(>{})", MAX_RENDER_TILE * 2);
 
     nLockVertex = 0;
 

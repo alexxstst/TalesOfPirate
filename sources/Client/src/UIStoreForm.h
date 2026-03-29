@@ -1,4 +1,4 @@
-
+ï»¿
 #pragma once
 
 #include "uiglobalvar.h"
@@ -19,53 +19,53 @@
 namespace GUI
 {
 
-	// µ¥¸öÉÌÆ·Àïµ¥¸öµÀ¾ßĞÅÏ¢
+	// 
 	struct stItemInfo
 	{
-		short       itemID;         //	µÀ¾ß±àºÅ
-		int         itemNum;        //	µÀ¾ß¸öÊı
-		int         itemFlute;      //	°¼²ÛÊı
-		short       itemAttrID[5];  //	Îå¸öÊôĞÔ±àºÅ
-		short       itemAttrVal[5]; //	Îå¸öÊôĞÔÖµ
+		short       itemID;         //	
+		int         itemNum;        //	
+		int         itemFlute;      //	
+		short       itemAttrID[5];  //	
+		short       itemAttrVal[5]; //	
 
 		void Clear() { memset(this, 0, sizeof(stItemInfo)); }
 	};
 
-	// µ¥¸öÉÌÆ·ĞÅÏ¢
+	// 
 	struct stStoreInfo
 	{
-		long        comID;          //	ÉÌÆ·±àºÅ
-		char        comName[21];    //	ÉÌÆ·Ãû³Æ
-		long        comClass;       //	ÉÌÆ··ÖÀà
-		long        comTime;        //	ÉÌÆ·ÉÏ¼ÜÊ±¼ä
-		long        comPrice;       //	¼Û¸ñ
-		char        comRemark[129]; //	ÉÌÆ·±¸×¢
-		int         comNumber;      //  ÉÌÆ·Ê£Óà¸öÊı¡£-1²»ÏŞÖÆ£¬0ÏÂ¼Ü
-		time_t      comExpire;      //  ÉÌÆ·µ½ÆÚÊ±¼ä¡£
-		int         itemNum;        //  µÀ¾ß¸öÊı
-		int         isHot;          //  ÊÇ·ñÈÈÂô
-		stItemInfo  comItemInfo[6]; //  ×î¶àÁù¸öµÀ¾ß
+		long        comID;          //	
+		char        comName[21];    //	
+		long        comClass;       //	
+		long        comTime;        //	
+		long        comPrice;       //	
+		char        comRemark[129]; //	
+		int         comNumber;      //  -10
+		time_t      comExpire;      //  
+		int         itemNum;        //  
+		int         isHot;          //  
+		stItemInfo  comItemInfo[6]; //  
 
 		stStoreInfo() { memset(this, 0, sizeof(stStoreInfo)); }
 		void Clear()  { memset(this, 0, sizeof(stStoreInfo)); }
 	};
 
-	//  µ¥¸öÉÌÆ·GUI
+	//  GUI
 	struct stStoreGui
 	{
-		CLabelEx*		labName;			// ÉÌÆ·Ãû
-		CLabelEx*		labPrice;			// ÉÌÆ·¼Û¸ñ
-		CLabelEx*		labLeftTime;		// ÉÌÆ·Ê£ÓàÊ±¼ä
-		CLabelEx*		labLeftNum;			// ÉÌÆ·Ê£Óà¸öÊı
-		CLabelEx*		labRemark;			// ÉÌÆ·ÃèÊö
-		CLabelEx*		labRightClickView;	// ÓÒ¼ü²é¿´ÏéÏ¸
-		CImage*			imgCutLine;			// ·Ö¸îÏß
-		CImage*			imgHot;				// ÈÈÂôÍ¼
-		CImage*			imgNew;				// ĞÂÆ·Í¼
-		CImage*			imgBlue;			// Ñ¡ÖĞÉÌÆ·¸ßÁÁ
-		CImage*			imgSquare;			// µÀ¾ß¸ñ×Ó
-		COneCommand*	cmdStore;			// ÉÌÆ·±í¸ñ
-		CTextButton*	btnBlue;			// ¸ßÁÁ°´Å¥
+		CLabelEx*		labName;			// 
+		CLabelEx*		labPrice;			// 
+		CLabelEx*		labLeftTime;		// 
+		CLabelEx*		labLeftNum;			// 
+		CLabelEx*		labRemark;			// 
+		CLabelEx*		labRightClickView;	// 
+		CImage*			imgCutLine;			// 
+		CImage*			imgHot;				// 
+		CImage*			imgNew;				// 
+		CImage*			imgBlue;			// 
+		CImage*			imgSquare;			// 
+		COneCommand*	cmdStore;			// 
+		CTextButton*	btnBlue;			// 
 		
 		CImage*			imgWhite;
 
@@ -107,58 +107,58 @@ namespace GUI
 		CForm*		GetStoreForm()			{  return frmStore;		}
 		static int	GetPageSize()			{  return STORE_PAGE_SIZE;  }
 
-		// ³¡¾°±äºÚ
+		// 
 		void DarkScene(bool bDark);
 
-		// ´ÓÁÙÊ±±³°üÈ¡³ö
+		// 
 		bool PopFromTempKitbag(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem);
 		
-		// ´ò¿ªÉÌ³ÇÑ¯ÎÊ
+		// 
 		void OpenStoreAsk();
 
-		// Ìí¼ÓÉÌ³ÇÊ÷½áµã£¨¸¸½áµãÎªÁã±íÊ¾¸ù½áµã£©
+		// 
 		void AddStoreTreeNode(long nParentID, long nID, const char* szCaption);
 
-		// Ìí¼ÓÉÌ³ÇÉÌÆ·ĞÅÏ¢
+		// 
 		void AddStoreItemInfo(long nSeq, long nID, const char* szName, long nPrice, const char* szRemark, bool isHot, long nTime, long nRemainNum, long nRemainTime);
 
-		// Ìí¼ÓÉÌ³ÇÉÌÆ·Ï¸½ÚĞÅÏ¢
+		// 
 		void AddStoreItemDetail(long nSeq, long nSubSeq, short sItemID, short sItemNum, short sFlute, short pItemAttrID[], short pItemAttrVal[]);
 
-		// Ìí¼ÓÓÃ»§ÉèÖÃ½áµã
+		// 
 		void AddStoreUserTreeNode(void);
 
-		// ÉèÖÃÉÌ³ÇÁĞ±íÒ³
+		// 
 		void SetStoreItemPage(long nCurPage, long nMaxPage);
 
-		// ÉèÖÃÄ§¶¹ÊıÁ¿
+		// 
 		void SetStoreMoney(long nMoBean, long nRplMoney);
 
-		// ÉèÖÃVIPÖµ
+		// VIP
 		void SetStoreVip(long nVip);
 
-		// Ìí¼ÓÉÌ³Ç¹«¸æ
+		// 
 		//void AddStoreCommunique(long nID, const char* szTitle, 
 
-		// Ë¢ĞÂÉÌ³ÇÊ÷
+		// 
 		void StoreTreeRefresh();
 
-		// Çå³ıÈ«²¿µÄÉÌ³ÇÊ÷½áµã
+		// 
 		void ClearStoreTreeNode();
 
-		// Çå³ıÈ«²¿ÉÌ³ÇÎïÆ·ÁĞ±í
+		// 
 		void ClearStoreItemList();
 
-		// ÉèÖÃÉÌ³Ç°´Å¥ÊÇ·ñ¿ÉÓÃ
+		// 
 		void SetStoreBuyButtonEnable(bool b);
 
-		// »ñµÃµ±Ç°Ñ¡ÖĞID
+		// ID
 		int GetCurSelItemID();
 
-		// ÖØÖÃ×îºó²Ù×÷Ê±¼ä£¬10 Ãë¼ä¸ô´¦Àí
+		// 10 
 		bool ResetLastOperate(bool bSilent = false);
 
-		// ÓÃ»§ĞÅÏ¢½áµã
+		// 
 		static const long USER_NODEID = 0x7FFFFFFE;
 		static const long HELP_NODEID = 0x7FFFFFFF;
 
@@ -170,58 +170,58 @@ namespace GUI
 
 	private:
 
-		// ÁÙÊ±±³°ü
-		CForm*			frmTempBag;			// ÁÙÊ±±³°ü½çÃæ
-		CGoodsGrid*		grdTempBag;			// ÁÙÊ±±³°ü±í¸ñ
+		// 
+		CForm*			frmTempBag;			// 
+		CGoodsGrid*		grdTempBag;			// 
 		
 		
-		stNumBox*		m_pkNumberBox;		// Ñ¯ÎÊ¸öÊı
-		stNetTempKitbag m_NetTempKitbag;	// ÁÙÊ±±³°üÍøÂçĞ­ÒéÊı¾İ
+		stNumBox*		m_pkNumberBox;		// 
+		stNetTempKitbag m_NetTempKitbag;	// 
 
 		static void _evtDragItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 		static void _MoveItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 	private:
-		// ÉÌ³Ç
-		CForm*			frmStore;			// ÉÌ³Ç½çÃæ
-		CTreeView*		trvStore;			// Ê÷ÁĞ±í
-		CLabelEx*		labMoneyLeft;		// ½ğÇ®Ê£Óà
-		CLabelEx*		labBeanLeft;		// ´ú±ÒÊ£Óà
-		CLabelEx*		labMemberStyle;		// »áÔ±ÀàĞÍ
+		// 
+		CForm*			frmStore;			// 
+		CTreeView*		trvStore;			// 
+		CLabelEx*		labMoneyLeft;		// 
+		CLabelEx*		labBeanLeft;		// 
+		CLabelEx*		labMemberStyle;		// 
 
 		CLabelEx*		labNameTitle;
 		CLabelEx*		labPriceTitle;
 		CLabelEx*		labLeftTimeTitle;
 		CLabelEx*		labLeftNumTitle;
 
-		CLabelEx*		labListPage;		// Ò³±êÇ©
-		CTextButton*	btnLeftPage;		// ×ó°´Å¥
-		CTextButton*	btnRightPage;		// ÓÒ°´Å¥
-		CTextButton*	btnTrade;			// ½»Ò×°´Å¥
-		CTextButton*	btnTryon;			// ÊÔ´©°´Å¥
-		CTextButton*	btnViewAll;			// ²é¿´È«²¿ÉÌÆ·°´Å¥
-		CLabelEx*		labTrade;			// ½»Ò×°´Å¥×Ö
-		CLabelEx*		labTryon;			// ÊÔ´©°´Å¥×Ö
-		CLabelEx*		labViewAll;			// ²é¿´È«²¿ÉÌÆ·°´Å¥×Ö
-		CMemo*			memStoreHelp;		// ¸öÈËĞÅÏ¢°ïÖú
-		CImage*			imgBackGround10;	// °×É«µ²°å£¨ÉÌÆ·¹ºÂòÊ±ÏÔÊ¾£¬×Ô¶¨ÒåĞÅÏ¢Ê±²»ÏÔÊ¾£©
-		stNumBox*		m_pkExchangeNum;	// ¶Ò»»´ú±ÒÊıÊäÈë¿ò
+		CLabelEx*		labListPage;		// 
+		CTextButton*	btnLeftPage;		// 
+		CTextButton*	btnRightPage;		// 
+		CTextButton*	btnTrade;			// 
+		CTextButton*	btnTryon;			// 
+		CTextButton*	btnViewAll;			// 
+		CLabelEx*		labTrade;			// 
+		CLabelEx*		labTryon;			// 
+		CLabelEx*		labViewAll;			// 
+		CMemo*			memStoreHelp;		// 
+		CImage*			imgBackGround10;	// 
+		stNumBox*		m_pkExchangeNum;	// 
 
-		static const int STORE_PAGE_SIZE = 9;		  // ÉÌÆ·ÁĞ±íÒ»Ò³×î¶à 9 Ìõ
+		static const int STORE_PAGE_SIZE = 9;		  //  9 
 		stStoreGui		m_stStoreGui [STORE_PAGE_SIZE];
 		stStoreInfo		m_stStoreInfo[STORE_PAGE_SIZE];
 
-		long			m_nCurClass;		// µ±Ç°ÀàĞÍ
-		long			m_nCurSel;			// µ±Ç°Ñ¡Ôñ
-		long			m_nCurPage;			// µ±Ç°Ò³
-		long			m_nMaxPage;			// ×î´óÒ³
-		long			m_nExchangeNum;		// ¶Ò»»Êı
-		long			m_nVip;				// ÊÇ·ñÊÇVIP
+		long			m_nCurClass;		// 
+		long			m_nCurSel;			// 
+		long			m_nCurPage;			// 
+		long			m_nMaxPage;			// 
+		long			m_nExchangeNum;		// 
+		long			m_nVip;				// VIP
 
 
 		typedef std::map<long, std::string> MapNode;
 		typedef std::map<long, std::string>::iterator MapNodeIter;
-		MapNode			m_mapNode;		// Ê÷½áµã
+		MapNode			m_mapNode;		// 
 
 		void _SetIsShowUserInfo(bool bShow);
 		void _SetIsShowHelpInfo(bool bShow);
@@ -246,19 +246,19 @@ namespace GUI
 
 	private:
 
-		// ÉÌ³Ç¶ÁÈ¡½çÃæ
+		// 
 		CForm*			frmStoreLoad;
 		CProgressBar*	proStoreLoad;
 		static void _evtStoreLoadFormClose(CForm* pForm, bool& IsClose);
 		static void _evtProTimeArriveEvt(CGuiData *pSender);
 		DWORD			_dwDarkScene;
 
-		static const int STORE_OPEN_TIMEOUT = 15;	// ÉÌ³Ç´ò¿ª³¬Ê±£¨µ¥Î»£ºÃë£©
+		static const int STORE_OPEN_TIMEOUT = 15;	// 
 
 	private:
 
-		// ²é¿´ÏéÏ¸
-		static const int STORE_ITEM_COUNT = 6;	// ÉÌÆ·×î¶àÁù¸öµÀ¾ß
+		// 
+		static const int STORE_ITEM_COUNT = 6;	// 
 		CForm*			frmViewAll;
 		CMemo*			memViewAll;
 		CImage*			imgSquareViewAll[STORE_ITEM_COUNT];
@@ -269,11 +269,11 @@ namespace GUI
 
 	private:
 
-		// ÊÔ´©(Avata)
-		CForm*			frmTryon;		// ÊÔ´©½çÃæ
-		C3DCompent*		ui3dplayer;		// 3DÊÔ´©
+		// (Avata)
+		CForm*			frmTryon;		// 
+		C3DCompent*		ui3dplayer;		// 3D
 
-		int				m_nChaRotate;	// ½ÇÉ«Ğı×ª
+		int				m_nChaRotate;	// 
 		CCharacter*		m_pCurrMainCha;
 		bool			m_isFight;
 		stNetLookInfo	m_sLookInfo;
@@ -282,7 +282,7 @@ namespace GUI
 		void			ChaEquipClearAll();
 		void			ChaLeftRotate();
 		void			ChaRightRotate();
-		void			RenderChaTryon(int x, int y);	// »æÖÆ 3D ½ÇÉ«
+		void			RenderChaTryon(int x, int y);	//  3D 
 
 		static void	_evtChaTryonRenderEvent(C3DCompent *pSender, int x, int y);
 		static void _evtChaEquipClearAll(CGuiData *sender, int x, int y, DWORD key);

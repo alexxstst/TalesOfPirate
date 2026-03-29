@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: GameApp.cpp
 // Creater: ZhangXuedong
 // Date: 2004.11.04
@@ -47,12 +47,12 @@ bool		g_bLogEntity = false;
 
 CItemRecordAttr*  g_pCItemAttr = NULL;
 CCharacter*	g_pCSystemCha = NULL;
-SubMap*		g_pScriptMap = NULL;		// �ű��ó�ʼ����ͼ��Ϣȫ�ֱ���
+SubMap*		g_pScriptMap = NULL;		// 
 long		g_lDeftMMaskLight = 21;
 string		g_strChaState[2];
 
 
-// ��Ϸѭ���е�ǰ�����ֵ�ִ�е�cha
+// cha
 uLong		g_ulCurID = defINVALID_CHA_ID;
 Long		g_lCurHandle = defINVALID_CHA_HANDLE;
 //
@@ -71,7 +71,7 @@ char		szItemInfoName[256]			= "ItemInfo";
 char		szInitChaItName[256]		= "Int_Cha_Item";
 char		g_szForgeTable[256]			= "forgeitem";
 char		szIslandInfoName[256]		= "AreaSet";
-char		szHairInfoName[64]			= "Hairs";		// �ɸ����ķ��ͼ�¼��
+char		szHairInfoName[64]			= "Hairs";		// 
 
 CAreaSet * CAreaSet::_Instance = NULL;
 
@@ -86,27 +86,27 @@ void ChaException(uLong ulCurID, Long lCurHandle)
 	Entity	*pCEnti = g_pGameApp->IsValidEntity(ulCurID, lCurHandle);
 	if (!pCEnti)
 	{
-		//LG("exception3", "δ֪��ʵ�壨ID:%u, Handle:%d���������쳣\n", ulCurID, lCurHandle);
+		//LG("exception3", "ID:%u, Handle:%d\n", ulCurID, lCurHandle);
 		ToLogService("errors", LogLevel::Error, "unknown entity(ID:{}, Handle:{})occur abnormity", ulCurID, lCurHandle);
 		return;
 	}
 	CCharacter *pCurCha = pCEnti->IsCharacter();
 	if (!pCurCha)
 	{
-		//LG("exception3", "δ֪�Ľ�ɫ��ID:%u, Handle:%d���������쳣\n", ulCurID, lCurHandle);
+		//LG("exception3", "ID:%u, Handle:%d\n", ulCurID, lCurHandle);
 		ToLogService("errors", LogLevel::Error, "unknown character(ID:{}, Handle:{})occur abnormity", ulCurID, lCurHandle);
 		return;
 	}
 
 	try
 	{
-		//LG("exception3", "��ɫ[%s] [%s]�����쳣, �����߳���Ϸ\n", pCurCha->GetLogName(), pCurCha->GetPlyMainCha()->GetLogName());
+		//LG("exception3", "[%s] [%s], \n", pCurCha->GetLogName(), pCurCha->GetPlyMainCha()->GetLogName());
 		ToLogService("errors", LogLevel::Error, "character[{}] [{}]occur abnormity, will be kick out game", pCurCha->GetLogName(), pCurCha->GetPlyMainCha()->GetLogName());
 		// ....
 		CPlayer	*pCPlayer = pCurCha->GetPlayer();
 		if (pCPlayer)
 		{
-			//LG("exception3", "��ҽ�ɫ[%s] [%s]�����쳣, [GoOutGame]\n", pCurCha->GetLogName(), pCurCha->GetPlyMainCha()->GetLogName());
+			//LG("exception3", "[%s] [%s], [GoOutGame]\n", pCurCha->GetLogName(), pCurCha->GetPlyMainCha()->GetLogName());
 			ToLogService("errors", LogLevel::Error, "player character[{}] [{}]occur abnormity, [GoOutGame]", pCurCha->GetLogName(), pCurCha->GetPlyMainCha()->GetLogName());
 			KICKPLAYER(pCPlayer, 0);
 			ToLogService("errors", LogLevel::Error, "End [KICKPLAYER], Begin[GoOutGame]");
@@ -116,21 +116,21 @@ void ChaException(uLong ulCurID, Long lCurHandle)
 		}
 		else
 		{
-			//LG("exception3", "�ͷŹ����ɫ[%s], Begin\n", pCurCha->GetName());
+			//LG("exception3", "[%s], Begin\n", pCurCha->GetName());
 			ToLogService("errors", LogLevel::Error, "release bugbear character[{}], Begin", pCurCha->GetName());
 			pCurCha->Free();
-			//LG("exception3", "End �ͷŹ����ɫ\n");
+			//LG("exception3", "End \n");
 			ToLogService("errors", LogLevel::Error, "End release bugbear character");
 		}
 	}
 	catch (...)
 	{
-		//LG("exception3", "����ɫѭ�������쳣ʱ, �߳���ɫ�Ĺ������ַ����쳣, [%s]\n", pCurCha->GetName());
+		//LG("exception3", ", , [%s]\n", pCurCha->GetName());
 		ToLogService("errors", LogLevel::Error, "when character loop occur abnormity, the process kick character occur abnormity again, [{}]", pCurCha->GetName());
 	}
 }
 
-// ��Ϸ�߼����߳�
+// 
 DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 {
 #ifdef __CATCH
@@ -151,7 +151,7 @@ DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
     while (!g_bGameEnd)
 	{
 		
-		DWORD	dwInterval = 50; // ����
+		DWORD	dwInterval = 50; // 
 
 		//lua_FrameMove();
 		if(g_pGameApp->m_bExecLuaCmd) 
@@ -168,19 +168,19 @@ DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 			g_strLogName = strLogName + szLogTime;
 		}*/
 
-		//״̬����
+		//
 		dwLastTick = GetTickCount();
 		g_pGameApp->Run(dwLastTick);
 		dwCurTick = GetTickCount();
 		dwRunTick = dwCurTick - dwLastTick;
 
-		//����������Ϣ����
+		//
 		dwLastTick = dwCurTick;
 		PEEKPACKET(50 > dwRunTick ? 50 - dwRunTick : 0);
 		dwCurTick = GetTickCount();
 		dwRunTick += dwCurTick - dwLastTick;
 
-		//InfoServer��Ϣ����
+		//InfoServer
 		dwLastTick = dwCurTick;
         g_gmsvr->GetInfoServer()->PeekMsg(50 > dwRunTick ? 50 - dwRunTick : 0);
 		g_StoreSystem.Run(dwCurTick, 10000, 10000);
@@ -190,7 +190,7 @@ DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter)
 		g_pGameApp->m_dwRunStep = 104;
 
 	}
-	//LG("init", "��Ϸ�߳̽���!\n");
+	//LG("init", "!\n");
 	ToLogService("common", "game thread finish!");
 	return 0;
 }
@@ -210,7 +210,7 @@ void CDBLogMgr::TradeLog(const char* action, const char *pszChaFrom, const char 
 
 // End
 
-// ����Log 5���ַ����ֶ�, ���һ������Ϊ8000�ַ�����
+// Log 5, 8000
 void CDBLogMgr::Log(const char *type, const char *c1, const char *c2, const char *c3, const char *c4, const char *p, BOOL bAddToList)
 {	
 	return;
@@ -237,7 +237,7 @@ void CDBLogMgr::Log(const char *type, const char *c1, const char *c2, const char
 }
 
 
-// ����ʱ����, ÿ��д��һ��������log��DB
+// , logDB
 void CDBLogMgr::HandleLogList() 
 {
 	if(_LogList.empty()) 
@@ -253,7 +253,7 @@ void CDBLogMgr::HandleLogList()
 	
 	
 	BOOL bFlush = FALSE;
-	// ÿ��ִֻ�й̶�����
+	// 
 	for(int i = 0; i < _nPerLogCnt; i++)
 	{
 		if(_LogList.empty()) break;
@@ -261,13 +261,13 @@ void CDBLogMgr::HandleLogList()
 		game_db.ExecLogSQL(pData->szLog);
 		_LogList.pop_front();
 
-		// �����ִ�е�λ���Ѿ�����pool����ʹ�õ�λ��
+		// pool
 		if(pData->nLoc > _nPoolUseLoc)
 		{
-			if(pData->nLoc - _nPoolUseLoc < 10) // ����λ���Ѿ��ܽӽ�, ��Ҫ�ص���, ����
+			if(pData->nLoc - _nPoolUseLoc < 10) // , , 
 			{
 				bFlush = TRUE;
-				//LG("dblog_error", "DBLogPoolλ�ü����ص�HandleLoc=[%d], PoolUseLoc=[%d]����DBLog�ٶȲ�����, ִ��Flush����ʣ��log!\n", pData->nLoc, _nPoolUseLoc);
+				//LG("dblog_error", "DBLogPoolHandleLoc=[%d], PoolUseLoc=[%d]DBLog, Flushlog!\n", pData->nLoc, _nPoolUseLoc);
 				ToLogService("errors", LogLevel::Error, "DBLogPool position will superpose HandleLoc=[{}], PoolUseLoc=[{}]deal with DBLog speed abnormity, carry out Flush all leavings log!", pData->nLoc, _nPoolUseLoc);
 				break;
 			}
@@ -282,7 +282,7 @@ void CDBLogMgr::HandleLogList()
 	ToLogService("common", "dblog exec sql use time = {}", t.End());
 }
 
-// GameServer�رյ�ʱ��, ��֤ʣ�µ�log��д��DB
+// GameServer, logDB
 void CDBLogMgr::FlushLogList()  
 {
 	for(list<SDBLogData*>::iterator it = _LogList.begin(); it!=_LogList.end(); it++)
@@ -342,7 +342,7 @@ CGameApp::CGameApp()
 CGameApp::~CGameApp()
 {
 	
-	//Log("�ر�", "haha", "", "" ,"", "");
+	//Log("", "haha", "", "" ,"", "");
 	Log("close", "haha", "", "" ,"", "");
 	FlushLogList();
 
@@ -384,7 +384,7 @@ BOOL LoadTable(CRawDataSet *pTable, const char *pszTableName)
 	string str = GetResPath(pszTableName);
 	if(pTable->LoadRawDataInfo(str.c_str())==FALSE)
 	{
-		//LG("error", "msg��ȡ����[%s]ʧ��\n", str.c_str());
+		//LG("error", "msg[%s]\n", str.c_str());
 		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00003), str.c_str()); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return FALSE;
 	}
@@ -394,13 +394,13 @@ BOOL LoadTable(CRawDataSet *pTable, const char *pszTableName)
 
 BOOL CGameApp::Init()
 {
-	//LG("init", "��ʼ��ʼ��GameApp\n");
+	//LG("init", "GameApp\n");
 	ToLogService("common", "start initialization GameApp");
 
-	//LG("init", "��ʼ�����ݿ�...\n");
+	//LG("init", "...\n");
 	ToLogService("common", "initialization DB...");
 	if(game_db.Init())
-	{	// ��ʼ�����ݿ�
+	{	// 
 		ToLogService("common", "database init...ok");
 	}
 	else
@@ -411,7 +411,7 @@ BOOL CGameApp::Init()
 
 	// Add by lark.li 20080324 begin
 	if(tradeLog_db.Init())
-	{	// ��ʼ�����ݿ�
+	{	// 
 		ToLogService("common", "database init...ok");
 	}
 	else
@@ -424,39 +424,39 @@ BOOL CGameApp::Init()
 	ChaAttrMaxValInit(false);
 	if( !CTextFilter::LoadFile( GetResPath("ChaNameFilter.txt" )) )
 	{
-		//LG( "init", "msg��ʼ��װ�����ֹ�����Ϣ�ļ�ʧ��!\n" );
+		//LG( "init", "msg!\n" );
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00004) );
 		return FALSE;		
 	}
 
-	//m_Ident.m_maxID = g_Config.m_ulBaseID; //���ID�������Ļ���
-	m_Ident.m_maxID = 0xafffffff; //���ID�������Ļ���
+	//m_Ident.m_maxID = g_Config.m_ulBaseID; //ID
+	m_Ident.m_maxID = 0xafffffff; //ID
 	if(!m_Ident.m_maxID)
-		//LG("init", "�����ID����!!!\n");
+		//LG("init", "ID!!!\n");
 		ToLogService("common", "error ID base!!!");
 	m_ItemIdent.m_maxID = 1;
 
 	m_pCPlySpace = new CPlayerAlloc(g_Config.m_nMaxPly);
 	if (!m_pCPlySpace)
 	{
-		//LG("init", "msg������ҿռ����!, �˳�!\n");
+		//LG("init", "msg!, !\n");
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00005));
 		return FALSE;
 	}
 	m_pCEntSpace = new CEntityAlloc(g_Config.m_nMaxCha + g_Config.m_nMaxPly * 3, g_Config.m_nMaxItem, g_Config.m_nMaxTNpc);
 	if (!m_pCEntSpace)
 	{
-		//LG("init", "msg�����ɫ�ռ����!, �˳�!\n");
+		//LG("init", "msg!, !\n");
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00017));
 		return FALSE;
 	}
 	g_pCSystemCha = GetNewCharacter();
 	g_pCSystemCha->SetID(m_Ident.GetID());
-	//g_pCSystemCha->SetName("ϵͳ");
+	//g_pCSystemCha->SetName("");
 	g_pCSystemCha->SetName(RES_STRING(GM_GAMEAPP_CPP_00018));
 	g_pCSystemCha->setAttr(ATTR_CHATYPE, enumCHACTRL_NONE, 1);
 
-    //LG("init", "��ʼ�������Entity�ڴ�\n");
+    //LG("init", "Entity\n");
 	ToLogService("common", "start to assign every Entity memory");
 	m_CabinHeap.Init();
 	m_TradeDataHeap.Init();
@@ -465,7 +465,7 @@ BOOL CGameApp::Init()
 	m_SkillTDataHeap.Init();
 	m_StateCellNodeHeap.Init();
 
-	//LG("init", "��ʼ���������...\n");
+	//LG("init", "...\n");
 	ToLogService("common", "initialization every form...");
 	int	nItemRecordNum = CItemRecord::enumItemMax;
 	
@@ -482,11 +482,11 @@ BOOL CGameApp::Init()
 	
 	m_CItemRecordSet		= new CItemRecordSet(0, nItemRecordNum);LoadTable(m_CItemRecordSet, szItemInfoName);
 
-	//�������ʱ����
+	//
 	/*m_PicSet = new CPicSet();
 	if(!m_PicSet->init())
 	{
-		ToLogService("common", LogLevel::Error, "��ȡͼƬʧ�ܣ�");
+		ToLogService("common", LogLevel::Error, "");
 		return FALSE;
 	}*/
 	
@@ -501,27 +501,27 @@ BOOL CGameApp::Init()
 
 	if( !g_ForgeSystem.LoadForgeData( g_szForgeTable ) )
 	{
-		//LG( "init", "msg��ȡ�������ݱ���Ϣʧ�ܣ�" );
+		//LG( "init", "msg" );
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00006) );
 		return FALSE;
 	}
 
 	if( !g_CharBoat.Load( "ShipInfo", "ShipItemInfo"))
 	{
-		//LG( "init", "msg��ȡ��ֻ���ݱ���Ϣʧ�ܣ�" );
+		//LG( "init", "msg" );
 		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00007) );
 		return FALSE;
 	}
 
 	ToLogService("common", "Loading {}", LUAJIT_VERSION);
 	ToLogService("common", "Loading Serverfile 1.38");
-	//LG("init", "��ʼ��Lua Script...\n");
+	//LG("init", "Lua Script...\n");
 	ToLogService("common", "initialization Lua Script...");
 	InitLuaScript();
 
 	if(InitMap()==FALSE)
 	{
-		//LG("init", "��ͼ��ʼ��ʧ��!, �˳�!\n");
+		//LG("init", "!, !\n");
 		ToLogService("common", "initialization map failed!, exit!");
 		return FALSE;
 	}
@@ -530,12 +530,12 @@ BOOL CGameApp::Init()
 
 	if (!IsChaAttrMaxValInit())
 	{
-		//LG("init", "��ɫ�������ֵ...Fail!\n");
+		//LG("init", "...Fail!\n");
 		ToLogService("common", "character attribute max...Fail!");
 		return FALSE;
 	}
 
-	//LG("init", "GameApp��ʼ������!\n");
+	//LG("init", "GameApp!\n");
 	ToLogService("common", "GameApp initialization finish!");
 
 	ToLogService("common", "sizeof(Entity) = {},  sizeof(Character) = {}", sizeof(Entity), sizeof(CCharacter));
@@ -577,7 +577,7 @@ void CGameApp::Run(DWORD dwCurTime)
 	t.Begin();
 	//if (dwChaCnt != m_dwChaCnt || dwPlayerCnt != m_dwPlayerCnt || dwActiveMgrUnit != m_dwActiveMgrUnit)
 	//	LG("PanelData", "ChaNum=%5d,\tPlayerNum=%4d,\tActMgrUnit=%6d\n", m_dwChaCnt, m_dwPlayerCnt, m_dwActiveMgrUnit);
-	// ����ͳ��
+	// 
 	//DataStatistic();
 	DWORD	dwDataStatisticTime = t.End();
 
@@ -593,15 +593,15 @@ void CGameApp::Run(DWORD dwCurTime)
 
 	DWORD	dwGameRunTime = t1.End();
 
-	// ��Ϸѭ�����ʺ���ʱ��ͳ��
+	// 
     if(dwCurTime - _dwLastTick >= 1000)
     {
         m_dwFPS       = _dwTempRunCnt;
         _dwTempRunCnt = 0;
         _dwLastTick   = dwCurTime;
     }
-    m_dwRunCnt++;     // ѭ���ܴ���, ��������ʱ���
-    _dwTempRunCnt++;  // ֡����
+    m_dwRunCnt++;     // , 
+    _dwTempRunCnt++;  // 
     m_dwRunStep = 104;
 
 	if (m_ulLeftSec > 0 && m_CTimerReset.IsOK(dwCurTime))
@@ -609,7 +609,7 @@ void CGameApp::Run(DWORD dwCurTime)
 		NotiGameReset(m_ulLeftSec);
 	    m_dwRunStep = 501;
 		m_ulLeftSec--;
-		if (m_ulLeftSec == 0) // �����ɫ��������Ϸ���˺�Ĵ��벻Ӧ�������ý�ɫ
+		if (m_ulLeftSec == 0) // 
 		{
 			SaveAllPlayer();
 		    m_dwRunStep = 502;
@@ -619,7 +619,7 @@ void CGameApp::Run(DWORD dwCurTime)
 	}
     m_dwRunStep = 503;
 
-	// ��¼����ʱ��
+	// 
 	DWORD	dwRunTimeKey = 100;
 	bool	bLogRunTime = false;
     if (dwCurTime - dwRunTick >= 30 * 1000)
@@ -712,7 +712,7 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime)
 				continue;
 
 			extern SubMap *g_pScriptMap;
-			g_pScriptMap = pCSubMap; // ��ô����AIѭ����, �Ͳ���ָ����ǰ��ͼ
+			g_pScriptMap = pCSubMap; // AI, 
 
 			m_dwChaCnt += pCSubMap->GetMonsterNum();
 			dwActMgrCellNum += pCSubMap->m_CEyeshotCellL.GetActiveNum();
@@ -762,7 +762,7 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime)
 			{
 				if (++lActCount > lTarNum)
 				{
-					//LG("״̬��Ԫ����", "ʵ�ʼ����� %d\n", lTarNum);
+					//LG("", " %d\n", lTarNum);
 					ToLogService("errors", LogLevel::Error, "fact activation number {}", lTarNum);
 					break;
 				}
@@ -890,13 +890,13 @@ void CGameApp::SetEntityEnableLog(bool bValid)
 	}
 }
 
-// ����һ���µ����
+// 
 CPlayer* CGameApp::GetNewPlayer()
 {
 	return m_pCPlySpace->GetNewPly();
 }
 
-// ������Ҿ��ȡָ��
+// 
 CPlayer* CGameApp::GetPlayer(long lHandle)
 {
 	return m_pCPlySpace->GetPly(lHandle);
@@ -913,15 +913,15 @@ CPlayer* CGameApp::IsValidPlayer(long lID, long lHandle)
 	return pCPly;
 }
 
-// ����������ݽṹ����ȡ���ݿ�
-// chType��0����ɫ���ߡ�1����ͼ�л�
+// 
+// chType01
 CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uLong ulWorldId, const char *cszMapName, char chType)
 {
 	CPlayer	*pCOldPly = GetPlayerByDBID(ulChaDBId);
 	if (pCOldPly)
 	{
-		//LG("�ظ���ɫ", "��ɫ %s[%u] ����ʱ�����ָý�ɫ�Ѿ����ڣ�\n", pCOldPly->GetMainCha()->GetName(), ulChaDBId);
-		ToLogService("common", "when character {}[{}] enter��find it has exist��", pCOldPly->GetMainCha()->GetName(), ulChaDBId);
+		//LG("", " %s[%u] \n", pCOldPly->GetMainCha()->GetName(), ulChaDBId);
+		ToLogService("common", "when character {}[{}] enterfind it has exist", pCOldPly->GetMainCha()->GetName(), ulChaDBId);
 		pCOldPly->GetCtrlCha()->BreakAction();
 		pCOldPly->MisLogout();
 		pCOldPly->MisGooutMap();
@@ -940,9 +940,9 @@ CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uL
 		if(pCMainCha)
 			pCMainCha->Free();
 
-        // ȱ��character��free
-       // LG("enter_map", "��������ҽ�ɫ��ID = %u��ʱ�������ڴ�ʧ�� \n", ulChaDBId);
-		ToLogService("map", "when create new player character��ID = {}����memory assign failed ", ulChaDBId);
+        // characterfree
+       // LG("enter_map", "ID = %u \n", ulChaDBId);
+		ToLogService("map", "when create new player characterID = {}memory assign failed ", ulChaDBId);
         return NULL;
 	}
 
@@ -960,15 +960,15 @@ CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uL
 	l_player->SetMaskMapName(cszMapName);
 
     ToLogService("map", "atorID = {}, begin read data from database: ", ulChaDBId);
-    if (!game_db.ReadPlayer(l_player, ulChaDBId)) // �������쳣���ж���Gate������
+    if (!game_db.ReadPlayer(l_player, ulChaDBId)) // Gate
     {
-       // LG("enter_map", "atorID = %d, ��ȡ��ɫ����ʱ�����ִ��󣬵���GameServer���GateServer�Ͽ�����\n", ulChaDBId);
-		 ToLogService("map", "atorID = {},when get character data��appear error��lead to GameServer with GateServer disconnection", ulChaDBId);
+       // LG("enter_map", "atorID = %d, GameServerGateServer\n", ulChaDBId);
+		 ToLogService("map", "atorID = {},when get character dataappear errorlead to GameServer with GateServer disconnection", ulChaDBId);
         l_player->Free();
         return NULL;
     }
 
-	// ������ҽ�ɫЯ���Ĵ�ֻ
+	// 
 	if(!g_CharBoat.LoadBoat( *l_player->GetMainCha(), chType ))
     {
         ToLogService("common", "Character {}[{}] Load Boat Failt.", l_player->GetMainCha()->GetName(), ulChaDBId);
@@ -989,10 +989,10 @@ CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uL
     ToLogService("map", "atorID = {}, logname = [{}] end enter", ulChaDBId, pCMainCha->GetLogName());
 }
 
-// ����������ϣ��黹�ڴ�
+// 
 void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
 {
-    // ����д���ݿ⣬�ͷŽ�ɫ
+    // 
     if(pPlayer && pPlayer->IsValid())
 	{
 		CCharacter	*pCCha = pPlayer->GetCtrlCha();
@@ -1007,13 +1007,13 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
 			pSrcMap->BeforePlyOutMap(pCCha);
 		if (pSrcMap)
 			bSavePos = pCCha->GetSubMap()->CanSavePos();
-		if (bIsDie || !bSavePos) // ��ɫ�Ѿ�����
+		if (bIsDie || !bSavePos) // 
 		{
 			if (bIsDie)
 				g_CParser.DoString("Relive", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pCCha, DOSTRING_PARAM_END);
 
 			SSrcPos = pCCha->GetPos();
-			if (pCCha->IsBoat()) // ��ֻ
+			if (pCCha->IsBoat()) // 
 			{
 				pCCha->SetToMainCha(bIsDie);
 
@@ -1029,11 +1029,11 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
 
 		if(game_db.SavePlayer(pPlayer, enumSAVE_TYPE_OFFLINE)==false)
 		{
-			//LG("enter_map", "SavePlayer[%s]ʧ��", pPlayer->GetMainCha()->GetName());
+			//LG("enter_map", "SavePlayer[%s]", pPlayer->GetMainCha()->GetName());
 			ToLogService("map", "SavePlayer[{}] failed", pPlayer->GetMainCha()->GetName());
 		}
 
-		if (bIsDie || !bSavePos) // ��ɫ�Ѿ�����
+		if (bIsDie || !bSavePos) // 
 		{
 			game_db.SavePlayerPos(pPlayer);
 			pCCha->SetSubMap(pSrcMap);
@@ -1045,7 +1045,7 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer)
 		pPlayer->Free();
 
 		//////////////////////////////////////////////////////////////////////////
-		// ɾ��gate server��Ӧ��ά����Ϣ
+		// gate server
 		pPlayer->OnLogoff();
 		DELPLAYER(pPlayer);
 		//////////////////////////////////////////////////////////////////////////
@@ -1082,7 +1082,7 @@ void CGameApp::NoticePlayerLogin(CPlayer *pCPlayer)
 	if (!pCPlayer || !pCPlayer->GetCtrlCha())
 		return;
 
-	// Типизированная сериализация: уведомление о входе игрока + ручной trailer
+	//  :     +  trailer
 	auto WtPk = net::msg::serialize(net::msg::MmLoginMessage{pCPlayer->GetCtrlCha()->GetName()});
 
 	BEGINGETGATE();
@@ -1105,19 +1105,19 @@ void CGameApp::AfterPlayerLogin(const char *cszPlyName)
 	g_CDMapEntry.AfterPlayerLogin(cszPlyName);
 }
 
-// ����һ���µĽ�ɫ
+// 
 CCharacter* CGameApp::GetNewCharacter()
 {
 	return m_pCEntSpace->GetNewCha();
 }
 
-// ����һ���µĵ���
+// 
 CItem* CGameApp::GetNewItem()
 {
 	return m_pCEntSpace->GetNewItem();
 }
 
-// ����һ���µ�NPC
+// NPC
 mission::CTalkNpc* CGameApp::GetNewTNpc()
 {
 	return m_pCEntSpace->GetNewTNpc();
@@ -1128,7 +1128,7 @@ Entity* CGameApp::GetEntity(long lHandle)
 	return m_pCEntSpace->GetEntity(lHandle);
 }
 
-// ��ɫ����Чʵ��
+// 
 Entity* CGameApp::IsValidEntity(unsigned long ulID, long lHandle)
 {
 	Entity	*pEnti = g_pGameApp->GetEntity(lHandle);
@@ -1141,7 +1141,7 @@ Entity* CGameApp::IsValidEntity(unsigned long ulID, long lHandle)
 	return pEnti;
 }
 
-// ��ɫ����Чʵ�壬�����ڵ�ͼ��������״̬
+// 
 Entity* CGameApp::IsLiveingEntity(unsigned long ulID, long lHandle)
 {
 	Entity	*pEnti = IsValidEntity(ulID, lHandle);
@@ -1154,7 +1154,7 @@ Entity* CGameApp::IsLiveingEntity(unsigned long ulID, long lHandle)
 	return pEnti;
 }
 
-// ��ɫ����Чʵ�壬�����ڵ�ͼ
+// 
 Entity* CGameApp::IsMapEntity(unsigned long ulID, long lHandle)
 {
 	Entity	*pEnti = IsValidEntity(ulID, lHandle);
@@ -1167,7 +1167,7 @@ Entity* CGameApp::IsMapEntity(unsigned long ulID, long lHandle)
 	return pEnti;
 }
 
-// ��ɫ����Чʵ�壬������
+// 
 Entity* CGameApp::IsLifeEntity(unsigned long ulID, long lHandle)
 {
 	Entity	*pEnti = IsValidEntity(ulID, lHandle);
@@ -1180,76 +1180,76 @@ Entity* CGameApp::IsLifeEntity(unsigned long ulID, long lHandle)
 	return pEnti;
 }
 
-// ��ʼ�����е�ͼ
+// 
 BOOL CGameApp::InitMap()
 {
-	//LG("init", "��ʼ����ͼ�б�...\n");
+	//LG("init", "...\n");
 	ToLogService("common", "initialization map list...");
 	
 	mission::g_WorldEudemon.Load( "Eudemon", g_Config.m_szEqument, -1 );
 
-	//��ʼ��Map��Ϣ
+	//Map
 	m_mapnum = g_Config.m_nMapCnt;
 	if(m_mapnum < 1)
 	{
-		//LG("init", "���õ�ͼ����Ϊ0,û�е�ͼ����ʼ��, �˳�!\n");
+		//LG("init", "0,, !\n");
 		ToLogService("common", "collocate map number 0,no map was initialization, exit!");
 		return FALSE;
 	}
 
 	m_strMapNameList = "";
 
-	//��ʼ����ͼ���ݽṹ
+	//
 	memset(m_MapList, 0, sizeof(CMapRes*) * MAX_MAP);
 	for(short i=0; i< m_mapnum; i++)
 	{
 		m_MapList[i] = new CMapRes();
 		m_MapList[i]->SetName(g_Config.m_szMapList[i]);
 
-		strcpy(m_MapList[i]->m_szObstacleFile, m_MapList[i]->GetName());		//�ϰ��ļ���
+		strcpy(m_MapList[i]->m_szObstacleFile, m_MapList[i]->GetName());		//
 		strcat(m_MapList[i]->m_szObstacleFile, "\\"); 
 		strcat(m_MapList[i]->m_szObstacleFile, m_MapList[i]->GetName());
 		strcat(m_MapList[i]->m_szObstacleFile, ".blk");
-		strcpy(m_MapList[i]->m_szSectionFile, m_MapList[i]->GetName());			//���������ļ���
+		strcpy(m_MapList[i]->m_szSectionFile, m_MapList[i]->GetName());			//
 		strcat(m_MapList[i]->m_szSectionFile, "\\");
 		strcat(m_MapList[i]->m_szSectionFile, m_MapList[i]->GetName());
-		strcpy(m_MapList[i]->m_szMonsterSpawnFile, m_MapList[i]->GetName());	//����ˢ���ļ���
+		strcpy(m_MapList[i]->m_szMonsterSpawnFile, m_MapList[i]->GetName());	//
 		strcat(m_MapList[i]->m_szMonsterSpawnFile, "\\");
 		strcat(m_MapList[i]->m_szMonsterSpawnFile, m_MapList[i]->GetName());
 		strcat(m_MapList[i]->m_szMonsterSpawnFile, "ChaSpn");
-		strcpy(m_MapList[i]->m_szNpcSpawnFile, m_MapList[i]->GetName());		//npc�����ļ���
+		strcpy(m_MapList[i]->m_szNpcSpawnFile, m_MapList[i]->GetName());		//npc
 		strcat(m_MapList[i]->m_szNpcSpawnFile, "\\");
 		strcat(m_MapList[i]->m_szNpcSpawnFile, m_MapList[i]->GetName());
 		strcat(m_MapList[i]->m_szNpcSpawnFile, "NPC");
-		strcpy(m_MapList[i]->m_szMapSwitchFile, m_MapList[i]->GetName());		//��ͼ�л��ļ���
+		strcpy(m_MapList[i]->m_szMapSwitchFile, m_MapList[i]->GetName());		//
 		strcat(m_MapList[i]->m_szMapSwitchFile, "\\");
 		strcat(m_MapList[i]->m_szMapSwitchFile, m_MapList[i]->GetName());
 		strcat(m_MapList[i]->m_szMapSwitchFile, "SwhMap");
-		strcpy(m_MapList[i]->m_szMonsterCofFile, m_MapList[i]->GetName());		//�����Ĺ���ˢ���ļ���
+		strcpy(m_MapList[i]->m_szMonsterCofFile, m_MapList[i]->GetName());		//
 		strcat(m_MapList[i]->m_szMonsterCofFile, "\\");
 		strcat(m_MapList[i]->m_szMonsterCofFile, m_MapList[i]->GetName());
 		strcat(m_MapList[i]->m_szMonsterCofFile, "monster_conf.lua");
-		strcpy(m_MapList[i]->m_szCtrlFile, m_MapList[i]->GetName());		//��ͼ�����ļ���
+		strcpy(m_MapList[i]->m_szCtrlFile, m_MapList[i]->GetName());		//
 		strcat(m_MapList[i]->m_szCtrlFile, "\\");
 		strcat(m_MapList[i]->m_szCtrlFile, "ctrl.lua");
-		strcpy(m_MapList[i]->m_szEntryFile, m_MapList[i]->GetName());		//��ͼ����ļ���
+		strcpy(m_MapList[i]->m_szEntryFile, m_MapList[i]->GetName());		//
 		strcat(m_MapList[i]->m_szEntryFile, "\\");
 		strcat(m_MapList[i]->m_szEntryFile, "entry.lua");
 
 		if(m_MapList[i]->Init()==FALSE)
 		{
-			//LG("init", "��ͼ[%s]��ʼ��ʧ��!\n", m_MapList[i]->GetName());
+			//LG("init", "[%s]!\n", m_MapList[i]->GetName());
 			ToLogService("common", "map [{}] initialization failed!", m_MapList[i]->GetName());
 			g_Config.m_btMapOK[i] = 0;
 			continue;
 		}
 		else
 		{
-			g_Config.m_btMapOK[i] = 1; // ��ʼ���ɹ����
+			g_Config.m_btMapOK[i] = 1; // 
 		}
 		m_strMapNameList += m_MapList[i]->GetName();
 		m_strMapNameList += ";";
-		//LG("init", "��ͼ[%s] ok!\n", m_MapList[i]->GetName());
+		//LG("init", "[%s] ok!\n", m_MapList[i]->GetName());
 		ToLogService("common", "map [{}] ok!", m_MapList[i]->GetName());
 	}
 	
@@ -1273,7 +1273,7 @@ BOOL CGameApp::SummonNpc( BYTE byMapID, USHORT sAreaID, const char szNpc[], USHO
 	return FALSE;
 }
 
-// ͨ�����Ʋ����ӵ�ͼ
+// 
 CMapRes *CGameApp::FindMapByName(const char *mapname, bool bIncUnRun)
 {
 	if (!mapname)
@@ -1283,8 +1283,8 @@ CMapRes *CGameApp::FindMapByName(const char *mapname, bool bIncUnRun)
 	for(;i < m_mapnum;i++)
 	{
 		CMapRes *pMap = m_MapList[i];
-		if(!pMap) continue; // �п��ܻ�û�г�ʼ��
-	    //�޸�С��ͼ��һ��ʱ���޷������BUG
+		if(!pMap) continue; // 
+	    //BUG
 		/* if (!bIncUnRun)
 			if (!(pMap->IsOpen())) continue;
 		*/
@@ -1339,12 +1339,12 @@ BOOL CGameApp::ReloadNpcInfo( CCharacter& character )
 	{
 		if( !pTalkNpc->InitScript( pTalkNpc->GetInitFunc(), pTalkNpc->GetName() ) )
 		{
-			//character.SystemNotice( "����װ��NPC[%s]��ʼ����Ϣ�ű�����[%s]ʧ��!", pTalkNpc->GetInitFunc(), pTalkNpc->GetName() );
+			//character.SystemNotice( "NPC[%s][%s]!", pTalkNpc->GetInitFunc(), pTalkNpc->GetName() );
 			character.SystemNotice( RES_STRING(GM_GAMEAPP_CPP_00001), pTalkNpc->GetInitFunc(), pTalkNpc->GetName() );
 		}
 	}
 
-	//mission::g_WorldEudemon.Load( "Eudemon", "�ػ���", -1 );
+	//mission::g_WorldEudemon.Load( "Eudemon", "", -1 );
 	mission::g_WorldEudemon.Load( "Eudemon", "Eudemon", -1 );
 	return TRUE;
 }
@@ -1368,7 +1368,7 @@ void CGameApp::NotiGameReset(unsigned long ulLeftSec)
 
 	sprintf(szNotiMsg, RES_STRING(GM_GAMEAPP_CPP_00002), g_Config.m_szName, ulLeftSec, m_strMapNameList.c_str());
 
-	// Типизированная сериализация: уведомление о перезапуске сервера
+	//  :    
 	auto wpk = net::msg::serialize(net::msg::McSysInfoMessage{szNotiMsg});
 	NotiPkToWorld(wpk);
 }
@@ -1398,7 +1398,7 @@ void CGameApp::SaveAllPlayer(void)
 		{
 			if (++nCount > GETPLAYERCOUNT(pGateServer))
 			{
-				//LG("�����������", "�����Ŀ:%u, %s\n", GETPLAYERCOUNT(pGateServer), "SaveAllPlayer");
+				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "SaveAllPlayer");
 				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "SaveAllPlayer");
 				break;
 			}
@@ -1407,7 +1407,7 @@ void CGameApp::SaveAllPlayer(void)
 			ToLogService("map", "");
 		}
 	}
-	game_db.GetMapMaskTable()->SaveAll(); // �˳�ʱ, һ���Դ���ʣ�µı�����ͼ����
+	game_db.GetMapMaskTable()->SaveAll(); // , 
 	ToLogService("map", "End SaveAllPlayer################################################################");
 }
 
@@ -1441,7 +1441,7 @@ void CGameApp::DataStatistic(void)
 	}
 }
 
-// ֪ͨ��������GameServer�ϵ����
+// GameServer
 void CGameApp::WorldNotice(const char *szString)
 {
 	if (!szString)
@@ -1450,7 +1450,7 @@ void CGameApp::WorldNotice(const char *szString)
 	ToLogService("common", "WorldNotice: len = {}", strlen(szString));
 	ToLogService("common", "WorldNotice: contend = {}", szString);
 
-	// Типизированная сериализация: мировое уведомление + ручной trailer
+	//  :   +  trailer
 	auto WtPk = net::msg::serialize(net::msg::MmNoticeMessage{szString});
 
 	BEGINGETGATE();
@@ -1470,7 +1470,7 @@ void CGameApp::GuildNotice(unsigned long guildID, const char *szString)
 	if (!szString)
 		return;
 
-	// Типизированная сериализация: уведомление гильдии (GameServer→Group)
+	//  :   (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmGuildNoticeMessage{(int64_t)guildID, szString});
 	SENDTOGROUP(WtPk);
 }
@@ -1480,7 +1480,7 @@ void CGameApp::ScrollNotice(const char * szString,int SetNum, DWORD color)
 {
 	if(!szString)
 		return;
-	// Типизированная сериализация: прокрутка уведомления (GameServer→Group)
+	//  :   (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmScrollNoticeMessage{szString, (int64_t)SetNum, (int64_t)color});
 	SENDTOGROUP(WtPk);
 }
@@ -1489,29 +1489,29 @@ void CGameApp::GMNotice( const char * szString )
 {
 	if(!szString)
 		return;
-	// Типизированная сериализация: GM-уведомление (GameServer→Group)
+	//  : GM- (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmGMNoticeMessage{szString});
 	SENDTOGROUP(WtPk);
 }
 
-// ֪ͨ��GameServer�ϵ����
+// GameServer
 void CGameApp::LocalNotice(const char *szString)
 {
 	if (!szString)
 		return;
 
-	// Типизированная сериализация: локальное уведомление
+	//  :  
 	auto wpk = net::msg::serialize(net::msg::McSysInfoMessage{szString});
 	SENDTOWORLD(wpk);
 }
 
-// ָ֪ͨ����ң����szChaName == ""����ͨ�汾��GameServer���������
+// szChaName == ""GameServer
 void CGameApp::ChaNotice(const char *szNotiString, const char *szChaName)
 {
 	if (!szNotiString || !szChaName)
 		return;
 
-	// Типизированная се��иализация: уведомление персонажа (GameServer→GateServer)
+	//  :   (GameServerGateServer)
 	auto WtPk = net::msg::serialize(net::msg::GmChaNoticeMessage{0, szNotiString, szChaName});
 
 	BEGINGETGATE();
@@ -1530,7 +1530,7 @@ void CGameApp::BanAccount(const char* szString)
 {
 	if (!szString)
 		return;
-	// Типизированная сериализация: бан аккаунта (GameServer→Group)
+	//  :   (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmBanAccountMessage{szString});
 	SENDTOGROUP(WtPk);
 }
@@ -1539,13 +1539,13 @@ void CGameApp::UnbanAccount(const char* szString)
 {
 	if (!szString)
 		return;
-	// Типизированная сериализация: разбан аккаунта (GameServer→Group)
+	//  :   (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmUnbanAccountMessage{szString});
 	SENDTOGROUP(WtPk);
 }
 
 void CGameApp::CanReceiveRequests(uLong chaID, bool CanSend) {
-	// Типизированная сериализация: флаг приёма запросов (GameServer→Group)
+	//  :    (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmCanReceiveRequestsMessage{(int64_t)chaID, (int64_t)CanSend});
 	SENDTOGROUP(WtPk);
 }

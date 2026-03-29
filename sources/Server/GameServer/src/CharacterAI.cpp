@@ -1,10 +1,10 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "Character.h"
 #include "SubMap.h"
 #include "NPC.h"
 
 //--------------------------------------------------------
-//                   AI¿ØÖÆËùÐèµÄ½Ó¿Úº¯Êý
+//                   AI
 //--------------------------------------------------------
 
 void CCharacter::SrcFightTar(CFightAble *pTar, dbc::Short sSkillID)

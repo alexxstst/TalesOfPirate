@@ -1,4 +1,4 @@
-print("-- [Loading] Mission SDK")
+﻿print("-- [Loading] Mission SDK")
 
 LUA_TRUE = 1
 LUA_FALSE = 0
@@ -866,19 +866,19 @@ end
 function ZSSTART(character, npc)
     local cha_name = GetChaDefaultName(character)
 
-    LG("ZSSTART", "Player" .. cha_name .. "��ʼת��")
+    LG("ZSSTART", "Player" .. cha_name .. "")
 end
 
 function ZSSTOP(character, npc)
     local cha_name = GetChaDefaultName(character)
 
-    LG("ZSSTOP", "Player" .. cha_name .. "����ת��")
+    LG("ZSSTOP", "Player" .. cha_name .. "")
 end
 
 function ZSSTOP2(character, npc)
     local cha_name = GetChaDefaultName(character)
 
-    LG("ZSSTOP2", "Player" .. cha_name .. "��������ת��")
+    LG("ZSSTOP2", "Player" .. cha_name .. "")
 end
 
 function MoreTime(character, value)
@@ -1804,9 +1804,9 @@ end
 function MissionLog(character, sid)
     PRINT("MissionLog")
     if sid == nil or Mission[sid] == nil then
-        PRINT("MissionLog: cannot locate quest script notice��sid = " .. sid)
-        LG("mission_error", "MissionLog: cannot locate quest script notice��sid = " .. sid)
-        SystemNotice(character, "MissionLog: cannot locate quest script notice��sid = " .. sid)
+        PRINT("MissionLog: cannot locate quest script noticesid = " .. sid)
+        LG("mission_error", "MissionLog: cannot locate quest script noticesid = " .. sid)
+        SystemNotice(character, "MissionLog: cannot locate quest script noticesid = " .. sid)
         return
     end
 
@@ -1865,15 +1865,15 @@ function SendMissionLog(character, mission, id, name)
             PRINT("SendMissionLog:GetNeedItemCount, num = ", num)
             if ret ~= LUA_TRUE then
                 PRINT(
-                    "SendMissionLog:GetNeedItemCount,error��misid = , itemid = , num = ",
+                    "SendMissionLog:GetNeedItemCount,errormisid = , itemid = , num = ",
                     id,
                     mission.need[n].p1,
                     mission.need[n].p2
                 )
-                SystemNotice(character, "SendMissionLog:GetNeedItemCount,error��")
+                SystemNotice(character, "SendMissionLog:GetNeedItemCount,error")
                 LG(
                     "mislog_error",
-                    "SendMissionLog:GetNeedItemCount,error��misid = , itemid = , num = ",
+                    "SendMissionLog:GetNeedItemCount,errormisid = , itemid = , num = ",
                     id,
                     mission.need[n].p1,
                     mission.need[n].p2
@@ -2142,11 +2142,11 @@ function SendPendingPage(character, npcid, mission, id)
             PRINT("SendPendingPage:GetNeedItemCount, num = ", num)
             if ret ~= LUA_TRUE then
                 PRINT(
-                    "SendPendingPage:GetNeedItemCount,error��itemid = , num = ",
+                    "SendPendingPage:GetNeedItemCount,erroritemid = , num = ",
                     mission.need[n].p1,
                     mission.need[n].p2
                 )
-                SystemNotice(character, "SendPendingPage:GetNeedItemCount,error��")
+                SystemNotice(character, "SendPendingPage:GetNeedItemCount,error")
                 num = 0
             end
             WriteByte(packet, num)
@@ -3412,7 +3412,7 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
             local ret = AddReadingBook(character, actions[i].p1)
             if ret ~= LUA_TRUE then
                 PRINT("ActionProc:AddReadingBook failed!")
-                SystemNotice(character, "ActionProc:�����鱾failed!")
+                SystemNotice(character, "ActionProc:failed!")
                 return LUA_FALSE
             end
         elseif actions[i].func == AddExpPer then
@@ -3420,7 +3420,7 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
             local ret = AddExpPer(character, actions[i].p1, actions[i].p2)
             if ret ~= LUA_TRUE then
                 PRINT("ActionProc: AddExpPer failed!")
-                SystemNotice(character, "ActionProc: ���辭��failed!")
+                SystemNotice(character, "ActionProc: failed!")
                 return LUA_FALSE
             end
         elseif actions[i].func == ZSSTART then
@@ -3808,7 +3808,7 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
             local ret = TakeXmasYB(character, actions[i].p1, actions[i].p2)
             if ret ~= LUA_TRUE then
                 PRINT("ActionProc: TakeXmasYB failed!")
-                SystemNotice(character, "ActionProc: ��ȡӲ��failed!")
+                SystemNotice(character, "ActionProc: failed!")
                 return LUA_FALSE
             end
         elseif actions[i].func == CpHuojiNum then
@@ -3864,7 +3864,7 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
             local ret = SetTestTime(character, npc, actions[i].p1, actions[i].p2)
             if ret ~= LUA_TRUE then
                 PRINT("ActionProc: SetTestTime failed!")
-                SystemNotice(character, "ActionProc: SetTestTime���ó�ʼʱ��failed!")
+                SystemNotice(character, "ActionProc: SetTestTimefailed!")
                 return LUA_FALSE
             end
         elseif actions[i].func == RenewTestTime1 then
@@ -3872,7 +3872,7 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
             local ret = RenewTestTime1(character, npc, actions[i].p1, actions[i].p2)
             if ret ~= LUA_TRUE then
                 PRINT("ActionProc: RenewTestTime1 failed!")
-                SystemNotice(character, "ActionProc: RenewTestTime1����µ�ʱ��failed!")
+                SystemNotice(character, "ActionProc: RenewTestTime1failed!")
                 return LUA_FALSE
             end
         elseif actions[i].func == RenewTestTime2 then
@@ -3880,7 +3880,7 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
             local ret = RenewTestTime2(character, npc, actions[i].p1, actions[i].p2)
             if ret ~= LUA_TRUE then
                 PRINT("ActionProc: RenewTestTime2 failed!")
-                SystemNotice(character, "ActionProc: RenewTestTime2����µ�ʱ��failed!")
+                SystemNotice(character, "ActionProc: RenewTestTime2failed!")
                 return LUA_FALSE
             end
         elseif actions[i].func == FailureRandMissionCount then
@@ -4204,8 +4204,8 @@ function ActionsProc(character, actions, npc, page, misid, scriptid, param1, par
 			PRINT( "ActionProc:TakeItem, p1 = , p2 = ", actions[i].p1, actions[i].p2 )
 			local ret = GiveXinZhuangBei( character, actions[i].p1)
 			if ret ~= LUA_TRUE then
-				PRINT( "ActionProc: GiveXinZhuangBei failed！" )
-				SystemNotice( character, "ActionProc: GiveXinZhuangBei failed！" )
+				PRINT( "ActionProc: GiveXinZhuangBei failed" )
+				SystemNotice( character, "ActionProc: GiveXinZhuangBei failed" )
 				return LUA_FALSE
 			end
 		elseif actions[i].func == ChangeClass then
@@ -4476,7 +4476,7 @@ function GetRandMissionPrize(character, misname, id, loopinfo, loopdata)
     if loopinfo == nil or loopdata == nil or id == nil or misname == nil then
         PRINT("GetRandMissionPrize: id = , loopdata = ", id, loopdata)
         LG("randmission_error", "GetRandMissionPrize: function parameter error!prizeitem = nil and id = " .. id)
-        SystemNotice(character, "GetRandMissionPrize:function parameter error��reward failed!")
+        SystemNotice(character, "GetRandMissionPrize:function parameter errorreward failed!")
         return 0, 0
     end
 
@@ -5453,9 +5453,9 @@ function RandMission(mission, param)
             mission.result.help = mission.result.help .. "<r" .. mission.need[n + 1].p2 .. "> <r" .. itemname .. ">"
             mission.need[1].p1 = mission.need[1].p1 .. "<r" .. mission.need[n + 1].p2 .. "> <r" .. itemname .. ">"
             if n < param.numdata then
-                mission.begin.talk = mission.begin.talk .. "��"
-                mission.result.help = mission.result.help .. "��"
-                mission.need[1].p1 = mission.need[1].p1 .. "��"
+                mission.begin.talk = mission.begin.talk .. ""
+                mission.result.help = mission.result.help .. ""
+                mission.need[1].p1 = mission.need[1].p1 .. ""
             end
         end
 
@@ -5464,7 +5464,7 @@ function RandMission(mission, param)
         mission.result.actions[2].p3 = param.exp
         PRINT("RandMission:AddExpAndType, exp = ", mission.result.actions[2].p1)
 
-        mission.need[1].p1 = mission.need[1].p1 .. "��"
+        mission.need[1].p1 = mission.need[1].p1 .. ""
 
         mission.begin.talk = mission.begin.talk .. mission.begin.talkend
         mission.result.talk = mission.result.talk .. mission.result.talkend
@@ -5539,8 +5539,8 @@ function RandMission(mission, param)
             mission.result.help =
                 mission.result.help .. "<r[" .. itemname .. "]> to give <p" .. areaname .. '>\'s <b"' .. npcname .. '">'
             if n < param.numdata then
-                mission.begin.talk = mission.begin.talk .. "��"
-                mission.result.help = mission.result.help .. "��"
+                mission.begin.talk = mission.begin.talk .. ""
+                mission.result.help = mission.result.help .. ""
             end
             PRINT("RandMission, talk = ", mission.begin.talk)
 
@@ -5642,7 +5642,7 @@ function RandMission(mission, param)
                 'escort <b"' ..
                     npcname ..
                         '"> reached <p' ..
-                            areaname .. ">'s <b" .. param.data[n].p4 .. "��" .. param.data[n].p5 .. "> nearby?"
+                            areaname .. ">'s <b" .. param.data[n].p4 .. "" .. param.data[n].p5 .. "> nearby?"
             PRINT("RandMission, talk = ", mission.begin.talk)
 
             mission.need[n + 1].p1 = n .. ') escort <b"' .. npcname .. '"> reached <p' .. areaname .. ">"
@@ -5799,7 +5799,7 @@ function AddChaItem8(character)
 
     local del_item = TakeItem(character, 0, 3280, 1)
     if del_item == 0 then
-        SystemNotice(character, "ɾ����������ʧ��")
+        SystemNotice(character, "")
     end
 
     local used_time =
@@ -5827,13 +5827,13 @@ function checkcytime(character, npc)
     local cha_name = GetChaDefaultName(character)
     local newch_xsz = ch_xsz + math.floor(50 * (exp_xsz / mexp_xsz))
     if newch_xsz <= mch_xsz then
-        SystemNotice(character, "��ϲ��ͨ���˿���ѧ������")
+        SystemNotice(character, "")
         SetItemAttr(role_xsz, ITEMATTR_URE, newch_xsz)
         AddExp(character, npc, newexp_xsz, newexp_xsz)
         SetItemAttr(role_xsz, ITEMATTR_ENERGY, 0)
         RefreshCha(character)
     else
-        SystemNotice(character, "��ϲ��ͨ�����ԣ�ѧ���Ѵ����ޣ���������")
+        SystemNotice(character, "")
         AddExp(character, npc, newexp_xsz, newexp_xsz)
         SetItemAttr(role_xsz, ITEMATTR_URE, mch_xsz)
         SetItemAttr(role_xsz, ITEMATTR_ENERGY, 0)
@@ -5841,7 +5841,7 @@ function checkcytime(character, npc)
     end
     local del_item = TakeItem(character, 0, 3279, 1)
     if del_item == 0 then
-        SystemNotice(character, "ɾ������ɼ���ʧ��")
+        SystemNotice(character, "")
     end
     return LUA_TRUE
 end
@@ -5853,7 +5853,7 @@ function checksjtime(character, npc)
     local time_cjd = GetItemAttr(role_cjd, ITEMATTR_VAL_AGI)
     local cha_name = GetChaDefaultName(character)
     if time_cjd > 0 and time_cjd <= 1800 then
-        LG("Player" .. cha_name .. "�ɹ�ͨ���������ԣ�ѧ��������")
+        LG("Player" .. cha_name .. "")
         lv_ch = lv_ch + 1
         SetItemAttr(role_xsz, ITEMATTR_FORGE, lv_ch)
         SetItemAttr(role_xsz, ITEMATTR_URE, 0)
@@ -5863,11 +5863,11 @@ function checksjtime(character, npc)
         SetItemAttr(role_xsz, ITEMATTR_MAXENERGY, new_mexp)
         RefreshCha(character)
     elseif time_cjd > 1800 then
-        LG("Player" .. cha_name .. "δ��ͨ���������ԣ���Ҫ������")
+        LG("Player" .. cha_name .. "")
     end
     local del_item = TakeItem(character, 0, 3281, 1)
     if del_item == 0 then
-        SystemNotice(character, "ɾ���������Գɼ���ʧ��")
+        SystemNotice(character, "")
     end
     return LUA_TRUE
 end
@@ -5927,10 +5927,10 @@ end
 function XmasNotice(role, value)
     local cha_name = GetChaDefaultName(role)
     local message = {}
-    message[1] = "ʥ������:��ӭ����ʥ����," .. cha_name .. ",������ǵ�һ��������Ļ�,��������Աߵ�ʥ���塤Ģ��ͷ�˽�һ���������!"
-    message[2] = "��������:" .. cha_name .. "~��������һ�������,Χ������һ������,������������!"
-    message[3] = "�ƶ����ĵĶ���˵:" .. cha_name .. ",����,������ҽ������������,�ø����BOSS���ٵ�ʥ����������!"
-    message[4] = "С��ķ:����~����~�Ǹ�������ʶ,����" .. cha_name .. ",�ҳ����һ��Ҫ������ôǿ!"
+    message[1] = ":," .. cha_name .. ",,!"
+    message[2] = ":" .. cha_name .. "~,,!"
+    message[3] = ":" .. cha_name .. ",,,BOSS!"
+    message[4] = ":~~," .. cha_name .. ",!"
     SystemNotice(role, message[value])
     return LUA_TRUE
 end

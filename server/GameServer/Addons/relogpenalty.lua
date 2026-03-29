@@ -1,4 +1,4 @@
-Relog = {}
+﻿Relog = {}
 Relog.Penalty = (2*60)
 Relog.Maps = {}
 Relog.Maps[1] = "garner2"

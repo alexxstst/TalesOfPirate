@@ -1,4 +1,4 @@
-AddHelpInfo("Bloodthirsty Hunter", "Somebody spotted them near local sea region at (410, 1532)")
+﻿AddHelpInfo("Bloodthirsty Hunter", "Somebody spotted them near local sea region at (410, 1532)")
 AddHelpInfo("White Finned Shark", "Somebody spotted them near local sea region at (3238, 3344)")
 AddHelpInfo("Ruby Dolphin", "Somebody spotted them near local sea region at (1020,3240)")
 AddHelpInfo("Tempest Sea Jelly", "Somebody spotted them near local sea region at (1797, 200)")

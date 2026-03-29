@@ -1,4 +1,4 @@
-emGldPermSpeak = 1
+﻿emGldPermSpeak = 1
 emGldPermMgr = 2
 emGldPermViewBank = 4
 emGldPermDepoBank = 8

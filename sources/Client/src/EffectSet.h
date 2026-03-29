@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TableData.h"
 
@@ -9,7 +9,7 @@
 //
 //	CEffectInfo()
 //	{
-//	   strcpy(szName, "������Ч");
+//	   strcpy(szName, "");
 //	   nPhotoTexID = 0;
 //	   nHeightOff  = 0;
 //	   nEffType	= 0;
@@ -44,7 +44,7 @@
 //
 //protected:
 //
-//	static CEffectSet* _Instance; // �൱�ڵ���, ���Լ���ס
+//	static CEffectSet* _Instance; // , 
 //   
 //	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 //	{
@@ -164,7 +164,7 @@ public:
 
 protected:
 
-	static CMagicSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CMagicSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -256,10 +256,10 @@ public:
 		nAni = 0;
 		nRow = 0;
 		nCol  = 0;
-		nUseAlphaTest = 0;//�Ƿ�ʹ��͸��ɫ
-		nAlphaType = 0;//alpha  ����
+		nUseAlphaTest = 0;//
+		nAlphaType = 0;//alpha  
 
-		nColorR = 0;//��ɫ
+		nColorR = 0;//
 		nColorG = 0;
 		nColorB = 0;
 		nColorA = 0;
@@ -274,15 +274,15 @@ public:
 	int		nRow;
 	int		nCol;
 
-	int		nUseAlphaTest;//�Ƿ�ʹ��͸��ɫ
-	int		nAlphaType;//alpha  ����
+	int		nUseAlphaTest;//
+	int		nAlphaType;//alpha  
 
-	int		nColorR;//��ɫ
+	int		nColorR;//
 	int		nColorG;
 	int		nColorB;
 	int		nColorA;
 
-	int		nType;//0�Ǹ����ɫ�ģ�1�Ǹ�����Ч�ģ�
+	int		nType;//01
 };
 
 
@@ -302,7 +302,7 @@ public:
 
 protected:
 
-	static CShadeSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CShadeSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{
@@ -345,10 +345,10 @@ protected:
 		pInfo->nRow   	= Str2Int(ParamList[3].c_str());
 		pInfo->nCol     = Str2Int(ParamList[4].c_str());
 
-		pInfo->nUseAlphaTest = Str2Int(ParamList[5].c_str());//�Ƿ�ʹ��͸��ɫ
-		pInfo->nAlphaType = Str2Int(ParamList[6].c_str());//alpha  ����
+		pInfo->nUseAlphaTest = Str2Int(ParamList[5].c_str());//
+		pInfo->nAlphaType = Str2Int(ParamList[6].c_str());//alpha  
 
-		pInfo->nColorR = Str2Int(ParamList[7].c_str());//��ɫ
+		pInfo->nColorR = Str2Int(ParamList[7].c_str());//
 		pInfo->nColorG = Str2Int(ParamList[8].c_str());
 		pInfo->nColorB = Str2Int(ParamList[9].c_str());
 		pInfo->nColorA = Str2Int(ParamList[10].c_str());

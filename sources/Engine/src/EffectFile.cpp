@@ -1,4 +1,4 @@
-// DXEffectFile.cpp: implementation of the CMPEffectFile class.
+﻿// DXEffectFile.cpp: implementation of the CMPEffectFile class.
 //
 //////////////////////////////////////////////////////////////////////
 

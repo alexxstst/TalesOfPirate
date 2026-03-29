@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 char g_key[9] = "19800216";
 int Decrypt(char* buf, int len, const char* enc, int elen)

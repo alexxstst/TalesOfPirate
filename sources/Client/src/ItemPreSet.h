@@ -1,4 +1,4 @@
-#include "TableData.h"
+ï»¿#include "TableData.h"
 
 class CItemPreInfo : public CRawDataInfo
 {
@@ -20,7 +20,7 @@ public:
 
 protected:
 
-	static CItemPreSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CItemPreSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

@@ -1,4 +1,4 @@
-/* WS2SPI.H -- definitions to be used with the WinSock service provider.
+﻿/* WS2SPI.H -- definitions to be used with the WinSock service provider.
  *
  * Copyright (c) Microsoft Corporation. All rights reserved.
  *

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M S P A B . H
  *	
  *	Public definitions for the Microsoft Personal Address Book

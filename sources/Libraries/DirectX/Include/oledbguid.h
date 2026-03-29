@@ -1,4 +1,4 @@
-//
+﻿//
 // GUIDs from oledb.h
 //
 #ifndef __oledbguid_h__

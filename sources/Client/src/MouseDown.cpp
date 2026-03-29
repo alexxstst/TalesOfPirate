@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "MouseDown.h"
 #include "SceneItem.h"
 #include "WorldScene.h"
@@ -198,7 +198,7 @@ void CMouseDown::MouseButtonDown()
 		_pAutoAttack->Follow( pMain, _pFollow );
 		break;
 	default:
-		// ��������ͷ���¹�������ƫ�ƶ���Ϊ���棬Ҫ�ȴ�lemon��ƫ�ƽӿ�
+		// lemon
 		_pScene->GetPickPos( g_pGameApp->GetMouseX(), g_pGameApp->GetMouseY() + 25, vPos );
 		int nAreaX = (int)(vPos.x * 100.0f);
 		int nAreaY = (int)(vPos.y * 100.0f);
@@ -313,7 +313,7 @@ bool CMouseDown::ActMove( CCharacter* pCha, int nScrX, int nScrY, bool isAdd, bo
 		move->SetMoveTo( nScrX, nScrY );
 		return pCha->GetActor()->SwitchState(move);
 
-		// �ֶ��㷨
+		// 
 		bool isOK = false;
 		if( !isLine && MOVE_LENGTH>0 )
 		{
@@ -395,7 +395,7 @@ bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacte
 		return false;
 	}
 
-	// ��ʱ���� by lh
+	//  by lh
     if( !g_NetIF->IsConnected() ) return false;
 
 	static CCharacter* pLastCha = NULL;
@@ -425,7 +425,7 @@ bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacte
 	_pScene->GetSign()->Show( pTarget );
 	g_pGameApp->AddTipText( pSkill->szName );	
 
-	//// ����ת�۵�
+	//// 
 	//if( g_Config.m_IsMoveClient && IsCompart && pSkill->GetDistance() )
 	//{
 	//	int preMove = CWaitMoveState::GetPreMoveDis();
@@ -506,7 +506,7 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 	nLastScrX = nScrX;
 	nLastScrY = nScrY;
 
-	//// ����ת�۵�
+	//// 
 	//if( g_Config.m_IsMoveClient && IsCompart && pSkill->GetDistance() )
 	//{
 	//	int preMove = CWaitMoveState::GetPreMoveDis();
@@ -546,7 +546,7 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 	//	}
 	//}
 
-	// ��ʾ������ת��Ч
+	// 
 	CAttackState *attack = new CAttackState(pCha->GetActor());
 	attack->SetIsForce( IsForce );
     attack->SetSkill( pSkill );

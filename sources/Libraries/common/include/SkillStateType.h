@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: SkillStateType.h
 // Creater: ZhangXuedong
 // Date: 2005.02.04
@@ -8,36 +8,36 @@
 #ifndef SKILLSTATETYPE_H
 #define SKILLSTATETYPE_H
 
-const unsigned char	SSTATE_NONE			= 0;	// ¿Õ×´Ì¬
+const unsigned char	SSTATE_NONE			= 0;	// 
 
-// Ç°°ËÖÖÒ²ÓÃÓÚµØÃæµÄ×´Ì¬
-const unsigned char	SSTATE_CUT			= 1;	// ÁÒÑæÕ¶
-const unsigned char	SSTATE_FERVOR_ARROR	= 2;	// ³ãÈÈÖ®¼ý
-const unsigned char	SSTATE_FROST_ARROR	= 3;	// Ëª¶³Ö®¼ý
-const unsigned char	SSTATE_SKYROCKET	= 4;	// Ñæ»ð±íÑÝ
-const unsigned char	SSTATE_MURRAIN		= 5;	// ÎÁÉñ
-const unsigned char	SSTATE_GIDDY		= 6;	// Ñ£ÔÎ
-const unsigned char	SSTATE_FREEZE		= 7;	// ½©Ó²
-const unsigned char	SSTATE_SLEEP		= 8;	// »èË¯
-const unsigned char	SSTATE_BIND			= 9;	// Êø¸¿
-const unsigned char	SSTATE_FROST		= 10;	// ±ù¶³
-const unsigned char	SSTATE_BEAT_BACK	= 11;	// »÷ÍË
-const unsigned char	SSTATE_UNBEATABLE	= 12;	// ÎÞµÐ
-const unsigned char	SSTATE_TOXIN		= 13;	// Î×¶¾
-const unsigned char	SSTATE_REBOUND		= 14;	// ·´µ¯
-const unsigned char	SSTATE_AVATAR		= 15;	// ±äÉí
-const unsigned char	SSTATE_TITAN		= 16;	// ¾ÞÈË
-const unsigned char	SSTATE_BLINDNESS	= 17;	// Ê§Ã÷
-const unsigned char	SSTATE_HAIR			= 18;	// Àí·¢
-const unsigned char	SSTATE_FLOAT		= 19;	// ¸¡¿Õ
-const unsigned char	SSTATE_CALL			= 20;	// ÕÙ»½
-const unsigned char	SSTATE_SHIELD		= 21;	// ¶ÜÅÆÊìÁ·
-const unsigned char	SSTATE_TIGER		= 22;	// »¢Ð¥
-const unsigned char	SSTATE_HIDE			= 43;	// ÒþÉí
-const unsigned char	SSTATE_TRADE		= 85;	// ½»Ò×
-const unsigned char	SSTATE_STALL		= 99;	// °ÚÌ¯
-const unsigned char	SSTATE_REPAIR		= 100;	// ÐÞÀí
-const unsigned char	SSTATE_FORGE		= 101;	// ¾«Á¶
+// 
+const unsigned char	SSTATE_CUT			= 1;	// 
+const unsigned char	SSTATE_FERVOR_ARROR	= 2;	// 
+const unsigned char	SSTATE_FROST_ARROR	= 3;	// 
+const unsigned char	SSTATE_SKYROCKET	= 4;	// 
+const unsigned char	SSTATE_MURRAIN		= 5;	// 
+const unsigned char	SSTATE_GIDDY		= 6;	// 
+const unsigned char	SSTATE_FREEZE		= 7;	// 
+const unsigned char	SSTATE_SLEEP		= 8;	// 
+const unsigned char	SSTATE_BIND			= 9;	// 
+const unsigned char	SSTATE_FROST		= 10;	// 
+const unsigned char	SSTATE_BEAT_BACK	= 11;	// 
+const unsigned char	SSTATE_UNBEATABLE	= 12;	// 
+const unsigned char	SSTATE_TOXIN		= 13;	// 
+const unsigned char	SSTATE_REBOUND		= 14;	// 
+const unsigned char	SSTATE_AVATAR		= 15;	// 
+const unsigned char	SSTATE_TITAN		= 16;	// 
+const unsigned char	SSTATE_BLINDNESS	= 17;	// 
+const unsigned char	SSTATE_HAIR			= 18;	// 
+const unsigned char	SSTATE_FLOAT		= 19;	// 
+const unsigned char	SSTATE_CALL			= 20;	// 
+const unsigned char	SSTATE_SHIELD		= 21;	// 
+const unsigned char	SSTATE_TIGER		= 22;	// 
+const unsigned char	SSTATE_HIDE			= 43;	// 
+const unsigned char	SSTATE_TRADE		= 85;	// 
+const unsigned char	SSTATE_STALL		= 99;	// 
+const unsigned char	SSTATE_REPAIR		= 100;	// 
+const unsigned char	SSTATE_FORGE		= 101;	// 
 
 
 const unsigned char	AREA_STATE_MAXID	= 255;

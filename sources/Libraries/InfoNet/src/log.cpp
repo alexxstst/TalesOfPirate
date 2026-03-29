@@ -1,4 +1,4 @@
-
+ï»¿
 
 #include "log.h"
 #include <sys/timeb.h>
@@ -78,8 +78,8 @@ __END_TRY
 
 LogMgr::LogMgr()
 {
-    mkdir(LOG_FOLDER);                  //  ´´½¨logÄ¿Â¼
-    getcwd(m_path, 260);   //  »ñÈ¡¹¤×÷Ä¿Â¼
+    mkdir(LOG_FOLDER);                  //  log
+    getcwd(m_path, 260);   //  
 }
 
 

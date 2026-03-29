@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #define		USE_MGR
 #define		USE_RENDER
 
@@ -26,7 +26,7 @@ class   MPRender;
 class   CMPResManger;
 
 //--------------------------------------------------------------------------------------
-//���õ�struct or type.
+//struct or type.
 //--------------------------------------------------------------------------------------
 #define    s_string								std::string          
 #define    LIST_string							std::list<s_string>  
@@ -246,18 +246,18 @@ class   CEffPath;
 class	EffParameter;
 
 //class lwSceneItem ;
-//!����󶥵�������Ϊ40����Ϊ��ʹ��VS���ı䶥��,����ʹ��������95 - 15
-//ÿ�μ��������Ӱ�Ӷ����������ܴ������ֵ
+//!40VS,95 - 15
+//
 #define  MAX_SHADER_VERNUM		300
 #define  MAX_SHADER_IDXNUM		MAX_SHADER_VERNUM  * 3 * 3
 
 /************************************************************************/
-/* Ч��ģ�� */
+/*  */
 /************************************************************************/
 struct SEFFECT_VERTEX
 {
 	D3DXVECTOR3		m_SPos;
-	FLOAT			m_fIdx;//ֻ������Ƭ��MESH����ΪUV���Ѱַ������
+	FLOAT			m_fIdx;//MESHUV
 	DWORD			m_dwDiffuse;
 	D3DXVECTOR2		m_SUV;
 };
@@ -267,8 +267,8 @@ struct SEFFECT_VERTEX
 struct SEFFECT_SHADE_VERTEX
 {
 	D3DXVECTOR3		m_SPos;
-	//float			m_fIdx;//ֻ������Ӱ��MESH����Ϊ���Ѱַ������
-							  //m_fIdx[0]Ϊ����λ�õ�������m_fIdx[1]Ϊuv���������
+	//float			m_fIdx;//MESH
+							  //m_fIdx[0]m_fIdx[1]uv
 	DWORD			m_dwDiffuse;
 	D3DXVECTOR2		m_SUV;
 	D3DXVECTOR2		m_SUV2;
@@ -322,18 +322,18 @@ inline	bool IsDefaultMesh(const s_string& strName)
 #define _MAX_STRING					256
 struct ActionInfo
 {
-	short		m_sActionNO;	// �������
-	short		m_sStartFrame;	// ��ʼ֡
-	short		m_sEndFrame;	// ����֡
+	short		m_sActionNO;	// 
+	short		m_sStartFrame;	// 
+	short		m_sEndFrame;	// 
 
-	short		m_sKeyFrameNum;	// �ؼ�֡����
-	short		*m_sKeyFrame;	// �ؼ�֡��
+	short		m_sKeyFrameNum;	// 
+	short		*m_sKeyFrame;	// 
 };
 struct SChaAction
 {
-	short		m_iCharacterType;	// ��ɫ����
-	short		m_iMaxActionNum;	// ��ɫ���������(���ļ��ж����Ľ�ɫ���������)
-	short		m_iActualActionNum;	// ��ɫ����Ч������(���ļ��ж����Ľ�ɫ�Ķ�������)
+	short		m_iCharacterType;	// 
+	short		m_iMaxActionNum;	// ()
+	short		m_iActualActionNum;	// ()
 	ActionInfo*  m_SActionInfo;
 };
 class  MINDPOWER_API CScriptFile
@@ -381,8 +381,8 @@ public:
 
 	static		CScriptFile		m_ctScript;
 protected:
-	short		m_iMaxCharacterType;		// ����ɫ������(���ļ��ж��������Ľ�ɫ���ͺ�)
-	short		m_iActualCharacterType;		// ��Ч��ɫ������(���ļ��ж����Ľ�ɫ����)
+	short		m_iMaxCharacterType;		// ()
+	short		m_iActualCharacterType;		// ()
 	SChaAction	*m_SCharacterAction;
 
 };
@@ -433,10 +433,10 @@ public:
 	bool	CreatePlaneRect();
 	bool	CreateRectZ();
 
-	//������Ӱģ��
+	//
 	bool	CreateShadeModel(WORD wVerNum = 6, WORD wFaceNum = 2,int iGridCrossNum = 1,bool usesoft = false);
 
-	//�����ɱ��ε�ģ��
+	//
 	bool	CreateTob(const s_string& str, int nSeg,float fHei,float fTopRadius,float fBottomRadius)
 	{
 		if(str==MESH_CYLINDER)
@@ -557,7 +557,7 @@ public:
 	LPDIRECT3DDEVICE8	GetDev();
 #endif
 public:
-	//!3D�豸
+	//!3D
 #ifdef USE_RENDER
 	MPRender*					m_pDev;
 #else
@@ -609,7 +609,7 @@ public:
 };
 
 /************************************************************************/
-/* ��������任*/
+/* */
 /************************************************************************/
 typedef     std::vector<D3DXVECTOR2>  TEXCOORD;
 
@@ -632,14 +632,14 @@ public:
 	void		Copy(CTexCoordList* pList)
 	{
 		m_wVerCount = pList->m_wVerCount;
-		//����������.
+		//.
 		m_wCoordCount = pList->m_wCoordCount;
-		//��������任ʱ��
+		//
 		m_fFrameTime = pList->m_fFrameTime;
 
 		m_vecCoordList.resize(m_wCoordCount);
 
-		//��������任����
+		//
 		int n;
 		for(n = 0; n < m_wCoordCount; ++n)
 		{
@@ -648,25 +648,25 @@ public:
 		}
 	}
 public:
-	//!��������
+	//!
 	WORD		m_wVerCount;
-	//����������.
+	//.
 	WORD		m_wCoordCount;
-	//��������任ʱ��
+	//
 	float		m_fFrameTime;
-	//��������任����
+	//
 	std::vector<TEXCOORD>	m_vecCoordList;
 
-	////!��ǰ��������
+	////!
 	//WORD					m_wCurIndex;
-	////!��ǰʱ��
+	////!
 	//float					m_fCurTime;
-	//!��ǰ������
+	//!
 	//TEXCOORD				m_vecCurCoord;
 };
 
 /************************************************************************/
-/* �����任*/
+/* */
 /************************************************************************/
 class CTexList
 {
@@ -691,9 +691,9 @@ public:
 	void					Copy(CTexList* pList)
 	{
 		m_wTexCount = pList->m_wTexCount;
-		//�����任ʱ��
+		//
 		m_fFrameTime = pList->m_fFrameTime;
-		//�����任����
+		//
 		m_vecTexList.resize(m_wTexCount);
 		int n;
 		for(n = 0; n < m_wTexCount; ++n)
@@ -702,31 +702,31 @@ public:
 			m_vecTexList[n] =  pList->m_vecTexList[n];
 		}
 
-		//!������
+		//!
 		m_vecTexName = pList->m_vecTexName;
-		//!��ǰ������ָ��
+		//!
 		m_lpCurTex = NULL;
 
 		m_pTex = NULL;
 	}
 public:
-	//������
+	//
 	WORD		m_wTexCount;
-	//�����任ʱ��
+	//
 	float		m_fFrameTime;
-	//�����任����
+	//
 	std::vector<TEXCOORD>	m_vecTexList;
 
-	//!������
+	//!
 	s_string	m_vecTexName;
-	//!��ǰ������ָ��
+	//!
 	IDirect3DTextureX*		m_lpCurTex;
 
 	lwITex*					m_pTex;
 
 };
 /************************************************************************/
-/* �����任*/
+/* */
 /************************************************************************/
 class CTexFrame
 {
@@ -760,13 +760,13 @@ public:
 		m_vecCoord = pList->m_vecCoord;
 	}
 public:
-	//������
+	//
 	WORD		m_wTexCount;
-	//�����任ʱ��
+	//
 	float		m_fFrameTime;
-	//!������
+	//!
 	std::vector<s_string>	m_vecTexName;
-	//!��ǰ������ָ��
+	//!
 	lwITex*					m_lpCurTex;
 
 	std::vector<lwITex*>	m_vecTexs;
@@ -800,7 +800,7 @@ protected:
 	std::vector<int>	_vecCurText;
 	int			_iTextureID;
 
-	//����ͼ
+	//
 	bool		_bUseBack;
 	s_string	_strBackBmp;
 #ifdef USE_RENDER
@@ -843,11 +843,11 @@ public:
 
 	void DestroyTobMesh(CMPResManger* resMgr);
 
-	//!	�ͷ�ȫ����Դ
+	//!	
 	virtual void ReleaseAll();
 	//!
 	virtual void Reset();
-	//����ʼ��
+	//
 #ifdef USE_RENDER
 	virtual	void Init(MPRender*	 pDev,EFFECT_TYPE  eType,
 		WPARAM wParam, LPARAM lParam);
@@ -866,7 +866,7 @@ public:
 	//		m_pDev->SetTexture(0, m_CTextruelist.m_lpCurTex);
 	//}
 	void		 SetVertexShader();//		{ m_pDev->SetVertexShader(*_pdwVShader);}
-	//!��Ⱦ
+	//!
 	virtual void Begin()
 	{
 		if (m_pCModel)
@@ -884,41 +884,41 @@ public:
 			m_pCModel->End();
 	}
 
-//!��Ա����
+//!
 public:
-	//! �õ�����������
+	//! 
 	WORD			getFrameCount(){ return _wFrameCount;}
 	WORD			setFrameCount(WORD  wFrameCount){ return _wFrameCount = wFrameCount;}
 
-	//!�õ�����
+	//!
 	EFFECT_TYPE		getType()						{ return _eEffectType;}
 	void			setType(EFFECT_TYPE eType)		{ _eEffectType =  eType;}
 
-	//!�õ�����
+	//!
 	float			getLength()						{ return _fLength;}
 	void			setLength(float fLength)		{ _fLength = fLength;}
 
-	//!�õ�֡ʱ��
+	//!
 	float			getFrameTime(WORD wIndex)		{ return _vecFrameTime[wIndex];}
 	void			setFrameTime(WORD wIndex,float fTime){ _vecFrameTime[wIndex] = fTime;}
 
-	//!�õ�֡��С
+	//!
 	D3DXVECTOR3		getFrameSize(WORD wIndex)		{ return _vecFrameSize[wIndex];}
 	void			setFrameSize(WORD wIndex,D3DXVECTOR3& SVerSize){ _vecFrameSize[wIndex] = SVerSize;}
 
-	//!�õ�֡�Ƕ�
+	//!
 	D3DXVECTOR3&	getFrameAngle(WORD wIndex)		{ return _vecFrameAngle[wIndex];}
 	void			setFrameAngle(WORD wIndex,D3DXVECTOR3& SVerAngle){_vecFrameAngle[wIndex]=SVerAngle;}
 
-	//!�õ�֡λ��
+	//!
 	D3DXVECTOR3&	getFramePos(WORD wIndex)		{ return _vecFramePos[wIndex];}
 	void			setFramePos(WORD wIndex,D3DXVECTOR3& SVerPos){_vecFramePos[wIndex]=SVerPos;}
 
-	//!�õ�֡��ɫ
+	//!
 	D3DXCOLOR&		getFrameColor(WORD wIndex)		{ return _vecFrameColor[wIndex];}
 	void			setFrameColor(WORD wIndex,D3DXCOLOR& SVerColor){_vecFrameColor[wIndex]=SVerColor;}
 
-	//!�õ�֡����ʱ��
+	//!
 	float	getFrameCoordTime()						{ return m_CTexCoordlist.m_fFrameTime; }
 	void    setFrameCoordTime(float fTime)			{ m_CTexCoordlist.m_fFrameTime = fTime;}
 
@@ -929,7 +929,7 @@ public:
 		m_CTexCoordlist.m_vecCoordList.resize(m_CTexCoordlist.m_wCoordCount);
 	}
 
-	//!�õ�֡����
+	//!
 	void	getFrameCoord(TEXCOORD& vecOutCoord, WORD wIndex)
 	{
 		vecOutCoord.clear();
@@ -948,7 +948,7 @@ public:
 		m_CTexCoordlist.m_vecCoordList[wIndex] = vecInCoord;
 	}
 
-	//!�õ�֡����
+	//!
 	TEXCOORD& getFrameTexture(WORD  wIndex)
 	{
 		return m_CTextruelist.m_vecTexList[wIndex];
@@ -978,35 +978,35 @@ public:
 	bool	IsChangeably();
 
 	//////////////////////////////////////////////////////////////////////////
-	//!�õ���ֵ��С
+	//!
 	void	GetLerpSize(D3DXVECTOR3 *pSOut, WORD wIdx1, WORD wIdx2, float fLerp)
 	{
 		if(_wFrameCount == 1 || _bSizeSame)
 		{	*pSOut = _vecFrameSize[0];return;}
 		D3DXVec3Lerp(pSOut, &_vecFrameSize[wIdx1], &_vecFrameSize[wIdx2], fLerp);
 	}
-	//!�õ���ֵ�Ƕ�
+	//!
 	void	GetLerpAngle(D3DXVECTOR3 *pSOut, WORD wIdx1, WORD wIdx2, float fLerp)
 	{
 		if(_wFrameCount == 1 || _bAngleSame)
 		{	*pSOut = _vecFrameAngle[0];return;}
 		D3DXVec3Lerp(pSOut, &_vecFrameAngle[wIdx1], &_vecFrameAngle[wIdx2], fLerp);
 	}
-	//!�õ���ֵλ��
+	//!
 	void	GetLerpPos(D3DXVECTOR3 *pSOut, WORD wIdx1, WORD wIdx2, float fLerp)
 	{
 		if(_wFrameCount == 1 || _bPosSame)
 		{	*pSOut =   _vecFramePos[0];return; }
 		D3DXVec3Lerp(pSOut, &_vecFramePos[wIdx1], &_vecFramePos[wIdx2], fLerp);
 	}
-	//!�õ���ֵ��ɫ
+	//!
 	void	GetLerpColor(D3DXCOLOR *pSOut, WORD wIdx1, WORD wIdx2, float fLerp)
 	{
 		if(_wFrameCount == 1 || _bColorSame)
 		{	*pSOut =  _vecFrameColor[0];return; }
 		D3DXColorLerp( pSOut, &_vecFrameColor[wIdx1], &_vecFrameColor[wIdx2], fLerp );
 	}
-	//!�õ���ֵ����
+	//!
 	void	GetLerpCoord(S_BVECTOR<D3DXVECTOR2>& vecOutCoord, WORD& wCurIndex,float &fCurTime, float fDailTime)
 	{
 		m_CTexCoordlist.GetCurCoord(vecOutCoord,wCurIndex,fCurTime,fDailTime);
@@ -1038,9 +1038,9 @@ public:
 	}
 
 	//////////////////////////////////////////////////////////////////////////
-	//!��������Դ
+	//!
 	void		 BindingResInit(CMPResManger	*m_CResMagr);
-	//!����0��ʾ����װ�룬1��ʾȱ����ͼ��2��ʾȱ��ģ�͡�3��ʾ��shade
+	//!0123shade
 	int 		 BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName = "temp");
 
 	s_string	 GetTextureName()		{ return m_CTextruelist.m_vecTexName;}
@@ -1048,7 +1048,7 @@ public:
 	void		 SetTextureName(const s_string&  pszName)		{ m_CTextruelist.SetTextureName(pszName);}
 
 	void		 SetModel(CEffectModel*	pCModel);
-	//���滻����
+	//
 	void		 ChangeTexture(const s_string&  pszName)
 	{
 		if(_eEffectType == EFFECT_FRAMETEX)
@@ -1060,19 +1060,19 @@ public:
 			m_CTextruelist.GetTextureFromModel(m_pCModel);
 		}
 	}
-	//!�滻ģ��
+	//!
 	void		 ChangeModel(CEffectModel*	pCModel,CMPResManger	*pCResMagr);
 
 	///////////////////////////////////////////////////////////////////////////
-	//!�õ�Ч������
+	//!
 	s_string&	 getEffectName()							{ return m_strEffectName;}
 	void		 setEffectName(const s_string& strName)		{ m_strEffectName = strName;}
 
-	//!�õ�ģ������
+	//!
 	s_string&	 getEffectModelName();
 	void		 setEffectModelName(const s_string& strModelName)	{ m_strModelName = strModelName;}
 
-	//!����BILLBOARD����
+	//!BILLBOARD
 	void		 setBillBoardMatrix(D3DXMATRIX* pMatBBoard)	{ _SpmatBBoard = pMatBBoard;}
 	D3DXMATRIX*	 getBillBoardMatrix()						{ return _SpmatBBoard;}
 
@@ -1092,9 +1092,9 @@ public:
 	void		SetAlphaType(D3DBLEND eSrcBlend, D3DBLEND eDestBlend)
 									{ _eSrcBlend = eSrcBlend; _eDestBlend = eDestBlend;}
 
-	//!����Ч�����ļ�	
+	//!	
 	bool		 SaveToFile(FILE* pFile);
-	//!װ��Ч�����ļ�
+	//!
 	bool		 LoadFromFile(FILE* pFile,DWORD dwVersion);
 
 	void		 IsSame();
@@ -1166,19 +1166,19 @@ public:
 
 	void	DeleteItem(CMPResManger* pResMgr);
 
-//����Ա����
+//
 public:
-	//!3D�豸
+	//!3D
 #ifdef		USE_RENDER
 	MPRender*					m_pDev;
 #else
 	LPDIRECT3DDEVICE8			m_pDev;
 #endif
-	//!���������б�
+	//!
 	CTexCoordList				m_CTexCoordlist;
-	//!�����б�
+	//!
 	CTexList					m_CTextruelist;
-	//!����֡
+	//!
 	CTexFrame					m_CTexFrame;
 
 	CEffectModel*				m_pCModel;
@@ -1194,25 +1194,25 @@ public:
 	int							m_ilast,m_inext;
 	float						m_flerp;
 protected:
-	//!	��������
+	//!	
 	EFFECT_TYPE			_eEffectType;
-	//��������ʱ�䳤��(��)
+	//()
 	float				_fLength; 
-	//������������
+	//
 	WORD				_wFrameCount;
-	//! ÿһ���ʱ��
+	//! 
 	VEC_float			_vecFrameTime;
-	//!	ÿһ��Ĵ�С(���ŵı�����Ĭ��Ϊ1.0f)
+	//!	(1.0f)
 	std::vector<D3DXVECTOR3>			_vecFrameSize;
-	//!	ÿһ��ĽǶ�
+	//!	
 	std::vector<D3DXVECTOR3>			_vecFrameAngle;
-	//!	ÿһ���λ��
+	//!	
 	std::vector<D3DXVECTOR3>			_vecFramePos;
 
-	//!	ÿһ��Ķ�����ɫ(Ĭ��Ϊ0xffffffff)
+	//!	(0xffffffff)
 	std::vector<D3DXCOLOR>				_vecFrameColor;
 
-	//!	ÿһ��Ķ���任
+	//!	
 	INT									_iUseParam;
 	std::vector<ModelParam>				_CylinderParam;
 
@@ -1246,7 +1246,7 @@ protected:
 //	~CEffectBase(){}
 //public:
 //	virtual void FrameMove(DWORD	dwDailTime)	{}
-//	//!��Ⱦ
+//	//!
 //	virtual void Render()						{}
 //
 //	virtual void RenderVS()						{}

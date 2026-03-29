@@ -1,4 +1,4 @@
-// via-rng.h - written and placed in public domain by Jeffrey Walton
+﻿// via-rng.h - written and placed in public domain by Jeffrey Walton
 
 /// \file padlkrng.h
 /// \brief Classes for VIA Padlock RNG

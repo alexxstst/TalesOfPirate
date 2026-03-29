@@ -1,4 +1,4 @@
-// pwdbased.h - originally written and placed in the public domain by Wei Dai
+﻿// pwdbased.h - originally written and placed in the public domain by Wei Dai
 //              Cutover to KeyDerivationFunction interface by Uri Blumenthal
 //              Marcel Raad and Jeffrey Walton in March 2018.
 

@@ -1,4 +1,4 @@
-// RoleData.h Created by knight-gongjian 2004.11.22.
+ï»¿// RoleData.h Created by knight-gongjian 2004.11.22.
 //---------------------------------------------------------
 #pragma once
 
@@ -13,12 +13,12 @@
 namespace mission
 {
 
-	// ÈÎÎñ¹¦ÄÜÏîÃüÁî½á¹¹
+	// 
 	typedef struct _ROLE_ITEM_COMMAND
 	{
-		USHORT usCmd;								// ¹¦ÄÜÏîÄ¿ÃüÁî
-		char   szDesc[ROLE_MAXNUM_FUNCITEMSIZE];	// ÃèÊöÐÅÏ¢	
-		BYTE   byParam;								// ²ÎÊýÐÅÏ¢
+		USHORT usCmd;								// 
+		char   szDesc[ROLE_MAXNUM_FUNCITEMSIZE];	// 	
+		BYTE   byParam;								// 
 		WORD   wParam;
 		DWORD  dwParam;
 
@@ -34,24 +34,24 @@ namespace mission
 
 	} ROLE_ITEM_COMMAND, *PROLE_ITEM_COMMAND;
 
-	// ÏÔÊ¾ÈÎÎñ¶Ô»°ÃèÊöÐÅÏ¢
+	// 
 	typedef struct _ROLE_DESCRIPTION
 	{
-		BYTE byCmd;							// ÃèÊö¶Ô»°À¸°´Å¥ÃüÁîID
-		char szDesc[ROLE_MAXNUM_DESPSIZE];	// ÃèÊöÐÅÏ¢
+		BYTE byCmd;							// ID
+		char szDesc[ROLE_MAXNUM_DESPSIZE];	// 
 
 	} ROLE_DESCRIPTION, *PROLE_DESCRIPTION;
 
-	//¡¡ÏÔÊ¾ÈÎÎñ¹¦ÄÜÃèÊöÐÅÏ¢
+	//
 	typedef struct _ROLE_FUNCTION
 	{		
-		BYTE byCount;		// ¹¦ÄÜÏî¼ÆÊý
-		ROLE_ITEM_COMMAND FuncItem[ROLE_MAXNUM_FUNCITEM]; // ¶ÔÓ¦µÄ¹¦ÄÜÏîÄ¿
+		BYTE byCount;		// 
+		ROLE_ITEM_COMMAND FuncItem[ROLE_MAXNUM_FUNCITEM]; // 
 
 	} ROLE_FUNCTION, *PROLE_FUNCTION;
 
-	// npcÐÅÏ¢´æ´¢½á¹¹
-	// ÀúÊ·ÈÎÎñµ¥¸ö±ê¼Ç½á¹¹
+	// npc
+	// 
 	typedef struct _ROLE_FLAGINFO
 	{
 		WORD  wRoleID;
@@ -90,7 +90,7 @@ namespace mission
 			return szFlag[dwIndex] & szTag;
 		}
 
-		// ÉèÖÃ»òÕßÇå³ýÉè¶¨±ê¼Ç
+		// 
 		BOOL SetFlag( WORD wFlag, BOOL bValid )
 		{
 			if( wFlag >= ROLE_MAXNUM_FLAGSIZE<<3 ) return FALSE;
@@ -146,7 +146,7 @@ namespace mission
 			return szFlag[dwIndex] & szTag;
 		}
 
-		// ÉèÖÃ»òÕßÇå³ýÉè¶¨±ê¼Ç
+		// 
 		void SetFlag( DWORD dwFlag, BOOL bValid )
 		{
 			DWORD dwIndex = dwFlag>>3; // dwFlag/ROLE_MAXNUM_INDEXSIZE;
@@ -164,17 +164,17 @@ namespace mission
 			DWORD dwTag = dwFlag&1;
 			if( dwTag == 0 )
 			{
-				// ¸ßËÄÎ»
+				// 
 				szParam[dwIndex] &= 0xF;
 			}
 			else
 			{
-				// µÍËÄÎ»
+				// 
 				szParam[dwIndex] &= 0xF0;
 			}
 		}
 
-		// ÉèÖÃ±ê¼ÇÏàÓ¦²ÎÊýÐÅÏ¢
+		// 
 		BOOL SetParam( DWORD dwFlag, BYTE byParam )
 		{
 			if( byParam >= ROLE_MAXVALUE_PARAM )
@@ -184,13 +184,13 @@ namespace mission
 			DWORD dwTag = dwFlag&1;
 			if( dwTag == 0 )
 			{
-				// ¸ßËÄÎ»
+				// 
 				szParam[dwIndex] &= 0xF;
 				szParam[dwIndex] |= byParam<<4;
 			}
 			else
 			{
-				// µÍËÄÎ»
+				// 
 				szParam[dwIndex] &= 0xF0;
 				szParam[dwIndex] |= byParam;
 			}
@@ -203,12 +203,12 @@ namespace mission
 			DWORD dwTag = dwFlag&1;
 			if( dwTag == 0 )
 			{
-				// ¸ßËÄÎ»
+				// 
 				return (szParam[dwIndex]&0xF0)>>4;
 			}
 			else
 			{
-				// µÍËÄÎ»
+				// 
 				return szParam[dwIndex]&0xF;
 			}
 
@@ -217,7 +217,7 @@ namespace mission
 		
 	} ROLE_EXFLAGINFO, *PROLE_EXFLAGINFO;
 
-	// ËùÓÐ½ÇÉ«×î´ó¿ÉÖ´ÐÐÀúÊ·ÈÎÎñ±ê¼Ç½á¹¹
+	// 
 	typedef struct _ROLE_RECORDINFO
 	{
 		char  szID[ROLE_MAXNUM_RECORDSIZE];
@@ -252,7 +252,7 @@ namespace mission
 			return szID[dwIndex] & szTag;
 		}
 
-		// ÉèÖÃ»òÕßÇå³ýÉè¶¨±ê¼Ç
+		// 
 		BOOL SetID( DWORD dwID, BOOL bValid )
 		{
 			if( dwID >= ROLE_MAXNUM_RECORDSIZE<<3 ) return FALSE;
@@ -273,84 +273,84 @@ namespace mission
 	} ROLE_RECORDINFO, *PROLE_RECORDINFO;
 
 
-	// ´¥·¢Æ÷ÐÅÏ¢¼ÇÂ¼
+	// 
 	typedef struct _TRIGGER_DATA
 	{
-		WORD wTriggerID;	// ´¥·¢Æ÷ID
-		WORD wMissionID;	// ÈÎÎñID(ÈÎÎñÈ¡ÏûÊ±ÐèÒª¼ì²â£¬Çå³ýÏàÓ¦ÈÎÎñµÄ´¥·¢Æ÷)
-		BYTE byType;		// ÊÂ¼þÀàÐÍ
-		WORD wParam1;		// ´¥·¢Æ÷²ÎÊý3
-		WORD wParam2;		// ´¥·¢Æ÷²ÎÊý4,¶¯×÷¼ÆÊý
-		WORD wParam3;		// (Èç¹ûÊÇËæ»úÈÎÎñ£¬ÔòÓÃ×÷¿ªÊ¼¼ÇÂ¼±êÇ©µÄÆðÊ¼Î»ÖÃ£¬´«µÝµ½´¥·¢Æ÷½Å±¾ÖÐÊ¹ÓÃ)
+		WORD wTriggerID;	// ID
+		WORD wMissionID;	// ID()
+		BYTE byType;		// 
+		WORD wParam1;		// 3
+		WORD wParam2;		// 4,
+		WORD wParam3;		// ()
 		WORD wParam4;		// 
 		WORD wParam5;
 		WORD wParam6;
 
-		BYTE byIsDel : 1;	// ±êÖ¾´¥·¢Æ÷ÊÇ·ñÓ¦¸ÃÉ¾³ý
+		BYTE byIsDel : 1;	// 
 		BYTE byParam : 7;
 
 	} TRIGGER_DATA, *PTRIGGER_DATA;
 
 	enum { TRIGGER_VALID, TRIGGER_DELED };
 
-	// ´¥·¢Æ÷ÐÅÏ¢¼ÇÂ¼
+	// 
 	typedef struct _NPC_TRIGGER_DATA
 	{
-		WORD wTID;			// ´¥·¢Æ÷ID
+		WORD wTID;			// ID
 		WORD wParam;
-		BYTE byType;		// ÊÂ¼þÀàÐÍ
-		WORD wParam1;		// ´¥·¢Æ÷²ÎÊý
+		BYTE byType;		// 
+		WORD wParam1;		// 
 		WORD wParam2;
 		WORD wParam3;
 		WORD wParam4;
 
 	} NPC_TRIGGER_DATA, *PNPC_TRIGGER_DATA;
 
-	// Ëæ»úÈÎÎñÊý¾ÝÐÅÏ¢
+	// 
 	typedef struct _MISSION_DATA
 	{
-		WORD	wParam1;				// Ëæ»úÈÎÎñµÄÖ´ÐÐÄÚÈÝÐÅÏ¢²ÎÊý
+		WORD	wParam1;				// 
 		WORD	wParam2;
 		WORD	wParam3;
 		WORD	wParam4;
 		WORD	wParam5;
 		WORD	wParam6;
 
-		void*	pData;					// ÔËÐÐÊ±ÁÙÊ±Êý¾Ý
+		void*	pData;					// 
 	} MISSION_DATA, *PMISSION_DATA;
 
 	typedef struct _MISSION_INFO
 	{
-		WORD	wRoleID;				// ÈÎÎñID
-		BYTE	byState : 3;			// ÈÎÎñ½øÐÐ×´Ì¬
-		BYTE	byMisType : 5;			// ÈÎÎñÀàÐÎ
-		BYTE	byType;					// Ëæ»úÈÎÎñÐÅÏ¢ÀàÐÍ
-		BYTE	byLevel;				// µÈ¼¶ÐÅÏ¢
-		BYTE	byNumData;				// Ö´ÐÐÄÚÈÝ¼ÆÊý
-		DWORD	dwExp;					// Ö´ÐÐ¸ÃÈÎÎñ¿ÉµÃµÄ¾­Ñé
-		DWORD	dwMoney;				// Ö´ÐÐ¸ÃÈÎÎñµÄ½ðÇ®½±Àø
-		WORD	wItem;					// Ëæ»úÈÎÎñµÄ¸ß¼¶ÎïÆ·½±Àø£¨ÖµÎª0±íÊ¾ÎÞ£¬ÊýÁ¿¶¼Îª1£©
-		WORD	wParam1;				// ²ÎÊý
+		WORD	wRoleID;				// ID
+		BYTE	byState : 3;			// 
+		BYTE	byMisType : 5;			// 
+		BYTE	byType;					// 
+		BYTE	byLevel;				// 
+		BYTE	byNumData;				// 
+		DWORD	dwExp;					// 
+		DWORD	dwMoney;				// 
+		WORD	wItem;					// 01
+		WORD	wParam1;				// 
 		WORD	wParam2;
-		ROLE_FLAGINFO RoleInfo;			// ±êÖ¾ºÍÈÎÎñIDÐÅÏ¢
-		MISSION_DATA RandData[ROLE_MAXNUM_RAND_DATA];	// Ëæ»úÈÎÎñÊý¾ÝÐÅÏ¢
+		ROLE_FLAGINFO RoleInfo;			// ID
+		MISSION_DATA RandData[ROLE_MAXNUM_RAND_DATA];	// 
 		
 	} MISSION_INFO, *PMISSION_INFO;
 
-	// Íê³ÉËæ»úÈÎÎñ¼ÆÊý½á¹¹
+	// 
 	typedef struct _RAND_MISSION_COUNT
 	{
-		WORD	wRoleID;				// ÈÎÎñID
-		WORD	wCount;					// ÈÎÎñÍê³É¼ÆÊý
-		WORD	wNum;					// Íê³ÉÈÎÎñµÄÈ¦Êý
+		WORD	wRoleID;				// ID
+		WORD	wCount;					// 
+		WORD	wNum;					// 
 
 	} RAND_MISSION_COUNT, *PRAND_MISSION_COUNT;
 
-	// NPCÈÎÎñÐÅÏ¢×´Ì¬¼ÇÂ¼
+	// NPC
 	typedef struct _STATE_DATA
 	{
-		BYTE byID : 5;		// Ã¿¸önpc×Ô´øµÄÈÎÎñÐÅÏ¢ÁÐ±íµÄË÷Òý
-		BYTE byState : 3;	// µ¥¸öÈÎÎñ×´Ì¬
+		BYTE byID : 5;		// npc
+		BYTE byState : 3;	// 
 	
 	} STATE_DATA, *PSTATE_DATA;
 
@@ -358,8 +358,8 @@ namespace mission
 	{
 		DWORD dwNpcID;
 		BYTE  byNpcState;
-		BYTE  byMisNum;			// ÒÑÍê³ÉÈÎÎñ¼ÆÊý
-		STATE_DATA StateInfo[ROLE_MAXNUM_MISSIONSTATE];	// ÈÎÎñÊý¾ÝÐÅÏ¢
+		BYTE  byMisNum;			// 
+		STATE_DATA StateInfo[ROLE_MAXNUM_MISSIONSTATE];	// 
 	
 	} MISSION_STATE, *PMISSION_STATE;
 }

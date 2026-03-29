@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Copyright (c) 1997-1999, Microsoft Corporation
  *
  *  Wrapper module that "stubs" APIs that were not implemented

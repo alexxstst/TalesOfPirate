@@ -1,4 +1,4 @@
-local ADmaps = {
+﻿local ADmaps = {
 	"garner",
 	"teampk",
 	"puzzleworld",

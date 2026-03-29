@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "UIPicList.h"
 
 using namespace GUI;
@@ -50,8 +50,8 @@ CFixList::~CFixList()
 	//delete _pImage; 
 	//delete _pSelect; 
 
-	SAFE_DELETE(_pImage);  // UIµ±»ú´¦Àí
-	SAFE_DELETE(_pSelect); // UIµ±»ú´¦Àí
+	SAFE_DELETE(_pImage);  // UI
+	SAFE_DELETE(_pSelect); // UI
 }
 
 void CFixList::Render() 
@@ -84,7 +84,7 @@ bool CFixList::MouseRun( int x, int y, DWORD key )
 	{
 		if( (key & Mouse_LDown) && (x>=_nHitX1 && x<=_nHitX2 && y>=_nHitY1 && y<=_nHitY2) )
 		{
-			// ¼ÆËãµã»÷ºóµÄÐÐÊý
+			// 
 			int row = ( y - _nHitY1 ) / (_nRowHeight+_nRowSpace);
 			if( (_lmtSel.GetCur()!=row) && ( _lmtSel.SetCur( row ) ) )
 			{
@@ -172,8 +172,8 @@ CCheckFixList::~CCheckFixList()
 	//delete _pImgCheck; 
 	//delete _pImgUnCheck; 
 
-	SAFE_DELETE(_pImgCheck);   // UIµ±»ú´¦Àí
-	SAFE_DELETE(_pImgUnCheck); // UIµ±»ú´¦Àí
+	SAFE_DELETE(_pImgCheck);   // UI
+	SAFE_DELETE(_pImgUnCheck); // UI
 }
 
 bool CCheckFixList::SetMaxNum( int n )

@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "UIPurifyForm.h"
 #include "GameApp.h"
@@ -48,7 +48,7 @@ namespace GUI
 			return false;
 		}
 
-		// Command������ʾ
+		// Command
 		char szName[32] = {0};
 		for(int i = 0; i < TYPE_COUNT; ++i)
 		{
@@ -103,7 +103,7 @@ namespace GUI
 
 	void CPurifyMgr::CloseForm()
 	{
-		// �����κδ���
+		// 
 	}
 
 
@@ -115,7 +115,7 @@ namespace GUI
 
 			if(PURIFY_TYPE <= nType && nType < PURIFY_TYPE + TYPE_COUNT)
 			{
-				m_nType = nType;  // ��������
+				m_nType = nType;  // 
 
 				for(int i = 0; i < TYPE_COUNT; ++i)
 				{
@@ -189,7 +189,7 @@ namespace GUI
 	}
 
 
-	// �Ƿ��ǿ���װ������Ʒ
+	// 
 	bool CPurifyMgr::IsEquipItem(CItemCommand& rItem)
 	{
 		CItemRecord* pItemRecord = rItem.GetItemInfo();
@@ -199,20 +199,20 @@ namespace GUI
 
 			switch(sType)
 			{
-			case 1:		//��
-			case 2:		//�޽�
-			case 3:		//��
-			case 4:		//��ǹ
-			case 7:		//ذ��
-			case 9:		//����
-			case 11:	//����
-			case 20:	//ñ��
-			case 22:	//�·�
-			case 23:	//����
-			case 24:	//Ь��
+			case 1:		//
+			case 2:		//
+			case 3:		//
+			case 4:		//
+			case 7:		//
+			case 9:		//
+			case 11:	//
+			case 20:	//
+			case 22:	//
+			case 23:	//
+			case 24:	//
 			case 25:	//rings
 			case 26:	//necks
-			case 27:	//����
+			case 27:	//
 			case 81:	//brac
 			case 82:	//brac
 			case 83:	//brac
@@ -236,10 +236,10 @@ namespace GUI
 
 			switch(nType)
 			{
-			case 1067://	ˮ����	
-			case 1068://	�ڶ�ˮ��	
-			case 1069://	������ˮ��	
-			case 1070://	������ˮ��
+			case 1067://		
+			case 1068://		
+			case 1069://		
+			case 1070://	
 				return true;
 
 			default:
@@ -260,7 +260,7 @@ namespace GUI
 
 			switch(nType)
 			{
-			case 2236://	�޲�����
+			case 2236://	
 				return true;
 
 			default:
@@ -274,13 +274,13 @@ namespace GUI
 
 	void CPurifyMgr::PushItem(int iIndex, CItemCommand& rItem)
 	{
-		// �жϵ����Ƿ������
+		// 
 		if(! rItem.GetIsValid())
 		{
 			return;
 		}
 
-		// �鿴ԭ����Cmd���Ƿ��Ѿ���Item�ˣ���������Ƴ�
+		// CmdItem
 		CItemCommand* pItemCommand =  
 			dynamic_cast<CItemCommand*>(cmdEquipPurify[iIndex]->GetCommand());
 		if (pItemCommand)
@@ -288,12 +288,12 @@ namespace GUI
 			PopItem(iIndex);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
 		m_iPurifyItemPos[iIndex] = g_stUIEquip.GetGoodsGrid()->GetDragIndex();
-		// ��Item��Ӧ����Ʒ���ҵ�
+		// Item
 		rItem.SetIsValid(false);
 
-		// ��������Item����Cmd�У�������new������PopItem()��ɾ��
+		// ItemCmdnewPopItem()
 		CItemCommand* pItemCmd = new CItemCommand(rItem);
 		pItemCmd->SetIsValid(true);
 		cmdEquipPurify[iIndex]->AddCommand(pItemCmd);
@@ -304,14 +304,14 @@ namespace GUI
 
 	void CPurifyMgr::PopItem(int iIndex)
 	{
-		// ɾ��Cmd�е�Item����Item����PushItem()����new����
+		// CmdItemItemPushItem()new
 		CItemCommand* pItemCommand =  
 			dynamic_cast<CItemCommand*>(cmdEquipPurify[iIndex]->GetCommand());
 		if (! pItemCommand) return;
 
-		cmdEquipPurify[iIndex]->DelCommand();	// �ú�����ɾ��delete Item
+		cmdEquipPurify[iIndex]->DelCommand();	// delete Item
 
-		// ��Item��Ӧ����Ʒ���ָ��ɿ���
+		// Item
 		CCommandObj* pItem = 
 					g_stUIEquip.GetGoodsGrid()->GetItem(m_iPurifyItemPos[iIndex]);
 		if (pItem)
@@ -319,12 +319,12 @@ namespace GUI
 			pItem->SetIsValid(true);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
 		m_iPurifyItemPos[iIndex] = NO_USE;
 	}
 
 
-	// ���ý��棬������۸�
+	// 
 	void CPurifyMgr::SetPurifyUI()
 	{
 		CItemCommand* pItem1 = dynamic_cast<CItemCommand*>(cmdEquipPurify[PURIFY_ONE]->GetCommand());
@@ -347,12 +347,12 @@ namespace GUI
 			return;
 		}
 
-		// ������λ���Ѿ����룬���������ȷ������ť
+		// 
 		btnForgeYes->SetIsEnabled(true);
 
 		int nMoney = 0;
 
-		// �����ᴿ
+		// 
 		if(GetType() == CPurifyMgr::PURIFY_TYPE)
 		{
 			//int nMainLevel = pItem1->GetItemInfo()->sNeedLv;
@@ -360,7 +360,7 @@ namespace GUI
 
 			nMoney = 1000000;
 		}
-		// ����
+		// 
 		else if(GetType() == CPurifyMgr::ENERGY_TYPE)
 		{
 			int nBatteryID = pItem2->GetItemInfo()->lID;
@@ -373,7 +373,7 @@ namespace GUI
 				nMoney = 1000;
 			}
 		}
-		// ��ʯ
+		// 
 		else if(GetType() == CPurifyMgr::GETSTONE_TYPE)
 		{
 			int nStoneLevel = pItem1->GetForgeInfo().nStoneLevel[0] + 
@@ -381,7 +381,7 @@ namespace GUI
 							  pItem1->GetForgeInfo().nStoneLevel[2];
 			nMoney = nStoneLevel * 10000;
 		}
-		// �����ƹ�
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE)
 		{
 			//int nOvenLevel = 0;
@@ -405,7 +405,7 @@ namespace GUI
 	}
 
 
-	// �����ᴿЭ��
+	// 
 	void CPurifyMgr::SendNetProtocol()
 	{
 		CS_ItemForgeAsk(true, GetType(), m_iPurifyItemPos, PURIFY_CELL_COUNT);
@@ -414,10 +414,10 @@ namespace GUI
 
 ///////////////////////////////////////////////////////////////////////////
 //
-//	������Ϣ����
+//	
 //
 
-	// ������Ҫ��Ʒ
+	// 
 	void CPurifyMgr::_evtDragPurifyOne(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
 	{
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
@@ -426,43 +426,43 @@ namespace GUI
 		CGoodsGrid* pGood = dynamic_cast<CGoodsGrid*>(CDrag::GetParent());
 		if( pGood != g_stUIEquip.GetGoodsGrid() ) return;
 
-		// �����ᴿ
+		// 
 		if(g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE)
 		{
 			//if(! g_stUIPurify.IsEquipItem(*pItemCommand))
 			//{
-			//	g_pGameApp->MsgBox(g_oLangRec.GetString(831)); // ��Ҫװ�����Ϸ���������ѡ��
+			//	g_pGameApp->MsgBox(g_oLangRec.GetString(831)); // 
 			//	return;
 			//}
 		}
-		// ����
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE)
 		{
 			if(pItemCommand->GetItemInfo()->sType != 29)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(852)); // ������Ĳ��Ǳ��ǣ�������ѡ��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(852)); // 
 				return;
 			}
 		}
-		// ��ʯ
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE)
 		{
 			if(! g_stUIPurify.IsEquipItem(*pItemCommand))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(831)); // ��Ҫװ�����Ϸ���������ѡ��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(831)); // 
 				return;
 			}
 		}
-		// �����ƹ�
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE)
 		{
 			if(! g_stUIPurify.IsMainLifeItem(*pItemCommand))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(891)); // ������Ĳ�������ܹ��ߣ�������ѡ��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(891)); // 
 				return;
 			}
 		}
-		else	// ���Ͳ��Ϸ�
+		else	// 
 		{
 			return;
 		}
@@ -471,7 +471,7 @@ namespace GUI
 	}
 
 
-	// �����ᴿ��Ʒ
+	// 
 	void CPurifyMgr::_evtDragPurifyTwo(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
 	{
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
@@ -482,61 +482,61 @@ namespace GUI
 
 		CItemCommand* pMainItem = dynamic_cast<CItemCommand*>(g_stUIPurify.cmdEquipPurify[PURIFY_ONE]->GetCommand());
 
-		// �����ᴿ
+		// 
 		if(g_stUIPurify.GetType() == CPurifyMgr::PURIFY_TYPE)
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(828)); // ���ȷ�����Ҫװ��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(828)); // 
 				return;
 			}
 
 			//if(pMainItem->GetItemInfo()->sType != pItemCommand->GetItemInfo()->sType)
 			//{
-			//	g_pGameApp->MsgBox(g_oLangRec.GetString(829)); // �ᴿװ������Ҫװ������ͬһ���ͣ�������ѡ��
+			//	g_pGameApp->MsgBox(g_oLangRec.GetString(829)); // 
 			//	return;
 			//}
 
 			//if(pMainItem->GetData().GetItemLevel() > pItemCommand->GetData().GetItemLevel() + 5)
 			//{
-			//	g_pGameApp->MsgBox(g_oLangRec.GetString(830)); // �ᴿװ���ȼ�����С����Ҫװ�� 5 ����������ѡ��
+			//	g_pGameApp->MsgBox(g_oLangRec.GetString(830)); //  5 
 			//	return;
 			//}
 		}
-		// ����
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::ENERGY_TYPE)
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(853)); // ���ȷ��뱴��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(853)); // 
 				return;
 			}
 		}
-		// ��ʯ
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::GETSTONE_TYPE)
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(828)); // ���ȷ�����Ҫװ��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(828)); // 
 				return;
 			}
 		}
-		// �����ƹ�
+		// 
 		else if(g_stUIPurify.GetType() == CPurifyMgr::REPAIR_OVEN_TYPE)
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(892)); // �������������ܹ���
+				g_pGameApp->MsgBox(g_oLangRec.GetString(892)); // 
 				return;
 			}
 
 			if(! g_stUIPurify.IsRepairLifeItem(*pItemCommand))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(893)); // ������Ĳ����޲����ߣ�������ѡ��
+				g_pGameApp->MsgBox(g_oLangRec.GetString(893)); // 
 				return;
 			}
 		}
-		// ���Ͳ��Ϸ�
+		// 
 		else
 		{
 			return;
@@ -546,7 +546,7 @@ namespace GUI
 	}
 
 
-	// �������ť�¼�
+	// 
 	void CPurifyMgr::_evtMainMouseButton(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 	{
 		string strName = pSender->GetName();
@@ -559,7 +559,7 @@ namespace GUI
 	}
 
 
-	// �رմ����¼�
+	// 
 	void CPurifyMgr::_evtClosePurifyForm(CForm* pForm, bool& IsClose)
 	{
 		g_stUIPurify.ClearAllCommand();

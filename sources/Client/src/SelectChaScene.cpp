@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "SelectChaScene.h"
 
@@ -14,9 +14,6 @@
 #include "GameConfig.h"
 
 #include "Character.h"
-#include "caLua.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "UIRender.h"
 #include "UIEdit.h"
 #include "UILabel.h"
@@ -40,7 +37,6 @@
 #include "uiDoublePwdForm.h"
 
 #include "UIMemo.h"
-#include "caLua.h"
 #include "cameractrl.h"
 
 #include "Connection.h"
@@ -101,14 +97,14 @@ CSelectChaScene::~CSelectChaScene()
 	ToLogService("common", "CSelectChaScene Destroy");
 }
 
-//~ ������ص� ===============================================================
+//~ Scene-related callbacks ===============================================================
 
 //-----------------------------------------------------------------------
 bool CSelectChaScene::_Init()
 {
 	if (!CGameScene::_Init())
 	{
-		//�������_Init()����,�򵥵ط���false.
+		// If parent _Init() fails, simply return false.
 		return false;
 	}
 
@@ -130,7 +126,7 @@ bool CSelectChaScene::_Init()
 	{
 		m_isInit = true;
 
-		// ���ӱ������
+		// Add background scene object
 		pObj = AddSceneObj(512);
 
 		if (pObj)
@@ -254,7 +250,7 @@ bool CSelectChaScene::_Init()
 	g_Render.SetRenderStateForced(D3DRS_LIGHTING, 0);
 	g_Render.SetRenderState(D3DRS_AMBIENT, 0xffffffff);
 	m_iCurPage = 0;
-	//��ʼ��UI
+	//Initialize UI
 	if (!_InitUI())
 	{
 		return false;
@@ -276,7 +272,7 @@ bool CSelectChaScene::_Clear()
 
 	if (!CGameScene::_Clear())
 	{
-		//����Clearʧ��,�򵥷���false.
+		// If Clear fails, simply return false.
 		return false;
 	}
 
@@ -311,7 +307,7 @@ void CSelectChaScene::_Render()
 
 	rsm->BeginScene();
 
-	//��Ⱦ����
+	//Render characters
 	rsm->BeginCharacter();
 
 
@@ -375,7 +371,7 @@ void CSelectChaScene::_Render()
 
 	rsm->EndCharacter();
 
-	//��Ⱦ����
+	//Render scene objects
 	rsm->BeginSceneObject();
 
 	if (pObj)
@@ -464,19 +460,19 @@ void CSelectChaScene::_FrameMove(DWORD dwTimeParam)
 //-----------------------------------------------------------------------
 bool CSelectChaScene::_MouseButtonDown(int nButton)
 {
-	// �����������봰����ʾʱ���������������  add by Philip.Wu  2006-07-20
+	// Ignore mouse clicks when password dialog is shown  add by Philip.Wu  2006-07-20
 	if (g_stUIDoublePwd.GetIsShowCreateForm() || g_stUIDoublePwd.GetIsShowAlterForm() || g_stUIDoublePwd.GetIsShowDoublePwdForm())
 	{
 		return false;
 	}
-	//�ж�����Ƿ��������
+	//Check whether a character was clicked
 	CCharacter* pCha = this->HitTestCharacter(g_pGameApp->GetMouseX(),
 		g_pGameApp->GetMouseY());
 	if (!pCha)
 	{
 		return false;
 	}
-	//ȷ����������λ��
+	//Determine the clicked character position
 
 	const auto index = [&]
 	{
@@ -511,7 +507,7 @@ bool CSelectChaScene::_MouseButtonDown(int nButton)
 	//    m_ChaColors[m_nCurChaIndex][1], m_ChaColors[m_nCurChaIndex][2]);
 	m_CharactorPtrs[m_nCurChaIndex].pCha->SetColor(255, 255, 255);
 
-	//���������ϵİ�ť�Ƿ����
+	//Update button state on the panel
 	UpdateButton();
 
 	return true;
@@ -535,7 +531,7 @@ void CSelectChaScene::_KeyDownEvent(int key)
 {
 
 	if (m_nCurChaIndex != static_cast<decltype(m_nCurChaIndex)>(-1))
-	{ /*�н�ɫ��ѡ�е������*/
+	{ /*A character is selected*/      
 		int iRotate = 0;		// left:-1	right:1
 		if (VK_LEFT == key)
 		{
@@ -553,14 +549,14 @@ void CSelectChaScene::_KeyDownEvent(int key)
 }
 
 //-----------------------------------------------------------------------
-void CSelectChaScene::LoadingCall()          // ��װ��loading��,ˢ��
+void CSelectChaScene::LoadingCall()          // Called during loading, refresh
 {
 	CGameScene::LoadingCall();
 
-	// ÿ�ν���Ϸ���ᾭ��ѡ�˽��棬���������߼��ܵ�COOLDOWN��Ϣ
+	// Each time entering the game through character selection, clear item COOLDOWN data
 	CItemCommand::ClearCoolDown();
 
-	// ��չ�����ʾ��������û�����򲻻�֪ͨ�ͻ��ˣ���������ǰһ�εĹ�������
+	// Extended guild display data; if not refreshed, client will not be notified; so preserve the previous guild data
 	//CGuildData::SetGuildMasterID(NULL);
 	//CGuildData::SetGuildName("");
 	//if(g_stUIChat.GetGuildNode()) g_stUIChat.GetGuildNode()->Clear();
@@ -579,14 +575,14 @@ void CSelectChaScene::LoadingCall()          // ��װ��loading��,ˢ�
 
 	if (!g_Config.m_IsDoublePwd)
 	{
-		// ��ʾ�����������봰��
+		// Show create password dialog
 		g_stUIDoublePwd.ShowCreateForm();
 
-		//CBoxMgr::ShowSelectBox(_evtCreateDoublePwdEvent, g_oLangRec.GetString(800), true);//"��ǰ�ʺ�δ������������\n\n�Ƿ����ڴ���?"
+		//CBoxMgr::ShowSelectBox(_evtCreateDoublePwdEvent, g_oLangRec.GetString(800), true);//"\n\n?"
 	}
 	else if (GetChaCount() == 0 && frmWelcomeNotice)
 	{
-		// ��ǰ�޽�ɫ����ʾ������ʾ
+		// No characters currently, show welcome notice
 		frmWelcomeNotice->ShowModal();
 	}
 	else if (m_isCreateCha)
@@ -595,7 +591,7 @@ void CSelectChaScene::LoadingCall()          // ��װ��loading��,ˢ�
 
 		if (GetChaCount() == 1 && frmCreateOKNotice)
 		{
-			// �մ�����һ����ɫ
+			// Just created first character
 			frmCreateOKNotice->ShowModal();
 		}
 	}
@@ -616,12 +612,12 @@ void CSelectChaScene::SetMainCha(int nChaID)
 	CGameScene::SetMainCha(nChaID);
 }
 
-//~ UI��صĺ��� =============================================================
+//~ UI-related functions =============================================================
 
 //-----------------------------------------------------------------------
 bool CSelectChaScene::_InitUI()
 {
-	//ѡ�˽���ı���
+	//Character selection scene form
 	frmSelectCha = CFormMgr::s_Mgr.Find("frmSelect", GetInitParam()->nUITemplete);
 	if (!frmSelectCha)		return false;
 
@@ -655,7 +651,7 @@ bool CSelectChaScene::_InitUI()
 	edtPassword2->SetIsPassWord(true);
 	confirmPIN->SetIsPassWord(true);
 
-	// ���ô�����ť��˸
+	// Set create button flashing
 	btnCreate->SetFlashCycle();
 
 	frmSelectCha->SetPos(
@@ -666,17 +662,17 @@ bool CSelectChaScene::_InitUI()
 
 	frmSelectCha->evtEntrustMouseEvent = _SelChaFrmMouseEvent;
 
-	// ������ӭ����   �ý�����ڵ�ǰ�ʺ����޽�ɫʱ����
+	// Welcome notice form   Shown when current account has no characters
 	frmWelcomeNotice = CFormMgr::s_Mgr.Find("frmWelcomeNotice");
 	if (!frmWelcomeNotice)		return false;
 	frmWelcomeNotice->evtEntrustMouseEvent = _evtWelcomeNoticeEvent;
 
-	// �����״δ�����ɫ�ɹ���ʾ����   �ý�����ڸ��ʺ������һ����ɫ�Ĵ������̺���ʾ
+	// First character creation success notice   Shown after first character is created for this account
 	frmCreateOKNotice = CFormMgr::s_Mgr.Find("frmCreateOKNotice");
 	if (!frmCreateOKNotice)		return false;
 	frmCreateOKNotice->evtEntrustMouseEvent = _evtCreateOKNoticeEvent;
 
-	// ������ť�Ƿ������
+	// Update button enabled state
 	UpdateButton();
 
 	frmChaNameAlter = CFormMgr::s_Mgr.Find("frmChaNameAlter");
@@ -720,7 +716,7 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 
 	if (strName == "btnCreate")
 	{
-		//�л����������ﳡ��
+		//Switch to character creation scene
 		stSceneInitParam param;
 		param.nTypeID = enumCreateChaScene;
 		param.strName = "";
@@ -741,8 +737,8 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 	}
 	else if (strName == "btnYes")
 	{
-		//������Ϸ
-		//����������Ϳ�ʼ��Ϸ����Ϣ
+		//Enter game
+		//Send begin play message to server
 		GetCurrScene().SendBeginPlayToServer();
 		CGameApp::Waiting();
 	}
@@ -750,13 +746,13 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 	{
 		if (g_Config.m_IsDoublePwd)
 		{
-			// ɾ����ɫ��Ҫ��������  modify by Philip.Wu  2006-07-19
+			// Deleting character requires password  modify by Philip.Wu  2006-07-19
 			g_stUIDoublePwd.SetType(CDoublePwdMgr::DELETE_CHARACTOR);
 			g_stUIDoublePwd.ShowDoublePwdForm();
 		}
 		else
 		{
-			// ɾ���ʺ�
+			// Delete account
 			//CBoxMgr::ShowSelectBox(_CheckFrmMouseEvent, g_oLangRec.GetString(384), true);
 		}
 	}
@@ -768,14 +764,14 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 			return;
 		}
 
-		// �˳�ѡ�˳���
+		// Exit character selection scene
 		CS_Logout();
 		CS_Disconnect(DS_DISCONN);
 		g_pGameApp->LoadScriptScene(enumLoginScene);
 	}
 	else if (strName == "btnAlter")
 	{
-		// ���¶�������
+		// Update double password
 		g_stUIDoublePwd.ShowAlterForm();
 
 	}
@@ -832,13 +828,13 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 }
 
 //-----------------------------------------------------------------------
-// �˺���������
+// Account verification callback
 //void CSelectChaScene::_CheckFrmMouseEvent(CCompent *pSender, int nMsgType, 
 //                                          int x, int y, DWORD dwKey)
 //{
 //    if( nMsgType == CForm::mrYes ) 
 //    {
-//        //�����������ɾ����ɫ����Ϣ
+//        // Send delete character message to server
 //        GetCurrScene().SendDelChaToServer();
 //        CGameApp::Waiting();
 //        return;
@@ -847,24 +843,24 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 //}
 
 
-// ѯ���Ƿ�Ҫ������������  add by Philip.Wu  2006-07-20
+// Ask whether to create double password  add by Philip.Wu  2006-07-20
 void CSelectChaScene::_evtCreateDoublePwdEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	if (nMsgType == CForm::mrYes)
 	{
-		// ��ʾ�����������봰��
+		// Show create password dialog
 		g_stUIDoublePwd.ShowCreateForm();
 	}
 	else
 	{
-		// ���ȡ�������������룬�˳�
+		// User cancelled creating double password, exit
 		if (g_TomServer.bEnable)
 		{
 			g_pGameApp->SetIsRun(false);
 			return;
 		}
 
-		// �˳�ѡ�˳���
+		// Exit character selection scene
 		CS_Logout();
 		CS_Disconnect(DS_DISCONN);
 		g_pGameApp->LoadScriptScene(enumLoginScene);
@@ -873,24 +869,24 @@ void CSelectChaScene::_evtCreateDoublePwdEvent(CCompent* pSender, int nMsgType, 
 
 
 
-//~ �߼���صĺ��� ==========================================================
+//~ Logic-related functions ==========================================================
 
 //-----------------------------------------------------------------------
 void CSelectChaScene::DelCurrentSelCha()
 {
-	//�ڳ�����ɾ���ý�ɫ
+	//Remove character from scene
 	m_CharactorPtrs[m_nCurChaIndex].pCha->SetValid(false);
 
 
-	//λ���ÿ�
+	//Clear the slot
 	m_CharactorPtrs[m_nCurChaIndex].pCha = nullptr;
 
-	m_FreePositions[m_nCurChaIndex] = 0;    //��ʾ��λ��Ϊ��
+	m_FreePositions[m_nCurChaIndex] = 0;    //Mark this slot as empty
 
 	m_nCurChaIndex = static_cast<decltype(m_nCurChaIndex)>(-1);
 	UpdateCharacterPositions();
 
-	//�������UI����
+	//Update UI buttons
 	UpdateButton();
 	return;
 }
@@ -910,7 +906,7 @@ bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeC
 	pCha->UpdataFace(*part);
 	pCha->SetScale(pCha->GetScale() * 1.0f);
 
-	//������һ�����õ�λ��
+	//Find next available slot
 
 	const auto it = std::find(std::cbegin(m_FreePositions), std::cend(m_FreePositions), 0);
 	if (it == std::cend(m_FreePositions))
@@ -968,7 +964,7 @@ void CSelectChaScene::SendBeginPlayToServer()
 
 	CCharacter* pCha = chaFont.pCha;
 
-	//���Դ���
+	//Debug output
 	ToLogService("ui", "Client Send:{},{},{},{},{},{}", pCha->getName(), pCha->GetPartID(0), pCha->GetPartID(1),
 		pCha->GetPartID(2), pCha->GetPartID(3), pCha->GetPartID(4));
 }
@@ -1165,7 +1161,7 @@ void CSelectChaScene::ShowWelcomeNotice(bool bShow)
 }
 
 
-// ��ӭ���� �¼�����
+// Welcome notice event handler
 void CSelectChaScene::_evtWelcomeNoticeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();
@@ -1181,7 +1177,7 @@ void CSelectChaScene::_evtWelcomeNoticeEvent(CCompent* pSender, int nMsgType, in
 }
 
 
-// �״δ�����ɫ�ɹ���ʾ���� �¼�����
+// First character creation success notice event handler
 void CSelectChaScene::_evtCreateOKNoticeEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();
@@ -1196,7 +1192,7 @@ void CSelectChaScene::_evtCreateOKNoticeEvent(CCompent* pSender, int nMsgType, i
 	}
 }
 
-// �״δ�����ɫ�ɹ���ʾ���� �¼�����
+// Character name alter event handler
 void CSelectChaScene::_evtChaNameAlterMouseEvent(CCompent* pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();

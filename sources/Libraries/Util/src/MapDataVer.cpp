@@ -1,4 +1,4 @@
-// #include "Stdafx.h"
+ï»¿// #include "Stdafx.h"
 #include "TerrainData.h"
 #include "ObjectData.h"
 #include "AttribData.h"
@@ -20,13 +20,13 @@ using namespace std;
 #define LW_RGBDWORDTO555(color) (WORD)( ((color&0xf8)<<7) | ((color & 0xf800)>>6) | ((color & 0xf80000)>>19) )
 #define LW_RGBDWORDTO565(color) (WORD)( ((color&0xf8)<<8) | ((color & 0xfC00)>>5) | ((color & 0xf80000)>>19) )
 
-// µØÍ¼ÎÄ¼þ°æ±¾×ª»»    
+//     
 void CheckMapFileVersion(const char *pszMapName)
 {
     FILE *fp = fopen(pszMapName, "rb");
     if(fp==NULL)
     {
-        //LG("error", "ÎÞ·¨´ò¿ªµØÍ¼ÎÄ¼þ[%s]\n", pszMapName);
+        //LG("error", "[%s]\n", pszMapName);
 		ToLogService("errors", LogLevel::Error, "can't open map [{}]", pszMapName);
         return;
     }
@@ -38,13 +38,13 @@ void CheckMapFileVersion(const char *pszMapName)
     fclose(fp);
     if(header.nMapFlag==780624)
     {
-        //LG("map_version", "msg´Ë¾É°æ±¾µÄµØÍ¼ÎÄ¼þÏÖÒÑ·ÏÆúÊ¹ÓÃ!");
+        //LG("map_version", "msg!");
 		ToLogService("common", LogLevel::Error, " this version file is deprecated!");
         return;
     }
     else if(header.nMapFlag==LAST_VERSION_NO)
     {
-        //LG("map_version", "msg¾É°æ±¾µÄµØÍ¼ÎÄ¼þ, ÏÖÔÚ¿ªÊ¼¸üÐÂ°æ±¾!");
+        //LG("map_version", "msg, !");
 		ToLogService("common", LogLevel::Error, " old version file, now update the version");
     }
     else
@@ -85,7 +85,7 @@ void CheckMapFileVersion(const char *pszMapName)
                     
 					TileInfo_8To5(pOld->t, tile.dwTileInfo, tile.btTileInfo);
 					
-					tile.cHeight  = (char)(pOld->sHeight / 10); // 10cmÎªÒ»¼¶
+					tile.cHeight  = (char)(pOld->sHeight / 10); // 10cm
                     tile.sColor   = LW_RGBDWORDTO565(pOld->dwColor);
                     tile.sRegion  = pOld->sRegion;
                     tile.btIsland = pOld->btIsland;
@@ -103,7 +103,7 @@ void CheckMapFileVersion(const char *pszMapName)
     string strOld = pszMapName;
     strOld+=".old";
     CopyFile(pszMapName, strOld.c_str(), FALSE);
-    //MessageBox(NULL, "µØÍ¼¸ñÊ½×ª»¯Íê³É, Ô­µØÍ¼ÃûÌí¼Ó.oldÒÑ±¸·Ý!", strOld.c_str(), 0);
+    //MessageBox(NULL, ", .old!", strOld.c_str(), 0);
 	MessageBox(NULL, "Map format convert ok, ole file backed OK(.old)!", strOld.c_str(), 0);
     CopyFile("map/temp.map", pszMapName, FALSE);
 }

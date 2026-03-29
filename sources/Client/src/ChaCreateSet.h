@@ -1,11 +1,11 @@
-
+ï»¿
 
 class CChaCreateInfo : public CRawDataInfo
 {
 
 public:
 
-    //ĞòºÅ	ÀàĞÍÃû³Æ	Í··¢£¬ Á³£¬ ÉíÌå£¬ ÊÖ£¬ ½Å
+    //		    
 	CChaCreateInfo()
 	{
 	}
@@ -42,7 +42,7 @@ public:
 
 protected:
 
-	static CChaCreateSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CChaCreateSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

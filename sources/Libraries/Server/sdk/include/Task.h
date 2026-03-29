@@ -1,4 +1,4 @@
-// Task.h — Базовый класс для фоновых задач
+﻿// Task.h      
 #pragma once
 
 #include "DBCCommon.h"

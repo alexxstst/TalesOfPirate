@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 
 #include "MPEditor.h"
 #include "GameApp.h"
@@ -156,7 +156,7 @@ void CGameApp::MouseButtonDB(int nButton)
 
 			GetCurScene()->_MouseButtonDB( nButton );
 
-			//����Ϸģʽ�м���˫���ָ�Ĭ���ӽ�
+			//
 			if( (nButton==1) && (!g_Config.m_bEditor) && (!_pMainCam->IsDefaultView()) )
 			{
 				//_pMainCam->ResetCamera();
@@ -278,7 +278,7 @@ void CGameApp::HandleSuperKey()
 		}
 		else if( g_pGameApp->IsKeyDown(DIK_F3) && g_Config.m_bEditor && g_pGameApp->IsCtrlPress() )
 		{
-			// �л����� by lh test
+			//  by lh test
 			static int type = 0;
 			type = GetCurScene()->GetSceneTypeID();
 			type++;
@@ -297,7 +297,7 @@ void CGameApp::HandleSuperKey()
 			CGameScene *pScene = GetCurScene();
 			if(pScene)
 			{
-				// �ڷŵĽ�ɫȫ��д�뵽һ���ı��ļ���
+				// 
 				FILE *fp = fopen("monster.txt", "wt");
 				for(int i = 0; i < pScene->GetChaCnt(); i++)
 				{

@@ -1,4 +1,4 @@
-/*
+﻿/*
     SDL_mixer:  An audio mixer library based on the SDL library
     Copyright (C) 1997, 1998, 1999, 2000, 2001  Sam Lantinga
 

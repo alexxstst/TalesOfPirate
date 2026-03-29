@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "UIComposeForm.h"
 #include "uiformmgr.h"
@@ -286,26 +286,26 @@ namespace GUI
 
     void CComposeMgr::PopItem(int iIndex, bool bRetry/* = false*/)
     {
-        //  �Ƿ�����
+        //  
         if(bLock)
         {
             return;
         }
-        // ɾ��Cmd�е�Item����Item����PushItem()����new����
+        // CmdItemItemPushItem()new
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdCompose[iIndex]->GetCommand());
 		if (! pItemCommand)
             return;
 
-		cmdCompose[iIndex]->DelCommand();	// �ú�����ɾ��delete Item
+		cmdCompose[iIndex]->DelCommand();	// delete Item
 
-		// ��Item��Ӧ����Ʒ���ָ��ɿ���
+		// Item
 		CCommandObj* pItem = g_stUIEquip.GetGoodsGrid()->GetItem(iComposePos[iIndex]);
 		if (pItem && (6 != iIndex))
 		{
 			pItem->SetIsValid(true);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
         if(!bRetry)
         {
 		    iComposePos[iIndex] = NO_USE;
@@ -315,36 +315,36 @@ namespace GUI
 
     void CComposeMgr::PushItem(int iIndex, CItemCommand& rItem, bool bRetry/* = false*/)
     {
-        //  �Ƿ�����
+        //  
         if(bLock)
         {
             return;
         }
-        // �жϵ����Ƿ������
+        // 
 		if(! rItem.GetIsValid())
 		{
 			return;
 		}
 
-		// �鿴ԭ����Cmd���Ƿ��Ѿ���Item�ˣ���������Ƴ�
+		// CmdItem
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdCompose[iIndex]->GetCommand());
 		if (pItemCommand)
 		{
 			PopItem(iIndex);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
         if(!bRetry)
         {
             iComposePos[iIndex] = g_stUIEquip.GetGoodsGrid()->GetDragIndex();
         }
         if(6 != iIndex)
         {
-		    // ��Item��Ӧ����Ʒ���ҵ�
+		    // Item
 		    rItem.SetIsValid(false);
         }
 
-		// ��������Item����Cmd�У�������new������PopItem()��ɾ��
+		// ItemCmdnewPopItem()
 		CItemCommand* pItemCmd = new CItemCommand(rItem);
 		pItemCmd->SetIsValid(true);
 		cmdCompose[iIndex]->AddCommand(pItemCmd);
@@ -531,7 +531,7 @@ namespace GUI
 
     void CComposeMgr::_evtDragItemBase4(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
     {
-        //  ����1
+        //  1
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
             g_pGameApp->MsgBox(g_oLangRec.GetString(896));
@@ -555,7 +555,7 @@ namespace GUI
 
     void CComposeMgr::_evtDragItemBase5(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
     {
-        //  ����2
+        //  2
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
             g_pGameApp->MsgBox(g_oLangRec.GetString(896));
@@ -579,7 +579,7 @@ namespace GUI
 
     void CComposeMgr::_evtDragItemBase6(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
     {
-        //  ����3
+        //  3
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
             g_pGameApp->MsgBox(g_oLangRec.GetString(896));

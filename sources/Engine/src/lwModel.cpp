@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 
 #include "lwModel.h"
@@ -311,7 +311,7 @@ LW_RESULT lwModel::Update()
     {
         imp = _obj_seq[i];
 
-        // �и��Ӳ�νṹ�ľ������ˣ��Ժ���ԸĽ�
+        // 
         lwMatrix44 mat(_mat_base);
         pp = imp;
         while(pp->GetParentID() != LW_INVALID_INDEX)

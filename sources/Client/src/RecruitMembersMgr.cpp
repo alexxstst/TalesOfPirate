@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------
+ï»¿//------------------------------------------------------------------------
 //	2005.5.8	Arcol	create this file
 //------------------------------------------------------------------------
 
@@ -31,7 +31,7 @@ bool CRecruitMembersMgr::DelRecruitMember(CRecruitMemberData* pRecruitMember)
 		if ((*Iter)==pRecruitMember)
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*Iter); // UI
 			m_pRecruitMembers.erase(Iter);
 			return true;
 		}
@@ -47,7 +47,7 @@ bool CRecruitMembersMgr::DelRecruitMemberByID(DWORD dwID)
 		if ((*Iter)->GetID()==dwID)
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*Iter); // UI
 			m_pRecruitMembers.erase(Iter);
 			return true;
 		}
@@ -63,7 +63,7 @@ bool CRecruitMembersMgr::DelRecruitMemberByName(string strName)
 		if ((*Iter)->GetName()==strName)
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*Iter); // UI
 			m_pRecruitMembers.erase(Iter);
 			return true;
 		}
@@ -116,7 +116,7 @@ void CRecruitMembersMgr::ResetAll()
 		Iter=m_pRecruitMembers.begin();
 		CRecruitMemberData* pNode=*Iter;
 		//delete pNode;
-		SAFE_DELETE(pNode); // UIµ±»ú´¦Àí
+		SAFE_DELETE(pNode); // UI
 		m_pRecruitMembers.erase(Iter);
 	}
 }

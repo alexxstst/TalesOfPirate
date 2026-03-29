@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I C O D E . H
  *
  *	Status Codes returned by MAPI routines

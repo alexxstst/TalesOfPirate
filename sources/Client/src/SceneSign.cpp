@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "scenesign.h"
 #include "SceneItem.h"
 #include "Scene.h"

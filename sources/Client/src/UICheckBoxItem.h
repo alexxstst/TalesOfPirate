@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "uigraph.h"
 
 class CCheckBoxItem :

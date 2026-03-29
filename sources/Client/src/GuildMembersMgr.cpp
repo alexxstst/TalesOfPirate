@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------
+ï»¿//------------------------------------------------------------------------
 //	2005.4.25	Arcol	create this file
 //------------------------------------------------------------------------
 
@@ -33,7 +33,7 @@ bool CGuildMembersMgr::DelGuildMember(CGuildMemberData* pGuildMember)
 		if ((*Iter)==pGuildMember)
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*Iter); // UI
 			m_pGuildMembers.erase(Iter);
 			return true;
 		}
@@ -49,7 +49,7 @@ bool CGuildMembersMgr::DelGuildMemberByID(DWORD dwID)
 		if ((*Iter)->GetID()==dwID)
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*Iter); // UI
 			m_pGuildMembers.erase(Iter);
 			return true;
 		}
@@ -65,7 +65,7 @@ bool CGuildMembersMgr::DelGuildMemberByName(string strName)
 		if ((*Iter)->GetName()==strName)
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UIµ±»ú´¦Àí
+			SAFE_DELETE(*Iter); // UI
 			m_pGuildMembers.erase(Iter);
 			return true;
 		}
@@ -118,7 +118,7 @@ void CGuildMembersMgr::ResetAll()
 		Iter=m_pGuildMembers.begin();
 		CGuildMemberData* pNode=*Iter;
 		//delete pNode;
-		SAFE_DELETE(pNode); // UIµ±»ú´¦Àí
+		SAFE_DELETE(pNode); // UI
 		m_pGuildMembers.erase(Iter);
 	}
 }

@@ -1,4 +1,4 @@
-// Copyright (C) Microsoft Corporation, 1990-1999
+﻿// Copyright (C) Microsoft Corporation, 1990-1999
 #if _MSC_VER > 1000
 #pragma once
 #endif

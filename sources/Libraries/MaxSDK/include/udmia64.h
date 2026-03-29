@@ -1,4 +1,4 @@
-// WIN64 Cleanup: Shuler
+﻿// WIN64 Cleanup: Shuler
 // These defines will be in a future basetsd.h, probably
 // in VC 7.0. Until then, they must be defined here.
 

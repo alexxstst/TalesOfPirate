@@ -1,4 +1,4 @@
-// validat2.cpp - originally written and placed in the public domain by Wei Dai and Jeffrey Walton
+﻿// validat2.cpp - originally written and placed in the public domain by Wei Dai and Jeffrey Walton
 //                Routines in this source file are only tested in Debug builds.
 //                Source files split in July 2018 to expedite compiles.
 

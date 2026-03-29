@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I T A G S . H
  *
  *	Property tag definitions for standard properties of MAPI

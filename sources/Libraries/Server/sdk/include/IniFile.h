@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "excp.h"
 #include <string>
@@ -50,7 +50,7 @@ private:
 		IniSection ** m_sect;
 	};
 	bool	m_update;
-	bool	m_rw;					//false:Ö»¶Á;true:¶ÁºÍÐ´¡£
+	bool	m_rw;					//false:;true:
 	char	m_filename[512];
 };
 

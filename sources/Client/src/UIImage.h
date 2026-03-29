@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:¾²Ì¬Í¼Æ¬
-// ×÷Õß:lh 2004-07-21
-// ×îºóĞŞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-21
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uicompent.h"
@@ -9,7 +9,7 @@
 namespace GUI
 {
 
-// Ò»ÕÅ¼òµ¥¾²Ì¬Í¼Æ¬
+// 
 class CImage : public CCompent
 {
 public:
@@ -27,14 +27,14 @@ public:
 	CGuiPic*		GetImage() { return _pImage; }
 
 public:
-	GuiMouseEvent	evtMouseDown;		// Êó±ê°´ÏÂÊÂ¼ş
+	GuiMouseEvent	evtMouseDown;		// 
 
 public:
 	CGuiPic* _pImage;
 
 };
 
-// ´ø±ß¿òµÄÍ¼Æ¬¿Ø¼ş
+// 
 class CFrameImage : public CCompent
 {
 public:
@@ -52,23 +52,23 @@ public:
 	CFramePic*		GetFrameImage() { return _pImage; }
 
 public:
-	GuiMouseEvent	evtMouseDown;		// Êó±ê°´ÏÂÊÂ¼ş
+	GuiMouseEvent	evtMouseDown;		// 
 
 protected:
 	CFramePic*		_pImage;
 
 };
 
-//´øĞ§¹ûµÄÍ¼Æ¬
+//
 class CFlashImage: public CCompent
 {
 public:
 	enum eStyle
 	{
-		enumNone,		// ¾²Ö¹Í¼Æ¬
-		enumFlash,		// ÉÁË¸
-		enumCartoon,	// ¶¯»­
-		enumRightMove,	// ´Ó×óÖÁÓÒÒÆ¶¯
+		enumNone,		// 
+		enumFlash,		// 
+		enumCartoon,	// 
+		enumRightMove,	// 
 	};
 
 	CFlashImage(CForm& frmOwn, unsigned int max=1 );

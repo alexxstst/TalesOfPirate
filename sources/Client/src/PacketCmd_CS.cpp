@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "PacketCmd.h"
 
 #include "GameApp.h"
@@ -8,13 +8,13 @@
 #include "UIBoothForm.h"
 #include "UIStoreForm.h"
 #include "CommandMessages.h"
-// Типы uChar, uShort, uLong, cChar определены в NetIF.h
-// Crypto++ — BLAKE2s для хеширования пароля
+//  uChar, uShort, uLong, cChar   NetIF.h
+// Crypto++  BLAKE2s   
 #include "blake2.h"
 #include "hex.h"
 #include "filters.h"
 //------------------------
-// Э��C->S : ����
+// C->S : 
 //------------------------
 bool CS_Connect(cChar *hostname, uint16_t port, uint32_t timeout)
 {
@@ -35,7 +35,7 @@ bool CS_Connect(cChar *hostname, uint16_t port, uint32_t timeout)
 }
 
 //------------------------
-// Э��C->S : �Ͽ�����
+// C->S : 
 //------------------------
 void CS_Disconnect(int reason)
 {
@@ -52,7 +52,7 @@ void CS_SendPrivateKey()
 
 
 //------------------------
-// Э��C->S : ��½
+// C->S : 
 //------------------------
 void CS_Login(const char *accounts,const char *password, const char* passport)
 {
@@ -60,7 +60,7 @@ void CS_Login(const char *accounts,const char *password, const char* passport)
 }
 
 //------------------------
-// Э��C->S : ���͵ǳ�����
+// C->S : 
 //------------------------
 void CS_Logout()
 {
@@ -80,13 +80,13 @@ void CS_OfflineMode()
 
 void CS_CancelExit()
 {
-	// Отмена выхода из игры
+	//    
 	auto pk = net::msg::serializeCmCancelExitCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
 //------------------------
-// Э��C->S : ����ѡ���ɫ����
+// C->S : 
 //------------------------
 void CS_BeginPlay(char cha_index)
 {
@@ -94,7 +94,7 @@ void CS_BeginPlay(char cha_index)
 }
 
 //------------------------
-// Э��C->S : ��������ѡ���ɫ����
+// C->S : 
 //------------------------
 void CS_EndPlay()
 {
@@ -104,7 +104,7 @@ void CS_EndPlay()
 }
 
 //------------------------
-// Э��C->S : �����½���ɫ����
+// C->S : 
 //------------------------
 
 void CS_NewCha(const char *chaname,const char *birth,int type, int hair, int face)
@@ -113,7 +113,7 @@ void CS_NewCha(const char *chaname,const char *birth,int type, int hair, int fac
 }
 
 //------------------------
-// Э��C->S : ����ɾ����ɫ����
+// C->S : 
 //------------------------
 void CS_DelCha(uint8_t cha_index, const char szPassword2[])
 {
@@ -121,7 +121,7 @@ void CS_DelCha(uint8_t cha_index, const char szPassword2[])
 }
 
 //------------------------
-// Э��C->S : ����������Ϣ
+// C->S : 
 //------------------------
 void CS_Say(const char *content){
 	g_NetIF->m_pCProCir->Say(content);
@@ -188,61 +188,61 @@ void CS_StallSearch(int ItemID)
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Создание второго пароля
+//   
 void CS_CreatePassword2( const char szPassword[] )
 {
 	auto pk = net::msg::serialize(net::msg::CmCreatePassword2Message{szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Обновление второго пароля
+//   
 void CS_UpdatePassword2( const char szOld[], const char szPassword[] )
 {
 	auto pk = net::msg::serialize(net::msg::CmUpdatePassword2Message{szOld, szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-//��������
+//
 void CS_LockKitbag()
 {
 	auto pk = net::msg::serializeCmKitbagLockCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
-//��������
+//
 void CS_UnlockKitbag( const char szPassword[] )
 {
 	auto pk = net::msg::serialize(net::msg::CmKitbagUnlockMessage{szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-//��鱳������״̬
+//
 void CS_KitbagCheck()
 {
 	auto pk = net::msg::serializeCmKitbagCheckCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// �����Զ�����״̬
+// 
 void CS_AutoKitbagLock(bool bAutoLock)
 {
 	auto pk = net::msg::serialize(net::msg::CmAutoKitbagLockMessage{bAutoLock ? 1 : 0});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Э��C->S : �����ж���Ϣ
+// C->S : 
 void CS_BeginAction(  CCharacter* pCha, DWORD type, void* param, CActionState* pState )
 {
 	g_NetIF->m_pCProCir->BeginAction( pCha, type, param, pState );
 }
 
-// Э��C->S : ����ֹͣ�ж���Ϣ
+// C->S : 
 void CS_EndAction( CActionState* pState )
 {
 	g_NetIF->m_pCProCir->EndAction(pState);
 }
 
-// Э��C->S : ����ֹͣ�ж���Ϣ
+// C->S : 
 void CS_DieReturn(char chReliveType)
 {
 	auto pk = net::msg::serialize(net::msg::CmDieReturnMessage{chReliveType});
@@ -254,7 +254,7 @@ void CS_DieReturn(char chReliveType)
 }
 
 //----------------------------
-//Э��C->S	: Ping��Ϸ������
+//C->S	: Ping
 //----------------------------
 void CS_SendPing()
 {
@@ -304,21 +304,21 @@ void CS_Buy(  DWORD dwNpcID, BYTE byItemType, BYTE byIndex1, BYTE byIndex2, BYTE
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Выбор торгового корабля
+//   
 void CS_SelectTradeBoat( DWORD dwNpcID, BYTE byIndex )
 {
 	auto packet = net::msg::serialize(net::msg::CmSelectTradeBoatMessage{(int64_t)dwNpcID, (int64_t)byIndex});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Продажа товаров NPC (торговый корабль)
+//   NPC ( )
 void CS_SaleGoods( DWORD dwNpcID, DWORD dwBoatID, BYTE byIndex, BYTE byCount )
 {
 	auto packet = net::msg::serialize(net::msg::CmSaleGoodsMessage{(int64_t)dwNpcID, (int64_t)dwBoatID, (int64_t)byIndex, (int64_t)byCount});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Покупка товаров NPC (торговый корабль)
+//   NPC ( )
 void CS_BuyGoods( DWORD dwNpcID, DWORD dwBoatID, BYTE byItemType, BYTE byIndex1, BYTE byIndex2, BYTE byCount )
 {
 	auto packet = net::msg::serialize(net::msg::CmBuyGoodsMessage{(int64_t)dwNpcID, (int64_t)dwBoatID, (int64_t)byItemType, (int64_t)byIndex1, (int64_t)byIndex2, (int64_t)byCount});
@@ -391,14 +391,14 @@ void CS_SelMission( DWORD dwNpcID, BYTE byIndex )
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Диалог миссии с NPC
+//    NPC
 void CS_MissionTalk( DWORD dwNpcID, BYTE byCmd )
 {
 	auto packet = net::msg::serialize(net::msg::CmMissionTalkMessage{(int64_t)dwNpcID, (int64_t)byCmd});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Выбор функции миссии у NPC
+//     NPC
 void CS_SelMissionFunc( DWORD dwNpcID, BYTE byPageID, BYTE byIndex )
 {
 	auto packet = net::msg::serialize(net::msg::CmSelMissionFuncMessage{(int64_t)dwNpcID, (int64_t)byPageID, (int64_t)byIndex});
@@ -493,7 +493,7 @@ void CS_EntityEvent( DWORD dwEntityID )
 
 }
 
-// Отправка данных лотка (все товары)
+//    ( )
 void CS_StallInfo( const char szName[], mission::NET_STALL_ALLDATA& Data )
 {
 	net::msg::CmStallInfoMessage msg;
@@ -557,9 +557,9 @@ void CS_TeamFightAnswer(bool bAccess)
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// lRepairmanID,lRepairmanHandle ����Ա
-// chPosType��1��װ������2��������
-// chPosID����Ӧλ�õı��
+// lRepairmanID,lRepairmanHandle 
+// chPosType12
+// chPosID
 void CS_ItemRepairAsk(long lRepairmanID, long lRepairmanHandle, char chPosType, char chPosID)
 {
 	auto packet = net::msg::serialize(net::msg::CmItemRepairAskMessage{lRepairmanID, lRepairmanHandle, chPosType, chPosID});
@@ -572,7 +572,7 @@ void CS_ItemRepairAnswer(bool bAccess)
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Типизированная сериализация: запрос ковки (с группами)
+//  :   ( )
 void CS_ItemForgeAsk(bool bSure, stNetItemForgeAsk *pSForge)
 {
 	net::msg::CmItemForgeGroupAskMessage msg;
@@ -603,7 +603,7 @@ void CS_ItemLotteryAnswer(bool bAccess)
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Типизированная сериализация: запрос лотереи (с группами)
+//  :   ( )
 void CS_ItemLotteryAsk(bool bSure, stNetItemLotteryAsk *pSLottery)
 {
 	net::msg::CmItemLotteryGroupAskMessage msg;
@@ -620,14 +620,14 @@ void CS_ItemLotteryAsk(bool bSure, stNetItemLotteryAsk *pSLottery)
 	g_NetIF->SendPacketMessage( packet );
 }
 // End
-// Запрос арены (амфитеатра)
+//   ()
 void CS_ItemAmphitheaterAsk(bool bSure,int ReID)
 {
 	auto packet = net::msg::serialize(net::msg::CmItemAmphitheaterAskMessage{bSure ? 1 : 0, (int64_t)ReID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Типизированная сериализация: запрос ковки (с массивом позиций)
+//  :   (  )
 void CS_ItemForgeAsk(bool bSure, int nType, int arPacketPos[], int nPosCount)
 {
 	net::msg::CmItemForgePosAskMessage msg;
@@ -643,7 +643,7 @@ void CS_ItemForgeAsk(bool bSure, int nType, int arPacketPos[], int nPosCount)
 }
 
 
-// ���̳�
+// 
 void CS_StoreOpenAsk(const char szPassword[])
 {
 	auto packet = net::msg::serialize(net::msg::CmStoreOpenAskMessage{szPassword});
@@ -766,77 +766,77 @@ void CS_CaptainConfirmAsr(short sRet, DWORD dwTeamID)
 }
 // End
 
-// Приглашение мастера
+//  
 void CS_MasterInvite(const char *szName, DWORD dwCharID)
 {
 	auto packet = net::msg::serialize(net::msg::CmMasterInviteMessage{szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Ответ на приглашение мастера
+//    
 void CS_MasterAsr(short sRet, const char *szName, DWORD dwCharID)
 {
 	auto packet = net::msg::serialize(net::msg::CmMasterAsrMessage{(int64_t)sRet, szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Приглашение ученика
+//  
 void CS_PrenticeInvite(const char *szName, DWORD dwCharID)
 {
 	auto packet = net::msg::serialize(net::msg::CmPrenticeInviteMessage{szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Ответ на приглашение ученика
+//    
 void CS_PrenticeAsr(short sRet, const char *szName, DWORD dwCharID)
 {
 	auto packet = net::msg::serialize(net::msg::CmPrenticeAsrMessage{(int64_t)sRet, szName, (int64_t)dwCharID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Удаление мастера
+//  
 void CS_MasterDel(const char *szName, uLong ulChaID)
 {
 	auto packet = net::msg::serialize(net::msg::CmMasterDelMessage{szName, (int64_t)ulChaID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Удаление ученика
+//  
 void CS_PrenticeDel(const char *szName, uLong ulChaID)
 {
 	auto packet = net::msg::serialize(net::msg::CmPrenticeDelMessage{szName, (int64_t)ulChaID});
 	g_NetIF->SendPacketMessage( packet );
 }
 
-// Запрос обновления информации о мастере
+//     
 void CP_Master_Refresh_Info(unsigned long chaid)
 {
 	auto pk = net::msg::serialize(net::msg::CmCpMasterRefreshInfoMessage{(int64_t)chaid});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Запрос обновления информации об ученике
+//     
 void CP_Prentice_Refresh_Info(unsigned long chaid)
 {
 	auto pk = net::msg::serialize(net::msg::CmCpPrenticeRefreshInfoMessage{(int64_t)chaid});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Сообщение в чат лагеря
+//    
 void CS_Say2Camp(const char *szContent)
 {
 	auto pk = net::msg::serialize(net::msg::CmSay2CampMessage{szContent});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Отправка GM-почты
+//  GM-
 void CS_GMSend(DWORD dwNPCID, const char *szTitle, const char *szContent)
 {
 	auto pk = net::msg::serialize(net::msg::CmGmSendMessage{(int64_t)dwNPCID, szTitle, szContent});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Получение GM-почты
+//  GM-
 void CS_GMRecv(DWORD dwNPCID)
 {
 	auto pk = net::msg::serialize(net::msg::CmGmRecvMessage{(int64_t)dwNPCID});
@@ -851,14 +851,14 @@ void CS_GMRecv(DWORD dwNPCID)
 //	g_NetIF->SendPacketMessage(l_wpk);
 //}
 
-// Ответ на проверку читов
+//    
 void CS_CheatCheck(cChar *answer)
 {
 	auto pk = net::msg::serialize(net::msg::CmCheatCheckMessage{answer});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-//  ���������ǣ�ˢ������
+//  
 //void CS_PKSilverSort(DWORD dwNPCID, short sItemPos)
 //{
 //    WPacket packet = g_NetIF->GetWPacket();
@@ -869,7 +869,7 @@ void CS_CheatCheck(cChar *answer)
 //}
 
 
-// Запрос жизненного навыка
+//   
 void CS_LifeSkill(long type, DWORD dwNPCID)
 {
     auto packet = net::msg::serialize(net::msg::CmLifeSkillMessage{(int64_t)type, (int64_t)dwNPCID});
@@ -877,7 +877,7 @@ void CS_LifeSkill(long type, DWORD dwNPCID)
 }
 
 
-// Типизированная сериализация: синтез (Compose)
+//  :  (Compose)
 void CS_Compose(DWORD dwNPCID, int* iPos, int iCount, bool asr /* = false */)
 {
     net::msg::CmLifeSkillCraftMessage msg;
@@ -892,7 +892,7 @@ void CS_Compose(DWORD dwNPCID, int* iPos, int iCount, bool asr /* = false */)
     g_NetIF->SendPacketMessage(packet);
 }
 
-// Типизированная сериализация: разборка (Break)
+//  :  (Break)
 void CS_Break(DWORD dwNPCID, int* iPos, int iCount, bool asr /* = false */)
 {
     net::msg::CmLifeSkillCraftMessage msg;
@@ -907,7 +907,7 @@ void CS_Break(DWORD dwNPCID, int* iPos, int iCount, bool asr /* = false */)
     g_NetIF->SendPacketMessage(packet);
 }
 
-// Типизированная сериализация: плавка (Found)
+//  :  (Found)
 void CS_Found(DWORD dwNPCID, int* iPos, int iCount, short big, bool asr /* = false */)
 {
     net::msg::CmLifeSkillCraftMessage msg;
@@ -923,7 +923,7 @@ void CS_Found(DWORD dwNPCID, int* iPos, int iCount, short big, bool asr /* = fal
     g_NetIF->SendPacketMessage(packet);
 }
 
-// Типизированная сериализация: кулинария (Cooking)
+//  :  (Cooking)
 void CS_Cooking(DWORD dwNPCID, int* iPos, int iCount, short percent, bool asr /* = false */)
 {
     net::msg::CmLifeSkillCraftMessage msg;
@@ -939,58 +939,58 @@ void CS_Cooking(DWORD dwNPCID, int* iPos, int iCount, short percent, bool asr /*
     g_NetIF->SendPacketMessage(packet);
 }
 
-// Разблокировка персонажа после крафта
+//    
 void CS_UnlockCharacter()
 {
     auto packet = net::msg::serialize(net::msg::CmUnlockCharacterMessage{0});
     g_NetIF->SendPacketMessage(packet);
 }
-// Ставка на аукционе
+//   
 void CS_AutionBidup(DWORD dwNPCID, short sItemID, uLong price)
 {
 	auto packet = net::msg::serialize(net::msg::CmBidUpMessage{(int64_t)dwNPCID, (int64_t)sItemID, (int64_t)price});
 	g_NetIF->SendPacketMessage(packet);
 }
 
-// Закрытие окна антизависимости
+//   
 void CS_AntiIndulgence_Close()
 {
 	auto packet = net::msg::serializeCmAntiIndulgenceCmd();
     g_NetIF->SendPacketMessage(packet);
 }
 
-// Блокировка предмета от выбрасывания
+//    
 void	CS_DropLock(int slot){
 	auto pk = net::msg::serialize(net::msg::CmItemLockAskMessage{(int64_t)slot});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Разблокировка предмета по паролю
+//    
 void CS_UnlockItem( const char szPassword[], int slot)	{
 	auto pk = net::msg::serialize(net::msg::CmItemUnlockAskMessage{szPassword, (int64_t)slot});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Запрос PIN-кода
+//  PIN-
 void CS_SendGameRequest( const char szPassword[])	{
 	auto pk = net::msg::serialize(net::msg::CmGameRequestPinMessage{szPassword});
 	g_NetIF->SendPacketMessage(pk);
 }
 
 
-// Установка прав в гильдии
+//    
 void CS_SetGuildPerms( DWORD ID, uLong Perms ){
 	auto pk = net::msg::serialize(net::msg::CmGuildPermMessage{(int64_t)ID, (int64_t)Perms});
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Запрос текущего множителя дропа
+//    
 void CS_RequestDropRate() {
 	auto pk = net::msg::serializeCmRequestDropRateCmd();
 	g_NetIF->SendPacketMessage(pk);
 }
 
-// Запрос текущего множителя опыта
+//    
 void CS_RequestExpRate() {
 	auto pk = net::msg::serializeCmRequestExpRateCmd();
 	g_NetIF->SendPacketMessage(pk);

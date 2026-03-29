@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 #include "lwPathInfo.h"
 #include "lwStdInc.h"

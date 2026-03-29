@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uibourseform.h"
 #include "uiform.h"
 #include "uiedit.h"
@@ -38,7 +38,7 @@ using namespace GUI;
 //////////////////////////////////////////////////////////////////////////
 const BYTE CBourseMgr::ITEM_TYPE = 0;
 
-const float CBourseMgr::SALE_RATE = 0.5;	//��Ʒ�������ۼ���ĿǰԼ��Ϊ50%
+const float CBourseMgr::SALE_RATE = 0.5;	//50%
 
 const int CBourseMgr::BUY_PAGE_INDEX = 0;		
 
@@ -50,7 +50,7 @@ const BYTE ERR_TRADE_LEVEL = 100;
 
 
 //////////////////////////////////////////////////////////////////////////
-// CBourseMgr��Ա����
+// CBourseMgr
 //////////////////////////////////////////////////////////////////////////
 CBourseMgr::CBourseMgr()
 : m_iItemSelIndex(-1), grdShipRoom(NULL), frmBoatRoom(NULL)
@@ -62,7 +62,7 @@ bool CBourseMgr::Init()
 {
 	CFormMgr &mgr = CFormMgr::s_Mgr;
 
-	/*���ս���������Ϳؼ�*/
+	/**/
 	{	
 		frmSeaTrade = mgr.Find("frmSeaTrade", enumMainForm);
 		if ( !frmSeaTrade)
@@ -72,7 +72,7 @@ bool CBourseMgr::Init()
 		}
 		frmSeaTrade->evtEntrustMouseEvent = _MainMouseSeaTradeEvent ;
 
-		//������������ı���
+		//
 		grdItemBuy = 
 			dynamic_cast<CGoodsGrid*>(frmSeaTrade->Find("grdItemSale"));
 		if (!grdItemBuy) 
@@ -122,20 +122,20 @@ void CBourseMgr::ShowBourse(const NET_TRADEINFO& TradeInfo, BYTE byCmd,
 	m_dwNpcID = dwNpcID;
 	m_dwBoatID = dwBoatID;
 
-	if ( frmSeaTrade )   //�򿪽���ǰ��ɾ�����еĵ��ߣ����ߺ�����
+	if ( frmSeaTrade )   //
 	{
 		ClearItemList(m_BuyList);
 		ClearItemList(m_SaleList);
 		frmSeaTrade->ClearChild();
 	}
 
-	// ���Ҵ��Ļ���
+	// 
 	CBoat* pBoat = g_stUIBoat.FindBoat( dwBoatID );
 	if (!pBoat) return; 
 	CForm* pBoatRoom = pBoat->GetForm();
 	if (!pBoatRoom) return;
 
-	//��������Դ�,�ر�
+	//,
 	CForm* pForm = dynamic_cast<CForm*>(pBoatRoom->GetParent());
 	xShipFactory* pkShip = ((CWorldScene*)g_pGameApp->GetCurScene())->GetShipMgr()->_factory;
 	if (pkShip && pkShip->sbf.wnd->GetIsShow() && pForm == pkShip->sbf.wnd)
@@ -151,7 +151,7 @@ void CBourseMgr::ShowBourse(const NET_TRADEINFO& TradeInfo, BYTE byCmd,
 	grdShipRoom = pBoat->GetGoodsGrid();
 	if (!grdShipRoom) return;
 
-	// �����ڱ������������򵽵���Ʒ
+	// 
 	int i(0);
 	ItemInfo_T* pkItemInfo(NULL);
 	for (; i<TradeInfo.TradePage[BUY_PAGE_INDEX].byCount; i++ )
@@ -173,7 +173,7 @@ void CBourseMgr::ShowBourse(const NET_TRADEINFO& TradeInfo, BYTE byCmd,
 		m_iItemSelIndex = 0;
 	}//end of if 
 
-	//���汾���������Ը߼������Ʒ
+	//
 	for (i=0; i<TradeInfo.TradePage[SALE_PAGE_INDEX].byCount; i++)
 	{
 		pkItemInfo = new ItemInfo_T();
@@ -217,7 +217,7 @@ void CBourseMgr::ClearItemList(ItemList& itemList)
 	for (; iter != end; ++iter)
 	{
 		//delete *iter;
-		SAFE_DELETE(*iter); // UI��������
+		SAFE_DELETE(*iter); // UI
 	} //end of for 
 
 	itemList.clear();
@@ -242,10 +242,10 @@ void CBourseMgr::ChangeItem(eDirectType enumDirect/*= LEFT*/)
 	if (m_iItemSelIndex < 0 || m_iItemSelIndex > (int)m_BuyList.size() - 1)
 		return;
 
-	//�ж�Ŀǰ�����
+	//
 	m_iItemSelIndex += ((int)(enumDirect));
 
-	// ѭ���ƶ�
+	// 
 	m_iItemSelIndex = (int)
 		((m_iItemSelIndex + m_BuyList.size()) % m_BuyList.size());
 
@@ -270,7 +270,7 @@ bool CBourseMgr::ShowBoat(unsigned int iBoatIndex /*= 0*/)
 		return false;
 	}
 
-	m_dwBoatID = pkBoat->GetCha()->getAttachID();		//����ID
+	m_dwBoatID = pkBoat->GetCha()->getAttachID();		//ID
 	
 
 	CGoodsGrid* pkGoodGrid = pkBoat->GetGoodsGrid();
@@ -333,7 +333,7 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 	//int iPrice = pkBuy->GetData()
 
 	if( rkBuy.GetPrice()>0 && CGameScene::GetMainCha() )
-	{	/* Ǯ���� */
+	{	/*  */
 		nMax = CGameScene::GetMainCha()->getGameAttr()->get(ATTR_GD) /  rkBuy.GetPrice();
 
 		if( nMax==0 )
@@ -349,12 +349,12 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 
 #if (GOOD_DISTINGUISH_PILE == 1)
 	if( rkBuy.GetIsPile() )
-	{	// ������Ʒ
+	{	// 
 		m_pkTradeBox = g_stUIBox.ShowTradeBox(
 			_BuyGoodsEvent, (float)rkBuy.GetPrice(), nMax, rkBuy.GetItemInfo()->szName );
 	}
 	else
-	{	// �򵥸���Ʒ
+	{	// 
 		char buf[256] = { 0 };
 		sprintf(buf, g_oLangRec.GetString(460), rkBuy.GetName());
 		g_stUIBox.ShowSelectBox(_BuyAGoodEvent, buf, true);
@@ -383,7 +383,7 @@ bool CBourseMgr::SaleGoods(CItemCommand& rkSaleCmd, int iGridIndex)
 		iSalePrice = int(dwPrice);
 
 	if( rkSaleCmd.GetIsPile() )
-	{	/* �������Ʒ */
+	{	/*  */
 		m_pkTradeBox = 
 			g_stUIBox.ShowTradeBox( _SaleGoodsEvent, 
 									(float)iSalePrice, 
@@ -394,7 +394,7 @@ bool CBourseMgr::SaleGoods(CItemCommand& rkSaleCmd, int iGridIndex)
 		else
 			return true;
 	}
-	else/* ��������Ʒ */
+	else/*  */
 	{
 		char buf[256] = { 0 };
 		sprintf(buf, g_oLangRec.GetString(461), 
@@ -467,7 +467,7 @@ void CBourseMgr::SetItems()
 		ToLogService("common", "No GoodGrid.");
 	}
 
-	//������Ļ���
+	//
 	int iIndex(0);
 	for (; iIndex < (int)(m_BuyList.size()); ++iIndex)
 	{
@@ -487,7 +487,7 @@ void CBourseMgr::SetItems()
 		}
 	} //end of for 
 
-	//�������Ļ���
+	//
 	iIndex = 0;
 	for (iIndex=0; iIndex<(int)(m_SaleList.size()); ++iIndex)
 	{
@@ -526,19 +526,19 @@ BYTE CBourseMgr::GetTradeLevel()
 }
 
 
-//~ �ص����� =================================================================
+//~  =================================================================
 void CBourseMgr::_MainMouseSeaTradeEvent(CCompent *pSender, int nMsgType, 
 										 int x, int y, DWORD dwKey)
 {
 	string name = pSender->GetName();
 	if( name=="btnNo"  || name == "btnClose" )  
 	{	
-		//�رձ���,ȡ������
+		//,
 		return;
 	}
 	else if ( name == "btnYes")
 	{
-		//ȷ������
+		//
 		return ;			
 	}
 }
@@ -611,7 +611,7 @@ void CBourseMgr::__gui_event_drag_before(CGuiData *pSender, CCommandObj* pItem,
 	//int nBuyGrid = nGridID;
 	//int nBuyCount = 1;
 	//if ( pkBuyCmd && pkBuyCmd->GetItemInfo()->GetIsPile() )
-	//{	/*�����Ƿ�����ͬ�Ŀ��ص�����Ʒ*/
+	//{	/**/
 	//	CItemRecord* pRecord = pkBuyCmd->GetItemInfo();
 	//	CItemCommand* pInfo = 0;
 	//	int count = pSelf->GetMaxNum();
@@ -659,7 +659,7 @@ void CBourseMgr::BuyItem(CGoodsGrid& rkToGoodsGrid, CCommandObj& rkItem,
 	int nBuyCount = 1;
 
 	if ( pkBuyCmd && pkBuyCmd->GetItemInfo()->GetIsPile() )
-	{	/*�����Ƿ�����ͬ�Ŀ��ص�����Ʒ*/
+	{	/**/
 		CItemRecord* pRecord = pkBuyCmd->GetItemInfo();
 		CItemCommand* pInfo = 0;
 		int count = rkToGoodsGrid.GetMaxNum();
@@ -770,7 +770,7 @@ void CBourseMgr::_SaleAGoodEvent(CCompent *pSender, int nMsgType,
 
 ////////////////////////////////////////////////////////////////////////////////
 //
-//  ��������
+//  
 //
 
 bool CBlackTradeMgr::Init()
@@ -840,15 +840,15 @@ bool CBlackTradeMgr::SailToBuy(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGrid
 	if(! pItem)
 		return false;
 
-	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, g_oLangRec.GetString(832), true ); // ȷ���Ƿ�һ�
+	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, g_oLangRec.GetString(832), true ); // 
 
 	//if(! pItem->GetIsValid())
 	//{
-	//	g_pGameApp->MsgBox(g_oLangRec.GetString(834)); // �һ�ʧ��
+	//	g_pGameApp->MsgBox(g_oLangRec.GetString(834)); // 
 	//}
 	//else
 	//{
-	//	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, g_oLangRec.GetString(832)); // ȷ���Ƿ�һ�
+	//	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, g_oLangRec.GetString(832)); // 
 	//}
 
 	return true;
@@ -877,7 +877,7 @@ void CBlackTradeMgr::RefreshSaleGrid()
 		{
 			if(m_vecBlackTrade[i].sSrcNum > g_stUIEquip.GetItemCount(m_vecBlackTrade[i].sSrcID))
 			{
-				// �ɿ����������㣬����Ϊ������
+				// 
 				pItem->SetIsValid(false);
 			}
 			else
@@ -896,7 +896,7 @@ void CBlackTradeMgr::SetItem(stBlackTrade* pBlackTrade)
 	pInfo = GetItemRecordInfo(pBlackTrade->sTarID);
 	if (!pInfo) return;
 	pItem = new CItemCommand(pInfo);
-	pItem->GetData().sNum = pBlackTrade->sTarNum;		 // ������
+	pItem->GetData().sNum = pBlackTrade->sTarNum;		 // 
 
 	pInfo = GetItemRecordInfo(pBlackTrade->sSrcID);
 	if(pInfo)
@@ -915,7 +915,7 @@ void CBlackTradeMgr::ExchangeAnswerProc(bool bSuccess, stBlackTrade* pBlackTrade
 {
 	if(bSuccess)
 	{
-		// ���һ��ɹ��ĵ��߷�������� grid ��
+		//  grid 
 		int nCurNum = g_stUIBlackTrade.grdItemBuy->GetCurNum();
 		if( nCurNum < g_stUIBlackTrade.grdItemBuy->GetMaxNum())
 		{
@@ -925,31 +925,31 @@ void CBlackTradeMgr::ExchangeAnswerProc(bool bSuccess, stBlackTrade* pBlackTrade
 			pInfo = GetItemRecordInfo(pBlackTrade->sTarID);
 			if (!pInfo) return;
 			pItem = new CItemCommand(pInfo);
-			pItem->GetData().sNum = pBlackTrade->sTarNum;		 // ������
+			pItem->GetData().sNum = pBlackTrade->sTarNum;		 // 
 			pInfo = GetItemRecordInfo(pBlackTrade->sSrcID);
 			if(pInfo)
 			{
 				char szBuffer[128] = {0};
-				sprintf(szBuffer, g_oLangRec.GetString(843), pBlackTrade->sSrcNum, pInfo->szName);	// x���ɿ�
+				sprintf(szBuffer, g_oLangRec.GetString(843), pBlackTrade->sSrcNum, pInfo->szName);	// x
 				pItem->SetOwnDefText(szBuffer);
 			}
 			grdItemBuy->SetItem(nCurNum, pItem);
 		}
 
 		//
-		// ˢ�¹������
+		// 
 		//
 		RefreshSaleGrid();
-		CCozeForm::GetInstance()->OnSystemMsg(g_oLangRec.GetString(833)); // �һ��ɹ�
+		CCozeForm::GetInstance()->OnSystemMsg(g_oLangRec.GetString(833)); // 
 	}
 	else
 	{
-		CCozeForm::GetInstance()->OnSystemMsg(g_oLangRec.GetString(834)); // �һ�ʧ��
+		CCozeForm::GetInstance()->OnSystemMsg(g_oLangRec.GetString(834)); // 
 	}
 }
 
 
-// �һ�ȷ��
+// 
 void CBlackTradeMgr::_TradeExchangeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	if(nMsgType != CForm::mrYes)
@@ -962,7 +962,7 @@ void CBlackTradeMgr::_TradeExchangeEvent(CCompent *pSender, int nMsgType, int x,
 	{
 		if(g_stUIBlackTrade.m_vecBlackTrade[i].sIndex == g_stUIBlackTrade.m_nDragIndex)
 		{
-			// ֪ͨ������
+			// 
 			CS_BlackMarketExchangeReq(  g_stUIBlackTrade.GetNpcID(), 
 										g_stUIBlackTrade.m_vecBlackTrade[i].sSrcID, 
 										g_stUIBlackTrade.m_vecBlackTrade[i].sSrcNum, 
@@ -977,7 +977,7 @@ void CBlackTradeMgr::_TradeExchangeEvent(CCompent *pSender, int nMsgType, int x,
 }
 
 
-// �رմ����¼�
+// 
 void CBlackTradeMgr::_evtCloseForm(CForm* pForm, bool& IsClose)
 {
 	for(int i = 0; i < g_stUIBlackTrade.grdItemSale->GetMaxNum(); ++i)

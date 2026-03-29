@@ -1,4 +1,4 @@
-/* WINSOCK.H--definitions to be used with the WINSOCK.DLL
+﻿/* WINSOCK.H--definitions to be used with the WINSOCK.DLL
  * Copyright (c) Microsoft Corporation. All rights reserved.
  *
  * This header file corresponds to version 1.1 of the Windows Sockets specification.

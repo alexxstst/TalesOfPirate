@@ -1,1 +1,1 @@
-print("-- [Loading] NPC Script [06]")
+﻿print("-- [Loading] NPC Script [06]")

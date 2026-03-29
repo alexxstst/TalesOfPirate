@@ -1,4 +1,4 @@
-// tweetnacl.cpp - modified tweetnacl.c placed in public domain by Jeffrey Walton.
+﻿// tweetnacl.cpp - modified tweetnacl.c placed in public domain by Jeffrey Walton.
 //                 The NaCl library and tweetnacl.c is public domain source code
 //                 written by Daniel J. Bernstein, Bernard van Gastel, Wesley
 //                 Janssen, Tanja Lange, Peter Schwabe and Sjaak Smetsers.

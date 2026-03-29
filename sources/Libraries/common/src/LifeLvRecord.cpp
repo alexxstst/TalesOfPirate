@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: LifeLvRecord.cpp
 // Creater: ZhangXuedong
 // Date: 2005.05.28
@@ -20,11 +20,11 @@ BOOL CLifeLvRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<strin
     string strList[80];
 	string strLine;
 
-	// ±àºÅ
+	// 
 	pInfo->lID = pInfo->nID;
-	// µÈ¼¶
+	// 
 	pInfo->sLevel = Str2Int(pInfo->szDataName);
-	// ¾­ÑéÖµ
+	// 
 	pInfo->ulExp = Str2Int(ParamList[m++]);
 
 	return TRUE;

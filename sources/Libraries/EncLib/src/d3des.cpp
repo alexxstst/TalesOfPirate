@@ -1,4 +1,4 @@
-/* D3DES (V5.09) -
+﻿/* D3DES (V5.09) -
  *
  * A portable, public domain, version of the Data Encryption Standard.
  *

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "smallmap.h"
 #include "EffectObj.h"
 #include "SceneObj.h"
@@ -502,37 +502,37 @@ void	CSMallMap2D::InitScene()
 	}
 #else
 	if(FAILED(D3DXCreateTextureFromFileEx(m_pDev,
-		"texture\\minimap\\mapmask.bmp", //�ļ���
+		"texture\\minimap\\mapmask.bmp", //
 		0, 
 		0, 
-		1, //��Ҫ���ټ�mipmap��������Ϊ1
-		0, //����������;
-		D3DFMT_UNKNOWN, //�Զ�����ļ���ʽ
-		D3DPOOL_MANAGED, //��DXGraphics����
-		D3DX_FILTER_TRIANGLE|D3DX_FILTER_MIRROR, //�������˷���
-		D3DX_FILTER_NONE, //mipmap�������˷���
-		0xff000000, //͸��ɫ��ɫ
-		NULL, //������ͼ���ʽ�洢�ںα�����
-		NULL, //�����ĵ�ɫ��洢�ںα�����
-		&_pTexMask)))//Ҫ����������
+		1, //mipmap1
+		0, //
+		D3DFMT_UNKNOWN, //
+		D3DPOOL_MANAGED, //DXGraphics
+		D3DX_FILTER_TRIANGLE|D3DX_FILTER_MIRROR, //
+		D3DX_FILTER_NONE, //mipmap
+		0xff000000, //
+		NULL, //
+		NULL, //
+		&_pTexMask)))//
 	{
 		ToLogService("errors", LogLevel::Error, "msgtexture\\minimap\\mapmask.bmp");
 	}
 
 	if(FAILED(D3DXCreateTextureFromFileEx(m_pDev,
-		"texture\\minimap\\mapsea.bmp", //�ļ���
+		"texture\\minimap\\mapsea.bmp", //
 		0, 
 		0, 
-		1, //��Ҫ���ټ�mipmap��������Ϊ1
-		0, //����������;
-		D3DFMT_UNKNOWN, //�Զ�����ļ���ʽ
-		D3DPOOL_MANAGED, //��DXGraphics����
-		D3DX_FILTER_TRIANGLE|D3DX_FILTER_MIRROR, //�������˷���
-		D3DX_FILTER_NONE, //mipmap�������˷���
-		0xff000000, //͸��ɫ��ɫ
-		NULL, //������ͼ���ʽ�洢�ںα�����
-		NULL, //�����ĵ�ɫ��洢�ںα�����
-		&_pTexDefault)))//Ҫ����������
+		1, //mipmap1
+		0, //
+		D3DFMT_UNKNOWN, //
+		D3DPOOL_MANAGED, //DXGraphics
+		D3DX_FILTER_TRIANGLE|D3DX_FILTER_MIRROR, //
+		D3DX_FILTER_NONE, //mipmap
+		0xff000000, //
+		NULL, //
+		NULL, //
+		&_pTexDefault)))//
 	{
 		ToLogService("errors", LogLevel::Error, "msgtexture\\minimap\\mapsea.bmp");
 	}
@@ -560,8 +560,8 @@ void	CSMallMap2D::RenderScene()
 
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
-	//��ֹ�ӷ�߽���˸
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
+	//
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
@@ -656,19 +656,19 @@ void	CSMallMap2D::RenderScene()
 						filename, 0, D3DFMT_A4R4G4B4);
 #else
 					D3DXCreateTextureFromFileEx(m_pDev,
-						filename, //�ļ���
+						filename, //
 						0, 
 						0, 
-						1, //��Ҫ���ټ�mipmap��������Ϊ1
-						0, //����������;
-						D3DFMT_UNKNOWN, //�Զ�����ļ���ʽ
-						D3DPOOL_MANAGED, //��DXGraphics����
-						D3DX_FILTER_LINEAR, //�������˷��� TRIANGLE|D3DX_FILTER_DITHER
-						D3DX_FILTER_NONE, //mipmap�������˷���
-						0x00000000, //͸��ɫ��ɫ
-						NULL, //������ͼ���ʽ�洢�ںα�����
-						NULL, //�����ĵ�ɫ��洢�ںα�����
-						&_pTex[n][m].pTex);//Ҫ����������
+						1, //mipmap1
+						0, //
+						D3DFMT_UNKNOWN, //
+						D3DPOOL_MANAGED, //DXGraphics
+						D3DX_FILTER_LINEAR, // TRIANGLE|D3DX_FILTER_DITHER
+						D3DX_FILTER_NONE, //mipmap
+						0x00000000, //
+						NULL, //
+						NULL, //
+						&_pTex[n][m].pTex);//
 #endif
 					if(_pTex[n][m].pTex)
 					{
@@ -958,7 +958,7 @@ void	CSMallMap2D::RenderMask()
 
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -1293,7 +1293,7 @@ void	CAniWnd::RenderScene()
 	g_Render.SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG2);
@@ -1332,7 +1332,7 @@ void	CAniWnd::RenderMask()
 
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
 	g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
@@ -1799,7 +1799,7 @@ void	CBigMap::Render()
 	g_Render.SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
 	g_Render.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff );
 
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	g_Render.SetSamplerState( 0, D3DSAMP_ADDRESSU , D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState( 0, D3DSAMP_ADDRESSV , D3DTADDRESS_CLAMP);
@@ -1885,7 +1885,7 @@ void	Ctemp::Render()
 	g_Render.SetSamplerState( 0, D3DSAMP_MINFILTER, D3DTEXF_POINT );
 	g_Render.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff );
 
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	g_Render.SetSamplerState( 0, D3DSAMP_ADDRESSU , D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState( 0, D3DSAMP_ADDRESSV , D3DTADDRESS_CLAMP);
@@ -2008,8 +2008,8 @@ void	CMinimap::RenderScene()
 
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
-	//��ֹ�ӷ�߽���˸
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
+	//
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
@@ -2389,7 +2389,7 @@ void	CMinimap::RenderMask()
 
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
@@ -2877,8 +2877,8 @@ void	CLargerMap::RenderScene()
 
 	g_Render.SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
 	g_Render.SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // ������Ⱦ
-	//��ֹ�ӷ�߽���˸
+	g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
+	//
 	g_Render.SetSamplerState(0,D3DSAMP_ADDRESSU, D3DTADDRESS_CLAMP);
 	g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_CLAMP);
 
@@ -2988,7 +2988,7 @@ void	CLargerMap::RenderScene()
 		_rcWnd.left + 61,_rcWnd.top + 31,0xff808000,0xffffff00);
 
 		static char psz[128] = { 0 };
-		// Modify by sunny.sun 20080904 ����Ҫ��ȥ��̽����
+		// Modify by sunny.sun 20080904 
 		//mothannakh fix compass in minimap
 		sprintf(psz, g_oLangRec.GetString(394), _nCenterX / 100, _nCenterY / 100, fInf);
 		pfont->DrawTextShadow(psz, _rcWnd.left + 350, _rcWnd.top + 30, _rcWnd.left + 351, _rcWnd.top + 31, 0xff808000, 0xffffff00);

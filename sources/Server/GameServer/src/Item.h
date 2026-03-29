@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: Item.h
 // Creater: ZhangXuedong
 // Date: 2004.09.21
@@ -14,10 +14,10 @@
 
 #define defITEM_ON_TICK		3 * 60 * 1000
 
-enum EItemProtType // µÀ¾ß±£»¤ÀàÐÍ
+enum EItemProtType // 
 {
-	enumITEM_PROT_OWN,	// ×Ô¼ºÍâµÄÆäËûÈË
-	enumITEM_PROT_TEAM,	// ¶ÓÎéÍâµÄÆäËûÈË
+	enumITEM_PROT_OWN,	// 
+	enumITEM_PROT_TEAM,	// 
 };
 
 class CItem : public Entity
@@ -54,12 +54,12 @@ private:
 	dbc::Char	m_chSpawType;
 	dbc::Long	m_lFromEntityID;
 	dbc::uLong	m_ulStartTick;
-	dbc::uLong	m_ulOnTick;		// Îª0£¬ÔòÓÀ²»Ïú»Ù
+	dbc::uLong	m_ulOnTick;		// 0
 
-	dbc::Char	m_chProtType;	// ±£»¤ÀàÐÍ
-	dbc::uLong	m_ulProtOnTick;	// ±£»¤Ê±¼ä£¬0ÔòÓÀ¾Ã±£»¤
-	dbc::uLong	m_ulProtID;		// µÀ¾ß±£»¤µÄ½ÇÉ«ID
-	dbc::uLong	m_ulProtHandle;	// µÀ¾ß±£»¤µÄ½ÇÉ«Handle
+	dbc::Char	m_chProtType;	// 
+	dbc::uLong	m_ulProtOnTick;	// 0
+	dbc::uLong	m_ulProtID;		// ID
+	dbc::uLong	m_ulProtHandle;	// Handle
 
 	virtual void OnBeginSeen(CCharacter *pCCha);
 	virtual void OnEndSeen(CCharacter *pCCha);

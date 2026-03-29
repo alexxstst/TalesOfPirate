@@ -1,4 +1,4 @@
-// keccakc.cpp - Keccak core functions shared between SHA3 and Keccak.
+﻿// keccakc.cpp - Keccak core functions shared between SHA3 and Keccak.
 //               written and placed in the public domain by JW.
 
 /*

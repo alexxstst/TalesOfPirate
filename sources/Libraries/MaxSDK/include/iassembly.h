@@ -1,4 +1,4 @@
-	 /**********************************************************************
+ï»¿	 /**********************************************************************
  
 	FILE: IAssembly.h
 
@@ -20,7 +20,7 @@
 // This type is not being used currently 
 typedef int AssemblyCode;
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // class IAssembly
 //
 // This interface allows for setting and retrieving assembly membership
@@ -108,7 +108,7 @@ class IAssembly : public FPMixinInterface
 inline IAssembly* GetAssemblyInterface(BaseInterface* baseIfc)	
 { DbgAssert( baseIfc != NULL); return static_cast<IAssembly*>(baseIfc->GetInterface(ASSEMBLY_INTERFACE)); }
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // class IAssembly2
 //
 // This new version of the assembly interface extends IAssembly

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameConfig.h"
 #include "GameApp.h"
 
@@ -9,12 +9,12 @@ CGameConfig g_Config;
 
 CGameConfig::CGameConfig()
 {
-	g_bBinaryTable	= TRUE;// �˱��������˱���ʹ���Ƿ������
+	g_bBinaryTable	= TRUE;// 
 	SetDefault();
-	Load("scripts/kop.cfg"); // �������ļ�
+	Load("scripts/kop.cfg"); // 
 }
 
-void CGameConfig::SetDefault()   // Ĭ������
+void CGameConfig::SetDefault()   // 
 {
 	memset(m_ChaList, 0, sizeof(SPlaceCha) * 20);
 
@@ -23,7 +23,7 @@ void CGameConfig::SetDefault()   // Ĭ������
 	m_bFullScreen       = FALSE;
     m_bEnableMusic      = TRUE;
 	
-	m_nChaCnt			= 0;  // ��ɫ����
+	m_nChaCnt			= 0;  // 
 
 	m_LightColor[0]     =  1.0f; 
 	m_LightColor[1]     =  1.0f;
@@ -33,12 +33,12 @@ void CGameConfig::SetDefault()   // Ĭ������
 	m_LightDir[2]       = -1.0f;
 
     m_bNoObj            = FALSE; 
-    m_bEditor           = FALSE; //  ��Ϸ�༭��
+    m_bEditor           = FALSE; //  
     m_btScreenMode      = 0;
 
     m_nMaxChaType       = 350;
 	m_nMaxSceneObjType  = 3000;
-	m_nMaxEffectType    = 14000;		// �������Ӿ������ߵ���Ч��	modify by Michael 2005-11-9
+	m_nMaxEffectType    = 14000;		// 	modify by Michael 2005-11-9
 	m_nMaxItemType      = 32768;
 	m_nMaxResourceNum	= 3000;        
 
@@ -46,45 +46,45 @@ void CGameConfig::SetDefault()   // Ĭ������
 	m_fCameraVel		= 0;  
 	m_fCameraAccl		= 0;
 
-	m_nCreateScene		= 1;          // ��ʼ����
+	m_nCreateScene		= 1;          // 
 
 
-	nLeftHand            = 0;      // ������������������
+	nLeftHand            = 0;      // 
     nRightHand           = 0;
 
 	m_bCheckOvermax      = TRUE; 
     m_nSendHeartbeat     = 30;
-	m_nConnectTimeOut	 = 0;   // �������ӳ�ʱ
+	m_nConnectTimeOut	 = 0;   // 
 
-    m_bEnableLGMsg       = TRUE;     //   ��������LG-Box
-    m_bEnableLG          = TRUE;     //   �������LG��Ϣ
+    m_bEnableLGMsg       = TRUE;     //   LG-Box
+    m_bEnableLG          = TRUE;     //   LG
 
-	m_bRenderSceneObj = TRUE;  //��������ʵʩ
-	m_bRenderCha      = TRUE;  //��ɫʵʩ
+	m_bRenderSceneObj = TRUE;  //
+	m_bRenderCha      = TRUE;  //
 	m_bRenderEffect   = TRUE;
 	m_bRenderTerrain  = TRUE;
 	m_bRenderUI       = TRUE;
 	m_bRenderMinimap  = TRUE;
 	m_bRender         = TRUE;
 
-	m_bMThreadRes	  = TRUE;	//�߳���Դ����
+	m_bMThreadRes	  = TRUE;	//
 
     m_dwFullScreenAntialias = 0;
 
     m_fLgtFactor = 0.0f;
     m_dwLgtBkColor = 0xffc0c0c0;
-    // ���������л���ͼʱ�Ĳ���
+    // 
 	m_dwMaxCha	= 300;   
 	m_dwMaxEff	= 500;
 	m_dwMaxItem = 400;
 	m_dwMaxObj	= 800;
 
-	strcpy(m_szMD5Pass, "");  // ��д��MD5����
+	strcpy(m_szMD5Pass, "");  // MD5
 	memset( m_szVerErrorHTTP, 0, sizeof(m_szVerErrorHTTP) ); 
 
-	m_IsShowConsole = false; // �Ƿ���Բ����ؼ�̨
+	m_IsShowConsole = false; // 
 	m_IsMoveClient = true;
-	m_IsBill = false; //  �Ƿ��ֵ
+	m_IsBill = false; //  
 
 	// Add by lark.li 20080429 for res
 	memcpy(m_szFontName1, "", sizeof(m_szFontName1));
@@ -97,12 +97,12 @@ void CGameConfig::SetDefault()   // Ĭ������
 	// End
 }
 
-void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
+void CGameConfig::Load(const char *pszFileName)   //  kop.cfg
 { 
 	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
 	
 	ifstream in(pszFileName);
-	if(in.is_open()==0)  //�Ƿ��ܴ�
+	if(in.is_open()==0)  //
 	{
 		return;
 	}
@@ -110,11 +110,11 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 	string strComment;
 	string strLine;
 	char szLine[255];
-	while(!in.eof())  //�Ƿ񵽴��ļ�β
+	while(!in.eof())  //
 	{
 		in.getline(szLine, 255);
 		strLine = szLine;
-		auto p = strLine.find("//");//��ȡע�ͺʹ���
+		auto p = strLine.find("//");//
 		if(p!=std::string::npos)  
 		{
 			string strLeft = strLine.substr(0, p);
@@ -125,11 +125,11 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		{
 			strComment = "";
 		}
-		Util_TrimString(strLine);   //  ��ʧ�ո�����
+		Util_TrimString(strLine);   //  
 		if(strLine.size()==0) continue;
 		if(strLine[0]=='[')
 		{
-			// Секция конфигурационного файла
+			//   
 			ToLogService("common", "{}", strLine);
 			continue;
 		}
@@ -139,11 +139,11 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
         string strKey   = strPair[0];
 		string strValue = strPair[1];
 		
-		if(strKey=="autologin") //�Զ���¼
+		if(strKey=="autologin") //
 		{
 			m_bAutoLogin = Str2Int(strValue);
 		}
-		else if(strKey=="cha") // �̶�λ�ðڷŵĽ�ɫ, For Demo
+		else if(strKey=="cha") // , For Demo
 		{
 			string strCha[5];
 			int nCnt = Util_ResolveTextLine(strValue.c_str(), strCha, 3, ',');
@@ -155,11 +155,11 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 				m_nChaCnt++;
 			}
 		}
-		else if(strKey=="fullscreen")  //ȫ��
+		else if(strKey=="fullscreen")  //
 		{ 
 			m_bFullScreen = Str2Int(strValue); 
 		}
-		else if(strKey=="screenmode")  //  ��Ļģʽ
+		else if(strKey=="screenmode")  //  
 		{
 			m_btScreenMode = (BYTE)(Str2Int(strValue));
 		}
@@ -184,7 +184,7 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 				m_LightColor[1] = Str2Float(strColor[1]);
 				m_LightColor[2] = Str2Float(strColor[2]);
 			}
-		}else if(strKey=="fogcolorR") // ����ɫ
+		}else if(strKey=="fogcolorR") // 
 		{
 			m_iFogR = Str2Int(strValue);
 		}else if(strKey=="fogcolorG")
@@ -193,7 +193,7 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		}else if(strKey=="fogcolorB") 
 		{
 			m_iFogB = Str2Int(strValue);
-		}else if(strKey=="fogexp2")  // ���ܶ�
+		}else if(strKey=="fogexp2")  // 
 		{
 			m_fExp2 = Str2Float(strValue);
 		}
@@ -226,10 +226,10 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 			refZ = Str2Float(strValue);
 		}else if(strKey=="fov")
 		{
-			fov = Str2Float(strValue); //  ��Ұ
+			fov = Str2Float(strValue); //  
 		}else if(strKey=="Aspect")
 		{
-			fAspect = Str2Float(strValue); // ���
+			fAspect = Str2Float(strValue); // 
 		}else if(strKey=="near")
 		{
 			fnear = Str2Float(strValue);
@@ -253,11 +253,11 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		{
 			m_fCameraAccl = Str2Float(strValue);
 		}
-        else if( strKey=="left_hand" ) // ��������
+        else if( strKey=="left_hand" ) // 
         {
             nLeftHand = Str2Int(strValue);
         }
-        else if( strKey=="right_hand" )// ��������
+        else if( strKey=="right_hand" )// 
         {
             nRightHand = Str2Int(strValue);
         }
@@ -271,11 +271,11 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
         }
         else if( strKey=="enable_lg_msg" )
         {
-            m_bEnableLGMsg = Str2Int(strValue);  // �Ƿ���������LG-Box
+            m_bEnableLGMsg = Str2Int(strValue);  // LG-Box
         }
         else if( strKey=="enable_lg" )
         { 
-            m_bEnableLG = Str2Int(strValue);   // �Ƿ��������LG��Ϣ
+            m_bEnableLG = Str2Int(strValue);   // LG
         }
 		else if(strKey=="sceneobj_render")
 		{
@@ -299,7 +299,7 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		}
 		else if(strKey=="minimap_render")
 		{
-			m_bRenderMinimap = Str2Int(strValue);//�Ƿ�ʵʩС��ͼ
+			m_bRenderMinimap = Str2Int(strValue);//
 		}
 		else if(strKey=="render")
 		{
@@ -351,7 +351,7 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		{
 			m_dwMaxObj = Str2Int(strValue);
 		}
-		else if(strKey=="md5pass") // ��д��MD5����
+		else if(strKey=="md5pass") // MD5
 		{
 			strcpy(m_szMD5Pass, strValue.c_str());
 		}
@@ -359,7 +359,7 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		{
 			m_IsShowConsole = Str2Int(strValue)!=0 ? true : false;
 		}
-		else if( strKey=="HTTP" ) // �汾��ƥ��ʱ���õ���ҳ
+		else if( strKey=="HTTP" ) // 
 		{
 			strcpy(m_szVerErrorHTTP, strValue.c_str());			 
 		}
@@ -370,7 +370,7 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		else if( strKey=="bill" )
 		{
 			//m_IsBill = Str2Int(strValue)!=0 ? true : false;
-			// �ĳɺ궨��
+			// 
 #ifdef USED_BILL
 			m_IsBill = true;
 #else
@@ -407,10 +407,10 @@ void CGameConfig::Load(const char *pszFileName)   //  ��kop.cfg
 		}
 		// End
    	}
-	in.close(); // �ر��ļ�
+	in.close(); // 
 }
 
-void CGameConfig::SetMoveClient( bool v )  // �����Ƿ���ͻ���ͬ��
+void CGameConfig::SetMoveClient( bool v )  // 
 {
 	m_IsMoveClient = v;
 	//g_pGameApp->SysInfo( g_Config.m_IsMoveClient ? g_oLangRec.GetString(142) : g_oLangRec.GetString(141) );

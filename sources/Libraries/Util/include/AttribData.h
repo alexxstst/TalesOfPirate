@@ -1,4 +1,4 @@
-#pragma pack(push)
+ï»¿#pragma pack(push)
 #pragma pack(1)
 
 struct SAttribFileHeader
@@ -60,7 +60,7 @@ inline DWORD CAttribData::_ReadSectionIdx(DWORD dwSectionNo)
     DWORD dwOffset = 0; fread(&dwOffset, sizeof(DWORD), 1, _fp);
     if(_bDebug)
     {
-        //LG(GetDataName(), "¶ÁÈ¡Ë÷ÒýÇøÊý¾Ý[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+        //LG(GetDataName(), "[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
 		g_logManager.LogDebug("common", "read index data [{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
     return dwOffset;
@@ -72,7 +72,7 @@ inline void CAttribData::_WriteSectionIdx(DWORD dwSectionNo, DWORD dwOffset)
     fwrite(&dwOffset, sizeof(DWORD), 1, _fp);
     if(_bDebug)
     {
-        //LG(GetDataName(), "Ð´ÈëË÷ÒýÇøÊý¾Ý[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
+        //LG(GetDataName(), "[%d %d], Offset = %d\n", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
 		g_logManager.LogDebug("common", "write index data [{} {}], Offset = {}", dwSectionNo % _nSectionCntX, dwSectionNo / _nSectionCntY, dwOffset);
     }
 }

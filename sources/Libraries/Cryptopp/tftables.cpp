@@ -1,4 +1,4 @@
-// Twofish tables
+﻿// Twofish tables
 
 #include "pch.h"
 #include "config.h"

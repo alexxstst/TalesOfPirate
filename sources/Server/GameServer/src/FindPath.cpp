@@ -1,7 +1,7 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "FindPath.h"
 
-struct NODE_SHARED   //Ñ°Â·Ê±¹«ÓÃµÄÂ·¾¶ÐÅÏ¢
+struct NODE_SHARED   //
 {
 	BYTE*			buf_ptr;
 	BYTE			dire;
@@ -25,10 +25,10 @@ static void DeletePathLink(PATH_LINK **ppPathLink)
 	}
 	*ppPathLink = NULL;
 }
-// Ê¹ÓÃ·½·¨
-// ½«±íÊ¾ÕÏ°­µÄ0,1Êý×é, ÒÔ¼°Êý×éµÄ¿íºÍ¸ß, Æðµã×ø±ê, Ä¿µÄµØ×ø±ê´«¸ø¸Ãº¯Êý
-// ·µ»ØÒ»¸ö¼ÇÂ¼·½ÏòµÄÁ´±í, Á´±íÎª¿Õ±íÊ¾Ñ°Â·Ê§°Ü
-// ´«ÈëµÄÕÏ°­Êý×é±ØÐëÊÇ±ß½çÈ«²¿Ìî³äÎª1, Ñ°Â·Ëã·¨ÖÐ²»ÔÙ¼ì²éÊý×é±ß½ç
+// 
+// 0,1, , , 
+// , 
+// 1, 
 
 PATH_LINK* SearchPath(BYTE *block_buf , short width , short height , short sx , short sy , short tx , short ty)
 {
@@ -78,7 +78,7 @@ PATH_LINK* SearchPath(BYTE *block_buf , short width , short height , short sx , 
 	//BYTE *temp_buf_ptr;
 
 	UINT32 lMaxStep = (height -1) * (height -1);
-	if(lMaxStep>STEP_LIMIT) lMaxStep = STEP_LIMIT; //ÏÞÖÆ×î´ó²½Êý
+	if(lMaxStep>STEP_LIMIT) lMaxStep = STEP_LIMIT; //
 
 	BYTE *end_block = &block_buf[STEP_LIMIT - 1];
 

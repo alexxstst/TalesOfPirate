@@ -1,12 +1,15 @@
+﻿
 
+// ---   (LuaBridge ) ---
 
-inline int lua_uiGetForm(lua_State *L)
-{
-    return 1;
-}
-
-inline int lua_uiHideAll(lua_State *L)
+inline void uiHideAll()
 {
     CFormMgr::s_Mgr.SetEnabled(FALSE);
-    return 0;
+}
+
+// --- lua_CFunction (,  1   ) ---
+
+inline int uiGetForm(lua_State *L)
+{
+    return 1;
 }

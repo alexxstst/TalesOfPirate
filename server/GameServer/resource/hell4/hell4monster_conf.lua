@@ -1,1 +1,1 @@
-print("-- [Loading] hell4Monster.lua")
+﻿print("-- [Loading] hell4Monster.lua")

@@ -1,1 +1,1 @@
-print("-- [Loading] teampkEntity.lua")
+﻿print("-- [Loading] teampkEntity.lua")

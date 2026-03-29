@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Character.h
 // Creater: ZhangXuedong
 // Date: 2004.10.19
@@ -23,12 +23,12 @@
 #define defPING_INTERVAL		20 * 1000
 #define defCHA_SCRIPT_PARAM_NUM	1
 
-extern CCharacter*		g_pCSystemCha;		// ϵͳ��ɫ
+extern CCharacter*		g_pCSystemCha;		// 
 
-struct SLean // �п�
+struct SLean // 
 {
-	dbc::uLong	ulPacketID; // ���ݰ���ID
-	dbc::Char	chState;	// 0���п���.1��ֹͣ����
+	dbc::uLong	ulPacketID; // ID
+	dbc::Char	chState;	// 0.1
 	dbc::Long	lPose;
 	dbc::Long	lAngle;
 	dbc::Long	lPosX, lPosY;
@@ -50,48 +50,48 @@ struct STempChaPart
 
 struct SCheatX
 {
-	uInt Xtype;			//1:������ɺ� 2:���ʺ�
-	uInt Xerror;		//�������
-	uInt Xright;		//������ԵĴ���
-	uInt Xcount;		//����Ĵ���
+	uInt Xtype;			//1: 2:
+	uInt Xerror;		//
+	uInt Xright;		//
+	uInt Xcount;		//
 	uInt Xn;
-	DWORD dwLastTime;	//��һ�ε�ʱ��
-	DWORD dwInterval;	//ʱ����
+	DWORD dwLastTime;	//
+	DWORD dwInterval;	//
 	std::string Xnum;		//X number
 };
 
 enum EActControl
 {
-	enumACTCONTROL_MOVE,		// �ƶ�λ
-	enumACTCONTROL_USE_GSKILL,	// ʹ����ͨ����λ
-	enumACTCONTROL_USE_MSKILL,	// ʹ��ħ������λ
-	enumACTCONTROL_BEUSE_SKILL,	// ��ʹ�ü���λ
-	enumACTCONTROL_TRADE,		// ����λ
-	enumACTCONTROL_USE_ITEM,	// ʹ����Ʒλ
-	enumACTCONTROL_BEUSE_ITEM,	// ��ʹ����Ʒλ
-	enumACTCONTROL_INVINCIBLE,	// �޵�λ
-	enumACTCONTROL_EYESHOT,		// ��Ұλ�����Կ�����Ұ�ڿɼ���ʵ�壩
-	enumACTCONTROL_NOHIDE,		// �����Σ����Ա�������
-	enumACTCONTROL_NOSHOW,		// ����ǿ�����Σ������ǿ�����Σ������α����Σ�
-	enumACTCONTROL_ITEM_OPT,	// ���߲���λ
-	enumACTCONTROL_TALKTO_NPC,	// ��NPC�Ի�λ
+	enumACTCONTROL_MOVE,		// 
+	enumACTCONTROL_USE_GSKILL,	// 
+	enumACTCONTROL_USE_MSKILL,	// 
+	enumACTCONTROL_BEUSE_SKILL,	// 
+	enumACTCONTROL_TRADE,		// 
+	enumACTCONTROL_USE_ITEM,	// 
+	enumACTCONTROL_BEUSE_ITEM,	// 
+	enumACTCONTROL_INVINCIBLE,	// 
+	enumACTCONTROL_EYESHOT,		// 
+	enumACTCONTROL_NOHIDE,		// 
+	enumACTCONTROL_NOSHOW,		// 
+	enumACTCONTROL_ITEM_OPT,	// 
+	enumACTCONTROL_TALKTO_NPC,	// NPC
 	enumACTCONTROL_MAX,
 };
 
 enum ESwitchMapType
 {
-	enumSWITCHMAP_CARRY,	// ����
-	enumSWITCHMAP_DIE,		// ����
+	enumSWITCHMAP_CARRY,	// 
+	enumSWITCHMAP_DIE,		// 
 };
 
-enum ELogAssetsType	// ��ö��ֵ��Ӧ�����±�
+enum ELogAssetsType	// 
 {
-	enumLASSETS_INIT,		// ��ʼ��
-	enumLASSETS_TRADE,		// ����
-	enumLASSETS_BANK,		// ����
-	enumLASSETS_PICKUP,		// ʰȡ
-	enumLASSETS_THROW,		// ����
-	enumLASSETS_DELETE,		// ɾ��
+	enumLASSETS_INIT,		// 
+	enumLASSETS_TRADE,		// 
+	enumLASSETS_BANK,		// 
+	enumLASSETS_PICKUP,		// 
+	enumLASSETS_THROW,		// 
+	enumLASSETS_DELETE,		// 
 };
 
 namespace mission
@@ -133,13 +133,13 @@ public:
 	void	Initially();
 	void	Finally();
 
-	bool	IsPlayerCha(void); // �Ƿ���ҽ�ɫ
-	bool	IsGMCha(); // GM�ȼ���0-10��GM��ɫ
-	bool	IsGMCha2(); // GM��ɫ
-	bool	IsPlayerCtrlCha(void); // ��ҵ�ǰ���ƵĽ�ɫ
-	bool	IsPlayerMainCha(void); // ��ҵ��˽�ɫ
-	bool	IsPlayerFocusCha(void); // ��ҵ�ǰ���ƵĽ�ɫ�� ͬIsPlayerCtrlCha����
-	bool	IsPlayerOwnCha(void); // ��ҽ�ɫ������������������
+	bool	IsPlayerCha(void); // 
+	bool	IsGMCha(); // GM0-10GM
+	bool	IsGMCha2(); // GM
+	bool	IsPlayerCtrlCha(void); // 
+	bool	IsPlayerMainCha(void); // 
+	bool	IsPlayerFocusCha(void); //  IsPlayerCtrlCha
+	bool	IsPlayerOwnCha(void); // 
 	CCharacter	*GetPlyCtrlCha(void);
 	CCharacter	*GetPlyMainCha(void);
 
@@ -156,7 +156,7 @@ public:
 
 	virtual void	ProcessPacket(uShort usCmd, net::RPacket& pk);
 
-	// ─── Обработчики команд (вызываются из ProcessPacket) ─────────
+	//    (  ProcessPacket) 
 	void Handle_GuildBankCmd(const net::msg::PmGuildBankMessage& msg);
 	void Handle_PushToGuildBank(const std::string& strItem);
 	void Handle_Ping(const net::msg::CmPingResponseMessage& msg);
@@ -197,7 +197,7 @@ public:
 	void	InitCheatX();
 	DWORD	GetCheatInterval(int state);
 
-	// ָ���
+	// 
 	bool		Cmd_EnterMap(dbc::cChar* l_map, dbc::Long lMapCopyNO, dbc::uLong l_x, dbc::uLong l_y, dbc::Char chLogin = 1);
 	void		Cmd_BeginMove(dbc::Short sPing, Point *pPath, dbc::Char chPointNum, dbc::Char chStopState = enumEXISTS_WAITING);
 	void		Cmd_BeginMoveDirect(Entity *pTar);
@@ -216,7 +216,7 @@ public:
 	dbc::Short	Cmd_BankOper(dbc::Char chSrcType, dbc::Short sSrcGridID, dbc::Short sSrcNum, dbc::Char chTarType, dbc::Short sTarGridID);
 	dbc::Short	Cmd_GuildBankOper(dbc::Char chSrcType, dbc::Short sSrcGridID, dbc::Short sSrcNum, dbc::Char chTarType, dbc::Short sTarGridID);
 	
-    //�Ϸ���ʱ�����ĵ���(sSrcGrid:��ʱ������λ��   sSrcNum:����   sTarGrid:������λ��)
+    //(sSrcGrid:   sSrcNum:   sTarGrid:)
     dbc::Short  Cmd_DragItem(dbc::Short sSrcGrid, dbc::Short sSrcNum, dbc::Short sTarGrid);
     
 	void Cmd_SetInPK(bool bInPK = true)
@@ -241,9 +241,9 @@ public:
 	void		Cmd_ReassignAttr(const net::msg::CmSynAttrMessage& msg);
 	dbc::Short	Cmd_RemoveItem(dbc::Long lItemID, dbc::Long lItemNum, dbc::Char chFromType, dbc::Short sFromID, dbc::Char chToType, dbc::Short sToID, bool bRefresh = true, bool bForcible = true);
 
-	void		Cmd_ChangeHair(net::RPacket& pk);											// ������������
-	void		Prl_ChangeHairResult(int nScriptID, const char* szReason, BOOL bNoticeAll = FALSE); // �������͵���Ϣ����
-	void		Prl_OpenHair();															// ֪ͨ�ͻ��˴���������	
+	void		Cmd_ChangeHair(net::RPacket& pk);											// 
+	void		Prl_ChangeHairResult(int nScriptID, const char* szReason, BOOL bNoticeAll = FALSE); // 
+	void		Prl_OpenHair();															// 	
 
 	void		Cmd_FightAsk(dbc::Char chType, dbc::Long lTarID, dbc::Long lTarHandle);
 	void		Cmd_FightAnswer(bool bFight);
@@ -257,19 +257,19 @@ public:
 	void		Cmd_ItemLotteryAnswer(bool bForge);
 	// End
 	
-	//��������
+	//
 	void		Cmd_Garner2_Reorder(short index);
 
-	//�����
+	//
 	void		Cmd_LifeSkillItemAsk(long dwType, SLifeSkillItem *pSItem);
 	void		Cmd_LifeSkillItemAsR(long dwType,SLifeSkillItem *pSItem);
-    //��������
+    //
     void        Cmd_LockKitbag();
     void        Cmd_UnlockKitbag(const char szPassword[]);
     void        Cmd_CheckKitbagState();
     void        Cmd_SetKitbagAutoLock(Char cAuto);
 
-	//���ִ�����
+	//
 	BOOL		Cmd_AddVolunteer();
 	BOOL		Cmd_DelVolunteer();
 	void		Cmd_ListVolunteer(short sPage, short sNum);
@@ -296,16 +296,16 @@ public:
 	void	ColourNotice( DWORD rgb, const char szData[], ... );
 	bool	IsPKSilver();
 
-	// ���ý�����Ϣ
+	// 
 	void	SetTradeData( mission::CTradeData* pData ) { m_pTradeData = pData; }
 	mission::CTradeData* GetTradeData() { return m_pTradeData; }
 	
-	// ��ֻ
+	// 
 	void	SetBoat( CCharacter* pBoat );
 	CCharacter* GetBoat();
 	bool	IsBoat(void) {return m_pCChaRecord->chModalType == enumMODAL_BOAT;}
 	
-	// ��npc����
+	// npc
 	BOOL	SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwMoney );
 	BOOL	SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMoney );
 	BOOL	SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwMoney );
@@ -322,8 +322,8 @@ public:
 	BOOL	SetTempData( DWORD dwNpcID, WORD wID, BYTE byState, BYTE byType );
 	BOOL	GetTempData( DWORD dwNpcID, WORD& wID, BYTE& byState, BYTE& byType );
 
-	// ����ϵͳ�ӿں���
-	BOOL	SaveMissionData();	// ��ɫ������Ϣ����
+	// 
+	BOOL	SaveMissionData();	// 
 
 	BOOL	AddMissionState( DWORD dwNpcID, BYTE byID, BYTE byState );
 	BOOL	ResetMissionState( mission::CTalkNpc& npc );
@@ -352,38 +352,38 @@ public:
 	BOOL	IsRecord( WORD wRec );
 	BOOL	IsValidRecord( WORD wRec );
 
-	// �������ӿڲ�����Ϣ
+	// 
 	BOOL	HasRandMission( WORD wRoleID );
 	BOOL	AddRandMission( WORD wRoleID, WORD wScriptID, BYTE byType, BYTE byLevel, DWORD dwExp, DWORD dwMoney, USHORT sPrizeData, USHORT sPrizeType, BYTE byNumData );
 	BOOL	SetRandMissionData( WORD wRoleID, BYTE byIndex, const mission::MISSION_DATA& RandData );
 	BOOL	GetRandMission( WORD wRoleID, BYTE& byType, BYTE& byLevel, DWORD& dwExp, DWORD& dwMoney, USHORT& sPrizeData, USHORT& sPrizeType, BYTE& byNumData );
 	BOOL	GetRandMissionData( WORD wRoleID, BYTE byIndex, mission::MISSION_DATA& RandData );
 
-	// ����͸�npc����Ʒ(������Ʒ��NPCȡ����Ʒ�󣬼�¼һ����ǣ��Ƿ�ȡ���øñ�Ǳ�ʶ)
+	// npc(NPC)
 	BOOL	HasSendNpcItemFlag( WORD wRoleID, WORD wNpcID );
 	BOOL	NoSendNpcItemFlag( WORD wRoleID, WORD wNpcID );
 	BOOL	HasRandMissionNpc( WORD wRoleID, WORD wNpcID, WORD wAreaID );
 
-	// ȡ�����������Ʒ
+	// 
 	BOOL	TakeRandNpcItem( WORD wRoleID, WORD wNpcID, const char szNpc[] );
 	BOOL	TakeAllRandItem( WORD wRoleID );
 
-	// �Ƿ�������Ҫ����Ʒ
+	// 
 	BOOL	IsMisNeedItem( USHORT sItemID );
 	BOOL	GetMisNeedItemCount( WORD wRoleID, USHORT sItemID, USHORT& sCount );
 	void	RefreshNeedItem( USHORT sItemID );
 
-	// ������־
+	// 
 	void	MisLog();
 	void	MisLogInfo( WORD wMisID );
 	void	MisLogClear( WORD wMisID );
 
-	// ���������Ѿ��������״̬
+	// 
 	BOOL	SetMissionComplete( WORD wRoleID );
 	BOOL	SetMissionFailure( WORD wRoleID );
 	BOOL	HasMissionFailure( WORD wRoleID );
 
-	// ���������ɼ����ӿ�
+	// 
 	BOOL	CompleteRandMission( WORD wRoleID );
 	BOOL	FailureRandMission( WORD wRoleID );
 	BOOL	AddRandMissionNum( WORD wRoleID );
@@ -393,14 +393,14 @@ public:
 	BOOL	GetRandMissionCount( WORD wRoleID, WORD& wCount );
 	BOOL	GetRandMissionNum( WORD wRoleID, WORD& wNum );
 
-	// �ٻ�һ��������NPC
+	// NPC
 	BOOL	ConvoyNpc( WORD wRoleID, BYTE byIndex, WORD wNpcCharID, BYTE byAiType );
 	BOOL	ClearConvoyNpc( WORD wRoleID, BYTE byIndex );
 	BOOL	ClearAllConvoyNpc( WORD wRoleID );
 	BOOL	HasConvoyNpc( WORD wRoleID, BYTE byIndex );
 	BOOL	IsConvoyNpc( WORD wRoleID, BYTE byIndex, WORD wNpcCharID );
 
-	// ��ɫ��Ǯ����Ʒ��������
+	// 
 	void	AddMoney( const char szName[], DWORD dwMoney );
 	BOOL	TakeMoney( const char szName[], DWORD dwMoney );
 	BOOL	HasMoney( DWORD dwMoney );
@@ -416,26 +416,26 @@ public:
 	BOOL	HasItemBagTemp(USHORT sItemID, USHORT sCount);
 	BOOL	TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szName[]);
 
-	//������Ʒ����ʱ����
+	//
 	BOOL	AddItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *pItemAttr, BYTE bySoundType = enumSYN_KITBAG_FROM_NPC );
 	BOOL	AddItem2KitbagTemp( USHORT sItemID, USHORT sCount, const char szName[], BYTE byAddType = enumITEM_INST_TASK, BYTE bySoundType = enumSYN_KITBAG_FROM_NPC );
 	BOOL	GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, ItemInfo *pItemAttr, BYTE bySoundType );
 	BOOL	GiveItem2KitbagTemp( USHORT sItemID, USHORT sCount, BYTE byAddType, BYTE bySoundType );
 
-	// �����ɫְҵ����
+	// 
 	BOOL	SetProfession( BYTE byPf );
 
-	bool	LearnSkill(dbc::Short sSkillID, dbc::Char chLv, bool bSetLv = true, bool bUsePoint = true, bool bLimit = true); // ѧϰ���ܣ�ͨ�棩
+	bool	LearnSkill(dbc::Short sSkillID, dbc::Char chLv, bool bSetLv = true, bool bUsePoint = true, bool bLimit = true); // 
 	bool	AddSkillState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle, dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType,
-			dbc::uChar uchStateID, dbc::uChar uchStateLv, dbc::Long lOnTick, dbc::Char chType = enumSSTATE_ADD_UNDEFINED, bool bNotice = true); // ���Ӽ���״̬
-	bool	DelSkillState(dbc::uChar uchStateID, bool bNotice = true); // ɾ��״̬
+			dbc::uChar uchStateID, dbc::uChar uchStateLv, dbc::Long lOnTick, dbc::Char chType = enumSSTATE_ADD_UNDEFINED, bool bNotice = true); // 
+	bool	DelSkillState(dbc::uChar uchStateID, bool bNotice = true); // 
 
-	// ��Ϊ����
+	// 
 	bool	GetActControl(dbc::Char chCtrlType) {return m_ActContrl[chCtrlType];}
 	void	Hide();
 	void	Show();
 
-	// �ָ���ɫ����
+	// 
 	void	RestoreHp( BYTE byHpRate );
 	void	RestoreSp( BYTE bySpRate );
 	void	RestoreAllHp();
@@ -444,7 +444,7 @@ public:
 
 	BOOL	ViewItemInfo( const net::msg::CmActionViewItemData& msg );
 
-	BOOL	AddAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK ); // ��Ҫ����ATTR_CEXP���ԣ���ʹ��CFightAble::AddExp
+	BOOL	AddAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK ); // ATTR_CEXPCFightAble::AddExp
 	BOOL	TakeAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK );
 
 	bool	IsInPK(void) { return m_chPKCtrl[0]; }
@@ -458,18 +458,18 @@ public:
 
 	virtual void BreakAction(net::RPacket* pk = nullptr);
 	virtual void EndAction(net::RPacket* pk = nullptr);
-	// ��ɫ�¼���������
+	// 
 	virtual void AfterObjDie(CCharacter *pCAtk, CCharacter *pCDead);
 	virtual void AfterPeekItem(dbc::Short sItemID, dbc::Short sNum);
 	virtual void AfterEquipItem(dbc::Short sItemID, dbc::uShort sTriID);
 	virtual void EntryMapUnit( BYTE byMapID, WORD wxPos, WORD wyPos );
-	virtual void OnMissionTime(); // ����ʱ�䴥�����¼�
+	virtual void OnMissionTime(); // 
 	virtual void OnLevelUp( USHORT sLevel );
 	virtual void OnSailLvUp( USHORT sLevel );
 	virtual void OnLifeLvUp( USHORT sLevel );
 	virtual void OnCharBorn();
 
-	// ��ֻ�����ӿں���
+	// 
 	BOOL	IsNeedRepair();
 	BOOL	IsNeedSupply();
 	void	RepairBoat();
@@ -481,7 +481,7 @@ public:
 	BOOL	BoatUpdate( BYTE byIndex, const BOAT_DATA& Data );
 	BOOL	BoatLoad( const BOAT_LOAD_INFO& Info );
 	
-	// ��ֻ����ó��
+	// 
 	BOOL	AdjustTradeItemCess( USHORT sLowCess, USHORT sData );
 	BOOL	GetTradeItemData( BYTE& byLevel, USHORT& sCess );
 	BOOL	SetTradeItemLevel( BYTE byLevel );	
@@ -503,51 +503,51 @@ public:
 	BOOL	PackBag( CCharacter& boat, BYTE byType, BYTE byLevel );
 	BOOL	PackBag( CCharacter& Boat, USHORT sItemID, USHORT sCount, USHORT sPileID, USHORT& sNumPack );
 	void	SetBoatAttrChangeFlag(bool bSet = true);
-	void	SyncBoatAttr( dbc::Short sSynType, bool bAllBoat = true ); // ͬ������Ĵ�ֻ����
+	void	SyncBoatAttr( dbc::Short sSynType, bool bAllBoat = true ); // 
 
-	// ��ֻ����ɾ��
+	// 
 	BOOL	BoatAdd( CCharacter& Boat );
 	BOOL	BoatClear( CCharacter& Boat );
 	BOOL	BoatAdd( DWORD dwDBID );
 	BOOL	BoatClear( DWORD dwDBID );
 
-	// �¼�ʵ�彻��ʱ���¼
+	// 
 	BOOL	SetEntityState( DWORD dwEntityID, BYTE byState );
 	void	SetEntityTime( DWORD dwTime );
 	DWORD	GetEntityTime();
 
-	// �����ж�����
+	// 
 	BOOL	HasGuild();
 
-	// ��̯
+	// 
 	void	SetStallData( mission::CStallData* pData );
 	mission::CStallData* GetStallData();
 	BYTE	GetStallNum();
 
 	//add by jilinlee 2007/4/20
-	//����
+	//
 	BOOL IsReadBook();
 	void SetReadBookState(bool bIsReadBook = false);
 
 
 	// 
-	void	ChangeItem(bool bEquip, SItemGrid *pItemCont, dbc::Char chLinkID); // ������װ���仯�����Ľ�ɫ���Եı仯
-	void	SkillRefresh(); // ���߼����
-	// �½���ɫ��ʼ��
+	void	ChangeItem(bool bEquip, SItemGrid *pItemCont, dbc::Char chLinkID); // 
+	void	SkillRefresh(); // 
+	// 
 	void	NewChaInit(void);
-	// �½���ɫ��װ����ʼ��
+	// 
 	void	ChaInitEquip(void);
 	void	ResetBirthInfo(void);
 
-	// ͬ����ɫ����
-	void	SynKitbagNew(dbc::Char chType); // ͬ��������
-	void    SynKitbagTmpNew(dbc::Char chType); // ͬ����ʱ����
-	void	SynShortcut(); // ͬ�������
-	void	SynLook(dbc::Char chSynType = enumSYN_LOOK_SWITCH); // ͬ����ɫ���
+	// 
+	void	SynKitbagNew(dbc::Char chType); // 
+	void    SynKitbagTmpNew(dbc::Char chType); // 
+	void	SynShortcut(); // 
+	void	SynLook(dbc::Char chSynType = enumSYN_LOOK_SWITCH); // 
 	void	SynLook(dbc::Char chLookType, bool verbose);
-	bool	ItemForge(SItemGrid *pItem, dbc::Char chAddLv = 1); // �������߲�ͬ��
-	void	SynSkillBag(dbc::Char chType); // ͬ��������
-	void	SynPKCtrl(void); // ͬ��PK״̬
+	bool	ItemForge(SItemGrid *pItem, dbc::Char chAddLv = 1); // 
+	void	SynSkillBag(dbc::Char chType); // 
+	void	SynPKCtrl(void); // PK
 	void	SynAddItemCha(CCharacter *pCItemCha);
 	void	SynDelItemCha(CCharacter *pCItemCha);
 	void	CheckPing(void);
@@ -580,7 +580,7 @@ public:
 
 	//
 
-	// ��ɫ���ݱ���֯
+	// 
 	void	WriteBaseInfo(net::WPacket &pk, dbc::Char chLookType = LOOK_SELF);
 	void	WritePKCtrl(net::WPacket &pk);
 	void	WriteSkillbag(net::WPacket &pk, int nSynType);
@@ -593,7 +593,7 @@ public:
 	void	WriteBoat(net::WPacket &pk);
 	void	WriteItemChaBoat(net::WPacket &pk, CCharacter *pCBoat);
 	void	WriteSideInfo(net::WPacket &pk);
-	// Fill* — заполнение типизированных структур (CommandMessages.h)
+	// Fill*     (CommandMessages.h)
 	void	FillBaseInfo(net::msg::ChaBaseInfo &b, dbc::Char chLookType = LOOK_SELF);
 	void	FillSkillBag(net::msg::ChaSkillBagInfo &s, int nSynType);
 	void	FillKitbag(net::msg::ChaKitbagInfo &k, CKitbag &CKb, int nSynType);
@@ -601,11 +601,11 @@ public:
 	void	FillBoats(std::vector<net::msg::BoatData> &boats);
 	//
 
-	// ������ж�ʧ��
+	// 
 	void	FailedActionNoti(dbc::Char chType, dbc::Char chReason);
-	// �ն���ʾ��Ϣ
+	// 
 	void	TerminalMessage(dbc::Long lMessageID);
-	// ���߲���ʧ��
+	// 
 	void	ItemOprateFailed(dbc::Short sFailedID);
 
 	void		SetMotto(dbc::cChar *szMotto) {if (szMotto) strncpy(m_szMotto, szMotto, defMOTTO_LEN - 1);}
@@ -634,8 +634,8 @@ public:
 	void			SetBlockCnt(BYTE cnt)				{   _btBlockCnt = cnt;				}
 
 	virtual void	AfterAttrChange(int nIdx, dbc::Long lOldVal, dbc::Long lNewVal);
-	virtual void	Die();	// ��������
-	void			JustDie(CCharacter *pCSrcCha);	// �������ϣ���������
+	virtual void	Die();	// 
+	void			JustDie(CCharacter *pCSrcCha);	// 
 	void			MoveCity(dbc::cChar *szCityName, Long lMapCpyNO = -1, Char chSwitchType = enumSWITCHMAP_CARRY);
 	void			BackToCity(bool Die = false, cChar *szCityName = 0, Long lMapCpyNO = -1, Char chSwitchType = enumSWITCHMAP_DIE);
 	void			BackToCityEx(bool Die = false, cChar *szCityName = 0, Long lMapCpyNO = -1, Char chSwitchType = enumSWITCHMAP_DIE);
@@ -684,7 +684,7 @@ public:
 	void	SetKitbagRecDBID(long lDBID) {m_lKbRecDBID = lDBID;}
 	long	GetKitbagRecDBID(void) {return m_lKbRecDBID;}
 
-    //��ʱ����ID
+    //ID
     void	SetKitbagTmpRecDBID(long lDBID) {m_lKbTmpRecDBID = lDBID;}
 	long	GetKitbagTmpRecDBID(void) {return m_lKbTmpRecDBID;}
 
@@ -700,23 +700,23 @@ public:
 
 	int		GetLotteryIssue();
 
-	DWORD				m_dwBoatCtrlTick; // �����ȼ�ʱ��
+	DWORD				m_dwBoatCtrlTick; // 
 
-	// AIʹ�õı����ͽӿں���----------------------------------------------------------------
-	// ��õķ�ʽ�Ƿ�װһ�� CAICharacter, ����Character�̳�
+	// AI----------------------------------------------------------------
+	//  CAICharacter, Character
 	BYTE				m_AIType;
 	CCharacter*			m_AITarget;		
-	CCharacter*			m_HostCha;		  // ���������
-	int					m_nPatrolX;       // Ѳ�ߵ�����
+	CCharacter*			m_HostCha;		  // 
+	int					m_nPatrolX;       // 
 	int					m_nPatrolY;
-	short				m_sChaseRange;    // ��ɫ��׷�ٷ�Χ, ���������Χ��ɫ�ͻ�س���������
-	BYTE				m_btPatrolState;  // Ѳ��״̬, 0 ��ʾͣ���ڵ�1
-	                                      //           1 ��ʾͣ���ڵ�2
-                                          //           2 ��ʾ���ӵ�1ǰ����2
-	                                      //           3 ��ʾ���ӵ�2ǰ����1
+	short				m_sChaseRange;    // , 
+	BYTE				m_btPatrolState;  // , 0 1
+	                                      //           1 2
+                                          //           2 12
+	                                      //           3 21
 public:
 
-	void	ResetAIState();				  // ����AI״̬, �ڽ�ɫ������ʱ�����
+	void	ResetAIState();				  // AI, 
 
 	BOOL		GetChaRelive() { return m_bRelive; }
 	void		SetChaRelive() { m_bRelive = true; }
@@ -745,12 +745,12 @@ public:
 	bool			IsStoreEnable() { return m_bStoreEnable; }
 	void			SetStoreEnable(bool bStoreEnable) { m_bStoreEnable = bStoreEnable; }
 
-    //  ������
+    //  
     bool IsScaleFlag(){return m_expFlag;}
     void SetScaleFlag(){m_expFlag = true;}
     void SetExpScale(DWORD scale){ m_ExpScale = scale; }
     DWORD GetExpScale(){ return m_ExpScale; }
-    int m_noticeState;//������ʱ��֪ͨ״̬
+    int m_noticeState;//
 	int m_retry3;
 	int m_retry4;
 	int m_retry5;
@@ -800,11 +800,11 @@ public:
 	dbc::Short	IsItemExpired(SItemGrid* pSEquipIt);
 
 public:
-	CKitbag				m_CKitbag;			// ������
-	CKitbag				*m_pCKitbagTmp;       // ��ʱ����
-	stNetShortCut		m_CShortcut;		// �����
-	long				m_lKbRecDBID;		// ����������Դ���е�ID
-	long				m_lKbTmpRecDBID;	// ��ʱ��������Դ���е�ID
+	CKitbag				m_CKitbag;			// 
+	CKitbag				*m_pCKitbagTmp;       // 
+	stNetShortCut		m_CShortcut;		// 
+	long				m_lKbRecDBID;		// ID
+	long				m_lKbTmpRecDBID;	// ID
 	long				m_lStoreItemID;
 	bool				m_bStoreBuy;
 	DWORD				m_dwStoreTime;
@@ -815,31 +815,31 @@ public:
 	int					m_nPetNum;
 	
 	stNetChangeChaPart	m_SChaPart;
-	bool				m_ActContrl[enumACTCONTROL_MAX];	// ��ɫ���ж�����
-	CTimer				m_timerScripts;						// ����HP��SP�ȵĻָ�
+	bool				m_ActContrl[enumACTCONTROL_MAX];	// 
+	CTimer				m_timerScripts;						// HPSP
 
-	CHateMgr*			m_pHate;							// ��޶�
+	CHateMgr*			m_pHate;							// 
 
-	BOOL				m_bRelive;							// �Ƿ����ڱ����ܸ���
+	BOOL				m_bRelive;							// 
 
-	BOOL				m_bVol;								// �Ƿ���־Ը��
-	BOOL				m_bInvited;							// �Ƿ����ڱ�����
+	BOOL				m_bVol;								// 
+	BOOL				m_bInvited;							// 
 
 	//SSkillGrid			*m_pSkillGridTemp;
 
-	// ������Ϣ
+	// 
 	struct
 	{
-		Char	m_chSelRelive;	// ѡ�񸴻ʽ
-		Char	m_chReliveLv;	// ����ȼ����������0�����ʾ���ڷ���Ȼ����Ŀ���.
+		Char	m_chSelRelive;	// 
+		Char	m_chReliveLv;	// 0.
 	};
 
 	CActionCache		m_CActCache;
 
 	DWORD	m_dwCellRunTime[16];
 
-	short	m_sTigerItemID[9];	// �ϻ�����9������ID
-	short	m_sTigerSel[3];		// Ͷע��־
+	short	m_sTigerItemID[9];	// 9ID
+	short	m_sTigerSel[3];		// 
 	
 private:
 	BOOL BoatEnterMap( CCharacter& Boat, DWORD dwxPos, DWORD dwyPos, USHORT sDir );
@@ -848,17 +848,17 @@ private:
 	dbc::uShort			m_usIcon;
 
     bool m_expFlag;
-    DWORD m_ExpScale;       //  �����ԣ��������
+    DWORD m_ExpScale;       //  
 
 	struct
 	{
-		short m_sPoseState; // 0��վ.1���п�
+		short m_sPoseState; // 0.1
 	};
 	//add by jilinlee 2007/4/20
 	struct SReadBook
 	{
-		bool bIsReadState;       //0,���ڶ���״̬.1���ڶ���״̬.
-        DWORD dwLastReadCallTick; //�ϴε���Reading_Book�ű�������ʱ��.
+		bool bIsReadState;       //0,.1.
+        DWORD dwLastReadCallTick; //Reading_Book.
 	};
     
 	SReadBook m_SReadBook;
@@ -877,11 +877,11 @@ private:
 	BOOL		IsChaOnMount;
 	
 
-	// ������Ϣ
+	// 
 	mission::CTradeData*	m_pTradeData;
 
-	#define CHAEXIT_NONE				0		// ��Ч״̬����ɫ����ʹ����...��
-	#define CHAEXIT_BEGIN				1<<0	// �Ѿ���ʼ�˳�״̬	
+	#define CHAEXIT_NONE				0		// ...
+	#define CHAEXIT_BEGIN				1<<0	// 	
 
 	BYTE				m_byExit;
 	CTimer				m_timerExit;
@@ -889,9 +889,9 @@ private:
     CTimer              m_timerAreaCheck;
 	CTimer				m_timerDBUpdate;
 	CTimer				m_timerDie;
-	CTimer				m_timerMission;			// ����ϵͳ���Ӽ�ʱ�������¼�
-    CTimer				m_timerSkillState;		// ����״̬��ʱ��
-	CTimer              m_timerTeam;			// Team��Ϣ��ʱ֪ͨ�ͻ���
+	CTimer				m_timerMission;			// 
+    CTimer				m_timerSkillState;		// 
+	CTimer              m_timerTeam;			// Team
 	struct
 	{
 		CTimer			m_timerPing;
@@ -900,7 +900,7 @@ private:
 
 	std::bitset<8>		m_chPKCtrl;
 
-	dbc::Long			m_lSideID;				// �ֱ߱��
+	dbc::Long			m_lSideID;				// 
 	bool				m_bInOutMapQueue;
 	struct // Ping
 	{
@@ -934,9 +934,9 @@ public:
 
 	BOOL	CheckLifeTime()
 	{
-		if(_dwLifeTime==0) return FALSE; // ����Ҫ����ʱ���ʱ
+		if(_dwLifeTime==0) return FALSE; // 
 		
-		if((GetTickCount() - _dwLifeTimeTick) > _dwLifeTime) // ����ʱ���ѵ�
+		if((GetTickCount() - _dwLifeTimeTick) > _dwLifeTime) // 
 		{
 			return TRUE;
 		}
@@ -962,7 +962,7 @@ public:
 	}
 };
 
-// ������ű�֮��Ľ���
+// 
 extern Point		g_SSkillPoint;
 extern bool			g_bBeatBack;
 extern unsigned char	g_uchFightID;
@@ -981,7 +981,7 @@ extern bool		Strin2SStateData(CCharacter *pCCha, std::string &strData);
 //Add by lark.li 20080723
 extern char*	ChaExtendAttr2String(CCharacter *pCCha, char *szAttrBuf, int nLen);
 extern bool		Strin2ChaExtendAttr(CCharacter *pCCha, std::string &strAttr);
- //������־��¼�ӿ�
+ //
 extern void TL(int nType, const char *pszCha1, const char *pszCha2, const char *pszTrade);
 
 #endif // CHARACTER_H

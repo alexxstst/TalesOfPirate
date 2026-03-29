@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "UIGlobalVar.h"
 #include "UILabel.h"
 #include "FindPath.h"
 #include "UICheckBox.h"
 namespace GUI
 {
-// С��ͼ
+// 
 class CMiniMapMgr : public CUIInterface
 {
 public:
@@ -13,7 +13,7 @@ public:
 	  frmMinimap(0), MinimatRect(0), labMapPos(0), labMapName(0), frmBigmap(0){}
 
 
-	// ����С��ͼ����ʱ�õ�Form��С
+	// Form
 	CCompent*	GetMinimapRect()			{ return MinimatRect;	}
 
 	void		RefreshChaPos( int x, int y );
@@ -56,7 +56,7 @@ private:
 	static void _evtShowbigmap(CGuiData *pSender);
 	static void _evtHidebigmap(CGuiData *pSender);
 
-	//�״�����enter�¼�
+	//enter
 	static void _evtShowNPCList(CGuiData *pSender,int x,int y ,DWORD key);
 
 	static void _evtRadarEnter(CGuiData *pSender);
@@ -64,13 +64,13 @@ private:
 	
 	static void ShowRadar();
 
-	// �������������Ƿ��зǷ��ַ�(ֻ֧������) ��ȷ����0,�������ݶ�Ϊ-1
+	// () 0,-1
 	static int CheckCoordinateEdit(const char* input);
 
-	// ���ƴ��ͼ��ʾ
+	// 
     void _RenderBigMapHint(void);//Add by sunny.sun 20080903
 
-	//С��ͼ����
+	//
 	CForm*		frmMinimap;
 	CCompent*	MinimatRect;
 
@@ -78,7 +78,7 @@ private:
 	{
 		MAP_POS_MAX = 10,
 	};
-    //С��ͼ�ؼ�
+    //
 	CLabelEx	*labMapPosRand[MAP_POS_MAX];
 	CLabelEx	*labMapPos;
 	CLabelEx    *labMapName;

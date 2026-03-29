@@ -1,4 +1,4 @@
-// zinflate.h - originally written and placed in the public domain by Wei Dai
+﻿// zinflate.h - originally written and placed in the public domain by Wei Dai
 
 /// \file zinflate.h
 /// \brief DEFLATE compression and decompression (RFC 1951)

@@ -1,4 +1,4 @@
-#include "TcpClient.h"
+﻿#include "TcpClient.h"
 #include <cassert>
 #include <iostream>
 #include <ostream>
@@ -7,48 +7,48 @@
 #pragma comment(lib, "ws2_32.lib")
 
 namespace net {
-	// ═══════════════════════════════════════════════════════════════
-	//  WsaErrorStr — текстовое описание WSA-ошибок
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  WsaErrorStr    WSA-
+	// 
 
 	static const char* WsaErrorStr(int err) {
 		switch (err) {
 		case 0: return "OK (0)";
-		case WSAEINTR: return "WSA=10004 WSAEINTR (прерван блокирующий вызов)";
-		case WSAEACCES: return "WSA=10013 WSAEACCES (отказано в доступе)";
-		case WSAEFAULT: return "WSA=10014 WSAEFAULT (неверный адрес)";
-		case WSAEINVAL: return "WSA=10022 WSAEINVAL (неверный аргумент)";
-		case WSAEMFILE: return "WSA=10024 WSAEMFILE (слишком много открытых сокетов)";
-		case WSAEWOULDBLOCK: return "WSA=10035 WSAEWOULDBLOCK (операция заблокирована)";
-		case WSAEINPROGRESS: return "WSA=10036 WSAEINPROGRESS (операция в процессе)";
-		case WSAEALREADY: return "WSA=10037 WSAEALREADY (операция уже выполняется)";
-		case WSAENOTSOCK: return "WSA=10038 WSAENOTSOCK (не сокет)";
-		case WSAEMSGSIZE: return "WSA=10040 WSAEMSGSIZE (сообщение слишком длинное)";
-		case WSAENETDOWN: return "WSA=10050 WSAENETDOWN (сеть недоступна)";
-		case WSAENETRESET: return "WSA=10052 WSAENETRESET (сеть сбросила соединение)";
-		case WSAECONNABORTED: return "WSA=10053 WSAECONNABORTED (соединение прервано)";
-		case WSAECONNRESET: return "WSA=10054 WSAECONNRESET (соединение сброшено удалённой стороной)";
-		case WSAENOBUFS: return "WSA=10055 WSAENOBUFS (нет буферного пространства)";
-		case WSAENOTCONN: return "WSA=10057 WSAENOTCONN (сокет не подключён)";
-		case WSAESHUTDOWN: return "WSA=10058 WSAESHUTDOWN (сокет выключен)";
-		case WSAETIMEDOUT: return "WSA=10060 WSAETIMEDOUT (таймаут соединения)";
-		case WSAECONNREFUSED: return "WSA=10061 WSAECONNREFUSED (соединение отклонено)";
-		case WSAEHOSTDOWN: return "WSA=10064 WSAEHOSTDOWN (хост недоступен)";
-		case WSAEHOSTUNREACH: return "WSA=10065 WSAEHOSTUNREACH (нет маршрута к хосту)";
-		case WSANOTINITIALISED: return "WSA=10093 WSANOTINITIALISED (WSAStartup не вызван)";
+		case WSAEINTR: return "WSA=10004 WSAEINTR (  )";
+		case WSAEACCES: return "WSA=10013 WSAEACCES (  )";
+		case WSAEFAULT: return "WSA=10014 WSAEFAULT ( )";
+		case WSAEINVAL: return "WSA=10022 WSAEINVAL ( )";
+		case WSAEMFILE: return "WSA=10024 WSAEMFILE (   )";
+		case WSAEWOULDBLOCK: return "WSA=10035 WSAEWOULDBLOCK ( )";
+		case WSAEINPROGRESS: return "WSA=10036 WSAEINPROGRESS (  )";
+		case WSAEALREADY: return "WSA=10037 WSAEALREADY (  )";
+		case WSAENOTSOCK: return "WSA=10038 WSAENOTSOCK ( )";
+		case WSAEMSGSIZE: return "WSA=10040 WSAEMSGSIZE (  )";
+		case WSAENETDOWN: return "WSA=10050 WSAENETDOWN ( )";
+		case WSAENETRESET: return "WSA=10052 WSAENETRESET (  )";
+		case WSAECONNABORTED: return "WSA=10053 WSAECONNABORTED ( )";
+		case WSAECONNRESET: return "WSA=10054 WSAECONNRESET (   )";
+		case WSAENOBUFS: return "WSA=10055 WSAENOBUFS (  )";
+		case WSAENOTCONN: return "WSA=10057 WSAENOTCONN (  )";
+		case WSAESHUTDOWN: return "WSA=10058 WSAESHUTDOWN ( )";
+		case WSAETIMEDOUT: return "WSA=10060 WSAETIMEDOUT ( )";
+		case WSAECONNREFUSED: return "WSA=10061 WSAECONNREFUSED ( )";
+		case WSAEHOSTDOWN: return "WSA=10064 WSAEHOSTDOWN ( )";
+		case WSAEHOSTUNREACH: return "WSA=10065 WSAEHOSTUNREACH (   )";
+		case WSANOTINITIALISED: return "WSA=10093 WSANOTINITIALISED (WSAStartup  )";
 		case WSAEDISCON: return "WSA=10101 WSAEDISCON (graceful disconnect)";
 		default: {
-			// Для неизвестных кодов — статический буфер (не thread-safe, но для логов достаточно)
+			//       ( thread-safe,    )
 			static thread_local char buf[64];
-			snprintf(buf, sizeof(buf), "WSA=%d (неизвестная ошибка)", err);
+			snprintf(buf, sizeof(buf), "WSA=%d ( )", err);
 			return buf;
 		}
 		}
 	}
 
-	// ═══════════════════════════════════════════════════════════════
+	// 
 	//  WinSock init/cleanup
-	// ═══════════════════════════════════════════════════════════════
+	// 
 
 	bool InitWinSock() {
 		WSADATA wsa;
@@ -59,9 +59,9 @@ namespace net {
 		WSACleanup();
 	}
 
-	// ═══════════════════════════════════════════════════════════════
-	//  TcpClient — реализация
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  TcpClient  
+	// 
 
 	TcpClient::TcpClient()
 		: _socket(INVALID_SOCKET), _connected(false), _pendingDisconnect(false),
@@ -72,18 +72,18 @@ namespace net {
 		Disconnect(0);
 	}
 
-	// ── Connect (client mode) ─────────────────────────────────
+	//  Connect (client mode) 
 
 	bool TcpClient::Connect(const std::string& host, uint16_t port, uint32_t timeoutMs) {
 		if (_connected) {
-			std::cout << "[TcpClient] Connect: уже подключён, повторный вызов игнорируется" << std::endl;
+			std::cout << "[TcpClient] Connect:  ,   " << std::endl;
 			return false;
 		}
 
-		std::cout << "[TcpClient] Подключение к " << host << ":" << port << " (timeout=" << timeoutMs << "ms)..." <<
+		std::cout << "[TcpClient]   " << host << ":" << port << " (timeout=" << timeoutMs << "ms)..." <<
 			std::endl;
 
-		// Резолв адреса
+		//  
 		addrinfo hints{};
 		hints.ai_family = AF_INET;
 		hints.ai_socktype = SOCK_STREAM;
@@ -95,20 +95,20 @@ namespace net {
 		addrinfo* result = nullptr;
 		int gaiErr = getaddrinfo(host.c_str(), portStr, &hints, &result);
 		if (gaiErr != 0) {
-			std::cout << "[TcpClient] getaddrinfo ОШИБКА: " << gaiErr << " для " << host << ":" << port << std::endl;
+			std::cout << "[TcpClient] getaddrinfo : " << gaiErr << "  " << host << ":" << port << std::endl;
 			return false;
 		}
 
-		// Создание сокета
+		//  
 		_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 		if (_socket == INVALID_SOCKET) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpClient] socket() ОШИБКА: " << WsaErrorStr(err) << std::endl;
+			std::cout << "[TcpClient] socket() : " << WsaErrorStr(err) << std::endl;
 			freeaddrinfo(result);
 			return false;
 		}
 
-		// Non-blocking connect с timeout
+		// Non-blocking connect  timeout
 		u_long nonBlocking = 1;
 		ioctlsocket(_socket, FIONBIO, &nonBlocking);
 
@@ -118,13 +118,13 @@ namespace net {
 		if (connectResult == SOCKET_ERROR) {
 			int err = WSAGetLastError();
 			if (err != WSAEWOULDBLOCK) {
-				std::cout << "[TcpClient] connect() ОШИБКА: " << WsaErrorStr(err) << std::endl;
+				std::cout << "[TcpClient] connect() : " << WsaErrorStr(err) << std::endl;
 				closesocket(_socket);
 				_socket = INVALID_SOCKET;
 				return false;
 			}
 
-			// Ожидание подключения с timeout
+			//    timeout
 			fd_set writeSet;
 			FD_ZERO(&writeSet);
 			FD_SET(_socket, &writeSet);
@@ -140,17 +140,17 @@ namespace net {
 			int selResult = select(0, nullptr, &writeSet, &exceptSet, &tv);
 			if (selResult <= 0 || FD_ISSET(_socket, &exceptSet)) {
 				if (selResult == 0) {
-					std::cout << "[TcpClient] connect() ТАЙМАУТ (" << timeoutMs << "ms) к " << host << ":" << port <<
+					std::cout << "[TcpClient] connect()  (" << timeoutMs << "ms)  " << host << ":" << port <<
 						std::endl;
 				}
 				else if (selResult < 0) {
-					std::cout << "[TcpClient] select() ОШИБКА: " << WsaErrorStr(WSAGetLastError()) << std::endl;
+					std::cout << "[TcpClient] select() : " << WsaErrorStr(WSAGetLastError()) << std::endl;
 				}
 				else {
 					int sockErr = 0;
 					int optLen = sizeof(sockErr);
 					getsockopt(_socket, SOL_SOCKET, SO_ERROR, (char*)&sockErr, &optLen);
-					std::cout << "[TcpClient] connect() ОТКЛОНЁН к " << host << ":" << port << ": " <<
+					std::cout << "[TcpClient] connect()   " << host << ":" << port << ": " <<
 						WsaErrorStr(sockErr) << std::endl;
 				}
 				closesocket(_socket);
@@ -159,11 +159,11 @@ namespace net {
 			}
 		}
 
-		// Обратно в blocking mode для recv thread
+		//   blocking mode  recv thread
 		nonBlocking = 0;
 		ioctlsocket(_socket, FIONBIO, &nonBlocking);
 
-		// Отключаем Nagle для минимальной задержки
+		//  Nagle   
 		int noDelay = 1;
 		setsockopt(_socket, IPPROTO_TCP, TCP_NODELAY, (const char*)&noDelay, sizeof(noDelay));
 
@@ -172,18 +172,18 @@ namespace net {
 		_connected = true;
 		_pendingDisconnect = false;
 
-		// Запуск recv потока
+		//  recv 
 		_recvThread = std::thread(&TcpClient::RecvThreadProc, this);
 
-		std::cout << "[TcpClient] Подключён к " << host << ":" << port << " (socket=" << _socket << ")" << std::endl;
+		std::cout << "[TcpClient]   " << host << ":" << port << " (socket=" << _socket << ")" << std::endl;
 		return true;
 	}
 
-	// ── Attach (server mode) ──────────────────────────────────
+	//  Attach (server mode) 
 
 	bool TcpClient::Attach(SOCKET sock, const std::string& peerIP, uint16_t peerPort) {
 		if (_connected) {
-			std::cout << "[TcpClient] Attach: уже подключён, вызов игнорируется" << std::endl;
+			std::cout << "[TcpClient] Attach:  ,  " << std::endl;
 			return false;
 		}
 
@@ -191,50 +191,50 @@ namespace net {
 		_peerIP = peerIP;
 		_peerPort = peerPort;
 
-		// Отключаем Nagle
+		//  Nagle
 		int noDelay = 1;
 		setsockopt(_socket, IPPROTO_TCP, TCP_NODELAY, (const char*)&noDelay, sizeof(noDelay));
 
 		_connected = true;
 		_pendingDisconnect = false;
 
-		// Запуск recv потока
+		//  recv 
 		_recvThread = std::thread(&TcpClient::RecvThreadProc, this);
 
-		std::cout << "[TcpClient] Attached от " << peerIP << ":" << peerPort << " (socket=" << _socket << ")" <<
+		std::cout << "[TcpClient] Attached  " << peerIP << ":" << peerPort << " (socket=" << _socket << ")" <<
 			std::endl;
 		return true;
 	}
 
-	// ── Disconnect ─────────────────────────────────────────────
+	//  Disconnect 
 
 	void TcpClient::Disconnect(int reason) {
 		bool expected = true;
 		if (!_connected.compare_exchange_strong(expected, false)) {
-			return; // Уже отключены
+			return; //  
 		}
 
 		std::cout << "[TcpClient] Disconnect: reason=" << reason
 			<< " peer=" << _peerIP << ":" << _peerPort
 			<< " (socket=" << _socket << ")" << std::endl;
 
-		// Закрыть сокет — это разблокирует recv() в потоке
+		//      recv()  
 		if (_socket != INVALID_SOCKET) {
 			shutdown(_socket, SD_BOTH);
 			closesocket(_socket);
 			_socket = INVALID_SOCKET;
 		}
 
-		// Ждём завершения recv потока
+		//   recv 
 		if (_recvThread.joinable()) {
 			_recvThread.join();
 		}
 
-		// Очищаем очереди
+		//  
 		_recvQueue.Clear();
 		_rpcResponseQueue.Clear();
 
-		// Отменяем все pending RPC с пустым ответом
+		//   pending RPC   
 		{
 			std::lock_guard<std::mutex> lock(_callsMtx);
 			for (auto& call : _pendingCalls) {
@@ -244,17 +244,17 @@ namespace net {
 			_pendingCalls.clear();
 		}
 
-		// Уведомляем handler
+		//  handler
 		if (_handler) {
 			_handler->OnDisconnected(reason);
 		}
 	}
 
-	// ── Send ───────────────────────────────────────────────────
+	//  Send 
 
 	bool TcpClient::Send(WPacket& packet) {
 		if (!_connected) {
-			std::cout << "[TcpClient] Send: не подключён, пакет отброшен" << std::endl;
+			std::cout << "[TcpClient] Send:  ,  " << std::endl;
 			return false;
 		}
 
@@ -264,22 +264,22 @@ namespace net {
 
 		int pktSize = packet.GetPacketSize();
 
-		// Шифрование CMD+payload (offset 6)
+		//  CMD+payload (offset 6)
 		if (_crypto && _crypto->IsActive() && pktSize > 6) {
 			int dataLen = pktSize - 6;
-			// AES-GCM overhead: nonce(12) + tag(16) = 28 байт
+			// AES-GCM overhead: nonce(12) + tag(16) = 28 
 			int maxEncLen = dataLen + 28;
 
-			// Временный буфер для шифрованных данных
+			//     
 			WPacket encrypted(maxEncLen);
 
-			// Копируем SESS [2..5]
+			//  SESS [2..5]
 			std::memcpy(encrypted.Data() + 2, packet.Data() + 2, 4);
 
 			int encLen = dataLen;
 			if (!_crypto->Encrypt(encrypted.Data() + 6, maxEncLen,
 								  packet.Data() + 6, encLen)) {
-				std::cout << "[TcpClient] Send: ошибка шифрования, пакет отброшен" << std::endl;
+				std::cout << "[TcpClient] Send:  ,  " << std::endl;
 				return false;
 			}
 
@@ -292,25 +292,25 @@ namespace net {
 		return SendExact(packet.Data(), pktSize);
 	}
 
-	// ── AsyncCall ──────────────────────────────────────────────
+	//  AsyncCall 
 
 	bool TcpClient::AsyncCall(WPacket& request, uint32_t timeoutMs, RpcCallback callback) {
 		if (!_connected) {
-			std::cout << "[TcpClient] AsyncCall: не подключён" << std::endl;
+			std::cout << "[TcpClient] AsyncCall:  " << std::endl;
 			return false;
 		}
 
-		// Генерируем уникальный SESS (1..0x7FFFFFFE)
+		//   SESS (1..0x7FFFFFFE)
 		uint32_t sess = _sessCounter.fetch_add(1);
 		if (sess >= 0x7FFFFFFF) {
 			_sessCounter.store(1);
 			sess = _sessCounter.fetch_add(1);
 		}
 
-		// Записываем SESS в пакет
+		//  SESS  
 		request.WriteSess(sess);
 
-		// Запоминаем callback
+		//  callback
 		{
 			std::lock_guard<std::mutex> lock(_callsMtx);
 			PendingCall pc;
@@ -320,9 +320,9 @@ namespace net {
 			_pendingCalls.push_back(std::move(pc));
 		}
 
-		// Отправляем
+		// 
 		if (!Send(request)) {
-			// Откатываем pending call
+			//  pending call
 			std::lock_guard<std::mutex> lock(_callsMtx);
 			_pendingCalls.erase(
 				std::remove_if(_pendingCalls.begin(), _pendingCalls.end(),
@@ -336,10 +336,10 @@ namespace net {
 		return true;
 	}
 
-	// ── PollPackets ────────────────────────────────────────────
+	//  PollPackets 
 
 	int TcpClient::PollPackets(int maxPackets) {
-		// 1. Обработать RPC-ответы (dispatch callbacks)
+		// 1.  RPC- (dispatch callbacks)
 		RPacket rpcPkt;
 		while (_rpcResponseQueue.Pop(rpcPkt)) {
 			uint32_t sess = rpcPkt.GetSess() & ~SESS_FLAG;
@@ -355,7 +355,7 @@ namespace net {
 			}
 		}
 
-		// 2. Проверить таймауты pending RPC
+		// 2.   pending RPC
 		{
 			std::lock_guard<std::mutex> lock(_callsMtx);
 			uint32_t now = GetTickCount();
@@ -372,7 +372,7 @@ namespace net {
 			}
 		}
 
-		// 3. Обработать обычные пакеты
+		// 3.   
 		if (!_handler) return 0;
 
 		int processed = 0;
@@ -383,7 +383,7 @@ namespace net {
 			++processed;
 		}
 
-		// Проверяем отложенное уведомление о разрыве от recv thread
+		//       recv thread
 		bool expected = true;
 		if (_pendingDisconnect.compare_exchange_strong(expected, false)) {
 			_recvQueue.Clear();
@@ -392,7 +392,7 @@ namespace net {
 				_recvThread.join();
 			}
 
-			// Отменяем все pending RPC
+			//   pending RPC
 			{
 				std::lock_guard<std::mutex> lock(_callsMtx);
 				for (auto& call : _pendingCalls) {
@@ -408,66 +408,66 @@ namespace net {
 		return processed;
 	}
 
-	// ── RecvThreadProc ─────────────────────────────────────────
+	//  RecvThreadProc 
 
 	void TcpClient::RecvThreadProc() {
-		// Сброс системных ошибок, чтобы WSAGetLastError/GetLastError возвращали актуальные значения
+		//   ,  WSAGetLastError/GetLastError   
 		WSASetLastError(0);
 		SetLastError(0);
-		std::cout << "[TcpClient] RecvThread: запущен (socket=" << _socket
+		std::cout << "[TcpClient] RecvThread:  (socket=" << _socket
 			<< " peer=" << _peerIP << ":" << _peerPort << ")" << std::endl;
 		uint8_t sizeHeader[2];
 
 		while (_connected) {
-			// 1. Читаем 2 байта размера пакета
+			// 1.  2   
 			if (!RecvExact(sizeHeader, 2)) {
-				std::cout << "[TcpClient] RecvThread: выход — ошибка чтения заголовка размера" << std::endl;
+				std::cout << "[TcpClient] RecvThread:      " << std::endl;
 				break;
 			}
 
 			int pktSize = static_cast<int>(readUInt16(sizeHeader));
 			if (pktSize == 2) {
-				std::cout << "[TcpClient] RecvThread: пришел пинг: " << pktSize << std::endl;
+				std::cout << "[TcpClient] RecvThread:  : " << pktSize << std::endl;
 				continue;
 			}
 
 			if (pktSize < 8 || pktSize > 65535) {
-				std::cout << "[TcpClient] RecvThread: невалидный размер кадра: " << pktSize << std::endl;
+				std::cout << "[TcpClient] RecvThread:   : " << pktSize << std::endl;
 				break;
 			}
 
-			// 2. Аллоцируем буфер из пула
+			// 2.    
 			int bucketSize = PacketPool::Shared().BucketSize(pktSize);
 			uint8_t* buf = PacketPool::Shared().Allocate(pktSize);
 
-			// Копируем size header
+			//  size header
 			writeUInt16(buf, static_cast<uint16_t>(pktSize));
 
-			// 3. Дочитываем остаток кадра [SESS][CMD][payload]
+			// 3.    [SESS][CMD][payload]
 			if (!RecvExact(buf + 2, pktSize - 2)) {
-				std::cout << "[TcpClient] RecvThread: выход — ошибка чтения тела пакета (size=" << pktSize << ")" <<
+				std::cout << "[TcpClient] RecvThread:       (size=" << pktSize << ")" <<
 					std::endl;
 				PacketPool::Shared().Free(buf, bucketSize);
 				break;
 			}
 
-			// 4. Дешифровка CMD+payload (offset 6)
+			// 4.  CMD+payload (offset 6)
 			if (_crypto && _crypto->IsActive() && pktSize > 6) {
 				int encLen = pktSize - 6;
 
 				if (!_crypto->Decrypt(buf + 6, encLen)) {
-					std::cout << "[TcpClient] RecvThread: ошибка дешифровки (size=" << pktSize << "), разрыв" <<
+					std::cout << "[TcpClient] RecvThread:   (size=" << pktSize << "), " <<
 						std::endl;
 					PacketPool::Shared().Free(buf, bucketSize);
 					break;
 				}
 
-				// Обновляем размер после дешифровки
+				//    
 				pktSize = 6 + encLen;
 				writeUInt16(buf, static_cast<uint16_t>(pktSize));
 			}
 
-			// 5. Маршрутизация по SESS: FLAG → RPC-ответ, иначе → обычный пакет
+			// 5.   SESS: FLAG  RPC-,    
 			uint32_t sess = readUInt32(buf + 2);
 
 			{
@@ -483,9 +483,9 @@ namespace net {
 			}
 		}
 
-		// Соединение потеряно — сигнализируем game thread через _pendingDisconnect
+		//     game thread  _pendingDisconnect
 		if (_connected) {
-			std::cout << "[TcpClient] RecvThread: соединение потеряно, ставим pendingDisconnect" << std::endl;
+			std::cout << "[TcpClient] RecvThread:  ,  pendingDisconnect" << std::endl;
 			_connected = false;
 			_pendingDisconnect = true;
 
@@ -495,11 +495,11 @@ namespace net {
 			}
 		}
 		else {
-			std::cout << "[TcpClient] RecvThread: завершён (Disconnect вызван извне)" << std::endl;
+			std::cout << "[TcpClient] RecvThread:  (Disconnect  )" << std::endl;
 		}
 	}
 
-	// ── RecvExact ──────────────────────────────────────────────
+	//  RecvExact 
 
 	bool TcpClient::RecvExact(uint8_t* buf, int len) {
 		int received = 0;
@@ -508,7 +508,7 @@ namespace net {
 			if (n <= 0) {
 				int err = WSAGetLastError();
 				if (n == 0) {
-					std::cout << "[TcpClient] RecvExact: соединение закрыто удалённой стороной" << std::endl;
+					std::cout << "[TcpClient] RecvExact:    " << std::endl;
 				}
 				else {
 					std::string error = WsaErrorStr(err);
@@ -521,7 +521,7 @@ namespace net {
 		return true;
 	}
 
-	// ── SendExact ──────────────────────────────────────────────
+	//  SendExact 
 
 	bool TcpClient::SendExact(const uint8_t* buf, int len) {
 		int sent = 0;

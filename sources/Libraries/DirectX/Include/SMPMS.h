@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  S M P M S . H
  *
  *  Definitions used by the Microsoft Sample Message Store Provider

@@ -1,4 +1,4 @@
-print("-- [Loading] NPC Script [08]")
+﻿print("-- [Loading] NPC Script [08]")
 
 bgtalk1_1 = "I am Event NPC - Pappa. You can check out available events here. If you are interested, select the event for more detail or visit our website at: http://www.piratekingonline.com/"
 bganswer1_13 = "Pirate King Online New Year Race"
@@ -256,7 +256,7 @@ function dream_talk27()
 end
 -- Resident - Depress (447,545)
 function dream_talk28()
-	Talk( 1, "Don't need to say anymore, his life is just 2 words, cough~ Hey don��t go, I haven't finish" )
+	Talk( 1, "Don't need to say anymore, his life is just 2 words, cough~ Hey dont go, I haven't finish" )
 end
 -- Tools - Honor (426,565)
 function dream_talk29()
@@ -264,7 +264,7 @@ function dream_talk29()
 end
 -- Accessory - Twinkle
 function dream_talk30()
-	Talk(1, "I have got high class rings and necklace here, don��t worry about the price, we can talk about it later")
+	Talk(1, "I have got high class rings and necklace here, dont worry about the price, we can talk about it later")
 	Text(1, "Trade", BuyPage)
 
 	InitTrade()
@@ -486,7 +486,7 @@ function dream_talk42()
 end
 -- Demon Deacon - Sebastien (380,608)
 function dream_talk43()
-	Talk( 1 ,"Sebastien: Even being a member of the demon's royal family, my master is a very kind person~ Yes, my lord��.. I'm just a deacon.")
+	Talk( 1 ,"Sebastien: Even being a member of the demon's royal family, my master is a very kind person~ Yes, my lord.. I'm just a deacon.")
 	Text( 1 , "I want to exchange Kiss of Demon" ,JumpPage , 2)
     Text( 1 , "I want to exchange Seal of Demon",JumpPage , 9)
 	Text( 1 , "I want to exchange Shadow of Demon",JumpPage , 16)

@@ -1,9 +1,9 @@
-#pragma once
+ï»¿#pragma once
 
 #include "TableData.h"
 
 
-// Êı¾İÏî ID µØÃû ±êÊ¶ÑÕÉ« 
+//  ID   
 class CAreaInfo : public CRawDataInfo
 {
 public:
@@ -18,7 +18,7 @@ public:
     DWORD dwEnvColor;
     DWORD dwLightColor;
     float fLightDir[3];
-	char  chType;			// 0-Ò°Íâ,1-³ÇÄÚ,ÓÃÓÚ¸ü»»ÏÔÊ¾ÎÄ×ÖµÄ±³¾°
+	char  chType;			// 0-,1-,
 };
 
 
@@ -36,7 +36,7 @@ public:
 
 protected:
 
-	static CAreaSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CAreaSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

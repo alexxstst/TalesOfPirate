@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: JobInitEquip.cpp
 // Creater: ZhangXuedong
 // Date: 2005.01.08
@@ -21,11 +21,11 @@ BOOL CJobEquipRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<str
     string strList[80];
 	string strLine;
 
-	// ±àºÅ
+	// 
 	pInfo->chID = (char)pInfo->nID;
-	// Ö°Òµ
+	// 
 	pInfo->chJob = (char)g_GetJobID(pInfo->szDataName);
-	// ×°±¸±àºÅ
+	// 
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	n = n > defJOB_INIT_EQUIP_MAX ? defJOB_INIT_EQUIP_MAX : n;

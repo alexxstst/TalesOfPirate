@@ -1,4 +1,4 @@
-#ifndef MPParticleEmitterFactory_H
+﻿#ifndef MPParticleEmitterFactory_H
 #define MPParticleEmitterFactory_H
 
 #include "MPEffPrerequisites.h"

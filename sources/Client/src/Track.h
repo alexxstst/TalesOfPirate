@@ -1,4 +1,4 @@
-
+Ôªø
 #include "publicfun.h"
 
 class CPointTrack
@@ -40,7 +40,7 @@ protected:
     float        _fProgressRate;
     float        _fSpeed;
 
-	float		 _fheight;//∆Ωª¨¥¶¿Ì∏ﬂ∂»
+	float		 _fheight;//
 	bool		 _bUpdateHei;
 
     std::list<STrackPoint> _PointList;

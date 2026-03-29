@@ -1,4 +1,4 @@
-// vmac.cpp - originally written and placed in the public domain by Wei Dai
+﻿// vmac.cpp - originally written and placed in the public domain by Wei Dai
 // based on Ted Krovetz's public domain vmac.c and draft-krovetz-vmac-01.txt
 
 #include "pch.h"
@@ -200,7 +200,7 @@ void VMAC_Base::VHASH_Update_SSE2(const word64 *data, size_t blocksRemainingInWo
 	// causes GCC to generate 'mov -0x40(%ebx), %ebx' for the restore. That
 	// obviously won't work because EBX is no longer valid. We can push and
 	// pop EBX, but that breaks the stack-based references. Attempting to
-	// sidestep with clobber lists results in "error: ‘asm’ operand has
+	// sidestep with clobber lists results in "error: asm operand has
 	// impossible constraints". Eventually, we found we could save EBX to
 	// ESP-20, which is one word below our stack in the frame.
 #ifdef __GNUC__

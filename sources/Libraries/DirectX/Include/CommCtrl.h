@@ -1,4 +1,4 @@
-
+﻿
 /*****************************************************************************\
 *                                                                             *
 * commctrl.h - - Interface for the Windows Common Controls                    *

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <process.h>
 #include "gameloading.h"
 #include "gameapp.h"

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  WABDEFS.H
  *
  *  Definitions used by WAB clients

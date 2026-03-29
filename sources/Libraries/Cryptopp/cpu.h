@@ -1,4 +1,4 @@
-// cpu.h - originally written and placed in the public domain by Wei Dai
+﻿// cpu.h - originally written and placed in the public domain by Wei Dai
 //         updated for ARM and PowerPC by Jeffrey Walton.
 //         updated to split CPU_Query() and CPU_Probe() by Jeffrey Walton.
 

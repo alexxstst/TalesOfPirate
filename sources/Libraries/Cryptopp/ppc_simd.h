@@ -1,4 +1,4 @@
-// ppc_simd.h - written and placed in public domain by Jeffrey Walton
+﻿// ppc_simd.h - written and placed in public domain by Jeffrey Walton
 
 /// \file ppc_simd.h
 /// \brief Support functions for PowerPC and vector operations

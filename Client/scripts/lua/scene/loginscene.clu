@@ -1,9 +1,0 @@
--- 创建登录场景
-nLoginScene = SN_CreateScene( enumLoginScene, "登陆场景", "", FORM_LOGIN, 300, 200, 100, 100 )	
-SN_SetIsShowMinimap( FALSE )
-SN_SetIsShow3DCursor( FALSE )
-
--- 场景UI
-UI_ShowForm( frmLOGO, TRUE )
-
-GP_GotoScene( nLoginScene )	-- GotoScene放在最后,因为涉及切换模板时的表单初始化

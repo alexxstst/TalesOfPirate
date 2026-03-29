@@ -1,4 +1,4 @@
-print("-- [Loading] Attr Type")
+﻿print("-- [Loading] Attr Type")
 
 ATTR_COUNT_BASE0 = 0
 ATTR_LV = ATTR_COUNT_BASE0 + 0

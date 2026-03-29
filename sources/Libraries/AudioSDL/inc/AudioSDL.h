@@ -1,7 +1,7 @@
-
+ï»¿
 //---------------------------
 //
-//  ÒôÆµ²¥·Å
+//  
 //  by Jampe
 //  2007/03/28
 //
@@ -22,52 +22,52 @@ class AudioSDL : public _singleton<AudioSDL>
 public:
     ~AudioSDL();
 
-    //  ³õÊ¼»¯ÉùÒôÏµÍ³
+    //  
     bool init();
 
-    //  ÊÍ·ÅÉùÒôÏµÍ³
+    //  
     void release();
 
-    //  ÉùÒôÏµÍ³ÊÇ·ñÓĞĞ§
+    //  
     bool is_valid();
 
-    //  »ñÈ¡ÒôÀÖ×ÊÔ´Ë÷Òı
+    //  
     ulong get_resID(const char* resource, int type);
 
-    //  ²¥·Å
+    //  
     bool play(ulong id, bool loop = false);
 
-    //  ½¥Èë
+    //  
     bool fadeIn(ulong id, int ms, bool loop = false);
 
-    //  ½¥ÍË
+    //  
     bool fadeOut(ulong id, int ms);
 
-    //  Í£Ö¹²¥·Å
+    //  
     bool stop(ulong id);
 
-    //  ÔİÍ£
+    //  
     bool pause(ulong id);
 
-    //  »Ö¸´
+    //  
     bool resume(ulong id);
 
-    //  ÖØÖÃ(½öÒôÀÖÓĞĞ§.ÈçMP3,OGGµÈ)
+    //  (.MP3,OGG)
     bool rewind(ulong id);
 
-    //  ÊÇ·ñÕıÔÚ²¥·Å
+    //  
     bool is_playing(ulong id);
 
-    //  ÊÇ·ñÔİÍ£
+    //  
     bool is_paused(ulong id);
 
-    //  ÊÇ·ñÍ£Ö¹
+    //  
     bool is_stopped(ulong id);
 
-    //  µ÷ÕûÒôÁ¿
+    //  
     bool volume(ulong id, int vol);
 
-    //  ¼ì²â×ÊÔ´ÓĞĞ§ĞÔ(Çå³ş³¬Ê±Î´ÒıÓÃ×ÊÔ´)(Ãë)
+    //  ()()
     void checkRes(ulong timeout = 300);
 
 protected:

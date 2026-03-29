@@ -1,4 +1,4 @@
-function DefaultItemString(tab)
+﻿function DefaultItemString(tab)
 	local default = {
 		ID = 0,
 		Quantity = 0,

@@ -1,4 +1,4 @@
-
+﻿
 /*****************************************************************************\
 *                                                                             *
 * prsht.h - - Interface for the Windows Property Sheet Pages                  *

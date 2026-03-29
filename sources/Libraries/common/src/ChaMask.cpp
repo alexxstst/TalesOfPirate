@@ -1,4 +1,4 @@
-#include ".\chamask.h"
+﻿#include ".\chamask.h"
 
 char	szBase64[defBASE54_CONV_SIZE];
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "uimenu.h"
 #include "UIForm.h"
 
@@ -86,7 +86,7 @@ void CMenu::_MenusClear()
 	for( menus::iterator it=_menus.begin(); it!=_menus.end(); it++ )
 	{
 		//delete *it;
-		SAFE_DELETE(*it); // UIµ±»ú´¦Àí
+		SAFE_DELETE(*it); // UI
 	}
 	_menus.clear();
 	_pSelectMenu = NULL;
@@ -98,8 +98,8 @@ CMenu::~CMenu()
 	//delete _pSelect;
 	//delete _pImage;
 
-	SAFE_DELETE(_pSelect); // UIµ±»ú´¦Àí
-	SAFE_DELETE(_pImage);  // UIµ±»ú´¦Àí
+	SAFE_DELETE(_pSelect); // UI
+	SAFE_DELETE(_pImage);  // UI
 }
 
 CMenuItem* CMenu::AddMenu(const char* szText)
@@ -121,7 +121,7 @@ bool CMenu::DelMenu( CMenuItem* pMenu )
 	if( it!=_menus.end() )
 	{
 		//delete pMenu;
-		SAFE_DELETE(pMenu); // UIµ±»ú´¦Àí
+		SAFE_DELETE(pMenu); // UI
 
 		_menus.erase( it );
 		return true;

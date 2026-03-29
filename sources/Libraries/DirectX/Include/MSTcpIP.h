@@ -1,4 +1,4 @@
-//  Copyright (c) Microsoft Corporation. All rights reserved.
+﻿//  Copyright (c) Microsoft Corporation. All rights reserved.
 #if _MSC_VER > 1000
 #pragma once
 #endif

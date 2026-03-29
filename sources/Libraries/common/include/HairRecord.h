@@ -1,4 +1,4 @@
-//======================================================================================================================
+ï»¿//======================================================================================================================
 // FileName: HairRecord.h
 // Creater: Jerry li
 // Date: 2005.08.29
@@ -21,11 +21,11 @@ public:
 	CHairRecord();
 	char	szColor[10];
 
-	DWORD	dwNeedItem[defHAIR_MAX_ITEM][2];		// ÐèÒªµÄµÀ¾ßID,ÒÔ¼°ËùÐèÒªµÄÊýÁ¿
-	DWORD	dwMoney;								// ÐèÒªµÄ½ðÇ®
-	DWORD	dwItemID;								// ¶ÔÓ¦µÄ(·¢ÐÍ²¿Î»)µÀ¾ßID
-	DWORD	dwFailItemID[defHAIR_MAX_FAIL_ITEM];	// Ê§°ÜÊ±µÄ·¢ÐÍ
-	bool	IsChaUse[4];							// 4¸öÖ÷½ÇÊÇ·ñ¿ÉÓÃ
+	DWORD	dwNeedItem[defHAIR_MAX_ITEM][2];		// ID,
+	DWORD	dwMoney;								// 
+	DWORD	dwItemID;								// ()ID
+	DWORD	dwFailItemID[defHAIR_MAX_FAIL_ITEM];	// 
+	bool	IsChaUse[4];							// 4
 	
 	int		GetFailItemNum()		{ return _nFailNum;		}
 	void	RefreshPrivateData();
@@ -48,7 +48,7 @@ public:
 	}
 
 protected:
-	static CHairRecordSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CHairRecordSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

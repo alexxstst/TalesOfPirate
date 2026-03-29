@@ -1,4 +1,4 @@
-
+﻿
 /*******************************************************************
  *
  *    DESCRIPTION:      Basic string definitions header file

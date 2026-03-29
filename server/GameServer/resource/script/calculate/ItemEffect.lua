@@ -1,4 +1,4 @@
-print("-- [Loading] Item Effect")
+﻿print("-- [Loading] Item Effect")
 function ItemUse_IDBOX(role, Item)
     local lv = GetChaAttr(role, ATTR_LV)
     local Item_CanGet = GetChaFreeBagGridNum(role)
@@ -498,7 +498,7 @@ function ItemUse_65BBBox(role, Item)
     local job = GetChaAttr(role, ATTR_JOB)
     local cha_type = GetChaTypeID(role)
     if job == 0 then
-        SystemNotice(role, "ֻ��һת���ϵĽ�ɫ�ſ���ʹ�ñ�����")
+        SystemNotice(role, "")
         UseItemFailed(role)
         return
     else
@@ -2351,7 +2351,7 @@ function ItemUse_CZKC(role, Item)
         return
     end
     if charLv < 86 then
-        SystemNotice(role, "86�����½�ɫ����ʹ��")
+        SystemNotice(role, "86")
         UseItemFailed(role)
         return
     end
@@ -3425,7 +3425,7 @@ function ItemUse_XiDianBook(role, item)
     local n = 0
     local item_canget = GetChaFreeBagGridNum(role)
     if item_canget < 2 then
-        SystemNotice(role, "������������Ҫ��2����λ")
+        SystemNotice(role, "2")
         UseItemFailed(role)
     else
         for i = 0, 5, 1 do
@@ -4293,8 +4293,8 @@ function ItemUse_ZBML1 ( role , Item  )
 	      x =x_move + x
 	      y =y_move + y
 	local MonsterID = 947
-	local Refresh = 700000					--֘ɺʱ¼䣬ëµ¥λ
-	local life = 600000					--ɺüʱ¼䣬ºÁëµ¥λ
+	local Refresh = 700000					--
+	local life = 600000					--
 	local new = CreateChaX( MonsterID , x , y , 145 , Refresh,role )
 	SetChaLifeTime( new, life )
 end
@@ -4348,8 +4348,8 @@ function ItemUse_ZBML2 ( role , Item  )
 	      x =x_move + x
 	      y =y_move + y
 	local MonsterID = 948
-	local Refresh = 700000					--֘ɺʱ¼䣬ëµ¥λ
-	local life = 600000					--ɺüʱ¼䣬ºÁëµ¥λ
+	local Refresh = 700000					--
+	local life = 600000					--
 	local new = CreateChaX( MonsterID , x , y , 145 , Refresh,role )
 	SetChaLifeTime( new, life )
 end
@@ -4403,8 +4403,8 @@ function ItemUse_ZBML3 ( role , Item  )
 	      x =x_move + x
 	      y =y_move + y
 	local MonsterID = 949
-	local Refresh = 700000					--֘ɺʱ¼䣬ëµ¥λ
-	local life = 600000					--ɺüʱ¼䣬ºÁëµ¥λ
+	local Refresh = 700000					--
+	local life = 600000					--
 	local new = CreateChaX( MonsterID , x , y , 145 , Refresh,role )
 	SetChaLifeTime( new, life )
 end
@@ -4458,8 +4458,8 @@ function ItemUse_ZBML4 ( role , Item  )
 	      x =x_move + x
 	      y =y_move + y
 	local MonsterID = 950
-	local Refresh = 700000					--֘ɺʱ¼䣬ëµ¥λ
-	local life = 600000					--ɺüʱ¼䣬ºÁëµ¥λ
+	local Refresh = 700000					--
+	local life = 600000					--
 	local new = CreateChaX( MonsterID , x , y , 145 , Refresh,role )
 	SetChaLifeTime( new, life )
 end
@@ -4513,8 +4513,8 @@ function ItemUse_ZBML5 ( role , Item  )
 	      x =x_move + x
 	      y =y_move + y
 	local MonsterID = 951
-	local Refresh = 700000					--֘ɺʱ¼䣬ëµ¥λ
-	local life = 600000					--ɺüʱ¼䣬ºÁëµ¥λ
+	local Refresh = 700000					--
+	local life = 600000					--
 	local new = CreateChaX( MonsterID , x , y , 145 , Refresh,role )
 	SetChaLifeTime( new, life )
 end
@@ -6383,7 +6383,7 @@ function Sk_Script_DS(role, Item)
     local Item_CanGet = GetChaFreeBagGridNum(role)
     if Item_CanGet < 1 then
         UseItemFailed(role)
-        SystemNotice(role, "��������Ҫһ���ո������ѧ��֤")
+        SystemNotice(role, "")
         return
     end
     local sk_add = SK_DS
@@ -6437,7 +6437,7 @@ function ItemUse_WisdomApple(role, Item)
         AddState(role, role, STATE_APPLE, statelv, statetime)
     else
         UseItemFailed(role)
-        SystemNotice(role, "�����޷�ʳ���ǻ۹�")
+        SystemNotice(role, "")
     end
 end
 function ItemUse_GoldApple(role, Item)
@@ -6465,7 +6465,7 @@ function ItemUse_GoldApple(role, Item)
         AddState(role, role, STATE_APPLE, statelv, statetime)
     else
         UseItemFailed(role)
-        SystemNotice(role, "�����޷�ʳ�ý�ƻ����")
+        SystemNotice(role, "")
     end
 end
 function Sk_Script_Hx(role, Item)

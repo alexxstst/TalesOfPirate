@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "stpose.h"
 #include "actor.h"
 #include "Character.h"
@@ -60,7 +60,7 @@ CInsertState::~CInsertState()
 
 bool CInsertState::_Start()
 {
-	// ´Ëº¯ÊıµÚ¶ş´ÎÊ±²»ÄÜ·µ»Øfalse,·ñÔò»áÒÑ¾­×øÏÂÊ±,µÚ¶ş´Î¿ìËÙ·¢ËÍÊ±,µ÷ÓÃÊ§°Ü,´Ó¶øÉ¾³ı±¾×´Ì¬
+	// false,,,,
 	int rv = true;
 	if( GetActor()->GetCha()->GetChaState()->IsFalse( enumChaStateMove ) ) 
 		rv = false;
@@ -164,8 +164,8 @@ bool CEquipState::_Start()
 	case enumUseItem:
 		CS_BeginAction( GetActor()->GetCha(), enumACTION_ITEM_USE, (void*)_pUseItem );
 		//	2008-7-30	yangyinyu	add	begin!
-		//	Ôö¼Ó¶ÔËø¶¨µÀ¾ßµÄÂß¼­¡£
-		//	1	ÔÚ
+		//	
+		//	1	
 		//	2008-7-30	yangyinyu	add	end!
 		break;
 	case enumUnfix:

@@ -1,4 +1,4 @@
-// sm3.h - written and placed in the public domain by Jeffrey Walton and Han Lulu
+﻿// sm3.h - written and placed in the public domain by Jeffrey Walton and Han Lulu
 //         Based on the specification provided by Sean Shen and Xiaodong Lee.
 //         Based on code by Krzysztof Kwiatkowski and Jack Lloyd.
 //         Also see https://tools.ietf.org/html/draft-shen-sm3-hash.

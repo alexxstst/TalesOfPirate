@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "LoginScene.h"
 
 
@@ -17,9 +17,6 @@
 #include "GameConfig.h"
 
 #include "Character.h"
-#include "caLua.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "UIRender.h"
 #include "UIEdit.h"
 #include "UILabel.h"
@@ -44,7 +41,6 @@
 #include "UIListView.h"
 
 #include "UIMemo.h"
-#include "caLua.h"
 
 #include "Connection.h"
 #include "ServerSet.h"
@@ -61,7 +57,7 @@
 
 #include <shellapi.h>
 
-//#define USE_STATUS		// ��Э����󲨵������г�ͻ���ر� lh by 2006-3-22
+//#define USE_STATUS		// Protocol wave conflict flag lh by 2006-3-22
 
 #ifdef USE_STATUS
 #include "UdpClient.h"
@@ -95,7 +91,7 @@ bool modelMode = false;
 char modelLook[8192];
 int	logoAlpha = 0;
 int alphacount = 0;
-int CLoginScene::nSelectChaType  = 0; // ����ѡ�н�ɫ����Ϣ
+int CLoginScene::nSelectChaType  = 0; // Selected character type info
 int CLoginScene::nSelectChaPart[enumEQUIP_PART_NUM] = { 0 };
 
 CForm*			CLoginScene::frmServer   = NULL;
@@ -103,8 +99,8 @@ CForm*			CLoginScene::frmRegion   = NULL;
 CForm*			CLoginScene::frmAccount  = NULL;
 CForm*          CLoginScene::frmLOGO     = NULL;
 CForm*          CLoginScene::frmAnnounce = NULL;
-CForm*          CLoginScene::frmKeyboard = NULL;	// add by Philip.Wu  �����̽���  2006-06-05
-CForm*          CLoginScene::frmRegister = NULL;	// add by Philip.Wu  �����̽���  2006-06-05
+CForm*          CLoginScene::frmKeyboard = NULL;	// add by Philip.Wu  Soft keyboard form  2006-06-05
+CForm*          CLoginScene::frmRegister = NULL;	// add by Philip.Wu  Soft keyboard form  2006-06-05
 CForm*          CLoginScene::frmPathLogo = NULL;
 CCheckBox*      CLoginScene::chkID       = NULL;
 
@@ -113,8 +109,8 @@ CListView*		CLoginScene::lstServer[NUM_SERVR_LIST];
 
 CEdit*			CLoginScene::edtID       = NULL;
 CEdit*          CLoginScene::edtPassword = NULL;
-CEdit*			CLoginScene::edtFocus    = NULL;	// add by Philip.Wu  ��꼤��ı༭��  2006-06-06
-CCheckBox*      CLoginScene::chkShift    = NULL;	// add by Philip.Wu  �������ϵ� Shift  2006-06-09
+CEdit*			CLoginScene::edtFocus    = NULL;	// add by Philip.Wu  Mouse-activated edit box  2006-06-06
+CCheckBox*      CLoginScene::chkShift    = NULL;	// add by Philip.Wu  Keyboard Shift key  2006-06-09
 
 CImage*         CLoginScene::imgLogo1    = NULL;
 CImage*         CLoginScene::imgLogo2    = NULL;
@@ -125,11 +121,11 @@ CCharacter*         CLoginScene::modelCha    = 0;
 
 //static			CCharacterBuilder* __character_scene = 0;
 static			CCharacter*  _pCntCha[3] = { 0 };
-static			CCharacter*  pPxCha[2] = { 0 };  //��½������3���з
+static			CCharacter*  pPxCha[2] = { 0 };  // Login scene character models
 static			CCharacter * _pSelectCha = 0;
 
-static	int		iSelectIndex = 0;				//�����е�3D�ؼ������
-static	int		iRotateCha      = 360;			// �ڴ�����ɫ��ʱ�򣬵�����Ұ�ť��ת
+static	int		iSelectIndex = 0;				// Index of selected 3D control
+static	int		iRotateCha      = 360;			// Rotation when creating character, input button rotates view
 static	int		iMiniRotateCha  = 360;
 
 static CLoginScene* g_login_scene = 0;
@@ -307,7 +303,7 @@ bool CLoginScene::_Init()
 	CFormMgr::s_Mgr.SetEnabled(TRUE);    
    	_pMainCha = NULL;
 
-	// ɾ���Զ����³���ĸ���
+	// Delete auto-updater from previous session
 	char szUpdateFileName[] = "_Update.exe";
 	SetFileAttributes(szUpdateFileName, FILE_ATTRIBUTE_NORMAL);
   	DeleteFile(szUpdateFileName);
@@ -444,7 +440,7 @@ void CLoginScene::ShowLoginForm()
 	edtPassword->SetCaption("");
 	frmAccount->Show();
 
-	// add by Philip.Wu  2006-07-03  ��ʾ�����ʱͬʱ��ʾ������
+	// add by Philip.Wu  2006-07-03  Show logo when login form is displayed
 	frmKeyboard->SetIsShow(false);
 	imgLogo1->SetIsShow(true);
 	imgLogo2->SetIsShow(true);
@@ -543,7 +539,7 @@ void CLoginScene::_FrameMove(DWORD dwTimeParam)
 					return;
 				}
 
-                // ���ص�ѡ�����������
+                // Return to server selection screen
 	             _eState = enumInit;
                 CGameApp::Waiting(false);
 
@@ -633,7 +629,7 @@ void CLoginScene::LoadingCall()
 }
 
 //-----------------
-// �������Routines
+// Login callbacks Routines
 //-----------------
 void CLoginScene::CallbackUIEvent_LoginScene( CCompent *pSender, int state, int x, int y, DWORD key)
 {
@@ -646,10 +642,10 @@ void CLoginScene::CallbackUIEvent_LoginScene( CCompent *pSender, int state, int 
 	{
 		if ( strName == "btnYes")
 		{
-			//�ر�ͨ�����
+			//Close announcement dialog
 			pSender->GetForm()->SetIsShow(false);
 /*
-			//������Ϸ�����б�����ʾ��Ϸ����ѡ�����
+			//After closing game list, show game server selection
 			pScene->InitRegionList();
 			frmRegion->SetIsShow(true);
 			//frmServer->Show();
@@ -660,7 +656,7 @@ void CLoginScene::CallbackUIEvent_LoginScene( CCompent *pSender, int state, int 
 		if(strName=="btnYes")
 		{         
             pSender->GetForm()->Hide();						
-            pScene->LoginFlow();//ѡ���˷�����	  
+            pScene->LoginFlow();// Selected server, proceed to login
 		}
 		else if(strName=="btnNo")
 		{
@@ -709,7 +705,7 @@ void CLoginScene::_evtRegionFrm(CCompent *pSender, int state, int x, int y, DWOR
 	string strName = (const char*)pSender->GetName();
 	if (strName == "btnNo")
 	{
-		//�رշ������б�����,��ʾͨ�����
+		//Close server list, show announcement dialog
 		pSender->GetForm()->SetIsShow(false);
 
 		g_pGameApp->SetIsRun( false );
@@ -726,7 +722,7 @@ void CLoginScene::_evtLoginFrm(CCompent *pSender, int state, int x, int y, DWORD
 	string strName = (const char*)pSender->GetName();
 	if(strName=="btnYes")
 	{
-		// �ȹر�������
+		// First close soft keyboard
 		if(frmKeyboard->GetIsShow())
 		{
 			frmKeyboard->SetIsShow(false);
@@ -735,13 +731,13 @@ void CLoginScene::_evtLoginFrm(CCompent *pSender, int state, int x, int y, DWORD
 			imgLogo2->SetIsShow(true);
 		}
 
-		// ���ӷ�����
+		// Connect to server
 		registerLogin = false;
 		pkScene->LoginFlow();
 	}
 	else if(strName=="btnNo")
 	{
-		// �ȹر�������
+		// First close soft keyboard
 		if(frmKeyboard->GetIsShow())
 		{
 			frmKeyboard->SetIsShow(false);
@@ -1084,7 +1080,7 @@ bool CLoginScene::IsValidCheckChaName(const char *name)
 	{
 		if ( s[i]&0x80 )
 		{
-			if (!(s[i]==-93) )  //���ڴ����Ƿ���˫�ֽڵ���ĸ
+			if (!(s[i]==-93) )  // Check whether it is a double-byte letter
 			{
 				i++;
 			}
@@ -1113,7 +1109,7 @@ bool CLoginScene::IsValidCheckChaName(const char *name)
 
 bool CLoginScene::_CheckAccount()
 {
-	// ���ؼ���û���������
+	// Additional keyboard check for validity
 	if(registerLogin){
 		CEdit* edtRegPassword = dynamic_cast<CEdit*>(frmRegister->Find( "edtRegPassword" ));
 		CEdit* edtRegPassword2 = dynamic_cast<CEdit*>(frmRegister->Find( "edtRegPassword2" ));
@@ -1141,7 +1137,7 @@ bool CLoginScene::_CheckAccount()
 		return false;
 	}
 
-	// �����û���
+	// Save username
 	SaveUserName(*chkID, *edtID);
 
 	m_sUsername = edtID->GetCaption();
@@ -1154,7 +1150,7 @@ void CLoginScene::_Connect()
 {
 	CGameApp::Waiting(true);
 
-	//PlayWhalePose();	//���㶯����Ϊ��ʼ��ʱ�Ͳ���(Michael Chen 2005-06-03)
+	//PlayWhalePose();	// Animation disabled since it does not play at init (Michael Chen 2005-06-03)
 
 	_eState = enumConnect;	
 
@@ -1171,7 +1167,7 @@ void CLoginScene::_Connect()
 	const char *pszSelectGateIP(0);
 
 #ifdef USE_STATUS
-	//�õ��������������ٵ�Gate��Ip
+	//Get the Gate IP with least load
 	CRegionInfo* pRegion = GetRegionMgr()->GetActiovRegion();
 	if( pRegion )
 	{
@@ -1197,7 +1193,7 @@ void CLoginScene::_Connect()
     else
     {
 
-        //���û�еõ����ѡ��Gate��Ip
+        //If no Gate IP obtained, select Gate IP from config
         if (!pszSelectGateIP) pszSelectGateIP = SelectGroupIP(m_iCurSelRegionIndex, m_iCurSelServerIndex );
         //if (!pszSelectGateIP) pszSelectGateIP = SelectGroupIP(0, 0);
     }
@@ -1221,7 +1217,7 @@ void CLoginScene::LoginFlow()
     ////////////////////////////////////////
     //
     //  By Jampe
-    //  �������û������봦��
+    //  User account and password handling
     //  2006/5/19
     //
     switch(g_cooperate.code)
@@ -1264,7 +1260,7 @@ void CLoginScene::_Login()
 
 void CLoginScene::SaveUserName(CCheckBox& chkID, CEdit& edtID)
 {
-	//�������ļ���
+	//Create directory for file
 	if (!CreateDirectory("user", NULL)) 
 	{ 
 	} 
@@ -1272,7 +1268,7 @@ void CLoginScene::SaveUserName(CCheckBox& chkID, CEdit& edtID)
 	m_bSaveAccount = chkID.GetIsChecked();
 	m_sSaveAccount = string(edtID.GetCaption());
 
-	//д�ļ�
+	//Write to file
 	FILE *fchk =fopen("user\\checkid.txt","wb");
 	if ( fchk )
 	{
@@ -1305,7 +1301,7 @@ void  CLoginScene::_evtVerErrorFrm(CCompent *pSender, int nMsgType, int x, int y
 
 	if( nMsgType!=CForm::mrYes )
 	{
-		// ����һ����ҳ
+		// Open a web page
 		if( strlen( g_Config.m_szVerErrorHTTP )==0 )
 			return;
 
@@ -1317,7 +1313,7 @@ void  CLoginScene::_evtVerErrorFrm(CCompent *pSender, int nMsgType, int x, int y
 		return;
 	}
 
-	// �Զ�����
+	// Auto update
 	extern bool g_IsAutoUpdate;
 	g_IsAutoUpdate = true;
 }
@@ -1413,7 +1409,7 @@ int  CLoginScene::GetServIconIndex(int iNum)
 
 
 // add by Philip.Wu  2006-06-05
-// �����̵��������ť�¼�
+// Soft keyboard button click event handler
 void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	if(!edtFocus) return;
@@ -1425,15 +1421,15 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 	string strName = pSender->GetName();
 	if(strName.size() <= 0) return;
 
-	// ������Ϣ�Ĵ���
-	if(strName == "btnClose" || strName == "btnYes")	// �ر�������
+	// Handle message info
+	if(strName == "btnClose" || strName == "btnYes")	// Close keyboard
 	{
 		if(frmKeyboard->GetIsShow())
 		{
 			ShowKeyboard(false);
 		}
 	}
-	else if(strName == "btnDel")	// ɾ�����һ���ַ�
+	else if(strName == "btnDel")	// Delete last character
 	{
 		if(strText.size() > 0)
 		{
@@ -1441,11 +1437,11 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 			edtFocus->SetCaption(strText.c_str());
 		}
 	}
-	else if(strName == "chkShift")	// ��Сת��
+	else if(strName == "chkShift")	// Toggle case
 	{
 		
 	}
-	else if(strName == "btnOther101")	// ��һ���ر��ַ���
+	else if(strName == "btnOther101")	// First row special characters
 	{
 		strText += '~';
 		edtFocus->SetCaption(strText.c_str());
@@ -1516,7 +1512,7 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 		edtFocus->SetCaption(strText.c_str());
 	}
 
-	else if(strName == "btnOther201")	// �ڶ����ر��ַ���
+	else if(strName == "btnOther201")	// Second row special characters
 	{
 		strText += '`';
 		edtFocus->SetCaption(strText.c_str());
@@ -1537,7 +1533,7 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 		edtFocus->SetCaption(strText.c_str());
 	}
 
-	else if(strName == "btnOther301")	// �������ر��ַ���
+	else if(strName == "btnOther301")	// Third row special characters
 	{
 		strText += '{';
 		edtFocus->SetCaption(strText.c_str());
@@ -1558,7 +1554,7 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 		edtFocus->SetCaption(strText.c_str());
 	}
 
-	else if(strName == "btnOther401")	// �������ر��ַ���
+	else if(strName == "btnOther401")	// Fourth row special characters
 	{
 		strText += ':';
 		edtFocus->SetCaption(strText.c_str());
@@ -1579,7 +1575,7 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 		edtFocus->SetCaption(strText.c_str());
 	}
 
-	else if(strName == "btnOther501")	// �������ر��ַ���
+	else if(strName == "btnOther501")	// Fifth row special characters
 	{
 		strText += '<';
 		edtFocus->SetCaption(strText.c_str());
@@ -1610,11 +1606,11 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 		edtFocus->SetCaption(strText.c_str());
 	}
 
-	else	// ���ܼ�ȫ���ų���ʣ�µ��������ַ�������
+	else	// After excluding all special characters, handle remaining letter/digit input
 	{
 		char cAdd = strName.at(strName.size() - 1);
 
-		// �ж��Ƿ������ֻ���ĸ����ʱ͵����ʽ������
+		// Check if it is a digit or letter, steal input mode at that time
 		if( ('0' <= cAdd && cAdd <= '9') )
 		{
 			strText += cAdd;
@@ -1624,12 +1620,12 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 		{
 			if(chkShift->GetIsChecked())
 			{
-				// ��д
+				// Uppercase
 				strText += cAdd;
 			}
 			else
 			{
-				// Сд
+				// Lowercase
 				strText += cAdd + 32;
 			}
 			edtFocus->SetCaption(strText.c_str());
@@ -1639,7 +1635,7 @@ void CLoginScene::_evtKeyboardFromMouseEvent(CCompent *pSender, int nMsgType, in
 
 
 // add by Philip.Wu  2006-06-07
-// �༭�򼤻��¼��������¼���ı༭��
+// Edit box activation event, record the activated edit box
 void CLoginScene::_evtAccountFocus(CGuiData* pSender)
 {
 	CEdit* edtTemp = dynamic_cast<CEdit*>(pSender);

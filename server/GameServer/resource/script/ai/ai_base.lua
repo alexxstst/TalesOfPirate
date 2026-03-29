@@ -1,4 +1,4 @@
-print("-- [Loading] Ai_Base.lua")
+﻿print("-- [Loading] Ai_Base.lua")
 
 AI_NONE = 0
 AI_N_ATK = 1

@@ -1,4 +1,4 @@
-//  Copyright (C) 1995-1999 Microsoft Corporation.  All rights reserved.
+﻿//  Copyright (C) 1995-1999 Microsoft Corporation.  All rights reserved.
 
 #ifndef __MTXDM_H__
 #define __MTXDM_H__

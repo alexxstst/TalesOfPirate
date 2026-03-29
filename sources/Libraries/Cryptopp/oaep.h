@@ -1,4 +1,4 @@
-// oaep.h - originally written and placed in the public domain by Wei Dai
+﻿// oaep.h - originally written and placed in the public domain by Wei Dai
 
 /// \file oaep.h
 /// \brief Classes for optimal asymmetric encryption padding

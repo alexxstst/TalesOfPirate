@@ -1,4 +1,4 @@
-// base64.cpp - originally written and placed in the public domain by Wei Dai
+﻿// base64.cpp - originally written and placed in the public domain by Wei Dai
 
 #include "pch.h"
 #include "config.h"

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: EyeshotCell.h
 // Creater: ZhangXuedong
 // Date: 2005.04.29
@@ -13,7 +13,7 @@
 #include "Item.h"
 #include "StateCell.h"
 
-// ��Ұ��Ԫ�࣬��¼��Ԫ�ڵ����н�ɫ�͵��ߣ��Լ�״̬��Ԫ��
+// 
 class CEyeshotCell
 {
 public:
@@ -31,20 +31,20 @@ public:
 	void	OutEyeshot(Entity *pCEnt);
 	void	RefreshEyeshot(Entity *pCEnt, bool bToEyeshot, bool bToNoHide, bool bToNoShow);
 
-	void	BeginGetCha(void) {m_pCChaSearch = m_pCChaL;} // ��ʼȡ��Ԫ�ڵĽ�ɫ.
-	CCharacter*	GetNextCha(void); // ȡ��Ԫ�ڵ���һ����ɫ
+	void	BeginGetCha(void) {m_pCChaSearch = m_pCChaL;} // .
+	CCharacter*	GetNextCha(void); // 
 
 public:
-	short			m_sPosX;	// λ��
+	short			m_sPosX;	// 
 	short			m_sPosY;
-	long	 	    m_lActNum;	// �������
-	CCharacter		*m_pCChaL;	// ��ɫ��
-	CItem			*m_pCItemL;	// ������
+	long	 	    m_lActNum;	// 
+	CCharacter		*m_pCChaL;	// 
+	CItem			*m_pCItemL;	// 
 
-	CEyeshotCell	*m_pCNext;	// ָ�򡰼���Ĺ�����Ԫ��������ָ��
+	CEyeshotCell	*m_pCNext;	// 
 	CEyeshotCell	*m_pCLast;
 
-	CStateCell		***m_pCStateCell;	// ��Ұ��Ԫ������״̬��Ԫ��һ����Ұ������������״̬��ԪҲ�ᱻ����෴ĳһ״̬��Ԫ�ļ��Ҳ�ἤ����Ұ
+	CStateCell		***m_pCStateCell;	// 
 	short			m_sStateCellNum;
 
 private:
@@ -61,7 +61,7 @@ inline void CEyeshotCell::AddEntity(CCharacter *pCCha)
 		return;
 	if (pCCha->m_pCEyeshotCellLast || pCCha->m_pCEyeshotCellNext)
 	{
-		//LG("��Ұ��Ԫ��������", "����Ұ��Ԫ���ӽ�ɫʵ�� %s ʱ��������û��������ǰ�Ĺ�����Ԫ", pCCha->GetLogName());
+		//LG("", " %s ", pCCha->GetLogName());
 		ToLogService("errors", LogLevel::Error, "when add character entity to eyeshot cell {} ,find it is not break away foregone manage cell", pCCha->GetLogName());
 		return;
 	}
@@ -83,7 +83,7 @@ inline void CEyeshotCell::AddEntity(CItem *pCItem)
 		return;
 	if (pCItem->m_pCEyeshotCellLast || pCItem->m_pCEyeshotCellNext)
 	{
-		//LG("��Ұ��Ԫ��������", "����Ұ��Ԫ���ӵ���ʵ�� %s ʱ��������û��������ǰ�Ĺ�����Ԫ", pCItem->GetLogName());
+		//LG("", " %s ", pCItem->GetLogName());
 		ToLogService("errors", LogLevel::Error, "when add item entity to {}, find it is not break away foregone manage cell", pCItem->GetLogName());
 		return;
 	}
@@ -145,15 +145,15 @@ inline void CEyeshotCell::DelEntity(Entity *pCEnt)
 }
 
 //=============================================================================
-// �������Ұ��Ԫ����
+// 
 class CActEyeshotCell
 {
 public:
 	void			Add(CEyeshotCell *pObj);
 	void			Del(CEyeshotCell *pObj);
 
-	void			BeginGet(void); // ��ʼȡ���Ԫ.
-	CEyeshotCell*	GetNext(void); // ȡ��һ�����Ԫ.
+	void			BeginGet(void); // .
+	CEyeshotCell*	GetNext(void); // .
 	CEyeshotCell*	GetCurrent(void);
 
 	long			GetActiveNum(void) {return m_lCount;}

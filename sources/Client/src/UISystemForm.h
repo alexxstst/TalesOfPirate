@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "UIGlobalVar.h"
 
 namespace GUI
@@ -20,7 +20,7 @@ public:
 		int nTexture;
 		bool bAnimation;
 		bool bCameraRotate;
-		//bool bViewFar;        //ȡ����ҰԶ��(Michael Chen 2005-04-22
+		//bool bViewFar;        //(Michael Chen 2005-04-22
 		bool bGroundMark;
 		bool bDepth32;
 		int  nQuality;
@@ -87,7 +87,7 @@ public:
 	}
 
 	/**
-	* ��ϵͳ��������Ϸ����Ч.
+	* .
 	* @return: success Return 0.
 	*          video failure Return -1.
 	*          audio failure Return -2.
@@ -97,17 +97,17 @@ public:
     int Apply();
 
     /**
-    * ��ϵͳ����Ƶ��������Ϸ����Ч.
+    * .
     * @return: success Return 0.
     */
     int ApplyVideo();
     /**
-    * ��ϵͳ��Ƶ��������Ϸ����Ч.
+    * .
     * @return: success Return 0.
     */
     int ApplyAudio();
 	/**
-	* ��ϵͳ��Ƶ��������Ϸ����Ч.
+	* .
 	* @return: success Return 0.
 	*/
 	int ApplyGameOption();
@@ -146,13 +146,13 @@ class CChaExitOnTime
 public:
 	CChaExitOnTime();
 
-public:	// ��Ҳ���
-	void	ChangeCha();	// ������ɫ
-	void	ExitApp();		// �˳�����
+public:	// 
+	void	ChangeCha();	// 
+	void	ExitApp();		// 
 	void	OfflineMode();
-	void	Relogin();		// ���µ�¼
+	void	Relogin();		// 
 
-	void	Cancel();		// ȡ�����ϲ���
+	void	Cancel();		// 
 
 	void	FrameMove(DWORD dwTime);
 
@@ -160,12 +160,12 @@ public:	// ��Ҳ���
 
 	void	Reset();
 
-public:	// ���緵��
-	void	NetStartExit( DWORD dwExitTime );	// ��ʼ��ʱ
-	void	NetCancelExit();					// �ѱ�ȡ����ʱ
+public:	// 
+	void	NetStartExit( DWORD dwExitTime );	// 
+	void	NetCancelExit();					// 
 
 private:
-	bool	_IsTime();				// ���ڼ�ʱ��,��Ҳ��ܲ���
+	bool	_IsTime();				// ,
 
 private:
 	enum eOptionType
@@ -186,7 +186,7 @@ private:
 
 extern CChaExitOnTime g_ChaExitOnTime;
 
-// �ı�ͼ��,����,�˳�ϵͳ��
+// ,,
 class CSystemMgr : public CUIInterface
 {
 public:
@@ -205,7 +205,7 @@ protected:
 
 private:
 	static void		_evtVideoChangeChange(CGuiData *pSender);
-	static void		_evtMainMusicMouseDown(CGuiData *pSender,int x,int y ,DWORD key);		//������Ч
+	static void		_evtMainMusicMouseDown(CGuiData *pSender,int x,int y ,DWORD key);		//
 
 	static void		_evtVideoFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 	static void		_evtSystemFromMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
@@ -229,7 +229,7 @@ private:
 	CCheckGroup      *cbxTexture;
 	CCheckGroup      *cbxMovie;
 	CCheckGroup      *cbxCamera;
-	//CCheckGroup      *cbxView;        //ȡ����ҰԶ��(Michael Chen 2005-04-22
+	//CCheckGroup      *cbxView;        //(Michael Chen 2005-04-22
 	CCheckGroup      *cbxTrail;
 	CCheckGroup      *cbxColor;
 	CCombo			 *cboResolution;

@@ -1,4 +1,4 @@
-#ifndef _SHDISPID_H_
+﻿#ifndef _SHDISPID_H_
 #define _SHDISPID_H_
 
 //+-------------------------------------------------------------------------

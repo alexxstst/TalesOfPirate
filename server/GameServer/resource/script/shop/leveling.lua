@@ -1,4 +1,4 @@
-print("-- [Loading] Leveling Category")
+﻿print("-- [Loading] Leveling Category")
 
 local MainTabName = 'Leveling'
 

@@ -1,4 +1,4 @@
-print("-- [Loading] magicseaEntity.lua")
+﻿print("-- [Loading] magicseaEntity.lua")
 
 function InitmagicseaEntity()
 	CreateBerthEntity("Docked", 455, 2, 84421,368426, -10, 3, 829,3687, 0)

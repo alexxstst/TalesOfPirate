@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiskillcommand.h"
 #include "Scene.h"
 #include "GameApp.h"
@@ -68,16 +68,16 @@ CSkillCommand& CSkillCommand::operator=( const CSkillCommand& rhs )
 CSkillCommand::~CSkillCommand()
 {
     //delete _pImage;
-	SAFE_DELETE(_pImage); // UI��������
+	SAFE_DELETE(_pImage); // UI
 }
 
 void CSkillCommand::Render( int x, int y )
 {
 	if( _pSkill->GetSkillGrid().chState )
 		_pImage->Render( x, y );
-	//else if(338 <= _pSkill->sID && _pSkill->sID <= 341)	// ��������⴦��
+	//else if(338 <= _pSkill->sID && _pSkill->sID <= 341)	// 
 	//	_pImage->Render( x, y );
-	//else if(_pSkill->sID == 459)	// ת������
+	//else if(_pSkill->sID == 459)	// 
 	//	_pImage->Render( x, y );
 	else if( GetIsSpecial(enumHighLight) )
 		_pImage->Render( x, y );
@@ -105,7 +105,7 @@ bool CSkillCommand::UseCommand(bool value)
 	CCharacter* pCha = CGameScene::GetMainCha();
 	if( !pCha ) return false;
 
-	// �������ܣ���ִ��
+	// 
 	if( !_pSkill->GetIsUse() )
 		return false;
 
@@ -163,7 +163,7 @@ bool CSkillCommand::IsAllowUse()
 	CCharacter* pCha = g_stUIBoat.GetHuman();
 	if( !pCha ) return false;
 
-	if(g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow())	// �����ĵ��޸ģ�������ʱ�������ż���
+	if(g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow())	// 
 	{
 		g_pGameApp->SysInfo( g_oLangRec.GetString(748) );
 		return false;
@@ -181,7 +181,7 @@ bool CSkillCommand::IsAllowUse()
 		return false;
 	}
 
-    // ����ʹ�õ��������:1.û����ʩ��ʱ��,2.�ѵ�����ʩ��ʱ��
+    // :1.,2.
     if( _GetSkillTime()<=0 ) 
 	{
 		return true;
@@ -343,14 +343,14 @@ bool CSkillCommand::GetIsSpecial(eSpecialType SpecialType)
 	{
 	case enumHighLight:
 		{
-			if(338 <= nID && nID <= 341) return true;	// ��������⴦��
-			if(459 == nID) return true;					// ת������
+			if(338 <= nID && nID <= 341) return true;	// 
+			if(459 == nID) return true;					// 
 		}
 		break;
 
 	case enumNotUpgrade:
 		{
-			if(453 <= nID && nID <= 459) return true;	// ת������
+			if(453 <= nID && nID <= 459) return true;	// 
 		}
 		break;
 

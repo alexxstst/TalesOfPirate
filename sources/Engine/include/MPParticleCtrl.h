@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "MPCamera.h"
 
@@ -518,9 +518,9 @@ public:
 	//CMPShadeCtrl*				GetShade(int iIdx);
 	//int							GetShadeNum(){return m_iShadeNum;}
 
-	//!±£´æÁ£×Óµ½ÎÄ¼ş	
+	//!	
 	bool		 SaveToFile(char* pszName);
-	//!×°ÈëÁ£×Ó´ÓÎÄ¼ş
+	//!
 	bool		 LoadFromFile(char* pszName);
 
 	bool		 LoadFromMemory(CMemoryBuf*	pbuf);
@@ -534,15 +534,15 @@ public:
 	float						m_fLength;
 	float						m_fCurTime;
 
-	//ÎäÆ÷ÍÏÀ­³öÀ´µÄÌõ´ø
+	//
 	int							m_iStripNum;
 	CMPStrip*					m_pcStrip;
 
-	//¹Ç÷À¶¯»­
+	//
 	int							m_iModelNum;
 	std::vector<CChaModel*>		m_vecModel;
 
-	////¹Ç÷À¶¯»­
+	////
 	//int							m_iShadeNum;
 	//std::vector<CMPShadeCtrl>	m_vecShade;
 };

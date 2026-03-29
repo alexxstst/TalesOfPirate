@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	NTDSBMSG.H
  *
  *	Windows NT Directory Service Backup/Restore API error codes

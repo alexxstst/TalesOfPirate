@@ -1,4 +1,4 @@
-#ifndef _DYNAMIC_H_
+﻿#ifndef _DYNAMIC_H_
 
 #define _DYNAMIC_H_
 #include "iparamm.h"

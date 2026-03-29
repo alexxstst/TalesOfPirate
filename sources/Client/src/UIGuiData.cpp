@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiGuidata.h"
 #include "uiForm.h"
 #include "uicompent.h"
@@ -111,7 +111,7 @@ void CGuiData::ClearAllGui()
 	for( vcs::iterator it=_AllGui.begin(); it!=_AllGui.end(); it++ )
 	{
 		//delete (*it);
-		SAFE_DELETE(*it); // UI��������
+		SAFE_DELETE(*it); // UI
 	}
 	_AllGui.clear();
 }

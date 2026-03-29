@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "state_reading.h"
 #include "actor.h"
 #include "Character.h"

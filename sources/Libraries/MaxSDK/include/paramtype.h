@@ -1,4 +1,4 @@
-#ifndef __PARAMTYPE__
+﻿#ifndef __PARAMTYPE__
 #define __PARAMTYPE__
 
 // Parameter types

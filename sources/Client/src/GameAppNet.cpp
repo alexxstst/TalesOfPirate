@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "GameApp.h"
 #include "Character.h"
 #include "Scene.h"
@@ -90,11 +90,11 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 					{
 						if( !g_ChaExitOnTime.TimeArrived() )
 						{
-							//�ǵ�½�����Ͽ�����
+							//
 							char szBuf[256] = { 0 };
 							if( g_NetIF )
 							{
-								// modify by Philip.Wu  2006-06-09  ���շ�ϵͳ����ʾ�û���ֵ
+								// modify by Philip.Wu  2006-06-09  
 								if(g_Config.m_IsBill)
 								{
 									sprintf( szBuf, g_oLangRec.GetString(136), g_oLangRec.GetString(137), dwParam1 );
@@ -121,8 +121,8 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 						}
 					}
 					else
-					{	//��½�����ڶϿ�����
-						//�ж������Ƿ����
+					{	//
+						//
 						CLoginScene *pkLogin = dynamic_cast<CLoginScene*>(scene);
 						if (pkLogin && pkLogin->IsPasswordError())
 						{

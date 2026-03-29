@@ -1,4 +1,4 @@
-// Script.h Created by knight-gongjian 2004.12.1.
+ï»¿// Script.h Created by knight-gongjian 2004.12.1.
 //---------------------------------------------------------
 #pragma once
 
@@ -20,16 +20,16 @@ extern void ReloadLuaInit();
 extern void ReloadEntity( const char szFileName[] );
 
 //
-//#define E_LUAPARAM		LG( "luamis_error", "luaº¯Êý[%s]²ÎÊý¸öÊý»òÕßÀàÐÍ´íÎó!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]²ÎÊý¸öÊý»òÕßÀàÐÍ´íÎó!", __FUNCTION__ );
-//#define E_LUANULL		LG( "luamis_error", "luaº¯Êý[%s]´«µÝ²ÎÊýÖ¸ÕëÎª¿Õ´íÎó!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]´«µÝ²ÎÊýÖ¸ÕëÎª¿Õ´íÎó!", __FUNCTION__ );
-//#define E_LUACOMPARE	LG( "luamis_error", "luaº¯Êý[%s]²ÎÊý´íÎóÎªÎ´ÖªµÄ±È½Ï×Ö·û!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]²ÎÊý´íÎóÎªÎ´ÖªµÄ±È½Ï×Ö·û!", __FUNCTION__ );
-#define E_LUAPARAM		ToLogService("lua", LogLevel::Error, "lua function [{}] takes wrong num parameter or wrong type patameter!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]²ÎÊý¸öÊý»òÕßÀàÐÍ´íÎó!", __FUNCTION__ );
-#define E_LUANULL		ToLogService("lua", LogLevel::Error, "lua function [{}] patameter is null!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]´«µÝ²ÎÊýÖ¸ÕëÎª¿Õ´íÎó!", __FUNCTION__ );
-#define E_LUACOMPARE	ToLogService("lua", LogLevel::Error, "lua function [{}] unknow compare character!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "luaº¯Êý[%s]²ÎÊý´íÎóÎªÎ´ÖªµÄ±È½Ï×Ö·û!", __FUNCTION__ );
+//#define E_LUAPARAM		LG( "luamis_error", "lua[%s]!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
+//#define E_LUANULL		LG( "luamis_error", "lua[%s]!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
+//#define E_LUACOMPARE	LG( "luamis_error", "lua[%s]!", __FUNCTION__ ); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
+#define E_LUAPARAM		ToLogService("lua", LogLevel::Error, "lua function [{}] takes wrong num parameter or wrong type patameter!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
+#define E_LUANULL		ToLogService("lua", LogLevel::Error, "lua function [{}] patameter is null!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
+#define E_LUACOMPARE	ToLogService("lua", LogLevel::Error, "lua function [{}] unknow compare character!", __FUNCTION__); if( g_pNoticeChar ) g_pNoticeChar->SystemNotice( "lua[%s]!", __FUNCTION__ );
 
-#define LUA_TRUE		1	// ÕýÈ·
+#define LUA_TRUE		1	// 
 #define LUA_FALSE		0	// 
-#define LUA_ERROR		-1	// ´íÎó
+#define LUA_ERROR		-1	// 
 
 #endif // _SCRIPT_H_
 

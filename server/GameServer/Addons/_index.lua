@@ -1,4 +1,4 @@
-addon				= {}
+﻿addon				= {}
 addon.rootDir		= GetResPath('../addons/')
 addon.files			=
 {

@@ -34,7 +34,7 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 
 	if (header.nMapFlag == MP_MAP_FLAG + 1) {
 		fs.close();
-		ToLogService("map", LogLevel::Error, "该地图文件[{}]版本过期, 请使用MapTool打开它来升级版本!", pszMapName);
+		ToLogService("map", LogLevel::Error, "[{}], MapTool!", pszMapName);
 		return FALSE;
 	}
 
@@ -45,7 +45,7 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 #endif
 	{
 		fs.close();
-		ToLogService("map", LogLevel::Error, "[{}]不是有效的 MindPower Map File!", pszMapName);
+		ToLogService("map", LogLevel::Error, "[{}] MindPower Map File!", pszMapName);
 		return FALSE;
 	}
 
@@ -60,7 +60,7 @@ BOOL ZRBlock::Load(const char* pszMapName, BOOL bEdit)
 
 	m_bEdit = bEdit;
 
-	// 读取全部索引
+	// 
 	m_pOffsetIdx = std::make_unique<DWORD[]>(m_nSectionCnt);
 	fs.read(reinterpret_cast<char*>(m_pOffsetIdx.get()), sizeof(DWORD) * m_nSectionCnt);
 

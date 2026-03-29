@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// ����:�����б��ؼ�
-// ����:lh 2004-08-02
-// ���˼��:CList+������
-// ����޸�����:2004-10-09
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2004-08-02
+// :CList+
+// :2004-10-09
 //----------------------------------------------------------------------
 
 #pragma once
@@ -16,12 +16,12 @@ class CListView : public CCompent
 public:
 	enum eStyle
 	{
-		eSimpleTitle=0,		// �򵥱�ͷ,����һ��ͼƬ
-		eWindowTitle,		// ��windowsһ���ı�ͷ,��Ҫ����ÿһ����ͷ��ͼƬ
-		eNoTitle,			// û�б�����
+		eSimpleTitle=0,		// ,
+		eWindowTitle,		// windows,
+		eNoTitle,			// 
 	};
 
-	class CListTitle	// �б�ͷ���
+	class CListTitle	// 
 	{
 	public:
 		CListTitle( CListView* pList ) : _pList(pList) {}
@@ -44,7 +44,7 @@ public:
 
 	};
 
-	class CImageTitle : public CListTitle		// �򵥷��,��һ������
+	class CImageTitle : public CListTitle		// ,
 	{
 	public:
 		CImageTitle( CListView* pList ) : CListTitle(pList), _pImage(new CImage(*pList->GetForm())) {}
@@ -61,11 +61,11 @@ public:
 		virtual void		SetAlpha( BYTE alpha )					{ _pImage->SetAlpha(alpha);				}
 
 	private:
-		CImage*				_pImage;			// �򵥷��ʱ����ʾ��Title����
+		CImage*				_pImage;			// Title
 
 	};
 
-	class CWindowsTitle : public CListTitle		// Windows���б�����
+	class CWindowsTitle : public CListTitle		// Windows
 	{
 	public:
 		CWindowsTitle( CListView* pList );
@@ -106,7 +106,7 @@ public:
 	virtual void		OnActive()	{ CCompent::OnActive(); _pList->OnActive();	}
 	virtual void		OnLost()	{ CCompent::OnLost(); _pList->OnLost();		}
 	virtual bool		OnKeyDown( int key );
-	virtual bool		SetShowRow( int n );			// ������ʾʱ���и�,��ı�List�ܸ߶�
+	virtual bool		SetShowRow( int n );			// ,List
 	virtual void		SetMargin( int left, int top, int right, int bottom );
 	virtual CCompent*   GetHintCompent( int x, int y );
 	virtual void        RenderHint( int x, int y );
@@ -130,7 +130,7 @@ public:
 	
 
 public:
-	GuiEvent			evtColumnClick;				// ������б�ͷ
+	GuiEvent			evtColumnClick;				// 
 
 private:
 	void				_ColumnClick( CGuiData* pSender ){	if( evtColumnClick ) evtColumnClick(pSender); }
@@ -141,24 +141,24 @@ private:
 	static int 			_nTmpX, _nTmpY,  _nTmpRow,	_nTmpCol;
 	int 				_GetHitItem( int x, int y );
 	int					_nStartX, _nStartY;
-	int					_nPageShowNum;				// һҳ����ʾ�ĸ���
+	int					_nPageShowNum;				// 
 	int					_nTotalW, _nTotalH;
 	int					left, top, bottom, right;
 	int 				_nShowCount;
-	int					_nFirst, _nLast;			// ��ʾʱ�ĵ�һ�������һ��
+	int					_nFirst, _nLast;			// 
 	int           	  _nSX1, _nSY1, _nSX2, _nSY2;   
 
 protected:
 	CListTitle*			_pTitle;
-	eStyle				_eTitle;			// ��ͷ���:ΪeSimpleTitle��ʹ��_pImage,����ʹ��_pColumn
+	eStyle				_eTitle;			// :eSimpleTitle_pImage,_pColumn
 
 	CList*				_pList;
-	unsigned int		_nColumnHeight;		// �б�ͷ�߶�
-	int					_nUnitHeight, _nUnitWidth;	// ��Ԫ���� 
-	int					_nSpaceX, _nSpaceY;			// ��Ԫ���
+	unsigned int		_nColumnHeight;		// 
+	int					_nUnitHeight, _nUnitWidth;	//  
+	int					_nSpaceX, _nSpaceY;			// 
 
-	int				_nRow, _nCol;				// ��ʾ������
-	int				_nMaxNum;					// ������,���е�������
+	int				_nRow, _nCol;				// 
+	int				_nMaxNum;					// ,
 };
 
 }

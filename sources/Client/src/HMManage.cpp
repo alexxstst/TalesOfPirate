@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "HMManage.h"
 #include "SkillRecord.h"
 #include "STStateObj.h"
@@ -188,12 +188,12 @@ void CServerHarm::SetIsOuter( bool v )
 		{
 			if( _pSkill->IsHarmRange() )
 			{
-				// ��Χ���ܣ���һ����ִ����
+				// 
 				return;
 			}
 			else if( _nReadyExec<(int)_harm.size() )
 			{
-				// �������ܽ����ಿ��ִ�е�
+				// 
 				ExecAll( (int)_harm.size() - _nReadyExec );
 				return;
 			}
@@ -201,7 +201,7 @@ void CServerHarm::SetIsOuter( bool v )
 
 		if( !_harm.empty() ) ExecAll();
 
-		// ���ⲿִ��ʱ,���ⲿִ�н���
+		// ,
 		if( _nReadyExec<=0 )
 		{
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("CServerHarm Over(Outer), FightID[{}]", GetFightID()));

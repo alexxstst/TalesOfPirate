@@ -1,7 +1,7 @@
-#pragma once
+﻿#pragma once
 
-// MsgpackUtil.h — вспомогательные функции для работы с msgpack payload.
-// Портировано из Kraken-Next/server/Kraken.Util/Source/Commands.cpp.
+// MsgpackUtil.h       msgpack payload.
+//   Kraken-Next/server/Kraken.Util/Source/Commands.cpp.
 
 #include "mpack.h"
 #include <cstdint>
@@ -12,7 +12,7 @@
 
 namespace net {
 
-// Пропустить один msgpack-элемент (data после tag).
+//   msgpack- (data  tag).
 inline void mpack_skip_element_data(mpack_reader_t& reader, mpack_tag_t tag) {
     switch (mpack_tag_type(&tag)) {
     case mpack_type_nil:
@@ -49,7 +49,7 @@ inline void mpack_skip_element_data(mpack_reader_t& reader, mpack_tag_t tag) {
     }
 }
 
-// Подсчёт количества msgpack-элементов верхнего уровня в буфере.
+//   msgpack-    .
 inline uint32_t mpack_sequence_length(const char* buffer, uint32_t length) {
     uint32_t result = 0;
     if (buffer && length > 0) {
@@ -69,8 +69,8 @@ inline uint32_t mpack_sequence_length(const char* buffer, uint32_t length) {
     return result;
 }
 
-// Оставить первые (total - count) элементов, обнулить остальные.
-// Возвращает новую длину данных (байт).
+//   (total - count) ,  .
+//     ().
 inline uint32_t mpack_discard_last(char* buffer, uint32_t length, uint32_t count) {
     auto realCount = mpack_sequence_length(buffer, length);
     if (realCount < count) {
@@ -93,7 +93,7 @@ inline uint32_t mpack_discard_last(char* buffer, uint32_t length, uint32_t count
     return result;
 }
 
-// Пропустить paramCount элементов, вернуть указатель на следующий.
+//  paramCount ,    .
 inline char* mpack_skeep_params(const char* buffer, uint32_t length, uint32_t paramCount) {
     mpack_reader_t reader{};
     mpack_reader_init_data(&reader, buffer, length);
@@ -113,7 +113,7 @@ inline char* mpack_skeep_params(const char* buffer, uint32_t length, uint32_t pa
     return elementPtr;
 }
 
-// Представить msgpack payload в виде строки: |int_value|str(len)data|bin(len)|...
+//  msgpack payload   : |int_value|str(len)data|bin(len)|...
 inline std::string mpack_sequence_to_string(const char* buffer, uint32_t length) {
     if (!buffer || length == 0) return {};
 
@@ -161,7 +161,7 @@ inline std::string mpack_sequence_to_string(const char* buffer, uint32_t length)
             auto len = mpack_tag_str_length(&tag);
             auto data = mpack_read_bytes_inplace(&reader, len);
             if (data) {
-                // Строки содержат null-terminator — выводим без него
+                //   null-terminator    
                 std::string value(data, len > 0 ? len - 1 : 0);
                 stream << "|str(" << len << ")" << value;
             } else {

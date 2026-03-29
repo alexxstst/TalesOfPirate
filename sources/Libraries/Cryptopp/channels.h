@@ -1,4 +1,4 @@
-// channels.h - originally written and placed in the public domain by Wei Dai
+﻿// channels.h - originally written and placed in the public domain by Wei Dai
 
 /// \file channels.h
 /// \brief Classes for multiple named channels

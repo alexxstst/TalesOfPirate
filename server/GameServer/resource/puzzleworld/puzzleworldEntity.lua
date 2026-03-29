@@ -1,1 +1,1 @@
-print("-- [Loading] puzzleworldEntity.lua")
+﻿print("-- [Loading] puzzleworldEntity.lua")

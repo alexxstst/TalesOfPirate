@@ -1,1 +1,1 @@
-print("-- [Loading] binglang2Entity.lua")
+﻿print("-- [Loading] binglang2Entity.lua")

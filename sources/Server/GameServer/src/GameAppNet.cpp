@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "GameApp.h"
 #include "GameAppNet.h"
 #include "CommandMessages.h"
@@ -54,7 +54,7 @@ void CGameApp::ProcessInfoMsg(pNetMessage msg, short sType, InfoServer* pInfo) {
 }
 
 void CGameApp::OnInfoConnected(InfoServer* pInfo) {
-	//??�InfoServer
+	//??InfoServer
 	pInfo->Login();
 }
 
@@ -67,7 +67,7 @@ void CGameApp::OnInfoDisconnected(InfoServer* pInfo) {
 void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 	if (msg) {
 		switch (msg->msgHead.msgID) {
-		case INFO_LOGIN: // ??�InfoServer
+		case INFO_LOGIN: // ??InfoServer
 		{
 			if (msg->msgHead.subID == INFO_SUCCESS) {
 				ToLogService("store", "InfoServer Login Success!");
@@ -84,7 +84,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 				pInfo->InValid();
 			}
 			else {
-				//ToLogService("store", "??�InfoServer???????????!");
+				//ToLogService("store", "??InfoServer???????????!");
 				ToLogService("store", "enter InfoServer message data error!");
 			}
 		}
@@ -124,7 +124,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 				short lComNum = LOWORD(msg->msgHead.msgExtend);
 				//???????
 				short lClassNum = HIWORD(msg->msgHead.msgExtend);
-				//???�??????
+				//?????????
 				g_StoreSystem.SetItemClass((ClassInfo*)(msg->msgBody), lClassNum);
 				//??????????
 				g_StoreSystem.SetItemList((StoreStruct*)((char*)msg->msgBody + lClassNum * sizeof(ClassInfo)), lComNum);
@@ -137,7 +137,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 				short lComNum = LOWORD(msg->msgHead.msgExtend);
 				//???????
 				short lClassNum = HIWORD(msg->msgHead.msgExtend);
-				//???�??????
+				//?????????
 				g_StoreSystem.SetItemClass((ClassInfo*)(msg->msgBody), lClassNum);
 				//??????????
 				g_StoreSystem.SetItemList((StoreStruct*)((char*)msg->msgBody + lClassNum * sizeof(ClassInfo)), lComNum);
@@ -151,20 +151,20 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 
 		case INFO_REQUEST_AFFICHE: // ??????????
 		{
-			//ToLogService("store", "??�??????!");
+			//ToLogService("store", "????????!");
 			ToLogService("store", "get offiche information!");
 			if (msg->msgHead.subID == INFO_SUCCESS) // ???????????
 			{
 				//???????
 				long lAfficheNum = msg->msgHead.msgExtend;
-				//???�??????
+				//?????????
 				g_StoreSystem.SetAfficheList((AfficheInfo*)msg->msgBody, lAfficheNum);
 			}
 			else if (msg->msgHead.subID == INFO_FAILED) // ???????????
 			{
 				//???????
 				long lAfficheNum = msg->msgHead.msgExtend;
-				//???�??????
+				//?????????
 				g_StoreSystem.SetAfficheList((AfficheInfo*)msg->msgBody, lAfficheNum);
 			}
 			else {
@@ -248,11 +248,11 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 		}
 		break;
 
-		case INFO_REQUEST_HISTORY: // ????????�
+		case INFO_REQUEST_HISTORY: // ????????
 		{
 			if (msg->msgHead.subID == INFO_SUCCESS) {
 				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????????�???!", lOrderID);
+				//ToLogService("store", "[{}]???????????!", lOrderID);
 				ToLogService("store", "[{}]succeed to query trade note!", lOrderID);
 
 				HistoryInfo* pRecord = (HistoryInfo*)((char*)msg->msgBody + sizeof(long long));
@@ -260,13 +260,13 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 			}
 			else if (msg->msgHead.subID == INFO_FAILED) {
 				long long lOrderID = *(long long*)msg->msgBody;
-				//ToLogService("store", "[{}]????????�???!", lOrderID);
+				//ToLogService("store", "[{}]???????????!", lOrderID);
 				ToLogService("store", "[{}]query trade note failed!", lOrderID);
 
 				g_StoreSystem.CancelRecord(lOrderID);
 			}
 			else {
-				//ToLogService("store", "?????�????????????????????!");
+				//ToLogService("store", "?????????????????????????!");
 				ToLogService("store", "trade note query resoibsuib nessage data error!");
 			}
 		}
@@ -328,7 +328,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 		break;
 
 		default: {
-			//ToLogService("store", "??�???????????!");
+			//ToLogService("store", "?????????????!");
 			ToLogService("store", "get unknown information type!");
 		}
 		break;
@@ -341,7 +341,7 @@ void CGameApp::ProcessMsg(pNetMessage msg, InfoServer* pInfo) {
 // ??Gate??????????????
 void CGameApp::OnGateConnected(GateServer* pGate, net::RPacket& pkt) {
 	// ??GateServer???GameServer
-	// Типизированная сериализация: регистрация GameServer на GateServer
+	//  :  GameServer  GateServer
 	auto wpk = net::msg::serialize(net::msg::MtLoginMessage{GETGMSVRNAME(), g_pGameApp->m_strMapNameList.c_str()});
 
 	ToLogService("network", "[{}]", g_pGameApp->m_strMapNameList.c_str());
@@ -380,7 +380,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 		net::msg::TmLoginAckMessage loginAck;
 		net::msg::deserialize(pkt, loginAck);
 		if (loginAck.errCode) {
-			/*ToLogService("network", "??� GateServer: {}:{}???[{}], ?????[{}]",
+			/*ToLogService("network", "?? GateServer: {}:{}???[{}], ?????[{}]",
 				pGate->GetIP().c_str(), pGate->GetPort(), g_GameGateConnError(loginAck.errCode),
 				g_pGameApp->m_strMapNameList.c_str());*/
 			ToLogService("network", "enter GateServer: {}:{} failed [{}], register map[{}]",
@@ -391,7 +391,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 		else {
 			pGate->GetName() = loginAck.gateName;
 			if (!strcmp(pGate->GetName().c_str(), "")) {
-				/*ToLogService("network", "??� GateServer: [{}:{}]??? ??�???�???????????????????????",
+				/*ToLogService("network", "?? GateServer: [{}:{}]??? ????????????????????????????",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());*/
 				ToLogService(
@@ -403,7 +403,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 				DISCONNECT(pGate);
 			}
 			else {
-				/*ToLogService("network", "??� GateServer: {} [{}:{}]??? [MapName:{}]",
+				/*ToLogService("network", "?? GateServer: {} [{}:{}]??? [MapName:{}]",
 					pGate->GetName().c_str(), pGate->GetIP().c_str(), pGate->GetPort(),
 					g_pGameApp->m_strMapNameList.c_str());*/
 				ToLogService("network", "entry GateServer: {} [{}:{}]success [MapName:{}]",
@@ -441,7 +441,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 		l_player = CreateGamePlayer(enterMsg.password.c_str(), enterMsg.dbCharId, enterMsg.worldId,
 									enterMsg.mapName.c_str(), enterMsg.loginFlag == 0 ? 0 : 1);
 		if (!l_player) {
-			// Типизированная сериализация: ошибка входа на карту с ручным trailer маршрутизации
+			//  :       trailer 
 			auto pkret = net::msg::serializeMcEnterMapError(ERR_MC_ENTER_ERROR, enterMsg.dbCharId, enterMsg.gateAddr);
 			pGate->SendData(pkret);
 			ToLogService("map", LogLevel::Error, "when create new palyer ID = {} assign memory failed",
@@ -539,7 +539,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 				//pCha->SystemNotice("??????????,?????????????????!");
 				pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00007));
 
-				// Типизированная сериализация: провал рассылки (не хватает денег)
+				//  :   (  )
 				auto l_wpk = net::msg::serialize(net::msg::GmSay2AllMessage{0, {}, {}});
 				pCha->ReflectINFof(pCha, l_wpk);
 
@@ -550,7 +550,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 			//pCha->SystemNotice("?????????????????,??????%ld?????!", lChatMoney);
 			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00006), lChatMoney);
 
-			// Типизированная сериализация: успех рассылки (CMD_MP_SAY2ALL)
+			//  :   (CMD_MP_SAY2ALL)
 			auto l_wpk = net::msg::serialize(net::msg::GmSay2AllMessage{1, pCha->GetName(), szContent});
 			pCha->ReflectINFof(pCha, l_wpk);
 		}
@@ -570,7 +570,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 				//pCha->SystemNotice("??????????,????????????????!");
 				pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00005));
 
-				// Типизированная сериализация: провал торговой рассылки (не хватает денег)
+				//  :    (  )
 				auto l_wpk = net::msg::serialize(net::msg::GmSay2TradeMessage{0, {}, {}});
 				pCha->ReflectINFof(pCha, l_wpk);
 
@@ -581,13 +581,13 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 			//pCha->SystemNotice("????????????????,??????%ld?????!", lChatMoney);
 			pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00004), lChatMoney);
 
-			// Типизированная сериализация: успех торговой рассылки (CMD_MP_SAY2TRADE)
+			//  :    (CMD_MP_SAY2TRADE)
 			auto l_wpk = net::msg::serialize(net::msg::GmSay2TradeMessage{1, pCha->GetName(), szContent});
 			pCha->ReflectINFof(pCha, l_wpk);
 		}
 	}
 	break;
-	case CMD_PM_TEAM: // GroupServer — команда
+	case CMD_PM_TEAM: // GroupServer  
 	{
 		net::msg::PmTeamMessage teamMsg;
 		net::msg::deserialize(pkt, teamMsg);
@@ -610,7 +610,7 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 	case CMD_PM_GUILD_CHALL_PRIZEMONEY: {
 		//ProcessGuildChallPrizeMoney( pGate, pkt );
 
-		// Типизированная сериализация: ретрансляция призовых денег гильдии
+		//  :    
 		net::msg::PmGuildChallPrizeMoneyMessage prizeMsg;
 		net::msg::deserialize(pkt, prizeMsg);
 		int64_t _guildId = prizeMsg.leaderId;
@@ -882,8 +882,8 @@ void CGameApp::ProcessGuildChallPrizeMoney(GateServer* pGate, const net::msg::Pm
 	if (pPlayer) {
 		CCharacter* pCha = pPlayer->GetMainCha();
 		pCha->AddMoney("??", dwMoney);
-		/*pCha->SystemNotice( "????????????%s????????????????????�?????%u????", pCha->GetGuildName(), dwMoney );
-		ToLogService("common", "????????????{}????????????????????�?????{}????", pCha->GetGuildName(), dwMoney);*/
+		/*pCha->SystemNotice( "????????????%s?????????????????????????%u????", pCha->GetGuildName(), dwMoney );
+		ToLogService("common", "????????????{}?????????????????????????{}????", pCha->GetGuildName(), dwMoney);*/
 		pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00010), pCha->GetGuildName(), dwMoney);
 		ToLogService(
 			"common",
@@ -998,7 +998,7 @@ void CGameApp::ProcessTeamMsg(GateServer* pGate, const net::msg::PmTeamMessage& 
 
 				CSkillState& leader_states = leaderCha->m_CSkillState;
 
-				//if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // ״̬��ʱ���
+				//if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // 
 				if (leader_states.HasState(217)) {
 					const auto& state = leader_states.GetSStateByID(217);
 					const auto use_duration = state->lOnTick * 1000;
@@ -1271,7 +1271,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 
 		unsigned long long gold = game_db.GetGuildBankGold(guildID);
 
-		// Типизированная сериализация: обновление золота банка гильдии
+		//  :    
 		auto WtPk = net::msg::serialize(net::msg::McUpdateGuildGoldMessage{to_string(gold).c_str()});
 
 		while (pGateServer = GETNEXTGATE()) {
@@ -1380,7 +1380,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 			pCha->SetGuildName("");
 			const std::string& l_gldname = kickMsg.guildName;
 			pCha->guildPermission = 0;
-			pCha->SetGuildID(0); //???�???ID
+			pCha->SetGuildID(0); //??????ID
 			pCha->SetGuildState(0);
 			pCha->SetGuildName("");
 			pCha->SetGuildMotto("");
@@ -1422,7 +1422,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 		if (!pCCha)
 			break;
 
-		// Типизированная сериализация: пинг + ручной trailer
+		//  :  +  trailer
 		auto WtPk = net::msg::serialize(net::msg::McPingMessage{
 			(int64_t)GetTickCount(), ToAddress(pGate), lSrcID, lGatePlayerID, lGatePlayerAddr
 		});
@@ -1440,7 +1440,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 		if (!pCCha || !pCCha->GetSubMap())
 			break;
 
-		// Типизированная сериализация: ответ с информацией о персонаже + ручной trailer
+		//  :      +  trailer
 		auto WtPk = net::msg::serialize(net::msg::McQueryChaMessage{
 			lSrcID, pCCha->GetName(), pCCha->GetSubMap()->GetName(), (int64_t)pCCha->GetPos().x,
 			(int64_t)pCCha->GetPos().y, pCCha->GetID()
@@ -1462,7 +1462,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 			break;
 		pCCha->m_CKitbag.SetChangeFlag();
 
-		// Типизированная сериализация: ответ на запрос инвентаря персонажа (кросс-серверный)
+		//  :      (-)
 		{
 			auto kitbag = pCCha->BuildKitbagInfo(pCCha->m_CKitbag, enumSYN_KITBAG_INIT);
 			auto WtPk = net::msg::serialize(net::msg::McQueryChaKitbagMessage{
@@ -1515,7 +1515,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 			if (!pCCha)
 				break;
 
-			// Типизированная сериализация: уведомление персонажу
+			//  :  
 			auto wpk = net::msg::serialize(net::msg::McSysInfoMessage{cszNotiCont});
 			pCCha->ReflectINFof(pCCha, wpk);
 		}
@@ -1700,8 +1700,8 @@ void CGameApp::ProcessGarner2Update(const net::msg::PmGarner2UpdateLegacyMessage
 }
 
 void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMessage& mapMsg) {
-	// Исторические имена: 1-е поле на проводе = srcMapName (в старом коде называлось szTarMapN),
-	// 2-е поле = targetMapName (в старом коде называлось szSrcMapN). Сохраняем алиасы для совместимости.
+	//  : 1-    = srcMapName (    szTarMapN),
+	// 2-  = targetMapName (    szSrcMapN).    .
 	const auto& szTarMapN = mapMsg.srcMapName;
 	const auto& szSrcMapN = mapMsg.targetMapName;
 
@@ -1763,7 +1763,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMes
 					break;
 				}
 			}
-			// Типизированная сериализация: успех создания входа в карту
+			//  :     
 			auto wpk = net::msg::serialize(net::msg::GmMapEntryResultMessage{
 				szSrcMapN, szTarMapN, (int64_t)enumMAPENTRY_RETURN, (int64_t)enumMAPENTRYO_CREATE_SUC
 			});
@@ -1803,7 +1803,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMes
 		if (pCEntry) {
 			pCEntry->ReleaseCopy(sCopyNO);
 		}
-		// Типизированная сериализация: ответ об удалении копии карты
+		//  :     
 		net::msg::MapEntryMessage meMsg;
 		meMsg.srcMapName = szSrcMapN;
 		meMsg.targetMapName = szTarMapN;
@@ -1833,7 +1833,7 @@ void CGameApp::ProcessDynMapEntry(GateServer* pGate, const net::msg::MapEntryMes
 							   DOSTRING_PARAM_END);
 			g_CDMapEntry.Del(pCEntry);
 
-			// Типизированная сериализация: успех разрушения входа в карту
+			//  :     
 			auto wpk = net::msg::serialize(net::msg::GmMapEntryResultMessage{
 				szSrcMapN, szTarMapN, (int64_t)enumMAPENTRY_RETURN, (int64_t)enumMAPENTRYO_DESTROY_SUC
 			});

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: EntitySpawn.cpp
 // Creater: ZhangXuedong
 // Date: 2004.09.10
@@ -41,14 +41,14 @@ bool CChaSpawn::Init(char *szSpawnTable, long lRegionNum)
 	m_pCMap = 0;
 
 	if (lRegionNum <= 0)
-		//THROW_EXCP(excpArr, "ˢ�ֵ�������Ŀ����");
+		//THROW_EXCP(excpArr, "");
 		THROW_EXCP(excpArr, RES_STRING(GM_ENTITYSPAWN_CPP_00001));
 	strcpy(m_szSpawnTable, szSpawnTable);
 	m_lRecordNum = lRegionNum;
 
 	m_pCMonRefRecordSet = new CMonRefRecordSet(0, lRegionNum);
 	if (!m_pCMonRefRecordSet)
-		//THROW_EXCP(excpMem,"ˢ�ּ�¼����������з����ڴ�ʧ��");
+		//THROW_EXCP(excpMem,"");
 		THROW_EXCP(excpMem,RES_STRING(GM_ENTITYSPAWN_CPP_00002));
 	if (!LoadTable(m_pCMonRefRecordSet, m_szSpawnTable))
 		return false;
@@ -56,7 +56,7 @@ bool CChaSpawn::Init(char *szSpawnTable, long lRegionNum)
 	m_lRegionNum = lRegionNum;
 	m_pSMonInfo = new SMonInfo[m_lRegionNum];
 	if (!m_pSMonInfo)
-		//THROW_EXCP(excpMem,"ˢ�ֶ���������з����ڴ�ʧ��");
+		//THROW_EXCP(excpMem,"");
 		THROW_EXCP(excpMem,RES_STRING(GM_ENTITYSPAWN_CPP_00003));
 
 	memset(m_pSMonInfo, 0, sizeof(SMonInfo) * m_lRegionNum);
@@ -74,14 +74,14 @@ long CChaSpawn::Load(SubMap *pCMap)
 
 	m_lCount = 0;
 	
-	//Char	szSpawnError[512] = "��ɫ��������";
+	//Char	szSpawnError[512] = "";
 	Char szSpawnError[512] = "Cha born error";
 
 	Char	szMap[512];
 	sprintf(szMap, "spawn mum %s", pCMap->GetName());
 	Long	lNum;
 	const Rect	&area = pCMap->GetRange();
-	//LG(szSpawnError, "��ɫ��������Ŀ���ԭ��1����ʼ����λ�÷Ƿ���2���ڽ�ɫ�����Ҳ�����Ӧ�ļ�¼��3���ڳ���λ��120�׷�Χ��û���ҵ��ʺϸý�ɫ����������\n\n\n");
+	//LG(szSpawnError, "123120\n\n\n");
 	for (int i = 0; i < m_lRegionNum; i++)
 	{
 		pMonRefRecord = GetMonRefRecordInfo(i + 1);
@@ -133,18 +133,18 @@ long CChaSpawn::Load(SubMap *pCMap)
 					lNum++;
 					if(m_lCount >= g_Config.m_nMaxCha)
 					{
-						//LG(szMap, "msg�����������Ŀ��������ֵ��������\n");
+						//LG(szMap, "msg\n");
 						ToLogService("common", LogLevel::Warning, "Character count reached maximum, stopping spawn");
 						return 1;
 					}
 				}
 				else
-					//LG(szSpawnError, "��ɫ�������󣬳�����Ϣ����ͼ %s[%d, %d]����ɫ��������� %d����ɫ����� %d������λ��[%d, %d]\n", pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
+					//LG(szSpawnError, " %s[%d, %d] %d %d[%d, %d]\n", pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
 					ToLogService("errors", LogLevel::Error, "character born error, born information: map {}[{}, {}], character hatch list number {}, character list number {}, born position[{}, {}]",
 							pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
 			}
 		}
-		//LG(szMap, "��Ŀ %d �Ľ�ɫ����\t%d\n", i + 1, lNum);
+		//LG(szMap, " %d \t%d\n", i + 1, lNum);
 		ToLogService("common", "entry {} character number:\t{}", i + 1, lNum);
 	}
 	return lRet;
@@ -152,7 +152,7 @@ long CChaSpawn::Load(SubMap *pCMap)
 
 long CChaSpawn::Reload()
 {
-	// ���������ͼ�ϵ����й���
+	// 
 	return 0;
 }
 
@@ -175,14 +175,14 @@ bool CMapSwitchEntitySpawn::Init(char *szSpawnTable, long lRecordNum)
 	m_pCMap = 0;
 
 	if (lRecordNum <= 0)
-		//THROW_EXCP(excpArr, "��¼��Ŀ����");
+		//THROW_EXCP(excpArr, "");
 		THROW_EXCP(excpArr, RES_STRING(GM_ENTITYSPAWN_CPP_00005));
 	strcpy(m_szSpawnTable, szSpawnTable);
 	m_lRecordNum = lRecordNum;
 
 	m_pCSwitchMapRecSet = new CSwitchMapRecordSet(0, lRecordNum);
 	if (!m_pCSwitchMapRecSet)
-		//THROW_EXCP(excpMem,"��ͼ�л���¼����������з����ڴ�ʧ��");
+		//THROW_EXCP(excpMem,"");
 		THROW_EXCP(excpMem,RES_STRING(GM_ENTITYSPAWN_CPP_00006));
 	if (!LoadTable(m_pCSwitchMapRecSet, m_szSpawnTable))
 		return false;
@@ -255,7 +255,7 @@ bool CNpcSpawn::Init( char *szSpawnTable, long lRecordNum )
 	m_pNpcRecordSet = new CNpcRecordSet( 0, lRecordNum );
 	if( !m_pNpcRecordSet )
 	{
-		//THROW_EXCP( excpMem, "NPC��¼�����ݹ�������з����ڴ�ʧ�ܣ�" );
+		//THROW_EXCP( excpMem, "NPC" );
 		THROW_EXCP( excpMem, RES_STRING(GM_ENTITYSPAWN_CPP_00008) );
 	}
 	if( !LoadTable(m_pNpcRecordSet, m_szSpawnTable ))
@@ -281,7 +281,7 @@ mission::CNpc* CNpcSpawn::FindNpc( const char szName[] )
 
 long CNpcSpawn::Load( SubMap& submap )
 {
-	// ��ʼ���õ�ͼװ�ص�NPCָ���б�
+	// NPC
 	memset( m_NpcList, 0, sizeof(mission::CNpc*)*ROLE_MAXNUM_MAPNPC );
 	m_sNumNpc = 0;
 
@@ -299,8 +299,8 @@ long CNpcSpawn::Load( SubMap& submap )
 		if( pCharRecord == NULL ) {
 			hasError = true;
 			C_PRINT("\nerror: NPC %d model %d unfound!", i, pNpcRecord->sCharID );
-			//LG( "npcinit_error", "��ͼ��ʼ������δ�ҵ�ָ��ID�Ľ�ɫ������Ϣ��ID = %d", pNpcRecord->sCharID );
-			ToLogService("errors", LogLevel::Error, "initialization map error��not find appoint ID roll attribute information��ID = {}", pNpcRecord->sCharID );
+			//LG( "npcinit_error", "IDID = %d", pNpcRecord->sCharID );
+			ToLogService("errors", LogLevel::Error, "initialization map errornot find appoint ID roll attribute informationID = {}", pNpcRecord->sCharID );
 			continue;
 		}
 		

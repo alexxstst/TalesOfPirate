@@ -1,4 +1,4 @@
-/* d3des.h -
+﻿/* d3des.h -
  *
  *	Headers and defines for d3des.c
  *	Graven Imagery, 1992.

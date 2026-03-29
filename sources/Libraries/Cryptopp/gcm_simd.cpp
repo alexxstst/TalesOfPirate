@@ -1,4 +1,4 @@
-// gcm_simd.cpp - written and placed in the public domain by
+﻿// gcm_simd.cpp - written and placed in the public domain by
 //                Jeffrey Walton, Uri Blumenthal and Marcel Raad.
 //                Original x86 CLMUL by Wei Dai. ARM and POWER8
 //                PMULL and VMULL by JW, UB and MR.

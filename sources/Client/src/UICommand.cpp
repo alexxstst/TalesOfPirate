@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UICommand.h"
 #include "uifastcommand.h"
 #include "GameApp.h"

@@ -1,4 +1,4 @@
-// CharForge.h Created by knight-gongjian 2005.1.24.
+ï»¿// CharForge.h Created by knight-gongjian 2005.1.24.
 //---------------------------------------------------------
 #pragma once
 
@@ -23,15 +23,15 @@ namespace mission
 
 		void	Clear();
 
-		// ×°ÔØ¾«Á·Êý¾ÝÐÅÏ¢
+		// 
 		BOOL	LoadForgeData( char szName[] );
 		
-		// ¾«Á·ÎïÆ·
+		// 
 		void	ForgeItem( CCharacter& character, BYTE byIndex );
 
 	private:
 
-		// ¾«Á·Êý¾Ý¼¯
+		// 
 		CForgeRecordSet* m_pRecordSet;
 	};
 

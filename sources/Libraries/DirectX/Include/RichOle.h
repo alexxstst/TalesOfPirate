@@ -1,4 +1,4 @@
-#ifndef _RICHOLE_
+﻿#ifndef _RICHOLE_
 #define _RICHOLE_
 
 #if _MSC_VER > 1000

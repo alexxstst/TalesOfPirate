@@ -1,4 +1,4 @@
-// sm4.cpp - written and placed in the public domain by Jeffrey Walton and Han Lulu
+﻿// sm4.cpp - written and placed in the public domain by Jeffrey Walton and Han Lulu
 //
 //    We understand future ARMv8 enhancements are supposed
 //    to include SM3 and SM4 related instructions so the function

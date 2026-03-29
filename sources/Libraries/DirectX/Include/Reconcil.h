@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (C) Microsoft Corporation, 1990-1999
  * reconcil.h - OLE reconciliation interface definitions.
  */

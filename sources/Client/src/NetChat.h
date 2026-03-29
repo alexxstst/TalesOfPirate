@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "NetIF.h"
 #include "compcommand.h"
@@ -9,11 +9,11 @@ struct stQueryPersonInfo;
 // End
 
 /****************************************************************
-		����Packet�������������
-		����:������������Ա
-		�޸�:������������Ա
-		����:�ͻ��˿�����Ա
-		�������������ļ�"NetPkXXX.cpp"(ע��:��Pk,��Ϊ�����������cpp�ļ�)
+		Packet
+		:
+		:
+		:
+		"NetPkXXX.cpp"(:Pk,cpp)
 *****************************************************************/
 extern void CS_GM1Say(const char *pszContent);
 extern void CS_GM1Say1(const char *pszContent, DWORD color);//Add by sunny.sun20080804
@@ -42,70 +42,70 @@ extern void	CS_Frnd_Delete(unsigned long chaid);
 
 extern void	CP_Frnd_Refresh_Info(unsigned long chaid);
 
-extern void	CP_Change_PersonInfo(const char *motto,unsigned short icon,bool refuse_sess);//refuse_sess =true,�������Զ��ܾ��Ự =false,���ջỰ.
+extern void	CP_Change_PersonInfo(const char *motto,unsigned short icon,bool refuse_sess);//refuse_sess =true, =false,.
 
 /****************************************************************
-		����Packet����õı��ؽӿ�������
-		����:������������Ա
-		�޸�:�ͻ��˿�����Ա
-		����:�����յ�Packet�������������Ρ���Ӧ����
-		�������������ļ�"NetXXX.cpp"(ע��:û��Pk,�����NetPkXXX,û�а�����)
+		Packet
+		:
+		:
+		:Packet
+		"NetXXX.cpp"(:Pk,NetPkXXX,)
 *****************************************************************/
 
-struct stNetSay2You			// ����˵��
+struct stNetSay2You			// 
 {
-	std::string m_src;		// ˵����
-	std::string m_dst;		// ������
-	std::string m_content;	// ����
+	std::string m_src;		// 
+	std::string m_dst;		// 
+	std::string m_content;	// 
 };
 
-struct stNetSay2All		// ��������˵��
+struct stNetSay2All		// 
 {
-	std::string m_src;	//˵����
-	std::string m_content;//����
+	std::string m_src;	//
+	std::string m_content;//
 };
 
-struct stNetScrollSay//��˵����˵�� ������ʾ
+struct stNetScrollSay// 
 {
-	std::string m_content;//��ʾ����
-	int		setnum;//��ʾ����
+	std::string m_content;//
+	int		setnum;//
 	DWORD	color;
 };
 
-struct stNetTeamChaPart // ��ӳ�Ա�����
+struct stNetTeamChaPart // 
 {
     struct SItem
     {
-	    short	sID;		// ���߱��е�ID��0��ʾû�е��ߣ�
-	    short	sNum;		// ���߸���
-	    char	chForgeLv;	// �����ȼ�
+	    short	sID;		// ID0
+	    short	sNum;		// 
+	    char	chForgeLv;	// 
 		long lFuseID;
     };
 
 	short		sTypeID;
 	SItem	    SLink[enumEQUIP_NUM];
-    short       sHairID;        // Ĭ�ϵ�ͷ��������
+    short       sHairID;        // 
 
 	void		Convert( const stNetChangeChaPart& stPart );
 };
 
 struct stNetTeamState
 {
-	unsigned long	ulID;			// ��ɫΨһID
-	BYTE			byWork;			// ְҵ
+	unsigned long	ulID;			// ID
+	BYTE			byWork;			// 
 	long			lHP;
 	long			lSP;
 	long			lLV;
     long            lMaxHP;
     long            lMaxSP;
 
-    stNetTeamChaPart    SFace;       // ���
+    stNetTeamChaPart    SFace;       // 
 };
 
 struct stNetPCTeam      // from group
 {
-	unsigned char kind;	// �ο�Common:netcommand.h - TEAM_MSG ��ʼ��
-	unsigned char count;//����Ԫ�صĸ���;
+	unsigned char kind;	// Common:netcommand.h - TEAM_MSG 
+	unsigned char count;//;
 	unsigned long cha_dbid[10];
 	char		  cha_name[10][33];
 	char		  motto[10][33];
@@ -139,12 +139,12 @@ extern void NetSynTeam(stNetTeamState *pSTeamState);
 
 struct stNetFrndStart
 {
-	std::string		szGroup;	//������������
+	std::string		szGroup;	//
 	unsigned long	lChaid;
 	std::string		szChaname;
 	std::string		szMotto;
 	unsigned short	sIconID;
-	unsigned char	cStatus;	//0-���ߣ���0-����
+	unsigned char	cStatus;	//0-0-
 };
 
 extern void NetFrndInvite(const char *inviter_name, unsigned long inviter_chaid,unsigned short icon);
@@ -163,7 +163,7 @@ extern void NetGMDel(unsigned long cha_id);
 extern void NetGMAdd(unsigned long cha_id,const char * cha_name,const char * motto,unsigned short icon_id,const char *grp);
 extern void NetFrndRefreshInfo(unsigned long cha_id,const char * motto,unsigned short icon,unsigned short degree,const char * job,const char *guildname);
 
-// ʦ��
+// 
 extern void NetMasterOnline(unsigned long cha_id);
 extern void NetMasterOffline(unsigned long cha_id);
 extern void NetMasterDel(unsigned long cha_id);
@@ -172,7 +172,7 @@ extern void NetMasterStart(stNetFrndStart &self,stNetFrndStart arrCha[],unsigned
 extern void NetMasterCancel(unsigned long  inviter_chaid,char reason);
 extern void NetMasterRefreshInfo(unsigned long cha_id,const char * motto,unsigned short icon,unsigned short degree,const char * job,const char *guildname);
 
-// ͽ��
+// 
 extern void NetPrenticeOnline(unsigned long cha_id);
 extern void NetPrenticeOffline(unsigned long cha_id);
 extern void NetPrenticeDel(unsigned long cha_id);
@@ -197,14 +197,14 @@ extern void NetSessAdd(unsigned long sessid,stNetSessCreate *cha);
 extern void NetSessLeave(unsigned long sessid,unsigned long chaid);
 extern void NetSessSay(unsigned long sessid,unsigned long chaid,const char *word);
 /****************************************************************
-		���յ�Packet��������������
-		����:������������Ա
-		�޸�:������������Ա
-		����:NetIF::HandlePacketMessage
-		�������������ļ�"NetPkXXX.cpp"(ע��:��Pk,��Ϊ�����������cpp�ļ�)
+		Packet
+		:
+		:
+		:NetIF::HandlePacketMessage
+		"NetPkXXX.cpp"(:Pk,cpp)
 *****************************************************************/
 
-//˽��
+//
 extern BOOL	PC_Say2You(LPRPACKET pk);
 extern BOOL	PC_GM1SAY(LPRPACKET pk);
 extern BOOL	PC_GM1SAY1(LPRPACKET pk);//Add by sunny.sun20080804
@@ -213,7 +213,7 @@ extern BOOL	PC_Say2All(LPRPACKET pk);
 extern BOOL	PC_Say2Team(LPRPACKET pk);
 extern BOOL	PC_Say2Gud(LPRPACKET pk);
 
-//��ӳ�Ա�仯��Ϣˢ��
+//
 extern BOOL	PC_SESS_CREATE(LPRPACKET pk);
 extern BOOL	PC_SESS_ADD(LPRPACKET pk);
 extern BOOL	PC_SESS_LEAVE(LPRPACKET pk);

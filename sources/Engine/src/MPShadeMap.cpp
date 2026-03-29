@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 //#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
@@ -73,7 +73,7 @@ void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
 	t_iID = m_CResMagr->GetTextureID(_strTexName);
 	if(t_iID == -1)
 	{
-		MessageBox(NULL,_strTexName.c_str() ,"shadeÎÆÀí²»´æÔÚ",MB_OK);
+		MessageBox(NULL,_strTexName.c_str() ,"shade",MB_OK);
 		_lpCurTex = NULL;
 	}
 	else
@@ -142,7 +142,7 @@ bool	CMPShadeMap::CreateShadeMap(float fRadius)
 	if(!SetGridNum(_iGridCrossNum))
 		return false;
 
-	//£¡´´½¨VB
+	//VB
 	for( int n = 0; n < _iVerNum; n++)
 	{
 		_SShadePos[n] = D3DXVECTOR3(0,0,0);
@@ -197,7 +197,7 @@ bool	CMPShadeMap::SetGridNum(int iNum)
 	//pVertex[3].m_SUV2			= D3DXVECTOR2(6, 7);
 
 	//_lpVB->Unlock();
-	//!´´½¨IB
+	//!IB
 
 #ifndef USE_MGR
 	SAFE_RELEASE(_lpIB);
@@ -282,7 +282,7 @@ void	CMPShadeMap::setFrameTexture(s_string& strTexName, CMPResManger	*pCResMagr)
 	t_iID = pCResMagr->GetTextureID(_strTexName);
 	if(t_iID == -1)
 	{
-		MessageBox(NULL,_strTexName.c_str(),"ÎÆÀí²»´æÔÚ",MB_OK);
+		MessageBox(NULL,_strTexName.c_str(),"",MB_OK);
 		_lpCurTex = NULL;
 	}
 	else
@@ -330,14 +330,14 @@ void	CMPShadeMap::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 	_SVerPos = SVerPos;
 
 
-	//£¡Çóµ±Ç°TILEµÄÎ»ÖÃ
+	//TILE
 	int nX	= (int)((_SVerPos.x - _fRadius / 2 ) /*/ TILESIZE*/);
 	int nY	= (int)((_SVerPos.y - _fRadius / 2 ) /*/ TILESIZE*/);
 
 	//D3DXVECTOR2 vCenter;
 	//vCenter.x = nX* TILESIZE + ((_fGridMax * TILESIZE) / 2);
 	//vCenter.y = nY* TILESIZE + ((_fGridMax * TILESIZE) / 2);
-	//£¡µ±Ç°TILEµÄÖÐÐÄÊÀ½ç×ø±êµã
+	//TILE
 	//float X = nX / TILESIZE + 0.5f;
 	//float Y = nY / TILESIZE + 0.5f;
 	
@@ -524,7 +524,7 @@ void	CMPShadeMap::FillVertex()
 		return;
 	}
 
-	int nIndex = 9;//!ÉèÖÃµÄVS³£Á¿´Ó9¿ªÊ¼
+	int nIndex = 9;//!VS9
 	for( int n = 0; n < _iVerNum; n++)
 	{
 		pVertex[n].m_dwDiffuse = _dwColor;
@@ -612,13 +612,13 @@ bool	CMPShadeMap::SaveToFile(FILE* pFile)
 	char t_pszName[32];
 
 	int t_temp;
-	//!´óÐ¡°ë¾¶
+	//!
 	fwrite(&_fRadius,sizeof(float),1,pFile);
 
 	lstrcpy(t_pszName,_strTexName.c_str());
 	fwrite(t_pszName, sizeof(char),32,pFile);
 
-	//!ÀàÐÍ
+	//!
 	t_temp = (int)_eSrcBlend;
 	fwrite(&t_temp,sizeof(int),1,pFile);
 	t_temp = (int)_eDestBlend;
@@ -635,13 +635,13 @@ bool	CMPShadeMap::LoadFromFile(FILE* pFile)
 	//char t_pszName[32];
 
 	int t_temp;
-	////!´óÐ¡°ë¾¶
+	////!
 	//fread(&_fRadius,sizeof(float),1,pFile);
 
 	//fread(t_pszName, sizeof(char),32,pFile);
 	//_strTexName = t_pszName;
 
-	//!ÀàÐÍ
+	//!
 	fread(&t_temp,sizeof(int),1,pFile);
 	_eSrcBlend = (D3DBLEND)t_temp;
 	fread(&t_temp,sizeof(int),1,pFile);
@@ -805,7 +805,7 @@ void	CMPShadeEX::MoveTo(D3DXVECTOR3 SVerPos, MPMap* pMap, float	fAngle)
 		return;
 	}
 	_SVerPos = SVerPos;
-	//£¡Çóµ±Ç°TILEµÄÎ»ÖÃ
+	//TILE
 	int nX	= (int)((_SVerPos.x - _fRadius / 2 ) /*/ TILESIZE*/);
 	int nY	= (int)((_SVerPos.y - _fRadius / 2 ) /*/ TILESIZE*/);
 	
@@ -893,7 +893,7 @@ bool	CMPShadeEX::SaveToFile(FILE* pFile)
 	char t_pszName[32];
 
 	int t_temp;
-	//!´óÐ¡°ë¾¶
+	//!
 	fwrite(&_fRadius,sizeof(float),1,pFile);
 
 	lstrcpy(t_pszName,_strTexName.c_str());
@@ -902,26 +902,26 @@ bool	CMPShadeEX::SaveToFile(FILE* pFile)
 	fwrite(&_iRow,sizeof(int),1,pFile);
 	fwrite(&_iCol,sizeof(int),1,pFile);
 
-	//!ÀàÐÍ
+	//!
 	t_temp = (int)_eSrcBlend;
 	fwrite(&t_temp,sizeof(int),1,pFile);
 	t_temp = (int)_eDestBlend;
 	fwrite(&t_temp,sizeof(int),1,pFile);
 
 
-	//!Ê±¼ä³¤¶È
+	//!
 	//fwrite(&_fLife,sizeof(float),1,pFile);
-	//!Ö¡ÊýÁ¿
+	//!
 	fwrite(&_iFrameCount,sizeof(int),1,pFile);
-	//!Ã¿Ò»Ö¡Ê±¼ä
+	//!
 	fwrite(&_fFrameTime,sizeof(float),1,pFile);
-	//!Ã¿Ò»Ö¡ÑÕÉ«
+	//!
 	for( int n = 0; n < _iFrameCount; n++)
 	{
 		fwrite(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
 	}
-	///////////////!±£´æ×ø±ê±ä»»
-	//!Ã¿Ò»Ö¡×ø±ê±ä»»Ê±¼ä
+	///////////////!
+	//!
 	fwrite(&_fTexFrameTime,sizeof(float),1,pFile);
 
 	fwrite(&_iIdxTech, sizeof(int),1,pFile);
@@ -934,7 +934,7 @@ bool	CMPShadeEX::LoadFromFile(FILE* pFile)
 	//char t_pszName[32];
 
 	int t_temp;
-	////!´óÐ¡°ë¾¶
+	////!
 	//fread(&_fRadius,sizeof(float),1,pFile);
 
 	//fread(t_pszName, sizeof(char),32,pFile);
@@ -943,25 +943,25 @@ bool	CMPShadeEX::LoadFromFile(FILE* pFile)
 	//fread(&_iRow,sizeof(int),1,pFile);
 	//fread(&_iCol,sizeof(int),1,pFile);
 
-	//!ÀàÐÍ
+	//!
 	fread(&t_temp,sizeof(int),1,pFile);
 	_eSrcBlend = (D3DBLEND)t_temp;
 	fread(&t_temp,sizeof(int),1,pFile);
 	_eDestBlend = (D3DBLEND)t_temp;
 
-	//!Ö¡ÊýÁ¿
+	//!
 	fread(&_iFrameCount,sizeof(int),1,pFile);
-	//!Ã¿Ò»Ö¡Ê±¼ä
+	//!
 	fread(&_fFrameTime,sizeof(float),1,pFile);
 
-	//!Ã¿Ò»Ö¡ÑÕÉ«
+	//!
 	_vecFrameColor.resize(_iFrameCount);
 	for( int n = 0; n < _iFrameCount; n++)
 	{
 		fread(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
 	}
-	///////////////!±£´æ×ø±ê±ä»»
-	//!Ã¿Ò»Ö¡×ø±ê±ä»»Ê±¼ä
+	///////////////!
+	//!
 	fread(&_fTexFrameTime,sizeof(float),1,pFile);
 
 	fread(&_iIdxTech, sizeof(int),1,pFile);

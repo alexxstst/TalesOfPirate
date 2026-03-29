@@ -1,4 +1,4 @@
-local cha=CreateCha(740, 23734, 40347, 145, 7200)
+Ôªølocal cha=CreateCha(740, 23734, 40347, 145, 7200)
 SetChaSideID(cha, 2)
 local cha=CreateCha(740, 25733, 40429, 145, 7200)
 SetChaSideID(cha, 2)
@@ -47,16 +47,16 @@ SetChaSideID(cha, 2)
 
 
 
-----…Ë÷√ª˘µÿ
+----
 RedSide_BaseRole=CreateCha(729, 24704, 40485, 270, 7200)
 SetChaSideID(RedSide_BaseRole, 2)
 
-----…Ë÷√¡∏≤÷
+----
 RedSide_LCRole = CreateCha(743, 7445, 38517, 145, 7200)
 RedSide_LCNotice = 0
 SetChaSideID(RedSide_LCRole, 2)
 
-----…Ë÷√µØ“©ø‚
+----
 RedSide_DYKRole= CreateCha(745, 38926, 39698, 190, 7200)
 RedSide_DYKNotice = 0
 SetChaSideID(RedSide_DYKRole, 2)

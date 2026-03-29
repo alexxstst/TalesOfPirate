@@ -1,9 +1,9 @@
-
+﻿
 #include "stdafx.h"
 #include <time.h>
 
 
-// Logר�ñ�
+// Log
 class CTradeTableLog : public cfl_rs
 {
 public:
@@ -24,7 +24,7 @@ public:
 		SQLRETURN l_sqlret  =  this->exec_sql_direct(sql);
 		if(!DBOK(l_sqlret))
 		{
-			//LG("gamelog", "����log��¼ʧ��, sql = [%s]!\n", sql);
+			//LG("gamelog", "log, sql = [%s]!\n", sql);
 			ToLogService("db", LogLevel::Error, "add log note failed, sql = [{}]!", sql);
 		}
 	}

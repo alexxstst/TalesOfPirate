@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 //#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
@@ -37,18 +37,18 @@ bool CEffectScript::LoadParamFromName( EFF_Param* pParam, const s_string& strNam
 	char pszModel[64];
 	char pszN[64];
 
-	if( !m_cScript.ReadLine( "Ä£ÐÍÊýÁ¿",&pParam->m_iModelNum) )
+	if( !m_cScript.ReadLine( "",&pParam->m_iModelNum) )
 		return false;
 	pParam->m_vecModelName.clear();
 	for (int n = 0; n < pParam->m_iModelNum; n++)
 	{
-		sprintf(pszN,"Ä£ÐÍ%d",n + 1);
+		sprintf(pszN,"%d",n + 1);
 		if( !m_cScript.ReadLine( pszN,pszModel,64) )
 			return false;
 		pParam->m_vecModelName.push_back(pszModel);
 	}
 
-	if( !m_cScript.ReadLine( "ËÙ¶È",&pParam->m_fvel) )
+	if( !m_cScript.ReadLine( "",&pParam->m_fvel) )
 		return false;
 
 	if( !m_cScript.ReadLine( "num",&pParam->m_iPartNum) )
@@ -72,7 +72,7 @@ bool CEffectScript::LoadParamFromName( EFF_Param* pParam, const s_string& strNam
 			return false;
 		pParam->m_vecDummyIdx.push_back(idummy);
 	}
-	if( !m_cScript.ReadLine( "ÔË¶¯·½Ê½",&pParam->m_iRenderIdx) )
+	if( !m_cScript.ReadLine( "",&pParam->m_iRenderIdx) )
 		return false;
 	if( !m_cScript.ReadLine( "Light",&pParam->m_iLightID) )
 		return false;
@@ -89,7 +89,7 @@ bool CEffectScript::LoadParamFromName( Group_Param* pParam, const s_string& strN
 		return false;
 	char pszN[64];
 
-	if( !m_cScript.ReadLine( "ÔªËØÖÖÀà",&pParam->nClass) )
+	if( !m_cScript.ReadLine( "",&pParam->nClass) )
 		return false;
 	pParam->vecParam.resize(pParam->nClass);
 	pParam->vecNum.resize(pParam->nClass);
@@ -97,16 +97,16 @@ bool CEffectScript::LoadParamFromName( Group_Param* pParam, const s_string& strN
 	int parma;
 	for (int n = 0; n < pParam->nClass; n++)
 	{
-		sprintf(pszN,"ÔªËØ%d",n + 1);
+		sprintf(pszN,"%d",n + 1);
 		if( !m_cScript.ReadLine( pszN,&parma) )
 			return false;
 		pParam->vecParam[n] = parma;
-		if( !m_cScript.ReadLine( "ÊýÁ¿",&parma) )
+		if( !m_cScript.ReadLine( "",&parma) )
 			return false;
 		pParam->vecNum[n] = parma;
 	}
 
-	if( !m_cScript.ReadLine( "ÔË¶¯·½Ê½",&pParam->nRenderIdx) )
+	if( !m_cScript.ReadLine( "",&pParam->nRenderIdx) )
 		return false;
 
 	return true;
@@ -163,11 +163,11 @@ void	CMPEffectCtrl::SetFontEffect(char* pszText,CMPFont* pFont)
 	}
 	else
 	{
-		ToLogService("errors", LogLevel::Error, " CMPEffectCtrl::SetFontEffectÏÔÊ¾×ÖÌåÌØÐ§£¬×ÖÌå´íÎóÖ¸Õë£¡");
+		ToLogService("errors", LogLevel::Error, " CMPEffectCtrl::SetFontEffect");
 	}
 }
 /************************************************************************/
-/*¼¼ÄÜ*/
+/**/
 /************************************************************************/
 
 //////////////////////////////////////////////////////////////////////////
@@ -474,16 +474,16 @@ void	CMagicCtrl::CalculateEmission(D3DXVECTOR3* vStart,D3DXVECTOR3* vTarget)
 	_fDist = D3DXVec3LengthSq(&_vDir);
 
 	D3DXVec3Normalize(&_vDir,&_vDir);
-	//ºÍµØÍ¼µÄÅö×²µã
+	//
 	//_vMapTarget = _vOldPos;
 	//_vMapTarget.z = GetScene()->GetGridHeight(_vMapTarget.x,_vMapTarget.y);
-	//¼ÆËã»¡ÐÎËã·¨ÖÐÆðµãºÍÄ¿±êµãÖ®¼ä×î¸ßÄÜµ½µÄ¸ß¶È
+	//
 	const auto v = _vOldTarget - _vOldPos;
 	_fHalfHei =  D3DXVec3Length(&v);
 	_vArcOrg = _vOldPos+ _vDir * (_fHalfHei/2);
 	_vArcOrg.z -= _fHalfHei/2;
 
-	//¼ÆËãÆðµãµ½Ô²ÐÄµÄ¾àÀë£¨°ë¾¶£©
+	//
 	const auto v2 = _vOldPos - _vArcOrg;
 	_fHalfHei = D3DXVec3Length(&v2);
 	D3DXVec3Normalize(&_vArcAxis, &v2);
@@ -520,7 +520,7 @@ void	CMagicCtrl::Emission(D3DXVECTOR3* vStart,D3DXVECTOR3* vTarget)
 			_fDirXZ[0] = asinf(D3DXVec3Dot(&_vDir, &v) / fDist);
 		}
 
-		//ÇóÔÚXÖá·½ÏòÐý×ªµÄ½Ç¶È
+		//X
 		if(_vDir.x == 0 && _vDir.y == 0)
 			_fDirXZ[1] = 0;
 		else
@@ -533,7 +533,7 @@ void	CMagicCtrl::Emission(D3DXVECTOR3* vStart,D3DXVECTOR3* vTarget)
 				_fDirXZ[1] = -_fDirXZ[1];
 			}
 		}
-		//ÇóÔÚZÖá·½ÏòÐý×ªµÄ½Ç¶È
+		//Z
 		for (int n = 0; n < _iModelNum; n++) 
 		{
 			_CpModel[n]->RotatingXZ(_fDirXZ[0], _fDirXZ[1]);
@@ -565,7 +565,7 @@ void	CMagicCtrl::ResetDir(D3DXVECTOR3* vTarget)
 		_fDirXZ[0] = asinf(D3DXVec3Dot(&_vDir, &v) / fDist);
 	}
 
-	//ÇóÔÚXÖá·½ÏòÐý×ªµÄ½Ç¶È
+	//X
 	if(_vDir.x == 0 && _vDir.y == 0)
 		_fDirXZ[1] = 0;
 	else
@@ -578,7 +578,7 @@ void	CMagicCtrl::ResetDir(D3DXVECTOR3* vTarget)
 			_fDirXZ[1] = -_fDirXZ[1];
 		}
 	}
-	//ÇóÔÚZÖá·½ÏòÐý×ªµÄ½Ç¶È
+	//Z
 	for (int n = 0; n < _iModelNum; n++) 
 	{
 		_CpModel[n]->RotatingXZ(_fDirXZ[0], _fDirXZ[1]);

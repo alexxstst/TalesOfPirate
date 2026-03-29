@@ -1,4 +1,4 @@
-// WorldEudemon.h Created by knight-gongjian 2005.3.9.
+﻿// WorldEudemon.h Created by knight-gongjian 2005.3.9.
 //---------------------------------------------------------
 #pragma once
 
@@ -18,26 +18,26 @@ namespace mission
 
 		virtual void SetType() { m_byType = EUDEMON; }
 
-		// ������Ϣ��������
+		// 
 		virtual HRESULT MsgProc( CCharacter& character, net::RPacket& packet );
 		
-		// װ�������ػ���������Ϣ
+		// 
 		virtual BOOL Load( const char szMsgProc[], const char szName[], dbc::uLong ulID );
 
 	private:
-		// װ�ؽű���Ϣ
+		// 
 		virtual BOOL InitScript( const char szFunc[], const char szName[] );
 		
 	};
 
-	// ��ʱδ��
+	// 
 	class CEudemonManager
 	{
 	public:
 		CEudemonManager();
 		~CEudemonManager();
 
-		// װ�������ػ����б������������ػ���
+		// 
 		BOOL	Load( const char szTable[] );
 
 	private:

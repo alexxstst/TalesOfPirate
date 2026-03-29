@@ -1,13 +1,13 @@
-print("-- [Loading] NPC Script [03]")
+锘縫rint("-- [Loading] NPC Script [03]")
 
 ----------------------------------------------------------
 --							--
 --							--
---		白银城[交易员·郝洛甫]			--
+--		[]			--
 --							--
 --		225538,280188				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk10 ()
 	
 	
@@ -83,22 +83,22 @@ function r_talk10 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<交易员·郝洛甫
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 
 
 ----------------------------------------------------------
 --							--
 --							--
---		雷霆堡[交易员·桑吉]			--
+--		[]			--
 --							--
 --		103877,127848				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk27 ()
 	
 	
-	Talk( 1, " Sanjay: Hi, Baby! I am in charge of the trade here…and girls too." )
+	Talk( 1, " Sanjay: Hi, Baby! I am in charge of the trade hereand girls too." )
 	InitTrigger()
 	TriggerCondition( 1, HasBoatInBerth, 2 )
 	TriggerAction( 1, TradeBerthList, 2 )
@@ -165,7 +165,7 @@ function r_talk27 ()
 	AddNpcMission	(1077)
 	AddNpcMission	(1133)
 	AddNpcMission	(1184)
-----------交易员·桑吉-------双子	--------------03
+-----------------	--------------03
 	AddNpcMission	(5728)
 	AddNpcMission	(5729)
 end 
@@ -173,11 +173,11 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		沙岚城[船工·弗兰克]			--
+--		[]			--
 --							--
 --		90391,366735				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk60 ()
 	
 	Talk( 1, "Franklin: Hi! I learnt my ship building skill in Argent City. You can call me Franklin." )
@@ -228,10 +228,10 @@ function r_talk60 ()
 	
 end 
 
------<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<船厂工人·弗兰克
+-----<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
 ------------------------------------------------------------
--- 白银城-----海事所助理·罗拉娜
+-- -----
 --           2247,2857
 ------------------------------------------------------------
 
@@ -239,15 +239,15 @@ function r_talk150()
 
 	Talk( 1, "Alena: Hi! I am the Maritime Assistant. Can I help you?" )
 
-	--Text( 1, "温情巨蟹宫(终极12宫专用任务)", JumpPage,2 )
+	--Text( 1, "(12)", JumpPage,2 )
 
-	Talk( 2, "海事所助理·罗拉娜:请选择你要闯关的难度,从水手到船长难度依次加大,当然了难度越高奖励越丰厚.你想好了吗?只能选择一次,不可以后悔哦" )
+	Talk( 2, ":,,.?," )
 
 	InitTrigger()
 	TriggerCondition( 1, NoRecord,1467 )
 	TriggerCondition( 1, NoRecord,1468 )
-	TriggerCondition( 1, HasItem, 1866, 1 )---------巨蟹门票
-	TriggerAction( 1, TakeItem, 1866, 1 )----------巨蟹门票
+	TriggerCondition( 1, HasItem, 1866, 1 )---------
+	TriggerAction( 1, TakeItem, 1866, 1 )----------
 	TriggerAction( 1, SetRecord, 1466 )
 	TriggerAction( 1, SetRecord, 1469 )
 	TriggerAction( 1, JumpPage, 3 )
@@ -257,8 +257,8 @@ function r_talk150()
 	InitTrigger()
 	TriggerCondition( 1, NoRecord,1466 )
 	TriggerCondition( 1, NoRecord,1468 )
-	TriggerCondition( 1, HasItem, 1866, 1 )---------巨蟹门票
-	TriggerAction( 1, TakeItem, 1866, 1 )----------巨蟹门票
+	TriggerCondition( 1, HasItem, 1866, 1 )---------
+	TriggerAction( 1, TakeItem, 1866, 1 )----------
 	TriggerAction( 1, SetRecord, 1467 )
 	TriggerAction( 1, SetRecord, 1469 )
 	TriggerAction( 1, JumpPage, 3 )
@@ -268,23 +268,23 @@ function r_talk150()
 	InitTrigger()
 	TriggerCondition( 1, NoRecord,1466 )
 	TriggerCondition( 1, NoRecord,1467 )
-	TriggerCondition( 1, HasItem, 1866, 1 )--------巨蟹门票
-	TriggerAction( 1, TakeItem, 1866, 1 )----------巨蟹门票
+	TriggerCondition( 1, HasItem, 1866, 1 )--------
+	TriggerAction( 1, TakeItem, 1866, 1 )----------
 	TriggerAction( 1, SetRecord, 1468 )
 	TriggerAction( 1, SetRecord, 1469 )
 	TriggerAction( 1, JumpPage, 3 )
 	TriggerFailure( 1, JumpPage, 4 )
 	Text( 2, "Captain",MultiTrigger, GetMultiTrigger(), 1)
 
-	Talk(3, "海事所助理·罗拉娜:希望您能够坚定自己的选择，不要放弃哦！我在这里祝福您..." )
-	Talk( 4, "海事所助理·罗拉娜:挑战巨蟹宫的时候,难度只能选择一次.并确保您的背包里有巨蟹宫门票.")
+	Talk(3, ":..." )
+	Talk( 4, ":,..")
 	
 	AddNpcMission 	(437)
 	AddNpcMission 	(439)
 	AddNpcMission 	(441)
 
-------------罗拉娜
------------------------巨蟹座
+------------
+-----------------------
 	AddNpcMission 	(5800)
 	AddNpcMission 	(5801)
 	AddNpcMission 	(5802)
@@ -311,7 +311,7 @@ function r_talk150()
 end
 
 ------------------------------------------------------------
--- 白银城-----船工·斯巴克
+-- -----
 ------------------------------------------------------------
 function r_talk151 ()
 		
@@ -349,7 +349,7 @@ function r_talk151 ()
 end 
 
 ------------------------------------------------------------
--- 白银城-----海港指挥·雪莉
+-- -----
 ------------------------------------------------------------
 
 function r_talk152()
@@ -393,7 +393,7 @@ function r_talk152()
 end
 
 ------------------------------------------------------------
--- 沙岚城-----海港指挥·马克
+-- -----
 ------------------------------------------------------------
 
 function r_talk153()
@@ -434,7 +434,7 @@ function r_talk153()
 end
 
 ------------------------------------------------------------
---冰狼堡-----船工·乔治
+-------
 ------------------------------------------------------------
 function r_talk155 ()
 		
@@ -477,7 +477,7 @@ function r_talk155 ()
 end 
 
 ------------------------------------------------------------
--- 冰狼堡-----海港指挥·席林
+-- -----
 ------------------------------------------------------------
 
 function r_talk154()
@@ -521,7 +521,7 @@ end
 
 
 ------------------------------------------------------------
--- 海风岛-----海港指挥·路凡
+-- -----
 ------------------------------------------------------------
 
 function r_talk178()
@@ -560,7 +560,7 @@ function r_talk178()
 end
 
 ------------------------------------------------------------
--- 碎冰岛-----海港指挥·诺尔罗德
+-- -----
 ------------------------------------------------------------
 
 function r_talk179()
@@ -599,7 +599,7 @@ function r_talk179()
 end
 
 ------------------------------------------------------------
--- 雪贼岛-----海港指挥·鲁兹鲁伊
+-- -----
 ------------------------------------------------------------
 
 function r_talk180()
@@ -638,7 +638,7 @@ function r_talk180()
 end
 
 ------------------------------------------------------------
--- 萨拉补给站-----海港指挥·温亚塔
+-- -----
 ------------------------------------------------------------
 
 function r_talk181()
@@ -663,7 +663,7 @@ function r_talk181()
 	AddNpcMission(	1742	)
 	AddNpcMission (	1938	)
 	AddNpcMission (	1953	)
-----------------吉尼斯---海港指挥·温亚塔--03
+---------------------03
 	AddNpcMission	(5511)
 	AddNpcMission	(5512)
 	
@@ -671,7 +671,7 @@ function r_talk181()
 end
 
 ------------------------------------------------------------
--- 阿尔补给站-----海港指挥·达耶达
+-- -----
 ------------------------------------------------------------
 
 function r_talk182()
@@ -694,13 +694,13 @@ function r_talk182()
 
 	AddNpcMission	(379)
 	AddNpcMission	(380)
-----------------吉尼斯---海港指挥·达耶达--03
+---------------------03
 	AddNpcMission (5533 )
 	AddNpcMission (5534 )
 end
 
 ------------------------------------------------------------
--- 哈尔补给站-----海港指挥·瓦雷米
+-- -----
 ------------------------------------------------------------
 
 function r_talk183()
@@ -737,20 +737,20 @@ function r_talk183()
 	AddNpcMission (	1951	)
 	AddNpcMission (	381	)
 	AddNpcMission (	382	)
-----------------吉尼斯---海港指挥·瓦雷米--03
+---------------------03
 	AddNpcMission (5531 )
 	AddNpcMission (5532 )
-	-----------------海港指挥·瓦雷米---------金牛
+	--------------------------
 	AddNpcMission	(5655)
 	AddNpcMission	(5656)
 
-	-----------------海港指挥·瓦雷米---------巨蟹
+	--------------------------
 	AddNpcMission	(5861)
 
 end
 
 ------------------------------------------------------------
--- 弗里敦补给站-----海港指挥·法第尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk184()
@@ -778,7 +778,7 @@ function r_talk184()
 	AddNpcMission (	384	)
 	AddNpcMission (	385	)
 
-	----------------吉尼斯---海港指挥·法第尔--03
+	---------------------03
 	AddNpcMission (5529 )
 	AddNpcMission (5530 )
 
@@ -787,7 +787,7 @@ function r_talk184()
 end
 
 ------------------------------------------------------------
--- 海风岛-----交易员·布尔兹
+-- -----
 ------------------------------------------------------------
 
 function r_talk185()
@@ -850,7 +850,7 @@ function r_talk185()
 end
 
 ------------------------------------------------------------
--- 碎冰岛-----交易员·赛瑟尼
+-- -----
 ------------------------------------------------------------
 
 function r_talk186()
@@ -909,13 +909,13 @@ function r_talk186()
 		
 	AddNpcMission	(761)
 
-	-----------------交易员·赛瑟尼---------金牛
+	--------------------------
 	AddNpcMission	(5643)
 	AddNpcMission	(5644)
 end
 
 ------------------------------------------------------------
--- 雪贼岛-----交易员·肥鲸德拉德
+-- -----
 ------------------------------------------------------------
 
 function r_talk187()
@@ -979,7 +979,7 @@ function r_talk187()
 end
 
 ------------------------------------------------------------
--- 冰雪岛-----海港指挥·波尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk188()
@@ -1014,13 +1014,13 @@ function r_talk188()
 	Talk( 4, "Sorry! I only repair ships docked in this harbor. Please pay 1000G." )
 	Talk( 5, "Sorry, you need to dock your ship in our harbor in order to refuel. Please pay 200G" )
 	Talk( 6, "Sorry! We only salvage ships docked in our harbor. You have to pay a fee of 1000G." )
-	----------海港指挥·波尔-------双子--------03
+	-------------------------03
 	AddNpcMission	(5704)
 	AddNpcMission	(5705)
 end
 
 ------------------------------------------------------------
--- 鸣沙岛-----海港指挥·托玛
+-- -----
 ------------------------------------------------------------
 
 function r_talk189()
@@ -1059,7 +1059,7 @@ function r_talk189()
 end
 
 ------------------------------------------------------------
--- 真爱岛-----海港指挥·夏德利
+-- -----
 ------------------------------------------------------------
 function r_talk190()
 
@@ -1096,7 +1096,7 @@ function r_talk190()
 end
 
 ------------------------------------------------------------
--- 苏港补给站-----海港指挥·鲁西
+-- -----
 ------------------------------------------------------------
 function r_talk191()
 
@@ -1114,7 +1114,7 @@ function r_talk191()
 
 	Talk( 4, "Sorry! Repair need 1000G" )
 	Talk( 5, "Sorry! Refuel needs a fee of 200G" )
-	 -------------吉尼斯--苏港补给站,海港指挥·鲁西(464,468)--03
+	 ---------------,(464,468)--03
 	AddNpcMission (5527 )
 	AddNpcMission (5528 )
 
@@ -1122,7 +1122,7 @@ function r_talk191()
 end
 
 ------------------------------------------------------------
--- 埃弗里补给站-----海港指挥·布纽
+-- -----
 ------------------------------------------------------------
 function r_talk192()
 
@@ -1149,7 +1149,7 @@ function r_talk192()
 	AddNpcMission (	386	)
 	AddNpcMission (	387	)
 
-	----------------吉尼斯---海港指挥·布纽--03
+	---------------------03
 	AddNpcMission (5525 )
 	AddNpcMission (5526 )
 	
@@ -1157,7 +1157,7 @@ end
 
 
 ------------------------------------------------------------
--- 拉古补给站-----海港指挥·多廉达
+-- -----
 ------------------------------------------------------------
 function r_talk193()
 
@@ -1179,7 +1179,7 @@ function r_talk193()
 	AddNpcMission(	1441	)
 	AddNpcMission (	1931	)
 
-	----------------吉尼斯---海港指挥·多廉达--03
+	---------------------03
 	AddNpcMission (5523 )
 	AddNpcMission (5524 )
 
@@ -1187,7 +1187,7 @@ function r_talk193()
 end
 
 ------------------------------------------------------------
--- 其索单补给站-----海港指挥·特巴齐尔
+-- -----
 ------------------------------------------------------------
 function r_talk194()
 
@@ -1209,7 +1209,7 @@ function r_talk194()
 end
 
 ------------------------------------------------------------
--- 穆穆尔补给站-----海港指挥·巴奥
+-- -----
 ------------------------------------------------------------
 function r_talk195()
 
@@ -1240,7 +1240,7 @@ function r_talk195()
 end
 
 ------------------------------------------------------------
--- 小肯补给站-----海港指挥·迪迪萨
+-- -----
 ------------------------------------------------------------
 function r_talk196()
 
@@ -1258,13 +1258,13 @@ function r_talk196()
 
 	Talk( 4, "Sorry! Repair need 1000G" )
 	Talk( 5, "Sorry! Refuel needs a fee of 200G" )
-	----------------吉尼斯---海港指挥·迪迪萨--03
+	---------------------03
 	AddNpcMission (5515 )
 	AddNpcMission (5516 )
 end
 
 ------------------------------------------------------------
--- 肖沸补给站-----海港指挥·丹尼斯
+-- -----
 ------------------------------------------------------------
 function r_talk197()
 
@@ -1288,13 +1288,13 @@ function r_talk197()
 	AddNpcMission (5134 )
 	AddNpcMission (5135 )
 
-	----------------吉尼斯---海港指挥·丹尼斯--03
+	---------------------03
 	AddNpcMission (5513 )
 	AddNpcMission (5514 )
 end
 
 ------------------------------------------------------------
--- 埃皮杜补给站-----海港指挥·索尔
+-- -----
 ------------------------------------------------------------
 function r_talk198()
 
@@ -1312,13 +1312,13 @@ function r_talk198()
 
 	Talk( 4, "Sorry! Repair need 1000G" )
 	Talk( 5, "Sorry! Refuel needs a fee of 200G" )
-	----------------吉尼斯---海港指挥·索尔--03
+	---------------------03
 	AddNpcMission (5517 )
 	AddNpcMission (5518 )
 end
 
 ------------------------------------------------------------
--- 冰雪岛-----交易员·西尔班
+-- -----
 ------------------------------------------------------------
 
 function r_talk199()
@@ -1380,7 +1380,7 @@ function r_talk199()
 end
 
 ------------------------------------------------------------
--- 鸣沙岛-----交易员·米索亚斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk200()
@@ -1440,13 +1440,13 @@ function r_talk200()
 	SetNpcActive()
 
 
-----------交易员·米索亚斯-------双子---03
+--------------------03
 	AddNpcMission	(5710)
 	AddNpcMission	(5711)
 end
 
 ------------------------------------------------------------
--- 真爱岛-----交易员·尤卡
+-- -----
 ------------------------------------------------------------
 
 function r_talk201()
@@ -1507,16 +1507,16 @@ function r_talk201()
 	SetNpcTrigger( GetTrigger( 1 ) )
 	SetNpcActive()
 
------------------交易员·尤卡---------金牛
+--------------------------
 	AddNpcMission	(5633)
 	AddNpcMission	(5634)
-----------交易员·尤卡-------双子---------------------03
+--------------------------------------03
 	AddNpcMission	(5716)
 	AddNpcMission	(5717)
 end
 
 ------------------------------------------------------------
--- 好运岛-----海港指挥·卢克
+-- -----
 ------------------------------------------------------------
 function r_talk202()
 
@@ -1553,7 +1553,7 @@ function r_talk202()
 end
 
 ------------------------------------------------------------
--- 萨迪勒补给站-----海港指挥·乔尔乔尼
+-- -----
 ------------------------------------------------------------
 function r_talk203()
 
@@ -1586,13 +1586,13 @@ function r_talk203()
 	AddNpcMission (5107 )
 	AddNpcMission (5108 )
 	AddNpcMission (5115 )
-	----------------吉尼斯---海港指挥·乔尔乔尼--03
+	---------------------03
 	AddNpcMission (5521 )
 	AddNpcMission (5522 )
 end
 
 ------------------------------------------------------------
--- 卡马赛补给站-----海港指挥·奥登
+-- -----
 ------------------------------------------------------------
 function r_talk204()
 
@@ -1610,16 +1610,16 @@ function r_talk204()
 
 	Talk( 4, "Sorry! Repair need 1000G" )
 	Talk( 5, "Sorry! Refuel needs a fee of 200G" )
-	----------------吉尼斯---海港指挥·奥登--03
+	---------------------03
 	AddNpcMission (5519 )
 	AddNpcMission (5520 )
-	-----------------海港指挥·奥登---------金牛
+	--------------------------
 	AddNpcMission	(5635)
 	AddNpcMission	(5636)
 end
 
 ------------------------------------------------------------
--- 思思索补给站-----海港指挥·拉米修
+-- -----
 ------------------------------------------------------------
 function r_talk205()
 
@@ -1638,16 +1638,16 @@ function r_talk205()
 	Talk( 4, "Sorry! Repair need 1000G" )
 	Talk( 5, "Sorry! Refuel needs a fee of 200G" )
 
-	-----------------海港指挥·拉米修---------金牛
+	--------------------------
 	AddNpcMission	(5659)
 	AddNpcMission	(5660)
-	----------海港指挥·拉米修-------双子--------------03
+	-------------------------------03
 	AddNpcMission	(5724)
 	AddNpcMission	(5725)
 end
 
 ------------------------------------------------------------
--- 好运岛-----交易员·帕德琉斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk206()
@@ -1710,7 +1710,7 @@ function r_talk206()
 end
 
 ------------------------------------------------------------
--- 雷霆堡军港-----海港指挥·查可夫中尉
+-- -----
 ------------------------------------------------------------
 function r_talk207()
 
@@ -1747,7 +1747,7 @@ function r_talk207()
 end
 
 ------------------------------------------------------------
--- 沙岚新城-----交易员·西多夫
+-- -----
 ------------------------------------------------------------
 
 function r_talk208()
@@ -1822,7 +1822,7 @@ function r_talk208()
 end
 
 ------------------------------------------------------------
--- 冰狼堡-----交易员·佩鲁诺
+-- -----
 ------------------------------------------------------------
 
 function r_talk209()
@@ -1890,7 +1890,7 @@ function r_talk209()
 end
 
 ------------------------------------------------------------
--- 雷霆堡军港-----船工·阿憨
+-- -----
 ------------------------------------------------------------
 function r_talk210 ()
 		
@@ -1936,7 +1936,7 @@ function r_talk210 ()
 end 
 
 ------------------------------------------------------------
--- 白银城-----海盗情报员·戈瓦撒
+-- -----
 ------------------------------------------------------------
 
 function r_talk211()
@@ -1953,7 +1953,7 @@ function r_talk211()
 end
 
 ------------------------------------------------------------
--- 白银城-----海军情报员·达隆丹
+-- -----
 ------------------------------------------------------------
 
 function r_talk212()
@@ -1964,7 +1964,7 @@ function r_talk212()
 end
 
 ------------------------------------------------------------
--- 白银城-----海军募兵小姐·蕾绮尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk213()
@@ -1973,7 +1973,7 @@ function r_talk213()
 end
 
 ------------------------------------------------------------
--- 废矿补给站-----打包人·乎勒达
+-- -----
 ------------------------------------------------------------
 
 function r_talk214()
@@ -1986,13 +1986,13 @@ function r_talk214()
 	Text( 1, "Load Crystal", MultiTrigger, GetMultiTrigger(), 1 )
 
 	Talk( 2, "Huradar: Hi! Your ship is not docked in Argent Harbor" )
-	----------打包人·乎勒达-------双子-------------03
+	------------------------------03
 	AddNpcMission	(5720)
 	AddNpcMission	(5721)	
 end
 
 ------------------------------------------------------------
--- 雷霆堡军港-----打包人·费德索拉
+-- -----
 ------------------------------------------------------------
 
 function r_talk215()
@@ -2009,7 +2009,7 @@ function r_talk215()
 end
 
 ------------------------------------------------------------
--- 白银林区-----打包人·摩根
+-- -----
 ------------------------------------------------------------
 
 function r_talk216()
@@ -2029,7 +2029,7 @@ function r_talk216()
 end
 
 ------------------------------------------------------------
--- 冰雪岛-----打包人·阿里西斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk217()
@@ -2046,7 +2046,7 @@ function r_talk217()
 end
 
 ------------------------------------------------------------
--- 鸣沙岛-----打包人·伊加卡班
+-- -----
 ------------------------------------------------------------
 
 function r_talk218()
@@ -2063,7 +2063,7 @@ function r_talk218()
 end
 
 ------------------------------------------------------------
--- 沙岚新城-----打包人·安巴瓦而
+-- -----
 ------------------------------------------------------------
 
 function r_talk219()
@@ -2080,7 +2080,7 @@ function r_talk219()
 end
 
 ------------------------------------------------------------
--- 阿兰比斯补给站-----打包人·阿加恩布赖得
+-- -----
 ------------------------------------------------------------
 
 function r_talk220()
@@ -2107,7 +2107,7 @@ end
 
 
 ------------------------------------------------------------
--- 卡尔加德雪原-----打包人·坎贝尔
+-- -----
 ------------------------------------------------------------
 
 function r_talk243()
@@ -2124,7 +2124,7 @@ function r_talk243()
 end
 
 ------------------------------------------------------------
--- 德尔维平原-----打包人·索拉斯
+-- -----
 ------------------------------------------------------------
 
 function r_talk244()
@@ -2143,7 +2143,7 @@ end
 
 
 ------------------------------------------------------------
--- 帕克荒漠-----打包人·安塞拉
+-- -----
 ------------------------------------------------------------
 
 function r_talk245()
@@ -2161,7 +2161,7 @@ end
 
 
 ------------------------------------------------------------
--- 冰极-----打包人·阿加西
+-- -----
 ------------------------------------------------------------
 
 function r_talk246()
@@ -2178,7 +2178,7 @@ function r_talk246()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----港口指挥◎迷
+-- -----
 ------------------------------------------------------------
 function r_talk247()
 
@@ -2216,7 +2216,7 @@ function r_talk247()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----小花园北部商店海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk248()
 
@@ -2235,7 +2235,7 @@ function r_talk248()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----小花园北部中央海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk249()
 
@@ -2254,7 +2254,7 @@ end
 
 
 ------------------------------------------------------------
--- 迷之港口-----小花园东部海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk250()
 
@@ -2272,7 +2272,7 @@ function r_talk250()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----小花园南部商店海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk251()
 
@@ -2290,7 +2290,7 @@ function r_talk251()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----小花园北部下海海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk257()
 
@@ -2308,7 +2308,7 @@ function r_talk257()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----小花园南部下海海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk258()
 
@@ -2327,7 +2327,7 @@ end
 
 
 ------------------------------------------------------------
--- 迷之港口-----阴暗沼泽海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk261()
 
@@ -2365,7 +2365,7 @@ function r_talk261()
 end
 
 ------------------------------------------------------------
--- 迷之港口-----废灵之都海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk262()
 
@@ -2405,11 +2405,11 @@ end
 ----------------------------------------------------------
 --							--
 --							--
---		竞技花园[神秘商人]			--
+--		[]			--
 --							--
 --		225538,280188				--
 ----------------------------------------------------------
------------------------------------------------------------这里开始P话聊天
+-----------------------------------------------------------P
 function r_talk259 ()
 	
 	
@@ -2445,7 +2445,7 @@ end
 
 
 ------------------------------------------------------------
--- 小花园-----药草商人
+-- -----
 ------------------------------------------------------------
 
 function r_talk260()
@@ -2461,7 +2461,7 @@ function r_talk260()
 end
 
 ------------------------------------------------------------
--- 沙岚新城-----神秘海港指挥
+-- -----
 ------------------------------------------------------------
 function r_talk263()
 
@@ -2499,9 +2499,9 @@ function r_talk263()
 end
 
 ----------------------------------------------------
---擂主公会特殊贸易品
+--
 ----------------------------------------------------
---军火商
+--
 
 
 function r_talk264()
@@ -2527,7 +2527,7 @@ function r_talk264()
 
 end
 
---精密仪器供应商	
+--	
 
 function r_talk265()
 	Talk( 1, "Rare Material Supplier: Hi, I am the Rare Material Supplier who supply most of Thundoria's material for construction. I have a new batch of material to ship to Thundoria. It will fetch a good price at the trader there. However, I only trust members of the second placing guild to deliever for me!" )
@@ -2556,7 +2556,7 @@ function r_talk265()
 end
 
 
---稀有金属供应商
+--
 
 function r_talk266()
 	Talk( 1, "Rare Metal Supplier: Hi, I am the Rare Metal Supplier who supply most of Thundoria's metal for construction. I have a new batch of metal to ship to Thundoria. It will fetch a good price at the trader there. However, I only trust members of the third placing guild to deliever for me!" )
@@ -2585,7 +2585,7 @@ end
 
 
 ------------------------------------------------------------
--- 沙岚新城-----打包人·阿里七七
+-- -----
 ------------------------------------------------------------
 
 function m_talk001()
@@ -2603,7 +2603,7 @@ end
 
 
 ------------------------------------------------------------
--- 夏岛北港-----海港指挥·夏青
+-- -----
 ------------------------------------------------------------
 function b_talk19()
 
@@ -2639,7 +2639,7 @@ function b_talk19()
 	Talk( 6, "Sorry! I only salvage sunken ships docked in northern Summer Island. Please pay 1000G." )
 
 
-	------------- 海港指挥·夏青-------巨蟹
+	------------- -------
 	AddNpcMission	(5853)
 	AddNpcMission	(5854)
 
@@ -2648,7 +2648,7 @@ end
 
 
 ------------------------------------------------------------
--- 夏岛南港-----海港指挥·夏云
+-- -----
 ------------------------------------------------------------
 function b_talk20()
 
@@ -2683,14 +2683,14 @@ function b_talk20()
 	Talk( 5, "Sorry, I only refuel ships docked at Summer Island southern harbor. Please pay 200G" )
 	Talk( 6, "Sorry! I only salvage ships docked in Summer Island. Please pay 1000G." )
 
-	------------- 海港指挥·夏云-------巨蟹
+	------------- -------
 	AddNpcMission	(5855)
 	AddNpcMission	(5856)
 
 
 end
 
------------黑市商人
+-----------
 function leo_talk10()	
 	Talk(1, "Black Market Merchant: Hoho, you must be somebody to locate me. Hoho, what do you need?")
 	--Text(1, "Something special", JumpPage, 2 )
@@ -2757,7 +2757,7 @@ function rand()
 	return tabunknow[math.floor(math.random(1,35))]
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零零
+-- -----
 ------------------------------------------------------------
 function star_talk001()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2770,7 +2770,7 @@ function star_talk001()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零一
+-- -----
 ------------------------------------------------------------
 function star_talk002()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2783,7 +2783,7 @@ function star_talk002()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零二
+-- -----
 ------------------------------------------------------------
 function star_talk003()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2796,7 +2796,7 @@ function star_talk003()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零三
+-- -----
 ------------------------------------------------------------
 function star_talk004()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2809,7 +2809,7 @@ function star_talk004()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零四
+-- -----
 ------------------------------------------------------------
 function star_talk005()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2822,7 +2822,7 @@ function star_talk005()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零五
+-- -----
 ------------------------------------------------------------
 function star_talk006()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2835,7 +2835,7 @@ function star_talk006()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零六
+-- -----
 ------------------------------------------------------------
 function star_talk007()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2848,7 +2848,7 @@ function star_talk007()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·零零七
+-- -----
 ------------------------------------------------------------
 function star_talk008()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2861,7 +2861,7 @@ function star_talk008()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺零
+-- -----
 ------------------------------------------------------------
 function star_talk009()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2875,7 +2875,7 @@ function star_talk009()
 end
 
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺一
+-- -----
 ------------------------------------------------------------
 function star_talk010()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2888,7 +2888,7 @@ function star_talk010()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺二
+-- -----
 ------------------------------------------------------------
 function star_talk011()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2901,7 +2901,7 @@ function star_talk011()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺三
+-- -----
 ------------------------------------------------------------
 function star_talk012()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2914,7 +2914,7 @@ function star_talk012()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺四
+-- -----
 ------------------------------------------------------------
 function star_talk013()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2927,7 +2927,7 @@ function star_talk013()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺五
+-- -----
 ------------------------------------------------------------
 function star_talk014()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2940,7 +2940,7 @@ function star_talk014()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺六
+-- -----
 ------------------------------------------------------------
 function star_talk015()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2953,7 +2953,7 @@ function star_talk015()
 	Talk( 2, "Sorry, your boat is not docked at this harbor." )
 end
 ------------------------------------------------------------
--- 圣战-----海港指挥·幺幺七
+-- -----
 ------------------------------------------------------------
 function star_talk016()
 	Talk( 1, "Harbour Operator: Hi! I'm the Harbour Operator for this Sacred War. I have records of all boats docked at Shaitan Harbour. Please register with me before you set sail, else you will be disallowed." )
@@ -2968,7 +2968,7 @@ end
 
 
 ------------------------------------------------------------
--- 圣战----海军前线指挥官--Roico
+-- ------Roico
 ------------------------------------------------------------
 function roico_talk001()
   Talk( 1, "Navy Frontline Commander: The battle has begun, everyone is a hero, remember what you strive for and work in teams to defeat the enemies! This is the only way to victory!" )
@@ -3047,7 +3047,7 @@ function roico_talk001()
 
 end
 ------------------------------------------------------------
--- 圣战----海盗前线指挥官--Roico
+-- ------Roico
 ------------------------------------------------------------
 function roico_talk002()
 Talk( 1, "Pirate Frontline Commander: Destroy, plunder, kill, nothing can stop us, show the enemy what real fear is!" )

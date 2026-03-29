@@ -1,4 +1,4 @@
-// hashfwd.h - written and placed in the public domain by Jeffrey Walton
+﻿// hashfwd.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file hashfwd.h
 /// \brief Forward declarations for hash functions used in signature encoding methods

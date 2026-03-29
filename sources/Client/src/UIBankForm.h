@@ -1,6 +1,6 @@
-//--------------------------------------------------------------
-// Ãû³Æ:ÓÃ»§½çÃæÒøĞĞ¹ÜÀíÀà
-// Éè¼ÆË¼Ïë:¹ÜÀí½çÃæÒøĞĞ
+ï»¿//--------------------------------------------------------------
+// :
+// :
 //--------------------------------------------------------------
 
 #ifndef UI_BANK_FORM_H
@@ -20,30 +20,30 @@ namespace GUI
 	class CBankMgr : public CUIInterface
 	{
 	public:
-		void		ShowBank(); // ÏÔÊ¾µÀ¾ßÀ¸ÎïÆ·
-		CGoodsGrid* GetBankGoodsGrid() { return grdBank; } // »ñÈ¡µÀ¾ßÀ¸¸ñ×Ó
+		void		ShowBank(); // 
+		CGoodsGrid* GetBankGoodsGrid() { return grdBank; } // 
 
-		bool		PushToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); // ½«ÎïÆ··ÅÈëÒøĞĞ
-		bool		PopFromBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); //´ÓÒøĞĞÖĞÍÏ³öÎïÆ·
-		bool		BankToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem);  //½«ÎïÆ·´ÓÒ»¸öÒøĞĞÒÆµ½ÁíÒ»¸öÒøĞĞ
+		bool		PushToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); // 
+		bool		PopFromBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem); //
+		bool		BankToBank(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGridID, CCommandObj& rkItem);  //
 
 	protected:
-		virtual bool Init(); // ÓÃ»§½çÃæÒøĞĞĞÅÏ¢³õÊ¼»¯
-		virtual void CloseForm(); //¹Ø±Õ±íµ¥ 
+		virtual bool Init(); // 
+		virtual void CloseForm(); // 
 
 	private:
-		static void _MoveItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);  // ÒÆ¶¯¶à¸öÎïÆ·
-		static void _MoveAItemEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);  //ÒÆ¶¯µ¥¸öÎïÆ·
-		static void _evtBankToBank(CGuiData *pSender,int nFirst, int nSecond, bool& isSwap);  //ÓÃÓÚÓÃ»§ÒøĞĞ±íµ¥ÖĞµÀ¾ß»¥»»
-		static void _evtOnClose( CForm* pForm, bool& IsClose );//¹Ø±ÕÒøĞĞ±íµ¥
+		static void _MoveItemsEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);  // 
+		static void _MoveAItemEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);  //
+		static void _evtBankToBank(CGuiData *pSender,int nFirst, int nSecond, bool& isSwap);  //
+		static void _evtOnClose( CForm* pForm, bool& IsClose );//
 
 	private:
-		stNumBox*		m_pkNumberBox; // Ñ¯ÎÊ¸öÊı
+		stNumBox*		m_pkNumberBox; // 
 		stNetBank		m_kNetBank;
 
-		// ½çÃæ
-		CForm*			frmBank; // ÒøĞĞ±íµ¥
-		CGoodsGrid*		grdBank; // ¸ñ×Ó±íµ¥
+		// 
+		CForm*			frmBank; // 
+		CGoodsGrid*		grdBank; // 
 		CLabel*			labCharName;
 
 	}; // end of class CBankMgr

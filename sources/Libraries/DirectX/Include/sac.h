@@ -1,4 +1,4 @@
-//
+﻿//
 // Microsoft Windows Media Technologies.
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //

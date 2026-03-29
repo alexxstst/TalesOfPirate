@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "uirichedit.h"
 #include "gameapp.h"
 #include "uieditkey.h"
@@ -100,13 +100,13 @@ bool CRichEdit::OnChar( char c )
 {
 	if( _IsReadyOnly ) return false;
 
-	// ÓÐÈýÖÖÇé¿ö£ºÒ»¡¢Ó¢ÎÄ×Ö·û£¬¶þ¡¢ºº×Ö£¬Èý¡¢¿ØÖÆ×Ö·û
+	// 
 	switch( c )
 	{
-	case '\r':		// »Ø³µ
+	case '\r':		// 
 		_cArticle.AddControl( c );
 		break;
-	case '\b':		// ÍË¸ñ
+	case '\b':		// 
 		break;
 	case '\t':
 		break;
@@ -128,7 +128,7 @@ bool CRichEdit::OnChar( char c )
 				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 
 					&& _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 )
 				{
-					// ÎªÓ¢ÎÄ»ò¿ØÖÆ×Ö·û
+					// 
 					_nEnterPos = 0;
 
 					_cArticle.AddChar( c );
@@ -138,7 +138,7 @@ bool CRichEdit::OnChar( char c )
 			{
 				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==-1 && _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[1] )==-1 )
 				{
-					// ºº×Ö
+					// 
 					_cArticle.AddChar(_szEnter[0], _szEnter[1] );
 
 					IsError = false;
@@ -149,7 +149,7 @@ bool CRichEdit::OnChar( char c )
 
 			if( IsError )
 			{
-				// ´íÎó
+				// 
 				_nEnterPos = 0;
 				_szEnter[1] = 0;
 			}

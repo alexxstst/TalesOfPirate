@@ -1,9 +1,9 @@
-#pragma  once
+ï»¿#pragma  once
 struct SClientAttr
 {
-	short sTeamAngle; // ×é¶ÓÊ±µÄÍ·Ïñ½Ç¶È
-	float fTeamDis;   // ×é¶ÓÊ±µÄÍ·Ïñ¾àÀë
-	float fTeamHei;   // ×é¶ÓÊ±µÄÍ·Ïñ¾àÀë
+	short sTeamAngle; // 
+	float fTeamDis;   // 
+	float fTeamHei;   // 
 
 	SClientAttr()
 		:sTeamAngle(0),
@@ -15,7 +15,7 @@ struct SClientAttr
 
 extern SClientAttr g_ClientAttr[2000];
 
-// ²ÎÊıÎªCharacterInfoÀïÃæµÄID
+// CharacterInfoID
 inline SClientAttr* GetClientAttr(int nScriptID)
 {
 	return &g_ClientAttr[nScriptID];

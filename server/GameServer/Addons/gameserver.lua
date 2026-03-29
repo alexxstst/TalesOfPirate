@@ -1,4 +1,4 @@
---[[
+﻿--[[
 -- OnBankItem
 -- @author: kong@pkodev.net
 -- @param Player - player who is banking

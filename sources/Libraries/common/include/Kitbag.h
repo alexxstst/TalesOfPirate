@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Kitbag.h
 // Creater: ZhangXuedong
 // Date: 2004.12.17
@@ -23,29 +23,29 @@ extern int Encrypt(char* buf, int len, const char* pwd, int plen);
 
 enum EKitbagItemType
 {
-	enumKBITEM_TYPE_ORD,	// ��ͨ��Ʒ
+	enumKBITEM_TYPE_ORD,	// 
 
-	enumKBITEM_TYPE_NUM		// ��Ʒ������
+	enumKBITEM_TYPE_NUM		// 
 };
 
 enum ITEM_STATE 
 {	
-	ITEM_DISENABLE			= 1<<0,	 // ����Ʒ��λ��Ʒ����ֹ�
+	ITEM_DISENABLE			= 1<<0,	 // 
 };
 
 enum EKbActRet
 {
-	enumKBACT_SUCCESS				= 0,	// ���������ɹ�
-	// �����Ǳ�������ʧ��ֵ
-	enumKBACT_ERROR_LOCK			= -1,	// ����������״̬
-	enumKBACT_ERROR_RANGE			= -2,	// ����Խ��
-	enumKBACT_ERROR_PUSHITEMID		= -3,	// ѹ��Ƿ��ĵ��߱��
-	enumKBACT_ERROR_FULL			= -4,	// ��������
-	enumKBACT_ERROR_NULLGRID		= -5,	// ����λ
-	enumKBACT_ERROR_POPNUM			= -6,	// ��������Ŀ�Ƿ�
+	enumKBACT_SUCCESS				= 0,	// 
+	// 
+	enumKBACT_ERROR_LOCK			= -1,	// 
+	enumKBACT_ERROR_RANGE			= -2,	// 
+	enumKBACT_ERROR_PUSHITEMID		= -3,	// 
+	enumKBACT_ERROR_FULL			= -4,	// 
+	enumKBACT_ERROR_NULLGRID		= -5,	// 
+	enumKBACT_ERROR_POPNUM			= -6,	// 
 };
 
-#define defKITBAG_DEFPUSH_POS	-1 // ������ȱʡѹ��λ�ã��Զ�Ѱ��λ�ã�
+#define defKITBAG_DEFPUSH_POS	-1 // 
 
 class CKitbag
 {
@@ -54,11 +54,11 @@ public:
 
 	struct SItemUnit
 	{
-		BYTE		byState;	// ��Ʒ���Ƿ񱻽�
+		BYTE		byState;	// 
 		SItemGrid	SContent;
 
-		short		sPosID;		// ������λ�ñ��
-		short		sReverseID;	// ���ڷ�����
+		short		sPosID;		// 
+		short		sReverseID;	// 
 	};
 
 	void		Init(short sCapacity = defMAX_KBITEM_NUM_PER_TYPE);
@@ -68,7 +68,7 @@ public:
 	bool		AddCapacity(short sAddVal);
 	short		GetUseGridNum(short sType = 0);
 	
-	// ����2��������ı䴫��Ĳ���1����Ʒ����ֵ(ע��:by knight.gong)
+	// 21(:by knight.gong)
 	short		CanPush(SItemGrid *pGrid, short &sPosID, short sType = 0);
 	short		CanPop(SItemGrid *pGrid, short sPosID, short sType = 0);
 
@@ -102,11 +102,11 @@ public:
 	bool		IsChange(short sType = 0);
 	short		GetChangeNum(short sType = 0);
 
-	// ��ȫ��(���֮�佻��ʱ���������ı�������
+	// (
 	void		Lock();
 	void		UnLock();
 
-    //������
+    //
     void		PwdLock();
     void		PwdUnlock();
     BOOL		IsPwdLocked();
@@ -127,12 +127,12 @@ private:
 	short		sVer;
 	BOOL		m_bLock;
 
-    //��������״̬
+    //
     int         m_bPwdLocked;
 
 	SItemUnit	*m_pSItem[enumKBITEM_TYPE_NUM][defMAX_KBITEM_NUM_PER_TYPE];
-	short		m_sCapacity;	// ÿҳ������
-	short		m_sUseNum[enumKBITEM_TYPE_NUM];	// ҳ�Ѿ�ʹ�õĸ�����
+	short		m_sCapacity;	// 
+	short		m_sUseNum[enumKBITEM_TYPE_NUM];	// 
 	SItemUnit	m_SItem[enumKBITEM_TYPE_NUM][defMAX_KBITEM_NUM_PER_TYPE];
 
 	short		m_sChangeNum[enumKBITEM_TYPE_NUM];
@@ -147,15 +147,15 @@ bool String2KitbagData(CKitbag *pKitbag, std::string &strData);
 
 //	2008-7-28	yangyinyu	add	begin!
 
-//	�ѵ���ת�����ַ�����
+//	
 bool	SItemGrid2String(	
-					std::string&	r,			//	���صĴ���
-					long&			lnCheckSum,	//	���صļ���͡�
-					SItemGrid*		pGridCont,	//	դ��
-					int				iOrder		//	դ�����
+					std::string&	r,			//	
+					long&			lnCheckSum,	//	
+					SItemGrid*		pGridCont,	//	
+					int				iOrder		//	
 					);;
 
-//	���ַ���ת���ɵ��ߡ�
+//	
 bool String2SItemGrid(	SItemGrid*	pGridCont,	long&	lnCheckSum,	const	std::string&	sData,	int	iVer,	bool	bIsOldVer	);;
 
 //	2008-7-28	yangyinyu	add	end!

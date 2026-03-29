@@ -1,4 +1,4 @@
-// LuaFunc.cpp Created by knight-gongjian 2006.9.20.
+﻿// LuaFunc.cpp Created by knight-gongjian 2006.9.20.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "luafunc.h"
@@ -13,12 +13,12 @@ extern void lua_callalert(lua_State* L, int status);
 
 BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 {
-	// ��ʼ��NPC�ű�ȫ�ֱ�����Ϣ
+	// NPC
 	lua_getglobal( g_pLuaState, "GetOnlineCount" );
 	if( !lua_isfunction( g_pLuaState, -1 ) )
 	{
 		lua_pop( g_pLuaState, 1 );
-		// Lua-функция не найдена
+		// Lua-  
 		ToLogService("lua", LogLevel::Error, "GetOnlineCount");
 		return FALSE;
 	}
@@ -39,7 +39,7 @@ BOOL GetOnlineCount( DWORD& dwLoginNum, DWORD& dwPlayerNum )
 	int nStatus = lua_pcall( g_pLuaState, 8, 3, 0 );
 	if( nStatus )
 	{
-		// Ошибка вызова lua-функции
+		//   lua-
 		ToLogService("lua", LogLevel::Error, "call [GetOnlineCount] failed!");
 		lua_callalert( g_pLuaState, nStatus );
 		lua_settop(g_pLuaState, 0);
@@ -149,7 +149,7 @@ inline int lua_LG(lua_State *L)
 	str << "\n";
 	str << ends;
 
-    // Лог из Lua-скрипта — канал определяется в рантайме
+    //   Lua-     
     g_logManager.InternalLog(LogLevel::Debug, (const char*)pszFile, str.str());
     return 0;
 }
@@ -225,7 +225,7 @@ inline int lua_EXLG(lua_State *L)
 			break;
 		default:
 			{
-				//str << "[��Ч��ʶ(" << *(pszPos + 1) << ")]";
+				//str << "[(" << *(pszPos + 1) << ")]";
 				str << "[invilid identifier(" << *(pszPos + 1) << ")]";
 			}
 			break;
@@ -236,7 +236,7 @@ inline int lua_EXLG(lua_State *L)
 	str << "\r\n";
 	str << '\0';
 	
-	// Расширенный лог из Lua-скрипта — канал определяется в рантайме
+	//    Lua-     
 	g_logManager.InternalLog(LogLevel::Debug, (const char*)pszFile, str.str());
 	return 0;
 }

@@ -1,4 +1,4 @@
-
+﻿
 /*
  * intshcut.h - Internet Shortcut interface definitions.
  *

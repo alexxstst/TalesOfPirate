@@ -1,4 +1,4 @@
-// adler32.h - originally written and placed in the public domain by Wei Dai
+﻿// adler32.h - originally written and placed in the public domain by Wei Dai
 
 /// \file adler32.h
 /// \brief Class file for ADLER-32 checksum calculations

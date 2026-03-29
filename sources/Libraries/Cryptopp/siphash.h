@@ -1,4 +1,4 @@
-// siphash.h - written and placed in public domain by Jeffrey Walton.
+﻿// siphash.h - written and placed in public domain by Jeffrey Walton.
 
 /// \file siphash.h
 /// \brief Classes for SipHash message authentication code

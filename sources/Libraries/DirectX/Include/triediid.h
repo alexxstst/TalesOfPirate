@@ -1,4 +1,4 @@
-// GUIDs for TriEdit.dll Active Document
+﻿// GUIDs for TriEdit.dll Active Document
 // Copyright 1998-1999 Microsoft Corporation.  All rights reserved.
 
 #ifndef _triediid_h_

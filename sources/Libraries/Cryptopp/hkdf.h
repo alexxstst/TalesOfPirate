@@ -1,4 +1,4 @@
-// hkdf.h - written and placed in public domain by Jeffrey Walton.
+﻿// hkdf.h - written and placed in public domain by Jeffrey Walton.
 
 /// \file hkdf.h
 /// \brief Classes for HKDF from RFC 5869

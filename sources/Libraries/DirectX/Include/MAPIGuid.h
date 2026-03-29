@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I G U I D . H
  *
  *	Master definitions of all GUID's for MAPI.

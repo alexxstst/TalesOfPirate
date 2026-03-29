@@ -1,4 +1,4 @@
-// xed25519.cpp - written and placed in public domain by Jeffrey Walton
+﻿// xed25519.cpp - written and placed in public domain by Jeffrey Walton
 //                Crypto++ specific implementation wrapped around Andrew
 //                Moon's public domain curve25519-donna and ed25519-donna,
 //                https://github.com/floodyberry/curve25519-donna and

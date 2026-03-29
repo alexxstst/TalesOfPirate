@@ -1,4 +1,4 @@
-print("-- [Loading] magicseaMonster.lua")
+﻿print("-- [Loading] magicseaMonster.lua")
 SetCurMap("magicsea")
 AddWeatherRegion(9,  15, 40, 650, 3700 , 80, 80)
 AddWeatherRegion(11, 15, 40, 900, 3800 , 80, 80)

@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:ÊäÈë·¨
-// ×÷Õß:lh 2004-07-28
-// ×îºóÐÞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-28
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uiGuidata.h"
@@ -10,14 +10,14 @@ namespace GUI
 {
 class CImeInput
 {
-    static const int InputX = 120;     //  ÊäÈë¿ò¿í
-    static const int InputY = 170;     //  ÊäÈë¿ò¸ß
+    static const int InputX = 120;     //  
+    static const int InputY = 170;     //  
 	enum
 	{
 		MAX_CHAR = 256,
 	};
 
-private:	// ½ûÖ¹¿½±´,¸´ÖÆ,¿ËÂ¡
+private:	// ,,
 	CImeInput& operator=(const CImeInput& rhs);
 	CImeInput(const CImeInput& rhs);
 
@@ -69,15 +69,15 @@ private:
     char        _strSBC[5];
     char        _strInterpunction[7];
 
-	HIMC		_hImc;		// ÊäÈë¾ä±ú
+	HIMC		_hImc;		// 
 	HIMC		_oldImc;
-	LPCANDIDATELIST		_pList;			// Ô¤Ñ¡×ÖÁÐ±í
+	LPCANDIDATELIST		_pList;			// 
 
-	int			_nWidth, _nHeight;		// ¿í¸ß
+	int			_nWidth, _nHeight;		// 
 
 };
 
-// ÄÚÁªº¯Êý
+// 
 inline void	CImeInput::OnCreate( HWND hWnd, HINSTANCE hInst )
 {
 	HIMC hImc = ::ImmCreateContext();

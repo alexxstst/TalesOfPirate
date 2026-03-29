@@ -1,4 +1,4 @@
-// Note: For 64 bit builds only
+﻿// Note: For 64 bit builds only
 // Currently, if the user includes WIN32.MAK and uses the $(cflags) environment variable
 // several warnings will be displayed when compiling.  This creates problems when some 
 // samples set warnings to errors.  So we have disabled some of the warnings.

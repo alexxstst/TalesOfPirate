@@ -1,4 +1,4 @@
-// Common macros for all MNMath.
+﻿// Common macros for all MNMath.
 
 #ifndef __MN_COMMON_H__
 #define __MN_COMMON_H__

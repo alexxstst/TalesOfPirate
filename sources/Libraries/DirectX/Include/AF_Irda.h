@@ -1,4 +1,4 @@
-//
+﻿//
 // Winsock1.1, IrDA1.1, WindowsNT5.0, Windows98 and WindowsCE1.0.
 // Define one of _WIN32_WINNT, _WIN32_WINDOWS, _WIN32_WCE.
 //  Copyright (C) Microsoft Corporation, 1994-1999.

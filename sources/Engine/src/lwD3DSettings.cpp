@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 #include "lwD3DSettings.h"
 

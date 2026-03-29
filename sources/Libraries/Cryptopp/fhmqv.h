@@ -1,4 +1,4 @@
-// fhmqv.h - written and placed in the public domain by Jeffrey Walton, Ray Clayton and Uri Blumenthal
+﻿// fhmqv.h - written and placed in the public domain by Jeffrey Walton, Ray Clayton and Uri Blumenthal
 //           Shamelessly based upon Wei Dai's MQV source files
 
 #ifndef CRYPTOPP_FHMQV_H
@@ -15,7 +15,7 @@
 NAMESPACE_BEGIN(CryptoPP)
 
 /// \brief Fully Hashed Menezes-Qu-Vanstone in GF(p)
-/// \details This implementation follows Augustin P. Sarr and Philippe Elbaz–Vincent, and Jean–Claude Bajard's
+/// \details This implementation follows Augustin P. Sarr and Philippe ElbazVincent, and JeanClaude Bajard's
 ///   <a href="http://eprint.iacr.org/2009/408">A Secure and Efficient Authenticated Diffie-Hellman Protocol</a>.
 ///   Note: this is FHMQV, Protocol 5, from page 11; and not FHMQV-C.
 /// \sa MQV, HMQV, FHMQV, and AuthenticatedKeyAgreementDomain
@@ -396,7 +396,7 @@ private:
 };
 
 /// \brief Fully Hashed Menezes-Qu-Vanstone in GF(p)
-/// \details This implementation follows Augustin P. Sarr and Philippe Elbaz–Vincent, and Jean–Claude Bajard's
+/// \details This implementation follows Augustin P. Sarr and Philippe ElbazVincent, and JeanClaude Bajard's
 ///   <a href="http://eprint.iacr.org/2009/408">A Secure and Efficient Authenticated Diffie-Hellman Protocol</a>.
 ///   Note: this is FHMQV, Protocol 5, from page 11; and not FHMQV-C.
 /// \sa FHMQV, MQV_Domain, FHMQV_Domain, AuthenticatedKeyAgreementDomain

@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "UIPKSilverForm.h"
 #include "uiformmgr.h"
@@ -131,7 +131,7 @@ namespace GUI
    //     string szName = pSender->GetName();
    //     if(szName == "btnSort")
    //     {
-   //         //  ��������
+   //         //  
    //         CGoodsGrid* pGrid  = g_stUIEquip.GetGoodsGrid();
 			//CItemCommand* pCmd = NULL;
    //         CItemRecord* pItemRecord = NULL;

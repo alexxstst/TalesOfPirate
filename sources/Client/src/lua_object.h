@@ -1,9 +1,9 @@
+ï»¿//-----------------
+// 
 //-----------------
-// ÅĞ¶ÏÎïÌåÊÇ·ñÓĞĞ§
-//-----------------
-inline int lua_objIsValid(lua_State *L)
+inline int objIsValid(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
     if(!bValid) 
     {
@@ -19,11 +19,11 @@ inline int lua_objIsValid(lua_State *L)
 }
 
 //-----------
-// È¡µÃÎïÌåID
+// ID
 //-----------
-inline int lua_objGetID(lua_State *L)
+inline int objGetID(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
     if(!bValid) 
     {
@@ -39,11 +39,11 @@ inline int lua_objGetID(lua_State *L)
 
 
 //--------------------
-// ÉèÖÃÎïÌå×ø±ê(ÀåÃ×)
+// ()
 //--------------------
-inline int lua_objSetPos (lua_State * L)
+inline int objSetPos (lua_State * L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
     if(!bValid) 
     {
@@ -58,11 +58,11 @@ inline int lua_objSetPos (lua_State * L)
 }
 
 //-------------
-// »ñÈ¡½ÇÉ«×ø±ê
+// 
 //-------------
-inline int lua_objGetPos(lua_State *L)
+inline int objGetPos(lua_State *L)
 {
-   // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+   // 
     BOOL bValid = (lua_gettop (L)==1); 
     if(!bValid) 
     {
@@ -77,11 +77,11 @@ inline int lua_objGetPos(lua_State *L)
 }
 
 //-------------
-// »ñÈ¡½ÇÉ«ÃæÏò
+// 
 //-------------
-inline int lua_objGetFaceAngle(lua_State *L)
+inline int objGetFaceAngle(lua_State *L)
 {
-   // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+   // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1)); 
     if(!bValid) 
     {
@@ -95,11 +95,11 @@ inline int lua_objGetFaceAngle(lua_State *L)
 }
 
 //-------------
-// ÉèÖÃ½ÇÉ«ÃæÏò
+// 
 //-------------
-inline int lua_objSetFaceAngle(lua_State *L)
+inline int objSetFaceAngle(lua_State *L)
 {
-   // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+   // 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2)); 
     if(!bValid) 
     {
@@ -113,11 +113,11 @@ inline int lua_objSetFaceAngle(lua_State *L)
 }
 
 //---------
-// ÊôĞÔÈ¡Öµ
+// 
 //---------
-inline int lua_objGetAttr(lua_State* L)
+inline int objGetAttr(lua_State* L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
     if(!bValid) 
     {
@@ -134,11 +134,11 @@ inline int lua_objGetAttr(lua_State* L)
 }
 
 //---------
-// ÊôĞÔ¸³Öµ
+// 
 //---------
-inline int lua_objSetAttr(lua_State* L)
+inline int objSetAttr(lua_State* L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3));
     if(!bValid) 
     {
@@ -157,11 +157,11 @@ inline int lua_objSetAttr(lua_State* L)
 }
 
 //--------------------
-// ½ÇÉ«Ëµ»°,Í·¶¥³öÎÄ×Ö
+// ,
 //--------------------
-inline int lua_chaSay(lua_State *L)
+inline int chaSay(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isstring(L, 2));
     if(!bValid) 
     {
@@ -174,7 +174,7 @@ inline int lua_chaSay(lua_State *L)
         SCENE_NULL_ERROR
         return 0;
     }
-    // Í·¶¥ÏÔÊ¾ÎÄ×Ö
+    // 
     CCharacter *pCha = (CCharacter*)lua_touserdata(L, 1);
     const char *pszText = lua_tostring(L, 2);
 	if( pCha )
@@ -187,11 +187,11 @@ inline int lua_chaSay(lua_State *L)
 }
 
 //-------------------------
-// ½ÇÉ«ÅÜ²½µ½Ö¸¶¨×ø±ê(ÀåÃ×)
+// ()
 //-------------------------
-inline int lua_chaMoveTo(lua_State *L)
+inline int chaMoveTo(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) &&  lua_isnumber (L, 3));
     if(!bValid) 
     {
@@ -214,11 +214,11 @@ inline int lua_chaMoveTo(lua_State *L)
 }
 
 //-------------
-// ½ÇÉ«×´Ì¬Í£Ö¹
+// 
 //-------------
-inline int lua_chaStop(lua_State *L)
+inline int chaStop(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
     if(!bValid) 
     {
@@ -235,11 +235,11 @@ inline int lua_chaStop(lua_State *L)
 
 
 //-----------------
-// ½ÇÉ«¸ü»»ÉíÌå²¿Î»
+// 
 //-----------------
-inline int lua_chaChangePart(lua_State *L)
+inline int chaChangePart(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==2 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2));
     if(!bValid) 
     {
@@ -257,11 +257,11 @@ inline int lua_chaChangePart(lua_State *L)
 }
 
 //-------------
-// ²¥·Å½ÇÉ«¶¯»­
+// 
 //-------------
-inline int lua_chaPlayPose(lua_State *L)
+inline int chaPlayPose(lua_State *L)
 {
-    // ²ÎÊıºÏ·¨ĞÔÅĞ±ğ
+    // 
     BOOL bValid = (lua_gettop (L)==3 && lua_islightuserdata(L, 1) && lua_isnumber (L, 2) && lua_isnumber(L,3));
     if(!bValid) 
     {

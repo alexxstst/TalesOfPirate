@@ -1,4 +1,4 @@
-// integer.cpp - originally written and placed in the public domain by Wei Dai
+﻿// integer.cpp - originally written and placed in the public domain by Wei Dai
 // contains public domain code contributed by Alister Lee and Leonard Janke
 
 // Notes by JW: The Integer class needs to do two things. First, it needs

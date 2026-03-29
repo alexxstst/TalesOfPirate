@@ -1,4 +1,4 @@
-/*
+﻿/*
 Copyright (c) 1995-1999 Microsoft Corporation
     File  ipxfltdf.h
 

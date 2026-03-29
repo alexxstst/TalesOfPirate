@@ -1,4 +1,4 @@
-// GUIDs for DHTMLEd.OCX
+﻿// GUIDs for DHTMLEd.OCX
 // Copyright 1998-1999 Microsoft Corporation.  All rights reserved.
 
 #ifndef _dhtmliid_h_

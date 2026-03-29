@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameConfig.h"
 
 #ifdef _LUA_GAME
@@ -10,206 +10,90 @@
 using namespace std;
 
 lua_State *L     = NULL;
-HWND g_dlgScript = NULL;
-list<string> g_luaFNList;
 
-int lua_sysAddHelpString(lua_State *L)
-{
-    const char *pszHelp = lua_tostring(L, 1);
-    g_luaFNList.push_back(pszHelp);
-    return 0;
-}
+int LuaPanicHandler(lua_State* L);
 
 void InitLuaPlatform()
 {
     g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(182));
-    
-    L = lua_open ();
-    lua_baselibopen (L);
-    lua_iolibopen (L);
-    lua_strlibopen (L);
-    lua_tablibopen(L);
-    lua_mathlibopen (L);
-    
-    #define REGFN(fn) (lua_pushstring(L, "" #fn ""), \
-        lua_pushcfunction(L, lua_##fn), \
-	 lua_settable(L, LUA_GLOBALSINDEX), \
-     g_luaFNList.push_back("" #fn ""))
 
-    lua_register(L, "sysAddHelpString", lua_sysAddHelpString);
-    
-    // util�����������
-    g_luaFNList.push_back("[util]");
-    REGFN(MsgBox);
-    REGFN(GetTickCount);
-    REGFN(Rand);
-    REGFN(LG);    
-    REGFN(SysInfo);
-    g_luaFNList.push_back("\r");
+	g_LuaState = luaL_newstate();
+	if (!g_LuaState)
+	{
+		ToLogService("lua", LogLevel::Error, "Failed to create Lua VM (luaL_newstate)");
+		return;
+	}
 
-    // app�����������
-    g_luaFNList.push_back("[app]");
-    REGFN(appGetCurScene);
-    REGFN(appSetCaption);
-    REGFN(appPlaySound);
-    REGFN(appUpdateRender);
-    //lua_dofile(L, "scripts/gamesdk/app.lua");
-    g_luaFNList.push_back("\r");
-    
-    // scene�����������
-    g_luaFNList.push_back("[scene]");
-    REGFN(sceAddObj);
-    REGFN(sceRemoveObj);
-    REGFN(sceGetObj);
-    REGFN(sceSetMainCha);
-    REGFN(sceGetMainCha);
-    REGFN(sceGetHoverCha);
-    REGFN(sceEnableDefaultMouse);
-    //lua_dofile(L, "scripts/gamesdk/scene.lua");
-    g_luaFNList.push_back("\r");
-    
-    // object�����������
-    g_luaFNList.push_back("[object]");
-    REGFN(objSetPos);
-    REGFN(objGetPos);
-    REGFN(objSetFaceAngle);
-    REGFN(objGetFaceAngle);
-    REGFN(objSetAttr);
-    REGFN(objGetAttr);
-    REGFN(objIsValid);
-    REGFN(objGetID);
-    REGFN(chaMoveTo);
-    REGFN(chaSay);
-    REGFN(chaChangePart);
-    REGFN(chaPlayPose);
-    REGFN(chaStop);
-    //lua_dofile(L, "scripts/gamesdk/object.lua");
-    g_luaFNList.push_back("\r");
+	lua_atpanic(g_LuaState, LuaPanicHandler);
+	luaL_openlibs(g_LuaState);
 
-    // ��ͷ�����������
-    g_luaFNList.push_back("[camera]");
-    REGFN(camGetCenter);
-    REGFN(camSetCenter);
-    REGFN(camFollow);
-    REGFN(camMoveForward);
-    REGFN(camMoveLeft);
-    REGFN(camMoveUp);
-    REGFN(camSetAngle);
-    g_luaFNList.push_back("\r");
+	ToLogService("lua", "LuaJIT VM initialized");
 
-    // Input�����������
-    g_luaFNList.push_back("[input]");
-    REGFN(IsKeyDown);
-    //lua_dofile(L, "scripts/gamesdk/input.lua");
-    g_luaFNList.push_back("\r");
+    //   VM  Script.cpp
+    L = g_LuaState;
 
-    // UI�����������
-    g_luaFNList.push_back("[UI]");
-    REGFN(uiHideAll);
-    // lua_dofile(L, "scripts/gamesdk/input.lua");
-    g_luaFNList.push_back("\r");
+    //    LuaBridge 
+    luabridge::getGlobalNamespace(L)
+        LUABRIDGE_REGISTER_FUNC(MsgBox)
+        .addFunction("GetTickCount", GetTickCount_Lua)
+        .addFunction("Rand", Rand_Lua)
+        // app
+        LUABRIDGE_REGISTER_FUNC(appSetCaption)
+        LUABRIDGE_REGISTER_FUNC(appPlaySound)
+        LUABRIDGE_REGISTER_FUNC(appUpdateRender)
+        // camera
+        LUABRIDGE_REGISTER_FUNC(camSetCenter)
+        LUABRIDGE_REGISTER_FUNC(camFollow)
+        LUABRIDGE_REGISTER_FUNC(camMoveForward)
+        LUABRIDGE_REGISTER_FUNC(camMoveLeft)
+        LUABRIDGE_REGISTER_FUNC(camMoveUp)
+        LUABRIDGE_REGISTER_FUNC(camSetAngle)
+        // input
+        LUABRIDGE_REGISTER_FUNC(IsKeyDown)
+        // UI
+        LUABRIDGE_REGISTER_FUNC(uiHideAll)
+        ;
+
+    // lua_CFunction  lightuserdata, -, arg
+    // util
+    LUA_REGISTER_CFUNC(L, LG);
+    LUA_REGISTER_CFUNC(L, SysInfo);
+    // app
+    LUA_REGISTER_CFUNC(L, appGetCurScene);
+    LUA_REGISTER_CFUNC(L, appSetCurScene);
+    LUA_REGISTER_CFUNC(L, appCreateScene);
+    // scene
+    LUA_REGISTER_CFUNC(L, sceAddObj);
+    LUA_REGISTER_CFUNC(L, sceRemoveObj);
+    LUA_REGISTER_CFUNC(L, sceGetObj);
+    LUA_REGISTER_CFUNC(L, sceSetMainCha);
+    LUA_REGISTER_CFUNC(L, sceGetMainCha);
+    LUA_REGISTER_CFUNC(L, sceGetHoverCha);
+    LUA_REGISTER_CFUNC(L, sceEnableDefaultMouse);
+    // object
+    LUA_REGISTER_CFUNC(L, objSetPos);
+    LUA_REGISTER_CFUNC(L, objGetPos);
+    LUA_REGISTER_CFUNC(L, objSetFaceAngle);
+    LUA_REGISTER_CFUNC(L, objGetFaceAngle);
+    LUA_REGISTER_CFUNC(L, objSetAttr);
+    LUA_REGISTER_CFUNC(L, objGetAttr);
+    LUA_REGISTER_CFUNC(L, objIsValid);
+    LUA_REGISTER_CFUNC(L, objGetID);
+    LUA_REGISTER_CFUNC(L, chaMoveTo);
+    LUA_REGISTER_CFUNC(L, chaSay);
+    LUA_REGISTER_CFUNC(L, chaChangePart);
+    LUA_REGISTER_CFUNC(L, chaPlayPose);
+    LUA_REGISTER_CFUNC(L, chaStop);
+    // camera
+    LUA_REGISTER_CFUNC(L, camGetCenter);
+    // network
+    LUA_REGISTER_CFUNC(L, Connect);
+    // UI
+    LUA_REGISTER_CFUNC(L, uiGetForm);
+
 }
 
-BOOL CALLBACK ScriptDialogProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
-{
-    switch(uMsg)
-    {
-        case WM_INITDIALOG:
-        {
-             HWND hEdit1  = GetDlgItem(hwndDlg, IDC_EDIT1);
-			 //extern CInputBox g_InputBox;
-			 //g_InputBox.SetEditWindow(hEdit1);
-			
-			
-			HWND hEdit = GetDlgItem(hwndDlg, IDC_EDIT2);
-            for(list<string>::iterator it = g_luaFNList.begin(); it!=g_luaFNList.end(); it++)
-            {
-                SendMessage(hEdit, EM_REPLACESEL, 0, (LPARAM)(*it).c_str()); 
-                SendMessage(hEdit, EM_REPLACESEL, 0, (LPARAM)"\r\n");
-            }
-            ShowWindow(hEdit, SW_HIDE);
-            break;
-        }
-        case WM_KEYDOWN:
-        {
-            break;
-        }
-        case WM_COMMAND:
-        {
-            HWND hEdit1   = GetDlgItem(hwndDlg, IDC_EDIT1);
-            HWND hEdit2   = GetDlgItem(hwndDlg, IDC_EDIT2);
-            HWND hButHelp = GetDlgItem(hwndDlg, IDFNLIST); 
-                    
-            switch(wParam)
-            {
-                case IDOK:
-                {
-                    FILE *fp = fopen("tmp.txt", "wt");
-                    if(fp==NULL) break;
-                    char szText[8192];
-                    int n = GetWindowText(hEdit1, szText, 8192); 
-                    fwrite(szText, n, 1, fp); 
-                    fclose(fp);
-                    lua_dofile(L, "tmp.txt");
-                    break;
-                }
-                case IDFNLIST:
-                {
-                    if(SendMessage(hButHelp, BM_GETCHECK, 0,0)==BST_CHECKED)
-                    {
-                        ShowWindow(hEdit1, SW_HIDE);
-                        ShowWindow(hEdit2, SW_SHOW);
-                    }
-                    else
-                    {
-                        ShowWindow(hEdit2, SW_HIDE);
-                        ShowWindow(hEdit1, SW_SHOW);
-                    }
-                    break;
-                }
-                case IDCLEAR:
-                { 
-                    SetWindowText(hEdit1, "");
-                    break;
-                }
-                case IDCANCEL:
-                {
-                    ShowWindow(hwndDlg, SW_HIDE);
-                }
-            }
-            break;
-        }
-    }
-    return FALSE;
-}
-
-
-void CreateScriptDebugWindow(HINSTANCE hInst, HWND hParent)
-{
-    g_dlgScript = CreateDialog(hInst, MAKEINTRESOURCE(IDD_DLG_SCRIPT), hParent, ScriptDialogProc);
-    if(g_Config.m_bEditor)
-    {
-        ShowWindow(g_dlgScript, SW_SHOW);
-    }
-    else
-    {
-        ShowWindow(g_dlgScript, SW_HIDE);
-    }
-    RECT rc;
-    GetWindowRect(hParent, &rc);
-    SetWindowPos(g_dlgScript, NULL, rc.right - 300, rc.bottom - 300, 0, 0, SWP_NOSIZE);
-}
-
-void ToggleScriptDebugWindow()
-{
-    if(IsWindowVisible(g_dlgScript))
-    {
-        ShowWindow(g_dlgScript, SW_HIDE);
-    }
-    else
-    {
-        ShowWindow(g_dlgScript, SW_SHOW);
-    }
-}
+void CreateScriptDebugWindow(HINSTANCE, HWND) {}
+void ToggleScriptDebugWindow() {}
 
 #endif

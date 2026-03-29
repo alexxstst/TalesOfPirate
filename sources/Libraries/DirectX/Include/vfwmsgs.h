@@ -1,4 +1,4 @@
- // no longer used  - but might get
+﻿ // no longer used  - but might get
  // our own facility in the future?
  // FacilityNames=(FACILITY_VFW=0x4)
  // To add a message:

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SubMap.h"
 #include "GameApp.h"
 #include "GameAppNet.h"
@@ -25,7 +25,7 @@ _DBC_USING
 extern std::string g_strLogName;
 
 //----------------------------------------------------------
-//                    ����������Ϣ�Ĵ���
+//                    
 //----------------------------------------------------------
 void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	switch (usCmd) {
@@ -221,7 +221,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 			g_CharBoat.GetBoatInfo(*this, GetPlayer()->GetLuanchID());
 		}
 		else {
-			//SystemNotice( "��Ĵ�ֻû�г�����" );
+			//SystemNotice( "" );
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00003));
 		}
 	}
@@ -322,7 +322,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 			pMainCha->m_CKitbag.Lock();
 		}
 		else
-		//pMainCha->SystemNotice("���ϲ��ܶ��飡");
+		//pMainCha->SystemNotice("");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00004));
 	}
 	break;
@@ -334,7 +334,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 			pMainCha->m_CKitbag.UnLock();
 		}
 		else
-		//pMainCha->SystemNotice("���ϲ��ܽ������飡");
+		//pMainCha->SystemNotice("");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00005));
 	}
 	break;
@@ -420,7 +420,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 			Guild::cmd_CreateGuild(GetPlyMainCha(), l_confirm, msg.guildName.c_str(), msg.passwd.c_str());
 		}
 		else {
-			//GetPlyMainCha()->SystemNotice("�����������Ƿ��ַ���");
+			//GetPlyMainCha()->SystemNotice("");
 			GetPlyMainCha()->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00006));
 		}
 	}
@@ -461,7 +461,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	break;
 	case CMD_CM_GUILD_LEAVE: {
 		if (!(GetPlyCtrlCha()->GetSubMap()->GetMapRes()->CanGuild())) {
-			//GetPlyMainCha()->SystemNotice("�˵�ͼ�����˻�!");
+			//GetPlyMainCha()->SystemNotice("!");
 			GetPlyMainCha()->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00007));
 			break;
 		}
@@ -514,20 +514,20 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	}
 	break;
 
-	case CMD_CM_UPDATEHAIR: // ��������
+	case CMD_CM_UPDATEHAIR: // 
 	{
 		if (!GetSubMap()) break;
 		Cmd_ChangeHair(pk);
 	}
 	break;
-	case CMD_CM_TEAM_FIGHT_ASK: // ������ս����
+	case CMD_CM_TEAM_FIGHT_ASK: // 
 	{
 		net::msg::CmTeamFightAskMessage msg;
 		net::msg::deserialize(pk, msg);
 		Cmd_FightAsk(static_cast<Char>(msg.type), static_cast<Long>(msg.worldId), static_cast<Long>(msg.handle));
 	}
 	break;
-	case CMD_CM_TEAM_FIGHT_ASR: // ������սӦ��
+	case CMD_CM_TEAM_FIGHT_ASR: // 
 	{
 		net::msg::CmTeamFightAnswerMessage msg;
 		net::msg::deserialize(pk, msg);
@@ -751,32 +751,32 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		DWORD dwCharID = static_cast<DWORD>(cmMsg.chaId);
 
 		if (IsBoat()) {
-			//SystemNotice("���ϲ�����ͽ!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00023));
 			break;
 		}
 
 		CCharacter* pTarCha = pMainCha->GetSubMap()->FindCharacter(dwCharID, pMainCha->GetShape().centre);
 		if (!pTarCha) {
-			//pMainCha->SystemNotice("%s �Ѿ��뿪��!", szName);
+			//pMainCha->SystemNotice("%s !", szName);
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00012), szName.c_str());
 			break;
 		}
 
 		if (pMainCha->GetLevel() < 41) {
-			//pMainCha->SystemNotice("���ĵȼ�����!");
+			//pMainCha->SystemNotice("!");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00024));
 			break;
 		}
 
 		if (pTarCha->GetLevel() > 40) {
-			//pMainCha->SystemNotice("�Է��ĵȼ�̫����!");
+			//pMainCha->SystemNotice("!");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00025));
 			break;
 		}
 
 		if (pTarCha->IsInvited()) {
-			//pMainCha->SystemNotice("�Է��ڽ��������˵�����!");
+			//pMainCha->SystemNotice("!");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00022));
 			break;
 		}
@@ -786,7 +786,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		}
 		pTarCha->SetInvited(true);
 
-		// Типизированная сериализация: запрос ученичества
+		//  :  
 		auto packet = net::msg::serialize(net::msg::McPrenticeAskMessage{pMainCha->GetName(), pMainCha->GetID()});
 		pTarCha->ReflectINFof(pTarCha, packet);
 	}
@@ -802,41 +802,41 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		pMainCha->SetInvited(false);
 
 		if (IsBoat()) {
-			//SystemNotice("���ϲ��ܰ�ʦ!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00019));
 			break;
 		}
 
 		CCharacter* pSrcCha = pMainCha->GetSubMap()->FindCharacter(dwCharID, pMainCha->GetShape().centre);
 		if (!pSrcCha) {
-			//pMainCha->SystemNotice("%s �Ѿ��뿪��!", szName);
+			//pMainCha->SystemNotice("%s !", szName);
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00012), szName.c_str());
 			break;
 		}
 
 		if (pSrcCha->GetLevel() < 41) {
-			//pSrcCha->SystemNotice("���ĵȼ�����!");
+			//pSrcCha->SystemNotice("!");
 			pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00024));
-			//pMainCha->SystemNotice("�Է��ĵȼ�����!");
+			//pMainCha->SystemNotice("!");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00017));
 			break;
 		}
 
 		if (pMainCha->GetLevel() > 40) {
-			//pSrcCha->SystemNotice("�Է��ĵȼ�̫����!");
+			//pSrcCha->SystemNotice("!");
 			pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00025));
-			//pMainCha->SystemNotice("���ĵȼ�̫����!");
+			//pMainCha->SystemNotice("!");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00020));
 			break;
 		}
 
 		if (sRet == 0) {
-			//pSrcCha->SystemNotice("%s ��ͬ�����Ϊʦ!", pMainCha->GetName());
+			//pSrcCha->SystemNotice("%s !", pMainCha->GetName());
 			pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00030), pMainCha->GetName());
 			break;
 		}
 
-		// Типизированная сериализация: создание связи наставник-ученик (приглашение от ученика)
+		//  :   - (  )
 		auto l_wpk = net::msg::serialize(net::msg::MpMasterCreateMessage{
 			pMainCha->GetName(), pMainCha->GetPlayer()->GetDBChaId(),
 			pSrcCha->GetName(), pSrcCha->GetPlayer()->GetDBChaId()
@@ -854,7 +854,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 
 		BOOL bHasGuild = pMainCha->HasGuild();
 		if (!bHasGuild) {
-			//SystemNotice("�㻹û�м��빫��!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00031));
 			break;
 		}
@@ -878,7 +878,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		}
 		else
 		{
-			//SystemNotice("��Ƶ��ֻ����ʥս��ͼ��ʹ��!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00032));
 		}
 		*/
@@ -902,7 +902,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		std::string szTitle = cmMsg.title;
 		std::string szContent = cmMsg.content;
 		if (szTitle.length() > 32 || szContent.length() > 512) {
-			//pMainCha->SystemNotice("�ʼ����ȷǷ�!");
+			//pMainCha->SystemNotice("!");
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00033));
 			break;
 		}
@@ -935,7 +935,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	}
 	break;
 	case CMD_CM_CHEAT_CHECK: {
-		//�������ʱ����
+		//
 		/*CCharacter *pMainCha = GetPlyMainCha();
 
 		cChar *answer = pk.ReadString();
@@ -945,7 +945,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	case CMD_CM_BIDUP:
 		//add by ALLEN 2007-10-19
 	{
-		//����ϵͳ��ʱ����
+		//
 		CCharacter* pMainCha = GetPlyMainCha();
 		if (g_CParser.DoString("YORN", enumSCRIPT_RETURN_NUMBER, 1, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pMainCha,
 							   DOSTRING_PARAM_END)) {
@@ -955,7 +955,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 				DWORD dwNpcID = static_cast<DWORD>(cmMsg.npcId);
 				CCharacter* pNpc = m_submap->FindCharacter(dwNpcID, GetShape().centre);
 				if (pNpc == NULL) {
-					//SystemNotice( "����NPCID%d��Ч��", dwNpcID );
+					//SystemNotice( "NPCID%d", dwNpcID );
 					SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00034), dwNpcID);
 					break;
 				}
@@ -972,7 +972,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	case CMD_CM_REQUEST_DROP_RATE: {
 		CCharacter* pCha = GetPlyCtrlCha();
 		if (pCha) {
-			// Типизированная сериализация: ответ на запрос множителя дропа
+			//  :     
 			auto pk = net::msg::serialize(net::msg::McRequestDropRateMessage{pCha->GetDropRate()});
 			pCha->ReflectINFof(pCha, pk);
 		}
@@ -981,7 +981,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	case CMD_CM_REQUEST_EXP_RATE: {
 		CCharacter* pCha = GetPlyMainCha();
 		if (pCha) {
-			// Типизированная сериализация: ответ на запрос множителя опыта
+			//  :     
 			auto pk = net::msg::serialize(net::msg::McRequestExpRateMessage{pCha->GetExpRate()});
 			pCha->ReflectINFof(pCha, pk);
 		}
@@ -992,7 +992,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	}
 }
 
-// ─── Обработчики команд (вызываются из ProcessPacket) ─────────
+//    (  ProcessPacket) 
 
 void CCharacter::Handle_GuildBankCmd(const net::msg::PmGuildBankMessage& msg) {
 	Char bankType = static_cast<Char>(msg.bankType);
@@ -1469,7 +1469,7 @@ void CCharacter::Handle_TigerStop(const net::msg::CmTigerStopMessage& msg) {
 
 	short sIndex = 3 * (sNum - 1);
 	bool bSucc = true;
-	// Типизированная сериализация: результат тигрового автомата
+	//  :   
 	int64_t ids[3];
 	for (int i = 0; i < 3; i++) {
 		if (pMainCha->m_sTigerItemID[sIndex] <= 0) {
@@ -1503,7 +1503,7 @@ void CCharacter::Handle_VolunteerOpen(const net::msg::CmVolunteerOpenMessage& cm
 	short sPageNum = (nVolNum % sNum == 0) ? (nVolNum / sNum) : (nVolNum / sNum + 1);
 
 	char chState = (pMainCha->IsVolunteer() ? 1 : 0);
-	// Типизированная сериализация: открытие окна волонтёров
+	//  :   
 	net::msg::McVolunteerOpenMessage openMsg;
 	openMsg.state = static_cast<int64_t>(chState);
 	openMsg.pageTotal = static_cast<int64_t>(sPageNum);
@@ -1529,7 +1529,7 @@ void CCharacter::Handle_VolunteerList(const net::msg::CmVolunteerListMessage& cm
 		sRetNum = 0;
 	short sPageNum = (nVolNum % sNum == 0) ? (nVolNum / sNum) : (nVolNum / sNum + 1);
 
-	// Типизированная сериализация: список волонтёров
+	//  :  
 	net::msg::McVolunteerListMessage listMsg;
 	listMsg.pageTotal = static_cast<int64_t>(sPageNum);
 	listMsg.page = static_cast<int64_t>(sPage);
@@ -1553,33 +1553,33 @@ void CCharacter::Handle_VolunteerSel(const net::msg::CmVolunteerSelMessage& cmMs
 	std::string szName = cmMsg.name;
 	CCharacter* pTarCha = FindVolunteer(szName.c_str());
 	if (!pTarCha) {
-		//pMainCha->SystemNotice("%s �Ѿ��뿪��!", szName);
+		//pMainCha->SystemNotice("%s !", szName);
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00012), szName.c_str());
 		return;
 	}
 
 	if (pTarCha == pMainCha) {
-		//pMainCha->SystemNotice("�㲻��ͬ�Լ����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00013));
 		return;
 	}
 
 	if (strcmp(pTarCha->GetPlyCtrlCha()->GetSubMap()->GetName(), GetPlyCtrlCha()->GetSubMap()->GetName())) {
-		//pMainCha->SystemNotice("���ź���, ���ǲ���ͬһ����ͼ!");
+		//pMainCha->SystemNotice(", !");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00014));
 		return;
 	}
 
 	if (!(GetPlyCtrlCha()->GetSubMap()->GetMapRes()->CanTeam())) {
-		//pMainCha->SystemNotice("�˵�ͼ�������!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00015));
 		return;
 	}
 
-	//pMainCha->SystemNotice("���������ѷ���,�����ĵȴ���Ӧ!");
+	//pMainCha->SystemNotice(",!");
 	pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00016));
 
-	// Типизированная сериализация: запрос волонтёру
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McVolunteerAskMessage{pMainCha->GetName()});
 	pTarCha->ReflectINFof(pTarCha, packet);
 }
@@ -1590,13 +1590,13 @@ void CCharacter::Handle_VolunteerAsr(const net::msg::CmVolunteerAsrMessage& cmMs
 	std::string szName = cmMsg.name;
 	CCharacter* pSrcCha = g_pGameApp->FindChaByName(szName.c_str());
 	if (!pSrcCha) {
-		//pMainCha->SystemNotice("%s �Ѿ��뿪��!", szName);
+		//pMainCha->SystemNotice("%s !", szName);
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00012), szName.c_str());
 		return;
 	}
 
 	if (sRet == 0) {
-		//pSrcCha->SystemNotice("%s ��ͬ��������!", pMainCha->GetName());
+		//pSrcCha->SystemNotice("%s !", pMainCha->GetName());
 		pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00018), pMainCha->GetName());
 		return;
 	}
@@ -1695,38 +1695,38 @@ void CCharacter::Handle_MasterInvite(const net::msg::CmMasterInviteMessage& cmMs
 	DWORD dwCharID = static_cast<DWORD>(cmMsg.chaId);
 
 	if (IsBoat()) {
-		//SystemNotice("���ϲ��ܰ�ʦ!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00019));
 		return;
 	}
 
 	CCharacter* pTarCha = pMainCha->GetSubMap()->FindCharacter(dwCharID, pMainCha->GetShape().centre);
 	if (!pTarCha) {
-		//pMainCha->SystemNotice("%s �Ѿ��뿪��!", szName);
+		//pMainCha->SystemNotice("%s !", szName);
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00012), szName.c_str());
 		return;
 	}
 
 	if (pTarCha->GetLevel() < 41) {
-		//pMainCha->SystemNotice("�Է��ȼ�����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00017));
 		return;
 	}
 
 	if (pMainCha->GetLevel() > 40) {
-		//pMainCha->SystemNotice("���ĵȼ�̫����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00020));
 		return;
 	}
 
 	if (pMainCha->GetMasterDBID() != 0) {
-		//pMainCha->SystemNotice("���Ѿ���ʦ����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00021));
 		return;
 	}
 
 	if (pTarCha->IsInvited()) {
-		//pMainCha->SystemNotice("�Է��ڽ��������˵�����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00022));
 		return;
 	}
@@ -1737,7 +1737,7 @@ void CCharacter::Handle_MasterInvite(const net::msg::CmMasterInviteMessage& cmMs
 
 	pTarCha->SetInvited(true);
 
-	// Типизированная сериализация: запрос наставничества
+	//  :  
 	auto packet = net::msg::serialize(net::msg::McMasterAskMessage{pMainCha->GetName(), pMainCha->GetID()});
 	pTarCha->ReflectINFof(pTarCha, packet);
 }
@@ -1751,41 +1751,41 @@ void CCharacter::Handle_MasterAsr(const net::msg::CmMasterAsrMessage& cmMsg) {
 	pMainCha->SetInvited(false);
 
 	if (IsBoat()) {
-		//SystemNotice("���ϲ�����ͽ!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00023));
 		return;
 	}
 
 	CCharacter* pSrcCha = pMainCha->GetSubMap()->FindCharacter(dwCharID, pMainCha->GetShape().centre);
 	if (!pSrcCha) {
-		//pMainCha->SystemNotice("%s �Ѿ��뿪��!", szName);
+		//pMainCha->SystemNotice("%s !", szName);
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00012), szName.c_str());
 		return;
 	}
 
 	if (pMainCha->GetLevel() < 41) {
-		//pSrcCha->SystemNotice("�Է��ĵȼ�����!");
+		//pSrcCha->SystemNotice("!");
 		pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00017));
-		//pMainCha->SystemNotice("���ĵȼ�����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00024));
 		return;
 	}
 
 	if (pSrcCha->GetLevel() > 40) {
-		//pSrcCha->SystemNotice("���ĵȼ�̫����!");
+		//pSrcCha->SystemNotice("!");
 		pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00020));
-		//pMainCha->SystemNotice("�Է��ĵȼ�̫����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00025));
 		return;
 	}
 
 	if (sRet == 0) {
-		//pSrcCha->SystemNotice("%s ��ͬ������Ϊͽ!", pMainCha->GetName());
+		//pSrcCha->SystemNotice("%s !", pMainCha->GetName());
 		pSrcCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00026), pMainCha->GetName());
 		return;
 	}
 
-	// Типизированная сериализация: создание связи наставник-ученик (приглашение от наставника)
+	//  :   - (  )
 	auto l_wpk = net::msg::serialize(net::msg::MpMasterCreateMessage{
 		pSrcCha->GetName(), pSrcCha->GetPlayer()->GetDBChaId(),
 		pMainCha->GetName(), pMainCha->GetPlayer()->GetDBChaId()
@@ -1799,22 +1799,22 @@ void CCharacter::Handle_MasterDel(const net::msg::CmMasterDelMessage& cmMsg) {
 	uLong ulChaID = static_cast<uLong>(cmMsg.chaId);
 
 	if (pMainCha->GetLevel() > 40) {
-		//pMainCha->SystemNotice("���Ѿ���ʦ��!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00027));
 		return;
 	}
 
 	long lDelMoney = 0; //* pMainCha->GetLevel();
 	if (!pMainCha->HasMoney(lDelMoney)) {
-		//pMainCha->SystemNotice("���Ľ�Ǯ����!");
+		//pMainCha->SystemNotice("!");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00028));
 		return;
 	}
-	//pMainCha->TakeMoney("ϵͳ", lDelMoney);
+	//pMainCha->TakeMoney("", lDelMoney);
 	//pMainCha->TakeMoney(RES_STRING(GM_CHARSCRIPT_CPP_00001), lDelMoney);
 	pMainCha->SystemNotice("Your Mentor Deleted Successfully ");
 
-	// Типизированная сериализация: удаление наставника
+	//  :  
 	auto l_wpk = net::msg::serialize(net::msg::MpMasterDelMessage{
 		pMainCha->GetName(), pMainCha->GetPlayer()->GetDBChaId(),
 		std::string(szName), static_cast<int64_t>(ulChaID)
@@ -1830,20 +1830,20 @@ void CCharacter::Handle_PrenticeDel(const net::msg::CmPrenticeDelMessage& cmMsg)
 	//long lDelMoney = 10000 * pMainCha->GetLevel();
 	//if(!pMainCha->HasMoney(lDelMoney))
 	//{
-	//	pMainCha->SystemNotice("���Ľ�Ǯ����!");
+	//	pMainCha->SystemNotice("!");
 	//	break;
 	//}
-	//pMainCha->TakeMoney("ϵͳ", lDelMoney);
+	//pMainCha->TakeMoney("", lDelMoney);
 	long lCredit = (long)pMainCha->GetCredit(); //- 5 * pMainCha->GetLevel();
 	if (lCredit < 0) {
 		lCredit = 0;
 	}
 	pMainCha->SetCredit(lCredit);
 	pMainCha->SynAttr(enumATTRSYN_TASK);
-	//pMainCha->SystemNotice("���������½���!");
+	//pMainCha->SystemNotice("!");
 	pMainCha->SystemNotice("Your Disciple Deleted Successfully ");
 
-	// Типизированная сериализация: удаление ученика
+	//  :  
 	auto l_wpk = net::msg::serialize(net::msg::MpMasterDelMessage{
 		std::string(szName), static_cast<int64_t>(ulChaID),
 		pMainCha->GetName(), pMainCha->GetPlayer()->GetDBChaId()
@@ -1872,17 +1872,17 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			return;
 		}
 
-		if (m_CAction.GetCurActionNo() >= 0) // ֮ǰ���ж�û�н���
+		if (m_CAction.GetCurActionNo() >= 0) // 
 		{
 			FailedActionNoti(enumACTION_MOVE, enumFACTION_EXISTACT);
-			//SystemNotice("���Ϸ����ж�������ǰ���ж�û�н�����\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00035));
 			break;
 		}
 
 		if (m_sPoseState == enumPoseSeat) {
 			FailedActionNoti(enumACTION_MOVE, enumFACTION_EXISTACT);
-			//SystemNotice("���Ϸ����ж�������ǰ���ж�û�н�����\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00035));
 			break;
 		}
@@ -1895,13 +1895,13 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		Char chPointNum;
 		if (!pData) {
 			FailedActionNoti(enumACTION_MOVE, enumFACTION_MOVEPATH);
-			//SystemNotice("�ƶ�·������û���ƶ����е�\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00036));
 			break;
 		}
 		if ((chPointNum = Char(ulTurnNum / sizeof(Point))) > defMOVE_INFLEXION_NUM) {
 			FailedActionNoti(enumACTION_MOVE, enumFACTION_MOVEPATH);
-			//SystemNotice("�ƶ�·�����󣨹յ�����%d�����յ�����%d��\n", ulTurnNum / sizeof(Point), defMOVE_INFLEXION_NUM);
+			//SystemNotice("%d%d\n", ulTurnNum / sizeof(Point), defMOVE_INFLEXION_NUM);
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00037), ulTurnNum / sizeof(Point), defMOVE_INFLEXION_NUM);
 			break;
 		}
@@ -1912,7 +1912,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 	break;
 	case enumACTION_SKILL: {
 		if (GetPlyMainCha()->m_CKitbag.IsLock()) {
-			//SystemNotice("������������״̬��ʩ�ż���ʧ�ܣ�\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00038));
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_ACTFORBID);
 			break;
@@ -1923,23 +1923,23 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		}
 
 		if (GetPlayer()->GetBankNpc()) {
-			//SystemNotice("���ȹر����У�\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00039));
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_ACTFORBID);
 			break;
 		}
 
-		if (m_CAction.GetCurActionNo() >= 0) // ֮ǰ���ж�û�н���
+		if (m_CAction.GetCurActionNo() >= 0) // 
 		{
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_EXISTACT);
-			//SystemNotice("���Ϸ����ж�������ǰ���ж�û�н�����\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00035));
 			break;
 		}
 
 		if (m_sPoseState == enumPoseSeat) {
 			FailedActionNoti(enumACTION_SKILL, enumFACTION_EXISTACT);
-			//SystemNotice("���Ϸ����ж�������ǰ���ж�û�н�����\n");
+			//SystemNotice("\n");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00035));
 			break;
 		}
@@ -1947,49 +1947,49 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 
 		const auto& skillData = std::get<net::msg::CmActionSkillInputData>(msg.data);
 		char chMove = static_cast<char>(skillData.chMove);
-		if (chMove == 2) // �ƶ���Ŀ������ʹ�ü���
+		if (chMove == 2) // 
 		{
-			// �ƶ���
+			// 
 			Point Path[defMOVE_INFLEXION_NUM];
 			Char chPointNum;
 			cChar* pData = skillData.pathData.data();
 			uShort ulTurnNum = static_cast<uShort>(skillData.pathData.size());
 			if (!pData) {
 				FailedActionNoti(enumACTION_SKILL, enumFACTION_MOVEPATH);
-				//SystemNotice("�ƶ�·������û���ƶ����е�\n");
+				//SystemNotice("\n");
 				SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00036));
 				break;
 			}
 
 			if ((chPointNum = Char(ulTurnNum / sizeof(Point))) > defMOVE_INFLEXION_NUM) {
 				FailedActionNoti(enumACTION_SKILL, enumFACTION_MOVEPATH);
-				//SystemNotice("�ƶ�·�����󣨹յ�����%d�����յ�����%d��\n", ulTurnNum / sizeof(Point), defMOVE_INFLEXION_NUM);
+				//SystemNotice("%d%d\n", ulTurnNum / sizeof(Point), defMOVE_INFLEXION_NUM);
 				SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00037), ulTurnNum / sizeof(Point), defMOVE_INFLEXION_NUM);
 				break;
 			}
 			memcpy(Path, pData, chPointNum * sizeof(Point));
-			// ���ܰ�
+			// 
 			dbc::uLong ulSkillID = static_cast<dbc::uLong>(skillData.skillId);
 			Long lTarInfo1 = static_cast<Long>(skillData.tarInfo1);
 			Long lTarInfo2 = static_cast<Long>(skillData.tarInfo2);
 
 			CSkillRecord* pRec = GetSkillRecordInfo(ulSkillID);
 			if (!pRec) {
-				//LG( "���ܲ�����", "��ɫ��%s��1���ܲ����ڣ����ܱ��: %d��[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
-				ToLogService("common", "character��{}��1skill inexistence��skill number: {}��[PacketID: {}]", GetName(),
+				//LG( "", "%s1: %d[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
+				ToLogService("common", "character{}1skill inexistenceskill number: {}[PacketID: {}]", GetName(),
 							 ulSkillID, ulPacketId);
 				FailedActionNoti(enumACTION_SKILL, enumFACTION_NOSKILL);
-				//LG( "���ܲ�����", "��ɫ��%s��2���ܲ����ڣ����ܱ��: %d��[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
-				ToLogService("common", "character��{}��2skill inexistence��skill number: {}��[PacketID: {}]", GetName(),
+				//LG( "", "%s2: %d[PacketID: %u]\n", GetName(), ulSkillID, ulPacketId);
+				ToLogService("common", "character{}2skill inexistenceskill number: {}[PacketID: {}]", GetName(),
 							 ulSkillID, ulPacketId);
-				//SystemNotice("���ܲ����ڣ����ܱ��: %d��\n", ulSkillID);
+				//SystemNotice(": %d\n", ulSkillID);
 				SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00040), ulSkillID);
 				break;
 			}
 			Cmd_BeginSkill((Short)m_dwPing, Path, chPointNum, pRec, 1, lTarInfo1, lTarInfo2);
 		}
 		else {
-			//SystemNotice("���ж����ͣ�ֱ��ʹ�ü��ܣ��Ѿ�����");
+			//SystemNotice("");
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00041));
 			break;
 		}
@@ -2011,7 +2011,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		DelSkillState((uChar)sStateID);
 	}
 	break;
-	case enumACTION_LEAN: // �п�
+	case enumACTION_LEAN: // 
 	{
 		if (!GetSubMap()) {
 			return;
@@ -2029,7 +2029,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		m_SLean.lHeight = static_cast<Long>(d.height);
 		m_SLean.chState = 0;
 
-		// Типизированная сериализация: наклон/присаживание через std::variant
+		//  : /  std::variant
 		{
 			net::msg::McCharacterActionMessage actionMsg;
 			actionMsg.worldId = m_ID;
@@ -2049,7 +2049,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 	}
 	break;
 	///item picks
-	case enumACTION_ITEM_PICK: // �����
+	case enumACTION_ITEM_PICK: // 
 	{
 		const auto& d = std::get<net::msg::CmActionItemPickData>(msg.data);
 		Long lWorldID = static_cast<Long>(d.worldId);
@@ -2060,7 +2060,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_ITEM_THROW: // �����ߣ��ӵ������������棩
+	case enumACTION_ITEM_THROW: // 
 	{
 		const auto& d = std::get<net::msg::CmActionItemThrowData>(msg.data);
 		Short sGridID = static_cast<Short>(d.gridId);
@@ -2073,7 +2073,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_ITEM_USE: // ʹ�õ���
+	case enumACTION_ITEM_USE: // 
 	{
 		const auto& d = std::get<net::msg::CmActionItemUseData>(msg.data);
 		Short sFromGridID = static_cast<Short>(d.fromGridId);
@@ -2084,7 +2084,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_ITEM_UNFIX: // жװ����
+	case enumACTION_ITEM_UNFIX: // 
 	{
 		m_CChaAttr.ResetChangeFlag();
 
@@ -2094,19 +2094,19 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		const auto& d = std::get<net::msg::CmActionItemUnfixData>(msg.data);
 		Char chLinkID = static_cast<Char>(d.linkId);
 		Short sGridID = static_cast<Short>(d.gridId);
-		if (sGridID == -2) // ��������
+		if (sGridID == -2) // 
 		{
 			chDir = 0;
 			lParam1 = static_cast<Long>(d.param1);
 			lParam2 = static_cast<Long>(d.param2);
 		}
-		else if (sGridID == -1) // ж��������������λ��
+		else if (sGridID == -1) // 
 		{
 			chDir = 1;
 			lParam1 = 0;
 			lParam2 = -1;
 		}
-		else if (sGridID >= 0) // ж����������ָ��λ��
+		else if (sGridID >= 0) // 
 		{
 			chDir = 1;
 			lParam1 = 0;
@@ -2120,7 +2120,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_ITEM_POS: // �ı����λ��
+	case enumACTION_ITEM_POS: // 
 	{
 		const auto& d = std::get<net::msg::CmActionItemPosData>(msg.data);
 		Short sSrcGrid = static_cast<Short>(d.srcGrid);
@@ -2132,7 +2132,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_KITBAGTMP_DRAG: //��ʱ�����Ϸ�
+	case enumACTION_KITBAGTMP_DRAG: //
 	{
 		const auto& d = std::get<net::msg::CmActionItemPosData>(msg.data);
 		Short sSrcGrid = static_cast<Short>(d.srcGrid);
@@ -2144,7 +2144,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_ITEM_DELETE: // ɾ������
+	case enumACTION_ITEM_DELETE: // 
 	{
 		const auto& d = std::get<net::msg::CmActionItemDeleteData>(msg.data);
 		Short sFromGridID = static_cast<Short>(d.fromGridId);
@@ -2155,7 +2155,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			ItemOprateFailed(sRet);
 	}
 	break;
-	case enumACTION_ITEM_INFO: // ������Ϣ
+	case enumACTION_ITEM_INFO: // 
 	{
 		const auto& d = std::get<net::msg::CmActionViewItemData>(msg.data);
 		ViewItemInfo(d);
@@ -2265,16 +2265,16 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		//for (int i = 0; i < enumEQUIP_NUM; i++)
 		//	m_SChaPart.SLink[i].sID = pk.ReadInt64();
 
-		//// ת��
+		//// 
 		//net::WPacket WtPk	=g_gmsvr->GetWPacket();
-		//WtPk.WriteCmd(CMD_MC_NOTIACTION);	//ͨ���ж�
+		//WtPk.WriteCmd(CMD_MC_NOTIACTION);	//
 		//WtPk.WriteInt64(m_ID);
 		//WtPk.WriteInt64(ulPacketId);
 		//WtPk.WriteInt64(enumACTION_LOOK);
 		//WtPk.WriteInt64(m_SChaPart.sTypeID);
 		//for (int i = 0; i < enumEQUIP_NUM; i++)
 		//	WtPk.WriteInt64(m_SChaPart.sLink[i]);
-		//NotiChgToEyeshot(WtPk);//ͨ��
+		//NotiChgToEyeshot(WtPk);//
 	}
 	break;
 	case enumACTION_TEMP: {
@@ -2282,7 +2282,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		m_STempChaPart.sItemID = static_cast<short>(d.itemId);
 		m_STempChaPart.sPartID = static_cast<short>(d.partId);
 
-		// Типизированная сериализация: временная смена внешности через std::variant
+		//  :     std::variant
 		{
 			net::msg::McCharacterActionMessage actionMsg;
 			actionMsg.worldId = m_ID;
@@ -2314,7 +2314,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		Short sAngle = static_cast<Short>(d.angle);
 		Short sPose = static_cast<Short>(d.pose);
 
-		// Типизированная сериализация: поворот лица через std::variant
+		//  :    std::variant
 		{
 			net::msg::McCharacterActionMessage actionMsg;
 			actionMsg.worldId = m_ID;
@@ -2340,7 +2340,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		Short sAngle = static_cast<Short>(d.angle);
 		Short sPose = static_cast<Short>(d.pose);
 
-		// Типизированная сериализация: поза скилла через std::variant
+		//  :    std::variant
 		net::msg::McCharacterActionMessage actionMsg;
 		actionMsg.worldId = m_ID;
 		actionMsg.packetId = ulPacketId;
@@ -2353,14 +2353,14 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 		if ((bToSeat && m_SSeat.chIsSeat) || (!bToSeat && !m_SSeat.chIsSeat))
 			break;
 
-		// ���¼��ܣ��ָ��ٶȼӿ죩
+		// 
 		dbc::uLong ulSkillID = 202;
 		CSkillRecord* pCSkill = GetSkillRecordInfo(ulSkillID);
 		if (!pCSkill) {
 			break;
 		}
 
-		if (bToSeat) // ����
+		if (bToSeat) // 
 		{
 			m_SSeat.chIsSeat = 1;
 			m_SSeat.sAngle = sAngle;
@@ -2368,7 +2368,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			g_CParser.DoString(pCSkill->szActive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
 							   enumSCRIPT_PARAM_NUMBER, 1, 1, DOSTRING_PARAM_END);
 		}
-		else // վ��
+		else // 
 		{
 			m_SSeat.chIsSeat = 0;
 			g_CParser.DoString(pCSkill->szInactive, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this,
@@ -2395,7 +2395,7 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 }
 
 
-// Э�� : �����������͵�����
+//  : 
 void CCharacter::Cmd_ChangeHair(net::RPacket& pk) {
 	char szRes[128];
 
@@ -2436,7 +2436,7 @@ void CCharacter::Cmd_ChangeHair(net::RPacket& pk) {
 			if (sGridLoc == -1) bOK = FALSE;
 
 			if (bOK) {
-				// ����ñ��������Ƿ���ָ������
+				// 
 				short sNowItemID = m_CKitbag.GetID(sGridLoc);
 				if (sNowItemID != sNeedItemID) {
 					bOK = FALSE;
@@ -2450,17 +2450,17 @@ void CCharacter::Cmd_ChangeHair(net::RPacket& pk) {
 			}
 			sValidGrid[sValidCnt][0] = sGridLoc;
 			sValidGrid[sValidCnt][1] = sNeedItemID;
-			sValidGrid[sValidCnt][2] = (short)(pHair->dwNeedItem[i][1]); // ������¼
+			sValidGrid[sValidCnt][2] = (short)(pHair->dwNeedItem[i][1]); // 
 			sValidCnt++;
 		}
 	}
 
 
-	// �۳���Ǯ�͵���, ˢ�±���
+	// , 
 	m_CKitbag.SetChangeFlag(false);
-	/*if(!TakeMoney("����ʦ", pHair->dwMoney))
+	/*if(!TakeMoney("", pHair->dwMoney))
 	{
-		SystemNotice("��������ʧ��, ��Ǯ����!");
+		SystemNotice(", !");
 		return;
 	}*/
 	if (!TakeMoney(RES_STRING(GM_CHARACTERPRL_CPP_00045), pHair->dwMoney)) {
@@ -2475,46 +2475,46 @@ void CCharacter::Cmd_ChangeHair(net::RPacket& pk) {
 
 		short sRet = KbPopItem(true, false, &item, sValidGrid[i][0]);
 		if (sRet != enumKBACT_SUCCESS) {
-			//SystemNotice("��������ʧ��, ��Ҫ�ĵ��߲����ڻ��ߵ�����������!");
+			//SystemNotice(", !");
 
 			SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00047));
 			return;
 		}
 	}
 
-	// ͬ����ɫ��������
+	// 
 	SynKitbagNew(enumSYN_KITBAG_FROM_NPC);
 
-	// �������ͳɹ�, �޸Ľ�ɫ�������
+	// , 
 
 	SetLookChangeFlag(true);
-	// 10%�ļ��ʻ�úܳ�ķ���
+	// 10%
 	if (rand() % 100 < 10 && pHair->GetFailItemNum() > 0) {
 		int nRandFail = rand() % pHair->GetFailItemNum();
 		short sFailHair = (short)(pHair->dwFailItemID[nRandFail]);
 		m_SChaPart.sHairID = sFailHair;
-		//SystemNotice("������������, ���͸�����!");
+		//SystemNotice(", !");
 		SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00048));
 		Prl_ChangeHairResult(sScriptID, "fail", true);
 	}
 	else {
-		// �������ͻ���, ���͸����ɹ�
-		m_SChaPart.sHairID = (short)(pHair->dwItemID); // ��������
+		// , 
+		m_SChaPart.sHairID = (short)(pHair->dwItemID); // 
 		Prl_ChangeHairResult(sScriptID, "ok", true);
 	}
 
-	// ��Ұ����۸���֪ͨ
+	// 
 	if (g_Config.m_bBlindChaos && IsPlayerCha() && IsPKSilver())
 		SynLook(LOOK_SELF, true); // sync to self (changing hair)
 	else
 		SynLook();
 }
 
-// �������͵ķ���
-// ����1 : ����ID, ʧ����Ϊ0
-// ����2 : �ַ�����ԭ��˵��
+// 
+// 1 : ID, 0
+// 2 : 
 void CCharacter::Prl_ChangeHairResult(int nScriptID, const char* szReason, BOOL bNoticeAll) {
-	// Типизированная сериализация: результат смены причёски
+	//  :   
 	auto wpk = net::msg::serialize(net::msg::McUpdateHairResMessage{
 		GetID(), static_cast<int64_t>(nScriptID), szReason
 	});
@@ -2526,11 +2526,11 @@ void CCharacter::Prl_ChangeHairResult(int nScriptID, const char* szReason, BOOL 
 	}
 }
 
-// ֪ͨ�ͻ��˴���������
+// 
 void CCharacter::Prl_OpenHair() {
 	HairAction(true);
 
-	// Типизированная сериализация: открытие UI причёски
+	//  :  UI 
 	auto wpk = net::msg::serializeMcOpenHairCutCmd();
 	ReflectINFof(this, wpk);
 }

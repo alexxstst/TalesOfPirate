@@ -1,4 +1,4 @@
-// bench.h - originally written and placed in the public domain by Wei Dai
+﻿// bench.h - originally written and placed in the public domain by Wei Dai
 //           CryptoPP::Test namespace added by JW in February 2017
 
 #ifndef CRYPTOPP_BENCH_H

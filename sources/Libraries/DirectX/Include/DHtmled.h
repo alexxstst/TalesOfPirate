@@ -1,4 +1,4 @@
-/* Microsoft Corporation Copyright 1999 */
+﻿/* Microsoft Corporation Copyright 1999 */
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 

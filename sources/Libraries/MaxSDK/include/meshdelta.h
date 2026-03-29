@@ -1,4 +1,4 @@
-// MeshDelta.h
+﻿// MeshDelta.h
 // By Steve Anderson of Kinetix.
 // Created June 1998
 

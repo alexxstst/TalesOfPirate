@@ -1,4 +1,4 @@
-/**
+﻿/**
 *  @file db.h
 *
 *  db.h, v 2.0 2004/11/24 13:14:05 shanghai China
@@ -94,7 +94,7 @@ protected:
 
 public:
 
-	// �򵥽ӿ�
+	// 
     SQLRETURN exec_sql_direct(char const* sql, unsigned short timeout = 50);
 
     SQLRETURN exec_sql(char const* sql, char const* pdata, int len, unsigned short timeout = 50);
@@ -109,15 +109,15 @@ public:
 	bool _get_bin_field(char* field_text, int& len, char* param, char* filter, int* affect_rows = NULL);
 	// End
 
-	//@TableName	nvarchar(50),		-- ����
-	//@ReturnFields	nvarchar(200) = '*',	-- ��Ҫ���ص��� 
-	//@PageSize	int = 10,		-- ÿҳ��¼��
-	//@PageIndex	int = 1,		-- ��ǰҳ��
-	//@Where		nvarchar(200) = '',	-- ��ѯ����
-	//@Orderfld	nvarchar(200),		-- �����ֶ��� ���ΪΨһ����
-	//@OrderType	int = 1,		-- �������� 1:���� ����Ϊ����
-	//@TotalPage  int out,--��ҳ��
-	//@TotalRecord int out --�ܼ�¼��
+	//@TableName	nvarchar(50),		-- 
+	//@ReturnFields	nvarchar(200) = '*',	--  
+	//@PageSize	int = 10,		-- 
+	//@PageIndex	int = 1,		-- 
+	//@Where		nvarchar(200) = '',	-- 
+	//@Orderfld	nvarchar(200),		--  
+	//@OrderType	int = 1,		--  1: 
+	//@TotalPage  int out,--
+	//@TotalRecord int out --
 	// Add by lark.li 20080809 begin
 	bool	get_page_data(char* tablename, char* param, int pagesize, int pageindex, char* filter, char* sort, int sorttype, int& totalpage, int& totalrecord, std::vector< std::vector< std::string > > &data, unsigned short timeout = 50);
 	// End
@@ -135,12 +135,12 @@ public:
 	bool	getalldata(const char* sql, std::vector< std::vector< std::string > > &data, unsigned short timeout = 50);
 	// End
 
-	// �߼��ӿ�
+	// 
 	bool begin_tran();
 	bool commit_tran();
 	bool rollback();
 
-	// �����ӿ�
+	// 
 	int get_affected_rows();
 	int get_identity();
     char const* const get_table() const;

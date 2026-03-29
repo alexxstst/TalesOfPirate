@@ -1,4 +1,4 @@
-
+ï»¿
 #include "IniFile.h"
 _DBC_USING
 
@@ -56,7 +56,7 @@ void IniFile::ReadFile(const char *filename){
 	if((l_len	>0) &&(l_len <512)){
 		strcpy(m_filename,filename);
 	}else{
-		THROW_EXCP(excpFile,"ÎÄ¼þÃû³¤¶È´íÎó!");
+		THROW_EXCP(excpFile,"!");
 	}
 	FILE * l_file	=fopen(filename,m_rw?"r+t":"rt");
 	if(!l_file &&m_rw){
@@ -64,7 +64,7 @@ void IniFile::ReadFile(const char *filename){
 		if(l_file)	m_update	=true;
 	}
 	if(!l_file){
-		THROW_EXCP(excpFile, "ÎÄ¼þ:" + filename + " ²»´æÔÚ»òÄ¿Â¼È¨ÏÞ²»ÔÊÐíÄã´ò¿ª»ò½¨Á¢ÎÄ¼þ!");
+		THROW_EXCP(excpFile, ":" + filename + " !");
 	}
 	try{
 		char	l_szbuf[1024];
@@ -74,7 +74,7 @@ void IniFile::ReadFile(const char *filename){
 		{
 			char	*l_str1 = fgets(l_szbuf,1024,l_file);
 			if( !l_str1 && ferror( l_file )){
-				THROW_EXCP(excpFile,"ÎÄ¼þ¶Á²Ù×÷´íÎó");
+				THROW_EXCP(excpFile,"");
 			}
 			l_lino	++;
 			if(!l_str1||!strlen(trim(l_szbuf))||l_szbuf[0]==';'||l_szbuf[0]=='#'||l_szbuf[0]=='/'){
@@ -83,7 +83,7 @@ void IniFile::ReadFile(const char *filename){
 			if((l_str1	=ltrim(l_szbuf))[0]=='['){
 				char	*l_str2	=strchr(l_str1+1,']');
 				if(!l_str2){
-					THROW_EXCP(excpFile, "INIÎÄ¼þ¸ñÊ½´íÎó:" + std::to_string(l_lino) + "ÐÐ");
+					THROW_EXCP(excpFile, "INI:" + std::to_string(l_lino) + "");
 				}
 				*l_str2	=0;
 				l_sect	=AddSection(trim(l_str1+1));
@@ -91,13 +91,13 @@ void IniFile::ReadFile(const char *filename){
 				*l_str1	=0;
 				char	*l_str2;
 				if(!l_sect||!*(l_str2	=trim(l_szbuf))){
-					THROW_EXCP(excpFile, "INIÎÄ¼þ¸ñÊ½´íÎó:" + std::to_string(l_lino) + "ÐÐ");
+					THROW_EXCP(excpFile, "INI:" + std::to_string(l_lino) + "");
 				}
 				char	*l_str3	=strstr(l_str1+1,"//");
 				if(l_str3){*l_str3	=0;}
 				l_sect->AddItem(l_str2,trim(l_str1+1));
 			}else{
-				THROW_EXCP(excpFile, "INIÎÄ¼þ¸ñÊ½´íÎó:" + std::to_string(l_lino) + "ÐÐ");
+				THROW_EXCP(excpFile, "INI:" + std::to_string(l_lino) + "");
 			}
 		}
 	}catch(...){
@@ -123,7 +123,7 @@ IniSection & IniFile::operator[](int i){
 		m_sect[m_sectcount]	=l_is;
 		m_sectcount	++;
 	}else{
-		THROW_EXCP(excpArr,"IniFile²Ù×÷ÏÂ±ê:" + std::to_string(i) + "Ô½½ç");
+		THROW_EXCP(excpArr,"IniFile:" + std::to_string(i) + "");
 	}
 	return *l_is;
 }
@@ -138,7 +138,7 @@ IniSection &IniFile::operator[](const char *sectname)const{
 	if(i<m_sectcount){
 		return *(m_sect[i]);
 	}else{
-		THROW_EXCP(excpIniF,"Section:" + sectname + " Ã»ÓÐÕÒµ½.");
+		THROW_EXCP(excpIniF,"Section:" + sectname + " .");
 	}
 }
 IniSection * IniFile::AddSection(const char *sectname){
@@ -169,7 +169,7 @@ IniItem & IniSection::operator[](int i){
 		m_item[m_itemcount]	=l_it;
 		m_itemcount	++;
 	}else{
-		THROW_EXCP(excpArr,std::string("Section:") + m_sectname + " µÄÏÂ±ê<<i<<Ô½½ç");
+		THROW_EXCP(excpArr,std::string("Section:") + m_sectname + " <<i<<");
 	}
 	return *l_it;
 }
@@ -183,7 +183,7 @@ std::string &IniSection::operator[](const char *name)const{
 	if(i<m_itemcount){
 		return m_item[i]->value;
 	}else{
-		THROW_EXCP(excpIniF, std::string("Section:") + m_sectname + " ÏÂµÄName:" + name + " Ã»ÓÐÕÒµ½.");
+		THROW_EXCP(excpIniF, std::string("Section:") + m_sectname + " Name:" + name + " .");
 	}
 }
 IniItem * IniSection::AddItem(const char *name,const char *value){

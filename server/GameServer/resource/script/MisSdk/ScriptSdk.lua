@@ -1,4 +1,4 @@
-print("-- [Loading] Script SDK")
+﻿print("-- [Loading] Script SDK")
 
 Page = {}
 Exchange = {}
@@ -429,7 +429,7 @@ function ModifyNpcInfo(npc, name, id)
 
     NpcPointer = LUA_NULL
 
-    local str = "�޸�NPC��" .. name .. "] script data notice, ID = " .. id
+    local str = "NPC" .. name .. "] script data notice, ID = " .. id
     PRINT(str)
     LG("npcinit", str)
 end
@@ -631,7 +631,7 @@ function ExchangeDataX(srcID, srcNum, tarID, tarNum)
     if srcID == nil or srcNum == nil or tarID == nil or tarNum == nil then
         LG(
             "npcinit_error",
-            "ExchangeDataX: Fuction parameter error��srcID, srcNum, tarID, tarNum",
+            "ExchangeDataX: Fuction parameter errorsrcID, srcNum, tarID, tarNum",
             srcID,
             srcNum,
             tarID,
@@ -3324,7 +3324,7 @@ function TestDefPage()
     Text(1, "Quest", amp, 2)
     Text(1, "bye", ct, 2)
 
-    Talk(2, 'Granny: "Nothing��Go do your stuff"')
+    Talk(2, 'Granny: "NothingGo do your stuff"')
 
     Talk(
         3,
@@ -3452,7 +3452,7 @@ function TestBorn()
     InitTrigger()
     TriggerAction(1, SystemNotice, "Time cycle per 1 minute")
     TriggerAction(1, HelpInfo, MIS_HELP_DESP, "You are still new. Work hard and train hard!")
-    TriggerAction(1, HelpInfo, MIS_HELP_IMAGE, "����map ָ���ֲ�.tga")
+    TriggerAction(1, HelpInfo, MIS_HELP_IMAGE, "map .tga")
     TriggerAction(1, HelpInfo, MIS_HELP_SOUNT, 18)
     RegTrigger(27, 1)
 

@@ -1,4 +1,4 @@
-print("-- [Loading] hellMonster.lua")
+﻿print("-- [Loading] hellMonster.lua")
 
 CreateCha(828, 6035, 19593, 145, 3600)
 CreateCha(828, 8289, 17527, 145, 3600)

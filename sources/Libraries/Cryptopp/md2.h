@@ -1,4 +1,4 @@
-// md2.h - originally written and placed in the public domain by Wei Dai
+﻿// md2.h - originally written and placed in the public domain by Wei Dai
 
 /// \file md2.h
 /// \brief Classes for the MD2 message digest

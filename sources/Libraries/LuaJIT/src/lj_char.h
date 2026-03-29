@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** Character types.
 ** Donated to the public domain.
 */

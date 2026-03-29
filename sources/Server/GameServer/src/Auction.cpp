@@ -1,4 +1,4 @@
-//add by ALLEN 2007-10-19
+﻿//add by ALLEN 2007-10-19
 #include "stdafx.h"
 #include "Auction.h"
 #include "GameApp.h"
@@ -25,9 +25,9 @@ BOOL CAuctionSystem::StartAuction(short sItemID, const string& strName, short sC
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.find(sItemID);
 	if(it != m_mapItemList.end())
 	{
-		// Заменено printf → логирование через snprintf + InternalLog
+		//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_AUCTION_CPP_00001), sItemID, strName.c_str()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
-		//LG( "Auction_error", "StartAuction:�����ظ���ID(%d), name = %s!", sItemID, strName.c_str() );
+		//LG( "Auction_error", "StartAuction:ID(%d), name = %s!", sItemID, strName.c_str() );
 		ToLogService("trade", LogLevel::Error, "StartAuction:exist repeat ID({}), name = {}!", sItemID, strName.c_str() );
 		return false;
 	}
@@ -35,9 +35,9 @@ BOOL CAuctionSystem::StartAuction(short sItemID, const string& strName, short sC
 	CAuctionItem *pAucItem = new CAuctionItem(sItemID, strName, sCount, nBasePrice, nMinBid);
 	if(pAucItem == NULL)
 	{
-		// Заменено printf → логирование через snprintf + InternalLog
+		//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_AUCTION_CPP_00002), sItemID, strName.c_str()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
-		//LG( "Auction_error", "StartAuction:�ڴ���䲻��,ID(%d), name = %s!", sItemID, strName.c_str() );
+		//LG( "Auction_error", "StartAuction:,ID(%d), name = %s!", sItemID, strName.c_str() );
 		ToLogService("trade", LogLevel::Error, "StartAuction:memory allot not enough,ID({}), name = {}!", sItemID, strName.c_str() );
 		return false;
 	}
@@ -51,9 +51,9 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.find(sItemID);
 	if(it == m_mapItemList.end())
 	{
-		// Заменено printf → логирование через snprintf + InternalLog
+		//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_AUCTION_CPP_00003), sItemID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
-		//LG( "Auction_error", "EndAuction:�����ڵ�ID(%d)!", sItemID );
+		//LG( "Auction_error", "EndAuction:ID(%d)!", sItemID );
 		ToLogService("trade", LogLevel::Error, "EndAuction:inexistent ID({})!", sItemID );
 		return false;
 	}
@@ -75,7 +75,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 			game_db.IsChaOnline(pAucItem->GetCurChaID(), bOnline);
 			if(!bOnline)
 			{
-				//LG("Auction", "EndAuction: ��� %s ������, ����id = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
+				//LG("Auction", "EndAuction:  %s , id = %d, count = %d!\n", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
 				ToLogService("trade", "EndAuction: player {} not online, item id = {}, count = {}!", pAucItem->GetCurChaName().c_str(), sItemID, pAucItem->GetItemCount());
 			}
 			else
@@ -113,7 +113,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 	}
 	else
 	{
-		//LG("Auction", "EndAuction: ���Ľ���, û�����Ͷ��!\n");
+		//LG("Auction", "EndAuction: , !\n");
 		ToLogService("trade", "EndAuction: contest finish, no player to bid!");
 	}
 	SAFE_DELETE(pAucItem);
@@ -124,7 +124,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 
 void CAuctionSystem::ListAuction(CCharacter* pCha, CCharacter* pNpc)
 {
-	// Типизированная сериализация: список аукционных предметов (клиенту)
+	//  :    ()
 	net::msg::McListAuctionMessage auctionMsg;
 	for (auto it = m_mapItemList.begin(); it != m_mapItemList.end(); ++it)
 	{
@@ -141,7 +141,7 @@ void CAuctionSystem::ListAuction(CCharacter* pCha, CCharacter* pNpc)
 
 void CAuctionSystem::NotifyAuction( CCharacter* pCha, CCharacter* pNpc )
 {
-	// Типизированная сериализация: список аукционных предметов (окружению)
+	//  :    ()
 	net::msg::McListAuctionMessage auctionMsg;
 	for (auto it = m_mapItemList.begin(); it != m_mapItemList.end(); ++it)
 	{
@@ -161,7 +161,7 @@ BOOL CAuctionSystem::BidUp(CCharacter *pCha, short sItemID, uInt price)
 	map<short, CAuctionItem *>::iterator it = m_mapItemList.find(sItemID);
 	if(it == m_mapItemList.end())
 	{
-		//pCha->SystemNotice("�����ѽ���!");
+		//pCha->SystemNotice("!");
 		pCha->SystemNotice(RES_STRING(GM_AUCTION_CPP_00004));
 		return false;
 	}

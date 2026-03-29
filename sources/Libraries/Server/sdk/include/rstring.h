@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include <string.h>
 #include <stdlib.h>
@@ -19,18 +19,18 @@ public:
 class rstring
 {
 public:
-	rstring():m_buf(0),m_overwrite(true){};						//È±Ê¡¹¹Ôì
-	rstring(cChar *str):m_buf(0),m_overwrite(true)				//´®¹¹Ôì
+	rstring():m_buf(0),m_overwrite(true){};						//
+	rstring(cChar *str):m_buf(0),m_overwrite(true)				//
 	{
 		SetSize(uLong(strlen(str))+1);
 		strcpy(m_buf->getbuf(),str);
 	}
-	rstring(cwChar *str):m_buf(0),m_overwrite(true)				//¿í´®¹¹Ôì
+	rstring(cwChar *str):m_buf(0),m_overwrite(true)				//
 	{
 		SetSize(wctmbcpy((char*)0,str)+1);
 		wctmbcpy(m_buf->getbuf(),str);
 	}
-	explicit rstring(int i):m_buf(0),m_overwrite(true)			//ÕûÊý¹¹Ôì
+	explicit rstring(int i):m_buf(0),m_overwrite(true)			//
 	{
 		char l_str[21];
 		itoa(i,l_str,10);
@@ -38,12 +38,12 @@ public:
 		SetSize(uLong(strlen(l_str))+1);
 		strcpy(m_buf->getbuf(),l_str);
 	}
-	rstring(const rstring &str):m_buf(0),m_overwrite(false)		//¿½±´¹¹Ôì
+	rstring(const rstring &str):m_buf(0),m_overwrite(false)		//
 	{
 		m_buf	=str.m_buf;
 		if(m_buf)m_buf->adopt();
 	}
-	~rstring(){Free();}									//Îö¹¹º¯Êý
+	~rstring(){Free();}									//
 
 	rstring& operator=(cChar *str)
 	{
@@ -60,7 +60,7 @@ public:
 		*this =l_str;
 		return *this;
 	}
-	rstring& operator=(const rstring& str)		//¸³Öµ·û
+	rstring& operator=(const rstring& str)		//
 	{
 		Free();
 		m_overwrite	=false;
@@ -84,10 +84,10 @@ private:
 	void Free()const{if(m_buf){m_buf->discard();m_buf=0;}}
 
 	mutable	rstrbuf	*volatile	m_buf;
-	mutable bool				m_overwrite;//ÅäºÏSetSizeÊ¹ÓÃ
+	mutable bool				m_overwrite;//SetSize
 	inline static	PreAllocHeapPtr<rstrbuf> m_heap{ 128,10 };
 };
-//==ÄÚÁª³ÉÔ±¶¨Òå============================================================
+//==============================================================
 inline uLong rstring::SetSize(uLong size)const
 {
 	if(Size()<size)
@@ -98,10 +98,10 @@ inline uLong rstring::SetSize(uLong size)const
 		m_overwrite	=false;
 		Free();
 		m_buf =l_buf;
-	}else if(size<=1)Free();	//Îª¿Õ¾Í°Ñ×Ô¼ºÊÍ·Å
+	}else if(size<=1)Free();	//
 	return Size();
 }
-//==ÓÑÔª±È½Ï²Ù×÷·û¶¨Òå============================================================
+//==============================================================
 inline bool operator>(const rstring&str1,cChar*str2)
 {
 	return strcmp(str1,str2)>0;
@@ -126,7 +126,7 @@ inline bool operator==(const rstring&str1,const rstring&str2)
 {
 	return !strcmp(str1,str2);
 }
-//==ÓÑÔªÁ¬½Ó²Ù×÷·û+=¶¨Òå============================================================
+//==+=============================================================
 inline rstring& operator+=(rstring& str1,cChar *str2)
 {
 	str1.SetOverwrite(false);
@@ -150,7 +150,7 @@ inline rstring& operator+=(rstring& str1,const rstring& str2)
 
 	return str1;
 }
-//==ÓÑÔªÁ¬½Ó²Ù×÷·û+¶¨Òå============================================================
+//==+============================================================
 inline const rstring operator+ (const rstring&str1,cChar *str2)
 {
 	rstring	l_str =str1;
@@ -171,7 +171,7 @@ inline const rstring operator+ (const rstring&str1,const rstring&str2)
 	l_str+=str2;
 	return l_str;
 }
-//==ÓÑÔªÁ¬½Ó²Ù×÷·û<<¶¨Òå============================================================
+//==<<============================================================
 inline rstring& operator<<(rstring&str1,int i)				{return str1+=i;}
 inline rstring& operator<<(rstring&str1,cChar* str2)		{return str1+=str2;}
 inline rstring& operator<<(rstring&str1,const rstring& str2){return str1+=str2;}

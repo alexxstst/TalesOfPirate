@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #ifdef USE_IOCP
 
@@ -49,9 +49,9 @@ DWORD WINAPI myiocpclt::conn_thrd(LPVOID conn_thrd_ctx)
                 sk_ctx = that->connect(that->gtarray[i].GetIP().c_str(), that->gtarray[i].GetPort());
                 if (sk_ctx == NULL)
                 {
-                   // LG("iocp_conn", "���� Gate %s:%d ʧ�ܣ�\n", that->gtarray[i].GetIP().c_str(),
+                   // LG("iocp_conn", " Gate %s:%d \n", that->gtarray[i].GetIP().c_str(),
                      //   that->gtarray[i].GetPort());
-					 ToLogService("common", "connect Gate {}:{} failed��", that->gtarray[i].GetIP().c_str(),
+					 ToLogService("common", "connect Gate {}:{} failed", that->gtarray[i].GetIP().c_str(),
 						 that->gtarray[i].GetPort());
                 }
                 else
@@ -234,18 +234,18 @@ bool myiocpclt::addplayer(GatePlayer* gtplayer, GateServer* gt, unsigned long gt
     if (gt == NULL || gtplayer == NULL) return false;
     if (!gt->IsValid()) return false;
 
-    // ���� GatePlayer ĳЩ�ֶ�ֵ
+    //  GatePlayer 
     gtplayer->SetGate(gt);
     gtplayer->SetGateAddr(gtaddr);
 
-    // �� gtplayer ���뵽ͷ��
+    //  gtplayer 
     gtplayer->Prev = NULL;
     gtplayer->Next = gt->GetPlayerList();
 
     if (gtplayer->Next != NULL)
         gtplayer->Next->Prev = gtplayer;
 
-    // ����ͷ��
+    // 
     gt->GetPlayerList() = gtplayer;
 
     return true;
@@ -260,22 +260,22 @@ bool myiocpclt::delplayer(GatePlayer* gtplayer)
 
 	if (gt->m_listcurplayer == gtplayer)
 		gt->m_listcurplayer = gtplayer->Next;
-    // ���������޳�
+    // 
     GatePlayer*& playerlist = gt->GetPlayerList();    
     if ((gtplayer->Prev == NULL) && (gtplayer->Next == NULL))
     {
         if (gtplayer == playerlist)
-        { // ֻ��һ�������
+        { // 
             playerlist = NULL;
             return true;
         }
         else
-        { // �Ƿ���gtplayer
+        { // gtplayer
             return false;
         }
     }
     else if ((gtplayer->Prev == NULL) && (gtplayer->Next != NULL))
-    { // ͷ��
+    { // 
         playerlist = gtplayer->Next;
         playerlist->Prev = NULL;
 
@@ -283,14 +283,14 @@ bool myiocpclt::delplayer(GatePlayer* gtplayer)
         return true;
     }    
     else if ((gtplayer->Prev != NULL) && (gtplayer->Next == NULL))
-    { // β��
+    { // 
         gtplayer->Prev->Next = NULL;
 
         gtplayer->Prev = NULL;
         return true;
     }
     else
-    { // �м�
+    { // 
         gtplayer->Prev->Next = gtplayer->Next;
         gtplayer->Next->Prev = gtplayer->Prev;
 
@@ -318,7 +318,7 @@ bool myiocpclt::sendtoworld(Packet* pkt)
     GatePlayer* pPlayer;
     GateServer* pGate;
 
-    // ׼��Ϊÿһ�����ӵ� Gate ����֪ͨ��
+    //  Gate 
     for (int i = 0; i < gtnum; ++ i)
     {
         pGate = &gtarray[i];
@@ -360,7 +360,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, GatePlayer* playerlist)
 {
     if (playerlist == NULL || pkt == NULL) return false;
 
-    // �ҳ���Ч�� Gate
+    //  Gate
     unsigned short usCount[MAX_GATE];
     Packet* CChginf[MAX_GATE];
     Packet* tmppkt;
@@ -381,7 +381,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, GatePlayer* playerlist)
         }
     }
 
-    // ���� playerlist ����֯�������� Gate �İ�
+    //  playerlist  Gate 
     GatePlayer* tmp = playerlist;
     while (tmp != NULL)
     {
@@ -409,7 +409,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, GatePlayer* playerlist)
         tmp = tmp->GetNextPlayer();
     }
 
-    //��������һ�� ���� ���ݣ������ͳ�ȥ
+    //  
     for (i = 0; i < sValidGateNum; i++)
     {
         if (usCount[i] > 0)
@@ -431,7 +431,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
     //LG("SendToClient", "\nSendToClient called to notify %d players\n", array_cnt);
 #endif
 
-    // �ҳ���Ч�� Gate
+    //  Gate
     unsigned short usCount[MAX_GATE];
     Packet* CChginf[MAX_GATE];
     Packet* tmppkt;
@@ -461,7 +461,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
     //LG("SendToClient", "Valid Gate num = %d\n", sValidGateNum);
 #endif
 
-    // ���� uplayer_array ����֯�������� Gate �İ�
+    //  uplayer_array  Gate 
     int j;
     for (i = 0; i < array_cnt; ++ i)
     {
@@ -490,7 +490,7 @@ bool myiocpclt::sendtoclient(Packet* pkt, int array_cnt, uplayer* uplayer_array)
         }
     }
 
-    //��������һ�� ���� ���ݣ������ͳ�ȥ
+    //  
     for (i = 0; i < sValidGateNum; i++)
     {
 #ifdef defCOMMU_LOG

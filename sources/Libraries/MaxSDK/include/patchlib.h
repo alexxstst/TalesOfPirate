@@ -1,4 +1,4 @@
-#ifndef _PATCHLIB_H_
+﻿#ifndef _PATCHLIB_H_
 
 #define _PATCHLIB_H_
 

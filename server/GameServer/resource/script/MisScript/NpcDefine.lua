@@ -1,4 +1,4 @@
-print("-- [Loading] NpcDefine")
+﻿print("-- [Loading] NpcDefine")
 
 AddNpcInfo(1, "Argent Secretary - Salvier", 1, 1)
 AddNpcInfo(2, "Blacksmith - Goldie", 1, 1)

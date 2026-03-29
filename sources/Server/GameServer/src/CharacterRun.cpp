@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Character.h"
 #include "Player.h"
 #include "GameDB.h"
@@ -6,10 +6,10 @@
 #include "SubMap.h"
 
 //----------------------------------------------
-//       ����Character�����Ķ�ʱѭ������
+//       Character
 //----------------------------------------------
 
-// ��ѭ�����
+// 
 void CCharacter::Run(DWORD dwCurTime)
 {
 		MPTimer	t;
@@ -29,10 +29,10 @@ void CCharacter::Run(DWORD dwCurTime)
 
 	m_dwCellRunTime[chCount++] = t.End();
 
-	// ����(���������)����ʱ����
+	// ()
 	if (!IsPlayerCha() && !IsNpc())
 	{
-		if (CheckLifeTime()) // ʱ�䵽
+		if (CheckLifeTime()) // 
 		{
 			if (m_HostCha && m_HostCha->IsPlayerCha())
 			{
@@ -40,23 +40,23 @@ void CCharacter::Run(DWORD dwCurTime)
 				if (nPetNum > 0)
 					m_HostCha->GetPlyMainCha()->SetPetNum(nPetNum - 1);
 			}
-			// ����һ���ű���Ϊ�¼�֪ͨ 
+			//  
 			g_CParser.DoString("event_cha_lifetime", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, DOSTRING_PARAM_END);
-			Free(); // �ͷ�, ��Ұ֪ͨ
+			Free(); // , 
 			// char szLua[255];
 			// lua_dostring(g_pLuaState, szLua);
 			return;
 		}
 	}
 
-	//�������ʱ����
+	//
 	/*if(IsPlayerCha() && !IsGMCha2() && ((!(GetAreaAttr() & enumAREA_TYPE_NOT_FIGHT)) || IsBoat()) && !GetPlyCtrlCha()->GetSubMap()->GetMapRes()->CanPK())
 	{
 		GetPlyMainCha()->CheatRun(dwCurTime);
 	}*/
 
 	//add by jilinlee 2007/4/20
-	//�Ƿ��ڶ���״̬
+	//
 	if (IsReadBook())
 	{
 		if (bIsLiveing)
@@ -72,17 +72,17 @@ void CCharacter::Run(DWORD dwCurTime)
 				dwReadBookTime = g_CParser.GetReturnNumber(0);
 			}
 			//else 
-			//	dwReadBookTime = 600*1000;   //ȡ�����Ļ���Ĭ��Ϊʮ���ӡ�
+			//	dwReadBookTime = 600*1000;   //
 			if (dwCurTime - m_SReadBook.dwLastReadCallTick >= dwReadBookTime)
 			{
-				//���ýű�����
+				//
 				char chSkillLv = 0;
 				static short sSkillID = 0;
 				if (sSkillID == 0 && g_CParser.DoString("ReadBookSkillId", enumSCRIPT_RETURN_NUMBER, 1, DOSTRING_PARAM_END))
 				{
 					sSkillID = g_CParser.GetReturnNumber(0);
 				}
-				SSkillGrid* pSkill = this->m_CSkillBag.GetSkillContByID(sSkillID); //���鼼�ܵļ���ID
+				SSkillGrid* pSkill = this->m_CSkillBag.GetSkillContByID(sSkillID); //ID
 				if (pSkill)
 				{
 					chSkillLv = pSkill->chLv;
@@ -128,7 +128,7 @@ void CCharacter::Run(DWORD dwCurTime)
 		GetPlayer()->Run(dwCurTime);
 	m_dwCellRunTime[chCount++] = t.End();
 
-	// ��ʱ�����
+	// 
 	t.Begin();
 	if (m_timerAI.IsOK(dwCurTime))         OnAI(dwCurTime);
 	m_dwCellRunTime[chCount++] = t.End();
@@ -168,7 +168,7 @@ void CCharacter::Run(DWORD dwCurTime)
 		if (m_timerPing.IsOK(dwCurTime))
 			CheckPing();
 
-		// Типизированная сериализация: пакет-шум (античит — случайные данные с фиктивным cmd)
+		//  : - (      cmd)
 		if (m_timerNetSendFreq.IsOK(dwCurTime) && m_ulNetSendLen > 0)
 		{
 			auto WtPk = net::msg::serializeNoisePacket(m_ulNetSendLen);
@@ -183,14 +183,14 @@ void CCharacter::RunEnd(DWORD dwCurTime)
 {
 		if (m_byExit == CHAEXIT_BEGIN && m_timerExit.IsOK(dwCurTime))
 		{
-			// ��ʽ�˳�
+			// 
 			Exit();
 		}
 }
 
 void CCharacter::StartExit()
 {
-		//LG( "��ʱ�˳�", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
+		//LG( "", "StartExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("common", "StartExit: Name = {},exitcode = {}", this->GetName(), m_byExit);
 	if (m_byExit != CHAEXIT_BEGIN)
 	{
@@ -198,7 +198,7 @@ void CCharacter::StartExit()
 		m_byExit = CHAEXIT_BEGIN;
 		m_timerExit.Begin(dwExitTime);
 
-		// Типизированная сериализация: начало обратного отсчёта выхода
+		//  :    
 		auto l_wpk = net::msg::serialize(net::msg::McStartExitMessage{(int64_t)dwExitTime});
 		ReflectINFof(this, l_wpk);
 	}
@@ -206,14 +206,14 @@ void CCharacter::StartExit()
 
 void CCharacter::CancelExit()
 {
-		//LG( "��ʱ�˳�", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
+		//LG( "", "CancelExit: Name = %s,exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("common", "CancelExit: Name = {},exitcode = {}", this->GetName(), m_byExit);
 	if (m_byExit == CHAEXIT_BEGIN)
 	{
 		m_byExit = CHAEXIT_NONE;
 		m_timerExit.Reset();
 
-		// Типизированная сериализация: отмена выхода
+		//  :  
 		auto l_wpk = net::msg::serializeMcCancelExitCmd();
 		ReflectINFof(this, l_wpk);
 	}
@@ -221,10 +221,10 @@ void CCharacter::CancelExit()
 
 void CCharacter::Exit()
 {
-		// ��ʽ�˳�
-		//LG( "��ʱ�˳�", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit );
+		// 
+		//LG( "", "Exit: Name = %s, exitcode = %d\n", this->GetName(), m_byExit );
 		ToLogService("common", "Exit: Name = {}, exitcode = {}", this->GetName(), m_byExit);
-	// Типизированная сериализация: выход игрока (GameServer→GateServer)
+	//  :   (GameServerGateServer)
 	auto l_wpk = net::msg::serializeGmPlayerExitCmd();
 	ReflectINFof(this, l_wpk);
 	g_pGameApp->GoOutGame(this->GetPlayer(), true);
@@ -233,7 +233,7 @@ void CCharacter::Exit()
 	m_timerExit.Reset();
 }
 
-// ��ʱ������仯
+// 
 void CCharacter::OnAreaCheck(DWORD dwCurTime)
 {
 }
@@ -257,7 +257,7 @@ BOOL CCharacter::SaveMissionData()
 	if (!pCPlayer) return FALSE;
 	if (!game_db.SaveMissionData(pCPlayer, pCPlayer->GetDBChaId()))
 	{
-		//SystemNotice( "�½���ɫ��%s���洢��ɫ��ʼ������Ϣʧ�ܣ�ID[0x%X]", this->GetName(), pCPlayer->GetDBChaId() );
+		//SystemNotice( "%sID[0x%X]", this->GetName(), pCPlayer->GetDBChaId() );
 		SystemNotice(RES_STRING(GM_CHARACTERRUN_CPP_00001), this->GetName(), pCPlayer->GetDBChaId());
 		return FALSE;
 	}
@@ -272,7 +272,7 @@ void CCharacter::OnTeamNotice(DWORD dwCurTime)
 	pCPlayer->NoticeTeamMemberData();
 }
 
-// �ű���ʱ��������HP�ظ����������ĵ�
+// HP
 void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 {
 		if (!IsPlayerCha())
@@ -284,7 +284,7 @@ void CCharacter::OnScriptTimer(DWORD dwExecTime, bool bNotice)
 		m_CKitbag.SetChangeFlag(false);
 	g_CParser.DoString("cha_timer", enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this, enumSCRIPT_PARAM_NUMBER, 2, defCHA_SCRIPT_TIMER / 1000, dwExecTime, DOSTRING_PARAM_END);
 
-	// ���ں���ʱ����������
+	// 
 	if (lOldHP > 0 && getAttr(ATTR_HP) <= 0)
 	{
 		if (IsBoat() && IsPlayerCha())

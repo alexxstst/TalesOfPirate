@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UIPKDialog.h"
 #include "NetProtocol.h"
 #include "UIFormMgr.h"
@@ -19,7 +19,7 @@ bool CPkDialog::Init()
 {
 	CFormMgr &mgr = CFormMgr::s_Mgr;
 
-	{	// pk ��ʼǰ�ĶԻ���
+	{	// pk 
 		frmTeamPkStart = mgr.Find("frmTeamPK");
 		if ( !frmTeamPkStart)
 		{
@@ -56,11 +56,11 @@ bool CPkDialog::Init()
 	}
 
 	{
-		 // pk ������ĶԻ���
+		 // pk 
 		//frmTeamPkEnd = mgr.Find("frmfrmTeamPkStart");
 		//if ( !frmTeamPkEnd)
 		//{
-		//	LG("gui", "npc.clu��û�ж������frmfrmTeamPk");
+		//	LG("gui", "npc.clufrmfrmTeamPk");
 		//	return false;
 		//}
 		//frmTeamPkEnd->evtEntrustMouseEvent = _MainMousePkEndEvent;
@@ -70,7 +70,7 @@ bool CPkDialog::Init()
 		//{
 		//	lvEndTeams[i] = dynamic_cast<CListView*>(frmTeamPkEnd->Find(szBuf));
 		//	if (!lvEndTeams[i]) 
-		//		return Error("npc.clu����<%s>���Ҳ����ؼ�<%s>",
+		//		return Error("npc.clu<%s><%s>",
 		//					 frmTeamPkEnd->GetName(), 
 		//					 szBuf);
 		//}

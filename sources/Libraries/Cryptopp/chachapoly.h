@@ -1,4 +1,4 @@
-// chachapoly.h - written and placed in the public domain by Jeffrey Walton
+﻿// chachapoly.h - written and placed in the public domain by Jeffrey Walton
 //                RFC 8439, Section 2.8, AEAD Construction, http://tools.ietf.org/html/rfc8439
 
 /// \file chachapoly.h

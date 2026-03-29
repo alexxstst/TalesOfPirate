@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I N L S . H
  *
  *	Internationalization Support Utilities

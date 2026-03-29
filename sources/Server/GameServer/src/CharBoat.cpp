@@ -1,4 +1,4 @@
-// CharBoat.cpp created by knight 2005.4.18
+﻿// CharBoat.cpp created by knight 2005.4.18
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "CharBoat.h"
@@ -58,7 +58,7 @@ namespace mission
 
 	void CCharBoat::GetBerthName( USHORT sBerthID, char szBerth[], USHORT sLen )
 	{
-		// ����NPC�ű��Ի���������
+		// NPC
 		lua_getglobal( g_pLuaState, "GetBerthData" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -90,26 +90,26 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
 		if( pInfo == NULL ) 
 		{
-			//owner.SystemNotice( "��ȡ��ֻ��Ϣʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", sBoatID );
+			//owner.SystemNotice( "ID[%d]!", sBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00042), sBoatID );
 			return TRUE;
 		}
 
 		if( pInfo->sLvLimit > (USHORT)owner.getAttr( ATTR_LV ) )
 		{
-			//owner.SystemNotice( "�������㣬��Ҫ�ȼ�%d��", pInfo->sLvLimit );
+			//owner.SystemNotice( "%d", pInfo->sLvLimit );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00043), pInfo->sLvLimit );
 			return TRUE;
 		}
 
-		// ����ְҵ������
+		// 
 		if( pInfo->sPfLimit[0] == USHORT(-1) )
 		{
 			return FALSE;
 		}
 
 		char szData[256];
-		//strcpy( szData, "�������㣬��Ҫְҵ��" );
+		//strcpy( szData, "" );
 		strcpy( szData, RES_STRING(GM_CHARBOAT_CPP_00044));
 		BOOL bRet = TRUE;
 		USHORT sPf = (USHORT)owner.getAttr( ATTR_JOB );
@@ -118,11 +118,11 @@ namespace mission
 			strcat( szData, g_GetJobName( pInfo->sPfLimit[i] ) );
 			if( i + 1 < pInfo->sNumPfLimit )
 			{
-				strcat( szData, "��" );
+				strcat( szData, "" );
 			}
 			else
 			{
-				strcat( szData, "��" );
+				strcat( szData, "" );
 			}
 			if( pInfo->sPfLimit[i] == sPf ) 
 			{
@@ -143,16 +143,16 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoat );
 		if( pInfo == NULL ) 
 		{
-			//LG( "boat_error", "���ô�ֻ�����Ϣ������Ĵ�ֻ��ϢID[%d]!", AttrInfo.sBoat );
+			//LG( "boat_error", "ID[%d]!", AttrInfo.sBoat );
 			ToLogService("errors", LogLevel::Error, "set boat surface informationg,error information of boat  ID[{}]!", AttrInfo.sBoat );
 			return FALSE;
 		}
 
-		// ��ֻ�Ƿ���Ը������
+		// 
 		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pInfo->sBody );
 		if( pData == NULL ) 
 		{
-			//LG( "boat_error", "���ô�ֻ�����Ϣ������Ĵ�����ϢID[%d]!", pInfo->sBody );
+			//LG( "boat_error", "ID[%d]!", pInfo->sBody );
 			ToLogService("errors", LogLevel::Error, "set boat surface informationg,error information of boat  ID[{}]!", pInfo->sBody );
 			return FALSE;
 		}
@@ -177,12 +177,12 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoatID );
 		if( pInfo == NULL ) 
 		{
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", AttrInfo.sBoatID );
+			//owner.SystemNotice( "ID[%d]!", AttrInfo.sBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00010), AttrInfo.sBoatID );
 			return FALSE;
 		}
 
-		// ��ֻ�Ƿ���Ը������
+		// 
 		xShipBuildInfo Data;
 		memset( &Data, 0, sizeof(xShipBuildInfo) );
 		Data.dwMoney = 0;
@@ -200,7 +200,7 @@ namespace mission
 		Data.sCapacity = pInfo->sCapacity;
 		GetBerthName( sBerthID, Data.szBerth, BOAT_MAXSIZE_NAME - 1 );
 
-		// Типизированная сериализация: синхронизация атрибутов корабля
+		//  :   
 		net::msg::McBoatSyncAttrMessage boatMsg{};
 		boatMsg.cmd = sCmd;
 		boatMsg.boatId = dwBoatID;
@@ -324,7 +324,7 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "���Ѿ��ɹ�ȡ���˽��촬ֻ�ļƻ���" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00003) );
 		}
 	}
@@ -333,35 +333,35 @@ namespace mission
 	{
 		if( owner.GetPlayer()->IsLuanchOut() )
 		{
-			//owner.SystemNotice( "��ǰ����״̬,�����Խ��촬ֻ��" );
+			//owner.SystemNotice( "," );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00004) );
 			return FALSE;
 		}
 
 		if( owner.GetTradeData() )
 		{
-			//owner.SystemNotice( "��ǰ����״̬,�����Խ��촬ֻ��" );
+			//owner.SystemNotice( "," );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00005) );
 			return FALSE;
 		}
 
 		if( owner.GetStallData() )
 		{
-			//owner.SystemNotice( "���ڰ�̯�������Խ��촬ֻ��" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00006) );
 			return FALSE;
 		}
 
 		if( owner.m_CKitbag.IsLock() || !owner.GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//owner.SystemNotice( "�����ѱ������������Խ��촬ֻ��" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00007) );
 			return FALSE;
 		}
 
         if( owner.m_CKitbag.IsPwdLocked() )
         {
-            //owner.SystemNotice( "�����ѱ����������������Խ��촬ֻ��" );
+            //owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00008) );
 			return FALSE;
         }
@@ -369,7 +369,7 @@ namespace mission
 		//add by ALLEN 2007-10-16
 				if(owner.IsReadBook())
 		{
-			//owner.SystemNotice("���ڶ��飬�����Խ��촬ֻ��");
+			//owner.SystemNotice("");
 			owner.SystemNotice(RES_STRING(GM_CHARBOAT_CPP_00009));
 			return FALSE;
 		}
@@ -377,7 +377,7 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
 		if( pInfo == NULL ) 
 		{
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", sBoatID );
+			//owner.SystemNotice( "ID[%d]!", sBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00010), sBoatID );
 			return FALSE;
 		}
@@ -387,20 +387,20 @@ namespace mission
 			// fixed me to modify
 			owner.GetBoat()->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "�ý�ɫ�Ѿ���ʼ�˴�ֻ����ID[%d]��", sBoatID );
+			//owner.SystemNotice( "ID[%d]", sBoatID );
 			//return FALSE;
 		}
 
 		if( owner.GetPlayer()->IsBoatFull() )
 		{
-			//owner.SystemNotice( "��ӵ�еĴ�ֻ�����������������ٽ����µĴ�ֻ��" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00011) );
 			return  FALSE;
 		}
 
 		if( owner.m_CKitbag.IsFull() )
 		{
-			//owner.BickerNotice( "���������������촬ֻʧ�ܣ�" );
+			//owner.BickerNotice( "" );
 			owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00012) );
 			return FALSE;
 		}
@@ -408,7 +408,7 @@ namespace mission
 		CCharacter* pBoat = g_pGameApp->GetNewCharacter();
 		if( pBoat == NULL )
 		{
-			//owner.SystemNotice( "������ֻʧ�ܣ����䴬ֻ�ڴ�ʧ��!ID[%d]", sBoatID );
+			//owner.SystemNotice( "!ID[%d]", sBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00013), sBoatID );
 			return FALSE;
 		}
@@ -417,7 +417,7 @@ namespace mission
 		pBoat->setAttr( ATTR_BOAT_SHIP, sBoatID );
 		pBoat->setAttr( ATTR_BOAT_BERTH, sBerthID );
 
-		// ͬ����ֻ������
+		// 
 		BOAT_SYNC_ATTR AttrInfo;
 		memset( &AttrInfo, 0, sizeof(BOAT_SYNC_ATTR) );
 		AttrInfo.byHeader = 0;
@@ -432,10 +432,10 @@ namespace mission
 		
 		if( !SyncAttr( owner, 0, CMD_MC_CREATEBOAT, sBerthID, AttrInfo ) )
 		{
-			// ͬ����ֻ����ʧ�ܣ�ȡ����ֻ����
+			// 
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "�����ֻ����������Ϣ��" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00014) );
 			return FALSE;
 		}
@@ -453,7 +453,7 @@ namespace mission
 		CCharacter* pBoat = pPlayer->GetBoat( dwBoatID );
 		if( !pBoat )
 		{
-			//owner.SystemNotice( "�Ҳ����ô�����Ϣ��ID[0x%X]", dwBoatID );
+			//owner.SystemNotice( "ID[0x%X]", dwBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00015), dwBoatID );
 			return FALSE;
 		}
@@ -482,7 +482,7 @@ namespace mission
 		CCharacter* pBoat = pPlayer->GetBoat( dwBoatID );
 		if( !pBoat )
 		{
-			//owner.SystemNotice( "�Ҳ����ô�����Ϣ��ID[0x%X]", dwBoatID );
+			//owner.SystemNotice( "ID[0x%X]", dwBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00015), dwBoatID );
 			return FALSE;
 		}
@@ -505,7 +505,7 @@ namespace mission
 		CCharacter* pBoat = owner.GetBoat();
 		if( !pBoat ) 
 		{
-			//owner.SystemNotice( "Update:�㻹δ��ʼ���촬ֻ�����ȿ�ʼ��" );
+			//owner.SystemNotice( "Update:" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00016) );
 			return FALSE;
 		}
@@ -519,7 +519,7 @@ namespace mission
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
 		if( pInfo == NULL ) 
 		{
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", sBoatID );
+			//owner.SystemNotice( "ID[%d]!", sBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00010), sBoatID );
 			return FALSE;
 		}
@@ -610,35 +610,35 @@ namespace mission
 	{
 		if( owner.GetPlayer()->IsLuanchOut() )
 		{
-			//owner.SystemNotice( "��ǰ����״̬,�����Խ��촬ֻ��" );
+			//owner.SystemNotice( "," );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00004) );
 			return FALSE;
 		}
 
 		if( owner.GetTradeData() )
 		{
-			//owner.SystemNotice( "��ǰ����״̬,�����Խ��촬ֻ��" );
+			//owner.SystemNotice( "," );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00005) );
 			return FALSE;
 		}
 
 		if( owner.GetStallData() )
 		{
-			//owner.SystemNotice( "���ڰ�̯�������Խ��촬ֻ��" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00006) );
 			return FALSE;
 		}
 
 		if( owner.m_CKitbag.IsLock() || !owner.GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//owner.SystemNotice( "�����ѱ������������Խ��촬ֻ��" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00007) );
 			return FALSE;
 		}
 
         if( owner.m_CKitbag.IsPwdLocked() )
         {
-            //owner.SystemNotice( "�����ѱ����������������Խ��촬ֻ��" );
+            //owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00008) );
 			return FALSE;
         }
@@ -646,7 +646,7 @@ namespace mission
 		//add by ALLEN 2007-10-16
 		if( owner.IsReadBook() )
         {
-           // owner.SystemNotice( "���ڶ��飬�����Խ��촬ֻ��" );
+           // owner.SystemNotice( "" );
 			 owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00009) );
 			return FALSE;
         }
@@ -654,7 +654,7 @@ namespace mission
 		CCharacter* pBoat = owner.GetBoat();
 		if( !pBoat ) 
 		{
-			//owner.SystemNotice( "MakeBoat:�㻹δ��ʼ���촬ֻ�����ȿ�ʼ��" );
+			//owner.SystemNotice( "MakeBoat:" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00017) );
 			return FALSE;
 		}
@@ -663,28 +663,28 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.BickerNotice( "���������������촬ֻʧ�ܣ�" );
+			//owner.BickerNotice( "" );
 			owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00012) );
 			return FALSE;
 		}
 
-		// ���ӵ�player������
+		// player
 		CPlayer* pPlayer = owner.GetPlayer();
 		if( !pPlayer )
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "�����Ҳ��������ߵ�player���ݣ�" );
+			//owner.SystemNotice( "player" );
 			owner.SystemNotice(RES_STRING(GM_CHARBOAT_CPP_00018) );
 			return FALSE;
 		}
 
-		// ����Ƿ������������ֻ
+		// 
 		if( pPlayer->IsBoatFull() )
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "��Ĵ�ֻ�����������������ٽ��죡" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00019) );
 			return FALSE;
 		}
@@ -700,17 +700,17 @@ namespace mission
 			{
 				pBoat->Free();
 				owner.SetBoat( NULL );
-				//owner.BickerNotice( "��ֻ�����ַ����ȱ�����%d-%d���ַ�֮�䣡", BOAT_MAXSIZE_MINNAME, BOAT_MAXSIZE_BOATNAME - 1 );
+				//owner.BickerNotice( "%d-%d", BOAT_MAXSIZE_MINNAME, BOAT_MAXSIZE_BOATNAME - 1 );
 				owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00020), BOAT_MAXSIZE_MINNAME, BOAT_MAXSIZE_BOATNAME - 1 );
 				return FALSE;
 			}
 
-			// У�鴬���Ƿ���ȷ
+			// 
 			if( !IsValidName( pszData.c_str(), (USHORT)nLen ) || !CTextFilter::IsLegalText( CTextFilter::NAME_TABLE, pszData ) )
 			{
 				pBoat->Free();
 				owner.SetBoat( NULL );
-				//owner.BickerNotice( "��ֻ���ơ�%s���Ƿ���", pszData );
+				//owner.BickerNotice( "%s", pszData );
 				owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00021), pszData.c_str() );
 				return FALSE;
 			}
@@ -719,10 +719,10 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "��ɫ%s�����˷Ƿ����ַ�ָ�룡", owner.GetName() );
+			//owner.SystemNotice( "%s", owner.GetName() );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00022), owner.GetName() );
-			//LG( "boat_error", "��ɫ%s�����˷Ƿ����ַ�ָ�룡", owner.GetName() );
-			ToLogService("errors", LogLevel::Error, "character{} pass unlawful character pointer��", owner.GetName() );
+			//LG( "boat_error", "%s", owner.GetName() );
+			ToLogService("errors", LogLevel::Error, "character{} pass unlawful character pointer", owner.GetName() );
 			return FALSE;			
 		}
 
@@ -739,7 +739,7 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", Data.sBoat );
+			//owner.SystemNotice( "ID[%d]!", Data.sBoat );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00010), Data.sBoat );
 			return FALSE;
 		}
@@ -825,14 +825,14 @@ namespace mission
 			}
 		}
 		
-		// ���㴬ֻ������Լӳ���Ϣ
+		// 
 		xShipAttrInfo Info;
 		memset( &Info, 0, sizeof(xShipAttrInfo) );
 		if( !GetData( owner, pInfo->byIsUpdate, Data, Info ) )
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "���촬ֻ����������Լӳ���Ϣ����" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00023) );
 			return FALSE;
 		}
@@ -841,7 +841,7 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "���촬ֻ%s��Ҫ��Ǯ%d����ȷ�����Ƿ����㹻��Ǯ��", pInfo->szName, Info.dwMoney );
+			//owner.SystemNotice( "%s%d", pInfo->szName, Info.dwMoney );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00024), pInfo->szName, Info.dwMoney );
 			return TRUE;
 		}
@@ -851,50 +851,50 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "���촬ֻ���ݿ�洢ʧ�ܣ�" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00025) );
 			return FALSE;
 		}
 
 		pBoat->m_CKitbag.SetCapacity( Data.sCapacity );
 
-		// ��鴬��֤��������Ϣ
+		// 
 		SItemGrid SGridCont;
 		SGridCont.sID = pInfo->sItemID;
 		SGridCont.sNum = 1;
 		owner.ItemInstance( enumITEM_INST_TASK, &SGridCont );
 		SGridCont.lDBParam[enumITEMDBP_INST_ID] = dwBoatID;
 
-		// ����ʵ������Ʒ
+		// 
 		owner.m_CKitbag.SetChangeFlag(false);
 		Short sPushPos = defKITBAG_DEFPUSH_POS;
 		Short sPushRet = owner.KbPushItem( false, false, &SGridCont, sPushPos );
-		if( sPushRet == enumKBACT_ERROR_LOCK ) // ������������
+		if( sPushRet == enumKBACT_ERROR_LOCK ) // 
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.BickerNotice( "�������ѱ����������촬ֻʧ�ܣ�" );
+			//owner.BickerNotice( "" );
 			owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00026) );
 			return FALSE;
 		}
-		else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // ���߲�����
+		else if( sPushRet == enumKBACT_ERROR_PUSHITEMID ) // 
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.BickerNotice( "�õ��߲����ڣ����촬ֻʧ�ܣ�" );
+			//owner.BickerNotice( "" );
 			owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00027) );
 			return FALSE;
 		}
-		else if( sPushRet == enumKBACT_ERROR_FULL ) // ��������������������
+		else if( sPushRet == enumKBACT_ERROR_FULL ) // 
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.BickerNotice( "���������������촬ֻʧ�ܣ�" );
+			//owner.BickerNotice( "" );
 			owner.BickerNotice( RES_STRING(GM_CHARBOAT_CPP_00012) );
 			return FALSE;
 		}
 
-		// ���ô�ֻ��֤��ID
+		// ID
 		pBoat->setAttr( ATTR_CHATYPE, enumCHACTRL_PLAYER );		
 		pBoat->setAttr( ATTR_BOAT_DBID, SGridCont.lDBParam[enumITEMDBP_INST_ID] );
 		pBoat->setAttr( ATTR_BOAT_DIECOUNT, 0 );
@@ -909,12 +909,12 @@ namespace mission
 		pBoat->SetName( Data.szName );
 		pBoat->setAttr( ATTR_LV, 1 );
 
-		// ��ȡ��ֻ��ɫ������Ϣ
+		// 
 		pBoat->SetCat( pInfo->sCharID );
 		CChaRecord* pRec = GetChaRecordInfo( pInfo->sCharID );
 		if( pRec == NULL )
 		{
-			//owner.SystemNotice( "������ֻ���޷��õ���Ч������Ϣ��ID[%d]", pInfo->sCharID );
+			//owner.SystemNotice( "ID[%d]", pInfo->sCharID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00028), pInfo->sCharID );
 			pBoat->Free();
 			owner.SetBoat( NULL );
@@ -932,7 +932,7 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "������ֻʧ�ܣ����ô�ֻ�������ʧ��!ID[%d]", Data.sBoat );
+			//owner.SystemNotice( "!ID[%d]", Data.sBoat );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00029), Data.sBoat );
 			return FALSE;
 		}
@@ -941,7 +941,7 @@ namespace mission
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "���ô�ֻ����ʧ�ܣ�" );
+			//owner.SystemNotice( "" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00030) );
 			return FALSE;
 		}
@@ -949,24 +949,24 @@ namespace mission
 		pBoat->SetPlayer( owner.GetPlayer() );
 		if( !game_db.SaveBoat( *pBoat, enumSAVE_TYPE_TIMER ) )
 		{
-			//owner.SystemNotice( "��ɫ%s�Ĵ�ֻ%s��ʱ���ݴ洢ʧ�ܣ�", owner.GetName(), pBoat->GetName() );
+			//owner.SystemNotice( "%s%s", owner.GetName(), pBoat->GetName() );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00031), owner.GetName(), pBoat->GetName() );
-			//LG( "boat_error", "��ɫ%s�Ĵ�ֻ%s��ʱ���ݴ洢ʧ�ܣ�", owner.GetName(), pBoat->GetName() ); 
-			ToLogService("errors", LogLevel::Error, "character{} boat {} temporary data memory failed��", owner.GetName(), pBoat->GetName() ); 
+			//LG( "boat_error", "%s%s", owner.GetName(), pBoat->GetName() ); 
+			ToLogService("errors", LogLevel::Error, "character{} boat {} temporary data memory failed", owner.GetName(), pBoat->GetName() ); 
 		}
 
 		if( !pPlayer->AddBoat( *pBoat ) )
 		{
 			pBoat->Free();
 			owner.SetBoat( NULL );
-			//owner.SystemNotice( "���Ӵ�ֻ���ݵ�player��ʧ�ܣ�" );
+			//owner.SystemNotice( "player" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00032) );
 			return FALSE;
 		}
 
 		owner.SynKitbagNew( enumSYN_KITBAG_SYSTEM );
 
-		// ������ʱ�촬����Ϊ��
+		// 
 		owner.SetBoat( NULL );
 		
 		Char szLogName[defLOG_NAME_LEN] = "";
@@ -978,7 +978,7 @@ namespace mission
 
 	BOOL CCharBoat::SetBoatAttr( CCharacter& owner, CCharacter& boat, const xShipInfo& ShipInfo, const BOAT_DATA& Data, bool bFromFile, bool bLoadState )
 	{
-		// ��ֻ�Ƿ���Ը������
+		// 
 		xShipAttrInfo Info;
 		memset( &Info, 0, sizeof(xShipAttrInfo) );
 		Info.dwMinAttack = ShipInfo.sMinAttack;
@@ -999,7 +999,7 @@ namespace mission
 		Info.dwScope = ShipInfo.sScope;
 		Info.dwCannonSpeed = ShipInfo.sCannonSpeed;
 
-		// ���㴬ֻ������Լӳ���Ϣ
+		// 
 		if( !GetData( owner, ShipInfo.byIsUpdate, Data, Info ) )
 		{
 			return FALSE;
@@ -1017,15 +1017,15 @@ namespace mission
 		
 		if( boat.getAttr( ATTR_HP ) < 0 )
 		{
-			//LG( "boatattr_error", "SetBoatAttr:��ֻ��ǰHP��ֵ����ȷ���Զ��ָ���HP = %d", boat.getAttr( ATTR_HP ) );
-			ToLogService("errors", LogLevel::Error, "SetBoatAttr: boat currently HP value error��automatism resume��HP = {}", boat.getAttr( ATTR_HP ) );
+			//LG( "boatattr_error", "SetBoatAttr:HPHP = %d", boat.getAttr( ATTR_HP ) );
+			ToLogService("errors", LogLevel::Error, "SetBoatAttr: boat currently HP value errorautomatism resumeHP = {}", boat.getAttr( ATTR_HP ) );
 			boat.setAttr( ATTR_HP, 1 );
 		}
 
 		if( boat.getAttr( ATTR_SP ) < 0 )
 		{
-			//LG( "boatattr_error", "SetBoatAttr:��ֻ��ǰSP��ֵ����ȷ���Զ��ָ���SP = %d", boat.getAttr( ATTR_SP ) );
-			ToLogService("errors", LogLevel::Error, "SetBoatAttr: boat currently SP value error��automatism resume��SP = {}", boat.getAttr( ATTR_SP ) );
+			//LG( "boatattr_error", "SetBoatAttr:SPSP = %d", boat.getAttr( ATTR_SP ) );
+			ToLogService("errors", LogLevel::Error, "SetBoatAttr: boat currently SP value errorautomatism resumeSP = {}", boat.getAttr( ATTR_SP ) );
 			boat.setAttr( ATTR_SP, 1 );
 		}
 
@@ -1058,7 +1058,7 @@ namespace mission
 		return TRUE;
 	}
 
-	// chType��0����ɫ���ߡ�1����ͼ�л�
+	// chType01
 	BOOL CCharBoat::LoadBoat( CCharacter& owner, char chType )
 	{
 		USHORT sNum = owner.m_CKitbag.GetUseGridNum();
@@ -1071,7 +1071,7 @@ namespace mission
 				CItemRecord* pItem = GetItemRecordInfo( pGridCont->sID );
 				if( !pItem )
 				{
-					/*owner.SystemNotice( "δ���ֽ�ɫ%s�����е�%d�����Ʒ��ϢID[%d]��", owner.GetName(), 
+					/*owner.SystemNotice( "%s%dID[%d]", owner.GetName(), 
 						pGridCont->sID );*/
 					owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00033), owner.GetName(), 
 						pGridCont->sID );
@@ -1099,7 +1099,7 @@ namespace mission
 		CCharacter* pBoat = g_pGameApp->GetNewCharacter();
 		if( pBoat == NULL )
 		{
-			//LG( "monsterboat_error", "��ɫ����װ�ش�ֻ���䴬ֻ�ڴ�ʧ��!" );
+			//LG( "monsterboat_error", "!" );
 			ToLogService("errors", LogLevel::Error, "when character online,loading boat and assign memory failed " );
 			return FALSE;
 		}
@@ -1112,11 +1112,11 @@ namespace mission
 		// Info.sBerth = (USHORT)pBoat->getAttr( ATTR_BOAT_BERTH );
 		Info.sBoat = sBoatID;
 
-		// ���ô��Ļ�������
+		// 
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( Info.sBoat );
 		if( pInfo == NULL ) 
 		{
-			//LG( "monsterboat_error", "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", Info.sBoat );
+			//LG( "monsterboat_error", "ID[%d]!", Info.sBoat );
 			ToLogService("errors", LogLevel::Error, "craete boat failed , error information of boat ID[{}]!", Info.sBoat );
 			return FALSE;
 		}
@@ -1151,21 +1151,21 @@ namespace mission
 		}
 		Info.sEquipment = pInfo->sEquipment[byIndex];
 
-		// ��ȡ��ֻ��ɫ������Ϣ
+		// 
 		CChaRecord* pRec = GetChaRecordInfo( pInfo->sCharID );
 		if( pRec == NULL )
 		{
-			//LG( "monsterboat_error", "������ֻ���޷��õ���Ч������Ϣ��ID[%d]", pInfo->sCharID );
-			ToLogService("errors", LogLevel::Error, "create boat��cannot get efficiency attribute information��ID[{}]", pInfo->sCharID );
+			//LG( "monsterboat_error", "ID[%d]", pInfo->sCharID );
+			ToLogService("errors", LogLevel::Error, "create boatcannot get efficiency attribute informationID[{}]", pInfo->sCharID );
 			pBoat->Free();
 			return FALSE;
 		}
 		pBoat->m_pCChaRecord = pRec;		
 
-		//LG( "monsterboat_init", "�ɹ�װ�ش�ֻ��%s��", pBoat->GetName() );
-		ToLogService("common", "succeed loading boat��{}��", pBoat->GetName() );
+		//LG( "monsterboat_init", "%s", pBoat->GetName() );
+		ToLogService("common", "succeed loading boat{}", pBoat->GetName() );
 
-		// ��ֻ�Ƿ���Ը������
+		// 
 		xShipAttrInfo Data;
 		memset( &Data, 0, sizeof(xShipAttrInfo) );
 		Data.dwMinAttack = pInfo->sMinAttack;
@@ -1185,7 +1185,7 @@ namespace mission
 		Data.dwScope = pInfo->sScope;
 		Data.dwCannonSpeed = pInfo->sCannonSpeed;
 
-		// ���㴬ֻ������Լӳ���Ϣ
+		// 
 		if( !GetData( *pBoat, pInfo->byIsUpdate, Info, Data ) )
 		{
 			return FALSE;
@@ -1213,15 +1213,15 @@ namespace mission
 		return NULL;
 	}
 
-	// chType��0����ɫ���ߡ�1����ͼ�л���2����Ϸ��ͨ��
+	// chType012
 	BOOL CCharBoat::CreateBoat( CCharacter& owner, DWORD dwBoatID, char chType )
 	{
 		CCharacter* pBoat = g_pGameApp->GetNewCharacter();
 		if( pBoat == NULL )
 		{
-			//owner.SystemNotice( "��ɫ����װ�ش�ֻ���䴬ֻ�ڴ�ʧ��!" );
+			//owner.SystemNotice( "!" );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00034) );
-			//LG( "boat_error", "��ɫ%s����װ�ش�ֻ���䴬ֻID[%d]�ڴ�ʧ��!", owner.GetName(), dwBoatID );
+			//LG( "boat_error", "%sID[%d]!", owner.GetName(), dwBoatID );
 			ToLogService("errors", LogLevel::Error, "character {} go up loading boat and assign boatID[{}]memory failed!", owner.GetName(), dwBoatID );
 			return FALSE;
 		}
@@ -1231,10 +1231,10 @@ namespace mission
 		if( !game_db.GetBoat( *pBoat ) )
 		{
 			pBoat->Free();
-			//owner.SystemNotice( "��ȡ��ɫ%s��ֻID[%d]���ݿ�����ʧ�ܣ�", owner.GetName(), dwBoatID );
+			//owner.SystemNotice( "%sID[%d]", owner.GetName(), dwBoatID );
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00035), owner.GetName(), dwBoatID );
-			//LG( "boat_error", "��ȡ��ɫ%s��ֻID[%d]���ݿ�����ʧ�ܣ�\n", owner.GetName(), dwBoatID );
-			ToLogService("errors", LogLevel::Error, "get character {} boat ID[{}]DB data failed��", owner.GetName(), dwBoatID );
+			//LG( "boat_error", "%sID[%d]\n", owner.GetName(), dwBoatID );
+			ToLogService("errors", LogLevel::Error, "get character {} boat ID[{}]DB data failed", owner.GetName(), dwBoatID );
 			return FALSE;
 		}
 
@@ -1248,28 +1248,28 @@ namespace mission
 		Info.sCannon = (USHORT)pBoat->getAttr( ATTR_BOAT_CANNON );
 		Info.sEquipment = (USHORT)pBoat->getAttr( ATTR_BOAT_PART );
 
-		// ���ô��Ļ�������
+		// 
 		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( Info.sBoat );
 		if( pInfo == NULL ) 
 		{
 			pBoat->Free();
-			/*owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[%d]!", Info.sBoat );
-			ToLogService("common", "������ֻʧ�ܣ�����Ĵ�ֻ��ϢID[{}]!", Info.sBoat);*/
+			/*owner.SystemNotice( "ID[%d]!", Info.sBoat );
+			ToLogService("common", "ID[{}]!", Info.sBoat);*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00010), Info.sBoat );
-			ToLogService("errors", LogLevel::Error, "create boat failed��error information of boat ID[{}]!", Info.sBoat );
+			ToLogService("errors", LogLevel::Error, "create boat failederror information of boat ID[{}]!", Info.sBoat );
 			return FALSE;
 		}
 
-		// ��ȡ��ֻ��ɫ������Ϣ
+		// 
 		pBoat->SetCat( pInfo->sCharID );
 		CChaRecord* pRec = GetChaRecordInfo( pInfo->sCharID );
 		if( pRec == NULL )
 		{
 			pBoat->Free();
-			/*owner.SystemNotice( "������ֻ���޷��õ���Ч������Ϣ��ID[%d]", pInfo->sCharID );
-			ToLogService("common", "������ֻ���޷��õ���Ч������Ϣ��ID[{}]", pInfo->sCharID);*/
+			/*owner.SystemNotice( "ID[%d]", pInfo->sCharID );
+			ToLogService("common", "ID[{}]", pInfo->sCharID);*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00028), pInfo->sCharID );
-			ToLogService("errors", LogLevel::Error, "create boat,cannot get efficiency attribute information��ID[{}]", pInfo->sCharID );
+			ToLogService("errors", LogLevel::Error, "create boat,cannot get efficiency attribute informationID[{}]", pInfo->sCharID );
 			return FALSE;
 		}
 		pBoat->m_pCChaRecord = pRec;
@@ -1283,8 +1283,8 @@ namespace mission
 		if( !SetPartData( *pBoat, pInfo->sCharID, Info ) )
 		{
 			pBoat->Free();
-			/*owner.SystemNotice( "������ֻʧ�ܣ����ô�ֻ�������ʧ��!ID[%d]", Info.sBoat );
-			ToLogService("common", "������ֻʧ�ܣ����ô�ֻ�������ʧ��!ID[{}]", Info.sBoat);*/
+			/*owner.SystemNotice( "!ID[%d]", Info.sBoat );
+			ToLogService("common", "!ID[{}]", Info.sBoat);*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00029), Info.sBoat );
 			ToLogService("errors", LogLevel::Error, "create boat failed,set boat surface data failed!ID[{}]", Info.sBoat );
 			return FALSE;
@@ -1298,10 +1298,10 @@ namespace mission
 		if( !SetBoatAttr( owner, *pBoat, *pInfo, Info, false ) )
 		{
 			pBoat->Free();
-			/*owner.SystemNotice( "���ô�ֻ����ʧ�ܣ�" );
-			ToLogService("common", "���ý�ɫ{}��ֻ����ʧ��,��ֻ��{}��ID[{}]����ɫplayer������Ϣʧ�ܣ�", owner.GetName(), pBoat->GetName(), dwBoatID);*/
+			/*owner.SystemNotice( "" );
+			ToLogService("common", "{},{}ID[{}]player", owner.GetName(), pBoat->GetName(), dwBoatID);*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00030) );
-			ToLogService("errors", LogLevel::Error, "set character {} boat attribute failed,boat��{}��ID[{}] to character player data information failed��", 
+			ToLogService("errors", LogLevel::Error, "set character {} boat attribute failed,boat{}ID[{}] to character player data information failed", 
 				owner.GetName(), pBoat->GetName(), dwBoatID );
 			return FALSE;
 		}
@@ -1309,17 +1309,17 @@ namespace mission
 		if( !owner.GetPlayer()->AddBoat( *pBoat ) )
 		{
 			pBoat->Free();
-			/*owner.SystemNotice( "���Ӵ�ֻ��%s��ID[%d]����ɫ%splayer������Ϣʧ�ܣ�", 
+			/*owner.SystemNotice( "%sID[%d]%splayer", 
 				pBoat->GetName(), dwBoatID, owner.GetName() );
-			ToLogService("common", "���Ӵ�ֻ��{}��ID[{}]����ɫ{}player������Ϣʧ�ܣ�", pBoat->GetName(), dwBoatID, owner.GetName());*/
+			ToLogService("common", "{}ID[{}]{}player", pBoat->GetName(), dwBoatID, owner.GetName());*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00036), 
 				pBoat->GetName(), dwBoatID, owner.GetName() );
-			ToLogService("errors", LogLevel::Error, "add boat��{}��ID[{}] to character {} player data information failed��", 
+			ToLogService("errors", LogLevel::Error, "add boat{}ID[{}] to character {} player data information failed", 
 				pBoat->GetName(), dwBoatID, owner.GetName() );
 			return FALSE;
 		}
 
-		/*owner.SystemNotice( "�ɹ�װ�ص�%d�Ҵ�ֻ��%s��", owner.GetPlayer()->GetNumBoat(), 
+		/*owner.SystemNotice( "%d%s", owner.GetPlayer()->GetNumBoat(), 
 			pBoat->GetName() );*/
 		owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00037), owner.GetPlayer()->GetNumBoat(), 
 			pBoat->GetName() );
@@ -1333,14 +1333,14 @@ namespace mission
 
 	BOOL CCharBoat::GetData( CCharacter& owner, BYTE byIsUpdate, const BOAT_DATA& Info, xShipAttrInfo& Data )
 	{
-		// ��ֻ�Ƿ���Ը������
+		// 
 		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sBody );
 		if( pData == NULL ) 
 		{
-			/*owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�����ϢID[%d]!", Info.sBody );
-			ToLogService("common", "������ֻʧ�ܣ�����Ĵ�����ϢID[{}]!", Info.sBody);*/
+			/*owner.SystemNotice( "ID[%d]!", Info.sBody );
+			ToLogService("common", "ID[{}]!", Info.sBody);*/
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00038), Info.sBody );
-			ToLogService("errors", LogLevel::Error, "create boat failed��error information of hull ID[{}]!", Info.sBody );
+			ToLogService("errors", LogLevel::Error, "create boat failederror information of hull ID[{}]!", Info.sBody );
 		}
 		else
 		{
@@ -1370,10 +1370,10 @@ namespace mission
 			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sHeader );
 			if( pData == NULL ) 
 			{
-				/*owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�ͷ��ϢID[%d]!", Info.sHeader );
-				ToLogService("common", "������ֻʧ�ܣ�����Ĵ�ͷ��ϢID[{}]!", Info.sHeader);*/
+				/*owner.SystemNotice( "ID[%d]!", Info.sHeader );
+				ToLogService("common", "ID[{}]!", Info.sHeader);*/
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00039), Info.sHeader );
-				ToLogService("errors", LogLevel::Error, "create boat failed��error information of fore ID[{}]!", Info.sHeader );
+				ToLogService("errors", LogLevel::Error, "create boat failederror information of fore ID[{}]!", Info.sHeader );
 			}
 			else
 			{
@@ -1401,10 +1401,10 @@ namespace mission
 			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sEngine );
 			if( pData == NULL ) 
 			{
-				/*owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�������ϢID[%d]!", Info.sEngine );
-				ToLogService("common", "������ֻʧ�ܣ�����Ĵ�������ϢID[{}]!", Info.sEngine);*/
+				/*owner.SystemNotice( "ID[%d]!", Info.sEngine );
+				ToLogService("common", "ID[{}]!", Info.sEngine);*/
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00040), Info.sEngine );
-				ToLogService("errors", LogLevel::Error, "create boat failed��error information of boat drive ID[{}]!", Info.sEngine );
+				ToLogService("errors", LogLevel::Error, "create boat failederror information of boat drive ID[{}]!", Info.sEngine );
 			}
 			else
 			{
@@ -1462,10 +1462,10 @@ namespace mission
 			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sCannon );
 			if( pData == NULL ) 
 			{
-				/*owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ�������ϢID[%d]!", Info.sCannon );
-				ToLogService("common", "������ֻʧ�ܣ�����Ĵ�������ϢID[{}]!", Info.sCannon);*/
+				/*owner.SystemNotice( "ID[%d]!", Info.sCannon );
+				ToLogService("common", "ID[{}]!", Info.sCannon);*/
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00041), Info.sCannon );
-				ToLogService("errors", LogLevel::Error, "create boat failed��error information of boat artillery ID[{}]!", Info.sCannon );
+				ToLogService("errors", LogLevel::Error, "create boat failederror information of boat artillery ID[{}]!", Info.sCannon );
 			}
 			else
 			{
@@ -1493,7 +1493,7 @@ namespace mission
 			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sEquipment );
 			if( pData == NULL ) 
 			{
-				//owner.SystemNotice( "������ֻʧ�ܣ�����Ĵ������ϢID[%d]!", Info.sEquipment );
+				//owner.SystemNotice( "ID[%d]!", Info.sEquipment );
 				//return FALSE;
 			}
 			else

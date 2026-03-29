@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: EntitySpawn.h
 // Creater: ZhangXuedong
 // Date: 2004.09.10
@@ -83,7 +83,7 @@ public:
 	void	Clear();
 	CNpcRecord* GetNpcInfo( USHORT sNpcID );
 	
-	// ÕÙ»½NPC³öÏÖ
+	// NPC
 	BOOL	SummonNpc( const char szNpc[], USHORT sAreaID, USHORT sTime );
 	mission::CNpc* FindNpc( const char szName[] );
 
@@ -92,7 +92,7 @@ protected:
 	long	m_lRecordNum;
 	CNpcRecordSet*	m_pNpcRecordSet;
 
-	// ÕÐ»½µÄNPCÁÐ±í
+	// NPC
 	mission::CNpc*	m_NpcList[ROLE_MAXNUM_MAPNPC];
 	USHORT			m_sNumNpc;
 

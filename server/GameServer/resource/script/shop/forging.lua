@@ -1,4 +1,4 @@
-print("-- [Loading] Forging Category")
+﻿print("-- [Loading] Forging Category")
 
 local MainTabName = 'Forging'
 

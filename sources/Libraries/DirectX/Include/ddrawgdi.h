@@ -1,4 +1,4 @@
-/******************************Module*Header*******************************\
+﻿/******************************Module*Header*******************************\
 * Module Name: ddrawgdi.h
 *
 * Structures and defines for the private entry points in GDI to support

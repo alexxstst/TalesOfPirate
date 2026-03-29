@@ -1,4 +1,4 @@
-// secblockfwd.h - written and placed in the public domain by Jeffrey Walton
+﻿// secblockfwd.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file secblockfwd.h
 /// \brief Forward declarations for SecBlock

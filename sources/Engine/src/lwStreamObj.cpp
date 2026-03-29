@@ -1,4 +1,4 @@
-//
+ï»¿//
 #include "stdafx.h"
 #include "lwStreamObj.h"
 #include "lwDeviceObject.h"
@@ -141,7 +141,7 @@ LW_RESULT lwStreamObjVB::LoseDevice()
             ret = LW_RET_FAILED;
     }
 
-    // Reinit (como já fazia)
+    // Reinit (como j fazia)
     if(LW_FAILED(lwStreamObject::Init(_total_size)))
         ret = LW_RET_FAILED;
 
@@ -863,7 +863,7 @@ lwDynamicStreamVB::lwDynamicStreamVB(lwIDeviceObject* dev_obj)
 
 lwDynamicStreamVB::~lwDynamicStreamVB()
 {
-    if(_buf) // só chama se ainda existir
+    if(_buf) // s chama se ainda existir
         LoseDevice();
 }
 

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "MPRender.h"
 #include "MPMath.h"
 #include "MPTextureSet.h"
@@ -86,7 +86,7 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
     d3dcp.present_param.hDeviceWindow = hWnd;
     d3dcp.present_param.Windowed = !bFullScreen;
     d3dcp.present_param.SwapEffect = D3DSWAPEFFECT_DISCARD;//bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY_VSYNC ;
-	// Modified by clp ��ȫ����ͬ�����ô�ֱͬ������˽��󻺳�������Ϊ2
+	// Modified by clp 2
 	d3dcp.present_param.BackBufferCount = 2;
     //d3dcp.present_param.BackBufferCount = 1;
     d3dcp.present_param.BackBufferFormat = d3ddm.Format;//D3DFMT_UNKNOWN;
@@ -110,15 +110,15 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
 
 	d3dcp.present_param.AutoDepthStencilFormat = D3DFMT_D16;
 
-	// Modified by clp ��ȫ����ͬ�����ô�ֱͬ��
+	// Modified by clp 
 	d3dcp.present_param.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
     // d3dcp.present_param.FullScreen_PresentationInterval = bFullScreen ? D3DPRESENT_INTERVAL_IMMEDIATE : D3DPRESENT_INTERVAL_DEFAULT;
-    // ����ֻ�ǲ���vs�İ汾���Ժ�d3d�Ĵ���������Ҫ���ⲿ���
+    // vsd3d
     if(_d3dCaps.VertexShaderVersion < D3DVS_VERSION(1,0))
     {
         d3dcp.behavior_flag = D3DCREATE_SOFTWARE_VERTEXPROCESSING;
 		d3dcp.present_param.SwapEffect = bFullScreen ? D3DSWAPEFFECT_DISCARD : D3DSWAPEFFECT_COPY;
-		d3dcp.present_param.BackBufferCount = 1; //�ϻ����ڴ����ٵ�
+		d3dcp.present_param.BackBufferCount = 1; //
 
     }
 
@@ -149,7 +149,7 @@ BOOL MPRender::Init(HWND hWnd, int nScrWidth, int nScrHeight, int nColorBit, BOO
             _tcscpy(err_str, "Create DirectX error");
             break;
         case INIT_ERR_CREATE_DEVICE:
-            ToLogService("common", LogLevel::Error, "��ѡ��ϵ͵�����ֱ��ʽ�����Ϸ");
+            ToLogService("common", LogLevel::Error, "");
             _tcscpy(err_str, "Create DirectX Device error");
             break;
         case INIT_ERR_DX_VERSION:
@@ -219,7 +219,7 @@ BOOL MPRender::InitResource()
 	if(!ResMgr.InitRes(_pD3DDevice,&GetWorldViewMatrix(),&GetViewProjMatrix()))
 #endif
 	{
-		ToLogService("errors", LogLevel::Error, "��ʼ��ResMgrʧ��,�˳�!");
+		ToLogService("errors", LogLevel::Error, "ResMgr,!");
 		return FALSE;
 	}
 	return TRUE;
@@ -229,7 +229,7 @@ BOOL MPRender::InitRes2()
 {
 	if(!ResMgr.InitRes2())
 	{
-		ToLogService("errors", LogLevel::Error, "��ʼ��ResMgr 2ʧ��,�˳�!");
+		ToLogService("errors", LogLevel::Error, "ResMgr 2,!");
 		return FALSE;
 	}
 	return TRUE;
@@ -239,7 +239,7 @@ BOOL MPRender::InitRes3()
 {
 	if(!ResMgr.InitRes3())
 	{
-		ToLogService("errors", LogLevel::Error, "��ʼ��ResMgr 3ʧ��,�˳�!");
+		ToLogService("errors", LogLevel::Error, "ResMgr 3,!");
 		return FALSE;
 	}
 	return TRUE;
@@ -683,7 +683,7 @@ BOOL MPRender::BeginRender(bool clear)//vim
 
 #if 0
 	HRESULT hr;
-    if( FAILED( hr = _pD3DDevice->TestCooperativeLevel() ) ) // ����������л��ֱ��ʺ���ɫ...
+    if( FAILED( hr = _pD3DDevice->TestCooperativeLevel() ) ) // ...
     {
         // If the device was lost, do not render until we get it back
         if (D3DERR_DEVICELOST == hr) return FALSE;
@@ -743,7 +743,7 @@ void MPRender::EndRender(const bool present) // vim
 		static int g_nAviCnt = 0;
 		static int g_nCapCnt = 0;
 
-		if(_bCaptureScreen) // ���ν���
+		if(_bCaptureScreen) // 
 		{
 			static int g_nScreenCap = 0;
 			char fileName[64];
@@ -776,7 +776,7 @@ void MPRender::EndRender(const bool present) // vim
 			_bCaptureScreen = FALSE;
 		}
 
-		if (_bEnableCaptureAVI) // 连续截屏
+		if (_bEnableCaptureAVI) // 
 		{
 			static int g_nAviCnt = 0;
 			char szFileName[64];
@@ -836,7 +836,7 @@ void MPRender::Print(int nInfoType, int x, int y, const char *szFormat, ...)
 	vsprintf(_szInfo, szFormat, list);
 	va_end( list );
 
-    int nIdx = y * 2000 + x; // �����ظ�����Ļ����
+    int nIdx = y * 2000 + x; // 
     _InfoIdx[nInfoType][nIdx] = _szInfo;
 }
 
@@ -847,7 +847,7 @@ void MPRender::EnableMipmap(BOOL bEnable)
     {
         SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_LINEAR );
     }
-    else // �ر�mipmap
+    else // mipmap
     {
 		SetSamplerState(0, D3DSAMP_MIPFILTER, D3DTEXF_NONE );
     }

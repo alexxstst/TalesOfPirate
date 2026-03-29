@@ -1,12 +1,12 @@
-#pragma once
-// Мнемоники сетевых команд для логирования пакетов.
-// Автогенерация из NetCommand.h
+﻿#pragma once
+//      .
+//   NetCommand.h
 
 #include "NetCommand.h"
 
 inline const char* GetCmdName(unsigned short cmd) {
     switch (cmd) {
-    // ── Client → GameServer (CM: 0-499) ──
+    //  Client  GameServer (CM: 0-499) 
     case CMD_CM_SAY:                return "CM_SAY";
     case CMD_CM_BEGINACTION:        return "CM_BEGINACTION";
     case CMD_CM_ENDACTION:          return "CM_ENDACTION";
@@ -66,14 +66,14 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_CM_PK_CTRL:            return "CM_PK_CTRL";
     case CMD_CM_ITEM_LOTTERY_ASK:   return "CM_ITEM_LOTTERY_ASK";
     case CMD_CM_ITEM_LOTTERY_ASR:   return "CM_ITEM_LOTTERY_ASR";
-    // CMD_CM_RANK и CMD_CM_CAPTAIN_CONFIRM_ASR оба = 97 (дубликат в NetCommand.h)
+    // CMD_CM_RANK  CMD_CM_CAPTAIN_CONFIRM_ASR  = 97 (  NetCommand.h)
     case CMD_CM_RANK:               return "CM_RANK";
     case CMD_CM_ITEM_AMPHITHEATER_ASK: return "CM_ITEM_AMPHITHEATER_ASK";
     case CMD_CM_ITEM_LOCK_ASK:      return "CM_ITEM_LOCK_ASK";
     case CMD_CM_ITEM_UNLOCK_ASK:    return "CM_ITEM_UNLOCK_ASK";
     case CMD_CM_GAME_REQUEST_PIN:   return "CM_GAME_REQUEST_PIN";
     case CMD_CM_DailyBuffRequest:   return "CM_DailyBuffRequest";
-    // Роли (ROLEBASE=300)
+    //  (ROLEBASE=300)
     case CMD_CM_REQUESTTALK:        return "CM_REQUESTTALK";
     case CMD_CM_TALKPAGE:           return "CM_TALKPAGE";
     case CMD_CM_FUNCITEM:           return "CM_FUNCITEM";
@@ -115,7 +115,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_CM_REQUEST_DROP_RATE:  return "CM_REQUEST_DROP_RATE";
     case CMD_CM_REQUEST_EXP_RATE:   return "CM_REQUEST_EXP_RATE";
     case CMD_CM_OFFLINE_MODE:       return "CM_OFFLINE_MODE";
-    // Гильдии (GULDBASE=400)
+    //  (GULDBASE=400)
     case CMD_CM_GUILD_PUTNAME:      return "CM_GUILD_PUTNAME";
     case CMD_CM_GUILD_TRYFOR:       return "CM_GUILD_TRYFOR";
     case CMD_CM_GUILD_TRYFORCFM:    return "CM_GUILD_TRYFORCFM";
@@ -129,7 +129,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_CM_GUILD_CHALLENGE:    return "CM_GUILD_CHALLENGE";
     case CMD_CM_GUILD_LEIZHU:       return "CM_GUILD_LEIZHU";
     case CMD_CM_GUILD_PERM:         return "CM_GUILD_PERM";
-    // Персонаж (CHARBASE=430)
+    //  (CHARBASE=430)
     case CMD_CM_LOGIN:              return "CM_LOGIN";
     case CMD_CM_LOGOUT:             return "CM_LOGOUT";
     case CMD_CM_BGNPLAY:            return "CM_BGNPLAY";
@@ -138,11 +138,11 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_CM_DELCHA:             return "CM_DELCHA";
     case CMD_CM_CANCELEXIT:         return "CM_CANCELEXIT";
     case CMD_CM_REGISTER:           return "CM_REGISTER";
-    // Гарнер, антииндульгенция
+    // , 
     case CMD_CM_GARNER2_REORDER:    return "CM_GARNER2_REORDER";
     case CMD_CM_ANTIINDULGENCE:     return "CM_ANTIINDULGENCE";
 
-    // ── GameServer → Client (MC: 500-999) ──
+    //  GameServer  Client (MC: 500-999) 
     case CMD_MC_SAY:                return "MC_SAY";
     case CMD_MC_MAPCRASH:           return "MC_MAPCRASH";
     case CMD_MC_CHABEGINSEE:        return "MC_CHABEGINSEE";
@@ -234,7 +234,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_MC_RecDailyBuffInfo:   return "MC_RecDailyBuffInfo";
     case CMD_MC_REQUEST_DROP_RATE:  return "MC_REQUEST_DROP_RATE";
     case CMD_MC_REQUEST_EXP_RATE:   return "MC_REQUEST_EXP_RATE";
-    // Роли (ROLEBASE=800)
+    //  (ROLEBASE=800)
     case CMD_MC_TALKPAGE:           return "MC_TALKPAGE";
     case CMD_MC_FUNCPAGE:           return "MC_FUNCPAGE";
     case CMD_MC_CLOSETALK:          return "MC_CLOSETALK";
@@ -304,7 +304,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_MC_BEGIN_ITEM_AMPHITHEATER: return "MC_BEGIN_ITEM_AMPHITHEATER";
     case CMD_MC_COLOUR_NOTICE:      return "MC_COLOUR_NOTICE";
     case CMD_MC_UPDATEGUILDBANKGOLD:return "MC_UPDATEGUILDBANKGOLD";
-    // Гильдии (GULDBASE=900)
+    //  (GULDBASE=900)
     case CMD_MC_GUILD_GETNAME:      return "MC_GUILD_GETNAME";
     case CMD_MC_LISTGUILD:          return "MC_LISTGUILD";
     case CMD_MC_GUILD_TRYFORCFM:    return "MC_GUILD_TRYFORCFM";
@@ -314,7 +314,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_MC_GUILD_LEAVE:        return "MC_GUILD_LEAVE";
     case CMD_MC_GUILD_KICK:         return "MC_GUILD_KICK";
     case CMD_MC_GUILD_INFO:         return "MC_GUILD_INFO";
-    // Персонаж (CHARBASE=930)
+    //  (CHARBASE=930)
     case CMD_MC_LOGIN:              return "MC_LOGIN";
     case CMD_MC_LOGOUT:             return "MC_LOGOUT";
     case CMD_MC_BGNPLAY:            return "MC_BGNPLAY";
@@ -328,7 +328,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_MC_SEND_SERVER_PUBLIC_KEY: return "MC_SEND_SERVER_PUBLIC_KEY";
     case CMD_MC_SEND_HANDSHAKE:     return "MC_SEND_HANDSHAKE";
 
-    // ── GroupServer → Client (PC: 5000-5499) ──
+    //  GroupServer  Client (PC: 5000-5499) 
     case CMD_PC_TEAM_INVITE:        return "PC_TEAM_INVITE";
     case CMD_PC_TEAM_REFRESH:       return "PC_TEAM_REFRESH";
     case CMD_PC_TEAM_CANCEL:        return "PC_TEAM_CANCEL";
@@ -367,7 +367,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_PC_REFRESH_SELECT:     return "PC_REFRESH_SELECT";
     case CMD_PC_GARNER2_ORDER:      return "PC_GARNER2_ORDER";
 
-    // ── Client → GroupServer (CP: 6000-6499) ──
+    //  Client  GroupServer (CP: 6000-6499) 
     case CMD_CP_TEAM_INVITE:        return "CP_TEAM_INVITE";
     case CMD_CP_TEAM_ACCEPT:        return "CP_TEAM_ACCEPT";
     case CMD_CP_TEAM_REFUSE:        return "CP_TEAM_REFUSE";
@@ -403,7 +403,7 @@ inline const char* GetCmdName(unsigned short cmd) {
     case CMD_CP_GUILDBANK:          return "CP_GUILDBANK";
     case CMD_CP_CHANGEPASS:         return "CP_CHANGEPASS";
 
-    // ── GateServer → Client (TC: 7500+) ──
+    //  GateServer  Client (TC: 7500+) 
     case CMD_TC_DISCONNECT:         return "TC_DISCONNECT";
 
     default:                        return "UNKNOWN";

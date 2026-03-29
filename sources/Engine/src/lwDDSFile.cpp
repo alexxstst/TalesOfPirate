@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 #include "lwDDSFile.h"
 #include "lwErrorCode.h"

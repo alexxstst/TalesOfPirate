@@ -1,4 +1,4 @@
-//------------------------------------------------------------------------
+﻿//------------------------------------------------------------------------
 //	2005.3.29	Arcol	create this file
 //	2005.4.5	Arcol	add session node and handle the flash event in the QQ form
 //------------------------------------------------------------------------
@@ -54,7 +54,7 @@ bool _Error(const char* strInfo, const char* strFormName, const char* strCompent
 }
 
 //------------------------------------------------------------------------
-//	CSessionMember��ʵ��
+//	CSessionMember
 //------------------------------------------------------------------------
 
 CSessionMember::CSessionMember(stNetSessCreate *pMember)
@@ -74,7 +74,7 @@ CSessionMember::~CSessionMember()
 CMenu* CTalkSessionForm::m_playerMouseRight=NULL;
 
 //------------------------------------------------------------------------
-//	CTalkSessionForm��ʵ��
+//	CTalkSessionForm
 //------------------------------------------------------------------------
 
 CTalkSessionForm::CTalkSessionForm(DWORD sessionID,eTalkSessionStyle style) : 
@@ -82,13 +82,13 @@ m_dwSessioinID(sessionID), m_strWaitForSend(""), m_bActive(true), m_pForm(NULL),
 m_strTalkMsg(""), /*m_pList(NULL),*/ m_pInformTextBtn(NULL), m_pInformTitle(NULL), m_nShowChannel(NULL),
 m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlashTimes(0), m_pTimer1(NULL), m_pTimer2(NULL)
 {
-	//����Form
+	//Form
 	m_bActive=(m_dwSessioinID!=0)?true:false;
 	CTextButton *btn;
 	static CForm *frmRemind=CFormMgr::s_Mgr.Find("frmRemind");
 	if (!frmRemind)
 	{
-		// Форма напоминания не найдена
+		//    
 		if( !frmRemind ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(410));
 		return;
 	}
@@ -129,7 +129,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	static CForm *frmChat=CFormMgr::s_Mgr.Find("frmChat");
 	if (!frmChat)
 	{
-		// Форма чата не найдена
+		//    
 		if( !frmChat ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(412));
 		 return;
 	}
@@ -161,7 +161,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	//btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnCloseD"));
 	//if( !btn )
 	//{
-	//	_Error("chat.clu����<%s>���Ҳ����ؼ�<%s>", m_pNormalForm->GetName(), "btnCloseD" );
+	//	_Error("chat.clu<%s><%s>", m_pNormalForm->GetName(), "btnCloseD" );
 	//	return;
 	//}
 	//btn->evtMouseClick=_OnMouseQuitButton;
@@ -195,7 +195,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	//m_pNormalList = dynamic_cast<CList*>(m_pNormalForm->Find("memCtrl"));
 	//if( !m_pNormalList )
 	//{
-	//	_Error("chat.clu����<%s>���Ҳ����ؼ�<%s>", m_pNormalForm->GetName(), "memCtrl" );
+	//	_Error("chat.clu<%s><%s>", m_pNormalForm->GetName(), "memCtrl" );
 	//	return;
 	//}
 	//m_pNormalList->SetRowHeight(20);
@@ -234,7 +234,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pFaceGrid = dynamic_cast<CGrid*>(m_pNormalForm->Find("grdFace"));
 	if( !m_pFaceGrid )
 	{
-		// Компонент сетки эмодзи не найден
+		//     
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(411), m_pNormalForm->GetName(), "grdFace"); g_logManager.InternalLog(LogLevel::Error, "common", _buf); }
 		return;
 	}
@@ -268,7 +268,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	static CForm *frmChatMd=CFormMgr::s_Mgr.Find("frmChatMd");
 	if (!frmChatMd)
 	{
-		// Форма малого чата не найдена
+		//     
 		if( !frmChatMd ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(413));
 		return;
 	}
@@ -316,7 +316,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	//m_pSmallList = dynamic_cast<CList*>(m_pSmallForm->Find("memCtrl"));
 	//if( !m_pSmallList )
 	//{
-	//	_Error("chat.clu����<%s>���Ҳ����ؼ�<%s>", m_pSmallForm->GetName(), "memCtrl" );
+	//	_Error("chat.clu<%s><%s>", m_pSmallForm->GetName(), "memCtrl" );
 	//	return;
 	//}
 
@@ -326,7 +326,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	static CForm *frmChatMin=CFormMgr::s_Mgr.Find("frmChatMin");
 	if (!frmChatMin)
 	{
-		// Форма минимизированного чата не найдена
+		//     
 		if( !frmChatMin ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(414));
 		return;
 	}
@@ -389,7 +389,7 @@ CTalkSessionForm::~CTalkSessionForm(void)
 		Iter=m_Members.begin();
 		pNode=*Iter;
 		//delete pNode;
-		SAFE_DELETE(pNode); // UI��������
+		SAFE_DELETE(pNode); // UI
 		m_Members.erase(Iter);
 	}
 	ClearMsg();
@@ -468,7 +468,7 @@ bool CTalkSessionForm::DelMember(DWORD chaID)
 		if (chaID==(*Iter)->GetID())
 		{
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UI��������
+			SAFE_DELETE(*Iter); // UI
 			m_Members.erase(Iter);
 			m_playerMouseRight->SetIsShow(false);
 			RefreshForm();
@@ -889,7 +889,7 @@ void CTalkSessionForm::_OnMouseSendButton(CGuiData *pSender, int x, int y, DWORD
 		pThis->m_pEdit->SetCaption("");
 	}
 	
-	// Add by ning.yan  20080726  ��ʱ���淢�͵���������  Begin
+	// Add by ning.yan  20080726    Begin
 	string strName = CGameScene::GetMainCha()->getName();
 	string strMotto = CGameScene::GetMainCha()->getSecondName();
 	__time64_t t;
@@ -910,15 +910,15 @@ void CTalkSessionForm::_OnMouseSendButton(CGuiData *pSender, int x, int y, DWORD
 	saveText += strName + sendText + "\r\n\r\n";
 
 	for(DWORD i=0; i< pThis->GetTotalMembers(); i++)
-	{ // forѭ��������������
+	{ // for
 		if (CChatRecord::Save(pThis->GetMemberByIndex(i)->GetName(),pThis->GetTotalMembers(),saveText))
 		{
-			//string str="�ѳɹ����浽�ļ�:\""+CChatRecord::GetLastSavePath()+"\"��";
+			//string str=":\""+CChatRecord::GetLastSavePath()+"\"";
 			//CCozeForm::GetInstance()->OnSystemMsg(str.c_str());
 		}
 		else
 		{
-			//CCozeForm::GetInstance()->OnSystemMsg("����ʧ�ܣ����ݿհף����̿ռ䲻����ļ�Ŀ¼û�п�дȨ�ޣ�");
+			//CCozeForm::GetInstance()->OnSystemMsg("");
 		}
 	}
 	// End
@@ -1037,7 +1037,7 @@ void CTalkSessionForm::_OnPlayerSelect(CGuiData *pSender, int x, int y, DWORD ke
 	CMenuItem* pItem=m_playerMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str=pItem->GetString();
-	if (str=="���Ӻ���" )
+	if (str=="" )
 	{
 		CSessionMember* pSessionMember=static_cast<CSessionMember*>(m_playerMouseRight->GetPointer());
 		CS_Frnd_Invite(pSessionMember->GetName());
@@ -1045,7 +1045,7 @@ void CTalkSessionForm::_OnPlayerSelect(CGuiData *pSender, int x, int y, DWORD ke
 }
 
 void CTalkSessionForm::_OnMouseSaveButton(CGuiData *pSender, int x, int y, DWORD key)
-{   //delete by ning.yan 2008-07-29 ȥ���ֶ����������¼���ܣ���Ϊ�Զ����� Begin
+{   //delete by ning.yan 2008-07-29  Begin
 	//CTalkSessionForm *pThis=((CTalkSessionForm*)pSender->GetPointer());
 	//if (!pThis || !pThis->GetMemberByIndex(0)) return;
 	//string saveText;
@@ -1065,14 +1065,14 @@ void CTalkSessionForm::_OnMouseSaveButton(CGuiData *pSender, int x, int y, DWORD
 	//}
 	//if (CChatRecord::Save(pThis->GetMemberByIndex(0)->GetName(),pThis->GetTotalMembers(),saveText))
 	//{
-	//	string str="�ѳɹ����浽�ļ�:\""+CChatRecord::GetLastSavePath()+"\"��";
+	//	string str=":\""+CChatRecord::GetLastSavePath()+"\"";
 	//	//g_stUICoze.OnSystemSay( str.c_str() );
 	//	CCozeForm::GetInstance()->OnSystemMsg(str.c_str());
 	//}
 	//else
 	//{
-	//	//g_stUICoze.OnSystemSay( "����ʧ�ܣ����ݿհף����̿ռ䲻����ļ�Ŀ¼û�п�дȨ�ޣ�" );
-	//	CCozeForm::GetInstance()->OnSystemMsg("����ʧ�ܣ����ݿհף����̿ռ䲻����ļ�Ŀ¼û�п�дȨ�ޣ�");
+	//	//g_stUICoze.OnSystemSay( "" );
+	//	CCozeForm::GetInstance()->OnSystemMsg("");
 	//}
 	//End
 
@@ -1098,7 +1098,7 @@ void CTalkSessionForm::GetMsg(DWORD chaID,string talkMsg)
 		}
 		else
 		{
-			nameBuf="�Լ�";
+			nameBuf="";
 			secondNameBuf="";
 		}
 	}
@@ -1110,7 +1110,7 @@ void CTalkSessionForm::GetMsg(DWORD chaID,string talkMsg)
 	//m_strTalkMsg+=buf+string(" : ")+talkMsg+"\n";
 	RefreshForm();
 
-	// Add by ning.yan  20080727  ��ʱ������յ�����������  Begin
+	// Add by ning.yan  20080727    Begin
 	if( pMsg->name != CGameScene::GetMainCha()->getName())
 	{
 		string strName =pMsg->name;
@@ -1135,12 +1135,12 @@ void CTalkSessionForm::GetMsg(DWORD chaID,string talkMsg)
 		{
 			if (CChatRecord::Save( GetMemberByIndex(i)->GetName(), GetTotalMembers(), saveText))
 			{
-				//string str="�ѳɹ����浽�ļ�:\""+CChatRecord::GetLastSavePath()+"\"��";
+				//string str=":\""+CChatRecord::GetLastSavePath()+"\"";
 				//CCozeForm::GetInstance()->OnSystemMsg(str.c_str());
 			}
 			else
 			{
-				//CCozeForm::GetInstance()->OnSystemMsg("����ʧ�ܣ����ݿհף����̿ռ䲻����ļ�Ŀ¼û�п�дȨ�ޣ�");
+				//CCozeForm::GetInstance()->OnSystemMsg("");
 			}
 		}
 	}
@@ -1161,7 +1161,7 @@ void CTalkSessionForm::SendBufferMsg()
 		}
 		m_strWaitForSend.clear();
 		//delete buf;
-		SAFE_DELETE_ARRAY(buf); // UI��������
+		SAFE_DELETE_ARRAY(buf); // UI
 	}
 	if (!m_strWaitForAdded.empty())
 	{
@@ -1175,7 +1175,7 @@ void CTalkSessionForm::SendBufferMsg()
 		}
 		m_strWaitForAdded.clear();
 		//delete buf;
-		SAFE_DELETE_ARRAY(buf); // UI��������
+		SAFE_DELETE_ARRAY(buf); // UI
 		//CS_Sess_Add(GetSessionID(),m_strWaitForAdded.c_str());
 		//m_strWaitForAdded.clear();
 	}
@@ -1189,7 +1189,7 @@ void CTalkSessionForm::ClearMsg()
 		Iter=m_TalkMsg.begin();
 		sTalkMsg* pNode=*Iter;
 		//delete pNode;
-		SAFE_DELETE(pNode); // UI��������
+		SAFE_DELETE(pNode); // UI
 		m_TalkMsg.erase(Iter);
 	}
 }
@@ -1215,7 +1215,7 @@ void CTalkSessionForm::GuiFormEscCloseEvent(CForm *pForm)
 }
 
 //------------------------------------------------------------------------
-//	CTalkSessionFormMgr��ʵ��
+//	CTalkSessionFormMgr
 //------------------------------------------------------------------------
 
 //RECT CTalkSessionFormMgr::INFORM_FORM;
@@ -1239,7 +1239,7 @@ CTalkSessionFormMgr::~CTalkSessionFormMgr(void)
 	{
 		Iter=m_SessionFormsLink.begin();
 		//delete (*Iter);
-		SAFE_DELETE(*Iter); // UI��������
+		SAFE_DELETE(*Iter); // UI
 		m_SessionFormsLink.erase(Iter);
 	}
 }
@@ -1299,7 +1299,7 @@ bool CTalkSessionFormMgr::AddToSession(DWORD sessionID,stNetSessCreate *pMember)
 	CTalkSessionForm *pSessionForm=GetSessionFormByID(sessionID);
 	if (!pSessionForm) return false;
 	pSessionForm->AddMembers(&pMember);
-	//pSessionForm->SetInformText("ϵͳ��Ϣ",pMember.  );
+	//pSessionForm->SetInformText("",pMember.  );
 	return true;
 }
 
@@ -1313,7 +1313,7 @@ void CTalkSessionFormMgr::CloseSessionForm(DWORD sessionID)
 			g_stUIChat.GetSessionNode()->DelItem((CItemObj*)((*Iter)->GetData()));
 			g_stUIChat.GetTeamView()->Refresh();
 			//delete (*Iter);
-			SAFE_DELETE(*Iter); // UI��������
+			SAFE_DELETE(*Iter); // UI
 			m_SessionFormsLink.erase(Iter);
 			--m_SessionCounts;
 			return;
@@ -1328,7 +1328,7 @@ void CTalkSessionFormMgr::ClearAll()
 	{
 		Iter=m_SessionFormsLink.begin();
 		//delete (*Iter);
-		SAFE_DELETE(*Iter); // UI��������
+		SAFE_DELETE(*Iter); // UI
 		m_SessionFormsLink.erase(Iter);
 	}
 	m_SessionCounts=0;
@@ -1623,7 +1623,7 @@ void CTalkSessionFormMgr::SessionReceiveMsg(DWORD sessionID,DWORD chaID,string t
 //
 //void CTalkSessionFormMgr::SetInformSize(RECT rectFrom,RECT rectTitle)
 //{
-//	//���滯���ο�
+//	//
 //	LONG tmp;
 //	if (rectFrom.top>rectFrom.bottom)
 //	{
@@ -1935,7 +1935,7 @@ void CTalkSessionFormMgr::PrintTraceInfo()
 		CTalkSessionForm* pSessionForm=(*Iter);
 		DWORD dwSessionID=pSessionForm->GetSessionID();
 		int nMemberCount=pSessionForm->GetTotalMembers();
-		sprintf(szBuf,"�ỰID=%d ����=%d ��Ա:",nMemberCount,dwSessionID);
+		sprintf(szBuf,"ID=%d =%d :",nMemberCount,dwSessionID);
 		strInfo+=szBuf;
 		for (int i=0;i<nMemberCount;i++)
 		{

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 
 #include "MPEffQuaternion.h"
 
@@ -7,9 +7,9 @@
 //-----------------------------------------------------------------------------
 void MPEffQuaternion::FromAngleAxis(const MPRadian& rfAngle, const MPEffVector3& rkAxis)
 {
-	// ¼ÙÉè:  Ðý×ªÖáÊÇµ¥Î»ÏòÁ¿
+	// :  
 	//
-	// Õâ¸öÐý×ªµÄËÄÔªÊýÊÇ
+	// 
 	//   q = cos(A/2)+sin(A/2)*(x*i+y*j+z*k)
 
 	MPRadian fHalfAngle(rfAngle * 0.5);
@@ -22,7 +22,7 @@ void MPEffQuaternion::FromAngleAxis(const MPRadian& rfAngle, const MPEffVector3&
 //-----------------------------------------------------------------------------
 MPEffVector3 MPEffQuaternion::operator*(const MPEffVector3& v) const
 {
-	// ¸ù¾ÝnVidia SDK ÊµÏÖ
+	// nVidia SDK 
 	MPEffVector3 uv, uuv; 
 	MPEffVector3 qvec(m_qSelf.x, m_qSelf.y, m_qSelf.z);
 	uv = qvec.crossProduct(v); 

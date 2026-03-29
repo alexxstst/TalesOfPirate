@@ -1,13 +1,13 @@
-// stdafx.h : include file for standard system include files,
+﻿// stdafx.h : include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
 
 #pragma once
 
-// ── Windows ──────────────────────────────────────────────
+//  Windows 
 #include <tchar.h>
 
-// ── C standard ───────────────────────────────────────────
+//  C standard 
 #include <cstdio>
 #include <cstdlib>
 #include <cmath>
@@ -15,7 +15,7 @@
 #include <cassert>
 #include <cstring>
 
-// ── C++ standard ─────────────────────────────────────────
+//  C++ standard 
 #include <algorithm>
 #include <array>
 #include <atomic>
@@ -34,7 +34,7 @@
 #include <thread>
 #include <vector>
 
-// ── Библиотеки проекта (стабильные) ─────────────────────
+//    () 
 #include "DBCCommon.h"
 #include "util.h"
 #include "i18n.h"

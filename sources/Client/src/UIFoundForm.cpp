@@ -1,4 +1,4 @@
-
+﻿
 #include "stdafx.h"
 #include "UIFoundForm.h"
 #include "uiformmgr.h"
@@ -284,26 +284,26 @@ namespace GUI
 
     void CFoundMgr::PopItem(int iIndex, bool bRetry/* = false*/)
     {
-        //  �Ƿ�����
+        //  
         if(bLock)
         {
             return;
         }
-        // ɾ��Cmd�е�Item����Item����PushItem()����new����
+        // CmdItemItemPushItem()new
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdFound[iIndex]->GetCommand());
 		if (! pItemCommand)
             return;
 
-		cmdFound[iIndex]->DelCommand();	// �ú�����ɾ��delete Item
+		cmdFound[iIndex]->DelCommand();	// delete Item
 
-		// ��Item��Ӧ����Ʒ���ָ��ɿ���
+		// Item
 		CCommandObj* pItem = g_stUIEquip.GetGoodsGrid()->GetItem(iFoundPos[iIndex]);
 		if (pItem && (6 != iIndex))
 		{
 			pItem->SetIsValid(true);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
         if(!bRetry)
         {
 		    iFoundPos[iIndex] = NO_USE;
@@ -312,25 +312,25 @@ namespace GUI
     
     void CFoundMgr::PushItem(int iIndex, CItemCommand& rItem, bool bRetry/* = false*/)
     {
-        //  �Ƿ�����
+        //  
         if(bLock)
         {
             return;
         }
-        // �жϵ����Ƿ������
+        // 
 		if(! rItem.GetIsValid())
 		{
 			return;
 		}
 
-		// �鿴ԭ����Cmd���Ƿ��Ѿ���Item�ˣ���������Ƴ�
+		// CmdItem
 		CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(cmdFound[iIndex]->GetCommand());
 		if (pItemCommand)
 		{
 			PopItem(iIndex);
 		}
 
-		// ��¼Item����Ʒ���е�λ��
+		// Item
         if(!bRetry)
         {
             iFoundPos[iIndex] = g_stUIEquip.GetGoodsGrid()->GetDragIndex();
@@ -338,11 +338,11 @@ namespace GUI
 
         if(6 != iIndex)
         {
-		    // ��Item��Ӧ����Ʒ���ҵ�
+		    // Item
 		    rItem.SetIsValid(false);
         }
 
-		// ��������Item����Cmd�У�������new������PopItem()��ɾ��
+		// ItemCmdnewPopItem()
 		CItemCommand* pItemCmd = new CItemCommand(rItem);
 		pItemCmd->SetIsValid(true);
 		cmdFound[iIndex]->AddCommand(pItemCmd);
@@ -501,7 +501,7 @@ namespace GUI
 
     void CFoundMgr::_evtDragItemBase4(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
     {
-        //  ����1
+        //  1
         if(!g_stUIFound.cmdFound[1]->GetCommand())
         {
             g_pGameApp->MsgBox(g_oLangRec.GetString(896));
@@ -524,7 +524,7 @@ namespace GUI
 
     void CFoundMgr::_evtDragItemBase5(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
     {
-        //  ����2
+        //  2
         if(!g_stUIFound.cmdFound[1]->GetCommand())
         {
             g_pGameApp->MsgBox(g_oLangRec.GetString(896));
@@ -547,7 +547,7 @@ namespace GUI
 
     void CFoundMgr::_evtDragItemBase6(CGuiData *pSender,CCommandObj* pItem,bool& isAccept)
     {
-        //  ����3
+        //  3
         if(!g_stUIFound.cmdFound[1]->GetCommand())
         {
             g_pGameApp->MsgBox(g_oLangRec.GetString(896));

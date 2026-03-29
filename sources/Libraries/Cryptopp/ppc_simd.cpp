@@ -1,4 +1,4 @@
-// ppc_simd.cpp - written and placed in the public domain by
+﻿// ppc_simd.cpp - written and placed in the public domain by
 //                Jeffrey Walton, Uri Blumenthal and Marcel Raad.
 //
 //    This source file uses intrinsics to gain access to AltiVec,

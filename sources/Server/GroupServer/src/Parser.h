@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Parser.h
 // Creater: ZhangXuedong
 // Date: 2004.11.22
@@ -14,12 +14,12 @@
 
 #include "lua.hpp"
 
-//#define PARAM_ERROR        { LG("lua_ai", "lua��չ����[%s]���������������ʹ���!",__FUNCTION__ ); }
+//#define PARAM_ERROR        { LG("lua_ai", "lua[%s]!",__FUNCTION__ ); }
 #define PARAM_ERROR        { ToLogService("lua", LogLevel::Error, "lua extend [{}] parameter type is wrong!", __FUNCTION__); }
-//#define MAP_NULL_ERROR     { LG("lua_ai", "lua��չ����[%s]��ǰ��ͼΪ��", __FUNCTION__);          }
+//#define MAP_NULL_ERROR     { LG("lua_ai", "lua[%s]", __FUNCTION__);          }
 #define MAP_NULL_ERROR     { ToLogService("lua", LogLevel::Error, "lua extend [{}] map is null", __FUNCTION__); }
 #define CHECK_MAP          { if(g_pScriptMap==NULL) { MAP_NULL_ERROR return 0; }				    }
-//#define PARAM_LG_ERROR		 THROW_EXCP( excp, "lua����û��ָ������ļ�������û�������Ϣ����!" );
+//#define PARAM_LG_ERROR		 THROW_EXCP( excp, "lua!" );
 #define PARAM_LG_ERROR		 THROW_EXCP( excp, "lua has no filename!" );
 
 #define REGFN_INIT g_luaFNList.clear();
@@ -70,7 +70,7 @@ private:
 		return true;
 	}
 
-	lua_State	*m_pSLua; // lua�ű�������
+	lua_State	*m_pSLua; // lua
 
 	int			m_nDoStringRet[DOSTRING_RETURN_NUM];
 	char		m_szDoStringRet[DOSTRING_RETURN_NUM][DOSTRING_RETURN_STRING_LEN];

@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: SkillBag.h
 // Creater: ZhangXuedong
 // Date: 2005.02.17
@@ -13,33 +13,33 @@
 #define defMAX_SKILL_NO		500
 #define defMAX_SKILL_LV		20
 
-// ¸üĞÂ¼¼ÄÜÊ±,ÀàĞÍ²Î¿¼CompCommand.h - ESynSkillBagType
-// ¸üĞÂÈ«²¿¼¼ÄÜÊ±,Ä¬ÈÏ¼¼ÄÜÎªµÚÒ»¸ö,ÆäËüÎª¿ÉÊÓ¼¼ÄÜ
-// ¸üĞÂÄ¬ÈÏ¼¼ÄÜÊ±,½öÖ»ÓĞÒ»¸ö
+// ,CompCommand.h - ESynSkillBagType
+// ,,
+// ,
 
 #define defSKILL_RANGE_PARAM_NUM	4
 
 struct SSkillGrid
 {
-	char	chState;	// ¼¼ÄÜ×´Ì¬£¬²Î¼ûCompCommand.hµÄESkillUseState
-	char	chLv;		// ¼¼ÄÜµÈ¼¶
-	short	sID;		// ¼¼ÄÜ±àºÅ
+	char	chState;	// CompCommand.hESkillUseState
+	char	chLv;		// 
+	short	sID;		// 
 
-	uint32_t	lColdDownT;	// ¼¼ÄÜ¿ªÊ¼»Ö¸´µÄÊ±¿Ì
+	uint32_t	lColdDownT;	// 
 
-	short	sReverseID;	// ÓÃÓÚ·´Ë÷Òı
+	short	sReverseID;	// 
 };
 
-struct SSkillGridEx // ÓÃÓÚÏò¿Í»§¶ËÍ¬²½¼¼ÄÜ
+struct SSkillGridEx // 
 {
-	char	chState;	// ¼¼ÄÜ×´Ì¬£¬²Î¼ûCompCommand.hµÄESkillUseState
-	char	chLv;		// ¼¼ÄÜµÈ¼¶
-	short	sID;		// ¼¼ÄÜ±àºÅ
-	short	sUseSP;		// SPÏûºÄÖµ
-	short	sUseEndure;	// ¡°ÄÍ¾Ã¶È¡°ÏûºÄÖµ
-	short	sUseEnergy;	// ¡°ÄÜÁ¿¡°ÏûºÄÖµ
-	long	lResumeTime;// ÔÙÊÍ·ÅĞèÒªµÄÊ±¼ä£¨ºÁÃë£©
-	short	sRange[defSKILL_RANGE_PARAM_NUM]; // ÇøÓòÃèÊö£¨ÀàĞÍ+²ÎÊı£©
+	char	chState;	// CompCommand.hESkillUseState
+	char	chLv;		// 
+	short	sID;		// 
+	short	sUseSP;		// SP
+	short	sUseEndure;	// 
+	short	sUseEnergy;	// 
+	long	lResumeTime;// 
+	short	sRange[defSKILL_RANGE_PARAM_NUM]; // +
 };
 
 class CSkillBag
@@ -214,7 +214,7 @@ inline bool CSkillBag::HasSkill(short sSkillID)
 
 inline bool CSkillBag::SetState(short sID, char chState)
 {
-	if (sID < 0) // ÉèÖÃËùÓĞµÄ¼¼ÄÜ
+	if (sID < 0) // 
 	{
 		for (short i = 0; i < m_sSkillNum; i++)
 		{

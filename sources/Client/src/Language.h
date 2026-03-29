@@ -1,4 +1,4 @@
-//#pragma once
+﻿//#pragma once
 //
 //#define GB2312		1
 //#define BIG5		2

@@ -1,4 +1,4 @@
-// darn.h - written and placed in public domain by Jeffrey Walton
+﻿// darn.h - written and placed in public domain by Jeffrey Walton
 //          DARN requires POWER9/ISA 3.0.
 
 // At the moment only GCC 7.0 (and above) seems to support __builtin_darn()

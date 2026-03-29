@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "mygraph.h"
 
 IDirect3DDeviceX* g_pd3dDevice     = NULL; // Our rendering device
@@ -9,7 +9,7 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	FILE *fp = fopen(strFileName , "rb");
 	if(fp==NULL)
 	{
-		// Не удалось открыть файл текстуры
+		//     
 		g_logManager.InternalLog(LogLevel::Error, "common", std::format("Open File {} Error!(LoadTextureFromRawFile())", strFileName));
 		return NULL;
 	}
@@ -20,7 +20,7 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	fread(&h , 4 , 1 , fp);
 	fread(&d , 4 , 1 , fp);
 
-	// Вывод информации о загруженном raw-файле
+	//     raw-
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("load raw file( w = {:3d}  h = {:3d}  d = {:3d} )", w, h, d));
 
 	int iImageSize = w * h * d;
@@ -31,7 +31,7 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	IDirect3DTextureX* pTexture;
 	if(D3DXCreateTexture(g_pd3dDevice , w , h , D3DX_DEFAULT , 0 , D3DFMT_A8R8G8B8 ,  D3DPOOL_MANAGED , &pTexture)!=D3D_OK)                              
 	{
-		// Не удалось создать текстуру
+		//    
 		g_logManager.InternalLog(LogLevel::Error, "common", "CreateTexture Failed");
 		delete[] pbImageBuf;
 		return NULL;
@@ -64,7 +64,7 @@ LPTEXTURE LoadTextureFromRawFile(char *strFileName)
 	}
 	else
 	{
-		// Не удалось заблокировать текстуру
+		//    
 		g_logManager.InternalLog(LogLevel::Error, "common", "Lock Texture Failed!");
 		SAFE_RELEASE(pTexture);
 	}

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Player.cpp
 // Creater: ZhangXuedong
 // Date: 2004.10.19
@@ -33,7 +33,7 @@ m_sGarnerWiner(0)
 	//m_CMapMask.AddMap("lonetower", defMAP_LONETOWER_WIDTH, defMAP_LONETOWER_HEIGHT);
 	m_lLightSize = g_lDeftMMaskLight;
 
-	//��ʼ��Ħ���ʹ�������
+	//
 	m_lMoBean = 0;
 	m_lRplMoney = 0;
 	m_lVipID = 0;
@@ -117,7 +117,7 @@ void CPlayer::Finally()
 	m_pCtrlCha = 0;
 	m_pMainCha = NULL;
 
-	// �����еĴ�ֻ
+	// 
 	if( m_pMakingBoat )
 	{
 		m_pMakingBoat->Free();
@@ -143,7 +143,7 @@ void CPlayer::SetIMP(long imp,bool sync) {
 	if (sync){
 		char cmd[64];
 		sprintf(cmd, "SetIMPAcc('%s',%d)",GetActName(),GetIMP());
-		// Типизированная сериализация: синхронизация IMP через Lua
+		//  :  IMP  Lua
 		auto WtPk = net::msg::serialize(net::msg::MmDoStringMessage{(int64_t)GetID(), cmd});
 		GetMainCha()->ReflectINFof(GetMainCha(), WtPk);
 	}
@@ -197,7 +197,7 @@ void CPlayer::GetAllBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DATA
 			strncpy( Data.szName[byIndex], m_Boat[i]->GetName(), BOAT_MAXSIZE_BOATNAME - 1 );
 			if( Data.byState[byIndex] != 0 )
 			{
-				//strcat( Data.szName[byIndex], "  [״̬����û]" );
+				//strcat( Data.szName[byIndex], "  []" );
 				strcat( Data.szName[byIndex], RES_STRING(GM_PLAYER_CPP_00001) );
 				Data.byState[byIndex] = BS_DEAD;
 			}
@@ -205,19 +205,19 @@ void CPlayer::GetAllBerthBoat( USHORT sBerthID, BYTE& byNumBoat, BOAT_BERTH_DATA
 			{
 				if( m_Boat[i]->getAttr( ATTR_HP ) < (m_Boat[i]->getAttr( ATTR_MXHP )/2) )
 				{
-					//strcat( Data.szName[byIndex], "  [״̬��������]" );
+					//strcat( Data.szName[byIndex], "  []" );
 					strcat( Data.szName[byIndex], RES_STRING(GM_PLAYER_CPP_00002) );
 					Data.byState[byIndex] = BS_NOHP;
 				}
 				else if( m_Boat[i]->getAttr( ATTR_SP ) < (m_Boat[i]->getAttr( ATTR_MXSP )/2) )
 				{
-					//strcat( Data.szName[byIndex], "  [״̬����������]" );	
+					//strcat( Data.szName[byIndex], "  []" );	
 					strcat( Data.szName[byIndex], RES_STRING(GM_PLAYER_CPP_00003) );	
 					Data.byState[byIndex] = BS_NOSP;
 				}
 				else
 				{					
-					//strcat( Data.szName[byIndex], "  [״̬������]" );
+					//strcat( Data.szName[byIndex], "  []" );
 					strcat( Data.szName[byIndex], RES_STRING(GM_PLAYER_CPP_00004) );
 					Data.byState[byIndex] = BS_GOOD;
 				}
@@ -368,22 +368,22 @@ void CPlayer::GetBerth( USHORT& sBerthID, USHORT& sxPos, USHORT& syPos, USHORT& 
 	sDir = m_sDir;
 }
 
-// ����йز�������
-// ���ӵ�������
+// 
+// 
 void CPlayer::AddTeamMember(uplayer *pUPlayer)
 {
-	//LG("team", "Ϊ[%s]���Ӷ���: [dbid = %d] [gate_addr=%d]\n", GetCtrlCha()->GetLogName(), pUPlayer->m_dwDBChaId, pUPlayer->m_ulGateAddr);
+	//LG("team", "[%s]: [dbid = %d] [gate_addr=%d]\n", GetCtrlCha()->GetLogName(), pUPlayer->m_dwDBChaId, pUPlayer->m_ulGateAddr);
 	if(_nTeamMemberCnt>=MAX_TEAM_MEMBER)
 	{
-		//LG("team", "Ҫ������Team����ʱ�ﵽ����[%d], �޷�����\n", MAX_TEAM_MEMBER);
+		//LG("team", "Team[%d], \n", MAX_TEAM_MEMBER);
 		return;
 	}
 	_Team[_nTeamMemberCnt] = *pUPlayer;
 	_nTeamMemberCnt++;
-	//LG("team", "���ӳɹ� ���ж������� %d\n", _nTeamMemberCnt);
+	//LG("team", "  %d\n", _nTeamMemberCnt);
 }
 
-// ������ж��Ѽ�¼
+// 
 void CPlayer::ClearTeamMember()
 {
     _dwTeamLeaderID = 0;
@@ -401,7 +401,7 @@ void CPlayer::UpdateTeam()
 {
 }
 
-// Э�� : ��Player��Ϊ��ӳ�Ա����Ϣ���͸����ѵĿͻ���
+//  : Player
 void CPlayer::NoticeTeamMemberData()
 {
 	int	nTMemberCnt = GetTeamMemberCnt();
@@ -411,9 +411,9 @@ void CPlayer::NoticeTeamMemberData()
 	CCharacter *pMainCha = pCha->GetPlayer()->GetMainCha();
 	
 	
-	//LG("team", "[%s]��Ϊ��Ա��������Ա�Ŀͻ���[%d��]֪ͨ������Ϣ\n", pCha->GetName(), nTMemberCnt);
+	//LG("team", "[%s][%d]\n", pCha->GetName(), nTMemberCnt);
 
-	// Типизированная сериализация: данные участника команды с внешним видом
+	//  :      
 	auto wpk = net::msg::serializeMcTeamMemberData(
 		pMainCha->GetID(),
 		static_cast<int64_t>((long)pCha->getAttr(ATTR_HP)),
@@ -434,7 +434,7 @@ void CPlayer::NoticeTeamLeaderID(void)
 
 	CCharacter *pCha = GetCtrlCha();
 
-	// Типизированная сериализация: синхронизация ID лидера команды
+	//  :  ID  
 	auto pk = net::msg::serialize(net::msg::McSynTLeaderIdMessage{pCha->GetID(), getTeamLeaderID()});
 
 	SENDTOCLIENT2(pk, nTMemberCnt, _Team);
@@ -443,7 +443,7 @@ void CPlayer::NoticeTeamLeaderID(void)
 
 }
 
-// ������ͬ�ӵĳ�Ա��ɫ
+// 
 CCharacter* CPlayer::GetTeamMemberCha(int nNo)
 {
 	CPlayer *pOther = g_pGameApp->GetPlayerByDBID(_Team[nNo].m_dwDBChaId);
@@ -505,7 +505,7 @@ void CPlayer::ClearChallengeObj(bool bAll)
 	SetChallengeType(enumFIGHT_NONE);
 }
 
-// chPosType 1��װ����.2��������
+// chPosType 1.2
 bool CPlayer::SetRepairPosInfo(dbc::Char chPosType, dbc::Char chPosID)
 {
 	m_chRepairPosType = chPosType;
@@ -544,7 +544,7 @@ bool CPlayer::OpenForge(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -557,7 +557,7 @@ bool CPlayer::OpenForge(CCharacter *pCNpc)
 // Add by lark.li 20080514 begin
 bool CPlayer::OpenLottery(CCharacter *pCNpc)
 {
-	//SystemNotice("���Ʊ��������ԣ�");
+	//SystemNotice("");
 
 	m_pCLotteryman = pCNpc;
 	GetCtrlCha()->SynBeginItemLottery();
@@ -569,7 +569,7 @@ bool CPlayer::OpenUnite(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -583,7 +583,7 @@ bool CPlayer::OpenMilling(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -597,7 +597,7 @@ bool CPlayer::OpenFusion(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -611,7 +611,7 @@ bool CPlayer::OpenUpgrade(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -625,7 +625,7 @@ bool CPlayer::OpenEidolonMetempsychosis(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -639,7 +639,7 @@ bool CPlayer::OpenEidolonFusion(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -653,7 +653,7 @@ bool CPlayer::OpenPurify(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -667,7 +667,7 @@ bool CPlayer::OpenFix(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -681,7 +681,7 @@ bool CPlayer::OpenEnergy(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -707,7 +707,7 @@ bool CPlayer::OpenGetStone(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -721,7 +721,7 @@ bool CPlayer::OpenTiger(CCharacter *pCNpc)
 {
 	if (IsInForge())
 	{
-		//SystemNotice("֮ǰ������û�����!");
+		//SystemNotice("!");
 		SystemNotice(RES_STRING(GM_PLAYER_CPP_00005));
 		return false;
 	}
@@ -742,7 +742,7 @@ void CPlayer::SystemNotice( const char szData[], ... )
 	// End
 	va_end( list );
 
-	// Типизированная сериализация: уведомление игрока + ручной trailer для маршрутизации
+	//  :   +  trailer  
 	auto packet = net::msg::serialize(net::msg::McSysInfoMessage{szTemp});
 	packet.WriteInt64(GetDBChaId());
 	packet.WriteInt64(GetGateAddr());
@@ -807,7 +807,7 @@ bool CPlayer::SetBankChangeFlag(char chBankNO, bool bChange)
 bool CPlayer::SynGuildBank(CKitbag * bag, char chType){
 	int canSeeBank = (m_pMainCha->guildPermission & emGldPermViewBank);
 	
-	// Типизированная сериализация: синхронизация гильдейского банка через std::variant
+	//  :     std::variant
 	net::msg::McCharacterActionMessage msg{};
 	msg.worldId = m_pMainCha->GetID();
 	msg.packetId = m_pMainCha->m_ulPacketID;
@@ -842,14 +842,14 @@ bool CPlayer::SynBank(char chBankNO, char chType)
 		chStart = chEnd = chBankNO;
 	}
 
-	// Типизированная сериализация: синхронизация банка через std::variant
+	//  :    std::variant
 	net::msg::McCharacterActionMessage msg{};
 	msg.worldId = m_pCtrlCha->GetID();
 	msg.packetId = m_pCtrlCha->m_ulPacketID;
 	msg.actionType = net::msg::ActionType::BANK;
 	msg.data = net::msg::ChaKitbagInfo{};
-	// Объединение нескольких страниц банка: используем первую страницу как базу,
-	// дополнительные предметы добавляются в общий kitbag
+	//    :     ,
+	//      kitbag
 	bool firstBank = true;
 	for (char i = chStart; i <= chEnd; i++)
 	{
@@ -876,38 +876,38 @@ bool CPlayer::BankCanOpen(CCharacter *pCNpc)
 	CCharacter	*pCCtrlCha = GetCtrlCha();
 	if (pCCtrlCha != GetMainCha())
 	{
-		//pCCtrlCha->SystemNotice("��ǰ��ɫ���ܽ�������");
+		//pCCtrlCha->SystemNotice("");
 		pCCtrlCha->SystemNotice(RES_STRING(GM_PLAYER_CPP_00006));
 		return false;
 	}
 	if (m_pCBankNpc)
 	{
-		//pCCtrlCha->SystemNotice("�����Ѿ��ڴ�״̬");
+		//pCCtrlCha->SystemNotice("");
 		pCCtrlCha->SystemNotice(RES_STRING(GM_PLAYER_CPP_00007));
 		return false;
 	}
 	if (!pCNpc)
 	{
-		//pCCtrlCha->SystemNotice("����NPC������");
+		//pCCtrlCha->SystemNotice("NPC");
 		pCCtrlCha->SystemNotice(RES_STRING(GM_PLAYER_CPP_00008));
 		return false;
 	}
 	if (pCCtrlCha->HasTradeAction())
 	{
-		//pCCtrlCha->SystemNotice("�Ѿ��ڽ�����");
+		//pCCtrlCha->SystemNotice("");
 		pCCtrlCha->SystemNotice(RES_STRING(GM_PLAYER_CPP_00009));
 		return false;
 	}
-	// �����жϣ���Npc����ʱ�Ѿ����˼��
+	// Npc
 	if (!pCCtrlCha->IsRangePoint(pCNpc->GetPos(), defBANK_DISTANCE))
 	{
-		//pCCtrlCha->SystemNotice("����̫Զ");
+		//pCCtrlCha->SystemNotice("");
 		pCCtrlCha->SystemNotice(RES_STRING(GM_PLAYER_CPP_00010));
 		return false;
 	}
 	if (!pCCtrlCha->TradeAction(true))
 	{
-		//pCCtrlCha->SystemNotice("���ý���״̬ʧ��");
+		//pCCtrlCha->SystemNotice("");
 		pCCtrlCha->SystemNotice(RES_STRING(GM_PLAYER_CPP_00011));
 		return false;
 	}
@@ -944,7 +944,7 @@ bool CPlayer::GetGuildGold(){
 	int canSeeBank = (pCCtrlCha->guildPermission & emGldPermViewBank);
 	if (canSeeBank == emGldPermViewBank){
 		unsigned long long gold = game_db.GetGuildBankGold(guildID);
-		// Типизированная сериализация: обновление золота банка гильдии
+		//  :    
 		auto WtPk = net::msg::serialize(net::msg::McUpdateGuildGoldMessage{to_string(gold).c_str()});
 		pCCtrlCha->ReflectINFof(pCCtrlCha, WtPk);
 		return true;
@@ -1034,7 +1034,7 @@ bool CPlayer::BankHasItem(USHORT sItemID, USHORT& sCount)
 	CItemRecord* pItem = GetItemRecordInfo( sItemID );
 	if( pItem == NULL )
 	{
-		//SystemNotice( "BankHasItem:�������Ʒ��������!ID = %d", sItemID );
+		//SystemNotice( "BankHasItem:!ID = %d", sItemID );
 		SystemNotice( RES_STRING(GM_PLAYER_CPP_00013), sItemID );
 		return FALSE;
 	}
@@ -1127,7 +1127,7 @@ bool CPlayer::Strin2BankDBIDData(std::string &strData)
 
 void CPlayer::CheckChaItemFinalData()
 {
-	// ���
+	// 
 	cChar	*szScript = "check_item_final_data";
 	CCharacter	*pCMainCha = GetMainCha();
 	for (int i = 0; i < enumEQUIP_NUM; i++)
@@ -1139,7 +1139,7 @@ void CPlayer::CheckChaItemFinalData()
 		}
 	}
 
-	// ����
+	// 
 	SItemGrid	*pGridCont;
 	Short	sUseNum = pCMainCha->m_CKitbag.GetUseGridNum();
 	for (int i = 0; i < sUseNum; i++)
@@ -1151,7 +1151,7 @@ void CPlayer::CheckChaItemFinalData()
 		g_CParser.DoString(szScript, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, pGridCont, DOSTRING_PARAM_END);
 	}
 
-	// ����
+	// 
 	for (int j = 0; j < MAX_BANK_NUM; j++)
 	{
 		sUseNum = m_CBank[j].GetUseGridNum();
@@ -1165,7 +1165,7 @@ void CPlayer::CheckChaItemFinalData()
 		}
 	}
 
-	// ����
+	// 
 	//for (int i = 0; i < m_byNumBoat; i++)
 	//{
 	//	if (m_Boat[i])
@@ -1196,7 +1196,7 @@ void CPlayer::Run(DWORD dwCurTime)
 	if (HasChallengeObj())
 		if (m_timerChallenge.IsOK(dwCurTime))
 		{
-			//SystemNotice("���볬ʱ!");
+			//SystemNotice("!");
 			SystemNotice(RES_STRING(GM_PLAYER_CPP_00014));
 			ClearChallengeObj(false);
 		}

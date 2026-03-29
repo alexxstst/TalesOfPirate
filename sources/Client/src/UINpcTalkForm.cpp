@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "uinpctalkform.h"
 #include "uiequipform.h"
 #include "uigoodsgrid.h"
@@ -29,7 +29,7 @@ using namespace GUI;
 
 static BYTE		_byIndex = - 1; 
 static BYTE		_byPage = - 1;       
-static DWORD	_npcID = -1;       //npcµÄid ºÅ
+static DWORD	_npcID = -1;       //npcid 
 static BYTE		_byCmd = 0;
 
 BYTE CNpcTalkMgr::_byTalkStyle = 0;
@@ -42,8 +42,8 @@ bool CNpcTalkMgr::Init()
 	m_bIsNpcTalk = false;
 	CFormMgr &mgr = CFormMgr::s_Mgr;
 
-	//³õÊ¼»¯npc¶Ô»°±íµ¥
-	frmNPCchat = _FindForm("frmNPCchat");   // µÀ¾ß±íµ¥
+	//npc
+	frmNPCchat = _FindForm("frmNPCchat");   // 
 	if ( !frmNPCchat ) return false;
 	frmNPCchat->evtEntrustMouseEvent = _MainMouseNPCEvent;
 
@@ -66,7 +66,7 @@ void CNpcTalkMgr::ShowFuncPage( BYTE byFuncPage , BYTE byCount,BYTE byMisNum, co
 {
 	m_bIsNpcTalk = true;
 
-	//É¾³ýLst¿Ø¼þÔ­À´µÄItem
+	//LstItem
 	if( !memCtrl ) return;
 
     memCtrl->Init();
@@ -74,7 +74,7 @@ void CNpcTalkMgr::ShowFuncPage( BYTE byFuncPage , BYTE byCount,BYTE byMisNum, co
 
 	memCtrl->SetCaption( FuncArray.szTalk );
 
-	if ( byCount >0 )   //¶ÁÈ¡Ñ¡ÏîÊý¾Ý
+	if ( byCount >0 )   //
 	{
 		memCtrl->SetIsHaveItem(true);			
 		memCtrl->SetItemRowNum( byCount);
@@ -140,7 +140,7 @@ void CNpcTalkMgr::_MainMouseNPCEvent(CCompent *pSender, int nMsgType, int x, int
 {
 	string name = pSender->GetName();
 
-	if( name=="btnNo"  || name == "btnClose" )  //Èç¹ûÊÇÍË³ö°´Å¥,Ôò¹Ø±Õ¸Ã±íµ¥
+	if( name=="btnNo"  || name == "btnClose" )  //,
 	{		
 		pSender->GetForm()->Close();
 		pSender->GetForm()->Find("memCtrl")->SetCaption("");			
@@ -234,7 +234,7 @@ void CNpcTalkMgr::SwitchMap()
 {
 	if( !(dynamic_cast<CWorldScene*>( CGameApp::GetCurScene() )) ) return;
 
-	// °ïÖú
+	// 
 	static bool IsFirstWorldScene = true;
 	if( IsFirstWorldScene )
 	{

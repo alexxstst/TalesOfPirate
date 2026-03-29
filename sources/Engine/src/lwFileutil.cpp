@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 #include "lwfileutil.h"
 #include <assert.h>

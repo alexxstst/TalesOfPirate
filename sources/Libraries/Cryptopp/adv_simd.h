@@ -1,4 +1,4 @@
-// adv_simd.h - written and placed in the public domain by Jeffrey Walton
+﻿// adv_simd.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file adv_simd.h
 /// \brief Template for AdvancedProcessBlocks and SIMD processing

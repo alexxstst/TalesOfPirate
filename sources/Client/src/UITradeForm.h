@@ -1,41 +1,41 @@
-#pragma once
+ï»¿#pragma once
 #include "UIGlobalVar.h"
 #include "gamecommon.h"
 
 struct NET_CHARTRADE_BOATDATA;
 namespace GUI
 {
-// ÓëÍæ¼Ò½»Ò×
+// 
 class CTradeMgr : public CUIInterface
 {
 public:
-	void	ShowCharTradeRequest( BYTE byType, DWORD dwRequestID );				// ÏÔÊ¾Ò»¸öÑûÇë¿ò
-	void	ShowCharTrade( BYTE byType, DWORD dwAcceptID,DWORD dwRequestID );	// ÏÔÊ¾½»Ò×½çÃæ
-	void	CancelCharTrade(  DWORD dwCharID );						// È¡Ïû½»Ò×
-	void	ShowCharTradeMoney(DWORD dwCharID, DWORD dwMoney);   // ÏÔÊ¾½»Ò×µÄ½ð¶î
-	void	ShowCharTradeIMP(DWORD dwCharID, DWORD dwMoney);   // ÏÔÊ¾½»Ò×µÄ½ð¶î
+	void	ShowCharTradeRequest( BYTE byType, DWORD dwRequestID );				// 
+	void	ShowCharTrade( BYTE byType, DWORD dwAcceptID,DWORD dwRequestID );	// 
+	void	CancelCharTrade(  DWORD dwCharID );						// 
+	void	ShowCharTradeMoney(DWORD dwCharID, DWORD dwMoney);   // 
+	void	ShowCharTradeIMP(DWORD dwCharID, DWORD dwMoney);   // 
 
 	void	ValidateTradeData( DWORD dwCharID );
 	void	ValidateTrade(  DWORD dwCharID );
-	void	ShowTradeSuccess(); // ÏÔÊ¾½»Ò×³É¹¦
-	void	ShowTradeFailed();  // ÏÔÊ¾½»Ò×Ê§°Ü
+	void	ShowTradeSuccess(); // 
+	void	ShowTradeFailed();  // 
 
-	void    CloseAllForm();		// ¹Ø±Õ´°Ìå
+	void    CloseAllForm();		// 
 
-	// ÍÏ¶¯µ½½»Ò×Ãæ°åÖÐ
+	// 
 	void	DragTradeToItem(DWORD dwCharID,BYTE byIndex,BYTE byItemIndex );
 
-	//sItem: ½»Ò×µÄµÀ¾ßÔÚµÀ¾ß±íÖÐµÄÐòÁÐ£¬ byIndex : ÔÚ½»Ò×±íµ¥ÖÐµÄË÷Òý byCount£º½»Ò×µÄÊýÁ¿
-	//byItemIndex: £º¸øµÀ¾ßÔÚµÀ¾ßÀ¸µÄË÷Òý
+	//sItem:  byIndex :  byCount
+	//byItemIndex: 
 	void	DragItemToTrade(DWORD dwCharID,USHORT sItemID,BYTE byIndex,BYTE byCount,BYTE byItemIndex, SItemGrid* pGrid, const NET_CHARTRADE_BOATDATA* const pBoat );
 
 	CGoodsGrid*     GetPlayertradeSaleGrid()    { return  grdSale;		} 
 	CGoodsGrid*		GetRequestGrid()			{ return  grdRequest;	} //
 
-	void			LocalSaleItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );  // ½»Ò×µÄµÀ¾ß
-	void			LocalCancelItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );// È¡Ïû½»Ò×µÄµÀ¾ß
+	void			LocalSaleItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );  // 
+	void			LocalCancelItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int nGridID, CCommandObj* pItem );// 
 
-	// ÊÇ·ñÕýÔÚ½»Ò×ÖÐ
+	// 
 	bool			IsTrading();
 
 	CForm*			GetForm()	{ return frmPlayertrade; } //
@@ -49,13 +49,13 @@ protected:
 
 protected:
 	static void _evtSelectYesNoEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-    static void _evtThrowItemEvent(CGuiData *pSender,int id,bool& isThrow);     // ´ÓµÀ¾ßÀ¸ÖÐÈÓ³öµÀ¾ß
+    static void _evtThrowItemEvent(CGuiData *pSender,int id,bool& isThrow);     // 
 
 	static void _evtIMPFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 	static void _evtGoldFormEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 	static void _MainMousePlayerTradeEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
-	static void _evtSelfRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,int nGridID);		// ½»Ò×½çÃæµã²é¿´×Ô¼ºµÄÎïÆ·µÀ¾ß
-	static void _evtOtherRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,int nGridID);		// ½»Ò×½çÃæµã²é¿´¶Ô·½µÄÎïÆ·µÀ¾ß
+	static void _evtSelfRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,int nGridID);		// 
+	static void _evtOtherRMouseGridEvent(CGuiData *pSender,CCommandObj* pItem,int nGridID);		// 
 
 private:
 	CGoodsGrid* GetPlayertradeBuyGrid()     { return  grdBuy;	}
@@ -63,7 +63,7 @@ private:
 
 private:
 	CForm*		frmPlayertrade;
-	CForm*		frmRequest;				//½»Ò××ó±ßµÄµÀ¾ß±íµ¥(»ò´¬²Õ)
+	CForm*		frmRequest;				//()
 	CGoodsGrid* grdRequest;
 	CGoodsGrid*	grdBuy;
 	CGoodsGrid*	grdSale;
@@ -81,9 +81,9 @@ private:
 	CCheckBox*		chkTrade;
 	CCheckBox*		chkYes;
 
-	DWORD			m_dwAcceptID;         // ½»Ò×½ÓÊÜ·½
-	DWORD			m_dwRequestID;        // ½»Ò×ÉêÇë·½
-	BYTE			m_bTradeType;		  // ½»Ò×ÀàÐÍ,²Î¿´RoleCommand.h TRADE_CHAR_TYPE
+	DWORD			m_dwAcceptID;         // 
+	DWORD			m_dwRequestID;        // 
+	BYTE			m_bTradeType;		  // ,RoleCommand.h TRADE_CHAR_TYPE
 
 	DWORD			m_dwMainID;
 

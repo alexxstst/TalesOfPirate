@@ -1,4 +1,4 @@
-#ifndef __cdostr_h_
+﻿#ifndef __cdostr_h_
 #define __cdostr_h_
 //	__CdoCalendar_MODULE_DEFINED__
 #define cdoTimeZoneIDURN	L"urn:schemas:calendar:timezoneid"

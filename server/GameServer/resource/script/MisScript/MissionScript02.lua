@@ -1,4 +1,4 @@
-print("-- [Loading] Mission Script [02]")
+锘縫rint("-- [Loading] Mission Script [02]")
 
 function StoryQuest01()
     DefineMission(200, "Secretary Message", 200)
@@ -218,7 +218,7 @@ function StoryQuest05()
 
     MisBeginCondition(AlwaysFailure)
 
-    MisResultTalk("<t>Oh… You found… <bTommy>?...Good… Good… I… I…")
+    MisResultTalk("<t>Oh You found <bTommy>?...Good Good I I")
     MisResultCondition(NoRecord, 206)
     MisResultCondition(HasMission, 206)
     MisResultCondition(HasItem, 3965, 1)
@@ -234,7 +234,7 @@ StoryQuest05()
 function StoryQuest06()
     DefineMission(213, "Food Poisoning", 207)
 
-    MisBeginTalk("<t>Ah… Ah… I am sorry… After lunch… Everyone started vomiting… Food… Poisoned… Please take this <yLunch Sample>… to <bPhysicial - Ditto> at <j(2250,2770)>… For the Antidote… Hurry!")
+    MisBeginTalk("<t>Ah Ah I am sorry After lunch Everyone started vomiting Food Poisoned Please take this <yLunch Sample> to <bPhysicial - Ditto> at <j(2250,2770)> For the Antidote Hurry!")
     MisBeginCondition(NoRecord, 207)
     MisBeginCondition(HasRecord, 206)
     MisBeginCondition(NoMission, 207)
@@ -246,8 +246,8 @@ function StoryQuest06()
 
     MisNeed(MIS_NEED_ITEM, 3967, 1, 10, 1)
 
-    MisResultTalk("<t>Ah… You're a good person… Thank you.")
-    MisHelpTalk("<t>Antidote… Hurry… Dying…")
+    MisResultTalk("<t>Ah You're a good person Thank you.")
+    MisHelpTalk("<t>Antidote Hurry Dying")
     MisResultCondition(HasMission, 207)
     MisResultCondition(HasItem, 3967, 1)
     MisResultAction(TakeItem, 3967, 1)
@@ -266,7 +266,7 @@ function StoryQuest06()
 
     MisBeginCondition(AlwaysFailure)
 
-    MisResultTalk("<t>Everyone has been Poisoned?! <n><t>Let me take a look… Wow, it looks too yummy to be poisonous doesn't it?")
+    MisResultTalk("<t>Everyone has been Poisoned?! <n><t>Let me take a look Wow, it looks too yummy to be poisonous doesn't it?")
     MisResultCondition(NoRecord, 207)
     MisResultCondition(NoFlag, 207, 1)
     MisResultCondition(HasMission, 207)
@@ -1175,7 +1175,7 @@ function StoryQuest33()
 
     MisBeginCondition(AlwaysFailure)
 
-    MisResultTalk("<t>Gone…Missing …I have failed in my duty. The supplies are missing.")
+    MisResultTalk("<t>GoneMissing I have failed in my duty. The supplies are missing.")
     MisResultCondition(NoRecord, 235)
     MisResultCondition(HasMission, 235)
     MisResultAction(ClearMission, 235)
@@ -1336,7 +1336,7 @@ function StoryQuest38()
     MisBeginCondition(HasRecord, 239)
     MisBeginCondition(NoMission, 240)
     MisBeginAction(AddMission, 240)
-    MisBeginAction(AddTrigger, 2401, TE_GETITEM, 4071, 1) --雪娃娃的记忆石
+    MisBeginAction(AddTrigger, 2401, TE_GETITEM, 4071, 1) --
     MisCancelAction(ClearMission, 240)
 
     MisNeed(MIS_NEED_ITEM, 4071, 1, 10, 1)
@@ -1529,7 +1529,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 6 )
 	MisResultAction(AddExp,1768,1768)
 	MisResultAction(AddMoney,1565,1565)
-	MisResultAction(AddExpAndType,2,9035,9035)----------------------------会长的把柄
+	MisResultAction(AddExpAndType,2,9035,9035)----------------------------
 	DefineMission( 273, "Chairman's Dark Secret", 246 )
 	
 	MisBeginTalk("<t>If you want the cooperation of <bChairman Ronnie>, we must blackmail him.<n><t>We need the help of <bAdmiral William>. Go have a chat with him at <j(2277, 2831)>.")
@@ -1541,22 +1541,22 @@ function HistoryMission001()
 		
 	MisNeed(MIS_NEED_DESP,"Look for the <bNavy General - William> at <j(2277, 2831)>.")
 	
-	MisHelpTalk("<t>Go…Go! Leave me alone with my wine.")
+	MisHelpTalk("<t>GoGo! Leave me alone with my wine.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------会长的把柄
+-----------------------------------
 	DefineMission( 274, "Chairman's Dark Secret", 246, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
 		
-	MisResultTalk("<t>Haha…Haha! Oh that sneaky old man, he will only look for me when he plot something bad. <n><t>Okay! In regards to this matter, since you have been such a big help so far, count me in!")
+	MisResultTalk("<t>HahaHaha! Oh that sneaky old man, he will only look for me when he plot something bad. <n><t>Okay! In regards to this matter, since you have been such a big help so far, count me in!")
 	MisResultCondition(NoRecord, 246 )
 	MisResultCondition(HasMission, 246)
 	MisResultAction(ClearMission, 246 )
 	MisResultAction(SetRecord, 246 )
 	MisResultAction(AddExp,3600,3600)
 	MisResultAction(AddMoney,3100,3100)	
-	MisResultAction(AddExpAndType,2,9035,9035)-------------------------------------------------废矿探索
+	MisResultAction(AddExpAndType,2,9035,9035)-------------------------------------------------
 	DefineMission( 275, "Mine Investigation", 247 )
 
 	MisBeginTalk("<t>Exit by the west gate and head west. Once you reach the <pSilver Mine>, head further to get to the abandoned cavern.<n><t>There is a special creature called a <rMud Monster>. It eats everything given to it but digest extremely slow. We use it as a rubbish bin. You unfortunately have to kill it to find old documents that will help us. Bring the <yOld Paper> back to me, surely we can start blackmailing <bChairman Ronnie> to reveal the truth to us.")
@@ -1564,7 +1564,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 246)
 	MisBeginCondition(NoMission, 247)
 	MisBeginAction(AddMission, 247)
-	MisBeginAction(AddTrigger, 2471, TE_GETITEM, 4081, 10 )		--破旧的纸片
+	MisBeginAction(AddTrigger, 2471, TE_GETITEM, 4081, 10 )		--
 	MisCancelAction(ClearMission, 247)
 
 	MisNeed(MIS_NEED_ITEM, 4081, 10, 10, 10)
@@ -1586,10 +1586,10 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 247, 10, 10 )
 	RegCurTrigger( 2471 )
 
-----------------------------纸片的秘密
+----------------------------
 	DefineMission( 276, "Secret of the Slip", 248 )
 	
-	MisBeginTalk("<t>Look at this <yAncient Bounty Token>, its an official wanted list, and guess who issued it, its none other the <bChairman Ronnie>.<n><t>I will love to follow you to see the look on his face when you ask him about it. Hehe…")
+	MisBeginTalk("<t>Look at this <yAncient Bounty Token>, its an official wanted list, and guess who issued it, its none other the <bChairman Ronnie>.<n><t>I will love to follow you to see the look on his face when you ask him about it. Hehe")
 	MisBeginCondition(NoRecord, 248 )
 	MisBeginCondition(HasRecord, 247 )
 	MisBeginCondition(NoMission, 248 )
@@ -1603,12 +1603,12 @@ function HistoryMission001()
 	MisHelpTalk("<t>Go now! I can imagine his expression. Haha!")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------纸片的秘密
+-----------------------------------
 	DefineMission( 277, "Secret of the Slip", 248, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
 		
-	MisResultTalk("<t>Why do you return? Gasp! Where did you get that? Hmm…I will talk. What do you wish to know?")
+	MisResultTalk("<t>Why do you return? Gasp! Where did you get that? HmmI will talk. What do you wish to know?")
 	MisResultCondition(NoRecord, 248 )
 	MisResultCondition(HasMission, 248)
 	MisResultCondition(HasItem, 4082, 1)
@@ -1618,7 +1618,7 @@ function HistoryMission001()
 	MisResultAction(AddMoney,3200,3200)
 	MisResultAction(AddExpAndType,2,9035,9035)
 
-----------------------------逃跑的巨兽
+----------------------------
 	DefineMission( 278, "Behemoth's Escape", 249 )
 	
 	MisBeginTalk("<t>Sometime ago, I travelled to the faraway land of <pAutumm Island>. I stumbled upon a <rBehemoth>, which could be sold for a handsome price. I also purchased a magical legendary fruit from a mysterious trader.<n><t>On the way back, I hid the fruit near the Behemoth's cage. I guess it must have eaten the priceless fruit and became strong enough to break its prison.<n><t>It escaped to the west silver mine and terrorising the miners there. I had to issue a reward for the capture of the beast but alas, no one succeeded. The <bCastle Guard - Peter> at <j(2192, 2767)> has also given a try but failed, perhaps he can help you with more details.")
@@ -1633,7 +1633,7 @@ function HistoryMission001()
 	MisHelpTalk("<t><bPeter> is near the Argent City's west gate. His big head is easy to notice.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------逃跑的巨兽
+-----------------------------------
 	DefineMission( 279, "Behemoth's Escape", 249, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -1647,16 +1647,16 @@ function HistoryMission001()
 	MisResultAction(AddMoney,1700,1700)	
 	MisResultAction(AddExpAndType,2,9035,9035)
 
--------------------------------------------------古老的悬赏令
+-------------------------------------------------
 	DefineMission( 280, "Ancient Bounty Token", 250 )
 
-	MisBeginTalk("<t>Its been a long time that any adventurers accept the hunting request for the <rBehemoth>. I almost forgot about it. The reward is still valid now. All you have to do is to slay the <rBehemoth> and take their <yIron Cuffs> here to claim the reward….. I don't think that you are strong enough to handle it though.")
+	MisBeginTalk("<t>Its been a long time that any adventurers accept the hunting request for the <rBehemoth>. I almost forgot about it. The reward is still valid now. All you have to do is to slay the <rBehemoth> and take their <yIron Cuffs> here to claim the reward.. I don't think that you are strong enough to handle it though.")
 	MisBeginCondition(NoRecord, 250)
 	MisBeginCondition(HasRecord, 248)
 	MisBeginCondition(NoMission, 250)
 	MisBeginCondition(HasItem, 4082, 1)
 	MisBeginAction(AddMission, 250)
-	MisBeginAction(AddTrigger, 2501, TE_GETITEM, 4083, 1 )		--镣铐x1
+	MisBeginAction(AddTrigger, 2501, TE_GETITEM, 4083, 1 )		--x1
 	MisCancelAction(ClearMission, 250)
 
 	MisNeed(MIS_NEED_ITEM, 4083, 1, 10, 1)
@@ -1681,7 +1681,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 250, 10, 1 )
 	RegCurTrigger( 2501 )
 
-----------------------------可怕的怪物
+----------------------------
 	DefineMission( 281, "Scary Monsters", 251 )
 	
 	MisBeginTalk("<t>Strangely, this monster likes to eat <bGranny - Beldi>'s pasteries. Back then when we were having tea break, it suddenly attacked. We were lucky to escape with minor injuries, but the cakes were all gone.")
@@ -1693,10 +1693,10 @@ function HistoryMission001()
 		
 	MisNeed(MIS_NEED_DESP,"Find <bGranny Beldi> at <j(2277, 2769)>.")
 	
-	MisHelpTalk("<t>Talking about <bGranny Beldi>'s pastries has made me drool…")
+	MisHelpTalk("<t>Talking about <bGranny Beldi>'s pastries has made me drool")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------可怕的怪物
+-----------------------------------
 	DefineMission( 282, "Scary Monsters", 251, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -1708,7 +1708,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 251 )
 	MisResultAction(AddExp,4000,4000)
 	MisResultAction(AddMoney,2000,2000)	
-	MisResultAction(AddExpAndType,2,9035,9035)----------------------------老奶奶的糕点
+	MisResultAction(AddExpAndType,2,9035,9035)----------------------------
 	DefineMission( 283, "Granny's Pastries", 252 )
 	
 	MisBeginTalk("<t><bMiner Drunky> loves the pasteries so much that he bought the whole batch today. So you can't have any sample of it.<n><t>But old granny don't think he can finish it all. You could find him at the <pSilver Mine>, guess he won't mind to share some.")
@@ -1723,29 +1723,29 @@ function HistoryMission001()
 	MisHelpTalk("<t>Hurry before <bDrunky> finishes it all for dinner.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------老奶奶的糕点
+-----------------------------------
 	DefineMission( 284, "Granny's Pastries", 252, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
 	
-	MisResultTalk("<t>You came for <bGranny Beldi>'s cake? I'm sorry but I don't have any left. Not that I even had a chance to eat any of it…….")
+	MisResultTalk("<t>You came for <bGranny Beldi>'s cake? I'm sorry but I don't have any left. Not that I even had a chance to eat any of it.")
 	MisResultCondition(NoRecord, 252 )
 	MisResultCondition(HasMission, 252)
 	MisResultAction(ClearMission, 252 )
 	MisResultAction(SetRecord, 252 )
 	MisResultAction(AddExp,4000,4000)
 	MisResultAction(AddMoney,2000,2000)
-	MisResultAction(AddExpAndType,2,9035,9035)-------------------------------------------------被夺走的便当
+	MisResultAction(AddExpAndType,2,9035,9035)-------------------------------------------------
 	DefineMission( 285, "Stolen Lunchbox", 253 )
 
 	MisBeginTalk("<t>It was supposed to be a happy day today as <bGranny - Beldi> has made me so many pastries. I happily packed them into my lunchbox and brought them to work but it was stolen the moment I turned away!<n><t>It was a <rNinja Mole>! I saw it too late, for it has already escaped into the <pAbandoned Mine>. I dare not enter that scary place.<n><t>Can you please help me get my lunchbox back? Otherwise...I will not have enough energy to work...These creatures often appear at <j(229, 28)>.")
 	MisBeginCondition(HasRecord, 252)
 	MisBeginCondition(NoMission, 253)
 	MisBeginCondition(NoRecord, 250)
-	MisBeginCondition(NoRecord, 253)  --暂时不许重复接
+	MisBeginCondition(NoRecord, 253)  --
 	MisBeginCondition(NoMission, 4)
 	MisBeginAction(AddMission, 253)
-	MisBeginAction(AddTrigger, 2531, TE_GETITEM, 4084, 1 )		--便当x1
+	MisBeginAction(AddTrigger, 2531, TE_GETITEM, 4084, 1 )		--x1
 	MisCancelAction(ClearMission, 253)
 
 	MisNeed(MIS_NEED_ITEM, 4084, 1, 10, 1)
@@ -1754,7 +1754,7 @@ function HistoryMission001()
 	MisPrizeSelAll()
 
 	MisResultTalk("<t> You are my saviour! Hohoho! Its my lunchbox! Thank you so much! This is great!<n><t>Come! This <yStrawberry Biscuit> is for you! Remember! Do not ever go to <pAbandoned Mine 2> to eat the biscuit! There is a monster residing at a corner who loves to attack anybody with tasty biscuit!!!")
-	MisHelpTalk("<t>Can't work…Too hungry…")
+	MisHelpTalk("<t>Can't workToo hungry")
 	MisResultCondition(HasMission, 253 )
 	MisResultCondition(HasItem, 4084, 1 )
 	MisResultAction(TakeItem, 4084, 1 )
@@ -1781,7 +1781,7 @@ function HistoryMission001()
 	TriggerAction( 1, SetMissionFailure, 4 )
 	RegCurTrigger( 108 )
 
--------------------------------------------------海上补给站
+-------------------------------------------------
 	DefineMission( 286, "Sea Haven", 254 )
 
 	MisBeginTalk("<t> When I was the captain of a powerful merchant fleet a long time ago. my travels brought me to <pAutumm Island>. The <rBehemoth> we captured from there would bring me a fortune. <n><t>On the way back, I stopped by <pNine Havan>, a person called <bAndrew> sold me rare magical items, claiming that the magical fruit is part of <bPirate King <Roland>'s treasures. Eating the Fruit will give you magical powers. I did not believe him but at the point of time, I had a spare 100,000G so I bought it as a souvenir.<n><t>The rest as you know is history. You should look for Andrew to solve the mystery of the feral animals. Go to <pArgent Harbor> and look for <bShirley> at <j(2243, 2826)> for directions.")
@@ -1796,7 +1796,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>I told you before, but I am not certain that <bAndrew> is still at <pNine Haven>.")
 	MisResultCondition(AlwaysFailure )
 
--------------------------------------------------山珍八宝酒
+-------------------------------------------------
 	DefineMission( 288, "Eight Treasures Wine", 255 )
 
 	MisBeginTalk("<t>To brew <yEight Treasures Wine> requires 4 more ingredients: 2 <yBamboo Dew> from <rAngelic Panda> at <j(1655, 2563)>, 2 <yNutritious Pearl Powder> from <rOyster> at <j(1817, 2472)>, 2 <ySmuggled Spice> from <rSmuggler> at <j(1624, 3017)> and 3 <yKangaroo Brew> from <rBerserk Boxeroo> at <j(1161, 2639)>.")
@@ -1805,10 +1805,10 @@ function HistoryMission001()
 	MisBeginCondition(HasMission, 242)
 	MisBeginCondition(NoMission, 255)
 	MisBeginAction(AddMission, 255)
-	MisBeginAction(AddTrigger, 2551, TE_GETITEM, 4077, 2 )		--竹叶上的露珠
-	MisBeginAction(AddTrigger, 2552, TE_GETITEM, 4078, 2 )		--养颜的珍珠粉
-	MisBeginAction(AddTrigger, 2553, TE_GETITEM, 4079, 2 )		--走私香料
-	MisBeginAction(AddTrigger, 2554, TE_GETITEM, 4080, 3 )		--袋鼠的私酿
+	MisBeginAction(AddTrigger, 2551, TE_GETITEM, 4077, 2 )		--
+	MisBeginAction(AddTrigger, 2552, TE_GETITEM, 4078, 2 )		--
+	MisBeginAction(AddTrigger, 2553, TE_GETITEM, 4079, 2 )		--
+	MisBeginAction(AddTrigger, 2554, TE_GETITEM, 4080, 3 )		--
 	MisCancelAction(ClearMission, 255)
 
 	MisNeed(MIS_NEED_ITEM, 4077, 2, 18, 2)
@@ -1854,7 +1854,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 255, 24, 3 )
 	RegCurTrigger( 2554 )
 
------------------------------------海上补给站
+-----------------------------------
 	DefineMission( 289, "Sea Haven", 254, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -1866,7 +1866,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 254 )
 	MisResultAction(AddExp,5000,5000)	
 	MisResultAction(AddMoney,2000,2000)	
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------航线活地图
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------
 	DefineMission( 290, "Navigation Map", 256 )
 
 	MisBeginTalk("<t>Although I have no knowledge of it, there are others that may know.<n><t>The Haven in the sea was attacked several times by pirates until it was destroyed. Usually during the reconstruction of the Haven, there will be a change in its name.<n><t>I remember when I was studying at <pArgent City> Maritime school, I once heard my teacher mentioned a place called <pWoody Heaven> where a harbor operator who was called the \"<rLiving Map of the sea>\". His name is.....<bBaros>!  Maybe you can try to look for him and question him. However, there are great dangers in the open sea so be prepared.<n><t>Oh right, the location of the Haven is at <j(2024, 2752)>, other than this I can't help you anymore. Good luck!")
@@ -1881,7 +1881,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>The ocean is a huge place,you must be ready.<n><t>Get your bearings right or else it's no laughing matter when you are lost. The radar would be extremely helpful.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------航线活地图
+-----------------------------------
 	DefineMission( 291, "Navigation Map", 256, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -1893,7 +1893,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 256 )
 	MisResultAction(AddExp,2649,2649)
 	MisResultAction(AddMoney,1680,1680)
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------挑战水母
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------
 	DefineMission( 292, "Challenge Sea Jelly", 257 )
 
 	MisBeginTalk("<t>*Cough* If you want to know so badly, you have to help me run an errand.<n><t>Back in my younger days I was termed the one and only \"Walking Map\", I travelled and traded between many places.<n><t>In my greed, I did not take care of my health and contracted this persistent cough.<n><t>*Cough* The only thing to sooth it is to drink a soup brewed by <yTempest Sea Jelly Crystal>. I will need 15 to last me for some time.<n><t>*Cough* Those <rSea Jellies> are nearby. Come back to me when you have 15 and I may give you some information.")
@@ -1901,13 +1901,13 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 256)
 	MisBeginCondition(NoMission, 257)
 	MisBeginAction(AddMission, 257)
-	MisBeginAction(AddTrigger, 2571, TE_GETITEM, 4140, 15 )		--竹叶上的露珠
+	MisBeginAction(AddTrigger, 2571, TE_GETITEM, 4140, 15 )		--
 	MisCancelAction(ClearMission, 257)
 
 	MisNeed(MIS_NEED_DESP,"Bring 15 <yTempest Sea Jelly Crystals> to <bBaros> in <pWoody Haven> at <j(2024, 2752)>.")
 	MisNeed(MIS_NEED_ITEM, 4140, 15, 10, 15)
 
-	MisResultTalk("<t>*cough* Not bad…Let me brew the medicine.")
+	MisResultTalk("<t>*cough* Not badLet me brew the medicine.")
 	MisHelpTalk("<t>*Cough* *gasp* *Cough*!")
 	MisResultCondition(HasMission, 257 )
 	MisResultCondition(HasItem, 4140, 15 )
@@ -1923,7 +1923,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 257, 10, 15 )
 	RegCurTrigger( 2571 )
 
--------------------------------------------------跑船
+-------------------------------------------------
 	DefineMission( 293, "Sailing", 258 )
 
 	MisBeginTalk("<t>That wasn't so hard wasn't it? Since you are a young and energetic person, help me with one more errand. <n><t>I won't take advantage of you, I'll give you an easy errand.<n><t>Here's some goods I need to transport to <yIcicle Harbor>. It's not that far.")
@@ -1940,7 +1940,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>Hey! Why are you still around?")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------跑船
+-----------------------------------
 	DefineMission( 294, "Sailing", 258, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -1954,10 +1954,10 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 258 )
 	MisResultAction(AddExp,2924,2924)	
 	MisResultAction(AddMoney,1711,1711)	
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------孪生兄弟
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------
 	DefineMission( 295, "The Li Brothers", 259 )
 
-	MisBeginTalk("<t>*Muak*<n><t>When you get this letter, I know that you have succesfully delivered the goods. Before you read on…. Take a deep breath…. <n><t>I am really sorry for lying to you, I am actually not the \"Walking Map\" that you are looking for, but do not get angry. <n><t>I do know who the \"Walking Map\" is as he is my twin brother. As you are so sincere, for your information, he lives in <bIcicle Castle>. His name is <bLuke>, bring my letter along and show it to him at <j(1320, 585)>. <n><t>P.S He is my twin brother so he will look like me!")
+	MisBeginTalk("<t>*Muak*<n><t>When you get this letter, I know that you have succesfully delivered the goods. Before you read on. Take a deep breath. <n><t>I am really sorry for lying to you, I am actually not the \"Walking Map\" that you are looking for, but do not get angry. <n><t>I do know who the \"Walking Map\" is as he is my twin brother. As you are so sincere, for your information, he lives in <bIcicle Castle>. His name is <bLuke>, bring my letter along and show it to him at <j(1320, 585)>. <n><t>P.S He is my twin brother so he will look like me!")
 	MisBeginCondition(NoRecord, 259)
 	MisBeginCondition(HasRecord, 258)
 	MisBeginCondition(NoMission, 259)
@@ -1971,7 +1971,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>The goods are here, you have taken your letter, anything else?")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------孪生兄弟
+-----------------------------------
 	DefineMission( 296, "The Li Brothers", 259, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -1985,7 +1985,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 259 )
 	MisResultAction(AddExp,3225,3225)	
 	MisResultAction(AddMoney,1742,1742)	
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------准备活动
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------
 	DefineMission( 297, "Activity Preparation", 260 )
 
 	MisBeginTalk("<t>Although I do know where \"Nine Haven\" is, I must warn you in advance.<n><t>The place is fraught with danger and peril. I do hope you are strong enough to face the trials ahead.<n><t>I do not wish to send a person to their death so I propose a trial.<n><t>Head east by ship from <pIcicle City> Harbor till you reach an area full of <rFeral Skeleton Fish>. Bring back 12 <ySkeleton Fish Scales> and I will present you with a reward.")
@@ -2018,10 +2018,10 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 260, 10, 12 )
 	RegCurTrigger( 2601 )
 
--------------------------------------------------祝福之手
+-------------------------------------------------
 	DefineMission( 298, "Blessing Hand", 261 )
 
-	MisBeginTalk("<t>Hmm… This <yRing of Sea> gives you the strength of the sea, but it requires a experienced soul to use it. Thus you cannot use it yet.<n><t>From <pIcicle City> Castle, head east. You will need to cross a narrow path to reach <pIcespire Haven>. There you will meet <bMaster Kerra>. His touch is rumored to be able to bring anything to life. Obtain blessing from him and return to me.")
+	MisBeginTalk("<t>Hmm This <yRing of Sea> gives you the strength of the sea, but it requires a experienced soul to use it. Thus you cannot use it yet.<n><t>From <pIcicle City> Castle, head east. You will need to cross a narrow path to reach <pIcespire Haven>. There you will meet <bMaster Kerra>. His touch is rumored to be able to bring anything to life. Obtain blessing from him and return to me.")
 	MisBeginCondition(NoRecord, 261)
 	MisBeginCondition(NoMission, 261)
 	MisBeginCondition(HasRecord, 260)
@@ -2033,7 +2033,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>Go look for <bMaster Kerra> now! He can help you unlock the power of the ring!")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------祝福之手
+-----------------------------------
 	DefineMission( 299, "Blessing Hand", 261, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2045,7 +2045,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 261 )
 	MisResultAction(AddExp,3916,3916)
 	MisResultAction(AddMoney,1807,1807)
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------心灵力量
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------
 	DefineMission( 300, "Spiritual Strength", 262 )
 
 	MisBeginTalk("<t> Countless people have requested my blessings. In fact, only a selected few has their wish granted, that is because I am only a guide. I have a strong mental power thus I can guide them successfully. Only those pure of heart can obtain the blessings. I do not wish to give you false hopes. Prove to me by heading eastwards towards the Icespire Haven, from there head north. You will find a group of Undead Archers at (2746, 450). Among them hides a Master Archer, he was resurrected by an unknown force. Kill him and bring his \"Radiant Soul\" so I can put him to rest.")
@@ -2082,7 +2082,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 262, 10, 1 )
 	RegCurTrigger( 2621 )
 
------------------------------------返回冰狼
+-----------------------------------
 	DefineMission( 302, "Return to Icicle", 7, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2095,7 +2095,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,5211,5211)	
 	MisResultAction(AddMoney,1910,1910)	
 	MisResultAction(AddExpAndType,2,26625,26625)
--------------------------------------------------前往t9
+-------------------------------------------------t9
 	DefineMission( 303, "Go Forth to Ninth Haven", 264 )
 
 	MisBeginTalk("<t>The <pNine Haven> you are talking about, existed 10 years ago.<n><t>Back then it was a mercantile trading port protected by the royal navy. They were raided by pirates and razed to ruins.<n><t>When it was rebuilt it was renamed <pAerase Haven>. Due to the victory the pirates had over the navy, it is considered pirate domain.<n><t>Not many people remember the area \"Nine Haven\" as new about it's sacking were surpressed.The coordinates are <j(2042, 635)> in the <pMagical Ocean>. Look for <bHarbor Operator - Burni>, he will help you.")
@@ -2110,7 +2110,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>I feel that you should enlist some friends to help.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------前往t9
+-----------------------------------t9
 	DefineMission( 304, "Go Forth to Ninth Haven", 264, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2122,7 +2122,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 264 )
 	MisResultAction(AddExp,12572,12572)
 	MisResultAction(AddMoney,3966,3966)	
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------前往t9
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------t9
 	DefineMission( 305, "Who is Andrew?", 265 )
 
 	MisBeginTalk("<t>This is the what <pNine Haven> was 10 years ago.  We now mingle freely here with the pirates. They are not too bad after all. Just a random bar fight here and there, that's about it.<n><t>I came here after the reconstruction, I have never heard of an <bAndrew> or anyone who has similar sounding names.<n><t>You should visit that old goat <bPirate Jeremy>.Head east towards the <pIsle of Chill> at <j(2362, 657)>, you should find him.")
@@ -2137,7 +2137,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>I feel that you should enlist some friends to help.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------前往t9
+-----------------------------------t9
 	DefineMission( 306, "Who is Andrew?", 265, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2149,7 +2149,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 265 )
 	MisResultAction(AddExp,8292,8292)	
 	MisResultAction(AddMoney,2097,2097)	
-	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------海军别动队
+	MisResultAction(AddExpAndType,2,26625,26625)-------------------------------------------------
 	DefineMission( 307, "Navy Don't Move!", 266 )
 
 	MisBeginTalk("<t>You are such a bother! If you wish to get some information from me then first, you'll have to help me out on this task.<n><t>On the northern most side of this island, you will find a detachment of <rNavy Rifleman>.Or at least that is what they claim to be...<n><t>In my opinion, they seem to be even more heartless and cruel compared to us pirates because they go about blackmailing helpless old men and throwing them onto another island as exile! Help me teach them a lesson by defeating 5 <rNavy Riflemen>.")
@@ -2176,7 +2176,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 266, 10, 5 )
 	RegCurTrigger( 2661 )
 
--------------------------------------------------又见杰克
+-------------------------------------------------
 	DefineMission( 308, "Jack Again", 267 )
 
 	MisBeginTalk("<t>Young one, I like your bravery. <bAndrew> has been living on this island for years but he changed his name to <bDarwen> and led a secluded life. Nobody knows that he is <bAndrew>. <n><t>A year ago, a group of pirates figured out that <bDarwen> and <bAndrew> was the same person, they persuaded him to go with them. I vaguely remember that they were men from <rJack the Pirate>'s group. I think you might wanna go to <rJack the Pirate>'s Headquaters at <yCanary Isle>.")
@@ -2191,12 +2191,12 @@ function HistoryMission001()
 	MisHelpTalk("<t>Look for me if you want to be a pirate. I guess we will get along well.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------又见杰克
+-----------------------------------
 	DefineMission( 309, "Jack Again", 267, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
 	
-	MisResultTalk("<t> Well Well, we meet again. I believe that you already guessed that I am the infamous <bJack the Pirate>.<n><t>I do hope you don't go around telling everyone who I am…")
+	MisResultTalk("<t> Well Well, we meet again. I believe that you already guessed that I am the infamous <bJack the Pirate>.<n><t>I do hope you don't go around telling everyone who I am")
 	MisResultCondition(NoRecord, 267 )
 	MisResultCondition(HasMission, 267)
 	MisResultAction(ClearMission, 267 )
@@ -2204,10 +2204,10 @@ function HistoryMission001()
 	MisResultAction(AddExp,13026,13026)
 	MisResultAction(AddMoney,2303,2303)
 	MisResultAction(AddExpAndType,2,26625,26625)
--------------------------------------------------稍后再来
+-------------------------------------------------
 	DefineMission( 310, "I'll be Back!", 268 )
 
-	MisBeginTalk( "Hmm…No…I mean that…Oh…I have nothing for you now. Maybe next time. Go back now.")
+	MisBeginTalk( "HmmNoI mean thatOhI have nothing for you now. Maybe next time. Go back now.")
 	MisBeginCondition(NoRecord, 268)
 	MisBeginCondition(HasRecord, 267)
 	MisBeginCondition(NoMission, 268)
@@ -2216,8 +2216,8 @@ function HistoryMission001()
 
 	MisNeed(MIS_NEED_DESP,"Look for <bCaptain Jack> at <j(1672, 3777)>.")
 
-	MisHelpTalk("Hmm… Looks like I need to complete my investigation.")
-	MisResultCondition(AlwaysFailure )-----------------------------------引诱巨兽
+	MisHelpTalk("Hmm Looks like I need to complete my investigation.")
+	MisResultCondition(AlwaysFailure )-----------------------------------
 	DefineMission( 311, "Lure Behemoth", 4, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2232,7 +2232,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,2649,2649)
 	MisResultAction(AddMoney,1680,1680)
 	MisResultAction(AddExpAndType,2,9035,9035)
-	MisResultAction(ClearTrigger, 108)-------------------------------------------------“调查”
+	MisResultAction(ClearTrigger, 108)-------------------------------------------------
 	DefineMission( 312, "\"Investigation\"", 269 )
 
 	MisBeginTalk("<t>Who sent you?  <bDavy>? <bJones>? <bSparrow>?<n><t>Forget it, like it matters. <bAndrew>? Hmm that name seems to ring a bell. Guess he went fishing a few days ago. Look, I have 8,000 crew members, I cannot possibly remember all their names. Everyone of my crew mates has a <yEmblem> of his own name. Why don't you go it look yourself.")
@@ -2251,7 +2251,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_ITEM, 3790, 1, 10, 1)
 	MisNeed(MIS_NEED_ITEM, 3791, 1, 11, 1)
 	MisNeed(MIS_NEED_ITEM, 3792, 1, 12, 1)
-	MisNeed(MIS_NEED_DESP,"Obtain some <yEmblem> from <bJack>'s henchmen to prove that you are carrying out an \"Investigation\".")	MisResultTalk("<t>The emblem in you hand belongs to my crew, how did the thing goes?<n><t>Wait! Wait! Why is there blood on the emblem? Don't tell me that…I think forget it. Do not investigate any further.<n><t>Darn <bAndrew>... He would not let me have a peaceful day when after he is dead. Look for me again at a later time. I will tell you the whole story.")
+	MisNeed(MIS_NEED_DESP,"Obtain some <yEmblem> from <bJack>'s henchmen to prove that you are carrying out an \"Investigation\".")	MisResultTalk("<t>The emblem in you hand belongs to my crew, how did the thing goes?<n><t>Wait! Wait! Why is there blood on the emblem? Don't tell me thatI think forget it. Do not investigate any further.<n><t>Darn <bAndrew>... He would not let me have a peaceful day when after he is dead. Look for me again at a later time. I will tell you the whole story.")
 	MisHelpTalk("<t>So how was it? If you do it slowly, you will find the person you are looking for.")
 	MisResultCondition(HasMission, 269 )
 	MisResultCondition(HasItem, 3790 , 1)
@@ -2276,7 +2276,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 269, 12, 1 )
 	RegCurTrigger( 2693 )
 
--------------------------------------------------鲁德安的遗物
+-------------------------------------------------
 	DefineMission( 313, "Memento of Andrew", 270 )
 
 	MisBeginTalk("<t> As you know <bAndrew> changed his name to <bDarwen>. But he cannot fool me with such an anagram. There has been multiple warrants for his arrest.<n><t>When I eventually found him, I offered him the chance of either being brought to trial or joining my crew, he choose the latter. Six months later, he contracted a strange disease. We had no choice but to put him on a raft and send him away. The tradition of pirates states that when a crew member is no longer with us, his treasure and belongings are shared by those still alive, you have to ask permission from me mates to be able collect his belongings.")
@@ -2307,7 +2307,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 4219 )
 	TriggerAction( 1, AddNextFlag, 270, 10, 1 )
-	RegCurTrigger( 2701 )-----------------------------------海盗之血1
+	RegCurTrigger( 2701 )-----------------------------------1
 	DefineMission( 314, "Blood of Pirate", 8, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2319,7 +2319,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 8 )
 	MisResultAction(ObligeAcceptMission, 11 )
 
------------------------------------海军之魂1
+-----------------------------------1
 	DefineMission( 315, "Soul of Navy", 9, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2331,7 +2331,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 9 )
 	MisResultAction(ObligeAcceptMission, 12 )
 
------------------------------------无名之人1
+-----------------------------------1
 	DefineMission( 316, "Nameless One", 10, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2343,7 +2343,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 10 )
 	MisResultAction(ObligeAcceptMission, 13 )
 
--------------------------------------------------海盗之血2
+-------------------------------------------------2
 	DefineMission( 317, "Blood of Pirate", 271 )
 
 	MisBeginTalk("<t>Blood of a Pirate? It been long since somebody asked. Looks like you have gotten hold of the <yHeart of Sailor>. Blood of a Pirate refers to the blood of an enemy.<n><t>Mix the blood and tear of your enemy and pour it over the Heart to gain access to its secret.<n><t><rNavy Riflemen> at <j(2389, 575)> are too arrogant. Use them as experiment.")
@@ -2380,7 +2380,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 271, 10, 30 )
 	RegCurTrigger( 2711 )
 
--------------------------------------------------海军之魂2
+-------------------------------------------------2
 	DefineMission( 318, "Soul of Navy", 272 )
 
 	MisBeginTalk( "<t<yThe Soul of the Navy>? I haven't heard anyone mention this name for ages! Ah the great memories we had during those days when we flew that flag. Now, that flag hasn't been used in over 30 years and the only place you can still find it is in the exhibition hall of our headquarters. <n><t>If you are willing to contribute <y2 millions>, I might consider loaning it to you. Come on, didn't you want to open the <yHeart of the Sailor>?")
@@ -2396,7 +2396,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Bring <y2,000,000G> to <bGeneral William> at <j(2277, 2831)>.")
 
 	MisResultTalk("<t>Good. You have really brought <y2 millions>? It looks like you have put your faith in the Navy. Actually, The Soul of the Navy does not exist, it is only a test of your faith. Take our the Heart now and have a look.")
-	MisHelpTalk("<t>Look…its only <y2,000,000G> for the flag.")
+	MisHelpTalk("<t>Lookits only <y2,000,000G> for the flag.")
 	MisResultCondition(HasMission, 272 )
 	MisResultCondition(HasItem, 4221 , 1)
 	MisResultCondition(HasMoney, 2000000 )
@@ -2410,10 +2410,10 @@ function HistoryMission001()
 	MisResultAction(GiveItem,1814,1,4)
 	MisResultBagNeed(2)
 
--------------------------------------------------无名之人3
+-------------------------------------------------3
 	DefineMission( 319, "Nameless One", 273 )
 
-	MisBeginTalk("<t>Nameless one? You have gotten the <yHeart of Sailor>?<n><t>Let me have a look! What a beauty… An unknown person seeking to make a name for himself overnight…However, a lack of courage deter him from his aimbition.<n><t>To prove your courage, take this Heart to the sea near Argent at <j(77,3971)> and use it. Let your courage flow through the Heart.")
+	MisBeginTalk("<t>Nameless one? You have gotten the <yHeart of Sailor>?<n><t>Let me have a look! What a beauty An unknown person seeking to make a name for himself overnightHowever, a lack of courage deter him from his aimbition.<n><t>To prove your courage, take this Heart to the sea near Argent at <j(77,3971)> and use it. Let your courage flow through the Heart.")
 	MisBeginCondition(NoRecord, 273)
 	MisBeginCondition(NoMission, 273)
 	MisBeginCondition(HasMission, 13)
@@ -2441,7 +2441,7 @@ function HistoryMission001()
 	MisResultAction(AddExpAndType,2,30000,30000)
 	MisResultBagNeed(1)
 
--------------------------------------------------鲁德安的遗物
+-------------------------------------------------
 	DefineMission( 320, "Thundoria Bank", 274 )
 
 	MisBeginTalk("<t>This is...Please wait a moment. Allow me to check...Sorry, we cannot pass you the item just yet.<n><t>According to our regulation, you will have to obtain the signatures of the <bGreat Four>. Bye bye...Next please...")
@@ -2499,10 +2499,10 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 274, 40, 1 )
 	RegCurTrigger( 2744 )
 
--------------------------------------------------海盗的朋友
+-------------------------------------------------
 	DefineMission( 321, "Friend of the Pirates", 275 )
 
-	MisBeginTalk("<t>Dear friend, the emblem on your shoulder already reveal your identity. We do not welcome anybody from the Navy. Please go before I…<n><t> What? You say you are a friend of the pirates? <n><t> Don't tell me you are that person…Show me a proof then. If you kill enough <yNavy Rifleman>, I might consider giving you my signature.")
+	MisBeginTalk("<t>Dear friend, the emblem on your shoulder already reveal your identity. We do not welcome anybody from the Navy. Please go before I<n><t> What? You say you are a friend of the pirates? <n><t> Don't tell me you are that personShow me a proof then. If you kill enough <yNavy Rifleman>, I might consider giving you my signature.")
 	MisBeginCondition(NoRecord, 275)
 	MisBeginCondition(NoRecord, 276)
 	MisBeginCondition(NoMission, 275)
@@ -2529,7 +2529,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 275, 10, 30 )
 	RegCurTrigger( 2751 )
 
------------------------------------我不是海军
+-----------------------------------
 	DefineMission( 322, "I'm not a NAVY!", 274, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2544,7 +2544,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 274, 1 )
 	MisResultBagNeed(1)
 
--------------------------------------------------脱离关系
+-------------------------------------------------
 	DefineMission( 323, "Sever Relationship", 277 )
 
 	MisBeginTalk("<t>You want my signature? Only <bLeChuck> the pirate would be so thick skinned to want my signature.<n><t>Unless...Impossible, you are not that person. That person will be part of our Navy. If you wish to consider, leave the pirates and join us.")
@@ -2588,7 +2588,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 277, 30, 10 )
 	RegCurTrigger( 2773 )
 
------------------------------------我不是海盗
+-----------------------------------
 	DefineMission( 324, "I'm not a PIRATE!", 274, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2603,7 +2603,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 274, 2 )
 	MisResultBagNeed(1)
 
--------------------------------------------------孤独的战士
+-------------------------------------------------
 	DefineMission( 325, "Lone Warrior", 279 )
 
 	MisBeginTalk("<t>Being a lone wanderer, you must have brave a lot of dangers. I was exploring the world on my own when I was your age.<n><t>Only a person of greatness will experience loneliness. Go forth and prove your worth. If you are the person we are waiting for, I will not hesitate to give you my signature.")
@@ -2654,7 +2654,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 279, 40, 5 )
 	RegCurTrigger( 2794 )
 
------------------------------------强大的后盾
+-----------------------------------
 	DefineMission( 326, "Powerful Backing", 274, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2669,7 +2669,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 274, 3 )
 	MisResultBagNeed(1)
 
--------------------------------------------------洗刷罪恶
+-------------------------------------------------
 	DefineMission( 327, "Repentant", 281 )
 
 	MisBeginTalk("<t>Everybody is equal in the eyes of our Goddess. It does not matter whether you are a pirate or from the navy. She will bless u nevertheless. What you need to do now is to cleanse away your sins. When it is done, I will pass you my signature.")
@@ -2699,7 +2699,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 281, 10, 30 )
 	RegCurTrigger( 2811 )
 
------------------------------------鲁德安的遗书
+-----------------------------------
 	DefineMission( 328, "Will of Andrew", 16, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2711,10 +2711,10 @@ function HistoryMission001()
 	MisResultAction(ClearMission, 16)
 	MisResultAction(SetRecord, 16 )
 
-----------------------------遗书的秘密
+----------------------------
 	DefineMission( 329, "Secret of the Will", 282 )
 	
-	MisBeginTalk("<t>Haha… <bAndrew> is always so…weird. You must be wondering why his scibbling makes no sense. It is because this sheepskin has been treated before. Don't look at me, I don't know how to solve this.<n><t>Actually <bLittle Daniel> at <j(2193, 2730)> can do it but don't ever tell him that I send you.")
+	MisBeginTalk("<t>Haha <bAndrew> is always soweird. You must be wondering why his scibbling makes no sense. It is because this sheepskin has been treated before. Don't look at me, I don't know how to solve this.<n><t>Actually <bLittle Daniel> at <j(2193, 2730)> can do it but don't ever tell him that I send you.")
 	MisBeginCondition(NoRecord, 282)
 	MisBeginCondition(HasRecord, 16)
 	MisBeginCondition(NoMission, 282)
@@ -2727,19 +2727,19 @@ function HistoryMission001()
 	MisHelpTalk("<t>Remember! Do not ever tell Little Daniel that I sent you.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------遗书的秘密
+-----------------------------------
 	DefineMission( 330, "Secret of the Will", 282, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
 	
-	MisResultTalk("<t>Let me have a look. Hmm…this smells like an <yInvisible Ink>. I am surprise that there are people who know how to make <yInvisible Ink>. I can help you concoct a negator. However, you must tell me who told you that I knew how to make a negator.")
+	MisResultTalk("<t>Let me have a look. Hmmthis smells like an <yInvisible Ink>. I am surprise that there are people who know how to make <yInvisible Ink>. I can help you concoct a negator. However, you must tell me who told you that I knew how to make a negator.")
 	MisResultCondition(NoRecord, 282 )
 	MisResultCondition(HasMission, 282)
 	MisResultCondition(HasItem, 4227, 1)
 	MisResultAction(ClearMission, 282)
 	MisResultAction(SetRecord, 282 )
 
-----------------------------杰克介绍
+----------------------------
 	DefineMission( 331, "Jack Introduction", 283 )
 	
 	MisBeginTalk("<t>What! So the despicable <bJack> told you? Tell him to kill himself, I will not help you. How I wish to forget the formula to concoct the negator. Stay away from me! I will not see you again!")
@@ -2757,7 +2757,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>Why are you still here? Do I have to throw acid to chase you away?")
 	MisResultCondition(AlwaysFailure )
 
--------------------------------------------------酒馆传闻
+-------------------------------------------------
 	DefineMission( 332, "Rumour of the Bar", 284 )
 
 	MisBeginTalk("<t>So you heard it from the tavern? I must be really drunk for it to slip my mouth.<n><t>Forget it, since you are able to find me, it seems that we are fated in some ways. Now, I will tell you the recipe. You are required to find these ingredients, then I will help you create the antidote.<n><t>Listen carefully, I requires 3 <yBloody Polliwog Tails>, 5 <yHearts of Temptest Sea Jelly>, 7 <yDangerous Shark Cartilages> and 9 <yTopaz Dolphin Dorsal Fins>. Go and locate them. Hurry up before I change my mind.")
@@ -2780,7 +2780,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_ITEM, 1365, 7, 30, 7)
 	MisNeed(MIS_NEED_ITEM, 1292, 9, 40, 9)
 
-	MisResultTalk("<t>Good. I will let you see what the writing on the sheepskin. Hmm…This is it. Take it. I have not done it in a long while. Don't blame me if anything goes wrong.")
+	MisResultTalk("<t>Good. I will let you see what the writing on the sheepskin. HmmThis is it. Take it. I have not done it in a long while. Don't blame me if anything goes wrong.")
 	MisHelpTalk("<t>You have not found the ingredient? Then how you expect me to concoct the negator?")
 	MisResultCondition(HasMission, 284 )
 	MisResultCondition(HasItem, 1255, 3)
@@ -2812,7 +2812,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 284, 40, 9 )
 	RegCurTrigger( 2844 )
 
-----------------------------感情纠纷
+----------------------------
 	DefineMission( 333, "Love Entanglement", 285 )
 	
 	MisBeginTalk("<t>Oh my god! You actually ignored my warning! Didn't I ask you not to mention my name?<n><t>Forget it, since <bLittle Daniel> is furious, the only person who is able to pacify him is <bBargirl - Donna>. Only she can help you. She can be found at <j(2224, 2887)>.<n><t>As to why..., you can ask <bBargirl - Donna> for the answers.")
@@ -2829,10 +2829,10 @@ function HistoryMission001()
 	MisHelpTalk("<t>Do not linger around here anymore. <bLittle Daniel> might forget the formula anytime.")
 	MisResultCondition(AlwaysFailure )
 
--------------------------------------------------感情纠纷
+-------------------------------------------------
 	DefineMission( 334, "Love Entanglement", 286 )
 
-	MisBeginTalk("<t>What? <bLittle Daniel> is still angry with <bJack> after so many years…Both of them were fighting over me years ago and <bJack> broke <bLittle Daniel>'s leg. He took it badly and bear a grudge on <bJack>. <n><t>Its all my fault. Let me resolve their enmity. I found out that Little Daniel is doing a research on pumpkin recently. Bring me one <yFrightful Pumpkin Head> from <rVicious Pumpkin Knight>.")
+	MisBeginTalk("<t>What? <bLittle Daniel> is still angry with <bJack> after so many yearsBoth of them were fighting over me years ago and <bJack> broke <bLittle Daniel>'s leg. He took it badly and bear a grudge on <bJack>. <n><t>Its all my fault. Let me resolve their enmity. I found out that Little Daniel is doing a research on pumpkin recently. Bring me one <yFrightful Pumpkin Head> from <rVicious Pumpkin Knight>.")
 	MisBeginCondition(NoRecord, 286)
 	MisBeginCondition(NoMission, 286)
 	MisBeginCondition(HasRecord, 283)
@@ -2846,7 +2846,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Bring 1 <yFrightful Pumpkin Head> to <bBarmaid Donna> at <j(2224, 2887)>.")
 	MisNeed(MIS_NEED_ITEM, 4735, 1, 10, 1)
 
-	MisResultTalk("<t>Hehe! This is a beautiful Pumpkin Head. I'm sure he will like this. Hmm…If I crave my signature on it he will surely take it in exchange for the <yInvisible Ink Negator>.")
+	MisResultTalk("<t>Hehe! This is a beautiful Pumpkin Head. I'm sure he will like this. HmmIf I crave my signature on it he will surely take it in exchange for the <yInvisible Ink Negator>.")
 	MisHelpTalk("<t>You have not gotten any <yFrightful Pumpkin Head>? I cannot help you then.")
 	MisResultCondition(HasMission, 286 )
 	MisResultCondition(HasItem, 4735, 1)
@@ -2862,12 +2862,12 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 286, 10, 1 )
 	RegCurTrigger( 2861 )
 
------------------------------------感情纠纷
+-----------------------------------
 	DefineMission( 335, "Love Entanglement", 17, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
 		
-	MisResultTalk("<t>Didn't I ask you to stay clear from me? Wait…What is that you are holding? A pumpkin head with <bDonna>'s signature! Can you give it to me? I will use the <yInvisible Ink Negator> as a trade.")
+	MisResultTalk("<t>Didn't I ask you to stay clear from me? WaitWhat is that you are holding? A pumpkin head with <bDonna>'s signature! Can you give it to me? I will use the <yInvisible Ink Negator> as a trade.")
 	MisResultCondition(NoRecord, 17 )
 	MisResultCondition(HasMission, 17 )
 	MisResultCondition(HasItem, 4229, 1)
@@ -2877,7 +2877,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4228, 1, 4 )
 	MisResultBagNeed(1)
 
--------------------------------------------------海盗语言
+-------------------------------------------------
 	DefineMission( 336, "Language of the Pirates", 287 )
 
 	MisBeginTalk("<t>Oh you found an ancient verse? Nobody believes in this legend anymore but if you insist I'll tell you about it. In the legend, a beautiful mermaid protects a mysterious carcass. The carcass's eye is always looking towards the direction of the hidden treasure. According to the legend, if you drench fresh blood onto the skeleton, it will summon forth a buried treasure. However no one has ever seen or taken such a treasure before. Are you willing to give it a try? <n><t>(Mermaids? There are so many mermaids out there, how do I find the right one? Could it be the <rMermaid Queen>? I don't think <bJack> would play such a trick would he? Here I come <yMermaid Carcass>, wait for me!)>.")
@@ -2914,7 +2914,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 287, 10, 1 )
 	RegCurTrigger( 2871 )
 
------------------------------------迷的日记
+-----------------------------------
 	DefineMission( 337, "Mystic Diary", 20, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2926,10 +2926,10 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 20 )
 	MisResultAction(ClearMission, 20 )
 	
-----------------------------女神的追随者
+----------------------------
 	DefineMission( 338, "Goddess's Follower", 288 )
 	
-	MisBeginTalk("<t>Of all the <bGoddess> followers, the most famous should be <bClan Chief - Albuda>…")
+	MisBeginTalk("<t>Of all the <bGoddess> followers, the most famous should be <bClan Chief - Albuda>")
 	MisBeginCondition(NoRecord, 288)
 	MisBeginCondition(HasRecord, 20)
 	MisBeginCondition(NoMission, 288)
@@ -2942,7 +2942,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>I believe I have already told you what you want. Look for other people now.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------女神的追随者
+-----------------------------------
 	DefineMission( 339, "Goddess's Follower", 288, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -2954,7 +2954,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 288 )
 	MisResultAction(ClearMission, 288 )
 
-----------------------------圣女
+----------------------------
 	DefineMission( 340, "Holy Priestess", 289 )
 	
 	MisBeginTalk("<t>I should warn you not to get involved with whatever <bHoly Priestess Ada> is doing otherwise you'll become an unwelcome person around here. <n><t> (What's wrong with all these old men? Why does the sight of this writings scare them? Maybe I should take up <bAlbuda>'s suggestion and head towards where <bAda> is at <j(862, 3303)>. She seems to be quite knowledgeable in this field, maybe I should try my luck.)>.")
@@ -2970,7 +2970,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>I say again! Do not look for <bAda>! She is a jinx!")
 	MisResultCondition(AlwaysFailure )
 
--------------------------------------------------虔诚的证明
+-------------------------------------------------
 	DefineMission( 341, "Testament of the Piety", 290 )
 
 	MisBeginTalk("<t>Ever since that incident happened, <bClan Chief Albuda> stopped the entire research related to this kind of language.<n><t>As you can see, I can only continue my research here and not anywhere else. I can translate the contents for you, but you'll have to prove your loyalty towards the Goddess, only those who are kind at heart yet determined can know the contents of the writings. Otherwise, the historical tragedy will once again come forth.<n><t>As for the method, you can ask <bHigh Priest Gannon> at <j(862, 3500)> he will know what to do.")
@@ -3001,7 +3001,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 3954 )
 	TriggerAction( 1, AddNextFlag, 290, 15, 1 )
-	RegCurTrigger( 2901 )-----------------------------------虔诚的证明
+	RegCurTrigger( 2901 )-----------------------------------
 	DefineMission( 342, "Testament of the Piety", 290, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3015,7 +3015,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 3954, 1, 4 )
 	MisResultBagNeed(1)
 	
------------------------------------虔诚的证明
+-----------------------------------
 	DefineMission( 343, "Testament of the Piety", 290, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3029,7 +3029,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 3954, 1, 4 )
 	MisResultBagNeed(1)
 	
------------------------------------虔诚的证明
+-----------------------------------
 	DefineMission( 344, "Testament of the Piety", 290, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3043,7 +3043,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 3954, 1, 4 )
 	MisResultBagNeed(1)
 	
------------------------------------虔诚的证明
+-----------------------------------
 	DefineMission( 345, "Testament of the Piety", 290, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3059,7 +3059,7 @@ function HistoryMission001()
 	MisResultCondition(HasItem, 4231, 1)
 	MisResultAction(SetFlag, 290, 1 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 346, "Goddess Test", 291 )
 
 	MisBeginTalk("<t>Are you ready? We are about to commence the first test! Lets see how well you do against these <rSteel Mummies> at <j(440, 1440)>.")
@@ -3085,7 +3085,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 291, 10, 10 )
 	RegCurTrigger( 2911 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 347, "Goddess Test", 292 )
 
 	MisBeginTalk("<t>Congratulations for passing the first test! Next, proceed to <j(511, 1721)> and send those <rUndead Warriors> back into their graves to rest in peace.")
@@ -3111,7 +3111,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 292, 10, 10 )
 	RegCurTrigger( 2921 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 348, "Goddess Test", 293 )
 
 	MisBeginTalk("<t>The third test is the <rSkeletal Archer> at <j(919, 1581)>. Look out for their arrows.")
@@ -3137,7 +3137,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 293, 10, 10 )
 	RegCurTrigger( 2931 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 349, "Goddess Test", 294 )
 
 	MisBeginTalk("<t>Round four, <rSkeletal Warrior Leaders>! If you are killed by them, you will suffer eternal damnation and burn in hell for all eternity!")
@@ -3163,7 +3163,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 294, 10, 10 )
 	RegCurTrigger( 2941 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 350, "Goddess Test", 295 )
 
 	MisBeginTalk("<t>Round five, <rCursed Corpses>! Defeat them so that they may finally be put to rest.")
@@ -3189,7 +3189,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 295, 10, 10 )
 	RegCurTrigger( 2951 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 351, "Goddess Test", 296 )
 
 	MisBeginTalk("<t>The sixth test is the <rBloodthirsty Hunter> at <j(445, 1571)>. They have brought much disturbance to the peace of the forest.")
@@ -3215,7 +3215,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 296, 10, 10 )
 	RegCurTrigger( 2961 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 352, "Goddess Test", 297 )
 
 	MisBeginTalk("<t>The seventh mission is the <rHorrific Cursed Corpse> at <j(360, 1340)>. Do not compare them with the normal cursed corpse, the difference is enormous.")
@@ -3241,7 +3241,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 297, 10, 10 )
 	RegCurTrigger( 2971 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 353, "Goddess Test", 298 )
 
 	MisBeginTalk("<t>The eighth test is <rVicious Pumpkin Knight> at <j(622, 3518)>. Drive these evil beings away.")
@@ -3267,7 +3267,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 298, 10, 10 )
 	RegCurTrigger( 2981 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 354, "Goddess Test", 299 )
 
 	MisBeginTalk("<t>The second last test is <rTreant Terror> at <j(662, 2460)>. They are an abomination of nature.")
@@ -3293,7 +3293,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 299, 10, 10 )
 	RegCurTrigger( 2991 )
 
--------------------------------------------------女神的考验
+-------------------------------------------------
 	DefineMission( 355, "Goddess Test", 300 )
 
 	MisBeginTalk("<t>Last round is <rAnubis>. Punish him on the behalf of the Goddess.")
@@ -3324,7 +3324,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 190 )
 	TriggerAction( 1, AddNextFlag, 300, 10, 1 )
-	RegCurTrigger( 3001 )-----------------------------------神秘小镇
+	RegCurTrigger( 3001 )-----------------------------------
 	DefineMission( 356, "Mystery Town", 21, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3335,7 +3335,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 21 )
 	MisResultAction(ClearMission, 21 )
 
-----------------------------春风小镇
+----------------------------
 	DefineMission( 357, "Spring Town", 301 )
 	
 	MisBeginTalk("<t>However, that drunkard talks nonsense most of the time and nobody knows if his words are true or false. <n><t>(<bHoly Priestess> meant to say that the drunkard seems to know about <pSpring Town> but I remembered having asked him about a location to hunt some shark in which he gave me the location of the North Pole instead. I almost died under the ice as a result of his misdirection. Now, it seems that I have to place my life in his words once again?! Sigh... I really don't know whether to laugh or cry.) ")
@@ -3350,7 +3350,7 @@ function HistoryMission001()
 	MisHelpTalk("<t><bDrunkyard - Anthony> seems to be at the <pArgent City Bar>.")
 	MisResultCondition(AlwaysFailure )
 
--------------------------------------------------冒险精神
+-------------------------------------------------
 	DefineMission( 358, "Exploration Spirit", 302 )
 
 	MisBeginTalk("<t><pSpring town>! How did you know of this name? No, you will never be able to reach the destination! I'll never tell anyone anything about <pSpring Town>! I do not wish to see the tragedy happen again, unless...I am saying unless...You can prove your strength and ability and that your spirit for exploration can overcome anything that happens on the sea.<n><t>Until you can prove yourself, don't bother looking for me. You are still young with many years to live, I don't know why you would go in search of such a perilous journey.")
@@ -3382,7 +3382,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 302, 10, 1 )
 	RegCurTrigger( 3021 )
 
------------------------------------冒险精神
+-----------------------------------
 	DefineMission( 359, "Exploration Spirit", 302, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3396,7 +3396,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 3962, 1, 4 )
 	MisResultBagNeed(1)
 
------------------------------------冒险精神
+-----------------------------------
 	DefineMission( 360, "Exploration Spirit", 302, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3410,7 +3410,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 3962, 1, 4 )
 	MisResultBagNeed(1)
 
------------------------------------冒险精神
+-----------------------------------
 	DefineMission( 361, "Exploration Spirit", 302, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3425,7 +3425,7 @@ function HistoryMission001()
 	MisResultCondition(NoPfEqual, 16)
 	MisResultAction(SetFlag, 302, 5 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 362, "Exploration Test", 303 )
 
 	MisBeginTalk("<t>Let me see what you have done for this test...Hmm...Ok...Hmm...Alright! I have already thought of the test in accordance with your performance, so sharpen your weapons and of course, prepare your ship for the test of the great sea.<n><t>Your first target is the <rSakura 13 Warship> found at <j(1950, 1286)>, destroy 10 of them. Oh...And remember that all of the future tests require you to destroy 10 of each. I shall remind you no more.")
@@ -3452,7 +3452,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 303, 10, 10 )
 	RegCurTrigger( 3031 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 363, "Exploration Test", 304 )
 
 	MisBeginTalk("<t>The next target is <rVampiric Polliwog> at <j(370, 2317)>. The only thing big about them is their heads, it shouldn't be a difficult task.")
@@ -3478,10 +3478,10 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 638 )
 	TriggerAction( 1, AddNextFlag, 304, 10, 10 )
 	RegCurTrigger( 3041 )
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 364, "Exploration Test", 305 )
 
-	MisBeginTalk("<t>Next…the <rTempest Sea Jellys>! Just like its name, they are soft and squishy.")
+	MisBeginTalk("<t>Nextthe <rTempest Sea Jellys>! Just like its name, they are soft and squishy.")
 	MisBeginCondition(NoRecord, 305)
 	MisBeginCondition(HasRecord, 304)
 	MisBeginCondition(HasMission, 302)
@@ -3505,7 +3505,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 305, 10, 10 )
 	RegCurTrigger( 3051 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 365, "Exploration Test", 306 )
 
 	MisBeginTalk("<t>Now, the next target is the crazy <rSilk Shark> found off Ascaron coast at <j(3149, 3836)>. I wonder who gave it that name, no one has even seen them spitting silk!")
@@ -3532,7 +3532,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 306, 10, 10 )
 	RegCurTrigger( 3061 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 366, "Exploration Test", 307 )
 
 	MisBeginTalk("<t>This can be a little cruel, your next target is cute little <rTopaz Dolphin> at <j(2631, 2048)>. I wonder if the topaz on their body is real.")
@@ -3559,7 +3559,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 307, 10, 10 )
 	RegCurTrigger( 3071 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 367, "Exploration Test", 308 )
 
 	MisBeginTalk("<t>Next, the brother of the <rTempest Sea Jelly>, eradicate the <rHurricane Sea Jellys> at <j(1275, 3634)>!")
@@ -3584,7 +3584,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 603 )
 	TriggerAction( 1, AddNextFlag, 308, 10, 10 )
-	RegCurTrigger( 3081 )-------------------------------------------------冒险考验
+	RegCurTrigger( 3081 )-------------------------------------------------
 	DefineMission( 368, "Exploration Test", 309 )
 
 	MisBeginTalk("<t>The next target is <rMature Ruby Dolphin> which can be found at <j(3785, 1975)>. Its another pitiful monster.  May the gods forgive me.")
@@ -3611,7 +3611,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 309, 10, 10 )
 	RegCurTrigger( 3091 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 369, "Exploration Test", 310 )
 
 	MisBeginTalk("<t>Next target is <rSakura 13 Pirate Command Ship> found at <j(2790, 1286)>. Its much harder this time but since you already made it so far, hang on!")
@@ -3636,7 +3636,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 650 )
 	TriggerAction( 1, AddNextFlag, 310, 10, 10 )
-	RegCurTrigger( 3101 )-------------------------------------------------冒险考验
+	RegCurTrigger( 3101 )-------------------------------------------------
 	DefineMission( 370, "Exploration Test", 311 )
 
 	MisBeginTalk("<t>Now for the next task, the <rSpiny Bone Fish> at <j(370, 2317)>! They are really an eyesore, destroy them for the good of the rest of the world!")
@@ -3663,7 +3663,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 311, 10, 10 )
 	RegCurTrigger( 3111 )
 
--------------------------------------------------冒险考验
+-------------------------------------------------
 	DefineMission( 371, "Exploration Test", 312 )
 
 	MisBeginTalk("<t><t>Your final task concerns the government, destroy the <rNorthern Pirate Support Ship>! I hope to see them without any clothes on.")
@@ -3696,7 +3696,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 312, 10, 10 )
 	RegCurTrigger( 3121 )
 
-----------------------------贝蒂
+----------------------------
 	DefineMission( 372, "Beldi", 313 )
 	
 	MisBeginTalk("<t>I suggest you ask <bGranny - Beldi>. She knows something.")
@@ -3709,7 +3709,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Talk to <bGranny Beldi> at <j(2277, 2769)>.")
 	
 	MisHelpTalk("<t>Find out from <bGranny Beldo> about <pSpring Town>.")
-	MisResultCondition(AlwaysFailure )----------------------------贝蒂
+	MisResultCondition(AlwaysFailure )----------------------------
 	DefineMission( 373, "Beldi", 313, COMPLETE_SHOW )
 
 	
@@ -3721,7 +3721,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 313 )
 	MisResultAction(ClearMission, 313 )
 
------------------------------------家乡
+-----------------------------------
 	DefineMission( 374, "Hometown", 315 )
 
 	MisBeginTalk("<t>Maybe, I 've spoken too much rubbish. Perhaps, maybe even you won't believe me. I used to live in <pSpring Town>, in a family of four. One day, we sailed out to the ocean to enjoy ourselves, unfortunately, we met with a huge wave and our ship sank. Although I was rescued by sailors, I have since lost contact with my family. As I was very young then and not independent enough, the sailors soon put me in an orphanage in Argent City. When I grew older, I always wanted to go back and look for my missing family but no one wanted to take the risk to go with me. Days passed by and now I'm an old man. I'm too old to travel now but if you are willing to risk your life, maybe you could help me to deliver something. The thing which I speak about is located at <pIcicle Castle>, in a bank. If you promise to do this, I'll tell you where the exact location of <pSpring Town>.")
@@ -3748,7 +3748,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 4235 )
 	TriggerAction( 1, AddNextFlag, 315, 1, 1 )
-	RegCurTrigger( 3151 )-----------------------------------贝蒂的耳环
+	RegCurTrigger( 3151 )-----------------------------------
 	DefineMission( 375, "Earring of Beldi", 316 )
 
 	MisBeginTalk("<t><bBeldi> has told me about your situation. This object is her last hope, I really don't know how someone as weak as you have the confidence to deliver her stuff over safely.<n><t>No matter. Anyway, unless you are able to break Ray's record of killing 100 <rGreat Polar Bears> to prove your ability, otherwise forget about taking Beldi's stuff back.<n><t>These big animals mostly live at <j(3101, 666)>.")
@@ -3779,7 +3779,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 504 )
 	TriggerAction( 1, AddNextFlag, 316, 1, 100 )
-	RegCurTrigger( 3161 )-------------------------------------------------家乡
+	RegCurTrigger( 3161 )-------------------------------------------------
 	DefineMission( 376, "Hometown", 315 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3794,7 +3794,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 315, 10 )
 	MisResultBagNeed(1)
 
--------------------------------------------------家乡
+-------------------------------------------------
 	DefineMission( 377, "Hometown", 315 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3809,7 +3809,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 315, 20 )
 	MisResultBagNeed(1)
 
--------------------------------------------------家乡
+-------------------------------------------------
 	DefineMission( 560, "Hometown", 315 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3824,7 +3824,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 315, 30 )
 	MisResultBagNeed(1)
 
--------------------------------------------------家乡
+-------------------------------------------------
 	DefineMission( 561, "Hometown", 315 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3839,7 +3839,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 315, 40 )
 	MisResultBagNeed(1)
 
--------------------------------------------------家乡
+-------------------------------------------------
 	DefineMission( 562, "Hometown", 315 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -3853,7 +3853,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4235, 1, 4 )
 	MisResultAction(SetFlag, 315, 50 )
 	MisResultBagNeed(1)
------------------------------------古老的胸针
+-----------------------------------
 	DefineMission( 378, "Ancient Brooch", 317 )
 
 	MisBeginTalk("<t>An ancient brooch? Yes, I do have one that has a similar flower pattern like this ear ring. My boyfriend and I picked it up while we were strolling on the beach.<n><t>What? You want it? No way! I like it very much. There are others that have offered 5000G for it and yet I would not sell it. What? You want to offer 10000G?  No, this is a love symbol between my boyfriend and I. No matter how much you are offering, I will not sell it to you. 50000G? Let me think about it... Make it 100000G, not a single cent less, deal? I'll give you the item once you've made payment.")
@@ -3879,7 +3879,7 @@ function HistoryMission001()
 	MisResultAction(AddExpAndType,2,40000,40000)
 	MisResultAction(GiveItem,3848,30,4)
 	MisResultBagNeed(2)
------------------------------------命运之轮
+-----------------------------------
 	DefineMission( 379, "Wheel of Fate", 318 )
 
 	MisBeginTalk("<t>Due to the remoteness of this location, this place has been deserted for quite some time.You said a voice led you here? Then count yourself lucky to be able to be standing here alive.<n><t>Lots of dangerous creatures often appear nearby and the Sakura 13 Pirates would be the worst. They often pretend to be drowning to attract the attentions of the passing ships for help. After which, they will ambush the ship. I think you must have been misled by them earlier on. Our transport ship was ambushed a few days ago! Since you have the ability to get here, why don't you help us recover the <ySupplies> and we will reward you accordingly.")
@@ -3906,7 +3906,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 4238 )
 	TriggerAction( 1, AddNextFlag, 318, 1, 1 )
-	RegCurTrigger( 3181 )----------------------------命运之轮
+	RegCurTrigger( 3181 )----------------------------
 	DefineMission( 380, "Wheel of Fate", 319 )
 	
 	MisBeginTalk("<t>I understand that you have gone through a lot of hell to help us recover our supplies. We really shouldn't trouble you anymore. However, you know our situation here, the line of supply has been overtaken by pirates and we do not know when the next supply will arrive. Please inform our fellow comrades from the supply depot to prepare for starvation.")
@@ -3920,7 +3920,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("Relate the <yStolen Supplies> incident to <bHarbor Operator - Whitcombe> in <pHafta Haven>.")
 	MisResultCondition(AlwaysFailure )
------------------------------------命运之轮
+-----------------------------------
 	DefineMission( 381, "Wheel of Fate", 320 )
 
 	MisBeginTalk("<t>What? What are you talking about? No food again? I'm thinking of quitting! Not only is the pay low, we often get attacked by pirates! I haven't eaten in three days! Is such suffering worth it?<n><t>Oh man, since you've already been so helpful why don't you help us this one last time?<n><t>There are a fish farm nearby but its guarded by ferocious creatures...Can you get some fishes back for me?")
@@ -3949,7 +3949,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 1478 )
 	TriggerAction( 1, AddNextFlag, 320, 1, 20 )
 	RegCurTrigger( 3201 )
------------------------------------命运之轮
+-----------------------------------
 	DefineMission( 382, "Wheel of Fate", 321 )
 	MisBeginCondition(NoMission, 321)
 	MisBeginCondition(HasRecord, 320)
@@ -3958,7 +3958,7 @@ function HistoryMission001()
 	
 	MisNeed(MIS_NEED_DESP,"Go to <pReagen Haven> and look for <bHarbor Operator - Fardell> at <j(3153, 674)>.")
 	
-	MisResultCondition(AlwaysFailure )-----------------------------------命运之轮
+	MisResultCondition(AlwaysFailure )-----------------------------------
 	DefineMission( 383, "Wheel of Fate", 321, COMPLETE_SHOW )
 	MisBeginCondition( AlwaysFailure )
 		
@@ -3968,7 +3968,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission, 321)
 	MisResultAction(SetRecord, 321)
 
------------------------------------命运之轮
+-----------------------------------
 	DefineMission( 384, "Wheel of Fate", 323 )
 
 	MisBeginTalk("<t>In order to make the special pill, you'll need a <yFascia Fish Bone>, a <yThick Fish Bone>, 30 <yRotten Fish Bones>, what's with that look of yours? You think it's poisonous? You think I'm lying to you?")
@@ -4011,10 +4011,10 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 4976 )
 	TriggerAction( 1, AddNextFlag, 323, 61, 30 )
 	RegCurTrigger( 3233 )
------------------------------------命运之轮
+-----------------------------------
 	DefineMission( 385, "Wheel of Fate", 324 )
 
-	MisBeginTalk("<t>Ah…. I'm not going to make it… looks like this is my retribution... I shouldn't have stolen your pill. Help me, I'm suffering, please just let me die.<n><t>No... wait wait! You're really going to leave me here alone? Please don't go! Save me! I stole the formula off the <bHarbor Operator - Buni> from <pAerase Haven> at <j(2042, 635)>. There, I've already told you all that I know, please help me!")
+	MisBeginTalk("<t>Ah. I'm not going to make it looks like this is my retribution... I shouldn't have stolen your pill. Help me, I'm suffering, please just let me die.<n><t>No... wait wait! You're really going to leave me here alone? Please don't go! Save me! I stole the formula off the <bHarbor Operator - Buni> from <pAerase Haven> at <j(2042, 635)>. There, I've already told you all that I know, please help me!")
 	MisBeginCondition(NoRecord, 324)
 	MisBeginCondition(HasRecord, 323)
 	MisBeginCondition(NoMission, 324)
@@ -4026,7 +4026,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_ITEM, 4254, 1, 1, 1)
 
 	MisResultTalk("<t> Ah! The medicine is so bitter! If not for it being able to save my life I would never eat it! Don't mind me, I just escaped death, it's not my fault for muttering stuff that has no logic.<n><t>What? What return you your money? I don't understand! I'm a little busy, see you later!")
-	MisHelpTalk("<t>…I have got no more strength to talk… my life is in your hands…")
+	MisHelpTalk("<t>I have got no more strength to talk my life is in your hands")
 	MisResultCondition(HasMission, 324 )
 	MisResultCondition(HasMission, 325 )
 	MisResultCondition(HasItem, 4254, 1)
@@ -4040,7 +4040,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 324, 1, 1 )
 	RegCurTrigger( 3241 )
 
------------------------------------命运之轮
+-----------------------------------
 	DefineMission( 386, "Wheel of Fate", 325 )
 
 	MisBeginTalk("<t>What? <bHarbor Operator Fardell> already knows how to make the potion of <yOmni-Relevation himself>, yet he stole the one I made for you?<n><t>He deserves it, let him die! He always comes in here and steals the formulas and he doesn't pay when he gets the medicine. Oh, and he still owes me 100000G! Before he dies please ask him to tell me his password to the bank!<n><t>Okay okay! I'm actually quite soft hearted, here is the antidote. Give it to him fast and also tells him that I am waiting for him to repay me the money! Oh, and if you treasure your life, don't trust him anymore and about the potion of...Forget it, I'll wait till you get back.")
@@ -4055,11 +4055,11 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Bring the <yOmni-Antidote> to <bHarbor Operator Fardell> at <y(3153, 674)> in exchange for 100,000G.")
 
 	MisResultTalk("<t>What? That fellow pretended to be ignorant and doesn't want to admit that he owes me money? Next time I'll poison him and make him mute.<n><t>Let's not talk about him already. About the <yPotion of Omni-Relevation>...")
-	MisHelpTalk("<t>Move it! Before I change my mind…")
+	MisHelpTalk("<t>Move it! Before I change my mind")
 	MisResultCondition(HasMission, 325)
 	MisResultCondition(HasRecord, 324)
 	MisResultAction(SetRecord, 325 )
-	MisResultAction(ClearMission, 325 )-----------------------------------命运之轮
+	MisResultAction(ClearMission, 325 )-----------------------------------
 	DefineMission( 387, "Wheel of Fate", 326 )
 
 	MisBeginTalk("<t>I got the formula from a chest that I fished out of the ocean. I didn't believe that it would work out at first until I made the medicine and fed it to a sheep, the sheep ended up being able to understand our language and it ran away the night that I was going to slaughter it. Unfortunately, the formula also got bitten into pieces and thrown into the ocean by the talking sheep. I've only 1/3 of it left with me; this is why <bFardell> got poisoned after following the formula, it isn't complete. <n><t>If you could help me retrieve the lost formula, I could try helping you to make the <yPotion of Omni-Relevation>.")
@@ -4091,7 +4091,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 326, 1, 10)
 	RegCurTrigger( 3261 )
 
-----------------------------语言问题
+----------------------------
 	DefineMission( 559, "Language Barrier", 387 )
 	
 	MisBeginTalk("<t>What are these people talking about, I cannot understand a single word...<n><t>I think I should get some help from <bGranny - Beldi> at <j(2277, 2769)>.")
@@ -4107,7 +4107,7 @@ function HistoryMission001()
 	MisHelpTalk( "Find <bGranny Beldi> and talk to her.")
 	MisResultCondition( AlwaysFailure )
 
-----------------------------语言问题
+----------------------------
 	DefineMission( 388, "Language Barrier", 327)
 	
 	MisBeginTalk("<t> Ah, young fellow, have you been to <pSpring Town> yet?<n><t>WHAT?! You say that you can't understand what are they talking? Didn't you drink a potion of <yOmni-Revelation>?<n><t>Nowadays young people don't pay attention to what old people are talking. Let me tell you one more time! Now listen properly, look for the <bBar Waitress Babara> at <j(1310, 530)> in <pIcicle City>. She may know something. A long time ago, when I was a young and beautiful woman, a stranger gave me the <yPotion of Omni-Revelation>. Do you think I'm still beautiful?")
@@ -4123,7 +4123,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("Talk to <bBar Waitress - Babara>.")
 	MisResultCondition(AlwaysFailure )
------------------------------------语言问题
+-----------------------------------
 	DefineMission( 389, "Language Barrier", 328 )
 
 	MisBeginTalk("<t>You want a <yPotion of Omni-Relevation>? You have found the correct person! I specially sell the formula for making the potion, suitable for both young and old.<n><t>The price is reasonable, it's a multipurpose translation potion. It can even translate coded messages into an understandable form. You only need one pill to do all of that! What!? You don't believe me? Do you not believe this lovable and innocent girl?<n><t>What? Are you trying to give me 100,000 to buy the formula and to make me not talk anymore about it? Okay, where's the money?")
@@ -4138,14 +4138,14 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"<r100000G>.")
 	
 	MisResultTalk("<t>You really know how to spot treasures. <yPotion of Omni Relevation> is yours.")
-	MisHelpTalk("<t>You do not have 100000G? How did you become a pirate…")
+	MisHelpTalk("<t>You do not have 100000G? How did you become a pirate")
 	MisResultCondition(HasMoney, 100000 )
 	MisResultCondition(HasMission, 328 )
 	MisResultAction(TakeMoney, 100000 )
 	MisResultAction(SetRecord, 328 )
 	MisResultAction(ClearMission, 328 )
  	MisResultAction(GiveItem, 4256, 1, 4 )
-	MisResultBagNeed(1)-----------------------------------语言问题
+	MisResultBagNeed(1)-----------------------------------
 	DefineMission( 391, "Language Barrier", 330 )
 
 	MisBeginTalk("<t> Is that <bAi Wen>? Long time no see... I'm not not speaking to you, I'm speaking to the <yOmni-Relevation> prescription. Yes, its name is <bAi Wen>, 500 years ago, a person with a soul was sealed inside this formula that is why it talks!<n><t>Anyway, I'll give you a discount, you only need to pay me <y50,000G> for me to complete the potion for you.")
@@ -4157,7 +4157,7 @@ function HistoryMission001()
 
 	MisNeed(MIS_NEED_DESP,"Collect all ingredient and also <y50,000G>.")
 
-	MisResultTalk("<t>Why the hurry? I'm not done yet! I need another <y50,000G> to complete it. Why...Are you taking out your weapon? Okay okay…. I was only joking.<n><t>The potion has already been completed. Here! Take it!<n><t>(You glup down the potion without thinking...)>.")
+	MisResultTalk("<t>Why the hurry? I'm not done yet! I need another <y50,000G> to complete it. Why...Are you taking out your weapon? Okay okay. I was only joking.<n><t>The potion has already been completed. Here! Take it!<n><t>(You glup down the potion without thinking...)>.")
 	MisHelpTalk("<t>No money, no potion. It's only 50,000G!")
 	MisResultCondition(HasMission, 330 )
 	MisResultCondition(HasItem, 4938, 30)
@@ -4181,7 +4181,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem,4708,1,4)
 	MisResultBagNeed(3)
 
-----------------------------远来是客
+----------------------------
 	DefineMission( 392, "Rare Visitor from Afar", 331)
 	
 	MisBeginTalk("<t>Hi, how are you? Is this your first time here? Relax, we treat everyone like a friend. As our custom goes, always treat people from afar as our friends!<n><t>Now, this guide will bring you around the village. Once again, a warm welcome to you!")
@@ -4209,7 +4209,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 331, 10, 7)
 	RegCurTrigger( 3311 )
 
-----------------------------远来是客
+----------------------------
 	DefineMission( 393, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -4222,7 +4222,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
 
-----------------------------远来是客
+----------------------------
 	DefineMission( 394, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -4235,7 +4235,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
 	
-----------------------------远来是客
+----------------------------
 	DefineMission( 395, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -4248,7 +4248,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
 	
----------------------------远来是客
+---------------------------
 	DefineMission( 396, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -4261,7 +4261,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
 	
-----------------------------远来是客
+----------------------------
 	DefineMission( 397, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -4273,7 +4273,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 331, 5)
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
-----------------------------远来是客
+----------------------------
 	DefineMission( 398, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -4286,7 +4286,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
 
-----------------------------远来是客
+----------------------------
 	DefineMission( 399, "Rare Visitor from Afar", 331, COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -4299,7 +4299,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 4242, 1, 4)
 	MisResultBagNeed(1)
 
------------------------------------画龙点睛
+-----------------------------------
 	DefineMission( 510, "Make the Finishing Point", 339 )
 
 	MisBeginTalk("<t>I am in need of a beautiful <yAncient Brooch>. If you willing to get one for me, I shall reveal a secret to you.")
@@ -4321,10 +4321,10 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 4236, 1 )	
 	MisResultAction(SetRecord, 339 )
 	MisResultAction(ClearMission, 339 )
-    -----------------------------------画龙点睛
+    -----------------------------------
 	DefineMission( 511, "Make the Finishing Point", 340 )
 
-	MisBeginTalk("<t> Okay the secret is…Haha! I've tricked you. I only needed this brooch to serve as the eye of dragon painting! Ah! I run out of dye again! Why don't you help me obtain 5 of each different colored dye so that I can finish up the painting? I might even reward you for your help.")
+	MisBeginTalk("<t> Okay the secret isHaha! I've tricked you. I only needed this brooch to serve as the eye of dragon painting! Ah! I run out of dye again! Why don't you help me obtain 5 of each different colored dye so that I can finish up the painting? I might even reward you for your help.")
 	MisBeginCondition(NoRecord, 340)
 	MisBeginCondition(HasRecord, 339)
 	MisBeginCondition(NoMission, 340)
@@ -4397,7 +4397,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 340, 31, 5 )
 	RegCurTrigger( 3407 )
 
------------------------------------画龙点睛
+-----------------------------------
 	DefineMission( 512, "Make the Finishing Point", 341 )
 
 	MisBeginTalk("<t>You know the most important thing about the dragon's eye, is its eyeball. Now that my brush has dried up, it is no longer able to draw a realistic looking eyeball. In order to soften up the brush, I'll have to soak it at least 30 times in <yPure Water>. Hurry up and get me 30 bottles of <yPure Water> or else I'll use my brush and color your face black!")
@@ -4423,7 +4423,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 1649 )
 	TriggerAction( 1, AddNextFlag, 341, 1, 30 )
 	RegCurTrigger( 3411 )
------------------------------------画龙点睛
+-----------------------------------
 	DefineMission( 513, "Make the Finishing Point", 342 )
 
 	MisBeginTalk("<t>This paint bush was made out of the finest grade of <yFox Tails>. Now that the brush is damaged, the special properties has been lost. To repair it, you will need to bring me 10 <yFox Tails>. If you fail, you better be able to compensate me for it in another way or I'll make a new brush out of your hair!<n><t>Get it from the <rFox Taoists> at <j(3322, 2460)>.")
@@ -4452,7 +4452,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 165 )
 	TriggerAction( 1, AddNextFlag, 342, 1, 10 )
-	RegCurTrigger( 3421 )-----------------------------------失踪
+	RegCurTrigger( 3421 )-----------------------------------
 	DefineMission( 514, "Lost", 343 )
 
 	MisBeginTalk("<t>Since you asked, I'm not going to hide it from you any longer.<n><t>Below this town, lies an <pUnderwater Tunnel>. It used to be a water plant but after an earthquake destroyed it, all that's left is rubble. Everyone who worked below it also perished as a result of the quake.<n><t>My son and a group of pirates went down to look for treasure in that hellhole but never made it back. I myself, tried searching for them below, but had no choice but to turn back because of a fire blocking my way. If you wish to risk your life by going down there, please help me find out what happened to my son!")
@@ -4471,7 +4471,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 343 )
 	MisResultAction(ClearMission, 343 )
 
------------------------------------失踪
+-----------------------------------
 	DefineMission( 515, "Lost", 343 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -4482,7 +4482,7 @@ function HistoryMission001()
 	MisResultCondition(NoFlag, 343, 2)
 	MisResultAction(SetFlag, 343, 2)
 	
------------------------------------失踪
+-----------------------------------
 	DefineMission( 516, "Lost", 345 )
 
 	MisBeginTalk("<t>From what I know, <bLuna> at <j(3279, 2501)> has a <yTalisman> which is able to retain the souls of zombies. If you have time, please go and speak to her.<n><t>Since I broke up their relationship at that time, I am too embarassed to approach her myself. She'll definitely be able to help. I'm sure!")
@@ -4498,7 +4498,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>Is <bLuna> willing to help? I hope there is still time.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------灵符
+-----------------------------------
 	DefineMission( 517, "Talisman", 346 )
 
 	MisBeginTalk("<t>What?! <b <bHami> > is trapped inside the <pUnderwater Tunnel>? Oh my god! The method which you speak off, requires a <ySpecial Talisman> which only can be made from the combination of various <yTalisman of Ghost>.<n><t>The talismans, which I used the last time, were bought off a merchant a couple of months ago. He hasn't come by in a while so I have no materials! Unless you are able to provide me 20 <yTalismans of Ghost>, I don't think I have any other ways of saving <b <bHami> >!")
@@ -4512,7 +4512,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Bring <y20 Talismans of Ghost> to <bGrocer Luna> at <j(3279, 2501)>.")
 	MisNeed(MIS_NEED_ITEM, 4262, 20, 1, 20)
 
-	MisResultTalk("<t>Hurry! I hope there is still time… Give this special talisman to <bHami>  and ask him to put it upon his head. I hope it works.")
+	MisResultTalk("<t>Hurry! I hope there is still time Give this special talisman to <bHami>  and ask him to put it upon his head. I hope it works.")
 	MisHelpTalk("<t>Don't waste any more time or all hope will gone! Remember! I need 20 <yTailsmans of Ghost>.")
 	MisResultCondition(HasMission, 346 )
 	MisResultCondition(HasItem, 4262, 20)
@@ -4527,7 +4527,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 346, 1, 20 )
 	RegCurTrigger( 3461 )
 
------------------------------------灵符
+-----------------------------------
 	DefineMission( 518, "Talisman", 347 )
 
 	MisBeginTalk("<t>What happened? I remember I was in a coma.<n><t>Why did I suddenly wake up? Is this a special talisman from <bLuna>?<n><t>I always knew that she would be thinking of me, but I can't go back now. Even if my soul is preserved in this body of mine, I will not survive the sunlight. Please tell her to forget about me.")
@@ -4543,7 +4543,7 @@ function HistoryMission001()
 	
 	MisResultCondition(AlwaysFailure )
 
------------------------------------灵符
+-----------------------------------
 	DefineMission( 519, "Talisman", 347 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -4559,7 +4559,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem, 3884, 5, 4)
 	MisResultBagNeed(2)
 
------------------------------------爱的奇迹
+-----------------------------------
 	DefineMission( 520, "Love Miracle", 349 )
 
 	MisBeginTalk("<t>Young man, I see the pain in your eyes.<n><t>Are you deeply touched by the love between <bLuna> and <bHami> ? Love possess the power to create miracles.<n><t>If you still wish to help them, you must find <yTears of the Goddess> , a <yMerman's Heart> and <yFeathers of Paradise Bird>. With these 3 items, we might be able to help them.")
@@ -4606,7 +4606,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 349, 15, 1 )
 	RegCurTrigger( 3493 )
 
------------------------------------女神的眼泪
+-----------------------------------
 	DefineMission( 521, "Tear of Goddess", 350 )
 
 	MisBeginTalk("<t> After all these years, someone actually remembers this legend. The <yTears of the Goddess> to be considered literally, it is actually <yPure Clarion Sand> which only be found deep in <pBarren Cavern>. Only the most revered can touch it and only someone who harbors compassion is able to carry it away from its resting place. So far, all the bandits and thieves who have tried getting it has died. Will you give it a try?")
@@ -4624,7 +4624,7 @@ function HistoryMission001()
 	MisResultCondition(HasItem, 4245, 1)
  	MisResultAction(SetRecord, 350 )
 	MisResultAction(ClearMission, 350 )
------------------------------------人鱼的心脏
+-----------------------------------
 	DefineMission( 522, "Heart of Mermaid", 351 )
 
 	MisBeginTalk("<t>A <yMerman's Heart> actually refers to the <yCrown of the Queen>. I did not think that such a young person like you would be able to understand what it is.<n><t>The <yMerman's Heart> is a diamond which <bWilliam> gave to his wife. Somehow, it was later inlaid on the <yCrown of the Queen> which later on fell into the hands of the enemy along with the royal palace. All trails leading to it has since been lost and it has been rumored that it carrys a Merman's curse. All the Bandits and Thieves who have searched for it in the Royal Palace ruins have been possessed and killed. Do you dare look for it yourself?")
@@ -4643,7 +4643,7 @@ function HistoryMission001()
  	MisResultAction(SetRecord, 351 )
 	MisResultAction(ClearMission, 351 )
 
-	-----------------------------------飞鸟的羽毛
+	-----------------------------------
 	DefineMission( 523, "Feather of the Bird", 352 )
 
 	MisBeginTalk("<t><yFeathers of Paradise Bird> is a name given to the award that is presented to brave warriors. It is the highest award and title bestowed to people who are able to go into the <pSnowstorm Family's Labyrinth> and retrieve a <yCrystalline Feather> from inside one of the valuable boxes. Many have died trying, do you wish to try?")
@@ -4662,7 +4662,7 @@ function HistoryMission001()
  	MisResultAction(SetRecord, 352 )
 	MisResultAction(ClearMission, 352 )
 
------------------------------------爱的奇迹
+-----------------------------------
 	DefineMission( 524, "Love Miracle", 353 )
 
 	MisBeginTalk("<t>Are you saying that as long as this brooch with me, it is possible for me to to return to the world?<n><t>Thank you! Now I may see <bLuna> again. Hurry and tell her the good news for me!")
@@ -4679,7 +4679,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>Really, thank you so much, I really don't know how to repay you, wish you good luck in the furture.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------爱的奇迹
+-----------------------------------
 	DefineMission( 525, "Love Miracle", 353 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -4696,7 +4696,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem,3350,10,4)
 	MisResultBagNeed(3)
 
------------------------------------尸毒
+-----------------------------------
 	DefineMission( 526, "Corpse Venom", 355 )
 
 	MisBeginTalk("<t>Are you being troubled by poison? I haven't made this kind of protective charms in a long time.<n><t>If you can bring me 20 <yTalismans of Ghost>, I can make you 1 protective charm for 5000G. The <yTalismans of Ghost> can be found in the <pUnder Water Tunnel>.")
@@ -4725,12 +4725,12 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 355, 1, 20 )
 	RegCurTrigger( 3551 )
 
------------------------------------失踪
+-----------------------------------
 	DefineMission( 527, "Lost", 345, COMPLETE_SHOW )
 
 	MisBeginCondition( AlwaysFailure )
 		
-	MisResultTalk("<t>What? My son is unable to return home? I guess as long as he is not dead… I'm so sorry for troubling you on this matter. I guess I should let the matter rest, I just feel so sorry for him and <bLuna>. <n><t>Since you've helped me, citizens of <pSpring Town> shall remember you for your good deeds, if there is anything I can help you with, please feel free to approach me.")
+	MisResultTalk("<t>What? My son is unable to return home? I guess as long as he is not dead I'm so sorry for troubling you on this matter. I guess I should let the matter rest, I just feel so sorry for him and <bLuna>. <n><t>Since you've helped me, citizens of <pSpring Town> shall remember you for your good deeds, if there is anything I can help you with, please feel free to approach me.")
 	MisResultCondition(HasRecord, 347)
 	MisResultCondition(NoRecord, 353)
 	MisResultCondition(NoRecord, 345)
@@ -4741,7 +4741,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission, 345 )
 	MisResultAction(SetRecord, 345 )
 	
------------------------------------失踪
+-----------------------------------
 	DefineMission( 528, "Lost", 345 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -4754,7 +4754,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 345 )
 	MisResultAction(SetRecord, 354 )
 
------------------------------------神奇果实
+-----------------------------------
 	DefineMission( 529, "Miracle Fruit", 358 )
 
 	MisBeginTalk("<t>Have you eaten a mysterious fruit before?<n><t>I haven't tried one before, really. I haven't. I mean I haven't even heard of anything like it before! <bYuri> at <j(3196, 2509)> must be making up stories again! I knew it! He likes to boast about things.")
@@ -4768,7 +4768,7 @@ function HistoryMission001()
 
 	MisHelpTalk("<t>I said I don't know! Why would an innocent old lady lie to you?")
 	MisResultCondition(AlwaysFailure )
------------------------------------神奇果实
+-----------------------------------
 	DefineMission( 530, "Miracle Fruit", 359 )
 
 	MisBeginTalk("<t>I'm really irritated by that old hag calling me a big liar. Lets drop the topic! I've seen Pirate King <bRoland> before.<n><t>If you don't believe me, take a look at these scars on my chest. These were the result of our duels a long time ago. You say you want to take a look at the mysterious fruits? The truth is...I haven't seen anything like that for over a year. The last time, Guard Zhou gave one to me to pass sell it to a stranger named \"Lu\".<n><t>Why don't you go ask <bGuard Zhou> at <j(3298, 2534)> about it?")
@@ -4785,7 +4785,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>If you want more information on golden apples or unicorn fruits, stop by and look for me.")
 	MisResultCondition(AlwaysFailure )
 
------------------------------------神奇果实
+-----------------------------------
 	DefineMission( 531, "Miracle Fruit", 360 )
 
 	MisBeginTalk("<t>Mysterious fruit? No I haven't seen it. Don't come near me! I promise I won't do it again! Please, don't kill me! I'll leave right now, I don't want anything. I only came here to have fun, I didn't steal your egg! I won't go back to the <pUnderwater Tunnel> again, it's a living hell down there! Anyone who goes down there has never come back, I'm just lucky! <n><t>There is a gap in the sewers, which leads to the <pUnderwater Tunnel>. There's a madman there, he might know a thing or two about your mysterious fruit.")
@@ -4800,7 +4800,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Investigate <pSeabed Tunnel>.")
 	MisNeed(MIS_NEED_ITEM, 4263, 1, 1, 1)
 
-	MisHelpTalk("<t>I am only an ugly duckling…quack quack…")
+	MisHelpTalk("<t>I am only an ugly ducklingquack quack")
 	MisResultCondition(AlwaysFailure )
 
 	InitTrigger()
@@ -4808,7 +4808,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 360, 1, 1 )
 	RegCurTrigger( 3601 )
 
------------------------------------恶魔的果实
+-----------------------------------
 	DefineMission( 532, "Demonic Fruit", 361 )
 
 	MisBeginTalk("<t>What's that in your hands? Looks familiar, don't come near me! Stay back! Take it away! Take it away! I don't want to see it ever again! <n><t>Take it away before something bad happens!")
@@ -4829,10 +4829,10 @@ function HistoryMission001()
    	MisResultAction(SetRecord, 361 )
 	MisResultAction(ClearMission, 361 )
 
------------------------------------周吴郑的信
+-----------------------------------
 	DefineMission( 533, "Letter of Zhou", 362 )
 
-	MisBeginTalk("<t>Back to the topic, you said that the <pUnderwater Tunnel> does not have anymore that… that kind of fruit?<n><t>Strange, I need time to recall. Could I have given you the wrong information? Why don't you help pass this letter to <bWang Mo> at <j(3290, 2512)> near the bank while I am trying to recall the whole matter? Don't peep inside it and come back once you are done, I should be ready by then.")
+	MisBeginTalk("<t>Back to the topic, you said that the <pUnderwater Tunnel> does not have anymore that that kind of fruit?<n><t>Strange, I need time to recall. Could I have given you the wrong information? Why don't you help pass this letter to <bWang Mo> at <j(3290, 2512)> near the bank while I am trying to recall the whole matter? Don't peep inside it and come back once you are done, I should be ready by then.")
 	MisBeginCondition(NoRecord, 362)
 	MisBeginCondition(NoMission, 362)
 	MisBeginCondition(HasRecord, 361)
@@ -4851,7 +4851,7 @@ function HistoryMission001()
    	MisResultAction(SetRecord, 362 )
 	MisResultAction(ClearMission, 362 )
 
------------------------------------恶魔的果实
+-----------------------------------
 	DefineMission( 534, "Demonic Fruit", 363 )
 
 	MisBeginTalk("<t>You should have seen the huge <rIcy Dragon> once you entered the <pUnderwater Tunnel> but that does not matter as it is not important.<n><t>Regarding the Strange Fruit you mentioned the other time, it is actually a <yDemonic Fruit>. Rumor has it that anybody who consume it will gain demonic powers, but will lose an entire life of happiness. I do not believe this until I met the <rIcy Dragon> in the tunnel.<n><t>Oh, there is somebody who has experienced the power of the <yDemonic Fruit>. Do not judge her by her appearance as she is much older than she look.<n><t>However, I don't think she will admit to having any relation to a <yDemonic Fruit>. I have told you what I have known and it will be up to you on what to do next.<n><t>By the way, I did not mention that she is the <bTavern Keeper>.")
@@ -4863,9 +4863,9 @@ function HistoryMission001()
 
 	MisNeed(MIS_NEED_DESP,"Ask <bBarkeeper Sang Di> at <j(3287, 2501)> about the <yDemonic Fruit>.")
 
-	MisHelpTalk("<t>I've already told you all that I know… and I thought I had already forgotten about it all. I not go crazy again.")
+	MisHelpTalk("<t>I've already told you all that I know and I thought I had already forgotten about it all. I not go crazy again.")
 	MisResultCondition(AlwaysFailure )
------------------------------------防腐剂
+-----------------------------------
 	DefineMission( 535, "Preservative", 364 )
 
 	MisBeginTalk("<t>Interested to make a <yPreservative>? It is very useless when you explore <pSeabed Tunnel>. It will keep your skin from rotting for 15 minutes.<n><t>Bring me 3 <yTinder>, 3 <yCursed Bone> and 3 <yArista> to make 1 <yPreservative>.")
@@ -4908,7 +4908,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 364, 10, 3 )
 	RegCurTrigger( 3643)
 
------------------------------------龙之泪
+-----------------------------------
 	DefineMission( 536, "Tear of Dragon", 24 , COMPLETE_SHOW)
 	MisBeginCondition( AlwaysFailure )
 		
@@ -4919,7 +4919,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 24)
 	MisResultAction(ClearMission, 24)
 
------------------------------------变卖龙之泪
+-----------------------------------
 	DefineMission( 537, "Sale of Dragon's Tear", 366 )
 
 	MisBeginTalk("<t>Give me the gem, I'll buy it off you for <y200,000G> so that you can pretend that all this never happened. Don't think about it anymore, <y200,000G> is not easy to come by just like that.")
@@ -4943,7 +4943,7 @@ function HistoryMission001()
  	MisResultAction(SetRecord, 366 )
  	MisResultAction(ClearMission, 366 )
 
------------------------------------龙之泪的传说
+-----------------------------------
 	DefineMission( 538, "Legend of Dragon's Tear", 367 )
 
 	MisBeginTalk("<t>So you really wish to know more about the secret to the <yTear of Dragon>? I only know of a legend.<n><t>However I need time to recollect all the points. Please come back again later when I'm ready.")
@@ -4966,7 +4966,7 @@ function HistoryMission001()
  	MisResultAction(ClearMission, 367 )
 	MisResultAction(ObligeAcceptMission, 25 )
 
------------------------------------龙之泪的秘密
+-----------------------------------
 	DefineMission( 539, "Secret of Dragon's Tear", 25, COMPLETE_SHOW )
 	MisBeginCondition( AlwaysFailure )
 		
@@ -4977,7 +4977,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 25)
 	MisResultAction(ClearMission, 25)
 
------------------------------------圣水
+-----------------------------------
 	DefineMission( 540, "Holy Water", 369 )
 
 	MisBeginTalk("<t>Pain and suffering is also a gift by the gods. It is only through the pain and hardship that one experiences that he is able to grow unceasingly. However, when a person shoulders too much of others pain and sorrow, it will affect him severely and therefore the <rIcy Dragon> was created to wash away a person's pain and tears. However, people started abusing this idea. And so a curse was made to turn people into <rIcy Dragons> should they try to abuse the kindness of the gods. <n><t>Your friend probably did not know of this. If you wish to help him, travel to the <pMagical Ocean> at <j(3800, 550)>. The sea water nearby contains the blessings of the <bGoddess> which is able to cleanse him of the curse. Bring the water back to me and I'll teach you how to use it to save your friend.")
@@ -5001,7 +5001,7 @@ function HistoryMission001()
  	MisResultAction(ClearMission, 369 )
 	MisResultBagNeed(1)
  
- -----------------------------------圣水
+ -----------------------------------
 	DefineMission( 541, "Redemption", 370 )
 
 	MisBeginTalk("<t>Cleanse your friend with this blessed water together with the <rTear of Dragon> and he'll be set free.")
@@ -5017,7 +5017,7 @@ function HistoryMission001()
 	MisResultCondition(AlwaysFailure )
 	
  
- -----------------------------------海砂的存款
+ -----------------------------------
 	DefineMission( 542, "Hassli's Deposit", 26 , COMPLETE_SHOW)
 	
 	MisBeginCondition( AlwaysFailure )
@@ -5032,7 +5032,7 @@ function HistoryMission001()
 	MisResultAction(AddMoney,250000,250000)
 	MisResultAction(AddExpAndType,2,60000,60000)
 
------------------------------------周吴郑的情书
+-----------------------------------
 	DefineMission( 543, "Love Letter of Zhou", 372 )
 
 	MisBeginTalk("<t>This is...Wait! Don't go! You have read this letter, haven't you?<n><t>Maintaining your silence doesn't help, you are already betrayed by the intense sweating. Actually I came to silence the witness but since I see much honesty in you, I will give you a chance to repent. I heard that there is many new goods at <bYuri>'s place at <j(3195,2506)>, help me obtain one and I shall spare your life.")
@@ -5060,12 +5060,12 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 4241 )
 	TriggerAction( 1, AddNextFlag, 372, 1, 1 )
 	RegCurTrigger( 3721 )
-  -----------------------------------周吴郑的信
+  -----------------------------------
 	DefineMission( 544, "Letter of Zhou", 362 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
 		
-	MisResultTalk("<t>…Again? That guy...I really don't know what to say about him.<n><t>Oh, I'm sorry! I wasn't talking about you. Please go back and tell him to give it up, he'll understand.")
+	MisResultTalk("<t>Again? That guy...I really don't know what to say about him.<n><t>Oh, I'm sorry! I wasn't talking about you. Please go back and tell him to give it up, he'll understand.")
 	MisResultCondition(NoRecord, 362)
 	MisResultCondition(NoFlag, 362, 10)
 	MisResultCondition(HasMission, 362)
@@ -5073,7 +5073,7 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 4250, 1)
 	MisResultAction(SetFlag, 362, 10)
 	
------------------------------------新货
+-----------------------------------
 	DefineMission( 545, "New Goods", 372 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -5084,7 +5084,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission, 372)
 	MisResultAction(SetFlag, 372, 10)
 	
------------------------------------出海打探
+-----------------------------------
 	DefineMission( 546, "Sea Exploration", 375 )
 
 	MisBeginTalk("<t>So you agreed to look for my ship? Great! First go to <j(2500, 2260)> to check it out. Take this <yBinocular>, you should be able to see our ship with it.")
@@ -5115,7 +5115,7 @@ function HistoryMission001()
 	MisResultAction(AddExpAndType,2,60000,60000)
 	MisResultBagNeed(1)
 
- -----------------------------------购买新衣
+ -----------------------------------
 	DefineMission( 547, "Buy New Clothes", 376 )
 
 	MisBeginTalk("<t> You don't intend to go to sea for me? Very well, I shall not force you then. I'll give you a 20 percent discount for this. 100000G what do you say? I'm an honest person, does it look like I'm out to cheat you of your money?")
@@ -5128,7 +5128,7 @@ function HistoryMission001()
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	
 	MisResultTalk("<t>Actually I was hoping that you would be willing to go to sea for me, but, since you are willing to part with 100000G, there's nothing much I can do..")
-	MisHelpTalk("<t>100000G…No more no less.")
+	MisHelpTalk("<t>100000GNo more no less.")
 	MisResultCondition(HasMission, 376)
 	MisResultCondition(HasMoney, 100000)
  	MisResultAction(TakeMoney, 100000)	
@@ -5137,7 +5137,7 @@ function HistoryMission001()
  	MisResultAction(ClearMission, 376 )
 	MisResultBagNeed(1)
 
------------------------------------恶魔的果实
+-----------------------------------
 	DefineMission( 548, "Demonic Fruit", 363 , COMPLETE_SHOW)
 
 	MisBeginCondition( AlwaysFailure )
@@ -5150,7 +5150,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,2500000,2500000)
 	MisResultAction(AddExpAndType,2,50000,50000)
 
------------------------------------恶魔的果实
+-----------------------------------
 	DefineMission( 550, "Demonic Fruit", 363, COMPLETE_SHOW )
 
 	MisBeginCondition( AlwaysFailure )
@@ -5168,7 +5168,7 @@ function HistoryMission001()
 	MisResultAction(GiveItem,3351,15,4)
 	MisResultAction(GiveItem,3352,15,4)
 	MisResultAction(GiveItem,3353,15,4)
-	MisResultBagNeed(3) -----------------------------------罗森
+	MisResultBagNeed(3) -----------------------------------
 	DefineMission( 551, "Roland", 380 )
 
 	MisBeginTalk("<t>Are you asking about <bRoland>? <bRoland> is the hero of all legends. All the girls in our city idolizes him and he is the role model for all the young guys...<n><t>I will tell you more once I have <pcollected all my debts>.")
@@ -5186,7 +5186,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission, 380)
   	MisResultAction(SetRecord, 380 )
  	MisResultAction(ClearMission, 380 )
-	-----------------------------------悲剧
+	-----------------------------------
 	DefineMission( 552, "Tragedy", 381 )
 
 	MisBeginTalk("<t>Do you know why <bOldman Blurry> is not willing to help you with the translation? That's because, after reading an article that he translated, his beloved grandson left <pArgent City> in search of the hidden city that was mentioned. Since then, he has never returned and that is why <bOldman Blurry> no longer wishes to do any more translations.<n><t>He was such a lovable young boy and he would visit me often. The last news I heard was that his grandson sailed towards the <pMagical Ocean> <j(3757, 1248)> before he went missing. Could you do me a favor and go investigate? Take my <yUnderwater Detector>, it'll help you with your search.")
@@ -5200,7 +5200,7 @@ function HistoryMission001()
 
 	
 	MisNeed(MIS_NEED_DESP,"Investigate around <pMagical Ocean> at <j(3757, 1248)>.")
-	MisResultCondition(AlwaysFailure )-----------------------------------悲剧
+	MisResultCondition(AlwaysFailure )-----------------------------------
 	DefineMission( 553, "Tragedy", 382 )
 
 	MisBeginTalk("<t>Hmm, I understand this writing. It looks like our friend has run into some pirates. <n><t>Take this to <bOldman Blurry>, it may come as a shock to him but I guess we all have to face the hard fact.")
@@ -5215,17 +5215,17 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Bring the <yLetter in a Bottle> to <bBlurry> at <j(2272, 2700)>.")
 	
 	MisResultCondition(AlwaysFailure )
------------------------------------悲剧
+-----------------------------------
 	DefineMission( 554, "Tragedy", 382, COMPLETE_SHOW )	MisBeginCondition( AlwaysFailure )
 		
-	MisResultTalk("<t>I knew this would happen… However, I am somewhat comforted that you gave me this letter. At least I now know what has become of him.")
+	MisResultTalk("<t>I knew this would happen However, I am somewhat comforted that you gave me this letter. At least I now know what has become of him.")
 	MisResultCondition(HasMission, 382)
 	MisResultCondition(HasItem, 4233, 1)
 	MisResultAction(TakeItem, 4233, 1)
 	MisResultAction(ClearMission, 382)
 	MisResultAction(SetRecord, 382)
 
------------------------------------悲剧
+-----------------------------------
 	DefineMission( 555, "Tragedy", 383 )
 
 	MisBeginTalk("<t>Although someone of my age should not harbor such thoughts of revenge, I will be eternally grateful it if you could teach those pirates of <pMagical Ocean> a lesson.")
@@ -5270,7 +5270,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 383, 16, 1 )
 	RegCurTrigger( 3833 )
 
------------------------------------过去
+-----------------------------------
 	DefineMission( 556, "Past", 384 )
 
 	MisBeginTalk("<t>Do you know why <bAlbuda> is so furious? Take a look at the rubble beneath my feet.<n><t>Many years ago, our clan managed to obtain some ancient manuscripts. After translation, the citizens came to know about the various places that exist outside of the city. With their curiosity aroused, many youngsters left the city and ventured forth into the great unknown in search of adventure.<n><t>Having forsaken their religion, this act of betrayal angered our <bGoddess>! She summoned a sandstorm that buried this city. What remains of this city is what you see beneath my feet, a mere shadow of its past existence.<n><t>Today, there are not many who know about the history of <pShaitan City> with <bAlbuda> being just one of the few. The reason he banished me was because I snuck into the library chambers and tried to steal those <r manuscripts out of curiosity. Of course I got caught and that is how I got confined here.<n><t>I wonder if those <r manuscripts still exist after such a long time. If you can somehow obtain them for me, I will give you some of my treasure in exchange.<n>.")
@@ -5301,7 +5301,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 384, 1, 1 )
 	RegCurTrigger( 3841 )
 
------------------------------------过去
+-----------------------------------
 	DefineMission( 557, "Past", 384, COMPLETE_SHOW )
 
 	MisBeginCondition( AlwaysFailure )
@@ -5314,7 +5314,7 @@ function HistoryMission001()
 	MisResultAction(SetFlag, 384, 10)
 
 	
------------------------------------------讨债
+-----------------------------------------
       DefineMission(558,"Demand for Payment",386)
 
       MisBeginCondition(HasMission,380)
@@ -5329,7 +5329,7 @@ function HistoryMission001()
 
       MisNeed(MIS_NEED_DESP,"Help <bSang Di> collect the debt from <bLong Er, Luna, Yuri, Wu Xin, Cloud, Bill and Shuang>.") 
       
-      MisHelpTalk("<t>You don't look too well, having a hard time? I'm just a lonely old woman without my son by my side to help me…If you cannot get it back, can you top it up with your own money? Its only 2 millions. 2 millions!")
+      MisHelpTalk("<t>You don't look too well, having a hard time? I'm just a lonely old woman without my son by my side to help meIf you cannot get it back, can you top it up with your own money? Its only 2 millions. 2 millions!")
       
       MisResultTalk("<t>I must thank you. Its really 2 millions. Did they cause you any trouble?<n><t>This gift is for you. Keep it well.")
     
@@ -5352,7 +5352,7 @@ function HistoryMission001()
       MisResultAction(SetRecord, 380 )
       MisResultAction(SetRecord,386)
 
-      ----------------------------------讨债      （武鑫）
+      ----------------------------------      
       DefineMission(567,"Demand for Payment",386, COMPLETE_SHOW )
       
       MisBeginCondition( AlwaysFailure )
@@ -5363,7 +5363,7 @@ function HistoryMission001()
       MisResultCondition(NoFlag, 386, 100)
       MisResultAction(AddMoney,200000)
       MisResultAction(SetFlag, 386, 100)
-           ------------------------------------讨债
+           ------------------------------------
        DefineMission(568,"Demand for Payment",386, COMPLETE_SHOW )
       
       MisBeginCondition( AlwaysFailure )
@@ -5374,7 +5374,7 @@ function HistoryMission001()
       MisResultCondition(NoFlag,386,101)
       MisResultAction(AddMoney,100000)
       MisResultAction(SetFlag,386,101)
-          ----------------------------------------龙女的债务
+          ----------------------------------------
       DefineMission(569,"Long Er's Debt",389)
 
       MisBeginCondition(HasMission,386)
@@ -5384,7 +5384,7 @@ function HistoryMission001()
       MisBeginAction(AddMission,389)
       MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-      MisBeginTalk("<t>Oh darn… my memory must be failing me. I've been busy recently with my work. Could you do me a favor and run over to the bank? I'll inform Wang Mo for you? If I remember correctly, the total amount inclusive of interest is 200000G.")
+      MisBeginTalk("<t>Oh darn my memory must be failing me. I've been busy recently with my work. Could you do me a favor and run over to the bank? I'll inform Wang Mo for you? If I remember correctly, the total amount inclusive of interest is 200000G.")
       
       MisNeed(MIS_NEED_DESP,"Go to <bBanker Wang Mo> at <j(3290, 2512)> to take 200000g.")
 
@@ -5392,7 +5392,7 @@ function HistoryMission001()
        
      MisResultCondition(AlwaysFailure)
 
--------------------------------------------龙女的债务
+-------------------------------------------
      DefineMission(570,"Long Er's Debt",389, COMPLETE_SHOW)
 
      MisBeginCondition(AlwaysFailure)
@@ -5406,7 +5406,7 @@ function HistoryMission001()
      MisResultAction(AddMoney,200000)
      MisResultAction(ClearMission, 389 )
      MisResultAction(SetRecord, 389 )
-     ---------------------------------------------讨债
+     ---------------------------------------------
      DefineMission(563,"Demand for Payment",386, COMPLETE_SHOW )
       
       MisBeginCondition( AlwaysFailure )
@@ -5417,7 +5417,7 @@ function HistoryMission001()
       MisResultCondition(NoFlag, 386, 102)
       MisResultAction(AddMoney,200000)
       MisResultAction(SetFlag, 386, 102)
-     ---------------------------------------------杂货商人的债务
+     ---------------------------------------------
       DefineMission(564,"Grocer's Debt",391)
 
       MisBeginTalk("<t>Lately, there is a demand for <yTeleport Tickets>. However I am out of materials to capitalize on this opportunity. If you can head down to the <pUnderwater Tunnel> and get me some materials, I will be able to return your money from the sales.")
@@ -5427,9 +5427,9 @@ function HistoryMission001()
       MisBeginCondition(NoMission,391)
       MisBeginAction(AddMission,391)
    
-      MisBeginAction(AddTrigger, 3911, TE_GETITEM, 0176, 3 )		--残缺的裹尸布
-      MisBeginAction(AddTrigger, 3912, TE_GETITEM, 0177, 3 )		--破损的裹尸布
-      MisBeginAction(AddTrigger, 3913, TE_GETITEM, 0178, 3 )		--完整的裹尸布
+      MisBeginAction(AddTrigger, 3911, TE_GETITEM, 0176, 3 )		--
+      MisBeginAction(AddTrigger, 3912, TE_GETITEM, 0177, 3 )		--
+      MisBeginAction(AddTrigger, 3913, TE_GETITEM, 0178, 3 )		--
       MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
       
       MisNeed(MIS_NEED_DESP,"Go to <pUnderwater Tunnel> and collect 3 <yTorn Corpse Wrap>, 3 <yDamaged Corpse Wrap> and 3 <yIntact Corpse Wrap> from the zombies.")
@@ -5465,7 +5465,7 @@ function HistoryMission001()
    TriggerAction( 1, AddNextFlag, 391, 30, 3 )
     RegCurTrigger(3913)
 
---------------------------------------------------------港口指挥·霜奇的债务
+--------------------------------------------------------
      DefineMission(565,"Shuang's Debt",392)
 
       MisBeginTalk("<t>Can you wait just a few more days? I just need to get this batch of goods transported over to the <bNavy Commander> in <pThundoria>. It's all good to go, I'm just waiting for someone to deliver them for me and I'll be able to receive 400000G as payment.<n><t>If you are willing to run this errand for me, I will be able to repay you quickly.")
@@ -5487,7 +5487,7 @@ function HistoryMission001()
       MisResultAction(ClearMission,392 )
       MisResultAction(SetRecord,400)
 
-  -------------------------------------------------------港口指挥·霜奇的债务
+  -------------------------------------------------------
 
   DefineMission(566,"Shuang's Debt",392, COMPLETE_SHOW )
 
@@ -5501,7 +5501,7 @@ function HistoryMission001()
       
        
 
-   -----------------------------------------------------贸易商人·油李的债务
+   -----------------------------------------------------
 
       DefineMission(572,"Yuri's Debt",393)
 
@@ -5534,7 +5534,7 @@ function HistoryMission001()
    TriggerAction( 1, AddNextFlag, 393, 10, 5 )
     RegCurTrigger(3931)
 
---------------------------------------------罗森
+--------------------------------------------
      DefineMission(571,"Roland",394)
      MisBeginTalk("<t>I have 2 million gold to deposit into the bank.<n><t>Talk to you later.")
      MisBeginCondition(HasRecord,386)
@@ -5545,13 +5545,13 @@ function HistoryMission001()
 
      MisNeed(MIS_NEED_DESP,"Wait for <bBarkeeper - Sang Di> at <j(3287, 2501)> to deposit the gold.")
      MisHelpTalk("<t>The gold is not yet deposited. Please be patient.")
-      MisResultTalk("<t>Its easy to save when you are old…")
+      MisResultTalk("<t>Its easy to save when you are old")
      MisResultCondition(NoRecord, 394)
      MisResultCondition(HasMission, 394)
      MisResultAction(SetRecord, 394 )
      MisResultAction(ClearMission, 394 )
 
-----------------------------------------追忆
+----------------------------------------
 	 DefineMission(592,"Retrospection",395)
 	
 	MisBeginTalk("<t>That was an incident that happened a long time ago, an unpleasant memory that I would rather not think about. <bRoland> was the greatest pirate at that time, his charming smile always full of mystery...Ahh! I have a headache just thinking about it. Here! Take this necklace and continue on your adventure. You will gradually unravel the mystery. Go to <pIcicle City> and find a young man named Daisha. Who knows there might be some shocking surprises in store for you.")
@@ -5559,7 +5559,7 @@ function HistoryMission001()
 	MisBeginCondition(NoMission, 395)
 	MisBeginCondition(HasRecord,394)
 	MisBeginAction(AddMission,395)
-	MisBeginAction(GiveItem, 1051, 1, 4)	----------------莫邪项链	
+	MisBeginAction(GiveItem, 1051, 1, 4)	----------------	
 	MisBeginBagNeed(1)
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 		
@@ -5567,7 +5567,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t>You haven't looked for <bDaisha> yet? Hurry and go look for him!")
 	MisResultCondition(AlwaysFailure)	
------------------------------------------追忆
+-----------------------------------------
 	DefineMission(593, "Retrospection", 395, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -5577,7 +5577,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission,395)
 	MisResultAction(ClearMission,395)
 	MisResultAction(SetRecord, 395)
-       -----------------------------------------------------达赫的恶梦
+       -----------------------------------------------------
 	DefineMission(594,"Daisha's Nightmare",396)
 	
 	MisBeginTalk("<t>I can't get to sleep everynight. I have been having nightmares recently. I really can't fathom the meaning of these nightmares. I need to get some advice on this, but unfortunately, I'm pretty tied up this few days. Can you help me ask <bHocus Pocus> at <j(3262, 2502)> about this?")
@@ -5591,7 +5591,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t>You haven't looked for the fortune teller yet? Be on your way then!")
 	MisResultCondition(AlwaysFailure)
-----------------------------------------------------达赫的恶梦
+----------------------------------------------------
 	DefineMission(5065,"Daisha's Nightmare",396)
 
 	MisBeginCondition(AlwaysFailure )
@@ -5601,7 +5601,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission,396)
 	MisResultAction(ClearMission,396)
 	MisResultAction(SetRecord, 396)
----------------------------------------------------------------狐道士作怪
+---------------------------------------------------------------
 	DefineMission(595,"Mischief of Fox Taoist",397)
 
       MisBeginTalk("<t>Usually, I don't help others in divination, but you have the necklace as proof and you look sincere. So.. I'm going to make you an exception just this once.<n><t>###..**##%! It's the <rFox Taoist>. Go kill 10 <rFox Taoist> at <j(3322, 2460)>.")
@@ -5609,7 +5609,7 @@ function HistoryMission001()
       MisBeginCondition(HasRecord,396)
       MisBeginCondition(NoRecord,397)
       MisBeginCondition(NoMission,397)
-      MisBeginCondition(HasItem,1051,1)----------莫邪项链
+      MisBeginCondition(HasItem,1051,1)----------
       MisBeginAction(TakeItem,1051,1)
       MisBeginAction(AddMission,397)
       MisBeginAction(AddTrigger, 3971, TE_KILL, 748, 10)
@@ -5630,7 +5630,7 @@ function HistoryMission001()
       TriggerCondition( 1, IsMonster, 748 )
       TriggerAction( 1, AddNextFlag, 397, 10, 10 )
       RegCurTrigger( 3971 )
--------------------------------------------------------为达赫解梦
+-------------------------------------------------------
 	DefineMission(5066,"Unravel the dream of Daisha",992)
 	
 	MisBeginTalk("<t>There is no need to thank me. Its always a pleasure to help someone in need. Go to <pIcicle City> and look for <bDaisha> at <j(1352, 499)>.")
@@ -5645,7 +5645,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t>I never annouce my name when I do good things, because I am <bHocus Pocus>!")
 	MisResultCondition(AlwaysFailure)
-----------------------------------------------------为达赫解梦
+----------------------------------------------------
 	DefineMission(5067,"Unravel the dream of Daisha",992)
 
 	MisBeginCondition(AlwaysFailure )
@@ -5658,7 +5658,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 992)
 	MisResultAction(AddMoney,20000)
 
-	------------------------------------------------------------布丽娜的恶梦
+	------------------------------------------------------------
        DefineMission(596,"Belinda's nightmare",398)
 	
 	MisBeginTalk("<t>Would you mind helping me again? My pretty neighbour, <bBelinda> at <j(1360, 519)> seems to be having some problems lately.")
@@ -5672,7 +5672,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t>Please find <bBelinda>?")
 	MisResultCondition(AlwaysFailure)
-	----------------------------------------------布丽娜的恶梦
+	----------------------------------------------
 	 DefineMission(597,"Belinda's nightmare",398)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -5682,7 +5682,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission,398)
 	MisResultAction(ClearMission,398)
 	MisResultAction(SetRecord, 398)	
-	------------------------------------------------解救布丽娜
+	------------------------------------------------
 	 DefineMission(598,"Rescue Belinda",399)
 	
 	MisBeginTalk("<t>I didn't sleep well last night, now I'm too tired to do anything. Can you help me get a divination from the fortune teller at <j(3262, 2502)>? Remember to come back and tell me the outcome.")
@@ -5703,7 +5703,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission,399)
 	MisResultAction(SetRecord, 399)
 
-	--------------------------------------------------------灵异水晶球
+	--------------------------------------------------------
 	DefineMission( 599, "Mytho Crystal Ball", 996 )
 
 	MisBeginTalk("<t>I give divinations only when my conditions are met. I'm making the most powerful <yCrystal Ball> ever to be depicted in the legends, but I'm still lacking of 2 <yAzure Crystals>that can be found on <rFeral Blood Polliwog> at <j(2550, 400)> in Ascaron, and 3 <yPerfect Crystals> that can be found on <rHorrific Cursed Corpse> at <j(360, 1340)> in <pAscaron>. You wouldn't reject me now, would you?")
@@ -5712,8 +5712,8 @@ function HistoryMission001()
 	MisBeginCondition(NoMission, 996)
 	MisBeginCondition(HasMission,399)
 	MisBeginAction(AddMission, 996)
-	MisBeginAction(AddTrigger, 9961, TE_GETITEM, 3366,2 )		--蓝色水晶
-	MisBeginAction(AddTrigger, 9962, TE_GETITEM, 1635, 3 )		--水晶纯石
+	MisBeginAction(AddTrigger, 9961, TE_GETITEM, 3366,2 )		--
+	MisBeginAction(AddTrigger, 9962, TE_GETITEM, 1635, 3 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Remember! Bring back 2 <yAzure Crystals> and 3 <yPerfect Crystals>!")
@@ -5739,7 +5739,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 996, 20, 3 )
 	RegCurTrigger(9962 )
 
-	----------------------------------------------------------------------------狐妖作怪
+	----------------------------------------------------------------------------
 	DefineMission( 5000, "Mischief of Fox Spirit", 950 )
 
 	MisBeginTalk("<t>###...**##%! This time, its the <rFox Spirit> at <j(3306, 2444)> on <pSpring Island> causing trouble. Do not let them off, kill 5 of them!")
@@ -5748,7 +5748,7 @@ function HistoryMission001()
 	MisBeginCondition(NoMission, 950 )
 	MisBeginCondition(HasRecord,996)-----------------
 	MisBeginAction(AddMission, 950 )
-	MisBeginAction(AddTrigger, 9501, TE_KILL,761, 5 )	----------狐妖
+	MisBeginAction(AddTrigger, 9501, TE_KILL,761, 5 )	----------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	
 	MisNeed(MIS_NEED_DESP,"Kill 5 <rFox Spirit> and return!")
@@ -5768,7 +5768,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag,  950 , 10,5)
 	RegCurTrigger(   9501 )
 
----------------------------------------------------------------------狐仙作怪
+---------------------------------------------------------------------
 
 	DefineMission( 5001, "Mischief of Fox Sage", 951 )
 
@@ -5777,7 +5777,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 399)
 	MisBeginCondition(NoMission, 951 )
 	MisBeginAction(AddMission, 951)
-	MisBeginAction(AddTrigger, 9511, TE_KILL, 776, 1 )----------------狐仙
+	MisBeginAction(AddTrigger, 9511, TE_KILL, 776, 1 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 1 <rFox Sage>.")
@@ -5799,7 +5799,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 951 , 10,1)
 	RegCurTrigger(   9511 )
 
------------------------------------------------------------------------重大秘密
+-----------------------------------------------------------------------
 
 	DefineMission( 5002, "Big Secret",952 )
 
@@ -5808,7 +5808,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 951)
 	MisBeginCondition(NoMission,952 )
 	MisBeginAction(AddMission, 952)
-	MisBeginAction(AddTrigger,9521, TE_KILL, 621, 1 )		----迅捷的暴风水母
+	MisBeginAction(AddTrigger,9521, TE_KILL, 621, 1 )		----
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	 MisNeed(MIS_NEED_DESP,"Kill 1 <rSwift Cyclonic Sea Jelly> of the shore of Magical Ocean!")
@@ -5827,7 +5827,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 621)	
 	TriggerAction( 1, AddNextFlag, 952 , 10,1)
 	RegCurTrigger( 9521 )
-------------------------------------------------------------------罗森精神
+------------------------------------------------------------------
 
 	DefineMission( 5003, "Spirit of Roland", 953)
 	
@@ -5842,7 +5842,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>She will help you.")
 	MisResultCondition(AlwaysFailure )
 
-	---------------------------------------罗森精神
+	---------------------------------------
 
 	DefineMission(5004,"Spirit of Roland",953,COMPLETE_SHOW )
 	
@@ -5854,7 +5854,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission, 953)
 	MisResultAction(SetRecord, 953)
 
------------------------------------------------------治疗裴蒂
+-----------------------------------------------------
 
 	DefineMission( 5005, "Heal Sang Di", 954 )
 
@@ -5884,7 +5884,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag,954, 10, 1 )
 	RegCurTrigger( 9541 )
 
-------------------------------------------------------------------魔力骨头粉
+------------------------------------------------------------------
 
 	DefineMission( 5006, "Sorcerer's bone powder.", 955 )
 
@@ -5915,7 +5915,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem,1626)	
 	TriggerAction( 1, AddNextFlag, 955, 10, 3 )
 	RegCurTrigger( 9551 )
-------------------------------------------------------------------------高级营养品
+------------------------------------------------------------------------
 
 	DefineMission( 5007, "Highly Nutritious Product", 956)
 
@@ -5944,7 +5944,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem,4783)	
 	TriggerAction( 1, AddNextFlag, 956, 10, 1 )
 	RegCurTrigger( 9561 )
----------------------------------------------------------------------------遗忘的过去
+---------------------------------------------------------------------------
 	 DefineMission(5008,"Forgotten Past",957)
 	
 	MisBeginTalk("<t>I guess I should tell you the things which I have tried to forget, since it is the fortune teller who have ask you to come and find me. Everyone have forgotten some of their past at one time or another, and you are no exception. Oh, don't look at me like that. I can't give you back your memories. Its something that you have to find back yourself. The <bHigh Priest Gannon> at <j(862, 3500)> of <pShaitan City> should be able to give you some clues. <bCome back and find me once you have gotten results>!")
@@ -5966,7 +5966,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 957 )
 	MisResultAction(AddExp,800000,800000)
 	MisResultAction(AddMoney,200000,200000)	
-	MisResultAction(AddExpAndType,2,60000,60000)------------------------------------------------------------------------克隆之回魂汤（1）
+	MisResultAction(AddExpAndType,2,60000,60000)------------------------------------------------------------------------1
 
 	DefineMission(5009,"Memory Soup",958)
 	
@@ -5987,7 +5987,7 @@ function HistoryMission001()
 	MisResultCondition(NoRecord, 958)
 	MisResultCondition(HasRecord, 962)
 	MisResultCondition(HasMission, 958)
-	MisResultCondition(HasItem, 1043, 1 )--------回魂汤
+	MisResultCondition(HasItem, 1043, 1 )--------
 	MisResultAction(TakeItem, 1043, 1 )
 	MisResultAction(ClearMission, 958)
 	MisResultAction(SetRecord, 958 )
@@ -5997,7 +5997,7 @@ function HistoryMission001()
 	MisResultAction(AddExpAndType,2,60000,60000)
 
 	
----------------------------------------------------------------------------血石（1）
+---------------------------------------------------------------------------1
 
 	DefineMission(5010,"Bloodstone",959)
 	
@@ -6023,7 +6023,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 959 )
 
 	
----------------------------------------------------------------------------邀请函（1）
+---------------------------------------------------------------------------1
 
 	DefineMission( 5011, "Invitation Letter", 960 )
 	
@@ -6033,7 +6033,7 @@ function HistoryMission001()
 	MisBeginCondition(NoMission,960)
 	MisBeginCondition(NoRecord,959)
 	MisBeginAction(AddMission, 960)
-	MisBeginAction(GiveItem, 1041, 1, 4)	----------邀请函	
+	MisBeginAction(GiveItem, 1041, 1, 4)	----------	
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
 		
@@ -6042,23 +6042,23 @@ function HistoryMission001()
 	MisHelpTalk("<t>Have not make a move?")
 	MisResultCondition(AlwaysFailure)
 	
------------------------------------------------------------------------邀请函（1）
+-----------------------------------------------------------------------1
 
 	DefineMission(5012,"Invitation Letter",960,COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
 		
-	MisResultTalk("<t>How can you take back something that you have given away? Its atrocious! As if I care! But since you are not as good-looking as I am, I guess I can help you…")
+	MisResultTalk("<t>How can you take back something that you have given away? Its atrocious! As if I care! But since you are not as good-looking as I am, I guess I can help you")
 	MisResultCondition(NoRecord, 960)
 	MisResultCondition(HasMission, 960)
 	MisResultCondition(HasItem, 1041, 1)
 	MisResultAction(TakeItem, 1041, 1 )
-	MisResultAction(GiveItem, 1040, 1,4)--------------血石
+	MisResultAction(GiveItem, 1040, 1,4)--------------
 	MisResultAction(ClearMission, 960 )
 	MisResultAction(SetRecord, 960 )
 	MisResultBagNeed(1)
 
-	-----------------------------------------------------------------回魂汤药方(1) 
+	-----------------------------------------------------------------(1) 
 	DefineMission(5014, "Memory Soup Recipe", 961 )
 
 	MisBeginTalk("<t>The ingredients of <yMemory Soup> is very simple: 10 <yArabic Dark Pearl Fragments> from <rMidnight Water Dancer> at <j(3289, 1746)> at <pDeep Blue>, 1 <yThick Transparent Polliwog Tail> from <rGreat Prowling Polliwog> at <j(900, 1308)> in <pMagical Ocean>. Its the making that requires special technique. Go gather the ingredients while I prepare.")
@@ -6087,7 +6087,7 @@ function HistoryMission001()
 	
 	MisResultAction(ClearMission, 961)
 	MisResultAction(SetRecord, 961 )
-	MisResultAction(GiveItem, 1043, 1, 4)-------回魂汤
+	MisResultAction(GiveItem, 1043, 1, 4)-------
 	MisResultAction(AddExp,800000,800000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
 	MisResultBagNeed(1)
@@ -6102,7 +6102,7 @@ function HistoryMission001()
 	RegCurTrigger(9612 )
 	
 	
-------------------------------------------------------降温黑珍珠(1) 
+------------------------------------------------------(1) 
 
 	DefineMission( 5015, "Cooling Black Pearl", 962 )
 
@@ -6111,7 +6111,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 961)
 	MisBeginCondition(NoMission,962)
 	MisBeginAction(AddMission, 962)
-	MisBeginAction(AddTrigger, 9621, TE_GETITEM, 3362,1)--------黑珍珠		
+	MisBeginAction(AddTrigger, 9621, TE_GETITEM, 3362,1)--------		
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Obtained 1 <yBlack Pearl> with trememdous cooling powers.")
@@ -6132,7 +6132,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem,3362)	
 	TriggerAction( 1, AddNextFlag, 962, 10, 1 )
 	RegCurTrigger( 9621 )
-------------------------------------------------------------------女神的基因之健忆胶囊（2）
+------------------------------------------------------------------2
 	DefineMission(5017,"Memory Capsule",963)
 	
 	MisBeginTalk("<t>You want to recover your past? Your past is actually laying asleep in your brain. You need to drink the <bMemory Soup> to awaken your memories. The recipe of the <yMemory Soup> is very strange. And what's even stranger is that only the <bMerman Prince> at <j(1254, 3491)> knows the recipe. Come back to me once you have gotten the recipe.")
@@ -6140,7 +6140,7 @@ function HistoryMission001()
 	MisBeginCondition(NoMission, 963)
 	MisBeginCondition(HasMission, 957)
 	MisBeginCondition(NoRecord, 957)
-	MisBeginCondition(IsChaType,3)----菲利尔
+	MisBeginCondition(IsChaType,3)----
 	MisBeginAction(AddMission,963)
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 		
@@ -6151,7 +6151,7 @@ function HistoryMission001()
 	MisResultCondition(NoRecord, 963)
 	MisResultCondition(HasMission, 963)
 	MisResultCondition(HasRecord, 967)
-	MisResultCondition(HasItem, 1050, 1 )-------健忆胶囊
+	MisResultCondition(HasItem, 1050, 1 )-------
 	MisResultAction(TakeItem, 1050,1 )
 	MisResultAction(ClearMission, 963)
 	MisResultAction(SetRecord, 963 )
@@ -6160,7 +6160,7 @@ function HistoryMission001()
 	MisResultAction(AddMoney,600000,600000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
 
---------------------------------------------------------------------泪之琥珀（2）
+--------------------------------------------------------------------2
 	DefineMission(5018,"Amber Tear",964)
 	
 	MisBeginTalk("<t>Young man, <yMemory Capsule> has a very important message. Only those that are really kind and good have the right to know.<n><t>Although I'm old now, I was actually very pretty when I was young. I even had a prince interested in me. But I only have <bLanga> of <pShaitan City> in my heart. Come to think of it, I have not seen him for a very long time. Can you help me give this <yAmber Tear> to him?")
@@ -6177,7 +6177,7 @@ function HistoryMission001()
 	MisHelpTalk("<t>Why seek for old memories if you can be happier in your current state.")
 	
 	MisResultCondition(AlwaysFailure)
-	----------------------------------------------------------------------泪之琥珀（2）
+	----------------------------------------------------------------------2
 	DefineMission(5019,"Amber Tear",964,COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6190,7 +6190,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission,964)
 	MisResultAction(SetRecord, 964)
 	MisResultAction(AddMoney,80000,80000)	
----------------------------------------------------------------补钙（２）	DefineMission( 5020, "Calcium Replenishment", 965)
+---------------------------------------------------------------	DefineMission( 5020, "Calcium Replenishment", 965)
 	DefineMission(5020, "Calcium Replenishment", 965)
 
 	MisBeginTalk("<t>Its ok even if he said that, some people are worth the wait. I wonder if it's because I'm feeling low, my lack of calcium seems to be getting worse, and I can't straighten my back. If you would help me get 1 <yAmethyst Dolphin Dorsal Fin> from <rAmethyst Dolphin> at <j(900, 2000)> found at <pMagical Ocean>, I think I would be able to help you.")
@@ -6221,7 +6221,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag,965, 10, 1 )
 	RegCurTrigger( 9651 )
 
---------------------------------------------------复活叶（２）
+--------------------------------------------------
 	DefineMission(5021, "Revival Clover", 966 )
 
 	MisBeginTalk("<t>Although you have helped me before, but I do not wish for anyone to know my stuff, and only the DEAD won't reveal secrets!<n><t>Don't be afraid. You have helped me before, so I'll give you another chance. Bring me 1 <yRevival Clover>. <bTerra Elder> at <j(1381, 3134)> seems to have it. If you can survive, not only will I not kill you, but I'll also tell you the whereabouts of <yMemory Capsule>."  )
@@ -6251,7 +6251,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 966 , 10, 1 )
 	RegCurTrigger( 9661 )
 
---------------------------------------------------------------------------------------副作用(2)
+--------------------------------------------------------------------------------------(2)
 	DefineMission( 5022, "Side effect", 967 )
 
 	MisBeginTalk("<t>Since you seize the opportunity, I'll tell you the truth. I have the <yMemory Capsule> with me all along. Eating it will let you remember the Past, but the side effect is that you will forget the present. To prevent this from happening, I suggest that you find 1 <yMurky Polliwog Blood> from <rGreat Prowling Polliwog> at <j(900, 1308)> at <pMagical Ocean> to soak in.")
@@ -6273,7 +6273,7 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 1351,1 )
 	MisResultAction(ClearMission, 967)
 	MisResultAction(SetRecord, 967)
-	MisResultAction(GiveItem, 1050, 1, 4)-------健忆胶囊
+	MisResultAction(GiveItem, 1050, 1, 4)-------
 	MisResultAction(AddExp,800000,800000)
 	MisResultAction(AddMoney,100000,100000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
@@ -6286,7 +6286,7 @@ function HistoryMission001()
 	
 -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 
---------------------------------------------------混血儿之美丽过往(3) 
+--------------------------------------------------(3) 
 	DefineMission(5024,"Beautiful Past",968)
 	
 	MisBeginTalk("<t>You want to find your forgotten Past? Your Past is sleeping dormant within your brain. To awaken your memories, you need to start from love. Do you still remember <bMinelli> at <j(1244, 3186)>? She has the memories that you want. Come back to me when you find the thing that can restore your memories.")
@@ -6313,7 +6313,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,2000000,2000000)
 	MisResultAction(AddMoney,800000,800000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
----------------------------------------------------烧过的蜡烛(3)
+---------------------------------------------------(3)
 	DefineMission(5025, "Used Candle", 969 )
 
 	MisBeginTalk("<t>You are here to inquire about your Past? I'm sorry, my memory has deminished along with the <yUsed Candle>. If you are capable of retriveing the candle from the <rDark Mud Monster> from <pGhana>, there could be a way.")
@@ -6344,7 +6344,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 969, 10, 1 )
 	RegCurTrigger( 9691 )
 
----------------------------------------------------------复原往事(3)
+---------------------------------------------------------(3)
 	DefineMission(5026,"Restore Past",970)
 	
 	MisBeginTalk("<t>Unfortunately, the past is gone. Even though the candle has been found, the enchantations on it is gone. If you really want to know, ask for a <yRestoration Potion> from <bDitto>. Come back to me when you have gotten the <yRestoration Potion>.")
@@ -6362,7 +6362,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission,970)
 	MisResultCondition(NoRecord, 970)
 	MisResultCondition(HasRecord, 971)
-	MisResultCondition(HasItem,1042, 1 )----------复原剂
+	MisResultCondition(HasItem,1042, 1 )----------
 	MisResultAction(TakeItem, 1042, 1 )
 	MisResultAction(ClearMission, 970)
 	MisResultAction(SetRecord, 970)
@@ -6374,7 +6374,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 970, 10, 1 )
 	RegCurTrigger(9701 )
 
-	--------------------------------------------------复原剂原料(3)
+	--------------------------------------------------(3)
 
 	DefineMission( 5027, "Ingredient of Restoration Potion", 971 )
 
@@ -6426,7 +6426,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 3147)	
 	TriggerAction( 1, AddNextFlag, 971, 30, 3 )
 	RegCurTrigger(9713 )
-	--------------------------------------------------------------释放爱情(3)
+	--------------------------------------------------------------(3)
 	DefineMission( 5028, "Let go off love", 972)
 	
 	MisBeginTalk("<t><bMinelli> must be very sad. You are really very cruel. If your happiness is based on her pain, then I won't help you. If theres really no helping it, it will be best to let her completely forget it...Here's a <yLotus Clover>.")
@@ -6443,7 +6443,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t><bMinelli> is in <pMagical Ocean> at <j(1244, 3186)>.")
 	MisResultCondition(AlwaysFailure)
-------------------------------------------------------------------释放爱情(3)
+------------------------------------------------------------------(3)
 	DefineMission(5029, "Let go off love", 972 ,COMPLETE_SHOW)
 
 	MisBeginCondition(AlwaysFailure )
@@ -6455,7 +6455,7 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 1054, 1 )
 	MisResultAction(ClearMission, 972)
 	MisResultAction(SetRecord, 972)
-----------------------------------------------------------------诞生之太极石(4)
+----------------------------------------------------------------(4)
 
 	DefineMission(5031,"Brimstone",973)
 	
@@ -6475,8 +6475,8 @@ function HistoryMission001()
 	MisResultCondition(NoRecord, 973)
 	MisResultCondition(HasMission, 973)
 	MisResultCondition(HasRecord, 977)
-	MisResultCondition(HasItem, 1045, 1)----------阴石
-	MisResultCondition(HasItem, 1048, 1)-----------阳石
+	MisResultCondition(HasItem, 1045, 1)----------
+	MisResultCondition(HasItem, 1048, 1)-----------
 	MisResultAction(TakeItem, 1045, 1 )
 	MisResultAction(TakeItem, 1048, 1 )
 	MisResultAction(ClearMission, 973)
@@ -6485,7 +6485,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,2000000,2000000)
 	MisResultAction(AddMoney,800000,800000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
-------------------------------------------------------诚信藏宝图
+------------------------------------------------------
 	DefineMission(5032,"Piety Treasure Map",974)
 	
 	MisBeginTalk("<t>You are here to ask me about <yBrimstone>? That was a long time ago. It was kept a secret because of the catastrophe that it may cause. Therefore it will not be easy for you to learn the whereabouts of the <yBrimstone>.. Unless you can swiftly deliver this <yTreasure Map> to <bMerman Prince> at <j(1254, 3491)> of <pMagical Ocean>.")
@@ -6493,7 +6493,7 @@ function HistoryMission001()
 	MisBeginCondition(NoMission,974)
 	MisBeginCondition(HasMission, 973)
 	MisBeginCondition(NoRecord,973)
-	MisBeginAction(GiveItem, 1053, 1, 4)------诚信藏宝图
+	MisBeginAction(GiveItem, 1053, 1, 4)------
 	MisBeginAction(AddMission,974)
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	--MisBeginAction(AddTrigger, 9741, TE_GETITEM, 1044,1)
@@ -6505,7 +6505,7 @@ function HistoryMission001()
 	
 	MisResultCondition(AlwaysFailure)
 
-	------------------------------------------诚信藏宝图
+	------------------------------------------
 
 	DefineMission(5033,"Piety Treasure Map",974,COMPLETE_SHOW)
 	
@@ -6518,26 +6518,26 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 1053, 1 )
 	MisResultAction(ClearMission, 974)
 	MisResultAction(SetRecord, 974)
-	MisResultAction(GiveItem, 1045, 1, 4)--------阴石
+	MisResultAction(GiveItem, 1045, 1, 4)--------
 	MisResultBagNeed(1)
-	--------------------------------------------------阳石的下落
+	--------------------------------------------------
 	DefineMission(5034,"Whereabouts of Sunstone",975)
 	
 	MisBeginTalk("<t>Shouldn't you be on your way? Alright, since you are so determined, I'll reveal a clue to you.. You can inquire about the <ySunstone> from <bDitto>. Here, take this <yRecommendation Letter> as proof.")
 	MisBeginCondition(NoRecord, 975)
 	MisBeginCondition(NoMission, 975)
 	MisBeginCondition(HasRecord, 974)
-	MisBeginAction(GiveItem, 1046, 1, 4)-------推荐信
+	MisBeginAction(GiveItem, 1046, 1, 4)-------
 	MisBeginAction(AddMission,975)
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
 		
 	MisNeed(MIS_NEED_DESP,"Find out more from <bPhysician Ditto>.")
 	
-	MisHelpTalk("<t>Look for <bDitto> in <pArgent City> at <j(2250, 2770)>！")
+	MisHelpTalk("<t>Look for <bDitto> in <pArgent City> at <j(2250, 2770)>")
 	MisResultCondition(AlwaysFailure)
 
---------------------------------------------------阳石的下落
+--------------------------------------------------
 	DefineMission(5035,"Whereabouts of Sunstone",975,COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6549,7 +6549,7 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 1046, 1 )
 	MisResultAction(ClearMission, 975 )
 	MisResultAction(SetRecord, 975)
-	----------------------------------------------养眼水
+	----------------------------------------------
 
 	DefineMission( 5036, "Eyedrop", 976 )
 
@@ -6580,7 +6580,7 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 3134, 3 )
 	MisResultAction(TakeItem,1649, 10 )
 	
-	MisResultAction(GiveItem, 1047, 1, 4)------------- 养眼水
+	MisResultAction(GiveItem, 1047, 1, 4)------------- 
 	MisResultAction(ClearMission, 976 )
 	MisResultAction(SetRecord, 976  )
 	MisResultAction(AddMoney,100000,100000)	
@@ -6600,7 +6600,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 976 , 30, 10 )
 	RegCurTrigger(9763 )
 
---------------------------------------------------------------------------岁月之尘
+--------------------------------------------------------------------------
 	DefineMission(5037, "Dust of the Century", 977)
 
 	MisBeginTalk("<t>Its been many years since someone came looking for the <ySunstone>. It is covered in <yDust of the Century>, a special chemical substance, rendering it useless. I'll need a <yShroud> that can be found on <rHell Mummy B> at <pAbaddon 2> to remove the chemical content.")
@@ -6621,7 +6621,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission, 977)
 	MisResultCondition(HasItem, 4782, 1)
 	MisResultAction(TakeItem, 4782, 1 )
-	MisResultAction(GiveItem, 1048, 1, 4)------------- 阳石
+	MisResultAction(GiveItem, 1048, 1, 4)------------- 
 	MisResultAction(ClearMission, 977)
 	MisResultAction(SetRecord, 977 )
 	MisResultAction(AddMoney,100000,100000)	
@@ -6631,7 +6631,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem,4782)	
 	TriggerAction( 1, AddNextFlag, 977, 10, 1 )
-	RegCurTrigger( 9771 )	--------------------------------------------------魔咒
+	RegCurTrigger( 9771 )	--------------------------------------------------
 
 	DefineMission( 5043, "Magical Curse", 978)
 
@@ -6647,14 +6647,14 @@ function HistoryMission001()
 	MisHelpTalk("<t>Not done yet?")
 	MisResultCondition(HasMission, 978)
 	MisResultCondition(NoRecord, 978)
-	MisResultCondition(HasItem, 1052, 1 )--------圣灵护符
+	MisResultCondition(HasItem, 1052, 1 )--------
 	MisResultAction(TakeItem, 1052, 1 )
 	MisResultAction(ClearMission, 978)
 	MisResultAction(SetRecord, 978 )
 	MisResultAction(AddExp,1000000,1000000)
 	MisResultAction(AddMoney,200000,200000)	
 	MisResultAction(AddExpAndType,2,60000,60000)	
--------------------------------------------------土著长矛
+-------------------------------------------------
 	DefineMission( 5045, "Tribal Long Spear", 979 )
 
 	MisBeginTalk("<t>I rememeber a close aide priest of mine was afflicted with the curse. Instead of praying, he started to hurl abuse at God. After the curse was broken, he was so ashamed that he switched faith. Haha what a joke... The remedy for the curse is very strange, and I promise <bKentaro> that I would not reveal his ability to cure the curse...<n><t>Oh! I think I just did...<n><t>I need to discuss this with <bKentaro> for a while. In the meantime, help me find 1 <yPointed Tribal Long Spear> from <rMad Tribal Witchdoctor> who is hiding in <pLone Tower 1>.")
@@ -6664,7 +6664,7 @@ function HistoryMission001()
 	MisBeginCondition(NoMission, 979 )
 	MisBeginAction(AddMission, 979)
 
-	MisBeginAction(AddTrigger, 9791, TE_GETITEM, 4739, 1 )		--长矛
+	MisBeginAction(AddTrigger, 9791, TE_GETITEM, 4739, 1 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	
 	MisNeed(MIS_NEED_DESP,"Obtain <yPointed Tribal Long Spear> from <rMad Tribal Witchdoctor>.")
@@ -6686,7 +6686,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 4739)	
 	TriggerAction( 1, AddNextFlag, 979, 10, 1)
 	RegCurTrigger( 9791 )
-----------------------------------------------------讨伐恐怖的诅咒古尸
+----------------------------------------------------
 
 	DefineMission(5046, "Kill Mummy", 980 )
 
@@ -6713,7 +6713,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 980, 10, 1 )
 	RegCurTrigger(  9801 )
 
-----------------------------------------------------佐罗面具
+----------------------------------------------------
 
 	DefineMission(5047,"Mask of Zorro",981)
 	
@@ -6721,7 +6721,7 @@ function HistoryMission001()
 	MisBeginCondition(NoRecord, 981)
 	MisBeginCondition(NoMission, 981)
 	MisBeginCondition(HasRecord, 980)
-	MisBeginAction(GiveItem, 1025, 1, 4)----------佐罗面具
+	MisBeginAction(GiveItem, 1025, 1, 4)----------
 	MisBeginAction(AddMission,981)
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
@@ -6730,7 +6730,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t><bKentaro> is at <pAscaron>.")-----------------------++++++12
 	MisResultCondition(AlwaysFailure)
-	------------------------------------------------佐罗面具
+	------------------------------------------------
 	DefineMission(5048,"Mask of Zorro",981,COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6742,7 +6742,7 @@ function HistoryMission001()
 	MisResultAction(TakeItem, 1025, 1 )
 	MisResultAction(ClearMission, 981 )
 	MisResultAction(SetRecord, 981 )
------------------------------------------------------终极密码
+-----------------------------------------------------
 	DefineMission( 5049, "Final Password", 982 )
 
 	MisBeginTalk("<t>After <bZorro> died, the mask was also lost. Legend has it that you can gain special powers if you know how to use it. Now a bunch of evil pirates are also looking for the mask. For the safety and peace of the sea, we must find the mask first. First we need to find a secret code in order to proceed with the next step. It is said that the code is written on a <yArista>.")
@@ -6750,7 +6750,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord,981)
 	MisBeginCondition(NoMission, 982  )
 	MisBeginAction(AddMission, 982 )
-	MisBeginAction(AddTrigger, 9821, TE_GETITEM, 4261, 1 )		--水芒
+	MisBeginAction(AddTrigger, 9821, TE_GETITEM, 4261, 1 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Obtained <rCursed Water Fairy>'s <yArista>.")
@@ -6773,7 +6773,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 4261)	
 	TriggerAction( 1, AddNextFlag, 982 , 10,1)
 	RegCurTrigger( 9821 )
--------------------------------------------------宿命之石
+-------------------------------------------------
 
 	DefineMission( 5050, "Stone of Destiny", 983 )
 
@@ -6782,7 +6782,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 982 )
 	MisBeginCondition(NoMission, 983 )
 	MisBeginAction(AddMission, 983)
-	MisBeginAction(AddTrigger, 9831, TE_GETITEM, 2487, 1 )		--兽丹石
+	MisBeginAction(AddTrigger, 9831, TE_GETITEM, 2487, 1 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Look for the <yBeastie Borestone> to understand the meaning of the mask.")
@@ -6805,7 +6805,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 983, 10,1)
 	RegCurTrigger(  9831 )
 
-----------------------------------------------------------销毁面具
+----------------------------------------------------------
 
 	DefineMission( 5051, "Destroy the mask", 984 )
 
@@ -6814,7 +6814,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 983)
 	MisBeginCondition(NoMission, 984 )
 	MisBeginAction(AddMission, 984)
-	MisBeginAction(AddTrigger, 9841, TE_GETITEM,4738, 1 )		--破碎的天使光环
+	MisBeginAction(AddTrigger, 9841, TE_GETITEM,4738, 1 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Obtain <yBroken Angel Halo> from <rCorrupted Guardian Angel>.")
@@ -6837,7 +6837,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag,  984, 10,1)
 	RegCurTrigger(   9841 )
 
--------------------------------------------------------魔布口袋
+-------------------------------------------------------
 	DefineMission( 5052, "Enchanted Pouch", 985 )
 
 	MisBeginTalk("<t>Although the evil has been removed, the <yMask of Zorro> is still too stained with evil to be trusted. Its dark powers must not be allowed to awaken. The only way is to use a <yEnchanted Pouch> on it. <bGeneral William> at <j(2277, 2831)> will help. I have already sent a letter to him. Bring the mask to him.")
@@ -6845,7 +6845,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 984)
 	MisBeginCondition(NoMission, 985)
 	MisBeginAction(AddMission, 985)
-	MisBeginAction(GiveItem, 1025, 1, 4)----------佐罗面具
+	MisBeginAction(GiveItem, 1025, 1, 4)----------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
 	
@@ -6854,7 +6854,7 @@ function HistoryMission001()
 	
 	MisResultCondition(AlwaysFailure)
 	
--------------------------------------------------------魔布口袋
+-------------------------------------------------------
 	DefineMission( 5053, "Enchanted Pouch", 985, COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6870,7 +6870,7 @@ function HistoryMission001()
 	MisResultAction(AddMoney,80000,80000)
 	MisResultBagNeed(1)
 	
-------------------------------------------------------灵符上的金粉
+------------------------------------------------------
 
 	DefineMission( 5054, "Gold powder on the Sacred Amulet", 986 )
 
@@ -6879,7 +6879,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 978)
 	MisBeginCondition(NoMission,986 )
 	MisBeginAction(AddMission, 986)
-	MisBeginAction(AddTrigger, 9861, TE_GETITEM, 2438, 10 )		--金币
+	MisBeginAction(AddTrigger, 9861, TE_GETITEM, 2438, 10 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Look for the <yGold Coin> found on <rSkeletar Pirate Ship> for <bSang Di>.")
@@ -6901,7 +6901,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem, 2438)	
 	TriggerAction( 1, AddNextFlag, 986, 10,10)
 	RegCurTrigger( 9861 )
--------------------------------------------------------裴蒂的指点
+-------------------------------------------------------
 	DefineMission(5055,"Sang Di's guidance",987)
 	
 	MisBeginTalk("<t>The Truth is for you to sought yourself. I can tell you an important news: Sought the one who can show you the road to your Class.")
@@ -6915,7 +6915,7 @@ function HistoryMission001()
 	
 	MisHelpTalk("<t>Why are you still here? Hurry!")
 	MisResultCondition(AlwaysFailure)
------------------------------------------------------裴蒂的指点（比特）
+-----------------------------------------------------
 	DefineMission(5056, "Sang Di's guidance", 987, COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6933,7 +6933,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission,987)
 	MisResultAction(SetRecord, 987)
 
------------------------------------------------------裴蒂的指点（雷欧）
+-----------------------------------------------------
 	DefineMission(5057, "Sang Di's guidance", 987, COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6952,7 +6952,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission,987)
 	MisResultAction(SetRecord, 987)
 
-	-----------------------------------------------------裴蒂的指点（小山车）
+	-----------------------------------------------------
 	DefineMission(5058, "Sang Di's guidance", 987 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6971,7 +6971,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission,987)
 	MisResultAction(SetRecord, 987)
 
-	-----------------------------------------------------裴蒂的指点(甘地维拉)
+	-----------------------------------------------------()
 	DefineMission(5059, "Sang Di's guidance", 987 , COMPLETE_SHOW)
 	
 	MisBeginCondition(AlwaysFailure )
@@ -6987,7 +6987,7 @@ function HistoryMission001()
 	MisResultCondition(NoPfEqual, 4)
 	MisResultCondition(NoPfEqual, 16)
 	MisResultAction(ClearMission,987)
-	MisResultAction(SetRecord, 987)-----------------------------------------------------职业介绍人的建议（if剑士）
+	MisResultAction(SetRecord, 987)-----------------------------------------------------if
 	
 	DefineMission( 5060, "Peter's suggestion",988 )
 
@@ -7003,7 +7003,7 @@ function HistoryMission001()
 	MisBeginCondition(NoPfEqual, 4)
 	MisBeginCondition(NoPfEqual, 16)
 	MisBeginAction(AddMission, 988 )
-	MisBeginAction(AddTrigger, 9881, TE_KILL, 524, 1 )		--暴怒的蜥蜴人
+	MisBeginAction(AddTrigger, 9881, TE_KILL, 524, 1 )		--
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_KILL,524,1, 10, 1)
@@ -7023,7 +7023,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 988 , 10,1)
 	RegCurTrigger(  9881 )
 
------------------------------------------------------雷欧的建议（if猎人）
+-----------------------------------------------------if
 	DefineMission( 5061, "Ray's suggestion", 989 )
 
 	MisBeginTalk("<t>Laughter always gets covered over by thoughts. Even if you have all the riches in the world, there will be times when you don't know what to do. At times like this, I'll go on a journey. Why don't you give it a try?<n><t>Collect 1 <yRoyal Bodyguard Emblem> from <rPalace Guard> at <j(435, 1690)> in <pAscaron> and 1 <yNimble Heart of Nature> from <pLone Tower 1> <rNimble Forest Hunter>.")
@@ -7069,7 +7069,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 989 , 20,1)
 	RegCurTrigger(  9892 )
 
----------------------------------------------------------------小山车的建议（if冒险者）
+---------------------------------------------------------------if
 	DefineMission( 5062, "Daniel's Suggestion", 990 )
 
 	MisBeginTalk("<t>Happiness always gets blown away. Even if you have experienced a lot in life, there are still times when you don't know what to do. At times like this, I'll go on a sea voyage. Why don't you give it a try? <n><t>Go on a journey to <pSalva Haven> at <j(194, 1718)> in <pDeep Blue>. Find and talk to <bHarbor Operator - Gregory>.")
@@ -7087,11 +7087,11 @@ function HistoryMission001()
 	MisBeginAction(AddMission, 990 )
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
-	MisHelpTalk("<t>Go to <pDeep Blue Archipelago's Salva Haven> at <j（194, 1718）> for a journey. Talk to <bHarbor Operator Gregory>.")
+	MisHelpTalk("<t>Go to <pDeep Blue Archipelago's Salva Haven> at <j194, 1718> for a journey. Talk to <bHarbor Operator Gregory>.")
 	MisNeed(MIS_NEED_DESP,"Talk to Harbor Operator Gregory.")
 
 	MisResultCondition(AlwaysFailure)
----------------------------------------------------------------职业介绍人的建议
+---------------------------------------------------------------
 	DefineMission( 5063, "Daniel's Suggestion", 990,COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -7113,7 +7113,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,800000,800000)
 	MisResultAction(AddMoney,200000,200000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
-	-------------------------------------------------------甘地维拉的建议（if药师）
+	-------------------------------------------------------if
 	DefineMission( 5064, "Gannon's Suggestion", 991 )
 
 	MisBeginTalk("<t>Hope is always easily crushed.<n><t><bMinelli> at <j(1244, 3186)> will tell you what to do.")
@@ -7134,7 +7134,7 @@ function HistoryMission001()
 	MisHelpTalk("<t><bMinelli> is in <pMagical Ocean> at <(1244, 3186)>.")
 	MisResultCondition(AlwaysFailure)
 
--------------------------------甘地维拉的建议
+-------------------------------
 	DefineMission( 5072, "Gannon's Suggestion", 991,COMPLETE_SHOW )
 	
 	MisBeginCondition(AlwaysFailure )
@@ -7147,7 +7147,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 991 )
 
 	
-	-------------------------------------------------------石化的意志
+	-------------------------------------------------------
 	DefineMission( 5073, "Harden Will", 998 )
 
 	MisBeginTalk("<t>Try using Harden on yourself.")
@@ -7169,7 +7169,7 @@ function HistoryMission001()
 	MisResultAction(AddMoney,200000,200000)	
 	MisResultAction(AddExpAndType,2,60000,60000)
 		
-	----------------------------------------智者的事
+	----------------------------------------
      DefineMission(5068,"Story of the Enlightened One",993)
      MisBeginTalk("<t>Your capabilities have been proven.<n><t>I'm in the midst of doing a <yStatistics Table>. I'll tell you a story about the <bEnlightened One> later.")
      MisBeginCondition(HasRecord,988)
@@ -7181,11 +7181,11 @@ function HistoryMission001()
      MisNeed(MIS_NEED_DESP,"Wait for <bPeter> of <pArgent City> to finish the <yStatistics Table>.")
      MisHelpTalk("<t><yStatistics Table> is not done yet. Do not fret.")
      MisResultTalk("<t><yStatistics Table> is not an easy thing to do.")
-     MisResultCondition(NoRecord, 993)---------应改为NoRecord
+     MisResultCondition(NoRecord, 993)---------NoRecord
      MisResultCondition(HasMission, 993)
      MisResultAction(SetRecord, 993 )
      MisResultAction(ClearMission, 993 )
-----------------------------------------智者的事
+----------------------------------------
       DefineMission(5069,"Story of the Enlightened One",994)
      MisBeginTalk("<t>Your capabilities have been proven.<n><t>I'm in the midst of doing a <yStatistics Table>. I'll tell you a story about the <bEnlightened One> later.")
      MisBeginCondition(HasRecord,989)
@@ -7197,12 +7197,12 @@ function HistoryMission001()
      MisNeed(MIS_NEED_DESP,"Wait for <bRay> of <pIcicle City> to finish the <yStatistics Table>.")
      MisHelpTalk("<t><yStatistics Table> is not done yet. Do not fret.")
       MisResultTalk("<t><yStatistics Table> is not an easy thing to do.")
-     MisResultCondition(NoRecord, 994)---------应改为NoRecord
+     MisResultCondition(NoRecord, 994)---------NoRecord
      MisResultCondition(HasMission, 994)
      MisResultAction(SetRecord, 994 )
      MisResultAction(ClearMission, 994 )
 
-     ----------------------------------------智者的事
+     ----------------------------------------
       DefineMission(5070,"Story of the Enlightened One",995)
      MisBeginTalk("<t>Your capability has been sufficiently proved.<n><t>I'm doing a very important <yStatistics Table>, I'll tell you about the <bEnlightened One> later.")
      MisBeginCondition(HasRecord,998)
@@ -7214,11 +7214,11 @@ function HistoryMission001()
      MisNeed(MIS_NEED_DESP,"Wait for <pMagical Ocean>'s <bMinelli> to finish the chart.")
      MisHelpTalk("<t><yStatistics Table> is not done yet. Do not fret.")
       MisResultTalk("<t>Making a Statistics Table is not an easy task.")
-     MisResultCondition(NoRecord, 995)---------应改为NoRecord
+     MisResultCondition(NoRecord, 995)---------NoRecord
      MisResultCondition(HasMission, 995)
      MisResultAction(SetRecord, 995 )
      MisResultAction(ClearMission, 995 )
-	----------------------------------------智者的事
+	----------------------------------------
       DefineMission(5071,"Story of the Enlightened One",997)
      MisBeginTalk("<t>Your capability has been sufficiently proved.<n><t>I'm doing a very important <yStatistics Table>, I'll tell you about the <bEnlightened One> later.")
      MisBeginCondition(HasRecord,990)
@@ -7230,12 +7230,12 @@ function HistoryMission001()
      MisNeed(MIS_NEED_DESP,"Wait for the Harbor Operator to finish the <yStatistics Table>.")
      MisHelpTalk("<t><yStatistics Table> is not done yet. Do not fret.")
       MisResultTalk("<t><yStatistics Table> is not an easy thing to do.")
-     MisResultCondition(NoRecord, 997)---------应改为NoRecord
+     MisResultCondition(NoRecord, 997)---------NoRecord
      MisResultCondition(HasMission, 997)
      MisResultAction(SetRecord, 997 )
      MisResultAction(ClearMission, 997 )
 
--------------------------------------------------------谁是智者-------------白银城商会会长·劳伦迪马斯
+--------------------------------------------------------------------
 	DefineMission( 5167, "Who is the Enlightened One", 1500 )
 
 	MisBeginTalk("<t>The <bEnlightened One>'s identity is shrouded in mystery. I'm not very sure of it myself. You can ask <bLanga> of <pShaitan City>, <pArgent City>'s <bChairman Ronnie> and <pIcicle City>'s <bReyno>. But time is the essence. You can only ask one of them.")
@@ -7249,7 +7249,7 @@ function HistoryMission001()
 	MisHelpTalk("<t><bLanga> is at <j(853, 3549)> while <bArgent Chairman Ronnie> is at <j(2242, 2748)> and <bReyno> can be found at <j(1294, 498)>.")
 	MisResultCondition(AlwaysFailure)
 
--------------------------------------------------------谁是智者---------雷欧
+----------------------------------------------------------------
 	DefineMission( 5168, "Who is the Enlightened One", 1501 )
 
 	MisBeginTalk("<t>The <bEnlightened One>'s identity is shrouded in mystery. I'm not very sure of it myself. You can ask <bLanga> of <pShaitan City>, <pArgent City>'s <bChairman Ronnie> and <pIcicle City>'s <bReyno>. But time is the essence. You can only ask one of them.")
@@ -7262,7 +7262,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Look for either <bLanga> of <pShaitan City>, <pArgent City>'s <bChairman Ronnie> and <pIcicle City>'s <bReyno> for a chat.")
 	MisHelpTalk("<t><bLanga> is at <j(853, 3549)> while <bArgent Chairman Ronnie> is at <j(2242, 2748)> and <bReyno> can be found at <j(1294, 498)>.")
 	MisResultCondition(AlwaysFailure)
-	-------------------------------------------------------谁是智者------------米尔米莉
+	-------------------------------------------------------------------
 	DefineMission( 5074, "Who is the Enlightened One", 1502 )
 
 	MisBeginTalk("<t>The <bEnlightened One>'s identity is shrouded in mystery. I'm not very sure of it myself. You can ask <bLanga> of <pShaitan City>, <pArgent City>'s <bChairman Ronnie> and <pIcicle City>'s <bReyno>. But time is the essence. You can only ask one of them.")
@@ -7276,7 +7276,7 @@ function HistoryMission001()
 	MisHelpTalk("<t><bLanga> is at <j(853, 3549)> while <bArgent Chairman Ronnie> is at <j(2242, 2748)> and <bReyno> can be found at <j(1294, 498)>.")
 	MisResultCondition(AlwaysFailure)
 
-	-------------------------------------------------------谁是智者------------乔尔乔尼
+	-------------------------------------------------------------------
 	DefineMission( 5075, "Who is the Enlightened One", 1503 )
 
 	MisBeginTalk("<t>The <bEnlightened One>'s identity is shrouded in mystery. I'm not very sure of it myself. You can ask <bLanga> of <pShaitan City>, <pArgent City>'s <bChairman Ronnie> and <pIcicle City>'s <bReyno>. But time is the essence. You can only ask one of them.")
@@ -7291,144 +7291,144 @@ function HistoryMission001()
 	MisResultCondition(AlwaysFailure)
 
 		
--------------------------------谁是智者
-	DefineMission( 5076, "Who is the Enlightened One", 1500,COMPLETE_SHOW )----------白银城商会会长·劳伦迪马斯
+-------------------------------
+	DefineMission( 5076, "Who is the Enlightened One", 1500,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared…")
+	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared")
 	MisResultCondition(NoRecord, 1500)
 	MisResultCondition(HasMission,1500)
 	MisResultAction(ClearMission, 1500 )
 	MisResultAction(SetRecord, 1500 )
 	MisResultAction(SetRecord, 1504 )
 
-	-------------------------------谁是智者
-	DefineMission( 5077, "Who is the Enlightened One", 1501,COMPLETE_SHOW )----------白银城商会会长·劳伦迪马斯
+	-------------------------------
+	DefineMission( 5077, "Who is the Enlightened One", 1501,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared…")
+	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared")
 	MisResultCondition(NoRecord, 1501)
 	MisResultCondition(HasMission,1501)
 	MisResultAction(ClearMission, 1501 )
 	MisResultAction(SetRecord, 1501 )
 	MisResultAction(SetRecord, 1504 )
 
-	-------------------------------谁是智者
-	DefineMission( 5078, "Who is the Enlightened One", 1502,COMPLETE_SHOW )----------白银城商会会长·劳伦迪马斯
+	-------------------------------
+	DefineMission( 5078, "Who is the Enlightened One", 1502,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared…")
+	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared")
 	MisResultCondition(NoRecord, 1502)
 	MisResultCondition(HasMission,1502)
 	MisResultAction(ClearMission, 1502 )
 	MisResultAction(SetRecord, 1502 )
 	MisResultAction(SetRecord, 1504 )
 
-	-------------------------------谁是智者
-	DefineMission( 5079, "Who is the Enlightened One", 1503,COMPLETE_SHOW )----------白银城商会会长·劳伦迪马斯
+	-------------------------------
+	DefineMission( 5079, "Who is the Enlightened One", 1503,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared…")
+	MisResultTalk("<t>Every aspiring youngster would want to seek enlightenment, myself is no exception is the past. The path ahead is challenging and tough...Be prepared")
 	MisResultCondition(NoRecord, 1503)
 	MisResultCondition(HasMission,1503)
 	MisResultAction(ClearMission, 1503 )
 	MisResultAction(SetRecord, 1503 )
 	MisResultAction(SetRecord, 1504 )
--------------------------------谁是智者
-	DefineMission( 5080, "Who is the Enlightened One", 1500,COMPLETE_SHOW )----------郎拿督
+-------------------------------
+	DefineMission( 5080, "Who is the Enlightened One", 1500,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah…")
+	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah")
 	MisResultCondition(NoRecord, 1500)
 	MisResultCondition(HasMission,1500)
 	MisResultAction(ClearMission, 1500 )
 	MisResultAction(SetRecord, 1500 )
-	MisResultAction(SetRecord, 1505 )-------------------------------谁是智者
-	DefineMission( 5081, "Who is the Enlightened One", 1501,COMPLETE_SHOW )-----------郎拿督
+	MisResultAction(SetRecord, 1505 )-------------------------------
+	DefineMission( 5081, "Who is the Enlightened One", 1501,COMPLETE_SHOW )-----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah…")
+	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah")
 	MisResultCondition(NoRecord, 1501)
 	MisResultCondition(HasMission,1501)
 	MisResultAction(ClearMission, 1501 )
 	MisResultAction(SetRecord, 1501 )
 	MisResultAction(SetRecord, 1505 )
 
--------------------------------谁是智者
-	DefineMission( 5082, "Who is the Enlightened One", 1502,COMPLETE_SHOW )-----------郎拿督
+-------------------------------
+	DefineMission( 5082, "Who is the Enlightened One", 1502,COMPLETE_SHOW )-----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah…")
+	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah")
 	MisResultCondition(NoRecord, 1502)
 	MisResultCondition(HasMission,1502)
 	MisResultAction(ClearMission, 1502 )
 	MisResultAction(SetRecord, 1502 )
 	MisResultAction(SetRecord, 1505 )
 
--------------------------------谁是智者
-	DefineMission( 5083, "Who is the Enlightened One", 1503,COMPLETE_SHOW )-----------郎拿督
+-------------------------------
+	DefineMission( 5083, "Who is the Enlightened One", 1503,COMPLETE_SHOW )-----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah…")
+	MisResultTalk("<t>You're looking for the <bEnlightened One>? Let me get this right: people with low IQ have no rights to see him...Muahahah")
 	MisResultCondition(NoRecord, 1503)
 	MisResultCondition(HasMission,1503)
 	MisResultAction(ClearMission, 1503 )
 	MisResultAction(SetRecord, 1503 )
-	MisResultAction(SetRecord, 1505 )	-------------------------------谁是智者
-	DefineMission( 5084, "Who is the Enlightened One", 1500,COMPLETE_SHOW )----------艾立克
+	MisResultAction(SetRecord, 1505 )	-------------------------------
+	DefineMission( 5084, "Who is the Enlightened One", 1500,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot…")
+	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot")
 	MisResultCondition(NoRecord, 1500)
 	MisResultCondition(HasMission,1500)
 	MisResultAction(ClearMission, 1500 )
 	MisResultAction(SetRecord, 1500 )
-	MisResultAction(SetRecord, 1506 )-------------------------------谁是智者
-	DefineMission( 5085, "Who is the Enlightened One", 1501,COMPLETE_SHOW )-----------艾立克
+	MisResultAction(SetRecord, 1506 )-------------------------------
+	DefineMission( 5085, "Who is the Enlightened One", 1501,COMPLETE_SHOW )-----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot…")
+	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot")
 	MisResultCondition(NoRecord, 1501)
 	MisResultCondition(HasMission,1501)
 	MisResultAction(ClearMission, 1501 )
 	MisResultAction(SetRecord, 1501 )
 	MisResultAction(SetRecord, 1506 )
 
--------------------------------谁是智者
-	DefineMission( 5086, "Who is the Enlightened One", 1502,COMPLETE_SHOW )-----------艾立克
+-------------------------------
+	DefineMission( 5086, "Who is the Enlightened One", 1502,COMPLETE_SHOW )-----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot…")
+	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot")
 	MisResultCondition(NoRecord, 1502)
 	MisResultCondition(HasMission,1502)
 	MisResultAction(ClearMission, 1502 )
 	MisResultAction(SetRecord, 1502 )
 	MisResultAction(SetRecord, 1506 )
 
--------------------------------谁是智者
-	DefineMission( 5087, "Who is the Enlightened One", 1503,COMPLETE_SHOW )-----------艾立克
+-------------------------------
+	DefineMission( 5087, "Who is the Enlightened One", 1503,COMPLETE_SHOW )-----------
 	
 	MisBeginCondition(AlwaysFailure )
 
-	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot…")
+	MisResultTalk("<t>My friend, I'm an intelligent person too. I once found out the reasons behind <bHigh Priest>'s balding and why <bLanga> has smelly foot")
 	MisResultCondition(NoRecord, 1503)
 	MisResultCondition(HasMission,1503)
 	MisResultAction(ClearMission, 1503 )
 	MisResultAction(SetRecord, 1503 )
 	MisResultAction(SetRecord, 1506 )
 
--------------------------------------------------------金牌门徒-------------白银城商会会长·劳伦迪马斯
+--------------------------------------------------------------------
 	DefineMission( 5088, "Top Disciple", 1507 )
 
 	MisBeginTalk("<t>The <bEnlightened One> is very eccentric. He only address those whose soul and skills are strong. Find the one who told you about him. He will conduct a few tests for you in my stead.")
@@ -7441,8 +7441,8 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Find the one who told you about the <bEnlightened One>. Hint: <bGregory, Minelli, Ray or Peter>.")
 	MisHelpTalk("<t><bMinelli> can be found in <pMagical Ocean> at <(1244, 3186)>.")
 	MisResultCondition(AlwaysFailure)
---------------------------------------------------------金牌门徒
-	DefineMission( 5089, "Top Disciple", 1507,COMPLETE_SHOW )--------比特
+--------------------------------------------------------
+	DefineMission( 5089, "Top Disciple", 1507,COMPLETE_SHOW )--------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -7460,8 +7460,8 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 1507)
 	MisResultAction(SetRecord, 1514)
 
-		--------------------------------------------------------金牌门徒
-	DefineMission( 5090, "Top Disciple", 1507,COMPLETE_SHOW )---------雷欧
+		--------------------------------------------------------
+	DefineMission( 5090, "Top Disciple", 1507,COMPLETE_SHOW )---------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -7480,8 +7480,8 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 1507)
 	MisResultAction(SetRecord, 1515)
 
---------------------------------------------------------金牌门徒
-	DefineMission( 5091, "Top Disciple", 1507,COMPLETE_SHOW )---------乔尔乔尼
+--------------------------------------------------------
+	DefineMission( 5091, "Top Disciple", 1507,COMPLETE_SHOW )---------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -7500,8 +7500,8 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 1507)
 	MisResultAction(SetRecord, 1516)
 
-	--------------------------------------------------------金牌门徒
-	DefineMission( 5092, "Top Disciple", 1507,COMPLETE_SHOW )---------米尔米莉
+	--------------------------------------------------------
+	DefineMission( 5092, "Top Disciple", 1507,COMPLETE_SHOW )---------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -7519,7 +7519,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 1507)
 	MisResultAction(SetRecord, 1517)
 
----------------------------------------------------------------------比特初级门徒
+---------------------------------------------------------------------
 
 	DefineMission( 5093, "Initial Disciple", 1508 )
 
@@ -7529,7 +7529,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1514 )
 	MisBeginCondition(NoMission, 1508 )
 	MisBeginAction(AddMission, 1508)
-	MisBeginAction(AddTrigger, 15081, TE_KILL, 67, 5 )----------------地精战士
+	MisBeginAction(AddTrigger, 15081, TE_KILL, 67, 5 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 5 <rTerra Captain> at <pAscaron> for <bPeter>.")
@@ -7548,7 +7548,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1508 , 10,5)
 	RegCurTrigger(   15081 )
 
-	---------------------------------------------------------------------比特二级门徒
+	---------------------------------------------------------------------
 
 	DefineMission( 5094, "Lv2 Disciple", 1509 )
 
@@ -7557,7 +7557,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1508 )
 	MisBeginCondition(NoMission, 1509 )
 	MisBeginAction(AddMission, 1509)
-	MisBeginAction(AddTrigger, 15091, TE_KILL, 549, 5 )----------------邪恶的不灭武
+	MisBeginAction(AddTrigger, 15091, TE_KILL, 549, 5 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 5 <rEvil Undead Warrior> in <pAscaron> for <bPeter>.")
@@ -7576,7 +7576,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1509 , 10,5)
 	RegCurTrigger(   15091 )
 
-	---------------------------------------------------------------------比特三级门徒
+	---------------------------------------------------------------------
 
 	DefineMission( 5095, "3rd Grade Disciple", 1510 )
 
@@ -7585,7 +7585,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1509 )
 	MisBeginCondition(NoMission, 1510 )
 	MisBeginAction(AddMission, 1510)
-	MisBeginAction(AddTrigger, 15101, TE_KILL, 546, 6 )----------------邪恶的南瓜骑士
+	MisBeginAction(AddTrigger, 15101, TE_KILL, 546, 6 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 6 Evil Pumpkin Knights in <pAscaron> for <bPeter>.")
@@ -7603,7 +7603,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 546)	
 	TriggerAction( 1, AddNextFlag, 1510 , 10,6)
 	RegCurTrigger(   15101 )
----------------------------------------------------------------------比特高级门徒
+---------------------------------------------------------------------
 
 	DefineMission( 5096, "Advance Disciple", 1511 )
 
@@ -7612,7 +7612,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1510 )
 	MisBeginCondition(NoMission, 1511 )
 	MisBeginAction(AddMission, 1511)
-	MisBeginAction(AddTrigger, 15111, TE_KILL, 201, 8 )----------------暗影猎手
+	MisBeginAction(AddTrigger, 15111, TE_KILL, 201, 8 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 8 <rShadow Hunter> at <pAscaron> for <bPeter>.")
@@ -7633,7 +7633,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 201)	
 	TriggerAction( 1, AddNextFlag, 1511 , 10,8)
 	RegCurTrigger(   15111 )	
-	---------------------------------------------------------------------雷欧初级门徒
+	---------------------------------------------------------------------
 
 	DefineMission( 5097, "Initial Disciple", 1512 )
 
@@ -7643,7 +7643,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1515 )
 	MisBeginCondition(NoMission, 1512 )
 	MisBeginAction(AddMission, 1512)
-	MisBeginAction(AddTrigger, 15121, TE_KILL, 187, 5 )----------------小冰龙
+	MisBeginAction(AddTrigger, 15121, TE_KILL, 187, 5 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 5 <pSeabed Tunnel's> <rBaby Icy Dragon> for <bRay>.")
@@ -7660,7 +7660,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 187)	
 	TriggerAction( 1, AddNextFlag, 1512 , 10,5)
-	RegCurTrigger(   15121 )	---------------------------------------------------------------------雷欧二级门徒
+	RegCurTrigger(   15121 )	---------------------------------------------------------------------
 
 	DefineMission( 5098, "Lv2 Disciple", 1513 )
 
@@ -7669,7 +7669,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1512 )
 	MisBeginCondition(NoMission, 1513 )
 	MisBeginAction(AddMission, 1513)
-	MisBeginAction(AddTrigger, 15131, TE_KILL, 543, 5 )----------------疯狂的土著人
+	MisBeginAction(AddTrigger, 15131, TE_KILL, 543, 5 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Hunt 5 <rMad Tribal Villager> in <pAscaron> and return to <bRay>.")
@@ -7686,7 +7686,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 543)	
 	TriggerAction( 1, AddNextFlag, 1513 , 10,5)
-	RegCurTrigger(   15131 )	---------------------------------------------------------------------雷欧三级门徒
+	RegCurTrigger(   15131 )	---------------------------------------------------------------------
 
 	DefineMission( 5099, "3rd Grade Disciple", 1518 )
 
@@ -7695,7 +7695,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1513 )
 	MisBeginCondition(NoMission, 1518 )
 	MisBeginAction(AddMission, 1518)
-	MisBeginAction(AddTrigger, 15181, TE_KILL, 566, 6 )----------------狼人战士队长
+	MisBeginAction(AddTrigger, 15181, TE_KILL, 566, 6 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 6 <rWerewolf Warrior Leader> in <pAscaron> for <bRay>.")
@@ -7712,7 +7712,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 566)	
 	TriggerAction( 1, AddNextFlag, 1518 , 10,6)
-	RegCurTrigger(   15181 )	---------------------------------------------------------------------雷欧高级门徒
+	RegCurTrigger(   15181 )	---------------------------------------------------------------------
 
 	DefineMission( 5100, "Advance Disciple", 1519 )
 
@@ -7721,7 +7721,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1518 )
 	MisBeginCondition(NoMission, 1519 )
 	MisBeginAction(AddMission, 1519)
-	MisBeginAction(AddTrigger, 15191, TE_KILL, 511, 8)----------------巨型树人
+	MisBeginAction(AddTrigger, 15191, TE_KILL, 511, 8)----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 8 <rLumbering Treant> in <pAscaron> and return to <bRay>.")
@@ -7743,7 +7743,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1519 , 10,8)
 	RegCurTrigger(   15191 )
 
-	---------------------------------------------------------------------米尔初级门徒
+	---------------------------------------------------------------------
 
 	DefineMission( 5101, "Initial Disciple", 1520 )
 
@@ -7753,7 +7753,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1517)
 	MisBeginCondition(NoMission, 1520 )
 	MisBeginAction(AddMission, 1520)
-	MisBeginAction(AddTrigger, 15201, TE_KILL, 549, 5 )----------------邪恶的不灭武士
+	MisBeginAction(AddTrigger, 15201, TE_KILL, 549, 5 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 5 <rEvil Undead Warrior> in <pAscaron> for <bMinelli>.")
@@ -7771,7 +7771,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 549)	
 	TriggerAction( 1, AddNextFlag, 1520 , 10,5)
 	RegCurTrigger(   15201 )
----------------------------------------------------------------------米尔二级门徒
+---------------------------------------------------------------------
 
 	DefineMission( 5102, "Lv2 Disciple", 1521 )
 
@@ -7787,7 +7787,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_KILL,587,2, 10, 2)
 
 	MisResultTalk("<t>Way to go!")
-	MisHelpTalk("<t>Oh…")
+	MisHelpTalk("<t>Oh")
 	MisResultCondition(HasMission, 1521)
 	MisResultCondition(NoRecord, 1521)
 	MisResultCondition(HasFlag, 1521, 11 )
@@ -7798,7 +7798,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 587)	
 	TriggerAction( 1, AddNextFlag, 1521 , 10,2)
 	RegCurTrigger(   15211 )
-	---------------------------------------------------------------------米尔三级门徒
+	---------------------------------------------------------------------
 
 	DefineMission( 5103, "3rd Grade Disciple", 1522 )
 
@@ -7826,7 +7826,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1522 , 10,3)
 	RegCurTrigger(   15221 )
 
----------------------------------------------------------------------米尔高级门徒
+---------------------------------------------------------------------
 
 	DefineMission( 5104, "Advance Disciple", 1523 )
 
@@ -7855,7 +7855,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 735)	
 	TriggerAction( 1, AddNextFlag, 1523 , 10,8)
-	RegCurTrigger(   15231 )---------------------------------------------------------------------乔尔初级门徒
+	RegCurTrigger(   15231 )---------------------------------------------------------------------
 
 	DefineMission( 5105, "Initial Disciple", 1524 )
 
@@ -7885,7 +7885,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1524, 10, 2 )
 	RegCurTrigger( 15241 )
 
-	---------------------------------------------------------------------乔尔二级门徒
+	---------------------------------------------------------------------
 
 	DefineMission( 5106, "Lv2 Disciple", 1525 )
 
@@ -7900,7 +7900,7 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"Obtain 2 <yBewitching Siren Crystals> from <rBewitching Siren> at <j(1014, 2550)> in <pMagical Ocean> and bring to <bGregory>.")
 	MisNeed(MIS_NEED_ITEM,1295,2, 10, 2)
 
-	MisResultTalk("<t>To kill a monster require stuff from the monster. This is called...called...Cough...cough…Lets not talk about these...Thank you.")
+	MisResultTalk("<t>To kill a monster require stuff from the monster. This is called...called...Cough...coughLets not talk about these...Thank you.")
 	MisHelpTalk("<t>We should not be going around killing monster as they are living being too. They are also born by parent too, just like we us, the human beings.")
 	MisResultCondition(HasMission, 1525)
 	MisResultCondition(NoRecord, 1525)
@@ -7913,7 +7913,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem,1295)	
 	TriggerAction( 1, AddNextFlag, 1525, 10, 2 )
 	RegCurTrigger( 15251 )
----------------------------------------------------------------------乔尔三级门徒
+---------------------------------------------------------------------
 
 	DefineMission( 5107, "3rd Grade Disciple", 1526 )
 
@@ -7940,7 +7940,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem,3116)	
 	TriggerAction( 1, AddNextFlag, 1526, 10, 99 )
-	RegCurTrigger( 15261 )	---------------------------------------------------------------------乔尔高级门徒
+	RegCurTrigger( 15261 )	---------------------------------------------------------------------
 
 	DefineMission( 5108, "Advance Disciple", 1527 )
 
@@ -7972,7 +7972,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1527, 10, 1 )
 	RegCurTrigger( 15271 )
 
--------------------------------------------------------合格的门徒--------比特
+---------------------------------------------------------------
 	DefineMission( 5109, "Qualified Disciple", 1528 )
 
 	MisBeginTalk("<t>You have reached my expected qualifications. Now go and find <bArgent City>'s <bChairman Ronnie>.")
@@ -7985,8 +7985,8 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"<t>Talk to <pArgent City>'s <bChairman Ronnie>.")
 	MisHelpTalk("<t><pArgent City>'s <bChairman Ronnie> is at <j(2242, 2748)>.")
 	MisResultCondition(AlwaysFailure)
---------------------------------------------------------合格的门徒
-	DefineMission( 5110, "Qualified Disciple", 1528,COMPLETE_SHOW )----------白银城商会会长·劳伦迪马斯
+--------------------------------------------------------
+	DefineMission( 5110, "Qualified Disciple", 1528,COMPLETE_SHOW )----------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -7996,7 +7996,7 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1528)
 	MisResultAction(SetRecord, 1528)
 	MisResultAction(SetRecord, 1577)-------------
--------------------------------------------------------合格的门徒--------雷欧
+---------------------------------------------------------------
 	DefineMission( 5111, "Qualified Disciple", 1529 )
 
 	MisBeginTalk("<t>You have reached my expected qualifications. Now go and find <pArgent City>'s <bChairman Ronnie>.")
@@ -8010,8 +8010,8 @@ function HistoryMission001()
 	MisHelpTalk("<t><pArgent City>'s <bChairman Ronnie> is at <j(2242, 2748)>.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------合格的门徒
-	DefineMission( 5112, "Qualified Disciple", 1529,COMPLETE_SHOW )------白银城商会会长·劳伦迪马斯(2242,2748)
+	--------------------------------------------------------
+	DefineMission( 5112, "Qualified Disciple", 1529,COMPLETE_SHOW )------(2242,2748)
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8020,7 +8020,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission, 1529)
 	MisResultAction(ClearMission,1529)
 	MisResultAction(SetRecord, 1529)
-	MisResultAction(SetRecord, 1577)-------------	-------------------------------------------------------合格的门徒--------米尔
+	MisResultAction(SetRecord, 1577)-------------	---------------------------------------------------------------
 	DefineMission( 5113, "Qualified Disciple", 1530 )
 
 	MisBeginTalk("<t>You are now a qualified disciple of the <bHigh Priest>. Look for <bRonnie> in <pArgent City> now.")
@@ -8034,8 +8034,8 @@ function HistoryMission001()
 	MisHelpTalk("<t><pArgent City>'s <bChairman Ronnie> is at <j(2242, 2748)>.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------合格的门徒
-	DefineMission( 5114, "Qualified Disciple", 1530,COMPLETE_SHOW )------劳伦迪马斯
+	--------------------------------------------------------
+	DefineMission( 5114, "Qualified Disciple", 1530,COMPLETE_SHOW )------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8046,7 +8046,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 1530)
 	MisResultAction(SetRecord, 1577)-------------
 
-	-------------------------------------------------------合格的门徒--------乔尔
+	---------------------------------------------------------------
 	DefineMission( 5115, "Qualified Disciple", 1531 )
 
 	MisBeginTalk("<t>You are already <bLittle Daniel>'s qualified disciple, go find <bRonnie>.")
@@ -8060,8 +8060,8 @@ function HistoryMission001()
 	MisHelpTalk("<t><pArgent City>'s <bChairman Ronnie> is at <j(2242, 2748)>.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------合格的门徒
-	DefineMission( 5116, "Qualified Disciple", 1531,COMPLETE_SHOW )------劳伦迪马斯
+	--------------------------------------------------------
+	DefineMission( 5116, "Qualified Disciple", 1531,COMPLETE_SHOW )------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8072,7 +8072,7 @@ function HistoryMission001()
 	MisResultAction(SetRecord, 1531)
 	MisResultAction(SetRecord, 1577)-------------
 
--------------------------------------------------------伟大的神谕----------朗拿度
+-----------------------------------------------------------------
 	DefineMission( 5117, "Grandeur Oracle", 1532 )
 
 	MisBeginTalk("<t>Find the 8 servants of <bGod> to get some ominous revelation and return to me.")
@@ -8086,26 +8086,26 @@ function HistoryMission001()
 	MisHelpTalk("<t>Show some respect to those slaves or else something bad might happen.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------伟大的神谕
-	DefineMission( 5118, "Grandeur Oracle", 1532,COMPLETE_SHOW )-------------服装店助理·蓓蓓
+	--------------------------------------------------------
+	DefineMission( 5118, "Grandeur Oracle", 1532,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
-	MisResultTalk("<t>My true identity is the servant of <bWater Deity>…")
+	MisResultTalk("<t>My true identity is the servant of <bWater Deity>")
 	MisResultCondition(NoRecord, 1532)
 	MisResultCondition(HasMission, 1532)
 	MisResultAction(ClearMission,1532)
 	MisResultAction(SetRecord, 1532)
----------------------------------------------------------------------一重门
+---------------------------------------------------------------------
 
 	DefineMission( 5119, "First Gate", 1533 )
 
-	MisBeginTalk("<t><bWater Deity>'s instruction is at the faraway 8th Gate. First accept my first test of God.")------服装店助理·蓓蓓
+	MisBeginTalk("<t><bWater Deity>'s instruction is at the faraway 8th Gate. First accept my first test of God.")------
 	MisBeginCondition(NoRecord, 1533 )
 	MisBeginCondition(HasRecord, 1532 )
 	MisBeginCondition(NoMission, 1533 )
 	MisBeginAction(AddMission, 1533)
-	MisBeginAction(AddTrigger, 15331, TE_KILL, 642, 2 )----------------凶猛的骨鱼
+	MisBeginAction(AddTrigger, 15331, TE_KILL, 642, 2 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Hunt 2 <rFeral Fish Bone> at <j(900, 1308)> in <pMagical Ocean> and return to <bTailor - Bebe>.")
@@ -8121,7 +8121,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 642)	
 	TriggerAction( 1, AddNextFlag, 1533 , 10,2)
-	RegCurTrigger(   15331 )-------------------------------------------------------告别一重门------------服装店助理·蓓蓓
+	RegCurTrigger(   15331 )-------------------------------------------------------------------
 	DefineMission( 5120, "Goodbye to First Gate", 1534 )
 
 	MisBeginTalk("<t>Find <bMaster Kerra> at <j(2664, 654)> in <pIcespire Haven>.")
@@ -8135,8 +8135,8 @@ function HistoryMission001()
 	MisHelpTalk("<t>His test for you will not be as easy as mine.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别一重门
-	DefineMission( 5121, "Goodbye to First Gate", 1534,COMPLETE_SHOW )-------------克拉拉大师
+	--------------------------------------------------------
+	DefineMission( 5121, "Goodbye to First Gate", 1534,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8146,16 +8146,16 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1534)
 	MisResultAction(SetRecord, 1534)
 
----------------------------------------------------------------------二重门
+---------------------------------------------------------------------
 
 	DefineMission( 5122, "2nd Gate", 1535 )
 
-	MisBeginTalk("<t>First Gate is only a small warm-up. Do not be conceited. Come and pass the 2nd Gate: Challenge of the servants of <bFire Deity>.")------克拉拉大师
+	MisBeginTalk("<t>First Gate is only a small warm-up. Do not be conceited. Come and pass the 2nd Gate: Challenge of the servants of <bFire Deity>.")------
 	MisBeginCondition(NoRecord, 1535 )
 	MisBeginCondition(HasRecord, 1534 )
 	MisBeginCondition(NoMission, 1535 )
 	MisBeginAction(AddMission, 1535)
-	MisBeginAction(AddTrigger, 15351, TE_KILL, 652, 2 )----------------凶猛的宝石海豚
+	MisBeginAction(AddTrigger, 15351, TE_KILL, 652, 2 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 2 <pMagical Ocean>'s <rFeral Ruby Dolphins> at <j(866, 2171)> for <bMaster Kerra>.")
@@ -8171,7 +8171,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 652)	
 	TriggerAction( 1, AddNextFlag, 1535 , 10,2)
-	RegCurTrigger(   15351 )-------------------------------------------------------告别二重门------------克拉拉大师
+	RegCurTrigger(   15351 )-------------------------------------------------------------------
 	DefineMission( 5123, "Goodbye to 2nd Gate", 1536 )
 
 	MisBeginTalk("<t>Find <bMarcus> <j(789, 3112)> at <pOasis Haven>.")
@@ -8185,8 +8185,8 @@ function HistoryMission001()
 	MisHelpTalk("<t>I wish that you could pass the 3rd Gate.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别二重门
-	DefineMission( 5124, "Goodbye to 2nd Gate", 1536,COMPLETE_SHOW )-------------马洛
+	--------------------------------------------------------
+	DefineMission( 5124, "Goodbye to 2nd Gate", 1536,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8196,16 +8196,16 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1536)
 	MisResultAction(SetRecord, 1536)
 
----------------------------------------------------------------------三重门
+---------------------------------------------------------------------
 
 	DefineMission( 5125, "3rd Gate", 1537 )
 
-	MisBeginTalk("<t>I am the servant of <bWind Deity>. I wonder if you are afraid of meeting the challenge.")------马洛
+	MisBeginTalk("<t>I am the servant of <bWind Deity>. I wonder if you are afraid of meeting the challenge.")------
 	MisBeginCondition(NoRecord, 1537 )
 	MisBeginCondition(HasRecord, 1536 )
 	MisBeginCondition(NoMission, 1537 )
 	MisBeginAction(AddMission, 1537)
-	MisBeginAction(AddTrigger, 15371, TE_KILL, 587, 2 )----------------凶猛的宝石海豚
+	MisBeginAction(AddTrigger, 15371, TE_KILL, 587, 2 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 2 <pMagical Ocean>'s <rBewitching Siren> at <j(1014, 2550)> on behalf of <bMarcus>.")
@@ -8221,7 +8221,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 587)	
 	TriggerAction( 1, AddNextFlag, 1537 , 10,2)
-	RegCurTrigger(   15371 )-------------------------------------------------------告别三重门------------马洛
+	RegCurTrigger(   15371 )-------------------------------------------------------------------
 	DefineMission( 5126, "Goodbye to 3rd Gate", 1538 )
 
 	MisBeginTalk("<t>Find <bXeus> at <j(2138, 545)> in <pSkeleton Haven>.")
@@ -8235,8 +8235,8 @@ function HistoryMission001()
 	MisHelpTalk("<t>Face the 4th Gate with bravery!")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别三重门
-	DefineMission( 5127, "Goodbye to 3rd Gate", 1538,COMPLETE_SHOW )-------------修司
+	--------------------------------------------------------
+	DefineMission( 5127, "Goodbye to 3rd Gate", 1538,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8245,16 +8245,16 @@ function HistoryMission001()
 	MisResultCondition(HasMission, 1538)
 	MisResultAction(ClearMission,1538)
 	MisResultAction(SetRecord, 1538)
----------------------------------------------------------------------四重门
+---------------------------------------------------------------------
 
 	DefineMission( 5128, "4th Gate", 1539 )
 
-	MisBeginTalk("<t>My secret identity is the close aide of <bEarth Deity>. Ssssh! Congratulation on passing the 3rd Gate. It will be easy to pass mine.")------修司
+	MisBeginTalk("<t>My secret identity is the close aide of <bEarth Deity>. Ssssh! Congratulation on passing the 3rd Gate. It will be easy to pass mine.")------
 	MisBeginCondition(NoRecord, 1539 )
 	MisBeginCondition(HasRecord, 1538 )
 	MisBeginCondition(NoMission, 1539 )
 	MisBeginAction(AddMission, 1539)
-	MisBeginAction(AddTrigger, 15391, TE_KILL, 570, 5 )----------------红胡子海盗团战斗员
+	MisBeginAction(AddTrigger, 15391, TE_KILL, 570, 5 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 5 <rBeardy Pirate Fighter> at <j(1588, 1708)> in <pDeep Blue> for <bXeus>.")
@@ -8270,7 +8270,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 570)	
 	TriggerAction( 1, AddNextFlag, 1539 , 10,5)
-	RegCurTrigger(   15391 )-------------------------------------------------------告别四重门------------修司
+	RegCurTrigger(   15391 )-------------------------------------------------------------------
 	DefineMission( 5129, "Goodbye to 4th Gate", 1540 )
 
 	MisBeginTalk("<t>Find <bDoctor Masa> at <j(773, 1549)> in <pThundoria Castle>.")
@@ -8284,8 +8284,8 @@ function HistoryMission001()
 	MisHelpTalk("<t>Go now, I have already promised somebody to eat Hotpot.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别四重门
-	DefineMission( 5130, "Goodbye to 4th Gate", 1540,COMPLETE_SHOW )-------------军医·玛沙
+	--------------------------------------------------------
+	DefineMission( 5130, "Goodbye to 4th Gate", 1540,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8293,16 +8293,16 @@ function HistoryMission001()
 	MisResultCondition(NoRecord, 1540)
 	MisResultCondition(HasMission, 1540)
 	MisResultAction(ClearMission,1540)
-	MisResultAction(SetRecord, 1540)---------------------------------------------------------------------五重门
+	MisResultAction(SetRecord, 1540)---------------------------------------------------------------------
 
 	DefineMission( 5131, "5th Gate", 1541 )
 
-	MisBeginTalk("<t>The first snowflake of 2088 will come later than expected. This is what I, servant of the <bSnow Deity> predicts.")------军医·玛沙
+	MisBeginTalk("<t>The first snowflake of 2088 will come later than expected. This is what I, servant of the <bSnow Deity> predicts.")------
 	MisBeginCondition(NoRecord, 1541 )
 	MisBeginCondition(HasRecord, 1540 )
 	MisBeginCondition(NoMission, 1541 )
 	MisBeginAction(AddMission, 1541)
-	MisBeginAction(AddTrigger, 15411, TE_KILL, 589, 2 )----------------海妖弓手
+	MisBeginAction(AddTrigger, 15411, TE_KILL, 589, 2 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 2 <rSiren Archer> in <pDeep Blue> at <j(3634, 3808)> and return to <bDoctor Masa>.")
@@ -8318,7 +8318,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsMonster, 589)	
 	TriggerAction( 1, AddNextFlag, 1541 , 10,2)
-	RegCurTrigger(   15411 )-------------------------------------------------------告别五重门------------军医·玛沙
+	RegCurTrigger(   15411 )-------------------------------------------------------------------
 	DefineMission( 5132, "Goodbye to 5th Gate", 1542 )
 
 	MisBeginTalk("<t><bDannis> at <j(136, 3432)> of <pHubble Haven> is waiting for you.")
@@ -8332,8 +8332,8 @@ function HistoryMission001()
 	MisHelpTalk("<t><bDannis> is very busy. You might miss him if you are not fast enough.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别五重门
-	DefineMission( 5133, "Goodbye to 5th Gate", 1542,COMPLETE_SHOW )-------------丹尼斯
+	--------------------------------------------------------
+	DefineMission( 5133, "Goodbye to 5th Gate", 1542,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8343,16 +8343,16 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1542)
 	MisResultAction(SetRecord, 1542)
 
----------------------------------------------------------------------六重门
+---------------------------------------------------------------------
 
 	DefineMission( 5134, "6th Gate", 1543 )
 
-	MisBeginTalk("<t><bThunder Deity> is my master. Here is the 6th Gate. Your mission is to kill 6 <rWhite Bobcats> at <pLone Tower 1>.")------丹尼斯
+	MisBeginTalk("<t><bThunder Deity> is my master. Here is the 6th Gate. Your mission is to kill 6 <rWhite Bobcats> at <pLone Tower 1>.")------
 	MisBeginCondition(NoRecord, 1543 )
 	MisBeginCondition(HasRecord, 1542 )
 	MisBeginCondition(NoMission, 1543 )
 	MisBeginAction(AddMission, 1543)
-	MisBeginAction(AddTrigger, 15431, TE_KILL, 36, 6 )----------------白灵猫
+	MisBeginAction(AddTrigger, 15431, TE_KILL, 36, 6 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 6 <rWhite Bobcats> in <pLone Tower 1> and return to <bDannis>.")
@@ -8370,7 +8370,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1543 , 10,6)
 	RegCurTrigger(   15431 )
 
--------------------------------------------------------告别六重门------------丹尼斯
+-------------------------------------------------------------------
 	DefineMission( 5135, "Goodbye to 6th Gate", 1544 )
 
 	MisBeginTalk("<t>Bring along my blessings and find <bZurbi> at <j(1037, 671)> in <pAtlantis Haven>.")
@@ -8384,8 +8384,8 @@ function HistoryMission001()
 	MisHelpTalk("<t>Let your passion burn!")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别六重门
-	DefineMission( 5136, "Goodbye to 6th Gate", 1544,COMPLETE_SHOW )-------------朱比
+	--------------------------------------------------------
+	DefineMission( 5136, "Goodbye to 6th Gate", 1544,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8395,16 +8395,16 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1544)
 	MisResultAction(SetRecord, 1544)
 
----------------------------------------------------------------------七重门
+---------------------------------------------------------------------
 
 	DefineMission( 5137, "7th Gate", 1545 )
 
-	MisBeginTalk("<t>My Lord, <bLightning Deity>, is forgiving. 7th Gate is where the game starts.")------朱比
+	MisBeginTalk("<t>My Lord, <bLightning Deity>, is forgiving. 7th Gate is where the game starts.")------
 	MisBeginCondition(NoRecord, 1545 )
 	MisBeginCondition(HasRecord, 1544 )
 	MisBeginCondition(NoMission, 1545 )
 	MisBeginAction(AddMission, 1545)
-	MisBeginAction(AddTrigger, 15451, TE_KILL, 263, 7 )----------------地精战士长
+	MisBeginAction(AddTrigger, 15451, TE_KILL, 263, 7 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 7 <pBarren Cavern>'s <rTerra Captain> at <j(1392, 3066)> and return to <bZurbi>.")
@@ -8422,7 +8422,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1545 , 10,7)
 	RegCurTrigger(   15451 )
 
--------------------------------------------------------告别七重门------------朱比
+-------------------------------------------------------------------
 	DefineMission( 5138, "Goodbye to 7th Gate", 1546 )
 
 	MisBeginTalk("<t>Find <bLinda> at <j(515, 2437)> in <pSolace Haven>.")
@@ -8436,8 +8436,8 @@ function HistoryMission001()
 	MisHelpTalk("<t>Young man, I have feeling you would definitely pass the 8th Gate.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------告别七重门
-	DefineMission( 5139, "Goodbye to 7th Gate", 1546,COMPLETE_SHOW )-------------琳达
+	--------------------------------------------------------
+	DefineMission( 5139, "Goodbye to 7th Gate", 1546,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8447,16 +8447,16 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1546)
 	MisResultAction(SetRecord, 1546)
 
----------------------------------------------------------------------八重门
+---------------------------------------------------------------------
 
 	DefineMission( 5140, "8th Gate", 1547 )
 
-	MisBeginTalk("<t>Here lies the 8th Gate of <bLove Deity>. You can only be called an expert if you can pass through here.")------琳达
+	MisBeginTalk("<t>Here lies the 8th Gate of <bLove Deity>. You can only be called an expert if you can pass through here.")------
 	MisBeginCondition(NoRecord, 1547 )
 	MisBeginCondition(HasRecord, 1546 )
 	MisBeginCondition(NoMission, 1547 )
 	MisBeginAction(AddMission, 1547)
-	MisBeginAction(AddTrigger, 15471, TE_KILL, 808, 8 )----------------亡灵士兵
+	MisBeginAction(AddTrigger, 15471, TE_KILL, 808, 8 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 8 <rDeathsoul Soldiers> and return to <bLinda>.")
@@ -8478,7 +8478,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1547 , 10,8)
 	RegCurTrigger(   15471 )
 
--------------------------------------------------------终结门的指示------------琳达
+-------------------------------------------------------------------
 	DefineMission( 5141, "Instructions for last Gate", 1548 )
 
 	MisBeginTalk("<t>Here is the <yOracle>. Bring it to <bLanga> for your answer.")
@@ -8486,7 +8486,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1547)
 	MisBeginCondition(NoMission, 1548 )
 	MisBeginAction(AddMission, 1548 )
-	MisBeginAction(GiveItem, 2917,1,4)----------------------------------------------------神谕
+	MisBeginAction(GiveItem, 2917,1,4)----------------------------------------------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
 
@@ -8494,36 +8494,36 @@ function HistoryMission001()
 	MisHelpTalk("<t>Go look for the answers with <yGoddess's Favor>.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------终结门的指示
-	DefineMission( 5142, "Instructions for last Gate", 1548,COMPLETE_SHOW )-------------郎拿度
+	--------------------------------------------------------
+	DefineMission( 5142, "Instructions for last Gate", 1548,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
 	MisResultTalk("<t>To be able to get the <yOracle> shows that you have put in more effort than a normal man could.")
 	MisResultCondition(NoRecord, 1548)
 	MisResultCondition(HasMission, 1548)
-	MisResultCondition(HasItem,2917,1)--------------神谕
-	MisResultAction(TakeItem, 2917,1)-------------神谕
+	MisResultCondition(HasItem,2917,1)--------------
+	MisResultAction(TakeItem, 2917,1)-------------
 	MisResultAction(ClearMission,1548)
 	MisResultAction(SetRecord, 1548)
 
-	---------------------------------------------------------------------完美海盗任务
+	---------------------------------------------------------------------
 
 	DefineMission( 5143, "Perfect Pirate Mission", 1549 )
 
-	MisBeginTalk("<t>Every well-known pirates have looks and brains. They also symbolises Courage and Strength. Find the mission that I have for you to prove that you are a perfect pirate.")------艾立克
+	MisBeginTalk("<t>Every well-known pirates have looks and brains. They also symbolises Courage and Strength. Find the mission that I have for you to prove that you are a perfect pirate.")------
 	MisBeginCondition(NoRecord, 1549 )
 	MisBeginCondition(HasRecord, 1506 )
 	MisBeginCondition(NoMission, 1549 )
 	MisBeginAction(AddMission, 1549)
-	MisBeginAction(AddTrigger, 15491, TE_KILL, 546, 10 )----------------邪恶的南瓜骑士
+	MisBeginAction(AddTrigger, 15491, TE_KILL, 546, 10 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 10 <rEvil Pumpkin Knight> at <j(340, 1581)> in <pAscaron> for <bReyno>.")
 	MisNeed(MIS_NEED_KILL,546,10, 10,10)
 
 	MisResultTalk("<t>Good.")
-	MisHelpTalk("<t>Don't breaks their pumpkin head…")
+	MisHelpTalk("<t>Don't breaks their pumpkin head")
 	MisResultCondition(HasMission, 1549)
 	MisResultCondition(NoRecord, 1549)
 	MisResultCondition(HasFlag, 1549, 19 )
@@ -8533,16 +8533,16 @@ function HistoryMission001()
 	TriggerCondition( 1, IsMonster, 546)	
 	TriggerAction( 1, AddNextFlag, 1549 , 10,10)
 	RegCurTrigger(   15491 )
----------------------------------------------------------------------完美海盗任务
+---------------------------------------------------------------------
 
 	DefineMission( 5144, "Perfect Pirate Mission", 1550 )
 
-	MisBeginTalk("<t>Although I'm a trader, I have always wish to be a courageous knight and uphold peace for royalty and beauty. Errm can you help me get 2 legendary <yRoyal Swords>.")------艾立克
+	MisBeginTalk("<t>Although I'm a trader, I have always wish to be a courageous knight and uphold peace for royalty and beauty. Errm can you help me get 2 legendary <yRoyal Swords>.")------
 	MisBeginCondition(NoRecord, 1550 )
 	MisBeginCondition(HasRecord, 1549 )
 	MisBeginCondition(NoMission, 1550 )
 	MisBeginAction(AddMission, 1550)
-	MisBeginAction(AddTrigger, 15501, TE_GETITEM, 4893, 2 )----------------王室佩剑
+	MisBeginAction(AddTrigger, 15501, TE_GETITEM, 4893, 2 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Obtain 2 <yRoyal Swords> from <pAscaron>'s <rPalace Guard> at <j(435, 1690)> for <bReyno>.")
@@ -8559,23 +8559,23 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 4893)	
 	TriggerAction( 1, AddNextFlag, 1550 , 10,2)
-	RegCurTrigger(   15501 )---------------------------------------------------------------------完美海盗任务
+	RegCurTrigger(   15501 )---------------------------------------------------------------------
 
 	DefineMission( 5145, "Perfect Pirate Mission", 1551 )
 
-	MisBeginTalk("<t>I heard that because <bDannis> did something wrong when he was young, his chest hair was recently burnt. It's frightening just to think about it because i too did a lot of wrong things when I was that age. Come to think of it, I once removed the tail scales of a <rLittle Siren>. Although it was wrong of me, but it was a case of whoever strikes first.")------艾立克
+	MisBeginTalk("<t>I heard that because <bDannis> did something wrong when he was young, his chest hair was recently burnt. It's frightening just to think about it because i too did a lot of wrong things when I was that age. Come to think of it, I once removed the tail scales of a <rLittle Siren>. Although it was wrong of me, but it was a case of whoever strikes first.")------
 	MisBeginCondition(NoRecord, 1551 )
 	MisBeginCondition(HasRecord, 1550 )
 	MisBeginCondition(NoMission, 1551 )
 	MisBeginAction(AddMission, 1551)
-	MisBeginAction(AddTrigger, 15511, TE_KILL, 606, 3 )----------------深蓝海妖
+	MisBeginAction(AddTrigger, 15511, TE_KILL, 606, 3 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 3 <rDark Blue Siren> at <j(1038, 2317)> in <pDeep Blue> for <bReyno>.")
 	MisNeed(MIS_NEED_KILL,606,3, 10,3)
 
 	MisResultTalk("<t>Never do anything wrong. Do not lie to me especially.")
-	MisHelpTalk("<t>Don't bother me!  I'm thinking what have I done...which shouldn't be done…")
+	MisHelpTalk("<t>Don't bother me!  I'm thinking what have I done...which shouldn't be done")
 	MisResultCondition(HasMission, 1551)
 	MisResultCondition(NoRecord, 1551)
 	MisResultCondition(HasFlag, 1551, 12 )
@@ -8586,16 +8586,16 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1551 , 10,3)
 	RegCurTrigger(   15511 )
 
----------------------------------------------------------------------完美海盗任务
+---------------------------------------------------------------------
 
 	DefineMission( 5146, "Perfect Pirate Mission", 1552 )
 
-	MisBeginTalk("<t>At another time, many years ago, I went to the beach. Out of curiosity, I stole a <yBewitching Crystal> from a <rSiren Archer>. It so embarrassing. I wouldn't have reveal such things that would defile my reputation if not for <bDannis>'s incident.")------艾立克
+	MisBeginTalk("<t>At another time, many years ago, I went to the beach. Out of curiosity, I stole a <yBewitching Crystal> from a <rSiren Archer>. It so embarrassing. I wouldn't have reveal such things that would defile my reputation if not for <bDannis>'s incident.")------
 	MisBeginCondition(NoRecord, 1552 )
 	MisBeginCondition(HasRecord, 1551 )
 	MisBeginCondition(NoMission, 1552 )
 	MisBeginAction(AddMission, 1552)
-	MisBeginAction(AddTrigger, 15521, TE_KILL, 589, 3 )----------------海妖弓手
+	MisBeginAction(AddTrigger, 15521, TE_KILL, 589, 3 )----------------
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Kill 3 <rSiren Archer> in <pDeep Blue> at <j(3634, 3808)> and return to <bReyno>.")
@@ -8617,14 +8617,14 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1552 , 10,3)
 	RegCurTrigger(   15521 )
 
--------------------------------------------------------谜底揭晓------------劳伦迪马斯
+-------------------------------------------------------------------
 	DefineMission( 5147, "The mystery has been solved", 1553 )
 
 	MisBeginTalk("<t>Very good! You have fulfil the requirements to meet with the <bEnlightened One>. He is actually <bWeird Grampa>. This <yStone of Meng> was a gift from him. Show it to him and he will oblige you on my account.")
 	MisBeginCondition(NoRecord,1553)
 	MisBeginCondition(HasRecord, 1577)
 	MisBeginCondition(NoMission, 1553 )
-	MisBeginAction(GiveItem, 2918, 1, 4)		------------蒙德石
+	MisBeginAction(GiveItem, 2918, 1, 4)		------------
 	MisBeginAction(AddMission, 1553 )
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
@@ -8633,28 +8633,28 @@ function HistoryMission001()
 	MisHelpTalk("<t>I'm warning you, its not easy to handle <bWeird Grampa> as rumored.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------谜底揭晓
-	DefineMission( 5148, "The mystery has been solved", 1553,COMPLETE_SHOW )-------------怪叟爷爷
+	--------------------------------------------------------
+	DefineMission( 5148, "The mystery has been solved", 1553,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
 	MisResultTalk("<t>Don't bother me, I'm having some problems. I won't give face to anyone!")
 	MisResultCondition(NoRecord, 1553)
 	MisResultCondition(HasMission, 1553)
-	MisResultCondition(HasItem, 2918, 1)------------蒙德石
-	MisResultAction(TakeItem, 2918, 1 )-----蒙德石
+	MisResultCondition(HasItem, 2918, 1)------------
+	MisResultAction(TakeItem, 2918, 1 )-----
 	MisResultAction(ClearMission,1553)
 	MisResultAction(SetRecord, 1553)
 	MisResultAction(SetRecord, 1556)
 
--------------------------------------------------------谜底揭晓------------郎拿度
+-------------------------------------------------------------------
 	DefineMission( 5149, "The mystery has been solved", 1554 )
 
 	MisBeginTalk("<t>Very good! You have fulfil the requirements to meet with the <bEnlightened One>. He is actually <bWeird Grampa>. This <bStone of Meng> was a gift from him. Show it to him and he will oblige you on my account.")
 	MisBeginCondition(NoRecord,1554)
 	MisBeginCondition(HasRecord, 1548)
 	MisBeginCondition(NoMission, 1554 )
-	MisBeginAction(GiveItem, 2918, 1, 4)		------------蒙德石
+	MisBeginAction(GiveItem, 2918, 1, 4)		------------
 	MisBeginAction(AddMission, 1554 )
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
@@ -8663,28 +8663,28 @@ function HistoryMission001()
 	MisHelpTalk("<t>I'm warning you, its not easy to handle <bWeird Grampa> as rumored.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------谜底揭晓
-	DefineMission( 5150, "The mystery has been solved", 1554,COMPLETE_SHOW )-------------怪叟爷爷
+	--------------------------------------------------------
+	DefineMission( 5150, "The mystery has been solved", 1554,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
 	MisResultTalk("<t>Don't bother me, I'm having some problems. I won't give face to anyone!")
 	MisResultCondition(NoRecord, 1554)
 	MisResultCondition(HasMission, 1554)
-	MisResultCondition(HasItem, 2918, 1)------------蒙德石
-	MisResultAction(TakeItem, 2918, 1 )-----蒙德石
+	MisResultCondition(HasItem, 2918, 1)------------
+	MisResultAction(TakeItem, 2918, 1 )-----
 	MisResultAction(ClearMission,1554)
 	MisResultAction(SetRecord, 1554)
 	MisResultAction(SetRecord, 1556)
 
--------------------------------------------------------谜底揭晓------------艾立克
+-------------------------------------------------------------------
 	DefineMission( 5151, "The mystery has been solved", 1555 )
 
 	MisBeginTalk("<t>With your intelligence now, you have earned the right to see the <bEnlightened One>. He is actually <bWeird Grampa>. This <yStone of Meng> was a gift from him. Show it to him and he will oblige you on my account.")
 	MisBeginCondition(NoRecord,1555)
 	MisBeginCondition(HasRecord, 1552)
 	MisBeginCondition(NoMission, 1555 )
-	MisBeginAction(GiveItem, 2918, 1, 4)		------------蒙德石
+	MisBeginAction(GiveItem, 2918, 1, 4)		------------
 	MisBeginAction(AddMission, 1555 )
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 	MisBeginBagNeed(1)
@@ -8693,21 +8693,21 @@ function HistoryMission001()
 	MisHelpTalk("<t>I'm warning you, its not easy to handle <bWeird Grampa> as rumored.")
 	MisResultCondition(AlwaysFailure)
 
-	--------------------------------------------------------谜底揭晓
-	DefineMission( 5152, "The mystery has been solved", 1555,COMPLETE_SHOW )-------------怪叟爷爷
+	--------------------------------------------------------
+	DefineMission( 5152, "The mystery has been solved", 1555,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
 	MisResultTalk("<t>Don't bother me, I'm having some problems. I won't give face to anyone!")
 	MisResultCondition(NoRecord, 1555)
 	MisResultCondition(HasMission, 1555)
-	MisResultCondition(HasItem, 2918, 1)------------蒙德石
-	MisResultAction(TakeItem, 2918, 1 )-----蒙德石
+	MisResultCondition(HasItem, 2918, 1)------------
+	MisResultAction(TakeItem, 2918, 1 )-----
 	MisResultAction(ClearMission,1555)
 	MisResultAction(SetRecord, 1555)
 	MisResultAction(SetRecord, 1556)
 
-------------------------------------------------------老朽们的纠纷------------怪叟爷爷
+------------------------------------------------------------------
 	DefineMission( 5169, "Dispute of the Old", 1557 )
 
 	MisBeginTalk("<t>You are asking who annoyed me? Ask <bGranny Dong> at <j(795, 363)> in <pIcicle City Haven> and you will know the answer.")
@@ -8719,8 +8719,8 @@ function HistoryMission001()
 
 	MisNeed(MIS_NEED_DESP,"<t>Look for <bGranny Dong>.")
 	MisHelpTalk("<t><bGranny Dong> is a stubborn and troublesome old lady.")
-	MisResultCondition(AlwaysFailure)	--------------------------------------------------------老朽们的纠纷
-	DefineMission( 5153, "Dispute of the Old", 1557,COMPLETE_SHOW )-------------冬达米婆婆
+	MisResultCondition(AlwaysFailure)	--------------------------------------------------------
+	DefineMission( 5153, "Dispute of the Old", 1557,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8730,11 +8730,11 @@ function HistoryMission001()
 	MisResultAction(ClearMission,1557)
 	MisResultAction(SetRecord, 1557)
 	
----------------------------------------------------------------------老太婆的智慧
+---------------------------------------------------------------------
 
 	DefineMission( 5154, "Granny's Intellect", 1561 )
 
-	MisBeginTalk("<t>Since you are a person of talent, I'll ask you another question.")------冬达米婆婆
+	MisBeginTalk("<t>Since you are a person of talent, I'll ask you another question.")------
 	MisBeginCondition(NoRecord,1561)
 	MisBeginCondition(HasRecord, 1558)
 	MisBeginCondition(HasRecord, 1559)
@@ -8752,11 +8752,11 @@ function HistoryMission001()
 	MisResultCondition(HasRecord, 1564)
 	MisResultAction(ClearMission,1561)
 	MisResultAction(SetRecord, 1561)
----------------------------------------------------------------------治疗传染病
+---------------------------------------------------------------------
 
-	DefineMission( 5155, "Cure infectious disease", 1566 )-----冬达米婆婆
+	DefineMission( 5155, "Cure infectious disease", 1566 )-----
 
-	MisBeginTalk("<t>You actually answered such a simple question wrongly. You must have been infected with <bWeird Grampa>'s senile disease. You need to undergo surgery to recover. Go learn how to make <yGrenade> now.")------冬达米婆婆
+	MisBeginTalk("<t>You actually answered such a simple question wrongly. You must have been infected with <bWeird Grampa>'s senile disease. You need to undergo surgery to recover. Go learn how to make <yGrenade> now.")------
 	MisBeginCondition(NoRecord,1566)
 	MisBeginCondition(HasRecord, 1558)
 	MisBeginCondition(HasRecord, 1560)
@@ -8780,12 +8780,12 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem,2743)	
 	TriggerAction( 1, AddNextFlag, 1566, 10, 1 )
 	RegCurTrigger( 15661 )
----------------------------------------------------------------------手动治疗法
+---------------------------------------------------------------------
 
-	DefineMission( 5156, "Manual Healing", 1567 )-----冬达米婆婆
+	DefineMission( 5156, "Manual Healing", 1567 )-----
 
 	
-	MisBeginTalk("<t>You actually answered such a simple question wrongly. You must have been infected with <bWeird Grampa>'s senile disease. You need to undergo surgery to recover. Go learn how to make <yFlash Bomb> now.")------冬达米婆婆
+	MisBeginTalk("<t>You actually answered such a simple question wrongly. You must have been infected with <bWeird Grampa>'s senile disease. You need to undergo surgery to recover. Go learn how to make <yFlash Bomb> now.")------
 	MisBeginCondition(NoRecord,1567)
 	MisBeginCondition(HasRecord, 1562)
 	MisBeginCondition(HasRecord, 1565)
@@ -8810,7 +8810,7 @@ function HistoryMission001()
 	TriggerCondition( 1, IsItem,2744)	
 	TriggerAction( 1, AddNextFlag, 1567, 10, 1 )
 	RegCurTrigger( 15671 )
--------------------------------------------------------真理守护者-----------------冬达米婆婆
+------------------------------------------------------------------------
 	DefineMission( 5157, "Guardian of Truth", 1568 )
 
 	MisBeginTalk("<t>You have been appointed <bGuardian of Truth> by the great <bGranny Dong>. Go and talk to <bWeird Grampa> and let him think it over.")
@@ -8826,8 +8826,8 @@ function HistoryMission001()
 	
 	MisResultCondition(AlwaysFailure)
 
-	-------------------------------------------------------真理守护者
-	DefineMission( 5158, "Guardian of Truth", 1568,COMPLETE_SHOW )-------------怪叟
+	-------------------------------------------------------
+	DefineMission( 5158, "Guardian of Truth", 1568,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8836,7 +8836,7 @@ function HistoryMission001()
 	MisResultCondition(HasMission, 1568)
 	MisResultAction(ClearMission,1568)
 	MisResultAction(SetRecord, 1568)
-	MisResultAction(SetRecord, 1571)	-------------------------------------------------------真理守护者-----------------冬达米婆婆
+	MisResultAction(SetRecord, 1571)	------------------------------------------------------------------------
 	DefineMission( 5159, "Guardian of Truth", 1569 )
 
 	MisBeginTalk("<t>You have been appointed <bGuardian of Truth> by the great <bGranny Dong>. Go and talk to <bWeird Grampa> and let him think it over.")
@@ -8849,9 +8849,9 @@ function HistoryMission001()
 	MisNeed(MIS_NEED_DESP,"<t>Look for <bWeird Grampa>.")
 	MisHelpTalk("<t>Get going now! The world's future depend on you youngster.")
 	
-	MisResultCondition(AlwaysFailure)--------------------------------------------------------真理守护者
+	MisResultCondition(AlwaysFailure)--------------------------------------------------------
 
-	DefineMission( 5160, "Guardian of Truth", 1569,COMPLETE_SHOW )-------------怪叟
+	DefineMission( 5160, "Guardian of Truth", 1569,COMPLETE_SHOW )-------------
 	
 	MisBeginCondition(AlwaysFailure )
 	
@@ -8865,7 +8865,7 @@ function HistoryMission001()
 	MisResultAction(AddExp,300000,300000)
 	MisResultAction(AddMoney,100000,100000)	
 	MisResultAction(AddExpAndType,2,20000,20000)
------------------------------------------------------神秘的咒语
+-----------------------------------------------------
 
 	DefineMission( 5161, "Mysterious Curse",1570 )
 
@@ -8874,7 +8874,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1571)
 	MisBeginCondition(NoMission,1570 )
 	MisBeginAction(AddMission, 1570)
-	MisBeginAction(AddTrigger, 15701, TE_GETITEM, 2408, 1 )		--口令AB
+	MisBeginAction(AddTrigger, 15701, TE_GETITEM, 2408, 1 )		--AB
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Get <yPassword AB> from <rDeathsoul Gunboat> for <bWeird Grampa>.")
@@ -8895,7 +8895,7 @@ function HistoryMission001()
 	TriggerAction( 1, AddNextFlag, 1570, 10,1)
 	RegCurTrigger( 15701 )
 
-----------------------------------------------------神秘的咒语
+----------------------------------------------------
 
 	DefineMission( 5162, "Mysterious Curse",1572 )
 
@@ -8904,7 +8904,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1570)
 	MisBeginCondition(NoMission,1572 )
 	MisBeginAction(AddMission, 1572)
-	MisBeginAction(AddTrigger, 15721, TE_GETITEM, 2409, 1 )		--口令BC
+	MisBeginAction(AddTrigger, 15721, TE_GETITEM, 2409, 1 )		--BC
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Defeat <rDeathsoul Speed Boat> and obtain <yPassword BC> for <bWeird Grampa>.")
@@ -8923,7 +8923,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 2409)	
 	TriggerAction( 1, AddNextFlag, 1572, 10,1)
-	RegCurTrigger( 15721 )	----------------------------------------------------神秘的咒语
+	RegCurTrigger( 15721 )	----------------------------------------------------
 
 	DefineMission( 5163, "Mysterious Curse",1573 )
 
@@ -8932,7 +8932,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1572)
 	MisBeginCondition(NoMission,1573 )
 	MisBeginAction(AddMission, 1573)
-	MisBeginAction(AddTrigger, 15731, TE_GETITEM, 2410, 1 )		--口令CD
+	MisBeginAction(AddTrigger, 15731, TE_GETITEM, 2410, 1 )		--CD
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Obtain <yPassword CD> from <rDeathsoul Soldier> and give to <bWeird Grampa>.")
@@ -8951,7 +8951,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 2410)	
 	TriggerAction( 1, AddNextFlag, 1573, 10,1)
-	RegCurTrigger( 15731 )----------------------------------------------------神秘的咒语
+	RegCurTrigger( 15731 )----------------------------------------------------
 
 	DefineMission( 5164, "Mysterious Curse",1574 )
 
@@ -8960,7 +8960,7 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1573)
 	MisBeginCondition(NoMission,1574 )
 	MisBeginAction(AddMission, 1574)
-	MisBeginAction(AddTrigger, 15741, TE_GETITEM, 2411, 1 )		--口令DE
+	MisBeginAction(AddTrigger, 15741, TE_GETITEM, 2411, 1 )		--DE
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Get <yPassword DE> from <rDeathsoul Soldier> for <bWeird Grampa>.")
@@ -8979,7 +8979,7 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 2411)	
 	TriggerAction( 1, AddNextFlag, 1574, 10,1)
-	RegCurTrigger( 15741 )----------------------------------------------------神秘的咒语
+	RegCurTrigger( 15741 )----------------------------------------------------
 
 	DefineMission( 5165, "Mysterious Curse",1575 )
 
@@ -8988,13 +8988,13 @@ function HistoryMission001()
 	MisBeginCondition(HasRecord, 1574)
 	MisBeginCondition(NoMission,1575 )
 	MisBeginAction(AddMission, 1575)
-	MisBeginAction(AddTrigger, 15751, TE_GETITEM, 2412, 1 )		--口令EF
+	MisBeginAction(AddTrigger, 15751, TE_GETITEM, 2412, 1 )		--EF
 	MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
 	MisNeed(MIS_NEED_DESP,"Get <yPassword EF> from <rDeathsoul Officer> for <bWeird Grampa>.")
 	MisNeed(MIS_NEED_ITEM,2412,1, 10, 1)
 	
-	MisResultTalk("<t>I'll let you know the results later…")
+	MisResultTalk("<t>I'll let you know the results later")
 	MisHelpTalk("<t><rDeathsoul Officer> often appears at <pUnderground Docks, Armory or Research Shelter>.")
 	MisResultCondition(HasMission, 1575)
 	MisResultCondition(NoRecord,1575)
@@ -9009,9 +9009,9 @@ function HistoryMission001()
 	InitTrigger()
 	TriggerCondition( 1, IsItem, 2412)	
 	TriggerAction( 1, AddNextFlag, 1575, 10,1)
-	RegCurTrigger( 15751 )----------------------------------------咒语的研究结果
+	RegCurTrigger( 15751 )----------------------------------------
      DefineMission(5166,"Seal Research Outcome",1576)
-     MisBeginTalk("<t>I'll let you know the results later…")
+     MisBeginTalk("<t>I'll let you know the results later")
      MisBeginCondition(NoRecord,1576)
       MisBeginCondition(NoMission, 1576)
      MisBeginCondition(HasRecord, 1575)
@@ -9019,9 +9019,9 @@ function HistoryMission001()
      MisCancelAction(SystemNotice, "This quest cannot be abandoned!")
 
      MisNeed(MIS_NEED_DESP,"Wait for <bWeird Grampa> to tell you his research results.")
-     MisHelpTalk("<t>Please be patient…")
+     MisHelpTalk("<t>Please be patient")
       MisResultTalk("<t>These cards have actually nothing to do with the curse. I have been tricked! Don't worry, I'll still give you something.")
-     MisResultCondition(HasRecord, 1576)---------应改为NoRecord
+     MisResultCondition(HasRecord, 1576)---------NoRecord
      MisResultCondition(HasMission, 1576)
      MisResultAction(ClearMission, 1576 )
      MisResultAction(SetRecord, 1576 )

@@ -1,4 +1,4 @@
-// CharScript.cpp Created by knight-gongjian 2004.12.13.
+﻿// CharScript.cpp Created by knight-gongjian 2004.12.13.
 //---------------------------------------------------------
 #include "stdafx.h"//add by alfred.shi 20080202
 #include "CharScript.h"
@@ -576,7 +576,7 @@ inline int lua_AddSkill( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	//char* szNpc = const_cast<char*>( RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -588,7 +588,7 @@ inline int lua_AddSkill( lua_State* L )
 	}
 
 	if (pChar->GetPlayer())
-		pChar = pChar->GetPlayer()->GetMainCha(); // ���ڵ���ɫ�Ǵ�ʱ
+		pChar = pChar->GetPlayer()->GetMainCha(); // 
 
 	WORD  wSkillID = (WORD)lua_tonumber( L, 3 );
 	BYTE  byLevel   = (BYTE)lua_tonumber( L, 4 );
@@ -597,7 +597,7 @@ inline int lua_AddSkill( lua_State* L )
 
 	if( bRet )
 	{
-		//char szSkill[defSKILL_NAME_LEN] = "δ֪";
+		//char szSkill[defSKILL_NAME_LEN] = "";
 		//char* szSkill = const_cast<char*>( RES_STRING(GM_CHARSCRIPT_CPP_00002));
 		char szSkill[defENTITY_NAME_LEN];
 		strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00002), defENTITY_NAME_LEN - 1 );
@@ -639,7 +639,7 @@ inline int lua_AddSailExp( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
 	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
@@ -688,7 +688,7 @@ inline int lua_AddLifeExp( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
 	CTalkNpc* pTalk = ( CTalkNpc*)lua_touserdata( L, 2 );
@@ -737,7 +737,7 @@ inline int lua_AddExp( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -788,7 +788,7 @@ inline int lua_AddExpAndType( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -813,7 +813,7 @@ inline int lua_AddExpAndType( lua_State* L )
 	}
 	
 	BOOL bRet;
-	if( byType == mission::MIS_EXP_NOMAL )// ������ͨ����
+	if( byType == mission::MIS_EXP_NOMAL )// 
 	{
 		bRet = pChar->GetPlyMainCha()->AddExpAndNotic( dwValue );
 		char szData[128];
@@ -821,7 +821,7 @@ inline int lua_AddExpAndType( lua_State* L )
 		pChar->SystemNotice( szData );
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
-	else if( byType == MIS_EXP_SAIL ) 	// ������������
+	else if( byType == MIS_EXP_SAIL ) 	// 
 	{
 		bRet = pChar->GetPlyMainCha()->AddAttr( ATTR_CSAILEXP, dwValue );
 		char szData[128];
@@ -829,7 +829,7 @@ inline int lua_AddExpAndType( lua_State* L )
 		pChar->SystemNotice( szData );
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
-	else if( byType == MIS_EXP_LIFE	)	// ���������
+	else if( byType == MIS_EXP_LIFE	)	// 
 	{
 		bRet = pChar->GetPlyMainCha()->AddAttr( ATTR_CLIFEEXP, dwValue );
 		char szData[128];
@@ -839,7 +839,7 @@ inline int lua_AddExpAndType( lua_State* L )
 	}
 	else
 	{
-		//pChar->SystemNotice( "�������ʹ���Name[%s], Type[%d], Exp[%d]��", szNpc, byType, dwValue );
+		//pChar->SystemNotice( "Name[%s], Type[%d], Exp[%d]", szNpc, byType, dwValue );
 		pChar->SystemNotice( RES_STRING(GM_CHARSCRIPT_CPP_00007), szNpc, byType, dwValue );
 		bRet = FALSE;
 	}
@@ -866,7 +866,7 @@ inline int lua_AddMoney( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] ="ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] ="";
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy( szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
 	
@@ -903,7 +903,7 @@ inline int lua_TakeMoney( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
 
@@ -985,7 +985,7 @@ inline int lua_TakeCancelMissionMoney( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -1026,7 +1026,7 @@ inline int lua_CheckFusionItem( lua_State* L )
 
 	//Add by sunny.sun 20080529
 	//Begin
-	inline int lua_GetTicketIssue( lua_State * L)//��ȡ��Ʊ�ں�
+	inline int lua_GetTicketIssue( lua_State * L)//
 	{
 	BOOL bValid = lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 );
 	if( !bValid )
@@ -1043,7 +1043,7 @@ inline int lua_CheckFusionItem( lua_State* L )
 	return 1;
 	}
 
-	inline int lua_GetTicketItemno( lua_State * L)//��ȡ��Ʊ����ֵ
+	inline int lua_GetTicketItemno( lua_State * L)//
 	{
 		BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 		if( !bValid )
@@ -1087,7 +1087,7 @@ inline int lua_CheckFusionItem( lua_State* L )
 			return 0;
 	}
 
-inline int lua_GetSItemGrid( lua_State * L)//��ȡ��ɫ��������
+inline int lua_GetSItemGrid( lua_State * L)//
 {
 	BOOL bValid = ( lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) );
 	if( !bValid )
@@ -1119,7 +1119,7 @@ inline int lua_FusionItem( lua_State* L )
 		return 0;
 	}
 
-	//��ʹ�����װ�������װ���ں�ʱ������ʽ��ͬ
+	//
 	//Modify by ning.yan 20080821  begin
 	//if(pItem2->sID >= CItemRecord::enumItemFusionStart)
 	CItemRecord * pItem = GetItemRecordInfo(pItem2->sID);
@@ -1129,7 +1129,7 @@ inline int lua_FusionItem( lua_State* L )
 	}
 	pItem1->CopyInstAttr( *pItem2 );
 
-	//�ۺϺ��װ���ȼ����ó�10
+	//10
 	pItem1->SetItemLevel(10);
 	
 	lua_pushnumber( L, LUA_TRUE );
@@ -1183,7 +1183,7 @@ inline int lua_GiveItem( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -1229,7 +1229,7 @@ inline int lua_GiveItemX( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[defENTITY_NAME_LEN] = "ϵͳ";
+	//char szNpc[defENTITY_NAME_LEN] = "";
 	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -1339,7 +1339,7 @@ inline int lua_TakeItemBagTemp( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[128] = "ϵͳ";
+	//char szNpc[128] = "";
 	//char* szNpc = const_cast<char*>(RES_STRING(GM_CHARSCRIPT_CPP_00001));
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
@@ -1376,7 +1376,7 @@ inline int lua_TakeItem( lua_State* L )
 		return 0;
 	}
 
-	//char szNpc[128] = "ϵͳ";
+	//char szNpc[128] = "";
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1 );
 
@@ -1936,12 +1936,12 @@ inline int lua_GetMissionTempInfo( lua_State* L )
 
 
 void ReAllPlayEffect(CCharacter* pChar) {
-	// Типизированная сериализация: визуальный эффект восстановления
+	//  :   
 	auto l_wpk = net::msg::serialize(net::msg::McChaPlayEffectMessage{pChar->GetID(), 114});
 	pChar->NotiChgToEyeshot(l_wpk);
 }
 
-// �ָ���ɫ����ֵ
+// 
 inline int lua_ReAll( lua_State* L )
 {
 	BOOL bValid = ( lua_gettop( L ) == 1 && lua_islightuserdata( L, 1 ) );
@@ -1958,7 +1958,7 @@ inline int lua_ReAll( lua_State* L )
 		return 0;
 	}
 	
-	// �ָ�
+	// 
 	pChar->RestoreAll();
 	ReAllPlayEffect(pChar);
 	lua_pushnumber( L, LUA_TRUE );
@@ -1981,7 +1981,7 @@ inline int lua_ReAllHp( lua_State* L )
 		return 0;
 	}
 
-	// �ָ�
+	// 
 	pChar->RestoreAllHp();
 	ReAllPlayEffect(pChar);
 	lua_pushnumber( L, LUA_TRUE );
@@ -2005,7 +2005,7 @@ inline int lua_ReHp( lua_State* L )
 	}
 
 	BYTE byRate = (BYTE)lua_tonumber( L, 2 );
-	// �ָ�
+	// 
 	pChar->RestoreHp( byRate );
 	ReAllPlayEffect(pChar);
 	lua_pushnumber( L, LUA_TRUE );
@@ -2028,7 +2028,7 @@ inline int lua_ReAllSp( lua_State* L )
 		return 0;
 	}
 
-	// �ָ�
+	// 
 	pChar->RestoreAllSp();
 	ReAllPlayEffect(pChar);
 	lua_pushnumber( L, LUA_TRUE );
@@ -2052,7 +2052,7 @@ inline int lua_ReSp( lua_State* L )
 	}
 
 	BYTE byRate = (BYTE)lua_tonumber( L, 2 );
-	// �ָ�
+	// 
 	pChar->RestoreSp( byRate );
 	ReAllPlayEffect(pChar);
 	lua_pushnumber( L, LUA_TRUE );
@@ -3107,7 +3107,7 @@ inline int lua_SetSpawnPos( lua_State* L )
 	}
 
 	pChar->SetBirthCity( pszCity );
-	//pChar->SystemNotice( "%s�������㡶%s�����óɹ���", pChar->GetName(), pszCity );
+	//pChar->SystemNotice( "%s%s", pChar->GetName(), pszCity );
 	pChar->SystemNotice( RES_STRING(GM_CHARSCRIPT_CPP_00010), pChar->GetName(), pszCity );
 
 	lua_pushnumber( L, LUA_TRUE );
@@ -3287,7 +3287,7 @@ inline int lua_SaveMissionData( lua_State* L )
 
 	return 1;
 }
-//==========����Begin=========================================================
+//==========Begin=========================================================
 inline int lua_HasFame( lua_State* L )
 {
 	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
@@ -3461,7 +3461,7 @@ BOOL bValid = lua_gettop(L) == 1 && lua_islightuserdata(L, 1);
 	return 1;	
 }
 
-//===========����End========================================================
+//===========End========================================================
 inline int lua_SetPkState( lua_State* L )
 {
 	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
@@ -3730,7 +3730,7 @@ inline int lua_BoatBerthList( lua_State* L )
 	USHORT sxPos = (USHORT)lua_tonumber( L, 5 );
 	USHORT syPos = (USHORT)lua_tonumber( L, 6 );
 	USHORT sDir = (USHORT)lua_tonumber( L, 7 );
-	//�ر�ó�׽ӿڣ�������
+	//
 	//BOOL bRet = pChar->BoatBerthList( dwNpcID, byType, sBerth, sxPos, syPos, sDir );
 	BOOL bRet;
 
@@ -4058,7 +4058,7 @@ inline int lua_SetTradeItemLevel( lua_State* L )
 	return 1;
 }
 
-// ����20050730Ҫ���滻�ĺ���
+// 20050730
 inline int lua_TradeItemLevelCheck( lua_State* L )
 {
 	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isstring( L, 2 ) && 
@@ -4106,7 +4106,7 @@ inline int lua_TradeItemLevelCheck( lua_State* L )
 	return 1;
 }
 
-/* ���滻���ĺ���
+/* 
 inline int lua_TradeItemLevelCheck( lua_State* L )
 {
 	BOOL bValid = lua_gettop( L ) == 3 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 ) && 
@@ -4705,7 +4705,7 @@ inline int lua_OpenTiger( lua_State *L )
 	return 1;
 }
 
-// ���������溯��
+// 
 inline int lua_OpenHair(lua_State *L)
 {
 	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
@@ -4723,16 +4723,16 @@ inline int lua_OpenHair(lua_State *L)
 		return 0;
 	}
 	
-	if(pChar->HasTradeAction()) // �Ѿ��ڽ�����
+	if(pChar->HasTradeAction()) // 
 	{
-		//LG("hair", "��ɫ[%s]�Ѿ��ڽ�����, �޷�����������!\n", pChar->GetName());
+		//LG("hair", "[%s], !\n", pChar->GetName());
 		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_CHARSCRIPT_CPP_00011), pChar->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		lua_pushnumber( L, LUA_FALSE);
 		return 1;
 	}
 
 	pChar->Prl_OpenHair();
-	pChar->TradeAction(true); // ����Ϊ����״̬
+	pChar->TradeAction(true); // 
 	
 	lua_pushnumber( L, LUA_TRUE);
 	return 1;
@@ -4753,7 +4753,7 @@ inline int lua_Garner2GetWiner(lua_State *L)
 		E_LUANULL;
 		return 0;
 	}
-	// Типизированная сериализация: запрос заказа Garner2 (ReflectINFof добавит trailer маршрутизации)
+	//  :   Garner2 (ReflectINFof  trailer )
 	auto l_wpk = net::msg::serializeGmGarner2GetOrderCmd();
 	pChar->ReflectINFof(pChar,l_wpk);
 
@@ -4809,7 +4809,7 @@ inline int lua_Garner2RequestReorder(lua_State *L)
 		}
 	}
 	if(-1 == pos)
-		//pMainCha->SystemNotice("�Բ���,��û������֤֮,��ȥ�Ҷ�����Ա����ȡ����֤֮");
+		//pMainCha->SystemNotice(",,");
 		pMainCha->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00012));
 	else
 		pMainCha->Cmd_Garner2_Reorder(pos);
@@ -4901,7 +4901,7 @@ inline int lua_EndAuction(lua_State* L)
 	return 1;
 }
 
-// �򿪹���ս����
+// 
 inline int lua_ListChallenge( lua_State* L )
 {
 	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_islightuserdata( L, 2 );
@@ -4924,7 +4924,7 @@ inline int lua_ListChallenge( lua_State* L )
 	return 1;
 }
 
-// �򿪹���ս����
+// 
 inline int lua_HasGuildLevel( lua_State* L )
 {
 	BOOL bValid = lua_gettop( L ) == 2 && lua_islightuserdata( L, 1 ) && lua_isnumber( L, 2 );
@@ -5451,7 +5451,7 @@ inline int lua_LifeSkillBegin(lua_State* L)
 
 	if(pChar->m_CKitbag.IsPwdLocked())
 	{
-		//pChar->SystemNotice("���������������ܽ�����ز�����");
+		//pChar->SystemNotice("");
 		pChar->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00013));
 		return 1;
 	}
@@ -5459,13 +5459,13 @@ inline int lua_LifeSkillBegin(lua_State* L)
 	//add by ALLEN 2007-10-16
 		if(pChar->IsReadBook())
 	{
-		//pChar->SystemNotice("���ڶ��飬���ܽ�����ز�����");
+		//pChar->SystemNotice("");
 		pChar->SystemNotice(RES_STRING(GM_CHARSCRIPT_CPP_00014));
 		return 1;
 	}
 
 	pChar->ForgeAction();
-	// Типизированная сериализация: начало жизненного навыка
+	//  :   
 	auto l_wpk = net::msg::serialize(net::msg::McLifeSkillShowMessage{ltype});
 	pChar->ReflectINFof(pChar,l_wpk);
 	lua_pushnumber( L, LUA_TRUE );
@@ -5731,10 +5731,10 @@ inline int lua_GetActID(lua_State* L)
 	return 1;
 }
 
-//  ������
+//  
 inline int lua_GetExpState(lua_State *L)
 {
-    // �����Ϸ����б�
+    // 
     BOOL bValid = (lua_gettop (L)==1 && lua_islightuserdata(L, 1));
 	if(!bValid) 
     {
@@ -5832,7 +5832,7 @@ inline int lua_RequestClientPin(lua_State *L) {
 		pCha->requestType = action;
 		pCha->requestPos.centre.x = pCha->GetShape().centre.x;
 		pCha->requestPos.centre.y = pCha->GetShape().centre.y;
-		// Типизированная сериализация: запрос PIN-кода
+		//  :  PIN-
 		auto l_wpk = net::msg::serializeMcRequestPinCmd();
 		pCha->ReflectINFof(pCha, l_wpk);
 		return 1;
@@ -6088,7 +6088,7 @@ inline int lua_SendDailyBuffInfo(lua_State* L) {
 		return 0;
 	}
 	//send info to client 
-	// Типизированная сериализация: информация о ежедневном бонусе
+	//  :    
 	auto l_wpk = net::msg::serialize(net::msg::McDailyBuffInfoMessage{imgName, LabelInfo});
 	pChar->ReflectINFof(pChar, l_wpk);
 
@@ -6203,7 +6203,7 @@ BOOL RegisterCharScript()
 {
 	lua_State *L = g_pLuaState;
 
-	// ���ú����Ǽ�
+	// 
 	REGFN(GetTickCount);
 	REGFN(Msg);
 	REGFN(Exit);
@@ -6211,7 +6211,7 @@ BOOL RegisterCharScript()
 	REGFN(GetSection);
 	REGFN(ToDword);
 
-	// ������غ����Ǽ�
+	// 
 	REGFN(SetMap);
 	REGFN(SetMapGuildWar);
 	REGFN(AddTrigger);
@@ -6278,7 +6278,7 @@ BOOL RegisterCharScript()
 	REGFN(GetItemP);
 	REGFN(GetEquipItemP);
 
-	// ���������
+	// 
 	REGFN(HasRandMission);
 	REGFN(AddRandMission);
 	REGFN(SetRandMissionData);
@@ -6290,7 +6290,7 @@ BOOL RegisterCharScript()
 	REGFN(TakeRandNpcItem);
 	REGFN(TakeAllRandItem);
 
-	// ���������ɼ����ӿ�
+	// 
 	REGFN(CompleteRandMissionCount);
 	REGFN(FailureRandMissionCount);
 	REGFN(AddRandMissionNum);
@@ -6300,27 +6300,27 @@ BOOL RegisterCharScript()
 	REGFN(GetRandMissionCount);
 	REGFN(GetRandMissionNum);
 
-	// �ָ�����
+	// 
 	REGFN(ReAll);
 	REGFN(ReAllHp);
 	REGFN(ReHp);
 	REGFN(ReAllSp);
 	REGFN(ReSp);
 
-	// ���ý�ɫ������
+	// 
 	REGFN(SetSpawnPos);
 	
-	// �ж��Ƿ�ָ��������
+	// 
 	REGFN(IsSpawnPos);
 
-	// �����ɫְҵ����
+	// 
 	REGFN(SetProfession);
 
-	// ���ý�ɫ��ʾ״̬
+	// 
 	REGFN(Hide);
 	REGFN(Show);
 
-	// �ȽϽ�ɫ����
+	// 
 	REGFN(GetCharMissionLevel);
 	REGFN(LvEqual);
 	REGFN(LvThan);
@@ -6335,13 +6335,13 @@ BOOL RegisterCharScript()
 	REGFN(IsCategory);
 	REGFN(HasFame);	
 
-	// ��ȡ��ɫ����
+	// 
 	REGFN(GetProfession);
 	REGFN(GetCategory);
 	REGFN(GetCatAndPf);
 	REGFN(GetChaBody);
 	
-	// �ٻ�����NPC
+	// NPC
 	REGFN(ConvoyNpc);
 	REGFN(ClearConvoyNpc);
 	REGFN(ClearAllConvoyNpc);
@@ -6350,10 +6350,10 @@ BOOL RegisterCharScript()
 
 	REGFN(SetPkState);
 
-	// �������ݿ�洢
+	// 
 	REGFN(SaveMissionData); 
 
-	// ע�ṫ�ắ��
+	// 
 	REGFN(HasGuild);
 	REGFN(CreateGuild);
 	REGFN(ListAllGuild);
@@ -6364,7 +6364,7 @@ BOOL RegisterCharScript()
 	REGFN(HasNavyGuild);
 	REGFN(NoNavyGuild);
 
-	// ��ֻ
+	// 
 	REGFN(IsBoatFull);
 	REGFN(CreateBoat);
 	REGFN(BoatLuanchOut);
@@ -6382,23 +6382,23 @@ BOOL RegisterCharScript()
 	REGFN(IsNeedSupply);
 	REGFN(IsNeedRepair);
 
-	// ó��֤����
+	// 
 	REGFN(AdjustTradeItemCess);
 	REGFN(SetTradeItemLevel);
 	REGFN(TradeItemLevelCheck);
 	REGFN(GetTradeItemData);
 	REGFN(TradeItemDataCheck);
 
-	// ���մ��
+	// 
 	REGFN(PackBag);
 	REGFN(PackBagList);
 
-	// ��ɫ�ʹ�����ͬ��
+	// 
 	REGFN(SetAttrChangeFlag);
 	REGFN(SyncBoat);
 	REGFN(SyncChar);
 
-	// ���в�������
+	// 
 	REGFN(OpenBank);
 
 	REGFN(OpenRepair);
@@ -6425,40 +6425,40 @@ BOOL RegisterCharScript()
 	REGFN(OpenGMSend);
 	REGFN(OpenGMRecv);
 
-	// ��������򿪺���
+	// 
 	REGFN(OpenHair);
 
 
-	// �ۺϵ���
+	// 
 	REGFN(CheckFusionItem);
 	REGFN(FusionItem);
 	
-	// �����Ϣ�ж�
+	// 
 	REGFN(IsTeamLeader);
 	REGFN(IsInTeam);
 	REGFN(HasTeammate);
 
-	//ʦͽ��������
+	//
 	REGFN(AddCreditX);
 	REGFN(AddMasterCredit);
 	REGFN(DelCredit);
 	REGFN(GetCredit);
 	REGFN(HasMaster);
 
-	//��ͼ��Ϣ״̬����
+	//
 	REGFN(GetMapPlayer);
 	REGFN(DealAllPlayerInMap);
 	REGFN(GetMapActivePlayer);
 	REGFN(DealAllActivePlayerInMap);
 	REGFN(SetCopySpecialInter);
 
-	//��������
+	//
 	REGFN(Garner2GetWiner);
 	REGFN(Garner2RequestReorder);
 	REGFN(ClearAllSubMapCha);
 	REGFN(ClearAllSubMapMonster);
 	REGFN(IsGarnerWiner);
-	//�����
+	//
 	REGFN(LifeSkillBegin);
 	REGFN(ClearAllFightSkill);
 	REGFN(ClearFightSkill);
@@ -6473,12 +6473,12 @@ BOOL RegisterCharScript()
 
 	REGFN(GetActName);
 	REGFN(GetActID);
-    //  ������, �������
+    //  , 
     REGFN(GetExpState);
 
     REGFN(KillCha);
 
-	// ��Դ�ַ������
+	// 
 	REGFN(GetResString);
 
 	REGFN(GetGmLv);
@@ -6510,11 +6510,11 @@ BOOL RegisterCharScript()
 	REGFN(GetPlyExpRate);
 
 	REGFN(RemoveOfflineMode);
-	// AI�����Ǽ�
+	// AI
 	RegisterLuaAI(g_pLuaState);
 	
 
-	// �����߼���غ����Ǽ�
+	// 
 	RegisterLuaGameLogic(g_pLuaState);
 
 	return TRUE;

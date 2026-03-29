@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Scene.h"
 
 #include "Character.h"
@@ -60,7 +60,7 @@ void CGameScene::_FrameMove(DWORD dwTimeParam)
 		_nMouseX = (int)(_vMousePos.x * 100.0f);
 		_nMouseY = (int)(_vMousePos.y * 100.0f);
 
-		// ��ͷ�Ǹ���ģʽ��, ����Ļ�м�ӳ�䵽�ر��ϵ�λ��Ϊ��ͷ����
+		// , 
 		if( g_Config.m_bEditor && !g_pGameApp->IsCameraFollow() )
 		{
 			static D3DXVECTOR3 vecPos; 

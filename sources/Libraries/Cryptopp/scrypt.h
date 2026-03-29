@@ -1,4 +1,4 @@
-// scrypt.h - written and placed in public domain by Jeffrey Walton.
+﻿// scrypt.h - written and placed in public domain by Jeffrey Walton.
 //            Based on reference source code by Colin Percival.
 
 /// \file scrypt.h

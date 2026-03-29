@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "udpsocket.h"
 #include <vector>
@@ -20,8 +20,8 @@ class	CGateInfo
 {
 public:
 	CGateInfo( CGroupInfo* pGroup, const char* name );
-	void			Start();			// ³õÊ¼»¯Socket,»ñÈ¡Êý¾Ý
-	void			Exit();				// ¹Ø±ÕSocket
+	void			Start();			// Socket,
+	void			Exit();				// Socket
 	CGroupInfo*		GetOwner()	{ return pOwner;			}
 	bool			Read();
 	bool			Send();
@@ -44,7 +44,7 @@ public:
 	CGateInfo*		Find( const char* Name );
 	CRegionInfo*	GetOwner()	{ return pOwner;		}
 	int				GetNum();
-	CGateInfo*		GetMinGate();		// »ñµÃ¸ºÔØ×îÐ¡µÄGate
+	CGateInfo*		GetMinGate();		// Gate
 
 	void			Start();
 	void			Exit();
@@ -83,18 +83,18 @@ private:
 
 typedef void (*GateChangeEvent) ( CGateInfo* pGate );
 
-// ¿Í»§¶Ë·¢ËÍÓÃ
+// 
 class CRegionMgr
 {
 public:
 	CRegionMgr();
 	void	Init( HWND hWnd, UINT uRegeditNetMes );
 
-	bool	Add( const char* szRegion, const char* szGroup, const char* szGate );	// Ôö¼Ó»ù´¡Êý¾Ý
+	bool	Add( const char* szRegion, const char* szGroup, const char* szGate );	// 
 
-	bool	EnterRegion( const char* szRegion );	// ½øÈëÁËÇø£¬×¼±¸»ñÈ¡Êý¾Ý
-	int		GetGroupNum( const char* szGroup );		// µÃµ½µ±Ç°ÇøÖÐÄ³¸öGroupÈËÊý,·µ»Ø-1ÎªÊ§°Ü
-	bool	ExitRegion();							// ´Óµ±Ç°GroupÖÐÍË³ö
+	bool	EnterRegion( const char* szRegion );	// 
+	int		GetGroupNum( const char* szGroup );		// Group,-1
+	bool	ExitRegion();							// Group
 	CRegionInfo*	GetActiovRegion()	{ return _pRegion;		}
 
 	void	Exit();
@@ -103,7 +103,7 @@ public:
 
 	void	FrameMove( DWORD dwTime );
 
-public:		// ÁÐ±íµÄ²Ù×÷
+public:		// 
 	CRegionInfo*	Find( const char* Name );
 	void			Add( CRegionInfo* pRegion )		{ if( pRegion ) _Regions.push_back( pRegion );	}
 
@@ -115,14 +115,14 @@ public:
 
 private:
 	typedef std::vector<CRegionInfo*> regions;
-	regions			_Regions;			// ËùÓÐÇø
+	regions			_Regions;			// 
 
-	CRegionInfo*	_pRegion;			// µ±Ç°¼¤»îµÄÇø£¬¿ÉÄÜÎª¿Õ
+	CRegionInfo*	_pRegion;			// 
 	HWND			_hWnd;
 	UINT			_uNetMessage;
 
 	typedef std::map<SOCKET, CGateInfo*> gates;
-	gates			_gates;				// ÓÃÓÚ¸ù¾Ýsocket¿ìËÙ²éÕÒCGateInfo
+	gates			_gates;				// socketCGateInfo
 
 	DWORD			_dwLastSendTime;
 

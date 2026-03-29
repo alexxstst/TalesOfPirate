@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "UIGlobalVar.h"
 #include "NetProtocol.h"
 
@@ -8,7 +8,7 @@ namespace GUI
 	class CMemoEx;
 	class CTextButton;
 
-	// ÈÎÎñ
+	// 
 	class CMissionMgr : public CUIInterface
 	{
 	public:
@@ -23,7 +23,7 @@ namespace GUI
 		void CloseForm();
 
 	private:
-		// ´°¿Ú´¦ÀíÏûÏ¢º¯Êý
+		// 
 		static void _MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey );
 		static void _ItemClickEvent( std::string strItem );
 

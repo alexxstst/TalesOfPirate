@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// ����:�༭������
-// ����:lh 2004-08-21
-// ����޸�����:2004-10-09
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2004-08-21
+// :2004-10-09
 //----------------------------------------------------------------------
 
 #pragma once
@@ -20,7 +20,7 @@ class CEditor : public CUIInterface
 {
 public:
     CEditor();
-    bool Init();			// ���ڳ�ʼ�ڲ�ָ��
+    bool Init();			// 
 
     bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
         { char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }

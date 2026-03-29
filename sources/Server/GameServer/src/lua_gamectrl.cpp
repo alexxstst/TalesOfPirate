@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "lua_gamectrl.h"
 #include "Birthplace.h"
 
@@ -6,10 +6,10 @@ using namespace std;
 
 std::list<CCharacter*> g_HelpNPCList;
 
-// ���ӳ������������
+// 
 int lua_AddBirthPoint(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop(L)==4 && lua_isstring(L, 1) && lua_isstring(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4));
 	if(!bValid) 
     {
@@ -23,15 +23,15 @@ int lua_AddBirthPoint(lua_State *L)
 	int y = (int)lua_tonumber(L, 4);
 
 	g_BirthMgr.AddBirthPoint(pszLocation, pszMapName, x, y);
-	//LG("birth", "���ӳ�����[%s] [%s] %d %d\n", pszLocation, pszMapName, x, y);
+	//LG("birth", "[%s] [%s] %d %d\n", pszLocation, pszMapName, x, y);
 	return 0;
 }
 
-// ������г������������
+// 
 int lua_ClearAllBirthPoint(lua_State *L)
 {
 	g_BirthMgr.ClearAll();
-	//LG("birth", "��������г�����\n");
+	//LG("birth", "\n");
 	return 0;
 }
 
@@ -43,22 +43,22 @@ void ReloadAISdk()
 
 //char g_TradeName[][32] = 
 //{
-//	"����",
-//	"��",	
-//	"��",
-//	"����",
-//	"��",
-//	"�����",
-//	"������",
-//	"���",
-//	"����",
-//	"����Ϸ",
-//	"����Ϸ",
-//	"��̯",
-//	"����",
-//	"ɾ��",
-//	"����",
-//	"װ��"
+//	"",
+//	"",	
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	"",
+//	""
 //};
 const char* g_TradeName[] = 
 {
@@ -122,7 +122,7 @@ void TL(int nType, const char *pszCha1, const char *pszCha2, const char *pszTrad
 
 map<string, string> g_HelpList;
 
-// ���Ӱ�����Ϣ, ����2������: �ؼ��� ��������
+// , 2:  
 int lua_AddHelpInfo(lua_State *L)
 {
 	BOOL bValid = (lua_gettop(L)==2  && lua_isstring(L, 1) && lua_isstring(L, 2));
@@ -156,7 +156,7 @@ void AddHelpInfo(const char *pszKey, const char *pszInfo)
 
 	g_HelpList[pszKey] = pszInfo;
 
-	//LG("help", "Ŀǰ������Ŀ�� = %d\n", g_HelpList.size());
+	//LG("help", " = %d\n", g_HelpList.size());
 	ToLogService("common", "now helplist amount = {}", g_HelpList.size());
 }
 
@@ -172,13 +172,13 @@ void AddMonsterHelp(int nScriptID, int x, int y)
 
 void AddHelpNPC(CCharacter *pNPC)
 {
-	//LG("init", "�ɹ����Ӱ���NPC[%s]\n", pNPC->GetName());
+	//LG("init", "NPC[%s]\n", pNPC->GetName());
 	ToLogService("common", "Succeed add HelpNPC[{}]", pNPC->GetName());
 	g_HelpNPCList.push_back(pNPC);
 }
 
 
-// ͨ���ű����Ӱ���NPC
+// NPC
 int lua_AddHelpNPC(lua_State *L)
 {
 	BOOL bValid = (lua_gettop(L)==1 && lua_isstring(L, 1));
@@ -187,9 +187,9 @@ int lua_AddHelpNPC(lua_State *L)
 		return 0;
 	}
 	
-	const char *pszName  = (const char*)lua_tostring(L, 1); // ��ð���NPC������
+	const char *pszName  = (const char*)lua_tostring(L, 1); // NPC
 	
-	// �����ֲ���NPC����
+	// NPC
 	g_pGameApp->BeginGetTNpc();
 	mission::CTalkNpc*	pCTNpc;
 	while (pCTNpc = g_pGameApp->GetNextTNpc())
@@ -207,10 +207,10 @@ int lua_ClearHelpNPC(lua_State *L)
 	return 0;
 }
 
-// ����DBLog
+// DBLog
 int lua_TestDBLog(lua_State *L)
 {
-	// �����Ϸ����б�
+	// 
     BOOL bValid = (lua_gettop (L)==1 && lua_isnumber(L, 1));
 	if(!bValid) 
     {
@@ -256,7 +256,7 @@ int lua_GetMapDataByName(lua_State *L)
 void RegisterLuaAI(lua_State *L)
 {
 	
-	// ͨ��
+	// 
 	REGFN(view);
 	REGFN(EXLG);
 	REGFN(PRINT);
@@ -320,7 +320,7 @@ void RegisterLuaAI(lua_State *L)
 	REGFN(DelCha);
 	REGFN(SetChaLifeTime);
 	
-	// ��ֵ����
+	// 
 	REGFN(SetChaAttrMax);
 	REGFN(GetChaDefaultName);
 	REGFN(SetChaAttrI);
@@ -328,89 +328,89 @@ void RegisterLuaAI(lua_State *L)
 	REGFN(IsPlayer);
 	REGFN(IsChaInRegion);
 	
-	// ���
+	// 
 	REGFN(IsChaInTeam);
 	REGFN(GetTeamCha);
 
-	// �������������
+	// 
 	REGFN(AddBirthPoint);
 	REGFN(ClearAllBirthPoint);
 
-	// ��������
+	// 
 	REGFN(AddWeatherRegion);
 	REGFN(ClearMapWeather);
 
-	// ����NPC
+	// NPC
 	REGFN(AddHelpInfo);
 	REGFN(AddHelpNPC);
 	REGFN(ClearHelpNPC);
 
-	// ��ֻ��ʱ
+	// 
 	REGFN(SetBoatCtrlTick);
 	REGFN(GetBoatCtrlTick);
 
     REGFN(GetRoleID);
 	REGFN(UnlockItem);
 	REGFN(SetMonsterAttr);
-	// ���Խű�
+	// 
 	REGFN(TestDBLog);
 	
 }
 
 
 /*
-				��Ƭ�ٻ�����ʵ������
+				
   
-һ:	ʹ�ÿ�Ƭ����, ִ��summon����
+:	, summon
 
-��: Ϊsummon�����Ĺ������ö�ʱ��ʧ�ļ���״̬, ״̬����ʱ����ǹ��������ʱ��
+: summon, 
 
-��: summon�����Ĺ���������״̬ʱ�䵽����ʧ, ����ﱻ���
+: summon, 
 
-��: ���˾�����ת��ʱ, summon�����Ĺ��ﱻ�Զ����
+: , summon
 	
-��:	����AI
+:	AI
 
-    function() û��Ŀ��
+    function() 
 	
-		if(��⸽���Ƿ��к��ʵ�Ŀ��)
+		if()
 		{
-			����Ŀ�����
+			
 		}
 		else
 		{
-			�����������̫Զ, �򿿽�
+			, 
 		}
 
-		ȡ���������˵Ķ����б��ĵ�һ��
-		if(��Ϊ��)
+		
+		if()
 		{
-			����Ŀ�����
+			
 		}
 		
 	end
 
   
-	function() ��Ŀ��
+	function() 
 		
-		if(Ŀ���������̫Զ || Ŀ������ || Ŀ�������Ѳ�����)
+		if( ||  || )
 		{
-			���Ŀ��
+			
 		}
 		else
 		{
-			��Ŀ��ʹ�ü���
+			
 		}
 	end
 
  
-��: ��Ƭ����������
+: 
 
-    ����1: ������
-    ����2: ��ʶ����ȼ�����ֵ
-    ����3: ����ʹ�õĴ���
+    1: 
+    2: 
+    3: 
 
-    ����1����ÿ�Ƭʱ����, ����2������3���Զ�̬�ı�
+    1, 23
 
 
 

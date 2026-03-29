@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 std::string ConvertNumToChinese( int num );
 

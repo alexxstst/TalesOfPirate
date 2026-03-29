@@ -1,4 +1,4 @@
-/*
+﻿/*
         @doc MAILMSG PROPERTIES
         @module mailmsgprops.h | MailMsg Properties for SMTP and NNTP
 */

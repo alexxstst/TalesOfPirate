@@ -1,15 +1,15 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:¼¼ÄÜ¿ò
-// ×÷Õß:lh 2004-12-13
-// ÓÃÍ¾:Ë«»÷¿ÉÒÔÊ¹ÓÃ¼¼ÄÜ,Éı¼¶Ê±ÏÔÊ¾Ò»¸öÉı¼¶°´Å¥,ÓĞµ±Ç°¼¶±ğ,Ä§·¨Öµ
-//      ¿ÉÍÏ¶¯µ½¿ì½İÀ¸,¿ÉË«»÷Ö´ĞĞ,ÒòĞ©ÓĞCommandÏµÁĞ
-//      ÓĞ¶¯Ì¬¿ÉÏÔÊ¾°´Å¥ÓÃÓÚÉı¼¶,Òò´ËÒªÏìÓ¦Êó±ê
-//      ÓĞ¾²Ì¬ÎÄ×Ö,±íÊ¾¼¼ÄÜÃû³Æ
-//      ÓĞ¶¯Ì¬ÎÄ×Ö,±íÊ¾µ±Ç°¼¶±ğ,ÏûºÄÄ§·¨Öµ
-//      ÓĞÉÏÏÂ»»ĞĞ,»»Ò³,µ½Í·Î²µÈ,ÒªÏìÓ¦¼üÅÌ
-//   ×¢:±¾À´Õâ¸öÀà¿ÉÒÔÖ±½ÓÊ¹ÓÃCList,Ö»ÒªÅÉÉúCListItems¼´¿É,µ«¿¼ÂÇµ½¹¦ÄÜ½ÏCList¸ü¶à¸ü¸´ÔÓ,
-//      ºóÆÚ¿ÉÄÜÓĞ¸Ä¶¯,ËùÒÔĞÂ¿ªÒ»¸öÀà,±ÜÃâCListÏµÁĞ¿ÉÄÜÌ«¹ı¸´ÔÓ
-// ×îºóĞŞ¸ÄÈÕÆÚ:
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-12-13
+// :,,,
+//      ,,Command
+//      ,
+//      ,
+//      ,,
+//      ,,,
+//   :CList,CListItems,CList,
+//      ,,CList
+// :
 //----------------------------------------------------------------------
 #pragma once
 #include <vector>
@@ -90,42 +90,42 @@ private:
     void			_DragEnd( int x, int y, DWORD key );
 
 protected:
-    CGuiPic*		_pImage;		// ±³¾°Í¼
-    CGuiPic*		_pSelect;	    // Ñ¡ÔñÌõ
-    CGuiPic*        _pButton;       // Éı¼¶°´Å¥
+    CGuiPic*		_pImage;		// 
+    CGuiPic*		_pSelect;	    // 
+    CGuiPic*        _pButton;       // 
     CScroll*		_pScroll;	    
 
     typedef std::vector<CSkillCommand*> skills;
     skills          _skills;
 
-    // ÓëÖÜÎ§±ß¿òµÄ¾àÀë
+    // 
     int				_nLeftMargin;	
     int				_nTopMargin;	
     int				_nRightMargin;	
     int				_nBottomMargin;	
 
-    int				_nRowHeight;    // ĞĞ¸ß
-    int             _nFontStart;    // ×ÖÌå¿ªÊ¼Î»ÖÃ
+    int				_nRowHeight;    // 
+    int             _nFontStart;    // 
     DWORD           _dwFontColor;
 
-    int             _nUnitHeight, _nUnitWidth;   // µ¥ÔªÍ¼Æ¬¿í¸ß
+    int             _nUnitHeight, _nUnitWidth;   // 
 
-    int             _nSelectIndex;  // Ñ¡ÔñµÄĞĞÊı
+    int             _nSelectIndex;  // 
     bool            _IsShowUpgrade;
 
 private:
-    int             _nShowFirst;    // ÏÔÊ¾µÄµÚÒ»ĞĞ
-    int             _nShowLast;     // ÏÔÊ¾µÄ×îºóÒ»ĞĞ
-    int				_nShowCount;    // ×Ü¹²¿ÉÒÔÏÔÊ¾¶àÉÙĞĞ    
+    int             _nShowFirst;    // 
+    int             _nShowLast;     // 
+    int				_nShowCount;    //     
 
-    // ÓÃÓÚÏÔÊ¾¼¼ÄÜµÄ·¶Î§
+    // 
     int             _nSX1, _nSY1, _nSX2, _nSY2;   
 
-    int             _nButtonX1;     // °´Å¥ÏÔÊ¾µÄXÎ»ÖÃ
-    int             _nButtonOffY;   // °´Å¥ÏÔÊ¾µÄYÖáÆ«ÒÆ
+    int             _nButtonX1;     // X
+    int             _nButtonOffY;   // Y
 
-    int             _nRowSpace;     // ĞĞ¾à
-    int             _nFontYOff;     // ×ÖÏÔÊ¾ÔÚÒ»ĞĞµÄÖĞ²¿¸ß¶È
+    int             _nRowSpace;     // 
+    int             _nFontYOff;     // 
 
 private:
     int             _nDragIndex;
@@ -135,7 +135,7 @@ private:
 };
 
 
-// ÄÚÁªº¯Êı 
+//  
 inline 	void CSkillList::_ResetPageNum() 
 { 
     _pScroll->SetPageNum( ( GetHeight() - _nTopMargin - _nBottomMargin ) / _nRowHeight - 1 );
@@ -154,7 +154,7 @@ inline int CSkillList::_GetHitSkill( int x, int y )
         int h = ( _nShowCount * _nRowHeight + _nSY1 );
         if( y >= h ) return false;
 
-        // µÃµ½ĞĞÊı
+        // 
         int row = ( y - _nSY1 ) / _nRowHeight + _nShowFirst;
         if( row>=0 && row<(int)_skills.size() ) 
 			return row;

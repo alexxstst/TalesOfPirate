@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "TableData.h"
 
@@ -76,7 +76,7 @@ public:
 
 protected:
 
-	static MPTerrainSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static MPTerrainSet* _Instance; // , 
     
     virtual CRawDataInfo* _CreateRawDataArray(int nIDCnt)
 	{
@@ -134,9 +134,9 @@ protected:
 };
 
 //--------------
-// ¿ì½ÝÈ«¾Öº¯Êý:
+// :
 //--------------
-inline MPTerrainInfo* GetTerrainInfo(int nID) // Í¨¹ýIDÈ¡µÃTerrainInfo±íÃæ
+inline MPTerrainInfo* GetTerrainInfo(int nID) // IDTerrainInfo
 {
     return (MPTerrainInfo*)MPTerrainSet::I()->GetRawDataInfo(nID);
 }

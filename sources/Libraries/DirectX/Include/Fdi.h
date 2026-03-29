@@ -1,4 +1,4 @@
-/***    types.h  - Common defines for FCI/FDI stuff -- goes into FCI/FDI.H
+﻿/***    types.h  - Common defines for FCI/FDI stuff -- goes into FCI/FDI.H
  *
  *  Copyright (C) Microsoft Corporation
  *  All Rights Reserved.

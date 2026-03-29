@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "stseat.h"
 #include "actor.h"
 #include "Character.h"
@@ -79,7 +79,7 @@ void CSeatState::_End()
     }
     if( GetDistance( _pCha->GetCurX(), _pCha->GetCurY(), _nOldX, _nOldY ) > 0 )
     {
-        // �����ƶ���ԭ����λ�ò��ܼ�����һ������
+        // 
         CWaitMoveState* state = new CWaitMoveState(GetActor());
         _pCha->MoveTo( _nOldX, _nOldY );
 

@@ -1,4 +1,4 @@
-// gf2n_simd.cpp - written and placed in the public domain by Jeffrey Walton
+﻿// gf2n_simd.cpp - written and placed in the public domain by Jeffrey Walton
 //                 Also based on PCLMULQDQ code by Jankowski, Laurent and
 //                 O'Mahony from Intel (see reference below).
 //

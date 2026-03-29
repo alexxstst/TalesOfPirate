@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// ����:����ʵ���������
-// ����:lh 2005-02-26
-// ����޸�����:2004-10-20
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2005-02-26
+// :2004-10-20
 //----------------------------------------------------------------------
 #pragma once
 #include "UIGlobalVar.h"
@@ -20,13 +20,13 @@ class CItemObj;
 
 enum eSendTeamMsg
 {
-	enumSTM_ADD_GROUP,  // ������,����1:CTeam*
-	enumSTM_DEL_GROUP,  // ɾ����,����1:CTeam*
-	enumSTM_ADD_MEMBER, // �������Ա,����:CMember*
-	enumSTM_DEL_MEMBER, // ɾ�����Ա,����:CMember*
+	enumSTM_ADD_GROUP,  // ,1:CTeam*
+	enumSTM_DEL_GROUP,  // ,1:CTeam*
+	enumSTM_ADD_MEMBER, // ,:CMember*
+	enumSTM_DEL_MEMBER, // ,:CMember*
 	enumSTM_AFTER_DEL_MEMBER,
-	enumSTM_NODE_CHANGE,// ��ǰ�ڵ㷢���仯,����:CMember*
-	enumSTM_NODE_DATA_CHANGE,   // �ڵ���չ���ݷ����仯,������ӵ�Ѫ,ħ��,����ȷ����仯ʱ֪ͨ,����:CMember*
+	enumSTM_NODE_CHANGE,// ,:CMember*
+	enumSTM_NODE_DATA_CHANGE,   // ,,,,:CMember*
 };
 
 class CGuiTime;
@@ -37,7 +37,7 @@ class CChat : public CUIInterface
 public:
     enum 
     {
-        MAX_MEMBER = 4,         // ����Ա��
+        MAX_MEMBER = 4,         // 
     };
 
     CChat();
@@ -45,12 +45,12 @@ public:
     bool Init();
     void End();
 
-    void RefreshTeam();         // ˢ����ӽ���
+    void RefreshTeam();         // 
 
-	// ˢ����ӳ�Ա����
+	// 
 	void RefreshTeamData( CMember* pCurMember );		
 
-    void ClearTeam();           // �����ӽ���
+    void ClearTeam();           // 
     int  TeamSend( DWORD dwMsg, void* pData=NULL, DWORD dwParam=0 );
 
 	void SortOnlineFrnd();
@@ -71,18 +71,18 @@ public:
 	static bool		_UpdateFrndInfo(CMember *pMember);
 	//static void		LoadFilterText(const char *text);
 	static bool		_UpdateSelfInfo();
-	static DWORD	_dwSelfID;			// �Լ���ID
-	static DWORD	_dwSelfIcon;			// �Լ���ͷ��
-	static std::string	_strSelfMottoName;		// �Լ���������
+	static DWORD	_dwSelfID;			// ID
+	static DWORD	_dwSelfIcon;			// 
+	static std::string	_strSelfMottoName;		// 
 	static CMember* _curSelectMember;
 
 
 public:
-	CForm*          frmChatManage;          // Chat����
+	CForm*          frmChatManage;          // Chat
 	//static CForm*	_frmDetails;
 	CForm*       GetDetailsForm()    { return _frmDetails;    }
-	//��ӽ���
-	static CForm*          frmTeamMenber[MAX_MEMBER];		// nTag��¼HummanID
+	//
+	static CForm*          frmTeamMenber[MAX_MEMBER];		// nTagHummanID
 	static CProgressBar*   proTeamMenberHP[MAX_MEMBER];
 	static CProgressBar*   proTeamMenberSP[MAX_MEMBER];
 	static CLabelEx*       labMenberName[MAX_MEMBER];
@@ -104,30 +104,30 @@ private:
 
 private:
 
-	static CForm*          _frmQQ;			 // QQ����
+	static CForm*          _frmQQ;			 // QQ
 
 	static CForm*          _frmAddFriend;	 
 	static CForm*          _frmChangeSytle;
 	static CForm*			_frmEditMotto;
 	static CForm*          _frmDetails;
 	static CForm*          _frmBlockPlayer;
-    static CTeamMgr*       _pTeamMgr;        // ��ӹ�����
+    static CTeamMgr*       _pTeamMgr;        // 
 	CTreeView*		m_pQQTreeView;
-	CTreeGridNode*  _pFrndNode;              // ���ѽڵ�
+	CTreeGridNode*  _pFrndNode;              // 
 
-    CTreeGridNode*  _pGroupNode;             // ����ڵ�
-	//����·������
+    CTreeGridNode*  _pGroupNode;             // 
+	//
 
-    //CTreeGridNode*  _pRoadNode;              // ·�˽ڵ�
-	static CTreeGridNode*  _pGuildNode;      // ����ڵ�
+    //CTreeGridNode*  _pRoadNode;              // 
+	static CTreeGridNode*  _pGuildNode;      // 
 	static CTreeGridNode*  _pSessionNode;
-	static CTreeGridNode*  _pMasterNode;	// ʦ��
-	static CTreeGridNode*  _pPrenticeNode;	// ͽ��
+	static CTreeGridNode*  _pMasterNode;	// 
+	static CTreeGridNode*  _pPrenticeNode;	// 
 	
-	static CTreeGridNode*  _pGMNode;	// ͽ��
+	static CTreeGridNode*  _pGMNode;	// 
 	static CTreeGridNode*  _pBlockedNode;
 	
-	static CCharacter2D*   _pCharacter[MAX_MEMBER]; // ������
+	static CCharacter2D*   _pCharacter[MAX_MEMBER]; // 
 	static CEdit*	_pEditFrndName;
 
 	static CEdit*	_pEditMotto;

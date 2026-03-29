@@ -1,4 +1,4 @@
-//add by ALLEN 2007-10-19
+﻿//add by ALLEN 2007-10-19
 #pragma once
 
 #include "DBCCommon.h"

@@ -1,4 +1,4 @@
-#ifndef _MAXVERSION_H_
+﻿#ifndef _MAXVERSION_H_
 #define _MAXVERSION_H_
 
 #include "buildnumber.h" // defines VERSION_INT

@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "Character.h"
 #include "Point.h"
 #include "MPShadeMap.h"
@@ -78,20 +78,20 @@ void DespawnAllPlayerMounts()
 	}
 }
 
-// �������
+// 
 enum eSpecial
 {
-	enumAlphaIn     = 1,		// ����
-	enumAlphaOut    = 2,		// ����
-	enumDrop        = 3,		// �³�
-	enumFastRaise   = 4,		// ��������
-	enumFastDrop    = 5,		// �����³�
-	enumHelixPos    = 6,		// ��ת
-	enumHelixYaw    = 7,		// ��ת
-	enumHelixOut    = 8,		// ����������
-	enumHelixIn     = 9,		// ������С����
-    enumDisappear   = 10,       // ������ʧ
-	enumCyclone		= 11,		// 쫷�
+	enumAlphaIn     = 1,		// 
+	enumAlphaOut    = 2,		// 
+	enumDrop        = 3,		// 
+	enumFastRaise   = 4,		// 
+	enumFastDrop    = 5,		// 
+	enumHelixPos    = 6,		// 
+	enumHelixYaw    = 7,		// 
+	enumHelixOut    = 8,		// 
+	enumHelixIn     = 9,		// 
+    enumDisappear   = 10,       // 
+	enumCyclone		= 11,		// 
 };
 
 #ifdef _LOG_NAME_
@@ -175,9 +175,9 @@ inline void SetPreName( int nItem, char* szName, DWORD& dwColor )
 	case 5339:	strcpy( szName, g_oLangRec.GetString(930) ); dwColor = COLOR_SKYBLUE; return;//D3DCOLOR_ARGB(255,255,000,000); return;
 	case 5340:	strcpy( szName, g_oLangRec.GetString(931) ); dwColor = COLOR_SKYBLUE; return;//D3DCOLOR_ARGB(255,241,014,240); return;
 
-	// TOM�汾
-	case 822:	strcpy( szName, g_oLangRec.GetString(14) );  dwColor = D3DCOLOR_ARGB(255,255,000,000); return;	// ����ѫ��
-	case 823:	strcpy( szName, g_oLangRec.GetString(15) );  dwColor = D3DCOLOR_ARGB(255,241,014,240); return;	// �Ƹ�ѫ��
+	// TOM
+	case 822:	strcpy( szName, g_oLangRec.GetString(14) );  dwColor = D3DCOLOR_ARGB(255,255,000,000); return;	// 
+	case 823:	strcpy( szName, g_oLangRec.GetString(15) );  dwColor = D3DCOLOR_ARGB(255,241,014,240); return;	// 
 	default: szName[0] = '\0';
 	}
 }
@@ -262,7 +262,7 @@ CCharacter::CCharacter()
  _nGuildID(0),
  _nGuildPermission(0),
  _dwGuildColor(COLOR_BLACK),
- _sReliveTime(60),				// Ĭ��Ϊ1����
+ _sReliveTime(60),				// 1
  _nPatrolX(0),
  _nPatrolY(0),
  _pBoatFog(NULL),
@@ -326,9 +326,9 @@ CCharacter::~CCharacter()
 	//delete _pChaState;
 	//delete _pSceneHeight;
 
-	SAFE_DELETE(_pActor);       // UI��������
-	SAFE_DELETE(_pChaState);    // UI��������
-	SAFE_DELETE(_pSceneHeight); // UI��������
+	SAFE_DELETE(_pActor);       // UI
+	SAFE_DELETE(_pChaState);    // UI
+	SAFE_DELETE(_pSceneHeight); // UI
 } 
 
 int CCharacter::LoadCha( const LoadChaInfo* info )
@@ -489,7 +489,7 @@ void CCharacter::FrameMove(DWORD dwTimeParam)
 		}
 		else if( GetChaState()->IsTrue(enumChaStateMove) )
 		{
-			// ���¼����µ�ProgressRate(������ǰ��λ�ú͸߶�)------------------------------------------------------------------------------
+			// ProgressRate()------------------------------------------------------------------------------
 			if( _nTurnCnt>1 )
 				_fStepProgressRate = _fStepProgressRate + _fStep * CWaitMoveState::GetMoveRate() / (float)_nTurnCnt;
 			else
@@ -508,7 +508,7 @@ void CCharacter::FrameMove(DWORD dwTimeParam)
 	}
 	else
 	{
-		// ÿ300msˢ��һ�θ߶�
+		// 300ms
 		if( _pSceneHeight->FrameMove(dwTimeParam) )
 		{
 			_UpdateHeight();
@@ -523,7 +523,7 @@ void CCharacter::FrameMove(DWORD dwTimeParam)
 
 	if(_nTurnCnt)
     {
-		// ���·���
+		// 
         _nYaw+=_nAngleStep;
         SetYaw(Angle2Radian((float)_nYaw));
         UpdateYawPitchRoll();
@@ -569,7 +569,7 @@ void CCharacter::FrameMove(DWORD dwTimeParam)
 		}
 		if( _Special.IsTrue( enumAlphaIn ) )
 		{
-			// �������ʱ��������Ч��ȡ��        
+			//         
             f = GetOpacity() + 0.03f;
             if( f>_fMaxOpacity ) 
             {
@@ -630,7 +630,7 @@ void CCharacter::FrameMove(DWORD dwTimeParam)
 	_computeLinkedMatrix();
 
     // by lsh
-    // ע�⣬�����FrameMove������������ã��������λ�����
+    // FrameMove
     CCharacterModel::FrameMove();
 	return;
 }
@@ -894,7 +894,7 @@ CEffectObj* CCharacter::SelfEffect(int nEffectID, int nDummy, bool isLoop, int n
 	}
 	if( nEffectID<=0 ) return NULL;
 
-	// added by Philip.Wu  2008-01-25 �Ҷ��������ﲻ������Щ��Ч
+	// added by Philip.Wu  2008-01-25 
 	if(g_stUIMap.IsPKSilver() && this->IsPlayer() && this->GetMainType()!=enumMainPlayer)
 	{
 		if(574 <= nEffectID && nEffectID <= 577) return 0;
@@ -908,7 +908,7 @@ CEffectObj* CCharacter::SelfEffect(int nEffectID, int nDummy, bool isLoop, int n
     if( isLoop ) 
 		pEffect->setLoop( isLoop );
 
-	if( nSize>0 && pEffect->GetBaseSize()>0.0f )	// ���С����,��֧������
+	if( nSize>0 && pEffect->GetBaseSize()>0.0f )	// ,
 	{
 		SkillCtrl ctrl;
 		ctrl.fSize = (float)nSize / 100.0f / pEffect->GetBaseSize();
@@ -995,17 +995,17 @@ CEffectObj* CCharacter::SkyEffect( int nEffectID, int nBeginDummy, int nItemDumm
 		switch( pSkill->GetShape() )
 		{
 		case enumRANGE_TYPE_NONE:
-		case enumRANGE_TYPE_SQUARE:		// ���Σ����ȣ����ȣ�
-		case enumRANGE_TYPE_CIRCLE:		// Բ�Σ��뾶��
+		case enumRANGE_TYPE_SQUARE:		// 
+		case enumRANGE_TYPE_CIRCLE:		// 
 			break;
-		case enumRANGE_TYPE_FAN:		// ���Σ��뾶���Ƕȣ�
+		case enumRANGE_TYPE_FAN:		// 
 			{
 				pEffect->SetFanAngle( pSkill->GetParam()[1] );
 				pEffect->SetMagicDist( (float)pSkill->GetParam()[0]/100.0f );
 			}
-		case enumRANGE_TYPE_STICK:		// ���Σ����ȣ����ȣ�
+		case enumRANGE_TYPE_STICK:		// 
 			{
-				// ȡ����Ϊ�����Ч�����ϵ��߷ɳ�ʱ�����ȴ���ڵ���������֮��ʱ����Ч�ɵķ��򲻶�
+				// 
 				int x, y;
 				GetDistancePos( GetCurX(), GetCurY(), int(pTarget->x * 100.0f), int(pTarget->y * 100.0f), 500, x, y );
 				pTarget->x = (float)x / 100;
@@ -1067,7 +1067,7 @@ void CCharacter::_UpdateHeight()
         _vPos.z = (float)( _nPoseHeightOff ) / 100.0f;
     }
     
-    SetPos((float*)&_vPos); // ��������ø߶ȵ�ʵ��, _vPos.x��_vPos.y������
+    SetPos((float*)&_vPos); // , _vPos.x_vPos.y
     if( GetDrunkState() )
     {
         UpdateChaMatrix();
@@ -1094,7 +1094,7 @@ void CCharacter::_UpdateHeight()
 //		_vPos.z = (float)( _nPoseHeightOff ) / 100.0f;
 //	}
 //
-//	SetPos((float*)&_vPos); // ��������ø߶ȵ�ʵ��, _vPos.x��_vPos.y������
+//	SetPos((float*)&_vPos); // , _vPos.x_vPos.y
 //	if( GetDrunkState() )
 //	{
 //		UpdateChaMatrix();
@@ -1105,7 +1105,7 @@ void CCharacter::OperatorEffect( char oper, int x, int y )
 {
 	//switch( oper )
 	//{
-	//case 3:// �ϰ�
+	//case 3:// 
 	//	if( IsBoat() )
 	//	{
 	//		D3DXVECTOR3 pos;
@@ -1120,7 +1120,7 @@ void CCharacter::OperatorEffect( char oper, int x, int y )
  //           }
 	//	}
 	//	break;
-	//case 1:// �º�
+	//case 1:// 
 	//	if( IsPlayer() )
 	//	{
 	//		D3DXVECTOR3 pos;
@@ -1396,12 +1396,12 @@ bool CCharacter::PlayPose( DWORD pose, DWORD type, int time, int fps, bool isBle
 	
     bool rv = GetCurPoseType()==pose;
 
-	// �����ã����Դ��룩
+	// 
 	if(GetIsFly()){
-		if(pose == POSE_WAITING || pose == POSE_WAITING2) pose = POSE_FLY_WAITING;	// վ��->����
-		if(pose == POSE_RUN     || pose == POSE_RUN2)     pose = POSE_FLY_RUN;	// �߶�->Ʈ��
-		if(pose == POSE_SHOW)  pose = POSE_FLY_SHOW;	// �ڿ�->���аڿ�
-		if(pose == POSE_SEAT)  pose = POSE_FLY_SEAT;	// ����->���������� 
+		if(pose == POSE_WAITING || pose == POSE_WAITING2) pose = POSE_FLY_WAITING;	// ->
+		if(pose == POSE_RUN     || pose == POSE_RUN2)     pose = POSE_FLY_RUN;	// ->
+		if(pose == POSE_SHOW)  pose = POSE_FLY_SHOW;	// ->
+		if(pose == POSE_SEAT)  pose = POSE_FLY_SEAT;	// -> 
 	}
 	else if ( !GetIsPK()&& GetIsOnMount() && GetMount())
 	{
@@ -1651,7 +1651,7 @@ xShipInfo* CCharacter::ConvertPartTo8DWORD( stNetChangeChaPart& stPart, DWORD* d
 		return NULL;
 	}
 
-	// ��ֻ�Ƿ���Ը������
+	// 
 	xShipPartInfo* pData = GetShipPartInfo( pInfo->sBody );
 	if( pData == NULL ) 
 	{
@@ -2476,13 +2476,13 @@ void CCharacter::SetItemFace( unsigned int nIndex, int nItem )
 
 	switch( nIndex )
 	{
-	case 0:				// ��һ�����ó��
+	case 0:				// 
 		
 		return;
 	case 1: 
 		if( pInfo->sType!=enumItemTypePet )
 		{
-			return;		// �ڶ����ų��ﾫ��
+			return;		// 
 		}
 		else
 		{
@@ -2532,10 +2532,10 @@ bool CCharacter::GetIsPet()
 
 	switch(nID)
 	{
-	case 929:	// ʥ��С����
-	case 930:	// ���ë�Ļ�
-	case 931:	// ��¹����
-	case 932:	// ѩ�˱���
+	case 929:	// 
+	case 930:	// 
+	case 931:	// 
+	case 932:	// 
 		return true;
 	}
 

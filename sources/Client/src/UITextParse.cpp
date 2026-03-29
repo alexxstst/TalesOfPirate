@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uitextparse.h"
 #include "UIGuiData.h"
 #include "uigraph.h"
@@ -39,7 +39,7 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 
 	while ( i < length)
 	{
-		if ( str[i]  & 0x80)  //����
+		if ( str[i]  & 0x80)  //
 		{
 			strLine += str.substr(i ,2) ;
 			i+=2;		 		
@@ -51,7 +51,7 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 				_strTwoChar =  str.substr(i+1 ,2);
 
 			index  = InitEx( _strTwoChar );
-			//���������0~iPicNum,ƽ����������Ӧ��ͼԪ����, ���ʾ����ͼԪ����
+			//0~iPicNum,, 
 			static CGraph* pGraph = NULL;
 			pGraph = GetFace(index);
 			if (pGraph) //(index >=0 && index < iPicNum && _files[index].pGraph ) 
@@ -60,8 +60,8 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 				int nX =  CGuiFont::s_Font.GetWidth( str.substr(0, i).c_str() );
 				int nX2 =(int) GetRender().DrawConvertX2((float) nX );
 		
-				strLine += "   "; //������1���ո�2���ո�3���ո񣿣���//added by billy			
-				pGraph->Next() ;  // �������Ķ���Ч�� :04-11-19
+				strLine += "   "; //123//added by billy			
+				pGraph->Next() ;  //  :04-11-19
 				pGraph->Render( iPosX + nX2, iPosY );
 				i+=3;
 			}
@@ -98,7 +98,7 @@ void CTextParse::RenderEx( string str, int x, int y, DWORD color, float scale )
 	int 	i=0;
 	while ( i < length)
 	{
-		if ( str[i]  & 0x80)  //����
+		if ( str[i]  & 0x80)  //
 		{
 			strLine += str.substr(i ,2) ;
 			i+=2;		 		
@@ -110,7 +110,7 @@ void CTextParse::RenderEx( string str, int x, int y, DWORD color, float scale )
 				_strTwoChar =  str.substr(i+1 ,2);
 
 			index  = InitEx( _strTwoChar ) ;
-			//���������0~iPicNum,ƽ����������Ӧ��ͼԪ����, ���ʾ����ͼԪ���� 		
+			//0~iPicNum,,  		
 			static CGraph* pGraph = NULL;
 			pGraph = GetFace(index);
 			if (pGraph) //index >=0 && index <= iPicNum && _files[index].pGraph ) 
@@ -119,9 +119,9 @@ void CTextParse::RenderEx( string str, int x, int y, DWORD color, float scale )
 				int nX =  CGuiFont::s_Font.GetWidth(str.substr(0, i).c_str() );
 				int nX2 =(int) GetRender().DrawConvertX2((float) nX );
 		
-				strLine += "   "; //������1���ո�2���ո�3���ո񣿣���//added by billy
+				strLine += "   "; //123//added by billy
 				
-				pGraph->Next();  // �������Ķ���Ч�� :04-11-19
+				pGraph->Next();  //  :04-11-19
 				pGraph->Render( iPosX + nX2 , iPosY  );
 				i+=3;
 			}
@@ -195,6 +195,6 @@ CGraph* CTextParse::GetFace( DWORD nIndex )
 
 int  CTextParse::InitLink()
 {
-	//_str���д���,��������
+	//_str,
 	return 1;
 }

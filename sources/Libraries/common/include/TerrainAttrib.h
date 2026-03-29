@@ -1,4 +1,4 @@
-
+ï»¿
 //
 // TerrainAttrib.h
 //
@@ -15,18 +15,18 @@
 #define ATTRIB_FILE_DEFAULT_WIDTH 4096
 #define ATTRIB_FILE_DEFAULT_HEIGHT 4096
 
-// ÇøÓòÊôĞÔÖµÓò¶¨Òå
+// 
 #define TILE_ATTRIB_MIN_BITS 1
 #define TILE_ATTRIB_MAX_BITS 16
 #define TILE_ATTRIB_DEFAULT_VALUE 0
 
-// º£µºÖµÓò¶¨Òå
+// 
 #define TILE_ISLAND_MIN_VALUE 0
 #define TILE_ISLAND_MAX_VALUE 200
 #define TILE_ISLAND_DEFAULT_VALUE TILE_ISLAND_MIN_VALUE
 
 
-// ¿ª·Å¸ø¿Í»§¶ËÊ¹ÓÃ£¬ÆäÖĞfilename²»´øÀ©Õ¹Ãû
+// filename
 bool createAttribFile(char const* filename, int width = ATTRIB_FILE_DEFAULT_WIDTH,
 					  int height = ATTRIB_FILE_DEFAULT_HEIGHT,
 					  int option = 0);
@@ -40,18 +40,18 @@ bool delTileAttrib(int x, int y, unsigned char attrib);
 bool getTileIsland(int x, int y, unsigned char& index);
 
 
-// ·şÎñ¶ËÖ»Ê¹ÓÃÒÔÏÂ½Ó¿Ú£¬¿Í»§¶ËÇĞÎğÊ¹ÓÃ£¡
-int s_openAttribFile(char const* filename); // ·µ»Ø -1 Ôò´íÎó
+// 
+int s_openAttribFile(char const* filename); //  -1 
 bool s_getAttribFileInfo(int id, unsigned int& width, unsigned int& height);
 bool s_getTileAttrib(int id, unsigned int x, unsigned int y, unsigned short& attrib);
 bool s_hasTileAttrib(int id, unsigned int x, unsigned int y, unsigned char attrib_mask);
 bool s_getTileIsland(int id, unsigned int x, unsigned int y, unsigned char& island_index);
 
-// ÉèÖÃ¶ÔÆë·½Ê½Îª1×Ö½Ú£¬ÒòÎªÒªĞ´ÈëÎÄ¼şÖĞ
+// 1
 #pragma pack(push)
 #pragma pack(1)
 
-// ÇøÓòÊôĞÔÎÄ¼şÎÄ¼şÍ·¶¨Òå
+// 
 struct SAttribFileHeader
 	{
 	unsigned int width;
@@ -59,11 +59,11 @@ struct SAttribFileHeader
 	};
 typedef SAttribFileHeader terrain_attr_hdr;
 
-// ÇøÓòÊôĞÔÎÄ¼şµ¥Î»Êı¾İ¶¨Òå
+// 
 typedef struct _Tile_Attrib
 	{
-	unsigned short attrib; // tileÊôĞÔ
-	unsigned char island; // º£µº±àºÅ
+	unsigned short attrib; // tile
+	unsigned char island; // 
 
 	} STILE_ATTRIB;
 typedef _Tile_Attrib terrain_attr_dat;

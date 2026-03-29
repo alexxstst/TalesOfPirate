@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: MapRes.h
 // Creater: ZhangXuedong
 // Date: 2005.09.05
@@ -45,10 +45,10 @@ public:
 protected:
 
 private:
-	dbc::Short	m_sUnitCountX;	// �����ϰ�����Ŀ
-	dbc::Short	m_sUnitCountY;	// �����ϰ�����Ŀ
-	dbc::Short	m_sUnitWidth;	// ���Կ�����ף�
-	dbc::Short	m_sUnitHeight;	// ���Կ�ߣ����ף�
+	dbc::Short	m_sUnitCountX;	// 
+	dbc::Short	m_sUnitCountY;	// 
+	dbc::Short	m_sUnitWidth;	// 
+	dbc::Short	m_sUnitHeight;	// 
 
 	int			m_nID;
 
@@ -60,56 +60,56 @@ private:
 
 enum EMapEntryStep
 {
-	enumMAPENTRY_CREATE,	// ������ͼ���
-	enumMAPENTRY_DESTROY,	// �������
-	enumMAPENTRY_SUBPLAYER,	// �ͷ����
-	enumMAPENTRY_SUBCOPY,	// �ͷŸ���
-	enumMAPENTRY_RETURN,	// ��������
-	enumMAPENTRY_COPYPARAM,	// ������������ֱ���Ϣ��
-	enumMAPENTRY_COPYRUN,	// ��������
+	enumMAPENTRY_CREATE,	// 
+	enumMAPENTRY_DESTROY,	// 
+	enumMAPENTRY_SUBPLAYER,	// 
+	enumMAPENTRY_SUBCOPY,	// 
+	enumMAPENTRY_RETURN,	// 
+	enumMAPENTRY_COPYPARAM,	// 
+	enumMAPENTRY_COPYRUN,	// 
 };
 
 enum EMapEntryOptRet
 {
-	enumMAPENTRYO_CREATE_SUC,		// �����ɹ�
-	enumMAPENTRYO_DESTROY_SUC,		// ���ٳɹ�
-	enumMAPENTRYO_COPY_CLOSE_SUC,	// �����رճɹ�
+	enumMAPENTRYO_CREATE_SUC,		// 
+	enumMAPENTRYO_DESTROY_SUC,		// 
+	enumMAPENTRYO_COPY_CLOSE_SUC,	// 
 };
 
 enum EMapState
 {
-	enumMAP_STATE_OPEN,			// ��
-	enumMAP_STATE_CLOSE,		// �ر�
-	enumMAP_STATE_ASK_CLOSE,	// ����ر�
+	enumMAP_STATE_OPEN,			// 
+	enumMAP_STATE_CLOSE,		// 
+	enumMAP_STATE_ASK_CLOSE,	// 
 };
 
 enum EMapEntryState
 {
-	enumMAPENTRY_STATE_ASK_OPEN,	// ������
-	enumMAPENTRY_STATE_OPEN,		// ����
-	enumMAPENTRY_STATE_CLOSE,		// �رգ���δ���Ź���
-	enumMAPENTRY_STATE_ASK_CLOSE,	// ����ر�
-	enumMAPENTRY_STATE_CLOSE_SUC,	// �رգ��Ѿ����Ź���
+	enumMAPENTRY_STATE_ASK_OPEN,	// 
+	enumMAPENTRY_STATE_OPEN,		// 
+	enumMAPENTRY_STATE_CLOSE,		// 
+	enumMAPENTRY_STATE_ASK_CLOSE,	// 
+	enumMAPENTRY_STATE_CLOSE_SUC,	// 
 };
 
-enum EMapType // ��ֵҲ���ڽű������ܸ���
+enum EMapType // 
 {
-	enumMAPTYPE_NORMAL			= 1, // ��ͨ��ͼ
-	enumMAPTYPE_GUILD_FIGHT		= 2, // ����ս��ͼ
-	enumMAPTYPE_TEAM_FIGHT		= 3, // ����ս��ͼ
+	enumMAPTYPE_NORMAL			= 1, // 
+	enumMAPTYPE_GUILD_FIGHT		= 2, // 
+	enumMAPTYPE_TEAM_FIGHT		= 3, // 
 };
 
-enum EMapCopyStartType // ��ֵҲ���ڽű������ܸ���
+enum EMapCopyStartType // 
 {
-	enumMAPCOPY_START_NOW		= 1, // ������ʼ
-	enumMAPCOPY_START_PLAYER	= 2, // �����ʱ��ʼ
-	enumMAPCOPY_START_CONDITION	= 3, // ������ʼ
+	enumMAPCOPY_START_NOW		= 1, // 
+	enumMAPCOPY_START_PLAYER	= 2, // 
+	enumMAPCOPY_START_CONDITION	= 3, // 
 };
 
-enum EMapCopyStartCdtType // ������ʼ��������
+enum EMapCopyStartCdtType // 
 {
-	enumMAPCOPY_START_CDT_UNKN,		// δ֪������
-	enumMAPCOPY_START_CDT_PLYNUM,	// �������
+	enumMAPCOPY_START_CDT_UNKN,		// 
+	enumMAPCOPY_START_CDT_PLYNUM,	// 
 };
 
 class CMapRes
@@ -151,12 +151,12 @@ public:
 	void		SetCanPK(bool bCan = true) {m_bCanPK = bCan;}
 	bool		CanPK(void) {return m_bCanPK;}
 	void		SetCanTeam(bool bCan = true) {m_bCanTeam = bCan;}
-	void		SetCanStall(bool bCan = true){m_bCanStall = bCan;}//�����ܷ��̯
+	void		SetCanStall(bool bCan = true){m_bCanStall = bCan;}//
 	void		SetCanGuild(bool bCan = true) { m_bCanGuild = bCan; }
 	void		SetGuildWar(bool bGuildWar) { m_bGuildWar = bGuildWar; }
 	bool		CanGuildWar() { return m_bGuildWar; }
 	bool		CanTeam(void) {return m_bCanTeam;}
-	bool		CanStall(void) {return m_bCanStall;}//�ܷ��̯
+	bool		CanStall(void) {return m_bCanStall;}//
 	bool		CanGuild(void) { return m_bCanGuild; }
 	void		SetType(dbc::Char chType = enumMAPTYPE_NORMAL) {m_chType = chType;}
 	dbc::Char	GetType(void) {return m_chType;}
@@ -180,7 +180,7 @@ public:
 
 	mission::CNpc*		FindNpc( const char szName[] );
 
-	// ��Ұ��Ԫ
+	// 
 	struct
 	{
 		dbc::cShort		m_csEyeshotCellWidth;
@@ -188,7 +188,7 @@ public:
 		dbc::Short		m_sEyeshotCellLin;
 		dbc::Short		m_sEyeshotCellCol;
 	};
-	// ״̬��Ԫ
+	// 
 	struct
 	{
 		dbc::cShort		m_csStateCellWidth;
@@ -216,19 +216,19 @@ public:
 	CMapSwitchEntitySpawn	*m_pCMapSwitchEntitySpawn;
 	CNpcSpawn*				m_pNpcSpawn;
 
-	// �����Ϣ
+	// 
 	struct
 	{
 		dbc::Char	m_szEntryMapName[MAX_MAPNAME_LENGTH];
 		Point		m_SEntryPos;
-		dbc::Char	m_chEntryState;		// ���״̬��EMapEntryState
+		dbc::Char	m_chEntryState;		// EMapEntryState
 
-		time_t		m_tEntryFirstTm;	// ��ڵ�һ��ִ�е�ʱ��
-		time_t		m_tEntryTmDis;		// ��ڵ�һ��ִ�к��Ժ����ִ�е�ʱ����
-		time_t		m_tEntryOutTmDis;	// ���ÿ��ִ�к󣬵���ʧ��ʱ����
-		time_t		m_tMapClsTmDis;		// ���ÿ��ִ�к󣬵���ͼ�رյ�ʱ����
+		time_t		m_tEntryFirstTm;	// 
+		time_t		m_tEntryTmDis;		// 
+		time_t		m_tEntryOutTmDis;	// 
+		time_t		m_tMapClsTmDis;		// 
 
-		FILE		*m_pfEntryFile;			// ����ļ�
+		FILE		*m_pfEntryFile;			// 
 	};
 
 	struct{
@@ -245,17 +245,17 @@ public:
 protected:
 
 private:
-	bool		m_bValid;	// ��ʾ����ͼ�Ƿ���Ч
-	dbc::Char	m_chState;	// ��ͼ״̬��EMapState
+	bool		m_bValid;	// 
+	dbc::Char	m_chState;	// EMapState
 
-	BYTE	m_byMapID; // ��ͼID
+	BYTE	m_byMapID; // ID
 
 	struct
 	{
-		bool	m_bCanSavePos;	// ��ɫ�ڸõ�ͼ���Ƿ���Ա���λ��
-		bool	m_bCanPK;		// ��ɫ�ڸõ�ͼ���Ƿ����PK
-		bool	m_bCanTeam;		// ��ɫ�ڸõ�ͼ���Ƿ���Բ�������
-		bool	m_bCanStall;	// ��ɫ�ڸõ�ͼ�Ƿ���԰�̯
+		bool	m_bCanSavePos;	// 
+		bool	m_bCanPK;		// PK
+		bool	m_bCanTeam;		// 
+		bool	m_bCanStall;	// 
 		bool	m_bCanGuild;
 	};
 
@@ -269,12 +269,12 @@ private:
 
 	struct
 	{
-		dbc::Char	m_chCopyStartType;		// ������ʼ���� EMapCopyStartType
-		dbc::Char	m_chCopyStartCdtType;	// ������ʼ��������
-		dbc::Long	m_lCopyStartCdtVal;	// ������ʼ����ֵ
+		dbc::Char	m_chCopyStartType;		//  EMapCopyStartType
+		dbc::Char	m_chCopyStartCdtType;	// 
+		dbc::Long	m_lCopyStartCdtVal;	// 
 	};
 
-	bool	m_bRepatriateDie;	// �Ƿ�Ҫǲ��������ɫ
+	bool	m_bRepatriateDie;	// 
 
 	dbc::Short	m_sUsedCopySearch;
 
@@ -282,7 +282,7 @@ private:
 
 };
 
-// ��ͼID�����������ݵ�ͼ��Ψһ�Ա�֤IDΨһ,�����ͼ����
+// IDID,
 class CMapID
 {
 public:

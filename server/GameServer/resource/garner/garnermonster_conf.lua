@@ -1,4 +1,4 @@
-print("-- [Loading] garnerMonster.lua")
+﻿print("-- [Loading] garnerMonster.lua")
 SetCurMap("garner")
 AddWeatherRegion(9,  8, 40, 2434, 2800 , 80, 80)
 AddWeatherRegion(11, 8, 40, 2247, 2960 , 80, 80)

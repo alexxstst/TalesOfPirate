@@ -1,4 +1,4 @@
-/*#!perl
+﻿/*#!perl
 MapHeaderToDll("objbase.h", "ole32.dll");
 ActivateAroundFunctionCall("ole32.dll");
 #IgnoreFunction("CreateDataAdviseHolder"); # this function occurs in ole2.h and objbase.h

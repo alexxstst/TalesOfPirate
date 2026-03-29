@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: AttachManage.cpp
 // Creater: ZhangXuedong
 // Date: 2004.10.19
@@ -33,7 +33,7 @@ void CConjureMgr::Add(CAttachable *pCAttach)
 		m_pCLstTail->m_pCConjureNext = pCAttach;
 		m_pCLstTail = pCAttach;
 	}
-	else // ¿ÕÁ´
+	else // 
 	{
 		pCAttach->m_pCConjureLast = 0;
 		pCAttach->m_pCConjureNext = 0;
@@ -190,7 +190,7 @@ void CPassengerMgr::Add(CAttachable *pCAttach)
 		m_pCLstTail->m_pCPassengerNext = pCAttach;
 		m_pCLstTail = pCAttach;
 	}
-	else // ¿ÕÁ´
+	else // 
 	{
 		pCAttach->m_pCPassengerLast = 0;
 		pCAttach->m_pCPassengerNext = 0;

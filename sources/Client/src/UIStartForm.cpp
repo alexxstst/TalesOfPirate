@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uistartform.h"
 #include "uiform.h"
 #include "uitextbutton.h"
@@ -52,7 +52,7 @@
 using namespace std;
 using namespace GUI;
 
-// Локальная обёртка: логирует ошибку UI-компонента и возвращает false для удобного return
+//  :   UI-   false   return
 inline bool Error(const char* strInfo, const char* strFormName, const char* strCompentName) {
 	char _buf[512]; snprintf(_buf, sizeof(_buf), strInfo, strFormName, strCompentName);
 	g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
@@ -483,13 +483,13 @@ bool CStartMgr::Init()
 			pMainCha->Create( rt );
 		}
 
-		// ���Լ�ͷ����Ҽ��˵�
+		// 
 		mnuSelf = CMenu::FindMenu("selfMouseRight");
 		if (!mnuSelf)  return Error( g_oLangRec.GetString(45), frmMain800->GetName(), "selfMouseRight" );
 		mnuSelf->evtListMouseDown=_OnSelfMenu;
 	}
 
-	// frmMain800����
+	// frmMain800
 	{
 		frmMain800 = _FindForm("frmMain800");
 		frmMain800->evtEntrustMouseEvent = _evtTaskMouseEvent;
@@ -498,37 +498,37 @@ bool CStartMgr::Init()
 		tlField = dynamic_cast<CTitle*>(frmMain800->Find("tlField"));
 
 		//grdHeart = dynamic_cast<CGrid*>(frmMain800->Find("grdHeart"));
-		//if( !grdHeart )	return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMain800->GetName(), "grdHeart" );
+		//if( !grdHeart )	return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "grdHeart" );
 		//grdHeart->evtSelectChange = _evtChaHeartChange;
 
 		//grdAction = dynamic_cast<CGrid*>(frmMain800->Find("grdAction"));
-		//if( !grdAction ) return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMain800->GetName(), "grdAction" );
+		//if( !grdAction ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "grdAction" );
 		//grdAction->evtSelectChange = _evtChaActionChange;
 	}
 
 
 
-	// ��ɫ����
+	// 
 	//proMainHP1 =  dynamic_cast<CProgressBar *> ( frmMain800->Find("proMainHP1") );
-	//if( !proMainHP1 ) return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMain800->GetName(), "proMainHP1" );   
+	//if( !proMainHP1 ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "proMainHP1" );   
 	//proMainHP1->SetPosition(10.0f );
 	//
 	//proMainHP2 =  dynamic_cast<CProgressBar *> ( frmMain800->Find("proMainHP2") );
-	//if( !proMainHP2 ) return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMain800->GetName(), "proMainHP2" );   
+	//if( !proMainHP2 ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "proMainHP2" );   
 	//proMainHP2->SetPosition(10.0f );
 
 	//proMainHP3 =  dynamic_cast<CProgressBar *> ( frmMain800->Find("proMainHP3") );
-	//if( !proMainHP3 ) return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMain800->GetName(), "proMainHP3" );   
+	//if( !proMainHP3 ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "proMainHP3" );   
 	//proMainHP3->SetPosition(10.0f );
 
 	//proMainSP =  dynamic_cast<CProgressBar *> ( frmMain800->Find("proMainSP") );
-	//if( !proMainSP ) return Error( "msgui.clu����<%s>���Ҳ����ؼ�<%s>", frmMain800->GetName(), "proMainSP" );
+	//if( !proMainSP ) return Error( "msgui.clu<%s><%s>", frmMain800->GetName(), "proMainSP" );
  //  	proMainSP->SetPosition (10.0f );
 
 	//_pShowExp = dynamic_cast<CLabel*>(frmMain800->Find( "labMainEXP" ) );
 	//_pShowLevel = dynamic_cast<CLabel*>(frmMain800->Find( "labMainLV" ) );
 
-	//frmMainFun����
+	//frmMainFun
 	{
 		frmMainFun = _FindForm("frmMainFun");
 		if(!frmMainFun) return false;
@@ -539,14 +539,14 @@ bool CStartMgr::Init()
 		/*FORM_CONTROL_LOADING_CHECK(btnQQ,frmMainFun,CTextButton,"msgui.clu","btnQQ");
 		btnQQ->GetImage()->LoadImage("texture/ui/main800.tga",32,32,4,136,201);*/
 
-		// ��������������˸
+		// 
 		btnLevelUpHelp = dynamic_cast<CTextButton*>(frmMainFun->Find("btnLevelUpHelp"));
 		//FORM_CONTROL_LOADING_CHECK(btnLevelUpHelp, frmMainFun, CTextButton, "msgui.clu", "btnLevelUpHelp");
 		if(btnLevelUpHelp)	btnLevelUpHelp->SetFlashCycle();
 	}
 
 	
-	// �Ҽ��˵�
+	// 
 	mainMouseRight=CMenu::FindMenu("mainMouseRight");
 	if (!mainMouseRight)
 	{
@@ -554,13 +554,13 @@ bool CStartMgr::Init()
 	}
 	mainMouseRight->evtListMouseDown=_evtPopMenu;
 
-	// ���Ǹ������
+	// 
 	frmMainChaRelive = _FindForm("frmRelive");
 	if(!frmMainChaRelive) return false;
 	frmMainChaRelive->evtEntrustMouseEvent = _evtReliveFormMouseEvent;
 
-	//��ֻ����ʱ�Ľ���
-	frmShipSail = _FindForm("frmShipsail");  //���Ա��� 
+	//
+	frmShipSail = _FindForm("frmShipsail");  // 
 	if( !frmShipSail )		return false;
 
 	labCanonShow	 =	(CLabelEx*)frmShipSail->Find("labCanonShow1");
@@ -568,8 +568,8 @@ bool CStartMgr::Init()
 	labLevelShow	 =  (CLabelEx*)frmShipSail->Find("labLvship");
 	labExpShow		 =  (CLabelEx*)frmShipSail->Find("labExpship");
 
-	proSailor		 =	(CProgressBar*)frmShipSail->Find("proSailor");				//�;ù�����
-	proCanon		 =	(CProgressBar*)frmShipSail->Find("proCanon");				//����������
+	proSailor		 =	(CProgressBar*)frmShipSail->Find("proSailor");				//
+	proCanon		 =	(CProgressBar*)frmShipSail->Find("proCanon");				//
 	frmShipSail->SetIsShow(false);
 	
 	//	Modify by alfred.shi 20080828
@@ -577,14 +577,14 @@ bool CStartMgr::Init()
 	if (!btn1) return false;
 	btn1->evtMouseClick = _evtShowBoatAttr;
 
-	// �Զ�����
+	// 
 	frmFollow = _FindForm("frmFollow");
 	if( !frmFollow ) return false;
 
 	labFollow = dynamic_cast<CLabel*>( frmFollow->Find("labFollow") );
 	if( !labFollow ) return Error( g_oLangRec.GetString(45), frmFollow->GetName(), "labFollow" );
 
-	// �������
+	// 
 	frmMainPet = _FindForm("frmMainPet");
 	if( !frmMainPet )		return false;
 
@@ -603,7 +603,7 @@ bool CStartMgr::Init()
 	if( !proPetSP ) return Error( g_oLangRec.GetString(45), frmMainPet->GetName(), "proPetSP" );
 
 	//
-	// ���ְ�������
+	// 
 	//
 	frmHelpSystem = CFormMgr::s_Mgr.Find("frmHelpSystem");
 	if( !frmHelpSystem ) return Error( g_oLangRec.GetString(45), "frmHelpSystem", "frmHelpSystem" );
@@ -650,14 +650,14 @@ bool CStartMgr::Init()
 	}
 
 	//
-	// ������ť����
+	// 
 	//
 	frmBag = CFormMgr::s_Mgr.Find("frmBag");
 	if(! frmBag) return Error(g_oLangRec.GetString(45), "frmBag", "frmBag");
 	frmBag->evtEntrustMouseEvent = _evtStartFormMouseEvent;
 
 	//
-	// �罻��ť���
+	// 
 	//
 	frmSociliaty = CFormMgr::s_Mgr.Find("frmSociliaty");
 	if(! frmSociliaty) return Error(g_oLangRec.GetString(45), "frmSociliaty", "frmSociliaty");
@@ -725,8 +725,8 @@ void CStartMgr::End()
 {
 	//delete pMainCha;
 	//pMainCha = NULL;
-	SAFE_DELETE(pMainCha); // UI��������
-	SAFE_DELETE(pTarget); // UI��������
+	SAFE_DELETE(pMainCha); // UI
+	SAFE_DELETE(pTarget); // UI
 }
 
 void CStartMgr::ShowQueryReliveForm( int nType, const char* str )
@@ -783,7 +783,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 {
 	string name=pSender->GetName();
 
-	if( name=="btnState" )	// ��ʾ���Խ���e
+	if( name=="btnState" )	// e
 	{
 		CForm* f = CFormMgr::s_Mgr.Find( "frmState" );
 		if( f ) 
@@ -792,7 +792,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		}
 		return;
 	}	
-	//else if( name=="btnItem" )	// ��ʾ���߽���
+	//else if( name=="btnItem" )	// 
 	//{
 	//	CForm* f = CFormMgr::s_Mgr.Find( "frmItem" );
 	//	if( f )
@@ -801,7 +801,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	//	}
 	//	return;
 	//}		
-	else if( name=="btnSkill" )	// ��ʾ���ܽ���
+	else if( name=="btnSkill" )	// 
 	{
 		CForm* f = CFormMgr::s_Mgr.Find( "frmSkill" );
 		if( f ) 
@@ -810,7 +810,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		}
 		return;
 	}
-	else if( name=="btnMission" )	// ��ʾ�������
+	else if( name=="btnMission" )	// 
 	{
 		CForm* f = CFormMgr::s_Mgr.Find( "frmMission" );
 		if( f ) 
@@ -819,7 +819,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		}
 		return;
 	}
-	//else if( name=="btnGuild" )	    // ��ʾ�������
+	//else if( name=="btnGuild" )	    // 
 	//{		
 	//	CForm* f = CFormMgr::s_Mgr.Find( "frmManage" );
 	//	if( f ) 
@@ -839,7 +839,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		return;
 	}
 
-	// ��ʾ��������		Add by alfred.shi 20080822	beign
+	// 		Add by alfred.shi 20080822	beign
 	else if( name=="btnShip1" )	
 	{
         CForm* f = CFormMgr::s_Mgr.Find("frmStartHelp");
@@ -879,7 +879,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	}
 	//	End
 
-	else if( name=="btnSystem" )	// ��ʾ���ܽ���
+	else if( name=="btnSystem" )	// 
 	{
 		CForm* f = CFormMgr::s_Mgr.Find("frmSystem");
 		if(f)		f->SetIsShow(!f->GetIsShow());			
@@ -894,7 +894,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		}
 		return;
 	}
-	else if( name == "btnLevelUpHelp" )	// ��ҽ�ɫ��������
+	else if( name == "btnLevelUpHelp" )	// 
 	{
 		SGameAttr* pAttr = CGameScene::GetMainCha()->getGameAttr();
 
@@ -903,12 +903,12 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 
 		g_stUIStart.ShowLevelUpHelpButton(false);
 	}
-	else if( name == "btnInfoCenter" )	// �������ֵ�һЩ�淨�Ľ���
+	else if( name == "btnInfoCenter" )	// 
 	{
 		bool bShow = g_stUIStart.frmHelpSystem->GetIsShow();
 		g_stUIStart.ShowHelpSystem(!bShow);
 	}
-	else if( name == "btnOpenBag" )	// �򿪱�����ť����
+	else if( name == "btnOpenBag" )	// 
 	{
 		g_stUIEquip.GetItemForm()->SetIsShow(!g_stUIEquip.GetItemForm()->GetIsShow());
 		//g_stUIStart.ShowBagButtonForm(! g_stUIStart.frmBag->GetIsShow());
@@ -917,7 +917,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		//g_stUIStart.frmBag->SetIsShow(! g_stUIStart.frmBag->GetIsShow());
 		//g_stUIStart.frmSociliaty->SetIsShow(false);
 	}
-	else if( name == "btnGuild" ) // ���罻��ť����
+	else if( name == "btnGuild" ) // 
 	{
 		//g_stUIStart.ShowSociliatyButtonForm(! g_stUIStart.frmSociliaty->GetIsShow());
 		//g_stUIStart.ShowBagButtonForm(false);
@@ -943,7 +943,7 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		
 		
 	}
-	//else if( name == "btnOpenItem")	// ��ʾ���߽���
+	//else if( name == "btnOpenItem")	// 
 	//{
 	//	CForm* f = CFormMgr::s_Mgr.Find( "frmItem" );
 	//	if( f )
@@ -952,20 +952,20 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 	//	}
 	//	return;
 	//}
-	else if( name == "btnOpenTempBag" ) // ����ʱ����
+	else if( name == "btnOpenTempBag" ) // 
 	{
 		//g_stUIStore.ShowTempKitbag();
 	}
-	else if( name == "btnOpenStore" )	// ���̳�
+	else if( name == "btnOpenStore" )	// 
 	{
-		// �̳�δ����,����ҳ
+		// ,
 		//g_stUIStore.ShowStoreWebPage();
 
-		// ���̳�����������루��ʱ���������̳ǣ�
+		// 
 		g_stUIDoublePwd.SetType(CDoublePwdMgr::STORE_OPEN_ASK);
 		g_stUIDoublePwd.ShowDoublePwdForm();
 	}
-	else if( name == "btnOpenGuild" )	// ��ʾ����
+	else if( name == "btnOpenGuild" )	// 
 	{
 	
 		CForm* f = CFormMgr::s_Mgr.Find( "frmManage" );
@@ -983,11 +983,11 @@ void CStartMgr::_evtStartFormMouseEvent(CCompent *pSender, int nMsgType, int x, 
 		}		
 		return;
 	}
-	else if( name == "btnOpenTeam" )	// ־Ը��
+	else if( name == "btnOpenTeam" )	// 
 	{
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 
-		// ��ɫ 8 �����½�ֹ���	Modify by alfred.shi 20080902	begin
+		//  8 	Modify by alfred.shi 20080902	begin
 		if(g_stUIFindTeam.IsShowFom())
 			g_stUIFindTeam.ShowFindTeamForm(false);
 		else if(pMainCha && !pMainCha->IsBoat() && pMainCha->getGameAttr()->get(ATTR_LV) >= 8)
@@ -1071,13 +1071,13 @@ void CStartMgr::MainChaDied()
 			}
 		}
 
-		// add by Philip.Wu  ��ɫ������ִ��һ���ƶ������ڹرմ���
+		// add by Philip.Wu  
 		CUIInterface::MainChaMove();
 
-		// add by Philip.Wu  2006-07-05  ��ɫ������رս��׽���
-		// BUG��ܣ�TEST-32  �ɽ��׺󴥷����������޹���bug
+		// add by Philip.Wu  2006-07-05  
+		// BUGTEST-32  bug
 		g_stUITrade.CloseAllForm();
-		// add by Philip.Wu  2006-07-12  ��ɫ������رճ�������
+		// add by Philip.Wu  2006-07-12  
 		CWorldScene* pWorldScene = dynamic_cast<CWorldScene*>(g_pGameApp->GetCurScene());
 		if(pWorldScene && pWorldScene->GetShipMgr())
 		{
@@ -1153,7 +1153,7 @@ void CStartMgr::_evtTaskMouseEvent(CCompent *pSender, int nMsgType, int x, int y
 	//	return;
 	//}
 
-	// ��ݼ��ĵ�� 
+	//  
 	if( pSender->nTag > 10 )
 	{
 		CCharacter* c = CGameScene::GetMainCha();
@@ -1207,7 +1207,7 @@ void GUI::CStartMgr::_evtMobPageIndexChange(CGuiData* pSender)
 
 void CStartMgr::RefreshMainLifeNum( long num, long max )
 {	
-	////HP�ı仯
+	////HP
 	//char szHP[32] = { 0 };
 	//if ( num < 0 )	num = 0;
 	//szHP[sizeof(szHP)-1] = '\0';
@@ -1247,7 +1247,7 @@ void CStartMgr::RefreshMainExperience(long num, long curlev, long nextlev)
 {
 	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(763), num, curlev, nextlev, 100.0f * (float)(num - curlev) / (float)(nextlev - curlev)); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 	
-	//// EXP�ı仯
+	//// EXP
 	//long max = nextlev - curlev;
 	//num = num - curlev;
 	//if ( num < 0 ) num = 0;
@@ -1307,7 +1307,7 @@ void CStartMgr::RefreshLv( long l )
 
 void CStartMgr::RefreshMainSP( long num , long max )
 {
-	//SP�ı仯
+	//SP
 	if ( proMainSP )
 	{
 		proMainSP->SetRange(0.0f, (float)max);
@@ -1315,14 +1315,14 @@ void CStartMgr::RefreshMainSP( long num , long max )
 	}
 }
 
-// �Ҽ��˵���Ϣ����
+// 
 void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 {
 	mainMouseRight->SetIsShow(false);
 	CMenuItem* pItem=mainMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str=pItem->GetString();
-	if (str==g_oLangRec.GetString(764))	// ���뽻��
+	if (str==g_oLangRec.GetString(764))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter * pMain = CGameScene::GetMainCha();
@@ -1336,16 +1336,16 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 			}
 			else
 			{
-				// ��ɫ�ȼ�6�����½�ֹ�������뽻��
+				// 6
 				g_pGameApp->SysInfo(g_oLangRec.GetString(864));
 			}
 		}
 		else
 		{
-			g_pGameApp->SysInfo( g_oLangRec.GetString(765) );	// ����ʱ����˫��������ң����Ǵ�
+			g_pGameApp->SysInfo( g_oLangRec.GetString(765) );	// 
 		}
 	}
-	else if (str==g_oLangRec.GetString(482))	// ���Ӻ���
+	else if (str==g_oLangRec.GetString(482))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter * pMain = CGameScene::GetMainCha();
@@ -1357,12 +1357,12 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// ��ɫ�ȼ�7�����½�ֹ�������Ӻ���
+			// 7
 			g_pGameApp->SysInfo(g_oLangRec.GetString(865));
 			
 		}
 	}
-	else if (str==g_oLangRec.GetString(484))	// �������
+	else if (str==g_oLangRec.GetString(484))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter * pMain = CGameScene::GetMainCha();
@@ -1375,18 +1375,18 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// ��ɫ�ȼ�8�����½�ֹ�����������
+			// 8
 			g_pGameApp->SysInfo(g_oLangRec.GetString(866));
 		}
 
 		return;	
 	}
-	else if (str==g_oLangRec.GetString(483))	// �뿪����
+	else if (str==g_oLangRec.GetString(483))	// 
 	{
 		CS_Team_Leave();
 		return;
 	}
-	else if (str==g_oLangRec.GetString(481))	// ����Է�
+	else if (str==g_oLangRec.GetString(481))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		if(pCha)
@@ -1395,7 +1395,7 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		return;
 	}
-	else if (str==g_oLangRec.GetString(766))	// ���ս���
+	else if (str==g_oLangRec.GetString(766))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter * pMain = CGameScene::GetMainCha();
@@ -1409,7 +1409,7 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		return;
 	}
-	else if( str==g_oLangRec.GetString(768) )	// �鿴̯λ
+	else if( str==g_oLangRec.GetString(768) )	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		if( pCha && !pCha->IsMainCha() )
@@ -1422,19 +1422,19 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		return;
 	}
-	else if( str==g_oLangRec.GetString(769) )	// ���鵥��
+	else if( str==g_oLangRec.GetString(769) )	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		if( pCha ) CS_TeamFightAsk( pCha->getAttachID(), pCha->lTag, enumFIGHT_TEAM );
 		return;
 	}
-	else if( str==g_oLangRec.GetString(770) )	// ��ҵ���
+	else if( str==g_oLangRec.GetString(770) )	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		if( pCha ) CS_TeamFightAsk( pCha->getAttachID(), pCha->lTag, enumFIGHT_MONOMER );
 		return;
 	}
-	else if(str == g_oLangRec.GetString(855))	// �����ʦ
+	else if(str == g_oLangRec.GetString(855))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter * pMain = CGameScene::GetMainCha();
@@ -1445,11 +1445,11 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// ��ʦ����ͽʱ����˫���������
+			// 
 			g_pGameApp->SysInfo(g_oLangRec.GetString(888));
 		}
 	}
-	else if(str == g_oLangRec.GetString(859))	// ������ͽ
+	else if(str == g_oLangRec.GetString(859))	// 
 	{
 		CCharacter * pCha = (CCharacter*)mainMouseRight->GetPointer();
 		CCharacter * pMain = CGameScene::GetMainCha();
@@ -1460,7 +1460,7 @@ void CStartMgr::_evtPopMenu(CGuiData *pSender, int x, int y, DWORD key)
 		}
 		else
 		{
-			// ��ʦ����ͽʱ����˫���������
+			// 
 			g_pGameApp->SysInfo(g_oLangRec.GetString(888));
 		}
 	}else if (str=="Check Eq"){
@@ -1505,7 +1505,7 @@ void CStartMgr::_evtAskTeamFightMouseEvent(CCompent *pSender, int nMsgType, int 
 	CS_TeamFightAnswer( nMsgType==CForm::mrYes );
 }
 
-// �����Ҽ��˵�
+// 
 void  CStartMgr::PopMenu( CCharacter* pCha )
 {
 	//g_pGameApp->GetCurScene()->GetTerrainName();
@@ -1513,13 +1513,13 @@ void  CStartMgr::PopMenu( CCharacter* pCha )
 	if (pCha->IsPlayer() && !g_stUIStart.IsCanTeam())
 		return;
 
-	if( g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow())		// �����ĵ��޸ģ��������в��������Ҽ��˵�
+	if( g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow())		// 
 		return;
 
-	if( g_stUIBooth.GetBoothItemsGrid()->GetForm()->GetIsShow())	// �����ĵ��޸ģ���̯���������Ҽ��˵�
+	if( g_stUIBooth.GetBoothItemsGrid()->GetForm()->GetIsShow())	// 
         return;
 
-	if( g_stUITrade.IsTrading())// �����ĵ��޸ģ�����ʱ���������Ҽ��˵�
+	if( g_stUITrade.IsTrading())// 
 		return;
 
 	if ( mainMouseRight && pCha && pCha->IsValid() && !pCha->IsHide() && (pCha->IsPlayer() || pCha->IsMonster()) ) // && (pCha->IsPlayer() || pCha->IsMonster())
@@ -1532,19 +1532,19 @@ void  CStartMgr::PopMenu( CCharacter* pCha )
 
 		if( !pMain->IsValid() || pMain->IsHide() ) return;
 
-		if( pCha->GetIsPet()) return;	// ���ﲻ��������Ҽ��˵�
+		if( pCha->GetIsPet()) return;	// 
 
 		int nMainGuildID = pMain->getGuildID();
 		int nChaGuildID  = pCha->getGuildID();
 		if( nMainGuildID > 0 && nChaGuildID > 0)
 		{
-			if(g_stUIMap.IsGuildWar() && ((nMainGuildID <= 100 && nChaGuildID > 100) || (nMainGuildID > 100 && nChaGuildID <= 100))) return;	// ��ͬ��Ӫ
+			if(g_stUIMap.IsGuildWar() && ((nMainGuildID <= 100 && nChaGuildID > 100) || (nMainGuildID > 100 && nChaGuildID <= 100))) return;	// 
 		}
 
 		mainMouseRight->SetAllEnabled( false );
 		const int nCount = mainMouseRight->GetCount();
 		CMenuItem* pItem = NULL;
-		const char *MapName = g_pGameApp->GetCurScene()->GetTerrainName(); // ȡ�����ﵱǰ���ڵ�ͼ Add by ning.yan 20080715
+		const char *MapName = g_pGameApp->GetCurScene()->GetTerrainName(); //  Add by ning.yan 20080715
 		//Add by sunny.sun20080820
 		//Begin
 		if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
@@ -1587,7 +1587,7 @@ void  CStartMgr::PopMenu( CCharacter* pCha )
 				pItem->SetIsEnabled( pMain!=pCha );
 			}
 			else if( stricmp( pItem->GetString(), g_oLangRec.GetString(484) )==0 )
-			{	// ��������ȡ����ӹ��� Add by ning.yan  20080715 Begin
+			{	//  Add by ning.yan  20080715 Begin
 				//if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
 				//	pItem->SetIsEnabled( false );
 				//// End
@@ -1596,7 +1596,7 @@ void  CStartMgr::PopMenu( CCharacter* pCha )
 				pItem->SetIsEnabled( g_stUIStart.IsCanTeam() && pMain!=pCha && ( pMain->GetTeamLeaderID()==0 || ( pMain->IsTeamLeader() && pCha->GetTeamLeaderID()!=pMain->GetTeamLeaderID() ) ) );
 			}
 			else if( stricmp( pItem->GetString(), g_oLangRec.GetString(483) )==0 )
-			{	// ��������ȡ���뿪���鹦��  Add by ning.yan  20080715 Begin
+			{	//   Add by ning.yan  20080715 Begin
 				//if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
 				//	pItem->SetIsEnabled( false );
 				//// End
@@ -1630,13 +1630,13 @@ void  CStartMgr::PopMenu( CCharacter* pCha )
 				pItem->SetIsHide(pCha->IsMonster());
 				pItem->SetIsEnabled( g_stUIStart.IsCanTeam() && pMain!=pCha && pCha->IsPlayer() );
 			}
-			else if( stricmp( pItem->GetString(), g_oLangRec.GetString(855) )==0 )	// �����ʦ
+			else if( stricmp( pItem->GetString(), g_oLangRec.GetString(855) )==0 )	// 
 			{
 				pItem->SetIsHide(pCha->IsMonster());
 				pItem->SetIsEnabled( pMain!=pCha && pCha->IsPlayer() && pMain->getGameAttr() && pMain->getGameAttr()->get(ATTR_LV) <= 40 );
 							//&& pCha->getGameAttr()  && pCha->getGameAttr()->get(ATTR_LV) > 40 );
 			}
-			else if( stricmp( pItem->GetString(), g_oLangRec.GetString(859) )==0 )	// ������ͽ
+			else if( stricmp( pItem->GetString(), g_oLangRec.GetString(859) )==0 )	// 
 			{
 				pItem->SetIsHide(pCha->IsMonster());
 				pItem->SetIsEnabled( pMain!=pCha && pCha->IsPlayer() && pMain->getGameAttr() && pMain->getGameAttr()->get(ATTR_LV) > 40 );
@@ -1805,7 +1805,7 @@ void CStartMgr::FrameMove(DWORD dwTime)
 
 }
 
-void CStartMgr::_evtShowBoatAttr(CGuiData *pSender,int x,int y ,DWORD key)	// ��ʾ��ֻ����
+void CStartMgr::_evtShowBoatAttr(CGuiData *pSender,int x,int y ,DWORD key)	// 
 {
 	xShipFactory* pkShip = ((CWorldScene*)g_pGameApp->GetCurScene())->GetShipMgr()->_factory;
 	if (pkShip && pkShip->sbf.wnd->GetIsShow())
@@ -1835,7 +1835,7 @@ void CStartMgr::SwitchMap()
 	}
 }
 
-//~ �ص����� =================================================================
+//~  =================================================================
 void CStartMgr::_NewFrmMainMouseEvent(CCompent *pSender, int nMsgType, 
 									  int x, int y, DWORD dwKey)
 {
@@ -1924,7 +1924,7 @@ void CStartMgr::_OnSelfMenu(CGuiData *pSender, int x, int y, DWORD key)
 	string str = pItem->GetString();
 	//Modify by sunny.sun20080820
 	//Begin
-	const char *MapName = g_pGameApp->GetCurScene()->GetTerrainName(); // ȡ�����ﵱǰ���ڵ�ͼ 
+	const char *MapName = g_pGameApp->GetCurScene()->GetTerrainName(); //  
 	if( stricmp( MapName,"starena1") == 0 || stricmp( MapName,"starena2") == 0 || stricmp( MapName,"starena3") == 0 )
 	{
 		pItem->SetIsEnabled( false );
@@ -2020,7 +2020,7 @@ void CStartMgr::RefreshPet( CItemCommand* pItem )
 	memset( &s_item, 0, sizeof(SItemHint) );
 	s_item.Convert( pItem->GetData(), pInfo );
 
-	// ���³���ȼ�,ͷ��
+	// ,
 	int nLevel = s_item.sInstAttr[ITEMATTR_VAL_STR]
 				+ s_item.sInstAttr[ITEMATTR_VAL_AGI] 
 				+ s_item.sInstAttr[ITEMATTR_VAL_DEX] 
@@ -2044,7 +2044,7 @@ void CStartMgr::ShowHelpSystem(bool bShow, int nIndex)
 
 	if(0 > nIndex || nCount <= nIndex)
 	{
-		// Խ��
+		// 
 		frmHelpSystem->SetIsShow(bShow);
 		return;
 	}

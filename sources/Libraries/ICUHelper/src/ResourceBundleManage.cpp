@@ -1,4 +1,4 @@
-#include "resourcebundlemanage.h"
+﻿#include "resourcebundlemanage.h"
 
 #include "windows.h"
 #include <string>
@@ -74,7 +74,7 @@ CResourceBundleManage::CResourceBundleManage(const char* configFileName)
     {
         throw "GetModuleFileName failed \n"; 
     }
-	// ȡ����ڳ����·��
+	// 
 	const char* ret = strrchr(szPath, '\\');
 	long dirLength = (long)(ret - szPath);
 
@@ -149,13 +149,13 @@ CResourceBundleManage::~CResourceBundleManage(void)
 	Release();
 }
 
-// ȡ����Դ����
+// 
 int CResourceBundleManage::GetSize(void)
 {
 	return (int)mapRes.size();
 }
 
-// ��Unicode�ַ���ת��Ϊ���ֽڱ�������
+// Unicode
 UErrorCode CResourceBundleManage::ToCodePageString(UConverter *conv, UChar* source, char* target, int destCapacity, int& len)
 {
   UErrorCode status = U_ZERO_ERROR;
@@ -168,7 +168,7 @@ UErrorCode CResourceBundleManage::ToCodePageString(UConverter *conv, UChar* sour
   return status;
 }
 
-// ��ʼ����Դ������
+// 
 bool CResourceBundleManage::Init()
 {
 	int len = 0;
@@ -179,7 +179,7 @@ bool CResourceBundleManage::Init()
 #if _DEBUG
 
 	const char* name = ucnv_getName(m_pConverter, &status);
-	// Заменено printf → логирование
+	//  printf  
 	ToLogService("common", "Current CodePage is {}", name);
 
 #endif
@@ -214,7 +214,7 @@ bool CResourceBundleManage::Init()
 	return false;
 }
 
-// �ͷ���Դ
+// 
 void CResourceBundleManage::Release(void)
 {
 	m_ResDir.reset(nullptr);
@@ -236,7 +236,7 @@ void CResourceBundleManage::Release(void)
 	}
 }
 
-// ����IDȡ���ַ���
+// ID
 const char* CResourceBundleManage::LoadResString(const char* key)
 {
 	const char* ret ="";
@@ -269,7 +269,7 @@ UnicodeString CResourceBundleManage::LoadUResString(const char* key)
 	return m_pResourceBundle->getStringEx(key, status);
 }
 
-// ��ʽ���ݲ�����һ���ַ���
+// 
 int CResourceBundleManage::Format(const char* key, CFormatParameter& parameter, char buffer[])
 {
     UErrorCode status = U_ZERO_ERROR;

@@ -1,4 +1,4 @@
-//
+ï»¿//
 #pragma once
 
 #include "lwHeader.h"
@@ -10,7 +10,7 @@
 LW_BEGIN
 
 // remarks: by lsh
-// 1¡£¾ßÓĞÍ¸Ã÷ÊôĞÔµÄÎï¼şÖ»ÓĞÔÚÏÔÊ½µ÷ÓÃ¼ÓÈëscene mangerºó²Å×öÅÅĞò
+// 1scene manger
 struct lwSortPriProcInfo
 {
     lwTranspPrimitiveProc proc;

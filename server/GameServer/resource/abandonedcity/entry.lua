@@ -1,4 +1,4 @@
-function config_entry(entry) 
+﻿function config_entry(entry) 
 	SetMapEntryEntiID(entry, 2492,4)
 end 
 

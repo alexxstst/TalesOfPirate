@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "EffectObj.h"
 #include "SceneObj.h"
 #include "Character.h"
@@ -163,7 +163,7 @@ inline  void	Part_follow(CMagicEff* pEffCtrl)
 	iangle = pEffCtrl->_pObj->getYaw();
 	switch(pEffCtrl->getTypeID())
 	{
-	case 1:	//��ɫ����Ч
+	case 1:	//
 		pCha = (CCharacter*)pEffCtrl->_pObj;
 		pEffCtrl->SetEffectDir(iangle);
 
@@ -185,7 +185,7 @@ inline  void	Part_follow(CMagicEff* pEffCtrl)
 			pEffCtrl->MoveTo(&tpos);
 		}
 		break;
-	case 2: //�������Ч
+	case 2: //
 		lwMatrix44Identity(&tMat);
 		pObj = (CSceneObj*)pEffCtrl->_pObj;
 		tMat._41 = pObj->getPos().x;
@@ -217,7 +217,7 @@ inline  void	Part_foldir(CMagicEff* pEffCtrl)
 		goto __ret;
 	switch(pEffCtrl->getTypeID())
 	{
-	case 1:	//��ɫ����Ч
+	case 1:	//
 		pCha = (CCharacter*)pEffCtrl->_pObj;
 		{
 			tpos = pCha->GetPos();
@@ -284,7 +284,7 @@ inline  void	Part_trace(CMagicCtrl* pEffCtrl, void*	pParam)
 		vTarget.z += 1.0f;
 	}
 
-	//!���Ŀ�����λ�ú���λ����ͬ�����أ�
+	//!
 	if(PointInstrPointRange(&vTarget, &pEffCtrl->_vOldTarget,1.0f))
 	{
 		return;
@@ -293,19 +293,19 @@ inline  void	Part_trace(CMagicCtrl* pEffCtrl, void*	pParam)
 	
 	pEffCtrl->ResetDir(&vTarget);
 
-	//!�õ�Ŀ�����λ������λ���ƶ��ķ���
+	//!
 	pEffCtrl->_vTargDir = vTarget - pEffCtrl->_vOldTarget;
-	//!�õ�Ŀ�����λ�ú���λ��֮��ľ���
+	//!
 	pEffCtrl->_fTargDist = D3DXVec3LengthSq(&pEffCtrl->_vTargDir);
 	D3DXVec3Normalize(&pEffCtrl->_vTargDir, &pEffCtrl->_vTargDir);
 
-	//!�õ����ӵ�λ����Ҫ��Ŀ���ƶ��ķ����ƶ��ľ���.
-	//	��ʽΪ������ = Ŀ���ƶ��ľ��� / ����������Դ��Ŀ��ľ��� * ���ӵ�ǰλ�ú���һ֡λ�õľ���
+	//!.
+	//	 =  /  * 
 	float flerp = (pEffCtrl->_fTargDist / pEffCtrl->_fDist) * fDist;
 
-	//!����Ŀ���ƶ��ķ���ȥ�ƶ�����
+	//!
 	pEffCtrl->_vPos	 += pEffCtrl->_vTargDir * flerp;
-	//!���¼��㵱ǰ������Ҫ�ƶ��ķ���;��롣
+	//!
 	pEffCtrl->_vOldTarget = vTarget;
 	pEffCtrl->_vDir = vTarget - pEffCtrl->_vPos;
 	pEffCtrl->_fDist = D3DXVec3LengthSq(&pEffCtrl->_vDir);
@@ -669,7 +669,7 @@ void	CMagicEff::SetScene(CGameScene* pScene)
 BOOL	CMagicEff::Create(int iIdxID)
 {
 	_dwStartTime = CGameApp::GetCurTick();
-	if(iIdxID >= 1000 && iIdxID < 3000)//����������Ч��ID��[1000,3000)��
+	if(iIdxID >= 1000 && iIdxID < 3000)//ID[1000,3000)
 	{
 		_bDail = false;
 		_fsCurTime = 0;
@@ -681,10 +681,10 @@ BOOL	CMagicEff::Create(int iIdxID)
 
 		if(	iIdxID < 2000)
 		{
-			if(!CreateMagic(iIdxID))			// Magic ID��[1000,2000)
+			if(!CreateMagic(iIdxID))			// Magic ID[1000,2000)
 				return FALSE;
 		}else
-			if(!CreateGroupMagic( iIdxID))		// Group Magic ID��[2000, 3000)
+			if(!CreateGroupMagic( iIdxID))		// Group Magic ID[2000, 3000)
 				return FALSE;
 
 		SkillCtrl ctrl;
@@ -692,7 +692,7 @@ BOOL	CMagicEff::Create(int iIdxID)
 		SetSkillCtrl(&ctrl);
 		return TRUE;
 	}
-	//������̬��Ч
+	//
 	if (_bMagic||_bGroupMagic)
 	{
 		_bMagic = FALSE;
@@ -721,7 +721,7 @@ BOOL	CMagicEff::Create(int iIdxID)
 
 		if(iIdxID< 100)
 			setTypeID(0);
-		else if((iIdxID>= 100 && iIdxID <400) || (iIdxID>= 650 && iIdxID <1000)) // ����650~1000������Ч
+		else if((iIdxID>= 100 && iIdxID <400) || (iIdxID>= 650 && iIdxID <1000)) // 650~1000
 		{
 			setTypeID(4);
 			_bMagicEm = TRUE;
@@ -747,7 +747,7 @@ BOOL	CMagicEff::Create(int iIdxID)
 		ctrl.fSize = 1.0f;
 		SetSkillCtrl(&ctrl);
 
-		// ������ͬ����Ч���ָ��㷨����Ϊ����Ϊ��Чʱ�Ѿ����㷨��� by lh 2005-10-27
+		//  by lh 2005-10-27
 		int nEffType = pInfo->nEffType;
 		switch(nEffType)
 		{
@@ -781,18 +781,18 @@ BOOL	CMagicEff::Create(int iIdxID)
 	switch(Property.m_iEffType)
 	{
 	case 0:
-		Property.m_iIdxRender = -1;//����ǳ�����Ч����ʹ���㷨
+		Property.m_iIdxRender = -1;//
 		break;
 	case 1:
 	case 2:
 	case 3:
- 		Property.m_iIdxRender = pInfo->nObjType;//ʹ�ð�dummy���㷨������㷨
+ 		Property.m_iIdxRender = pInfo->nObjType;//dummy
 		break;
 	case 4:
-		Property.m_iIdxRender = pInfo->nObjType;//ʹ���ض����㷨��
+		Property.m_iIdxRender = pInfo->nObjType;//
 		break;
 	case 5:
-		Property.m_iIdxRender = pInfo->nObjType;//����Ǵ�������Ч��ʹ�� �㷨
+		Property.m_iIdxRender = pInfo->nObjType;// 
 		break;
 	default:
 		return FALSE;
@@ -809,8 +809,8 @@ BOOL	CMagicEff::Create(int iIdxID)
 
 	if(iIdxID< 100)
 		setTypeID(0);
-	else if((iIdxID>= 100 && iIdxID <400) || (iIdxID>= 800 && iIdxID <1000) || // ����800~1000������Ч
-		(iIdxID >= 564 && iIdxID < 600))	// 07ʥ�����̻�
+	else if((iIdxID>= 100 && iIdxID <400) || (iIdxID>= 800 && iIdxID <1000) || // 800~1000
+		(iIdxID >= 564 && iIdxID < 600))	// 07
 	{
 		setTypeID(4);
 		_bMagicEm = TRUE;
@@ -1337,7 +1337,7 @@ void	CMagicEff::Emission(int iID, D3DXVECTOR3* vBegin, D3DXVECTOR3* vEnd, int iT
 	if(_bMagicEm)
 	{
 		if (809 <= _iIdxID && _iIdxID <= 818 )
-			_pEffCtrl->GetPartCtrl()->Play(0);	// �����Ǳ��������
+			_pEffCtrl->GetPartCtrl()->Play(0);	// 
 		else
 			_pEffCtrl->GetPartCtrl()->Play(!_bloop/*0*/);
 		if(_bloop)
@@ -1417,17 +1417,17 @@ void	CMagicEff::_UpdateScale(float fx,float fy,float fz)
 void	CMagicEff::SetInvalidByTime(DWORD dwDailTime)
 {
 	if (_iIdxID >=1 && _iIdxID < 100)
-	{	// ������Ч��ɾ��
+	{	// 
 		return;
 	}
 
 	if (_iIdxID >=3000)
-	{	// ������Ч��ɾ��
+	{	// 
 		return;
 	}
 
 	if (_bloop)
-	{	// �ֶ�����ѭ������Ч��ɾ��
+	{	// 
 		return;
 	}
 
@@ -1490,7 +1490,7 @@ bool	CShadeEff::Create( CShadeInfo* pInfo)
 		return false;
 	if (pInfo->nUseAlphaTest)
 	{
-		//ʹ��AlphaTest
+		//AlphaTest
 		SetRenderIndex(4);
 	}
 	switch(pInfo->nAlphaType) 
@@ -1534,7 +1534,7 @@ bool	CShadeEff::CreateAttachLight(int iIdxID, float fRange,D3DXCOLOR dwcolor)
 		return false;
 	if (pInfo->nUseAlphaTest)
 	{
-		//ʹ��AlphaTest
+		//AlphaTest
 		SetRenderIndex(4);
 	}
 	switch(pInfo->nAlphaType) 
@@ -1586,7 +1586,7 @@ void	CShadeEff::Render()
 
 	switch(getTypeID())
 	{
-	case 1://��ɫ��Ӱ��
+	case 1://
 		if(_iChaID >= 0)
 		{
 			pCha = _pScene->GetCha(_iChaID);
@@ -1597,7 +1597,7 @@ void	CShadeEff::Render()
 			}
 		}
 		break;
-	case 2://���ߵ�Ӱ��
+	case 2://
 		if(_iChaID >= 0)
 		{
 			pItem = _pScene->GetSceneItem(_iChaID);
@@ -1608,7 +1608,7 @@ void	CShadeEff::Render()
 			}
 		}
 		break;
-	case 3://�ƹ��Ӱ��
+	case 3://
 		if(_iChaID >= 0)
 		{
 			pObj = _pScene->GetSceneObj(_iChaID);

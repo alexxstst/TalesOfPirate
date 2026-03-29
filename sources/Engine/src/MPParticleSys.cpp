@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 
 //#include <mindpower.h>
 #include "GlobalInc.h"
@@ -52,7 +52,7 @@ CMPPartSys::CMPPartSys()
 	_fPlayTime =0;
 	_fCurPlayTime = 0;
 
-	//_vecParticle.resize(100);//Ã¿Ò»¸öÁ£×ÓÏµÍ³µÄÁ£×ÓÊýÄ¿²»ÄÜ´óÓÚ100
+	//_vecParticle.resize(100);//100
 
 	//_vecFrameSize.resize(100);
 	//_vecFrameAngle.resize(100);
@@ -65,10 +65,10 @@ CMPPartSys::CMPPartSys()
 	_CPPart = NULL;
 	_bUseBone = false;
 
-	_bModelRange = false;//Ê¹ÓÃÄ£ÐÍ·¶Î§À´²úÉúÁ£×Ó
-	_strVirualModel = "ÎÞ";//ÓÃÀ´²éÕÒµÄÐéÄâÄ£ÐÍµÄÃû³Æ
-	_vecPointRange.clear();//ÓÃÀ´²úÉúÁ£×ÓµÄµã
-	_wVecNum = 0;//¶¥µãÊýÁ¿
+	_bModelRange = false;//
+	_strVirualModel = "";//
+	_vecPointRange.clear();//
+	_wVecNum = 0;//
 
 	_vOffset = D3DXVECTOR3(0,0,0);
 
@@ -328,9 +328,9 @@ bool	CMPPartSys::Create(int iType, const s_string& strPartName,int iNumPart,
 	else
 		_pCModel = pCResMagr->GetMeshByID(id);
 
-	_fRange[0]		= vRange.x;	//!Á£×ÓÔÚÕâ¸ö·¶Î§Ö®ÄÚ²úÉú
-	_fRange[1]		= vRange.y;	//!Á£×ÓÔÚÕâ¸ö·¶Î§Ö®ÄÚ²úÉú
-	_fRange[2]		= vRange.z;	//!Á£×ÓÔÚÕâ¸ö·¶Î§Ö®ÄÚ²úÉú
+	_fRange[0]		= vRange.x;	//!
+	_fRange[1]		= vRange.y;	//!
+	_fRange[2]		= vRange.z;	//!
 	_vPos			= D3DXVECTOR3( -_fRange[0] / 2, -_fRange[1] / 2,-_fRange[2] / 2);
 
 	_wFrameCount	= wFrameCount;
@@ -606,7 +606,7 @@ void	CMPPartSys::BindingRes(CMPResManger	*pCResMagr)
 		id = pCResMagr->GetEffectID(_strModelName);
 		if(id < 0)
 		{
-			MessageBox(NULL,_strModelName.c_str(),"ÕÒ²»µ½Á£×ÓÄ£ÐÍERROR",0);
+			MessageBox(NULL,_strModelName.c_str(),"ERROR",0);
 			return;
 		}
 		else
@@ -670,14 +670,14 @@ __ret:
 
 	//if(_bModelRange)
 	//{
-	//	id = pCResMagr->GetMeshID(_strVirualModel);//ÓÃÀ´²éÕÒµÄÐéÄâÄ£ÐÍµÄÃû³Æ
+	//	id = pCResMagr->GetMeshID(_strVirualModel);//
 	//	if(id == -1)
 	//	{
-	//		MessageBox(NULL,_strVirualModel.c_str(),"ÐéÄâÎïÌåÃ»ÓÐÕÒµ½ERROR",0);
+	//		MessageBox(NULL,_strVirualModel.c_str(),"ERROR",0);
 	//	}
 	//	else
 	//	{
-	//		//ÔÚÕâÀïµÃµ½¶¥µãÊýÁ¿ºÍ¶¥µãÊý¾Ý£» 
+	//		// 
 	//	}
 	//}
 }
@@ -733,7 +733,7 @@ void	CMPPartSys::SetModelName(const s_string& strModelName,CMPResManger	*pCResMa
 		id = pCResMagr->GetEffectID(_strModelName);
 		if(id < 0)
 		{
-			MessageBox(NULL,_strModelName.c_str(),"ÕÒ²»µ½Á£×ÓÄ£ÐÍERROR",0);
+			MessageBox(NULL,_strModelName.c_str(),"ERROR",0);
 			return;
 		}
 		else
@@ -799,9 +799,9 @@ void	CMPPartSys::InitParam()
 	_vDir  = D3DXVECTOR3(1.23f,1.25f,3.48f);
 	_fVecl =  2.8f;
 	_vAccel = D3DXVECTOR3(0,0,0);
-	//_fInfXY = 0;//ÔÚXYÖá·½ÏòÊÜµ½µÄÓ°Ïì
+	//_fInfXY = 0;//XY
 
-	_fStep	= 0.0f;//Ã¿¸ô¶àÉÙÊ±¼ä´´½¨Ò»¸öÁ£×Ó
+	_fStep	= 0.0f;//
 	_fCurTime = 0;
 	_fDelayTime =0;
 	_fPlayTime =0;
@@ -1668,7 +1668,7 @@ void CMPPartSys::setDir(float fx, float fy, float fz)
 			//	fDirXZ[0] = asinf(D3DXVec3Dot(&vDir,
 			//		&D3DXVECTOR3(0.0f, 0.0f, 1.0f))/ fDist);
 			//}
-			////ÇóÔÚXÖá·½ÏòÐý×ªµÄ½Ç¶È
+			////X
 			//if(vDir.x == 0 && vDir.y == 0)
 			//	fDirXZ[1] = 0;
 			//else
@@ -1925,7 +1925,7 @@ void _FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime)
 	//_fDummyDist
 	//_vDummyPos
 
-	// ÉèÖÃÃ¿¸öÁ£×ÓµÄÐÂÎ»ÖÃ
+	// 
 	CMPParticle* pParticle(0);
 	for(WORD n = 0; n < pPart->_iParNum; ++n)
 	{
@@ -2055,7 +2055,7 @@ void _FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime)
 	//_fDummyDist
 	//_vDummyPos
 
-	// ÉèÖÃÃ¿¸öÁ£×ÓµÄÐÂÎ»ÖÃ
+	// 
 	CMPParticle* pParticle(0);
 	for(WORD n = 0; n < pPart->_iParNum; ++n)
 	{
@@ -3238,13 +3238,13 @@ bool	_CreateWind(CMPPartSys* pPart,CMPParticle* pCtrl)
 
 	//pParticle = pPart->_vecParticle[0];
 
-	//float fFrameTime = pParticle->m_fLife / pPart->_wFrameCount;//Ã¿Ò»Ö¡µÄ¸ß¶È
+	//float fFrameTime = pParticle->m_fLife / pPart->_wFrameCount;//
 	//for(int n = 0; n < pPart->_iParNum; ++n)
 	//{
 	//	pParticle = pPart->_vecParticle[n];
 
 	//	pParticle->m_bLive		= false;
-	//	pParticle->m_fLife		=   Randf(pPart->_fVecl);//pPart->_fLife;//¾ÍÊÇ·çµÄ¸ß¶È
+	//	pParticle->m_fLife		=   Randf(pPart->_fVecl);//pPart->_fLife;//
 
 	//	pParticle->m_fFrameTime = fFrameTime;
 
@@ -3294,24 +3294,24 @@ void	_FrameMoveWind(CMPPartSys* pPart,DWORD	dwDailTime)
 	//	pPart->_vecBone.push_back(tv);
 	//}
 
-	////¼ÆËãÃ¿Ò»Ö¡µÄÁ£×ÓÊýÁ¿
+	////
 	//int iNum = (int)pPart->_iParNum / pPart->_wFrameCount;
-	////ÔÚÃ¿Ò»Ö¡
+	////
 	//for(int m = 0; m < pPart->_wFrameCount - 1; ++m)
 	//{
-	//	//¼ÆËãµ±Ç°Ö¡ºÍÏÂÒ»Ö¡µÄsize µÄ²î
+	//	//size 
 	//	float fsize = *pPart->_vecFrameSize[m+1] - *pPart->_vecFrameSize[m];
 	//	D3DXVECTOR3 vDir = *pPart->_vecBone[m+1] - *pPart->_vecBone[m];
 	//	float fdist = D3DXVec3Length(&vDir);
 	//	D3DXVec3Normalize(&vDir,&vDir);
-	//	fdist /= iNum;//Ã¿¸öÁ£×ÓµÄ¼ä¸ô¾àÀë
-	//	fsize /= iNum;//Ã¿¸öÁ£×ÓµÄ¼ä¸ô´óÐ¡
-	//	//ÔÚÃ¿Ò»¸öÁ£×Ó
+	//	fdist /= iNum;//
+	//	fsize /= iNum;//
+	//	//
 	//	for(int n = 0; n < iNum; ++n)
 	//	{
-	//		int icurp = m * iNum + n;//µÃµ½µ±Ç°Á£×ÓË÷Òý
+	//		int icurp = m * iNum + n;//
 	//		pParticle = pPart->_vecParticle[icurp];
-	//		//¼ÆËãµ±Ç°Á£×ÓµÄÎ»ÖÃ
+	//		//
 	//		pParticle->m_vPos = (*pPart->_vecBone[m])  + (vDir * (fdist * n));
 	//		pParticle->m_fSize = *pPart->_vecFrameSize[m] + fsize * n;
 
@@ -3986,7 +3986,7 @@ bool	_CreateRipple(CMPPartSys* pPart,CMPParticle* pCtrl)
 		pCtrl->m_fFrameTime = pCtrl->m_fLife / pPart->_wFrameCount;
 
 		if(pPart->_bUseBone)
-			pCtrl->m_SBoneMat = pPart->_SBoneMat;//ÑØZÖá½øÐÐÐý×ª
+			pCtrl->m_SBoneMat = pPart->_SBoneMat;//Z
 		pCtrl->m_fCurTime	= 0;
 		pCtrl->m_wCurFrame = 0;
 
@@ -4139,18 +4139,18 @@ bool	CMPPartSys::SaveToFile(FILE* t_pFile)
 	fwrite(&_vAccel,sizeof(D3DXVECTOR3),1,t_pFile);
 	fwrite(&_fStep,sizeof(float),1,t_pFile);
 
-//¼ÓÈëÐéÄâÄ£ÐÍµÄ±£´æ
+//
 	fwrite(&_bModelRange,sizeof(bool),1,t_pFile);
 	lstrcpy(t_pszName,_strVirualModel.c_str());
 	fwrite(t_pszName,sizeof(char),32,t_pFile);
 
-//¼ÓÈëÎ»ÖÃÆ«ÒÆ
+//
 	fwrite(&_vOffset,sizeof(D3DXVECTOR3),1,t_pFile);
-//¼ÓÈëÑÓ³Ù²¥·Å
+//
 	fwrite(&_fDelayTime,sizeof(float),1,t_pFile);
 	fwrite(&_fPlayTime,sizeof(float),1,t_pFile);
 
-//¼ÓÈëÂ·¾¶±£´æ
+//
 	bool	busepsth = _pcPath ? true : false;
 	fwrite(&busepsth,sizeof(bool),1,t_pFile);
 	if(busepsth)
@@ -4158,7 +4158,7 @@ bool	CMPPartSys::SaveToFile(FILE* t_pFile)
 
 	fwrite(&m_bShade,sizeof(bool),1,t_pFile);
 
-	//¼ÓÈë´ò»÷Ð§¹û
+	//
 	lstrcpy(t_pszName,m_strHitEff.c_str());
 	fwrite(t_pszName,sizeof(char),32,t_pFile);
 
@@ -4188,7 +4188,7 @@ bool	CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion)
 	_vecParticle.setsize(_iParNum);
 
 	fread(t_pszName,sizeof(char),32,t_pFile);
-	//È«²¿×ª»»³ÉÐ¡Ð´
+	//
 	//char *pszDataName = _strlwr( _strdup( t_pszName ) );
 
 	s_string sFileName = t_pszName;
@@ -4270,13 +4270,13 @@ bool	CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion)
 
 	if(dwVersion > 3)
 	{
-		//¼ÓÈëÐéÄâÄ£ÐÍµÄ¶ÁÈ¡
+		//
 		fread(&_bModelRange,sizeof(bool),1,t_pFile);
 		fread(t_pszName,sizeof(char),32,t_pFile);
 	}
 	if(dwVersion > 4)
 	{
-		//¼ÓÈëÎ»ÖÃÆ«ÒÆ
+		//
 		fread(&_vOffset,sizeof(D3DXVECTOR3),1,t_pFile);
 	}
 	if(dwVersion > 5)
@@ -4284,7 +4284,7 @@ bool	CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion)
 		fread(&_fDelayTime,sizeof(float),1,t_pFile);
 		fread(&_fPlayTime,sizeof(float),1,t_pFile);
 	}
-	//¼ÓÈëÂ·¾¶
+	//
 	if(dwVersion > 8)
 	{
 		SAFE_DELETE(_pcPath);
@@ -4302,7 +4302,7 @@ bool	CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion)
 	{
 		fread(&m_bShade,sizeof(bool),1,t_pFile);
 	}
-	//¼ÓÈë´ò»÷Ð§¹û
+	//
 	if(dwVersion > 10)
 	{
 		fread(t_pszName,sizeof(char),32,t_pFile);
@@ -4350,7 +4350,7 @@ bool	CMPPartSys::LoadFromMemory(CMemoryBuf*	pbuf, DWORD dwVersion)
 	_vecParticle.setsize(_iParNum);
 
 	pbuf->mread(t_pszName,sizeof(char),32); 
-	//È«²¿×ª»»³ÉÐ¡Ð´
+	//
 	//char *pszDataName = _strlwr( _strdup( t_pszName ) );
 	s_string sFileName = t_pszName;
 	transform(sFileName.begin(), sFileName.end(),
@@ -4438,13 +4438,13 @@ bool	CMPPartSys::LoadFromMemory(CMemoryBuf*	pbuf, DWORD dwVersion)
 
 	if(dwVersion > 3)
 	{
-		//¼ÓÈëÐéÄâÄ£ÐÍµÄ¶ÁÈ¡
+		//
 		pbuf->mread(&_bModelRange,sizeof(bool),1);
 		pbuf->mread(t_pszName,sizeof(char),32);
 	}
 	if(dwVersion > 4)
 	{
-		//¼ÓÈëÎ»ÖÃÆ«ÒÆ
+		//
 		pbuf->mread(&_vOffset,sizeof(D3DXVECTOR3),1);
 	}
 	if(dwVersion > 5)
@@ -4452,7 +4452,7 @@ bool	CMPPartSys::LoadFromMemory(CMemoryBuf*	pbuf, DWORD dwVersion)
 		pbuf->mread(&_fDelayTime,sizeof(float),1);
 		pbuf->mread(&_fPlayTime,sizeof(float),1);
 	}
-	//¼ÓÈëÂ·¾¶
+	//
 	if(dwVersion > 8)
 	{
 		SAFE_DELETE(_pcPath);
@@ -4472,7 +4472,7 @@ bool	CMPPartSys::LoadFromMemory(CMemoryBuf*	pbuf, DWORD dwVersion)
 	}
 	SetOpertion();
 
-	//¼ÓÈë´ò»÷Ð§¹û
+	//
 	if(dwVersion > 10)
 	{
 		pbuf->mread(t_pszName,sizeof(char),32);
@@ -4522,9 +4522,9 @@ void	CopyPartSys(CMPPartSys* part1,CMPPartSys* part2)
 	part1->_strModelName	= part2->_strModelName;
 	part1->_pCModel		= NULL;//part2->_pCModel;
 
-	part1->_fRange[0]		= part2->_fRange[0];	//!Á£×ÓÔÚÕâ¸ö·¶Î§Ö®ÄÚ²úÉú
-	part1->_fRange[1]		= part2->_fRange[1];	//!Á£×ÓÔÚÕâ¸ö·¶Î§Ö®ÄÚ²úÉú
-	part1->_fRange[2]		= part2->_fRange[2];	//!Á£×ÓÔÚÕâ¸ö·¶Î§Ö®ÄÚ²úÉú
+	part1->_fRange[0]		= part2->_fRange[0];	//!
+	part1->_fRange[1]		= part2->_fRange[1];	//!
+	part1->_fRange[2]		= part2->_fRange[2];	//!
 
 	part1->_wFrameCount	=  part2->_wFrameCount;
 

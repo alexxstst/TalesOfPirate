@@ -1,4 +1,4 @@
-#ifndef __dsquery_h
+﻿#ifndef __dsquery_h
 #define __dsquery_h
 
 //

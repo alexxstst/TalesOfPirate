@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I X . H
  *	
  *	Definitions of objects/flags, etc used by Extended MAPI.

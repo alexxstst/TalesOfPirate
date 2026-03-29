@@ -1,10 +1,11 @@
-#include "stdafx.h"
-#include "caLua.h"
+ï»¿#include "stdafx.h"
 #include "script.h"
 #include "scene.h"
 #include "GameApp.h"
 #include "ChaClientAttr.h"
 #include "WorldScene.h"
+#include <LuaBridge.h>
+
 
 SClientAttr g_ClientAttr[2000];
 
@@ -13,7 +14,7 @@ SCameraMode CameraMode[4];
 //---------------------------------------------------------------------------
 // Scene_Script
 //---------------------------------------------------------------------------
-int SN_CreateScene( int type, char* name, char* map_name, int ui, int max_cha, int max_obj, int max_item, int max_eff )
+int SN_CreateScene( int type, const std::string& name, const std::string& map_name, int ui, int max_cha, int max_obj, int max_item, int max_eff )
 {
 	if( type>=0 && type<enumSceneEnd )
 	{
@@ -28,7 +29,7 @@ int SN_CreateScene( int type, char* name, char* map_name, int ui, int max_cha, i
 		param.nMaxEff = max_eff;
 
 		CGameScene* s = g_pGameApp->CreateScene( &param );
-		
+
 		if( s ) return s->GetScriptID();
 	}
 	return R_FAIL;
@@ -44,9 +45,9 @@ int SN_SetTerrainShowCenter( int sceneid, int x, int y )
 {
 	CGameScene * p =  dynamic_cast<CGameScene*>(CScript::GetScriptObj(sceneid));
 	if( !p ) return R_FAIL;
-	
+
     MPTerrain *t = p->GetTerrain();
-	if( t ) 
+	if( t )
 	{
 		t->SetShowCenter( (float)x, (float)y );
 		return R_OK;
@@ -76,47 +77,11 @@ int CHA_SetClientAttr(int nScriptID, int nAngle, float fDis, float fHei)
 	return 0;
 }
 
-/************************************************************************/
-/*                                                                      */
-/************************************************************************/
-//C_NORMAL    = 0  --Õý³£Ä£Ê½   
-//C_NEAR      = 1  --Æ«½üÄ£Ê½  ¾àÀë±ÈÕý³£Ä£Ê½Æ«½ü
-//C_HIGHSPEED = 2  --¸ßËÙÄ£Ê½  ¹Ì¶¨¾µÍ·, ²»¿ÉÐý×ª
-//C_SHIP      = 3  --º£ÉÏÄ£Ê½  ÔÚ´¬ÉÏ, ¾àÀëºÜÔ¶
-//
-//CameraRangeXY(C_NORMAL, 40, 45)
-//CameraRangeZ(C_NORMAL, 25, 35)
-//CameraRangeFOV(C_NORMAL, 17, 20)
-//CameraEnableRotate(C_NORMAL, 0)
-//CameraShowSize(38, 38)
-//
-//CameraRangeXY(C_NEAR, 40, 45)
-//CameraRangeZ(C_NEAR, 25, 35)
-//CameraRangeFOV(C_NEAR, 17, 20)
-//CameraEnableRotate(C_NEAR, 0)
-//CameraShowSize(34, 34)
-//
-//CameraRangeXY(C_HIGHSPEED, 40, 45)
-//CameraRangeZ(C_HIGHSPEED, 25, 35)
-//CameraRangeFOV(C_HIGHSPEED, 17, 20)
-//CameraEnableRotate(C_HIGHSPEED, 1)
-//CameraShowSize(30, 30)
-//
-//CameraRangeXY(C_SHIP, 40, 45)
-//CameraRangeZ(C_SHIP, 25, 35)
-//CameraRangeFOV(C_SHIP, 17, 20)
-//CameraEnableRotate(C_SHIP, 0)
-//CameraShowSize(45, 45)
-
-//scripts/cameraconf.clu
-//¶ÔÓ¦cµÄÈ«¾Ö±äÁ¿ CameraMode[].xxxx
-
 int CameraRangeXY(int nMode, float fMin, float fMax)
 {
 	CameraMode[nMode].m_fminxy = fMin;
 	CameraMode[nMode].m_fmaxxy = fMax;
 	return 0;
-
 }
 
 int CameraRangeZ(int nMode, float fMin, float fMax)
@@ -124,7 +89,6 @@ int CameraRangeZ(int nMode, float fMin, float fMax)
 	CameraMode[nMode].m_fminHei = fMin;
 	CameraMode[nMode].m_fmaxHei = fMax;
 	return 0;
-
 }
 
 int CameraRangeFOV(int nMode, float fMin, float fMax)
@@ -132,14 +96,12 @@ int CameraRangeFOV(int nMode, float fMin, float fMax)
 	CameraMode[nMode].m_fminfov = fMin;
 	CameraMode[nMode].m_fmaxfov = fMax;
 	return 0;
-
 }
 
 int CameraEnableRotate(int nMode, int nEnable)
 {
 	CameraMode[nMode].m_bRotate = nEnable;
 	return 0;
-
 }
 
 int CameraShowSize(int nMode, int w, int h)
@@ -147,7 +109,6 @@ int CameraShowSize(int nMode, int w, int h)
 	CameraMode[nMode].m_nShowWidth  = w;
 	CameraMode[nMode].m_nShowHeight = h;
 	return 0;
-
 }
 
 int CameraShowSize1024(int nMode, int w, int h)
@@ -160,18 +121,18 @@ int CameraShowSize1024(int nMode, int w, int h)
 //---------------------------------------------------------------------------
 // ScriptRegedit
 //---------------------------------------------------------------------------
-void MPInitLua_Scene()
+void MPInitLua_Scene(lua_State* L)
 {
-	CLU_RegisterFunction("SN_CreateScene", "int", "int,char*,char*,int,int,int,int,int", CLU_CDECL, CLU_CAST(SN_CreateScene));	
-	CLU_RegisterFunction("SN_SetTerrainShowCenter", "int", "int,int,int", CLU_CDECL, CLU_CAST(SN_SetTerrainShowCenter));	
-	CLU_RegisterFunction("SN_SetIsShow3DCursor", "int", "int", CLU_CDECL, CLU_CAST(SN_SetIsShow3DCursor));
-	CLU_RegisterFunction("SN_SetIsShowMinimap", "int", "int", CLU_CDECL, CLU_CAST(SN_SetIsShowMinimap));
-	CLU_RegisterFunction("SN_SetAttackChaColor", "int", "int,int,int", CLU_CDECL, CLU_CAST(SN_SetAttackChaColor));
-
-	CLU_RegisterFunction("CHA_SetClientAttr", "int", "int,int,float,float", CLU_CDECL, CLU_CAST(CHA_SetClientAttr));
-	CLU_RegisterFunction("CameraRangeXY", "int", "int,float,float", CLU_CDECL, CLU_CAST(CameraRangeXY));
-	CLU_RegisterFunction("CameraRangeZ",  "int", "int,float,float", CLU_CDECL, CLU_CAST(CameraRangeZ));
-	CLU_RegisterFunction("CameraRangeFOV","int", "int,float,float", CLU_CDECL, CLU_CAST(CameraRangeFOV));
-	CLU_RegisterFunction("CameraEnableRotate", "int", "int,int", CLU_CDECL, CLU_CAST(CameraEnableRotate));
-	CLU_RegisterFunction("CameraShowSize", "int", "int,int,int", CLU_CDECL, CLU_CAST(CameraShowSize));
+	luabridge::getGlobalNamespace(L)
+		LUABRIDGE_REGISTER_FUNC(SN_CreateScene)
+		LUABRIDGE_REGISTER_FUNC(SN_SetTerrainShowCenter)
+		LUABRIDGE_REGISTER_FUNC(SN_SetIsShow3DCursor)
+		LUABRIDGE_REGISTER_FUNC(SN_SetIsShowMinimap)
+		LUABRIDGE_REGISTER_FUNC(SN_SetAttackChaColor)
+		LUABRIDGE_REGISTER_FUNC(CHA_SetClientAttr)
+		LUABRIDGE_REGISTER_FUNC(CameraRangeXY)
+		LUABRIDGE_REGISTER_FUNC(CameraRangeZ)
+		LUABRIDGE_REGISTER_FUNC(CameraRangeFOV)
+		LUABRIDGE_REGISTER_FUNC(CameraEnableRotate)
+		LUABRIDGE_REGISTER_FUNC(CameraShowSize);
 }

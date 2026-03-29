@@ -1,4 +1,4 @@
-print("-- [Loading] Crystals Category")
+﻿print("-- [Loading] Crystals Category")
 
 local MainTabName = 'Crystals'
 

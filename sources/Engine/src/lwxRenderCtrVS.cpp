@@ -1,4 +1,4 @@
-//
+ï»¿//
 
 #include "stdafx.h"
 #include "lwxRenderCtrlVS.h"
@@ -54,7 +54,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    // ===== declarações antecipadas (evita warnings com goto) =====
+    // ===== declaraes antecipadas (evita warnings com goto) =====
     lwIResourceMgr*              res_mgr   = 0;
     lwIDeviceObject*             dev_obj   = 0;
     lwMatrix44*                  mat_global= 0;
@@ -80,7 +80,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
     DWORD                        vs_id = 0;
 #endif
 
-    // ===== validações básicas =====
+    // ===== validaes bsicas =====
     if (!agent)
         goto __ret;
 
@@ -163,7 +163,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
                 if (bone_num == 0 || !rtmat)
                     goto __ret;
 
-                // buffer estático: 50 ossos * (3 registros * 4 floats) = 600 floats
+                // buffer esttico: 50 ossos * (3 registros * 4 floats) = 600 floats
                 static float __this_buf[50 * 12];
                 if (bone_num > 50)
                     bone_num = 50; // evita overflow, mantido simples
@@ -180,7 +180,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
         }
     }
 
-    // ===== pixel shader (bloco adicionado, mantido próximo ao original) =====
+    // ===== pixel shader (bloco adicionado, mantido prximo ao original) =====
     if (!mPixelShaderName.empty())
     {
         IDirect3DDeviceX* device = dev_obj->GetDevice();
@@ -254,7 +254,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
     ret = LW_RET_OK;
 
 __ret:
-    // restaura fog se tínhamos desligado e falhou
+    // restaura fog se tnhamos desligado e falhou
     if (LW_FAILED(ret) && _rs_fog)
         dev_obj->SetRenderState(D3DRS_FOGENABLE, TRUE);
 
@@ -399,7 +399,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    // --- declarações antecipadas (evita warnings com goto) ---
+    // --- declaraes antecipadas (evita warnings com goto) ---
     lwIResourceMgr*             res_mgr      = 0;
     lwIDeviceObject*            dev_obj      = 0;
     IDirect3DDeviceX*           dev          = 0;
@@ -408,7 +408,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
     DWORD                       blend_factor = 0;
 
     lwMatrix44*                 mat_global   = 0;
-    lwMatrix44                  mat; // viewProj * global (sem transpose, como no seu código)
+    lwMatrix44                  mat; // viewProj * global (sem transpose, como no seu cdigo)
     lwVector3                   light_dir(0.0f, 0.0f, 0.0f);
 
     DWORD                       rs_amb       = 0;
@@ -417,7 +417,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
     DWORD                       animobj_num  = 0;
     lwIAnimCtrlObj*             animctrl_obj = 0;
 
-    // --- validações mínimas preservando o estilo original ---
+    // --- validaes mnimas preservando o estilo original ---
     if (!agent)
         goto __ret;
 
@@ -448,7 +448,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
     if (_rs_fog)
         dev_obj->SetRenderState(D3DRS_FOGENABLE, FALSE);
 
-    // --- matrizes (mantido sem transpose, como no seu código) ---
+    // --- matrizes (mantido sem transpose, como no seu cdigo) ---
     mat_global = agent->GetGlobalMatrix();
     if (!mat_global)
         goto __ret;
@@ -557,7 +557,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSet(lwIRenderCtrlAgent* agent)
     ret = LW_RET_OK;
 
 __ret:
-    // restaura FOG se falhou e tínhamos desligado
+    // restaura FOG se falhou e tnhamos desligado
     if (LW_FAILED(ret) && _rs_fog)
         dev_obj->SetRenderState(D3DRS_FOGENABLE, TRUE);
 
@@ -582,7 +582,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    // --- declarações antecipadas (evita warnings com goto) ---
+    // --- declaraes antecipadas (evita warnings com goto) ---
     lwIResourceMgr*     res_mgr       = 0;
     lwIDeviceObject*    dev_obj       = 0;
     lwIMtlTexAgent*     mtltex_agent  = 0;
@@ -597,7 +597,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
     DWORD               animobj_num   = 0;
     lwIAnimCtrlObj*     animctrl_obj  = 0;
 
-    // tabela de estágios para UV (mantida como no original)
+    // tabela de estgios para UV (mantida como no original)
     DWORD stage_tab[3] =
     {
         VS_CONST_REG_TS0_UVMAT,
@@ -605,7 +605,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
         VS_CONST_REG_TS2_UVMAT,
     };
 
-    // --- validações mínimas ---
+    // --- validaes mnimas ---
     if (!agent)
         goto __ret;
 
@@ -636,7 +636,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
     _rs_amb.g = LW_ARGB_G(rs_amb);
     _rs_amb.b = LW_ARGB_B(rs_amb);
 
-    // --- combinações amb/dif conforme luz direcional (mantido) ---
+    // --- combinaes amb/dif conforme luz direcional (mantido) ---
     if (_rs_lgt && _lgt_enable && _lgt.Type == D3DLIGHT_DIRECTIONAL)
     {
         c = &amb_dif[0];
@@ -673,7 +673,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
     if (FAILED(_const_tab->SetVector(dev, "mtl_dif", (D3DXVECTOR4*)&amb_dif[1])))
         goto __ret;
 
-    // --- UV anim (mantido; só adicionei bounds-check) ---
+    // --- UV anim (mantido; s adicionei bounds-check) ---
     anim_agent = agent->GetAnimCtrlAgent();
     if (!anim_agent)
         goto __ret;
@@ -694,7 +694,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
             // checa subset e tipo
             if (info.data[0] == subset && info.type == ANIM_CTRL_TYPE_TEXUV)
             {
-                // garante índice válido em stage_tab
+                // garante ndice vlido em stage_tab
                 if (info.data[1] >= 0 && info.data[1] < 3)
                 {
                     DWORD stage_id = stage_tab[info.data[1]];
@@ -711,7 +711,7 @@ LW_RESULT lwxRenderCtrlVSVertexBlend::BeginSetSubset(DWORD subset, lwIRenderCtrl
                     // if (FAILED(_const_tab->SetMatrix(dev, "ts0_uvmat", &mat)))
                     //     goto __ret;
                 }
-                // se não for [0..2], ignora silenciosamente
+                // se no for [0..2], ignora silenciosamente
             }
         }
     }

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "HMSynchroObj.h"
 #include "GameApp.h"
 #include "character.h"
@@ -71,7 +71,7 @@ void CSynchroManage::FrameMove( DWORD dwTime )
 			static CCharacter* pCha = NULL;
 			if( p->_isExec || dwTime >= p->_dwExecTime )
 			{
-				// ���ǰ����δִ�е�ͬ��ɫ�˺��������ݲ�ִ��
+				// 
 				pCha = p->GetHarmCha();
 				if( pCha && find( noexec.begin(), noexec.end(), pCha )!=noexec.end() )
 					continue;

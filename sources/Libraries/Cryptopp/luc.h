@@ -1,4 +1,4 @@
-// luc.h - originally written and placed in the public domain by Wei Dai
+﻿// luc.h - originally written and placed in the public domain by Wei Dai
 
 /// \file luc.h
 /// \brief Classes for the LUC cryptosystem
@@ -308,7 +308,7 @@ struct DL_CryptoKeys_LUC
 /// \brief LUC Integrated Encryption Scheme
 /// \tparam COFACTOR_OPTION cofactor multiplication option
 /// \tparam HASH HashTransformation derived class used for key drivation and MAC computation
-/// \tparam DHAES_MODE flag indicating if the MAC includes additional context parameters such as <em>u·V</em>, <em>v·U</em> and label
+/// \tparam DHAES_MODE flag indicating if the MAC includes additional context parameters such as <em>uV</em>, <em>vU</em> and label
 /// \tparam LABEL_OCTETS flag indicating if the label size is specified in octets or bits
 /// \sa CofactorMultiplicationOption
 /// \since Crypto++ 2.1, Crypto++ 5.7 for Bouncy Castle and Botan compatibility

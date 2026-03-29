@@ -1,4 +1,4 @@
-// donna_sse.cpp - written and placed in public domain by Jeffrey Walton
+﻿// donna_sse.cpp - written and placed in public domain by Jeffrey Walton
 //                 This is a integration of Andrew Moon's public domain code.
 //                 Also see https://github.com/floodyberry/curve25519-donna.
 

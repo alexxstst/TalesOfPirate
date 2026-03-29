@@ -1,4 +1,4 @@
-// simon.h - written and placed in the public domain by Jeffrey Walton
+﻿// simon.h - written and placed in the public domain by Jeffrey Walton
 
 #include "pch.h"
 #include "config.h"

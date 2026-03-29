@@ -1,4 +1,4 @@
-print("-- [Loading] System SDK")
+﻿print("-- [Loading] System SDK")
 
 Server = {}
 Server.Sys = {}

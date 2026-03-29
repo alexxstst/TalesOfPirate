@@ -1,4 +1,4 @@
-#ifndef UI_MAKE_EQUIP_FORM_H
+ï»¿#ifndef UI_MAKE_EQUIP_FORM_H
 #define UI_MAKE_EQUIP_FORM_H
 
 #include "UIGlobalVar.h"
@@ -37,10 +37,10 @@ namespace GUI
 		void		SetType(int type) { m_iType = type; }
 		int			GetType() const { return m_iType; }
 
-		static const int MAKE_EQUIP_TYPE = 2;	//ºÏ³ÉÀàÐÍ£¨Ð­ÒéÖÐÓÃ£©
-		static const int EQUIP_FUSION_TYPE = 4;	//×°±¸ÈÛºÏ
-		static const int EQUIP_UPGRADE_TYPE = 5;//×°±¸Éý¼¶
-		static const int ELF_SHIFT_TYPE     = 6;//¾«Áé¶þ×ª
+		static const int MAKE_EQUIP_TYPE = 2;	//
+		static const int EQUIP_FUSION_TYPE = 4;	//
+		static const int EQUIP_UPGRADE_TYPE = 5;//
+		static const int ELF_SHIFT_TYPE     = 6;//
 
 		
 		void		PushEquipUpgradeItem(int iIndex, CItemCommand& rItem);
@@ -73,12 +73,12 @@ namespace GUI
 		void		ClearEquipList(int iIndex);
 
 		/*
-		 *	Help Function:ÓÃÓÚÍ³Ò»´¦ÀíÍÏ¶¯ÊÂ¼þ
+		 *	Help Function:
 		 */
 		//void		DragEvtEquipItem(int index, CGuiData *pSender, CCommandObj* pItem, bool& isAccept);
 
 		/*
-		 *	ÊÇ·ñ±¦Ê¯ºÏ³É
+		 *	
 		 */
 		bool		IsMakeGem();	
 		bool		CanPushStone(int iIndex, CItemCommand& rItem);
@@ -87,7 +87,7 @@ namespace GUI
 		//void		SetMakeEquipUI();
 
 		/*
-		 *	ÍÐ·Å¾íÖáÏà¹Ø
+		 *	
 		 */
 		//void		PushRouleau(CItemCommand& rItem);
 		void		PopRouleau();
@@ -95,43 +95,43 @@ namespace GUI
 		void		PushNewEquips(CItemRecord& rRouleauRecord);
 
 		/*
-		 *	ÍÐ·Å±¦Ê¯Ïà¹Ø
+		 *	
 		 */
 		void		PushGemItem(int iIndex, CItemCommand& rItem);
 		void		PopGemItem(int iIndex);
 
 		/*
-		 *	ÍÐ·ÅÆäËûºÏ³ÉÔ­ÁÏÏà¹Ø
+		 *	
 		 */
 		void		PushEquipItem(int iIndex, CItemCommand& rItem);
 		void		PopEquipItem(int iIndex);
 
 		/*
-		 *	ÍÏ·ÅÈÛºÏÎïÆ·
+		 *	
 		 */
 		void		PushEquipFusionItem(int iIndex, CItemCommand& rItem);
 		void		PopEquipFusionItem(int iIndex);
 
 		/*
-		 *	ÍÏ·ÅÉý¼¶ÎïÆ·
+		 *	
 		 */
 		//void		PushEquipUpgradeItem(int iIndex, CItemCommand& rItem);
 		void		PopEquipUpgradeItem(int iIndex);
 
 		/*
-		 *	ÍÏ·Å×îºóºÏ³ÉÎïÏà¹Ø
+		 *	
 		 */
 		void		PushLastEquip(CItemCommand& rItem);
 		void		PopLastEquip();
 
 		/*
-		 *  ÍÏ·Å¾«Áé¶þ×ªÏà¹Ø
+		 *  
 		 */
 		void		PushElfShiftItem(int iIndex, CItemCommand& rItem);
 		void		PopElfShiftItem(int iIndex);
 
 		/*
-		 *	Êµ¼ÊÖ´ÐÐÍÐ·Å²Ù×÷µÄº¯Êý
+		 *	
 		 */
 		//void		PushItem(int iIndex, CItemCommand& rItem, int iItemNum);
 		void		PopItem(int iIndex);
@@ -149,19 +149,19 @@ namespace GUI
 		bool		IsEquipUpgradeSpar(CItemCommand& rItem);
 		bool		IsFusionEquip(CItemCommand& rItem);
 
-		bool        IsElfShiftStone(CItemCommand& rItem);	// ÊÇ·ñÊÇ¾«Áé¶þ×ªËùÐèµÄ¶ñÄ§¹ûÊµ
-		bool        IsElfShiftItem(CItemCommand& rItem);	// ÊÇ·ñÊÇ¾«Áé
+		bool        IsElfShiftStone(CItemCommand& rItem);	// 
+		bool        IsElfShiftItem(CItemCommand& rItem);	// 
 
 
 	private:
-		static const int STONE_ITEM_NUM = 2;	//±¦Ê¯ºÏ³ÉÊýÁ¿
-		static const int ITEM_NUM = 4;			//ÆäËûºÏ³ÉÊýÁ¿
-		static const int FUSION_NUM = 3;		//ÈÛºÏItemÊýÁ¿
-		static const int UPGRADE_NUM = 2;		//Éý¼¶ItemÊýÁ¿
-		static const int SHIFT_NUM   = 2;       //¾«Áé¶þ×ªItemÊýÁ¿
+		static const int STONE_ITEM_NUM = 2;	//
+		static const int ITEM_NUM = 4;			//
+		static const int FUSION_NUM = 3;		//Item
+		static const int UPGRADE_NUM = 2;		//Item
+		static const int SHIFT_NUM   = 2;       //Item
 
-		static const int GEM_ROULEAU_TYPE = 47;	//±¦Ê¯¾íÖáµÀ¾ßÀàÐÍºÅ
-		static const int EQUIP_ROULEAU_TYPE = 48;//µÀ¾ßºÏ³É¾íÖáDºÅ
+		static const int GEM_ROULEAU_TYPE = 47;	//
+		static const int EQUIP_ROULEAU_TYPE = 48;//D
 		static const int GEN_STONE_TYPE = 49;
 		static const int FORGE_STONE_TYPE = 50;
 		static const int EQUIP_FUSION_ROULEAU_TYPE = 60;
@@ -174,7 +174,7 @@ namespace GUI
 
 
 		static const long MAKE_EQUIP_MONEY = 50000;
-		static const long EQUIP_FUSION_MONEY = 1000;	// ÈÛºÏ³ËÒÔµÄÇ®Êý
+		static const long EQUIP_FUSION_MONEY = 1000;	// 
 		static const long EQUIP_UPGRADE_MONEY = 10000;
 
 		CForm*			frmMakeEquip;
@@ -187,8 +187,8 @@ namespace GUI
 		CTextButton	*	btnYes;
 
 		struct EquipInfo {
-			int iPos;		// ÎïÆ·À¸Î»µÄÎ»ÖÃË÷Òý
-			int iNum;		// ÎïÆ·µÄÊýÁ¿
+			int iPos;		// 
+			int iNum;		// 
 		};
 		typedef std::vector<EquipInfo*> EquipList;
 		typedef EquipList::iterator EquipListIter;

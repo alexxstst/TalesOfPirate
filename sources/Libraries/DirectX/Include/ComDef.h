@@ -1,4 +1,4 @@
-/***
+﻿/***
 * comdef.h - Native C++ compiler COM support - main definitions header
 *
 *       Copyright (C) 1996-1999 Microsoft Corporation

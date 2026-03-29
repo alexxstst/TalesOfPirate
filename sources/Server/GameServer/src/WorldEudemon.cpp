@@ -1,4 +1,4 @@
-// WorldEudemon.cpp Created by knight-gongjian 2005.3.9.
+﻿// WorldEudemon.cpp Created by knight-gongjian 2005.3.9.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "WorldEudemon.h"
@@ -26,7 +26,7 @@ namespace mission
 	{
 		if( szFunc[0] == '0' ) return TRUE;
 
-		// ��ʼ��NPC�ű�ȫ�ֱ�����Ϣ
+		// NPC
 		lua_getglobal( g_pLuaState, "ResetNpcInfo" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -41,9 +41,9 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s]�Ľű���ʼ����������[ResetNpcInfo]����ʧ��!", szName );
+			//LG( "NpcInit", "npc[%s][ResetNpcInfo]!", szName );
 			ToLogService("common", "npc[{}]'s script init dispose function[ResetNpcInfo]transfer error!", szName );
-			// Заменено printf → логирование через snprintf + InternalLog
+			//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_WORLDEUDEMON_CPP_00001), szName); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -51,7 +51,7 @@ namespace mission
 		}
 		lua_settop(g_pLuaState, 0);
 
-		// ����NPC��ʼ��ȫ�ֱ�����Ϣ��ں���
+		// NPC
 		lua_getglobal( g_pLuaState, szFunc );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -63,9 +63,9 @@ namespace mission
 		nStatus = lua_pcall( g_pLuaState, 0, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s]�Ľű����ݴ�������[%s]����ʧ��!", szName, szFunc );
+			//LG( "NpcInit", "npc[%s][%s]!", szName, szFunc );
 			ToLogService("common", "npc[{}]'s script data dispose function[{}]transfer failed!", szName, szFunc );
-			// Заменено printf → логирование через snprintf + InternalLog
+			//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_WORLDEUDEMON_CPP_00002), szName, szFunc); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -73,7 +73,7 @@ namespace mission
 		}
 		lua_settop(g_pLuaState, 0);
 
-		// ��ȡNPC�ĶԻ���Ϣ�ͽ�����Ϣ
+		// NPC
 		lua_getglobal( g_pLuaState, "GetNpcInfo" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -88,9 +88,9 @@ namespace mission
 		nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s]�Ľű���ʼ����������[GetNpcInfo]����ʧ��!", szName );
+			//LG( "NpcInit", "npc[%s][GetNpcInfo]!", szName );
 			ToLogService("common", "npc[{}]'s script init dispose fuction[GetNpcInfo]transfer failed!", szName );
-			// Заменено printf → логирование через snprintf + InternalLog
+			//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_WORLDEUDEMON_CPP_00003), szName); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -105,10 +105,10 @@ namespace mission
 	{
 		Clear();
 
-		// ��ʼ��npc�ű���Ϣ
+		// npc
 		InitScript( szMsgProc, szName );
 		
-		// npc���ñ����
+		// npc
 		m_sNpcID = 0;
 
 		// 
@@ -120,7 +120,7 @@ namespace mission
 		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
 		SetLogName(szLogName);
 
-		// Ĭ��ʹ�õ�һ����ɫ��Ϣ
+		// 
 		m_pCChaRecord = (CChaRecord*)GetChaRecordInfo( 1 );
 		m_cat = (SHORT)m_pCChaRecord->lID;
 
@@ -132,7 +132,7 @@ namespace mission
     
 	HRESULT CWorldEudemon::MsgProc( CCharacter& character, net::RPacket& packet )
 	{
-		// ����NPC�ű��Ի���������
+		// NPC
 		lua_getglobal( g_pLuaState, "NpcProc" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -149,7 +149,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 4, 0, 0 );
 		if( nStatus )
 		{
-			//character.SystemNotice( "npc[%s]�Ľű���Ϣ��������[NpcProc]����ʧ��!", m_name );
+			//character.SystemNotice( "npc[%s][NpcProc]!", m_name );
 			character.SystemNotice( RES_STRING(GM_WORLDEUDEMON_CPP_00004), m_name );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);

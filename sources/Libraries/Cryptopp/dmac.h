@@ -1,4 +1,4 @@
-// dmac.h - originally written and placed in the public domain by Wei Dai
+﻿// dmac.h - originally written and placed in the public domain by Wei Dai
 
 /// \file dmac.h
 /// \brief Classes for DMAC message authentication code

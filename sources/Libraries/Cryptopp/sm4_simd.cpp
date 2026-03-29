@@ -1,4 +1,4 @@
-// sm4_simd.cpp - written and placed in the public domain by
+﻿// sm4_simd.cpp - written and placed in the public domain by
 //                Markku-Juhani O. Saarinen and Jeffrey Walton
 //
 //    This source file uses intrinsics and built-ins to gain access to

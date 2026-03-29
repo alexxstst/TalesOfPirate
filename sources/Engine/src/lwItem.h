@@ -1,4 +1,4 @@
-//
+﻿//
 #pragma once
 
 #include "lwHeader.h"
@@ -65,7 +65,7 @@ public:
     LW_RESULT PlayDefaultAnimation(bool IsGlitched = false);
 
 
-    // �������Ƕ���������߾��й�����������dummyֻ�а��ڹ����ϲ�����Ч��
+    // dummy
     LW_RESULT GetDummyMatrix( lwMatrix44* mat, DWORD id );
     LW_RESULT GetObjDummyRunTimeMatrix( lwMatrix44* mat, DWORD id );
 

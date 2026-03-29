@@ -1,4 +1,4 @@
-// FTSIFACE.h -- DLL interface for FTSrch.dll
+﻿// FTSIFACE.h -- DLL interface for FTSrch.dll
 // Copyright (c) 1996-1999 Microsoft Corporation
 
 #ifndef __FTSIFACE_H__

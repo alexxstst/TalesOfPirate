@@ -1,4 +1,4 @@
-/*
+﻿/*
  *
  *  Copyright (C) Microsoft Corporation, 1999-2000
  *

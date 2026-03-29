@@ -1,8 +1,8 @@
-#pragma once
+ï»¿#pragma once
 //----------------------------------------------------------------------
-// Ãû³Æ:µÀ¾ß¾«Á·×Ü±í
-// ×÷Õß:lh 2005-11-03
-// ×îºóÐÞ¸ÄÈÕÆÚ:
+// :
+// :lh 2005-11-03
+// :
 //----------------------------------------------------------------------
 #include "TableData.h"
 
@@ -16,7 +16,7 @@ public:
 		memset( fChaEffectScale, 0, sizeof(fChaEffectScale) );
     }
 	short Value[ITEM_REFINE_NUM];
-	float fChaEffectScale[4];			// µÀ¾ß½ÇÉ«ÌØÐ§Ëõ·Å±í
+	float fChaEffectScale[4];			// 
 	
 };
 
@@ -33,7 +33,7 @@ public:
 	}
 
 protected:
-	static CItemRefineSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CItemRefineSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

@@ -1,4 +1,4 @@
-//
+﻿//
 #include "lwHeader.h"
 #include "lwObjectPool.h"
 

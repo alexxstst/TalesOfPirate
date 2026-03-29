@@ -1,4 +1,4 @@
-// speck.h - written and placed in the public domain by Jeffrey Walton
+﻿// speck.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file speck.h
 /// \brief Classes for the Speck block cipher

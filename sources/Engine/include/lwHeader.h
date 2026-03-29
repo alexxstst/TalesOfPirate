@@ -1,4 +1,4 @@
-//
+﻿//
 #pragma once
 
 #define LW_NAMESPACE            MindPower

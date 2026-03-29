@@ -1,4 +1,4 @@
-// npc.cpp Created by knight-gongjian 2004.11.19.
+﻿// npc.cpp Created by knight-gongjian 2004.11.19.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "NPC.h"
@@ -98,7 +98,7 @@ namespace mission
 	{
 		if( szFunc[0] == '0' ) return TRUE;
 
-		// ��ʼ��NPC�ű�ȫ�ֱ�����Ϣ
+		// NPC
 		lua_getglobal( g_pLuaState, "ResetNpcInfo" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -113,9 +113,9 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s]�Ľű���ʼ����������[ResetNpcInfo]����ʧ��!", szName );
+			//LG( "NpcInit", "npc[%s][ResetNpcInfo]!", szName );
 			ToLogService("common", "npc[{}]'s script init dispose function[ResetNpcInfo]transfer failed!", szName );
-			// Заменено printf → логирование через snprintf + InternalLog
+			//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_NPC_CPP_00001), szName); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -123,7 +123,7 @@ namespace mission
 		}
 		lua_settop(g_pLuaState, 0);
 
-		// ����NPC��ʼ��ȫ�ֱ�����Ϣ��ں���
+		// NPC
 		lua_getglobal( g_pLuaState, szFunc );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -135,9 +135,9 @@ namespace mission
 		nStatus = lua_pcall( g_pLuaState, 0, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s]�Ľű����ݴ�������[%s]����ʧ��!", szName, szFunc );
+			//LG( "NpcInit", "npc[%s][%s]!", szName, szFunc );
 			ToLogService("common", "npc[{}]'s script data dispose function[{}]transfer failed!", szName, szFunc );
-			// Заменено printf → логирование через snprintf + InternalLog
+			//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_NPC_CPP_00002), szName, szFunc); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -145,7 +145,7 @@ namespace mission
 		}
 		lua_settop(g_pLuaState, 0);
 
-		// ��ȡNPC�ĶԻ���Ϣ�ͽ�����Ϣ
+		// NPC
 		lua_getglobal( g_pLuaState, "GetNpcInfo" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -160,9 +160,9 @@ namespace mission
 		nStatus = lua_pcall( g_pLuaState, 2, 0, 0 );
 		if( nStatus )
 		{
-			//LG( "NpcInit", "npc[%s]�Ľű���ʼ����������[GetNpcInfo]����ʧ��!", szName );
+			//LG( "NpcInit", "npc[%s][GetNpcInfo]!", szName );
 			ToLogService("common", "npc[{}]'s script init dispose function[GetNpcInfo]transfer failed!", szName );
-			// Заменено printf → логирование через snprintf + InternalLog
+			//  printf    snprintf + InternalLog
 		{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_NPC_CPP_00003), szName); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -177,13 +177,13 @@ namespace mission
 	BOOL CTalkNpc::Load( const CNpcRecord& recNpc, const CChaRecord& recChar )
 	{
 		Clear();
-		// ����npcΪδ����״̬
+		// npc
 		SetEyeshotAbility( false );	
 
-		// ��ʼ��npc�ű���Ϣ
+		// npc
 		InitScript( recNpc.szMsgProc, recNpc.szName );
 		
-		// npc���ñ����
+		// npc
 		m_sNpcID = recNpc.nID;
 
 		// 
@@ -222,51 +222,51 @@ namespace mission
 		//if( m_sScriptID == INVALID_SCRIPT_NPCHANDLE )
 		//	return EN_OK;
 		
-		// �ж��Ƿ��ڽ���״̬
+		// 
 		if( character.GetTradeData() )
 		{
-			//character.SystemNotice( "�����ں�������ɫ���ף������Ժ�npc�Ի�!" );
+			//character.SystemNotice( "npc!" );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00004) );
 			return EN_FAILER;
 		}
 
 		if( character.GetBoat() )
 		{
-			//character.SystemNotice( "�������촬�������Ժ�npc�Ի�!" );
+			//character.SystemNotice( "npc!" );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00005));
 			return EN_FAILER;
 		}
 
 		if( character.GetStallData() )
 		{
-			//character.SystemNotice( "�����ڰ�̯�������Ժ�npc�Ի�!" );
+			//character.SystemNotice( "npc!" );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00006) );
 			return EN_FAILER;
 		}
 
 		if( !GetActControl(enumACTCONTROL_TALKTO_NPC) )
 		{
-			//character.SystemNotice( "���ڲ����Ժ�npc�Ի�!" );
+			//character.SystemNotice( "npc!" );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00007) );
 			return EN_FAILER;
 		}
 
-		// �ж��Ƿ��ڽ���״̬
+		// 
 		if( character.m_CKitbag.IsLock() || !character.GetActControl(enumACTCONTROL_ITEM_OPT) )
 		{
-			//character.SystemNotice( "��ı����ѱ������������Ժ�npc�Ի�!" );
+			//character.SystemNotice( "npc!" );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00008) );
 			return EN_FAILER;
 		}
 
-		// ����ɫ�Ƿ���npc20�׷�Χ��
+		// npc20
 		//if( !IsDist( GetShape().centre.x, GetShape().centre.y, character.GetShape().centre.x, 
 		//	character.GetShape().centre.y, 20 ) )
 		//{
 		//	return EN_FAILER;
 		//}
 
-		// ����NPC�ű��Ի���������
+		// NPC
 		lua_getglobal( g_pLuaState, "NpcProc" );
 		if( !lua_isfunction( g_pLuaState, -1 ) )
 		{
@@ -283,7 +283,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 4, 0, 0 );
 		if( nStatus )
 		{
-			//character.SystemNotice( "npc[%s]�Ľű���Ϣ��������[NpcProc]����ʧ��!", m_name );
+			//character.SystemNotice( "npc[%s][NpcProc]!", m_name );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00009), m_name );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -314,7 +314,7 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 3, 1, 0 );
 		if( nStatus )
 		{
-			//character.SystemNotice( "npc[%s]�Ľű�����������[NpcState]����ʧ��!", m_name );
+			//character.SystemNotice( "npc[%s][NpcState]!", m_name );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00010), m_name );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
@@ -325,7 +325,7 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 		if( dwResult != LUA_TRUE )
 		{
-			//character.SystemNotice( "npc[%s]������״̬��������[NpcState]����ʧ��!", m_name );
+			//character.SystemNotice( "npc[%s][NpcState]!", m_name );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00011), m_name );
 			return FALSE;
 		}
@@ -405,11 +405,11 @@ namespace mission
 		{
 			if( m_Trigger[i].byType == TE_GAME_TIME )
 			{
-				// �ж��Ƿ񵽴�ʱ��������
+				// 
 				if( ++m_Trigger[i].wParam4 < m_Trigger[i].wParam2 )
 					continue;
 
-				// lua�ű�������������Ϣ
+				// lua
 				lua_getglobal( g_pLuaState, "TriggerProc" );
 				if( !lua_isfunction( g_pLuaState, -1 ) )
 				{
@@ -427,10 +427,10 @@ namespace mission
 				if( nStatus )
 				{
 #ifdef ROLE_DEBUG_INFO
-					// Заменено printf → логирование
+					//  printf  
 				g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_NPC_CPP_00012));
 #endif
-					//LG( "trigger_error", "CTalkNpc::TimeOut:����������[TriggerProc]����ʧ��!" );
+					//LG( "trigger_error", "CTalkNpc::TimeOut:[TriggerProc]!" );
 					ToLogService("errors", LogLevel::Error, "CTalkNpc::TimeOut:task dispose fuction[TriggerProc]transfer failed!" );
 					lua_callalert( g_pLuaState, nStatus );
 					lua_settop(g_pLuaState, 0);
@@ -441,12 +441,12 @@ namespace mission
 				lua_settop(g_pLuaState, 0);
 				if( dwResult == LUA_TRUE )
 				{
-					// �ж������������Ϣ
+					// 
 					switch( m_Trigger[i].wParam1 )
 					{
 					case TT_CYCLETIME:
 						{
-							// �����������
+							// 
 							m_Trigger[i].wParam4 = 0;
 						}
 						break;
@@ -456,7 +456,7 @@ namespace mission
 							{
 								m_Trigger[i].wParam3--;
 								
-								// �����������
+								// 
 								m_Trigger[i].wParam4 = 0;
 							}
 							else
@@ -466,16 +466,16 @@ namespace mission
 									m_Trigger[i].wTID, m_byNumTrigger, m_Trigger[i].wParam1, m_Trigger[i].wParam1,
 									m_Trigger[i].wParam3, m_Trigger[i].wParam4 );
 #endif
-								// ���������
+								// 
 								ClearTrigger( i-- );
 							}
 						}
 						break;
 					default:
 						{
-							//LG( "trigger_error", "δ֪��ʱ�䴥����ʱ��������!" );
+							//LG( "trigger_error", "!" );
 							ToLogService("errors", LogLevel::Error, "unknown time trigger distance taye!" );
-							// Заменено printf → логирование через snprintf + InternalLog
+							//  printf    snprintf + InternalLog
 						{ char _buf[512]; snprintf(_buf, sizeof(_buf), RES_STRING(GM_NPC_CPP_00013), m_Trigger[i].wTID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 							ClearTrigger( i-- );
 						}
@@ -496,7 +496,7 @@ namespace mission
 	{
 		m_sTime = sTime;
 		
-		// �ж��Ƿ�û�б��ٻ�����
+		// 
 		if( m_bSummoned == FALSE )
 		{
 			m_bSummoned = TRUE;

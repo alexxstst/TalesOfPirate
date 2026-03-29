@@ -1,11 +1,11 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "CommFunc.h"
 #include <cassert>
 #include <cstring>
 #include <iostream>
 #include <string>
 
-// Сравнение двух stNetChangeChaPart (только поля, сериализуемые LookData2String)
+//   stNetChangeChaPart ( ,  LookData2String)
 static bool CompareLook(const stNetChangeChaPart &a, const stNetChangeChaPart &b)
 {
 	if (a.sTypeID != b.sTypeID) { std::cerr << "sTypeID mismatch\n"; return false; }
@@ -47,7 +47,7 @@ static bool CompareLook(const stNetChangeChaPart &a, const stNetChangeChaPart &b
 	return true;
 }
 
-// Тест 1: roundtrip — пустой look (все нули)
+//  1: roundtrip   look ( )
 static bool TestEmptyRoundtrip()
 {
 	stNetChangeChaPart original;
@@ -76,7 +76,7 @@ static bool TestEmptyRoundtrip()
 		return false;
 	}
 
-	// Второй roundtrip: serialized2 должна совпасть с serialized
+	//  roundtrip: serialized2    serialized
 	std::string serialized2;
 	if (!LookData2String(parsed, serialized2))
 	{
@@ -95,7 +95,7 @@ static bool TestEmptyRoundtrip()
 	return true;
 }
 
-// Тест 2: roundtrip с заполненными данными
+//  2: roundtrip   
 static bool TestFilledRoundtrip()
 {
 	stNetChangeChaPart original;
@@ -103,7 +103,7 @@ static bool TestFilledRoundtrip()
 	original.sTypeID = 3;
 	original.sHairID = 2125;
 
-	// Заполняем несколько слотов
+	//   
 	for (int i = 0; i < 5; i++)
 	{
 		auto &item = original.SLink[i];
@@ -123,7 +123,7 @@ static bool TestFilledRoundtrip()
 		item.SetDBParam(1, 99 + i);
 	}
 
-	// Слот с instance-атрибутами
+	//   instance-
 	auto &slotWithAttr = original.SLink[2];
 	slotWithAttr.sInstAttr[0][0] = 10;
 	slotWithAttr.sInstAttr[0][1] = 20;
@@ -151,7 +151,7 @@ static bool TestFilledRoundtrip()
 		return false;
 	}
 
-	// Двойной roundtrip
+	//  roundtrip
 	std::string serialized2;
 	LookData2String(parsed, serialized2);
 	if (serialized != serialized2)
@@ -164,7 +164,7 @@ static bool TestFilledRoundtrip()
 	return true;
 }
 
-// Тест 3: проверка формата версии (начинается с "112#")
+//  3:    (  "112#")
 static bool TestVersionFormat()
 {
 	stNetChangeChaPart look{};
@@ -180,7 +180,7 @@ static bool TestVersionFormat()
 		return false;
 	}
 
-	// Проверяем, что после "112#" идёт "typeID,hairID;..."
+	// ,   "112#"  "typeID,hairID;..."
 	auto afterVer = serialized.substr(4);
 	if (afterVer.substr(0, 6) != "2,2063")
 	{
@@ -192,15 +192,15 @@ static bool TestVersionFormat()
 	return true;
 }
 
-// Тест 4: совместимость с F# parseLookMinimal
-// F# парсер: version=112 → sID на позиции 5 в каждой equip-секции
+//  4:   F# parseLookMinimal
+// F# : version=112  sID   5   equip-
 static bool TestFSharpCompatibility()
 {
 	stNetChangeChaPart original{};
 	original.sTypeID = 1;
 	original.sHairID = 2001;
 
-	// Заполняем первый слот конкретным sID
+	//     sID
 	original.SLink[0].sID = 777;
 	original.SLink[0].expiration = 100;
 	original.SLink[0].bItemTradable = 1;
@@ -211,12 +211,12 @@ static bool TestFSharpCompatibility()
 	std::string serialized;
 	LookData2String(original, serialized);
 
-	// Парсим формат как F#: split по ';', section[1] split по ','
-	// sID должен быть на позиции 5 (0-indexed) при version=112
+	//    F#: split  ';', section[1] split  ','
+	// sID     5 (0-indexed)  version=112
 	auto hashPos = serialized.find('#');
 	auto dataStr = serialized.substr(hashPos + 1);
 
-	// split по ';'
+	// split  ';'
 	std::vector<std::string> sections;
 	{
 		size_t start = 0;
@@ -239,7 +239,7 @@ static bool TestFSharpCompatibility()
 		return false;
 	}
 
-	// Section[1] = первый equip slot
+	// Section[1] =  equip slot
 	std::vector<std::string> fields;
 	{
 		size_t start = 0;
@@ -276,7 +276,7 @@ static bool TestFSharpCompatibility()
 	return true;
 }
 
-// Тест 5: F# простой формат "typeID;hairID;faceID"
+//  5: F#   "typeID;hairID;faceID"
 static bool TestFSharpSimpleFormat()
 {
 	std::string fsharpLook = "1;2001;2555";
@@ -300,7 +300,7 @@ static bool TestFSharpSimpleFormat()
 		return false;
 	}
 
-	// Все слоты должны быть пустыми
+	//     
 	for (int i = 0; i < enumEQUIP_NUM; i++)
 	{
 		if (parsed.SLink[i].sID != 0)
@@ -314,7 +314,7 @@ static bool TestFSharpSimpleFormat()
 	return true;
 }
 
-// Тест 6: контрольная сумма — повреждённые данные не парсятся
+//  6:       
 static bool TestChecksumValidation()
 {
 	stNetChangeChaPart original{};
@@ -324,7 +324,7 @@ static bool TestChecksumValidation()
 	std::string serialized;
 	LookData2String(original, serialized);
 
-	// Подменяем последний символ контрольной суммы
+	//     
 	std::string corrupted = serialized;
 	corrupted.back() = (corrupted.back() == '0') ? '1' : '0';
 

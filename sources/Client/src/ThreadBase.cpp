@@ -1,4 +1,4 @@
-
+﻿
 
 #include "stdafx.h"
 #include "ThreadBase.h"
@@ -24,14 +24,14 @@ CThreadBase::~CThreadBase()
 
 bool CThreadBase::Begin(int flag)
 {
-    // ������ʱ���ȹ���
+    // 
     m_thread = (HANDLE)_beginthreadex(NULL, 0, ThreadFunc, this, CREATE_SUSPENDED, &m_threadid);
 
 	ToLogService("common", "{}:{}", m_threadid, "CThreadBase");
 
     if(m_thread)
     {
-        // ָ�� CPU ���к��ٿ�ʼ����
+        //  CPU 
         SetThreadAffinityMask(m_thread, 1);
         ResumeThread(m_thread);
     }

@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: EventRecord.cpp
 // Creater: ZhangXuedong
 // Date: 2004.11.24
@@ -20,27 +20,27 @@ BOOL CEventRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string
     string strList[80];
 	string strLine;
 
-	// ±àºÅ
+	// 
 	pInfo->lID = pInfo->nID;
-	// Ãû³Æ
+	// 
 	_tcsncpy(pInfo->szName, pInfo->szDataName, defEVENT_NAME_LEN);
 	pInfo->szName[defEVENT_NAME_LEN - 1] = _TEXT('0');
 
-    // ÊÂ¼þÀàÐÍ
+    // 
     pInfo->sEventType = Str2Int(ParamList[m++]);
-	// ´¥·¢ÀàÐÍ
+	// 
 	pInfo->sArouseType = Str2Int(ParamList[m++]);
-	// ´¥·¢°ë¾¶
+	// 
 	pInfo->sArouseRadius = Str2Int(ParamList[m++]);
-	// ´¥·¢ÌØÐ§
+	// 
 	pInfo->sEffect = Str2Int(ParamList[m++]);
-	// ´¥·¢ÒôÐ§
+	// 
 	pInfo->sMusic = Str2Int(ParamList[m++]);
-	// ³öÉúÊ±µÄÌØÐ§
+	// 
 	pInfo->sBornEffect = Str2Int(ParamList[m++]);	
-	// ÊÂ¼þÏÔÊ¾µÄ¹â±ê
+	// 
 	pInfo->sCursor = Str2Int(ParamList[m++]);		
-	// Êó±êÖ¸ÕëÊ²Ã´Çé¿öÓÐÐ§(0-¶¼ÓÐÐ§,1-ÈË£¬2-´¬)
+	// (0-,1-2-)
 	pInfo->chMainChaType = Str2Int(ParamList[m++]);		
 	return TRUE;
 }

@@ -1,4 +1,4 @@
-// MNBigMat.h
+﻿// MNBigMat.h
 // Created by Steve Anderson, Nov. 22 1996.
 
 // BigMatrix is for when I need good old-fashioned mxn matrices.

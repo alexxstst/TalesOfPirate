@@ -1,4 +1,4 @@
-#include "util2.h"
+﻿#include "util2.h"
 #include "logutil.h"
 #include <algorithm>
 #include <time.h>
@@ -43,7 +43,7 @@ DWORD EndTimeRecord()
 }
 
 
-// Удаляет все пробелы и табуляции из строки (in-place, без аллокаций)
+//        (in-place,  )
 void Util_TrimString(std::string &str)
 {
 	str.erase(
@@ -52,7 +52,7 @@ void Util_TrimString(std::string &str)
 }
 
 
-// ����Ӣ�� MAKEBIN �ո�ʧ����  modify by Philip.Wu  2006-07-31
+//  MAKEBIN   modify by Philip.Wu  2006-07-31
 void Util_TrimTabString(std::string &str)
 {
 	char *psz = (char*)(str.c_str());
@@ -204,7 +204,7 @@ int  Util_ResolveTextLine(const char *pszText , std::string strList[] ,
 	{
 	if (pszText == NULL || strlen(pszText) == 0) return 0;
 
-	// ���û�÷ָ������Դ��ֻ��1���ַ�
+	// 1
 	if ((nSep == 0 && nSep2 == 0) || (strlen(pszText) == 1))
 		{
 		strList[0] = pszText;
@@ -214,12 +214,12 @@ int  Util_ResolveTextLine(const char *pszText , std::string strList[] ,
 	int nResult = 0;
 	if ((nSep != 0) && (nSep2 != 0) && (nSep != nSep2))
 		{
-		// ͬʱ֧���������ո���Ʊ���
+		// 
 		std::string lstrList[1024];
 		int n1 = 0;
 		int n2 = 0;
 
-		// ���ַ������Ƿ������ּ����
+		// 
 		char* pszFound1 = NULL;
 		char* pszFound2 = NULL;
         pszFound1 =(char*) strchr(pszText, nSep);
@@ -227,33 +227,33 @@ int  Util_ResolveTextLine(const char *pszText , std::string strList[] ,
 
 		if ((pszFound1 == NULL) || (pszFound2 == NULL))
 			{
-			// ֻ��һ�ַָ�����û��
+			// 
 			if (pszFound1 != NULL)
 				nResult = Util_ResolveTextLine1(pszText, strList, nMax, nSep);
 			else if (pszFound2 != NULL)
 				nResult = Util_ResolveTextLine1(pszText, strList, nMax, nSep2);
 			else
 				{
-				// ���ַָ�����û��
+				// 
 				strList[0] = pszText;
 				return 1;
 				}
 			}
 		else
 			{
-			// ���ַָ�������
+			// 
 			std::string newString;
 
-			// ��ȥ����һ��
+			// 
 			n1 = Util_ResolveTextLine1(pszText, lstrList, nMax, nSep);
 
-			// ��ʣ���������������
+			// 
 			for (int i = 0; i < n1; ++ i)
 				{
 				newString += lstrList[i] + char(nSep2);
 				}
 
-			// ��ȥ���ڶ���
+			// 
 			char const* p = newString.c_str();
 			n2 = Util_ResolveTextLine1(newString.c_str(), strList, nMax, nSep2);
 			nResult = n2;
@@ -261,7 +261,7 @@ int  Util_ResolveTextLine(const char *pszText , std::string strList[] ,
 		}
 	else
 		{
-		// ֻ��һ����nSep��nSep2������ͬ
+		// nSepnSep2
 		int sep = 0;
 		if (nSep != 0) sep = nSep;
 		else sep = nSep2;
@@ -280,31 +280,31 @@ const struct tm* Util_GetCurTime()
     return g_tm;
 /*
 tm_sec
-Seconds after minute (0 �C 59)
+Seconds after minute (0 C 59)
 
 tm_min
-Minutes after hour (0 �C 59)
+Minutes after hour (0 C 59)
 
 tm_hour
-Hours after midnight (0 �C 23)
+Hours after midnight (0 C 23)
 
 tm_mday
-Day of month (1 �C 31)
+Day of month (1 C 31)
 
 tm_mon
-Month (0 �C 11; January = 0)
+Month (0 C 11; January = 0)
 
 tm_year
 Year (current year minus 1900)
 
 tm_wday
-Day of week (0 �C 6; Sunday = 0)
+Day of week (0 C 6; Sunday = 0)
 
 tm_yday
-Day of year (0 �C 365; January 1 = 0)
+Day of year (0 C 365; January 1 = 0)
 
 tm_isdst
-Positive value if daylight saving time is in effect; 0 if daylight saving time is not in effect; negative value if status of daylight saving time is unknown. The C run-time library assumes the United States��s rules for implementing the calculation of Daylight Saving Time (DST). 
+Positive value if daylight saving time is in effect; 0 if daylight saving time is not in effect; negative value if status of daylight saving time is unknown. The C run-time library assumes the United Statess rules for implementing the calculation of Daylight Saving Time (DST). 
 */
 
 }

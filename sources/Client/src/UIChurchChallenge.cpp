@@ -1,4 +1,4 @@
-//add by ALLEN 2007-10-19
+ï»¿//add by ALLEN 2007-10-19
 #include "StdAfx.h"
 #include "UIChurchChallenge.h"
 #include "UINpcTalkForm.h"
@@ -75,10 +75,10 @@ void CChurchChallengeMgr::ShowForm(bool bShow)
 }
 
 
-// Ñ¯ÎÊ¾ºÅÄ¼Û¸ñ
+// 
 void CChurchChallengeMgr::ChallengePriceAsk(void)
 {
-	_pNumberBox = g_stUIBox.ShowNumberBox(_evtChallengeNumInput, -1, g_oLangRec.GetString(936), true);	// "ÇëÊäÈë¾¹ÅÄ¼Û¸ñ"
+	_pNumberBox = g_stUIBox.ShowNumberBox(_evtChallengeNumInput, -1, g_oLangRec.GetString(936), true);	// ""
 
 	char szBuf[32] = {0};
 	sprintf(szBuf, "%d", _stInfo.nCurPrice + _stInfo.nMinbid);
@@ -86,7 +86,7 @@ void CChurchChallengeMgr::ChallengePriceAsk(void)
 }
 
 
-// È·ÈÏ¾ºÅÄ¼Û¸ñ
+// 
 void CChurchChallengeMgr::CheckChallengePrice(void)
 {
 	if(_pNumberBox)
@@ -95,18 +95,18 @@ void CChurchChallengeMgr::CheckChallengePrice(void)
 		if ( _nPrice >= _stInfo.nCurPrice + _stInfo.nMinbid)
 		{
 			char szBuf[256] = {0};
-			sprintf(szBuf, g_oLangRec.GetString(940), _nPrice);	// "È·¶¨¾¹ÅÄ¼Û¸ñ %d"
+			sprintf(szBuf, g_oLangRec.GetString(940), _nPrice);	// " %d"
 			g_stUIBox.ShowSelectBox(_evtChallengeNumCheck, szBuf, true);
 		}
 		else
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(937), _stInfo.nCurPrice + _stInfo.nMinbid);//"²»µÃµÍÓÚ×îµÍ¼Û %d"
+			g_pGameApp->MsgBox(g_oLangRec.GetString(937), _stInfo.nCurPrice + _stInfo.nMinbid);//" %d"
 		}
 	}
 }
 
 
-// Í¨Öª·þÎñÆ÷
+// 
 void CChurchChallengeMgr::NetSendChallenge(void)
 {
 	CS_AutionBidup(g_stUINpcTalk.GetNpcId(), _stInfo.sChurchID, _nPrice);

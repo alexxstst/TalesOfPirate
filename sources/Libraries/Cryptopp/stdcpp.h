@@ -1,4 +1,4 @@
-// stdcpp.h - originally written and placed in the public domain by Wei Dai
+﻿// stdcpp.h - originally written and placed in the public domain by Wei Dai
 
 /// \file stdcpp.h
 /// \brief Common C++ header files

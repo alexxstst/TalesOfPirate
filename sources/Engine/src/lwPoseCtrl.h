@@ -1,4 +1,4 @@
-//
+﻿//
 #pragma once
 
 
@@ -11,7 +11,7 @@
 LW_BEGIN
 
 // by lsh
-// ����汾��PlayPose��CallBack��PLAY_LOOP��־�µĹؼ�֡�������ԣ����٣����������٣�
+// PlayPoseCallBackPLAY_LOOP
 ///////////////////////////
 
 class lwPoseCtrl : public lwIPoseCtrl

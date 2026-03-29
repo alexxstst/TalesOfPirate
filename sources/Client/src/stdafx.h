@@ -1,4 +1,4 @@
-// stdafx.h : include file for standard system include files,
+﻿// stdafx.h : include file for standard system include files,
 // or project specific include files that are used frequently, but
 // are changed infrequently
 //
@@ -32,16 +32,16 @@
 #include <functional>
 #include <fstream>
 
-namespace GUI  //�������ֿռ�
+namespace GUI  //
 {
 };
 
 using namespace GUI;
 
-// ── Логирование ──────────────────────────────────────────────
+//   
 #include "logutil.h"
 
-// ── Engine + утилиты ─────────────────────────────────────────
+//  Engine +  
 #include "Language.h"
 #include "util.h"
 #include "GlobalInc.h"
@@ -49,7 +49,7 @@ using namespace GUI;
 
 #include "LanguageRecord.h"
 
-extern CLanguageRecord g_oLangRec;	// ����������
+extern CLanguageRecord g_oLangRec;	// 
 
 inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
                            FLOAT a )
@@ -65,9 +65,9 @@ inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b
 
 //#define APP_DEBUG
 
-#define _LOG_NAME_		// ���������ɫ����,��ݼ�
+#define _LOG_NAME_		// ,
 
-// #define FLOAT_INVALID   // ���������󣬽���⸡���쳣,��֪caLua���и����쳣
+// #define FLOAT_INVALID   // ,caLua
 
 //#define USE_TIMERPERIOD
 #define WM_USER_TIMER (WM_USER+99)
@@ -77,14 +77,14 @@ inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b
 
 #define CLIENT_BUILD
 
-// #define KOP_TOM			// ����TOMƽ̨
+// #define KOP_TOM			// TOM
 
-// ── Часто используемые проектные заголовки (PCH-оптимизация) ──
+//      (PCH-) 
 
-// GameConfig (33 include, зависит только от <string>)
+// GameConfig (33 include,    <string>)
 #include "GameConfig.h"
 
-// GUI-система: uiguidata → uiform → uicompent → uiformmgr (вместе ~200+ include)
+// GUI-: uiguidata  uiform  uicompent  uiformmgr ( ~200+ include)
 #include "uiguidata.h"
 #include "uiform.h"
 #include "uicompent.h"
@@ -92,16 +92,16 @@ inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b
 #include "UIGlobalVar.h"
 #include "uilabel.h"
 
-// Сцена и игровые объекты
+//    
 #include "Scene.h"
 #include "Character.h"
 #include "EffectObj.h"
 #include "SceneItem.h"
 #include "Actor.h"
 
-// Сеть
+// 
 #include "NetProtocol.h"
 #include "PacketCmd.h"
 
-// GameApp (123 include — самый частый заголовок)
+// GameApp (123 include    )
 #include "GameApp.h"

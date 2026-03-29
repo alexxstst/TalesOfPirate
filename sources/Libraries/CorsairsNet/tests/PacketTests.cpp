@@ -1,5 +1,5 @@
-// PacketTests.cpp — тесты WPacket / RPacket (msgpack payload).
-// По аналогии с .NET PacketTests.fs.
+﻿// PacketTests.cpp   WPacket / RPacket (msgpack payload).
+//    .NET PacketTests.fs.
 
 #include "TestFramework.h"
 #include "Packet.h"
@@ -14,27 +14,27 @@
 
 using namespace net;
 
-// ═══════════════════════════════════════════════════════════════
-//  Вспомогательная функция: вывод содержимого пакета
-// ═══════════════════════════════════════════════════════════════
+// 
+//   :   
+// 
 
 static std::string printPacket(const WPacket& w) {
     int payloadLen = w.GetPacketSize() - 8;
-    if (payloadLen <= 0) return "[пустой payload]";
+    if (payloadLen <= 0) return "[ payload]";
     return mpack_sequence_to_string(
         reinterpret_cast<const char*>(w.Data() + 8), payloadLen);
 }
 
 static std::string printPacket(RPacket& r) {
     int payloadLen = r.GetPacketSize() - 8;
-    if (payloadLen <= 0) return "[пустой payload]";
+    if (payloadLen <= 0) return "[ payload]";
     return mpack_sequence_to_string(
         reinterpret_cast<const char*>(r.Data() + 8), payloadLen);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 1: WPacket — тесты записи
-// ═══════════════════════════════════════════════════════════════
+// 
+//   1: WPacket   
+// 
 
 TEST(WPacketWrite, EmptyPacket_FrameLength8) {
     WPacket w(16);
@@ -63,7 +63,7 @@ TEST(WPacketWrite, SizeField_UpdatesOnWrite) {
     w.WriteCmd(1);
     ASSERT_EQ(8, static_cast<int>(readUInt16(w.Data())));
     w.WriteInt64(0xFF);
-    // msgpack compact: 0xFF → cc ff (2 bytes)
+    // msgpack compact: 0xFF  cc ff (2 bytes)
     ASSERT_TRUE(w.GetPacketSize() > 8);
 }
 
@@ -77,7 +77,7 @@ TEST(WPacketWrite, WriteUInt8_IncreasesSize) {
 TEST(WPacketWrite, WriteString_NullTerminator) {
     WPacket w(64);
     w.WriteString("hello");
-    // payload содержит msgpack str с "hello\0" (6 байт данных)
+    // payload  msgpack str  "hello\0" (6  )
     std::string content = printPacket(w);
     ASSERT_TRUE(content.find("str(6)hello") != std::string::npos);
 }
@@ -99,9 +99,9 @@ TEST(WPacketWrite, Reset_ClearsPayload) {
     ASSERT_EQ(8, w.GetPacketSize());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 2: Roundtrip WPacket → RPacket
-// ═══════════════════════════════════════════════════════════════
+// 
+//   2: Roundtrip WPacket  RPacket
+// 
 
 TEST(Roundtrip, UInt8) {
     WPacket w(32);
@@ -309,19 +309,19 @@ TEST(Roundtrip, Combined_AllTypes) {
     ASSERT_EQ(1, (int)(uint8_t)seqPtr[0]);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 3: Msgpack compact encoding (все числа → int64)
-// ═══════════════════════════════════════════════════════════════
+// 
+//   3: Msgpack compact encoding (   int64)
+// 
 
 TEST(MsgpackCompact, SmallPositive_SingleByte) {
-    // Числа 0..127 кодируются в 1 байт (positive fixint)
+    //  0..127   1  (positive fixint)
     WPacket w(16);
     w.WriteInt64(42);
     ASSERT_EQ(9, w.GetPacketSize()); // 8 header + 1 byte payload
 }
 
 TEST(MsgpackCompact, SmallNegative_SingleByte) {
-    // Числа -32..-1 кодируются в 1 байт (negative fixint)
+    //  -32..-1   1  (negative fixint)
     WPacket w(16);
     w.WriteInt64(-1);
     ASSERT_EQ(9, w.GetPacketSize()); // 8 header + 1 byte
@@ -334,36 +334,36 @@ TEST(MsgpackCompact, Zero_SingleByte) {
 }
 
 TEST(MsgpackCompact, UInt8_LargeValue) {
-    // 255 → cc ff (2 bytes: uint8 prefix + value)
+    // 255  cc ff (2 bytes: uint8 prefix + value)
     WPacket w(16);
     w.WriteInt64(255);
     ASSERT_EQ(10, w.GetPacketSize()); // 8 + 2
 }
 
 TEST(MsgpackCompact, UInt16_Value256) {
-    // 256 → cd 01 00 (3 bytes: uint16 prefix + BE value)
+    // 256  cd 01 00 (3 bytes: uint16 prefix + BE value)
     WPacket w(16);
     w.WriteInt64(256);
     ASSERT_EQ(11, w.GetPacketSize()); // 8 + 3
 }
 
 TEST(MsgpackCompact, UInt32_LargeValue) {
-    // 0xFFFFFFFF → ce ff ff ff ff (5 bytes: uint32 prefix + BE value)
+    // 0xFFFFFFFF  ce ff ff ff ff (5 bytes: uint32 prefix + BE value)
     WPacket w(16);
     w.WriteInt64(0xFFFFFFFF);
     ASSERT_EQ(13, w.GetPacketSize()); // 8 + 5
 }
 
 TEST(MsgpackCompact, Int64_Large) {
-    // INT64_MAX → cf 7f ff ff ff ff ff ff ff (9 bytes)
+    // INT64_MAX  cf 7f ff ff ff ff ff ff ff (9 bytes)
     WPacket w(16);
     w.WriteInt64(INT64_MAX);
     ASSERT_EQ(17, w.GetPacketSize()); // 8 + 9
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 4: ReverseRead и DiscardLast
-// ═══════════════════════════════════════════════════════════════
+// 
+//   4: ReverseRead  DiscardLast
+// 
 
 TEST(ReverseRead, UInt32_Single) {
     WPacket w(32);
@@ -382,7 +382,7 @@ TEST(ReverseRead, Multiple_Values) {
     w.WriteInt64(333); // elem 2
 
     RPacket r(w.Data(), w.GetPacketSize());
-    // ReverseRead читает с конца
+    // ReverseRead   
     ASSERT_EQ(333u, r.ReverseReadInt64());
     ASSERT_EQ(222u, r.ReverseReadInt64());
     ASSERT_EQ(111u, r.ReverseReadInt64());
@@ -416,7 +416,7 @@ TEST(DiscardLast, SingleElement) {
     RPacket r(w.Data(), w.GetPacketSize());
     ASSERT_TRUE(r.DiscardLast(1));
 
-    // Осталось только 111
+    //   111
     ASSERT_EQ(111u, r.ReadInt64());
     ASSERT_FALSE(r.HasData());
 }
@@ -457,14 +457,14 @@ TEST(DiscardLastByReverseIndex, Basic) {
     w.WriteInt64(444); // elem 3
 
     RPacket r(w.Data(), w.GetPacketSize());
-    // Читаем 2 элемента с конца
+    //  2   
     ASSERT_EQ(444u, r.ReverseReadInt64());
     ASSERT_EQ(333u, r.ReverseReadInt64());
 
-    // DiscardLastByReverseIndex: удалит прочитанные 333 и 444
+    // DiscardLastByReverseIndex:   333  444
     r.DiscardLastByReverseIndex();
 
-    // Осталось 111 и 222
+    //  111  222
     r.ResetPosition();
     ASSERT_EQ(111u, r.ReadInt64());
     ASSERT_EQ(222u, r.ReadInt64());
@@ -472,7 +472,7 @@ TEST(DiscardLastByReverseIndex, Basic) {
 }
 
 TEST(DiscardLastByReverseIndex, GateServerPattern) {
-    // Паттерн из GateServer: ReverseRead данных из trailer, DiscardLastByReverseIndex, затем ForwardRead
+    //   GateServer: ReverseRead   trailer, DiscardLastByReverseIndex,  ForwardRead
     WPacket w(128);
     w.WriteCmd(500);
     w.WriteString("body_data");  // body
@@ -495,7 +495,7 @@ TEST(DiscardLastByReverseIndex, GateServerPattern) {
     ASSERT_EQ(200u, loginId);
     ASSERT_EQ(100u, gpAddr);
 
-    // Удалить trailer
+    //  trailer
     r.DiscardLastByReverseIndex();
 
     // ForwardRead body
@@ -503,16 +503,16 @@ TEST(DiscardLastByReverseIndex, GateServerPattern) {
     ASSERT_FALSE(r.HasData());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 5: DiscardLast с routing pairs (паттерн ForwardMC)
-// ═══════════════════════════════════════════════════════════════
+// 
+//   5: DiscardLast  routing pairs ( ForwardMC)
+// 
 
 TEST(DiscardLastRouting, ForwardMC_Pattern) {
-    // Паттерн ForwardMC: body + routing pairs + aimnum
+    //  ForwardMC: body + routing pairs + aimnum
     WPacket w(128);
     w.WriteCmd(600);
     w.WriteString("action_data");  // body
-    // Routing: 2 пары (playerId, dbid)
+    // Routing: 2  (playerId, dbid)
     w.WriteInt64(1001); // pair 0: playerId
     w.WriteInt64(2001); // pair 0: dbid
     w.WriteInt64(1002); // pair 1: playerId
@@ -528,7 +528,7 @@ TEST(DiscardLastRouting, ForwardMC_Pattern) {
     ASSERT_EQ(2002u, p1);
     ASSERT_EQ(1002u, p1id);
 
-    // DiscardLast: 2*aimnum + 1 элементов (пары + aimnum)
+    // DiscardLast: 2*aimnum + 1  ( + aimnum)
     r.DiscardLast(2 * aimnum + 1);
 
     r.ResetPosition();
@@ -553,9 +553,9 @@ TEST(DiscardLastRouting, ForwardMC_ZeroTargets) {
     ASSERT_FALSE(r.HasData());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 6: Skip
-// ═══════════════════════════════════════════════════════════════
+// 
+//   6: Skip
+// 
 
 TEST(Skip, SkipElements) {
     WPacket w(64);
@@ -564,7 +564,7 @@ TEST(Skip, SkipElements) {
     w.WriteInt64(333);
 
     RPacket r(w.Data(), w.GetPacketSize());
-    r.Skip(2); // пропустить 111 и 222
+    r.Skip(2); //  111  222
     ASSERT_EQ(333u, r.ReadInt64());
 }
 
@@ -574,13 +574,13 @@ TEST(Skip, SkipString) {
     w.WriteInt64(42);
 
     RPacket r(w.Data(), w.GetPacketSize());
-    r.Skip(1); // пропустить строку
+    r.Skip(1); //  
     ASSERT_EQ(42u, r.ReadInt64());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 7: WPacket из RPacket (копирование)
-// ═══════════════════════════════════════════════════════════════
+// 
+//   7: WPacket  RPacket ()
+// 
 
 TEST(WPacketFromRPacket, CopyPreservesData) {
     WPacket orig(64);
@@ -595,7 +595,7 @@ TEST(WPacketFromRPacket, CopyPreservesData) {
     ASSERT_EQ(700, copy.GetCmd());
     ASSERT_EQ(0x12345678u, copy.GetSess());
 
-    // Читаем из копии
+    //   
     RPacket r2(copy.Data(), copy.GetPacketSize());
     ASSERT_EQ(42u, r2.ReadInt64());
     ASSERT_EQ(std::string("copied"), r2.ReadString());
@@ -609,7 +609,7 @@ TEST(WPacketFromRPacket, AppendAfterCopy) {
     RPacket rpk(orig.Data(), orig.GetPacketSize());
     WPacket copy(rpk);
 
-    // Дописать в копию
+    //   
     copy.WriteInt64(200);
     copy.WriteInt64(300);
 
@@ -619,9 +619,9 @@ TEST(WPacketFromRPacket, AppendAfterCopy) {
     ASSERT_EQ(300u, r.ReadInt64());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 8: HasData и RemainingBytes
-// ═══════════════════════════════════════════════════════════════
+// 
+//   8: HasData  RemainingBytes
+// 
 
 TEST(State, HasData_Empty) {
     WPacket w(16);
@@ -650,9 +650,9 @@ TEST(State, RemainingBytes_DecreasesOnRead) {
     ASSERT_EQ(0, r.RemainingBytes());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 9: ResetPosition
-// ═══════════════════════════════════════════════════════════════
+// 
+//   9: ResetPosition
+// 
 
 TEST(ResetPosition, ReReadsFromStart) {
     WPacket w(32);
@@ -668,9 +668,9 @@ TEST(ResetPosition, ReReadsFromStart) {
     ASSERT_EQ(222u, r.ReadInt64());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 10: mpack_sequence_to_string
-// ═══════════════════════════════════════════════════════════════
+// 
+//   10: mpack_sequence_to_string
+// 
 
 TEST(SequenceToString, AllTypes) {
     WPacket w(128);
@@ -684,7 +684,7 @@ TEST(SequenceToString, AllTypes) {
     std::string s = printPacket(w);
     std::cout << "    mpack_sequence_to_string: " << s << "\n";
 
-    // Проверяем что все элементы присутствуют
+    //     
     ASSERT_TRUE(s.find("|42") != std::string::npos);
     ASSERT_TRUE(s.find("|-100") != std::string::npos);
     ASSERT_TRUE(s.find("str(6)hello") != std::string::npos);
@@ -696,12 +696,12 @@ TEST(SequenceToString, EmptyPayload) {
     ASSERT_TRUE(s.empty());
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 11: Граничные значения и EnsureCapacity
-// ═══════════════════════════════════════════════════════════════
+// 
+//   11:    EnsureCapacity
+// 
 
 TEST(Boundary, ManyWrites_TriggerResize) {
-    WPacket w(8); // минимальный размер
+    WPacket w(8); //  
     for (int i = 0; i < 100; ++i) {
         w.WriteInt64(static_cast<uint32_t>(i));
     }
@@ -736,9 +736,9 @@ TEST(Boundary, LargeSequence) {
     ASSERT_EQ((char)0xAB, ptr[499]);
 }
 
-// ═══════════════════════════════════════════════════════════════
-//  Группа 12: Move semantics
-// ═══════════════════════════════════════════════════════════════
+// 
+//   12: Move semantics
+// 
 
 TEST(Move, WPacket_MoveConstruct) {
     WPacket w(32);
@@ -764,9 +764,9 @@ TEST(Move, RPacket_MoveConstruct) {
     ASSERT_EQ(99u, r2.ReadInt64());
 }
 
-// ═══════════════════════════════════════════════════════════════
+// 
 //  main
-// ═══════════════════════════════════════════════════════════════
+// 
 
 int main() {
     return test::runAll();

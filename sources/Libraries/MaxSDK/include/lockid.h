@@ -1,4 +1,4 @@
-
+﻿
 
 #ifndef __LOCKID_H__
 #define __LOCKID_H__

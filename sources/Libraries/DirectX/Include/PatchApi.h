@@ -1,4 +1,4 @@
-//
+﻿//
 //  patchapi.h
 //
 //  Interface for creating and applying patches to files.

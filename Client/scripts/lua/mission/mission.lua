@@ -1,4 +1,4 @@
---------------------------------------------------------------------------
+Ôªø--------------------------------------------------------------------------
 --									--
 --									--
 --mission.lua Created by Robin 2004.12.27.	--
@@ -7,14 +7,14 @@
 --------------------------------------------------------------------------
 print( "loading mission.lua" )
 
---lua∫Ø ˝∑µªÿ÷µ∂®“Â
+-- Lua boolean value definitions
 LUA_FALSE					= 0
 LUA_TRUE					= 1
 
-MIS_TREENODE_INVALID	= 0	-- Œﬁ–ß¿‡–Õ
-MIS_TREENODE_NOMAL		= 1	-- ∆’Õ®»ŒŒÒ
-MIS_TREENODE_HISTORY	= 2	-- ¿˙ ∑»ŒŒÒ
-MIS_TREENODE_GUILD		= 3	-- π§ª·»ŒŒÒ
+MIS_TREENODE_INVALID	= 0	-- Invalid quest
+MIS_TREENODE_NOMAL		= 1	-- Normal quest
+MIS_TREENODE_HISTORY	= 2	-- History quest
+MIS_TREENODE_GUILD		= 3	-- Guild quest
 		
 MisData = {}
 

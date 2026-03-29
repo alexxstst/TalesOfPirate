@@ -1,4 +1,4 @@
-#ifndef _DISCORD_GAME_SDK_H_
+﻿#ifndef _DISCORD_GAME_SDK_H_
 #define _DISCORD_GAME_SDK_H_
 
 #ifdef __cplusplus

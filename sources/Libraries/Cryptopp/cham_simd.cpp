@@ -1,4 +1,4 @@
-// cham_simd.cpp - written and placed in the public domain by Jeffrey Walton
+﻿// cham_simd.cpp - written and placed in the public domain by Jeffrey Walton
 //
 //    This source file uses intrinsics and built-ins to gain access to
 //    SSSE3, ARM NEON and ARMv8a, and Power7 Altivec instructions. A separate

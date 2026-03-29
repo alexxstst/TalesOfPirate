@@ -1,4 +1,4 @@
-#ifndef _BUILD_VER_
+﻿#ifndef _BUILD_VER_
 #define _BUILD_VER_
 
 

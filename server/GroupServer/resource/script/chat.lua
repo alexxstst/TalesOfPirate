@@ -1,4 +1,4 @@
--- Avaliable functions:
+﻿-- Avaliable functions:
 -- GetChaName(player)
 -- GetGmLv(player)
 -- EstopPlayer(player, time in minutes)

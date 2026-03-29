@@ -1,4 +1,4 @@
-//
+﻿//
 #include "stdafx.h"
 #include "lwSysCharacter.h"
 #include "lwPhysique.h"

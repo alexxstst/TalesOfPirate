@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <iostream>
 #include "GroupServerApp.h"
 #include "GameCommon.h"
@@ -7,7 +7,7 @@ void GroupServerApp::CP_FRND_INVITE(Player *ply,net::TcpClient *client,net::RPac
 {
 	if(ply->m_CurrFriendNum >=const_frnd.FriendMax)
 	{
-		//ply->SendSysInfo("���ĺ������Ѿ��ﵽ�����������ˣ��������뱻ȡ����");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00001));
 	}else
 	{
@@ -26,13 +26,13 @@ void GroupServerApp::CP_FRND_INVITE(Player *ply,net::TcpClient *client,net::RPac
 			ply->SendSysInfo(l_buf);
 		}else if(l_invited =l_invited_ply->FrndFindInvitedByInviterChaID(ply->m_chaid[ply->m_currcha]))
 		{
-			//ply->SendSysInfo(dstring("����ǰ�ԡ�")<<l_invited_name<<"���Ѿ���һ��δ���ĺ������룬���԰����ꡣ");
+			//ply->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00003),l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
 		}else if(l_invited =ply->FrndFindInvitedByInviterChaID(l_invited_ply->m_chaid[l_invited_ply->m_currcha]))
 		{
-			//ply->SendSysInfo(dstring("��")<<l_invited_name<<"����ǰ�Ѿ���һ������ĺ������룬����ܼ��ɡ�");
+			//ply->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00005),l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
@@ -44,7 +44,7 @@ void GroupServerApp::CP_FRND_INVITE(Player *ply,net::TcpClient *client,net::RPac
 		}
 		else if (m_tblfriends->GetFriendsCount(ply->m_chaid[ply->m_currcha], l_invited_ply->m_chaid[l_invited_ply->m_currcha]) > 0)
 		{
-			//ply->SendSysInfo(dstring("������ҡ�")<<l_invited_name<<"���Ѿ��Ǻ����ˡ�");
+			//ply->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf, RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00007), l_invited_name.c_str());
 			ply->SendSysInfo(l_buf);
@@ -100,13 +100,13 @@ void GroupServerApp::CP_FRND_ACCEPT(Player *ply,net::TcpClient *client,net::RPac
 		if((++(ply->m_CurrFriendNum)) >const_frnd.FriendMax)
 		{
 			--(ply->m_CurrFriendNum);
-			//ply->SendSysInfo("���ĺ������Ѵﵽ�����������ˡ�");
+			//ply->SendSysInfo("");
 			ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00011));
 		}else if((++(l_inviter->m_CurrFriendNum)) >const_frnd.FriendMax)
 		{
 			--(ply->m_CurrFriendNum);
 			--(l_inviter->m_CurrFriendNum);
-			//ply->SendSysInfo(dstring("�����ߡ�")<<l_inviter->m_chaname[l_inviter->m_currcha].c_str()<<"���ĺ������Ѵﵽ�����������ˡ�");
+			//ply->SendSysInfo(dstring("")<<l_inviter->m_chaname[l_inviter->m_currcha].c_str()<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00012),l_inviter->m_chaname[l_inviter->m_currcha].c_str());
 			ply->SendSysInfo(l_buf);
@@ -114,7 +114,7 @@ void GroupServerApp::CP_FRND_ACCEPT(Player *ply,net::TcpClient *client,net::RPac
 		{
 			--(ply->m_CurrFriendNum);
 			--(l_inviter->m_CurrFriendNum);
-			//ply->SendSysInfo(dstring("���͡�")<<l_inviter->m_chaname[l_inviter->m_currcha].c_str()<<"���Ѿ��Ǻ����ˡ�");
+			//ply->SendSysInfo(dstring("")<<l_inviter->m_chaname[l_inviter->m_currcha].c_str()<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00007),l_inviter->m_chaname[l_inviter->m_currcha].c_str());
 			ply->SendSysInfo(l_buf);
@@ -122,8 +122,8 @@ void GroupServerApp::CP_FRND_ACCEPT(Player *ply,net::TcpClient *client,net::RPac
 		{
 			LogLine	l_line(g_LogFriend);
 			/*
-			l_line<<newln<<"���"<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
-				<<")�����"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")��Ϊ�˺���"
+			l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
+				<<")"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")"
 				<<endln;
 			*/
 			l_line<<newln<<"player"<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
@@ -155,7 +155,7 @@ void GroupServerApp::CP_FRND_DELETE(Player *ply,net::TcpClient *client,net::RPac
 	auto const l_lockDB = std::lock_guard{m_mtxDB};
 	if(m_tblfriends->GetFriendsCount(ply->m_chaid[ply->m_currcha],l_deleted_chaid)<1)
 	{
-		//ply->SendSysInfo("������Ҫɾ������Ҳ��Ǻ��ѹ�ϵ������ϵ�ͷ�������");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPFRND_CPP_00018));
 	}else
 	{
@@ -187,8 +187,8 @@ void GroupServerApp::CP_FRND_DELETE(Player *ply,net::TcpClient *client,net::RPac
 		m_tblfriends->DelFriend(ply->m_chaid[ply->m_currcha],l_deleted_chaid);
 		LogLine	l_line(g_LogFriend);
 		/*
-		l_line<<newln<<"���"<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
-			<<")��("<<l_deleted_chaid<<")����˺��ѹ�ϵ";
+		l_line<<newln<<""<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
+			<<")("<<l_deleted_chaid<<")";
 	   */
 		l_line<<newln<<"player"<<ply->m_chaname[ply->m_currcha]<<"("<<ply->m_chaid[ply->m_currcha]
 			<<")and("<<l_deleted_chaid<<")free friends";
@@ -270,8 +270,8 @@ void Player::FrndInvitedCheck(Invited	*invited)
 		FrndEndInvited(l_inviter);
 	}
 }
-/*	�������ʱ��ȡ����������SQL���
-atorID-���߽�ɫID
+/*	SQL
+atorID-ID
 select '' relation,count(*) addr,0 cha_id,'' cha_name,0 icon,'' motto from ( 
 select distinct friends.relation relation from character INNER JOIN 
 friends ON character.cha_id = friends.cha_id2 where friends.cha_id1 = 240 

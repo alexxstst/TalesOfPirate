@@ -1,4 +1,4 @@
-// ec2n.h - originally written and placed in the public domain by Wei Dai
+﻿// ec2n.h - originally written and placed in the public domain by Wei Dai
 
 /// \file ec2n.h
 /// \brief Classes for Elliptic Curves over binary fields

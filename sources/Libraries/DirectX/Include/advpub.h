@@ -1,4 +1,4 @@
-//*     Copyright (c) Microsoft Corporation 1995-1998. All rights reserved. *
+﻿//*     Copyright (c) Microsoft Corporation 1995-1998. All rights reserved. *
 //***************************************************************************
 //*                                                                         *
 //* ADVPUB.H - Specify the Interface for ADVPACK.DLL                        *

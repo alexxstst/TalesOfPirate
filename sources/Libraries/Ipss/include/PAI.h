@@ -1,4 +1,4 @@
-/* Define Encryption Const */
+﻿/* Define Encryption Const */
 
 #define cCode_NONE 0
 #define cCode_OSBP 1

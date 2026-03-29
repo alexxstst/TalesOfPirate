@@ -1,4 +1,4 @@
-// private header for Serpent and Sosemanuk
+﻿// private header for Serpent and Sosemanuk
 
 #ifndef CRYPTOPP_SERPENTP_H
 #define CRYPTOPP_SERPENTP_H

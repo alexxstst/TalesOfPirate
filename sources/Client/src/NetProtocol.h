@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "GameCommon.h"
 #include "Point.h"
 #include "Kitbag.h"
@@ -25,9 +25,9 @@ struct SMoveList
 
 struct stNetMoveInfo // enumACTION_MOVE
 {
-    DWORD dwAveragePing; // ��λ�����룬ͨ�� NetIF::GetAveragePing() ��ã���ֵ�����ٶȾ���Ԥ�ƶ��ľ���
-    POINT pos_buf[defMAX_POS_NUM]; // �ƶ��յ����У�������ǰλ�ã�
-    DWORD pos_num; // ��Ч��ĸ���
+    DWORD dwAveragePing; //  NetIF::GetAveragePing() 
+    POINT pos_buf[defMAX_POS_NUM]; // 
+    DWORD pos_num; // 
 	stNetMoveInfo() :
     dwAveragePing(0), pos_num(0){};
 };
@@ -35,11 +35,11 @@ struct stNetMoveInfo // enumACTION_MOVE
 struct stNetSkillInfo // enumACTION_SKILL
 {
 	BYTE	byFightID;
-	char	chMove;		// 1��ֱ��ʹ�ü��ܡ�2���ƶ���λ����ʹ�ü���
+	char	chMove;		// 12
 
-	long	lSkillID;		// 0������������>0��ħ������
+	long	lSkillID;		// 0>0
 
-	// ��Ŀ����ʵ�壬��ֱ��ʾWorldID,Handle����Ŀ�������꣬��ֱ��ʾ�����x,y
+	// WorldID,Handlex,y
 	struct
 	{
 		long	lTarInfo1;
@@ -51,24 +51,24 @@ struct stNetSkillInfo // enumACTION_SKILL
 
 struct stNetNotiMove // enumACTION_MOVE
 {
-    short    sState;                    // ״̬���μ�CompCommand.h EMoveState����
-    short    sStopState;                // ֹͣ״̬enumEXISTS_WAITING��enumEXISTS_SLEEPING
-    POINT    SPos[defMAX_POS_NUM];    // �ƶ��յ����У�������ǰλ�ã�
-    long    nPointNum;                // ��Ч��ĸ���
+    short    sState;                    // CompCommand.h EMoveState
+    short    sStopState;                // enumEXISTS_WAITINGenumEXISTS_SLEEPING
+    POINT    SPos[defMAX_POS_NUM];    // 
+    long    nPointNum;                // 
 	stNetNotiMove() :
     sState(0), sStopState(0), nPointNum(0){};
 };
 
 struct stEffect
 {
-	long	lAttrID;	// Ӱ�������ID
-	LONG64	lVal;		// Ӱ�����ֵ
+	long	lAttrID;	// ID
+	LONG64	lVal;		// 
 };
 
 struct stSkillState
 {
 	BYTE	chID;
-	BYTE	chLv;       // Ϊ��ɾ�����״̬,������������״̬
+	BYTE	chLv;       // ,
 	unsigned long		lTimeRemaining;
 };
 
@@ -76,52 +76,52 @@ struct stAreaSkillState
 {
 	BYTE	chID;
 	BYTE	chLv;
-	long	lWorldID;	// ʩ���ߵ�Ψһ��ʶ
+	long	lWorldID;	// 
 	unsigned char	uchFightID;
 };
 
-struct stNetNotiSkillRepresent //���ܱ��� enumACTION_SKILL_SRC
+struct stNetNotiSkillRepresent // enumACTION_SKILL_SRC
 {
 	BYTE	byFightID;
-	short	sAngle;         // ����serverͨ��
-	short	sState;			// ״̬���μ�CompCommand.h EFightState��
-	short	sStopState;		// ֹͣ״̬enumEXISTS_WAITING��enumEXISTS_SLEEPING
-	char	chCrt;          // 0��û�б�����1�����ڱ���
+	short	sAngle;         // server
+	short	sState;			// CompCommand.h EFightState
+	short	sStopState;		// enumEXISTS_WAITINGenumEXISTS_SLEEPING
+	char	chCrt;          // 01
 
-	long	lSkillID;		// ���ܱ��
-	long	lSkillSpeed;	// ����ʹ��Ƶ�ʣ����룩
-	char	chObjType;		// Ŀ�����ͣ�0��ʵ�塣1������
-	long	lTargetID;		// Ŀ��ID
-	POINT	STargetPoint;	// Ŀ���
-	short	sExecTime;	    // ���ô���,���ڵ�����
+	long	lSkillID;		// 
+	long	lSkillSpeed;	// 
+	char	chObjType;		// 01
+	long	lTargetID;		// ID
+	POINT	STargetPoint;	// 
+	short	sExecTime;	    // ,
 
-	CSizeArray<stEffect>		SEffect;	// Ӱ��Ľ������
-	CSizeArray<stSkillState>	SState;		// ����״̬
+	CSizeArray<stEffect>		SEffect;	// 
+	CSizeArray<stSkillState>	SState;		// 
 };
 
-struct stNetNotiSkillEffect // ���ܵ����ý�� enumACTION_SKILL_TAR
+struct stNetNotiSkillEffect //  enumACTION_SKILL_TAR
 {
 	BYTE	byFightID;
-	short	sState;			// ״̬���μ�CompCommand.h EFightState��
-	bool	bDoubleAttack;	// ˫������
+	short	sState;			// CompCommand.h EFightState
+	bool	bDoubleAttack;	// 
 	bool	bMiss;			// Miss;
-	bool	bBeatBack;		// �Ƿ����
-	Point	SPos;			// ���˺��λ��
-	long	lSkillID;		// ʹ�õļ���ID
-	char	chObjType;		// Ŀ�����ͣ�0��ʵ�塣1������
-	long	lSrcID;			// ʹ�÷��Ľ�ɫID
-	Point	SSrcPos;		// ʹ�÷���λ��
-	Point	SSkillTPos;		// �������
-	short	sExecTime;		// ���ô���,Ϊһ
+	bool	bBeatBack;		// 
+	Point	SPos;			// 
+	long	lSkillID;		// ID
+	char	chObjType;		// 01
+	long	lSrcID;			// ID
+	Point	SSrcPos;		// 
+	Point	SSkillTPos;		// 
+	short	sExecTime;		// ,
 
-	// ����
-	CSizeArray<stEffect>		SEffect;	// Ӱ��Ľ������
-	CSizeArray<stSkillState>	SState;		// ����״̬
+	// 
+	CSizeArray<stEffect>		SEffect;	// 
+	CSizeArray<stSkillState>	SState;		// 
 
-	// ����Դ
-	short						sSrcState;	// ״̬���μ�CompCommand.h EFightState��
-	CSizeArray<stEffect>		SSrcEffect;	// Ӱ��Ľ������
-	CSizeArray<stSkillState>	SSrcState;	// ����״̬
+	// 
+	short						sSrcState;	// CompCommand.h EFightState
+	CSizeArray<stEffect>		SSrcEffect;	// 
+	CSizeArray<stSkillState>	SSrcState;	// 
 };
 
 struct stNetPKCtrl
@@ -153,37 +153,37 @@ class CEvent;
 struct stNetEvent
 {
 	long			lEntityID;
-	char			chEntityType;					// 1-��ɫ,2-����
+	char			chEntityType;					// 1-,2-
 	unsigned short	usEventID;
 	std::string		cszEventName;
 
-	CEvent*			ChangeEvent();					// �ı��¼�����
+	CEvent*			ChangeEvent();					// 
 
-	CEvent*			Exec( CSceneNode* pNode );		// �����¼�
+	CEvent*			Exec( CSceneNode* pNode );		// 
 
 };
 
 struct stNetLookInfo
 {
-	char	chSynType;	// �μ� ESynLookType����ֵΪenumSYN_LOOK_CHANGEʱ��ֻ��SLook.sID��ֵ����0���Ÿ��¸�λ��
+	char	chSynType;	//  ESynLookTypeenumSYN_LOOK_CHANGESLook.sID0
 	stNetChangeChaPart	SLook;
 };
 
-struct stNetActorCreate				// ������ɫ����Ϣ
+struct stNetActorCreate				// 
 {
 	stNetActorCreate() = default;
 
 	unsigned long	ulWorldID{};
-	unsigned long	ulCommID{};		// ͨ��ID
-	std::string szCommName;	// ͨ�н�ɫ��
-	long			lHandle{};		// ����������Ϣ��ԭֵ����
+	unsigned long	ulCommID{};		// ID
+	std::string szCommName;	// 
+	long			lHandle{};		// 
 	unsigned long	ulChaID{};
-	char			chCtrlType{};		// �������ͣ���ң�NPC������ȡ��ο�CompCommand.h EChaCtrlType��
-	int			chGuildPermission{};		// �������ͣ���ң�NPC������ȡ��ο�CompCommand.h EChaCtrlType��
+	char			chCtrlType{};		// NPCCompCommand.h EChaCtrlType
+	int			chGuildPermission{};		// NPCCompCommand.h EChaCtrlType
 	Circle			SArea{};
-	short			sAngle{};			// ����serverͨ��
-	unsigned long	ulTLeaderID{};	// �ӳ�ID��û��Ϊ0
-	short			sState{};			// ״̬ 0x00�������С�0x01�������С�0x02��������
+	short			sAngle{};			// server
+	unsigned long	ulTLeaderID{};	// ID0
+	short			sState{};			//  0x000x010x02
 	std::string 			strMottoName;
 	short			sIcon{};
 	long			lGuildID{};
@@ -191,18 +191,18 @@ struct stNetActorCreate				// ������ɫ����Ϣ
 	std::string 			strGuildMotto;
 	std::string			strStallName;
 	std::string szName;
-	char			chSeeType{enumENTITY_SEEN_NEW};		// ���ֵ�����,EEntitySeenType
-	char			chGMLv{};			// GM�ȼ�
+	char			chSeeType{enumENTITY_SEEN_NEW};		// ,EEntitySeenType
+	char			chGMLv{};			// GM
 	int 			chIsPlayer{};
 	
 	
-	stNetChaSideInfo	SSideInfo{};	// �ֱ���Ϣ
+	stNetChaSideInfo	SSideInfo{};	// 
 	stNetLookInfo		SLookInfo{};
 	stNetPKCtrl		SPKCtrl{};
 	stNetEvent		SEvent{};
 	stNetAppendLook	SAppendLook{};
 
-	char			chMainCha{};		// 0-������ɫ,1-Ϊ����,2-���ǵĵ���
+	char			chMainCha{};		// 0-,1-,2-
 
 	CCharacter*		CreateCha();
 	void			SetValue( CCharacter* pCha );
@@ -210,13 +210,13 @@ struct stNetActorCreate				// ������ɫ����Ϣ
 
 struct stNetNPCShow
 {
-	BYTE			byNpcType;	 // ��Ұ����ʱ 
-    BYTE            byNpcState;  // �����NPC,�򸽴�NPC״̬
+	BYTE			byNpcType;	 //  
+    BYTE            byNpcState;  // NPC,NPC
 
 	void			SetNpcShow( CCharacter* pCha );
 };
 
-struct stNetLeanInfo // �п�
+struct stNetLeanInfo // 
 {
 	char	chState;
 
@@ -226,114 +226,114 @@ struct stNetLeanInfo // �п�
 	long	lHeight;
 };
 
-struct stNetSwitchMap // ��ɫ�������Ϣ
+struct stNetSwitchMap // 
 {
 	short	sEnterRet;
 	std::string szMapName;
 	char	chEnterType;
 	bool	bIsNewCha;
-	bool	bCanTeam;	// ��ͼ�Ƿ�ɲ�������
+	bool	bCanTeam;	// 
 };
 
-// ˵��
-struct stNetSysInfo		// ϵͳ��Ϣ����ʾĳ�˲������ϵ�
+// 
+struct stNetSysInfo		// 
 {
-	const char *m_sysinfo;		// ϵͳ��Ϣ����
+	const char *m_sysinfo;		// 
 };
 
-struct stNetSay			// ��Ұ��˵��
+struct stNetSay			// 
 {
-	unsigned long	m_srcid;	// ˵���˵�ID
-	const char	*	m_content;	// ����
+	unsigned long	m_srcid;	// ID
+	const char	*	m_content;	// 
 };
 
-// ʰȡ��������
-// 1.�ͻ���ʰȡ������,����ʰȡ���ߵ�������
-// 2.������֪ͨ���ͻ���,�����������仯
-// 3.������֪ͨ���пͻ���,�����ϵ�����ʧ
+// 
+// 1.,
+// 2.,
+// 3.,
 // 
 // 
-// װ������
-// 1.�ڵ�����ѡ������϶���װ����,����װ��Э��
-//    �ɹ�:1.֪ͨ���пͻ�����۷����仯,ͬʱ���ͻ��˸�����Ӧװ����
-//         2.֪ͨ���ͻ��˵����������仯
+// 
+// 1.,
+//    :1.,
+//         2.
 
-struct stNetItemCreate	// ��Ʒ���֣���ʧ
+struct stNetItemCreate	// 
 {
 	long	lWorldID;
-	long	lHandle;		// ��������Ϣ��ԭֵ����
-	long	lEntityAddr;	// ����˵�ʵ���ַ
+	long	lHandle;		// 
+	long	lEntityAddr;	// 
 	long	lID;
 	Point	SPos;
 	short	sAngle;
-	short	sNum;			// ��Ʒ����
-	char	chAppeType;		// �������ͣ��μ�CompCommand.h EItemAppearType��
-	long	lFromID;		// �׳�Դ��ID�����Ϊ0���򲻴����׳�Դ
+	short	sNum;			// 
+	char	chAppeType;		// CompCommand.h EItemAppearType
+	long	lFromID;		// ID0
 
 	stNetEvent	SEvent;
 };
 
-struct stNetItemUnfix	// ����жװ
+struct stNetItemUnfix	// 
 {
-	char    chLinkID;	// Link��
-	short	sGridID;	// ���ڵ�����,��������Ʒ����λ��,-1,��������Ʒ��,��ָ��λ��,-2,�����ڵ���
-    long	lPosX;		// �����ڵ����λ��
+	char    chLinkID;	// Link
+	short	sGridID;	// ,,-1,,,-2,
+    long	lPosX;		// 
     long	lPosY;
 };
 
-struct stNetItemPick	// ���ߵ�ʰȡ
+struct stNetItemPick	// 
 {
 	long	lWorldID;
 	long	lHandle;
 };
 
-struct stNetItemThrow	// ���ߵĶ���
+struct stNetItemThrow	// 
 {
-	short	sGridID;	// ��Ʒ��λ��
-	long	lNum;		// ������Ʒ�ĸ���
-	long	lPosX;		// �����ڵ����λ��
+	short	sGridID;	// 
+	long	lNum;		// 
+	long	lPosX;		// 
 	long	lPosY;
 };
 
-struct stNetItemPos		// ���߸ı������е�λ��
+struct stNetItemPos		// 
 {
-	short	sSrcGridID;	// ��Ʒ��λ��
-	short	sSrcNum;	// Դ��Ʒ������,���Ϊ�㣬����ȫ����Ʒ����
-	short	sTarGridID;	// ��Ʒ��λ��
+	short	sSrcGridID;	// 
+	short	sSrcNum;	// ,
+	short	sTarGridID;	// 
 };
 
-struct stNetBank		// ���н���
+struct stNetBank		// 
 {
-	char	chSrcType;	// Դ������ 0�������� 1������
-	short	sSrcID;		// ��Ʒ��λ��
-	short	sSrcNum;	// ��Ʒ������
-	char	chTarType;	// Ŀ�������
-	short	sTarID;		// ��Ʒ��λ��
+	char	chSrcType;	//  0 1
+	short	sSrcID;		// 
+	short	sSrcNum;	// 
+	char	chTarType;	// 
+	short	sTarID;		// 
 };
 
-struct stNetTempKitbag	// ��ʱ������������
+struct stNetTempKitbag	// 
 {
-	short   sSrcGridID;	// ��ʱ����λ��
-	short	sSrcNum;	// �϶�����
-	short	sTarGridID;	// ����λ��
+	short   sSrcGridID;	// 
+	short	sSrcNum;	// 
+	short	sTarGridID;	// 
 };
 
-struct stNetUseItem		// ʹ�õ���
+struct stNetUseItem		// 
 {
 	stNetUseItem() {sTarGridID = -1;}
-	short	sGridID;	// ��Ʒ��λ��
-	short	sTarGridID;	// Ŀ��λ�ã����ڸ�����ιʳ�������
+	short	sGridID;	// 
+	short	sTarGridID;	// 
 };
 
-struct stNetDelItem		// ɾ������
+struct stNetDelItem		// 
 {
-	short	sGridID;	// ��Ʒ��λ��
+	short	sGridID;	// 
 };
 
-struct stNetItemInfo	// ������Ϣ
+struct stNetItemInfo	// 
 {
 	char	chType;
-	short	sGridID;	// ��Ʒ��λ��
+	short	sGridID;	// 
 };
 
 struct stTempChangeChaPart
@@ -342,24 +342,24 @@ struct stTempChangeChaPart
 	DWORD           dwItemID;
 };
 
-struct stNetKitbag				    // ��������������
+struct stNetKitbag				    // 
 {
-	char	chBagType;				// 0�������� 1������
-	char	chType;					// �������ͣ��ο�CompCommand.h��ESynKitbagType��
-    int     nKeybagNum;             // ������������
+	char	chBagType;				// 0 1
+	char	chType;					// CompCommand.hESynKitbagType
+    int     nKeybagNum;             // 
     struct stGrid
     {
-	    short	    sGridID;		// ����ID
+	    short	    sGridID;		// ID
 	    SItemGrid	SGridContent;
     };
-    int     nGridNum;               // ��Ч�ĸ�����
+    int     nGridNum;               // 
     stGrid  Grid[defMAX_KBITEM_NUM_PER_TYPE];     
 };
 
-struct stNetSkillBag			    // ���¼�����
+struct stNetSkillBag			    // 
 {
-	char			chType;			// �������ͣ��ο�CompCommand.h��ESynSkillBagType��
-	CSizeArray<SSkillGridEx>		SBag;	// ��������
+	char			chType;			// CompCommand.hESynSkillBagType
+	CSizeArray<SSkillGridEx>		SBag;	// 
 };
 
 struct stNetDefaultSkill
@@ -369,15 +369,15 @@ struct stNetDefaultSkill
 	void	Exec(void);
 };
 
-struct stNetSkillState				// ���¼���״̬
+struct stNetSkillState				// 
 {
-	char	chType;					// �������ͣ�δ���壩
+	char	chType;					// 
 	CSizeArray<stSkillState> SState;
 };
 
-struct stNetChangeCha				// ������ɫЭ��
+struct stNetChangeCha				// 
 {
-	unsigned long	ulMainChaID;	// ����ID
+	unsigned long	ulMainChaID;	// ID
 };
 
 struct stNetActivateEvent
@@ -387,7 +387,7 @@ struct stNetActivateEvent
 	short	sEventID;
 };
 
-struct stNetFace                    // �ͻ��˻�����,��ӦenumACTION_FACE
+struct stNetFace                    // ,enumACTION_FACE
 {
     short   sPose;              
     short	sAngle;
@@ -398,7 +398,7 @@ struct stLookEnergy
 	short	sEnergy[enumEQUIP_NUM];
 };
 
-// �Ի�������Ϣ
+// 
 typedef struct _NET_FUNCITEM
 {
 	char szFunc[ROLE_MAXNUM_FUNCITEMSIZE];
@@ -419,7 +419,7 @@ typedef struct _NET_FUNCPAGE
 
 } NET_FUNCPAGE, *PNET_FUNCPAGE;
 
-// �����б���Ϣ
+// 
 typedef struct _NET_MISSIONLIST
 {
 	BYTE byListType;
@@ -435,7 +435,7 @@ typedef struct _NET_MISSIONLIST
 
 #define HELPINFO_DESPSIZE 4096
 
-// ��ʾͼ�Σ����֣���������
+// 
 typedef struct _NET_HELPINFO
 {
 	BYTE byType;
@@ -447,7 +447,7 @@ typedef struct _NET_HELPINFO
 
 } NET_HELPINFO, *PNET_HELPINFO;
 
-// ����ҳ��Ϣ
+// 
 typedef struct _NET_MISNEED
 {
 	BYTE byType;
@@ -502,7 +502,7 @@ typedef struct _NET_MISLOG_LIST
 
 } NET_MISLOG_LIST, *PNET_MISLOG_LIST;
 
-// ���״�����Ϣ
+// 
 typedef struct _NET_TRADEPAGE
 {
 	BYTE   byCount;
@@ -550,7 +550,7 @@ struct NET_CHARTRADE_BOATDATA
 
 };
 
-// ��ɫ������Ʒʵ����Ϣ�ṹ
+// 
 typedef struct _NET_CHARTRADE_ITEMDATA
 {
 	BYTE byForgeLv;
@@ -567,8 +567,8 @@ typedef struct _NET_CHARTRADE_ITEMDATA
 
 } NET_CHARTRADE_ITEMDATA, *PNET_CHARTRADE_ITEMDATA;
 
-// ������ս��Ϣ�ṹ
-#define MAX_GUILD_CHALLLEVEL				3	// ����������ǰ��
+// 
+#define MAX_GUILD_CHALLLEVEL				3	// 
 typedef struct _NET_GUILD_CHALLINFO
 {
 	BYTE byIsLeader;
@@ -582,9 +582,9 @@ typedef struct _NET_GUILD_CHALLINFO
 
 struct NetChaBehave
 {
-	std::string		sCharName;			//��ɫ��
-	std::string		sJob;				//ְҵ
-	short			iDegree;			//��ɫ�ȼ�
+	std::string		sCharName;			//
+	std::string		sJob;				//
+	short			iDegree;			//
 	Look_Minimal look_minimal;
 };
 
@@ -599,15 +599,15 @@ struct stNetShortCutChange
 
 struct stNetNpcMission
 {
-    BYTE    byType;     // ����
-    USHORT  sNum;		// ��Ҫ�ݻ����������
-    USHORT  sID;	    // ���ݻ��������ID
-    USHORT  sCount;     // ����ɼ���    
+    BYTE    byType;     // 
+    USHORT  sNum;		// 
+    USHORT  sID;	    // ID
+    USHORT  sCount;     //     
 };
 
 struct stNetAreaState
 {
-	short				sAreaX;			// ��
+	short				sAreaX;			// 
 	short				sAreaY;
 	char				chStateNum;
 	stAreaSkillState	State[AREA_STATE_NUM];
@@ -622,34 +622,34 @@ struct stNetChaAttr
 
 struct stNetQueryRelive
 {
-	char		chType;	// ͬCompCommand��EPlayerReliveType
+	char		chType;	// CompCommandEPlayerReliveType
 	std::string	szSrcChaName;
 };
 
-// ������Ҫ�����������
+// 
 struct stNetOpenHair
 {
 	void Exec();
 };
 
-// �����������
+// 
 struct stNetUpdateHair
 {
-	short	sScriptID;			// ��Ӧ��Hair�ű�ID,���Ϊ0������ر���������
-	short	sGridLoc[4];		// ��Ʒ���ڵĸ���
+	short	sScriptID;			// HairID,0
+	short	sGridLoc[4];		// 
 };
 
-// �������͵ķ���ֵ
+// 
 struct stNetUpdateHairRes
 {
-	unsigned long	ulWorldID;			// ��Ӧ��ɫ
-	int				nScriptID;			// ������Ľű�ID
-	std::string		szReason;			// ����ʱ��ԭ��,�����ɹ�Ϊ:ok,����Ϊ��ķ���Ϊ��fail,����ʧ��Ϊ:����ԭ��
+	unsigned long	ulWorldID;			// 
+	int				nScriptID;			// ID
+	std::string		szReason;			// ,:ok,fail,:
 
 	void	Exec();
 };
 
-// �Է��յ��Ķ�����ս����
+// 
 struct stNetTeamFightAsk
 {
 	struct
@@ -726,7 +726,7 @@ struct SForgeCell
 
 struct stNetItemForgeAsk
 {
-	char	chType;	// 1��������2���ϳ�
+	char	chType;	// 12
 	SForgeCell	SGroup[defMAX_FORGE_GROUP_NUM];
 };
 
@@ -766,15 +766,15 @@ struct stNetEspeItem
 	} SContent[4];
 };
 
-// �������˽ṹ��
+// 
 struct stBlackTrade
 {
 	short sIndex;		// 
-	short sSrcID;		// ������ƷID
-	short sSrcNum;		// ������Ʒ����
-	short sTarID;		// Ŀ����ƷID
-	short sTarNum;		// Ŀ����Ʒ����
-	short sTimeNum;		// timeֵ
+	short sSrcID;		// ID
+	short sSrcNum;		// 
+	short sTarID;		// ID
+	short sTarNum;		// 
+	short sTimeNum;		// time
 };
 
 
@@ -782,11 +782,11 @@ struct stChurchChallenge
 {
 	short sChurchID;	// id
 	char  szName[32];	// name
-	char  szChaName[32];// ��ǰ������
-	short sCount;		// ����
-	long  nBasePrice;	// �׼�
-	long  nMinbid;		// ��ͳ���
-	long  nCurPrice;	// ��ǰ���ļ�
+	char  szChaName[32];// 
+	short sCount;		// 
+	long  nBasePrice;	// 
+	long  nMinbid;		// 
+	long  nCurPrice;	// 
 
 	stChurchChallenge()	{ memset(this, 0, sizeof(stChurchChallenge)); }
 };
@@ -802,7 +802,7 @@ struct BankLog {
 
 
 extern void	NetLoginSuccess(char byPassword, uint8_t maxCharacters, std::span<const NetChaBehave> characters);
-extern void NetLoginFailure(unsigned short Errno);	                //��½������Ϣ
+extern void NetLoginFailure(unsigned short Errno);	                //
 extern void	NetBeginPlay(unsigned short Errno);
 extern void	NetEndPlay(uint8_t maxCharacters, std::span<const NetChaBehave> characters);
 extern void NetNewCha(unsigned short Errno);
@@ -848,46 +848,46 @@ extern void NetQueryRelive(unsigned int nID, stNetQueryRelive &SQueryRelive);
 extern void NetPreMoveTime(unsigned long ulTime);
 extern void NetMapMask(unsigned int nID, BYTE *pMask, long lLen);
 
-// ��ʾnpc������Ʒ����
+// npc
 extern void NetShowTrade( const NET_TRADEINFO& TradeInfo, BYTE byCmd, DWORD dwNpcID, DWORD dwParam );
 extern void NetUpdateTradeAllData( const NET_TRADEINFO& TradeInfo, BYTE byCmd, DWORD dwNpcID, DWORD dwParam );
 extern void NetUpdateTradeData( DWORD dwNpcID, BYTE byPage, BYTE byIndex, USHORT sItemID, USHORT sCount, DWORD dwPrice );
 
-// ��npc���׽��
+// npc
 extern void NetTradeResult( BYTE byCmd, BYTE byIndex, BYTE byCount, USHORT sItemID, DWORD dwMoney );
 
-// ��ʾ��ɫ��������
+// 
 extern void NetShowCharTradeRequest( BYTE byType, DWORD dwRequestID );
 
-// ��ʼ���н�ɫ����
+// 
 extern void NetShowCharTradeInfo( BYTE byType, DWORD dwAcceptID, DWORD dwRequestID );
 
-// ȡ����ɫ����
+// 
 extern void NetCancelCharTrade( DWORD dwCharID );
 
-// ��ɫ����ȷ�Ͻ���������Ϣ
+// 
 extern void NetValidateTradeData( DWORD dwCharID );
 
-// ��ɫ����ȷ�Ͻ���
+// 
 extern void NetValidateTrade( DWORD dwCharID );
 
-// ��ɫ�����϶�����֤����Ʒ
+// 
 extern void NetTradeAddBoat( DWORD dwCharID, BYTE byOpType, USHORT sItemID, BYTE byIndex, 
 							BYTE byCount, BYTE byItemIndex, const NET_CHARTRADE_BOATDATA& Data );
 
-// ��ɫ�����϶���Ʒ
+// 
 extern void NetTradeAddItem( DWORD dwCharID, BYTE byOpType, USHORT sItemID, BYTE byIndex, 
 							BYTE byCount, BYTE byItemIndex, const NET_CHARTRADE_ITEMDATA& Data );
 
-// ��ɫ���׽�����ʾ��Ǯ����
+// 
 extern void NetTradeShowMoney( DWORD dwCharID, DWORD dwMoney );
 extern void NetTradeShowIMP( DWORD dwCharID, DWORD dwMoney );
 
-// ��ɫ���׽��
+// 
 extern void NetTradeSuccess();
 extern void NetTradeFailed();
 
-// ��̯
+// 
 extern void NetStallInfo( DWORD dwCharID, BYTE byNum, const char szName[] );
 extern void NetStallAddBoat( BYTE byGrid, USHORT sItemID, BYTE byCount, DWORD dwMoney, NET_CHARTRADE_BOATDATA& Data );
 extern void NetStallAddItem( BYTE byGrid, USHORT sItemID, BYTE byCount, DWORD dwMoney, NET_CHARTRADE_ITEMDATA& Data );

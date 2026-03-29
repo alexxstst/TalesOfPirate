@@ -1,4 +1,4 @@
-Amplifier = {}
+﻿Amplifier = {}
 Amplifier[3844] = {State = {STATE_SBJYGZ}, StateLevel = 1, Type = "experience", Bonus = 2, StateTime = 900, Level = {Min = nil, Max = nil}}
 Amplifier[3094] = {State = {STATE_SBJYGZ}, StateLevel = 1, Type = "experience", Bonus = 2, StateTime = 1800, Level = {Min = nil, Max = nil}}
 Amplifier[3095] = {State = {STATE_SBJYGZ}, StateLevel = 2, Type = "experience", Bonus = 2.5, StateTime = 1800, Level = {Min = 60, Max = nil}}

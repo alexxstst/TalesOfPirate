@@ -1,4 +1,4 @@
-// mersenne.h - written and placed in public domain by Jeffrey Walton.
+﻿// mersenne.h - written and placed in public domain by Jeffrey Walton.
 
 /// \file mersenne.h
 /// \brief Class file for Mersenne Twister

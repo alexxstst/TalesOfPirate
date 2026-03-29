@@ -1,4 +1,4 @@
-// arm_simd.h - written and placed in public domain by Jeffrey Walton
+﻿// arm_simd.h - written and placed in public domain by Jeffrey Walton
 
 /// \file arm_simd.h
 /// \brief Support functions for ARM and vector operations

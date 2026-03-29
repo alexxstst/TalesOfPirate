@@ -1,4 +1,4 @@
-#ifndef PROCIRCULATE_H
+﻿#ifndef PROCIRCULATE_H
 #define PROCIRCULATE_H
 #include "GameCommon.h"
 

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "GameApp.h"
 
 #include "Scene.h"
@@ -27,7 +27,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 	
     switch(nMsgType)
 	{
-        // ���¸������͵ĳ����������
+        // 
         case SCENEMSG_SCENEOBJ_UPDATEVALID:
         {
             BOOL bValid = nParam1;
@@ -168,7 +168,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 			pCha->RemoveEffect();
 			_cSceenSign.ChaDisappear( pCha );
 
-			//ɾ��shade
+			//shade
 			CShadeEff *pShade;
 			size = pCha->GetShadeNum();
 			for(n = 0; n < size; n++)
@@ -360,7 +360,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 				}
 			}
 			pObj->RemoveEffect();
-			//ɾ��shade
+			//shade
 			CShadeEff *pShade;
 			size = pObj->GetShadeNum();
 			for(n = 0; n < size; n++)
@@ -381,12 +381,12 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 		{
 			break;
 		}
-		//�������Ŀ��
+		//
 		case SCENEMSG_EFFECT_HIT:
 		{
 			break;
 		}
-		//�����Ч������Ч
+		//
 		case SCENEMSG_EFFECT_VALID:
 		{
 			CEffectObj * eff = GetEffect( nParam2 );
@@ -412,7 +412,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 			eff->RemoveEffect();
 			break;
 		}
-		//������Ч
+		//
 		case SCENEMSG_EFFECT_CREATE:
 		{
 			CEffectObj * eff = GetEffect( nParam2 );
@@ -452,13 +452,13 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 			}
 			break;
 		}
-		//����������Ч
+		//
 		case SCENEMSG_SCENEITEM_CREATE:
 		{
 			pItem = GetSceneItem(nParam1);
 			if( nParam2!=0 )
 			{
-				// ��������
+				// 
 				CItemRecord *pInfo = pItem->GetItemInfo();
 				for (int n = 0; n < pInfo->sEffNum; n++)
 				{
@@ -472,7 +472,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 					//pEffect = GetFirstInvalidEffObj();
 					//if( !pEffect ) continue;
 
-					//// ʹ�õ��߱����dummy
+					//// dummy
 					//if(!pEffect->Create( pInfo->sEffect[n][0] ))
 					//{
 					//	LG("ERROR","create cha`s effect fail,ID %d", pInfo->sEffect[n][0]);
@@ -486,9 +486,9 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 			}
 			else
 			{
-				// �ڵ���
+				// 
 				CShadeEff *pShade = NULL;
-				//��Ȧ
+				//
 				pShade = GetFirstInvalidShadeObj();
 				if( pShade )
 				{
@@ -500,7 +500,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 					pItem->AddShade(pShade->getID());
 				}
 
-				//Ӱ��
+				//
 				pShade = GetFirstInvalidShadeObj();
 				if( pShade )
 				{
@@ -515,7 +515,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 			}
 			break;
 		}
-		//ɾ��������Ч
+		//
 		case SCENEMSG_SCENEITEM_DESTROY:
 		{
 			pItem = GetSceneItem(nParam1);
@@ -537,7 +537,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
 				}
 			}
 			pItem->RemoveEffect();
-			//ɾ��shade
+			//shade
 			CShadeEff *pShade;
 			size = pItem->GetShadeNum();
 			for(n = 0; n < size; n++)

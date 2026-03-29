@@ -1,4 +1,4 @@
-// ossig.h - written and placed in the public domain by Jeffrey Walton
+﻿// ossig.h - written and placed in the public domain by Jeffrey Walton
 //
 /// \file ossig.h
 /// \brief Utility class for trapping OS signals.

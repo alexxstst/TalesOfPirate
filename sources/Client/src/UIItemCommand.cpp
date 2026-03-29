@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiitemcommand.h"
 #include "ItemRecord.h"
 #include "uicompent.h"
@@ -49,7 +49,7 @@ const DWORD GLOD_COLOR = 0xFFFFFF00;
 const unsigned int ITEM_HEIGHT = 32;
 const unsigned int ITEM_WIDTH = 32;
 
-std::map<int, DWORD>	CItemCommand::_mapCoolDown;	// ������һ�ηŵĵ��߼��ܵ�ʱ��
+std::map<int, DWORD>	CItemCommand::_mapCoolDown;	// 
 
 
 CItemCommand::CItemCommand( CItemRecord* pItem )
@@ -62,7 +62,7 @@ _pAniClock(NULL), _pSkill(NULL), _dwPlayTime(0),_canDrag(true)
 
     const char* file = pItem->GetIconFile();
 
-    // �ж��ļ��Ƿ����
+    // 
     HANDLE hFile = CreateFile(file,GENERIC_READ,0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
     if( INVALID_HANDLE_VALUE == hFile ) 
     {
@@ -120,7 +120,7 @@ void CItemCommand::_Copy( const CItemCommand& rhs )
 CItemCommand::~CItemCommand()
 {
     //delete _pImage;
-	SAFE_DELETE(_pImage); // UI��������
+	SAFE_DELETE(_pImage); // UI
 
 	if( _pBoatHint )
 	{
@@ -510,7 +510,7 @@ void CItemCommand::AddHint( int x, int y ){
 		//PushHint( buf, (DWORD)(COLOR_WHITE ^ 0xFF000000), 5, 1, -1, true, -16777216);
 		
 		if( _pItem->lID == 1034 ){
-			sprintf(buf, g_oLangRec.GetString(862), _ItemData.sEndure[0] * 10 - 1000, _ItemData.sEndure[1] * 10 - 1000);// ������㷽ʽѯ�ʲ߻�
+			sprintf(buf, g_oLangRec.GetString(862), _ItemData.sEndure[0] * 10 - 1000, _ItemData.sEndure[1] * 10 - 1000);// 
 			PushHint( buf, COLOR_WHITE, 5, 1 );
 			//return;
 		}
@@ -589,7 +589,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 		AddHintHeight();
 
-		if(! isStore)	// �̳��ڲ���ʾ����������ͳɳ���
+		if(! isStore)	// 
 		{
 			sprintf( buf, g_oLangRec.GetString(662), _ItemData.sEndure[0] / 50, _ItemData.sEndure[1] / 50 );
 			PushHint( buf );
@@ -600,7 +600,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 		AddHintHeight();
 
-		// ��ǿ,�����ǿ
+		// ,
 		AddHintHeight();
 		for( int i=0; i<ITEMATTR_CLIENT_MAX; i++ )
 		{
@@ -693,14 +693,14 @@ void CItemCommand::AddHint( int x, int y ){
 
     }
 	 
-    else if( _pItem->sType==42 )    // �������
+    else if( _pItem->sType==42 )    // 
     {
         PushHint( _pItem->szName, COLOR_BLUE, 5, 1 );
 
         SetHintIsCenter( false );
 		_AddDescriptor();
     }
-    else if( _pItem->sType==18 || _pItem->sType==19 )	// ��ͷ,����
+    else if( _pItem->sType==18 || _pItem->sType==19 )	// ,
     {
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -711,7 +711,7 @@ void CItemCommand::AddHint( int x, int y ){
 		}
 
 		if ( _ItemData.GetItemLevel() > 0 ){
-			sprintf( buf, g_oLangRec.GetString(627), _ItemData.GetItemLevel() * 2 + 100 );	// ���Ӷȶ��� 0��-80% 1��-82% ...
+			sprintf( buf, g_oLangRec.GetString(627), _ItemData.GetItemLevel() * 2 + 100 );	//  0-80% 1-82% ...
 			PushHint( buf, GENERIC_COLOR );
 		}
 
@@ -719,7 +719,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 		_AddDescriptor();
     }
-	else if( _pItem->sType==43 )    // ����֤��
+	else if( _pItem->sType==43 )    // 
 	{
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -832,7 +832,7 @@ void CItemCommand::AddHint( int x, int y ){
 		_AddDescriptor();
 		return;
 	}
-	else if( _pItem->sType==29 )    // ����
+	else if( _pItem->sType==29 )    // 
 	{
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -845,7 +845,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 		_AddDescriptor();
 	}
-	else if( _pItem->sType==45 )    // ó��֤��
+	else if( _pItem->sType==45 )    // 
 	{
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -868,7 +868,7 @@ void CItemCommand::AddHint( int x, int y ){
 		PushHint( buf );
 
 	}
-	else if( _pItem->sType==34 )	// ������
+	else if( _pItem->sType==34 )	// 
 	{
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -935,7 +935,7 @@ void CItemCommand::AddHint( int x, int y ){
 			_AddDescriptor();
 		}
 	}
-	else if( _pItem->sType == 46 )	// ����֤֮
+	else if( _pItem->sType == 46 )	// 
 	{
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -954,7 +954,7 @@ void CItemCommand::AddHint( int x, int y ){
 		sprintf( buf, g_oLangRec.GetString(655), _ItemData.sEndure[1] );
 		PushHint( buf, GENERIC_COLOR );
 
-		sprintf( buf, "%s:%d", g_oLangRec.GetString(848), _ItemData.sEnergy[1] );	// �Ҷ�����
+		sprintf( buf, "%s:%d", g_oLangRec.GetString(848), _ItemData.sEnergy[1] );	// 
 		PushHint( buf, GENERIC_COLOR );
 
 		_AddDescriptor();
@@ -979,7 +979,7 @@ void CItemCommand::AddHint( int x, int y ){
 		sprintf( buf, g_oLangRec.GetString(656), ConvertNumToChinese( item.sEnergy[1] ).c_str(), _pItem->szName );
         //PushHint( buf, color, 5, 1, -1, true, -16777216);
 		PushHint( buf, (DWORD)(color ^ 0xFF000000), 5, 1, -1, true, -16777216);
-		PushHint( GetStoneHint(1).c_str() );	// ������ʯ����ʾ1��������
+		PushHint( GetStoneHint(1).c_str() );	// 1
 		_AddDescriptor();
 	}
 	else if( _pItem->sType==50 )
@@ -988,7 +988,7 @@ void CItemCommand::AddHint( int x, int y ){
         PushHint( buf, COLOR_WHITE, 5, 1 );
 		_AddDescriptor();
 	}
-	else if( _pItem->sType == 65 )	// ������̳  add by Philip.Wu  2006-06-19
+	else if( _pItem->sType == 65 )	//   add by Philip.Wu  2006-06-19
 	{
 		// Add by lark.li 20080320 begin
 		if(5724 == _pItem->lID)
@@ -1006,7 +1006,7 @@ void CItemCommand::AddHint( int x, int y ){
 		//	Modify by alfred.shi 20080822
 		if( 3279 <= _pItem->lID && _pItem->lID <= 3282||_pItem->lID == 6370||_pItem->lID == 6371||_pItem->lID == 6376||
 				_pItem->lID == 6377||_pItem->lID == 6378||(_pItem->lID>=5882&&_pItem->lID<=5893)||_pItem->lID == 5895||
-				_pItem->lID == 5897||(_pItem->lID>=6383&&_pItem->lID<=6385))	// ����ϵͳ���⴦����������
+				_pItem->lID == 5897||(_pItem->lID>=6383&&_pItem->lID<=6385))	// 
 		{
 			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -1024,7 +1024,7 @@ void CItemCommand::AddHint( int x, int y ){
 		AddHintHeight();
 
 		if( _pItem->lID == 2911 || _pItem->lID == 2912 || _pItem->lID == 2952 || 
-			_pItem->lID == 3066 || _pItem->lID == 3078 )	// ����������⴦��
+			_pItem->lID == 3066 || _pItem->lID == 3078 )	// 
 		{
 			int nMonth  = 0;
 			int nDay    = 0;
@@ -1081,7 +1081,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 			return;
 		}
-		else if(_pItem->lID == 2954)	// ������ߴ���������֤����
+		else if(_pItem->lID == 2954)	// 
 		{
 			int nCount = 0;
 			for(int i = 0; i < 5; ++i)
@@ -1093,7 +1093,7 @@ void CItemCommand::AddHint( int x, int y ){
 				}
 			}
 
-			sprintf( buf, "%s: %d", g_oLangRec.GetString(933), nCount );	// "��������"
+			sprintf( buf, "%s: %d", g_oLangRec.GetString(933), nCount );	// ""
 			PushHint( buf );
 
 			AddHintHeight();
@@ -1102,7 +1102,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 			return;
 		}
-        else if(_pItem->lID == 579)     // ��ѧ֤�� ������ͨ������ʾ���⴦��
+        else if(_pItem->lID == 579)     //  
         {
             SetHintIsCenter( false );
 		    _AddDescriptor();
@@ -1129,7 +1129,7 @@ void CItemCommand::AddHint( int x, int y ){
 					}
 				}
 
-				sprintf(buf,"�洢ʱ��Ϊ��%d",nCount);
+				sprintf(buf,"%d",nCount);
 			}
 
 			PushHint( buf, GENERIC_COLOR );
@@ -1179,7 +1179,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 		return;
 	}
-	else if(_pItem->sType == 69)	// XXXͼֽ
+	else if(_pItem->sType == 69)	// XXX
 	{
         int iItem = 0;
         long lForge = 0;
@@ -1283,9 +1283,9 @@ void CItemCommand::AddHint( int x, int y ){
     {
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
-		if(_pItem->lID == 2902 || _pItem->lID == 2903)	// ������Ե��, ������Ե��
+		if(_pItem->lID == 2902 || _pItem->lID == 2903)	// , 
 		{
-			sprintf(buf, g_oLangRec.GetString(909), item.sInstAttr[ITEMATTR_VAL_STR]); // "��Ե���룺%d"
+			sprintf(buf, g_oLangRec.GetString(909), item.sInstAttr[ITEMATTR_VAL_STR]); // "%d"
 	        PushHint(buf, GENERIC_COLOR);
 
 			AddHintHeight();
@@ -1303,7 +1303,7 @@ void CItemCommand::AddHint( int x, int y ){
             sprintf(buf, g_oLangRec.GetString(878), _ItemData.sEndure[0] / 50);
             PushHint(buf, GENERIC_COLOR);
 
-            sprintf(buf, g_oLangRec.GetString(897), _ItemData.sEnergy[0]); // "���߾��飺%i"
+            sprintf(buf, g_oLangRec.GetString(897), _ItemData.sEnergy[0]); // "%i"
             PushHint(buf, GENERIC_COLOR);
         }
 
@@ -1346,30 +1346,30 @@ void CItemCommand::AddHint( int x, int y ){
 		SetHintIsCenter( true );
 		_AddDescriptor();
 	}
-	else if( _pItem->sType==71 && _pItem->lID == 3289 )   //ѧ��֤����
+	else if( _pItem->sType==71 && _pItem->lID == 3289 )   //
     {
 		//add by ALLEN 2007-10-16
 
-		// ѧ��֤���⴦�������ȶ��ģ�����
-		PushHint(_pItem->szName, COLOR_WHITE, 5, 1 ); // ����
+		// 
+		PushHint(_pItem->szName, COLOR_WHITE, 5, 1 ); // 
 
 		int nLevel = item.chForgeLv;
-		const char* arShowName[5] = { g_oLangRec.GetString(944), g_oLangRec.GetString(945), g_oLangRec.GetString(946), g_oLangRec.GetString(947), g_oLangRec.GetString(948) };// "�׶�԰", "Сѧ", "����", "����", "��ѧ" };
+		const char* arShowName[5] = { g_oLangRec.GetString(944), g_oLangRec.GetString(945), g_oLangRec.GetString(946), g_oLangRec.GetString(947), g_oLangRec.GetString(948) };// "", "", "", "", "" };
 		if(0 <= nLevel && nLevel <= 4)
 		{
-			sprintf(buf, g_oLangRec.GetString(949), arShowName[nLevel]);	// "ѧ��:%s"
+			sprintf(buf, g_oLangRec.GetString(949), arShowName[nLevel]);	// ":%s"
 			PushHint(buf, COLOR_WHITE, 5, 1 );
 		}
 
-		sprintf(buf, g_oLangRec.GetString(950), item.sEndure[0], item.sEndure[1]);	// "ѧ��(%d/%d)"
+		sprintf(buf, g_oLangRec.GetString(950), item.sEndure[0], item.sEndure[1]);	// "(%d/%d)"
 		PushHint(buf, COLOR_WHITE, 5, 1 );
 
-		sprintf(buf, g_oLangRec.GetString(951), item.sEnergy[0] * 1000, item.sEnergy[1] * 1000);	// "����(%d/%d)"
+		sprintf(buf, g_oLangRec.GetString(951), item.sEnergy[0] * 1000, item.sEnergy[1] * 1000);	// "(%d/%d)"
 		PushHint(buf, COLOR_WHITE, 5, 1 );
 
 		return;
     }
-	//	Add by alfred.shi 20080922 begin. �������޴�����
+	//	Add by alfred.shi 20080922 begin. 
 	else if( _pItem->sType==71 && _pItem->lID == 6377 )
 	{
 		
@@ -1404,7 +1404,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
     else if(_pItem->sType == 41)
     {
-		if(_pItem->lID == 58) // ��Ů��Ҫ�����⴦����з��
+		if(_pItem->lID == 58) // 
 		{
 			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -1416,7 +1416,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 			return;
 		}
-		else if(_pItem->lID == 171) // bragiҪ�����⴦��
+		else if(_pItem->lID == 171) // bragi
 		{
 			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -1436,7 +1436,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 			return;
 		}
-		else if(_pItem->lID == 2967) // ��ɩҪ�����⴦�������
+		else if(_pItem->lID == 2967) // 
 		{
 			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -1448,7 +1448,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 			return;
 		}
-		else    // һ�����
+		else    // 
 		{
 			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -1456,7 +1456,7 @@ void CItemCommand::AddHint( int x, int y ){
 			_AddDescriptor();
 		}
 	}
-    else    // һ�����
+    else    // 
     {
         PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
 
@@ -1468,7 +1468,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 	if(_pItem->sType != 75)	// 
 	{
-		// ��ǿ,�����ǿ
+		// ,
 		AddHintHeight();
 		for( int i=0; i<ITEMATTR_CLIENT_MAX; i++ )
 		{
@@ -1481,9 +1481,9 @@ void CItemCommand::AddHint( int x, int y ){
 
 	if( _hints.GetCount()>0 && (_pItem->sType<=27 || _pItem->sType==44) && _pItem->sType!=18 && _pItem->sType!=19 && _pItem->sType!=21) 
 	{
-		// �������ֵ�İ�λ������ɫ,ʮλ�����´�������ǰ׺
+		// ,
 		char szBuf[16] = { 0 };
-		sprintf( szBuf, "%09d", _ItemData.sEnergy[1]/10 );		// ��ʮ����Ϊ����������ֵΪ4λ��,�ȴ��Ժ��Ϊ��λ
+		sprintf( szBuf, "%09d", _ItemData.sEnergy[1]/10 );		// 4,
 		char szHundred[2] = { szBuf[6], 0 };
 		int nHundred = atoi( szHundred );
 		int nTen = atoi( &szBuf[7] );
@@ -1534,7 +1534,7 @@ void CItemCommand::AddHint( int x, int y ){
 			_hints.GetHint(0)->color = dwNameColor;
 	}
 
-	// ��������
+	// 
 	SItemForge& Forge = GetForgeInfo();
 	if( _hints.GetCount()>0 && Forge.IsForge )
 	{
@@ -1774,27 +1774,27 @@ long	_lock_item_id_        = 0;
 long	_lock_grid_id_        = 0;
 long	_lock_fusion_item_id_ = 0;
 
-//extern	bool	g_yyy_add_lock_item_wait_return_state;		//	�Ѿ�����������Ϣ���ȴ������������������״̬��
+//extern	bool	g_yyy_add_lock_item_wait_return_state;		//	
 
 static	void	_evtSelectYesNoEvent(	CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey	)
 {
-	//	�ر�ѡ���
+	//	
 	
 	
 	
 	pSender->GetForm()->Close();
 	
-	//	ȡ������֡�
+	//	
 	string	name	=	pSender->GetName();
 
 	if(	!strcmp(	name.c_str(),	"btnYes"	)	)
 	{
-		//	���ͼ�����Ϣ��
+		//	
 		//CS_DropLock(	_lock_pos_,	_lock_item_id_,	_lock_grid_id_,	_lock_fusion_item_id_	);
 		CS_DropLock(	_lock_grid_id_	);
-		//	���õȴ���ꡣ
+		//	
 		CCursor::I()->SetCursor(	CCursor::stWait	);
-		//	���õȴ������������������״̬��
+		//	
 		//g_yyy_add_lock_item_wait_return_state	=	true;
 
 	}
@@ -1815,7 +1815,7 @@ bool CItemCommand::MouseDown()
 
 	if( CRepairState* pState = dynamic_cast<CRepairState*>(pCha->GetActor()->GetCurState()) )
 	{
-		// ���������������״̬
+		// 
 		if( _pItem->sType>=31 ) 
 		{
 			g_pGameApp->SysInfo( g_oLangRec.GetString(675), _pItem->szName );
@@ -1845,7 +1845,7 @@ bool CItemCommand::MouseDown()
 	}
 	else if( CFeedState* pState = dynamic_cast<CFeedState*>(pCha->GetActor()->GetCurState()) )
 	{
-		// ιʳ״̬
+		// 
 		if( _pItem->sType!=enumItemTypePet )
 		{
 			g_pGameApp->SysInfo( g_oLangRec.GetString(676) );
@@ -1973,7 +1973,7 @@ bool CItemCommand::UseCommand(bool isRightClick)
 		}
 		else */
 			
-		if( _pItem->sType == 66 || ( 864 <= _pItem->lID && _pItem->lID <= 866 ) )	// ���Ӽ���״̬  add by Philip.Wu  2006-06-20
+		if( _pItem->sType == 66 || ( 864 <= _pItem->lID && _pItem->lID <= 866 ) )	//   add by Philip.Wu  2006-06-20
 		{
 			CActor* pActor = CGameScene::GetMainCha()->GetActor();
 
@@ -1982,7 +1982,7 @@ bool CItemCommand::UseCommand(bool isRightClick)
 			pActor->SwitchState( pState );
 			return false;
 		}
-		else if(GetItemInfo()->sType == 71) // ���ܵ���ʹ��
+		else if(GetItemInfo()->sType == 71) // 
 		{
 			CCharacter* pCha = CGameScene::GetMainCha();
 			if( !pCha ) return false;
@@ -1990,17 +1990,17 @@ bool CItemCommand::UseCommand(bool isRightClick)
 			int nSkillID = atoi(GetItemInfo()->szAttrEffect);
 			CSkillRecord* pSkill = GetSkillRecordInfo(nSkillID);
 
-			// �������ܣ���ִ��
+			// 
 			if( !pSkill || !pSkill->GetIsUse() ) return false;
 
-			// �жϼ����ܷ��ں���ʩ��
+			// 
 			if( pCha->IsBoat() && pSkill->chSrcType != 2)
 			{
 				g_pGameApp->SysInfo(g_oLangRec.GetString(879));
 				return false;
 			}
 
-			// �жϼ����ܷ���½����ʩ��
+			// 
 			if( ! pCha->IsBoat() && pSkill->chSrcType != 1)
 			{
 				g_pGameApp->SysInfo(g_oLangRec.GetString(880));
@@ -2008,22 +2008,22 @@ bool CItemCommand::UseCommand(bool isRightClick)
 			}
 
 			int nCoolDownTime = atoi(pSkill->szFireSpeed);
-			if(nCoolDownTime > 0)// �� cooldown ʱ��
+			if(nCoolDownTime > 0)//  cooldown 
 			{
-				DWORD nCurTickCount = g_pGameApp->GetCurTick() - 500;	// 500������ʱ����
+				DWORD nCurTickCount = g_pGameApp->GetCurTick() - 500;	// 500
 				map<int, DWORD>::iterator it = _mapCoolDown.find(nSkillID);
 
 				if(it != _mapCoolDown.end() && it->second + nCoolDownTime >= nCurTickCount)
 				{
-					// cooldown ��
-					g_pGameApp->SysInfo(g_oLangRec.GetString(898), (it->second + nCoolDownTime - nCurTickCount) / 1000 + 1);//"������ȷ�У�ʣ�� %d ��"
+					// cooldown 
+					g_pGameApp->SysInfo(g_oLangRec.GetString(898), (it->second + nCoolDownTime - nCurTickCount) / 1000 + 1);//" %d "
 					return false;
 				}
 
-				_mapCoolDown[nSkillID] = g_pGameApp->GetCurTick();	// �����µ��߼���ʹ��ʱ��
+				_mapCoolDown[nSkillID] = g_pGameApp->GetCurTick();	// 
 			}
 
-			// �����������ͷŶ����Χ
+			// 
 			if( pSkill->GetDistance()<=0 )
 			{
 				CAttackState* attack = new CAttackState(pCha->GetActor());
@@ -2329,11 +2329,11 @@ void CItemCommand::_ShowWork( CItemRecord* pItem, SGameAttr* pAttr )
 	}
 	//else
 	//{
-	//	PushHint( "ְҵ����:��", GENERIC_COLOR );
+	//	PushHint( ":", GENERIC_COLOR );
 	//}
 }
 
-void CItemCommand::_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquipItem, SGameAttr* pAttr)// ������ʾ�ۺϺ���ߵ�ְҵ����
+void CItemCommand::_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquipItem, SGameAttr* pAttr)// 
 {
 	bool isFind = false;
 	int  iAppearIndex = -1;
@@ -2377,7 +2377,7 @@ void CItemCommand::_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquip
 	}
 	//else
 	//{
-	//	PushHint( "ְҵ����:��", GENERIC_COLOR );
+	//	PushHint( ":", GENERIC_COLOR );
 	//}
 }
 
@@ -2398,15 +2398,15 @@ void CItemCommand::_ShowWork( xShipInfo* pInfo, SGameAttr* pAttr )
 			isFind = true;
 		}*/
 		//add by alfred.shi 20080714	begin	
-		/*	�޸����˴������ע�ͣ������������Ѿ��޸ģ������ֳ��֣����뱻�˸Ķ����ַ�����ԴҲû�ҵ���*/
+		/*	*/
 		if( !isFind ) 
 		{
 			//string name(RES_STRING(CL_UIITEMCOMMAND_CPP_00010));
-			string name("������");
+			string name("");
 			g_GetJobName(pInfo->sPfLimit[i]);
 			if(name.compare(g_GetJobName(pInfo->sPfLimit[i])) == 0)
 			{
-				sprintf( buf,"%s", "��ӡ�ŵ�װ��");
+				sprintf( buf,"%s", "");
 				//PushHint( buf, VALID_COLOR );
 			}
 			else
@@ -2431,7 +2431,7 @@ void CItemCommand::_ShowWork( xShipInfo* pInfo, SGameAttr* pAttr )
 	}
 	//else
 	//{
-	//	PushHint( "ְҵ����:��", GENERIC_COLOR );
+	//	PushHint( ":", GENERIC_COLOR );
 	//}
 }
 
@@ -2541,7 +2541,7 @@ void SItemHint::Convert( SItemGrid& ItemGrid, CItemRecord* pInfo )
 		sInstAttr[i] = pInfo->GetTypeValue( i );
 	}
 
-	// ��ȡ���ԣ�������������ԣ�ʹ���������ԣ�����ӱ����ж�ȡ
+	// 
 	int nAttr = 0;
 	for( int i=0; i<defITEM_INSTANCE_ATTR_NUM; i++ )
 	{
@@ -2565,13 +2565,13 @@ SItemForge& SItemForge::Convert( DWORD v, int nItemID )
 		return forge;
 
 	forge.IsForge = true;
-	forge.nHoleNum = v / 1000000000;	// ����
+	forge.nHoleNum = v / 1000000000;	// 
 
 	int nStoneData;
 	CStoneInfo* pStoneInfo = NULL;
 	for(int i = 0; i < 3; ++i)
 	{
-		nStoneData = (v / (int)(pow(1000, 2 - i))) % 1000;	// ��λһȡ
+		nStoneData = (v / (int)(pow(1000, 2 - i))) % 1000;	// 
 
 		pStoneInfo = GetStoneInfo(nStoneData / 10);
 		if(!pStoneInfo) continue;
@@ -2598,7 +2598,7 @@ SItemForge& SItemForge::Convert( DWORD v, int nItemID )
 	return forge;
 
 	//////////////////////////////////////////////////////////////////////////////////
-	// ����Ŀ��ܻ������⣬��ִ��
+	// 
 
 	//int Num = 0;
 	//if( g_pGameApp->GetScriptMgr()->DoString( "Get_HoleNum", "u-d", dwForgeValue, &Num ) )
@@ -2609,7 +2609,7 @@ SItemForge& SItemForge::Convert( DWORD v, int nItemID )
 	//	}
 	//}
 
-	//// �õ����ű�ʯ
+	//// 
 	//int nStone;
 	//int nStoneLv;
 	//CStoneInfo* pStone = NULL;

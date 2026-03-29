@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I F O R M . H
  *
  *	Declarations of interfaces for clients and providers of MAPI

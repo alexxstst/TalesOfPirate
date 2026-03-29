@@ -1,4 +1,4 @@
-/* Header file for use with Cryptogam's ARMv4 AES.         */
+﻿/* Header file for use with Cryptogam's ARMv4 AES.         */
 /* Also see http://www.openssl.org/~appro/cryptogams/ and  */
 /* https://wiki.openssl.org/index.php?title=Cryptogams_AES */
 

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: ItemRecord.h
 // Creater: ZhangXuedong
 // Date: 2004.09.01
@@ -222,52 +222,52 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
     string strList[80];
 	string strLine;
 
-	// ���
+	// 
 	pInfo->lID = pInfo->nID;
-	// ����
+	// 
 	_tcsncpy(pInfo->szName, pInfo->szDataName, defITEM_NAME_LEN);
 	pInfo->szName[defITEM_NAME_LEN - 1] = _TEXT('\0');
 	// ICON
 	_tcsncpy(pInfo->szICON, ParamList[m++].c_str(), defITEM_ICON_NAME_LEN);
 	pInfo->szICON[defITEM_ICON_NAME_LEN - 1] = _TEXT('\0');
-	// ģ��
+	// 
 	for (int i = 0; i < defITEM_MODULE_NUM; i++)
 	{
 		_tcsncpy(pInfo->chModule[i], ParamList[m++].c_str(), defITEM_MODULE_LEN);
 		pInfo->chModule[i][defITEM_MODULE_LEN - 1] = _TEXT(0);
 	}
-	// ����־
+	// 
 	pInfo->sShipFlag = Str2Int(ParamList[m++]);
-	// �����ͺ�
+	// 
 	pInfo->sShipType = Str2Int(ParamList[m++]);
-	// ����
+	// 
 	pInfo->sType = Str2Int(ParamList[m++]);
 
-	// ���ǰ׺����
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��װ���
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// �����ȼ�
+	// 
 	pInfo->chForgeLv = Str2Int(ParamList[m++]);
-	// ����ֵ
+	// 
 	pInfo->chForgeSteady = Str2Int(ParamList[m++]);
-	// ΨһID
+	// ID
 	pInfo->chExclusiveID = Str2Int(ParamList[m++]);
-	// ����
+	// 
 	pInfo->chIsTrade = Str2Int(ParamList[m++]);
-	// ʰȡ
+	// 
 	pInfo->chIsPick = Str2Int(ParamList[m++]);
-	// ����
+	// 
 	pInfo->chIsThrow = Str2Int(ParamList[m++]);
-	// ����
+	// 
 	pInfo->chIsDel = Str2Int(ParamList[m++]);
-	// �ڵ�����һ���п��Է��õ�������
+	// 
 	pInfo->nPileMax = Str2Int(ParamList[m++]);
-	// �Ƿ�ʵ����
+	// 
 	pInfo->chInstance = Str2Int(ParamList[m++]);
-	// �۸�
+	// 
 	pInfo->lPrice = Str2Int(ParamList[m++]);
-	// ����
+	// 
 	memset(pInfo->chBody, cchItemRecordKeyValue, sizeof(pInfo->chBody));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -276,9 +276,9 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->chBody[i] = Str2Int(strList[i]);
 	}
-	// ��ɫ�ȼ�
+	// 
 	pInfo->sNeedLv = Str2Int(ParamList[m++]);    
-	// ְҵ
+	// 
 	memset(pInfo->szWork, cchItemRecordKeyValue, sizeof(char) * MAX_JOB_TYPE);
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -287,11 +287,11 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->szWork[i] = Str2Int(strList[i]);
 	}
-	// ��ɫ�ƺ�
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��ɫ����
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ���߿�װ��λ��
+	// 
 	memset(pInfo->szAbleLink, cchItemRecordKeyValue, sizeof(char) * enumEQUIP_NUM);
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -300,7 +300,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->szAbleLink[i] = Str2Int(strList[i]);
 	}
-	// ����װ�������������λ��
+	// 
 	memset(pInfo->szNeedLink, cchItemRecordKeyValue, sizeof(char) * enumEQUIP_NUM);
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -310,53 +310,53 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		pInfo->szNeedLink[i] = Str2Int(strList[i]);
 	}
 
-	// ʰȡ����λ��
+	// 
 	pInfo->chPickTo = Str2Int(ParamList[m++]);
 
-	// ����ϵ���ӳ�
+	// 
 	pInfo->sStrCoef = Str2Int(ParamList[m++]);
-	// ����ϵ���ӳ�
+	// 
 	pInfo->sAgiCoef = Str2Int(ParamList[m++]);
-	// רעϵ���ӳ�
+	// 
 	pInfo->sDexCoef = Str2Int(ParamList[m++]);
-	// ����ϵ���ӳ�
+	// 
 	pInfo->sConCoef = Str2Int(ParamList[m++]);
-	// ����ϵ���ӳ�
+	// 
 	pInfo->sStaCoef = Str2Int(ParamList[m++]);
-	// ����ϵ���ӳ�
+	// 
 	pInfo->sLukCoef = Str2Int(ParamList[m++]);
-	// ����Ƶ��ϵ���ӳ�
+	// 
 	pInfo->sASpdCoef = Str2Int(ParamList[m++]);
-	// ��������ϵ���ӳ�
+	// 
 	pInfo->sADisCoef = Str2Int(ParamList[m++]);
-	// ��С������ϵ���ӳ�
+	// 
 	pInfo->sMnAtkCoef = Str2Int(ParamList[m++]);
-	// ��󹥻���ϵ���ӳ�
+	// 
 	pInfo->sMxAtkCoef = Str2Int(ParamList[m++]);
-	// ����ϵ���ӳ�
+	// 
 	pInfo->sDefCoef = Str2Int(ParamList[m++]);
-	// ���Hpϵ���ӳ�
+	// Hp
 	pInfo->sMxHpCoef = Str2Int(ParamList[m++]);
-	// ���Spϵ���ӳ�
+	// Sp
 	pInfo->sMxSpCoef = Str2Int(ParamList[m++]);
-	// ������ϵ���ӳ�
+	// 
 	pInfo->sFleeCoef = Str2Int(ParamList[m++]);
-	// ������ϵ���ӳ�
+	// 
 	pInfo->sHitCoef = Str2Int(ParamList[m++]);
-	// ������ϵ���ӳ�
+	// 
 	pInfo->sCrtCoef = Str2Int(ParamList[m++]);
-	// Ѱ����ϵ���ӳ�
+	// 
 	pInfo->sMfCoef = Str2Int(ParamList[m++]);
-	// hp�ָ��ٶ�ϵ���ӳ�
+	// hp
 	pInfo->sHRecCoef = Str2Int(ParamList[m++]);
-	// sp�ָ��ٶ�ϵ���ӳ�
+	// sp
 	pInfo->sSRecCoef = Str2Int(ParamList[m++]);
-	// �ƶ��ٶ�ϵ���ӳ�
+	// 
 	pInfo->sMSpdCoef = Str2Int(ParamList[m++]);
-	// ��Դ�ɼ��ٶ�ϵ���ӳ�
+	// 
 	pInfo->sColCoef = Str2Int(ParamList[m++]);
 
-	// ���������ӳ�
+	// 
 	memset(pInfo->sStrValu, 0, sizeof(pInfo->sStrValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -365,7 +365,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sStrValu[i] = Str2Int(strList[i]);
 	}
-	// ���ݳ����ӳ�
+	// 
 	memset(pInfo->sAgiValu, 0, sizeof(pInfo->sAgiValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -374,7 +374,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sAgiValu[i] = Str2Int(strList[i]);
 	}
-	// רע�����ӳ�
+	// 
 	memset(pInfo->sDexValu, 0, sizeof(pInfo->sDexValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -383,7 +383,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sDexValu[i] = Str2Int(strList[i]);
 	}
-	// ���ʳ����ӳ�
+	// 
 	memset(pInfo->sConValu, 0, sizeof(pInfo->sConValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -392,7 +392,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sConValu[i] = Str2Int(strList[i]);
 	}
-	// ���������ӳ�
+	// 
 	memset(pInfo->sStaValu, 0, sizeof(pInfo->sStaValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -401,7 +401,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sStaValu[i] = Str2Int(strList[i]);
 	}
-	// ���˳����ӳ�
+	// 
 	memset(pInfo->sLukValu, 0, sizeof(pInfo->sLukValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -410,7 +410,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sLukValu[i] = Str2Int(strList[i]);
 	}
-	// ����Ƶ�ʳ����ӳ�
+	// 
 	memset(pInfo->sASpdValu, 0, sizeof(pInfo->sASpdValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -419,7 +419,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sASpdValu[i] = Str2Int(strList[i]);
 	}
-	// �������볣���ӳ�
+	// 
 	memset(pInfo->sADisValu, 0, sizeof(pInfo->sADisValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -428,7 +428,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sADisValu[i] = Str2Int(strList[i]);
 	}
-	// ��С�����������ӳ�
+	// 
 	memset(pInfo->sMnAtkValu, 0, sizeof(pInfo->sMnAtkValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -437,7 +437,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sMnAtkValu[i] = Str2Int(strList[i]);
 	}
-	// ��󹥻��������ӳ�
+	// 
 	memset(pInfo->sMxAtkValu, 0, sizeof(pInfo->sMxAtkValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -446,7 +446,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sMxAtkValu[i] = Str2Int(strList[i]);
 	}
-	// ���������ӳ�
+	// 
 	memset(pInfo->sDefValu, 0, sizeof(pInfo->sDefValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -455,7 +455,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sDefValu[i] = Str2Int(strList[i]);
 	}
-	// ���Hp�����ӳ�
+	// Hp
 	memset(pInfo->sMxHpValu, 0, sizeof(pInfo->sMxHpValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -464,7 +464,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sMxHpValu[i] = Str2Int(strList[i]);
 	}
-	// ���Sp�����ӳ�
+	// Sp
 	memset(pInfo->sMxSpValu, 0, sizeof(pInfo->sMxSpValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -473,7 +473,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sMxSpValu[i] = Str2Int(strList[i]);
 	}
-	// �����ʳ����ӳ�
+	// 
 	memset(pInfo->sFleeValu, 0, sizeof(pInfo->sFleeValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -482,7 +482,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sFleeValu[i] = Str2Int(strList[i]);
 	}
-	// �����ʳ����ӳ�
+	// 
 	memset(pInfo->sHitValu, 0, sizeof(pInfo->sHitValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -491,7 +491,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sHitValu[i] = Str2Int(strList[i]);
 	}
-	// �����ʳ����ӳ�
+	// 
 	memset(pInfo->sCrtValu, 0, sizeof(pInfo->sCrtValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -500,7 +500,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sCrtValu[i] = Str2Int(strList[i]);
 	}
-	// Ѱ���ʳ����ӳ�
+	// 
 	memset(pInfo->sMfValu, 0, sizeof(pInfo->sMfValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -509,7 +509,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sMfValu[i] = Str2Int(strList[i]);
 	}
-	// hp�ָ��ٶȳ����ӳ�
+	// hp
 	memset(pInfo->sHRecValu, 0, sizeof(pInfo->sHRecValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -518,7 +518,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sHRecValu[i] = Str2Int(strList[i]);
 	}
-	// sp�ָ��ٶȳ����ӳ�
+	// sp
 	memset(pInfo->sSRecValu, 0, sizeof(pInfo->sSRecValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -527,7 +527,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sSRecValu[i] = Str2Int(strList[i]);
 	}
-	// �ƶ��ٶȳ����ӳ�
+	// 
 	memset(pInfo->sMSpdValu, 0, sizeof(pInfo->sMSpdValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -536,7 +536,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sMSpdValu[i] = Str2Int(strList[i]);
 	}
-	// ��Դ�ɼ��ٶȳ����ӳ�
+	// 
 	memset(pInfo->sColValu, 0, sizeof(pInfo->sColValu));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -546,7 +546,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		pInfo->sColValu[i] = Str2Int(strList[i]);
 	}
 
-	// �����ֿ�
+	// 
 	memset(pInfo->sPDef, 0, sizeof(pInfo->sPDef));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -555,9 +555,9 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 	{
 		pInfo->sPDef[i] = Str2Int(strList[i]);
 	}
-	// �������ַ���
+	// 
 	pInfo->sLHandValu = Str2Int(ParamList[m++]);
-	// ����
+	// 
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	for (int i = 0; i < 2; i++)
@@ -567,7 +567,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		else
 			pInfo->sEnergy[i] = 0;
 	}
-	// �;ö�
+	// 
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	for (int i = 0; i < 2; i++)
@@ -577,31 +577,31 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		else
 			pInfo->sEndure[i] = 0;
 	}
-	// ����
+	// 
 	pInfo->sHole = Str2Int(ParamList[m++]);
-	// ���;ûָ�
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��װ������
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��Ա����
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��Ա����
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��������
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ��������
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// �ڵ������ٶ�
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ���ƶ��ٶ�
+	// 
 	strLine = Str2Int(ParamList[m++]);
-	// ʹ��Ч��
+	// 
 	strncpy(pInfo->szAttrEffect, ParamList[m++].c_str(), defITEM_ATTREFFECT_NAME_LEN);
 	pInfo->szAttrEffect[defITEM_ATTREFFECT_NAME_LEN - 1] = _TEXT('\0');
 
 	//drap
 	pInfo->sDrap = Str2Int(ParamList[m++]);
-	// ����������Ч
+	// 
 	memset(pInfo->sEffect,0 ,sizeof(pInfo->sEffect));
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
@@ -619,7 +619,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
         pInfo->sEffNum = n;
     }
 
-	// ������Ч��dummy
+	// dummy
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	if( n>defITEM_BIND_EFFECT_NUM ) n=defITEM_BIND_EFFECT_NUM;
@@ -628,7 +628,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		pInfo->sEffect[e][1] = Str2Int(strList[e]);
 	}
 
-	// ���������Ч
+	// 
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	int ItemNum = sizeof(pInfo->sItemEffect) / sizeof( pInfo->sItemEffect[0] );
@@ -639,7 +639,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		pInfo->sItemEffect[e] = Str2Int(strList[e]);
 	}
 
-	// ���ڵ���ʱ����Ч
+	// 
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	int AreaNum = sizeof(pInfo->sAreaEffect) / sizeof( pInfo->sAreaEffect[0] );
@@ -650,7 +650,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		pInfo->sAreaEffect[e] = Str2Int(strList[e]);
 	}
 
-	// ʹ��ʱ����Ч
+	// 
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	int nNum = sizeof(pInfo->sUseItemEffect) / sizeof( pInfo->sUseItemEffect[0] );
@@ -661,7 +661,7 @@ BOOL CItemRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string>
 		pInfo->sUseItemEffect[e] = Str2Int(strList[e]);
 	}
 
-	//����
+	//
     strLine = ParamList[m++];
 
     if( strLine=="0" )

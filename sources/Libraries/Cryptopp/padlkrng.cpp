@@ -1,4 +1,4 @@
-// via-rng.cpp - written and placed in public domain by Jeffrey Walton and Uri Blumenthal.
+﻿// via-rng.cpp - written and placed in public domain by Jeffrey Walton and Uri Blumenthal.
 
 #include "pch.h"
 #include "config.h"

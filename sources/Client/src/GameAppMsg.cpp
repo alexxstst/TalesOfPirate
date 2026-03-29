@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+﻿#include "Stdafx.h"
 #include "Character.h"
 #include "SceneObj.h"
 #include "SceneObjFile.h"
@@ -33,16 +33,16 @@
 
 using namespace std;
 
-// obj�ļ���ڷŵ�������Ͷ���  16λ��������ֶε����2λ
-#define OBJ_MASK_SCENEOBJ	0		// �������				
-#define OBJ_MASK_EFFECT     16384	//  = 01 000000 000000 00   
+// Objects in .obj file are differentiated by type masks; top 2 bits of 16-bit type field
+#define OBJ_MASK_SCENEOBJ	0		// Scene object
+#define OBJ_MASK_EFFECT     16384	//  = 01 000000 000000 00
 #define OBJ_MASK_CHA        32768   //  = 10 000000 000000 00
 
 bool g_IsCameraMode = false;
 
 short GetObjTypeID(short sValue)
 {
-	return sValue & 16383; // ������Ч��14λ
+	return sValue & 16383; // Extract lower 14 bits (effective ID)
 }
 
 short GetMaskType(short sValue)
@@ -50,13 +50,13 @@ short GetMaskType(short sValue)
 	return sValue & 49152;
 }
 
-// ��ͼ���̻ص�����, �˺����õ�֪ͨ��, ���ɵ�ͼ�ϵ����
+// Terrain section callback; creates/destroys objects on map sections
 long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned long dwParam, MPTerrain* pThis)
 {
 	long			nSectionObjCnt = 0;
 	SSceneObjInfo	infoex[MAX_MAP_SECTION_OBJ];
 
-	// ���ĸ�����Ӧ�ô�.obj��.ifl�ļ�ͷ�л�ȡ
+	// These four values should be read from .obj and .ifl file headers
 	const long		clSectionWidth = 8;
 	const long		clSectionHeight = 8;
 	const long		clTileWidth = 2;
@@ -81,7 +81,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 
 	nSectionNO = nSectionY * pThis->GetSectionCntX() + nSectionX;
 
-	if (nFlag == 0) // ����Section����
+	if (nFlag == 0) // Load section objects
 	{
         int nSceneObj = 0;
 
@@ -91,13 +91,13 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 		    {
 				pScene = CGameApp::GetCurScene();
 
-			    if (infoex[i].GetType() == 0) // �������
+			    if (infoex[i].GetType() == 0) // Scene object type
 			    {
-					// �޸��ش󳡾��������ʾ�޳�bug��//by clp
+					// Fix large scene object infinite display bug //by clp
 					CSceneObjInfo *pInfo = GetSceneObjInfo( infoex[i].GetID() );
 					if( pInfo && pInfo->bIsReallyBig )
 					{
-						// �ش��������������������
+						// Large objects are loaded separately, skip here
 						continue;
 					}
 
@@ -109,7 +109,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 						pObj->setPos(infoex[i].nX, infoex[i].nY);
 						pObj->setYaw(infoex[i].sYawAngle);
 					}
-					else if( g_Config.m_bEnableLGMsg )// ���������Ӵ�������ѯ����ɾ��
+					else if( g_Config.m_bEnableLGMsg )// Creation failed, prompt to delete from .obj file
 					{
 						_stprintf(tcsPrint,
 							_TEXT(g_oLangRec.GetString(101)),
@@ -125,7 +125,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 						}
 					}
 			    }
-			    else if (infoex[i].GetType() == 1) // ��Ч���
+			    else if (infoex[i].GetType() == 1) // Effect object type
 			    {
 				    pEffObj = pScene->AddSceneEffect(infoex[i].GetID());
 				    if (pEffObj)
@@ -135,12 +135,12 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 					    pEffObj->setPos(infoex[i].nX, infoex[i].nY);
 					    pEffObj->setYaw(infoex[i].sYawAngle);
 				    }
-					else if( g_Config.m_bEnableLGMsg )// ���������Ӵ�������ѯ����ɾ��
+					else if( g_Config.m_bEnableLGMsg )// Creation failed, prompt to delete from .obj file
 					{
 						_stprintf(tcsPrint,
-							_TEXT("���� ID Ϊ��%d ����Ч���ʱ���������Ƿ񽫴������.obj�ļ���ɾ��"),
+							_TEXT(" ID %d .obj"),
 							infoex[i].GetID());
-						if (IDYES == MessageBox(NULL, tcsPrint, _TEXT("����"), MB_YESNO))
+						if (IDYES == MessageBox(NULL, tcsPrint, _TEXT(""), MB_YESNO))
 						{
 							for (int j = i; j < nSectionObjCnt - 1; j ++)
 								infoex[j] = infoex[j + 1];
@@ -175,7 +175,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 			}
 		}
 	}
-	else if (nFlag == 1) // ���沢�ͷ�Section����
+	else if (nFlag == 1) // Save and release section objects
 	{
 		pScene = CGameApp::GetCurScene();
 		int n = 0;
@@ -186,15 +186,15 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 		int nEndY   = (nSectionY + 1) * 8 * 100;
 		int nPosX, nPosY;
 		
-		// �������
+		// Scene objects
 		for(int i = 0; i < pScene->GetSceneObjCnt(); i++)
 		{
 			pObj = pScene->GetSceneObj( i );
 
-			// �޸��ش󳡾��������ʾ�޳�bug��//by clp
+			// Fix large scene object infinite display bug //by clp
 			if( pScene->IsInRBOList ( pObj ) )
 			{
-				// �ش��������������������
+				// Large objects are loaded separately, skip here
 				continue;
 			}
 
@@ -224,7 +224,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 		iCount = n;
 
 		
-		// ��Ч���
+		// Effect objects
 		for(int i = 0; i < pScene->GetSceneEffCnt(); i++)
 		{
 			pEffObj = pScene->GetEffect(i);
@@ -268,7 +268,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 				returnValue = 0;
 	}
 
-	// �޸��ش󳡾��������ʾ�޳�bug��//by clp
+	// Fix large scene object infinite display bug //by clp
 	std::set < CSceneObj* > ::iterator itr = g_pGameApp->GetCurScene()->Begin_RBO();
 	std::set < CSceneObj* > ::iterator end = g_pGameApp->GetCurScene()->End_RBO();
 	while ( itr != end )
@@ -324,9 +324,9 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 	//	if(CGameScene::_pLargerMap)
 	//		CGameScene::_pLargerMap->Show( TRUE );
 	//}
-	// ��ע��˴���д�İ�����������������Ϸ����ʽʹ�õ�
-    // ���Ϊ�˵���ʹ�û��������ѡ��, ����д��HandleSuperKey()������
-    if(IsKeyDown(DIK_F1) && IsCtrlPress() ) // ����|�ر�SuperKeyģʽ
+	// Note: hotkeys written here are for actual gameplay use
+    // For debug-only hotkeys, write them in HandleSuperKey()
+    if(IsKeyDown(DIK_F1) && IsCtrlPress() ) // Toggle SuperKey mode on/off
     {
 		if( g_Config.IsPower() || ( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv() ) ) 
 		{
@@ -334,7 +334,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 			TipI(_bEnableSuperKey, g_oLangRec.GetString(102), g_oLangRec.GetString(103));
 		}
     }
-	else if (IsKeyDown(DIK_F12) && IsShiftPress()) // ����LogView���� add by cf
+	else if (IsKeyDown(DIK_F12) && IsShiftPress()) // Launch LogView tool  add by cf
 	{
 		WinExec("system/Logvwr.exe", SW_SHOWNORMAL);
 		EnableSprintSmMap(FALSE);
@@ -350,7 +350,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
     }
     else if(IsKeyDown(DIK_D) && IsCtrlPress())
     {
-        if(g_Config.m_bEditor) ToggleScriptDebugWindow();
+        // debug console 
     }
 	else if(IsKeyDown(DIK_L) && IsCtrlPress() )
 	{
@@ -369,7 +369,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
         HandleSuperKey();
     }
 	
-	if(g_Config.m_bEditor && IsKeyDown(DIK_TAB)) // ����|�رձ༭��
+	if(g_Config.m_bEditor && IsKeyDown(DIK_TAB)) // Toggle editor on/off
 	{
 		extern CEditor g_stUIEditor;
         g_stUIEditor.SetEnabled( !g_stUIEditor.frmEditor->GetIsShow() );
@@ -377,10 +377,10 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 
     if(IsKeyDown(DIK_RETURN) && IsAltPress())
     {
-		// ��ʱ���
+		// Temporarily disabled
 		return;
 
-		//����ȫ�������л�
+		// Toggle fullscreen/windowed mode
 		g_stUISystem.m_sysProp.m_videoProp.bFullScreen = 
 			!g_stUISystem.m_sysProp.m_videoProp.bFullScreen;
 		g_stUISystem.m_sysProp.ApplyVideo();
@@ -411,7 +411,7 @@ void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool b
 	//	
 	////	width = wnd_rc.right - wnd_rc.left;
 	////	height = wnd_rc.bottom - wnd_rc.top;
-	//	LG("video", "���ڷ�ʽ, ʵ���ܴ������ڳߴ�Ϊwidth = %d, height = %d\n", width, height);
+	//	LG("video", "Windowed mode, actual window size: width = %d, height = %d", width, height);
 	//}
 	//// else
 	//{
@@ -456,9 +456,9 @@ void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool b
 	//wnd_info.windowed_style = style;
 
 
-	//// ����ӿ�ֻ����ʱ�������Եģ���ʽ�İ汾�У�d3dpp�Ĳ������Ⱦ��Ѿ�׼���ã�
-	//// �����ⲿ���룬ͬʱ�ýӿڽ��������g_Render.ToggleFullScreen();��
-	//LG("video", "�����ToggleFullScreen wnd_info w = %d h = %d\n", wnd_info.width, wnd_info.height);
+	//// This interface is only for temporary testing; in release builds, d3dpp params are already set by the renderer,
+	//// no external input needed; this interface will be replaced by g_Render.ToggleFullScreen();
+	//LG("video", "Calling ToggleFullScreen wnd_info w = %d h = %d", wnd_info.width, wnd_info.height);
 	//if(g_Render.ToggleFullScreen(&d3dpp, &wnd_info) == 0)
 	//{
 	//	LG("video", "msgToggleFullScreen error");
@@ -640,7 +640,7 @@ void CGameApp::MouseButtonDB(int nButton)
 
 		GetCurScene()->_MouseButtonDB( nButton );
 
-		//����Ϸģʽ�м���˫���ָ�Ĭ���ӽ�
+		// In gameplay mode, right-double-click resets camera to default view
 		if( (nButton==1) && (!g_Config.m_bEditor) && (!_pMainCam->IsDefaultView()) )
         {
             //_pMainCam->ResetCamera();
@@ -705,7 +705,7 @@ void CGameApp::MouseScroll(int nScroll)
 			//pCam->Scale((float)f * 0.005f);
 
 			//int f = nScroll < 0 ? 100 : -100;
-			//Ninja::Camera* pCamera = GetNinjaCamera();	// ���������
+			//Ninja::Camera* pCamera = GetNinjaCamera();	// Get camera object
 			//pCamera->Range((float)f * 0.02f);
 		}
 	}
@@ -763,7 +763,7 @@ void CGameApp::HandleSuperKey()
     }
     else if( g_pGameApp->IsKeyDown(DIK_F3) && g_Config.m_bEditor && g_pGameApp->IsCtrlPress() )
 	{
-		// �л����� by lh test
+		// Switch scene type  by lh test
 		static int type = 0;
 		type = GetCurScene()->GetSceneTypeID();
 		type++;
@@ -1004,9 +1004,9 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 				if ( dwParam1 == 'm' || dwParam1 =='M')   
 					GetCurScene()->ShowMinimap( !GetCurScene()->GetIsShowMinimap() ); 
 
-				if(CFormMgr::s_Mgr.GetEnableHotKey())	// �ȼ��Ƿ�����
+				if(CFormMgr::s_Mgr.GetEnableHotKey())	// Fast command bar needs special handling
 					CFormMgr::s_Mgr.OnHotKey( (char)dwParam1, 0 );
-				else if(dwParam1 == 'd' || dwParam1 =='D')	// �ٽ��������⴦��
+				else if(dwParam1 == 'd' || dwParam1 =='D')	// Fast command bar needs special handling
 					CFormMgr::s_Mgr.OnHotKey( (char)dwParam1, 0 );
 			}
 			else if ( dwParam1 == VK_F10 )
@@ -1045,7 +1045,7 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 }
 
 //-----------------
-// ����ڷű༭����
+// Monster placement editor commands
 //-----------------
 const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 {
@@ -1074,10 +1074,10 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			in.getline(szCha, 255);
 			if(strlen(szCha)==0) break;
 
-			Util_ResolveTextLine(szCha, strList, 2, '(');			 // ȥ��������
+			Util_ResolveTextLine(szCha, strList, 2, '(');			 // Strip left parenthesis
 			string strRight = strList[1];
 			Util_ResolveTextLine(strRight.c_str(), strList, 2, ')');
-			string strValue = strList[0];							 // ȥ��������
+			string strValue = strList[0];							 // Strip right parenthesis
 			int n = Util_ResolveTextLine(strValue.c_str(), strList, 8, ',');
 			
 			int nChaID  = Str2Int(strList[0]);
@@ -1087,7 +1087,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			int time    = Str2Int(strList[4]);
 
 			int px = 0, py = 0;
-			if(n > 5) // ����Ѳ�ߵ����
+			if(n > 5) // Contains patrol waypoint data
 			{
 				px = Str2Int(strList[5]);
 				py = Str2Int(strList[6]);
@@ -1109,7 +1109,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 		in.close();
 		return g_oLangRec.GetString(114);
 	}
-	else if( strCmd=="save") // ����Źּ�¼
+	else if( strCmd=="save") // Save monster placement records
 	{
 		if(p1=="") return g_oLangRec.GetString(110);
 		Util_MakeDir("monster");
@@ -1119,9 +1119,9 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 
 		DWORD dwTime = 0;
 		
-		if(p2!="") dwTime = Str2Int(p2); // ����ʱ��
+		if(p2!="") dwTime = Str2Int(p2); // Write all placed characters to a text file
 
-		// �ڷŵĽ�ɫȫ��д�뵽һ���ı��ļ���
+		// Write all placed characters to a text file
 		FILE *fp = fopen(strFileName.c_str(), "wt");
 		for(int i = 0; i < pScene->GetChaCnt(); i++)
 		{
@@ -1132,11 +1132,11 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 				{
 					DWORD dwTime1 = dwTime;
 					if(dwTime1==0) dwTime1 = pCha->getReliveTime();
-					if(pCha->getPatrolX()==0) // ����Ѳ�ߵ������
+					if(pCha->getPatrolX()==0) // No patrol waypoints
 					{
 						fprintf(fp, "CreateCha(%d, %d, %d, %d, %d)\n", pCha->getTypeID(), pCha->GetCurX(), pCha->GetCurY(), FixAngle(pCha->getYaw()), dwTime1);
 					}
-					else // ��Ѳ�ߵ������
+					else // Has patrol waypoints
 					{
 						fprintf(fp, "CreatePatrolCha(%d, %d, %d, %d, %d, %d, %d)\n", pCha->getTypeID(), pCha->GetCurX(), pCha->GetCurY(), FixAngle(pCha->getYaw()), dwTime1, pCha->getPatrolX(), pCha->getPatrolY());
 					}
@@ -1146,7 +1146,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 		fclose(fp);
 		return g_oLangRec.GetString(115);
 	}
-	else if(strCmd=="seek") // ���չ�����Ѱ��һ����
+	else if(strCmd=="seek") // Find a monster by script ID
 	{
 		if(p1=="") return g_oLangRec.GetString(110);
 		int nScriptID = Str2Int(p1);
@@ -1161,7 +1161,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 					CChaRecord* pInfo = GetChaRecordInfo( pCha->getTypeID() );
 					if((pInfo && p1==pInfo->szDataName) || nScriptID==pCha->getTypeID())
 					{
-						// ��ǰ���������
+						// Move camera to found monster
 						int x = pCha->GetCurX();
 						int y = pCha->GetCurY();
 						pScene->SetMainCha(pCha->getID());
@@ -1173,7 +1173,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 		}
 		return "";
 	}
-	else if(strCmd=="clear") // ������й���
+	else if(strCmd=="clear") // Clear all monsters
 	{
 		for(int i = 0; i < pScene->GetChaCnt(); i++)
 		{
@@ -1248,10 +1248,10 @@ const char* ConsoleCallback(const char *pszCmd)
 	static char szConsoleHelp[][64] = 
 	{
 		"command       param    detail",
-		//"ָ��        ����     ˵��",
-		//"loadmap     ��ͼ��   ��ȡָ�����Ƶĵ�ͼ",
-		//"savemap     ��ͼ��   �����ͼΪָ�����Ƶ��ļ�",
-		//"brushheight �߶�ֵ   ���ø�ƽ�ر���ˢ�ӵĸ߶�"
+		//"savemap      mapname   save the map to the specified file",
+		//"brushheight  height    set terrain brush height"   
+		//"savemap     mapname   save the map to the specified file",
+		//"brushheight  height    set terrain brush height"
 	    "brushheight   0.6",
 		""
 	};
@@ -1328,7 +1328,7 @@ const char* ConsoleCallback(const char *pszCmd)
         BOOL bPerf = Str2Int(p1);
         g_Render.EnablePrint(INFO_PERF, bPerf);
     }
-	else if(strCmd=="ui")				//��ʾUI��Ϣ�������� 0�ر� 1��	-added by Arcol
+	else if(strCmd=="ui")				// Show UI debug info; 0=off, 1=on  -added by Arcol
 	{
 		if (p1=="1" || p1=="on" || p1=="y" || p1=="yes")
 		{
@@ -1396,7 +1396,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		g_stTeamInviteFormMgr.RemoveInviteForm(214);
 		g_stTeamInviteFormMgr.RemoveInviteForm(213);
 	}
-	else if(strCmd=="unhide") // ֹͣ����
+	else if(strCmd=="unhide") // Stop stealth state
 	{
 		CCharacter *pCha = CGameScene::GetMainCha();
 		if( pCha && pCha->GetStateMgr()->GetSkillStateNum()>0 )
@@ -1405,7 +1405,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			CS_BeginAction( pCha, enumACTION_STOP_STATE, &nState );
 		}
 	}
-	else if(strCmd=="unshield") // ֹͣħ����
+	else if(strCmd=="unshield") // Stop magic shield state
 	{
 		CCharacter *pCha = CGameScene::GetMainCha();
 		if( pCha && pCha->GetStateMgr()->GetSkillStateNum()>0 )
@@ -1423,7 +1423,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			CS_BeginAction( pCha, enumACTION_STOP_STATE, &nState );
 		}
 	}
-	else if(strCmd=="up") // վ��
+	else if(strCmd=="up") // Stand up
 	{
 		if( !g_pGameApp->GetCurScene() )
 			return strRes.c_str();
@@ -1522,7 +1522,7 @@ const char* ConsoleCallback(const char *pszCmd)
 				{
 					pItem->LitUnresetTexture();
 
-					// ж��				
+					// Unload effects
 					int nCount = pItem->GetEffectNum();
 					CEffectObj	*pEffect = NULL;
 					for( int i=0; i<nCount; i++ )
@@ -1550,14 +1550,14 @@ const char* ConsoleCallback(const char *pszCmd)
 					return strRes.c_str();
 				}
 
-				pItem->lTag = RefineID * 10 + Level;						// ����copyʱ��ԭ
+				pItem->lTag = RefineID * 10 + Level;						// Store for restoring on copy
 
 				if( pInfo->nLightID!=0 )
-					pItem->LitResetTexture( pInfo->nLightID, Level );		// ��������
+					pItem->LitResetTexture( pInfo->nLightID, Level );		// Apply light texture
 				else
 					pItem->LitUnresetTexture();
 
-				// ��ȡ��֮ǰ����Ч
+				// Remove previous effects
 				int nCount = pItem->GetEffectNum();
 				CEffectObj	*pEffect = NULL;
 				for( int i=0; i<nCount; i++ )
@@ -1577,7 +1577,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 					if( !pEffect ) continue;
 
-					// ʹ�õ��߱����dummy
+					// Use item dummy attachment point
 					if( !pEffect->Create( nEffectID ) )
 					{
 						ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
@@ -1728,11 +1728,11 @@ const char* ConsoleCallback(const char *pszCmd)
 		nEnd++;
 		for (int j(0); j<nTestCount; j++)
 		{
-			//g_pGameApp->AutoTestInfo( "��%d�ֲ���...", j );
+			//g_pGameApp->AutoTestInfo( "Test round %d...", j );
 
-			// ���ڲ���������Ч
+			//g_pGameApp->AutoTestInfo( "Testing scene effects" );
 			{
-				//g_pGameApp->AutoTestInfo( "���ڲ���������Ч" );
+				//g_pGameApp->AutoTestInfo( "Testing scene effects" );
 				int nCount = CEffectSet::I()->GetLastID() + 1;
 				CEffectObj* pEffect = NULL;
 				CMagicInfo* pInfo = NULL;
@@ -1764,7 +1764,7 @@ const char* ConsoleCallback(const char *pszCmd)
 						{
 							Sleep( 10 );
 							
-							//g_pGameApp->AutoTestInfo( "��Ч�ռ��������������������Ч" );
+						//g_pGameApp->AutoTestInfo( "Effect pool full, clearing all effects" );
 							int nCount = pScene->GetInitParam()->nMaxEff;
 							for( int i=0; i<nCount; i++ )
 							{
@@ -1779,7 +1779,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 					if( !pEffect->Create( i ) )
 					{
-						//g_pGameApp->AutoTestInfo( "Error, ��Ч���ܴ���:%d", i );
+					//g_pGameApp->AutoTestInfo( "Error, effect creation failed: %d", i );
 						continue;
 					}
 
@@ -1797,11 +1797,11 @@ const char* ConsoleCallback(const char *pszCmd)
 				}
 			}
 		}
-		//g_pGameApp->AutoTestInfo( "��ʼ���Խ���" );	
+		//g_pGameApp->AutoTestInfo( "Test session complete" );	
 	}
 	else if( strCmd=="testskilleffect" )
 	{
-		// ��⼼�ܱ��е���Ч�Ƿ�����
+		// Check if effects referenced in skill table exist
 		{
 			int nCount = CSkillRecordSet::I()->GetLastID() + 1;
 			CSkillRecord* _pSkillInfo = NULL;
@@ -1828,7 +1828,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			g_pGameApp->HasLogFile( "skillinfoerror" );
 		}
 
-		// �������ܱ��е���Ч
+		// Test skill table effects
 		g_pGameApp->GetConsole()->Show( FALSE );
 
 		CGameScene* pScene = g_pGameApp->GetCurScene();
@@ -1958,7 +1958,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		CEffectObj	*pEffect = pMain->GetScene()->GetFirstInvalidEffObj();
 		if( !pEffect ) return strRes.c_str();;
 
-		// ʹ�õ��߱����dummy
+		// Use item dummy attachment point
 		if( !pEffect->Create( nEffectID ) )
 		{
 			ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
@@ -2016,11 +2016,11 @@ const char* ConsoleCallback(const char *pszCmd)
 						{
 							pItem = pChaItem;
 							if( pInfo->nLightID!=0 )
-								pItem->LitResetTexture( pInfo->nLightID, Level );		// ��������
+								pItem->LitResetTexture( pInfo->nLightID, Level );		// Apply light texture
 							else
 								pItem->LitUnresetTexture();
 
-							// ��ȡ��֮ǰ����Ч
+							// Remove previous effects
 							int nCount = pItem->GetEffectNum();
 							CEffectObj	*pEffect = NULL;
 							for( int i=0; i<nCount; i++ )
@@ -2040,7 +2040,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 								if( !pEffect ) continue;
 
-								// ʹ�õ��߱����dummy
+								// Use item dummy attachment point
 								if( !pEffect->Create( nEffectID ) )
 								{
 									ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
@@ -2073,11 +2073,11 @@ const char* ConsoleCallback(const char *pszCmd)
 						{
 							pItem = pChaItem;
 							if( pInfo->nLightID!=0 )
-								pItem->LitResetTexture( pInfo->nLightID, Level );		// ��������
+								pItem->LitResetTexture( pInfo->nLightID, Level );		// Apply light texture
 							else
 								pItem->LitUnresetTexture();
 
-							// ��ȡ��֮ǰ����Ч
+							// Remove previous effects
 							int nCount = pItem->GetEffectNum();
 							CEffectObj	*pEffect = NULL;
 							for( int i=0; i<nCount; i++ )
@@ -2097,7 +2097,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 								if( !pEffect ) continue;
 
-								// ʹ�õ��߱����dummy
+								// Use item dummy attachment point
 								if( !pEffect->Create( nEffectID ) )
 								{
 									ToLogService("errors", LogLevel::Error, "msgcreate cha`s effect fail,ID {}", nEffectID);
@@ -2249,7 +2249,7 @@ const char* ConsoleCallback(const char *pszCmd)
 				loadtex_flag = res_bs->GetValue(OPT_RESMGR_LOADTEXTURE_MT);
 				res_bs->SetValue(OPT_RESMGR_LOADTEXTURE_MT, 0);
 
-		// ��id�ı���
+		// Variable to change ID
 				DWORD part_buf[5] =
 				{
 					pInfo->sSkinInfo[0],
@@ -2298,7 +2298,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			}
 			else if( pInfo->chModalType == enumMODAL_OTHER)
 			{
-				// ���Ǵ���
+				// This is the main window
 				MPChaLoadInfo load_info;
 
 				sprintf( load_info.bone, "%04d.lab", pInfo->sModel );        

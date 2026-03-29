@@ -1,4 +1,4 @@
-/* Define Notify Message Const */
+﻿/* Define Notify Message Const */
 
 #define cBTI_Opened        10000
 #define cBTI_Connected     10001

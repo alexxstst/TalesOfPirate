@@ -1,4 +1,4 @@
-#if !defined(__cplusplus) || defined(CINTERFACE)
+﻿#if !defined(__cplusplus) || defined(CINTERFACE)
 // Include the full header file that works for C
 #include "mshtmlc.h"
 #else

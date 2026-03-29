@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 class   MPRender;
 
 #include "i_effect.h"
@@ -238,7 +238,7 @@ public:
 
 	void					SendResMessage(const s_string& strPartName, D3DXVECTOR3 vPos, MPMap* pMap);
 public:
-	//!3D…Ë±∏
+	//!3D
 #ifdef		USE_RENDER
 	MPRender*					m_pDev;
 #else
@@ -258,7 +258,7 @@ public:
 	lwISystem*					m_pSys;
     lwISysGraphics*             m_pSysGraphics;
 protected:
-	//!◊∞»Î“ª∏ˆ◊È∫œ–ßπ˚
+	//!
 	bool					LoadEffectFromFile(int idx, char* pszFileName);
 
 	void					LoadTotalRes();
@@ -309,7 +309,7 @@ protected:
 	IDirect3DVertexShaderX*					_dwFontVS;
 
 	IDirect3DVertexShaderX*					_dwMinimapVS;
-	bool									_bMagr;// «∑Ò π”√Õ≥“ªπ‹¿Ì
+	bool									_bMagr;//
 
 	CMPEffectFile						_CEffectFile;
 	//VEC_int								_vecEffTech;

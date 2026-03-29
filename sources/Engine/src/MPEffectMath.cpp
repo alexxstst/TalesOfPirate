@@ -1,4 +1,4 @@
-#include "stdafx.h"
+Ôªø#include "stdafx.h"
 #include "MPEffectMath.h"
 
 #include <math.h>
@@ -73,7 +73,7 @@ MPEffectMath::~MPEffectMath()
 //-----------------------------------------------------------------------------
 void MPEffectMath::buildTrigTables(void)
 {
-	// ππΩ®≤È’“±Ì
+	// 
 	float angle;
 	for (int i = 0; i < m_TrigTableSize; ++i)
 	{

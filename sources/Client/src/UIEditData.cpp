@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uieditdata.h"
 #include "uieditstrategy.h"
 #include "uifont.h"
@@ -81,7 +81,7 @@ CEditArticle::CEditArticle()
 CEditArticle::~CEditArticle()
 {
 	//delete _pStrategy;
-	SAFE_DELETE(_pStrategy); // UI��������
+	SAFE_DELETE(_pStrategy); // UI
 }
 
 void CEditArticle::Init()
@@ -93,7 +93,7 @@ void CEditArticle::Clear()
 	for( memorys::iterator it=_memorys.begin(); it!=_memorys.end(); it++ )
 	{
 		//delete (*it);
-		SAFE_DELETE(*it); // UI��������
+		SAFE_DELETE(*it); // UI
 	}
 	_memorys.clear();
 
@@ -125,7 +125,7 @@ bool CEditArticle::_AddObj( CEditObj* pObj )
 
 	if( _nCursor>=_memorys.size() )
 	{
-		// �����ĩβ
+		// 
 		if( _pStrategy->Append( pObj ) )
 		{
 			_memorys.push_back( pObj );
@@ -186,7 +186,7 @@ void CEditArticle::DelSelect()
 			for( unsigned int i=start; i<end; i++ )
 			{
 				//delete _memorys[i];
-				SAFE_DELETE(_memorys[i]); // UI��������
+				SAFE_DELETE(_memorys[i]); // UI
 			}
 			_memorys.erase(_memorys.begin() + start, _memorys.begin() + end);
 			RefreshText();
@@ -213,12 +213,12 @@ void CEditArticle::OnKeyDown( int key, bool IsShiftPress )
 		}
 		else if( _eRunType==enumNormal )
 		{			
-			// �ƶ����
+			// 
 			if( _nCursor>0 ) _nCursor--;
 		}
 		else
 		{
-			// ȡ��ѡ��
+			// 
 			_eRunType = enumNormal;
 			_nCursor = _nSelStart;
 		}
@@ -233,12 +233,12 @@ void CEditArticle::OnKeyDown( int key, bool IsShiftPress )
 		}
 		else if( _eRunType==enumNormal )
 		{
-			// �ƶ����
+			// 
 			if( _nCursor<_memorys.size() ) _nCursor++;
 		}
 		else
 		{
-			// ȡ��ѡ��
+			// 
 			_eRunType = enumNormal;
 			_nCursor = _nSelEnd;
 		}

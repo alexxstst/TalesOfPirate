@@ -1,4 +1,4 @@
-// ttmac.h - written and placed in the public domain by Kevin Springle
+﻿// ttmac.h - written and placed in the public domain by Kevin Springle
 
 /// \file ttmac.h
 /// \brief Classes for the TTMAC message authentication code

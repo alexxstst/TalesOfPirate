@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "FindPath.h"
 #include "EffectObj.h"
 #include "Character.h"
@@ -13,7 +13,7 @@
 #include "UIBoxForm.h"
 #include "STMove.h"
 
-struct NODE_SHARED   //Ѱ·ʱ���õ�·����Ϣ
+struct NODE_SHARED   //
 {
 	BYTE* buf_ptr;
 	BYTE			dire;
@@ -90,7 +90,7 @@ PATH_LINK* SearchPath(BYTE* block_buf, short width, short height, short sx, shor
 	BOOL  found_flag = FALSE;
 
 	UINT32 lMaxStep = (height -1) * (height -1);
-	if((long)lMaxStep>STEP_LIMIT) lMaxStep = STEP_LIMIT; //���������
+	if((long)lMaxStep>STEP_LIMIT) lMaxStep = STEP_LIMIT; //
 
 	BYTE const* end_block = &block_buf[STEP_LIMIT - 1];
 
@@ -463,7 +463,7 @@ BYTE* CFindPath::GetTempTerrain(CGameScene* pScene, CCharacter* pCha,int iCurX, 
 
                 *pValue = pTer->GetBlock()->IsGridBlock( tm, tn ); //jze
 
-                //������������
+                //
 			    if(*pValue==0)
 			    {
 				    if( !g_IsMoveAble( pCha->getChaCtrlType(), Territory, (EAreaMask)pTer->GetBlock()->GetTileRegionAttr(tm  * 50/100, tn   *50/100) ) ) 
@@ -503,7 +503,7 @@ bool	PointPointRange(int px1, int py1,int px2, int py2, int range)
 	return ((abs(px1 - px2) < range) &&
 		(abs(py1 - py2) < range));
 }
-// nCurX,nCurY,nTargetX,nTargetY �ĵ�λ��������
+// nCurX,nCurY,nTargetX,nTargetY 
 BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int nSelfY, int nTargetX, int nTargetY, bool &IsWalkLine)
 { 
     ToLogService("map", "Self[{}, {}], Target[{}, {}], ChaPos[{}, {}]", nSelfX, nSelfY, nTargetX, nTargetY, pCha->GetCurX(), pCha->GetCurY());
@@ -644,7 +644,7 @@ BOOL CFindPath::FindPath(CGameScene* pScene, CCharacter* pCha, int nSelfX, int n
 		if(n>=MAX_PATH_STEP)
 		{
 			ToLogService("common", "Path Searth Step = {} Overmax ", n);
-			n = 0; // ·����0
+			n = 0; // 0
 			break;
 		}
 	}

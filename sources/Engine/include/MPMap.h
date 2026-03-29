@@ -1,4 +1,4 @@
-#ifndef _MPMAP_H_
+ï»¿#ifndef _MPMAP_H_
 #define _MPMAP_H_
 #include "ZRBlock.h"
 #include "MPTile.h"
@@ -15,11 +15,11 @@
 
 struct MPActiveMapSection
 {
-	MPTile*		pTileData;							// Ö¸ÏòÊµ¼ÊµÄTileÊý¾Ý
-	int			nX;									// MapSectionËùÔÚµÄÎ»ÖÃ
+	MPTile*		pTileData;							// Tile
+	int			nX;									// MapSection
 	int			nY;
-	DWORD		dwActiveTime;						// ×îºóÒ»´ÎÊ¹ÓÃµÄÊ±¼ä
-	DWORD		dwDataOffset;						// ÎÄ¼þÊý¾ÝÖ¸ÕëÎ»ÖÃ = 0, ±íÊ¾Ã»ÓÐÊý¾Ý
+	DWORD		dwActiveTime;						// 
+	DWORD		dwDataOffset;						//  = 0, 
 	
 	void	Init()
 	{
@@ -127,20 +127,20 @@ public:
     void        SetSeaDefaultColor(DWORD dwColor)       { _dwSeaDefaultColor = dwColor;           }
     void        UpdateRender(BOOL bReset = FALSE)       
     { 
-        if(bReset) _nUpdateRender = 2; // ÐèÒªÖØÐÂÉú³ÉGroup (±ÈÈç¶ÁÅÌ, ÊÓÒ°±ä»¯)
-        else       _nUpdateRender = 1; // Ö»ÐèÒªÖØÐÂ²úÉúVB(±ÈÈç±à¼­Æ÷, µÆ¹âÑÕÉ«¸üÐÂ)
+        if(bReset) _nUpdateRender = 2; // Group (, )
+        else       _nUpdateRender = 1; // VB(, )
     }
 
-    float       GetGridHeight(int x, int y);    // x,yÎªÐ¡¸ñ×Ó×ø±ê
-    BYTE        IsGridBlock(int x, int y);      // x,yÎªÐ¡¸ñ×Ó×ø±ê
-	float		GetTileHeight(int x, int y);    // x,yÎª´ó¸ñ×ÓÃ××ø±ê
-	short       GetTileRegionAttr(int x, int y);// x,yÎª´ó¸ñ×ÓÃ××ø±ê
+    float       GetGridHeight(int x, int y);    // x,y
+    BYTE        IsGridBlock(int x, int y);      // x,y
+	float		GetTileHeight(int x, int y);    // x,y
+	short       GetTileRegionAttr(int x, int y);// x,y
 
 public:
 
     DWORD       m_dwTerrainRenderTime;
     DWORD       m_dwSeaRenderTime;
-    DWORD       m_dwLoadingTime[3]; // ×î½ü3´Î²»Îª0µÄ¶ÁÅÌÊ±¼ä
+    DWORD       m_dwLoadingTime[3]; // 30
     DWORD       m_dwMaxLoadingTime;
     DWORD       m_dwActiveSectionCnt;
     DWORD       m_dwBatchTime;
@@ -197,16 +197,16 @@ protected:
 	
     int _nWidth{ 0 };
 	int _nHeight{ 0 };
-	int _nSectionWidth{ 0 }; // Ã¿Ò»¿éSectionµÄ¿í¶ÈºÍ¸ß¶È
+	int _nSectionWidth{ 0 }; // Section
 	int _nSectionHeight{ 0 };
-	int _nSectionCntX{ 0 }; // µØÍ¼Ë®Æ½·½ÏòÉÏSectionµÄ¿éÊý
-	int _nSectionCntY{ 0 }; // µØÍ¼´¹Ö±·½ÏòÉÏSectionµÄ¿éÊý
-	int _nSectionCnt{ 0 }; // µØÍ¼ÉÏSectionµÄ×Ü¿éÊý
+	int _nSectionCntX{ 0 }; // Section
+	int _nSectionCntY{ 0 }; // Section
+	int _nSectionCnt{ 0 }; // Section
 
-	float _fShowCenterX{ 0 }; // ¶¯Ì¬¶ÁÈëµÄÖÐÐÄÎ»ÖÃ
+	float _fShowCenterX{ 0 }; // 
 	float _fShowCenterY{ 0 };
 
-	int _nShowWidth{ 0 }; // ¿ÉÊÓ·¶Î§
+	int _nShowWidth{ 0 }; // 
 	int _nShowHeight{ 0 };
 
 
@@ -218,12 +218,12 @@ protected:
 	int							    _nSectionStartY{ 0 };
     DWORD*                          _pOffsetIdx{ nullptr };
 
-	MAP_PROC					_pfnProc{ nullptr };			// ¦Ì?¨ª??¡¥¨¬??¨¢¨¨???¦Ì¡Â¨ª¡§?ao¡¥¨ºy
+	MAP_PROC					_pfnProc{ nullptr };			// ?????????aoy
 	
-	FILE*						_fp{ nullptr };				// ¦Ì?¨ª????t??¡À¨²
-	BOOL						_bEdit{ TRUE };		// ¨º?¡¤??¨¦¡À¨¤?-
+	FILE*						_fp{ nullptr };				// ?????t??
+	BOOL						_bEdit{ TRUE };		// ????-
 	BOOL						_bSeaVisible{ TRUE };
-	BOOL						_bShowCenterPoint{ FALSE };	// ¨º?¡¤???¨º??1¦Ì?o¨ª?1¦Ì??¨´?¨²Section
+	BOOL						_bShowCenterPoint{ FALSE };	// ??????1?o?1???Section
 
 	int _nWaterLoopFrame{ 0 };
 	BOOL _bUseVB{ FALSE };
@@ -321,7 +321,7 @@ inline void CopyMapSection(MPActiveMapSection *pSource, MPActiveMapSection *pDes
    memcpy(pDest->pTileData, pSource->pTileData, sizeof(MPTile) * 64);
 }
 
-inline float MPMap::GetTileHeight(int x, int y) // ´ó¸ñ×Ó×ø±ê
+inline float MPMap::GetTileHeight(int x, int y) // 
 {
     int offx = x - _nLastTileStartX;
     int offy = y - _nLastTileStartY;
@@ -332,7 +332,7 @@ inline float MPMap::GetTileHeight(int x, int y) // ´ó¸ñ×Ó×ø±ê
     return _fTileHeightBuffer[offy][offx];
 }
 
-inline short MPMap::GetTileRegionAttr(int x, int y) // ´ó¸ñ×Ó×ø±ê
+inline short MPMap::GetTileRegionAttr(int x, int y) // 
 {
     int offx = x - _nLastTileStartX;
     int offy = y - _nLastTileStartY;
@@ -361,7 +361,7 @@ inline float MPMap::GetGridHeight(int x, int y) // Small grid coordinates
 	}
 }
 
-inline BYTE MPMap::IsGridBlock(int x, int y) // Ð¡¸ñ×Ó×ø±ê
+inline BYTE MPMap::IsGridBlock(int x, int y) // 
 {
     int offx = x - _nLastGridStartX;
     int offy = y - _nLastGridStartY;

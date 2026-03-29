@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #define  _STATE_DEBUG
 
@@ -9,18 +9,18 @@ class CMoveList;
 class CActor;
 class CCharacter;
 
-// ��������
+// 
 class CActionState
 {
 	friend class CActor;
 public:
     CActionState(CActor* p);
 
-    void Start();								// ��ʼִ��
+    void Start();								// 
 
-	virtual void PushPoint( int x, int y ){}					// ���ڿ������ƶ����������
-	virtual void ServerEnd(int nState)      { _IsOver = true;	}	// ���÷�����ͨ��ִ�����
-	virtual void MoveEnd(int x, int y, int nState)	{ _IsOver = true;	}	// �������ƶ���Action���������ƶ�
+	virtual void PushPoint( int x, int y ){}					// 
+	virtual void ServerEnd(int nState)      { _IsOver = true;	}	// 
+	virtual void MoveEnd(int x, int y, int nState)	{ _IsOver = true;	}	// Action
     virtual void SetServerID( int n );
     virtual void Cancel();
 	virtual void MouseRightDown(){}
@@ -33,12 +33,12 @@ public:
 
 	CActor* GetActor() 			{ return _pActor;	}
 
-	bool	GetIsOver()			{ return _IsOver;	}			// ִ����ʣ�ද��,�����������
-	bool	GetIsExecEnd()		{ return _isExecEnd;}			// �����Ѿ�ȫ��ִ�����,(��������ͨ��ִ�����)
-	bool	GetIsCancel()		{ return _IsCancel;	}			// ��������Ѿ������ȡ����		
+	bool	GetIsOver()			{ return _IsOver;	}			// ,
+	bool	GetIsExecEnd()		{ return _isExecEnd;}			// ,()
+	bool	GetIsCancel()		{ return _IsCancel;	}			// 		
 	bool	GetIsWait()			{ return _isWait;	}
 
-	// �������Ϊ��������������,ע:��CActor�в�֪���������
+	// ,:CActor
     void			SetParent( CActionState* p ){ _pParent=p;		}	
 	CActionState*	GetParent()				{ return _pParent;		}
 
@@ -57,19 +57,19 @@ protected:
     virtual void ActionFrame( DWORD pose_id, int key_frame ) {}	
     virtual void ActionEnd( DWORD pose_id )	{}
     virtual void BeforeNewState(){}
-    virtual bool IsKeepPose()       { return false;     }       // ����ִ����ɺ�,�Ƿ�ظ�������״̬
+    virtual bool IsKeepPose()       { return false;     }       // ,
     virtual bool IsAllowUse()       { return true;      }
 	virtual void StartFailed()		{}
 
 	virtual bool	_Start()		{ return true;		}
-	virtual void	_End()			{}          // ִ�н���
-    virtual bool    _IsAllowCancel();			// �Ƿ���Ա�Cancel����״̬
+	virtual void	_End()			{}          // 
+    virtual bool    _IsAllowCancel();			// Cancel
 
 	bool			_AllowCancel()		{ return !_isWait && !_IsCancel && !_IsOver;	}
 
 private:
 	void			SetIsWait( bool v )		    { _isWait=v;		}
-    void			_StartFailed();		// ��ʼʱʧ��ʱ����
+    void			_StartFailed();		// 
 
 protected:
 	bool	_IsCancel;		
@@ -81,13 +81,13 @@ private:
 	CActor			*_pActor;
 	CActionState	*_pParent;
 
-	bool	_isWait;			// Ϊtrue,����Actor�Ķ�����,������ִ��,��IsAllowStart()����false
+	bool	_isWait;			// true,Actor,,IsAllowStart()false
 	bool	_isExecEnd;
 	bool	_IsInit;
 
 };
 
-// ActorҪ�ƶ����б�
+// Actor
 class CMoveList
 {
 public:
@@ -110,7 +110,7 @@ private:
 
 };
 
-// ��������
+// 
 inline void CActionState::SetServerID( int n )
 {
     if( _nServerID==INT_MAX )

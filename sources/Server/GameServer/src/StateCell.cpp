@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: StateCell.cpp
 // Creater: ZhangXuedong
 // Date: 2005.04.29
@@ -20,7 +20,7 @@ CChaListNode* CStateCell::AddCharacter(CCharacter *pCCha, bool bIn)
 			m_pCChaIn->m_pCLast = pNode;
 		m_pCChaIn = pNode;
 
-		pNode->m_pCEntStateNode = pCCha->EnterStateCell(this, pNode, true); // ʵ���¼���ڵĹ�����Ԫ
+		pNode->m_pCEntStateNode = pCCha->EnterStateCell(this, pNode, true); // 
 	}
 	else
 	{
@@ -29,11 +29,11 @@ CChaListNode* CStateCell::AddCharacter(CCharacter *pCCha, bool bIn)
 			m_pCChaCross->m_pCLast = pNode;
 		m_pCChaCross = pNode;
 
-		pNode->m_pCEntStateNode = pCCha->EnterStateCell(this, pNode); // ʵ���¼���ڵĹ�����Ԫ
+		pNode->m_pCEntStateNode = pCCha->EnterStateCell(this, pNode); // 
 	}
 	m_lChaNum++;
 
-	// ���ɫ����״̬
+	// 
 	if (m_CSkillState.GetStateNum() > 0)
 	{
 		pCCha->m_CChaAttr.ResetChangeFlag();
@@ -68,9 +68,9 @@ void CStateCell::DelCharacter(CChaListNode *pCEntNode)
 	pCEntNode->m_pCLast = 0;
 	pCEntNode->m_pCNext = 0;
 	m_lChaNum--;
-	pCEntNode->m_pCCha->OutMgrUnit(pCEntNode->m_pCEntStateNode); // ʵ���¼���ڵĹ�����Ԫ
+	pCEntNode->m_pCCha->OutMgrUnit(pCEntNode->m_pCEntStateNode); // 
 
-	// ���ɫ����״̬
+	// 
 	CCharacter		*pCCha = pCEntNode->m_pCCha;
 	if (m_CSkillState.GetStateNum() > 0)
 	{
@@ -97,14 +97,14 @@ void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 	//{
 	//	if (pCEntNode->m_chEntiType == def_MGRUNIT_ENTITY_TYPE_CHACROSS)
 	//	{
-	//		// ɾ��
+	//		// 
 	//		if (pCEntNode->m_pCLast)
 	//			pCEntNode->m_pCLast->m_pCNext = pCEntNode->m_pCNext;
 	//		if (pCEntNode->m_pCNext)
 	//			pCEntNode->m_pCNext->m_pCLast = pCEntNode->m_pCLast;
 	//		if (m_pCChaCross == pCEntNode)
 	//			m_pCChaCross = pCEntNode->m_pCNext;
-	//		// ����
+	//		// 
 	//		if (pCEntNode->m_pCNext = m_pCChaIn)
 	//			m_pCChaIn->m_pCLast = pCEntNode;
 	//		m_pCChaIn = pCEntNode;
@@ -113,21 +113,21 @@ void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 	//	}
 	//	else if (pCEntNode->m_chEntiType == def_MGRUNIT_ENTITY_TYPE_ITEMCROSS)
 	//	{
-	//		// ɾ��
+	//		// 
 	//		if (pCEntNode->m_pCLast)
 	//			pCEntNode->m_pCLast->m_pCNext = pCEntNode->m_pCNext;
 	//		if (pCEntNode->m_pCNext)
 	//			pCEntNode->m_pCNext->m_pCLast = pCEntNode->m_pCLast;
 	//		if (m_pCItemCross == pCEntNode)
 	//			m_pCItemCross = pCEntNode->m_pCNext;
-	//		// ����
+	//		// 
 	//		if (pCEntNode->m_pCNext = m_pCItemIn)
 	//			m_pCItemIn->m_pCLast = pCEntNode;
 	//		m_pCItemIn = pCEntNode;
 
 	//		pCEntNode->m_chEntiType = def_MGRUNIT_ENTITY_TYPE_ITEMIN;
 	//	}
-	//	else // �����ܵ����
+	//	else // 
 	//	{}
 	//	pCEntNode->m_pCEntity->SetCenterMgrNode(pCEntNode->m_pCEntStateNode);
 	//}
@@ -135,14 +135,14 @@ void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 	//{
 	//	if (pCEntNode->m_chEntiType == def_MGRUNIT_ENTITY_TYPE_CHAIN)
 	//	{
-	//		// ɾ��
+	//		// 
 	//		if (pCEntNode->m_pCLast)
 	//			pCEntNode->m_pCLast->m_pCNext = pCEntNode->m_pCNext;
 	//		if (pCEntNode->m_pCNext)
 	//			pCEntNode->m_pCNext->m_pCLast = pCEntNode->m_pCLast;
 	//		if (m_pCChaIn == pCEntNode)
 	//			m_pCChaIn = pCEntNode->m_pCNext;
-	//		// ����
+	//		// 
 	//		if (pCEntNode->m_pCNext = m_pCChaCross)
 	//			m_pCChaCross->m_pCLast = pCEntNode;
 	//		m_pCChaCross = pCEntNode;
@@ -151,21 +151,21 @@ void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 	//	}
 	//	else if (pCEntNode->m_chEntiType == def_MGRUNIT_ENTITY_TYPE_ITEMIN)
 	//	{
-	//		// ɾ��
+	//		// 
 	//		if (pCEntNode->m_pCLast)
 	//			pCEntNode->m_pCLast->m_pCNext = pCEntNode->m_pCNext;
 	//		if (pCEntNode->m_pCNext)
 	//			pCEntNode->m_pCNext->m_pCLast = pCEntNode->m_pCLast;
 	//		if (m_pCItemIn == pCEntNode)
 	//			m_pCItemIn = pCEntNode->m_pCNext;
-	//		// ����
+	//		// 
 	//		if (pCEntNode->m_pCNext = m_pCItemCross)
 	//			m_pCItemCross->m_pCLast = pCEntNode;
 	//		m_pCItemCross = pCEntNode;
 
 	//		pCEntNode->m_chEntiType = def_MGRUNIT_ENTITY_TYPE_ITEMCROSS;
 	//	}
-	//	else // �����ܵ����
+	//	else // 
 	//	{}
 	//}
 }
@@ -173,11 +173,11 @@ void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)
 bool CStateCell::AddState(unsigned char uchFightID, unsigned long ulSrcWorldID, long lSrcHandle, char chObjType, char chObjHabitat, char chEffType,
 						unsigned char uchStateID, unsigned char uchStateLv, unsigned long ulStartTick, long lOnTick, char chType, char chWithCenter)
 {
-	// ��ر�����״̬
+	// 
 	if (!m_CSkillState.Add(uchFightID, ulSrcWorldID, lSrcHandle, chObjType, chObjHabitat, chEffType, uchStateID, uchStateLv, ulStartTick, lOnTick, chType, chWithCenter))
 		return false;
 
-	// ���ɫ����״̬
+	// 
 	unsigned char	uchStateNo = m_CSkillState.GetReverseID(uchStateID);
 	CChaListNode	*pNode;
 	pNode = m_pCChaIn;
@@ -279,7 +279,7 @@ bool CStateCell::AddStateToCharacter(SSkillStateUnit	*pSStateUnit, CCharacter *p
 	return false;
 }
 
-// ״̬���ڿ���
+// 
 void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 {
 	unsigned char	uchStateNum = m_CSkillState.GetStateNum();
@@ -291,7 +291,7 @@ void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 	{
 		if (pSStateUnit->lOnTick > 0)
 		{
-			if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // ״̬��ʱ���
+			if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // 
 			{
 				lOnTime = g_pGameApp->GetSStateTraOnTime(pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
 				pNode = m_pCChaIn;
@@ -311,7 +311,7 @@ void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 			}
 			else
 			{
-				// ���ɫ����״̬
+				// 
 				CChaListNode	*pNode;
 				pNode = m_pCChaIn;
 				while (pNode)
@@ -359,10 +359,10 @@ void CStateCell::StateBeginSeen(Entity *pCEnt)
 
 	if (!pCCha)
 		return;
-	if(!pCCha->IsPlayerFocusCha()) // �ý�ɫ������ҵ�ǰ�Ŀ��ƽ���
+	if(!pCCha->IsPlayerFocusCha()) // 
 		return;
 
-	// Типизированная сериализация: появление состояний ячейки
+	//  :   
 	auto pk = net::msg::serialize(net::msg::McAStateBeginSeeMessage{
 		static_cast<int64_t>(m_sPosX), static_cast<int64_t>(m_sPosY),
 		m_CSkillState.BuildStateEntries()
@@ -376,13 +376,13 @@ void CStateCell::StateEndSeen(Entity *pCEnt)
 
 	if (!pCCha)
 		return;
-	if(!pCCha->IsPlayerFocusCha()) // �ý�ɫ������ҵ�ǰ�Ŀ��ƽ���
+	if(!pCCha->IsPlayerFocusCha()) // 
 		return;
 
 	if (m_CSkillState.GetStateNum() <= 0)
 		return;
 
-	// Типизированная сериализация: область навыков вышла из поля зрения
+	//  :      
 	auto pk = net::msg::serialize(net::msg::McAStateEndSeeMessage{(int64_t)m_sPosX, (int64_t)m_sPosY});
 
 	pCCha->ReflectINFof(pCCha, pk);

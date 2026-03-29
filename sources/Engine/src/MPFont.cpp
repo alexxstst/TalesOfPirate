@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 #include "StdAfx.h"
 #include "GlobalInc.h"
 #include "assert.h"
@@ -97,7 +97,7 @@ bool CMPFont::CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char szFontName[], int n
 	}
 
 	SIZE size;
-	::GetTextExtentPoint(_hDc,"��",1,&size);
+	::GetTextExtentPoint(_hDc,"",1,&size);
 
 	_TextSize	 = /*size.cy;//*/	nSize;//
 	_TextureSize = 32 << nLevel;		
@@ -477,10 +477,10 @@ void CMPFont::DrawTextClipOnce(char* szText, int nLen, LPRECT psrc, LPRECT pclip
 		else
 		{
 			TextToTexture( ch[0], ch[1], a, b );
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx1 = (float)a / (float)((float)_TextureSize - _fyu/*- (ch[0] & 0x80 ? _fyu/2: _fyu/4)*/);
 			ty1 = (float)b / (float)((float)_TextureSize - _fyu/*- (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx2 = tx1 + (float)_TextSize / (float)((float)_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 			ty2 = ty1 + (float)_TextSize / (float)((float)_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 
@@ -497,7 +497,7 @@ void CMPFont::DrawTextClipOnce(char* szText, int nLen, LPRECT psrc, LPRECT pclip
 			if(!GetIntersectRect(&dest, &rc,pclip))
 			{
 				sx+=offset;
-				continue;//�������ֲ��ڲ�����������ʾ
+				continue;//
 			}else if( rc.left >= pclip->left && rc.right <= pclip->right\
 				&&rc.top >= pclip->top && rc.bottom <= pclip->bottom)
 			{
@@ -522,10 +522,10 @@ void CMPFont::DrawTextClipOnce(char* szText, int nLen, LPRECT psrc, LPRECT pclip
 					_vecVer[idxHsl++].SetValue(D3DXVECTOR4(sx,    sy,   0.0f,1),color,D3DXVECTOR2(tx1,ty1));
 				}
 
-				//��������ȫ���ڲ���������ʾ
+				//
 			}else 
 			{
-				//���� 
+				// 
 				tx = (float)dest.left;
 				ty = (float)dest.top;
 				float tw = (float)dest.right - (float)dest.left;
@@ -663,10 +663,10 @@ bool CMPFont::DrawTextClip( char* szText, int nLen, LPRECT psrc, LPRECT pclip,D3
 			{
 				_lpCurTex = _pTex;
 			}
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx1 = (float)a / (float)((float)_TextureSize - _fyu/*- (ch[0] & 0x80 ? _fyu/2: _fyu/4)*/);
 			ty1 = (float)b / (float)((float)_TextureSize - _fyu/*- (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx2 = tx1 + (float)_TextSize / (float)((float)_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 			ty2 = ty1 + (float)_TextSize / (float)((float)_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 
@@ -686,7 +686,7 @@ bool CMPFont::DrawTextClip( char* szText, int nLen, LPRECT psrc, LPRECT pclip,D3
 			if(!GetIntersectRect(&dest, &rc,pclip))
 			{
 				sx+=offset;
-				continue;//�������ֲ��ڲ�����������ʾ
+				continue;//
 			}else if( rc.left >= pclip->left && rc.right <= pclip->right\
 				&&rc.top >= pclip->top && rc.bottom <= pclip->bottom)
 			{
@@ -710,10 +710,10 @@ bool CMPFont::DrawTextClip( char* szText, int nLen, LPRECT psrc, LPRECT pclip,D3
 				_pDev->SetVertexShaderConstantF(14, v[5], 1);
 				_pDev->SetVertexShaderConstantF(15, v[6], 1);
 				_pDev->SetVertexShaderConstantF(16, v[7], 1);
-				//��������ȫ���ڲ���������ʾ
+				//
 			}else 
 			{
-				//���� 
+				// 
 				tx = (float)dest.left;
 				ty = sy;//(float)dest.top;
 				float tw = (float)dest.right - (float)dest.left;
@@ -891,10 +891,10 @@ __ret:
 			TextToTexture( ch[0], ch[1], a, b );
 			bExit = false;
 
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx1 = (float)a / (float)((float)_TextureSize - _fyu/*- (ch[0] & 0x80 ? _fyu/2: _fyu/4)*/);
 			ty1 = (float)b / (float)((float)_TextureSize - _fyu/*- (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx2 = tx1 + (float)_TextSize / (float)((float)_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 			ty2 = ty1 + (float)_TextSize / (float)((float)_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 		}
@@ -1303,10 +1303,10 @@ __ret:
 			bExit = false;
 
 
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx1 = (float)a / (float)((float)_TextureSize -_fyu);
 			ty1 = (float)b / (float)((float)_TextureSize -_fyu);
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx2 = tx1 + (float)_TextSize / (float)((float)_TextureSize -_fyu);
 			ty2 = ty1 + (float)_TextSize / (float)((float)_TextureSize -_fyu);
 		}
@@ -1500,10 +1500,10 @@ bool CMPFont::Draw3DText(char* szText,D3DXVECTOR3& vPos, D3DXCOLOR color,float f
 				_pDev->SetTexture( 0, _lpCurTex );
 #endif
 			}
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx1 = (float)(a) / (float)(_TextureSize -_fyu/*  - (ch[0] & 0x80 ? _fyu /2: _fyu/4)*/);
 			ty1 = (float)(b) / (float)(_TextureSize -_fyu/*  - (ch[0] & 0x80 ? _fyu /2: _fyu/4)*/);
-			//! �����������Ͻ� 0.0-1.0
+			//!  0.0-1.0
 			tx2 = tx1 + (float)_TextSize / (float)(_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 			ty2 = ty1 + (float)_TextSize / (float)(_TextureSize -_fyu/* - (ch[0] & 0x80 ? _fyu/2 : _fyu/4)*/);
 		}

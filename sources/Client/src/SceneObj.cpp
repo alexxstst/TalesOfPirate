@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SceneObj.h"
 #include "SceneObjSet.h"
 #include "Scene.h"
@@ -140,7 +140,7 @@ void CSceneObj::Render()
             {
                 if(_pScene->IsSceneObjCulling()==FALSE)
                 {
-                    // added by billy �����Ӷ�����Ƿ�����׶����ж� (point 8 )              				
+                    // added by billy  (point 8 )              				
                     DWORD index = box->GetData();			   
                     if ( IsBoxVisible(  u ,v , index ) )
                     {
@@ -152,7 +152,7 @@ void CSceneObj::Render()
                 }
                 else
                 {
-                    // ���Ӷ�����Ƿ�����׶����ж� (point 8, line 12)
+                    //  (point 8, line 12)
                     DWORD index = box->GetData();         				
                     if( IsBoxVisible_LineWithPlane(u,v, index) )
                     {
@@ -211,7 +211,7 @@ void CSceneObj::FrameMove(DWORD dwTimeParam)
 	//	GetScene()->HandleSceneMsg(SCENEMSG_SCENEOBJ_DESTROY,_nEffID,getID());
 
     // by lsh
-    // ע�⣬�����FrameMove������������ã��������λ�����
+    // FrameMove
 	MPSceneObject::FrameMove();	
 }
 
@@ -234,7 +234,7 @@ bool  CSceneObj::IsBoxVisible(  MPVector3 vecMin, MPVector3 vecMax, DWORD &index
 
 	MPCullInfo *pCull = g_Render.GetCullInfo();
 
-	//���ȼ���ϴμ�⵽��ƽ��ͷ�ڵĵ�
+	//
 
 	for( int iPlane = 0; iPlane < 6; iPlane++ )
 	{
@@ -316,7 +316,7 @@ bool  CSceneObj::IsBoxVisible_LineWithPlane(  MPVector3 vecMin, MPVector3 vecMax
 	D3DXVECTOR3  vecPoint ;
 
 
-	//���ȼ���ϴμ�⵽��ƽ��ͷ�ڵĵ�
+	//
 
 	for( int iPlane = 0; iPlane < 6; iPlane++ )
 	{
@@ -337,7 +337,7 @@ bool  CSceneObj::IsBoxVisible_LineWithPlane(  MPVector3 vecMin, MPVector3 vecMax
 		return true  ;
 	}
 
-	//����8����
+	//8
     for( int iPoint = 0; iPoint < 8; iPoint++ )
     {
 		if (iPoint == index )
@@ -368,7 +368,7 @@ bool  CSceneObj::IsBoxVisible_LineWithPlane(  MPVector3 vecMin, MPVector3 vecMax
 
 
 
-//���Box�ı�
+//Box
 
 	 // Now see if any of the bounding box edges penetrate any of the faces of
     // the frustum
@@ -459,7 +459,7 @@ void CSceneObj::_UpdateValid(BOOL bValid)
 	{
 	    _pScene->HandleSceneMsg(SCENEMSG_SCENEOBJ_DESTROY,getID());
 	}
-    // ֪ͨSceneά��SceneObj����������
+    // SceneSceneObj
     _pScene->HandleSceneMsg(SCENEMSG_SCENEOBJ_UPDATEVALID, bValid, _dwObjType, _dwID);
 }
 
@@ -516,7 +516,7 @@ void	CSceneObj::UpdateLight()
 
 	switch(_iOwerType)
 	{
-	case 1://��ɫ��
+	case 1://
 		if(_iChaID >= 0)
 		{
 			pCha = _pScene->GetCha(_iChaID);
@@ -527,7 +527,7 @@ void	CSceneObj::UpdateLight()
 			}
 		}
 		break;
-	case 2://���ߵ�
+	case 2://
 		if(_iChaID >= 0)
 		{
 			pItem = _pScene->GetSceneItem(_iChaID);
@@ -538,7 +538,7 @@ void	CSceneObj::UpdateLight()
 			}
 		}
 		break;
-	case 3://��Ч��
+	case 3://
 		if(_iChaID >= 0)
 		{
 			pEff = _pScene->GetEffect(_iChaID);

@@ -1,4 +1,4 @@
-// config_ns.h - written and placed in public domain by Jeffrey Walton
+﻿// config_ns.h - written and placed in public domain by Jeffrey Walton
 //               the bits that make up this source file are from the
 //               library's monolithic config.h.
 

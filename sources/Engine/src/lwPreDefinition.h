@@ -1,4 +1,4 @@
-//
+﻿//
 #pragma once
 
 // all user preprocesser definition

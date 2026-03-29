@@ -1,4 +1,4 @@
-// Copyright (c) 1990-1999  Microsoft Corporation
+﻿// Copyright (c) 1990-1999  Microsoft Corporation
 #ifndef _MADCAPCL_H_
 #define _MADCAPCL_H_
 

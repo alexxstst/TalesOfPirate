@@ -1,4 +1,4 @@
-#ifndef MPStringVector_H
+﻿#ifndef MPStringVector_H
 #define MPStringVector_H
 
 #include "MPEffPrerequisites.h"

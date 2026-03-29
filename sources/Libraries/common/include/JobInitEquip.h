@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: JobInitEquip.h
 // Creater: ZhangXuedong
 // Date: 2005.01.08
@@ -21,9 +21,9 @@ class CJobEquipRecord : public CRawDataInfo
 public:
 	//CJobEquipRecord();
 
-	char	chID;			// ±àºÅ
-	char	chJob;			// Ö°Òµ
-	short	sItemID[defJOB_INIT_EQUIP_MAX];		// ×°±¸±àºÅ
+	char	chID;			// 
+	char	chJob;			// 
+	short	sItemID[defJOB_INIT_EQUIP_MAX];		// 
 };
 
 class CJobEquipRecordSet : public CRawDataSet
@@ -41,7 +41,7 @@ public:
 
 protected:
 
-	static CJobEquipRecordSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CJobEquipRecordSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

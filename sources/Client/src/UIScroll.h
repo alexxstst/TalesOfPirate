@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// Ãû³Æ:¹ö¶¯Ìõ
-// ×÷Õß:lh 2004-07-20
-// ÓÃÍ¾:ÓÃÓÚÅäºÏÊ÷×´¿Ø¼þ,ÁÐ±íÀ¸µÈµÄ¹ö¶¯
-// ×îºóÐÞ¸ÄÈÕÆÚ:2004-10-09
+ï»¿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-20
+// :,
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uicompent.h"
@@ -19,8 +19,8 @@ class CScroll : public CCompent
 public:
 	enum eStyle
 	{
-		btHorizontal=0, // Ë®Æ½µÄ,´Ó×ó×ÔÓÒµÄ
-		btVertical,     // ´¹Ö±µÄ£¬´ÓÏÂÖ±ÉÏµÄ      
+		btHorizontal=0, // ,
+		btVertical,     //       
 	};
 
 public:
@@ -40,7 +40,7 @@ public:
 	virtual bool	IsFrameMove()		{ return true;		}
 	virtual void	SetAlpha( BYTE alpha );
     virtual void    RenderHint( int x, int y );	
-    virtual CCompent* GetHintCompent( int x, int y );                       // ·µ»ØÓÐÌáÊ¾µÄ¿Ø¼þ
+    virtual CCompent* GetHintCompent( int x, int y );                       // 
 
 	virtual bool    IsHandleMouse()		{ return true;		}
 
@@ -68,7 +68,7 @@ public:
 	// End
 
 public:
-	GuiEvent		evtChange;		// ·¢ÉúÁË¹ö¶¯
+	GuiEvent		evtChange;		// 
 
 protected:
 	void			_RefreshMidst();
@@ -99,7 +99,7 @@ protected:
 	void			_UpdataStep( int v );
 
 protected:
-	CGuiPic*		_pImage;		// ±³¾°Í¼
+	CGuiPic*		_pImage;		// 
 
 	CTextButton*	_up;
 	CTextButton*	_down;
@@ -110,8 +110,8 @@ protected:
 	CStep			_step;
 	int				_nStart;
 
-	float			_fPageNum;		// ·­Ò³Ê±µÄ¼ä¾à
-	bool			_IsAutoHide;	// Èç¹ûÃ»ÓÐ·­Ò³ÊÇ·ñ×Ô¶¯Òþ²Ø
+	float			_fPageNum;		// 
+	bool			_IsAutoHide;	// 
 
 private:
 	int				_nMinDrag, _nMaxDrag;

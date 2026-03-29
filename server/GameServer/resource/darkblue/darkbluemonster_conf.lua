@@ -1,4 +1,4 @@
-print("-- [Loading] darkblueMonster.lua")
+﻿print("-- [Loading] darkblueMonster.lua")
 SetCurMap("darkblue")
 AddWeatherRegion(9, 15, 40, 1100, 950 , 80, 80)
 AddWeatherRegion(11, 15, 40, 1500, 900 , 80, 80)

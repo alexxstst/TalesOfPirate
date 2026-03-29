@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "Connection.h"
 #include "NetIF.h"
 
@@ -30,27 +30,27 @@ bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
 	m_hostname[sizeof(m_hostname) - 1] = '\0';
 	m_port = port;
 
-	// Ждём завершения предыдущего потока подключения
+	//     
 	if (m_connectThread.joinable())
 		m_connectThread.join();
 
-	// Подключение в отдельном потоке (TcpClient::Connect блокирующий)
+	//     (TcpClient::Connect )
 	m_connectThread = std::thread([this]() {
 		bool ok = m_netif->GetClient().Connect(m_hostname, m_port, m_timeout);
 
 		std::lock_guard<std::mutex> lock(m_mtx);
 		if (ok) {
-			// TCP подключён. Статус остаётся CNST_CONNECTING
-			// до вызова CHAPSTR() из SC_SendPublicKey/CS_SendPrivateKey.
+			// TCP .   CNST_CONNECTING
+			//   CHAPSTR()  SC_SendPublicKey/CS_SendPrivateKey.
 			int cur = m_status.load();
 			if (cur == CNST_TIMEOUT) {
-				// Таймаут уже сработал — закрываем только что открытое соединение
+				//         
 				m_netif->GetClient().Disconnect(0);
 			}
 		} else {
 			int expected = CNST_CONNECTING;
 			if (!m_status.compare_exchange_strong(expected, CNST_FAILURE)) {
-				// Статус уже изменился (например, CNST_TIMEOUT)
+				//    (, CNST_TIMEOUT)
 			}
 		}
 	});
@@ -89,10 +89,10 @@ int Connection::GetConnStat()
 		std::lock_guard<std::mutex> lock(m_mtx);
 		int expected = CNST_CONNECTING;
 		if (m_status.compare_exchange_strong(expected, CNST_TIMEOUT)) {
-			// Таймаут — поток подключения либо ещё работает, либо уже завершился.
-			// Если соединение установлено, оно будет закрыто в Process().
+			//       ,   .
+			//   ,     Process().
 		} else if (expected == CNST_CONNECTED || expected == CNST_HANDSHAKE) {
-			// Подключились как раз вовремя
+			//    
 			m_status = expected;
 		}
 	}

@@ -1,4 +1,4 @@
-// eccrypto.h - originally written and placed in the public domain by Wei Dai
+﻿// eccrypto.h - originally written and placed in the public domain by Wei Dai
 //              deterministic signatures added by by Douglas Roark
 
 /// \file eccrypto.h
@@ -299,7 +299,7 @@ typedef ECHMQV< ECP, DL_GroupParameters_EC< ECP >::DefaultCofactorOption, SHA512
 /// \brief Fully Hashed Elliptic Curve Menezes-Qu-Vanstone
 /// \tparam EC elliptic curve field
 /// \tparam COFACTOR_OPTION cofactor multiplication option
-/// \details This implementation follows Augustin P. Sarr and Philippe Elbaz–Vincent, and Jean–Claude Bajard's
+/// \details This implementation follows Augustin P. Sarr and Philippe ElbazVincent, and JeanClaude Bajard's
 ///   <a href="http://eprint.iacr.org/2009/408">A Secure and Efficient Authenticated Diffie-Hellman Protocol</a>.
 ///   Note: this is FHMQV, Protocol 5, from page 11; and not FHMQV-C.
 /// \sa CofactorMultiplicationOption
@@ -588,7 +588,7 @@ struct ECGDSA : public DL_SS<
 /// \brief Elliptic Curve Integrated Encryption Scheme
 /// \tparam COFACTOR_OPTION cofactor multiplication option
 /// \tparam HASH HashTransformation derived class used for key drivation and MAC computation
-/// \tparam DHAES_MODE flag indicating if the MAC includes additional context parameters such as <em>u·V</em>, <em>v·U</em> and label
+/// \tparam DHAES_MODE flag indicating if the MAC includes additional context parameters such as <em>uV</em>, <em>vU</em> and label
 /// \tparam LABEL_OCTETS flag indicating if the label size is specified in octets or bits
 /// \details ECIES is an Elliptic Curve based Integrated Encryption Scheme (IES). The scheme combines a Key Encapsulation
 ///   Method (KEM) with a Data Encapsulation Method (DEM) and a MAC tag. The scheme is
@@ -615,7 +615,7 @@ struct ECGDSA : public DL_SS<
 ///     ECIES<ECP,SHA1,NoCofactorMultiplication,true,true>::Encryptor encryptor(decryptor);
 /// </pre>
 /// \sa DLIES, <a href="http://www.weidai.com/scan-mirror/ca.html#ECIES">Elliptic Curve Integrated Encryption Scheme (ECIES)</a>,
-///   Martínez, Encinas, and Ávila's <A HREF="http://digital.csic.es/bitstream/10261/32671/1/V2-I2-P7-13.pdf">A Survey of the Elliptic
+///   Martnez, Encinas, and vila's <A HREF="http://digital.csic.es/bitstream/10261/32671/1/V2-I2-P7-13.pdf">A Survey of the Elliptic
 ///   Curve Integrated Encryption Schemes</A>
 /// \since Crypto++ 4.0, Crypto++ 5.7 for Bouncy Castle and Botan compatibility
 template <class EC, class HASH = SHA1, class COFACTOR_OPTION = NoCofactorMultiplication, bool DHAES_MODE = true, bool LABEL_OCTETS = false>

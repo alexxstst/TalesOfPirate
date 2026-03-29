@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "ResourceBundleManage.h"		//Add by lark.li 20080303
 #define RES_STRING(a) g_ResourceBundleManage.LoadResString("" #a  "")

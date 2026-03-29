@@ -1,4 +1,4 @@
-//================================================================
+﻿//================================================================
 // It must be permitted by Dabo.Zhang that this program is used for
 // any purpose in any situation.
 // Copyright (C) Dabo.Zhang 2000-2003
@@ -69,7 +69,7 @@ ConditionalLockGuard(ConditionallyEmpty<T, is_empty_>) -> ConditionalLockGuard<T
 //=================================================================
 //common ancestry class define
 template<bool sync =false>
-class robject								//�������ü������з��������ԭʼ����
+class robject								//
 {
 protected:
 	robject()
@@ -78,10 +78,10 @@ protected:
 	}
 	virtual ~robject() = default;
 
-	virtual void Free(){delete this;};	//ȱʡ���ͷź���,ȱʡ�Ĳ�������ɾ���Լ�.
+	virtual void Free(){delete this;};	//,.
 
 public:
-	uLong adopt()								//[����]�������,���ü���������1
+	uLong adopt()								//[],1
 	{
 		_lock();
 		try{
@@ -93,7 +93,7 @@ public:
 		_unlock();
 		return 0;
 	}
-	uLong discard()							//[����]����������ʹ��,���ü�����1,��0�͵���Free�ͷ�
+	uLong discard()							//[],1,0Free
 	{
 		_lock();
 		try{

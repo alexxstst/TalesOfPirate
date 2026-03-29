@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "createchascene.h"
 
@@ -27,9 +27,6 @@
 #include "GameConfig.h"
 #include "ITEMRECORD.h"
 #include "Character.h"
-#include "caLua.h"
-#include "lualib.h"
-#include "lauxlib.h"
 #include "UIRender.h"
 #include "UIEdit.h"
 #include "UILabel.h"
@@ -53,7 +50,6 @@
 #include "uicompent.h"
 
 #include "UIMemo.h"
-#include "caLua.h"
 
 #include "Connection.h"
 #include "ServerSet.h"
@@ -752,7 +748,7 @@ CCreateChaScene::~CCreateChaScene()
 	ToLogService("common", "CCreateChaScene Destroy");
 }
 
-//~ ������صĺ��� ==========================================================
+//~ Scene-related functions ==========================================================
 
 //-----------------------------------------------------------------------
 bool CCreateChaScene::_Init()
@@ -806,7 +802,7 @@ bool CCreateChaScene::_Init()
 		m_LoginSceneCreateCha.LoadArrowItem("target.lgo", offsetPos4);
 	}
 
-    //�趨����ṹ��
+    //Set camera structure
     CCameraCtrl *pCam = g_pGameApp->GetMainCam();
     if(pCam)
     {
@@ -827,7 +823,7 @@ bool CCreateChaScene::_Init()
     g_Render.LookAt(pCam->m_EyePos, pCam->m_RefPos);
     g_Render.SetCurrentView(MPRender::VIEW_WORLD);
 
-    //�����ĸ���ɫģ��
+    //Create four character models
     int i=0;
     for (; i<4; i++)
     {
@@ -969,19 +965,19 @@ bool CCreateChaScene::_MouseButtonDown(int nButton)
 
 		switch(m_nSelChaIndex)
 		{
-		case 0:	// ����
+		case 0:	// Lance
 			frmLanchInfo->ShowModal();
 			break;
 
-		case 1:	// ����˹
+		case 1:	// Carsise
 			frmCaxiusInfo->ShowModal();
 			break;
 
-		case 2:	// �����
+		case 2:	// Phyllis
 			frmFelierInfo->ShowModal();
 			break;
 
-		case 3:	// ����
+		case 3:	// Ami
 			frmAimiInfo->ShowModal();
 			break;
 		}
@@ -995,10 +991,10 @@ bool CCreateChaScene::_MouseButtonDown(int nButton)
 }
 
 
-//~ UI��صĺ��� =============================================================
+//~ UI-related functions =============================================================
 bool CCreateChaScene::_InitUI()
 {
-    // ��ɫ��������
+    // Character creation form
     {
         frmChaFound = CFormMgr::s_Mgr.Find("frmFound", GetInitParam()->nUITemplete);
         if (!frmChaFound)
@@ -1039,7 +1035,7 @@ bool CCreateChaScene::_InitUI()
         }
         btnRightFace->evtMouseClick = __gui_event_right_face;
 
-		// ���ͣ����� ���Ұ�ť��˸
+		// Initially make left/right buttons flash
 		btnLeftHair->SetFlashCycle();
 		btnRightHair->SetFlashCycle();
 		btnLeftFace->SetFlashCycle();
@@ -1107,7 +1103,7 @@ bool CCreateChaScene::_InitUI()
         frmChaFound->evtEntrustMouseEvent = _ChaFoundFrmMouseEvent;
     }
 
-    // ��ɫ����ѡ�����
+    // Character city selection form
     {
         frmChaCity = CFormMgr::s_Mgr.Find( "frmCity", GetInitParam()->nUITemplete );
         if (!frmChaFound)
@@ -1117,7 +1113,7 @@ bool CCreateChaScene::_InitUI()
         }
 
 		frmChaCity->evtEntrustMouseEvent = _ChaCityFrmMouseEvent;
-		//����ͼƬ
+		//Load images
 		char szPicNameBase[] = "imgCity%d%d";
 		char szPicName[20];
 
@@ -1140,7 +1136,7 @@ bool CCreateChaScene::_InitUI()
 		}
 		iCurrCity = 0;
 
-		//�������п�
+		//Load city blocks
 		char szCityBlockName[] = "imgCity%d";
 
 		for (int i(0); i<MAX_CITY_NUM; ++i)
@@ -1156,7 +1152,7 @@ bool CCreateChaScene::_InitUI()
 		}
     }
 
-    // �˳��˵�����
+    // Exit menu form
     {
         frmQuit = CFormMgr::s_Mgr.Find( "frmQuit", GetInitParam()->nUITemplete );
         if (!frmQuit)
@@ -1166,7 +1162,7 @@ bool CCreateChaScene::_InitUI()
         }
         frmQuit->evtEntrustMouseEvent = _QuitFrmMouseEvent;
 
-        frmQuit->Find("imgBack")->SetIsShow(false); //��ʼʱͼƬ����ʾ
+        frmQuit->Find("imgBack")->SetIsShow(false); //Initially hide background image
         frmQuit->SetPos(
             (g_pGameApp->GetWindowWidth() - frmQuit->GetWidth())/2,
             g_pGameApp->GetWindowHeight() - frmQuit->GetHeight() - 40 );
@@ -1175,7 +1171,7 @@ bool CCreateChaScene::_InitUI()
     }
 
 
-	// �������̽���
+	// Role info forms setup
 	{
 		frmRoleInfo = CFormMgr::s_Mgr.Find("frmRoleInfo");
 		if(! frmRoleInfo)
@@ -1227,7 +1223,7 @@ bool CCreateChaScene::_InitUI()
 		}
 		frmRoleAllInfo->evtEntrustMouseEvent = _evtRoleAllInfoFormMouseEvent;
 
-		// ���ְ��� MEMO
+		// Class description MEMO
 		memChaDescribeUp = dynamic_cast<CMemo*>(frmRoleAllInfo->Find("memChaDescribeUp"));
 		if(! memChaDescribeUp)
 		{
@@ -1244,7 +1240,7 @@ bool CCreateChaScene::_InitUI()
 		char szChaView[64] = {0};
 		memset(imgChaView, 0, sizeof(CImage*) * ROLE_ALL_INFO_COUNT);
 		
-		// ��ɫְҵ����ͼ
+		// Character class portrait images
 		for(int i = 0; i < ROLE_ALL_INFO_COUNT; ++i)
 		{
 			sprintf(szChaView, "imgChaView%d", i + 1);
@@ -1262,7 +1258,7 @@ bool CCreateChaScene::_InitUI()
 }
 
 
-//~ �ص����� =================================================================
+//~ Callback functions =================================================================
 
 void CCreateChaScene::_SelectCity(CCompent *pSender, int nMsgType, 
 								int x, int y, DWORD dwKey)
@@ -1270,7 +1266,7 @@ void CCreateChaScene::_SelectCity(CCompent *pSender, int nMsgType,
 	bShowDialog = false;
 	if( nMsgType == CForm::mrYes ) 
 	{
-		//֪ͨ������������ɫ
+		//Notify server to create character
 		GetCurrScene().SendChaToServ();
 
 //		CGameApp::Waiting();
@@ -1296,38 +1292,38 @@ void CCreateChaScene::_ChaFoundFrmMouseEvent(CCompent *pSender, int nMsgType,
     {
         CCreateChaScene& rkScene = GetCurrScene();
 
-        //ȷ����ť�¼�
+        //Confirm button event
 
-        //����û���
+        //Validate name
         if (!rkScene.IsValidCheckChaName( edtName->GetCaption() ))
             return;
 
 		if (rkScene.m_bSameNameError)
 		{
-			//ֱ�ӷ��ʹ�����ɫ
+			//Directly send create character request
 			
-			GetCurrScene().SendChaToServ();//֪ͨ������������ɫ
+			GetCurrScene().SendChaToServ();// Notify server to create character
 			CGameApp::Waiting();
 		}
 		else
 		{
-			//��ѡ����н���
+			//Open city selection form
 
 			frmChaFound->Close();	
-			rkScene.InitChaCityFrm();//ͬ��ѡ����б���
-			frmChaCity->ShowModal();//��ʾ��һ������
+			rkScene.InitChaCityFrm();// Sync city selection list
+			frmChaCity->ShowModal();// Show next step form
 		}
 
 
     }
     else if ( strName == "btnNo" )
     {
-        //ȡ����ť�¼�
+        //Cancel button event
 
-        //�رոñ���,���س���
+        //Close this form, return to scene
         frmChaFound->Close();
 
-        //��������
+        //Undim the scene
         GetCurrScene().DarkScene(false);
 		frmQuit->SetIsShow(true);
     }
@@ -1363,7 +1359,7 @@ void CCreateChaScene::_ChaCityFrmMouseEvent(CCompent *pSender, int nMsgType,
 
     //if(strName=="btnYes")
     //{
-    //    //֪ͨ������������ɫ
+    //    //Notify server to create character
     //    GetCurrScene().SendChaToServ();
 
     //    CGameApp::Waiting();
@@ -1371,10 +1367,10 @@ void CCreateChaScene::_ChaCityFrmMouseEvent(CCompent *pSender, int nMsgType,
     //}
     if ( strName == "btnNo" )
     {
-        //�رոñ���
+        //Close this form
         frmChaCity->Close();
 
-        //������һ������
+        //Open previous step form
         frmChaFound->ShowModal();
     }
 
@@ -1393,8 +1389,8 @@ void CCreateChaScene::_QuitFrmMouseEvent(CCompent *pSender, int nMsgType,
 
     if(strName=="btnNo")
     {
-        //�˳���ť�¼�
-        //g_pGameApp->MsgBox("�˳���ť�¼�");
+        //Exit button event
+        //g_pGameApp->MsgBox("Exit button event");
         GetCurrScene().GotoSelChaScene();
     }
 }
@@ -1474,7 +1470,7 @@ void CCreateChaScene::__cha_render_event( C3DCompent *pSender, int x, int y)
 }
 
 
-//~ �߼����� =================================================================
+//~ Logic functions =================================================================
 
 //-----------------------------------------------------------------------
 void CCreateChaScene::ChangeFace(eDirectType enumDirect)
@@ -1484,20 +1480,20 @@ void CCreateChaScene::ChangeFace(eDirectType enumDirect)
 
     if (NULL == m_pChaForUI[m_nSelChaIndex]) return;
 
-    //ȡ�õ�ǰ����ͷ���Ŀ�ʼ���
+    //Get the start index of the current face type
     const long nBeginIndex = nFaceTestCnt[m_nSelChaIndex];
 
-    // ѭ���ƶ�
+    // Cycle through faces
     m_nCurFaceIndex -= nBeginIndex;
     m_nCurFaceIndex += ((int)(enumDirect));
     m_nCurFaceIndex = (m_nCurFaceIndex + nSelFaceNum[m_nSelChaIndex]) % nSelFaceNum[m_nSelChaIndex];
     m_nCurFaceIndex += nBeginIndex;
 
-    // �ı�����
+    // Change face
     BOOL bOK = m_pChaForUI[m_nSelChaIndex]->ChangePart(enumEQUIP_FACE, m_nCurFaceIndex);
     if(bOK)
     {
-        //����ԭ����ʾ"����+���"�ĳ���ʾ"����"
+        //Change display from "name+number" to just "name"
         CItemRecord* pItem = GetItemRecordInfo(m_nCurFaceIndex);
         if( pItem )
         {
@@ -1515,17 +1511,17 @@ void CCreateChaScene::ChangeHair(eDirectType enumDirect)
 
     if (NULL == m_pChaForUI[m_nSelChaIndex]) return;
 
-    //ȡ�õ�ǰ����ͷ���Ŀ�ʼ���
+    //Get the start index of the current hair type
     const long nBeginIndex = nHairTestCnt[m_nSelChaIndex];
 
 
-    // ѭ���ƶ�
+    // Cycle through hair styles
     m_nCurHairIndex -= nBeginIndex;
     m_nCurHairIndex += ((int)(enumDirect));
     m_nCurHairIndex = (m_nCurHairIndex + nSelHairNum[m_nSelChaIndex]) % nSelHairNum[m_nSelChaIndex];
     m_nCurHairIndex += nBeginIndex;
 
-    // �ı�ͷ��
+    // Change hair
     BOOL bOK = m_pChaForUI[m_nSelChaIndex]->ChangePart(enumEQUIP_HEAD, m_nCurHairIndex);
     if(bOK)
     {
@@ -1551,12 +1547,12 @@ void CCreateChaScene::ChangeCity(eDirectType enumDirect)
     CLabelEx  *labCityShow = ( CLabelEx *) frmChaCity ->Find("labCityShow");
     if (!labCityShow)    return ;
 
-    //�ж�Ŀǰ�����
+    //Determine current city
 
 
     m_nCurCityIndex += ((int)(enumDirect));
 
-    // ѭ���ƶ�
+    // Cycle through cities
     m_nCurCityIndex = (m_nCurCityIndex + MAX_CITY_NUM) % MAX_CITY_NUM;
     //labCityShow->SetCaption( szCities[m_nCurCityIndex]);
 	memChaDescribe2->SetCaption(GetCityDescription(m_nCurCityIndex));
@@ -1635,7 +1631,7 @@ void CCreateChaScene::InitChaFoundFrm()
 	bOK = m_pChaForUI[m_nSelChaIndex]->ChangePart(enumEQUIP_FACE, m_nCurFaceIndex);
 	if(bOK)
 	{
-		//����ԭ����ʾ"����+���"�ĳ���ʾ"����"
+		//Change display from 'name+number' to just 'name'
 		CItemRecord* pItem = GetItemRecordInfo(m_nCurFaceIndex);
 		if( pItem )
 		{
@@ -1673,11 +1669,11 @@ void CCreateChaScene::InitChaData()
     if (m_nSelChaIndex < 0 || m_nSelChaIndex > 3)
         return;
 
-    m_sName = "";									//��ɫ��
-    m_nCurHairIndex = nHairTestCnt[m_nSelChaIndex]; //��ǰ�ķ��ͱ��
-    m_nCurFaceIndex = nFaceTestCnt[m_nSelChaIndex]; //��ǰ�����ͱ��
+    m_sName = "";											//Character name
+    m_nCurHairIndex = nHairTestCnt[m_nSelChaIndex]; //Current hair style index
+    m_nCurFaceIndex = nFaceTestCnt[m_nSelChaIndex]; //Current face type index
 
-	//������������س��б��
+	//Randomly select initial city index
 	int i = rand();
 	if (i<RAND_MAX/3)
 		m_nCurCityIndex = 0;
@@ -1686,7 +1682,7 @@ void CCreateChaScene::InitChaData()
 	else
 		m_nCurCityIndex = 2;
 
-    m_nChaRotate = 0;                               //�ϴ������ƫ�ƽǶ�(-180~+180)
+    m_nChaRotate = 0;                               //Last mouse drag rotation offset (-180~+180)
 
 }
 
@@ -1722,7 +1718,7 @@ bool CCreateChaScene::IsValidCheckChaName(const char *name)
     {
         if ( s[i]&0x80 )
         {
-            if (!(s[i]==-93) )  //���ڴ����Ƿ���˫�ֽڵ���ĸ
+            if (!(s[i]==-93) )  // Check whether it is a double-byte letter
             {
                 i++;
             }
@@ -1746,7 +1742,7 @@ bool CCreateChaScene::IsValidCheckChaName(const char *name)
     if (!bOk )
         g_pGameApp->MsgBox( g_oLangRec.GetString(52));
 
-    //����Ƿ��в�����Ϊ��ɫ���Ĵ�
+    //Check for forbidden character name words
     string sName(name);
     if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sName))
     {
@@ -1799,7 +1795,7 @@ void CCreateChaScene::CreateNewCha()
 
 	m_bSameNameError = false;
 
-    //�رոñ���
+    //Close this form
 	frmChaFound->Close();
     frmChaCity->Close();
 
@@ -1815,7 +1811,7 @@ void CCreateChaScene::CreateNewCha()
     part.SLink[enumEQUIP_FACE] = (short)m_pChaForUI[m_nSelChaIndex]->GetPartID(1);
     int nChaIndex = m_nSelChaIndex;
 
-    //�л���ѡ�˳�������
+    //Switch to character selection scene
     GotoSelChaScene();
 
     CSelectChaScene& rkScene = CSelectChaScene::GetCurrScene();
@@ -1839,7 +1835,7 @@ void CCreateChaScene::NewChaError( int error_no, const char* error_info )
 
 	if (ERR_PT_SAMECHANAME == error_no)
 	{
-		//�ر�ѡ����б���
+		//Close city selection list
 		frmChaCity->Close();
 
 		m_bSameNameError = true;
@@ -1917,7 +1913,7 @@ void CCreateChaScene::ShowCityZone(int index)
 }
 
 
-// ��װ��loading��,ˢ��
+// Called during loading, refresh
 void CCreateChaScene::LoadingCall()
 {
     CGameScene::LoadingCall();
@@ -1933,17 +1929,17 @@ void CCreateChaScene::LoadingCall()
 
 void CCreateChaScene::ShowChaFoundForm()
 {
-    //��ʼ����ɫ����
+    //Initialize character data
     InitChaData();
 
-    //ͬ�����ﴴ������
+    //Sync character creation form
     InitChaFoundFrm();
 
-    //�����䰵
+    //Dim the scene
     this->DarkScene(true);
 	frmQuit->SetIsShow(false);
 
-	//��ʾ����
+	//Show form
     frmChaFound->ShowModal();
 }
 
@@ -1960,82 +1956,82 @@ void CCreateChaScene::ShowAllRoleInfo(int nRoleInfo)
 
 				switch(nRoleInfo)
 				{
-				case 2:  // ��ʿ
+				case 2:  // Swordsman
 				case 9:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(803));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(804));
 					break;
 
-				case 5:  // ˫��ʿ
+				case 5:  // Dual-Sword Fighter
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(806));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(807));
 					break;
 
-				case 10: // �޽�ʿ
+				case 10: // Crusader
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(808));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(809));
 					break;
 
-				case 13: // ҩʦ
+				case 13: // Herbalist
 				case 20:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(810));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(811));
 					break;
 
-				case 16: // ʥְ��
+				case 16: // Cleric
 				case 22:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(812));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(813));
 					break;
 
-				case 17: // ��ӡʦ
+				case 17: // Seal Master
 				case 23:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(814));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(815));
 					break;
 
-				case 4:  // ð����
+				case 4:  // Explorer
 				case 14:
 				case 21:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(816));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(817));
 					break;
 
-				case 7:  // ����ʿ
+				case 7:  // Sharpshooter
 				case 18:
 				case 24:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(818));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(819));
 					break;
 
-				case 3:  // ����
+				case 3:  // Hunter
 				case 12:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(820));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(821));
 					break;
 
-				case 6:  // �ѻ���
+				case 6:  // Voyager
 				case 15:
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(822));
 					memChaDescribeDown->SetCaption(g_oLangRec.GetString(823));
 					break;
 
-				case 1:  // ����
+				case 1:  // Lance (base)
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(35));
 					memChaDescribeDown->SetCaption("");
 					break;
 
-				case 8:  // ����˹
+				case 8:  // Carsise (base)
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(36));
 					memChaDescribeDown->SetCaption("");
 					break;
 
-				case 11:  // ������
+				case 11:  // Phyllis (base)
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(37));
 					memChaDescribeDown->SetCaption("");
 					break;
 
-				case 19:  // ����
+				case 19:  // Ami (base)
 					memChaDescribeUp->SetCaption(g_oLangRec.GetString(38));
 					memChaDescribeDown->SetCaption("");
 					break;
@@ -2092,7 +2088,7 @@ void CCreateChaScene::_evtRoleInfoFormMouseEvent(CCompent *pSender, int nMsgType
 	}
 }
 
-// ������� ��1 ~ 7��
+// Lance race classes (1 ~ 7)
 void CCreateChaScene::_evtLanchInfoFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();
@@ -2112,36 +2108,36 @@ void CCreateChaScene::_evtLanchInfoFormMouseEvent(CCompent *pSender, int nMsgTyp
 		}
 		else if(strName == "btnViewPlayer_1")
 		{
-			pCreateChaScene->ShowAllRoleInfo(1);	// �����ʼ
+			pCreateChaScene->ShowAllRoleInfo(1);	// Lance base
 		}
 		else if(strName == "btnViewPlayer_2")
 		{
-			pCreateChaScene->ShowAllRoleInfo(2);	// ��ʿ
+			pCreateChaScene->ShowAllRoleInfo(2);	// Swordsman
 		}
 		else if(strName == "btnViewPlayer_3")
 		{
-			pCreateChaScene->ShowAllRoleInfo(3);	// ����
+			pCreateChaScene->ShowAllRoleInfo(3);	// Hunter
 		}
 		else if(strName == "btnViewPlayer_4")
 		{
-			pCreateChaScene->ShowAllRoleInfo(4);	// ð����
+			pCreateChaScene->ShowAllRoleInfo(4);	// Explorer
 		}
 		else if(strName == "btnViewPlayer_5")
 		{
-			pCreateChaScene->ShowAllRoleInfo(5);	// ˫��ʿ
+			pCreateChaScene->ShowAllRoleInfo(5);	// Dual-Sword Fighter
 		}
 		else if(strName == "btnViewPlayer_6")
 		{
-			pCreateChaScene->ShowAllRoleInfo(6);	// �ѻ���
+			pCreateChaScene->ShowAllRoleInfo(6);	// Voyager
 		}
 		else if(strName == "btnViewPlayer_7")
 		{
-			pCreateChaScene->ShowAllRoleInfo(7);	// ����ʿ
+			pCreateChaScene->ShowAllRoleInfo(7);	// Sharpshooter
 		}
 	}
 }
 
-// ���׽��� ��19 ~ 24��
+// Ami race classes (19 ~ 24)
 void CCreateChaScene::_evtAimiInfoFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();
@@ -2161,32 +2157,32 @@ void CCreateChaScene::_evtAimiInfoFormMouseEvent(CCompent *pSender, int nMsgType
 		}
 		else if(strName == "btnViewPlayer_19")
 		{
-			pCreateChaScene->ShowAllRoleInfo(19);	// ���׳�ʼ
+			pCreateChaScene->ShowAllRoleInfo(19);	// Ami base
 		}
 		else if(strName == "btnViewPlayer_20")
 		{
-			pCreateChaScene->ShowAllRoleInfo(20);	// ҩʦ
+			pCreateChaScene->ShowAllRoleInfo(20);	// Herbalist
 		}
 		else if(strName == "btnViewPlayer_21")
 		{
-			pCreateChaScene->ShowAllRoleInfo(21);	// ð����
+			pCreateChaScene->ShowAllRoleInfo(21);	// Explorer
 		}
 		else if(strName == "btnViewPlayer_22")
 		{
-			pCreateChaScene->ShowAllRoleInfo(22);	// ʥְ��
+			pCreateChaScene->ShowAllRoleInfo(22);	// Cleric
 		}
 		else if(strName == "btnViewPlayer_23")
 		{
-			pCreateChaScene->ShowAllRoleInfo(23);	// ��ӡʦ
+			pCreateChaScene->ShowAllRoleInfo(23);	// Seal Master
 		}
 		else if(strName == "btnViewPlayer_24")
 		{
-			pCreateChaScene->ShowAllRoleInfo(24);	// ����ʿ
+			pCreateChaScene->ShowAllRoleInfo(24);	// Sharpshooter
 		}
 	}
 }
 
-// ���������� ��11 ~ 18��
+// Phyllis race classes (11 ~ 18)
 void CCreateChaScene::_evtFelierInfoFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();
@@ -2206,40 +2202,40 @@ void CCreateChaScene::_evtFelierInfoFormMouseEvent(CCompent *pSender, int nMsgTy
 		}
 		else if(strName == "btnViewPlayer_11")
 		{
-			pCreateChaScene->ShowAllRoleInfo(11);	// ��������ʼ
+			pCreateChaScene->ShowAllRoleInfo(11);	// Phyllis base
 		}
 		else if(strName == "btnViewPlayer_12")
 		{
-			pCreateChaScene->ShowAllRoleInfo(12);	// ����
+			pCreateChaScene->ShowAllRoleInfo(12);	// Hunter
 		}
 		else if(strName == "btnViewPlayer_13")
 		{
-			pCreateChaScene->ShowAllRoleInfo(13);	// ҩʦ
+			pCreateChaScene->ShowAllRoleInfo(13);	// Herbalist
 		}
 		else if(strName == "btnViewPlayer_14")
 		{
-			pCreateChaScene->ShowAllRoleInfo(14);	// ð����
+			pCreateChaScene->ShowAllRoleInfo(14);	// Explorer
 		}
 		else if(strName == "btnViewPlayer_15")
 		{
-			pCreateChaScene->ShowAllRoleInfo(15);	// �ѻ���
+			pCreateChaScene->ShowAllRoleInfo(15);	// Voyager
 		}
 		else if(strName == "btnViewPlayer_16")
 		{
-			pCreateChaScene->ShowAllRoleInfo(16);	// ʥְ��
+			pCreateChaScene->ShowAllRoleInfo(16);	// Cleric
 		}
 		else if(strName == "btnViewPlayer_17")
 		{
-			pCreateChaScene->ShowAllRoleInfo(17);	// ��ӡʦ
+			pCreateChaScene->ShowAllRoleInfo(17);	// Seal Master
 		}
 		else if(strName == "btnViewPlayer_18")
 		{
-			pCreateChaScene->ShowAllRoleInfo(18);	// ����ʿ
+			pCreateChaScene->ShowAllRoleInfo(18);	// Sharpshooter
 		}
 	}
 }
 
-// ����˹���� ��8 ~ 10��
+// Carsise race classes (8 ~ 10)
 void CCreateChaScene::_evtCaxiusInfoFormMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
 	string strName = pSender->GetName();
@@ -2259,15 +2255,15 @@ void CCreateChaScene::_evtCaxiusInfoFormMouseEvent(CCompent *pSender, int nMsgTy
 		}
 		else if(strName == "btnViewPlayer_8")
 		{
-			pCreateChaScene->ShowAllRoleInfo(8);	// ����˹��ʼ
+			pCreateChaScene->ShowAllRoleInfo(8);	// Carsise base
 		}
 		else if(strName == "btnViewPlayer_9")
 		{
-			pCreateChaScene->ShowAllRoleInfo(9);	// ��ʿ
+			pCreateChaScene->ShowAllRoleInfo(9);	// Swordsman
 		}
 		else if(strName == "btnViewPlayer_10")
 		{
-			pCreateChaScene->ShowAllRoleInfo(10);	// �޽�ʿ
+			pCreateChaScene->ShowAllRoleInfo(10);	// Crusader
 		}
 	}
 }
@@ -2285,19 +2281,19 @@ void CCreateChaScene::_evtRoleAllInfoFormMouseEvent(CCompent *pSender, int nMsgT
 
 			switch(pCreateChaScene->m_nSelChaIndex)
 			{
-			case 0:	// ����
+			case 0:	// Lance
 				pCreateChaScene->frmLanchInfo->ShowModal();
 				break;
 
-			case 1:	// ����˹
+			case 1:	// Carsise
 				pCreateChaScene->frmCaxiusInfo->ShowModal();
 				break;
 
-			case 2:	// ������
+			case 2:	// Phyllis
 				pCreateChaScene->frmFelierInfo->ShowModal();
 				break;
 
-			case 3:	// ����
+			case 3:	// Ami
 				pCreateChaScene->frmAimiInfo->ShowModal();
 				break;
 			}

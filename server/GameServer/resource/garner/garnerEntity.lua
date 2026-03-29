@@ -1,4 +1,4 @@
-print("-- [Loading] garnerEntity.lua")
+﻿print("-- [Loading] garnerEntity.lua")
 
 function InitgarnerEntity()
 	CreateBerthEntity("Docked", 455, 2, 225065, 281984, 0, 1, 2231, 2827, 0)

@@ -1,4 +1,4 @@
-//=============================================================================
+ï»¿//=============================================================================
 // FileName: SwitchMapRecord.h
 // Creater: ZhangXuedong
 // Date: 2004.11.23
@@ -22,13 +22,13 @@ class CSwitchMapRecord : public CRawDataInfo
 public:
 	//CSwitchMapRecord();
 
-	long	lID;							// ±àºÅ
-	long	lEntityID;						// ±»°ó¶¨µÄÊµÌåID
-	long	lEventID;						// ÊÂ¼þ±àºÅ
-	Point	SEntityPos;						// ÊµÌåµÄÎ»ÖÃ£¨ÀåÃ×£©
-	short	sAngle;							// ÊµÌåµÄ·½Ïò
-	_TCHAR	szTarMapName[defMAP_NAME_LEN];	// Ä¿±êµØÍ¼Ãû
-	Point	STarPos;						// Ä¿±êµØÍ¼µÄÎ»ÖÃ£¨ÀåÃ×£©
+	long	lID;							// 
+	long	lEntityID;						// ID
+	long	lEventID;						// 
+	Point	SEntityPos;						// 
+	short	sAngle;							// 
+	_TCHAR	szTarMapName[defMAP_NAME_LEN];	// 
+	Point	STarPos;						// 
 };
 
 class CSwitchMapRecordSet : public CRawDataSet
@@ -46,7 +46,7 @@ public:
 
 protected:
 
-	static CSwitchMapRecordSet* _Instance; // Ïàµ±ÓÚµ¥¼ü, °Ñ×Ô¼º¼Ç×¡
+	static CSwitchMapRecordSet* _Instance; // , 
 
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

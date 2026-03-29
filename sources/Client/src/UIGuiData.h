@@ -1,12 +1,12 @@
-//--------------------------------------------------------------
-// ����:GUI�ӿ�
-// ����:lh 2004-07-15
-// ���˼��:CGuiDat�����ڴ棬�ṩ�ؼ��ӿ�
-//		     CForm��ʾ�������¼����л��ؼ����㣬װ�ش洢��Դ�ļ�
-// ע:����ʵ��ֻ�����ڶ������ɣ��ɳ���ʼʱ��̬����
-//    �˳�ʱ�ͷ���Դ
-// �޸�����:2004-10-26 by lh
-// �޸�����:��CItemObj�Ľű����ܷ���ΪCUIScript,CItemRow֧�ֶ�̬
+﻿//--------------------------------------------------------------
+// :GUI
+// :lh 2004-07-15
+// :CGuiDat
+//		     CForm
+// :
+//    
+// :2004-10-26 by lh
+// :CItemObjCUIScript,CItemRow
 //--------------------------------------------------------------
 
 #pragma once
@@ -20,7 +20,7 @@
 #include "UIFont.h"
 #include "UIPicture.h"
 
-// ���º�����֧��Gui��¡
+// Gui
 #define GUI_CLONE(TName)	\
 public:							\
 	virtual CGuiData* Clone() { return new (##TName)(*this); }	\
@@ -33,13 +33,13 @@ public:							\
 
 namespace GUI
 {
-// ���ں���MouseRun�Ĳ���key��,�����Ϊ�ļ���
+// MouseRunkey,
 enum eMouseState
 {
 	Mouse_LDown		= 0x0001,
 	Mouse_MDown		= 0x0002,
 	Mouse_RDown		= 0x0004,
-	Mouse_Down		= 0x0008,	// �м�����
+	Mouse_Down		= 0x0008,	// 
 	Mouse_LUp		= 0x0010,
 	Mouse_MUp		= 0x0020,
 	Mouse_RUp		= 0x0040,
@@ -47,27 +47,27 @@ enum eMouseState
 	Mouse_LDB		= 0x0100,
 	Mouse_MDB		= 0x0200,
 	Mouse_RDB		= 0x0400,
-	Mouse_LClick	= 0x0800,	// ���������
+	Mouse_LClick	= 0x0800,	// 
 	Mouse_MClick	= 0x1000,	
 	Mouse_RClick	= 0x2000,	
 };
 
 enum eCompentAlign
 {
-	caNone,				// ���ı�λ��
-	caLeft,				// �������
-	caLeftUp,			// �����������Ͻ�
+	caNone,				// 
+	caLeft,				// 
+	caLeftUp,			// 
 	caUp,
 	caRightUp,
 	caRight,
 	caRightBottom,
 	caBottom,
 	caLeftBottom,	
-	caClient,			// ����ȫ��
-    caCenter,           // ��ȫ����
-    caWidthCenter,      // ˮƽ����
-    caHeightCenter,     // ���¾���
-	caEnd,				// ��������������
+	caClient,			// 
+    caCenter,           // 
+    caWidthCenter,      // 
+    caHeightCenter,     // 
+	caEnd,				// 
 };
 
 const BYTE DROP_ALPHA = 0xA0;
@@ -85,7 +85,7 @@ typedef void (*CompentFun)(CCompent* pSender, unsigned int index );
 typedef bool (*GuiHotKeyEvent)(CForm *pSender, char key );
 typedef void (*GuiItemClickEvent)(std::string strItem);
 
-// GUI�����϶�
+// GUI
 class CDrag
 {
 public:
@@ -103,7 +103,7 @@ public:
 	void			SetYare( unsigned int n )	{ if(n<30) _nYareLen = n; }
 
 	bool			MouseRun( int x, int y, DWORD key );
-	int				BeginMouseRun( CGuiData* gui, bool InRect, int x, int y, DWORD key );	// ȷ�����״̬,����0�޶���
+	int				BeginMouseRun( CGuiData* gui, bool InRect, int x, int y, DWORD key );	// ,0
 
 	static CDrag*		GetDrag()		{ return _pDrag;	}
 	static CGuiData*	GetParent()		{ return _pParent;	}
@@ -139,13 +139,13 @@ public:
 	CCursor::eState	GetDragCursor()							{ return _crDrag;	}
 
 public:
-	GuiMouseEvent	evtMouseDragBegin;			// ��ʼ�϶�
-	GuiMouseEvent	evtMouseDragMove;			// �����϶��¼�
-	GuiMouseEvent	evtMouseDragEnd;			// �϶�����
+	GuiMouseEvent	evtMouseDragBegin;			// 
+	GuiMouseEvent	evtMouseDragMove;			// 
+	GuiMouseEvent	evtMouseDragEnd;			// 
 
 private:
-	static CDrag*		_pDrag;					// �����϶��еĶ���
-	static CGuiData*	_pParent;				// �����϶��е�gui
+	static CDrag*		_pDrag;					// 
+	static CGuiData*	_pParent;				// gui
 
 	static int			_nDragX, _nDragY;
 	static int			_nStartX, _nStartY;
@@ -153,19 +153,19 @@ private:
 	int				_nYareLen;
 	eState			_eState;
 
-	bool			_IsMove;					// ���ƶ�������,ֱ�ӽ��ؼ��ƶ�
-	bool			_IsUseGrid;					// �Ƿ�ʹ�ö������
+	bool			_IsMove;					// ,
+	bool			_IsUseGrid;					// 
 
-	CCursor::eState	_crDragIn;					// �����϶������ڵĹ��
-	CCursor::eState	_crDrag;					// �϶�ʱ�Ĺ��
-    static 	CCursor::eState	_crNormal;			// ��������µĹ��
+	CCursor::eState	_crDragIn;					// 
+	CCursor::eState	_crDrag;					// 
+    static 	CCursor::eState	_crNormal;			// 
 
-	static DWORD    _dwGridWidth, _dwGridHeight;// �������Ŀ���
-	static DWORD	_dwMouseUpTime;				// ���ڿ�ʼ�϶���,�Ѿ�û��MouseUP��Ϣ,�����ȴ���ɿ��ﵽһ��ʱ���ȡ���϶�
+	static DWORD    _dwGridWidth, _dwGridHeight;// 
+	static DWORD	_dwMouseUpTime;				// ,MouseUP,
 
 };
 
-// ���º�����֧��Gui��¡
+// Gui
 #define ITEM_CLONE(TName)	\
 public:							\
 	virtual TName* Clone() { return new (##TName)(*this); }	\
@@ -177,7 +177,7 @@ public:							\
 	}
 
 
-// ��ʾ��GUI�����е�С����
+// GUI
 class CItemObj		
 {
 public:
@@ -205,7 +205,7 @@ public:
 
 };
 
-// GUI������
+// GUI
 class CForm;
 class CGuiData
 {
@@ -217,12 +217,12 @@ public:
 	virtual ~CGuiData();
 	GUI_CLONE(CGuiData)
 
-	virtual void		Init() {}			// �����ⲿ��ʼ������װ��ͼƬ��
+	virtual void		Init() {}			// 
 
-	virtual void		Render(){}			// ��ʾ
-	virtual void		Refresh();			// ����ˢ����ʾ�õľ�������
+	virtual void		Render(){}			// 
+	virtual void		Refresh();			// 
 
-	// ������괦�����̣��Ѵ���������true
+	// true
 	virtual bool		MouseRun( int x, int y, DWORD key );
 	virtual bool		MouseScroll( int nScroll )		{ return _IsMouseIn;}
 
@@ -235,7 +235,7 @@ public:
 	virtual CGuiPic*	GetImage()						{ return NULL;		}
 
 	virtual CForm*		GetForm()						{ return NULL;		}
-	virtual void		SetCaption( const char * str) {}	// ������ʾ���ı�
+	virtual void		SetCaption( const char * str) {}	// 
 	virtual void		SetTextColor( DWORD color ) {}
 	virtual void		SetIsDrag( bool v );
 
@@ -246,13 +246,13 @@ public:
 
     virtual void        RenderHint( int x, int y );
 
-    virtual bool        IsAllowActive();            // �ж��Ƿ���Լ���
+    virtual bool        IsAllowActive();            // 
 
-	virtual void		Reset()					{};	// �����ⲿ����,�ù���������ȹ���
+	virtual void		Reset()					{};	// ,
 
 public:
-	static HWND		GetHWND();						// �õ�windows handle
-	static CGuiData* GetGui( DWORD dwID ) {			// ���������õ��ؼ�����
+	static HWND		GetHWND();						// windows handle
+	static CGuiData* GetGui( DWORD dwID ) {			// 
         if( dwID==0 )
         {
             ToLogService("common", "NULL GUI");
@@ -265,8 +265,8 @@ public:
         }
 		return _AllGui[dwID-1]; 
 	}
-	static void		ClearAllGui();					// ������пؼ�
-	static void		InitMemory();					// ���������пؼ������
+	static void		ClearAllGui();					// 
+	static void		InitMemory();					// 
 
     static bool         SetHintItem( CItemObj* pObj );
     static CItemObj*    GetHintItem()                   { return _pHintItem;    }
@@ -309,54 +309,54 @@ public:
 	void		SetPointer( void* v )		{ _pVoid = v;					}
 	void*		GetPointer()				{ return _pVoid;				}
 
-	void		ScriptSetShow( bool v )		{ _bShow = v;					}	// �ⲿ�ű���
+	void		ScriptSetShow( bool v )		{ _bShow = v;					}	// 
 
 	int			nTag;
 
 public:
 	
 	bool		InRect(int x, int y)		{ return _IsMouseIn = ( x >= _nX1 && x<= _nX2 && y >=_nY1 && y <=_nY2 );	}
-	bool        IsNoDrag(int x, int y, DWORD key);		// ���û�п�ʼ�϶�,���ҵ���������,����true
+	bool        IsNoDrag(int x, int y, DWORD key);		// ,,true
 
 	static void SetScreen( float dx, float dy, float sx, float sy ) {
 		_fDrawX = dx, _fDrawY = dy,  _fScreenX = sx,  _fScreenY = sy;
 	}
-	void		LineFrame();					// ��һ���߿�
-	void        SelectChaLineFrame() ;          //��һ�����˿�
+	void		LineFrame();					// 
+	void        SelectChaLineFrame() ;          //
 
-	void		LineThinFrame();				// ��һ��ϸ��
-	void		FillFrame();					// ���
+	void		LineThinFrame();				// 
+	void		FillFrame();					// 
 
 	static void	SetMousePos( int x, int y )	{ _nMouseX=x; _nMouseY=y;		}
 	static int  GetMouseX()					{ return _nMouseX;				}
 	static int  GetMouseY()					{ return _nMouseY;				}
 	
-	static void SetCursor( CCursor::eState v )	{ _eCursor = v;				}		// ������MouseRun��
+	static void SetCursor( CCursor::eState v )	{ _eCursor = v;				}		// MouseRun
 	static CCursor::eState GetCursor()		{ return _eCursor;				}
 
 protected:
-	virtual void _AddForm() {}			// ���Լ����뵽������Form��
+	virtual void _AddForm() {}			// Form
 
 protected:
 	typedef std::vector<CGuiData*> vcs;
-	static vcs	_AllGui;		// ������еĿؼ���Դ
+	static vcs	_AllGui;		// 
 
-	DWORD		_dwID;			// ע��ؼ���ID-���������ⲿ���ɸı�
+	DWORD		_dwID;			// ID-
 
 	CGuiData*	_pParent;
 
-	std::string		_strName;				// ��ʶ
-	int			_nWidth, _nHeight;		// ����
-	int			_nLeft, _nTop;			// �������
+	std::string		_strName;				// 
+	int			_nWidth, _nHeight;		// 
+	int			_nLeft, _nTop;			// 
 
-	int			_nX1,_nX2, _nY1, _nY2;	// ��ʾ�õľ�������
+	int			_nX1,_nX2, _nY1, _nY2;	// 
 
-	bool		_bShow;			// �Ƿ���ʾ
-	bool		_bEnabled;		// �Ƿ����
+	bool		_bShow;			// 
+	bool		_bEnabled;		// 
 	CDrag*		_pDrag;
 
-	bool		_IsMouseIn;		// ����Ƿ���������
-    std::string		_strHint;		// �ؼ���ʾ
+	bool		_IsMouseIn;		// 
+    std::string		_strHint;		// 
 
 	void*		_pVoid;
 
@@ -367,11 +367,11 @@ protected:
 
 private:
 	static		float		_fDrawX, _fDrawY,  _fScreenX,  _fScreenY;
-	static		CGuiPic		_imgLevel,	_imgVertical;	// ���ڻ��߿��ˮƽ�ߺʹ�ֱ��
+	static		CGuiPic		_imgLevel,	_imgVertical;	// 
     static      CItemObj*   _pHintItem;
 
-	static		int			_nMouseX,	_nMouseY;		// Ŀǰ������ڵ�λ��
-	static		CCursor::eState		_eCursor;			// ��ʾ��gui�ϵĹ��
+	static		int			_nMouseX,	_nMouseY;		// 
+	static		CCursor::eState		_eCursor;			// gui
 };
 
 class CGuiTime;
@@ -382,7 +382,7 @@ class CGuiTime
 	friend class CFormMgr;
 public:
 	static  CGuiTime*	Create( DWORD dwInterval=0, GuiTimerEvent evt=NULL );
-	bool	Release();					// �ⲿɾ������
+	bool	Release();					// 
 
 	static void			FrameMove(DWORD dwTime);
 	static  CGuiTime*	Find( DWORD id ); 
@@ -398,7 +398,7 @@ public:
 	void	SetUserPoint( PVOID v )	{ _lpData = v;			}
 	PVOID	GetUserPoint()			{ return _lpData;		}
 	
-	bool	IsTime()				{	// �Ƿ񵽴�ʱ���,��������
+	bool	IsTime()				{	// ,
 		if( _IsTime ) {
 			_IsTime = false;
 			return true;
@@ -409,13 +409,13 @@ public: // event
 	GuiTimerEvent	evtTime;
 
 private:
-	DWORD	_dwIndex;			// ΨһID
-	DWORD 	_dwInterval;		// ������,������;
+	DWORD	_dwIndex;			// ID
+	DWORD 	_dwInterval;		// ,;
 
 	bool	_IsTime;
 	DWORD	_dwLastTime;
 
-	// �û�����
+	// 
 	DWORD	_nEventID;
 	PVOID	_lpData;
 
@@ -431,7 +431,7 @@ private:
 
 };
 
-// ��������
+// 
 inline bool	CGuiData::IsNoDrag(int x, int y, DWORD key)
 { 
 	InRect( x, y );

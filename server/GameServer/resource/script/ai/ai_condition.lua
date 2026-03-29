@@ -1,4 +1,4 @@
-print("-- [Loading] Ai_Condition.lua")
+﻿print("-- [Loading] Ai_Condition.lua")
 
 function aic_at_spawnpos(c)
     local x, y = GetChaSpawnPos(c)

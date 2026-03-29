@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 //#include "../../../proj/EffectEditer.h"
 //#include <mindpower.h>
 
@@ -175,21 +175,21 @@ CMPModelEff::~CMPModelEff(void)
 	ReleaseAll();
 }
 
-//!±£´æÐ§¹ûµ½ÎÄ¼þ
+//!
 bool	CMPModelEff::SaveToFile(char* pszFileName)	
 {
 	FILE* t_pFile;
 	t_pFile = fopen(pszFileName, "wb");
 	if(!t_pFile)
 	{
-		ToLogService("errors", LogLevel::Error, " {},Ö»¶ÁÎÄ¼þ£¬´ò¿ªÊ§°Ü",pszFileName);
+		ToLogService("errors", LogLevel::Error, " {},",pszFileName);
 		return false;
 	}
-	//!°æ±¾
+	//!
 	DWORD t_dwVersion = 7;
 	fwrite(&t_dwVersion,sizeof(t_dwVersion),1,t_pFile);
 
-	//!Ð§¹û×´Ì¬Ë÷Òý
+	//!
 	int t_temp;
 	t_temp = m_iIdxTech;
 	fwrite(&t_temp,sizeof(int),1,t_pFile);
@@ -208,7 +208,7 @@ bool	CMPModelEff::SaveToFile(char* pszFileName)
 	fwrite(&m_SVerRota, sizeof(D3DXVECTOR3),1,t_pFile);
 	fwrite(&m_fRotaVel, sizeof(float),1,t_pFile);
 
-	//!Ð§¹ûÊýÁ¿
+	//!
 	t_temp = m_iEffNum;
 	fwrite(&t_temp,sizeof(int),1,t_pFile);
 
@@ -222,14 +222,14 @@ bool	CMPModelEff::SaveToFile(char* pszFileName)
 	fclose(t_pFile);
 	return true;
 }
-//!×°ÈëÐ§¹û´ÓÎÄ¼þ
+//!
 bool	CMPModelEff::LoadFromFile(char* pszFileName)
 {
 	return true;
 }
 
 /************************************************************************/
-/*!	ÊÍ·ÅÈ«²¿×ÊÔ´*/
+/*!	*/
 /************************************************************************/
 void CMPModelEff::ReleaseAll()
 {
@@ -298,7 +298,7 @@ void	CMPModelEff::ClearEffect()
 }
 
 /************************************************************************/
-/*!ÖØÉè*/
+/*!*/
 /************************************************************************/
 void CMPModelEff::Reset()
 {
@@ -318,11 +318,11 @@ void CMPModelEff::Reset()
 	m_fCurRotat = 0;
 }
 ///************************************************************************/
-///*/£¡³õÊ¼»¯*/
+///*/*/
 ///************************************************************************/
 
 /************************************************************************/
-/*/£¡¸üÐÂèå*/
+/*/*/
 /************************************************************************/
 
 void CMPModelEff::FrameMoveAccel(float fDail)
@@ -512,24 +512,24 @@ void CMPModelEff::FrameMove(DWORD	dwDailTime)
 		int   t_iNextFrame;
 
 		m_pCurCortrol->m_fCurTime += *m_pfDailTime;
-		//!µÃ³öµ±Ç°²¥·ÅµÄÊÇÄÄÒ»Ö¡
+		//!
 		if(m_pCurCortrol->m_fCurTime >= m_pCEffect->getFrameTime(m_pCurCortrol->m_wCurFrame))
 		{
 			m_pCurCortrol->m_wCurFrame++;
 			if(m_pCurCortrol->m_wCurFrame >= m_pCEffect->getFrameCount())
 			{
-				m_pCurCortrol->Stop();//ÖØÉèµ½µÚÒ»Ö¡
-				if(m_bLoop)//£¡Ñ­»·²¥·Å
+				m_pCurCortrol->Stop();//
+				if(m_bLoop)//
 				{
-					if(!IsPlay())//!Èç¹ûËùÓÐµÄÐ§¹û¶¼Í£Ö¹£¬ÖØÐÂ²¥·ÅÈ«²¿Ð§¹û
+					if(!IsPlay())//!
 					{
 						Play2(0);
 					}
 					continue;
 				}
-				else//!°´´ÎÊý²¥·Å
+				else//!
 				{
-					if(!IsPlay())//!Èç¹ûËùÓÐµÄÐ§¹û¶¼Í£Ö¹£¬Í£Ö¹
+					if(!IsPlay())//!
 					{
 						Stop();
 						return;
@@ -539,20 +539,20 @@ void CMPModelEff::FrameMove(DWORD	dwDailTime)
 
 			m_pCurCortrol->m_fCurTime = 0.0f;
 		}
-		//!µÃµ½ÏÂÒ»Ö¡
+		//!
 		if( m_pCurCortrol->m_wCurFrame == (/*_wFrameCount*/m_pCEffect->getFrameCount() - 1) )
 			t_iNextFrame = 0;
 		else
 			t_iNextFrame = m_pCurCortrol->m_wCurFrame+1;
 
-		//!µÃµ½²åÖµÏµÊý
+		//!
 		m_fLerp = m_pCurCortrol->m_fCurTime / m_pCEffect->getFrameTime(m_pCurCortrol->m_wCurFrame);
 
 		m_pCEffect->m_ilast = m_pCurCortrol->m_wCurFrame;
 		m_pCEffect->m_inext = t_iNextFrame;
 		m_pCEffect->m_flerp = m_fLerp;
 
-		//!µÃµ½µ±Ç°´óÐ¡
+		//!
 		m_pCEffect->GetLerpSize(&m_pCurCortrol->m_SCurSize,m_pCurCortrol->m_wCurFrame,t_iNextFrame,m_fLerp);
 
 		if(!m_pCEffect->IsBillBoard())
@@ -560,32 +560,32 @@ void CMPModelEff::FrameMove(DWORD	dwDailTime)
 			//if(!m_pCEffect->IsRotaLoop())
 				m_pCEffect->GetLerpAngle(&m_pCurCortrol->m_SCurAngle,m_pCurCortrol->m_wCurFrame,t_iNextFrame, m_fLerp);
 		}
-		//!µÃµ½µ±Ç°Î»ÖÃ
+		//!
 		m_pCEffect->GetLerpPos(&m_pCurCortrol->m_SCurPos,m_pCurCortrol->m_wCurFrame, t_iNextFrame, m_fLerp);
-		//!µÃµ½µ±Ç°ÑÕÉ«
+		//!
 		m_pCEffect->GetLerpColor(&m_pCurCortrol->m_dwCurColor,m_pCurCortrol->m_wCurFrame,t_iNextFrame,m_fLerp);
 
 		if(!m_pCEffect->IsItem())
 		{
 			if(m_pCEffect->getType() == EFFECT_MODELUV)
 			{
-				//!µÃµ½µ±Ç°µÄÎÆÀí×ø±ê
+				//!
 				m_pCEffect->GetLerpCoord(m_pCurCortrol->m_vecCurCoord, m_pCurCortrol->m_wCurCoordIndex,m_pCurCortrol->m_fCurCoordTime,*m_pfDailTime);
 			}else
 			{
 				if(m_pCEffect->getType() == EFFECT_MODELTEXTURE)
 				{
-					//!µÃµ½µ±Ç°ÎÆÀí
+					//!
 					m_pCEffect->GetLerpTexture(m_pCurCortrol->m_lpCurTex, m_pCurCortrol->m_wCurTexIndex,m_pCurCortrol->m_fCurTexTime,*m_pfDailTime);
 				}else if(m_pCEffect->getType() == EFFECT_FRAMETEX)
 				{
-					//!µÃµ½µ±Ç°ÎÆÀí
+					//!
 					m_pCEffect->GetLerpFrame(m_pCurCortrol->m_wCurTexIndex,m_pCurCortrol->m_fCurTexTime,*m_pfDailTime);
 				}
 			}
 		}else if(m_pCEffect->getType() == EFFECT_FRAMETEX)
 		{
-			//!µÃµ½µ±Ç°ÎÆÀí
+			//!
 			m_pCEffect->GetLerpFrame(m_pCurCortrol->m_wCurTexIndex,m_pCurCortrol->m_fCurTexTime,*m_pfDailTime);
 		}
 	}
@@ -595,7 +595,7 @@ void CMPModelEff::FrameMove(DWORD	dwDailTime)
 	}*/
 }
 /************************************************************************/
-/*/£¡äÖÈ¾*/
+/*/*/
 /************************************************************************/
 void CMPModelEff::Render()
 {
@@ -1099,12 +1099,12 @@ void	CMPModelEff::ShowCurFrame(int iCurSubEff, int iCurFrame)
 		//m_pCurCortrol = &m_vecCortrol[iCurSubEff];
 		m_pCEffect  = m_vecEffect[iCurSubEff];
 
-	//!µÃµ½µ±Ç°´óÐ¡
+	//!
 	D3DXVECTOR3 t_sVerSize = m_pCEffect->getFrameSize(iCurFrame);
 
 	D3DXVECTOR3 t_sVerAngle = m_pCEffect->getFrameAngle(iCurFrame);
 
-	//!µÃµ½µ±Ç°Î»ÖÃ
+	//!
 	D3DXVECTOR3 t_sVerPos = m_pCEffect->getFramePos(iCurFrame);
 
 	D3DXMATRIX t_SMat, t_SMatRot;
@@ -1122,10 +1122,10 @@ void	CMPModelEff::ShowCurFrame(int iCurSubEff, int iCurFrame)
 	D3DXMatrixMultiply(&m_SMatResult, &m_SMatResult, &t_SMat);
 
 
-	//!µÃµ½µ±Ç°ÑÕÉ«
+	//!
 	D3DXCOLOR   t_sColor = m_pCEffect->getFrameColor(iCurFrame);
 
-	//!µÃµ½µ±Ç°µÄÎÆÀí×ø±ê
+	//!
 	//TEXCOORD	t_SCoord;
 	//m_pCEffect->getFrameCoord(t_SCoord,0);
 	//		
@@ -1138,7 +1138,7 @@ void	CMPModelEff::ShowCurFrame(int iCurSubEff, int iCurFrame)
 	//		pVertex[i].m_dwDiffuse = 0xffffffff;
 	//	}
 	//	m_pCEffect->m_pCModel->GetVertexBuffer()->Unlock();
-	//!µÃµ½µ±Ç°ÎÆÀí
+	//!
 		m_pCEffect->SetTexture();
 #ifdef USE_RENDER
 		m_pCEffect->m_pDev->SetTransformWorld(&m_SMatResult);
@@ -1191,7 +1191,7 @@ void	CMPModelEff::ShowTempFrame(int iCurSubEff,
 	//		pVertex[i].m_dwDiffuse = 0xffffffff;//(DWORD)pColor;
 	//	}
 	//	m_pCEffect->m_pCModel->GetVertexBuffer()->Unlock();
-	//!µÃµ½µ±Ç°ÎÆÀí
+	//!
 	m_pCEffect->SetTexture();
 #ifdef USE_RENDER
 	m_pCEffect->m_pDev->SetTransformWorld(&m_SMatResult);
@@ -1231,7 +1231,7 @@ CMPStrip::CMPStrip()
 	_vecCtrl.resize(m_iMaxLen/2);
 	_pTex = NULL;
 	_pCEffFile = NULL;
-	_strTexName = "ÎÞÃû";
+	_strTexName = "";
 	_pfDailTime=  NULL;
 	_fCurTime = 0;
 	_bPlay = false;

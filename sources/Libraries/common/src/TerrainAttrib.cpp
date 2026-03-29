@@ -1,4 +1,4 @@
-
+ï»¿
 #include "terrainattrib.h"
 #include "util.h"
 #include <iostream>
@@ -6,7 +6,7 @@
 
 using namespace std;
 
-// µØÍ¼ÎÄ¼şÎÄ¼şÍ·¶¨Òå
+// 
 struct MPMapFileHeader
 	{
 	int nMapFlag;
@@ -15,22 +15,22 @@ struct MPMapFileHeader
 	int nSectionWidth;
 	int nSectionHeight;};
 
-//// ÉèÖÃ¶ÔÆë·½Ê½Îª1×Ö½Ú£¬ÒòÎªÒªĞ´ÈëÎÄ¼şÖĞ
+//// 1
 //#pragma pack(push)
 //#pragma pack(1)
 //
-//// ÇøÓòÊôĞÔÎÄ¼şÎÄ¼şÍ·¶¨Òå
+//// 
 //struct SAttribFileHeader
 //	{
 //	unsigned int width;
 //	unsigned int height;
 //	};
 //
-//// ÇøÓòÊôĞÔÎÄ¼şµ¥Î»Êı¾İ¶¨Òå
+//// 
 //typedef struct _Tile_Attrib
 //	{
-//	unsigned short attrib; // tileÊôĞÔ
-//	unsigned char island; // º£µº±àºÅ
+//	unsigned short attrib; // tile
+//	unsigned char island; // 
 //
 //	} STILE_ATTRIB;
 //#pragma pack(pop)
@@ -59,7 +59,7 @@ public:
 	unsigned char getTileIsland(int nX, int nY);
 	void setTileIsland(int nX, int nY, unsigned char btIsland);
 
-	// ³õÊ¼»¯±êÖ¾
+	// 
 	bool m_bInitFlag;
 
 protected:
@@ -139,12 +139,12 @@ bool CTerrainAttrib::_getMapInfo(char const* filename, int& width, int& height)
 	char mapfilename[128];
 	MPMapFileHeader header;
 
-	// ´ò¿ªÍ¬ÃûµØÍ¼ÎÄ¼ş£¬È¡µÃ¿í¶ÈºÍ¸ß¶È
+	// 
 	sprintf(mapfilename, "map/%s.map", filename);
 	FILE* fp = fopen(mapfilename, "rb");
 	if (fp == NULL)
 		{
-		//LG("error", "msgµØÍ¼[%s]²»´æÔÚ, ²»ÄÜ±à¼­ÆäÇøÓòÊôĞÔ!", pszTerrainName);
+		//LG("error", "msg[%s], !", pszTerrainName);
 		return false;
 		}
 
@@ -157,10 +157,10 @@ bool CTerrainAttrib::_getMapInfo(char const* filename, int& width, int& height)
 	}
 
 //
-// Íâ²¿½Ó¿Ú
+// 
 //
 
-// ´´½¨Ò»¸öĞÂµÄÇøÓòÊôĞÔÎÄ¼ş»ò¸²¸ÇÔ­ÓĞÎÄ¼ş (*.atr)
+//  (*.atr)
 bool CTerrainAttrib::createFile(char const* filename, int width, int height,
 								int option)
 	{
@@ -170,7 +170,7 @@ bool CTerrainAttrib::createFile(char const* filename, int width, int height,
 		_fp = NULL;
 		}
 
-	// µÃµ½¿í¶È_widthºÍ¸ß¶È_height
+	// _width_height
 	if (width <= 0 && height <= 0)
 		{
 		if (!_getMapInfo(filename, _width, _height))
@@ -182,21 +182,21 @@ bool CTerrainAttrib::createFile(char const* filename, int width, int height,
 		_height = height;
 		}
 
-	// ¼ì²é²ÎÊı±êÖ¾¼°ÎÄ¼şÊÇ·ñ´æÔÚ!
+	// !
 	char attribfilename[128];
 	sprintf(attribfilename, "map/%s.atr", filename);
 
 	if ((option == 0) && (_access(attribfilename, 0) == 0))
 		{
-		// ÎÄ¼şÒÑ´æÔÚ£¬²¢ÇÒµ÷ÓÃÕß²¢²»Ç¿ÖÆ´´½¨
+		// 
 		return true;
 		}
 
-	// ´´½¨
+	// 
 	_fp = fopen(attribfilename, "wb");
 	if (_fp == NULL) return false;
 
-	// ×éÖ¯Êı¾İ
+	// 
 	_header.width = _width;
 	_header.height = _height;
 
@@ -204,12 +204,12 @@ bool CTerrainAttrib::createFile(char const* filename, int width, int height,
 	_tile_attrib.attrib = TILE_ATTRIB_DEFAULT_VALUE;
 	_tile_attrib.island = TILE_ISLAND_DEFAULT_VALUE;
 
-	// Ğ´ÈëÎÄ¼şÍ·ºÍtileÊôĞÔÊı¾İ
+	// tile
 	fwrite(&_header, sizeof _header, 1, _fp);
 	for (int i = 0; i < cnt; ++ i)
 		fwrite(&_tile_attrib, sizeof _tile_attrib, 1, _fp);
 
-	// fwrite²»ÄÜÒ»´ÎĞ´³¬¹ı4KµÄ×Ö½Ú
+	// fwrite4K
 	//fwrite(&_tile_attrib, sizeof _tile_attrib, cnt, _fp);
 
 	fclose(_fp);
@@ -224,7 +224,7 @@ bool CTerrainAttrib::openFile(char const* fname)
 
 	if (_fp != NULL) {fclose(_fp); _fp = NULL;}
 
-    // È¥µôÖ»¶ÁÊôĞÔ
+    // 
     DWORD file_atr = ::GetFileAttributes(atr_fname);
     if (file_atr & FILE_ATTRIBUTE_READONLY)
         SetFileAttributes(atr_fname,
@@ -237,7 +237,7 @@ bool CTerrainAttrib::openFile(char const* fname)
 		return false;
 		}
 
-	// ¶ÁÈ¡ÎÄ¼şÍ·
+	// 
 	fread(&_header, sizeof _header, 1, _fp);
 	_width = _header.width;
 	_height = _header.height;
@@ -252,14 +252,14 @@ void CTerrainAttrib::Init(char const* pszTerrainName)
 		_fp = NULL;
 		}
 
-	// ´ò¿ªÍ¬ÃûµØÍ¼ÎÄ¼ş£¬È¡µÃ¿í¶ÈºÍ¸ß¶È
+	// 
 	char szMapFileName[128];
 	sprintf(szMapFileName, "map/%s.map", pszTerrainName);
 
 	FILE* fp = fopen(szMapFileName, "rb");
 	if (fp == NULL)
 		{
-		//LG("error", "msgµØÍ¼[%s]²»´æÔÚ, ²»ÄÜ±à¼­ÆäÇøÓòÊôĞÔ!", pszTerrainName);
+		//LG("error", "msg[%s], !", pszTerrainName);
 		return;
 		}
 
@@ -270,10 +270,10 @@ void CTerrainAttrib::Init(char const* pszTerrainName)
 	_height = header.nWidth;
 	_width  = header.nHeight;
 
-	// ¼ì²éÇøÓòÊôĞÔÎÄ¼şÊÇ·ñ´æÔÚ£¬²»´æÔÚÔò´´½¨
+	// 
 	char szAttrFileName[128];
 	sprintf(szAttrFileName, "map/%s.atr", pszTerrainName);
-	if (_access(szAttrFileName, 0) == -1) // ÎÄ¼ş²»´æÔÚ, ´´½¨ĞÂÎÄ¼ş
+	if (_access(szAttrFileName, 0) == -1) // , 
 		{
 		_header.width = _width;
 		_header.height = _height;
@@ -289,16 +289,16 @@ void CTerrainAttrib::Init(char const* pszTerrainName)
 			fwrite(&_tile_attrib, sizeof _tile_attrib, 1, _fp);
 			}
 #endif
-		// Ğ´ÈëÎÄ¼şÍ·
+		// 
 		fwrite(&_header, sizeof _header, 1, _fp);
 
-		// Ğ´ÈëÊı¾İ
+		// 
 		fwrite(&_tile_attrib, sizeof _tile_attrib, nTileCnt, _fp);
 
 		fclose(_fp);
 		}
 
-	// ´ò¿ªÇøÓòÊôĞÔÎÄ¼ş
+	// 
 	_fp = fopen(szAttrFileName, "r+b");
 	m_bInitFlag = true;
 	}
@@ -335,12 +335,12 @@ void CTerrainAttrib::setTileAttrib(int nX, int nY, unsigned char btAttrib, bool 
 
 		if (bAdd)
 			{
-			// Ôö¼ÓtileÊôĞÔ
+			// tile
 			sAttrib |= i << (btAttrib - 1);
 			}
 		else
 			{
-			// ¸³ÓètileÊôĞÔ
+			// tile
 			sAttrib = i << (btAttrib - 1);
 			}
 
@@ -401,10 +401,10 @@ void CTerrainAttrib::setTileIsland(int nX, int nY, unsigned char btIsland)
 
 	if (_validateFilePointer() && _validateTile(nX, nY))
 		{
-		// ¶¨Î»µ½attrib
+		// attrib
 		_seekTile(nX, nY);
 
-		// ¶¨Î»µ½island
+		// island
 		_tile_attrib.island = btIsland;
 		fseek(_fp, sizeof _tile_attrib.attrib, SEEK_CUR);
 		fwrite(&_tile_attrib.island, sizeof _tile_attrib.island, 1, _fp);
@@ -417,10 +417,10 @@ unsigned char CTerrainAttrib::getTileIsland(int nX, int nY)
 
 	if (_validateFilePointer() && _validateTile(nX, nY))
 		{
-		// ¶¨Î»µ½attrib
+		// attrib
 		_seekTile(nX, nY);
 
-		// ¶¨Î»µ½island
+		// island
 		fseek(_fp, sizeof _tile_attrib.attrib, SEEK_CUR);
 		fread(&_tile_attrib.island, sizeof _tile_attrib.island, 1, _fp);
 		btIsland = _tile_attrib.island;
@@ -429,7 +429,7 @@ unsigned char CTerrainAttrib::getTileIsland(int nX, int nY)
 	return btIsland;
 	}
 
-// µ¥¼şCTAMgr
+// CTAMgr
 #include <iostream>
 #include <memory>
 class CTAMgr
@@ -444,7 +444,7 @@ public:
 	static CTAMgr* Instance();
 
 public:
-	// ºËĞÄ¶ÔÏó
+	// 
 	std::unique_ptr<CTerrainAttrib> ta = std::make_unique <CTerrainAttrib>();
 
 protected:
@@ -463,7 +463,7 @@ CTAMgr* CTAMgr::Instance()
 	}
 
 //
-// ¼òµ¥½Ó¿Ú
+// 
 //
 bool createAttribFile(char const* filename, int width, int height, int option)
 	{
@@ -642,7 +642,7 @@ inline bool mem_stuff::chfile(char const* fname, char const* mode /* = "rb" */)
 
     return true;}
 
-// ÇøÓòÊôĞÔ»ù±¾½Ó¿Ú¶¨Òå
+// 
 class terrain_attr
     {
 protected:
@@ -659,7 +659,7 @@ protected:
     terrain_attr_hdr* _hdr;
     };
 
-// ÇøÓòÊôĞÔÈ«²¿×°ÈëÄÚ´æ£¬Ö±½Ó´ÓÄÚ´æÖĞ¶ÁÈ¡
+// 
 class terrain_attr_mem : public terrain_attr, public mem_stuff
     {
 public:
@@ -715,7 +715,7 @@ inline bool terrain_attr_mem::get_info(unsigned int& width, unsigned int& height
     height = _hdr->height;
     return true;}
 
-// ´¦Àíterrain_attr_memµÄµ¥¼ş
+// terrain_attr_mem
 class tamem_mgr
     {
     friend class cfl_singleton_ap<tamem_mgr>;
@@ -741,15 +741,15 @@ public:
             return false;}
         }
 
-    // ×°ÔØÇøÓòÊôĞÔÎÄ¼ş½øÄÚ´æ
+    // 
     int load_map(char const* fname);
 
-    // µÃµ½ÇøÓòÊôĞÔÎÄ¼şĞÅÏ¢
+    // 
     bool get_info(int id, unsigned int& width, unsigned int& height)
         {
         return (validate(id)) ? _ta[id]->get_info(width, height) : false;}
 
-    // ÇøÓòÊôĞÔ
+    // 
     bool get_trrnattr(int id, unsigned int x, unsigned int y, unsigned short& attr)
         {
         return (validate(id)) ? _ta[id]->get_attr(x, y, attr) : false;}
@@ -761,7 +761,7 @@ public:
         {
         return (validate(id)) ? _ta[id]->has_attr(x, y, mask) : false;}
 
-    // º£µº±àºÅ
+    // 
     bool get_isldidx(int id, unsigned int x, unsigned int y, unsigned char& isldidx)
         {
         return (validate(id)) ? _ta[id]->get_island(x, y, isldidx) : false;}
@@ -787,7 +787,7 @@ int tamem_mgr::load_map(char const* fname)
 
     int id = _find(fname);
     if (id != INVALID_INDEX) return id;
-    else { // ĞÂ×°ÈëÄÚ´æ
+    else { // 
         terrain_attr_mem* tmp;
         try {tmp = new terrain_attr_mem(fname);}
         catch (...)

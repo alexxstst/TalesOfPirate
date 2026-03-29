@@ -1,4 +1,4 @@
-
+ï»¿
 // pch.h
 //  created by claude fan at 2004-8-31
 //  for precompiled-header
@@ -6,24 +6,24 @@
 #if !defined(LOGUTIL_PRECOMPILED_HEADER_FILE)
 #define LOGUTIL_PRECOMPILED_HEADER_FILE
 
-// Æ½Ì¨ÎÞ¹Øºê¶¨Òå
+// 
 #define LINE_COMMENT /##/
 #define LC LINE_COMMENT
 #define $ LINE_COMMENT
 
-// C±ê×¼¿â
+// C
 #include <stdio.h>
 #include <time.h>
 
-// C++±ê×¼¿â
+// C++
 #include <list>
 #include <map>
 #include <list>
 #include <string>
 
-// Æ½Ì¨Ïà¹Ø¶¨Òå
+// 
 #if defined(WIN32)
-	// Win32Æ½Ì¨ËùÐè¶¨ÒåºÍ°üº¬
+	// Win32
     #pragma warning(disable : 4251)
     #pragma warning(disable : 4786)
 
@@ -32,7 +32,7 @@
 	#include <direct.h>
 
 #elif defined(LINUX)
-	// LinuxÆ½Ì¨ËùÐè¶¨ÒåºÍ°üº¬
+	// Linux
     #include <unistd.h>
     #include <string.h>
     
@@ -56,7 +56,7 @@
 	#define _LOG
 	#define _LOG_CONSOLE
 #elif defined(FREEBSD)
-	// FreeBSDÆ½Ì¨ËùÐè¶¨ÒåºÍ°üº¬
+	// FreeBSD
 
 #endif
 

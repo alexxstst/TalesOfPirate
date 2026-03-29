@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "NetProtocol.h"
 #include "gameapp.h"
 #include "Actor.h"
@@ -14,7 +14,6 @@
 #include "actor.h"
 #include "WorldScene.h"
 #include "LoginScene.h"
-#include "caLua.h"
 
 #include "PacketCmd.h"
 #include "EffectObj.h"
@@ -103,7 +102,7 @@ inline static CCharacter* GetCharacter(unsigned int nID, const char* error = NUL
 }
 
 //----------------------------------------------------------------------------
-// ���纯��
+// Network functions
 //----------------------------------------------------------------------------
 
 
@@ -111,11 +110,11 @@ void NetLoginSuccess(char byPassword, uint8_t maxCharacters, std::span<const Net
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
-	// ��¼�Ƿ��ж�������
+	// Record whether secondary password exists
 	g_Config.m_IsDoublePwd = byPassword ? true : false;
 
 	ToLogService("ui", "NetLoginSuccess - CharNum:{}", characters.size());
@@ -144,7 +143,7 @@ void NetLoginFailure(unsigned short Errno) {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
@@ -156,13 +155,13 @@ void NetLoginFailure(unsigned short Errno) {
 		return;
 	}
 
-	//�ж������Ƿ����
+	// Check if password is wrong
 	switch (Errno) {
 	case ERR_AP_INVALIDPWD: {
 		pScene->SetPasswordError(true);
 		pScene->Error(Errno, "NetLoginFailure");
 
-		// ���´��������ж��������������
+		// Track consecutive wrong password attempts
 		typedef vector<DWORD> times;
 		static times error_time;
 		error_time.push_back(CGameApp::GetCurTick());
@@ -194,12 +193,12 @@ void NetLoginFailure(unsigned short Errno) {
 	pScene->Error(Errno, "NetLoginFailure");
 }
 
-void NetBeginPlay(unsigned short Errno) // ��NetRetCode.h�ļ��в�ѯerrno����
+void NetBeginPlay(unsigned short Errno) // Look up errno in NetRetCode.h
 {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
@@ -213,7 +212,7 @@ void NetEndPlay(uint8_t maxCharacters, std::span<const NetChaBehave> characters)
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
@@ -229,7 +228,7 @@ void NetEndPlay(uint8_t maxCharacters, std::span<const NetChaBehave> characters)
 	//}
 
 
-	// ���»ص�ѡ��ɫ�б�
+	// Return to character selection list
 	g_pGameApp->LoadScriptScene(enumLoginScene);
 	g_pGameApp->SetLoginTime(0);
 
@@ -242,7 +241,7 @@ void NetEndPlay(uint8_t maxCharacters, std::span<const NetChaBehave> characters)
 		//pScene->ShowLoginForm();
 	}
 
-	// ��ɫ�˳�����״̬��ΪĬ�ϲ�����״̬
+	// Reset equipment lock state to default (unlocked)
 	g_stUIEquip.SetIsLock(false);
 
 	g_pGameApp->LoadScriptScene(enumSelectChaScene);
@@ -250,12 +249,12 @@ void NetEndPlay(uint8_t maxCharacters, std::span<const NetChaBehave> characters)
 	CSelectChaScene::GetCurrScene().SelectCharacters(characters);
 }
 
-void NetNewCha(unsigned short Errno) // ��NetRetCode.h�ļ��в�ѯerrno����
+void NetNewCha(unsigned short Errno) // Look up errno in NetRetCode.h
 {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
@@ -272,12 +271,12 @@ void NetNewCha(unsigned short Errno) // ��NetRetCode.h�ļ��в�ѯerrn
 	}
 }
 
-void NetDelCha(unsigned short Errno) //��NetRetCode.h�ļ��в�ѯerrno����
+void NetDelCha(unsigned short Errno) // Look up errno in NetRetCode.h
 {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
@@ -311,11 +310,11 @@ void NetDelCha(unsigned short Errno) //��NetRetCode.h�ļ��в�ѯerrno
 }
 
 void NetCreatePassword2(unsigned short Errno) {
-	// �����ָ�����
+	// Restore cursor
 	CCursor::I()->SetCursor(CCursor::stNormal);
 
 	if (Errno == ERR_SUCCESS) {
-		// ������������ɹ�
+		// Secondary password created successfully
 		g_Config.m_IsDoublePwd = true;
 
 		CSelectChaScene* pSelChaScene = dynamic_cast<CSelectChaScene*>(g_pGameApp->GetCurScene());
@@ -323,7 +322,7 @@ void NetCreatePassword2(unsigned short Errno) {
 			pSelChaScene->UpdateButton();
 
 			if (0 == pSelChaScene->GetChaCount()) {
-				// ��ʾ���ֽ���
+				// Show welcome notice
 				pSelChaScene->ShowWelcomeNotice();
 			}
 		}
@@ -331,38 +330,38 @@ void NetCreatePassword2(unsigned short Errno) {
 		g_stUIDoublePwd.CloseAllForm();
 	}
 	else if (Errno == ERR_PT_SERVERBUSY) {
-		// ϵͳæ
+		// System busy
 		g_pGameApp->MsgBox(g_oLangRec.GetString(172), "");
 	}
 	else if (Errno == ERR_PT_INVALID_PW2) {
-		// �����������������һ�����Ѵ���
+		// Secondary password already exists
 		g_pGameApp->MsgBox(g_oLangRec.GetString(801));
 	}
 	else {
-		// δ֪����
+		// Unknown error
 		g_pGameApp->MsgBox(g_oLangRec.GetString(375));
 	}
 }
 
 void NetUpdatePassword2(unsigned short Errno) {
-	// �����ָ�����
+	// Restore cursor
 	CCursor::I()->SetCursor(CCursor::stNormal);
 
 	if (Errno == ERR_SUCCESS) {
-		// ������������ɹ�
+		// Secondary password updated successfully
 		g_Config.m_IsDoublePwd = true;
 		g_stUIDoublePwd.CloseAllForm();
 	}
 	else if (Errno == ERR_PT_SERVERBUSY) {
-		// ϵͳæ
+		// System busy
 		g_pGameApp->MsgBox(g_oLangRec.GetString(172), "");
 	}
 	else if (Errno == ERR_PT_INVALID_PW2) {
-		// �����������������һ�����Ѵ���
+		// Secondary password already exists
 		g_pGameApp->MsgBox(g_oLangRec.GetString(801));
 	}
 	else {
-		// δ֪����
+		// Unknown error
 		g_pGameApp->MsgBox(g_oLangRec.GetString(375));
 	}
 }
@@ -414,7 +413,7 @@ void NetActorMove(unsigned int id, stNetNotiMove& list) {
 		g_state->PushPoint(list.SPos[i].x, list.SPos[i].y);
 	}
 
-	// �����״̬��ֹͣ
+	// If movement state is "stop"
 	if (list.sState) {
 		if (list.nPointNum > 1) {
 			g_state->MoveEnd(list.SPos[list.nPointNum - 1].x, list.SPos[list.nPointNum - 1].y, list.sState);
@@ -487,7 +486,7 @@ CCharacter* stNetActorCreate::CreateCha() {
 		p->SetValid(FALSE);
 	}
 
-	// ������ɫ,��������
+	// Create character and apply look
 	CChaRecord* pChaRec = GetChaRecordInfo(ulChaID);
 	if (!pChaRec) return NULL;
 
@@ -506,7 +505,7 @@ CCharacter* stNetActorCreate::CreateCha() {
 	}
 
 	SPKCtrl.Exec(p);
-	p->SetMainType((eMainChaType)chMainCha); // ���ֵ��enumENTITY_SEEN_SWITCHʱΪ�㣬ֻ���ڳ�ʼ����ʱ����
+	p->SetMainType((eMainChaType)chMainCha); // This value is zero for enumENTITY_SEEN_SWITCH, only set on initial creation
 	SetValue(p);
 
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("MainChaType:{}", static_cast<int>(chMainCha)));
@@ -517,11 +516,11 @@ CCharacter* stNetActorCreate::CreateCha() {
 	}
 
 	if (pChaRec->chModalType != enumMODAL_BOAT) {
-		// ��������
+		// Apply look
 		if (p->GetMainType() != enumMainPlayer && pChaRec->chCtrlType == 5) {
 			p->setTypeID(pChaRec->lScript);
 
-			// ���� Avata ���
+			// Apply Avatar parts
 			if (pChaRec->sSkinInfo[5]) {
 				SLookInfo.SLook.SLink[enumEQUIP_LHAND].sID = (short)pChaRec->sSkinInfo[5];
 				SLookInfo.SLook.SLink[enumEQUIP_LHAND].sNum = 1;
@@ -537,7 +536,7 @@ CCharacter* stNetActorCreate::CreateCha() {
 
 	if (chMainCha) {
 		if (chMainCha == enumMainPlayer) {
-			// �������,�����
+			// Main character, set up boat
 			g_stUIBoat.Clear();
 			g_stUIBoat.SetHuman(p);
 
@@ -562,7 +561,7 @@ CCharacter* stNetActorCreate::CreateCha() {
 			}
 			break;
 		case enumEXISTS_DIE:
-		case enumEXISTS_WITHERING: // �Ѿ�����
+		case enumEXISTS_WITHERING: // Already dead
 		case enumEXISTS_RESUMEING:
 			p->GetActor()->SetState(enumDied);
 			p->PlayPose(POSE_FALLDOWN);
@@ -623,7 +622,7 @@ void NetActorDestroy(unsigned int nID, char chSeeType) {
 		return;
 	}
 
-	// ��ʧ
+	// Disappear
 	CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(nID);
 	if (pCha) {
 		if (pCha->getChaCtrlType() == enumCHACTRL_PLAYER) {
@@ -670,7 +669,7 @@ void NetSynSkillState(DWORD dwCharID, stNetSkillState* pSSkillState) {
 void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 	bool isRep = g_IsValidFightState(SSkillRep.sState);
 
-	// ��������
+	// Find attacker
 	CCharacter* pCha = CGameApp::GetCurScene()->SearchByID(nID);
 	if (!pCha) {
 		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(267), SSkillRep.lSkillID, nID);
@@ -761,7 +760,7 @@ void NetActorSkillRep(unsigned int nID, stNetNotiSkillRepresent& SSkillRep) {
 	}
 }
 
-// Ч������
+// Effect chain
 /*
 void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 {
@@ -775,7 +774,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 		return;
 	}
 
-	// ��������
+	// Find target
 	CCharacter* pTarget = pScene->SearchByID( nID );
 	if( !pTarget )
 	{
@@ -783,11 +782,11 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 		return;
 	}
 
-	// ������
+	// Find attacker
 	CCharacter* pAttack = pScene->SearchByID( SkillEff.lSrcID );
 	if( !pAttack )
 	{
-		// �������Ұ��,���п���Ϊ��
+		// Attacker not in view, may be null
 	}
 
     CServerHarm* pHarm = NULL;
@@ -797,7 +796,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
     }
     else
     {
-        // û���ҵ���������ʱ,Ϊ��Ч����ʱ,��ʱ����һ����ͬ�Ĺ�����Ч
+        // When attacker not found and skill has projectile effect, create matching attack effect
         if( pSkill->IsEffectHarm() )
         {
             CEffectObj	*pEffect = CGameApp::GetCurScene()->GetFirstInvalidEffObj();
@@ -853,7 +852,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 	eff->SetTargetCha( pTarget );
     eff->SetAttackCha( pAttack );
 
-    // �˺���
+    // Damage values
     eff->SetIsDoubleAttack( SkillEff.bDoubleAttack );
     eff->SetIsMiss( SkillEff.bMiss );
     eff->SetBeatPos( SkillEff.bBeatBack, SkillEff.SPos.x, SkillEff.SPos.y );
@@ -869,7 +868,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 		}
 	}
 
-    // ���ְ�
+    // Attacker feedback
 
 	if( SkillEff.SSrcEffect.GetCount()>0 || SkillEff.SSrcState.GetCount()>0 || (SkillEff.sSrcState & enumFSTATE_DIE) )
 	{
@@ -891,7 +890,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect &SkillEff)
 		}
 		eff->SetAttackRep( rep );
 
-		// ��ִ�У��ȴ�eff����ִ��
+		// Defer execution, wait for eff to execute first
 		rep->Reset();
 	}
 
@@ -923,17 +922,17 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect& SkillEff) {
 		return;
 	}
 
-	// ��������
+	// Find target
 	CCharacter* pTarget = pScene->SearchByID(nID);
 	if (!pTarget) {
 		//LG( "protocol", "msgNetActorSkillEff Error, Target[%u] is Null, SkillID[%u]\n", nID, SkillEff.lSkillID );
 		return;
 	}
 
-	// ������
+	// Find attacker
 	CCharacter* pAttack = pScene->SearchByID(SkillEff.lSrcID);
 	if (!pAttack) {
-		// �������Ұ��,���п���Ϊ��
+		// Attacker not in view, may be null
 	}
 
 	CServerHarm* pHarm = NULL;
@@ -941,7 +940,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect& SkillEff) {
 		pHarm = pAttack->GetActor()->FindHarm(SkillEff.byFightID);
 	}
 	else {
-		// û���ҵ���������ʱ,Ϊ��Ч����ʱ,��ʱ����һ����ͬ�Ĺ�����Ч
+		// When attacker not found and skill has projectile effect, create matching attack effect
 		if (pSkill->IsEffectHarm()) {
 			CEffectObj* pEffect = CGameApp::GetCurScene()->GetFirstInvalidEffObj();
 			if (pEffect && pEffect->Create(pSkill->sSkyEffect)) {
@@ -990,7 +989,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect& SkillEff) {
 	eff->SetTargetCha(pTarget);
 	eff->SetAttackCha(pAttack);
 
-	// �˺���
+	// Damage values
 	eff->SetIsDoubleAttack(SkillEff.bDoubleAttack);
 	eff->SetIsMiss(SkillEff.bMiss);
 	eff->SetBeatPos(SkillEff.bBeatBack, SkillEff.SPos.x, SkillEff.SPos.y);
@@ -1004,7 +1003,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect& SkillEff) {
 		}
 	}
 
-	// ���ְ�
+	// Attacker feedback
 	if (SkillEff.SSrcEffect.GetCount() > 0 || SkillEff.SSrcState.GetCount() > 0 || (SkillEff.sSrcState &
 		enumFSTATE_DIE)) {
 		CAttackRepSynchro* rep = new CAttackRepSynchro;
@@ -1023,7 +1022,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect& SkillEff) {
 		}
 		eff->SetAttackRep(rep);
 
-		// ��ִ�У��ȴ�eff����ִ��
+		// Defer execution, wait for eff to execute first
 		rep->Reset();
 	}
 
@@ -1034,7 +1033,7 @@ void NetActorSkillEff(unsigned int nID, stNetNotiSkillEffect& SkillEff) {
 }
 
 void NetActorLean(unsigned int nID, stNetLeanInfo& lean) {
-	// ��,��
+	// Sit, stand
 	if (lean.chState == 0) {
 		CCharacter* cha = CGameApp::GetCurScene()->GetMainCha();
 		if (cha && cha->getAttachID() == nID) {
@@ -1079,11 +1078,11 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 #ifdef _TEST_CLIENT
 	static int i = 0;
 	i++;
-	// Удалён dev-only лог test_client
+	//  dev-only  test_client
 	return;
 #endif
 
-	// �˶δ���ʹ��������ɫ���ڴ沼��Ϊ��������ڷ�ֹһЩ�򵥵Ļ�ȡ�ڴ�ֵ�����
+	// Anti-cheat: randomize character memory layout to prevent simple memory value reading
 	static char* pMemory = new char[1];
 	delete [] pMemory;
 	pMemory = new char[rand() % 777 + 1];
@@ -1091,7 +1090,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 	g_ChaExitOnTime.Reset();
 
 	if (switchmap.sEnterRet != ERR_SUCCESS) {
-		if (switchmap.sEnterRet == ERR_MC_ENTER_ERROR) // ��������ɫ���ڣ���15�����ܽ���
+		if (switchmap.sEnterRet == ERR_MC_ENTER_ERROR) // Character still online, cannot enter for 15 minutes
 		{
 			g_pGameApp->MsgBox(g_oLangRec.GetString(271));
 			CGameApp::Waiting(false);
@@ -1103,7 +1102,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 	}
 
 	// comment by Philip.Wu  2006-07-06
-	// BUG��ܣ�TEST-46  �ӳ��Ͷ�Ա���ڲ�ͬ��ͼʱ���ӳ������ʧ
+	// BUG report: TEST-46  Team leader lost when members on different maps
 	//g_stUIStart.SetIsLeader( false );
 
 	g_stUIStart.SetIsNewer(switchmap.bIsNewCha);
@@ -1120,7 +1119,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 
 	CGameApp::Waiting(false);
 	CWorldScene* s = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
-	if (!s) //����Ϸ����
+	if (!s) // Enter game scene
 	{
 		stSceneInitParam init;
 		init.strMapFile = pInfo->szDataName;
@@ -1153,7 +1152,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 			}
 		}
 
-		//--��¼��½��Ϸʱ��
+		// Record game login time
 		CGameApp::SetLoginTime(GetTickCount());
 	}
 	else {
@@ -1190,7 +1189,7 @@ void NetSideInfo(const char szName[], const char szInfo[]) {
 	CCozeForm::GetInstance()->OnSideMsg(szName, szInfo);
 }
 
-void NetSay(stNetSay& netsay, DWORD dwColour) //·��
+void NetSay(stNetSay& netsay, DWORD dwColour) // Nearby chat
 {
 	CCharacter* cha = GetCharacter(netsay.m_srcid, "NetSay");
 	if (!cha) {
@@ -1248,8 +1247,8 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 	pThrowItem->SetItem(pItem);
 
 	switch (info.chAppeType) {
-	case enumITEM_APPE_THROW: // ����ɫ�ӳ�
-	case enumITEM_APPE_MONS: // �������
+	case enumITEM_APPE_THROW: // Thrown by character
+	case enumITEM_APPE_MONS: // Dropped by monster
 	{
 		if (info.lFromID) {
 			CCharacter* pFromCha = CGameApp::GetCurScene()->SearchByID(info.lFromID);
@@ -1272,7 +1271,7 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 		}
 	}
 	break;
-	case enumITEM_APPE_NATURAL: // ��Ȼ����
+	case enumITEM_APPE_NATURAL: // Natural spawn
 		break;
 	}
 
@@ -1284,7 +1283,7 @@ CSceneItem* NetCreateItem(stNetItemCreate& info) {
 void NetItemDisappear(unsigned int nID) {
 	ToLogService("common", "Disappear - WorldID:{}", nID);
 
-	// ������ʧ
+	// Item disappear
 	if (!CGameApp::GetCurScene()) return;
 
 	CSceneItem* pItem = CGameApp::GetCurScene()->SearchItemByID(nID);
@@ -1364,7 +1363,7 @@ void NetPreMoveTime(unsigned long ulTime) {
 }
 
 void NetMapMask(unsigned int nID, BYTE* pMask, long lLen) {
-	// ���pMaskΪ�գ���û�д��ͼ
+	// If pMask is empty, there is no large map
 	if (pMask) {
 		if (CMaskData::g_MaskData) {
 			CMaskData::g_MaskData->InitMaskData(pMask, lLen);
@@ -1383,7 +1382,7 @@ void NetMapMask(unsigned int nID, BYTE* pMask, long lLen) {
 }
 
 void NetTempChangeChaPart(unsigned int nID, stTempChangeChaPart& SPart) {
-	// ��ʱЭ�飬��װ��
+	// Temporary protocol, equip part
 	CCharacter* cha = GetCharacter(nID, "NetTempChangeChaPart");
 	if (!cha) return;
 
@@ -1454,7 +1453,7 @@ void NetCreateBoat(const xShipBuildInfo& Info) {
 	if (!pShip)
 		return;
 
-	//����Ѿ��д򿪴����Դ���,�����ر�
+	// If shipyard window is already open, close it first
 	if (pShip->sbf.wnd->GetIsShow())
 		pShip->sbf.wnd->SetIsShow(false);
 
@@ -1474,7 +1473,7 @@ void NetBoatInfo(DWORD dwBoatID, const char szName[], const xShipBuildInfo& Info
 	if (!pShip)
 		return;
 
-	//����Ѿ��д򿪴����Դ���,�����ر�
+	// If shipyard window is already open, close it first
 	if (pShip->sbf.wnd->GetIsShow())
 		pShip->sbf.wnd->SetIsShow(false);
 
@@ -1528,11 +1527,11 @@ void NetShowBoatList(DWORD dwNpcID, BYTE byNumBoat, const BOAT_BERTH_DATA& Data,
 
 void NetShowTrade(const NET_TRADEINFO& TradeInfo, BYTE byCmd, DWORD dwNpcID, DWORD dwParam) {
 	if (byCmd == mission::TRADE_GOODS) {
-		// ���ջ��ｻ��(dwParam��ʾ���״�ֻID)
+		// Goods exchange trading (dwParam is first boat ID)
 		g_stUIBourse.ShowBourse(TradeInfo, byCmd, dwNpcID, dwParam);
 	}
 	else if (byCmd == mission::TRADE_SALE || byCmd == mission::TRADE_BUY) {
-		// ��ͨ����
+		// Normal trading
 		g_stUINpcTrade.ShowTradePage(TradeInfo, byCmd, dwNpcID);
 	}
 }
@@ -1541,14 +1540,14 @@ void NetUpdateTradeAllData(const NET_TRADEINFO& TradeInfo, BYTE byCmd, DWORD dwN
 	if (byCmd == mission::TRADE_GOODS && dwNpcID == g_stUIBourse.GetNpcId() && g_stUIBourse.IsShow()) {
 		if (0 == dwParam)
 			dwParam = g_stUIBourse.GetBoatId();
-		// ����ȫ������
+		// Refresh all data
 		g_stUIBourse.ShowBourse(TradeInfo, byCmd, dwNpcID, dwParam);
 	}
 }
 
 void NetUpdateTradeData(DWORD dwNpcID, BYTE byPage, BYTE byIndex, USHORT sItemID, USHORT sCount, DWORD dwPrice) {
 	if (dwNpcID == g_stUIBourse.GetNpcId() && g_stUIBourse.IsShow()) {
-		// ���µ�������
+		// Update single item
 		g_stUIBourse.UpdateOneGood(byPage, byIndex, sItemID, sCount, dwPrice);
 	}
 }
@@ -1582,7 +1581,7 @@ void NetTradeAddBoat(DWORD dwCharID, BYTE byOpType, USHORT sItemID, BYTE byIndex
 		g_stUITrade.DragTradeToItem(dwCharID, byIndex, byItemIndex);
 	}
 	else {
-		// ������ֻ��Ϣ
+		// Update boat info
 		g_stUITrade.DragItemToTrade(dwCharID, sItemID, byIndex, byCount, byItemIndex, NULL, &Data);
 	}
 }
@@ -1728,7 +1727,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 
 	g_stUIState.RefreshStateFrm();
 
-	// �Ҷ����������⴦��
+	// Silver coin zone special handling
 	if (g_stUIMap.IsPKSilver() && pCha->IsPlayer() && pCha->GetMainType() != enumMainPlayer && pCha->getGameAttr()) {
 		SGameAttr* pAttr = pCha->getGameAttr();
 		long nJob = pAttr->get(ATTR_JOB);
@@ -1739,10 +1738,10 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 		SLook.SLink[enumEQUIP_BODY] = 289;
 		SLook.SLink[enumEQUIP_BODY].sNum = 1;
 
-		SLook.sHairID = 0; // ����ͳһ
+		SLook.sHairID = 0; // Unify hair style
 
 		switch (nJob) {
-		case JOB_TYPE_JUJS: // ����˹���޽�ʿ
+		case JOB_TYPE_JUJS: // Lance, Crusader
 			SLook.SLink[enumEQUIP_BODY] = 1933;
 			SLook.SLink[enumEQUIP_BODY].sNum = 1;
 			SLook.SLink[enumEQUIP_GLOVE] = 477;
@@ -1753,7 +1752,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 			SLook.SLink[enumEQUIP_RHAND].sNum = 1;
 			break;
 
-		case JOB_TYPE_SHUANGJS: // ���飬˫��ʿ
+		case JOB_TYPE_SHUANGJS: // Carsise, Dual-Blade Warrior
 			SLook.SLink[enumEQUIP_BODY] = 1930;
 			SLook.SLink[enumEQUIP_BODY].sNum = 1;
 			SLook.SLink[enumEQUIP_GLOVE] = 1937;
@@ -1766,7 +1765,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 			SLook.SLink[enumEQUIP_RHAND].sNum = 1;
 			break;
 
-		case JOB_TYPE_JUJISHOU: // ����/���������ѻ���
+		case JOB_TYPE_JUJISHOU: // Ami/Phyllis, Sharpshooter
 			SLook.SLink[enumEQUIP_BODY] = 1945;
 			SLook.SLink[enumEQUIP_BODY].sNum = 1;
 			SLook.SLink[enumEQUIP_GLOVE] = 1949;
@@ -1777,7 +1776,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 			SLook.SLink[enumEQUIP_RHAND].sNum = 1;
 			break;
 
-		case JOB_TYPE_FENGYINSHI: // ����������ӡʿ
+		case JOB_TYPE_FENGYINSHI: // Ami/Phyllis, Seal Master
 			SLook.SLink[enumEQUIP_BODY] = 1957;
 			SLook.SLink[enumEQUIP_BODY].sNum = 1;
 			SLook.SLink[enumEQUIP_GLOVE] = 1964;
@@ -1788,7 +1787,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 			SLook.SLink[enumEQUIP_RHAND].sNum = 1;
 			break;
 
-		case JOB_TYPE_HANGHAISHI: // ������/���ף�����ʿ
+		case JOB_TYPE_HANGHAISHI: // Lance/Carsise, Voyager
 			SLook.SLink[enumEQUIP_BODY] = 1978;
 			SLook.SLink[enumEQUIP_BODY].sNum = 1;
 			SLook.SLink[enumEQUIP_GLOVE] = 1982;
@@ -1801,7 +1800,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 			SLook.SLink[enumEQUIP_RHAND].sNum = 1;
 			break;
 
-		case JOB_TYPE_SHENGZHIZHE: // ������/���ף�ʥְ��
+		case JOB_TYPE_SHENGZHIZHE: // Lance/Carsise, Cleric
 			SLook.SLink[enumEQUIP_BODY] = 1960;
 			SLook.SLink[enumEQUIP_BODY].sNum = 1;
 			SLook.SLink[enumEQUIP_GLOVE] = 1967;
@@ -1846,7 +1845,7 @@ void NetSynAttr(DWORD dwWorldID, char chType, short sNum, stEffect* pEffect) {
 		//	SLook.SLink[enumEQUIP_SHOES].sNum = 0;
 		//}
 
-		// ���½�ɫ
+		// Update character
 		if (SLook.sTypeID != 0 && pCha->getTypeID() != SLook.sTypeID) {
 			if (SLook.sTypeID != 0 && SLook.sTypeID != pCha->getTypeID())
 				pCha->ReCreate(SLook.sTypeID);
@@ -2026,12 +2025,12 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 			nMarginNum = pObj->GetTotalNum() - nMarginNum;
 
 
-			if (SKitbag.chBagType != 1 && nMarginNum > 0) // modify by Philip.Wu  2006-06-21  ʰ��0����BUG����
+		if (SKitbag.chBagType != 1 && nMarginNum > 0) // modify by Philip.Wu  2006-06-21  Picking 0 items BUG fix
 			{
 				switch (chType) {
 				case enumSYN_KITBAG_PICK: g_pGameApp->SysInfo(g_oLangRec.GetString(283), item->szName, nMarginNum);
 					break;
-				//case enumSYN_KITBAG_FROM_NPC:	g_pGameApp->SysInfo("NPC��[%s �� %d]!", item->szName, nMarginNum );	break;
+			//case enumSYN_KITBAG_FROM_NPC:	g_pGameApp->SysInfo("NPC gave [%s x %d]!", item->szName, nMarginNum );	break;
 				case enumSYN_KITBAG_SYSTEM: g_pGameApp->SysInfo(g_oLangRec.GetString(284), item->szName, nMarginNum);
 					break;
 				case enumSYN_KITBAG_TRADE: g_pGameApp->SysInfo(g_oLangRec.GetString(285), item->szName, nMarginNum);
@@ -2044,7 +2043,7 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 			}
 		}
 		else {
-			// ���ǵĵ�������ʱ,���Ϊ��ݷ�ʽ,���¿�ݷ�ʽ
+			// When deleting items, if it is a shortcut, update the shortcut bar
 			if (chType != enumSYN_KITBAG_INIT && grd == g_stUIEquip.GetGoodsGrid()) {
 				CCommandObj* pObj = grd->GetItem(pGrid[i].sGridID);
 
@@ -2070,15 +2069,15 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 		}
 	}
 
-	// ���������º�Ĵ���
+	// Post-sync processing
 	switch (chType) {
 	case enumSYN_KITBAG_INIT:
-		//��������У������н���
+		// If it is a bank bag, show bank window
 		if (SKitbag.chBagType == 1) {
 			g_stUIBank.ShowBank();
 		}
 		break;
-	case enumSYN_KITBAG_ATTR: // ������
+	case enumSYN_KITBAG_ATTR: // Attribute update
 		break;
 	case enumSYN_KITBAG_PICK:
 	case enumSYN_KITBAG_THROW:
@@ -2123,7 +2122,7 @@ void NetChangeKitbag(DWORD dwChaID, stNetKitbag& SKitbag) {
 	}
 }
 
-// ͬ����������
+// Sync kitbag capacity
 void NetKitbagCapacity(unsigned int nID, short sKbCap) {
 	CGoodsGrid* grd = g_stUIBoat.FindGoodsGrid(nID);
 	if (!grd) return;
@@ -2525,7 +2524,7 @@ void stNetTeamFightAsk::Exec() {
 		//	short mask = pTerrain->GetTile(x, y)->sRegion;
 		//	if( !(mask & enumAREA_TYPE_FIGHT_ASK) )
 		//	{
-		//		// ��Ҳ���PK��
+		// Player not in PK zone
 		//		return;
 		//	}
 		//}
@@ -2581,7 +2580,7 @@ void stNetItemForgeAnswer::Exec() {
 }
 
 void stNetAppendLook::Exec(unsigned long ulWorldID) {
-	// Ŀǰ�����ǵ�һ��
+	// Currently only the first one
 	CCharacter* pCha = GetCharacter(ulWorldID, "stNetAppendLook");
 	if (!pCha) return;
 
@@ -2621,9 +2620,9 @@ void NetItemUseSuccess(unsigned int nID, short sItemID) {
 	int nDummy = pInfo->sUseItemEffect[1];
 
 	if (g_stUIMap.IsPKSilver() && (200 <= nEffectID && nEffectID <= 205)) return;
-	// added by Philip.Wu  2008-01-15 �Ҷ��������ﲻ������Щ������Ч
+	// added by Philip.Wu  2008-01-15 Silver coin zone ignores certain visual effects
 	if ((nEffectID >= 361 && nEffectID <= 369) || (nEffectID >= 3354 && nEffectID <= 3359)
-		|| (nEffectID >= 564 && nEffectID < 600)) // added by Philip.Wu  2007-12-07  �̻���Ч
+		|| (nEffectID >= 564 && nEffectID < 600)) // added by Philip.Wu  2007-12-07  Petrify effects
 	{
 		CEffectObj* pEffect = CGameApp::GetCurScene()->GetFirstInvalidEffObj();
 		if (!pEffect) return;
@@ -2655,11 +2654,11 @@ void NetCancelExit() {
 
 void NetKitbagCheckAnswer(bool bLock) {
 	if (g_stUIEquip.GetIsLock() && bLock) {
-		// ����ʧ��
+		// Forge failed
 		g_pGameApp->MsgBox(g_oLangRec.GetString(802));
 	}
 	else if (g_stUIEquip.GetIsLock() && !bLock) {
-		// �����ɹ�
+		// Forge succeeded
 		g_stUIDoublePwd.CloseAllForm();
 	}
 

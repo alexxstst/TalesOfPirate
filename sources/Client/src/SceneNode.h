@@ -1,11 +1,11 @@
-#pragma once
+ï»¿#pragma once
 
 #include <windows.h>
 #include "Script.h"
 #include "ChaAttrType.h"
 
-// ´«µÝ¸øSetShadeShow(int iIdx, bool bShow)µÄiIdx
-#define SCENENODE_SHADOW  0  // Scene NodeµÄÒõÓ°
+// SetShadeShow(int iIdx, bool bShow)iIdx
+#define SCENENODE_SHADOW  0  // Scene Node
 
 #define	EFFECT_RIPPLE1	  97
 #define	EFFECT_RIPPLE2	  98
@@ -147,8 +147,8 @@ protected:
     int         _nHeightOff;
 	int			_nPoseHeightOff;
     
-    BOOL        _bHide; // Òþ²Ø (±ÈÈç±à¼­Æ÷Àï×öÁÙÊ±Òþ²Ø, ·½±ã±à¼­)
-    int         _nSize; // Âß¼­ÉÏµÄ³ß´ç
+    BOOL        _bHide; //  (, )
+    int         _nSize; // 
 
 	//lemon add@2004.9.27 for  bind effect;
 	int						_iEffNum;
@@ -158,7 +158,7 @@ protected:
 
     SGameAttr               _Attr;
 
-	D3DXVECTOR3		_vPos;				// ÓÃÓÚÍâ²¿¿ìËÙ·ÃÎÊ
+	D3DXVECTOR3		_vPos;				// 
 
 protected:
 

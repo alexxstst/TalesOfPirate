@@ -1,4 +1,4 @@
-// darn.cpp - written and placed in public domain by Jeffrey Walton
+﻿// darn.cpp - written and placed in public domain by Jeffrey Walton
 
 #include "pch.h"
 #include "config.h"

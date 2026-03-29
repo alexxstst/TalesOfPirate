@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "UICozeForm.h"
 #include "uiformmgr.h"
 #include "uiform.h"
@@ -147,7 +147,7 @@ void CCharMsg::AddMsg(eChannel channel, string strWho, string strText, bool bSen
 	WORD wChannelIndex=GetChannelIndex(channel);
 	if (m_sChannelInfo[wChannelIndex].dwTotalMsg >= m_dwChannelBufferSize)
 	{
-		//��������
+		//
 		lstTextInfoType::iterator iterRemoveObject=m_sChannelInfo[wChannelIndex].itFirstMsgPos;
 		while(m_sChannelInfo[wChannelIndex].itFirstMsgPos != m_lstMsgLink.end())
 		{
@@ -593,16 +593,16 @@ void CCozeForm::OnSightMsg(CCharacter* pChar, string strMsg,DWORD dwColour)
 	
 	//Add by sunny.sun 20080902
 	//Begin
-	const string pcnsenderface = "#21";//�������ղ������ַ���
-	const string preplaceface = "#99";//�滻���͵��ַ���
-	ReplaceSpecialFace(strMsg,pcnsenderface,preplaceface);//�滻�ַ���
+	const string pcnsenderface = "#21";//
+	const string preplaceface = "#99";//
+	ReplaceSpecialFace(strMsg,pcnsenderface,preplaceface);//
 	//End
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
 	OnSightMsg(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str(), strMsg,0xFF56bdfc);	//local chat color default //mothannakh player name color
 
-	string str = string(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str())+": "+strMsg;// 需要修�? ning.yan 2008-11-07
+	string str = string(pChar->IsPlayer() ? pChar->getHumanName() : pChar->getName().c_str())+": "+strMsg;// ? ning.yan 2008-11-07
 	CItemEx *item = new CItemEx(str.c_str(), CCharMsg::GetChannelColor(CCharMsg::CHANNEL_SIGHT));
-	if (strlen(str.c_str()) > 32)  //�������?32���ַ�����������?
+	if (strlen(str.c_str()) > 32)  //?32?
 	{
 		item->SetIsMultiLine(true);
 		//item->ProcessString((int)strlen(pChar->getHumanName())+1);
@@ -794,7 +794,7 @@ void CCozeForm::AddToEdit(string strData)
 }
 //Add by sunny.sun 20080902
 //Begin
-//��strMsg�е�strFace�滻ΪstrReplace
+//strMsgstrFacestrReplace
 void CCozeForm::ReplaceSpecialFace( string &strMsg, const string & strReplace, const string & strFace )
 {
 	auto nPos=strMsg.find(strFace);
@@ -867,7 +867,7 @@ bool CCozeForm::Init()
 	m_btnCallingCardSwitch->evtMouseClick=EventCallingCardSwitchClick;		//switch
 
 	FORM_CONTROL_LOADING_CHECK(m_lstCallingCard,m_frmMainChat,CList,"main.clu","lstCard");
-	//m_lstCallingCard->evtLost=EventCallingCardLostFocus; -arcol ��Ч�¼�
+	//m_lstCallingCard->evtLost=EventCallingCardLostFocus; -arcol 
 	m_lstCallingCard->evtSelectChange=EventCardSelected;
 	m_lstCallingCard->SetIsChangeColor(false);
 
@@ -929,7 +929,7 @@ void CCozeForm::SendMsg()
 
 	if(g_stUIMap.IsPKSilver() && pChar->getGMLv() <= 0)
 	{
-		g_pGameApp->SysInfo(g_oLangRec.GetString(901)); // �Ҷ��������н�ֹ������Ϣ
+		g_pGameApp->SysInfo(g_oLangRec.GetString(901)); // 
 		return;
 	}
 
@@ -940,7 +940,7 @@ void CCozeForm::SendMsg()
 		auto p = strMsg.find(" ") ;
 		if (p != std::string::npos)
 		{	
-			string strPersonName=strMsg.substr(1, p-1) ;//˽�Ķ���
+			string strPersonName=strMsg.substr(1, p-1) ;//
 			string strContent=strMsg.substr(p+1);
 			if (!strContent.empty())
 			{
@@ -962,7 +962,7 @@ void CCozeForm::SendMsg()
 					}
 					else
 					{
-						// ��ɫ�ȼ�9�����½�ֹ��������˽��
+						// 9
 						g_pGameApp->SysInfo(g_oLangRec.GetString(868));
 					}
 
@@ -1020,7 +1020,7 @@ void CCozeForm::SendMsg()
 			{
 				OnSystemMsg(g_oLangRec.GetString(509));
 			}
-			else	// modify by Philip.Wu  2006-06-09  ���� 10 ������ʹ������Ƶ��
+			else	// modify by Philip.Wu  2006-06-09   10 
 			{
 				if (pChar->getGMLv() == 99 || GetTickCount()-g_pGameApp->GetLoginTime()>60000)
 				{
@@ -1045,7 +1045,7 @@ void CCozeForm::SendMsg()
 			{
 				OnSystemMsg(g_oLangRec.GetString(511));
 			}
-			else	// modify by Philip.Wu  2006-06-09  ���� 10 ������ʹ��ó��Ƶ��
+			else	// modify by Philip.Wu  2006-06-09   10 
 			{
 				if (pChar->getGMLv() == 99 ||  GetTickCount()-g_pGameApp->GetLoginTime()>60000)
 				{
@@ -1402,7 +1402,7 @@ void CCozeForm::EventPublishSendMsg(CGuiData *pSender)
 	CCharacter* pCharacter=CGameScene::GetMainCha();
 	if(!pCharacter) return;
 
-	//����?�ǿո�����ʾ
+	//?
 	CCozeForm *pThis=CCozeForm::GetInstance();
 	string strMsg=pThis->m_edtPublishMsg->GetCaption() ;
 	if (strMsg.empty() || strMsg.length() == count( strMsg.begin( ), strMsg.end( ), ' '))

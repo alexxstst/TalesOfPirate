@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #pragma warning(disable: 4018)
 #include "NetIF.h"
 #include "GameApp.h"
@@ -10,7 +10,7 @@
 #include "CommandMessages.h"
 #include "GameConfig.h"
 #include "ProCirculate.h"
-//=============附加包含头文件BEGIN=============
+//=============BEGIN=============
 #include "PacketCmd.h"
 #include "NetChat.h"
 #include "NetGuild.h"
@@ -19,9 +19,9 @@
 #include <fstream>
 #include <iostream>
 #include "CmdNames.h"
-//=============附加包含头文件END===============
+//=============END===============
 
-// Консоль для логирования пакетов
+//    
 static bool g_consoleInitialized = false;
 
 static void EnsureConsole() {
@@ -30,8 +30,8 @@ static void EnsureConsole() {
 	if (AllocConsole()) {
 		FILE* fp = nullptr;
 		freopen_s(&fp, "CONOUT$", "w", stdout);
-		SetConsoleTitleA("TalesOfPirate — Packet Log");
-		// Увеличить буфер консоли
+		SetConsoleTitleA("TalesOfPirate  Packet Log");
+		//   
 		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
 		COORD size = {160, 9999};
 		SetConsoleScreenBufferSize(hOut, size);
@@ -50,7 +50,7 @@ extern CDoublePwdMgr g_stUIDoublePwd;
 using namespace std;
 
 //-------------------
-// Packet消息处理函数
+// Packet
 //-------------------
 
 BOOL NetIF::HandlePacketMessage(LPRPACKET pk) {
@@ -283,7 +283,7 @@ BOOL NetIF::HandlePacketMessage(LPRPACKET pk) {
 	case CMD_TC_DISCONNECT: return SC_Disconnect(pk);
 	case CMD_PC_REFRESH_SELECT: return SC_RefreshSelectScreen(pk);
 
-	// Пинг — обрабатываем здесь (ранее обрабатывались в OnProcessData)
+	//     (   OnProcessData)
 	case CMD_PC_PING: return PC_Ping(pk);
 	case CMD_MC_PING: return SC_Ping(pk);
 	case CMD_MC_CHECK_PING: return SC_CheckPing(pk);
@@ -316,19 +316,9 @@ NetIF::NetIF()
 	  , _enc(false), _comm_enc(0) {
 	net::InitWinSock();
 
-	// Настройка TcpClient
+	//  TcpClient
 	_client.SetHandler(this);
 	_client.SetCrypto(this);
-
-	// Инициализация шифрования
-	memset(_key, 0, sizeof _key);
-	_key_len = 0;
-	g_rLvm = init_lua();
-	g_sLvm = init_lua();
-	load_luc(g_rLvm, "scripts/lua/apple.luc");
-	load_luc(g_sLvm, "scripts/lua/apple.luc");
-	load_luc(g_rLvm, "scripts/lua/pear.luc");
-	load_luc(g_sLvm, "scripts/lua/pear.luc");
 
 	handshakeDone = false;
 	hRsaPubKey = NULL;
@@ -342,9 +332,6 @@ NetIF::NetIF()
 
 NetIF::~NetIF() {
 	_enc = false;
-	memset(_key, 0, sizeof _key);
-	exit_lua(g_sLvm);
-	exit_lua(g_rLvm);
 
 	CleanupCrypto();
 
@@ -400,14 +387,14 @@ bool NetIF::InitAesKey() {
 	return true;
 }
 
-// ── ITcpClientHandler ────────────────────────────────────────
+//  ITcpClientHandler 
 
 void NetIF::OnPacket(net::RPacket& packet) {
 	unsigned short sCmdType = packet.GetCmd();
 
 	if (sCmdType != CMD_MC_PING) {
 		ToLogService("common", "{}", sCmdType);
-		// [IN] логи временно отключены для отладки SESS-счётчика
+		// [IN]      SESS-
 		//EnsureConsole();
 	}
 
@@ -430,7 +417,7 @@ void NetIF::OnDisconnected(int reason) {
 	}
 }
 
-// ── ICryptoProvider ──────────────────────────────────────────
+//  ICryptoProvider 
 
 bool NetIF::IsActive() const {
 	return _comm_enc > 0 && handshakeDone;
@@ -455,7 +442,7 @@ bool NetIF::Decrypt(uint8_t* data, int& len) {
 	return ok;
 }
 
-// ── SwitchNet ────────────────────────────────────────────────
+//  SwitchNet 
 
 void NetIF::SwitchNet(bool isConnected) {
 	if (m_pCProCir) delete m_pCProCir;
@@ -498,7 +485,7 @@ unsigned long NetIF::GetAveragePing() {
 	return ulAverage;
 }
 
-//------------- Packet отправка    Client -> Server ----------------------------
+//------------- Packet     Client -> Server ----------------------------
 void NetIF::SendPacketMessage(LPWPACKET pk) {
 	BOOL bUseFakeServer = FALSE;
 	if (bUseFakeServer) {
@@ -512,7 +499,7 @@ void NetIF::SendPacketMessage(LPWPACKET pk) {
 		return;
 	}
 
-	// WPE: записываем инкрементальный счётчик пакетов в поле SESS (байты 2-5)
+	// WPE:       SESS ( 2-5)
 	pk.WriteSess(m_ulPacketCount++);
 
 	{
@@ -529,7 +516,7 @@ void NetIF::SendPacketMessage(LPWPACKET pk) {
 }
 
 
-// AES-256-GCM шифрование (BCrypt). Wire format: [nonce(12)][tag(16)][ciphertext]
+// AES-256-GCM  (BCrypt). Wire format: [nonce(12)][tag(16)][ciphertext]
 bool NetIF::EncryptAES(char* ciphertext, uLong ciphertext_len, cChar* plaintext, unsigned long& ciphersize) {
 	const ULONG NONCE_SIZE = 12;
 	const ULONG TAG_SIZE = 16;
@@ -587,7 +574,7 @@ bool NetIF::EncryptAES(char* ciphertext, uLong ciphertext_len, cChar* plaintext,
 	return true;
 }
 
-// AES-256-GCM дешифрование (BCrypt). Wire format: [nonce(12)][tag(16)][ciphertext]
+// AES-256-GCM  (BCrypt). Wire format: [nonce(12)][tag(16)][ciphertext]
 bool NetIF::DecryptAES(char* ciphertext, unsigned long& len) {
 	const ULONG NONCE_SIZE = 12;
 	const ULONG TAG_SIZE = 16;

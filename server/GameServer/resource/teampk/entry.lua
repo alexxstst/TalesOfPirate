@@ -1,4 +1,4 @@
-SetTeamFightMapName("teampk") 
+锘縎etTeamFightMapName("teampk") 
 
 function config_entry(entry) 
 end 
@@ -54,7 +54,7 @@ function check_can_enter_teampk( role, copy_mgr )
 			return 0
 		end
 		if attr_num > Rongy_xianzhi0 then
-			SystemNotice ( role , "荣誉值过高，不允许参加挑战" )
+			SystemNotice ( role , "" )
 			return 0
 		end
 	end

@@ -1,4 +1,4 @@
-#include "stdafx.h"
+ï»¿#include "stdafx.h"
 #include "lwShaderMgr.h"
 #include "lwInterface.h"
 #include "lwSystem.h"
@@ -291,7 +291,7 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, BYTE* data, DWORD size)
     IDirect3DVertexShaderX* handle = 0;
     lwVertexShaderInfo* i = 0;            // << declarado antes de qualquer goto
 
-    if (type >= _vs_size)                 // DWORD é unsigned; "type < 0" nunca é verdadeiro
+    if (type >= _vs_size)                 // DWORD  unsigned; "type < 0" nunca  verdadeiro
         goto __ret;
 
     if (_vs_seq[type].handle)
@@ -434,20 +434,20 @@ LW_RESULT lwShaderMgr9::RegisterVertexDeclaration(DWORD type, D3DVERTEXELEMENT9*
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    // Declarações antecipadas (evita "init skipped by goto")
+    // Declaraes antecipadas (evita "init skipped by goto")
     IDirect3DVertexDeclarationX* handle = 0;
     IDirect3DDeviceX* dev = _dev_obj->GetDevice();
     int i = 0;
     D3DVERTEXELEMENT9* p = 0;
 
-    // (Com DWORD, "type < 0" nunca é verdadeiro; pode remover se quiser)
+    // (Com DWORD, "type < 0" nunca  verdadeiro; pode remover se quiser)
     if (type >= _decl_size)
         goto __ret;
 
     if (_decl_seq[type].handle)
         goto __ret;
 
-    if (!data)  // segurança
+    if (!data)  // segurana
         goto __ret;
 
     if (FAILED(dev->CreateVertexDeclaration(data, &handle)))

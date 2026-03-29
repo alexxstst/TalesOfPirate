@@ -1,4 +1,4 @@
-print("-- [Loading] darkswampMonster.lua")
+﻿print("-- [Loading] darkswampMonster.lua")
 
 CreateCha(675, 6340, 101057, 175, 10800)
 CreateCha(696, 5782, 101891, 145, 10800)
@@ -502,7 +502,7 @@ CreateCha(698, 35346, 121499, 0, 300)
 CreateCha(698, 26227, 113546, 0, 300)
 
 
---2²ã
+--2
 CreateCha(698, 38553, 71242, 145, 120)
 CreateCha(696, 5442, 47313, 235, 120)
 CreateCha(696, 7729, 46479, 235, 120)
@@ -803,7 +803,7 @@ CreateCha(696, 32293, 84643, 145, 120)
 CreateCha(696, 39635, 74010, 145, 120)
 CreateCha(698, 38818, 74851, 145, 120)
 
----1²ã
+---1
 CreateCha(695, 9311, 9257, 145, 60)
 CreateCha(695, 9516, 9945, 145, 60)
 CreateCha(695, 8742, 10174, 145, 60)

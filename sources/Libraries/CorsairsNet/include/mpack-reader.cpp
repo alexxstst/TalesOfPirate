@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Copyright (c) 2015-2021 Nicholas Fraser and the MPack authors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of

@@ -1,4 +1,4 @@
-// trunhash.h - originally written and placed in the public domain by Wei Dai
+﻿// trunhash.h - originally written and placed in the public domain by Wei Dai
 
 /// \file trunhash.h
 /// \brief Classes for truncated hashes

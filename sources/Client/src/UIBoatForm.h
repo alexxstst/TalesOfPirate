@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "UIGlobalVar.h"
 #include "uiform.h"
 #include "uigoodsgrid.h"
@@ -7,26 +7,26 @@ class CCharacter;
 
 namespace GUI
 {
-#define defMaxBoat 3 // ¿É»ñµÃ×î´ó´¬Ö»Êı
+#define defMaxBoat 3 // 
 
-class CBoat // ´¬ĞÅÏ¢Àà
+class CBoat // 
 {
 public:
 	CBoat();
 	bool Init( int n, CForm* ship, GuiDragInGridEvent evt );
 
-	void		Reset(); // ÖØĞÂÉèÖÃ´¬
-	void		Link( CCharacter* pBoat )	{ _chtBoat = pBoat;			}  // ´¬ÈËÎïºÍ½ÇÉ«ÈËÎï¶ÔÓ¦
-	bool		GetIsValid()				{ return _chtBoat!=NULL;	}  // »ñµÃ½ÇÉ«ĞÅÏ¢
+	void		Reset(); // 
+	void		Link( CCharacter* pBoat )	{ _chtBoat = pBoat;			}  // 
+	bool		GetIsValid()				{ return _chtBoat!=NULL;	}  // 
 	void		UnLink()					{ _chtBoat=NULL;			}  
 
-	CCharacter* GetCha()			{ return _chtBoat;		}  // ÕÒÈËÎï
-	CGoodsGrid*	GetGoodsGrid()		{ return _grdHold;		}  // »ñµÃ½ÇÉ«µÀ¾ß
-	CForm*		GetForm()			{ return _frmShipRoom;	}  // ÕÒ´¬µÀ¾ßÀ¸ĞÅÏ¢
+	CCharacter* GetCha()			{ return _chtBoat;		}  // 
+	CGoodsGrid*	GetGoodsGrid()		{ return _grdHold;		}  // 
+	CForm*		GetForm()			{ return _frmShipRoom;	}  // 
 
 private:
 	static void _evtHoldGridRMouse(CGuiData *pSender,CCommandObj* pItem,int nGridID);
-	static void _evtEscClose( CForm* pForm );	// °´ ESC ¹Ø±Õ´°ÌåÊÂ¼ş  add by Philip.Wu  2006-06-22
+	static void _evtEscClose( CForm* pForm );	//  ESC   add by Philip.Wu  2006-06-22
 
 private:
 	int				_nIndex;
@@ -42,33 +42,33 @@ class CBoatMgr : public CUIInterface
 public:
 	void	Clear();
 
-	bool	AddBoat( CCharacter* pBoat );  // ÓÃ»§Ìí¼Ó´¬Ö»
-	CBoat*	GetBoat( unsigned int n )		{ return &_cBoats[n];	} // »ñÈ¡´¬Ö»
-	CBoat*	FindBoat( unsigned int ulWorldID );  // ÕÒµ½ÓÃ»§È«²¿´¬Ö»
+	bool	AddBoat( CCharacter* pBoat );  // 
+	CBoat*	GetBoat( unsigned int n )		{ return &_cBoats[n];	} // 
+	CBoat*	FindBoat( unsigned int ulWorldID );  // 
 
 	void	SetHuman( CCharacter* p )		{ _pHuman = p;			} 
-	CCharacter*		GetHuman()				{ return _pHuman;		} // ²éÕÒµ±Ç°½ÇÉ«
+	CCharacter*		GetHuman()				{ return _pHuman;		} // 
 
-	CGoodsGrid*		FindGoodsGrid( unsigned int ulWorldID );	// ¸ù¾İID²éÕÒ¶ÔÓ¦µÄµÀ¾ßÀ¸
-	CCharacter*		FindCha( unsigned int ulWorldID );         // ²éÕÒ´¬Ö÷ÈË
-	CCharacter*		FindCha( CGoodsGrid* pGoods );   // ÓÉ×°±¸Æ¥Åä²éÕÒ´¬Ö»µÄÖ÷ÈË
+	CGoodsGrid*		FindGoodsGrid( unsigned int ulWorldID );	// ID
+	CCharacter*		FindCha( unsigned int ulWorldID );         // 
+	CCharacter*		FindCha( CGoodsGrid* pGoods );   // 
 
-	CCharacter*		ChangeMainCha( unsigned int ulWorldID );	// ÇĞ»»Ö÷½Ç
+	CCharacter*		ChangeMainCha( unsigned int ulWorldID );	// 
 
-	CBoat*	GetOtherBoat()					{ return &_cOther;		}  // ²é¿´±ğÈË´¬
+	CBoat*	GetOtherBoat()					{ return &_cOther;		}  // 
 
 protected:
-	virtual bool Init(); //ÓÃ»§´¬ĞÅÏ¢³õÊ¼»¯
+	virtual bool Init(); //
     virtual void End(); 
-	virtual void SwitchMap()				{	Clear();			} // Ìø×ªµØÍ¼Ê±Çå³ı´¬ĞÅÏ¢
+	virtual void SwitchMap()				{	Clear();			} // 
 
 private:
-	CBoat*		GetFreeBoat(); // »ñµÃÃâ·Ñ´¬Ö»
+	CBoat*		GetFreeBoat(); // 
 
 private:
 	CCharacter*	_pHuman;
-	CBoat		_cBoats[defMaxBoat];        // µ±Ç°½ÇÉ«¿ÉÓµÓĞµÄ´¬ÊıÁ¿
-	CBoat		_cOther;					// Ò»¸öÓÃÓÚ²é¿´±ğÈËµÄ´¬²Õ£¬»õÎïÊ±µÄÁÙÊ±±äÁ¿¡¡
+	CBoat		_cBoats[defMaxBoat];        // 
+	CBoat		_cOther;					// 
 
 };
 

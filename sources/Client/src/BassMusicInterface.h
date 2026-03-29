@@ -1,4 +1,4 @@
-#ifndef __BASSMUSICINTERFACE_H__
+﻿#ifndef __BASSMUSICINTERFACE_H__
 #define __BASSMUSICINTERFACE_H__
 
 #include "MusicInterface.h"

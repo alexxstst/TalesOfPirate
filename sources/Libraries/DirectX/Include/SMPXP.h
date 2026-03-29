@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  S M P X P . H
  *
  *  Definitions used by the Microsoft Sample Transport provider

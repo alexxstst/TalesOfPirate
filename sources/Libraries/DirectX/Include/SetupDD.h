@@ -1,4 +1,4 @@
-// setupdd.h - Public definitions for users of SETUPDD.DLL
+﻿// setupdd.h - Public definitions for users of SETUPDD.DLL
 //
 //
 

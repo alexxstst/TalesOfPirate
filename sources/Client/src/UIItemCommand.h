@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// ����:����
-// ����:lh 2004-07-19
-// ����޸�����:2004-10-09
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-19
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "UICommand.h"
@@ -25,21 +25,21 @@ namespace GUI
 
 struct SItemForge
 {
-	bool	IsForge;			// �Ƿ���
-	int		nHoleNum;			// �м�����
-	int		nLevel;				// �����ȼ�
+	bool	IsForge;			// 
+	int		nHoleNum;			// 
+	int		nLevel;				// 
 
-	CStoneInfo*	pStoneInfo[3];	// ���ű�ʯ,Ϊ���ޱ�ʯ
-	int		nStoneLevel[3];		// ��Ӧ�ı�ʯ�ȼ�
-	char	szStoneHint[3][256];// ��ʯ˵��
-	int		nStoneNum;			// ��ʯ����
+	CStoneInfo*	pStoneInfo[3];	// ,
+	int		nStoneLevel[3];		// 
+	char	szStoneHint[3][256];// 
+	int		nStoneNum;			// 
 
 	static SItemForge& Convert( DWORD v, int nItemID=-1 );
 
-	static float GetAlpha( int nTotalLevel );	// �����ܵȼ�,�õ���Чalpha
+	static float GetAlpha( int nTotalLevel );	// ,alpha
 
-public:		// Ϊ������
-	int						nStoneType[3];		// ��ʯ����,û��Ϊ-1
+public:		// 
+	int						nStoneType[3];		// ,-1
 	CItemRefineInfo*		pRefineInfo;
 	CItemRefineEffectInfo*	pEffectInfo;
 	int						nEffectLevel;
@@ -49,7 +49,7 @@ private:
 
 };
 
-// ��Դ��SItemGrid,��ʵ�������Բ�һ����ʵ�������� = SItemGrid��ʵ�������� + ��ȡ����
+// SItemGrid, = SItemGrid + 
 struct SItemHint
 {
 	short	sID;
@@ -117,14 +117,14 @@ public:
 
     CItemRecord*  GetItemInfo()         { return _pItem;                }
 
-    int     GetThrowLink();         // �ɹ�>=0,ʧ�ܷ���-1
+    int     GetThrowLink();         // >=0,-1
 
 	void	SetPrice( int n )			{ _nPrice=n;					}
 
 	SItemForge&		GetForgeInfo();
-	std::string			GetStoneHint(int nLevel=-1);	// �õ���ʯ��hint������Ϊ��1�ǵ��߱�����hint������Ϊ����ȼ���hint
+	std::string			GetStoneHint(int nLevel=-1);	// hint1hinthint
 
-	static void ClearCoolDown()			{ _mapCoolDown.clear();			}	// ���߼��� COOLDOWN ��Ϣ���
+	static void ClearCoolDown()			{ _mapCoolDown.clear();			}	//  COOLDOWN 
 
 	void SetColor(DWORD c) { _dwColor = c; }
 	DWORD GetColor() { return _dwColor; }
@@ -140,12 +140,12 @@ protected:
     void    _Copy( const CItemCommand& rhs );
     //int     _GetValue( int nItemAttrType, SItemGrid& item );
     int     _GetValue( int nItemAttrType, SItemHint& item );
-	void	_ShowWork( CItemRecord* pItem, SGameAttr* pAttr );	// ������ʾ���ߵ�ְҵ����
-	void	_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquipItem, SGameAttr* pAttr);// ������ʾ�ۺϺ���ߵ�ְҵ����
+	void	_ShowWork( CItemRecord* pItem, SGameAttr* pAttr );	// 
+	void	_ShowFusionWork(CItemRecord* pAppearItem, CItemRecord* pEquipItem, SGameAttr* pAttr);// 
 	void	_AddDescriptor();
-	void	_ShowWork( xShipInfo* pInfo, SGameAttr* pAttr );	// ������ʾ����ְҵ����
-	void	_ShowBody(CItemRecord* _pItem2 = NULL);										// ������ʾ��ɫ����
-	void    _ShowFusionBody(CItemRecord* pEquipItem);			// ������ʾ�ۺϺ��ɫ����
+	void	_ShowWork( xShipInfo* pInfo, SGameAttr* pAttr );	// 
+	void	_ShowBody(CItemRecord* _pItem2 = NULL);										// 
+	void    _ShowFusionBody(CItemRecord* pEquipItem);			// 
 
 protected:
 	//void	_PushItemAttr( int attr, SItemGrid& item, DWORD color=COLOR_WHITE );
@@ -170,13 +170,13 @@ private:
 	int				_nPrice;
 	bool 				_canDrag;
 private:
-    DWORD           _dwColor;           // ��Ч��ɫ��ʾ, ��ʵ���͸��
+    DWORD           _dwColor;           // , 
 	NET_CHARTRADE_BOATDATA*		_pBoatHint;
 
-	static std::map<int, DWORD>		_mapCoolDown;	// ������һ�ηŵĵ��߼��ܵ�ʱ��
+	static std::map<int, DWORD>		_mapCoolDown;	// 
 };
 
-// ��������
+// 
 inline void CItemCommand::SetIsValid( bool v )        
 {
     _dwColor = ( _dwColor & 0xff000000 ) | ( v ? 0x00ffffff : INVALID_COLOR  );

@@ -1,4 +1,4 @@
-
+﻿
 /*****************************************************************************\
 *                                                                             *
 * powrprof.h - - Interface for powrprof.dll, the power policy applicator      *

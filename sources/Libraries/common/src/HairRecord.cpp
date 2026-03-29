@@ -1,4 +1,4 @@
-//======================================================================================================================
+ï»¿//======================================================================================================================
 // FileName: HairRecord.cpp
 // Creater: Jerry li
 // Date: 2005.08.29
@@ -88,7 +88,7 @@ void CHairRecordSet::_ProcessRawDataInfo(CRawDataInfo *pInfo)
 {
 	CHairRecord *pHair = (CHairRecord*)pInfo;
 
-    // ¸üÐÂ¶¯Ì¬ÊôÐÔ
+    // 
 	pHair->RefreshPrivateData();	
 }
 

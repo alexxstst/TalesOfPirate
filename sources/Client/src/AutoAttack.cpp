@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "autoattack.h"
 #include "isskilluse.h"
 #include "gameapp.h"

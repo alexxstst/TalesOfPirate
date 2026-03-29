@@ -1,4 +1,4 @@
-/************************************************************************
+﻿/************************************************************************
 *                                                                       *
 *   winternl.h -- This module defines the internal NT APIs and data     *
 *       structures that are intended for the use only by internal core  *

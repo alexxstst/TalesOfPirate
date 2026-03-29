@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "steadyframe.h"
 
 DWORD CSteadyFrame::_dwFPS = 0;

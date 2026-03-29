@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I D E F S . H
  *
  *	Definitions used by MAPI clients and service providers.

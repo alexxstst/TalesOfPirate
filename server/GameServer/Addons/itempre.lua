@@ -1,4 +1,4 @@
-function SetItemPrefix(item, pre)
+﻿function SetItemPrefix(item, pre)
     local baoshilv = GetItemAttr(item, 53)
     local oldpre = GetItemPrefix(item)
     if oldpre == pre then

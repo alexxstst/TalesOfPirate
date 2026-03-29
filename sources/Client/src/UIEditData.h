@@ -1,7 +1,7 @@
-//----------------------------------------------------------------------
-// ÃèÊö:EditµÄÊı¾İ½á¹¹
-// ×÷Õß:lh 2004-07-12
-// ×îºóĞŞ¸ÄÈÕÆÚ:
+ï»¿//----------------------------------------------------------------------
+// :Edit
+// :lh 2004-07-12
+// :
 //----------------------------------------------------------------------
 #pragma once
 
@@ -12,7 +12,7 @@ class CEditParse;
 class CEditStrategy;
 class CRichEdit;
 
-// ×îĞ¡µ¥Ôª
+// 
 class CEditObj
 {
 public:
@@ -25,7 +25,7 @@ public:
 	virtual const char* GetCaption()			{ return "";		}
 	virtual DWORD		GetWordCount()			{ return 0;			}
 
-	// ×Ó¶ÔÏóµÄ²Ù×÷
+	// 
 	virtual void	PushUnit( CEditObj* pObj )	{}
 	virtual void	ClearChilds()				{}
 	virtual	bool	IsEmpty()					{ return true;		}
@@ -34,7 +34,7 @@ public:
 
 };
 
-// ÎÄ×ÖÀà´Ó×æÏÈ
+// 
 class CEditTextObj : public CEditObj
 {
 public:
@@ -51,17 +51,17 @@ public:
 	void		SetColor( DWORD dwColor )		{ _dwColor=dwColor;			}
 	DWORD		GetColor()						{ return _dwColor;			}
 
-	// ÓÃÓÚÅĞ¶ÏÊÇ·ñ¿ÉÒÔºÏ²¢ÎÄ×Ö
+	// 
 	bool		IsSameType( CEditTextObj* pObj ){ return pObj->GetColor()==GetColor() && pObj->GetFont()==GetFont();	}
 
 private:
-	DWORD			_dwFont;			// ËùÓÃµÄ×ÖÌå
-	DWORD			_dwColor;			// ÑÕÉ«
+	DWORD			_dwFont;			// 
+	DWORD			_dwColor;			// 
 
 };
 
 
-// µ¥¸ö×Ö·û,°üÀ¨ºº×Ö
+// ,
 class CEditChar : public CEditTextObj
 {
 public:
@@ -75,7 +75,7 @@ public:
 
 	int				GetWidth()					{ return _nWidth;					}
 
-	// ÓÃÓÚÏÔÊ¾±»Ñ¡ÔñÊ±
+	// 
 	void			InvertRedner( int x, int y );
 
 protected:
@@ -84,7 +84,7 @@ protected:
 
 };
 
-// ¿ØÖÆ·û
+// 
 class CEditControl : public CEditObj
 {
 public:
@@ -100,7 +100,7 @@ private:
 
 };
 
-// ¾ä×Ó£¬Í¬Àà×Ö·ûµÄ¼¯ºÏ£¬ÓÃÓÚ¿ìËÙÏÔÊ¾
+// 
 class CEditSentence : public CEditTextObj
 {
 public:
@@ -120,12 +120,12 @@ private:
 	typedef std::vector<CEditChar*> chars;
 	chars			_chars;
 
-	std::string			_szString;			// ºÏ²¢ºóµÄ×Ö´®
+	std::string			_szString;			// 
 	int				_nX,	_nY;
 
 };
 
-// ÎÄÕÂ£¬°üº¬ÁËËùÓĞÄÚÈİÒÔ¼°Ò»¸öÓÃ»»ĞĞµÄËã·¨
+// 
 class CEditArticle : public CEditObj
 {
 public:
@@ -148,7 +148,7 @@ public:
 	void	SetColor( DWORD dwColor )		{ _dwFontColor=dwColor;		}
 	DWORD	GetColor()						{ return _dwFontColor;		}
 
-public:		// ¼üÅÌÊÂ¼ş
+public:		// 
 	void	OnKeyDown( int key, bool IsShiftPress );
 	void	DelSelect();
 
@@ -162,27 +162,27 @@ private:
 private:
 	enum eRunType
 	{
-		enumNormal,							// Õı³£Ä£Ê½
-		enumSelect,							// ÓÃ»§ÕıÔÚÑ¡Ôñ£¬´ËÊ±²»ÏÔÊ¾¹â±ê
+		enumNormal,							// 
+		enumSelect,							// 
 	};
 
 	CRichEdit*		_pEdit;
 	CEditStrategy*	_pStrategy;
 
 	typedef std::vector<CEditObj*> memorys;
-	memorys			_memorys;				// Ô­Ê¼ÄÚ´æ£¬ÓÃÓÚ¹ÜÀíÄÚ´æ,Ò²ÓÃÓÚ¼ÆËã¹â±ê
+	memorys			_memorys;				// ,
 
 	eRunType		_eRunType;
 
-	unsigned int	_nCursor;				// ¹â±êËùÔÚÎ»ÖÃ
-	unsigned int	_nSelStart;				// ÓÃ»§Ñ¡ÔñµÄÇøÓò
+	unsigned int	_nCursor;				// 
+	unsigned int	_nSelStart;				// 
 	unsigned int	_nSelEnd;
 
-	unsigned int	_dwWordMax;				// ¿ÉÊäÈë×ÖÊıµÄ×î´óÖµ,Îª0²»ÏŞÖÆ
-	unsigned int	_dwWordNum;				// Ä¿Ç°ÎÄ×Ö¸öÊı
+	unsigned int	_dwWordMax;				// ,0
+	unsigned int	_dwWordNum;				// 
 
-	DWORD			_dwFontColor;			// µ±Ç°×ÖÌåÑÕÉ«
-	int				_dwFontIndex;			// µ±Ç°×ÖÌå
+	DWORD			_dwFontColor;			// 
+	int				_dwFontIndex;			// 
 
 };
 
@@ -201,7 +201,7 @@ inline bool CEditArticle::AddControl( char c )
 	if( !_AddObj( pChar ) )
 	{
 		//delete pChar;
-		SAFE_DELETE(pChar); // UIµ±»ú´¦Àí
+		SAFE_DELETE(pChar); // UI
 		return false;
 	}
 	return true;
@@ -215,7 +215,7 @@ inline bool CEditArticle::AddChar( char c1, char c2 )
 	if( !_AddObj( pChar ) )
 	{
 		//delete pChar;
-		SAFE_DELETE(pChar); // UIµ±»ú´¦Àí
+		SAFE_DELETE(pChar); // UI
 		return true;
 	}
 	return false;

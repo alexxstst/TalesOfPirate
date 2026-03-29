@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiequipform.h"
 #include "uiform.h"
 #include "uiskilllist.h"
@@ -162,7 +162,7 @@ bool CEquipMgr::Init()
 {
 	CForm *frmMain800 = _FindForm("frmMain800");
 
-	///////////����ϵ�� 
+	/////////// 
 	frmSkill = _FindForm("frmSkill");
 	if(!frmSkill) return false;
 	frmSkill->evtShow = _evtSkillFormShow;
@@ -213,14 +213,14 @@ bool CEquipMgr::Init()
 
 
 
-	SetIsLock(false);	// Ĭ�ϲ�����
+	SetIsLock(false);	// 
 
 
-	///////////////��ݼ�ϵ��
+	///////////////
 	CForm* frmFast = _FindForm("frmFast");
 	if( !frmFast ) return false;
 
-	// ���»�ҳ��ť
+	// 
     CTextButton* btnFastUp = dynamic_cast<CTextButton*>( frmFast->Find("btnFastUp") );
     if( !btnFastUp ) return Error( g_oLangRec.GetString(45), frmMain800->GetName(), "btnFastUp" );
 	btnFastUp->evtMouseClick = _evtButtonClickEvent;
@@ -276,7 +276,7 @@ bool CEquipMgr::Init()
 	//_pActiveFastLabel = dynamic_cast<CLabel*>(frmMain800->Find( "labFast" ) );
     _ActiveFast( 0 );
 
-	/////////////// װ����
+	/////////////// 
 	
 	memset( cnmEquip, 0, sizeof(cnmEquip) );
 	cnmEquip[enumEQUIP_HEAD] = dynamic_cast<COneCommand*>(frmInv->Find("cmdArmet"));
@@ -323,7 +323,7 @@ bool CEquipMgr::Init()
         {
             cnmEquip[i]->evtBeforeAccept = _evtEquipEvent;
             //cnmEquip[i]->evtMouseClick = _UnequipPart;
-			//cnmEquip[i]->evtThrowItem = _evtThrowEquipEvent;	// ����ֱ�ӽ�װ������
+			//cnmEquip[i]->evtThrowItem = _evtThrowEquipEvent;	// 
 
 			cnmEquip[i]->SetActivePic( &_imgCharges[i] );
         }
@@ -354,7 +354,7 @@ bool CEquipMgr::Init()
 		}
 	}
 	
-	frmItemSpy = _FindForm("frmItemSpy");   // ���߱���
+	frmItemSpy = _FindForm("frmItemSpy");   // 
 	frmItemSpy->evtShow = _evtSpyFormShow;
 	frmItemSpy->evtClose = _evtSpyFormClose;
 	if( !frmItemSpy ) 		return false;  
@@ -362,7 +362,7 @@ bool CEquipMgr::Init()
 	//frmItemSpy->evtClose = _evtItemFormClose;
 	//frmItemSpy->evtEntrustMouseEvent = _evtItemFormMouseEvent;
 	
-	/////////////// װ����
+	/////////////// 
 	memset( cnmEquipSpy, 0, sizeof(cnmEquipSpy) );
 	cnmEquipSpy[enumEQUIP_HEAD] = dynamic_cast<COneCommand*>(frmItemSpy->Find("cmdArmet"));
 	cnmEquipSpy[enumEQUIP_BODY] = dynamic_cast<COneCommand*>(frmItemSpy->Find("cmdBody"));
@@ -596,7 +596,7 @@ void CEquipMgr::_UnequipPart(CGuiData *pSender, int x, int y, DWORD key){
 
 void CEquipMgr::End()
 {
-	//RefreshServerShortCut(); Human�Ѿ���Ч
+	//RefreshServerShortCut(); Human
 }
 
 void CEquipMgr::_evtSkillUpgrade(CSkillList *pSender, CSkillCommand* pSkill)
@@ -648,7 +648,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
 	SSkillGridEx* pSBag = pSSkillBag->SBag.GetValue();
     switch( pSSkillBag->chType )
     {
-    case enumSYN_SKILLBAG_INIT: // ��������ʼ��������ȫ���ļ�����Ϣ��
+    case enumSYN_SKILLBAG_INIT: // 
         {
 			lstSailSkill->Clear();
 			lstFightSkill->Clear();
@@ -677,7 +677,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
             }
         }
         break;
-    case enumSYN_SKILLBAG_ADD:  // ���Ӽ��ܣ�ֻ���������ӵļ��ܵ���Ϣ��
+    case enumSYN_SKILLBAG_ADD:  // 
         {
             CSkillRecord* pInfo = NULL;
             CSkillCommand* tmp = NULL;
@@ -700,7 +700,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
             }
         }
         break;
-    case enumSYN_SKILLBAG_MODI: // �޸ļ���
+    case enumSYN_SKILLBAG_MODI: // 
         {
             CSkillRecord* pInfo = NULL;
             CSkillCommand* tmp = NULL;
@@ -793,7 +793,7 @@ void CEquipMgr::_evtFastChange(CGuiData *pSender, CCommandObj* pItem, bool& isAc
 
 void CEquipMgr::UpdataEquipData( const stNetChangeChaPart& SPart, CCharacter* pCha )
 {
-	// ID��������ʱ,������ֵ
+	// ID,
 	CItemCommand* pItem = NULL;
 	for( int i=0; i<enumEQUIP_NUM; i++ )
 	{
@@ -822,7 +822,7 @@ void CEquipMgr::UpdataEquipData( const stNetChangeChaPart& SPart, CCharacter* pC
 
 void CEquipMgr::UpdataEquip( const stNetChangeChaPart& SPart, CCharacter* pCha )
 {     
-    // Ĭ��װ����ռװ����
+    // 
     memcpy( &stEquip, &SPart, sizeof(SPart) );
     for( int i=0; i<enumEQUIP_PART_NUM; i++ )
     {
@@ -835,7 +835,7 @@ void CEquipMgr::UpdataEquip( const stNetChangeChaPart& SPart, CCharacter* pCha )
     //        stEquip.SLink[i].sID = 0;
     //}
 
-    // ����UIװ����
+    // UI
     for( int i=0; i<enumEQUIP_NUM; i++ )
     {
         _UpdataEquip( stEquip.SLink[i], i );
@@ -844,7 +844,7 @@ void CEquipMgr::UpdataEquip( const stNetChangeChaPart& SPart, CCharacter* pCha )
 
 void CEquipMgr::UpdataEquipSpy( const stNetChangeChaPart& SPart, CCharacter* pCha )
 {     
-    // Ĭ��װ����ռװ����
+    // 
 	eqSpyTarget = pCha;
 	
 	CLabel* labTitle = (CLabel*)frmItemSpy->Find( "labTitle" );
@@ -1202,7 +1202,7 @@ void CEquipMgr::DelFastCommand( CCommandObj* pObj )
 			param.chIndex = nIndex;
 			CS_BeginAction( g_stUIBoat.GetHuman(), enumACTION_SHORTCUT, (void*)&param );
 
-			// ���������յ����޷���,�ͻ����Լ��ı�
+			// ,
 			stNetShortCut& SCut = _stShortCut;
 			SCut.chType[nIndex] = 0;
 			SCut.byGridID[nIndex] = 0;	
@@ -1504,7 +1504,7 @@ void CEquipMgr::evtThrowItemEvent(CGuiData *pSender,int id,bool& isThrow)
 	if( !pSelf ) return;
 
 	// add by Philip.Wu  2006-07-05
-	// �ж������Ƿ�Ϸ�����ֹ���߱��������ټ����ֿ��õ� BUG
+	//  BUG
 	if(!obj->GetIsValid()) return;
 
     int x = (int)(CGameApp::GetCurScene()->GetMouseMapX() * 100.0f);
@@ -1518,7 +1518,7 @@ void CEquipMgr::evtThrowItemEvent(CGuiData *pSender,int id,bool& isThrow)
 	sthrow.nGridID = id;
 	sthrow.pSelf = pSelf;
 	
-	//����Ǵ���֤��
+	//
 	CItemCommand* pItem = dynamic_cast<CItemCommand*>(obj);
 	if ( pItem && pItem->GetItemInfo()->sType==43 )
 	{
@@ -1640,7 +1640,7 @@ void CEquipMgr::FrameMove(DWORD dwTime)
 		SGameAttr* pGameAttr = pCha->getGameAttr();
 		if( frmSkill->GetIsShow() )
 		{
-			// ��ʾʣ�༼�ܵ���
+			// 
 			sprintf( szBuf, "%d", pGameAttr->get(ATTR_TP) );
 			labPoint->SetCaption( szBuf );
 
@@ -1654,7 +1654,7 @@ void CEquipMgr::FrameMove(DWORD dwTime)
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 		if( pMainCha )
 		{
-			// ˢ�¼��ܼ����
+			// 
 			CSkillCommand::GetActiveImage()->Next();
 
 			CChaStateMgr* pState = pMainCha->GetStateMgr();
@@ -1869,7 +1869,7 @@ void CEquipMgr::_StartUnfix( stUnfix& unfix )
 	{
         //if( !pItem->IsAllowThrow() ) 
         //{
-        //    g_pGameApp->SysInfo( "������Ʒ���ܶ���" );
+        //    g_pGameApp->SysInfo( "" );
         //    return;
         //}
 
@@ -1999,7 +1999,7 @@ void CEquipMgr::CloseAllForm()
 }
 
 
-// ��õ����ڵ�ǰ�������ܵĸ���
+// 
 int CEquipMgr::GetItemCount(int nID)
 {
 	int nRet = 0;
@@ -2026,7 +2026,7 @@ void CEquipMgr::_evtItemFormMouseEvent(CCompent *pSender, int nMsgType, int x, i
 	{
 		if(g_stUIEquip.GetIsLock())
 		{
-			// ����
+			// 
 			g_stUIDoublePwd.SetType(CDoublePwdMgr::PACKAGE_UNLOCK);
 			g_stUIDoublePwd.ShowDoublePwdForm();
 		}
@@ -2051,7 +2051,7 @@ bool CEquipMgr::GetIsLock()
 }
 
 
-// ���� MSGBOX ȷ��
+//  MSGBOX 
 void CEquipMgr::_CheckLockMouseEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey)
 {
     if( nMsgType == CForm::mrYes ) 

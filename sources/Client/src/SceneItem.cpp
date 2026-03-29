@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "SceneItem.h"
 #include "SceneItemSet.h"
 #include "Scene.h"
@@ -300,7 +300,7 @@ void CSceneItem::FrameMove(DWORD dwTimeParam)
 	{
 		if( _nCharacterID == -1 )
 		{			
-			// ���¸߶�
+			// 
 			if( _pSceneHeight->FrameMove(dwTimeParam) )
 			{
                 _UpdatePos();			
@@ -330,7 +330,7 @@ void CSceneItem::FrameMove(DWORD dwTimeParam)
 	//	_pCurScene->HandleSceneMsg(SCENEMSG_SCENEOBJ_DESTROY,_nEffID,getID());
 
     // by lsh
-    // ע�⣬�����FrameMove������������ã��������λ�����
+    // FrameMove
 	MPSceneItem::FrameMove();	
 }
 
@@ -432,7 +432,7 @@ void CSceneItem::SetForgeEffect( DWORD value, int nCharID )
 	{
 		LitUnresetTexture();
 
-		// ж��				
+		// 				
 		int nCount = GetEffectNum();
 		CEffectObj* pEffect = NULL;
 		for( int i=0; i<nCount; i++ )
@@ -453,11 +453,11 @@ void CSceneItem::SetForgeEffect( DWORD value, int nCharID )
 
 	CSceneItem* pItem = this;
 	if( pInfo->nLightID!=0 )
-		pItem->LitResetTexture( pInfo->nLightID, Level );		// ��������
+		pItem->LitResetTexture( pInfo->nLightID, Level );		// 
 	else
 		pItem->LitUnresetTexture();
 
-	// ��ȡ��֮ǰ����Ч
+	// 
 	int nCount = pItem->GetEffectNum();
 	CEffectObj	*pEffect = NULL;
 	for( int i=0; i<nCount; i++ )
@@ -481,7 +481,7 @@ void CSceneItem::SetForgeEffect( DWORD value, int nCharID )
 			continue;
 		}
 
-		// ʹ�õ��߱����dummy
+		// dummy
 		if( !pEffect->Create( nEffectID ) )
 		{
 			ToLogService("errors", LogLevel::Error, "msgSceneItem SetForgeEffect effect fail,ID {}", nEffectID);

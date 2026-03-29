@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "NetChat.h"
 
 #include "Character.h"
@@ -17,14 +17,14 @@
 #include "UIGuildMgr.h"
 #include "CommandMessages.h"
 
-// Типы uChar, uShort, uLong, cChar определены в NetIF.h
+//  uChar, uShort, uLong, cChar   NetIF.h
 
 // =================================================================
-//  Отправка CP-команд (клиент -> GroupServer через GateServer)
+//   CP- ( -> GroupServer  GateServer)
 // =================================================================
 
 //----------------------------
-// GM-объявление (на весь сервер)
+// GM- (  )
 //----------------------------
 void CS_GM1Say(const char *pszContent)
 {
@@ -33,7 +33,7 @@ void CS_GM1Say(const char *pszContent)
 }
 
 //----------------------------
-// GM-объявление с цветом и прокруткой
+// GM-    
 //----------------------------
 void CS_GM1Say1(const char *pszContent, DWORD color)
 {
@@ -42,7 +42,7 @@ void CS_GM1Say1(const char *pszContent, DWORD color)
 }
 
 //----------------------------
-// Торговый чат
+//  
 //----------------------------
 void CS_Say2Trade(const char *pszContent)
 {
@@ -51,7 +51,7 @@ void CS_Say2Trade(const char *pszContent)
 }
 
 //----------------------------
-// Общий чат
+//  
 //----------------------------
 void CS_Say2All(const char *pszContent)
 {
@@ -60,7 +60,7 @@ void CS_Say2All(const char *pszContent)
 }
 
 //----------------------------
-// Установить флаг «отказ от приватных сообщений»
+//      
 //----------------------------
 void CP_RefuseToMe(bool refusetome)
 {
@@ -69,7 +69,7 @@ void CP_RefuseToMe(bool refusetome)
 }
 
 //----------------------------
-// Приватное сообщение конкретному игроку
+//    
 //----------------------------
 void CS_Say2You(const char *you, const char *pszContent)
 {
@@ -78,7 +78,7 @@ void CS_Say2You(const char *you, const char *pszContent)
 }
 
 //----------------------------
-// Командный чат
+//  
 //----------------------------
 void CS_Say2Team(const char *pszContent)
 {
@@ -87,7 +87,7 @@ void CS_Say2Team(const char *pszContent)
 }
 
 //----------------------------
-// Гильдейский чат
+//  
 //----------------------------
 void CS_Say2Guild(const char* pszContent)
 {
@@ -96,7 +96,7 @@ void CS_Say2Guild(const char* pszContent)
 }
 
 //----------------------------
-// Пригласить в команду
+//   
 //----------------------------
 void CS_Team_Invite(const char *chaname)
 {
@@ -107,7 +107,7 @@ void CS_Team_Invite(const char *chaname)
 }
 
 //----------------------------
-// Отклонить приглашение в команду
+//    
 //----------------------------
 void CS_Team_Refuse(unsigned long chaid)
 {
@@ -116,7 +116,7 @@ void CS_Team_Refuse(unsigned long chaid)
 }
 
 //----------------------------
-// Принять приглашение в команду
+//    
 //----------------------------
 void CS_Team_Confirm(unsigned long chaid)
 {
@@ -127,7 +127,7 @@ void CS_Team_Confirm(unsigned long chaid)
 }
 
 //----------------------------
-// Исключить из команды
+//   
 //----------------------------
 void CS_Team_Kick(DWORD dwKickedID)
 {
@@ -138,7 +138,7 @@ void CS_Team_Kick(DWORD dwKickedID)
 }
 
 //----------------------------
-// Покинуть команду
+//  
 //----------------------------
 void CS_Team_Leave()
 {
@@ -149,7 +149,7 @@ void CS_Team_Leave()
 }
 
 //----------------------------
-// Пригласить в друзья
+//   
 //----------------------------
 void CS_Frnd_Invite(const char *chaname)
 {
@@ -158,7 +158,7 @@ void CS_Frnd_Invite(const char *chaname)
 }
 
 //----------------------------
-// Отклонить запрос в друзья
+//    
 //----------------------------
 void CS_Frnd_Refuse(unsigned long chaid)
 {
@@ -167,7 +167,7 @@ void CS_Frnd_Refuse(unsigned long chaid)
 }
 
 //----------------------------
-// Принять запрос в друзья
+//    
 //----------------------------
 void CS_Frnd_Confirm(unsigned long chaid)
 {
@@ -176,7 +176,7 @@ void CS_Frnd_Confirm(unsigned long chaid)
 }
 
 //----------------------------
-// Удалить из друзей
+//   
 //----------------------------
 void CS_Frnd_Delete(unsigned long chaid)
 {
@@ -185,7 +185,7 @@ void CS_Frnd_Delete(unsigned long chaid)
 }
 
 //----------------------------
-// Запросить подробную информацию о друге
+//     
 //----------------------------
 void CP_Frnd_Refresh_Info(unsigned long chaid)
 {
@@ -194,7 +194,7 @@ void CP_Frnd_Refresh_Info(unsigned long chaid)
 }
 
 //----------------------------
-// Изменить личную информацию (девиз, иконка, отказ от сессий)
+//    (, ,   )
 //----------------------------
 void CP_Change_PersonInfo(const char* motto, unsigned short icon, bool refuse_sess)
 {
@@ -204,7 +204,7 @@ void CP_Change_PersonInfo(const char* motto, unsigned short icon, bool refuse_se
 }
 
 //----------------------------
-// Создать чат-сессию
+//  -
 //----------------------------
 void CS_Sess_Create(const char *chaname[], unsigned char chanum)
 {
@@ -220,7 +220,7 @@ void CS_Sess_Create(const char *chaname[], unsigned char chanum)
 }
 
 //----------------------------
-// Добавить участника в сессию
+//    
 //----------------------------
 void CS_Sess_Add(unsigned long sessid, const char *chaname)
 {
@@ -230,7 +230,7 @@ void CS_Sess_Add(unsigned long sessid, const char *chaname)
 }
 
 //----------------------------
-// Покинуть сессию
+//  
 //----------------------------
 void CS_Sess_Leave(unsigned long sessid)
 {
@@ -240,7 +240,7 @@ void CS_Sess_Leave(unsigned long sessid)
 }
 
 //----------------------------
-// Сообщение в сессию
+//   
 //----------------------------
 void CS_Sess_Say(unsigned long sessid, const char *word)
 {
@@ -250,11 +250,11 @@ void CS_Sess_Say(unsigned long sessid, const char *word)
 }
 
 // =================================================================
-//  Обработка PC-команд (GroupServer -> клиент)
+//   PC- (GroupServer -> )
 // =================================================================
 
 //----------------------------
-// Приватное сообщение
+//  
 //----------------------------
 BOOL PC_Say2You(LPRPACKET pk)
 {
@@ -270,7 +270,7 @@ BOOL PC_Say2You(LPRPACKET pk)
 }
 
 //----------------------------
-// Командный чат (входящий)
+//   ()
 //----------------------------
 BOOL PC_Say2Team(LPRPACKET pk)
 {
@@ -283,7 +283,7 @@ BOOL PC_Say2Team(LPRPACKET pk)
 }
 
 //----------------------------
-// Гильдейский чат (входящий)
+//   ()
 //----------------------------
 BOOL PC_Say2Gud(LPRPACKET pk)
 {
@@ -296,7 +296,7 @@ BOOL PC_Say2Gud(LPRPACKET pk)
 }
 
 //----------------------------
-// Общий чат (входящий)
+//   ()
 //----------------------------
 BOOL PC_Say2All(LPRPACKET pk)
 {
@@ -311,7 +311,7 @@ BOOL PC_Say2All(LPRPACKET pk)
 }
 
 //----------------------------
-// GM-объявление (входящее)
+// GM- ()
 //----------------------------
 BOOL PC_GM1SAY(LPRPACKET pk)
 {
@@ -326,7 +326,7 @@ BOOL PC_GM1SAY(LPRPACKET pk)
 }
 
 //----------------------------
-// GM-объявление с прокруткой (входящее)
+// GM-   ()
 //----------------------------
 BOOL PC_GM1SAY1(LPRPACKET pk)
 {
@@ -342,7 +342,7 @@ BOOL PC_GM1SAY1(LPRPACKET pk)
 }
 
 //----------------------------
-// Торговый чат (входящий)
+//   ()
 //----------------------------
 BOOL PC_SAY2TRADE(LPRPACKET pk)
 {
@@ -357,7 +357,7 @@ BOOL PC_SAY2TRADE(LPRPACKET pk)
 }
 
 //----------------------------
-// Создание сессии (ошибка / успех)
+//   ( / )
 //----------------------------
 BOOL PC_SESS_CREATE(LPRPACKET pk)
 {
@@ -387,7 +387,7 @@ BOOL PC_SESS_CREATE(LPRPACKET pk)
 }
 
 //----------------------------
-// Добавление участника в сессию
+//    
 //----------------------------
 BOOL PC_SESS_ADD(LPRPACKET pk)
 {
@@ -404,7 +404,7 @@ BOOL PC_SESS_ADD(LPRPACKET pk)
 }
 
 //----------------------------
-// Выход из сессии
+//   
 //----------------------------
 BOOL PC_SESS_LEAVE(LPRPACKET pk)
 {
@@ -417,7 +417,7 @@ BOOL PC_SESS_LEAVE(LPRPACKET pk)
 }
 
 //----------------------------
-// Сообщение в сессии
+//   
 //----------------------------
 BOOL PC_SESS_SAY(LPRPACKET pk)
 {
@@ -430,7 +430,7 @@ BOOL PC_SESS_SAY(LPRPACKET pk)
 }
 
 //----------------------------
-// Приглашение в команду (входящее)
+//    ()
 //----------------------------
 BOOL PC_TEAM_INVITE(LPRPACKET pk)
 {
@@ -444,7 +444,7 @@ BOOL PC_TEAM_INVITE(LPRPACKET pk)
 }
 
 //----------------------------
-// Отмена/ошибка приглашения в команду
+// /   
 //----------------------------
 BOOL PC_TEAM_CANCEL(LPRPACKET pk)
 {
@@ -457,7 +457,7 @@ BOOL PC_TEAM_CANCEL(LPRPACKET pk)
 }
 
 //----------------------------
-// Обновление состава команды
+//   
 //----------------------------
 BOOL PC_TEAM_REFRESH(LPRPACKET pk)
 {
@@ -490,7 +490,7 @@ BOOL PC_TEAM_REFRESH(LPRPACKET pk)
 }
 
 //----------------------------
-// Приглашение в друзья (входящее)
+//    ()
 //----------------------------
 BOOL PC_FRND_INVITE(LPRPACKET pk)
 {
@@ -504,7 +504,7 @@ BOOL PC_FRND_INVITE(LPRPACKET pk)
 }
 
 //----------------------------
-// Отмена/ошибка добавления в друзья
+// /   
 //----------------------------
 BOOL PC_FRND_CANCEL(LPRPACKET pk)
 {
@@ -517,7 +517,7 @@ BOOL PC_FRND_CANCEL(LPRPACKET pk)
 }
 
 //----------------------------
-// GM-информация (тегированный протокол через десериализатор)
+// GM- (   )
 //----------------------------
 BOOL PC_GM_INFO(LPRPACKET pk)
 {
@@ -567,7 +567,7 @@ BOOL PC_GM_INFO(LPRPACKET pk)
 }
 
 //----------------------------
-// Обновление списка друзей (тегированный протокол через десериализатор)
+//    (   )
 //----------------------------
 BOOL PC_FRND_REFRESH(LPRPACKET pk)
 {
@@ -631,7 +631,7 @@ BOOL PC_FRND_REFRESH(LPRPACKET pk)
 }
 
 //----------------------------
-// Подробная информация о друге
+//    
 //----------------------------
 BOOL PC_FRND_REFRESH_INFO(LPRPACKET pk)
 {
@@ -654,7 +654,7 @@ BOOL PC_FRND_REFRESH_INFO(LPRPACKET pk)
 }
 
 //----------------------------
-// Обновление личной информации (девиз, иконка, отказ от сессий)
+//    (, ,   )
 //----------------------------
 BOOL PC_CHANGE_PERSONINFO(LPRPACKET pk)
 {

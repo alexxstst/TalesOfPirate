@@ -1,4 +1,4 @@
-print("-- [Loading] Look")
+﻿print("-- [Loading] Look")
 
 enumEQUIP_HEAD = 0
 enumEQUIP_FACE = 1

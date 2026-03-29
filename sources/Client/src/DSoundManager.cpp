@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "DSoundManager.h"
 #include <io.h>
 #include <fcntl.h>

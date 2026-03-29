@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include <iostream>
 #include "GroupServerApp.h"
 #include "GameCommon.h"
@@ -16,7 +16,7 @@ void GroupServerApp::CP_MASTER_REFRESH_INFO(Player *ply,net::TcpClient *client,n
 	if(HasMaster(ply->m_chaid[ply->m_currcha],l_chaid) < 1)
 	{
 		m_mtxDB.unlock();
-		//ply->SendSysInfo("���ǲ���ʦͽ��ϵ��");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001));
 	}else if(m_tblcharaters->FetchRowByChaID(l_chaid) ==1)
 	{
@@ -41,7 +41,7 @@ void GroupServerApp::CP_PRENTICE_REFRESH_INFO(Player *ply,net::TcpClient *client
 	if(HasMaster(l_chaid, ply->m_chaid[ply->m_currcha]) < 1)
 	{
 		m_mtxDB.unlock();
-		//ply->SendSysInfo("���ǲ���ʦͽ��ϵ��");
+		//ply->SendSysInfo("");
 		ply->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00001));
 	}else if(m_tblcharaters->FetchRowByChaID(l_chaid) ==1)
 	{
@@ -73,25 +73,25 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 	if(!pPrentice || !pMaster)
 	{
 		LogLine l_line(g_LogMaster);
-		//l_line<<newln<<"MP_MASTER_CREATE()��Ա������!";
+		//l_line<<newln<<"MP_MASTER_CREATE()!";
 		l_line<<newln<<"MP_MASTER_CREATE() member is offline!";
 		return;
 	}
 
-	//����
+	//
 	bool bInvited = false;
 	if(pPrentice->m_CurrMasterNum >= const_master.MasterMax)
 	{
-		//pMaster->SendSysInfo("�Է��Ѿ��е�ʦ��!");
+		//pMaster->SendSysInfo("!");
 		pMaster->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00003));
-		//pPrentice->SendSysInfo("���Ѿ��е�ʦ��!");
+		//pPrentice->SendSysInfo("!");
 		pPrentice->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00004));
 	}
 	else if(m_tblmaster->GetPrenticeCount(l_master_chaid) >= const_master.PrenticeMax)
 	{
-		//pMaster->SendSysInfo("����ѧͽ���Ѿ��ﵽ������������!");
+		//pMaster->SendSysInfo("!");
 		pMaster->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00005));
-		//pPrentice->SendSysInfo("�Է���ѧͽ���Ѿ��ﵽ������������!");
+		//pPrentice->SendSysInfo("!");
 		pPrentice->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00006));
 	}
 	else
@@ -112,22 +112,22 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 			pPrentice->SendSysInfo(l_buf);
 		}else if(l_invited = l_invited_ply->MasterFindInvitedByInviterChaID(pPrentice->m_chaid[pPrentice->m_currcha]))
 		{
-			//pPrentice->SendSysInfo(dstring("����ǰ�ԡ�")<<l_invited_name<<"���Ѿ���һ��δ���İ�ʦ���룬���԰����ꡣ");
+			//pPrentice->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00008),l_invited_name);
 			pPrentice->SendSysInfo(l_buf);
 		}else if(l_invited = pPrentice->MasterFindInvitedByInviterChaID(l_invited_ply->m_chaid[l_invited_ply->m_currcha]))
 		{
-			//pPrentice->SendSysInfo(dstring("��")<<l_invited_name<<"����ǰ�Ѿ���һ������İ�ʦ���룬����ܼ��ɡ�");
+			//pPrentice->SendSysInfo(dstring("")<<l_invited_name<<"");
 			char l_buf[256];
 			sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00009),l_invited_name);
 			pPrentice->SendSysInfo(l_buf);
 		//}else if(m_tblmaster->HasMaster(pPrentice->m_chaid[pPrentice->m_currcha], l_invited_ply->m_chaid[l_invited_ply->m_currcha]) > 0)
 		}else if(HasMaster(pPrentice->m_chaid[pPrentice->m_currcha], l_invited_ply->m_chaid[l_invited_ply->m_currcha]) > 0)
 		{
-			//pPrentice->SendSysInfo("�����Ѿ���ʦͽ��!");
+			//pPrentice->SendSysInfo("!");
 			pPrentice->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00011));
-			//pMaster->SendSysInfo("�����Ѿ���ʦͽ��!");
+			//pMaster->SendSysInfo("!");
 			pMaster->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00011));
 		}else
 		{
@@ -143,7 +143,7 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 		}
 	}
 
-	//ȷ��
+	//
 	if(bInvited)
 	{
 		uLong		l_inviter_chaid	= l_prentice_chaid;
@@ -156,7 +156,7 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 			{
 				--(pMaster->m_CurrPrenticeNum);
 				--(pPrentice->m_CurrMasterNum);
-				//pMaster->SendSysInfo(dstring("��")<<l_inviter->m_chaname[l_inviter->m_currcha].c_str()<<"���Ѿ��е�ʦ��!");
+				//pMaster->SendSysInfo(dstring("")<<l_inviter->m_chaname[l_inviter->m_currcha].c_str()<<"!");
 				char l_buf[256];
 				sprintf(l_buf,RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00013),l_inviter->m_chaname[l_inviter->m_currcha].c_str());
 				pMaster->SendSysInfo(l_buf);
@@ -164,8 +164,8 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 			{
 				LogLine	l_line(g_LogMaster);
 				/*
-				l_line<<newln<<"���"<<pMaster->m_chaname[pMaster->m_currcha]<<"("<<pMaster->m_chaid[pMaster->m_currcha]
-				<<")�����"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")��Ϊʦͽ!"
+				l_line<<newln<<""<<pMaster->m_chaname[pMaster->m_currcha]<<"("<<pMaster->m_chaid[pMaster->m_currcha]
+				<<")"<<l_inviter->m_chaname[l_inviter->m_currcha]<<"("<<l_inviter_chaid<<")!"
 					<<endln;
 				*/
 				l_line<<newln<<"player"<<pMaster->m_chaname[pMaster->m_currcha]<<"("<<pMaster->m_chaid[pMaster->m_currcha]
@@ -173,9 +173,9 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 					<<endln;
 				m_tblmaster->AddMaster(l_prentice_chaid, l_master_chaid);
 				AddMaster(l_prentice_chaid, l_master_chaid);
-				//pMaster->SendSysInfo("��ϲ������ͽ��!");
+				//pMaster->SendSysInfo("!");
 				pMaster->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00014));
-				//pPrentice->SendSysInfo("��ϲ������ʦ��!");
+				//pPrentice->SendSysInfo("!");
 				pPrentice->SendSysInfo(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00015));
 				net::WPacket	l_wpk(256);
 				l_wpk.WriteCmd(CMD_PC_MASTER_REFRESH);
@@ -200,7 +200,7 @@ void GroupServerApp::MP_MASTER_CREATE(Player *ply,net::TcpClient *client,net::RP
 	else
 	{
 		LogLine l_line(g_LogMaster);
-		//l_line<<newln<<"MP_MASTER_CREATE()����ʧ��";
+		//l_line<<newln<<"MP_MASTER_CREATE()";
 		l_line<<newln<<"MP_MASTER_CREATE() invite failed";
 	}
 }
@@ -248,8 +248,8 @@ void GroupServerApp::MP_MASTER_DEL(Player *ply,net::TcpClient *client,net::RPack
 		DelMaster(l_prentice_chaid,l_master_chaid);
 		LogLine	l_line(g_LogMaster);
 		/*
-		l_line<<newln<<"���"<<szMasterName<<"("<<l_master_chaid
-		<<")��<<szPrenticeName<<("<<l_prentice_chaid<<")�����ʦͽ��ϵ";
+		l_line<<newln<<""<<szMasterName<<"("<<l_master_chaid
+		<<")<<szPrenticeName<<("<<l_prentice_chaid<<")";
 		*/
 		l_line<<newln<<"player"<<szMasterName<<"("<<l_master_chaid
 		<<")and <<szPrenticeName<<("<<l_prentice_chaid<<"free master relation";
@@ -319,7 +319,7 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 	int l_num1{ std::size(l_farray1) };
 	int l_num2{ std::size(l_farray2) };
 
-	//֪ͨѧͽ
+	//
 	m_tblmaster->GetPrenticeData(l_farray1,l_num1,ply->m_chaid[ply->m_currcha]);
 
 	net::WPacket	l_toPrentice(256);
@@ -353,7 +353,7 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 			else
 			{
 				//l_toSelf1.WriteString(l_farray1[i].relation.c_str());
-				//l_toSelf1.WriteString("ѧͽ");
+				//l_toSelf1.WriteString("");
 				l_toSelf1.WriteString(RES_STRING(GP_GROUPSERVERAPPMASTER_CPP_00017));
 				l_toSelf1.WriteInt64(uShort(l_farray1[i].memaddr));
 				ply->m_CurrPrenticeNum += l_farray1[i].memaddr;
@@ -382,11 +382,11 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 	}
 	SendToClient(ply,l_toSelf1);
 	LogLine	l_line1(g_LogMaster);
-	//l_line1<<newln<<"����֪ͨ��ѧͽ����"<<l_plynum1<<endln;
+	//l_line1<<newln<<""<<l_plynum1<<endln;
 	l_line1<<newln<<"online notice apprentice num:"<<l_plynum1<<endln;
 	SendToClient(l_plylst1.data(),l_plynum1,l_toPrentice);
 
-	//֪ͨ��ʦ
+	//
 	m_tblmaster->GetMasterData(l_farray2,l_num2,ply->m_chaid[ply->m_currcha]);
 
 	net::WPacket	l_toMaster(256);
@@ -448,7 +448,7 @@ void GroupServerApp::PC_MASTER_INIT(Player *ply)
 	}
 	SendToClient(ply,l_toSelf2);
 	LogLine	l_line2(g_LogMaster);
-	//l_line2<<newln<<"����֪ͨ�ĵ�ʦ����"<<l_plynum2<<endln;
+	//l_line2<<newln<<""<<l_plynum2<<endln;
 	l_line2<<newln<<"online notice master num:"<<l_plynum2<<endln;
 	SendToClient(l_plylst2.data(), l_plynum2, l_toMaster);
 }

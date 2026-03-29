@@ -1,4 +1,4 @@
-#define WIN32_DLG
+﻿#define WIN32_DLG
 
 #ifdef WIN32_DLG
 

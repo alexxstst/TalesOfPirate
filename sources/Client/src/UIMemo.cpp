@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uimemo.h"
 #include "uigraph.h"
 #include "uitextparse.h"
@@ -164,7 +164,7 @@ void CMemo::AddItemRowContent(int row ,const  char* szFunc, const char* szItemEx
 		ToLogService("common", "msgCMemo::AddItemRowContent( {}, {} ) out of range!", row, szFunc);
 		return;
 	}
-	//������
+	//
 	_strItem[row] = szFunc;
 	_strItemEx[row] = szItemEx;
 }
@@ -188,13 +188,13 @@ void CMemo::AddMisRowContent(int row ,const char *szFunc)
 
 void CMemo::ProcessCaption()
 {
-	//���б�־��_
+	//_
 	for (int nRow =0 ; nRow <=_nRowNum ; nRow++)
 		_str[nRow] = "";
 	_nRowNum = 0 ;
 
 	
-	//��������ַ��Ĵ���
+	//
 	const char  *s = _strCaption.c_str() ;
 	string  strTemp ;
 	int length =(int ) strlen( s );
@@ -263,7 +263,7 @@ void CMemo::ProcessCaption()
 		}
 	}
 	
-	_nRowInfo[0][1] = _nRowNum;    //ǰ������memo����
+	_nRowInfo[0][1] = _nRowNum;    //memo
 
 	if (_strCaption.length() == 0)
 	{
@@ -295,11 +295,11 @@ void CMemo::ProcessCaption()
 
     if (_bIsHaveItem)
 	{
-        _str[_nRowNum]  = "";   //���У�����˵������������
+        _str[_nRowNum]  = "";   //
 		_nRowNum++;		
 		_nRowInfo[2][0]= _nRowNum;
 	
-		for(i = 0 ; i<_nItemRowNum ; i ++)  //ѡ��lst������
+		for(i = 0 ; i<_nItemRowNum ; i ++)  //lst
 		{
 			_str[_nRowNum]  =  _strItem[i];
 			_nRowNum++;				
@@ -521,7 +521,7 @@ void CMemo::_SetScrollRange()
 
 
 ////////////////////////////////////////////////////
-//˵�����ÿؼ����ڴ�������������ʾ�ʹ���
+//
 ////////////////////////////////////////////////////
 
 CMemoEx::CMemoEx(CForm& frmOwn)
@@ -533,7 +533,7 @@ _nRowHeight(14),_nTitleHeight(24),_nIconHeight(18),_nPhraseNum(0), evtClickItem(
 	_pScroll = new CScroll( frmOwn );	
 	_SetSelf();
 
-	// ��ʼ������������Ϣ
+	// 
 	for( int i = 0; i < MEMO_MAX_LINE; i++ )
 	{
 		m_MemoInfo[i].strDesp = "";
@@ -580,7 +580,7 @@ CMemoEx::CMemoEx( const CMemoEx& rhs )
 
 void  CMemoEx::Clear()
 {
-	// ��ʼ������������Ϣ
+	// 
 	for( int i = 0; i < MEMO_MAX_LINE; i++ )
 	{
 		m_MemoInfo[i].strDesp = "";
@@ -656,7 +656,7 @@ void CMemoEx::Init()
 	_pScroll->Init();
 	_OnScrollChange();
 
-	// װ�ؽ���ѡ���ͼ��
+	// 
 	if( m_pPrizePic == NULL && m_pPrizeSelPic == NULL )
 	{
 		SAFE_DELETE(m_pPrizePic);
@@ -668,7 +668,7 @@ void CMemoEx::Init()
 		m_pPrizeSelPic->LoadImage( "./texture/ui/QQ2.tga", 156, 38, 0, 81, 39 );
 	}
 
-	// ��ʼ������������Ϣ
+	// 
 	Clear();
 }
 
@@ -681,7 +681,7 @@ BOOL CMemoEx::SelPrizeItem( int nxPos, int nyPos, DWORD dwKey )
 	int nPosY = GetY() + _nTopMargin;
 	int nPosX = GetX() + _nLeftMargin;
 
-	// ����ߴ�
+	// 
 	int nHeight = _nRowHeight;
 	int nWidth = CGuiFont::s_Font.GetWidth("a");	
 	int x, y;
@@ -728,7 +728,7 @@ BOOL CMemoEx::SelPrizeItem( int nxPos, int nyPos, DWORD dwKey )
 		}
 		else
 		{
-			// δ֪��������Ҫ��ʾ
+			// 
 		}
 	}
 	return FALSE;
@@ -745,7 +745,7 @@ int CMemoEx::SelMemInfo(int x, int y, DWORD key)
 	int nPosY = GetY() + _nTopMargin;
 	int nPosX = GetX() + _nLeftMargin;
 
-	// ����ߴ�
+	// 
 	int nHeight = _nRowHeight;
 	int nWidth = CGuiFont::s_Font.GetWidth("a");	
 	int startX, startY;
@@ -786,7 +786,7 @@ int CMemoEx::SelMemInfo(int x, int y, DWORD key)
 		}
 		else
 		{
-			// δ֪��������Ҫ��ʾ
+			// 
 		}
 	}
 
@@ -801,14 +801,14 @@ void CMemoEx::Render()
 	int nPosY = GetY() + _nTopMargin;
 	int nPosX = GetX() + _nLeftMargin;
 
-	// ����ߴ�
+	// 
 	int nHeight = _nRowHeight;
 	int nWidth = CGuiFont::s_Font.GetWidth("a");	
 	int x, y;
 	int nInterval = 0;
 	BYTE bySelID = 0;
 
-	// �ü���ʾ��
+	// 
 	GetRender().SetClipRect( nPosX, nPosY, 32 * nWidth, (_nPageShowNum + 1) * nHeight );
 
 	//CGuiFont::s_Font.Begin();
@@ -865,7 +865,7 @@ void CMemoEx::Render()
 		}
 		else
 		{
-			// δ֪��������Ҫ��ʾ
+			// 
 		}
 	}
 	//CGuiFont::s_Font.End();
@@ -906,7 +906,7 @@ std::vector<std::string> stringQuebrada(std::string original) {
 }
 
 std::string justificarNew(string texto) {
-	//std::string texto = "Seja Bem vindo ao 'Soul of Pirates Online'. \n Voc� acaba de embarcar em um Mundo conhecido como Orisord, um lugar repleto de criaturas m�sticas, tesouros e segredos que o aguardam para grandes aventuras. \n Sua jornada se inicia em uma cidade conhecida como Argent City, localizada na Regi�o de Ascaron. Sinta-se livre para explorar-la ao m�ximo. \n  Ao longo de sua jornada voc� poder� escolher entre fazer parte das For�as da Marinha ou de Grandes Organiza��es Piratas. Tal escolha ser� �nica e muito importante para o seu futuro. \n  Por enquanto, o seu primeiro objetivo � encontrar a <bInstrutora Senna> em <rArgent City> nas coordenadas (2223, 2785). Ela ir� o auxiliar no come�o de sua mais nova aventura. ";
+	//std::string texto = "Seja Bem vindo ao 'Soul of Pirates Online'. \n Voc acaba de embarcar em um Mundo conhecido como Orisord, um lugar repleto de criaturas msticas, tesouros e segredos que o aguardam para grandes aventuras. \n Sua jornada se inicia em uma cidade conhecida como Argent City, localizada na Regio de Ascaron. Sinta-se livre para explorar-la ao mximo. \n  Ao longo de sua jornada voc poder escolher entre fazer parte das Foras da Marinha ou de Grandes Organizaes Piratas. Tal escolha ser nica e muito importante para o seu futuro. \n  Por enquanto, o seu primeiro objetivo  encontrar a <bInstrutora Senna> em <rArgent City> nas coordenadas (2223, 2785). Ela ir o auxiliar no comeo de sua mais nova aventura. ";
 	texto.append(" ");
 	const int nMax = 32;
 	for (int i = 0; i < stringQuebrada(texto).size(); i++) {
@@ -967,16 +967,16 @@ void CMemoEx::ParseMisPage()
 {
 	USHORT sMaxCom = 32;
 	USHORT sRow = 0, sCom = 0;
-	DWORD dwColor = 0xFF000000; // ��ɫ
+	DWORD dwColor = 0xFF000000; // 
 
-	// �������Ʊ���
+	// 
 	m_MemoInfo[m_sNumInfo].strDesp = m_PageInfo.szName;
 	m_MemoInfo[m_sNumInfo].dwColor = 0xFF000000;
 	m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_TITLE;
 	m_MemoInfo[m_sNumInfo].sxPos   = sCom;
 	m_MemoInfo[m_sNumInfo].syPos   = sRow;
 
-	// ��ʼ��һ��	
+	// 	
 	m_sNumInfo++;
 	sRow++;
 	m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -985,13 +985,13 @@ void CMemoEx::ParseMisPage()
 	m_MemoInfo[m_sNumInfo].sxPos   = sCom;
 	m_MemoInfo[m_sNumInfo].syPos   = sRow;
 
-	// ������������
+	// 
 	char* pszData = m_PageInfo.szDesp;
 	char* pszTemp = pszData;
 	ParseScript( pszData, m_sNumInfo, sRow, sCom, 0, sMaxCom, 0xFF000000, m_MemoInfo, MEMO_MAX_LINE );
 	
 
-	// ��ʼ��һ��	
+	// 	
 	m_sNumInfo++;
 	//sRow++;
 	m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -1001,7 +1001,7 @@ void CMemoEx::ParseMisPage()
 	m_MemoInfo[m_sNumInfo].syPos   = sRow;
 
 	char szNumber[128] = {0};
-	// ����Ŀ��
+	// 
 	if( m_PageInfo.byNeedNum > 0 )
 	{
 		sRow++;
@@ -1089,7 +1089,7 @@ void CMemoEx::ParseMisPage()
 			}
 			else
 			{
-				// ���������
+				// 
 				strTemp += g_oLangRec.GetString(710);
 			}
 
@@ -1111,7 +1111,7 @@ void CMemoEx::ParseMisPage()
 			}
 		}
 
-		// ��ʼ��һ��
+		// 
 		m_sNumInfo++;
 		//sRow++;
 		m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -1123,7 +1123,7 @@ void CMemoEx::ParseMisPage()
 
 	if( m_PageInfo.byPrizeNum > 0 )
 	{
-		// ������
+		// 
 		sRow++;
 		sCom = 0;
 		dwColor = 0xFF000000;
@@ -1131,7 +1131,7 @@ void CMemoEx::ParseMisPage()
 		m_MemoInfo[m_sNumInfo].strDesp = g_oLangRec.GetString(711);
 		if( m_PageInfo.byPrizeSelType == mission::PRZIE_SELALL )
 		{
-			//m_MemoInfo[m_sNumInfo].strDesp += "(ȫ��)";
+			//m_MemoInfo[m_sNumInfo].strDesp += "()";
 		}
 		else
 		{
@@ -1164,7 +1164,7 @@ void CMemoEx::ParseMisPage()
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
 				m_MemoInfo[m_sNumInfo].pIcon = new CGraph( szItem, 32,32, 0, 0, 1 );
 
-				// ��ʼ��һ��
+				// 
 				m_sNumInfo++;
 				//sRow++;
 				m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -1211,7 +1211,7 @@ void CMemoEx::ParseMisPage()
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
 				m_MemoInfo[m_sNumInfo].pIcon = new CGraph( szItem, 32,32, 0, 0, 1 );
 
-				// ��ʼ��һ��
+				// 
 				m_sNumInfo++;
 				//sRow++;
 				m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -1249,7 +1249,7 @@ void CMemoEx::ParseMisPage()
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
 				m_MemoInfo[m_sNumInfo].pIcon = new CGraph( szItem, 32,32, 0, 0, 1 );
 
-				// ��ʼ��һ��
+				// 
 				m_sNumInfo++;
 				//sRow++;
 				m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -1287,7 +1287,7 @@ void CMemoEx::ParseMisPage()
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
 				m_MemoInfo[m_sNumInfo].pIcon = new CGraph( szItem, 32,32, 0, 0, 1 );
 
-				// ��ʼ��һ��
+				// 
 				m_sNumInfo++;
 				//sRow++;
 				m_MemoInfo[m_sNumInfo].strDesp = "";
@@ -1350,7 +1350,7 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 			pszTemp++;
 			if( pszTemp[0] == 'p' )
 			{
-				dwColor = 0xFFFF00FF; // ��ɫ
+				dwColor = 0xFFFF00FF; // 
 				if( pszTemp[1] == '>' )
 				{
 					pszTemp++;
@@ -1428,11 +1428,11 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 			}
 			else
 			{
-				// δ֪���ͱ�����
+				// 
 				continue;
 			}
 
-			// ʹ���µ��ַ���¼
+			// 
 			pszTemp++;
 			sNumLine++;
 			pInfo[sNumLine].strDesp = "";
@@ -1443,10 +1443,10 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 		}
 		else if( pszTemp[0] == '>' )
 		{
-			dwColor = dwDefColor; // �ָ�����Ϊ��ɫ
+			dwColor = dwDefColor; // 
 			pszTemp++;
 
-			// ʹ���µ��ַ���¼
+			// 
 			sNumLine++;
 			pInfo[sNumLine].strDesp = "";
 			pInfo[sNumLine].dwColor = dwColor;
@@ -1456,7 +1456,7 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 			continue;
 		}
 
-		// �ж��Ƿ�һ��GBK
+		// GBK
 		BOOL bFlag1 = 0x81 <= (BYTE)pszTemp[0] && (BYTE)pszTemp[0] <= 0xFE;
 		BOOL bFlag2 = (0x40 <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0x7E) || (0x7E <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0xFE);
 		if( bFlag1 && bFlag2 )
@@ -1467,13 +1467,13 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 				szData[1] = pszTemp[1];
 				pInfo[sNumLine].strDesp += szData;
 				
-				// �ƶ��к�ָ����һ���ַ�
+				// 
 				sCom += 2;
 				pszTemp += 2;
 			}
 			else
 			{
-				// ����
+				// 
 				sRow++;
 				sCom = sStartCom;
 
@@ -1492,13 +1492,13 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 				szData[0] = pszTemp[0];
 				pInfo[sNumLine].strDesp += szData;
 				
-				// �ƶ��к�ָ����һ���ַ�
+				// 
 				sCom++;
 				pszTemp++;
 			}
 			else
 			{
-				// ����
+				// 
 				sRow++;
 				sCom = sStartCom;
 
@@ -1517,7 +1517,7 @@ BOOL CMemoEx::ParseScript( char* pszTemp, USHORT& sNumLine, USHORT& sRow, USHORT
 void CMemoEx::Refresh()
 {
 	CCompent::Refresh();
-	//_pScroll->SetRange( (float)0.0f, (float )_nRowNum-4 );  // _nRowNum���ֵΪ��
+	//_pScroll->SetRange( (float)0.0f, (float )_nRowNum-4 );  // _nRowNum
 	_pScroll->Refresh();
 	_OnScrollChange();
 
@@ -1571,7 +1571,7 @@ bool CMemoEx::MouseRun( int x, int y, DWORD key )
 
 		if( m_bIsSelect )
 		{
-			// �ж��Ƿ�ѡ���˽�����Ʒ
+			// 
 			if( IsSelPrize() )
 			{
 				if( SelPrizeItem( x, y, key ) )
@@ -1695,7 +1695,7 @@ void CRichMemo::Render()
 	int nPosX = GetX();
 	DWORD dwyPos = 0;
 
-	// �ü���ʾ��
+	// 
 	GetRender().SetClipRect( nPosX + m_ShowRect.left, nPosY + m_ShowRect.top, 
 		GetWidth() - m_ShowRect.right+2, GetHeight() - m_ShowRect.bottom );
 	
@@ -1705,7 +1705,7 @@ void CRichMemo::Render()
 	for(const auto& pInfo : m_LineList)
 	{
 		dwyPos += pInfo->sHeight + m_byDist;
-		// ��ʾ���пɼ�����Ϣ
+		// 
 		MEMO_COLINFO_ARRAY::iterator colpos;
 		for(const auto& colpos : pInfo->ColInfoArray)
 		{
@@ -1824,16 +1824,16 @@ void CRichMemo::Clear()
 	}
 	m_LineList.clear();
 
-	// �Զ�����
+	// 
 	AutoScroll();
 }
 
 void CRichMemo::AddText( const char szTitle[], const char szText[], BYTE byColorType, BYTE byFontType )
 {
-	// �ж��Ƿ񳬳���ʾ��Χ
+	// 
 	if( m_LineList.size() >= m_sMaxLine )
 	{
-		// ɾ����һ���е���ʾ����
+		// 
 		MEMO_LINEINFO_LIST::iterator pos = m_LineList.begin();
 		if( pos != m_LineList.end() )
 		{
@@ -1848,7 +1848,7 @@ void CRichMemo::AddText( const char szTitle[], const char szText[], BYTE byColor
 	ParseScript( szText, dwColor, byFontType, (USHORT)m_ShowRect.left + 2, 
 		(USHORT)(_nWidth - m_ShowRect.right - m_ShowRect.left) );
 	
-	// �Զ�����
+	// 
 	AutoScroll();
 }
 
@@ -1856,29 +1856,29 @@ DWORD CRichMemo::GetColor( BYTE byType )
 {
 	switch( byType )
 	{
-	case TEXT_COLOR_WIGHT: // ��ɫ
+	case TEXT_COLOR_WIGHT: // 
 		return 0xFFFFFFFF;
 		break;
-	case TEXT_COLOR_BLACK: // ��ɫ
+	case TEXT_COLOR_BLACK: // 
 		return 0xFF000000;
 		break;
-	case TEXT_COLOR_RED: // ��ɫ
+	case TEXT_COLOR_RED: // 
 		return 0xFFFF0000;
 		break;
-	case TEXT_COLOR_GREEN: // ��ɫ
+	case TEXT_COLOR_GREEN: // 
 		return 0xFF00FF00;
 		break;
-	case TEXT_COLOR_BLUE: // ��ɫ
+	case TEXT_COLOR_BLUE: // 
 		return 0xFF0000FF;
 		break;
-	case TEXT_COLOR_GRAY: // ��ɫ
+	case TEXT_COLOR_GRAY: // 
 		return 0xFF808080;
 		break;
-	case TEXT_COLOR_PURPLE: // ��ɫ
+	case TEXT_COLOR_PURPLE: // 
 		return 0xFFFF00FF;
 		break;
 	default:
-		return 0xFF233413; // ���ɫ
+		return 0xFF233413; // 
 		break;
 	}
 }
@@ -1899,7 +1899,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 	char szData[3];
 	memset( szData, 0, 3 );
 
-	// ��ȡ����ߴ�
+	// 
 	int nWidth, nHeight;
 	CGuiFont::s_Font.GetSize( byFont, "a", nWidth, nHeight );
 
@@ -1922,7 +1922,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 		{
 			if( strDesp.length() > 0 )
 			{
-				// ��������
+				// 
 				MEMO_COLINFO Info;
 				Info.strDesp = strDesp;
 				Info.dwColor = dwColor;
@@ -1938,7 +1938,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 			pszTemp++;
 			if( pszTemp[0] == 'p' )
 			{
-				dwColor = 0xFFFF00FF; // ��ɫ
+				dwColor = 0xFFFF00FF; // 
 				if( pszTemp[1] == '>' )
 				{
 					pszTemp += 2;
@@ -2001,7 +2001,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				pLineInfo = new MEMO_LINE_INFO;
 				if( pLineInfo == NULL ) return;
 
-				// ����
+				// 
 				sCom = sStartCom;
 				sxPos = sCom;
 				sCurHeight = (USHORT)nHeight;
@@ -2027,7 +2027,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 					pLineInfo = new MEMO_LINE_INFO;
 					if( pLineInfo == NULL ) return;
 
-					// ����
+					// 
 					sCom = sStartCom;
 					sxPos = sCom;
 					sCurHeight = (USHORT)nHeight;
@@ -2055,7 +2055,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				char szIcon[32] = "";
 				strncpy( szIcon, pszTemp + 1, pszEnd - pszTemp - 1 );
 				pszTemp = pszEnd;
-				// ��ȡͼ��
+				// 
 				CGraph* pIcon = m_pImageList->GetImage( szIcon );
 				if( !pIcon )
 				{
@@ -2063,7 +2063,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				}
 				else
 				{
-					// �ж��Ƿ�����ܹ���ʾ���¸�ͼ����������ʾ
+					// 
 					if( sCom + pIcon->GetWidth() > sMaxCom )
 					{
 						pLineInfo->byFontType = byFont;
@@ -2080,7 +2080,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 						strDesp = "";
 					}						
 
-					// ����������ʾ�߶�
+					// 
 					if( sCurHeight < pIcon->GetHeight() + 4 )
 					{
 						sCurHeight = pIcon->GetHeight() + 4;
@@ -2097,7 +2097,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 					sCom += pIcon->GetWidth();
 					sxPos = sCom;
 
-					// �ж�ͼ���Ƿ�̫���´���ʾ�Ƿ���Ҫ����
+					// 
 					if( sCom >= sMaxCom )
 					{
 						pLineInfo->byFontType = byFont;
@@ -2117,18 +2117,18 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 			}
 			else
 			{
-				// δ֪���ͱ�����
+				// 
 				continue;
 			}
 
-			// ʹ���µ��ַ���¼
+			// 
 			pszTemp++;
 			continue;
 		}
 		else if( pszTemp[0] == '>' )
 		{
-			// ʹ���µ��ַ���¼
-			// ��������
+			// 
+			// 
 			MEMO_COLINFO Info;
 			Info.strDesp = strDesp;
 			Info.dwColor = dwColor;
@@ -2137,14 +2137,14 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 			Info.pIcon = NULL;
 			pLineInfo->ColInfoArray.push_back( Info );
 
-			dwColor = dwDefColor; // �ָ�����Ϊ��ɫ
+			dwColor = dwDefColor; // 
 			pszTemp++;
 			sxPos = sCom;
 			strDesp = "";
 			continue;
 		}
 
-		// �ж��Ƿ�һ��GBK
+		// GBK
 		BOOL bFlag1 = 0x81 <= (BYTE)pszTemp[0] && (BYTE)pszTemp[0] <= 0xFE;
 		BOOL bFlag2 = (0x40 <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0x7E) || (0x7E <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0xFE);
 		if( bFlag1 && bFlag2 )
@@ -2155,7 +2155,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				szData[1] = pszTemp[1];
 				strDesp += szData;
 				
-				// �ƶ��к�ָ����һ���ַ�
+				// 
 				sCom += (USHORT)nWidth*2;
 				pszTemp += 2;
 			}
@@ -2178,7 +2178,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				pLineInfo = new MEMO_LINE_INFO;
 				if( pLineInfo == NULL ) return;
 
-				// ����
+				// 
 				sCom = sStartCom;
 				sxPos = sCom;
 				sCurHeight = (USHORT)nHeight;
@@ -2192,7 +2192,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				szData[0] = pszTemp[0];
 				strDesp += szData;
 				
-				// �ƶ��к�ָ����һ���ַ�
+				// 
 				sCom += (USHORT)nWidth;
 				pszTemp++;
 			}
@@ -2215,7 +2215,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 				pLineInfo = new MEMO_LINE_INFO;
 				if( pLineInfo == NULL ) return;
 
-				// ����
+				// 
 				sCom = sStartCom;
 				sxPos = sCom;
 				sCurHeight = (USHORT)nHeight;
@@ -2254,7 +2254,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 	else if( pLineInfo && pLineInfo->ColInfoArray.size() <= 0 )
 	{
 		//delete pLineInfo;
-		SAFE_DELETE(pLineInfo); // UI��������
+		SAFE_DELETE(pLineInfo); // UI
 	}
 	
 
@@ -2278,7 +2278,7 @@ CFaceImage::~CFaceImage()
 		pNode=*Iter;
 		
 		//delete pNode;
-		SAFE_DELETE(pNode); // UI��������
+		SAFE_DELETE(pNode); // UI
 		
 		m_pData.erase(Iter);
 	}

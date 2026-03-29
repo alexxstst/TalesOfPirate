@@ -1,5 +1,4 @@
-#include "stdafx.h"
-#include "caLua.h"
+﻿#include "stdafx.h"
 #include "script.h"
 #include "scene.h"
 #include "GameApp.h"
@@ -7,29 +6,24 @@
 #include "PacketCmd.h"
 #include "cameractrl.h"
 #include "UISystemForm.h"
+#include <LuaBridge.h>
+
 
 void CGameApp::LoadScriptScene( eSceneType eType )
 {
 	switch( eType )
 	{
-	    case enumLoginScene:        LoadScriptScene("scripts/lua/scene/loginscene.bin");		break;
-	    case enumSelectChaScene:    LoadScriptScene("scripts/lua/scene/selectchascene.bin");    break;
-	    case enumCreateChaScene:    LoadScriptScene("scripts/lua/scene/createchascene.bin");    break;
-		case enumWorldScene:        LoadScriptScene("scripts/lua/scene/mainscene.bin");			break;
+	    case enumLoginScene:        LoadScriptScene("scripts/lua/scene/loginscene.lua");		break;
+	    case enumSelectChaScene:    LoadScriptScene("scripts/lua/scene/selectchascene.lua");    break;
+	    case enumCreateChaScene:    LoadScriptScene("scripts/lua/scene/createchascene.lua");    break;
+		case enumWorldScene:        LoadScriptScene("scripts/lua/scene/mainscene.lua");			break;
 
 	}
 }
 
 void CGameApp::LoadScriptScene( const char* script_file )
 {
-	//try
-	//{
-		CLU_LoadScript((char*)script_file, 0);
-	//}
-	//catch(...)
-	//{
-	//	LG( "script", "msgLoad Scene Script[%s] Error", script_file );
-	//}
+	LoadLuaScript(g_LuaState, script_file);
 }
 
 //---------------------------------------------------------------------------
@@ -40,7 +34,7 @@ int GP_SetCameraPos( float ex, float ey, float ez, float rx, float ry, float rz 
 	CCameraCtrl *pCam = g_pGameApp->GetMainCam();
 	pCam->m_EyePos.x = ex;
 	pCam->m_EyePos.y = ey;
-	pCam->m_EyePos.z = ez; 
+	pCam->m_EyePos.z = ez;
 	pCam->m_RefPos.x = rx;
 	pCam->m_RefPos.y = ry;
 	pCam->m_RefPos.z = rz;
@@ -60,8 +54,9 @@ int GP_GotoScene( int sceneid )
 //---------------------------------------------------------------------------
 // ScriptRegedit
 //---------------------------------------------------------------------------
-void MPInitLua_App()
+void MPInitLua_App(lua_State* L)
 {
-	CLU_RegisterFunction("GP_SetCameraPos", "int", "float,float,float,float,float,float", CLU_CDECL, CLU_CAST(GP_SetCameraPos));
-    CLU_RegisterFunction("GP_GotoScene", "int", "int", CLU_CDECL, CLU_CAST(GP_GotoScene));
+	luabridge::getGlobalNamespace(L)
+		LUABRIDGE_REGISTER_FUNC(GP_SetCameraPos)
+		LUABRIDGE_REGISTER_FUNC(GP_GotoScene);
 }

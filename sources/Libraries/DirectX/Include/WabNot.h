@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	WABNOT.H
  *
  * Defines Notification structures.  These are also defined in mapispi.h.

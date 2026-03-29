@@ -1,4 +1,4 @@
-// kalyna.cpp - written and placed in the public domain by Jeffrey Walton
+﻿// kalyna.cpp - written and placed in the public domain by Jeffrey Walton
 //              This code relied upon three sources. First was Oliynykov, Gorbenko, Kazymyrov, Ruzhentsev,
 //              Kuznetsov, Gorbenko, Dyrda, Dolgov, Pushkaryov, Mordvinov and Kaidalov's "A New Encryption
 //              Standard of Ukraine: The Kalyna Block Cipher" (http://eprint.iacr.org/2015/650.pdf). Second

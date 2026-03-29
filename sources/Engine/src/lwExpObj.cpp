@@ -1,4 +1,4 @@
-//
+ï»¿//
 
 #include "stdafx.h"
 #include "lwExpObj.h"
@@ -195,7 +195,7 @@ LW_RESULT lwMtlTexInfo_Load(lwMtlTexInfo* info, FILE* fp, DWORD version)
                 t->tss_set[j].value1 = rsv->value;
             }
         }
-        //¼æÈÝ¾É°æ±¾µÄÎÄ¼þµ¼³ö
+        //
         if(info->tex_seq[0].format == D3DFMT_A4R4G4B4)
         {
             info->tex_seq[0].format = D3DFMT_A1R5G5B5;
@@ -207,14 +207,14 @@ LW_RESULT lwMtlTexInfo_Load(lwMtlTexInfo* info, FILE* fp, DWORD version)
         return LW_RET_FAILED;
     }
 
-    // ÕâÀïÖ¸¶¨mipmap level = 3
+    // mipmap level = 3
     //if(info->tex_seq[0].colorkey_type == COLORKEY_TYPE_NONE)
     {
         info->tex_seq[0].pool = D3DPOOL_MANAGED;
         info->tex_seq[0].level = D3DX_DEFAULT;
     }
 
-    // ¼æÈÝ°æ±¾ÉèÖÃ
+    // 
     BOOL transp_flag = 0;
     lwRenderStateAtom* rsa;
     DWORD i = 0;
@@ -412,8 +412,8 @@ LW_RESULT lwAnimDataTexUV::GetValue(lwMatrix44* mat, float frame)
 
     //if(_data_seq[frame].w_angle != 0.0f) {
 
-    //    // DirectX¶ÔÓÚUV¾ØÕóµÄµÄ¼ÆËãÐèÒªUVÈ¡¸ºÖµ²ÅÄÜµÃµ½ÐèÒªµÄÐ§¹û
-    //    // ¿ÉÄÜÊÇÄ³¸ö¿ª¹ØÃ»ÓÐÉèÖÃÕýÈ·
+    //    // DirectXUVUV
+    //    // 
     //    lwMatrix44 tmp;
     //    lwMatrix44Identity(&tmp);
 
@@ -923,8 +923,8 @@ LW_RESULT lwAnimDataBone::GetValue(lwMatrix44* mat, DWORD bone_id, float frame, 
         goto __ret;
 
     // by lsh
-    // ÕâÀïframe > _frame_num Ã»ÓÐÓÃ">="ÊÇÒòÎªÎÒÃÇÔÚ¿¼ÂÇPLAY_LOOPµÄÇé¿öÊ±
-    // ÐèÒª²åÖµµÚ0Ö¡ºÍµÚ_data._frame_num - 1Ö¡µÄÊý¾Ý
+    // frame > _frame_num ">="PLAY_LOOP
+    // 0_data._frame_num - 1
     if(frame < 0 || frame > _frame_num)
         goto __ret;
 
@@ -973,9 +973,9 @@ LW_RESULT lwAnimDataBone::GetValue(lwMatrix44* mat, DWORD bone_id, float frame, 
 
             if (max_f == _frame_num)
             {
-                // ÕâÀïÎÒÃÇ²åÖµµÚ0Ö¡ºÍµÚ_data._frame_num - 1Ö¡µÄÊý¾Ý
+                // 0_data._frame_num - 1
                 max_f = 0;
-                //max_f = _frame_num - 1; ²»×÷±ß½ç½Ø¶Ï
+                //max_f = _frame_num - 1; 
             }
 
 #if 0

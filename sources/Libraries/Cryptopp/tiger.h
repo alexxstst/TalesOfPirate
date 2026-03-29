@@ -1,4 +1,4 @@
-// tiger.h - originally written and placed in the public domain by Wei Dai
+﻿// tiger.h - originally written and placed in the public domain by Wei Dai
 
 /// \file tiger.h
 /// \brief Classes for the Tiger message digest

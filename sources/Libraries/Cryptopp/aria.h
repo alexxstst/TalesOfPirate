@@ -1,4 +1,4 @@
-// aria.h - written and placed in the public domain by Jeffrey Walton
+﻿// aria.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file aria.h
 /// \brief Classes for the ARIA block cipher

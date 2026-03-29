@@ -1,4 +1,4 @@
-#pragma once
+Ôªø#pragma once
 
 
 #include "terrainattrib.h"
@@ -29,8 +29,6 @@ public:
         _AttrHeightSeq2 = 0;
         _dwAttrNum = 0;
 
-        _fp = fopen(".\\log\\fps.log", "wt");
-
 	} 
     ~MPEditor()
     {
@@ -39,8 +37,6 @@ public:
         SAFE_DELETE_ARRAY(_AttrBlockSeq2);
         SAFE_DELETE_ARRAY(_AttrHeightSeq2);
 
-        fclose(_fp);
-        _fp = 0;
     }
 
 	void		Init(int nMapID);
@@ -99,7 +95,7 @@ public:
 	
 	//lemon add@2004.11.4
 	bool		m_bShowLightBrush;
-public:		// ”√”⁄Õ‚≤øΩÁ√Êµ˜”√
+public:		// 
 
     DWORD       GetColor() { return _dwColor; }
 	void		SetColor( DWORD color ) { _dwColor=color; }
@@ -141,13 +137,12 @@ protected:
     BYTE*           _AttrBlockSeq2;
     float*          _AttrHeightSeq2;
     DWORD           _dwAttrNum;
-    FILE*           _fp;
     
 	// add by claude for terrain attrib
-	unsigned char _AttribIndex; // «¯”Ú Ù–‘∞¥≈•µƒ±‡∫≈ (1...16)
-	unsigned char _getTileAttribMask(unsigned char attrib_btn_index); // ≤Œ ˝ ««¯”Ú Ù–‘∞¥≈•µƒ±‡∫≈
-	unsigned char _IslandIndex; // ∫£µ∫µƒ±‡∫≈
-    bool _is_erase; //  «ÃÌº” Ù–‘ªπ «…æ≥˝ Ù–‘≤Ÿ◊˜
+	unsigned char _AttribIndex; //  (1...16)
+	unsigned char _getTileAttribMask(unsigned char attrib_btn_index); // 
+	unsigned char _IslandIndex; // 
+    bool _is_erase; // 
 
 	void _renderTileAttrib(int nX, int nY, int nAttribIndex);
 	void _renderTileIsland(int nX, int nY, int nIslandIndex);

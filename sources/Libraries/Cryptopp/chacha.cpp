@@ -1,4 +1,4 @@
-// chacha.cpp - written and placed in the public domain by Jeffrey Walton.
+﻿// chacha.cpp - written and placed in the public domain by Jeffrey Walton.
 //              Based on Wei Dai's Salsa20, Botan's SSE2 implementation,
 //              and Bernstein's reference ChaCha family implementation at
 //              http://cr.yp.to/chacha.html.

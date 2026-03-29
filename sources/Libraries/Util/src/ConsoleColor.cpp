@@ -1,5 +1,5 @@
-// Реализация функций управления цветом консоли Windows.
-// Использует SetConsoleTextAttribute для вывода цветного текста.
+﻿//      Windows.
+//  SetConsoleTextAttribute    .
 
 #include "ConsoleColor.h"
 #include <algorithm>
@@ -8,7 +8,7 @@
 namespace TalesOfPirate::Utils::Console {
 
     int stoc(std::string a) {
-        // Приведение к нижнему регистру, замена '_' и '-' на пробелы
+        //    ,  '_'  '-'  
         std::transform(a.begin(), a.end(), a.begin(), [](char c) {
             if ('A' <= c && c <= 'Z')
                 c = c - 'A' + 'a';

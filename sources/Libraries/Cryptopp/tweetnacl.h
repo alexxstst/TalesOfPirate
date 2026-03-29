@@ -1,4 +1,4 @@
-// tweetnacl.h - written and placed in the public domain by Jeffrey Walton
+﻿// tweetnacl.h - written and placed in the public domain by Jeffrey Walton
 
 /// \file nr.h
 /// \brief Declarations for Bernstein's TweetNaCL

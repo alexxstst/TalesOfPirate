@@ -1,28 +1,28 @@
-// ══════════════════════════════════════════════════════════
-// CryptoInterop — C++ тестовая утилита для верификации
-// совместимости AES-GCM шифрования между C++ и F#.
+﻿// 
+// CryptoInterop  C++    
+//  AES-GCM   C++  F#.
 //
-// Реализует два формата:
+//   :
 //
-// 1) "gate" — формат C++ GateServer (оригинальный):
+// 1) "gate"   C++ GateServer ():
 //    AES-128-GCM, tag=12, IV=16
 //    Wire: [Base64(ciphertext + tag)][0x00][IV(16)]
 //
-// 2) "new" — новый формат F# AesTransport:
+// 2) "new"    F# AesTransport:
 //    AES-256-GCM, tag=16, nonce=12
 //    Wire: [nonce(12)][tag(16)][ciphertext]
 //
-// Использует Crypto++ (идентичная библиотека с GateServer).
+//  Crypto++ (   GateServer).
 //
-// Команды:
-//   crypto_interop gate-vectors     — тестовые вектора формата GateServer
+// :
+//   crypto_interop gate-vectors         GateServer
 //   crypto_interop gate-encrypt <hex_key_16b> <hex_iv_16b> <hex_pt>
 //   crypto_interop gate-decrypt <hex_key_16b> <hex_wire>
-//   crypto_interop new-vectors      — тестовые вектора нового формата
+//   crypto_interop new-vectors          
 //   crypto_interop new-encrypt <hex_key_32b> <hex_nonce_12b> <hex_pt>
 //   crypto_interop new-decrypt <hex_key_32b> <hex_wire>
-//   crypto_interop roundtrip        — самопроверка обоих форматов
-// ══════════════════════════════════════════════════════════
+//   crypto_interop roundtrip           
+// 
 
 #include <iostream>
 #include <string>
@@ -40,7 +40,7 @@
 
 using namespace CryptoPP;
 
-// ── Hex утилиты ──
+//  Hex  
 
 static std::string toHex(const std::vector<uint8_t>& data) {
     std::ostringstream oss;
@@ -64,28 +64,28 @@ static std::vector<uint8_t> fromHex(const std::string& hex) {
     return result;
 }
 
-// ══════════════════════════════════════════════════════════
-//  Формат "gate" — точная копия C++ GateServer
+// 
+//   "gate"    C++ GateServer
 //  AES-128-GCM, IV=16(BLOCKSIZE), tag=12
 //  Wire: [Base64(ciphertext + tag)][0x00][IV(16)]
-// ══════════════════════════════════════════════════════════
+// 
 
 static const int GATE_TAG_SIZE = 12;
 
-// Шифрование как в GateServer::EncryptAES
+//    GateServer::EncryptAES
 static std::vector<uint8_t> gateEncrypt(
-    const uint8_t* key, size_t keyLen,     // 16 байт (AES::MIN_KEYLENGTH)
-    const uint8_t* iv, size_t ivLen,       // 16 байт (AES::BLOCKSIZE)
+    const uint8_t* key, size_t keyLen,     // 16  (AES::MIN_KEYLENGTH)
+    const uint8_t* iv, size_t ivLen,       // 16  (AES::BLOCKSIZE)
     const uint8_t* plaintext, size_t ptLen)
 {
-    // 1. AES-GCM encrypt → output = ciphertext + tag(12)
+    // 1. AES-GCM encrypt  output = ciphertext + tag(12)
     std::string output;
     GCM<AES>::Encryption e;
     e.SetKeyWithIV(key, keyLen, iv, ivLen);
     StringSource ss(plaintext, ptLen, true,
         new AuthenticatedEncryptionFilter(e,
             new StringSink(output),
-            false,    // MAC не в начало
+            false,    // MAC   
             GATE_TAG_SIZE));
 
     // 2. Base64 encode
@@ -93,17 +93,17 @@ static std::vector<uint8_t> gateEncrypt(
     StringSource ss2(output, true,
         new Base64Encoder(new StringSink(base64), false));
 
-    // 3. Собираем wire: [base64][0x00][IV(16)]
+    // 3.  wire: [base64][0x00][IV(16)]
     std::vector<uint8_t> wire;
     wire.reserve(base64.size() + 1 + ivLen);
     wire.insert(wire.end(), base64.begin(), base64.end());
-    wire.push_back(0x00); // разделитель
+    wire.push_back(0x00); // 
     wire.insert(wire.end(), iv, iv + ivLen);
 
     return wire;
 }
 
-// Расшифровка как в GateServer::DecryptAES
+//    GateServer::DecryptAES
 static std::vector<uint8_t> gateDecrypt(
     const uint8_t* key, size_t keyLen,
     const uint8_t* wire, size_t wireLen)
@@ -111,7 +111,7 @@ static std::vector<uint8_t> gateDecrypt(
     if (wireLen < AES::BLOCKSIZE + 1)
         throw std::runtime_error("Wire data too short");
 
-    // 1. Извлекаем IV с конца: последние 16 байт
+    // 1.  IV  :  16 
     size_t base64Len = wireLen - AES::BLOCKSIZE - 1;
     SecByteBlock iv(wire + base64Len + 1, AES::BLOCKSIZE);
 
@@ -137,18 +137,18 @@ static std::vector<uint8_t> gateDecrypt(
     return std::vector<uint8_t>(plain.begin(), plain.end());
 }
 
-// ══════════════════════════════════════════════════════════
-//  Формат "new" — F# AesTransport
+// 
+//   "new"  F# AesTransport
 //  AES-256-GCM, nonce=12, tag=16
 //  Wire: [nonce(12)][tag(16)][ciphertext]
-// ══════════════════════════════════════════════════════════
+// 
 
 static const int NEW_NONCE_SIZE = 12;
 static const int NEW_TAG_SIZE = 16;
 
 static std::vector<uint8_t> newEncrypt(
-    const uint8_t* key, size_t keyLen,       // 32 байта
-    const uint8_t* nonce, size_t nonceLen,   // 12 байт
+    const uint8_t* key, size_t keyLen,       // 32 
+    const uint8_t* nonce, size_t nonceLen,   // 12 
     const uint8_t* plaintext, size_t ptLen)
 {
     GCM<AES>::Encryption e;
@@ -164,7 +164,7 @@ static std::vector<uint8_t> newEncrypt(
 
     size_t ctLen = ciphertextAndTag.size() - NEW_TAG_SIZE;
 
-    // Собираем: [nonce(12)][tag(16)][ciphertext]
+    // : [nonce(12)][tag(16)][ciphertext]
     std::vector<uint8_t> result;
     result.reserve(nonceLen + NEW_TAG_SIZE + ctLen);
     result.insert(result.end(), nonce, nonce + nonceLen);
@@ -193,7 +193,7 @@ static std::vector<uint8_t> newDecrypt(
     GCM<AES>::Decryption d;
     d.SetKeyWithIV(key, keyLen, nonce, NEW_NONCE_SIZE);
 
-    // Crypto++ ожидает [ciphertext][tag]
+    // Crypto++  [ciphertext][tag]
     std::string ctAndTag;
     ctAndTag.append((const char*)ciphertext, ctLen);
     ctAndTag.append((const char*)tag, NEW_TAG_SIZE);
@@ -211,9 +211,9 @@ static std::vector<uint8_t> newDecrypt(
     return std::vector<uint8_t>(plain.begin(), plain.end());
 }
 
-// ══════════════════════════════════════════════════════════
-//  Команды
-// ══════════════════════════════════════════════════════════
+// 
+//  
+// 
 
 static void cmdGateVectors() {
     struct TestCase {
@@ -224,7 +224,7 @@ static void cmdGateVectors() {
 
     std::vector<TestCase> cases;
 
-    // Тест 1: "Hello, World!"
+    //  1: "Hello, World!"
     {
         TestCase tc;
         tc.key.resize(AES::MIN_KEYLENGTH);
@@ -236,7 +236,7 @@ static void cmdGateVectors() {
         cases.push_back(tc);
     }
 
-    // Тест 2: пустые данные
+    //  2:  
     {
         TestCase tc;
         tc.key.resize(AES::MIN_KEYLENGTH);
@@ -246,7 +246,7 @@ static void cmdGateVectors() {
         cases.push_back(tc);
     }
 
-    // Тест 3: бинарные данные (64 байта)
+    //  3:   (64 )
     {
         TestCase tc;
         tc.key.resize(AES::MIN_KEYLENGTH);
@@ -258,7 +258,7 @@ static void cmdGateVectors() {
         cases.push_back(tc);
     }
 
-    // Тест 4: имитация пакета CMD+payload
+    //  4:   CMD+payload
     {
         TestCase tc;
         tc.key.resize(AES::MIN_KEYLENGTH);
@@ -301,7 +301,7 @@ static void cmdNewVectors() {
 
     std::vector<TestCase> cases;
 
-    // Тест 1: "Hello, World!"
+    //  1: "Hello, World!"
     {
         TestCase tc;
         tc.key.resize(32);
@@ -313,7 +313,7 @@ static void cmdNewVectors() {
         cases.push_back(tc);
     }
 
-    // Тест 2: пустые данные
+    //  2:  
     {
         TestCase tc;
         tc.key.resize(32);
@@ -323,7 +323,7 @@ static void cmdNewVectors() {
         cases.push_back(tc);
     }
 
-    // Тест 3: 256 байт бинарных данных
+    //  3: 256   
     {
         TestCase tc;
         tc.key.resize(32);
@@ -335,7 +335,7 @@ static void cmdNewVectors() {
         cases.push_back(tc);
     }
 
-    // Тест 4: имитация пакета
+    //  4:  
     {
         TestCase tc;
         tc.key.resize(32);
@@ -458,7 +458,7 @@ static void cmdNewDecrypt(const std::string& hexKey, const std::string& hexWire)
 
 int main(int argc, char* argv[]) {
     if (argc < 2) {
-        std::cerr << "CryptoInterop — AES-GCM test utility (Crypto++)" << std::endl;
+        std::cerr << "CryptoInterop  AES-GCM test utility (Crypto++)" << std::endl;
         std::cerr << std::endl;
         std::cerr << "Gate format (C++ GateServer): AES-128-GCM, tag=12, IV=16" << std::endl;
         std::cerr << "  Wire: [Base64(ciphertext+tag)][0x00][IV(16)]" << std::endl;

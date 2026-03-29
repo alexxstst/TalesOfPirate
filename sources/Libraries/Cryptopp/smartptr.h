@@ -1,4 +1,4 @@
-// smartptr.h - originally written and placed in the public domain by Wei Dai
+﻿// smartptr.h - originally written and placed in the public domain by Wei Dai
 
 /// \file smartptr.h
 /// \brief Classes for automatic resource management

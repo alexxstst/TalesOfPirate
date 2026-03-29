@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "STStateObj.h"
 #include "procirculate.h"
 #include "NetProtocol.h"

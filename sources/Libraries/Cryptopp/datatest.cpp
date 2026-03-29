@@ -1,4 +1,4 @@
-// datatest.cpp - originally written and placed in the public domain by Wei Dai
+﻿// datatest.cpp - originally written and placed in the public domain by Wei Dai
 //                CryptoPP::Test namespace added by JW in February 2017
 
 #define CRYPTOPP_DEFAULT_NO_DLL

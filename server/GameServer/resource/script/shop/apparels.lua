@@ -1,4 +1,4 @@
-print("-- [Loading] Apparels Category")
+﻿print("-- [Loading] Apparels Category")
 
 local MainTabName = 'Apparels'
 local SubTabName1  = 'Single-Handed'

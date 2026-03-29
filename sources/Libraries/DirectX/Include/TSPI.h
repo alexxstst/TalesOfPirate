@@ -1,4 +1,4 @@
-/*++ BUILD Version: 0000    // Increment this if a change has global effects
+﻿/*++ BUILD Version: 0000    // Increment this if a change has global effects
 
 The  Telephony  API  is jointly copyrighted by Intel and Microsoft.  You are
 granted  a royalty free worldwide, unlimited license to make copies, and use

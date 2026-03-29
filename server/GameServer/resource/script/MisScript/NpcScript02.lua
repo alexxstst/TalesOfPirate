@@ -1,4 +1,4 @@
-print("-- [Loading] NPC Script [02]")
+﻿print("-- [Loading] NPC Script [02]")
 
 function TeleportCity()
 	Talk(1, "Jovial: Hi! I am the Teleporter! How may I help you?")

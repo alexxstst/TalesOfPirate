@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 //#include <mindpower.h>
 #include "GlobalInc.h"
 #include "MPModelEff.h"
@@ -44,7 +44,7 @@ using namespace std;
 //{
 //	m_CFire = new CMPFire;
 //
-//	m_CFire->Init("»ðÇò",5,"Flare.tga",MESH_PLANERECT,D3DXVECTOR2(0,0),5,true);
+//	m_CFire->Init("",5,"Flare.tga",MESH_PLANERECT,D3DXVECTOR2(0,0),5,true);
 //	m_CFire->BindingRes(pResMagr);
 //	m_CFire->setParticleVel(10);
 //	m_CFire->setParticleLife(10);
@@ -55,7 +55,7 @@ using namespace std;
 //
 //
 //	m_CBlast = new CMPBlast;
-//	m_CBlast->Init("±¬Õ¨",10,"Flare.tga",MESH_PLANERECT,D3DXVECTOR2(1.0f,1.0f),5,true);
+//	m_CBlast->Init("",10,"Flare.tga",MESH_PLANERECT,D3DXVECTOR2(1.0f,1.0f),5,true);
 //	m_CBlast->BindingRes(pResMagr);
 //	m_CBlast->setParticleColor(0xffff7000);
 //
@@ -73,7 +73,7 @@ using namespace std;
 //	_pCModelEff->BindingRes(pResMagr);
 //	_pCModelEff->Scaling(2.f,2.f,2.f);
 //
-//	//Ó°×Ó
+//	//
 //	_pCShade	= new CMPShadeMap;
 //	_pCShade->setTextureName("boxlight2.tga");
 //	_pCShade->BoundingRes(pResMagr);
@@ -99,7 +99,7 @@ using namespace std;
 //	if(m_bEmiss)
 //	{
 //
-//		//! ÔÚÕâÀïµÃµ½Ä¿±êIDµÄÎ»ÖÃ£¬ÅÐ¶ÏÄ¿±êµÄÐÂÎ»ÖÃÊÇ·ñºÍÄ¿±êµãÊÇÒ»ÖÂµÄ¡£
+//		//! ID
 //
 //		//SetTarget(D3DXVECTOR3(f,20,0));
 //
@@ -178,23 +178,23 @@ using namespace std;
 //		Blast();
 //		return;
 //	}
-//	//!Èç¹ûÄ¿±êµÄÐÂÎ»ÖÃºÍÀÏÎ»ÖÃÏàÍ¬£¬·µ»Ø£¡
+//	//!
 //	if(vTarget  == m_CPath[1])
 //		return;
-//	//!µÃµ½Ä¿±êµÄÀÏÎ»ÖÃÏòÐÂÎ»ÖÃÒÆ¶¯µÄ·½Ïò
+//	//!
 //	m_vTargDir = vTarget - m_CPath[1];
-//	//!µÃµ½Ä¿±êµÄÀÏÎ»ÖÃºÍÐÂÎ»ÖÃÖ®¼äµÄ¾àÀë
+//	//!
 //	m_fTargDist = D3DXVec3LengthSq(&m_vTargDir);
 //	D3DXVec3Normalize(&m_vTargDir, &m_vTargDir);
 //
-//	//!µÃµ½Á£×ÓµÄÎ»ÖÃÐèÒªÏòÄ¿±êÒÆ¶¯µÄ·½ÏòÒÆ¶¯µÄ¾àÀë.
-//	//	¹«Ê½Îª£º¾àÀë = Ä¿±êÒÆ¶¯µÄ¾àÀë / ×î³õ¼ÆËã³öµÄÔ´ºÍÄ¿±êµÄ¾àÀë * Á£×Óµ±Ç°Î»ÖÃºÍÉÏÒ»Ö¡Î»ÖÃµÄ¾àÀë
+//	//!.
+//	//	 =  /  * 
 //	float flerp = (m_fTargDist / m_fDist) * fDist;
 //	//m_fDist = fDist;//D3DXVec3Length(&(m_vPos - m_vOldPos));
 //
-//	//!°´ÕÕÄ¿±êÒÆ¶¯µÄ·½ÏòÈ¥ÒÆ¶¯Á£×Ó
+//	//!
 //	m_vPos	 += m_vTargDir * flerp;
-//	//!ÖØÐÂ¼ÆËãµ±Ç°Á£×ÓÐèÒªÒÆ¶¯µÄ·½ÏòºÍ¾àÀë¡£
+//	//!
 //	m_CPath[1] = vTarget;
 //	m_vDir = vTarget - m_vPos;
 //	m_fDist = D3DXVec3LengthSq(&m_vDir);
@@ -219,7 +219,7 @@ using namespace std;
 //{
 //
 //	m_CRippleStop = new CMPRipple;
-//	m_CRippleStop->Init("²¨ÎÆ",5,"Ripple.tga",MESH_PLANERECT,D3DXVECTOR2(0.f,0.f),4,false);
+//	m_CRippleStop->Init("",5,"Ripple.tga",MESH_PLANERECT,D3DXVECTOR2(0.f,0.f),4,false);
 //	m_CRippleStop->BindingRes(pResMagr);
 //	m_CRippleStop->setParticleLife(100);
 //	m_CRippleStop->SetAlphaType(D3DBLEND_SRCALPHA,D3DBLEND_INVSRCALPHA);
@@ -227,7 +227,7 @@ using namespace std;
 //	//m_CRipple->Play();
 //
 //	m_CRippleMove = new CMPRipple;
-//	m_CRippleMove->Init("²¨ÎÆ2",13,"Ripple2.tga",MESH_PLANERECT,D3DXVECTOR2(0.f,0.f),4,false);
+//	m_CRippleMove->Init("2",13,"Ripple2.tga",MESH_PLANERECT,D3DXVECTOR2(0.f,0.f),4,false);
 //	m_CRippleMove->BindingRes(pResMagr);
 //	m_CRippleMove->SetAlphaType(D3DBLEND_SRCALPHA,D3DBLEND_INVSRCALPHA);
 //	m_CRippleMove->setParticleLife(200);
@@ -243,7 +243,7 @@ using namespace std;
 //void	CMPParticleRipple::FrameMove(DWORD	dwDailTime)
 //{
 //
-//		//! ÔÚÕâÀïµÃµ½Ä¿±êIDµÄÎ»ÖÃ£¬ÅÐ¶ÏÄ¿±êµÄÐÂÎ»ÖÃÊÇ·ñºÍÄ¿±êµãÊÇÒ»ÖÂµÄ¡£
+//		//! ID
 //
 //
 //		//SetTarget(D3DXVECTOR3(0,20,0));
@@ -298,12 +298,12 @@ using namespace std;
 /************************************************************************/
 CMPPartCtrl::CMPPartCtrl(void)
 {
-	m_strName = "ÎÞÃû";
+	m_strName = "";
 	m_iPartNum = 0;
 #ifndef USE_GAME
-	//m_vecPartSys.resize(MAX_PART_SYS);//×î´óÁ£×ÓÏµÍ³µÄÊýÄ¿²»ÄÜ´óÓÚ6
+	//m_vecPartSys.resize(MAX_PART_SYS);//6
 #endif
-	m_fLength = 0;//Èç¹û³¤¶ÈÎª0£¬ÔòÑ­»·²¥·Å
+	m_fLength = 0;//0
 	m_fCurTime = 0;
 
 	m_iStripNum = 0;
@@ -391,7 +391,7 @@ CMPStrip*	CMPPartCtrl::GetStrip(int iIdx)
 
 void	CMPPartCtrl::SetPlayType(int nType)
 {
-	if(nType == 0)//Ñ­»·²¥·Å
+	if(nType == 0)//
 	{
 		for (int n = 0; n < m_iPartNum; ++n)
 		{
@@ -404,7 +404,7 @@ void	CMPPartCtrl::SetPlayType(int nType)
 			m_vecModel[n]->SetPlayType(PLAY_LOOP);
 			m_vecModel[n]->Play();
 		}
-	//}else if(nType == 1)//°´Ö¡Êý²¥·Å
+	//}else if(nType == 1)//
 	//{
 	//	for (int n = 0; n < m_iPartNum; ++n)
 	//	{
@@ -412,7 +412,7 @@ void	CMPPartCtrl::SetPlayType(int nType)
 	//		m_vecPartSys[n]->SetDelayTime(0); 
 	//		m_vecPartSys[n]->SetLoop(false);
 	//	}
-	//}else if(nType == 2)//°´Ê±¼ä²¥·Å
+	//}else if(nType == 2)//
 	//{
 	//	for (int n = 0; n < m_iPartNum; ++n)
 	//	{
@@ -627,11 +627,11 @@ bool	CMPPartCtrl::SaveToFile(char* pszName)
 	t_pFile = fopen(pszName, "wb");
 	if(!t_pFile)
 	{
-		ToLogService("errors", LogLevel::Error, " {},Ö»¶ÁÎÄ¼þ£¬´ò¿ªÊ§°Ü",pszName);
+		ToLogService("errors", LogLevel::Error, " {},",pszName);
 		return false;
 	}
 
-	//!°æ±¾
+	//!
 	DWORD t_dwVersion = CMPPartCtrl::ParVersion;
 	fwrite(&t_dwVersion,sizeof(t_dwVersion),1,t_pFile);
 
@@ -677,17 +677,17 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	}
 	string sName = pszName;
 
-	//!°æ±¾
+	//!
 	DWORD t_dwVersion;
 	fread(&t_dwVersion,sizeof(t_dwVersion),1,t_pFile);
 	if ( t_dwVersion > CMPPartCtrl::ParVersion)
 	{
-		ToLogService("errors", LogLevel::Error, "[{}]µÄ°æ±¾[{}]¸ßÓÚÏµÍ³µÄ°æ±¾[{}] (CMPPartCtrl::LoadFromFile)",pszName,t_dwVersion,CMPPartCtrl::ParVersion);
+		ToLogService("errors", LogLevel::Error, "[{}][{}][{}] (CMPPartCtrl::LoadFromFile)",pszName,t_dwVersion,CMPPartCtrl::ParVersion);
 		return false;
 	}
 	if(t_dwVersion < 2)
 	{
-		ToLogService("errors", LogLevel::Error, "[{}]µÄ°æ±¾[{}]µÍÓÚÏµÍ³ÄÜ´¦ÀíµÄ°æ±¾[{}] (CMPPartCtrl::LoadFromFile)",pszName,t_dwVersion,2);
+		ToLogService("errors", LogLevel::Error, "[{}][{}][{}] (CMPPartCtrl::LoadFromFile)",pszName,t_dwVersion,2);
 		return false;
 	}
 
@@ -713,7 +713,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 	{
 		if (!m_vecPartSys[n]->LoadFromFile(t_pFile,t_dwVersion))
 		{
-			ToLogService("errors", LogLevel::Error, "[{}]µÄµÚ[{}]¸ö×ÓÏµÍ³¼ÓÔØÊ§°Ü.(CMPPartCtrl::LoadFromFile)", pszName, n);
+			ToLogService("errors", LogLevel::Error, "[{}][{}].(CMPPartCtrl::LoadFromFile)", pszName, n);
 			return false;
 		}
 		if(t_dwVersion < 6)
@@ -734,7 +734,7 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 		{
 			if (!m_pcStrip[n].LoadFromFile(t_pFile,t_dwVersion))
 			{
-				ToLogService("errors", LogLevel::Error, "[{}]µÄµÚ[{}]¸öStrip¼ÓÔØÊ§°Ü.(CMPPartCtrl::LoadFromFile)", pszName, n);
+				ToLogService("errors", LogLevel::Error, "[{}][{}]Strip.(CMPPartCtrl::LoadFromFile)", pszName, n);
 				delete m_pcStrip;
 				return false;
 			}
@@ -756,17 +756,17 @@ bool	CMPPartCtrl::LoadFromFile(char* pszName)
 
 bool	CMPPartCtrl::LoadFromMemory(CMemoryBuf*	pbuf)
 {
-	//!°æ±¾
+	//!
 	DWORD t_dwVersion;
 	pbuf->mread(&t_dwVersion,sizeof(t_dwVersion),1);
 	if ( t_dwVersion > CMPPartCtrl::ParVersion)
 	{
-		ToLogService("errors", LogLevel::Error, "°æ±¾[{}]¸ßÓÚÏµÍ³µÄ°æ±¾[{}] (CMPPartCtrl::LoadFromFile)",t_dwVersion,CMPPartCtrl::ParVersion);
+		ToLogService("errors", LogLevel::Error, "[{}][{}] (CMPPartCtrl::LoadFromFile)",t_dwVersion,CMPPartCtrl::ParVersion);
 		return false;
 	}
 	if(t_dwVersion < 2)
 	{
-		ToLogService("errors", LogLevel::Error, "°æ±¾[{}]µÍÓÚÏµÍ³ÄÜ´¦ÀíµÄ°æ±¾[{}] (CMPPartCtrl::LoadFromFile)",t_dwVersion,2);
+		ToLogService("errors", LogLevel::Error, "[{}][{}] (CMPPartCtrl::LoadFromFile)",t_dwVersion,2);
 		return false;
 	}
 
@@ -952,7 +952,7 @@ bool	CChaModel::LoadScript(const s_string& strModel)
 
 	if(!CScriptFile::m_ctScript.ReadSection((char*)(LPCSTR)strModel.c_str()))
 		return false;
-	if( !CScriptFile::m_ctScript.ReadLine( "¹Ç÷À",sModel.bone,64 ) )
+	if( !CScriptFile::m_ctScript.ReadLine( "",sModel.bone,64 ) )
 		return false;
 
 	_iID = atoi((char*)(LPCSTR)strModel.c_str());
@@ -960,7 +960,7 @@ bool	CChaModel::LoadScript(const s_string& strModel)
 	char str[64];
 	for( short i = 0; i < 5; i++ )
 	{
-		sprintf(str,"Æ¤·ô%d",i+1);
+		sprintf(str,"%d",i+1);
 		if( !CScriptFile::m_ctScript.ReadLine( str,sModel.part[i],64 ) )
 			return false;
 	}
@@ -1031,7 +1031,7 @@ void	CChaModel::Begin()
 	SetOpacity(_dwCurColor.a);
 #else
 	m_pDev->SetRenderState(D3DRS_DITHERENABLE,FALSE);
-	m_pDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // µ¥ÃæäÖÈ¾
+	m_pDev->SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW); // 
 
 	m_pDev->SetRenderState(D3DRS_TEXTUREFACTOR, _dwCurColor );
 
@@ -1279,7 +1279,7 @@ void	CMPLink::GetPhysique()
 
 	//D3DXVec3Cross(&_vcross,&D3DXVECTOR3(0,0,-1), &_vdir);
 
-	//È¡°ë¾¶×î´óÖµ
+	//
 	float frad = 3.0f;
 	if(_fdist > frad * 2)
 	{

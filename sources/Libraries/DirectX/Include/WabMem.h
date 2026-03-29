@@ -1,4 +1,4 @@
-#if !defined(WABMEM_H)
+﻿#if !defined(WABMEM_H)
 #define WABMEM_H
 
 #if !defined(MAPIX_H)

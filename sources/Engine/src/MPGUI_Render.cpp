@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "MPRender.h"
 #include "MPGUI.h"
 #include "MPTextureSet.h"

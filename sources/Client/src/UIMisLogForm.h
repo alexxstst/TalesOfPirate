@@ -1,11 +1,11 @@
-#pragma once
+﻿#pragma once
 #include "UIGlobalVar.h"
 #include "NetProtocol.h"
 #include "UIMissionForm.h"
 
 namespace GUI
 {
-#define MISLOG_REFRESH_TIME				2000	// ������־ˢ��ʱ��
+#define MISLOG_REFRESH_TIME				2000	// 
 
 class CTreeNodeObj;
 class CMisLogForm : public CUIInterface
@@ -30,30 +30,30 @@ protected:
 	void ClearAllNode();
 
 private:
-	// ���ڴ�����Ϣ����
+	// 
 	static void _MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey );
 	static void _ItemClickEvent(std::string strItem);
 	static void _MouseDown( CGuiData *pSender, int x, int y, DWORD key );
 	static void	_Show( CGuiData *pSender );
-	// ȷ���Ƿ��ж�����
+	// 
 	static void _evtBreakYesNoEvent(CCompent *pSender, int nMsgType, int x, int y, DWORD dwKey);
 
 	CForm*		m_pForm;
 
-	// ������־�ؼ�
+	// 
 	CTreeView*	m_pMisTree;
 	CMemoEx*	m_pMisInfo;
 	
-	// �������ͽڵ�
+	// 
 	CTreeNodeObj*	m_pNormal;
 	CTreeNodeObj*	m_pHistory;
 	CTreeNodeObj*	m_pGuild;
 	CTreeNodeObj*	m_pInvalid;
 
-	// ������־��Ϣ
+	// 
 	NET_MISLOG_LIST m_LogList;
 
-	// ��ǰ����˵��
+	// 
 	WORD  m_wMisID;
 	DWORD m_dwUpdateTick;
 };

@@ -1,4 +1,4 @@
-print("-- [Loading] Char Born Script")
+﻿print("-- [Loading] Char Born Script")
 
 function PCBorn()
     InitTrigger()

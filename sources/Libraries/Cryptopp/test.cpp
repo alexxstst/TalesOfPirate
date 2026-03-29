@@ -1,4 +1,4 @@
-// test.cpp - originally written and placed in the public domain by Wei Dai
+﻿// test.cpp - originally written and placed in the public domain by Wei Dai
 //            CryptoPP::Test namespace added by JW in February 2017
 //            scoped_main added to CryptoPP::Test namespace by JW in July 2017
 //            Also see http://github.com/weidai11/cryptopp/issues/447

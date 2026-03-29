@@ -1,4 +1,4 @@
-// cpu.cpp - originally written and placed in the public domain by Wei Dai
+﻿// cpu.cpp - originally written and placed in the public domain by Wei Dai
 //           modified by Jeffrey Walton and the community over the years.
 
 #include "pch.h"

@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: FightAble.h
 // Creater: ZhangXuedong
 // Date: 2004.09.15
@@ -18,25 +18,25 @@
 #include "Timer.h"
 #include "SkillTemp.h"
 
-enum EItemInstance // �˴���Ҫ���ű�ͳһ
+enum EItemInstance // 
 {
-	enumITEM_INST_BUY	= 0,		// �̵�����
-	enumITEM_INST_MONS	= 1,		// �������
-	enumITEM_INST_COMP	= 2,		// �ϳ�
-	enumITEM_INST_TASK	= 3,		// ������
+	enumITEM_INST_BUY	= 0,		// 
+	enumITEM_INST_MONS	= 1,		// 
+	enumITEM_INST_COMP	= 2,		// 
+	enumITEM_INST_TASK	= 3,		// 
 };
 
 enum EFightChaType
 {
-	enumFIGHT_CHA_SRC		= 0,	// ������
-	enumFIGHT_CHA_TAR		= 1,	// �ܻ���
-	enumFIGHT_CHA_SPLASH	= 2,	// ������
+	enumFIGHT_CHA_SRC		= 0,	// 
+	enumFIGHT_CHA_TAR		= 1,	// 
+	enumFIGHT_CHA_SPLASH	= 2,	// 
 };
 
 struct SFireUnit
 {
 #ifdef defPROTOCOL_HAVE_PACKETID
-	dbc::uLong	ulPacketID;	// ����ID
+	dbc::uLong	ulPacketID;	// ID
 #endif
 	dbc::uChar	uchFightID;
 
@@ -46,7 +46,7 @@ struct SFireUnit
 	dbc::Long	lTarInfo1;
 	dbc::Long	lTarInfo2;
 
-	dbc::Short		sExecTime;	// ִ�д���
+	dbc::Short		sExecTime;	// 
 	CSkillRecord	*pCSkillRecord;
 	CSkillTempData	*pCSkillTData;
 };
@@ -56,15 +56,15 @@ struct SFightInit
 	CSkillRecord	*pCSkillRecord;
 	SSkillGrid		*pSSkillGrid;
 	CSkillTempData	*pCSkillTData;
-	// lInfo1,lInfo2 ��Ŀ����ʵ��,��ֱ���WorldID,Handle ����ֱ��������x,y
+	// lInfo1,lInfo2 ,WorldID,Handle x,y
 	struct
 	{
-		dbc::Char		chTarType;	// 0����Ŀ�ꡣ1��Ŀ����ʵ�塣2��Ŀ��������
+		dbc::Char		chTarType;	// 012
 		dbc::Long		lTarInfo1;
 		dbc::Long		lTarInfo2;
 	};
 
-	dbc::Short		sStopState;		// ����ֹͣ���״̬��enumEXISTS_WAITING, enumEXISTS_SLEEPING��
+	dbc::Short		sStopState;		// enumEXISTS_WAITING, enumEXISTS_SLEEPING
 };
 
 namespace net { namespace msg {
@@ -73,7 +73,7 @@ namespace net { namespace msg {
 }}
 
 /*
-*	��ս��ʵ��
+*	
 *	lark.li
 */
 class	CFightAble : public CAttachable
@@ -91,10 +91,10 @@ public:
 		dbc::Short	sState;
 		Request	sRequestState;
 
-		bool		bCrt;			// ����
+		bool		bCrt;			// 
 		bool		bMiss;			// Miss
 
-		long		lERangeBParam[defSKILL_RANGE_BASEP_NUM];	// ��������������������꣬����
+		long		lERangeBParam[defSKILL_RANGE_BASEP_NUM];	// 
 	};
 
 	dbc::Short	GetFightState(void) {return m_SFightProc.sState;}
@@ -119,17 +119,17 @@ public:
 	void	SynSkillStateToEyeshot(void);
 	void	SynSkillStateToUnit(CFightAble *pCObj);
 	void	SynLookEnergy(void);
-	// ���ݱ���֯
+	// 
 	void	WriteSkillState(net::WPacket &pk);
 	void	WriteAttr(net::WPacket &pk, dbc::Short sSynType);
 	void	WriteMonsAttr(net::WPacket &pk, dbc::Short sSynType);
 	void	WriteAttr(net::WPacket &pk, dbc::Short sStartAttr, dbc::Short sEndAttr, dbc::Short sSynType);
 	void	WriteLookEnergy(net::WPacket &pk);
-	// Fill* — заполнение типизированных структур (CommandMessages.h)
+	// Fill*     (CommandMessages.h)
 	void	FillSkillState(net::msg::ChaSkillStateInfo &s);
 	void	FillAttr(net::msg::ChaAttrInfo &a, dbc::Short sSynType);
-	void	FillAttrAll(net::msg::ChaAttrInfo &a, dbc::Short sSynType); // все атрибуты 0..ATTR_CLIENT_MAX-1
-	void	FillMonsAttr(net::msg::ChaAttrInfo &a, dbc::Short sSynType); // 5 атрибутов монстра
+	void	FillAttrAll(net::msg::ChaAttrInfo &a, dbc::Short sSynType); //   0..ATTR_CLIENT_MAX-1
+	void	FillMonsAttr(net::msg::ChaAttrInfo &a, dbc::Short sSynType); // 5  
 
 	bool	IsRightSkill(CSkillRecord *pSkill);
 	bool	IsRightSkillSrc(dbc::Char chSkillEffType);
@@ -148,13 +148,13 @@ public:
 	void	CountSailLevel(void);
 	void	CountLifeLevel(void);
 
-	// �����¼������ӿ�
+	// 
 	virtual void AfterObjDie(CCharacter *pCAtk, CCharacter *pCDead) {}
 	virtual void OnLevelUp( USHORT sLevel ) {};
 	virtual void OnSailLvUp( USHORT sLevel ) {};
 	virtual void OnLifeLvUp( USHORT sLevel ) {};
 
-	// �ɼ���Դ������Ʒ	
+	// 	
 	void	SpawnResource( CCharacter *pCAtk, dbc::Long lSkillLv );
 	void	ItemCount(CCharacter *pAtk);
 	void	ItemInstance(dbc::Char chType, SItemGrid *pGridContent, BOOL isTradable = 1, LONG expiration = 0);
@@ -188,14 +188,14 @@ public:
 	void			SetDie(CCharacter *pCSkillSrcCha);
 	virtual void	Die(){};
 
-	CCharacter* SkillPopBoat(dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// �Ŵ�
-	bool SkillPopBoat(CCharacter *pCBoat, dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// �Ŵ�
-	bool SkillInBoat(CCharacter* pCBoat);	// �ϴ�
-	bool SkillOutBoat(dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// �´�
-	bool SkillPushBoat(CCharacter* pCBoat, bool bFree = true);	// �մ�
+	CCharacter* SkillPopBoat(dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// 
+	bool SkillPopBoat(CCharacter *pCBoat, dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// 
+	bool SkillInBoat(CCharacter* pCBoat);	// 
+	bool SkillOutBoat(dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// 
+	bool SkillPushBoat(CCharacter* pCBoat, bool bFree = true);	// 
 
-	dbc::uLong	m_ulPacketID;		// ����ID
-	dbc::uChar	m_uchFightID;		// �����ı�ţ�ֻ��Ϊ�˿ͻ���ƥ�����;
+	dbc::uLong	m_ulPacketID;		// ID
+	dbc::uChar	m_uchFightID;		// 
 
 	SFightInit	m_SFightInit;
 	SFightProc	m_SFightProc;
@@ -233,14 +233,14 @@ private:
 	virtual void BreakAction(net::RPacket* pk = nullptr) {};
 	virtual void EndAction(net::RPacket* pk = nullptr) {}
 
-	bool SkillGeneral(dbc::Long lDistance, dbc::Short sExecTime = 1); // ��ͨ����
+	bool SkillGeneral(dbc::Long lDistance, dbc::Short sExecTime = 1); // 
 
-	dbc::uShort	m_usTickInterval;	// ս��ִ�е�������Ƶ�ʣ�����λ�����룩
-	dbc::uLong	m_ulLastTick;		// ��λ�����룩
+	dbc::uShort	m_usTickInterval;	// 
+	dbc::uLong	m_ulLastTick;		// 
 	bool		m_bOnFight;
 
-	bool		m_bLookAttrChange;	// ������Ըı�
-	CFightAble*	m_pCItemHostObj;	// ���ϵ�����
+	bool		m_bLookAttrChange;	// 
+	CFightAble*	m_pCItemHostObj;	// 
 
 };
 
@@ -250,10 +250,10 @@ public:
 	struct SMgrUnit
 	{
 		SFireUnit	SFireSrc;
-		dbc::uLong	ulLeftTick;	// ʣ��ʱ��
+		dbc::uLong	ulLeftTick;	// 
 		SubMap		*pCMap;
-		Point		STargetPos;	// Ŀ��λ��
-		long		lERangeBParam[defSKILL_RANGE_BASEP_NUM];	// ��������������������꣬����
+		Point		STargetPos;	// 
+		long		lERangeBParam[defSKILL_RANGE_BASEP_NUM];	// 
 		SMgrUnit	*pSNext;
 	};
 
@@ -266,10 +266,10 @@ public:
 
 private:
 	unsigned long	m_ulTick;
-	unsigned short	m_usFreq;	// ִ��������Ƶ�ʣ�
+	unsigned short	m_usFreq;	// 
 
-	SMgrUnit	*m_pSExecQueue;	// ִ�ж���
-	SMgrUnit	*m_pSFreeQueue;	// ���ж���
+	SMgrUnit	*m_pSExecQueue;	// 
+	SMgrUnit	*m_pSFreeQueue;	// 
 
 };
 

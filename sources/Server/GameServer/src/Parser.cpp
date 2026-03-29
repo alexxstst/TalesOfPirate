@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: Parser.cpp
 // Creater: ZhangXuedong
 // Date: 2004.11.22
@@ -30,7 +30,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 
 	MPTimer t; t.Begin();
 	lua_getglobal(m_pSLua, csString);
-	if (!lua_isfunction(m_pSLua, -1)) // ���Ǻ�����
+	if (!lua_isfunction(m_pSLua, -1)) // 
 	{
 		lua_pop(m_pSLua, 1);
 		if (nRetNum == 1 && chRetType == enumSCRIPT_RETURN_NUMBER)
@@ -38,7 +38,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 			m_nDoStringRet[0] = atoi(csString);
 			return 1;
 		}
-		//LG("lua_err", "û�ж����DoString(%s)\n", csString);
+		//LG("lua_err", "DoString(%s)\n", csString);
 		ToLogService("lua", LogLevel::Error, "no define's DoString({})", csString);
 		lua_settop(m_pSLua, 0);
 		return 0;
@@ -46,7 +46,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 
 	if (nRetNum > DOSTRING_RETURN_NUM)
 	{
-		//LG("lua_err", "msgDoString(%s) ����ֵ��������!!!\n", csString);
+		//LG("lua_err", "msgDoString(%s) !!!\n", csString);
 		ToLogService("lua", LogLevel::Error, "msgDoString({}) return value number error!", csString);
 
 		lua_settop(m_pSLua, 0);
@@ -97,7 +97,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 				lua_pushstring(m_pSLua, va_arg(list, char *));
 			break;
 		default:
-			//LG("lua_err", "msgDoString(%s) �������ʹ���!!!\n", csString);
+			//LG("lua_err", "msgDoString(%s) !!!\n", csString);
 			ToLogService("lua", LogLevel::Error, "msgDoString({}) param type error!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
@@ -124,8 +124,8 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		{
 			if (!lua_isnumber(m_pSLua, -1 - i))
 			{
-				//LG("lua����ֵ����", "���ýű� %s������%d��������ֵ%d���� ʱ���䷵��ֵ���Ͳ�ƥ��!\n", csString, nParamNum, nRetNum);
-				ToLogService("errors", LogLevel::Error, " when transfer script {}��param number{} ��return value number{} )��It return value's type inconsistent!", csString, nParamNum, nRetNum);
+				//LG("lua", " %s%d%d !\n", csString, nParamNum, nRetNum);
+				ToLogService("errors", LogLevel::Error, " when transfer script {}param number{} return value number{} )It return value's type inconsistent!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
 			}
@@ -135,8 +135,8 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		{
 			if (!lua_isstring(m_pSLua, -1 - i))
 			{
-				//LG("lua����ֵ����", "���ýű� %s������%d��������ֵ%d���� ʱ���䷵��ֵ���Ͳ�ƥ��!\n", csString, nParamNum, nRetNum);
-				ToLogService("errors", LogLevel::Error, " when transfer script {}��param number{} ��return value number{} )��It return value's type inconsistent!", csString, nParamNum, nRetNum);
+				//LG("lua", " %s%d%d !\n", csString, nParamNum, nRetNum);
+				ToLogService("errors", LogLevel::Error, " when transfer script {}param number{} return value number{} )It return value's type inconsistent!", csString, nParamNum, nRetNum);
 				nRet = 0;
 				break;
 			}
@@ -144,7 +144,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 		}
 		else
 		{
-			//LG("lua_err", "msgDoString(%s) ����ֵ���ʹ���!!!\n", csString);
+			//LG("lua_err", "msgDoString(%s) !!!\n", csString);
 			ToLogService("lua", LogLevel::Error, "msgDoString({}) return value's type error!!!", csString);
 			lua_settop(m_pSLua, 0);
 			return 0;
@@ -156,7 +156,7 @@ int CParser::DoString(const char *csString, char chRetType, int nRetNum, ...)
 	DWORD dwEndTime = t.End();
 	if(dwEndTime > 20)
 	{
-		//LG("script_time", "�ű�[%s]����ʱ����� time = %d\n", csString, dwEndTime);
+		//LG("script_time", "[%s] time = %d\n", csString, dwEndTime);
 		ToLogService("lua", LogLevel::Trace, "script[{}]cost time too long time = {}", csString, dwEndTime);
 	}
 	return nRet;

@@ -1,4 +1,4 @@
-/*
+﻿/*
 ** $Id: lualib.h,v 1.1.1.1 2004/01/13 09:01:54 justin_reynen Exp $
 ** Lua standard libraries
 ** See Copyright Notice in lua.h

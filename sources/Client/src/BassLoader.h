@@ -1,4 +1,4 @@
-#ifndef __BASSLOADER_H__
+﻿#ifndef __BASSLOADER_H__
 #define __BASSLOADER_H__
 
 #define WIN32_LEAN_AND_MEAN

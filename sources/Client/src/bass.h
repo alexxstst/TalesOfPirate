@@ -1,4 +1,4 @@
-/* BASS 1.6a C/C++ header file, copyright (c) 1999-2002 Ian Luck.
+﻿/* BASS 1.6a C/C++ header file, copyright (c) 1999-2002 Ian Luck.
    Please report bugs/suggestions/etc... to bass@un4seen.com
 
    See the BASS.CHM file for more complete documentation */

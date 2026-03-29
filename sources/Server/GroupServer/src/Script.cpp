@@ -1,4 +1,4 @@
-// Script.cpp Created by knight-gongjian 2004.12.1.
+ï»¿// Script.cpp Created by knight-gongjian 2004.12.1.
 //---------------------------------------------------------
 #include "stdafx.h"
 #include "Script.h"
@@ -52,7 +52,7 @@ BOOL RegisterScript()
 {
 	lua_State *L = g_pLuaState;
 
-	//×¢²áLuaº¯Êý
+	//Lua
 	if( !RegisterLuaFunc() )
 		return FALSE;
 
@@ -71,7 +71,7 @@ void ReloadLuaSdk()
 
 void ReloadScript()
 {
-	// ×°ÔØNPCÈÎÎñÊý¾ÝÐÅÏ¢
+	// NPC
 	luaL_dofile( g_pLuaState, GetResPath("script/Script01.lua") );
 }
 
@@ -86,7 +86,7 @@ BOOL LoadScript()
 	ReloadLuaSdk();
 	ReloadScript();
 
-	//Ö´ÐÐLua½Å±¾
+	//Lua
 
 	return TRUE;
 }

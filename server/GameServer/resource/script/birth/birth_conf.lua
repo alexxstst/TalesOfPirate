@@ -1,4 +1,4 @@
-ClearAllBirthPoint()
+﻿ClearAllBirthPoint()
 AddBirthPoint("Argent City", "garner",  2232, 2787)
 AddBirthPoint("Argent City", "garner",  2194, 2779)
 AddBirthPoint("Argent City", "garner",  2245, 2703)

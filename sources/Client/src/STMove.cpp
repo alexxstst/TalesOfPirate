@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "stmove.h"
 #include "actor.h"
 #include "GameApp.h"
@@ -78,7 +78,7 @@ void CWaitMoveState::SetPreMoveTime( long time )
 
 void CWaitMoveState::RenderPing()
 {
-	// ÆÁ±Î CTRL + ALT + SHIFT + K ÏÔÊ¾µÄÄÚÈÝ
+	//  CTRL + ALT + SHIFT + K 
 
 	//static char szBuf[128] = { 0 };
 	//g_pGameApp->GetFont()->DrawText( szBuf, 5, 55, D3DCOLOR_ARGB(255,255,255,255));
@@ -92,7 +92,7 @@ void CWaitMoveState::RenderCameraInfo()
 	static char szBuf[128] = { 0 };
 	int y(65), step(16), line(5);
 
-	GetRender().FillFrame(0, y - 5, 160, y + 5 + step * line);	// ºÚÉ«±³¾°
+	GetRender().FillFrame(0, y - 5, 160, y + 5 + step * line);	// 
 
 	sprintf( szBuf, " CameraRangeXY  = %.2f ", pCam->m_fxy);
 	g_pGameApp->GetFont()->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));

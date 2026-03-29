@@ -1,4 +1,4 @@
-// DISPIDs for DHTMLEd.OCX
+﻿// DISPIDs for DHTMLEd.OCX
 // Copyright 1998-1999 Microsoft Corporation.  All rights reserved.
 
 #ifndef __DHTMLDID_H_

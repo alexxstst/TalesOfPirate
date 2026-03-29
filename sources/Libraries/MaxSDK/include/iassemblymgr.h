@@ -1,4 +1,4 @@
- /**********************************************************************
+ï»¿ /**********************************************************************
  
 	FILE: IAssemblyMgr.h
 
@@ -18,7 +18,7 @@
 #include "iFnPub.h"
 #include "iassembly.h"
 
-//¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯¯
+//
 // class IAssemblyMgr
 //
 // This interface allows for working with assemblies and its methods are

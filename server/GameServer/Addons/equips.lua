@@ -1,4 +1,4 @@
-EQUIPMENT_LV = 30
+﻿EQUIPMENT_LV = 30
 
 function randomBiased(min, max, bias)
     local v = math.pow(math.random(), bias)

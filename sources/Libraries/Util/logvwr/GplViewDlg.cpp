@@ -1,4 +1,4 @@
-// GplViewDlg.cpp : implementation file
+Ôªø// GplViewDlg.cpp : implementation file
 //
 
 #include "stdafx.h"
@@ -43,7 +43,7 @@ void CGplViewDlg::OnPaint()
     // Do not call CDialog::OnPaint() for painting messages
 
     GetClientRect(m_RC);
-    dc.FillRect(m_RC, &m_Brush); // À¢±≥æ∞
+    dc.FillRect(m_RC, &m_Brush); // 
 
     DrawGplData(dc);
     }
@@ -52,19 +52,19 @@ BOOL CGplViewDlg::DrawGplData(CPaintDC& dc)
     {
     if (m_pGPLData == NULL)
         {
-        TRACE0(" ˝æ›‘¥∑«∑®\n");
+        TRACE0("\n");
         return FALSE;
         }
 
-    // ≤Èø¥ ˝æ›
+    // 
     int size = int(m_pGPLData->size());
     if (size == 0)
         {
-        TRACE0(" ˝æ›‘¥Œ™ø’\n");
+        TRACE0("\n");
         return FALSE;
         }
 
-    // œ‘ æ ˝æ›
+    // 
     dc.SetBkMode(TRANSPARENT);
 	dc.SelectObject(GetFont());
     dc.SetTextColor(RGB(255, 0, 0));
@@ -75,7 +75,7 @@ BOOL CGplViewDlg::DrawGplData(CPaintDC& dc)
     for (i = m_pGPLData->begin(); i != m_pGPLData->end(); ++ i)
         if ((*i)->IsEnabled())
             {
-            // œ‘ æ
+            // 
             for (std::map<int, std::string>::iterator it = (*i)->m_Map.begin();
                  it !=
                  (*i)->m_Map.end();
@@ -98,11 +98,11 @@ void CGplViewDlg::OnRButtonDown(UINT nFlags, CPoint point)
 
     try
         {
-        // µØ≥ˆ”“º¸≤Àµ•
+        // 
         POINT pt;
         ::GetCursorPos(&pt);
 
-        CMenu* pSub = (m_pParent->m_pMainMenu)->GetSubMenu(1); // µ√µΩView◊”≤Àµ•
+        CMenu* pSub = (m_pParent->m_pMainMenu)->GetSubMenu(1); // View
         pSub->TrackPopupMenu(TPM_LEFTALIGN | TPM_RIGHTBUTTON, pt.x, pt.y,
                              m_pParent);
         }
@@ -115,16 +115,16 @@ void CGplViewDlg::OnRButtonDown(UINT nFlags, CPoint point)
 
 BOOL CGplViewDlg::OnCommand(WPARAM wParam, LPARAM lParam)
     {
-    UINT nID = LOWORD(wParam); // øÿº˛°¢øÏΩ›º¸°¢≤Àµ•µƒID
-    int nCode = HIWORD(wParam); // œ˚œ¢°¢1°¢0
-    HWND hWndCtrl = (HWND) lParam; // ¥∞ø⁄æ‰±˙°¢0°¢0
+    UINT nID = LOWORD(wParam); // ID
+    int nCode = HIWORD(wParam); // 10
+    HWND hWndCtrl = (HWND) lParam; // 00
 
     if ((nID > MY_LGMENU_BASE) &&
         (nID <= MY_LGMENU_BASE + UINT(m_pLGData->size())) &&
         (nCode == 0) &&
         (hWndCtrl == NULL))
         {
-        // ◊‘º∫µƒ∂ØÃ¨LGµƒMENUœ˚œ¢£¨◊™∑¢∏¯∏∏¥∞ø⁄
+        // LGMENU
         m_pParent->PostMessage(WM_COMMAND, wParam, lParam);
         return TRUE;
         }
@@ -133,7 +133,7 @@ BOOL CGplViewDlg::OnCommand(WPARAM wParam, LPARAM lParam)
              (nCode == 0) &&
              (hWndCtrl == NULL))
         {
-        // ◊‘º∫µƒ∂ØÃ¨GPLµƒMENUœ˚œ¢£¨◊™∑¢∏¯∏∏¥∞ø⁄
+        // GPLMENU
         m_pParent->PostMessage(WM_COMMAND, wParam, lParam);
         return TRUE;
         }

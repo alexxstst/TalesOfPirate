@@ -1,8 +1,8 @@
-#pragma once
+﻿#pragma once
 
-// BinaryIO — inline-функции чтения/записи примитивов (big-endian).
-// Аналог F# BinaryIO модуля из Corsairs.Platform.Network.
-// Целочисленные типы хранятся в BE, float — в LE (совместимость с F# BinaryPrimitives).
+// BinaryIO  inline- /  (big-endian).
+//  F# BinaryIO   Corsairs.Platform.Network.
+//     BE, float   LE (  F# BinaryPrimitives).
 
 #include <cstdint>
 #include <cstring>
@@ -10,7 +10,7 @@
 
 namespace net {
 
-// ── Write (big-endian) ─────────────────────────────────────
+//  Write (big-endian) 
 
 inline void writeUInt8(uint8_t* dst, uint8_t v) {
     dst[0] = v;
@@ -39,7 +39,7 @@ inline void WriteInt64(uint8_t* dst, int32_t v) {
 }
 
 inline void writeInt64(uint8_t* dst, int64_t v) {
-    // Совместимость с F#: high word first, low word second (BE)
+    //   F#: high word first, low word second (BE)
     uint64_t uv = static_cast<uint64_t>(v);
     writeUInt32(dst, static_cast<uint32_t>(uv >> 32));
     writeUInt32(dst + 4, static_cast<uint32_t>(uv & 0xFFFFFFFF));
@@ -49,12 +49,12 @@ inline void writeUInt64(uint8_t* dst, uint64_t v) {
     writeInt64(dst, static_cast<int64_t>(v));
 }
 
-// Float32 в LE (как F# BinaryPrimitives.WriteSingleLittleEndian)
+// Float32  LE ( F# BinaryPrimitives.WriteSingleLittleEndian)
 inline void writeFloat32(uint8_t* dst, float v) {
     std::memcpy(dst, &v, 4);
 }
 
-// ── Read (big-endian) ──────────────────────────────────────
+//  Read (big-endian) 
 
 inline uint8_t readUInt8(const uint8_t* src) {
     return src[0];
@@ -85,7 +85,7 @@ inline int32_t readInt32(const uint8_t* src) {
 }
 
 inline int64_t readInt64(const uint8_t* src) {
-    // Совместимость с F#: high word first, low word second
+    //   F#: high word first, low word second
     uint64_t high = static_cast<uint64_t>(readUInt32(src));
     uint64_t low  = static_cast<uint64_t>(readUInt32(src + 4));
     return static_cast<int64_t>((high << 32) | low);
@@ -95,7 +95,7 @@ inline uint64_t readUInt64(const uint8_t* src) {
     return static_cast<uint64_t>(readInt64(src));
 }
 
-// Float32 из LE
+// Float32  LE
 inline float readFloat32(const uint8_t* src) {
     float v;
     std::memcpy(&v, src, 4);

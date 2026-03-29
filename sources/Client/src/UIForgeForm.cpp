@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiforgeform.h"
 #include "uiformmgr.h"
 #include "uiform.h"
@@ -37,7 +37,7 @@ static int         g_nForgeIndex  =-1;
 bool CForgeMgr::Init()
 {
 	CFormMgr &mgr = CFormMgr::s_Mgr;
-	//��ʼ��npc�Ի�����
+	//npc
 	frmNPCforge  = mgr.Find("frmNPCforge" );
 	if ( !frmNPCforge )
 	{	
@@ -53,7 +53,7 @@ bool CForgeMgr::Init()
 		return Error(g_oLangRec.GetString(561), frmNPCforge->GetName(), "labForgeGold");	
 	labForgeGold->SetCaption("");
 
-	// װ����
+	// 
 	char szBuf[32];
 	for (int i(0); i<ITEM_NUM; i++)
 	{
@@ -132,7 +132,7 @@ void CForgeMgr::ShowForge(bool bShow, bool isMilling)
 		frmNPCforge->Refresh();
 		frmNPCforge->Show();
 
-		//ͬʱ����ҵ�װ����
+		//
 		int x = frmNPCforge->GetX() + frmNPCforge->GetWidth();
 		int y = frmNPCforge->GetY();
 		g_stUIEquip.GetItemForm()->SetPos(x, y);
@@ -143,7 +143,7 @@ void CForgeMgr::ShowForge(bool bShow, bool isMilling)
 			g_stUIEquip.GetItemForm()->Show();
 		}
 
-		//���½��棨��ĥ������
+		//
 		btnMillingYes->SetIsShow(m_isMilling);
 		btnForgeYes->SetIsShow(!m_isMilling);
 		btnYes = m_isMilling ? btnMillingYes : btnForgeYes;
@@ -227,11 +227,11 @@ bool CForgeMgr::SendForgeProtocol()
 {
 	stNetItemForgeAsk kNetItemForgeAsk;
 	
-	kNetItemForgeAsk.chType = m_isMilling? MILLING_TYPE : FORGE_TYPE;	// ��ĥ����
+	kNetItemForgeAsk.chType = m_isMilling? MILLING_TYPE : FORGE_TYPE;	// 
 
 	for (int i(0); i<ITEM_NUM; ++i)
 	{
-		kNetItemForgeAsk.SGroup[i].sCellNum = 1;		// ʼ����1
+		kNetItemForgeAsk.SGroup[i].sCellNum = 1;		// 1
 		kNetItemForgeAsk.SGroup[i].pCell = new SForgeCell::SCell[1];
 		kNetItemForgeAsk.SGroup[i].pCell[0].sNum = 1;
 		kNetItemForgeAsk.SGroup[i].pCell[0].sPosID = m_iForgeItemPos[i];
@@ -290,9 +290,9 @@ void CForgeMgr::_MainMouseEvent(CCompent *pSender, int nMsgType, int x, int y, D
 {
 	string name = pSender->GetName();
 	if( name=="btnClose"  || name == "btnForgeNo" )  
-	{ ///�رձ���
-		// ������������ڹ�����ȡ�����򣬷���ȡ��Э���������
-		//ȫ���Ƶ�OnClose�¼���
+	{ ///
+		// 
+		//OnClose
 		//if (g_stUIForge.proNPCforge->IsRuning())
 		//{
 		//	g_stUIForge.proNPCforge->Start(0);
@@ -354,7 +354,7 @@ void CForgeMgr::_DragEvtGenStone(CGuiData *pSender,CCommandObj* pItem,bool& isAc
 	if( !(pItemCommand->GetIsValid())) return;
 
 	if (g_stUIForge.m_isMilling)
-	{ //�����Ǵ�ĥ
+	{ //
 		if (g_stUIForge.IsMillingReinforce(*pItemCommand))
 		{
 			g_stUIForge.PushItem(GEN_STONE, *pItemCommand);
@@ -366,7 +366,7 @@ void CForgeMgr::_DragEvtGenStone(CGuiData *pSender,CCommandObj* pItem,bool& isAc
 		}
 	}
 	else
-	{ //�����Ǿ���
+	{ //
 		if (g_stUIForge.IsGenStone(*pItemCommand))
 		{
 			g_stUIForge.PushItem(GEN_STONE, *pItemCommand);
@@ -394,7 +394,7 @@ void CForgeMgr::_DragEvtForgStone(CGuiData *pSender,CCommandObj* pItem,bool& isA
 	if (!(pItemCommand->GetIsValid())) return;
 
 	if (g_stUIForge.m_isMilling)
-	{ //�����Ǵ�ĥ
+	{ //
 		if (g_stUIForge.IsMillingKatalyst(*pItemCommand))
 		{
 			g_stUIForge.PushItem(FORGE_STONE, *pItemCommand);
@@ -406,7 +406,7 @@ void CForgeMgr::_DragEvtForgStone(CGuiData *pSender,CCommandObj* pItem,bool& isA
 		}
 	}
 	else
-	{ //�����Ǿ���
+	{ //
 		if (g_stUIForge.IsForgStone(*pItemCommand))
 		{
 			g_stUIForge.PushItem(FORGE_STONE, *pItemCommand);
@@ -467,7 +467,7 @@ bool CForgeMgr::IsEquip(CItemCommand& rItem)
 	if (pItemRecord) 
 	{
 		short sType = pItemRecord->sType;
-		//	Close by alfred.shi 20080912 ñ��Ҳ���Դ�ĥ
+		//	Close by alfred.shi 20080912 
 		if (sType < EQUIP_TYPE && sType != 12 && sType != 13 && sType != 17 && sType != 18 && sType != 19 /*&& sType != 20*/ && sType != 21 || sType == 88)
 			return true;
 	}
@@ -533,7 +533,7 @@ bool CForgeMgr::IsValidDragSource()
 //---------------------------------------------------------------------------
 void CForgeMgr::PushItem(int iIndex, CItemCommand& rItem)
 {
-	// �鿴ԭ����Cmd���Ƿ��Ѿ���Item�ˣ���������Ƴ�
+	// CmdItem
 	CItemCommand* pItemCommand =  
 		dynamic_cast<CItemCommand*>(cmdForgeItem[iIndex]->GetCommand());
 	if (pItemCommand)
@@ -541,12 +541,12 @@ void CForgeMgr::PushItem(int iIndex, CItemCommand& rItem)
 		PopItem(iIndex);
 	}
 
-	// ��¼Item����Ʒ���е�λ��
+	// Item
 	m_iForgeItemPos[iIndex] = g_stUIEquip.GetGoodsGrid()->GetDragIndex();
-	// ��Item��Ӧ����Ʒ���ҵ�
+	// Item
 	rItem.SetIsValid(false);
 
-	// ��������Item����Cmd�У�������new������PopItem()��ɾ��
+	// ItemCmdnewPopItem()
 	CItemCommand* pItemCmd = new CItemCommand(rItem);
 	pItemCmd->SetIsValid(true);
 	cmdForgeItem[iIndex]->AddCommand(pItemCmd);
@@ -557,13 +557,13 @@ void CForgeMgr::PushItem(int iIndex, CItemCommand& rItem)
 //---------------------------------------------------------------------------
 void CForgeMgr::PopItem(int iIndex)
 {
-	// ɾ��Cmd�е�Item����Item����PushItem()����new����
+	// CmdItemItemPushItem()new
 	CItemCommand* pItemCommand =  
 		dynamic_cast<CItemCommand*>(cmdForgeItem[iIndex]->GetCommand());
 	if (pItemCommand)
-		cmdForgeItem[iIndex]->DelCommand();	// �ú�����ɾ��delete Item
+		cmdForgeItem[iIndex]->DelCommand();	// delete Item
 
-	// ��Item��Ӧ����Ʒ���ҵ�
+	// Item
 	CCommandObj* pItem = 
 				g_stUIEquip.GetGoodsGrid()->GetItem(m_iForgeItemPos[iIndex]);
 	if (pItem)
@@ -571,7 +571,7 @@ void CForgeMgr::PopItem(int iIndex)
 		pItem->SetIsValid(true);
 	}
 
-	// ��¼Item����Ʒ���е�λ��
+	// Item
 	m_iForgeItemPos[iIndex] = NO_USE;
 
 	this->SetForgeUI();
@@ -586,19 +586,19 @@ void CForgeMgr::SetForgeUI()
 {
 
 	/*
-	���֮��      +5
-	���һ      3��        �챦ʯ     
-	��۶�      ��         
-	�����     ����         ����
-	�����ӳ�    ����+18    רע+79    ����+99
-	���Ӽӳ�     ���� 
-	��ʯЧ��     ����+2      רע+1 
+	      +5
+	      3             
+	               
+	              
+	    +18    +79    +99
+	      
+	     +2      +1 
 	*/
 
 	char szBuf[64];
 	if (cmdForgeItem[EQUIP]->GetCommand())
 	{
-		// ����������
+		// 
 		CItemCommand* pItemCommand =  
 			dynamic_cast<CItemCommand*>(cmdForgeItem[EQUIP]->GetCommand());
 		if (!pItemCommand)
@@ -610,7 +610,7 @@ void CForgeMgr::SetForgeUI()
 		SItemForge rItemForgeInfo = pItemCommand->GetForgeInfo();
 
 		string sEquipState("");
-		// ������
+		// 
 		CItemRow* pItem = lstForgeItemState->GetItems()->GetItem(0);
 		if (pItem)
 		{
@@ -620,7 +620,7 @@ void CForgeMgr::SetForgeUI()
 			pItem->GetBegin()->SetString(sEquipState.c_str());
 		}
 
-		// �������һ
+		// 
 		pItem = lstForgeItemState->GetItems()->GetItem(1);
 		if (pItem)
 		{
@@ -644,7 +644,7 @@ void CForgeMgr::SetForgeUI()
 			pItem->GetBegin()->SetString(sEquipState.c_str());
 		}
 
-		// ������۶�
+		// 
 		pItem = lstForgeItemState->GetItems()->GetItem(2);
 		if (pItem)
 		{
@@ -668,7 +668,7 @@ void CForgeMgr::SetForgeUI()
 			pItem->GetBegin()->SetString(sEquipState.c_str());
 		}
 
-		// ���������
+		// 
 		pItem = lstForgeItemState->GetItems()->GetItem(3);
 		if (pItem)
 		{
@@ -692,7 +692,7 @@ void CForgeMgr::SetForgeUI()
 			pItem->GetBegin()->SetString(sEquipState.c_str());
 		}
 
-		// ���������ӳ�
+		// 
 		pItem = lstForgeItemState->GetItems()->GetItem(4);
 		if (pItem)
 		{
@@ -709,7 +709,7 @@ void CForgeMgr::SetForgeUI()
 		}
 
 
-		// ���������ӳ�
+		// 
 		pItem = lstForgeItemState->GetItems()->GetItem(5);
 		if (pItem)
 		{
@@ -730,7 +730,7 @@ void CForgeMgr::SetForgeUI()
 
 	}
 
-	//		��ʯЧ��     ����+2      רע+1 
+	//		     +2      +1 
 	if (!m_isMilling)
 	{
 		if (cmdForgeItem[GEN_STONE]->GetCommand())
@@ -761,7 +761,7 @@ void CForgeMgr::SetForgeUI()
 
 
 	}
-		// ����UI����
+		// UI
 
 	if (cmdForgeItem[EQUIP]->GetCommand() 
 		&& cmdForgeItem[GEN_STONE]->GetCommand() 

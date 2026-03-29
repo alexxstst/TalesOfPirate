@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: MapEntry.cpp
 // Creater: ZhangXuedong
 // Date: 2005.10.21
@@ -13,7 +13,7 @@ using namespace std;
 
 CDynMapEntry	g_CDMapEntry;
 
-char	g_szTFightMapName[MAX_MAPNAME_LENGTH] = "";	// ������ս��ͼ��
+char	g_szTFightMapName[MAX_MAPNAME_LENGTH] = "";	// 
 
 //=============================================================================
 void CMapEntryCopyCell::WriteParamPacket(net::WPacket &pk)
@@ -27,7 +27,7 @@ void CDynMapEntryCell::SetCopyNum(dbc::Short sCopyNum)
 {
 	if (sCopyNum > defMAX_MAP_COPY_NUM)
 	{
-		//LG("������Ŀ����", "msg�趨�ĸ�����Ŀ %d �������ֵ %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
+		//LG("", "msg %d  %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
 		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00008), sCopyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return;
 	}
@@ -67,7 +67,7 @@ void CDynMapEntryCell::SynCopyParam(dbc::Short sCopyID)
 	if (!pCCopyCell)
 		return;
 
-	// Типизированная сериализация: параметры копии карты
+	//  :   
 	net::msg::GmMapEntryCopyParamMessage copyMsg;
 	copyMsg.targetMapName = GetTMapName();
 	copyMsg.srcMapName = GetMapName();
@@ -90,7 +90,7 @@ void CDynMapEntryCell::SynCopyRun(dbc::Short sCopyID, dbc::Char chCdtType, dbc::
 	if (!pCCopyCell)
 		return;
 
-	// Типизированная сериализация: запуск условия копии карты
+	//  :    
 	net::msg::MapEntryMessage meMsg;
 	meMsg.srcMapName = GetTMapName();
 	meMsg.targetMapName = GetMapName();

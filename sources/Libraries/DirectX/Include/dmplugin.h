@@ -1,4 +1,4 @@
-/************************************************************************
+﻿/************************************************************************
 *                                                                       *
 *   dmplugin.h -- This module contains the API for plugins for the      *
 *                 DirectMusic performance layer                         *

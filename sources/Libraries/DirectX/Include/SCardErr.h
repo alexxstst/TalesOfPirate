@@ -1,4 +1,4 @@
-/*
+﻿/*
  scarderr.mc
 
    Error message codes from the Smart Card Resource Manager

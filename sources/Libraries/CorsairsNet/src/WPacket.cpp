@@ -1,18 +1,18 @@
-#include "Packet.h"
+﻿#include "Packet.h"
 #include <algorithm>
 
 namespace net {
 
-// ═══════════════════════════════════════════════════════════════
-//  WPacket — реализация (msgpack payload)
-// ═══════════════════════════════════════════════════════════════
+// 
+//  WPacket   (msgpack payload)
+// 
 
 WPacket::WPacket(int payloadCapacity) {
     int totalSize = 8 + payloadCapacity;
     _capacity = PacketPool::Shared().BucketSize(totalSize);
     _data = PacketPool::Shared().Allocate(totalSize);
     std::memset(_data, 0, 8);
-    writeUInt16(_data, 8); // Начальный размер = заголовок
+    writeUInt16(_data, 8); //   = 
     UpdateWriterPosition();
 }
 
@@ -92,7 +92,7 @@ WPacket::~WPacket() {
     }
 }
 
-// ── Writer position ───────────────────────────────────────
+//  Writer position 
 
 void WPacket::UpdateWriterPosition() {
     mpack_writer_init(&_writer, reinterpret_cast<char*>(_data + 8), _capacity - 8);
@@ -105,7 +105,7 @@ void WPacket::SyncSize() {
     SetPacketSize(8 + payloadUsed);
 }
 
-// ── Заголовок ──────────────────────────────────────────────
+//   
 
 void WPacket::WriteCmd(uint16_t cmd) {
     writeUInt16(_data + 6, cmd);
@@ -125,7 +125,7 @@ uint32_t WPacket::GetSess() const {
     return readUInt32(_data + 2);
 }
 
-// ── Размеры ────────────────────────────────────────────────
+//   
 
 int WPacket::GetPacketSize() const {
     if (!_data || _capacity < 2) return 0;
@@ -140,11 +140,11 @@ int WPacket::PayloadLength() const {
     return GetPacketSize() - 8;
 }
 
-// ── EnsureCapacity ─────────────────────────────────────────
+//  EnsureCapacity 
 
 int WPacket::EnsureCapacity(int needed) {
     int pos = GetPacketSize();
-    int required = pos + needed + 4; // +4 запас для msgpack тегов
+    int required = pos + needed + 4; // +4   msgpack 
 
     if (required > _capacity) {
         mpack_writer_destroy(&_writer);
@@ -161,7 +161,7 @@ int WPacket::EnsureCapacity(int needed) {
     return pos;
 }
 
-// ── Запись payload ─────────────────────────────────────────
+//   payload 
 
 void WPacket::WriteInt64(int64_t v) {
     EnsureCapacity(9);
@@ -190,7 +190,7 @@ void WPacket::WriteSequence(const char* data, uint16_t len) {
 void WPacket::WriteString(const std::string& str) {
     if (str.empty()) {
         EnsureCapacity(6);
-        mpack_write_str(&_writer, "\0", 1); // 1 байт = null-terminator
+        mpack_write_str(&_writer, "\0", 1); // 1  = null-terminator
     } else {
         int len = str.size() + 1; // +1 = null
         EnsureCapacity(5 + len);
@@ -199,7 +199,7 @@ void WPacket::WriteString(const std::string& str) {
     SyncSize();
 }
 
-// ── Reset ──────────────────────────────────────────────────
+//  Reset 
 
 void WPacket::Reset() {
     mpack_writer_destroy(&_writer);

@@ -1,4 +1,4 @@
---[[
+﻿--[[
 	Lua TradeServer by Billy.
 	* Limited quantity by Mothana.
 	* Individual item quantity by Angelix.

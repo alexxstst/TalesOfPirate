@@ -1,4 +1,4 @@
-//================================================================
+﻿//================================================================
 // It must be permitted by Dabo.Zhang that this program is used for
 // any purpose in any situation.
 // Copyright (C) Dabo.Zhang 2000-2003
@@ -7,13 +7,13 @@
 // This program is modified recently by Zhang.Dabo in 2003.7
 //=================================================================
 /*
-	д�п�Ƕ��д�Ͷ�
-	����ֻ��Ƕ�׶�������Ƕ��д
+	
+	
 */
 #pragma once
 
-#ifndef USING_TAO		//ʹ��Win32����Platform SDK
-#include <winsock2.h>		//ȷ�������µ�WinSock2.2�汾
+#ifndef USING_TAO		//Win32Platform SDK
+#include <winsock2.h>		//WinSock2.2
 #include <windows.h>
 #else
 #include "TAOSpecial.h"
@@ -38,7 +38,7 @@ public:
 
 		if (!m_semWrite || !m_semRead)
 		{
-			THROW_EXCP(excpSync,"��дͬ������������ϵͳͬ������ʧ��");
+			THROW_EXCP(excpSync,"");
 		}
 	};
 	void BeginRead();

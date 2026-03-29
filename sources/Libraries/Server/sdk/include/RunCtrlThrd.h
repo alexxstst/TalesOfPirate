@@ -1,4 +1,4 @@
-/*
+﻿/*
 Created By DBZHANG IN 8.25.2004
 For Control Thread
 Usage:
@@ -41,7 +41,7 @@ protected:
 	void lock()		{m_mtxrun.lock();}
 	void unlock()	{m_mtxrun.unlock();}
 private:
-	virtual void	_Run()=0;					//������override����Ӧ
+	virtual void	_Run()=0;					//override
 
 	std::recursive_mutex			m_mtxrun;
 };
@@ -52,11 +52,11 @@ class RunCtrlThrd	:private RunBiDirectChain< RunCtrlObj<T> >	,public	Task
 	template<class T>friend class RunCtrlObj;
 	template<class T>friend class RunCtrlMgr;
 private:
-	RunCtrlThrd(RunCtrlMgr<T> * mgr,short thrdpos):m_mgr(mgr),m_thrdpos(thrdpos),m_timer(false)//ʹ��QueuePerformanceX��ʱ
+	RunCtrlThrd(RunCtrlMgr<T> * mgr,short thrdpos):m_mgr(mgr),m_thrdpos(thrdpos),m_timer(false)//QueuePerformanceX
 	{
 	}
 	virtual	~RunCtrlThrd() = default;
-	Task	*	Lastly()			//������mgrɾ��
+	Task	*	Lastly()			//mgr
 	{
 		return 0;
 	}
@@ -75,7 +75,7 @@ private:
 
 			uLong	l_tick	=m_timer.End();
 			AddUsage(l_tick);
-			if(T::TimePrecision>long(l_tick))::Sleep(T::TimePrecision-long(l_tick));	//�����ۻ�CPU���ĵ�ʱ���㷨
+			if(T::TimePrecision>long(l_tick))::Sleep(T::TimePrecision-long(l_tick));	//CPU
 		}catch(...){}}
 		return 0;
 	}

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uititle.h"
 #include "gameapp.h"
 using namespace std;

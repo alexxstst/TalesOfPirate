@@ -1,4 +1,4 @@
-
+﻿
 #include <SDL.h>
 #include <SDL_mixer.h>
 
@@ -7,12 +7,12 @@
 
 
 //
-// 1.0 �汾�����ֲ��ŷ��� by claude Fan at 2004-08-22
+// 1.0  by claude Fan at 2004-08-22
 //
 
 
 //
-// 2.0 �汾�����ֲ��ŷ��� by claude Fan at 2004-10-20
+// 2.0  by claude Fan at 2004-10-20
 //
 
 const int ERROR_TIME = 10000;

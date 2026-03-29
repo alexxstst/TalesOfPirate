@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
 #include "TableData.h"
 
@@ -35,7 +35,7 @@ _Instance = this;
 
 protected:
 
-	static CMusicSet* _Instance; // �൱�ڵ���, ���Լ���ס
+	static CMusicSet* _Instance; // , 
    
 	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
 	{

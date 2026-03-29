@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 
 #include "Scene.h"
 #include "GameApp.h"
@@ -122,7 +122,7 @@ void CGameScene::_Render()
 			if(g_Editor.IsEnable()) g_Render.AddLine(_vMousePos, D3DXVECTOR3(_vMousePos.x, _vMousePos.y, _vMousePos.z + 4.0f), 0xFFFF0000);
 		}
 
-		// ��ǰ��ɫ�����Ѳ�߹�, ���Ѳ��·�߻��Ƴ���
+		// , 
 		
 		for(int i = 0; i < GetChaCnt(); i++)
 		{
@@ -421,7 +421,7 @@ void CGameScene::_Render()
 
         if(_nShowChair)
         {
-            // ����ͨ�������Ⱦ(�������)
+            // ()
             for(int k = SCENEOBJ_TYPE_POSE; k <=SCENEOBJ_TYPE_ENVSOUND; k++)
             {
                 for(it = _SceneObjIdx[k].begin(); it!=_SceneObjIdx[k].end(); it++)
@@ -461,7 +461,7 @@ void CGameScene::_Render()
 
 
 
-	//lemon add@2004.12.14 ��ֹ������������ЧӰ���¸ı�͸����
+	//lemon add@2004.12.14 
 	g_Render.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff );
 
     {
@@ -649,7 +649,7 @@ void CGameScene::_Render()
 
 				if( pCha->IsPlayer() )
 				{
-					// ��������,����ʾ���ѻ�����
+					// ,
 					if( !( (nMainTeamID>0 && nMainTeamID==pCha->GetTeamLeaderID()) || ( pCha==pMain ) ) )
 					{
 						continue;
@@ -795,7 +795,7 @@ void CGameScene::_Render()
 	
 	g_Render.EnableZBuffer(TRUE); 
 		
-	//��Ⱦ��Ч���ĺ���
+	//
 	//g_CEffBox.Render();
     MPTimer mpt;
 
@@ -1095,12 +1095,12 @@ void	CGameScene::RenderSMallMap()
 
 
 					// begin by Jack
-					// ���´�������Ϊ����������Ҫ��ģ��ɳ�ݵ���������Ҫ����
-					// ����Ŀǰ����Ʒ��������ȵĵ���������������������
-					// ���޷����������������ָ����ֵ
-					// ����������⣬Ŀǰ��Ҫ���������ֻ��ɳ��һ�֣���ʱ
-					// ����ʱ�������жϣ�����Ժ����������࣬��Ҫ��sceneobj.txt
-					// �ж���������һ��
+					// 
+					// 
+					// 
+					// 
+					// sceneobj.txt
+					// 
 					if(info->nID == 232)
 					{
 						db4_env.d = 0xffffffff;

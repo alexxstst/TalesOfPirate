@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+Ôªø#include "StdAfx.h"
 #include "uiitem.h"
 #include "uitextparse.h"
 
@@ -91,7 +91,7 @@ void CColorItem::ParseScript( const char szScript[], USHORT sStartCom, DWORD dwD
 		{
 			if( strDesp.size() > 0 )
 			{
-				// ÃÌº”Œƒ◊÷œ‘ æ ˝æ›µΩ¡–±Ì÷–
+				// 
 				ITEM_TEXT_DATA Data;
 				Data.dwColor = dwColor;
 				Data.sxPos = sxPos;
@@ -104,7 +104,7 @@ void CColorItem::ParseScript( const char szScript[], USHORT sStartCom, DWORD dwD
 			pszTemp++;
 			if( pszTemp[0] == 'p' )
 			{
-				dwColor = 0xFFFF00FF; // ◊œ…´
+				dwColor = 0xFFFF00FF; // 
 				if( pszTemp[1] == '>' )
 				{
 					pszTemp++;
@@ -158,16 +158,16 @@ void CColorItem::ParseScript( const char szScript[], USHORT sStartCom, DWORD dwD
 			}
 			else
 			{
-				// Œ¥÷™¿‡–Õ±®¥Ì£°
+				// 
 				continue;
 			}
 
-			//  π”√–¬µƒ◊÷∑˚º«¬º
+			// 
 			pszTemp++;
 		}
 		else if( pszTemp[0] == '>' )
 		{
-			// ÃÌº”Œƒ◊÷œ‘ æ ˝æ›µΩ¡–±Ì÷–
+			// 
 			ITEM_TEXT_DATA Data;
 			Data.dwColor = dwColor;
 			Data.sxPos = sxPos;
@@ -181,7 +181,7 @@ void CColorItem::ParseScript( const char szScript[], USHORT sStartCom, DWORD dwD
 			continue;
 		}
 
-		// ≈–∂œ «∑Ò“ª∏ˆGBK
+		// GBK
 		BOOL bFlag1 = 0x81 <= (BYTE)pszTemp[0] && (BYTE)pszTemp[0] <= 0xFE;
 		BOOL bFlag2 = (0x40 <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0x7E) || (0x7E <= (BYTE)pszTemp[1] && (BYTE)pszTemp[1] <= 0xFE);
 		if( bFlag1 && bFlag2 )
@@ -190,7 +190,7 @@ void CColorItem::ParseScript( const char szScript[], USHORT sStartCom, DWORD dwD
 			szData[1] = pszTemp[1];
 			strDesp += szData;
 			
-			// “∆∂Ø¡–∫Õ÷∏œÚœ¬“ª∏ˆ◊÷∑˚
+			// 
 			sCom += 2;
 			pszTemp += 2;
 		}
@@ -199,7 +199,7 @@ void CColorItem::ParseScript( const char szScript[], USHORT sStartCom, DWORD dwD
 			szData[0] = pszTemp[0];
 			strDesp += szData;
 			
-			// “∆∂Ø¡–∫Õ÷∏œÚœ¬“ª∏ˆ◊÷∑˚
+			// 
 			sCom++;
 			pszTemp++;
 		}
@@ -256,12 +256,12 @@ void CItemRow::_Clear()
 		if( _items[i] != _GetNullItem() )
 		{
 			//delete _items[i];
-			SAFE_DELETE(_items[i]); // UIµ±ª˙¥¶¿Ì
+			SAFE_DELETE(_items[i]); // UI
 		}
 	}
 
 	//delete [] _items;
-	SAFE_DELETE_ARRAY(_items); // UIµ±ª˙¥¶¿Ì
+	SAFE_DELETE_ARRAY(_items); // UI
 	_pTag = NULL;
 }
 
@@ -285,27 +285,27 @@ void CItemRow::SetColor( DWORD c )
 //---------------------------------------------------------------------------
 // class CItemEx
 //---------------------------------------------------------------------------
-void CItemEx::ProcessString( int length ) // ≤Œ ˝£∫Ω«…´√˚≥∆µƒ≥§∂»
+void CItemEx::ProcessString( int length ) // 
 {
-	_strLine[0] = _str.substr( 0 , length ); //µ⁄“ª––œ‘ æΩ«…´µƒ√˚≥∆
+	_strLine[0] = _str.substr( 0 , length ); //
 
-	if ( _str.size() - length <= 32)  // µº Œƒ◊÷≤ª◊„32∏ˆ◊÷∑˚,‘Ú2––œ‘ æ
+	if ( _str.size() - length <= 32)  //32,2
 	{
 		_strLine[1] = _str.substr (length , _str.size() - length ) ;
 		_nLineNum = 2;
 	}
-	else       // µº Œƒ◊÷≥§”⁄32∏ˆ◊÷∑˚,‘Ú3––œ‘ æ,◊Ó∂‡3––
+	else       //32,3,3
 	{
 		int i ;
 		i = length ;					
-		while((int) _strLine[1].size() < 32 )   //µ⁄2––
+		while((int) _strLine[1].size() < 32 )   //2
 		{
-			if ( _str[i] & 0x80 ) //∫∫◊÷
+			if ( _str[i] & 0x80 ) //
 			{
 				_strLine[1] +=  _str.substr (i , 2  );
 				i += 2 ;
 			}						
-			else //∆‰À˚◊÷∑˚
+			else //
 			{
 				//Modify by sunny.sun20080901
 				//begin
@@ -344,7 +344,7 @@ void CItemEx::ProcessString( int length ) // ≤Œ ˝£∫Ω«…´√˚≥∆µƒ≥§∂»
 			}
 		}
 
-		while ( (int)_strLine[1].size() >= 32 && (int)_strLine[2].size() < 32 && i < (int)_str.size()) //µ⁄3––
+		while ( (int)_strLine[1].size() >= 32 && (int)_strLine[2].size() < 32 && i < (int)_str.size()) //3
 		{
 			if ( _str[i] & 0x80 )
 			{

@@ -1,20 +1,20 @@
-#pragma once
+﻿#pragma once
 
-// TcpClient — универсальное TCP-соединение с выделенным потоком приёма.
+// TcpClient   TCP-    .
 //
-// Режимы работы:
-//   Client mode: Connect(host, port) — исходящее подключение
-//   Server mode: Attach(socket, peerIP, peerPort) — от готового сокета после accept
+//  :
+//   Client mode: Connect(host, port)   
+//   Server mode: Attach(socket, peerIP, peerPort)      accept
 //
-// Архитектура:
-//   Recv Thread: блокирующий recv() → сборка кадра → дешифровка → очередь
-//                Пакеты с SESS|FLAG → _rpcResponseQueue (RPC-ответы)
-//                Остальные → _recvQueue (обычные пакеты)
-//   Game Thread: PollPackets() → OnPacket callback + RPC callback dispatch
-//   Game Thread: Send() → шифровка → send() в сокет
-//   Game Thread: AsyncCall() → запись SESS → Send() → ожидание ответа в PollPackets
+// :
+//   Recv Thread:  recv()       
+//                  SESS|FLAG  _rpcResponseQueue (RPC-)
+//                  _recvQueue ( )
+//   Game Thread: PollPackets()  OnPacket callback + RPC callback dispatch
+//   Game Thread: Send()    send()  
+//   Game Thread: AsyncCall()   SESS  Send()     PollPackets
 //
-// Шифрование через ICryptoProvider (реализуется в клиенте).
+//   ICryptoProvider (  ).
 
 #include "Packet.h"
 #include <WinSock2.h>
@@ -28,42 +28,42 @@
 #include <vector>
 
 namespace net {
-	// ═══════════════════════════════════════════════════════════════
-	//  ICryptoProvider — интерфейс шифрования
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  ICryptoProvider   
+	// 
 
 	struct ICryptoProvider {
 		virtual ~ICryptoProvider() = default;
 
-		// Активно ли шифрование (handshake завершён)
+		//    (handshake )
 		virtual bool IsActive() const = 0;
 
-		// Шифрует данные. ciphertext — выходной буфер, ciphertext_len — его размер.
-		// plaintext — входные данные, len — на входе размер plaintext, на выходе размер ciphertext.
+		//  . ciphertext   , ciphertext_len   .
+		// plaintext   , len     plaintext,    ciphertext.
 		virtual bool Encrypt(uint8_t* ciphertext, int ciphertext_len,
 							 const uint8_t* plaintext, int& len) = 0;
 
-		// Дешифрует данные in-place. len — на входе размер ciphertext, на выходе размер plaintext.
+		//   in-place. len     ciphertext,    plaintext.
 		virtual bool Decrypt(uint8_t* data, int& len) = 0;
 	};
 
-	// ═══════════════════════════════════════════════════════════════
-	//  ITcpClientHandler — callback'и событий
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  ITcpClientHandler  callback' 
+	// 
 
 	struct ITcpClientHandler {
 		virtual ~ITcpClientHandler() = default;
 
-		// Вызывается из game thread при PollPackets
+		//   game thread  PollPackets
 		virtual void OnPacket(RPacket& packet) = 0;
 
-		// Вызывается при разрыве соединения (из game thread через PollPackets или Disconnect)
+		//     ( game thread  PollPackets  Disconnect)
 		virtual void OnDisconnected(int reason) = 0;
 	};
 
-	// ═══════════════════════════════════════════════════════════════
-	//  TcpClient — универсальное TCP-соединение с recv потоком
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  TcpClient   TCP-  recv 
+	// 
 
 	class TcpClient {
 	public:
@@ -73,52 +73,52 @@ namespace net {
 		TcpClient(const TcpClient&) = delete;
 		TcpClient& operator=(const TcpClient&) = delete;
 
-		// ── Lifecycle ───────────────────────────────────────────
+		//  Lifecycle 
 
-		// Client mode: подключение к серверу. Блокирующий вызов.
+		// Client mode:   .  .
 		bool Connect(const std::string& host, uint16_t port, uint32_t timeoutMs = 5000);
 
-		// Server mode: инициализация из готового сокета (после accept). Запускает recv поток.
+		// Server mode:     ( accept).  recv .
 		bool Attach(SOCKET sock, const std::string& peerIP, uint16_t peerPort);
 
-		// Отключение. reason: 0 = нормальное, <0 = ошибка.
+		// . reason: 0 = , <0 = .
 		void Disconnect(int reason = 0);
 
-		// Статус соединения
+		//  
 		bool IsConnected() const {
 			return _connected.load();
 		}
 
-		// Pending disconnect (recv thread → game thread уведомление)
+		// Pending disconnect (recv thread  game thread )
 		bool HasPendingDisconnect() const {
 			return _pendingDisconnect.load();
 		}
 
-		// ── Отправка (из game thread) ───────────────────────────
+		//   ( game thread) 
 
-		// Отправить пакет. Шифрует если crypto активен. Блокирует до завершения send().
+		//  .   crypto .    send().
 		bool Send(WPacket& packet);
 
-		// ── Приём (из game thread) ──────────────────────────────
+		//   ( game thread) 
 
-		// Обработать до maxPackets пакетов из очереди.
-		// Сначала: RPC-ответы → dispatch callback'ов.
-		// Затем: обычные пакеты → handler->OnPacket().
-		// Также проверяет таймауты pending RPC вызовов.
-		// Возвращает кол-во обработанных обычных пакетов.
+		//   maxPackets   .
+		// : RPC-  dispatch callback'.
+		// :    handler->OnPacket().
+		//    pending RPC .
+		//  -   .
 		int PollPackets(int maxPackets = 1);
 
-		// ── AsyncCall (lambda-based RPC) ────────────────────────
+		//  AsyncCall (lambda-based RPC) 
 
 		using RpcCallback = std::function<void(RPacket& response)>;
 
-		// Async RPC вызов с callback.
-		// Записывает уникальный SESS в пакет, отправляет, запоминает callback.
-		// Когда придёт ответ с SESS|FLAG — вызовет callback из PollPackets().
-		// При таймауте — вызовет callback с пустым RPacket.
+		// Async RPC   callback.
+		//   SESS  , ,  callback.
+		//     SESS|FLAG   callback  PollPackets().
+		//     callback   RPacket.
 		bool AsyncCall(WPacket& request, uint32_t timeoutMs, RpcCallback callback);
 
-		// ── Настройка ───────────────────────────────────────────
+		//   
 
 		void SetHandler(ITcpClientHandler* handler) {
 			_handler = handler;
@@ -128,7 +128,7 @@ namespace net {
 			_crypto = crypto;
 		}
 
-		// App-level pointer (аналог DataSocket::SetPointer/GetPointer)
+		// App-level pointer ( DataSocket::SetPointer/GetPointer)
 		void SetPointer(void* ptr) {
 			_appPtr = ptr;
 		}
@@ -137,7 +137,7 @@ namespace net {
 			return _appPtr;
 		}
 
-		// ── Информация ──────────────────────────────────────────
+		//   
 
 		SOCKET GetSocket() const {
 			return _socket;
@@ -152,13 +152,13 @@ namespace net {
 		}
 
 	private:
-		// Поток приёма
+		//  
 		void RecvThreadProc();
 
-		// Блокирующее чтение ровно len байт. Возвращает false при ошибке/закрытии.
+		//    len .  false  /.
 		bool RecvExact(uint8_t* buf, int len);
 
-		// Отправка ровно len байт. Возвращает false при ошибке.
+		//   len .  false  .
 		bool SendExact(const uint8_t* buf, int len);
 
 		SOCKET _socket;
@@ -170,11 +170,11 @@ namespace net {
 		ICryptoProvider* _crypto;
 		void* _appPtr;
 
-		// Информация о peer
+		//   peer
 		std::string _peerIP;
 		uint16_t _peerPort;
 
-		// Потокобезопасная очередь входящих пакетов
+		//    
 		struct PacketQueue {
 			std::mutex mtx;
 			std::queue<RPacket> packets;
@@ -198,10 +198,10 @@ namespace net {
 			}
 		};
 
-		PacketQueue _recvQueue; // Обычные пакеты (SESS без FLAG)
-		PacketQueue _rpcResponseQueue; // RPC-ответы (SESS с FLAG)
+		PacketQueue _recvQueue; //   (SESS  FLAG)
+		PacketQueue _rpcResponseQueue; // RPC- (SESS  FLAG)
 
-		// Мьютекс отправки
+		//  
 		std::mutex _sendMtx;
 
 		// AsyncCall state
@@ -218,11 +218,11 @@ namespace net {
 		std::vector<PendingCall> _pendingCalls;
 	};
 
-	// ═══════════════════════════════════════════════════════════════
-	//  WinSock — глобальная инициализация
-	// ═══════════════════════════════════════════════════════════════
+	// 
+	//  WinSock   
+	// 
 
-	// Вызвать один раз при старте приложения
+	//      
 	bool InitWinSock();
 	void CleanupWinSock();
 } // namespace net

@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+﻿#include "StdAfx.h"
 #include "uiboxform.h"
 #include "uiform.h"
 #include "uiedit.h"
@@ -27,7 +27,7 @@ CForm* CBoxMgr::_cfrmError = NULL;
 //---------------------------------------------------------------------------
 bool CBoxMgr::Init()
 {
-	// ���׶Ի���
+	// 
     CForm* frmTrade  = _FindForm("frmTrade");   
 	if ( !frmTrade ) return false;
 
@@ -43,7 +43,7 @@ bool CBoxMgr::Init()
 
 	_cTrade.Init( frmTrade );
 
-	// ѡ��Ի���
+	// 
     CForm* frmSelect  = _FindForm("frmSelect");   
 	if ( !frmSelect ) return false;
 	//frmSelect->SetPos( g_Render.GetScrWidth(), g_Render.GetScrHeight() - 151 );
@@ -53,7 +53,7 @@ bool CBoxMgr::Init()
 
 	_cSelect.Init( frmSelect );
 
-	// ���������Ի���
+	// 
     CForm* frmNumber = _FindForm("frmNumber");
     if( !frmNumber ) return false;
 
@@ -67,7 +67,7 @@ bool CBoxMgr::Init()
 	_cNumber.Init( frmNumber );
 
 
-	// ��������Ի���
+	// 
 	CForm* frmPassword = _FindForm("frmPass");
 	if( !frmPassword ) return false;
 
@@ -80,7 +80,7 @@ bool CBoxMgr::Init()
 	_cPassword.Init( frmPassword );
 
 
-	// һ����Ϣ�Ի���
+	// 
     CForm* frmError  = _FindForm("frmError");   
 	if ( !frmError ) return false;
 
@@ -120,7 +120,7 @@ void CBoxMgr::_ClearBox( CHideForm& list )
 
 		if(frm->GetPointer())
 		{
-			delete frm->GetPointer(); // UI��������
+			delete frm->GetPointer(); // UI
 			frm->SetPointer( NULL );
 		}
 	}
@@ -171,7 +171,7 @@ stTradeBox* CBoxMgr::ShowTradeBox( FormMouseEvent evtForm, float fUnitMoney, int
 		t->edtNumber->SetCaption( "" );
 	}
 	t->nTotalNum = nTotalNum;
-	t->fUnitMoney = (float)(int)fUnitMoney;				// ��Ϸ����ʾȡ��������� call ����
+	t->fUnitMoney = (float)(int)fUnitMoney;				//  call 
 	return t;
 }
 

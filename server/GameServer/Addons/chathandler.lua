@@ -1,4 +1,4 @@
-function explode(separator, str)
+﻿function explode(separator, str)
     local pos, arr = 0, {}
     for st, sp in function() return string.find(str, separator, pos, true) end do
         table.insert(arr, string.sub(str, pos, st-1))

@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include "uiglobalvar.h"
 
 namespace GUI
@@ -31,12 +31,12 @@ private:
 	static CLabelEx*	m_pGuildNavyLab;
 	static CImage*	m_pGuildNavyImg;
 	//static CImage*	m_pGuildNavyImg1;
-	//static CImage*	m_pGuildNavyImg2;	// ÐÞ¸Ä³É Label ÁË
+	//static CImage*	m_pGuildNavyImg2;	//  Label 
 	static CImage*	m_pGuildNavyImg3;
 	static CImage*	m_pGuildNavyImg4;
 	static CImage*	m_pGuildPirateImg;
 	//static CImage*	m_pGuildPirateImg1;
-	//static CImage*	m_pGuildPirateImg2;	// ÐÞ¸Ä³É Label ÁË
+	//static CImage*	m_pGuildPirateImg2;	//  Label 
 	static CImage*	m_pGuildPirateImg3;
 	static CImage*	m_pGuildPirateImg4;
 

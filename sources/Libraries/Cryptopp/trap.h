@@ -1,4 +1,4 @@
-// trap.h - written and placed in public domain by Jeffrey Walton.
+﻿// trap.h - written and placed in public domain by Jeffrey Walton.
 
 /// \file trap.h
 /// \brief Debugging and diagnostic assertions

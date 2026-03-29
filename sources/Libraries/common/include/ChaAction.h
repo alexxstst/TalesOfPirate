@@ -1,4 +1,4 @@
-//=============================================================================
+Ôªø//=============================================================================
 // FileName: ChaAction.h
 // Creater: ZhangXuedong
 // Date: 2005.09.15
@@ -8,19 +8,19 @@
 #ifndef CHAACTION_H
 #define CHAACTION_H
 
-const long	ACTCONTROL_MOVE         = 0; // “∆∂ØŒª
-const long	ACTCONTROL_USE_GSKILL   = 1; //  π”√∆’Õ®ººƒ‹Œª
-const long	ACTCONTROL_USE_MSKILL   = 2; //  π”√ƒß∑®ººƒ‹Œª
-const long	ACTCONTROL_BEUSE_SKILL  = 3; // ±ª π”√ººƒ‹Œª
-const long	ACTCONTROL_TRADE        = 4; // Ωª“◊Œª
-const long	ACTCONTROL_USE_ITEM     = 5; //  π”√ŒÔ∆∑Œª
-const long	ACTCONTROL_BEUSE_ITEM   = 6; // ±ª π”√ŒÔ∆∑Œª
-const long	ACTCONTROL_INVINCIBLE   = 7; // Œﬁµ–Œª
-const long	ACTCONTROL_EYESHOT      = 8; //  ”“∞Œª£®ø…“‘ø¥µΩ ”“∞ƒ⁄ø…º˚µƒ µÃÂ£©
-const long	ACTCONTROL_NOHIDE       = 9; // ≤ª“˛–Œ£®ø…“‘±ªø¥º˚£©
-const long	ACTCONTROL_NOSHOW       = 10; // ≤ª±ª«ø÷∆œ÷–Œ£®»Áπ˚”–«ø÷∆œ÷–Œ£¨‘Ú“˛–Œ±ª∆¡±Œ£©
-const long	ACTCONTROL_ITEM_OPT     = 11; // µ¿æﬂ≤Ÿ◊˜Œª
-const long	ACTCONTROL_TALKTO_NPC   = 12; // ∫ÕNPC∂‘ª∞Œª
+const long	ACTCONTROL_MOVE         = 0; // 
+const long	ACTCONTROL_USE_GSKILL   = 1; // 
+const long	ACTCONTROL_USE_MSKILL   = 2; // 
+const long	ACTCONTROL_BEUSE_SKILL  = 3; // 
+const long	ACTCONTROL_TRADE        = 4; // 
+const long	ACTCONTROL_USE_ITEM     = 5; // 
+const long	ACTCONTROL_BEUSE_ITEM   = 6; // 
+const long	ACTCONTROL_INVINCIBLE   = 7; // 
+const long	ACTCONTROL_EYESHOT      = 8; // 
+const long	ACTCONTROL_NOHIDE       = 9; // 
+const long	ACTCONTROL_NOSHOW       = 10; // 
+const long	ACTCONTROL_ITEM_OPT     = 11; // 
+const long	ACTCONTROL_TALKTO_NPC   = 12; // NPC
 
 const long	ACTCONTROL_MAX          = 13;
 

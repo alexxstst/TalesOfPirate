@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I W I N . H
  *
  *	Definitions used by the MAPI Development Team to aid in

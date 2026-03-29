@@ -1,4 +1,4 @@
-// mdc.h - originally written and placed in the public domain by Wei Dai
+﻿// mdc.h - originally written and placed in the public domain by Wei Dai
 
 /// \file mdc.h
 /// \brief Classes for the MDC message digest

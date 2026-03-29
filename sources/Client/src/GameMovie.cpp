@@ -1,4 +1,4 @@
-
+ï»¿
 #include "StdAfx.h"
 #include "GameMovie.h"
 
@@ -26,7 +26,7 @@ CGameMovie::~CGameMovie(void)
 }
 
 
-// ²¥·Å
+// 
 bool CGameMovie::Play(HWND hWnd, const char* pszFileName)
 {
 	/*	yangyinyu	2008-10-14	add	begin!
@@ -119,7 +119,7 @@ bool CGameMovie::Play(HWND hWnd, const char* pszFileName)
 }
 
 
-// Í£Ö¹²¥·Å
+// 
 void CGameMovie::Stop(void)
 {
 	/*	yangyinyu	2008-10-14	add	begin!
@@ -133,7 +133,7 @@ void CGameMovie::Stop(void)
 }
 
 
-// Çå³ý
+// 
 void CGameMovie::Cleanup()
 {
 	/*	yangyinyu	2008-10-14	add	begin!
@@ -151,7 +151,7 @@ void CGameMovie::Cleanup()
 }
 
 
-// ÊÇ·ñÕýÔÚ²¥·Å
+// 
 bool CGameMovie::IsPlaying(void)
 {
 	/*	yangyinyu	2008-10-14	add	begin!

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  XCMCEXT.H
  *  
  *  Purpose:

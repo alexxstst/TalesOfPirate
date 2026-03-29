@@ -1,4 +1,4 @@
-/*
+﻿/*
  *	M A P I D B G . H
  *
  *	Debugging support for MAPI service providers.

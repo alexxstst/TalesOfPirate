@@ -1,4 +1,4 @@
-
+﻿
 #include "Stdafx.h"
 #include "GameApp.h"
 #include "../proj/resource.h"
@@ -98,7 +98,7 @@ BOOL CALLBACK DlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 			}
 			break;
 		}
-		case WM_USER_LOG: // ͨ��SendMessage��log���������̵߳��б�
+		case WM_USER_LOG: // SendMessagelog
 		{
 			// g_pGameApp->AddLog((const char*)lParam);
 			break;	
@@ -237,11 +237,11 @@ void DrawMapUnit(SubMap *pMap, HDC dc, int sx, int sy, int w, int h)
 	//lf.lfWeight    = 9;
 	lf.lfWidth     = 14;
 	lf.lfHeight    = 14;
-	lf.lfUnderline = FALSE;           //���»���
-	lf.lfStrikeOut = FALSE;           //��ɾ����
+	lf.lfUnderline = FALSE;           //
+	lf.lfStrikeOut = FALSE;           //
 	lf.lfItalic    = FALSE; 
-	lf.lfCharSet   = DEFAULT_CHARSET; //ʹ��ȱʡ�ַ���
-    strcpy(lf.lfFaceName,"������");   //������=@system
+	lf.lfCharSet   = DEFAULT_CHARSET; //
+    strcpy(lf.lfFaceName,"");   //=@system
 
 	font = CreateFontIndirect(&lf);
 	SelectObject(dc, font);
@@ -426,7 +426,7 @@ void SystemReport(DWORD dwTimeParam)
 
 	if(g_bShowView) InvalidateRect(g_MapView, NULL, FALSE);
 	
-	if(dwLastReportTime==0) // ִֻ��һ��
+	if(dwLastReportTime==0) // 
 	{
 		HWND hDB = GetDlgItem(g_ReportView, IDC_GAMEDB);
 		if(game_db.m_bInitOK)	SetWindowText(hDB, "ok");
@@ -485,13 +485,13 @@ void SystemReport(DWORD dwTimeParam)
 		CMapRes *pCMap = g_pGameApp->FindMapByName("teampk");
 		if(pCMap)
 		{
-			// ����б���
+			// 
 			HWND hPKList = GetDlgItem(g_ReportView, IDC_PK_LIST);
 			SendMessage(hPKList, LB_RESETCONTENT, 0, 0);
 			sprintf(szText, RES_STRING(GM_SYSTEMDIALOG_CPP_00001));
 			SendMessage(hPKList, LB_ADDSTRING, 0, (LPARAM)szText);  
 			
-			// ��ʼ����
+			// 
 			pCMap->BeginGetUsedCopy();
 			SubMap *pCMapCopy;
 			int nPKCnt = 0;
@@ -504,8 +504,8 @@ void SystemReport(DWORD dwTimeParam)
 				nPKCnt++;
 				nPlayerCnt+=nNum;
 			}
-			sprintf(szFPS, "%d ����:%d", nPKCnt, nPlayerCnt);
-			if(hPKCnt) SetWindowText(hPKCnt, szFPS); // ��ʾ����
+			sprintf(szFPS, "%d :%d", nPKCnt, nPlayerCnt);
+			if(hPKCnt) SetWindowText(hPKCnt, szFPS); // 
 		}
 	}
 

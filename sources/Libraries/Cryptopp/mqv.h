@@ -1,7 +1,7 @@
-// mqv.h - originally written and placed in the public domain by Wei Dai
+﻿// mqv.h - originally written and placed in the public domain by Wei Dai
 
 /// \file mqv.h
-/// \brief Classes for Menezes–Qu–Vanstone (MQV) key agreement
+/// \brief Classes for MenezesQuVanstone (MQV) key agreement
 /// \since Crypto++ 3.0
 
 #ifndef CRYPTOPP_MQV_H

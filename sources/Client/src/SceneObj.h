@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "SceneNode.h"
 #include "MindPower.h"
@@ -71,7 +71,7 @@ protected:
 
 	//lemon add@2004.10.20 for light
 	MPTerrain*      _pTerrain;
-	int				_iChaID;//ÓĞ¿ÉÄÜÊÇ½ÇÉ«£¬»òÎï¼ş£¬»òÎäÆ÷»òÌØĞ§µÄID
+	int				_iChaID;//ID
 	int				_iOwerType;
 	float			_fRange;
 	D3DXCOLOR		_dwcolor;

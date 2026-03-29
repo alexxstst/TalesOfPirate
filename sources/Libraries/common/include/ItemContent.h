@@ -1,4 +1,4 @@
-//=============================================================================
+﻿//=============================================================================
 // FileName: ItemContent.h
 // Creater: ZhangXuedong
 // Date: 2005.10.19
@@ -10,27 +10,27 @@
 #include <fstream>
 enum EItemDBParam
 {
-	enumITEMDBP_FORGE,			// ���߾���
-	enumITEMDBP_INST_ID,		// ����ʵ����������(1.��ֻ���ݿ�ID, 2.....)
+	enumITEMDBP_FORGE,			// 
+	enumITEMDBP_INST_ID,		// (1.ID, 2.....)
 
-	enumITEMDBP_MAXNUM,			// ���������
+	enumITEMDBP_MAXNUM,			// 
 };
 
 #define defITEM_INSTANCE_ATTR_NUM			5
 
 //#pragma pack(push)
 //#pragma pack(2)
-struct SItemGrid // ���߸�����
+struct SItemGrid // 
 {
 
 	//#pragma pack(pop)
 	SItemGrid(short sId = 0, short sINum = 0) : sID(sId), sNum(sINum) {}
 
-// ��Ա����
+// 
 	void	SetInstAttrInvalid() {sInstAttr[0][0] = 0;}
 	bool	IsInstAttrValid() const { return sInstAttr[0][0] > 0; }
 
-	// װ���ȼ���Ϣ�ӿ�
+	// 
 	char	GetItemLevel() 
 	{ 
 		char chLevel = char(lDBParam[1]&0xFFFF);
@@ -88,24 +88,24 @@ struct SItemGrid // ���߸�����
 	bool	IsChange() const { return bChange; }
 	void	SetChange(bool bChg = true) {bChange = bChg;}
 	
-	// ���Ƶ���ʵ������
+	// 
 	void    CopyInstAttr( SItemGrid& item );
 	bool	FusionCheck( SItemGrid& item ); 
 
 	bool	bIsLock{ false };
 	short	sNeedLv{ 0 };
 	DWORD	dwDBID{ 0 };
-	short	sID{ 0 };		// ���߱��е�ID��0��ʾû�е��ߣ�
-	short	sNum{ 0 };		// ���߸���
+	short	sID{ 0 };		// ID0
+	short	sNum{ 0 };		// 
 	std::array<short, 2> sEndure{};
 	std::array<short, 2> sEnergy{};
-	char	chForgeLv{ 0 };	// �����ȼ�
+	char	chForgeLv{ 0 };	// 
 	std::array<long, enumITEMDBP_MAXNUM> lDBParam{};
 	std::array<std::array<short, 2>, defITEM_INSTANCE_ATTR_NUM> sInstAttr{};
-	CItemAttr	CAttr;	// ����
+	CItemAttr	CAttr;	// 
 
 	bool	bValid{ true };
-	bool	bChange{ false }; // �����Ƿ�䶯
+	bool	bChange{ false }; // 
 	bool	bItemTradable{ true };
 	long	expiration{ 0 };
 };

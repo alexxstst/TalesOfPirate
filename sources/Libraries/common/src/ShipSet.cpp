@@ -1,4 +1,4 @@
-// ShipSet.cpp created by knight 2005.4.20
+ï»¿// ShipSet.cpp created by knight 2005.4.20
 //---------------------------------------------------------
 
 #include "ShipSet.h"
@@ -22,7 +22,7 @@ BOOL xShipSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &Para
 	pInfo->byIsUpdate = 1;//(BYTE)Str2Int(ParamList[m++]);
 	pInfo->sBody = (USHORT)Str2Int(ParamList[m++]);
 
-	// ´¬Ö»²¿¼þÁÐ±í
+	// 
 	int nNum = Util_ResolveTextLine( ParamList[m++].c_str(), strList, BOAT_MAXNUM_PARTITEM, ',' );
 	pInfo->sNumEngine = ( nNum > 0 ) ? nNum : 0;
 	memset( pInfo->sEngine, 0, sizeof(USHORT)*BOAT_MAXNUM_PARTITEM );
@@ -64,7 +64,7 @@ BOOL xShipSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &Para
 		pInfo->sPfLimit[i] = (USHORT)Str2Int(strList[i]);
 	}
 
-	// ´¬Ö»²¿¼þ»ù±¾ÊôÐÔ
+	// 
 	pInfo->sEndure = (USHORT)Str2Int(ParamList[m++]);
 	pInfo->sResume = (USHORT)Str2Int(ParamList[m++]);
 	pInfo->sDefence = (USHORT)Str2Int(ParamList[m++]);
@@ -105,7 +105,7 @@ BOOL xShipPartSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &
 
 	pInfo->dwPrice = (DWORD)Str2Int(ParamList[m++]);
 
-	// ´¬Ö»²¿¼þ»ù±¾ÊôÐÔ
+	// 
 	pInfo->sEndure = (USHORT)Str2Int(ParamList[m++]);
 	pInfo->sResume = (USHORT)Str2Int(ParamList[m++]);
 	pInfo->sDefence = (USHORT)Str2Int(ParamList[m++]);

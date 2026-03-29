@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+ï»¿#include "Stdafx.h"
 #include "MPTile.h"
 #include "MPMap.h"
 #include "lwgraphicsutil.h"
@@ -47,7 +47,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
     if(header.nMapFlag==MP_MAP_FLAG+1)
     {
 	    fclose(fp);
-		ToLogService("map", LogLevel::Error, "¸ÃµØÍ¼ÎÄ¼þ[{}]°æ±¾¹ýÆÚ, ÇëÊ¹ÓÃMapTool´ò¿ªËüÀ´Éý¼¶°æ±¾!", pszMapName);
+		ToLogService("map", LogLevel::Error, "[{}], MapTool!", pszMapName);
 		return FALSE;
 	}
     
@@ -58,7 +58,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 #endif
 	{
 		fclose(fp);
-		ToLogService("map", LogLevel::Error, "[{}]²»ÊÇÓÐÐ§µÄ MindPower Map File!", pszMapName);
+		ToLogService("map", LogLevel::Error, "[{}] MindPower Map File!", pszMapName);
 		return FALSE;
 	}
 
@@ -75,7 +75,7 @@ BOOL MPMap::Load(const char *pszMapName, BOOL bEdit)
 
 	_fp = fp;
 
-    // ¶ÁÈ¡È«²¿Ë÷Òý
+    // 
     _pOffsetIdx = new DWORD[_nSectionCnt];
     fread(_pOffsetIdx, _nSectionCnt * 4, 1, _fp);
 	dwReadSize += _nSectionCnt * 4;
@@ -134,7 +134,7 @@ void MPMap::SetSectionTileData(int nX, int nY, BYTE btTexNo)
 			pTile->TexLayer[0].btAlphaNo = 15;
  			pTile->fHeight = 0.6f + (float)(rand()%30) / 100.0f;
 			pTile->dwColor = 0xffffffff;
-            pTile->sRegion = 1; // ²úÉúÂ½µØÊôÐÔ
+            pTile->sRegion = 1; // 
 		}
 	}
 	// pSection->dwDataOffset = 0;
@@ -162,13 +162,13 @@ DWORD MPMap::_ReadSectionDataOffset(int nSectionX, int nSectionY)
 }
 
 //-----------------
-// ±£´æµØÍ¼Çø¿éÊý¾Ý
+// 
 //-----------------
 void MPMap::_SaveSection(MPActiveMapSection *pSection)
 {
 	if(!_bEdit || _fp==NULL) return;
 	
-	// Ê×ÏÈÓ¦¸ÃÑ°ÕÒ·ÏÆúµÄTileDataÊý¾Ý¶Î
+	// TileData
 	if(pSection->dwDataOffset)
 	{
 		fseek(_fp, pSection->dwDataOffset, SEEK_SET);
@@ -207,7 +207,7 @@ void MPMap::_SaveSection(MPActiveMapSection *pSection)
 }
 
 //-----------------
-// ¶ÁÈ¡µØÍ¼Çø¿éÊý¾Ý
+// 
 //-----------------
 void MPMap::_LoadSectionData(MPActiveMapSection *pSection)
 {
@@ -284,12 +284,12 @@ MPActiveMapSection *MPMap::LoadSectionData(int nSectionX, int nSectionY)
 
 void MPMap::ClearSectionData(int nSectionX, int nSectionY)
 {
-    // Çå³ýÎÄ¼þÀïµÄ¼ÇÂ¼
+    // 
     _WriteSectionDataOffset(nSectionX, nSectionY, 0);
     
-    // Çå³ýÄÚ´æÀïµÄ¼ÇÂ¼
+    // 
     MPActiveMapSection *pSection = GetActiveSection(nSectionX, nSectionY);
-	if(pSection) // ´ËSection»¹Î´¶ÁÈëÄÚ´æ
+	if(pSection) // Section
     {
         _ActiveSectionList.remove(pSection);
         _ActiveSectionArray[nSectionY][nSectionX] = NULL;
@@ -301,7 +301,7 @@ void MPMap::FullLoading()
 {
     if(_fp==NULL) return;
 
-    // ¶ÁÈ¡È«²¿SectionÊý¾Ý
+    // Section
     for(int i = 0; i < _nSectionCnt; i++)
     {
         int nSectionX = i % _nSectionCntX;
@@ -387,9 +387,9 @@ void MPMap::DynamicLoading(DWORD dwTimeParam)
                 }
 			}
 		}
-        if(bDelFail) ToLogService("map", "ÊÍ·ÅSectionÊý¾ÝÊ±, ³¬¹ý×î´óBuffer, n = {}", n);
+        if(bDelFail) ToLogService("map", "Section, Buffer, n = {}", n);
 	
-		for(int i = 0; i < n; i++) // Çå³ý²»ÐèÒªµÄSection Tile Data
+		for(int i = 0; i < n; i++) // Section Tile Data
 		{
 		    UpdateRender(TRUE);
         	_ActiveSectionList.remove(DelSectionList[i]);
@@ -405,7 +405,7 @@ void MPMap::DynamicLoading(DWORD dwTimeParam)
 	}
 
     
-    // Í³Ò»Ö´ÐÐMapNotice
+    // MapNotice
     for(list<MPActiveMapSection*>::iterator it = _NewList.begin(); it!=_NewList.end(); it++)
 	{
         MPActiveMapSection *pNewSection = (*it); 

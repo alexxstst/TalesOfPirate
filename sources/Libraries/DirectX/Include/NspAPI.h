@@ -1,4 +1,4 @@
-/*++
+﻿/*++
 
 Copyright (c) 1991-1998  Microsoft Corporation
 

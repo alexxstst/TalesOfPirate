@@ -1,4 +1,4 @@
-#include "Stdafx.h"
+ï»¿#include "Stdafx.h"
 #include "MPMath.h"
 
 using namespace std;
@@ -222,7 +222,7 @@ int GetSamplePointList(float fStartX, float fStartY, float fEndX, float fEndY, f
 
     D3DXVECTOR3 vM = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
 	D3DXVECTOR3 vShift;
-	D3DXVec3Cross(&vShift, &vecDir, &vM); // È¡µÃË®Æ½·½ÏòµÄÏòÁ¿
+	D3DXVec3Cross(&vShift, &vecDir, &vM); // 
 	D3DXVec3Normalize(&vShift, &vShift);
 			
     float fDis = DistanceFrom(vecStart, vecEnd);

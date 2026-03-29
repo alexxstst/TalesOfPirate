@@ -1,4 +1,4 @@
-#ifndef __CUSTOMAW_H__
+﻿#ifndef __CUSTOMAW_H__
 #define __CUSTOMAW_H__
 
 #if _MSC_VER > 1000

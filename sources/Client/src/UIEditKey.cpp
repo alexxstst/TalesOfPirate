@@ -1,4 +1,4 @@
-#include "StdAfx.h"
+ï»¿#include "StdAfx.h"
 #include "uieditkey.h"
 #include "gameapp.h"
 #include "uirender.h"
@@ -26,7 +26,7 @@ CEditKey::CEditKey()
 CEditKey::~CEditKey()
 {
 	//delete _pParse;
-	SAFE_DELETE(_pParse); // UIµ±»ú´¦Àí
+	SAFE_DELETE(_pParse); // UI
 }
 
 bool CEditKey::OnKeyDown( int key )
@@ -64,13 +64,13 @@ bool CEditKey::OnChar( char c )
 {
 	if( _IsReadyOnly ) return false;
 
-	// ÓÐÈýÖÖÇé¿ö£ºÒ»¡¢Ó¢ÎÄ×Ö·û£¬¶þ¡¢ºº×Ö£¬Èý¡¢¿ØÖÆ×Ö·û
+	// 
 	switch( c )
 	{
-	case '\r':		// »Ø³µ
+	case '\r':		// 
 		AddChar( new CEditControl( c ) );
 		break;
-	case '\b':		// ÍË¸ñ
+	case '\b':		// 
 		break;
 	case '\t':
 		break;
@@ -92,7 +92,7 @@ bool CEditKey::OnChar( char c )
 				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 
 					&& _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 )
 				{
-					// ÎªÓ¢ÎÄ»ò¿ØÖÆ×Ö·û
+					// 
 					_nEnterPos = 0;
 
 					AddChar( new CEditChar( c ) );
@@ -102,7 +102,7 @@ bool CEditKey::OnChar( char c )
 			{
 				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==-1 && _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[1] )==-1 )
 				{
-					// ºº×Ö
+					// 
 					AddChar( new CEditChar( _szEnter[0], _szEnter[1] ) );
 
 
@@ -114,7 +114,7 @@ bool CEditKey::OnChar( char c )
 
 			if( IsError )
 			{
-				// ´íÎó
+				// 
 				_nEnterPos = 0;
 				_szEnter[1] = 0;
 			}
@@ -159,7 +159,7 @@ void CEditKey::AddChar( CEditObj* pObj )
 	if( rv==-1 )
 	{
 		//delete pObj;
-		SAFE_DELETE(pObj); // UIµ±»ú´¦Àí
+		SAFE_DELETE(pObj); // UI
 	}
 	else
 	{

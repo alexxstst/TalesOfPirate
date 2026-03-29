@@ -1,4 +1,4 @@
-// sosemanuk.h - originally written and placed in the public domain by Wei Dai
+﻿// sosemanuk.h - originally written and placed in the public domain by Wei Dai
 
 /// \file sosemanuk.h
 /// \brief Classes for Sosemanuk stream cipher
@@ -46,8 +46,8 @@ protected:
 
 /// \brief Sosemanuk stream cipher
 /// \details is a stream cipher developed by Come Berbain, Olivier Billet, Anne Canteaut, Nicolas Courtois,
-///   Henri Gilbert, Louis Goubin, Aline Gouget, Louis Granboulan, Cédric Lauradoux, Marine Minier, Thomas
-///   Pornin and Hervé Sibert. Sosemanuk is one of the final four Profile 1 (software) ciphers selected for
+///   Henri Gilbert, Louis Goubin, Aline Gouget, Louis Granboulan, Cdric Lauradoux, Marine Minier, Thomas
+///   Pornin and Herv Sibert. Sosemanuk is one of the final four Profile 1 (software) ciphers selected for
 ///   the eSTREAM Portfolio.
 /// \sa <a href="http://www.cryptolounge.org/wiki/Sosemanuk">Sosemanuk</a>
 /// \since Crypto++ 5.5

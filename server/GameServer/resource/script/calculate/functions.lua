@@ -1,4 +1,4 @@
-print("-- [Loading] Functions")
+﻿print("-- [Loading] Functions")
 
 MFRADIX = 100
 CRTRADIX = 100
@@ -4012,7 +4012,7 @@ function XianJing(Player, type)
         local hp = Hp(Player)
         local hp_dmg = math.floor(hp * 0.3)
         Hp_Endure_Dmg(Player, hp_dmg)
-        SystemNotice(Player, "Almost poisoned by pirate trap. Escaped in time��Luckily")
+        SystemNotice(Player, "Almost poisoned by pirate trap. Escaped in timeLuckily")
     end
 end
 
@@ -5236,7 +5236,7 @@ function CheckRealNpc(role, value)
     if n == value then
         return LUA_TRUE
     else
-        SystemNotice(role, "һ��ͷ���ۻ�֮��,�㱻�ٵĿ�����˹�����˰���")
+        SystemNotice(role, ",")
     end
 end
 
@@ -5251,7 +5251,7 @@ function Givecrab(character)
     SetItemAttr(Item_CRAB, ITEMATTR_MAXENERGY, CRAB_NOW)
     SetItemAttr(Item_CRAB, ITEMATTR_ENERGY, CRAB_NOW)
     RefreshCha(character)
-    SystemNotice(character, "з���������ڱ�������2��Ż���׳�ɳ���?")
+    SystemNotice(character, "2?")
 end
 
 function crablife(character)
@@ -5265,12 +5265,12 @@ function crablife(character)
             return LUA_TRUE
         end
     else
-        SystemNotice(character, "��ȷ����������ֻ��һֻз��")
+        SystemNotice(character, "")
     end
 end
 
 function GiveZNZItem(role)
-    SystemNotice(role, "������")
+    SystemNotice(role, "")
     local cha_name = GetChaDefaultName(role)
     local star = math.random(1, 10000)
 
@@ -5295,49 +5295,49 @@ function GiveZNZItem(role)
         local el1 = math.random(1, 5)
         if el1 == 1 then
             GiveItem(role, 0, 0863, 1, 4)
-            local message = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?����"
+            local message = cha_name .. ",?"
             Notice(message)
         elseif el1 == 2 then
             GiveItem(role, 0, 0860, 1, 4)
-            local message1 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?����ʯ"
+            local message1 = cha_name .. ",?"
             Notice(message1)
         elseif el1 == 3 then
             GiveItem(role, 0, 0861, 1, 4)
-            local message2 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?ӥ��ʯ"
+            local message2 = cha_name .. ",?"
             Notice(message2)
         elseif el1 == 4 then
             GiveItem(role, 0, 0862, 1, 4)
-            local message3 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?����"
+            local message3 = cha_name .. ",?"
             Notice(message3)
         elseif el1 == 5 then
             GiveItem(role, 0, 1028, 1, 4)
-            local message4 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?Ħ����ʯ"
+            local message4 = cha_name .. ",?"
             Notice(message4)
         end
     elseif star >= 9801 and star <= 9998 then
         local el2 = math.random(1, 100)
         if el2 <= 50 then
             GiveItem(role, 0, 0992, 1, 4)
-            local message5 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?�ɳ����?"
+            local message5 = cha_name .. ",??"
             Notice(message5)
         elseif el2 >= 51 and el2 <= 74 then
             GiveItem(role, 0, 0853, 1, 4)
-            local message6 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?���ڻ�����־"
+            local message6 = cha_name .. ",?"
             Notice(message6)
         elseif el2 >= 75 and el2 <= 100 then
             GiveItem(role, 0, 1012, 1, 4)
-            local message7 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?����֮��"
+            local message7 = cha_name .. ",?"
             Notice(message7)
         end
     elseif star >= 9899 and star <= 10000 then
         local el3 = math.random(1, 100)
         if el3 == 63 then
             GiveItem(role, 0, 0096, 1, 4)
-            local message8 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?����֮��"
+            local message8 = cha_name .. ",?"
             Notice(message8)
         elseif el3 == 98 then
             GiveItem(role, 0, 0094, 1, 4)
-            local message9 = cha_name .. "��Ʒ����,������˲ر�ͼ̽����?Ԫ˧֮��"
+            local message9 = cha_name .. ",?"
             Notice(message9)
         end
     end
@@ -5560,18 +5560,18 @@ end
 function AuctionEnd(role)
     local sc = CheckBagItem(role, 3025)
     if sc <= 0 then
-        SystemNotice(role, "��ȷ��������Я�н��þ��꿨")
+        SystemNotice(role, "")
         return 0
     end
 
     local item_number = CheckBagItem(role, 3066)
     if item_number >= 1 then
-        SystemNotice(role, "��ȷ��������û�н���ʹ��֤��")
+        SystemNotice(role, "")
         return 0
     end
     local Item_CanGet = GetChaFreeBagGridNum(role)
     if Item_CanGet < 2 then
-        SystemNotice(role, "��ȷ����2��ʣ��ռ�?")
+        SystemNotice(role, "2?")
         return 0
     end
     GiveItem(role, 0, 3666, 10, 4)
@@ -5748,25 +5748,25 @@ end
 function YORN(role)
     local Item_CanGet = GetChaFreeBagGridNum(role)
     if Item_CanGet < 2 then
-        SystemNotice(role, "��ȷ����2��ʣ��ռ�?")
+        SystemNotice(role, "2?")
         return 0
     end
 
     local item_number1 = CheckBagItem(role, 3066)
     if item_number1 >= 1 then
-        SystemNotice(role, "��ȷ��������û�н���ʹ��֤��")
+        SystemNotice(role, "")
         return 0
     end
 
     local item_number2 = CheckBagItem(role, 3078)
     if item_number2 >= 1 then
-        SystemNotice(role, "��ȷ��������û�����?")
+        SystemNotice(role, "?")
         return 0
     end
 
     local item_number3 = CheckBagItem(role, 3025)
     if item_number3 < 1 then
-        SystemNotice(role, "��ȷ���������н��þ��꿨")
+        SystemNotice(role, "")
         return 0
     end
     return 1
@@ -5874,7 +5874,7 @@ function AddChaHJ(character)
     SetItemAttr(Item_Rwine, ITEMATTR_MAXENERGY, Rwine_NOW)
     SetItemAttr(Item_Rwine, ITEMATTR_ENERGY, Rwine_NOW)
     RefreshCha(character)
-    SystemNotice(character, "�����Ʊ�������ڱ�������?��Ż���Ӵ���")
+    SystemNotice(character, "?")
 end
 
 function CheckHJ(character)
@@ -5887,7 +5887,7 @@ function CheckHJ(character)
             return LUA_TRUE
         end
     else
-        SystemNotice(character, "��ȷ����������ֻ��һƿ������")
+        SystemNotice(character, "")
     end
 end
 
@@ -5926,11 +5926,11 @@ function CheckBBBB(role)
 
             return LUA_TRUE
         else
-            SystemNotice(role, "��Ѻ�͵Ķ�������������߰�?")
+            SystemNotice(role, "?")
             return LUA_FALSE
         end
     else
-        SystemNotice(role, "��Ѻ�͵Ķ�������������߰�?")
+        SystemNotice(role, "?")
         return LUA_FALSE
     end
 end
@@ -5940,7 +5940,7 @@ function AddExpNextLv1(role)
     local cha_name = GetChaDefaultName(role)
     SetChaAttrI(role, ATTR_CEXP, exp_add)
     RefreshCha(role)
-    Notice("���?" .. cha_name .. "�����㣬˫�޳ɹ����ȼ�����1��")
+    Notice("?" .. cha_name .. "1")
     return LUA_TRUE
 end
 
@@ -5949,7 +5949,7 @@ function AddExpNextLv2(role)
     local cha_name = GetChaDefaultName(role)
     SetChaAttrI(role, ATTR_CEXP, exp_add)
     RefreshCha(role)
-    Notice("���?" .. cha_name .. "�����㣬���˺�һ���ȼ�����1��")
+    Notice("?" .. cha_name .. "1")
     return LUA_TRUE
 end
 

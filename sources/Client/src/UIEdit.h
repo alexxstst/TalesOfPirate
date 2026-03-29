@@ -1,8 +1,8 @@
-//----------------------------------------------------------------------
-// ����:�����
-// ����:lh 2004-07-08
-// ���˼��:��֧������,ͼ��,ͼ�󲿷�δ���
-// ����޸�����:2004-10-09
+﻿//----------------------------------------------------------------------
+// :
+// :lh 2004-07-08
+// :,,
+// :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
 #include "uiCompent.h"
@@ -27,7 +27,7 @@ public:
 	virtual void	OnActive();
 	virtual void	OnLost();
 
-	// ��������Ϣѭ���У����ռ�����Ϣ
+	// 
 	bool OnKeyDown( int key );		
 	bool OnChar( char c );
 
@@ -71,10 +71,10 @@ public:	// Get,Set
 	void			SetEnterButton( CTextButton* pButton )	{ _pEnterButton=pButton;	}
 
 public:
-	GuiEvent			evtEnter;		// ���ı����س�ʱִ�е��¼�
+	GuiEvent			evtEnter;		// 
 	GuiKeyDownEvent		evtKeyDown;
 	GuiKeyCharEvent		evtKeyChar;
-    GuiEvent            evtChange;      // caption�����仯
+    GuiEvent            evtChange;      // caption
 
 public:
 	void			Render();
@@ -88,32 +88,32 @@ public:
 	void			ClearText();
 
 protected:
-	bool			_IsCursorInHZ( long l, char * s );		// �жϹ���Ƿ���һ�������м�
-	void			ShowFocus();		// ��ʾ���
+	bool			_IsCursorInHZ( long l, char * s );		// 
+	void			ShowFocus();		// 
 	void			CorrectCursor();
 
-	// ��������йصĲ���
+	// 
 	void			_Copy();	
 	void			_Paste();
 
 	void			_Cut();
-	void			_Delete();			// ɾ����ѡ����ַ���
+	void			_Delete();			// 
 
-	void			_UpdataLines();		// ���µ�����ʾ���֣�����Ӳ�س������س�
+	void			_UpdataLines();		// 
 
 	bool			_isdigit( char c )	{ return (c>='0' && c<='9') || c==VK_BACK || c==VK_RETURN || c==VK_DELETE;	}
 
 private:
-	// void		_RefreshCursorPos();	// ���ݹ���������У���������ʾ��λ��
+	// void		_RefreshCursorPos();	// 
 	void        _GetCursorPos(int nCurPos);       
 	void		_Copy( const CEdit& rhs );
 
 private:
-	static MPTexRect	_CursorImage;	// �����ͼ��Ϣ
+	static MPTexRect	_CursorImage;	// 
 
 	static int			_nCursorFlashCount;
 	static bool			_bCursorIsShow;
-	static int	_nCursorX, _nCursorY;	// ���Ӧ����ʾ��λ��
+	static int	_nCursorX, _nCursorY;	// 
 
 	CGuiPic*			_pImage;
 
@@ -122,30 +122,30 @@ private:
 	int					_nLeftMargin;
 	int					_nTopMargin;
 
-	bool		        _bParseText;	// �Ƿ���Ҫ����ͼԪ
+	bool		        _bParseText;	// 
 
-	CTextButton*		_pEnterButton;	// ��Ӧ�س��İ�ť
+	CTextButton*		_pEnterButton;	// 
 
 protected:
 	std::string		_str;
 	std::string      _strVisible ; 
 
-	int			_nMaxNum;			// �������
-	int         _nMaxNumVisible ;      //�ؼ�һ�ο������ɵ��ַ���Ŀ
+	int			_nMaxNum;			// 
+	int         _nMaxNumVisible ;      //
 
-	bool		_bIsPassWord;		// �Ƿ�������ʾ
-	bool		_bIsMulti;			// �Ƿ��������
-	bool		_bIsDigit;			// �Ƿ������������
+	bool		_bIsPassWord;		// 
+	bool		_bIsMulti;			// 
+	bool		_bIsDigit;			// 
 	bool		_bIsWrap;
 	int			_nOffset;
 
-protected:		// �����ڲ�����	
-	int			_nFontHeight;		// �иߣ����������еĸ߶�
-	int			_nMaxLineNum;		// �������������Ӳ�س������س�
+protected:		// 	
+	int			_nFontHeight;		// 
+	int			_nMaxLineNum;		// 
 
-protected:		// ��궨λ
-	int			_nCursorRow;		// ��������
-	int			_nCursorCol;		// ��������,�ӵ�0�е�length������
+protected:		// 
+	int			_nCursorRow;		// 
+	int			_nCursorCol;		// ,0length
 	int			_nCursorFirstCol;
 	int			_nCursorSecondCol;
 
@@ -154,7 +154,7 @@ protected:		// ��궨λ
 
 };
 
-// ��������
+// 
 inline void	CEdit::SetMaxLineNum( int v ) 
 { 
 	if( v > 1 ) {

@@ -1,35 +1,28 @@
-#include <strstream>
+﻿#include <strstream>
 
-inline int lua_MsgBox(lua_State *L)
+// ---   (LuaBridge ) ---
+
+inline void MsgBox(const std::string& content)
 {
-    const char *pszContent = lua_tostring(L, 1);
-    MessageBox(NULL, pszContent, "msg", 0);
-    return 0;
+    MessageBox(NULL, content.c_str(), "msg", 0);
 }
 
-inline int lua_GetTickCount(lua_State *L)
+inline int GetTickCount_Lua()
 {
-    lua_pushnumber(L, GetTickCount());
-    return 1;
+    return (int)GetTickCount();
 }
 
-inline int lua_Rand(lua_State *L)
+inline int Rand_Lua(int nRange)
 {
-    BOOL bValid = (lua_gettop(L)==1 && lua_isnumber(L, 1));
-    if(!bValid)
-    {
-        PARAM_ERROR;
-    }
-    int nRange = (int)lua_tonumber(L, 1);
-    int nRand = rand()%nRange;
-    lua_pushnumber(L, nRand);
-    return 1;
+    return rand() % nRange;
 }
 
-inline int lua_LG(lua_State *L)
+// --- lua_CFunction (arg  LuaBridge  ) ---
+
+inline int LG(lua_State *L)
 {
     int count = lua_gettop(L);
-    if( count<=1 ) 
+    if( count<=1 )
     {
         PARAM_ERROR;
     }
@@ -42,16 +35,16 @@ inline int lua_LG(lua_State *L)
     {
         str << ", " << lua_tostring(L, i);
     }
-    
+
     str << std::ends;
     g_logManager.InternalLog(LogLevel::Debug, "common", str.str());
     return 0;
 }
 
-inline int lua_SysInfo(lua_State *L)
+inline int SysInfo(lua_State *L)
 {
     int count = lua_gettop(L);
-    if( count<=0 ) 
+    if( count<=0 )
     {
         PARAM_ERROR;
     }
@@ -62,7 +55,7 @@ inline int lua_SysInfo(lua_State *L)
     {
         str << " " << lua_tostring(L, i);
     }
-    
+
     str << std::ends;
 	g_pGameApp->SysInfo( "luaSysInfo:%s", str.str() );
     return 0;

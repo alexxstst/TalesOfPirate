@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "STStateObj.h"
 #include "GameApp.h"
 #include "PacketCmd.h"
@@ -48,7 +48,7 @@ void CActionState::FrameMove()
 void CActionState::End()
 {
 	if( _IsInit )
-		_End();				// ִ����β����,���ٴβ���һ��������
+		_End();				// ,
 
 #ifdef _STATE_DEBUG
 	if( GetActor()->GetCha()->IsMainCha() )	

@@ -1,4 +1,4 @@
-
+﻿
 #include "util.h"
 #include "algo.h"
 #include "md5.h"

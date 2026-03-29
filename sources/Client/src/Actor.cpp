@@ -1,4 +1,4 @@
-#include "stdafx.h"
+﻿#include "stdafx.h"
 #include "Actor.h"
 #include "SkillRecord.h"
 #include "FindPath.h"
@@ -34,7 +34,7 @@ bool CActor::AddState( CActionState* pState )
 	if( !IsEnabled() ) 
 	{
 		//delete pState;
-		SAFE_DELETE(pState); // UI��������
+		SAFE_DELETE(pState); // UI
 		return false;
 	}
 
@@ -60,7 +60,7 @@ bool CActor::InsertState( CActionState* pState, bool IsFront )
 	if( !IsEnabled() ) 
 	{
 		//delete pState;
-		SAFE_DELETE(pState); // UI��������
+		SAFE_DELETE(pState); // UI
 		return false;
 	}
 
@@ -86,7 +86,7 @@ bool CActor::SwitchState( CActionState* pState )
     if( !pState->IsAllowUse() )
     {
         //delete pState;
-		SAFE_DELETE(pState); // UI��������
+		SAFE_DELETE(pState); // UI
         return false;
     }
 
@@ -98,7 +98,7 @@ bool CActor::SwitchState( CActionState* pState )
 		
 		if( _pCurState->GetIsCancel() ) 
 		{
-			// ����ϴ��Ѿ�ȡ������������϶��ܷ��أ��ݽ���β���ѹ����м���
+			// 
 			ClearQueueState();		
 
 			pState->SetIsWait(true);
@@ -106,7 +106,7 @@ bool CActor::SwitchState( CActionState* pState )
 			return true;
 		}
 
-		ClearQueueState();		// �л�ʱ,���ԭ���Ķ���
+		ClearQueueState();		// ,
 
         _pCurState->Cancel();
 
@@ -116,7 +116,7 @@ bool CActor::SwitchState( CActionState* pState )
 	}
 	else
 	{
-		ClearQueueState();		// �л�ʱ,���ԭ���Ķ���
+		ClearQueueState();		// ,
 
 		_pCurState = pState;
         _pCurState->Start();
@@ -192,7 +192,7 @@ void CActor::ExecDied()
 	{
 		(*it)->Exec();
 		//delete (*it);
-		SAFE_DELETE(*it); // UI��������
+		SAFE_DELETE(*it); // UI
 	}
 
 	_dies.clear();
@@ -401,8 +401,8 @@ void CMonsterItem::Exec()
 
 	int nDummy = _pItem->GetItemInfo()->sAreaEffect[1];
 
-	// ���´��������⣬û����Ч��ʾ����
-	// ���ϵ�ģ�ʹ���������Ч
+	// 
+	// 
     CEffectObj	*pEffect = CGameApp::GetCurScene()->GetFirstInvalidEffObj();
     if( !pEffect ) return;            
 
@@ -428,7 +428,7 @@ CMissionTrigger::CMissionTrigger()
 CMissionTrigger::~CMissionTrigger()
 {
 	//delete _pData;
-	SAFE_DELETE(_pData); // UI��������
+	SAFE_DELETE(_pData); // UI
 }
 
 void CMissionTrigger::SetData( stNetNpcMission& v )	

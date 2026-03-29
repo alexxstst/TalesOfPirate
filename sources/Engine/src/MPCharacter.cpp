@@ -1,4 +1,4 @@
-//
+﻿//
 
 #include "stdafx.h"
 #include "MPCharacter.h"
@@ -480,7 +480,7 @@ LW_RESULT MPCharacter::AttachItem( const MPItemLinkInfo* info )
     else
     {
         assert(0);
-        // ���½ӿڿ�����Ҫ�޸�
+        // 
         //lwIPrimitive* p = _physique->GetPrimitive( info->data );
         //if( p == NULL )
         //    return LW_RET_FAILED;
