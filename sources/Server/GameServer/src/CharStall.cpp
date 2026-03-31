@@ -315,7 +315,7 @@ namespace mission
 			if(	grid2	&&	grid2->dwDBID	)
 			{
 				pData->Free();
-				staller.SystemNotice(	"Item %s is bind, cannot be sold!",	pItem->szName	);
+				staller.SystemNotice(	"Item %s is bind, cannot be sold!",	pItem->szName.c_str()	);
 				return;
 			}
 			if( !pItem->chIsTrade || !staller.m_CKitbag.GetGridContByID(pData->m_Goods[i].byIndex)->GetInstAttr(ITEMATTR_TRADABLE))
@@ -323,7 +323,7 @@ namespace mission
 				pData->Free();
 				/*staller.SystemNotice( "%s", pItem->szName );
 				ToLogService("common", "{}", pItem->szName);*/
-				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00020), pItem->szName );
+				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00020), pItem->szName.c_str() );
 				ToLogService("store", LogLevel::Error, "start to stallres{}cannot trade", pItem->szName );
 				return;
 			}
@@ -380,7 +380,7 @@ return;
 			}
 			else
 			{
-				sprintf(szTemp, RES_STRING(GM_CHARSTALL_CPP_00025), pData->m_Goods[i].byCount, pItem->szName, pData->m_Goods[i].dwMoney);
+				sprintf(szTemp, RES_STRING(GM_CHARSTALL_CPP_00025), pData->m_Goods[i].byCount, pItem->szName.c_str(), pData->m_Goods[i].dwMoney);
 			}
 			strcat(szLog, szTemp);
 		}
@@ -836,7 +836,7 @@ return;
 			}
 			else
 			{
-				sprintf(szLog, RES_STRING(GM_CHARSTALL_CPP_00051), pItem->szName);
+				sprintf(szLog, RES_STRING(GM_CHARSTALL_CPP_00051), pItem->szName.c_str());
 			}
 			Bag.Lock();
 
@@ -850,7 +850,7 @@ return;
 			CFormatParameter param(6);
 			param.setString(0, character.GetName());
 			param.setLong(1, byCount);
-			param.setString(2, pItem->szName);
+			param.setString(2, pItem->szName.c_str());
 			param.setLong(3, pData->m_Goods[byIndex].dwMoney * byCount);
 			param.setLong(4, pData->m_Goods[byIndex].dwMoney);
 			param.setLong(5, (long)pStaller->getAttr(ATTR_GD));

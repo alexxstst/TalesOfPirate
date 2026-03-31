@@ -112,8 +112,6 @@ bool CEffectScript::LoadParamFromName( Group_Param* pParam, const s_string& strN
 	return true;
 }
 #else
-CEff_ParamSet* CEff_ParamSet::_Instance = NULL;
-CGroup_ParamSet* CGroup_ParamSet::_Instance = NULL;
 //CEff_ParamSet* CEff_ParamSet::I() { return _Instance; }
 #endif
 /************************************************************************/

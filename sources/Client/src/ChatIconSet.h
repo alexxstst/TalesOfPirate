@@ -1,33 +1,9 @@
 ﻿#pragma  once
 
 #include "TableData.h"
-
-class CChatIconInfo : public CRawDataInfo
-{
-public:
-    CChatIconInfo()
-    {
-        memset( szSmall, 0, sizeof(szSmall) );
-        memset( szSmallOff, 0, sizeof(szSmallOff) );
-        memset( szBig, 0, sizeof(szBig) );
-        memset( szHint, 0, sizeof(szHint) );
-    }
-
-    char	szSmall[16];
-	int		nSmallX;
-	int		nSmallY;
-
-    char	szSmallOff[16];		// 
-	int		nSmallOffX;
-	int		nSmallOffY;
-
-	char	szBig[16];
-	int		nBigX;
-	int		nBigY;
-
-	char	szHint[32];
-
-};
+#include "ChatIconRecord.h"
+#include "ChatIconRecordStore.h"
+#include "AssetDatabase.h"
 
 
 class CChatIconSet : public CRawDataSet
@@ -96,9 +72,9 @@ protected:
 
 	   return TRUE;
     }
-};
 
-inline CChatIconInfo* GetChatIconInfo(int nIconID)
-{
-    return (CChatIconInfo*)CChatIconSet::I()->GetRawDataInfo(nIconID);
-}
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
+	{
+		ChatIconRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *(CChatIconInfo*)pRawDataInfo);
+	}
+};

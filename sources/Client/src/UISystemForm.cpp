@@ -1,7 +1,5 @@
 ﻿#include "StdAfx.h"
 #include "uisystemform.h"
-#include <stdio.h> 
-#include <windows.h> 
 #include "uiform.h"
 #include "uicheckbox.h"
 #include "Gameapp.h"
@@ -168,117 +166,37 @@ int CSystemProperties::Apply()
 */
 int CSystemProperties::readFromFile(const char * szIniFileName)
 {
-	//return 0;
-#define DEFAULT_NUM -2
+	auto& video = g_SystemIni["video"];
+	m_videoProp.nTexture      = static_cast<int>(video.GetInt64("texture", 0));
+	m_videoProp.bAnimation    = video.GetInt64("animation", 0) != 0;
+	m_videoProp.bCameraRotate = video.GetInt64("cameraRotate", 0) != 0;
+	m_videoProp.bGroundMark   = video.GetInt64("groundMark", 0) != 0;
+	m_videoProp.bDepth32      = video.GetInt64("depth32", 0) != 0;
+	m_videoProp.nQuality      = static_cast<int>(video.GetInt64("quality", 0));
+	m_videoProp.bFullScreen   = video.GetInt64("fullScreen", 0) != 0;
+	m_videoProp.bResolution   = static_cast<int>(video.GetInt64("resolution", 0));
 
-	if ((!szIniFileName) || (strlen(szIniFileName) == 0))
-	{
-		return -3;
-	}
+	auto& audio = g_SystemIni["audio"];
+	m_audioProp.nMusicSound  = static_cast<int>(audio.GetInt64("musicSound", 0));
+	m_audioProp.nMusicEffect = static_cast<int>(audio.GetInt64("musicEffect", 0));
 
-	int iTemp;
-	// video
-	iTemp = GetPrivateProfileInt("video", "texture", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.nTexture = iTemp;
+	auto& game = g_SystemIni["gameOption"];
+	m_gameOption.bRunMode         = game.GetInt64("runMode", 0) != 0;
+	m_gameOption.bHelpMode        = game.GetInt64("helpMode", 1) != 0;
+	m_gameOption.bCameraMode      = game.GetInt64("cameraMode", 0) != 0;
+	m_gameOption.bAppMode         = game.GetInt64("apparel", 0) != 0;
+	m_gameOption.bEffMode         = game.GetInt64("effect", 0) != 0;
+	m_gameOption.bStateMode       = game.GetInt64("state", 0) != 0;
+	m_gameOption.bEnemyNames      = game.GetInt64("enemynames", 0) != 0;
+	m_gameOption.bShowBars        = game.GetInt64("showbars", 0) != 0;
+	m_gameOption.bShowPercentages = game.GetInt64("showpercentages", 0) != 0;
+	m_gameOption.bShowInfo        = game.GetInt64("showinfo", 0) != 0;
+	m_gameOption.bFramerate       = game.GetInt64("framerate", 0) != 0;
+	m_gameOption.bShowMounts      = game.GetInt64("showmounts", 0) != 0;
 
-	iTemp = GetPrivateProfileInt("video", "animation", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.bAnimation = int2bool(iTemp);
+	auto& start = g_SystemIni["startOption"];
+	m_startOption.bFirst = start.GetInt64("first", 0) != 0;
 
-	iTemp = GetPrivateProfileInt("video", "cameraRotate", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.bCameraRotate = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("video", "groundMark", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.bGroundMark = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("video", "depth32", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.bDepth32 = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("video", "quality", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.nQuality = iTemp;
-
-	iTemp = GetPrivateProfileInt("video", "fullScreen", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.bFullScreen = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("video", "resolution", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_videoProp.bResolution = iTemp;
-
-	// audio
-	iTemp = GetPrivateProfileInt("audio", "musicSound", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_audioProp.nMusicSound = iTemp;
-
-	iTemp = GetPrivateProfileInt("audio", "musicEffect", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_audioProp.nMusicEffect = iTemp;
-
-	// gameOption
-	iTemp = GetPrivateProfileInt("gameOption", "runMode", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bRunMode = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("gameOption", "helpMode", 1, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bHelpMode = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("gameOption", "cameraMode", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bCameraMode = int2bool(iTemp);
-	
-	iTemp = GetPrivateProfileInt("gameOption", "apparel", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bAppMode = int2bool(iTemp);
-	
-	iTemp = GetPrivateProfileInt("gameOption", "effect", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bEffMode = int2bool(iTemp);
-	
-	iTemp = GetPrivateProfileInt("gameOption", "state", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bStateMode = int2bool(iTemp);
-
-	// Add by Mdr.st May 2020 - FPO alpha
-	iTemp = GetPrivateProfileInt("gameOption", "enemynames", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bEnemyNames = int2bool(iTemp);
-
-	// Add by Mdr.st May 2020 - FPO alpha
-	iTemp = GetPrivateProfileInt("gameOption", "showbars", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bShowBars = int2bool(iTemp);
-	// Add by Mdr.st May 2020 - FPO alpha
-	iTemp = GetPrivateProfileInt("gameOption", "showpercentages", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bShowPercentages = int2bool(iTemp);
-	// Add by Mdr.st May 2020 - FPO alpha
-	iTemp = GetPrivateProfileInt("gameOption", "showinfo", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bShowInfo = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("gameOption", "framerate", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bFramerate = int2bool(iTemp);
-
-	iTemp = GetPrivateProfileInt("gameOption", "showmounts", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_gameOption.bShowMounts = int2bool(iTemp);
-
-
-	// Add by lark.li 20080826 begin
-	iTemp = GetPrivateProfileInt("startOption", "first", DEFAULT_NUM, szIniFileName);
-	if (iTemp == DEFAULT_NUM)	return DEFAULT_NUM;
-	m_startOption.bFirst = int2bool(iTemp);
-
-	// End
-
-	// success
 	return 0;
 }
 /**
@@ -291,105 +209,45 @@ int CSystemProperties::readFromFile(const char * szIniFileName)
 */
 int CSystemProperties::writeToFile(const char * szIniFileName)
 {
-#define OTHER_ERROR -1
-#define ERROE_FILE_CANNT_CREAT -2
+	auto& video = g_SystemIni["video"];
+	video.SetInt64("texture",      m_videoProp.nTexture);
+	video.SetInt64("animation",    m_videoProp.bAnimation ? 1 : 0);
+	video.SetInt64("cameraRotate", m_videoProp.bCameraRotate ? 1 : 0);
+	video.SetInt64("groundMark",   m_videoProp.bGroundMark ? 1 : 0);
+	video.SetInt64("depth32",      m_videoProp.bDepth32 ? 1 : 0);
+	video.SetInt64("quality",      m_videoProp.nQuality);
+	video.SetInt64("fullScreen",   m_videoProp.bFullScreen ? 1 : 0);
+	video.SetInt64("resolution",   m_videoProp.bResolution);
 
-	if ((!szIniFileName) || (strlen(szIniFileName) == 0))
-	{
-		return -3;
+	auto& audio = g_SystemIni["audio"];
+	audio.SetInt64("musicSound",  m_audioProp.nMusicSound);
+	audio.SetInt64("musicEffect", m_audioProp.nMusicEffect);
+
+	auto& game = g_SystemIni["gameOption"];
+	game.SetInt64("runMode",         1); // всегда true (как в оригинале)
+	game.SetInt64("helpMode",        m_gameOption.bHelpMode ? 1 : 0);
+	game.SetInt64("cameraMode",      m_gameOption.bCameraMode ? 1 : 0);
+	game.SetInt64("apparel",         m_gameOption.bAppMode ? 1 : 0);
+	game.SetInt64("effect",          m_gameOption.bEffMode ? 1 : 0);
+	game.SetInt64("state",           m_gameOption.bStateMode ? 1 : 0);
+	game.SetInt64("enemynames",      m_gameOption.bEnemyNames ? 1 : 0);
+	game.SetInt64("showbars",        m_gameOption.bShowBars ? 1 : 0);
+	game.SetInt64("showpercentages", m_gameOption.bShowPercentages ? 1 : 0);
+	game.SetInt64("showinfo",        m_gameOption.bShowInfo ? 1 : 0);
+	game.SetInt64("framerate",       m_gameOption.bFramerate ? 1 : 0);
+	game.SetInt64("showmounts",      m_gameOption.bShowMounts ? 1 : 0);
+
+	g_SystemIni["startOption"].SetInt64("first", m_startOption.bFirst ? 1 : 0);
+
+	try {
+		g_SystemIni.Save();
+	}
+	catch (const std::exception&) {
+		return -1;
 	}
 
-	// video
-	if (!WriteInteger("video", "texture", m_videoProp.nTexture, szIniFileName))
-	{
-		FILE *fp;
-		fp=fopen(szIniFileName, "wb");
-		if( fp )
-		{
-			fclose(fp);
-		}
-		else
-		{
-			return ERROE_FILE_CANNT_CREAT;
-		}
-	}
-
-	if (!WriteInteger("video", "animation", bool2int(m_videoProp.bAnimation), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("video", "cameraRotate", bool2int(m_videoProp.bCameraRotate), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("video", "groundMark", bool2int(m_videoProp.bGroundMark), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("video", "depth32", bool2int(m_videoProp.bDepth32), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("video", "quality", m_videoProp.nQuality, szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("video", "fullScreen", bool2int(m_videoProp.bFullScreen), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("video", "resolution", m_videoProp.bResolution, szIniFileName))
-		return OTHER_ERROR;
-
-	// audio
-	if (!WriteInteger("audio", "musicSound", m_audioProp.nMusicSound, szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("audio", "musicEffect", m_audioProp.nMusicEffect, szIniFileName))
-		return OTHER_ERROR;
-
-	// gameOption
-	//if (!WriteInteger("gameOption", "runMode", bool2int(m_gameOption.bRunMode), szIniFileName))
-	if (!WriteInteger("gameOption", "runMode", bool2int(true), szIniFileName))
-		return OTHER_ERROR;
-
-	if (!WriteInteger("gameOption", "helpMode", bool2int(m_gameOption.bHelpMode), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "cameraMode", bool2int(m_gameOption.bCameraMode), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "apparel", bool2int(m_gameOption.bAppMode), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "effect", bool2int(m_gameOption.bEffMode), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "state", bool2int(m_gameOption.bStateMode), szIniFileName))
-		return OTHER_ERROR;
-
-	if (!WriteInteger("gameOption", "enemynames", bool2int(m_gameOption.bEnemyNames), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "showbars", bool2int(m_gameOption.bShowBars), szIniFileName))
-		return OTHER_ERROR;
-
-
-	if (!WriteInteger("gameOption", "showpercentages", bool2int(m_gameOption.bShowPercentages), szIniFileName))		// ADd by Mdr.st May 2020 - FPO alpha
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "showinfo", bool2int(m_gameOption.bShowInfo), szIniFileName))
-		return OTHER_ERROR;
-	if (!WriteInteger("gameOption", "framerate", bool2int(m_gameOption.bFramerate), szIniFileName))
-		return OTHER_ERROR;
-
-	if (!WriteInteger("gameOption", "showmounts", bool2int(m_gameOption.bShowMounts), szIniFileName))
-		return OTHER_ERROR;
-			
-
-	// Add by lark.li 20080826 begin
-	if (!WriteInteger("startOption", "first", bool2int(m_startOption.bFirst), szIniFileName))
-		return OTHER_ERROR;
-	// End
-
-	// Success
 	return 0;
 }
-
-bool CSystemProperties::int2bool(int n)
-{
-	if (0 == n)
-		return false;
-	else 
-		return true;
-}
-
-int	CSystemProperties::bool2int(bool b)
-{
-	return b?1:0;
-}
-
 
 
 //video
@@ -1046,7 +904,8 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 			g_stUISystem.m_sysProp.m_gameOption.bHelpMode = bHelpMode;
 			if (!bHelpMode) g_stUIStart.ShowLevelUpHelpButton(bHelpMode);
 			g_stUIStart.ShowInfoCenterButton(bHelpMode);
-			::WritePrivateProfileString("gameOption", "helpMode", bHelpMode ? "1" : "0", "./user/system.ini");
+			g_SystemIni["gameOption"].SetInt64("helpMode", bHelpMode ? 1 : 0);
+			g_SystemIni.Save();
 
 		}
 	}
@@ -1059,7 +918,8 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 		{
 			g_stUISystem.m_sysProp.m_gameOption.bCameraMode = bCameraMode;
 			g_IsCameraMode = bCameraMode;
-			::WritePrivateProfileString("gameOption", "cameraMode", bCameraMode ? "1" : "0", "./user/system.ini");
+			g_SystemIni["gameOption"].SetInt64("cameraMode", bCameraMode ? 1 : 0);
+			g_SystemIni.Save();
 		}
 	}
 	
@@ -1088,7 +948,8 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 			stTeamPart.Convert(pCha->GetPart());
 			g_stUIStart.GetMainCha()->UpdataFace(stTeamPart);
 
-			::WritePrivateProfileString("gameOption", "apparel", bAppMode ? "1" : "0", "./user/system.ini");
+			g_SystemIni["gameOption"].SetInt64("apparel", bAppMode ? 1 : 0);
+			g_SystemIni.Save();
 		}
 	}
 	
@@ -1113,7 +974,8 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 				pCha++;
 			}
 
-			::WritePrivateProfileString("gameOption", "effect", bEffMode ? "1" : "0", "./user/system.ini");
+			g_SystemIni["gameOption"].SetInt64("effect", bEffMode ? 1 : 0);
+			g_SystemIni.Save();
 		}
 	}
 
@@ -1125,7 +987,8 @@ void CSystemMgr::_evtGameOptionFormMouseDown(CCompent* pSender, int nMsgType, in
 		{
 			g_stUISystem.m_sysProp.m_gameOption.bStateMode = bStateMode;
 			g_IsShowStates = bStateMode;
-			::WritePrivateProfileString("gameOption", "state", bStateMode ? "1" : "0", "./user/system.ini");
+			g_SystemIni["gameOption"].SetInt64("state", bStateMode ? 1 : 0);
+			g_SystemIni.Save();
 		}
 	}
 

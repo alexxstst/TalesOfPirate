@@ -7,7 +7,7 @@
 #include "scene.h"
 #include "GameApp.h"
 #include "SceneObj.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 
 CSceneObjFile	g_ObjFile;
 

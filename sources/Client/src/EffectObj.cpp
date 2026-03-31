@@ -4,7 +4,8 @@
 #include "Character.h"
 #include "SceneItem.h"
 
-#include "EffectSet.h"
+#include "EffectRecordStore.h"
+#include "ShadeRecordStore.h"
 
 #include "effdelay.h"
 #include "Scene.h"
@@ -130,7 +131,7 @@ inline  void	Part_bind(CMagicEff* pEffCtrl)
 	skip:
 			if(pCha->GetObjDummyRunTimeMatrix(&tMat,pEffCtrl->_iDummy))
 			{
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(55), pEffCtrl->_iIdxID, pEffCtrl->_iDummy, pCha->GetDefaultChaInfo()->szName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(55), pEffCtrl->_iIdxID, pEffCtrl->_iDummy, pCha->GetDefaultChaInfo()->szName.c_str()); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 				const auto v = D3DXVECTOR3(0, 0, 0);
 				pEffCtrl->MoveTo(&v);
 				return;

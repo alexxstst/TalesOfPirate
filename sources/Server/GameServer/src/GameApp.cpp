@@ -27,10 +27,21 @@
 #include "SkillRecord.h"
 #include "SkillStateRecord.h"
 #include "ItemRecord.h"
+#include "ItemRecordStore.h"
+#include "LevelRecordStore.h"
+#include "SailLvRecordStore.h"
+#include "LifeLvRecordStore.h"
+#include "ChaRecordStore.h"
+#include "SkillRecordStore.h"
+#include "SkillStateRecordStore.h"
+#include "HairRecordStore.h"
+#include "ForgeRecordStore.h"
+#include "JobEquipRecordStore.h"
+#include "AreaRecordStore.h"
+#include "ShipRecordStore.h"
+#include "ShipPartRecordStore.h"
+#include "AssetDatabase.h"
 #include "ItemAttr.h"
-#include "LevelRecord.h"
-#include "SailLvRecord.h"
-#include "LifeLvRecord.h"
 #include "CharForge.h"
 #include "HairRecord.h"
 
@@ -68,12 +79,7 @@ char		szChaLvUpName[256]			= "character_lvup";
 char		szChaSailLvUpName[256]		= "saillvup";
 char		szChaLifeLvUpName[256]		= "lifelvup";
 char		szItemInfoName[256]			= "ItemInfo";
-char		szInitChaItName[256]		= "Int_Cha_Item";
-char		g_szForgeTable[256]			= "forgeitem";
-char		szIslandInfoName[256]		= "AreaSet";
-char		szHairInfoName[64]			= "Hairs";		// 
-
-CAreaSet * CAreaSet::_Instance = NULL;
+char		szHairInfoName[64]			= "Hairs";		//
 
 void ChaException(uLong ulCurID, Long lCurHandle)
 {
@@ -347,8 +353,6 @@ CGameApp::~CGameApp()
 	CloseLuaScript();
 	//g_CParser.Free();
 	
-	SAFE_DELETE(m_CChaRecordSet);
-	SAFE_DELETE(m_CSkillRecordSet);
 	SAFE_DELETE(m_pCEntSpace);
 	SAFE_DELETE(m_pCPlySpace);
 
@@ -461,55 +465,31 @@ BOOL CGameApp::Init()
 	//LG("init", "...\n");
 	ToLogService("common", "initialization every form...");
 	int	nItemRecordNum = CItemRecord::enumItemMax;
-	
-	m_CChaRecordSet			= new CChaRecordSet(0, defMAX_CHARINFO_NO);			LoadTable(m_CChaRecordSet,		 szChaInfoName);
-	m_CSkillRecordSet		= new CSkillRecordSet(0, defMAX_SKILL_NO);			LoadTable(m_CSkillRecordSet,	 szSkillInfoName);
-	m_CLevelRecordSet		= new CLevelRecordSet(0, 600);			LoadTable(m_CLevelRecordSet,	 szChaLvUpName);
-	m_CSailLvRecord			= new CSailLvRecordSet(0, 600);			LoadTable(m_CSailLvRecord,		 szChaSailLvUpName);
-	m_CLifeLvRecord			= new CLifeLvRecordSet(0, 600);			LoadTable(m_CLifeLvRecord,		 szChaLifeLvUpName);
-	m_CHairRecord			= new CHairRecordSet(0, 300);			LoadTable(m_CHairRecord,		 szHairInfoName);	
-	// Modify by lark.li 20080822 begin
-	//m_CSkillStateRecordSet	= new CSkillStateRecordSet(0, SKILL_STATE_MAXID);		LoadTable(m_CSkillStateRecordSet,szSkillStateInfoName);
-	m_CSkillStateRecordSet	= new CSkillStateRecordSet(0, 300);		LoadTable(m_CSkillStateRecordSet,szSkillStateInfoName);
-	// End
-	
-	m_CItemRecordSet		= new CItemRecordSet(0, nItemRecordNum);LoadTable(m_CItemRecordSet, szItemInfoName);
+	AssetDatabase::Instance()->Open(g_Config._assetDbPath);
+	auto& db = AssetDatabase::Instance()->GetDb();
 
-	//
-	/*m_PicSet = new CPicSet();
-	if(!m_PicSet->init())
-	{
-		ToLogService("common", LogLevel::Error, "");
-		return FALSE;
-	}*/
-	
+	ItemRecordStore::Instance()->Load(db);
+	LevelRecordStore::Instance()->Load(db);
+	SailLvRecordStore::Instance()->Load(db);
+	LifeLvRecordStore::Instance()->Load(db);
+	ChaRecordStore::Instance()->Load(db);
+	SkillRecordStore::Instance()->Load(db);
+	SkillStateRecordStore::Instance()->Load(db);
+	HairRecordStore::Instance()->Load(db);
+	ForgeRecordStore::Instance()->Load(db);
+	JobEquipRecordStore::Instance()->Load(db);
+	AreaRecordStore::Instance()->Load(db);
+	ShipRecordStore::Instance()->Load(db);
+	ShipPartRecordStore::Instance()->Load(db);
+
 	g_pCItemAttr = new CItemRecordAttr[nItemRecordNum];
 	for (int i = 0; i < nItemRecordNum; i++)
 	{
 		g_pCItemAttr[i].Init(i);
 	}
-	
-	m_CJobEquipRecordSet = new CJobEquipRecordSet(0, MAX_JOB_TYPE + 1); LoadTable(m_CJobEquipRecordSet, szInitChaItName);
-	m_CAreaRecordSet = new CAreaSet(0, 256);							LoadTable(m_CAreaRecordSet, szIslandInfoName);
 
-	if( !g_ForgeSystem.LoadForgeData( g_szForgeTable ) )
-	{
-		//LG( "init", "msg" );
-		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00006) );
-		return FALSE;
-	}
+	ToLogService("common", "Loading LuaJIT {}", LUAJIT_VERSION);
 
-	if( !g_CharBoat.Load( "ShipInfo", "ShipItemInfo"))
-	{
-		//LG( "init", "msg" );
-		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00007) );
-		return FALSE;
-	}
-
-	ToLogService("common", "Loading {}", LUAJIT_VERSION);
-	ToLogService("common", "Loading Serverfile 1.38");
-	//LG("init", "Lua Script...\n");
-	ToLogService("common", "initialization Lua Script...");
 	InitLuaScript();
 
 	if(InitMap()==FALSE)
@@ -679,8 +659,8 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime)
 	Char			chPartCount;
 	CCharacter		*pCLongTimeCha;
 	DWORD			dwTempTick1, dwTempTick2;
-	static DWORD	dwMapRunTick[MAX_MAP] = {0};
-	static Long		lMapLogTime[MAX_MAP] = {0};
+	static std::vector<DWORD> dwMapRunTick(m_mapnum, 0);
+	static std::vector<Long> lMapLogTime(m_mapnum, 0);
 	bool			bLogRun;
 	DWORD			dwRTimeKey = 60;
 
@@ -1182,22 +1162,20 @@ BOOL CGameApp::InitMap()
 	mission::g_WorldEudemon.Load( "Eudemon", g_Config.m_szEqument, -1 );
 
 	//Map
-	m_mapnum = g_Config.m_nMapCnt;
+	m_mapnum = static_cast<short>(g_Config.m_mapList.size());
 	if(m_mapnum < 1)
 	{
-		//LG("init", "0,, !\n");
 		ToLogService("common", "collocate map number 0,no map was initialization, exit!");
 		return FALSE;
 	}
 
 	m_strMapNameList = "";
 
-	//
-	memset(m_MapList, 0, sizeof(CMapRes*) * MAX_MAP);
+	m_MapList.assign(m_mapnum, nullptr);
 	for(short i=0; i< m_mapnum; i++)
 	{
 		m_MapList[i] = new CMapRes();
-		m_MapList[i]->SetName(g_Config.m_szMapList[i]);
+		m_MapList[i]->SetName(g_Config.m_mapList[i].c_str());
 
 		strcpy(m_MapList[i]->m_szObstacleFile, m_MapList[i]->GetName());		//
 		strcat(m_MapList[i]->m_szObstacleFile, "\\"); 
@@ -1233,12 +1211,12 @@ BOOL CGameApp::InitMap()
 		{
 			//LG("init", "[%s]!\n", m_MapList[i]->GetName());
 			ToLogService("common", "map [{}] initialization failed!", m_MapList[i]->GetName());
-			g_Config.m_btMapOK[i] = 0;
+			g_Config.m_mapOK[i] = 0;
 			continue;
 		}
 		else
 		{
-			g_Config.m_btMapOK[i] = 1; // 
+			g_Config.m_mapOK[i] = 1;
 		}
 		m_strMapNameList += m_MapList[i]->GetName();
 		m_strMapNameList += ";";
@@ -1305,23 +1283,17 @@ void CGameApp::LoadAllTable()
 
 void CGameApp::LoadCharacterInfo()
 {
-	m_CChaRecordSet->Release();
-	m_CChaRecordSet = new CChaRecordSet(0, defMAX_CHARINFO_NO);
-	LoadTable(m_CChaRecordSet, szChaInfoName);
+	ChaRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb());
 }
 
 void CGameApp::LoadSkillInfo()
 {
-	m_CSkillRecordSet->Release();
-	m_CSkillRecordSet = new CSkillRecordSet(0, defMAX_SKILL_NO);
-	LoadTable(m_CSkillRecordSet, szSkillInfoName);
+	SkillRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb());
 }
 
 void CGameApp::LoadItemInfo()
 {
-	m_CItemRecordSet->Release();
-	m_CItemRecordSet = new CItemRecordSet(0, CItemRecord::enumItemMax);
-	LoadTable(m_CItemRecordSet, szItemInfoName);
+	ItemRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb());
 }
 
 BOOL CGameApp::ReloadNpcInfo( CCharacter& character )

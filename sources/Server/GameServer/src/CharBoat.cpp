@@ -3,6 +3,8 @@
 #include "stdafx.h"
 #include "CharBoat.h"
 #include <ShipSet.h>
+#include <ShipRecordStore.h>
+#include <ShipPartRecordStore.h>
 #include "GameApp.h"
 #include "GameDB.h"
 #include "SubMap.h"
@@ -13,45 +15,7 @@
 mission::CCharBoat g_CharBoat;
 
 namespace mission
-{	
-	CCharBoat::CCharBoat()
-	{
-		m_pShipSet = NULL;
-		m_pShipPartSet = NULL;
-	}
-
-	CCharBoat::~CCharBoat()
-	{
-		Clear();
-	}
-	
-	void CCharBoat::Clear()
-	{
-		SAFE_DELETE( m_pShipSet );
-		SAFE_DELETE( m_pShipPartSet );
-	}
-
-	BOOL CCharBoat::Load( const char szBoat[], const char szPart[] )
-	{
-		
-		extern BOOL LoadTable(CRawDataSet *pTable, const char*);
-		m_pShipSet = new xShipSet( 1, 400 );
-		if( !LoadTable(m_pShipSet, szBoat ) )
-		{
-			Clear();
-			return FALSE;
-		}
-
-		m_pShipPartSet = new xShipPartSet( 1, 400 );
-		if( !LoadTable(m_pShipPartSet, szPart ) )
-		{
-			Clear();
-			return FALSE;
-		}
-
-		return TRUE;
-	}
-
+{
 	void CCharBoat::UpdateBoat( const BOAT_DATA& Data )
 	{
 		
@@ -88,7 +52,7 @@ namespace mission
 
 	BOOL CCharBoat::BoatLimit( CCharacter& owner, USHORT sBoatID )
 	{
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( sBoatID );
 		if( pInfo == NULL ) 
 		{
 			//owner.SystemNotice( "ID[%d]!", sBoatID );
@@ -141,7 +105,7 @@ namespace mission
 
 	BOOL CCharBoat::SetPartData( CCharacter& boat, USHORT sTypeID, const BOAT_DATA& AttrInfo )
 	{
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoat );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( AttrInfo.sBoat );
 		if( pInfo == NULL ) 
 		{
 			//LG( "boat_error", "ID[%d]!", AttrInfo.sBoat );
@@ -150,7 +114,7 @@ namespace mission
 		}
 
 		// 
-		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pInfo->sBody );
+		xShipPartInfo* pData = ShipPartRecordStore::Instance()->Get( pInfo->sBody );
 		if( pData == NULL ) 
 		{
 			//LG( "boat_error", "ID[%d]!", pInfo->sBody );
@@ -175,7 +139,7 @@ namespace mission
 
 	BOOL CCharBoat::SyncAttr( CCharacter& owner, DWORD dwBoatID, USHORT sCmd, USHORT sBerthID, const BOAT_SYNC_ATTR& AttrInfo )
 	{
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( AttrInfo.sBoatID );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( AttrInfo.sBoatID );
 		if( pInfo == NULL ) 
 		{
 			//owner.SystemNotice( "ID[%d]!", AttrInfo.sBoatID );
@@ -211,7 +175,7 @@ namespace mission
 		boatMsg.berthName = Data.szBerth;
 		boatMsg.isUpdate = pInfo->byIsUpdate;
 
-		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pInfo->sBody );
+		xShipPartInfo* pData = ShipPartRecordStore::Instance()->Get( pInfo->sBody );
 		if( pData == NULL )
 		{
 			owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00038), pInfo->sBody );
@@ -228,7 +192,7 @@ namespace mission
 		if( pInfo->byIsUpdate )
 		{
 			boatMsg.hasUpdateParts = true;
-			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sHeader );
+			pData = ShipPartRecordStore::Instance()->Get( AttrInfo.sHeader );
 			if( pData == NULL )
 			{
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00039), AttrInfo.sHeader );
@@ -241,7 +205,7 @@ namespace mission
 			Data.dwCurSupply += pData->sSupply; Data.dwMaxSupply += pData->sSupply;
 			Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 
-			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sEngine );
+			pData = ShipPartRecordStore::Instance()->Get( AttrInfo.sEngine );
 			if( pData == NULL )
 			{
 				owner.SystemNotice( RES_STRING(GM_CHARBOAT_CPP_00040), AttrInfo.sEngine );
@@ -256,7 +220,7 @@ namespace mission
 
 			for( int i = 0; i < BOAT_MAXNUM_MOTOR; i++ )
 			{
-				xShipPartInfo* pMotorData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pData->sMotor[i] );
+				xShipPartInfo* pMotorData = ShipPartRecordStore::Instance()->Get( pData->sMotor[i] );
 				if( pMotorData == NULL )
 				{
 					boatMsg.motorModels[i] = 0;
@@ -273,7 +237,7 @@ namespace mission
 			}
 		}
 
-		pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sCannon );
+		pData = ShipPartRecordStore::Instance()->Get( AttrInfo.sCannon );
 		if( pData == NULL )
 		{
 			boatMsg.cannonId = AttrInfo.byCannon;
@@ -290,7 +254,7 @@ namespace mission
 			Data.dwConsume += pData->sConsume; Data.dwAttackTime += pData->sTime;
 		}
 
-		pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( AttrInfo.sEquipment );
+		pData = ShipPartRecordStore::Instance()->Get( AttrInfo.sEquipment );
 		if( pData == NULL )
 		{
 			boatMsg.equipmentId = 0;
@@ -375,7 +339,7 @@ namespace mission
 			return FALSE;
 		}
 
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( sBoatID );
 		if( pInfo == NULL ) 
 		{
 			//owner.SystemNotice( "ID[%d]!", sBoatID );
@@ -517,7 +481,7 @@ namespace mission
 
 		USHORT sBoatID = (USHORT)owner.GetBoat()->getAttr( ATTR_BOAT_SHIP );
 		USHORT sBerthID = (USHORT)pBoat->getAttr( ATTR_BOAT_BERTH );
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( sBoatID );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( sBoatID );
 		if( pInfo == NULL ) 
 		{
 			//owner.SystemNotice( "ID[%d]!", sBoatID );
@@ -735,7 +699,7 @@ namespace mission
 		Data.dwOwnerID = owner.GetPlayer()->GetDBChaId();
 		Data.sBoat = (USHORT)owner.GetBoat()->getAttr( ATTR_BOAT_SHIP );		
 		Data.sBerth = (USHORT)owner.GetBoat()->getAttr( ATTR_BOAT_BERTH );
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( Data.sBoat );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( Data.sBoat );
 		if( pInfo == NULL ) 
 		{
 			pBoat->Free();
@@ -1114,7 +1078,7 @@ namespace mission
 		Info.sBoat = sBoatID;
 
 		// 
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( Info.sBoat );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( Info.sBoat );
 		if( pInfo == NULL ) 
 		{
 			//LG( "monsterboat_error", "ID[%d]!", Info.sBoat );
@@ -1250,7 +1214,7 @@ namespace mission
 		Info.sEquipment = (USHORT)pBoat->getAttr( ATTR_BOAT_PART );
 
 		// 
-		xShipInfo* pInfo = (xShipInfo*)m_pShipSet->GetRawDataInfo( Info.sBoat );
+		xShipInfo* pInfo = ShipRecordStore::Instance()->Get( Info.sBoat );
 		if( pInfo == NULL ) 
 		{
 			pBoat->Free();
@@ -1335,7 +1299,7 @@ namespace mission
 	BOOL CCharBoat::GetData( CCharacter& owner, BYTE byIsUpdate, const BOAT_DATA& Info, xShipAttrInfo& Data )
 	{
 		// 
-		xShipPartInfo* pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sBody );
+		xShipPartInfo* pData = ShipPartRecordStore::Instance()->Get( Info.sBody );
 		if( pData == NULL ) 
 		{
 			/*owner.SystemNotice( "ID[%d]!", Info.sBody );
@@ -1368,7 +1332,7 @@ namespace mission
 
 		if( byIsUpdate )
 		{
-			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sHeader );
+			pData = ShipPartRecordStore::Instance()->Get( Info.sHeader );
 			if( pData == NULL ) 
 			{
 				/*owner.SystemNotice( "ID[%d]!", Info.sHeader );
@@ -1399,7 +1363,7 @@ namespace mission
 				Data.dwMoney += pData->dwPrice;
 			}
 
-			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sEngine );
+			pData = ShipPartRecordStore::Instance()->Get( Info.sEngine );
 			if( pData == NULL ) 
 			{
 				/*owner.SystemNotice( "ID[%d]!", Info.sEngine );
@@ -1431,7 +1395,7 @@ namespace mission
 			}
 			for( int i = 0; i < BOAT_MAXNUM_MOTOR; i++ )
 			{
-				xShipPartInfo* pMotorData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( pData->sMotor[i] );
+				xShipPartInfo* pMotorData = ShipPartRecordStore::Instance()->Get( pData->sMotor[i] );
 				if( pMotorData == NULL ) 
 				{
 					break;
@@ -1460,7 +1424,7 @@ namespace mission
 				}
 			}
 
-			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sCannon );
+			pData = ShipPartRecordStore::Instance()->Get( Info.sCannon );
 			if( pData == NULL ) 
 			{
 				/*owner.SystemNotice( "ID[%d]!", Info.sCannon );
@@ -1491,7 +1455,7 @@ namespace mission
 				Data.dwMoney += pData->dwPrice;
 			}
 
-			pData = (xShipPartInfo*)m_pShipPartSet->GetRawDataInfo( Info.sEquipment );
+			pData = ShipPartRecordStore::Instance()->Get( Info.sEquipment );
 			if( pData == NULL ) 
 			{
 				//owner.SystemNotice( "ID[%d]!", Info.sEquipment );

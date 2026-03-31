@@ -258,7 +258,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 		CGameScene::_pSmallMap->FrameMove(dwTimeParam);
 	}
 
-	MPTexSet::I()->DynamicRelease();
+	TextureManager::I()->DynamicRelease();
 }
 
 bool CGameApp::_MouseInScene = false;

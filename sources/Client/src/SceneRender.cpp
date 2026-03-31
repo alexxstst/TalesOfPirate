@@ -4,7 +4,7 @@
 #include "GameApp.h"
 #include "GameConfig.h"
 #include "MPEditor.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 
 #include "Character.h"
 #include "SceneObj.h"
@@ -14,7 +14,7 @@
 #include "MPFont.h"
 #include "SmallMap.h"
 #include "GlobalVar.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "UIRender.h"
 #include "RenderStateMgr.h"
 #include "uiheadsay.h"

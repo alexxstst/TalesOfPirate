@@ -351,7 +351,7 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 	if( rkBuy.GetIsPile() )
 	{	// 
 		m_pkTradeBox = g_stUIBox.ShowTradeBox(
-			_BuyGoodsEvent, (float)rkBuy.GetPrice(), nMax, rkBuy.GetItemInfo()->szName );
+			_BuyGoodsEvent, (float)rkBuy.GetPrice(), nMax, rkBuy.GetItemInfo()->szName.c_str() );
 	}
 	else
 	{	// 
@@ -361,7 +361,7 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 	}
 #else
 	m_pkTradeBox = g_stUIBox.ShowTradeBox(
-		_BuyGoodsEvent, (float)rkBuy.GetPrice(), nMax, rkBuy.GetItemInfo()->szName );
+		_BuyGoodsEvent, (float)rkBuy.GetPrice(), nMax, rkBuy.GetItemInfo()->szName.c_str() );
 #endif
 
 
@@ -388,7 +388,7 @@ bool CBourseMgr::SaleGoods(CItemCommand& rkSaleCmd, int iGridIndex)
 			g_stUIBox.ShowTradeBox( _SaleGoodsEvent, 
 									(float)iSalePrice, 
 									rkSaleCmd.GetTotalNum(),
-									rkSaleCmd.GetItemInfo()->szName );
+									rkSaleCmd.GetItemInfo()->szName.c_str() );
 		if (m_pkTradeBox->GetTradeNum() < rkSaleCmd.GetTotalNum())
 			return false;
 		else
@@ -902,7 +902,7 @@ void CBlackTradeMgr::SetItem(stBlackTrade* pBlackTrade)
 	if(pInfo)
 	{
 		char szBuffer[128] = {0};
-		sprintf(szBuffer, "%d x %s", pBlackTrade->sSrcNum, pInfo->szName);
+		sprintf(szBuffer, "%d x %s", pBlackTrade->sSrcNum, pInfo->szName.c_str());
 		pItem->SetOwnDefText(szBuffer);
 	}
 
@@ -930,7 +930,7 @@ void CBlackTradeMgr::ExchangeAnswerProc(bool bSuccess, stBlackTrade* pBlackTrade
 			if(pInfo)
 			{
 				char szBuffer[128] = {0};
-				sprintf(szBuffer, g_oLangRec.GetString(843), pBlackTrade->sSrcNum, pInfo->szName);	// x
+				sprintf(szBuffer, g_oLangRec.GetString(843), pBlackTrade->sSrcNum, pInfo->szName.c_str());	// x
 				pItem->SetOwnDefText(szBuffer);
 			}
 			grdItemBuy->SetItem(nCurNum, pItem);

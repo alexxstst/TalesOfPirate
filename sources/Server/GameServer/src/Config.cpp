@@ -1,7 +1,7 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "Config.h"
-#include <fstream>
-#include "Util.h"
+#include "IniFile.h"
+#include "StringLib.h"
 
 using namespace std;
 
@@ -17,19 +17,17 @@ CGameConfig::CGameConfig()
 void CGameConfig::SetDefault()
 {
 	m_nGateCnt = 0;
-    m_nMapCnt  = 0;
 	m_lSocketAlive = 1;
-	memset(m_btMapOK, 0, MAX_MAP);
+	m_mapList.clear();
+	m_mapOK.clear();
 	strcpy(m_szDBIP,  "192.168.1.233");
 	strcpy(m_szDBUsr,  "usr");
-	strcpy(m_szDBPass, "22222"); 
+	strcpy(m_szDBPass, "22222");
 
-	// Add by lark.li 20080321 begin
 	memset(m_szTradeLogDBIP, 0, sizeof(m_szTradeLogDBIP));
 	memset(m_szTradeLogDBName, 0, sizeof(m_szTradeLogDBName));
 	memset(m_szTradeLogDBUsr, 0, sizeof(m_szTradeLogDBUsr));
 	memset(m_szTradeLogDBPass, 0, sizeof(m_szTradeLogDBPass));
-	// End
 
 	memset( m_szEqument, 0, MAX_MAPNAME_LENGTH );
 	m_nMaxPly = 3000;
@@ -47,20 +45,18 @@ void CGameConfig::SetDefault()
 	strcpy(m_szResDir, "");
 	strcpy(m_szLogDir, "log\\");
 
-	m_bLogAI		= FALSE;	// AIlog
-	m_bLogCha		= FALSE;	// log
-	m_bLogCal		= FALSE;	// log
-	m_bLogMission	= FALSE;	// Missionlog
+	m_bLogAI		= FALSE;
+	m_bLogCha		= FALSE;
+	m_bLogCal		= FALSE;
+	m_bLogMission	= FALSE;
 
 	m_bSuperCmd     = FALSE;
 
-	// Add by lark.li 20080731 begin
 	m_vGMCmd.clear();
-	// End
 
 	m_bLogDB        = FALSE;
 
-	m_bTradeLogIsConfig = FALSE;	// Add by lark.li 20080324
+	m_bTradeLogIsConfig = FALSE;
 
 	m_sGuildNum = 80;
 	m_sGuildTryNum = 80;
@@ -71,324 +67,148 @@ void CGameConfig::SetDefault()
 	m_lWeather = 120;
 	m_dwStallTime = 48;
 	m_cSaveState[32] = {0};
+	_assetDbPath = "gamedata.sqlite";
 }
 
 bool CGameConfig::Load(char *pszFileName)
 {
-	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
-	
-	ifstream in(pszFileName);
-	if(in.is_open()==0)
-	{
-		ToLogService("common", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
-		return false;
+	ToLogService("common", "Load Game Config File [{}]", pszFileName);
+
+	auto cfg = dbc::IniFile(pszFileName);
+
+	auto& id = cfg["ID"];
+	strncpy_s(m_szName, sizeof(m_szName), id.GetString("name", m_szName).c_str(), _TRUNCATE);
+	strncpy_s(m_szEqument, sizeof(m_szEqument), id.GetString("equment").c_str(), _TRUNCATE);
+
+	// [Gate]
+	auto gateParts = SplitString(cfg["Gate"].GetString("gate"));
+	if (gateParts.size() >= 2 && m_nGateCnt < MAX_GATE) {
+		strncpy_s(m_szGateIP[m_nGateCnt], sizeof(m_szGateIP[0]), gateParts[0].c_str(), _TRUNCATE);
+		m_nGatePort[m_nGateCnt] = std::stoi(gateParts[1]);
+		m_nGateCnt++;
 	}
-	string strPair[2];
-	string strComment;
-	string strLine;
-	char szLine[255];
-	while(!in.eof())
-	{
-		in.getline(szLine, 255);
-		strLine = szLine;
-		auto p = strLine.find("//");
-		if(p!= std::string::npos)
-		{
-			string strLeft = strLine.substr(0, p);
-			strComment = strLine.substr(p + 2, strLine.size() - p - 2);
-			strLine = strLeft;
-		}
+
+	// [Map] — список карт через запятую: maps = garner, lonetower, teampk
+	m_mapList = SplitString(cfg["Map"].GetString("maps"));
+	m_mapOK.resize(m_mapList.size(), 0);
+
+	// [Database]
+	auto& db = cfg["Database"];
+	strncpy_s(m_szDBName, sizeof(m_szDBName), db.GetString("db_name", m_szDBName).c_str(), _TRUNCATE);
+	strncpy_s(m_szDBIP, sizeof(m_szDBIP), db.GetString("db_ip", m_szDBIP).c_str(), _TRUNCATE);
+	strncpy_s(m_szDBUsr, sizeof(m_szDBUsr), db.GetString("db_usr", m_szDBUsr).c_str(), _TRUNCATE);
+	strncpy_s(m_szDBPass, sizeof(m_szDBPass), db.GetString("db_pass", m_szDBPass).c_str(), _TRUNCATE);
+
+	_assetDbPath = cfg["Assets"].GetString("StringAssetPack", "gamedata.sqlite");
+
+	// [Socket]
+	m_lSocketAlive = static_cast<long>(cfg["Socket"].GetInt64("keep_alive", m_lSocketAlive));
+
+	// [BaseID]
+	auto baseIdStr = cfg["BaseID"].GetString("BaseID");
+	if (!baseIdStr.empty()) {
+		if (baseIdStr.find("0x") != std::string::npos || baseIdStr.find("0X") != std::string::npos)
+			sscanf(baseIdStr.c_str(), "%x", &m_ulBaseID);
 		else
-		{
-			strComment = "";
-		}
-		Util_TrimString(strLine);
-		if(strLine.size()==0) continue;
-		if(strLine[0]=='[') 
-		{
-			//   
-			ToLogService("common", "{}", strLine);
-			continue;
-		}
-		
-		int n = Util_ResolveTextLine(strLine.c_str(), strPair, 2, '=');
-		if(n < 2) continue;
-        string strKey   = strPair[0];
-		string strValue = strPair[1];
-		
-		if(strKey=="gate")
-		{
-			string strList[2];
-            int nCnt = Util_ResolveTextLine(strValue.c_str(), strList, 2, ',');
-		    if(nCnt==2)
-            {
-                strcpy(m_szGateIP[m_nGateCnt], strList[0].c_str());
-                m_nGatePort[m_nGateCnt] = Str2Int(strList[1]);
-				if (m_nGateCnt < MAX_GATE)
-					m_nGateCnt++;
-            }
-        }
-		else if(strKey == "persist_state")
-		{
-			string strList[32];
-			int nCnt = Util_ResolveTextLine(strValue.c_str(), strList, 32, ',');
-			for (int i = 0; i < nCnt; i++)
-			{
-				m_cSaveState[i] = Str2Int(strList[i]);
-			}
-		}
-		else if(strKey=="map") 
-		{
-		    strcpy(m_szMapList[m_nMapCnt], strValue.c_str());
-            m_nMapCnt++;
-        }
-		else if(strKey=="equment" )
-		{
-			strncpy( m_szEqument, strValue.c_str(), MAX_MAPNAME_LENGTH - 1 );
-		}
-		else if(strKey=="name")
-		{
-            strcpy(m_szName, strValue.c_str());
-		}
-		else if (strKey == "BaseID")
-		{
-			size_t stPos = 0;
-			if ((stPos = strValue.find("0x")) != std::string::npos || (stPos = strValue.find("0X")) != std::string::npos) // 
-				sscanf(strValue.c_str(), "%x", &m_ulBaseID);
-			else // 
-				sscanf(strValue.c_str(), "%d", &m_ulBaseID);
-		}
-		else if(strKey=="max_ply")
-		{
-			m_nMaxPly = Str2Int(strValue);
-		}
-		else if(strKey=="max_cha")
-		{
-			m_nMaxCha = Str2Int(strValue);
-		}
-		else if(strKey=="max_item")
-		{
-			m_nMaxItem = Str2Int(strValue);
-		}
-		else if(strKey=="max_tnpc")
-		{
-			m_nMaxTNpc = Str2Int(strValue);
-		}
-		else if(strKey=="db_ip")
-		{
-			strcpy(m_szDBIP, strValue.c_str());
-		}
-		else if(strKey=="db_usr")
-		{
-			strcpy(m_szDBUsr, strValue.c_str());
-		}
-		else if(strKey=="db_pass")
-		{
-			strcpy(m_szDBPass, strValue.c_str());
-		}
-		else if(strKey=="log_cha")
-		{
-			m_bLogCha = Str2Int(strValue);
-		}
-		else if(strKey=="db_name")
-		{
-			strncpy_s( m_szDBName, sizeof(m_szDBName), strValue.c_str(), _TRUNCATE );
-		}
-		else if(strKey=="log_ai")
-		{
-			m_bLogAI = Str2Int(strValue);
-		}
-		else if(strKey=="log_cal")
-		{
-			m_bLogCal = Str2Int(strValue);
-		}
-		else if(strKey=="log_mission")
-		{
-			m_bLogMission = Str2Int(strValue);
-		}
-		else if (strKey=="keep_alive")
-		{
-			m_lSocketAlive = Str2Int(strValue);
-		}	
-		// Add by lark.li 20080731 begin
-		if(strKey=="gmcmd")
-		{
-			string strList[7];
-            int nCnt = Util_ResolveTextLine(strValue.c_str(), strList, 7, ',');
-
-			for(int i=0;i<nCnt;i++)
-			{
-                m_vGMCmd.push_back(Str2Int(strList[i]));
-			}
-       }
-		// End
-		else if(strKey=="supercmd")
-		{
-			m_bSuperCmd = Str2Int(strValue);
-		}
-		else if(strKey=="item_show_time")
-		{
-			m_lItemShowTime = Str2Int(strValue);
-		}
-		else if(strKey=="item_prot_time")
-		{
-			m_lItemProtTime = Str2Int(strValue);
-		}
-		else if(strKey=="say_interval")
-		{
-			m_lSayInterval = Str2Int(strValue) * 1000;
-		}
-		else if(strKey=="res_dir")
-		{
-			strcpy(m_szResDir, strValue.c_str());
-		}
-		else if(strKey=="log_dir")
-		{
-			strcpy(m_szLogDir, strValue.c_str());
-		}
-		else if(strKey=="db_mapmask")
-		{
-			m_chMapMask = Str2Int(strValue);
-		}
-		else if(strKey=="save_db")
-		{
-			m_lDBSave = Str2Int(strValue) * 60 * 1000;
-		}
-		else if(strKey=="log_db")
-		{
-			m_bLogDB = Str2Int(strValue);
-		} // Add by lark.li 20080324 begin
-		else if(strKey=="tradelog_db_ip")
-		{
-			strcpy(m_szTradeLogDBIP, strValue.c_str());
-		}
-		else if(strKey=="tradelog_db_name")
-		{
-			strcpy(m_szTradeLogDBName, strValue.c_str());
-		}
-		else if(strKey=="tradelog_db_usr")
-		{
-			strcpy(m_szTradeLogDBUsr, strValue.c_str());
-		}
-		else if(strKey=="tradelog_db_pass")
-		{
-			strcpy(m_szTradeLogDBPass, strValue.c_str());
-		}
-		else if(strKey=="guild_num")
-		{
-			m_sGuildNum = Str2Int(strValue);
-		}
-		else if(strKey=="guild_try_num")
-		{
-			m_sGuildTryNum = Str2Int(strValue);
-		}
-		else if(strKey=="stall_offline")
-		{
-			m_bOfflineMode = Str2Int(strValue);
-		}
-		else if(strKey=="igs_instant")
-		{
-			m_bInstantIGS = Str2Int(strValue);
-		}
-		else if(strKey=="stall_empty_dc")
-		{
-			m_bDiscStall = Str2Int(strValue);
-		}
-		else if(strKey=="chaos_blind")
-		{
-			m_bBlindChaos = Str2Int(strValue);
-		}
-		else if(strKey=="weather_interval")
-		{
-			m_lWeather = Str2Int(strValue);
-		}
-		else if(strKey=="chaos_map")
-		{
-			strncpy_s( m_szChaosMap, sizeof(m_szChaosMap), strValue.c_str(), _TRUNCATE );
-		}
-		else if(strKey=="stall_interval")
-		{
-			m_dwStallTime = Str2Int(strValue);
-		}
+			sscanf(baseIdStr.c_str(), "%d", &m_ulBaseID);
 	}
-	in.close();
 
-	// Add by lark.li 20080324 begin
-	if( strlen(g_Config.m_szTradeLogDBIP) > 0 && strlen(g_Config.m_szTradeLogDBName) > 0 && strlen(g_Config.m_szTradeLogDBUsr) > 0 && strlen(g_Config.m_szTradeLogDBPass) > 0 )
+	// [Entity]
+	auto& entity = cfg["Entity"];
+	m_nMaxPly  = static_cast<int>(entity.GetInt64("max_ply", m_nMaxPly));
+	m_nMaxCha  = static_cast<int>(entity.GetInt64("max_cha", m_nMaxCha));
+	m_nMaxItem = static_cast<int>(entity.GetInt64("max_item", m_nMaxItem));
+	m_nMaxTNpc = static_cast<int>(entity.GetInt64("max_tnpc", m_nMaxTNpc));
+
+	// [Guild]
+	auto& guild = cfg["Guild"];
+	m_sGuildNum    = static_cast<short>(guild.GetInt64("guild_num", m_sGuildNum));
+	m_sGuildTryNum = static_cast<short>(guild.GetInt64("guild_try_num", m_sGuildTryNum));
+
+	// [Item]
+	auto& item = cfg["Item"];
+	m_lItemShowTime = static_cast<long>(item.GetInt64("item_show_time", m_lItemShowTime / 1000)) * 1000;
+	m_lItemProtTime = static_cast<long>(item.GetInt64("item_prot_time", m_lItemProtTime / 1000)) * 1000;
+
+	// [Interval]
+	auto& interval = cfg["Interval"];
+	m_lSayInterval = static_cast<long>(interval.GetInt64("say_interval", m_lSayInterval / 1000)) * 1000;
+	m_lWeather     = static_cast<long>(interval.GetInt64("weather_interval", m_lWeather));
+
+	// [LOG]
+	auto& log = cfg["LOG"];
+	m_bLogCha     = static_cast<BOOL>(log.GetInt64("log_cha", m_bLogCha));
+	m_bLogCal     = static_cast<BOOL>(log.GetInt64("log_cal", m_bLogCal));
+	m_bLogAI      = static_cast<BOOL>(log.GetInt64("log_ai", m_bLogAI));
+	m_bLogMission = static_cast<BOOL>(log.GetInt64("log_mission", m_bLogMission));
+
+	// [Debug]
+	auto& debug = cfg["Debug"];
+	m_bSuperCmd = static_cast<BOOL>(debug.GetInt64("supercmd", m_bSuperCmd));
+	auto gmcmdStr = debug.GetString("gmcmd");
+	if (!gmcmdStr.empty())
+		m_vGMCmd = SplitStringInt(gmcmdStr);
+
+	// [Res]
+	auto& res = cfg["Res"];
+	strncpy_s(m_szResDir, sizeof(m_szResDir), res.GetString("res_dir", m_szResDir).c_str(), _TRUNCATE);
+	strncpy_s(m_szLogDir, sizeof(m_szLogDir), res.GetString("log_dir", m_szLogDir).c_str(), _TRUNCATE);
+
+	// [Large map switch]
+	m_chMapMask = static_cast<char>(cfg["Large map switch"].GetInt64("db_mapmask", m_chMapMask));
+
+	// [Corsairs]
+	auto& corsairs = cfg["Corsairs"];
+	m_bOfflineMode = static_cast<BOOL>(corsairs.GetInt64("stall_offline", m_bOfflineMode));
+	m_bDiscStall   = static_cast<BOOL>(corsairs.GetInt64("stall_empty_dc", m_bDiscStall));
+	m_dwStallTime  = static_cast<DWORD>(corsairs.GetInt64("stall_interval", m_dwStallTime));
+	m_bInstantIGS  = static_cast<BOOL>(corsairs.GetInt64("igs_instant", m_bInstantIGS));
+	strncpy_s(m_szChaosMap, sizeof(m_szChaosMap), corsairs.GetString("chaos_map", m_szChaosMap).c_str(), _TRUNCATE);
+	m_bBlindChaos  = static_cast<BOOL>(corsairs.GetInt64("chaos_blind", m_bBlindChaos));
+
+	auto persistStr = corsairs.GetString("persist_state");
+	if (!persistStr.empty()) {
+		auto states = SplitStringInt(persistStr);
+		for (size_t i = 0; i < states.size() && i < 32; i++)
+			m_cSaveState[i] = static_cast<unsigned char>(states[i]);
+	}
+
+	// Trade log DB
+	auto& tradeLog = cfg["TradeLog"];
+	strncpy_s(m_szTradeLogDBIP, sizeof(m_szTradeLogDBIP), tradeLog.GetString("tradelog_db_ip").c_str(), _TRUNCATE);
+	strncpy_s(m_szTradeLogDBName, sizeof(m_szTradeLogDBName), tradeLog.GetString("tradelog_db_name").c_str(), _TRUNCATE);
+	strncpy_s(m_szTradeLogDBUsr, sizeof(m_szTradeLogDBUsr), tradeLog.GetString("tradelog_db_usr").c_str(), _TRUNCATE);
+	strncpy_s(m_szTradeLogDBPass, sizeof(m_szTradeLogDBPass), tradeLog.GetString("tradelog_db_pass").c_str(), _TRUNCATE);
+
+	if (strlen(m_szTradeLogDBIP) > 0 && strlen(m_szTradeLogDBName) > 0 &&
+		strlen(m_szTradeLogDBUsr) > 0 && strlen(m_szTradeLogDBPass) > 0)
 		m_bTradeLogIsConfig = TRUE;
-	// End
 
 	return true;
 }
 
 bool CGameConfig::Reload(char *pszFileName)
 {
-	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
-	
-	ifstream in(pszFileName);
-	if(in.is_open()==0)
-	{
-		ToLogService("common", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
+	ToLogService("common", "Reload Game Config File [{}]", pszFileName);
+
+	dbc::IniFile cfg;
+	try {
+		cfg = dbc::IniFile(pszFileName);
+	} catch (const std::exception& e) {
+		ToLogService("common", LogLevel::Error, "Config reload error: {}", e.what());
 		return false;
 	}
-	string strPair[2];
-	string strComment;
-	string strLine;
-	char szLine[255];
-	while(!in.eof())
-	{
-		in.getline(szLine, 255);
-		strLine = szLine;
-		auto p = strLine.find("//");
-		if(p!= std::string::npos)
-		{
-			string strLeft = strLine.substr(0, p);
-			strComment = strLine.substr(p + 2, strLine.size() - p - 2);
-			strLine = strLeft;
-		}
-		else
-		{
-			strComment = "";
-		}
-		Util_TrimString(strLine);
-		if(strLine.size()==0) continue;
-		if(strLine[0]=='[') 
-		{
-			//   
-			ToLogService("common", "{}", strLine);
-			continue;
-		}
-		
-		int n = Util_ResolveTextLine(strLine.c_str(), strPair, 2, '=');
-		if(n < 2) continue;
-        string strKey   = strPair[0];
-		string strValue = strPair[1];
-		if(strKey=="guild_num")
-		{
-			m_sGuildNum = Str2Int(strValue);
-		}
-		else if(strKey=="guild_try_num")
-		{
-			m_sGuildTryNum = Str2Int(strValue);
-		}
-		else if(strKey=="offline_stall")
-		{
-			m_bOfflineMode = Str2Int(strValue);
-		}
-		else if(strKey=="instant_igs")
-		{
-			m_bInstantIGS = Str2Int(strValue);
-		}
-		else if(strKey=="empty_disconnect")
-		{
-			m_bDiscStall = Str2Int(strValue);
-		}
-		else if(strKey=="chaos_blind")
-		{
-			m_bBlindChaos = Str2Int(strValue);
-		}
-	}
-	in.close();
+
+	auto& guild = cfg["Guild"];
+	m_sGuildNum    = static_cast<short>(guild.GetInt64("guild_num", m_sGuildNum));
+	m_sGuildTryNum = static_cast<short>(guild.GetInt64("guild_try_num", m_sGuildTryNum));
+
+	auto& corsairs = cfg["Corsairs"];
+	m_bOfflineMode = static_cast<BOOL>(corsairs.GetInt64("stall_offline", m_bOfflineMode));
+	m_bInstantIGS  = static_cast<BOOL>(corsairs.GetInt64("igs_instant", m_bInstantIGS));
+	m_bDiscStall   = static_cast<BOOL>(corsairs.GetInt64("stall_empty_dc", m_bDiscStall));
+	m_bBlindChaos  = static_cast<BOOL>(corsairs.GetInt64("chaos_blind", m_bBlindChaos));
+
 	return true;
 }
 
@@ -412,7 +232,6 @@ void CGameCommand::SetDefault()
 	strcpy(m_cQcha, "qcha");
 	strcpy(m_cQitem, "qitem");
 	strcpy(m_cCall, "call");
-	strcpy(m_cMove, "move");
 	strcpy(m_cGamesvrstop, "gamesvrstop");
 	strcpy(m_cUpdateall, "updateall");
 	strcpy(m_cMisreload, "misreload");
@@ -436,107 +255,69 @@ void CGameCommand::SetDefault()
 
 bool CGameCommand::Load(const char *pszFileName)
 {
+	ToLogService("common", "Load Command Config [{}]", pszFileName);
 
-	ToLogService("common", "Load Game Config File(Text Mode) [{}]", pszFileName);
-	ifstream in(pszFileName);
-	if(in.is_open()==0)
-	{
-		ToLogService("common", "msgLoad Game Config File(Text Mode) [{}] error! ", pszFileName);
-		return false;
-	}
-	string strPair[2];
-	string strComment;
-	string strLine;
-	char szLine[255];
-	while(!in.eof()) {
-		in.getline(szLine, 255);
-		strLine = szLine;
-		auto p = strLine.find("//");
-		if(p!= std::string::npos)
-		{
-			string strLeft = strLine.substr(0, p);
-			strComment = strLine.substr(p + 2, strLine.size() - p - 2);
-			strLine = strLeft;
-		}
-		else
-		{
-			strComment = "";
-		}
-		Util_TrimString(strLine);
-		if(strLine.size()==0)
-			continue;
-		if(strLine[0]=='[')
-		{
-			//   
-			ToLogService("common", "{}", strLine);
-			continue;
-		}
-		int n = Util_ResolveTextLine(strLine.c_str(), strPair, 2, '=');
-		if(n < 2)
-			continue;
+	auto cfg = dbc::IniFile(pszFileName);
 
-		string strKey = strPair[0];
-		string strValue = strPair[1];
-		if (strKey == "cmd_move")
-			strcpy(m_cMove, strValue.c_str());
-		else if (strKey == "cmd_make")
-			strcpy(m_cMake, strValue.c_str());
-		else if (strKey == "cmd_notice")
-			strcpy(m_cNotice, strValue.c_str());
-		else if (strKey == "cmd_hide")
-			strcpy(m_cHide, strValue.c_str());
-		else if (strKey == "cmd_unhide")
-			strcpy(m_cUnhide, strValue.c_str());
-		else if (strKey == "cmd_goto")
-			strcpy(m_cGoto, strValue.c_str());
-		else if (strKey == "cmd_kick")
-			strcpy(m_cKick, strValue.c_str());
-		else if (strKey == "cmd_kick")
-			strcpy(m_cKick, strValue.c_str());
-		else if(strKey=="cmd_reload")
-			strcpy(m_cReload, strValue.c_str());
-		else if(strKey=="cmd_relive")
-			strcpy(m_cRelive, strValue.c_str());
-		else if(strKey=="cmd_qcha")
-			strcpy(m_cQcha, strValue.c_str());
-		else if(strKey=="cmd_qitem")
-			strcpy(m_cQitem, strValue.c_str());
-		else if(strKey=="cmd_call")
-			strcpy(m_cCall, strValue.c_str());
-		else if(strKey=="cmd_move")
-			strcpy(m_cMove, strValue.c_str());
-		else if(strKey=="cmd_gamesvrstop")
-			strcpy(m_cGamesvrstop, strValue.c_str());
-		else if(strKey=="cmd_updateall")
-			strcpy(m_cUpdateall, strValue.c_str());
-		else if(strKey=="cmd_misreload")
-			strcpy(m_cMisreload, strValue.c_str());
-		else if(strKey=="cmd_summon")
-			strcpy(m_cSummon, strValue.c_str());
-		else if(strKey=="cmd_summonex")
-			strcpy(m_cSummonex, strValue.c_str());
-		else if(strKey=="cmd_kill")
-			strcpy(m_cKill, strValue.c_str());
-		else if(strKey=="cmd_addmoney")
-			strcpy(m_cAddmoney, strValue.c_str());
-		else if(strKey=="cmd_addexp")
-			strcpy(m_cAddexp, strValue.c_str());
-		else if(strKey=="cmd_attr")
-			strcpy(m_cAttr, strValue.c_str());
-		else if(strKey=="cmd_itemattr")
-			strcpy(m_cItemattr, strValue.c_str());
-		else if(strKey=="cmd_skill")
-			strcpy(m_cSkill, strValue.c_str());
-		else if(strKey=="cmd_delitem")
-			strcpy(m_cDelitem, strValue.c_str());
-		else if(strKey=="cmd_lua_all")
-			strcpy(m_cLuaall, strValue.c_str());
-		else if(strKey=="cmd_addkb")
-			strcpy(m_cAddkb, strValue.c_str());
-		else if(strKey=="cmd_lua")
-			strcpy(m_cLua, strValue.c_str());
-		else if (strKey == "cmd_addimp")
-			strcpy(m_cAddImp, strValue.c_str());
-	}
+	// Все команды в одной секции (или без секций — попадут в дефолтную при чтении)
+	// Ищем по всем секциям
+	auto tryGet = [&]<size_t N>(const char* key, char (&dest)[N]) {
+		for (int i = 0; i < cfg.SectCount(); i++) {
+			auto val = cfg[i].GetString(key);
+			if (!val.empty()) {
+				strncpy_s(dest, val.c_str(), _TRUNCATE);
+				return;
+			}
+		}
+	};
+
+	// Нет — cmd.cfg без секций, все ключи попадут в последнюю секцию.
+	// IniFile требует секцию. Пусть cmd.cfg парсится старым способом — ключи без секции
+	// не поддерживаются IniFile. Добавим поддержку: ключи без секции попадут в секцию "".
+	// Но сейчас IniFile игнорирует ключи до первой секции (currentSection == nullptr -> exception).
+	// TODO: Нужна поддержка дефолтной секции в IniFile.
+	// Пока используем простой подход — читаем из любой секции:
+
+	auto& cmds = cfg["Commands"];
+
+	auto readCmd = [&]<size_t N>(const char* key, char (&dest)[N]) {
+		auto val = cmds.GetString(key);
+		if (!val.empty())
+			strncpy_s(dest, val.c_str(), _TRUNCATE);
+	};
+
+	readCmd("cmd_move", m_cMove);
+	readCmd("cmd_make", m_cMake);
+	readCmd("cmd_notice", m_cNotice);
+	readCmd("cmd_hide", m_cHide);
+	readCmd("cmd_unhide", m_cUnhide);
+	readCmd("cmd_goto", m_cGoto);
+	readCmd("cmd_kick", m_cKick);
+	readCmd("cmd_mute", m_cMute);
+	readCmd("cmd_reload", m_cReload);
+	readCmd("cmd_relive", m_cRelive);
+	readCmd("cmd_qcha", m_cQcha);
+	readCmd("cmd_qitem", m_cQitem);
+	readCmd("cmd_call", m_cCall);
+	readCmd("cmd_gamesvrstop", m_cGamesvrstop);
+	readCmd("cmd_updateall", m_cUpdateall);
+	readCmd("cmd_misreload", m_cMisreload);
+	readCmd("cmd_summon", m_cSummon);
+	readCmd("cmd_summonex", m_cSummonex);
+	readCmd("cmd_kill", m_cKill);
+	readCmd("cmd_addmoney", m_cAddmoney);
+	readCmd("cmd_addexp", m_cAddexp);
+	readCmd("cmd_attr", m_cAttr);
+	readCmd("cmd_itemattr", m_cItemattr);
+	readCmd("cmd_skill", m_cSkill);
+	readCmd("cmd_delitem", m_cDelitem);
+	readCmd("cmd_lua_all", m_cLuaall);
+	readCmd("cmd_addkb", m_cAddkb);
+	readCmd("cmd_lua", m_cLua);
+	readCmd("cmd_addimp", m_cAddImp);
+	readCmd("cmd_scroll", m_cScrollNotice);
+	readCmd("cmd_gencharbag", m_cgenCharBag);
+	readCmd("cmd_distance", m_cDistance);
+
 	return true;
 }

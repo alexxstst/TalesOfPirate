@@ -57,7 +57,7 @@
     <ClCompile>
       <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\server\Sdk\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\enclib\include;$(ProjectDir)..\..\ICUHelper\inc;$(ProjectDir)..\..\icu\include\;$(ProjectDir)..\..\cryptopp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\server\Sdk\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\enclib\include;$(ProjectDir)..\..\ICUHelper\inc;$(ProjectDir)..\..\icu\include\;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -80,7 +80,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\server\Sdk\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\enclib\include;$(ProjectDir)..\..\ICUHelper\inc;$(ProjectDir)..\..\icu\include\;$(ProjectDir)..\..\cryptopp\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\server\Sdk\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\enclib\include;$(ProjectDir)..\..\ICUHelper\inc;$(ProjectDir)..\..\icu\include\;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -105,25 +105,64 @@
     <ClCompile Include="..\src\CharacterRecord.cpp" />
     <ClCompile Include="..\src\CommFunc.cpp" />
     <ClCompile Include="..\src\EventRecord.cpp" />
-    <ClCompile Include="..\src\ForgeRecord.cpp" />
     <ClCompile Include="..\src\HairRecord.cpp" />
     <ClCompile Include="..\src\ItemAttr.cpp" />
     <ClCompile Include="..\src\ItemContent.cpp" />
     <ClCompile Include="..\src\ItemRecord.cpp" />
-    <ClCompile Include="..\src\JobInitEquip.cpp" />
     <ClCompile Include="..\src\Kitbag.cpp" />
     <ClCompile Include="..\src\LevelRecord.cpp" />
     <ClCompile Include="..\src\LifeLvRecord.cpp" />
     <ClCompile Include="..\src\MonRefRecord.cpp" />
     <ClCompile Include="..\src\NpcRecord.cpp" />
     <ClCompile Include="..\src\SailLvRecord.cpp" />
-    <ClCompile Include="..\src\ShipSet.cpp" />
     <ClCompile Include="..\src\SkillRecord.cpp" />
     <ClCompile Include="..\src\SkillStateRecord.cpp" />
     <ClCompile Include="..\src\StringLib.cpp" />
     <ClCompile Include="..\src\SwitchMapRecord.cpp" />
     <ClCompile Include="..\src\TableData.cpp" />
     <ClCompile Include="..\src\TerrainAttrib.cpp" />
+    <ClCompile Include="..\src\SqliteDatabase.cpp" />
+    <ClCompile Include="..\src\ItemRecordStore.cpp" />
+    <ClCompile Include="..\src\LevelRecordStore.cpp" />
+    <ClCompile Include="..\src\SailLvRecordStore.cpp" />
+    <ClCompile Include="..\src\LifeLvRecordStore.cpp" />
+    <ClCompile Include="..\src\ChaRecordStore.cpp" />
+    <ClCompile Include="..\src\SkillRecordStore.cpp" />
+    <ClCompile Include="..\src\SkillStateRecordStore.cpp" />
+    <ClCompile Include="..\src\HairRecordStore.cpp" />
+    <ClCompile Include="..\src\ForgeRecordStore.cpp" />
+    <ClCompile Include="..\src\JobEquipRecordStore.cpp" />
+    <ClCompile Include="..\src\AreaRecordStore.cpp" />
+    <ClCompile Include="..\src\ShipRecordStore.cpp" />
+    <ClCompile Include="..\src\ShipPartRecordStore.cpp" />
+    <ClCompile Include="..\src\MusicRecordStore.cpp" />
+    <ClCompile Include="..\src\EventSoundRecordStore.cpp" />
+    <ClCompile Include="..\src\EffectRecordStore.cpp" />
+    <ClCompile Include="..\src\ShadeRecordStore.cpp" />
+    <ClCompile Include="..\src\SceneObjRecordStore.cpp" />
+    <ClCompile Include="..\src\PoseRecordStore.cpp" />
+    <ClCompile Include="..\src\ChaCreateRecordStore.cpp" />
+    <ClCompile Include="..\src\MapRecordStore.cpp" />
+    <ClCompile Include="..\src\EventRecordStore.cpp" />
+    <ClCompile Include="..\src\ServerRecordStore.cpp" />
+    <ClCompile Include="..\src\NotifyRecordStore.cpp" />
+    <ClCompile Include="..\src\ChatIconRecordStore.cpp" />
+    <ClCompile Include="..\src\ItemTypeRecordStore.cpp" />
+    <ClCompile Include="..\src\ItemPreRecordStore.cpp" />
+    <ClCompile Include="..\src\TerrainRecordStore.cpp" />
+    <ClCompile Include="..\src\EffParamRecordStore.cpp" />
+    <ClCompile Include="..\src\GroupParamRecordStore.cpp" />
+    <ClCompile Include="..\src\ItemRefineRecordStore.cpp" />
+    <ClCompile Include="..\src\ItemRefineEffectRecordStore.cpp" />
+    <ClCompile Include="..\src\MonsterListRecordStore.cpp" />
+    <ClCompile Include="..\src\NPCListRecordStore.cpp" />
+    <ClCompile Include="..\src\AssetDatabase.cpp" />
+    <ClCompile Include="..\..\Server\Sdk\src\IniFile.cpp" />
+    <ClCompile Include="..\..\sqlite3\sqlite3.c">
+      <CompileAs>CompileAsC</CompileAs>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\AreaRecord.h" />
@@ -166,6 +205,64 @@
     <ClInclude Include="..\include\TableData.h" />
     <ClInclude Include="..\include\TerrainAttrib.h" />
     <ClInclude Include="..\include\ToolClass.h" />
+    <ClInclude Include="..\include\SqliteDatabase.h" />
+    <ClInclude Include="..\include\GameRecordset.h" />
+    <ClInclude Include="..\include\ItemRecordStore.h" />
+    <ClInclude Include="..\include\LevelRecordStore.h" />
+    <ClInclude Include="..\include\SailLvRecordStore.h" />
+    <ClInclude Include="..\include\LifeLvRecordStore.h" />
+    <ClInclude Include="..\include\ChaRecordStore.h" />
+    <ClInclude Include="..\include\SkillRecordStore.h" />
+    <ClInclude Include="..\include\SkillStateRecordStore.h" />
+    <ClInclude Include="..\include\HairRecordStore.h" />
+    <ClInclude Include="..\include\ForgeRecordStore.h" />
+    <ClInclude Include="..\include\JobEquipRecordStore.h" />
+    <ClInclude Include="..\include\AreaRecordStore.h" />
+    <ClInclude Include="..\include\ShipRecordStore.h" />
+    <ClInclude Include="..\include\ShipPartRecordStore.h" />
+    <ClInclude Include="..\include\MusicRecord.h" />
+    <ClInclude Include="..\include\MusicRecordStore.h" />
+    <ClInclude Include="..\include\EventSoundRecord.h" />
+    <ClInclude Include="..\include\EventSoundRecordStore.h" />
+    <ClInclude Include="..\include\EffectRecord.h" />
+    <ClInclude Include="..\include\EffectRecordStore.h" />
+    <ClInclude Include="..\include\ShadeRecord.h" />
+    <ClInclude Include="..\include\ShadeRecordStore.h" />
+    <ClInclude Include="..\include\SceneObjRecord.h" />
+    <ClInclude Include="..\include\SceneObjRecordStore.h" />
+    <ClInclude Include="..\include\PoseRecord.h" />
+    <ClInclude Include="..\include\PoseRecordStore.h" />
+    <ClInclude Include="..\include\ChaCreateRecord.h" />
+    <ClInclude Include="..\include\ChaCreateRecordStore.h" />
+    <ClInclude Include="..\include\MapRecord.h" />
+    <ClInclude Include="..\include\MapRecordStore.h" />
+    <ClInclude Include="..\include\EventRecordStore.h" />
+    <ClInclude Include="..\include\ServerRecord.h" />
+    <ClInclude Include="..\include\ServerRecordStore.h" />
+    <ClInclude Include="..\include\NotifyRecord.h" />
+    <ClInclude Include="..\include\NotifyRecordStore.h" />
+    <ClInclude Include="..\include\ChatIconRecord.h" />
+    <ClInclude Include="..\include\ChatIconRecordStore.h" />
+    <ClInclude Include="..\include\ItemTypeRecord.h" />
+    <ClInclude Include="..\include\ItemTypeRecordStore.h" />
+    <ClInclude Include="..\include\ItemPreRecord.h" />
+    <ClInclude Include="..\include\ItemPreRecordStore.h" />
+    <ClInclude Include="..\include\TerrainRecord.h" />
+    <ClInclude Include="..\include\TerrainRecordStore.h" />
+    <ClInclude Include="..\include\EffParamRecord.h" />
+    <ClInclude Include="..\include\EffParamRecordStore.h" />
+    <ClInclude Include="..\include\GroupParamRecord.h" />
+    <ClInclude Include="..\include\GroupParamRecordStore.h" />
+    <ClInclude Include="..\include\ItemRefineRecord.h" />
+    <ClInclude Include="..\include\ItemRefineRecordStore.h" />
+    <ClInclude Include="..\include\ItemRefineEffectRecord.h" />
+    <ClInclude Include="..\include\ItemRefineEffectRecordStore.h" />
+    <ClInclude Include="..\include\NPCDataRecord.h" />
+    <ClInclude Include="..\include\MonsterListRecordStore.h" />
+    <ClInclude Include="..\include\NPCListRecordStore.h" />
+    <ClInclude Include="..\include\AssetDatabase.h" />
+    <ClInclude Include="..\..\Server\Sdk\Include\IniFile.h" />
+    <ClInclude Include="..\..\sqlite3\sqlite3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

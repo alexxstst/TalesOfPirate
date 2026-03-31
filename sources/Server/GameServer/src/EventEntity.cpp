@@ -44,7 +44,7 @@ namespace mission
 		}
 		else
 		{
-			strncpy( m_name, pRec->szName, 32 - 1 );
+			strncpy( m_name, pRec->szName.c_str(), 32 - 1 );
 		}
 
 		m_ID = g_pGameApp->m_Ident.GetID();
@@ -127,7 +127,7 @@ namespace mission
 				character.SystemNotice( RES_STRING(GM_EVENTENTITY_CPP_00002), m_sID );
 				return FALSE;
 			}
-			strcpy( szItem, pItem->szName );
+			strcpy( szItem, pItem->szName.c_str() );
 			if( character.GiveItem( m_sID, m_sNum, enumITEM_INST_TASK, enumSYN_KITBAG_FROM_NPC ) )
 			{
 				//character.SystemNotice( "%d%s!", m_sNum, szItem );

@@ -14,7 +14,7 @@ class CGameConfig
 public:	
 	CGameConfig();
 	
-	void	Load(const char *pszFileName); // 
+	void	Load(); // Загрузить конфиг из g_SystemIni
 	void	SetDefault();  //
 	void	SetMoveClient( bool v ); //
 	

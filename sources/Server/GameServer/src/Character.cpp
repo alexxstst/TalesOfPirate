@@ -17,7 +17,8 @@
 #include "CommFunc.h"
 #include "Player.h"
 #include "ItemAttr.h"
-#include "JobInitEquip.h"  
+#include "JobInitEquip.h"
+#include "JobEquipRecordStore.h"  
 #include "GameAppNet.h"
 #include "SkillStateRecord.h"
 #include "EventHandler.h"
@@ -2577,8 +2578,8 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 
 	if( !pItem->chIsTrade || !m_CKitbag.GetGridContByID(byIndex)->GetInstAttr(ITEMATTR_TRADABLE))
 	{
-		//SystemNotice( "%s!", pItem->szName );
-		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00006), pItem->szName );
+		//SystemNotice( "%s!", pItem->szName.c_str() );
+		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00006), pItem->szName.c_str() );
 		return FALSE;
 	}
 
@@ -2602,8 +2603,8 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 
 	if( m_CKitbag.GetNum(byIndex) < byCount )
 	{
-		//SystemNotice( "%s(%d)(%d)!", pItem->szName, byCount, wItemID );
-		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00008), pItem->szName, byCount, wItemID );
+		//SystemNotice( "%s(%d)(%d)!", pItem->szName.c_str(), byCount, wItemID );
+		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00008), pItem->szName.c_str(), byCount, wItemID );
 		return FALSE;
 	}
 	
@@ -2623,8 +2624,8 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 
 		if( !BoatClear( m_CKitbag.GetDBParam( enumITEMDBP_INST_ID, byIndex ) ) )
 		{
-			//SystemNotice( "%s!", pItem->szName );			
-			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00010), pItem->szName );			
+			//SystemNotice( "%s!", pItem->szName.c_str() );			
+			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00010), pItem->szName.c_str() );			
 			return enumITEMOPT_ERROR_UNUSE;
 		}
 	}
@@ -2645,10 +2646,10 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	SynAttr( enumATTRSYN_TRADE );
 	SyncBoatAttr(enumATTRSYN_TRADE);
 	
-	//SystemNotice( "%d%s(%d)(%d)!", byCount, pItem->szName, dwMoney, dwCharMoney );
-	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName, dwMoney, dwCharMoney );
+	//SystemNotice( "%d%s(%d)(%d)!", byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );
+	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );
 	char szLog[128] = "";
-	sprintf( szLog, "%d%s", byCount, pItem->szName );
+	sprintf( szLog, "%d%s", byCount, pItem->szName.c_str() );
 	ToLogService("trade", "[CHA_SELL] {} : {}", GetName(), szLog);
 
 	// 
@@ -2764,7 +2765,7 @@ BOOL CCharacter::SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMon
 	if (byCount > pItem->nPileMax)
 	{
 
-		BickerNotice("%s comes in Stacks of %d Only", pItem->szName, pItem->nPileMax);
+		BickerNotice("%s comes in Stacks of %d Only", pItem->szName.c_str(), pItem->nPileMax);
 		return FALSE;
 	}
 	
@@ -2781,8 +2782,8 @@ BOOL CCharacter::SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMon
 	{
 		if( !pItem->GetIsPile() )
 		{
-			//SystemNotice( "This item"% s "cannot be stacked!", pItem->szName );
-			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00017), pItem->szName );
+			//SystemNotice( "This item"% s "cannot be stacked!", pItem->szName.c_str() );
+			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00017), pItem->szName.c_str() );
 			return FALSE;
 		}
 	}
@@ -2790,8 +2791,8 @@ BOOL CCharacter::SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMon
 	DWORD dwCharMoney = (long)getAttr( ATTR_GD );
 	if( dwCharMoney < dwMoney )
 	{
-		//SystemNotice( "Your money (% d) is not enough to purchase% d items "% s"! Unit price (% d)", dwCharMoney,byCount, pItem->szName, pItem->lPrice );
-		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00018), dwCharMoney,byCount, pItem->szName, pItem->lPrice );
+		//SystemNotice( "Your money (% d) is not enough to purchase% d items "% s"! Unit price (% d)", dwCharMoney,byCount, pItem->szName.c_str(), pItem->lPrice );
+		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00018), dwCharMoney,byCount, pItem->szName.c_str(), pItem->lPrice );
 		return FALSE;
 	}
 	//fix money npc exploit >mothannakh<
@@ -2853,10 +2854,10 @@ BOOL CCharacter::SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMon
 	SynAttr( enumATTRSYN_TRADE );
 	SyncBoatAttr(enumATTRSYN_TRADE);
 
-	//SystemNotice( "You have purchased% d "% s" and spent (% d) money! Balance (%d)", sNum, pItem->szName, dwMoney, dwCharMoney );
-	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName, dwMoney, dwCharMoney );
+	//SystemNotice( "You have purchased% d "% s" and spent (% d) money! Balance (%d)", sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
+	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
 	char szLog[128] = "";
-	sprintf( szLog, "%d??%s", sNum, pItem->szName );
+	sprintf( szLog, "%d??%s", sNum, pItem->szName.c_str() );
 	ToLogService("trade", "[CHA_BUY] {} : {}", GetName(), szLog);
 
 	// Database save
@@ -2958,8 +2959,8 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 
 				if( pItem->sType == enumItemTypeMission )
 				{
-					//SystemNotice( "Quest prop "% s" cannot be traded!", pItem->szName );
-					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00021), pItem->szName );
+					//SystemNotice( "Quest prop "% s" cannot be traded!", pItem->szName.c_str() );
+					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00021), pItem->szName.c_str() );
 					return FALSE;
 				}
 
@@ -2972,8 +2973,8 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 
 				if( Bag.GetNum(byIndex) < byCount )
 				{
-					//SystemNotice( "The quantity (% d) of the sale item "% s" is insufficient, the total number (%d)!", pItem->szName, byCount, wItemID );
-					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00008), pItem->szName, byCount, wItemID );
+					//SystemNotice( "The quantity (% d) of the sale item "% s" is insufficient, the total number (%d)!", pItem->szName.c_str(), byCount, wItemID );
+					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00008), pItem->szName.c_str(), byCount, wItemID );
 					return FALSE;
 				}
 
@@ -2982,8 +2983,8 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 				{
 					if( !BoatClear( Bag.GetDBParam( enumITEMDBP_INST_ID, byIndex ) ) )
 					{
-						//SystemNotice( "Failed to sell "% s", you are using the boat!", pItem->szName );
-						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00010), pItem->szName );
+						//SystemNotice( "Failed to sell "% s", you are using the boat!", pItem->szName.c_str() );
+						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00010), pItem->szName.c_str() );
 						return enumITEMOPT_ERROR_UNUSE;
 					}
 				}
@@ -3020,11 +3021,11 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 				SaveAssets();
 				pBoat->LogAssets(enumLASSETS_TRADE);
 
-				//SystemNotice( "You sold% d "% s" items and got (% d) money, total(%d)!", byCount, pItem->szName, dwMoney, dwCharMoney );				
-				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName, dwMoney, dwCharMoney );				
+				//SystemNotice( "You sold% d "% s" items and got (% d) money, total(%d)!", byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );				
+				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );				
 				
 				char szLog[128] = "";
-				sprintf( szLog, "%d??%s", byCount, pItem->szName );
+				sprintf( szLog, "%d??%s", byCount, pItem->szName.c_str() );
 				ToLogService("trade", "[BOAT_SYS] {} : {}", GetName(), szLog);
 				return TRUE;
 			}
@@ -3075,7 +3076,7 @@ BOOL CCharacter::SafeBuyGoods( DWORD dwBoatID, WORD wItemID, BYTE byCount, BYTE 
 				if (byCount > pItem->nPileMax)
 				{
 
-					BickerNotice("%s comes in Stacks of %d Only", pItem->szName, pItem->nPileMax);
+					BickerNotice("%s comes in Stacks of %d Only", pItem->szName.c_str(), pItem->nPileMax);
 					return FALSE;
 				}
 				//
@@ -3090,8 +3091,8 @@ BOOL CCharacter::SafeBuyGoods( DWORD dwBoatID, WORD wItemID, BYTE byCount, BYTE 
 				{
 					if( !pItem->GetIsPile() )
 					{
-						//SystemNotice( "The item "% s" cannot be stacked!", pItem->szName );
-						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00017), pItem->szName );
+						//SystemNotice( "The item "% s" cannot be stacked!", pItem->szName.c_str() );
+						SystemNotice( RES_STRING(GM_CHARACTER_CPP_00017), pItem->szName.c_str() );
 						return FALSE;
 					}
 				}
@@ -3104,8 +3105,8 @@ BOOL CCharacter::SafeBuyGoods( DWORD dwBoatID, WORD wItemID, BYTE byCount, BYTE 
 				DWORD dwCharMoney = (long)getAttr( ATTR_GD );
 				if( dwCharMoney < dwMoney )
 				{
-					//SystemNotice( "Your money (% d) is not enough to purchase% d items "% s"!??(%d)", dwCharMoney,byCount, pItem->szName, dwPrice );
-					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00018), dwCharMoney,byCount, pItem->szName, dwPrice );
+					//SystemNotice( "Your money (% d) is not enough to purchase% d items "% s"!??(%d)", dwCharMoney,byCount, pItem->szName.c_str(), dwPrice );
+					SystemNotice( RES_STRING(GM_CHARACTER_CPP_00018), dwCharMoney,byCount, pItem->szName.c_str(), dwPrice );
 					return FALSE;
 				}				
 
@@ -3160,11 +3161,11 @@ BOOL CCharacter::SafeBuyGoods( DWORD dwBoatID, WORD wItemID, BYTE byCount, BYTE 
 				SaveAssets();
 				pBoat->LogAssets(enumLASSETS_TRADE);
 
-				//SystemNotice( "You have purchased% d "% s" and spent (% d) money! Balance (% d)", sNum, pItem->szName, dwMoney, dwCharMoney );
-				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName, dwMoney, dwCharMoney );
+				//SystemNotice( "You have purchased% d "% s" and spent (% d) money! Balance (% d)", sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
+				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
 				
 				char szLog[128] = "";
-				sprintf( szLog, "%d??%s", sNum, pItem->szName );
+				sprintf( szLog, "%d??%s", sNum, pItem->szName.c_str() );
 				ToLogService("trade", "[SYS_BOAT] {} : {}", GetName(), szLog);
 
 				return TRUE;
@@ -3270,10 +3271,10 @@ BOOL CCharacter::MakeItem( USHORT sItemID, USHORT sCount, USHORT& sItemPos, BYTE
 
 	sItemPos = sPushPos;
 	SynKitbagNew( enumSYN_KITBAG_SYSTEM );
-	//SystemNotice( "%s%d%s!", "", sCount, pItem->szName );
-	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), RES_STRING(GM_CHARACTER_CPP_00012), sCount, pItem->szName );
+	//SystemNotice( "%s%d%s!", "", sCount, pItem->szName.c_str() );
+	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), RES_STRING(GM_CHARACTER_CPP_00012), sCount, pItem->szName.c_str() );
 	char szLog[128] = "";
-	sprintf( szLog, "%d%s", sCount, pItem->szName );
+	sprintf( szLog, "%d%s", sCount, pItem->szName.c_str() );
 	ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 
 	return TRUE;
@@ -3434,7 +3435,7 @@ BOOL CCharacter::AddItem( USHORT sItemID, USHORT sCount, const char szName[], BY
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00029), sItemID );
 		return FALSE;
 	}
-	strncpy( szItem, pItem->szName,128 - 1 );//szItem128
+	strncpy( szItem, pItem->szName.c_str(),128 - 1 );//szItem128
 
 	if( GiveItem( sItemID, sCount, byAddType, bySoundType, isTradable, expiration, posID ) )
 	{
@@ -3583,7 +3584,7 @@ BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szNam
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00035), sItemID );
 		return FALSE;
 	}
-	strcpy( szItem, pItem->szName );
+	strcpy( szItem, pItem->szName.c_str() );
 	USHORT sSize = m_pCKitbagTmp->GetUseGridNum();
 	Short sIndex[defMAX_KBITEM_NUM_PER_TYPE][2];
 	memset( sIndex, 0, sizeof(Short)*sSize );
@@ -3666,13 +3667,13 @@ BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 		return FALSE;
 	}
 	///mothannakh fix// item name long string return false  ///
-	if (strlen(pItem->szName) > 128)
+	if (pItem->szName.size() > 128)
 	{
 		SystemNotice("Item Name too Long Pm GM !");
 		return false;
 	}
 	// exploit fix end --
-	strcpy( szItem, pItem->szName );
+	strcpy( szItem, pItem->szName.c_str() );
 	USHORT sSize = m_CKitbag.GetUseGridNum();
 	Short sIndex[defMAX_KBITEM_NUM_PER_TYPE][2];
 	memset( sIndex, 0, sizeof(Short)*sSize );
@@ -4165,8 +4166,8 @@ bool CCharacter::LearnSkill(Short sSkillID, Char chLv, bool bSetLv, bool bUsePoi
 	{
 		if (SAddSkill.chState == enumSUSTATE_ACTIVE) // 
 		{
-			g_luaAPI.Call(pCSkill->szInactive, static_cast<CCharacter*>(this), (int)chOldLv);
-			g_luaAPI.Call(pCSkill->szActive, static_cast<CCharacter*>(this), (int)chNewLv);
+			g_luaAPI.Call(pCSkill->szInactive.c_str(), static_cast<CCharacter*>(this), (int)chOldLv);
+			g_luaAPI.Call(pCSkill->szActive.c_str(), static_cast<CCharacter*>(this), (int)chNewLv);
 		}
 		GetPlyMainCha()->SynSkillBag(enumSYN_SKILLBAG_MODI);
 	}
@@ -4460,14 +4461,14 @@ bool CCharacter::AddSkillState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHa
 	{
 		if (uchOldLv != uchStateLv)
 		{
-			g_luaAPI.Call(pSSkillState->szSubState, static_cast<CCharacter*>(this), (int)uchOldLv);
-			g_luaAPI.Call(pSSkillState->szAddState, static_cast<CCharacter*>(this), (int)uchStateLv);
+			g_luaAPI.Call(pSSkillState->szSubState.c_str(), static_cast<CCharacter*>(this), (int)uchOldLv);
+			g_luaAPI.Call(pSSkillState->szAddState.c_str(), static_cast<CCharacter*>(this), (int)uchStateLv);
 		}
 		else
 			return false;
 	}
 	else
-		g_luaAPI.Call(pSSkillState->szAddState, static_cast<CCharacter*>(this), (int)uchStateLv);
+		g_luaAPI.Call(pSSkillState->szAddState.c_str(), static_cast<CCharacter*>(this), (int)uchStateLv);
 	BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, chEffType);
 
 	if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // 
@@ -4577,7 +4578,7 @@ bool CCharacter::DelSkillState(dbc::uChar uchStateID, bool bNotice)
 
 		Long	lOldHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 
-		g_luaAPI.Call(pSSkillState->szSubState, static_cast<CCharacter*>(this), (int)uchStateLv);
+		g_luaAPI.Call(pSSkillState->szSubState.c_str(), static_cast<CCharacter*>(this), (int)uchStateLv);
 
 		BeUseSkill(lOldHP, (long)m_CChaAttr.GetAttr(ATTR_HP), pCCha, chEffType);
 		if (lOldHP > 0 && m_CChaAttr.GetAttr(ATTR_HP) <= 0) // 
@@ -5098,13 +5099,13 @@ void CCharacter::SkillRefresh()
 				pCMainCha->m_sDefSkillNo = pSkillGrid->sID;
 			if (pSkillGrid->chState != enumSUSTATE_ACTIVE)
 			{
-				if (strcmp(pCSkillRecord->szActive, "0"))
+				if (pCSkillRecord->szActive != "0")
 				{
 					if (pCSkillRecord->chType == enumSKILL_PASSIVE) // ,
 						pCExecCha = pCMainCha;
 					else
 						pCExecCha = pCCtrlCha;
-					g_luaAPI.Call(pCSkillRecord->szActive, pCExecCha, (int)pSkillGrid->chLv);
+					g_luaAPI.Call(pCSkillRecord->szActive.c_str(), pCExecCha, (int)pSkillGrid->chLv);
 				}
 				pCSkillBag->SetState(pSkillGrid->sID, enumSUSTATE_ACTIVE);
 			}
@@ -5113,13 +5114,13 @@ void CCharacter::SkillRefresh()
 		{
 			if (pSkillGrid->chState != enumSUSTATE_INACTIVE)
 			{
-				if (strcmp(pCSkillRecord->szInactive, "0"))
+				if (pCSkillRecord->szInactive != "0")
 				{
 					if (pCSkillRecord->chType == enumSKILL_PASSIVE) // ,
 						pCExecCha = pCMainCha;
 					else
 						pCExecCha = pCCtrlCha;
-					g_luaAPI.Call(pCSkillRecord->szInactive, pCExecCha, (int)pSkillGrid->chLv);
+					g_luaAPI.Call(pCSkillRecord->szInactive.c_str(), pCExecCha, (int)pSkillGrid->chLv);
 				}
 				pCSkillBag->SetState(pSkillGrid->sID, enumSUSTATE_INACTIVE);
 			}
@@ -5247,7 +5248,7 @@ void CCharacter::SynLook(dbc::Char chLookType, bool verbose)
 
 void CCharacter::ChaInitEquip(void)
 {
-	CJobEquipRecord	*pCInitEquip = GetJobEquipRecordInfo((long)m_CChaAttr.GetAttr(ATTR_JOB));
+	CJobEquipRecord	*pCInitEquip = JobEquipRecordStore::Instance()->Get((int)m_CChaAttr.GetAttr(ATTR_JOB));
 	if (!pCInitEquip)
 		return;
 
@@ -7015,7 +7016,7 @@ void CCharacter::LogAssets(Char chLType)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+		sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 	}
     for (short i = 0; i < sItemTmpNum; i++)
 	{
@@ -7025,7 +7026,7 @@ void CCharacter::LogAssets(Char chLType)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 	}
 	//LG("", "%s(%s)%s %u%s, %s.\n", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), g_kitbag, g_kitbagTmp);
 	ToLogService("common", "player {}({}), {} operator; coin {}, kitbag {}, Tempkitbag {}.", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), static_cast<const char*>(g_kitbag), static_cast<const char*>(g_kitbagTmp));

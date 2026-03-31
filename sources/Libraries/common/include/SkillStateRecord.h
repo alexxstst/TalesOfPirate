@@ -9,6 +9,7 @@
 #define SKILLSTATERECORD_H
 
 #include <tchar.h>
+#include <string>
 #include "util.h"
 #include "TableData.h"
 
@@ -24,12 +25,12 @@ class CSkillStateRecord : public CRawDataInfo
 public:
 	// CSkillStateRecord();
 
-	char	chID;									// 
-	char	szName[defSKILLSTATE_NAME_LEN];			// 
-	short	sFrequency;								// 
-	char	szOnTransfer[defSKILLSTATE_SCRIPT_NAME];// 
-	char	szAddState[defSKILLSTATE_SCRIPT_NAME];	// 
-	char	szSubState[defSKILLSTATE_SCRIPT_NAME];	// 
+	char	chID;									//
+	std::string	szName;								//
+	short	sFrequency;								//
+	std::string	szOnTransfer;						//
+	std::string	szAddState;							//
+	std::string	szSubState;							//
 	char	chAddType;								// 
 	bool	bCanCancel;								// 
 	bool	bCanMove;								// 
@@ -59,7 +60,7 @@ public:
 	short	sDummy2;								// dummy
 	short	sIcon;									// ICON
 	char	szIcon[defSKILLSTATE_NAME_LEN][10];		// icons for pots per level 
-	char	szDesc[defSKILLSTATE_DESC_NAME_LEN];
+	std::string	szDesc;
 	int		lColour;
 public:
 	void	RefreshPrivateData();
@@ -71,56 +72,6 @@ public:
 
 };
 
-class CSkillStateRecordSet : public CRawDataSet
-{
-public:
-
-	static CSkillStateRecordSet* I() { return _Instance; }
-
-	CSkillStateRecordSet(int nIDStart, int nIDCnt, int nCol = 128)
-		:CRawDataSet(nIDStart, nIDCnt, nCol)
-	{
-		_Instance = this;
-		_Init();
-	}
-
-protected:
-
-	static CSkillStateRecordSet* _Instance; // , 
-
-	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
-	{
-		return new CSkillStateRecord[nCnt];
-	}
-
-	virtual void _DeleteRawDataArray()
-	{
-		delete[] (CSkillStateRecord*)_RawDataArray;
-	}
-
-	virtual int _GetRawDataInfoSize()
-	{
-		return sizeof(CSkillStateRecord);
-	}
-
-	virtual void*	_CreateNewRawData(CRawDataInfo *pInfo)
-	{
-		return NULL;
-	}
-
-	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
-	{
-		SAFE_DELETE(pInfo->pData);
-	}
-
-	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList);
-	virtual void _ProcessRawDataInfo(CRawDataInfo *pInfo);
-
-};
-
-inline CSkillStateRecord* GetCSkillStateRecordInfo( int nTypeID )
-{
-	return (CSkillStateRecord*)CSkillStateRecordSet::I()->GetRawDataInfo(nTypeID);
-}
+CSkillStateRecord* GetCSkillStateRecordInfo(int nTypeID);
 
 #endif // SKILLSTATERECORD_H

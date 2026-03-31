@@ -6,6 +6,7 @@
 //=============================================================================
 
 #include "ItemRecord.h"
+#include "ItemRecordStore.h"
 #include "ItemContent.h"
 
 bool SItemGrid::InitAttr()
@@ -55,7 +56,7 @@ void SItemGrid::CheckValid()
 		bValid = false;
 		return;
 	}
-	if (!CItemRecordSet::I())
+	if (!ItemRecordStore::Instance())
 	{
 		bValid = false;
 		return;

@@ -5,14 +5,11 @@
 
 //---------------------------------------------------------
 
-class xShipSet;
-class xShipPartSet;
-
 namespace mission
 {
 	struct BOAT_SYNC_ATTR
 	{
-		char szName[BOAT_MAXSIZE_NAME];	// 
+		char szName[BOAT_MAXSIZE_NAME];	//
 		USHORT	sBoatID;
 		BYTE	byHeader;
 		BYTE	byEngine;
@@ -27,14 +24,9 @@ namespace mission
 	class CCharBoat
 	{
 	public:
-		CCharBoat();
-		~CCharBoat();
-		
-		// 
-		BOOL	Load( const char szBoat[], const char szPart[] );
 		CCharacter* SummonBoat( USHORT sBoatID );
 
-		// 
+		//
 		BOOL	LoadBoat( CCharacter& owner, char chType );
 		BOOL	CreateBoat( CCharacter& owner, DWORD dwBoatID, char chType );
 		BOOL	Create( CCharacter& owner, USHORT sBoatID, USHORT sBerthID );
@@ -49,19 +41,16 @@ namespace mission
 		BOOL	BoatLimit( CCharacter& owner, USHORT sBoatID );
 
 	private:
-		void	Clear();
 		void	UpdateBoat( const BOAT_DATA& Data );
-		BOOL	SyncAttr( CCharacter& owner, DWORD dwBoatID, USHORT sCmd, USHORT sBerthID, 
+		BOOL	SyncAttr( CCharacter& owner, DWORD dwBoatID, USHORT sCmd, USHORT sBerthID,
 					const BOAT_SYNC_ATTR& AttrInfo );
 		BOOL	GetData( CCharacter& owner, BYTE byIsUpdate, const BOAT_DATA& Info, xShipAttrInfo& Data );
 		BOOL	SetPartData( CCharacter& boat, USHORT sTypeID, const BOAT_DATA& AttrInfo );
-		BOOL	SetBoatAttr( CCharacter& owner, CCharacter& boat, const xShipInfo& ShipInfo, 
+		BOOL	SetBoatAttr( CCharacter& owner, CCharacter& boat, const xShipInfo& ShipInfo,
 					const BOAT_DATA& Data, bool bFromFile = true, bool bLoadState = false );
-		xShipSet*		m_pShipSet;
-		xShipPartSet*	m_pShipPartSet;
 	};
 
 }
 
-// 
+//
 extern mission::CCharBoat g_CharBoat;

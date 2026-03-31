@@ -301,3 +301,33 @@ const char* StringSplitNum( long nNumber, int nCount, char cSplit )
 	}
 	return szBuf;
 }
+
+std::vector<std::string> SplitString(std::string_view str, char delimiter) {
+	std::vector<std::string> result;
+	size_t start = 0;
+	while (start <= str.size()) {
+		auto end = str.find(delimiter, start);
+		if (end == std::string_view::npos) end = str.size();
+
+		auto token = str.substr(start, end - start);
+		while (!token.empty() && (token.front() == ' ' || token.front() == '\t'))
+			token.remove_prefix(1);
+		while (!token.empty() && (token.back() == ' ' || token.back() == '\t'))
+			token.remove_suffix(1);
+
+		if (!token.empty())
+			result.emplace_back(token);
+
+		start = end + 1;
+	}
+	return result;
+}
+
+std::vector<int> SplitStringInt(std::string_view str, char delimiter) {
+	auto tokens = SplitString(str, delimiter);
+	std::vector<int> result;
+	result.reserve(tokens.size());
+	for (auto& t : tokens)
+		result.push_back(std::stoi(t));
+	return result;
+}

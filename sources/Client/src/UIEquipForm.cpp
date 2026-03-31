@@ -1,4 +1,6 @@
 ﻿#include "StdAfx.h"
+#include "SkillRecordStore.h"
+#include "SkillStateRecordStore.h"
 #include "uiequipform.h"
 #include "uiform.h"
 #include "uiskilllist.h"
@@ -329,7 +331,7 @@ bool CEquipMgr::Init()
         }
     }
 
-	int nTotalSkill = CSkillRecordSet::I()->GetLastID() + 1;
+	int nTotalSkill = SkillRecordStore::Instance()->GetMaxId() + 1;
 	CSkillRecord *pInfo;
 	for( int i=0; i<nTotalSkill; i++ )
 	{
@@ -340,7 +342,7 @@ bool CEquipMgr::Init()
 		}
 	}
 
-	int nTotalState = CSkillStateRecordSet::I()->GetLastID() + 1;
+	int nTotalState = SkillStateRecordStore::Instance()->GetMaxId() + 1;
 	CSkillStateRecord* pState;
 	for( int i=0; i<nTotalState; i++ )
 	{

@@ -3902,7 +3902,7 @@ bool CGameDB::ReadPlayer(CPlayer *pPlayer, DWORD atorID)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+		sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 	}
 	ToLogService("trade", "[CHA_ENTER] {} : {}", pCMainC->GetName(), g_kitbag);
 
@@ -3918,7 +3918,7 @@ bool CGameDB::ReadPlayer(CPlayer *pPlayer, DWORD atorID)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 	}
 	ToLogService("trade", "[CHA_ENTER] {} : {}", pCMainC->GetName(), g_kitbagTmp);
 
@@ -3937,7 +3937,7 @@ bool CGameDB::ReadPlayer(CPlayer *pPlayer, DWORD atorID)
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+			sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 		}
 		ToLogService("trade", "[CHA_ENTER] {} : {}", pCMainC->GetName(), g_kitbag);
 	}
@@ -3952,7 +3952,7 @@ bool CGameDB::ReadPlayer(CPlayer *pPlayer, DWORD atorID)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_equip + strlen(g_equip), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+		sprintf(g_equip + strlen(g_equip), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 	}
 	ToLogService("trade", "[CHA_EQUIP] {} : {}", pCMainC->GetName(), g_equip);
 	
@@ -4047,7 +4047,7 @@ bool CGameDB::SavePlayer(CPlayer *pPlayer, char chSaveType)
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+			sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 		}
 		ToLogService("trade", "[CHA_OUT] {} : {}", pCMainC->GetName(), g_kitbag);
 
@@ -4063,7 +4063,7 @@ bool CGameDB::SavePlayer(CPlayer *pPlayer, char chSaveType)
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+			sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 		}
 		ToLogService("trade", "[CHA_OUT] {} : {}", pCMainC->GetName(), g_kitbagTmp);
 
@@ -4077,7 +4077,7 @@ bool CGameDB::SavePlayer(CPlayer *pPlayer, char chSaveType)
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_equip + strlen(g_equip), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+			sprintf(g_equip + strlen(g_equip), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 		}
 		ToLogService("trade", "[CHA_EQUIP] {} : {}", pCMainC->GetName(), g_equip);
 
@@ -4096,7 +4096,7 @@ bool CGameDB::SavePlayer(CPlayer *pPlayer, char chSaveType)
 				pCItem = GetItemRecordInfo(pGridCont->sID);
 				if (!pCItem)
 					continue;
-				sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName, pGridCont->sID, pGridCont->sNum);
+				sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
 			}
 		}
 		ToLogService("trade", "[CHA_BANK] {} : {}", pCMainC->GetName(), g_kitbag);

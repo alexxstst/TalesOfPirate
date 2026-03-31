@@ -190,13 +190,7 @@ BOOL CGameApp::_Init() {
 
 	CCozeForm::GetInstance();
 	//InitAllTable();
-
-#ifdef _LUA_GAME
 	extern HINSTANCE g_hInstance;
-#endif
-
-	if (!LoadTerrainSet("scripts/table/TerrainInfo", FALSE))
-		return 0;
 
 	// After initializing the resource list, initialize resources -- Michael Chen
 	if (!LoadResourceSet("scripts/table/ResourceInfo", g_Config.m_nMaxResourceNum, FALSE))

@@ -137,7 +137,7 @@ void CStartMgr::SetMonsterInfo()
 		listMobDrops[i]->AddCommand(rItem);
 		listMobDrops[i]->SetIsEnabled(false);
 
-		const char* item_name = rInfo->szName;
+		const char* item_name = rInfo->szName.c_str();
 		char get_name[128] = {0};
 		sprintf(get_name, "%s", StringLimit(item_name, 16).c_str());
 		LabMobItems[i]->SetCaption(get_name);
@@ -1979,7 +1979,7 @@ void CStartMgr::RefreshPet(){
 		labPetLv->SetCaption( szBuf );
 	
 		static CGuiPic* Pic = imgPetHead->GetImage();
-		Pic->LoadImage( pInfo->GetIconFile(), 
+		Pic->LoadImage( pInfo->GetIconFile().c_str(), 
 			imgPetHead->GetWidth(), imgPetHead->GetHeight(), 
 			0, 
 			4, 4 );
@@ -2004,7 +2004,7 @@ void CStartMgr::RefreshPet( SItemGrid pGrid,SItemGrid pApp )
 		labPetLv->SetCaption( szBuf );
 	
 		static CGuiPic* Pic = imgPetHead->GetImage();
-		Pic->LoadImage( pInfo->GetIconFile(), 
+		Pic->LoadImage( pInfo->GetIconFile().c_str(), 
 			imgPetHead->GetWidth(), imgPetHead->GetHeight(), 
 			0, 
 			4, 4 );
@@ -2031,7 +2031,7 @@ void CStartMgr::RefreshPet( CItemCommand* pItem )
 	labPetLv->SetCaption( szBuf );
 
 	static CGuiPic* Pic = imgPetHead->GetImage();
-	Pic->LoadImage( pInfo->GetIconFile(), 
+	Pic->LoadImage( pInfo->GetIconFile().c_str(), 
 		imgPetHead->GetWidth(), imgPetHead->GetHeight(), 
 		0, 
 		4, 4 );
@@ -2176,16 +2176,17 @@ void CStartMgr::_evtPageIndexChange(CGuiData *pSender)
 {
 	NPCHelper* pNPCHelper = NPCHelper::I();
 	SAFE_DELETE(pNPCHelper);
-	pNPCHelper = new NPCHelper(0,1000);
 
 	int index = g_stUIStart.listPage->GetIndex();
 	if(index == 0) //npc
 	{
+		pNPCHelper = new NPCHelper(0, 1000, NPCHelperType::NPCList);
 		pNPCHelper->LoadRawDataInfo("scripts/table/NPCList", FALSE);
 		g_stUIStart.lstCurrList = g_stUIStart.lstNpcList;
 	}
 	else if(index == 1)
 	{
+		pNPCHelper = new NPCHelper(0, 1000, NPCHelperType::MonsterList);
 		pNPCHelper->LoadRawDataInfo("scripts/table/MonsterList", FALSE);
 		g_stUIStart.lstCurrList = g_stUIStart.lstMonsterList;
 	}

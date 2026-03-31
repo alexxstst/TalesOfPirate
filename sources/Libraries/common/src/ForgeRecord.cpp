@@ -2,6 +2,9 @@
 //---------------------------------------------------------
 
 #include "ForgeRecord.h"
+
+#include "AssetDatabase.h"
+#include "ForgeRecordStore.h"
 using namespace std;
 
 //---------------------------------------------------------
@@ -38,5 +41,6 @@ BOOL CForgeRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string
 	// 
 	pInfo->dwMoney = Str2Int(ParamList[m++]);
 
+	ForgeRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *pInfo);
 	return TRUE;
 }

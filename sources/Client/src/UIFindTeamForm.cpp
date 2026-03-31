@@ -4,7 +4,7 @@
 #include "UIBoxForm.h"
 #include "PacketCmd.h"
 #include "GameApp.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "UIMiniMapForm.h"
 #include "UIBoatForm.h"
 #include "UIGlobalVar.h"

@@ -13,7 +13,7 @@
 #include "StoneSet.h"
 #include "GameApp.h"
 #include "ItemRefineSet.h"
-#include "ItemRefineEffectSet.h"
+#include "ItemRefineEffectRecordStore.h"
 #include "EffectObj.h"
 #include "UIItemCommand.h"
 #include "LootFilter.h"
@@ -55,11 +55,11 @@ BOOL CSceneItem::_Create(int nObjTypeID,int nType)
     }
 
 	char str[ 260 ];
-    sprintf( str, "%s.lgo", _pItemInfo->chModule[nType] );
+    sprintf( str, "%s.lgo", _pItemInfo->chModule[nType].c_str() );
 	
     if(Load( str ) == 0)
     {
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(350), nObjTypeID, _pItemInfo->szName, str); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(350), nObjTypeID, _pItemInfo->szName.c_str(), str); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return FALSE;
     }
 
@@ -383,7 +383,7 @@ void CSceneItem::setIsShowName( bool v )
     _IsShowName = v;	
     if( v )
     {
-        CGuiFont::s_Font.GetSize( _pItemInfo->szName, _nNameW, _nNameH );
+        CGuiFont::s_Font.GetSize( _pItemInfo->szName.c_str(), _nNameW, _nNameH );
     }
 }
 
@@ -409,7 +409,7 @@ void CSceneItem::RenderUI()
 
         nX -= _nNameW / 2;
         GetRender().FillFrame( nX, nY, nX + _nNameW, nY + _nNameH, 0x90000000 );
-        CGuiFont::s_Font.Render( _pItemInfo->szName, nX, nY, 0xffffffff );
+        CGuiFont::s_Font.Render( _pItemInfo->szName.c_str(), nX, nY, 0xffffffff );
     }
 }
 

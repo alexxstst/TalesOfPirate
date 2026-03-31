@@ -9,6 +9,7 @@
 #include <NpcRecord.h>
 #include <CharacterRecord.h>
 #include <assert.h>
+#include "AreaRecordStore.h"
 #include "lua_gamectrl.h"
 //---------------------------------------------------------
 _DBC_USING
@@ -119,7 +120,7 @@ std::string GetMonsterName(int sMonsterID)
 	CChaRecord* pRec = GetChaRecordInfo(static_cast<USHORT>(sMonsterID));
 	if (pRec)
 	{
-		strncpy(szName, pRec->szName, 64 - 1);
+		strncpy(szName, pRec->szName.c_str(), 64 - 1);
 	}
 
 	return szName;
@@ -133,7 +134,7 @@ std::string GetItemName(int sItemID)
 	CItemRecord* pRec = GetItemRecordInfo(static_cast<USHORT>(sItemID));
 	if (pRec)
 	{
-		strncpy(szItem, pRec->szName, 64 - 1);
+		strncpy(szItem, pRec->szName.c_str(), 64 - 1);
 	}
 
 	return szItem;
@@ -144,7 +145,7 @@ std::string GetAreaName(int sAreaID)
 	char szArea[128];
 	strncpy(szArea, RES_STRING(GM_NPCSCRIPT_CPP_00002), 128 - 1);
 
-	CAreaInfo* pInfo = (CAreaInfo*)GetAreaInfo(static_cast<USHORT>(sAreaID));
+	CAreaInfo* pInfo = AreaRecordStore::Instance()->Get(static_cast<int>(sAreaID));
 	if (pInfo)
 	{
 		strncpy(szArea, pInfo->szDataName, 128 - 1);

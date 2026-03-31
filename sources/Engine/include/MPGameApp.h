@@ -128,7 +128,6 @@ public:
     DWORD               GetRenderUseTime()                  { return _dwRenderUseTime;   }
 
 	void				SetInputActive(bool bActive);
-    BOOL                LoadTerrainSet(const char* file, BOOL bBinary);
     BOOL                UnloadTerrainSet();
 	BOOL				LoadResourceSet(const char* file, int iMaxIndex, BOOL bBinary);
 	BOOL                UnloadResourceSet();

@@ -6,7 +6,7 @@
 #include "GameAppMsg.h"
 #include "packetcmd.h"
 #include "MPEditor.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "NetProtocol.h"
 #include "worldscene.h"
 #include "LoginScene.h"

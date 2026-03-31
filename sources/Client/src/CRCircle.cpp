@@ -2,7 +2,8 @@
 #include "crcircle.h"
 
 #include "EffectObj.h"
-#include "EffectSet.h"
+#include "EffectRecordStore.h"
+#include "ShadeRecordStore.h"
 
 #include "Scene.h"
 

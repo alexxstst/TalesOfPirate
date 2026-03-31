@@ -16,7 +16,7 @@
 #include "PacketCmd.h"
 #include "character.h"
 #include "EffectObj.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "UIStoreForm.h"
 #include "UIDoublePwdForm.h"
 #include "UIMisLogForm.h"//add by alfred.shi 20080722
@@ -886,7 +886,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
                 nMonCount++;
 
                 char szBuf[256] = {0};
-                sprintf( szBuf, " %d. %s   LV:%2d ", nMonCount, pMonsterInfo[i]->szName, pMonsterInfo[i]->lLv);
+                sprintf( szBuf, " %d. %s   LV:%2d ", nMonCount, pMonsterInfo[i]->szName.c_str(), pMonsterInfo[i]->lLv);
                 strMonsterName[i] = szBuf;
 
                 SIZE size;

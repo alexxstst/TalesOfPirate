@@ -13,7 +13,7 @@ int GetChaPhotoTexID(int nTypeID)
     if(pInfo)
 	{
     	char szPhoto[80] = { 0 };
-		sprintf(szPhoto, "texture/photo/%s.bmp", pInfo->szIconName);
+		sprintf(szPhoto, "texture/photo/%s.bmp", pInfo->szIconName.c_str());
 		return GetTextureID(szPhoto);
 	}
 	return 0;

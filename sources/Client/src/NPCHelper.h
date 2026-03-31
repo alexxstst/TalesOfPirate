@@ -1,66 +1,47 @@
-﻿#pragma once
-#include "util.h"
+#pragma once
+
+#include "NPCDataRecord.h"
+#include "MonsterListRecordStore.h"
+#include "NPCListRecordStore.h"
+#include "AssetDatabase.h"
 #include "TableData.h"
 
-#define NPC_MAXSIZE_NAME			128 // 
-
-class NPCData : public CRawDataInfo
-{
-public:
-	char szName[NPC_MAXSIZE_NAME];		//
-	char szArea[NPC_MAXSIZE_NAME];		// 
-	DWORD dwxPos0, dwyPos0;				// 
-	char szMapName[NPC_MAXSIZE_NAME];	// 
-};
-
+enum class NPCHelperType { MonsterList, NPCList };
 
 class NPCHelper : public CRawDataSet
 {
 public:
-
 	static NPCHelper* I() { return _Instance; }
 
-	NPCHelper(int nIDStart, int nIDCnt, int nCol = 128)
-		: CRawDataSet(nIDStart, nIDCnt, nCol)
+	NPCHelper(int nIDStart, int nIDCnt, NPCHelperType type, int nCol = 128)
+		: CRawDataSet(nIDStart, nIDCnt, nCol), _type(type)
 	{
 		_Instance = this;
 		_Init();
 	}
 
 protected:
+	static NPCHelper* _Instance;
+	NPCHelperType _type;
 
-	static NPCHelper* _Instance; // 
-
-	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
-	{
-		return new NPCData[nCnt];
-	}
-
-	virtual void _DeleteRawDataArray()
-	{
-		delete[] (NPCData*)_RawDataArray;
-	}
-
-	virtual int _GetRawDataInfoSize()
-	{
-		return sizeof(NPCData);
-	}
-
-	virtual void*	_CreateNewRawData(CRawDataInfo *pInfo)
-	{
-		return NULL;
-	}
-
-	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
-	{
-		SAFE_DELETE(pInfo->pData);
-	}
+	virtual CRawDataInfo* _CreateRawDataArray(int nCnt) { return new NPCData[nCnt]; }
+	virtual void _DeleteRawDataArray() { delete[] (NPCData*)_RawDataArray; }
+	virtual int _GetRawDataInfoSize() { return sizeof(NPCData); }
+	virtual void* _CreateNewRawData(CRawDataInfo *pInfo) { return NULL; }
+	virtual void _DeleteRawData(CRawDataInfo *pInfo) { SAFE_DELETE(pInfo->pData); }
 
 	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList);
+
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo) {
+		auto& db = AssetDatabase::Instance()->GetDb();
+		if (_type == NPCHelperType::MonsterList)
+			MonsterListRecordStore::Insert(db, *(NPCData*)pRawDataInfo);
+		else
+			NPCListRecordStore::Insert(db, *(NPCData*)pRawDataInfo);
+	}
 };
 
-
-inline NPCData* GetNPCDataInfo( int nTypeID )
+inline NPCData* GetNPCDataInfo(int nTypeID)
 {
 	return (NPCData*)NPCHelper::I()->GetRawDataInfo(nTypeID);
 }

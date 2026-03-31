@@ -724,16 +724,17 @@ CMapID::~CMapID()
 
 void CMapID::Clear()
 {
-	memset( m_MapInfo, 0, MAX_MAP );
+	m_MapInfo.clear();
 	m_byNumMap = 0;
 }
 
 BOOL CMapID::AddInfo( const char szMap[], BYTE byID )
 {
-	if( m_byNumMap >= MAX_MAP )
-		return FALSE;
-	strncpy( m_MapInfo[m_byNumMap].szMap, szMap, MAX_MAPNAME_LENGTH - 1 );
-	m_MapInfo[m_byNumMap].byID = byID;
+	MAP_INFO info{};
+	strncpy( info.szMap, szMap, MAX_MAPNAME_LENGTH - 1 );
+	info.byID = byID;
+	info.pMap = nullptr;
+	m_MapInfo.push_back(info);
 	m_byNumMap++;
 	return TRUE;
 }

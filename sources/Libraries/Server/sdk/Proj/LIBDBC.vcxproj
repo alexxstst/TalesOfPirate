@@ -95,7 +95,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\DBCCommon.cpp" />
-    <ClCompile Include="..\src\IniFile.cpp" />
     <ClCompile Include="..\src\LogStream.cpp" />
     <ClCompile Include="..\src\Point.cpp" />
     <ClCompile Include="..\src\RWMutex.cpp" />

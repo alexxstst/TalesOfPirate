@@ -68,18 +68,18 @@ public:
 	CSystemProperties() {}
 	~CSystemProperties() {}
 	/**
-	 * Load the propties from the file(*.ini)
-	 * @param: szIniFileName The name of ini file.
-	 * @return: success Return 0.
+	 * Загрузить настройки из INI-файла.
+	 * @param: szIniFileName Путь к INI-файлу.
+	 * @return: 0 — успех, иначе — ошибка.
 	 */
 	int Load(const char * szIniFileName)
 	{
 		return readFromFile(szIniFileName);
 	}
 	/**
-	 * Save the propties to the file(*.ini)
-	 * @param: szIniFileName The name of ini file.
-	 * @return: success Return 0.
+	 * Сохранить настройки в INI-файл.
+	 * @param: szIniFileName Путь к INI-файлу.
+	 * @return: 0 — успех, иначе — ошибка.
 	 */
 	int Save(const char * szIniFileName)
 	{
@@ -125,19 +125,6 @@ private:
 	 * @return: success Return 0.
 	 */
 	int writeToFile(const char * szIniFileName);
-	
-	bool int2bool(int n);
-
-	int	bool2int(bool b);
-
-	BOOL WriteInteger( const char* szSection, const char* szKey, int value, const char* szFileName )
-	{
-		char szbuf[50] = { 0 };
-		itoa( value, szbuf, 10 );
-
-		return WritePrivateProfileString( szSection, szKey, szbuf, szFileName );
-	}
-
 
 };
 

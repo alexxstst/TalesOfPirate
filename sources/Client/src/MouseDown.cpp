@@ -423,7 +423,7 @@ bool CMouseDown::ActAttackCha( CCharacter* pCha, CSkillRecord* pSkill, CCharacte
 	pLastSkill = pSkill;
 
 	_pScene->GetSign()->Show( pTarget );
-	g_pGameApp->AddTipText( pSkill->szName );	
+	g_pGameApp->AddTipText( pSkill->szName.c_str() );
 
 	//// 
 	//if( g_Config.m_IsMoveClient && IsCompart && pSkill->GetDistance() )
@@ -553,7 +553,7 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 	attack->SetAttackPoint( nScrX, nScrY );
 	attack->SetCommand( CCommandObj::GetReadyCommand() );
 
-    g_pGameApp->AddTipText( "AttackPoint: %s", pSkill->szName );
+    g_pGameApp->AddTipText( "AttackPoint: %s", pSkill->szName.c_str() );
     return pCha->GetActor()->SwitchState(attack);
 }
 

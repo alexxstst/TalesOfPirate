@@ -1,15 +1,8 @@
 ﻿#pragma once
-#include "TableData.h"
 
-class CEventSoundInfo : public CRawDataInfo
-{
-public:
-	CEventSoundInfo() : nSoundID(-1)
-	{
-	}
-
-	int nSoundID;
-};
+#include "EventSoundRecord.h"
+#include "EventSoundRecordStore.h"
+#include "AssetDatabase.h"
 
 class CEventSoundSet : public CRawDataSet
 {
@@ -24,42 +17,23 @@ public:
 	}
 
 protected:
-	static CEventSoundSet* _Instance; // , 
+	static CEventSoundSet* _Instance;
 
-	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
-	{
-		return new CEventSoundInfo[nCnt];
-	}
-
-	virtual void _DeleteRawDataArray()
-	{
-		delete[] (CEventSoundInfo*)_RawDataArray;
-	}
-
-	virtual int _GetRawDataInfoSize()
-	{
-		return sizeof(CEventSoundInfo);
-	}
-
-	virtual void*	_CreateNewRawData(CRawDataInfo *pInfo)
-	{
-		return NULL;
-	}
-
-	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
-	{
-		SAFE_DELETE(pInfo->pData);
-	}
+	virtual CRawDataInfo* _CreateRawDataArray(int nCnt) { return new CEventSoundInfo[nCnt]; }
+	virtual void _DeleteRawDataArray() { delete[] (CEventSoundInfo*)_RawDataArray; }
+	virtual int _GetRawDataInfoSize() { return sizeof(CEventSoundInfo); }
+	virtual void* _CreateNewRawData(CRawDataInfo *pInfo) { return NULL; }
+	virtual void _DeleteRawData(CRawDataInfo *pInfo) { SAFE_DELETE(pInfo->pData); }
 
 	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList)
-	{   
+	{
 		CEventSoundInfo *pInfo = (CEventSoundInfo*)pRawDataInfo;
 		pInfo->nSoundID = Str2Int(ParamList[0]);
 		return TRUE;
 	}
-};
 
-inline CEventSoundInfo* GetEventSoundInfo(int nTypeID)
-{
-	return (CEventSoundInfo*)CEventSoundSet::I()->GetRawDataInfo(nTypeID);
-}
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
+	{
+		EventSoundRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *(CEventSoundInfo*)pRawDataInfo);
+	}
+};

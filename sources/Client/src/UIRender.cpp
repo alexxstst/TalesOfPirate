@@ -1138,7 +1138,7 @@ bool CEdit::InitCursor( const char* szFile )
 	MPTexRect* pTex = &_CursorImage;
 
 	int nTextureNo = GetTextureID( szFile );
-	MPTexInfo* pInfo = GetTextureInfo(nTextureNo);
+	auto* pInfo = GetTextureInfo(nTextureNo);
 	if( pInfo )
 	{
 		pTex->nTextureNo = nTextureNo;

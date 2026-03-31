@@ -498,20 +498,20 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
 	
     if( !ir ) return 0;
 
-    char* sx = 0;
+    const char* sx = nullptr;
 
 
     switch( _ModelType )
     {
     case MODEL_CHARACTER:
         // robin
-        sx = ir->chModule[_BoneID +1];
+        sx = ir->chModule[_BoneID +1].c_str();
         break;
     case MODEL_WARSHIP:
-        sx = ir->chModule[0];
+        sx = ir->chModule[0].c_str();
         break;
     case MODEL_TOWER:
-        sx = ir->chModule[0];
+        sx = ir->chModule[0].c_str();
         break;
     default:
         return 0;
@@ -543,7 +543,7 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
             {
                 // logo
                 ir = GetItemRecordInfo( ir->sShipFlag );
-                sprintf( str, "%s.lgo", ir->chModule[0] );
+                sprintf( str, "%s.lgo", ir->chModule[0].c_str() );
                 LoadPart( 3, str );
 
                 _PartID[ 3 ] = ir->sShipFlag;
@@ -557,17 +557,17 @@ int CCharacterModel::ChangePart( DWORD part_id, DWORD tab_id )
             {
                 DestroyPart( 4 + i );
 
-                DWORD o = atoi( ir->chModule[ i + 1 ] );
+                DWORD o = atoi( ir->chModule[ i + 1 ].c_str() );
                 if( o == 0 )
                     continue;
                 CItemRecord* iiir = GetItemRecordInfo( o );
-                if( iiir == 0 || iiir->chModule[0] == 0 )
+                if( iiir == 0 || iiir->chModule[0].empty() )
                 {
                     ToLogService("common", "msgLoadPart no model file exists: {}, call robin", o);
                     return 0;
                 }
 
-                sprintf( str, "%s.lgo", iiir->chModule[0] );
+                sprintf( str, "%s.lgo", iiir->chModule[0].c_str() );
                 
                 if( FAILED( LoadPart( 4 + i, str ) ) )
                 {

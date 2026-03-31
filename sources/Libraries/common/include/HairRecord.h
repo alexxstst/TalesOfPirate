@@ -9,6 +9,7 @@
 #define	HAIRRECORD_H
 
 #include <tchar.h>
+#include <string>
 #include "util.h"
 #include "TableData.h"
 
@@ -19,7 +20,7 @@ class CHairRecord : public CRawDataInfo
 {
 public:
 	CHairRecord();
-	char	szColor[10];
+	std::string	szColor;
 
 	DWORD	dwNeedItem[defHAIR_MAX_ITEM][2];		// ID,
 	DWORD	dwMoney;								// 
@@ -35,55 +36,6 @@ private:
 	
 };
 
-class CHairRecordSet : public CRawDataSet
-{
-public:
-	static CHairRecordSet* I() { return _Instance; }
-
-	CHairRecordSet(int nIDStart, int nIDCnt, int nCol = 128)
-		:CRawDataSet(nIDStart, nIDCnt, nCol)
-	{
-		_Instance = this;
-		_Init();
-	}
-
-protected:
-	static CHairRecordSet* _Instance; // , 
-
-	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
-	{
-		return new CHairRecord[nCnt];
-	}
-
-	virtual void _DeleteRawDataArray()
-	{
-		delete[] (CHairRecord*)_RawDataArray;
-	}
-
-	virtual int _GetRawDataInfoSize()
-	{
-		return sizeof(CHairRecord);
-	}
-
-	virtual void*	_CreateNewRawData(CRawDataInfo *pInfo)
-	{
-		return NULL;
-	}
-
-	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
-	{
-		SAFE_DELETE(pInfo->pData);
-	}
-    virtual void  _AfterLoad();
-
-	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList);
-	virtual void _ProcessRawDataInfo(CRawDataInfo *pInfo);
-
-};
-
-inline CHairRecord* GetHairRecordInfo( int nTypeID )
-{
-	return (CHairRecord*)CHairRecordSet::I()->GetRawDataInfo(nTypeID);
-}
+CHairRecord* GetHairRecordInfo(int nTypeID);
 
 #endif //HAIRRECORD_H

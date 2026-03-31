@@ -1,6 +1,6 @@
 ﻿#include "stdafx.h"
 #include "SceneObj.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 #include "Scene.h"
 #include "LuaInterface.h"
 #include "EffectObj.h"
@@ -12,8 +12,6 @@
 #include "UISystemForm.h"
 #include <fstream>
 #include <iostream>
-CSceneObjSet* CSceneObjSet::_Instance = NULL;
-
 CSceneObj::CSceneObj()
 : CSceneNode(), _dwObjType( SCENEOBJ_TYPE_NORMAL ), _nMusicID(-1)
 {

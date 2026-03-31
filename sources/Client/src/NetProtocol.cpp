@@ -2237,7 +2237,7 @@ void NetTriggerAction(stNetNpcMission& info) {
 	case mission::TE_GET_ITEM: {
 		CItemRecord* pItem = GetItemRecordInfo(info.sID);
 		if (pItem) {
-			strncpy(szData, pItem->szName, sizeof(szData));
+			strncpy(szData, pItem->szName.c_str(), sizeof(szData));
 		}
 		g_pGameApp->ShowMidText(g_oLangRec.GetString(289), szData, info.sCount, info.sNum);
 	}

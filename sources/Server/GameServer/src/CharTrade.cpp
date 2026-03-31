@@ -978,7 +978,7 @@ namespace mission
 			if( !pItem->chIsTrade || !Bag.GetGridContByID(byItemIndex)->GetInstAttr(ITEMATTR_TRADABLE))
 			{
 				//pMain->SystemNotice( "%s", pItem->szName );
-				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00049), pItem->szName );
+				pMain->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00049), pItem->szName.c_str() );
 				return FALSE;
 			}
 
@@ -1509,7 +1509,7 @@ namespace mission
 						}
 						else
 						{
-							sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00096), AcpGrid[i].sNum, pItem->szName );
+							sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00096), AcpGrid[i].sNum, pItem->szName.c_str() );
 							strcat( szTrade, szTemp );
 						}
 					}
@@ -1588,7 +1588,7 @@ namespace mission
 						}
 						else
 						{
-							sprintf( szTemp, "%d%s", ReqGrid[i].sNum, pItem->szName );
+							sprintf( szTemp, "%d%s", ReqGrid[i].sNum, pItem->szName.c_str() );
 							strcat( szTrade, szTemp );
 						}
 					}
@@ -1633,16 +1633,16 @@ namespace mission
 						if( pCCtrlCha->GetSubMap()->ItemSpawn( AcpGrid + i, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle() ) == NULL )
 						{
 							/*pAccept->SystemNotice( "%s%sID[%d], Num[%d]", 
-								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+								pRequest->GetName(), pItem->szName.c_str(), AcpGrid[i].sID, AcpGrid[i].sNum );
 							pRequest->SystemNotice( "%s%sID[%d], Num[%d]", 
-								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+								pRequest->GetName(), pItem->szName.c_str(), AcpGrid[i].sID, AcpGrid[i].sNum );
 							ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum);*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
-								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+								pRequest->GetName(), pItem->szName.c_str(), AcpGrid[i].sID, AcpGrid[i].sNum );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
-								pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+								pRequest->GetName(), pItem->szName.c_str(), AcpGrid[i].sID, AcpGrid[i].sNum );
 							ToLogService("trade", LogLevel::Error, "Error code[{}],when trading,{} bag is full,{}failed to put on floortrade res failedID[{}], Num[{}]", 
-								sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+								sPushRet, pRequest->GetName(), pItem->szName.c_str(), AcpGrid[i].sID, AcpGrid[i].sNum );
 						}
 					}
 					else if( sPushRet != enumKBACT_SUCCESS )
@@ -1652,9 +1652,9 @@ namespace mission
 						pRequest->SystemNotice( "%s%sID[%d], Num[%d]", pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
 						ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), AcpGrid[i].sID, ReqGrid[i].sNum);*/
-						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pRequest->GetName(), 
+						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName.c_str(), pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
-						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pRequest->GetName(), 
+						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName.c_str(), pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
 						ToLogService("trade", LogLevel::Error, "Error code[{}],it failed to put res in {} bag when trading res {}trade res failedID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );
@@ -1719,16 +1719,16 @@ namespace mission
 						if( pCCtrlCha->GetSubMap()->ItemSpawn( ReqGrid + i, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle() ) == NULL )
 						{
 							/*pAccept->SystemNotice( "%s%sID[%d], Num[%d]", 
-								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
+								pAccept->GetName(), pItem->szName.c_str(), ReqGrid[i].sID, ReqGrid[i].sNum );
 							pRequest->SystemNotice( "%s%sID[%d], Num[%d]", 
-								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
+								pAccept->GetName(), pItem->szName.c_str(), ReqGrid[i].sID, ReqGrid[i].sNum );
 							ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum);*/
 							pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
-								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
+								pAccept->GetName(), pItem->szName.c_str(), ReqGrid[i].sID, ReqGrid[i].sNum );
 							pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00070), 
-								pAccept->GetName(), pItem->szName, ReqGrid[i].sID, ReqGrid[i].sNum );
+								pAccept->GetName(), pItem->szName.c_str(), ReqGrid[i].sID, ReqGrid[i].sNum );
 							ToLogService("trade", LogLevel::Error, "Error code[{}],when trading,{} bag is full,{}failed to put on floortrade res failedID[{}], Num[{}]", 
-								sPushRet, pRequest->GetName(), pItem->szName, AcpGrid[i].sID, AcpGrid[i].sNum );
+								sPushRet, pRequest->GetName(), pItem->szName.c_str(), AcpGrid[i].sID, AcpGrid[i].sNum );
 						}
 					}
 					else if( sPushRet != enumKBACT_SUCCESS )
@@ -1738,9 +1738,9 @@ namespace mission
 						pRequest->SystemNotice( "%s%sID[%d], Num[%d]", pItem->szName, pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
 						ToLogService("trade", LogLevel::Error, "Error code[{}],{}{}ID[{}], Num[{}]", sPushRet, pItem->szName, pAccept->GetName(), ReqGrid[i].sID, ReqGrid[i].sNum);*/
-						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pAccept->GetName(), 
+						pAccept->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName.c_str(), pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
-						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName, pAccept->GetName(), 
+						pRequest->SystemNotice( RES_STRING(GM_CHARTRADE_CPP_00071), pItem->szName.c_str(), pAccept->GetName(), 
 							ReqGrid[i].sID, ReqGrid[i].sNum );
 						ToLogService("trade", LogLevel::Error, "Error code[{}],it failed to put res in {} bag when trading res {}trade res failedID[{}], Num[{}]", sPushRet, pItem->szName, pRequest->GetName(), 
 							AcpGrid[i].sID, ReqGrid[i].sNum );

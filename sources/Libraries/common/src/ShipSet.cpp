@@ -2,6 +2,9 @@
 //---------------------------------------------------------
 
 #include "ShipSet.h"
+#include "AssetDatabase.h"
+#include "ShipRecordStore.h"
+#include "ShipPartRecordStore.h"
 
 //---------------------------------------------------------
 using namespace std;
@@ -85,6 +88,7 @@ BOOL xShipSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &Para
 
 	pInfo->sParam = (USHORT)Str2Int(ParamList[m++]);
 
+	ShipRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *pInfo);
 	return TRUE;
 }
 
@@ -126,6 +130,7 @@ BOOL xShipPartSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &
 
 	pInfo->sParam = (USHORT)Str2Int(ParamList[m++]);
 
+	ShipPartRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *pInfo);
 	return TRUE;
 }
 

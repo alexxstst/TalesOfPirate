@@ -27,8 +27,6 @@ using namespace std;
 
 LW_USING
 
-MPTexSet* MPTexSet::_Instance = NULL;
-MPTerrainSet* MPTerrainSet::_Instance = NULL;
 MPResourceSet* MPResourceSet::m_pInstance = NULL;
 
 
@@ -121,11 +119,9 @@ BOOL MPGameApp::Init(HINSTANCE hInst, const char* pszClassName, int nScrWidth, i
 		return FALSE;
 	}
 
-	MPTexSet* pTextureSet = new MPTexSet(0, 8192);
+	new TextureManager();
 
 	_nLogoTexID = GetTextureID("texture/logo.BMP");
-
-	pTextureSet->EnableRequest(FALSE);
 
 	_InitInput();
 
@@ -226,7 +222,7 @@ void MPGameApp::Render() {
 #endif
 
 	if (_pConsole->IsVisible()) {
-		MPTexInfo* pTexInfo = GetTextureInfo(_nLogoTexID);
+		auto* pTexInfo = GetTextureInfo(_nLogoTexID);
 		if (pTexInfo) {
 			MPTexRect TexRect;
 			TexRect.nTexW = 128;
@@ -382,15 +378,7 @@ void MPGameApp::SetInputActive(bool bActive) {
 	_bActive = bActive;
 }
 
-BOOL MPGameApp::LoadTerrainSet(const char* file, BOOL bBinary) {
-	MPTerrainSet* pTerrainSet = new MPTerrainSet(0, 100);
-	//pTerrainSet->LoadRawDataInfo("scripts/table/TerrainInfo", FALSE);
-	return pTerrainSet->LoadRawDataInfo(file, bBinary);
-}
-
 BOOL MPGameApp::UnloadTerrainSet() {
-	MPTerrainSet* pTerrainSet = MPTerrainSet::I();
-	//SAFE_DELETE(pTerrainSet);
 	return TRUE;
 }
 

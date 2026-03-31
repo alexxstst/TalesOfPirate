@@ -1158,7 +1158,7 @@ void CMemoEx::ParseMisPage()
 				CItemRecord *pItem = GetItemRecordInfo( m_PageInfo.MisPrize[n].wParam1 );
 				if( pItem )
 				{
-					strcpy( szItem, pItem->GetIconFile() );
+					strcpy( szItem, pItem->GetIconFile().c_str() );
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
@@ -1178,7 +1178,7 @@ void CMemoEx::ParseMisPage()
 				m_sNumInfo++;
 				if( pItem )
 				{
-					strcpy( szItem, pItem->szName );
+					strcpy( szItem, pItem->szName.c_str() );
 				}
 				else 
 				{
@@ -1205,7 +1205,7 @@ void CMemoEx::ParseMisPage()
 				CItemRecord *pItem = GetItemRecordInfo( 194 );
 				if( pItem )
 				{
-					strcpy( szItem, pItem->GetIconFile() );
+					strcpy( szItem, pItem->GetIconFile().c_str() );
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
@@ -1243,7 +1243,7 @@ void CMemoEx::ParseMisPage()
 				CItemRecord *pItem = GetItemRecordInfo( 195 );
 				if( pItem )
 				{
-					strcpy( szItem, pItem->GetIconFile() );
+					strcpy( szItem, pItem->GetIconFile().c_str() );
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;
@@ -1281,7 +1281,7 @@ void CMemoEx::ParseMisPage()
 				CItemRecord *pItem = GetItemRecordInfo( 195 );
 				if( pItem )
 				{
-					strcpy( szItem, pItem->GetIconFile() );
+					strcpy( szItem, pItem->GetIconFile().c_str() );
 				}
 
 				m_MemoInfo[m_sNumInfo].byType = MEMO_LINE_ICON;

@@ -1,19 +1,9 @@
 ﻿#pragma once
 
 #include "TableData.h"
-
-class CNotifyInfo : public CRawDataInfo
-{
-public:
-    CNotifyInfo() : chType(0)
-	{
-        memset(szInfo, 0, sizeof(szInfo));
-    }
-    
-    char    chType;
-    char    szInfo[64];
-
-};
+#include "NotifyRecord.h"
+#include "NotifyRecordStore.h"
+#include "AssetDatabase.h"
 
 
 class CNotifySet : public CRawDataSet
@@ -60,20 +50,18 @@ protected:
 	}
 	
 	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList)
-	{   
+	{
         CNotifyInfo *pInfo = (CNotifyInfo*)pRawDataInfo;
 
         pInfo->chType = Str2Int( ParamList[0] );
 
 		strncpy( pInfo->szInfo, ParamList[1].c_str(), sizeof(pInfo->szInfo) );
-        
+
 		return TRUE;
     }
+
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
+	{
+		NotifyRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *(CNotifyInfo*)pRawDataInfo);
+	}
 };
-
-inline CNotifyInfo* GetNotifyInfo(int nTypeID)
-{
-	return (CNotifyInfo*)CNotifySet::I()->GetRawDataInfo(nTypeID);
-}
-
-

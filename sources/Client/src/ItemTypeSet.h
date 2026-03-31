@@ -1,13 +1,8 @@
 ﻿#pragma once
 #include "TableData.h"
-
-class CItemTypeInfo : public CRawDataInfo
-{
-public:    
-	CItemTypeInfo()
-	{
-    }
-};
+#include "ItemTypeRecord.h"
+#include "ItemTypeRecordStore.h"
+#include "AssetDatabase.h"
 
 
 class CItemTypeSet : public CRawDataSet
@@ -55,14 +50,12 @@ protected:
 	{   
         // if(ParamList.size()==0) return FALSE;
 		
-        CItemTypeInfo *pInfo = (CItemTypeInfo*)pRawDataInfo;            
+        CItemTypeInfo *pInfo = (CItemTypeInfo*)pRawDataInfo;
         return TRUE;
     }
+
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
+	{
+		ItemTypeRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *(CItemTypeInfo*)pRawDataInfo);
+	}
 };
-
-inline CItemTypeInfo* GetItemTypeInfo(int nTypeID)
-{
-	return (CItemTypeInfo*)CItemTypeSet::I()->GetRawDataInfo(nTypeID);
-}
-
-

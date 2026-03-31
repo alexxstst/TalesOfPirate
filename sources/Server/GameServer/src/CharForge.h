@@ -11,28 +11,13 @@
 //---------------------------------------------------------
 _DBC_USING
 
-class CForgeRecordSet;
-
 namespace mission
 {
 	class CForgeSystem
 	{
 	public:
-		CForgeSystem();
-		virtual ~CForgeSystem();
-
-		void	Clear();
-
-		// 
-		BOOL	LoadForgeData( char szName[] );
-		
-		// 
+		//
 		void	ForgeItem( CCharacter& character, BYTE byIndex );
-
-	private:
-
-		// 
-		CForgeRecordSet* m_pRecordSet;
 	};
 
 }

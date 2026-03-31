@@ -48,15 +48,7 @@ class SubMap;
 class CCharacter;
 class CItemRecordAttr;
 
-class CChaRecordSet; 	  
-class CSkillRecordSet;   
-class CItemRecordSet;	  
-class CLevelRecordSet;
-class CSailLvRecordSet;
-class CLifeLvRecordSet;
-class CJobEquipRecordSet;
-class CForgeRecordSet;
-class CHairRecordSet;
+class AssetDatabase;
 
 class GateServer;
 
@@ -242,7 +234,6 @@ public:
 	void		UnbanAccount(const char *szString);
 	void		CanReceiveRequests(uLong chaID, bool CanSend);
 	short		GetMapNum() { return m_mapnum; }
-	CMapRes**	GetMapList() { return m_MapList; }
 
 	DWORD   m_dwFPS;
 	DWORD   m_dwRunCnt;
@@ -289,20 +280,9 @@ protected:
 	void	MapMgrRun(DWORD dwCurTime);
 
 protected:
-	CMapRes* m_MapList[MAX_MAP];		// 
+	std::vector<CMapRes*> m_MapList;
 	short	 m_mapnum;
 	
-	CChaRecordSet 	   *m_CChaRecordSet;
-	CSkillRecordSet    *m_CSkillRecordSet;
-	CSkillStateRecordSet	*m_CSkillStateRecordSet;
-	CItemRecordSet	   *m_CItemRecordSet;
-	CLevelRecordSet	   *m_CLevelRecordSet;
-	CJobEquipRecordSet *m_CJobEquipRecordSet;
-	CAreaSet           *m_CAreaRecordSet;
-	CSailLvRecordSet   *m_CSailLvRecord;
-	CLifeLvRecordSet   *m_CLifeLvRecord;
-	CHairRecordSet	   *m_CHairRecord;
-
 	std::map<DWORD, CPlayer*>  _PlayerIdx;  // DB IDPlayer
 
 	std::vector<SVolunteer>	m_vecVolunteerList;	// 
@@ -412,38 +392,38 @@ inline CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv)
 		m_sSkillSetNo = sSkillNo;
 		m_chSkillSetLv = chSkillLv;
 		// SP
-		if (strcmp(pCSkillRec->szUseSP, "0"))
+		if (pCSkillRec->szUseSP != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseSP, (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseSP.c_str(), (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = 0;
 		//
-		if (strcmp(pCSkillRec->szUseEndure, "0"))
+		if (pCSkillRec->szUseEndure != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEndure, (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEndure.c_str(), (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = 0;
 		//
-		if (strcmp(pCSkillRec->szUseEnergy, "0"))
+		if (pCSkillRec->szUseEnergy != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEnergy, (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEnergy.c_str(), (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = 0;
 		//
 		m_pCSkillTData[sSkillNo][chSkillLv]->sRange[0] = enumRANGE_TYPE_NONE;
-		if (strcmp(pCSkillRec->szSetRange, "0"))
-			g_luaAPI.Call(pCSkillRec->szSetRange, (int)chSkillLv);
+		if (pCSkillRec->szSetRange != "0")
+			g_luaAPI.Call(pCSkillRec->szSetRange.c_str(), (int)chSkillLv);
 		//
 		m_pCSkillTData[sSkillNo][chSkillLv]->sStateParam[0] = SSTATE_NONE;
-		if (strcmp(pCSkillRec->szRangeState, "0"))
-			g_luaAPI.Call(pCSkillRec->szRangeState, (int)chSkillLv);
+		if (pCSkillRec->szRangeState != "0")
+			g_luaAPI.Call(pCSkillRec->szRangeState.c_str(), (int)chSkillLv);
 		//
-		if (strcmp(pCSkillRec->szFireSpeed, "0"))
+		if (pCSkillRec->szFireSpeed != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = g_luaAPI.CallR<int>(pCSkillRec->szFireSpeed, (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = g_luaAPI.CallR<int>(pCSkillRec->szFireSpeed.c_str(), (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = 0;
@@ -482,16 +462,16 @@ inline void CGameApp::InitSStateTraOnTime()
 		pSStateR = GetCSkillStateRecordInfo(i);
 		if (!pSStateR)
 			continue;
-		if (!strcmp(pSStateR->szOnTransfer, "0"))
+		if (pSStateR->szOnTransfer == "0")
 			continue;
-		if (!g_luaAPI.HasFunction(pSStateR->szOnTransfer))
+		if (!g_luaAPI.HasFunction(pSStateR->szOnTransfer.c_str()))
 		{
 			ToLogService("lua", LogLevel::Warning, "Skill state {} has szOnTransfer='{}' but function not found", i, pSStateR->szOnTransfer);
 			continue;
 		}
 		for (int j = 1; j <= SKILL_STATE_LEVEL; j++)
 		{
-			m_lSStateTraOnTime[i][j] = g_luaAPI.CallR<int>(pSStateR->szOnTransfer, (int)j).value_or(0);
+			m_lSStateTraOnTime[i][j] = g_luaAPI.CallR<int>(pSStateR->szOnTransfer.c_str(), (int)j).value_or(0);
 		}
 	}
 }

@@ -1,9 +1,7 @@
 ﻿#pragma once
-#include "TableData.h"
-
-#define MAX_GROUP_GATE   5
-#define MAX_REGION_GROUP 20
-#define MAX_REGION       20
+#include "ServerRecord.h"
+#include "ServerRecordStore.h"
+#include "AssetDatabase.h"
 
 #include <vector>
 #include <map>
@@ -11,20 +9,6 @@ typedef std::vector<std::string>	ReginList;
 typedef std::map<int, ReginList> ReginListMap;
 
 extern std::string g_serverset;
-
-// 
-class CServerGroupInfo : public CRawDataInfo
-{
-public:
-    CServerGroupInfo()
-    {
-    	cValidGateCnt = 0;
-	}
-
-    char  szGateIP[MAX_GROUP_GATE][16];
-	char  szRegion[16];
-	char  cValidGateCnt;
-};
 
 class CServerSet : public CRawDataSet
 {
@@ -129,16 +113,18 @@ protected:
 	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
 	{
 	    CServerGroupInfo *pInfo = (CServerGroupInfo*)pRawDataInfo;
-    
+
 		for (size_t i = 0; i < m_nRegionCnt; i++)
 		{
-			if (strcmp(m_szRegionName[i], pInfo->szRegion) == 0) // 
+			if (strcmp(m_szRegionName[i], pInfo->szRegion) == 0)
 			{
 				m_nCurGroupList[i][m_nCurGroupCnt[i]] = pInfo->nID;
 				m_nCurGroupCnt[i]++;
 				break;
 			}
 		}
+
+		ServerRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *pInfo);
 	}
 };
 

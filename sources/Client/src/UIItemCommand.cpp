@@ -19,7 +19,7 @@
 #include "stnpctalk.h"
 #include "stoneset.h"
 #include "ItemRefineSet.h"
-#include "ItemRefineEffectSet.h"
+#include "ItemRefineEffectRecordStore.h"
 #include "elfskillset.h"
 #include "STAttack.h"
 #include "STMove.h"
@@ -60,10 +60,10 @@ _pAniClock(NULL), _pSkill(NULL), _dwPlayTime(0),_canDrag(true)
 
     _pImage = new CGuiPic;
 
-    const char* file = pItem->GetIconFile();
+    auto file = pItem->GetIconFile();
 
     // 
-    HANDLE hFile = CreateFile(file,GENERIC_READ,0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
+    HANDLE hFile = CreateFile(file.c_str(),GENERIC_READ,0,NULL,OPEN_EXISTING,FILE_ATTRIBUTE_NORMAL,NULL);
     if( INVALID_HANDLE_VALUE == hFile ) 
     {
         _pImage->LoadImage( "texture/icon/error.png", ITEM_WIDTH, ITEM_HEIGHT, 0 );
@@ -72,13 +72,13 @@ _pAniClock(NULL), _pSkill(NULL), _dwPlayTime(0),_canDrag(true)
     {
         CloseHandle(hFile);
 
-        _pImage->LoadImage( file, ITEM_WIDTH, ITEM_HEIGHT, 0 );
+        _pImage->LoadImage( file.c_str(), ITEM_WIDTH, ITEM_HEIGHT, 0 );
     }
 
 	int nSkillID = 0;
 	if ( _pItem->sType == 71 )
 	{
-		nSkillID = atoi(GetItemInfo()->szAttrEffect);
+		nSkillID = atoi(GetItemInfo()->szAttrEffect.c_str());
 		_pSkill = GetSkillRecordInfo(nSkillID);
 		if ( !_pSkill || !_pSkill->GetIsUse() )
 			_pSkill = 0;
@@ -210,13 +210,13 @@ void CItemCommand::SaleRender( int x, int y, int nWidth, int nHeight )
 	
 	
 
-	CGuiFont::s_Font.GetSize( _pItem->szName, w, h );	
+	CGuiFont::s_Font.GetSize( _pItem->szName.c_str(), w, h );	
 	if( w > nWidth )
 	{
 		static char szBuf1[128] = { 0 };
 		static char szBuf2[128] = { 0 };
 		static int nEnter = 0;
-		strncpy( szBuf1, _pItem->szName, sizeof(szBuf1) );
+		strncpy( szBuf1, _pItem->szName.c_str(), sizeof(szBuf1) );
 		nEnter = (int)strlen( szBuf1 ) / 2;
 		if( _ismbslead( (unsigned char*)szBuf1, (unsigned char*)&szBuf1[nEnter] ) )
 		{
@@ -226,7 +226,7 @@ void CItemCommand::SaleRender( int x, int y, int nWidth, int nHeight )
 
 		nEnter++;
 		szBuf1[nEnter] = '\0';
-		strncpy( szBuf2, &_pItem->szName[nEnter], sizeof(szBuf2) );
+		strncpy( szBuf2, _pItem->szName.c_str() + nEnter, sizeof(szBuf2) );
 
 		CGuiFont::s_Font.GetSize( szBuf1, w, h );	
 		CGuiFont::s_Font.Render( szBuf1, x + ( nWidth - w ) / 2, nY - h - h - 2, COLOR_BLACK );
@@ -236,7 +236,7 @@ void CItemCommand::SaleRender( int x, int y, int nWidth, int nHeight )
 	}
 	else
 	{
-		CGuiFont::s_Font.Render( _pItem->szName, x + ( nWidth - w ) / 2, nY - h - 2, COLOR_BLACK );
+		CGuiFont::s_Font.Render( _pItem->szName.c_str(), x + ( nWidth - w ) / 2, nY - h - 2, COLOR_BLACK );
 	}
 
 	if(_nPrice > 2000000000){
@@ -245,7 +245,7 @@ void CItemCommand::SaleRender( int x, int y, int nWidth, int nHeight )
 		int itemID = price - (quantity*100000);
 		CItemRecord* pInfo = GetItemRecordInfo( itemID );
 		if (pInfo){
-			sprintf( buf, "%dx %s", quantity,pInfo->szName );
+			sprintf( buf, "%dx %s", quantity,pInfo->szName.c_str() );
 		}else{
 			sprintf( buf, "%dx Invalid ID [ %d]", quantity,itemID);
 		}
@@ -404,13 +404,13 @@ void CItemCommand::OwnDefRender( int x, int y, int nWidth, int nHeight )
 		CGuiFont::s_Font.Render( buf, xNum, yNum, COLOR_BLACK );
 	}
 
-	CGuiFont::s_Font.GetSize( _pItem->szName, w, h );	
+	CGuiFont::s_Font.GetSize( _pItem->szName.c_str(), w, h );	
 	if( w > nWidth )
 	{
 		static char szBuf1[128] = { 0 };
 		static char szBuf2[128] = { 0 };
 		static int nEnter = 0;
-		strncpy( szBuf1, _pItem->szName, sizeof(szBuf1) );
+		strncpy( szBuf1, _pItem->szName.c_str(), sizeof(szBuf1) );
 		nEnter = (int)strlen( szBuf1 ) / 2;
 		if( _ismbslead( (unsigned char*)szBuf1, (unsigned char*)&szBuf1[nEnter] ) )
 		{
@@ -420,7 +420,7 @@ void CItemCommand::OwnDefRender( int x, int y, int nWidth, int nHeight )
 
 		nEnter++;
 		szBuf1[nEnter] = '\0';
-		strncpy( szBuf2, &_pItem->szName[nEnter], sizeof(szBuf2) );
+		strncpy( szBuf2, _pItem->szName.c_str() + nEnter, sizeof(szBuf2) );
 
 		CGuiFont::s_Font.GetSize( szBuf1, w, h );	
 		CGuiFont::s_Font.Render( szBuf1, x + ( nWidth - w ) / 2, nY - h - h - 2, COLOR_BLACK );
@@ -430,7 +430,7 @@ void CItemCommand::OwnDefRender( int x, int y, int nWidth, int nHeight )
 	}
 	else
 	{
-		CGuiFont::s_Font.Render( _pItem->szName, x + ( nWidth - w ) / 2, nY - h - 2, COLOR_BLACK );
+		CGuiFont::s_Font.Render( _pItem->szName.c_str(), x + ( nWidth - w ) / 2, nY - h - 2, COLOR_BLACK );
 	}
 
 	CGuiFont::s_Font.GetSize( _OwnDefText.c_str(), w, h );
@@ -450,7 +450,7 @@ void CItemCommand::RenderEnergy(int x, int y)
 
 void CItemCommand::_AddDescriptor()
 {
-	StringNewLine( buf, 40, _pItem->szDescriptor, (unsigned int)strlen(_pItem->szDescriptor) );
+	StringNewLine( buf, 40, _pItem->szDescriptor.c_str(), (unsigned int)_pItem->szDescriptor.size() );
     PushHint( buf );
 }
 
@@ -491,7 +491,7 @@ void CItemCommand::AddHint( int x, int y ){
 	item.Convert( _ItemData, _pItem );
 	
 	if(_ItemData.sEndure[1] == 25000 && _ItemData.sEnergy[1] == 0){
-		PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+		PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 		_ShowBody();
 		return;
 	}
@@ -674,7 +674,7 @@ void CItemCommand::AddHint( int x, int y ){
 
         SetHintIsCenter( false );
 
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		if(5786 == _pItem->lID || 5787 == _pItem->lID || 5788 == _pItem->lID || 5789 == _pItem->lID)
 		{
@@ -695,14 +695,14 @@ void CItemCommand::AddHint( int x, int y ){
 	 
     else if( _pItem->sType==42 )    // 
     {
-        PushHint( _pItem->szName, COLOR_BLUE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_BLUE, 5, 1 );
 
         SetHintIsCenter( false );
 		_AddDescriptor();
     }
     else if( _pItem->sType==18 || _pItem->sType==19 )	// ,
     {
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		if( _pItem->nID==3908 || _pItem->nID==3108 ) // 3108 add by Philip  2005-05-30
 		{
@@ -721,7 +721,7 @@ void CItemCommand::AddHint( int x, int y ){
     }
 	else if( _pItem->sType==43 )    // 
 	{
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		if( _pBoatHint )
 		{
@@ -834,7 +834,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
 	else if( _pItem->sType==29 )    // 
 	{
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		PUSH_HINT( g_oLangRec.GetString(628), _pItem->sNeedLv, pAttr->get(ATTR_LV)>=_pItem->sNeedLv ? GENERIC_COLOR : VALID_COLOR );
 
@@ -847,7 +847,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
 	else if( _pItem->sType==45 )    // 
 	{
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		PUSH_HINT( g_oLangRec.GetString(634), _ItemData.sEnergy[0] );
 		
@@ -870,9 +870,9 @@ void CItemCommand::AddHint( int x, int y ){
 	}
 	else if( _pItem->sType==34 )	// 
 	{
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
-		CSkillRecord* pSkill = GetSkillRecordInfo( _pItem->szName );
+		CSkillRecord* pSkill = GetSkillRecordInfo( _pItem->szName.c_str() );
 		if( pSkill )
 		{
 			if( pSkill->chJobSelect[0][0]>=0 )	
@@ -915,7 +915,7 @@ void CItemCommand::AddHint( int x, int y ){
 				if( p )
 				{
 					pSelfSkill = g_stUIEquip.FindSkill( p->nID );
-					sprintf( buf, g_oLangRec.GetString(649), p->szName, pSkill->sPremissSkill[i][1] );
+					sprintf( buf, g_oLangRec.GetString(649), p->szName.c_str(), pSkill->sPremissSkill[i][1] );
 					if( pSelfSkill && pSelfSkill->GetSkillGrid().chLv >= pSkill->sPremissSkill[i][1] )
 						PushHint( buf );
 					else
@@ -923,11 +923,11 @@ void CItemCommand::AddHint( int x, int y ){
 				}
 			}
 			SetHintIsCenter( false );
-			StringNewLine( buf, 40, pSkill->szExpendHint, (unsigned int)strlen(pSkill->szExpendHint) );
+			StringNewLine( buf, 40, pSkill->szExpendHint.c_str(), (unsigned int)pSkill->szExpendHint.size() );
     		PushHint( buf );
-			StringNewLine( buf, 40, pSkill->szEffectHint, (unsigned int)strlen(pSkill->szEffectHint) );
+			StringNewLine( buf, 40, pSkill->szEffectHint.c_str(), (unsigned int)pSkill->szEffectHint.size() );
     		PushHint( buf, ADVANCED_COLOR );
-			StringNewLine( buf, 40, pSkill->szDescribeHint, (unsigned int)strlen(pSkill->szDescribeHint) );
+			StringNewLine( buf, 40, pSkill->szDescribeHint.c_str(), (unsigned int)pSkill->szDescribeHint.size() );
     		PushHint( buf );
 		}
 		else
@@ -937,7 +937,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
 	else if( _pItem->sType == 46 )	// 
 	{
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		int show_attr[] = { ITEMATTR_VAL_STR, ITEMATTR_VAL_AGI, ITEMATTR_VAL_DEX, ITEMATTR_VAL_CON, ITEMATTR_VAL_STA };
 		string show_text[] = { g_oLangRec.GetString(650), g_oLangRec.GetString(651), g_oLangRec.GetString(652), g_oLangRec.GetString(653), g_oLangRec.GetString(654) };
@@ -976,7 +976,7 @@ void CItemCommand::AddHint( int x, int y ){
 			}
 		}
 
-		sprintf( buf, g_oLangRec.GetString(656), ConvertNumToChinese( item.sEnergy[1] ).c_str(), _pItem->szName );
+		sprintf( buf, g_oLangRec.GetString(656), ConvertNumToChinese( item.sEnergy[1] ).c_str(), _pItem->szName.c_str() );
         //PushHint( buf, color, 5, 1, -1, true, -16777216);
 		PushHint( buf, (DWORD)(color ^ 0xFF000000), 5, 1, -1, true, -16777216);
 		PushHint( GetStoneHint(1).c_str() );	// 1
@@ -984,7 +984,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
 	else if( _pItem->sType==50 )
 	{
-		sprintf( buf, g_oLangRec.GetString(656), ConvertNumToChinese( item.sEnergy[1] ).c_str(), _pItem->szName );
+		sprintf( buf, g_oLangRec.GetString(656), ConvertNumToChinese( item.sEnergy[1] ).c_str(), _pItem->szName.c_str() );
         PushHint( buf, COLOR_WHITE, 5, 1 );
 		_AddDescriptor();
 	}
@@ -1008,7 +1008,7 @@ void CItemCommand::AddHint( int x, int y ){
 				_pItem->lID == 6377||_pItem->lID == 6378||(_pItem->lID>=5882&&_pItem->lID<=5893)||_pItem->lID == 5895||
 				_pItem->lID == 5897||(_pItem->lID>=6383&&_pItem->lID<=6385))	// 
 		{
-			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+			PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 			SetHintIsCenter( false );
 			_AddDescriptor();
@@ -1019,7 +1019,7 @@ void CItemCommand::AddHint( int x, int y ){
 
 		SetHintIsCenter(true);
 
-		PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+		PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 		//_AddDescriptor();
 		AddHintHeight();
 
@@ -1185,7 +1185,7 @@ void CItemCommand::AddHint( int x, int y ){
         long lForge = 0;
         CItemRecord*     pCItemRec = NULL;
 
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
         sprintf(buf, g_oLangRec.GetString(869), _ItemData.sEndure[0]);
         PushHint(buf, GENERIC_COLOR);
@@ -1196,7 +1196,7 @@ void CItemCommand::AddHint( int x, int y ){
             pCItemRec = GetItemRecordInfo(iItem);
             if(pCItemRec)
             {
-                sprintf(buf, g_oLangRec.GetString(870), pCItemRec->szName);
+                sprintf(buf, g_oLangRec.GetString(870), pCItemRec->szName.c_str());
                 PushHint(buf, GENERIC_COLOR);
             }
         }
@@ -1214,7 +1214,7 @@ void CItemCommand::AddHint( int x, int y ){
             pCItemRec = GetItemRecordInfo(iItem);
             if(pCItemRec)
             {
-                sprintf(buf, g_oLangRec.GetString(872), pCItemRec->szName, (lForge / 10000000));
+                sprintf(buf, g_oLangRec.GetString(872), pCItemRec->szName.c_str(), (lForge / 10000000));
                 PushHint(buf, GENERIC_COLOR);
             }
         }
@@ -1226,7 +1226,7 @@ void CItemCommand::AddHint( int x, int y ){
             pCItemRec = GetItemRecordInfo(iItem);
             if(pCItemRec)
             {
-                sprintf(buf, g_oLangRec.GetString(873), pCItemRec->szName, (lForge / 10000));
+                sprintf(buf, g_oLangRec.GetString(873), pCItemRec->szName.c_str(), (lForge / 10000));
                 PushHint(buf, GENERIC_COLOR);
             }
         }
@@ -1238,7 +1238,7 @@ void CItemCommand::AddHint( int x, int y ){
             pCItemRec = GetItemRecordInfo(iItem);
             if(pCItemRec)
             {
-                sprintf(buf, g_oLangRec.GetString(874), pCItemRec->szName, (lForge / 10));
+                sprintf(buf, g_oLangRec.GetString(874), pCItemRec->szName.c_str(), (lForge / 10));
                 PushHint(buf, GENERIC_COLOR);
             }
         }
@@ -1264,7 +1264,7 @@ void CItemCommand::AddHint( int x, int y ){
 			CItemRecord* pInfo= GetItemRecordInfo( ID );
 				
 			if(pInfo){
-				sprintf(buf, "Trade Value: %dx %s",num,pInfo->szName);
+				sprintf(buf, "Trade Value: %dx %s",num,pInfo->szName.c_str());
 			}else{
 				sprintf(buf, "Trade Value: %dx [Unknown]",num);
 			}
@@ -1281,7 +1281,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
     else if(_pItem->sType == 70)
     {
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		if(_pItem->lID == 2902 || _pItem->lID == 2903)	// , 
 		{
@@ -1321,7 +1321,7 @@ void CItemCommand::AddHint( int x, int y ){
 			CItemRecord* pInfo= GetItemRecordInfo( ID );
 				
 			if(pInfo){
-				sprintf(buf, "Trade Value: %dx %s",num,pInfo->szName);
+				sprintf(buf, "Trade Value: %dx %s",num,pInfo->szName.c_str());
 			}else{
 				sprintf(buf, "Trade Value: %dx [Unknown]",num);
 			}
@@ -1338,7 +1338,7 @@ void CItemCommand::AddHint( int x, int y ){
     }
 	else if(_pItem->sType == 71 && _pItem->lID == 3010)
 	{
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
         sprintf( buf, g_oLangRec.GetString(644), _ItemData.sEnergy[0], _ItemData.sEnergy[1] );
         PushHint( buf );
@@ -1351,7 +1351,7 @@ void CItemCommand::AddHint( int x, int y ){
 		//add by ALLEN 2007-10-16
 
 		// 
-		PushHint(_pItem->szName, COLOR_WHITE, 5, 1 ); // 
+		PushHint(_pItem->szName.c_str(), COLOR_WHITE, 5, 1 ); // 
 
 		int nLevel = item.chForgeLv;
 		const char* arShowName[5] = { g_oLangRec.GetString(944), g_oLangRec.GetString(945), g_oLangRec.GetString(946), g_oLangRec.GetString(947), g_oLangRec.GetString(948) };// "", "", "", "", "" };
@@ -1373,7 +1373,7 @@ void CItemCommand::AddHint( int x, int y ){
 	else if( _pItem->sType==71 && _pItem->lID == 6377 )
 	{
 		
-		PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+		PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 		SetHintIsCenter( false );
 		_AddDescriptor();
@@ -1389,12 +1389,12 @@ void CItemCommand::AddHint( int x, int y ){
 		if (active)
 		{
 			color = 0x00FF00;
-			sprintf( buf, "%s (%s)", _pItem->szName, "enable");
+			sprintf( buf, "%s (%s)", _pItem->szName.c_str(), "enable");
 		}
 		else
 		{
 			color = 0xDC143C;
-			sprintf( buf, "%s (%s)", _pItem->szName, "disable");
+			sprintf( buf, "%s (%s)", _pItem->szName.c_str(), "disable");
 		}
 
 		PushHint( buf, (DWORD)(color ^ 0xFF000000), 5, 1, -1, true, -16777216);
@@ -1406,7 +1406,7 @@ void CItemCommand::AddHint( int x, int y ){
     {
 		if(_pItem->lID == 58) // 
 		{
-			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+			PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 			sprintf( buf, g_oLangRec.GetString(626), item.sEnergy[0], item.sEnergy[1] );
 			PushHint( buf, GENERIC_COLOR );
@@ -1418,7 +1418,7 @@ void CItemCommand::AddHint( int x, int y ){
 		}
 		else if(_pItem->lID == 171) // bragi
 		{
-			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+			PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 			static const char* pszText[5] = {	g_oLangRec.GetString(952), 
 												g_oLangRec.GetString(953), 
@@ -1438,7 +1438,7 @@ void CItemCommand::AddHint( int x, int y ){
 		}
 		else if(_pItem->lID == 2967) // 
 		{
-			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+			PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 			sprintf( buf, g_oLangRec.GetString(626), item.sEnergy[0], item.sEnergy[1] );
 			PushHint( buf, GENERIC_COLOR );
@@ -1450,7 +1450,7 @@ void CItemCommand::AddHint( int x, int y ){
 		}
 		else    // 
 		{
-			PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+			PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
 			SetHintIsCenter( false );
 			_AddDescriptor();
@@ -1458,7 +1458,7 @@ void CItemCommand::AddHint( int x, int y ){
 	}
     else    // 
     {
-        PushHint( _pItem->szName, COLOR_WHITE, 5, 1 );
+        PushHint( _pItem->szName.c_str(), COLOR_WHITE, 5, 1 );
 
         SetHintIsCenter( false );
 
@@ -1608,7 +1608,7 @@ void CItemCommand::AddHint( int x, int y ){
 		CItemRecord* pInfo= GetItemRecordInfo( ID );
 			
 		if(pInfo){
-			sprintf(buf, "Trade Value: %dx %s",num,pInfo->szName);
+			sprintf(buf, "Trade Value: %dx %s",num,pInfo->szName.c_str());
 		}else{
 			sprintf(buf, "Trade Value: %dx [Unknown]",num);
 		}
@@ -1818,7 +1818,7 @@ bool CItemCommand::MouseDown()
 		// 
 		if( _pItem->sType>=31 ) 
 		{
-			g_pGameApp->SysInfo( g_oLangRec.GetString(675), _pItem->szName );
+			g_pGameApp->SysInfo( g_oLangRec.GetString(675), _pItem->szName.c_str() );
 			return false;
 		}
 
@@ -1987,7 +1987,7 @@ bool CItemCommand::UseCommand(bool isRightClick)
 			CCharacter* pCha = CGameScene::GetMainCha();
 			if( !pCha ) return false;
 
-			int nSkillID = atoi(GetItemInfo()->szAttrEffect);
+			int nSkillID = atoi(GetItemInfo()->szAttrEffect.c_str());
 			CSkillRecord* pSkill = GetSkillRecordInfo(nSkillID);
 
 			// 
@@ -2007,7 +2007,7 @@ bool CItemCommand::UseCommand(bool isRightClick)
 				return false;
 			}
 
-			int nCoolDownTime = atoi(pSkill->szFireSpeed);
+			int nCoolDownTime = atoi(pSkill->szFireSpeed.c_str());
 			if(nCoolDownTime > 0)//  cooldown 
 			{
 				DWORD nCurTickCount = g_pGameApp->GetCurTick() - 500;	// 500
@@ -2090,10 +2090,10 @@ bool CItemCommand::StartCommand()
 			_dwPlayTime = CGameApp::GetCurTick() + _GetSkillTime();
 
             _pAniClock->Play( _GetSkillTime() );
-            g_pGameApp->AddTipText( "CItemCommand::Exec[%s]", _pItem->szName );
+            g_pGameApp->AddTipText( "CItemCommand::Exec[%s]", _pItem->szName.c_str() );
             return true;
         }
-	    g_pGameApp->AddTipText( "CItemCommand::Exec[%s] Failed", _pItem->szName );
+	    g_pGameApp->AddTipText( "CItemCommand::Exec[%s] Failed", _pItem->szName.c_str() );
 	    return false;
     }
     return true;
@@ -2215,7 +2215,7 @@ bool CItemCommand::ReadyUse()
 
 void CItemCommand::Error()
 {    
-	g_pGameApp->AddTipText("Item [%s] encounter an error!", _pItem->szName );
+	g_pGameApp->AddTipText("Item [%s] encounter an error!", _pItem->szName.c_str() );
 }
 
 //int CItemCommand::_GetValue( int nItemAttrType, SItemGrid& item )
@@ -2286,12 +2286,12 @@ const char* CItemCommand::GetName()
 { 
     if( _ItemData.chForgeLv==0 )
     {
-        return _pItem->szName;
+        return _pItem->szName.c_str();
     }
     else
     {
         static char szBuf[128] = { 0 };
-        sprintf( szBuf, "Lv%d %s", _ItemData.chForgeLv, _pItem->szName );
+        sprintf( szBuf, "Lv%d %s", _ItemData.chForgeLv, _pItem->szName.c_str() );
         return szBuf;
     }
 }

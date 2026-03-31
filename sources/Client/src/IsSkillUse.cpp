@@ -234,59 +234,59 @@ const char*	CIsSkillUse::GetError()
 	switch( _eError )
 	{
 	case enumInValid: 
-		sprintf( buf, g_oLangRec.GetString(149), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(149), _pSkill->szName.c_str());
 		break;
 	case enumNotEnergy:
-		sprintf( buf, g_oLangRec.GetString(150), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(150), _pSkill->szName.c_str());
 		break;
 	case enumNotAttack: return g_oLangRec.GetString(151);
 	case enumNotUse: return g_oLangRec.GetString(152);
 	case enumNotMP: 
-		sprintf( buf, g_oLangRec.GetString(153), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(153), _pSkill->szName.c_str());
 		break;
 
 	case enumSelf: 
-		sprintf( buf, g_oLangRec.GetString(154), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(154), _pSkill->szName.c_str());
 		break;
 	case enumFish:
-		sprintf( buf, g_oLangRec.GetString(155), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(155), _pSkill->szName.c_str());
 		break;
 	case enumDieBoat:
-		sprintf( buf, g_oLangRec.GetString(156), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(156), _pSkill->szName.c_str());
 		break;
 	case enumTree:
-		sprintf( buf, g_oLangRec.GetString(157), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(157), _pSkill->szName.c_str());
 		break;
 	case enumMine:
-		sprintf( buf, g_oLangRec.GetString(158), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(158), _pSkill->szName.c_str());
 		break;
 	case enumOnlyTeam:
-		sprintf( buf, g_oLangRec.GetString(159), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(159), _pSkill->szName.c_str());
 		break;		
 	case enumDie:
-		sprintf( buf, g_oLangRec.GetString(160), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(160), _pSkill->szName.c_str());
 		break;
 	case enumTargetError:
-		sprintf( buf, g_oLangRec.GetString(161), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(161), _pSkill->szName.c_str());
 		break;
 		
 	case enumHelpMons:
-		sprintf( buf, g_oLangRec.GetString(162), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(162), _pSkill->szName.c_str());
 		break;
 	case enumAttackMain:
-		sprintf( buf, g_oLangRec.GetString(163), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(163), _pSkill->szName.c_str());
 		break;
 	case enumAttackTeam:
-		sprintf( buf, g_oLangRec.GetString(164), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(164), _pSkill->szName.c_str());
 		break;
 	case enumAttackDie:
-		sprintf( buf, g_oLangRec.GetString(165), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(165), _pSkill->szName.c_str());
 		break;
 	case enumAttackPlayer:
-		sprintf( buf, g_oLangRec.GetString(166), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(166), _pSkill->szName.c_str());
 		break;
 	case enumRepair:
-		sprintf( buf, g_oLangRec.GetString(167), _pSkill->szName );
+		sprintf( buf, g_oLangRec.GetString(167), _pSkill->szName.c_str());
 		break;
 	}
 	return buf;

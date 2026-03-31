@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "SkillRecordStore.h"
 #include "UISkillList.h"
 #include "uiform.h"
 #include "uiformmgr.h"
@@ -94,7 +95,7 @@ void CSkillList::Init()
     if( GetCommand(0) ) return;
     
     CSkillRecord *info;
-    int count = CSkillRecordSet::I()->GetLastID() + 1;
+    int count = SkillRecordStore::Instance()->GetMaxId() + 1;
     for( int i=0; i<count; i++ )
     {
         info = GetSkillRecordInfo( i );

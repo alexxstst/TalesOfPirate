@@ -39,7 +39,7 @@
 #include "AreaRecord.h"
 #include "UIGuildBankForm.h"
 #include "UIGlobalVar.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 
 
 #ifdef _TEST_CLIENT

@@ -23,6 +23,9 @@
 #include "lua_gamectrl.h"
 #include "LuaAPI.h"
 #include "CommandMessages.h"
+#include "LevelRecordStore.h"
+#include "LifeLvRecordStore.h"
+#include "SailLvRecordStore.h"
 
 using namespace std;
 
@@ -344,7 +347,7 @@ void CFightAble::SkillTarEffect(SFireUnit *pSFireSrc)
 	//
 	for (int i = 0; i < pSFireSrc->sExecTime; i++)
 		//g_CParser.DoString(pSFireSrc->pCSkillRecord->szEffect, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 2, pSrcCha, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSrcCha->m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
-		g_luaAPI.Call(pSFireSrc->pCSkillRecord->szEffect, pSrcCha, this->IsCharacter(), (int)pSrcCha->m_SFightInit.pSSkillGrid->chLv);
+		g_luaAPI.Call(pSFireSrc->pCSkillRecord->szEffect.c_str(), pSrcCha, this->IsCharacter(), (int)pSrcCha->m_SFightInit.pSSkillGrid->chLv);
 	lNowHP = (long)m_CChaAttr.GetAttr(ATTR_HP);
 	BeUseSkill(lOldHP, lNowHP, pSrcCha, pSFireSrc->pCSkillRecord->chHelpful);
 
@@ -1124,9 +1127,9 @@ bool CFightAble::SkillExpend(Short sExecTime)
 	}
 
 	//
-	if (strcmp(m_SFightInit.pCSkillRecord->szUse, "0"))
+	if (m_SFightInit.pCSkillRecord->szUse != "0")
 		//g_CParser.DoString(m_SFightInit.pCSkillRecord->szUse, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, m_SFightInit.pSSkillGrid->chLv, DOSTRING_PARAM_END);
-		g_luaAPI.Call(m_SFightInit.pCSkillRecord->szUse, this->IsCharacter(), (int)m_SFightInit.pSSkillGrid->chLv);
+		g_luaAPI.Call(m_SFightInit.pCSkillRecord->szUse.c_str(), this->IsCharacter(), (int)m_SFightInit.pSSkillGrid->chLv);
 	if (m_SFightProc.sState == enumFSTATE_NO_EXPEND)
 	{
 		NotiSkillSrcToEyeshot(sExecTime);
@@ -2197,7 +2200,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 						for (int j = 0; j < sExecTime; j++)
 						{
 							//g_CParser.DoString(pCSStateRec->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSStateUnit->GetStateLv(), DOSTRING_PARAM_END);
-							g_luaAPI.Call(pCSStateRec->szAddState, this->IsCharacter(), (int)pSStateUnit->GetStateLv());
+							g_luaAPI.Call(pCSStateRec->szAddState.c_str(), this->IsCharacter(), (int)pSStateUnit->GetStateLv());
 						}
 						pSStateUnit->ulLastTick += pCSStateRec->sFrequency * sExecTime * 1000;
 					}
@@ -2215,7 +2218,7 @@ void CFightAble::OnSkillState(DWORD dwCurTick)
 					for (int j = 0; j < sExecTime; j++)
 					{
 						//g_CParser.DoString(pCSStateRec->szAddState, enumSCRIPT_RETURN_NONE, 0, enumSCRIPT_PARAM_LIGHTUSERDATA, 1, this->IsCharacter(), enumSCRIPT_PARAM_NUMBER, 1, pSStateUnit->GetStateLv(), DOSTRING_PARAM_END);
-						g_luaAPI.Call(pCSStateRec->szAddState, this->IsCharacter(), (int)pSStateUnit->GetStateLv());
+						g_luaAPI.Call(pCSStateRec->szAddState.c_str(), this->IsCharacter(), (int)pSStateUnit->GetStateLv());
 					}
 					pSStateUnit->ulLastTick += pCSStateRec->sFrequency * sExecTime * 1000;
 				}

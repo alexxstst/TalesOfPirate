@@ -9,6 +9,7 @@
 #define CHARACTERRECORD_H
 
 #include <tchar.h>
+#include <string>
 #include "util.h"
 #include "TableData.h"
 
@@ -67,9 +68,9 @@ class CChaRecord : public CRawDataInfo
 public:
 	//CChaRecord();
 
-	long	lID;								// 
-	_TCHAR	szName[defCHA_NAME_LEN];			// 
-	_TCHAR	szIconName[defCHA_ICON_NAME_LEN];	// 
+	long	lID;								//
+	std::string	szName;							//
+	std::string	szIconName;						//
 	char	chModalType;						// 
 	char	chCtrlType;							// 
 	short	sModel;								// 
@@ -146,9 +147,9 @@ public:
 	long	lSta;	// stamina		sp
 	long	lLuk;	// luck			
 	long	lLHandVal;	// 
-	_TCHAR	szGuild[defCHA_GUILD_NAME_LEN];	// 
-	_TCHAR	szTitle[defCHA_TITLE_NAME_LEN];	// 
-	_TCHAR	szJob[defCHA_JOB_NAME_LEN];		// 
+	std::string	szGuild;						//
+	std::string	szTitle;						//
+	std::string	szJob;							//
 	LONG32	lCExp;	// 
 	LONG32	lNExp;	// 
 	long	lFame;	// 
@@ -202,55 +203,6 @@ private:
 
 };
 
-class CChaRecordSet : public CRawDataSet
-{
-public:
-	static CChaRecordSet* I() { return _Instance; }
-
-	CChaRecordSet(int nIDStart, int nIDCnt, int nCol = 128)
-		:CRawDataSet(nIDStart, nIDCnt, nCol)
-	{
-		_Instance = this;
-		_Init();
-	}
-
-protected:
-
-	static CChaRecordSet* _Instance; // , 
-
-	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
-	{
-		return new CChaRecord[nCnt];
-	}
-
-	virtual void _DeleteRawDataArray()
-	{
-		delete[] (CChaRecord*)_RawDataArray;
-	}
-
-	virtual int _GetRawDataInfoSize()
-	{
-		return sizeof(CChaRecord);
-	}
-
-	virtual void*	_CreateNewRawData(CRawDataInfo *pInfo)
-	{
-		return NULL;
-	}
-
-	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
-	{
-		SAFE_DELETE(pInfo->pData);
-	}
-
-	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList);
-	virtual void _ProcessRawDataInfo(CRawDataInfo *pInfo);
-
-};
-
-inline CChaRecord* GetChaRecordInfo( int nTypeID )
-{
-	return (CChaRecord*)CChaRecordSet::I()->GetRawDataInfo(nTypeID);
-}
+CChaRecord* GetChaRecordInfo(int nTypeID);
 
 #endif // CHARACTERRECORD_H

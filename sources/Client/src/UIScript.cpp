@@ -33,8 +33,8 @@
 #include "UIHeadSay.h"
 #include "UISkillList.h"
 #include "CharacterRecord.h"
-#include "MapSet.h"
-#include "EffectSet.h"
+#include "MapRecordStore.h"
+#include "EffectRecordStore.h"
 #include "uimenu.h"
 #include "uiCozeform.h"
 #include "UIChat.h"
@@ -1344,7 +1344,7 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
             if( pInfo )
             {
 				char szBuf[128] = { 0 };
-				sprintf( szBuf, "%d.%s", pInfo->lID, pInfo->szName );
+				sprintf( szBuf, "%d.%s", pInfo->lID, pInfo->szName.c_str() );
                 pHint->SetHint( szBuf );
             }
         }

@@ -444,7 +444,7 @@ void CMissionTrigger::Exec()
 	CChaRecord* pCharRecord = GetChaRecordInfo( _pData->sID );
 	if( pCharRecord )
 	{
-		strncpy( szData, pCharRecord->szName, sizeof(szData) );
+		strncpy( szData, pCharRecord->szName.c_str(), sizeof(szData) );
 	}
 	g_pGameApp->ShowMidText( g_oLangRec.GetString(3), szData, _pData->sCount, _pData->sNum );
 }

@@ -8,11 +8,13 @@
 #include "JobInitEquip.h"
 #include "CommFunc.h"
 
+#include "AssetDatabase.h"
+#include "JobEquipRecordStore.h"
 using namespace std;
 CJobEquipRecordSet * CJobEquipRecordSet::_Instance = NULL;
 
 BOOL CJobEquipRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string> &ParamList)
-{   
+{
 	if(ParamList.size()==0) return FALSE;
 
 	CJobEquipRecord *pInfo = (CJobEquipRecord*)pRawDataInfo;
@@ -21,11 +23,11 @@ BOOL CJobEquipRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<str
     string strList[80];
 	string strLine;
 
-	// 
+	//
 	pInfo->chID = (char)pInfo->nID;
-	// 
+	//
 	pInfo->chJob = (char)g_GetJobID(pInfo->szDataName);
-	// 
+	//
 	strLine = ParamList[m++];
 	n = Util_ResolveTextLine(strLine.c_str(), strList, 80, ',');
 	n = n > defJOB_INIT_EQUIP_MAX ? defJOB_INIT_EQUIP_MAX : n;
@@ -37,5 +39,6 @@ BOOL CJobEquipRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<str
 			pInfo->sItemID[i] = 0;
 	}
 
+	JobEquipRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *pInfo);
 	return TRUE;
 }

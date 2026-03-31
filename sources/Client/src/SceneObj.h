@@ -3,7 +3,7 @@
 #include "SceneNode.h"
 #include "MindPower.h"
 #include "SceneLight.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 
 class CEffectObj;
 

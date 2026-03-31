@@ -140,7 +140,7 @@ CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Cha
 	pCItem->m_pCItemRecord = pCItemRec;
 	if (pCEvent)
 		pCItem->SetEvent(*pCEvent);
-	pCItem->SetName(pCItemRec->szName);
+	pCItem->SetName(pCItemRec->szName.c_str());
 	pCItem->SetCat(pItemInfo->sID);
 	pCItem->m_ID = g_pGameApp->m_Ident.GetID();
 	pCItem->SetSpawnType(chSpawnType);
@@ -201,7 +201,7 @@ CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Poi
 	pCCha->SetAngle(sAngle);
 	Square SShape = {*pSPos, pCCha->m_pCChaRecord->sRadii};
 	if (!cszChaName)
-		strcpy(pCCha->m_name, pCCha->m_pCChaRecord->szName);
+		strcpy(pCCha->m_name, pCCha->m_pCChaRecord->szName.c_str());
 	else
 		strcpy(pCCha->m_name, cszChaName);
 	pCCha->SetEyeshotAbility(bEyeshotAbility);

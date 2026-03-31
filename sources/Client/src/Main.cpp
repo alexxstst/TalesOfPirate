@@ -36,10 +36,12 @@
 #include "SelectChaScene.h"
 
 #include "LootFilter.h"
+#include "AssetDatabase.h"
 
 
 
 std::string g_serverset;
+dbc::IniFile g_SystemIni;
 
 #define MAX_LOADSTRING 100
  
@@ -122,6 +124,12 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	TalesOfPirate::Utils::Crush::SetupDumpSetting("log\\game\\dumps");
 	g_logManager.InitLogger("log\\game");
 	g_logManager.EnableGlobalConsole(true);
+
+	g_SystemIni = dbc::IniFile("./user/system.ini");
+	g_Config.Load();
+
+	const auto assetDbPath = g_SystemIni["Assets"].GetString("StringAssetPack", "gamedata.sqlite");
+	AssetDatabase::Instance()->Open(assetDbPath);
 
 	if(strParam.find("editor")!= std::string::npos) // Launch game editor
     {

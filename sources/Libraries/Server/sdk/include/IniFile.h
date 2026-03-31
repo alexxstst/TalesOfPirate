@@ -1,60 +1,66 @@
-﻿#pragma once
+#pragma once
 
-#include "excp.h"
 #include <string>
+#include <string_view>
+#include <vector>
+#include <cstdint>
 
-_DBC_BEGIN
-#pragma pack(push)
-#pragma pack(4)
+namespace dbc {
 
-struct IniItem{
-	std::string	name;
-	std::string	value;
+struct IniItem {
+	std::string name;
+	std::string value;
 };
-class IniSection{
-friend class IniFile;
+
+class IniSection {
+	friend class IniFile;
+
 public:
-	int	ItemCount(){return m_itemcount;}
-	IniItem & operator[](int);
-	std::string & operator[](const char *name)const;
+	int ItemCount() const { return static_cast<int>(m_items.size()); }
+
+	const std::string& GetName() const { return m_name; }
+
+	// Получить строковое значение. Если ключ не найден — возвращает defaultValue.
+	std::string GetString(std::string_view key, std::string_view defaultValue = "") const;
+
+	// Получить целочисленное значение. Если ключ не найден или не парсится — возвращает defaultValue.
+	int64_t GetInt64(std::string_view key, int64_t defaultValue = 0) const;
+
+	// Установить значение ключа (создаёт если не существует).
+	void SetString(std::string_view key, std::string_view value);
+	void SetInt64(std::string_view key, int64_t value);
+
 private:
-	IniSection():m_itemcount(0),m_itemsize(0),m_item(0){}
-	~IniSection();
+	std::string m_name;
+	std::vector<IniItem> m_items;
 
-	IniItem * AddItem(const char *name,const char *value);
-
-	struct{
-		int	m_itemcount;
-		int	m_itemsize;
-		IniItem ** m_item;
-		std::string	m_sectname;
-	};
+	IniItem* FindItem(std::string_view key);
+	const IniItem* FindItem(std::string_view key) const;
 };
 
-class IniFile{
+class IniFile {
 public:
-	IniFile(const char *filename);
-	~IniFile();
+	explicit IniFile(std::string_view filename = "");
+	~IniFile() = default;
 
-	int	SectCount(){return m_sectcount;}
-	IniSection & operator[](int);
-	IniSection & operator[](const char *sectname)const;
+	IniFile(const IniFile&) = delete;
+	IniFile& operator=(const IniFile&) = delete;
+	IniFile(IniFile&&) = default;
+	IniFile& operator=(IniFile&&) = default;
+
+	int SectCount() const { return static_cast<int>(m_sections.size()); }
+
+	// Получить секцию по имени. Если не найдена — создаёт пустую.
+	IniSection& operator[](std::string_view sectname);
+
+	// Сохранить в файл (по умолчанию — в тот же, из которого загружали).
+	void Save(std::string_view filename = "") const;
+
 private:
-	void Flush();
-	void ReadFile(const char *filename);
-	IniSection * AddSection(const char *sectname);
+	void ReadFile(std::string_view filename);
 
-	struct{
-		int	m_sectcount;
-		int	m_sectsize;
-		IniSection ** m_sect;
-	};
-	bool	m_update;
-	bool	m_rw;					//false:;true:
-	char	m_filename[512];
+	std::vector<IniSection> m_sections;
+	std::string m_filename;
 };
 
-#pragma pack(pop)
-_DBC_END
-
-
+} // namespace dbc

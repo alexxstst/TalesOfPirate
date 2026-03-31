@@ -1,8 +1,11 @@
 ﻿#pragma once
 
+#include "IniFile.h"
+
 class MPEditor;
 
 extern MPEditor g_Editor;
+extern dbc::IniFile g_SystemIni;
 
 #define TINY_RES_X 800
 #define TINY_RES_Y 600

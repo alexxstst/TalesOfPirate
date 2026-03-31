@@ -1010,7 +1010,7 @@ namespace GUI
 			m_TradeBox = g_stUIBox.ShowTradeBox(_BuyGoodsEvent, 
 								   (float)m_pkCurrSetupBooth->iPrice, 
 								   m_pkCurrSetupBooth->iNum, 
-								   rkItemCmd.GetItemInfo()->szName );
+								   rkItemCmd.GetItemInfo()->szName.c_str() );
 
 		}
 		else
@@ -1032,7 +1032,7 @@ namespace GUI
 				if(pInfo){
 					sprintf(buf, "Do you wish to trade\n%dx %s\nfor %s",
 					num,
-					pInfo->szName,
+					pInfo->szName.c_str(),
 					rkItemCmd.GetName());
 				}else{
 					sprintf(buf, "Do you wish to trade\n%dx Undefined\nfor %s",

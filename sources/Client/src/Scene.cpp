@@ -4,10 +4,10 @@
 #include "SceneObj.h"
 #include "SceneItem.h"
 #include "EffectObj.h"
-#include "EffectSet.h"
+#include "EffectRecordStore.h"
 #include "MPModelEff.h"
 #include "MPFont.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 #include "GameApp.h"
 #include "GameConfig.h"
 #include "MPEditor.h"
@@ -22,14 +22,14 @@
 #include "UICursor.h"
 #include "GlobalVar.h"
 #include "UIFormMgr.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "GameAppMsg.h"
 #include "DrawPointList.h"
 #include "terrainattrib.h"
 #include "PacketCmd.h"
 #include "ItemRecord.h"
 #include "SceneLight.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 #include "Track.h"
 #include "CommFunc.h"
 #include "uiminimapform.h"
@@ -2258,8 +2258,8 @@ int CGameScene::SetTextureLOD(DWORD level)
         }
     }
 
-    int start_id = MPTerrainSet::I()->GetIDStart();
-    int id_cnt = start_id + MPTerrainSet::I()->GetIDCnt();
+    int start_id = 0;
+    int id_cnt = TerrainRecordStore::Instance()->GetMaxId() + 1;
     MPTerrainInfo* info;
 
     DWORD t_level = level == 0 ? level : 2;

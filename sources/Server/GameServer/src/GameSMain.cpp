@@ -170,7 +170,7 @@ ToLogService("common", "game map server [{}] startup...", g_Config.m_szName);
 	CreateMainDialog(hInst, NULL);
 
 	//       CGameApp::Log
-	g_pGameApp->Log("restart", "GameServer restart", g_Config.m_szMapList[0], "", "", "");
+	g_pGameApp->Log("restart", "GameServer restart", g_Config.m_mapList[0].c_str(), "", "", "");
 	
 	return TRUE;
 }

@@ -4,10 +4,10 @@
 #include "SceneObj.h"
 #include "SceneItem.h"
 #include "EffectObj.h"
-#include "EffectSet.h"
+#include "EffectRecordStore.h"
 #include "MPModelEff.h"
 #include "MPFont.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 #include "GameApp.h"
 #include "GameConfig.h"
 #include "MPEditor.h"
@@ -21,7 +21,7 @@
 #include "UICursor.h"
 #include "GlobalVar.h"
 #include "UIFormMgr.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "GameAppMsg.h"
 #include "UIChat.h"
 #include "UITeam.h"
@@ -2023,11 +2023,9 @@ void CWorldScene::LoadingCall()
 		static bool firstTime = true;
 		if( firstTime )
 		{
-			char szMap[32] = {0};
-			char szAppName[] = {(char)0xB1, (char)0xE0, (char)0xBC, (char)0xAD, (char)0xC6, (char)0xF7, (char)0};	// 
-			GetPrivateProfileString(szAppName, "MapName", "", szMap, 32, "./scripts/kop.cfg");
+			auto szMap = g_SystemIni["Editor"].GetString("MapName");
 
-			CMapInfo* pMap = GetMapInfo(szMap);
+			CMapInfo* pMap = GetMapInfo(szMap.c_str());
 			if(pMap && SwitchMap(pMap->nID))
 			{
 				GetMainCha()->setPos(pMap->nInitX * 100, pMap->nInitX * 100);
@@ -2059,7 +2057,8 @@ void CWorldScene::LoadingCall()
 	{
 		// 
 		g_stUISystem.m_sysProp.m_gameOption.bHelpMode = true;
-		::WritePrivateProfileString("gameOption", "helpMode", "1", "./user/system.ini");
+		g_SystemIni["gameOption"].SetInt64("helpMode", 1);
+		g_SystemIni.Save();
 
 		g_stUIStart.ShowLevelUpHelpButton(true);
 		g_stUIStart.ShowInfoCenterButton(true);

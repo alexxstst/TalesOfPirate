@@ -1,194 +1,153 @@
-﻿
 #include "IniFile.h"
-_DBC_USING
+#include "excp.h"
+#include <fstream>
+#include <filesystem>
+#include <charconv>
 
-char * ltrim(char * src){
-	if(!src)return 0;
-	char *l_ret =src;
-	while(*l_ret){
-		if((*l_ret ==' ')||(*l_ret ==0x9)||(*l_ret ==0xA)||(*l_ret ==0xD))
-			l_ret++;
-		else
-			break;
-	}
-	return l_ret;
+namespace dbc {
+
+static std::string_view TrimView(std::string_view sv) {
+	while (!sv.empty() && (sv.front() == ' ' || sv.front() == '\t' || sv.front() == '\r' || sv.front() == '\n'))
+		sv.remove_prefix(1);
+	while (!sv.empty() && (sv.back() == ' ' || sv.back() == '\t' || sv.back() == '\r' || sv.back() == '\n'))
+		sv.remove_suffix(1);
+	return sv;
 }
-char * rtrim(char *src){
-	if(!src)return 0;
-	char *l_tmp =src+strlen(src)-1;
-	while(l_tmp >=src){
-		if((*l_tmp ==' ')||(*l_tmp ==0x9)||(*l_tmp ==0xA)||(*l_tmp ==0xD))
-			l_tmp--;
-		else{
-			break;
-		}
-	}
-	*(l_tmp+1)	=0;
-	return src;
-}
-char	*trim(char *src){
-	return rtrim(ltrim(src));
-}
-IniFile::IniFile(const char *filename)
-:m_rw(false),m_update(false)
-,m_sectcount(0),m_sectsize(0),m_sect(0)
-{
-	m_filename[0]	=m_filename[1]	=0;
-	if(filename && (strlen(filename) >0)){
+
+// ============================================================================
+// IniFile
+// ============================================================================
+
+IniFile::IniFile(std::string_view filename) {
+	if (!filename.empty())
 		ReadFile(filename);
-	}
-}
-IniFile::~IniFile(){
-   if(m_rw) Flush();
-	for(int i=0;i<m_sectcount;i++){
-		delete m_sect[i];
-	}
-	delete []m_sect;
-};
-void IniFile::Flush(){
-	if(!m_update)return;
-	m_update	=false;
-
-}
-void IniFile::ReadFile(const char *filename){
-	m_rw	=false;
-	uLong	l_len	=uLong(strlen(filename));
-	if((l_len	>0) &&(l_len <512)){
-		strcpy(m_filename,filename);
-	}else{
-		THROW_EXCP(excpFile,"!");
-	}
-	FILE * l_file	=fopen(filename,m_rw?"r+t":"rt");
-	if(!l_file &&m_rw){
-		l_file	=fopen(filename,"w+t");
-		if(l_file)	m_update	=true;
-	}
-	if(!l_file){
-		THROW_EXCP(excpFile, ":" + filename + " !");
-	}
-	try{
-		char	l_szbuf[1024];
-		int	l_lino	=0;
-		IniSection *l_sect	=0;
-		while( !feof( l_file ) )
-		{
-			char	*l_str1 = fgets(l_szbuf,1024,l_file);
-			if( !l_str1 && ferror( l_file )){
-				THROW_EXCP(excpFile,"");
-			}
-			l_lino	++;
-			if(!l_str1||!strlen(trim(l_szbuf))||l_szbuf[0]==';'||l_szbuf[0]=='#'||l_szbuf[0]=='/'){
-				continue;
-			}
-			if((l_str1	=ltrim(l_szbuf))[0]=='['){
-				char	*l_str2	=strchr(l_str1+1,']');
-				if(!l_str2){
-					THROW_EXCP(excpFile, "INI:" + std::to_string(l_lino) + "");
-				}
-				*l_str2	=0;
-				l_sect	=AddSection(trim(l_str1+1));
-			}else	if(l_str1	=strchr(l_szbuf,'=')){
-				*l_str1	=0;
-				char	*l_str2;
-				if(!l_sect||!*(l_str2	=trim(l_szbuf))){
-					THROW_EXCP(excpFile, "INI:" + std::to_string(l_lino) + "");
-				}
-				char	*l_str3	=strstr(l_str1+1,"//");
-				if(l_str3){*l_str3	=0;}
-				l_sect->AddItem(l_str2,trim(l_str1+1));
-			}else{
-				THROW_EXCP(excpFile, "INI:" + std::to_string(l_lino) + "");
-			}
-		}
-	}catch(...){
-		fclose(l_file);
-		throw;
-	}
-	fclose( l_file );
-}
-IniSection & IniFile::operator[](int i){
-	IniSection	*l_is	=0;
-	if(i>=0 && i<m_sectcount){
-		l_is	=m_sect[i];
-	}else if(i==m_sectcount){
-		l_is	=new IniSection;
-		if(m_sectcount >=m_sectsize){
-			IniSection	**l_sect	=new IniSection*[m_sectsize +16];
-			MemCpy((char*)l_sect,(char*)m_sect,sizeof(IniSection*)*m_sectcount);
-			MemSet((char*)(l_sect+m_sectcount),0,sizeof(IniSection*)*(m_sectsize+16-m_sectcount));
-			delete []m_sect;
-			m_sectsize	+=16;
-			m_sect	=l_sect;
-		}
-		m_sect[m_sectcount]	=l_is;
-		m_sectcount	++;
-	}else{
-		THROW_EXCP(excpArr,"IniFile:" + std::to_string(i) + "");
-	}
-	return *l_is;
 }
 
-IniSection &IniFile::operator[](const char *sectname)const{
-	int i = 0; 
-	for(;i<m_sectcount;i++){
-		if(m_sect[i]->m_sectname	==sectname){
-			break;
+void IniFile::ReadFile(std::string_view filename) {
+	m_filename = filename;
+
+	std::ifstream file(m_filename);
+	if (!file.is_open())
+		THROW_EXCP(excpFile, "Не удалось открыть: " + m_filename);
+
+	std::string line;
+	int lineNo = 0;
+	IniSection* currentSection = nullptr;
+
+	while (std::getline(file, line)) {
+		lineNo++;
+		auto trimmed = TrimView(line);
+
+		if (trimmed.empty() || trimmed.front() == ';' || trimmed.front() == '#' || trimmed.front() == '/')
+			continue;
+
+		if (trimmed.front() == '[') {
+			auto closing = trimmed.find(']');
+			if (closing == std::string_view::npos)
+				THROW_EXCP(excpFile, "INI:" + std::to_string(lineNo) + " — нет закрывающей ]");
+
+			auto sectName = TrimView(trimmed.substr(1, closing - 1));
+			currentSection = &(*this)[sectName];
+		}
+		else {
+			auto eqPos = trimmed.find('=');
+			if (eqPos == std::string_view::npos)
+				THROW_EXCP(excpFile, "INI:" + std::to_string(lineNo) + " — ошибка формата");
+
+			// Ключи до первой секции попадают в дефолтную секцию ""
+			if (!currentSection)
+				currentSection = &(*this)[""];
+
+			auto key = TrimView(trimmed.substr(0, eqPos));
+			auto val = trimmed.substr(eqPos + 1);
+
+			if (auto commentPos = val.find("//"); commentPos != std::string_view::npos)
+				val = val.substr(0, commentPos);
+
+			val = TrimView(val);
+
+			if (key.empty())
+				THROW_EXCP(excpFile, "INI:" + std::to_string(lineNo) + " — пустой ключ");
+
+			currentSection->SetString(key, val);
 		}
 	}
-	if(i<m_sectcount){
-		return *(m_sect[i]);
-	}else{
-		THROW_EXCP(excpIniF,"Section:" + sectname + " .");
+}
+
+IniSection& IniFile::operator[](std::string_view sectname) {
+	for (auto& sect : m_sections)
+		if (sect.m_name == sectname)
+			return sect;
+
+	auto& sect = m_sections.emplace_back();
+	sect.m_name = sectname;
+	return sect;
+}
+
+void IniFile::Save(std::string_view filename) const {
+	auto path = filename.empty() ? m_filename : std::string(filename);
+	if (path.empty())
+		THROW_EXCP(excpFile, "IniFile::Save — путь не указан");
+
+	if (auto parent = std::filesystem::path(path).parent_path(); !parent.empty())
+		std::filesystem::create_directories(parent);
+
+	std::ofstream file(path);
+	if (!file.is_open())
+		THROW_EXCP(excpFile, "Не удалось записать: " + path);
+
+	for (const auto& sect : m_sections) {
+		file << '[' << sect.m_name << "]\n";
+		for (const auto& item : sect.m_items)
+			file << item.name << " = " << item.value << '\n';
+		file << '\n';
 	}
 }
-IniSection * IniFile::AddSection(const char *sectname){
-	IniSection *l_sect	=&((*this)[m_sectcount]);
-	l_sect->m_sectname	=sectname;
-	return l_sect;
+
+// ============================================================================
+// IniSection
+// ============================================================================
+
+IniItem* IniSection::FindItem(std::string_view key) {
+	for (auto& item : m_items)
+		if (item.name == key)
+			return &item;
+	return nullptr;
 }
-IniSection::~IniSection(){
-	for(int i=0;i<m_itemcount;i++){
-		delete m_item[i];
+
+const IniItem* IniSection::FindItem(std::string_view key) const {
+	for (auto& item : m_items)
+		if (item.name == key)
+			return &item;
+	return nullptr;
+}
+
+std::string IniSection::GetString(std::string_view key, std::string_view defaultValue) const {
+	if (auto* item = FindItem(key))
+		return item->value;
+	return std::string(defaultValue);
+}
+
+int64_t IniSection::GetInt64(std::string_view key, int64_t defaultValue) const {
+	auto* item = FindItem(key);
+	if (!item)
+		return defaultValue;
+
+	int64_t result = defaultValue;
+	std::from_chars(item->value.data(), item->value.data() + item->value.size(), result);
+	return result;
+}
+
+void IniSection::SetString(std::string_view key, std::string_view value) {
+	if (auto* item = FindItem(key)) {
+		item->value = value;
+		return;
 	}
-	delete []m_item;
+	m_items.push_back({std::string(key), std::string(value)});
 }
-IniItem & IniSection::operator[](int i){
-	IniItem	*l_it	=0;
-	if(i>=0 && i<m_itemcount)
-		l_it	=m_item[i];
-	else if(i==m_itemcount){
-		l_it	=new IniItem;
-		if(m_itemcount >=m_itemsize){
-			IniItem	**l_item	=new IniItem*[m_itemsize +16];
-			MemCpy((char*)l_item,(char*)m_item,sizeof(IniItem*)*m_itemcount);
-			MemSet((char*)(l_item+m_itemcount),0,sizeof(IniItem*)*(m_itemsize+16-m_itemcount));
-			delete []m_item;
-			m_itemsize	+=16;
-			m_item	=l_item;
-		}
-		m_item[m_itemcount]	=l_it;
-		m_itemcount	++;
-	}else{
-		THROW_EXCP(excpArr,std::string("Section:") + m_sectname + " <<i<<");
-	}
-	return *l_it;
+
+void IniSection::SetInt64(std::string_view key, int64_t value) {
+	SetString(key, std::to_string(value));
 }
-std::string &IniSection::operator[](const char *name)const{
-	int i = 0;
-	for(;i<m_itemcount;i++){
-		if(m_item[i]->name	==name){
-			break;
-		}
-	}
-	if(i<m_itemcount){
-		return m_item[i]->value;
-	}else{
-		THROW_EXCP(excpIniF, std::string("Section:") + m_sectname + " Name:" + name + " .");
-	}
-}
-IniItem * IniSection::AddItem(const char *name,const char *value){
-	IniItem *l_item	=&((*this)[m_itemcount]);
-	l_item->name	=name;
-	l_item->value	=value;
-	return l_item;
-}
+
+} // namespace dbc

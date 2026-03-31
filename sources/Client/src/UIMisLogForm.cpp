@@ -9,7 +9,7 @@
 #include "lua_platform.h"
 #include "uiboxform.h"
 #include "uiboatform.h"
-#include "MapSet.h"
+#include "MapRecordStore.h"
 #include "FindPath.h"
 #include "UIStartForm.h"
 #include "UIList.h"

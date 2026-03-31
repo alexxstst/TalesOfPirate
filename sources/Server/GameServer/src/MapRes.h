@@ -304,7 +304,7 @@ private:
 		CMapRes*	pMap;
 	};
 
-	MAP_INFO m_MapInfo[MAX_MAP];
+	std::vector<MAP_INFO> m_MapInfo;
 	BYTE	 m_byNumMap;
 };
 

@@ -211,7 +211,7 @@ int AddSkill(CCharacter* pChar, CTalkNpc* pTalk, int wSkillID, int byLevel)
 		CSkillRecord* pSkill = GetSkillRecordInfo((WORD)wSkillID);
 		if (pSkill)
 		{
-			strncpy(szSkill, pSkill->szName, defSKILL_NAME_LEN - 1);
+			strncpy(szSkill, pSkill->szName.c_str(), defSKILL_NAME_LEN - 1);
 		}
 
 		char szData[128];

@@ -2322,12 +2322,12 @@ void CCharacter::BeginAction(const net::msg::CmBeginActionMessage& msg) {
 			m_SSeat.chIsSeat = 1;
 			m_SSeat.sAngle = sAngle;
 			m_SSeat.sPose = sPose;
-			g_luaAPI.Call(pCSkill->szActive, static_cast<CCharacter*>(this), 1);
+			g_luaAPI.Call(pCSkill->szActive.c_str(), static_cast<CCharacter*>(this), 1);
 		}
-		else // 
+		else //
 		{
 			m_SSeat.chIsSeat = 0;
-			g_luaAPI.Call(pCSkill->szInactive, static_cast<CCharacter*>(this), 1);
+			g_luaAPI.Call(pCSkill->szInactive.c_str(), static_cast<CCharacter*>(this), 1);
 		}
 		if (bToSeat)
 			m_sPoseState = enumPoseSeat;

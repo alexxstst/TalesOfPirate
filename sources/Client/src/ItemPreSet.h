@@ -1,9 +1,7 @@
 ﻿#include "TableData.h"
-
-class CItemPreInfo : public CRawDataInfo
-{
-public:    
-};
+#include "ItemPreRecord.h"
+#include "ItemPreRecordStore.h"
+#include "AssetDatabase.h"
 
 
 class CItemPreSet : public CRawDataSet
@@ -49,12 +47,12 @@ protected:
 	
 	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList)
 	{   	
-        CItemPreInfo *pInfo = (CItemPreInfo*)pRawDataInfo;            
+        CItemPreInfo *pInfo = (CItemPreInfo*)pRawDataInfo;
         return TRUE;
     }
-};
 
-inline CItemPreInfo* GetItemPreInfo(int nTypeID)
-{
-	return (CItemPreInfo*)CItemPreSet::I()->GetRawDataInfo(nTypeID);
-}
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
+	{
+		ItemPreRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *(CItemPreInfo*)pRawDataInfo);
+	}
+};

@@ -17,6 +17,9 @@
 #include "lua_gamectrl.h"
 #include "MapEntry.h"
 #include "CommandMessages.h"
+#include "LevelRecordStore.h"
+#include "LifeLvRecordStore.h"
+#include "SailLvRecordStore.h"
 
 using namespace std;
 
@@ -478,7 +481,7 @@ void CCharacter::Cmd_BeginSkill(Short sPing, Point *pPath, Char chPointNum,
 			pSSkillCont = GetPlayer()->GetMainCha()->m_CSkillBag.GetSkillContByID(pSkill->sID);
 		if(!pSSkillCont)
 		{
-			short sItemID = atoi(pSkill->szDescribeHint);
+			short sItemID = atoi(pSkill->szDescribeHint.c_str());
 			if(sItemID > 10)
 			{
 				CItemRecord* pItemRec = GetItemRecordInfo( sItemID );
@@ -965,7 +968,7 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 
 	// 
 	bool	bUseSuccess;
-	if (strcmp(pCItemRec->szAttrEffect, "0") == 0)
+	if (pCItemRec->szAttrEffect == "0")
 	{
 		bUseSuccess = false;
 	}
@@ -985,7 +988,7 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 		g_chUseItemGiveMission[0] = 0;
 		// End
 
-		g_luaAPI.Call(pCItemRec->szAttrEffect, static_cast<CCharacter*>(this), pSGridCont, pSTarGridCont);
+		g_luaAPI.Call(pCItemRec->szAttrEffect.c_str(), static_cast<CCharacter*>(this), pSGridCont, pSTarGridCont);
 		
 		if (g_chUseItemFailed[0] == 1) // 
 			bUseSuccess = false;
@@ -1024,7 +1027,7 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00001), pCItemRec->szName, SGridCont.sID, SGridCont.sNum);
+	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00001), pCItemRec->szName.c_str(), SGridCont.sID, SGridCont.sNum);
 	ToLogService("trade", "[CHA_EXPEND] {} : {}", szPlyName, szMsg);
 
 	if (bRefresh)
@@ -1174,7 +1177,7 @@ Short CCharacter::Cmd_UnfixItem(Char chLinkID, Short *psItemNum, Char chDir, Lon
 		else
 			sprintf(szPlyName, "%s", GetName());
 		char	szMsg[128];
-		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00002), pCItemRec->szName, SUnfixCont.sID, *psItemNum);
+		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00002), pCItemRec->szName.c_str(), SUnfixCont.sID, *psItemNum);
 		ToLogService("trade", "[CHA_SYS] {} : {}", szPlyName, szMsg);
 	}
 	else // 
@@ -1325,7 +1328,7 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 		if( GetPlayer()->IsBoatFull() )
 		{
 			//SystemNotice( "%s!", pItem->szName );
-			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00003), pItem->szName );
+			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00003), pItem->szName.c_str() );
 			return enumITEMOPT_ERROR_UNUSE;
 		}
 	}
@@ -1393,7 +1396,7 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00005), pItem->szName, pCItem->m_SGridContent.sID, sPickupNum);
+	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00005), pItem->szName.c_str(), pCItem->m_SGridContent.sID, sPickupNum);
 	ToLogService("trade", "[SYS_CHA] {} : {}", szPlyName, szMsg);
 
 	//ColourNotice(0xb5eb8e, "Picked up x%d %s", sPickupNum, pItem->szName);
@@ -1404,7 +1407,7 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 	CFormatParameter param(3);
 	param.setString(0, szPlyName);
 	param.setLong(1, sPickupNum);
-	param.setString(2, pItem->szName);
+	param.setString(2, pItem->szName.c_str());
 
 	//char szParamMsg[255];
 	RES_FORMAT_STRING(GM_CHARACTERCMD_CPP_00006, param, szTeamMsg);
@@ -1519,7 +1522,7 @@ Short CCharacter::Cmd_ThrowItem(Short sKbPage, Short sKbGrid, Short *psThrowNum,
 		if( !BoatClear( dwBoatID ) )
 		{
 			//SystemNotice( "%s!", pItem->szName );
-			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00008), pItem->szName );
+			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00008), pItem->szName.c_str() );
 			return enumITEMOPT_ERROR_UNUSE;
 		}
 	}
@@ -1563,7 +1566,7 @@ Short CCharacter::Cmd_ThrowItem(Short sKbPage, Short sKbGrid, Short *psThrowNum,
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00009), pItem->szName, GridCont.sID, GridCont.sNum);
+	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00009), pItem->szName.c_str(), GridCont.sID, GridCont.sNum);
 	ToLogService("trade", "[CHA_SYS] {} : {}", szPlyName, szMsg);
 
 	pCMap->ItemSpawn(&GridCont, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle(), 10 * 1000); // 10
@@ -1655,7 +1658,7 @@ Short CCharacter::Cmd_DelItem(Short sKbPage, Short sKbGrid, dbc::Short *psThrowN
 		if( !BoatClear( dwBoatID ) )
 		{
 			//SystemNotice( "%s!", pItem->szName );
-			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00010), pItem->szName );
+			SystemNotice( RES_STRING(GM_CHARACTERCMD_CPP_00010), pItem->szName.c_str() );
 			return enumITEMOPT_ERROR_UNUSE;
 		}
 	}
@@ -1708,7 +1711,7 @@ Short CCharacter::Cmd_DelItem(Short sKbPage, Short sKbGrid, dbc::Short *psThrowN
 	else
 		sprintf(szPlyName, "%s", GetName());
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00011), pItem->szName, sItemID, GridCont.sNum);
+	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00011), pItem->szName.c_str(), sItemID, GridCont.sNum);
 	ToLogService("trade", "[CHA_DELETE] {} : {}", szPlyName, szMsg);
 
 	LogAssets(enumLASSETS_DELETE);
@@ -1973,7 +1976,7 @@ Short CCharacter::Cmd_BankOper(Char chSrcType, Short sSrcGridID, Short sSrcNum, 
 		else
 			sprintf(szPlyName, "%s", GetName());
 		char	szMsg[128];
-		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00012), chSrcType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), chTarType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), pItem->szName, sSrcItemID, sLeftNum);
+		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00012), chSrcType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), chTarType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), pItem->szName.c_str(), sSrcItemID, sLeftNum);
 		ToLogService("trade", "[CHA_BANK] {} : {}", szPlyName, szMsg);
 	}
 

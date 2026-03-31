@@ -6,6 +6,8 @@
 //=============================================================================
 
 #include "EventRecord.h"
+#include "AssetDatabase.h"
+#include "EventRecordStore.h"
 using namespace std;
 
 CEventRecordSet * CEventRecordSet::_Instance = NULL;
@@ -41,6 +43,11 @@ BOOL CEventRecordSet::_ReadRawDataInfo(CRawDataInfo *pRawDataInfo, vector<string
 	// 
 	pInfo->sCursor = Str2Int(ParamList[m++]);		
 	// (0-,1-2-)
-	pInfo->chMainChaType = Str2Int(ParamList[m++]);		
+	pInfo->chMainChaType = Str2Int(ParamList[m++]);
 	return TRUE;
+}
+
+void CEventRecordSet::_ProcessRawDataInfo(CRawDataInfo *pRawDataInfo)
+{
+	EventRecordStore::Insert(AssetDatabase::Instance()->GetDb(), *(CEventRecord*)pRawDataInfo);
 }

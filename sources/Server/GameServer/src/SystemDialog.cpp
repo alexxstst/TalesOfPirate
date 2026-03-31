@@ -434,15 +434,15 @@ void SystemReport(DWORD dwTimeParam)
 		
 		HWND hMapList = GetDlgItem(g_ReportView, IDC_MAP_LIST);
 		char szText[128];
-		for(int i = 0; i < g_Config.m_nMapCnt; i++)
+		for(size_t i = 0; i < g_Config.m_mapList.size(); i++)
 		{
-			if(g_Config.m_btMapOK[i])
+			if(g_Config.m_mapOK[i])
 			{
-				sprintf(szText, "%-12s   ok", g_Config.m_szMapList[i]);
+				sprintf(szText, "%-12s   ok", g_Config.m_mapList[i].c_str());
 			}
 			else
 			{
-				sprintf(szText, "%-12s fail", g_Config.m_szMapList[i]);
+				sprintf(szText, "%-12s fail", g_Config.m_mapList[i].c_str());
 			}
 			SendMessage(hMapList, LB_ADDSTRING, 0, (LPARAM)szText);  
 		}

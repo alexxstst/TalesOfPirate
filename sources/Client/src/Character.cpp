@@ -18,7 +18,7 @@
 //#include "EffectObj.h"
 #include "terrainattrib.h"
 #include "GameApp.h"
-#include "MusicSet.h"
+#include "MusicRecordStore.h"
 #include "STAttack.h"
 #include "UIHeadSay.h"
 #include "UICommand.h"

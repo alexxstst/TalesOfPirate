@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include "ChaRecordStore.h"
 #include "STAttack.h"
 #include "Actor.h"
 #include "NetProtocol.h"
@@ -197,7 +198,7 @@ void CWaitAttackState::_UseSkill()
     _nKeyFrameNum = _pSelf->GetCurPoseKeyFrameNum();
 	if( _nKeyFrameNum<=0 && _pSkillInfo->sActionKeyFrme!=-1 )
     {
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(399), _pSelf->getLogName(), _pSkillInfo->szName, _nSkillPoseID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(399), _pSelf->getLogName(), _pSkillInfo->szName.c_str(), _nSkillPoseID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
     }
 
 	// If there are additional special effects operations, such as: boarding and disembarking, etc., a special effect should be played
@@ -538,7 +539,7 @@ bool CAttackState::_Start()
     }
 
 	// 
-	if( strcmp( _pSkillInfo->szFireSpeed, "0" )==0 )
+	if( _pSkillInfo->szFireSpeed == "0" )
 	{
 		SetSkillSpeed( _pSelf->getAttackSpeed() );
 	}
@@ -1093,7 +1094,7 @@ bool CAllPoseState::_Start()
 	_nPoseStart = 1;
 	_nPoseEnd = 54;
 	_nChaStart = 1;
-	_nChaEnd = CChaRecordSet::I()->GetLastID() + 1;
+	_nChaEnd = ChaRecordStore::Instance()->GetMaxId() + 1;
 
 	_nCurPose = _nPoseStart;
 

@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "SkillStateRecordStore.h"
 #include "uiheadsay.h"
 #include "GameApp.h"
 #include "Character.h"
@@ -172,7 +173,7 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 
     CGuiPic stateIcon;
     int stateCount = 0;
-    int nTotalState = CSkillStateRecordSet::I()->GetLastID() + 1;
+    int nTotalState = SkillStateRecordStore::Instance()->GetMaxId() + 1;
     bool IsStatesPerLevel = false;
     bool RenderIcon = false;
     CSkillStateRecord* pState;
@@ -727,7 +728,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 		for( int i=0; i<nCount; i++ )
 		{
 			y -= 20;
-			CGuiFont::s_Font.Render( pState->GetSkillState(i)->szName, x, y, COLOR_WHITE );
+			CGuiFont::s_Font.Render( pState->GetSkillState(i)->szName.c_str(), x, y, COLOR_WHITE );
 		}
     }
 #endif

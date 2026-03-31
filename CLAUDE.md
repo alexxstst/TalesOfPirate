@@ -14,6 +14,14 @@ Tales of Pirate — MMORPG with two codebases:
 
 **C++ standard: C++23.** Prefer modern C++ constructs: `std::string`/`std::string_view` over `char*`, `std::format` over `sprintf`, `std::filesystem` over Win32 file API, structured bindings, `auto`, range-based for, `std::optional`, `std::span`, smart pointers. Avoid raw `new`/`delete` where possible.
 
+**Рефакторинг C-строк:** при рефакторинге и исправлении ошибок заменять C-функции на C++ аналоги:
+- `strcpy`/`strncpy` → `std::string` присваивание или `.assign()`
+- `strcmp`/`strncmp` → `==`, `!=`, `.compare()` или `std::string_view`
+- `sprintf`/`snprintf` → `std::format`
+- `strlen` → `.size()` / `.length()`
+- `strcat` → `+=` или `std::string::append()`
+- `atoi`/`atof` → `std::stoi`/`std::stof` или `std::from_chars`
+
 Main solution: `sources/TalesOfPirates.sln` — contains both C++ and .NET projects.
 
 ## Build Commands

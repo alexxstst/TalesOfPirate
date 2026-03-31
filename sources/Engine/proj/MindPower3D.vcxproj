@@ -177,6 +177,7 @@
     <ClInclude Include="..\include\MPStringVector.h" />
     <ClInclude Include="..\include\MPTerrainSet.h" />
     <ClInclude Include="..\include\MPTextureSet.h" />
+    <ClInclude Include="..\include\TextureManager.h" />
     <ClInclude Include="..\include\MPTile.h" />
     <ClInclude Include="..\include\mygraph.h" />
     <ClInclude Include="..\include\ShaderLoad.h" />
@@ -308,6 +309,7 @@
     <ClCompile Include="..\src\MPEffVector3.cpp" />
     <ClCompile Include="..\src\MPFont.cpp" />
     <ClCompile Include="..\src\MPGameApp.cpp" />
+    <ClCompile Include="..\src\TextureManager.cpp" />
     <ClCompile Include="..\src\MPMap.cpp" />
     <ClCompile Include="..\src\MPMapData.cpp" />
     <ClCompile Include="..\src\MPMath.cpp" />

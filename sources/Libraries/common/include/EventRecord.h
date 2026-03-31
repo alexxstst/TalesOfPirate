@@ -104,6 +104,7 @@ protected:
 	}
 
 	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList);
+	virtual void _ProcessRawDataInfo(CRawDataInfo *pRawDataInfo);
 };
 
 inline CEventRecord* GetEventRecordInfo( int nTypeID )

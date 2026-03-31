@@ -3,7 +3,7 @@
 // GameAppSwitchScene(),  SceneSwitchMap
 #pragma once
 #include "Script.h"
-#include "MusicSet.h"
+#include "MusicRecordStore.h"
 #include "BoolSet.h"
 #include "SceneSign.h"
 
@@ -153,7 +153,7 @@ class CMinimap;
 class CLargerMap;
 struct stNetChangeChaPart;
 class CSkillRecord;
-class CMapInfo;
+#include "MapRecord.h"
 
 class CGameScene : public CScript
 {

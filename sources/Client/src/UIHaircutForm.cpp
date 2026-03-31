@@ -219,7 +219,7 @@ namespace GUI
 		if (!pHairRecord) return;
 
 		char szBuf[16];
-		lblHairColor->SetCaption(pHairRecord->szColor);
+		lblHairColor->SetCaption(pHairRecord->szColor.c_str());
 		lblHairType->SetCaption(pHairRecord->szDataName);
 		sprintf(szBuf, "%d", pHairRecord->dwMoney);
 		lblHairFare->SetCaption(szBuf);

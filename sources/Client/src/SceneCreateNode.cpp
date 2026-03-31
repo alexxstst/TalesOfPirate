@@ -3,7 +3,7 @@
 #include "GameApp.h"
 #include "CharacterPoseSet.h"
 #include "CharacterRecord.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 
 #include "CharacterModel.h"
 #include "Character.h"

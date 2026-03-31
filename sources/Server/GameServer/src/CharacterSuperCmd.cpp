@@ -1078,7 +1078,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			for (int i = 0; i < inventory[p].GetCapacity(); i++) {
 				if (inventory[p].GetGridContByID(i)) {
 					
-					sprintf(buf3, "Item Name: %s; Item ID: %d; Position ID: %d\n;", GetItemRecordInfo(inventory[p].GetGridContByID(i)->sID)->szName, inventory[p].GetGridContByID(i)->sID, i);
+					sprintf(buf3, "Item Name: %s; Item ID: %d; Position ID: %d\n;", GetItemRecordInfo(inventory[p].GetGridContByID(i)->sID)->szName.c_str(), inventory[p].GetGridContByID(i)->sID, i);
 					myfile << buf3;
 					sprintf(buf4, "STR (raw): %d. STR (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(26), inventory[p].GetGridContByID(i)->GetInstAttr(1));
 					myfile << buf4;

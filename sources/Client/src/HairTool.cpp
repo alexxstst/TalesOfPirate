@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "HairRecordStore.h"
 #include "hairtool.h"
 #include "HairRecord.h"
 
@@ -34,7 +35,7 @@ bool CHairTools::RefreshCha( DWORD dwChaID )
 	if( dwChaID==0 || dwChaID>4 ) return false;
 	dwChaID--;
 
-	int nCount = CHairRecordSet::I()->GetLastID() + 1;
+	int nCount = HairRecordStore::Instance()->GetMaxId() + 1;
 	CHairRecord* pInfo = NULL;
 	for( int i=0; i<nCount; i++ )
 	{

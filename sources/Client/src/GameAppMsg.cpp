@@ -1,4 +1,6 @@
 ﻿#include "Stdafx.h"
+#include "ChaRecordStore.h"
+#include "SkillRecordStore.h"
 #include "Character.h"
 #include "SceneObj.h"
 #include "SceneObjFile.h"
@@ -25,9 +27,9 @@
 #include "UITeam.h"
 #include "UICommand.h"
 #include "uiitemcommand.h"
-#include "ItemRefineEffectSet.h"
-#include "SceneObjSet.h"
-#include "effectset.h"
+#include "ItemRefineEffectRecordStore.h"
+#include "SceneObjRecordStore.h"
+#include "EffectRecordStore.h"
 #include "stattack.h"
 #include "CameraCtrl.h"
 
@@ -1220,14 +1222,14 @@ void CheckSkillEffect( CSkillRecord* pSkill, int nEffectID )
 
 	if( name.empty() )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(117), pSkill->nID, pSkill->szName, nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(117), pSkill->nID, pSkill->szName.c_str(), nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		return;
 	}
 
 	int n = (int)name.find( g_oLangRec.GetString(118) );
 	if( n >= 0 )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(119), pSkill->nID, pSkill->szName, nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(119), pSkill->nID, pSkill->szName.c_str(), nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 	}
 }
 
@@ -1539,7 +1541,7 @@ const char* ConsoleCallback(const char *pszCmd)
 				int nCharID = pMain->getTypeID() - 1;
 				if( nCharID<0 || nCharID>3 )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName, RefineID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName.c_str(), RefineID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 					return strRes.c_str();
 				}
 
@@ -1640,7 +1642,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		CGameScene* pScene = g_pGameApp->GetCurScene();
 		if (pScene)
 		{
-			for (int i(1); i<CSceneObjSet::I()->GetLastID() + 1; i++)
+			for (int i(1); i<SceneObjRecordStore::Instance()->GetMaxId() + 1; i++)
 			{
 				CSceneObj* pSceneObj = pScene->AddSceneObj(i);
 				if (pSceneObj)
@@ -1733,7 +1735,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			//g_pGameApp->AutoTestInfo( "Testing scene effects" );
 			{
 				//g_pGameApp->AutoTestInfo( "Testing scene effects" );
-				int nCount = CEffectSet::I()->GetLastID() + 1;
+				int nCount = EffectRecordStore::Instance()->GetMaxId() + 1;
 				CEffectObj* pEffect = NULL;
 				CMagicInfo* pInfo = NULL;
 
@@ -1803,7 +1805,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	{
 		// Check if effects referenced in skill table exist
 		{
-			int nCount = CSkillRecordSet::I()->GetLastID() + 1;
+			int nCount = SkillRecordStore::Instance()->GetMaxId() + 1;
 			CSkillRecord* _pSkillInfo = NULL;
 			for( int k=0; k<nCount; k++ )
 			{
@@ -2162,7 +2164,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		CAllPoseState* pState = new CAllPoseState( pMain->GetActor() );
 		if( nStart==0 || nEnd==0 )
 		{
-			pState->SetChaRange( 1, CChaRecordSet::I()->GetLastID() + 1 );
+			pState->SetChaRange( 1, ChaRecordStore::Instance()->GetMaxId() + 1 );
 		}
 		else
 		{

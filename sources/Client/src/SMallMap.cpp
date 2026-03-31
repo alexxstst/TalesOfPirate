@@ -4,7 +4,7 @@
 #include "SceneObj.h"
 #include "Scene.h"
 #include "Character.h"
-#include "SceneObjSet.h"
+#include "SceneObjRecordStore.h"
 #include "GameApp.h"
 #include "NetProtocol.h"
 #include "CharacterModel.h"

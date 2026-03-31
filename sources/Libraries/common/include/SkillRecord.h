@@ -9,6 +9,7 @@
 #define	SKILLRECORD_H
 
 #include <tchar.h>
+#include <string>
 #include "util.h"
 #include "TableData.h"
 #include "SkillBag.h"
@@ -131,8 +132,8 @@ class CSkillRecord : public CRawDataInfo
 public:
 	CSkillRecord();
 
-	short	sID;												// 
-	_TCHAR	szName[defSKILL_NAME_LEN];							// 
+	short	sID;												//
+	std::string	szName;											//
 	char    chFightType;										// 
 	char	chJobSelect[defSKILL_JOB_SELECT_NUM][2];			// 
 																// 0 1 2 3 4 5 6 7 8
@@ -152,16 +153,16 @@ public:
 	short	sAngle;												// 0-360
 	short	sRadii;												// 
 	char	chRange;											// 
-	char	szPrepare[defSKILL_RANGE_SET_SCRIPT];				// 
-	char	szUseSP[defSKILL_EFFECT_SCRIPT_LEN];				// SP
-	char	szUseEndure[defSKILL_EFFECT_SCRIPT_LEN];			// 
-	char	szUseEnergy[defSKILL_EFFECT_SCRIPT_LEN];			// 
-	char	szSetRange[defSKILL_EFFECT_SCRIPT_LEN];				// 
-	char	szRangeState[defSKILL_EFFECT_SCRIPT_LEN];			// 
-	char	szUse[defSKILL_EFFECT_SCRIPT_LEN];					// 
-	char	szEffect[defSKILL_EFFECT_SCRIPT_LEN];				// 
-	char	szActive[defSKILL_EFFECT_SCRIPT_LEN];				// 
-	char	szInactive[defSKILL_EFFECT_SCRIPT_LEN];				// 
+	std::string	szPrepare;											//
+	std::string	szUseSP;											// SP
+	std::string	szUseEndure;										//
+	std::string	szUseEnergy;										//
+	std::string	szSetRange;											//
+	std::string	szRangeState;										//
+	std::string	szUse;												//
+	std::string	szEffect;											//
+	std::string	szActive;											//
+	std::string	szInactive;											//
 	int		nStateID;											// 
 	short	sSelfAttr[defEFFECT_SELF_ATTR_NUM];					// 
 	short	sSelfEffect[defSELF_EFFECT_NUM];					// 
@@ -174,7 +175,7 @@ public:
 	short	sVariation;											// 
 	short	sSummon;											// 
 	short	sPreTime;											// 
-	char	szFireSpeed[defSKILL_EFFECT_SCRIPT_LEN];			// 
+	std::string	szFireSpeed;										//
 	char	chOperate[defSKILL_OPERATE_NUM];					// 012
 
 public:		// 
@@ -200,11 +201,11 @@ public:		//
 	char	chTargetEffectTime;									//  ,0-12()
     short   sAgroundEffectID;                                   // ,
 	short	sWaterEffectID;										// , 
-	char	szICON[defSKILL_ICON_NAME_LEN];						// 
-	char	chPlayTime;											// 
-	char	szDescribeHint[128];								// ,hint
-	char	szEffectHint[128];									// ,hint
-	char	szExpendHint[128];									// ,hint
+	std::string	szICON;												//
+	char	chPlayTime;											//
+	std::string	szDescribeHint;									// hint
+	std::string	szEffectHint;									// hint
+	std::string	szExpendHint;									// hint
 
 public:
     bool    IsPlayCyc()         { return chPlayTime==1;     }   // 
@@ -272,62 +273,8 @@ public:
 	}
 };
 
-class CSkillRecordSet : public CRawDataSet
-{
-public:
-
-	static CSkillRecordSet* I() { return _Instance; }
-
-	CSkillRecordSet(int nIDStart, int nIDCnt, int nCol = 128)
-		:CRawDataSet(nIDStart, nIDCnt, nCol)
-	{
-		_Instance = this;
-		_Init();
-	}
-
-protected:
-
-	static CSkillRecordSet* _Instance; // , 
-
-	virtual CRawDataInfo* _CreateRawDataArray(int nCnt)
-	{
-		return new CSkillRecord[nCnt];
-	}
-
-	virtual void _DeleteRawDataArray()
-	{
-		delete[] (CSkillRecord*)_RawDataArray;
-	}
-
-	virtual int _GetRawDataInfoSize()
-	{
-		return sizeof(CSkillRecord);
-	}
-
-	virtual void*	_CreateNewRawData(CRawDataInfo *pInfo)
-	{
-		return NULL;
-	}
-
-	virtual void  _DeleteRawData(CRawDataInfo *pInfo)
-	{
-		SAFE_DELETE(pInfo->pData);
-	}
-
-	virtual BOOL _ReadRawDataInfo(CRawDataInfo *pRawDataInfo, std::vector<std::string> &ParamList);
-	virtual void _ProcessRawDataInfo(CRawDataInfo *pInfo);
-
-};
-
-inline CSkillRecord* GetSkillRecordInfo( int nTypeID )
-{
-	return (CSkillRecord*)CSkillRecordSet::I()->GetRawDataInfo(nTypeID);
-}
-
-inline CSkillRecord* GetSkillRecordInfo( const char* szName )
-{
-	return (CSkillRecord*)CSkillRecordSet::I()->GetRawDataInfo(szName);
-}
+CSkillRecord* GetSkillRecordInfo(int nTypeID);
+CSkillRecord* GetSkillRecordInfo(const char* szName);
 
 inline bool CSkillRecord::IsJobAllow( int nJob )
 {
@@ -357,4 +304,7 @@ inline int CSkillRecord::GetJobMax( int nJob )
 
 	return -1;
 }
+CSkillRecord* GetSkillRecordInfo(int nTypeID);
+CSkillRecord* GetSkillRecordInfo(const char* szName);
+
 #endif //SKILLRECORD_H

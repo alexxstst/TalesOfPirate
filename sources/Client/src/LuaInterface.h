@@ -1,6 +1,6 @@
 ﻿#include "uiguidata.h"
 #include "sceneobjset.h"
-#include "EffectSet.h"
+#include "EffectRecordStore.h"
 
 //---------------------------------------------------------------------------
 // Info_Script
@@ -19,7 +19,7 @@ inline int GetEffectPhotoTexID(int nTypeID)
 
 inline int GetTerrainTextureType(int nID)
 {
-	MPTerrainInfo *pInfo = (MPTerrainInfo*)MPTerrainSet::I()->GetRawDataInfo(nID);	
+	MPTerrainInfo *pInfo = GetTerrainInfo(nID);	
 	if(!pInfo) 
 	{
 		return -1;
