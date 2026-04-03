@@ -49,67 +49,50 @@ GameRecordset<CSceneObjInfo>::RecordEntry SceneObjRecordStore::ReadRecord(Sqlite
 	CSceneObjInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record._id       = stmt.GetInt(col++);
+	record._dataName = std::string(stmt.GetText(col++));
+	record._name     = std::string(stmt.GetText(col++));
 
-	// data_name
-	{
-		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
-	// name
-	{
-		auto name = stmt.GetText(col++);
-		strncpy(record.szName, name.data(), sizeof(record.szName) - 1);
-		record.szName[sizeof(record.szName) - 1] = '\0';
-	}
-
-	record.nType = stmt.GetInt(col++);
+	record._type = stmt.GetInt(col++);
 
 	// point_color — "r,g,b"
 	{
 		auto text = stmt.GetText(col++);
-		ParseByteArray(text, record.btPointColor, 3);
+		ParseByteArray(text, record._pointColor, 3);
 	}
 
 	// env_color — "r,g,b"
 	{
 		auto text = stmt.GetText(col++);
-		ParseByteArray(text, record.btEnvColor, 3);
+		ParseByteArray(text, record._envColor, 3);
 	}
 
-	record.nRange        = stmt.GetInt(col++);
-	record.Attenuation1  = static_cast<float>(stmt.GetDouble(col++));
-	record.nAnimCtrlID   = stmt.GetInt(col++);
-	record.nAttachEffectID = stmt.GetInt(col++);
-	record.bEnableEnvLight   = stmt.GetInt(col++);
-	record.bEnablePointLight = stmt.GetInt(col++);
-	record.nStyle        = stmt.GetInt(col++);
-	record.nFlag         = stmt.GetInt(col++);
-	record.nSizeFlag     = stmt.GetInt(col++);
+	record._range        = stmt.GetInt(col++);
+	record._attenuation  = static_cast<float>(stmt.GetDouble(col++));
+	record._animCtrlId   = stmt.GetInt(col++);
+	record._attachEffectId = stmt.GetInt(col++);
+	record._enableEnvLight   = stmt.GetInt(col++);
+	record._enablePointLight = stmt.GetInt(col++);
+	record._style        = stmt.GetInt(col++);
+	record._flag         = stmt.GetInt(col++);
+	record._sizeFlag     = stmt.GetInt(col++);
 
-	// env_sound
-	{
-		auto text = stmt.GetText(col++);
-		strncpy(record.szEnvSound, text.data(), sizeof(record.szEnvSound) - 1);
-		record.szEnvSound[sizeof(record.szEnvSound) - 1] = '\0';
-	}
+	record._envSound = std::string(stmt.GetText(col++));
 
-	record.nEnvSoundDis  = stmt.GetInt(col++);
-	record.bShadeFlag    = stmt.GetInt(col++);
-	record.bIsReallyBig  = stmt.GetInt(col++);
-	record.nFadeObjNum   = stmt.GetInt(col++);
+	record._envSoundDis  = stmt.GetInt(col++);
+	record._shadeFlag    = stmt.GetInt(col++);
+	record._isReallyBig  = stmt.GetInt(col++);
+	record._fadeObjNum   = stmt.GetInt(col++);
 
 	// fade_obj_seq — "s0,s1,..."
 	{
 		auto text = stmt.GetText(col++);
-		ParseIntArray(text, record.nFadeObjSeq, 16);
+		ParseIntArray(text, record._fadeObjSeq, 16);
 	}
 
-	record.fFadeCoefficent = static_cast<float>(stmt.GetDouble(col++));
+	record._fadeCoefficient = static_cast<float>(stmt.GetDouble(col++));
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record._id, record._dataName, std::move(record)};
 }
 
 void SceneObjRecordStore::Insert(SqliteDatabase& db, const CSceneObjInfo& r) {
@@ -122,30 +105,34 @@ void SceneObjRecordStore::Insert(SqliteDatabase& db, const CSceneObjInfo& r) {
 			"env_sound,env_sound_dis,shade_flag,is_really_big,fade_obj_num,fade_obj_seq,fade_coefficient) "
 			"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
-		stmt.Bind(p++, std::string_view(r.szName));
-		stmt.Bind(p++, r.nType);
-		stmt.Bind(p++, SerializeByteArray(r.btPointColor, 3));
-		stmt.Bind(p++, SerializeByteArray(r.btEnvColor, 3));
-		stmt.Bind(p++, r.nRange);
-		stmt.Bind(p++, static_cast<double>(r.Attenuation1));
-		stmt.Bind(p++, r.nAnimCtrlID);
-		stmt.Bind(p++, r.nAttachEffectID);
-		stmt.Bind(p++, static_cast<int>(r.bEnableEnvLight));
-		stmt.Bind(p++, static_cast<int>(r.bEnablePointLight));
-		stmt.Bind(p++, r.nStyle);
-		stmt.Bind(p++, r.nFlag);
-		stmt.Bind(p++, r.nSizeFlag);
-		stmt.Bind(p++, std::string_view(r.szEnvSound));
-		stmt.Bind(p++, r.nEnvSoundDis);
-		stmt.Bind(p++, static_cast<int>(r.bShadeFlag));
-		stmt.Bind(p++, static_cast<int>(r.bIsReallyBig));
-		stmt.Bind(p++, r.nFadeObjNum);
-		stmt.Bind(p++, SerializeIntArray(r.nFadeObjSeq, r.nFadeObjNum));
-		stmt.Bind(p++, static_cast<double>(r.fFadeCoefficent));
+		stmt.Bind(p++, r._id);
+		stmt.Bind(p++, std::string_view(r._dataName));
+		stmt.Bind(p++, r._name);
+		stmt.Bind(p++, r._type);
+		stmt.Bind(p++, SerializeByteArray(r._pointColor, 3));
+		stmt.Bind(p++, SerializeByteArray(r._envColor, 3));
+		stmt.Bind(p++, r._range);
+		stmt.Bind(p++, static_cast<double>(r._attenuation));
+		stmt.Bind(p++, r._animCtrlId);
+		stmt.Bind(p++, r._attachEffectId);
+		stmt.Bind(p++, static_cast<int>(r._enableEnvLight));
+		stmt.Bind(p++, static_cast<int>(r._enablePointLight));
+		stmt.Bind(p++, r._style);
+		stmt.Bind(p++, r._flag);
+		stmt.Bind(p++, r._sizeFlag);
+		stmt.Bind(p++, std::string_view(r._envSound));
+		stmt.Bind(p++, r._envSoundDis);
+		stmt.Bind(p++, static_cast<int>(r._shadeFlag));
+		stmt.Bind(p++, static_cast<int>(r._isReallyBig));
+		stmt.Bind(p++, r._fadeObjNum);
+		stmt.Bind(p++, SerializeIntArray(r._fadeObjSeq, r._fadeObjNum));
+		stmt.Bind(p++, static_cast<double>(r._fadeCoefficient));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "SceneObjRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "SceneObjRecordStore::Insert(id={}) failed: {}", r._id, e.what());
 	}
+}
+
+CSceneObjInfo* GetSceneObjInfo(int nTypeID, const std::source_location& loc) {
+	return SceneObjRecordStore::Instance()->Get(nTypeID, loc);
 }

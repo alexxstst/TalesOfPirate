@@ -192,9 +192,6 @@ BOOL CGameApp::_Init() {
 	//InitAllTable();
 	extern HINSTANCE g_hInstance;
 
-	// After initializing the resource list, initialize resources -- Michael Chen
-	if (!LoadResourceSet("scripts/table/ResourceInfo", g_Config.m_nMaxResourceNum, FALSE))
-		return 0;
 	if (!LoadResource() || !LoadRes2() /*|| !LoadRes3()*/) {
 		return 0;
 	}
@@ -425,9 +422,6 @@ void CGameApp::_End() {
 	ToLogService("common", "NetIF release end");
 
 	CFormMgr::s_Mgr.Clear();
-
-	UnloadResourceSet();
-	UnloadTerrainSet();
 
 	//::mus_mgr_exit();	// music
 #ifdef USE_DSOUND

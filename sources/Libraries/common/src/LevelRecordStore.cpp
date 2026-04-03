@@ -12,3 +12,7 @@ GameRecordset<CLevelRecord>::RecordEntry LevelRecordStore::ReadRecord(SqliteStat
 
 	return {record.nID, {}, std::move(record)};
 }
+
+CLevelRecord* GetLevelRecordInfo(int nTypeID, const std::source_location& loc) {
+	return LevelRecordStore::Instance()->Get(nTypeID, loc);
+}

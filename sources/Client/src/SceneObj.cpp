@@ -38,18 +38,18 @@ BOOL CSceneObj::_Create(int nScriptID,int nType)
     }
 
     ///*
-	if(S_OK!=Load(pInfo->szDataName, nScriptID))
+	if(S_OK!=Load(pInfo->_dataName.c_str(), nScriptID))
     {
         ToLogService("map", LogLevel::Error, "SceneObj invalid TypeID = {}", nScriptID);
         return FALSE;
     }
     //*/
-    
+
     // ShowBoundingObject( 1 );
     // ShowHelperMesh( 1 );
 
 	//lemon add flag for minimap
-	setObjType(pInfo->nFlag);
+	setObjType(pInfo->_flag);
 
     // Hardcoded glitched trees Mdr may 2020 FPO beta
     bool IsGlitched = false;
@@ -57,13 +57,13 @@ BOOL CSceneObj::_Create(int nScriptID,int nType)
     char buf[260];
     ofstream myfile;
     myfile.open ("myfile.txt", ios::out | ios::app);
-    sprintf(buf, "szName: %s. nID: %d. Flag: %d. Szdataname: %s \n", pInfo->szName, pInfo->nID, pInfo->nFlag, pInfo->szDataName);
+    sprintf(buf, "name: %s. id: %d. flag: %d. dataName: %s \n", pInfo->_name.c_str(), pInfo->_id, pInfo->_flag, pInfo->_dataName.c_str());
     myfile << buf;
     myfile.close();
 
 */
 
-    if(pInfo->nID == 184 || pInfo->nID == 188 || pInfo->nID == 183 || pInfo->nID == 175 || pInfo->nID == 83 || pInfo->nID == 187 || pInfo->nID == 126 || pInfo->nID == 269 || pInfo->nID == 215 || pInfo->nID == 461 || pInfo->nID == 448 || !g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = true;
+    if(pInfo->_id == 184 || pInfo->_id == 188 || pInfo->_id == 183 || pInfo->_id == 175 || pInfo->_id == 83 || pInfo->_id == 187 || pInfo->_id == 126 || pInfo->_id == 269 || pInfo->_id == 215 || pInfo->_id == 461 || pInfo->_id == 448 || !g_stUISystem.m_sysProp.m_gameOption.bFramerate) IsGlitched = true;
     PlayDefaultAnimation(IsGlitched);
 
 	_nMusicID = -1;
@@ -77,7 +77,7 @@ BOOL CSceneObj::_Create(int nScriptID,int nType)
     DWORD num = this->GetPrimitiveNum();
     for(DWORD i = 0; i < num; i++)
     {
-        LitInfo* l = g_lit_mgr.Lit(1, i, pInfo->szDataName);
+        LitInfo* l = g_lit_mgr.Lit(1, i, pInfo->_dataName.c_str());
         if(l)
         {
             lwIPrimitive* p = GetPrimitive(i);
@@ -465,25 +465,25 @@ void CSceneObj::SetSceneLightInfo(int id)
 {
     CSceneObjInfo *pInfo = GetSceneObjInfo(id);
 
-    if(pInfo->nType == 3)
+    if(pInfo->_type == 3)
     {
         amb.a = 1.0f;
-        amb.r = pInfo->btPointColor[0] / 255.0f;
-        amb.g = pInfo->btPointColor[1] / 255.0f;
-        amb.b = pInfo->btPointColor[2] / 255.0f;
+        amb.r = pInfo->_pointColor[0] / 255.0f;
+        amb.g = pInfo->_pointColor[1] / 255.0f;
+        amb.b = pInfo->_pointColor[2] / 255.0f;
         dif = amb;
-        range = (float)pInfo->nRange;
+        range = (float)pInfo->_range;
         attenuation0 = 0;
-        attenuation1 = pInfo->Attenuation1;
+        attenuation1 = pInfo->_attenuation;
         attenuation2 = 0;
 
         type = SceneLight::SL_LIGHT;
 
         // check world scene
-        if(pInfo->nAnimCtrlID != -1)
+        if(pInfo->_animCtrlId != -1)
         {
             CWorldScene* wc = (CWorldScene*)_pScene;
-            anim_light = wc->GetAnimLight(pInfo->nAnimCtrlID);
+            anim_light = wc->GetAnimLight(pInfo->_animCtrlId);
         }
 
 		//lemon add@2004.10.20 for light
@@ -492,12 +492,12 @@ void CSceneObj::SetSceneLightInfo(int id)
 		//_dwcolor = dif;
 
     }
-    else if(pInfo->nType == 4)
+    else if(pInfo->_type == 4)
     {
         amb.a = 1.0f;
-        amb.r = pInfo->btEnvColor[0] / 255.0f;
-        amb.g = pInfo->btEnvColor[1] / 255.0f;
-        amb.b = pInfo->btEnvColor[2] / 255.0f;
+        amb.r = pInfo->_envColor[0] / 255.0f;
+        amb.g = pInfo->_envColor[1] / 255.0f;
+        amb.b = pInfo->_envColor[2] / 255.0f;
 
         type = SceneLight::SL_AMBIENT;
     }
@@ -678,7 +678,7 @@ void CSceneObj::SetMaterial(const D3DMATERIALX* mtl)
     MPTerrain* t = _pScene->GetTerrain();
     CSceneObjInfo* info = GetSceneObjInfo(getTypeID());
 
-    if(t && info->bShadeFlag)
+    if(t && info->_shadeFlag)
     {
         D3DXVECTOR3 v = this->getPos();
         MPTile* tile = t->GetTile((int)v.x, (int)v.y);
@@ -729,13 +729,13 @@ int CSceneObj::UpdateObjFadeInFadeOut(const MPVector3* org, const MPVector3* ray
     //    return 0;
 
     CSceneObjInfo* info = GetSceneObjInfo(_dwTypeID);
-    if(info == 0 || info->nFadeObjNum == 0)
+    if(info == 0 || info->_fadeObjNum == 0)
         return 0;
 
     DWORD flag = 0;
     MPPickInfo pi;
 
-    float fade_limits = info->fFadeCoefficent;
+    float fade_limits = info->_fadeCoefficient;
 
     const float fade_coefficient = 0.012f;
 
@@ -781,9 +781,9 @@ int CSceneObj::UpdateObjFadeInFadeOut(const MPVector3* org, const MPVector3* ray
     {
         p = GetPrimitive(i);
         DWORD pri_id = p->GetID();
-        for(int j = 0; j < info->nFadeObjNum; j++)
+        for(int j = 0; j < info->_fadeObjNum; j++)
         {
-            if(pri_id == info->nFadeObjSeq[j])
+            if(pri_id == info->_fadeObjSeq[j])
             {
                 p->SetOpacity(_fTranspValue);
                 p->SetState(STATE_VISIBLE, (_fTranspValue > 0.0f) ? 1 : 0);

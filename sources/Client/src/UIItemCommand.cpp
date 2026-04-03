@@ -961,20 +961,11 @@ void CItemCommand::AddHint( int x, int y ){
 	}
 	else if( _pItem->sType==49 )
 	{
-		CStoneInfo* pStoneInfo = NULL;
 		DWORD color = -1;
-		int nCount = CStoneSet::I()->GetLastID() + 1;
-		for( int i=0; i<nCount; i++ )
-		{
-			pStoneInfo = ::GetStoneInfo( i );
-			if( !pStoneInfo )
-				continue;
-			if( pStoneInfo->nItemID == _pItem->nID )
-			{
-				color = (DWORD)pStoneInfo->nItemRgb; //| 0xFF000000;
-				break;
-			}
-		}
+		StoneRecordStore::Instance()->ForEach([&](const CStoneInfo& stone) {
+			if( color == (DWORD)-1 && stone.nItemID == _pItem->nID )
+				color = (DWORD)stone.nItemRgb;
+		});
 
 		sprintf( buf, g_oLangRec.GetString(656), ConvertNumToChinese( item.sEnergy[1] ).c_str(), _pItem->szName.c_str() );
         //PushHint( buf, color, 5, 1, -1, true, -16777216);
@@ -1645,21 +1636,15 @@ string CItemCommand::GetStoneHint(int nLevel)
 	string hint = "error";
 	if( _pItem->sType==49 )
 	{
-		CStoneInfo* pInfo = NULL;
-		int nCount = CStoneSet::I()->GetLastID() + 1;
-		for( int i=0; i<nCount; i++ )
-		{
-			pInfo = ::GetStoneInfo( i );
-			if( !pInfo ) continue;
-
-			if( pInfo->nItemID != _pItem->nID ) continue;
+		StoneRecordStore::Instance()->ForEach([&](const CStoneInfo& stone) {
+			if( hint != "error" ) return;
+			if( stone.nItemID != _pItem->nID ) return;
 
 			if( nLevel<0 )
-				g_pGameApp->GetScriptMgr()->DoString( pInfo->szHintFunc, "u-s", _ItemData.sEnergy[1], &hint );
+				g_pGameApp->GetScriptMgr()->DoString( stone.szHintFunc, "u-s", _ItemData.sEnergy[1], &hint );
 			else
-				g_pGameApp->GetScriptMgr()->DoString( pInfo->szHintFunc, "u-s", 1, &hint );
-			return hint;
-		}
+				g_pGameApp->GetScriptMgr()->DoString( stone.szHintFunc, "u-s", 1, &hint );
+		});
 		
 	}
 	return hint;

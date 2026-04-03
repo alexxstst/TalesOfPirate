@@ -71,3 +71,7 @@ void ChatIconRecordStore::Insert(SqliteDatabase& db, const CChatIconInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ChatIconRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CChatIconInfo* GetChatIconInfo(int nIconID, const std::source_location& loc) {
+	return ChatIconRecordStore::Instance()->Get(nIconID, loc);
+}

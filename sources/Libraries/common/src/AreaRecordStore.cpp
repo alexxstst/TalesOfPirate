@@ -75,3 +75,7 @@ void AreaRecordStore::Insert(SqliteDatabase& db, const CAreaInfo& record) {
 		ToLogService("errors", LogLevel::Error, "AreaRecordStore::Insert(id={}) failed: {}", record.nID, e.what());
 	}
 }
+
+CAreaInfo* GetAreaInfo(int nAreaID, const std::source_location& loc) {
+	return AreaRecordStore::Instance()->Get(nAreaID, loc);
+}

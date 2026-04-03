@@ -38,6 +38,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CForgeRecord* GetForgeRecordInfo(int nIndex) {
-	return ForgeRecordStore::Instance()->Get(nIndex);
-}
+CForgeRecord* GetForgeRecordInfo(int nIndex, const std::source_location& loc = std::source_location::current());

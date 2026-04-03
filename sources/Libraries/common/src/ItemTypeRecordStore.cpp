@@ -28,3 +28,7 @@ void ItemTypeRecordStore::Insert(SqliteDatabase& db, const CItemTypeInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ItemTypeRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CItemTypeInfo* GetItemTypeInfo(int nTypeID, const std::source_location& loc) {
+	return ItemTypeRecordStore::Instance()->Get(nTypeID, loc);
+}

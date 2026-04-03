@@ -27,8 +27,6 @@ using namespace std;
 
 LW_USING
 
-MPResourceSet* MPResourceSet::m_pInstance = NULL;
-
 
 MPGameApp::MPGameApp()
 	: _dwRenderUseTime(0),
@@ -378,37 +376,6 @@ void MPGameApp::SetInputActive(bool bActive) {
 	_bActive = bActive;
 }
 
-BOOL MPGameApp::UnloadTerrainSet() {
-	return TRUE;
-}
-
-//-----------------------------------------------------------------------------
-BOOL MPGameApp::LoadResourceSet(const char* file, int iMaxIndex, BOOL bBinary) {
-	//#if RESOURCE_SCRIPT == 2 || RESOURCE_SCRIPT == 3
-	MPResourceSet* pResourceSet = new MPResourceSet(0, iMaxIndex);
-	return pResourceSet->LoadRawDataInfo(file, bBinary);
-	//#endif
-	return TRUE;
-}
-
-//-----------------------------------------------------------------------------
-BOOL MPGameApp::UnloadResourceSet() {
-	//MPResourceSet *pResourceSet = MPResourceSet::GetInstancePtr();
-	//SAFE_DELETE(pResourceSet);
-
-	//
-	MPResourceSet* pResourceSet = MPResourceSet::GetInstancePtr();
-	if (pResourceSet) {
-		pResourceSet->Release();
-		delete pResourceSet;
-		MPResourceSet::m_pInstance = NULL;
-	}
-
-	return TRUE;
-}
-
-//-----------------------------------------------------------------------------
-
 void MPGameApp::_ReadKeyboardInput() {
 	// set the single key strokes to 0 each time, so it just records changes between frames
 	ZeroMemory(_btButtonState, sizeof(_btButtonState)); // 0 is no action
@@ -675,9 +642,3 @@ void MPGameApp::End() {
 	ToLogService("common", "exit game appliaction successful!");
 }
 
-void MPGameApp::LG_Config(const LGInfo& info) {
-	//
-	g_logManager.InitLogger(info.dir);
-
-	_lgInfo = info;
-}

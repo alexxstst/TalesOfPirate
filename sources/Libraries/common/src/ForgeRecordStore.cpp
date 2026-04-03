@@ -79,3 +79,7 @@ void ForgeRecordStore::Insert(SqliteDatabase& db, const CForgeRecord& record) {
 		ToLogService("errors", LogLevel::Error, "ForgeRecordStore::Insert(id={}) failed: {}", record.byLevel, e.what());
 	}
 }
+
+CForgeRecord* GetForgeRecordInfo(int nIndex, const std::source_location& loc) {
+	return ForgeRecordStore::Instance()->Get(nIndex, loc);
+}

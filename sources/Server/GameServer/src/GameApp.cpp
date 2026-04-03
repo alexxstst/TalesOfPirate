@@ -56,7 +56,7 @@ _DBC_USING;
 
 bool		g_bLogEntity = false;
 
-CItemRecordAttr*  g_pCItemAttr = NULL;
+std::unordered_map<int, CItemRecordAttr> g_itemAttrMap;
 CCharacter*	g_pCSystemCha = NULL;
 SubMap*		g_pScriptMap = NULL;		// 
 long		g_lDeftMMaskLight = 21;
@@ -464,7 +464,6 @@ BOOL CGameApp::Init()
 
 	//LG("init", "...\n");
 	ToLogService("common", "initialization every form...");
-	int	nItemRecordNum = CItemRecord::enumItemMax;
 	AssetDatabase::Instance()->Open(g_Config._assetDbPath);
 	auto& db = AssetDatabase::Instance()->GetDb();
 
@@ -482,11 +481,9 @@ BOOL CGameApp::Init()
 	ShipRecordStore::Instance()->Load(db);
 	ShipPartRecordStore::Instance()->Load(db);
 
-	g_pCItemAttr = new CItemRecordAttr[nItemRecordNum];
-	for (int i = 0; i < nItemRecordNum; i++)
-	{
-		g_pCItemAttr[i].Init(i);
-	}
+	ItemRecordStore::Instance()->ForEach([](CItemRecord& item) {
+		g_itemAttrMap[static_cast<int>(item.lID)].Init(item);
+	});
 
 	ToLogService("common", "Loading LuaJIT {}", LUAJIT_VERSION);
 

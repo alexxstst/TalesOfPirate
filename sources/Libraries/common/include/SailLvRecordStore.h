@@ -47,6 +47,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CSailLvRecord* GetSailLvRecordInfo(int nTypeID) {
-	return SailLvRecordStore::Instance()->Get(nTypeID);
-}
+CSailLvRecord* GetSailLvRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

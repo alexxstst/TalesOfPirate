@@ -71,3 +71,11 @@ void MapRecordStore::Insert(SqliteDatabase& db, const CMapInfo& r) {
 		ToLogService("errors", LogLevel::Error, "MapRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CMapInfo* GetMapInfo(int nMapID, const std::source_location& loc) {
+	return MapRecordStore::Instance()->Get(nMapID, loc);
+}
+
+CMapInfo* GetMapInfo(const char* pszMapName, const std::source_location& loc) {
+	return MapRecordStore::Instance()->Get(std::string_view(pszMapName), loc);
+}

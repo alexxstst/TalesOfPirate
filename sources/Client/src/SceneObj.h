@@ -101,7 +101,7 @@ public:
 		CSceneObjInfo *info = GetSceneObjInfo(this->getTypeID());
 		if ( info )
 		{
-			return info->bIsReallyBig;
+			return info->_isReallyBig;
 		}
 		return FALSE;
 	}

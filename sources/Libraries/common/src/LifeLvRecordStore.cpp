@@ -12,3 +12,7 @@ GameRecordset<CLifeLvRecord>::RecordEntry LifeLvRecordStore::ReadRecord(SqliteSt
 
 	return {record.nID, {}, std::move(record)};
 }
+
+CLifeLvRecord* GetLifeLvRecordInfo(int nTypeID, const std::source_location& loc) {
+	return LifeLvRecordStore::Instance()->Get(nTypeID, loc);
+}

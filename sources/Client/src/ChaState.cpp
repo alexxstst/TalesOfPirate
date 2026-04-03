@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "chastate.h"
 #include "SkillStateRecord.h"
+#include "SkillStateRecordStore.h"
 #include "netprotocol.h"
 #include "character.h"
 #include "EffectObj.h"
@@ -11,55 +12,49 @@
 CSkillStateRecord* CChaStateMgr::_pLastActInfo = nullptr;
 int CChaStateMgr::_nShopLevel = 0;
 
-CChaStateMgr::stChaState CChaStateMgr::_sInitState[SKILL_STATE_MAXID];
-bool CChaStateMgr::_IsInit = false;
-
 CChaStateMgr::CChaStateMgr(CCharacter* pCha)
-: _pCha(pCha)
-{
-	if( !_IsInit )
-	{
-		_IsInit=true;
-
-		memset( &_sInitState, 0, sizeof(_sInitState) );
-		for( int i=1; i<SKILL_STATE_MAXID; i++ )
-		{
-			_sInitState[i].pInfo = GetCSkillStateRecordInfo( i );
-		}
-	}
-	memcpy( _sChaState, _sInitState, sizeof(_sChaState) );
+	: _pCha(pCha) {
+	_ResetStates();
 }
 
-void CChaStateMgr::ChaDestroy()
-{
-	for (const auto& _state : _states)
-	{
-		if(_state->pEffect ) 
-		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(29), _state->pEffect->getIdxID(), _state->pEffect); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+void CChaStateMgr::ChaDestroy() {
+	for (const auto& _state : _states) {
+		if (_state->pEffect) {
+			{
+				char _buf[512];
+				snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(29), _state->pEffect->getIdxID(), _state->pEffect);
+				g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
+			}
 
-			_state->pEffect->SetValid( FALSE );
+			_state->pEffect->SetValid(FALSE);
 			_state->pEffect = nullptr;
 		}
 	}
 
-	memcpy( _sChaState, _sInitState, sizeof(_sChaState) );
+	_ResetStates();
 	_states.clear();
+}
+
+void CChaStateMgr::_ResetStates() {
+	_sChaState.fill({});
+	SkillStateRecordStore::Instance()->ForEach([this](CSkillStateRecord& rec) {
+		if (rec.nID > 0 && rec.nID < static_cast<int>(_sChaState.size()))
+			_sChaState[rec.nID].pInfo = &rec;
+	});
 }
 
 CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 	static CBoolSet _ChaState;
-	static stChaState* stTmp[SKILL_STATE_MAXID] = { nullptr };
+	static stChaState* stTmp[SKILL_STATE_MAXID] = {nullptr};
 	static unsigned int nTmpCount = 0;
 
-	// 
+	//
 	static bool IsExist[SKILL_STATE_MAXID] = {};
 	memset(IsExist, 0, sizeof(IsExist));
 
 	static int nID = 0;
 	nTmpCount = 0;
-	for (const auto& _state : _states)
-	{
+	for (const auto& _state : _states) {
 		_state->IsDel = true;
 
 		nID = _state->pInfo->nID;
@@ -101,11 +96,21 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 	for (unsigned int i = 0; i < nTmpCount; i++) {
 		pChaState = stTmp[i];
 		if (pChaState->IsDel) {
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(30), pChaState->pInfo->nID, pChaState->pInfo->szName.c_str(), pChaState->pInfo->sEffect); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			{
+				char _buf[512];
+				snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(30), pChaState->pInfo->nID,
+						 pChaState->pInfo->szName.c_str(), pChaState->pInfo->sEffect);
+				g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
+			}
 
 			// Existing delete
 			if (pChaState->pEffect) {
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(31), pChaState->pEffect->getIdxID(), pChaState->pEffect); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+				{
+					char _buf[512];
+					snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(31), pChaState->pEffect->getIdxID(),
+							 pChaState->pEffect);
+					g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
+				}
 
 				pChaState->pEffect->SetValid(FALSE);
 				pChaState->pEffect = nullptr;
@@ -115,7 +120,12 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 		else {
 			// increase
 			_states.push_back(pChaState);
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(32), pChaState->pInfo->nID, pChaState->pInfo->szName.c_str(), pChaState->pInfo->sEffect); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			{
+				char _buf[512];
+				snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(32), pChaState->pInfo->nID,
+						 pChaState->pInfo->szName.c_str(), pChaState->pInfo->sEffect);
+				g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
+			}
 
 			pInfo = pChaState->pInfo;
 			if (pInfo->sBitEffect > 0) {
@@ -216,7 +226,12 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 
 			if (pInfo->sEffect > 0 && !pChaState->pEffect) {
 				pChaState->pEffect = _pCha->SelfEffect(pInfo->sEffect, pInfo->sDummy1, true);
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(33), pInfo->sEffect, pInfo->sDummy1, pChaState->pEffect); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+				{
+					char _buf[512];
+					snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(33), pInfo->sEffect, pInfo->sDummy1,
+							 pChaState->pEffect);
+					g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
+				}
 			}
 		}
 	}

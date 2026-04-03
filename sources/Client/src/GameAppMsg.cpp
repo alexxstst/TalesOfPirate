@@ -97,7 +97,7 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 			    {
 					// Fix large scene object infinite display bug //by clp
 					CSceneObjInfo *pInfo = GetSceneObjInfo( infoex[i].GetID() );
-					if( pInfo && pInfo->bIsReallyBig )
+					if( pInfo && pInfo->_isReallyBig )
 					{
 						// Large objects are loaded separately, skip here
 						continue;
@@ -1461,22 +1461,6 @@ const char* ConsoleCallback(const char *pszCmd)
 		g_pGameApp->HasLogFile( "roadsay" );
 		g_pGameApp->HasLogFile( "iteminfoerror" );
 	}
-	else if( strCmd=="lg" )
-	{
-		LGInfo* pInfo = g_pGameApp->GetLGConfig();
-		pInfo->bEnableAll = Str2Int( p1 )!=0;
-		g_pGameApp->LG_Config( *pInfo );
-	}
-	else if( strCmd=="lgmsg" )
-	{
-		LGInfo* pInfo = g_pGameApp->GetLGConfig();
-		pInfo->bMsgBox = Str2Int( p1 )!=0;
-		g_pGameApp->LG_Config( *pInfo );
-	}
-	else if( strCmd=="lgclear" )
-	{
-		g_logManager.Shutdown();
-	}
 	else if( strCmd=="gate" )
 	{
 		if( g_NetIF->IsConnected() )
@@ -1642,12 +1626,11 @@ const char* ConsoleCallback(const char *pszCmd)
 		CGameScene* pScene = g_pGameApp->GetCurScene();
 		if (pScene)
 		{
-			for (int i(1); i<SceneObjRecordStore::Instance()->GetMaxId() + 1; i++)
-			{
-				CSceneObj* pSceneObj = pScene->AddSceneObj(i);
+			SceneObjRecordStore::Instance()->ForEach([&](const CSceneObjInfo& info) {
+				CSceneObj* pSceneObj = pScene->AddSceneObj(info._id);
 				if (pSceneObj)
 					pSceneObj->SetValid(false);
-			}
+			});
 			
 		}
 
@@ -1735,15 +1718,13 @@ const char* ConsoleCallback(const char *pszCmd)
 			//g_pGameApp->AutoTestInfo( "Testing scene effects" );
 			{
 				//g_pGameApp->AutoTestInfo( "Testing scene effects" );
-				int nCount = EffectRecordStore::Instance()->GetMaxId() + 1;
 				CEffectObj* pEffect = NULL;
-				CMagicInfo* pInfo = NULL;
 
 				string name;
 				bool IsDel = false;
 				for( int i=nStart; i<nEnd; i++ )
 				{
-					pInfo = GetMagicInfo(i);
+					CMagicInfo* pInfo = GetMagicInfo(i);
 					if(!pInfo) continue;
 
 					IsDel = false;
@@ -1805,27 +1786,21 @@ const char* ConsoleCallback(const char *pszCmd)
 	{
 		// Check if effects referenced in skill table exist
 		{
-			int nCount = SkillRecordStore::Instance()->GetMaxId() + 1;
-			CSkillRecord* _pSkillInfo = NULL;
-			for( int k=0; k<nCount; k++ )
-			{
-				_pSkillInfo = GetSkillRecordInfo(k);
-				if( !_pSkillInfo ) continue;
-
+			SkillRecordStore::Instance()->ForEach([](CSkillRecord& skill) {
 				for( int i=0; i<defSKILL_ACTION_EFFECT; i++ )
 				{
-					CheckSkillEffect( _pSkillInfo, _pSkillInfo->sActionEffect[i] );
+					CheckSkillEffect( &skill, skill.sActionEffect[i] );
 				}
 
-				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sItemEffect1[0] );
-				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sItemEffect2[0] );
+				CheckSkillEffect( &skill, skill.sItemEffect1[0] );
+				CheckSkillEffect( &skill, skill.sItemEffect2[0] );
 
-				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sSkyEffect );
+				CheckSkillEffect( &skill, skill.sSkyEffect );
 
-				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sAgroundEffectID );
-				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sWaterEffectID );
-				CheckSkillEffect( _pSkillInfo, _pSkillInfo->sTargetEffectID );												
-			}
+				CheckSkillEffect( &skill, skill.sAgroundEffectID );
+				CheckSkillEffect( &skill, skill.sWaterEffectID );
+				CheckSkillEffect( &skill, skill.sTargetEffectID );
+			});
 
 			g_pGameApp->HasLogFile( "skillinfoerror" );
 		}

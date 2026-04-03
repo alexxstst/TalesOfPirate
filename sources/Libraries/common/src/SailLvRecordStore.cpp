@@ -12,3 +12,7 @@ GameRecordset<CSailLvRecord>::RecordEntry SailLvRecordStore::ReadRecord(SqliteSt
 
 	return {record.nID, {}, std::move(record)};
 }
+
+CSailLvRecord* GetSailLvRecordInfo(int nTypeID, const std::source_location& loc) {
+	return SailLvRecordStore::Instance()->Get(nTypeID, loc);
+}

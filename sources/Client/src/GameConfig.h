@@ -101,10 +101,9 @@ public:
 
 	char	m_szMD5Pass[48];	// MD5
 
-	bool	m_IsShowConsole;	// 
-	bool	m_IsTomServer;		// Tom
+	bool	m_IsShowConsole;	//
 
-	bool	m_IsMoveClient;		// 
+	bool	m_IsMoveClient;		//
 
 	char	m_szVerErrorHTTP[256];	// 
 

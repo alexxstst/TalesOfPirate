@@ -2,6 +2,9 @@
 
 #include "GameRecordset.h"
 #include "ServerRecord.h"
+#include <string>
+#include <vector>
+#include <map>
 
 class ServerRecordStore : public GameRecordset<CServerGroupInfo> {
 public:
@@ -27,11 +30,31 @@ public:
 
 	bool Load(SqliteDatabase& db) {
 		EnsureCreated(db, TABLE_NAME, CREATE_TABLE_SQL);
-		return GameRecordset::Load(db, SELECT_ALL_SQL);
+		if (!GameRecordset::Load(db, SELECT_ALL_SQL))
+			return false;
+
+		m_regionGroups.clear();
+		ForEach([this](const CServerGroupInfo& info) {
+			m_regionGroups[info.region].push_back(info.nID);
+		});
+
+		return true;
 	}
+
+	// region → список group ID
+	std::map<std::string, std::vector<int>> m_regionGroups{};
 
 	static void Insert(SqliteDatabase& db, const CServerGroupInfo& record);
 
 protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
+
+// Доступ к данным серверов
+CServerGroupInfo*      GetServerGroupInfo(int nGroupID, const std::source_location& loc = std::source_location::current());
+CServerGroupInfo*      GetServerGroupInfo(const std::string& groupName, const std::source_location& loc = std::source_location::current());
+int                    GetCurServerGroupCnt(int nRegionNo);
+const std::string&     GetCurServerGroupName(int nRegionNo, int nGroupNo);
+int                    GetRegionCnt();
+const std::string&     GetCurRegionName(int nRegionNo);
+const std::string&     SelectGroupIP(int nRegionNo, int nGroupNo);

@@ -331,30 +331,16 @@ bool CEquipMgr::Init()
         }
     }
 
-	int nTotalSkill = SkillRecordStore::Instance()->GetMaxId() + 1;
-	CSkillRecord *pInfo;
-	for( int i=0; i<nTotalSkill; i++ )
-	{
-		pInfo=GetSkillRecordInfo( i );
-		if( pInfo )
-		{
-			if( pInfo->nStateID ) _cancels.push_back( pInfo );
-		}
-	}
+	SkillRecordStore::Instance()->ForEach([&](CSkillRecord& info) {
+		if( info.nStateID ) _cancels.push_back( &info );
+	});
 
-	int nTotalState = SkillStateRecordStore::Instance()->GetMaxId() + 1;
-	CSkillStateRecord* pState;
-	for( int i=0; i<nTotalState; i++ )
-	{
-		pState = GetCSkillStateRecordInfo( i );
-		if( pState )
+	SkillStateRecordStore::Instance()->ForEach([&](CSkillStateRecord& state) {
+		if( state.sChargeLink>=0 && state.sChargeLink<enumEQUIP_NUM )
 		{
-			if( pState->sChargeLink>=0 && pState->sChargeLink<enumEQUIP_NUM )
-			{
-				_charges.push_back( pState );
-			}
+			_charges.push_back( &state );
 		}
-	}
+	});
 	
 	frmItemSpy = _FindForm("frmItemSpy");   // 
 	frmItemSpy->evtShow = _evtSpyFormShow;

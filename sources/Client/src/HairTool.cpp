@@ -35,17 +35,10 @@ bool CHairTools::RefreshCha( DWORD dwChaID )
 	if( dwChaID==0 || dwChaID>4 ) return false;
 	dwChaID--;
 
-	int nCount = HairRecordStore::Instance()->GetMaxId() + 1;
-	CHairRecord* pInfo = NULL;
-	for( int i=0; i<nCount; i++ )
-	{
-		pInfo = GetHairRecordInfo( i );
-		if( !pInfo ) continue;
-
-		if( !pInfo->IsChaUse[dwChaID] ) continue;
-
-		_AddInfo( pInfo );
-	}
+	HairRecordStore::Instance()->ForEach([&](CHairRecord& hair) {
+		if( hair.IsChaUse[dwChaID] )
+			_AddInfo( &hair );
+	});
 	return true;
 }
 

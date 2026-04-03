@@ -396,15 +396,7 @@ namespace GUI
 		}
 		else
 		{
-			// 
-			extern TOM_SERVER g_TomServer;
-			if( g_TomServer.bEnable )
-			{
-				g_pGameApp->SetIsRun( false );
-				return;
-			}
-
-			// 
+			//
 			CS_Logout();
 			CS_Disconnect(DS_DISCONN);
 			g_pGameApp->LoadScriptScene( enumLoginScene );

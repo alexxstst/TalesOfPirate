@@ -19,6 +19,7 @@
 #include "Identity.h"
 #include "Player.h"
 #include "SkillStateRecord.h"
+#include "SkillStateRecordStore.h"
 #include "Script.h"
 #include "AreaRecord.h"
 #include "SkillTemp.h"
@@ -394,32 +395,32 @@ inline CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv)
 		// SP
 		if (pCSkillRec->szUseSP != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseSP.c_str(), (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseSP, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = 0;
 		//
 		if (pCSkillRec->szUseEndure != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEndure.c_str(), (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEndure, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = 0;
 		//
 		if (pCSkillRec->szUseEnergy != "0")
 		{
-			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEnergy.c_str(), (int)chSkillLv).value_or(0);
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEnergy, (int)chSkillLv).value_or(0);
 		}
 		else
 			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = 0;
 		//
 		m_pCSkillTData[sSkillNo][chSkillLv]->sRange[0] = enumRANGE_TYPE_NONE;
 		if (pCSkillRec->szSetRange != "0")
-			g_luaAPI.Call(pCSkillRec->szSetRange.c_str(), (int)chSkillLv);
+			g_luaAPI.Call(pCSkillRec->szSetRange, (int)chSkillLv);
 		//
 		m_pCSkillTData[sSkillNo][chSkillLv]->sStateParam[0] = SSTATE_NONE;
 		if (pCSkillRec->szRangeState != "0")
-			g_luaAPI.Call(pCSkillRec->szRangeState.c_str(), (int)chSkillLv);
+			g_luaAPI.Call(pCSkillRec->szRangeState, (int)chSkillLv);
 		//
 		if (pCSkillRec->szFireSpeed != "0")
 		{
@@ -456,24 +457,21 @@ inline void CGameApp::SetSkillTDataState(short *psState)
 inline void CGameApp::InitSStateTraOnTime()
 {
 	memset(m_lSStateTraOnTime, 0, sizeof(m_lSStateTraOnTime));
-	CSkillStateRecord	*pSStateR;
-	for (int i = 1; i <= AREA_STATE_MAXID; i++)
-	{
-		pSStateR = GetCSkillStateRecordInfo(i);
-		if (!pSStateR)
-			continue;
-		if (pSStateR->szOnTransfer == "0")
-			continue;
-		if (!g_luaAPI.HasFunction(pSStateR->szOnTransfer.c_str()))
+	SkillStateRecordStore::Instance()->ForEach([this](CSkillStateRecord& rec) {
+		if (rec.nID < 1 || rec.nID > AREA_STATE_MAXID)
+			return;
+		if (rec.szOnTransfer == "0")
+			return;
+		if (!g_luaAPI.HasFunction(rec.szOnTransfer.c_str()))
 		{
-			ToLogService("lua", LogLevel::Warning, "Skill state {} has szOnTransfer='{}' but function not found", i, pSStateR->szOnTransfer);
-			continue;
+			ToLogService("lua", LogLevel::Warning, "Skill state {} has szOnTransfer='{}' but function not found", rec.nID, rec.szOnTransfer);
+			return;
 		}
 		for (int j = 1; j <= SKILL_STATE_LEVEL; j++)
 		{
-			m_lSStateTraOnTime[i][j] = g_luaAPI.CallR<int>(pSStateR->szOnTransfer.c_str(), (int)j).value_or(0);
+			m_lSStateTraOnTime[rec.nID][j] = g_luaAPI.CallR<int>(rec.szOnTransfer.c_str(), (int)j).value_or(0);
 		}
-	}
+	});
 }
 
 inline long CGameApp::GetSStateTraOnTime(unsigned char uchStateID, unsigned char uchStateLv)
@@ -743,7 +741,7 @@ struct SSwitchMapInfo //
 extern bool             g_bLogEntity;
 
 extern CGameApp*        g_pGameApp;
-extern CItemRecordAttr* g_pCItemAttr;
+extern std::unordered_map<int, CItemRecordAttr> g_itemAttrMap;
 extern CCharacter*		g_pCSystemCha;		// 
 extern SubMap *			g_pScriptMap;		// 
 extern long				g_lDeftMMaskLight;	// 

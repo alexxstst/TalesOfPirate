@@ -17,6 +17,7 @@
 #include <string>
 #include <string_view>
 #include <chrono>
+#include <source_location>
 #include <logutil.h>
 
 template <typename T>
@@ -29,29 +30,41 @@ public:
 	GameRecordset& operator=(const GameRecordset&) = delete;
 
 	// Получить запись по ID. nullptr если не найдена
-	T* Get(int id) {
+	T* Get(int id, const std::source_location& loc = std::source_location::current()) {
 		auto it = _idIndex.find(id);
-		if (it == _idIndex.end()) return nullptr;
-		return &_records[it->second];
+		if (it == _idIndex.end()) {
+			ToLogService("store_miss", "GET MISS id={} store={} at {}:{}", id, typeid(T).name(), loc.file_name(), loc.line());
+			return nullptr;
+		}
+		return it->second;
 	}
 
-	const T* Get(int id) const {
+	const T* Get(int id, const std::source_location& loc = std::source_location::current()) const {
 		auto it = _idIndex.find(id);
-		if (it == _idIndex.end()) return nullptr;
-		return &_records[it->second];
+		if (it == _idIndex.end()) {
+			ToLogService("store_miss", "GET MISS id={} store={} at {}:{}", id, typeid(T).name(), loc.file_name(), loc.line());
+			return nullptr;
+		}
+		return it->second;
 	}
 
 	// Получить запись по имени. nullptr если не найдена
-	T* Get(std::string_view name) {
+	T* Get(std::string_view name, const std::source_location& loc = std::source_location::current()) {
 		auto it = _nameIndex.find(std::string(name));
-		if (it == _nameIndex.end()) return nullptr;
-		return &_records[it->second];
+		if (it == _nameIndex.end()) {
+			ToLogService("store_miss", "GET MISS name='{}' store={} at {}:{}", name, typeid(T).name(), loc.file_name(), loc.line());
+			return nullptr;
+		}
+		return it->second;
 	}
 
-	const T* Get(std::string_view name) const {
+	const T* Get(std::string_view name, const std::source_location& loc = std::source_location::current()) const {
 		auto it = _nameIndex.find(std::string(name));
-		if (it == _nameIndex.end()) return nullptr;
-		return &_records[it->second];
+		if (it == _nameIndex.end()) {
+			ToLogService("store_miss", "GET MISS name='{}' store={} at {}:{}", name, typeid(T).name(), loc.file_name(), loc.line());
+			return nullptr;
+		}
+		return it->second;
 	}
 
 	// Количество загруженных записей
@@ -74,22 +87,34 @@ public:
 			_idIndex.clear();
 			_nameIndex.clear();
 
-			_maxId = 0;
+			// Первый проход: читаем все записи в вектор, запоминаем id/name отдельно
+			std::vector<std::pair<int, std::string>> keys;
 			while (stmt.Step()) {
 				auto [id, name, record] = ReadRecord(stmt);
-				size_t idx = _records.size();
 				_records.push_back(std::move(record));
-				_idIndex[id] = idx;
-				if (id > _maxId) _maxId = id;
-				if (!name.empty()) {
-					_nameIndex[name] = idx;
+				keys.emplace_back(id, std::move(name));
+			}
+
+			// Второй проход: строим индексы (вектор больше не растёт, указатели стабильны)
+			_maxId = 0;
+			for (size_t i = 0; i < _records.size(); i++) {
+				T* ptr = &_records[i];
+				int id = keys[i].first;
+				_idIndex[id] = ptr;
+				if (!keys[i].second.empty()) {
+					_nameIndex[keys[i].second] = ptr;
 				}
+				if (id > _maxId) _maxId = id;
 			}
 
 			auto elapsed = std::chrono::high_resolution_clock::now() - start;
 			auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(elapsed).count();
 
-			ToLogService("common", "GameRecordset<{}> loaded {} records in {} ms", typeid(T).name(), _records.size(), ms);
+			int minId = _maxId;
+			for (auto& [k, _] : _idIndex) {
+				if (k < minId) minId = k;
+			}
+			ToLogService("common", "GameRecordset<{}> loaded {} records in {} ms (id range: {}..{})", typeid(T).name(), _records.size(), ms, minId, _maxId);
 			return true;
 		}
 		catch (const SqliteException& e) {
@@ -141,8 +166,8 @@ protected:
 	}
 
 private:
-	std::vector<T> _records;
-	std::unordered_map<int, size_t> _idIndex;
-	std::unordered_map<std::string, size_t> _nameIndex;
+	std::vector<T> _records{};
+	std::unordered_map<int, T*> _idIndex{};
+	std::unordered_map<std::string, T*> _nameIndex{};
 	int _maxId = 0;
 };

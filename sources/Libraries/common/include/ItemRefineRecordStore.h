@@ -14,4 +14,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CItemRefineInfo* GetItemRefineInfo(int nRefineID) { return ItemRefineRecordStore::Instance()->Get(nRefineID); }
+CItemRefineInfo* GetItemRefineInfo(int nRefineID, const std::source_location& loc = std::source_location::current());

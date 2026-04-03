@@ -10,6 +10,7 @@
 
 #include <tchar.h>
 #include <string>
+#include <source_location>
 #include "util.h"
 #include "TableData.h"
 
@@ -36,6 +37,6 @@ private:
 	
 };
 
-CHairRecord* GetHairRecordInfo(int nTypeID);
+CHairRecord* GetHairRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());
 
 #endif //HAIRRECORD_H

@@ -10,6 +10,7 @@
 
 #include <tchar.h>
 #include <string>
+#include <source_location>
 #include "util.h"
 #include "TableData.h"
 
@@ -20,58 +21,59 @@ const char cchSkillStateRecordKeyValue = (char)0xff;
 #define defSKILLSTATE_ACT_NUM		3
 #define defSKILLSTATE_DESC_NAME_LEN	255
 
-class CSkillStateRecord : public CRawDataInfo
-{
+class CSkillStateRecord : public CRawDataInfo {
 public:
 	// CSkillStateRecord();
 
-	char	chID;									//
-	std::string	szName;								//
-	short	sFrequency;								//
-	std::string	szOnTransfer;						//
-	std::string	szAddState;							//
-	std::string	szSubState;							//
-	char	chAddType;								// 
-	bool	bCanCancel;								// 
-	bool	bCanMove;								// 
-	bool	bCanMSkill;								// 
-	bool	bCanGSkill;								// 
-	bool	bCanTrade;								// 
-	bool	bCanItem;								// 
-	bool	bCanUnbeatable;							// 
-	bool	bCanItemmed;							// 
-	bool	bCanSkilled;							// 
-	bool	bNoHide;								// 
-	bool	bNoShow;								// 
-	bool	bOptItem;								// 
-	bool	bTalkToNPC;								// NPC
-	char	bFreeStateID;							// 
+	char chID; //
+	std::string szName; //
+	short sFrequency; //
+	std::string szOnTransfer; //
+	std::string szAddState; //
+	std::string szSubState; //
+	char chAddType; //
+	bool bCanCancel; //
+	bool bCanMove; //
+	bool bCanMSkill; //
+	bool bCanGSkill; //
+	bool bCanTrade; //
+	bool bCanItem; //
+	bool bCanUnbeatable; //
+	bool bCanItemmed; //
+	bool bCanSkilled; //
+	bool bNoHide; //
+	bool bNoShow; //
+	bool bOptItem; //
+	bool bTalkToNPC; // NPC
+	char bFreeStateID; //
 
-	// 
-	char	chScreen;								// 
-	char    nActBehave[defSKILLSTATE_ACT_NUM];		// 
-	short	sChargeLink;							// ,
-    short   sAreaEffect;                            // 
-	bool	IsShowCenter;							// ,
-	bool	IsDizzy;								// 
-	short	sEffect;								// 
-	short	sDummy1;								// dummy
-	short	sBitEffect;								// 
-	short	sDummy2;								// dummy
-	short	sIcon;									// ICON
-	char	szIcon[defSKILLSTATE_NAME_LEN][10];		// icons for pots per level 
-	std::string	szDesc;
-	int		lColour;
-public:
-	void	RefreshPrivateData();
-
-	int		GetActNum()			{ return _nActNum;		}
+	//
+	char chScreen; //
+	char nActBehave[defSKILLSTATE_ACT_NUM]; //
+	short sChargeLink; // ,
+	short sAreaEffect; //
+	bool IsShowCenter; // ,
+	bool IsDizzy; //
+	short sEffect; //
+	short sDummy1; // dummy
+	short sBitEffect; //
+	short sDummy2; // dummy
+	short sIcon; // ICON
+	char szIcon[defSKILLSTATE_NAME_LEN][10]; // icons for pots per level
+	std::string szDesc;
+	int lColour;
 
 public:
-	int		_nActNum;								// 
+	void RefreshPrivateData();
 
+	int GetActNum() {
+		return _nActNum;
+	}
+
+public:
+	int _nActNum; //
 };
 
-CSkillStateRecord* GetCSkillStateRecordInfo(int nTypeID);
+CSkillStateRecord* GetCSkillStateRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());
 
 #endif // SKILLSTATERECORD_H

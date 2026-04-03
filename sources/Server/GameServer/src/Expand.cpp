@@ -8,11 +8,12 @@
 #include "GameApp.h"
 #include "GameServerApp.h"
 #include "SubMap.h"
+#include "lua_gamectrl.h"
 #include <tuple>
 
 _DBC_USING
 
-extern const char* GetResPath(const char *pszRes);
+extern const char* GetResPath(const char* pszRes);
 
 void SynLook(CCharacter* pCha) {
 	if (!pCha) return;
@@ -34,7 +35,7 @@ void SetAttributeEditable(SItemGrid* item, int slot, int attribute) {
 	if (!item) return;
 	if (slot >= 0 && slot < 5) {
 		item->sInstAttr[slot][0] = attribute;
-		item->sInstAttr[slot][1] = g_pCItemAttr[item->sID].GetAttr(attribute, false);
+		item->sInstAttr[slot][1] = g_itemAttrMap[item->sID].GetAttr(attribute, false);
 	}
 }
 
@@ -64,11 +65,14 @@ int GetIMP(CCharacter* pCCha) {
 // Variable args: 2 or 3 params with different behavior
 int SetIMP_raw(lua_State* pLS) {
 	if ((lua_gettop(pLS) == 2 || lua_gettop(pLS) == 3) && lua_islightuserdata(pLS, 1) && lua_isnumber(pLS, 2)) {
-		CCharacter* pCCha = (CCharacter*)lua_touserdata(pLS, 1);
+		auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
+		if (!pCChaResult) { PARAM_ERROR return 0; }
+		CCharacter* pCCha = *pCChaResult;
 		int IMP = lua_tonumber(pLS, 2);
 		if (lua_gettop(pLS) == 3) {
 			pCCha->SetIMP(IMP, false);
-		} else {
+		}
+		else {
 			pCCha->SetIMP(IMP, true);
 		}
 	}
@@ -80,9 +84,10 @@ int GetChaAttr_raw(lua_State* pLS) {
 	int nParaNum = lua_gettop(pLS);
 	if (nParaNum > 2) return 0;
 
-	CCharacter* pCCha = (CCharacter*)lua_touserdata(pLS, 1);
+	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
+	if (!pCChaResult) { PARAM_ERROR return 0; }
+	CCharacter* pCCha = *pCChaResult;
 	short sAttrIndex = (unsigned __int64)lua_tonumber(pLS, 2);
-	if (!pCCha) return 0;
 	if (sAttrIndex < 0 || sAttrIndex >= ATTR_MAX_NUM) return 0;
 
 	int nAttrVal = pCCha->getAttr(sAttrIndex);
@@ -94,10 +99,11 @@ int GetChaAttr_raw(lua_State* pLS) {
 	return 1;
 }
 
-int SetChaAttr(CCharacter* pCCha, int sAttrIndex, int lValue) {
+int SetChaAttr(CCharacter* pCCha, int sAttrIndex, int64_t lValue) {
 	if (!pCCha) return 0;
 	if (sAttrIndex < 0 || sAttrIndex >= ATTR_MAX_NUM) return 0;
-	long lSetRet = pCCha->setAttr(sAttrIndex, lValue);
+	auto clamped = std::clamp(lValue, static_cast<int64_t>(INT32_MIN), static_cast<int64_t>(INT32_MAX));
+	long lSetRet = pCCha->setAttr(sAttrIndex, static_cast<LONG32>(clamped));
 	return lSetRet != 0 ? 1 : 0;
 }
 
@@ -142,8 +148,10 @@ void SetRangeState(int s1, int s2, int s3) {
 	g_pGameApp->SetSkillTDataState(sState);
 }
 
-std::tuple<int, int> GetSkillPos() {
-	return std::make_tuple((int)g_SSkillPoint.x, (int)g_SSkillPoint.y);
+int GetSkillPos_raw(lua_State* L) {
+	lua_pushinteger(L, g_SSkillPoint.x);
+	lua_pushinteger(L, g_SSkillPoint.y);
+	return 2;
 }
 
 int GetSkillLv(CCharacter* pCCha, int nSkillID) {
@@ -170,9 +178,9 @@ int GetObjDire(CCharacter* pCCha) {
 void AddState(CCharacter* pCSrcCha, CCharacter* pCTarCha, int uchStateID, int uchStateLV, int nOnTime) {
 	if (!pCSrcCha || !pCTarCha) return;
 	pCTarCha->AddSkillState(g_uchFightID, pCSrcCha->GetID(), pCSrcCha->GetHandle(),
-		enumSKILL_TYPE_SELF, enumSKILL_TAR_LORS, enumSKILL_EFF_HELPFUL,
-		(unsigned char)uchStateID, (unsigned char)uchStateLV, nOnTime,
-		enumSSTATE_ADD_UNDEFINED, false);
+							enumSKILL_TYPE_SELF, enumSKILL_TAR_LORS, enumSKILL_EFF_HELPFUL,
+							(unsigned char)uchStateID, (unsigned char)uchStateLV, nOnTime,
+							enumSSTATE_ADD_UNDEFINED, false);
 }
 
 void RemoveState(CCharacter* pCCha, int uchStateID) {
@@ -213,7 +221,9 @@ int AddChaSkill_raw(lua_State* pLS) {
 		return 1;
 	}
 
-	CCharacter* pCCha = (CCharacter*)lua_touserdata(pLS, 1);
+	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
+	if (!pCChaResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
+	CCharacter* pCCha = *pCChaResult;
 	int nSkillID = (int)lua_tonumber(pLS, 2);
 	int nSkillLv = (int)lua_tonumber(pLS, 3);
 	bool bSetLv = (int)lua_tonumber(pLS, 4) == 1 ? true : false;
@@ -221,11 +231,6 @@ int AddChaSkill_raw(lua_State* pLS) {
 	bool checkReq = true;
 	if (nParaNum == 6) {
 		checkReq = (int)lua_tonumber(pLS, 6) == 1 ? false : true;
-	}
-
-	if (!pCCha) {
-		lua_pushnumber(pLS, 0);
-		return 1;
 	}
 	if (pCCha->GetPlayer())
 		pCCha = pCCha->GetPlayer()->GetMainCha();
@@ -263,7 +268,8 @@ void BeatBack(CCharacter* pCSrcCha, CCharacter* pCTarCha, int nBackLen) {
 	Point STarNewPos;
 	SSrcPos = pCSrcCha->GetPos();
 	STarPos = pCTarCha->GetPos();
-	int nDist1 = (int)sqrt(double((SSrcPos.x - STarPos.x) * (SSrcPos.x - STarPos.x) + (SSrcPos.y - STarPos.y) * (SSrcPos.y - STarPos.y)));
+	int nDist1 = (int)sqrt(double(
+		(SSrcPos.x - STarPos.x) * (SSrcPos.x - STarPos.x) + (SSrcPos.y - STarPos.y) * (SSrcPos.y - STarPos.y)));
 	int nDist2 = nDist1 + nBackLen;
 	STarNewPos.x = nDist2 * (STarPos.x - SSrcPos.x) / nDist1 + SSrcPos.x;
 	STarNewPos.y = nDist2 * (STarPos.y - SSrcPos.y) / nDist1 + SSrcPos.y;
@@ -366,11 +372,9 @@ int RemoveChaItem_raw(lua_State* pLS) {
 		return 1;
 	}
 
-	CCharacter* pCCha = (CCharacter*)lua_touserdata(pLS, 1);
-	if (!pCCha) {
-		lua_pushnumber(pLS, 0);
-		return 1;
-	}
+	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
+	if (!pCChaResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
+	CCharacter* pCCha = *pCChaResult;
 	if (pCCha->m_CKitbag.IsLock()) {
 		pCCha->SystemNotice("Unable to remove item. Inventory locked!");
 		lua_pushnumber(pLS, 0);
@@ -387,7 +391,8 @@ int RemoveChaItem_raw(lua_State* pLS) {
 	if (nParaNum == 8)
 		bNotice = (char)lua_tonumber(pLS, 8) != 0 ? true : false;
 
-	if (pCCha->Cmd_RemoveItem(lItemID, lItemNum, chFromType, sFromID, chToType, 0, bNotice, chForcible) != enumITEMOPT_SUCCESS) {
+	if (pCCha->Cmd_RemoveItem(lItemID, lItemNum, chFromType, sFromID, chToType, 0, bNotice, chForcible) !=
+		enumITEMOPT_SUCCESS) {
 		lua_pushnumber(pLS, 0);
 		return 1;
 	}
@@ -480,8 +485,9 @@ int GetItemAttr_raw(lua_State* pLS) {
 
 	if (nParaNum != 2) return 0;
 
-	SItemGrid* pSItem = (SItemGrid*)lua_touserdata(pLS, 1);
-	if (!pSItem) return 0;
+	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
+	if (!pSItemResult) { PARAM_ERROR return 0; }
+	SItemGrid* pSItem = *pSItemResult;
 
 	long lAttrID = (int)lua_tonumber(pLS, 2);
 	if (lAttrID == ITEMATTR_VAL_PARAM1)
@@ -519,11 +525,9 @@ int SetItemAttr_raw(lua_State* pLS) {
 		return 1;
 	}
 
-	SItemGrid* pSItem = (SItemGrid*)lua_touserdata(pLS, 1);
-	if (!pSItem) {
-		lua_pushnumber(pLS, 0);
-		return 1;
-	}
+	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
+	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
+	SItemGrid* pSItem = *pSItemResult;
 
 	long lAttrID = (int)lua_tonumber(pLS, 2);
 	short sAttr = (short)lua_tonumber(pLS, 3);
@@ -554,20 +558,21 @@ int AddItemAttr_raw(lua_State* pLS) {
 		return 1;
 	}
 
-	SItemGrid* pSItem = (SItemGrid*)lua_touserdata(pLS, 1);
-	if (!pSItem) {
-		lua_pushnumber(pLS, 0);
-		return 1;
-	}
+	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
+	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
+	SItemGrid* pSItem = *pSItemResult;
 
 	long lAttrID = (int)lua_tonumber(pLS, 2);
 	short sAttr = (short)lua_tonumber(pLS, 3);
 
-	if (lAttrID == ITEMATTR_VAL_PARAM1) {}
-	else if (lAttrID == ITEMATTR_VAL_PARAM2) {}
+	if (lAttrID == ITEMATTR_VAL_PARAM1) {
+	}
+	else if (lAttrID == ITEMATTR_VAL_PARAM2) {
+	}
 	else if (lAttrID == ITEMATTR_VAL_LEVEL)
 		pSItem->AddItemLevel(char(sAttr));
-	else if (lAttrID == ITEMATTR_VAL_FUSIONID) {}
+	else if (lAttrID == ITEMATTR_VAL_FUSIONID) {
+	}
 	else {
 		if (!pSItem->SetInstAttr(lAttrID, sAttr))
 			bSuccess = false;
@@ -604,7 +609,7 @@ int GetItemAttrRange(int sItemID, int sAttrID, int sType) {
 	CItemRecord* pCItemRec = GetItemRecordInfo((short)sItemID);
 	if (!pCItemRec) return 0;
 	bool bMax = (sType == 0) ? false : true;
-	return g_pCItemAttr[(short)sItemID].GetAttr((short)sAttrID, bMax);
+	return g_itemAttrMap[(short)sItemID].GetAttr((short)sAttrID, bMax);
 }
 
 int GetItemForgeParam(SItemGrid* pSItem, int lType) {
@@ -623,11 +628,9 @@ int SetItemForgeParam_raw(lua_State* pLS) {
 		return 1;
 	}
 
-	SItemGrid* pSItem = (SItemGrid*)lua_touserdata(pLS, 1);
-	if (!pSItem) {
-		lua_pushnumber(pLS, 1);
-		return 1;
-	}
+	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
+	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(pLS, 1); return 1; }
+	SItemGrid* pSItem = *pSItemResult;
 
 	long lType = (int)lua_tonumber(pLS, 2);
 	if (lType == 0)
@@ -742,11 +745,9 @@ int SetMapEntryTime_raw(lua_State* pLS) {
 		return 1;
 	}
 
-	auto pCMap = static_cast<CMapRes*>(lua_touserdata(pLS, 1));
-	if (!pCMap) {
-		lua_pushnumber(pLS, 0);
-		return 1;
-	}
+	auto pCMapResult = luabridge::Stack<CMapRes*>::get(pLS, 1);
+	if (!pCMapResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
+	auto pCMap = *pCMapResult;
 
 	struct tm time_set, *time_get;
 	time_t timep;
@@ -891,11 +892,9 @@ int GetMapEntryPosInfo_raw(lua_State* pLS) {
 		return 0;
 	}
 
-	CDynMapEntryCell* pEntry = (CDynMapEntryCell*)lua_touserdata(pLS, 1);
-	if (!pEntry) {
-		ToLogService("errors", LogLevel::Error, "\t entrance object is inexistence, transfer failed");
-		return 0;
-	}
+	auto pEntryResult = luabridge::Stack<CDynMapEntryCell*>::get(pLS, 1);
+	if (!pEntryResult) { PARAM_ERROR return 0; }
+	CDynMapEntryCell* pEntry = *pEntryResult;
 
 	const char* pMapN = "";
 	const char* pTMapN = "";
@@ -1336,9 +1335,15 @@ void DisuseLotteryIssue(int issue, int state) {
 // IsValidRegTeam uses 4 userdata params
 int IsValidRegTeam_raw(lua_State* pLS) {
 	int teamID = (int)lua_tonumber(pLS, 1);
-	CCharacter* pCaptain = (CCharacter*)lua_touserdata(pLS, 2);
-	CCharacter* pMember1 = (CCharacter*)lua_touserdata(pLS, 3);
-	CCharacter* pMember2 = (CCharacter*)lua_touserdata(pLS, 4);
+	auto pCaptainResult = luabridge::Stack<CCharacter*>::get(pLS, 2);
+	if (!pCaptainResult) { PARAM_ERROR lua_pushnumber(pLS, (long)0); return 1; }
+	CCharacter* pCaptain = *pCaptainResult;
+	auto pMember1Result = luabridge::Stack<CCharacter*>::get(pLS, 3);
+	if (!pMember1Result) { PARAM_ERROR lua_pushnumber(pLS, (long)0); return 1; }
+	CCharacter* pMember1 = *pMember1Result;
+	auto pMember2Result = luabridge::Stack<CCharacter*>::get(pLS, 4);
+	if (!pMember2Result) { PARAM_ERROR lua_pushnumber(pLS, (long)0); return 1; }
+	CCharacter* pMember2 = *pMember2Result;
 
 	if (game_db.IsValidAmphitheaterTeam(teamID, pCaptain->GetID(), pMember1->GetID(), pMember2->GetID()))
 		lua_pushnumber(pLS, (long)1);
@@ -1349,7 +1354,9 @@ int IsValidRegTeam_raw(lua_State* pLS) {
 
 // IsValidTeam has complex multi-return logic
 int IsValidTeam_raw(lua_State* pLS) {
-	CCharacter* pCCha = (CCharacter*)lua_touserdata(pLS, 1);
+	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
+	if (!pCChaResult) { PARAM_ERROR lua_pushnumber(pLS, (long)-4); return 1; }
+	CCharacter* pCCha = *pCChaResult;
 	CPlayer* pTeamPlayer = pCCha->GetPlayer();
 	int masterID = pTeamPlayer->GetDBChaId();
 
@@ -1386,7 +1393,8 @@ int GetAmphitheaterSeason_raw(lua_State* pLS) {
 	if (game_db.GetAmphitheaterSeasonAndRound(season, round)) {
 		lua_pushnumber(pLS, (long)season);
 		return 1;
-	} else {
+	}
+	else {
 		lua_pushnumber(pLS, (long)0);
 		return 0;
 	}
@@ -1398,7 +1406,8 @@ int GetAmphitheaterRound_raw(lua_State* pLS) {
 	if (game_db.GetAmphitheaterSeasonAndRound(season, round)) {
 		lua_pushnumber(pLS, (long)round);
 		return 1;
-	} else {
+	}
+	else {
 		lua_pushnumber(pLS, (long)0);
 		return 1;
 	}
@@ -1443,11 +1452,18 @@ int GetAmphitheaterNoUseTeamID_raw(lua_State* pLS) {
 // AmphitheaterTeamSignUP uses multiple userdata
 int AmphitheaterTeamSignUP_raw(lua_State* pLS) {
 	int teamID = (int)lua_tonumber(pLS, 1);
-	CCharacter* pCaptain = (CCharacter*)lua_touserdata(pLS, 2);
-	CCharacter* pMember1 = (CCharacter*)lua_touserdata(pLS, 3);
-	CCharacter* pMember2 = (CCharacter*)lua_touserdata(pLS, 4);
+	auto pCaptainResult = luabridge::Stack<CCharacter*>::get(pLS, 2);
+	if (!pCaptainResult) { PARAM_ERROR return 0; }
+	CCharacter* pCaptain = *pCaptainResult;
+	auto pMember1Result = luabridge::Stack<CCharacter*>::get(pLS, 3);
+	if (!pMember1Result) { PARAM_ERROR return 0; }
+	CCharacter* pMember1 = *pMember1Result;
+	auto pMember2Result = luabridge::Stack<CCharacter*>::get(pLS, 4);
+	if (!pMember2Result) { PARAM_ERROR return 0; }
+	CCharacter* pMember2 = *pMember2Result;
 
-	if (game_db.AmphitheaterTeamSignUP(teamID, pCaptain->GetPlayer()->GetDBChaId(), pMember1->GetPlayer()->GetDBChaId(), pMember2->GetPlayer()->GetDBChaId()))
+	if (game_db.AmphitheaterTeamSignUP(teamID, pCaptain->GetPlayer()->GetDBChaId(), pMember1->GetPlayer()->GetDBChaId(),
+									   pMember2->GetPlayer()->GetDBChaId()))
 		return 1;
 	return 0;
 }
@@ -1533,7 +1549,8 @@ int GetCaptainByMapId_raw(lua_State* pLS) {
 		if (strcmp(nocaptain, Captainid2.c_str()) == 0) {
 			Capid1 = atoi(Captainid1.c_str());
 			Capid2 = 0;
-		} else {
+		}
+		else {
 			Capid1 = atoi(Captainid1.c_str());
 			Capid2 = atoi(Captainid2.c_str());
 		}
@@ -1545,7 +1562,8 @@ int GetCaptainByMapId_raw(lua_State* pLS) {
 			pCCha1 = player1->GetMainCha();
 			if (pCCha1 == NULL)
 				return 0;
-		} else {
+		}
+		else {
 			if (player1 == NULL)
 				return 0;
 			pCCha1 = player1->GetMainCha();
@@ -1631,13 +1649,10 @@ int SetExpiration_raw(lua_State* L) {
 		return 1;
 	}
 
-	SItemGrid* pSItem = static_cast<SItemGrid*>(lua_touserdata(L, 1));
+	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(L, 1);
+	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(L, 0); return 1; }
+	SItemGrid* pSItem = *pSItemResult;
 	long expiration = *static_cast<long*>(lua_touserdata(L, 2));
-
-	if (!pSItem) {
-		lua_pushnumber(L, 0);
-		return 1;
-	}
 	if (expiration == -1 || expiration == 0)
 		pSItem->expiration = 0;
 	else
@@ -1648,11 +1663,12 @@ int SetExpiration_raw(lua_State* L) {
 }
 
 void RegisterLuaGameLogic(lua_State* L) {
+	lua_register(L, "GetSkillPos", GetSkillPos_raw);
+
 	luabridge::getGlobalNamespace(L)
 		LUABRIDGE_REGISTER_FUNC(SetChaAttr)
 		LUABRIDGE_REGISTER_FUNC(CheckChaRole)
 		LUABRIDGE_REGISTER_FUNC(SetRangeState)
-		LUABRIDGE_REGISTER_FUNC(GetSkillPos)
 		LUABRIDGE_REGISTER_FUNC(GetSkillLv)
 		LUABRIDGE_REGISTER_FUNC(GetChaStateLv)
 		LUABRIDGE_REGISTER_FUNC(GetObjDire)
@@ -1786,8 +1802,7 @@ void RegisterLuaGameLogic(lua_State* L) {
 		LUABRIDGE_REGISTER_FUNC(GetIMP)
 		LUABRIDGE_REGISTER_FUNC(LookEnergy)
 		LUABRIDGE_REGISTER_FUNC(EndGuildBid)
-		LUABRIDGE_REGISTER_FUNC(EndGuildChallenge)
-		;
+		LUABRIDGE_REGISTER_FUNC(EndGuildChallenge);
 
 	// Raw lua_CFunction registrations (variable args / dynamic type checking / need lua_State*)
 	lua_register(L, "GetChaAttr", GetChaAttr_raw);

@@ -1,7 +1,8 @@
 ﻿#pragma once
 
-//  - 
-class CCharacter;
+#include "GameApp.h"
+
+//  -
 
 #define MAX_HARM_REC    5
 #define MAX_VALID_CNT   8

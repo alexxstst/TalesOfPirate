@@ -41,7 +41,7 @@
 #include "uitradeform.h"
 #include "UIChat.h"
 #include "UITeam.h"
-#include "NPCHelper.h"//add by alfred.shi 20080710
+#include "NPCHelper.h"
 #include "AutoAttack.h"
 // Add by lark.li 20080811 begin
 #include "UITeam.h"
@@ -2140,11 +2140,11 @@ void CStartMgr::ShowNPCHelper(const char * mapName,bool isShow)
 		items->Clear();
 		lstCurrList->Refresh();
 
-		int nTotalIndex = NPCHelper::I()->GetLastID() + 1;
+		int nTotalIndex = GetNPCMaxId(npcHelperType) + 1;
 		for(int i = 1; i < nTotalIndex ; ++ i)
 		{
-			
-			NPCData * p = GetNPCDataInfo(i);
+
+			NPCData * p = GetNPCDataInfo(i, npcHelperType);
 			if(p == NULL) continue;
 			if(p && strcmp(p->szMapName,strMapName) == 0) 
 			{
@@ -2174,27 +2174,17 @@ void CStartMgr::ShowNPCHelper(const char * mapName,bool isShow)
 
 void CStartMgr::_evtPageIndexChange(CGuiData *pSender)
 {
-	NPCHelper* pNPCHelper = NPCHelper::I();
-	SAFE_DELETE(pNPCHelper);
-
 	int index = g_stUIStart.listPage->GetIndex();
 	if(index == 0) //npc
 	{
-		pNPCHelper = new NPCHelper(0, 1000, NPCHelperType::NPCList);
-		pNPCHelper->LoadRawDataInfo("scripts/table/NPCList", FALSE);
+		g_stUIStart.npcHelperType = NPCHelperType::NPCList;
 		g_stUIStart.lstCurrList = g_stUIStart.lstNpcList;
 	}
 	else if(index == 1)
 	{
-		pNPCHelper = new NPCHelper(0, 1000, NPCHelperType::MonsterList);
-		pNPCHelper->LoadRawDataInfo("scripts/table/MonsterList", FALSE);
+		g_stUIStart.npcHelperType = NPCHelperType::MonsterList;
 		g_stUIStart.lstCurrList = g_stUIStart.lstMonsterList;
 	}
-	/*else if(index == 2)
-	{
-		pNPCHelper->LoadRawDataInfo("scripts/table/BossList", FALSE);
-		g_stUIStart.lstCurrList = g_stUIStart.lstBOSSList;
-	}*/
 	g_stUIStart.ShowNPCHelper(g_stUIStart.GetCurrMapName(),true);
 }
 void CStartMgr::_evtNPCListChange(CGuiData *pSender)

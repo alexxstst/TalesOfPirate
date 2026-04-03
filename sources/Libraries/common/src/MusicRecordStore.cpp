@@ -31,3 +31,7 @@ void MusicRecordStore::Insert(SqliteDatabase& db, const CMusicInfo& r) {
 		ToLogService("errors", LogLevel::Error, "MusicRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CMusicInfo* GetMusicInfo(int nTypeID, const std::source_location& loc) {
+	return MusicRecordStore::Instance()->Get(nTypeID, loc);
+}

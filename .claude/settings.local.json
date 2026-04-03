@@ -1,13 +1,14 @@
 {
   "permissions": {
     "allow": [
-      "Bash(dotnet build:*)",
       "Bash(*)",
-      "Bash(grep:*)",
-      "Bash(sed 's/^.*let //')",
-      "Bash(sed 's/ .*//')",
-      "Read(//tmp/**)",
-      "Bash(dotnet test:*)"
+      "Edit(*)",
+      "Write(*)",
+      "Read(*)",
+      "Glob(*)",
+      "Grep(*)",
+      "PowerShell(*)",
+      "WebFetch(domain:kunitoki.github.io)"
     ],
     "defaultMode": "auto"
   }

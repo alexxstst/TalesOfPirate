@@ -14,6 +14,8 @@ Tales of Pirate — MMORPG with two codebases:
 
 **C++ standard: C++23.** Prefer modern C++ constructs: `std::string`/`std::string_view` over `char*`, `std::format` over `sprintf`, `std::filesystem` over Win32 file API, structured bindings, `auto`, range-based for, `std::optional`, `std::span`, smart pointers. Avoid raw `new`/`delete` where possible.
 
+**Именование полей классов:** при рефакторинге поля класса начинать с префикса `_`, без венгерской нотации. Например: `_id`, `_name`, `_type` вместо `nID`, `szName`, `m_nType`.
+
 **Рефакторинг C-строк:** при рефакторинге и исправлении ошибок заменять C-функции на C++ аналоги:
 - `strcpy`/`strncpy` → `std::string` присваивание или `.assign()`
 - `strcmp`/`strncmp` → `==`, `!=`, `.compare()` или `std::string_view`

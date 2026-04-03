@@ -35,6 +35,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CEventSoundInfo* GetEventSoundInfo(int nTypeID) {
-	return EventSoundRecordStore::Instance()->Get(nTypeID);
-}
+CEventSoundInfo* GetEventSoundInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

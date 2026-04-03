@@ -1,4 +1,8 @@
 #include <ServerRecordStore.h>
+#include <sstream>
+#include <cstdlib>
+
+// --- ReadRecord / Insert ---
 
 GameRecordset<CServerGroupInfo>::RecordEntry ServerRecordStore::ReadRecord(SqliteStatement& stmt) {
 	CServerGroupInfo record{};
@@ -10,33 +14,25 @@ GameRecordset<CServerGroupInfo>::RecordEntry ServerRecordStore::ReadRecord(Sqlit
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
+		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
 	}
 
-	{
-		auto text = stmt.GetText(col++);
-		strncpy(record.szRegion, text.data(), sizeof(record.szRegion) - 1);
-	}
+	record.region = std::string(stmt.GetText(col++));
 
-	// gate_ips — "ip0;ip1;ip2;ip3;ip4"
+	// gate_ips — "ip0;ip1;ip2;..."
 	{
 		std::string text(stmt.GetText(col++));
-		int i = 0;
-		size_t start = 0;
-		while (start < text.size() && i < MAX_GROUP_GATE) {
-			auto end = text.find(';', start);
-			if (end == std::string::npos) end = text.size();
-			auto ip = text.substr(start, end - start);
-			strncpy(record.szGateIP[i], ip.c_str(), 15);
-			record.szGateIP[i][15] = '\0';
-			i++;
-			start = end + 1;
+		std::istringstream ss(text);
+		std::string token;
+		while (std::getline(ss, token, ';')) {
+			if (!token.empty() && token != "0")
+				record.gateIPs.push_back(std::move(token));
 		}
 	}
 
-	record.cValidGateCnt = static_cast<char>(stmt.GetInt(col++));
+	col++; // valid_gate_cnt — вычисляется из gateIPs.size()
 
-	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	return {record.nID, std::string(record.szDataName), std::move(record)};
 }
 
 void ServerRecordStore::Insert(SqliteDatabase& db, const CServerGroupInfo& r) {
@@ -44,9 +40,9 @@ void ServerRecordStore::Insert(SqliteDatabase& db, const CServerGroupInfo& r) {
 		EnsureCreated(db, TABLE_NAME, CREATE_TABLE_SQL);
 
 		std::string ips;
-		for (int i = 0; i < r.cValidGateCnt; i++) {
+		for (size_t i = 0; i < r.gateIPs.size(); i++) {
 			if (i > 0) ips += ';';
-			ips += r.szGateIP[i];
+			ips += r.gateIPs[i];
 		}
 
 		auto stmt = db.Prepare(
@@ -54,11 +50,72 @@ void ServerRecordStore::Insert(SqliteDatabase& db, const CServerGroupInfo& r) {
 		int p = 1;
 		stmt.Bind(p++, r.nID);
 		stmt.Bind(p++, std::string_view(r.szDataName));
-		stmt.Bind(p++, std::string_view(r.szRegion));
+		stmt.Bind(p++, r.region);
 		stmt.Bind(p++, ips);
-		stmt.Bind(p++, static_cast<int>(r.cValidGateCnt));
+		stmt.Bind(p++, static_cast<int>(r.gateIPs.size()));
 		stmt.Step();
 	} catch (const std::exception& e) {
 		ToLogService("errors", LogLevel::Error, "ServerRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
+}
+
+// --- Функции доступа ---
+
+static const std::string s_empty;
+static const std::vector<int> s_emptyVec;
+
+// Получить n-й элемент map по индексу
+static auto GetRegionEntry(int nRegionNo) {
+	auto& groups = ServerRecordStore::Instance()->m_regionGroups;
+	if (nRegionNo < 0 || nRegionNo >= static_cast<int>(groups.size()))
+		return groups.end();
+	return std::next(groups.begin(), nRegionNo);
+}
+
+CServerGroupInfo* GetServerGroupInfo(int nGroupID, const std::source_location& loc) {
+	return ServerRecordStore::Instance()->Get(nGroupID, loc);
+}
+
+CServerGroupInfo* GetServerGroupInfo(const std::string& groupName, const std::source_location& loc) {
+	return ServerRecordStore::Instance()->Get(std::string_view(groupName), loc);
+}
+
+int GetCurServerGroupCnt(int nRegionNo) {
+	auto it = GetRegionEntry(nRegionNo);
+	if (it == ServerRecordStore::Instance()->m_regionGroups.end()) return 0;
+	return static_cast<int>(it->second.size());
+}
+
+const std::string& GetCurServerGroupName(int nRegionNo, int nGroupNo) {
+	auto it = GetRegionEntry(nRegionNo);
+	if (it == ServerRecordStore::Instance()->m_regionGroups.end()) return s_empty;
+	if (nGroupNo < 0 || nGroupNo >= static_cast<int>(it->second.size())) return s_empty;
+	auto* info = GetServerGroupInfo(it->second[nGroupNo]);
+	if (!info) return s_empty;
+	static thread_local std::string result;
+	result = info->szDataName;
+	return result;
+}
+
+int GetRegionCnt() {
+	return static_cast<int>(ServerRecordStore::Instance()->m_regionGroups.size());
+}
+
+const std::string& GetCurRegionName(int nRegionNo) {
+	auto it = GetRegionEntry(nRegionNo);
+	if (it == ServerRecordStore::Instance()->m_regionGroups.end()) return s_empty;
+	return it->first;
+}
+
+const std::string& SelectGroupIP(int nRegionNo, int nGroupNo) {
+	auto it = GetRegionEntry(nRegionNo);
+	if (it == ServerRecordStore::Instance()->m_regionGroups.end()) return s_empty;
+	if (nGroupNo < 0 || nGroupNo >= static_cast<int>(it->second.size())) return s_empty;
+
+	auto* pGroup = GetServerGroupInfo(it->second[nGroupNo]);
+	if (!pGroup || pGroup->gateIPs.empty()) return s_empty;
+
+	srand(GetTickCount());
+	int nGateNo = rand() % static_cast<int>(pGroup->gateIPs.size());
+	return pGroup->gateIPs[nGateNo];
 }

@@ -78,3 +78,7 @@ void ItemRefineRecordStore::Insert(SqliteDatabase& db, const CItemRefineInfo& r)
 		ToLogService("errors", LogLevel::Error, "ItemRefineRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CItemRefineInfo* GetItemRefineInfo(int nRefineID, const std::source_location& loc) {
+	return ItemRefineRecordStore::Instance()->Get(nRefineID, loc);
+}

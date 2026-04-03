@@ -5,34 +5,21 @@
 #include "SceneObjRecordStore.h"
 #include "EffectRecordStore.h"
 #include "MusicRecordStore.h"
-#include "CharacterPoseSet.h"
 #include "MapRecordStore.h"
-#include "ChaCreateSet.h"
-#include "EventSoundSet.h"
 #include "AreaRecord.h"
-#include "ServerSet.h"
 
 #include "MPEditor.h"
 #include "FindPath.h"
 #include "MPFont.h"
 
 #include "EffectObj.h"
-#include "notifyset.h"
-#include "ChatIconSet.h"
-#include "ItemTypeSet.h"
 #include "InputBox.h"
-#include "ItemPreSet.h"
 #include "ItemRefineSet.h"
 #include "ItemRefineEffectRecordStore.h"
-#include "StoneSet.h"
-#include "ElfSkillSet.h"
 #include "GameWG.h"
 #include "GameMovie.h"
-#include "MonsterSet.h"
-#include "helpinfoset.h"
 #include "ResourceBundleManage.h"
 #include "pi_Alloc.h"
-#include "MountRecord.h"
 #include "LootFilter.h"
 
 #ifndef USE_DSOUND
@@ -49,21 +36,7 @@ pi_LeakReporter pi_leakReporter("gameleak.log");		// since client uses StringSet
 bool	volatile	g_bLoadRes				  = FALSE;
 CGameApp*	        g_pGameApp	              = NULL;
 
-CPoseSet*           CPoseSet::_Instance       = NULL;
-CChaCreateSet*      CChaCreateSet::_Instance  = NULL;
-CEventSoundSet*     CEventSoundSet::_Instance = NULL;
-CServerSet*         CServerSet::_Instance     = NULL;
-CNotifySet*         CNotifySet::_Instance     = NULL;
-CChatIconSet*		CChatIconSet::_Instance   = NULL;
-CItemTypeSet*		CItemTypeSet::_Instance   = NULL;
-CItemPreSet*		CItemPreSet::_Instance	  = NULL;
-CStoneSet*			CStoneSet::_Instance				= NULL;
-CElfSkillSet*		CElfSkillSet::_Instance				= NULL;
 
-CMonsterSet*        CMonsterSet::_Instance    = NULL;//Add by sunny.sun 20080903
-CHelpInfoSet*		CHelpInfoSet::_Instance     = NULL;
-// Add by Mdr
-CMountSet*          CMountSet::_Instance      = NULL;
 
 
 MPEditor	        g_Editor;

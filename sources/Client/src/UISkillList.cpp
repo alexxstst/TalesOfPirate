@@ -94,17 +94,13 @@ void CSkillList::Init()
     // 
     if( GetCommand(0) ) return;
     
-    CSkillRecord *info;
-    int count = SkillRecordStore::Instance()->GetMaxId() + 1;
-    for( int i=0; i<count; i++ )
-    {
-        info = GetSkillRecordInfo( i );
-		if( info && info->IsShow() )
+    SkillRecordStore::Instance()->ForEach([&](CSkillRecord& info) {
+		if( info.IsShow() )
         {
-            CSkillCommand* tmp = new CSkillCommand( info );
+            CSkillCommand* tmp = new CSkillCommand( &info );
             AddCommand( tmp );
         }
-    }
+    });
 }
 
 void CSkillList::Render()

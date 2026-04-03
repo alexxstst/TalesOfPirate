@@ -2174,16 +2174,16 @@ void CGameScene::PlayEnvSound( int nX, int nY )
 		if( pObj->IsValid() && !pObj->IsHide() )
 		{
 			pInfo = GetSceneObjInfo( pObj->getTypeID() );
-			if( !pInfo || pInfo->nEnvSoundDis <= 0 )	continue;
+			if( !pInfo || pInfo->_envSoundDis <= 0 )	continue;
 
 			dis = GetDistance( pObj->GetCurX(), pObj->GetCurY(), nX, nY ); 
-			if( dis <= pInfo->nEnvSoundDis )
+			if( dis <= pInfo->_envSoundDis )
 			{
-				dis = (int)(_fSoundSize * ( 1.0f - (float)dis / (float)pInfo->nEnvSoundDis ));
+				dis = (int)(_fSoundSize * ( 1.0f - (float)dis / (float)pInfo->_envSoundDis ));
 				if( pObj->GetMusicID() == -1 )
 				{
 					static char szSoundName[256] = { 0 };
-					sprintf(szSoundName, "music/sound/%s.wav", pInfo->szEnvSound);
+					sprintf(szSoundName, "music/sound/%s.wav", pInfo->_envSound.c_str());
 					//r = ::env_snd_add( szSoundName );
 					//if( r != -1 )
 					//{
@@ -2258,24 +2258,13 @@ int CGameScene::SetTextureLOD(DWORD level)
         }
     }
 
-    int start_id = 0;
-    int id_cnt = TerrainRecordStore::Instance()->GetMaxId() + 1;
-    MPTerrainInfo* info;
-
-    DWORD t_level = level == 0 ? level : 2;
-
-    for(int i = start_id; i < id_cnt; i++)
-    {
-        info = ::GetTerrainInfo(i);
-        if(info)
+    TerrainRecordStore::Instance()->ForEach([&](const MPTerrainInfo& info) {
+        MPITex* tex = GetTexByID(info.nTextureID);
+        if(tex)
         {
-            MPITex* tex = GetTexByID(info->nTextureID);
-            if(tex)
-            {
-                tex->SetLOD(level);
-            }
+            tex->SetLOD(level);
         }
-    }
+    });
 
     return 1;
 

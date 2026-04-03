@@ -46,3 +46,12 @@ void PoseRecordStore::Insert(SqliteDatabase& db, const CPoseInfo& r) {
 		ToLogService("errors", LogLevel::Error, "PoseRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CPoseInfo* GetPoseInfo(short sPoseID, const std::source_location& loc) {
+	return PoseRecordStore::Instance()->Get(sPoseID, loc);
+}
+
+short GetRealPoseID(short sPoseID, short sPoseType) {
+	CPoseInfo* pInfo = GetPoseInfo(sPoseID);
+	return pInfo ? pInfo->sRealPoseID[sPoseType] : 0;
+}

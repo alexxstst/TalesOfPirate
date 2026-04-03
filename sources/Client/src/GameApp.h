@@ -93,8 +93,6 @@ public:
 	virtual void MouseScroll(int nScroll);
 	virtual void MouseContinue(int nButton);
 	virtual void HandleKeyDown(DWORD dwKey);
-	virtual void LG_Config(const LGInfo& info);
-
 	bool LoadRes4();
 
 	void SetIsRun(bool v) {

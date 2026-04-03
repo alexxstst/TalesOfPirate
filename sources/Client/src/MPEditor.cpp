@@ -1748,7 +1748,7 @@ void MPEditor::HideSelectSceneObj()
     if(_pSelSceneObj)
     {
         CSceneObjInfo *pInfo = GetSceneObjInfo(_pSelSceneObj->getTypeID());
-        char szTip[64]; sprintf(szTip, g_oLangRec.GetString(214), pInfo->szName); 
+        char szTip[64]; sprintf(szTip, g_oLangRec.GetString(214), pInfo->_name.c_str());
         _pSelSceneObj->SetHide(TRUE);
         Tip(szTip);
     }

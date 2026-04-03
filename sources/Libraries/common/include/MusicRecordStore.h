@@ -35,6 +35,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CMusicInfo* GetMusicInfo(int nTypeID) {
-	return MusicRecordStore::Instance()->Get(nTypeID);
-}
+CMusicInfo* GetMusicInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

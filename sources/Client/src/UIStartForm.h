@@ -2,6 +2,7 @@
 #include "UIGlobalVar.h"
 #include "ChaState.h"//add by alfred.shi 20080709
 #include "uipage.h"	//add by alfred.shi 20080709
+#include "NPCHelper.h"
 
 extern float g_ExpBonus;
 extern float g_DropBonus;
@@ -241,6 +242,7 @@ private:
 	CForm*			lstList;
 	//CList*		lstBOSSList;
 	CList*			lstCurrList;
+	NPCHelperType	npcHelperType = NPCHelperType::NPCList;
 	const char*		strMapName;
 
 

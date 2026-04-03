@@ -758,11 +758,6 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 	}
 	else if (strName == "btnNo")
 	{
-		if (g_TomServer.bEnable)
-		{
-			g_pGameApp->SetIsRun(false);
-			return;
-		}
 
 		// Exit character selection scene
 		CS_Logout();
@@ -853,13 +848,6 @@ void CSelectChaScene::_evtCreateDoublePwdEvent(CCompent* pSender, int nMsgType, 
 	}
 	else
 	{
-		// User cancelled creating double password, exit
-		if (g_TomServer.bEnable)
-		{
-			g_pGameApp->SetIsRun(false);
-			return;
-		}
-
 		// Exit character selection scene
 		CS_Logout();
 		CS_Disconnect(DS_DISCONN);

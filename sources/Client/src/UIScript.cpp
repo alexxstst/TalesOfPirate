@@ -1378,7 +1378,7 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
                 if( pInfo )
                 {             
 					char szBuf[128] = { 0 };
-					sprintf( szBuf, "%d.%s", pInfo->nID, pInfo->szName );
+					sprintf( szBuf, "%d.%s", pInfo->_id, pInfo->_name.c_str() );
 					pHint->SetHint( szBuf );
                 }
             }

@@ -40,3 +40,5 @@ public:
 protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
+
+CChaCreateInfo* GetChaCreateInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

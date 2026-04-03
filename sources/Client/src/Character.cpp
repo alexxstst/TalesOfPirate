@@ -39,7 +39,7 @@
 #include "UIEquipForm.h"
 #include "UIItemCommand.h"
 #include "UIMiniMapForm.h"
-#include "MountRecord.h"
+#include "MountRecordStore.h"
 
 #include "PacketCmd.h"
 

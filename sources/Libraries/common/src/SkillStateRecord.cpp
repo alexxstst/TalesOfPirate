@@ -1,22 +1,18 @@
 #include "SkillStateRecord.h"
 #include "SkillStateRecordStore.h"
 
-void CSkillStateRecord::RefreshPrivateData()
-{
+void CSkillStateRecord::RefreshPrivateData() {
 	_nActNum = 0;
-	for (int i = 0; i < defSKILLSTATE_ACT_NUM; i++)
-	{
-		if( nActBehave[i]!=0 )
-		{
+	for (int i = 0; i < defSKILLSTATE_ACT_NUM; i++) {
+		if (nActBehave[i] != 0) {
 			_nActNum++;
 		}
-		else
-		{
+		else {
 			break;
 		}
 	}
 }
 
-CSkillStateRecord* GetCSkillStateRecordInfo(int nTypeID) {
-	return SkillStateRecordStore::Instance()->Get(nTypeID);
+CSkillStateRecord* GetCSkillStateRecordInfo(int nTypeID, const std::source_location& loc) {
+	return SkillStateRecordStore::Instance()->Get(nTypeID, loc);
 }

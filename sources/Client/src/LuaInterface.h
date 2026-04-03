@@ -32,7 +32,7 @@ inline int GetSceneObjPhotoTexID(int nTypeID)
 	CSceneObjInfo *pInfo = GetSceneObjInfo(nTypeID);
 	if(pInfo)
 	{
-		return pInfo->nPhotoTexID;
+		return pInfo->_photoTexId;
 	}
 	return 0;
 }
@@ -42,7 +42,7 @@ inline int GetSceneObjPhotoTexType(int nTypeID)
 	CSceneObjInfo *pInfo = GetSceneObjInfo(nTypeID);
 	if(pInfo)
 	{
-		return pInfo->nStyle;
+		return pInfo->_style;
 	}
 	return -1;
 }

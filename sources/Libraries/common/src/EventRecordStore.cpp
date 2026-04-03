@@ -51,3 +51,7 @@ void EventRecordStore::Insert(SqliteDatabase& db, const CEventRecord& r) {
 		ToLogService("errors", LogLevel::Error, "EventRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CEventRecord* GetEventRecordInfo(int nTypeID, const std::source_location& loc) {
+	return EventRecordStore::Instance()->Get(nTypeID, loc);
+}

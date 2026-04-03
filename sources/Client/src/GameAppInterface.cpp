@@ -34,6 +34,11 @@
 #include "GroupParamRecordStore.h"
 #include "ItemRefineRecordStore.h"
 #include "ItemRefineEffectRecordStore.h"
+#include "MonsterInfoRecordStore.h"
+#include "ResourceRecordStore.h"
+#include "StoneRecordStore.h"
+#include "ElfSkillRecordStore.h"
+#include "HelpInfoRecordStore.h"
 #include "AssetDatabase.h"
 
 #include "Character.h"
@@ -65,23 +70,16 @@
 
 #include "SceneObjRecordStore.h"
 #include "EffectRecordStore.h"
-#include "CharacterPoseSet.h"
 #include "Mapset.h"
 #include "MusicRecordStore.h"
 #include "CharacterRecord.h"
-#include "ChaCreateSet.h"
-#include "ServerSet.h"
 #include "ItemRecord.h"
 #include "SkillRecord.h"
 #include "AreaRecord.h"
 #include "RenderStateMgr.h"
-#include "notifyset.h"
 #include "SkillStateRecord.h"
-#include "ChatIconSet.h"
-#include "ItemTypeSet.h"
 #include "forgerecord.h"
 #include "EventRecord.h"
-#include "EventSoundSet.h"
 #include "createchascene.h"
 #include "SelectChaScene.h"
 #include "SteadyFrame.h"
@@ -96,15 +94,11 @@
 #include "HairRecord.h"
 #include "ItemRefineSet.h"
 #include "ItemRefineEffectRecordStore.h"
-#include "StoneSet.h"
 #include "SceneItem.h"
-#include "ElfSkillSet.h"
 #include "GameMovie.h"
 // add by mdr
 #include "NPCHelper.h"
-#include "helpinfoset.h"
-#include "MonsterSet.h"
-#include "MountRecord.h"
+#include "MountRecordStore.h"
 
 using namespace std;
 
@@ -1315,73 +1309,15 @@ void CGameApp::InitAllTable() {
 	EffectRecordStore::Instance()->Load(db, GetTextureID);
 	MonsterListRecordStore::Instance()->Load(db);
 	NPCListRecordStore::Instance()->Load(db);
-
-	BOOL bBinary = FALSE; // g_bBinaryTable
-
-
-	NPCHelper* pNpcHelpSet = new NPCHelper(0, 1000, NPCHelperType::MonsterList);
-	pNpcHelpSet->LoadRawDataInfo("scripts/table/MonsterList", bBinary);
-
-	pNpcHelpSet = new NPCHelper(0, 1000, NPCHelperType::NPCList);
-	pNpcHelpSet->LoadRawDataInfo("scripts/table/NPCList", bBinary);
-
-
-	CMonsterSet* pMonsterSet = new CMonsterSet(0, 1000);
-	pMonsterSet->LoadRawDataInfo("scripts/table/MonsterInfo", bBinary);
-
-	CMountSet* pMount = new CMountSet(0, 500);
-	pMount->LoadRawDataInfo("scripts/table/mountinfo", bBinary);
-
-	//CHelpInfoSet* pHelpInfoSet = new CHelpInfoSet( 0, 20 );
-	//pHelpInfoSet->LoadRawDataInfo("scripts/table/helpinfoset", bBinary);
-
-	CStoneSet* pStoneSet = new CStoneSet(0, 100);
-	pStoneSet->LoadRawDataInfo("scripts/table/StoneInfo", bBinary);
-
-	MPResourceSet* pResourceSet = new MPResourceSet(0, g_Config.m_nMaxResourceNum);
-	pResourceSet->LoadRawDataInfo("scripts/table/ResourceInfo", bBinary);
-
-	CElfSkillSet* pElfSkillSet = new CElfSkillSet(0, 100);
-	pElfSkillSet->LoadRawDataInfo("scripts/table/ElfSkillInfo", bBinary);
+	MonsterInfoRecordStore::Instance()->Load(db);
+	MountRecordStore::Instance()->Load(db);
+	ResourceRecordStore::Instance()->Load(db);
+	StoneRecordStore::Instance()->Load(db);
+	ElfSkillRecordStore::Instance()->Load(db);
+	HelpInfoRecordStore::Instance()->Load(db);
 }
 
 void CGameApp::ReleaseAllTable() {
-	CPoseSet* pPoseSet = CPoseSet::I();
-	SAFE_DELETE(pPoseSet);
-
-	CChaCreateSet* pChaCreateSet = CChaCreateSet::I();
-	SAFE_DELETE(pChaCreateSet);
-
-
-	CEventSoundSet* pEventSoundSet = CEventSoundSet::I();
-	SAFE_DELETE(pEventSoundSet);
-
-	CEventRecordSet* pEvent = CEventRecordSet::I();
-	SAFE_DELETE(pEvent);
-
-	CServerSet* pServe = CServerSet::I();
-	SAFE_DELETE(pServe);
-
-	CNotifySet* pNotify = CNotifySet::I();
-	SAFE_DELETE(pNotify);
-
-	CChatIconSet* pIcon = CChatIconSet::I();
-	SAFE_DELETE(pIcon);
-
-	CItemTypeSet* pItemType = CItemTypeSet::I();
-	SAFE_DELETE(pItemType);
-
-	CItemPreSet* pItemPreSet = CItemPreSet::I();
-	SAFE_DELETE(pItemPreSet);
-
-	CStoneSet* pStone = CStoneSet::I();
-	SAFE_DELETE(pStone);
-
-	CElfSkillSet* pElfSkillSet = CElfSkillSet::I();
-	SAFE_DELETE(pElfSkillSet);
-
-	//MPResourceSet *pResourceSet = MPResourceSet::GetInstancePtr();
-	//SAFE_DELETE(pResourceSet);
 }
 
 bool CGameApp::LoadRes4() {
@@ -1400,31 +1336,16 @@ bool CGameApp::LoadRes4() {
 }
 
 void LoadResModelBuf(MPIResourceMgr* res_mgr) {
-	MPIResBufMgr* buf_mgr = res_mgr->GetResBufMgr();
-	MPIPathInfo* path_info = res_mgr->GetSysGraphics()->GetSystem()->GetPathInfo();
-	const char* model_path = path_info->GetPath(PATH_TYPE_MODEL_SCENE);
+	auto* buf_mgr = res_mgr->GetResBufMgr();
+	auto* path_info = res_mgr->GetSysGraphics()->GetSystem()->GetPathInfo();
+	std::string model_path = path_info->GetPath(PATH_TYPE_MODEL_SCENE);
 
-	char path[LW_MAX_PATH];
-	LW_HANDLE handle;
-
-
-	CSceneObjInfo* obj_info;
-	const DWORD model_num = 500;
-	for (DWORD i = 0; i < model_num; i++) {
-		if ((obj_info = GetSceneObjInfo(i)) == 0)
-			continue;
-
-		if (stricmp(obj_info->szDataName, "sl-bd026-05.lmo") == 0) {
-			int x = 0;
+	SceneObjRecordStore::Instance()->ForEach([&](const CSceneObjInfo& info) {
+		auto path = model_path + info._dataName;
+		if (LW_FAILED(buf_mgr->RegisterModelObjInfo(info._id, path.c_str()))) {
+			ToLogService("common", "cannot find model file: {}", path);
 		}
-		handle = obj_info->nID;
-		sprintf(path, "%s%s", model_path, obj_info->szDataName);
-
-		if (LW_FAILED(buf_mgr->RegisterModelObjInfo(handle, path))) {
-			ToLogService("common", "msgcannot find model file: {}", path);
-			continue;
-		}
-	}
+	});
 }
 
 void CGameApp::SetFPSInterval(DWORD v) {
@@ -1512,50 +1433,37 @@ void CGameApp::AutoTest() {
 		//
 		{
 			AutoTestInfo(g_oLangRec.GetString(80));
-			int nCount = EffectRecordStore::Instance()->GetMaxId() + 1;
-			CEffectObj* pEffect = NULL;
-			CMagicInfo* pInfo = NULL;
-			for (int i = 0; i < nCount; i++) {
-				pInfo = GetMagicInfo(i);
-				if (!pInfo) continue;
+			EffectRecordStore::Instance()->ForEach([&](const CMagicInfo& info) {
+				auto* pEffect = pScene->GetFirstInvalidEffObj();
+				if (!pEffect) return;
 
-				pEffect = pScene->GetFirstInvalidEffObj();
-				if (!pEffect) continue;
-
-				if (!pEffect->Create(i)) {
-					AutoTestInfo(g_oLangRec.GetString(81), i);
-					continue;
+				if (!pEffect->Create(info.nID)) {
+					AutoTestInfo(g_oLangRec.GetString(81), info.nID);
+					return;
 				}
 
 				pEffect->Emission(-1, &TestPos, NULL);
 				pEffect->SetValid(TRUE);
-
 				AutoTestUpdate();
-
 				pEffect->SetValid(FALSE);
-			}
+			});
 		}
 	}
 	// ,,,
 	{
 		AutoTestInfo(g_oLangRec.GetString(82));
 
-		int nCount = ChaRecordStore::Instance()->GetMaxId() + 1;
-		CCharacter* pCha = NULL;
-		for (int i = 0; i < nCount; i++) {
-			CChaRecord* pInfo = GetChaRecordInfo(i);
-			if (!pInfo) continue;
-
-			pCha = pScene->AddCharacter(i);
+		ChaRecordStore::Instance()->ForEach([&](const CChaRecord& info) {
+			auto* pCha = pScene->AddCharacter(info.nID);
 			if (!pCha) {
-				AutoTestInfo(g_oLangRec.GetString(83), i);
-				continue;
+				AutoTestInfo(g_oLangRec.GetString(83), info.nID);
+				return;
 			}
 
 			pCha->setPos(nTestX, nTestY);
 			AutoTestUpdate();
 			pCha->SetValid(FALSE);
-		}
+		});
 	}
 
 	// begin
@@ -1568,25 +1476,20 @@ void CGameApp::AutoTest() {
 			pHairCha[i] = pScene->AddCharacter(i + 1);
 			pHairCha[i]->setPos(nTestX, nTestY + i * 100 - 200);
 		}
-		int nCount = HairRecordStore::Instance()->GetMaxId() + 1;
-		CHairRecord* pHair = NULL;
-		for (int i = 0; i < nCount; i++) {
-			pHair = GetHairRecordInfo(i);
-			if (!pHair) continue;
-
+		HairRecordStore::Instance()->ForEach([&](CHairRecord& hair) {
 			for (int j = 0; j < nMax; j++) {
-				if (pHair->IsChaUse[j]) {
-					if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, pHair->dwItemID))
-						SysInfo(g_oLangRec.GetString(85), i, j + 1, pHair->dwItemID);
+				if (hair.IsChaUse[j]) {
+					if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwItemID))
+						SysInfo(g_oLangRec.GetString(85), hair.nID, j + 1, hair.dwItemID);
 
-					for (int k = 0; k < pHair->GetFailItemNum(); k++) {
-						if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, pHair->dwFailItemID[k]))
-							SysInfo(g_oLangRec.GetString(86), i, j + 1, pHair->dwFailItemID[k]);
+					for (int k = 0; k < hair.GetFailItemNum(); k++) {
+						if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwFailItemID[k]))
+							SysInfo(g_oLangRec.GetString(86), hair.nID, j + 1, hair.dwFailItemID[k]);
 					}
 					AutoTestUpdate();
 				}
 			}
-		}
+		});
 		for (int i = 0; i < nMax; i++) {
 			pHairCha[i]->SetValid(FALSE);
 		}
@@ -1596,28 +1499,20 @@ void CGameApp::AutoTest() {
 	//
 	{
 		AutoTestInfo(g_oLangRec.GetString(80));
-		int nCount = EffectRecordStore::Instance()->GetMaxId() + 1;
-		CEffectObj* pEffect = NULL;
-		CMagicInfo* pInfo = NULL;
-		for (int i = 0; i < nCount; i++) {
-			pInfo = GetMagicInfo(i);
-			if (!pInfo) continue;
+		EffectRecordStore::Instance()->ForEach([&](const CMagicInfo& info) {
+			auto* pEffect = pScene->GetFirstInvalidEffObj();
+			if (!pEffect) return;
 
-			pEffect = pScene->GetFirstInvalidEffObj();
-			if (!pEffect) continue;
-
-			if (!pEffect->Create(i)) {
-				AutoTestInfo(g_oLangRec.GetString(81), i);
-				continue;
+			if (!pEffect->Create(info.nID)) {
+				AutoTestInfo(g_oLangRec.GetString(81), info.nID);
+				return;
 			}
 
 			pEffect->Emission(-1, &TestPos, NULL);
 			pEffect->SetValid(TRUE);
-
 			AutoTestUpdate();
-
 			pEffect->SetValid(FALSE);
-		}
+		});
 	}
 
 	//
@@ -1681,54 +1576,34 @@ void CGameApp::AutoTest() {
 	// ...
 	{
 		AutoTestInfo(g_oLangRec.GetString(96));
-		CItemRefineInfo* pRefine = NULL;
-		int nCount = ItemRefineRecordStore::Instance()->GetMaxId() + 1;
-		int nEffectID = 0;
-		CItemRefineEffectInfo* pEffectInfo = NULL;
-		for (int i = 0; i < nCount; i++) {
-			pRefine = GetItemRefineInfo(i);
-			if (!pRefine) continue;
-
+		ItemRefineRecordStore::Instance()->ForEach([&](const CItemRefineInfo& refine) {
 			for (int k = 0; k < ITEM_REFINE_NUM; k++) {
-				nEffectID = pRefine->Value[k];
-				if (nEffectID > 0) {
-					pEffectInfo = GetItemRefineEffectInfo(nEffectID);
-					if (!pEffectInfo) {
-						AutoTestInfo(g_oLangRec.GetString(97), i, pRefine->szDataName, nEffectID);
-					}
+				int effectID = refine.Value[k];
+				if (effectID > 0 && !GetItemRefineEffectInfo(effectID)) {
+					AutoTestInfo(g_oLangRec.GetString(97), refine.nID, refine.szDataName, effectID);
 				}
 			}
-		}
+		});
 	}
 
 	// ...
 	{
 		AutoTestInfo(g_oLangRec.GetString(98));
-		int nCount = ItemRefineEffectRecordStore::Instance()->GetMaxId() + 1;
-		CItemRefineEffectInfo* pInfo = NULL;
-		CMagicInfo* pEffectInfo = NULL;
-		int nEffectNum;
-		int nEffectID;
-		for (int i = 0; i < nCount; i++) {
-			pInfo = GetItemRefineEffectInfo(i);
-			if (!pInfo) continue;
-
-			// 4
+		ItemRefineEffectRecordStore::Instance()->ForEach([&](CItemRefineEffectInfo& info) {
 			for (int k = 0; k < 4; k++) {
-				nEffectNum = pInfo->GetEffectNum(k);
+				int nEffectNum = info.GetEffectNum(k);
 				for (int j = 0; j < nEffectNum; j++) {
-					if (pInfo->sEffectID[k][j] <= 0) continue;
+					if (info.sEffectID[k][j] <= 0) continue;
 
 					for (int level = 0; level < 4; level++) {
-						nEffectID = pInfo->sEffectID[k][j] * 10 + level;
-						pEffectInfo = GetMagicInfo(nEffectID);
-						if (!pEffectInfo) {
-							AutoTestInfo(g_oLangRec.GetString(99), i, pInfo->szDataName, nEffectID);
+						int nEffectID = info.sEffectID[k][j] * 10 + level;
+						if (!GetMagicInfo(nEffectID)) {
+							AutoTestInfo(g_oLangRec.GetString(99), info.nID, info.szDataName, nEffectID);
 						}
 					}
 				}
 			}
-		}
+		});
 	}
 
 	//
@@ -1739,14 +1614,4 @@ void CGameApp::AutoTest() {
 	}
 
 	g_pGameApp->HasLogFile("autotest");
-}
-
-void CGameApp::LG_Config(const LGInfo& info) {
-	LGInfo in = info;
-	if (g_Config.m_bEditor) {
-		in.bMsgBox = true;
-		in.bEnableAll = true;
-	}
-
-	MPGameApp::LG_Config(in);
 }

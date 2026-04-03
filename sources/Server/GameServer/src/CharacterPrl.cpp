@@ -336,8 +336,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 			pMainCha->SystemNotice(RES_STRING(GM_CHARACTERPRL_CPP_00005));
 	}
 	break;
-	case CMD_CM_SYNATTR:
-	{
+	case CMD_CM_SYNATTR: {
 		net::msg::CmSynAttrMessage synMsg;
 		net::msg::deserialize(pk, synMsg);
 		GetPlayer()->GetMainCha()->Cmd_ReassignAttr(synMsg);
@@ -482,7 +481,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 		net::msg::CmGuildMottoMessage msg;
 		net::msg::deserialize(pk, msg);
 		if (!msg.motto.empty() && msg.motto.length() < 50 &&
-			IsValidName(msg.motto.c_str(), uShort(msg.motto.length()))) {
+			IsValidName(msg.motto)) {
 			int canMotto = (GetPlyMainCha()->guildPermission & emGldPermMotto);
 			if (canMotto == emGldPermMotto && !strchr(msg.motto.c_str(), '\'')) {
 				// Probably not enough

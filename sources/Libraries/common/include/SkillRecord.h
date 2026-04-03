@@ -10,6 +10,7 @@
 
 #include <tchar.h>
 #include <string>
+#include <source_location>
 #include "util.h"
 #include "TableData.h"
 #include "SkillBag.h"
@@ -273,8 +274,8 @@ public:
 	}
 };
 
-CSkillRecord* GetSkillRecordInfo(int nTypeID);
-CSkillRecord* GetSkillRecordInfo(const char* szName);
+CSkillRecord* GetSkillRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());
+CSkillRecord* GetSkillRecordInfo(const char* szName, const std::source_location& loc = std::source_location::current());
 
 inline bool CSkillRecord::IsJobAllow( int nJob )
 {
@@ -304,7 +305,5 @@ inline int CSkillRecord::GetJobMax( int nJob )
 
 	return -1;
 }
-CSkillRecord* GetSkillRecordInfo(int nTypeID);
-CSkillRecord* GetSkillRecordInfo(const char* szName);
 
 #endif //SKILLRECORD_H

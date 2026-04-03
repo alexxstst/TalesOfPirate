@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "event.h"
 #include "eventrecord.h"
+#include "EventRecordStore.h"
 #include "character.h"
 #include "netprotocol.h"
 #include "packetcmd.h"

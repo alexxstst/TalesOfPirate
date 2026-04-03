@@ -808,38 +808,20 @@ IDirect3DVertexDeclarationX* CMPResManger::GetMinimapVDecl()
 
 bool	CMPResManger::LoadTotalTexture()
 {
-#if RESOURCE_SCRIPT == 0 || RESOURCE_SCRIPT == 1
 	{
 		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
 		HANDLE  t_hFind = NULL;
 
 		lstrcpy(t_Path,_pszTexPath);
-#ifdef USE_DDS_FILE_EFFECT
-		lstrcat(t_Path,"\\*.dds");
-#else
 		lstrcat(t_Path,"\\*.tga");
-#endif
 
-		//char pszname[32];
-		//AfxMessageBox(t_Path);
-		//char t_pszFile[MAX_PATH];
-
-		//LPDIRECT3DTEXTURE8  t_lptex = NULL;
 		if((t_hFind=FindFirstFile(t_Path,&t_sfd))==INVALID_HANDLE_VALUE)
 			return false;
 		string sFileName;
 		do{
 			if(!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
 			{
-				//sprintf(t_pszFile, "%s\\%s",_pszTexPath,t_sfd.cFileName);
-				////
-				//memset(pszname,0,32);
-				//char *pszDataName = _strlwr( _strdup( t_sfd.cFileName ) );
-				//int len = lstrlen(pszDataName);
-				//memcpy(pszname, pszDataName,len - 4); 
-				//pszname[len - 4 + 1] = '\0';
-
 				sFileName = t_sfd.cFileName;
 				transform(sFileName.begin(), sFileName.end(),
 					sFileName.begin(),
@@ -856,36 +838,6 @@ bool	CMPResManger::LoadTotalTexture()
 		}while(FindNextFile(t_hFind,&t_sfd));
 		FindClose(t_hFind);
 	}
-#else
-	{
-		MPResourceInfo* pResInfo(0);
-		char szName[32];
-		memset(szName,0,32);
-
-		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() +1; i++)
-		{
-			pResInfo = MPResourceSet::GetInstance().GetResourceInfoByID(i);
-			if (!pResInfo)
-				continue;
-			if (pResInfo->GetType() == MPResourceInfo::RT_TEXTURE)
-			{
-				if((strstr(pResInfo->szDataName,".dds")==NULL)&&strstr(pResInfo->szDataName,".tga")==NULL)
-				{
-					_mapTexture[pResInfo->szDataName] = (int)_vecTexName.size();
-					_vecTexName.push_back(pResInfo->szDataName);
-				}
-				else
-				{
-					int len = lstrlen(pResInfo->szDataName);
-					memcpy(szName, pResInfo->szDataName,len - 4); 
-					_mapTexture[pResInfo->szDataName] = (int)_vecTexName.size();
-					_vecTexName.push_back(szName);
-					memset(szName,0,32);
-				}
-			}
-		}
-	}
-#endif
 
 	_iTexNum = (int)_vecTexName.size();
 	_vecTexList.resize(_iTexNum);
@@ -1133,7 +1085,7 @@ bool	CMPResManger::LoadTotalMesh()
 	_CShadeModel->InitDevice(m_pDev,m_pSysGraphics->GetResourceMgr());
 	_CShadeModel->CreateShadeModel();
 	
-#if USE_RESOURCE_SCRIPT == 0 || USE_RESOURCE_SCRIPT == 1
+
 	{
 		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
@@ -1205,50 +1157,24 @@ bool	CMPResManger::LoadTotalMesh()
 
 		}while(FindNextFile(t_hFind,&t_sfd));
 		FindClose(t_hFind);
-
-		//// 
-		//lstrcpy(t_Path,"model\\character");
-		//lstrcat(t_Path,"\\*.lgo");
-
-		//if((t_hFind=FindFirstFile(t_Path,&t_sfd))==INVALID_HANDLE_VALUE)
-		//	return true;
-		//do{
-		//	if(!(t_sfd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY))
-		//	{
-		//		int length = (int)strlen(t_sfd.cFileName);
-		//		char *sname = &t_sfd.cFileName[length - 4];
-		//		if(strcmp(sname,".lgo") != 0)
-		//		{
-		//			continue; 
-		//		}
-
-		//		//
-		//		if( !g_GeomManager.LoadGeomobj( t_sfd.cFileName ) )
-		//		{
-		//			//LG("error","msg:(%s)", t_sfd.cFileName );
-		//		}
-		//	}
-
-		//}while(FindNextFile(t_hFind,&t_sfd));
-		//FindClose(t_hFind);
 	}
-#else
-	{
-		MPResourceInfo* pResInfo(0);
-		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() +1; i++)
-		{
-			pResInfo = MPResourceSet::GetInstance().GetResourceInfoByID(i);
-			if (!pResInfo)
-				continue;
-			if (pResInfo->GetType() == MPResourceInfo::RT_MESH)
-			{
-				_mapMesh[pResInfo->szDataName] = (int)_vecMeshName.size();
-				_vecMeshName.push_back(pResInfo->szDataName);
-				_iMeshNum++;
-			}
-		}
-	}
-#endif
+// #else
+// 	{
+// 		MPResourceInfo* pResInfo(0);
+// 		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() +1; i++)
+// 		{
+// 			pResInfo = MPResourceSet::GetInstance().GetResourceInfoByID(i);
+// 			if (!pResInfo)
+// 				continue;
+// 			if (pResInfo->GetType() == MPResourceInfo::RT_MESH)
+// 			{
+// 				_mapMesh[pResInfo->szDataName] = (int)_vecMeshName.size();
+// 				_vecMeshName.push_back(pResInfo->szDataName);
+// 				_iMeshNum++;
+// 			}
+// 		}
+// 	}
+// #endif
 
 	return true;
 }
@@ -1337,7 +1263,6 @@ bool	CMPResManger::LoadEffectFromFile(int idx, char* pszFileName)
 }
 bool	CMPResManger::LoadTotalEffect()
 {
-#if RESOURCE_SCRIPT == 0 || RESOURCE_SCRIPT == 1
 	{
 		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
@@ -1395,38 +1320,7 @@ bool	CMPResManger::LoadTotalEffect()
 		}while(FindNextFile(t_hFind,&t_sfd));
 		FindClose(t_hFind);
 	}
-#else
-	{
-		MPResourceInfo* pResInfo(0);
-		char szFile[MAX_PATH];
 
-		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() + 1; i++)
-		{
-			pResInfo = MPResourceSet::GetInstance().GetResourceInfoByID(i);
-			if (!pResInfo)
-				continue;
-			if (pResInfo->GetType() == MPResourceInfo::RT_EFF)
-			{
-				_vecEffectList.resize( _iEffectNum + 1);
-				_vecEffectList[_iEffectNum].clear();
-				_vecEffectParam.resize(_iEffectNum + 1);
-
-				//if(!LoadEffectFromFile(_iEffectNum, t_pszFile))
-				//	return false;
-
-				_vecEffectName.resize(_iEffectNum + 1);
-				_mapEffect[pResInfo->szDataName] = _iEffectNum;
-				_vecEffectName[_iEffectNum] = pResInfo->szDataName;
-				//SAFE_DELETE_ARRAY(pszDataName);
-
-				//
-				//_vecEffectList[_iEffectNum][0].setEffectName(_vecEffectName[_iEffectNum]);
-
-				_iEffectNum++;
-			}
-		}
-	}
-#endif
 	return true;
 }
 
@@ -1971,7 +1865,6 @@ CEffPath*	CMPResManger::GetEffPath(int iID)
 
 bool	CMPResManger::LoadTotalPath()
 {
-#if RESOURCE_SCRIPT == 0 || RESOURCE_SCRIPT == 1
 	{
 		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
@@ -1998,28 +1891,7 @@ bool	CMPResManger::LoadTotalPath()
 		}while(FindNextFile(t_hFind,&t_sfd));
 		FindClose(t_hFind);
 	}
-#else
-	{
-		MPResourceInfo* pResInfo(0);
-		char szFile[MAX_PATH];
 
-		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() +1; i++)
-		{
-			pResInfo = MPResourceSet::GetInstance().GetResourceInfoByID(i);
-			if (!pResInfo)
-				continue;
-			if (pResInfo->GetType() == MPResourceInfo::RT_PATH)
-			{
-				_iPathNum++;
-				_vecPathName.push_back(pResInfo->szDataName);
-
-				sprintf(szFile, "%s\\%s",_pszEFFectPath,pResInfo->szDataName);
-				_vecPath.resize(_iPathNum);
-				_vecPath[_iPathNum - 1].LoadPathFromFile(szFile);
-			}
-		}
-	}
-#endif
 	return true;
 }
 
@@ -2139,8 +2011,6 @@ CMPPartCtrl*	CMPResManger::GetPartCtrlByID(int iID)
 
 void	CMPResManger::LoadTotalPartCtrl()
 {
-#if RESOURCE_SCRIPT == 0 || RESOURCE_SCRIPT == 1
-	//
 	{
 		char t_Path[MAX_PATH];
 		WIN32_FIND_DATA t_sfd;
@@ -2189,23 +2059,6 @@ void	CMPResManger::LoadTotalPartCtrl()
 		//	_vecPartCtrl.resize(_iPartCtrlNum);
 		//#endif
 	}
-#else
-	//
-	{
-		MPResourceInfo* pResInfo(0);
-		for(int i(1); i<MPResourceSet::GetInstance().GetLastID() +1; i++)
-		{
-			pResInfo = MPResourceSet::GetInstance().GetResourceInfoByID(i);
-			if (!pResInfo)
-				continue;
-			if (pResInfo->GetType() == MPResourceInfo::RT_PAR)
-			{
-				_iPartCtrlNum++;
-				_vecPartName.push_back(pResInfo->szDataName);
-			}
-		}
-	}
-#endif
 }
 
 CMPPartCtrl*	CMPResManger::NewPartCtrl(const s_string& strName)

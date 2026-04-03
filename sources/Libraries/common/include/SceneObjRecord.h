@@ -1,34 +1,37 @@
 #pragma once
 
-#include "TableData.h"
+#include <string>
+#include <cstdint>
+#include <windows.h>
 
 // Запись таблицы объектов сцены
-class CSceneObjInfo : public CRawDataInfo
-{
+class CSceneObjInfo {
 public:
-	char    szName[16]{};
-	int     nType{0};
-	BYTE    btPointColor[3]{};
-	BYTE    btEnvColor[3]{};
-	BYTE    btFogColor[3]{};
-	int     nRange{0};
-	float   Attenuation1{0};
-	int     nAnimCtrlID{0};
+	int32_t _id{};
+	std::string _dataName{};
+	std::string _name{};
+	int32_t _type{};
+	uint8_t _pointColor[3]{};
+	uint8_t _envColor[3]{};
+	uint8_t _fogColor[3]{};
+	int32_t _range{};
+	float _attenuation{};
+	int32_t _animCtrlId{};
 
-	int     nStyle{0};
-	int     nAttachEffectID{0};
-	BOOL    bEnablePointLight{FALSE};
-	BOOL    bEnableEnvLight{FALSE};
-	int     nFlag{0};
-	int     nSizeFlag{0};
+	int32_t _style{};
+	int32_t _attachEffectId{};
+	bool _enablePointLight{false};
+	bool _enableEnvLight{false};
+	int32_t _flag{};
+	int32_t _sizeFlag{};
 
-	char    szEnvSound[11]{};
-	int     nEnvSoundDis{0};
-	int     nPhotoTexID{0};
-	BOOL    bShadeFlag{FALSE};
-	BOOL    bIsReallyBig{FALSE};
+	std::string _envSound{};
+	int32_t _envSoundDis{};
+	int32_t _photoTexId{};
+	bool _shadeFlag{false};
+	bool _isReallyBig{false};
 
-	int     nFadeObjNum{0};
-	int     nFadeObjSeq[16]{};
-	float   fFadeCoefficent{0};
+	int32_t _fadeObjNum{};
+	int32_t _fadeObjSeq[16]{};
+	float _fadeCoefficient{};
 };

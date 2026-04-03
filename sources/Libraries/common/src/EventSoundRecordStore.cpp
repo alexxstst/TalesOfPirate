@@ -31,3 +31,7 @@ void EventSoundRecordStore::Insert(SqliteDatabase& db, const CEventSoundInfo& r)
 		ToLogService("errors", LogLevel::Error, "EventSoundRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CEventSoundInfo* GetEventSoundInfo(int nTypeID, const std::source_location& loc) {
+	return EventSoundRecordStore::Instance()->Get(nTypeID, loc);
+}

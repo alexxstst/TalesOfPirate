@@ -54,6 +54,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline xShipPartInfo* GetShipPartInfo(int nTypeID) {
-	return ShipPartRecordStore::Instance()->Get(nTypeID);
-}
+xShipPartInfo* GetShipPartInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

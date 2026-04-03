@@ -294,9 +294,9 @@ void CGameScene::_Render()
 
                 CSceneObjInfo* info = GetSceneObjInfo( pObj->getTypeID() );
                 
-                BOOL light_enable = info->bEnableEnvLight | info->bEnablePointLight | info->bShadeFlag;
+                BOOL light_enable = info->_enableEnvLight | info->_enablePointLight | info->_shadeFlag;
                 g_Render.SetRenderState( D3DRS_LIGHTING, light_enable );
-                g_Render.LightEnable(0, info->bEnableEnvLight);
+                g_Render.LightEnable(0, info->_enableEnvLight);
 
                 // set region lighting color
 				if( _pTerrain )
@@ -329,7 +329,7 @@ void CGameScene::_Render()
 				}
 
 #if(defined OPEN_AMBIENT_ENV)
-                if(info->bShadeFlag)
+                if(info->_shadeFlag)
                 {
                     MPDwordByte4 db4_obj;
                     MPDwordByte4 db4_env;
@@ -338,7 +338,7 @@ void CGameScene::_Render()
                     db4_obj.d = pObj->GetObjTileColor();
                     db4_env.d = env_color;
 
-                    if(info->nSizeFlag == 0)
+                    if(info->_sizeFlag == 0)
                     {
                         db4_env.d = 0xffffffff;
                     }
@@ -354,7 +354,7 @@ void CGameScene::_Render()
 
                 if(light_enable)
                 {
-                    BeginUpdateSceneObjLight(pObj, info->bEnablePointLight);
+                    BeginUpdateSceneObjLight(pObj, info->_enablePointLight);
                 }
 
 
@@ -405,7 +405,7 @@ void CGameScene::_Render()
                     EndUpdateSceneObjLight(pObj);
                 }
 
-                if(info->bShadeFlag)
+                if(info->_shadeFlag)
                 {
                     g_Render.SetRenderState(D3DRS_AMBIENT, env_color);
                 }
@@ -1053,9 +1053,9 @@ void	CGameScene::RenderSMallMap()
 
 				CSceneObjInfo* info = GetSceneObjInfo( pObj->getTypeID() );
 
-				BOOL light_enable = info->bEnableEnvLight | info->bEnablePointLight | info->bShadeFlag;
+				BOOL light_enable = info->_enableEnvLight | info->_enablePointLight | info->_shadeFlag;
 				g_Render.SetRenderState( D3DRS_LIGHTING, light_enable );
-				g_Render.LightEnable(0, info->bEnableEnvLight);
+				g_Render.LightEnable(0, info->_enableEnvLight);
 				// set region lighting color
 				int a = _pTerrain->GetTile( (int)(pObj->getPos().x), (int)(pObj->getPos().y) )->getIsland();
 				if(a != nArea)
@@ -1084,7 +1084,7 @@ void	CGameScene::RenderSMallMap()
 				}
 
 #if(defined OPEN_AMBIENT_ENV)
-				if(info->bShadeFlag)
+				if(info->_shadeFlag)
 				{
 					MPDwordByte4 db4_obj;
 					MPDwordByte4 db4_env;
@@ -1095,13 +1095,13 @@ void	CGameScene::RenderSMallMap()
 
 
 					// begin by Jack
-					// 
-					// 
-					// 
-					// 
+					//
+					//
+					//
+					//
 					// sceneobj.txt
-					// 
-					if(info->nID == 232)
+					//
+					if(info->_id == 232)
 					{
 						db4_env.d = 0xffffffff;
 					}
@@ -1117,7 +1117,7 @@ void	CGameScene::RenderSMallMap()
 
 				if(light_enable)
 				{
-					BeginUpdateSceneObjLight(pObj, info->bEnablePointLight);
+					BeginUpdateSceneObjLight(pObj, info->_enablePointLight);
 				}
 
 #if(!defined OPEN_AMBIENT_ENV)
@@ -1159,7 +1159,7 @@ void	CGameScene::RenderSMallMap()
 					EndUpdateSceneObjLight(pObj);
 				}
 
-				if(info->bShadeFlag)
+				if(info->_shadeFlag)
 				{
 					g_Render.SetRenderState(D3DRS_AMBIENT, env_color);
 				}

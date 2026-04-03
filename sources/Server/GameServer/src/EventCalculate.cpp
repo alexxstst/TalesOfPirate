@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "EventHandler.h"
 #include "Character.h"
+#include "HarmRec.h"
 #include "Player.h"
 #include "lua_gamectrl.h"
 

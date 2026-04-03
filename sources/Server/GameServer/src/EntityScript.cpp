@@ -44,7 +44,9 @@ int SetEntityData_raw(lua_State* L)
 	}
 
 	BOOL bRet = FALSE;
-	mission::CEventEntity* pEntity = (mission::CEventEntity*)lua_touserdata(L, 1);
+	auto pEntityResult = luabridge::Stack<mission::CEventEntity*>::get(L, 1);
+	if (!pEntityResult) { PARAM_ERROR return 0; }
+	mission::CEventEntity* pEntity = *pEntityResult;
 	switch (pEntity->GetType())
 	{
 	case BASE_ENTITY:

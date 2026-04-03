@@ -62,3 +62,7 @@ void JobEquipRecordStore::Insert(SqliteDatabase& db, const CJobEquipRecord& reco
 		ToLogService("errors", LogLevel::Error, "JobEquipRecordStore::Insert(id={}) failed: {}", record.chID, e.what());
 	}
 }
+
+CJobEquipRecord* GetJobEquipRecordInfo(int nTypeID, const std::source_location& loc) {
+	return JobEquipRecordStore::Instance()->Get(nTypeID, loc);
+}

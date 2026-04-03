@@ -33,3 +33,6 @@ public:
 protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
+
+CPoseInfo* GetPoseInfo(short sPoseID, const std::source_location& loc = std::source_location::current());
+short GetRealPoseID(short sPoseID, short sPoseType);

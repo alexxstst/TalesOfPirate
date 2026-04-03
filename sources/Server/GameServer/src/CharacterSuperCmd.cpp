@@ -8,6 +8,7 @@
 #include "CommFunc.h"
 #include "Player.h"
 #include "ItemAttr.h"
+#include "HarmRec.h"
 #include "JobInitEquip.h"
 #include "GameAppNet.h"
 #include "SkillStateRecord.h"

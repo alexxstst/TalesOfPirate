@@ -14,4 +14,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CItemTypeInfo* GetItemTypeInfo(int nTypeID) { return ItemTypeRecordStore::Instance()->Get(nTypeID); }
+CItemTypeInfo* GetItemTypeInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

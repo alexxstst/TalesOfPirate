@@ -19,7 +19,7 @@ GameRecordset<MPTerrainInfo>::RecordEntry TerrainRecordStore::ReadRecord(SqliteS
 	// nTextureID — runtime-only, не хранится в SQLite
 
 	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	return {.id = record.nID, .name = std::move(name), .record = record};
 }
 
 void TerrainRecordStore::Insert(SqliteDatabase& db, const MPTerrainInfo& r) {
@@ -35,4 +35,25 @@ void TerrainRecordStore::Insert(SqliteDatabase& db, const MPTerrainInfo& r) {
 	} catch (const std::exception& e) {
 		ToLogService("errors", LogLevel::Error, "TerrainRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
+}
+
+MPTerrainInfo* GetTerrainInfo(int nID, const std::source_location& loc) {
+	return TerrainRecordStore::Instance()->Get(nID, loc);
+}
+
+int GetTerrainTextureID(int nID, const std::source_location& loc) {
+	auto* pInfo = TerrainRecordStore::Instance()->Get(nID, loc);
+	return pInfo ? pInfo->nTextureID : 0;
+}
+
+int GetWaterBumpTextureID(int nFrame) {
+	return TerrainRecordStore::Instance()->GetWaterBumpTextureID(nFrame);
+}
+
+int GetTerrainAlphaTextureID(int nAlphaNo) {
+	return TerrainRecordStore::Instance()->GetAlphaTextureID(nAlphaNo);
+}
+
+int GetTerrainAlphaTextureID_I() {
+	return TerrainRecordStore::Instance()->m_nAlphaTextureI;
 }

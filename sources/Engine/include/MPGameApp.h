@@ -41,15 +41,6 @@ class MPConsole;
 #define M_MClick	0x1000
 #define M_RClick	0x2000
 
-struct LGInfo
-{
-    bool bCloseAll;
-    bool bEraseMode;
-    bool bMsgBox;
-    bool bEnableAll;
-    char dir[260];
-};
-
 class MINDPOWER_API MPGameApp
 {
 public:
@@ -128,16 +119,10 @@ public:
     DWORD               GetRenderUseTime()                  { return _dwRenderUseTime;   }
 
 	void				SetInputActive(bool bActive);
-    BOOL                UnloadTerrainSet();
-	BOOL				LoadResourceSet(const char* file, int iMaxIndex, BOOL bBinary);
-	BOOL                UnloadResourceSet();
 
 	BOOL				LoadResource();
 	BOOL				LoadRes2();
 	BOOL				LoadRes3();
-
-    virtual void LG_Config(const LGInfo& info);
-    LGInfo* GetLGConfig() { return &_lgInfo; }
 
 protected:
 
@@ -157,8 +142,6 @@ protected:
 
 	bool					_bActive;
 	
-    LGInfo                  _lgInfo;
-
 	// Texture Management
 
 	// Direct Input

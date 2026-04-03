@@ -47,6 +47,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CLevelRecord* GetLevelRecordInfo(int nTypeID) {
-	return LevelRecordStore::Instance()->Get(nTypeID);
-}
+CLevelRecord* GetLevelRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

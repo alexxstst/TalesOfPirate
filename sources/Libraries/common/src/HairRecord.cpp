@@ -28,6 +28,6 @@ void CHairRecord::RefreshPrivateData()
 	}
 }
 
-CHairRecord* GetHairRecordInfo(int nTypeID) {
-	return HairRecordStore::Instance()->Get(nTypeID);
+CHairRecord* GetHairRecordInfo(int nTypeID, const std::source_location& loc) {
+	return HairRecordStore::Instance()->Get(nTypeID, loc);
 }

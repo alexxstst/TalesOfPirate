@@ -168,3 +168,7 @@ void ShipRecordStore::Insert(SqliteDatabase& db, const xShipInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ShipRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+xShipInfo* GetShipInfo(int nTypeID, const std::source_location& loc) {
+	return ShipRecordStore::Instance()->Get(nTypeID, loc);
+}

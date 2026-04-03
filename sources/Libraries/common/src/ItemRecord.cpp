@@ -187,20 +187,10 @@ bool CItemRecord::IsLockable() const {
 
 #include "ItemRecordStore.h"
 
-CItemRecord* GetItemRecordInfo(int nTypeID) {
-	auto* store = ItemRecordStore::Instance();
-	if (!store) {
-		return nullptr;
-	}
-
-	return store->Get(nTypeID);
+CItemRecord* GetItemRecordInfo(int nTypeID, const std::source_location& loc) {
+	return ItemRecordStore::Instance()->Get(nTypeID, loc);
 }
 
-CItemRecord* GetItemRecordInfo(std::string_view itemName) {
-	auto* store = ItemRecordStore::Instance();
-	if (!store) {
-		return nullptr;
-	}
-
-	return store->Get(itemName);
+CItemRecord* GetItemRecordInfo(std::string_view itemName, const std::source_location& loc) {
+	return ItemRecordStore::Instance()->Get(itemName, loc);
 }

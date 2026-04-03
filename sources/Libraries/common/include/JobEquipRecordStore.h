@@ -36,6 +36,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CJobEquipRecord* GetJobEquipRecordInfo(int nTypeID) {
-	return JobEquipRecordStore::Instance()->Get(nTypeID);
-}
+CJobEquipRecord* GetJobEquipRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

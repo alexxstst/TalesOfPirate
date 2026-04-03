@@ -47,6 +47,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CLifeLvRecord* GetLifeLvRecordInfo(int nTypeID) {
-	return LifeLvRecordStore::Instance()->Get(nTypeID);
-}
+CLifeLvRecord* GetLifeLvRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

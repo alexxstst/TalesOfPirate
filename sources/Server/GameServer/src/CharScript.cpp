@@ -466,7 +466,9 @@ int GetTicketItemno_raw(lua_State* L)
 		return 0;
 	}
 
-	SItemGrid* pItem1 = (SItemGrid*)lua_touserdata(L, 1);
+	auto pItem1Result = luabridge::Stack<SItemGrid*>::get(L, 1);
+	if (!pItem1Result) { PARAM_ERROR return 0; }
+	SItemGrid* pItem1 = *pItem1Result;
 	int index = (int)lua_tonumber(L, 2);
 
 	if (floor((float)pItem1->sInstAttr[0][1] / 1000) > 0)
@@ -544,16 +546,14 @@ int GiveItem_raw(lua_State* L)
 		return 0;
 	}
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	if (pChar == NULL)
-	{
-		E_LUANULL;
-		return 0;
-	}
+	auto pCharResult = luabridge::Stack<CCharacter*>::get(L, 1);
+	if (!pCharResult) { PARAM_ERROR return 0; }
+	CCharacter* pChar = *pCharResult;
 
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata(L, 2);
+	auto pTalkResult = luabridge::Stack<mission::CNpc*>::get(L, 2);
+	mission::CNpc* pTalk = pTalkResult ? *pTalkResult : nullptr;
 	if (pTalk)
 	{
 		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
@@ -604,16 +604,14 @@ int GiveItemY_raw(lua_State* L)
 		return 0;
 	}
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
-	if (pChar == NULL)
-	{
-		E_LUANULL;
-		return 0;
-	}
+	auto pCharResult = luabridge::Stack<CCharacter*>::get(L, 1);
+	if (!pCharResult) { PARAM_ERROR return 0; }
+	CCharacter* pChar = *pCharResult;
 
 	char szNpc[defENTITY_NAME_LEN];
 	strncpy(szNpc, RES_STRING(GM_CHARSCRIPT_CPP_00001), defENTITY_NAME_LEN - 1);
-	CTalkNpc* pTalk = (CTalkNpc*)lua_touserdata(L, 2);
+	auto pTalkResult = luabridge::Stack<mission::CNpc*>::get(L, 2);
+	mission::CNpc* pTalk = pTalkResult ? *pTalkResult : nullptr;
 	if (pTalk)
 	{
 		strncpy(szNpc, pTalk->GetName(), defENTITY_NAME_LEN - 1);
@@ -764,9 +762,14 @@ int AddMissionState(CCharacter* pChar, int dwNpcID, int byID, int byState)
 	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
-int ResetMissionState(CCharacter* pChar, CTalkNpc* pTalk)
+int ResetMissionState(CCharacter* pChar, CNpc* pNpc)
 {
-	if (!pChar || !pTalk) return LUA_FALSE;
+	if (!pChar || !pNpc) return LUA_FALSE;
+	auto* pTalk = dynamic_cast<CTalkNpc*>(pNpc);
+	if (!pTalk) {
+		ToLogService("lua", LogLevel::Warning, "ResetMissionState: CNpc is not CTalkNpc");
+		return LUA_FALSE;
+	}
 	BOOL bRet = pChar->ResetMissionState(*pTalk);
 	return bRet ? LUA_TRUE : LUA_FALSE;
 }
@@ -2344,7 +2347,9 @@ int String2Item_raw(lua_State* L) {
 	if (!((lua_gettop(L) == 2 || (lua_gettop(L) == 3 && lua_isnumber(L, 3))) && lua_islightuserdata(L, 1) && lua_isstring(L, 2))) {
 		return 0;
 	}
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
+	auto pCharResult = luabridge::Stack<CCharacter*>::get(L, 1);
+	if (!pCharResult) { PARAM_ERROR return 0; }
+	CCharacter* pChar = *pCharResult;
 	const char* pszData = lua_tostring(L, 2);
 	SItemGrid SGridCont;
 	String2Item(pszData, &SGridCont);

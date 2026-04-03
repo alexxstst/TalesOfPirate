@@ -41,6 +41,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CAreaInfo* GetAreaInfo(int nAreaID) {
-	return AreaRecordStore::Instance()->Get(nAreaID);
-}
+CAreaInfo* GetAreaInfo(int nAreaID, const std::source_location& loc = std::source_location::current());

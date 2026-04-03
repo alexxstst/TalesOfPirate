@@ -716,10 +716,10 @@ void CMisLogForm::_ItemClickEvent( string strItem )
 		}
 		else
 		{
-			int nTotalIndex = NPCHelper::I()->GetLastID() + 1;
+			int nTotalIndex = GetNPCMaxId(NPCHelperType::NPCList) + 1;
 			for(int i = 0; i < nTotalIndex ; ++ i)
 			{
-				NPCData* pData = GetNPCDataInfo(i);
+				NPCData* pData = GetNPCDataInfo(i, NPCHelperType::NPCList);
 				if( pData )
 				{
 					const char* npc = pData->szName;

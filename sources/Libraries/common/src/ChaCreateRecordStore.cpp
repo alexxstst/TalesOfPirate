@@ -78,3 +78,7 @@ void ChaCreateRecordStore::Insert(SqliteDatabase& db, const CChaCreateInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ChaCreateRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CChaCreateInfo* GetChaCreateInfo(int nTypeID, const std::source_location& loc) {
+	return ChaCreateRecordStore::Instance()->Get(nTypeID, loc);
+}

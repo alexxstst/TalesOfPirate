@@ -236,7 +236,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
         if(bCreate)
         {
 		    pObj->Destroy();
-		    if(!pObj->_CreateNode(nScriptID, pInfo->nType, this))
+		    if(!pObj->_CreateNode(nScriptID, pInfo->_type, this))
             {
                 return NULL;
             }
@@ -246,21 +246,21 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
             ToLogService("common", "Found Same Type Object [{}]", nScriptID);
         }
 
-        if(pInfo->nType == 3)
+        if(pInfo->_type == 3)
         {
             pObj->SetSceneLightInfo(nScriptID);
             //g_pSceneLight = (SceneLight*)pObj;
             //g_AnimCtrlLight.Load(".\\scripts\\aaa.txt");
-          
+
         }
-        else if(pInfo->nType == 4)
+        else if(pInfo->_type == 4)
         {
             pObj->SetSceneLightInfo(nScriptID);
         }
 
 
         // last
-		pObj->setObjType(pInfo->nType);
+		pObj->setObjType(pInfo->_type);
         pObj->SetValid(TRUE);
 #if(defined OPT_CULL_2)
         pObj->SetCullingFlag(1);
@@ -303,7 +303,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
     }
 
 	// Added by clp
-	if ( pInfo->bIsReallyBig )
+	if ( pInfo->_isReallyBig )
 	{
 		CCharacter * tempChar = GetMainCha();
 		if( tempChar )

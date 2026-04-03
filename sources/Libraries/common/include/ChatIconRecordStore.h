@@ -14,4 +14,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CChatIconInfo* GetChatIconInfo(int nIconID) { return ChatIconRecordStore::Instance()->Get(nIconID); }
+CChatIconInfo* GetChatIconInfo(int nIconID, const std::source_location& loc = std::source_location::current());

@@ -96,10 +96,10 @@ void CSkillRecord::RefreshPrivateData()
 	}
 }
 
-CSkillRecord* GetSkillRecordInfo(int nTypeID) {
-	return SkillRecordStore::Instance()->Get(nTypeID);
+CSkillRecord* GetSkillRecordInfo(int nTypeID, const std::source_location& loc) {
+	return SkillRecordStore::Instance()->Get(nTypeID, loc);
 }
 
-CSkillRecord* GetSkillRecordInfo(const char* szName) {
-	return SkillRecordStore::Instance()->Get(szName);
+CSkillRecord* GetSkillRecordInfo(const char* szName, const std::source_location& loc) {
+	return SkillRecordStore::Instance()->Get(std::string_view(szName), loc);
 }

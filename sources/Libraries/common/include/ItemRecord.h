@@ -12,6 +12,7 @@
 #include <string>
 #include <array>
 #include <cstdint>
+#include <source_location>
 #include "util.h"
 #include "TableData.h"
 #include "CompCommand.h"
@@ -232,8 +233,8 @@ private:
 	bool _IsBody[5]{};
 };
 
-CItemRecord* GetItemRecordInfo(int nTypeID);
-CItemRecord* GetItemRecordInfo(std::string_view itemName);
+CItemRecord* GetItemRecordInfo(int nTypeID, const std::source_location& loc = std::source_location::current());
+CItemRecord* GetItemRecordInfo(std::string_view itemName, const std::source_location& loc = std::source_location::current());
 
 inline bool CItemRecord::IsAllowEquip(unsigned int nChaID) const {
 	if (nChaID < 5) return _IsBody[nChaID];

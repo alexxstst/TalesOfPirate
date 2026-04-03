@@ -50,8 +50,8 @@ public:
 		if (getTexId) {
 			ForEach([&](CSceneObjInfo& info) {
 				char szPhoto[72];
-				sprintf(szPhoto, "texture/photo/sceneobj/%s.bmp", info.szName);
-				info.nPhotoTexID = getTexId(szPhoto);
+				sprintf(szPhoto, "texture/photo/sceneobj/%s.bmp", info._name.c_str());
+				info._photoTexId = getTexId(szPhoto);
 			});
 		}
 		return true;
@@ -63,6 +63,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CSceneObjInfo* GetSceneObjInfo(int nTypeID) {
-	return SceneObjRecordStore::Instance()->Get(nTypeID);
-}
+CSceneObjInfo* GetSceneObjInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

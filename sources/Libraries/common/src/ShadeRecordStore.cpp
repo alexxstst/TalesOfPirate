@@ -60,3 +60,7 @@ void ShadeRecordStore::Insert(SqliteDatabase& db, const CShadeInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ShadeRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CShadeInfo* GetShadeInfo(int nTypeID, const std::source_location& loc) {
+	return ShadeRecordStore::Instance()->Get(nTypeID, loc);
+}

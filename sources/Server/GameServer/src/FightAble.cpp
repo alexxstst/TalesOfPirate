@@ -2057,9 +2057,9 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 	char szItemInstLog[256];
 	strncpy(szItemInstLog, RES_STRING(GM_FIGHTABLE_CPP_00003), 256 - 1);
 
-	pGridContent->sEndure[1] = g_pCItemAttr[pGridContent->sID].GetAttr(ITEMATTR_MAXURE, false);
+	pGridContent->sEndure[1] = g_itemAttrMap[pGridContent->sID].GetAttr(ITEMATTR_MAXURE, false);
 	pGridContent->sEndure[0] = pGridContent->sEndure[1];
-	pGridContent->sEnergy[1] = g_pCItemAttr[pGridContent->sID].GetAttr(ITEMATTR_MAXENERGY, false);
+	pGridContent->sEnergy[1] = g_itemAttrMap[pGridContent->sID].GetAttr(ITEMATTR_MAXENERGY, false);
 	pGridContent->sEnergy[0] = pGridContent->sEnergy[1];
 	pGridContent->bItemTradable = isTradable == 1 ? true : false;
 	pGridContent->expiration = expiration;
@@ -2089,8 +2089,8 @@ void CFightAble::ItemInstance(Char chType, SItemGrid* pGridContent, BOOL isTrada
 			//nAttr = g_CParser.GetReturnNumber(nRetID + 1);
 			nAttrID = creatResult[nRetID].cast<int>().value();
 			nAttr = creatResult[nRetID + 1].cast<int>().value();
-			sMin = g_pCItemAttr[pGridContent->sID].GetAttr(nAttrID, false);
-			sMax = g_pCItemAttr[pGridContent->sID].GetAttr(nAttrID, true);
+			sMin = g_itemAttrMap[pGridContent->sID].GetAttr(nAttrID, false);
+			sMax = g_itemAttrMap[pGridContent->sID].GetAttr(nAttrID, true);
 			if (nAttrID == ITEMATTR_MAXURE)
 			{
 				if (nAttr < 0 || nAttr > 100) // 

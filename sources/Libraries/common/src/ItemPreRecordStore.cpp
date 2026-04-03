@@ -28,3 +28,7 @@ void ItemPreRecordStore::Insert(SqliteDatabase& db, const CItemPreInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ItemPreRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CItemPreInfo* GetItemPreInfo(int nTypeID, const std::source_location& loc) {
+	return ItemPreRecordStore::Instance()->Get(nTypeID, loc);
+}

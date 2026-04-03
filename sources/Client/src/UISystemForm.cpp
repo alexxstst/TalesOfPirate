@@ -692,11 +692,6 @@ void CSystemMgr::_evtSystemFromMouseEvent(CCompent *pSender, int nMsgType, int x
 	}
 	else if (name == "btnRelogin")
 	{
-		if (g_TomServer.bEnable)
-		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(773) );
-			return;
-		}
 		CForm* f = CFormMgr::s_Mgr.Find( "frmAskRelogin" );
 		if( f ) 	f->SetIsShow(true);
 		g_stUISystem.frmSystem->SetIsShow(false) ;

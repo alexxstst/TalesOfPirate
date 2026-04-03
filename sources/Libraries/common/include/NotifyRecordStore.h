@@ -14,4 +14,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CNotifyInfo* GetNotifyInfo(int nTypeID) { return NotifyRecordStore::Instance()->Get(nTypeID); }
+CNotifyInfo* GetNotifyInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

@@ -67,13 +67,6 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 			{
                 Waiting( false );
 
-				if( g_TomServer.bEnable )
-				{
-					MessageBox( g_pGameApp->GetHWND(), g_oLangRec.GetString(134), "error", 0 );
-					g_pGameApp->SetIsRun( false );
-					return;
-				}
-
 				CGameScene* scene = CGameApp::GetCurScene();
 				if( !scene ) return;
 

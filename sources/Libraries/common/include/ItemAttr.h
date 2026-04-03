@@ -10,28 +10,32 @@
 
 #include "ItemAttrType.h"
 
-class CItemAttr
-{
+class CItemRecord;
+
+class CItemAttr {
 public:
-	CItemAttr() {m_bInitFlag = false;}
+	CItemAttr() {
+		m_bInitFlag = false;
+	}
 
-	bool	Init(short sItemID);
-	bool	HasInit(void) {return m_bInitFlag;}
+	bool Init(const CItemRecord& rec);
 
-	short	GetAttr(short sAttrType);
-	short	SetAttr(short sAttrType, short sVal);
-	short	AddAttr(short sAttrType, short sVal);
+	bool HasInit(void) {
+		return m_bInitFlag;
+	}
+
+	short GetAttr(short sAttrType);
+	short SetAttr(short sAttrType, short sVal);
+	short AddAttr(short sAttrType, short sVal);
 
 protected:
 
 private:
-	short	m_sAttr[ITEMATTR_MAX_NUM];
-	bool	m_bInitFlag;
-
+	short m_sAttr[ITEMATTR_MAX_NUM]{};
+	bool m_bInitFlag{};
 };
 
-inline short CItemAttr::GetAttr(short sAttrType)
-{
+inline short CItemAttr::GetAttr(short sAttrType) {
 	if (sAttrType < 1 || sAttrType >= ITEMATTR_MAX_NUM)
 		return 0;
 
@@ -39,8 +43,7 @@ inline short CItemAttr::GetAttr(short sAttrType)
 }
 
 // 01
-inline short CItemAttr::SetAttr(short sAttrType, short sVal)
-{
+inline short CItemAttr::SetAttr(short sAttrType, short sVal) {
 	if (sAttrType < 1 || sAttrType >= ITEMATTR_MAX_NUM)
 		return 0;
 
@@ -49,8 +52,7 @@ inline short CItemAttr::SetAttr(short sAttrType, short sVal)
 }
 
 // 01
-inline short CItemAttr::AddAttr(short sAttrType, short sVal)
-{
+inline short CItemAttr::AddAttr(short sAttrType, short sVal) {
 	if (sAttrType < 1 || sAttrType >= ITEMATTR_MAX_NUM)
 		return 0;
 
@@ -59,23 +61,21 @@ inline short CItemAttr::AddAttr(short sAttrType, short sVal)
 }
 
 //=============================================================================
-class CItemRecordAttr
-{
-public:
-	bool	Init(short sItemID);
+class CItemRecord;
 
-	short	GetAttr(short sAttrType, bool bMax);
+class CItemRecordAttr {
+public:
+	bool Init(const CItemRecord& itemRec);
+
+	short GetAttr(short sAttrType, bool bMax);
 
 protected:
 
 private:
-	short	m_sAttr[ITEMATTR_MAX_NUM][2];
-
+	short m_sAttr[ITEMATTR_MAX_NUM][2];
 };
 
-inline short CItemRecordAttr::GetAttr(short sAttrType, bool bMax)
-{
-
+inline short CItemRecordAttr::GetAttr(short sAttrType, bool bMax) {
 	if (sAttrType < 1 || sAttrType >= ITEMATTR_MAX_NUM)
 		return 0;
 

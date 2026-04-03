@@ -90,3 +90,7 @@ void ItemRefineEffectRecordStore::Insert(SqliteDatabase& db, const CItemRefineEf
 		ToLogService("errors", LogLevel::Error, "ItemRefineEffectRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CItemRefineEffectInfo* GetItemRefineEffectInfo(int nRefineID, const std::source_location& loc) {
+	return ItemRefineEffectRecordStore::Instance()->Get(nRefineID, loc);
+}

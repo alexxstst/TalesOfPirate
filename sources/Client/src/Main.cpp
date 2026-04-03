@@ -173,30 +173,10 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 		return 0;
 	}
 
-	LGInfo lg_info;
-	memset( &lg_info, 0, sizeof(lg_info) );
-
-	if( !g_Config.IsPower() ) // Disable logging when not in editor mode
-	{
-		lg_info.bCloseAll = true;
-	}
-
 	long*	pClientLogNO = NULL;
 	pClientLogNO = (long *)MapViewOfFile(hFile, FILE_MAP_WRITE, 0, 0, 0);
 	g_nCurrentLogNo = *pClientLogNO;
 	(*pClientLogNO)++;
-	if (g_nCurrentLogNo > 0)
-	{
-		sprintf(lg_info.dir, "%s%d", "log", g_nCurrentLogNo);
-	}
-	else
-	{
-		sprintf(lg_info.dir, "%s", "log" );
-	}
-
-	lg_info.bEnableAll = g_Config.m_bEnableLG!=0;
-	lg_info.bMsgBox = g_Config.m_bEnableLGMsg!=0;
-	lg_info.bEraseMode = true;
 
 	// Delete the auto-update program copy
 	char szUpdateFileName[] = "Launcher_d.exe";
@@ -297,26 +277,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         }
     }
 
-//#ifdef KOP_TOM
-	auto nTomPos = strParam.find("tom:");
-	if(nTomPos!= std::string::npos)
-	{
-		// Parse Tom string, format: "tom:ServerIP,Port,Username,Password"
-		std::string strTom = strParam.substr( nTomPos + 4, strParam.length() );
-		auto nEnd = strTom.length();
-		nEnd = strTom.find( " " );
-		if( nEnd!= std::string::npos) strTom = strTom.substr( 0, nEnd );
-		
-		std::string strList[4];
-		Util_ResolveTextLine( strTom.c_str(), strList, 4, ',' );
-
-		g_TomServer.szServerIP = strList[0];
-		g_TomServer.nPort = atoi( strList[1].c_str() );
-		g_TomServer.szUser = strList[2];
-		g_TomServer.szPassword = strList[3];
-		g_TomServer.bEnable=true;
-	}
-//#endif
 
 
     ////////////////////////////////////////
@@ -369,7 +329,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     MPTimer t;
     t.Begin();
     g_pGameApp = new CGameApp();
-	g_pGameApp->LG_Config( lg_info );
 	g_lootFilter = new LootFilter();
 
 	if(strParam.find("table_bin") != std::string::npos) // If command line contains table_bin, generate binary tables
@@ -825,17 +784,10 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 
 void MakeBinTable()  
 {
-	g_bBinaryTable = FALSE; 		
-	LGInfo lg_info;
-	lg_info = *g_pGameApp->GetLGConfig();
-	lg_info.bMsgBox = true;
-	lg_info.bEnableAll  = true;
-	g_pGameApp->LG_Config( lg_info );
+	g_bBinaryTable = FALSE;
 
 	g_pGameApp->InitAllTable();
 
-	MPResourceSet* pResourceSet = new MPResourceSet(0, g_Config.m_nMaxResourceNum);
-	pResourceSet->LoadRawDataInfo("scripts/table/ResourceInfo", g_bBinaryTable);
 
 //	MessageBox( NULL, g_oLangRec.GetString(193), "Info", 0 );
 }

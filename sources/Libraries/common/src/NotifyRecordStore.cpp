@@ -39,3 +39,7 @@ void NotifyRecordStore::Insert(SqliteDatabase& db, const CNotifyInfo& r) {
 		ToLogService("errors", LogLevel::Error, "NotifyRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CNotifyInfo* GetNotifyInfo(int nTypeID, const std::source_location& loc) {
+	return NotifyRecordStore::Instance()->Get(nTypeID, loc);
+}

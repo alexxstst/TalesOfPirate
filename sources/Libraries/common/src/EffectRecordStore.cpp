@@ -84,3 +84,7 @@ void EffectRecordStore::Insert(SqliteDatabase& db, const CMagicInfo& r) {
 		ToLogService("errors", LogLevel::Error, "EffectRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+CMagicInfo* GetMagicInfo(int nTypeID, const std::source_location& loc) {
+	return EffectRecordStore::Instance()->Get(nTypeID, loc);
+}

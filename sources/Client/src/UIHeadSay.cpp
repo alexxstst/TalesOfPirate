@@ -173,13 +173,12 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 
     CGuiPic stateIcon;
     int stateCount = 0;
-    int nTotalState = SkillStateRecordStore::Instance()->GetMaxId() + 1;
     bool IsStatesPerLevel = false;
     bool RenderIcon = false;
-    CSkillStateRecord* pState;
-    for (int i = 0; i < nTotalState; i++) {
+    SkillStateRecordStore::Instance()->ForEach([&](const CSkillStateRecord& state) {
+        int i = state.nID;
         if (cha->GetStateMgr()->HasSkillState(i)) {
-            pState = GetCSkillStateRecordInfo(i);
+            auto* pState = &state;
             if (pState) {
                 if (0 != stricmp(pState->szIcon[0], "0")) {
                     if (0 == stricmp(pState->szIcon[cha->GetStateMgr()->GetStateLv(i) - 1], "0")) {
@@ -237,7 +236,7 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
                 }
             }
         }
-    }
+    });
 
     //hide states form if has 0 active states 
     if (stateCount > 0 && g_IsShowStates) {

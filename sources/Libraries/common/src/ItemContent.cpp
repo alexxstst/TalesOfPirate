@@ -30,8 +30,10 @@ bool SItemGrid::InitAttr()
 		sTempID = GetFusionItemID();
 	}
 
-	if (!CAttr.Init(sTempID))
+	CItemRecord* pRec = GetItemRecordInfo(sTempID);
+	if (!pRec || !CAttr.Init(*pRec))
 		return false;
+
 	SetAttr(ITEMATTR_URE, sEndure[0]);
 	SetAttr(ITEMATTR_MAXURE, sEndure[1]);
 	SetAttr(ITEMATTR_ENERGY, sEnergy[0]);

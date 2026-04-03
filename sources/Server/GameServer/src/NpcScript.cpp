@@ -194,13 +194,10 @@ int MoveCity_raw(lua_State* L)
 		return 0;
 	}
 
-	CCharacter* pChar = (CCharacter*)lua_touserdata(L, 1);
+	auto pCharResult = luabridge::Stack<CCharacter*>::get(L, 1);
+	if (!pCharResult) { PARAM_ERROR return 0; }
+	CCharacter* pChar = *pCharResult;
 	const char* pszData = lua_tostring(L, 2);
-	if (!pChar)
-	{
-		E_LUANULL;
-		return 0;
-	}
 	Long lMapCpyNO = 0;
 	if (nParamNum == 3)
 		lMapCpyNO = (Long)lua_tonumber(L, 3);

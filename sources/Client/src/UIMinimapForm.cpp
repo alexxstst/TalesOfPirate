@@ -23,7 +23,7 @@
 #include "UIstartform.h"//add by alfred.shi 20080711
 
 #include "AreaRecord.h"//add by sunny.sun 20080903
-#include "MonsterSet.h" //add by mdr
+#include "MonsterInfoRecordStore.h"
 #include <shellapi.h>
 #include "ProCirculate.h"
 #include "uiBoatForm.h"

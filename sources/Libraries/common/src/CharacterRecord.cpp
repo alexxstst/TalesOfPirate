@@ -14,6 +14,6 @@ void CChaRecord::RefreshPrivateData()
 	}
 }
 
-CChaRecord* GetChaRecordInfo(int nTypeID) {
-	return ChaRecordStore::Instance()->Get(nTypeID);
+CChaRecord* GetChaRecordInfo(int nTypeID, const std::source_location& loc) {
+	return ChaRecordStore::Instance()->Get(nTypeID, loc);
 }

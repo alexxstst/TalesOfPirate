@@ -46,6 +46,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CShadeInfo* GetShadeInfo(int nTypeID) {
-	return ShadeRecordStore::Instance()->Get(nTypeID);
-}
+CShadeInfo* GetShadeInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

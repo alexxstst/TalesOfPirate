@@ -58,23 +58,8 @@ private:
 	int _nAlphaTexture[40]{};
 };
 
-inline MPTerrainInfo* GetTerrainInfo(int nID) {
-	return TerrainRecordStore::Instance()->Get(nID);
-}
-
-inline int GetTerrainTextureID(int nID) {
-	auto* pInfo = TerrainRecordStore::Instance()->Get(nID);
-	return pInfo ? pInfo->nTextureID : 0;
-}
-
-inline int GetWaterBumpTextureID(int nFrame) {
-	return TerrainRecordStore::Instance()->GetWaterBumpTextureID(nFrame);
-}
-
-inline int GetTerrainAlphaTextureID(int nAlphaNo) {
-	return TerrainRecordStore::Instance()->GetAlphaTextureID(nAlphaNo);
-}
-
-inline int GetTerrainAlphaTextureID_I() {
-	return TerrainRecordStore::Instance()->m_nAlphaTextureI;
-}
+MPTerrainInfo* GetTerrainInfo(int nID, const std::source_location& loc = std::source_location::current());
+int GetTerrainTextureID(int nID, const std::source_location& loc = std::source_location::current());
+int GetWaterBumpTextureID(int nFrame);
+int GetTerrainAlphaTextureID(int nAlphaNo);
+int GetTerrainAlphaTextureID_I();

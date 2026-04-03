@@ -53,6 +53,4 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CMagicInfo* GetMagicInfo(int nTypeID) {
-	return EffectRecordStore::Instance()->Get(nTypeID);
-}
+CMagicInfo* GetMagicInfo(int nTypeID, const std::source_location& loc = std::source_location::current());

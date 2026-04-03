@@ -22,20 +22,7 @@
 //=============END===============
 
 //    
-static bool g_consoleInitialized = false;
-
 static void EnsureConsole() {
-	if (g_consoleInitialized) return;
-	g_consoleInitialized = true;
-	if (AllocConsole()) {
-		FILE* fp = nullptr;
-		freopen_s(&fp, "CONOUT$", "w", stdout);
-		SetConsoleTitleA("TalesOfPirate  Packet Log");
-		//   
-		HANDLE hOut = GetStdHandle(STD_OUTPUT_HANDLE);
-		COORD size = {160, 9999};
-		SetConsoleScreenBufferSize(hOut, size);
-	}
 }
 
 bool g_logautobak = false;

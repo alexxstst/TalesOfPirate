@@ -62,7 +62,7 @@
       <AdditionalOptions>/GR /EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\EncLib\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;$(ProjectDir)..\..\Libraries\Server\Sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LUA_GAME;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -108,7 +108,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\EncLib\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\ICUHelper\inc;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;$(ProjectDir)..\..\Libraries\Server\Sdk\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_LUA_GAME;MINDPOWER_USE_DLL;NARROW;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_LUA_GAME;NARROW;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <MinimalRebuild>false</MinimalRebuild>
       <ExceptionHandling>Sync</ExceptionHandling>
@@ -439,6 +439,7 @@
     <ClInclude Include="..\src\Main.h" />
     <ClInclude Include="..\src\MapSet.h" />
     <ClInclude Include="..\src\MonsterSet.h" />
+    <ClInclude Include="..\src\MountSet.h" />
     <ClInclude Include="..\src\MouseDown.h" />
     <ClInclude Include="..\src\MPEditor.h" />
     <ClInclude Include="..\src\MusicSet.h" />

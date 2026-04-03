@@ -127,3 +127,7 @@ void ShipPartRecordStore::Insert(SqliteDatabase& db, const xShipPartInfo& r) {
 		ToLogService("errors", LogLevel::Error, "ShipPartRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
 	}
 }
+
+xShipPartInfo* GetShipPartInfo(int nTypeID, const std::source_location& loc) {
+	return ShipPartRecordStore::Instance()->Get(nTypeID, loc);
+}

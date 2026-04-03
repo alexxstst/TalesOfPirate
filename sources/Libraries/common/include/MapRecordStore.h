@@ -39,10 +39,5 @@ protected:
 	RecordEntry ReadRecord(SqliteStatement& stmt) override;
 };
 
-inline CMapInfo* GetMapInfo(int nMapID) {
-	return MapRecordStore::Instance()->Get(nMapID);
-}
-
-inline CMapInfo* GetMapInfo(const char* pszMapName) {
-	return MapRecordStore::Instance()->Get(std::string_view(pszMapName));
-}
+CMapInfo* GetMapInfo(int nMapID, const std::source_location& loc = std::source_location::current());
+CMapInfo* GetMapInfo(const char* pszMapName, const std::source_location& loc = std::source_location::current());

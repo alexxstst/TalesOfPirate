@@ -818,7 +818,7 @@ void	CSMallMap2D::RenderScene()
 
 			int nScriptID = pscobj->getTypeID();
 			CSceneObjInfo *pInfo = GetSceneObjInfo(nScriptID);
-			if(pscobj /*&& pscobj->IsValid()*/ &&pInfo->nFlag != 0)
+			if(pscobj /*&& pscobj->IsValid()*/ &&pInfo->_flag != 0)
 			{
 				if(PosInRange(pscobj->getPos(), _vEyePt, SHOWRSIZE))
 				{
