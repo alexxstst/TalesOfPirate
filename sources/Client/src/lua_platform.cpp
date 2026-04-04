@@ -14,7 +14,7 @@ lua_State* L = NULL;
 int LuaPanicHandler(lua_State* L);
 
 void InitLuaPlatform() {
-	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(182));
+	g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(182).c_str());
 
 	g_LuaState = luaL_newstate();
 	if (!g_LuaState) {

@@ -309,9 +309,6 @@
 					RelativePath="..\include\fifo.h">
 				</File>
 				<File
-					RelativePath="..\include\LanguageRecord.h">
-				</File>
-				<File
 					RelativePath="..\include\log.h">
 				</File>
 				<File

@@ -362,7 +362,7 @@ namespace GUI
 			if(! IsPwdValid(g_stUIDoublePwd.edtDoublePwdCreate->GetCaption()))
 			{
 				// 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(797));//" 0 ~ 9 "
+				g_pGameApp->MsgBox("%s", GetLanguageString(797).c_str());//" 0 ~ 9 "
 
 				g_stUIDoublePwd.edtDoublePwdCreate->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdCreateRetry->SetCaption("");
@@ -372,7 +372,7 @@ namespace GUI
 			if(6 > nPwdLen || 12 < nPwdLen)
 			{
 				//  6 ~ 12 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(798));//" 6 ~ 12"
+				g_pGameApp->MsgBox("%s", GetLanguageString(798).c_str());//" 6 ~ 12"
 
 				g_stUIDoublePwd.edtDoublePwdCreate->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdCreateRetry->SetCaption("");
@@ -383,7 +383,7 @@ namespace GUI
 						   g_stUIDoublePwd.edtDoublePwdCreateRetry->GetCaption()))
 			{
 				// 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(799));//""
+				g_pGameApp->MsgBox("%s", GetLanguageString(799).c_str());//""
 
 				g_stUIDoublePwd.edtDoublePwdCreate->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdCreateRetry->SetCaption("");
@@ -415,7 +415,7 @@ namespace GUI
 			if(! IsPwdValid(g_stUIDoublePwd.edtDoublePwdAlterNew->GetCaption()))
 			{
 				// 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(797));//" 0 ~ 9 "
+				g_pGameApp->MsgBox("%s", GetLanguageString(797).c_str());//" 0 ~ 9 "
 
 				g_stUIDoublePwd.edtDoublePwdAlterOld->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdAlterNew->SetCaption("");
@@ -427,7 +427,7 @@ namespace GUI
 			if(6 > nPwdLen || 12 < nPwdLen)
 			{
 				//  6 ~ 12 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(798));//" 6 ~ 12"
+				g_pGameApp->MsgBox("%s", GetLanguageString(798).c_str());//" 6 ~ 12"
 
 				g_stUIDoublePwd.edtDoublePwdAlterOld->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdAlterNew->SetCaption("");
@@ -439,7 +439,7 @@ namespace GUI
 						   g_stUIDoublePwd.edtDoublePwdAlterNewRetry->GetCaption()))
 			{
 				// 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(799));//""
+				g_pGameApp->MsgBox("%s", GetLanguageString(799).c_str());//""
 
 				g_stUIDoublePwd.edtDoublePwdAlterOld->SetCaption("");
 				g_stUIDoublePwd.edtDoublePwdAlterNew->SetCaption("");

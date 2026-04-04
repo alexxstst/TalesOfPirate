@@ -111,7 +111,7 @@ namespace GUI
 	{
 		if(strlen(edtQuestionTitle->GetCaption()) < 16)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(914));	// 816
+			g_pGameApp->MsgBox("%s", GetLanguageString(914).c_str());	// 816
 			return;
 		}
 

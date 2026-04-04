@@ -746,7 +746,7 @@ public:
 		{
 			if(FAILED(lwLoadTex(&_pTex[n],res_mgr, pszName[n], 0, D3DFMT_A4R4G4B4)))
 			{
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(395), pszName[n]); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+				g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(395), pszName[n]));
 				//return FALSE;
 				_pTex[n] = NULL;
 			}
@@ -1116,15 +1116,15 @@ protected:
 	void	GetChangeNameText(char* pszName)
 	{
 		if (strcmp("garner",pszName) == 0)
-			strMapName = g_oLangRec.GetString(56);
+			strMapName = GetLanguageString(56);
 		else if (strcmp("darkblue",pszName) == 0)
-			strMapName = g_oLangRec.GetString(58);
+			strMapName = GetLanguageString(58);
 		else if (strcmp("eastgoaf",pszName) == 0)
-			strMapName = g_oLangRec.GetString(396);
+			strMapName = GetLanguageString(396);
 		else if (strcmp("lonetower",pszName) == 0)
-			strMapName = g_oLangRec.GetString(397);
+			strMapName = GetLanguageString(397);
 		else if (strcmp("magicsea",pszName) == 0)
-			strMapName = g_oLangRec.GetString(57);
+			strMapName = GetLanguageString(57);
 
 	}
 private:

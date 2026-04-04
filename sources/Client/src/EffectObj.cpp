@@ -131,7 +131,7 @@ inline  void	Part_bind(CMagicEff* pEffCtrl)
 	skip:
 			if(pCha->GetObjDummyRunTimeMatrix(&tMat,pEffCtrl->_iDummy))
 			{
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(55), pEffCtrl->_iIdxID, pEffCtrl->_iDummy, pCha->GetDefaultChaInfo()->szName.c_str()); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+				g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(55), pEffCtrl->_iIdxID, pEffCtrl->_iDummy, pCha->GetDefaultChaInfo()->szName));
 				const auto v = D3DXVECTOR3(0, 0, 0);
 				pEffCtrl->MoveTo(&v);
 				return;
@@ -1797,46 +1797,46 @@ void CNavigationBar::SetTarget(const char* pszName, D3DXVECTOR3& pTarget)
 	s_string	strTar = pszName;
 	_strName = g_pGameApp->GetCurScene()->GetTerrainName();
 	if(_strName == "garner")
-		_strName = g_oLangRec.GetString(56);
+		_strName = GetLanguageString(56);
 	else if(_strName == "magicsea")
-		_strName = g_oLangRec.GetString(57);
+		_strName = GetLanguageString(57);
 	else if(_strName == "darkblue")
-		_strName = g_oLangRec.GetString(58);
+		_strName = GetLanguageString(58);
 
 	{
 		_vTarget = pTarget;
-		if(_strName == g_oLangRec.GetString(56))
+		if(_strName == GetLanguageString(56))
 		{
-			if(strTar == g_oLangRec.GetString(57))
+			if(strTar == GetLanguageString(57))
 			{
 				_vTarget.x += 4096;
 			}
-			else if(strTar == g_oLangRec.GetString(58))
+			else if(strTar == GetLanguageString(58))
 			{
 				_vTarget.x += 4096 * 2;
 			}
 		}
-		if(_strName == g_oLangRec.GetString(57))
+		if(_strName == GetLanguageString(57))
 		{
 			_vTarget.x += 4096;
-			if(strTar == g_oLangRec.GetString(56))
+			if(strTar == GetLanguageString(56))
 			{
 				_vTarget.x -= 4096;
 			}
-			else if(strTar == g_oLangRec.GetString(58))
+			else if(strTar == GetLanguageString(58))
 			{
 				_vTarget.x += 4096;
 			}
 		}
-		if(_strName == g_oLangRec.GetString(58))
+		if(_strName == GetLanguageString(58))
 		{
 			_vTarget.x += 4096 * 2;
 
-			if(strTar == g_oLangRec.GetString(56))
+			if(strTar == GetLanguageString(56))
 			{
 				_vTarget.x -= 4096 * 2;
 			}
-			else if(strTar == g_oLangRec.GetString(57))
+			else if(strTar == GetLanguageString(57))
 			{
 				_vTarget.x -= 4096;
 			}

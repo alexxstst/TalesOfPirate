@@ -15,7 +15,7 @@
 bool CS_Connect(cChar *hostname, uint16_t port, uint32_t timeout)
 {
 	
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(294), hostname); g_logManager.InternalLog(LogLevel::Debug, "connections", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "connections", SafeVFormat(GetLanguageString(294), hostname));
     if( g_NetIF->m_pCProCir )
     {
         delete g_NetIF->m_pCProCir;

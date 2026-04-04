@@ -34,7 +34,7 @@ bool CMissionMgr::Init() //
 	m_pMisForm = _FindForm("frmNPCMission" ); 
 	if( !m_pMisForm )
 	{	
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(740));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(740).c_str());
 		return false;
 	}
 	
@@ -44,28 +44,28 @@ bool CMissionMgr::Init() //
 
 	if( !m_pMisInfo )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "memMission"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(45), m_pMisForm->GetName(), "memMission"));
 		return false;
 	}
 
 	m_pMisBtn1 = dynamic_cast<CTextButton*>(m_pMisForm->Find( "btnYes" ) );
 	if( !m_pMisBtn1 )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnYes"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(45), m_pMisForm->GetName(), "btnYes"));
 		return false;
 	}
 
 	m_pMisBtn2 = dynamic_cast<CTextButton*>(m_pMisForm->Find( "btnComplete" ) );
 	if( !m_pMisBtn2 )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnComplete"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(45), m_pMisForm->GetName(), "btnComplete"));
 		return false;
 	}
 
 	m_pMisClose = dynamic_cast<CTextButton*>(m_pMisForm->Find( "btnClose" ) );
 	if( !m_pMisClose )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(45), m_pMisForm->GetName(), "btnClose"); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(45), m_pMisForm->GetName(), "btnClose"));
 		return false;
 	}
 
@@ -99,7 +99,7 @@ void CMissionMgr::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 				bySel = g_stUIMission.m_pMisInfo->GetSelPrize();
 				if( bySel == (BYTE)-1 )
 				{
-					g_pGameApp->MsgBox( g_oLangRec.GetString(741) );
+					g_pGameApp->MsgBox("%s", GetLanguageString(741).c_str());
 					return;
 				}
 			}

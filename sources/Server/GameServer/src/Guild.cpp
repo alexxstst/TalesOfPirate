@@ -9,9 +9,9 @@
 
 BOOL Guild::lua_CreateGuild(CCharacter* pCha)//,1-,2-
 {
-	if(pCha->GetPlayer()->m_GuildState.IsFalse(emGuildGetName))//
+	if(!(pCha->GetPlayer()->m_GuildState & emGuildGetName))//
 	{
-		pCha->GetPlayer()->m_GuildState.SetBit(emGuildGetName);
+		pCha->GetPlayer()->m_GuildState |= emGuildGetName;
 
 		//  :     
 		auto l_wpk = net::msg::serializeMcGuildGetNameCmd();
@@ -21,12 +21,12 @@ BOOL Guild::lua_CreateGuild(CCharacter* pCha)//,1-,2-
 }
 void Guild::cmd_CreateGuild(CCharacter* pCha, bool confirm, cChar *guildname, cChar *passwd)
 {
-	if(pCha->GetPlayer()->m_GuildState.IsFalse(emGuildGetName))
+	if(!(pCha->GetPlayer()->m_GuildState & emGuildGetName))
 	{
 		return;
 	}else
-	{        
-		pCha->GetPlayer()->m_GuildState.ClearBit(emGuildGetName);
+	{
+		pCha->GetPlayer()->m_GuildState &= ~emGuildGetName;
 		if(!guildname || !passwd || !confirm)
 		{
 			return;
@@ -137,13 +137,13 @@ void Guild::cmd_GuildTryFor(CCharacter* pCha, uLong guildid)			//
 }
 void Guild::cmd_GuildTryForComfirm(CCharacter* pCha, char IsReplace)
 {
-	if(pCha->GetPlayer()->m_GuildState.IsTrue(emGuildReplaceOldTry))
+	if(pCha->GetPlayer()->m_GuildState & emGuildReplaceOldTry)
 	{
 		if(IsReplace ==1)
 		{
 			game_db.GuildTryForConfirm(pCha,pCha->GetPlayer()->m_lTempGuildID);
 		}
-		pCha->GetPlayer()->m_GuildState.ClearBit(emGuildReplaceOldTry);
+		pCha->GetPlayer()->m_GuildState &= ~emGuildReplaceOldTry;
 	}
 }
 void Guild::cmd_GuildListTryPlayer(CCharacter* pCha)

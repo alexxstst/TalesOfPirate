@@ -511,7 +511,7 @@ namespace GUI
 		}
 		else
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(698));	// ""
+			g_pGameApp->MsgBox("%s", GetLanguageString(698).c_str());	// ""
 		}
 	}
 
@@ -528,13 +528,13 @@ namespace GUI
 		CItemCommand* pStoneItem = dynamic_cast<CItemCommand*>(g_stUISpirit.cmdSpiritMarry[SPIRIT_MARRY_ITEM]->GetCommand());
 		if(NULL == pStoneItem)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(826));//
+			g_pGameApp->MsgBox("%s", GetLanguageString(826).c_str());//
 			return;
 		}
 
 		if(! pItemCommand->GetIsValid())
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(899));//
+			g_pGameApp->MsgBox("%s", GetLanguageString(899).c_str());//
 			return;
 		}
 
@@ -545,7 +545,7 @@ namespace GUI
 		}
 		else
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(827));//20
+			g_pGameApp->MsgBox("%s", GetLanguageString(827).c_str());//20
 		}
 	}
 
@@ -562,13 +562,13 @@ namespace GUI
 		CItemCommand* pStoneItem = dynamic_cast<CItemCommand*>(g_stUISpirit.cmdSpiritMarry[SPIRIT_MARRY_ITEM]->GetCommand());
 		if(NULL == pStoneItem)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(826));
+			g_pGameApp->MsgBox("%s", GetLanguageString(826).c_str());
 			return;
 		}
 
 		if(! pItemCommand->GetIsValid())
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(899));//
+			g_pGameApp->MsgBox("%s", GetLanguageString(899).c_str());//
 			return;
 		}
 
@@ -579,7 +579,7 @@ namespace GUI
 		}
 		else
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(827));//20
+			g_pGameApp->MsgBox("%s", GetLanguageString(827).c_str());//20
 		}
 	}
 
@@ -707,7 +707,7 @@ namespace GUI
 				! g_stUISpirit.chkSetmoney[1]->GetIsChecked() &&
 				! g_stUISpirit.chkSetmoney[2]->GetIsChecked())
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(844));
+				g_pGameApp->MsgBox("%s", GetLanguageString(844).c_str());
 				return;
 			}
 
@@ -724,20 +724,20 @@ namespace GUI
 				g_stUISpirit.chkSetmoney[1]->SetIsChecked(false);
 				g_stUISpirit.chkSetmoney[2]->SetIsChecked(false);
 
-				g_pGameApp->MsgBox(g_oLangRec.GetString(881));
+				g_pGameApp->MsgBox("%s", GetLanguageString(881).c_str());
 				return;
 			}
 
 			int nEmptyCount = g_stUIEquip.GetGoodsGrid()->GetEmptyGridCount();
 			if(ERNIE_EMPTY_COUNT > nEmptyCount)	//  5 
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(890), ERNIE_EMPTY_COUNT);
+				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(890), ERNIE_EMPTY_COUNT).c_str());
 				return;
 			}
 
 			if(g_stUIEquip.GetIsLock())	// 
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(894), ERNIE_EMPTY_COUNT);
+				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(894), ERNIE_EMPTY_COUNT).c_str());
 				return;
 			}
 

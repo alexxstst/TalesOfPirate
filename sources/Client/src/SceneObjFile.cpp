@@ -135,8 +135,8 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 		{
 			if (!bSilence)
 			{
-				_stprintf(tcsPrint, "%s %s %s", g_oLangRec.GetString(355), ptcsFileName, g_oLangRec.GetString(356));
-				MessageBox(nullptr, tcsPrint, g_oLangRec.GetString(25), 0);
+				_stprintf(tcsPrint, "%s %s %s", GetLanguageString(355).c_str(), ptcsFileName, GetLanguageString(356).c_str());
+				MessageBox(nullptr, tcsPrint, GetLanguageString(25).c_str(), 0);
 			}
 			lRet = 0;
 			goto end;
@@ -152,8 +152,8 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 	{
 		if (!bSilence)
 		{
-			_stprintf(tcsPrint, "%s %s", ptcsFileName, g_oLangRec.GetString(357));
-			MessageBox(nullptr, tcsPrint, g_oLangRec.GetString(25), 0);
+			_stprintf(tcsPrint, "%s %s", ptcsFileName, GetLanguageString(357).c_str());
+			MessageBox(nullptr, tcsPrint, GetLanguageString(25).c_str(), 0);
 		}
 		lRet = 0;
 		goto end;
@@ -172,8 +172,8 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 		{
 			if (!bSilence)
 			{
-				_stprintf(tcsPrint, "%s %s", ptcsFileName, g_oLangRec.GetString(358));
-				MessageBox(nullptr, tcsPrint, g_oLangRec.GetString(25), 0);
+				_stprintf(tcsPrint, "%s %s", ptcsFileName, GetLanguageString(358).c_str());
+				MessageBox(nullptr, tcsPrint, GetLanguageString(25).c_str(), 0);
 			}
 			lRet = 0;
 			goto end;
@@ -188,8 +188,8 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 	{
 		if (!bSilence)
 		{
-			_stprintf(tcsPrint, "%s %s", ptcsFileName, g_oLangRec.GetString(340));
-			MessageBox(nullptr, tcsPrint, g_oLangRec.GetString(25), 0);
+			_stprintf(tcsPrint, "%s %s", ptcsFileName, GetLanguageString(340).c_str());
+			MessageBox(nullptr, tcsPrint, GetLanguageString(25).c_str(), 0);
 		}
 		lRet = 0;
 		goto end;
@@ -212,8 +212,8 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 	{
 		if (!bSilence)
 		{
-			_stprintf(tcsPrint, "%s %s", ptcsFileName, g_oLangRec.GetString(339));
-			MessageBox(nullptr, tcsPrint, g_oLangRec.GetString(25), 0);
+			_stprintf(tcsPrint, "%s %s", ptcsFileName, GetLanguageString(339).c_str());
+			MessageBox(nullptr, tcsPrint, GetLanguageString(25).c_str(), 0);
 		}
 		lRet = 0;
 		goto end;
@@ -228,8 +228,8 @@ long CSceneObjFile::Init(const char *ptcsFileName, bool bSilence)
 	{
 		if (!bSilence)
 		{
-			_stprintf(tcsPrint, "%s %s", ptcsFileName, g_oLangRec.GetString(359));
-			MessageBox(NULL, tcsPrint, g_oLangRec.GetString(25), 0);
+			_stprintf(tcsPrint, "%s %s", ptcsFileName, GetLanguageString(359).c_str());
+			MessageBox(NULL, tcsPrint, GetLanguageString(25).c_str(), 0);
 		}
 		lRet = 0;
 		goto end;
@@ -387,8 +387,8 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 		goto end;
 	}
 
-	_stprintf(tcsPrint, g_oLangRec.GetString(360), ptcsFileName);
-	MessageBox(NULL, tcsPrint, g_oLangRec.GetString(361), 0);
+	_stprintf(tcsPrint, GetLanguageString(360).c_str(), ptcsFileName);
+	MessageBox(NULL, tcsPrint, GetLanguageString(361).c_str(), 0);
 
 	lMaxSectionNum = SHead.iSectionCntX * SHead.iSectionCntY;
 	pSSectionIndex = new (SSectionIndex[lMaxSectionNum]);
@@ -452,8 +452,8 @@ long CSceneObjFile::ConvertObjFileVer(const char* ptcsFileName, bool bBackUp) //
 end:
 	if (lRet == 2)
 	{
-		_stprintf(tcsPrint, g_oLangRec.GetString(362), ptcsFileName, tcsBackUpName);
-		MessageBox(NULL, tcsPrint, g_oLangRec.GetString(363), 0);
+		_stprintf(tcsPrint, GetLanguageString(362).c_str(), ptcsFileName, tcsBackUpName);
+		MessageBox(NULL, tcsPrint, GetLanguageString(363).c_str(), 0);
 	}
 	if (fFileOld)
 		fclose(fFileOld);
@@ -494,7 +494,7 @@ long CSceneObjFile::ReadSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj,
 			SSceneObjInfo *pObj = (SSceneObj + i);
 			if(pObj->GetID()==0)
 			{
-				g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(364));
+				g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(364));
 			}
 			
 		}
@@ -562,7 +562,7 @@ long CSceneObjFile::WriteSectionObjInfo(int nSectionNO, SSceneObjInfo *SSceneObj
 	lFileSize = ftell(m_fRdWr);
 	if (lFileSize != m_SFileHead.lFileSize)
 	{
-		MessageBox(nullptr, g_oLangRec.GetString(365), g_oLangRec.GetString(25), 0);
+		MessageBox(nullptr, GetLanguageString(365).c_str(), GetLanguageString(25).c_str(), 0);
 	}
 	//
 
@@ -702,10 +702,10 @@ long CSceneObjFile::TrimDirectory(const char *ptcsDirectory, bool bBackUp)
 	_TCHAR			tcsPrint[256];
 
 	if (bBackUp)
-		_stprintf(tcsPrint, g_oLangRec.GetString(366), ptcsDirectory);
+		_stprintf(tcsPrint, GetLanguageString(366).c_str(), ptcsDirectory);
 	else
-		_stprintf(tcsPrint, g_oLangRec.GetString(367), ptcsDirectory);
-	if (IDYES != MessageBox(NULL, tcsPrint, g_oLangRec.GetString(361), MB_YESNO))
+		_stprintf(tcsPrint, GetLanguageString(367).c_str(), ptcsDirectory);
+	if (IDYES != MessageBox(NULL, tcsPrint, GetLanguageString(361).c_str(), MB_YESNO))
 		return 1;
 
 	lLen = _tcslen(ptcsDirectory);
@@ -724,7 +724,7 @@ long CSceneObjFile::TrimDirectory(const char *ptcsDirectory, bool bBackUp)
 	if (fRecord == NULL)
 		return 0;
 	_ftime(&tTimeBuffer);
-	_ftprintf(fRecord, g_oLangRec.GetString(368), _tctime(&tTimeBuffer.time));
+	_ftprintf(fRecord, GetLanguageString(368).c_str(), _tctime(&tTimeBuffer.time));
 
 	_stprintf(tcsFileName,"%s%s", tcsPath, "*.obj");
 	if( (hFile = (long)_tfindfirst(tcsFileName, &c_file)) == -1L )
@@ -743,25 +743,25 @@ long CSceneObjFile::TrimDirectory(const char *ptcsDirectory, bool bBackUp)
 			switch (TrimFile(tcsFileName, bBackUp))
 			{
 			case	1:
-				_ftprintf(fRecord, g_oLangRec.GetString(369));
+				_ftprintf(fRecord, GetLanguageString(369).c_str());
 				break;
 			case	-1:
-				_ftprintf(fRecord,g_oLangRec.GetString(370));
+				_ftprintf(fRecord,GetLanguageString(370).c_str());
 				break;
 			case	-2:
-				_ftprintf(fRecord, g_oLangRec.GetString(371));
+				_ftprintf(fRecord, GetLanguageString(371).c_str());
 				break;
 			case	-3:
-				_ftprintf(fRecord, g_oLangRec.GetString(372));
+				_ftprintf(fRecord, GetLanguageString(372).c_str());
 				break;
 			case	-4:
-				_ftprintf(fRecord, g_oLangRec.GetString(373));
+				_ftprintf(fRecord, GetLanguageString(373).c_str());
 				break;
 			case	-5:
-				_ftprintf(fRecord, g_oLangRec.GetString(374));
+				_ftprintf(fRecord, GetLanguageString(374).c_str());
 				break;
 			default:
-				_ftprintf(fRecord, g_oLangRec.GetString(375));
+				_ftprintf(fRecord, GetLanguageString(375).c_str());
 			}
 		}
 		while( _findnext( hFile, &c_file ) == 0 )
@@ -775,25 +775,25 @@ long CSceneObjFile::TrimDirectory(const char *ptcsDirectory, bool bBackUp)
 				switch (TrimFile(tcsFileName, bBackUp))
 				{
 				case	1:
-					_ftprintf(fRecord, g_oLangRec.GetString(369));
+					_ftprintf(fRecord, GetLanguageString(369).c_str());
 					break;
 				case	-1:
-					_ftprintf(fRecord, g_oLangRec.GetString(370));
+					_ftprintf(fRecord, GetLanguageString(370).c_str());
 					break;
 				case	-2:
-					_ftprintf(fRecord,g_oLangRec.GetString(371));
+					_ftprintf(fRecord,GetLanguageString(371).c_str());
 					break;
 				case	-3:
-					_ftprintf(fRecord, g_oLangRec.GetString(372));
+					_ftprintf(fRecord, GetLanguageString(372).c_str());
 					break;
 				case	-4:
-					_ftprintf(fRecord, g_oLangRec.GetString(373));
+					_ftprintf(fRecord, GetLanguageString(373).c_str());
 					break;
 				case	-5:
-					_ftprintf(fRecord, g_oLangRec.GetString(374));
+					_ftprintf(fRecord, GetLanguageString(374).c_str());
 					break;
 				default:
-					_ftprintf(fRecord, g_oLangRec.GetString(375));
+					_ftprintf(fRecord, GetLanguageString(375).c_str());
 				}
 			}
 		}

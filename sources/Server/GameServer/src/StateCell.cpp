@@ -10,7 +10,7 @@
 
 CChaListNode* CStateCell::AddCharacter(CCharacter *pCCha, bool bIn)
 {
-	CChaListNode	*pNode = g_pGameApp->m_ChaListHeap.Get();
+	CChaListNode	*pNode = g_pGameApp->m_ChaListPool.Get();
 	pNode->m_pCCha = pCCha;
 	pNode->m_bIn = bIn;
 	if (bIn)
@@ -88,7 +88,7 @@ void CStateCell::DelCharacter(CChaListNode *pCEntNode)
 		pCCha->SynAttr(enumATTRSYN_SKILL_STATE);
 	}
 
-	pCEntNode->Free();
+	g_pGameApp->m_ChaListPool.Release(pCEntNode);
 }
 
 void CStateCell::SetCharacterIn(CChaListNode *pCEntNode, bool bIn)

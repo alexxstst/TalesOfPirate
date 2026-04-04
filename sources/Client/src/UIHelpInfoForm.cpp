@@ -121,17 +121,17 @@ void CHelpInfoMgr::_ItemClickEvent( string strItem )
 
 		//check npc is valid or not
 		std::string targetmap;
-		if (map == g_oLangRec.GetString(56))
+		if (map == GetLanguageString(56))
 		{
-			targetmap = g_oLangRec.GetString(56);
+			targetmap = GetLanguageString(56);
 		}
-		else if (map == g_oLangRec.GetString(57))
+		else if (map == GetLanguageString(57))
 		{
-			targetmap = g_oLangRec.GetString(57);
+			targetmap = GetLanguageString(57);
 		}
-		else if (map == g_oLangRec.GetString(58))
+		else if (map == GetLanguageString(58))
 		{
-			targetmap = g_oLangRec.GetString(58);
+			targetmap = GetLanguageString(58);
 		}
 		else if (map == wintermap)
 		{

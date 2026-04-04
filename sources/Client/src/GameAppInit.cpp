@@ -228,7 +228,7 @@ BOOL CGameApp::_Init() {
 
 	_IsMusicSystemValid = true;
 	if (!_IsMusicSystemValid && g_Config.m_bEnableMusic != 0) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(65));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(65));
 	}
 
 	_bConnected = FALSE;
@@ -244,13 +244,13 @@ BOOL CGameApp::_Init() {
 	// #define MPFONT_UNLINE      0x0004
 
 #ifdef USE_RENDER
-	g_CFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(66)), 12);
-	_MidFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 16, 3, MPFONT_BOLD);
-	_BottomFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 12, 3, MPFONT_BOLD);
+	g_CFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(66).c_str()), 12);
+	_MidFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 16, 3, MPFONT_BOLD);
+	_BottomFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 12, 3, MPFONT_BOLD);
 #else
-	g_CFont.CreateFont(g_Render.GetDevice(), const_cast<char*>(g_oLangRec.GetString(66)), 12);
-	_MidFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 16, 3, MPFONT_BOLD);
-	_BottomFont.CreateFont(&g_Render, const_cast<char*>(g_oLangRec.GetString(67)), 12, 3, MPFONT_BOLD);
+	g_CFont.CreateFont(g_Render.GetDevice(), const_cast<char*>(GetLanguageString(66).c_str()), 12);
+	_MidFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 16, 3, MPFONT_BOLD);
+	_BottomFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 12, 3, MPFONT_BOLD);
 #endif
 	g_CFont.BindingRes(&ResMgr);
 	_MidFont.BindingRes(&ResMgr);
@@ -263,7 +263,7 @@ BOOL CGameApp::_Init() {
 	_stMidFont.dwBeginTime = 0;
 
 	if (!_stScriptMgr.Init()) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(68));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(68));
 		return FALSE;
 	}
 
@@ -296,7 +296,7 @@ BOOL CGameApp::_Init() {
 
 	if (!CFormMgr::s_Mgr.Init(g_pGameApp->GetHWND())) // by lh Executes CLU_LoadScript and others
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(69));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(69));
 		return FALSE;
 	}
 
@@ -305,7 +305,7 @@ BOOL CGameApp::_Init() {
 	CFormMgr::s_Mgr.SetEnabled(true);
 
 	if (!_stScriptMgr.LoadScript()) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(70));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(70));
 		return FALSE;
 	}
 

@@ -43,7 +43,7 @@ CTextGraph::~CTextGraph()
 void CTextGraph::Render( int x, int y )	
 { 
     _pImage->Render(x, y);	    
-    static int nOffY = ( 16 - CGuiFont::s_Font.GetHeight( g_oLangRec.GetString(489) ) ) / 2;
+    static int nOffY = ( 16 - CGuiFont::s_Font.GetHeight( GetLanguageString(489).c_str() ) ) / 2;
     CGuiFont::s_Font.Render( _strName.c_str(), x + 20, y + nOffY, _color );
 }
 

@@ -230,64 +230,64 @@ bool CIsSkillUse::IsAttack( CSkillRecord* pSkill, CCharacter* pSelf, CCharacter*
 
 const char*	CIsSkillUse::GetError()
 {
-	static char buf[64] = { "CIsSkillUse ???" };
+	static std::string buf = "CIsSkillUse ???";
 	switch( _eError )
 	{
-	case enumInValid: 
-		sprintf( buf, g_oLangRec.GetString(149), _pSkill->szName.c_str());
+	case enumInValid:
+		buf = SafeVFormat(GetLanguageString(149), _pSkill->szName);
 		break;
 	case enumNotEnergy:
-		sprintf( buf, g_oLangRec.GetString(150), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(150), _pSkill->szName);
 		break;
-	case enumNotAttack: return g_oLangRec.GetString(151);
-	case enumNotUse: return g_oLangRec.GetString(152);
-	case enumNotMP: 
-		sprintf( buf, g_oLangRec.GetString(153), _pSkill->szName.c_str());
+	case enumNotAttack: return GetLanguageString(151).c_str();
+	case enumNotUse: return GetLanguageString(152).c_str();
+	case enumNotMP:
+		buf = SafeVFormat(GetLanguageString(153), _pSkill->szName);
 		break;
 
-	case enumSelf: 
-		sprintf( buf, g_oLangRec.GetString(154), _pSkill->szName.c_str());
+	case enumSelf:
+		buf = SafeVFormat(GetLanguageString(154), _pSkill->szName);
 		break;
 	case enumFish:
-		sprintf( buf, g_oLangRec.GetString(155), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(155), _pSkill->szName);
 		break;
 	case enumDieBoat:
-		sprintf( buf, g_oLangRec.GetString(156), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(156), _pSkill->szName);
 		break;
 	case enumTree:
-		sprintf( buf, g_oLangRec.GetString(157), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(157), _pSkill->szName);
 		break;
 	case enumMine:
-		sprintf( buf, g_oLangRec.GetString(158), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(158), _pSkill->szName);
 		break;
 	case enumOnlyTeam:
-		sprintf( buf, g_oLangRec.GetString(159), _pSkill->szName.c_str());
-		break;		
+		buf = SafeVFormat(GetLanguageString(159), _pSkill->szName);
+		break;
 	case enumDie:
-		sprintf( buf, g_oLangRec.GetString(160), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(160), _pSkill->szName);
 		break;
 	case enumTargetError:
-		sprintf( buf, g_oLangRec.GetString(161), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(161), _pSkill->szName);
 		break;
-		
+
 	case enumHelpMons:
-		sprintf( buf, g_oLangRec.GetString(162), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(162), _pSkill->szName);
 		break;
 	case enumAttackMain:
-		sprintf( buf, g_oLangRec.GetString(163), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(163), _pSkill->szName);
 		break;
 	case enumAttackTeam:
-		sprintf( buf, g_oLangRec.GetString(164), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(164), _pSkill->szName);
 		break;
 	case enumAttackDie:
-		sprintf( buf, g_oLangRec.GetString(165), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(165), _pSkill->szName);
 		break;
 	case enumAttackPlayer:
-		sprintf( buf, g_oLangRec.GetString(166), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(166), _pSkill->szName);
 		break;
 	case enumRepair:
-		sprintf( buf, g_oLangRec.GetString(167), _pSkill->szName.c_str());
+		buf = SafeVFormat(GetLanguageString(167), _pSkill->szName);
 		break;
 	}
-	return buf;
+	return buf.c_str();
 }

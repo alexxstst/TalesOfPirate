@@ -419,7 +419,7 @@ void SystemReport(DWORD dwTimeParam)
 
 	HWND hRunFlag   = GetDlgItem(g_ReportView, IDC_RUNFLAG);
 	char szInfo[64];
-	sprintf(szInfo, "%d", g_pGameApp->m_dwRunStep);
+	sprintf(szInfo, "%d", g_pGameApp->m_dwRunStep.load());
 	if(hRunFlag) SetWindowText(hRunFlag, szInfo);
 
 	if(dwTimeParam - dwLastReportTime < 1000) return;	
@@ -470,7 +470,7 @@ void SystemReport(DWORD dwTimeParam)
 	if(hPlayerCnt) SetWindowText(hPlayerCnt, szFPS);
 	sprintf(szFPS, "%d", g_pGameApp->m_dwActiveMgrUnit);
 	if(hActiveUnit) SetWindowText(hActiveUnit, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->m_dwRunStep);
+	sprintf(szFPS, "%d", g_pGameApp->m_dwRunStep.load());
 	if(hRunFlag) SetWindowText(hRunFlag, szFPS);
 	sprintf(szFPS, "%d", g_pGameApp->GetLogLeft());
 	if(hDBLogLeft) SetWindowText(hDBLogLeft, szFPS);

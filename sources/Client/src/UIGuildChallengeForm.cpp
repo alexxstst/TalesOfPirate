@@ -41,7 +41,7 @@ namespace GUI
 		frmGuildPK  = mgr.Find("frmGuildPK" );
 		if ( !frmGuildPK )
 		{	
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(560));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(560).c_str());
 			return false;
 		}
 
@@ -57,30 +57,30 @@ namespace GUI
 		{
 			sprintf(szBuf, "labGuildName%d", i);
 			labGuildName[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
-			if (!labGuildName[i]) 
-				return Error(g_oLangRec.GetString(561),
-				frmGuildPK->GetName(), 
+			if (!labGuildName[i])
+				return Error(GetLanguageString(561).c_str(),
+				frmGuildPK->GetName(),
 				szBuf);
 
 			sprintf(szBuf, "labChallenger%d", i);
 			labChallenger[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
-			if (!labChallenger[i]) 
-				return Error(g_oLangRec.GetString(561),
-				frmGuildPK->GetName(), 
+			if (!labChallenger[i])
+				return Error(GetLanguageString(561).c_str(),
+				frmGuildPK->GetName(),
 				szBuf);
 
 			sprintf(szBuf, "labMoney%d", i);
 			labMoney[i] = dynamic_cast<CLabel*>(frmGuildPK->Find(szBuf));
-			if (!labMoney[i]) 
-				return Error(g_oLangRec.GetString(561),
-				frmGuildPK->GetName(), 
+			if (!labMoney[i])
+				return Error(GetLanguageString(561).c_str(),
+				frmGuildPK->GetName(),
 				szBuf);
 
 			sprintf(szBuf, "btnCharge%d", i);
 			btnCharge[i] = dynamic_cast<CTextButton*>(frmGuildPK->Find(szBuf));
-			if (!btnCharge[i]) 
-				return Error(g_oLangRec.GetString(561),
-				frmGuildPK->GetName(), 
+			if (!btnCharge[i])
+				return Error(GetLanguageString(561).c_str(),
+				frmGuildPK->GetName(),
 				szBuf);
 
 		}
@@ -190,7 +190,7 @@ namespace GUI
 		g_stGuildChallenge.m_iChangeMoney = iChargeMoney;
 
 		char buf[256] = { 0 };
-		sprintf(buf, g_oLangRec.GetString(583), StringSplitNum( iChargeMoney ));
+		sprintf(buf, GetLanguageString(583).c_str(), StringSplitNum( iChargeMoney ));
 		g_stUIBox.ShowSelectBox(_ChargeEvent, buf, true);
 	}
 	//-------------------------------------------------------------------------
@@ -219,7 +219,7 @@ namespace GUI
 
 		if (m_bStart[iIndex])
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(584));
+			g_pGameApp->MsgBox("%s", GetLanguageString(584).c_str());
 			return;
 		}
 
@@ -227,7 +227,7 @@ namespace GUI
 		{
 			if (GetChallengeMasterIndex(pMainCha->getGuildName()) != -1)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(585));
+				g_pGameApp->MsgBox("%s", GetLanguageString(585).c_str());
 				return;
 			}
 		}
@@ -238,12 +238,12 @@ namespace GUI
 			{
 				if (iIndex == iMasterIndex)
 				{
-					g_pGameApp->MsgBox(g_oLangRec.GetString(586));
+					g_pGameApp->MsgBox("%s", GetLanguageString(586).c_str());
 					return;
 				}
 				if (iIndex > iMasterIndex)
 				{
-					g_pGameApp->MsgBox(g_oLangRec.GetString(587));
+					g_pGameApp->MsgBox("%s", GetLanguageString(587).c_str());
 					return;
 				}
 			}
@@ -252,7 +252,7 @@ namespace GUI
 
 		if (strcmp(labChallenger[iIndex]->GetCaption(), pMainCha->getGuildName()) == 0 )
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(588));
+			g_pGameApp->MsgBox("%s", GetLanguageString(588).c_str());
 			return;
 		}
 		m_iSelIndex = iIndex;
@@ -267,7 +267,7 @@ namespace GUI
 		}
 
 		char szBuf[64];
-		stNumBox* numBox = CBoxMgr::ShowNumberBox(_enterChargeMoney, -1, g_oLangRec.GetString(589), false);
+		stNumBox* numBox = CBoxMgr::ShowNumberBox(_enterChargeMoney, -1, GetLanguageString(589).c_str(), false);
 		sprintf(szBuf, "%d", iNextCharge);
 		numBox->edtNumber->SetCaption(szBuf);
 	}
@@ -290,7 +290,7 @@ namespace GUI
 		{
 			if (lMoney < FIRST_CHARGE_MONEY[iIndex])
 			{
-				g_pGameApp->MsgBox( g_oLangRec.GetString(590) );
+				g_pGameApp->MsgBox("%s", GetLanguageString(590).c_str() );
 				return false;
 			}
 		}
@@ -299,14 +299,14 @@ namespace GUI
 			long lMinMoney = m_lChargeMoney[iIndex] + CGuildChallengeMgr::CHARGE_MONEY;
 			if( lMoney < lMinMoney ) 
 			{
-				g_pGameApp->MsgBox( g_oLangRec.GetString(591) );
+				g_pGameApp->MsgBox("%s", GetLanguageString(591).c_str() );
 				return false;
 			}
 		}
 
 		if (lMoney >= 2000000000)
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(592) );
+			g_pGameApp->MsgBox("%s", GetLanguageString(592).c_str() );
 			return false;
 		}
 		return true;

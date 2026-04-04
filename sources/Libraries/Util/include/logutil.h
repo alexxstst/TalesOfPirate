@@ -11,7 +11,15 @@
 #include <mutex>
 #include <queue>
 #include <string>
+#include <tuple>
 #include <windows.h>
+
+// P2905 (C++26): std::make_format_args требует lvalue-аргументы.
+// SafeVFormat принимает ар��ументы по значению (= lvalues внутри функции).
+template <class... _Types>
+std::string SafeVFormat(std::string_view _Fmt, _Types... _Args) {
+	return std::vformat(_Fmt, std::make_format_args(_Args...));
+}
 
 namespace TalesOfPirate::Utils::Logs {
 	//        
@@ -74,8 +82,6 @@ namespace TalesOfPirate::Utils::Logs {
 
 		void InitLogger(const std::string& path);
 		bool AddLogger(const std::string& loggerName);
-		void SetLevel(const std::string& logSystem, LogLevel logLevel);
-		bool IsLogLevel(const std::string& logSystem, LogLevel logLevel);
 		void EnableGlobalConsole(bool status);
 
 		//    
@@ -87,73 +93,61 @@ namespace TalesOfPirate::Utils::Logs {
 		void InternalLog(const LogUtilEntry& logEntry);
 
 		template <class... _Types>
-		void Log(LogLevel logLevel, const std::string& logSystem,
-				 std::format_string<std::remove_cvref_t<_Types>...> _Fmt, _Types&&... _Args) {
-			InternalLog(logLevel, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+		void LogTrace(const std::string& logSystem,
+					  std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+			InternalLog(LogLevel::Trace, logSystem, std::format(_Fmt, std::forward<_Types>(_Args)...));
 		}
 
 		template <class... _Types>
-		void LogTrace(const std::string& logSystem, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-					  _Types&&... _Args) {
-			InternalLog(LogLevel::Trace, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+		void LogDebug(const std::string& logSystem,
+					  std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+			InternalLog(LogLevel::Debug, logSystem, std::format(_Fmt, std::forward<_Types>(_Args)...));
 		}
 
 		template <class... _Types>
-		void LogDebug(const std::string& logSystem, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-					  _Types&&... _Args) {
-			InternalLog(LogLevel::Debug, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+		void LogInfo(const std::string& logSystem,
+					 std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+			InternalLog(LogLevel::Info, logSystem, std::format(_Fmt, std::forward<_Types>(_Args)...));
 		}
 
 		template <class... _Types>
-		void LogInfo(const std::string& logSystem, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-					 _Types&&... _Args) {
-			InternalLog(LogLevel::Info, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+		void LogWarning(const std::string& logSystem,
+						std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+			InternalLog(LogLevel::Warning, logSystem, std::format(_Fmt, std::forward<_Types>(_Args)...));
 		}
 
 		template <class... _Types>
-		void LogWarning(const std::string& logSystem, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-						_Types&&... _Args) {
-			InternalLog(LogLevel::Warning, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+		void LogError(const std::string& logSystem,
+					  std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+			InternalLog(LogLevel::Error, logSystem, std::format(_Fmt, std::forward<_Types>(_Args)...));
 		}
 
 		template <class... _Types>
-		void LogError(const std::string& logSystem, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-					  _Types&&... _Args) {
-			InternalLog(LogLevel::Error, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
-		}
-
-		template <class... _Types>
-		void LogFatal(const std::string& logSystem, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-					  _Types&&... _Args) {
-			InternalLog(LogLevel::Fatal, logSystem, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+		void LogFatal(const std::string& logSystem,
+					  std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+			InternalLog(LogLevel::Fatal, logSystem, std::format(_Fmt, std::forward<_Types>(_Args)...));
 		}
 	};
 
 	//    
 	extern LogManager g_logManager;
 
-	//     "common"   Debug
-	template <class... _Types>
-	void ToLog(std::format_string<std::remove_cvref_t<_Types>...> _Fmt, _Types&&... _Args) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", vformat(_Fmt.get(), std::make_format_args(_Args...)));
-	}
-
 	//        Debug
 	template <class... _Types>
-	void ToLogService(const std::string& logger, std::format_string<std::remove_cvref_t<_Types>...> _Fmt,
-					  _Types&&... _Args) {
-		g_logManager.InternalLog(LogLevel::Debug, logger, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+	void ToLogService(const std::string& logger,
+					  std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+		g_logManager.InternalLog(LogLevel::Debug, logger, std::format(_Fmt, std::forward<_Types>(_Args)...));
 	}
 
-	//        
+	//
 	template <class... _Types>
 	void ToLogService(const std::string& logger, LogLevel level,
-					  std::format_string<std::remove_cvref_t<_Types>...> _Fmt, _Types&&... _Args) {
-		g_logManager.InternalLog(level, logger, vformat(_Fmt.get(), std::make_format_args(_Args...)));
+					  std::format_string<std::type_identity_t<_Types>...> _Fmt, _Types&&... _Args) {
+		g_logManager.InternalLog(level, logger, std::format(_Fmt, std::forward<_Types>(_Args)...));
 	}
 }
 
-//   LogLevel  ostream (   )
+//   LogLevel  ostream (  LogStream::Write)
 std::ostream& operator<<(std::ostream& stream, const TalesOfPirate::Utils::Logs::LogLevel& io);
 
 //  std::formatter  LogLevel ( std::format)

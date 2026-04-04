@@ -23,7 +23,7 @@ bool CPkDialog::Init()
 		frmTeamPkStart = mgr.Find("frmTeamPK");
 		if ( !frmTeamPkStart)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(744));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(744).c_str());
 			return false;
 		}
 		frmTeamPkStart->evtEntrustMouseEvent = _MainMousePkStartEvent;
@@ -35,7 +35,7 @@ bool CPkDialog::Init()
 			sprintf(szBuf, "lstTeam%d", i);
 			lvStartTeams[i] = dynamic_cast<CListView*>(frmTeamPkStart->Find(szBuf));
 			if (!lvStartTeams[i]) 
-				return Error(g_oLangRec.GetString(616),
+				return Error(GetLanguageString(616).c_str(),
 							 frmTeamPkStart->GetName(), 
 							 szBuf);
 

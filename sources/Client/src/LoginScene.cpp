@@ -224,7 +224,7 @@ bool CLoginScene::_Init() {
 	m_sPassword = "";
 
 	if (!_InitUI()) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(168));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(168));
 
 		return false;
 	}
@@ -400,7 +400,7 @@ void CLoginScene::_FrameMove(DWORD dwTimeParam) {
 			ShowKeyboard(false);
 			frmRegion->SetIsShow(false);
 			//frmAccount->SetIsShow(false);
-			GUI::CBoxMgr::ShowMsgBox(_GoBack, g_oLangRec.GetString(169));
+			GUI::CBoxMgr::ShowMsgBox(_GoBack, GetLanguageString(169).c_str());
 		}
 			return;
 		case Connection::CNST_CONNECTED:
@@ -776,7 +776,7 @@ void CLoginScene::CloseNewChaFrm() {
 
 bool CLoginScene::IsValidCheckChaName(const std::string& name) {
 	if (!::IsValidName(name)) {
-		CGameApp::MsgBox(g_oLangRec.GetString(51));
+		CGameApp::MsgBox("%s", GetLanguageString(51).c_str());
 		return false;
 	}
 	return true;
@@ -799,14 +799,14 @@ bool CLoginScene::_CheckAccount() {
 	}
 
 	if (strlen(edtID->GetCaption()) == 0) {
-		CGameApp::MsgBox(g_oLangRec.GetString(174));
+		CGameApp::MsgBox("%s", GetLanguageString(174).c_str());
 		return false;
 	}
 	if (!IsValidCheckChaName(edtID->GetCaption()))
 		return false;
 
 	if (strlen(edtPassword->GetCaption()) <= 4) {
-		CGameApp::MsgBox(g_oLangRec.GetString(175));
+		CGameApp::MsgBox("%s", GetLanguageString(175).c_str());
 		return false;
 	}
 
@@ -826,11 +826,7 @@ void CLoginScene::_Connect() {
 
 	_eState = enumConnect;
 
-	{
-		char _buf[512];
-		snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex);
-		g_logManager.InternalLog(LogLevel::Debug, "connections", _buf);
-	}
+	g_logManager.InternalLog(LogLevel::Debug, "connections", SafeVFormat(GetLanguageString(179), m_iCurSelRegionIndex, m_iCurSelServerIndex));
 	//int nSelRegionNo = 0;
 	//int nNO = lstServer->GetItems()->GetSelect()->GetIndex();
 
@@ -848,11 +844,7 @@ void CLoginScene::_Connect() {
 	}
 
 	if (selectGateIP.empty()) {
-		{
-			char _buf[512];
-			snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(180), 0, 0);
-			g_logManager.InternalLog(LogLevel::Debug, "connections", _buf);
-		}
+		g_logManager.InternalLog(LogLevel::Debug, "connections", SafeVFormat(GetLanguageString(180), 0, 0));
 	}
 	else {
 		CS_Connect(selectGateIP.c_str(), 1973, g_Config.m_nConnectTimeOut);
@@ -964,7 +956,7 @@ void CLoginScene::Error(int error_no, const std::string& error_info) {
 				 g_GetServerError(error_no));
 
 	if (ERR_MC_VER_ERROR == error_no) {
-		CBoxMgr::ShowSelectBox(_evtVerErrorFrm, g_oLangRec.GetString(181), true);
+		CBoxMgr::ShowSelectBox(_evtVerErrorFrm, GetLanguageString(181).c_str(), true);
 		return;
 	}
 

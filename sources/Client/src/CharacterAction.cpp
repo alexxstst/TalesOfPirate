@@ -124,7 +124,7 @@ bool CGameCharacterAction::Init(const char* ptcsFileName)
 				//  
 				if (_ttoi(tcsTemp) < 1)
 				{
-					MessageBox(NULL, _TEXT(g_oLangRec.GetString(24)), _TEXT(g_oLangRec.GetString(25)), 0);
+					MessageBox(NULL, GetLanguageString(24).c_str(), GetLanguageString(25).c_str(), 0);
 					goto end;
 				}
 				//

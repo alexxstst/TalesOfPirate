@@ -28,11 +28,11 @@ namespace mission
 
 	} TRADE_DATA, *PTRADE_DATA;
 
-	class CTradeData : public dbc::PreAllocStru
+	class CTradeData
 	{
 	public:
-		CTradeData(dbc::uLong lSize);
-		virtual ~CTradeData();
+		CTradeData() = default;
+		~CTradeData() = default;
 
 		void Clear()
 		{

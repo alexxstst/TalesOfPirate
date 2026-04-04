@@ -160,7 +160,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Use Item):\tTick:[{}]", GetTickCount()));
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(322), pUseItem->sGridID, pUseItem->sTarGridID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(322), pUseItem->sGridID, pUseItem->sTarGridID));
 
 			break;
 		}
@@ -197,7 +197,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Del Item):\tTick:[{}]", GetTickCount()));
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(323), pDelItem->sGridID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(323), pDelItem->sGridID));
 
 			break;
 		}
@@ -208,7 +208,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 			pCNetIf->SendPacketMessage(pk);
 
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("###Send(Item Info):\tTick:[{}]", GetTickCount()));
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(324), pItemInfo->chType, pItemInfo->sGridID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(324), pItemInfo->chType, pItemInfo->sGridID));
 
 			break;
 			break;
@@ -521,11 +521,11 @@ void CProCirculate::SynBaseAttribute(CChaAttr* pCAttr) {
 
 	// log
 	char szReqChangeAttr[256] = {0};
-	strcpy(szReqChangeAttr, g_oLangRec.GetString(325));
+	strncpy_s(szReqChangeAttr, sizeof(szReqChangeAttr), GetLanguageString(325).c_str(), _TRUNCATE);
 
 	for (int i = ATTR_STR; i <= ATTR_LUK; i++) {
 		if (pCAttr->GetChangeBitFlag(i))
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(326), i, pCAttr->GetAttr(i)); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(326), i, pCAttr->GetAttr(i)));
 	}
 
 	pCNetIf->SendPacketMessage(pk);
@@ -541,7 +541,7 @@ void CProCirculate::SkillUpgrade(short sSkillID, char chAddLv) {
 	//  
 	auto pk = net::msg::serialize(net::msg::CmSkillUpgradeMessage{(int64_t)sSkillID, (int64_t)chAddLv});
 
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(328), sSkillID, chAddLv); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(328), sSkillID, chAddLv));
 
 	pCNetIf->SendPacketMessage(pk);
 }

@@ -42,63 +42,63 @@ bool CEditor::Init()
     frmEditor = mgr.Find("frmEditor");
     if( !frmEditor ) 
     {
-        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(527));
+        g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(527).c_str());
         return false;
     }
     frmEditor->evtShow = _ShowEditor;
     frmEditor->evtHide = _HideEditor;
 
     trvEditor = dynamic_cast<CTreeView*>(frmEditor->Find("trvEditor"));
-    if( !trvEditor ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "trvEditor" );
+    if( !trvEditor ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "trvEditor" );
     trvEditor->evtMouseDown = _TreeMouseDown;
     trvEditor->evtItemLost = _TreeSelectLost;
     trvEditor->GetScroll()->SetPageNum( 5 );
 
     imgEditor =  dynamic_cast<CImage*>(frmEditor->Find("imgEditor"));
-    if( !imgEditor ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "imgEditor" );
+    if( !imgEditor ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "imgEditor" );
 
     btnColor =  dynamic_cast<CTextButton*>(frmEditor->Find("btnColor"));
-    if( !btnColor ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "btnColor" );
+    if( !btnColor ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "btnColor" );
     btnColor->evtMouseClick = _ColorMouseDown;
     btnColor->GetImage()->SetColor( g_Editor.GetColor() ); 
 
     chkSize01 =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkSize01"));
-    if( !chkSize01 ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkSize01" );
+    if( !chkSize01 ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkSize01" );
 
     chkSize02 =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkSize02"));
-    if( !chkSize02 ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkSize02" );
+    if( !chkSize02 ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkSize02" );
 
     chkSize03 =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkSize03"));
-    if( !chkSize03 ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkSize03" );
+    if( !chkSize03 ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkSize03" );
 
     chgGroup =   dynamic_cast<CCheckGroup*>(frmEditor->Find("chgGroup"));
-    if( !chgGroup ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chgGroup" );
+    if( !chgGroup ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chgGroup" );
     chgGroup->evtSelectChange = _CheckSelectChange;
 
     chkWireFrame =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkWireFrame"));
-    if( !chkWireFrame ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkWireFrame" );
+    if( !chkWireFrame ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkWireFrame" );
     chkWireFrame->evtCheckChange = _WireCheckChange;
 
     chkEnabledAlpha =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkEnabledAlpha"));
-    if( !chkEnabledAlpha ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkEnabledAlpha" );
+    if( !chkEnabledAlpha ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkEnabledAlpha" );
     chkEnabledAlpha->evtCheckChange = _EnabledAlphaCheckChange;
     chkEnabledAlpha->SetIsChecked( g_Editor.m_bEnableTextureAlphaBlend == TRUE );
 
     chkSmooth  =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkSmooth"));
-    if( !chkSmooth ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkSmooth" );
+    if( !chkSmooth ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkSmooth" );
     chkSmooth->evtCheckChange = _SmoothCheckChange;
     chkSmooth->SetIsChecked( g_Editor.m_bSmooth );
 
     chkHideTree =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkHideTree"));
-    if( !chkHideTree ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkHideTree" );
+    if( !chkHideTree ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkHideTree" );
     chkHideTree->evtCheckChange = _HideTreeCheckChange;
     chkHideTree->SetIsChecked( true );
 
     imgTreeFrame =  dynamic_cast<CFrameImage*>(frmEditor->Find("imgTreeFrame"));
-    if( !imgTreeFrame ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "imgTreeFrame" );
+    if( !imgTreeFrame ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "imgTreeFrame" );
 
     edtSetMainChaPos =  dynamic_cast<CEdit*>(frmEditor->Find("edtSetMainChaPos"));
-    if( !edtSetMainChaPos ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "edtSetMainChaPos" );
+    if( !edtSetMainChaPos ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "edtSetMainChaPos" );
     edtSetMainChaPos->evtKeyChar = _evtSetChaPosKeyChar;
 
     CEdit* edtShotMiniMap =  dynamic_cast<CEdit*>(frmEditor->Find("edtShotMiniMap"));
@@ -107,67 +107,67 @@ bool CEditor::Init()
     lblShotMiniMap =  dynamic_cast<CLabel*>(frmEditor->Find("lblShotMiniMap"));
 
     edtSetBrushHeight =  dynamic_cast<CEdit*>(frmEditor->Find("edtSetBrushHeight"));
-    if( !edtSetBrushHeight ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "edtSetBrushHeight" );
+    if( !edtSetBrushHeight ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "edtSetBrushHeight" );
     edtSetBrushHeight->evtKeyChar = _evtSetBrushHeightKeyChar;
     char buf[10] = { 0 };
     itoa(g_Editor.m_nBrushHeight, buf, 10);
     edtSetBrushHeight->SetCaption( buf );
 
     chkModifyHeight =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkModifyHeight"));
-    if( !chkModifyHeight ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkModifyHeight" );
+    if( !chkModifyHeight ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkModifyHeight" );
     chkModifyHeight->evtCheckChange = _ModifyHeightCheckChange;
     chkModifyHeight->SetIsChecked( g_Editor.m_bModifyHeight == TRUE );
 
     chkColor  =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkColor"));
-    if( !chkColor ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkColor" );
+    if( !chkColor ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkColor" );
     chkColor->evtCheckChange = _ColorCheckChange;
     chkColor->SetIsChecked( g_Editor.m_bIsBrushColor );
 
     chkShowLightBrush  =  dynamic_cast<CCheckBox*>(frmEditor->Find("chkShowLightBrush"));
-    if( !chkShowLightBrush ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkShowLightBrush" );
+    if( !chkShowLightBrush ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkShowLightBrush" );
     chkShowLightBrush->evtCheckChange = _ShowLightBrushCheckChange ;
     chkShowLightBrush->SetIsChecked( g_Editor.m_bShowLightBrush );
 
 
     ckhHideOptionEx = dynamic_cast<CCheckBox*>(frmEditor->Find("ckhHideOptionEx"));
-    if( !ckhHideOptionEx ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "ckhHideOptionEx" );
+    if( !ckhHideOptionEx ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "ckhHideOptionEx" );
     ckhHideOptionEx->evtCheckChange = _HideOptionExCheckChange;
     ckhHideOptionEx->SetIsChecked( false );
 
     imgEditorEx =  dynamic_cast<CImage*>(frmEditor->Find("imgEditorEx"));
-    if( !imgEditorEx ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "imgEditorEx" );
+    if( !imgEditorEx ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "imgEditorEx" );
 
     lblSetMainChaPos = dynamic_cast<CLabel*>(frmEditor->Find("lblSetMainChaPos"));
-    if( !lblSetMainChaPos ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "lblSetMainChaPos" );
+    if( !lblSetMainChaPos ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "lblSetMainChaPos" );
 
     lblSetBrushHeight = dynamic_cast<CLabel*>(frmEditor->Find("lblSetBrushHeight"));
-    if( !lblSetBrushHeight ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "lblSetBrushHeight" );
+    if( !lblSetBrushHeight ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "lblSetBrushHeight" );
 
     ckhShowCompass =  dynamic_cast<CCheckBox*>(frmEditor->Find("ckhShowCompass"));
-    if( !ckhShowCompass ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "ckhShowCompass" );
+    if( !ckhShowCompass ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "ckhShowCompass" );
     ckhShowCompass->SetIsChecked( false );
     ckhShowCompass->evtCheckChange = _ShowCompassCheckChange;
 
     edtSetIslandIndex =  dynamic_cast<CEdit*>(frmEditor->Find("edtSetIslandIndex"));
     if( !edtSetIslandIndex )
-        return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "edtSetIslandIndex" );
+        return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "edtSetIslandIndex" );
     edtSetIslandIndex->evtKeyChar = _evtSetIslandIndex;
     edtSetIslandIndex->SetIsShow(false);
 
     lblSetIslandIndex = dynamic_cast<CLabel*>(frmEditor->Find("lblSetIslandIndex"));
-    if( !lblSetIslandIndex ) return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "lblSetIslandIndex" );
+    if( !lblSetIslandIndex ) return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "lblSetIslandIndex" );
     lblSetIslandIndex->SetIsShow(false);
 
     chkEraseAttrib = dynamic_cast<CCheckBox*>(frmEditor->Find("chkEraseAttrib"));
     if (!chkEraseAttrib)
-        return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "chkEraseAttrib");
+        return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "chkEraseAttrib");
     chkEraseAttrib->SetIsChecked(false);
     chkEraseAttrib->evtCheckChange = _EraseAttribCheckChange;
     chkEraseAttrib->SetIsShow(false);
 
     lblEraseAttrib = dynamic_cast<CLabel*>(frmEditor->Find("lblEraseAttrib"));
     if (!lblEraseAttrib)
-        return Error(g_oLangRec.GetString(45), frmEditor->GetName(), "lblEraseAttrib");
+        return Error(GetLanguageString(45).c_str(), frmEditor->GetName(), "lblEraseAttrib");
     lblEraseAttrib->SetIsShow(false);
 
 
@@ -209,21 +209,21 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
     CItem *item = dynamic_cast<CItem*>(select->GetItem());
     if( !item ) return;
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(528) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(528).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) g_Editor.SetCha( press, p->nTag );
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(529) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(529).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) g_Editor.SetEff( press, p->nTag );
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(530) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(530).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) 
@@ -244,7 +244,7 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(531) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(531).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) 
@@ -266,7 +266,7 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(532) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(532).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p && press ) 
@@ -279,14 +279,14 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(533) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(533).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) g_Editor.SetChaPose( press, p->nTag );
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(534) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(534).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) 
@@ -296,7 +296,7 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
         return;
     }
 
-    if( stricmp(item->GetString(), g_oLangRec.GetString(535))==0 )
+    if( _stricmp(item->GetString(), GetLanguageString(535).c_str())==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p )
@@ -317,20 +317,20 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
                         pEffect->SetValid(TRUE);
                     }
                 }
-                g_pGameApp->AddTipText( g_oLangRec.GetString(536) );
+                g_pGameApp->AddTipText( "%s", GetLanguageString(536).c_str() );
                 break;
             case 1:
                 CReadyDieState* st = new CReadyDieState(pCha->GetActor());
                 st->SetState( enumDied );
                 pCha->GetActor()->InsertState(st);
-                g_pGameApp->AddTipText( g_oLangRec.GetString(537) );
+                g_pGameApp->AddTipText( "%s", GetLanguageString(537).c_str() );
                 break;
             }
         }
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(538) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(538).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) g_Editor.ChangePart( press, p->nTag );
@@ -343,14 +343,14 @@ void CEditor::_TreeEvent(CTreeView* tree, bool press )
     item = dynamic_cast<CItem*>( parent->GetItem() );
     if( !item ) return;
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(539) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(539).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) g_Editor.SetTerr( press, p->nTag );
         return;
     }
 
-    if( stricmp( item->GetString(), g_oLangRec.GetString(540) )==0 )
+    if( _stricmp( item->GetString(), GetLanguageString(540).c_str() )==0 )
     {
         CGraph *p = dynamic_cast<CGraph*>( tree->GetSelect()->GetItem() );
         if( p ) g_Editor.SetObj( press, p->nTag );
@@ -543,11 +543,11 @@ bool CEditor::_evtSetChaPosKeyChar(CGuiData *pSender, char& key)
                 p[1] = atoi( str.substr(pos+1,str.length()).c_str() );
                 CGameApp::GetCurScene()->GetMainCha()->setPos( p[0] * 100, p[1] * 100 );
                 CGameApp::GetCurScene()->SetMainCha( CGameApp::GetCurScene()->GetMainCha()->getID() );
-                g_pGameApp->AddTipText( g_oLangRec.GetString(541) );
+                g_pGameApp->AddTipText( "%s", GetLanguageString(541).c_str() );
             }
             else
             {
-                g_pGameApp->AddTipText( g_oLangRec.GetString(542) );
+                g_pGameApp->AddTipText( "%s", GetLanguageString(542).c_str() );
             }
         }
         return true;
@@ -573,7 +573,7 @@ bool CEditor::_evtShotMiniMap(CGuiData *pSender, char& key)
             int n = Util_ResolveTextLine( pEdit->GetCaption(), strList, SIZE, ',');            
             if( n!=4 )
             {
-                g_pGameApp->MsgBox( g_oLangRec.GetString(543) );
+                g_pGameApp->MsgBox( "%s", GetLanguageString(543).c_str() );
                 return true;
             }
 
@@ -584,7 +584,7 @@ bool CEditor::_evtShotMiniMap(CGuiData *pSender, char& key)
 
             g_pGameApp->SetStartMinimap( value[0], value[1], value[2], value[3] );
             g_pGameApp->EnableSprintSmMap(TRUE);
-            g_pGameApp->MsgBox( g_oLangRec.GetString(544), value[0], value[1], value[2], value[3] );
+            g_pGameApp->MsgBox( "%s", SafeVFormat(GetLanguageString(544), value[0], value[1], value[2], value[3]).c_str() );
         }
         return true;
     }
@@ -600,12 +600,12 @@ bool CEditor::_evtSetBrushHeightKeyChar(CGuiData *pSender, char& key)
             string str = g_stUIEditor.edtSetBrushHeight->GetCaption();
             if( str.empty() )
             {
-                g_pGameApp->AddTipText( g_oLangRec.GetString(545) );
+                g_pGameApp->AddTipText( "%s", GetLanguageString(545).c_str() );
             }
             else
             {
                 g_Editor.m_nBrushHeight = atoi( str.c_str() );
-                g_pGameApp->AddTipText( g_oLangRec.GetString(546) );
+                g_pGameApp->AddTipText( "%s", GetLanguageString(546).c_str() );
 
 				CEffectObj* pEffect = dynamic_cast<CEffectObj*>(g_Editor.GetSelectSceneObj());
 				if (!pEffect)

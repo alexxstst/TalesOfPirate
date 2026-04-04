@@ -8,60 +8,28 @@
 #ifndef STATECELL_H
 #define STATECELL_H
 
-#include "PreAlloc.h"
 #include "Character.h"
 
-class CChaListNode : public dbc::PreAllocStru
+class CChaListNode
 {
 public:
-	CChaListNode(unsigned long ulSize = 1) : PreAllocStru(1)
-	{
-		m_pCCha = 0;
-		m_pCNext = 0;
-		m_pCLast = 0;
-	}
+	CChaListNode() = default;
 
-	bool			m_bIn{ false };	// 
-	CCharacter* m_pCCha{  };
-	CStateCellNode* m_pCEntStateNode{  };
+	bool			m_bIn{ false };
+	CCharacter*		m_pCCha{ nullptr };
+	CStateCellNode* m_pCEntStateNode{ nullptr };
 
-	CChaListNode* m_pCNext{ nullptr };
-	CChaListNode* m_pCLast{ nullptr };
-
-protected:
-	void	Initially();
-	void	Finally();
+	CChaListNode*	m_pCNext{ nullptr };
+	CChaListNode*	m_pCLast{ nullptr };
 };
-
-inline void CChaListNode::Initially()
-{
-	m_pCCha = nullptr;
-	m_pCNext = nullptr;
-	m_pCLast = nullptr;
-}
-
-inline void CChaListNode::Finally()
-{
-}
 
 class CEyeshotCell;
 
 // 
-class CStateCell : public dbc::PreAllocStru
+class CStateCell
 {
 public:
-	CStateCell(unsigned long ulSize = 1) : PreAllocStru(1)
-	{
-		m_sPosX = 0;
-		m_sPosY = 0;
-		m_lActNum = 0;
-		m_lChaNum = 0;
-		m_pCChaIn = 0;
-		m_pCChaCross = 0;
-
-		m_pCNext = 0;
-		m_pCLast = 0;
-	}
+	CStateCell() = default;
 
 	long			GetChaNum(void) {return m_lChaNum;}
 	long			GetStateNum(void) {return m_CSkillState.m_uchStateNum;}
@@ -87,45 +55,21 @@ public:
 	void			StateBeginSeen(Entity *pCEnt);
 	void			StateEndSeen(Entity *pCEnt);
 
-	short			m_sPosX;		// 
-	short			m_sPosY;		// 
-	long			m_lActNum;		// 
-	long			m_lChaNum;		// 
+	short			m_sPosX{};
+	short			m_sPosY{};
+	long			m_lActNum{};
+	long			m_lChaNum{};
 
-	CChaListNode	*m_pCChaIn;		// 
-	CChaListNode	*m_pCChaCross;	// 
+	CChaListNode	*m_pCChaIn{ nullptr };
+	CChaListNode	*m_pCChaCross{ nullptr };
 
 	CSkillState		m_CSkillState;	// 
 
-	CEyeshotCell	*m_pCEyeshotCell;	// 
+	CEyeshotCell	*m_pCEyeshotCell{ nullptr };
 
-	CStateCell		*m_pCNext;		// 
-	CStateCell		*m_pCLast;
-
-protected:
-
-private:
-	void	Initially();
-	void	Finally();
-
+	CStateCell		*m_pCNext{ nullptr };
+	CStateCell		*m_pCLast{ nullptr };
 };
-
-inline void CStateCell::Initially()
-{
-	m_lActNum = 0;
-	m_lChaNum = 0;
-	m_pCChaIn = 0;
-	m_pCChaCross = 0;
-	m_CSkillState.Init();
-	m_pCEyeshotCell = 0;
-
-	m_pCNext = 0;
-	m_pCLast = 0;
-}
-
-inline void CStateCell::Finally()
-{
-}
 
 class CActStateCell // 
 {
@@ -207,39 +151,16 @@ inline CStateCell* CActStateCell::GetNext()
 	return pRet;
 }
 
-class CStateCellNode : public dbc::PreAllocStru
+class CStateCellNode
 {
 public:
-	CStateCellNode(unsigned long ulSize = 1) : PreAllocStru(1)
-	{
-		m_pCStateCell = 0;
-		m_pCChaNode = 0;
-		m_pCNext = 0;
-		m_pCLast = 0;
-	}
+	CStateCellNode() = default;
 
-	CStateCell		*m_pCStateCell;
-	CChaListNode	*m_pCChaNode;
+	CStateCell		*m_pCStateCell{ nullptr };
+	CChaListNode	*m_pCChaNode{ nullptr };
 
-	CStateCellNode	*m_pCNext;
-	CStateCellNode	*m_pCLast;
-
-protected:
-	void	Initially();
-	void	Finally();
-
+	CStateCellNode	*m_pCNext{ nullptr };
+	CStateCellNode	*m_pCLast{ nullptr };
 };
-
-inline void CStateCellNode::Initially()
-{
-	m_pCStateCell = 0;
-	m_pCChaNode = 0;
-	m_pCNext = 0;
-	m_pCLast = 0;
-}
-
-inline void CStateCellNode::Finally()
-{
-}
 
 #endif // STATECELL_H

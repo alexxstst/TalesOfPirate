@@ -282,13 +282,13 @@ void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[]
 
 	if( !CGameApp::GetCurScene() )
 	{
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(244));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(244));
 		return;
 	}
 
 	if( !CGameScene::GetMainCha() ) 
 	{
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(245));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(245));
 		return;
 	}
 
@@ -323,7 +323,7 @@ void NetMC_GUILD_INFO( DWORD dwCharID, DWORD dwGuildID, const char szGuildName[]
 
 		if( !pCha )
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(246), dwCharID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(246), dwCharID));
 			return;
 		}
 

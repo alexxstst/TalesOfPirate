@@ -114,9 +114,9 @@ long CALLBACK TerrainNotice(int nFlag, int nSectionX, int nSectionY, unsigned lo
 					else if( g_Config.m_bEnableLGMsg )// Creation failed, prompt to delete from .obj file
 					{
 						_stprintf(tcsPrint,
-							_TEXT(g_oLangRec.GetString(101)),
+							GetLanguageString(101).c_str(),
 							infoex[i].GetID());
-						if (IDYES == MessageBox(NULL, tcsPrint, _TEXT(g_oLangRec.GetString(25)), MB_YESNO))
+						if (IDYES == MessageBox(NULL, tcsPrint, GetLanguageString(25).c_str(), MB_YESNO))
 						{
 							for (int j = i; j < nSectionObjCnt - 1; j ++)
 								infoex[j] = infoex[j + 1];
@@ -333,7 +333,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 		if( g_Config.IsPower() || ( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv() ) ) 
 		{
 			EnableSuperKey(1 - _bEnableSuperKey);
-			TipI(_bEnableSuperKey, g_oLangRec.GetString(102), g_oLangRec.GetString(103));
+			if(_bEnableSuperKey) { g_pGameApp->AddTipText("%s", GetLanguageString(102).c_str()); } else { g_pGameApp->AddTipText("%s", GetLanguageString(103).c_str()); }
 		}
     }
 	else if (IsKeyDown(DIK_F12) && IsShiftPress()) // Launch LogView tool  add by cf
@@ -394,7 +394,7 @@ void CGameApp::HandleKeyDown(DWORD dwKey)
 
 void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool bWindowed )
 {
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(104), width, height, bWindowed); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(104), width, height, static_cast<int>(bWindowed)));
 
 	//MPInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
 	//MPIResourceMgr* res_mgr = imgr->res_mgr;
@@ -473,7 +473,7 @@ void CGameApp::ChangeVideoStyle(int width , int height ,D3DFORMAT format, bool b
 		return;
     }
 
-	g_logManager.InternalLog(LogLevel::Debug, "ui", g_oLangRec.GetString(105));
+	g_logManager.InternalLog(LogLevel::Debug, "ui", GetLanguageString(105));
 
 	//SetIsFullScreen( !bWindowed);
 
@@ -757,7 +757,7 @@ void CGameApp::HandleSuperKey()
 		//	//g_pGameApp->ResetGameCamera( GetCurScene()->GetMainCha()->IsBoat() ? 1 : 0 );
 		//}
 
-		TipI( _bCameraFollow, g_oLangRec.GetString(106), g_oLangRec.GetString(107));
+		if(_bCameraFollow) { g_pGameApp->AddTipText("%s", GetLanguageString(106).c_str()); } else { g_pGameApp->AddTipText("%s", GetLanguageString(107).c_str()); }
 	}
     else if(g_pGameApp->IsKeyDown(DIK_INSERT) && g_pGameApp->IsCtrlPress())
     {
@@ -814,12 +814,12 @@ void CGameApp::HandleSuperKey()
         else if(g_pGameApp->IsKeyDown(DIK_L)) 
         {
             g_pGameApp->GetDrawPoints()->SetIsEnabled( !g_pGameApp->GetDrawPoints()->GetIsEnabled() );
-            g_pGameApp->AddTipText( g_oLangRec.GetString(108) );
+            g_pGameApp->AddTipText( "%s", GetLanguageString(108).c_str() );
         }
         else if( g_pGameApp->IsKeyDown(DIK_T) )
         {
             g_pGameApp->SetIsRenderTipText( !g_pGameApp->GetIsRenderTipText() );
-            g_pGameApp->AddTipText( g_oLangRec.GetString(109) );
+            g_pGameApp->AddTipText( "%s", GetLanguageString(109).c_str() );
         }
     }
 #endif   
@@ -1059,7 +1059,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 	
 	if( strCmd=="load")
 	{
-		if(p1=="") return g_oLangRec.GetString(110);
+		if(p1=="") return GetLanguageString(110).c_str();
 		string strFileName = p1 + ".lua";
 
 		strFileName = "monster/" + strFileName;
@@ -1067,7 +1067,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 		ifstream in; in.open(strFileName.c_str());
 		if(in.is_open()==false)
 		{
-			return g_oLangRec.GetString(111);
+			return GetLanguageString(111).c_str();
 		}
 		char szCha[255];
 		string strList[10];
@@ -1105,15 +1105,15 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			}
 			else
 			{
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(113), nChaID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+				g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(113), nChaID));
 			}
 		}
 		in.close();
-		return g_oLangRec.GetString(114);
+		return GetLanguageString(114).c_str();
 	}
 	else if( strCmd=="save") // Save monster placement records
 	{
-		if(p1=="") return g_oLangRec.GetString(110);
+		if(p1=="") return GetLanguageString(110).c_str();
 		Util_MakeDir("monster");
 		string strFileName = p1 + ".lua";
 		
@@ -1146,11 +1146,11 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			}
 		}
 		fclose(fp);
-		return g_oLangRec.GetString(115);
+		return GetLanguageString(115).c_str();
 	}
 	else if(strCmd=="seek") // Find a monster by script ID
 	{
-		if(p1=="") return g_oLangRec.GetString(110);
+		if(p1=="") return GetLanguageString(110).c_str();
 		int nScriptID = Str2Int(p1);
 		
 		for(int i = 0; i < pScene->GetChaCnt(); i++)
@@ -1183,7 +1183,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 			pCha->SetValid(FALSE);
 		}
 	}
-	return g_oLangRec.GetString(116);
+	return GetLanguageString(116).c_str();
 }
 
 void CheckSkillEffect( CSkillRecord* pSkill, int nEffectID )
@@ -1222,14 +1222,14 @@ void CheckSkillEffect( CSkillRecord* pSkill, int nEffectID )
 
 	if( name.empty() )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(117), pSkill->nID, pSkill->szName.c_str(), nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(117), pSkill->nID, pSkill->szName, nEffectID));
 		return;
 	}
 
-	int n = (int)name.find( g_oLangRec.GetString(118) );
+	int n = (int)name.find( GetLanguageString(118) );
 	if( n >= 0 )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(119), pSkill->nID, pSkill->szName.c_str(), nEffectID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(119), pSkill->nID, pSkill->szName, nEffectID));
 	}
 }
 
@@ -1240,7 +1240,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	int n = Util_ResolveTextLine(pszCmd, strList, 80, ' ');
 	
 	string strCmd = strList[0];
-	string strRes = g_oLangRec.GetString(120);
+	string strRes = GetLanguageString(120);
 
 	string p1 = strList[1];
 	string p2 = strList[2];
@@ -1270,15 +1270,15 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	if(strCmd=="thanks")
 	{
-		g_pGameApp->GetConsole()->AddText(g_oLangRec.GetString(121));   
-		//g_pGameApp->GetConsole()->AddText(g_oLangRec.GetString(122));
+		g_pGameApp->GetConsole()->AddText(GetLanguageString(121).c_str());
+		//g_pGameApp->GetConsole()->AddText(GetLanguageString(122));
 		g_pGameApp->GetConsole()->AddText("Designer:   Paco Koyo S.K Robin Baby Idle Sage Mars");
 		g_pGameApp->GetConsole()->AddText("Programmer: Ryan Jack Adnor Lemon Jerry Jacky Claude Knight Arcol Michael");
 		g_pGameApp->GetConsole()->AddText("Artist:     Thirteen Gsc xiaojinjin lmayaz sean tiger rondy potion omo");
 		g_pGameApp->GetConsole()->AddText("            always milo AF redpig aoao ldc gooncoo RBMMax koala momo");
 		g_pGameApp->GetConsole()->AddText("Developer:  KONG Wrexor Billy Foxseiz OggeW Mi");
 		g_pGameApp->GetConsole()->AddText("            ");
-		g_pGameApp->GetConsole()->AddText(g_oLangRec.GetString(123));
+		g_pGameApp->GetConsole()->AddText(GetLanguageString(123).c_str());
 	}
 	else if(strCmd=="reload")
 	{
@@ -1469,7 +1469,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		}
 		else
 		{
-			g_pGameApp->SysInfo( g_oLangRec.GetString(124) );
+			g_pGameApp->SysInfo( "%s", GetLanguageString(124).c_str() );
 		}
 	}
 	else if( strCmd=="teamleaderid" )
@@ -1481,7 +1481,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		CGameScene* pScene = CGameApp::GetCurScene();
 		if( pScene )
 		{				
-			g_pGameApp->SysInfo( g_oLangRec.GetString(125), pScene->m_dwValidEffCnt, pScene->m_dwValidChaCnt, pScene->m_dwValidSceneObjCnt );
+			g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(125), pScene->m_dwValidEffCnt, pScene->m_dwValidChaCnt, pScene->m_dwValidSceneObjCnt).c_str() );
 		}
 	}
 	else if( g_Config.m_bEditor && strCmd=="refine" )
@@ -1525,14 +1525,14 @@ const char* ConsoleCallback(const char *pszCmd)
 				int nCharID = pMain->getTypeID() - 1;
 				if( nCharID<0 || nCharID>3 )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(126), pMain->GetDefaultChaInfo()->szName.c_str(), RefineID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(126), pMain->GetDefaultChaInfo()->szName, RefineID));
 					return strRes.c_str();
 				}
 
 				CItemRefineEffectInfo* pInfo = GetItemRefineEffectInfo( RefineID );
 				if( !pInfo )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(127), RefineID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(127), RefineID));
 					return strRes.c_str();
 				}
 
@@ -1650,7 +1650,7 @@ const char* ConsoleCallback(const char *pszCmd)
 			if( nLine>0 )
 			{
 				CTextHint::stHint* pHint = CCommandObj::GetHints().GetHint(0);
-				g_pGameApp->SysInfo( g_oLangRec.GetString(129), pHint->hint.c_str(), nLine );
+				g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(129), pHint->hint, nLine).c_str() );
 			}
 		}
 	}
@@ -1681,9 +1681,9 @@ const char* ConsoleCallback(const char *pszCmd)
 	{
 		g_pGameApp->GetConsole()->Show( FALSE );
 
-		g_pGameApp->AutoTestInfo( g_oLangRec.GetString(130) );			
+		g_pGameApp->AutoTestInfo( "%s", GetLanguageString(130).c_str() );
 		g_pGameApp->AutoTest();
-		g_pGameApp->AutoTestInfo( g_oLangRec.GetString(131) );		
+		g_pGameApp->AutoTestInfo( "%s", GetLanguageString(131).c_str() );
 	}
 	else if( strCmd=="testeffect" )
 	{
@@ -1708,7 +1708,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		int nEnd = Str2Int( p2 );
 		int nTestCount = Str2Int( p3 );
 		if( nTestCount<=0 ) nTestCount=1;
-		g_pGameApp->AutoTestInfo( g_oLangRec.GetString(132), nStart, nEnd, nTestCount );			
+		g_pGameApp->AutoTestInfo( "%s", SafeVFormat(GetLanguageString(132), nStart, nEnd, nTestCount).c_str() );
 
 		nEnd++;
 		for (int j(0); j<nTestCount; j++)
@@ -1729,7 +1729,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 					IsDel = false;
 					name = pInfo->szName;
-					int n = (int)name.find( g_oLangRec.GetString(118) );
+					int n = (int)name.find( GetLanguageString(118) );
 					if( n >= 0 ) 
 					{
 						IsDel = true;
@@ -1831,7 +1831,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		int nEnd = Str2Int( p2 );
 		int nTestCount = Str2Int( p3 );
 		if( nTestCount<=0 ) nTestCount=1;
-		g_pGameApp->AutoTestInfo( g_oLangRec.GetString(133), nStart, nEnd, nTestCount );
+		g_pGameApp->AutoTestInfo( "%s", SafeVFormat(GetLanguageString(133), nStart, nEnd, nTestCount).c_str() );
 		
 		nEnd++;
 		CSkillRecord* pInfo = NULL;
@@ -2238,7 +2238,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 					continue;
 				}
 			}
@@ -2253,7 +2253,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 					continue;
 				}
 			}
@@ -2269,7 +2269,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadTower( pInfo->chModalType, part_buf ) == 0 )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 					continue;
 				}
 			}
@@ -2291,13 +2291,13 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadCha( &load_info ) == 0 )
 				{
-					{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 					continue;
 				}  
 			}
 			if( ((CCharacterModel*)pCha)->LoadPose( pInfo->sActionID ) == 0 )
 			{
-				{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(27), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+				g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), nScriptID, std::string_view(pInfo->szDataName)));
 					continue;
 			} 
 		    pCha->SetValid(TRUE); 

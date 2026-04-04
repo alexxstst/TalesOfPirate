@@ -108,7 +108,7 @@ void CPlayer::Finally()
 		if( m_Boat[i] )
 		{
 			if (m_Boat[i]->GetShip())
-				m_Boat[i]->GetShip()->Free();
+				g_pGameApp->m_CabinPool.Release(m_Boat[i]->GetShip());
 			m_Boat[i]->SetShip(0);
 			m_Boat[i]->Free();
 			m_Boat[i] = 0;
@@ -127,7 +127,7 @@ void CPlayer::Finally()
 
 	if( m_pStallData )
 	{
-		m_pStallData->Free();
+		g_pGameApp->m_StallDataPool.Release(m_pStallData);
 		m_pStallData = NULL;
 	}
 

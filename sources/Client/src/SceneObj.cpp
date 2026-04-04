@@ -33,7 +33,7 @@ BOOL CSceneObj::_Create(int nScriptID,int nType)
 	CSceneObjInfo *pInfo = GetSceneObjInfo(nScriptID);
     if(pInfo==NULL)
     {
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(354), nScriptID); g_logManager.InternalLog(LogLevel::Debug, "map", _buf); }
+        g_logManager.InternalLog(LogLevel::Debug, "map", SafeVFormat(GetLanguageString(354), nScriptID));
         return FALSE;
     }
 

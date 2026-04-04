@@ -140,35 +140,35 @@ bool CChat::Init() {
 
 		sprintf(szBuf, "proTeamMenber%dHP", i + 1);
 		proTeamMenberHP[i] = dynamic_cast<CProgressBar*>(frmTeamMenber[i]->Find(szBuf));
-		if (!proTeamMenberHP[i]) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), szBuf);
+		if (!proTeamMenberHP[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf);
 		proTeamMenberHP[i]->SetRange(0.0f, 1.0f);
 
 		sprintf(szBuf, "proTeamMenber%dSP", i + 1);
 		proTeamMenberSP[i] = dynamic_cast<CProgressBar*>(frmTeamMenber[i]->Find(szBuf));
-		if (!proTeamMenberSP[i]) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), szBuf);
+		if (!proTeamMenberSP[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf);
 		proTeamMenberSP[i]->SetRange(0.0f, 1.0f);
 
 		sprintf(szBuf, "labMenber%dName", i + 1);
 		labMenberName[i] = dynamic_cast<CLabelEx*>(frmTeamMenber[i]->Find(szBuf));
-		if (!labMenberName[i]) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), szBuf);
+		if (!labMenberName[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), szBuf);
 
 		labLv[i] = dynamic_cast<CLabelEx*>(frmTeamMenber[i]->Find("labFLv"));
-		if (!labLv[i]) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), "labFLv");
+		if (!labLv[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), "labFLv");
 
 		imgWork[i] = dynamic_cast<CImage*>(frmTeamMenber[i]->Find("imgobj"));
-		if (!imgWork[i]) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), "imgobj");
+		if (!imgWork[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), "imgobj");
 
 		imgLeader[i] = dynamic_cast<CImage*>(frmTeamMenber[i]->Find("imgLeader"));
-		if (!imgLeader[i]) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), "imgLeader");
+		if (!imgLeader[i]) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), "imgLeader");
 
 		C3DCompent* p3DDown = dynamic_cast<C3DCompent*>(frmTeamMenber[i]->Find("d3dDown"));
-		if (!p3DDown) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), "d3dDown");
+		if (!p3DDown) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), "d3dDown");
 		p3DDown->nTag = i;
 		p3DDown->evtMouseDown = _MemberMouseDownEvent;
 		p3DDown->SetMouseAction(enumMA_Skill);
 
 		C3DCompent* p3D = dynamic_cast<C3DCompent*>(frmTeamMenber[i]->Find("d3dHead"));
-		if (!p3D) return _Error(g_oLangRec.GetString(45), frmTeamMenber[i]->GetName(), "d3dHead");
+		if (!p3D) return _Error(GetLanguageString(45).c_str(), frmTeamMenber[i]->GetName(), "d3dHead");
 		p3D->SetRenderEvent(_RenderEvent);
 		p3D->nTag = i;
 
@@ -185,7 +185,7 @@ bool CChat::Init() {
 	// QQ
 	_frmQQ = mgr.Find("frmQQ");
 	if (!_frmQQ) {
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(412));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(412).c_str());
 		return false;
 	}
 
@@ -194,51 +194,51 @@ bool CChat::Init() {
 	CGuiTime::Create(300, _OnTimerFlash);
 
 	CTextButton* pbtnAdd = dynamic_cast<CTextButton*>(_frmQQ->Find("btnAdd"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "btnAdd");
+	if (!pbtnAdd) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "btnAdd");
 	pbtnAdd->evtMouseClick = _evtQQMainAddFrnd;
 
 
 	pbtnAdd = dynamic_cast<CTextButton*>(_frmQQ->Find("btnEdit"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "btnEdit");
+	if (!pbtnAdd) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "btnEdit");
 	pbtnAdd->evtMouseClick = _evtQQMainEditMotto;
 
 
 	pbtnAdd = dynamic_cast<CTextButton*>(_frmQQ->Find("btnBlock"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "btnBlock");
+	if (!pbtnAdd) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "btnBlock");
 	pbtnAdd->evtMouseClick = _evtQQMainBlockPlayer;
 
 	m_pQQTreeView = dynamic_cast<CTreeView*>(_frmQQ->Find("trvEditor"));
-	if (!m_pQQTreeView) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "trvEditor");
+	if (!m_pQQTreeView) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "trvEditor");
 
 	CLabelEx* pMineName = dynamic_cast<CLabelEx*>(_frmQQ->Find("labMineName"));
-	if (!pMineName) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "labMineName");
+	if (!pMineName) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "labMineName");
 
 	_frndMouseRight = CMenu::FindMenu("frndMouseRight");
-	if (!_frndMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "frndMouseRight");
+	if (!_frndMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "frndMouseRight");
 	_frndMouseRight->evtListMouseDown = _OnMouseFrndMenu;
 
 	_groupMouseRight = CMenu::FindMenu("groupMouseRight");
-	if (!_groupMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "groupMouseRight");
+	if (!_groupMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "groupMouseRight");
 	_groupMouseRight->evtListMouseDown = _OnMouseGroupMenu;
 
 	_roadMouseRight = CMenu::FindMenu("roadMouseRight");
-	if (!_roadMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "roadMouseRight");
+	if (!_roadMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "roadMouseRight");
 	_roadMouseRight->evtListMouseDown = _OnMouseRoadMenu;
 
 	_sessMouseRight = CMenu::FindMenu("ChatMouseRight");
-	if (!_sessMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "ChatMouseRight");
+	if (!_sessMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "ChatMouseRight");
 	_sessMouseRight->evtListMouseDown = _OnMouseSessMenu;
 
 	_MasterMouseRight = CMenu::FindMenu("MasterRight");
-	if (!_MasterMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "MasterRight");
+	if (!_MasterMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "MasterRight");
 	_MasterMouseRight->evtListMouseDown = _OnMouseMasterMenu;
 
 	_StudentMouseRight = CMenu::FindMenu("StudentRight");
-	if (!_StudentMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "StudentRight");
+	if (!_StudentMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "StudentRight");
 	_StudentMouseRight->evtListMouseDown = _OnMouseStudentMenu;
 
 	_BlockedMouseRight = CMenu::FindMenu("BlockedRight");
-	if (!_BlockedMouseRight) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "BlockedRight");
+	if (!_BlockedMouseRight) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "BlockedRight");
 	_BlockedMouseRight->evtListMouseDown = _OnMouseBlockedMenu;
 
 	m_pQQTreeView->evtMouseDown = _MainMouseClick;
@@ -250,35 +250,35 @@ bool CChat::Init() {
 	int nHeight = SMALL_ICON_SIZE + 3;
 
 	_pSessionNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->
-																	 FindNode(g_oLangRec.GetString(465)));
+																	 FindNode(GetLanguageString(465).c_str()));
 	_pSessionNode->GetItem()->SetColor(COLOR_BLACK);
 	_pSessionNode->GetUpImage()->UnLoadImage();
 	_pSessionNode->GetDownImage()->UnLoadImage();
 	_pSessionNode->SetUnitSize(nWidth, nHeight);
 	_pSessionNode->SetColMaxNum(1);
 
-	_pFrndNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(g_oLangRec.GetString(466)));
+	_pFrndNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(466).c_str()));
 	_pFrndNode->GetItem()->SetColor(COLOR_BLACK);
 	_pFrndNode->GetUpImage()->UnLoadImage();
 	_pFrndNode->GetDownImage()->UnLoadImage();
 	_pFrndNode->SetUnitSize(nWidth, nHeight);
 	_pFrndNode->SetColMaxNum(1);
 
-	_pGroupNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(g_oLangRec.GetString(467)));
+	_pGroupNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(467).c_str()));
 	_pGroupNode->GetItem()->SetColor(COLOR_BLACK);
 	_pGroupNode->GetUpImage()->UnLoadImage();
 	_pGroupNode->GetDownImage()->UnLoadImage();
 	_pGroupNode->SetUnitSize(nWidth, nHeight);
 	_pGroupNode->SetColMaxNum(1);
 
-	_pGuildNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(g_oLangRec.GetString(468)));
+	_pGuildNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(468).c_str()));
 	_pGuildNode->GetItem()->SetColor(COLOR_BLACK);
 	_pGuildNode->GetUpImage()->UnLoadImage();
 	_pGuildNode->GetDownImage()->UnLoadImage();
 	_pGuildNode->SetUnitSize(nWidth, nHeight);
 	_pGuildNode->SetColMaxNum(1);
 
-	_pMasterNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(g_oLangRec.GetString(850)));
+	_pMasterNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->FindNode(GetLanguageString(850).c_str()));
 	_pMasterNode->GetItem()->SetColor(COLOR_BLACK);
 	_pMasterNode->GetUpImage()->UnLoadImage();
 	_pMasterNode->GetDownImage()->UnLoadImage();
@@ -286,7 +286,7 @@ bool CChat::Init() {
 	_pMasterNode->SetColMaxNum(1);
 
 	_pPrenticeNode = dynamic_cast<GUI::CTreeGridNode*>(m_pQQTreeView->GetRootNode()->
-																	  FindNode(g_oLangRec.GetString(851)));
+																	  FindNode(GetLanguageString(851).c_str()));
 	_pPrenticeNode->GetItem()->SetColor(COLOR_BLACK);
 	_pPrenticeNode->GetUpImage()->UnLoadImage();
 	_pPrenticeNode->GetDownImage()->UnLoadImage();
@@ -316,61 +316,61 @@ bool CChat::Init() {
 
 	_frmAddFriend = mgr.Find("frmAddFriend");
 	if (!_frmAddFriend) {
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(470));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(470).c_str());
 		return false;
 	}
 	_frmAddFriend->SetIsShow(true);
 	pbtnAdd = dynamic_cast<CTextButton*>(_frmAddFriend->Find("btnYes"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(411), _frmAddFriend->GetName(), "btnYes");
+	if (!pbtnAdd) return _Error(GetLanguageString(411).c_str(), _frmAddFriend->GetName(), "btnYes");
 	pbtnAdd->evtMouseClick = _evtAddFrnd;
 	_pEditFrndName = dynamic_cast<CEdit*>(_frmAddFriend->Find("edtTradeGold"));
-	if (!_pEditFrndName) return _Error(g_oLangRec.GetString(411), _frmAddFriend->GetName(), "edtTradeGold");
+	if (!_pEditFrndName) return _Error(GetLanguageString(411).c_str(), _frmAddFriend->GetName(), "edtTradeGold");
 
 
 	_styMenu = CMenu::FindMenu("styMenu");
-	if (!_styMenu) return _Error(g_oLangRec.GetString(411), _frmQQ->GetName(), "styMenu");
+	if (!_styMenu) return _Error(GetLanguageString(411).c_str(), _frmQQ->GetName(), "styMenu");
 	_styMenu->evtListMouseDown = _evtChangeStyle;
 
 	_frmEditMotto = mgr.Find("frmEdit");
 	if (!_frmEditMotto) {
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(471));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(471).c_str());
 		return false;
 	}
 	_frmEditMotto->SetIsShow(true);
 	pbtnAdd = dynamic_cast<CTextButton*>(_frmEditMotto->Find("btnYes"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(411), _frmEditMotto->GetName(), "btnYes");
+	if (!pbtnAdd) return _Error(GetLanguageString(411).c_str(), _frmEditMotto->GetName(), "btnYes");
 	pbtnAdd->evtMouseClick = _evtChangeMotto;
 
 	_pEditMotto = dynamic_cast<CEdit*>(_frmEditMotto->Find("edtTradeGold"));
-	if (!_pEditMotto) return _Error(g_oLangRec.GetString(411), _frmEditMotto->GetName(), "edtTradeGold");
+	if (!_pEditMotto) return _Error(GetLanguageString(411).c_str(), _frmEditMotto->GetName(), "edtTradeGold");
 	_labNameOfMottoFrm = dynamic_cast<CLabelEx*>(_frmEditMotto->Find("labName"));
-	if (!_labNameOfMottoFrm) return _Error(g_oLangRec.GetString(411), _frmEditMotto->GetName(), "labName");
+	if (!_labNameOfMottoFrm) return _Error(GetLanguageString(411).c_str(), _frmEditMotto->GetName(), "labName");
 	_imgFaceOfMottoFrm = dynamic_cast<CImage*>(_frmEditMotto->Find("imgMhead"));
-	if (!_imgFaceOfMottoFrm) return _Error(g_oLangRec.GetString(411), _frmEditMotto->GetName(), "imgMhead");
+	if (!_imgFaceOfMottoFrm) return _Error(GetLanguageString(411).c_str(), _frmEditMotto->GetName(), "imgMhead");
 	_chkForbidOfMottoFrm = dynamic_cast<CCheckBox*>(_frmEditMotto->Find("chkChat"));
-	if (!_chkForbidOfMottoFrm) return _Error(g_oLangRec.GetString(411), _frmEditMotto->GetName(), "chkChat");
+	if (!_chkForbidOfMottoFrm) return _Error(GetLanguageString(411).c_str(), _frmEditMotto->GetName(), "chkChat");
 
 	_frmDetails = mgr.Find("frmdetails");
 	if (!_frmDetails) {
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(472));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(472).c_str());
 		return false;
 	}
 	_frmDetails->SetIsShow(true);
 	pbtnAdd = dynamic_cast<CTextButton*>(_frmDetails->Find("btnRefurbish"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(473), _frmDetails->GetName(), "btnRefurbish");
+	if (!pbtnAdd) return _Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "btnRefurbish");
 	pbtnAdd->evtMouseClick = _evtRefreshInfo;
 
 	_frmBlockPlayer = mgr.Find("frmBlockPlayer");
 	if (!_frmBlockPlayer) {
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(470));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(470).c_str());
 		return false;
 	}
 	_frmBlockPlayer->SetIsShow(true);
 	pbtnAdd = dynamic_cast<CTextButton*>(_frmBlockPlayer->Find("btnYes"));
-	if (!pbtnAdd) return _Error(g_oLangRec.GetString(411), _frmBlockPlayer->GetName(), "btnYes");
+	if (!pbtnAdd) return _Error(GetLanguageString(411).c_str(), _frmBlockPlayer->GetName(), "btnYes");
 	pbtnAdd->evtMouseClick = _evtBlockPlayer;
 	_pEditBlockName = dynamic_cast<CEdit*>(_frmBlockPlayer->Find("edtTradeGold"));
-	if (!_pEditBlockName) return _Error(g_oLangRec.GetString(411), _frmBlockPlayer->GetName(), "edtTradeGold");
+	if (!_pEditBlockName) return _Error(GetLanguageString(411).c_str(), _frmBlockPlayer->GetName(), "edtTradeGold");
 
 	return true;
 }
@@ -728,7 +728,7 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 
 		CCharacter* pCha = pScene->SearchByHumanName(labMenberName[pSender->nTag]->GetCaption());
 		if (!pCha) {
-			g_pGameApp->SysInfo(g_oLangRec.GetString(474), labMenberName[pSender->nTag]->GetCaption());
+			g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(474), labMenberName[pSender->nTag]->GetCaption()).c_str());
 			return;
 		}
 
@@ -746,7 +746,7 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 			if (pMember) {
 				_curSelectMember = pMember;
 				CMenuItem* pItem = _groupMouseRight->GetMenuItem(3);
-				if (pItem && stricmp(pItem->GetString(), g_oLangRec.GetString(475)) == 0) {
+				if (pItem && _stricmp(pItem->GetString(), GetLanguageString(475).c_str()) == 0) {
 					if (g_stUIStart.GetIsLeader()) {
 						pItem->SetIsEnabled(true);
 					}
@@ -758,7 +758,7 @@ void CChat::_MemberMouseDownEvent(CGuiData* pSender, int x, int y, DWORD key) {
 				return;
 			}
 		}
-		g_pGameApp->SysInfo(g_oLangRec.GetString(476), labMenberName[pSender->nTag]->GetCaption());
+		g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(476), labMenberName[pSender->nTag]->GetCaption()).c_str());
 	}
 }
 
@@ -953,7 +953,7 @@ void CChat::_evtQQMainShow(CGuiData* pSender) {
 			pMineName->SetCaption(pMain->getHumanName());
 		}
 		else {
-			_Error(g_oLangRec.GetString(473), _frmQQ->GetName(), "labMineName");
+			_Error(GetLanguageString(473).c_str(), _frmQQ->GetName(), "labMineName");
 		}
 	}
 }
@@ -964,21 +964,21 @@ void CChat::_OnMouseFrndMenu(CGuiData* pSender, int x, int y, DWORD key) {
 	CMenuItem* pItem = _frndMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str = pItem->GetString();
-	if (str == g_oLangRec.GetString(477)) {
+	if (str == GetLanguageString(477)) {
 		_UpdateFrndInfo(_curSelectMember);
 		CP_Frnd_Refresh_Info(_curSelectMember->GetID());
 		_frmDetails->Show();
 	}
-	else if (str == g_oLangRec.GetString(478)) {
+	else if (str == GetLanguageString(478)) {
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if (str == g_oLangRec.GetString(479)) {
-		string str = g_oLangRec.GetString(480);
+	else if (str == GetLanguageString(479)) {
+		string str = GetLanguageString(480);
 		str += _curSelectMember->GetName();
 		stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnFrndDeleteConfirm, str.c_str(),true);
 		pSelectBox->dwTag = _curSelectMember->GetID();
 	}
-	else if (str == g_oLangRec.GetString(481)) {
+	else if (str == GetLanguageString(481)) {
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
 	_frmQQ->Refresh();
@@ -990,19 +990,19 @@ void CChat::_OnMouseGroupMenu(CGuiData* pSender, int x, int y, DWORD key) {
 	CMenuItem* pItem = _groupMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str = pItem->GetString();
-	if (str == g_oLangRec.GetString(482)) {
+	if (str == GetLanguageString(482)) {
 		CS_Frnd_Invite(_curSelectMember->GetName());
 	}
-	else if (str == g_oLangRec.GetString(478)) {
+	else if (str == GetLanguageString(478)) {
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if (str == g_oLangRec.GetString(483)) {
+	else if (str == GetLanguageString(483)) {
 		CS_Team_Leave();
 	}
-	else if (str == g_oLangRec.GetString(481)) {
+	else if (str == GetLanguageString(481)) {
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
-	else if (str == g_oLangRec.GetString(475)) {
+	else if (str == GetLanguageString(475)) {
 		CS_Team_Kick(_curSelectMember->GetID());
 	}
 	else if (str == "Follow") {
@@ -1022,16 +1022,16 @@ void CChat::_OnMouseRoadMenu(CGuiData* pSender, int x, int y, DWORD key) {
 	CMenuItem* pItem = _roadMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str = pItem->GetString();
-	if (str == g_oLangRec.GetString(482)) {
+	if (str == GetLanguageString(482)) {
 		CS_Frnd_Invite(_curSelectMember->GetName());
 	}
-	else if (str == g_oLangRec.GetString(484)) {
+	else if (str == GetLanguageString(484)) {
 		CS_Team_Invite(_curSelectMember->GetName());
 	}
-	else if (str == g_oLangRec.GetString(478)) {
+	else if (str == GetLanguageString(478)) {
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if (str == g_oLangRec.GetString(481)) {
+	else if (str == GetLanguageString(481)) {
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
 	_frmQQ->Refresh();
@@ -1042,7 +1042,7 @@ void CChat::_OnMouseSessMenu(CGuiData* pSender, int x, int y, DWORD key) {
 	CMenuItem* pItem = _sessMouseRight->GetSelectMenu();
 	if (!pItem) return;
 	string str = pItem->GetString();
-	if (str == g_oLangRec.GetString(485)) //
+	if (str == GetLanguageString(485)) //
 	{
 		CTalkSessionFormMgr::OnClickCloseSession(static_cast<CTalkSessionForm*>(_sessMouseRight->GetPointer()));
 	}
@@ -1059,7 +1059,7 @@ void CChat::_OnMouseMasterMenu(CGuiData* pSender, int x, int y, DWORD key) {
 
 	string strCommand = pItem->GetString();
 
-	if (strCommand == g_oLangRec.GetString(482)) //
+	if (strCommand == GetLanguageString(482)) //
 	{
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 		if (pMainCha && pMainCha->getGameAttr() && pMainCha->getGameAttr()->get(ATTR_LV) >= 7) {
@@ -1067,10 +1067,10 @@ void CChat::_OnMouseMasterMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			//
-			g_pGameApp->SysInfo(g_oLangRec.GetString(865));
+			g_pGameApp->SysInfo("%s", GetLanguageString(865).c_str());
 		}
 	}
-	else if (strCommand == g_oLangRec.GetString(484)) //
+	else if (strCommand == GetLanguageString(484)) //
 	{
 		CCharacter* pMainCha = CGameScene::GetMainCha();
 		if (pMainCha && (pMainCha->IsBoat() || (pMainCha->getGameAttr() && pMainCha->getGameAttr()->get(ATTR_LV) >=
@@ -1079,27 +1079,26 @@ void CChat::_OnMouseMasterMenu(CGuiData* pSender, int x, int y, DWORD key) {
 		}
 		else {
 			//
-			g_pGameApp->SysInfo(g_oLangRec.GetString(866));
+			g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
 		}
 	}
-	else if (strCommand == g_oLangRec.GetString(481)) //
+	else if (strCommand == GetLanguageString(481)) //
 	{
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
-	else if (strCommand == g_oLangRec.GetString(478)) //
+	else if (strCommand == GetLanguageString(478)) //
 	{
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if (strCommand == g_oLangRec.GetString(854)) //
+	else if (strCommand == GetLanguageString(854)) //
 	{
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if (pMain && pMain->getGameAttr()) {
 			long nLevel = pMain->getGameAttr()->get(ATTR_LV);
 
-			char szBuffer[256] = {0};
-			sprintf(szBuffer, g_oLangRec.GetString(889), _curSelectMember->GetName(), nLevel * 500); // " %s \n:%d\n"
+			auto _str = SafeVFormat(GetLanguageString(889), _curSelectMember->GetName(), nLevel * 500); // " %s \n:%d\n"
 
-			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnMasterDeleteConfirm, szBuffer, true);
+			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnMasterDeleteConfirm, _str.c_str(), true);
 			pSelectBox->dwTag = _curSelectMember->GetID();
 			pSelectBox->pointer = (void*)_curSelectMember->GetName();
 		}
@@ -1117,38 +1116,37 @@ void CChat::_OnMouseStudentMenu(CGuiData* pSender, int x, int y, DWORD key) {
 
 	string strCommand = pItem->GetString();
 
-	if (strCommand == g_oLangRec.GetString(482)) //
+	if (strCommand == GetLanguageString(482)) //
 	{
 		CS_Frnd_Invite(_curSelectMember->GetName());
 	}
-	else if (strCommand == g_oLangRec.GetString(484)) //
+	else if (strCommand == GetLanguageString(484)) //
 	{
 		if (_curSelectMember->GetLevel() >= 8) {
 			CS_Team_Invite(_curSelectMember->GetName());
 		}
 		else {
 			//
-			g_pGameApp->SysInfo(g_oLangRec.GetString(866));
+			g_pGameApp->SysInfo("%s", GetLanguageString(866).c_str());
 		}
 	}
-	else if (strCommand == g_oLangRec.GetString(481)) //
+	else if (strCommand == GetLanguageString(481)) //
 	{
 		CCozeForm::GetInstance()->OnPrivateNameSet(_curSelectMember->GetName());
 	}
-	else if (strCommand == g_oLangRec.GetString(478)) //
+	else if (strCommand == GetLanguageString(478)) //
 	{
 		CTalkSessionFormMgr::ApplySession(&_curSelectMember);
 	}
-	else if (strCommand == g_oLangRec.GetString(854)) //
+	else if (strCommand == GetLanguageString(854)) //
 	{
 		CCharacter* pMain = CGameScene::GetMainCha();
 		if (pMain && pMain->getGameAttr()) {
 			long nLevel = pMain->getGameAttr()->get(ATTR_LV);
 
-			char szBuffer[256] = {0};
-			sprintf(szBuffer, g_oLangRec.GetString(856), _curSelectMember->GetName(), nLevel * 5); //  %s \n:%d  :%d\n
+			auto _str = SafeVFormat(GetLanguageString(856), _curSelectMember->GetName(), nLevel * 5); //  %s \n:%d  :%d\n
 
-			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnStudentDeleteConfirm, szBuffer, true);
+			stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnStudentDeleteConfirm, _str.c_str(), true);
 			pSelectBox->dwTag = _curSelectMember->GetID();
 			pSelectBox->pointer = (void*)_curSelectMember->GetName();
 		}
@@ -1185,7 +1183,7 @@ void CChat::_evtAddFrnd(CGuiData* pSender, int x, int y, DWORD key) {
 			CS_Frnd_Invite(name.c_str());
 		}
 		else {
-			g_pGameApp->MsgBox(g_oLangRec.GetString(51));
+			g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
 		}
 	}
 	else {
@@ -1209,10 +1207,10 @@ void CChat::_evtChangeStyle(CGuiData* pSender, int x, int y, DWORD key) {
 	CMenuItem* pItem = _styMenu->GetSelectMenu();
 	if (!pItem) return;
 	string str = pItem->GetString();
-	if (str == g_oLangRec.GetString(486)) {
+	if (str == GetLanguageString(486)) {
 		_pTeamMgr->ChangeStyle(enumShowQQName);
 	}
-	else if (str == g_oLangRec.GetString(487)) {
+	else if (str == GetLanguageString(487)) {
 		_pTeamMgr->ChangeStyle(enumShowQQMotto);
 	}
 	_frmQQ->Refresh();
@@ -1242,7 +1240,7 @@ void CChat::_evtChangeMotto(CGuiData* pSender, int x, int y, DWORD key) {
 	std::string name = _pEditMotto->GetCaption();
 
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, name) || !IsValidName(name)) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(51));
+		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
 		return;
 	}
 
@@ -1282,7 +1280,7 @@ bool CChat::_UpdateFrndInfo(CMember* pMember) {
 		pDeName->SetCaption(pMember->GetName());
 	}
 	else {
-		_Error(g_oLangRec.GetString(473), _frmDetails->GetName(), "labDeName");
+		_Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "labDeName");
 	}
 
 	CLabelEx* pJob = dynamic_cast<CLabelEx*>(_frmDetails->Find("labJob"));
@@ -1290,7 +1288,7 @@ bool CChat::_UpdateFrndInfo(CMember* pMember) {
 		pJob->SetCaption(pMember->GetJobName());
 	}
 	else {
-		_Error(g_oLangRec.GetString(473), _frmDetails->GetName(), "labJob");
+		_Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "labJob");
 	}
 
 	CLabelEx* pLv = dynamic_cast<CLabelEx*>(_frmDetails->Find("labLv"));
@@ -1300,7 +1298,7 @@ bool CChat::_UpdateFrndInfo(CMember* pMember) {
 		pLv->SetCaption(buf);
 	}
 	else {
-		_Error(g_oLangRec.GetString(473), _frmDetails->GetName(), "labLv");
+		_Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "labLv");
 	}
 
 	CLabelEx* pConsortia = dynamic_cast<CLabelEx*>(_frmDetails->Find("labConsortia"));
@@ -1310,7 +1308,7 @@ bool CChat::_UpdateFrndInfo(CMember* pMember) {
 
 	CLabelEx* pName = dynamic_cast<CLabelEx*>(_frmDetails->Find("labName"));
 	if (!pName) {
-		_Error(g_oLangRec.GetString(473), _frmDetails->GetName(), "labName");
+		_Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "labName");
 	}
 
 	CImage* pDeHead = dynamic_cast<CImage*>(_frmDetails->Find("imgDeHead"));
@@ -1324,7 +1322,7 @@ bool CChat::_UpdateFrndInfo(CMember* pMember) {
 		}
 	}
 	else {
-		_Error(g_oLangRec.GetString(473), _frmDetails->GetName(), "imgDeHead");
+		_Error(GetLanguageString(473).c_str(), _frmDetails->GetName(), "imgDeHead");
 	}
 
 	_frmDetails->nTag = pMember->GetID();
@@ -1340,7 +1338,7 @@ bool CChat::_UpdateSelfInfo() {
 		pMineName->SetHint(_strSelfMottoName.c_str());
 	}
 	else {
-		_Error(g_oLangRec.GetString(473), _frmQQ->GetName(), "labMineName");
+		_Error(GetLanguageString(473).c_str(), _frmQQ->GetName(), "labMineName");
 	}
 
 	CImage* pImage = dynamic_cast<CImage*>(_frmQQ->Find("imgHead"));
@@ -1354,7 +1352,7 @@ bool CChat::_UpdateSelfInfo() {
 		}
 	}
 	else {
-		_Error(g_oLangRec.GetString(473), _frmQQ->GetName(), "imgHead");
+		_Error(GetLanguageString(473).c_str(), _frmQQ->GetName(), "imgHead");
 	}
 
 	return true;
@@ -1394,7 +1392,7 @@ void CChat::_OnDragEnd(CForm* pTargetForm, CTreeView* pTree, CTreeNodeObj* pNode
 	pSessForm = CTalkSessionFormMgr::GetSessionFormByForm(pTargetForm);
 	if (!pSessForm) return;
 	string strCaption = pNode->GetCaption();
-	if (strCaption == g_oLangRec.GetString(465)) return;
+	if (strCaption == GetLanguageString(465)) return;
 	CTextGraph* pText = dynamic_cast<CTextGraph*>(pItem);
 	if (pText) {
 		CMember* pMember = static_cast<CMember*>(pText->GetPointer());
@@ -1404,7 +1402,7 @@ void CChat::_OnDragEnd(CForm* pTargetForm, CTreeView* pTree, CTreeNodeObj* pNode
 		}
 		else {
 			if (string(pMember->GetName()) == pSessForm->GetMemberByIndex(0)->GetName()) {
-				g_pGameApp->SysInfo(g_oLangRec.GetString(488));
+				g_pGameApp->SysInfo("%s", GetLanguageString(488).c_str());
 				return;
 			}
 			pSessForm->AddMemberToBuffer(pMember->GetName());
@@ -1472,10 +1470,9 @@ void CChat::_OnStudentDeleteConfirm(CCompent* pSender, int nMsgType, int x, int 
 
 
 void CChat::MasterAsk(const char* szName, DWORD dwCharID) {
-	char szBuffer[512] = {0};
-	sprintf(szBuffer, g_oLangRec.GetString(860), szName);
+	auto _str = SafeVFormat(GetLanguageString(860), szName);
 
-	stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnStudentAskConfirm, szBuffer, true);
+	stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnStudentAskConfirm, _str.c_str(), true);
 	pSelectBox->pointer = (void*)szName;
 	pSelectBox->dwTag = dwCharID;
 }
@@ -1489,10 +1486,9 @@ void CChat::_OnStudentAskConfirm(CCompent* pSender, int nMsgType, int x, int y, 
 
 
 void CChat::PrenticeAsk(const char* szName, DWORD dwCharID) {
-	char szBuffer[512] = {0};
-	sprintf(szBuffer, g_oLangRec.GetString(861), szName);
+	auto _str = SafeVFormat(GetLanguageString(861), szName);
 
-	stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnMasterAskConfirm, szBuffer, true);
+	stSelectBox* pSelectBox = g_stUIBox.ShowSelectBox(_OnMasterAskConfirm, _str.c_str(), true);
 	pSelectBox->pointer = (void*)szName;
 	pSelectBox->dwTag = dwCharID;
 }

@@ -44,7 +44,7 @@ bool CMisLogForm::Init()
 	m_pForm = _FindForm( "frmMission" );
 	if( !m_pForm )
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(721));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(721).c_str());
 		return false;
 	}
 
@@ -54,7 +54,7 @@ bool CMisLogForm::Init()
 
 	if( !m_pMisTree )
 	{
-		return Error( g_oLangRec.GetString(473), m_pForm->GetName(), "trvMission" );
+		return Error( GetLanguageString(473).c_str(), m_pForm->GetName(), "trvMission" );
 	}
 
 	m_pMisTree->evtMouseDown = _MouseDown;
@@ -64,7 +64,7 @@ bool CMisLogForm::Init()
 	m_pMisInfo = dynamic_cast<CMemoEx*>(m_pForm->Find( "memMiss" ));
 	if( !m_pMisInfo )
 	{
-		return Error( g_oLangRec.GetString(473), m_pForm->GetName(), "memMiss" );
+		return Error( GetLanguageString(473).c_str(), m_pForm->GetName(), "memMiss" );
 	}
 	m_pMisInfo->SetRowNum(64);
 	m_pMisInfo->Refresh();
@@ -110,7 +110,7 @@ void CMisLogForm::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 			
 			char szData[128];
 			BYTE byType = 0;
-			sprintf( szData,g_oLangRec.GetString(722), g_stUIMisLog.m_wMisID );
+			strncpy_s(szData, sizeof(szData), SafeVFormat(GetLanguageString(722), g_stUIMisLog.m_wMisID).c_str(), _TRUNCATE);
 
 			// Get mission info
 			g_stUIMisLog.GetMisData( g_stUIMisLog.m_wMisID, byType, szData, 32 );
@@ -126,7 +126,7 @@ void CMisLogForm::_MouseEvent( CCompent *pSender, int nMsgType, int x, int y, DW
 			//}
 			//else
 			//{
-				sprintf( szBuf, g_oLangRec.GetString(723), szData );
+				strncpy_s(szBuf, sizeof(szBuf), SafeVFormat(GetLanguageString(723), szData).c_str(), _TRUNCATE);
 			//}
 
 
@@ -196,7 +196,7 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 	USHORT sMaxNum = 28;
 	char szData[128];
 	byType = 0;
-	sprintf( szData,g_oLangRec.GetString(722), wMisID );
+	strncpy_s(szData, sizeof(szData), SafeVFormat(GetLanguageString(722), wMisID).c_str(), _TRUNCATE);
 	CTreeNodeObj* pNode = m_pMisTree->GetRootNode();
 
 	// Get mission info
@@ -246,19 +246,19 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 
 	if( byState == ROLE_MIS_PENDING_FLAG )
 	{
-		strData += g_oLangRec.GetString(724);
+		strData += GetLanguageString(724);
 	}
 	else if( byState == ROLE_MIS_COMPLETE_FLAG )
 	{
-		strData += g_oLangRec.GetString(725);
+		strData += GetLanguageString(725);
 	}
 	else if( byState == ROLE_MIS_FAILURE_FALG )
 	{
-		strData += g_oLangRec.GetString(726);
+		strData += GetLanguageString(726);
 	}
 	else
 	{
-		strData += g_oLangRec.GetString(727);
+		strData += GetLanguageString(727);
 	}
 
 	// Add mission info to the appropriate category tree node
@@ -273,7 +273,7 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 	{
 		if( m_pNormal == NULL )
 		{
-			CItem* pTemp = new CItem( g_oLangRec.GetString(728), COLOR_BLACK );
+			CItem* pTemp = new CItem( GetLanguageString(728).c_str(), COLOR_BLACK );
 			m_pNormal = new CTreeNode( m_pMisTree, pTemp );
 			m_pNormal->SetTag( -1 );
 			pNode->AddNode( m_pNormal );
@@ -284,7 +284,7 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 	{
 		if( m_pHistory == NULL )
 		{
-			CItem* pTemp = new CItem( g_oLangRec.GetString(729), COLOR_BLACK );
+			CItem* pTemp = new CItem( GetLanguageString(729).c_str(), COLOR_BLACK );
 			m_pHistory = new CTreeNode( m_pMisTree, pTemp );
 			m_pHistory->SetTag( -1 );
 			pNode->AddNode( m_pHistory );
@@ -295,7 +295,7 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 	{
 		if( m_pGuild == NULL )
 		{
-			CItem* pTemp = new CItem( g_oLangRec.GetString(730), COLOR_BLACK );
+			CItem* pTemp = new CItem( GetLanguageString(730).c_str(), COLOR_BLACK );
 			m_pGuild = new CTreeNode( m_pMisTree, pTemp );
 			m_pGuild->SetTag( -1 );
 			pNode->AddNode( m_pGuild );
@@ -306,7 +306,7 @@ BOOL CMisLogForm::AddNode( WORD wMisID, BYTE byState, BYTE& byType )
 	{
 		if( m_pInvalid == NULL )
 		{
-			CItem* pTemp = new CItem( g_oLangRec.GetString(731), COLOR_BLACK );
+			CItem* pTemp = new CItem( GetLanguageString(731).c_str(), COLOR_BLACK );
 			m_pInvalid = new CTreeNode( m_pMisTree, pTemp );
 			m_pInvalid->SetTag( -1 );
 			pNode->AddNode( m_pInvalid );
@@ -414,7 +414,7 @@ void CMisLogForm::MisClear( WORD wMisID )
 
 	if( nIndex == -1 )
 	{
-		g_pGameApp->MsgBox( g_oLangRec.GetString(732), wMisID );
+		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(732), wMisID).c_str());
 		return;
 	}
 
@@ -444,7 +444,7 @@ void CMisLogForm::MisClear( WORD wMisID )
 			CTreeNodeObj* pChild = pNode->GetChildNode( n );
 			if( pChild == NULL )
 			{
-				g_pGameApp->MsgBox( g_oLangRec.GetString(733), wMisID, n );
+				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(733), wMisID, n).c_str());
 				break;
 			}
 			DWORD dwData = pChild->GetTag();
@@ -554,7 +554,7 @@ void CMisLogForm::MisLogState( WORD wMisID, BYTE byState )
 			CTreeNodeObj* pChild = pNode->GetChildNode( n );
 			if( pChild == NULL )
 			{
-				g_pGameApp->MsgBox( g_oLangRec.GetString(734), wMisID, n );
+				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(734), wMisID, n).c_str());
 				break;
 			}
 			DWORD dwData = pChild->GetTag();
@@ -568,7 +568,7 @@ void CMisLogForm::MisLogState( WORD wMisID, BYTE byState )
 	
 	if( pFind == NULL ) 
 	{
-		g_pGameApp->MsgBox( g_oLangRec.GetString(735), wMisID );
+		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(735), wMisID).c_str());
 		return;
 	}
 
@@ -577,7 +577,7 @@ void CMisLogForm::MisLogState( WORD wMisID, BYTE byState )
 	// Get mission info
 	char szData[128];
 	BYTE byType = 0;
-	sprintf( szData,g_oLangRec.GetString(722), wMisID );
+	strncpy_s(szData, sizeof(szData), SafeVFormat(GetLanguageString(722), wMisID).c_str(), _TRUNCATE);
 	GetMisData( wMisID, byType, szData, 32 );
 
 	string strData = "<p";
@@ -593,36 +593,36 @@ void CMisLogForm::MisLogState( WORD wMisID, BYTE byState )
 
 	if( byState == ROLE_MIS_PENDING_FLAG )
 	{
-		strData += g_oLangRec.GetString(724);
+		strData += GetLanguageString(724);
 	}
 	else if( byState == ROLE_MIS_COMPLETE_FLAG )
 	{
-		strData += g_oLangRec.GetString(725);
+		strData += GetLanguageString(725);
 	}
 	else if( byState == ROLE_MIS_FAILURE_FALG )
 	{
-		strData += g_oLangRec.GetString(726);
+		strData += GetLanguageString(726);
 	}
 	else
 	{
-		strData += g_oLangRec.GetString(727);
+		strData += GetLanguageString(727);
 	}
 
 	if( byState == ROLE_MIS_PENDING_FLAG )
 	{
-		strData += g_oLangRec.GetString(736);
+		strData += GetLanguageString(736);
 	}
 	else if( byState == ROLE_MIS_COMPLETE_FLAG )
 	{
-		strData += g_oLangRec.GetString(737);
+		strData += GetLanguageString(737);
 	}
 	else if( byState == ROLE_MIS_FAILURE_FALG )
 	{
-		strData += g_oLangRec.GetString(738);
+		strData += GetLanguageString(738);
 	}
 	else
 	{
-		strData += g_oLangRec.GetString(739);
+		strData += GetLanguageString(739);
 	}
 
 	pItem->SetString( strData.c_str() );
@@ -698,17 +698,17 @@ void CMisLogForm::_ItemClickEvent( string strItem )
 		auto wintermap = "Winter Isle Archipelago";
 		//check npc is valid or not
 		const char* targetmap = nullptr;
-		if (map == g_oLangRec.GetString(56))
+		if (map == GetLanguageString(56))
 		{
-			targetmap = g_oLangRec.GetString(56);
+			targetmap = GetLanguageString(56).c_str();
 		}
-		else if (map == g_oLangRec.GetString(57))
+		else if (map == GetLanguageString(57))
 		{
-			targetmap = g_oLangRec.GetString(57);
+			targetmap = GetLanguageString(57).c_str();
 		}
-		else if (map == g_oLangRec.GetString(58))
+		else if (map == GetLanguageString(58))
 		{
-			targetmap = g_oLangRec.GetString(58);
+			targetmap = GetLanguageString(58).c_str();
 		}
 		else if (map == wintermap)
 		{

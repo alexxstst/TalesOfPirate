@@ -15,8 +15,8 @@ extern "C"
 #define LUA_TRUE			1
 
 // runtime-   InternalLog 
-#define PARAM_ERROR        { g_logManager.InternalLog(LogLevel::Error, "lua", std::format("{}  {}", __FUNCTION__, g_oLangRec.GetString(183))); }
-#define SCENE_NULL_ERROR   { g_logManager.InternalLog(LogLevel::Error, "lua", std::format("{}  {}", __FUNCTION__, g_oLangRec.GetString(184))); }
+#define PARAM_ERROR        { g_logManager.InternalLog(LogLevel::Error, "lua", std::format("{}  {}", __FUNCTION__, GetLanguageString(183))); }
+#define SCENE_NULL_ERROR   { g_logManager.InternalLog(LogLevel::Error, "lua", std::format("{}  {}", __FUNCTION__, GetLanguageString(184))); }
 
 extern void InitLuaPlatform();
 

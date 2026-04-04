@@ -50,7 +50,8 @@ bool CTeamInviteFormMgr::AddInviteForm(DWORD id,string inviterName)
 	CLabelEx *labGroupName=dynamic_cast<CLabelEx*>(node->pForm->Find("labGroupName"));
 	if (labGroupName)
 	{
-		sprintf(str,g_oLangRec.GetString(62),inviterName.data());
+		auto _str = SafeVFormat(GetLanguageString(62), inviterName.data());
+		strncpy_s(str, sizeof(str), _str.c_str(), _TRUNCATE);
 		//labGroupName->SetIsCenter(true);
 		labGroupName->SetCaption(str);
 	}
@@ -58,7 +59,7 @@ bool CTeamInviteFormMgr::AddInviteForm(DWORD id,string inviterName)
 	if (labGroup)
 	{
 		//labGroup->SetIsCenter(true);
-		labGroup->SetCaption(g_oLangRec.GetString(420));
+		labGroup->SetCaption(GetLanguageString(420).c_str());
 	}
 	node->pForm->evtEntrustMouseEvent=_MainMousePlayerGroupEvent;
 	node->pForm->nTag=id;

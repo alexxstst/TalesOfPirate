@@ -34,8 +34,8 @@ long CSceneArea::Init(_TCHAR *ptcsAreaFile, bool bSilence)
 	{
 		if (!bSilence)
 		{
-			_stprintf(tcsPrint, _TEXT("%s %s"), ptcsAreaFile, _TEXT(g_oLangRec.GetString(339)));
-			MessageBox(NULL, tcsPrint, _TEXT(g_oLangRec.GetString(25)), 0);
+			_stprintf(tcsPrint, _TEXT("%s %s"), ptcsAreaFile, GetLanguageString(339).c_str());
+			MessageBox(NULL, tcsPrint, GetLanguageString(25).c_str(), 0);
 		}
 		lRet = -1;
 		goto end;
@@ -45,8 +45,8 @@ long CSceneArea::Init(_TCHAR *ptcsAreaFile, bool bSilence)
 	{
 		if (!bSilence)
 		{
-			_stprintf(tcsPrint, _TEXT("%s %s"), ptcsAreaFile, _TEXT(g_oLangRec.GetString(340)));
-			MessageBox(NULL, tcsPrint, _TEXT(g_oLangRec.GetString(25)), 0);
+			_stprintf(tcsPrint, _TEXT("%s %s"), ptcsAreaFile, GetLanguageString(340).c_str());
+			MessageBox(NULL, tcsPrint, GetLanguageString(25).c_str(), 0);
 		}
 		lRet = -2;
 		goto end;

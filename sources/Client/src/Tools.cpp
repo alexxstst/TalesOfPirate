@@ -6,7 +6,7 @@ using namespace std;
 
 string ConvertNumToChinese( int num )
 {
-	if( num==0 ) return g_oLangRec.GetString(421);
+	if( num==0 ) return GetLanguageString(421);
 
 	char szNum[255] = { 0 };
 	itoa( num, szNum, 10 );
@@ -17,31 +17,31 @@ string ConvertNumToChinese( int num )
 	const char* pszPos = szNum;
 	if( *pszPos=='-' )
 	{
-		str << g_oLangRec.GetString(422);
+		str << GetLanguageString(422).c_str();
 		pszPos++;
 	}
 
-	static char szChinese[10][16];// = { g_oLangRec.GetString(421), g_oLangRec.GetString(423), g_oLangRec.GetString(424), g_oLangRec.GetString(425), g_oLangRec.GetString(426), g_oLangRec.GetString(427), g_oLangRec.GetString(428), g_oLangRec.GetString(429), g_oLangRec.GetString(430), g_oLangRec.GetString(431) };
-	strcpy(szChinese[0], g_oLangRec.GetString(421));
-	strcpy(szChinese[1], g_oLangRec.GetString(423));
-	strcpy(szChinese[2], g_oLangRec.GetString(424));
-	strcpy(szChinese[3], g_oLangRec.GetString(425));
-	strcpy(szChinese[4], g_oLangRec.GetString(426));
-	strcpy(szChinese[5], g_oLangRec.GetString(427));
-	strcpy(szChinese[6], g_oLangRec.GetString(428));
-	strcpy(szChinese[7], g_oLangRec.GetString(429));
-	strcpy(szChinese[8], g_oLangRec.GetString(430));
-	strcpy(szChinese[9], g_oLangRec.GetString(431));
+	static char szChinese[10][16];// = { GetLanguageString(421), GetLanguageString(423), GetLanguageString(424), GetLanguageString(425), GetLanguageString(426), GetLanguageString(427), GetLanguageString(428), GetLanguageString(429), GetLanguageString(430), GetLanguageString(431) };
+	strncpy_s(szChinese[0], sizeof(szChinese[0]), GetLanguageString(421).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[1], sizeof(szChinese[1]), GetLanguageString(423).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[2], sizeof(szChinese[2]), GetLanguageString(424).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[3], sizeof(szChinese[3]), GetLanguageString(425).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[4], sizeof(szChinese[4]), GetLanguageString(426).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[5], sizeof(szChinese[5]), GetLanguageString(427).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[6], sizeof(szChinese[6]), GetLanguageString(428).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[7], sizeof(szChinese[7]), GetLanguageString(429).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[8], sizeof(szChinese[8]), GetLanguageString(430).c_str(), _TRUNCATE);
+	strncpy_s(szChinese[9], sizeof(szChinese[9]), GetLanguageString(431).c_str(), _TRUNCATE);
 
-	static char szHigh[8][16];// = { g_oLangRec.GetString(432), g_oLangRec.GetString(433), g_oLangRec.GetString(434), g_oLangRec.GetString(435), g_oLangRec.GetString(432), g_oLangRec.GetString(433), g_oLangRec.GetString(434), g_oLangRec.GetString(436) };
-	strcpy(szHigh[0], g_oLangRec.GetString(432));
-	strcpy(szHigh[1], g_oLangRec.GetString(433));
-	strcpy(szHigh[2], g_oLangRec.GetString(434));
-	strcpy(szHigh[3], g_oLangRec.GetString(435));
-	strcpy(szHigh[4], g_oLangRec.GetString(432));
-	strcpy(szHigh[5], g_oLangRec.GetString(433));
-	strcpy(szHigh[6], g_oLangRec.GetString(434));
-	strcpy(szHigh[7], g_oLangRec.GetString(436));
+	static char szHigh[8][16];// = { GetLanguageString(432), GetLanguageString(433), GetLanguageString(434), GetLanguageString(435), GetLanguageString(432), GetLanguageString(433), GetLanguageString(434), GetLanguageString(436) };
+	strncpy_s(szHigh[0], sizeof(szHigh[0]), GetLanguageString(432).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[1], sizeof(szHigh[1]), GetLanguageString(433).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[2], sizeof(szHigh[2]), GetLanguageString(434).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[3], sizeof(szHigh[3]), GetLanguageString(435).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[4], sizeof(szHigh[4]), GetLanguageString(432).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[5], sizeof(szHigh[5]), GetLanguageString(433).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[6], sizeof(szHigh[6]), GetLanguageString(434).c_str(), _TRUNCATE);
+	strncpy_s(szHigh[7], sizeof(szHigh[7]), GetLanguageString(436).c_str(), _TRUNCATE);
 	
 	char nChar = 0;
 	int nZeroNum = 0;				
@@ -70,7 +70,7 @@ string ConvertNumToChinese( int num )
 			if( nZeroNum>0 )    // ,
 			{
 				nZeroNum = 0;
-				str << g_oLangRec.GetString(421);
+				str << GetLanguageString(421).c_str();
 			}
 			str << szChinese[ nChar - '0' ];
 			if( nLen > 0 )
@@ -98,7 +98,7 @@ string ConvertNumToChinese( int num )
 
 	// ,
 	string rv = str.str();
-	if( rv.length()>=4 && rv.substr( 0, 4 ) == g_oLangRec.GetString(437) )
+	if( rv.length()>=4 && rv.substr( 0, 4 ) == GetLanguageString(437) )
 		return rv.substr( 2, rv.length() );
 
 	return rv;

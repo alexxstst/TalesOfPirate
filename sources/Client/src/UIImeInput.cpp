@@ -71,7 +71,7 @@ bool CImeInput::HandleWindowMsg(DWORD dwMsg, WPARAM wParam, LPARAM lParam)
 			else
 			{
 				_bIsShow = false;
-				strcpy( _strImmName, g_oLangRec.GetString(622));
+				strncpy_s( _strImmName, sizeof(_strImmName), GetLanguageString(622).c_str(), _TRUNCATE);
 			}
             return true;
 		}

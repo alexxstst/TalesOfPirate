@@ -251,7 +251,7 @@ public:
 	bool		m_bIsGuildLeader;	//0-;1-
 	struct
 	{
-		BitMaskStatus m_GuildState;	//,:enum EGuildState
+		uint32_t m_GuildState{};	//,:enum EGuildState
 
 		uLong m_GuildStatus;	//
 		uLong m_lGuildID;		//ID.

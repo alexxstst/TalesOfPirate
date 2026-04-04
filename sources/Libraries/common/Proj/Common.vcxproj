@@ -57,7 +57,7 @@
     <ClCompile>
       <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\server\Sdk\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\enclib\include;$(ProjectDir)..\..\ICUHelper\inc;$(ProjectDir)..\..\icu\include\;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
@@ -70,17 +70,11 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Lib />
-    <Lib>
-      <AdditionalDependencies>cryptlib.lib</AdditionalDependencies>
-    </Lib>
-    <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\cryptopp\Win32\Output\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-    </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\server\Sdk\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\enclib\include;$(ProjectDir)..\..\ICUHelper\inc;$(ProjectDir)..\..\icu\include\;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -94,10 +88,7 @@
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
-    <Lib>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\ICUHelper\lib;$(ProjectDir)..\..\icu\lib;$(ProjectDir)..\..\cryptopp\Win32\Output\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>cryptlib.lib</AdditionalDependencies>
-    </Lib>
+    <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\src\ChaAttr.cpp" />
@@ -162,8 +153,8 @@
     <ClCompile Include="..\src\ItemRefineEffectRecordStore.cpp" />
     <ClCompile Include="..\src\MonsterListRecordStore.cpp" />
     <ClCompile Include="..\src\NPCListRecordStore.cpp" />
+    <ClCompile Include="..\src\LanguageRecordStore.cpp" />
     <ClCompile Include="..\src\AssetDatabase.cpp" />
-    <ClCompile Include="..\..\Server\Sdk\src\IniFile.cpp" />
     <ClCompile Include="..\..\sqlite3\sqlite3.c">
       <CompileAs>CompileAsC</CompileAs>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -277,8 +268,8 @@
     <ClInclude Include="..\include\NPCDataRecord.h" />
     <ClInclude Include="..\include\MonsterListRecordStore.h" />
     <ClInclude Include="..\include\NPCListRecordStore.h" />
+    <ClInclude Include="..\include\LanguageRecordStore.h" />
     <ClInclude Include="..\include\AssetDatabase.h" />
-    <ClInclude Include="..\..\Server\Sdk\Include\IniFile.h" />
     <ClInclude Include="..\..\sqlite3\sqlite3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

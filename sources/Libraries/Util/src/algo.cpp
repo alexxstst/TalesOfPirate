@@ -669,38 +669,6 @@ bool encrypt_A(char* out, char* in, long data_len, char const* key,
     {return algo_A(out, in, data_len, key, key_len, en);}
 
 
-#if 0
-bool dbpswd_out(char const* ctxt, int ctxt_len, string& pswd)
-    {
-    char ctmp1[1024];
-    char ctmp2[2048];
-    unsigned int ctmp2_len;
-
-    ibase64(ctxt, ctxt_len, ctmp2, &ctmp2_len);
-
-    if (!algo_A(ctmp1, ctmp2, ctmp2_len, basis_128, int(strlen(basis_128)), false))
-        return false;
-
-    ctmp1[ctmp2_len] = 0;
-    pswd = ctmp1;
-    return true;}
-bool dbpswd_in(char const* pswd, int pswd_len, string& ctxt)
-{
-    char ctmp1[1024];
-    unsigned int ctmp1_len;
-    char ctmp2[1024];
-    unsigned int ctmp2_len;
-
-    if (!algo_A(ctmp1, (char *)pswd, pswd_len, basis_128, int(strlen(basis_128)), true))
-        return false;
-
-    ctmp1_len = 8 * (pswd_len / 8 + ((pswd_len % 8 != 0) ? 1 : 0));
-    base64(ctmp1, ctmp1_len, ctmp2, sizeof ctmp2, &ctmp2_len);
-
-    ctxt = ctmp2;
-    return true;}
-#endif
-
 //////////////////////////////////////////////////////////////////////////
 //
 // Message Digest 5

@@ -18,20 +18,12 @@
 #include "ItemRefineEffectRecordStore.h"
 #include "GameWG.h"
 #include "GameMovie.h"
-#include "ResourceBundleManage.h"
-#include "pi_Alloc.h"
 #include "LootFilter.h"
 
 #ifndef USE_DSOUND
 #include "AudioThread.h"
 CAudioThread	g_AudioThread;
 #endif
-
-// 
-CLanguageRecord g_oLangRec("./scripts/table/StringSet.bin", "./scripts/table/StringSet.txt");
-CResourceBundleManage g_ResourceBundleManage("Game.loc");			// These objects are just being called here to avoid linker errors,
-pi_LeakReporter pi_leakReporter("gameleak.log");		// since client uses StringSet instead of .res files.
-
 
 bool	volatile	g_bLoadRes				  = FALSE;
 CGameApp*	        g_pGameApp	              = NULL;

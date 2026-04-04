@@ -48,7 +48,7 @@ bool CNpcTalkMgr::Init()
 	frmNPCchat->evtEntrustMouseEvent = _MainMouseNPCEvent;
 
 	memCtrl = dynamic_cast<CMemo*> (frmNPCchat->Find("memCtrl")) ;
-	if( !memCtrl ) return Error(g_oLangRec.GetString(45), frmNPCchat->GetName(), "memCtrl");	
+	if( !memCtrl ) return Error(GetLanguageString(45).c_str(), frmNPCchat->GetName(), "memCtrl");	
 	memCtrl->evtSelectChange = _evtMemSelectChange;
 	return true;
 }

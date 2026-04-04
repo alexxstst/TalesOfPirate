@@ -50,7 +50,7 @@ BOOL CSceneItem::_Create(int nObjTypeID,int nType)
     _pItemInfo = GetItemRecordInfo( nObjTypeID );
 	if( _pItemInfo==NULL ) 
     {
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(349), nObjTypeID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+        g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(349), nObjTypeID));
         return FALSE;
     }
 
@@ -59,7 +59,7 @@ BOOL CSceneItem::_Create(int nObjTypeID,int nType)
 	
     if(Load( str ) == 0)
     {
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(350), nObjTypeID, _pItemInfo->szName.c_str(), str); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(350), nObjTypeID, _pItemInfo->szName.c_str(), str));
 		return FALSE;
     }
 

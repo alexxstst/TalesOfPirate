@@ -100,7 +100,7 @@ bool CUIGuildMgr::Init() {
 	FORM_CONTROL_LOADING_CHECK(m_pbtnMemberPerms, m_pGuildMgrForm, CTextButton, "manage.clu", "btnperm");
 
 	m_pbtnGuildLeave->evtMouseClick = [](CGuiData* pSender, int x, int y, DWORD key) {
-		CBoxMgr::ShowSelectBox(_OnClickLeave, g_oLangRec.GetString(596), true);
+		CBoxMgr::ShowSelectBox(_OnClickLeave, GetLanguageString(596).c_str(), true);
 	};
 	m_pbtnGuildDisband->evtMouseClick = [](CGuiData* pSender, int x, int y, DWORD key) {
 		CBoxMgr::ShowPasswordBox(_OnPassDismiss, "Disband Guild");
@@ -227,7 +227,7 @@ void CUIGuildMgr::_OnClickConfirmPerm(CGuiData* pSender, int x, int y, DWORD key
 	if (pSelfData && perm == emGldPermMgr) {
 		CItemRow* pRow = m_plstGuildMember->GetList()->GetSelectItem();
 		if (!pRow) {
-			CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(600), true);
+			CBoxMgr::ShowMsgBox(NULL, GetLanguageString(600).c_str(), true);
 			return;
 		}
 
@@ -435,7 +435,7 @@ void CUIGuildMgr::_OnClickEditMottoName(CGuiData* pSender, int x, int y, DWORD k
 		m_pGuildMottoNameEditForm->ShowModal();
 	}
 	else {
-		CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(594), true);
+		CBoxMgr::ShowMsgBox(NULL, GetLanguageString(594).c_str(), true);
 	}
 }
 
@@ -445,7 +445,7 @@ void CUIGuildMgr::_OnClickRecruit(CGuiData* pSender, int x, int y, DWORD key) {
 	if (pSelfData && perm == emGldPermRecruit) {
 		CItemRow* pRow = m_plstRecruitMember->GetList()->GetSelectItem();
 		if (!pRow) {
-			CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(597), true);
+			CBoxMgr::ShowMsgBox(NULL, GetLanguageString(597).c_str(), true);
 			return;
 		}
 		CRecruitMemberData* pMemberData = static_cast<CRecruitMemberData*>(pRow->GetPointer());
@@ -454,7 +454,7 @@ void CUIGuildMgr::_OnClickRecruit(CGuiData* pSender, int x, int y, DWORD key) {
 		CRecruitMembersMgr::DelRecruitMember(pMemberData);
 	}
 	else {
-		CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(598), true);
+		CBoxMgr::ShowMsgBox(NULL, GetLanguageString(598).c_str(), true);
 	}
 }
 
@@ -464,7 +464,7 @@ void CUIGuildMgr::_OnClickRefuse(CGuiData* pSender, int x, int y, DWORD key) {
 	if (pSelfData && perm == emGldPermRecruit) {
 		CItemRow* pRow = m_plstRecruitMember->GetList()->GetSelectItem();
 		if (!pRow) {
-			CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(597), true);
+			CBoxMgr::ShowMsgBox(NULL, GetLanguageString(597).c_str(), true);
 			return;
 		}
 		CRecruitMemberData* pMemberData = static_cast<CRecruitMemberData*>(pRow->GetPointer());
@@ -473,7 +473,7 @@ void CUIGuildMgr::_OnClickRefuse(CGuiData* pSender, int x, int y, DWORD key) {
 		CRecruitMembersMgr::DelRecruitMember(pMemberData);
 	}
 	else {
-		CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(599), true);
+		CBoxMgr::ShowMsgBox(NULL, GetLanguageString(599).c_str(), true);
 	}
 }
 
@@ -482,15 +482,15 @@ void CUIGuildMgr::_OnClickKick(CGuiData* pSender, int x, int y, DWORD key) {
 	if (pSelfData && (pSelfData->GetPerm() & emGldPermKick) == emGldPermKick) {
 		CItemRow* pRow = m_plstGuildMember->GetList()->GetSelectItem();
 		if (!pRow) {
-			CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(600), true);
+			CBoxMgr::ShowMsgBox(NULL, GetLanguageString(600).c_str(), true);
 			return;
 		}
 		CGuildMemberData* pMemberData = static_cast<CGuildMemberData*>(pRow->GetPointer());
-		string str = g_oLangRec.GetString(601) + pMemberData->GetName() + g_oLangRec.GetString(602);
+		string str = GetLanguageString(601) + pMemberData->GetName() + GetLanguageString(602);
 		CBoxMgr::ShowSelectBox(_OnPassKick, str.c_str(),true);
 	}
 	else {
-		CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(603), true);
+		CBoxMgr::ShowMsgBox(NULL, GetLanguageString(603).c_str(), true);
 	}
 }
 
@@ -499,7 +499,7 @@ void CUIGuildMgr::_OnClickMottoFormOK(CGuiData* pSender, int x, int y, DWORD key
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, name)
 		|| !IsValidName(name)
 	) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(51));
+		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
 		return;
 	}
 	CM_GUILD_MOTTO(name.c_str());
@@ -523,31 +523,31 @@ void CUIGuildMgr::RefreshAttribute() {
 	CGuildData::eState state = CGuildData::GetGuildState();
 	string strState;
 	if (state == CGuildData::normal) {
-		strState = g_oLangRec.GetString(606);
+		strState = GetLanguageString(606);
 		//m_plabGuildState->SetCaption(strState.c_str());
 		//m_plabGuildRemainTime->SetCaption("");
 	}
 	else {
-		strState = g_oLangRec.GetString(607);
+		strState = GetLanguageString(607);
 		if (state & CGuildData::money) {
-			strState += g_oLangRec.GetString(608);
+			strState += GetLanguageString(608);
 		}
 		if (state & CGuildData::repute) {
-			strState += g_oLangRec.GetString(609);
+			strState += GetLanguageString(609);
 		}
 		if (state & CGuildData::member) {
-			strState += g_oLangRec.GetString(610);
+			strState += GetLanguageString(610);
 		}
 		//m_plabGuildState->SetCaption(strState.c_str());
 		__int64 remain = CGuildData::GetRemainTime();
 		if (remain > 1440) {
-			sprintf(buf, g_oLangRec.GetString(611), remain / 1440);
+			sprintf(buf, GetLanguageString(611).c_str(), remain / 1440);
 		}
 		else if (remain > 60) {
-			sprintf(buf, g_oLangRec.GetString(612), remain / 60);
+			sprintf(buf, GetLanguageString(612).c_str(), remain / 60);
 		}
 		else {
-			sprintf(buf, g_oLangRec.GetString(613), remain);
+			sprintf(buf, GetLanguageString(613).c_str(), remain);
 		}
 		//m_plabGuildRemainTime->SetCaption(buf);
 	}
@@ -689,7 +689,7 @@ void CUIGuildMgr::_OnPassKick(CCompent* pSender, int nMsgType, int x, int y, DWO
 	if (nMsgType != CForm::mrYes) return;
 	CItemRow* pRow = m_plstGuildMember->GetList()->GetSelectItem();
 	if (!pRow) {
-		CBoxMgr::ShowMsgBox(NULL, g_oLangRec.GetString(614), true);
+		CBoxMgr::ShowMsgBox(NULL, GetLanguageString(614).c_str(), true);
 		return;
 	}
 	CGuildMemberData* pMemberData = static_cast<CGuildMemberData*>(pRow->GetPointer());

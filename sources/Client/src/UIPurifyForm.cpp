@@ -431,7 +431,7 @@ namespace GUI
 		{
 			//if(! g_stUIPurify.IsEquipItem(*pItemCommand))
 			//{
-			//	g_pGameApp->MsgBox(g_oLangRec.GetString(831)); // 
+			//	g_pGameApp->MsgBox("%s", GetLanguageString(831).c_str()); // 
 			//	return;
 			//}
 		}
@@ -440,7 +440,7 @@ namespace GUI
 		{
 			if(pItemCommand->GetItemInfo()->sType != 29)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(852)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(852).c_str()); // 
 				return;
 			}
 		}
@@ -449,7 +449,7 @@ namespace GUI
 		{
 			if(! g_stUIPurify.IsEquipItem(*pItemCommand))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(831)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(831).c_str()); // 
 				return;
 			}
 		}
@@ -458,7 +458,7 @@ namespace GUI
 		{
 			if(! g_stUIPurify.IsMainLifeItem(*pItemCommand))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(891)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(891).c_str()); // 
 				return;
 			}
 		}
@@ -487,19 +487,19 @@ namespace GUI
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(828)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(828).c_str()); // 
 				return;
 			}
 
 			//if(pMainItem->GetItemInfo()->sType != pItemCommand->GetItemInfo()->sType)
 			//{
-			//	g_pGameApp->MsgBox(g_oLangRec.GetString(829)); // 
+			//	g_pGameApp->MsgBox(GetLanguageString(829)); // 
 			//	return;
 			//}
 
 			//if(pMainItem->GetData().GetItemLevel() > pItemCommand->GetData().GetItemLevel() + 5)
 			//{
-			//	g_pGameApp->MsgBox(g_oLangRec.GetString(830)); //  5 
+			//	g_pGameApp->MsgBox(GetLanguageString(830)); //  5 
 			//	return;
 			//}
 		}
@@ -508,7 +508,7 @@ namespace GUI
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(853)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(853).c_str()); // 
 				return;
 			}
 		}
@@ -517,7 +517,7 @@ namespace GUI
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(828)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(828).c_str()); // 
 				return;
 			}
 		}
@@ -526,13 +526,13 @@ namespace GUI
 		{
 			if(NULL == pMainItem)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(892)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(892).c_str()); // 
 				return;
 			}
 
 			if(! g_stUIPurify.IsRepairLifeItem(*pItemCommand))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(893)); // 
+				g_pGameApp->MsgBox("%s", GetLanguageString(893).c_str()); // 
 				return;
 			}
 		}

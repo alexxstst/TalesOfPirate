@@ -1,1 +1,0 @@
-start system\Game.exe pKcfT0PcaX table_bin

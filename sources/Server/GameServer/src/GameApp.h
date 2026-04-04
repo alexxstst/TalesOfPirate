@@ -13,6 +13,7 @@
 
 
 #include "GameAppNet.h"
+#include "TrackedPool.h"
 #include "point.h"
 #include "RoleData.h"
 #include "Config.h"
@@ -241,18 +242,18 @@ public:
 	DWORD	m_dwChaCnt;
 	DWORD	m_dwPlayerCnt;
 	DWORD	m_dwActiveMgrUnit;
-	dbc::InterLockedLong   m_dwRunStep;	// 
+	std::atomic<LONG>   m_dwRunStep;	//
 	
 	BOOL	m_bExecLuaCmd;
 	std::string	m_strMapNameList;
 
-	dbc::PreAllocHeap<CPassengerMgr>		m_CabinHeap;
-	dbc::PreAllocHeap<mission::CTradeData>	m_TradeDataHeap;
-	dbc::PreAllocHeap<mission::CStallData>  m_StallDataHeap;
-	dbc::PreAllocHeap<CSkillTempData>		m_SkillTDataHeap;
-	dbc::PreAllocHeap<CStateCell>			m_MapStateCellHeap;
-	dbc::PreAllocHeap<CChaListNode>			m_ChaListHeap;
-	dbc::PreAllocHeap<CStateCellNode>		m_StateCellNodeHeap;
+	TrackedPool<CPassengerMgr>				m_CabinPool{"Cabin"};
+	TrackedPool<mission::CTradeData>		m_TradeDataPool{"TradeData"};
+	TrackedPool<mission::CStallData>		m_StallDataPool{"StallData"};
+	TrackedPool<CSkillTempData>				m_SkillTDataPool{"SkillTData"};
+	TrackedPool<CStateCell>					m_MapStateCellPool{"StateCell"};
+	TrackedPool<CChaListNode>				m_ChaListPool{"ChaList"};
+	TrackedPool<CStateCellNode>				m_StateCellNodePool{"StateCellNode"};
 
 	// 
 	dbc::Long	m_lCabinHeapNum;
@@ -382,7 +383,7 @@ inline CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv)
 {
 	if (!m_pCSkillTData[sSkillNo][chSkillLv])
 	{
-		m_pCSkillTData[sSkillNo][chSkillLv] = m_SkillTDataHeap.Get();
+		m_pCSkillTData[sSkillNo][chSkillLv] = m_SkillTDataPool.Get();
 		if (!m_pCSkillTData[sSkillNo][chSkillLv])
 			return 0;
 		CSkillRecord	*pCSkillRec;

@@ -73,7 +73,7 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 				if( dwParam1==1000 )
 				{
 					char szBuf[128] = { 0 };
-					sprintf( szBuf, g_oLangRec.GetString(135), WSAGetLastError() );
+					{ auto _str = SafeVFormat(GetLanguageString(135), WSAGetLastError()); strncpy_s(szBuf, sizeof(szBuf), _str.c_str(), _TRUNCATE); }
 					g_stUIBox.ShowMsgBox( _Disconnect, szBuf );
 					return;
 				}
@@ -90,7 +90,7 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 								// modify by Philip.Wu  2006-06-09  
 								if(g_Config.m_IsBill)
 								{
-									sprintf( szBuf, g_oLangRec.GetString(136), g_oLangRec.GetString(137), dwParam1 );
+									{ auto _str = SafeVFormat(GetLanguageString(136), GetLanguageString(137), dwParam1); strncpy_s(szBuf, sizeof(szBuf), _str.c_str(), _TRUNCATE); }
 								}
 								else
 								{
@@ -101,7 +101,7 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 							}
 							else
 							{
-								sprintf( szBuf, g_oLangRec.GetString(139), dwParam1 );
+								{ auto _str = SafeVFormat(GetLanguageString(139), dwParam1); strncpy_s(szBuf, sizeof(szBuf), _str.c_str(), _TRUNCATE); }
 							}
 
 							g_stUIBox.ShowMsgBox( _Disconnect, szBuf );
@@ -109,7 +109,7 @@ void CGameApp::_HandleMsg(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
 							extern bool g_HaveGameMender;
 							if( g_HaveGameMender )
 							{
-								g_pGameApp->MsgBox( g_oLangRec.GetString(140) );
+								g_pGameApp->MsgBox( "%s", GetLanguageString(140).c_str() );
 							}
 						}
 					}

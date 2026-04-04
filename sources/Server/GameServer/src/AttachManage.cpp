@@ -158,25 +158,7 @@ CAttachable	*CConjureMgr::GetNext(void)
 }
 
 //=============================================================================
-CPassengerMgr::CPassengerMgr(uLong) : PreAllocStru(1)
-{
-	m_pCLstHead = 0;
-	m_pCLstTail = 0;
-	m_lNum = 0;
-}
-
 CPassengerMgr::~CPassengerMgr()
-{
-}
-
-void CPassengerMgr::Initially()
-{
-	m_pCLstHead = 0;
-	m_pCLstTail = 0;
-	m_lNum = 0;
-}
-
-void CPassengerMgr::Finally()
 {
 	DeleteAll();
 }

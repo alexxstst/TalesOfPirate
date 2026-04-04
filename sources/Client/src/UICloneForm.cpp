@@ -46,7 +46,7 @@ CForm* CCloneForm::Clone()
 
 	if( _nCount>30 )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(490), rv->GetName(), _nCount); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(490), rv->GetName(), _nCount));
 	}
 	return rv;
 }
@@ -97,7 +97,7 @@ CForm* CHideForm::GetHide()
 
 	if( _vfrm.size()>30 )
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(491), frm->GetName(), _vfrm.size()); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(491), frm->GetName(), _vfrm.size()));
 	}
 
 	return frm;

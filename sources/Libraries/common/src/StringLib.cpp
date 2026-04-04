@@ -11,9 +11,6 @@
 #include "StringLib.h"
 #include <mbstring.h>
 
-#include "LanguageRecord.h"
-extern CLanguageRecord g_oLangRec;
-
 using namespace std;
 
 //TODO(Ogge): There is is a flaw here
@@ -54,55 +51,6 @@ bool GetNameFormString(const string &str,string &name)
 	}
 	if (name.length()<=16) return true;
 	return false;
-}
-
-//------------------------------------------------------------------------
-//	
-//------------------------------------------------------------------------
-string CutFaceText(string &text,size_t cutLimitlen)
-{
-	string retStr=text;
-	if ( cutLimitlen<=0 || text.length()<=cutLimitlen )
-	{
-		text.clear();
-		return retStr;
-	}
-
-	if(0 == stricmp(g_oLangRec.GetString(0), "English"))
-	{
-		// 
-		string temp = text.substr(0,cutLimitlen);
-		size_t nPos = temp.find_last_of(" ");
-		if(nPos != string::npos && nPos > 8)
-		{
-			retStr = text.substr(0,nPos);
-			cutLimitlen = nPos;
-		}
-		else
-		{
-			retStr=text.substr(0,cutLimitlen);
-		}
-	}
-	else
-	{
-		// 
-		retStr=text.substr(0,cutLimitlen);
-	}
-
-	if (_ismbslead((unsigned char*)text.c_str(),(unsigned char*)&text[cutLimitlen-1]))
-	{
-		retStr=text.substr(0,cutLimitlen-1);
-	}
-	if ((*--retStr.end())=='#')
-	{
-		retStr=retStr.substr(0,retStr.length()-1);
-	}
-	else if ((*(retStr.end()-2))=='#')
-	{
-		retStr=retStr.substr(0,retStr.length()-2);
-	}
-	text=text.substr(retStr.length(),text.length()-retStr.length());
-	return retStr;
 }
 
 ////------------------------------------------------------------------------
@@ -151,22 +99,6 @@ void ChangeParseSymbol(string &text,int nMaxCount)
 			text.replace(nPos,strlen(szSrc),szRpl);
 			nPos=text.find(szSrc,nPos+strlen(szRpl));
 		}
-	}
-}
-
-
-// InBufnWidthOutBuf
-int StringNewLine( char* pOutBuf, unsigned int nWidth, const char* pInBuf, unsigned int nInLen )
-{
-	if(0 == _stricmp(g_oLangRec.GetString(0), "english"))
-	{
-		// 
-		return StringNewLineEng(pOutBuf, nWidth, pInBuf, nInLen);
-	}
-	else
-	{
-		// 
-		return StringNewLineChs(pOutBuf, nWidth, pInBuf, nInLen);
 	}
 }
 

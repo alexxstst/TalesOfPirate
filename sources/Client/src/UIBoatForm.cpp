@@ -36,7 +36,7 @@ bool CBoat::Init( int n, CForm* ship, GuiDragInGridEvent evt )  //
 	_grdHold = dynamic_cast<CGoodsGrid*>(_frmShipRoom->Find("grdRoom"));
 	if( !_grdHold ) 
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(443));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(443).c_str());
 		return false;
 	}
 
@@ -207,7 +207,7 @@ CCharacter* CBoatMgr::ChangeMainCha( unsigned int ulWorldID ) //
 	}
 	else
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(444), ulWorldID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(444), ulWorldID));
 	}
 	return pCha;
 }

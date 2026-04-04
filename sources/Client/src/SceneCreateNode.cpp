@@ -26,7 +26,7 @@ CCharacter* CGameScene::AddBoat( stNetChangeChaPart& part )
     CCharacter *pCha = _GetFirstInvalidCha(); // Cha	
 	if( !pCha ) 
 	{
-        g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(341));
+        g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(341));
 		return NULL;
 	}
 
@@ -73,7 +73,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 	pCha = _GetFirstInvalidCha(); // ????????????????????????Cha
 	if (pCha == NULL)
 	{
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(342));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(342));
 		pCha = NULL;
 		goto __ret;
 	}
@@ -99,7 +99,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadCha(pInfo->chModalType, pInfo->sModel, part_buf) == 0)
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -116,7 +116,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadShip(pInfo->chModalType, pInfo->sModel, part_buf) == 0)
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -134,7 +134,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadTower(pInfo->chModalType, part_buf) == 0)
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -160,7 +160,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0)
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -168,7 +168,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 	if (((CCharacterModel*)pCha)->LoadPose(pInfo->sActionID) == 0)
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(27), nScriptID, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), nScriptID, std::string_view(pInfo->szDataName)));
 		pCha = NULL;
 		goto __ret;
 	}
@@ -213,7 +213,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 	CSceneObjInfo *pInfo = GetSceneObjInfo(nScriptID);
     if(pInfo==NULL)
     {
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(343), nScriptID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+        g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(343), nScriptID));
         return NULL;
     }
 
@@ -221,11 +221,11 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 	{
 		if(m_dwValidSceneObjCnt>=290)
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(344), 299); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(344), 299));
 		}
 		if(m_dwSceneObjPolyCnt>=9000)
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(345), 9000); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(345), 9000));
 		}
 	}
 
@@ -271,7 +271,7 @@ CSceneObj* CGameScene::AddSceneObj(int nScriptID)
 	}
 	else
 	{
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(346), _nSceneObjCnt); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(346), _nSceneObjCnt));
 	}
 
     // 
@@ -338,7 +338,7 @@ CEffectObj* CGameScene::AddSceneEffect(int nEffectTypeID)
     }
 	else
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "ui", g_oLangRec.GetString(347));
+		g_logManager.InternalLog(LogLevel::Debug, "ui", GetLanguageString(347));
 	}
 	return pEff;
 }
@@ -366,7 +366,7 @@ CSceneItem* CGameScene::AddSceneItem(int nScriptID, int nType)
 	}
 	else
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(348));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(348));
 	}
 	return pObj;
 }
@@ -385,7 +385,7 @@ CSceneItem* CGameScene::AddSceneItem( const char* file )
 	}
 	else
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(348));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(348));
 	}
 	return pObj;
 

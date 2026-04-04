@@ -3,12 +3,8 @@
 #ifndef USE_IOCP
 
 #include "GameServerApp.h"
-#include "LanguageRecord.h"
 #include <iostream>
 
-// StringLib.cpp (Common) ссылается на g_oLangRec через extern.
-// Серверу языковые строки не нужны — пустой экземпляр.
-CLanguageRecord g_oLangRec;
 #include <time.h>
 #include "GameCommon.h"
 #include "SubMap.h"

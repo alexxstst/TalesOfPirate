@@ -361,23 +361,23 @@ bool CSystemMgr::Init()
 	*/
 
 	cbxTrail = ( CCheckGroup *)frmVideo->Find( "cbxTrail" ); //
-	if (! cbxTrail )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxTrail" );
+	if (! cbxTrail )	return Error( GetLanguageString(45).c_str(), frmVideo->GetName(), "cbxTrail" );
 	cbxTrail->SetActiveIndex(m_sysProp.m_videoProp.bGroundMark ? 0 : 1);    // Michael Chen 2005-04-22
 
 	cbxColor = ( CCheckGroup *)frmVideo->Find( "cbxColor" ); //
-	if (! cbxColor )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxColor" );
+	if (! cbxColor )	return Error( GetLanguageString(45).c_str(), frmVideo->GetName(), "cbxColor" );
 	cbxColor->SetActiveIndex(m_sysProp.m_videoProp.bDepth32 ? 1 : 0);   // Michael Chen 2005-04-22
 
 	cboResolution = (CCombo*)frmVideo->Find("cboResolution"); //
-	if (!cboResolution)		return Error(g_oLangRec.GetString(45), frmVideo->GetName(), "cboResolution");
+	if (!cboResolution)		return Error(GetLanguageString(45).c_str(), frmVideo->GetName(), "cboResolution");
 	cboResolution->GetList()->GetItems()->Select(m_sysProp.m_videoProp.bResolution);
 
 	cbxModel = ( CCheckGroup *)frmVideo->Find( "cbxModel" ); //
-	if (! cbxModel )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxModel" );	
+	if (! cbxModel )	return Error( GetLanguageString(45).c_str(), frmVideo->GetName(), "cbxModel" );	
 	cbxModel->SetActiveIndex(m_sysProp.m_videoProp.bFullScreen ? 0 : 1);    // Michael Chen 2005-04-22
 
 	cbxQuality = ( CCheckGroup *)frmVideo->Find( "cbxQuality" ); //
-	if (! cbxQuality )	return Error( g_oLangRec.GetString(45), frmVideo->GetName(), "cbxQuality" );
+	if (! cbxQuality )	return Error( GetLanguageString(45).c_str(), frmVideo->GetName(), "cbxQuality" );
 	cbxQuality->SetActiveIndex(m_sysProp.m_videoProp.nQuality); // Michael Chen 2005-04-22
 	cbxQuality->evtSelectChange  = _evtVideoChangeChange;
 
@@ -387,64 +387,64 @@ bool CSystemMgr::Init()
 	frmAudio->evtEntrustMouseEvent = _evtAudioFormMouseEvent;
 
 	proAudioMusic  = dynamic_cast<CProgressBar *>(frmAudio->Find("proAudioMusic"));    
-	if( !proAudioMusic )		return Error( g_oLangRec.GetString(45), frmAudio->GetName(), "proAudioMusic" );
+	if( !proAudioMusic )		return Error( GetLanguageString(45).c_str(), frmAudio->GetName(), "proAudioMusic" );
 	proAudioMusic->SetPosition( static_cast<float>(m_sysProp.m_audioProp.nMusicSound) );    // Michael Chen 2005-04-22
 	proAudioMusic->evtMouseDown = _evtMainMusicMouseDown;
 
 	proAudioMidi  = dynamic_cast<CProgressBar *>(frmAudio->Find("proAudioMidi"));    
-	if( !proAudioMidi )			return Error( g_oLangRec.GetString(45), frmAudio->GetName(), "proAudioMidi" );
+	if( !proAudioMidi )			return Error( GetLanguageString(45).c_str(), frmAudio->GetName(), "proAudioMidi" );
 	proAudioMidi->SetPosition( static_cast<float>(m_sysProp.m_audioProp.nMusicEffect) );    // Michael Chen 2005-04-22
 	proAudioMidi->evtMouseDown = _evtMainMusicMouseDown;
 
 	//////// GameOption
 	frmGameOption = _FindForm("frmGame");
-	if (!frmGameOption) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "frmGame");
+	if (!frmGameOption) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "frmGame");
 	frmGameOption->evtEntrustMouseEvent = _evtGameOptionFormMouseDown;
 	frmGameOption->evtBeforeShow = _evtGameOptionFormBeforeShow;
 
 	cbxRunMode = (CCheckGroup*)frmGameOption->Find("cbxRunmodel");
-	if (!cbxRunMode) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxRunmodel");
+	if (!cbxRunMode) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxRunmodel");
 
 	cbxLockMode = (CCheckGroup*)frmGameOption->Find("cbxLockmodel");
-	if (!cbxLockMode) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxLockmodel");
+	if (!cbxLockMode) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxLockmodel");
 
 	cbxHelpMode = (CCheckGroup*)frmGameOption->Find("cbxHelpmodel");
-	if (!cbxHelpMode) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxHelpmodel");
+	if (!cbxHelpMode) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxHelpmodel");
 
 	cbxCameraMode = static_cast<CCheckGroup*>(frmGameOption->Find("cbxCameraMode_p"));
 	if (!cbxCameraMode)
 	{
-		return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxCameraMode_p");
+		return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxCameraMode_p");
 	}
 	
 	cbxAppMode = (CCheckGroup*)frmGameOption->Find("cbxAppmodel");
-	if (!cbxAppMode) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxAppmodel");
+	if (!cbxAppMode) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxAppmodel");
 
 	cbxEffMode = (CCheckGroup*)frmGameOption->Find("cbxEffmodel");
-	if (!cbxEffMode) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxEffmodel");
+	if (!cbxEffMode) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxEffmodel");
 
 	cbxStateMode = (CCheckGroup*)frmGameOption->Find("cbxStatemodel");
-	if (!cbxStateMode) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxStatemodel");
+	if (!cbxStateMode) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxStatemodel");
 
 	// Added by mdrst May 2020 - FPO alpha
 
 	cbxEnemyNames = (CCheckGroup*)frmGameOption->Find("cbxEnemyNames_p");
-	if (!cbxEnemyNames) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxEnemyNames_p");
+	if (!cbxEnemyNames) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxEnemyNames_p");
 
 	cbxShowBars = (CCheckGroup*)frmGameOption->Find("cbxShowBars_p");
-	if (!cbxShowBars) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxShowBars_p");
+	if (!cbxShowBars) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxShowBars_p");
 	cbxShowPercentages = (CCheckGroup*)frmGameOption->Find("cbxShowPercentages_p");
-	if (!cbxShowPercentages) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxShowPercentages_p");
+	if (!cbxShowPercentages) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxShowPercentages_p");
 
 	cbxShowInfo = (CCheckGroup*)frmGameOption->Find("cbxShowInfo_p");
-	if (!cbxShowInfo) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxShowInfo_p");
+	if (!cbxShowInfo) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxShowInfo_p");
 	cbxFramerate = (CCheckGroup*)frmGameOption->Find("cbxFramerate_p");
-	if (!cbxFramerate) return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxFramerate_p");
+	if (!cbxFramerate) return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxFramerate_p");
 
 	cbxShowMounts = static_cast<CCheckGroup*>(frmGameOption->Find("cbxShowMounts_p"));
 	if (!cbxShowMounts)
 	{
-		return Error(g_oLangRec.GetString(45), frmGameOption->GetName(), "cbxShowMounts_p");
+		return Error(GetLanguageString(45).c_str(), frmGameOption->GetName(), "cbxShowMounts_p");
 	}
 
 
@@ -1148,7 +1148,7 @@ bool CChaExitOnTime::_IsTime()
 			return false;
 		}
 
-		g_pGameApp->SysInfo( g_oLangRec.GetString(774) );
+		g_pGameApp->SysInfo("%s", GetLanguageString(774).c_str());
 		return true;
 	}
 
@@ -1274,7 +1274,7 @@ void CChaExitOnTime::FrameMove(DWORD dwTime)
 		static CTimeWork time(1000);
 		if( time.IsTimeOut( dwTime ) )
 		{
-			g_pGameApp->ShowBigText( g_oLangRec.GetString(775), (_dwEndTime - dwTime)/1000 );
+			g_pGameApp->ShowBigText("%s", SafeVFormat(GetLanguageString(775), (_dwEndTime - dwTime)/1000).c_str());
 			return;
 		}
 	}
@@ -1336,14 +1336,14 @@ void CChaExitOnTime::NetStartExit( DWORD dwExitTime )
 {
 	_dwEndTime = CGameApp::GetCurTick() + dwExitTime;
 
-	g_pGameApp->SysInfo( g_oLangRec.GetString(776), dwExitTime / 1000 );
+	g_pGameApp->SysInfo("%s", SafeVFormat(GetLanguageString(776), dwExitTime / 1000).c_str());
 }
 
 void CChaExitOnTime::NetCancelExit()
 {
 	_eOptionType = enumInit;
 
-	g_pGameApp->SysInfo( g_oLangRec.GetString(777) );
+	g_pGameApp->SysInfo("%s", GetLanguageString(777).c_str());
 }
 
 void CChaExitOnTime::Reset()		

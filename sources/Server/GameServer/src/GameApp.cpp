@@ -305,13 +305,6 @@ CGameApp::CGameApp()
  m_dwChaCnt(0),
  m_dwPlayerCnt(0),
  m_dwRunStep(0),
- m_CabinHeap(1, 1000),
- m_MapStateCellHeap(1, 2000),
- m_ChaListHeap(1, 2000),
- m_StateCellNodeHeap(1, 1000),
- m_SkillTDataHeap(1, defMAX_SKILL_NO),
- m_TradeDataHeap(1, ROLE_MAXSIZE_TRADEDATA),
- m_StallDataHeap(1, ROLE_MAXSIZE_STALLDATA),
  m_mapnum(0),
  m_ulLeftSec(0)
 {
@@ -455,12 +448,7 @@ BOOL CGameApp::Init()
 
     //LG("init", "Entity\n");
 	ToLogService("common", "start to assign every Entity memory");
-	m_CabinHeap.Init();
-	m_TradeDataHeap.Init();
-	m_MapStateCellHeap.Init();
-	m_ChaListHeap.Init();
-	m_SkillTDataHeap.Init();
-	m_StateCellNodeHeap.Init();
+	// TrackedPool не требует Init() — std::pmr выделяет по запросу
 
 	//LG("init", "...\n");
 	ToLogService("common", "initialization every form...");
@@ -1375,12 +1363,12 @@ void CGameApp::SaveAllPlayer(void)
 
 void CGameApp::DataStatistic(void)
 {
-	Long	lCabinHeapNum = m_CabinHeap.GetUsedNum();
-	Long	lTradeDataHeapNum = m_TradeDataHeap.GetUsedNum();
-	Long	lSkillTDataHeapNum = m_SkillTDataHeap.GetUsedNum();
-	Long	lMapMgrUnitHeapNum = m_MapStateCellHeap.GetUsedNum();
-	Long	lEntityListHeapNum = m_ChaListHeap.GetUsedNum();
-	Long	lMgrNodeHeapNum = m_StateCellNodeHeap.GetUsedNum();
+	Long	lCabinHeapNum = static_cast<Long>(m_CabinPool.GetUsedCount());
+	Long	lTradeDataHeapNum = static_cast<Long>(m_TradeDataPool.GetUsedCount());
+	Long	lSkillTDataHeapNum = static_cast<Long>(m_SkillTDataPool.GetUsedCount());
+	Long	lMapMgrUnitHeapNum = static_cast<Long>(m_MapStateCellPool.GetUsedCount());
+	Long	lEntityListHeapNum = static_cast<Long>(m_ChaListPool.GetUsedCount());
+	Long	lMgrNodeHeapNum = static_cast<Long>(m_StateCellNodePool.GetUsedCount());
 
 	if (lCabinHeapNum > m_lCabinHeapNum || lTradeDataHeapNum > m_lTradeDataHeapNum || lSkillTDataHeapNum > m_lSkillTDataHeapNum
 		|| lMapMgrUnitHeapNum > m_lMapMgrUnitHeapNum || lEntityListHeapNum > m_lEntityListHeapNum || lMgrNodeHeapNum > m_lMgrNodeHeapNum)

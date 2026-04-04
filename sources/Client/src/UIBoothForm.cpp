@@ -84,7 +84,7 @@ namespace GUI
 		frmBooth = mgr.Find("frmBooth", enumMainForm); // 
 		if ( !frmBooth)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(445));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(445).c_str());
 			return false;
 		}
 		frmBooth->evtEntrustMouseEvent = _MainMouseBoothEvent ; // 
@@ -92,28 +92,28 @@ namespace GUI
 
 		lblOwnerName = dynamic_cast<CLabel*>(frmBooth->Find("lblOwnerName"));
 		if (!lblOwnerName)
-			return Error(g_oLangRec.GetString(446),
+			return Error(GetLanguageString(446).c_str(),
 			frmBooth->GetName(), "lblOwnerName");
 
 		edtBoothName = dynamic_cast<CEdit*>(frmBooth->Find("edtBoothName"));
 		if (!lblOwnerName)
-			return Error(g_oLangRec.GetString(446),
+			return Error(GetLanguageString(446).c_str(),
 			frmBooth->GetName(), "edtBoothName");
 
 		btnSetupBooth = dynamic_cast<CTextButton*>(frmBooth->Find("btnSetupBooth"));
 		if (!btnSetupBooth)
-			return Error(g_oLangRec.GetString(446),
+			return Error(GetLanguageString(446).c_str(),
 			frmBooth->GetName(), "btnSetupBooth");
 
 		btnPullStakes = dynamic_cast<CTextButton*>(frmBooth->Find("btnPullStakes"));
 		if (!btnSetupBooth)
-			return Error(g_oLangRec.GetString(446),
+			return Error(GetLanguageString(446).c_str(),
 			frmBooth->GetName(), "btnPullStakes");
 
 
 		grdBoothItem = dynamic_cast<CGoodsGrid*>(frmBooth->Find("grdBoothItem"));
 		if (!grdBoothItem) 
-			return Error(g_oLangRec.GetString(446),
+			return Error(GetLanguageString(446).c_str(),
 			frmBooth->GetName(), "grdBoothItem");
 		grdBoothItem->evtBeforeAccept = CUIInterface::_evtDragToGoodsEvent;
 		grdBoothItem;
@@ -501,7 +501,7 @@ namespace GUI
 
 			if (strlen(g_stUIBooth.edtBoothName->GetCaption()) == 0)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(447));
+				g_pGameApp->MsgBox("%s", GetLanguageString(447).c_str());
 				return;
 			}
 			
@@ -509,7 +509,7 @@ namespace GUI
 			string sName(g_stUIBooth.edtBoothName->GetCaption());
 			if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sName))
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(448));
+				g_pGameApp->MsgBox("%s", GetLanguageString(448).c_str());
 				return ;
 			}
 
@@ -616,7 +616,7 @@ namespace GUI
 
 		if( kItemNumBox->GetNumber()<=0 ) 
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(449) );
+			g_pGameApp->MsgBox( "%s", GetLanguageString(449).c_str() );
 			return;
 		}
 
@@ -625,7 +625,7 @@ namespace GUI
 		
 
 		//
-		g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, g_oLangRec.GetString(450), false);
+		g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, GetLanguageString(450).c_str(), false);
 
 	}
 	
@@ -646,14 +646,14 @@ namespace GUI
 
 		if( kItemPriceBox->GetNumber()<=0 ) 
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(451) );
+			g_pGameApp->MsgBox( "%s", GetLanguageString(451).c_str() );
 			return;
 		}
 
 		int iTotal = g_stUIBooth.m_pkCurrSetupBooth->iNum * kItemPriceBox->GetNumber();
 		if (iTotal >= 1000000000)
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(452) );
+			g_pGameApp->MsgBox( "%s", GetLanguageString(452).c_str() );
 			return;
 		}
 
@@ -705,7 +705,7 @@ namespace GUI
 
 		if (!g_stUIBooth.m_pkCurrSetupBooth)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(453));
+			g_pGameApp->MsgBox("%s", GetLanguageString(453).c_str());
 			return;
 		}
 
@@ -730,7 +730,7 @@ namespace GUI
 
 		if (!g_stUIBooth.m_pkCurrSetupBooth)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(453));
+			g_pGameApp->MsgBox("%s", GetLanguageString(453).c_str());
 			return;
 		}
 
@@ -840,13 +840,13 @@ namespace GUI
 		//g_stUIBox.ShowSelectBox(_PushItemCurrencyType,"Use gold as currency?");
 		if (g_stUIBooth.m_pkCurrSetupBooth->itemGetIsPile&& g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum > 1)
 			{
-				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemNumEvent, g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum, g_oLangRec.GetString(454), false);
+				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemNumEvent, g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum, GetLanguageString(454).c_str(), false);
 			}
 			else
 			{
 				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//1
 				g_stUIBooth.m_pkCurrSetupBooth->iTotal = 1;
-				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, g_oLangRec.GetString(450), false);
+				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, GetLanguageString(450).c_str(), false);
 			}
 		return true;
 	}
@@ -859,13 +859,13 @@ namespace GUI
 			//normal stall item flow.
 			if (g_stUIBooth.m_pkCurrSetupBooth->itemGetIsPile&& g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum > 1)
 			{
-				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemNumEvent, g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum, g_oLangRec.GetString(454), false);
+				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemNumEvent, g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum, GetLanguageString(454).c_str(), false);
 			}
 			else
 			{
 				g_stUIBooth.m_pkCurrSetupBooth->iNum = 1;	//1
 				g_stUIBooth.m_pkCurrSetupBooth->iTotal = 1;
-				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, g_oLangRec.GetString(450), false);
+				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_InquireSetupPushItemPriceEvent, -1, GetLanguageString(450).c_str(), false);
 			}
 			return;
 		}else{
@@ -873,7 +873,7 @@ namespace GUI
 			//chad item stall flow.
 			if (g_stUIBooth.m_pkCurrSetupBooth->itemGetIsPile&& g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum > 1)
 			{
-				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_PushItemTradeNumEvent, g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum, g_oLangRec.GetString(454), false);
+				g_stUIBooth.m_NumBox = g_stUIBox.ShowNumberBox(_PushItemTradeNumEvent, g_stUIBooth.m_pkCurrSetupBooth->itemTotalNum, GetLanguageString(454), false);
 			}
 			else
 			{
@@ -902,7 +902,7 @@ namespace GUI
 
 		if( kItemNumBox->GetNumber()<=0 ) 
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(449) );
+			g_pGameApp->MsgBox( "%s", GetLanguageString(449).c_str() );
 			return;
 		}
 
@@ -1017,7 +1017,7 @@ namespace GUI
 		{/// 
 			char buf[256] = { 0 };
 
-			/*sprintf(buf, g_oLangRec.GetString(455),
+			/*sprintf(buf, GetLanguageString(455),
 				StringSplitNum( rkItemCmd.GetPrice() ),
 				ConvertNumToChinese(rkItemCmd.GetPrice()).c_str(),
 				rkItemCmd.GetName());*/
@@ -1070,7 +1070,7 @@ namespace GUI
 		CItemCommand* pNeck  = g_stUIEquip.GetEquipItem(enumEQUIP_NECK);
 		if(!pRHand || !pNeck)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(941));	// ""
+			g_pGameApp->MsgBox("%s", GetLanguageString(941).c_str());	// ""
 			return false;
 		}
 
@@ -1088,7 +1088,7 @@ namespace GUI
 
 	bool CReadBookMgr::ShowReadBookForm()
 	{
-		CBoxMgr::ShowSelectBox(_evtSelectBox, g_oLangRec.GetString(942), true);	// ""
+		CBoxMgr::ShowSelectBox(_evtSelectBox, GetLanguageString(942).c_str(), true);	// ""
 		return true;
 	}
 
@@ -1106,7 +1106,7 @@ namespace GUI
 			return;
 		}
 
-		stMsgBox* pMsgBox = CBoxMgr::ShowMsgBox(_evtMsgBox, g_oLangRec.GetString(943), false);	// " \"\" "
+		stMsgBox* pMsgBox = CBoxMgr::ShowMsgBox(_evtMsgBox, GetLanguageString(943).c_str(), false);	// " \"\" "
 		pMsgBox->frmDialog->SetIsEscClose(false);
 
 		CS_ReadBookStart();

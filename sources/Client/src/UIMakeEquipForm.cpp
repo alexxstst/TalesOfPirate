@@ -32,7 +32,7 @@ namespace GUI
 		frmMakeEquip = mgr.Find("frmMakeEquip");
 		if ( !frmMakeEquip)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(685));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(685).c_str());
 			return false;
 		}
 		frmMakeEquip->evtEntrustMouseEvent = _MainMouseEvent;
@@ -41,7 +41,7 @@ namespace GUI
 		cmdRouleau = dynamic_cast<COneCommand*>(frmMakeEquip->Find("cmdRouLeau"));
 		if (!cmdRouleau)
 		{
-			return Error(g_oLangRec.GetString(561),
+			return Error(GetLanguageString(561).c_str(),
 						 frmMakeEquip->GetName(), 
 						 "cmdRouleau");
 		}
@@ -50,7 +50,7 @@ namespace GUI
 		cmdLastEquip = dynamic_cast<COneCommand*>(frmMakeEquip->Find("cmdLastEquip"));
 		if (!cmdLastEquip)
 		{
-			return Error(g_oLangRec.GetString(561),
+			return Error(GetLanguageString(561).c_str(),
 						 frmMakeEquip->GetName(), 
 						 "cmdForgeItem");
 		}
@@ -61,7 +61,7 @@ namespace GUI
 			sprintf(szBuf, "cmdItem%d", i);
 			cmdItem[i] = dynamic_cast<COneCommand*>(frmMakeEquip->Find(szBuf));
 			if (!cmdItem[i]) 
-				return Error(g_oLangRec.GetString(561),
+				return Error(GetLanguageString(561).c_str(),
 							 frmMakeEquip->GetName(), 
 							 szBuf);
 		}
@@ -73,7 +73,7 @@ namespace GUI
 		labForgeGold = dynamic_cast<CLabel*>(frmMakeEquip->Find("labForgeGold"));
 		if (!labForgeGold)
 		{
-			return Error(g_oLangRec.GetString(561),
+			return Error(GetLanguageString(561).c_str(),
 						 frmMakeEquip->GetName(), 
 						 "labForgeGold");
 		}
@@ -81,11 +81,11 @@ namespace GUI
 
 		memForgeItemState = dynamic_cast<CMemo*> (frmMakeEquip->Find("memForgeItemState")) ;
 		if( !memForgeItemState ) 
-			return Error(g_oLangRec.GetString(561), frmMakeEquip->GetName(), "memForgeItemState");	
+			return Error(GetLanguageString(561).c_str(), frmMakeEquip->GetName(), "memForgeItemState");
 
 		btnYes = dynamic_cast<CTextButton*>(frmMakeEquip->Find("btnForgeYes"));
 		if( !btnYes ) 
-			return Error(g_oLangRec.GetString(561), frmMakeEquip->GetName(), "btnForgeYes");
+			return Error(GetLanguageString(561).c_str(), frmMakeEquip->GetName(), "btnForgeYes");
 
 		return true;
 	}
@@ -138,7 +138,7 @@ namespace GUI
 	void CMakeEquipMgr::ShowConfirmDialog(long lMoney)
 	{
 		char szBuf[255] = { 0 };
-		sprintf( szBuf, g_oLangRec.GetString(568), lMoney );
+		strncpy_s(szBuf, sizeof(szBuf), SafeVFormat(GetLanguageString(568), lMoney).c_str(), _TRUNCATE);
 		GUI::stSelectBox * pBox = g_stUIBox.ShowSelectBox( _evtConfirmEvent, szBuf, true );
 		pBox->frmDialog->evtEscClose = _evtConfirmCancelEvent;
 	}
@@ -310,7 +310,7 @@ namespace GUI
 			}
 			else 
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(686));
+				g_pGameApp->MsgBox("%s", GetLanguageString(686).c_str());
 				return;
 			}
 		}
@@ -320,7 +320,7 @@ namespace GUI
 				dynamic_cast<CItemCommand*>(cmdItem[0]->GetCommand());
 			if (!pItemCommand)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(687));
+				g_pGameApp->MsgBox("%s", GetLanguageString(687).c_str());
 				return;
 			}
 
@@ -333,7 +333,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(688));
+				g_pGameApp->MsgBox("%s", GetLanguageString(688).c_str());
 				return;
 			}
 		}
@@ -345,7 +345,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(689));
+				g_pGameApp->MsgBox("%s", GetLanguageString(689).c_str());
 				return;
 			}
 		}
@@ -366,7 +366,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(690));
+				g_pGameApp->MsgBox("%s", GetLanguageString(690).c_str());
 				return;
 			}
 		}
@@ -378,7 +378,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(691));
+				g_pGameApp->MsgBox("%s", GetLanguageString(691).c_str());
 				return;
 			}
 		}
@@ -532,7 +532,7 @@ namespace GUI
 		//  false
 		if (pItemRecord->sType != GEN_STONE_TYPE && pItemRecord->sType != FORGE_STONE_TYPE)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(692));
+			g_pGameApp->MsgBox("%s", GetLanguageString(692).c_str());
 			return false;
 		}
 
@@ -548,7 +548,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(693));
+				g_pGameApp->MsgBox("%s", GetLanguageString(693).c_str());
 				return false;
 			}
 		}
@@ -810,8 +810,8 @@ namespace GUI
 			{
 				if (!g_stUIMakeEquip.cmdItem[2]->GetCommand())
 				{
-					g_stUIBox.ShowSelectBox( _evtFusionNoCatalyzerConfirmEvent, 
-						g_oLangRec.GetString(694), 
+					g_stUIBox.ShowSelectBox( _evtFusionNoCatalyzerConfirmEvent,
+						GetLanguageString(694).c_str(),
 						true );
 				}
 				else
@@ -851,7 +851,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(695));
+				g_pGameApp->MsgBox("%s", GetLanguageString(695).c_str());
 			}
 			break;
 		case EQUIP_FUSION_TYPE:
@@ -862,7 +862,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(696));
+				g_pGameApp->MsgBox("%s", GetLanguageString(696).c_str());
 			}
 			break;
 		case EQUIP_UPGRADE_TYPE:
@@ -873,7 +873,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(697));
+				g_pGameApp->MsgBox("%s", GetLanguageString(697).c_str());
 			}
 			break;
 		case ELF_SHIFT_TYPE:	// 
@@ -884,7 +884,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(698));
+				g_pGameApp->MsgBox("%s", GetLanguageString(698).c_str());
 			}
 		}
 
@@ -980,15 +980,15 @@ namespace GUI
 			case MAKE_EQUIP_TYPE:
 			case EQUIP_FUSION_TYPE:
 			case EQUIP_UPGRADE_TYPE:
-				g_pGameApp->MsgBox(g_oLangRec.GetString(699));
+				g_pGameApp->MsgBox("%s", GetLanguageString(699).c_str());
 				break;
 
 			case ELF_SHIFT_TYPE:
-				g_pGameApp->MsgBox(g_oLangRec.GetString(700));
+				g_pGameApp->MsgBox("%s", GetLanguageString(700).c_str());
 				break;
 
 			default:
-				g_pGameApp->MsgBox(g_oLangRec.GetString(701));
+				g_pGameApp->MsgBox("%s", GetLanguageString(701).c_str());
 				break;
 			}
 
@@ -1271,7 +1271,7 @@ namespace GUI
 
 		if(20 > nLevel)
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(702));
+			g_pGameApp->MsgBox("%s", GetLanguageString(702).c_str());
 			return;
 		}
 
@@ -1287,7 +1287,7 @@ namespace GUI
 			}
 			else 
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(703));
+				g_pGameApp->MsgBox("%s", GetLanguageString(703).c_str());
 				return;
 			}
 		}
@@ -1303,7 +1303,7 @@ namespace GUI
 			}
 			else 
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(703));
+				g_pGameApp->MsgBox("%s", GetLanguageString(703).c_str());
 				return;
 			}
 		}

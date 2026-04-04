@@ -89,7 +89,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	if (!frmRemind)
 	{
 		//    
-		if( !frmRemind ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(410));
+		if( !frmRemind ) g_logManager.InternalLog(LogLevel::Error, "common", GetLanguageString(410).c_str());
 		return;
 	}
 	dupe1.SetSample(frmRemind);
@@ -97,7 +97,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pInformTextBtn = dynamic_cast<CTextButton*>(m_pInformForm->Find("btnCheck"));
 	if( !m_pInformTextBtn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pInformForm->GetName(), "btnCheck" );
+		_Error(GetLanguageString(411).c_str(), m_pInformForm->GetName(), "btnCheck" );
 		return;
 	}
 	m_pInformTextBtn->evtMouseClick=_OnMouseInformButton;
@@ -105,13 +105,13 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pInformTitle = dynamic_cast<CLabelEx*>(m_pInformForm->Find("labTitle"));
 	if( !m_pInformTitle )
 	{
-		_Error(g_oLangRec.GetString(411), m_pInformForm->GetName(), "labTitle" );
+		_Error(GetLanguageString(411).c_str(), m_pInformForm->GetName(), "labTitle" );
 		return;
 	}
 	btn = dynamic_cast<CTextButton*>(m_pInformForm->Find("btnYes"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pInformForm->GetName(), "btnYes" );
+		_Error(GetLanguageString(411).c_str(), m_pInformForm->GetName(), "btnYes" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseInformButton;
@@ -119,7 +119,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pInformForm->Find("btnNo"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pInformForm->GetName(), "btnNo" );
+		_Error(GetLanguageString(411).c_str(), m_pInformForm->GetName(), "btnNo" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseQuitButton;
@@ -130,7 +130,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	if (!frmChat)
 	{
 		//    
-		if( !frmChat ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(412));
+		if( !frmChat ) g_logManager.InternalLog(LogLevel::Error, "common", GetLanguageString(412).c_str());
 		 return;
 	}
 	dupe2.SetSample(frmChat);
@@ -145,7 +145,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnMin"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnMin" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnMin" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseMinimizeButton;
@@ -153,7 +153,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnClose"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnClose" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnClose" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseCloseButton;
@@ -169,7 +169,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnChat"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnChat" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnChat" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseSaveButton;
@@ -177,7 +177,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnSend"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnSend" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnSend" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseSendButton;
@@ -185,7 +185,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pNormalEdit = dynamic_cast<CEdit*>(m_pNormalForm->Find("edtChat"));
 	if( !m_pNormalEdit )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "edtChat" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "edtChat" );
 		return;
 	}
 	m_pNormalEdit->SetEnterButton(btn);
@@ -203,7 +203,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pNormalMemo = dynamic_cast<CRichMemo*>(m_pNormalForm->Find("memChat"));
 	if( !m_pNormalMemo )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "memChat" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "memChat" );
 		return;
 	}
 	m_pNormalMemo->SetAutoScroll(true);
@@ -218,7 +218,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnBrow"));
 	if( !btn )
 	{
-		_Error( g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnBrow" );
+		_Error( GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnBrow" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseFaceListButton;
@@ -226,7 +226,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnClean"));
 	if( !btn )
 	{
-		_Error( g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnClean" );
+		_Error( GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnClean" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseCleanText;
@@ -235,7 +235,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	if( !m_pFaceGrid )
 	{
 		//     
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(411), m_pNormalForm->GetName(), "grdFace"); g_logManager.InternalLog(LogLevel::Error, "common", _buf); }
+		g_logManager.InternalLog(LogLevel::Error, "common", SafeVFormat(GetLanguageString(411), m_pNormalForm->GetName(), "grdFace"));
 		return;
 	}
 	m_pFaceGrid->evtSelectChange =_OnMouseSelectFace;
@@ -244,7 +244,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pNormalNameList = dynamic_cast<CList*>(m_pNormalForm->Find("lstChat"));
 	if( !m_pNormalNameList )
 	{
-		_Error( g_oLangRec.GetString(411), m_pNormalForm->GetName(), "lstChat" );
+		_Error( GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "lstChat" );
 		return;
 	}
 	m_pNormalNameList->SetRowHeight(16);
@@ -252,14 +252,14 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_playerMouseRight=CMenu::FindMenu("ListMouseRight");
 	if (!m_playerMouseRight)
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "ListMouseRight" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "ListMouseRight" );
 		return;
 	}
 	m_playerMouseRight->evtListMouseDown=_OnPlayerSelect;
 	btn = dynamic_cast<CTextButton*>(m_pNormalForm->Find("btnQuit"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "btnQuit" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "btnQuit" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseQuitButton;
@@ -269,7 +269,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	if (!frmChatMd)
 	{
 		//     
-		if( !frmChatMd ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(413));
+		if( !frmChatMd ) g_logManager.InternalLog(LogLevel::Error, "common", GetLanguageString(413).c_str());
 		return;
 	}
 	dupe3.SetSample(frmChatMd);
@@ -277,7 +277,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pSmallForm->Find("btnMin"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pSmallForm->GetName(), "btnMin" );
+		_Error(GetLanguageString(411).c_str(), m_pSmallForm->GetName(), "btnMin" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseMinimizeButton;
@@ -285,7 +285,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pSmallForm->Find("btnReturn"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pSmallForm->GetName(), "btnReturn" );
+		_Error(GetLanguageString(411).c_str(), m_pSmallForm->GetName(), "btnReturn" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseNormalButton;
@@ -293,7 +293,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pSmallForm->Find("btnClose"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pSmallForm->GetName(), "btnClose" );
+		_Error(GetLanguageString(411).c_str(), m_pSmallForm->GetName(), "btnClose" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseQuitButton;
@@ -301,7 +301,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pSmallForm->Find("btnSend"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pSmallForm->GetName(), "btnSend" );
+		_Error(GetLanguageString(411).c_str(), m_pSmallForm->GetName(), "btnSend" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseSendButton;
@@ -309,7 +309,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	m_pSmallEdit = dynamic_cast<CEdit*>(m_pSmallForm->Find("edtTradeGold"));
 	if( !m_pSmallEdit )
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "edtTradeGold" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "edtTradeGold" );
 		return;
 	}
 	m_pSmallEdit->SetEnterButton(btn);
@@ -327,7 +327,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	if (!frmChatMin)
 	{
 		//     
-		if( !frmChatMin ) g_logManager.InternalLog(LogLevel::Error, "common", g_oLangRec.GetString(414));
+		if( !frmChatMin ) g_logManager.InternalLog(LogLevel::Error, "common", GetLanguageString(414).c_str());
 		return;
 	}
 	dupe4.SetSample(frmChatMin);
@@ -336,7 +336,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pMinimizeForm->Find("btnMax"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pMinimizeForm->GetName(), "btnMax" );
+		_Error(GetLanguageString(411).c_str(), m_pMinimizeForm->GetName(), "btnMax" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseNormalButton;
@@ -344,7 +344,7 @@ m_nShowSx(NULL), m_nShowSy(NULL), m_strWaitForAdded(""), m_bFlash(NULL), m_nFlas
 	btn = dynamic_cast<CTextButton*>(m_pMinimizeForm->Find("btnClose"));
 	if( !btn )
 	{
-		_Error(g_oLangRec.GetString(411), m_pMinimizeForm->GetName(), "btnClose" );
+		_Error(GetLanguageString(411).c_str(), m_pMinimizeForm->GetName(), "btnClose" );
 		return;
 	}
 	btn->evtMouseClick=_OnMouseCloseButton;
@@ -611,12 +611,11 @@ void CTalkSessionForm::RefreshForm()
 	string str;
 	if (total==1)
 	{
-		str=string(g_oLangRec.GetString(415))+GetMemberByIndex(0)->GetName()+g_oLangRec.GetString(416);
+		str=string(GetLanguageString(415))+GetMemberByIndex(0)->GetName()+GetLanguageString(416);
 	}
 	else
 	{
-		sprintf(buf,g_oLangRec.GetString(417),total);
-		str=buf;
+		str=SafeVFormat(GetLanguageString(417), total);
 	}
 
 	CLabelEx* pText=dynamic_cast<CLabelEx*>(m_pMinimizeForm->Find("labName"));
@@ -626,22 +625,21 @@ void CTalkSessionForm::RefreshForm()
 	}
 	else
 	{
-		_Error(g_oLangRec.GetString(411), m_pMinimizeForm->GetName(), "labName" );
+		_Error(GetLanguageString(411).c_str(), m_pMinimizeForm->GetName(), "labName" );
 	}
 	if (total==1)
 	{
-		str=string(g_oLangRec.GetString(415))+GetMemberByIndex(0)->GetName();
+		str=string(GetLanguageString(415))+GetMemberByIndex(0)->GetName();
 		if (strlen(GetMemberByIndex(0)->GetMotto())>0)
 		{
 			str+=string("(")+GetMemberByIndex(0)->GetMotto()+string(")");
 		}
 		str=StringLimit(str,31);
-		str+=g_oLangRec.GetString(416);
+		str+=GetLanguageString(416);
 	}
 	else
 	{
-		sprintf(buf,g_oLangRec.GetString(418),total);
-		str=buf;
+		str=SafeVFormat(GetLanguageString(418), total);
 		for (int i=0;i<total;i++)
 		{
 			str+=GetMemberByIndex(i)->GetName();
@@ -657,10 +655,9 @@ void CTalkSessionForm::RefreshForm()
 	}
 	else
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "labName1" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "labName1" );
 	}
-	sprintf(buf,g_oLangRec.GetString(419),total);
-	str=buf;
+	str=SafeVFormat(GetLanguageString(419), total);
 	pText=dynamic_cast<CLabelEx*>(m_pNormalForm->Find("labParty"));
 	if (pText)
 	{
@@ -668,7 +665,7 @@ void CTalkSessionForm::RefreshForm()
 	}
 	else
 	{
-		_Error(g_oLangRec.GetString(411), m_pNormalForm->GetName(), "labParty" );
+		_Error(GetLanguageString(411).c_str(), m_pNormalForm->GetName(), "labParty" );
 	}
 
 	m_pNormalNameList->GetItems()->Clear();

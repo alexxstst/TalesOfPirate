@@ -236,9 +236,9 @@ struct stNetSwitchMap //
 };
 
 // 
-struct stNetSysInfo		// 
+struct stNetSysInfo		//
 {
-	const char *m_sysinfo;		// 
+	std::string m_sysinfo;		//
 };
 
 struct stNetSay			// 

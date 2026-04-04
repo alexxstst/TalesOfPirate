@@ -445,7 +445,7 @@ std::string NetIF::GetDisconnectErrText(int reason) const {
 	return [&]()-> std::string {
 		switch (reason) {
 		case -33: return "Offline mode has been successfully established, you may now close the client";
-		default: return g_oLangRec.GetString(138);
+		default: return GetLanguageString(138);
 		}
 	}();
 }

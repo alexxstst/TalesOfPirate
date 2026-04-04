@@ -20,13 +20,10 @@ using namespace std;
 _DBC_USING
 using namespace mission;
 
-// Add by lark.li 20080310 begin
 std::string GetResString(const std::string& pszID)
 {
-	const char* text = const_cast<char*>(g_ResourceBundleManage.LoadResString(pszID.c_str()));
-	return std::string(text ? text : "");
+	return std::string(LanguageRecordStore::Instance()->GetKeyString(pszID));
 }
-// End
 
 int SetMap(const std::string& pszMap, int byID)
 {

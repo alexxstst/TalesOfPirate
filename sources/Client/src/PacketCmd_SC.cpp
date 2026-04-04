@@ -875,8 +875,7 @@ BOOL SC_AStateBeginSee(LPRPACKET pk) {
 
 	//   
 	{
-		char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum);
-		g_logManager.InternalLog(LogLevel::Debug, "common", buf);
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(296), SynAState.sAreaX, SynAState.sAreaY, SynAState.chStateNum));
 		for (char j = 0; j < SynAState.chStateNum; j++) {
 			g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}\t{}", static_cast<int>(SynAState.State[j].chID), static_cast<int>(SynAState.State[j].chLv)));
 		}
@@ -898,8 +897,7 @@ BOOL SC_AStateEndSee(LPRPACKET pk) {
 	NetAreaStateEndSee(&SynAState);
 
 	// log
-	{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(296), SynAState.sAreaX, SynAState.sAreaY, 0);
-	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(296), SynAState.sAreaX, SynAState.sAreaY, 0));
 	//
 
 	return TRUE;
@@ -954,8 +952,7 @@ BOOL SC_Cha_Emotion(LPRPACKET pk) {
 	uShort sEmotion = static_cast<uShort>(msg.emotion);
 
 	NetChaEmotion(l_id, sEmotion);
-	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(297), sEmotion);
-	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(297), sEmotion));
 	return TRUE;
 }
 
@@ -1379,7 +1376,7 @@ BOOL SC_SynAttribute(LPRPACKET pk) {
 
 	//   
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Character Attr: Count={}\t, Type:{}\tTick:[{}]", SChaAttr.sNum, static_cast<int>(SChaAttr.chType), GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(312));
+	g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(312));
 	for (short i = 0; i < SChaAttr.sNum; i++) {
 		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{}\t{}", SChaAttr.SEff[i].lAttrID, SChaAttr.SEff[i].lVal));
 	}
@@ -1425,7 +1422,7 @@ BOOL SC_SynSkillBag(LPRPACKET pk) {
 
 		// log
 		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Skill Bag, Type:{},\tTick:[{}]", static_cast<int>(SCurSkill.chType), GetTickCount()));
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(310));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(310));
 		char szRange[256];
 		for (short i = 0; i < sSkillNum; i++) {
 			sprintf(szRange, "%d", pSBag[i].sRange[0]);
@@ -1485,7 +1482,7 @@ BOOL SC_SynSkillState(LPRPACKET pk) {
 
 	// log
 	g_logManager.InternalLog(LogLevel::Debug, "common", std::format("Syn Skill State: Num[{}]\tTick[{}]", sNum, GetTickCount()));
-	g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(311));
+	g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(311));
 	for (char i = 0; i < sNum; i++)
 		g_logManager.InternalLog(LogLevel::Debug, "common", std::format("\t{:8}\t{:4}", static_cast<int>(SCurSState.SState[i].chID), static_cast<int>(SCurSState.SState[i].chLv)));
 
@@ -1535,8 +1532,7 @@ BOOL SC_SynTLeaderID(LPRPACKET pk) {
 	NetChaTLeaderID(lID, lLeaderID);
 
 	// log
-	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(300), lLeaderID, lID);
-	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(300), lLeaderID, lID));
 	//
 
 	return TRUE;
@@ -1688,10 +1684,9 @@ BOOL SC_TradeResult(LPRPACKET packet) {
 	BYTE byCount = static_cast<BYTE>(msg.count);
 	USHORT sItemID = static_cast<USHORT>(msg.itemId);
 	DWORD dwMoney = static_cast<DWORD>(msg.money);
-	{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(301), byType, byIndex, byCount, sItemID, dwMoney);
-	  g_logManager.InternalLog(LogLevel::Debug, "trade", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "trade", SafeVFormat(GetLanguageString(301), byType, byIndex, byCount, sItemID, dwMoney));
 	NetTradeResult(byType, byIndex, byCount, sItemID, dwMoney);
-	g_logManager.InternalLog(LogLevel::Debug, "trade", g_oLangRec.GetString(302));
+	g_logManager.InternalLog(LogLevel::Debug, "trade", GetLanguageString(302));
 	return TRUE;
 }
 
@@ -1786,7 +1781,7 @@ BOOL SC_CharTradeInfo(LPRPACKET packet) {
 			}
 		}
 		else {
-			MessageBox(NULL, g_oLangRec.GetString(303), g_oLangRec.GetString(25), MB_OK);
+			MessageBox(NULL, GetLanguageString(303).c_str(), GetLanguageString(25).c_str(), MB_OK);
 			return FALSE;
 		}
 	}
@@ -1896,7 +1891,7 @@ BOOL SC_MisPage(LPRPACKET packet) {
 				strncpy(page.MisNeed[i].szNeed, msg.needs[i].desp.c_str(), ROLE_MAXNUM_NEEDDESPSIZE - 1);
 			}
 			else {
-				g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(304));
+				g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(304));
 				return FALSE;
 			}
 		}
@@ -1967,7 +1962,7 @@ BOOL SC_MisLogInfo(LPRPACKET packet) {
 			strncpy(page.MisNeed[i].szNeed, msg.needs[i].desp.c_str(), ROLE_MAXNUM_NEEDDESPSIZE - 1);
 		}
 		else {
-			g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(304));
+			g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(304));
 			return FALSE;
 		}
 	}
@@ -2343,17 +2338,15 @@ BOOL SC_TeamFightAsk(LPRPACKET packet) {
 	stNetTeamFightAsk SFightAsk;
 	SFightAsk.chSideNum1 = static_cast<char>(msg.srcCount);
 	SFightAsk.chSideNum2 = static_cast<char>(msg.tarCount);
-	{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(306), static_cast<int>(SFightAsk.chSideNum1), static_cast<int>(SFightAsk.chSideNum2));
-	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(306), static_cast<int>(SFightAsk.chSideNum1), static_cast<int>(SFightAsk.chSideNum2)));
 	for (size_t i = 0; i < msg.players.size(); i++) {
 		SFightAsk.Info[i].szName = msg.players[i].name;
 		SFightAsk.Info[i].chLv = static_cast<char>(msg.players[i].lv);
 		SFightAsk.Info[i].szJob = msg.players[i].job;
 		SFightAsk.Info[i].usFightNum = static_cast<unsigned short>(msg.players[i].fightNum);
 		SFightAsk.Info[i].usVictoryNum = static_cast<unsigned short>(msg.players[i].victoryNum);
-		{ char buf[512]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(307), SFightAsk.Info[i].szName.c_str(), static_cast<int>(SFightAsk.Info[i].chLv),
-		   SFightAsk.Info[i].szJob.c_str());
-		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(307), SFightAsk.Info[i].szName.c_str(), static_cast<int>(SFightAsk.Info[i].chLv),
+		   SFightAsk.Info[i].szJob.c_str()));
 	}
 	SFightAsk.Exec();
 	return TRUE;
@@ -2459,10 +2452,8 @@ BOOL SC_QueryCha(LPRPACKET pk) {
 	net::msg::deserialize(pk, msg);
 
 	stNetSysInfo SShowInfo;
-	char szInfo[512] = "";
-	sprintf(szInfo, g_oLangRec.GetString(308), msg.name.c_str(), static_cast<long>(msg.chaId2),
+	SShowInfo.m_sysinfo = SafeVFormat(GetLanguageString(308), msg.name.c_str(), static_cast<long>(msg.chaId2),
 		msg.mapName.c_str(), static_cast<long>(msg.posX), static_cast<long>(msg.posY));
-	SShowInfo.m_sysinfo = szInfo;
 	NetSysInfo(SShowInfo);
 
 	return TRUE;
@@ -2480,9 +2471,7 @@ BOOL SC_QueryChaPing(LPRPACKET pk) {
 	net::msg::deserialize(pk, msg);
 
 	stNetSysInfo SShowInfo;
-	char szInfo[512] = "";
-	sprintf(szInfo, g_oLangRec.GetString(309), msg.mapName.c_str(), static_cast<long>(msg.ping));
-	SShowInfo.m_sysinfo = szInfo;
+	SShowInfo.m_sysinfo = SafeVFormat(GetLanguageString(309), msg.mapName.c_str(), static_cast<long>(msg.ping));
 	NetSysInfo(SShowInfo);
 
 	return TRUE;
@@ -2657,7 +2646,7 @@ BOOL SC_StoreBuyAnswer(LPRPACKET packet) {
 		g_stUIStore.SetStoreMoney(-1, lRplMoney);
 	}
 	else {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(907));
+		g_pGameApp->MsgBox("%s", GetLanguageString(907).c_str());
 	}
 
 	g_stUIStore.SetStoreBuyButtonEnable(true);
@@ -2673,7 +2662,7 @@ BOOL SC_StoreChangeAnswer(LPRPACKET packet) {
 		g_stUIStore.SetStoreMoney(static_cast<long>(msg.moBean), static_cast<long>(msg.replMoney));
 	}
 	else {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(908));
+		g_pGameApp->MsgBox("%s", GetLanguageString(908).c_str());
 	}
 	return TRUE;
 }
@@ -3141,8 +3130,7 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 		Grid[nGridNum].sGridID = static_cast<short>(it.gridId);
 		pItem = &Grid[nGridNum].SGridContent;
 		pItem->sID = static_cast<short>(it.itemId);
-		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(313), Grid[nGridNum].sGridID, pItem->sID);
-		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(313), Grid[nGridNum].sGridID, pItem->sID));
 		if (pItem->sID > 0) {
 			pItem->dwDBID = static_cast<DWORD>(it.dbId);
 			pItem->sNeedLv = static_cast<short>(it.needLv);
@@ -3151,9 +3139,8 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 			pItem->sEndure[1] = static_cast<short>(it.endure1);
 			pItem->sEnergy[0] = static_cast<short>(it.energy0);
 			pItem->sEnergy[1] = static_cast<short>(it.energy1);
-			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1],
-			   pItem->sEnergy[0], pItem->sEnergy[1]);
-			  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(314), pItem->sNum, pItem->sEndure[0], pItem->sEndure[1],
+			   pItem->sEnergy[0], pItem->sEnergy[1]));
 			pItem->chForgeLv = static_cast<char>(it.forgeLv);
 			pItem->SetValid(it.valid != 0);
 			pItem->bItemTradable = static_cast<int>(it.tradable);
@@ -3161,9 +3148,8 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 
 			pItemRec = GetItemRecordInfo(pItem->sID);
 			if (pItemRec == NULL) {
-				char szBuf[256] = {0};
-				sprintf(szBuf, g_oLangRec.GetString(315), pItem->sID);
-				MessageBox(0, szBuf, "Error", 0);
+				auto _str315 = SafeVFormat(GetLanguageString(315), pItem->sID);
+				MessageBox(0, _str315.c_str(), "Error", 0);
 #ifdef USE_DSOUND
 				if (g_dwCurMusicID) {
 					AudioSDL::get_instance()->stop(g_dwCurMusicID);
@@ -3183,27 +3169,23 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 				pItem->SetDBParam(enumITEMDBP_INST_ID, static_cast<long>(it.instId));
 			}
 
-			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(316), pItem->GetDBParam(enumITEMDBP_FORGE));
-			  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(316), pItem->GetDBParam(enumITEMDBP_FORGE)));
 			if (it.hasInstAttr) {
 				for (int j = 0; j < defITEM_INSTANCE_ATTR_NUM; j++) {
 					pItem->sInstAttr[j][0] = static_cast<short>(it.instAttr[j][0]);
 					pItem->sInstAttr[j][1] = static_cast<short>(it.instAttr[j][1]);
-					{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]);
-					  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+					g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(317), pItem->sInstAttr[j][0], pItem->sInstAttr[j][1]));
 				}
 			}
 		}
 		nGridNum++;
 		if (nGridNum > defMAX_KBITEM_NUM_PER_TYPE) {
-			{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE);
-			  g_logManager.InternalLog(LogLevel::Error, "errors", buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(319), nGridNum, defMAX_KBITEM_NUM_PER_TYPE));
 			break;
 		}
 	}
 	SKitbag.nGridNum = nGridNum;
-	{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(320), SKitbag.nGridNum);
-	  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(320), SKitbag.nGridNum));
 }
 
 //  msg.shortcut (ChaShortcutInfo) -> stNetShortCut (   pk)
@@ -3213,8 +3195,7 @@ void ReadChaShortcutFromMsg(const net::msg::ChaShortcutInfo& info, stNetShortCut
 	for (int i = 0; i < SHORT_CUT_NUM; i++) {
 		SShortcut.chType[i] = static_cast<char>(info.entries[i].type);
 		SShortcut.byGridID[i] = static_cast<BYTE>(info.entries[i].gridId);
-		{ char buf[256]; snprintf(buf, sizeof(buf), g_oLangRec.GetString(321), static_cast<int>(SShortcut.chType[i]), static_cast<int>(SShortcut.byGridID[i]));
-		  g_logManager.InternalLog(LogLevel::Debug, "common", buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(321), static_cast<int>(SShortcut.chType[i]), static_cast<int>(SShortcut.byGridID[i])));
 	}
 }
 

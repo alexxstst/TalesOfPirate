@@ -50,15 +50,15 @@ bool CFrndInviteFormMgr::AddInviteForm(DWORD id,string inviterName)
 	CLabelEx *labFrndName=dynamic_cast<CLabelEx*>(node->pForm->Find("labFrndName"));
 	if (labFrndName)
 	{
-		sprintf(str,g_oLangRec.GetString(62),inviterName.data());
+		auto _str62 = SafeVFormat(GetLanguageString(62), inviterName.data());
 		//labFrndName->SetIsCenter(true);
-		labFrndName->SetCaption(str);
+		labFrndName->SetCaption(_str62.c_str());
 	}
 	CLabelEx *labFrnd=dynamic_cast<CLabelEx*>(node->pForm->Find("labFrnd"));
 	if (labFrnd)
 	{
 		//labFrnd->SetIsCenter(true);
-		labFrnd->SetCaption(g_oLangRec.GetString(63));
+		labFrnd->SetCaption(GetLanguageString(63).c_str());
 	}
 	node->pForm->evtEntrustMouseEvent=_MainMousePlayerFrndEvent;
 	node->pForm->nTag=id;

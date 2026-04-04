@@ -78,7 +78,7 @@ void CChurchChallengeMgr::ShowForm(bool bShow)
 // 
 void CChurchChallengeMgr::ChallengePriceAsk(void)
 {
-	_pNumberBox = g_stUIBox.ShowNumberBox(_evtChallengeNumInput, -1, g_oLangRec.GetString(936), true);	// ""
+	_pNumberBox = g_stUIBox.ShowNumberBox(_evtChallengeNumInput, -1, GetLanguageString(936).c_str(), true);	// ""
 
 	char szBuf[32] = {0};
 	sprintf(szBuf, "%d", _stInfo.nCurPrice + _stInfo.nMinbid);
@@ -94,13 +94,12 @@ void CChurchChallengeMgr::CheckChallengePrice(void)
 		_nPrice = g_stChurchChallenge._pNumberBox->GetNumber();
 		if ( _nPrice >= _stInfo.nCurPrice + _stInfo.nMinbid)
 		{
-			char szBuf[256] = {0};
-			sprintf(szBuf, g_oLangRec.GetString(940), _nPrice);	// " %d"
-			g_stUIBox.ShowSelectBox(_evtChallengeNumCheck, szBuf, true);
+			auto _str = SafeVFormat(GetLanguageString(940), _nPrice);	// " %d"
+			g_stUIBox.ShowSelectBox(_evtChallengeNumCheck, _str.c_str(), true);
 		}
 		else
 		{
-			g_pGameApp->MsgBox(g_oLangRec.GetString(937), _stInfo.nCurPrice + _stInfo.nMinbid);//" %d"
+			g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(937), _stInfo.nCurPrice + _stInfo.nMinbid).c_str());//" %d"
 		}
 	}
 }

@@ -74,7 +74,7 @@ void CWaitAttackState::SetSkill( CSkillRecord* p )
 { 
 	if( !p )
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(398));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(398));
 	}
 	
 	_pSkillInfo = p; 
@@ -198,7 +198,7 @@ void CWaitAttackState::_UseSkill()
     _nKeyFrameNum = _pSelf->GetCurPoseKeyFrameNum();
 	if( _nKeyFrameNum<=0 && _pSkillInfo->sActionKeyFrme!=-1 )
     {
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(399), _pSelf->getLogName(), _pSkillInfo->szName.c_str(), _nSkillPoseID); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+        g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(399), _pSelf->getLogName(), _pSkillInfo->szName.c_str(), _nSkillPoseID));
     }
 
 	// If there are additional special effects operations, such as: boarding and disembarking, etc., a special effect should be played
@@ -493,7 +493,7 @@ bool CAttackState::_Start()
 	{
 		if( _pSkillInfo->GetLevel()>_pSkillInfo->GetJobMax( _pSelf->getGameAttr()->get(ATTR_JOB) ) )
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(400), _pSkillInfo->GetLevel(), _pSkillInfo->GetJobMax( _pSelf->getGameAttr()->get(ATTR_JOB) )); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(400), _pSkillInfo->GetLevel(), _pSkillInfo->GetJobMax( _pSelf->getGameAttr()->get(ATTR_JOB) )));
 			return false;
 		}
 
@@ -550,7 +550,7 @@ bool CAttackState::_Start()
 
 	if( _nSkillSpeed==0 )
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(401));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(401));
 	}
 
 	stNetSkillInfo param;
@@ -991,7 +991,7 @@ void CHitAttackState::ActionEnd( DWORD pose_id )
 
 void CHitAttackState::_End()
 {
-	g_pGameApp->SysInfo( g_oLangRec.GetString(402) );
+	g_pGameApp->SysInfo( "%s", GetLanguageString(402).c_str() );
 }
 
 bool CHitAttackState::_Start()
@@ -1000,8 +1000,7 @@ bool CHitAttackState::_Start()
 	if( _fSpeed>1000.0f ) _fSpeed = 1000.0f;
 
 	char szBuf[ 128 ] = { 0 };
-	sprintf( szBuf, g_oLangRec.GetString(403), _nPoseNum, _fSpeed );
-	string str = szBuf;
+	string str = SafeVFormat(GetLanguageString(403), _nPoseNum, _fSpeed);
 	for( int i=0; i<_nPoseNum; i++ )
 	{
 		sprintf( szBuf, " %d", _nPose[i] );
@@ -1083,7 +1082,7 @@ void CAllPoseState::ActionEnd( DWORD pose_id )
 
 void CAllPoseState::_End()
 {
-	g_pGameApp->SysInfo( g_oLangRec.GetString(402) );
+	g_pGameApp->SysInfo( "%s", GetLanguageString(402).c_str() );
 }
 
 bool CAllPoseState::_Start()

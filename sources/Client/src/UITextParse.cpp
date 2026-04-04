@@ -27,11 +27,11 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 	int sy=0;
 	if (allign==eAlignCenter)
 	{
-		sy=(height-CGuiFont::s_Font.GetHeight(g_oLangRec.GetString(623)))/2;
+		sy=(height-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str()))/2;
 	}
 	else if (allign==eAlignBottom)
 	{
-		sy=height-CGuiFont::s_Font.GetHeight(g_oLangRec.GetString(623));
+		sy=height-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str());
 	}
 
 	string strLine;

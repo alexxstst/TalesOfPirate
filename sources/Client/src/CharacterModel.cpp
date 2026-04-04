@@ -295,11 +295,11 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
             return NULL;
         }
 #endif
-#if 0  // 
+#if 0  //
         // 
         MPChaLoadInfo load_info;
 
@@ -316,7 +316,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( &load_info ) == 0 )
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
             return NULL;
         }
 #endif
@@ -332,7 +332,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
             return NULL;
         }
     }
@@ -348,7 +348,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadTower( pInfo->chModalType, part_buf ) == 0 )
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
             return NULL;
         }
     }
@@ -370,7 +370,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( &load_info ) == 0 )
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(26), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
             return NULL;
         }
     }
@@ -380,7 +380,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
     if( LoadPose( type_id ) == 0 )
     {
-       { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(27), type_id, pInfo->szDataName); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+       g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), type_id, std::string_view(pInfo->szDataName)));
        return NULL;
     }
     
@@ -712,7 +712,7 @@ DWORD CCharacterModel::_BigPose2SmallPose(DWORD pose_id)
     CPoseInfo* info = ::GetPoseInfo( (short)pose_id );
     if( info == NULL )
     {
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(28), pose_id); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+        g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(28), pose_id));
         return -1;
     }
 

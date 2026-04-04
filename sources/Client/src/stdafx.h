@@ -47,9 +47,7 @@ using namespace GUI;
 #include "GlobalInc.h"
 #include "MindPower.h"
 
-#include "LanguageRecord.h"
-
-extern CLanguageRecord g_oLangRec;	// 
+#include "LanguageRecordStore.h"
 
 inline VOID D3DUtil_InitMaterialI( D3DMATERIALX& mtrl, FLOAT r, FLOAT g, FLOAT b,
                            FLOAT a )

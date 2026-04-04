@@ -247,10 +247,6 @@ namespace TalesOfPirate::Utils::Logs {
 		Shutdown();
 	}
 
-	void LogManager::SetLevel(const std::string& logSystem, LogLevel logLevel) {
-		_channels.find(logSystem)->second->MinimumLogLevel = logLevel;
-	}
-
 	//     ()
 	void LogManager::InternalLog(const LogUtilEntry& logEntry) {
 		if (logEntry.Message.empty()) {
@@ -259,15 +255,6 @@ namespace TalesOfPirate::Utils::Logs {
 
 		std::scoped_lock lock(_queueMutex);
 		_logsQueue.push(logEntry);
-	}
-
-	bool LogManager::IsLogLevel(const std::string& logSystem, LogLevel logLevel) {
-		const auto it = _channels.find(logSystem);
-		if (it == _channels.end()) {
-			return true;
-		}
-
-		return it->second->MinimumLogLevel >= logLevel;
 	}
 
 	void LogManager::EnableGlobalConsole(bool status) {

@@ -162,7 +162,7 @@ CMember* CTeam::Add( unsigned long nID, const char* szName,const char* szMotto, 
 		CMember* tmp;
 		string strMotto;
 		if (szMotto==NULL)
-			strMotto=g_oLangRec.GetString(778);
+			strMotto=GetLanguageString(778);
 		else
 			strMotto=szMotto;
 
@@ -291,11 +291,11 @@ DWORD CTeamMgr::_dwTeamLeaderID = 0;
 
 CTeamMgr::CTeamMgr()
 {
-	_pFrndTeam     = new CTeam(enumTeamFrnd,     g_oLangRec.GetString(466));
-    _pGroupTeam    = new CTeam(enumTeamGroup,    g_oLangRec.GetString(299));
-    _pRoadTeam     = new CTeam(enumTeamRoad,     g_oLangRec.GetString(469));
-	_pMasterTeam   = new CTeam(enumTeamMaster,   g_oLangRec.GetString(850));
-	_pPrenticeTeam = new CTeam(enumTeamPrentice, g_oLangRec.GetString(851));
+	_pFrndTeam     = new CTeam(enumTeamFrnd,     GetLanguageString(466).c_str());
+    _pGroupTeam    = new CTeam(enumTeamGroup,    GetLanguageString(299).c_str());
+    _pRoadTeam     = new CTeam(enumTeamRoad,     GetLanguageString(469).c_str());
+	_pMasterTeam   = new CTeam(enumTeamMaster,   GetLanguageString(850).c_str());
+	_pPrenticeTeam = new CTeam(enumTeamPrentice, GetLanguageString(851).c_str());
 	_pGMTeam = new CTeam(enumTeamGM, "GM");
 	_pBlockedTeam  = new CTeam(enumTeamBlocked,  "Blocked");
 }

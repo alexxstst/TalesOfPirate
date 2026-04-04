@@ -7,7 +7,7 @@
 #include "stdafx.h" //add by alfred.shi 20080313
 
 #include "NetRetCode.h"
-#include "PreAlloc.h"
+
 #include "point.h"
 #include "gtplayer.h"
 

@@ -1551,7 +1551,7 @@ bool CGameScene::_HandleSuperKey()
 	if(g_pGameApp->IsKeyDown(DIK_V))
     {
         EnableSceneObjCulling(1 - IsSceneObjCulling());
-        TipI(IsSceneObjCulling(), g_oLangRec.GetString(329), g_oLangRec.GetString(330));
+        TipI(IsSceneObjCulling(), GetLanguageString(329).c_str(), GetLanguageString(330).c_str());
     }
 	else if(g_pGameApp->IsKeyDown(DIK_F5))
 	{
@@ -1559,22 +1559,22 @@ bool CGameScene::_HandleSuperKey()
 		g_bEnablePrint = 1 - g_bEnablePrint;
 		g_Render.EnablePrint(INFO_FPS,   g_bEnablePrint);
 		g_Render.EnablePrint(INFO_DEBUG, g_bEnablePrint);
-		TipI(g_bEnablePrint, g_oLangRec.GetString(331), g_oLangRec.GetString(332));
+		TipI(g_bEnablePrint, GetLanguageString(331).c_str(), GetLanguageString(332).c_str());
 	}
 	else if(g_pGameApp->IsKeyDown(DIK_F6))
 	{
 		//g_pGameApp->ResetGameCamera();
-		Tip(g_oLangRec.GetString(333));
+		Tip(GetLanguageString(333).c_str());
 	}
 	else if(g_pGameApp->IsKeyDown(DIK_F7))
 	{
 		this->ShowSceneObjTerrain(1 - this->IsSceneObjTerrainVisible());
-		TipI(this->IsSceneObjTerrainVisible(), g_oLangRec.GetString(334), g_oLangRec.GetString(335));
+		TipI(this->IsSceneObjTerrainVisible(), GetLanguageString(334).c_str(), GetLanguageString(335).c_str());
 	}
 	else if(g_pGameApp->IsKeyDown(DIK_F8))
 	{
 		this->ShowSceneObj(1 - this->IsSceneObjVisible());
-		TipI(this->IsSceneObjVisible(), g_oLangRec.GetString(336), g_oLangRec.GetString(337));
+		TipI(this->IsSceneObjVisible(), GetLanguageString(336).c_str(), GetLanguageString(337).c_str());
 	}
 	else if (g_pGameApp->IsKeyDown(DIK_F9)) //activesection
 	{
@@ -1679,12 +1679,12 @@ bool CGameScene::_HandleSuperKey()
 	else if(g_pGameApp->IsKeyContinue(DIK_F11))
 	{
 		this->ShowChairObj(1 - this->IsShowChairObj());
-		TipI(this->IsShowChairObj(), g_oLangRec.GetString(215), g_oLangRec.GetString(216));
+		TipI(this->IsShowChairObj(), GetLanguageString(215).c_str(), GetLanguageString(216).c_str());
 	}
 	else if(g_pGameApp->IsKeyDown(DIK_X))
 	{
 		_IsShowPath = !_IsShowPath;
-		g_pGameApp->AddTipText( g_oLangRec.GetString(338) );
+		g_pGameApp->AddTipText( "%s", GetLanguageString(338).c_str() );
 	}else if(g_pGameApp->IsKeyDown(DIK_M))
 	{
 		if(!_pBigMap->IsLoad())

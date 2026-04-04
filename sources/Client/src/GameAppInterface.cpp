@@ -243,12 +243,12 @@ void CGameApp::AutoTestUpdate() {
 
 void CGameApp::GotoScene(CGameScene* scene, bool isDelCurScene, bool IsShowLoading) {
 	if (!scene) {
-		MsgBox(g_oLangRec.GetString(71));
+		MsgBox("%s", GetLanguageString(71).c_str());
 		return;
 	}
 
 	if (_pCurScene && !_pCurScene->_Clear()) {
-		_SceneError(g_oLangRec.GetString(72), _pCurScene);
+		_SceneError(GetLanguageString(72).c_str(), _pCurScene);
 		SetIsRun(false);
 		return;
 	}
@@ -263,7 +263,7 @@ void CGameApp::GotoScene(CGameScene* scene, bool isDelCurScene, bool IsShowLoadi
 	CFormMgr::s_Mgr.SwitchTemplete(_pCurScene->GetInitParam()->nUITemplete);
 
 	if (!_pCurScene->_Init()) {
-		_SceneError(g_oLangRec.GetString(73), _pCurScene);
+		_SceneError(GetLanguageString(73).c_str(), _pCurScene);
 		SetIsRun(false);
 		return;
 	}
@@ -453,7 +453,7 @@ BOOL CGameApp::_CreateSmMap(MPTerrain* pTerr) {
 				xp = xp1;
 				yp += SHOWRSIZE;
 				if (int(yp / SHOWRSIZE) >= destyp / SHOWRSIZE) {
-					MessageBox(NULL, g_oLangRec.GetString(74), "INFO", 0);
+					MessageBox(NULL, GetLanguageString(74).c_str(), "INFO", 0);
 					xp = xp1;
 					yp = yp1;
 
@@ -543,9 +543,8 @@ BOOL CGameApp::_PrintScreen() {
 		sprintf(fileName, "%scap%05d.bmp", pszName, g_nScreenCap);
 		g_Render.CaptureScreen(fileName);
 
-		char szTip[64];
-		sprintf(szTip, g_oLangRec.GetString(75), fileName);
-		Tip(szTip);
+		auto _strTip = SafeVFormat(GetLanguageString(75), fileName);
+		Tip(_strTip.c_str());
 		g_nScreenCap++;
 		EnableSprintScreen(FALSE);
 	}
@@ -591,7 +590,7 @@ CGameScene* CGameApp::CreateScene(stSceneInitParam* param) {
 BOOL CGameApp::CreateCurrentScene(char* szMapName) {
 	stSceneInitParam stInit;
 	stInit.nTypeID = enumLoginScene;
-	stInit.strName = g_oLangRec.GetString(76);
+	stInit.strName = GetLanguageString(76);
 	stInit.strMapFile = szMapName;
 	stInit.nMaxEff = 300;
 	stInit.nMaxCha = 300;
@@ -1354,10 +1353,10 @@ void CGameApp::SetFPSInterval(DWORD v) {
 
 void CGameApp::_SceneError(const char* info, CGameScene* p) {
 	if (p) {
-		MsgBox(g_oLangRec.GetString(78), p->GetInitParam()->strName.c_str(), info);
+		MsgBox("%s", SafeVFormat(GetLanguageString(78), p->GetInitParam()->strName, info).c_str());
 	}
 	else {
-		MsgBox(g_oLangRec.GetString(79), info);
+		MsgBox("%s", SafeVFormat(GetLanguageString(79), info).c_str());
 	}
 }
 
@@ -1432,13 +1431,13 @@ void CGameApp::AutoTest() {
 	for (int i(0); i < 1; i++) {
 		//
 		{
-			AutoTestInfo(g_oLangRec.GetString(80));
+			AutoTestInfo("%s", GetLanguageString(80).c_str());
 			EffectRecordStore::Instance()->ForEach([&](const CMagicInfo& info) {
 				auto* pEffect = pScene->GetFirstInvalidEffObj();
 				if (!pEffect) return;
 
 				if (!pEffect->Create(info.nID)) {
-					AutoTestInfo(g_oLangRec.GetString(81), info.nID);
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.nID).c_str());
 					return;
 				}
 
@@ -1451,12 +1450,12 @@ void CGameApp::AutoTest() {
 	}
 	// ,,,
 	{
-		AutoTestInfo(g_oLangRec.GetString(82));
+		AutoTestInfo("%s", GetLanguageString(82).c_str());
 
 		ChaRecordStore::Instance()->ForEach([&](const CChaRecord& info) {
 			auto* pCha = pScene->AddCharacter(info.nID);
 			if (!pCha) {
-				AutoTestInfo(g_oLangRec.GetString(83), info.nID);
+				AutoTestInfo("%s", SafeVFormat(GetLanguageString(83), info.nID).c_str());
 				return;
 			}
 
@@ -1468,7 +1467,7 @@ void CGameApp::AutoTest() {
 
 	// begin
 	{
-		AutoTestInfo(g_oLangRec.GetString(84));
+		AutoTestInfo("%s", GetLanguageString(84).c_str());
 
 		CCharacter* pHairCha[4] = {NULL};
 		int nMax = 4;
@@ -1480,11 +1479,11 @@ void CGameApp::AutoTest() {
 			for (int j = 0; j < nMax; j++) {
 				if (hair.IsChaUse[j]) {
 					if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwItemID))
-						SysInfo(g_oLangRec.GetString(85), hair.nID, j + 1, hair.dwItemID);
+						SysInfo("%s", SafeVFormat(GetLanguageString(85), hair.nID, j + 1, hair.dwItemID).c_str());
 
 					for (int k = 0; k < hair.GetFailItemNum(); k++) {
 						if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwFailItemID[k]))
-							SysInfo(g_oLangRec.GetString(86), hair.nID, j + 1, hair.dwFailItemID[k]);
+							SysInfo("%s", SafeVFormat(GetLanguageString(86), hair.nID, j + 1, hair.dwFailItemID[k]).c_str());
 					}
 					AutoTestUpdate();
 				}
@@ -1498,13 +1497,13 @@ void CGameApp::AutoTest() {
 
 	//
 	{
-		AutoTestInfo(g_oLangRec.GetString(80));
+		AutoTestInfo("%s", GetLanguageString(80).c_str());
 		EffectRecordStore::Instance()->ForEach([&](const CMagicInfo& info) {
 			auto* pEffect = pScene->GetFirstInvalidEffObj();
 			if (!pEffect) return;
 
 			if (!pEffect->Create(info.nID)) {
-				AutoTestInfo(g_oLangRec.GetString(81), info.nID);
+				AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.nID).c_str());
 				return;
 			}
 
@@ -1525,14 +1524,14 @@ void CGameApp::AutoTest() {
 			y = CGameScene::GetMainCha()->GetCurY();
 		}
 
-		AutoTestInfo(g_oLangRec.GetString(87));
+		AutoTestInfo("%s", GetLanguageString(87).c_str());
 		CItemRecord* pInfo = NULL;
 		CSceneItem* pItem = NULL;
 		CMagicInfo* pEffectInfo = NULL;
 		int nEffectID = 0;
 		auto checkEffect = [&](int effectID, int msgIdx, int id, const char* name) {
 			if (effectID > 0 && !GetMagicInfo(effectID))
-				AutoTestInfo(g_oLangRec.GetString(msgIdx), id, name, effectID);
+				AutoTestInfo("%s", SafeVFormat(GetLanguageString(msgIdx), id, name, effectID).c_str());
 		};
 
 		ItemRecordStore::Instance()->ForEach([&](CItemRecord& item) {
@@ -1545,14 +1544,13 @@ void CGameApp::AutoTest() {
 				auto itemPath = std::format("model/item/{}.lgo", module);
 				auto chaPath = std::format("model/character/{}.lgo", module);
 				if (!IsExistFile(itemPath.c_str()) && !IsExistFile(chaPath.c_str())) {
-					AutoTestInfo(g_oLangRec.GetString(j == 0 ? 88 : 89),
-								 id, item.szName.c_str(), j, item.chModule[j].c_str());
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(j == 0 ? 88 : 89), id, item.szName, j, item.chModule[j]).c_str());
 				}
 			}
 
 			if (std::string_view(item.szICON) != "0") {
 				if (!IsExistFile(item.GetIconFile()))
-					AutoTestInfo(g_oLangRec.GetString(90), id, item.szName.c_str(), item.szICON.c_str());
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(90), id, item.szName, item.szICON).c_str());
 			}
 
 			checkEffect(item.sDrap, 91, id, item.szName.c_str());
@@ -1563,7 +1561,7 @@ void CGameApp::AutoTest() {
 
 			auto* sceneItem = pScene->AddSceneItem(id, 0);
 			if (!sceneItem) {
-				AutoTestInfo(g_oLangRec.GetString(95), id, item.szName.c_str());
+				AutoTestInfo("%s", SafeVFormat(GetLanguageString(95), id, item.szName).c_str());
 				return;
 			}
 
@@ -1575,12 +1573,12 @@ void CGameApp::AutoTest() {
 
 	// ...
 	{
-		AutoTestInfo(g_oLangRec.GetString(96));
+		AutoTestInfo("%s", GetLanguageString(96).c_str());
 		ItemRefineRecordStore::Instance()->ForEach([&](const CItemRefineInfo& refine) {
 			for (int k = 0; k < ITEM_REFINE_NUM; k++) {
 				int effectID = refine.Value[k];
 				if (effectID > 0 && !GetItemRefineEffectInfo(effectID)) {
-					AutoTestInfo(g_oLangRec.GetString(97), refine.nID, refine.szDataName, effectID);
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(97), refine.nID, std::string_view(refine.szDataName), effectID).c_str());
 				}
 			}
 		});
@@ -1588,7 +1586,7 @@ void CGameApp::AutoTest() {
 
 	// ...
 	{
-		AutoTestInfo(g_oLangRec.GetString(98));
+		AutoTestInfo("%s", GetLanguageString(98).c_str());
 		ItemRefineEffectRecordStore::Instance()->ForEach([&](CItemRefineEffectInfo& info) {
 			for (int k = 0; k < 4; k++) {
 				int nEffectNum = info.GetEffectNum(k);
@@ -1598,7 +1596,7 @@ void CGameApp::AutoTest() {
 					for (int level = 0; level < 4; level++) {
 						int nEffectID = info.sEffectID[k][j] * 10 + level;
 						if (!GetMagicInfo(nEffectID)) {
-							AutoTestInfo(g_oLangRec.GetString(99), info.nID, info.szDataName, nEffectID);
+							AutoTestInfo("%s", SafeVFormat(GetLanguageString(99), info.nID, std::string_view(info.szDataName), nEffectID).c_str());
 						}
 					}
 				}
@@ -1608,7 +1606,7 @@ void CGameApp::AutoTest() {
 
 	//
 	{
-		AutoTestInfo(g_oLangRec.GetString(100));
+		AutoTestInfo("%s", GetLanguageString(100).c_str());
 
 		g_pGameApp->HasLogFile("iteminfoerror");
 	}

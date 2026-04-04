@@ -563,7 +563,7 @@ bool Entity::IsLiveing(void)
 
 CStateCellNode* Entity::EnterStateCell(CStateCell *pStateCell, CChaListNode *pEntiNode, bool bIsIn)
 {
-	CStateCellNode	*pCMgrNode = g_pGameApp->m_StateCellNodeHeap.Get();
+	CStateCellNode	*pCMgrNode = g_pGameApp->m_StateCellNodePool.Get();
 	pCMgrNode->m_pCStateCell = pStateCell;
 	pCMgrNode->m_pCChaNode = pEntiNode;
 	if (bIsIn) // 
@@ -602,7 +602,7 @@ void Entity::OutMgrUnit(CStateCellNode *pCMgrNode)
 			m_pCStateCellTail->m_pCNext = 0;
 	pCMgrNode->m_pCLast = 0;
 	pCMgrNode->m_pCNext = 0;
-	pCMgrNode->Free();
+	g_pGameApp->m_StateCellNodePool.Release(pCMgrNode);
 }
 
 void Entity::SetCenterMgrNode(CStateCellNode *pCMgrNode)

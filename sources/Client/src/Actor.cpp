@@ -408,7 +408,7 @@ void CMonsterItem::Exec()
 
     if( !pEffect->Create( nEffectID ) )
     {
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(1), nEffectID); g_logManager.InternalLog(LogLevel::Debug, "network", _buf); }
+		g_logManager.InternalLog(LogLevel::Debug, "network", SafeVFormat(GetLanguageString(1), nEffectID));
         return;
     }
 	pEffect->setFollowObj((CSceneNode*)_pItem, NODE_ITEM);
@@ -439,13 +439,13 @@ void CMissionTrigger::SetData( stNetNpcMission& v )
 void CMissionTrigger::Exec()
 {
 	char szData[64] = {0};
-	strcpy(szData, g_oLangRec.GetString(2));
+	strncpy_s(szData, sizeof(szData), GetLanguageString(2).c_str(), _TRUNCATE);
 
 	CChaRecord* pCharRecord = GetChaRecordInfo( _pData->sID );
 	if( pCharRecord )
 	{
 		strncpy( szData, pCharRecord->szName.c_str(), sizeof(szData) );
 	}
-	g_pGameApp->ShowMidText( g_oLangRec.GetString(3), szData, _pData->sCount, _pData->sNum );
+	g_pGameApp->ShowMidText( "%s", SafeVFormat(GetLanguageString(3), std::string_view(szData), static_cast<int>(_pData->sCount), static_cast<int>(_pData->sNum)).c_str() );
 }
 

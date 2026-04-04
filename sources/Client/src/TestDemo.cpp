@@ -270,7 +270,7 @@ void CGameApp::HandleSuperKey()
 			//	//g_pGameApp->ResetGameCamera( GetCurScene()->GetMainCha()->IsBoat() ? 1 : 0 );
 			//}
 
-			TipI( _bCameraFollow, g_oLangRec.GetString(106), g_oLangRec.GetString(107));
+			TipI( _bCameraFollow, GetLanguageString(106).c_str(), GetLanguageString(107).c_str());
 		}
 		else if(g_pGameApp->IsKeyDown(DIK_INSERT) && g_pGameApp->IsCtrlPress())
 		{
@@ -327,12 +327,12 @@ void CGameApp::HandleSuperKey()
 			else if(g_pGameApp->IsKeyDown(DIK_L)) 
 			{
 				g_pGameApp->GetDrawPoints()->SetIsEnabled( !g_pGameApp->GetDrawPoints()->GetIsEnabled() );
-				g_pGameApp->AddTipText( g_oLangRec.GetString(108) );
+				g_pGameApp->AddTipText( "%s", GetLanguageString(108).c_str() );
 			}
 			else if( g_pGameApp->IsKeyDown(DIK_T) )
 			{
 				g_pGameApp->SetIsRenderTipText( !g_pGameApp->GetIsRenderTipText() );
-				g_pGameApp->AddTipText( g_oLangRec.GetString(109) );
+				g_pGameApp->AddTipText( "%s", GetLanguageString(109).c_str() );
 			}
 		}
 #endif   

@@ -67,7 +67,7 @@ bool CBourseMgr::Init()
 		frmSeaTrade = mgr.Find("frmSeaTrade", enumMainForm);
 		if ( !frmSeaTrade)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(456));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(456).c_str());
 			return false;
 		}
 		frmSeaTrade->evtEntrustMouseEvent = _MainMouseSeaTradeEvent ;
@@ -76,7 +76,7 @@ bool CBourseMgr::Init()
 		grdItemBuy = 
 			dynamic_cast<CGoodsGrid*>(frmSeaTrade->Find("grdItemSale"));
 		if (!grdItemBuy) 
-			return Error(g_oLangRec.GetString(446),
+			return Error(GetLanguageString(446).c_str(),
 			frmSeaTrade->GetName(), "grdItemSale");
 		grdItemBuy->SetShowStyle(CGoodsGrid::enumSale);
 		grdItemBuy->SetIsHint(true);
@@ -85,7 +85,7 @@ bool CBourseMgr::Init()
 		grdItemSale = 
 			dynamic_cast<CGoodsGrid*>(frmSeaTrade->Find("grdItemBuy"));
 		if (!grdItemSale) 
-			return Error(g_oLangRec.GetString(446), 
+			return Error(GetLanguageString(446).c_str(), 
 				frmSeaTrade->GetName(), "grdItemBuy");
 		grdItemSale->SetShowStyle(CGoodsGrid::enumSale);
 		grdItemSale->SetIsHint(true);
@@ -316,14 +316,14 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 {
 	if (nFreeCnt == 0)
 	{
-		g_pGameApp->MsgBox(g_oLangRec.GetString(457));
+		g_pGameApp->MsgBox("%s", GetLanguageString(457).c_str());
 		return;
 	}
 
 	int iNum = int(rkBuy.GetData().sNum);
 	if (iNum == 0) 
 	{
-		g_pGameApp->MsgBox(g_oLangRec.GetString(458));
+		g_pGameApp->MsgBox("%s", GetLanguageString(458).c_str());
 		return;
 	} //end of if 
 
@@ -338,7 +338,7 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 
 		if( nMax==0 )
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(459) );
+			g_pGameApp->MsgBox( "%s", GetLanguageString(459).c_str() );
 			return;
 		}
 	}	
@@ -355,9 +355,8 @@ void CBourseMgr::BuyGoods(CItemCommand& rkBuy, int nFreeCnt)
 	}
 	else
 	{	// 
-		char buf[256] = { 0 };
-		sprintf(buf, g_oLangRec.GetString(460), rkBuy.GetName());
-		g_stUIBox.ShowSelectBox(_BuyAGoodEvent, buf, true);
+		auto _str = SafeVFormat(GetLanguageString(460), rkBuy.GetName());
+		g_stUIBox.ShowSelectBox(_BuyAGoodEvent, _str.c_str(), true);
 	}
 #else
 	m_pkTradeBox = g_stUIBox.ShowTradeBox(
@@ -396,11 +395,8 @@ bool CBourseMgr::SaleGoods(CItemCommand& rkSaleCmd, int iGridIndex)
 	}
 	else/*  */
 	{
-		char buf[256] = { 0 };
-		sprintf(buf, g_oLangRec.GetString(461), 
-				StringSplitNum( iSalePrice ),
-				rkSaleCmd.GetName());
-		g_stUIBox.ShowSelectBox(_SaleAGoodEvent, buf, true);
+		auto _str = SafeVFormat(GetLanguageString(461), StringSplitNum( iSalePrice ), rkSaleCmd.GetName());
+		g_stUIBox.ShowSelectBox(_SaleAGoodEvent, _str.c_str(), true);
 
 		return true;
 	}
@@ -483,7 +479,7 @@ void CBourseMgr::SetItems()
 		}
 		if (!grdItemBuy->SetItem(iIndex, pItem))
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(462));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(462).c_str());
 		}
 	} //end of for 
 
@@ -499,7 +495,7 @@ void CBourseMgr::SetItems()
 		pItem->GetData().sNum = m_SaleList[iIndex]->wNum;
 		if (!grdItemSale->SetItem(iIndex, pItem))
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(462));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(462).c_str());
 		}
 	}
 }
@@ -649,7 +645,7 @@ void CBourseMgr::BuyItem(CGoodsGrid& rkToGoodsGrid, CCommandObj& rkItem,
 	if (!pkBuyCmd)	return;
 	if ( !(pkBuyCmd->GetIsValid()) )
 	{
-		g_pGameApp->MsgBox(g_oLangRec.GetString(463));
+		g_pGameApp->MsgBox("%s", GetLanguageString(463).c_str());
 		return;
 	}
 	CItemRecord* pkBuyRecord = pkBuyCmd->GetItemInfo();
@@ -840,15 +836,15 @@ bool CBlackTradeMgr::SailToBuy(CGoodsGrid& rkDrag, CGoodsGrid& rkSelf, int nGrid
 	if(! pItem)
 		return false;
 
-	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, g_oLangRec.GetString(832), true ); // 
+	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, GetLanguageString(832).c_str(), true ); //
 
 	//if(! pItem->GetIsValid())
 	//{
-	//	g_pGameApp->MsgBox(g_oLangRec.GetString(834)); // 
+	//	g_pGameApp->MsgBox(GetLanguageString(834)); // 
 	//}
 	//else
 	//{
-	//	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, g_oLangRec.GetString(832)); // 
+	//	CBoxMgr::ShowSelectBox( _TradeExchangeEvent, GetLanguageString(832)); // 
 	//}
 
 	return true;
@@ -929,9 +925,8 @@ void CBlackTradeMgr::ExchangeAnswerProc(bool bSuccess, stBlackTrade* pBlackTrade
 			pInfo = GetItemRecordInfo(pBlackTrade->sSrcID);
 			if(pInfo)
 			{
-				char szBuffer[128] = {0};
-				sprintf(szBuffer, g_oLangRec.GetString(843), pBlackTrade->sSrcNum, pInfo->szName.c_str());	// x
-				pItem->SetOwnDefText(szBuffer);
+				auto _str = SafeVFormat(GetLanguageString(843), pBlackTrade->sSrcNum, pInfo->szName.c_str());	// x
+				pItem->SetOwnDefText(_str.c_str());
 			}
 			grdItemBuy->SetItem(nCurNum, pItem);
 		}
@@ -940,11 +935,11 @@ void CBlackTradeMgr::ExchangeAnswerProc(bool bSuccess, stBlackTrade* pBlackTrade
 		// 
 		//
 		RefreshSaleGrid();
-		CCozeForm::GetInstance()->OnSystemMsg(g_oLangRec.GetString(833)); // 
+		CCozeForm::GetInstance()->OnSystemMsg(GetLanguageString(833)); // 
 	}
 	else
 	{
-		CCozeForm::GetInstance()->OnSystemMsg(g_oLangRec.GetString(834)); // 
+		CCozeForm::GetInstance()->OnSystemMsg(GetLanguageString(834)); // 
 	}
 }
 

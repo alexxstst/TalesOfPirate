@@ -2987,11 +2987,10 @@ void	CLargerMap::RenderScene()
 		pfont->DrawTextShadow((char*)strMapName.c_str(),_rcWnd.left + 60,_rcWnd.top + 30,
 		_rcWnd.left + 61,_rcWnd.top + 31,0xff808000,0xffffff00);
 
-		static char psz[128] = { 0 };
-		// Modify by sunny.sun 20080904 
+		// Modify by sunny.sun 20080904
 		//mothannakh fix compass in minimap
-		sprintf(psz, g_oLangRec.GetString(394), _nCenterX / 100, _nCenterY / 100, fInf);
-		pfont->DrawTextShadow(psz, _rcWnd.left + 350, _rcWnd.top + 30, _rcWnd.left + 351, _rcWnd.top + 31, 0xff808000, 0xffffff00);
+		auto _strCoord = SafeVFormat(GetLanguageString(394), _nCenterX / 100, _nCenterY / 100, fInf);
+		pfont->DrawTextShadow(const_cast<char*>(_strCoord.c_str()), _rcWnd.left + 350, _rcWnd.top + 30, _rcWnd.left + 351, _rcWnd.top + 31, 0xff808000, 0xffffff00);
 	}
 }
 

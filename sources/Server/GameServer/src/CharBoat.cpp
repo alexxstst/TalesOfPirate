@@ -842,7 +842,7 @@ namespace mission {
 		pBoat->m_CChaAttr.Init(pInfo->sCharID, FALSE);
 		pBoat->SetID(g_pGameApp->m_Ident.GetID());
 		pBoat->SetRadius(pBoat->m_pCChaRecord->sRadii);
-		pBoat->SetShip(g_pGameApp->m_CabinHeap.Get());
+		pBoat->SetShip(g_pGameApp->m_CabinPool.Get());
 		pBoat->setAttr(ATTR_CHATYPE, enumCHACTRL_PLAYER);
 		pBoat->EnrichSkillBag();
 
@@ -1173,7 +1173,7 @@ namespace mission {
 		pBoat->m_CChaAttr.Init(pInfo->sCharID, FALSE);
 		pBoat->SetID(g_pGameApp->m_Ident.GetID());
 		pBoat->SetRadius(pBoat->m_pCChaRecord->sRadii);
-		pBoat->SetShip(g_pGameApp->m_CabinHeap.Get());
+		pBoat->SetShip(g_pGameApp->m_CabinPool.Get());
 		pBoat->setAttr(ATTR_CHATYPE, enumCHACTRL_PLAYER);
 		pBoat->EnrichSkillBag();
 

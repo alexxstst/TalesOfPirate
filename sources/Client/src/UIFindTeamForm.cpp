@@ -204,7 +204,7 @@ namespace GUI
 		m_strTeamLeader = szName;
 
 		char szBuffer[256] = {0};
-		sprintf(szBuffer, g_oLangRec.GetString(863), szName);
+		sprintf(szBuffer, GetLanguageString(863).c_str(), szName);
 		CBoxMgr::ShowSelectBox(_evtFindTeamCheckEvent, szBuffer, true);
 	}
 
@@ -249,7 +249,7 @@ namespace GUI
 			DWORD dwCurTick = g_pGameApp->GetCurTick();
 			if(g_stUIFindTeam.m_dwLastTick + 1000 * FINDTEAM_INTERVAL > dwCurTick)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(883), FINDTEAM_INTERVAL, FINDTEAM_INTERVAL - (dwCurTick - g_stUIFindTeam.m_dwLastTick) / 1000);
+				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(883), FINDTEAM_INTERVAL, FINDTEAM_INTERVAL - (dwCurTick - g_stUIFindTeam.m_dwLastTick) / 1000).c_str());
 				return;
 			}
 			g_stUIFindTeam.m_dwLastTick = dwCurTick;

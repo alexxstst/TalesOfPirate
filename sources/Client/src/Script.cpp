@@ -197,11 +197,7 @@ bool CScriptMgr::DoString(const char* szFunc, const char* szFormat, ...) {
 	double dd = value / 1000.0 * 1000.0;
 	if (dd != value) {
 		_control87(_CW_DEFAULT, 0xfffff);
-		{
-			char _buf[512];
-			snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(380), szFunc, szFormat);
-			g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
-		}
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(380), szFunc, szFormat));
 	}
 
 	int narg, nres;
@@ -306,17 +302,13 @@ string CScriptMgr::GetStoneHint(const char* szHintFun, int Lv) {
 	double dd = value / 1000.0 * 1000.0;
 	if (dd != value) {
 		_control87(_CW_DEFAULT, 0xfffff);
-		{
-			char _buf[512];
-			snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(381), szHintFun, Lv);
-			g_logManager.InternalLog(LogLevel::Debug, "common", _buf);
-		}
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(381), szHintFun, Lv));
 	}
 
 	lua_getglobal(_pLuaState, szHintFun);
 	if (!lua_isfunction(_pLuaState, -1)) {
 		lua_pop(_pLuaState, 1);
-		return g_oLangRec.GetString(382);
+		return GetLanguageString(382);
 	}
 
 	int nParamNum = 0;
@@ -332,7 +324,7 @@ string CScriptMgr::GetStoneHint(const char* szHintFun, int Lv) {
 	string hint;
 	int nRetNum = 1;
 	if (!lua_isstring(_pLuaState, -1)) {
-		g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(383));
+		g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(383));
 	}
 	else {
 		hint = lua_tostring(_pLuaState, -1);

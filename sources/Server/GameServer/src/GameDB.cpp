@@ -4429,9 +4429,9 @@ void CTableGuild::TryFor(CCharacter* pCha, uLong guildid)
 			pCha->SystemNotice(RES_STRING(GM_GAMEDB_CPP_00037),buf[2].c_str());
 			return;
 		}
-		else if(status == emGldMembStatTry && pCha->GetPlayer()->m_GuildState.IsFalse(emGuildReplaceOldTry))
+		else if(status == emGldMembStatTry && !(pCha->GetPlayer()->m_GuildState & emGuildReplaceOldTry))
 		{
-			pCha->GetPlayer()->m_GuildState.SetBit(emGuildReplaceOldTry);
+			pCha->GetPlayer()->m_GuildState |= emGuildReplaceOldTry;
 			pCha->GetPlayer()->m_lTempGuildID = guildid;
 			//  :     
 			auto l_wpk = net::msg::serialize(net::msg::McGuildTryForCfmMessage{buf[2].c_str()});
@@ -4488,7 +4488,7 @@ void CTableGuild::TryForConfirm(CCharacter* pCha, uLong guildid)
 	}
 
 	// 
-	if( dwOldGuildID && pCha->GetPlayer()->m_GuildState.IsTrue(emGuildReplaceOldTry) )
+	if( dwOldGuildID && (pCha->GetPlayer()->m_GuildState & emGuildReplaceOldTry) )
 	{
 		sprintf(sql,"update guild set try_total =try_total -1 where guild_id =%d and try_total > 0"
 			,dwOldGuildID);

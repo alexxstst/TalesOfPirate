@@ -307,8 +307,8 @@ public:
 	{
 		if (m_pCStateCell[y][x] && m_pCStateCell[y][x]->GetChaNum() == 0 && m_pCStateCell[y][x]->GetStateNum() == 0)
 		{
-			m_pCStateCell[y][x]->Free();
-			m_pCStateCell[y][x] = 0;
+			g_pGameApp->m_MapStateCellPool.Release(m_pCStateCell[y][x]);
+			m_pCStateCell[y][x] = nullptr;
 		}
 	}
 
@@ -330,7 +330,7 @@ private:
 	{
 		if (!m_pCStateCell[y][x])
 		{
-			m_pCStateCell[y][x] = g_pGameApp->m_MapStateCellHeap.Get();
+			m_pCStateCell[y][x] = g_pGameApp->m_MapStateCellPool.Get();
 			m_pCStateCell[y][x]->m_sPosX = (Short)x;
 			m_pCStateCell[y][x]->m_sPosY = (Short)y;
 			m_pCStateCell[y][x]->m_pCEyeshotCell = &m_pCEyeshotCell[y * GetStateCellWidth() / GetEyeshotCellWidth()][x * GetStateCellWidth() / GetEyeshotCellHeight()];

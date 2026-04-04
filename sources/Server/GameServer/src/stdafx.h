@@ -38,10 +38,9 @@
 
 //    () 
 #include "DBCCommon.h"
+#include "excp.h"
 #include "util.h"
 #include "i18n.h"
-#include "pi_Alloc.h"
-#include "pi_Memory.h"
 #include "point.h"
 #include "Timer.h"
 #include "CompCommand.h"

@@ -472,7 +472,7 @@ namespace GUI
     {
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
-            g_pGameApp->MsgBox(g_oLangRec.GetString(896));
+            g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
             return;
         }
         CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
@@ -511,7 +511,7 @@ namespace GUI
     {
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
-            g_pGameApp->MsgBox(g_oLangRec.GetString(896));
+            g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
             return;
         }
         CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
@@ -534,7 +534,7 @@ namespace GUI
         //  1
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
-            g_pGameApp->MsgBox(g_oLangRec.GetString(896));
+            g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
             return;
         }
         CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
@@ -558,7 +558,7 @@ namespace GUI
         //  2
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
-            g_pGameApp->MsgBox(g_oLangRec.GetString(896));
+            g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
             return;
         }
         CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);
@@ -582,7 +582,7 @@ namespace GUI
         //  3
         if(!g_stUICompose.cmdCompose[1]->GetCommand())
         {
-            g_pGameApp->MsgBox(g_oLangRec.GetString(896));
+            g_pGameApp->MsgBox("%s", GetLanguageString(896).c_str());
             return;
         }
         CItemCommand* pItemCommand =  dynamic_cast<CItemCommand*>(pItem);

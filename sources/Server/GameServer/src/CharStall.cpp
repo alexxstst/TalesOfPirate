@@ -18,16 +18,6 @@ namespace mission
 {
 	#define MAX_STALL_MONEY 1000000000 // 1
 
-	CStallData::CStallData(dbc::uLong lSize)
-		: PreAllocStru(1)
-	{
-		Clear();
-	}
-
-	CStallData::~CStallData()
-	{
-	}
-
 	void CStallData::Clear()
 	{
 		m_byNum = 0;
@@ -116,7 +106,7 @@ namespace mission
 			return;
 		}
 
-		CStallData* pData = g_pGameApp->m_StallDataHeap.Get();
+		CStallData* pData = g_pGameApp->m_StallDataPool.Get();
 		if (!pData)
 		{
 			staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00009) );
@@ -223,7 +213,7 @@ namespace mission
 		pData->m_byNum = static_cast<BYTE>(msg.num);
 		if( pData->m_byNum == 0 || pData->m_byNum > byStallNum )
 		{
-			pData->Free();
+			g_pGameApp->m_StallDataPool.Release(pData);
 			//staller.SystemNotice( "%s[%d]", staller.GetName(), pData->m_byNum );
 			staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00014), staller.GetName(), pData->m_byNum );
 			//LG( "stall_error", "%s[%d]", staller.GetName(), pData->m_byNum );
@@ -266,7 +256,7 @@ namespace mission
 
 			if( pData->m_Goods[i].byGrid >= byStallNum )
 			{
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				//staller.SystemNotice( "%sGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00016), staller.GetName(), pData->m_Goods[i].byGrid );
 				//LG( "stall_error", "%sGRID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
@@ -277,7 +267,7 @@ namespace mission
 			__int64 n64Temp = (__int64)(pData->m_Goods[i].dwMoney) * pData->m_Goods[i].byCount;
 			if (n64Temp > MAX_STALL_MONEY && pData->m_Goods[i].dwMoney <= 2000000000)
 			{
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				//staller.SystemNotice( "" );
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00017) );
 				return;
@@ -292,10 +282,10 @@ namespace mission
 			{
 				/*staller.SystemNotice( "%sID[%d]", staller.GetName(), pData->m_Goods[i].byIndex );
 				ToLogService("common", "{}ID[{}]", staller.GetName(), pData->m_Goods[i].byIndex);
-				pData->Free();*/
+				g_pGameApp->m_StallDataPool.Release(pData);*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00018), staller.GetName(), pData->m_Goods[i].byIndex );
 				ToLogService("store", LogLevel::Error, "start to stallcharacter{}submit data inexistence of stall goodsID[{}]", staller.GetName(), pData->m_Goods[i].byIndex );
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				return;
 			}
 			
@@ -303,7 +293,7 @@ namespace mission
 			CItemRecord* pItem = (CItemRecord*)GetItemRecordInfo( pData->m_Goods[i].sItemID );
 			if( pItem == NULL )
 			{
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				/*staller.SystemNotice( "IDID = %d", pData->m_Goods[i].sItemID );
 				ToLogService("common", "IDID = {}", pData->m_Goods[i].sItemID);*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00019), pData->m_Goods[i].sItemID );
@@ -314,13 +304,13 @@ namespace mission
 
 			if(	grid2	&&	grid2->dwDBID	)
 			{
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				staller.SystemNotice(	"Item %s is bind, cannot be sold!",	pItem->szName.c_str()	);
 				return;
 			}
 			if( !pItem->chIsTrade || !staller.m_CKitbag.GetGridContByID(pData->m_Goods[i].byIndex)->GetInstAttr(ITEMATTR_TRADABLE))
 			{
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				/*staller.SystemNotice( "%s", pItem->szName );
 				ToLogService("common", "{}", pItem->szName);*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00020), pItem->szName.c_str() );
@@ -337,10 +327,10 @@ namespace mission
 			{
 				/*staller.SystemNotice( "%sID[%d]", staller.GetName(), pData->m_Goods[i].byIndex );
 				ToLogService("common", "{}ID[{}]", staller.GetName(), pData->m_Goods[i].byIndex);
-				pData->Free();*/
+				g_pGameApp->m_StallDataPool.Release(pData);*/
 				staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00021), staller.GetName(), pData->m_Goods[i].byIndex );
 				ToLogService("store", LogLevel::Error, "start to stallcharacter{}submit res of staller number errorID[{}]", staller.GetName(), pData->m_Goods[i].byIndex );
-				pData->Free();
+				g_pGameApp->m_StallDataPool.Release(pData);
 				return;
 			}
 
@@ -351,7 +341,7 @@ namespace mission
 				if( pData->m_Goods[j].byGrid == pData->m_Goods[i].byGrid || 
 					pData->m_Goods[j].byIndex == pData->m_Goods[i].byIndex )
 				{
-					pData->Free();
+					g_pGameApp->m_StallDataPool.Release(pData);
 					/*staller.SystemNotice( "%sID[%d]", staller.GetName(), pData->m_Goods[i].byGrid );
 					ToLogService("common", "{}ID[{}]", staller.GetName(), pData->m_Goods[i].byGrid);*/
 					staller.SystemNotice( RES_STRING(GM_CHARSTALL_CPP_00022), staller.GetName(), pData->m_Goods[i].byGrid );
@@ -370,7 +360,7 @@ namespace mission
 					ToLogService("common", "ID[0x{:X}]", dwBoatID);*/
 staller.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00023), dwBoatID);
 ToLogService("store", LogLevel::Error, "start to stallit cannot find the information of the boat that captain to confirm in this tradeID[0x{:X}]", dwBoatID);
-pData->Free();
+g_pGameApp->m_StallDataPool.Release(pData);
 return;
 				}
 				else
@@ -406,7 +396,7 @@ return;
 		staller.StallAction(false);
 		staller.SetStallName("");
 		staller.m_CKitbag.UnLock();
-		staller.GetStallData()->Free();
+		g_pGameApp->m_StallDataPool.Release(staller.GetStallData());
 		staller.SetStallData(NULL);
 		//staller.SystemNotice( "" );
 		staller.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00027));
@@ -847,17 +837,13 @@ return;
 			/*pStaller->SystemNotice( "%s%d%s%d%d%d", character.GetName(), byCount, pItem->szName,
 				byCount * pData->m_Goods[byIndex].dwMoney, pData->m_Goods[byIndex].dwMoney, pStaller->getAttr( ATTR_GD ) );*/
 
-			CFormatParameter param(6);
-			param.setString(0, character.GetName());
-			param.setLong(1, byCount);
-			param.setString(2, pItem->szName.c_str());
-			param.setLong(3, pData->m_Goods[byIndex].dwMoney * byCount);
-			param.setLong(4, pData->m_Goods[byIndex].dwMoney);
-			param.setLong(5, (long)pStaller->getAttr(ATTR_GD));
-
-			RES_FORMAT_STRING(GM_CHARSTALL_CPP_00052, param, szNotice);
-			
-
+			{
+				auto& stallFmt = LanguageRecordStore::Instance()->GetKeyString("GM_CHARSTALL_CPP_00052");
+				snprintf(szNotice, sizeof(szNotice), "%s",
+					SafeVFormat(stallFmt, character.GetName(), byCount, pItem->szName.c_str(),
+						pData->m_Goods[byIndex].dwMoney * byCount, pData->m_Goods[byIndex].dwMoney,
+						(long)pStaller->getAttr(ATTR_GD)).c_str());
+			}
 
 			pStaller->SystemNotice(szNotice);
 
@@ -866,7 +852,7 @@ return;
 			pStaller->SynKitbagNew(enumSYN_KITBAG_TRADE);
 			DelGoods(*pStaller, pData->m_Goods[byIndex].byGrid, byCount);
 
-			// 
+			//
 			pStaller->RefreshNeedItem(Grid.sID);
 			character.RefreshNeedItem(Grid.sID);
 
@@ -874,19 +860,19 @@ return;
 			{
 				if (!character.BoatAdd((DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID)))
 				{
-					/*pStaller->SystemNotice( "%sID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ) );
-					character.SystemNotice( "%sID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ) );
-					ToLogService("common", "{}ID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam( enumITEMDBP_INST_ID ));*/
 					pStaller->SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00053), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00053), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					ToLogService("store", LogLevel::Error, "stalladd boat failed that charcter{}boughtID[0xX]", character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 				}
 			}
 
-			// The two parameters are different
-			param.setString(0, pStaller->GetName());
-			param.setLong(5, (long)character.getAttr(ATTR_GD));
-			RES_FORMAT_STRING(GM_CHARSTALL_CPP_00054, param, szNotice);
+			{
+				auto& stallFmt2 = LanguageRecordStore::Instance()->GetKeyString("GM_CHARSTALL_CPP_00054");
+				snprintf(szNotice, sizeof(szNotice), "%s",
+					SafeVFormat(stallFmt2, pStaller->GetName(), byCount, pItem->szName.c_str(),
+						pData->m_Goods[byIndex].dwMoney * byCount, pData->m_Goods[byIndex].dwMoney,
+						(long)character.getAttr(ATTR_GD)).c_str());
+			}
 			character.SystemNotice(szNotice);
 
 			character.SynKitbagNew(enumSYN_KITBAG_TRADE);

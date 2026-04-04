@@ -18,5 +18,3 @@
 
 #include "i18n.h"
 
-#include "pi_Alloc.h"
-#include "pi_Memory.h"

@@ -36,7 +36,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
             {
                 if(find(pList->begin(), pList->end(), nParam3)!=pList->end())
                 {
-                    { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(352), nParam2, nParam3); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+                    g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(352), nParam2, nParam3));
                     break;
                 }
                 _SceneObjIdx[nParam2].push_back(nParam3);
@@ -56,7 +56,7 @@ void CGameScene::HandleSceneMsg(int nMsgType, int nParam1, int nParam2, int nPar
             {
                 if(find(pList->begin(), pList->end(), nParam3)==pList->end())
                 {
-                    { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(353), nParam2, nParam3); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+                    g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(353), nParam2, nParam3));
                     break;
                 }
                 _SceneObjIdx[nParam2].remove(nParam3);

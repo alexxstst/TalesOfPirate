@@ -443,11 +443,11 @@ void CItemEx::Render( int x, int y )
 	int sy=0;
 	if (m_Allign==eAlignCenter)
 	{
-		sy=(_nHeight-CGuiFont::s_Font.GetHeight(g_oLangRec.GetString(623)))/2;
+		sy=(_nHeight-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str()))/2;
 	}
 	else if (m_Allign==eAlignBottom)
 	{
-		sy=_nHeight-CGuiFont::s_Font.GetHeight(g_oLangRec.GetString(623));
+		sy=_nHeight-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str());
 	}
 	if( _bParseText ) 
 	{

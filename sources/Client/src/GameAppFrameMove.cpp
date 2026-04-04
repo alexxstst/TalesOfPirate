@@ -65,7 +65,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 			pObj->setHeightOff(pAdd->nHeightOff);
 			pObj->setPos(pAdd->nPosX, pAdd->nPosY);
 			pObj->setYaw(pAdd->nAngle);
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(64), pAdd->nTypeID, pAdd->nPosX, pAdd->nPosY); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(64), pAdd->nTypeID, pAdd->nPosX, pAdd->nPosY));
 		}
 		delete pAdd;
 	}

@@ -218,9 +218,9 @@ bool CWorldScene::_Init()
 	}
 
 #ifdef USE_RENDER
-	_cFont.CreateFont(&g_Render,const_cast<char*>(g_oLangRec.GetString(66)));
+	_cFont.CreateFont(&g_Render,const_cast<char*>(GetLanguageString(66).c_str()));
 #else
-	_cFont.CreateFont(g_Render.GetDevice(),const_cast<char*>(g_oLangRec.GetString(66)));
+	_cFont.CreateFont(g_Render.GetDevice(),const_cast<char*>(GetLanguageString(66).c_str()));
 #endif
 	_cFont.BindingRes(&ResMgr);
 
@@ -274,11 +274,11 @@ void CWorldScene::_FrameMove( DWORD dwTimeParam )
 						GetMainCha()->DespawnMount();
 						GetMainCha()->FightSwitch(true);
 					}
-                    g_pGameApp->SysInfo( g_oLangRec.GetString(788) );
+                    g_pGameApp->SysInfo("%s", GetLanguageString(788).c_str());
                 }
                 else
                 {
-                    g_pGameApp->SysInfo( g_oLangRec.GetString(789) );
+                    g_pGameApp->SysInfo("%s", GetLanguageString(789).c_str());
                 }
             }
 
@@ -303,7 +303,7 @@ void CWorldScene::_FrameMove( DWORD dwTimeParam )
 					}
 					else if( _pMapInfo )
 					{
-						std::string name = std::string(_pMapInfo->szName) + g_oLangRec.GetString(790);
+						std::string name = std::string(_pMapInfo->szName) + GetLanguageString(790);
 						g_stUIMap.RefreshMapName( name.c_str() );
 						g_pGameApp->ShowBigText( "%s", name.c_str() );
 					}
@@ -1117,7 +1117,7 @@ void CWorldScene::_KeyDownEvent( int key )
 
 			if( GetMainCha()->IsBoat() )
 			{
-				g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(791));
+				g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(791).c_str());
 				return;
 			}
 	#if 0
@@ -1277,7 +1277,7 @@ void CWorldScene::_KeyDownEvent( int key )
 			if( g_pGameApp->IsShiftPress() )
 			{
 				_IsAutoPick = !_IsAutoPick;
-				g_pGameApp->SysInfo( _IsAutoPick ? g_oLangRec.GetString(792) : g_oLangRec.GetString(793) );
+				g_pGameApp->SysInfo("%s", _IsAutoPick ? GetLanguageString(792).c_str() : GetLanguageString(793).c_str());
 			}
 		}
 
@@ -1310,7 +1310,7 @@ void CWorldScene::_KeyDownEvent( int key )
 		if( (key=='b' || key=='B') )
 		{
 			g_IsShowModel = !g_IsShowModel;
-			g_pGameApp->SysInfo( g_IsShowModel ? g_oLangRec.GetString(794) : g_oLangRec.GetString(795) );
+			g_pGameApp->SysInfo("%s", g_IsShowModel ? GetLanguageString(794).c_str() : GetLanguageString(795).c_str());
 
 			CCharacter *pCha = NULL;
 			for(int i = 0; i < _nChaCnt; i++)
@@ -1452,7 +1452,7 @@ void CWorldScene::SetMainCha(int nChaID)
 	}
 
 	const char* szLogName = pCha->getLogName();
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(796), GetTickCount()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(796), GetTickCount()));
 	
 	_pMainCha = pCha;
     pCha->EnableAI(FALSE);

@@ -1,0 +1,193 @@
+﻿Сборка начата 04.04.2026 17:51:29.
+
+Проект "D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj" в узле 1 (целевые объекты по умолчанию).
+PrepareForBuild:
+  Структурированный вывод включен. Форматирование диагностики компилятора будет отражать иерархию ошибок. Подробнее см. https://aka.ms/cpp/structured-output.
+InitializeBuildStatus:
+  Обращение к "D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\build\Release\Game.tlog\unsuccessfulbuild".
+ComputeStdModulesCompileInputs:
+  Чтение файла манифеста библиотеки "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\modules.json", который предоставляет данные для библиотеки "microsoft/STL".
+  Добавление источника модуля "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\std.ixx" из библиотеки "microsoft/STL" для сборки с этим проектом.
+  Добавление источника модуля "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\modules\std.compat.ixx" из библиотеки "microsoft/STL" для сборки с этим проектом.
+ClCompile:
+  Для всех выходных данных обновления не требуется.
+  Для всех выходных данных обновления не требуется.
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\bin\HostX64\x86\CL.exe /c /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Engine\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\EncLib\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\CorsairsNet\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\LuaJIT\src /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\LuaBridge\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\Common\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\Util\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\AudioSDL\inc /I"D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\SDL-1.2.7\INCLUDE" /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\DirectX\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\icu\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\ICUHelper\inc /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\Discord\Include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\Cryptopp /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\DirectX\DX9\include /ID:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\..\Libraries\Server\Sdk\include /Zi /nologo /W0 /WX- /diagnostics:column /O2 /Ob2 /Oi /Ot /Oy /GT /D WIN32 /D NDEBUG /D _WINDOWS /D _LUA_GAME /D NARROW /D _WIN32_WINNT=0x0500 /D USE_DX_VERSION /D LW_USE_DX9 /D DIRECT3D_VERSION=0x0900 /D RSA_AES /D _MBCS /Gm- /EHsc /MT /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /std:c++latest /Yu"stdafx.h" /Fp"D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\build\Release\Game.pch" /Fo"D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\build\Release\\" /Fd"D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\..\bin\system\Game.pdb" /external:W0 /Gd /TP /FIstdafx.h /analyze- /FC /errorReport:queue /GR /EHa ..\src\NetProtocol.cpp ..\src\ShipFactory.cpp
+cl : командная строка  warning D9025: переопределение "/EHs" на "/EHa" [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  NetProtocol.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3697,19): error C2338: static_assert failed: 'Cannot format an argument. To make type T formattable, provide a formatter<T> specialization. See N4950 [format.arg.store]/2 and [formatter.requirements].' [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  (компиляция исходного файла "/src/NetProtocol.cpp")
+      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3697,19):
+      контекст создания экземпляра шаблона (сначала самый старый)
+          D:\Projects\MMORPG\TalesOfPirate\sources\Client\src\NetProtocol.cpp(395,100):
+          выполняется компиляция ссылки на экземпляр шаблон функции "auto std::make_format_args<std::format_context,eActorState,const char*,long&,short&,LONG&,LONG&,DWORD>(eActorState &&,const char *&&,long &,short &,LONG &,LONG &,DWORD &&)"
+  
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672: "std::_Format_arg_traits<_Context>::_Type_eraser": не найдена соответствующая перегруженная функция [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         with [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         [ [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:             _Context=std::format_context [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         ] [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  (компиляция исходного файла "/src/NetProtocol.cpp")
+      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(676,17):
+      может быть "auto std::_Format_arg_traits<_Context>::_Type_eraser(void)"
+          with
+          [
+              _Context=std::format_context
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73):
+          связанные ограничения не соблюдаются
+              C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(839,11):
+              концепция "std::_Formattable_with<eActorState,std::format_context,std::formatter<eActorState,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(653,29):
+                  концепция "std::semiregular<std::formatter<eActorState,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(255,23):
+                      концепция "std::copyable<std::formatter<eActorState,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(248,20):
+                          концепция "std::copy_constructible<std::formatter<eActorState,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                              C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(170,30):
+                              концепция "std::move_constructible<std::formatter<eActorState,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                                  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(105,30):
+                                  концепция "std::constructible_from<std::formatter<eActorState,_CharT>,std::formatter<eActorState,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                                      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(95,8):
+                                      ограничение не было выполнено
+      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73):
+      контекст создания экземпляра шаблона (сначала самый старый)
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3700,49):
+          выполняется компиляция ссылки на экземпляр класс шаблон функции "std::_Format_arg_store<std::format_context,eActorState,const char *,long &,short &,LONG &,LONG &,DWORD>"
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(1976,66):
+          выполняется компиляция ссылки на шаблон переменной "const size_t std::_Format_arg_traits<std::basic_format_context<std::back_insert_iterator<std::_Fmt_buffer<char> >,char> >::_Storage_size<enum eActorState>"
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(682,52):
+          выполняется компиляция ссылки на экземпляр псевдоним шаблон функции "std::_Format_arg_traits<_Context>::_Storage_type<_Ty>"
+          with
+          [
+              _Context=std::format_context,
+              _Ty=eActorState
+          ]
+  
+  ShipFactory.cpp
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3697,19): error C2338: static_assert failed: 'Cannot format an argument. To make type T formattable, provide a formatter<T> specialization. See N4950 [format.arg.store]/2 and [formatter.requirements].' [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  (компиляция исходного файла "/src/ShipFactory.cpp")
+      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3697,19):
+      контекст создания экземпляра шаблона (сначала самый старый)
+          D:\Projects\MMORPG\TalesOfPirate\sources\Client\src\ShipFactory.cpp(473,70):
+          выполняется компиляция ссылки на экземпляр шаблон функции "auto std::make_format_args<std::format_context,xShipFactory::<unnamed-enum-ITEM_HEAD>,xShipFactory::<unnamed-enum-ITEM_HEAD>>(xShipFactory::<unnamed-enum-ITEM_HEAD> &&,xShipFactory::<unnamed-enum-ITEM_HEAD> &&)"
+  
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672: "std::_Format_arg_traits<_Context>::_Type_eraser": не найдена соответствующая перегруженная функция [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         with [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         [ [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:             _Context=std::format_context [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         ] [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  (компиляция исходного файла "/src/ShipFactory.cpp")
+      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(676,17):
+      может быть "auto std::_Format_arg_traits<_Context>::_Type_eraser(void)"
+          with
+          [
+              _Context=std::format_context
+          ]
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73):
+          связанные ограничения не соблюдаются
+              C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(839,11):
+              концепция "std::_Formattable_with<xShipFactory::<unnamed-enum-ITEM_HEAD>,std::format_context,std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(653,29):
+                  концепция "std::semiregular<std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(255,23):
+                      концепция "std::copyable<std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(248,20):
+                          концепция "std::copy_constructible<std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                              C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(170,30):
+                              концепция "std::move_constructible<std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                                  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(105,30):
+                                  концепция "std::constructible_from<std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>,std::formatter<xShipFactory::<unnamed-enum-ITEM_HEAD>,_CharT>>" вычислена как false
+          with
+          [
+              _CharT=char
+          ]
+                                      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\concepts(95,8):
+                                      ограничение не было выполнено
+      C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73):
+      контекст создания экземпляра шаблона (сначала самый старый)
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3700,49):
+          выполняется компиляция ссылки на экземпляр класс шаблон функции "std::_Format_arg_store<std::format_context,xShipFactory::<unnamed-enum-ITEM_HEAD>,xShipFactory::<unnamed-enum-ITEM_HEAD>>"
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(1976,66):
+          выполняется компиляция ссылки на шаблон переменной "const size_t std::_Format_arg_traits<std::basic_format_context<std::back_insert_iterator<std::_Fmt_buffer<char> >,char> >::_Storage_size<enum xShipFactory::<unnamed-enum-ITEM_HEAD> >"
+          C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(682,52):
+          выполняется компиляция ссылки на экземпляр псевдоним шаблон функции "std::_Format_arg_traits<_Context>::_Storage_type<_Ty>"
+          with
+          [
+              _Context=std::format_context,
+              _Ty=xShipFactory::<unnamed-enum-ITEM_HEAD>
+          ]
+  
+  Создание кода...
+Сборка проекта "D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj" завершена (целевые объекты по умолчанию) с ошибкой.
+
+Ошибка сборки.
+
+"D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj" (целевой объект по умолчанию) (1) ->
+(Целевой объект ClCompile) -> 
+  cl : командная строка  warning D9025: переопределение "/EHs" на "/EHa" [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+
+
+"D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj" (целевой объект по умолчанию) (1) ->
+(Целевой объект ClCompile) -> 
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3697,19): error C2338: static_assert failed: 'Cannot format an argument. To make type T formattable, provide a formatter<T> specialization. See N4950 [format.arg.store]/2 and [formatter.requirements].' [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672: "std::_Format_arg_traits<_Context>::_Type_eraser": не найдена соответствующая перегруженная функция [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         with [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         [ [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:             _Context=std::format_context [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         ] [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(3697,19): error C2338: static_assert failed: 'Cannot format an argument. To make type T formattable, provide a formatter<T> specialization. See N4950 [format.arg.store]/2 and [formatter.requirements].' [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+  C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672: "std::_Format_arg_traits<_Context>::_Type_eraser": не найдена соответствующая перегруженная функция [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         with [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         [ [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:             _Context=std::format_context [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+C:\Program Files\Microsoft Visual Studio\2022\Enterprise\VC\Tools\MSVC\14.38.33130\include\format(679,73): error C2672:         ] [D:\Projects\MMORPG\TalesOfPirate\sources\Client\proj\kop.vcxproj]
+
+    Предупреждений: 1
+    Ошибок: 4
+
+Прошло времени 00:00:00.96

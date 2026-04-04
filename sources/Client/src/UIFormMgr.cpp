@@ -142,7 +142,7 @@ bool CFormMgr::_AddMemory( CForm* form )
 	{
 		if( stricmp( form->GetName(), (*it)->GetName() )==0 )
 		{
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(574), form->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			{ g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(574), form->GetName())); }
 			return false;
 		}
 	}
@@ -890,7 +890,7 @@ void CFormMgr::ShowDebugInfo()
 
 	GetRender().FillFrame(0,16,600,27);
 	//CGuiFont::s_Font.Render("ID                                                 ",0,16,COLOR_WHITE);
-	CGuiFont::s_Font.Render(g_oLangRec.GetString(575),0,16,COLOR_WHITE);
+	CGuiFont::s_Font.Render(GetLanguageString(575).c_str(),0,16,COLOR_WHITE);
 	for( i=0;i<(int)_forms->size();i++ )
 	{
 		//pForm = *it;
@@ -942,7 +942,7 @@ void CFormMgr::ShowDebugInfo()
 	data5=(int)_show.size()+(int)_modal.size();	//
 	data6=(int)_modal.size();					//
 	data7=(int)CGuiTime::_times.size();
-	sprintf(buf,g_oLangRec.GetString(576),data0,data1,data2,data3,data4,data5,data6,data7,totalTick);
+	sprintf(buf,GetLanguageString(576).c_str(),data0,data1,data2,data3,data4,data5,data6,data7,totalTick);
 	GetRender().FillFrame(0,0,CGuiFont::s_Font.GetWidth(buf),11);
 	CGuiFont::s_Font.Render(buf,0,0,COLOR_WHITE);
 	int help_sx=620;

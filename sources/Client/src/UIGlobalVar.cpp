@@ -204,7 +204,7 @@ void CUIInterface::MainChaMove()
 CForm* CUIInterface::_FindForm(const char * frmName)
 {
 	CForm*	form = CFormMgr::s_Mgr.Find( frmName );
-	if( !form )	{ char _buf[256]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(464), frmName); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
+	if( !form )	{ g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(464), frmName)); }
 	return form;
 }
 

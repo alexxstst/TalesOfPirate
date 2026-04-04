@@ -32,14 +32,14 @@ bool CBoxMgr::Init()
 	if ( !frmTrade ) return false;
 
 	CEdit* edtNumber = dynamic_cast<CEdit*>(frmTrade->Find("edtNumber"));
-	if( !edtNumber ) return Error( g_oLangRec.GetString(45), frmTrade->GetName(), "edtNumber" );
+	if( !edtNumber ) return Error( GetLanguageString(45).c_str(), frmTrade->GetName(), "edtNumber" );
 	edtNumber->SetIsDigit( true );
 
 	CLabel* labPrice = dynamic_cast<CLabel*>(frmTrade->Find("labPrice"));
-	if( !labPrice )	return Error( g_oLangRec.GetString(45), frmTrade->GetName(), "labPrice" );
+	if( !labPrice )	return Error( GetLanguageString(45).c_str(), frmTrade->GetName(), "labPrice" );
 
 	CLabel* labName = dynamic_cast<CLabelEx*>( frmTrade->Find("labName") );
-	if( !labName )	return Error( g_oLangRec.GetString(45), frmTrade->GetName(), "labName" );
+	if( !labName )	return Error( GetLanguageString(45).c_str(), frmTrade->GetName(), "labName" );
 
 	_cTrade.Init( frmTrade );
 
@@ -49,7 +49,7 @@ bool CBoxMgr::Init()
 	//frmSelect->SetPos( g_Render.GetScrWidth(), g_Render.GetScrHeight() - 151 );
 
 	CLabel* labInfo = dynamic_cast<CLabelEx*>( frmSelect->Find("labInfo") );
-	if( !labInfo )	return Error( g_oLangRec.GetString(45), frmSelect->GetName(), "labInfo" );
+	if( !labInfo )	return Error( GetLanguageString(45).c_str(), frmSelect->GetName(), "labInfo" );
 
 	_cSelect.Init( frmSelect );
 
@@ -58,11 +58,11 @@ bool CBoxMgr::Init()
     if( !frmNumber ) return false;
 
     edtNumber = dynamic_cast<CEdit*>(frmNumber->Find( "edtNumber" ));
-	if( !edtNumber )	return Error( g_oLangRec.GetString(45), frmNumber->GetName(), "edtNumber" );
+	if( !edtNumber )	return Error( GetLanguageString(45).c_str(), frmNumber->GetName(), "edtNumber" );
 	edtNumber->SetIsDigit( true );
 
 	labInfo = dynamic_cast<CLabelEx*>( frmNumber->Find("labInfo") );
-	if( !labInfo )	return Error( g_oLangRec.GetString(45), frmNumber->GetName(), "labInfo" );
+	if( !labInfo )	return Error( GetLanguageString(45).c_str(), frmNumber->GetName(), "labInfo" );
 
 	_cNumber.Init( frmNumber );
 
@@ -72,10 +72,10 @@ bool CBoxMgr::Init()
 	if( !frmPassword ) return false;
 
 	CEdit* edtPassword = dynamic_cast<CEdit*>(frmPassword->Find( "edtPassword" ));
-	if( !edtPassword )	return Error( g_oLangRec.GetString(45), frmPassword->GetName(), "edtPassword" );
+	if( !edtPassword )	return Error( GetLanguageString(45).c_str(), frmPassword->GetName(), "edtPassword" );
 
 	labInfo = dynamic_cast<CLabelEx*>( frmPassword->Find("labTitle") );
-	if( !labInfo )	return Error( g_oLangRec.GetString(45), frmPassword->GetName(), "labTitle" );
+	if( !labInfo )	return Error( GetLanguageString(45).c_str(), frmPassword->GetName(), "labTitle" );
 
 	_cPassword.Init( frmPassword );
 
@@ -85,7 +85,7 @@ bool CBoxMgr::Init()
 	if ( !frmError ) return false;
 
 	CLabel* labError = dynamic_cast<CLabelEx*>( frmError->Find("labError") );
-	if( !labError )	return Error( g_oLangRec.GetString(45), frmError->GetName(), "labError" );
+	if( !labError )	return Error( GetLanguageString(45).c_str(), frmError->GetName(), "labError" );
 
 	_cfrmError = frmError;
 
@@ -97,7 +97,7 @@ bool CBoxMgr::Init()
 CForm* CBoxMgr::_FindForm(const char * frmName)
 {
 	CForm* form = CFormMgr::s_Mgr.Find( frmName, 4 );
-	if( !form )	{ char _buf[256]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(464), frmName); g_logManager.InternalLog(LogLevel::Debug, "ui", _buf); }
+	if( !form )	g_logManager.InternalLog(LogLevel::Debug, "ui", SafeVFormat(GetLanguageString(464), frmName));
 	return form;
 }
 
@@ -219,7 +219,7 @@ stNumBox* CBoxMgr::ShowNumberBox( FormMouseEvent evtForm, int nTotalNum, const c
 	}
 	else
 	{
-		t->labInfo->SetCaption( g_oLangRec.GetString(454) );
+		t->labInfo->SetCaption( GetLanguageString(454) );
 	}
 
 	if( nTotalNum<0 || nTotalNum>MAX_BOX_NUM )

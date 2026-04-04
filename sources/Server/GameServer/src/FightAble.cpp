@@ -1354,7 +1354,7 @@ CCharacter* CFightAble::SkillPopBoat(Long lPosX, Long lPosY, Short sDir) //
 		pCCha = GetSubMap()->ChaSpawn(302, enumCHACTRL_PLAYER, sDir, &SPos, true, GetName(), 0);
 		if (pCCha)
 		{
-			pCCha->SetShip(g_pGameApp->m_CabinHeap.Get());
+			pCCha->SetShip(g_pGameApp->m_CabinPool.Get());
 
 			SSkillGrid	SSkillCont;
 			SSkillCont.chState = enumSUSTATE_ACTIVE;
@@ -1497,7 +1497,7 @@ bool CFightAble::SkillOutBoat(Long lPosX, Long lPosY, Short sDir) //
 bool CFightAble::SkillPushBoat(CCharacter* pCBoat, bool bFree) // 
 {
 	if (bFree)
-		pCBoat->GetShip()->Free(); // 
+		g_pGameApp->m_CabinPool.Release(pCBoat->GetShip());
 
 	pCBoat->BreakAction();
 	pCBoat->m_CSkillState.Reset();

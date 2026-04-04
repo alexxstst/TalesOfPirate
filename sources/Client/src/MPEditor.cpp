@@ -108,7 +108,7 @@ void MPEditor::Enable(BOOL bEnable)
 
     _bEnable = bEnable;
 
-    TipI(_bEnable, g_oLangRec.GetString(198), g_oLangRec.GetString(199));
+    TipI(_bEnable, GetLanguageString(198).c_str(), GetLanguageString(199).c_str());
     
 	MPTerrain *pCurTerrain = GetCurTerrain();
     if(!pCurTerrain) return;
@@ -606,34 +606,29 @@ void MPEditor::SystemReport(DWORD dwTimeParam)
         g_Render.Print(INFO_PERF, 200, 200, "%s", szInfo);
 
         
-		{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(200), g_Render.GetFPS(), CGameApp::GetFrameFPS(),
+		g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(200), g_Render.GetFPS(), CGameApp::GetFrameFPS(),
             g_pGameApp->GetRenderUseTime(), g_pGameApp->GetFrameMoveUseTime(),
-            g_NetIF->m_curdelay, g_NetIF->m_maxdelay, g_NetIF->m_mindelay);
-          g_logManager.InternalLog(LogLevel::Trace, "ui", _buf); }
+            g_NetIF->m_curdelay, g_NetIF->m_maxdelay, g_NetIF->m_mindelay));
 
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(201),
+        g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(201),
             pScene->m_dwValidChaCnt, pScene->m_dwChaPolyCnt,
-            pScene->m_dwChaRenderTime, pScene->m_dwValidEffCnt);
-          g_logManager.InternalLog(LogLevel::Trace, "ui", _buf); }
+            pScene->m_dwChaRenderTime, pScene->m_dwValidEffCnt));
 
-        { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(202),
+        g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(202),
             pScene->m_dwValidSceneObjCnt, pScene->m_dwRenderSceneObjCnt,
-            pScene->m_dwSceneObjPolyCnt, pScene->m_dwSceneObjRenderTime, pScene->m_dwCullingTime);
-          g_logManager.InternalLog(LogLevel::Trace, "ui", _buf); }
+            pScene->m_dwSceneObjPolyCnt, pScene->m_dwSceneObjRenderTime, pScene->m_dwCullingTime));
 
         if(pCurTerrain)
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(203),
+            g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(203),
                 pCurTerrain->m_dwTerrainRenderTime, pCurTerrain->m_dwSeaRenderTime,
                 pCurTerrain->m_dwTerrainRenderTime + pCurTerrain->m_dwSeaRenderTime,
-                g_pGameApp->m_dwRenderUITime, g_pGameApp->m_dwRenderSceneTime);
-              g_logManager.InternalLog(LogLevel::Trace, "ui", _buf); }
+                g_pGameApp->m_dwRenderUITime, g_pGameApp->m_dwRenderSceneTime));
 
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(204),
+            g_logManager.InternalLog(LogLevel::Trace, "ui", SafeVFormat(GetLanguageString(204),
                 pCurTerrain->m_dwActiveSectionCnt, pCurTerrain->m_dwLoadingTime[0],
                 pCurTerrain->m_dwLoadingTime[1], pCurTerrain->m_dwLoadingTime[2],
-                pCurTerrain->m_dwMaxLoadingTime);
-              g_logManager.InternalLog(LogLevel::Trace, "ui", _buf); }
+                pCurTerrain->m_dwMaxLoadingTime));
         }
 
 #if 0
@@ -721,8 +716,8 @@ void MPEditor::FrameMove(DWORD dwTimeParam)
 				if(pCha->IsValid())
 				{
 					sMonsterStatus[pCha->getTypeID()]++;
-					sprintf(szRelive, g_oLangRec.GetString(205), pCha->getReliveTime());
-					pCha->setSecondName(szRelive);
+					auto _strRelive = SafeVFormat(GetLanguageString(205), pCha->getReliveTime());
+					pCha->setSecondName(_strRelive.c_str());
 				}
 			}
 			int x = 600;
@@ -738,7 +733,7 @@ void MPEditor::FrameMove(DWORD dwTimeParam)
 					nTotal+=sMonsterStatus[i];
 				}
 			}
-			g_Render.Print(INFO_DEBUG, x, y, g_oLangRec.GetString(206), nTotal);
+			g_Render.Print(INFO_DEBUG, x, y, "%s", SafeVFormat(GetLanguageString(206), nTotal).c_str());
 		}
 	
 	}
@@ -1043,27 +1038,27 @@ void MPEditor::HandleKeyDown()
     }
     else if(g_pGameApp->IsKeyDown(DIK_U))
     {
-        Tip(g_oLangRec.GetString(207));
+        Tip(GetLanguageString(207).c_str());
         UnhideAllSceneObj();
     }
     else if(g_pGameApp->IsKeyDown(DIK_F5))
     {
         m_bShowHeightmap = 1 - m_bShowHeightmap;
-		TipI(m_bShowHeightmap, g_oLangRec.GetString(208), g_oLangRec.GetString(209));
+		TipI(m_bShowHeightmap, GetLanguageString(208).c_str(), GetLanguageString(209).c_str());
     }
     else if(g_pGameApp->IsKeyDown(DIK_G))
     {
         m_bLockObj = 1 - m_bLockObj;
-		TipI(m_bLockObj, g_oLangRec.GetString(210), g_oLangRec.GetString(211));
+		TipI(m_bLockObj, GetLanguageString(210).c_str(), GetLanguageString(211).c_str());
     }
     else if(g_pGameApp->IsKeyDown(DIK_Q))
     {
-    	Tip(g_oLangRec.GetString(212));
+    	Tip(GetLanguageString(212).c_str());
         GenerateLandAttr();
     }
     else if(g_pGameApp->IsKeyDown(DIK_F9))
     {
-    	Tip(g_oLangRec.GetString(213));
+    	Tip(GetLanguageString(213).c_str());
         _UpdateObjHeightmap(_pSelSceneObj);
     }
     
@@ -1748,9 +1743,9 @@ void MPEditor::HideSelectSceneObj()
     if(_pSelSceneObj)
     {
         CSceneObjInfo *pInfo = GetSceneObjInfo(_pSelSceneObj->getTypeID());
-        char szTip[64]; sprintf(szTip, g_oLangRec.GetString(214), pInfo->_name.c_str());
+        auto _strTip = SafeVFormat(GetLanguageString(214), pInfo->_name.c_str());
         _pSelSceneObj->SetHide(TRUE);
-        Tip(szTip);
+        Tip(_strTip.c_str());
     }
 }
 
@@ -1892,7 +1887,7 @@ void MPEditor::SetObj( bool press, int num )
 		if(m_nSelTypeID >=230 && pScene->IsShowChairObj()==0)
 		{
 			pScene->ShowChairObj(1);
-			TipI(pScene->IsShowChairObj(), g_oLangRec.GetString(215), g_oLangRec.GetString(216));
+			TipI(pScene->IsShowChairObj(), GetLanguageString(215).c_str(), GetLanguageString(216).c_str());
 		}
 	}
 	else
@@ -1924,7 +1919,7 @@ void MPEditor::SetEff( bool press, int num )
 		pEff = pScene->AddSceneEffect(m_nSelTypeID);
 		if (!pEff)
 		{
-			g_logManager.InternalLog(LogLevel::Error, "errors", g_oLangRec.GetString(217));
+			g_logManager.InternalLog(LogLevel::Error, "errors", GetLanguageString(217));
 			return;
 		}
 		m_nSelID = pEff->getID();

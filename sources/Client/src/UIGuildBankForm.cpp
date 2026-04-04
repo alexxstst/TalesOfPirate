@@ -31,7 +31,7 @@ namespace GUI
 		frmBank = mgr.Find("frmManage");// NPC 
 		if ( !frmBank)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(438));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(438).c_str());
 			return false;
 		}
 
@@ -68,7 +68,7 @@ namespace GUI
 		if (!kItemPriceBox) return;
 		int value = kItemPriceBox->GetNumber();
 		if( value<=0 ) {
-			g_pGameApp->MsgBox( g_oLangRec.GetString(451) );
+			g_pGameApp->MsgBox("%s", GetLanguageString(451).c_str() );
 			return;
 		}
 		CS_GuildBankGiveGold(value);
@@ -86,7 +86,7 @@ namespace GUI
 		if (!kItemPriceBox) return;
 		int value = kItemPriceBox->GetNumber();
 		if( value<=0 ) {
-			g_pGameApp->MsgBox( g_oLangRec.GetString(451) );
+			g_pGameApp->MsgBox("%s", GetLanguageString(451).c_str() );
 			return;
 		}
 		CS_GuildBankTakeGold(value);
@@ -110,7 +110,7 @@ namespace GUI
 			return;
 
 		char szBuf[32];
-		sprintf(szBuf, "%s%s", g_stUIBoat.GetHuman()->getName().c_str(), g_oLangRec.GetString(440));//
+		sprintf(szBuf, "%s%s", g_stUIBoat.GetHuman()->getName().c_str(), GetLanguageString(440).c_str());//
 		//labCharName->SetCaption(szBuf);//
 
 		frmBank->Show();
@@ -161,14 +161,14 @@ namespace GUI
 		 || pkItemRecord->lID == 6373 || pkItemRecord->lID >= 6376 && pkItemRecord->lID <= 6378
 		 || pkItemRecord->lID >= 6383 && pkItemRecord->lID <= 6385 )// modify by ning.yan 20080820 
 		{
-			//g_pGameApp->MsgBox(g_oLangRec.GetString(958));	// ""
-			g_pGameApp->MsgBox(g_oLangRec.GetString(958));	// ""
+			//g_pGameApp->MsgBox(GetLanguageString(958));	// ""
+			g_pGameApp->MsgBox("%s", GetLanguageString(958).c_str());	// ""
 			return false;
 		}
 		if ( pkItemCmd->GetItemInfo()->GetIsPile() && pkItemCmd->GetTotalNum() > 1 )
 		{	/**/
 			m_pkNumberBox = 
-				g_stUIBox.ShowNumberBox(_MoveItemsEvent, pkItemCmd->GetTotalNum(), g_oLangRec.GetString(441), false);
+				g_stUIBox.ShowNumberBox(_MoveItemsEvent, pkItemCmd->GetTotalNum(), GetLanguageString(441).c_str(), false);
 
 			if (m_pkNumberBox->GetNumber() < pkItemCmd->GetTotalNum())
 				return false;
@@ -205,7 +205,7 @@ namespace GUI
 		if ( pkItemCmd->GetItemInfo()->GetIsPile() && pkItemCmd->GetTotalNum() > 1 )
 		{	/**/
 			m_pkNumberBox = 
-				g_stUIBox.ShowNumberBox( _MoveItemsEvent, pkItemCmd->GetTotalNum(), g_oLangRec.GetString(442), false);
+				g_stUIBox.ShowNumberBox( _MoveItemsEvent, pkItemCmd->GetTotalNum(), GetLanguageString(442).c_str(), false);
 
 			if (m_pkNumberBox->GetNumber() < pkItemCmd->GetTotalNum())
 				return false;

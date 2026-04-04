@@ -134,7 +134,7 @@ bool CMouseDown::PickItem( CCharacter* pMain )
 	if( nCount > 0 )
 	{
 		_pAutoAttack->Cancel();
-		g_pGameApp->SysInfo( g_oLangRec.GetString(195), nCount );
+		g_pGameApp->SysInfo( "%s", SafeVFormat(GetLanguageString(195), nCount).c_str() );
 		return true;
 	}
 	return false;
@@ -481,7 +481,7 @@ bool CMouseDown::ActAttackArea( CCharacter* pCha, CSkillRecord* pSkill, int nScr
 
 	if( !pSkill->IsAttackArea() ) 
 	{
-		g_pGameApp->SysInfo(g_oLangRec.GetString(196));
+		g_pGameApp->SysInfo("%s", GetLanguageString(196).c_str());
 		return false;
 	}
 
@@ -801,7 +801,7 @@ BOOL CALLBACK CMouseDown::_EnumWindowsProc( HWND hWnd, LPARAM lParam )
 
 	static char szBuf[1024] = { 0 };
 	GetWindowText( hWnd, szBuf, sizeof(szBuf) );
-	if( strlen(szBuf)>0 && strstr( szBuf, g_oLangRec.GetString(197)) != nullptr )
+	if( strlen(szBuf)>0 && strstr( szBuf, GetLanguageString(197).c_str()) != nullptr )
 	{
 		extern void	CS_Logout();
 		CS_Logout();

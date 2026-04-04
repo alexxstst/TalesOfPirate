@@ -655,37 +655,31 @@ bool CCreateChaScene::bShowDialog = false;
 
 
 const char* GetCharacterDescription(int index) {
-	return [&] {
-		switch (index) {
-		case 0: return g_oLangRec.GetString(35);
-		case 1: return g_oLangRec.GetString(36);
-		case 2: return g_oLangRec.GetString(37);
-		case 3: return g_oLangRec.GetString(38);
-		default: return "";
-		}
-	}();
+	switch (index) {
+	case 0: return GetLanguageString(35).c_str();
+	case 1: return GetLanguageString(36).c_str();
+	case 2: return GetLanguageString(37).c_str();
+	case 3: return GetLanguageString(38).c_str();
+	default: return "";
+	}
 }
 
 const char* GetCityName(int index) {
-	return [&] {
-		switch (index) {
-		case 0: return g_oLangRec.GetString(39);
-		case 1: return g_oLangRec.GetString(40);
-		case 2: return g_oLangRec.GetString(41);
-		default: return "";
-		}
-	}();
+	switch (index) {
+	case 0: return GetLanguageString(39).c_str();
+	case 1: return GetLanguageString(40).c_str();
+	case 2: return GetLanguageString(41).c_str();
+	default: return "";
+	}
 }
 
 const char* GetCityDescription(int index) {
-	return [&] {
-		switch (index) {
-		case 0: return g_oLangRec.GetString(42);
-		case 1: return g_oLangRec.GetString(43);
-		case 2: return g_oLangRec.GetString(44);
-		default: return "";
-		}
-	}();
+	switch (index) {
+	case 0: return GetLanguageString(42).c_str();
+	case 1: return GetLanguageString(43).c_str();
+	case 2: return GetLanguageString(44).c_str();
+	default: return "";
+	}
 }
 
 int CCreateChaScene::nHairTestCnt[MAX_HAIR_NUM] = {2000, 2062, 2124, 2291};
@@ -941,28 +935,28 @@ bool CCreateChaScene::_InitUI() {
 		}
 		CTextButton* btnLeftHair = (CTextButton*)frmChaFound->Find("btnLeftHair");
 		if (!btnLeftHair) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "btnLeftHair");
 			return false;
 		}
 		btnLeftHair->evtMouseClick = __gui_event_left_hair;
 		CTextButton* btnRightHair = (CTextButton*)frmChaFound->Find("btnRightHair");
 		if (!btnRightHair) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "btnRightHair");
 			return false;
 		}
 		btnRightHair->evtMouseClick = __gui_event_right_hair;
 		CTextButton* btnLeftFace = (CTextButton*)frmChaFound->Find("btnLeftFace");
 		if (!btnLeftFace) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "btnLeftFace");
 			return false;
 		}
 		btnLeftFace->evtMouseClick = __gui_event_left_face;
 		CTextButton* btnRightFace = (CTextButton*)frmChaFound->Find("btnRightFace");
 		if (!btnRightFace) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "btnRightFace");
 			return false;
 		}
@@ -977,7 +971,7 @@ bool CCreateChaScene::_InitUI() {
 
 		CTextButton* btnLeft3d = (CTextButton*)frmChaFound->Find("btnLeft3d");
 		if (!btnLeft3d) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "btnLeft3d");
 			return false;
 		}
@@ -986,7 +980,7 @@ bool CCreateChaScene::_InitUI() {
 
 		CTextButton* btnRight3d = (CTextButton*)frmChaFound->Find("btnRight3d");
 		if (!btnRight3d) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "btnRight3d");
 			return false;
 		}
@@ -995,21 +989,21 @@ bool CCreateChaScene::_InitUI() {
 
 		labHair = (CLabel*)frmChaFound->Find("labHairShow");
 		if (!labHair) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "labHairShow");
 			return false;
 		}
 
 		labFace = (CLabel*)frmChaFound->Find("labFaceShow");
 		if (!labFace) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "labFaceShow");
 			return false;
 		}
 
 		edtName = (CEdit*)frmChaFound->Find("edtName");
 		if (!edtName) {
-			Error(g_oLangRec.GetString(45),
+			Error(GetLanguageString(45).c_str(),
 				  frmChaFound->GetName(), "edtName");
 			return false;
 		}
@@ -1017,7 +1011,7 @@ bool CCreateChaScene::_InitUI() {
 
 		memChaDescribe = (CMemo*)frmChaFound->Find("memChaDescribe");
 		if (!memChaDescribe) {
-			return Error(g_oLangRec.GetString(45),
+			return Error(GetLanguageString(45).c_str(),
 						 frmChaFound->GetName(), "memChaDescribe");
 		}
 		C3DCompent* ui3dCreateCha = (C3DCompent*)frmChaFound->Find("ui3dCreateCha");
@@ -1047,7 +1041,7 @@ bool CCreateChaScene::_InitUI() {
 				sprintf(szPicName, szPicNameBase, i, j);
 				imgCities[i][j] = (CImage*)frmChaCity->Find(szPicName);
 				if (!imgCities[i][j]) {
-					return Error(g_oLangRec.GetString(46),
+					return Error(GetLanguageString(46).c_str(),
 								 frmChaCity->GetName(), szPicName);
 				}
 				if (i == 0)
@@ -1065,7 +1059,7 @@ bool CCreateChaScene::_InitUI() {
 			sprintf(szPicName, szCityBlockName, i + 1);
 			imgCitiesBlock[i] = (CTextButton*)frmChaCity->Find(szPicName);
 			if (!imgCitiesBlock[i]) {
-				return Error(g_oLangRec.GetString(46),
+				return Error(GetLanguageString(46).c_str(),
 							 frmChaCity->GetName(), szPicName);
 			}
 			imgCitiesBlock[i]->SetIsShow(true); // for debug.
@@ -1402,11 +1396,7 @@ void CCreateChaScene::ChangeHair(eDirectType enumDirect) {
 		}
 	}
 	else {
-		{
-			char _buf[512];
-			snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(47), m_nCurHairIndex);
-			g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
-		}
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(47), m_nCurHairIndex));
 	}
 }
 
@@ -1488,11 +1478,7 @@ void CCreateChaScene::InitChaFoundFrm() {
 		}
 	}
 	else {
-		{
-			char _buf[512];
-			snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(47), m_nCurHairIndex);
-			g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
-		}
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(47), m_nCurHairIndex));
 	}
 	bOK = m_pChaForUI[m_nSelChaIndex]->ChangePart(enumEQUIP_FACE, m_nCurFaceIndex);
 	if (bOK) {
@@ -1503,11 +1489,7 @@ void CCreateChaScene::InitChaFoundFrm() {
 		}
 	}
 	else {
-		{
-			char _buf[512];
-			snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(48), m_nCurHairIndex);
-			g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
-		}
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(48), m_nCurHairIndex));
 	}
 }
 
@@ -1553,18 +1535,18 @@ void CCreateChaScene::InitChaData() {
 //-----------------------------------------------------------------------
 bool CCreateChaScene::IsValidCheckChaName(const char* name) {
 	/* Copy from LoginScene.cpp */
-	if (stricmp(name, g_oLangRec.GetString(49)) == 0) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(49));
+	if (_stricmp(name, GetLanguageString(49).c_str()) == 0) {
+		g_pGameApp->MsgBox("%s", GetLanguageString(49).c_str());
 		return false;
 	}
 
 	if (strlen(name) <= 0) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(50));
+		g_pGameApp->MsgBox("%s", GetLanguageString(50).c_str());
 		return false;
 	}
 
 	if (!::IsValidName(name)) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(51));
+		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
 		return false;
 	}
 	//return true;
@@ -1594,12 +1576,12 @@ bool CCreateChaScene::IsValidCheckChaName(const char* name) {
 	}
 
 	if (!bOk)
-		g_pGameApp->MsgBox(g_oLangRec.GetString(52));
+		g_pGameApp->MsgBox("%s", GetLanguageString(52).c_str());
 
 	//Check for forbidden character name words
 	string sName(name);
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sName)) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(53));
+		g_pGameApp->MsgBox("%s", GetLanguageString(53).c_str());
 		return false;
 	}
 
@@ -1630,7 +1612,7 @@ void CCreateChaScene::SendChaToServ() {
 	//}
 	//
 	//else
-	//	g_pGameApp->MsgBox(g_oLangRec.GetString(54));
+	//	g_pGameApp->MsgBox(GetLanguageString(54));
 
 
 	int sTypeID = (short)m_pChaForUI[m_nSelChaIndex]->getTypeID();
@@ -1785,81 +1767,81 @@ void CCreateChaScene::ShowAllRoleInfo(int nRoleInfo) {
 				switch (nRoleInfo) {
 				case 2: // Swordsman
 				case 9:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(803));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(804));
+					memChaDescribeUp->SetCaption(GetLanguageString(803).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(804).c_str());
 					break;
 
 				case 5: // Dual-Sword Fighter
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(806));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(807));
+					memChaDescribeUp->SetCaption(GetLanguageString(806).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(807).c_str());
 					break;
 
 				case 10: // Crusader
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(808));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(809));
+					memChaDescribeUp->SetCaption(GetLanguageString(808).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(809).c_str());
 					break;
 
 				case 13: // Herbalist
 				case 20:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(810));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(811));
+					memChaDescribeUp->SetCaption(GetLanguageString(810).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(811).c_str());
 					break;
 
 				case 16: // Cleric
 				case 22:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(812));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(813));
+					memChaDescribeUp->SetCaption(GetLanguageString(812).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(813).c_str());
 					break;
 
 				case 17: // Seal Master
 				case 23:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(814));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(815));
+					memChaDescribeUp->SetCaption(GetLanguageString(814).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(815).c_str());
 					break;
 
 				case 4: // Explorer
 				case 14:
 				case 21:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(816));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(817));
+					memChaDescribeUp->SetCaption(GetLanguageString(816).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(817).c_str());
 					break;
 
 				case 7: // Sharpshooter
 				case 18:
 				case 24:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(818));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(819));
+					memChaDescribeUp->SetCaption(GetLanguageString(818).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(819).c_str());
 					break;
 
 				case 3: // Hunter
 				case 12:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(820));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(821));
+					memChaDescribeUp->SetCaption(GetLanguageString(820).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(821).c_str());
 					break;
 
 				case 6: // Voyager
 				case 15:
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(822));
-					memChaDescribeDown->SetCaption(g_oLangRec.GetString(823));
+					memChaDescribeUp->SetCaption(GetLanguageString(822).c_str());
+					memChaDescribeDown->SetCaption(GetLanguageString(823).c_str());
 					break;
 
 				case 1: // Lance (base)
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(35));
+					memChaDescribeUp->SetCaption(GetLanguageString(35).c_str());
 					memChaDescribeDown->SetCaption("");
 					break;
 
 				case 8: // Carsise (base)
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(36));
+					memChaDescribeUp->SetCaption(GetLanguageString(36).c_str());
 					memChaDescribeDown->SetCaption("");
 					break;
 
 				case 11: // Phyllis (base)
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(37));
+					memChaDescribeUp->SetCaption(GetLanguageString(37).c_str());
 					memChaDescribeDown->SetCaption("");
 					break;
 
 				case 19: // Ami (base)
-					memChaDescribeUp->SetCaption(g_oLangRec.GetString(38));
+					memChaDescribeUp->SetCaption(GetLanguageString(38).c_str());
 					memChaDescribeDown->SetCaption("");
 					break;
 

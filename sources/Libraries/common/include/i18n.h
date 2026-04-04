@@ -1,9 +1,11 @@
-﻿#pragma once
+#pragma once
 
-#include "ResourceBundleManage.h"		//Add by lark.li 20080303
-#define RES_STRING(a) g_ResourceBundleManage.LoadResString("" #a  "")
-#define RES_FORMAT_STRING(a, b, c) g_ResourceBundleManage.Format("" #a  "", b, c)
+#include "LanguageRecordStore.h"
 
-extern CResourceBundleManage g_ResourceBundleManage; //Add by lark.li 20080303
+#define RES_STRING(a) LanguageRecordStore::Instance()->GetKeyString("" #a "").c_str()
+
+// RES_FORMAT_STRING удалён — использовал ICU CFormatParameter.
+// Оставшиеся 5 call sites в GameServer (Weather, CharacterCmd, CharStall, CharTrade)
+// нужно переписать на std::format + GetKeyString.
+
 const char* ConvertResString(const char* str);
-

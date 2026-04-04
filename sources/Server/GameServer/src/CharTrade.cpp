@@ -19,16 +19,6 @@ namespace mission
 	//----------------------------------------------------
 	// CTradeData implemented
 
-	CTradeData::CTradeData(dbc::uLong lSize)
-	: PreAllocStru(1)
-	{
-
-	}
-
-	CTradeData::~CTradeData()
-	{
-
-	}
 
 	//----------------------------------------------------
 	// CTradeSystem implemented
@@ -437,7 +427,7 @@ namespace mission
 		}
 
 		// 
-		CTradeData* pData = g_pGameApp->m_TradeDataHeap.Get();
+		CTradeData* pData = g_pGameApp->m_TradeDataPool.Get();
 		if( pData == NULL ) 
 		{
 			//pMain->SystemNotice( "" );
@@ -556,7 +546,7 @@ namespace mission
 		pTradeData1->pAccept->TradeAction( FALSE );
 		pTradeData1->pRequest->TradeAction( FALSE );
 
-		pTradeData1->Free();
+		g_pGameApp->m_TradeDataPool.Release(pTradeData1);
 
 		return TRUE;
 	}
@@ -626,7 +616,7 @@ namespace mission
 			return FALSE;
 		}
 
-		pTradeData->Free();
+		g_pGameApp->m_TradeDataPool.Release(pTradeData);
 		return TRUE;
 	}
 
@@ -1427,7 +1417,7 @@ namespace mission
 			{
 				pAccept->SetTradeData( NULL );
 				pRequest->SetTradeData( NULL );
-				pTradeData->Free();
+				g_pGameApp->m_TradeDataPool.Release(pTradeData);
 
 				// 
 				pTradeData->pAccept->TradeAction( FALSE );
@@ -1802,7 +1792,7 @@ namespace mission
 
 			pAccept->SetTradeData( NULL );
 			pRequest->SetTradeData( NULL );
-			pTradeData->Free();	
+			g_pGameApp->m_TradeDataPool.Release(pTradeData);	
 
 			// 
 			game_db.BeginTran();
@@ -2003,24 +1993,17 @@ namespace mission
 
 			if( pTradeData->ReqTradeData.dwMoney )
 			{
-				//pAccept->SystemNotice( "(%s)%d", pRequest->GetName(), pTradeData->ReqTradeData.dwMoney );
-				CFormatParameter param(2);
-				param.setString(0, pRequest->GetName());
-				param.setLong(1, pTradeData->ReqTradeData.dwMoney);
-
-				RES_FORMAT_STRING(GM_CHARTRADE_CPP_00076, param, szNotice);
-
+				auto& tradeFmt = LanguageRecordStore::Instance()->GetKeyString("GM_CHARTRADE_CPP_00076");
+				snprintf(szNotice, sizeof(szNotice), "%s",
+					SafeVFormat(tradeFmt, pRequest->GetName(), pTradeData->ReqTradeData.dwMoney).c_str());
 				pAccept->SystemNotice( szNotice );
 			}
 
 			if (pTradeData->AcpTradeData.dwMoney)
 			{
-				CFormatParameter param(2);
-				param.setString(0, pAccept->GetName());
-				param.setLong(1, pTradeData->AcpTradeData.dwMoney);
-
-				RES_FORMAT_STRING(GM_CHARTRADE_CPP_00076, param, szNotice);
-
+				auto& tradeFmt = LanguageRecordStore::Instance()->GetKeyString("GM_CHARTRADE_CPP_00076");
+				snprintf(szNotice, sizeof(szNotice), "%s",
+					SafeVFormat(tradeFmt, pAccept->GetName(), pTradeData->AcpTradeData.dwMoney).c_str());
 				pRequest->SystemNotice(szNotice);
 			}
 

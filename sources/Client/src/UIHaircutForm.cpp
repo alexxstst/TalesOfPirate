@@ -50,7 +50,7 @@ namespace GUI
 		frmHaircut = mgr.Find("frmHead", enumMainForm);
 		if ( !frmHaircut)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(615));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(615).c_str());
 			return false;
 		}
 		frmHaircut->evtEntrustMouseEvent = _MainMouseHaircutEvent ;
@@ -62,30 +62,30 @@ namespace GUI
 			sprintf(szBuf, "cmdHead%d", i+1);
 			cmdProp[i] = dynamic_cast<COneCommand *>(frmHaircut->Find(szBuf));
 			if (!cmdProp[i])
-				return Error(g_oLangRec.GetString(616),
+				return Error(GetLanguageString(616).c_str(),
 							 frmHaircut->GetName(), szBuf);
 		}
 
 		lblHairColor = dynamic_cast<CLabel*>(frmHaircut->Find("labHairColor"));
 		if (!lblHairColor)
-			return Error(g_oLangRec.GetString(616),
+			return Error(GetLanguageString(616).c_str(),
 						 frmHaircut->GetName(), "labHairColor");
 
 		lblHairType = dynamic_cast<CLabel*>(frmHaircut->Find("labHair"));
 		if (!lblHairType)
-			return Error(g_oLangRec.GetString(616),
+			return Error(GetLanguageString(616).c_str(),
 						 frmHaircut->GetName(), "labHair");
 
 		lblHairFare = dynamic_cast<CLabel*>(frmHaircut->Find("labHairMoney"));
 		if (!lblHairFare)
-			return Error(g_oLangRec.GetString(616),
+			return Error(GetLanguageString(616).c_str(),
 						 frmHaircut->GetName(), "labHairMoney");
 
 		// 
 		CTextButton* btnLeftColor = (CTextButton*)frmHaircut->Find("btnLeftColor");
 		if( !btnLeftColor ) 
 		{
-			Error(g_oLangRec.GetString(616), 
+			Error(GetLanguageString(616).c_str(),
 				frmHaircut->GetName(), "btnLeftColor");
 			return false;
 		}
@@ -94,7 +94,7 @@ namespace GUI
 		CTextButton* btnRightColor = (CTextButton*)frmHaircut->Find("btnRightColor");
 		if( !btnRightColor ) 
 		{
-			Error(g_oLangRec.GetString(616), 
+			Error(GetLanguageString(616).c_str(),
 				frmHaircut->GetName(), "btnRightColor");
 			return false;
 		}
@@ -103,7 +103,7 @@ namespace GUI
 		CTextButton* btnLeftHair = (CTextButton*)frmHaircut->Find("btnLeftHair");
 		if( !btnLeftHair ) 
 		{
-			Error(g_oLangRec.GetString(616), 
+			Error(GetLanguageString(616).c_str(),
 				frmHaircut->GetName(), "btnLeftHair");
 			return false;
 		}
@@ -112,7 +112,7 @@ namespace GUI
 		CTextButton* btnRightHair = (CTextButton*)frmHaircut->Find("btnRightHair");
 		if( !btnLeftHair ) 
 		{
-			Error(g_oLangRec.GetString(616), 
+			Error(GetLanguageString(616).c_str(),
 				frmHaircut->GetName(), "btnRightHair");
 			return false;
 		}
@@ -127,7 +127,7 @@ namespace GUI
 		CTextButton* btnLeft3d = (CTextButton*)frmHaircut->Find("btnLeft3d");
 		if (!btnLeft3d)
 		{
-			Error(g_oLangRec.GetString(45), 
+			Error(GetLanguageString(45).c_str(),
 				frmHaircut->GetName(), "btnLeft3d");
 			return false;
 		}
@@ -137,7 +137,7 @@ namespace GUI
 		CTextButton* btnRight3d = (CTextButton*)frmHaircut->Find("btnRight3d");
 		if (!btnRight3d)
 		{
-			Error(g_oLangRec.GetString(45), 
+			Error(GetLanguageString(45).c_str(),
 				frmHaircut->GetName(), "btnRight3d");
 			return false;
 		}
@@ -168,14 +168,14 @@ namespace GUI
 		//if (!pCha) return;
 
 		CCharacter* pMainCha = g_stUIBoat.GetHuman();
-		if (!pMainCha){ g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(617)); return; }
+		if (!pMainCha){ g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(617).c_str()); return; }
 
 		m_pHairTools->RefreshCha( pMainCha->GetDefaultChaInfo()->lID );
 		//
 		
 		if( (m_dwHairTypeMaxNum = m_pHairTools->GetHairMax()) <= 0 ) 
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(618) );
+			g_pGameApp->MsgBox("%s", GetLanguageString(618).c_str() );
 			return;
 		}
 
@@ -186,7 +186,7 @@ namespace GUI
 		frmHaircut->Show();
 
 		CCharacter* pCha = CGameApp::GetCurScene()->AddCharacter( pMainCha->getTypeID() );
-		if( !pCha ) { g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(619)); return; }
+		if( !pCha ) { g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(619).c_str()); return; }
 		pCha->GetActor()->SetSleep();
 		pCha->UpdataFace(pMainCha->GetPart());
 
@@ -204,14 +204,14 @@ namespace GUI
 		CHairName* pHairName = m_pHairTools->GetHair(m_dwHairTypeIndex);
 		if (!pHairName)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(620));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(620).c_str());
 			return;
 		}
 
 
 		if ( (m_dwHairColorMaxNum = pHairName->GetMax()) <= 0)
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(621));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(621).c_str());
 			return;
 		}
 

@@ -135,7 +135,7 @@ void CUIGuildApply::OnConfirm(CCompent *pSender, int nMsgType, int x, int y, DWO
 
         if(!IsValidGuildName(name.c_str(), (unsigned short)name.length(), bEnglishName))
 		{
-			CBoxMgr::ShowMsgBox( OnShowForm, g_oLangRec.GetString(51), true );
+			CBoxMgr::ShowMsgBox( OnShowForm, GetLanguageString(51).c_str(), true );
 		}
 		else
 		{
@@ -150,18 +150,18 @@ void CUIGuildApply::OnConfirm(CCompent *pSender, int nMsgType, int x, int y, DWO
 				{
 					m_pGuildPasswordEdit->SetCaption("");
 					m_pGuildConfirmEdit->SetCaption("");
-					CBoxMgr::ShowMsgBox( OnShowForm, g_oLangRec.GetString(580), true );
+					CBoxMgr::ShowMsgBox( OnShowForm, GetLanguageString(580).c_str(), true );
 				}
 			}
 			else
 			{
-				CBoxMgr::ShowMsgBox( OnShowForm, g_oLangRec.GetString(581), true );
+				CBoxMgr::ShowMsgBox( OnShowForm, GetLanguageString(581).c_str(), true );
 			}
 		}
 	}
 	else
 	{
-		CBoxMgr::ShowMsgBox( OnShowForm, g_oLangRec.GetString(582), true );
+		CBoxMgr::ShowMsgBox( OnShowForm, GetLanguageString(582).c_str(), true );
 	}
 }
 

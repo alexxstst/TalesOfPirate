@@ -578,7 +578,7 @@ void CSelectChaScene::LoadingCall()          // Called during loading, refresh
 		// Show create password dialog
 		g_stUIDoublePwd.ShowCreateForm();
 
-		//CBoxMgr::ShowSelectBox(_evtCreateDoublePwdEvent, g_oLangRec.GetString(800), true);//"\n\n?"
+		//CBoxMgr::ShowSelectBox(_evtCreateDoublePwdEvent, GetLanguageString(800), true);//"\n\n?"
 	}
 	else if (GetChaCount() == 0 && frmWelcomeNotice)
 	{
@@ -753,7 +753,7 @@ void CSelectChaScene::_SelChaFrmMouseEvent(CCompent* pSender, int nMsgType,
 		else
 		{
 			// Delete account
-			//CBoxMgr::ShowSelectBox(_CheckFrmMouseEvent, g_oLangRec.GetString(384), true);
+			//CBoxMgr::ShowSelectBox(_CheckFrmMouseEvent, GetLanguageString(384), true);
 		}
 	}
 	else if (strName == "btnNo")
@@ -917,7 +917,7 @@ bool CSelectChaScene::CreateCha(const string& sName, int nChaIndex, stNetChangeC
 
 	chaFont.pCha = pCha;
 	chaFont.iLevel = 1;
-	chaFont.sProfession = g_oLangRec.GetString(385);
+	chaFont.sProfession = GetLanguageString(385);
 	chaFont.iPos = m_nCurChaIndex;
 	chaFont.iFontX = -1;
 	chaFont.iFontY = -1;

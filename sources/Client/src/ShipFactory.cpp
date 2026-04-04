@@ -466,11 +466,11 @@ BOOL xShipFactory::CheckShipName() {
 	strcpy(ship_name, sbf.name->GetCaption());
 	size_t l = _tcslen(ship_name);
 	if (l == 0) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(390));
+		g_pGameApp->MsgBox("%s", GetLanguageString(390).c_str());
 		return 0;
 	}
 	else if (l < MIN_LENGTH || l > MAX_LENGTH) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(391), MIN_LENGTH, MAX_LENGTH);
+		g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(391), static_cast<int>(MIN_LENGTH), static_cast<int>(MAX_LENGTH)).c_str());
 		return 0;
 	}
 
@@ -478,7 +478,7 @@ BOOL xShipFactory::CheckShipName() {
 	string sBoatName(sbf.name->GetCaption());
 	if (!CTextFilter::IsLegalText(CTextFilter::NAME_TABLE, sBoatName) ||
 		!IsValidName(sBoatName)) {
-		g_pGameApp->MsgBox(g_oLangRec.GetString(51));
+		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
 		return 0;
 	}
 
@@ -506,12 +506,12 @@ BOOL xShipFactory::GetCabinByID() {
 	// The boat cabin form is shared, so check whether it is in use by the user
 	CForm* pTradeForm = g_stUIBourse.GetForm();
 	if (pTradeForm && pTradeForm->GetIsShow() && pForm == pTradeForm) {
-		g_pGameApp->SysInfo(g_oLangRec.GetString(392));
+		g_pGameApp->SysInfo("%s", GetLanguageString(392).c_str());
 		return FALSE;
 	}
 	CForm* pChangeForm = g_stUITrade.GetForm();
 	if (pChangeForm && pChangeForm->GetIsShow() && pForm == pChangeForm) {
-		g_pGameApp->SysInfo(g_oLangRec.GetString(392));
+		g_pGameApp->SysInfo("%s", GetLanguageString(392).c_str());
 		return FALSE;
 	}
 
@@ -962,7 +962,7 @@ void xShipLaunchList::Update(DWORD num, const BOAT_BERTH_DATA* data,
 	memo->Init();
 	memo->reset();
 
-	memo->SetCaption(g_oLangRec.GetString(393));
+	memo->SetCaption(GetLanguageString(393).c_str());
 	memo->SetIsHaveItem(1);
 	memo->SetItemRowNum(num);
 	//memo->SetRowHeight(20);

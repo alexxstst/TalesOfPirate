@@ -269,5 +269,5 @@ void CGameConfig::Load()
 void CGameConfig::SetMoveClient( bool v )  // 
 {
 	m_IsMoveClient = v;
-	//g_pGameApp->SysInfo( g_Config.m_IsMoveClient ? g_oLangRec.GetString(142) : g_oLangRec.GetString(141) );
+	//g_pGameApp->SysInfo( g_Config.m_IsMoveClient ? GetLanguageString(142) : GetLanguageString(141) );
 }

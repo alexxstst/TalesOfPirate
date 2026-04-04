@@ -518,7 +518,7 @@ namespace GUI
 	// 
 	void CStoreMgr::OpenStoreAsk()
 	{
-		//CBoxMgr::ShowSelectBox(_evtStoreOpenCheckEvent, g_oLangRec.GetString(858), true);
+		//CBoxMgr::ShowSelectBox(_evtStoreOpenCheckEvent, GetLanguageString(858), true);
 		CS_StoreOpenAsk("");
 	}
 
@@ -661,7 +661,7 @@ namespace GUI
         else
         {
 		    /*ShellExecute(0, "open",
-				    g_oLangRec.GetString(938), // "http://cache.moliyo.com/shop_77/",
+				    GetLanguageString(938), // "http://cache.moliyo.com/shop_77/",
 				    NULL, NULL, SW_SHOW);*/
 			//NetColourInfo( 0x9576D1, "Ingame shop currently offline" );
         }
@@ -866,7 +866,7 @@ namespace GUI
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(882));
+				g_pGameApp->MsgBox("%s", GetLanguageString(882).c_str());
 			}
 		}
 		else
@@ -915,7 +915,7 @@ namespace GUI
 		{
 			// 
 			m_pkNumberBox = 
-				g_stUIBox.ShowNumberBox( _evtDragItemsEvent, pkItemCmd->GetTotalNum(), g_oLangRec.GetString(442), false);
+				g_stUIBox.ShowNumberBox( _evtDragItemsEvent, pkItemCmd->GetTotalNum(), GetLanguageString(442).c_str(), false);
 
 			if (m_pkNumberBox->GetNumber() < pkItemCmd->GetTotalNum())
 				return false;
@@ -1015,7 +1015,7 @@ namespace GUI
 		m_stStoreGui[nSeq].labLeftNum->SetCaption(nRemainNum >= 0 ? szTemp : "No Limit");
 		m_stStoreGui[nSeq].labLeftNum->SetIsShow(true);
 
-		sprintf(szTemp, g_oLangRec.GetString(911), nRemainTime);// "%d"
+		strncpy_s(szTemp, sizeof(szTemp), SafeVFormat(GetLanguageString(911), nRemainTime).c_str(), _TRUNCATE);// "%d"
 		m_stStoreGui[nSeq].labLeftTime->SetCaption(nRemainTime >= 0 ? szTemp : "No Limit");
 		m_stStoreGui[nSeq].labLeftTime->SetIsShow(true);
 
@@ -1119,8 +1119,8 @@ namespace GUI
 	void CStoreMgr::AddStoreUserTreeNode(void)
 	{
 		//disabled help / management
-		//AddStoreTreeNode(0, USER_NODEID, g_oLangRec.GetString(906));
-		//AddStoreTreeNode(0, HELP_NODEID, g_oLangRec.GetString(921));
+		//AddStoreTreeNode(0, USER_NODEID, GetLanguageString(906));
+		//AddStoreTreeNode(0, HELP_NODEID, GetLanguageString(921));
 	}
 
 
@@ -1175,12 +1175,12 @@ namespace GUI
 		if(nVip)
 		{
 			//if(btnToVip) btnToVip->SetIsEnabled(false);
-			labMemberStyle->SetCaption(g_oLangRec.GetString(902)); // 
+			labMemberStyle->SetCaption(GetLanguageString(902).c_str()); //
 		}
 		else
 		{
 			//if(btnToVip) btnToVip->SetIsEnabled(true);
-			labMemberStyle->SetCaption(g_oLangRec.GetString(903)); // 
+			labMemberStyle->SetCaption(GetLanguageString(903).c_str()); //
 		}
 
 		m_nVip = nVip;
@@ -1244,7 +1244,7 @@ namespace GUI
 		{
 			if(! bSilent)
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(895));	// 
+				g_pGameApp->MsgBox("%s", GetLanguageString(895).c_str());	//
 			}
 
 			return false;
@@ -1375,15 +1375,15 @@ namespace GUI
 		{
 			if(0 == m_nVip && _IsCurSelVipNode())
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(913)); // VIPVIP
+				g_pGameApp->MsgBox("%s", GetLanguageString(913).c_str()); // VIPVIP
 				return;
 			}
 
 			char szTitle[256] = {0};
-			sprintf(szTitle, "%s%s: %s\n%s: %s", 
-					g_oLangRec.GetString(857), 
-					g_oLangRec.GetString(845), g_stUIStore.m_stStoreGui[g_stUIStore.m_nCurSel].labName->GetCaption(), 
-					g_oLangRec.GetString(846), g_stUIStore.m_stStoreGui[g_stUIStore.m_nCurSel].labPrice->GetCaption());
+			sprintf(szTitle, "%s%s: %s\n%s: %s",
+					GetLanguageString(857).c_str(),
+					GetLanguageString(845).c_str(), g_stUIStore.m_stStoreGui[g_stUIStore.m_nCurSel].labName->GetCaption(),
+					GetLanguageString(846).c_str(), g_stUIStore.m_stStoreGui[g_stUIStore.m_nCurSel].labPrice->GetCaption());
 
 			CBoxMgr::ShowSelectBox(_evtTradeCheckEvent, szTitle, true);
 		}
@@ -1441,7 +1441,7 @@ namespace GUI
 			if(strName.size() > 3)
 			{
 				strName = strName.substr(0, 3);
-				if(0 == _stricmp(strName.c_str(), g_oLangRec.GetString(902))) // 
+				if(0 == _stricmp(strName.c_str(), GetLanguageString(902).c_str())) //
 				{
 					return true;
 				}
@@ -1466,11 +1466,11 @@ namespace GUI
 					g_stUIStore.m_nCurClass = it->first;
 					g_stUIStore.m_nCurPage  = 1;
 
-					if(strItem == g_oLangRec.GetString(906))	// 
+					if(strItem == GetLanguageString(906))	// 
 					{
 						g_stUIStore._SetIsShowUserInfo(true);
 					}
-					else if(strItem == g_oLangRec.GetString(921))	// 
+					else if(strItem == GetLanguageString(921))	// 
 					{
 						g_stUIStore._SetIsShowHelpInfo(true);
 					}
@@ -1552,12 +1552,12 @@ namespace GUI
 		{
 			if(g_stUIStore.imgBackGround10->GetIsShow()) return;
 			g_stUIStore.m_pkExchangeNum = 
-				g_stUIBox.ShowNumberBox( _evtExchangeEvent, -1, g_oLangRec.GetString(904), false); // 
+				g_stUIBox.ShowNumberBox( _evtExchangeEvent, -1, GetLanguageString(904).c_str(), false); //
 		}
 		//else if(strName == "btnToVIP")	// VIP
 		//{
 		//	if(g_stUIStore.imgBackGround10->GetIsShow()) return;
-		//	CBoxMgr::ShowSelectBox(_evtStoreToVipEvent, g_oLangRec.GetString(915), true); // VIP
+		//	CBoxMgr::ShowSelectBox(_evtStoreToVipEvent, GetLanguageString(915), true); // VIP
 		//}
 		else if(strName == "btnReceiveMoDou") // 
 		{
@@ -1578,7 +1578,7 @@ namespace GUI
 			case COP_SINA:
 
 			default:
-				strURL = g_oLangRec.GetString(939); // "http://pay.moliyo.com/";
+				strURL = GetLanguageString(939); // "http://pay.moliyo.com/";
 				break;
 			}
 
@@ -1666,7 +1666,7 @@ namespace GUI
 			g_stUIStore.m_nExchangeNum = num;
 
 			char szBuffer[MAX_PATH] ={0};
-			sprintf(szBuffer, g_oLangRec.GetString(905), g_stUIStore.m_nExchangeNum); // : %d
+			strncpy_s(szBuffer, sizeof(szBuffer), SafeVFormat(GetLanguageString(905), g_stUIStore.m_nExchangeNum).c_str(), _TRUNCATE); // : %d
 			CBoxMgr::ShowSelectBox(_evtExchangeCheckEvent, szBuffer, true);
 		}
 	}

@@ -21,15 +21,12 @@ namespace mission
 	} STALL_GOODS, *PSTALL_GOODS;
 
 	class CStallSystem;
-	class CStallData : public dbc::PreAllocStru
+	class CStallData
 	{
 		friend CStallSystem;
 	public:
-		CStallData(dbc::uLong lSize);
-		virtual ~CStallData();
-		
-		virtual void Initially() { Clear(); }
-		virtual void Finally() { Clear(); }
+		CStallData() { Clear(); }
+		~CStallData() = default;
 
 	private:
 		void Clear();

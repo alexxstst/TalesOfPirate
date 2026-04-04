@@ -8,7 +8,6 @@
 #ifndef MGRUNITEX_H
 #define MGRUNITEX_H
 
-#include "PreAlloc.h"
 #include "GameApp.h"
 
 #define def_MGRUNIT_ENTITY_TYPE_CHAIN		1
@@ -18,44 +17,23 @@
 
 class SubMap;
 
-class CEntityListNode : public dbc::PreAllocStru
+class CEntityListNode
 {
 public:
-	CEntityListNode(unsigned long ulSize = 1) : PreAllocStru(1)
-	{
-		m_pCEntity = 0;
-		m_pCNext = 0;
-		m_pCLast = 0;
-	}
+	CEntityListNode() = default;
 
-	char			m_chEntiType;
-	Entity			*m_pCEntity;
-	CMgrNode		*m_pCEntMgrNode; // 
+	char			m_chEntiType{};
+	Entity			*m_pCEntity{ nullptr };
+	CMgrNode		*m_pCEntMgrNode{ nullptr };
 
-	CEntityListNode	*m_pCNext;
-	CEntityListNode	*m_pCLast;
-
-protected:
-	void	Initially();
-	void	Finally();
-
+	CEntityListNode	*m_pCNext{ nullptr };
+	CEntityListNode	*m_pCLast{ nullptr };
 };
 
-inline void CEntityListNode::Initially()
-{
-	m_pCEntity = 0;
-	m_pCNext = 0;
-	m_pCLast = 0;
-}
-
-inline void CEntityListNode::Finally()
-{
-}
-
-class CMgrUnit : public dbc::PreAllocStru
+class CMgrUnit
 {
 public:
-	CMgrUnit(unsigned long ulSize = 1) : PreAllocStru(1)
+	CMgrUnit()
 	{
 		m_sPosX = 0;
 		m_sPosY = 0;
@@ -114,10 +92,6 @@ protected:
 private:
 	void	StateBeginSeen(Entity *pCEnt);
 	void	StateEndSeen(Entity *pCEnt);
-
-	void	Initially();
-	void	Finally();
-
 };
 
 inline void CMgrUnit::EnterEyeshot(Entity *pCEnt)
@@ -337,23 +311,6 @@ inline void CMgrUnit::StateEndSeen(Entity *pCEnt)
 	pCCha->ReflectINFof(pCCha, pk);//
 }
 
-inline void CMgrUnit::Initially()
-{
-	m_lActiveNum = 0;
-	m_lEntityNum = 0;
-	m_pCChaIn = 0;
-	m_pCChaCross = 0;
-	m_pCItemIn = 0;
-	m_pCItemCross = 0;
-	m_CSkillState.Init();
-
-	m_pCNext = 0;
-	m_pCLast = 0;
-}
-
-inline void CMgrUnit::Finally()
-{
-}
 
 class CActiveMgrUnitL // 
 {
@@ -422,39 +379,16 @@ inline CMgrUnit* CActiveMgrUnitL::GetNext()
 	return pRet;
 }
 
-class CMgrNode : public dbc::PreAllocStru
+class CMgrNode
 {
 public:
-	CMgrNode(unsigned long ulSize = 1) : PreAllocStru(1)
-	{
-		m_pCMgrUnit = 0;
-		m_pCEntityNode = 0;
-		m_pCNext = 0;
-		m_pCLast = 0;
-	}
+	CMgrNode() = default;
 
-	CMgrUnit		*m_pCMgrUnit;
-	CEntityListNode	*m_pCEntityNode;
+	CMgrUnit		*m_pCMgrUnit{ nullptr };
+	CEntityListNode	*m_pCEntityNode{ nullptr };
 
-	CMgrNode		*m_pCNext;
-	CMgrNode		*m_pCLast;
-
-protected:
-	void	Initially();
-	void	Finally();
-
+	CMgrNode		*m_pCNext{ nullptr };
+	CMgrNode		*m_pCLast{ nullptr };
 };
-
-inline void CMgrNode::Initially()
-{
-	m_pCMgrUnit = 0;
-	m_pCEntityNode = 0;
-	m_pCNext = 0;
-	m_pCLast = 0;
-}
-
-inline void CMgrNode::Finally()
-{
-}
 
 #endif // MGRUNITEX_H

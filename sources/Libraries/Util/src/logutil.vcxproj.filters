@@ -33,9 +33,6 @@
     <ClCompile Include="db3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="LanguageRecord.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="logutil.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,9 +84,6 @@
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\include\fifo.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\LanguageRecord.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\include\matrix_stuff.h">

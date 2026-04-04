@@ -1338,7 +1338,7 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
     {
         CTreeNode* pParent = dynamic_cast<CTreeNode*>( obj->GetParent() );
 
-        if( stricmp( obj->GetItem()->GetString(), g_oLangRec.GetString(528) )==0 )
+        if( stricmp( obj->GetItem()->GetString(), GetLanguageString(528).c_str() )==0 )
         {
             CChaRecord* pInfo = GetChaRecordInfo( pHint->nTag );
             if( pInfo )
@@ -1348,7 +1348,7 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
                 pHint->SetHint( szBuf );
             }
         }
-        else if( stricmp( obj->GetItem()->GetString(), g_oLangRec.GetString(532) )==0 )
+        else if( stricmp( obj->GetItem()->GetString(), GetLanguageString(532).c_str() )==0 )
         {
             CMapInfo* pInfo = GetMapInfo( pHint->nTag );
             if( pInfo )
@@ -1356,11 +1356,11 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
                 pHint->SetHint( pInfo->szName );
             }
         }
-        else if( stricmp( obj->GetItem()->GetString(), g_oLangRec.GetString(530) )==0 )
+        else if( stricmp( obj->GetItem()->GetString(), GetLanguageString(530).c_str() )==0 )
         {
             pHint->SetHint( g_GetAreaName(pHint->nTag) );
         }
-        else if( stricmp( obj->GetItem()->GetString(), g_oLangRec.GetString(529) )==0 )
+        else if( stricmp( obj->GetItem()->GetString(), GetLanguageString(529).c_str() )==0 )
         {
             CEffectInfo *pInfo = GetEffectInfo(pHint->nTag);
             if( pInfo )
@@ -1372,7 +1372,7 @@ int UI_GridNodeAddItem( int nodeid, int itemid )
         }
         else if( pParent )            
         {
-            if( stricmp( pParent->GetItem()->GetString(), g_oLangRec.GetString(540) )==0 ) 
+            if( stricmp( pParent->GetItem()->GetString(), GetLanguageString(540).c_str() )==0 ) 
             {
         	    CSceneObjInfo *pInfo = GetSceneObjInfo(pHint->nTag);
                 if( pInfo )

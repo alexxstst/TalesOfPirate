@@ -37,11 +37,10 @@ private:
 	CAttachable* m_pCur{};
 };
 
-class CPassengerMgr : public dbc::PreAllocStru
+class CPassengerMgr
 {
 public:
-
-	CPassengerMgr(dbc::uLong);
+	CPassengerMgr() = default;
 	~CPassengerMgr();
 
 	void		Add(CAttachable *pCAttach);
@@ -55,17 +54,12 @@ public:
 	void		FreeAll();
 	void		DeleteAll();
 
-protected:
-
 private:
-	void	Initially();
-	void	Finally();
-
-	CAttachable* m_pCLstHead{}; // 
-	CAttachable* m_pCLstTail{};
+	CAttachable* m_pCLstHead{ nullptr };
+	CAttachable* m_pCLstTail{ nullptr };
 
 	long		m_lNum{};
-	CAttachable* m_pCCurPess{}; // 
+	CAttachable* m_pCCurPess{ nullptr };
 };
 
 inline void CPassengerMgr::BeginGet(void)

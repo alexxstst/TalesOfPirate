@@ -122,7 +122,7 @@ UINT CALLBACK CGameWG::Run(void* param)
 		{
 			// 
 
-			CS_ReportWG(g_oLangRec.GetString(143));
+			CS_ReportWG(GetLanguageString(143).c_str());
 			break;
 		}
 

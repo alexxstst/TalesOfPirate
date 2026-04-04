@@ -225,7 +225,7 @@ char* UIGetOpenFileName( char* strInitDir )
 	of.nMaxCustFilter = 0L;
 	of.lpstrFilter = szFilter;
 	of.nFilterIndex = 1L;
-	of.lpstrTitle = g_oLangRec.GetString(745);
+	of.lpstrTitle = GetLanguageString(745).c_str();
 	of.nFileOffset = 0;
 	of.nFileExtension = 0;
 	of.lpstrDefExt = "*.*";
@@ -1354,7 +1354,7 @@ void CCursor::Init()
     {
         if( !_hCursor[i] )
         {
-            { char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(746), i); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(746), i));
         }
     }
     
@@ -1409,7 +1409,7 @@ bool CFormMgr::Init(HWND hWnd)
 		LoadLuaScript(g_LuaState, "scripts/lua/font.lua");
 		if( !CGuiFont::s_Font.Init() )
 		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(747));
+			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(747).c_str());
 			return false;
 		}
 

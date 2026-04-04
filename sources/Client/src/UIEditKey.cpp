@@ -149,7 +149,7 @@ bool CEditKey::SetFont( DWORD dwFont )
 void CEditKey::Init()
 {	
 	int w, h;
-	CGuiFont::s_Font.GetSize( _dwFontIndex, g_oLangRec.GetString(489), w, h );
+	CGuiFont::s_Font.GetSize( _dwFontIndex, GetLanguageString(489).c_str(), w, h );
 	_dwCursorHeight = h;
 }
 

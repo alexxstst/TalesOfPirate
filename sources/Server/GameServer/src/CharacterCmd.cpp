@@ -1404,13 +1404,9 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 	//
 	char szTeamMsg[128];
 
-	CFormatParameter param(3);
-	param.setString(0, szPlyName);
-	param.setLong(1, sPickupNum);
-	param.setString(2, pItem->szName.c_str());
-
-	//char szParamMsg[255];
-	RES_FORMAT_STRING(GM_CHARACTERCMD_CPP_00006, param, szTeamMsg);
+	auto& pickupFmt = LanguageRecordStore::Instance()->GetKeyString("GM_CHARACTERCMD_CPP_00006");
+	snprintf(szTeamMsg, sizeof(szTeamMsg), "%s",
+		SafeVFormat(pickupFmt, szPlyName, sPickupNum, pItem->szName.c_str()).c_str());
 
 	//  :      
 	auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{ szTeamMsg });

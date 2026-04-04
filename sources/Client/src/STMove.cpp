@@ -73,7 +73,7 @@ void CWaitMoveState::SetPreMoveTime( long time )
 	nTotalFPS += g_Render.GetFPS();
 	nTotalFPSCnt++;
 	fFPSAverage = (float)nTotalFPS / (float)nTotalFPSCnt;
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(404), LastPingShow[0], LastPingShow[1], LastPingShow[2], MaxPing, fAveragePing, MinPing, nMaxFPS, fFPSAverage, nMinFPS); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(404), LastPingShow[0], LastPingShow[1], LastPingShow[2], MaxPing, fAveragePing, MinPing, nMaxFPS, fFPSAverage, nMinFPS));
 }
 
 void CWaitMoveState::RenderPing()
@@ -171,7 +171,7 @@ bool CWaitMoveState::IsAllowMove()
 {
 	if( _pCha->GetChaState()->IsFalse(enumChaStateMove) )
 	{
-		g_pGameApp->SysInfo( g_oLangRec.GetString(406) );
+		g_pGameApp->SysInfo( "%s", GetLanguageString(406).c_str() );
 		return false;
 	}
 
@@ -294,7 +294,7 @@ void CMoveState::PushPoint( int x, int y )
     int dis = GetDistance( x, y, _pCha->GetCurX(), _pCha->GetCurY() );
     if( dis > 500 )
     {
-        g_pGameApp->AddTipText( g_oLangRec.GetString(407), dis );
+        g_pGameApp->AddTipText( "%s", SafeVFormat(GetLanguageString(407), dis).c_str() );
     }
 }
 
@@ -509,7 +509,7 @@ void CServerMoveState::_End()
 	_dwLastEndTime = CGameApp::GetCurTick();
 
 	DWORD dwSpace = _dwLastEndTime - _dwLastMoveTime;
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(408), dwSpace, _dwLastMoveTime, _dwLastEndTime, (float)dwSpace * (float)GetActor()->GetCha()->getMoveSpeed() / 1000.0f); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(408), dwSpace, _dwLastMoveTime, _dwLastEndTime, (float)dwSpace * (float)GetActor()->GetCha()->getMoveSpeed() / 1000.0f));
 }
 
 void CServerMoveState::MoveEnd(int x, int y, int nState)

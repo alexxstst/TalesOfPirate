@@ -151,7 +151,7 @@ namespace GUI
 			//		}
 			//	}
 			//}
-   //         g_pGameApp->MsgBox(g_oLangRec.GetString(849));
+   //         g_pGameApp->MsgBox(GetLanguageString(849));
    //     }
    // }
 

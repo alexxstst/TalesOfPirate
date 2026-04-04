@@ -25,7 +25,6 @@
 #include "Lua_Platform.h"
 #include "packfile.h"
 #include "loginscene.h"
-#include "d3des.h"
 #include "Character.h"
 #include "gameloading.h"
 #include "script.h"
@@ -37,7 +36,7 @@
 
 #include "LootFilter.h"
 #include "AssetDatabase.h"
-
+#include "LanguageRecordStore.h"
 
 
 std::string g_serverset;
@@ -129,7 +128,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_Config.Load();
 
 	const auto assetDbPath = g_SystemIni["Assets"].GetString("StringAssetPack", "gamedata.sqlite");
+	const auto language = g_SystemIni["Main"].GetString("language", "english");
 	AssetDatabase::Instance()->Open(assetDbPath);
+	LanguageRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb(), language, LanguageTarget::Client);
 
 	if(strParam.find("editor")!= std::string::npos) // Launch game editor
     {
@@ -155,14 +156,14 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 */
 	::_setmaxstdio( 2048 ); //   Increase max open file handles
 
-	//setlocale(LC_CTYPE, g_oLangRec.GetString(0)); // Set locale from language resource file  Add by Philip.Wu  2006-07-19
-	setlocale(LC_CTYPE, g_oLangRec.GetString(0)); // Set locale from language resource file  Add by Philip.Wu  2006-07-19
+	//setlocale(LC_CTYPE, GetLanguageString(0)); // Set locale from language resource file  Add by Philip.Wu  2006-07-19
+	setlocale(LC_CTYPE, GetLanguageString(0).c_str()); // Set locale from language resource file  Add by Philip.Wu  2006-07-19
 
 	InstallFont(".\\Font");	// Auto-install fonts  Add by Philip.Wu  2006-08-07
 
 	if(CheckDxVersion(dx_ver) == 0) 
     {
-        MessageBox(NULL, g_oLangRec.GetString(187), "error", MB_OK);
+        MessageBox(NULL, GetLanguageString(187).c_str(), "error", MB_OK);
         return 0;
     }
 
@@ -225,9 +226,9 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 		CMiniPack pkfile;
 		if(pkfile.SaveToPack(pszpath,pszFile))
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(188), pszPos); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(188), pszPos));
 		else
-			{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(189), pszPos); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(189), pszPos));
 		return 0;
 	}
 
@@ -290,7 +291,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
     //  /login:VendorCode&ServerName&Username&Password
     if(std::string::npos != nCopPos)
     {
-        SetEncKey(key);
         std::string strCop = strParam.substr(nCopPos + 7, strParam.length());
         std::string tmp[4];
         Util_ResolveTextLine(strCop.c_str(), tmp, 4, '&');
@@ -298,9 +298,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
         g_cooperate.code = atol(tmp[0].c_str());
         g_cooperate.serv = tmp[1];
         g_cooperate.uid = tmp[2];
-        unsigned char buff[128] = {0};
-        Decrypt(buff, 128, (unsigned char*)tmp[3].c_str(), (int)tmp[3].length());
-        g_cooperate.pwd = (char*)buff;
+        g_cooperate.pwd = tmp[3];
     }
     switch(g_cooperate.code) // Different vendors map to different server lists
     {
@@ -406,7 +404,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 
 	if(!g_pGameApp->Init(hInstance, szWindowClass, nWidth, nHeight, nDepth, FALSE /*g_Config.m_bFullScreen*/))
     {
-        g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(191));
+        g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(191));
         g_pGameApp->End();
         return 0;
     }
@@ -669,7 +667,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 			CenterWindow(hWnd);
 
 			g_InputEdit = CreateWindow(TEXT("EDIT"),
-			TEXT(g_oLangRec.GetString(192)),
+			GetLanguageString(192).c_str(),
 			WS_CHILD | WS_VISIBLE,
 			0,0,
 			0,0,
@@ -789,7 +787,7 @@ void MakeBinTable()
 	g_pGameApp->InitAllTable();
 
 
-//	MessageBox( NULL, g_oLangRec.GetString(193), "Info", 0 );
+//	MessageBox( NULL, GetLanguageString(193), "Info", 0 );
 }
 
 // Display error message to debug output (formerly printf to edit control)

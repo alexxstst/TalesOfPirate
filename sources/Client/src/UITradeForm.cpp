@@ -39,55 +39,55 @@ bool CTradeMgr::Init()
 	frmPlayertrade =  mgr.Find("frmPlayertrade");
 	if ( !frmPlayertrade)
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", g_oLangRec.GetString(456));
+		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(456).c_str());
 		return false;
 	}
 	frmPlayertrade->evtEntrustMouseEvent = _MainMousePlayerTradeEvent ;
 
 	// 
 	grdSale = dynamic_cast<CGoodsGrid*>(frmPlayertrade->Find("grdSale"));
-	if( !grdSale )		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "grdSale" );
+	if( !grdSale )		return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "grdSale" );
 	GetPlayertradeSaleGrid()->evtBeforeAccept = _evtDragToGoodsEvent;
 	GetPlayertradeSaleGrid()->evtRMouseEvent = _evtSelfRMouseGridEvent;
 
 	grdBuy = dynamic_cast<CGoodsGrid*>(frmPlayertrade->Find("grdBuy"));
-	if( !grdBuy )		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "grdBuy" );
+	if( !grdBuy )		return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "grdBuy" );
     GetPlayertradeBuyGrid()->evtBeforeAccept = _evtDragToGoodsEvent;
 	GetPlayertradeBuyGrid()->evtRMouseEvent = _evtOtherRMouseGridEvent;
 
 	//
 	labOtherGold =  dynamic_cast<CLabelEx*>(frmPlayertrade->Find("labOtherGold") ); 
-	if ( !labOtherGold)		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "labOtherGold" );
+	if ( !labOtherGold)		return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "labOtherGold" );
 	
 	labSelfGold =  dynamic_cast<CLabelEx*>(frmPlayertrade->Find("labSelfGold") ); 
-	if ( !labSelfGold)		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "labSelfGold" );
+	if ( !labSelfGold)		return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "labSelfGold" );
 
 	
 	labOtherIMP =  dynamic_cast<CLabelEx*>(frmPlayertrade->Find("labOtherIMP") ); 
-	if ( !labOtherIMP)		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "labOtherIMP" );
+	if ( !labOtherIMP)		return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "labOtherIMP" );
 	
 	labSelfIMP =  dynamic_cast<CLabelEx*>(frmPlayertrade->Find("labSelfIMP") ); 
-	if ( !labSelfIMP)		return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "labSelfIMP" );
+	if ( !labSelfIMP)		return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "labSelfIMP" );
 	
 	
 	
 	chkYes = ( CCheckBox *)frmPlayertrade->Find( "chkYes" );     
-	if ( !chkYes)	return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "chkYes" );    
+	if ( !chkYes)	return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "chkYes" );    
 
 	chkTrade = ( CCheckBox *)frmPlayertrade->Find( "chkTrade" );  
-	if ( !chkTrade )	return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "chkTrade" );     
+	if ( !chkTrade )	return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "chkTrade" );     
 
 	btnYes =  ( CTextButton *)frmPlayertrade->Find( "btnYes" ); 
-	if ( !btnYes )	return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "btnYes" );         
+	if ( !btnYes )	return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "btnYes" );         
 
 	btnTrade =  ( CTextButton *)frmPlayertrade->Find( "btnTrade" ); 
-	if ( !btnTrade )	return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "btnTrade" );             
+	if ( !btnTrade )	return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "btnTrade" );             
 
 	btnGold =  ( CTextButton *)frmPlayertrade->Find( "btnGold" ); 
-	if ( !btnGold )	return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "btnGold" );  
+	if ( !btnGold )	return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "btnGold" );  
 
 	btnIMP =  ( CTextButton *)frmPlayertrade->Find( "btnIMP" ); 
-	if ( !btnIMP )	return Error( g_oLangRec.GetString(45), frmPlayertrade->GetName(), "btnIMP" );    
+	if ( !btnIMP )	return Error( GetLanguageString(45).c_str(), frmPlayertrade->GetName(), "btnIMP" );    
 	
 	return true;
 }
@@ -121,9 +121,9 @@ void CTradeMgr::ShowCharTradeRequest( BYTE byType, DWORD dwRequestID )
 	
 	char szBuf[80] = { 0 };
 	if( byType==mission::TRADE_CHAR )
-		sprintf( szBuf, g_oLangRec.GetString(779), pCha->getHumanName() );
+		strncpy_s(szBuf, sizeof(szBuf), SafeVFormat(GetLanguageString(779), pCha->getHumanName()).c_str(), _TRUNCATE);
 	else
-		sprintf( szBuf, g_oLangRec.GetString(780), pCha->getHumanName() );
+		strncpy_s(szBuf, sizeof(szBuf), SafeVFormat(GetLanguageString(780), pCha->getHumanName()).c_str(), _TRUNCATE);
 
 
 	// add by Philip.Wu  2006-06-11  
@@ -190,7 +190,7 @@ void CTradeMgr::_MainMousePlayerTradeEvent(CCompent *pSender, int nMsgType, int 
 	}
 	else if ( name=="btnGold")
 	{			
-		g_stUIBox.ShowNumberBox( _evtGoldFormEvent, g_stUIBoat.GetHuman()->getGameAttr()->get(ATTR_GD), g_oLangRec.GetString(781), false );
+		g_stUIBox.ShowNumberBox( _evtGoldFormEvent, g_stUIBoat.GetHuman()->getGameAttr()->get(ATTR_GD), GetLanguageString(781).c_str(), false );
 	}
 	else if ( name=="btnIMP")
 	{			
@@ -476,7 +476,7 @@ void CTradeMgr::LocalSaleItem( CGoodsGrid* pSaleGrid, CGoodsGrid* pSelfGrid, int
 	{
 		if( pBoat && pBoat->GetItemInfo()->sType==43 )
 		{
-			g_pGameApp->MsgBox( g_oLangRec.GetString(782) );
+			g_pGameApp->MsgBox("%s", GetLanguageString(782).c_str());
 		}
 	}
 
@@ -547,17 +547,17 @@ void  CTradeMgr::ShowTradeSuccess()
 	int nFree = g_stUIEquip.GetGoodsGrid()->GetMaxNum() - g_stUIEquip.GetGoodsGrid()->GetCurNum();
 	if( nFree < g_stUITrade.grdBuy->GetCurNum() )
 	{
-		g_pGameApp->ShowMidText(g_oLangRec.GetString(783));
-		g_pGameApp->SysInfo(g_oLangRec.GetString(783));
+		g_pGameApp->ShowMidText("%s", GetLanguageString(783).c_str());
+		g_pGameApp->SysInfo("%s", GetLanguageString(783).c_str());
 	}
 
-	g_pGameApp->SysInfo(g_oLangRec.GetString(784));
+	g_pGameApp->SysInfo("%s", GetLanguageString(784).c_str());
 	Clear();
 }
 
 void CTradeMgr::ShowTradeFailed()
 {
-	g_pGameApp->SysInfo(g_oLangRec.GetString(785));
+	g_pGameApp->SysInfo("%s", GetLanguageString(785).c_str());
 	Clear();
 }
 
@@ -603,9 +603,9 @@ void CTradeMgr::Clear()
 void CTradeMgr::CancelCharTrade(  DWORD dwCharID )
 {	
 	if ( dwCharID==m_dwMainID )
-		g_pGameApp->SysInfo(g_oLangRec.GetString(786));
+		g_pGameApp->SysInfo("%s", GetLanguageString(786).c_str());
 	else
-		g_pGameApp->SysInfo(g_oLangRec.GetString(787));
+		g_pGameApp->SysInfo("%s", GetLanguageString(787).c_str());
 
 	Clear();
 }

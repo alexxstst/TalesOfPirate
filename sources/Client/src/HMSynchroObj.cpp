@@ -156,7 +156,7 @@ bool CSynchroManage::_DelState( CStateSynchro* pState)
 		ToLogService("common", "DelState(), SynchroNum[{}], Head[{}], Tail[{}], ID[{}]", _nSynchroNum, _dwHead, _dwTail, nID);
 		return true;
 	}
-	{ char _buf[512]; snprintf(_buf, sizeof(_buf), g_oLangRec.GetString(148), _nSynchroNum, _dwHead, _dwTail, nID); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+	g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(148), _nSynchroNum, _dwHead, _dwTail, nID));
     return false;
 }
 

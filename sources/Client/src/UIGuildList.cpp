@@ -178,7 +178,7 @@ void CUIGuildList::OnClickApply(CGuiData *pSender, int x, int y, DWORD key)
 
 void CUIGuildList::OnMsgReplaceApply(string strOldGuildName)
 {
-	string str=g_oLangRec.GetString(593)+strOldGuildName;
+	string str=GetLanguageString(593)+strOldGuildName;
 	CBoxMgr::ShowSelectBox( OnMsgReplaceApplySelectClick, str.c_str(), true );
 }
 

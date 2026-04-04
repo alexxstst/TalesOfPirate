@@ -39,18 +39,9 @@ void CWeather::RandLocation(SubMap *pMap)
 			g_dwLastWeatherTick[_btType] = dwCurTick; 
 			char szText[128]; 
 			
-			// Modify by lark.li 20080618 begin
-			CFormatParameter param(3);
-			char val[25];
-			sprintf(val,"%d", SRange.ltop.x / 100);
-			param.setString(0, val);
-			sprintf(val,"%d", SRange.ltop.y / 100);
-			param.setString(1, val);
-			param.setString(2, pEff->szDataName);
-
-			//char szParamMsg[255];
-			RES_FORMAT_STRING(GM_WEATHER_CPP_00001, param, szText);
-			// End
+			auto& weatherFmt = LanguageRecordStore::Instance()->GetKeyString("GM_WEATHER_CPP_00001");
+			snprintf(szText, sizeof(szText), "%s",
+				SafeVFormat(weatherFmt, SRange.ltop.x / 100, SRange.ltop.y / 100, pEff->szDataName).c_str());
 
 			g_pGameApp->LocalNotice( szText );
 			//LG("weather", "[%s][%s], time = %d\n", pMap->GetName(), szText, dwCurTick / 1000);

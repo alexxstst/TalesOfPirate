@@ -165,13 +165,13 @@ bool CSkillCommand::IsAllowUse()
 
 	if(g_stUIBank.GetBankGoodsGrid()->GetForm()->GetIsShow())	// 
 	{
-		g_pGameApp->SysInfo( g_oLangRec.GetString(748) );
+		g_pGameApp->SysInfo("%s", GetLanguageString(748).c_str() );
 		return false;
 	}
 
 	if( pCha->GetChaState()->IsFalse(enumChaStateUseSkill) )
 	{
-		g_pGameApp->SysInfo( g_oLangRec.GetString(748) );
+		g_pGameApp->SysInfo("%s", GetLanguageString(748).c_str() );
 		return false;
 	}
 
@@ -222,7 +222,7 @@ bool CSkillCommand::ReadyUse()
 
 void CSkillCommand::Error()
 {    
-	g_pGameApp->AddTipText(g_oLangRec.GetString(750), _pSkill->szName.c_str() );
+	g_pGameApp->AddTipText("%s", SafeVFormat(GetLanguageString(750), _pSkill->szName.c_str()).c_str() );
 }
 
 void CSkillCommand::AddHint( int x, int y )
@@ -238,7 +238,7 @@ void CSkillCommand::AddHint( int x, int y )
 		switch( _pSkill->chFightType )
 		{
 		case enumSKILL_LAND_LIVE:
-			PushHint( g_oLangRec.GetString(751), pMain->IsBoat() ? COLOR_RED : COLOR_WHITE );
+			PushHint( GetLanguageString(751).c_str(), pMain->IsBoat() ? COLOR_RED : COLOR_WHITE );
 			break;
 
 		case enumSKILL_FIGHT:
@@ -246,45 +246,45 @@ void CSkillCommand::AddHint( int x, int y )
 			{
 				if( _pSkill->chSrcType==1 )
 				{
-					PushHint( g_oLangRec.GetString(752), pMain->IsBoat() ? COLOR_RED : COLOR_WHITE );
+					PushHint( GetLanguageString(752).c_str(), pMain->IsBoat() ? COLOR_RED : COLOR_WHITE );
 				}
 				else
 				{
-					PushHint( g_oLangRec.GetString(753), !pMain->IsBoat() ? COLOR_RED : COLOR_WHITE );
+					PushHint( GetLanguageString(753).c_str(), !pMain->IsBoat() ? COLOR_RED : COLOR_WHITE );
 				}
 			}
 			else
 			{
-				PushHint( g_oLangRec.GetString(754), COLOR_WHITE );
+				PushHint( GetLanguageString(754).c_str(), COLOR_WHITE );
 			}
 			break;
 
 		case enumSKILL_SAIL:
-			//PushHint( g_oLangRec.GetString(755), pMain->IsBoat() ? COLOR_WHITE : COLOR_RED );
-			PushHint( g_oLangRec.GetString(755), COLOR_WHITE );
+			//PushHint( GetLanguageString(755), pMain->IsBoat() ? COLOR_WHITE : COLOR_RED );
+			PushHint( GetLanguageString(755).c_str(), COLOR_WHITE );
 			break;
 
 		case enumSKILL_SEE_LIVE:
-			PushHint( g_oLangRec.GetString(756), pMain->IsBoat() ? COLOR_WHITE : COLOR_RED );		
+			PushHint( GetLanguageString(756).c_str(), pMain->IsBoat() ? COLOR_WHITE : COLOR_RED );		
 			break;
 		}
 	}
 
-	PushHint( g_oLangRec.GetString(757) );
+	PushHint( GetLanguageString(757).c_str() );
 	StringNewLine( szBuf, HINT_WIDTH, _pSkill->szDescribeHint.c_str(), (unsigned int)_pSkill->szDescribeHint.size() );
 	PushHint( szBuf );
 
-	PushHint( g_oLangRec.GetString(758) );
+	PushHint( GetLanguageString(758).c_str() );
 	StringNewLine( szBuf, HINT_WIDTH, _pSkill->szEffectHint.c_str(), (unsigned int)_pSkill->szEffectHint.size() );
 	PushHint( szBuf );
 
-	PushHint( g_oLangRec.GetString(759) );
+	PushHint( GetLanguageString(759).c_str() );
 	StringNewLine( szBuf, HINT_WIDTH, _pSkill->szExpendHint.c_str(), (unsigned int)_pSkill->szExpendHint.size() );
 	PushHint( szBuf );
 
 	if( _pSkill->GetIsActive() )
 	{
-		PushHint( g_oLangRec.GetString(760) );
+		PushHint( GetLanguageString(760).c_str() );
 	}
 }
 

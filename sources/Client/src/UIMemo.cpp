@@ -1008,7 +1008,7 @@ void CMemoEx::ParseMisPage()
 		sCom = 0;
 		dwColor = 0xFF000000;
 		m_sNumInfo++;
-		m_MemoInfo[m_sNumInfo].strDesp = g_oLangRec.GetString(704);
+		m_MemoInfo[m_sNumInfo].strDesp = GetLanguageString(704);
 		m_MemoInfo[m_sNumInfo].dwColor = dwColor;
 		m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_TITLE;
 		m_MemoInfo[m_sNumInfo].sxPos   = sCom;
@@ -1019,20 +1019,20 @@ void CMemoEx::ParseMisPage()
 			string strTemp = "  ";
 			if( m_PageInfo.MisNeed[i].byType == mission::MIS_NEED_ITEM )
 			{
-				strTemp += g_oLangRec.GetString(705);
+				strTemp += GetLanguageString(705);
 				CItemRecord *pItem = GetItemRecordInfo( m_PageInfo.MisNeed[i].wParam1 );
 				if( !pItem )
 				{
-					strTemp += g_oLangRec.GetString(706);
+					strTemp += GetLanguageString(706);
 					sprintf( szNumber, "0x%X", m_PageInfo.MisNeed[i].wParam1 );
 					strTemp += szNumber;
 					strTemp += "]>";
 				}
 				else
 				{
-					strTemp += g_oLangRec.GetString(707);
+					strTemp += GetLanguageString(707);
 					strTemp += pItem->szName;
-					strTemp += g_oLangRec.GetString(708);
+					strTemp += GetLanguageString(708);
 				}
 				szNumber[0] = 0;
 				sprintf( szNumber, "<r%d/%d>", m_PageInfo.MisNeed[i].wParam3, m_PageInfo.MisNeed[i].wParam2 );
@@ -1052,20 +1052,20 @@ void CMemoEx::ParseMisPage()
 			}
 			else if( m_PageInfo.MisNeed[i].byType == mission::MIS_NEED_KILL )
 			{
-				strTemp += g_oLangRec.GetString(709);
+				strTemp += GetLanguageString(709);
 				CChaRecord* pInfo = GetChaRecordInfo( m_PageInfo.MisNeed[i].wParam1 );
 				if( !pInfo)
 				{
-					strTemp += g_oLangRec.GetString(706);
+					strTemp += GetLanguageString(706);
 					sprintf( szNumber, "0x%X", m_PageInfo.MisNeed[i].wParam1 );
 					strTemp += szNumber;
 					strTemp += "]>";
 				}
 				else
 				{
-					strTemp += g_oLangRec.GetString(707);
+					strTemp += GetLanguageString(707);
 					strTemp += pInfo->szName;
-					strTemp += g_oLangRec.GetString(708);
+					strTemp += GetLanguageString(708);
 				}
 				szNumber[0] = 0;
 				sprintf( szNumber, "<r%d/%d>", m_PageInfo.MisNeed[i].wParam3, m_PageInfo.MisNeed[i].wParam2 );
@@ -1090,7 +1090,7 @@ void CMemoEx::ParseMisPage()
 			else
 			{
 				// 
-				strTemp += g_oLangRec.GetString(710);
+				strTemp += GetLanguageString(710);
 			}
 
 			sRow++;
@@ -1128,14 +1128,14 @@ void CMemoEx::ParseMisPage()
 		sCom = 0;
 		dwColor = 0xFF000000;
 		m_sNumInfo++;
-		m_MemoInfo[m_sNumInfo].strDesp = g_oLangRec.GetString(711);
+		m_MemoInfo[m_sNumInfo].strDesp = GetLanguageString(711);
 		if( m_PageInfo.byPrizeSelType == mission::PRZIE_SELALL )
 		{
 			//m_MemoInfo[m_sNumInfo].strDesp += "()";
 		}
 		else
 		{
-			m_MemoInfo[m_sNumInfo].strDesp += g_oLangRec.GetString(712);
+			m_MemoInfo[m_sNumInfo].strDesp += GetLanguageString(712);
 		}
 		m_MemoInfo[m_sNumInfo].dwColor = dwColor;
 		m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_TITLE;
@@ -1182,10 +1182,10 @@ void CMemoEx::ParseMisPage()
 				}
 				else 
 				{
-					sprintf( szItem, g_oLangRec.GetString(713), m_PageInfo.MisPrize[n].wParam1 );
+					strncpy_s(szItem, sizeof(szItem), SafeVFormat(GetLanguageString(713), m_PageInfo.MisPrize[n].wParam1).c_str(), _TRUNCATE);
 				}
 
-				sprintf( szNumber, g_oLangRec.GetString(714), m_PageInfo.MisPrize[n].wParam2, szItem );
+				strncpy_s(szNumber, sizeof(szNumber), SafeVFormat(GetLanguageString(714), m_PageInfo.MisPrize[n].wParam2, szItem).c_str(), _TRUNCATE);
 				m_MemoInfo[m_sNumInfo].strDesp = "";
 				m_MemoInfo[m_sNumInfo].dwColor = 0xFF808080;
 				m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_DESP;
@@ -1223,7 +1223,7 @@ void CMemoEx::ParseMisPage()
 				sCom += 8;
 
 				m_sNumInfo++;
-				sprintf( szNumber, g_oLangRec.GetString(715), m_PageInfo.MisPrize[n].wParam1 );
+				strncpy_s(szNumber, sizeof(szNumber), SafeVFormat(GetLanguageString(715), m_PageInfo.MisPrize[n].wParam1).c_str(), _TRUNCATE);
 				m_MemoInfo[m_sNumInfo].strDesp = "";
 				m_MemoInfo[m_sNumInfo].dwColor = 0xFF808080;
 				m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_DESP;
@@ -1261,7 +1261,7 @@ void CMemoEx::ParseMisPage()
 				sCom += 8;
 
 				m_sNumInfo++;
-				sprintf( szNumber, g_oLangRec.GetString(716), m_PageInfo.MisPrize[n].wParam1 );
+				strncpy_s(szNumber, sizeof(szNumber), SafeVFormat(GetLanguageString(716), m_PageInfo.MisPrize[n].wParam1).c_str(), _TRUNCATE);
 				m_MemoInfo[m_sNumInfo].strDesp = "";
 				m_MemoInfo[m_sNumInfo].dwColor = 0xFF808080;
 				m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_DESP;
@@ -1299,7 +1299,7 @@ void CMemoEx::ParseMisPage()
 				sCom += 8;
 
 				m_sNumInfo++;
-				sprintf( szNumber, g_oLangRec.GetString(717), m_PageInfo.MisPrize[n].wParam1 );
+				strncpy_s(szNumber, sizeof(szNumber), SafeVFormat(GetLanguageString(717), m_PageInfo.MisPrize[n].wParam1).c_str(), _TRUNCATE);
 				m_MemoInfo[m_sNumInfo].strDesp = "";
 				m_MemoInfo[m_sNumInfo].dwColor = 0xFF808080;
 				m_MemoInfo[m_sNumInfo].byType  = MEMO_LINE_DESP;
@@ -1311,7 +1311,7 @@ void CMemoEx::ParseMisPage()
 			}
 			else
 			{
-				g_pGameApp->MsgBox(g_oLangRec.GetString(718), m_PageInfo.MisPrize[n].byType, m_PageInfo.MisPrize[n].wParam1, m_PageInfo.MisPrize[n].wParam2);
+				g_pGameApp->MsgBox("%s", SafeVFormat(GetLanguageString(718), m_PageInfo.MisPrize[n].byType, m_PageInfo.MisPrize[n].wParam1, m_PageInfo.MisPrize[n].wParam2).c_str());
 			}
 		}
 	}
