@@ -12,9 +12,7 @@
 #include "./util2.h"
 #include "./logutil.h"
 #include "./singleton.h"
-#include "./matrix_stuff.h"
 #include "./db.h"
-#include "./db3.h"
 #include "./algo.h"
 #include "./fifo.h"
 

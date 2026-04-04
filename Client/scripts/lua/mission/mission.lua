@@ -32,7 +32,6 @@ function AddMisData( id, name, tp )
 	MisData[id].name = name
 	MisData[id].tp = tp
 	
-	print( "Set Quest: ["..name..">> ID["..id.."] Type["..tp.."]" )
 end
 
 function GetMisData( id )
@@ -48,5 +47,3 @@ function GetMisData( id )
 	
 	return LUA_TRUE, MisData[id].tp, MisData[id].name
 end
-
-AddMisData( 100, "Test Name", MIS_TREENODE_NOMAL )

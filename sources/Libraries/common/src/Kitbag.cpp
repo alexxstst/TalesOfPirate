@@ -6,6 +6,9 @@
 //=============================================================================
 
 #include "Kitbag.h"
+#include "algo.h"
+#include "mpack.h"
+#include <vector>
 char g_key[9] = "19800216";
 
 
@@ -33,6 +36,14 @@ char* KitbagData2String(CKitbag* pKitbag, char* szStrBuf, int nLen)
 {
 	static char buff[7000];
 	if (!pKitbag || !szStrBuf) return NULL;
+
+	// v115: Msgpack сериализация
+	auto msgpackStr = KitbagData2Msgpack(pKitbag);
+	if (!msgpackStr.empty() && static_cast<int>(msgpackStr.size()) < nLen) {
+		memcpy(szStrBuf, msgpackStr.c_str(), msgpackStr.size() + 1);
+		return szStrBuf;
+	}
+	// Fallback на старый формат если msgpack не влез
 
 	__int64	lnCheckSum = 0;
 	char	szData[512];
@@ -166,24 +177,22 @@ bool String2KitbagData(CKitbag* pKitbag, std::string& strData)
 		bIsOldVer = Util_ResolveTextLine(strCap[0].c_str(), strVer, 2, '#') == 1 ? true : false;
 	}
 
-	//	2008-7-28	yangyinyu	add	begin!
 	int	iVer = atoi(strVer[0].c_str());
-	//	2008-7-28	yangyinyu	add	end!
+
+	// Msgpack (v115) — отдельный путь десериализации
+	if (iVer == KITBAG_VERSION_MSGPACK && !strVer[1].empty()) {
+		return Msgpack2KitbagData(pKitbag, strVer[1].c_str(), strVer[1].length());
+	}
 
 	if (bIsOldVer)
 	{
 		if (!strcmp(strVer[0].c_str(), ""))
 			return true;
-		/*	2008-7-28	yangyinyu	change	begin!	//	?????????????ID??????????114????????113??114???????
-		if(strcmp(strVer[0].c_str(),"113") == 0)
-		*/
 		if (iVer == 113 || iVer == 114)
-			//	2008-7-28	yangyinyu	change	end!
 		{
 			int len = Decrypt(buff, 7000, strVer[1].c_str(), (int)strVer[1].length());
 			buff[len] = '\0';
 			nSegNum = Util_ResolveTextLine(buff, strList, csStrNum, ';');
-
 		}
 		else
 			nSegNum = Util_ResolveTextLine(strVer[0].c_str(), strList, csStrNum, ';');

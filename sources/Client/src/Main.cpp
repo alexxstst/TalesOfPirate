@@ -28,6 +28,7 @@
 #include "Character.h"
 #include "gameloading.h"
 #include "script.h"
+#include "UICozeForm.h"
 #include "CrushSystem.h"
 
 #include "GlobalVar.h"
@@ -131,6 +132,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	const auto language = g_SystemIni["Main"].GetString("language", "english");
 	AssetDatabase::Instance()->Open(assetDbPath);
 	LanguageRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb(), language, LanguageTarget::Client);
+	CCharMsg::InitChannelNames();
 
 	if(strParam.find("editor")!= std::string::npos) // Launch game editor
     {

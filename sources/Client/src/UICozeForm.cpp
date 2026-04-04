@@ -24,24 +24,30 @@
 using namespace std;
 
 
-//const WORD					CCharMsg::m_wTotalChannelsCount;
 //const DWORD					CCharMsg::m_dwChannelBufferSize;
 CCharMsg::lstTextInfoType CCharMsg::m_lstMsgLink;
 
-CCharMsg::sChannelInfo CCharMsg::m_sChannelInfo[m_wTotalChannelsCount] =
-{
-	{CHANNEL_NONE, "", 0xFFFFFFFF, "", 0,}, //CHANNEL_NONE
-	{CHANNEL_ALL, GetLanguageString(493), 0xFFFFFFFF, "", 0,}, //CHANNEL_ALL
-	{CHANNEL_SIGHT, GetLanguageString(494), 0xFFFFFFFF, "", 0,}, //CHANNEL_SIGHT
-	{CHANNEL_PRIVATE, GetLanguageString(495), 0xFFFFFFFF, "@", 0,}, //CHANNEL_PRIVATE
-	{CHANNEL_WORLD, GetLanguageString(496), 0xFFFFFFFF, "*", 0,}, //CHANNEL_WORLD
-	{CHANNEL_TRADE, GetLanguageString(497), 0xFF09bdba, "^", 0,}, //CHANNEL_TRADE
-	{CHANNEL_TEAM, GetLanguageString(299), 0xFFFFFFFF, "!", 0,}, //CHANNEL_TEAM
-	{CHANNEL_GUILD, GetLanguageString(468), 0xFFFFFFFF, "%", 0,}, //CHANNEL_GUILD
-	{CHANNEL_SYSTEM, GetLanguageString(498), 0xFFFFFFFF, "", 0,}, //CHANNEL_SYSTEM
-	{CHANNEL_PUBLISH, GetLanguageString(499), 0xFFFFFFFF, "", 0,}, //CHANNEL_PUBLISH
-	{CHANNEL_SIDE, GetLanguageString(932), 0xFFFFFFFF, "|", 0,}, //CHANNEL_SIDE
-};
+std::vector<CCharMsg::sChannelInfo> CCharMsg::m_sChannelInfo;
+
+void CCharMsg::InitChannelNames() {
+	if (!m_sChannelInfo.empty()) {
+		return;
+	}
+
+	m_sChannelInfo = {
+		{CHANNEL_NONE, "", 0xFFFFFFFF, "", 0,},
+		{CHANNEL_ALL, GetLanguageString(493), 0xFFFFFFFF, "", 0,},
+		{CHANNEL_SIGHT, GetLanguageString(494), 0xFFFFFFFF, "", 0,},
+		{CHANNEL_PRIVATE, GetLanguageString(495), 0xFFFFFFFF, "@", 0,},
+		{CHANNEL_WORLD, GetLanguageString(496), 0xFFFFFFFF, "*", 0,},
+		{CHANNEL_TRADE, GetLanguageString(497), 0xFF09bdba, "^", 0,},
+		{CHANNEL_TEAM, GetLanguageString(299), 0xFFFFFFFF, "!", 0,},
+		{CHANNEL_GUILD, GetLanguageString(468), 0xFFFFFFFF, "%", 0,},
+		{CHANNEL_SYSTEM, GetLanguageString(498), 0xFFFFFFFF, "", 0,},
+		{CHANNEL_PUBLISH, GetLanguageString(499), 0xFFFFFFFF, "", 0,},
+		{CHANNEL_SIDE, GetLanguageString(932), 0xFFFFFFFF, "|", 0,},
+	};
+}
 
 CCharMsg::lstInstanceType CCharMsg::m_lstThisInstanceLink;
 
@@ -59,7 +65,7 @@ CCharMsg::~CCharMsg() {
 
 WORD CCharMsg::GetChannelIndex(eChannel channel) {
 	DWORD dwChannel = (DWORD)channel;
-	for (WORD i = 1; i <= m_wTotalChannelsCount; i++) {
+	for (WORD i = 1; i < m_sChannelInfo.size(); i++) {
 		if (dwChannel & 1)
 			return i;
 		dwChannel = dwChannel >> 1;
@@ -92,7 +98,7 @@ CCharMsg::eChannel CCharMsg::GetChannelByIndex(WORD wChannelIndex) {
 }
 
 WORD CCharMsg::GetTotalChannelCount() {
-	return m_wTotalChannelsCount;
+	return static_cast<WORD>(m_sChannelInfo.size());
 }
 
 void CCharMsg::AddMsg(eChannel channel, string strWho, string strText, bool bSendTo, DWORD dwcolour) {
@@ -164,7 +170,7 @@ void CCharMsg::AddMsg(eChannel channel, string strWho, string strText, bool bSen
 
 void CCharMsg::ClearAllMsg() {
 	m_lstMsgLink.clear();
-	for (WORD i = 0; i < m_wTotalChannelsCount; i++) {
+	for (WORD i = 0; i < m_sChannelInfo.size(); i++) {
 		m_sChannelInfo[i].dwTotalMsg = 0;
 		m_sChannelInfo[i].itFirstMsgPos = m_lstMsgLink.end();
 	}
@@ -490,7 +496,7 @@ CCozeForm* CCozeForm::GetInstance() {
 }
 
 void CCozeForm::OnSightMsg(string strName, string strMsg, DWORD dwColour) {
-	CCharMsg::AddMsg(CCharMsg::CHANNEL_SIGHT, strName, strMsg,false, dwColour);
+	CCharMsg::AddMsg(CCharMsg::CHANNEL_SIGHT, strName, strMsg, false, dwColour);
 	UpdatePages();
 }
 
@@ -568,19 +574,19 @@ void CCozeForm::OnPrivateMsg(string strFromName, string strToName, string strMsg
 
 void CCozeForm::OnWorldMsg(string strName, string strMsg, DWORD dwColour) {
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
-	CCharMsg::AddMsg(CCharMsg::CHANNEL_WORLD, strName, strMsg,false, 0xFFFFFFFF); //dwColour
+	CCharMsg::AddMsg(CCharMsg::CHANNEL_WORLD, strName, strMsg, false, 0xFFFFFFFF); //dwColour
 	UpdatePages();
 }
 
 void CCozeForm::OnTradeMsg(string strName, string strMsg, DWORD dwColour) {
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
-	CCharMsg::AddMsg(CCharMsg::CHANNEL_TRADE, strName, strMsg,false, 0xFF09bdba); //dwColour
+	CCharMsg::AddMsg(CCharMsg::CHANNEL_TRADE, strName, strMsg, false, 0xFF09bdba); //dwColour
 	UpdatePages();
 }
 
 void CCozeForm::OnTeamMsg(string strName, string strMsg, DWORD dwColour) {
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
-	CCharMsg::AddMsg(CCharMsg::CHANNEL_TEAM, strName, strMsg,false, 0xFF33ff00); //dwColour
+	CCharMsg::AddMsg(CCharMsg::CHANNEL_TEAM, strName, strMsg, false, 0xFF33ff00); //dwColour
 	UpdatePages();
 }
 
@@ -603,7 +609,7 @@ void CCozeForm::OnTeamMsg(DWORD dwCharID, string strMsg, DWORD dwColour) {
 
 void CCozeForm::OnGuildMsg(string strName, string strMsg, DWORD dwColour) {
 	CTextFilter::Filter(CTextFilter::DIALOG_TABLE, strMsg);
-	CCharMsg::AddMsg(CCharMsg::CHANNEL_GUILD, strName, strMsg,false, 0xFF0eb5e8); //dwColour
+	CCharMsg::AddMsg(CCharMsg::CHANNEL_GUILD, strName, strMsg, false, 0xFF0eb5e8); //dwColour
 	UpdatePages();
 }
 
@@ -618,7 +624,7 @@ void CCozeForm::OnSystemMsg(string strMsg) {
 }
 
 void CCozeForm::OnSideMsg(string strName, string strMsg, DWORD dwColour) {
-	CCharMsg::AddMsg(CCharMsg::CHANNEL_SIDE, strName, strMsg,false, dwColour);
+	CCharMsg::AddMsg(CCharMsg::CHANNEL_SIDE, strName, strMsg, false, dwColour);
 	UpdatePages();
 }
 

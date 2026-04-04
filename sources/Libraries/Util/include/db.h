@@ -196,26 +196,4 @@ inline bool cfl_rs::rollback() {
 	return _db->rollback();
 }
 
-struct friend_dat {
-	unsigned long memaddr; // VA in GameServer
-	unsigned int atorID; // id of character
-	std::string relation; // relationship
-	std::string atorNome; // name of character
-	unsigned int icon_id;
-	std::string motto;
-};
-
-class friend_tbl : public cfl_rs {
-public:
-	//friend_tbl(cfl_db* db) : cfl_rs(db) {}
-	friend_tbl(cfl_db* db) : cfl_rs(db, "friends", 10) {
-	}
-
-	virtual ~friend_tbl() {
-	}
-
-	bool get_friend_dat(friend_dat* farray, int& array_num, unsigned int atorID, bool* drop = NULL);
-	bool get_gm_dat(friend_dat* farray, int& array_num, bool* drop = NULL);
-};
-
 #endif //_DB_H_

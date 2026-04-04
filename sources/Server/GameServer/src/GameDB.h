@@ -1,100 +1,890 @@
-﻿#include "Util.h"
+#include "Util.h"
+#include "Database.h"
 #include "GameAppNet.h"
 #include "Player.h"
 
 #define defCHA_TABLE_VER		110
 #define defCHA_TABLE_NEW_VER	111
 
-enum ESaveType
-{
-	enumSAVE_TYPE_OFFLINE,	// 
-	enumSAVE_TYPE_SWITCH,	// 
-	enumSAVE_TYPE_TIMER,	// 
-	enumSAVE_TYPE_TRADE,	// 
+enum ESaveType {
+	enumSAVE_TYPE_OFFLINE, //
+	enumSAVE_TYPE_SWITCH, //
+	enumSAVE_TYPE_TIMER, //
+	enumSAVE_TYPE_TRADE, //
 };
 
 class CPlayer;
-class CTableCha : public cfl_rs
-{
-public:
 
-    CTableCha(cfl_db *pDB)
-        :cfl_rs(pDB, "character", 100)
-    {
-    
+// ============================================================================
+// Row structures — маппинг 1:1 на строки SQL-таблиц
+// ============================================================================
+
+struct AccountRow {
+	int ato_id;
+	std::string ato_nome;
+	int jmes;
+	std::string ator_ids;
+	std::string last_ip;
+	std::string disc_reason;
+	std::string last_leave;
+	std::string password;
+	int merge_state;
+	int IMP;
+	int total_votes;
+	int credit;
+};
+
+struct AmphitheaterSettingRow {
+	int section;
+	int season;
+	int round;
+	int state;
+	std::string createdate;
+	std::string updatetime;
+};
+
+struct AmphitheaterTeamRow {
+	int id;
+	int captain;
+	std::string member;
+	int matchno;
+	int state;
+	int map;
+	int mapflag;
+	int winnum;
+	int losenum;
+	int relivenum;
+	std::string createdate;
+	std::string updatetime;
+};
+
+struct BoatRow {
+	int boat_id;
+	int boat_berth;
+	std::string boat_name;
+	int boat_boatid;
+	int boat_header;
+	int boat_body;
+	int boat_engine;
+	int boat_cannon;
+	int boat_equipment;
+	int boat_bagsize;
+	std::string boat_bag;
+	int boat_diecount;
+	std::string boat_isdead;
+	int cur_endure;
+	int mx_endure;
+	int cur_supply;
+	int mx_supply;
+	std::string skill_state;
+	int boat_ownerid;
+	std::string boat_createtime;
+	std::string boat_isdeleted;
+	std::string map;
+	int map_x;
+	int map_y;
+	int angle;
+	int degree;
+	int exp;
+	int version;
+};
+
+struct CharacterRow {
+	int atorID;
+	std::string atorNome;
+	std::string motto;
+	int icon;
+	int version;
+	int pk_ctrl;
+	int endeMem;
+	int ato_id;
+	int guild_id;
+	int guild_stat;
+	int64_t guild_permission;
+	std::string job;
+	int degree;
+	int64_t exp;
+	int hp;
+	int sp;
+	int ap;
+	int tp;
+	int bomd;
+	int str, dex, agi, con, sta, luk;
+	int sail_lv;
+	int sail_exp;
+	int sail_left_exp;
+	int live_lv;
+	int live_exp;
+	std::string map;
+	int map_x;
+	int map_y;
+	int radius;
+	int angle;
+	std::string olhe;
+	int kb_capacity;
+	std::string kitbag;
+	std::string skillbag;
+	std::string shortcut;
+	std::string mission;
+	std::string misrecord;
+	std::string mistrigger;
+	std::string miscount;
+	std::string birth;
+	std::string login_cha;
+	int live_tp;
+	std::string map_mask;
+	int delflag;
+	std::string operdate;
+	std::string deldate;
+	std::string main_map;
+	std::string skill_state;
+	std::string bank;
+	std::string estop;
+	int estoptime;
+	int kb_locked;
+	int kitbag_tmp;
+	int credit;
+	int store_item;
+	std::string extend;
+	int chatColour;
+	int IMP;
+};
+
+struct CharacterLogRow {
+	int atorID;
+	std::string atorNome;
+	int ato_id;
+	int guild_id;
+	std::string job;
+	int degree;
+	int exp;
+	int hp, sp, ap, tp, bomd;
+	int str, dex, agi, con, sta, luk;
+	std::string map;
+	int map_x, map_y, radius;
+	std::string olhe;
+	std::string del_date;
+};
+
+struct FriendsRow {
+	int cha_id1;
+	int cha_id2;
+	std::string relation;
+	std::string createtime;
+};
+
+struct GuildRow {
+	int guild_id;
+	std::string guild_name;
+	std::string motto;
+	std::string passwd;
+	int leader_id;
+	int64_t exp;
+	int64_t gold;
+	std::string bank;
+	int level;
+	int member_total;
+	int try_total;
+	std::string disband_date;
+	int challlevel;
+	int challid;
+	int64_t challmoney;
+	int challstart;
+};
+
+struct LotterySettingRow {
+	int section;
+	int issue;
+	int state;
+	std::string createdate;
+	std::string updatetime;
+	std::string itemno;
+};
+
+struct MapMaskRow {
+	int id;
+	int atorID;
+	std::string content1;
+	std::string content2;
+	std::string content3;
+	std::string content4;
+	std::string content5;
+};
+
+struct MasterRow {
+	int cha_id1;
+	int cha_id2;
+	int finish;
+	std::string relation;
+};
+
+struct ParamRow {
+	int id;
+	int param1, param2, param3, param4, param5;
+	int param6, param7, param8, param9, param10;
+};
+
+struct PersonAvatarRow {
+	int atorID;
+	std::vector<uint8_t> avatar;
+};
+
+struct PersonInfoRow {
+	int atorID;
+	std::string motto;
+	int showmotto;
+	std::string sex;
+	int age;
+	std::string name;
+	std::string animal_zodiac;
+	std::string blood_type;
+	int birthday;
+	std::string state;
+	std::string city;
+	std::string constellation;
+	std::string career;
+	int avatarsize;
+	int prevent;
+	int support;
+	int oppose;
+};
+
+struct PropertyRow {
+	int64_t id;
+	int64_t atorID;
+	std::string context;
+	int64_t sum;
+	std::string time;
+};
+
+struct ResourceRow {
+	int id;
+	int atorID;
+	int type_id;
+	std::string content;
+};
+
+struct StatLogRow {
+	std::string track_date;
+	int login_num;
+	int play_num;
+	int wgplay_num;
+};
+
+struct StatDegreeRow {
+	std::string statDate;
+	int degree;
+	int64_t characterCount;
+};
+
+struct StatGenderRow {
+	std::string statDate;
+	std::string gender;
+	int64_t genderCount;
+};
+
+struct StatJobRow {
+	std::string statDate;
+	std::string job;
+	int64_t characterCount;
+};
+
+struct StatLoginRow {
+	std::string statDate;
+	int64_t loginCount;
+};
+
+struct StatMapRow {
+	std::string statDate;
+	std::string map;
+	int64_t playCount;
+};
+
+struct TicketRow {
+	int id;
+	int atorID;
+	int issue;
+	std::string itemno;
+	int real;
+	std::string buydate;
+};
+
+struct TradeLogRow {
+	int ID;
+	std::string ExecuteTime;
+	std::string GameServer;
+	std::string Action;
+	std::string From;
+	std::string To;
+	std::string Memo;
+};
+
+struct WeekReportRow {
+	std::string ato_nome;
+	std::string atorNome;
+	int degree;
+	std::string ip;
+	std::string createdate;
+	std::string logouttime;
+	int playtime;
+	std::string Guild_Name;
+};
+
+struct WinTicketRow {
+	int issue;
+	std::string itemno;
+	int grade;
+	std::string createdate;
+	int num;
+};
+
+// ============================================================================
+// Типизированные таблицы — наследники OdbcTable<T> (Column DSL)
+// ============================================================================
+
+class TableAccount : public OdbcTable<AccountRow> {
+public:
+	explicit TableAccount(OdbcDatabase& db)
+		: OdbcTable(db, "account", {
+			MakeColumn("ato_id",       &AccountRow::ato_id, PrimaryKey),
+			MakeColumn("ato_nome",     &AccountRow::ato_nome),
+			MakeColumn("jmes",         &AccountRow::jmes),
+			MakeColumn("ator_ids",     &AccountRow::ator_ids),
+			MakeColumn("last_ip",      &AccountRow::last_ip),
+			MakeColumn("disc_reason",  &AccountRow::disc_reason),
+			MakeColumn("last_leave",   &AccountRow::last_leave),
+			MakeColumn("password",     &AccountRow::password),
+			MakeColumn("merge_state",  &AccountRow::merge_state),
+			MakeColumn("IMP",          &AccountRow::IMP),
+			MakeColumn("total_votes",  &AccountRow::total_votes),
+			MakeColumn("credit",       &AccountRow::credit),
+		}) {}
+};
+
+class TableAmphitheaterSetting : public OdbcTable<AmphitheaterSettingRow> {
+public:
+	explicit TableAmphitheaterSetting(OdbcDatabase& db)
+		: OdbcTable(db, "AmphitheaterSetting", {
+			MakeColumn("section",    &AmphitheaterSettingRow::section),
+			MakeColumn("season",     &AmphitheaterSettingRow::season),
+			MakeColumn("round",      &AmphitheaterSettingRow::round),
+			MakeColumn("state",      &AmphitheaterSettingRow::state),
+			MakeColumn("createdate", &AmphitheaterSettingRow::createdate),
+			MakeColumn("updatetime", &AmphitheaterSettingRow::updatetime),
+		}) {}
+};
+
+class TableAmphitheaterTeam : public OdbcTable<AmphitheaterTeamRow> {
+public:
+	explicit TableAmphitheaterTeam(OdbcDatabase& db)
+		: OdbcTable(db, "AmphitheaterTeam", {
+			MakeColumn("id",         &AmphitheaterTeamRow::id, PrimaryKey),
+			MakeColumn("captain",    &AmphitheaterTeamRow::captain),
+			MakeColumn("member",     &AmphitheaterTeamRow::member),
+			MakeColumn("matchno",    &AmphitheaterTeamRow::matchno),
+			MakeColumn("state",      &AmphitheaterTeamRow::state),
+			MakeColumn("map",        &AmphitheaterTeamRow::map),
+			MakeColumn("mapflag",    &AmphitheaterTeamRow::mapflag),
+			MakeColumn("winnum",     &AmphitheaterTeamRow::winnum),
+			MakeColumn("losenum",    &AmphitheaterTeamRow::losenum),
+			MakeColumn("relivenum",  &AmphitheaterTeamRow::relivenum),
+			MakeColumn("createdate", &AmphitheaterTeamRow::createdate),
+			MakeColumn("updatetime", &AmphitheaterTeamRow::updatetime),
+		}) {}
+};
+
+class TableBoat : public OdbcTable<BoatRow> {
+public:
+	explicit TableBoat(OdbcDatabase& db)
+		: OdbcTable(db, "boat", {
+			MakeColumn("boat_id",         &BoatRow::boat_id, PrimaryKey),
+			MakeColumn("boat_berth",      &BoatRow::boat_berth),
+			MakeColumn("boat_name",       &BoatRow::boat_name),
+			MakeColumn("boat_boatid",     &BoatRow::boat_boatid),
+			MakeColumn("boat_header",     &BoatRow::boat_header),
+			MakeColumn("boat_body",       &BoatRow::boat_body),
+			MakeColumn("boat_engine",     &BoatRow::boat_engine),
+			MakeColumn("boat_cannon",     &BoatRow::boat_cannon),
+			MakeColumn("boat_equipment",  &BoatRow::boat_equipment),
+			MakeColumn("boat_bagsize",    &BoatRow::boat_bagsize),
+			MakeColumn("boat_bag",        &BoatRow::boat_bag),
+			MakeColumn("boat_diecount",   &BoatRow::boat_diecount),
+			MakeColumn("boat_isdead",     &BoatRow::boat_isdead),
+			MakeColumn("cur_endure",      &BoatRow::cur_endure),
+			MakeColumn("mx_endure",       &BoatRow::mx_endure),
+			MakeColumn("cur_supply",      &BoatRow::cur_supply),
+			MakeColumn("mx_supply",       &BoatRow::mx_supply),
+			MakeColumn("skill_state",     &BoatRow::skill_state),
+			MakeColumn("boat_ownerid",    &BoatRow::boat_ownerid),
+			MakeColumn("boat_createtime", &BoatRow::boat_createtime),
+			MakeColumn("boat_isdeleted",  &BoatRow::boat_isdeleted),
+			MakeColumn("map",             &BoatRow::map),
+			MakeColumn("map_x",           &BoatRow::map_x),
+			MakeColumn("map_y",           &BoatRow::map_y),
+			MakeColumn("angle",           &BoatRow::angle),
+			MakeColumn("degree",          &BoatRow::degree),
+			MakeColumn("exp",             &BoatRow::exp),
+			MakeColumn("version",         &BoatRow::version),
+		}) {}
+};
+
+class TableCharacter : public OdbcTable<CharacterRow> {
+public:
+	explicit TableCharacter(OdbcDatabase& db)
+		: OdbcTable(db, "character", {
+			MakeColumn("atorID",           &CharacterRow::atorID, PrimaryKey),
+			MakeColumn("atorNome",         &CharacterRow::atorNome),
+			MakeColumn("motto",            &CharacterRow::motto),
+			MakeColumn("icon",             &CharacterRow::icon),
+			MakeColumn("version",          &CharacterRow::version),
+			MakeColumn("pk_ctrl",          &CharacterRow::pk_ctrl),
+			MakeColumn("endeMem",          &CharacterRow::endeMem),
+			MakeColumn("ato_id",           &CharacterRow::ato_id),
+			MakeColumn("guild_id",         &CharacterRow::guild_id),
+			MakeColumn("guild_stat",       &CharacterRow::guild_stat),
+			MakeColumn("guild_permission", &CharacterRow::guild_permission),
+			MakeColumn("job",              &CharacterRow::job),
+			MakeColumn("degree",           &CharacterRow::degree),
+			MakeColumn("exp",              &CharacterRow::exp),
+			MakeColumn("hp",               &CharacterRow::hp),
+			MakeColumn("sp",               &CharacterRow::sp),
+			MakeColumn("ap",               &CharacterRow::ap),
+			MakeColumn("tp",               &CharacterRow::tp),
+			MakeColumn("bomd",             &CharacterRow::bomd),
+			MakeColumn("str",              &CharacterRow::str),
+			MakeColumn("dex",              &CharacterRow::dex),
+			MakeColumn("agi",              &CharacterRow::agi),
+			MakeColumn("con",              &CharacterRow::con),
+			MakeColumn("sta",              &CharacterRow::sta),
+			MakeColumn("luk",              &CharacterRow::luk),
+			MakeColumn("sail_lv",          &CharacterRow::sail_lv),
+			MakeColumn("sail_exp",         &CharacterRow::sail_exp),
+			MakeColumn("sail_left_exp",    &CharacterRow::sail_left_exp),
+			MakeColumn("live_lv",          &CharacterRow::live_lv),
+			MakeColumn("live_exp",         &CharacterRow::live_exp),
+			MakeColumn("map",              &CharacterRow::map),
+			MakeColumn("map_x",            &CharacterRow::map_x),
+			MakeColumn("map_y",            &CharacterRow::map_y),
+			MakeColumn("radius",           &CharacterRow::radius),
+			MakeColumn("angle",            &CharacterRow::angle),
+			MakeColumn("olhe",             &CharacterRow::olhe),
+			MakeColumn("kb_capacity",      &CharacterRow::kb_capacity),
+			MakeColumn("kitbag",           &CharacterRow::kitbag),
+			MakeColumn("skillbag",         &CharacterRow::skillbag),
+			MakeColumn("shortcut",         &CharacterRow::shortcut),
+			MakeColumn("mission",          &CharacterRow::mission),
+			MakeColumn("misrecord",        &CharacterRow::misrecord),
+			MakeColumn("mistrigger",       &CharacterRow::mistrigger),
+			MakeColumn("miscount",         &CharacterRow::miscount),
+			MakeColumn("birth",            &CharacterRow::birth),
+			MakeColumn("login_cha",        &CharacterRow::login_cha),
+			MakeColumn("live_tp",          &CharacterRow::live_tp),
+			MakeColumn("map_mask",         &CharacterRow::map_mask),
+			MakeColumn("delflag",          &CharacterRow::delflag),
+			MakeColumn("operdate",         &CharacterRow::operdate),
+			MakeColumn("deldate",          &CharacterRow::deldate),
+			MakeColumn("main_map",         &CharacterRow::main_map),
+			MakeColumn("skill_state",      &CharacterRow::skill_state),
+			MakeColumn("bank",             &CharacterRow::bank),
+			MakeColumn("estop",            &CharacterRow::estop),
+			MakeColumn("estoptime",        &CharacterRow::estoptime),
+			MakeColumn("kb_locked",        &CharacterRow::kb_locked),
+			MakeColumn("kitbag_tmp",       &CharacterRow::kitbag_tmp),
+			MakeColumn("credit",           &CharacterRow::credit),
+			MakeColumn("store_item",       &CharacterRow::store_item),
+			MakeColumn("extend",           &CharacterRow::extend),
+			MakeColumn("chatColour",       &CharacterRow::chatColour),
+			MakeColumn("IMP",              &CharacterRow::IMP),
+		}) {}
+};
+
+class TableCharacterLog : public OdbcTable<CharacterLogRow> {
+public:
+	explicit TableCharacterLog(OdbcDatabase& db)
+		: OdbcTable(db, "character_log", {
+			MakeColumn("atorID",   &CharacterLogRow::atorID),
+			MakeColumn("atorNome", &CharacterLogRow::atorNome),
+			MakeColumn("ato_id",   &CharacterLogRow::ato_id),
+			MakeColumn("guild_id", &CharacterLogRow::guild_id),
+			MakeColumn("job",      &CharacterLogRow::job),
+			MakeColumn("degree",   &CharacterLogRow::degree),
+			MakeColumn("exp",      &CharacterLogRow::exp),
+			MakeColumn("hp",       &CharacterLogRow::hp),
+			MakeColumn("sp",       &CharacterLogRow::sp),
+			MakeColumn("ap",       &CharacterLogRow::ap),
+			MakeColumn("tp",       &CharacterLogRow::tp),
+			MakeColumn("bomd",     &CharacterLogRow::bomd),
+			MakeColumn("str",      &CharacterLogRow::str),
+			MakeColumn("dex",      &CharacterLogRow::dex),
+			MakeColumn("agi",      &CharacterLogRow::agi),
+			MakeColumn("con",      &CharacterLogRow::con),
+			MakeColumn("sta",      &CharacterLogRow::sta),
+			MakeColumn("luk",      &CharacterLogRow::luk),
+			MakeColumn("map",      &CharacterLogRow::map),
+			MakeColumn("map_x",    &CharacterLogRow::map_x),
+			MakeColumn("map_y",    &CharacterLogRow::map_y),
+			MakeColumn("radius",   &CharacterLogRow::radius),
+			MakeColumn("olhe",     &CharacterLogRow::olhe),
+			MakeColumn("del_date", &CharacterLogRow::del_date),
+		}) {}
+};
+
+class TableFriends : public OdbcTable<FriendsRow> {
+public:
+	explicit TableFriends(OdbcDatabase& db)
+		: OdbcTable(db, "friends", {
+			MakeColumn("cha_id1",    &FriendsRow::cha_id1),
+			MakeColumn("cha_id2",    &FriendsRow::cha_id2),
+			MakeColumn("relation",   &FriendsRow::relation),
+			MakeColumn("createtime", &FriendsRow::createtime),
+		}) {}
+};
+
+class TableGuildTyped : public OdbcTable<GuildRow> {
+public:
+	explicit TableGuildTyped(OdbcDatabase& db)
+		: OdbcTable(db, "guild", {
+			MakeColumn("guild_id",     &GuildRow::guild_id, PrimaryKey),
+			MakeColumn("guild_name",   &GuildRow::guild_name),
+			MakeColumn("motto",        &GuildRow::motto),
+			MakeColumn("passwd",       &GuildRow::passwd),
+			MakeColumn("leader_id",    &GuildRow::leader_id),
+			MakeColumn("exp",          &GuildRow::exp),
+			MakeColumn("gold",         &GuildRow::gold),
+			MakeColumn("bank",         &GuildRow::bank),
+			MakeColumn("level",        &GuildRow::level),
+			MakeColumn("member_total", &GuildRow::member_total),
+			MakeColumn("try_total",    &GuildRow::try_total),
+			MakeColumn("disband_date", &GuildRow::disband_date),
+			MakeColumn("challlevel",   &GuildRow::challlevel),
+			MakeColumn("challid",      &GuildRow::challid),
+			MakeColumn("challmoney",   &GuildRow::challmoney),
+			MakeColumn("challstart",   &GuildRow::challstart),
+		}) {}
+};
+
+class TableLotterySetting : public OdbcTable<LotterySettingRow> {
+public:
+	explicit TableLotterySetting(OdbcDatabase& db)
+		: OdbcTable(db, "LotterySetting", {
+			MakeColumn("section",    &LotterySettingRow::section),
+			MakeColumn("issue",      &LotterySettingRow::issue),
+			MakeColumn("state",      &LotterySettingRow::state),
+			MakeColumn("createdate", &LotterySettingRow::createdate),
+			MakeColumn("updatetime", &LotterySettingRow::updatetime),
+			MakeColumn("itemno",     &LotterySettingRow::itemno),
+		}) {}
+};
+
+class TableMapMaskTyped : public OdbcTable<MapMaskRow> {
+public:
+	explicit TableMapMaskTyped(OdbcDatabase& db)
+		: OdbcTable(db, "map_mask", {
+			MakeColumn("id",       &MapMaskRow::id, PrimaryKey),
+			MakeColumn("atorID",   &MapMaskRow::atorID),
+			MakeColumn("content1", &MapMaskRow::content1),
+			MakeColumn("content2", &MapMaskRow::content2),
+			MakeColumn("content3", &MapMaskRow::content3),
+			MakeColumn("content4", &MapMaskRow::content4),
+			MakeColumn("content5", &MapMaskRow::content5),
+		}) {}
+};
+
+class TableMaster : public OdbcTable<MasterRow> {
+public:
+	explicit TableMaster(OdbcDatabase& db)
+		: OdbcTable(db, "master", {
+			MakeColumn("cha_id1",  &MasterRow::cha_id1),
+			MakeColumn("cha_id2",  &MasterRow::cha_id2),
+			MakeColumn("finish",   &MasterRow::finish),
+			MakeColumn("relation", &MasterRow::relation),
+		}) {}
+};
+
+class TableParam : public OdbcTable<ParamRow> {
+public:
+	explicit TableParam(OdbcDatabase& db)
+		: OdbcTable(db, "param", {
+			MakeColumn("id",      &ParamRow::id, PrimaryKey),
+			MakeColumn("param1",  &ParamRow::param1),
+			MakeColumn("param2",  &ParamRow::param2),
+			MakeColumn("param3",  &ParamRow::param3),
+			MakeColumn("param4",  &ParamRow::param4),
+			MakeColumn("param5",  &ParamRow::param5),
+			MakeColumn("param6",  &ParamRow::param6),
+			MakeColumn("param7",  &ParamRow::param7),
+			MakeColumn("param8",  &ParamRow::param8),
+			MakeColumn("param9",  &ParamRow::param9),
+			MakeColumn("param10", &ParamRow::param10),
+		}) {}
+};
+
+class TablePersonAvatar : public OdbcTable<PersonAvatarRow> {
+public:
+	explicit TablePersonAvatar(OdbcDatabase& db)
+		: OdbcTable(db, "personavatar", {
+			MakeColumn("atorID", &PersonAvatarRow::atorID, PrimaryKey),
+			MakeColumn("avatar", &PersonAvatarRow::avatar),
+		}) {}
+};
+
+class TablePersonInfo : public OdbcTable<PersonInfoRow> {
+public:
+	explicit TablePersonInfo(OdbcDatabase& db)
+		: OdbcTable(db, "personinfo", {
+			MakeColumn("atorID",        &PersonInfoRow::atorID, PrimaryKey),
+			MakeColumn("motto",         &PersonInfoRow::motto),
+			MakeColumn("showmotto",     &PersonInfoRow::showmotto),
+			MakeColumn("sex",           &PersonInfoRow::sex),
+			MakeColumn("age",           &PersonInfoRow::age),
+			MakeColumn("name",          &PersonInfoRow::name),
+			MakeColumn("animal_zodiac", &PersonInfoRow::animal_zodiac),
+			MakeColumn("blood_type",    &PersonInfoRow::blood_type),
+			MakeColumn("birthday",      &PersonInfoRow::birthday),
+			MakeColumn("state",         &PersonInfoRow::state),
+			MakeColumn("city",          &PersonInfoRow::city),
+			MakeColumn("constellation", &PersonInfoRow::constellation),
+			MakeColumn("career",        &PersonInfoRow::career),
+			MakeColumn("avatarsize",    &PersonInfoRow::avatarsize),
+			MakeColumn("prevent",       &PersonInfoRow::prevent),
+			MakeColumn("support",       &PersonInfoRow::support),
+			MakeColumn("oppose",        &PersonInfoRow::oppose),
+		}) {}
+};
+
+class TableProperty : public OdbcTable<PropertyRow> {
+public:
+	explicit TableProperty(OdbcDatabase& db)
+		: OdbcTable(db, "property", {
+			MakeColumn("id",      &PropertyRow::id, PrimaryKey),
+			MakeColumn("atorID",  &PropertyRow::atorID),
+			MakeColumn("context", &PropertyRow::context),
+			MakeColumn("sum",     &PropertyRow::sum),
+			MakeColumn("time",    &PropertyRow::time),
+		}) {}
+};
+
+class TableResourceTyped : public OdbcTable<ResourceRow> {
+public:
+	explicit TableResourceTyped(OdbcDatabase& db)
+		: OdbcTable(db, "Resource", {
+			MakeColumn("id",      &ResourceRow::id, PrimaryKey),
+			MakeColumn("atorID",  &ResourceRow::atorID),
+			MakeColumn("type_id", &ResourceRow::type_id),
+			MakeColumn("content", &ResourceRow::content),
+		}) {}
+};
+
+class TableStatLog : public OdbcTable<StatLogRow> {
+public:
+	explicit TableStatLog(OdbcDatabase& db)
+		: OdbcTable(db, "stat_log", {
+			MakeColumn("track_date",  &StatLogRow::track_date, PrimaryKey),
+			MakeColumn("login_num",   &StatLogRow::login_num),
+			MakeColumn("play_num",    &StatLogRow::play_num),
+			MakeColumn("wgplay_num",  &StatLogRow::wgplay_num),
+		}) {}
+};
+
+class TableStatDegree : public OdbcTable<StatDegreeRow> {
+public:
+	explicit TableStatDegree(OdbcDatabase& db)
+		: OdbcTable(db, "StatDegree", {
+			MakeColumn("statDate",       &StatDegreeRow::statDate, PrimaryKey),
+			MakeColumn("degree",         &StatDegreeRow::degree, PrimaryKey),
+			MakeColumn("characterCount", &StatDegreeRow::characterCount),
+		}) {}
+};
+
+class TableStatGender : public OdbcTable<StatGenderRow> {
+public:
+	explicit TableStatGender(OdbcDatabase& db)
+		: OdbcTable(db, "StatGender", {
+			MakeColumn("statDate",    &StatGenderRow::statDate, PrimaryKey),
+			MakeColumn("gender",      &StatGenderRow::gender, PrimaryKey),
+			MakeColumn("genderCount", &StatGenderRow::genderCount),
+		}) {}
+};
+
+class TableStatJob : public OdbcTable<StatJobRow> {
+public:
+	explicit TableStatJob(OdbcDatabase& db)
+		: OdbcTable(db, "StatJob", {
+			MakeColumn("statDate",       &StatJobRow::statDate, PrimaryKey),
+			MakeColumn("job",            &StatJobRow::job, PrimaryKey),
+			MakeColumn("characterCount", &StatJobRow::characterCount),
+		}) {}
+};
+
+class TableStatLogin : public OdbcTable<StatLoginRow> {
+public:
+	explicit TableStatLogin(OdbcDatabase& db)
+		: OdbcTable(db, "StatLogin", {
+			MakeColumn("statDate",   &StatLoginRow::statDate, PrimaryKey),
+			MakeColumn("loginCount", &StatLoginRow::loginCount),
+		}) {}
+};
+
+class TableStatMap : public OdbcTable<StatMapRow> {
+public:
+	explicit TableStatMap(OdbcDatabase& db)
+		: OdbcTable(db, "StatMap", {
+			MakeColumn("statDate",  &StatMapRow::statDate, PrimaryKey),
+			MakeColumn("map",       &StatMapRow::map, PrimaryKey),
+			MakeColumn("playCount", &StatMapRow::playCount),
+		}) {}
+};
+
+class TableTicket : public OdbcTable<TicketRow> {
+public:
+	explicit TableTicket(OdbcDatabase& db)
+		: OdbcTable(db, "Ticket", {
+			MakeColumn("id",      &TicketRow::id, PrimaryKey),
+			MakeColumn("atorID",  &TicketRow::atorID),
+			MakeColumn("issue",   &TicketRow::issue),
+			MakeColumn("itemno",  &TicketRow::itemno),
+			MakeColumn("real",    &TicketRow::real),
+			MakeColumn("buydate", &TicketRow::buydate),
+		}) {}
+};
+
+class TableTradeLog : public OdbcTable<TradeLogRow> {
+public:
+	explicit TableTradeLog(OdbcDatabase& db)
+		: OdbcTable(db, "Trade_Log", {
+			MakeColumn("ID",          &TradeLogRow::ID, PrimaryKey),
+			MakeColumn("ExecuteTime", &TradeLogRow::ExecuteTime),
+			MakeColumn("GameServer",  &TradeLogRow::GameServer),
+			MakeColumn("Action",      &TradeLogRow::Action),
+			MakeColumn("From",        &TradeLogRow::From),
+			MakeColumn("To",          &TradeLogRow::To),
+			MakeColumn("Memo",        &TradeLogRow::Memo),
+		}) {}
+};
+
+class TableWeekReport : public OdbcTable<WeekReportRow> {
+public:
+	explicit TableWeekReport(OdbcDatabase& db)
+		: OdbcTable(db, "weekreport", {
+			MakeColumn("ato_nome",   &WeekReportRow::ato_nome),
+			MakeColumn("atorNome",   &WeekReportRow::atorNome),
+			MakeColumn("degree",     &WeekReportRow::degree),
+			MakeColumn("ip",         &WeekReportRow::ip),
+			MakeColumn("createdate", &WeekReportRow::createdate),
+			MakeColumn("logouttime", &WeekReportRow::logouttime),
+			MakeColumn("playtime",   &WeekReportRow::playtime),
+			MakeColumn("Guild_Name", &WeekReportRow::Guild_Name),
+		}) {}
+};
+
+class TableWinTicket : public OdbcTable<WinTicketRow> {
+public:
+	explicit TableWinTicket(OdbcDatabase& db)
+		: OdbcTable(db, "WinTicket", {
+			MakeColumn("issue",      &WinTicketRow::issue),
+			MakeColumn("itemno",     &WinTicketRow::itemno),
+			MakeColumn("grade",      &WinTicketRow::grade),
+			MakeColumn("createdate", &WinTicketRow::createdate),
+			MakeColumn("num",        &WinTicketRow::num),
+		}) {}
+};
+
+// ============================================================================
+// Legacy table classes
+// ============================================================================
+
+class PlayerStorage {
+	OdbcDatabase& _db;
+	TableCharacter& _characters;
+
+	// Совместимые хелперы — cfl_rs API через OdbcDatabase (без try/catch)
+	enum { MAX_COL = 64, MAX_DATALEN = 8192 };
+
+	UCHAR _buf[MAX_COL][MAX_DATALEN]{};
+	SDWORD _buf_len[MAX_COL]{};
+
+	void handle_err(SQLHANDLE, SQLSMALLINT, RETCODE, const char* = nullptr, bool = false);
+
+	std::string _tbl_name{"character"};
+	int _max_col{100};
+
+	const char* _get_table() const;
+	SQLRETURN exec_sql_direct(const char* sql);
+	int get_affected_rows();
+	bool _get_row(std::string buf[], int maxCol, const char* param, const char* filter, int* affect_rows = nullptr);
+	bool _get_row2(const char* sql, std::string buf[], int maxCol, int* rows_got = nullptr);
+	bool _get_row3(std::string buf[], int maxCol, const char* param, const char* filter, int* affect_rows = nullptr);
+	bool begin_tran();
+	bool commit_tran();
+	bool rollback();
+	bool getalldata(const char* sql, std::vector<std::vector<std::string>>& data);
+
+public:
+	PlayerStorage(OdbcDatabase& db, TableCharacter& characters)
+		: _db(db), _characters(characters) {
 	}
 
 	bool ShowExpRank(CCharacter* pCha, int count);
 	bool Init(void);
-    bool ReadAllData(CPlayer *pPlayer, DWORD atorID);	// 
-    bool SaveAllData(CPlayer *pPlayer, char chSaveType);// 
-	bool SavePos(CPlayer *pPlayer);						// 
-	bool SaveMoney(CPlayer *pPlayer);
-	bool SaveKBagDBID(CPlayer *pPlayer);
-    bool SaveKBagTmpDBID(CPlayer *pPlayer);             // ID
-    bool SaveKBState(CPlayer *pPlayer);                 // 
-	bool SaveMMaskDBID(CPlayer *pPlayer);
-	bool SaveBankDBID(CPlayer *pPlayer);
-	bool SaveTableVer(DWORD atorID);					// 
-	BOOL SaveMissionData(CPlayer *pPlayer, DWORD atorID); // 
-    BOOL VerifyName(const char *pszName);               // 
+	bool ReadAllData(CPlayer& player, DWORD atorID);
+	bool SaveAllData(CPlayer* pPlayer, char chSaveType); //
+	bool SavePos(CPlayer* pPlayer); //
+	bool SaveMoney(CPlayer* pPlayer);
+	bool SaveKBagDBID(CPlayer* pPlayer);
+	bool SaveKBagTmpDBID(CPlayer* pPlayer); // ID
+	bool SaveKBState(CPlayer* pPlayer); //
+	bool SaveMMaskDBID(CPlayer* pPlayer);
+	bool SaveBankDBID(CPlayer* pPlayer);
+	bool SaveTableVer(DWORD atorID); //
+	BOOL SaveMissionData(CPlayer* pPlayer, DWORD atorID); //
+	BOOL VerifyName(const char* pszName); //
 	std::string GetName(int cha_id);
 
 	BOOL AddCreditByDBID(DWORD atorID, long lCredit);
-	BOOL IsChaOnline(DWORD atorID, BOOL &bOnline);
+	BOOL IsChaOnline(DWORD atorID, BOOL& bOnline);
 	Long GetChaAddr(DWORD atorID);
 	bool SetChaAddr(DWORD atorID, Long addr);
 
 	bool SetGuildPermission(int atorID, unsigned long perm, int guild_id);
-	
+
 
 	BOOL SaveStoreItemID(DWORD atorID, long lStoreItemID);
 	BOOL AddMoney(DWORD atorID, long money);
 
 	BOOL SaveDaily(CPlayer* pPlayer);
-
 };
 
-class CTableMaster : public cfl_rs
-{
+class CTableMaster : public cfl_rs {
 public:
-
-	CTableMaster(cfl_db *pDB)
-		:cfl_rs(pDB, "master", 6)
-	{
-
+	CTableMaster(cfl_db* pDB)
+		: cfl_rs(pDB, "master", 6) {
 	}
 
 	bool Init(void);
-	unsigned long GetMasterDBID(CPlayer *pPlayer);
+	unsigned long GetMasterDBID(CPlayer* pPlayer);
 	bool IsMasterRelation(int masterID, int prenticeID);
 };
 
-// 
-enum ResDBTypeID
-{
-	enumRESDB_TYPE_LOOK,	// 
-	enumRESDB_TYPE_KITBAG,	// 
-	enumRESDB_TYPE_BANK,	// 
+//
+enum ResDBTypeID {
+	enumRESDB_TYPE_LOOK, //
+	enumRESDB_TYPE_KITBAG, //
+	enumRESDB_TYPE_BANK, //
 	enumRESDB_TYPE_KITBAGTMP, //
 };
 
 // Add by lark.li 20080521 begin
-enum IssueState
-{
-	enumCURRENT = 0,	// 
-	enumPASTDUE = 1,	// 
-	enumDISUSE = 2,		// 
+enum IssueState {
+	enumCURRENT = 0, //
+	enumPASTDUE = 1, //
+	enumDISUSE = 2, //
 };
 
-// 
-class CTableLotterySetting : public cfl_rs
-{
+//
+class CTableLotterySetting : public cfl_rs {
 public:
-    CTableLotterySetting(cfl_db *pDB)
-        :cfl_rs(pDB, "LotterySetting", 10)
-    {
-    
+	CTableLotterySetting(cfl_db* pDB)
+		: cfl_rs(pDB, "LotterySetting", 10) {
 	}
 
 	bool Init(void);
@@ -105,32 +895,28 @@ public:
 	bool GetWinItemNo(int issue, std::string& itemno);
 };
 
-// 
-class CTableTicket : public cfl_rs
-{
+//
+class CTableTicket : public cfl_rs {
 public:
-    CTableTicket(cfl_db *pDB)
-        :cfl_rs(pDB, "Ticket", 10)
-    {
-    
+	CTableTicket(cfl_db* pDB)
+		: cfl_rs(pDB, "Ticket", 10) {
 	}
 
 	bool Init(void);
 	bool AddTicket(int atorID, int issue, char itemno[6][2]);
 	bool IsExist(int issue, char* itemno);
 	bool CalWinTicket(int issue, int max, std::string& itemno);
+
 private:
-	bool AddTicket(int atorID, int issue, char itemno1, char itemno2, char itemno3, char itemno4, char itemno5, char itemno6, int real = 1);
+	bool AddTicket(int atorID, int issue, char itemno1, char itemno2, char itemno3, char itemno4, char itemno5,
+				   char itemno6, int real = 1);
 };
 
-// 
-class CTableWinTicket : public cfl_rs
-{
+//
+class CTableWinTicket : public cfl_rs {
 public:
-    CTableWinTicket(cfl_db *pDB)
-        :cfl_rs(pDB, "WinTicket", 10)
-    {
-    
+	CTableWinTicket(cfl_db* pDB)
+		: cfl_rs(pDB, "WinTicket", 10) {
 	}
 
 	bool Init(void);
@@ -139,200 +925,178 @@ public:
 	bool Exchange(int issue, char* itemno);
 };
 
-struct AmphitheaterSetting
-{
-	enum AmphitheaterSateSetting
-	{
+struct AmphitheaterSetting {
+	enum AmphitheaterSateSetting {
 		enumCURRENT = 0,
 	};
 };
+
 //Add by sunny.sun 20080725
-struct AmphitheaterTeam
-{
-	enum AmphitheaterSateTeam
-	{
-		enumNotUse = 0,				//
-		enumUse = 1,				// 
-		enumPromotion = 2,			// 
-		enumRelive = 3,				// 
-		enumOut = 4,				// 
+struct AmphitheaterTeam {
+	enum AmphitheaterSateTeam {
+		enumNotUse = 0, //
+		enumUse = 1, //
+		enumPromotion = 2, //
+		enumRelive = 3, //
+		enumOut = 4, //
 	};
 };
 
-// 
-//    
-class CTableAmphitheaterSetting : public cfl_rs
-{
+//
+//
+class CTableAmphitheaterSetting : public cfl_rs {
 public:
-    CTableAmphitheaterSetting(cfl_db *pDB)
-        :cfl_rs(pDB, "AmphitheaterSetting", 10)
-    {
-    
+	CTableAmphitheaterSetting(cfl_db* pDB)
+		: cfl_rs(pDB, "AmphitheaterSetting", 10) {
 	}
 
 	bool Init(void);
 	bool GetCurrentSeason(int& season, int& round);
 	bool AddSeason(int season);
-	bool DisuseSeason(int season, int state,const char* winner);
+	bool DisuseSeason(int season, int state, const char* winner);
 	bool UpdateRound(int season, int round);
 };
 
-// 
-class CTableAmphitheaterTeam : public cfl_rs
-{
+//
+class CTableAmphitheaterTeam : public cfl_rs {
 public:
-    CTableAmphitheaterTeam(cfl_db *pDB)
-        :cfl_rs(pDB, "AmphitheaterTeam", 10)
-    {
-    
+	CTableAmphitheaterTeam(cfl_db* pDB)
+		: cfl_rs(pDB, "AmphitheaterTeam", 10) {
 	}
 
 	bool Init(void);
 	bool GetTeamCount(int& count);
-	bool GetNoUseTeamID(int &teamID);
-	bool TeamSignUP(int &teamID, int captain, int member1, int member2);
+	bool GetNoUseTeamID(int& teamID);
+	bool TeamSignUP(int& teamID, int captain, int member1, int member2);
 	bool TeamCancel(int teamID);
-	
+
 	bool TeamUpdate(int teamID, int matchNo, int state, int winnum, int losenum, int relivenum);
 	bool IsValidAmphitheaterTeam(int teamID, int captainID, int member1, int member2);
-	bool IsLogin(int pActorID);//Add by sunny.sun20080714
-	bool IsMapFull(int MapID,int & PActorIDNum);
-	bool UpdateMapNum(int Teamid,int Mapid,int MapFlag);
+	bool IsLogin(int pActorID); //Add by sunny.sun20080714
+	bool IsMapFull(int MapID, int& PActorIDNum);
+	bool UpdateMapNum(int Teamid, int Mapid, int MapFlag);
 	bool SetMaxBallotTeamRelive(void);
-	bool SetMatchResult(int Teamid1,int Teamid2,int Id1state,int Id2state);
-	bool GetMapFlag(int Teamid,int & Mapflag);
-	bool GetCaptainByMapId(int Mapid,std::string &Captainid1,std::string &Captainid2);
+	bool SetMatchResult(int Teamid1, int Teamid2, int Id1state, int Id2state);
+	bool GetMapFlag(int Teamid, int& Mapflag);
+	bool GetCaptainByMapId(int Mapid, std::string& Captainid1, std::string& Captainid2);
 	bool UpdateMap(int Mapid);
 
-	bool GetPromotionAndReliveTeam(std::vector< std::vector< std::string > > &dataPromotion, std::vector< std::vector< std::string > > &dataRelive);
+	bool GetPromotionAndReliveTeam(std::vector<std::vector<std::string>>& dataPromotion,
+								   std::vector<std::vector<std::string>>& dataRelive);
 	bool UpdatReliveNum(int ReID);
 	bool UpdateAbsentTeamRelive(void);
-	bool UpdateMapAfterEnter(int CaptainID,int MapID);
-	bool UpdateWinnum( int teamid );//Add by sunnysun20080818
-	bool GetUniqueMaxWinnum(int &teamid);
-	bool SetMatchnoState( int teamid );
+	bool UpdateMapAfterEnter(int CaptainID, int MapID);
+	bool UpdateWinnum(int teamid); //Add by sunnysun20080818
+	bool GetUniqueMaxWinnum(int& teamid);
+	bool SetMatchnoState(int teamid);
 	bool UpdateState(void);
-	bool CloseReliveByState( int & statenum );
-	bool CleanMapFlag(int teamid1,int teamid2);
-	bool GetStateByTeamid( int teamid, int & state );
+	bool CloseReliveByState(int& statenum);
+	bool CleanMapFlag(int teamid1, int teamid2);
+	bool GetStateByTeamid(int teamid, int& state);
 };
 
 // End
 
 //Add by sunny.sun 20080822
 //Begin
-class CTablePersoninfo : public cfl_rs
-{
+class CTablePersoninfo : public cfl_rs {
 public:
-    CTablePersoninfo(cfl_db *pDB)
-        :cfl_rs(pDB, "personinfo", 10)
-	{
-	
+	CTablePersoninfo(cfl_db* pDB)
+		: cfl_rs(pDB, "personinfo", 10) {
 	}
+
 	bool Init(void);
-	bool GetPersonBirthday(int chaid , int &birthday);
+	bool GetPersonBirthday(int chaid, int& birthday);
 };
 
 //End
 
-class CTableResource : public cfl_rs
-{
+// Resource — kitbag/bank хранилище (OdbcDatabase)
+class CTableResource {
 public:
-    CTableResource(cfl_db *pDB)
-        :cfl_rs(pDB, "resource", 10)
-    {
-    
+	explicit CTableResource(OdbcDatabase& db) : _db(db) {
 	}
 
-	bool Init(void);
-	bool Create(long &lDBID, long lChaId, long lTypeId);
-    bool ReadKitbagData(CCharacter *pCCha);
-    bool SaveKitbagData(CCharacter *pCCha);
-    bool ReadKitbagTmpData(CCharacter *pCCha);
-    bool SaveKitbagTmpData(CCharacter *pCCha);
-	bool ReadKitbagTmpData(long lRecDBID, std::string& strData);
-	bool SaveKitbagTmpData(long lRecDBID, const std::string& strData);
-	bool ReadBankData(CPlayer *pCPly, char chBankNO = -1);
-	bool SaveBankData(CPlayer *pCPly, char chBankNO = -1);
+	bool Create(long& lDBID, long lChaId, long lTypeId);
+	bool ReadKitbagData(CCharacter* pCCha);
+	bool SaveKitbagData(CCharacter* pCCha);
+	bool ReadKitbagTmpData(CCharacter* pCCha);
+	bool SaveKitbagTmpData(CCharacter* pCCha);
+	bool ReadBankData(CPlayer* pCPly, char chBankNO = -1);
+	bool SaveBankData(CPlayer* pCPly, char chBankNO = -1);
+
+private:
+	OdbcDatabase& _db;
 };
 
-class CTableMapMask : public cfl_rs
-{
+// MapMask — миграция на OdbcDatabase
+class CTableMapMask {
 public:
-    CTableMapMask(cfl_db *pDB)
-        :cfl_rs(pDB, "map_mask", 10)
-    {
-    
+	explicit CTableMapMask(OdbcDatabase& db) : _db(db) {
 	}
 
-	bool Init(void);
-	bool Create(long &lDBID, long lChaId);
-    bool ReadData(CPlayer *pCPly);
-    bool SaveData(CPlayer *pCPly, BOOL bDirect = FALSE);
-	bool GetColNameByMapName(const char *szMapName, char *szColName, long lColNameLen);
+	bool Create(long& lDBID, long lChaId);
+	bool ReadData(CPlayer* pCPly);
+	bool SaveData(CPlayer* pCPly, BOOL bDirect = FALSE);
 
 	void HandleSaveList();
-	void AddSaveQuest(const char *pszSQL);
 	void SaveAll();
 
-protected:
+	static bool GetColNameByMapName(const char* szMapName, std::string& colName);
 
-	BOOL			_ExecSQL(const char *pszSQL);
-	std::list<std::string>	_SaveMapMaskList;  // 
+private:
+	OdbcDatabase& _db;
+	std::list<std::string> _saveQueue;
 };
 
-void inline CTableMapMask::AddSaveQuest(const char *pszSQL)
-{
-	_SaveMapMaskList.push_back(pszSQL);
-}
 
-
-class CTableAct : public cfl_rs
-{
+class CTableBoat {
 public:
-
-    CTableAct(cfl_db *pDB)
-        :cfl_rs(pDB, "account", 10)
-    {
-    
+	explicit CTableBoat(OdbcDatabase& db) : _db(db) {
 	}
 
-	bool Init(void);
-	bool ReadAllData(CPlayer *pPlayer, DWORD ato_id);
-	bool SaveIMP(CPlayer *pPlayer);
-	bool SaveGmLv(CPlayer *pPlayer);
+	BOOL Create(DWORD& dwBoatID, const BOAT_DATA& Data);
+	BOOL GetBoat(CCharacter& Boat);
+	BOOL SaveBoat(CCharacter& Boat, char chSaveType);
+	BOOL SaveBoatTempData(CCharacter& Boat, BYTE byIsDeleted = 0);
+	BOOL SaveBoatTempData(DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted = 0);
+	BOOL SaveBoatDelTag(DWORD dwBoatID, BYTE byIsDeleted = 0);
+
+	bool SaveAllData(CPlayer* pPlayer, char chSaveType);
+	bool ReadCabin(CCharacter& Boat);
+	bool SaveCabin(CCharacter& Boat, char chSaveType);
+	bool SaveAllCabin(CPlayer* pPlayer, char chSaveType);
+
+private:
+	OdbcDatabase& _db;
 };
 
-class CTableBoat : public cfl_rs
-{
+class CTableGuild {
+	OdbcDatabase& _db;
+
+	// Совместимые хелперы — cfl_rs API через OdbcDatabase (без try/catch — исключения пробрасываются)
+	enum { MAX_COL = 64, MAX_DATALEN = 8192 };
+
+	UCHAR _buf[MAX_COL][MAX_DATALEN]{};
+	SDWORD _buf_len[MAX_COL]{};
+
+	void handle_err(SQLHANDLE, SQLSMALLINT, RETCODE, const char* = nullptr, bool = false);
+
+	std::string _tbl_name{"guild"};
+	int _max_col{100};
+
+	const char* _get_table() const;
+	SQLRETURN exec_sql_direct(const char* sql);
+	int get_affected_rows();
+	bool _get_row(std::string buf[], int maxCol, const char* param, const char* filter, int* affect_rows = nullptr);
+	bool _get_row3(std::string buf[], int maxCol, const char* param, const char* filter);
+	bool begin_tran();
+	bool commit_tran();
+	bool rollback();
+	bool getalldata(const char* sql, std::vector<std::vector<std::string>>& data);
+
 public:
-	CTableBoat( cfl_db* pDB )
-		:cfl_rs( pDB, "boat", 100 )
-	{
-
-	}
-
-	bool Init(void);
-	BOOL Create( DWORD& dwBoatID, const BOAT_DATA& Data );
-	BOOL GetBoat( CCharacter& Boat );
-	BOOL SaveBoat( CCharacter& Boat, char chSaveType );
-	BOOL SaveBoatTempData( CCharacter& Boat, BYTE byIsDeleted = 0 );
-	BOOL SaveBoatTempData( DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted = 0 );
-	BOOL SaveBoatDelTag( DWORD dwBoatID, BYTE byIsDeleted = 0 );	
-
-    bool SaveAllData(CPlayer *pPlayer, char chSaveType);
-	bool ReadCabin(CCharacter& Boat);	// 
-	bool SaveCabin(CCharacter& Boat, char chSaveType);	// 
-	bool SaveAllCabin(CPlayer *pPlayer, char chSaveType);
-};
-
-class CTableGuild : public cfl_rs
-{
-public:
-	CTableGuild(cfl_db *pDB)
-        :cfl_rs(pDB, "guild", 100)
-	{
-
+	explicit CTableGuild(OdbcDatabase& db) : _db(db) {
 	}
 
 
@@ -346,13 +1110,12 @@ public:
 
 	//std::vector<BankLog> data;
 
-	bool Init(void);
-	long Create(CCharacter* pCha, char *guildname, cChar *passwd);
+	long Create(CCharacter* pCha, char* guildname, cChar* passwd);
 	bool ListAll(CCharacter* pCha, char disband_days);
 	void TryFor(CCharacter* pCha, uLong guildid);
-	void TryForConfirm(CCharacter* pCha, uLong guildid);	
+	void TryForConfirm(CCharacter* pCha, uLong guildid);
 	bool GetGuildBank(uLong guildid, CKitbag* bag);
-	
+
 	bool UpdateGuildBank(uLong guildid, CKitbag* bag);
 	int GetGuildLeaderID(uLong guildid);
 
@@ -360,977 +1123,232 @@ public:
 	std::vector<BankLog> GetGuildLog(uLong guildid);
 
 
-
 	bool UpdateGuildBankGold(int guildID, int money);
 	unsigned long long GetGuildBankGold(uLong guildid);
-	
-	bool GetGuildInfo(CCharacter* pCha, uLong guildid );
+
+	bool GetGuildInfo(CCharacter* pCha, uLong guildid);
 	bool ListTryPlayer(CCharacter* pCha, char disband_days);
 	bool Approve(CCharacter* pCha, uLong chaid);
 	bool Reject(CCharacter* pCha, uLong chaid);
 	bool Kick(CCharacter* pCha, uLong chaid);
 	bool Leave(CCharacter* pCha);
-	bool Disband(CCharacter* pCha,cChar *passwd);
-	bool Motto(CCharacter* pCha,cChar *motto);
+	bool Disband(CCharacter* pCha, cChar* passwd);
+	bool Motto(CCharacter* pCha, cChar* motto);
 	bool GetGuildName(long lGuildID, std::string& strGuildName);
 
-	// 
-	bool Challenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney );
-	bool Leizhu( CCharacter* pCha, BYTE byLevel, DWORD dwMoney );
-	void ListChallenge( CCharacter* pCha );
-	bool GetChallInfo( BYTE byLevel, DWORD& dwGuildID1, DWORD& dwGuildID2, DWORD& dwMoney );
-	bool StartChall( BYTE byLevel );
-	bool HasCall( BYTE byLevel );
-	void EndChall( DWORD dwGuild1, DWORD dwGuild2, BOOL bChall );
-	void ChallMoney( BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD dwChallID, DWORD dwMoney );
-	bool ChallWin( BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD dwFailerGuildID );
-	bool HasGuildLevel( CCharacter* pChar, BYTE byLevel );
+	//
+	bool Challenge(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
+	bool Leizhu(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
+	void ListChallenge(CCharacter* pCha);
+	bool GetChallInfo(BYTE byLevel, DWORD& dwGuildID1, DWORD& dwGuildID2, DWORD& dwMoney);
+	bool StartChall(BYTE byLevel);
+	bool HasCall(BYTE byLevel);
+	void EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall);
+	void ChallMoney(BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD dwChallID, DWORD dwMoney);
+	bool ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD dwFailerGuildID);
+	bool HasGuildLevel(CCharacter* pChar, BYTE byLevel);
 };
 
 // Log
-class CTableLog : public cfl_rs
-{
+class CTableLog : public cfl_rs {
 public:
-    CTableLog(cfl_db *pDB)
-        :cfl_rs(pDB, "gamelog", 10)
-    {
-    
+	CTableLog(cfl_db* pDB)
+		: cfl_rs(pDB, "gamelog", 10) {
 	}
-
 };
 
-class	CTableItem	:	public	cfl_rs
-{
+class CTableItem : public cfl_rs {
 public:
-	CTableItem(	cfl_db*	pDB)
-		:	cfl_rs(pDB, "property",	10	)
-	{
+	CTableItem(cfl_db* pDB)
+		: cfl_rs(pDB, "property", 10) {
 	}
 
-	bool	LockItem(	SItemGrid*	sig,	int	iChaId	);
-	bool	UnlockItem(	SItemGrid*	sig,	int	iChaId	);
+	bool LockItem(SItemGrid* sig, int iChaId);
+	bool UnlockItem(SItemGrid* sig, int iChaId);
 };
 
-class CGameDB
-{
+class CGameDB {
 public:
-
-	CGameDB() : _connect() {}
-
-   ~CGameDB()
-    {
-       if (_tab_cha != NULL) {delete _tab_cha; _tab_cha = NULL;}
-       if (_tab_act != NULL) {delete _tab_act; _tab_act = NULL;}
-	   if (_tab_gld != NULL) {delete _tab_gld; _tab_gld = NULL;}
-	   if (_tab_master != NULL) {delete _tab_master; _tab_master = NULL;}
-	   SAFE_DELETE(_tab_boat);
-       SAFE_DELETE(_tab_log);
-	   SAFE_DELETE(_tab_item);
-	   _connect.disconn();
-    }
-    
-    BOOL    Init();
-
-	bool	BeginTran()
-	{
-		return _connect.begin_tran();
-	}
-
-	bool	RollBack()
-	{
-		return _connect.rollback();
-	}
-
-	bool	CommitTran()
-	{
-		return _connect.commit_tran();
-	}
-
-	bool	ReadPlayer(CPlayer *pPlayer, DWORD atorID);
-	bool	SavePlayer(CPlayer *pPlayer, char chSaveType);
-	bool	SavePlayerKitbag(CPlayer *pPlayer, char chSaveType = enumSAVE_TYPE_TRADE)
-	{
-		return false;
-		// throw
-		try
-		{
-			if (!_tab_res->SaveKitbagData(pPlayer->GetMainCha()))
-				return false;
-			if (!_tab_boat->SaveAllCabin(pPlayer, chSaveType))
-				return false;
-		}
-		catch (...)
-		{
-			//LG("enter_map", "!\n");
-			ToLogService("map", LogLevel::Error, "When save character item and money occured abnormity");
-			return false;
-		}
-
-		return true;
-	}
-	bool	SaveChaAssets(CCharacter *pCCha)
-	{
-		// throw
-		try
-		{
-			//LG("enter_map", ".\n");
-			ToLogService("map", "Start save character assets.");
-			if (!pCCha || !pCCha->GetPlayer())
-				return false;
-
-			DWORD	dwStartTick = GetTickCount();
-			if (!_tab_cha->SaveMoney(pCCha->GetPlayer()))
-				return false;
-
-			if (!pCCha->IsBoat())
-			{
-				if (!_tab_res->SaveKitbagData(pCCha))
-					return false;
-			}
-			else
-			{
-				if (!_tab_boat->SaveCabin(*pCCha, enumSAVE_TYPE_TRADE))
-					return false;
-			}
-
-			//LG("enter_map", " %s(%s) .\n", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
-			ToLogService("map", "Save character {}({}) assets succeed.", pCCha->GetLogName(), pCCha->GetPlyMainCha()->GetLogName());
-			//LG("", "%-8d.[%d %s]\n", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
-			ToLogService("common", "Save data waste time: totalled {}. [{} {}]", GetTickCount() - dwStartTick, pCCha->GetPlayer()->GetDBChaId(), pCCha->GetLogName());
-		}
-		catch (...)
-		{
-			//LG("enter_map", "!\n");
-			ToLogService("map", LogLevel::Error, "When save character assets occured abnormity");
-			return false;
-		}
-
-		return true;
-	}
-
-	// Add by lark.li 20080527 begin
-	bool	GetWinItemno(int issue, std::string& itemno)
-	{
-		try
-		{
-			return this->_tab_setting->GetWinItemNo(issue, itemno);
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	bool	CalWinTicket(int issue, int max, std::string& itemno)
-	{
-		try
-		{
-			if(!this->_tab_ticket->CalWinTicket(issue, max, itemno))
-				return false;
-			
-			this->_tab_setting->SetWinItemNo(issue, itemno.c_str());
-
-			//this->DisuseIssue(issue, 1);
-
-			//this->AddIssue(issue + 1);
-
-			return true;
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	bool	GetLotteryIssue(int& issue)
-	{
-		try
-		{
-			return this->_tab_setting->GetCurrentIssue(issue);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	bool	LotteryIsExsit(int issue, char* itemno)
-	{
-		try
-		{
-			return this->_tab_ticket->IsExist(issue, itemno);
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	bool	AddLotteryTicket(CCharacter *pCCha, int issue, char itemno[6][2])
-	{
-		try
-		{
-			this->_tab_ticket->AddTicket(pCCha->m_ID, issue, itemno);
-		}
-		catch (...)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	bool AddIssue(int issue)
-	{
-		try
-		{
-			this->_tab_setting->AddIssue(issue);
-		}
-		catch (...)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	bool DisuseIssue(int issue, int state)
-	{
-		try
-		{
-			this->_tab_setting->DisuseIssue(issue, state);
-		}
-		catch (...)
-		{
-			return false;
-		}
-
-		return true;
-	}
-
-	bool IsValidAmphitheaterTeam(int teamID, int captainID, int member1, int member2)
-	{
-		bool ret = false;
-
-		try
-		{
-			ret = this->_tab_amp_team->IsValidAmphitheaterTeam(teamID, captainID, member1, member2);
-		}
-		catch (...)
-		{
-			ret = false;
-		}
-
-		return ret;
-	}
-
-	// 
-	bool IsMasterRelation(int masterID, int prenticeID)
-	{
-		bool ret = false;
-
-		try
-		{
-			ret = this->_tab_master->IsMasterRelation(masterID, prenticeID);
-		}
-		catch (...)
-		{
-			ret = false;
-		}
-
-		return ret;
-	}
-
-	//   s
-	bool GetAmphitheaterSeasonAndRound(int& season, int& round)
-	{
-		try
-		{
-			return this->_tab_amp_setting->GetCurrentSeason(season, round);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	// 
-	bool AddAmphitheaterSeason(int season)
-	{
-		try
-		{
-			return this->_tab_amp_setting->AddSeason(season);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	// 
-	bool DisuseAmphitheaterSeason(int season, int state,const char* winner)
-	{
-		try
-		{
-			return this->_tab_amp_setting->DisuseSeason(season, state, winner);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	//  
-	bool UpdateAmphitheaterRound(int season, int round)
-	{
-		try
-		{
-			return this->_tab_amp_setting->UpdateRound(season, round);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	// 
-	bool GetAmphitheaterTeamCount(int& count)
-	{
-		try
-		{
-			return this->_tab_amp_team->GetTeamCount(count);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	// ID
-	bool GetAmphitheaterNoUseTeamID(int &teamID)
-	{
-		try
-		{
-			return this->_tab_amp_team->GetNoUseTeamID(teamID);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	// 
-	bool AmphitheaterTeamSignUP(int &teamID, int captain, int member1, int member2)
-	{
-		try
-		{
-			return this->_tab_amp_team->TeamSignUP(teamID, captain, member1, member2);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-
-	// 
-	bool AmphitheaterTeamCancel(int teamID)
-	{
-		try
-		{
-			return this->_tab_amp_team->TeamCancel(teamID);	
-		}
-		catch (...)
-		{
-			return false;
-		}
-	}
-	//Add by sunny.sun20080714
-	//ID
-	bool IsAmphitheaterLogin(int pActorID)
-	{
-		try
-		{
-			return this->_tab_amp_team->IsLogin(pActorID);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	
-	}
-	//
-	bool IsMapFull(int MapID,int &PActorIDNum)
-	{
-		try 
-		{
-			return this->_tab_amp_team->IsMapFull(MapID,PActorIDNum);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-		//mapflag
-	bool UpdateMapNum(int Teamid,int Mapid,int MapFlag)
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdateMapNum(Teamid,Mapid,MapFlag);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool GetMapFlag(int Teamid,int & Mapflag)
-	{
-		try
-		{
-			return this->_tab_amp_team->GetMapFlag(Teamid,Mapflag);
-		}
-		catch(...)
-		{
-			return false;
-		}
-		
-	}
-	bool SetMaxBallotTeamRelive(void)
-	{
-		try
-		{
-			return this->_tab_amp_team->SetMaxBallotTeamRelive();
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool SetMatchResult(int Teamid1,int Teamid2,int Id1state,int Id2state)
-	{
-		try
-		{
-			return this->_tab_amp_team->SetMatchResult(Teamid1,Teamid2,Id1state,Id2state);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool GetCaptainByMapId(int Mapid,std::string &Captainid,std::string & Captainid2)
-	{
-		try
-		{
-			return this->_tab_amp_team->GetCaptainByMapId(Mapid,Captainid,Captainid2);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool UpdateMap(int Mapid)
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdateMap(Mapid);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	
-	}
-
-	bool UpdateMapAfterEnter(int CaptainID,int MapID)
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdateMapAfterEnter(CaptainID,MapID);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool GetPromotionAndReliveTeam(std::vector< std::vector< std::string > > &dataPromotion, std::vector< std::vector< std::string > > &dataRelive)
-	{
-		try
-		{
-			return this->_tab_amp_team->GetPromotionAndReliveTeam(dataPromotion, dataRelive);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-	
-	bool UpdatReliveNum( int ReID )
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdatReliveNum(ReID);
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool UpdateAbsentTeamRelive()
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdateAbsentTeamRelive();
-		}
-		catch(...)
-		{
-			return false;
-		}		
-	}
-
-	bool UpdateWinnum(int teamid )
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdateWinnum( teamid );
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-	
-	bool GetUniqueMaxWinnum(int &teamid)
-	{	
-		try
-		{
-			return this->_tab_amp_team->GetUniqueMaxWinnum( teamid );
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool SetMatchnoState( int teamid )
-	{
-		try
-		{
-			return this->_tab_amp_team->SetMatchnoState( teamid );
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-	bool UpdateState()
-	{
-		try
-		{
-			return this->_tab_amp_team->UpdateState();
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool CloseReliveByState( int & statenum )
-	{	try
-		{
-			return this->_tab_amp_team->CloseReliveByState( statenum );
-		}
-		catch(...)
-		{
-			return false;
-		}
-	}
-
-	bool CleanMapFlag(int teamid1,int teamid2)
-	{
-		try
-		{
-			return this->_tab_amp_team->CleanMapFlag( teamid1,teamid2 );
-		}
-		catch(...)
-		{
-			return false;
-		}
-	
-	}
-	bool GetStateByTeamid( int teamid, int &state )
-	{
-		try
-		{
-			return this->_tab_amp_team->GetStateByTeamid( teamid,state );
-		}
-		catch(...)
-		{
-			return false;
-		}	
-	}
-
-	bool UpdateIMP(CPlayer* ply){
-		return _tab_act->SaveIMP(ply);
-	}
-
-	bool SaveGmLv(CPlayer* ply)
-	{
-		return _tab_act->SaveGmLv(ply);
-	}
-
-
-	std::string GetChaNameByID(int cha_id)
-	{
-		return _tab_cha->GetName(cha_id);
-	}
-
-	void ShowExpRank(CCharacter* pCha, int top)
-	{
-		_tab_cha->ShowExpRank(pCha, top);
-	}
-	bool	SavePlayerPos(CPlayer *pPlayer)
-	{
-		return _tab_cha->SavePos(pPlayer);
-	}
-	bool	SavePlayerKBagDBID(CPlayer *pPlayer)
-	{
-		return _tab_cha->SaveKBagDBID(pPlayer);
-	}
-    bool	SavePlayerKBagTmpDBID(CPlayer *pPlayer)
-	{
-		return _tab_cha->SaveKBagTmpDBID(pPlayer);
-	}
-	bool	SavePlayerMMaskDBID(CPlayer *pPlayer)
-	{
-		return _tab_cha->SaveMMaskDBID(pPlayer);
-	}
-	bool	CreatePlyBank(CPlayer *pCPly)
-	{
-		if (pCPly->GetCurBankNum() >= MAX_BANK_NUM)
-			return false;
-		long lBankDBID;
-		if (!_tab_res->Create(lBankDBID, pCPly->GetDBChaId(), enumRESDB_TYPE_BANK))
-			return false;
-		pCPly->AddBankDBID(lBankDBID);
-		if (!_tab_cha->SaveBankDBID(pCPly))
-			return false;
-
-		return true;
-	}
-	bool	SavePlyBank(CPlayer *pCPly, char chBankNO = -1)
-	{
-		return _tab_res->SaveBankData(pCPly, chBankNO);
-	}
-
-	unsigned long GetPlayerMasterDBID(CPlayer *pPlayer)
-	{
-		return _tab_master->GetMasterDBID(pPlayer);
-	}
-
-	BOOL	AddCreditByDBID(DWORD atorID, long lCredit)
-	{
-		return _tab_cha->AddCreditByDBID(atorID, lCredit);
-	}
-
-	BOOL	SaveStoreItemID(DWORD atorID, long lStoreItemID)
-	{
-		return _tab_cha->SaveStoreItemID(atorID, lStoreItemID);
-	}
-
-	BOOL	AddMoney(DWORD atorID, long money)
-	{
-		return _tab_cha->AddMoney(atorID, money);
-	}
-
-	BOOL	ReadKitbagTmpData(DWORD res_id, std::string& strData)
-	{
-		return _tab_res->ReadKitbagTmpData(res_id, strData);
-	}
-
-	BOOL	SaveKitbagTmpData(DWORD res_id, const std::string& strData)
-	{
-		return _tab_res->SaveKitbagTmpData(res_id, strData);
-	}
-
-	BOOL	IsChaOnline(DWORD atorID, BOOL &bOnline)
-	{
-		return _tab_cha->IsChaOnline(atorID, bOnline);
-	}
-
-	Long	GetChaAddr(DWORD atorID)
-	{
-		return _tab_cha->GetChaAddr(atorID);
-	}
-	
-	Long	SetGuildPermission(int atorID, unsigned long perm, int guild_id)
-	{
-		return _tab_cha->SetGuildPermission(atorID, perm, guild_id);
-	}
-
-	Long	SetChaAddr(DWORD atorID, Long addr)
-	{
-		return _tab_cha->SetChaAddr(atorID, addr);
-	}
-
-	BOOL	SaveMissionData( CPlayer *pPlayer, DWORD atorID ) // 
-	{
-		return _tab_cha->SaveMissionData( pPlayer, atorID );
-	}
-
-	// 
-	BOOL Create( DWORD& dwBoatID, const BOAT_DATA& Data )
-	{
-		return _tab_boat->Create( dwBoatID, Data );
-	}
-	BOOL GetBoat( CCharacter& Boat )
-	{
-		return _tab_boat->GetBoat( Boat );
-	}
-	BOOL SaveBoat( CCharacter& Boat, char chSaveType )
-	{
-		return _tab_boat->SaveBoat( Boat, chSaveType );
-	}
-	BOOL SaveBoatDelTag( DWORD dwBoatID, BYTE byIsDeleted = 0 )
-	{
-		return _tab_boat->SaveBoatDelTag( dwBoatID, byIsDeleted );
-	}
-	BOOL SaveBoatTempData( CCharacter& Boat, BYTE byIsDeleted = 0 )
-	{
-		return _tab_boat->SaveBoatTempData( Boat, byIsDeleted );
-	}
-	BOOL SaveBoatTempData( DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted = 0 )
-	{
-		return _tab_boat->SaveBoatTempData( dwBoatID, dwOwnerID, byIsDeleted );
-	}
-	long CreateGuild(CCharacter* pCha, char *guildname, cChar *passwd)
-	{
-		return _tab_gld->Create(pCha, guildname,passwd);
-	}
-
-	long GetGuildBank(uLong guildid, CKitbag * bag)
-	{
-		return _tab_gld->GetGuildBank(guildid, bag);
-	}
-	
-	long UpdateGuildBank(uLong guildid, CKitbag * bag)
-	{
-		return _tab_gld->UpdateGuildBank(guildid, bag);
-	}
-
-
-	bool SetGuildLog(std::vector<CTableGuild::BankLog> log, uLong guildid)
-	{
-
-		return _tab_gld->SetGuildLog(log, guildid);
-	}
-
-	std::vector<CTableGuild::BankLog> GetGuildLog(uLong guildid)
-	{
-
-		return _tab_gld->GetGuildLog(guildid);
-	}
-
-
-	unsigned long long GetGuildBankGold(uLong guildid)
-	{
-		return _tab_gld->GetGuildBankGold(guildid);
-	}
-	bool UpdateGuildBankGold(int guildID, int money)
-	{
-		return _tab_gld->UpdateGuildBankGold(guildID, money);
-	}
-
-	int GetGuildLeaderID(uLong guildid)
-	{
-		return _tab_gld->GetGuildLeaderID(guildid);
-	}
-
-	bool ListAllGuild(CCharacter* pCha, char disband_days =1)
-	{
-		return _tab_gld->ListAll(pCha,disband_days);
-	}
-	void GuildTryFor(CCharacter* pCha, uLong guildid)
-	{
-		_tab_gld->TryFor(pCha,guildid);
-	}
-	void GuildTryForConfirm(CCharacter* pCha, uLong guildid)
-	{
-		_tab_gld->TryForConfirm(pCha,guildid);
-	}
-	bool GuildListTryPlayer(CCharacter* pCha, char disband_days)
-	{
-		return _tab_gld->ListTryPlayer(pCha,disband_days);
-	}
-	bool GuildApprove(CCharacter* pCha, uLong chaid)
-	{
-		return _tab_gld->Approve(pCha,chaid);
-	}
-	bool GuildReject(CCharacter* pCha, uLong chaid)
-	{
-		return _tab_gld->Reject(pCha,chaid);
-	}
-	bool GuildKick(CCharacter* pCha, uLong chaid)
-	{
-		return _tab_gld->Kick(pCha,chaid);
-	}
-	bool GuildLeave(CCharacter* pCha)
-	{
-		return _tab_gld->Leave(pCha);
-	}
-	bool GuildDisband(CCharacter* pCha,cChar *passwd)
-	{
-		return _tab_gld->Disband(pCha,passwd);
-	}
-	bool GuildMotto(CCharacter* pCha,cChar *motto)
-	{
-		return _tab_gld->Motto(pCha,motto);
-	}
-	CTableMapMask* GetMapMaskTable()
-	{
-		return _tab_mmask;	
-	}
-	bool GetGuildName(long lGuildID, std::string& strGuildName)
-	{
-		return _tab_gld->GetGuildName(lGuildID, strGuildName);
-	}
-	
-	bool Challenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
-	{
-		return _tab_gld->Challenge( pCha, byLevel, dwMoney );
-	}
-
-	bool Leizhu( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
-	{
-		return _tab_gld->Leizhu( pCha, byLevel, dwMoney );
-	}
-
-	void ListChallenge( CCharacter* pCha )
-	{
-		return _tab_gld->ListChallenge( pCha );
-	}
-
-	bool StartChall( BYTE byLevel )
-	{
-		for( int i = 0; i < 100; i++ )
-		{
-			if( _tab_gld->StartChall( byLevel ) )
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	bool GetChall( BYTE byLevel, DWORD& dwGuildID1, DWORD& dwGuildID2, DWORD& dwMoney )
-	{
-		for( int i = 0; i < 100; i++ )
-		{
-			if( _tab_gld->GetChallInfo( byLevel, dwGuildID1, dwGuildID2, dwMoney ) )
-			{
-				return true;
-			}
-		}
-
-		return false;
-	}
-
-	void EndChall( DWORD dwGuild1, DWORD dwGuild2, BOOL bChall )
-	{
-		return _tab_gld->EndChall( dwGuild1, dwGuild2, bChall );
-	}
-
-	bool HasChall( BYTE byLevel )
-	{
-		return _tab_gld->HasCall( byLevel );
-	}
-
-	bool HasGuildLevel( CCharacter* pChar, BYTE byLevel )
-	{
-		return _tab_gld->HasGuildLevel( pChar, byLevel );
-	}
-
-	// sqlgamelog
-	void ExecLogSQL(const char *pszSQL)
-	{
-		SQLRETURN l_sqlret  =  _tab_log->exec_sql_direct(pszSQL);
-		if(!DBOK(l_sqlret))
-		{
-			//LG("gamelog", "log, sql = [%s]!\n", pszSQL);
-			ToLogService("db", LogLevel::Error, "add log note failed, sql = [{}]!", pszSQL);
-		}
-	}
-	
-	// Log 5, 8000
-	//void Log(const char *type, const char *c1, const char *c2, const char *c3, const char *c4, const char *p, BOOL bAddToList = TRUE);
-	//void Log1(int nType, const char *cha1, const char *cha2, const char *pszContent);
-	//void Log2(int nType, CCharacter *pCha1, CCharacter *pCha2, const char *pszContent);
-	
-	// Add by lark.li 20080324 begin
-	void ExecTradeLogSQL(const char* gameServerName, const char* action, const char *pszChaFrom, const char *pszChaTo, const char *pszTrade)
-	{
-		time_t ltime;
-		time(&ltime);
-
-		tm* ttm  = localtime(&ltime);
-		char time[20];
-		time[19] = 0;
-        sprintf(time, "%04i/%02i/%02i %02i:%02i:%02i", ttm->tm_year + 1900, ttm->tm_mon + 1, ttm->tm_mday, ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
-		
-		char format[] = "insert into Trade_Log(ExecuteTime,GameServer,[Action],[From],[To],Memo) values ('%s','%s','%s','%s','%s','%s')";
-		
-		char sql[1024];
-		memset(sql, 0, sizeof(sql));
-		sprintf(sql, format, time, gameServerName, action, pszChaFrom, pszChaTo, pszTrade);
-		
-		ExecLogSQL(sql);
-	}
-	// End
-
-	BOOL	m_bInitOK{ false };
-
-	bool	LockItem(	SItemGrid*	sig,	int	iChaId	)
-	{
-		return	_tab_item->LockItem(	sig,	iChaId	);
-	};
-
-	bool	UnlockItem( SItemGrid* sig, int iChaId )
-	{
-		return _tab_item->UnlockItem( sig, iChaId );
-	};
+	CGameDB();
+	~CGameDB();
+
+	BOOL Init();
+
+	OdbcTransaction BeginTransaction();
+
+	// Совместимость со старым кодом
+	bool BeginTran();
+	bool RollBack();
+	bool CommitTran();
+
+	bool ReadPlayer(CPlayer* pPlayer, DWORD atorID);
+	bool SavePlayer(CPlayer* pPlayer, char chSaveType);
+
+	bool SavePlayerKitbag(CPlayer* pPlayer, char chSaveType = enumSAVE_TYPE_TRADE);
+	bool SaveChaAssets(CCharacter* pCCha);
+
+	// Лотерея — LotterySetting
+	bool GetWinItemno(int issue, std::string& itemno);
+	bool GetLotteryIssue(int& issue);
+	bool AddIssue(int issue);
+	bool DisuseIssue(int issue, int state);
+
+	// Лотерея — Ticket
+	bool LotteryIsExsit(int issue, char* itemno);
+	bool AddLotteryTicket(CCharacter* pCCha, int issue, char itemno[6][2]);
+	bool CalWinTicket(int issue, int max, std::string& itemno);
+
+	// Амфитеатр
+	bool IsValidAmphitheaterTeam(int teamID, int captainID, int member1, int member2);
+	bool IsMasterRelation(int masterID, int prenticeID);
+
+	// === AmphitheaterSetting ===
+	bool GetAmphitheaterSeasonAndRound(int& season, int& round);
+	bool AddAmphitheaterSeason(int season);
+	bool DisuseAmphitheaterSeason(int season, int state, const char* winner);
+	bool UpdateAmphitheaterRound(int season, int round);
+
+	// === AmphitheaterTeam ===
+	bool GetAmphitheaterTeamCount(int& count);
+	bool GetAmphitheaterNoUseTeamID(int& teamID);
+	bool AmphitheaterTeamSignUP(int& teamID, int captain, int member1, int member2);
+	bool AmphitheaterTeamCancel(int teamID);
+	bool IsAmphitheaterLogin(int pActorID);
+	bool IsMapFull(int MapID, int& PActorIDNum);
+	bool UpdateMapNum(int Teamid, int Mapid, int MapFlag);
+	bool GetMapFlag(int Teamid, int& Mapflag);
+	bool SetMaxBallotTeamRelive();
+	bool SetMatchResult(int Teamid1, int Teamid2, int Id1state, int Id2state);
+	bool GetCaptainByMapId(int Mapid, std::string& Captainid1, std::string& Captainid2);
+	bool UpdateMap(int Mapid);
+	bool UpdateMapAfterEnter(int CaptainID, int MapID);
+	bool GetPromotionAndReliveTeam(std::vector<std::vector<std::string>>& dataPromotion,
+								   std::vector<std::vector<std::string>>& dataRelive);
+	bool UpdatReliveNum(int ReID);
+	bool UpdateAbsentTeamRelive();
+	bool UpdateWinnum(int teamid);
+	bool GetUniqueMaxWinnum(int& teamid);
+	bool SetMatchnoState(int teamid);
+	bool UpdateState();
+	bool CloseReliveByState(int& statenum);
+	bool CleanMapFlag(int teamid1, int teamid2);
+	bool GetStateByTeamid(int teamid, int& state);
+
+	bool UpdateIMP(CPlayer* ply);
+	bool SaveGmLv(CPlayer* ply);
+
+	std::string GetChaNameByID(int cha_id);
+	void ShowExpRank(CCharacter* pCha, int top);
+	bool SavePlayerPos(CPlayer* pPlayer);
+	bool SavePlayerKBagDBID(CPlayer* pPlayer);
+	bool SavePlayerKBagTmpDBID(CPlayer* pPlayer);
+	bool SavePlayerMMaskDBID(CPlayer* pPlayer);
+
+	bool CreatePlyBank(CPlayer* pCPly);
+	bool SavePlyBank(CPlayer* pCPly, char chBankNO = -1);
+	unsigned long GetPlayerMasterDBID(CPlayer* pPlayer);
+
+	BOOL AddCreditByDBID(DWORD atorID, long lCredit);
+	BOOL SaveStoreItemID(DWORD atorID, long lStoreItemID);
+	BOOL AddMoney(DWORD atorID, long money);
+
+	BOOL ReadKitbagTmpData(DWORD res_id, std::string& strData);
+	BOOL SaveKitbagTmpData(DWORD res_id, const std::string& strData);
+
+	BOOL IsChaOnline(DWORD atorID, BOOL& bOnline);
+	Long GetChaAddr(DWORD atorID);
+	Long SetGuildPermission(int atorID, unsigned long perm, int guild_id);
+	Long SetChaAddr(DWORD atorID, Long addr);
+
+	BOOL SaveMissionData(CPlayer* pPlayer, DWORD atorID);
+
+	// Лодки
+	BOOL Create(DWORD& dwBoatID, const BOAT_DATA& Data);
+	BOOL GetBoat(CCharacter& Boat);
+	BOOL SaveBoat(CCharacter& Boat, char chSaveType);
+	BOOL SaveBoatDelTag(DWORD dwBoatID, BYTE byIsDeleted = 0);
+	BOOL SaveBoatTempData(CCharacter& Boat, BYTE byIsDeleted = 0);
+	BOOL SaveBoatTempData(DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted = 0);
+
+	// Гильдии
+	long CreateGuild(CCharacter* pCha, char* guildname, cChar* passwd);
+	long GetGuildBank(uLong guildid, CKitbag* bag);
+	long UpdateGuildBank(uLong guildid, CKitbag* bag);
+	bool SetGuildLog(std::vector<CTableGuild::BankLog> log, uLong guildid);
+	std::vector<CTableGuild::BankLog> GetGuildLog(uLong guildid);
+	unsigned long long GetGuildBankGold(uLong guildid);
+	bool UpdateGuildBankGold(int guildID, int money);
+	int GetGuildLeaderID(uLong guildid);
+
+	bool ListAllGuild(CCharacter* pCha, char disband_days = 1);
+	void GuildTryFor(CCharacter* pCha, uLong guildid);
+	void GuildTryForConfirm(CCharacter* pCha, uLong guildid);
+	bool GuildListTryPlayer(CCharacter* pCha, char disband_days);
+	bool GuildApprove(CCharacter* pCha, uLong chaid);
+	bool GuildReject(CCharacter* pCha, uLong chaid);
+	bool GuildKick(CCharacter* pCha, uLong chaid);
+	bool GuildLeave(CCharacter* pCha);
+	bool GuildDisband(CCharacter* pCha, cChar* passwd);
+	bool GuildMotto(CCharacter* pCha, cChar* motto);
+
+	CTableMapMask* GetMapMaskTable();
+
+	bool GetGuildName(long lGuildID, std::string& strGuildName);
+	bool Challenge(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
+	bool Leizhu(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
+	void ListChallenge(CCharacter* pCha);
+	bool StartChall(BYTE byLevel);
+	bool GetChall(BYTE byLevel, DWORD& dwGuildID1, DWORD& dwGuildID2, DWORD& dwMoney);
+	void EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall);
+	bool HasChall(BYTE byLevel);
+	bool HasGuildLevel(CCharacter* pChar, BYTE byLevel);
+
+	// Логирование
+	void ExecLogSQL(const char* pszSQL);
+	void ExecTradeLogSQL(const char* gameServerName, const char* action,
+						 const char* pszChaFrom, const char* pszChaTo, const char* pszTrade);
+
+	BOOL m_bInitOK{false};
 
 protected:
+	// ODBC API — объявлен первым, т.к. все таблицы зависят от _db
+	OdbcDatabase _db{};
 
-    cfl_db			_connect;
-	CTableCha* _tab_cha{  };
-	CTableMaster* _tab_master{  };
-	CTableResource*	_tab_res;
-	
-	// Add by lark.li 20080521 begin
-	// 
-	CTableLotterySetting*	_tab_setting;
-	CTableTicket*			_tab_ticket;
-	CTableWinTicket*			_tab_winticket;
+	// Legacy-таблицы (прямые члены)
+	PlayerStorage _tab_cha;
+	CTableResource _tab_res;
+	CTableMapMask _tab_mmask;
+	CTableGuild _tab_gld;
+	CTableBoat _tab_boat;
 
-	// 
-	CTableAmphitheaterSetting*	_tab_amp_setting;
-	CTableAmphitheaterTeam*	_tab_amp_team;
-	// End
-
-	CTableMapMask*	_tab_mmask;
-	CTableAct* _tab_act{ };
-	CTableGuild* _tab_gld{  };
-	CTableBoat* _tab_boat{};
-	CTableLog* _tab_log{};
-	CTableItem* _tab_item{};
+	// Типизированные таблицы
+	TableAccount _accounts;
+	TableAmphitheaterSetting _amphiSettings;
+	TableAmphitheaterTeam _amphiTeams;
+	TableBoat _boats;
+	TableCharacter _characters;
+	TableCharacterLog _characterLogs;
+	TableFriends _friends;
+	TableGuildTyped _guilds;
+	TableLotterySetting _lotterySettings;
+	TableMapMaskTyped _mapMasks;
+	TableMaster _masters;
+	TableParam _params;
+	TablePersonAvatar _personAvatars;
+	TablePersonInfo _personInfo;
+	TableProperty _properties;
+	TableResourceTyped _resources;
+	TableStatLog _statLogs;
+	TableStatDegree _statDegrees;
+	TableStatGender _statGenders;
+	TableStatJob _statJobs;
+	TableStatLogin _statLogins;
+	TableStatMap _statMaps;
+	TableTicket _tickets;
+	TableTradeLog _tradeLogs;
+	TableWeekReport _weekReports;
+	TableWinTicket _winTickets;
 };
-
 
 
 extern CGameDB game_db;
-

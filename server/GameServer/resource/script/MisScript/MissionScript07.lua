@@ -8505,7 +8505,7 @@ TriggerAction( 1, AddNextFlag, 1203, 70, 1 )
 RegCurTrigger( 12037 )
 
 ------------------------------------------
-DefineMission ( 5736, "", 1205)
+DefineMission ( 5736, "Legend of the Fairy Couple", 1205)
 
 MisBeginTalk("<t>,,.?10.")
 
@@ -8536,7 +8536,7 @@ TriggerAction( 1, AddNextFlag, 1205, 10, 10 )
 RegCurTrigger( 12051 )
 
 ---------------------------------------
-DefineMission( 5737, "", 1206)
+DefineMission( 5737, "Magpie Bridge Romance", 1206)
 
 MisBeginTalk( "<t>.............<n><t>!.")
 MisBeginCondition(HasRecord, 1205 )
@@ -8551,7 +8551,7 @@ MisResultCondition(AlwaysFailure )
 
 ----------------------------------------------
 
-DefineMission(5738,"",1206,COMPLETE_SHOW )
+DefineMission(5738,"Magpie Bridge Romance",1206,COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure)
 
@@ -8563,7 +8563,7 @@ MisResultAction(SetRecord, 1206)
 
 
 -------------------------------------
-DefineMission( 5739, "", 1207)
+DefineMission( 5739, "Letter from a Thousand Miles", 1207)
 
 MisBeginTalk( "<t>,,.?!!")
 MisBeginCondition(HasRecord, 1206 )
@@ -8580,7 +8580,7 @@ MisResultCondition(AlwaysFailure )
 
 -------------------------------------------
 
-DefineMission(5740,"",1207,COMPLETE_SHOW )
+DefineMission(5740,"Letter from a Thousand Miles",1207,COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure)
 
@@ -8835,7 +8835,7 @@ MisResultBagNeed(1)
 
 
 -----------------------------------------------------------	--------
-DefineMission (5801, "", 1471)
+DefineMission (5801, "Tender Cancer: Fame Hero", 1471)
 
 MisBeginTalk("<t>,..")
 
@@ -8859,7 +8859,7 @@ MisResultAction(GiveItem, 2569, 1, 4)
 MisResultBagNeed(1)
 
 -----------------------------------------------------------	---------
-DefineMission (5802, "", 1472)
+DefineMission (5802, "Tender Cancer: Level Hero", 1472)
 
 MisBeginTalk("<t>,,...")
 
@@ -8883,7 +8883,7 @@ MisResultBagNeed(1)
 
 
 -----------------------------------------------------------	----------
-DefineMission (5803, "", 1473)
+DefineMission (5803, "Tender Cancer: Honor Hero", 1473)
 
 MisBeginTalk("<t>,,!,.")
 
@@ -8907,7 +8907,7 @@ MisResultAction(GiveItem, 2571, 1, 4)
 MisResultBagNeed(1)	
 
 -----------------------------------------------------------	----------	
-DefineMission (5804, "", 1474)
+DefineMission (5804, "Tender Cancer: Gathering Ambassador", 1474)
 
 MisBeginTalk("<t>!....")
 
@@ -8989,7 +8989,7 @@ TriggerAction( 1, AddNextFlag, 1474,32, 1 )
 RegCurTrigger( 14746 )
 
 --------------------------------------------------------------------
-DefineMission( 5805, "", 1475 )
+DefineMission( 5805, "Tender Cancer: Cancer Doomsday", 1475 )
 MisBeginTalk("<t>BOSS,.")
 			
 MisBeginCondition(NoMission, 1475)
@@ -9021,7 +9021,7 @@ RegCurTrigger( 14751 )
 
 
 -----------------------------------------------------------
-DefineMission (5806, "", 1476)
+DefineMission (5806, "Tender Cancer: Brawl Hero", 1476)
 
 MisBeginTalk("<t>,,.?")
 
@@ -9046,7 +9046,7 @@ MisResultBagNeed(1)
 
 
 -----------------------------------------------------------	--------
-DefineMission (5807, "", 1477)
+DefineMission (5807, "Tender Cancer: Fame Hero", 1477)
 
 MisBeginTalk("<t>,..")
 
@@ -9071,7 +9071,7 @@ MisResultBagNeed(1)
 
 
 -----------------------------------------------------------	---------
-DefineMission (5808, "", 1600)
+DefineMission (5808, "Tender Cancer: Level Hero", 1600)
 
 MisBeginTalk("<t>,,...")
 
@@ -9094,7 +9094,7 @@ MisResultAction(GiveItem, 2570, 1, 4)
 MisResultBagNeed(1)
 
 -----------------------------------------------------------	----------
-DefineMission (5809, "", 1479)
+DefineMission (5809, "Tender Cancer: Honor Hero", 1479)
 
 MisBeginTalk("<t>,,!,.")
 
@@ -9118,7 +9118,7 @@ MisResultAction(GiveItem, 2571, 1, 4)
 MisResultBagNeed(1)	
 
 -----------------------------------------------------------	----------	
-DefineMission (5810, "", 1480)
+DefineMission (5810, "Tender Cancer: Gathering Ambassador", 1480)
 
 MisBeginTalk("<t>!....")
 
@@ -9208,7 +9208,7 @@ RegCurTrigger( 14807 )
 
 
 -----------------------------------------------------------
-DefineMission (5811, "", 1481)
+DefineMission (5811, "Tender Cancer: Brawl Hero", 1481)
 
 MisBeginTalk("<t>,,.?")
 
@@ -9232,7 +9232,7 @@ MisResultAction(GiveItem, 2568, 1, 4)
 MisResultBagNeed(1)
 
 -----------------------------------------------------------	--------
-DefineMission (5812, "", 1482)
+DefineMission (5812, "Tender Cancer: Fame Hero", 1482)
 
 MisBeginTalk("<t>,..")
 
@@ -9257,7 +9257,7 @@ MisResultBagNeed(1)
 
 
 -----------------------------------------------------------	---------
-DefineMission (5813, "", 1483)
+DefineMission (5813, "Tender Cancer: Level Hero", 1483)
 
 MisBeginTalk("<t>,,...")
 
@@ -9280,7 +9280,7 @@ MisResultAction(GiveItem, 2570, 1, 4)
 MisResultBagNeed(1)
 
 -----------------------------------------------------------	----------
-DefineMission (5814, "", 1484)
+DefineMission (5814, "Tender Cancer: Honor Hero", 1484)
 
 MisBeginTalk("<t>,,!,.")
 
@@ -9305,7 +9305,7 @@ MisResultBagNeed(1)
 
 
 -----------------------------------------------------------	----------	
-DefineMission (5815, "", 1485)
+DefineMission (5815, "Tender Cancer: Gathering Ambassador", 1485)
 
 MisBeginTalk("<t>!....")
 
@@ -10300,7 +10300,7 @@ RegCurTrigger( 16117 )
 
 -------------------------------------------------2277,2769
 
-DefineMission(5865,"",1208)
+DefineMission(5865,"Golden October: Eating Hairy Crabs",1208)
 
 MisBeginTalk("<t><n><t>")
 
@@ -10358,7 +10358,7 @@ RegCurTrigger(12083)
 
 -------------------------------------------------2277,2769
 
-DefineMission(5866,"",1209)
+DefineMission(5866,"Golden October: Savory Mitten Crabs",1209)
 
 MisBeginTalk("<t>")
 
@@ -10428,7 +10428,7 @@ RegCurTrigger(12094)
 
 -------------------------------------------------2277,2769
 
-DefineMission(5867, "", 1210)
+DefineMission(5867, "Golden October: Raising Crab Fry", 1210)
 
 MisBeginTalk("<t>")
 
@@ -10526,7 +10526,7 @@ RegCurTrigger( 12111 )
 
 --------------------------------------------------------------------
 
-DefineMission( 6139, "", 1212 )
+DefineMission( 6139, "Rescue Swordsman Pei Meng", 1212 )
 MisBeginTalk("<t>.,<bP-E-I-M-E-N-G>..<b(271,1775)>")
 MisBeginCondition(NoMission, 1212)
 MisBeginCondition(NoRecord,1212)
@@ -10607,7 +10607,7 @@ TriggerAction( 1, AddNextFlag, 1212, 60, 1 )
 RegCurTrigger( 12126 )
 
 --------------------------------------------------------------------
-DefineMission( 6140, "", 1213 )
+DefineMission( 6140, "Information from the Gatekeeper", 1213 )
 MisBeginTalk("<t>,.,1(263,260)")
 			
 MisBeginCondition(NoMission, 1213)
@@ -10622,7 +10622,7 @@ MisNeed(MIS_NEED_DESP,"1(263,260)")
 MisHelpTalk("<t>,?")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6141, "", 1213, COMPLETE_SHOW )
+DefineMission(6141, "Information from the Gatekeeper", 1213, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -10634,7 +10634,7 @@ MisResultAction(SetRecord, 1213)
 
 
 ------------------------------------------------------
-DefineMission(6142,"",1214)
+DefineMission(6142,"The Manservant's Discontent",1214)
 
   MisBeginTalk("<t> ,.?,.,.")
 
@@ -10694,7 +10694,7 @@ TriggerAction( 1, AddNextFlag, 1214, 76, 25 )
 RegCurTrigger( 12144 )
 
 --------------------------------------------------------------------
-DefineMission( 6143, "", 1215 )
+DefineMission( 6143, "The Strange Maid", 1215 )
 MisBeginTalk("<t>,2(151,134)..")
 			
 MisBeginCondition(NoMission, 1215)
@@ -10708,7 +10708,7 @@ MisNeed(MIS_NEED_DESP,"2(151,134)")
 MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6144, "", 1215, COMPLETE_SHOW )
+DefineMission(6144, "The Strange Maid", 1215, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -10719,7 +10719,7 @@ MisResultAction(ClearMission,1215)
 MisResultAction(SetRecord, 1215)
 
 ------------------------------------------------------
-DefineMission(6145,"",1216)
+DefineMission(6145,"Cure for Loose Lips",1216)
 
   MisBeginTalk("<t> ,.,,..")
 
@@ -10770,7 +10770,7 @@ TriggerCondition( 1, IsItem, 4745)
 TriggerAction( 1, AddNextFlag, 1216, 71, 35 )
 RegCurTrigger(12163 )
 --------------------------------------------------------------------
-DefineMission( 6146, "", 1217 )
+DefineMission( 6146, "Locke's Little Secretary", 1217 )
 MisBeginTalk("<t>,3(63,311).,,,,.")
 			
 MisBeginCondition(NoMission, 1217)
@@ -10784,7 +10784,7 @@ MisNeed(MIS_NEED_DESP,"3(63,311)")
 MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6147, "", 1217, COMPLETE_SHOW )
+DefineMission(6147, "Locke's Little Secretary", 1217, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -10796,7 +10796,7 @@ MisResultAction(SetRecord, 1217)
 
 --------------------------------------------------------------------------
 
-DefineMission( 6148, "", 1218 )
+DefineMission( 6148, "The Secretary's Dream", 1218 )
 MisBeginTalk("<t>,..")
 MisBeginCondition(NoMission, 1218)
 MisBeginCondition(NoRecord,1218)
@@ -10876,7 +10876,7 @@ TriggerAction( 1, AddNextFlag, 1218, 101, 20 )
 RegCurTrigger( 12186 )
 
 --------------------------------------------------------------------
-DefineMission( 6149, "", 1219 )
+DefineMission( 6149, "The Stern Guardian", 1219 )
 MisBeginTalk("<t>4(261,70),.")
 			
 MisBeginCondition(NoMission, 1219)
@@ -10890,7 +10890,7 @@ MisNeed(MIS_NEED_DESP,"4(261,70)")
 MisHelpTalk("<t>.")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6150, "", 1219, COMPLETE_SHOW )
+DefineMission(6150, "The Stern Guardian", 1219, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -10902,7 +10902,7 @@ MisResultAction(SetRecord, 1219)
 
 --------------------------------------------------------------------------
 
-DefineMission( 6151, "", 1220 )
+DefineMission( 6151, "Favor After Favor", 1220 )
 MisBeginTalk("<t>?!.,10,.,.")
 MisBeginCondition(NoMission, 1220)
 MisBeginCondition(NoRecord,1220)
@@ -10943,7 +10943,7 @@ TriggerAction( 1, AddNextFlag, 1220, 21, 50 )
 RegCurTrigger( 12202 )
 
 --------------------------------------------------------------------
-DefineMission( 6152, "", 1221 )
+DefineMission( 6152, "Yet Another Favor", 1221 )
 MisBeginTalk("<t>,,.<n><t>5(542,54)")
 			
 MisBeginCondition(NoMission, 1221)
@@ -10957,7 +10957,7 @@ MisNeed(MIS_NEED_DESP,"5(542,54)")
 MisHelpTalk("<t>,,....")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6153, "", 1221, COMPLETE_SHOW )
+DefineMission(6153, "Yet Another Favor", 1221, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -10970,7 +10970,7 @@ MisResultAction(SetRecord, 1221)
 
 --------------------------------------------------------------------------
 
-DefineMission( 6154, "", 1222 )
+DefineMission( 6154, "The Butler's Troubles", 1222 )
 MisBeginTalk("<t>?.,.,,,")
 MisBeginCondition(NoMission, 1222)
 MisBeginCondition(NoRecord,1222)
@@ -11020,7 +11020,7 @@ TriggerAction( 1, AddNextFlag, 1222, 71, 35 )
 RegCurTrigger( 12223 )
 
 -------------------------------------------------------------------
-DefineMission( 6155, "", 1223 )
+DefineMission( 6155, "The Butler's Revenge", 1223 )
 MisBeginTalk("<t>~~,,,...,,.,,,~~")
 			
 MisBeginCondition(NoMission, 1223)
@@ -11034,7 +11034,7 @@ MisNeed(MIS_NEED_DESP,"6(541,268)")
 MisHelpTalk("<t>,,,...")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6156, "", 1223, COMPLETE_SHOW )
+DefineMission(6156, "The Butler's Revenge", 1223, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -11045,7 +11045,7 @@ MisResultAction(ClearMission,1223)
 MisResultAction(SetRecord, 1223)
 --------------------------------------------------------------------------
 
-DefineMission( 6157, "", 1224 )
+DefineMission( 6157, "The Beauty's Strange Hobby", 1224 )
 MisBeginTalk("<t>,.,.,,.")
 MisBeginCondition(NoMission, 1224)
 MisBeginCondition(NoRecord,1224)
@@ -11076,7 +11076,7 @@ TriggerAction( 1, AddNextFlag, 1224, 1, 110 )
 RegCurTrigger( 12241 )
 
 ----------------------------------------------------------------
-DefineMission( 6158, "", 1225 )
+DefineMission( 6158, "Wangcai's Grudge", 1225 )
 MisBeginTalk("<t>.,.,..")
 			
 MisBeginCondition(NoMission, 1225)
@@ -11090,7 +11090,7 @@ MisNeed(MIS_NEED_DESP,"(154,912)")
 MisHelpTalk("<t>...")
 MisResultCondition(AlwaysFailure)	
 -------------------------------------------------
-DefineMission(6159, "", 1225, COMPLETE_SHOW )
+DefineMission(6159, "Wangcai's Grudge", 1225, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -11103,7 +11103,7 @@ MisResultAction(SetRecord, 1225)
 
 --------------------------------------------------------------------------
 
-DefineMission( 6160, "!", 1226 )
+DefineMission( 6160, "Don't Mess with Wangcai!", 1226 )
 MisBeginTalk("<t>,,..")
 MisBeginCondition(NoMission, 1226)
 MisBeginCondition(NoRecord,1226)
@@ -11135,7 +11135,7 @@ RegCurTrigger( 12261 )
 
 
 -----------------------------------------------------!----------
-DefineMission( 6161, "!", 1227 )
+DefineMission( 6161, "Oh! No Key", 1227 )
 MisBeginTalk("<t>!.(2423,3186),,")
 			
 MisBeginCondition(NoMission, 1227)
@@ -11149,7 +11149,7 @@ MisNeed(MIS_NEED_DESP,"(2423,3186)")
 MisHelpTalk("<t>!...")
 MisResultCondition(AlwaysFailure)	
 -----------------------------------------!--------
-DefineMission(6162, "!", 1227, COMPLETE_SHOW )
+DefineMission(6162, "Oh! No Key", 1227, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -11163,7 +11163,7 @@ MisResultAction(SetRecord, 1227)
 
 --------------------------------------------------------------------------
 
-DefineMission( 6163, "", 1228 )
+DefineMission( 6163, "The Tour Guide's Request", 1228 )
 MisBeginTalk("<t>,.,")
 MisBeginCondition(NoMission, 1228)
 MisBeginCondition(NoRecord,1228)
@@ -11214,7 +11214,7 @@ RegCurTrigger( 12283 )
 
 	--------------------------------------------------------------------------
 
-DefineMission( 6164, "", 1229 )
+DefineMission( 6164, "Consoling the Spirits", 1229 )
 MisBeginTalk("<t>,,.")
 MisBeginCondition(NoMission, 1229)
 MisBeginCondition(NoRecord,1229)
@@ -11256,7 +11256,7 @@ TriggerAction( 1, AddNextFlag, 1229, 51, 50 )
 RegCurTrigger( 12292 )
 
 -------------------------------------------------------------
-DefineMission( 6165, "", 1230 )
+DefineMission( 6165, "One Key Opens One Lock", 1230 )
 MisBeginTalk("<t>.")
 			
 MisBeginCondition(NoMission, 1230)
@@ -11270,7 +11270,7 @@ MisNeed(MIS_NEED_DESP,"(2229,2782).")
 MisHelpTalk("<t>...")
 MisResultCondition(AlwaysFailure)	
 --------------------------------------------------
-DefineMission(6166, "", 1230, COMPLETE_SHOW )
+DefineMission(6166, "One Key Opens One Lock", 1230, COMPLETE_SHOW )
 
 MisBeginCondition(AlwaysFailure )
 
@@ -11486,7 +11486,7 @@ MisResultAction(ClearRecord, 1234)---------------can be repeated
 MisResultAction(ClearRecord, 1235)---------------can be repeated
 
 -----------------------------------------
-DefineMission( 6174, "", 1236)
+DefineMission( 6174, "Fortune in All Seasons", 1236)
 MisBeginTalk( "<t>4(2722,3137),,.")
 MisBeginCondition( NoMission, 1236)
 MisBeginCondition( NoRecord, 1236)
@@ -11538,7 +11538,7 @@ TriggerAction( 1, AddNextFlag, 1236, 40, 1 )
 RegCurTrigger( 12364 )
 
 ---------------------------------------------
-DefineMission( 6175, "", 1237)
+DefineMission( 6175, "Treasures from All Directions", 1237)
 MisBeginTalk( "<t>4(2722,3137),,,,(3734,2661),,!")
 MisBeginCondition( NoMission, 1237)
 MisBeginCondition( NoRecord, 1237)
@@ -11633,7 +11633,7 @@ TriggerAction( 1, AddNextFlag, 1237,80, 1 )
 RegCurTrigger( 12378 )
 
 --------------------------------------------
-DefineMission( 6176, "", 1238)
+DefineMission( 6176, "Lock of the Heart", 1238)
 MisBeginTalk( "<t>,,(2256,2707).")
 MisBeginCondition( NoMission, 1238)
 MisBeginCondition( NoRecord, 1238)
@@ -11663,7 +11663,7 @@ TriggerAction( 1, AddNextFlag, 1238, 10, 1 )
 RegCurTrigger( 12381 )
 
 --------------------------------------------
-DefineMission( 6177, "", 1239)
+DefineMission( 6177, "Lock of the Heart", 1239)
 MisBeginTalk( "<t>,2,,,2,!!")
 MisBeginCondition( HasMission, 1238)
 MisBeginCondition( NoRecord, 1239)
@@ -11692,7 +11692,7 @@ TriggerAction( 1, AddNextFlag, 1239, 10, 2 )
 RegCurTrigger( 12391 )
 
 --------------------------------------------
-DefineMission( 6178, "", 1240)
+DefineMission( 6178, "Aged Red Wine", 1240)
 MisBeginTalk( "<t>,(1291,541)1,?")
 MisBeginCondition( NoMission, 1240)
 MisBeginCondition( NoRecord, 1240)
@@ -11722,7 +11722,7 @@ TriggerAction( 1, AddNextFlag, 1240, 10, 1 )
 RegCurTrigger( 12401 )
 
 ---------------------------------------------
-DefineMission( 6179, "", 1241)
+DefineMission( 6179, "Aged Red Wine", 1241)
 MisBeginTalk( "<t>,?!!<n><t>3,3,3,70.")
 MisBeginCondition( NoMission, 1241)
 MisBeginCondition( NoRecord, 1241)
@@ -11779,7 +11779,7 @@ RegCurTrigger( 12414 )
 
 
 --------------------------------------------
-DefineMission( 6180, "", 1242)
+DefineMission( 6180, "Aged Red Wine", 1242)
 MisBeginTalk( "<t>,,,,!")
 MisBeginCondition( NoMission, 1242)
 MisBeginCondition( NoRecord, 1242)
@@ -11803,7 +11803,7 @@ MisResultAction( GiveItem, 2977, 1, 4)
 MisResultBagNeed(1)
 
 -----------------------------------------------
-DefineMission( 6181, "", 1243)
+DefineMission( 6181, "Retrieve the Rose Petals", 1243)
 MisBeginTalk( "<t>,(1280,478),?")
 MisBeginCondition( NoMission, 1243)
 MisBeginCondition( NoRecord, 1243)
@@ -11834,7 +11834,7 @@ TriggerAction( 1, AddNextFlag, 1243, 10, 1 )
 RegCurTrigger( 12431 )
 
 -----------------------------------------------
-DefineMission( 6182, "", 1244)
+DefineMission( 6182, "Retrieve the Rose Petals", 1244)
 MisBeginTalk( "<t>,,.3,3,3,..")
 MisBeginCondition( NoMission, 1244)
 MisBeginCondition( NoRecord, 1244)
@@ -11881,7 +11881,7 @@ TriggerAction( 1, AddNextFlag, 1244, 10, 1 )
 RegCurTrigger( 12443 )
 
 --------------------------------------------
-DefineMission( 6183, "", 1245)
+DefineMission( 6183, "Retrieve the Fine Candles", 1245)
 MisBeginTalk( "<t>,,(897,3683)?")
 MisBeginCondition( NoMission, 1245)
 MisBeginCondition( NoRecord, 1245)
@@ -11913,7 +11913,7 @@ TriggerAction( 1, AddNextFlag, 1245, 10, 1 )
 RegCurTrigger( 12451 )
 
 ----------------------------------------------
-DefineMission( 6184, "", 1246)
+DefineMission( 6184, "Retrieve the Fine Candles", 1246)
 MisBeginTalk( "<t>,2,2,,.")
 MisBeginCondition( NoMission, 1246)
 MisBeginCondition( NoRecord, 1246)
@@ -11952,7 +11952,7 @@ TriggerAction( 1, AddNextFlag, 1246, 20, 2 )
 RegCurTrigger( 12462 )
 
 ------------------------------------ 	NPC1216550
-DefineMission( 6185, "", 1247)
+DefineMission( 6185, "Rescue Santa Claus", 1247)
 MisBeginTalk( "<t>,?.,,.,.,..")
 MisBeginCondition( NoMission, 1247)
 MisBeginCondition( NoRecord, 1247)
@@ -11969,7 +11969,7 @@ MisResultCondition( AlwaysFailure )
 
 
 ----------------------------------------------------------------(2111,557)
-DefineMission( 6186, "", 1247, COMPLETE_SHOW)
+DefineMission( 6186, "Rescue Santa Claus", 1247, COMPLETE_SHOW)
 MisBeginCondition( AlwaysFailure )
 
 MisResultTalk( "<t>..")
@@ -11984,7 +11984,7 @@ MisResultAction( GiveItem, 3240, 1, 4)
 MisResultBagNeed(3)
 
 ------------------------------	
-DefineMission( 6187, "", 1248)
+DefineMission( 6187, "Great Turkey Hunt", 1248)
 MisBeginTalk( "<t>.?,,,100.")
 MisBeginCondition( NoMission, 1248)
 MisBeginCondition( NoRecord, 1248)
@@ -12013,7 +12013,7 @@ TriggerAction( 1, AddNextFlag, 1248, 10, 100 )
 RegCurTrigger( 12481 )
 
 ------------------------------	
-DefineMission( 6188, "", 1249)
+DefineMission( 6188, "Great Reindeer Hunt", 1249)
 MisBeginTalk( "<t>.?,,,100.")
 MisBeginCondition( NoMission, 1249)
 MisBeginCondition( NoRecord, 1249)
@@ -12042,7 +12042,7 @@ TriggerAction( 1, AddNextFlag, 1249, 10, 100 )
 RegCurTrigger( 12491 )
 
 ------------------------------	
-DefineMission( 6189, "", 1250)
+DefineMission( 6189, "Great Snowman Hunt", 1250)
 MisBeginTalk( "<t>.?,,,100.")
 MisBeginCondition( NoMission, 1250)
 MisBeginCondition( NoRecord, 1250)

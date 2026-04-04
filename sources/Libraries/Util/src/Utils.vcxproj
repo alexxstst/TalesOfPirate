@@ -94,7 +94,7 @@
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
     <ClCompile Include="db.cpp" />
-    <ClCompile Include="db3.cpp" />
+    <ClCompile Include="Database.cpp" />
     <ClCompile Include="DBCCommon.cpp" />
     <ClCompile Include="Point.cpp" />
     <ClCompile Include="IniFile.cpp" />
@@ -113,15 +113,14 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\algo.h" />
+    <ClInclude Include="..\include\Database.h" />
     <ClInclude Include="..\include\DBCCommon.h" />
     <ClInclude Include="..\include\Point.h" />
     <ClInclude Include="..\include\IniFile.h" />
     <ClInclude Include="..\include\excp.h" />
     <ClInclude Include="..\include\TrackedPool.h" />
     <ClInclude Include="..\include\db.h" />
-    <ClInclude Include="..\include\db3.h" />
     <ClInclude Include="..\include\fifo.h" />
-    <ClInclude Include="..\include\matrix_stuff.h" />
     <ClInclude Include="..\include\MPMapDef.h" />
     <ClInclude Include="..\include\pch.h" />
     <ClInclude Include="..\include\singleton.h" />

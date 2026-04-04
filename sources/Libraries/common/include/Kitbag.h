@@ -141,9 +141,14 @@ private:
 };
 
 //=============================================================================
-char* KitbagData2String(CKitbag *pKitbag, char *szStrBuf, int nLen);
+constexpr int KITBAG_VERSION_MSGPACK = 115;
 
+char* KitbagData2String(CKitbag *pKitbag, char *szStrBuf, int nLen);
 bool String2KitbagData(CKitbag *pKitbag, std::string &strData);
+
+// Msgpack сериализация (v115)
+std::string KitbagData2Msgpack(CKitbag* pKitbag);
+bool Msgpack2KitbagData(CKitbag* pKitbag, const char* b64Data, size_t b64Len);
 
 //	2008-7-28	yangyinyu	add	begin!
 

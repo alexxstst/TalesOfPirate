@@ -57,6 +57,7 @@ public:
 	static eChannel	GetChannelByIndex(WORD wChannelIndex);
 	static WORD		GetTotalChannelCount();
 	static void		ClearAllMsg();
+	static void		InitChannelNames();
 
 	void			SetShowChannels(DWORD ecboShowChannels);
 	bool			ModifyShowChannel(eChannel eShowChannel, bool bAddOrRemove = true, bool bShowTips = true);
@@ -73,9 +74,8 @@ private:
 
 private:
 
-	static const WORD			m_wTotalChannelsCount = 12;	//  10 -> 11
 	static const DWORD			m_dwChannelBufferSize = 100;
-	static sChannelInfo			m_sChannelInfo[m_wTotalChannelsCount];
+	static std::vector<sChannelInfo> m_sChannelInfo;
 	static lstTextInfoType		m_lstMsgLink;
 	typedef std::list<CCharMsg*>		lstInstanceType;
 	static lstInstanceType		m_lstThisInstanceLink;

@@ -24,6 +24,26 @@ Tales of Pirate — MMORPG with two codebases:
 - `strcat` → `+=` или `std::string::append()`
 - `atoi`/`atof` → `std::stoi`/`std::stof` или `std::from_chars`
 
+**Форматирование:** Однострочные `if` без фигурных скобок запрещены. Всегда использовать скобки и переносы:
+```cpp
+// Неправильно:
+if (result.empty()) return false;
+
+// Правильно:
+if (result.empty()) {
+    return false;
+}
+```
+
+**Цепочки `.SetParam()`:** Каждый параметр на отдельной строке:
+```cpp
+// Правильно:
+_db.CreateCommand("UPDATE character SET level = ? WHERE atorID = ?")
+    .SetParam(1, level)
+    .SetParam(2, chaId)
+    .ExecuteNonQuery();
+```
+
 Main solution: `sources/TalesOfPirates.sln` — contains both C++ and .NET projects.
 
 ## Build Commands

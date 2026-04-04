@@ -122,7 +122,7 @@ namespace net { namespace msg {
 class CCharacter : public CMoveAble
 {
 	friend class CChaSpawn;
-	friend class CTableCha;
+	friend class PlayerStorage;
 	friend class Guild;
 	friend class CTableGuild;
 	friend class CTableMaster;
@@ -764,7 +764,7 @@ public:
 	int m_retry5;
     int m_retry6;
 
-	unsigned long guildPermission;
+	std::int64_t guildPermission{};
 
 	unsigned int chatColour;
 protected:

@@ -1,4 +1,4 @@
-﻿#include "stdafx.h"
+#include "stdafx.h"
 #include "TradeLogDB.h"
 #include "Config.h"
 
@@ -6,46 +6,58 @@ BOOL CTradeLogDB::Init()
 {
 	m_bInitOK = FALSE;
 
-	if(g_Config.m_bTradeLogIsConfig)
+	if (g_Config.m_bTradeLogIsConfig)
 	{
 		const char* buf = g_Config.m_szTradeLogDBPass;
-		if(strcmp(buf,"\"\"") == 0 || strcmp(buf,"''") == 0 || strcmp(buf,"22222") == 0)
+		if (strcmp(buf, "\"\"") == 0 || strcmp(buf, "''") == 0 || strcmp(buf, "22222") == 0)
 		{
-			ToLogService("common", "Database  Password Error!");
+			ToLogService("common", "Database Password Error!");
 			return FALSE;
 		}
 
-		_connect.enable_errinfo();
-
-		ToLogService("common", "Connectting database [{} : {}]......", g_Config.m_szTradeLogDBIP, g_Config.m_szTradeLogDBName);
-
-
-		std::string err_info;
-		//if(!pswd.c_str() || pswd.length() == 0)
-		//{
-		//	LG("gamedb", "Database  Password Error!");
-		//	return FALSE;
-		//}
-		static const char* s_szDsn = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=gamedb;Trusted_Connection=Yes;";
-		bool r = _connect.connect(s_szDsn, err_info);
-		if(!r)
-		{
-			ToLogService("common", "Database Connect Failed!, ERROR REPORT[{}]", err_info.c_str() );
+		try {
+			static const char* s_szDsn = "DRIVER={ODBC Driver 17 for SQL Server};SERVER=localhost;DATABASE=gamedb;Trusted_Connection=Yes;";
+			ToLogService("common", "TradeLogDB: connecting [{}]...", s_szDsn);
+			_db.Open(s_szDsn);
+			ToLogService("common", "TradeLogDB: connected");
+		}
+		catch (const OdbcException& e) {
+			ToLogService("common", LogLevel::Error, "TradeLogDB connect failed: {}", e.what());
 			return FALSE;
 		}
-
-		ToLogService("common", "Database Connected!");
-
-		_tab_log   = new CTradeTableLog(&_connect);
-
-		if (!_tab_log )
-			return FALSE;
 	}
 
 	m_bInitOK = TRUE;
-
 	return TRUE;
 }
 
+void CTradeLogDB::ExecLogSQL(const char* gameServerName, const char* action,
+							 const char* pszChaFrom, const char* pszChaTo, const char* pszTrade)
+{
+	time_t ltime;
+	time(&ltime);
+	tm* ttm = localtime(&ltime);
+
+	char timeBuf[20];
+	sprintf(timeBuf, "%04i/%02i/%02i %02i:%02i:%02i",
+		ttm->tm_year + 1900, ttm->tm_mon + 1, ttm->tm_mday,
+		ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
+
+	try {
+		auto cmd = _db.CreateCommand(
+			"INSERT INTO Trade_Log (ExecuteTime, GameServer, [Action], [From], [To], Memo) "
+			"VALUES (@time, @server, @action, @from, @to, @memo)");
+		cmd.SetParam("@time", std::string_view(timeBuf));
+		cmd.SetParam("@server", std::string_view(gameServerName));
+		cmd.SetParam("@action", std::string_view(action));
+		cmd.SetParam("@from", std::string_view(pszChaFrom));
+		cmd.SetParam("@to", std::string_view(pszChaTo));
+		cmd.SetParam("@memo", std::string_view(pszTrade));
+		cmd.ExecuteNonQuery();
+	}
+	catch (const OdbcException& e) {
+		ToLogService("db", LogLevel::Error, "TradeLogDB insert failed: {}", e.what());
+	}
+}
 
 CTradeLogDB tradeLog_db;
