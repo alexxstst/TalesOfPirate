@@ -1,4 +1,6 @@
 ﻿#include "StdAfx.h"
+
+#include "StringLib.h"
 #include "uiformmgr.h"
 #include "uiedit.h"
 #include "UIRender.h"
@@ -942,7 +944,7 @@ void CFormMgr::ShowDebugInfo()
 	data5=(int)_show.size()+(int)_modal.size();	//
 	data6=(int)_modal.size();					//
 	data7=(int)CGuiTime::_times.size();
-	sprintf(buf,GetLanguageString(576).c_str(),data0,data1,data2,data3,data4,data5,data6,data7,totalTick);
+	FmtLang(buf, sizeof(buf), GetLanguageString(576), data0, data1, data2, data3, data4, data5, data6, data7, totalTick);
 	GetRender().FillFrame(0,0,CGuiFont::s_Font.GetWidth(buf),11);
 	CGuiFont::s_Font.Render(buf,0,0,COLOR_WHITE);
 	int help_sx=620;

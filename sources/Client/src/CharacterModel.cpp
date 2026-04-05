@@ -625,22 +625,21 @@ int CCharacterModel::LoadPose()
     if(pose_ctrl->GetPoseNum() > 1)
         return 1;
 
-    SCharacterAction SCharAct;
-    if (false == GetCharacterAction(cha_type, &SCharAct)) // ID
-    {
+    const SCharacterAction* pCharAct = GetCharacterAction(cha_type);
+    if (!pCharAct) {
         ToLogService("common", "msgInvalid LoadPose call");
         return 0;
     }
 
-    num = SCharAct.m_iMaxActionNum;
+    num = pCharAct->GetMaxActionNum();
     buf = new MPPoseInfo[num];
 
-    for(DWORD i = 0; i < num; i ++)
-    {
-        s = &SCharAct.m_SActionInfo[i];
+    for (DWORD i = 0; i < num; i++) {
+        s = const_cast<SActionInfo*>(&pCharAct->m_actions[i]);
 
-        if(s->m_sActionNO < 1)
+        if (s->m_sActionNO < 1) {
             continue;
+        }
 
         p = &buf[i];
         *p = s->info;

@@ -6,6 +6,21 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+// Отключить verbose-логи TcpClient в stdout.
+// Раскомментировать для отладки сетевого слоя.
+// #define TCPCLIENT_VERBOSE
+
+#ifdef TCPCLIENT_VERBOSE
+#define TCP_LOG TCP_LOG
+#else
+struct NullStream {
+	template<typename T> NullStream& operator<<(const T&) { return *this; }
+	NullStream& operator<<(std::ostream&(*)(std::ostream&)) { return *this; }
+};
+static NullStream nullStream_;
+#define TCP_LOG nullStream_
+#endif
+
 namespace net {
 	// 
 	//  WsaErrorStr    WSA-
@@ -76,11 +91,11 @@ namespace net {
 
 	bool TcpClient::Connect(const std::string& host, uint16_t port, uint32_t timeoutMs) {
 		if (_connected) {
-			std::cout << "[TcpClient] Connect:  ,   " << std::endl;
+			TCP_LOG << "[TcpClient] Connect:  ,   " << std::endl;
 			return false;
 		}
 
-		std::cout << "[TcpClient]   " << host << ":" << port << " (timeout=" << timeoutMs << "ms)..." <<
+		TCP_LOG << "[TcpClient]   " << host << ":" << port << " (timeout=" << timeoutMs << "ms)..." <<
 			std::endl;
 
 		//  
@@ -95,7 +110,7 @@ namespace net {
 		addrinfo* result = nullptr;
 		int gaiErr = getaddrinfo(host.c_str(), portStr, &hints, &result);
 		if (gaiErr != 0) {
-			std::cout << "[TcpClient] getaddrinfo : " << gaiErr << "  " << host << ":" << port << std::endl;
+			TCP_LOG << "[TcpClient] getaddrinfo : " << gaiErr << "  " << host << ":" << port << std::endl;
 			return false;
 		}
 
@@ -103,7 +118,7 @@ namespace net {
 		_socket = socket(result->ai_family, result->ai_socktype, result->ai_protocol);
 		if (_socket == INVALID_SOCKET) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpClient] socket() : " << WsaErrorStr(err) << std::endl;
+			TCP_LOG << "[TcpClient] socket() : " << WsaErrorStr(err) << std::endl;
 			freeaddrinfo(result);
 			return false;
 		}
@@ -118,7 +133,7 @@ namespace net {
 		if (connectResult == SOCKET_ERROR) {
 			int err = WSAGetLastError();
 			if (err != WSAEWOULDBLOCK) {
-				std::cout << "[TcpClient] connect() : " << WsaErrorStr(err) << std::endl;
+				TCP_LOG << "[TcpClient] connect() : " << WsaErrorStr(err) << std::endl;
 				closesocket(_socket);
 				_socket = INVALID_SOCKET;
 				return false;
@@ -140,17 +155,17 @@ namespace net {
 			int selResult = select(0, nullptr, &writeSet, &exceptSet, &tv);
 			if (selResult <= 0 || FD_ISSET(_socket, &exceptSet)) {
 				if (selResult == 0) {
-					std::cout << "[TcpClient] connect()  (" << timeoutMs << "ms)  " << host << ":" << port <<
+					TCP_LOG << "[TcpClient] connect()  (" << timeoutMs << "ms)  " << host << ":" << port <<
 						std::endl;
 				}
 				else if (selResult < 0) {
-					std::cout << "[TcpClient] select() : " << WsaErrorStr(WSAGetLastError()) << std::endl;
+					TCP_LOG << "[TcpClient] select() : " << WsaErrorStr(WSAGetLastError()) << std::endl;
 				}
 				else {
 					int sockErr = 0;
 					int optLen = sizeof(sockErr);
 					getsockopt(_socket, SOL_SOCKET, SO_ERROR, (char*)&sockErr, &optLen);
-					std::cout << "[TcpClient] connect()   " << host << ":" << port << ": " <<
+					TCP_LOG << "[TcpClient] connect()   " << host << ":" << port << ": " <<
 						WsaErrorStr(sockErr) << std::endl;
 				}
 				closesocket(_socket);
@@ -175,7 +190,7 @@ namespace net {
 		//  recv 
 		_recvThread = std::thread(&TcpClient::RecvThreadProc, this);
 
-		std::cout << "[TcpClient]   " << host << ":" << port << " (socket=" << _socket << ")" << std::endl;
+		TCP_LOG << "[TcpClient]   " << host << ":" << port << " (socket=" << _socket << ")" << std::endl;
 		return true;
 	}
 
@@ -183,7 +198,7 @@ namespace net {
 
 	bool TcpClient::Attach(SOCKET sock, const std::string& peerIP, uint16_t peerPort) {
 		if (_connected) {
-			std::cout << "[TcpClient] Attach:  ,  " << std::endl;
+			TCP_LOG << "[TcpClient] Attach:  ,  " << std::endl;
 			return false;
 		}
 
@@ -201,7 +216,7 @@ namespace net {
 		//  recv 
 		_recvThread = std::thread(&TcpClient::RecvThreadProc, this);
 
-		std::cout << "[TcpClient] Attached  " << peerIP << ":" << peerPort << " (socket=" << _socket << ")" <<
+		TCP_LOG << "[TcpClient] Attached  " << peerIP << ":" << peerPort << " (socket=" << _socket << ")" <<
 			std::endl;
 		return true;
 	}
@@ -214,7 +229,7 @@ namespace net {
 			return; //  
 		}
 
-		std::cout << "[TcpClient] Disconnect: reason=" << reason
+		TCP_LOG << "[TcpClient] Disconnect: reason=" << reason
 			<< " peer=" << _peerIP << ":" << _peerPort
 			<< " (socket=" << _socket << ")" << std::endl;
 
@@ -254,11 +269,11 @@ namespace net {
 
 	bool TcpClient::Send(WPacket& packet) {
 		if (!_connected) {
-			std::cout << "[TcpClient] Send:  ,  " << std::endl;
+			TCP_LOG << "[TcpClient] Send:  ,  " << std::endl;
 			return false;
 		}
 
-		std::cout << "[TcpClient] " << packet.PrintCommand() << std::endl;
+		TCP_LOG << "[TcpClient] " << packet.PrintCommand() << std::endl;
 
 		std::lock_guard<std::mutex> lock(_sendMtx);
 
@@ -279,7 +294,7 @@ namespace net {
 			int encLen = dataLen;
 			if (!_crypto->Encrypt(encrypted.Data() + 6, maxEncLen,
 								  packet.Data() + 6, encLen)) {
-				std::cout << "[TcpClient] Send:  ,  " << std::endl;
+				TCP_LOG << "[TcpClient] Send:  ,  " << std::endl;
 				return false;
 			}
 
@@ -296,7 +311,7 @@ namespace net {
 
 	bool TcpClient::AsyncCall(WPacket& request, uint32_t timeoutMs, RpcCallback callback) {
 		if (!_connected) {
-			std::cout << "[TcpClient] AsyncCall:  " << std::endl;
+			TCP_LOG << "[TcpClient] AsyncCall:  " << std::endl;
 			return false;
 		}
 
@@ -414,25 +429,25 @@ namespace net {
 		//   ,  WSAGetLastError/GetLastError   
 		WSASetLastError(0);
 		SetLastError(0);
-		std::cout << "[TcpClient] RecvThread:  (socket=" << _socket
+		TCP_LOG << "[TcpClient] RecvThread:  (socket=" << _socket
 			<< " peer=" << _peerIP << ":" << _peerPort << ")" << std::endl;
 		uint8_t sizeHeader[2];
 
 		while (_connected) {
 			// 1.  2   
 			if (!RecvExact(sizeHeader, 2)) {
-				std::cout << "[TcpClient] RecvThread:      " << std::endl;
+				TCP_LOG << "[TcpClient] RecvThread:      " << std::endl;
 				break;
 			}
 
 			int pktSize = static_cast<int>(readUInt16(sizeHeader));
 			if (pktSize == 2) {
-				std::cout << "[TcpClient] RecvThread:  : " << pktSize << std::endl;
+				TCP_LOG << "[TcpClient] RecvThread:  : " << pktSize << std::endl;
 				continue;
 			}
 
 			if (pktSize < 8 || pktSize > 65535) {
-				std::cout << "[TcpClient] RecvThread:   : " << pktSize << std::endl;
+				TCP_LOG << "[TcpClient] RecvThread:   : " << pktSize << std::endl;
 				break;
 			}
 
@@ -445,7 +460,7 @@ namespace net {
 
 			// 3.    [SESS][CMD][payload]
 			if (!RecvExact(buf + 2, pktSize - 2)) {
-				std::cout << "[TcpClient] RecvThread:       (size=" << pktSize << ")" <<
+				TCP_LOG << "[TcpClient] RecvThread:       (size=" << pktSize << ")" <<
 					std::endl;
 				PacketPool::Shared().Free(buf, bucketSize);
 				break;
@@ -456,7 +471,7 @@ namespace net {
 				int encLen = pktSize - 6;
 
 				if (!_crypto->Decrypt(buf + 6, encLen)) {
-					std::cout << "[TcpClient] RecvThread:   (size=" << pktSize << "), " <<
+					TCP_LOG << "[TcpClient] RecvThread:   (size=" << pktSize << "), " <<
 						std::endl;
 					PacketPool::Shared().Free(buf, bucketSize);
 					break;
@@ -472,7 +487,7 @@ namespace net {
 
 			{
 				RPacket tmp(buf, pktSize, /*ownsBuffer=*/false);
-				std::cout << "[TcpClient] " << tmp.PrintCommand() << std::endl;
+				TCP_LOG << "[TcpClient] " << tmp.PrintCommand() << std::endl;
 			}
 
 			if (sess & SESS_FLAG) {
@@ -485,7 +500,7 @@ namespace net {
 
 		//     game thread  _pendingDisconnect
 		if (_connected) {
-			std::cout << "[TcpClient] RecvThread:  ,  pendingDisconnect" << std::endl;
+			TCP_LOG << "[TcpClient] RecvThread:  ,  pendingDisconnect" << std::endl;
 			_connected = false;
 			_pendingDisconnect = true;
 
@@ -495,7 +510,7 @@ namespace net {
 			}
 		}
 		else {
-			std::cout << "[TcpClient] RecvThread:  (Disconnect  )" << std::endl;
+			TCP_LOG << "[TcpClient] RecvThread:  (Disconnect  )" << std::endl;
 		}
 	}
 
@@ -508,11 +523,11 @@ namespace net {
 			if (n <= 0) {
 				int err = WSAGetLastError();
 				if (n == 0) {
-					std::cout << "[TcpClient] RecvExact:    " << std::endl;
+					TCP_LOG << "[TcpClient] RecvExact:    " << std::endl;
 				}
 				else {
 					std::string error = WsaErrorStr(err);
-					std::cout << "[TcpClient] RecvExact: recv() = " << n << ", " << error << std::endl;
+					TCP_LOG << "[TcpClient] RecvExact: recv() = " << n << ", " << error << std::endl;
 				}
 				return false;
 			}
@@ -529,7 +544,7 @@ namespace net {
 			int n = send(_socket, reinterpret_cast<const char*>(buf + sent), len - sent, 0);
 			if (n <= 0) {
 				int err = WSAGetLastError();
-				std::cout << "[TcpClient] SendExact: send() = " << n << ", " << WsaErrorStr(err) << std::endl;
+				TCP_LOG << "[TcpClient] SendExact: send() = " << n << ", " << WsaErrorStr(err) << std::endl;
 				return false;
 			}
 			sent += n;

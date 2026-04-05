@@ -18,6 +18,7 @@
 #include <string>
 #include <functional>
 #include <chrono>
+#include <source_location>
 #include "logutil.h"
 
 template <typename T>
@@ -39,14 +40,21 @@ public:
 	TrackedPool& operator=(const TrackedPool&) = delete;
 
 	// Аллокация + конструирование (perfect forwarding аргументов в конструктор T)
-	template <typename... Args>
-	T* Get(Args&&... args) {
-		T* ptr = _alloc.allocate(1);
+	T* Get(const std::source_location& loc = std::source_location::current()) {
+		T* ptr = nullptr;
 		try {
-			std::construct_at(ptr, std::forward<Args>(args)...);
+			ptr = _alloc.allocate(1);
+			std::construct_at(ptr);
 		}
-		catch (...) {
-			_alloc.deallocate(ptr, 1);
+		catch (const std::exception& e) {
+			auto msg = std::format(
+				"TrackedPool<{}>::Get - exception during {}: {} (at {}:{})",
+				_name, ptr ? "construct" : "allocate", e.what(),
+				loc.file_name(), loc.line());
+			ToLogService("errors", LogLevel::Error, "{}", msg);
+			if (ptr) {
+				_alloc.deallocate(ptr, 1);
+			}
 			throw;
 		}
 

@@ -1800,14 +1800,14 @@ int EndAuction(int sItemID)
 int ListChallenge(CCharacter* pChar, CTalkNpc* pTalk)
 {
 	if (!pChar || !pTalk) return LUA_FALSE;
-	game_db.ListChallenge(pChar);
+	game_db.ListChallenge(*pChar);
 	return LUA_TRUE;
 }
 
 int HasGuildLevel(CCharacter* pChar, int byLevel)
 {
 	if (!pChar) return LUA_FALSE;
-	BOOL bRet = game_db.HasGuildLevel(pChar, (BYTE)byLevel);
+	bool bRet = game_db.HasGuildLevel(*pChar, (BYTE)byLevel);
 	return bRet ? LUA_TRUE : LUA_FALSE;
 }
 
@@ -2190,7 +2190,7 @@ void SetGmLv(CCharacter* pCha, int gmLv)
 	pCha->GetPlayer()->SetGMLev(gmLv);
 	Square& chaPos = (Square&)pCha->GetShape();
 	pCha->GetPlayer()->GetMainCha()->Cmd_EnterMap(pCha->GetBirthMap(), -1, chaPos.centre.x, chaPos.centre.y, 0);
-	game_db.SaveGmLv(pCha->GetPlayer());
+	game_db.SaveGmLv(*pCha->GetPlayer());
 }
 
 void RequestClientPin(CCharacter* pCha, int action)
@@ -2336,7 +2336,7 @@ void SendDailyBuffInfo(CCharacter* pChar, const std::string& imgName, const std:
 void ForcePlayerSave(CCharacter* pChar)
 {
 	if (!pChar) return;
-	game_db.SavePlayer(pChar->GetPlayer(), enumSAVE_TYPE_TIMER);
+	game_db.SavePlayer(*pChar->GetPlayer(), enumSAVE_TYPE_TIMER);
 }
 
 // String2Item has variable args (2 or 3) with different behavior -- keep as raw

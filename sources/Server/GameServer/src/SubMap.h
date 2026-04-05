@@ -12,6 +12,7 @@
 #include "Range.h"
 #include "EyeshotCell.h"
 #include "StateCell.h"
+#include "StateCellGrid.h"
 #include "Weather.h"
 #include "GameApp.h"
 #include "MapRes.h"
@@ -24,80 +25,85 @@ class Entity;
 class CFightAble;
 
 // 
-class	COutMapCha
-{
+class COutMapCha {
 public:
-	struct SMgrUnit
-	{
-		bool	IsValidCha(void) {if (!pCCha) return false; return pCCha->GetID() == ulChaID;}
+	struct SMgrUnit {
+		bool IsValidCha(void) {
+			if (!pCCha) return false;
+			return pCCha->GetID() == ulChaID;
+		}
 
-		dbc::Long	lLeftTick1;	// 
-		dbc::Long	lLeftTick2;	// 
-		dbc::Char	chAction;	// 
-		CCharacter	*pCCha;
-		dbc::uLong	ulChaID;
-		SSwitchMapInfo	SwitchInfo;
-		dbc::Char	chStep;
+		dbc::Long lLeftTick1; //
+		dbc::Long lLeftTick2; //
+		dbc::Char chAction; //
+		CCharacter* pCCha;
+		dbc::uLong ulChaID;
+		SSwitchMapInfo SwitchInfo;
+		dbc::Char chStep;
 
-		SMgrUnit	*pSNext;
+		SMgrUnit* pSNext;
 	};
 
 	COutMapCha(unsigned short usFreq = 2000);
 	~COutMapCha();
 
-	void	Add(CCharacter *pCObj, dbc::uLong ulChaID, SSwitchMapInfo *pSwitchInfo, dbc::Char chAction, dbc::Long lLeftTick1, dbc::Long lLeftTick2);
-	void	Run(unsigned long ulCurTick);
-	void	Drop();
-	void	ExecTimeCha(SMgrUnit *pChaInfo);
-	std::deque<std::unique_ptr<SMgrUnit>>  spawnQueue;	// Spawn queue rework - Mdr
+	void Add(CCharacter* pCObj, dbc::uLong ulChaID, SSwitchMapInfo* pSwitchInfo, dbc::Char chAction,
+			 dbc::Long lLeftTick1, dbc::Long lLeftTick2);
+	void Run(unsigned long ulCurTick);
+	void Drop();
+	void ExecTimeCha(SMgrUnit* pChaInfo);
+	std::deque<std::unique_ptr<SMgrUnit>> spawnQueue; // Spawn queue rework - Mdr
 private:
-	unsigned long	m_ulTick;
-	unsigned short	m_usFreq;	// 
+	unsigned long m_ulTick;
+	unsigned short m_usFreq; //
 };
 
-// 
-class SubMap
-{
+//
+class SubMap {
 public:
 	SubMap();
 	virtual ~SubMap();
 
-	bool	Init(CMapRes *pCMapRes, dbc::Short sCopyNO = 0);
-	bool	IsRun(void) {return m_bIsRun;}
+	bool Init(CMapRes* pCMapRes, dbc::Short sCopyNO = 0);
 
-	const char*  GetName(void) {return m_pCMapRes->GetName();}
+	bool IsRun(void) {
+		return m_bIsRun;
+	}
+
+	const char* GetName(void) {
+		return m_pCMapRes->GetName();
+	}
 
 	//pt.
-	Rect   GetEyeshot(Point &pt)const;
-	Rect   GetEyeshot(short sMgrUnitX, short sMgrUnitY)const;
-	void   GetEyeshotCenter(Point &pt);
-	Rect   GetHoldStateCell(Point &pt, dbc::Long lRadius) const;
-	void   GetHoldStateCellCenter(Point &pt);
+	Rect GetEyeshot(Point& pt) const;
+	Rect GetEyeshot(short sMgrUnitX, short sMgrUnitY) const;
+	void GetEyeshotCenter(Point& pt);
+	Rect GetHoldStateCell(Point& pt, dbc::Long lRadius) const;
+	void GetHoldStateCellCenter(Point& pt);
 
-	void   Add(Entity * ent);
-	void   Delete(Entity * ent);
-	void   MoveInStateCell(CCharacter* pCCha, const Point &SSrcPos, const Point &STarPos);
-	void   MoveInMapMask(CCharacter* pCCha, const Point &SSrcPos, const Point &STarPos);
+	void Add(Entity* ent);
+	void Delete(Entity* ent);
+	void MoveInStateCell(CCharacter* pCCha, const Point& SSrcPos, const Point& STarPos);
+	void MoveInMapMask(CCharacter* pCCha, const Point& SSrcPos, const Point& STarPos);
 
-	bool EnsurePos(Square* pSEntShape, Entity *ent, dbc::cLong clSearchRadius = 40 * 100);
-	bool Enter(Square* pSEntShape, Entity *ent, dbc::cLong clSearchRadius = 40 * 100);
-	void GoOut(Entity *ent);
-	void MoveTo(Entity *pCEnt, const Point &STar);
-	void RefreshEyeshot(Entity *pCEnt, bool bEyeshot, bool bHide, bool bShow);
+	bool EnsurePos(Square* pSEntShape, Entity* ent, dbc::cLong clSearchRadius = 40 * 100);
+	bool Enter(Square* pSEntShape, Entity* ent, dbc::cLong clSearchRadius = 40 * 100);
+	void GoOut(Entity* ent);
+	void MoveTo(Entity* pCEnt, const Point& STar);
+	void RefreshEyeshot(Entity* pCEnt, bool bEyeshot, bool bHide, bool bShow);
 
-	bool IsValidPos(dbc::Long lPosX, dbc::Long lPosY)
-	{
-		const Rect	&MapRange = GetRange();
+	bool IsValidPos(dbc::Long lPosX, dbc::Long lPosY) {
+		const Rect& MapRange = GetRange();
 		if (lPosX < MapRange.ltop.x || lPosX >= MapRange.rbtm.x
 			|| lPosY < MapRange.ltop.y || lPosY >= MapRange.rbtm.y)
 			return false;
 		return true;
 	}
-	dbc::uShort	GetAreaAttr(dbc::Long lPosX, dbc::Long lPosY)
-	{
-		dbc::Short	sUnitWidth, sUnitHeight;
-		dbc::Short	sUnitX, sUnitY;
-		dbc::uShort	usAreaAttr;
+
+	dbc::uShort GetAreaAttr(dbc::Long lPosX, dbc::Long lPosY) {
+		dbc::Short sUnitWidth, sUnitHeight;
+		dbc::Short sUnitX, sUnitY;
+		dbc::uShort usAreaAttr;
 
 		m_pCMapRes->m_CTerrain.GetUnitSize(&sUnitWidth, &sUnitHeight);
 		sUnitX = Short(lPosX / sUnitWidth);
@@ -106,88 +112,172 @@ public:
 
 		return usAreaAttr;
 	}
-	dbc::uShort	GetAreaAttr(const Point &Pos)
-	{
+
+	dbc::uShort GetAreaAttr(const Point& Pos) {
 		return GetAreaAttr(Pos.x, Pos.y);
 	}
 
 	void NotiStateCellToEyeshot(dbc::Short sCellX, dbc::Short sCellY);
 
-	// 
-	void		BeginSearchInRange(dbc::Long *plRangeBParam, dbc::Long *plRangeEParam, bool bIncludeHideEnti = false);
-	CCharacter*	GetNextCharacterInRange(void);
+	//
+	void BeginSearchInRange(dbc::Long* plRangeBParam, dbc::Long* plRangeEParam, bool bIncludeHideEnti = false);
+	CCharacter* GetNextCharacterInRange(void);
 
-	// 
-	bool		RangeAddState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle,
-				dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType, dbc::Short *sStateParam);
-	bool		RangeAddState(Rect *pSRange, dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle,
-				dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType, dbc::Short *sStateParam);
+	//
+	bool RangeAddState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle,
+					   dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType, dbc::Short* sStateParam);
+	bool RangeAddState(Rect* pSRange, dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle,
+					   dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType, dbc::Short* sStateParam);
 
-	// 
-	CCharacter*	FindCharacter( dbc::uLong ulID, const Point& point );
-	// 
-	bool		IsMoveAble(Entity *pCEnt, dbc::Long lPosX, dbc::Long lPosY);
+	//
+	CCharacter* FindCharacter(dbc::uLong ulID, const Point& point);
+	//
+	bool IsMoveAble(Entity* pCEnt, dbc::Long lPosX, dbc::Long lPosY);
 
-	void		LoadMonsterInfo(void);
+	void LoadMonsterInfo(void);
 
-	BOOL		LoadNpc();
+	BOOL LoadNpc();
 
-	BOOL		LoadEventEntity();
+	BOOL LoadEventEntity();
 
-	CNpcRecord* GetNpcInfo( USHORT sNpcID );
+	CNpcRecord* GetNpcInfo(USHORT sNpcID);
 
-	CItem*		ItemSpawn(const SItemGrid *pItemInfo, dbc::Long lPosX, dbc::Long lPosY, dbc::Char chSpawnType,
-		dbc::Long lFromEntityID = 0, dbc::Long lProtChaID = 0, dbc::Long lProtChaHandle = 0, dbc::Long lProtTime = 0, dbc::Long lOnTick = 0,
-		CEvent	*pCEvent = NULL);
-	CCharacter*	ChaSpawn(dbc::Long lChaInfoID, dbc::Char chCtrlType, dbc::Short sAngle, Point *pSPos, bool bEyeshotAbility = false,
-		dbc::cChar *cszChaName = 0, const long clSearchRadius = 120 * 100);
+	CItem* ItemSpawn(const SItemGrid* pItemInfo, dbc::Long lPosX, dbc::Long lPosY, dbc::Char chSpawnType,
+					 dbc::Long lFromEntityID = 0, dbc::Long lProtChaID = 0, dbc::Long lProtChaHandle = 0,
+					 dbc::Long lProtTime = 0, dbc::Long lOnTick = 0,
+					 CEvent* pCEvent = NULL);
+	CCharacter* ChaSpawn(dbc::Long lChaInfoID, dbc::Char chCtrlType, dbc::Short sAngle, Point* pSPos,
+						 bool bEyeshotAbility = false,
+						 dbc::cChar* cszChaName = 0, const long clSearchRadius = 120 * 100);
 
-	void		EntryOpen(void);
-	void		EntryClose(void);
-	void		Open(void);
-	void		Run(DWORD dwCurTime);
-	void		Close(void);
-	void		ClearSurfaceState(void);
-	void		ResetNotPlyCha(void);
-	void		ClearPlayerCha(void);
-	void		ClearAllCha(void);
-	void		ClearAllMonster(void);
-	void		ClearAllMonsterByName(const char* szMonsName);
-	void		Notice( const char *szString );
+	void EntryOpen(void);
+	void EntryClose(void);
+	void Open(void);
+	void Run(DWORD dwCurTime);
+	void Close(void);
+	void ClearSurfaceState(void);
+	void ResetNotPlyCha(void);
+	void ClearPlayerCha(void);
+	void ClearAllCha(void);
+	void ClearAllMonster(void);
+	void ClearAllMonsterByName(const char* szMonsName);
+	void Notice(const char* szString);
 
-	dbc::Short	GetEyeshotCellWidth(void) const {return m_pCMapRes->m_csEyeshotCellWidth;}
-	dbc::Short	GetEyeshotCellHeight(void) const {return m_pCMapRes->m_csEyeshotCellHeight;}
-	dbc::Short	GetEyeshotCellLin(void) const {return m_pCMapRes->m_sEyeshotCellLin;}
-	dbc::Short	GetEyeshotCellCol(void) const {return m_pCMapRes->m_sEyeshotCellCol;}
-	dbc::Short	GetStateCellWidth(void) const {return m_pCMapRes->m_csStateCellWidth;}
-	dbc::Short	GetStateCellHeight(void) const {return m_pCMapRes->m_csStateCellHeight;}
-	dbc::Short	GetStateCellLin(void) const {return m_pCMapRes->m_sStateCellLin;}
-	dbc::Short	GetStateCellCol(void) const {return m_pCMapRes->m_sStateCellCol;}
-	dbc::Short	GetBlockCellWidth(void) const {return m_pCMapRes->m_csBlockUnitWidth;}
-	dbc::Short	GetBlockCellHeight(void) const {return m_pCMapRes->m_csBlockUnitHeight;}
-	bool		GetTerrainCellSize(dbc::Short *psWidth, dbc::Short *psHeight) {return m_pCMapRes->m_CTerrain.GetUnitSize(psWidth, psHeight);}
-	bool		GetTerrainCellAttr(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uShort &usAttribute) {return m_pCMapRes->m_CTerrain.GetUnitAttr(sUnitX, sUnitY, usAttribute);}
-	bool		GetTerrainCellIsland(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uChar &uchIsland) {return m_pCMapRes->m_CTerrain.GetUnitIsland(sUnitX, sUnitY, uchIsland);}
-	BYTE		IsBlock(dbc::Long lCellX, dbc::Long lCellY) {return m_pCMapRes->m_CBlock.IsBlock(lCellX, lCellY);}
-	const Rect&	GetRange(void) const {return m_pCMapRes->GetRange();}
-	BYTE		GetMapID() {return m_pCMapRes->GetMapID();}
-	dbc::Short	GetEyeshotWidth(void) const {return m_pCMapRes->m_eyeshotwidth;}
-	bool		CanPK(void) {return m_pCMapRes->CanPK();}
-	bool		CanSavePos(void) {return m_pCMapRes->CanSavePos();}
-	void		BeforePlyOutMap(CCharacter *pCCha);
-	void		AfterPlyEnterMap(CCharacter *pCCha);
-	dbc::Long	GetMonsterNum(void) {return m_pCMapRes->m_pCMonsterSpawn->GetChaCount();}
-	CMapRes*	GetMapRes(void) {return m_pCMapRes;}
-	void		SetCopyNO(dbc::Short sCopyNO) {m_sCopyNO = sCopyNO;}
-	dbc::Short	GetCopyNO(void) {return m_sCopyNO;}
-	dbc::Long	GetPlayerNum(void) {return m_lPlayerNum;}
-	dbc::Long	GetInfoParam(dbc::Char chParamID) {if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return 0; return m_lInfoParam[chParamID];}
-	bool		SetInfoParam(dbc::Char chParamID, dbc::Long lParamVal) {if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return false; m_lInfoParam[chParamID] = lParamVal; return true;}
-	void		BeginGetPlyCha(void);
-	CCharacter*	GetNextPlyCha(void);
-	bool		CheckRun(void);
-	void		DealActivePlayer(std::string & function);//2006.10.12wsj.
-	void		DealPlayer(std::string & function);
+	dbc::Short GetEyeshotCellWidth(void) const {
+		return m_pCMapRes->m_csEyeshotCellWidth;
+	}
+
+	dbc::Short GetEyeshotCellHeight(void) const {
+		return m_pCMapRes->m_csEyeshotCellHeight;
+	}
+
+	dbc::Short GetEyeshotCellLin(void) const {
+		return m_pCMapRes->m_sEyeshotCellLin;
+	}
+
+	dbc::Short GetEyeshotCellCol(void) const {
+		return m_pCMapRes->m_sEyeshotCellCol;
+	}
+
+	dbc::Short GetStateCellWidth(void) const {
+		return m_pCMapRes->m_csStateCellWidth;
+	}
+
+	dbc::Short GetStateCellHeight(void) const {
+		return m_pCMapRes->m_csStateCellHeight;
+	}
+
+	dbc::Short GetStateCellLin(void) const {
+		return m_pCMapRes->m_sStateCellLin;
+	}
+
+	dbc::Short GetStateCellCol(void) const {
+		return m_pCMapRes->m_sStateCellCol;
+	}
+
+	dbc::Short GetBlockCellWidth(void) const {
+		return m_pCMapRes->m_csBlockUnitWidth;
+	}
+
+	dbc::Short GetBlockCellHeight(void) const {
+		return m_pCMapRes->m_csBlockUnitHeight;
+	}
+
+	bool GetTerrainCellSize(dbc::Short* psWidth, dbc::Short* psHeight) {
+		return m_pCMapRes->m_CTerrain.GetUnitSize(psWidth, psHeight);
+	}
+
+	bool GetTerrainCellAttr(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uShort& usAttribute) {
+		return m_pCMapRes->m_CTerrain.GetUnitAttr(sUnitX, sUnitY, usAttribute);
+	}
+
+	bool GetTerrainCellIsland(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uChar& uchIsland) {
+		return m_pCMapRes->m_CTerrain.GetUnitIsland(sUnitX, sUnitY, uchIsland);
+	}
+
+	BYTE IsBlock(dbc::Long lCellX, dbc::Long lCellY) {
+		return m_pCMapRes->m_CBlock.IsBlock(lCellX, lCellY);
+	}
+
+	const Rect& GetRange(void) const {
+		return m_pCMapRes->GetRange();
+	}
+
+	BYTE GetMapID() {
+		return m_pCMapRes->GetMapID();
+	}
+
+	dbc::Short GetEyeshotWidth(void) const {
+		return m_pCMapRes->m_eyeshotwidth;
+	}
+
+	bool CanPK(void) {
+		return m_pCMapRes->CanPK();
+	}
+
+	bool CanSavePos(void) {
+		return m_pCMapRes->CanSavePos();
+	}
+
+	void BeforePlyOutMap(CCharacter* pCCha);
+	void AfterPlyEnterMap(CCharacter* pCCha);
+
+	dbc::Long GetMonsterNum(void) {
+		return m_pCMapRes->m_pCMonsterSpawn->GetChaCount();
+	}
+
+	CMapRes* GetMapRes(void) {
+		return m_pCMapRes;
+	}
+
+	void SetCopyNO(dbc::Short sCopyNO) {
+		m_sCopyNO = sCopyNO;
+	}
+
+	dbc::Short GetCopyNO(void) {
+		return m_sCopyNO;
+	}
+
+	dbc::Long GetPlayerNum(void) {
+		return m_lPlayerNum;
+	}
+
+	dbc::Long GetInfoParam(dbc::Char chParamID) {
+		if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return 0;
+		return m_lInfoParam[chParamID];
+	}
+
+	bool SetInfoParam(dbc::Char chParamID, dbc::Long lParamVal) {
+		if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return false;
+		m_lInfoParam[chParamID] = lParamVal;
+		return true;
+	}
+
+	void BeginGetPlyCha(void);
+	CCharacter* GetNextPlyCha(void);
+	bool CheckRun(void);
+	void DealActivePlayer(std::string& function); //2006.10.12wsj.
+	void DealPlayer(std::string& function);
 	//void		OnPlayerDie(CCharacter	*pCCha)//2006.10.12wsj
 	//{
 	//	Point		l_pt = pCCha->GetPos();
@@ -205,162 +295,165 @@ public:
 	//	}
 	//	m_lActivePlayerNum--;
 	//};
-	void SetSpecialInter(int interva)//2006.10.12wsj
+	void SetSpecialInter(int interva) //2006.10.12wsj
 	{
 		m_timeSpecialRun.SetInterval(interva);
 	}
-		
 
-	dbc::Long GetActivePlayer()
-	{
-		CCharacter * pCha;
+
+	dbc::Long GetActivePlayer() {
+		CCharacter* pCha;
 		long lActivePlayerNum = 0;
 		BeginGetPlyCha();
 
-		while(pCha = GetNextPlyCha())
-		{
-			if(pCha->IsPlayerCha() && pCha->IsLiveing())
-			{
+		while (pCha = GetNextPlyCha()) {
+			if (pCha->IsPlayerCha() && pCha->IsLiveing()) {
 				lActivePlayerNum++;
 			}
 		}
 		return lActivePlayerNum;
-	}//2006.10.12wsj
+	} //2006.10.12wsj
 
-	dbc::Long	CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY);
-	void	ActiveEyeshotCell(dbc::Long lCellX, dbc::Long lCellY)
-	{
+	dbc::Long CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY);
+
+	void ActiveEyeshotCell(dbc::Long lCellX, dbc::Long lCellY) {
 		if (m_pCEyeshotCell[lCellY][lCellX].m_lActNum == 0)
 			m_CEyeshotCellL.Add(&m_pCEyeshotCell[lCellY][lCellX]);
 		m_pCEyeshotCell[lCellY][lCellX].m_lActNum++;
 	}
-	void	InactiveEyeshotCell(dbc::Long lCellX, dbc::Long lCellY)
-	{
+
+	void InactiveEyeshotCell(dbc::Long lCellX, dbc::Long lCellY) {
 		m_pCEyeshotCell[lCellY][lCellX].m_lActNum--;
-		if (m_pCEyeshotCell[lCellY][lCellX].m_lActNum == 0)
-		{
-			if (CountEyeshotPlyActiveNum(lCellX, lCellY) > 0) // 
+		if (m_pCEyeshotCell[lCellY][lCellX].m_lActNum == 0) {
+			if (CountEyeshotPlyActiveNum(lCellX, lCellY) > 0) //
 			{
 				m_pCEyeshotCell[lCellY][lCellX].m_lActNum++;
 				//LG("", "!!![%d,%d]\n", lCellX, lCellY);
-				ToLogService("errors", LogLevel::Error, "when eyeshot cell[{},{}] stop activation, find the character player who has eyeshot ability.", lCellX, lCellY);
+				ToLogService("errors", LogLevel::Error,
+							 "when eyeshot cell[{},{}] stop activation, find the character player who has eyeshot ability.",
+							 lCellX, lCellY);
 			}
 			else
 				m_CEyeshotCellL.Del(&m_pCEyeshotCell[lCellY][lCellX]);
 		}
 	}
-	bool	IsValidStateCell(dbc::Long x, dbc::Long y)
-	{
-		if (m_pCStateCell[y][x])
-			return true;
-		return false;
-	}
-	CChaListNode*	StateCellAddCha(dbc::Long lCellX, dbc::Long lCellY, CCharacter *pCCha, bool bIn)
-	{
-		CheckStateCell(lCellX, lCellY);
-		return m_pCStateCell[lCellY][lCellX]->AddCharacter(pCCha, bIn);
+
+	bool IsValidStateCell(dbc::Long x, dbc::Long y) {
+		return _stateCellGrid.Get(static_cast<short>(x), static_cast<short>(y)) != nullptr;
 	}
 
-	void	StateCellDelCha(dbc::Long lCellX, dbc::Long lCellY, CChaListNode *pCChaNode)
-	{
-		m_pCStateCell[lCellY][lCellX]->DelCharacter(pCChaNode);
+	CChaListNode* StateCellAddCha(dbc::Long lCellX, dbc::Long lCellY, CCharacter* pCCha, bool bIn) {
+		CheckStateCell(lCellX, lCellY);
+		return _stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY))->AddCharacter(pCCha, bIn);
+	}
+
+	void StateCellDelCha(dbc::Long lCellX, dbc::Long lCellY, CChaListNode* pCChaNode) {
+		_stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY))->DelCharacter(pCChaNode);
 		ReleaseStateCell(lCellX, lCellY);
 	}
 
-	void	ActiveStateCell(dbc::Long lCellX, dbc::Long lCellY)
-	{
-		if (m_pCStateCell[lCellY][lCellX]->m_lActNum == 0)
-			m_CStateCellL.Add(m_pCStateCell[lCellY][lCellX]);
-		m_pCStateCell[lCellY][lCellX]->m_lActNum++;
-		ActiveEyeshotCell(m_pCStateCell[lCellY][lCellX]->m_pCEyeshotCell->m_sPosX, m_pCStateCell[lCellY][lCellX]->m_pCEyeshotCell->m_sPosY);
+	void ActiveStateCell(dbc::Long lCellX, dbc::Long lCellY) {
+		auto* cell = _stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY));
+		if (cell->m_lActNum == 0) {
+			m_CStateCellL.Add(cell);
+		}
+		cell->m_lActNum++;
+		ActiveEyeshotCell(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
 	}
-	void	InactiveStateCell(dbc::Long lCellX, dbc::Long lCellY)
-	{
-		InactiveEyeshotCell(m_pCStateCell[lCellY][lCellX]->m_pCEyeshotCell->m_sPosX, m_pCStateCell[lCellY][lCellX]->m_pCEyeshotCell->m_sPosY);
-		m_pCStateCell[lCellY][lCellX]->m_lActNum--;
-		if (m_pCStateCell[lCellY][lCellX]->m_lActNum == 0)
-		{
-			m_CStateCellL.Del(m_pCStateCell[lCellY][lCellX]);
+
+	void InactiveStateCell(dbc::Long lCellX, dbc::Long lCellY) {
+		auto* cell = _stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY));
+		InactiveEyeshotCell(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
+		cell->m_lActNum--;
+		if (cell->m_lActNum == 0) {
+			m_CStateCellL.Del(cell);
 			ReleaseStateCell(lCellX, lCellY);
 		}
 	}
 
-	bool	AddCellState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle, dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType,
-		dbc::Long lCellX, dbc::Long lCellY, dbc::uChar uchStateID, dbc::uChar uchStateLv, dbc::uLong ulStartTick, dbc::Long lOnTick, dbc::Char chType, dbc::Char chWithCenter)
-	{
-		bool	bValid = true;
-		if (!m_pCStateCell[lCellY][lCellX])
-		{
-			bValid = false;
+	bool AddCellState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle, dbc::Char chObjType,
+					  dbc::Char chObjHabitat, dbc::Char chEffType,
+					  dbc::Long lCellX, dbc::Long lCellY, dbc::uChar uchStateID, dbc::uChar uchStateLv,
+					  dbc::uLong ulStartTick, dbc::Long lOnTick, dbc::Char chType, dbc::Char chWithCenter) {
+		auto sx = static_cast<short>(lCellX);
+		auto sy = static_cast<short>(lCellY);
+		bool bValid = _stateCellGrid.Get(sx, sy) != nullptr;
+		if (!bValid) {
 			CheckStateCell(lCellX, lCellY);
 		}
-		bool bHasState = m_pCStateCell[lCellY][lCellX]->HasState(uchStateID);
-		bool bAddSuc = m_pCStateCell[lCellY][lCellX]->AddState(uchFightID, ulSrcWorldID, lSrcHandle, chObjType, chObjHabitat, chEffType, uchStateID, uchStateLv, ulStartTick, lOnTick, chType, chWithCenter);
-		if (!bValid && !bAddSuc)
+		auto* cell = _stateCellGrid.Get(sx, sy);
+		bool bHasState = cell->HasState(uchStateID);
+		bool bAddSuc = cell->AddState(uchFightID, ulSrcWorldID, lSrcHandle, chObjType,
+									  chObjHabitat, chEffType, uchStateID, uchStateLv,
+									  ulStartTick, lOnTick, chType, chWithCenter);
+		if (!bValid && !bAddSuc) {
 			ReleaseStateCell(lCellX, lCellY);
-		if (!bHasState && bAddSuc)
+		}
+		if (!bHasState && bAddSuc) {
 			ActiveStateCell(lCellX, lCellY);
-
+		}
 		return bAddSuc;
 	}
-	void	ReleaseStateCell(dbc::Long x, dbc::Long y)
-	{
-		if (m_pCStateCell[y][x] && m_pCStateCell[y][x]->GetChaNum() == 0 && m_pCStateCell[y][x]->GetStateNum() == 0)
-		{
-			g_pGameApp->m_MapStateCellPool.Release(m_pCStateCell[y][x]);
-			m_pCStateCell[y][x] = nullptr;
+
+	void ReleaseStateCell(dbc::Long x, dbc::Long y) {
+		auto sx = static_cast<short>(x);
+		auto sy = static_cast<short>(y);
+		auto* cell = _stateCellGrid.Get(sx, sy);
+		if (cell && cell->GetChaNum() == 0 && cell->GetStateNum() == 0) {
+			g_pGameApp->m_MapStateCellPool.Release(cell);
+			_stateCellGrid.Set(sx, sy, nullptr);
 		}
 	}
 
-	CEyeshotCell	**m_pCEyeshotCell; // 
-	CStateCell		***m_pCStateCell; // 
-	COutMapCha		m_COutMapCha; // 
+	CEyeshotCell** m_pCEyeshotCell; //
+	StateCellGrid _stateCellGrid; //
+	COutMapCha m_COutMapCha; //
 	//
-	CActEyeshotCell	m_CEyeshotCellL;	// 
-	CActStateCell	m_CStateCellL;		// 
+	CActEyeshotCell m_CEyeshotCellL; //
+	CActStateCell m_CStateCellL; //
 
-	bool			m_bIsRun;		// 
-	CWeatherMgr		m_WeatherMgr;	// 
+	bool m_bIsRun; //
+	CWeatherMgr m_WeatherMgr; //
 
 private:
-	CMapRes	*m_pCMapRes;
-	CTimer	m_timeSpecialRun;
+	CMapRes* m_pCMapRes;
+	CTimer m_timeSpecialRun;
 
-	void	CheckStateCell(dbc::Long x, dbc::Long y)
-	{
-		if (!m_pCStateCell[y][x])
-		{
-			m_pCStateCell[y][x] = g_pGameApp->m_MapStateCellPool.Get();
-			m_pCStateCell[y][x]->m_sPosX = (Short)x;
-			m_pCStateCell[y][x]->m_sPosY = (Short)y;
-			m_pCStateCell[y][x]->m_pCEyeshotCell = &m_pCEyeshotCell[y * GetStateCellWidth() / GetEyeshotCellWidth()][x * GetStateCellWidth() / GetEyeshotCellHeight()];
+	void CheckStateCell(dbc::Long x, dbc::Long y) {
+		auto sx = static_cast<short>(x);
+		auto sy = static_cast<short>(y);
+		if (!_stateCellGrid.Get(sx, sy)) {
+			auto* cell = g_pGameApp->m_MapStateCellPool.Get();
+			cell->m_sPosX = sx;
+			cell->m_sPosY = sy;
+			cell->m_pCEyeshotCell = &m_pCEyeshotCell[y * GetStateCellWidth() / GetEyeshotCellWidth()][x *
+				GetStateCellWidth() / GetEyeshotCellHeight()];
+			_stateCellGrid.Set(sx, sy, cell);
 		}
 	}
 
-	// 
-	struct
-	{
-		bool				m_bIncludeHideEnti;							// 
-		dbc::Short			m_sRangeMgrUnitNum;							// 
-		dbc::Long			m_lRangeMgrUnit[defRANGE_MGRUNIU_NUM][2];	// x,y
-		dbc::Long			m_lRangeCentUnit[2];						// ;
-		dbc::Short			m_sRangeCurMgrUnit;							// 
-		CChaListNode*		m_pRangeCurEntiNode;						// 
-		CRangeBase			*m_pCBaseRange;
+	//
+	struct {
+		bool m_bIncludeHideEnti; //
+		dbc::Short m_sRangeMgrUnitNum; //
+		dbc::Long m_lRangeMgrUnit[defRANGE_MGRUNIU_NUM][2]; // x,y
+		dbc::Long m_lRangeCentUnit[2]; // ;
+		dbc::Short m_sRangeCurMgrUnit; //
+		CChaListNode* m_pRangeCurEntiNode; //
+		CRangeBase* m_pCBaseRange;
 
-		CRangeStick		m_CStickRange;
-		CRangeFan		m_CFanRange;
-		CRangeSquare	m_CSquareCRange;
-		CRangeCircle	m_CCircleRange;
+		CRangeStick m_CStickRange;
+		CRangeFan m_CFanRange;
+		CRangeSquare m_CSquareCRange;
+		CRangeCircle m_CCircleRange;
 	};
 
-	dbc::Short	m_sCopyNO;
-	CTimer		m_timeScriptRun;
+	dbc::Short m_sCopyNO;
+	CTimer m_timeScriptRun;
 
-	dbc::Long	m_lPlayerNum;
-//	dbc::Long	m_lActivePlayerNum;
-	dbc::Long	m_lInfoParam[defMAPCOPY_INFO_PARAM_NUM];
-
+	dbc::Long m_lPlayerNum;
+	//	dbc::Long	m_lActivePlayerNum;
+	dbc::Long m_lInfoParam[defMAPCOPY_INFO_PARAM_NUM];
 };
 
 #endif //SUBMAP_H

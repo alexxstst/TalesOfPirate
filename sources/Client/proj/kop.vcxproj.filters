@@ -1318,32 +1318,8 @@
     <ClInclude Include="..\src\ThreadBase.h">
       <Filter>Tools\Thread</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lua_app.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_camera.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_input.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_network.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_object.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_scene.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_ui.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\lua_util.h">
-      <Filter>Lua_GamePlatform</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\lua_platform.h">
-      <Filter>Lua_GamePlatform\main</Filter>
+      <Filter>Lua_GamePlatform</Filter>
     </ClInclude>
     <ClInclude Include="..\src\Resource.h">
       <Filter>Resource Files</Filter>

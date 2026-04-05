@@ -28,6 +28,7 @@
 #include "NetChat.h"
 #include "UIsystemform.h"
 #include "GlobalVar.h"
+#include "StringLib.h"
 #include "UITreeView.h"
 #include "UIGraph.h"
 
@@ -541,13 +542,13 @@ void CUIGuildMgr::RefreshAttribute() {
 		//m_plabGuildState->SetCaption(strState.c_str());
 		__int64 remain = CGuildData::GetRemainTime();
 		if (remain > 1440) {
-			sprintf(buf, GetLanguageString(611).c_str(), remain / 1440);
+			FmtLang(buf, sizeof(buf), GetLanguageString(611), remain / 1440);
 		}
 		else if (remain > 60) {
-			sprintf(buf, GetLanguageString(612).c_str(), remain / 60);
+			FmtLang(buf, sizeof(buf), GetLanguageString(612), remain / 60);
 		}
 		else {
-			sprintf(buf, GetLanguageString(613).c_str(), remain);
+			FmtLang(buf, sizeof(buf), GetLanguageString(613), remain);
 		}
 		//m_plabGuildRemainTime->SetCaption(buf);
 	}

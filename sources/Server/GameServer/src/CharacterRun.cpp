@@ -248,7 +248,7 @@ void CCharacter::OnDBUpdate(DWORD dwCurTime)
 		return;
 
 	ToLogService("map", "OnDBUpdate start!");
-	game_db.SavePlayer(pCPlayer, enumSAVE_TYPE_TIMER);
+	game_db.SavePlayer(*pCPlayer, enumSAVE_TYPE_TIMER);
 	ToLogService("map", "OnDBUpdate end!");
 }
 
@@ -256,7 +256,7 @@ BOOL CCharacter::SaveMissionData()
 {
 		CPlayer* pCPlayer = GetPlayer();
 	if (!pCPlayer) return FALSE;
-	if (!game_db.SaveMissionData(pCPlayer, pCPlayer->GetDBChaId()))
+	if (!game_db.SaveMissionData(*pCPlayer, pCPlayer->GetDBChaId()))
 	{
 		//SystemNotice( "%sID[0x%X]", this->GetName(), pCPlayer->GetDBChaId() );
 		SystemNotice(RES_STRING(GM_CHARACTERRUN_CPP_00001), this->GetName(), pCPlayer->GetDBChaId());

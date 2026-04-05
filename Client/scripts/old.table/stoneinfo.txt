@@ -1,0 +1,44 @@
+1	Fiery Gem	0878	1	1	ItemHint_LieYanS	F6D243
+2	Furious Gem	0879	2,3,4,7,9	1	ItemHint_ZhiYanS	F6D243
+3	Explosive Gem	0880	3,4	1	ItemHint_HuoYaoS	F6D243
+4	Lustrious Gem	0881	1,2,3,4,7,9,23	1	ItemHint_MaNaoS	F6D243
+5	Glowing Gem	0882	11,22,27	2	ItemHint_HanYu	F6D243
+6	Shining Gem	0883	11,22,27	2	ItemHint_YueZhiX	F6D243
+7	Shadow Gem	0884	1,2,3,4,7,9,24	2	ItemHint_ShuiLingS	F6D243
+8	Spirit Gem	0887	1,2,3,4,7,9,24	4	ItemHint_ShengGuangS	F6D243
+9	Gem of the Wind	0860	24	4	ItemHint_FengLingS	EB4E68
+10	Gem of Striking	0861	23	4	ItemHint_YingYanS	EB4E68
+11	Gem of Colossus	0862	11,22,27	4	ItemHint_YanVitS	EB4E68
+12	Gem of Rage	0863	1,2,3,4,7,9	4	ItemHint_YanStrS	EB4E68
+13	Eye of Black Dragon	0864	1,2,3,4,7,9	1	ItemHint_LongZhiTong	E14DF7
+14	Soul of Black Dragon	0865	11,22,27	2	ItemHint_LongZhiHun	E14DF7
+15	Heart of Black Dragon	0866	23,24	2	ItemHint_LongZhiXin	E14DF7
+16	Gem of Soul	1012	1,2,3	4	ItemHint_GaNaZhiShen	EB4E68
+17	Yellow Jade	6832	14,0,0	2	ItemHint_HuangYu	FED330
+18	Red Jade	6833	14,0,0	2	ItemHint_ChiYu	EA2027
+19	Green Jade	6834	14,0,0	2	ItemHint_QingYu	4CD137
+20	Chiatan's Aura	6836	23,0,0	1	ItemHint_XTLingGuang	7158E2
+21	Locke's Hitting	6837	23,0,0	1	ItemHint_LKBiZhong	7158E2
+22	Bing's Dodging	6838	24,0,0	2	ItemHint_BBDuoShan	7158E2
+23	Feng's Defense	6839	14,23,24	2	ItemHint_FFDiYu	7158E2
+24	Shark's Strengthening	6840	14,11,0	4	ItemHint_XKQiangHua	7158E2
+34	Broken Gem of the Wind	6817	24,0,0	4	ItemHint_HLS	FFA500
+35	Cracked Gem of the Wind	6818	24,0,0	4	ItemHint_HYS	FFA500
+36	Chipped Gem of the Wind	6819	24,0,0	4	ItemHint_HJS	FFA500
+37	Broken Gem of Striking	6820	3,4,23	4	ItemHint_BLS	FFA500
+38	Cracked Gem of Striking	6821	23,0,0	4	ItemHint_BYS	FFA500
+39	Chipped Gem of Striking	6822	23,0,0	4	ItemHint_BJS	FFA500
+40	Broken Gem of Colossus	6823	11,22,27	4	ItemHint_CLS	FFA500
+41	Cracked Gem of Colossus	6824	11,22,27	4	ItemHint_CYS	FFA500
+42	Chipped Gem of Colossus	6825	11,22,27	4	ItemHint_CJS	FFA500
+43	Broken Gem of Rage	6826	1,2,3	4	ItemHint_ZLS	FFA500
+44	Cracked Gem of Rage	6827	1,2,3	4	ItemHint_ZYS	FFA500
+45	Chipped Gem of Rage	6828	1,2,3	4	ItemHint_ZJS	FFA500
+46	Broken Gem of Soul	6829	1,2,3	4	ItemHint_QLS	FFA500
+47	Cracked Gem of Soul	6830	1,2,3	4	ItemHint_QYS	FFA500
+48	Chipped Gem of Soul	6831	1,2,3	4	ItemHint_QJS	FFA500
+49	Great Gem of Rage	7108	1,2,0	4	ItemHint_GGR	FFFFFF
+50	Great Gem of Soul	7109	9,0,0	4	ItemHint_GGS	FFFFFF
+51	Great Gem of Striking	7110	23,2,3	4	ItemHint_GGOS	FFFFFF
+52	Great Gem of Colossus	7111	11,22,0	4	ItemHint_GGC	FFFFFF
+53	Great Gem of Wind	7112	24,0,0	4	ItemHint_GGW	FFFFFF

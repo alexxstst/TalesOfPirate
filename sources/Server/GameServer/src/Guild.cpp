@@ -77,7 +77,7 @@ void Guild::cmd_CreateGuild(CCharacter* pCha, bool confirm, cChar *guildname, cC
 	}
 	char l_guildname[32];
 	strcpy(l_guildname,guildname);
-	long l_guildid =game_db.CreateGuild(pCha,l_guildname,passwd);
+	long l_guildid =game_db.CreateGuild(*pCha,l_guildname,passwd);
 	if(!l_guildid)
 	{
 		return;
@@ -115,7 +115,7 @@ BOOL Guild::lua_ListAllGuild(CCharacter* pCha)			//NPC
 }
 void Guild::cmd_ListAllGuild(CCharacter* pCha)			//20
 {
-	game_db.ListAllGuild(pCha,7);
+	game_db.ListAllGuild(*pCha,7);
 }
 void Guild::cmd_GuildTryFor(CCharacter* pCha, uLong guildid)			//
 {
@@ -132,7 +132,7 @@ void Guild::cmd_GuildTryFor(CCharacter* pCha, uLong guildid)			//
 			if (!result.value_or(0))
 				return;
 		}
-		game_db.GuildTryFor(pCha,guildid);
+		game_db.GuildTryFor(*pCha,guildid);
 	}
 }
 void Guild::cmd_GuildTryForComfirm(CCharacter* pCha, char IsReplace)
@@ -141,7 +141,7 @@ void Guild::cmd_GuildTryForComfirm(CCharacter* pCha, char IsReplace)
 	{
 		if(IsReplace ==1)
 		{
-			game_db.GuildTryForConfirm(pCha,pCha->GetPlayer()->m_lTempGuildID);
+			game_db.GuildTryForConfirm(*pCha,pCha->GetPlayer()->m_lTempGuildID);
 		}
 		pCha->GetPlayer()->m_GuildState &= ~emGuildReplaceOldTry;
 	}
@@ -149,37 +149,37 @@ void Guild::cmd_GuildTryForComfirm(CCharacter* pCha, char IsReplace)
 void Guild::cmd_GuildListTryPlayer(CCharacter* pCha)
 {
 
-	game_db.GuildListTryPlayer(pCha,7);
+	game_db.GuildListTryPlayer(*pCha,7);
 }
 void Guild::cmd_GuildApprove(CCharacter* pCha,uLong chaid)
 {
 
-	game_db.GuildApprove(pCha,chaid);
+	game_db.GuildApprove(*pCha,chaid);
 }
 void Guild::cmd_GuildReject(CCharacter* pCha,uLong chaid)
 {
 
-	game_db.GuildReject(pCha,chaid);
+	game_db.GuildReject(*pCha,chaid);
 }
 void Guild::cmd_GuildKick(CCharacter* pCha,uLong chaid)
 {
 
-	game_db.GuildKick(pCha,chaid);
+	game_db.GuildKick(*pCha,chaid);
 }
 void Guild::cmd_GuildLeave(CCharacter* pCha)
 {
 
-	game_db.GuildLeave(pCha);
+	game_db.GuildLeave(*pCha);
 }
 void Guild::cmd_GuildDisband(CCharacter* pCha,cChar *passwd)
 {
 
-	game_db.GuildDisband(pCha,passwd);
+	game_db.GuildDisband(*pCha,passwd);
 }
 void Guild::cmd_GuildMotto(CCharacter* pCha,cChar *motto)
 {
 
-	game_db.GuildMotto(pCha,motto);
+	game_db.GuildMotto(*pCha,motto);
 }
 void Guild::cmd_GuildChallenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
 {
@@ -198,11 +198,11 @@ void Guild::cmd_GuildChallenge( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
         return;
     }
     
-	game_db.Challenge( pCha, byLevel, dwMoney );
+	game_db.Challenge( *pCha, byLevel, dwMoney );
 }
 void Guild::cmd_GuildLeizhu( CCharacter* pCha, BYTE byLevel, DWORD dwMoney )
 {
-	game_db.Leizhu( pCha, byLevel, dwMoney );	
+	game_db.Leizhu( *pCha, byLevel, dwMoney );
 }
 void Guild::cmd_PMDisband(CCharacter *pCha)
 {

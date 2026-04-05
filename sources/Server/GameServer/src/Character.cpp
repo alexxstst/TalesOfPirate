@@ -408,7 +408,7 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 			GetPlyMainCha()->Cmd_DelVolunteer();
 		}
 
-		game_db.SavePlayer(pPlayer, enumSAVE_TYPE_SWITCH);
+		game_db.SavePlayer(*pPlayer, enumSAVE_TYPE_SWITCH);
 		//LG("enter_map", "\n");
 		ToLogService("map", "save data succeed");
 
@@ -7034,7 +7034,7 @@ void CCharacter::LogAssets(Char chLType)
 
 bool CCharacter::SaveAssets(void)
 {
-	return game_db.SaveChaAssets(this);
+	return game_db.SaveChaAssets(*this);
 }
 
 int CCharacter::GetLotteryIssue()
@@ -7109,7 +7109,7 @@ void CCharacter::AddMasterCredit(long lCredit)
 
 unsigned long CCharacter::GetMasterDBID()
 {
-	return game_db.GetPlayerMasterDBID(GetPlayer());
+	return game_db.GetPlayerMasterDBID(*GetPlayer());
 }
 
 void CCharacter::InitCheatX()

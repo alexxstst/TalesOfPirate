@@ -282,6 +282,10 @@ bool CStateCell::AddStateToCharacter(SSkillStateUnit	*pSStateUnit, CCharacter *p
 // 
 void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 {
+	// Сохраняем координаты до цикла — InactiveStateCell может освободить
+	// ячейку обратно в пул, после чего m_sPosX/m_sPosY станут невалидны.
+	short savedPosX = m_sPosX;
+	short savedPosY = m_sPosY;
 	unsigned char	uchStateNum = m_CSkillState.GetStateNum();
 	SSkillStateUnit	*pSStateUnit;
 	long			lOnTime;
@@ -291,7 +295,7 @@ void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 	{
 		if (pSStateUnit->lOnTick > 0)
 		{
-			if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000) // 
+			if (ulCurTick - pSStateUnit->ulStartTick >= (unsigned long)pSStateUnit->lOnTick * 1000)
 			{
 				lOnTime = g_pGameApp->GetSStateTraOnTime(pSStateUnit->GetStateID(), pSStateUnit->GetStateLv());
 				pNode = m_pCChaIn;
@@ -307,11 +311,10 @@ void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 					pNode = pNode->m_pCNext;
 				}
 				m_CSkillState.Del(pSStateUnit->GetStateID());
-				pCMap->InactiveStateCell(m_sPosX, m_sPosY);
+				pCMap->InactiveStateCell(savedPosX, savedPosY);
 			}
 			else
 			{
-				// 
 				CChaListNode	*pNode;
 				pNode = m_pCChaIn;
 				while (pNode)
@@ -332,12 +335,14 @@ void CStateCell::StateRun(unsigned long ulCurTick, SubMap *pCMap)
 	}
 	if (m_CSkillState.GetStateNum() != uchStateNum)
 	{
-		pCMap->NotiStateCellToEyeshot(m_sPosX, m_sPosY);
+		pCMap->NotiStateCellToEyeshot(savedPosX, savedPosY);
 	}
 }
 
 void CStateCell::DropState(SubMap *pCMap)
 {
+	short savedPosX = m_sPosX;
+	short savedPosY = m_sPosY;
 	SSkillStateUnit	*pSStateUnit;
 	m_CSkillState.BeginGetState();
 	while (pSStateUnit = m_CSkillState.GetNextState())
@@ -345,7 +350,7 @@ void CStateCell::DropState(SubMap *pCMap)
 		if (pSStateUnit->lOnTick > 0)
 		{
 			m_CSkillState.Del(pSStateUnit->GetStateID());
-			pCMap->InactiveStateCell(m_sPosX, m_sPosY);
+			pCMap->InactiveStateCell(savedPosX, savedPosY);
 		}
 	}
 }

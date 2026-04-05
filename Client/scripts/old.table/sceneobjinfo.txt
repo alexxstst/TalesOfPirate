@@ -1,0 +1,1203 @@
+//ID	模型文件名	中文名称	类型	类型参数1	类型参数2	Special Parameter	平行光影响	点光源影响	风格	Sign	背景色开关	受地表阴影印象
+1	by-bd001.lmo	Argent Palace 0	0	0	0	0	1	0	1	0	1	0
+2	by-bd002.lmo	Argent Navy Adm	0	0	0	0	1	0	1	0	1	0
+3	by-bd003.lmo	Argent Bank HQ 	0	0	0	0	1	0	1	0	1	0
+4	by-bd004.lmo	Argent Commerce	0	0	0	0	1	0	1	0	1	0
+5	by-bd005.lmo	Argent Blacksmi	0	0	0	0	1	0	1	0	1	1
+6	nml-bd141.lmo	Whirlpool 01	0	0	0	0	0	0	9	0	1	0
+7	by-bd007.lmo	Argent Trading 	0	0	0	0	1	0	1	0	1	0
+8	by-bd008.lmo	Argent Shipyard	0	0	0	0	1	0	1	0	1	0
+9	by-bd009.lmo	Argent Deep Blu	0	0	0	0	1	0	1	0	1	0
+10	by-bd010.lmo	Argent Bar 01	0	0	0	0	0	0	1	0	1	0
+11	by-bd011.lmo	Argent Church 0	0	0	0	0	1	0	1	0	1	0
+12	nml-bd150.lmo	Broken Bridge 0	0	0	0	0	1	0	9	0	1	1
+13	by-bd013.lmo	Argent Lighthou	0	0	0	0	0	0	1	0	1	0
+14	by-bd014-1.lmo	Argent Harbor M	0	0	0	0	1	0	1	0	1	0
+15	by-bd014-2.lmo	Argent Harbor M	0	0	0	0	1	0	1	0	1	0
+16	by-bd014-3.lmo	Argent Harbor C	0	0	0	0	1	0	1	0	1	0
+17	by-bd014-4.lmo	Argent Harbor C	0	0	0	0	1	0	1	0	1	0
+18	by-bd014-5.lmo	Argent Harbor H	0	0	0	0	1	0	1	0	1	0
+19	by-bd014-6.lmo	Argent Harbor S	0	0	0	0	1	0	1	0	1	0
+20	by-bd014-7.lmo	Argent Harbor C	0	0	0	0	1	0	1	0	1	0
+21	by-bd014-8.lmo	Argent Harbor C	0	0	0	0	1	0	1	0	1	0
+22	by-bd015.lmo	Argent Bell Tow	0	0	0	0	0	0	1	0	1	0
+23	by-bd016.lmo	Argent House 01	0	0	0	0	1	0	1	0	1	0
+24	by-bd017.lmo	Argent House 02	0	0	0	0	1	0	1	0	1	0
+25	by-bd018.lmo	Argent Guardhou	0	0	0	0	1	0	1	0	1	0
+26	nml-bd151.lmo	Volcano 01	0	0	0	0	0	0	9	0	1	1
+27	by-bd020.lmo	Argent Warehous	0	0	0	0	1	0	1	0	1	0
+28	nml-bd152.lmo	Aquatic Rock 01	0	0	0	0	1	0	9	0	1	1
+29	by-bd022.lmo	Argent Waterwhe	0	0	0	0	1	0	1	0	1	0
+30	by-bd023.lmo	Argent Harbor S	0	0	0	0	1	0	1	0	1	0
+31	by-bd024.lmo	Argent Harbor S	0	0	0	0	1	0	1	0	1	0
+32	by-bd025.lmo	Argent Harbor S	0	0	0	0	1	0	1	0	1	0
+33	by-bd026.lmo	Argent Harbor C	0	0	0	0	1	0	1	0	1	0
+34	by-bd027.lmo	Argent Church B	0	0	0	0	1	0	1	0	1	0
+35	nml-bd153.lmo	Underwater Stat	0	0	0	0	1	0	9	0	1	1
+36	by-bd036.lmo	Argent Street L	0	0	0	0	1	0	1	0	1	0
+37	by-bd037.lmo	Argent City Fen	0	0	0	0	1	0	1	0	1	0
+38	by-bd038.lmo	Argent Gate Pil	0	0	0	0	1	0	1	0	1	0
+39	by-bd039.lmo	Argent City Wal	0	0	0	0	1	0	1	0	1	0
+40	by-bd040.lmo	Argent Gate 01	0	0	0	0	1	0	1	0	1	0
+41	lt-bd038.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+42	lt-bd002.lmo	Thundoria Navy 	0	0	0	0	1	0	2	0	1	0
+43	lt-bd001-01.lmo	Thundoria Palac	0	0	0	0	1	0	2	0	1	0
+44	lt-bd001-02.lmo	Thundoria Palac	0	0	0	0	1	0	2	0	1	0
+45	lt-bd005.lmo	Thundoria Black	0	0	0	0	1	0	2	0	1	0
+46	sl-bd038.lmo	Old Shaitan Wal	0	0	0	0	1	0	3	0	1	1
+47	lt-bd007.lmo	Thundoria Bank 	0	0	0	0	1	0	2	0	1	0
+48	sl-bd039.lmo	Old Shaitan Wal	0	0	0	0	1	0	3	0	1	1
+49	lt-bd009.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+50	lt-bd011.lmo	Thundoria Statu	0	0	0	0	1	0	2	0	1	0
+51	lt-bd012.lmo	Thundoria Memor	0	0	0	0	1	0	2	0	1	0
+52	lt-bd018-11.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+53	lt-bd036-03.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+54	lt-bd014.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+55	lt-bd015.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+56	lt-bd016.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+57	lt-bd017.lmo	Thundoria Apron	0	0	0	0	1	0	2	0	1	0
+58	lt-bd018-01.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+59	lt-bd018-02.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+60	lt-bd018-03.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+61	lt-bd018-04.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+62	lt-bd018-05.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+63	lt-bd018-06.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+64	lt-bd018-07.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+65	lt-bd018-08.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+66	lt-bd019.lmo	Thundoria 3m St	0	0	0	0	1	0	2	0	1	1
+67	lt-bd020.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	1
+68	lt-bd021.lmo	Thundoria Stree	0	0	0	0	1	0	2	0	1	0
+69	lt-bd022.lmo	Thundoria Pond 	0	0	0	0	0	0	2	0	1	0
+70	lt-bd024.lmo	Thundoria Castl	0	0	0	0	1	0	2	0	1	0
+71	lt-bd025-01.lmo	Camp 01	0	0	0	0	1	0	2	0	1	0
+72	lt-bd025-02.lmo	Camp 02	0	0	0	0	1	0	2	0	1	0
+73	lt-bd025-03.lmo	Camp 03	0	0	0	0	1	0	2	0	1	0
+74	lt-bd025-04.lmo	Camp 04	0	0	0	0	1	0	2	0	1	0
+75	lt-bd025-05.lmo	Camp 05	0	0	0	0	1	0	2	0	1	0
+76	lt-bd025-06.lmo	Camp 06	0	0	0	0	1	0	2	0	1	0
+77	lt-bd025-07.lmo	Camp 07	0	0	0	0	1	0	2	0	1	0
+78	lt-bd025-08.lmo	Camp 08	0	0	0	0	1	0	2	0	1	0
+79	lt-bd013-01.lmo	Thundoria Navy 	0	0	0	0	1	0	2	0	1	1
+80	lt-bd013-02.lmo	Thundoria Navy 	0	0	0	0	1	0	2	0	1	1
+81	lt-bd013-03.lmo	Thundoria Navy 	0	0	0	0	1	0	2	0	1	1
+82	lt-bd013-04.lmo	Thundoria Navy 	0	0	0	0	1	0	2	0	1	1
+83	lt-bd025-09.lmo	Military Tent 0	0	0	0	0	1	0	2	0	1	0
+84	lt-bd026.lmo	Cannon 01	0	0	0	0	1	0	2	0	1	0
+85	lt-bd018-09.lmo	Thundoria Gate 	0	0	0	0	1	0	2	0	1	0
+86	lt-bd018-10.lmo	Thundoria Gate 	0	0	0	0	1	0	2	0	1	0
+87	lt-bd027.lmo	Cannon 02	0	0	0	0	1	0	2	0	1	0
+88	lt-bd028.lmo	Thundoria Inn 0	0	0	0	0	1	0	2	0	1	0
+89	lt-bd029.lmo	Thundoria Arrow	0	0	0	0	1	0	2	0	1	0
+90	lt-bd030.lmo	Lone Tower 01	0	0	0	0	1	0	7	0	1	1
+91	lt-bd031.lmo 	Thundoria Table	0	0	0	0	1	0	2	0	1	0
+92	lt-bd032.lmo 	Thundoria Chair	0	0	0	0	1	0	2	0	1	0
+93	lt-bd033.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+94	lt-bd034.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+95	lt-bd035.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+96	lt-bd036-01.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+97	lt-bd036-02.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+98	lt-bd037.lmo	Thundoria Harbo	0	0	0	0	1	0	2	0	1	0
+99	nml-bd138.lmo	Floating Leaf 0	0	0	0	0	1	0	8	0	1	0
+100	nml-bd139.lmo	Fence 01	0	0	0	0	1	0	9	0	1	1
+101	nml-bd140.lmo	Snowy Fence 01	0	0	0	0	1	0	9	0	1	1
+102	sl-bd001.lmo	New Kara Shrine	0	0	0	0	1	0	3	0	1	0
+103	sl-bd005.lmo	Shaitan Bank 01	0	0	0	0	1	0	3	0	1	0
+104	sl-bd008.lmo	Shaitan Grocery	0	0	0	0	1	0	3	0	1	0
+105	sl-bd009.lmo	Shaitan Bar 01	0	0	0	0	1	0	3	0	1	0
+106	sl-bd012.lmo	Shaitan Blacksm	0	0	0	0	1	0	3	0	1	0
+107	sl-bd006.lmo	Shaitan Crab St	0	0	0	0	1	0	3	0	1	0
+108	sl-bd010.lmo	Shaitan Commerc	0	0	0	0	1	0	3	0	1	0
+109	sl-bd007.lmo	Shaitan Inn 01	0	0	0	0	1	0	3	0	1	0
+110	sl-bd003.lmo	Shaitan Commerc	0	0	0	0	1	0	3	0	1	0
+111	sl-bd004.lmo	Shaitan Navy Of	0	0	0	0	1	0	3	0	1	0
+112	sl-bd013.lmo	Shaitan Lightho	0	0	0	0	1	0	3	0	1	0
+113	sl-bd026-01.lmo	Shaitan Canal 0	0	0	0	0	0	0	3	0	1	0
+114	sl-bd026-02.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+115	sl-bd026-03.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+116	sl-bd026-04.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+117	sl-bd026-05.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+118	sl-bd026-06.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+119	sl-bd026-07.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+120	sl-bd026-08.lmo	Shaitan Aqueduc	0	0	0	0	0	0	3	0	1	0
+121	sl-bd015.lmo	Shaitan Waterwh	0	0	0	0	0	0	3	0	1	0
+122	sl-bd019.lmo	Shaitan Room 01	0	0	0	0	1	0	3	0	1	0
+123	sl-bd020.lmo	Shaitan Bungalo	0	0	0	0	1	0	3	0	1	0
+124	sl-bd025.lmo	Shaitan Fruit C	0	0	0	0	1	0	3	0	1	0
+125	sl-bd011.lmo	Shaitan Flame T	0	0	0	0	1	0	3	0	1	0
+126	sl-bd021.lmo	Shaitan Tent 01	0	0	0	0	1	0	3	0	1	1
+127	sl-bd032-01.lmo	Shaitan Stave 0	0	0	0	0	1	0	3	0	1	0
+128	sl-bd032-02.lmo	Shaitan Stave 0	0	0	0	0	1	0	3	0	1	0
+129	sl-bd032-03.lmo	Shaitan Stave 0	0	0	0	0	1	0	3	0	1	0
+130	sl-bd014-01.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+131	sl-bd014-02.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+132	sl-bd014-03.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+133	sl-bd014-04.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+134	sl-bd014-05.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+135	sl-bd017-01.lmo	Shaitan Wall 01	0	0	0	0	1	0	3	0	1	0
+136	sl-bd017-02.lmo	Shaitan Wall 02	0	0	0	0	1	0	3	0	1	0
+137	sl-bd017-03.lmo	Shaitan Wall 03	0	0	0	0	1	0	3	0	1	0
+138	sl-bd032.lmo	Shaitan Chair 0	0	0	0	0	1	0	3	0	1	0
+139	sl-bd033.lmo	Shaitan Table 0	0	0	0	0	1	0	3	0	1	0
+140	sl-bd034.lmo	Shaitan Parasol	0	0	0	0	1	0	3	0	1	0
+141	sl-bd026-09.lmo	Shaitan Aqueduc	0	0	0	0	1	0	3	0	1	1
+142	sl-bd030.lmo	Old Shaitan Rub	0	0	0	0	1	0	3	0	1	1
+143	sl-bd028-01.lmo	Shaitan Abandon	0	0	0	0	1	0	3	0	1	1
+144	sl-bd028-02.lmo	Shaitan Abandon	0	0	0	0	1	0	3	0	1	1
+145	sl-bd031.lmo	Shaitan Broken 	0	0	0	0	1	0	3	0	1	1
+146	sl-bd028-03.lmo	Shaitan Abandon	0	0	0	0	1	0	3	0	1	1
+147	sl-bd028-04.lmo	Shaitan Abandon	0	0	0	0	1	0	3	0	1	1
+148	sl-bd035.lmo	Shaitan Wooden 	0	0	0	0	1	0	3	0	1	1
+149	sl-bd036.lmo	Shaitan Ship Fa	0	0	0	0	1	0	3	0	1	1
+150	sl-bd037.lmo	Shaitan Pond 01	0	0	0	0	0	0	3	0	1	0
+151	bl-bd001.lmo	Icicle Grocery 	0	0	0	0	1	0	4	0	1	1
+152	bl-bd002.lmo	Icicle Commerce	0	0	0	0	1	0	4	0	1	1
+153	bl-bd003.lmo	Icicle Rampart 	0	0	0	0	1	0	4	0	1	1
+154	bl-bd004.lmo	Icicle House 01	0	0	0	0	1	0	4	0	1	1
+155	bl-bd005-01.lmo	Icicle Rubbles 	0	0	0	0	1	0	4	0	1	1
+156	bl-bd005-02.lmo	Icicle Rubbles 	0	0	0	0	1	0	4	0	1	1
+157	bl-bd005-03.lmo	Icicle Rubbles 	0	0	0	0	1	0	4	0	1	1
+158	bl-bd006.lmo	Icicle Blacksmi	0	0	0	0	1	0	4	0	1	1
+159	bl-bd007.lmo	Icicle Hotel 01	0	0	0	0	1	0	4	0	1	1
+160	bl-bd008-01.lmo	Icicle Wall 01	0	0	0	0	1	0	4	0	1	1
+161	bl-bd008-02.lmo	Icicle Wall 02	0	0	0	0	1	0	4	0	1	1
+162	bl-bd008-03.lmo	Icicle Wall 03	0	0	0	0	1	0	4	0	1	1
+163	bl-bd008-04.lmo	Icicle Wall 04	0	0	0	0	1	0	4	0	1	1
+164	bl-bd009.lmo	Snowy Crate 01	0	0	0	0	1	0	4	0	1	1
+165	bl-bd010.lmo	Snow Crate 01	0	0	0	0	1	0	4	0	1	1
+166	bl-bd011.lmo	Snow Barrel 01	0	0	0	0	1	0	4	0	1	1
+167	bl-bd012.lmo	Snow Stump 01	0	0	0	0	1	0	4	0	1	1
+168	bl-bd013.lmo	Icicle Castle 0	0	0	0	0	1	0	4	0	1	1
+169	bl-bd014.lmo	Icicle Statue 0	0	0	0	0	0	0	4	0	1	1
+170	bl-bd015.lmo	Icicle Statue 0	0	0	0	0	0	0	4	0	1	1
+171	bl-bd016.lmo	Icicle Pool 01	0	0	0	0	0	0	4	0	1	0
+172	bl-bd017.lmo	Icicle Castle P	0	0	0	0	1	0	4	0	1	1
+173	nml-bd142.lmo	Fog 01	0	0	0	0	0	0	9	0	1	0
+174	nml-bd143.lmo	Fire 01	0	0	0	0	0	0	9	0	1	0
+175	nml-bd144.lmo	Ice Tree 01	0	0	0	0	0	0	8	0	1	1
+176	nml-bd145.lmo	Autumn Hut 01	0	0	0	0	1	0	9	0	1	1
+177	nml-bd146.lmo	Autumn Altar 01	0	0	0	0	1	0	9	0	1	1
+178	nml-bd147.lmo	Mini Tent 01	0	0	0	0	1	0	9	0	1	1
+179	nml-bd148-01.lmo	Number two maze	0	0	0	0	1	0	9	0	1	1
+180	nml-bd148-02.lmo	Number two laby	0	0	0	0	1	0	9	0	1	1
+181	nml-bd149.lmo	Falling Bamboo 	0	0	0	0	1	0	9	0	1	1
+182	nml-bd136.lmo	Yellow Flowery 	0	0	0	0	1	0	8	0	1	1
+183	nml-bd135.lmo	Fat Green Tree 	0	0	0	0	1	0	8	0	1	1
+184	nml-bd137.lmo	Fat Tree 01	0	0	0	0	1	0	8	0	1	1
+185	mz-bd025.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+186	mz-bd024.lmo	Lamp 01	0	0	0	0	1	0	7	0	1	1
+187	nml-bd134.lmo	Green Twin Tree	0	0	0	0	1	0	8	0	1	1
+188	nml-bd133.lmo	Crimson Twin Tr	0	0	0	0	1	0	8	0	1	1
+189	nml-bd132.lmo	Red Coconut Tre	0	0	0	0	1	0	8	0	1	1
+190	nml-bd131.lmo	Red Coconut Tre	0	0	0	0	1	0	8	0	1	1
+191	mz-bd023.lmo	Mini Tramcar 01	0	0	0	0	1	0	7	0	1	1
+192	mz-bd022.lmo	Labyrinth Black	0	0	0	0	0	0	7	0	1	1
+193	mz-bd021.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+194	mz-bd020.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+195	mz-bd019.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+196	mz-bd018.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+197	mz-bd017.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+198	mz-bd016.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+199	mz-bd015.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+200	mz-bd014.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+201	mz-bd013.lmo	Mine Labyrinth 	0	0	0	0	0	0	7	0	1	1
+202	mz-bd011-06.lmo	Mine Labyrinth 	0	0	0	0	1	0	7	0	1	0
+203	mz-bd011-05.lmo	Mine Labyrinth 	0	0	0	0	1	0	7	0	1	0
+204	mz-bd011-04.lmo	Mine Labyrinth 	0	0	0	0	1	0	7	0	1	1
+205	mz-bd011-03.lmo	Mine Labyrinth 	0	0	0	0	1	0	7	0	1	1
+206	mz-bd011-02.lmo	Mine Labyrinth 	0	0	0	0	1	0	7	0	1	0
+207	mz-bd011-01.lmo	Mine Labyrinth 	0	0	0	0	1	0	7	0	1	0
+208	nml-bd130.lmo	Conch 01	0	0	0	0	1	0	9	0	1	1
+209	nml-bd129.lmo	Firepile 01	0	0	0	0	1	0	9	0	1	1
+210	nml-bd128-04.lmo	Snow Mountain M	0	0	0	0	0	0	9	0	1	0
+211	nml-bd128-03.lmo	Snow Mountain M	0	0	0	0	0	0	9	0	1	0
+212	nml-bd128-02.lmo	Snow Mountain M	0	0	0	0	0	0	9	0	1	0
+213	nml-bd128-01.lmo	Snow Mountain M	0	0	0	0	0	0	9	0	1	0
+214	nml-bd127.lmo	Thundra Snowy T	0	0	0	0	1	0	8	0	1	1
+215	nml-bd126.lmo	Red Maple 01	0	0	0	0	1	0	8	0	1	1
+216	nml-bd125.lmo	Snow Maple Tree	0	0	0	0	1	0	8	0	1	1
+217	nml-bd124.lmo	New Snow Grass 	0	0	0	0	0	0	8	0	0	1
+218	nml-bd123.lmo	Forest Snow Tre	0	0	0	0	1	0	8	0	1	1
+219	nml-bd122.lmo	Forest Snow Tre	0	0	0	0	1	0	8	0	1	1
+220	nml-bd121.lmo	Withered Snow T	0	0	0	0	1	0	8	0	1	1
+221	nml-bd120.lmo	Special Effect 	0	0	0	0	1	0	9	0	1	1
+222	nml-bd119.lmo	Snowy Weird Tre	0	0	0	0	1	0	8	0	1	1
+223	nml-bd118.lmo	Tundra Snowy Tr	0	0	0	0	1	0	8	0	1	1
+224	nml-bd117.lmo	Tundra Snowball	0	0	0	0	1	0	8	0	1	1
+225	nml-bd116.lmo	Sand Grass Tree	0	0	0	0	1	0	8	0	1	1
+226	nml-bd115.lmo	Fern Grass 01	0	0	0	0	1	0	8	0	1	1
+227	nml-bd114.lmo	Sand Strange Tr	0	0	0	0	1	0	8	0	1	1
+228	nml-bd113.lmo	Cactus 01	0	0	0	0	1	0	8	0	1	1
+229	nml-bd112.lmo	Big Sand Rock 0	0	0	0	0	1	0	9	0	1	1
+230	nml-bd111.lmo	Sand 01	0	0	0	0	1	0	9	0	1	1
+231	nml-bd110.lmo	Sand Grass 02	0	0	0	0	0	0	8	0	0	1
+232	nml-bd109.lmo	Sand Grass 01	0	0	0	0	0	0	8	0	0	1
+233	mz-bd005.lmo	Pool 03	0	0	0	0	0	0	7	0	1	1
+234	nml-bd108.lmo	New Barrel Grou	0	0	0	0	1	0	9	0	1	1
+235	nml-bd107.lmo	New Cask 01	0	0	0	0	1	0	9	0	1	1
+236	nml-bd106.lmo	Grass Fence 02	0	0	0	0	1	0	7	0	1	1
+237	nml-bd105.lmo	Grass Wall 01	0	0	0	0	1	0	7	0	1	1
+238	nml-bd104.lmo	Keel 01	0	0	0	0	1	0	9	0	1	1
+239	nml-bd103.lmo	Dragon Bone 01	0	0	0	0	1	0	9	0	1	1
+240	nml-bd102.lmo	Dragon Bone 01	0	0	0	0	1	0	9	0	1	1
+241	nml-bd101.lmo	Big Stump01	0	0	0	0	1	0	8	0	1	1
+242	nml-bd100.lmo	Desert Flower 0	0	0	0	0	1	0	8	0	1	1
+243	nml-bd099.lmo	Desert Tree 01	0	0	0	0	1	0	8	0	1	1
+244	nml-bd098.lmo	Tree Ball Flowe	0	0	0	0	1	0	8	0	1	1
+245	nml-bd097.lmo	New Grass 04	0	0	0	0	1	0	8	0	1	1
+246	mz-bd010.lmo	Pillar 01	0	0	0	0	0	0	7	0	1	1
+247	nml-bd096.lmo	Lumber Mill 01	0	0	0	0	1	0	9	0	1	0
+248	nml-bd095.lmo	Blossom 02	0	0	0	0	1	0	8	0	1	0
+249	mz-bd009.lmo	Pool 06	0	0	0	0	0	0	7	0	1	1
+250	mz-bd008.lmo	Pool 05	0	0	0	0	0	0	7	0	1	1
+251	mz-bd007.lmo	Palace Statue 0	0	0	0	0	0	0	7	0	1	1
+252	mz-bd006.lmo	Pool 04	0	0	0	0	0	0	7	0	1	1
+253	mz-bd011.lmo	Maze Wall 03	0	0	0	0	0	0	7	0	1	1
+254	mz-bd004.lmo	Pool 02	0	0	0	0	0	0	7	0	1	1
+255	mz-bd003.lmo	Pool 01	0	0	0	0	0	0	7	0	1	1
+256	mz-bd002.lmo	Wall 02	0	0	0	0	0	0	7	0	1	1
+257	mz-bd001.lmo	Wall 01	0	0	0	0	0	0	7	0	1	1
+258	nml-bd094.lmo	Flower 01	0	0	0	0	1	0	8	0	1	0
+259	nml-bd093.lmo	New Grass 03	0	0	0	0	1	0	8	0	1	1
+260	nml-bd092.lmo	New Tree 01	0	0	0	0	1	0	8	0	1	1
+261	nml-bd091.lmo	Grass 01	0	0	0	0	1	0	8	0	1	0
+262	nml-bd090.lmo	Fountain 01	0	0	0	0	0	0	9	0	1	0
+263	nml-bd089.lmo	Stone Bench 01	0	0	0	0	1	0	9	0	1	1
+264	nml-bd088.lmo	Peach Tree 02	0	0	0	0	1	0	8	0	1	0
+265	nml-bd087.lmo	Cherry Tree 01	0	0	0	0	1	0	8	0	1	0
+266	nml-bd086.lmo	New Grass 02	0	0	0	0	1	0	8	0	1	1
+267	nml-bd085.lmo	New Grass 01	0	0	0	0	1	0	8	0	1	1
+268	nml-bd084.lmo	Flower 07	0	0	0	0	0	0	8	0	0	1
+269	nml-bd083.lmo	Crimson Tree 01	0	0	0	0	1	0	8	0	1	1
+270	nml-bd082.lmo	Thousand Old Tr	0	0	0	0	1	0	8	0	1	0
+271	nml-bd081.lmo	Oil Barrel 01	0	0	0	0	1	0	9	0	1	0
+272	nml-bd080.lmo	Little Yellow L	0	0	0	0	1	0	9	0	1	0
+273	nml-bd079.lmo	Traffic Lamp 01	0	0	0	0	1	0	9	0	1	0
+274	nml-bd078.lmo	Turning Edge 01	0	0	0	0	1	0	9	0	1	0
+275	nml-bd077.lmo	6m Step 01	0	0	0	0	1	0	9	0	1	0
+276	nml-bd076.lmo	2m Stave 01	0	0	0	0	1	0	9	0	1	0
+277	nml-bd075.lmo	Small Icicle 01	0	0	0	0	0	0	9	0	1	1
+278	nml-bd074.lmo	Big Ice Pillar 	0	0	0	0	0	0	9	0	1	1
+279	nml-bd073.lmo	Old Tree 01	0	0	0	0	1	0	8	0	1	1
+280	nml-bd072.lmo	Bamboo 02	0	0	0	0	1	0	8	0	1	1
+281	nml-bd071.lmo	Bamboo 01	0	0	0	0	1	0	8	0	1	1
+282	nml-bd070.lmo	Revolving Light	0	0	0	0	1	0	9	0	1	1
+283	nml-bd069.lmo	Ocean Canteen	0	0	0	0	1	0	9	0	1	0
+284	nml-bd068.lmo	Snowy Stone 01	0	0	0	0	1	0	9	0	1	1
+285	nml-bd067.lmo	Boat 02	0	0	0	0	1	0	9	0	1	1
+286	nml-bd066.lmo	Snowy Rock 01	0	0	0	0	1	0	9	0	1	1
+287	sl-bd040.lmo	Old Shaitan Wal	0	0	0	0	1	0	3	0	1	1
+288	sl-bd041.lmo	Old Shaitan Wal	0	0	0	0	1	0	3	0	1	1
+289	nml-bd063.lmo	Red Mango Grass	0	0	0	0	1	0	8	0	1	0
+290	nml-bd062.lmo	Forest Trees 02	0	0	0	0	1	0	8	0	1	1
+291	nml-bd061.lmo	Forest Tree 01	0	0	0	0	1	0	8	0	1	1
+292	nml-bd060.lmo	Flower 06	0	0	0	0	0	0	8	0	0	1
+293	nml-bd059.lmo	Bridge 01	0	0	0	0	1	0	9	0	1	1
+294	nml-bd058.lmo	Small Bench 01	0	0	0	0	1	0	9	0	1	0
+295	nml-bd057.lmo	Rock 02	0	0	0	0	1	0	9	0	1	1
+296	nml-bd056.lmo	Rock 01	0	0	0	0	1	0	9	0	1	1
+297	nml-bd055.lmo	Flower 05	0	0	0	0	0	0	8	0	0	1
+298	nml-bd054.lmo	Tree 12	0	0	0	0	1	0	8	0	1	1
+299	nml-bd053.lmo	Tree 11	0	0	0	0	0	0	8	0	1	0
+300	nml-bd052.lmo	Tree 10	0	0	0	0	0	0	8	0	1	0
+301	nml-bd051.lmo	Fore 01	0	0	0	0	1	0	9	0	1	1
+302	nml-bd048.lmo	Bench 02	0	0	0	0	1	0	9	0	1	1
+303	nml-bd047.lmo	Market 01	0	0	0	0	1	0	1	0	1	0
+304	nml-bd046.lmo	Signpost 02	0	0	0	0	1	0	9	0	1	0
+305	nml-bd045.lmo	Singpost 01	0	0	0	0	1	0	9	0	1	0
+306	nml-bd044.lmo	Barrel Board Im	0	0	0	0	1	0	9	0	1	1
+307	nml-bd043.lmo	Barrel Board Im	0	0	0	0	1	0	9	0	1	1
+308	nml-bd042.lmo	Barrel Board Im	0	0	0	0	1	0	9	0	1	1
+309	nml-bd041.lmo	Metal Fence Pil	0	0	0	0	1	0	9	0	1	0
+310	nml-bd040.lmo	Metal Fence 01	0	0	0	0	1	0	9	0	1	0
+311	nml-bd039.lmo	Pergola 01	0	0	0	0	1	0	9	0	1	0
+312	nml-bd038.lmo	Table 01	0	0	0	0	1	0	9	0	1	0
+313	nml-bd037.lmo	Rattan Chair 01	0	0	0	0	1	0	9	0	1	0
+314	nml-bd036.lmo	Bench 01	0	0	0	0	1	0	1	0	1	0
+315	nml-bd035.lmo	Flower 04	0	0	0	0	1	0	8	0	1	0
+316	nml-bd034.lmo	Grass 06	0	0	0	0	0	0	8	0	0	1
+317	nml-bd033.lmo	Blossom 02	0	0	0	0	1	0	8	0	1	1
+318	nml-bd032.lmo	Flower 01	0	0	0	0	1	0	8	0	1	1
+319	nml-bd031.lmo	Flower Grass 01	0	0	0	0	1	0	8	0	1	0
+320	nml-bd030.lmo	Flower Pot 03	0	0	0	0	1	0	9	0	1	1
+321	nml-bd029.lmo	Flower Pot 02	0	0	0	0	1	0	9	0	1	1
+322	nml-bd028.lmo	Flower Pot 01	0	0	0	0	1	0	9	0	1	1
+323	nml-bd027.lmo	Garden 01	0	0	0	0	1	0	9	0	1	0
+324	nml-bd026.lmo	Withered Trunk 	0	0	0	0	1	0	8	0	1	1
+325	nml-bd025.lmo	Grass 04	0	0	0	0	0	0	8	0	0	1
+326	nml-bd024.lmo	Grass 03	0	0	0	0	1	0	8	0	1	0
+327	nml-bd023.lmo	Grass 02	0	0	0	0	1	0	8	0	1	0
+328	nml-bd022.lmo	Grass 01	0	0	0	0	0	0	8	0	1	0
+329	nml-bd021.lmo	Tree 09	0	0	0	0	1	0	8	0	1	0
+330	nml-bd020.lmo	Tree 08	0	0	0	0	1	0	8	0	1	0
+331	nml-bd019.lmo	Tree 07	0	0	0	0	1	0	8	0	1	0
+332	nml-bd018.lmo	Flower 08	0	0	0	0	1	0	8	0	1	0
+333	nml-bd017.lmo	Tree 05	0	0	0	0	1	0	8	0	1	0
+334	nml-bd049.lmo	Sand Shop01	0	0	0	0	1	0	9	0	1	0
+335	nml-bd015.lmo	Tree 03	0	0	0	0	1	0	8	0	1	0
+336	nml-bd014.lmo	Tree 02	0	0	0	0	1	0	8	0	1	0
+337	nml-bd013.lmo	Tree 01	0	0	0	0	1	0	8	0	1	0
+338	nml-bd012.lmo	Road Notice 03	0	0	0	0	1	0	9	0	1	0
+339	nml-bd011.lmo	Road Strip 02	0	0	0	0	1	0	9	0	1	0
+340	nml-bd010.lmo	Road Strip 01	0	0	0	0	1	0	9	0	1	0
+341	nml-bd009.lmo	Wooden Crate 01	0	0	0	0	1	0	9	0	1	1
+342	nml-bd008.lmo	Big Chest 01	0	0	0	0	1	0	9	0	1	1
+343	nml-bd007.lmo	Birdship 01	0	0	0	0	1	0	9	0	1	1
+344	nml-bd050.lmo	Stump 01	0	0	0	0	1	0	8	0	1	0
+345	nml-bd006.lmo	Fruit Cart 01	0	0	0	0	1	0	1	0	1	0
+346	nml-bd005.lmo	Wine Barrel 01	0	0	0	0	1	0	9	0	1	0
+347	nml-bd004.lmo	Wooden Barrel 0	0	0	0	0	1	0	9	0	1	0
+348	nml-bd003.lmo	Crate Swarm 01	0	0	0	0	1	0	9	0	1	1
+349	nml-bd002.lmo	Fruit Crate 01	0	0	0	0	1	0	9	0	1	0
+350	nml-bd001.lmo	Small Crate 01	0	0	0	0	1	0	9	0	1	0
+351	yyyy001.lmo	Sit 1	1	0	0	0	1	0	200	0	1	0
+352	yyyy002.lmo	Lean 1	1	0	0	0	1	0	200	0	1	0
+353	yyyy003.lmo	Impassable 7	2	0	0	0	1	0	200	0	1	0
+354	yyyy004.lmo	Passable 7	2	0	0	0	1	0	200	0	1	0
+355	yyyy005.lmo	Passable 3	2	0	0	0	1	0	200	0	1	0
+356	yyyy006.lmo	Impassable 3	2	0	0	0	1	0	200	0	1	0
+400	yyyy007.lmo	Lamp 01	3	0,255,0	10,1.0,2	0	1	0	200	0	1	0
+401	yyyy007.lmo	Lamp 02	3	0,255,0	10,1.0,0	0	1	0	200	0	1	0
+402	yyyy007.lmo	Lamp 03	3	0,18,255	10,1.0,3	0	1	0	200	0	1	0
+403	yyyy007.lmo	Lamp 04	3	27,80,250	10,1.0,1	0	1	0	200	0	1	0
+404	yyyy007.lmo	Lmap 05	3	248,228,137	3,1.0,6	0	1	0	200	0	1	0
+405	yyyy007.lmo	Lamp 06	3	60,69,137	10,1.0,5	0	1	0	200	0	1	0
+406	yyyy007.lmo	Lamp 07	3	248,228,137	3,1.0,4	0	1	0	200	0	1	0
+407	yyyy007.lmo	Lamp 08	3	250,120,50	6,1.0,7	0	1	0	200	0	1	0
+408	yyyy007.lmo	Lamp 09	3	25,226,153	3,1.0,8	0	1	0	200	0	1	0
+421	nml-bd154.lmo	Wooden Harbor M	0	0	0	0	1	0	9	0	1	1
+422	nml-bd155.lmo	Wooden Harbor M	0	0	0	0	1	0	9	0	1	1
+423	nml-bd156.lmo	Wooden Harbor M	0	0	0	0	1	0	9	0	1	1
+424	nml-bd157.lmo	Wooden Harbor M	0	0	0	0	1	0	9	0	1	1
+425	nml-bd158.lmo	Icy Mountain 01	0	0	0	0	1	0	9	0	1	1
+426	nml-bd159.lmo	Icy Mountain 02	0	0	0	0	1	0	9	0	1	1
+427	nml-bd160.lmo	Ocean Graveyard	0	0	0	0	1	0	9	0	1	1
+428	nml-bd161.lmo	Ocean Graveyard	0	0	0	0	1	0	9	0	1	1
+429	nml-bd162.lmo	Ocean Graveyard	0	0	0	0	1	0	9	0	1	1
+430	nml-bd163.lmo	Abandoned Mine 	0	7	0	0	0	0	9	0	1	0
+431	nml-bd164.lmo	Floating Ball 0	0	0	0	0	1	0	9	0	1	1
+432	nml-bd165.lmo	Floating Plank 	0	0	0	0	1	0	9	0	1	1
+433	nml-bd166.lmo	Turning Tree 01	0	0	0	0	1	0	8	0	1	1
+434	nml-bd167.lmo	Fish Swarm 01	0	0	0	0	1	0	9	0	1	1
+435	login.lmo	Login Interface	0	0	0	0	0	0	0	0	1	0
+436	nml-bd169.lmo	Dried Wood 01	0	0	0	0	1	0	8	0	1	1
+437	nml-bd170.lmo	Mushroom 01	0	0	0	0	1	0	8	0	1	1
+438	nml-bd171.lmo	Fluorescent Gra	0	0	0	0	1	0	8	0	1	1
+439	nml-bd168.lmo	Yellow Grass 01	0	0	0	0	1	0	8	0	1	1
+440	mz-bd026.lmo	Desert Labyrint	0	9,7,8,9,10,11,12,13,14,15	0	0	0	0	7	0	1	0
+441	nml-bd172.lmo	Desert Labyrint	0	0	0	0	0	0	8	0	1	1
+442	mz-bd027.lmo	Desert Labyrint	0	0	0	0	0	0	7	0	1	1
+443	mz-bd028.lmo	Desert Labyrint	0	0	0	0	0	0	7	0	1	1
+444	mz-bd029.lmo	Desert Labyrint	0	0	0	0	0	0	7	0	1	1
+445	mz-bd030.lmo	Desert Labyrint	0	0	0	0	0	0	7	0	1	1
+446	nml-bd173.lmo	Big Leave Tree 	0	0	0	0	1	0	8	0	1	1
+447	nml-bd174.lmo	Withered Tree 0	0	0	0	0	1	0	8	0	1	1
+448	nml-bd175.lmo	Small Tree 01	0	0	0	0	1	0	8	0	1	1
+449	by-bd041.lmo	Argent Harbor B	0	11,16,17,18,19,20,21,22,23,24,25,26	0	0	0	0	1	0	1	0
+450	nml-bd176.lmo	Forest Labyrint	0	0	0	0	1	0	7	0	1	1
+451	nml-bd177.lmo	Forest Labyrint	0	0	0	0	1	0	7	0	1	1
+452	nml-bd178.lmo	Forest Labyrint	0	0	0	0	1	0	7	0	1	1
+453	nml-bd179.lmo	Forest Maze Mod	0	0	0	0	1	0	7	0	1	1
+454	nml-bd180.lmo	Forest Maze Mod	0	0	0	0	1	0	7	0	1	1
+455	nml-bd181.lmo	Forest Labyrint	0	0	0	0	1	0	7	0	1	1
+456	nml-bd182.lmo	Forest Labyrint	0	0	0	0	1	0	7	0	1	1
+457	nml-bd183.lmo	Yellow Grass 01	0	0	0	0	1	0	8	0	1	1
+458	nml-bd184.lmo	Little Grass 01	0	0	0	0	0	0	8	0	0	1
+459	nml-bd185.lmo	Rosebush 01	0	0	0	0	1	0	8	0	1	1
+460	nml-bd186.lmo	Autumn Grass 01	0	0	0	0	0	0	8	0	0	1
+461	nml-bd187.lmo	Erected Small T	0	0	0	0	1	0	8	0	1	1
+462	nml-bd188.lmo	Summer Island H	0	0	0	0	1	0	9	0	1	1
+463	nml-bd189.lmo	Summer Island W	0	0	0	0	0	0	9	0	1	0
+464	nml-bd190.lmo	Summer Island W	0	0	0	0	0	0	9	0	1	0
+465	nml-bd191.lmo	Summer Island W	0	0	0	0	0	0	9	0	1	0
+466	nml-bd192.lmo	Fallen Leaf 01	0	0	0	0	0	0	9	0	1	0
+467	nml-bd193.lmo	Fallen Leaf 02	0	0	0	0	0	0	9	0	1	0
+468	nml-bd194.lmo	Fallen Leaf 03	0	0	0	0	0	0	9	0	1	0
+469	by-bd019.lmo	Argent Harbor G	0	0	0	0	1	0	1	0	1	0
+470	nml-bd195.lmo	Harbor Statue 0	0	0	0	0	1	0	9	0	1	0
+471	by-bd028.lmo	Argent Pier 01	0	0	0	0	1	0	1	0	1	0
+472	by-bd029.lmo	Argent Bank Sig	0	0	0	0	1	0	1	0	1	0
+473	by-bd030.lmo	Argent Bar Sign	0	0	0	0	1	0	1	0	1	0
+474	by-bd031.lmo	Argent Weaponry	0	0	0	0	1	0	1	0	1	0
+475	by-bd032.lmo	Argent Herb Sig	0	0	0	0	1	0	1	0	1	0
+476	by-bd033.lmo	Argent Grocery 	0	0	0	0	1	0	1	0	1	0
+477	by-bd034.lmo	Argent Tailor S	0	0	0	0	1	0	1	0	1	0
+478	by-bd035.lmo	Argent Commerce	0	0	0	0	1	0	1	0	1	0
+480	yyyy080.lmo	Wave Sound Effe	6	env_surf	2500	0	1	0	200	0	1	0
+481	yyyy080.lmo	Worm Sound Effe	6	env_insect	2500	0	1	0	200	0	1	0
+482	yyyy080.lmo	Cicada Sound Ef	6	env_cicada	2500	0	1	0	200	0	1	0
+483	yyyy080.lmo	Chirping Sound 	6	env_bird1	2500	0	1	0	200	0	1	0
+484	yyyy080.lmo	Chirping Sound 	6	env_bird2	2500	0	1	0	200	0	1	0
+485	yyyy080.lmo	Chilling Sound 	6	env_bise	2500	0	1	0	200	0	1	0
+486	yyyy080.lmo	Shipyard Sound 	6	env_ship	2500	0	1	0	200	0	1	0
+487	yyyy080.lmo	Factory Sound E	6	env_BlackS	2500	0	1	0	200	0	1	0
+488	yyyy080.lmo	Fountain Sound 	6	env_founta	2500	0	1	0	200	0	1	0
+489	yyyy080.lmo	River Sound Eff	6	env_ghyll	2500	0	1	0	200	0	1	0
+501	by-bd042.lmo	New Road Sign 0	0	0	0	0	1	0	1	0	1	0
+502	by-bd043.lmo	Argent Ship Fac	0	0	0	0	1	0	1	0	1	0
+503	by-bd044.lmo	Navy Admin Post	0	0	0	0	1	0	1	0	1	0
+504	bl-bd018.lmo	Icicle Harbor M	0	0	0	0	1	0	4	0	1	1
+505	bl-bd019.lmo	Icicle Harbor M	0	0	0	0	1	0	4	0	1	1
+506	bl-bd020.lmo	Icicle Harbor M	0	0	0	0	1	0	4	0	1	1
+507	by-bd045.lmo	Argent Navy Rec	0	0	0	0	1	0	1	0	1	0
+508	by-bd046.lmo	Argent Bounty T	0	0	0	0	1	0	1	0	1	0
+509	nml-bd196.lmo	Lighthouse 01	0	0	0	0	1	0	9	0	1	0
+510	nml-bd197.lmo	Buoy 01	0	0	0	0	1	0	9	0	1	0
+511	nml-bd198.lmo	Ball Float 01	0	0	0	0	1	0	9	0	1	0
+512	login02.lmo	Login Interface	0	0	0	0	0	0	0	0	1	0
+513	nml-bd199.lmo	Butterfly 01	0	0	0	0	1	0	9	0	1	0
+514	nml-bd200.lmo	Buoy 02	0	0	0	0	1	0	9	0	1	0
+515	by-bd047.lmo	Argent City Tra	0	8	0	0	1	0	1	0	1	0
+516	by-bd048.lmo	Argent Trading 	0	0	0	0	1	0	1	0	1	0
+517	sl-bd042.lmo	Shaitan Trading	0	10	0	0	1	0	3	0	1	0
+518	nml-bd201.lmo	Harbor Sign 01	0	0	0	0	1	0	9	0	1	0
+519	lt-bd039.lmo	Thundoria Tradi	0	9	0	0	0	0	2	0	1	0
+520	bl-bd021.lmo	Icicle Trading 	0	8	0	0	1	0	4	0	1	1
+521	sl-bd043.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+522	sl-bd044.lmo	Shaitan Harbor 	0	0	0	0	1	0	3	0	1	0
+523	cc-bd001.lmo	Spring Town Bel	0	0	0	0	1	0	5	0	1	0
+524	cc-bd002.lmo	Spring Town Tav	0	0	0	0	1	0	5	0	1	0
+525	cc-bd003.lmo	Spring Town Wal	0	0	0	0	1	0	5	0	1	0
+526	cc-bd004.lmo	Spring Town Wal	0	0	0	0	1	0	5	0	1	0
+527	cc-bd005.lmo	Spring Town Wal	0	0	0	0	1	0	5	0	1	0
+528	cc-bd006.lmo	Spring Town Wal	0	0	0	0	1	0	5	0	1	0
+529	cc-bd007.lmo	Spring Town Win	0	0	0	0	1	0	5	0	1	0
+530	cc-bd008.lmo	Spring Town Hou	0	0	0	0	1	0	5	0	1	0
+531	cc-bd009.lmo	Spring Town Pin	0	0	0	0	1	0	5	0	1	0
+532	cc-bd010.lmo	Spring Town Lam	0	0	0	0	1	0	5	0	1	0
+533	cc-bd011.lmo	Spring Town Mas	0	0	0	0	1	0	5	0	1	0
+534	cc-bd012.lmo	Spring Town Pin	0	0	0	0	1	0	5	0	1	0
+535	cc-bd013.lmo	Spring Town Tem	0	0	0	0	1	0	5	0	1	0
+536	cc-bd014.lmo	Spring Town Bri	0	0	0	0	1	0	5	0	1	0
+537	cc-bd015.lmo	Spring Town Bun	0	0	0	0	1	0	5	0	1	0
+538	cc-bd016.lmo	Spring Town But	0	0	0	0	1	0	5	0	1	0
+539	cc-bd017.lmo	Spring Town Roc	0	0	0	0	1	0	5	0	1	0
+540	cc-bd018.lmo	Spring Town Lan	0	0	0	0	1	0	5	0	1	0
+541	cc-bd019.lmo	Spring Town Lan	0	0	0	0	1	0	5	0	1	0
+542	cc-bd020.lmo	Spring Town San	0	0	0	0	1	0	5	0	1	1
+543	cc-bd021.lmo	Spring Town Ped	0	0	0	0	1	0	5	0	1	1
+544	cc-bd022.lmo	Spring Town Pap	0	0	0	0	1	0	5	0	1	0
+545	cc-bd023.lmo	Spring Town Hou	0	0	0	0	1	0	5	0	1	0
+546	cc-bd024.lmo	Spring Town Bri	0	0	0	0	1	0	5	0	1	0
+547	cc-bd025.lmo	Spring Town Pav	0	0	0	0	1	0	5	0	1	1
+548	cc-bd026.lmo	Spring Town Pav	0	0	0	0	1	0	5	0	1	0
+549	cc-bd027.lmo	Spring Town Pil	0	0	0	0	1	0	5	0	1	0
+550	cc-bd028.lmo	Spring Town Par	0	0	0	0	1	0	5	0	1	0
+551	cc-bd029.lmo	Spring Town Tra	0	1,2	0	0	0	0	5	0	1	0
+552	cc-bd030.lmo	Spring Town Pea	0	0	0	0	1	0	5	0	1	0
+553	cc-bd031.lmo	Spring Town Blo	0	0	0	0	1	0	5	0	1	0
+554	cc-bd032.lmo	Spring Town Hou	0	0	0	0	1	0	5	0	1	0
+555	cc-bd033.lmo	Spring Town Fen	0	0	0	0	1	0	5	0	1	0
+556	cc-bd034.lmo	Spring Town Fen	0	0	0	0	1	0	5	0	1	0
+557	cc-bd035.lmo	Spring Town Fen	0	0	0	0	1	0	5	0	1	0
+558	cc-bd036.lmo	Spring Town Lil	0	0	0	0	1	0	5	0	1	0
+559	cc-bd037.lmo	Spring Town Bam	0	0	0	0	1	0	5	0	1	1
+560	cc-bd038.lmo	Spring Town Bam	0	0	0	0	1	0	5	0	1	1
+561	cc-bd039.lmo	Spring Town Fen	0	0	0	0	1	0	5	0	1	1
+562	cc-bd040.lmo	Spring Harbor 0	0	0	0	0	1	0	5	0	1	1
+563	cc-bd041.lmo	Spring Town Lan	0	0	0	0	1	0	5	0	1	1
+564	cc-bd042.lmo	Spring Town Shi	0	0	0	0	1	0	5	0	1	0
+565	cc-bd043.lmo	Spring Town Shi	0	0	0	0	1	0	5	0	1	0
+566	cc-bd044.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+567	cc-bd045.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+568	cc-bd046.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+569	cc-bd047.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+570	mz-bd099.lmo	Labyrinth Black	0	0	0	0	0	0	7	0	1	1
+571	cc-bd049.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+572	cc-bd050.lmo	Underwater Junk	0	0	0	0	0	0	5	0	1	1
+573	cc-bd051.lmo	Underground Tun	0	0	0	0	0	0	5	0	1	1
+574	cc-bd052.lmo	Underground Tun	0	0	0	0	0	0	5	0	1	1
+575	cc-bd053.lmo	Dirty Bottle 01	0	0	0	0	0	0	5	0	1	1
+576	cc-bd054.lmo	Carcass 01	0	0	0	0	0	0	5	0	1	1
+577	cc-bd055.lmo	Spring Town Shi	0	0	0	0	1	0	5	0	1	0
+578	cc-bd056.lmo	Spring Town Sma	0	0	0	0	1	0	5	0	1	0
+579	cc-bd057.lmo	Spring Town Woo	0	0	0	0	1	0	5	0	1	0
+580	cc-bd058.lmo	Underwater Tunn	0	0	0	0	0	0	5	0	1	1
+581	cc-bd059.lmo	Underwater Tunn	0	0	0	0	0	0	5	0	1	1
+582	cc-bd060.lmo	Fish Swarm 02	0	0	0	0	0	0	5	0	1	1
+583	cc-bd061.lmo	Underwater Tunn	0	0	0	0	0	0	5	0	1	1
+584	cc-bd062.lmo	Underwater Tunn	0	0	0	0	0	0	5	0	1	1
+585	cc-bd063.lmo	Underwater Tunn	0	0	0	0	0	0	5	0	1	1
+586	cc-bd064.lmo	Underwater Tunn	0	0	0	0	0	0	5	0	1	1
+587	nml-bd202.lmo	Swamp Tree 01	0	0	0	0	1	0	8	0	1	1
+588	nml-bd203.lmo	Swamp Stump 01	0	0	0	0	1	0	8	0	1	1
+589	cc-bd067.lmo	Spring Town Par	0	0	0	0	1	0	5	0	1	0
+590	cc-bd068.lmo	Footprint 01	0	0	0	0	1	0	5	0	1	1
+591	cc-bd069.lmo	Spring Town Aqu	0	0	0	0	1	0	5	0	1	0
+592	nml-bd204.lmo	Swamp Stone 01	0	0	0	0	1	0	9	0	1	1
+593	nml-bd205.lmo	City of Cripple	0	0	0	0	1	0	7	0	1	1
+594	nml-bd206.lmo	City of Cripple	0	0	0	0	1	0	7	0	1	1
+595	nml-bd207.lmo	City of Cripple	0	0	0	0	1	0	7	0	1	1
+596	nml-bd208.lmo	City of Cripple	0	0	0	0	1	0	7	0	1	1
+597	nml-bd209.lmo	City of Cripple	0	0	0	0	1	0	7	0	1	1
+598	nml-bd210.lmo	City of Cripple	0	0	0	0	1	0	7	0	1	1
+599	cc-bd077.lmo	Tree 013	0	0	0	0	1	0	8	0	1	1
+600	nml-bd211.lmo	Demonic Wall 01	0	0	0	0	0	0	7	0	1	1
+601	nml-bd212.lmo	Demonic Wall 03	0	0	0	0	0	0	7	0	1	1
+602	nml-bd213.lmo	Demonic Spike 0	0	0	0	0	0	0	7	0	1	1
+603	nml-bd214.lmo	Demonic Wall 05	0	0	0	0	0	0	7	0	1	1
+604	nml-bd215.lmo	Demonic Wall 04	0	0	0	0	0	0	7	0	1	1
+605	nml-bd216.lmo	Demonic Wall 06	0	0	0	0	0	0	7	0	1	1
+606	nml-bd217.lmo	Demonic Statue 	0	0	0	0	0	0	7	0	1	1
+607	nml-bd218.lmo	Demonic Pool 01	0	0	0	0	0	0	7	0	1	1
+608	nml-bd219.lmo	Demonic Pool 02	0	0	0	0	0	0	7	0	1	1
+609	nml-bd220.lmo	Demonic Pool 03	0	0	0	0	0	0	7	0	1	1
+610	nml-bd221.lmo	Demonic Pool 04	0	0	0	0	0	0	7	0	1	1
+611	nml-bd222.lmo	Demonic Wall 02	0	0	0	0	0	0	7	0	1	1
+612	cc-bd065.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+613	cc-bd066.lmo	Spring Town Und	0	0	0	0	0	0	5	0	1	1
+614	cc-bd071.lmo	Spring Town Bar	0	0	0	0	1	0	5	0	1	0
+615	cc-bd072.lmo	Spring Town Hai	0	0	0	0	1	0	5	0	1	0
+616	cc-bd073.lmo	Spring Town Acc	0	0	0	0	1	0	5	0	1	0
+617	cc-bd074.lmo	Spring Town Ban	0	0	0	0	1	0	5	0	1	0
+618	cc-bdhq.lmo	Underwater Blac	0	0	0	0	0	0	5	0	1	1
+619	hlcx02.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+620	hlcx03.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+621	hlcx04.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+622	hlcx05.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+623	hlcx06.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+624	hlcx07.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+625	hlcx08.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+626	hlcx09.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	1
+627	hlcx-gh.lmo	Ghost Flame	0	0	0	0	0	0	5	0	1	0
+628	hlcx-rk.lmo	Black Dragon La	0	0	0	0	1	0	5	0	1	0
+629	hlcx-bx.lmo	Treasure Chest	0	0	0	0	0	0	5	0	1	1
+630	hdsd01.lmo	Seabed Tunnel E	0	0	0	0	1	0	5	0	1	1
+631	long001.lmo	Black Dragon La	0	0	0	0	0	0	5	0	1	0
+632	hlcx-ck.lmo	Black Dragon La	0	0	0	0	1	0	5	0	1	0
+633	cc-bddxsdrk.lmo	Underwater Tunn	0	0	0	0	1	0	5	0	1	1
+634	cc-bd075.lmo	Gate of Spring 	0	0	0	0	1	0	5	0	1	0
+635	hdmgrk01.lmo	Pirate Base Ent	0	1,2	0	0	1	0	5	0	1	1
+636	hdwjsj001.lmo	Calculator	0	0	0	0	1	0	5	0	1	1
+637	hdwblg001.lmo	Glass Bottle	0	0	0	0	1	0	5	0	1	1
+638	hdjd-cbd01.lmo	Treasure pile 0	0	0	0	0	1	0	5	0	1	1
+639	ys_jiaotang.lmo	Cathedral	0	0	0	0	1	0	5	0	1	1
+640	jtsn.lmo	In the Cathedra	0	0	0	0	1	0	5	0	1	1
+641	sbm.lmo	Drape	0	0	0	0	1	0	5	0	1	0
+642	ys_ditan.lmo	yy carpet	0	0	0	0	1	0	5	0	1	0
+643	07hdw_hualanbai.lmo	Corbeil	0	0	0	0	1	0	5	0	1	0
+644	xmas_hengfu.lmo	Xmas Banner	0	0	0	0	1	0	5	0	1	0
+645	xmas_caidai.lmo	Christmas Ribbo	0	0	0	0	1	0	5	0	1	0
+646	dd_bd001.lmo	Winter Island H	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+647	dd_bd002.lmo	Winter Island D	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+648	dd_bd003.lmo	Snow Grass	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+649	dd_bd004.lmo	Snow Gravel	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+650	dd_bd006.lmo	Snow Stone	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+651	dd_bd007.lmo	Snow Tree	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+652	dd_bd008.lmo	Winter Island B	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+653	dd_bd009.lmo	Winter Island G	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+654	dd_bd010.lmo	Winter Island L1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+655	dd_bd011.lmo	Winter Island L2	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+656	dd_bd012.lmo	Winter Island L3	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+657	dd_bd013.lmo	Winter Island L4	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+658	dd_bd014.lmo	Winter Island L5	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+659	dd_bd015.lmo	Winter Island L6	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+660	MY_bd001.lmo	Treasure Room	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	5	0	1	1
+661	ns_gangdian.lmo	Goddes' Palace	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	0	0	1	1
+662	kyjj-bd01-01.lmo	Roman Column01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+663	kyjj-bd01-21.lmo	Roman Column02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+664	kyjj-bd01-22.lmo	Roman Column03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+665	kyjj-bd01-23.lmo	Roman Column04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+666	kyjj-bd01-31.lmo	Roman Column05	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+667	kyjj-bd01-32.lmo	Roman Column06	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+668	kyjj-bd01-33.lmo	Roman Column07	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+669	kyjj-bd01-34.lmo	Roman Column08	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+670	kyjj-bd02-01.lmo	The fence01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+671	kyjj-bd02-02.lmo	The fence02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+672	kyjj-bd02-21.lmo	The fence01_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+673	kyjj-bd02-22.lmo	The fence01_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+674	kyjj-bd02-23.lmo	The fence01_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+675	kyjj-bd02-24.lmo	The fence01_04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+676	kyjj-bd02-31.lmo	The fence02_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+677	kyjj-bd02-32.lmo	The fence02_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+678	kyjj-bd02-33.lmo	The fence02_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+679	kyjj-bd02-34.lmo	The fence02_04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+680	kyjj-bd02-41.lmo	The fence01_02_1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+681	kyjj-bd02-42.lmo	The fence01_02_2	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+682	kyjj-bd02-43.lmo	The fence01_02_3	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+683	kyjj-bd02-51.lmo	The fence02_02_4	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+684	kyjj-bd02-52.lmo	The fence01_02_5	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+685	kyjj-bd02-53.lmo	The fence01_02_6	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+686	kyjj-bd03-01.lmo	Fence Post01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+687	kyjj-bd03-21.lmo	Fence Column02_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+688	kyjj-bd03-22.lmo	Fence Column02_1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+689	kyjj-bd03-31.lmo	Fence Column03_2	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+690	kyjj-bd03-32.lmo	Fence Column03_3	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+691	kyjj-bd04-01.lmo	The walls01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+692	kyjj-bd04-21.lmo	The walls02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+693	kyjj-bd05-01.lmo	The statue01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+694	kyjj-bd05-21.lmo	The statue02_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+695	kyjj-bd05-22.lmo	The statue02_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+696	kyjj-bd05-23.lmo	The statue02_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+697	kyjj-bd05-31.lmo	The statue03_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+698	kyjj-bd05-32.lmo	The statue03_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+699	kyjj-bd05-33.lmo	The statue03_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+700	kyjj-bd05-34.lmo	The statue03_04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+701	kyjj-bd06-01.lmo	ornaments01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+702	kyjj-bd06-21.lmo	ornaments02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	1
+703	kyjj-bd06-22.lmo	ornaments03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	1
+704	kyjj-bd05-22.lmo	The statue02_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+705	kyjj-bd01-41.lmo	Roman column fr1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+706	kyjj-bd01-42.lmo	Roman column fr2	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+707	kyjj-bd01-43.lmo	Roman column fr3	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+708	kyjj-bd04-31.lmo	The walls03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+709	kyjj-bd04-41.lmo	The walls4	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+710	kyjj-bd07-01.lmo	Fire	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	0
+711	kyjj-bd07-02.lmo	The light effect	0	0,0,0,0,0,0,0,0,0,0,0,0	0	1	0	0	6	0	1	0
+712	kyjj-bd07-03.lmo	The light effec1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	1	0	0	6	0	1	0
+713	kyjj-bd06-23.lmo	gravel head_1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	1
+714	kyjj-bd06-24.lmo	gravel head_2	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+715	kyjj-bd06-25.lmo	gravel head_3	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+716	kyjj-bd06-26.lmo	gravel head_4	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+717	kyjj-bd06-27.lmo	gravel head_5	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	6	0	1	1
+718	kyjj-bd06-28.lmo	gravel head_6	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+719	kyjj-bd06-29.lmo	gravel head_7	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+720	sw_louti.lmo	Star stairs	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+721	sw_weiqiang.lmo	Star wall	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+722	sw_ta.lmo	Star tower	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+723	sw_yabian.lmo	Star BHF	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+724	sw_louti2.lmo	Star step width	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	6	0	1	0
+725	tsrj_wjbayi01.lmo	Sky bar chair	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+726	tsrj_yinxiang.lmo	Audio	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+727	tsrj_caideng.lmo	DiscoBall	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+728	tsrj_caidengpian.lmo	Disco Lights	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+729	tsrj_caidengpian1.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+730	tsrj_caidengpian2.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+731	tsrj_caidengpian3.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+732	tsrj_caidengpian4.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+734	tsrj_caidengpian1x.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+735	tsrj_caidengpian2x.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+736	tsrj_caidengpian3x.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+737	tsrj_caidengpian4x.lmo	Disco Chang lig1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+738	wjfangzhuo001.lmo	Square Table	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+739	wjzhuozi001.lmo	Table	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+740	wjyizi001.lmo	Chair	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+741	wjchaji001.lmo	Coffee Table	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+742	tsrj_make.lmo	heaven microphon	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+743	wjwutai001.lmo	Stage001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+744	wjwutai002.lmo	Stage001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+745	wjwutai003.lmo	Stage001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+746	wjwutai004.lmo	TV	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+747	wjwutai005.lmo	Stage002	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+748	wjwutai006.lmo	Stage002	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+749	tsrj_bataizhuozi.lmo	Earth Bar	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+750	wjshafa001.lmo	sofa01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+751	wjshafa002.lmo	sofa02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+752	wjshafa003.lmo	sofa03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+753	wjqiangtiq001.lmo	stage wall01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+754	wjqiangtiq002.lmo	stage wall02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+755	wjqiangtiq003.lmo	stage wall03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+756	wjqiangtiq004.lmo	stage wall04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+757	wjzhuziq001.lmo	stage pillar01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+758	tsrj_bataiguizi.lmo	Earth Closed	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+759	wjqiangtiq005.lmo	stage wall05	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+760	wjhuaq001.lmo	Painting01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+761	wjhuaq002.lmo	Painting02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+762	wjhuaq003.lmo	Painting03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	0	0	1	0
+763	wjhuaq004.lmo	Painting04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	0	0	1	0
+764	wjditanq001.lmo	rooms carpet01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	1
+765	tsrj_guopen01.lmo	Guopen	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+766	tsrj_guopen02.lmo	wine bottles 1	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+767	tsrj_jiuping01.lmo	wine bottles 2	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+768	tsrj_jiuping02.lmo	wine bottles 3	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+769	tsrj_jiuping03.lmo	wine bottles 4	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	1	0	101	0	1	0
+770	sky_bd01.lmo	Bay Guang	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+771	yu_bd01.lmo	Clouds	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+772	bot_bd001.lmo	Sunken boat 01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+773	bot_bd002.lmo	Sunken boat 02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+774	bot_bd003.lmo	Sunken boat 03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+775	kxs_bd001.lmo	Floatin Carsise	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+776	Am_bd002.lmo	Floatin Ami	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	101	0	1	0
+799	1-1.lmo	1-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+800	10-1.lmo	10-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+801	11-1.lmo	11-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+802	2-1.lmo	2-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+803	3-1.lmo	3-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+804	4-1.lmo	4-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+805	5-1.lmo	5-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+806	6-1.lmo	6-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+807	7-1.lmo	7-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+808	8-1.lmo	8-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+809	9-1.lmo	9-1.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+810	FB_AYMG_dong_01.lmo	FB_AYMG_dong_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+811	FB_AYMG_house_0002.lmo	FB_AYMG_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+812	FB_AYMG_house_0003.lmo	FB_AYMG_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+813	FB_AYMG_other_0002.lmo	FB_AYMG_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+814	FB_AYMG_other_0003.lmo	FB_AYMG_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+815	FB_BCY_fengche_01.lmo	FB_BCY_fengche_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+816	FB_BCY_gangkou_0001.lmo	FB_BCY_gangkou_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+817	FB_BCY_shimai_01.lmo	FB_BCY_shimai_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+818	FB_BCY_shimai_03.lmo	FB_BCY_shimai_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+819	FB_BCY_shu_01.lmo	FB_BCY_shu_01.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+820	FB_BCY_xiaochuan_0001.lmo	FB_BCY_xiaochuan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+821	FB_BCY_xiaochuan_0002.lmo	FB_BCY_xiaochuan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+822	FB_BCY_xiaomen_0001.lmo	FB_BCY_xiaomen_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+823	FB_BCY_yeshu_0001.lmo	FB_BCY_yeshu_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+824	FB_BCY_yeshu_0002.lmo	FB_BCY_yeshu_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+825	FB_BCY_yeshu_0003.lmo	FB_BCY_yeshu_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+826	FB_BCY_yeshu_0004.lmo	FB_BCY_yeshu_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+827	FB_BSFB_caibao_01.lmo	FB_BSFB_caibao_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+828	FB_BSFB_caibao_02.lmo	FB_BSFB_caibao_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+829	FB_BSFB_caibao_03.lmo	FB_BSFB_caibao_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+830	FB_BSFB_kuangjia_0002.lmo	FB_BSFB_kuangjia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+831	FB_chongdong_dan_0001.lmo	FB_chongdong_dan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+832	FB_chongdong_dan_0002.lmo	FB_chongdong_dan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+833	FB_chongdong_dan_0003.lmo	FB_chongdong_dan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+834	FB_chongdong_dan_0004.lmo	FB_chongdong_dan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+835	FB_chongdong_dan_0005.lmo	FB_chongdong_dan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+836	FB_chongdong_dan_0006.lmo	FB_chongdong_dan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+837	FB_chongdong_mogu_0001.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+838	FB_chongdong_mogu_0001_01.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+839	FB_chongdong_mogu_0001_02.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+840	FB_chongdong_mogu_0001_03.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+841	FB_chongdong_mogu_0002.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+842	FB_chongdong_mogu_0003.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+843	FB_chongdong_mogu_0004.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+844	FB_chongdong_mogu_0005.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+845	FB_chongdong_mogu_0006.lmo	FB_chongdong_mog	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+846	FB_chongdong_other_0001.lmo	FB_chongdong_oth	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+847	FB_chongdong_other_0002.lmo	FB_chongdong_oth	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+848	FB_chongdong_other_0003.lmo	FB_chongdong_oth	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+849	FB_chongdong_other_0004.lmo	FB_chongdong_oth	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+850	FB_chongdong_other_0006.lmo	FB_chongdong_oth	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+851	FB_chongdong_other_0007.lmo	FB_chongdong_oth	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+852	FB_dadi_cao_0001.lmo	FB_dadi_cao_0001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+853	FB_dadi_house_0001.lmo	FB_dadi_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+854	FB_dadi_house_0002.lmo	FB_dadi_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+855	FB_dadi_jitai_0001.lmo	FB_dadi_jitai_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+856	FB_dadi_jitai_0002.lmo	FB_dadi_jitai_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+857	FB_dadi_other_0001.lmo	FB_dadi_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+858	FB_dadi_other_0002.lmo	FB_dadi_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+859	FB_dadi_other_0003.lmo	FB_dadi_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+860	FB_dadi_other_0004.lmo	FB_dadi_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+861	FB_dadi_other_0005.lmo	FB_dadi_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+862	FB_dadi_other_0006.lmo	FB_dadi_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+863	FB_dadi_rukou_0001.lmo	FB_dadi_rukou_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+864	FB_dadi_rukou_0002.lmo	FB_dadi_rukou_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+865	FB_dadi_shiban_0001.lmo	FB_dadi_shiban_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+866	FB_dadi_shiban_0002.lmo	FB_dadi_shiban_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+867	FB_dadi_shiban_0003.lmo	FB_dadi_shiban_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+868	FB_dadi_shudiao_0001.lmo	FB_dadi_shudiao_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+869	FB_dadi_shuwu_0001.lmo	FB_dadi_shuwu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+870	FB_DDLD_guanme_0001.lmo	FB_DDLD_guanme_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+871	FB_DDLD_guanme_0002.lmo	FB_DDLD_guanme_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+872	FB_DXSD_baobian_0001.lmo	FB_DXSD_baobian_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+873	FB_DXSD_baobian_0002.lmo	FB_DXSD_baobian_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+874	FB_DXSD_louti_0001.lmo	FB_DXSD_louti_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+875	FB_DXSD_louti_0002.lmo	FB_DXSD_louti_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+876	FB_DXSD_men_0001.lmo	FB_DXSD_men_0001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+877	FB_DXSD_qiang_0001.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+878	FB_DXSD_qiang_0002.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+879	FB_DXSD_qiang_0003.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+880	FB_DXSD_qiang_0004.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+881	FB_DXSD_qiang_0005.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+882	FB_DXSD_qiang_0006.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+883	FB_DXSD_qiang_0007.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+884	FB_DXSD_qiang_0008.lmo	FB_DXSD_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+885	FB_DXSD_rukou_0001.lmo	FB_DXSD_rukou_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+886	FB_DXSD_taizi_0003.lmo	FB_DXSD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+887	FB_DXSD_taizi_0005.lmo	FB_DXSD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+888	FB_DXSD_weilan_0001.lmo	FB_DXSD_weilan_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+889	FB_DXSD_zhuzi_0001.lmo	FB_DXSD_zhuzi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+890	FB_DXSD_zhuzi_0002.lmo	FB_DXSD_zhuzi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+891	FB_DXSD_zhuzi_0003.lmo	FB_DXSD_zhuzi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+892	FB_GPJJC_xieebaobian_0001.lmo	FB_GPJJC_xieebao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+893	FB_GPJJC_xieebaobian_0002.lmo	FB_GPJJC_xieebao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+894	FB_GPJJC_xieediaosu_0001.lmo	FB_GPJJC_xieedia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+895	FB_GPJJC_xieedidong_0001.lmo	FB_GPJJC_xieedid	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+896	FB_GPJJC_xieetaijie_0001.lmo	FB_GPJJC_xieetai	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+897	FB_GPJJC_xieezhuangshideng_0001.lmo	FB_GPJJC_xieezhu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+898	FB_GPJJC_xieezhujianzhu_0001.lmo	FB_GPJJC_xieezhu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+899	FB_GPJJC_xieezhuzi_0001.lmo	FB_GPJJC_xieezhu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+900	FB_GPJJC_yewaifangzi_01.lmo	FB_GPJJC_yewaifa	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+901	FB_GPJJC_zhengyidiaosu_0001.lmo	FB_GPJJC_zhengyi	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+902	FB_GPJJC_zhengyitaijie_0001.lmo	FB_GPJJC_zhengyi	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+903	FB_jianyu_damen_0001.lmo	FB_jianyu_damen_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+904	FB_jianyu_kulou_0003.lmo	FB_jianyu_kulou_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+905	FB_jianyu_qiang_0001.lmo	FB_jianyu_qiang_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+906	FB_jianyu_qiang_0002.lmo	FB_jianyu_qiang_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+907	FB_jianyu_zhuzi_0001.lmo	FB_jianyu_zhuzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+908	FB_jianyu_zhuzi_0002.lmo	FB_jianyu_zhuzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+909	FB_jianyu_zhuzi_0003.lmo	FB_jianyu_zhuzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+910	FB_jitan_0001.lmo	FB_jitan_0001.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+911	FB_jitan_0002.lmo	FB_jitan_0002.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+912	FB_jitan_0003.lmo	FB_jitan_0003.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+913	FB_jitan_0004.lmo	FB_jitan_0004.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+914	FB_jitan_0005.lmo	FB_jitan_0005.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+915	FB_jitan_0010.lmo	FB_jitan_0010.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+916	FB_jitan_0011.lmo	FB_jitan_0011.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+917	FB_jitan_0012.lmo	FB_jitan_0012.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+918	FB_KLLD_fenmu_0001.lmo	FB_KLLD_fenmu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+919	FB_KLLD_fenmu_0002.lmo	FB_KLLD_fenmu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+920	FB_KLLD_fenmu_0003.lmo	FB_KLLD_fenmu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+921	FB_KLLD_fenmu_0004.lmo	FB_KLLD_fenmu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+922	FB_KLLD_fenmu_0005.lmo	FB_KLLD_fenmu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+923	FB_KLLD_fenmu_0006.lmo	FB_KLLD_fenmu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+924	FB_KLLD_guanmu_01.lmo	FB_KLLD_guanmu_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+925	FB_KLLD_guanmu_02.lmo	FB_KLLD_guanmu_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+926	FB_KLLD_guanmu_03.lmo	FB_KLLD_guanmu_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+927	FB_KLLD_house_0004.lmo	FB_KLLD_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+928	FB_KLLD_house_0005.lmo	FB_KLLD_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+929	FB_KLLD_house_0008.lmo	FB_KLLD_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+930	FB_KLLD_house_0009_01.lmo	FB_KLLD_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+931	FB_KLLD_house_0009_02.lmo	FB_KLLD_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+932	FB_KLLD_house_0010.lmo	FB_KLLD_house_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+933	FB_KLLD_huopen_0001.lmo	FB_KLLD_huopen_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+934	FB_KLLD_kuloudui_0001.lmo	FB_KLLD_kuloudui	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+935	FB_KLLD_kushu_0001.lmo	FB_KLLD_kushu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+936	FB_KLLD_kushu_0002.lmo	FB_KLLD_kushu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+937	FB_KLLD_kushu_0003.lmo	FB_KLLD_kushu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+938	FB_KLLD_kushu_0004.lmo	FB_KLLD_kushu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+939	FB_KLLD_LD_0001.lmo	FB_KLLD_LD_0001.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+940	FB_KLLD_other_0001.lmo	FB_KLLD_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+941	FB_KLLD_other_0002.lmo	FB_KLLD_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+942	FB_KLLD_other_0003.lmo	FB_KLLD_other_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+943	FB_KLLD_qiao_0002.lmo	FB_KLLD_qiao_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+944	FB_KLLD_qiao_0004.lmo	FB_KLLD_qiao_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+945	FB_KLLD_qizi_0001.lmo	FB_KLLD_qizi_000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+946	FB_KLLD_shu_01.lmo	FB_KLLD_shu_01.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+947	FB_KLLD_shu_02.lmo	FB_KLLD_shu_02.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+948	FB_KLLD_shu_03.lmo	FB_KLLD_shu_03.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+949	FB_KLLD_taijie_0001.lmo	FB_KLLD_taijie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+950	FB_KLLD_taijie_0002.lmo	FB_KLLD_taijie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+951	FB_KLLD_taijie_0003.lmo	FB_KLLD_taijie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+952	FB_KLLD_taizi_0001.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+953	FB_KLLD_taizi_0002.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+954	FB_KLLD_taizi_0003.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+955	FB_KLLD_taizi_0004.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+956	FB_KLLD_taizi_0005.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+957	FB_KLLD_taizi_0006.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+958	FB_KLLD_taizi_0007.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+959	FB_KLLD_taizi_0008.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+960	FB_KLLD_taizi_0009.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+961	FB_KLLD_taizi_0010.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+962	FB_KLLD_taizi_0011.lmo	FB_KLLD_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+963	FB_KLLD_zhalan_0001.lmo	FB_KLLD_zhalan_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+964	FB_KLLD_zhalan_0002.lmo	FB_KLLD_zhalan_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+965	FB_LYMK_baozuo_01.lmo	FB_LYMK_baozuo_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+966	FB_LYMK_diaosu_01.lmo	FB_LYMK_diaosu_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+967	FB_LYMK_diaosu_02.lmo	FB_LYMK_diaosu_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+968	FB_LYMK_dibanzhuan_01.lmo	FB_LYMK_dibanzhu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+969	FB_LYMK_dibanzhuan_02.lmo	FB_LYMK_dibanzhu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+970	FB_LYMK_louti_01.lmo	FB_LYMK_louti_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+971	FB_LYMK_rukou_01.lmo	FB_LYMK_rukou_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+972	FB_MMHJ_men_01.lmo	FB_MMHJ_men_01.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+973	FB_MMHJ_zhiwu_01.lmo	FB_MMHJ_zhiwu_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+974	FB_MMHJ_zhiwu_02.lmo	FB_MMHJ_zhiwu_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+975	FB_MMHJ_zhiwu_03.lmo	FB_MMHJ_zhiwu_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+976	FB_MMHJ_zhiwu_04.lmo	FB_MMHJ_zhiwu_04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+977	FB_paochuan_01.lmo	FB_paochuan_01.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+978	FB_paochuan_02.lmo	FB_paochuan_02.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+979	FB_RC_3crukou_0001.lmo	FB_RC_3crukou_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+980	FB_RC_buji_01.lmo	FB_RC_buji_01.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+981	FB_RC_changlang_01.lmo	FB_RC_changlang_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+982	FB_RC_changlang_02.lmo	FB_RC_changlang_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+983	FB_RC_changlang_03.lmo	FB_RC_changlang_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+984	FB_RC_dizuo_01.lmo	FB_RC_dizuo_01.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+985	FB_RC_dizuo_02.lmo	FB_RC_dizuo_02.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+986	FB_RC_dizuo_03.lmo	FB_RC_dizuo_03.l	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+987	FB_RC_GYDZ_0001.lmo	FB_RC_GYDZ_0001.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+988	FB_RC_JDFS_rukou_0001.lmo	FB_RC_JDFS_rukou	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+989	FB_RC_jianyu_01.lmo	FB_RC_jianyu_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+990	FB_RC_jianyu_02.lmo	FB_RC_jianyu_02.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+991	FB_RC_jianyu_03.lmo	FB_RC_jianyu_03.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+992	FB_RC_jianyu_04.lmo	FB_RC_jianyu_04.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+993	FB_RC_JYMT_rukou_0001.lmo	FB_RC_JYMT_rukou	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+994	FB_RC_SHBJJD_rukou_0001.lmo	FB_RC_SHBJJD_ruk	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+995	FB_RC_SLTY_rukou_0001.lmo	FB_RC_SLTY_rukou	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+996	FB_RC_SMBZDYS_rukou_0001.lmo	FB_RC_SMBZDYS_ru	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+997	FB_RC_tuyangrukou_0001.lmo	FB_RC_tuyangruko	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+998	FB_RC_WJSL_rukou_0001.lmo	FB_RC_WJSL_rukou	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+999	FB_RC_wucengrukou_0001.lmo	FB_RC_wucengruko	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1000	FB_rukou_migong.lmo	FB_rukou_migong.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1001	FB_SDHJ_baoshitai_0001.lmo	FB_SDHJ_baoshita	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1002	FB_SDHJ_chuansongtai_0001.lmo	FB_SDHJ_chuanson	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1003	FB_SDHJ_feixu_0002.lmo	FB_SDHJ_feixu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1004	FB_SDHJ_feixu_0004.lmo	FB_SDHJ_feixu_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1005	FB_SDHJ_huanxingfeixu_0001.lmo	FB_SDHJ_huanxing	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1006	FB_SDHJ_qiangbaobian_0001.lmo	FB_SDHJ_qiangbao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1007	FB_SDHJ_qiangbaobian_0002.lmo	FB_SDHJ_qiangbao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1008	FB_SDHJ_qiangbaobian_0003.lmo	FB_SDHJ_qiangbao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1009	FB_SDHJ_qiangbaobian_0004.lmo	FB_SDHJ_qiangbao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1010	FB_SDHJ_shu_0001.lmo	FB_SDHJ_shu_0001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1011	FB_SDHJ_shu_0002.lmo	FB_SDHJ_shu_0002	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1012	FB_SDHJ_shu_0003.lmo	FB_SDHJ_shu_0003	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1013	FB_SGSD_bosstaizi_0001.lmo	FB_SGSD_bosstaiz	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1014	FB_SGSD_chushengdi_0001.lmo	FB_SGSD_chusheng	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1015	FB_SGSD_men_0001.lmo	FB_SGSD_men_0001	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1016	FB_SLBL_qiang_0001.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1017	FB_SLBL_qiang_0002.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1018	FB_SLBL_qiang_0003.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1019	FB_SLBL_qiang_0004.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1020	FB_SLBL_qiang_0005.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1021	FB_SLBL_qiang_0006_01.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1022	FB_SLBL_qiang_0006_02.lmo	FB_SLBL_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1023	FB_SLBL_rukou_0003.lmo	FB_SLBL_rukou_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1024	FB_SLBL_taizi_0001.lmo	FB_SLBL_taizi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1025	FB_SLBL_xiaoweilan_0001.lmo	FB_SLBL_xiaoweil	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1026	FB_SLBL_xiaoweilan_0002.lmo	FB_SLBL_xiaoweil	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1027	FB_swzl_0001.lmo	FB_swzl_0001.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1028	FB_swzl_0001_01.lmo	FB_swzl_0001_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1029	FB_swzl_0002.lmo	FB_swzl_0002.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1030	FB_swzl_0002_01.lmo	FB_swzl_0002_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1031	FB_swzl_0003.lmo	FB_swzl_0003.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1032	FB_swzl_0003_01.lmo	FB_swzl_0003_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1033	FB_swzl_0005_01.lmo	FB_swzl_0005_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1034	FB_swzl_0007.lmo	FB_swzl_0007.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1035	FB_swzl_0008.lmo	FB_swzl_0008.lmo	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1036	FB_tt-2_Bossshizhu_0001.lmo	FB_tt-2_Bossshiz	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1037	FB_tt-2_Bosstaizi_01_01.lmo	FB_tt-2_Bosstaiz	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1038	FB_tt-2_Bosstaizi_01_02.lmo	FB_tt-2_Bosstaiz	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1039	FB_ttt3_diaoxiang_0001.lmo	FB_ttt3_diaoxian	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1040	FB_ttt3_diaoxiang_0002.lmo	FB_ttt3_diaoxian	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1041	FB_ttt3_louti_0001.lmo	FB_ttt3_louti_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1042	FB_ttt3_louti_0002.lmo	FB_ttt3_louti_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1043	FB_ttt3_penquan_0001.lmo	FB_ttt3_penquan_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1044	FB_ttt3_qiang_0001.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1045	FB_ttt3_qiang_0002.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1046	FB_ttt3_qiang_0003.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1047	FB_ttt3_qiang_0004.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1048	FB_ttt3_qiang_0005.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1049	FB_ttt3_qiang_0006.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1050	FB_ttt3_qiang_0007.lmo	FB_ttt3_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1051	FB_ttt3_taijie_0001.lmo	FB_ttt3_taijie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1052	FB_ttt3_xiejie_0001.lmo	FB_ttt3_xiejie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1053	FB_ttt3_zhuzi_0001.lmo	FB_ttt3_zhuzi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1054	FB_ttts_diaoxiang_0001.lmo	FB_ttts_diaoxian	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1055	FB_ttts_diaoxiang_0002.lmo	FB_ttts_diaoxian	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1056	FB_ttts_louti_0001.lmo	FB_ttts_louti_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1057	FB_ttts_louti_0002.lmo	FB_ttts_louti_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1058	FB_ttts_penquan_0001.lmo	FB_ttts_penquan_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1059	FB_ttts_qiang_0001.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1060	FB_ttts_qiang_0002.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1061	FB_ttts_qiang_0003.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1062	FB_ttts_qiang_0004.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1063	FB_ttts_qiang_0005.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1064	FB_ttts_qiang_0006.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1065	FB_ttts_qiang_0007.lmo	FB_ttts_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1066	FB_ttts_taijie_0001.lmo	FB_ttts_taijie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1067	FB_ttts_xiejie_0001.lmo	FB_ttts_xiejie_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1068	FB_ttts_zhuzi_0001.lmo	FB_ttts_zhuzi_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1069	FB_TTT_diaosu_01.lmo	FB_TTT_diaosu_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1070	FB_TTT_shangrukou_0001.lmo	FB_TTT_shangruko	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1071	FB_TTT_shangrukou_0002.lmo	FB_TTT_shangruko	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1072	FB_TTT_shangrukou_0003.lmo	FB_TTT_shangruko	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1073	FB_TTT_shangrukou_0004.lmo	FB_TTT_shangruko	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1074	FB_XSGB_dixiaqiang_0001.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1075	FB_XSGB_dixiaqiang_0002.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1076	FB_XSGB_dixiaqiang_0003.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1077	FB_XSGB_dixiaqiang_0004.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1078	FB_XSGB_dixiaqiang_0005.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1079	FB_XSGB_dixiaqiang_0006.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1080	FB_XSGB_dixiaqiang_0007.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1081	FB_XSGB_dixiaqiang_0008.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1082	FB_XSGB_dixiaqiang_0011.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1083	FB_XSGB_dixiaqiang_0013.lmo	FB_XSGB_dixiaqia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1084	FB_XSGB_kuijia_0001.lmo	FB_XSGB_kuijia_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1085	FB_XSGB_lazhudeng_0001.lmo	FB_XSGB_lazhuden	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1086	FB_XSGB_qiang_0001.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1087	FB_XSGB_qiang_0002.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1088	FB_XSGB_qiang_0003.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1089	FB_XSGB_qiang_0004.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1090	FB_XSGB_qiang_0005.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1091	FB_XSGB_qiang_0006.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1092	FB_XSGB_qiang_0007.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1093	FB_XSGB_qiang_0008.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1094	FB_XSGB_qiang_0009.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1095	FB_XSGB_qiang_0010.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1096	FB_XSGB_qiang_0012.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1097	FB_XSGB_qiang_0013.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1098	FB_XSGB_qiang_0014.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1099	FB_XSGB_qiang_0015.lmo	FB_XSGB_qiang_00	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1100	FB_Xshuiqu_bosstaizi_0001.lmo	FB_Xshuiqu_bosst	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1101	FB_Xshuiqu_chushengdian_0001.lmo	FB_Xshuiqu_chush	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1102	FB_YGJJ_shizhuqun_01.lmo	FB_YGJJ_shizhuqu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1103	FB_YGJJ_shizhuqun_02.lmo	FB_YGJJ_shizhuqu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1104	FB_YGJJ_shizhuqun_03.lmo	FB_YGJJ_shizhuqu	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1105	FB_YGJJ_ta_01.lmo	FB_YGJJ_ta_01.lm	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1106	FB_YGJJ_XCSM_01.lmo	FB_YGJJ_XCSM_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1107	FB_YGJJ_XCSM_02.lmo	FB_YGJJ_XCSM_02.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1108	FB_YGJJ_ZCSM_01.lmo	FB_YGJJ_ZCSM_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1109	FB_YGJJ_ZCSM_02.lmo	FB_YGJJ_ZCSM_02.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1110	FB_ZJCCZ_dengzi_0001.lmo	FB_ZJCCZ_dengzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1111	FB_ZJCCZ_fangzi_0001.lmo	FB_ZJCCZ_fangzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1112	FB_ZJCCZ_fangzi_0002.lmo	FB_ZJCCZ_fangzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1113	FB_ZJCCZ_fangzi_0003.lmo	FB_ZJCCZ_fangzi_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1114	FB_ZJCCZ_fengche_0001.lmo	FB_ZJCCZ_fengche	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1115	FB_ZJCCZ_maowu_0001.lmo	FB_ZJCCZ_maowu_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1116	FB_ZJCCZ_muchai_0002.lmo	FB_ZJCCZ_muchai_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1117	FB_ZJCCZ_muxiang_0003.lmo	FB_ZJCCZ_muxiang	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1118	FB_ZJCCZ_tuiche_0001.lmo	FB_ZJCCZ_tuiche_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1119	FB_ZJCCZ_tuiche_0002.lmo	FB_ZJCCZ_tuiche_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1120	FB_ZJCCZ_wuqizao_0001.lmo	FB_ZJCCZ_wuqizao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1121	FB_ZJCCZ_wuqizao_0002.lmo	FB_ZJCCZ_wuqizao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1122	FB_ZJCCZ_wuqizao_0003.lmo	FB_ZJCCZ_wuqizao	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1123	FB_ZJSM_fangzi_0001.lmo	FB_ZJSM_fangzi_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1124	FB_ZJSM_fangzi_0003.lmo	FB_ZJSM_fangzi_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1125	FB_ZJSM_fangzi_0004.lmo	FB_ZJSM_fangzi_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1126	FB_ZJSM_fangzi_0005.lmo	FB_ZJSM_fangzi_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1127	0	0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1128	Map_DYSL_daqiang_01.lmo	Map_DYSL_daqiang	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1129	Map_DYSL_daqiang_02.lmo	Map_DYSL_daqiang	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1130	Map_DYSL_DCM_01.lmo	Map_DYSL_DCM_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1131	Map_DYSL_DCM_02.lmo	Map_DYSL_DCM_02.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1132	Map_DYSL_DCM_03.lmo	Map_DYSL_DCM_03.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1133	Map_DYSL_DCM_04.lmo	Map_DYSL_DCM_04.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1134	Map_DYSL_DCM_05.lmo	Map_DYSL_DCM_05.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1135	Map_DYSL_diaosu_01.lmo	Map_DYSL_diaosu_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1136	Map_DYSL_diaosu_02.lmo	Map_DYSL_diaosu_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1137	Map_DYSL_diaosu_03.lmo	Map_DYSL_diaosu_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1138	MAP_DYSL_guanmu01.lmo	MAP_DYSL_guanmu0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1139	MAP_DYSL_guanmu02.lmo	MAP_DYSL_guanmu0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1140	MAP_DYSL_guanmu03.lmo	MAP_DYSL_guanmu0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1141	map_dysl_house_0005.lmo	map_dysl_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1142	map_dysl_house_0009.lmo	map_dysl_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1143	map_dysl_house_0012.lmo	map_dysl_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1144	Map_DYSL_house_X0002_01.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1145	Map_DYSL_house_X0002_02.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1146	Map_DYSL_house_X0002_03.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1147	Map_DYSL_house_X0002_04.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1148	Map_DYSL_house_X0003_01.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1149	Map_DYSL_house_X0003_02.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1150	Map_DYSL_house_X0003_03.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1151	Map_DYSL_house_X0003_04.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1152	Map_DYSL_house_X0003_05.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1153	Map_DYSL_house_X0003_06.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1154	Map_DYSL_house_X0003_07.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1155	Map_DYSL_house_X0003_08.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1156	Map_DYSL_house_X0003_09.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1157	Map_DYSL_house_X0006_01.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1158	Map_DYSL_house_X0006_02.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1159	Map_DYSL_house_X0006_03.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1160	Map_DYSL_house_X0006_04.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1161	Map_DYSL_house_X0006_05.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1162	Map_DYSL_house_X0006_06.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1163	Map_DYSL_house_X0008_01.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1164	Map_DYSL_house_X0008_02.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1165	Map_DYSL_house_X0008_03.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1166	Map_DYSL_house_X0008_04.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1167	Map_DYSL_house_X0008_05.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1168	Map_DYSL_house_X0008_06.lmo	Map_DYSL_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1169	map_dysl_house_X0010_01.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1170	map_dysl_house_X0010_02.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1171	map_dysl_house_X0011_01.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1172	map_dysl_house_X0011_02.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1173	map_dysl_house_X0013_01.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1174	map_dysl_house_X0013_02.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1175	map_dysl_house_X0013_03.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1176	map_dysl_house_X0013_04.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1177	map_dysl_house_X0013_05.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1178	map_dysl_house_X0013_06.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1179	map_dysl_house_X0013_07.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1180	map_dysl_house_X0015_01.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1181	map_dysl_house_X0015_02.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1182	map_dysl_house_X0015_03.lmo	map_dysl_house_X	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1183	Map_DYSL_ludeng_01.lmo	Map_DYSL_ludeng_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1184	Map_DYSL_luya_01.lmo	Map_DYSL_luya_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1185	Map_DYSL_luya_02.lmo	Map_DYSL_luya_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1186	Map_DYSL_MaTou_01.lmo	Map_DYSL_MaTou_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1187	Map_DYSL_MaTou_02.lmo	Map_DYSL_MaTou_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1188	Map_DYSL_mofashi_01.lmo	Map_DYSL_mofashi	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1189	map_dysl_other_0005.lmo	map_dysl_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1190	map_dysl_other_0007.lmo	map_dysl_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1191	Map_DYSL_other_01.lmo	Map_DYSL_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1192	Map_DYSL_other_02.lmo	Map_DYSL_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1193	Map_DYSL_other_03.lmo	Map_DYSL_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1194	Map_DYSL_other_04.lmo	Map_DYSL_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1195	Map_DYSL_other_05.lmo	Map_DYSL_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1196	Map_DYSL_other_06.lmo	Map_DYSL_other_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1197	Map_DYSL_Other_CM_0001_03.lmo	Map_DYSL_Other_C	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1198	Map_DYSL_Other_CM_0001_04.lmo	Map_DYSL_Other_C	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1199	Map_DYSL_Other_CM_X0001_01.lmo	Map_DYSL_Other_C	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1200	Map_DYSL_Other_CM_X0001_02.lmo	Map_DYSL_Other_C	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1201	Map_DYSL_Other_CM_X0001_03.lmo	Map_DYSL_Other_C	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1202	Map_DYSL_Other_CM_X0002_01.lmo	Map_DYSL_Other_C	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1203	Map_dysl_other_csm_0001.lmo	Map_dysl_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1204	map_DYSL_other_matou_0001.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1205	map_DYSL_other_matou_0002.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1206	map_DYSL_other_matou_0003.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1207	map_DYSL_other_matou_0004.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1208	map_DYSL_other_matou_0005.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1209	map_DYSL_other_matou_0006.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1210	map_DYSL_other_matou_0007.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1211	map_DYSL_other_matou_0008.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1212	map_DYSL_other_matou_0009.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1213	map_DYSL_other_matou_0010.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1214	map_DYSL_other_matou_0011.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1215	map_DYSL_other_matou_0012.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1216	map_DYSL_other_matou_0013.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1217	map_DYSL_other_matou_0014.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1218	map_DYSL_other_matou_0015.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1219	map_DYSL_other_matou_0016.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1220	map_DYSL_other_matou_0017.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1221	map_DYSL_other_matou_0018.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1222	map_DYSL_other_matou_0019.lmo	map_DYSL_other_m	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1223	Map_DYSL_Other_MX_0001.lmo	Map_DYSL_Other_M	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1224	Map_DYSL_Other_MX_0002.lmo	Map_DYSL_Other_M	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1225	Map_DYSL_Other_MX_zuhe01.lmo	Map_DYSL_Other_M	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1226	Map_DYSL_Other_MX_zuhe02.lmo	Map_DYSL_Other_M	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1227	Map_DYSL_other_psc	Map_DYSL_other_p	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1228	Map_DYSL_other_qiao_0001.lmo	Map_DYSL_other_q	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1229	map_DYSL_other_ronglu_0001.lmo	map_DYSL_other_r	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1230	map_DYSL_other_yanjing_0001.lmo	map_DYSL_other_y	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1231	Map_DYSL_Other_ZL_0001.lmo	Map_DYSL_Other_Z	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1232	Map_DYSL_penquan_01.lmo	Map_DYSL_penquan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1233	Map_DYSL_penquan_03.lmo	Map_DYSL_penquan	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1234	Map_DYSL_qiang_01.lmo	Map_DYSL_qiang_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1235	Map_DYSL_room_01.lmo	Map_DYSL_room_01	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1236	Map_DYSL_room_02.lmo	Map_DYSL_room_02	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1237	Map_DYSL_room_03.lmo	Map_DYSL_room_03	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1238	Map_DYSL_room_04.lmo	Map_DYSL_room_04	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1239	Map_DYSL_room_05.lmo	Map_DYSL_room_05	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1240	Map_DYSL_room_06.lmo	Map_DYSL_room_06	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1241	Map_DYSL_room_07.lmo	Map_DYSL_room_07	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1242	Map_DYSL_room_08.lmo	Map_DYSL_room_08	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1243	Map_DYSL_room_09.lmo	Map_DYSL_room_09	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1244	Map_DYSL_room_11.lmo	Map_DYSL_room_11	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1245	Map_DYSL_room_12.lmo	Map_DYSL_room_12	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1246	Map_DYSL_room_13.lmo	Map_DYSL_room_13	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1247	Map_DYSL_room_14.lmo	Map_DYSL_room_14	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1248	map_DYSL_tree0001.lmo	map_DYSL_tree000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1249	map_DYSL_tree0002.lmo	map_DYSL_tree000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1250	map_DYSL_tree0003.lmo	map_DYSL_tree000	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1251	Map_DYSL_wuqijia_01.lmo	Map_DYSL_wuqijia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1252	Map_DYSL_wuqijia_02.lmo	Map_DYSL_wuqijia	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1253	Map_DYSL_XCM_01.lmo	Map_DYSL_XCM_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1254	Map_DYSL_XCM_02.lmo	Map_DYSL_XCM_02.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1255	Map_DYSL_Xother_0001.lmo	Map_DYSL_Xother_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1256	Map_DYSL_Xother_0002.lmo	Map_DYSL_Xother_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1257	Map_DYSL_Xother_0003.lmo	Map_DYSL_Xother_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1258	Map_DYSL_Xother_0004.lmo	Map_DYSL_Xother_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1259	Map_DYSL_Xother_0005.lmo	Map_DYSL_Xother_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1260	Map_DYSL_Xother_0006.lmo	Map_DYSL_Xother_	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1261	Map_DYSL_yueliangjing_01.lmo	Map_DYSL_yuelian	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1262	Map_DYSL_yueshenxiang.lmo	Map_DYSL_yueshen	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1263	Map_HMSL_gangkou_0001.lmo	Map_HMSL_gangkou	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1264	Map_paoshang_01.lmo	Map_paoshang_01.	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1265	Map_XSCY_house_0003.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1266	Map_XSCY_house_0004.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1267	Map_XSCY_house_0005.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1268	Map_XSCY_house_0007.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1269	Map_XSCY_house_0009.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1270	Map_XSCY_house_0010.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1271	Map_XSCY_house_0012.lmo	Map_XSCY_house_0	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1272	Map_XSCY_other_cm_0001-01.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1273	Map_XSCY_other_cm_0001-03.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1274	Map_XSCY_other_cm_0001-04.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1275	Map_XSCY_other_cm_0001-05.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1276	Map_XSCY_other_cm_0001-06.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1277	Map_XSCY_other_cm_0001-07.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1278	Map_XSCY_other_cm_0002-01.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1279	Map_XSCY_other_cm_0002-03.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1280	Map_XSCY_other_cm_0002-04.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1281	Map_XSCY_other_cm_0002-05.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1282	Map_XSCY_other_cm_0002-06.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1283	Map_XSCY_other_cm_0002-07.lmo	Map_XSCY_other_c	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1284	Map_XSCY_other_gutai_0001.lmo	Map_XSCY_other_g	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1285	Map_XSCY_other_gutai_0002.lmo	Map_XSCY_other_g	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1286	Map_XSCY_other_jianta_0001_01.lmo	Map_XSCY_other_j	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1287	Map_XSCY_other_jianta_0001_02.lmo	Map_XSCY_other_j	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1288	Map_XSCY_other_jianta_0001_03.lmo	Map_XSCY_other_j	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1289	Map_XSCY_other_jianta_0002_01.lmo	Map_XSCY_other_j	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1290	Map_XSCY_other_jianta_0002_02.lmo	Map_XSCY_other_j	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1291	Map_XSCY_other_jianta_0002_03.lmo	Map_XSCY_other_j	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0
+1292	Map_ZJC_qiuguanshinei_zhuozi_0001.lmo	Map_ZJC_qiuguans	0	0,0,0,0,0,0,0,0,0,0,0,0	0	0	0	0	7	0	0	0

@@ -1,3 +1,0 @@
-//±àºÅ	Ãû³Æ	Hint Mode	Content
-1	Skill Learning Detection	1	Insufficient EXP, unable to learn
-2	Skill Learning Detection	1	Already possess this skill. Unable to learn

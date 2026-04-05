@@ -473,6 +473,7 @@ __ret:
 LW_RESULT lwAnimCtrlBone::LoadData(const void* data)
 {
     LW_RESULT ret = LW_RET_FAILED;
+	lwPoseInfo pi{};
 
     const lwAnimDataBone* data_bone = (lwAnimDataBone*)data;
 
@@ -487,10 +488,6 @@ LW_RESULT lwAnimCtrlBone::LoadData(const void* data)
         _dummy_rtmat_seq[i].id = _data._dummy_seq[i].id;
     }
 
-    // insert default pose 0
-    lwPoseInfo pi;
-    memset(&pi, 0, sizeof(pi));
-    pi.start = 0;
     pi.end = _data._frame_num - 1;
     _pose_ctrl.SetFrameNum(_data._frame_num);
     _pose_ctrl.InsertPose(0, &pi, 1);
@@ -1075,6 +1072,7 @@ LW_RESULT lwAnimCtrlTexImg::LoadData(const void* data)
     LW_RESULT ret = LW_RET_FAILED;
 
     lwAnimDataTexImg* adti = (lwAnimDataTexImg*)data;
+	lwPoseInfo pi{};
 
     if(LW_FAILED(_data.Copy(adti)))
         goto __ret;
@@ -1100,9 +1098,6 @@ LW_RESULT lwAnimCtrlTexImg::LoadData(const void* data)
 
     // insert default pose 0
     _pose_ctrl.RemoveAll();
-    lwPoseInfo pi;
-    memset(&pi, 0, sizeof(pi));
-    pi.start = 0;
     pi.end = _tex_num - 1;
     _pose_ctrl.SetFrameNum(_tex_num);
     _pose_ctrl.InsertPose(0, &pi, 1);

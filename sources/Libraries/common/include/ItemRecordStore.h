@@ -83,6 +83,6 @@ protected:
 
 private:
 	static void ParsePair(std::string_view text, short& out0, short& out1);
-	static void ParseCharArray(std::string_view text, uint8_t* out, int maxLen, uint8_t defaultVal);
+	static void ParseCharArray(std::string_view text, std::int8_t* out, int maxLen, std::int8_t defaultVal);
 	static void ParseShortArray(std::string_view text, short* out, int maxLen);
 };

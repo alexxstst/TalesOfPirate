@@ -1,0 +1,113 @@
+//ID	Name	?	ID 1 (Lance)	ID 1 (Carsise)	ID 1 (Phyllis)	ID 1 (Ami)	? 1	ID 2 (Lance)	ID 2 (Carsise)	ID 2 (Phyllis)	ID 2 (Ami)	? 2	ID 3 (Lance)	ID 3 (Carsise)	ID 3 (Phyllis)	ID 3 (Ami)	? 3	ID 4 (Lance)	ID 4 (Carsise)	ID 4 (Phyllis)	ID 4 (Ami)	? 4
+1	Staff Bonus	3	0	0	300	300	4	0	0	301	301	4	0	0	302	302	0	0	0	0	0	0
+2	Great Attack	1	303	303	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+3	Single Hand Sword Attack	1	304	304	304	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+4	Dagger Attack	1	305	0	305	305	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+5	Gun Attack	1	306	0	306	0	3	307	0	307	0	1	0	0	0	0	0	0	0	0	0	0
+6	Staff Defense	2	0	0	308	308	4	0	0	309	309	4	0	0	310	310	0	0	0	0	0	0
+7	Staff Attack	1	0	0	311	311	4	0	0	312	312	4	0	0	313	313	0	0	0	0	0	0
+8	Great Defense	2	317	317	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+9	Single Hand Sword Defense	2	318	318	318	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+10	Dagger Defense	2	319	0	319	319	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+11	Hugh Bonus	3	314	314	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+12	Single Hand Sword Bonus	3	315	315	315	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+13	Dagger Bonus	3	316	0	316	316	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+14	Gun Defense	2	320	0	320	0	3	321	0	321	0	1	0	0	0	0	0	0	0	0	0	0
+15	Gun Bonus	3	322	0	322	0	3	323	0	323	0	1	0	0	0	0	0	0	0	0	0	0
+16	Staff Bonus Defense	2	0	0	300	300	4	0	0	301	301	4	0	0	310	310	0	0	0	0	0	0
+17	Staff Bonus add Attack	3	0	0	311	311	4	0	0	309	309	4	0	0	302	302	0	0	0	0	0	0
+18	Staff Attack Added Defense	1	0	0	308	308	4	0	0	312	312	4	0	0	313	313	0	0	0	0	0	0
+19	Staff Parry Bonus	1	0	0	325	325	4	0	0	301	301	4	0	0	324	324	0	0	0	0	0	0
+20	Great Bonus Add Defense	3	326	326	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+21	Great Bonus adds Attack	1	329	329	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+22	Great Attack Add Defense	2	332	332	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+23	Great Parry Bonus	1	335	335	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+24	Sword Bonus Defense	3	327	327	327	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+25	Sword Bonus add Attack	1	330	330	330	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+26	Sword Attack Added Defense	2	333	333	333	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+27	Sword Parry Bonus	1	336	336	336	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+28	Dagger Bonus Defense	3	328	0	328	328	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+29	Dagger Bonus adds Attack	1	331	0	331	331	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+30	Dagger Attack Adds Defense	2	334	0	334	334	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+31	DaggerParry Bonus	1	337	0	337	337	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+32	Gun Defense adds Bonus	2	320	0	320	0	3	323	0	323	0	1	0	0	0	0	0	0	0	0	0	0
+33	Gun Bonus Attack	3	322	0	322	0	3	307	0	307	0	1	0	0	0	0	0	0	0	0	0	0
+34	Gun Defense adds Attack	1	320	0	320	0	3	307	0	307	0	1	0	0	0	0	0	0	0	0	0	0
+35	Gun Attack Defense Bonus	2	338	0	338	0	3	339	0	339	0	1	0	0	0	0	0	0	0	0	0	0
+36	Bow Attack	1	340	0	340	0	0	341	0	341	0	4	341	0	341	0	5	0	0	0	0	0
+37	Bow Bonus	3	342	0	342	0	0	343	0	343	0	4	343	0	343	0	5	0	0	0	0	0
+38	Bow Defense	2	344	0	344	0	0	345	0	345	0	4	345	0	345	0	5	0	0	0	0	0
+39	Bow Defense + Attack	1	347	0	347	0	0	341	0	341	0	4	341	0	341	0	5	0	0	0	0	0
+40	Bow Defense + Bonus	2	346	0	346	0	0	345	0	345	0	4	345	0	345	0	5	0	0	0	0	0
+41	Bow Attack + Bonus	3	348	0	348	0	0	341	0	341	0	4	341	0	341	0	5	0	0	0	0	0
+42	Bow Parry Bonus	3	349	0	349	0	0	345	0	345	0	4	341	0	341	0	5	0	0	0	0	0
+43	Staff Poison	4	0	0	350	350	4	0	0	351	351	4	0	0	352	352	0	0	0	0	0	0
+44	Gun Poison	4	354	0	354	0	1	353	0	353	0	0	0	0	0	0	0	0	0	0	0	0
+45	Sword Poison	4	365	365	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+46	Great Poison	4	364	364	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+47	Dagger Poison	4	366	0	366	366	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+48	Sword Poison Attack	4	356	356	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+49	Sword Poison Bonus	4	359	359	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+50	Sword Poison Resist	4	362	362	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+51	Great Poison Attack	4	355	355	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+52	Great Poison Bonus	4	358	358	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+53	Great Poison Resist	4	361	361	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+54	Dagger Poison Attack	4	357	0	357	357	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+55	Dagger Poison Bonus	4	360	0	360	360	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+56	Dagger Poison Resist	4	363	0	363	363	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+57	Staff Poison adds Defense	2	0	0	350	350	4	0	0	301	301	4	0	0	310	310	0	0	0	0	0	0
+58	Staff Bonus adds Poison	3	0	0	350	350	4	0	0	309	309	4	0	0	302	302	0	0	0	0	0	0
+59	Poisoned Staff Attack	1	0	0	350	350	4	0	0	312	312	4	0	0	313	313	0	0	0	0	0	0
+60	Gun Defense Added Poison	2	320	0	320	0	3	354	0	354	0	1	0	0	0	0	0	0	0	0	0	0
+61	Gun Bonus adds Poison	3	322	0	322	0	3	354	0	354	0	1	0	0	0	0	0	0	0	0	0	0
+62	Gun Poison Adds Attack	1	353	0	353	0	3	307	0	307	0	1	0	0	0	0	0	0	0	0	0	0
+63	Sword Poison Resist	4	367	367	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+64	Sword Attack Bonus Poison	4	368	368	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+65	Sword Poison Bonus Defense	4	369	369	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+66	Greatsword Attack Poison Resist	4	370	370	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+67	Greatsword Attack Bonus Poison	4	371	371	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+68	Greatsword Poison Bonus Defense	4	372	372	0	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+69	Dagger Attack Poison Resist	4	373	0	373	373	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+70	Dagger Attack Bonus Poison	4	374	0	374	374	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+71	Dagger Poison Bonus Defense	4	375	0	375	375	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+72	Gun Attack Poison Resist	1	376	0	376	0	3	354	0	354	0	1	0	0	0	0	0	0	0	0	0	0
+73	Gun Bonus Poison	1	377	0	377	0	3	354	0	354	0	1	0	0	0	0	0	0	0	0	0	0
+74	Gun Poison Bonus Defense	3	338	0	338	0	3	354	0	354	0	1	0	0	0	0	0	0	0	0	0	0
+75	Staff Attack Poison Resist	1	0	0	379	379	4	0	0	301	301	4	0	0	378	378	0	0	0	0	0	0
+76	Staff Attack Bonus Poison	3	0	0	381	381	4	0	0	301	301	4	0	0	380	380	0	0	0	0	0	0
+77	Staff Poison Resist Bonus	2	0	0	383	383	4	0	0	301	301	4	0	0	382	382	0	0	0	0	0	0
+78	Axe Poison	4	384	384	0	0	4	392	392	0	0	0	0	0	0	0	0	0	0	0	0	0
+79	Axe Attack	1	385	385	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+80	Axe Defense	2	386	386	0	0	4	393	393	0	0	0	0	0	0	0	0	0	0	0	0	0
+81	Axe Bonus	3	387	387	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+82	Axe Bonus Defense	3	386	386	0	0	4	393	393	0	0	0	0	0	0	0	0	0	0	0	0	0
+83	Axe Bonus Attack	3	385	385	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+84	Axe Parry	1	386	386	0	0	4	393	393	0	0	0	0	0	0	0	0	0	0	0	0	0
+85	Axe Poison Bonus	3	384	384	0	0	4	392	392	0	0	0	0	0	0	0	0	0	0	0	0	0
+86	Axe Poison Attack	4	385	385	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+87	Axe Poison Resist	4	386	386	0	0	4	393	393	0	0	0	0	0	0	0	0	0	0	0	0	0
+88	Axe Parry Bonus	1	391	391	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+89	Axe Attack Poison Resist	2	389	389	0	0	4	393	393	0	0	0	0	0	0	0	0	0	0	0	0	0
+90	Axe Attack Bonus Poison	3	388	388	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+91	Axe Poison Resist Bonus	4	390	390	0	0	4	394	394	0	0	0	0	0	0	0	0	0	0	0	0	0
+92	Crescent Dagger Attack	1	305	0	305	305	2	396	0	396	396	2	0	0	0	0	0	0	0	0	0	0
+93	Crescent Dagger Defense	2	319	0	319	319	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+94	Crescent Dagger Bonus	3	316	0	316	316	2	397	0	397	397	2	0	0	0	0	0	0	0	0	0	0
+95	Crescent Dagger Poison	4	366	0	366	366	2	398	0	398	398	2	0	0	0	0	0	0	0	0	0	0
+96	Crescent Dagger Bonus adds Defense	3	328	0	328	328	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+97	Crescent Dagger Bonus Attack	1	331	0	331	331	2	396	0	396	396	2	0	0	0	0	0	0	0	0	0	0
+98	Crescent Dagger Attack adds Defense	2	334	0	334	334	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+99	Crescent Dagger Poison Attack	4	357	0	357	357	2	396	0	396	396	2	0	0	0	0	0	0	0	0	0	0
+100	Crescent Dagger Poison Bonus	4	360	0	360	360	2	397	0	397	397	2	0	0	0	0	0	0	0	0	0	0
+101	Dagger Poison Resist	4	363	0	363	363	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+102	Crescent DaggerParry Bonus	1	337	0	337	337	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+103	Dagger Attack Poison Resist	4	373	0	373	373	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+104	Crescent Dagger Attack Poison Bonus	4	374	0	374	374	2	396	0	396	396	2	0	0	0	0	0	0	0	0	0	0
+105	Crescent Dagger Poison Bonus Defense	4	375	0	375	375	2	395	0	395	395	2	0	0	0	0	0	0	0	0	0	0
+106	Defecate effect	0	399	399	399	399	4	399	399	399	399	4	399	399	399	399	4	399	399	399	399	4
+107	?¡§1?¡è¡§¡è¡§?¡§¡ä	2	403	403	403	0	6	403	403	403	0	6	403	403	403	0	6	403	403	403	0	6
+108	?¡§1??¡§¡ã?	3	404	404	404	0	6	404	404	404	0	6	404	404	404	0	6	404	404	404	0	6
+109	?¡§1?¡è¡§¡è??	2	405	405	405	0	6	405	405	405	0	6	405	405	405	0	6	405	405	405	0	6
+110	Single Hand Sword Attack	2	403	403	403	0	2	403	403	403	0	3	403	403	403	0	4	403	403	403	0	2
+111	Single Hand Sword Attack	1	404	404	404	0	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+200	Sword of Azure Flame	2	319	319	319	0	2	345	345	345	0	3	345	345	345	0	4	301	301	301	0	2

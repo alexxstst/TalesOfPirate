@@ -190,7 +190,7 @@ namespace GUI
 		g_stGuildChallenge.m_iChangeMoney = iChargeMoney;
 
 		char buf[256] = { 0 };
-		sprintf(buf, GetLanguageString(583).c_str(), StringSplitNum( iChargeMoney ));
+		FmtLang(buf, sizeof(buf), GetLanguageString(583), StringSplitNum(iChargeMoney));
 		g_stUIBox.ShowSelectBox(_ChargeEvent, buf, true);
 	}
 	//-------------------------------------------------------------------------

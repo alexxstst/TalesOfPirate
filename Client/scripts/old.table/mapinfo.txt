@@ -1,0 +1,42 @@
+//ID	File	Name	1?	Coords	2?	RGB color
+1	garner	Ascaron	1	2202,2782	3,2202,2782	255,255,255
+2	magicsea	Magical Ocean	1	1350,550	3,1350,550	255,255,255
+3	darkblue	Deep Blue	1	70,70	3,70,70	255,255,255
+4	lonetower	Lone Tower	0	50,50	3,50,50	255,255,255
+5	eastgoaf	Eastern Goaf	1	50,50	3,50,50	255,255,255
+6	secretgarden	Garden of Edel	0	50,50	3,50,50	255,255,255
+7	darkswamp	Dark Swamp	0	50,50	3,50,50	255,255,255
+8	abandonedcity	Forsaken City	0	50,50	3,50,50	255,255,255
+9	abandonedcity2	Forsaken City 2	0	150,150	3,150,150	255,255,255
+10	abandonedcity3	Forsaken City 3	0	150,150	3,150,150	255,255,255
+11	puzzleworld	Demonic World	0	1,1	3,1,1	255,255,255
+12	puzzleworld2	Demonic World 2	0	1,1	3,1,1	255,255,255
+13	teampk	Arena	0	1,1	3,1,1	255,255,255
+14	jialebi	Pirate Hideout	1	150,150	3,150,150	255,255,255
+15	garner2	Chaos Argent	0	1,1	3,1,1	255,255,255
+16	hell	Purgatory	1	150,150	3,150,150	255,255,255
+17	hell2	Drown	1	150,150	3,150,150	255,255,255
+18	hell3	Hades	1	150,150	3,150,150	255,255,255
+19	hell4	Gate of Despair	1	150,150	3,150,150	255,255,255
+20	hell5	Abaddon Eternal	1	150,150	3,150,150	255,255,255
+21	guildwar	Sacred War	1	150,150	3,150,150	255,255,255
+22	leiting2	Thundoria Mirage	1	150,150	3,150,150	255,255,255
+23	shalan2	Shaitan Mirage	1	150,150	3,150,150	255,255,255
+24	binglang2	Icicle Mirage	1	150,150	3,150,150	255,255,255
+25	guildwar2	Mini Sacred War	1	150,150	3,150,150	255,255,255
+26	yschurch	Church	1	150,150	3,150,150	255,255,255
+27	07xmas	Chirstmas Villag	1	150,150	3,150,150	255,255,255
+28	sdBoss	Converse Chirstm	1	150,150	3,150,150	255,255,255
+29	07xmas2	Xmas Arena	1	150,150	3,150,150	255,255,255
+30	darkhouse	Dark House	1	150,150	3,150,150	255,255,255
+31	prisonisland	Prison Island	1	150,150	3,150,150	255,255,255
+32	PKmap	PKmap	1	50,50	3,50,50	255,255,255
+33	DreamIsland	Dream Island	1	150,150	3,150,150	255,255,255
+34	winterland	Winter Island	1	202,171	3,202,171	255,255,255
+35	mjing1	1st Aurora Area	0	202,171	3,202,171	255,255,255
+36	mjing2	2nd Aurora Area	0	202,171	3,202,171	255,255,255
+37	mjing3	1st Dark Area	0	202,171	3,202,171	255,255,255
+38	mjing4	2nd Dark Area	0	202,171	3,202,171	255,255,255
+39	lobby	Lobby	0	202,171	3,202,171	255,255,255
+40	ctf	Capture The Flag	0	150,150	3,150,150	255,255,255
+49	heilong	Black Dragon Lai	1	50,50	3,50,50	255,255,255

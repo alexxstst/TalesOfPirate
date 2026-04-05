@@ -39,25 +39,8 @@ extern char modelLook[8192];
 class CCharacter;
 
 
-//
-//  By Jampe
-#define COP_OURGAME                 1001        //
-#define COP_SINA                    1002        //
-#define COP_CGA                     1003        //
-
 #define NUM_REGIN_LIST				2
 #define NUM_SERVR_LIST				2
-
-
-typedef struct _Cooperate_ {
-	long code;
-	std::string serv;
-	std::string uid;
-	std::string pwd;
-} Cooperate, *pCooperate;
-
-extern Cooperate g_cooperate;
-//#endif
 
 class CLoginScene : public CGameScene {
 public:

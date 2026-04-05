@@ -93,7 +93,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="algo.cpp" />
-    <ClCompile Include="db.cpp" />
     <ClCompile Include="Database.cpp" />
     <ClCompile Include="DBCCommon.cpp" />
     <ClCompile Include="Point.cpp" />
@@ -119,7 +118,6 @@
     <ClInclude Include="..\include\IniFile.h" />
     <ClInclude Include="..\include\excp.h" />
     <ClInclude Include="..\include\TrackedPool.h" />
-    <ClInclude Include="..\include\db.h" />
     <ClInclude Include="..\include\fifo.h" />
     <ClInclude Include="..\include\MPMapDef.h" />
     <ClInclude Include="..\include\pch.h" />

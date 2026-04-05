@@ -1,0 +1,3 @@
+//Number	Group Name	   Affiliated Region          Gate Address 01      Gate Address 2      Gate Address 3     Gate Address 4    Gate Address 5
+1	Local	Development	127.0.0.1	0	0	0	0
+2	live	Development	97.98.97.97	0	0	0	0

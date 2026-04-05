@@ -155,6 +155,7 @@
     <ClCompile Include="..\src\MonsterListRecordStore.cpp" />
     <ClCompile Include="..\src\NPCListRecordStore.cpp" />
     <ClCompile Include="..\src\LanguageRecordStore.cpp" />
+    <ClCompile Include="..\src\PoseDataStore.cpp" />
     <ClCompile Include="..\src\AssetDatabase.cpp" />
     <ClCompile Include="..\..\sqlite3\sqlite3.c">
       <CompileAs>CompileAsC</CompileAs>
@@ -241,6 +242,7 @@
     <ClInclude Include="..\include\SceneObjRecordStore.h" />
     <ClInclude Include="..\include\PoseRecord.h" />
     <ClInclude Include="..\include\PoseRecordStore.h" />
+    <ClInclude Include="..\include\PoseDataStore.h" />
     <ClInclude Include="..\include\ChaCreateRecord.h" />
     <ClInclude Include="..\include\ChaCreateRecordStore.h" />
     <ClInclude Include="..\include\MapRecord.h" />

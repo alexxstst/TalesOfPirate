@@ -1968,7 +1968,7 @@ void CEquipMgr::_evtRepairEvent(CCompent *pSender, int nMsgType, int x, int y, D
 void CEquipMgr::ShowRepairMsg( const char* pItemName, long lMoney )
 {
 	char szBuf[255] = { 0 };
-	sprintf( szBuf, GetLanguageString(559).c_str(), pItemName, lMoney );
+	FmtLang(szBuf, sizeof(szBuf), GetLanguageString(559), pItemName, lMoney);
 	g_stUIBox.ShowSelectBox( _evtRepairEvent, szBuf, true );	
 }
 

@@ -1,0 +1,355 @@
+//ID	Name	Level	Coordinates	Map
+0	Monster Name 	Monster Level 	0,0	Region 
+1	Mystic Shrub	1	2092,2654	Ascaron
+2	Sleepy Snail	2	2108,2694	Ascaron
+3	Forest Spirit	3	2046,2611	Ascaron
+4	Little Squirt	3	2077,2811	Ascaron
+5	Mystic Flower	4	2210,2612	Ascaron
+6	Mini Bee	5	2077,2772	Ascaron
+7	Little Squidy	5	2294,2548	Ascaron
+8	Greedy Shroom	6	2218,2594	Ascaron
+9	Grass Tortoise	7	2066,2555	Ascaron
+10	Sea Snail	8	1988,2833	Ascaron
+11	Cuddly Lamb	8	1968,2697	Ascaron
+12	Bubble Clam	9	2191,2514	Ascaron
+13	Marsh Spirit	9	1998,2625	Ascaron
+14	Piglet	10	1950,2563	Ascaron
+15	Bear Cub	12	1899,2825	Ascaron
+16	Oyster	13	1800,2472	Ascaron
+17	Whacky Lamb	14	1972,2683	Ascaron
+18	Armored Crab	15	1766,2536	Ascaron
+19	Sentry Crab	16	1784,2508	Ascaron
+20	Angelic Panda	17	1693,2579	Ascaron
+21	Killer Shroom	19	1589,2668	Ascaron
+22	Smuggler	20	1624,3017	Ascaron
+23	Barbaric Bee	20	1667,3140	Ascaron
+24	Owlie	21	1490,2712	Ascaron
+25	Tusk Battle Boar	23	1296,2977	Ascaron
+26	Air Porky	23	1357,2864	Ascaron
+27	Bandit	25	1038,3062	Ascaron
+28	Meadow Deer	25	1469,2671	Ascaron
+29	Seaweed	25	899,580	Ascaron
+30	Wild Seaweed	25	1448,1602	Ascaron
+31	Stramonium	26	1381,2904	Ascaron
+32	Sea Jelly	26	1573,1200	Ascaron
+33	Floating Seaweed	26	1573,1200	Ascaron
+34	Rookie Boxeroo	27	1152,2908	Ascaron
+35	Skeleton Fish	27	3697,1156	Ascaron
+36	Icky Seaweed	27	3930,3150	Ascaron
+37	Mature Grass Tortoise	28	1199,3117	Ascaron
+38	Mad Boar	30	911,2972	Ascaron
+39	Berserk Mad Boar	30	882,2967	Ascaron
+40	Grassland Elk	31	1360,2684	Ascaron
+41	White Owlie 	32	1360,2684	Ascaron
+42	Electric Sea Jelly	32	2005,2110	Ascaron
+43	Grassland Wolf	33	1144,2705	Ascaron
+44	Grassland Wolf Champion	33	1143,2705	Ascaron
+45	Ocean Water Dancer	33	1910,3604	Ascaron
+46	Vicious Baby Squid	33	1479,550	Ascaron
+47	Berserk Boxeroo	34	1162,2639	Ascaron
+48	Evil Water Dancer	34	2005,2110	Ascaron
+49	Slowpoke Snail	35	1227,2743	Ascaron
+50	Mermaid	35	1350,2200	Ascaron
+51	Poisonous Sea Jelly	35	1350,1980	Ascaron
+52	Mud Monster	36	935,2748	Ascaron
+53	Tempest Sea Jelly	36	1350,2200	Ascaron
+54	Berserk Sea Jelly	36	1310,3604	Ascaron
+55	Stinging Beak	37	863,2632	Ascaron
+56	Ruby Dolphin	37	1310,3604	Ascaron
+57	Blackout Squid	37	1350,1980	Ascaron
+58	Fearsome Tortoise	38	970,2588	Ascaron
+59	Fish Bone	38	2557,169	Ascaron
+60	Octopus	38	571,390	Ascaron
+61	Thickskin Lizard	39	733,2697	Ascaron
+62	Great Polliwog	39	571,750	Ascaron
+63	Chameleon Squid	39	571,750	Ascaron
+64	Rock Golem 	40	683,2592	Ascaron
+65	Malicious Azure Siren	40	3050,400	Ascaron
+66	Azure Siren	40	3050,400	Ascaron
+67	Wolf	41	755,2942	Ascaron
+68	Evil Skeleton Fish	41	3050,400	Ascaron
+69	Needle of Stramonium	42	560,1599	Ascaron
+70	Werewolf Warrior	42	755,2942	Ascaron
+71	Tribal Villager	43	824,2305	Ascaron
+72	Crimson Siren	45	2050,400	Ascaron
+73	Pumpkin Knight	46	622,2864	Ascaron
+74	Elite Tribal Warrior	46	821,2121	Ascaron
+75	Shocking Sea Jelly	46	2550,400	Ascaron
+76	Evil Blood Polliwog	47	2050,400	Ascaron
+77	Treant	48	792,1857	Ascaron
+78	Feral Blood Polliwog	48	2550,400	Ascaron
+79	Prowling Blood Polliwog	48	2550,400	Ascaron
+80	Dark Mud Monster	49	667,1896	Ascaron
+81	Wandering Mermaid	50	3692,323	Ascaron
+82	Sturdy Rock Golem	51	737,1718	Ascaron
+83	Old Sawtooth Shark	51	2738,3508	Ascaron
+84	Undead Warrior	52	512,1722	Ascaron
+85	White Finned Shark	52	3538,3508	Ascaron
+86	Iron Mummy	53	556,1558	Ascaron
+87	Elite Werewolf Warrior	53	556,1439	Ascaron
+88	Spearhead Shark	53	3538,3508	Ascaron
+89	Black Finned Shark	53	2738,3508	Ascaron
+90	Huge Spiky Stramonium	54	440,1320	Ascaron
+91	Sakura 13 Support Ship	54	1950,1287	Ascaron
+92	Tribal Shaman	55	626,1289	Ascaron
+93	Guardian Angel	55	886,1284	Ascaron
+94	Sakura 13 Warship	55	1950,1287	Ascaron
+95	Agile Tribal Villager	56	736,1289	Ascaron
+96	Tempest Sea Jelly	56	3149,3836	Ascaron
+97	Silk Shark	56	3149,3836	Ascaron
+98	Vicious Undead Warrior	57	831,1126	Ascaron
+99	Forest Hunter	58	920,1582	Ascaron
+100	Deadly Skeletal Archer	58	945,1595	Ascaron
+101	Sakura 13 Pirate Command Ship	58	1950,1287	Ascaron
+102	Cursed Corpse	59	360,1440	Ascaron
+103	Skeletal Warrior Leader	59	360,1440	Ascaron
+104	Terra Soldier Leader	60	546,2726	Ascaron
+105	Lizard Warrior	60	382,2726	Ascaron
+106	Iron Golem	60	546,2590	Ascaron
+107	Stone Golem	60	546,2590	Ascaron
+108	Bloodthirsty Hunter	60	440,1587	Ascaron
+109	Small Treant	62	683,2385	Ascaron
+110	Giant Lizard	62	731,2074	Ascaron
+111	Horrific Cursed Corpse	63	360,1340	Ascaron
+112	Vicious Pumpkin Knight	63	622,3018	Ascaron
+113	Chimera	64	663,2460	Ascaron
+114	Elite Tribal Warrior	64	646,2310	Ascaron
+115	Treant Terror	64	663,2460	Ascaron
+116	Terra Captain	65	373,2590	Ascaron
+117	Elite Werewolf Archer	65	472,2484	Ascaron
+118	Mad Tribal Villager	66	561,2334	Ascaron
+119	Evil Undead Warrior	66	580,2122	Ascaron
+120	Evil Pumpkin Knight	67	340,1581	Ascaron
+121	Werewolf Warrior Leader	67	472,2484	Ascaron
+122	Shadow Hunter	68	468,2102	Ascaron
+123	Palace Guard	68	436,1690	Ascaron
+124	Lumbering Treant	68	475,2085	Ascaron
+125	Corrupted Guardian Angel	69	335,2122	Ascaron
+126	Lizard Warrior Leader	71	412,2334	Ascaron
+127	Terra Warrior Leader	72	375,2422	Ascaron
+128	Melon	1	1027,3551	Magical Ocean
+129	Dry Mystic Shrub	1	1027,3551	Magical Ocean
+130	Baby Scorpion	3	1187,3540	Magical Ocean
+131	Cactus	4	1032,3556	Magical Ocean
+132	Humpy Camel	6	967,3367	Magical Ocean
+133	Big Scorpion	8	1185,3557	Magical Ocean
+134	Hopping Lizard	10	856,3237	Magical Ocean
+135	Aberrance Hopping Lizard	10	919,3282	Magical Ocean
+136	Wolf Cub	11	684,3066	Magical Ocean
+137	Killer Cactus	14	845,3111	Magical Ocean
+138	Gigantic Melon	15	687,3094	Magical Ocean
+139	Phantom Tree	17	885,3029	Magical Ocean
+140	Starving Wolf	20	653,2925	Magical Ocean
+141	Sand Brigand	20	740,3298	Magical Ocean
+142	Sandy Tortoise	21	1197,3270	Magical Ocean
+143	Ancient Sandy Tortoise	21	1225,3220	Magical Ocean
+144	Sand Bandit	22	1339,3301	Magical Ocean
+145	Sandy Shroom	23	1334,3438	Magical Ocean
+146	Mudman	24	1413,3419	Magical Ocean
+147	Sand Raider	25	1027,3011	Magical Ocean
+148	Seaweed	25	1792,2528	Magical Ocean
+149	Sea Jelly	26	3351,759	Magical Ocean
+150	Feral Wolf	26	1473,3296	Magical Ocean
+151	Skeleton Fish	27	587,1936	Magical Ocean
+152	Man-Eating Spider	27	1093,2948	Magical Ocean
+153	Man-Eating Spider Queen	27	1094,2953	Magical Ocean
+154	Sand Bandit Leader - Garet	28	1172,3027	Magical Ocean
+155	Baby Squid	28	3204,898	Magical Ocean
+156	Cursed Seaweed	28	1950,3126	Magical Ocean
+157	Cavalier	29	1256,2974	Magical Ocean
+158	Blackarrow Squid	30	2519,3164	Magical Ocean
+159	Water Dancer	30	2680,3126	Magical Ocean
+160	Jack the Pirate's Sailor	30	1506,3436	Magical Ocean
+161	Lizard King	30	1507,2971	Magical Ocean
+162	Captain Fickle 	30	1506,3436	Magical Ocean
+163	Swift Skeleton Fish	31	2681,3684	Magical Ocean
+164	Tanned Skeleton Fish	31	1498,2528	Magical Ocean
+165	Electric Sea Jelly	32	2681,3684	Magical Ocean
+166	Sluggish Squid	32	1523,2454	Magical Ocean
+167	Tempest Sea Jelly	36	635,1908	Magical Ocean
+168	Elite Tempest Sea Jelly	36	1950,3126	Magical Ocean
+169	Fish Bone	38	635,1908	Magical Ocean
+170	Azure Siren	40	2322,1670	Magical Ocean
+171	Crimson Siren	45	2756,2002	Magical Ocean
+172	Sand Crab	47	1381,3134	Magical Ocean
+173	Jack the Pirate's Support Ship	49	2092,2528	Magical Ocean
+174	Jack the Pirate's Warship	50	2092,2528	Magical Ocean
+175	Jack the Pirate's Command Ship	52	2092,2528	Magical Ocean
+176	Big Eyed Polliwog	61	3723,3338	Magical Ocean
+177	Scavenger Fish Bone	61	3828,3114	Magical Ocean
+178	Evil Great Polliwog	62	3828,3714	Magical Ocean
+179	Great Feral Polliwog	62	3828,3714	Magical Ocean
+180	Swift Cyclonic Sea Jelly	63	3750,1275	Magical Ocean
+181	Cursed Mermaid	64	3750,1275	Magical Ocean
+182	Raging Electric Sea Jelly	64	3750,2475	Magical Ocean
+183	Old Ruby Dolphin	65	3750,2475	Magical Ocean
+184	Feral Fish Bone	65	900,1308	Magical Ocean
+185	Stealth Great Polliwog	66	900,1308	Magical Ocean
+186	Feral Ruby Dolphin	66	900,2000	Magical Ocean
+187	Bewitching Siren	67	1014,2550	Magical Ocean
+188	Amethyst Dolphin	67	900,2000	Magical Ocean
+189	Old Ruby Dolphin	68	3750,2075	Magical Ocean
+190	Terra Artificer	70	1381,3134	Magical Ocean
+191	Terra Elder	70	1403,3190	Magical Ocean
+192	Terra Captain	70	1381,3134	Magical Ocean
+193	Berserk Mermaid Protector	71	1065,1308	Magical Ocean
+194	Terra Warrior Leader	72	1381,3134	Magical Ocean
+195	Berserk Siren Guard	72	1114,1308	Magical Ocean
+196	Ancient Siren	72	3750,1675	Magical Ocean
+197	Ancient Siren Archer	73	3122,1298	Magical Ocean
+198	Tanned Mermaid Protector	74	2822,1970	Magical Ocean
+199	Tanned Siren Guard	74	1990,1366	Magical Ocean
+200	Horrific Mermaid Protector	75	2822,1970	Magical Ocean
+201	Horrific Siren Guard	75	1965,1424	Magical Ocean
+202	Shadow Siren	76	3122,1298	Magical Ocean
+203	Feral Siren	76	1502,1970	Magical Ocean
+204	Ancient Bewitching Siren	77	961,1817	Magical Ocean
+205	Ancient Mermaid Protector	79	2092,2117	Magical Ocean
+206	Ancient Siren Guard	80	1014,2182	Magical Ocean
+207	Mermaid Queen	100	2822,1970	Magical Ocean
+208	Siren Queen	100	2002,1298	Magical Ocean
+209	Ancient Behemoth	100	2000,2000	Magical Ocean
+210	Mystic Shrub	1	3373,2494	Deep Blue
+211	Snowy Mystic Shrub	1	1018,492	Deep Blue
+212	Purple Mystic Shrub	1	3453,3348	Deep Blue
+213	Orange Mystic Shrub	1	3003,2771	Deep Blue
+214	Snowy Mystic Shrub	1	995,372	Deep Blue
+215	Red Mystic Shrub	1	3387,3259	Deep Blue
+216	Dry Mystic Shrub	1	3703,2765	Deep Blue
+217	Sleepy Snail	2	3360,2510	Deep Blue
+218	Snow Squirt	2	1466,402	Deep Blue
+219	Snow Squidy	4	1466,402	Deep Blue
+220	Mystic Flower	4	3373,2494	Deep Blue
+221	Snowy Piglet	6	1180,372	Deep Blue
+222	Little Deer	7	1164,305	Deep Blue
+223	Strong Little Deer	7	1126,313	Deep Blue
+224	Little White Deer	9	1349,313	Deep Blue
+225	Sailor Penguin	10	1102,642	Deep Blue
+226	Naiad	11	1079,521	Deep Blue
+227	Oyster	13	945,415	Deep Blue
+228	Sharp Beak	13	858,500	Deep Blue
+229	Elk	14	885,333	Deep Blue
+230	Vampiric Elk	14	888,323	Deep Blue
+231	Sailor Squirt	15	756,291	Deep Blue
+232	Sailor Squirt	15	738,427	Deep Blue
+233	Horned Penguin	15	808,303	Deep Blue
+234	Sailor Squidy	16	817,292	Deep Blue
+235	Snowy Bat	16	743,358	Deep Blue
+236	Snowy Shroom	17	952,551	Deep Blue
+237	Snowy Snail	19	657,332	Deep Blue
+238	Snowy Snail Monarch	19	652,315	Deep Blue
+239	Naive Snow Doll 	21	1074,735	Deep Blue
+240	Snowy Bear Cub	22	2120,466	Deep Blue
+241	Snow Lady	23	873,646	Deep Blue
+242	Snowy Wolf	24	965,775	Deep Blue
+243	War Tortoise	25	891,750	Deep Blue
+244	Seaweed	25	2153,3904	Deep Blue
+245	Fallen Naiad	26	891,750	Deep Blue
+246	Armored Crab	26	970,846	Deep Blue
+247	Sea Jelly	26	2915,1842	Deep Blue
+248	Skeleton Fish	27	435,1016	Deep Blue
+249	Northern Snail	27	802,750	Deep Blue
+250	Baby Squid	28	388,3844	Deep Blue
+251	Snow Spirit	28	1060,806	Deep Blue
+252	Cavalier	29	3704,2781	Deep Blue
+253	White Cap Sea Jelly	29	385,822	Deep Blue
+254	Fragile Snow Doll	29	907,842	Deep Blue
+255	Man Eating Sea Jelly	29	385,1190	Deep Blue
+256	Combat Piglet	30	1456,561	Deep Blue
+257	Yeti	31	1496,667	Deep Blue
+258	Ocean Water Dancer	33	1495,1000	Deep Blue
+259	Blood Polliwog	34	2141,3788	Deep Blue
+260	Playful Snow Doll	34	1588,566	Deep Blue
+261	Playful Snow Doll	34	1746,530	Deep Blue
+262	Aberrance Blood Polliwog	34	3584,3758	Deep Blue
+263	Battle Tortoise	35	2165,462	Deep Blue
+264	Atrocious Yeti King	35	880,891	Deep Blue
+265	Skeletal Archer	36	2267,470	Deep Blue
+266	Fearsome Skeletal Archer	36	2213,435	Deep Blue
+267	Ruby Dolphin	37	1495,1000	Deep Blue
+268	Snowy Tortoise	37	2165,462	Deep Blue
+269	Crazy Sheep	37	2267,590	Deep Blue
+270	Ferocious Scorpion	38	2471,508	Deep Blue
+271	Fish Bone	38	3664,469	Deep Blue
+272	Ferocious Scorpion	38	2374,552	Deep Blue
+273	Polar Bear	38	1983,530	Deep Blue
+274	Snowy Tusk Boar	39	2267,590	Deep Blue
+275	Chameleon Squid	39	1495,1000	Deep Blue
+276	Great Polliwog	39	823,2089	Deep Blue
+277	Skeletal Warrior	40	2267,470	Deep Blue
+278	Decaying Fish Bone	40	2092,1298	Deep Blue
+279	Cumbersome Snowman	41	2471,503	Deep Blue
+280	Swift Baby Squid	42	3814,469	Deep Blue
+281	Werewolf Warrior	42	2595,555	Deep Blue
+282	Sawtooth Shark	42	3132,1292	Deep Blue
+283	Rapid Squid	43	3132,998	Deep Blue
+284	Snowman	43	2595,455	Deep Blue
+285	Crystalline Dolphin	43	3814,469	Deep Blue
+286	Swift Water Dancer	44	3211,1732	Deep Blue
+287	Steel-shell Snail	44	2737,651	Deep Blue
+288	Cumbersome Yeti	44	2811,566	Deep Blue
+289	Midnight Water Dancer	44	3211,1815	Deep Blue
+290	Feral Skeleton Fish	45	3206,1268	Deep Blue
+291	Cumbersome Yeti	45	2855,451	Deep Blue
+292	Undead Archer	45	2746,451	Deep Blue
+293	Thunder Sea Jelly	46	3747,1248	Deep Blue
+294	Evil Blood Polliwog	47	3746,1292	Deep Blue
+295	Swift Electric Sea Jelly	47	3746,998	Deep Blue
+296	Elite Skeletal Archer	47	2714,372	Deep Blue
+297	Infant Icy Dragon	47	2852,651	Deep Blue
+298	Water Fairy	49	2998,560	Deep Blue
+299	Great Polar Bear	49	3101,667	Deep Blue
+300	Vicious Mermaid	49	3746,998	Deep Blue
+301	Werewolf Archer 	50	2681,795	Deep Blue
+302	Horrific Snowman	50	3126,588	Deep Blue
+303	Wandering Mermaid	50	1265,3634	Deep Blue
+304	Horrific Yeti	51	2591,795	Deep Blue
+305	Shadow Mermaid	51	2996,2345	Deep Blue
+306	Elite Skeletal Warrior	52	2598,831	Deep Blue
+307	Spearhead Shark	53	441,2957	Deep Blue
+308	Black Finned Shark	53	1265,3634	Deep Blue
+309	Berserk Electric Sea Jelly	54	371,1762	Deep Blue
+310	Lizardman	55	2588,900	Deep Blue
+311	Vampiric Polliwog	55	428,2399	Deep Blue
+312	Tempest Sea Jelly	56	441,2957	Deep Blue
+313	Tornado Sea Jelly	57	371,1762	Deep Blue
+314	Topaz Dolphin	57	2631,2048	Deep Blue
+315	Mature Ruby Dolphin	58	429,2957	Deep Blue
+316	Mature Ruby Dolphin	58	3785,1975	Deep Blue
+317	Spiny Fish Bone	59	371,2317	Deep Blue
+318	Hungry Fish Bone	60	429,2957	Deep Blue
+319	Pirate 006	65	2736,3042	Deep Blue
+320	Fox Spirit	65	3194,2433	Deep Blue
+321	Pirate 007	68	2736,3042	Deep Blue
+322	Dark Blue Siren	68	1038,2317	Deep Blue
+323	Siren Archer	69	3634,3808	Deep Blue
+324	Beardy Pirate Support Ship	69	1038,1762	Deep Blue
+325	Beardy Pirate Warship	70	761,1561	Deep Blue
+326	Feral Diamond Dolphin	70	2141,3788	Deep Blue
+327	Pirate 008	70	2823,2815	Deep Blue
+328	Elite Lizardman Warrior	71	3650,2967	Deep Blue
+329	Frenzied Siren	71	3003,3711	Deep Blue
+330	Evil Tribal Warrior	72	3528,3469	Deep Blue
+331	Beardy Pirate Command Ship	73	1038,1762	Deep Blue
+332	Evil Tribal Shaman	76	3660,3279	Deep Blue
+333	Frantic Lizardman	77	3274,3302	Deep Blue
+334	Ancient Dark Blue Siren	78	2082,2348	Deep Blue
+335	King Tortoise	90	197,901	Winter Island 
+336	Stone Dragon	92	404,1340	Winter Island 
+337	Red Stone	94	451,1288	Winter Island 
+338	Violent Bear	95	661,1230	Winter Island 
+339	Soul Killer	96	839,1160	Winter Island 
+340	Royal Beast	98	632,459	Winter Island 
+341	Half-beast Man	99	815,493	Winter Island 
+342	Frost Chimera	100	354,454	Winter Island 
+343	Snow Leopard	102	549,528	Winter Island 
+344	Pumpkin General	103	966,272	Winter Island 
+345	Blooding Warrior	103	1035,39	Winter Island 
+346	Icy Dragon	104	1454,369	Winter Island 
+347	Crazy Snow Demon	105	1364,1239	Winter Island 
+348	Sword Demon	105	1807,614	Winter Island 
+349	Jack Pirate	106	1651,674	Winter Island 
+350	Demonic Soul	107	1676,800	Winter Island 
+351	Nightmare	109	1640,1083	Winter Island 
+352	Evil Snow Leopard	110	1119,347	Winter Island 
+353	Icy Soul Lord	110	1595,687	Winter Island 

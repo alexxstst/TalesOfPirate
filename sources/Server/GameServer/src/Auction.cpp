@@ -62,7 +62,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 	CAuctionItem *pAucItem = m_mapItemList[sItemID];
 	if(pAucItem->GetCurChaID() > 0)
 	{
-		BOOL bOnline = false;
+		bool bOnline = false;
 		CCharacter *pCha = NULL;
 		CPlayer *pPlayer = g_pGameApp->GetPlayerByDBID(pAucItem->GetCurChaID());
 		if(pPlayer)

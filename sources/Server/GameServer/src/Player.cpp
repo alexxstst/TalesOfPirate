@@ -754,12 +754,12 @@ bool CPlayer::RefreshMapMask(const char *szMapName, long lPosX, long lPosY)
 
 bool CPlayer::AddBank(void)
 {
-	return game_db.CreatePlyBank(this);
+	return game_db.CreatePlyBank(*this);
 }
 
 bool CPlayer::SaveBank(char chBankNO)
 {
-	return game_db.SavePlyBank(this, chBankNO);
+	return game_db.SavePlyBank(*this, chBankNO);
 }
 
 bool CPlayer::SetBankChangeFlag(char chBankNO, bool bChange)

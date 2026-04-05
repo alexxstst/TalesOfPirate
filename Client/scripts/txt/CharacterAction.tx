@@ -1,395 +1,395 @@
-// 角色动作纪录文件 (每行最大字符数为1024)
-//“角色类型”作为描述的开始，单独一行，并对齐行首。
-// 接下来的每一行描述该“角色类型“的一个动作，以制表符（TAB）开始，后接“动作编号，起始帧，结束帧，关键帧1，。。。“
-// 之间的分隔符可以是任意个的制表符，逗号，空格。或它们的组合。
-//1	"空手,拳套,钱袋"	普通waiting
-//2	"空手,拳套,钱袋"	摆酷pose
-//3	"空手,拳套,钱袋"	搞笑pose
-//4	"空手,拳套,钱袋"	戒备waiting
-//5	"空手,拳套,钱袋"	普通奔跑
-//6	"空手,拳套,钱袋"	戒备奔跑
-//7	"空手,拳套,钱袋"	普通攻击1
-//8	"空手,拳套,钱袋"	普通攻击2
-//9	"空手,拳套,钱袋"	普通攻击3
-//10	"空手,拳套,钱袋"	重击
-//11	"空手,拳套,钱袋"	技能１
-//12	"空手,拳套,钱袋"	技能２
-//13	"空手,拳套,钱袋"	技能３
-//14	"空手,拳套,钱袋"	技能４
-//15	"空手,拳套,钱袋"	技能５
-//16	"空手,拳套,钱袋"	普通坐下
-//17	"空手,拳套,钱袋"	死亡(通用)
-//18	"空手,拳套,钱袋"	挥手(通用)
-//19	"空手,拳套,钱袋"	大哭(通用)
-//20	"空手,拳套,钱袋"	雀跃(通用)
-//21	"空手,拳套,钱袋"	生气(通用)
-//22	"空手,拳套,钱袋"	挑衅(通用)
-//23	"空手,拳套,钱袋"	自恋(男通用)
-//24	"空手,拳套,钱袋"	表情动作7
-//25	"空手,拳套,钱袋"	表情动作8
-//26	"空手,拳套,钱袋"	表情动作9
-//27	"空手,拳套,钱袋"	表情动作10
-//28	"空手,拳套,钱袋"	挖矿(场景互动)
-//29	"空手,拳套,钱袋"	采集(场景互动)
-//30	"空手,拳套,钱袋"	坐凳子(场景互动)
-//31	"空手,拳套,钱袋"	靠墙(场景互动)
-//32	"空手,拳套,钱袋"	靠树(场景互动)
-//33	"空手,拳套,钱袋"	角色互动(场景互动)
-//34	"空手,拳套,钱袋"	场景互动动作7
-//35	"空手,拳套,钱袋"	场景互动动作8
-//36	"空手,拳套,钱袋"	场景互动动作9
-//37	"空手,拳套,钱袋"	场景互动动作10
-//38	"空手,拳套,钱袋"	坐下待机
-//39	"空手,拳套,钱袋"	死亡待机
-//40	"空手,拳套,钱袋"	技能动作6
-//41	"空手,拳套,钱袋"	技能动作7
-//42	"空手,拳套,钱袋"	技能动作8
-//43	"空手,拳套,钱袋"	技能动作9
-//44	"空手,拳套,钱袋"	技能动作10
-//45	"空手,拳套,钱袋"	技能动作11
-//46	"空手,拳套,钱袋"	技能动作12
-//47	"空手,拳套,钱袋"	技能动作13
-//48	"空手,拳套,钱袋"	技能动作14
-//49	"空手,拳套,钱袋"	技能动作15
-//50	"空手,拳套,钱袋"	技能动作16
-//51	"空手,拳套,钱袋"	技能动作17
-//52	"空手,拳套,钱袋"	技能动作18
-//53	"空手,拳套,钱袋"	技能动作19
-//54	"空手,拳套,钱袋"	技能动作20
-//55	"剑,刀,仗,斧子,剑盾"	普通waiting
-//56	"剑,刀,仗,斧子,剑盾"	摆酷pose
-//57	"剑,刀,仗,斧子,剑盾"	搞笑pose
-//58	"剑,刀,仗,斧子,剑盾"	戒备waiting
-//59	"剑,刀,仗,斧子,剑盾"	普通奔跑
-//60	"剑,刀,仗,斧子,剑盾"	戒备奔跑
-//61	"剑,刀,仗,斧子,剑盾"	普通攻击1
-//62	"剑,刀,仗,斧子,剑盾"	普通攻击2
-//63	"剑,刀,仗,斧子,剑盾"	普通攻击3
-//64	"剑,刀,仗,斧子,剑盾"	重击
-//65	"剑,刀,仗,斧子,剑盾"	技能１
-//66	"剑,刀,仗,斧子,剑盾"	技能２
-//67	"剑,刀,仗,斧子,剑盾"	技能３
-//68	"剑,刀,仗,斧子,剑盾"	技能４
-//69	"剑,刀,仗,斧子,剑盾"	技能５
-//70	"剑,刀,仗,斧子,剑盾"	普通坐下
-//71	"剑,刀,仗,斧子,剑盾"	死亡(通用)
-//72	"剑,刀,仗,斧子,剑盾"	挥手(通用)
-//73	"剑,刀,仗,斧子,剑盾"	大哭(通用)
-//74	"剑,刀,仗,斧子,剑盾"	雀跃(通用)
-//75	"剑,刀,仗,斧子,剑盾"	生气(通用)
-//76	"剑,刀,仗,斧子,剑盾"	挑衅(通用)
-//77	"剑,刀,仗,斧子,剑盾"	自恋(男通用)
-//78	"剑,刀,仗,斧子,剑盾"	表情动作7
-//79	"剑,刀,仗,斧子,剑盾"	表情动作8
-//80	"剑,刀,仗,斧子,剑盾"	表情动作9
-//81	"剑,刀,仗,斧子,剑盾"	表情动作10
-//82	"剑,刀,仗,斧子,剑盾"	挖矿(场景互动)
-//83	"剑,刀,仗,斧子,剑盾"	采集(场景互动)
-//84	"剑,刀,仗,斧子,剑盾"	坐凳子(场景互动)
-//85	"剑,刀,仗,斧子,剑盾"	靠墙(场景互动)
-//86	"剑,刀,仗,斧子,剑盾"	靠树(场景互动)
-//87	"剑,刀,仗,斧子,剑盾"	角色互动(场景互动)
-//88	"剑,刀,仗,斧子,剑盾"	场景互动动作7
-//89	"剑,刀,仗,斧子,剑盾"	场景互动动作8
-//90	"剑,刀,仗,斧子,剑盾"	场景互动动作9
-//91	"剑,刀,仗,斧子,剑盾"	场景互动动作10
-//92	"剑,刀,仗,斧子,剑盾"	坐下待机
-//93	"剑,刀,仗,斧子,剑盾"	死亡待机
-//94	"剑,刀,仗,斧子,剑盾"	技能动作6
-//95	"剑,刀,仗,斧子,剑盾"	技能动作7
-//96	"剑,刀,仗,斧子,剑盾"	技能动作8
-//97	"剑,刀,仗,斧子,剑盾"	技能动作9
-//98	"剑,刀,仗,斧子,剑盾"	技能动作10
-//99	"剑,刀,仗,斧子,剑盾"	技能动作11
-//100	"剑,刀,仗,斧子,剑盾"	技能动作12
-//101	"剑,刀,仗,斧子,剑盾"	技能动作13
-//102	"剑,刀,仗,斧子,剑盾"	技能动作14
-//103	"剑,刀,仗,斧子,剑盾"	技能动作15
-//104	"剑,刀,仗,斧子,剑盾"	技能动作16
-//105	"剑,刀,仗,斧子,剑盾"	技能动作17
-//106	"剑,刀,仗,斧子,剑盾"	技能动作18
-//107	"剑,刀,仗,斧子,剑盾"	技能动作19
-//108	"剑,刀,仗,斧子,剑盾"	技能动作20
-//109	双手近战武器	普通waiting
-//110	双手近战武器	摆酷pose
-//111	双手近战武器	搞笑pose
-//112	双手近战武器	戒备waiting
-//113	双手近战武器	普通奔跑
-//114	双手近战武器	戒备奔跑
-//115	双手近战武器	普通攻击1
-//116	双手近战武器	普通攻击2
-//117	双手近战武器	普通攻击3
-//118	双手近战武器	重击
-//119	双手近战武器	技能１
-//120	双手近战武器	技能２
-//121	双手近战武器	技能３
-//122	双手近战武器	技能４
-//123	双手近战武器	技能５
-//124	双手近战武器	普通坐下
-//125	双手近战武器	死亡(通用)
-//126	双手近战武器	挥手(通用)
-//127	双手近战武器	大哭(通用)
-//128	双手近战武器	雀跃(通用)
-//129	双手近战武器	生气(通用)
-//130	双手近战武器	挑衅(通用)
-//131	双手近战武器	自恋(男通用)
-//132	双手近战武器	表情动作7
-//133	双手近战武器	表情动作8
-//134	双手近战武器	表情动作9
-//135	双手近战武器	表情动作10
-//136	双手近战武器	挖矿(场景互动)
-//137	双手近战武器	采集(场景互动)
-//138	双手近战武器	坐凳子(场景互动)
-//139	双手近战武器	靠墙(场景互动)
-//140	双手近战武器	靠树(场景互动)
-//141	双手近战武器	角色互动(场景互动)
-//142	双手近战武器	场景互动动作7
-//143	双手近战武器	场景互动动作8
-//144	双手近战武器	场景互动动作9
-//145	双手近战武器	场景互动动作10
-//146	双手近战武器	坐下待机
-//147	双手近战武器	死亡待机
-//148	双手近战武器	技能动作6
-//149	双手近战武器	技能动作7
-//150	双手近战武器	技能动作8
-//151	双手近战武器	技能动作9
-//152	双手近战武器	技能动作10
-//153	双手近战武器	技能动作11
-//154	双手近战武器	技能动作12
-//155	双手近战武器	技能动作13
-//156	双手近战武器	技能动作14
-//157	双手近战武器	技能动作15
-//158	双手近战武器	技能动作16
-//159	双手近战武器	技能动作17
-//160	双手近战武器	技能动作18
-//161	双手近战武器	技能动作19
-//162	双手近战武器	技能动作20
-//163	手持两把近战武器	普通waiting
-//164	手持两把近战武器	摆酷pose
-//165	手持两把近战武器	搞笑pose
-//166	手持两把近战武器	戒备waiting
-//167	手持两把近战武器	普通奔跑
-//168	手持两把近战武器	戒备奔跑
-//169	手持两把近战武器	普通攻击1
-//170	手持两把近战武器	普通攻击2
-//171	手持两把近战武器	普通攻击3
-//172	手持两把近战武器	重击
-//173	手持两把近战武器	技能１
-//174	手持两把近战武器	技能２
-//175	手持两把近战武器	技能３
-//176	手持两把近战武器	技能４
-//177	手持两把近战武器	技能５
-//178	手持两把近战武器	普通坐下
-//179	手持两把近战武器	死亡(通用)
-//180	手持两把近战武器	挥手(通用)
-//181	手持两把近战武器	大哭(通用)
-//182	手持两把近战武器	雀跃(通用)
-//183	手持两把近战武器	生气(通用)
-//184	手持两把近战武器	挑衅(通用)
-//185	手持两把近战武器	自恋(男通用)
-//186	手持两把近战武器	表情动作7
-//187	手持两把近战武器	表情动作8
-//188	手持两把近战武器	表情动作9
-//189	手持两把近战武器	表情动作10
-//190	手持两把近战武器	挖矿(场景互动)
-//191	手持两把近战武器	采集(场景互动)
-//192	手持两把近战武器	坐凳子(场景互动)
-//193	手持两把近战武器	靠墙(场景互动)
-//194	手持两把近战武器	靠树(场景互动)
-//195	手持两把近战武器	角色互动(场景互动)
-//196	手持两把近战武器	场景互动动作7
-//197	手持两把近战武器	场景互动动作8
-//198	手持两把近战武器	场景互动动作9
-//199	手持两把近战武器	场景互动动作10
-//200	手持两把近战武器	坐下待机
-//201	手持两把近战武器	死亡待机
-//202	手持两把近战武器	技能动作6
-//203	手持两把近战武器	技能动作7
-//204	手持两把近战武器	技能动作8
-//205	手持两把近战武器	技能动作9
-//206	手持两把近战武器	技能动作10
-//207	手持两把近战武器	技能动作11
-//208	手持两把近战武器	技能动作12
-//209	手持两把近战武器	技能动作13
-//210	手持两把近战武器	技能动作14
-//211	手持两把近战武器	技能动作15
-//212	手持两把近战武器	技能动作16
-//213	手持两把近战武器	技能动作17
-//214	手持两把近战武器	技能动作18
-//215	手持两把近战武器	技能动作19
-//216	手持两把近战武器	技能动作20
-//217	单手持枪械武器	普通waiting
-//218	单手持枪械武器	摆酷pose
-//219	单手持枪械武器	搞笑pose
-//220	单手持枪械武器	戒备waiting
-//221	单手持枪械武器	普通奔跑
-//222	单手持枪械武器	戒备奔跑
-//223	单手持枪械武器	普通攻击1
-//224	单手持枪械武器	普通攻击2
-//225	单手持枪械武器	普通攻击3
-//226	单手持枪械武器	重击
-//227	单手持枪械武器	技能１
-//228	单手持枪械武器	技能２
-//229	单手持枪械武器	技能３
-//230	单手持枪械武器	技能４
-//231	单手持枪械武器	技能５
-//232	单手持枪械武器	普通坐下
-//233	单手持枪械武器	死亡(通用)
-//234	单手持枪械武器	挥手(通用)
-//235	单手持枪械武器	大哭(通用)
-//236	单手持枪械武器	雀跃(通用)
-//237	单手持枪械武器	生气(通用)
-//238	单手持枪械武器	挑衅(通用)
-//239	单手持枪械武器	自恋(男通用)
-//240	单手持枪械武器	表情动作7
-//241	单手持枪械武器	表情动作8
-//242	单手持枪械武器	表情动作9
-//243	单手持枪械武器	表情动作10
-//244	单手持枪械武器	挖矿(场景互动)
-//245	单手持枪械武器	采集(场景互动)
-//246	单手持枪械武器	坐凳子(场景互动)
-//247	单手持枪械武器	靠墙(场景互动)
-//248	单手持枪械武器	靠树(场景互动)
-//249	单手持枪械武器	角色互动(场景互动)
-//250	单手持枪械武器	场景互动动作7
-//251	单手持枪械武器	场景互动动作8
-//252	单手持枪械武器	场景互动动作9
-//253	单手持枪械武器	场景互动动作10
-//254	单手持枪械武器	坐下待机
-//255	单手持枪械武器	死亡待机
-//256	单手持枪械武器	技能动作6
-//257	单手持枪械武器	技能动作7
-//258	单手持枪械武器	技能动作8
-//259	单手持枪械武器	技能动作9
-//260	单手持枪械武器	技能动作10
-//261	单手持枪械武器	技能动作11
-//262	单手持枪械武器	技能动作12
-//263	单手持枪械武器	技能动作13
-//264	单手持枪械武器	技能动作14
-//265	单手持枪械武器	技能动作15
-//266	单手持枪械武器	技能动作16
-//267	单手持枪械武器	技能动作17
-//268	单手持枪械武器	技能动作18
-//269	单手持枪械武器	技能动作19
-//270	单手持枪械武器	技能动作20
-//271	双手持弓箭类武器	普通waiting
-//272	双手持弓箭类武器	摆酷pose
-//273	双手持弓箭类武器	搞笑pose
-//274	双手持弓箭类武器	戒备waiting
-//275	双手持弓箭类武器	普通奔跑
-//276	双手持弓箭类武器	戒备奔跑
-//277	双手持弓箭类武器	普通攻击1
-//278	双手持弓箭类武器	普通攻击2
-//279	双手持弓箭类武器	普通攻击3
-//280	双手持弓箭类武器	重击
-//281	双手持弓箭类武器	技能１
-//282	双手持弓箭类武器	技能２
-//283	双手持弓箭类武器	技能３
-//284	双手持弓箭类武器	技能４
-//285	双手持弓箭类武器	技能５
-//286	双手持弓箭类武器	普通坐下
-//287	双手持弓箭类武器	死亡(通用)
-//288	双手持弓箭类武器	挥手(通用)
-//289	双手持弓箭类武器	大哭(通用)
-//290	双手持弓箭类武器	雀跃(通用)
-//291	双手持弓箭类武器	生气(通用)
-//292	双手持弓箭类武器	挑衅(通用)
-//293	双手持弓箭类武器	自恋(男通用)
-//294	双手持弓箭类武器	表情动作7
-//295	双手持弓箭类武器	表情动作8
-//296	双手持弓箭类武器	表情动作9
-//297	双手持弓箭类武器	表情动作10
-//298	双手持弓箭类武器	挖矿(场景互动)
-//299	双手持弓箭类武器	采集(场景互动)
-//300	双手持弓箭类武器	坐凳子(场景互动)
-//301	双手持弓箭类武器	靠墙(场景互动)
-//302	双手持弓箭类武器	靠树(场景互动)
-//303	双手持弓箭类武器	角色互动(场景互动)
-//304	双手持弓箭类武器	场景互动动作7
-//305	双手持弓箭类武器	场景互动动作8
-//306	双手持弓箭类武器	场景互动动作9
-//307	双手持弓箭类武器	场景互动动作10
-//308	双手持弓箭类武器	坐下待机
-//309	双手持弓箭类武器	死亡待机
-//310	双手持弓箭类武器	技能动作6
-//311	双手持弓箭类武器	技能动作7
-//312	双手持弓箭类武器	技能动作8
-//313	双手持弓箭类武器	技能动作9
-//314	双手持弓箭类武器	技能动作10
-//315	双手持弓箭类武器	技能动作11
-//316	双手持弓箭类武器	技能动作12
-//317	双手持弓箭类武器	技能动作13
-//318	双手持弓箭类武器	技能动作14
-//319	双手持弓箭类武器	技能动作15
-//320	双手持弓箭类武器	技能动作16
-//321	双手持弓箭类武器	技能动作17
-//322	双手持弓箭类武器	技能动作18
-//323	双手持弓箭类武器	技能动作19
-//324	双手持弓箭类武器	技能动作20
-//325	匕首	普通waiting
-//326	匕首	摆酷pose
-//327	匕首	搞笑pose
-//328	匕首	戒备waiting
-//329	匕首	普通奔跑
-//330	匕首	戒备奔跑
-//331	匕首	普通攻击1
-//332	匕首	普通攻击2
-//333	匕首	普通攻击3
-//334	匕首	重击
-//335	匕首	技能１
-//336	匕首	技能２
-//337	匕首	技能３
-//338	匕首	技能４
-//339	匕首	技能５
-//340	匕首	普通坐下
-//341	匕首	死亡(通用)
-//342	匕首	挥手(通用)
-//343	匕首	大哭(通用)
-//344	匕首	雀跃(通用)
-//345	匕首	生气(通用)
-//346	匕首	挑衅(通用)
-//347	匕首	自恋(男通用)
-//348	匕首	表情动作7
-//349	匕首	表情动作8
-//350	匕首	表情动作9
-//351	匕首	表情动作10
-//352	匕首	挖矿(场景互动)
-//353	匕首	采集(场景互动)
-//354	匕首	坐凳子(场景互动)
-//355	匕首	靠墙(场景互动)
-//356	匕首	靠树(场景互动)
-//357	匕首	角色互动(场景互动)
-//358	匕首	场景互动动作7
-//359	匕首	场景互动动作8
-//360	匕首	场景互动动作9
-//361	匕首	场景互动动作10
-//362	匕首	坐下待机
-//363	匕首	死亡待机
-//364	匕首	技能动作6
-//365	匕首	技能动作7
-//366	匕首	技能动作8
-//367	匕首	技能动作9
-//368	匕首	技能动作10
-//369	匕首	技能动作11
-//370	匕首	技能动作12
-//371	匕首	技能动作13
-//372	匕首	技能动作14
-//373	匕首	技能动作15
-//374	匕首	技能动作16
-//375	匕首	技能动作17
-//376	匕首	技能动作18
-//377	匕首	技能动作19
-//378	匕首	技能动作20
+// Character action record file (max 1024 characters per line)
+//"Character type" marks the beginning of a section, on its own line, aligned to the left.
+// Each following line describes one action for that "Character type", starting with TAB, followed by "Action number, Start frame, End frame, Keyframe 1, ..."
+// Separators can be any number of tabs, commas, spaces, or their combination.
+//1	"Unarmed,Knuckles,MoneyBag"	Normal waiting
+//2	"Unarmed,Knuckles,MoneyBag"	Cool pose
+//3	"Unarmed,Knuckles,MoneyBag"	Funny pose
+//4	"Unarmed,Knuckles,MoneyBag"	Alert waiting
+//5	"Unarmed,Knuckles,MoneyBag"	Normal run
+//6	"Unarmed,Knuckles,MoneyBag"	Alert run
+//7	"Unarmed,Knuckles,MoneyBag"	Normal attack 1
+//8	"Unarmed,Knuckles,MoneyBag"	Normal attack 2
+//9	"Unarmed,Knuckles,MoneyBag"	Normal attack 3
+//10	"Unarmed,Knuckles,MoneyBag"	Heavy hit
+//11	"Unarmed,Knuckles,MoneyBag"	Skill 1
+//12	"Unarmed,Knuckles,MoneyBag"	Skill 2
+//13	"Unarmed,Knuckles,MoneyBag"	Skill 3
+//14	"Unarmed,Knuckles,MoneyBag"	Skill 4
+//15	"Unarmed,Knuckles,MoneyBag"	Skill 5
+//16	"Unarmed,Knuckles,MoneyBag"	Normal sit
+//17	"Unarmed,Knuckles,MoneyBag"	Death (universal)
+//18	"Unarmed,Knuckles,MoneyBag"	Wave (universal)
+//19	"Unarmed,Knuckles,MoneyBag"	Cry (universal)
+//20	"Unarmed,Knuckles,MoneyBag"	Cheer (universal)
+//21	"Unarmed,Knuckles,MoneyBag"	Angry (universal)
+//22	"Unarmed,Knuckles,MoneyBag"	Taunt (universal)
+//23	"Unarmed,Knuckles,MoneyBag"	Narcissist (male)
+//24	"Unarmed,Knuckles,MoneyBag"	Emote 7
+//25	"Unarmed,Knuckles,MoneyBag"	Emote 8
+//26	"Unarmed,Knuckles,MoneyBag"	Emote 9
+//27	"Unarmed,Knuckles,MoneyBag"	Emote 10
+//28	"Unarmed,Knuckles,MoneyBag"	Mining (scene)
+//29	"Unarmed,Knuckles,MoneyBag"	Gathering (scene)
+//30	"Unarmed,Knuckles,MoneyBag"	Sit on bench (scene)
+//31	"Unarmed,Knuckles,MoneyBag"	Lean on wall (scene)
+//32	"Unarmed,Knuckles,MoneyBag"	Lean on tree (scene)
+//33	"Unarmed,Knuckles,MoneyBag"	Character interact (scene)
+//34	"Unarmed,Knuckles,MoneyBag"	Scene interaction 7
+//35	"Unarmed,Knuckles,MoneyBag"	Scene interaction 8
+//36	"Unarmed,Knuckles,MoneyBag"	Scene interaction 9
+//37	"Unarmed,Knuckles,MoneyBag"	Scene interaction 10
+//38	"Unarmed,Knuckles,MoneyBag"	Sit idle
+//39	"Unarmed,Knuckles,MoneyBag"	Death idle
+//40	"Unarmed,Knuckles,MoneyBag"	Skill action 6
+//41	"Unarmed,Knuckles,MoneyBag"	Skill action 7
+//42	"Unarmed,Knuckles,MoneyBag"	Skill action 8
+//43	"Unarmed,Knuckles,MoneyBag"	Skill action 9
+//44	"Unarmed,Knuckles,MoneyBag"	Skill action 10
+//45	"Unarmed,Knuckles,MoneyBag"	Skill action 11
+//46	"Unarmed,Knuckles,MoneyBag"	Skill action 12
+//47	"Unarmed,Knuckles,MoneyBag"	Skill action 13
+//48	"Unarmed,Knuckles,MoneyBag"	Skill action 14
+//49	"Unarmed,Knuckles,MoneyBag"	Skill action 15
+//50	"Unarmed,Knuckles,MoneyBag"	Skill action 16
+//51	"Unarmed,Knuckles,MoneyBag"	Skill action 17
+//52	"Unarmed,Knuckles,MoneyBag"	Skill action 18
+//53	"Unarmed,Knuckles,MoneyBag"	Skill action 19
+//54	"Unarmed,Knuckles,MoneyBag"	Skill action 20
+//55	"Sword,Blade,Staff,Axe,SwordShield"	Normal waiting
+//56	"Sword,Blade,Staff,Axe,SwordShield"	Cool pose
+//57	"Sword,Blade,Staff,Axe,SwordShield"	Funny pose
+//58	"Sword,Blade,Staff,Axe,SwordShield"	Alert waiting
+//59	"Sword,Blade,Staff,Axe,SwordShield"	Normal run
+//60	"Sword,Blade,Staff,Axe,SwordShield"	Alert run
+//61	"Sword,Blade,Staff,Axe,SwordShield"	Normal attack 1
+//62	"Sword,Blade,Staff,Axe,SwordShield"	Normal attack 2
+//63	"Sword,Blade,Staff,Axe,SwordShield"	Normal attack 3
+//64	"Sword,Blade,Staff,Axe,SwordShield"	Heavy hit
+//65	"Sword,Blade,Staff,Axe,SwordShield"	Skill 1
+//66	"Sword,Blade,Staff,Axe,SwordShield"	Skill 2
+//67	"Sword,Blade,Staff,Axe,SwordShield"	Skill 3
+//68	"Sword,Blade,Staff,Axe,SwordShield"	Skill 4
+//69	"Sword,Blade,Staff,Axe,SwordShield"	Skill 5
+//70	"Sword,Blade,Staff,Axe,SwordShield"	Normal sit
+//71	"Sword,Blade,Staff,Axe,SwordShield"	Death (universal)
+//72	"Sword,Blade,Staff,Axe,SwordShield"	Wave (universal)
+//73	"Sword,Blade,Staff,Axe,SwordShield"	Cry (universal)
+//74	"Sword,Blade,Staff,Axe,SwordShield"	Cheer (universal)
+//75	"Sword,Blade,Staff,Axe,SwordShield"	Angry (universal)
+//76	"Sword,Blade,Staff,Axe,SwordShield"	Taunt (universal)
+//77	"Sword,Blade,Staff,Axe,SwordShield"	Narcissist (male)
+//78	"Sword,Blade,Staff,Axe,SwordShield"	Emote 7
+//79	"Sword,Blade,Staff,Axe,SwordShield"	Emote 8
+//80	"Sword,Blade,Staff,Axe,SwordShield"	Emote 9
+//81	"Sword,Blade,Staff,Axe,SwordShield"	Emote 10
+//82	"Sword,Blade,Staff,Axe,SwordShield"	Mining (scene)
+//83	"Sword,Blade,Staff,Axe,SwordShield"	Gathering (scene)
+//84	"Sword,Blade,Staff,Axe,SwordShield"	Sit on bench (scene)
+//85	"Sword,Blade,Staff,Axe,SwordShield"	Lean on wall (scene)
+//86	"Sword,Blade,Staff,Axe,SwordShield"	Lean on tree (scene)
+//87	"Sword,Blade,Staff,Axe,SwordShield"	Character interact (scene)
+//88	"Sword,Blade,Staff,Axe,SwordShield"	Scene interaction 7
+//89	"Sword,Blade,Staff,Axe,SwordShield"	Scene interaction 8
+//90	"Sword,Blade,Staff,Axe,SwordShield"	Scene interaction 9
+//91	"Sword,Blade,Staff,Axe,SwordShield"	Scene interaction 10
+//92	"Sword,Blade,Staff,Axe,SwordShield"	Sit idle
+//93	"Sword,Blade,Staff,Axe,SwordShield"	Death idle
+//94	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 6
+//95	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 7
+//96	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 8
+//97	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 9
+//98	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 10
+//99	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 11
+//100	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 12
+//101	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 13
+//102	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 14
+//103	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 15
+//104	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 16
+//105	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 17
+//106	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 18
+//107	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 19
+//108	"Sword,Blade,Staff,Axe,SwordShield"	Skill action 20
+//109	Two-handed melee	Normal waiting
+//110	Two-handed melee	Cool pose
+//111	Two-handed melee	Funny pose
+//112	Two-handed melee	Alert waiting
+//113	Two-handed melee	Normal run
+//114	Two-handed melee	Alert run
+//115	Two-handed melee	Normal attack 1
+//116	Two-handed melee	Normal attack 2
+//117	Two-handed melee	Normal attack 3
+//118	Two-handed melee	Heavy hit
+//119	Two-handed melee	Skill 1
+//120	Two-handed melee	Skill 2
+//121	Two-handed melee	Skill 3
+//122	Two-handed melee	Skill 4
+//123	Two-handed melee	Skill 5
+//124	Two-handed melee	Normal sit
+//125	Two-handed melee	Death (universal)
+//126	Two-handed melee	Wave (universal)
+//127	Two-handed melee	Cry (universal)
+//128	Two-handed melee	Cheer (universal)
+//129	Two-handed melee	Angry (universal)
+//130	Two-handed melee	Taunt (universal)
+//131	Two-handed melee	Narcissist (male)
+//132	Two-handed melee	Emote 7
+//133	Two-handed melee	Emote 8
+//134	Two-handed melee	Emote 9
+//135	Two-handed melee	Emote 10
+//136	Two-handed melee	Mining (scene)
+//137	Two-handed melee	Gathering (scene)
+//138	Two-handed melee	Sit on bench (scene)
+//139	Two-handed melee	Lean on wall (scene)
+//140	Two-handed melee	Lean on tree (scene)
+//141	Two-handed melee	Character interact (scene)
+//142	Two-handed melee	Scene interaction 7
+//143	Two-handed melee	Scene interaction 8
+//144	Two-handed melee	Scene interaction 9
+//145	Two-handed melee	Scene interaction 10
+//146	Two-handed melee	Sit idle
+//147	Two-handed melee	Death idle
+//148	Two-handed melee	Skill action 6
+//149	Two-handed melee	Skill action 7
+//150	Two-handed melee	Skill action 8
+//151	Two-handed melee	Skill action 9
+//152	Two-handed melee	Skill action 10
+//153	Two-handed melee	Skill action 11
+//154	Two-handed melee	Skill action 12
+//155	Two-handed melee	Skill action 13
+//156	Two-handed melee	Skill action 14
+//157	Two-handed melee	Skill action 15
+//158	Two-handed melee	Skill action 16
+//159	Two-handed melee	Skill action 17
+//160	Two-handed melee	Skill action 18
+//161	Two-handed melee	Skill action 19
+//162	Two-handed melee	Skill action 20
+//163	Dual-wield melee	Normal waiting
+//164	Dual-wield melee	Cool pose
+//165	Dual-wield melee	Funny pose
+//166	Dual-wield melee	Alert waiting
+//167	Dual-wield melee	Normal run
+//168	Dual-wield melee	Alert run
+//169	Dual-wield melee	Normal attack 1
+//170	Dual-wield melee	Normal attack 2
+//171	Dual-wield melee	Normal attack 3
+//172	Dual-wield melee	Heavy hit
+//173	Dual-wield melee	Skill 1
+//174	Dual-wield melee	Skill 2
+//175	Dual-wield melee	Skill 3
+//176	Dual-wield melee	Skill 4
+//177	Dual-wield melee	Skill 5
+//178	Dual-wield melee	Normal sit
+//179	Dual-wield melee	Death (universal)
+//180	Dual-wield melee	Wave (universal)
+//181	Dual-wield melee	Cry (universal)
+//182	Dual-wield melee	Cheer (universal)
+//183	Dual-wield melee	Angry (universal)
+//184	Dual-wield melee	Taunt (universal)
+//185	Dual-wield melee	Narcissist (male)
+//186	Dual-wield melee	Emote 7
+//187	Dual-wield melee	Emote 8
+//188	Dual-wield melee	Emote 9
+//189	Dual-wield melee	Emote 10
+//190	Dual-wield melee	Mining (scene)
+//191	Dual-wield melee	Gathering (scene)
+//192	Dual-wield melee	Sit on bench (scene)
+//193	Dual-wield melee	Lean on wall (scene)
+//194	Dual-wield melee	Lean on tree (scene)
+//195	Dual-wield melee	Character interact (scene)
+//196	Dual-wield melee	Scene interaction 7
+//197	Dual-wield melee	Scene interaction 8
+//198	Dual-wield melee	Scene interaction 9
+//199	Dual-wield melee	Scene interaction 10
+//200	Dual-wield melee	Sit idle
+//201	Dual-wield melee	Death idle
+//202	Dual-wield melee	Skill action 6
+//203	Dual-wield melee	Skill action 7
+//204	Dual-wield melee	Skill action 8
+//205	Dual-wield melee	Skill action 9
+//206	Dual-wield melee	Skill action 10
+//207	Dual-wield melee	Skill action 11
+//208	Dual-wield melee	Skill action 12
+//209	Dual-wield melee	Skill action 13
+//210	Dual-wield melee	Skill action 14
+//211	Dual-wield melee	Skill action 15
+//212	Dual-wield melee	Skill action 16
+//213	Dual-wield melee	Skill action 17
+//214	Dual-wield melee	Skill action 18
+//215	Dual-wield melee	Skill action 19
+//216	Dual-wield melee	Skill action 20
+//217	One-handed firearm	Normal waiting
+//218	One-handed firearm	Cool pose
+//219	One-handed firearm	Funny pose
+//220	One-handed firearm	Alert waiting
+//221	One-handed firearm	Normal run
+//222	One-handed firearm	Alert run
+//223	One-handed firearm	Normal attack 1
+//224	One-handed firearm	Normal attack 2
+//225	One-handed firearm	Normal attack 3
+//226	One-handed firearm	Heavy hit
+//227	One-handed firearm	Skill 1
+//228	One-handed firearm	Skill 2
+//229	One-handed firearm	Skill 3
+//230	One-handed firearm	Skill 4
+//231	One-handed firearm	Skill 5
+//232	One-handed firearm	Normal sit
+//233	One-handed firearm	Death (universal)
+//234	One-handed firearm	Wave (universal)
+//235	One-handed firearm	Cry (universal)
+//236	One-handed firearm	Cheer (universal)
+//237	One-handed firearm	Angry (universal)
+//238	One-handed firearm	Taunt (universal)
+//239	One-handed firearm	Narcissist (male)
+//240	One-handed firearm	Emote 7
+//241	One-handed firearm	Emote 8
+//242	One-handed firearm	Emote 9
+//243	One-handed firearm	Emote 10
+//244	One-handed firearm	Mining (scene)
+//245	One-handed firearm	Gathering (scene)
+//246	One-handed firearm	Sit on bench (scene)
+//247	One-handed firearm	Lean on wall (scene)
+//248	One-handed firearm	Lean on tree (scene)
+//249	One-handed firearm	Character interact (scene)
+//250	One-handed firearm	Scene interaction 7
+//251	One-handed firearm	Scene interaction 8
+//252	One-handed firearm	Scene interaction 9
+//253	One-handed firearm	Scene interaction 10
+//254	One-handed firearm	Sit idle
+//255	One-handed firearm	Death idle
+//256	One-handed firearm	Skill action 6
+//257	One-handed firearm	Skill action 7
+//258	One-handed firearm	Skill action 8
+//259	One-handed firearm	Skill action 9
+//260	One-handed firearm	Skill action 10
+//261	One-handed firearm	Skill action 11
+//262	One-handed firearm	Skill action 12
+//263	One-handed firearm	Skill action 13
+//264	One-handed firearm	Skill action 14
+//265	One-handed firearm	Skill action 15
+//266	One-handed firearm	Skill action 16
+//267	One-handed firearm	Skill action 17
+//268	One-handed firearm	Skill action 18
+//269	One-handed firearm	Skill action 19
+//270	One-handed firearm	Skill action 20
+//271	Two-handed bow	Normal waiting
+//272	Two-handed bow	Cool pose
+//273	Two-handed bow	Funny pose
+//274	Two-handed bow	Alert waiting
+//275	Two-handed bow	Normal run
+//276	Two-handed bow	Alert run
+//277	Two-handed bow	Normal attack 1
+//278	Two-handed bow	Normal attack 2
+//279	Two-handed bow	Normal attack 3
+//280	Two-handed bow	Heavy hit
+//281	Two-handed bow	Skill 1
+//282	Two-handed bow	Skill 2
+//283	Two-handed bow	Skill 3
+//284	Two-handed bow	Skill 4
+//285	Two-handed bow	Skill 5
+//286	Two-handed bow	Normal sit
+//287	Two-handed bow	Death (universal)
+//288	Two-handed bow	Wave (universal)
+//289	Two-handed bow	Cry (universal)
+//290	Two-handed bow	Cheer (universal)
+//291	Two-handed bow	Angry (universal)
+//292	Two-handed bow	Taunt (universal)
+//293	Two-handed bow	Narcissist (male)
+//294	Two-handed bow	Emote 7
+//295	Two-handed bow	Emote 8
+//296	Two-handed bow	Emote 9
+//297	Two-handed bow	Emote 10
+//298	Two-handed bow	Mining (scene)
+//299	Two-handed bow	Gathering (scene)
+//300	Two-handed bow	Sit on bench (scene)
+//301	Two-handed bow	Lean on wall (scene)
+//302	Two-handed bow	Lean on tree (scene)
+//303	Two-handed bow	Character interact (scene)
+//304	Two-handed bow	Scene interaction 7
+//305	Two-handed bow	Scene interaction 8
+//306	Two-handed bow	Scene interaction 9
+//307	Two-handed bow	Scene interaction 10
+//308	Two-handed bow	Sit idle
+//309	Two-handed bow	Death idle
+//310	Two-handed bow	Skill action 6
+//311	Two-handed bow	Skill action 7
+//312	Two-handed bow	Skill action 8
+//313	Two-handed bow	Skill action 9
+//314	Two-handed bow	Skill action 10
+//315	Two-handed bow	Skill action 11
+//316	Two-handed bow	Skill action 12
+//317	Two-handed bow	Skill action 13
+//318	Two-handed bow	Skill action 14
+//319	Two-handed bow	Skill action 15
+//320	Two-handed bow	Skill action 16
+//321	Two-handed bow	Skill action 17
+//322	Two-handed bow	Skill action 18
+//323	Two-handed bow	Skill action 19
+//324	Two-handed bow	Skill action 20
+//325	Dagger	Normal waiting
+//326	Dagger	Cool pose
+//327	Dagger	Funny pose
+//328	Dagger	Alert waiting
+//329	Dagger	Normal run
+//330	Dagger	Alert run
+//331	Dagger	Normal attack 1
+//332	Dagger	Normal attack 2
+//333	Dagger	Normal attack 3
+//334	Dagger	Heavy hit
+//335	Dagger	Skill 1
+//336	Dagger	Skill 2
+//337	Dagger	Skill 3
+//338	Dagger	Skill 4
+//339	Dagger	Skill 5
+//340	Dagger	Normal sit
+//341	Dagger	Death (universal)
+//342	Dagger	Wave (universal)
+//343	Dagger	Cry (universal)
+//344	Dagger	Cheer (universal)
+//345	Dagger	Angry (universal)
+//346	Dagger	Taunt (universal)
+//347	Dagger	Narcissist (male)
+//348	Dagger	Emote 7
+//349	Dagger	Emote 8
+//350	Dagger	Emote 9
+//351	Dagger	Emote 10
+//352	Dagger	Mining (scene)
+//353	Dagger	Gathering (scene)
+//354	Dagger	Sit on bench (scene)
+//355	Dagger	Lean on wall (scene)
+//356	Dagger	Lean on tree (scene)
+//357	Dagger	Character interact (scene)
+//358	Dagger	Scene interaction 7
+//359	Dagger	Scene interaction 8
+//360	Dagger	Scene interaction 9
+//361	Dagger	Scene interaction 10
+//362	Dagger	Sit idle
+//363	Dagger	Death idle
+//364	Dagger	Skill action 6
+//365	Dagger	Skill action 7
+//366	Dagger	Skill action 8
+//367	Dagger	Skill action 9
+//368	Dagger	Skill action 10
+//369	Dagger	Skill action 11
+//370	Dagger	Skill action 12
+//371	Dagger	Skill action 13
+//372	Dagger	Skill action 14
+//373	Dagger	Skill action 15
+//374	Dagger	Skill action 16
+//375	Dagger	Skill action 17
+//376	Dagger	Skill action 18
+//377	Dagger	Skill action 19
+//378	Dagger	Skill action 20
 
 
 //**************************************************************************************
-// 注意：
-// 1。如果上述动作编号的表意有变化，请通知学东。
-// 2。动作编号必须连续，若有疑问，请问Jack。
+// Note:
+// 1。If the meaning of the above action numbers changes, please notify Xuedong.
+// 2。Action numbers must be consecutive. If in doubt, ask Jack.
 //**************************************************************************************
 
-//角色类型
-//		动作编号	起始帧		结束帧		关键帧1		关键帧2		关键帧X...
+//Character type
+//		Action number	Start frame		End frame		Keyframe 1		Keyframe 2		Keyframe X...
 1										
 		1		2		59				
 		2		855		917				

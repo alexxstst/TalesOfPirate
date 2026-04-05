@@ -1,0 +1,38 @@
+1	Sword
+2	Greatsword
+3	Bow
+4	Firegun
+5	Blade
+6	Boxing Gloves
+7	Dagger
+8	Gold Pouch
+9	Short Staff
+10	Hammer
+11	Shield
+12	Arrow
+13	Ammunition
+14	Headgear
+18	Axe
+19	Metal Pickaxe
+20	Hair
+21	Face
+22	Armor
+23	Gloves
+24	Shoe
+25	Necklace
+26	Ring
+31	恢复类
+32	加成类
+33	特殊效果类
+41	一般物品
+42	Quest Item
+51	船首
+52	船身
+53	Mobility
+54	船炮
+55	螺旋桨
+56	船标志
+61	炮基座
+62	Cannon Tower
+63	炮管
+64	炮标志

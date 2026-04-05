@@ -766,7 +766,7 @@ namespace mission {
 			return TRUE;
 		}
 
-		DWORD dwBoatID;
+		std::uint32_t dwBoatID;
 		if (!game_db.Create(dwBoatID, Data)) {
 			pBoat->Free();
 			owner.SetBoat(NULL);

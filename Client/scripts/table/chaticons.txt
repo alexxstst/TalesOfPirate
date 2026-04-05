@@ -1,9 +1,0 @@
-//编号	小图标	起始坐标X	起始坐标Y   	离线图标	起始坐标X	起始坐标Y   	大图标   	起始坐标X	起始坐标Y    	提示
-1	1x.tga	0	0	1xh.tga	0	0	1.tga	0	0	0
-2	2x.tga	0	0	2xh.tga	0	0	2.tga	0	0	0
-3	3x.tga	0	0	3xh.tga	0	0	3.tga	0	0	0
-4	4x.tga	0	0	4xh.tga	0	0	4.tga	0	0	0
-5	5x.tga	0	0	5xh.tga	0	0	5.tga	0	0	0
-6	6x.tga	0	0	6xh.tga	0	0	6.tga	0	0	0
-7	7x.tga	0	0	7xh.tga	0	0	7.tga	0	0	0
-8	8x.tga	0	0	8xh.tga	0	0	8.tga	0	0	0

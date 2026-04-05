@@ -12,7 +12,6 @@
 #include "./util2.h"
 #include "./logutil.h"
 #include "./singleton.h"
-#include "./db.h"
 #include "./algo.h"
 #include "./fifo.h"
 

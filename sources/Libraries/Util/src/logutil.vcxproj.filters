@@ -27,9 +27,6 @@
     <ClCompile Include="algo.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="db.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="db3.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -75,9 +72,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\include\algo.h">
-      <Filter>Header Files\public</Filter>
-    </ClInclude>
-    <ClInclude Include="..\include\db.h">
       <Filter>Header Files\public</Filter>
     </ClInclude>
     <ClInclude Include="..\include\db3.h">

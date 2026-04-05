@@ -1,0 +1,29 @@
+// [Gemini.Datasets(v = 2.5, t = Gemini.Datasets.ElfSkillInfo74, s = 116, n = 27)]
+1	Novice Protection	1	1
+2	Standard Protection	1	2
+3	Expert Protection	1	3
+4	Novice Berserk	2	1
+5	Standard Berserk	2	2
+6	Expert Berserk	2	3
+7	Novice Magic	3	1
+8	Standard Magic	3	2
+9	Expert Magic	3	3
+10	Novice Recover	4	1
+11	Standard Recover	4	2
+12	Expert Recover	4	3
+13	Novice Meditation	5	1
+14	Standard Meditation	5	2
+15	Expert Meditation	5	3
+16	Novice Manufacturing	13	1
+17	Standard Manufacturing	13	2
+18	Advance Manufacturing	13	3
+19	Novice Crafting	14	1
+20	Standard Crafting	14	2
+21	Advance Crafting	14	3
+22	Novice Analyze	15	1
+23	Standard Analyze	15	2
+24	Advance Analyze	15	3
+25	Novice Cooking	16	1
+26	Standard Cooking	16	2
+27	Advanced Cooking	16	3
+// [Gemini Decompiler] End of data.

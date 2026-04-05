@@ -9,7 +9,9 @@
 #include "UIBoatForm.h"
 #include "UIGlobalVar.h"
 #include "Character.h"
-#include <jobtype.h>	// common 
+#include <jobtype.h>	// common
+
+#include "StringLib.h"
 extern const char* g_szJobName[MAX_JOB_TYPE];
 
 using namespace std;
@@ -204,7 +206,7 @@ namespace GUI
 		m_strTeamLeader = szName;
 
 		char szBuffer[256] = {0};
-		sprintf(szBuffer, GetLanguageString(863).c_str(), szName);
+		FmtLang(szBuffer, sizeof(szBuffer), GetLanguageString(863), szName);
 		CBoxMgr::ShowSelectBox(_evtFindTeamCheckEvent, szBuffer, true);
 	}
 

@@ -420,15 +420,7 @@
     <ClInclude Include="..\src\LoginScene.h" />
     <ClInclude Include="..\src\LootFilter.h" />
     <ClInclude Include="..\src\LuaInterface.h" />
-    <ClInclude Include="..\src\lua_app.h" />
-    <ClInclude Include="..\src\lua_camera.h" />
-    <ClInclude Include="..\src\lua_input.h" />
-    <ClInclude Include="..\src\lua_network.h" />
-    <ClInclude Include="..\src\lua_object.h" />
     <ClInclude Include="..\src\lua_platform.h" />
-    <ClInclude Include="..\src\lua_scene.h" />
-    <ClInclude Include="..\src\lua_ui.h" />
-    <ClInclude Include="..\src\lua_util.h" />
     <ClInclude Include="..\src\Main.h" />
     <ClInclude Include="..\src\MapSet.h" />
     <ClInclude Include="..\src\MonsterSet.h" />

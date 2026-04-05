@@ -1,0 +1,9 @@
+// 资源文件
+// 类型约定 : RT_PAR = 0,RT_PATH = 1,RT_EFF = 2,RT_MESH = 3,RT_TEXTURE = 4,RT_UNKNOWN = -1,
+// ID	文件名	类型
+1	sel1.tga	4
+2	whitesmoke.par	0
+3	RectPlane	3
+4	1.tga	4
+5	range.tga	4
+7	smoke1.tga	4

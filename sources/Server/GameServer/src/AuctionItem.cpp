@@ -81,7 +81,7 @@ BOOL CAuctionItem::BidUp(CCharacter *pCha, uInt price)
 		ToLogService("trade", "character {} bid {} success!", GetCurChaName().c_str(),GetCurPrice());
 
 	//
-	BOOL bOnline = false;
+	bool bOnline = false;
 	if(!game_db.IsChaOnline(dwPreChaID, bOnline))
 	{
 		//LG("Auction", " %s !\n", strPreChaName.c_str());

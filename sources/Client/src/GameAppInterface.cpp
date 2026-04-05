@@ -99,6 +99,7 @@
 // add by mdr
 #include "NPCHelper.h"
 #include "MountRecordStore.h"
+#include "PoseDataStore.h"
 
 using namespace std;
 
@@ -1314,6 +1315,7 @@ void CGameApp::InitAllTable() {
 	StoneRecordStore::Instance()->Load(db);
 	ElfSkillRecordStore::Instance()->Load(db);
 	HelpInfoRecordStore::Instance()->Load(db);
+	PoseDataStore::Instance()->Load(db);
 }
 
 void CGameApp::ReleaseAllTable() {

@@ -121,14 +121,14 @@ public:
 	char chIsThrow{};
 	char chIsDel{};
 	long lPrice{};
-	std::array<uint8_t, defITEM_BODY> chBody{};
+	std::array<std::int8_t, defITEM_BODY> chBody{};
 	short sNeedLv{};
-	std::array<uint8_t, MAX_JOB_TYPE> szWork{};
+	std::array<std::int8_t, MAX_JOB_TYPE> szWork{};
 
 	int nPileMax{};
 	char chInstance{};
-	std::array<uint8_t, enumEQUIP_NUM> szAbleLink{};
-	std::array<uint8_t, enumEQUIP_NUM> szNeedLink{};
+	std::array<std::int8_t, enumEQUIP_NUM> szAbleLink{};
+	std::array<std::int8_t, enumEQUIP_NUM> szNeedLink{};
 	char chPickTo{};
 
 	short sStrCoef{};
@@ -201,7 +201,7 @@ public:
 	bool IsAllowEquip(unsigned int nChaID) const;
 
 	bool IsAllEquip() const {
-		return chBody[0] == 0xFF;
+		return chBody[0] == static_cast<std::int8_t>(0xFF);
 	}
 
 	void RefreshData();

@@ -4,6 +4,19 @@
 
 #pragma comment(lib, "ws2_32.lib")
 
+// #define TCPSERVER_VERBOSE
+
+#ifdef TCPSERVER_VERBOSE
+#define TCP_SLOG TCP_SLOG
+#else
+struct NullStreamS {
+	template<typename T> NullStreamS& operator<<(const T&) { return *this; }
+	NullStreamS& operator<<(std::ostream&(*)(std::ostream&)) { return *this; }
+};
+static NullStreamS nullStreamS_;
+#define TCP_SLOG nullStreamS_
+#endif
+
 namespace net {
 
 	// 
@@ -22,7 +35,7 @@ namespace net {
 
 	bool TcpServer::Listen(const std::string& ip, uint16_t port, int maxConns) {
 		if (_listening) {
-			std::cout << "[TcpServer] Listen:  ,  " << std::endl;
+			TCP_SLOG << "[TcpServer] Listen:  ,  " << std::endl;
 			return false;
 		}
 
@@ -32,7 +45,7 @@ namespace net {
 		_listenSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
 		if (_listenSocket == INVALID_SOCKET) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpServer] socket() : WSA=" << err << std::endl;
+			TCP_SLOG << "[TcpServer] socket() : WSA=" << err << std::endl;
 			return false;
 		}
 
@@ -53,7 +66,7 @@ namespace net {
 
 		if (bind(_listenSocket, (sockaddr*)&addr, sizeof(addr)) == SOCKET_ERROR) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpServer] bind() : WSA=" << err << "  " << ip << ":" << port << std::endl;
+			TCP_SLOG << "[TcpServer] bind() : WSA=" << err << "  " << ip << ":" << port << std::endl;
 			closesocket(_listenSocket);
 			_listenSocket = INVALID_SOCKET;
 			return false;
@@ -62,7 +75,7 @@ namespace net {
 		// Listen
 		if (listen(_listenSocket, SOMAXCONN) == SOCKET_ERROR) {
 			int err = WSAGetLastError();
-			std::cout << "[TcpServer] listen() : WSA=" << err << std::endl;
+			TCP_SLOG << "[TcpServer] listen() : WSA=" << err << std::endl;
 			closesocket(_listenSocket);
 			_listenSocket = INVALID_SOCKET;
 			return false;
@@ -71,7 +84,7 @@ namespace net {
 		_listening = true;
 		_acceptThread = std::thread(&TcpServer::AcceptThreadProc, this);
 
-		std::cout << "[TcpServer]  " << ip << ":" << port << " (maxConns=" << maxConns << ")" << std::endl;
+		TCP_SLOG << "[TcpServer]  " << ip << ":" << port << " (maxConns=" << maxConns << ")" << std::endl;
 		return true;
 	}
 
@@ -82,7 +95,7 @@ namespace net {
 			return;
 		}
 
-		std::cout << "[TcpServer] Shutdown..." << std::endl;
+		TCP_SLOG << "[TcpServer] Shutdown..." << std::endl;
 
 		//  listen socket  accept thread 
 		if (_listenSocket != INVALID_SOCKET) {
@@ -109,7 +122,7 @@ namespace net {
 		}
 		_connections.clear();
 
-		std::cout << "[TcpServer] Shutdown " << std::endl;
+		TCP_SLOG << "[TcpServer] Shutdown " << std::endl;
 	}
 
 	//  DisconnectClient 
@@ -157,7 +170,7 @@ namespace net {
 
 			for (auto& pa : accepts) {
 				if (_maxConns > 0 && static_cast<int>(_connections.size()) >= _maxConns) {
-					std::cout << "[TcpServer] PollAll:   ("
+					TCP_SLOG << "[TcpServer] PollAll:   ("
 						<< _maxConns << "),  " << pa.peerIP << ":" << pa.peerPort << std::endl;
 					closesocket(pa.sock);
 					continue;
@@ -173,7 +186,7 @@ namespace net {
 				conn.client->SetHandler(conn.adapter.get());
 
 				if (!conn.client->Attach(pa.sock, pa.peerIP, pa.peerPort)) {
-					std::cout << "[TcpServer] PollAll: Attach   "
+					TCP_SLOG << "[TcpServer] PollAll: Attach   "
 						<< pa.peerIP << ":" << pa.peerPort << std::endl;
 					closesocket(pa.sock);
 					continue;
@@ -218,7 +231,7 @@ namespace net {
 	//  AcceptThreadProc 
 
 	void TcpServer::AcceptThreadProc() {
-		std::cout << "[TcpServer] AcceptThread: " << std::endl;
+		TCP_SLOG << "[TcpServer] AcceptThread: " << std::endl;
 
 		while (_listening) {
 			sockaddr_in clientAddr{};
@@ -229,7 +242,7 @@ namespace net {
 			if (clientSock == INVALID_SOCKET) {
 				if (_listening) {
 					int err = WSAGetLastError();
-					std::cout << "[TcpServer] AcceptThread: accept() : WSA=" << err << std::endl;
+					TCP_SLOG << "[TcpServer] AcceptThread: accept() : WSA=" << err << std::endl;
 				}
 				break;
 			}
@@ -238,7 +251,7 @@ namespace net {
 			inet_ntop(AF_INET, &clientAddr.sin_addr, ipBuf, sizeof(ipBuf));
 			uint16_t port = ntohs(clientAddr.sin_port);
 
-			std::cout << "[TcpServer] AcceptThread:   "
+			TCP_SLOG << "[TcpServer] AcceptThread:   "
 				<< ipBuf << ":" << port << std::endl;
 
 			{
@@ -247,7 +260,7 @@ namespace net {
 			}
 		}
 
-		std::cout << "[TcpServer] AcceptThread: " << std::endl;
+		TCP_SLOG << "[TcpServer] AcceptThread: " << std::endl;
 	}
 
 } // namespace net

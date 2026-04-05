@@ -16,9 +16,6 @@ CEyeshotCell::CEyeshotCell()
 	m_pCNext = 0;
 	m_pCLast = 0;
 
-	m_pCStateCell = 0;
-	m_sStateCellNum = 0;
-
 	m_lChaCount = 0;
 	m_lItemCount = 0;
 }
@@ -49,9 +46,11 @@ CEyeshotCell::~CEyeshotCell()
 // pCEnt
 void CEyeshotCell::EnterEyeshot(Entity *pCEnt)
 {
-	for (short i = 0; i < m_sStateCellNum; i++)
-		if (*m_pCStateCell[i])
-			(*m_pCStateCell[i])->StateBeginSeen(pCEnt);
+	for (auto* slot : _stateCellSlots) {
+		if (auto* cell = *slot) {
+			cell->StateBeginSeen(pCEnt);
+		}
+	}
 
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	CCharacter	*pCCellCha = m_pCChaL;
@@ -90,9 +89,11 @@ void CEyeshotCell::EnterEyeshot(Entity *pCEnt)
 
 void CEyeshotCell::OutEyeshot(Entity *pCEnt)
 {
-	for (short i = 0; i < m_sStateCellNum; i++)
-		if (*m_pCStateCell[i])
-			(*m_pCStateCell[i])->StateEndSeen(pCEnt);
+	for (auto* slot : _stateCellSlots) {
+		if (auto* cell = *slot) {
+			cell->StateEndSeen(pCEnt);
+		}
+	}
 
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	CCharacter	*pCCellCha = m_pCChaL;

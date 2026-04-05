@@ -125,7 +125,6 @@ class CCharacter : public CMoveAble
 	friend class PlayerStorage;
 	friend class Guild;
 	friend class CTableGuild;
-	friend class CTableMaster;
 public:
 	CCharacter();
 	~CCharacter();

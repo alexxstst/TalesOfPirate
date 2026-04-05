@@ -176,7 +176,7 @@ void CForgeMgr::ShowForge(bool bShow, bool isMilling)
 void CForgeMgr::ShowConfirmDialog(long lMoney)
 {
 	char szBuf[255] = { 0 };
-	sprintf( szBuf, GetLanguageString(568).c_str(), lMoney );
+	FmtLang(szBuf, sizeof(szBuf), GetLanguageString(568), lMoney);
 	g_stUIBox.ShowSelectBox( _evtConfirmEvent, szBuf, true );
 
 }

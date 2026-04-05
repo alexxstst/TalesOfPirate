@@ -4,10 +4,10 @@
 // class CItemRecord
 //---------------------------------------------------------------------------
 CItemRecord::CItemRecord() {
-	chBody.fill(0xFE);
-	szWork.fill(0xFE);
-	szAbleLink.fill(0xFE);
-	szNeedLink.fill(0xFE);
+	chBody.fill(static_cast<std::int8_t>(0xFE));
+	szWork.fill(static_cast<std::int8_t>(0xFE));
+	szAbleLink.fill(static_cast<std::int8_t>(0xFE));
+	szNeedLink.fill(static_cast<std::int8_t>(0xFE));
 }
 
 std::string CItemRecord::GetIconFile() const {
@@ -33,9 +33,14 @@ void CItemRecord::RefreshData() {
 			_IsBody[i] = true;
 	}
 	else {
-		for (int i = 0; i < defITEM_BODY; i++)
-			if (chBody[i] > 0 && chBody[i] < 5)
+		for (int i = 0; i < defITEM_BODY; i++) {
+			if (chBody[i] == cchItemRecordKeyValue) {
+				break;
+			}
+			if (chBody[i] > 0 && chBody[i] < 5) {
 				_IsBody[chBody[i]] = true;
+			}
+		}
 	}
 
 	bool hasChaModel[5]{};

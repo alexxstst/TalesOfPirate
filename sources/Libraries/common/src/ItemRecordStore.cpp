@@ -19,7 +19,7 @@ void ItemRecordStore::ParsePair(std::string_view text, short& out0, short& out1)
 	out1 = static_cast<short>(std::atoi(std::string(text.substr(pos + 1)).c_str()));
 }
 
-void ItemRecordStore::ParseCharArray(std::string_view text, uint8_t* out, int maxLen, uint8_t defaultVal) {
+void ItemRecordStore::ParseCharArray(std::string_view text, std::int8_t* out, int maxLen, std::int8_t defaultVal) {
 	std::fill(out, out + maxLen, defaultVal);
 	if (text.empty() || text == "0") return;
 
@@ -28,7 +28,7 @@ void ItemRecordStore::ParseCharArray(std::string_view text, uint8_t* out, int ma
 	std::string token;
 	int i = 0;
 	while (std::getline(ss, token, ',') && i < maxLen) {
-		out[i++] = static_cast<uint8_t>(std::atoi(token.c_str()));
+		out[i++] = static_cast<std::int8_t>(std::atoi(token.c_str()));
 	}
 }
 
@@ -79,15 +79,15 @@ GameRecordset<CItemRecord>::RecordEntry ItemRecordStore::ReadRecord(SqliteStatem
 	record.lPrice        = stmt.GetInt(col++);
 
 	// byte arrays
-	ParseCharArray(stmt.GetText(col++), record.chBody.data(), defITEM_BODY, 0xFE);
+	ParseCharArray(stmt.GetText(col++), record.chBody.data(), defITEM_BODY, static_cast<std::int8_t>(0xFE));
 	record.sNeedLv = static_cast<short>(stmt.GetInt(col++));
-	ParseCharArray(stmt.GetText(col++), record.szWork.data(), MAX_JOB_TYPE, 0xFE);
+	ParseCharArray(stmt.GetText(col++), record.szWork.data(), MAX_JOB_TYPE, static_cast<std::int8_t>(0xFE));
 
 	record.nPileMax  = stmt.GetInt(col++);
 	record.chInstance = static_cast<char>(stmt.GetInt(col++));
 
-	ParseCharArray(stmt.GetText(col++), record.szAbleLink.data(), enumEQUIP_NUM, 0xFE);
-	ParseCharArray(stmt.GetText(col++), record.szNeedLink.data(), enumEQUIP_NUM, 0xFE);
+	ParseCharArray(stmt.GetText(col++), record.szAbleLink.data(), enumEQUIP_NUM, static_cast<std::int8_t>(0xFE));
+	ParseCharArray(stmt.GetText(col++), record.szNeedLink.data(), enumEQUIP_NUM, static_cast<std::int8_t>(0xFE));
 	record.chPickTo = static_cast<char>(stmt.GetInt(col++));
 
 	// 21 коэффициентов

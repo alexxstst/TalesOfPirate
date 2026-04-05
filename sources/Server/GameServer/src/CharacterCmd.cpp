@@ -348,7 +348,7 @@ Error:
 
 	pCPlayer->SetLoginCha(enumLOGIN_CHA_MAIN, 0);
 	pCPlayer->SetCtrlCha(GetPlyMainCha());
-	game_db.SavePlayerPos(pCPlayer);
+	game_db.SavePlayerPos(*pCPlayer);
 	g_pGameApp->GoOutGame(pCPlayer, true);
 
 	//LG("enter_map", " %s(%s)\n", GetLogName(), GetPlyCtrlCha()->GetLogName());
@@ -1243,7 +1243,7 @@ Short CCharacter::Cmd_UnfixItem(Char chLinkID, Short *psItemNum, Char chDir, Lon
 	}
 	//if all went fine add our cooldown
 		//GetPlyMainCha()->SwitchItemColD = dwLastTime + 100;
-		game_db.SavePlayer(GetPlayer(), enumSAVE_TYPE_TIMER);
+		game_db.SavePlayer(*GetPlayer(), enumSAVE_TYPE_TIMER);
 	//cooldown end 
 	return enumITEMOPT_SUCCESS;
 }
@@ -3101,7 +3101,7 @@ void CCharacter::Cmd_ItemLotteryAsk(SLotteryItem *pSItem)
 				pItemLottery->sInstAttr[4][0] = ITEMATTR_VAL_STA;
 				pItemLottery->sInstAttr[4][1] = buffer[4][0] * 100 + buffer[5][0];	// 125 346	
 
-				game_db.AddLotteryTicket(this, issue, buffer);
+				game_db.AddLotteryTicket(*this, issue, buffer);
 			}
 
 			for (int i = 1; i < defMAX_ITEM_LOTTERY_GROUP; i++)

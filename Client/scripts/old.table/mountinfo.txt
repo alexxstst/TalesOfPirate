@@ -1,0 +1,21 @@
+//ID	Mount Name	Iteminfo ID	boneID	height	offsetX	offsetY	poseID
+1	Baby Black Dragon Mount	9500	3	-10,-10,20,20	0	30	30,30,16,16
+2	Cuddly Lamb Mount	9501	3	-5,-5,35,35	0	-10	30,30,16,16
+3	Witch Broomstick Mount	9502	2	-50,-50,-50,-50	0	5	30,30,30,30
+4	Pink Ostrich Mount	9503	2	-55,-55,-20,-20	0	-15	30,30,16,16
+5	Lycan Mount	9504	0	-10,-10,20,20	0	25	30,30,16,16
+6	Little Cat Mount	9505	0	-10,-10,20,20	0	25	30,30,16,16
+7	Lion King Mount	9506	0	-10,-10,20,20	0	32	30,30,16,16
+8	Tortoise Mount	9507	2	-60,-60,-20,-20	0	35	30,30,16,16
+9	T-Rex Mount	9508	2	-65,-65,-25,-25	0	-10	30,30,16,16
+10	Rat King Mount	9509	2	-60,-60,-20,-20	0	50	30,30,16,16
+11	Pink Deer Mount	9510	2	-67,-67,-25,-25	0	20	30,30,16,16
+12	Little Wolf Mount	9511	2	-59,-59,-20,-20	0	30	30,30,16,16
+13	Birdocopter Mount	9512	3	-2,-2,-2,-,2	0	75	30,30,30,30
+14	Elephant King Mount	9513	2	-59,-59,-20,-20	0	50	30,30,16,16
+15	Baby Rockets Mount	9514	2	-55,-55,-55,-55	0	5	30,30,30,30
+16	Squirrel Mount	9515	2	-55,-55,-20,-20	0	50	30,30,16,16
+17	Brown-Dinosaur Mount	19695	3	-10,0,0,0	0	0	30,0,0,0
+18	Chariot Mount	19692	2	-30,0,0,0	0	200	30,0,0,0
+19	Cart Mount	19693	0	0,0,0,0	0	0	30,0,0,0
+20	Rabbit-car Mount	19694	0	125,0,0,0	0	-115	30,0,0,0

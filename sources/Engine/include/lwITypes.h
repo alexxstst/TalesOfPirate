@@ -210,11 +210,11 @@ struct lwPickInfo
 
 struct lwPoseInfo
 {
-	DWORD charType;
-    DWORD start;
-    DWORD end;
-    DWORD key_frame_seq[ MAX_KEY_FRAME_NUM ];
-    DWORD key_frame_num;    
+	DWORD charType{};
+    DWORD start{};
+    DWORD end{};
+    DWORD key_frame_seq[ MAX_KEY_FRAME_NUM ]{};
+    DWORD key_frame_num{};
 };
 
 

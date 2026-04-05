@@ -64,9 +64,6 @@
 
 using namespace std;
 
-Cooperate g_cooperate; //  add by jampe
-
-
 bool registerLogin = false;
 
 char autoLoginName[32];
@@ -564,10 +561,6 @@ void CLoginScene::_evtServerLDBDown(CGuiData* pSender, int x, int y, DWORD key) 
 		pkScene->SetCurSelServerIndex(pkServerList->GetItems()->GetSelect()->GetIndex() * 2 + 1);
 	}
 
-	if (g_cooperate.code) {
-		pkScene->LoginFlow();
-	}
-
 	if (key & Mouse_LDown) {
 		pSender->GetForm()->Hide();
 		pkScene->ShowLoginForm();
@@ -854,29 +847,9 @@ void CLoginScene::_Connect() {
 
 
 void CLoginScene::LoginFlow() {
-	////////////////////////////////////////
-	//
-	//  By Jampe
-	//  User account and password handling
-	//  2006/5/19
-	//
-	switch (g_cooperate.code) {
-	case COP_OURGAME:
-	case COP_SINA:
-	case COP_CGA: {
-		m_sUsername = g_cooperate.uid;
-		m_sPassword = g_cooperate.pwd;
+	if (!_CheckAccount()) {
+		return;
 	}
-	break;
-	case 0:
-	default: {
-		if (!_CheckAccount()) {
-			return;
-		}
-	}
-		break;
-	}
-	//  end
 	m_sPassport = "nobill";
 	_Connect();
 }

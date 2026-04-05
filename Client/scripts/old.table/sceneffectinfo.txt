@@ -1,0 +1,1106 @@
+1	wave1.par	Sea Wave	Sea Wave	0	0	-1	-1	1	0	0	-1
+2	dian.par	电球	Sea Wave	0	0	0	-1	0	0	0	-1
+3	shuihua01.par	大水花	大水花	0	0	0	-1	0	0	0	-1
+4	shuihua02.par	水花	Sea Wave	0	0	0	-1	0	0	0	-1
+5	guang.par	光	Sea Wave	0	0	0	-1	0	0	0	-1
+6	blacksmoke.par	黑烟	Sea Wave	0	0	0	-1	0	0	0	-1
+7	xieguang.par	斜光	Sea Wave	0	0	0	-1	0	0	0	-1
+8	add.par	Fog	Sea Wave	0	0	0	-1	0	0	0	-1
+9	firefly.par	Firefly	Sea Wave	0	0	0	-1	0	0	0	-1
+10	00000002.par	火焰	Sea Wave	0	0	0	-1	0	0	0	-1
+11	00000003.par	火焰2	Sea Wave	0	0	0	-1	0	0	0	-1
+12	wave2.par	海浪2	Sea Wave	0	0	0	-1	0	0	0	-1
+13	whitesmoke.par	白烟	Sea Wave	0	0	0	-1	0	0	0	-1
+14	snow.par	Sbiw	Sea Wave	0	0	0	-1	0	0	0	-1
+15	00000007.par	沙岚火焰	Sea Wave	0	0	0	-1	0	0	0	-1
+16	sali.par	Sandstorm	Sea Wave	0	0	0	-1	0	0	0	-1
+17	ufo2.par	灵火2	Sea Wave	0	0	0	-1	0	0	0	-1
+18	ufo.par	灵火	Sea Wave	0	0	0	-1	0	0	0	-1
+95	00000001.par	30斜光	Sea Wave	0	0	0	-1	0	0	0	-1
+96	01030011.par	道具特效	Sea Wave	0	0	0	-1	0	0	0	-1
+97	waterwave1.par	水波	Sea Wave	1	0	-1	-1	0	0	0	-1
+98	waterwave2.par	水波2	Sea Wave	1	0	-1	-1	0	0	0	-1
+99	miss2.par	爆字	Sea Wave	0	0	0	1	0	0	0	-1
+100	wolf.par	Howl Unleashed	Sea Wave	0	0	-1	-1	0	1	0	-1
+101	01030006.par	Howl 命中	Sea Wave	0	0	-1	1	0	1	0	-1
+102	foot02.par	Tiger Roar 施放	Sea Wave	0	0	-1	-1	20	1	0	-1
+103	foot.par	Tiger Roar Hit Rate	Sea Wave	0	0	-2	1	0	1	0	-1
+104	runatktarget.par	连珠箭命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+105	yfire.par	连珠箭施放	Sea Wave	0	0	-1	1	0	1	0	-1
+106	fallstar02.par	流星箭地面命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+107	fallstar01.par	流星箭人物施放	Sea Wave	0	0	-1	1	0	1	0	-1
+108	01000004.par	Dispersion Bullet 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+109	01020005.par	Dispersion Bullet 命中	Sea Wave	0	0	-1	1	0	1	0	-1
+110	01020006.par	Penetrating Bullet 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+111	01010002.par	Magma Bullet 地面命中	Sea Wave	0	0	-1	1	0	1	0	-1
+112	01030001.par	Magma Bullet 地面持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+113	heallight.pa	Greater Heal 施放	Sea Wave	0	0	-1	1	0	1	0	-1
+114	01020007.par	Greater Heal 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+115	01050013.par	Magma Bullet 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+116	01040024.par	Tiger Roar 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+117	spire01.par	Berserk 施放	海浪	0	0	-1	-1	0	1	0	-1
+118	ragefire.par	Berserk 人物持续	海浪	0	0	-1	-1	0	1	0	-1
+119	01000007.par	图腾招唤施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+120	01020008.par	图腾招唤人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+121	hide01.par	隐月流Stealth 术施放	海浪	0	0	-1	-1	0	1	0	-1
+122	01000009.par	伊贺鬼轮斩施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+123	01040002.par	伊贺鬼轮斩人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+124	01000010.par	伊贺流Backstab 杀施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+125	01020009.par	伊贺流Backstab 杀人物命中	Sea Wave	0	0	-1	1	0	1	0	-1
+126	01000011.par	伊贺流刺盲术施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+127	01040003.par	伊贺流刺盲术人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+128	01020010.par	Diligence 术人物命中	海浪	0	0	-1	-1	0	1	0	-1
+129	01020011.par	冰霜护盾人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+130	critical.par	Double Damage	Sea Wave	0	0	-1	-1	0	1	0	-1
+131	01030006.par	受到伤害	Sea Wave	0	0	-1	1	0	1	0	-1
+132	01030007.par	Levelup	Sea Wave	0	0	-1	-1	0	1	0	-1
+133	01030008.par	HP Recover	Sea Wave	0	0	-1	-1	0	1	0	-1
+134	01030009.par	SP recovery	Sea Wave	0	0	-1	-1	0	1	0	-1
+135	01040004.par	冰霜护盾人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+136	01000012.par	Parry 施放	海浪	0	0	-1	-1	0	1	0	-1
+137	01000013.par	丛林穿越施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+138	01040005.par	丛林穿越人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+139	01000014.par	慧星强击施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+140	01020012.par	慧星强击人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+141	01000015.par	宠物理疗施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+142	04000010.par	Cripple 射击释放	海浪	0	0	-2	-1	0	1	0	-1
+143	01040006.par	Cripple 持续	海浪	0	0	-1	-1	0	1	0	-1
+144	01020013.par	Cripple 命中	海浪	0	0	-1	-1	0	1	0	-1
+145	01000017.par	火焰喷射施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+146	01040007.par	火焰喷射人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+147	01040008.par	Headshot Duration	Sea Wave	0	0	-1	-1	0	1	0	-1
+148	01020014.par	Recover Hit Rate	Sea Wave	0	0	-1	-1	0	1	0	-1
+149	01010003.par	Greater Recover 地面命中	海浪	0	0	-1	1	0	1	0	-1
+150	01000018.par	烈焰之翼施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+151	01020015.par	烈焰之翼人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+152	01040009.par	烈焰之翼人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+153	01020016.par	圣火之光人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+154	01040010.par	圣火之光人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+155	01020017.par	Spiritual Fire 人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+156	01040011.par	Spiritual Fire 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+157	firelighting02.par	Cursed Fire 释放	海浪	0	0	-1	-1	0	1	0	-1
+158	fireghosth.par	Cursed Fire 人物持续	海浪	0	0	-1	-1	0	1	0	-1
+159	angel.par	Angelic Shield	Sea Wave	0	0	-1	-1	0	1	0	-1
+160	01000019.par	Angelic Shield 人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+161	01040034.par	Angelic Shield 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+162	01020020.par	圣职纹章人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+163	01040014.par	圣职纹章人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+164	01020021.par	天使祈愿人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+165	spahurt.par	Healing Spring 地面持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+166	01040033.par	Healing Spring 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+167	01000020.par	幸运之光施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+168	01020022.par	幸运之光人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+169	01040016.par	幸运之光人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+170	01020040.par	Tempest Boost 人物命中	海浪	0	0	-1	1	0	1	0	-1
+171	01020024.par	急速风暴人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+172	01040017.par	急速风暴人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+173	01030003.par	Counterguard 地面持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+174	01040018.par	Counterguard 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+175	feye.par	True Sight 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+176	01000021.par	True Sight 人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+177	01020025.par	Seal of Elder 人物命中	海浪	0	0	-1	-1	0	1	0	-1
+178	01040020.par	Seal of Elder 人物持续	海浪	0	0	-1	-1	0	1	0	-1
+179	shadow01.par	Shadow Insignia 地面命中	海浪	0	0	-1	-1	0	1	0	-1
+180	shadowh.par	Shadow Insignia 人物持续	海浪	0	0	-1	-1	0	1	0	-1
+181	01020027.par	十字束缚人物命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+182	01040022.par	十字束缚人物持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+183	01000022.par	回复天使施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+184	01010004.par	回复天使地面命中	Sea Wave	0	0	-1	1	0	1	0	-1
+185	fireghostt.par	Cursed Fire 地面命中	海浪	0	0	-1	-1	0	1	0	-1
+186	01000014.par	Illusion Slash 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+187	bang02.par	Mighty Strike 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+188	01000025.par	Primal Fist Unleashed	Sea Wave	0	0	-1	-1	0	1	0	-1
+189	01000026.par	Frozen Arrow 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+190	hpushf.par	Spiritual Bolt 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+191	01000028.par	Spiritual Fire 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+192	01000029.par	Tempest Boost 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+193	01000030.par	Tornado Swirl 施放	Sea Wave	0	0	-1	-1	0	1	0	-1
+194	angel1.par	Angelic Shield 道具释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+195	01020028.par	Illusion Slash Hit Rate	Sea Wave	0	0	-1	-1	0	1	0	-1
+196	bang.par	Mighty Strike 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+197	01020030.par	兽王之拳命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+198	poisont.par	毒标命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+199	01020032.par	Numb Hit Rate	Sea Wave	0	0	-1	-1	0	1	0	-1
+200	01020033.par	Frozen Arrow 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+201	01020034.par	Spiritual Bolt 命中	Sea Wave	0	0	-1	1	0	1	0	-1
+202	01020035.par	Spiritual Fire 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+203	01020036.par	急速风暴命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+204	seal.par	Angelic Shield 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+205	01020038.par	Seal of Elder 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+206	01040011.par	Spiritual Fire 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+207	01040025.par	Tempest Boost 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+208	01040035.par	急速风暴持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+209	01040027.par	Angelic Shield 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+210	01040028.par	技能禁止持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+211	barrierh.par	Energy Shield 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+212	01040030.par	Frozen Arrow 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+213	01000032.par	Eagle's Eye 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+214	01040032.par	Eagle's Eye 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+215	01020044.par	Eagle's Eye 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+216	01050021.par	Mining 特效	Sea Wave	0	0	-1	-1	0	1	0	-1
+217	01030010.par	普通刀光幻影	Sea Wave	0	0	-1	-1	0	1	0	-1
+218	swordlight02.par	刀光02	Sea Wave	0	0	-1	-1	0	1	0	-1
+219	01000011.par	小Recover 释放	海浪	0	0	-1	-1	0	1	0	-1
+220	swordlightj.par	刀光	Sea Wave	0	0	-1	-1	0	1	0	-1
+
+226	01010505.par	Octopus 技能命中	海浪	0	0	-1	-1	0	1	0	-1
+227	01010506.par	针刺曼陀罗命中	Sea Wave	0	0	-2	-1	0	1	0	-1
+229	01030006.par	飞熊猫命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+230	01010511.par	地精长老命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+231	01010510.par	水精灵命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+232	01010513.par	Oyster命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+233	01010507.par	小冰龙命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+234	01010508.par	大冰龙命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+235	01010514.par	射水贝命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+236	firegush.par	Berserk 命中	海浪	0	0	-1	-1	0	1	0	-1
+237	abysm02.par	深渊沼泽释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+238	abysm01.par	深渊沼泽道具释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+239	abysm03.par	深渊沼泽命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+240	abysm04.par	深渊沼泽持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+241	spa.par	Healing Spring 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+242	spaf.par	Healing Spring 道具释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+243	firelighting01.par	Cursed Fire 道具释放	海浪	0	0	-1	-1	0	1	0	-1
+244	shadowf01.par	Shadow Insignia 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+245	shadowi.par	Shadow Insignia Item Used	Sea Wave	0	0	-1	-1	0	1	0	-1
+246	barrierf.par	Energy Shield 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+247	barrieri.par	Energy Shield 道具释放	海浪	0	0	-1	-1	0	1	0	-1
+248	barriert.par	Energy Shield 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+249	poisonf.par	毒标释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+250	poisonh.par	毒标持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+251	dancet.par	Shadow Slash 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+252	dancef.par	Shadow Slash 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+253	danceh.par	Shadow Slash 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+254	01000033.par	Magma Bullet 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+255	01000033(a).par	Magma Bullet 道具释放	Sea Wave	0	0	-2	-1	0	1	0	-1
+256	01000016.par	爆头道具释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+257	04000008.par	爆头道具释放发射	Sea Wave	0	0	-2	-1	0	1	0	-1
+258	01020013(a).par	Headshot命中	海浪	0	0	-1	-1	0	1	0	-1
+259	01040007.par	Enfeeble 道具持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+260	04000011.par	Enfeeble 道具释放发射	Sea Wave	0	0	-2	-1	0	1	0	-1
+261	01020013(b).par	Enfeeble 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+262	spurtice.par	雪女喷霜	Sea Wave	0	0	-2	-1	0	1	0	-1
+263	01060008.par	龟王起浪受击	Sea Wave	0	0	-2	-1	0	1	0	-1
+264	01060006.par	遗迹守护者受击	Sea Wave	0	0	-2	-1	0	1	0	-1
+265	cowfire.par	Conch Ray 波	海浪	0	0	-2	-1	0	1	0	-1
+266	cowdust.par	Conch Ray 尘土	海浪	0	0	-2	-1	0	1	0	-1
+267	cowtarget.par	Conch Ray 受击	海浪	0	0	-2	-1	0	1	0	-1
+268	spagh.par	Healing Spring 地面持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+269	strik.par	Lightning Bolt 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+270	strhurt.par	Lightning Bolt 受击	Sea Wave	0	0	-2	-1	0	1	0	-1
+271	strc.par	Lightning Bolt 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+272	wind.par	Tornado 释放	海浪	0	0	-1	-1	0	1	0	-1
+273	whurt.par	Tornado 命中	海浪	0	0	-1	-1	0	1	0	-1
+274	windc.par	Tornado 持续	海浪	0	0	-1	-1	0	1	0	-1
+275	aglef.par	Algae Persists	Sea Wave	0	0	-1	-1	0	1	0	-1
+276	agle.par	海藻命中	Sea Wave	0	0	-2	-1	0	1	0	-1
+277	aglec.par	海藻持續	Sea Wave	0	0	-1	-1	0	1	0	-1
+278	eddy.par	漩渦釋放	Sea Wave	0	0	-2	-1	0	1	0	-1
+279	eddyhurt.par	漩渦命中	Sea Wave	0	0	-2	-1	0	1	0	-1
+280	eddyc.par	漩渦持續	Sea Wave	0	0	-2	-1	0	1	0	-1
+281	fog.par	迷霧釋放	Sea Wave	0	0	-1	-1	0	1	0	-1
+282	foghurt.par	迷霧命中	Sea Wave	0	0	-2	-1	0	1	0	-1
+283	fogc.par	迷霧持續	Sea Wave	0	0	-1	-1	0	1	0	-1
+284	cannon01.par	普通砲彈釋放	Sea Wave	0	0	-2	-1	0	1	0	-1
+285	obey.par	順風釋放	Sea Wave	0	0	-2	-1	0	1	0	-1
+286	obeyhurt.par	順風命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+287	obeyc.par	順風持續	Sea Wave	0	0	-1	-1	0	1	0	-1
+288	levin.par	Lightning Curtain 釋放	Sea Wave	0	0	-2	-1	0	1	0	-1
+289	levinh.par	Lightning Curtain 命中	Sea Wave	0	0	-2	-1	0	1	0	-1
+290	levinc.par	Lightning Curtain 地面命中	Sea Wave	0	0	-2	-1	0	1	0	-1
+291	00000004.par	风区	Sea Wave	0	0	-2	-1	0	1	0	-1
+292	00000006.par	雷区	Sea Wave	0	0	-2	-1	0	1	0	-1
+293	00000005.par	雾区	Sea Wave	0	0	-2	-1	0	1	0	-1
+294	tiger.par	Tiger Roar Persists	Sea Wave	0	0	-1	-1	0	1	0	-1
+295	tigerc.par	Tiger Roar 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+296	icearrow.par	冰箭释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+297	icearrowc.par	冰箭持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+298	parrow.par	Venom Arrow 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+299	stoneshieldi.par	石盾释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+300	stoneshieldt.par	石盾命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+301	shijia.par	石盾持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+302	rousec.par	Rousing 持续	海浪	0	0	-1	-1	0	1	0	-1
+303	rouse.par	Rousing 释放	海浪	0	0	-1	-1	0	1	0	-1
+304	shield.par	Break Armor 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+305	shieldh.par	Break Armor 命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+306	pojia.par	Break Armor 持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+307	steel.par	Will of Steel 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+308	toil.par	Fishing 释放	海浪	0	0	-1	-1	0	1	0	-1
+309	toilh.par	Salvage sunken ship	Sea Wave	0	0	-1	-1	0	1	0	-1
+310	iron.par	Unleash Salvage Persists	Sea Wave	0	0	-1	-1	0	1	0	-1
+311	01050038.par	守护天使释放	Sea Wave	0	0	10	-1	0	1	0	-1
+312	01050041.par	Goddess 思念体释放	海浪	0	0	-1	-1	0	1	0	-1
+313	01050042.par	Goddess 思念体释放	海浪	0	0	-1	-1	0	1	0	-1
+314	01050045.par	Goddess 思念体命中	海浪	0	0	-2	-1	0	1	0	-1
+315	cannon04.par	普通炮弹2	Sea Wave	0	0	-1	-1	0	1	0	-1
+316	cannon02.par	普通炮弹1	Sea Wave	0	0	-1	-1	0	1	0	-1
+317	cxsw1.par	死亡嘲笑释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+318	cxsw2.par	死亡嘲笑命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+319	cxsw3.par	死亡嘲笑持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+320	xn.par	血怒释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+321	xncx.par	血怒持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+322	xnjz.par	血怒命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+323	nbjz.par	Mud Hit Rate	Sea Wave	0	0	-1	-1	0	1	0	-1
+324	nbcx.par	泥巴持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+325	dzsf.par	地震释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+326	dzmz.par	地震命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+327	bwsf.par	冰吻释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+328	bwsj.par	冰吻受击	Sea Wave	0	0	-1	-1	0	1	0	-1
+329	bwcx.par	冰吻持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+330	frsf.par	风刃释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+331	frsfb.par	风刃释放b	Sea Wave	0	0	-1	-1	0	1	0	-1
+332	frsj.par	Wind Blade Attack	Sea Wave	0	0	-1	-1	0	1	0	-1
+333	mosterlight.par	巨人首领刀光	Sea Wave	0	0	-1	-1	0	1	0	-1
+334	stars.par	Hairstyling successful	Sea Wave	0	0	-1	-1	0	1	0	-1
+335	starsb.par	Hairstyling failed	Sea Wave	0	0	-1	-1	0	1	0	-1
+336	cfsf.par	Taunt 释放	海浪	0	0	-1	-1	0	1	0	-1
+337	cfsj.par	Taunt Attack	Sea Wave	0	0	-1	-1	0	1	0	-1
+338	pxsf.par	Roar 释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+339	sgfire.par	上古BOSS绿火释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+340	sgbjg.par	Ancient BOSS Laser Attack Persists	Sea Wave	0	0	-1	-1	0	1	0	-1
+341	sgfiremz.par	上古BOSS绿火命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+342	pkkp.par	PK炮塔开炮	Sea Wave	0	0	-1	-1	0	1	0	-1
+343	mfbda.par	魔法暴动持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+344	mfbdb.par	魔法暴动释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+345	jlcg.par	Forging successful	Sea Wave	0	0	-1	-1	0	1	0	-1
+346	jlsb.par	Forging failed	Sea Wave	0	0	-1	-1	0	1	0	-1
+347	corpse.par	Corpse Attack	Sea Wave	0	0	-2	-1	0	1	0	-1
+348	corpse2jq.par	僵尸攻击聚气	Sea Wave	0	0	-1	-1	0	1	0	-1
+349	corpse2.par	Corpse Attack Persists	Sea Wave	0	0	-1	-1	0	1	0	-1
+350	hdrmf.par	狐道士魔法释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+351	hdrmffx.par	狐道士魔法飞行	Sea Wave	0	0	-1	-1	0	1	0	-1
+352	hymf.par	狐妖魔法释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+353	hymffx.par	狐妖魔法飞行	Sea Wave	0	0	-1	-1	0	1	0	-1
+354	ilui.par	i	Sea Wave	0	0	-1	-1	0	1	0	-1
+355	ilul.par	love	Sea Wave	0	0	-1	-1	0	1	0	-1
+356	iluu.par	u	Sea Wave	0	0	-1	-1	0	1	0	-1
+357	iluwo.par	Me	Sea Wave	0	0	-1	-1	0	1	0	-1
+358	iluai.par	Love	Sea Wave	0	0	-1	-1	0	1	0	-1
+359	iluni.par	你	Sea Wave	0	0	-1	-1	0	1	0	-1
+360	denglong.par	Lantern	Sea Wave	0	0	-1	-1	0	1	0	-1
+361	yanhua.par	Firework a1	Sea Wave	0	0	-1	-1	0	1	0	-1
+362	yanhuaa.par	Firework a2	Sea Wave	0	0	-1	-1	0	1	0	-1
+363	yanhuae.par	Firework a3	Sea Wave	0	0	-1	-1	0	1	0	-1
+364	yanhuared.par	Firework b1	Sea Wave	0	0	-1	-1	0	1	0	-1
+365	yanhuaared.par	Firework b2	Sea Wave	0	0	-1	-1	0	1	0	-1
+366	yanhuaered.par	Firework b3	Sea Wave	0	0	-1	-1	0	1	0	-1
+367	yanhuablue.par	Firework c1	Sea Wave	0	0	-1	-1	0	1	0	-1
+368	yanhuaablue.par	Firework c2	Sea Wave	0	0	-1	-1	0	1	0	-1
+369	yanhuaeblue.par	Firework c3	Sea Wave	0	0	-1	-1	0	1	0	-1
+370	ilu.par	Love you so	Sea Wave	0	0	-1	-1	0	1	0	-1
+371	mh.par	Fascinate	海浪	0	0	-1	-1	0	1	0	-1
+372	hxsf.par	狐仙魔法释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+373	hxhl.par	狐仙葫芦释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+374	tt.par	图腾攻击释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+375	qzmf.par	Sachem's Witchcraft	Sea Wave	0	0	-1	-1	0	1	0	-1
+376	icedragonhit01.par	冰龙1受击	Sea Wave	0	0	-1	-1	0	1	0	-1
+377	icedragonhit02.par	冰龙2受击	Sea Wave	0	0	-1	-1	0	1	0	-1
+378	xr2.par	蟹绒持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+379	kj.par	Black Dragon Terror	Sea Wave	0	0	-1	-1	0	1	0	-1
+380	bhsd.par	冰河时代	Sea Wave	0	0	-1	-1	0	1	0	-1
+381	hlsw.par	狐狸死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+382	hfjd.par	基地红死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+383	lfjd.par	Blue Base Destroyed	Sea Wave	0	0	6	-1	0	1	0	-1
+384	pkpt.par	PK炮台红死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+385	pkptb.par	PK炮台蓝死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+386	zp.par	帐篷红死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+387	zpb.par	帐篷蓝死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+388	xmb.par	小卖部红死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+389	xmbb.par	小卖部蓝死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+390	slbz.par	Water Mine Explosion	Sea Wave	0	0	6	-1	0	1	0	-1
+391	ptbz.par	炮台死亡	Sea Wave	0	0	6	-1	0	1	0	-1
+392	01050021.par	Blacksmith Mars	Sea Wave	0	0	6	-1	0	1	0	-1
+393	01060003.par	小冰龙死亡	Sea Wave	0	0	-1	-1	0	1	0	-1
+394	01060004.par	守卫死亡	Sea Wave	0	0	-1	-1	0	1	0	-1
+395	01060002.par	冰龙死亡	Sea Wave	0	0	-1	-1	0	1	0	-1
+396	01060005.par	Carnivore Flower	Sea Wave	0	0	-1	-1	0	1	0	-1
+397	01060001.par	火灵	Sea Wave	0	0	-1	-1	0	1	0	-1
+398	ghost.par	npc死亡	Sea Wave	0	0	-1	-1	0	1	0	-1
+399	born.par	npc出生	Sea Wave	0	0	-1	-1	0	1	0	-1
+400	03000001.par	Thundorian Staff	Sea Wave	3	0	4	-1	0	0	0	-1
+401	03000002.par	Staff of Life	Sea Wave	3	0	4	-1	0	0	0	-1
+402	03000003.par	Magical Staff	Sea Wave	3	0	4	-1	0	0	0	-1
+403	redstone01.par	红宝石1	Sea Wave	3	0	4,5	-1	0	0	0	-1
+404	redstone02.par	红宝石2	Sea Wave	3	0	4	-1	0	0	0	-1
+405	redstone03.par	红宝石3	Sea Wave	3	0	4	-1	0	0	0	-1
+406	bluestone01.par	蓝宝石1	Sea Wave	3	0	4,5	-1	0	0	0	-1
+407	bluestone02.par	蓝宝石2	Sea Wave	3	0	4	-1	0	0	0	-1
+408	bluestone03.par	Sapphire 3	Sea Wave	3	0	4	-1	0	0	0	-1
+409	yellowstone01.par	黄宝石1	Sea Wave	3	0	4,5	-1	0	0	0	-1
+410	yellowstone02.par	黄宝石2	Sea Wave	3	0	4	-1	0	0	0	-1
+411	yellowstone03.par	黄宝石3	Sea Wave	3	0	4	-1	0	0	0	-1
+412	refinestone.par	Refining Gem	Sea Wave	3	0	4	-1	0	0	0	-1
+450	01050009.par	机器人黑烟	Sea Wave	1	0	16,17	-1	0	0	0	-1
+451	01050006.par	半兽人烟	Sea Wave	1	0	5	-1	0	0	0	-1
+452	01050001.par	Humpy Camel Dust	Sea Wave	1	0	4,5	-1	0	0	0	-1
+453	01050001.par	沙骑兵尘	Sea Wave	1	0	5,6	-1	0	0	0	-1
+454	01050007.par	Naiad	海浪	1	0	1	-1	0	0	0	-1
+455	01050010.par	千年女尸	Sea Wave	1	0	6,9	-1	0	0	0	-1
+456	01050005.par	南瓜人火	Sea Wave	1	0	7,8	-1	0	0	0	-1
+457	01050005_1.par	南瓜人火	Sea Wave	1	0	10	-1	0	0	0	-1
+458	01050003.par	诅咒木尸	Sea Wave	1	0	6	0	0	0	0	-1
+459	01050001.par	Sand Bandit	Sea Wave	1	0	4,5	-1	0	0	0	-1
+460	01050011.par	Octopus	Sea Wave	1	0	2	-1	0	0	0	-1
+461	01050012.par	Kingfisher	Sea Wave	1	0	2	-1	0	0	0	-1
+462	01050013.par	火灵	Sea Wave	1	0	10	-1	0	0	0	-1
+463	01050014.par	Mystic Shrub	Sea Wave	1	0	0	-1	0	0	0	-1
+464	01050016.par	法王火球	Sea Wave	1	0	4,5,17,9	-1	0	0	0	-1
+465	01050017.par	Icy Dragon	Sea Wave	1	0	1,2,3,4,6,7,9	-1	0	0	0	-1
+466	01050019.par	鼹鼠灯光	Sea Wave	1	0	10	-1	0	0	0	-1
+467	01050015.par	Mystic Flower	Sea Wave	1	0	0	-1	0	0	0	-1
+468	zone.par	zone	Sea Wave	0	0	0	-1	0	0	0	-1
+469	01050020.par	Silly Crab Soldier	Sea Wave	1	0	0	-1	0	0	0	-1
+470	01050018.par	Baby Icy Dragon	Sea Wave	1	0	1,2,3	-1	0	0	0	-1
+471	01050031.par	阿努比斯	Sea Wave	1	0	10	-1	0	0	0	-1
+472	01050029.par	Nightmare	Sea Wave	1	0	5,8,12,15,4,7,16,17	-1	0	0	0	-1
+473	01050022.par	Snowy Mystic Shrub	Sea Wave	1	0	0	-1	0	0	0	-1
+474	01050023.par	橙色精灵草	Sea Wave	1	0	0	-1	0	0	0	-1
+475	01050024.par	Red Mystic Shrub	Sea Wave	1	0	0	-1	0	0	0	-1
+476	01050025.par	Dry Mystic Shrub	Sea Wave	1	0	0	-1	0	0	0	-1
+477	01050026.par	Blue Mystic Shrub	Sea Wave	1	0	0	-1	0	0	0	-1
+478	01050027.par	紫色精灵草	Sea Wave	1	0	0	-1	0	0	0	-1
+479	01050028.par	Ancient Mystic Shrub	Sea Wave	1	0	0	-1	0	0	0	-1
+480	shuimu01.par	Tempest Sea Jelly	Sea Wave	1	0	1	-1	0	0	0	-1
+481	shuimu02.par	Electric Sea Jelly	Sea Wave	1	0	1	-1	0	0	0	-1
+482	01050030.par	Shadow Hunter	Sea Wave	1	0	4,5	-1	0	0	0	-1
+483	01050032.par	Man-Eating Spider	Sea Wave	1	0	4	-1	0	0	0	-1
+484	01050035.par	Snow Lady	Sea Wave	1	0	3	-1	0	0	0	-1
+485	01050033.par	Snow Lady	Sea Wave	1	0	0	-1	0	0	0	-1
+486	01050034.par	南瓜将军	Sea Wave	1	0	4	-1	0	0	0	-1
+487	01050034.par	泥浆怪	Sea Wave	1	0	7,8	-1	0	0	0	-1
+488	01050036.par	Guardian Angel	Sea Wave	1	0	-1	-1	0	0	0	-1
+489	01050037.par	Lubi Terror	Sea Wave	1	0	13	-1	0	0	0	-1
+490	01050043.par	Soul of Goddess	Sea Wave	1	0	-1	-1	0	0	0	-1
+491	shiphurt01.par	船只HP不足1	Sea Wave	1	0	4	-1	0	0	0	-1
+492	shiphurt02.par	船只HP不足2	Sea Wave	1	0	4	-1	0	0	0	-1
+493	shiphurt03.par	船只HP不足3	Sea Wave	1	0	4	-1	0	0	0	-1
+494	seazone.par	海上传送门	Sea Wave	0	0	4	-1	0	0	0	-1
+495	pkhp1.par	PK建筑HP不足1	Sea Wave	1	0	1	-1	0	0	0	-1
+496	pkhp2.par	PK建筑HP不足2	Sea Wave	1	0	1	-1	0	0	0	-1
+497	pkhp3.par	PK建筑HP不足3	Sea Wave	1	0	1	-1	0	0	0	-1
+498	vipwings01.par	Dark Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+499	vipwings02.par	Dark Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+500	vipwings03.par	Dark Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+501	anwing1.par	Angel Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+502	anwing2.par	Angel Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+503	anwing3.par	Angel Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+504	rozen.par	Rose	Sea Wave	1	0	25	-1	0	0	0	-1
+505	elf.par	光之精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+506	ballelf.par	黄色球精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+507	ballelf2.par	绿色球精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+508	elfgreen.par	绿精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+509	elfgreen2.par	红精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+510	xdelf.par	咸蛋绿精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+511	xdelf2.par	咸蛋兰精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+512	eggelf.par	包菜绿精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+513	eggelf2.par	黄包菜精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+514	gelf.par	幽灵精灵	Sea Wave	1	0	-1	-1	0	0	0	-1
+515	gelf2.par	幽灵精灵2	Sea Wave	1	0	-1	-1	0	0	0	-1
+516	zzshjl1.par	鹦鹉精灵1	Sea Wave	1	0	-1	-1	0	0	0	-1
+517	zzshjl2.par	鹦鹉精灵2	Sea Wave	1	0	-1	-1	0	0	0	-1
+518	fjlxiao.par	Tiny Fairy	Sea Wave	1	0	0	-1	3	0	0	-1
+519	ejl1.par	Note 2	Sea Wave	1	0	0	-1	3	0	0	-1
+520	ejl2.par	Brute Strength	Sea Wave	1	0	0	-1	3	0	0	-1
+521	ejl3.par	Vampiric 	Sea Wave	1	0	0	-1	3	0	0	-1
+522	ejl4.par	Retaliate	Sea Wave	1	0	0	-1	3	0	0	-1
+523	ejl5.par	Thorns	Sea Wave	1	0	0	-1	3	0	0	-1
+524	ejl6.par	Break Armor	Sea Wave	1	0	0	-1	3	0	0	-1
+525	ejl7.par	ward off blows	Sea Wave	1	0	0	-1	3	0	0	-1
+526	fjlxiao1.par	Mini Fairy 2	Sea Wave	1	0	0	-1	3	0	0	-1
+527	futi1.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+528	futi2.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+529	futi3.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+530	futi4.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+531	futi5.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+532	futi6.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+533	futi7.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+534	futi8.par	New Fairy Effect	Sea Wave	1	0	0	-1	3	0	0	-1
+535	ragetest.par	Shadow Hoop	Sea Wave	0	0	0	-1	0	1	0	-1
+536	zhizhen.par	Shadow Needle	Sea Wave	0	0	0	-1	0	1	0	-1
+537	chigirl1a.par	Rebirth Phyllis 	Sea Wave	1	0	24	-1	0	0	0	-1
+538	chigirl1b.par	?????2	Sea Wave	1	0	24	-1	0	0	0	-1
+539	chigirl1c.par	Rebirth Phyllis 	Sea Wave	1	0	24	-1	0	0	0	-1
+540	chigirl2a.par	Rebirth Ami 1	Sea Wave	1	0	24	-1	0	0	0	-1
+541	chigirl2b.par	Rebirth Ami 2	Sea Wave	1	0	24	-1	0	0	0	-1
+542	chigirl2c.par	Rebirth Ami 3	Sea Wave	1	0	24	-1	0	0	0	-1
+543	chiman1a.par	Reborn Lance 1	Sea Wave	1	0	24	-1	0	0	0	-1
+544	chiman1b.par	Rebirth Lance 2	Sea Wave	1	0	24	-1	0	0	0	-1
+545	chiman1c.par	Rebirth Lance 3	Sea Wave	1	0	24	-1	0	0	0	-1
+546	chiman2a.par	Rebirth Carsise 	Sea Wave	1	0	24	-1	0	0	0	-1
+547	chiman2b.par	Rebirth Carsise 	Sea Wave	1	0	24	-1	0	0	0	-1
+548	chiman2c.par	Rebirth Carsise 	Sea Wave	1	0	24	-1	0	0	0	-1
+549	hlcb.par	Black Dragon Wre	Sea Wave	1	0	24	-1	0	0	0	-1
+550	chcb.par	Rainbow End	Sea Wave	1	0	24	-1	0	0	0	-1
+551	hl_crab.par	??戒??????	Sea Wave	1	0	24	-1	0	0	0	-1
+552	elfbm1.par	Brute Strength	Sea Wave	1	0	0	-1	0	0	0	-1
+553	elfbm2.par	Brute Strength	Sea Wave	1	0	0	-1	0	0	0	-1
+564	mct.par	??????	Sea Wave	0	0	0	-1	0	1	0	-1
+565	hny.par	???????	Sea Wave	0	0	0	-1	0	1	0	-1
+566	sdlr.par	??????????	Sea Wave	0	0	0	-1	0	1	0	-1
+567	lulu.par	??????	Sea Wave	0	0	0	-1	0	1	0	-1
+568	wazi.par	0	Sea Wave	0	0	0	-1	0	1	0	-1
+569	xrsw.par	?????	Sea Wave	0	0	0	-1	0	1	0	-1
+570	sds.par	?????????	Sea Wave	0	0	0	-1	0	1	0	-1
+571	xsds.par	妊?????????	Sea Wave	0	0	0	-1	0	1	0	-1
+572	fyyf.par	85BB????????完	Sea Wave	0	0	0	-1	0	1	0	-1
+573	hhyf.par	85BB?????????完	Sea Wave	0	0	0	-1	0	1	0	-1
+574	jjyf.par	85BB????????完	Sea Wave	0	0	0	-1	0	1	0	-1
+575	lryf.par	85BB?????????完	Sea Wave	0	0	0	-1	0	1	0	-1
+576	sjyf.par	85BB????????完	Sea Wave	0	0	0	-1	0	1	0	-1
+577	szyf.par	85BB???????完	Sea Wave	0	0	0	-1	0	1	0	-1
+578	xzdll.par	???快?????	Sea Wave	0	0	0	-1	0	1	0	-1
+579	huota.par	????	Sea Wave	0	0	0	-1	0	1	0	-1
+580	huoju.par	???	Sea Wave	0	0	0	-1	0	1	0	-1
+581	anwing4.par	???g?x?????(???	Sea Wave	0	0	0	-1	0	1	0	-1
+582	anwing5.par	I Love HK?????	Sea Wave	0	0	0	-1	0	1	0	-1
+583	lianhua.par	95bb??????	Sea Wave	0	0	0	-1	0	1	0	-1
+584	zhaohuan.par	???	Sea Wave	0	0	0	-1	0	1	0	-1
+585	fzr.par	?????	Sea Wave	0	0	0	-1	0	1	0	-1
+586	huoqius2.par	????????	Sea Wave	0	0	0	-1	0	1	0	-1
+587	huoqiuf2.par	?????	Sea Wave	0	0	0	-1	0	1	0	-1
+588	bingqius.par	????????	Sea Wave	0	0	0	-1	0	1	0	-1
+589	bingqiuf.par	?????	Sea Wave	0	0	0	-1	0	1	0	-1
+590	fzrmz.par	?????????	Sea Wave	0	0	0	-1	0	1	0	-1
+591	ttdan.par	???籯	Sea Wave	1	0	0	-1	0	0	0	-1
+592	qingbao.par	Information Bank	Sea Wave	0	0	0	-1	0	1	0	-1
+593	baiyang.par	????	Sea Wave	1	0	0	-1	3	0	0	-1
+594	jinniu.par	?????	Sea Wave	1	0	0	-1	3	0	0	-1
+595	shuangzi.par	?????	Sea Wave	1	0	0	-1	3	0	0	-1
+596	juxie.par	??戒??	Sea Wave	1	0	0	-1	3	0	0	-1
+597	shizi.par	???	Sea Wave	1	0	0	-1	3	0	0	-1
+598	chunv.par	???	Sea Wave	1	0	0	-1	3	0	0	-1
+599	tianping.par	???	Sea Wave	1	0	0	-1	3	0	0	-1
+600	tianxie.par	??局	Sea Wave	1	0	0	-1	3	0	0	-1
+601	sheshou.par	????	Sea Wave	1	0	0	-1	3	0	0	-1
+602	shanyang.par	???	Sea Wave	1	0	0	-1	3	0	0	-1
+603	shuiping.par	??	Sea Wave	1	0	0	-1	3	0	0	-1
+604	shuangyu.par	???	Sea Wave	1	0	0	-1	3	0	0	-1
+605	nvshen.par	???	Sea Wave	1	0	0	-1	0	1	0	-1
+606	chibangjy.par	0	Sea Wave	1	0	24	-1	0	0	0	-1
+607	flag.par	??????	Sea Wave	1	0	0	-1	0	0	0	-1
+608	xhlgua.par	lua	Sea Wave	1	0	0	-1	3	0	0	-1
+609	fjldiao1.par	Mini Fairy 2	Sea Wave	1	0	0	-1	3	0	0	-1
+610	fjlsiao1.par	Mini Fairy 2	Sea Wave	1	0	0	-1	3	0	0	-1
+611	fjlxia01.par	Mini Fairy 2	Sea Wave	1	0	0	-1	3	0	0	-1
+612	fjlyiao1.par	Mini Fairy 2	Sea Wave	1	0	0	-1	3	0	0	-1
+613	fjlaiao1.par	Mini Fairy 2	Sea Wave	1	0	0	-1	3	0	0	-1
+614	rhlgua.par	lua	Sea Wave	1	0	0	-1	3	0	0	-1
+615	angellts.par	Angel Wing 2	Sea Wave	1	0	24	-1	0	1	0	-1
+616	angeldlts.par	Angel Wing 3	Sea Wave	1	0	24	-1	0	1	0	-1
+617	angelqts.par	Angel Wing 4	Sea Wave	1	0	24	-1	0	1	0	-1
+618	angelzts.par	Angel Wing 5	Sea Wave	0	0	24	-1	0	1	0	-1
+619	angelzzts.par	Angel Wing 6	Sea Wave	1	0	24	-1	0	1	0	-1
+620	anwing3b.par	Angel Wing 7	Sea Wave	1	0	24	-1	0	1	0	-1
+621	anwing3r.par	Angel Wing 8	Sea Wave	1	0	24	-1	0	1	0	-1
+622	ilcb.par	Red Dragon Wre	Sea Wave	1	0	24	-1	0	0	0	-1
+623	jlcb.par	Blue Dragon Wre	Sea Wave	1	0	24	-1	0	0	0	-1
+624	klcb.par	Green Dragon Wre	Sea Wave	1	0	24	-1	0	0	0	-1
+625	llcb.par	Purple Dragon Wr	Sea Wave	1	0	24	-1	0	0	0	-1
+626	mlcb.par	Cyan Dragon Wre	Sea Wave	1	0	24	-1	0	0	0	-1
+627	ispkmod.par	PK Mode	Sea Wave	0	0	0	-1	0	1	0	-1
+800	icedragonready01.par	Frost Breath	Sea Wave	1	0	1	-1	0	1	0	-1
+801	icedragonready02.par	冰龙扇形冷气攻击	Sea Wave	1	0	1	-1	0	1	0	-1
+802	sd.par	木尸法王尸毒	Sea Wave	1	0	1	-1	0	1	0	-1
+803	lx.par	Black Dragon Breath	Sea Wave	1	0	1	-1	0	1	0	-1
+804	ly.par	Black Dragon Flight	Sea Wave	1	0	1	-1	0	1	0	-1
+805	xzsb1.par	机械巨兵1	Sea Wave	1	0	-1	-1	0	1	0	-1
+806	xzsb2.par	机械巨兵2	Sea Wave	1	0	-1	-1	0	1	0	-1
+807	mhcx.par	魅惑持续	Sea Wave	0	0	-1	-1	0	1	0	-1
+808	hld.par	龙明	Sea Wave	0	0	-1	-1	0	1	0	-1
+809	sun.par	太阳表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+810	cloud.par	阴天表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+811	snowface.par	雪表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+812	starface.par	星表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+813	rain.par	雨表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+814	cnsun.par	多云表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+815	kulouface.par	骷髅表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+816	caihong.par	彩虹表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+817	angelface.par	天使表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+818	devilface.par	恶魔表情	Sea Wave	0	0	-1	-1	0	1	0	-1
+881	bdicess.par	小黑龙虎啸释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+882	bdiceaa.par	小黑龙虎啸命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+883	bdlightss.par	小黑龙雷击释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+885	bdlightaa.par	小黑龙雷击命中	Sea Wave	0	0	-1	-1	2	1	0	-1
+886	bdwindss.par	小黑龙幻影斩释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+887	bdlightaft.par	小黑龙雷击持续	Sea Wave	0	0	-1	-1	1	1	0	-1
+888	bdwindaa.par	小黑龙幻影斩命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+889	zzfbfs.par	黑龙炎球释放	Sea Wave	0	0	-1	-1	0	1	0	-1
+891	zzfbfa.par	黑龙炎球命中	Sea Wave	0	0	-1	-1	0	1	0	-1
+892	zzfbfat.par	黑龙炎球地面	Sea Wave	0	0	-1	-1	0	1	0	-1
+893	bdsummon.par	黑龙召唤	Sea Wave	0	0	-1	-1	1	1	0	-1
+894	bdiceaft.par	小黑龙虎啸持续	Sea Wave	0	0	-1	-1	1	1	0	-1
+895	aoyunhuoju.par	Flame	Sea Wave	0	0	0	-1	0	0	0	-1
+900	fcansmoke2.par	Magma Bullet Per	Sea Wave	0	0	0	-1	0	1	0	-1
+901	fshock1.par	Roquet Discharge	Sea Wave	0	0	0	-1	0	1	0	-1
+902	fshocka1.par	Roquet hit rate	Sea Wave	0	0	0	-1	0	1	0	-1
+903	flaserss.par	Laser Beam Disch	Sea Wave	0	0	0	-1	0	1	0	-1
+904	flaseraa.par	Laser Beam hit r	Sea Wave	0	0	0	-1	0	1	0	-1
+905	fguns1.par	Firegun Discharg	Sea Wave	0	0	0	-1	0	1	0	-1
+906	fsummon.par	Summon Discharge	Sea Wave	0	0	0	-1	0	1	0	-1
+907	fblowupaa.par	Ranged Blast Hit	Sea Wave	0	0	0	-1	0	1	0	-1
+908	fsmokeaa.par	Cloud Attack hit	Sea Wave	0	0	0	-1	0	1	0	-1
+909	fgunaa.par	Firegun Hit Rate	Sea Wave	0	0	0	-1	0	1	0	-1
+910	fboness.par	Encumbered Skele	Sea Wave	0	0	0	-1	0	1	0	-1
+911	fflashss.par	Soul Displacemen	Sea Wave	0	0	0	-1	0	1	0	-1
+912	fshieldss.par	Skeletar Shieldi	Sea Wave	0	0	-1	-1	0	1	0	-1
+913	fslashss.par	Slice	Sea Wave	0	0	0	-1	0	1	0	-1
+914	fbellowss.par	Roar	Sea Wave	0	0	0	-1	0	1	0	-1
+915	fjestss.par	Shriek	Sea Wave	0	0	0	-1	0	1	0	-1
+916	fbloodaa.par	Cursed Blood hit	Sea Wave	0	0	0	-1	0	1	0	-1
+917	fmoonss.par	Moonlight Recove	Sea Wave	0	0	0	-1	0	1	0	-1
+918	fspireaa.par	Vortex	Sea Wave	0	0	0	-1	0	1	0	-1
+919	fboomerff.par	Bomb Throwing hi	Sea Wave	0	0	0	-1	0	1	0	-1
+920	fbloodhh.par	Cursed Blood Per	Sea Wave	0	0	0	-1	0	1	0	-1
+921	fbonehh.par	Skeletar Binding	Sea Wave	0	0	0	-1	0	1	0	-1
+922	fspeedhh.par	Acceleration Per	Sea Wave	0	0	0	-1	0	1	0	-1
+923	fdeathaa.par	Evil Attack Hit 	Sea Wave	0	0	0	-1	0	1	0	-1
+924	fwateraa.par	Water Arrow hit 	Sea Wave	0	0	0	-1	0	1	0	-1
+925	fbloodss.par	Cursed Blood Dis	Sea Wave	0	0	0	-1	0	1	0	-1
+926	fjesthh.par	Shriek Persists	Sea Wave	0	0	0	-1	0	1	0	-1
+927	bloods.par	Bloodied Shoes	Sea Wave	0	0	0	-1	0	1	0	-1
+928	snball.par	Little Snow Ball	Sea Wave	0	0	0	-1	0	1	0	-1
+929	ximota.par	Devil strike	Sea Wave	0	0	0	-1	0	1	0	-1
+930	shzhan.par	Navy Guardian st	Sea Wave	0	0	0	-1	0	1	0	-1
+931	hdzhan.par	Pirate Guardian 	Sea Wave	0	0	0	-1	0	1	0	-1
+932	shihua.par	Harden strike	Sea Wave	0	0	0	-1	0	1	0	-1
+933	shihuaf.par	Harden discharge	Sea Wave	0	0	0	-1	0	1	0	-1
+934	cangying.par	Insect Swarm	Sea Wave	0	0	0	-1	0	1	0	-1
+935	shensheng.par	Holy Judgement	Sea Wave	0	0	0	-1	0	1	0	-1
+936	youling.par	Rear Fairy	Sea Wave	0	0	0	-1	0	1	0	-1
+937	laji.par	Will Power	Sea Wave	0	0	0	-1	0	1	0	-1
+938	bsj.par	Beast Legion Sma	Sea Wave	0	0	0	-1	0	1	0	-1
+939	wyzhan.par	Ethereal Slash	Sea Wave	0	0	0	-1	0	1	0	-1
+940	hamhamha.par	HamiHamiHa	Sea Wave	0	0	0	-1	0	1	0	-1
+941	shzhanfs.par	Navy Slash	Sea Wave	0	0	0	-1	0	1	0	-1
+942	hdzhanfs.par	Pirate Slash	Sea Wave	0	0	0	-1	0	1	0	-1
+943	binghuans.par	Ice persists	Sea Wave	0	0	0	-1	0	1	0	-1
+945	eidolon1.par	Thunder Class S	Sea Wave	1	0	0	-1	0	0	0	-1
+947	eidolon2.par	Light Class Spi	Sea Wave	1	0	0	-1	0	0	0	-1
+948	eidolon3.par	Darkness Class	Sea Wave	1	0	0	-1	0	0	0	-1
+952	01020045.par	Eff 2	Sea Wave	1	0	1	-1	0	0	0	-1
+953	01020046.par	Eff 5	Sea Wave	1	0	1	-1	0	0	0	-1
+954	01020047.par	Eff 7	Sea Wave	1	0	1	-1	0	0	0	-1
+955	01020048.par	Eff 10	Sea Wave	1	0	1	-1	0	0	0	-1
+956	4100_2.par	lv1 cap glow lan	Sea Wave	1	0	1	-1	0	0	0	-1
+957	4103_2.par	lv1 cap glow car	Sea Wave	1	0	1	-1	0	0	0	-1
+958	4106_2.par	lv1 cap glow phy	Sea Wave	1	0	1	-1	0	0	0	-1
+959	4109_2.par	lv1 cap glow ami	Sea Wave	1	0	1	-1	0	0	0	-1
+960	anwing3-m1.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+961	anwing3-m2.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+962	hlcb_m1.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+963	chcb_m1.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+964	chcb_m2.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+965	chcb_m3.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+966	chcb_m4.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+967	chcb_m5.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+968	hlcb_m2.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+969	hlcb_m3.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+970	hlcb_m4.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+971	hlcb_m5.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+972	hlcb_m6.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+973	hlcb_m7.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+974	hlcb_m8.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+975	anwing2-m1.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+976	hlcb_m9.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+977	vipwings02_m1.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+978	vipwings03_m1.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+979	vipwings03_m2.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+980	chibangjy2.par	王者之翼	Sea Wave	1	0	24	-1	0	0	0	-1
+981	chibangjy3.par	王者之翼	Sea Wave	1	0	24	-1	0	0	0	-1
+982	vipwings03_m3.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+983	vipwings03_m4.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+984	chcb_m6.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+985	chcb_m7.par	PKO Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+986	pettor01.par	Fairy Skin 001	Sea Wave	1	0	-1	-1	3	0	0	-1
+987	pettor02.par	Fairy Skin 002	Sea Wave	1	0	-1	-1	3	0	0	-1
+988	pettor03.par	Fairy Skin 003	Sea Wave	1	0	-1	-1	3	0	0	-1
+989	pettor04.par	Fairy Skin 004	Sea Wave	1	0	-1	-1	3	0	0	-1
+990	pettor05.par	Fairy Skin 005	Sea Wave	1	0	-1	-1	3	0	0	-1
+991	pettor06.par	Fairy Skin 006	Sea Wave	1	0	-1	-1	3	0	0	-1
+992	pettor07.par	Fairy Skin 007	Sea Wave	1	0	-1	-1	3	0	0	-1
+993	pettor08.par	Fairy Skin 008	Sea Wave	1	0	-1	-1	3	0	0	-1
+994	pettor09.par	Fairy Skin 009	Sea Wave	1	0	-1	-1	3	0	0	-1
+995	pettor10.par	Fairy Skin 010	Sea Wave	1	0	-1	-1	3	0	0	-1
+996	pettor11.par	Fairy Skin 011	Sea Wave	1	0	-1	-1	3	0	0	-1
+997	pettor12.par	Fairy Skin 012	Sea Wave	1	0	-1	-1	3	0	0	-1
+998	fjldiao1.par	Fairy BabyCat	Sea Wave	1	0	0	-1	3	0	0	-1
+999	fjlsiao1.par	Fairy HamBurger	Sea Wave	1	0	0	-1	3	0	0	-1
+1000	fjlxia01.par	Fairy Witch Spirit	Sea Wave	1	0	0	-1	3	0	0	-1
+1001	fjlyiao1.par	Fairy Green Mjr	Sea Wave	1	0	-1	-1	3	0	0	-1
+1002	fjlaiao1.par	Fairy Pink Mjr	Sea Wave	1	0	-1	-1	3	0	0	-1
+1003	rhlgua.par	Fairy Red Dragon	Sea Wave	1	0	0	-1	3	0.0	0.0	-1.0
+1004	fjl802.par	August Fairy 1	Sea Wave	0	0	-1	-1	0	1	0	-1
+1005	fjl803.par	August Fairy 2	Sea Wave	0	0	-1	-1	0	1	0	-1
+1006	fjl804.par	August Fairy 3	Sea Wave	0	0	-1	-1	0	1	0	-1
+			
+3000	jf004.par	法杖增益头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3001	jf003.par	法杖增益头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3002	jf002.par	法杖增益头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3003	jf001.par	法杖增益头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3010	jf000.par	法杖增益环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3011	jf000.par	法杖增益环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3012	jf000.par	法杖增益环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3013	jf006.par	法杖增益环有	Sea Wave	1	0	1	-1	0	0	0	-1
+3020	jf000.par	法杖增益身体空	Sea Wave	1	0	1	-1	0	0	0	-1
+3021	jf005.par	法杖增益身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3022	jf005.par	法杖增益身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3023	jf005.par	法杖增益身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3030	jb01.par	巨剑攻击1	Sea Wave	1	0	1	-1	0	0	0	-1
+3031	jb02.par	巨剑攻击2	Sea Wave	1	0	1	-1	0	0	0	-1
+3032	jb03.par	巨剑攻击3	Sea Wave	1	0	1	-1	0	0	0	-1
+3033	jb04.par	巨剑攻击4	Sea Wave	1	0	1	-1	0	0	0	-1
+3040	jj01.par	单手剑攻击1	Sea Wave	1	0	1	-1	0	0	0	-1
+3041	jj02.par	Single-handed Sword Attack 2	Sea Wave	1	0	1	-1	0	0	0	-1
+3042	jj03.par	单手剑Attack 3	Sea Wave	1	0	1	-1	0	0	0	-1
+3043	jj04.par	单手剑攻击4	Sea Wave	1	0	1	-1	0	0	0	-1
+3050	js01.par	匕首攻击1	Sea Wave	1	0	1	-1	0	0	0	-1
+3051	js02.par	匕首攻击2	Sea Wave	1	0	1	-1	0	0	0	-1
+3052	js03.par	匕首攻击3	Sea Wave	1	0	1	-1	0	0	0	-1
+3053	js04.par	匕首攻击4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3060	jg01.par	枪攻击身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3061	jg01.par	枪攻击身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3062	jg02.par	枪攻击身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3063	jg03.par	枪攻击身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3070	jg04.par	枪攻击头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3071	jg05.par	枪攻击头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3072	jg06.par	枪攻击头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3073	jg06.par	枪攻击头4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3080	jfb004.par	法杖防御头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3081	jfb003.par	法杖防御头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3082	jfb002.par	法杖防御头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3083	jfb001.par	法杖防御头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3090	jf000.par	法杖防御环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3091	jf000.par	法杖防御环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3092	jf000.par	法杖防御环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3093	jf006.par	法杖防御环有	Sea Wave	1	0	1	-1	0	0	0	-1
+3100	jf000.par	法杖防御身体空	Sea Wave	1	0	1	-1	0	0	0	-1
+3101	jfb005.par	法杖防御身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3102	jfb005.par	法杖防御身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3103	jfb005.par	法杖防御身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3110	jfr004.par	法杖攻击头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3111	jfr003.par	法杖攻击头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3112	jfr002.par	法杖攻击头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3113	jfr001.par	法杖攻击头4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3120	jf000.par	法杖攻击环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3121	jf000.par	法杖攻击环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3122	jf000.par	法杖攻击环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3123	jf006.par	法杖攻击环有	Sea Wave	1	0	1	-1	0	0	0	-1
+3130	jf000.par	法杖攻击身体空	Sea Wave	1	0	1	-1	0	0	0	-1
+3131	jfr005.par	法杖攻击身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3132	jfr005.par	法杖攻击身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3133	jfr005.par	法杖攻击身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3140	jby01.par	巨剑增益1	Sea Wave	1	0	1	-1	0	0	0	-1
+3141	jby02.par	巨剑增益2	Sea Wave	1	0	1	-1	0	0	0	-1
+3142	jby03.par	巨剑增益3	Sea Wave	1	0	1	-1	0	0	0	-1
+3143	jby04.par	巨剑增益4	Sea Wave	1	0	1	-1	0	0	0	-1
+3150	jjy01.par	单手剑增益1	Sea Wave	1	0	1	-1	0	0	0	-1
+3151	jjy02.par	单手剑增益2	Sea Wave	1	0	1	-1	0	0	0	-1
+3152	jjy03.par	单手剑增益3	Sea Wave	1	0	1	-1	0	0	0	-1
+3153	jjy04.par	单手剑增益4	Sea Wave	1	0	1	-1	0	0	0	-1
+3160	jsy01.par	匕首增益1	Sea Wave	1	0	1	-1	0	0	0	-1
+3161	jsy02.par	匕首增益2	Sea Wave	1	0	1	-1	0	0	0	-1
+3162	jsy03.par	匕首增益3	Sea Wave	1	0	1	-1	0	0	0	-1
+3163	jsy04.par	匕首增益4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3170	jbb01.par	巨剑防御1	Sea Wave	1	0	1	-1	0	0	0	-1
+3171	jbb02.par	巨剑防御2	Sea Wave	1	0	1	-1	0	0	0	-1
+3172	jbb03.par	巨剑防御3	Sea Wave	1	0	1	-1	0	0	0	-1
+3173	jbb04.par	巨剑防御4	Sea Wave	1	0	1	-1	0	0	0	-1
+3180	jjb01.par	单手剑防御1	Sea Wave	1	0	1	-1	0	0	0	-1
+3181	jjb02.par	单手剑防御2	Sea Wave	1	0	1	-1	0	0	0	-1
+3182	jjb03.par	单手剑防御3	Sea Wave	1	0	1	-1	0	0	0	-1
+3183	jjb04.par	单手剑防御4	Sea Wave	1	0	1	-1	0	0	0	-1
+3190	jsb01.par	匕首防御1	Sea Wave	1	0	1	-1	0	0	0	-1
+3191	jsb02.par	匕首防御2	Sea Wave	1	0	1	-1	0	0	0	-1
+3192	jsb03.par	Dagger Defense 3	Sea Wave	1	0	1	-1	0	0	0	-1
+3193	jsb04.par	匕首防御4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3200	jgb01.par	枪防御身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3201	jgb01.par	枪防御身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3202	jgb02.par	枪防御身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3203	jgb03.par	枪防御身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3210	jgb04.par	Gun Head Defense 1	Sea Wave	1	0	1	-1	0	0	0	-1
+3211	jgb05.par	枪防御头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3212	jgb06.par	枪防御头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3213	jgb06.par	枪防御头4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3220	jgy01.par	枪增益身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3221	jgy01.par	枪增益身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3222	jgy02.par	枪增益身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3223	jgy03.par	枪增益身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3230	jgy04.par	Gun Head Bonus 1	Sea Wave	1	0	1	-1	0	0	0	-1
+3231	jgy05.par	枪增益头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3232	jgy06.par	枪增益头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3233	jgy06.par	枪增益头4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3240	jfq02.par	法杖攻防增身体淡	Sea Wave	1	0	1	-1	0	0	0	-1
+3241	jfq03.par	法杖攻防增身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3242	jfq03.par	法杖攻防增身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3243	jfq03.par	法杖攻防增身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3250	jfr004.par	法杖攻防增头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3251	jfr003.par	法杖攻防增头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3252	jfr002.par	法杖攻防增头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3253	jfq01.par	法杖攻防增头4	Sea Wave	1	0	1	-1	0	0	0	-1
+
+3260	jbyb01.par	巨剑增防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3261	jbyb02.par	巨剑增防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3262	jbyb03.par	巨剑增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3263	jbyb04.par	巨剑增防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3270	jjyb01.par	单手剑增防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3271	jjyb02.par	单手剑增防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3272	jjyb03.par	单手剑增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3273	jjyb04.par	单手剑增防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3280	jsyb01.par	匕首增防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3281	jsyb02.par	匕首增防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3282	jsyb03.par	匕首增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3283	jsyb04.par	匕首增防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3290	jbry01.par	巨剑增攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3291	jbry02.par	巨剑增攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3292	jbry03.par	巨剑增攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3293	jbry04.par	巨剑增攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3300	jjry01.par	单手剑增攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3301	jjry02.par	单手剑增攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3302	jjry03.par	单手剑增攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3303	jjry04.par	单手剑增攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3310	jsry01.par	匕首增攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3311	jsry02.par	匕首增攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3312	jsry03.par	匕首增攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3313	jsry04.par	Dagger Bonus Attack 4	Sea Wave	1	0	1	-1	0	0	0	-1
+3320	jbrb01.par	巨剑攻防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3321	jbrb02.par	巨剑攻防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3322	jbrb03.par	巨剑攻防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3323	jbrb04.par	巨剑攻防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3330	jjrb01.par	单手剑攻防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3331	jjrb02.par	Single-handed Sword Parry 2	Sea Wave	1	0	1	-1	0	0	0	-1
+3332	jjrb03.par	单手剑攻防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3333	jjrb04.par	单手剑攻防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3340	jsrb01.par	匕首攻防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3341	jsrb02.par	匕首攻防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3342	jsrb03.par	匕首攻防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3343	jsrb04.par	匕首攻防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3350	jbryb01.par	巨剑攻防增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3351	jbryb02.par	巨剑攻防增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3352	jbryb03.par	巨剑攻防增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3353	jbryb04.par	巨剑攻防增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3360	jjryb01.par	单手剑攻防增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3361	jjryb02.par	单手剑攻防增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3362	jjryb03.par	单手剑攻防增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3363	jjryb04.par	单手剑攻防增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3370	jsryb01.par	匕首攻防增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3371	jsryb02.par	匕首攻防增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3372	jsryb03.par	匕首攻防增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3373	jsryb04.par	匕首攻防增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3380	jgy01.par	枪攻防增身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3381	jgy01.par	枪攻防增身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3382	jgq01.par	枪攻防增身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3383	jgq02.par	枪攻防增身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3390	jg04.par	枪攻防增头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3391	jg05.par	枪攻防增头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3392	jg06.par	枪攻防增头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3393	jg06.par	枪攻防增头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3400	jf000.par	弓攻击身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3401	jar03.par	弓攻击身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3402	jar01.par	弓攻击身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3403	jar01.par	弓攻击身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3410	jf000.par	弓攻击拖尾1	Sea Wave	1	0	1	-1	0	0	0	-1
+3411	jf000.par	弓攻击拖尾2	Sea Wave	1	0	1	-1	0	0	0	-1
+3412	jf000.par	弓攻击拖尾3	Sea Wave	1	0	1	-1	0	0	0	-1
+3413	jar02.par	弓攻击拖尾4	Sea Wave	1	0	1	-1	0	0	0	-1
+3420	jf000.par	弓增益身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3421	jay03.par	弓增益身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3422	jay01.par	弓增益身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3423	jay01.par	弓增益身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3430	jf000.par	弓增益拖尾1	Sea Wave	1	0	1	-1	0	0	0	-1
+3431	jf000.par	弓增益拖尾2	Sea Wave	1	0	1	-1	0	0	0	-1
+3432	jf000.par	弓增益拖尾3	Sea Wave	1	0	1	-1	0	0	0	-1
+3433	jay02.par	弓增益拖尾4	Sea Wave	1	0	1	-1	0	0	0	-1
+3440	jf000.par	弓防御身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3441	jab03.par	弓防御身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3442	jab01.par	弓防御身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3443	jab01.par	弓防御身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3450	jf000.par	弓防御拖尾1	Sea Wave	1	0	1	-1	0	0	0	-1
+3451	jf000.par	弓防御拖尾2	Sea Wave	1	0	1	-1	0	0	0	-1
+3452	jf000.par	弓防御拖尾3	Sea Wave	1	0	1	-1	0	0	0	-1
+3453	jab02.par	弓防御拖尾4	Sea Wave	1	0	1	-1	0	0	0	-1
+3460	jf000.par	弓防御增益身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3461	jay03.par	弓防御增益身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3462	jaby01.par	弓防御增益身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3463	jaby01.par	弓防御增益身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3470	jf000.par	弓防御攻击身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3471	jab03.par	弓防御攻击身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3472	jabr01.par	弓防御攻击身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3473	jabr01.par	弓防御攻击身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3480	jf000.par	弓攻击增益身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3481	jar03.par	Base Bonus of Bow Attack 2	Sea Wave	1	0	1	-1	0	0	0	-1
+3482	jary01.par	弓Attack 增益身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3483	jary01.par	弓攻击增益身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3490	jf000.par	弓攻防增身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3491	jabry03.par	弓攻防增身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3492	jabry01.par	弓攻防增身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3493	jabry01.par	弓攻防增身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3500	jfg004.par	法杖毒头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3501	jfg003.par	法杖毒头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3502	jfg002.par	法杖毒头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3503	jfg001.par	法杖毒头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3510	jf000.par	法杖毒环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3511	jf000.par	法杖毒环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3512	jf000.par	法杖毒环空	Sea Wave	1	0	1	-1	0	0	0	-1
+3513	jf006.par	法杖毒环有	Sea Wave	1	0	1	-1	0	0	0	-1
+3520	jf000.par	法杖毒身体空	Sea Wave	1	0	1	-1	0	0	0	-1
+3521	jfg005.par	Base Resist to Staff Poison	Sea Wave	1	0	1	-1	0	0	0	-1
+3522	jfg005.par	Base Resist to Staff Poison	Sea Wave	1	0	1	-1	0	0	0	-1
+3523	jfg005.par	Base Resist to Staff Poison	Sea Wave	1	0	1	-1	0	0	0	-1
+3530	jgg01.par	枪毒身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3531	jgg01.par	枪毒身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3532	jgg02.par	枪毒身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3533	jgg03.par	枪毒身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3540	jgg04.par	枪毒头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3541	jgg05.par	枪毒头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3542	jgg06.par	枪毒头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3543	jgg06.par	枪毒头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3550	jbrg01.par	巨剑毒攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3551	jbrg02.par	巨剑毒攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3552	jbrg03.par	巨剑毒攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3553	jbrg04.par	巨剑毒攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3560	jjrg01.par	Single-handed Sword Poison Attack 1	Sea Wave	1	0	1	-1	0	0	0	-1
+3561	jjrg02.par	单手剑毒攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3562	jjrg03.par	单手剑毒攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3563	jjrg04.par	单手剑毒攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3570	jsrg01.par	匕首毒攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3571	jsrg02.par	匕首毒攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3572	jsrg03.par	匕首毒攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3573	jsrg04.par	匕首毒攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3580	jbyg01.par	巨剑毒增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3581	jbyg02.par	巨剑毒增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3582	jbyg03.par	巨剑毒增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3583	jbyg04.par	巨剑毒增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3590	jjyg01.par	单手剑毒增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3591	jjyg02.par	单手剑毒增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3592	jjyg03.par	单手剑毒增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3593	jjyg04.par	Single-handed Sword Poison Bonus 4	Sea Wave	1	0	1	-1	0	0	0	-1
+3600	jsyg01.par	匕首毒增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3601	jsyg02.par	匕首毒增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3602	jsyg03.par	匕首毒增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3603	jsyg04.par	匕首毒增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3610	jbbg01.par	巨剑毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3611	jbbg02.par	Greatsword Poison Resist 2	Sea Wave	1	0	1	-1	0	0	0	-1
+3612	jbbg03.par	巨剑毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3613	jbbg04.par	巨剑毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3620	jjbg01.par	单手剑毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3621	jjbg02.par	单手剑毒防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3622	jjbg03.par	单手剑毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3623	jjbg04.par	单手剑毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3630	jsbg01.par	匕首毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3631	jsbg02.par	匕首毒防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3632	jsbg03.par	匕首毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3633	jsbg04.par	匕首毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3640	jbg01.par	巨剑毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3641	jbg02.par	巨剑毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3642	jbg03.par	巨剑毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3643	jbg04.par	巨剑毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3650	jjg01.par	单手剑毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3651	jjg02.par	Single-handed Sword Poison 2	Sea Wave	1	0	1	-1	0	0	0	-1
+3652	jjg03.par	单手剑毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3653	jjg04.par	单手剑毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3660	jsg01.par	匕首毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3661	jsg02.par	匕首毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3662	jsg03.par	匕首毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3663	jsg04.par	匕首毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3670	jjrgb01.par	剑攻毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3671	jjrgb02.par	剑攻毒防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3672	jjrgb03.par	剑攻毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3673	jjrgb04.par	剑攻毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3680	jjryg01.par	剑攻增毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3681	jjryg02.par	剑攻增毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3682	jjryg03.par	剑攻增毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3683	jjryg04.par	剑攻增毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3690	jjgyb01.par	剑毒增防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3691	jjgyb02.par	剑毒增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3692	jjgyb03.par	剑毒增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3693	jjgyb04.par	剑毒增防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3700	jbrgb01.par	巨剑攻毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3701	jbrgb02.par	巨剑攻毒防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3702	jbrgb03.par	巨剑攻毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3703	jbrgb04.par	巨剑攻毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3710	jbryg01.par	巨剑攻增毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3711	jbryg02.par	巨剑攻增毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3712	jbryg03.par	巨剑攻增毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3713	jbryg04.par	巨剑攻增毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3720	jbgyb01.par	巨剑毒增防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3721	jbgyb02.par	巨剑毒增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3722	jbgyb03.par	巨剑毒增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3723	jbgyb04.par	巨剑毒增防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3730	jsrgb01.par	匕首攻毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3731	jsrgb02.par	匕首攻毒防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3732	jsrgb03.par	匕首攻毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3733	jsrgb04.par	匕首攻毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3740	jsryg01.par	匕首攻增毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3741	jsryg02.par	匕首攻增毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3742	jsryg03.par	匕首攻增毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3743	jsryg04.par	匕首攻增毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3750	jsgyb01.par	匕首毒增防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3751	jsgyb02.par	匕首毒增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3752	jsgyb03.par	匕首毒增防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3753	jsgyb04.par	匕首毒增防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3760	jgb01.par	枪毒攻防身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3761	jgb01.par	枪毒攻防身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3762	jgrb01.par	枪毒攻防身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3763	jgrb02.par	枪毒攻防身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3770	jgy01.par	枪毒攻增身体1	Sea Wave	1	0	1	-1	0	0	0	-1
+3771	jgy01.par	枪毒攻增身体2	Sea Wave	1	0	1	-1	0	0	0	-1
+3772	jgry01.par	枪毒攻增身体3	Sea Wave	1	0	1	-1	0	0	0	-1
+3773	jgry02.par	枪毒攻增身体4	Sea Wave	1	0	1	-1	0	0	0	-1
+3780	jfq02.par	法杖毒防增身体淡	Sea Wave	1	0	1	-1	0	0	0	-1
+3781	jfrb01.par	法杖毒防增身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3782	jfrb01.par	法杖毒防增身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3783	jfrb01.par	法杖毒防增身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3790	jfg004.par	法杖毒防增头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3791	jfg003.par	法杖毒防增头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3792	jfg002.par	法杖毒防增头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3793	jfrgb01.par	法杖毒防增头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3800	jfrb02.par	法杖攻毒防身体淡	Sea Wave	1	0	1	-1	0	0	0	-1
+3801	jfry01.par	Base Resist to Staff Poison Attack	Sea Wave	1	0	1	-1	0	0	0	-1
+3802	jfry01.par	Base Resist to Staff Poison Attack	Sea Wave	1	0	1	-1	0	0	0	-1
+3803	jfry01.par	Base Resist to Staff Poison Attack	Sea Wave	1	0	1	-1	0	0	0	-1
+3810	jfg004.par	法杖攻毒防头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3811	jfg003.par	法杖攻毒防头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3812	jfg002.par	法杖攻毒防头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3813	jfryg01.par	法杖攻毒防头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3820	jfry02.par	法杖攻增毒身体淡	Sea Wave	1	0	1	-1	0	0	0	-1
+3821	jfq03.par	法杖攻增毒身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3822	jfq03.par	法杖攻增毒身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3823	jfq03.par	法杖攻增毒身体有	Sea Wave	1	0	1	-1	0	0	0	-1
+3830	jfg004.par	法杖攻增毒头1	Sea Wave	1	0	1	-1	0	0	0	-1
+3831	jfg003.par	法杖攻增毒头2	Sea Wave	1	0	1	-1	0	0	0	-1
+3832	jfg002.par	法杖攻增毒头3	Sea Wave	1	0	1	-1	0	0	0	-1
+3833	jfgyb01.par	法杖攻增毒头4	Sea Wave	1	0	1	-1	0	0	0	-1
+3840	jlg01.par	斧头毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3841	jlg02.par	斧头毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3842	jlg03.par	斧头毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3843	jlg04.par	Axe Poison 4	Sea Wave	1	0	1	-1	0	0	0	-1
+3850	jlr01.par	斧头攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3851	jlr02.par	斧头攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3852	jlr03.par	斧头攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3853	jlr04.par	斧头攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3860	jlb01.par	斧头防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3861	jlb02.par	斧头防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3862	jlb03.par	斧头防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3863	jlb04.par	斧头防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3870	jly01.par	斧头增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3871	jly02.par	斧头增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3872	jly03.par	斧头增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3873	jly04.par	斧头增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3880	jlrgy01.par	斧头攻增毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3881	jlrgy02.par	斧头攻增毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3882	jlrgy03.par	斧头攻增毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3883	jlrgy04.par	斧头攻增毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3890	jlrgb01.par	斧头攻毒防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3891	jlrgb02.par	斧头攻毒防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3892	jlrgb03.par	斧头攻毒防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3893	jlrgb04.par	斧头攻毒防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3900	jlgyb01.par	Axe Poison Resist Bonus 1	Sea Wave	1	0	1	-1	0	0	0	-1
+3901	jlgyb02.par	斧头毒防增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3902	jlgyb03.par	斧头毒防增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3903	jlgyb04.par	斧头毒防增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3910	jlrby01.par	斧头攻防增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3911	jlrby02.par	斧头攻防增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3912	jlrby03.par	斧头攻防增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3913	jlrby04.par	斧头攻防增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3920	jf000.par	斧头毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3921	jf000.par	斧头毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3922	jlhg03.par	斧头毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3923	jlhg02.par	Axe Poison 4	Sea Wave	1	0	1	-1	0	0	0	-1
+3930	jf000.par	斧头防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3931	jf000.par	斧头防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3932	jlhb03.par	斧头防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3933	jlhb02.par	斧头防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3940	jf000.par	斧头攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3941	jf000.par	斧头攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3942	jlhr03.par	斧头攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3943	jlhr02.par	斧头攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3950	jswb01.par	弯匕首防1	Sea Wave	1	0	1	-1	0	0	0	-1
+3951	jswb01.par	弯匕首防2	Sea Wave	1	0	1	-1	0	0	0	-1
+3952	jswb01.par	弯匕首防3	Sea Wave	1	0	1	-1	0	0	0	-1
+3953	jswb01.par	弯匕首防4	Sea Wave	1	0	1	-1	0	0	0	-1
+3960	jswr01.par	弯匕首攻1	Sea Wave	1	0	1	-1	0	0	0	-1
+3961	jswr01.par	弯匕首攻2	Sea Wave	1	0	1	-1	0	0	0	-1
+3962	jswr01.par	弯匕首攻3	Sea Wave	1	0	1	-1	0	0	0	-1
+3963	jswr01.par	弯匕首攻4	Sea Wave	1	0	1	-1	0	0	0	-1
+3970	jswy01.par	弯匕首增1	Sea Wave	1	0	1	-1	0	0	0	-1
+3971	jswy01.par	弯匕首增2	Sea Wave	1	0	1	-1	0	0	0	-1
+3972	jswy01.par	弯匕首增3	Sea Wave	1	0	1	-1	0	0	0	-1
+3973	jswy01.par	弯匕首增4	Sea Wave	1	0	1	-1	0	0	0	-1
+3980	jswg01.par	弯匕首毒1	Sea Wave	1	0	1	-1	0	0	0	-1
+3981	jswg01.par	弯匕首毒2	Sea Wave	1	0	1	-1	0	0	0	-1
+3982	jswg01.par	弯匕首毒3	Sea Wave	1	0	1	-1	0	0	0	-1
+3983	jswg01.par	弯匕首毒4	Sea Wave	1	0	1	-1	0	0	0	-1
+3990	cangying.par	Insect Swarm 1	Sea Wave	1	0	1	-1	0	0	0	-1
+3991	cangying.par	Insect Swarm 2	Sea Wave	1	0	1	-1	0	0	0	-1
+3992	cangying.par	Insect Swarm 3	Sea Wave	1	0	1	-1	0	0	0	-1
+3993	cangying.par	Insect Swarm 4	Sea Wave	1	0	1	-1	0	0	0	-1
+3994	01020018.par	Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+3995	01020019.par	Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+4000	ssdao.par	Death Scythe Ray	Sea Wave	1	0	10	11	0	0	0	-1
+4001	bmtitle08.par	Ranking Winner	Sea Wave	1	0	1	-1	0	0	0	-1
+4002	01020045.par	Eff 2	Sea Wave	1	0	1	-1	0	0	0	-1
+4003	01020046.par	Eff 5	Sea Wave	1	0	1	-1	0	0	0	-1
+4004	01020047.par	Eff 7	Sea Wave	1	0	1	-1	0	0	0	-1
+4005	01020048.par	Eff 10	Sea Wave	1	0	1	-1	0	0	0	-1
+4006	title00.par	Forsaken	Sea Wave	1	0	0	-1	3	0	0	-1
+4007	title01.par	Darkswamp	Sea Wave	1	0	0	-1	3	0	0	-1
+4008	title02.par	Demonic	Sea Wave	1	0	0	-1	3	0	0	-1
+4010	ssjj.par	Death Scythe Lav	Sea Wave	1	0	4	-1	0	0	0	-1
+4011	ssjj.par	Death Scythe Lav	Sea Wave	1	0	4	-1	0	0	0	-1
+4012	ssjj.par	Death Scythe Lav	Sea Wave	1	0	4	-1	0	0	0	-1
+4013	ssjj.par	Death Scythe Lav	Sea Wave	1	0	4	-1	0	0	0	-1
+4015	cap1.par	cap model	Sea Wave	1	0	3	-1	0	0	0	-1
+4016	cap2.par	cap model	Sea Wave	1	0	24	-1	0	0	0	-1
+4017	cap3.par	cap model	Sea Wave	1	0	24	-1	0	0	0	-1
+4018	cap4.par	cap model	Sea Wave	1	0	24	-1	0	0	0	-1
+4019	shihuns.par	Sayajin Blue	Sea Wave	1	0	0	-1	0	0	0	-1
+4020	dbzaura.par	Sayajin Yellow	Sea Wave	1	0	0	-1	0	0	0	-1
+4021	poxuec.par	???a3?D?	Sea Wave	1	0	0	-1	0	0	0	-1
+4022	vipneck.par	VIP??芍∩	o㏒角?	1	0	0	-1	3	0	0	-1
+4023	fcring.par	Lightning Bolt P	Sea Wave	0	0	0	-1	0	1	0	-1
+4024	vln1.par	Wings of thunder	Wings	0	0	0	-1	0	1	0	-1
+4025	thnd.par	Wings of thunder	Wings	0	0	0	-1	0	1	0	-1
+4026	frst.par	Wings of the for	Wings	0	0	0	-1	0	1	0	-1
+4027	nght.par	Wings of the nig	Wings	0	0	0	-1	0	1	0	-1
+4028	break_wing.par	Wings of the ter	Wings	0	0	0	-1	0	1	0	-1
+4034	thnd.par	Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+4035	nght.par	Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+4036	frst.par	Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+4037	break_wing.par	Wing	Sea Wave	1	0	24	-1	0	0	0	-1
+4060	01020029.par	熊猫秋千(蓝)	海浪	1	0	3	-1	0	0	0	-1
+4061	01020029(2).par	熊猫秋千(卡)	海浪	1	0	3	-1	0	0	0	-1
+4062	01020029(3).par	熊猫秋千(菲)	海浪	1	0	24	-1	0	0	0	-1
+4063	01020029(4).par	熊猫秋千(艾)	海浪	1	0	3	-1	0	0	0	-1
+4064	01020031.par	爱心秋千(蓝)	海浪	1	0	3	-1	0	0	0	-1
+4065	01020031(2).par	爱心秋千(卡)	海浪	1	0	3	-1	0	0	0	-1
+4066	01020031(3).par	爱心秋千(菲)	海浪	1	0	24	-1	0	0	0	-1
+4067	01020031(4).par	爱心秋千(艾)	海浪	1	0	3	-1	0	0	0	-1
+4068	01020037.par	HelloKitty秋千(	海浪	1	0	3	-1	0	0	0	-1
+4069	01020037(2).par	HelloKitty秋千(	海浪	1	0	3	-1	0	0	0	-1
+4070	01020037(3).par	HelloKitty秋千(	海浪	1	0	24	-1	0	0	0	-1
+4071	01020037(4).par	HelloKitty秋千(	海浪	1	0	3	-1	0	0	0	-1
+4072	01020039.par	轻松熊秋千(蓝)	海浪	1	0	3	-1	0	0	0	-1
+4073	01020039(2).par	轻松熊秋千(卡)	海浪	1	0	3	-1	0	0	0	-1
+4074	01020039(3).par	轻松熊秋千(菲)	海浪	1	0	24	-1	0	0	0	-1
+4075	01020039(4).par	轻松熊秋千(艾)	海浪	1	0	3	-1	0	0	0	-1
+4076	01020041.par	可爱骷髅头秋千(	海浪	1	0	3	-1	0	0	0	-1
+4077	01020041(2).par	可爱骷髅头秋千(	海浪	1	0	3	-1	0	0	0	-1
+4078	01020041(3).par	可爱骷髅头秋千(	海浪	1	0	24	-1	0	0	0	-1
+4079	01020041(4).par	可爱骷髅头秋千(	海浪	1	0	3	-1	0	0	0	-1
+4080	01020042.par	十字军秋千(蓝)	海浪	1	0	3	-1	0	0	0	-1
+4081	01020042(2).par	十字军秋千(卡)	海浪	1	0	3	-1	0	0	0	-1
+4082	01020042(3).par	十字军秋千(菲)	海浪	1	0	24	-1	0	0	0	-1
+4083	01020042(4).par	十字军秋千(艾)	海浪	1	0	3	-1	0	0	0	-1
+4084	01020043.par	王者秋千(蓝)	海浪	1	0	3	-1	0	0	0	-1
+4085	01020043(2).par	王者秋千(卡)	海浪	1	0	3	-1	0	0	0	-1
+4086	01020043(3).par	王者秋千(菲)	海浪	1	0	24	-1	0	0	0	-1
+4087	01020043(4).par	王者秋千(艾)	海浪	1	0	3	-1	0	0	0	-1						

@@ -6,6 +6,8 @@
 #include <string>
 #include <vector>
 #include <string_view>
+#include <format>
+#include <cstring>
 std::string StringLimit(const std::string& str,size_t len);
 bool GetNameFormString(const std::string &str, std::string &name);
 std::string CutFaceText(std::string &text,size_t cutLimitlen);
@@ -28,3 +30,11 @@ std::vector<int> SplitStringInt(std::string_view str, char delimiter = ',');
 const char* StringSplitNum( long nNumber, int nCount=3, char cSplit=',' );
 const char* StringSplitNum( const char* bigIntBuf, int nCount=3, char cSplit=',' );
 
+// Форматирование языковой строки (с {} плейсхолдерами) в char-буфер.
+// Замена sprintf для строк из GetLanguageString.
+template <typename... Args>
+void FmtLang(char* dst, size_t dstSize, const std::string& fmt, Args&&... args) {
+	auto result = std::vformat(fmt, std::make_format_args(args...));
+	std::strncpy(dst, result.c_str(), dstSize - 1);
+	dst[dstSize - 1] = '\0';
+}

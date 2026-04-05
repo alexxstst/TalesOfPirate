@@ -1,0 +1,195 @@
+//No.	Name	Trigger interval	Transfer duration	Use effect script	Remove the effect of the script	Substitution principle	Manually Cancel	Can Move	Can use Skills	Can attack	Can trade	Can use items	It can be attacked	Can someone else use items	Can someone else use the skills	Invisible	Whether it is forced to show	Whether the backpack can be operated	Is it possible to talk to npc	Release effect number	Screen effect Client performance	Client performance indicator	State ground effect	Center point display	Stunning performance	Special effect performance	dummy1	Attacked special effects performance in this state	dummy2	ICON	Explanation	description	Manifestations	Remarks
+1	Burn	1	State_Rs_Tran	State_Rs_Add	State_Rs_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	112	0	0	115	2	0	0	0	e0013,0,0,0,0,0,0,0,0,0	Inflicts Burn Damage	15218966
+2	Healing Spring	3	State_Hfwq_Tran	State_Hfwq_Add	State_Hfwq_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	268	1	0	166	-1	0	0	0	s0122,0,0,0,0,0,0,0,0,0	Heals Target Continuously	1566795
+3	Cursed Fire	-1	State_Zzzh_Tran	State_Zzzh_Add	State_Zzzh_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	158	-1	0	0	0	s0119,0,0,0,0,0,0,0,0,0	Decreases Defense	15218966
+4	Poisoned	1	State_Zd_Tran	State_Zd_Add	State_Zd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	250	2	0	0	0	e0012,0,0,0,0,0,0,0,0,0	Inflicts Poison Damage	15218966
+5	Counterguard	-1	State_Sdbz_Tran	State_Sdbz_Add	State_Sdbz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	173	0	0	174	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+6	True Sight	-1	State_Syzy_Tran	0	0	1	0	1	1	1	1	1	1	1	1	1	0	1	1	0	0	0	-1	176	1	0	0	-1	0	0	0	s0116,0,0,0,0,0,0,0,0,0	Reveals Stealth	15218966
+7	Abyss Mire	-1	State_Synz_Tran	State_Synz_Add	State_Synz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	240	-1	0	0	0	s0121,0,0,0,0,0,0,0,0,0	Decreases Movement Speed	15218966
+9	Thunderstorm	2	State_Larea_Tran	State_Larea_Add	State_Larea_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	7	292	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+10	Fog	2	State_Warea_Tran	State_Warea_Add	State_Warea_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	8	293	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+11	Tornado	2	State_Farea_Tran	State_Farea_Add	State_Farea_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	5	291	0	0	0	0	0	0	0	s0213,0,0,0,0,0,0,0,0,0	Traps Target in the Air	15218966
+12	Whirlpool	-1	State_Xw_Tran	State_Xw_Add	State_Xw_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	280	1	0	0	0	0	0	0	s0218,0,0,0,0,0,0,0,0,0	Decreases Movement Speed of Ship	15218966
+13	Fog	-1	State_Mw_Tran	State_Mw_Add	State_Mw_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	283	1	0	0	0	0	0	0	s0219,0,0,0,0,0,0,0,0,0	Decreases Attack of Ship	15218966
+14	Lightning Curtain	2	State_Lm_Tran	State_Lm_Add	State_Lm_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	290	1	0	0	0	0	0	0	s0220,0,0,0,0,0,0,0,0,0	Inflicts Lightning Damage	15218966
+15	Taunt	-1	0	State_Chf_Add	State_Chf_Rem	4	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	s0128,0,0,0,0,0,0,0,0,0	Does Nothing	15218966
+16	Water Mine Self Destruct	1	0	State_Slzb_Add	State_Slzb_Rem	1	0	0	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	302	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+17	Bull Potion	-1	0	State_PKMNYS_Add	State_PKMNYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n0290,0,0,0,0,0,0,0,0,0	Increases Max HP	1566795
+18	Hairstyling	-1	0	0	0	1	0	0	0	0	0	0	1	1	1	1	1	0	0	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+19	Battle Potion	-1	0	State_PKZDYS_Add	State_PKZDYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n0426,0,0,0,0,0,0,0,0,0	Increases Attack Power	1566795
+20	Berserk Potion	-1	0	State_PKKBYS_Add	State_PKKBYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n0351,0,0,0,0,0,0,0,0,0	Increases Attack Speed	1566795
+21	Shield Mastery	-1	0	State_Dpsl_Add	State_Dpsl_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+22	Tiger Roar	-1	0	State_Hx_Add	State_Hx_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	295	-1	0	0	0	s0127,0,0,0,0,0,0,0,0,0	Decreases Attack and Movement Speed	15218966
+23	Greatsword Mastery	-1	0	State_Jjsl_Add	State_Jjsl_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+24	Berserk	-1	0	State_Kb_Add	State_Kb_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	118	1	0	0	0	s0084,0,0,0,0,0,0,0,0,0	Increases Attack Speed	1566795
+26	Skill Forbidden	-1	0	0	0	1	0	1	0	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	178	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+27	Fatal Strike	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	178	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+28	Ranger	-1	0	State_Clxz_Add	State_Clxz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+29	Tempest Boost	-1	0	State_Fzlz_Add	State_Fzlz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	207	1	0	0	0	s0101,0,0,0,0,0,0,0,0,0	Increases Attack Speed and Movement Speed	1566795
+30	Archery Mastery	-1	0	State_Gjsl_Add	State_Gjsl_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+31	Evasion	-1	0	State_Hys_Add	State_Hys_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+33	Tornado Swirl	-1	0	State_Jsfb_Add	State_Jsfb_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	208	1	0	0	0	s0102,0,0,0,0,0,0,0,0,0	Increases Critical Hit Chance	1566795
+34	Tempest Slash	-1	0	State_Jfz_Add	State_Jfz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+35	Gun Research	-1	0	State_Qxyj_Add	State_Qxyj_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+36	Beast Strength	-1	0	State_Shtz_Add	State_Shtz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+37	Angelic Shield	-1	0	State_Tshd_Add	State_Tshd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	161	1	0	0	0	s0103,0,0,0,0,0,0,0,0,0	Greatly Increases Defense	1566795
+38	Angel Blessing	-1	0	State_Tsqy_Add	State_Tsqy_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	166	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+39	Cripple	-1	0	State_Tj_Add	State_Tj_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	143	1	0	0	0	s0094,0,0,0,0,0,0,0,0,0	Decreases Movement Speed and Dodge	15218966
+40	Spiritual Fire	-1	0	State_Xlzh_Add	State_Xlzh_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	206	1	0	0	0	s0100,0,0,0,0,0,0,0,0,0	Increases Attack	1566795
+41	Energy Potion	-1	0	State_PKJSYS_Add	State_PKJSYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	q0027,0,0,0,0,0,0,0,0,0	Increases Spirit	1566795
+42	Harden Potion	-1	0	State_PKSFYS_Add	State_PKSFYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n0133,0,0,0,0,0,0,0,0,0	Increases Defense	1566795
+43	Stealth	5	0	State_Ys_Add	0	1	1	1	1	1	1	1	1	1	1	0	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	s0123,0,0,0,0,0,0,0,0,0	Hides from Enemies	1566795
+44	Accurate Potion	-1	0	State_PKJZYS_Add	State_PKJZYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n0293,0,0,0,0,0,0,0,0,0	Increases Hit Rate	1566795
+45	Shadow Slash	-1	0	State_Xy_Add	State_Xy_Rem	2	0	0	0	0	0	0	1	1	1	1	1	1	0	0	0	0	-1	0	0	1	253	1	0	0	0	s0086,0,0,0,0,0,0,0,0,0	Stuns Target	15218966
+46	Numb	-1	0	State_Mb_Add	State_Mb_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	271	2	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+47	Blessed Potion	-1	0	State_PKWd_Add	State_PKWd_Rem	1	0	1	1	1	1	1	0	0	0	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	q0033,0,0,0,0,0,0,0,0,0	Grants Invincibility	1566795
+48	EXP Bonus	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	strive01,strive02,strive03,strive04,strive05,strive06,0,0,0,0	Increases Experience Rate	1566795
+49	Drop Bonus	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	luck01,luck02,luck03,luck04,luck05,luck06,0,0,0,0	Increases Item Drop Rate	1566795
+50	Intense Magic	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	343	-1	0	0	0	s0225,0,0,0,0,0,0,0,0,0	Increases Magic Power	1566795
+51	Frost Shield	-1	0	State_Bshd_Add	State_Bshd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	135	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+53	Firegun Mastery	-1	0	State_Hqsl_Add	State_Hqsl_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+54	Refined Gunpowder	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+55	Attack Weakness	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	178	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+56	Divine Grace	-1	0	State_Sy_Add	State_Sy_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+57	Angel Blessing	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	178	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+58	Benediction	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	178	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+59	Inferno Wings	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	152	9	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+60	Holy Beam	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	154	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+61	Holy Heraldry	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	163	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+62	Ray of Luck	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	169	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+63	Ammunition Warehouse is empty	-1	0	State_PKDYK_Add	State_PKDYK_Rem	3	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+64	Granary empty	-1	0	State_PKLC_Add	State_PKLC_Rem	3	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+65	Attack forbidden	-1	0	0	0	1	0	1	1	0	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	180	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+66	Traversing	-1	0	State_Clcy_Add	State_Clcy_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+67	Hit Rate Decrease	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	178	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+68	Enfeeble	-1	0	State_Sj_Add	State_Sj_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	259	1	0	0	0	s0095,0,0,0,0,0,0,0,0,0	Decreases Attack and Stops Skills	15218966
+69	Sword Mastery	-1	0	State_Jssl_Add	State_Jssl_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+70	Will of Steel	-1	0	State_Gtyz_Add	State_Gtyz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	301	1	0	0	0	s0063,0,0,0,0,0,0,0,0,0	Increases Defense	1566795
+71	Strengthen	-1	0	State_Qhtz_Add	State_Qhtz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+72	Deftness	-1	0	State_Lqhb_Add	State_Lqhb_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+73	Shield Concentration	-1	0	State_Jdzz_Add	State_Jdzz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+74	Blood Bull	-1	0	State_Mnrx_Add	State_Mnrx_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+75	Evasion	-1	0	State_Hys_Add	State_Hys_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+76	Blood Frenzy	-1	0	State_Pxkg_Add	State_Pxkg_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+77	Recuperate	-1	0	State_Tzhf_Add	State_Tzhf_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+78	Windwalk	-1	0	State_Jfb_Add	State_Jfb_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+79	Eagle's Eye	-1	0	State_Yy_Add	State_Yy_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	214	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+80	Vigor	-1	0	State_Jsjc_Add	State_Jsjc_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+81	Frozen Arrow	-1	0	State_Bdj_Add	State_Bdj_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	297	-1	0	0	0	s0093,0,0,0,0,0,0,0,0,0	Decreases Movement Speed	15218966
+82	Hunter Disguise	-1	0	State_Lrwz_Add	State_Lrwz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+83	Energy Shield	-1	0	0	0	1	1	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	211	-1	0	0	0	s0106,0,0,0,0,0,0,0,0,0	Damage is inflicted to SP rather than HP	4379124
+84	Dual Hand Weapon Bonus	-1	0	State_Fsz_Add	State_Fsz_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+85	Trade Status	-1	0	0	0	4	0	0	0	0	1	0	1	1	1	1	1	1	0	0	0	0	-1	0	0	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+86	Tornado	-1	0	0	0	2	0	0	0	0	0	0	0	0	0	1	1	1	1	0	0	11	-1	0	0	1	274	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+87	Algae Entanglement	3	0	State_Hzcr_Add	State_Hzcr_Rem	2	0	0	0	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	277	0	0	0	0	0	0	0	s0215,0,0,0,0,0,0,0,0,0	Binds Target	15218966
+88	Tail Wind	-1	0	State_Sf_Add	State_Sf_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	287	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+89	Break Armor	-1	0	State_Pj_Add	State_Pj_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	306	1	0	0	0	s0222,0,0,0,0,0,0,0,0,0	Lowers Defense	15218966
+90	Rousing	-1	0	State_Fnq_Add	State_Fnq_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	302	-1	0	0	0	s0223,0,0,0,0,0,0,0,0,0	Increases Attack Speed	1566795
+91	Venom Arrow	2	State_Dj_Tran	State_Dj_Add	State_Dj_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	250	1	0	0	0	s0224,0,0,0,0,0,0,0,0,0	Inflicts Poison Damage	15218966
+92	Harden	-1	0	State_Shpf_Add	State_Shpf_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	301	1	0	0	0	s0225,0,0,0,0,0,0,0,0,0	Increases Defense	1566795
+93	Blood Fury	1	0	State_Xn_Add	State_Xn_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	321	-1	0	0	0	kissofthefrost,0,0,0,0,0,0,0,0,0	0	1566795
+94	Lair	-1	0	State_Nt_Add	State_Nt_Rem	1	0	1	0	0	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	324	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+95	Earthquake	-1	State_DiZ_Tran	State_DiZ_Add	State_DiZ_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	253	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+96	Kiss of Frost	-1	0	State_Biw_Add	State_Biw_Rem	2	0	0	0	0	0	0	0	0	0	1	1	1	1	0	0	0	-1	0	0	0	329	2	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+97	Wood Bundle	3	0	State_MCK_Add	State_MCK_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+98	Death Shriek	-1	0	State_Swcx_Add	State_Swcx_Rem	2	0	0	0	0	0	0	1	1	1	1	1	1	1	0	0	0	-1	0	0	1	319	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+99	Set Stall	-1	0	0	0	4	1	0	0	0	0	0	1	0	1	1	1	1	0	0	0	0	-1	0	0	0	0	-1	0	0	0	selling,0,0,0,0,0,0,0,0,0	0	1566795
+100	Repair	-1	0	0	0	4	1	0	0	0	0	0	1	0	1	1	1	1	0	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+101	Forging	-1	0	0	0	4	1	0	0	0	0	0	1	0	1	1	1	1	0	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+102	Strength Potion	-1	0	State_YSLLQH_Add	State_YSLLQH_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1196,0,0,0,0,0,0,0,0,0	0	1566795
+103	Agility Potion	-1	0	State_YSMJQH_Add	State_YSMJQH_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1192,0,0,0,0,0,0,0,0,0	0	1566795
+104	Accuracy Potion	-1	0	State_YSLQQH_Add	State_YSLQQH_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1193,0,0,0,0,0,0,0,0,0	0	1566795
+105	Constitution Potion	-1	0	State_YSTZQH_Add	State_YSTZQH_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1194,0,0,0,0,0,0,0,0,0	0	1566795
+106	Spirit Potion	-1	0	State_YSJSQH_Add	State_YSJSQH_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1195,0,0,0,0,0,0,0,0,0	0	1566795
+107	Forge Bonus	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1198,0,0,0,0,0,0,0,0,0	Increases Forging Success Rate	1566795
+108	Combine Bonus	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1199,0,0,0,0,0,0,0,0,0	Increases Combining Success Rate	1566795
+109	Lantern	-1	0	State_DengLong_Add	State_DengLong_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	360	1	0	0	0	n0848,0,0,0,0,0,0,0,0,0	Increases Defense	1566795
+110	Rose	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	504	25	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+111	Potions to recover HP	3	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+112	Wine 1	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+113	Wine 2	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+114	Corpse Poison	3	0	State_JSDD_Add	State_JSDD_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	250	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+115	Fascinate	-1	0	State_HYMH_Add	State_HYMH_Rem	3	0	0	0	0	0	0	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	807	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+116	Black Dragon Terror	-1	0	State_HLKJ_Add	State_HLKJ_Rem	1	0	0	0	0	0	0	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	319	-1	0	0	0	s0225,0,0,0,0,0,0,0,0,0	0	15218966
+117	Black Dragon Roar	-1	0	State_HLLM_Add	State_HLLM_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	158	-1	0	0	0	s0225,0,0,0,0,0,0,0,0,0	0	15218966
+118	Crab Binding	-1	0	State_CRXSF_Add	State_CRXSF_Rem	3	0	0	0	0	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	378	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+119	Fairy March	-1	0	State_MarchElf_Add	State_MarchElf_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	505	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+120	Skating Potion	-1	0	State_YSMspd_Add	State_YSMspd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1390,0,0,0,0,0,0,0,0,0	Greatly Increases Movement Speed	1566795
+121	Potion ship speed modify	-1	0	State_YSBoatMspd_Add	State_YSBoatMspd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+122	Potion ship defense modify	-1	0	State_YSBoatDEF_Add	State_YSBoatDEF_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+123	Spring Town Status	-1	0	0	0	4	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+124	Ether Clover	-1	0	State_PKSBYS_Add	State_PKSBYS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+125	Black Dragon Roar	-1	0	State_BlackHx_Add	State_BlackHx_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	894	-1	0	0	0	s0225,0,0,0,0,0,0,0,0,0	0	15218966
+126	Black Dragon Lightning Bolt	-1	0	State_BlackLj_Add	State_BlackLj_Rem	1	0	0	0	0	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	887	-1	0	0	0	s0214,0,0,0,0,0,0,0,0,0	0	15218966
+127	Party EXP Bonus	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1405,0,0,0,0,0,0,0,0,0	Increases Party EXP Rate	1566795
+128	Battle Array	-1	0	State_KUANGZ_Add	State_KUANGZ_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1407,0,0,0,0,0,0,0,0,0	Greatly Increases Attack but Slightly Reduces Defense	1566795
+129	Full Body Armor	-1	0	State_QUANS_Add	State_QUANS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1408,0,0,0,0,0,0,0,0,0	Greatly Increases Defense but Slightly Reduces Attack	1566795
+130	Weightless Potion	-1	0	State_QINGZ_Add	State_QINGZ_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1406,0,0,0,0,0,0,0,0,0	Greatly Increases Movement Speed but Slightly Reduces Defense	1566795
+131	Pet Poison Bite	1	0	State_JLDS_Add	State_JLDS_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	250	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+132	Fairy Possession A	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	527	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+133	Super Lollipop	-1	0	State_CJBBT_Add	State_CJBBT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1475,0,0,0,0,0,0,0,0,0	Greatly Increases Strength	1566795
+134	Huge Chocolate	-1	0	State_JRQKL_Add	State_JRQKL_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1476,0,0,0,0,0,0,0,0,0	Greatly Increases Constitution	1566795
+135	Deathsoul Magma Bullet	1	0	State_wlrsd_Add	State_wlrsd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+136	Deathsoul Acceleration	-1	0	State_wljs_Add	State_wljs_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	922	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+137	Deathsoul Whirlpool	-1	State_wlxw_Tran	State_wlxw_Add	State_wlxw_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	280	1	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+138	Encumbered Skeleton	3	0	State_klcs_Add	State_klcs_Rem	1	0	0	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	921	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+139	Skeletar Shielding	-1	0	State_klhd_Add	State_klhd_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	912	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+140	Deathsoul Taunt	-1	0	State_wlcx_Add	State_wlcx_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	926	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+141	Cursed Blood	1	0	State_wlcx_Add	State_wlcx_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	920	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+142	Deathsoul Poison Dart	1	0	State_wldb_Add	State_wldb_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	920	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+143	Deathsoul Roquet	-1	0	State_wljy_Add	State_wljy_Rem	1	0	0	0	0	0	0	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	253	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+144	Whirlpool	-1	State_Xw_Tran	State_Xw_Add	State_Xw_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	280	1	0	0	0	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+145	Cloud Attack	1	State_ywgj_Tran	State_ywgj_Add	State_ywgj_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	293	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+146	Roar of Deathsoul	-1	0	State_wlnh_Add	State_wlnh_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+147	Fairy Growth Bonus	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1483,0,0,0,0,0,0,0,0,0	Doubles Growth Rate of Fairy	1566795
+148	Skill - Defecate	-1	0	State_jltx1_Add	State_jltx1_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	830	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+149	Skill - Undergarment	-1	0	State_jltx2_Add	State_jltx2_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	831	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+150	Skill - Garment	-1	0	State_jltx3_Add	State_jltx3_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	832	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+151	Skill - Coin Shower	-1	0	State_jltx4_Add	State_jltx4_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	833	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+152	Skill - Fool	-1	0	State_jltx5_Add	State_jltx5_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	834	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+153	Skill - Snooty	-1	0	State_jltx6_Add	State_jltx6_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	835	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+154	Skill - Dumb	-1	0	State_jltx7_Add	State_jltx7_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	836	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+155	Skill - Dumb	-1	0	State_jltx8_Add	State_jltx8_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	837	1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+156	Heart of Innocence	-1	0	State_CZZX_Add	State_CZZX_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+157	Kara's Victory	-1	0	State_KALA_Add	State_KALA_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+158	Sure-death	2	0	State_5MBS_Add	State_5MBS_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+159	Flash Bomb	-1	0	State_ShanGD_Add	State_ShanGD_Rem	1	0	0	0	0	0	0	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	253	1	0	0	0	n1695,0,0,0,0,0,0,0,0,0	Stuns Target	15218966
+160	Radiation	1	State_FuShe_Tran	State_FuShe_Add	State_FuShe_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	920	1	0	0	0	n1696,0,0,0,0,0,0,0,0,0	Inflicts Poison Damage	1566795
+161	Ship Atomizer	-1	0	State_PengSheQi_Add	State_PengSheQi_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	222	-1	0	0	0	n1707,0,0,0,0,0,0,0,0,0	Greatly Increases Ship Movement Speed	1566795
+162	Impaler	-1	0	State_PoRenDan_Add	State_PoRenDan_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	306	-1	0	0	0	n1709,0,0,0,0,0,0,0,0,0	Decreases Damage of Ship	15218966
+163	Ship Flamer	1	0	State_RanShaoDan_Add	State_RanShaoDan_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1710,0,0,0,0,0,0,0,0,0	Inflicts Burn Damage	15218966
+164	Ship Accelerator	-1	0	State_czjs_Add	State_czjs_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	922	-1	0	0	0	n1706,0,0,0,0,0,0,0,0,0	Increases Ship Movement Speed	1566795
+165	Cooking Potion HP	-1	0	State_CookingPotionHP_Add	State_CookingPotionHP_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1669,n1670,n1671,n1672,n1677,n1682,n1686,n1687,n1688,n1689	a	1566795
+166	Cooking Potion ATK	-1	0	State_CookingPotionATK_Add	State_CookingPotionATK_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1673,n1674,n1678,n1679,n1683,0,0,0,0,0	a	1566795
+167	Cooking Potion SPR	-1	0	State_CookingPotionSPR_Add	State_CookingPotionSPR_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1675,n1676,n1681,n1680,n1684,n1685,0,0,0,0	a	1566795
+168	Fairy Possession B	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	528	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+169	Fairy Possession C	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	529	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+170	Fairy Possession D	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	530	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+171	Fairy Possession E	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	531	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+172	Fairy Possession F	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	532	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+173	Fairy Possession G	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	533	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+174	Fairy Possession H	-1	0	State_JLFT_Add	State_JLFT_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	534	-1	0	0	0	s0234,0,0,0,0,0,0,0,0,0	Grants the Power of the Fairy	1566795
+176	Carrion Ball	-1	0	State_FuShiZhiQiu_Add	State_FuShiZhiQiu_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	306	1	0	0	0	n1700,0,0,0,0,0,0,0,0,0	Decreases Defense and Physical Resist	15218966
+177	Noise Polluter	1	State_ZaoYinZhiZao_Tran	State_ZaoYinZhiZao_Add	State_ZaoYinZhiZao_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	1	0	920	1	0	0	0	n1701,0,0,0,0,0,0,0,0,0	Decreases Spirit	15218966
+178	Earthquake Generator	-1	State_DiZhenFaSheng_Tran	State_DiZhenFaSheng_Add	State_DiZhenFaSheng_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	326	1	0	253	1	0	0	0	n1702,0,0,0,0,0,0,0,0,0	Decreases Movement Speed	15218966
+179	Chain Bullet	-1	0	State_LianDan_Add	State_LianDan_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	271	-1	0	0	0	n1716,0,0,0,0,0,0,0,0,0	Decreases Movement Speed of Ship	15218966
+180	Mirage Generator	-1	0	State_HuanYinFaSheng_Add	State_HuanYinFaSheng_Rem	1	0	1	1	1	1	1	0	0	0	1	1	1	1	0	0	0	-1	0	0	0	912	-1	0	0	0	n1712,0,0,0,0,0,0,0,0,0	Grants Invincibility to Ship	1566795
+181	Stealth Ship	-1	0	State_ChuanZhiQianXing_Add	State_ChuanZhiQianXing_Rem	1	0	1	1	1	0	1	1	1	1	0	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1714,0,0,0,0,0,0,0,0,0	0	1566795
+182	Radar	-1	State_LeiDa_Tran	State_LeiDa_Add	State_LeiDa_Rem	1	0	1	1	1	1	1	1	1	1	1	0	1	1	0	0	0	-1	176	1	0	0	-1	0	0	0	n1715,0,0,0,0,0,0,0,0,0	Reveals Stealth of Ship	15218966
+183	Carrion Bullet	1	0	State_FuShiDan_Add	State_FuShiDan_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	250	-1	0	0	0	n1711,0,0,0,0,0,0,0,0,0	Decreases Fuel of Ship	15218966
+184	Water Mine burning	1	State_Slrs_Tran	State_Slrs_Add	State_Slrs_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	115	2	0	0	0	n1717,0,0,0,0,0,0,0,0,0	0	1566795
+185	Burning Lamb	1	State_Myrs_Tran	State_Myrs_Add	State_Myrs_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	115	2	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+186	Drag Tower	-1	0	State_JST_Add	State_JST_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	297	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+187	Healing Spring	1	0	State_HFZQ_Add	State_HFZQ_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	166	-1	0	0	0	s0122,0,0,0,0,0,0,0,0,0	Heals Target Continuously	1566795
+188	Devil Curse	1	0	State_EmoYuYan_Add	State_EmoYuYan_Rem	1	0	1	1	1	0	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	936	-1	0	0	0	s0457,0,0,0,0,0,0,0,0,0	Deals Damage Continuously and Decreases Stats	15218966
+189	Super consciousness	3	State_XYSYF_Tran	State_XYSYF_Add	State_XYSYF_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	937	1	0	131	-1	0	0	0	s0454,0,0,0,0,0,0,0,0,0	Deals Damage Continuously	15218966
+190	Ammo Warehouse is gone	-1	0	State_JHKML_Add	State_JHKML_Rem	3	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+191	Frozen ring	-1	0	State_BDH_Add	State_BDH_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	943	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+194	Egg Yolk Dumpling	-1	0	State_DHZ_Add	State_DHZ_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	1	0	0	0	n1866,0,0,0,0,0,0,0,0,0	0	1566795
+195	Bean Paste Dumpling	-1	0	State_DSZ_Add	State_DSZ_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n1867,0,0,0,0,0,0,0,0,0	0	1566795
+196	Double the reading experience	-1	0	0	0	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+197	I Love Dad	-1	0	State_Ilovedad_Add	State_Ilovedad_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	552	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795
+198	Slowly restore mana	1	0	STATE_HPHMHF_Add	STATE_HPHMHF_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	0,0,0,0,0,0,0,0,0,0	0	1566795																																	
+199	Super Happy Ration	-1	0	State_super_Add	STATE_super_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	n0461,0,0,0,0,0,0,0,0,0	0	1566795
+220	Game Master	-1	0	State_GameMaster_Add	State_GameMaster_Rem	1	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	0	-1	0	0	0	ns0002	0	1566795
+221	Flag Holder	-1	0	State_None_Add	State_None_Rem	3	0	1	1	1	1	1	1	1	1	1	1	1	1	0	0	0	-1	0	0	0	912	-1	0	0	0	0	0	1566795

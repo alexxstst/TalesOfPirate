@@ -68,6 +68,7 @@ int SetIMP_raw(lua_State* pLS) {
 		auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
 		if (!pCChaResult) { PARAM_ERROR return 0; }
 		CCharacter* pCCha = *pCChaResult;
+		if (!pCCha) return luaL_error(pLS, "SetIMP: null CCharacter*");
 		int IMP = lua_tonumber(pLS, 2);
 		if (lua_gettop(pLS) == 3) {
 			pCCha->SetIMP(IMP, false);
@@ -87,6 +88,7 @@ int GetChaAttr_raw(lua_State* pLS) {
 	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
 	if (!pCChaResult) { PARAM_ERROR return 0; }
 	CCharacter* pCCha = *pCChaResult;
+	if (!pCCha) return luaL_error(pLS, "GetChaAttr: null CCharacter*");
 	short sAttrIndex = (unsigned __int64)lua_tonumber(pLS, 2);
 	if (sAttrIndex < 0 || sAttrIndex >= ATTR_MAX_NUM) return 0;
 
@@ -224,6 +226,7 @@ int AddChaSkill_raw(lua_State* pLS) {
 	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
 	if (!pCChaResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
 	CCharacter* pCCha = *pCChaResult;
+	if (!pCCha) return luaL_error(pLS, "AddChaSkill: null CCharacter*");
 	int nSkillID = (int)lua_tonumber(pLS, 2);
 	int nSkillLv = (int)lua_tonumber(pLS, 3);
 	bool bSetLv = (int)lua_tonumber(pLS, 4) == 1 ? true : false;
@@ -375,6 +378,7 @@ int RemoveChaItem_raw(lua_State* pLS) {
 	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
 	if (!pCChaResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
 	CCharacter* pCCha = *pCChaResult;
+	if (!pCCha) return luaL_error(pLS, "RemoveChaItem: null CCharacter*");
 	if (pCCha->m_CKitbag.IsLock()) {
 		pCCha->SystemNotice("Unable to remove item. Inventory locked!");
 		lua_pushnumber(pLS, 0);
@@ -488,6 +492,7 @@ int GetItemAttr_raw(lua_State* pLS) {
 	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
 	if (!pSItemResult) { PARAM_ERROR return 0; }
 	SItemGrid* pSItem = *pSItemResult;
+	if (!pSItem) return luaL_error(pLS, "GetItemAttr: null SItemGrid*");
 
 	long lAttrID = (int)lua_tonumber(pLS, 2);
 	if (lAttrID == ITEMATTR_VAL_PARAM1)
@@ -528,6 +533,7 @@ int SetItemAttr_raw(lua_State* pLS) {
 	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
 	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
 	SItemGrid* pSItem = *pSItemResult;
+	if (!pSItem) return luaL_error(pLS, "SetItemAttr: null SItemGrid*");
 
 	long lAttrID = (int)lua_tonumber(pLS, 2);
 	short sAttr = (short)lua_tonumber(pLS, 3);
@@ -561,6 +567,7 @@ int AddItemAttr_raw(lua_State* pLS) {
 	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
 	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
 	SItemGrid* pSItem = *pSItemResult;
+	if (!pSItem) return luaL_error(pLS, "AddItemAttr: null SItemGrid*");
 
 	long lAttrID = (int)lua_tonumber(pLS, 2);
 	short sAttr = (short)lua_tonumber(pLS, 3);
@@ -631,6 +638,7 @@ int SetItemForgeParam_raw(lua_State* pLS) {
 	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(pLS, 1);
 	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(pLS, 1); return 1; }
 	SItemGrid* pSItem = *pSItemResult;
+	if (!pSItem) return luaL_error(pLS, "SetItemForgeParam: null SItemGrid*");
 
 	long lType = (int)lua_tonumber(pLS, 2);
 	if (lType == 0)
@@ -748,6 +756,7 @@ int SetMapEntryTime_raw(lua_State* pLS) {
 	auto pCMapResult = luabridge::Stack<CMapRes*>::get(pLS, 1);
 	if (!pCMapResult) { PARAM_ERROR lua_pushnumber(pLS, 0); return 1; }
 	auto pCMap = *pCMapResult;
+	if (!pCMap) return luaL_error(pLS, "SetMapEntryTime: null CMapRes*");
 
 	struct tm time_set, *time_get;
 	time_t timep;
@@ -895,6 +904,7 @@ int GetMapEntryPosInfo_raw(lua_State* pLS) {
 	auto pEntryResult = luabridge::Stack<CDynMapEntryCell*>::get(pLS, 1);
 	if (!pEntryResult) { PARAM_ERROR return 0; }
 	CDynMapEntryCell* pEntry = *pEntryResult;
+	if (!pEntry) return luaL_error(pLS, "GetMapEntryPosInfo: null CDynMapEntryCell*");
 
 	const char* pMapN = "";
 	const char* pTMapN = "";
@@ -1161,7 +1171,7 @@ int GetChallengeGuildID_raw(lua_State* pLS) {
 	int nParaNum = lua_gettop(pLS);
 	if (nParaNum != 1) return 0;
 
-	DWORD dwHostID = 0, dwReqID = 0, dwMoney;
+	std::uint32_t dwHostID = 0, dwReqID = 0, dwMoney;
 	if (!game_db.GetChall((BYTE)lua_tonumber(pLS, 1), dwHostID, dwReqID, dwMoney))
 		return 0;
 
@@ -1177,7 +1187,7 @@ void EndGuildBid(int byLevel) {
 }
 
 void EndGuildChallenge(unsigned int param1, unsigned int param2, unsigned int param3) {
-	game_db.EndChall((DWORD)param1, (DWORD)param2, param3 ? TRUE : FALSE);
+	game_db.EndChall(static_cast<std::uint32_t>(param1), static_cast<std::uint32_t>(param2), param3 ? true : false);
 }
 
 int AddKbCap(CCharacter* pCCha, int cap) {
@@ -1344,6 +1354,8 @@ int IsValidRegTeam_raw(lua_State* pLS) {
 	auto pMember2Result = luabridge::Stack<CCharacter*>::get(pLS, 4);
 	if (!pMember2Result) { PARAM_ERROR lua_pushnumber(pLS, (long)0); return 1; }
 	CCharacter* pMember2 = *pMember2Result;
+	if (!pCaptain || !pMember1 || !pMember2)
+		return luaL_error(pLS, "IsValidRegTeam: null CCharacter* (captain=%p, m1=%p, m2=%p)", pCaptain, pMember1, pMember2);
 
 	if (game_db.IsValidAmphitheaterTeam(teamID, pCaptain->GetID(), pMember1->GetID(), pMember2->GetID()))
 		lua_pushnumber(pLS, (long)1);
@@ -1357,6 +1369,7 @@ int IsValidTeam_raw(lua_State* pLS) {
 	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
 	if (!pCChaResult) { PARAM_ERROR lua_pushnumber(pLS, (long)-4); return 1; }
 	CCharacter* pCCha = *pCChaResult;
+	if (!pCCha) return luaL_error(pLS, "IsValidTeam: null CCharacter*");
 	CPlayer* pTeamPlayer = pCCha->GetPlayer();
 	int masterID = pTeamPlayer->GetDBChaId();
 
@@ -1461,6 +1474,10 @@ int AmphitheaterTeamSignUP_raw(lua_State* pLS) {
 	auto pMember2Result = luabridge::Stack<CCharacter*>::get(pLS, 4);
 	if (!pMember2Result) { PARAM_ERROR return 0; }
 	CCharacter* pMember2 = *pMember2Result;
+	if (!pCaptain || !pMember1 || !pMember2)
+		return luaL_error(pLS, "AmphitheaterTeamSignUP: null CCharacter* (captain=%p, m1=%p, m2=%p)", pCaptain, pMember1, pMember2);
+	if (!pCaptain->GetPlayer() || !pMember1->GetPlayer() || !pMember2->GetPlayer())
+		return luaL_error(pLS, "AmphitheaterTeamSignUP: null Player* for team members");
 
 	if (game_db.AmphitheaterTeamSignUP(teamID, pCaptain->GetPlayer()->GetDBChaId(), pMember1->GetPlayer()->GetDBChaId(),
 									   pMember2->GetPlayer()->GetDBChaId()))
@@ -1652,6 +1669,7 @@ int SetExpiration_raw(lua_State* L) {
 	auto pSItemResult = luabridge::Stack<SItemGrid*>::get(L, 1);
 	if (!pSItemResult) { PARAM_ERROR lua_pushnumber(L, 0); return 1; }
 	SItemGrid* pSItem = *pSItemResult;
+	if (!pSItem) return luaL_error(L, "SetExpiration: null SItemGrid*");
 	long expiration = *static_cast<long*>(lua_touserdata(L, 2));
 	if (expiration == -1 || expiration == 0)
 		pSItem->expiration = 0;

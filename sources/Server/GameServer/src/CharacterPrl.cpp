@@ -35,7 +35,7 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 			BickerNotice("Please Calm Down Don't Spam! ");
 			return;
 		}
-		game_db.ShowExpRank(GetPlyMainCha(), 50);
+		game_db.ShowExpRank(*GetPlyMainCha(), 50);
 		break;
 	}
 	case CMD_CM_STALLSEARCH: {

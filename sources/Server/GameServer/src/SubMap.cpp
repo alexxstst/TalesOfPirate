@@ -14,7 +14,6 @@ const char* GetResPath(const char *pszRes);
 
 SubMap::SubMap()
 :m_pCEyeshotCell(0)
-,m_pCStateCell(0)
 ,m_bIsRun(false)
 {
 	m_sCopyNO = 0;
@@ -24,22 +23,6 @@ SubMap::SubMap()
 
 SubMap::~SubMap()
 {
-/*	for (short i = 0; i < GetEyeshotCellLin(); i++)
-	{
-		for (short j = 0; j < GetEyeshotCellCol(); j++)
-		{
-			delete [] m_pCEyeshotCell[i][j].m_pCStateCell;
-		}
-		delete [] m_pCEyeshotCell[i];
-	}
-	delete [] m_pCEyeshotCell;
-	m_pCEyeshotCell = 0;
-
-	for (short i = 0; i < GetStateCellLin(); i++)
-		delete [] m_pCStateCell[i];
-	delete [] m_pCStateCell;
-	m_pCStateCell = 0;
-*/
 }
 
 bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
@@ -47,34 +30,21 @@ bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
 	m_pCMapRes = pCMapRes;
 	m_pCBaseRange = 0;
 
-	// 
-	m_pCStateCell = new CStateCell**[GetStateCellLin()];
-	if (!m_pCStateCell)
-		//THROW_EXCP(excpMem,"");
-		THROW_EXCP(excpMem,RES_STRING(GM_SUBMAP_CPP_00001));
-	for (short i = 0; i < GetStateCellLin(); i++)
-	{
-		m_pCStateCell[i] = new CStateCell*[GetStateCellCol()];
-		if (!m_pCStateCell[i])
-			//THROW_EXCP(excpMem,"");
-			THROW_EXCP(excpMem,RES_STRING(GM_SUBMAP_CPP_00001));
-		for (short j = 0; j < GetStateCellCol(); j++)
-			m_pCStateCell[i][j] = 0;
-	}
-	// 
+	// Инициализация 2D-сетки state cell
+	_stateCellGrid.Init(GetStateCellLin(), GetStateCellCol());
+
+	// Инициализация eyeshot cell
 	m_pCEyeshotCell = new CEyeshotCell*[GetEyeshotCellLin()];
-	if (!m_pCEyeshotCell)
-		//THROW_EXCP(excpMem,"");
+	if (!m_pCEyeshotCell) {
 		THROW_EXCP(excpMem,RES_STRING(GM_SUBMAP_CPP_00002));
+	}
 	short	sECellSX, sECellEX, sECellSY, sECellEY;
-	short	sSCellNum;
 	for (short i = 0; i < GetEyeshotCellLin(); i++)
 	{
 		m_pCEyeshotCell[i] = new CEyeshotCell[GetEyeshotCellCol()];
-		if (!m_pCEyeshotCell[i])
-			//THROW_EXCP(excpMem,"");
+		if (!m_pCEyeshotCell[i]) {
 			THROW_EXCP(excpMem,RES_STRING(GM_SUBMAP_CPP_00002));
-		// 
+		}
 		for (short j = 0; j < GetEyeshotCellCol(); j++)
 		{
 			m_pCEyeshotCell[i][j].m_sPosX = j;
@@ -84,12 +54,14 @@ bool SubMap::Init(CMapRes *pCMapRes, dbc::Short sCopyNO)
 			sECellEX = (j * GetEyeshotCellWidth() + GetEyeshotCellWidth() - 1) / GetStateCellWidth();
 			sECellSY = i * GetEyeshotCellHeight() / GetStateCellHeight();
 			sECellEY = (i * GetEyeshotCellHeight() + GetEyeshotCellHeight() - 1) / GetStateCellHeight();
-			m_pCEyeshotCell[i][j].m_sStateCellNum = (sECellEX - sECellSX + 1) * (sECellEY - sECellSY + 1);
-			m_pCEyeshotCell[i][j].m_pCStateCell = new CStateCell**[m_pCEyeshotCell[i][j].m_sStateCellNum];
-			sSCellNum = 0;
-			for (short m = sECellSY; m <= sECellEY; m++)
-				for (short n = sECellSX; n <= sECellEX; n++)
-					m_pCEyeshotCell[i][j].m_pCStateCell[sSCellNum++] = &m_pCStateCell[m][n];
+
+			auto& slots = m_pCEyeshotCell[i][j]._stateCellSlots;
+			slots.reserve(static_cast<size_t>(sECellEX - sECellSX + 1) * (sECellEY - sECellSY + 1));
+			for (short m = sECellSY; m <= sECellEY; m++) {
+				for (short n = sECellSX; n <= sECellEX; n++) {
+					slots.push_back(_stateCellGrid.SlotAddress(n, m));
+				}
+			}
 		}
 	}
 
@@ -1085,8 +1057,10 @@ Research:
 		m_sRangeCurMgrUnit++;
 		if (m_sRangeCurMgrUnit >= m_sRangeMgrUnitNum)
 			return 0;
-		if (m_pCStateCell[m_lRangeMgrUnit[m_sRangeCurMgrUnit][1]][m_lRangeMgrUnit[m_sRangeCurMgrUnit][0]])
-			m_pRangeCurEntiNode = m_pCStateCell[m_lRangeMgrUnit[m_sRangeCurMgrUnit][1]][m_lRangeMgrUnit[m_sRangeCurMgrUnit][0]]->m_pCChaIn;
+		if (auto* cell = _stateCellGrid.Get(static_cast<short>(m_lRangeMgrUnit[m_sRangeCurMgrUnit][0]),
+										   static_cast<short>(m_lRangeMgrUnit[m_sRangeCurMgrUnit][1]))) {
+			m_pRangeCurEntiNode = cell->m_pCChaIn;
+		}
 	}
 
 	if (m_pRangeCurEntiNode)
@@ -1133,8 +1107,12 @@ bool SubMap::RangeAddState(uChar uchFightID, uLong ulSrcWorldID, Long lSrcHandle
 		bAlreadyHas = false;
 		x = m_lRangeMgrUnit[i][0], y = m_lRangeMgrUnit[i][1];
 
-		if (m_pCStateCell[y][x] && m_pCStateCell[y][x]->m_CSkillState.HasState((uChar)sStateParam[0]))
-			bAlreadyHas = true;
+		{
+			auto* cell = _stateCellGrid.Get(static_cast<short>(x), static_cast<short>(y));
+			if (cell && cell->m_CSkillState.HasState((uChar)sStateParam[0])) {
+				bAlreadyHas = true;
+			}
+		}
 		if (x == m_lRangeCentUnit[0] && y == m_lRangeCentUnit[1])
 			bAddSuc = AddCellState(uchFightID, ulSrcWorldID, lSrcHandle, chObjType, chObjHabitat, chEffType, x, y, (uChar)sStateParam[0], (uChar)sStateParam[1], ulStartTick, sStateParam[2], pSStateR->chAddType, 1);
 		else
@@ -1181,15 +1159,20 @@ bool SubMap::RangeAddState(Rect *pSRange, uChar uchFightID, uLong ulSrcWorldID, 
 			bAddSuc = false;
 			bAlreadyHas = false;
 
-			if (m_pCStateCell[y][x] && m_pCStateCell[y][x]->m_CSkillState.HasState((uChar)sStateParam[0]))
-				bAlreadyHas = true;
+			{
+				auto* cell = _stateCellGrid.Get(static_cast<short>(x), static_cast<short>(y));
+				if (cell && cell->m_CSkillState.HasState((uChar)sStateParam[0])) {
+					bAlreadyHas = true;
+				}
+			}
 			if (y == lUnitCY && x == lUnitCX)
 				bAddSuc = AddCellState(uchFightID, ulSrcWorldID, lSrcHandle, chObjType, chObjHabitat, chEffType, x, y, (uChar)sStateParam[0], (uChar)sStateParam[1], ulStartTick, sStateParam[2], pSStateR->chAddType, 1);
 			else
 				bAddSuc = AddCellState(uchFightID, ulSrcWorldID, lSrcHandle, chObjType, chObjHabitat, chEffType, x, y, (uChar)sStateParam[0], (uChar)sStateParam[1], ulStartTick, sStateParam[2], pSStateR->chAddType, 0);
 			if (!bAlreadyHas && bAddSuc)
 			{
-				ActiveEyeshotCell(m_pCStateCell[y][x]->m_pCEyeshotCell->m_sPosX, m_pCStateCell[y][x]->m_pCEyeshotCell->m_sPosY); // 
+				auto* cell = _stateCellGrid.Get(static_cast<short>(x), static_cast<short>(y));
+				ActiveEyeshotCell(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
 				NotiStateCellToEyeshot((short)x, (short)y);
 			}
 		}
@@ -1199,16 +1182,17 @@ bool SubMap::RangeAddState(Rect *pSRange, uChar uchFightID, uLong ulSrcWorldID, 
 
 void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
 {
-	if (!m_pCStateCell[sCellY][sCellX])
+	auto* cell = _stateCellGrid.Get(sCellX, sCellY);
+	if (!cell) {
 		return;
+	}
 
-	//  :   
 	auto pk = net::msg::serialize(net::msg::McAStateBeginSeeMessage{
 		static_cast<int64_t>(sCellX), static_cast<int64_t>(sCellY),
-		m_pCStateCell[sCellY][sCellX]->m_CSkillState.BuildStateEntries()
+		cell->m_CSkillState.BuildStateEntries()
 	});
 
-	Rect	l_rect = GetEyeshot(m_pCStateCell[sCellY][sCellX]->m_pCEyeshotCell->m_sPosX, m_pCStateCell[sCellY][sCellX]->m_pCEyeshotCell->m_sPosY);
+	Rect	l_rect = GetEyeshot(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
 	Entity		*pCEnt;
 	CCharacter	*pCCha;
 	CPlayer	*pHeadPlayer = 0, *pLastPlayer = 0;

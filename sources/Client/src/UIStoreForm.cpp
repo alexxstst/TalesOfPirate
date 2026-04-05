@@ -650,21 +650,6 @@ namespace GUI
 	// 
 	void CStoreMgr::ShowStoreWebPage()
 	{
-		extern Cooperate g_cooperate;
-		if(g_cooperate.code == COP_CGA) // 
-		{
-            string strURL = "http://pv.cga.com.cn/counter.asp?id=720";
-
-            ShellExecute(0, "open", strURL.c_str(), 
-                        NULL, NULL, SW_SHOW);
-        }
-        else
-        {
-		    /*ShellExecute(0, "open",
-				    GetLanguageString(938), // "http://cache.moliyo.com/shop_77/",
-				    NULL, NULL, SW_SHOW);*/
-			//NetColourInfo( 0x9576D1, "Ingame shop currently offline" );
-        }
 	}
 
 
@@ -1559,32 +1544,12 @@ namespace GUI
 		//	if(g_stUIStore.imgBackGround10->GetIsShow()) return;
 		//	CBoxMgr::ShowSelectBox(_evtStoreToVipEvent, GetLanguageString(915), true); // VIP
 		//}
-		else if(strName == "btnReceiveMoDou") // 
+		else if(strName == "btnReceiveMoDou") //
 		{
 			if(g_stUIStore.imgBackGround10->GetIsShow()) return;
 
-			string strURL("");
-			extern Cooperate g_cooperate;
-			switch(g_cooperate.code)
-			{
-			case COP_OURGAME:
-				strURL = "http://shop.ourgame.com/games/hdw/#cz";
-				break;
-
-            case COP_CGA:
-                strURL = "http://pv.cga.com.cn/counter.asp?id=720";
-                break;
-
-			case COP_SINA:
-
-			default:
-				strURL = GetLanguageString(939); // "http://pay.moliyo.com/";
-				break;
-			}
-
-			ShellExecute(0, "open",
-					strURL.c_str(),
-					NULL, NULL, SW_SHOW);	
+			std::string strURL = GetLanguageString(939);
+			ShellExecute(0, "open", strURL.c_str(), NULL, NULL, SW_SHOW);
 		}
 		else if(strName.size() > 0 && strName.substr(0, 8) == "btnBlue_" &&
 				'0' <= strName[strName.size() - 1] && strName[strName.size() - 1] <= '0' + CStoreMgr::STORE_PAGE_SIZE)	// 

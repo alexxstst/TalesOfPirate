@@ -1,0 +1,237 @@
+//编号（道具id）	道具名	精炼特效表现类型1   （攻击系）	精炼特效表现类型2   (Defensive Series)	精炼特效表现类型3   (Poison Series)	精炼特效表现类型4   (增益状态系）	精炼特效表现类型5   （攻击系＋防御系）	精炼特效表现类型6      （攻击系＋毒副状态系）	精炼特效表现类型7   （攻击系＋增益状态系）	精炼特效表现类型8   （防御+毒）	精炼特效表现类型9   （防御+增益）	精炼特效表现类型10   （毒+增益）	精炼特效表现类型11   （攻击+防御+毒）	精炼特效表现类型12   （攻击+防御+增益）	精炼特效表现类型13   （攻击+毒+增益）	精炼特效表现类型14   （防御+毒+增益）	Lance's forging base effect value	卡西斯精练效果基准值	菲利尔精练效果基准值	艾米精练效果基准值
+0004	Serpentine Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0005	Dazzling Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0006	Wyrm Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0007	Sacro Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.7	1.1	1	0.7
+0015	Criss Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0016	Paladin Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0017	Bone Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0018	Thunder Blade	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0019	Onyx Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0020	Rebel Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0021	Charging Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0022	Crescent Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0023	Delusion Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0039	Exquisite Pistol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0040	Exquisite Rifle	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0041	Laser Gun	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0042	Venom Gun	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0043	Firegun of Sol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0044	Token Pistol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0045	Gattling Firegun	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0076	Moon Kris	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0077	Hyena Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0078	Dagger of Hydra	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0079	Trident of Poseidon	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0083	Crystalline Kris	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0084	Vampiric Kris	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0100	Grace Wand	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0101	Beastly Wand	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0102	Thundorian Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0103	Staff of Life	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0107	Battle Stave	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0108	Lotus Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0109	Staff of Wonders	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0110	Revered Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0111	Demon Bane Rod	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0112	Crimson Rod	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0113	Draco	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0114	Drakan	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0115	Crag	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0116	Colossus	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0150	Visceral	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.5
+0151	Riven Soul	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.6
+0771	Greatsword of Incantation	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0772	Roar of Evanescence	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0773	Judgment of Enigma	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+0774	Blade of Incantation	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0775	Dance of Evanescence	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+0776	Blade of Enigma	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.8	1.2	1	0.7
+0782	Kiss of the Cursed	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0783	Bellow of Evanescence	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0784	Rifle of Enigma	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+0786	Staff of Incantation	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0787	Staff of Evanescence	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0788	Staff of Enigma	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0793	Staff of Abraxas	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0794	Staff of Mirage	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0795	Staff of the Sphinx	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+0800	Tooth of the Cursed	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0801	Tooth of Evanescence	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+0802	Kris of the Sphinx	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1372	Righteous Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1373	Cavalier Saber	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1374	Grey Sword of Darkan	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1376	Vampiric Bat King	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1.1	1	0.7
+1377	Common Rebel Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1378	Fiery Sword of Darkan	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1381	Protector Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1382	Invader Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1383	Soul Sword of Darkan	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1385	Wings of Death	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1.1	1	0.7
+1386	Enhanced Rebel Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1387	Rustle Sword	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1391	Emerald Blade	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1392	Steel Saber	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1393	Hymn Sword of Darkan	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1394	Sword of Dawn	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1398	Tribal Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1399	Amber Sword	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1408	Pocket Pistol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1409	Battle Rifle	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1410	Holy Judgement	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1411	Kiss of the Serpent	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1412	Lightning Taser	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1413	Steel Pistol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1414	Spectar Firegun	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1418	Comet Spike	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1419	Blade of Torment	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1420	Venom Soul Spike	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1421	Tooth of Fury	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1425	Quartz Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1426	Nightmare Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1430	Wand of Holiness	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1431	Feral Wand	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1432	Staff of Thunderbolt	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1433	Hearten Wand	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1437	Restraining Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1438	Fury Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1439	Staff of Wrath	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1440	Elegant Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1441	Staff of Gaia	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1442	Tears of Angel	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1446	Spike of Feint	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1447	Pirate Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1448	Sovereign Kris	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1449	Clarity Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1460	Gemmed Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1461	Cursed Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1465	Brilliance Wand	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1466	Wand of Vigor	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1467	Protector Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1468	Staff of High Priest	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1472	Staff of Endeavor	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1473	Staff of Flame	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1474	Staff of Sun	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1475	Spiritual Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1476	Staff of Binding	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1477	Eye of Sorrow	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1892	Earth Sealed Greatsword of Incantation	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1893	Fire Sealed Roar of Evanescence	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1894	Ice Sealed Judgment of Enigma	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+1895	Earth Sealed Blade of Incantation	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1896	Fire Sealed Dance of Evanescence	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1897	Ice Sealed Blade of Enigma	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+1903	Earth Sealed Kiss of the Cursed	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1904	Fire Sealed Bellow of Evanescence	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1905	Ice Sealed Rifle of Enigma	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+1907	Earth Sealed Staff of Incantation	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1908	Fire Sealed Staff of Evanescence	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1909	Ice Sealed Staff of Enigma	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1914	Earth Sealed Staff of Abraxas	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1915	Fire Sealed Staff of Mirage	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1916	Ice Sealed Staff of the Sphinx	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+1921	Earth Sealed Tooth of the Cursed	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1922	Fire Sealed Tooth of Evanescence	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+1923	Ice Sealed Kris of the Sphinx	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2338	Exquisite Pistol of Wraith	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2339	Exquisite Rifle	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2340	Laser Gun of Wraith	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2341	Venom Gun	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2342	Firegun of Sol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2343	Token Pistol of Wraith	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2344	Gattling Firegun of Wraith	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+2375	Moon Kris of Wraith	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2376	Hyena Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2377	Dagger of Hydra	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2378	Trident of Poseidon	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2382	Crystalline Kris of Wraith	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2383	Vampiric Kris of Wraith	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+2399	Graceful Wand of Wraith	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+2400	Beastly Wand of Wraith	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+2401	Thundorian Staff	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+2402	Staff of Life	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+2406	Battle Stave of Wraith	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+2407	Lotus Staff of Wraith	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3799	Sword of the Tempest	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+3800	Spike of Sistine	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+3801	Sword of the Kylin	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+3802	Sword of Glowing Flame	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+3803	Roar of Gallon	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+3804	Greatsword of the Tortoise	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+3806	Flaming Pistol	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+3807	Rifle of Darwin	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+3808	Rifle of the White Tiger	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+3810	Seal of Frozen Crescent	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3811	Staff of Udine	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3812	Staff of the Peacock	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3813	Glory Sigil	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3814	Staff of Hope	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3815	Staff of the Phoenix	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+3817	Blade of the Tempest	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+3818	Spike of Forlorn	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+3819	Blade of the Green Dragon	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+4197	Flame of the Arctic	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4198	Soul Spring	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4199	Searing Frost	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4200	Consonance of Souls	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4201	Claw of Demonic Dragon	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4202	Eye of Sacred Dragon	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4203	God of Flame	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4204	Gold of Tears	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4205	God of Fire	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4206	God of Rebuke	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4207	God of Sight	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4208	God of Wrath	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4209	Roar of Turbulence	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+4210	Soul Beast	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+4211	Comet Magenta	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+4212	Ember Scar	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+4213	Swift Lightning	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+4214	Rattlesnake	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+4215	Serpentine Gun of Resonance	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+4216	Tooth of Eclipse	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+4217	Thunder Tooth	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+4218	Essence Dagger	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+4300	Staff of Amercement	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4301	Staff of Sagacious	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4302	Guardian of Nature	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4303	Holy Guidance	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4304	Staff of Amercement	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4305	Staff of Sagacious	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4306	Guardian of Nature	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+4307	Holy Guidance	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+5001	Sword of Azure Flame	200	200	0	200	200	0	200	0	200	0	0	200	0	0	1.375	1.2	1.4	0
+5002	Sword of Crimson Thunder	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+5003	Great Hammer of Zest	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+5004	Blade of the Frozen Crescent	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+5005	Vinyon	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+5006	Rattle Drum of the Burning Crescent	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+5007	Sword of Crimson Flame	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.7	1.1	1	0.7
+5008	Sword of Azure Thunder	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1	1	0.7
+5009	Great Hammer of Hone	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1	1	0.7
+5010	Blade of Burning Crescent	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1	1	0.7
+5011	Victorian	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1	1	0.7
+5012	Rattle Drum of the Frozen Crescent	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1	1	0.7
+5277	Cleaning brush	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5278	Branch of Defecate	106	106	106	106	106	106	106	106	106	106	106	106	106	106	0.6	1.0	1.0	0.7
+5280	Soup Spoon	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5281	Pseudo Air Cannon	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1.0	1.0	0.7
+5282	Oriental Mystic Chopsticks	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.7	1.1	1.0	0.7
+5283	Barborosa's Knife	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5284	Barborosa's Fork	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5285	Matchstick Granny's Pan	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1.0	1.0	0.7
+5286	Fine Crossbow	5	14	0	15	34	0	33	0	32	0	0	35	0	0	0.6	1.0	1.0	0.7
+5448	Deadly Ruler	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1.0	1.0	0.7
+5449	Beef Tendon Bidirectional Tome	2	8	0	11	22	0	21	0	20	0	0	23	0	0	0.6	1.0	1.0	0.7
+5450	Deluxe Binding Encyclopaedia	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1.0	1.0	0.7
+5451	Snake-heart Magic Pen	7	6	0	1	18	0	17	0	16	0	0	19	0	0	0.6	1.0	1.0	0.7
+5452	Sharp Dividers	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5453	Jeansui Accurate Ruler	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5454	Jeansui Long Ruler	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5455	Jeansui Triangular Ruler	4	10	0	13	30	0	29	0	28	0	0	31	0	0	0.6	1.0	1.0	0.7
+5501	Big katana	110	110	0	110	110	0	110	0	110	0	0	110	0	0	0.9	0.1	0.1	0.1
+5502	Dark Repulsera	111	111	0	111	111	0	111	0	111	0	0	111	0	0	0.9	0.1	0.1	0.1
+6089	Bow of Incantation	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1.0	1.0	0.7
+6090	Bow of Evanescence	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1.0	1.0	0.7
+6091	Bow of Enigma	3	9	0	12	26	0	25	0	24	0	0	27	0	0	0.6	1.0	1.0	0.7

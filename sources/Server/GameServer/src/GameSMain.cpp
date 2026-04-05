@@ -41,6 +41,7 @@ void sigintHandler(int sig_num) {
 }
 
 int main(int argc, char* argv[]) {
+	SetConsoleOutputCP(CP_UTF8);
 	setvbuf(stdout, nullptr, _IONBF, 0);
 	setvbuf(stderr, nullptr, _IONBF, 0);
 

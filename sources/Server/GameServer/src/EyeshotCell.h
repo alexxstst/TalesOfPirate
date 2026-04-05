@@ -12,6 +12,7 @@
 #include "Entity.h"
 #include "Item.h"
 #include "StateCell.h"
+#include <vector>
 
 // 
 class CEyeshotCell
@@ -44,8 +45,7 @@ public:
 	CEyeshotCell	*m_pCNext;	// 
 	CEyeshotCell	*m_pCLast;
 
-	CStateCell		***m_pCStateCell;	// 
-	short			m_sStateCellNum;
+	std::vector<CStateCell**> _stateCellSlots;	// указатели на слоты в StateCellGrid
 
 private:
 	long			m_lChaCount;

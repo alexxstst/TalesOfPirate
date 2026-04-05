@@ -20,108 +20,108 @@ class CPlayer;
 // ============================================================================
 
 struct AccountRow {
-	int ato_id;
+	std::int32_t ato_id;
 	std::string ato_nome;
-	int jmes;
+	std::int32_t jmes;
 	std::string ator_ids;
 	std::string last_ip;
 	std::string disc_reason;
 	std::string last_leave;
 	std::string password;
-	int merge_state;
-	int IMP;
-	int total_votes;
-	int credit;
+	std::int32_t merge_state;
+	std::int32_t IMP;
+	std::int32_t total_votes;
+	std::int32_t credit;
 };
 
 struct AmphitheaterSettingRow {
-	int section;
-	int season;
-	int round;
-	int state;
+	std::int32_t section;
+	std::int32_t season;
+	std::int32_t round;
+	std::int32_t state;
 	std::string createdate;
 	std::string updatetime;
 };
 
 struct AmphitheaterTeamRow {
-	int id;
-	int captain;
+	std::int32_t id;
+	std::int32_t captain;
 	std::string member;
-	int matchno;
-	int state;
-	int map;
-	int mapflag;
-	int winnum;
-	int losenum;
-	int relivenum;
+	std::int32_t matchno;
+	std::int32_t state;
+	std::int32_t map;
+	std::int32_t mapflag;
+	std::int32_t winnum;
+	std::int32_t losenum;
+	std::int32_t relivenum;
 	std::string createdate;
 	std::string updatetime;
 };
 
 struct BoatRow {
-	int boat_id;
-	int boat_berth;
+	std::int32_t boat_id;
+	std::int32_t boat_berth;
 	std::string boat_name;
-	int boat_boatid;
-	int boat_header;
-	int boat_body;
-	int boat_engine;
-	int boat_cannon;
-	int boat_equipment;
-	int boat_bagsize;
+	std::int32_t boat_boatid;
+	std::int32_t boat_header;
+	std::int32_t boat_body;
+	std::int32_t boat_engine;
+	std::int32_t boat_cannon;
+	std::int32_t boat_equipment;
+	std::int32_t boat_bagsize;
 	std::string boat_bag;
-	int boat_diecount;
+	std::int32_t boat_diecount;
 	std::string boat_isdead;
-	int cur_endure;
-	int mx_endure;
-	int cur_supply;
-	int mx_supply;
+	std::int32_t cur_endure;
+	std::int32_t mx_endure;
+	std::int32_t cur_supply;
+	std::int32_t mx_supply;
 	std::string skill_state;
-	int boat_ownerid;
+	std::int32_t boat_ownerid;
 	std::string boat_createtime;
 	std::string boat_isdeleted;
 	std::string map;
-	int map_x;
-	int map_y;
-	int angle;
-	int degree;
-	int exp;
-	int version;
+	std::int32_t map_x;
+	std::int32_t map_y;
+	std::int32_t angle;
+	std::int32_t degree;
+	std::int32_t exp;
+	std::int32_t version;
 };
 
 struct CharacterRow {
-	int atorID;
+	std::int32_t atorID;
 	std::string atorNome;
 	std::string motto;
-	int icon;
-	int version;
-	int pk_ctrl;
-	int endeMem;
-	int ato_id;
-	int guild_id;
-	int guild_stat;
-	int64_t guild_permission;
+	std::int32_t icon;
+	std::int32_t version;
+	std::int32_t pk_ctrl;
+	std::int32_t endeMem;
+	std::int32_t ato_id;
+	std::int32_t guild_id;
+	std::int32_t guild_stat;
+	std::int64_t guild_permission;
 	std::string job;
-	int degree;
-	int64_t exp;
-	int hp;
-	int sp;
-	int ap;
-	int tp;
-	int bomd;
-	int str, dex, agi, con, sta, luk;
-	int sail_lv;
-	int sail_exp;
-	int sail_left_exp;
-	int live_lv;
-	int live_exp;
+	std::int32_t degree;
+	std::int64_t exp;
+	std::int32_t hp;
+	std::int32_t sp;
+	std::int32_t ap;
+	std::int32_t tp;
+	std::int32_t bomd;
+	std::int32_t str, dex, agi, con, sta, luk;
+	std::int32_t sail_lv;
+	std::int32_t sail_exp;
+	std::int32_t sail_left_exp;
+	std::int32_t live_lv;
+	std::int32_t live_exp;
 	std::string map;
-	int map_x;
-	int map_y;
-	int radius;
-	int angle;
+	std::int32_t map_x;
+	std::int32_t map_y;
+	std::int32_t radius;
+	std::int32_t angle;
 	std::string olhe;
-	int kb_capacity;
+	std::int32_t kb_capacity;
 	std::string kitbag;
 	std::string skillbag;
 	std::string shortcut;
@@ -131,79 +131,79 @@ struct CharacterRow {
 	std::string miscount;
 	std::string birth;
 	std::string login_cha;
-	int live_tp;
+	std::int32_t live_tp;
 	std::string map_mask;
-	int delflag;
+	std::int32_t delflag;
 	std::string operdate;
 	std::string deldate;
 	std::string main_map;
 	std::string skill_state;
 	std::string bank;
 	std::string estop;
-	int estoptime;
-	int kb_locked;
-	int kitbag_tmp;
-	int credit;
-	int store_item;
+	std::int32_t estoptime;
+	std::int32_t kb_locked;
+	std::int32_t kitbag_tmp;
+	std::int32_t credit;
+	std::int32_t store_item;
 	std::string extend;
-	int chatColour;
-	int IMP;
+	std::int32_t chatColour;
+	std::int32_t IMP;
 };
 
 struct CharacterLogRow {
-	int atorID;
+	std::int32_t atorID;
 	std::string atorNome;
-	int ato_id;
-	int guild_id;
+	std::int32_t ato_id;
+	std::int32_t guild_id;
 	std::string job;
-	int degree;
-	int exp;
-	int hp, sp, ap, tp, bomd;
-	int str, dex, agi, con, sta, luk;
+	std::int32_t degree;
+	std::int32_t exp;
+	std::int32_t hp, sp, ap, tp, bomd;
+	std::int32_t str, dex, agi, con, sta, luk;
 	std::string map;
-	int map_x, map_y, radius;
+	std::int32_t map_x, map_y, radius;
 	std::string olhe;
 	std::string del_date;
 };
 
 struct FriendsRow {
-	int cha_id1;
-	int cha_id2;
+	std::int32_t cha_id1;
+	std::int32_t cha_id2;
 	std::string relation;
 	std::string createtime;
 };
 
 struct GuildRow {
-	int guild_id;
+	std::int32_t guild_id;
 	std::string guild_name;
 	std::string motto;
 	std::string passwd;
-	int leader_id;
-	int64_t exp;
-	int64_t gold;
+	std::int32_t leader_id;
+	std::int64_t exp;
+	std::int64_t gold;
 	std::string bank;
-	int level;
-	int member_total;
-	int try_total;
+	std::int32_t level;
+	std::int32_t member_total;
+	std::int32_t try_total;
 	std::string disband_date;
-	int challlevel;
-	int challid;
-	int64_t challmoney;
-	int challstart;
+	std::int32_t challlevel;
+	std::int32_t challid;
+	std::int64_t challmoney;
+	std::int32_t challstart;
 };
 
 struct LotterySettingRow {
-	int section;
-	int issue;
-	int state;
+	std::int32_t section;
+	std::int32_t issue;
+	std::int32_t state;
 	std::string createdate;
 	std::string updatetime;
 	std::string itemno;
 };
 
 struct MapMaskRow {
-	int id;
-	int atorID;
+	std::int32_t id;
+	std::int32_t atorID;
 	std::string content1;
 	std::string content2;
 	std::string content3;
@@ -212,105 +212,105 @@ struct MapMaskRow {
 };
 
 struct MasterRow {
-	int cha_id1;
-	int cha_id2;
-	int finish;
+	std::int32_t cha_id1;
+	std::int32_t cha_id2;
+	std::int32_t finish;
 	std::string relation;
 };
 
 struct ParamRow {
-	int id;
-	int param1, param2, param3, param4, param5;
-	int param6, param7, param8, param9, param10;
+	std::int32_t id;
+	std::int32_t param1, param2, param3, param4, param5;
+	std::int32_t param6, param7, param8, param9, param10;
 };
 
 struct PersonAvatarRow {
-	int atorID;
+	std::int32_t atorID;
 	std::vector<uint8_t> avatar;
 };
 
 struct PersonInfoRow {
-	int atorID;
+	std::int32_t atorID;
 	std::string motto;
-	int showmotto;
+	std::int32_t showmotto;
 	std::string sex;
-	int age;
+	std::int32_t age;
 	std::string name;
 	std::string animal_zodiac;
 	std::string blood_type;
-	int birthday;
+	std::int32_t birthday;
 	std::string state;
 	std::string city;
 	std::string constellation;
 	std::string career;
-	int avatarsize;
-	int prevent;
-	int support;
-	int oppose;
+	std::int32_t avatarsize;
+	std::int32_t prevent;
+	std::int32_t support;
+	std::int32_t oppose;
 };
 
 struct PropertyRow {
-	int64_t id;
-	int64_t atorID;
+	std::int64_t id;
+	std::int64_t atorID;
 	std::string context;
-	int64_t sum;
+	std::int64_t sum;
 	std::string time;
 };
 
 struct ResourceRow {
-	int id;
-	int atorID;
-	int type_id;
+	std::int32_t id;
+	std::int32_t atorID;
+	std::int32_t type_id;
 	std::string content;
 };
 
 struct StatLogRow {
 	std::string track_date;
-	int login_num;
-	int play_num;
-	int wgplay_num;
+	std::int32_t login_num;
+	std::int32_t play_num;
+	std::int32_t wgplay_num;
 };
 
 struct StatDegreeRow {
 	std::string statDate;
-	int degree;
-	int64_t characterCount;
+	std::int32_t degree;
+	std::int64_t characterCount;
 };
 
 struct StatGenderRow {
 	std::string statDate;
 	std::string gender;
-	int64_t genderCount;
+	std::int64_t genderCount;
 };
 
 struct StatJobRow {
 	std::string statDate;
 	std::string job;
-	int64_t characterCount;
+	std::int64_t characterCount;
 };
 
 struct StatLoginRow {
 	std::string statDate;
-	int64_t loginCount;
+	std::int64_t loginCount;
 };
 
 struct StatMapRow {
 	std::string statDate;
 	std::string map;
-	int64_t playCount;
+	std::int64_t playCount;
 };
 
 struct TicketRow {
-	int id;
-	int atorID;
-	int issue;
+	std::int32_t id;
+	std::int32_t atorID;
+	std::int32_t issue;
 	std::string itemno;
-	int real;
+	std::int32_t real;
 	std::string buydate;
 };
 
 struct TradeLogRow {
-	int ID;
+	std::int32_t ID;
 	std::string ExecuteTime;
 	std::string GameServer;
 	std::string Action;
@@ -322,20 +322,20 @@ struct TradeLogRow {
 struct WeekReportRow {
 	std::string ato_nome;
 	std::string atorNome;
-	int degree;
+	std::int32_t degree;
 	std::string ip;
 	std::string createdate;
 	std::string logouttime;
-	int playtime;
+	std::int32_t playtime;
 	std::string Guild_Name;
 };
 
 struct WinTicketRow {
-	int issue;
+	std::int32_t issue;
 	std::string itemno;
-	int grade;
+	std::int32_t grade;
 	std::string createdate;
-	int num;
+	std::int32_t num;
 };
 
 // ============================================================================
@@ -797,75 +797,41 @@ class PlayerStorage {
 	OdbcDatabase& _db;
 	TableCharacter& _characters;
 
-	// Совместимые хелперы — cfl_rs API через OdbcDatabase (без try/catch)
-	enum { MAX_COL = 64, MAX_DATALEN = 8192 };
-
-	UCHAR _buf[MAX_COL][MAX_DATALEN]{};
-	SDWORD _buf_len[MAX_COL]{};
-
-	void handle_err(SQLHANDLE, SQLSMALLINT, RETCODE, const char* = nullptr, bool = false);
-
-	std::string _tbl_name{"character"};
-	int _max_col{100};
-
-	const char* _get_table() const;
-	SQLRETURN exec_sql_direct(const char* sql);
-	int get_affected_rows();
-	bool _get_row(std::string buf[], int maxCol, const char* param, const char* filter, int* affect_rows = nullptr);
-	bool _get_row2(const char* sql, std::string buf[], int maxCol, int* rows_got = nullptr);
-	bool _get_row3(std::string buf[], int maxCol, const char* param, const char* filter, int* affect_rows = nullptr);
-	bool begin_tran();
-	bool commit_tran();
-	bool rollback();
-	bool getalldata(const char* sql, std::vector<std::vector<std::string>>& data);
-
 public:
 	PlayerStorage(OdbcDatabase& db, TableCharacter& characters)
 		: _db(db), _characters(characters) {
 	}
 
-	bool ShowExpRank(CCharacter* pCha, int count);
+	bool ShowExpRank(CCharacter& pCha, std::int32_t count);
 	bool Init(void);
-	bool ReadAllData(CPlayer& player, DWORD atorID);
-	bool SaveAllData(CPlayer* pPlayer, char chSaveType); //
-	bool SavePos(CPlayer* pPlayer); //
-	bool SaveMoney(CPlayer* pPlayer);
-	bool SaveKBagDBID(CPlayer* pPlayer);
-	bool SaveKBagTmpDBID(CPlayer* pPlayer); // ID
-	bool SaveKBState(CPlayer* pPlayer); //
-	bool SaveMMaskDBID(CPlayer* pPlayer);
-	bool SaveBankDBID(CPlayer* pPlayer);
-	bool SaveTableVer(DWORD atorID); //
-	BOOL SaveMissionData(CPlayer* pPlayer, DWORD atorID); //
-	BOOL VerifyName(const char* pszName); //
-	std::string GetName(int cha_id);
+	bool ReadAllData(CPlayer& player, std::uint32_t atorID);
+	bool SaveAllData(CPlayer& pPlayer, char chSaveType); //
+	bool SavePos(CPlayer& pPlayer); //
+	bool SaveMoney(CPlayer& pPlayer);
+	bool SaveKBagDBID(CPlayer& pPlayer);
+	bool SaveKBagTmpDBID(CPlayer& pPlayer); // ID
+	bool SaveKBState(CPlayer& pPlayer); //
+	bool SaveMMaskDBID(CPlayer& pPlayer);
+	bool SaveBankDBID(CPlayer& pPlayer);
+	bool SaveTableVer(std::uint32_t atorID); //
+	bool SaveMissionData(CPlayer& pPlayer, std::uint32_t atorID); //
+	bool VerifyName(const std::string& pszName); //
+	std::string GetName(std::int32_t cha_id);
 
-	BOOL AddCreditByDBID(DWORD atorID, long lCredit);
-	BOOL IsChaOnline(DWORD atorID, BOOL& bOnline);
-	Long GetChaAddr(DWORD atorID);
-	bool SetChaAddr(DWORD atorID, Long addr);
+	bool AddCreditByDBID(std::uint32_t atorID, std::int32_t lCredit);
+	bool IsChaOnline(std::uint32_t atorID, bool& bOnline);
+	Long GetChaAddr(std::uint32_t atorID);
+	bool SetChaAddr(std::uint32_t atorID, Long addr);
 
-	bool SetGuildPermission(int atorID, unsigned long perm, int guild_id);
+	bool SetGuildPermission(std::int32_t atorID, std::uint32_t perm, std::int32_t guild_id);
 
 
-	BOOL SaveStoreItemID(DWORD atorID, long lStoreItemID);
-	BOOL AddMoney(DWORD atorID, long money);
+	bool SaveStoreItemID(std::uint32_t atorID, std::int32_t lStoreItemID);
+	bool AddMoney(std::uint32_t atorID, std::int32_t money);
 
-	BOOL SaveDaily(CPlayer* pPlayer);
+	bool SaveDaily(CPlayer& pPlayer);
 };
 
-class CTableMaster : public cfl_rs {
-public:
-	CTableMaster(cfl_db* pDB)
-		: cfl_rs(pDB, "master", 6) {
-	}
-
-	bool Init(void);
-	unsigned long GetMasterDBID(CPlayer* pPlayer);
-	bool IsMasterRelation(int masterID, int prenticeID);
-};
-
-//
 enum ResDBTypeID {
 	enumRESDB_TYPE_LOOK, //
 	enumRESDB_TYPE_KITBAG, //
@@ -878,51 +844,6 @@ enum IssueState {
 	enumCURRENT = 0, //
 	enumPASTDUE = 1, //
 	enumDISUSE = 2, //
-};
-
-//
-class CTableLotterySetting : public cfl_rs {
-public:
-	CTableLotterySetting(cfl_db* pDB)
-		: cfl_rs(pDB, "LotterySetting", 10) {
-	}
-
-	bool Init(void);
-	bool GetCurrentIssue(int& issue);
-	bool AddIssue(int issue);
-	bool DisuseIssue(int issue, int state);
-	bool SetWinItemNo(int issue, const char* itemno);
-	bool GetWinItemNo(int issue, std::string& itemno);
-};
-
-//
-class CTableTicket : public cfl_rs {
-public:
-	CTableTicket(cfl_db* pDB)
-		: cfl_rs(pDB, "Ticket", 10) {
-	}
-
-	bool Init(void);
-	bool AddTicket(int atorID, int issue, char itemno[6][2]);
-	bool IsExist(int issue, char* itemno);
-	bool CalWinTicket(int issue, int max, std::string& itemno);
-
-private:
-	bool AddTicket(int atorID, int issue, char itemno1, char itemno2, char itemno3, char itemno4, char itemno5,
-				   char itemno6, int real = 1);
-};
-
-//
-class CTableWinTicket : public cfl_rs {
-public:
-	CTableWinTicket(cfl_db* pDB)
-		: cfl_rs(pDB, "WinTicket", 10) {
-	}
-
-	bool Init(void);
-	bool GetTicket(int issue);
-	bool AddTicket(int issue, char* itemno, int grade);
-	bool Exchange(int issue, char* itemno);
 };
 
 struct AmphitheaterSetting {
@@ -942,88 +863,19 @@ struct AmphitheaterTeam {
 	};
 };
 
-//
-//
-class CTableAmphitheaterSetting : public cfl_rs {
-public:
-	CTableAmphitheaterSetting(cfl_db* pDB)
-		: cfl_rs(pDB, "AmphitheaterSetting", 10) {
-	}
-
-	bool Init(void);
-	bool GetCurrentSeason(int& season, int& round);
-	bool AddSeason(int season);
-	bool DisuseSeason(int season, int state, const char* winner);
-	bool UpdateRound(int season, int round);
-};
-
-//
-class CTableAmphitheaterTeam : public cfl_rs {
-public:
-	CTableAmphitheaterTeam(cfl_db* pDB)
-		: cfl_rs(pDB, "AmphitheaterTeam", 10) {
-	}
-
-	bool Init(void);
-	bool GetTeamCount(int& count);
-	bool GetNoUseTeamID(int& teamID);
-	bool TeamSignUP(int& teamID, int captain, int member1, int member2);
-	bool TeamCancel(int teamID);
-
-	bool TeamUpdate(int teamID, int matchNo, int state, int winnum, int losenum, int relivenum);
-	bool IsValidAmphitheaterTeam(int teamID, int captainID, int member1, int member2);
-	bool IsLogin(int pActorID); //Add by sunny.sun20080714
-	bool IsMapFull(int MapID, int& PActorIDNum);
-	bool UpdateMapNum(int Teamid, int Mapid, int MapFlag);
-	bool SetMaxBallotTeamRelive(void);
-	bool SetMatchResult(int Teamid1, int Teamid2, int Id1state, int Id2state);
-	bool GetMapFlag(int Teamid, int& Mapflag);
-	bool GetCaptainByMapId(int Mapid, std::string& Captainid1, std::string& Captainid2);
-	bool UpdateMap(int Mapid);
-
-	bool GetPromotionAndReliveTeam(std::vector<std::vector<std::string>>& dataPromotion,
-								   std::vector<std::vector<std::string>>& dataRelive);
-	bool UpdatReliveNum(int ReID);
-	bool UpdateAbsentTeamRelive(void);
-	bool UpdateMapAfterEnter(int CaptainID, int MapID);
-	bool UpdateWinnum(int teamid); //Add by sunnysun20080818
-	bool GetUniqueMaxWinnum(int& teamid);
-	bool SetMatchnoState(int teamid);
-	bool UpdateState(void);
-	bool CloseReliveByState(int& statenum);
-	bool CleanMapFlag(int teamid1, int teamid2);
-	bool GetStateByTeamid(int teamid, int& state);
-};
-
-// End
-
-//Add by sunny.sun 20080822
-//Begin
-class CTablePersoninfo : public cfl_rs {
-public:
-	CTablePersoninfo(cfl_db* pDB)
-		: cfl_rs(pDB, "personinfo", 10) {
-	}
-
-	bool Init(void);
-	bool GetPersonBirthday(int chaid, int& birthday);
-};
-
-//End
-
 // Resource — kitbag/bank хранилище (OdbcDatabase)
 class CTableResource {
 public:
 	explicit CTableResource(OdbcDatabase& db) : _db(db) {
 	}
 
-	bool Create(long& lDBID, long lChaId, long lTypeId);
-	bool ReadKitbagData(CCharacter* pCCha);
-	bool SaveKitbagData(CCharacter* pCCha);
-	bool ReadKitbagTmpData(CCharacter* pCCha);
-	bool SaveKitbagTmpData(CCharacter* pCCha);
-	bool ReadBankData(CPlayer* pCPly, char chBankNO = -1);
-	bool SaveBankData(CPlayer* pCPly, char chBankNO = -1);
+	bool Create(std::int32_t& lDBID, std::int32_t lChaId, std::int32_t lTypeId);
+	bool ReadKitbagData(CCharacter& pCCha);
+	bool SaveKitbagData(CCharacter& pCCha);
+	bool ReadKitbagTmpData(CCharacter& pCCha);
+	bool SaveKitbagTmpData(CCharacter& pCCha);
+	bool ReadBankData(CPlayer& pCPly, std::int8_t chBankNO = -1);
+	bool SaveBankData(CPlayer& pCPly, std::int8_t chBankNO = -1);
 
 private:
 	OdbcDatabase& _db;
@@ -1035,14 +887,14 @@ public:
 	explicit CTableMapMask(OdbcDatabase& db) : _db(db) {
 	}
 
-	bool Create(long& lDBID, long lChaId);
-	bool ReadData(CPlayer* pCPly);
-	bool SaveData(CPlayer* pCPly, BOOL bDirect = FALSE);
+	bool Create(std::int32_t& lDBID, std::int32_t lChaId);
+	bool ReadData(CPlayer& pCPly);
+	bool SaveData(CPlayer& pCPly, bool bDirect = FALSE);
 
 	void HandleSaveList();
 	void SaveAll();
 
-	static bool GetColNameByMapName(const char* szMapName, std::string& colName);
+	static bool GetColNameByMapName(const std::string& szMapName, std::string& colName);
 
 private:
 	OdbcDatabase& _db;
@@ -1055,17 +907,17 @@ public:
 	explicit CTableBoat(OdbcDatabase& db) : _db(db) {
 	}
 
-	BOOL Create(DWORD& dwBoatID, const BOAT_DATA& Data);
-	BOOL GetBoat(CCharacter& Boat);
-	BOOL SaveBoat(CCharacter& Boat, char chSaveType);
-	BOOL SaveBoatTempData(CCharacter& Boat, BYTE byIsDeleted = 0);
-	BOOL SaveBoatTempData(DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted = 0);
-	BOOL SaveBoatDelTag(DWORD dwBoatID, BYTE byIsDeleted = 0);
+	bool Create(std::uint32_t& dwBoatID, const BOAT_DATA& Data);
+	bool GetBoat(CCharacter& Boat);
+	bool SaveBoat(CCharacter& Boat, std::int8_t chSaveType);
+	bool SaveBoatTempData(CCharacter& Boat, std::uint8_t byIsDeleted = 0);
+	bool SaveBoatTempData(std::uint32_t dwBoatID, std::uint32_t dwOwnerID, std::uint8_t byIsDeleted = 0);
+	bool SaveBoatDelTag(std::uint32_t dwBoatID, std::uint8_t byIsDeleted = 0);
 
-	bool SaveAllData(CPlayer* pPlayer, char chSaveType);
+	bool SaveAllData(CPlayer& pPlayer, std::int8_t chSaveType);
 	bool ReadCabin(CCharacter& Boat);
-	bool SaveCabin(CCharacter& Boat, char chSaveType);
-	bool SaveAllCabin(CPlayer* pPlayer, char chSaveType);
+	bool SaveCabin(CCharacter& Boat, std::int8_t chSaveType);
+	bool SaveAllCabin(CPlayer& pPlayer, std::int8_t chSaveType);
 
 private:
 	OdbcDatabase& _db;
@@ -1073,27 +925,6 @@ private:
 
 class CTableGuild {
 	OdbcDatabase& _db;
-
-	// Совместимые хелперы — cfl_rs API через OdbcDatabase (без try/catch — исключения пробрасываются)
-	enum { MAX_COL = 64, MAX_DATALEN = 8192 };
-
-	UCHAR _buf[MAX_COL][MAX_DATALEN]{};
-	SDWORD _buf_len[MAX_COL]{};
-
-	void handle_err(SQLHANDLE, SQLSMALLINT, RETCODE, const char* = nullptr, bool = false);
-
-	std::string _tbl_name{"guild"};
-	int _max_col{100};
-
-	const char* _get_table() const;
-	SQLRETURN exec_sql_direct(const char* sql);
-	int get_affected_rows();
-	bool _get_row(std::string buf[], int maxCol, const char* param, const char* filter, int* affect_rows = nullptr);
-	bool _get_row3(std::string buf[], int maxCol, const char* param, const char* filter);
-	bool begin_tran();
-	bool commit_tran();
-	bool rollback();
-	bool getalldata(const char* sql, std::vector<std::vector<std::string>>& data);
 
 public:
 	explicit CTableGuild(OdbcDatabase& db) : _db(db) {
@@ -1103,68 +934,50 @@ public:
 	struct BankLog {
 		short type;
 		time_t time;
-		unsigned long long parameter; // ItemID or Gold value
+		std::int64_t parameter; // ItemID or Gold value
 		short quantity; // 1-99 for items, 0 for gold;
 		short userID; // chaID of the actor
 	};
 
 	//std::vector<BankLog> data;
 
-	long Create(CCharacter* pCha, char* guildname, cChar* passwd);
-	bool ListAll(CCharacter* pCha, char disband_days);
-	void TryFor(CCharacter* pCha, uLong guildid);
-	void TryForConfirm(CCharacter* pCha, uLong guildid);
-	bool GetGuildBank(uLong guildid, CKitbag* bag);
+	std::int32_t Create(CCharacter& pCha, const std::string& guildname, const std::string& passwd);
+	bool ListAll(CCharacter& pCha, std::int8_t disband_days);
+	void TryFor(CCharacter& pCha, std::uint32_t guildid);
+	void TryForConfirm(CCharacter& pCha, std::uint32_t guildid);
+	bool GetGuildBank(std::uint32_t guildid, CKitbag* bag);
 
-	bool UpdateGuildBank(uLong guildid, CKitbag* bag);
-	int GetGuildLeaderID(uLong guildid);
+	bool UpdateGuildBank(std::uint32_t guildid, CKitbag* bag);
+	std::int32_t GetGuildLeaderID(std::uint32_t guildid);
 
-	bool SetGuildLog(std::vector<BankLog> log, uLong guildid);
-	std::vector<BankLog> GetGuildLog(uLong guildid);
+	bool SetGuildLog(std::vector<BankLog> log, std::uint32_t guildid);
+	std::vector<BankLog> GetGuildLog(std::uint32_t guildid);
 
 
-	bool UpdateGuildBankGold(int guildID, int money);
-	unsigned long long GetGuildBankGold(uLong guildid);
+	bool UpdateGuildBankGold(std::int32_t guildID, std::int32_t money);
+	std::int64_t GetGuildBankGold(std::uint32_t guildid);
 
-	bool GetGuildInfo(CCharacter* pCha, uLong guildid);
-	bool ListTryPlayer(CCharacter* pCha, char disband_days);
-	bool Approve(CCharacter* pCha, uLong chaid);
-	bool Reject(CCharacter* pCha, uLong chaid);
-	bool Kick(CCharacter* pCha, uLong chaid);
-	bool Leave(CCharacter* pCha);
-	bool Disband(CCharacter* pCha, cChar* passwd);
-	bool Motto(CCharacter* pCha, cChar* motto);
-	bool GetGuildName(long lGuildID, std::string& strGuildName);
+	bool GetGuildInfo(CCharacter& pCha, std::uint32_t guildid);
+	bool ListTryPlayer(CCharacter& pCha, char disband_days);
+	bool Approve(CCharacter& pCha, std::uint32_t chaid);
+	bool Reject(CCharacter& pCha, std::uint32_t chaid);
+	bool Kick(CCharacter& pCha, std::uint32_t chaid);
+	bool Leave(CCharacter& pCha);
+	bool Disband(CCharacter& pCha, const std::string& passwd);
+	bool Motto(CCharacter& pCha, const std::string& motto);
+	bool GetGuildName(std::int32_t lGuildID, std::string& strGuildName);
 
 	//
-	bool Challenge(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
-	bool Leizhu(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
-	void ListChallenge(CCharacter* pCha);
-	bool GetChallInfo(BYTE byLevel, DWORD& dwGuildID1, DWORD& dwGuildID2, DWORD& dwMoney);
-	bool StartChall(BYTE byLevel);
-	bool HasCall(BYTE byLevel);
-	void EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall);
-	void ChallMoney(BYTE byLevel, BOOL bChall, DWORD dwGuildID, DWORD dwChallID, DWORD dwMoney);
-	bool ChallWin(BOOL bUpdate, BYTE byLevel, DWORD dwWinGuildID, DWORD dwFailerGuildID);
-	bool HasGuildLevel(CCharacter* pChar, BYTE byLevel);
-};
-
-// Log
-class CTableLog : public cfl_rs {
-public:
-	CTableLog(cfl_db* pDB)
-		: cfl_rs(pDB, "gamelog", 10) {
-	}
-};
-
-class CTableItem : public cfl_rs {
-public:
-	CTableItem(cfl_db* pDB)
-		: cfl_rs(pDB, "property", 10) {
-	}
-
-	bool LockItem(SItemGrid* sig, int iChaId);
-	bool UnlockItem(SItemGrid* sig, int iChaId);
+	bool Challenge(CCharacter& pCha, std::uint8_t byLevel, std::uint32_t dwMoney);
+	bool Leizhu(CCharacter& pCha, std::uint8_t byLevel, std::uint32_t dwMoney);
+	void ListChallenge(CCharacter& pCha);
+	bool GetChallInfo(std::uint8_t byLevel, std::uint32_t& dwGuildID1, std::uint32_t& dwGuildID2, std::uint32_t& dwMoney);
+	bool StartChall(std::uint8_t byLevel);
+	bool HasCall(std::uint8_t byLevel);
+	void EndChall(std::uint32_t dwGuild1, std::uint32_t dwGuild2, bool bChall);
+	void ChallMoney(std::uint8_t byLevel, bool bChall, std::uint32_t dwGuildID, std::uint32_t dwChallID, std::uint32_t dwMoney);
+	bool ChallWin(bool bUpdate, std::uint8_t byLevel, std::uint32_t dwWinGuildID, std::uint32_t dwFailerGuildID);
+	bool HasGuildLevel(CCharacter& pChar, std::uint8_t byLevel);
 };
 
 class CGameDB {
@@ -1172,7 +985,7 @@ public:
 	CGameDB();
 	~CGameDB();
 
-	BOOL Init();
+	bool Init();
 
 	OdbcTransaction BeginTransaction();
 
@@ -1181,134 +994,134 @@ public:
 	bool RollBack();
 	bool CommitTran();
 
-	bool ReadPlayer(CPlayer* pPlayer, DWORD atorID);
-	bool SavePlayer(CPlayer* pPlayer, char chSaveType);
+	bool ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID);
+	bool SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType);
 
-	bool SavePlayerKitbag(CPlayer* pPlayer, char chSaveType = enumSAVE_TYPE_TRADE);
-	bool SaveChaAssets(CCharacter* pCCha);
+	bool SavePlayerKitbag(CPlayer& pPlayer, std::int8_t chSaveType = enumSAVE_TYPE_TRADE);
+	bool SaveChaAssets(CCharacter& pCCha);
 
 	// Лотерея — LotterySetting
-	bool GetWinItemno(int issue, std::string& itemno);
-	bool GetLotteryIssue(int& issue);
-	bool AddIssue(int issue);
-	bool DisuseIssue(int issue, int state);
+	bool GetWinItemno(std::int32_t issue, std::string& itemno);
+	bool GetLotteryIssue(std::int32_t& issue);
+	bool AddIssue(std::int32_t issue);
+	bool DisuseIssue(std::int32_t issue, std::int32_t state);
 
 	// Лотерея — Ticket
-	bool LotteryIsExsit(int issue, char* itemno);
-	bool AddLotteryTicket(CCharacter* pCCha, int issue, char itemno[6][2]);
-	bool CalWinTicket(int issue, int max, std::string& itemno);
+	bool LotteryIsExsit(std::int32_t issue, const std::string& itemno);
+	bool AddLotteryTicket(CCharacter& pCCha, std::int32_t issue, char itemno[6][2]);
+	bool CalWinTicket(std::int32_t issue, std::int32_t max, std::string& itemno);
 
 	// Амфитеатр
-	bool IsValidAmphitheaterTeam(int teamID, int captainID, int member1, int member2);
-	bool IsMasterRelation(int masterID, int prenticeID);
+	bool IsValidAmphitheaterTeam(std::int32_t teamID, std::int32_t captainID, std::int32_t member1, std::int32_t member2);
+	bool IsMasterRelation(std::int32_t masterID, std::int32_t prenticeID);
 
 	// === AmphitheaterSetting ===
-	bool GetAmphitheaterSeasonAndRound(int& season, int& round);
-	bool AddAmphitheaterSeason(int season);
-	bool DisuseAmphitheaterSeason(int season, int state, const char* winner);
-	bool UpdateAmphitheaterRound(int season, int round);
+	bool GetAmphitheaterSeasonAndRound(std::int32_t& season, std::int32_t& round);
+	bool AddAmphitheaterSeason(std::int32_t season);
+	bool DisuseAmphitheaterSeason(std::int32_t season, std::int32_t state, const std::string& winner);
+	bool UpdateAmphitheaterRound(std::int32_t season, std::int32_t round);
 
 	// === AmphitheaterTeam ===
-	bool GetAmphitheaterTeamCount(int& count);
-	bool GetAmphitheaterNoUseTeamID(int& teamID);
-	bool AmphitheaterTeamSignUP(int& teamID, int captain, int member1, int member2);
-	bool AmphitheaterTeamCancel(int teamID);
-	bool IsAmphitheaterLogin(int pActorID);
-	bool IsMapFull(int MapID, int& PActorIDNum);
-	bool UpdateMapNum(int Teamid, int Mapid, int MapFlag);
-	bool GetMapFlag(int Teamid, int& Mapflag);
+	bool GetAmphitheaterTeamCount(std::int32_t& count);
+	bool GetAmphitheaterNoUseTeamID(std::int32_t& teamID);
+	bool AmphitheaterTeamSignUP(std::int32_t& teamID, std::int32_t captain, std::int32_t member1, std::int32_t member2);
+	bool AmphitheaterTeamCancel(std::int32_t teamID);
+	bool IsAmphitheaterLogin(std::int32_t pActorID);
+	bool IsMapFull(std::int32_t MapID, std::int32_t& PActorIDNum);
+	bool UpdateMapNum(std::int32_t Teamid, std::int32_t Mapid, std::int32_t MapFlag);
+	bool GetMapFlag(std::int32_t Teamid, std::int32_t& Mapflag);
 	bool SetMaxBallotTeamRelive();
-	bool SetMatchResult(int Teamid1, int Teamid2, int Id1state, int Id2state);
-	bool GetCaptainByMapId(int Mapid, std::string& Captainid1, std::string& Captainid2);
-	bool UpdateMap(int Mapid);
-	bool UpdateMapAfterEnter(int CaptainID, int MapID);
+	bool SetMatchResult(std::int32_t Teamid1, std::int32_t Teamid2, std::int32_t Id1state, std::int32_t Id2state);
+	bool GetCaptainByMapId(std::int32_t Mapid, std::string& Captainid1, std::string& Captainid2);
+	bool UpdateMap(std::int32_t Mapid);
+	bool UpdateMapAfterEnter(std::int32_t CaptainID, std::int32_t MapID);
 	bool GetPromotionAndReliveTeam(std::vector<std::vector<std::string>>& dataPromotion,
 								   std::vector<std::vector<std::string>>& dataRelive);
-	bool UpdatReliveNum(int ReID);
+	bool UpdatReliveNum(std::int32_t ReID);
 	bool UpdateAbsentTeamRelive();
-	bool UpdateWinnum(int teamid);
-	bool GetUniqueMaxWinnum(int& teamid);
-	bool SetMatchnoState(int teamid);
+	bool UpdateWinnum(std::int32_t teamid);
+	bool GetUniqueMaxWinnum(std::int32_t& teamid);
+	bool SetMatchnoState(std::int32_t teamid);
 	bool UpdateState();
-	bool CloseReliveByState(int& statenum);
-	bool CleanMapFlag(int teamid1, int teamid2);
-	bool GetStateByTeamid(int teamid, int& state);
+	bool CloseReliveByState(std::int32_t& statenum);
+	bool CleanMapFlag(std::int32_t teamid1, std::int32_t teamid2);
+	bool GetStateByTeamid(std::int32_t teamid, std::int32_t& state);
 
-	bool UpdateIMP(CPlayer* ply);
-	bool SaveGmLv(CPlayer* ply);
+	bool UpdateIMP(CPlayer& ply);
+	bool SaveGmLv(CPlayer& ply);
 
-	std::string GetChaNameByID(int cha_id);
-	void ShowExpRank(CCharacter* pCha, int top);
-	bool SavePlayerPos(CPlayer* pPlayer);
-	bool SavePlayerKBagDBID(CPlayer* pPlayer);
-	bool SavePlayerKBagTmpDBID(CPlayer* pPlayer);
-	bool SavePlayerMMaskDBID(CPlayer* pPlayer);
+	std::string GetChaNameByID(std::int32_t cha_id);
+	void ShowExpRank(CCharacter& pCha, std::int32_t top);
+	bool SavePlayerPos(CPlayer& pPlayer);
+	bool SavePlayerKBagDBID(CPlayer& pPlayer);
+	bool SavePlayerKBagTmpDBID(CPlayer& pPlayer);
+	bool SavePlayerMMaskDBID(CPlayer& pPlayer);
 
-	bool CreatePlyBank(CPlayer* pCPly);
-	bool SavePlyBank(CPlayer* pCPly, char chBankNO = -1);
-	unsigned long GetPlayerMasterDBID(CPlayer* pPlayer);
+	bool CreatePlyBank(CPlayer& pCPly);
+	bool SavePlyBank(CPlayer& pCPly, char chBankNO = -1);
+	std::uint32_t GetPlayerMasterDBID(CPlayer& pPlayer);
 
-	BOOL AddCreditByDBID(DWORD atorID, long lCredit);
-	BOOL SaveStoreItemID(DWORD atorID, long lStoreItemID);
-	BOOL AddMoney(DWORD atorID, long money);
+	bool AddCreditByDBID(std::uint32_t atorID, std::int32_t lCredit);
+	bool SaveStoreItemID(std::uint32_t atorID, std::int32_t lStoreItemID);
+	bool AddMoney(std::uint32_t atorID, std::int32_t money);
 
-	BOOL ReadKitbagTmpData(DWORD res_id, std::string& strData);
-	BOOL SaveKitbagTmpData(DWORD res_id, const std::string& strData);
+	bool ReadKitbagTmpData(std::uint32_t res_id, std::string& strData);
+	bool SaveKitbagTmpData(std::uint32_t res_id, const std::string& strData);
 
-	BOOL IsChaOnline(DWORD atorID, BOOL& bOnline);
-	Long GetChaAddr(DWORD atorID);
-	Long SetGuildPermission(int atorID, unsigned long perm, int guild_id);
-	Long SetChaAddr(DWORD atorID, Long addr);
+	bool IsChaOnline(std::uint32_t atorID, bool& bOnline);
+	Long GetChaAddr(std::uint32_t atorID);
+	Long SetGuildPermission(std::int32_t atorID, std::uint32_t perm, std::int32_t guild_id);
+	Long SetChaAddr(std::uint32_t atorID, Long addr);
 
-	BOOL SaveMissionData(CPlayer* pPlayer, DWORD atorID);
+	bool SaveMissionData(CPlayer& pPlayer, std::uint32_t atorID);
 
 	// Лодки
-	BOOL Create(DWORD& dwBoatID, const BOAT_DATA& Data);
-	BOOL GetBoat(CCharacter& Boat);
-	BOOL SaveBoat(CCharacter& Boat, char chSaveType);
-	BOOL SaveBoatDelTag(DWORD dwBoatID, BYTE byIsDeleted = 0);
-	BOOL SaveBoatTempData(CCharacter& Boat, BYTE byIsDeleted = 0);
-	BOOL SaveBoatTempData(DWORD dwBoatID, DWORD dwOwnerID, BYTE byIsDeleted = 0);
+	bool Create(std::uint32_t& dwBoatID, const BOAT_DATA& Data);
+	bool GetBoat(CCharacter& Boat);
+	bool SaveBoat(CCharacter& Boat, char chSaveType);
+	bool SaveBoatDelTag(std::uint32_t dwBoatID, std::uint8_t byIsDeleted = 0);
+	bool SaveBoatTempData(CCharacter& Boat, std::uint8_t byIsDeleted = 0);
+	bool SaveBoatTempData(std::uint32_t dwBoatID, std::uint32_t dwOwnerID, std::uint8_t byIsDeleted = 0);
 
 	// Гильдии
-	long CreateGuild(CCharacter* pCha, char* guildname, cChar* passwd);
-	long GetGuildBank(uLong guildid, CKitbag* bag);
-	long UpdateGuildBank(uLong guildid, CKitbag* bag);
-	bool SetGuildLog(std::vector<CTableGuild::BankLog> log, uLong guildid);
-	std::vector<CTableGuild::BankLog> GetGuildLog(uLong guildid);
-	unsigned long long GetGuildBankGold(uLong guildid);
-	bool UpdateGuildBankGold(int guildID, int money);
-	int GetGuildLeaderID(uLong guildid);
+	std::int32_t CreateGuild(CCharacter& pCha, const std::string& guildname, const std::string& passwd);
+	std::int32_t GetGuildBank(std::uint32_t guildid, CKitbag* bag);
+	std::int32_t UpdateGuildBank(std::uint32_t guildid, CKitbag* bag);
+	bool SetGuildLog(std::vector<CTableGuild::BankLog> log, std::uint32_t guildid);
+	std::vector<CTableGuild::BankLog> GetGuildLog(std::uint32_t guildid);
+	std::int64_t GetGuildBankGold(std::uint32_t guildid);
+	bool UpdateGuildBankGold(std::int32_t guildID, std::int32_t money);
+	std::int32_t GetGuildLeaderID(std::uint32_t guildid);
 
-	bool ListAllGuild(CCharacter* pCha, char disband_days = 1);
-	void GuildTryFor(CCharacter* pCha, uLong guildid);
-	void GuildTryForConfirm(CCharacter* pCha, uLong guildid);
-	bool GuildListTryPlayer(CCharacter* pCha, char disband_days);
-	bool GuildApprove(CCharacter* pCha, uLong chaid);
-	bool GuildReject(CCharacter* pCha, uLong chaid);
-	bool GuildKick(CCharacter* pCha, uLong chaid);
-	bool GuildLeave(CCharacter* pCha);
-	bool GuildDisband(CCharacter* pCha, cChar* passwd);
-	bool GuildMotto(CCharacter* pCha, cChar* motto);
+	bool ListAllGuild(CCharacter& pCha, char disband_days = 1);
+	void GuildTryFor(CCharacter& pCha, std::uint32_t guildid);
+	void GuildTryForConfirm(CCharacter& pCha, std::uint32_t guildid);
+	bool GuildListTryPlayer(CCharacter& pCha, char disband_days);
+	bool GuildApprove(CCharacter& pCha, std::uint32_t chaid);
+	bool GuildReject(CCharacter& pCha, std::uint32_t chaid);
+	bool GuildKick(CCharacter& pCha, std::uint32_t chaid);
+	bool GuildLeave(CCharacter& pCha);
+	bool GuildDisband(CCharacter& pCha, const std::string& passwd);
+	bool GuildMotto(CCharacter& pCha, const std::string& motto);
 
 	CTableMapMask* GetMapMaskTable();
 
-	bool GetGuildName(long lGuildID, std::string& strGuildName);
-	bool Challenge(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
-	bool Leizhu(CCharacter* pCha, BYTE byLevel, DWORD dwMoney);
-	void ListChallenge(CCharacter* pCha);
-	bool StartChall(BYTE byLevel);
-	bool GetChall(BYTE byLevel, DWORD& dwGuildID1, DWORD& dwGuildID2, DWORD& dwMoney);
-	void EndChall(DWORD dwGuild1, DWORD dwGuild2, BOOL bChall);
-	bool HasChall(BYTE byLevel);
-	bool HasGuildLevel(CCharacter* pChar, BYTE byLevel);
+	bool GetGuildName(std::int32_t lGuildID, std::string& strGuildName);
+	bool Challenge(CCharacter& pCha, std::uint8_t byLevel, std::uint32_t dwMoney);
+	bool Leizhu(CCharacter& pCha, std::uint8_t byLevel, std::uint32_t dwMoney);
+	void ListChallenge(CCharacter& pCha);
+	bool StartChall(std::uint8_t byLevel);
+	bool GetChall(std::uint8_t byLevel, std::uint32_t& dwGuildID1, std::uint32_t& dwGuildID2, std::uint32_t& dwMoney);
+	void EndChall(std::uint32_t dwGuild1, std::uint32_t dwGuild2, bool bChall);
+	bool HasChall(std::uint8_t byLevel);
+	bool HasGuildLevel(CCharacter& pChar, std::uint8_t byLevel);
 
 	// Логирование
-	void ExecLogSQL(const char* pszSQL);
-	void ExecTradeLogSQL(const char* gameServerName, const char* action,
-						 const char* pszChaFrom, const char* pszChaTo, const char* pszTrade);
+	void ExecLogSQL(const std::string& pszSQL);
+	void ExecTradeLogSQL(const std::string& gameServerName, const std::string& action,
+						 const std::string& pszChaFrom, const std::string& pszChaTo, const std::string& pszTrade);
 
-	BOOL m_bInitOK{false};
+	bool m_bInitOK{false};
 
 protected:
 	// ODBC API — объявлен первым, т.к. все таблицы зависят от _db
