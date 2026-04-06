@@ -6462,83 +6462,35 @@ function Abaddon_Init()
 end
 
 function CheckEquipmentSet(Player, Head, Body, Glove, Shoes, Neck, RHand, LHand, Ring1, Ring2, Bracelet1, Bracelet2, Handguard, Belt)
-    if Head ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 0)) ~= Head then
-            if GetItemAttr(GetChaItem(Player, 1, 0), ITEMATTR_VAL_FUSIONID) ~= Head then
-                return 0
-            end
-        end
+    local function CheckSlot(slot, required)
+        if required == 0 then return true end
+        local item = GetChaItem(Player, 1, slot)
+        if not item then return false end
+        if GetItemID(item) == required then return true end
+        if GetItemAttr(item, ITEMATTR_VAL_FUSIONID) == required then return true end
+        return false
     end
-    if Body ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 2)) ~= Body then
-            if GetItemAttr(GetChaItem(Player, 1, 2), ITEMATTR_VAL_FUSIONID) ~= Body then
-                return 0
-            end
-        end
+
+    local function CheckSlotSimple(slot, required)
+        if required == 0 then return true end
+        local item = GetChaItem(Player, 1, slot)
+        if not item then return false end
+        return GetItemID(item) == required
     end
-    if Glove ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 3)) ~= Glove then
-            if GetItemAttr(GetChaItem(Player, 1, 3), ITEMATTR_VAL_FUSIONID) ~= Glove then
-                return 0
-            end
-        end
-    end
-    if Shoes ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 4)) ~= Shoes then
-            if GetItemAttr(GetChaItem(Player, 1, 4), ITEMATTR_VAL_FUSIONID) ~= Shoes then
-                return 0
-            end
-        end
-    end
-    if Neck ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 5)) ~= Neck then
-            return 0
-        end
-    end
-    if RHand ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 9)) ~= RHand then
-            if GetItemAttr(GetChaItem(Player, 1, 9), ITEMATTR_VAL_FUSIONID) ~= RHand then
-                return 0
-            end
-        end
-    end
-    if LHand ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 6)) ~= LHand then
-            if GetItemAttr(GetChaItem(Player, 1, 6), ITEMATTR_VAL_FUSIONID) ~= LHand then
-                return 0
-            end
-        end
-    end
-    if Ring1 ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 7)) ~= Ring1 then
-            return 0
-        end
-    end
-    if Ring2 ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 8)) ~= Ring2 then
-            return 0
-        end
-    end
-    if Bracelet1 ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 10)) ~= Bracelet1 then
-            return 0
-        end
-    end
-    if Bracelet2 ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 11)) ~= Bracelet2 then
-            return 0
-        end
-    end
-    if Handguard ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 13)) ~= Handguard then
-            return 0
-        end
-    end
-    if Belt ~= 0 then
-        if GetItemID(GetChaItem(Player, 1, 12)) ~= Belt then
-            return 0
-        end
-    end
+
+    if not CheckSlot(0, Head) then return 0 end
+    if not CheckSlot(2, Body) then return 0 end
+    if not CheckSlot(3, Glove) then return 0 end
+    if not CheckSlot(4, Shoes) then return 0 end
+    if not CheckSlotSimple(5, Neck) then return 0 end
+    if not CheckSlot(9, RHand) then return 0 end
+    if not CheckSlot(6, LHand) then return 0 end
+    if not CheckSlotSimple(7, Ring1) then return 0 end
+    if not CheckSlotSimple(8, Ring2) then return 0 end
+    if not CheckSlotSimple(10, Bracelet1) then return 0 end
+    if not CheckSlotSimple(11, Bracelet2) then return 0 end
+    if not CheckSlotSimple(13, Handguard) then return 0 end
+    if not CheckSlotSimple(12, Belt) then return 0 end
     return 1
 end
 Server.EqSet["Kylin"] = function(Player)
