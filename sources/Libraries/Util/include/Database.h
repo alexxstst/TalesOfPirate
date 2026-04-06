@@ -168,6 +168,7 @@ public:
 	OdbcCommand& SetParam(int index, double value);
 	OdbcCommand& SetParam(int index, std::nullptr_t);
 	OdbcCommand& SetParam(int index, const void* data, size_t len);
+	OdbcCommand& SetTimestampParam(int index, std::string_view value);
 
 	// Параметры по имени (@name)
 	OdbcCommand& SetParam(std::string_view name, int value);
@@ -185,6 +186,9 @@ public:
 
 	void SetTimeout(unsigned short seconds) { _timeout = seconds; }
 
+	// Строка-обёртка для datetime/timestamp параметров (биндится как SQL_TYPE_TIMESTAMP)
+	struct TimestampString { std::string value; };
+
 	// Хранение значения параметра (public для доступа из вспомогательных функций)
 	struct ParamValue {
 		std::variant<
@@ -193,7 +197,8 @@ public:
 			std::string,
 			double,
 			std::vector<char>,   // binary
-			std::monostate       // NULL
+			std::monostate,      // NULL
+			TimestampString      // datetime/timestamp
 		> value;
 	};
 
@@ -249,6 +254,8 @@ private:
 enum ColumnFlags {
 	None = 0,
 	PrimaryKey = 1,
+	Nullable = 2,    // Пустая строка биндится как SQL NULL
+	Timestamp = 4,   // Строка биндится как SQL_TYPE_TIMESTAMP (для datetime-колонок)
 };
 
 template <typename T>
@@ -264,10 +271,19 @@ Column<T> MakeColumn(std::string name, V T::* member, int flags = None) {
 	return {
 		.name = name,
 		.flags = flags,
-		.bind = [member](OdbcCommand& cmd, int idx, const T& row) {
+		.bind = [member, flags](OdbcCommand& cmd, int idx, const T& row) {
 			if constexpr (std::is_same_v<V, std::vector<uint8_t>>) {
 				const auto& v = row.*member;
 				cmd.SetParam(idx, v.data(), v.size());
+			} else if constexpr (std::is_same_v<V, std::string>) {
+				const auto& s = row.*member;
+				if ((flags & Nullable) && s.empty()) {
+					cmd.SetParam(idx, nullptr);
+				} else if (flags & Timestamp) {
+					cmd.SetTimestampParam(idx, s);
+				} else {
+					cmd.SetParam(idx, s);
+				}
 			} else {
 				cmd.SetParam(idx, row.*member);
 			}

@@ -43,7 +43,7 @@ OdbcException::OdbcException(std::string sqlState, int nativeError, std::string 
 
 void OdbcDatabase::ThrowIfError(SQLSMALLINT handleType, SQLHANDLE handle, SQLRETURN ret, std::string_view context) {
 	if (ret == SQL_SUCCESS || ret == SQL_SUCCESS_WITH_INFO) {
-		return;
+		return; 
 	}
 
 	SQLCHAR sqlState[6]{};
@@ -542,6 +542,12 @@ OdbcCommand& OdbcCommand::SetParam(int index, const void* data, size_t len) {
 	return *this;
 }
 
+OdbcCommand& OdbcCommand::SetTimestampParam(int index, std::string_view value) {
+	EnsureParamSlot(_params, index);
+	_params[index - 1].value = TimestampString{std::string(value)};
+	return *this;
+}
+
 // SetParam по имени
 OdbcCommand& OdbcCommand::SetParam(std::string_view name, int value) {
 	return SetParam(ResolveNamedParam(name), value);
@@ -633,11 +639,49 @@ void OdbcCommand::BindAndExecute() {
 				SQLBindParameter(_hstmt, paramNo, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_VARCHAR,
 								 1, 0, nullptr, 0, &_indicators[i]);
 			}
+			else if constexpr (std::is_same_v<V, TimestampString>) {
+				auto& ts = std::get<TimestampString>(pv.value);
+				_indicators[i] = static_cast<SQLLEN>(ts.value.size());
+				SQLBindParameter(_hstmt, paramNo, SQL_PARAM_INPUT, SQL_C_CHAR, SQL_TYPE_TIMESTAMP,
+								 23, 3, const_cast<char*>(ts.value.c_str()),
+								 static_cast<SQLLEN>(ts.value.size()), &_indicators[i]);
+			}
 		}, pv.value);
 	}
 
 	ret = SQLExecute(_hstmt);
 	if (ret != SQL_SUCCESS && ret != SQL_SUCCESS_WITH_INFO && ret != SQL_NO_DATA) {
+		// Дамп параметров для диагностики
+		std::string paramDump;
+		for (size_t i = 0; i < _params.size(); ++i) {
+			if (!paramDump.empty()) {
+				paramDump += ", ";
+			}
+			paramDump += std::format("[{}]=", i + 1);
+			std::visit([&](auto&& val) {
+				using V = std::decay_t<decltype(val)>;
+				if constexpr (std::is_same_v<V, int>) {
+					paramDump += std::to_string(val);
+				} else if constexpr (std::is_same_v<V, int64_t>) {
+					paramDump += std::to_string(val);
+				} else if constexpr (std::is_same_v<V, std::string>) {
+					if (val.size() <= 64) {
+						paramDump += "'" + val + "'";
+					} else {
+						paramDump += std::format("'{}...' ({}b)", val.substr(0, 64), val.size());
+					}
+				} else if constexpr (std::is_same_v<V, double>) {
+					paramDump += std::to_string(val);
+				} else if constexpr (std::is_same_v<V, std::vector<char>>) {
+					paramDump += std::format("<binary {}b>", val.size());
+				} else if constexpr (std::is_same_v<V, std::monostate>) {
+					paramDump += "NULL";
+				} else if constexpr (std::is_same_v<V, TimestampString>) {
+					paramDump += "TS'" + val.value + "'";
+				}
+			}, _params[i].value);
+		}
+		ToLogService("errors", LogLevel::Error, "OdbcCommand params: {}", paramDump);
 		OdbcDatabase::ThrowIfError(SQL_HANDLE_STMT, _hstmt, ret, sql);
 	}
 }

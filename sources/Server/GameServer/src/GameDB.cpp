@@ -351,9 +351,13 @@ bool PlayerStorage::SaveAllData(CPlayer& pPlayer, char chSaveType) {
 	// Позиция — сохраняем только если карта позволяет
 	bool bWithPos = pCCtrlCha->GetSubMap() && pCCtrlCha->GetSubMap()->CanSavePos();
 
-	// Собираем CharacterRow
-	CharacterRow row{};
-	row.atorID = static_cast<int>(atorID);
+	// Читаем текущую строку из БД, чтобы сохранить неизменяемые поля
+	auto existing = _characters.FindOne("atorID = ?", static_cast<int>(atorID));
+	if (!existing) {
+		ToLogService("map", "SaveAllData: character {} not found in database!", atorID);
+		return false;
+	}
+	CharacterRow row = std::move(*existing);
 	row.hp = pCha->getAttr(ATTR_HP);
 	row.sp = pCha->getAttr(ATTR_SP);
 	row.exp = pCha->getAttr(ATTR_CEXP);

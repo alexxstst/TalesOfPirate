@@ -8,7 +8,7 @@ public enum DatabaseProviderType
 {
     SqlServer,
     PostgreSql,
-    MySql,
+    //MySql,
     Sqlite
 }
 
@@ -44,7 +44,7 @@ public static class DatabaseServiceExtensions
         {
             "sqlserver" or "mssql" => DatabaseProviderType.SqlServer,
             "postgresql" or "postgres" or "npgsql" => DatabaseProviderType.PostgreSql,
-            "mysql" or "mariadb" => DatabaseProviderType.MySql,
+           // "mysql" or "mariadb" => DatabaseProviderType.MySql,
             "sqlite" => DatabaseProviderType.Sqlite,
             _ => throw new ArgumentException($"Неизвестный провайдер БД: {providerName}")
         };
@@ -63,10 +63,10 @@ public static class DatabaseServiceExtensions
             case DatabaseProviderType.PostgreSql:
                 options.UseNpgsql(connectionString);
                 break;
-            case DatabaseProviderType.MySql:
-                var serverVersion = ServerVersion.AutoDetect(connectionString);
-                options.UseMySql(connectionString, serverVersion);
-                break;
+            // case DatabaseProviderType.MySql:
+            //     var serverVersion = ServerVersion.AutoDetect(connectionString);
+            //     options.UseMySql(connectionString, serverVersion);
+            //     break;
             case DatabaseProviderType.Sqlite:
                 options.UseSqlite(connectionString);
                 break;

@@ -352,7 +352,7 @@ public:
 			MakeColumn("ator_ids",     &AccountRow::ator_ids),
 			MakeColumn("last_ip",      &AccountRow::last_ip),
 			MakeColumn("disc_reason",  &AccountRow::disc_reason),
-			MakeColumn("last_leave",   &AccountRow::last_leave),
+			MakeColumn("last_leave",   &AccountRow::last_leave, Timestamp),
 			MakeColumn("password",     &AccountRow::password),
 			MakeColumn("merge_state",  &AccountRow::merge_state),
 			MakeColumn("IMP",          &AccountRow::IMP),
@@ -369,8 +369,8 @@ public:
 			MakeColumn("season",     &AmphitheaterSettingRow::season),
 			MakeColumn("round",      &AmphitheaterSettingRow::round),
 			MakeColumn("state",      &AmphitheaterSettingRow::state),
-			MakeColumn("createdate", &AmphitheaterSettingRow::createdate),
-			MakeColumn("updatetime", &AmphitheaterSettingRow::updatetime),
+			MakeColumn("createdate", &AmphitheaterSettingRow::createdate, Timestamp),
+			MakeColumn("updatetime", &AmphitheaterSettingRow::updatetime, Nullable | Timestamp),
 		}) {}
 };
 
@@ -388,8 +388,8 @@ public:
 			MakeColumn("winnum",     &AmphitheaterTeamRow::winnum),
 			MakeColumn("losenum",    &AmphitheaterTeamRow::losenum),
 			MakeColumn("relivenum",  &AmphitheaterTeamRow::relivenum),
-			MakeColumn("createdate", &AmphitheaterTeamRow::createdate),
-			MakeColumn("updatetime", &AmphitheaterTeamRow::updatetime),
+			MakeColumn("createdate", &AmphitheaterTeamRow::createdate, Nullable | Timestamp),
+			MakeColumn("updatetime", &AmphitheaterTeamRow::updatetime, Timestamp),
 		}) {}
 };
 
@@ -481,12 +481,12 @@ public:
 			MakeColumn("live_tp",          &CharacterRow::live_tp),
 			MakeColumn("map_mask",         &CharacterRow::map_mask),
 			MakeColumn("delflag",          &CharacterRow::delflag),
-			MakeColumn("operdate",         &CharacterRow::operdate),
-			MakeColumn("deldate",          &CharacterRow::deldate),
+			MakeColumn("operdate",         &CharacterRow::operdate, Timestamp),
+			MakeColumn("deldate",          &CharacterRow::deldate, Nullable | Timestamp),
 			MakeColumn("main_map",         &CharacterRow::main_map),
 			MakeColumn("skill_state",      &CharacterRow::skill_state),
 			MakeColumn("bank",             &CharacterRow::bank),
-			MakeColumn("estop",            &CharacterRow::estop),
+			MakeColumn("estop",            &CharacterRow::estop, Timestamp),
 			MakeColumn("estoptime",        &CharacterRow::estoptime),
 			MakeColumn("kb_locked",        &CharacterRow::kb_locked),
 			MakeColumn("kitbag_tmp",       &CharacterRow::kitbag_tmp),
@@ -525,7 +525,7 @@ public:
 			MakeColumn("map_y",    &CharacterLogRow::map_y),
 			MakeColumn("radius",   &CharacterLogRow::radius),
 			MakeColumn("olhe",     &CharacterLogRow::olhe),
-			MakeColumn("del_date", &CharacterLogRow::del_date),
+			MakeColumn("del_date", &CharacterLogRow::del_date, Timestamp),
 		}) {}
 };
 
@@ -536,7 +536,7 @@ public:
 			MakeColumn("cha_id1",    &FriendsRow::cha_id1),
 			MakeColumn("cha_id2",    &FriendsRow::cha_id2),
 			MakeColumn("relation",   &FriendsRow::relation),
-			MakeColumn("createtime", &FriendsRow::createtime),
+			MakeColumn("createtime", &FriendsRow::createtime, Nullable | Timestamp),
 		}) {}
 };
 
@@ -555,7 +555,7 @@ public:
 			MakeColumn("level",        &GuildRow::level),
 			MakeColumn("member_total", &GuildRow::member_total),
 			MakeColumn("try_total",    &GuildRow::try_total),
-			MakeColumn("disband_date", &GuildRow::disband_date),
+			MakeColumn("disband_date", &GuildRow::disband_date, Timestamp),
 			MakeColumn("challlevel",   &GuildRow::challlevel),
 			MakeColumn("challid",      &GuildRow::challid),
 			MakeColumn("challmoney",   &GuildRow::challmoney),
@@ -570,8 +570,8 @@ public:
 			MakeColumn("section",    &LotterySettingRow::section),
 			MakeColumn("issue",      &LotterySettingRow::issue),
 			MakeColumn("state",      &LotterySettingRow::state),
-			MakeColumn("createdate", &LotterySettingRow::createdate),
-			MakeColumn("updatetime", &LotterySettingRow::updatetime),
+			MakeColumn("createdate", &LotterySettingRow::createdate, Timestamp),
+			MakeColumn("updatetime", &LotterySettingRow::updatetime, Nullable | Timestamp),
 			MakeColumn("itemno",     &LotterySettingRow::itemno),
 		}) {}
 };
@@ -660,7 +660,7 @@ public:
 			MakeColumn("atorID",  &PropertyRow::atorID),
 			MakeColumn("context", &PropertyRow::context),
 			MakeColumn("sum",     &PropertyRow::sum),
-			MakeColumn("time",    &PropertyRow::time),
+			MakeColumn("time",    &PropertyRow::time, Timestamp),
 		}) {}
 };
 
@@ -679,7 +679,7 @@ class TableStatLog : public OdbcTable<StatLogRow> {
 public:
 	explicit TableStatLog(OdbcDatabase& db)
 		: OdbcTable(db, "stat_log", {
-			MakeColumn("track_date",  &StatLogRow::track_date, PrimaryKey),
+			MakeColumn("track_date",  &StatLogRow::track_date, PrimaryKey | Timestamp),
 			MakeColumn("login_num",   &StatLogRow::login_num),
 			MakeColumn("play_num",    &StatLogRow::play_num),
 			MakeColumn("wgplay_num",  &StatLogRow::wgplay_num),
@@ -744,7 +744,7 @@ public:
 			MakeColumn("issue",   &TicketRow::issue),
 			MakeColumn("itemno",  &TicketRow::itemno),
 			MakeColumn("real",    &TicketRow::real),
-			MakeColumn("buydate", &TicketRow::buydate),
+			MakeColumn("buydate", &TicketRow::buydate, Timestamp),
 		}) {}
 };
 
@@ -770,8 +770,8 @@ public:
 			MakeColumn("atorNome",   &WeekReportRow::atorNome),
 			MakeColumn("degree",     &WeekReportRow::degree),
 			MakeColumn("ip",         &WeekReportRow::ip),
-			MakeColumn("createdate", &WeekReportRow::createdate),
-			MakeColumn("logouttime", &WeekReportRow::logouttime),
+			MakeColumn("createdate", &WeekReportRow::createdate, Nullable | Timestamp),
+			MakeColumn("logouttime", &WeekReportRow::logouttime, Nullable | Timestamp),
 			MakeColumn("playtime",   &WeekReportRow::playtime),
 			MakeColumn("Guild_Name", &WeekReportRow::Guild_Name),
 		}) {}
@@ -784,7 +784,7 @@ public:
 			MakeColumn("issue",      &WinTicketRow::issue),
 			MakeColumn("itemno",     &WinTicketRow::itemno),
 			MakeColumn("grade",      &WinTicketRow::grade),
-			MakeColumn("createdate", &WinTicketRow::createdate),
+			MakeColumn("createdate", &WinTicketRow::createdate, Timestamp),
 			MakeColumn("num",        &WinTicketRow::num),
 		}) {}
 };
