@@ -591,7 +591,7 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime) {
 	static DWORD dwTick = 0;
 	if (dwCurTime - dwTick >= 1 * 60 * 1000) {
 		dwTick = dwCurTime;
-		ToLogService("common", "Ply[%5d %5d %5d],\tCha[%5d %5d %5d],\tItem[%5d %5d %5d],\tTNpc[%5d %5d %5d]",
+		ToLogService("common", "Ply[{:5d} {:5d} {:5d}],\tCha[{:5d} {:5d} {:5d}],\tItem[{:5d} {:5d} {:5d}],\tTNpc[{:5d} {:5d} {:5d}]",
 					 m_pCPlySpace->GetHoldPlyNum(), m_pCPlySpace->GetMaxHoldPlyNum(), m_pCPlySpace->GetAllocPlyNum(),
 					 m_pCEntSpace->GetHoldChaNum(), m_pCEntSpace->GetMaxHoldChaNum(), m_pCEntSpace->GetAllocChaNum(),
 					 m_pCEntSpace->GetHoldItemNum(), m_pCEntSpace->GetMaxHoldItemNum(), m_pCEntSpace->GetAllocItemNum(),

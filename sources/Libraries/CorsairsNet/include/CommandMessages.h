@@ -7181,9 +7181,7 @@ namespace net {
 		//  Deserialize:  CM ( ) 
 
 		inline void deserialize(RPacket& pk, CmSayMessage& m) {
-			unsigned short len;
-			const char* data = pk.ReadSequence(len);
-			if (data && len > 0) m.content.assign(data, len - 1); //  null-
+			m.content = pk.ReadString();
 		}
 		inline void deserialize(RPacket& pk, CmSynAttrMessage& m) {
 			int64_t count = pk.ReadInt64();
@@ -8406,7 +8404,7 @@ namespace net {
 
 		inline WPacket serialize(const CmSayMessage& m) {
 			WPacket w(static_cast<int>(m.content.size()) + 16); w.WriteCmd(CMD_CM_SAY);
-			w.WriteSequence(m.content.c_str(), static_cast<unsigned short>(m.content.size()) + 1); return w;
+			w.WriteString(m.content); return w;
 		}
 		inline WPacket serialize(const CmSynAttrMessage& m) {
 			WPacket w(static_cast<int>(m.attrs.size()) * 16 + 16); w.WriteCmd(CMD_CM_SYNATTR);

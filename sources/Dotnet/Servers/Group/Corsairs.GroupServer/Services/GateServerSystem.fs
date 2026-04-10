@@ -268,6 +268,10 @@ type GateServerSystem
         | Commands.CMD_TP_ESTOPUSER_CHECK ->
             Admin.handleTpEstopuserCheck ctx packet
 
+        // ── TP_DISC (Sess=0, без RPC) ──
+        | Commands.CMD_TP_DISC ->
+            Auth.handleTpDisc ctx ch packet
+
         // ── CP_* от клиента (через trailer) ──
         | Commands.CMD_CP_TEAM_INVITE
         | Commands.CMD_CP_TEAM_ACCEPT

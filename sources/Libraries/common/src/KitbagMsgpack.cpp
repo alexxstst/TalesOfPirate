@@ -35,7 +35,7 @@ std::string KitbagData2Msgpack(CKitbag* pKitbag) {
 			if (!g) continue;
 
 			bool hasAttr = g->IsInstAttrValid();
-			mpack_start_map(&writer, hasAttr ? 14 : 13);
+			mpack_start_map(&writer, hasAttr ? 13 : 12);
 
 			mpack_write_cstr(&writer, "p"); mpack_write_i32(&writer, j);
 			mpack_write_cstr(&writer, "i"); mpack_write_i32(&writer, g->sID);

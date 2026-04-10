@@ -14,7 +14,7 @@
 using namespace std;
 
 CMapID g_MapID;
-const char g_cchLogMapEntry = 1;
+const char g_cchLogMapEntry = 0;
 
 _DBC_USING
 

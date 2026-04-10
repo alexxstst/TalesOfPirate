@@ -82,11 +82,14 @@ int SetIMP_raw(lua_State* pLS) {
 
 // GetChaAttr has special unsigned handling
 int GetChaAttr_raw(lua_State* pLS) {
-	int nParaNum = lua_gettop(pLS);
-	if (nParaNum > 2) return 0;
+	if (!LuaCheckParamCount(pLS, 2, __FUNCTION__) ||
+		!LuaCheckParamPtr(pLS, 1, __FUNCTION__) ||
+		!LuaCheckParam(pLS, 2, LUA_TNUMBER, __FUNCTION__)) {
+		return 0;
+	}
 
 	auto pCChaResult = luabridge::Stack<CCharacter*>::get(pLS, 1);
-	if (!pCChaResult) { PARAM_ERROR return 0; }
+	if (!pCChaResult) { LuaLogCastFailed(pLS, 1, "CCharacter*", __FUNCTION__); return 0; }
 	CCharacter* pCCha = *pCChaResult;
 	if (!pCCha) return luaL_error(pLS, "GetChaAttr: null CCharacter*");
 	short sAttrIndex = (unsigned __int64)lua_tonumber(pLS, 2);

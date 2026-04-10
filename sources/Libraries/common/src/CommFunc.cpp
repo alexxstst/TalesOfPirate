@@ -239,14 +239,22 @@ int g_IsUseSkill( stNetChangeChaPart *pSEquip, int nSkillID )
 
 	short sLHandType = 0, sRHandType = 0, sBodyType = 0;
 
-	CItemRecord	*pItem = GetItemRecordInfo(nLHandID);
-	if (pItem) sLHandType = pItem->sType;
+	CItemRecord	*pItem;
 
-	pItem = GetItemRecordInfo(nRHandID);
-	if (pItem) sRHandType = pItem->sType;
+	if (nLHandID > 0) {
+		pItem = GetItemRecordInfo(nLHandID);
+		if (pItem) sLHandType = pItem->sType;
+	}
 
-	pItem = GetItemRecordInfo(nBodyID);
-	if (pItem) sBodyType = pItem->sType;
+	if (nRHandID > 0) {
+		pItem = GetItemRecordInfo(nRHandID);
+		if (pItem) sRHandType = pItem->sType;
+	}
+
+	if (nBodyID > 0) {
+		pItem = GetItemRecordInfo(nBodyID);
+		if (pItem) sBodyType = pItem->sType;
+	}
 
 	bool IsLeft = false;
 	bool IsRight = false;

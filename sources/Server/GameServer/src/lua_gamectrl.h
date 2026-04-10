@@ -10,10 +10,97 @@
 #pragma warning(disable: 4800)
 
 //    Lua-
-#define PARAM_ERROR        { ToLogService("lua", LogLevel::Error, "lua extend function[{}] param number or type error!", __FUNCTION__); }
-#define MAP_NULL_ERROR     { ToLogService("lua", LogLevel::Error, "lua extend function[{}] nonce map is null", __FUNCTION__); }
+#define MAP_NULL_ERROR     { ToLogService("lua", LogLevel::Error, "[{}] map is null at {}:{}", __FUNCTION__, __FILE__, __LINE__); }
 #define CHECK_MAP          { if(g_pScriptMap==NULL) { MAP_NULL_ERROR return 0; }				    }
 #define PARAM_LG_ERROR		 THROW_EXCP( excp, RES_STRING(GM_LUA_GAMECTRL_H_00001) );
+
+// Названия типов Lua для диагностики
+inline const char* LuaTypeName(int type) {
+	switch (type) {
+		case LUA_TNIL:            return "nil";
+		case LUA_TBOOLEAN:        return "boolean";
+		case LUA_TLIGHTUSERDATA:  return "lightuserdata";
+		case LUA_TNUMBER:         return "number";
+		case LUA_TSTRING:         return "string";
+		case LUA_TTABLE:          return "table";
+		case LUA_TFUNCTION:       return "function";
+		case LUA_TUSERDATA:       return "userdata";
+		case LUA_TTHREAD:         return "thread";
+		default:                  return "unknown";
+	}
+}
+
+// Детальная проверка одного параметра Lua-функции.
+// Возвращает true если тип совпал, иначе логирует ошибку и возвращает false.
+inline bool LuaCheckParam(lua_State* L, int idx, int expectedType, const char* funcName,
+						  const std::source_location& loc = std::source_location::current()) {
+	int actualType = lua_type(L, idx);
+	if (actualType != expectedType) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] param #{}: expected {}, got {} at {}:{}",
+			funcName, idx, LuaTypeName(expectedType), LuaTypeName(actualType),
+			loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+// Быстрая проверка: параметр является указателем (без логирования).
+inline bool LuaIsPtr(lua_State* L, int idx) {
+	int t = lua_type(L, idx);
+	return t == LUA_TLIGHTUSERDATA || t == LUA_TUSERDATA;
+}
+
+// Проверка что параметр — указатель (lightuserdata или userdata).
+// LuaBridge может пушить C++ объекты как любой из двух типов.
+inline bool LuaCheckParamPtr(lua_State* L, int idx, const char* funcName,
+							 const std::source_location& loc = std::source_location::current()) {
+	int actualType = lua_type(L, idx);
+	if (actualType != LUA_TLIGHTUSERDATA && actualType != LUA_TUSERDATA) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] param #{}: expected lightuserdata/userdata, got {} at {}:{}",
+			funcName, idx, LuaTypeName(actualType), loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+// Проверка количества параметров. Возвращает true если совпало.
+inline bool LuaCheckParamCount(lua_State* L, int expected, const char* funcName,
+							   const std::source_location& loc = std::source_location::current()) {
+	int actual = lua_gettop(L);
+	if (actual != expected) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] expected {} params, got {} at {}:{}",
+			funcName, expected, actual, loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+// Проверка количества параметров (диапазон). Возвращает true если в диапазоне.
+inline bool LuaCheckParamCountRange(lua_State* L, int minCount, int maxCount, const char* funcName,
+									const std::source_location& loc = std::source_location::current()) {
+	int actual = lua_gettop(L);
+	if (actual < minCount || actual > maxCount) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] expected {}-{} params, got {} at {}:{}",
+			funcName, minCount, maxCount, actual, loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+// Проверка что luabridge::Stack::get удался (для CCharacter* и т.п.)
+inline void LuaLogCastFailed(lua_State* L, int idx, const char* targetType, const char* funcName,
+							 const std::source_location& loc = std::source_location::current()) {
+	ToLogService("lua", LogLevel::Error,
+		"[{}] param #{}: lightuserdata failed cast to {} at {}:{}",
+		funcName, idx, targetType, loc.file_name(), loc.line());
+}
+
+// Обратная совместимость: PARAM_ERROR для файлов, ещё не мигрированных на детальные проверки
+#define PARAM_ERROR { ToLogService("lua", LogLevel::Error, "[{}] param error at {}:{}", __FUNCTION__, __FILE__, __LINE__); }
 
 
 //--------------------------NPC-----------------------------

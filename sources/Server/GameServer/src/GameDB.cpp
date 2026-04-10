@@ -1376,7 +1376,7 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 	sprintf(g_equip, RES_STRING(GM_GAMEDB_CPP_00024), enumEQUIP_NUM);
 	for (short i = 0; i < enumEQUIP_NUM; i++) {
 		pGridCont = &pCMainC->m_SChaPart.SLink[i];
-		if (!pGridCont)
+		if (!pGridCont || pGridCont->sID <= 0)
 			continue;
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
@@ -1496,7 +1496,7 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 		sprintf(g_equip, RES_STRING(GM_GAMEDB_CPP_00024), enumEQUIP_NUM);
 		for (short i = 0; i < enumEQUIP_NUM; i++) {
 			pGridCont = &pCMainC->m_SChaPart.SLink[i];
-			if (!pGridCont)
+			if (!pGridCont || pGridCont->sID <= 0)
 				continue;
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)

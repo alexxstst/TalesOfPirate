@@ -315,9 +315,14 @@ void ChaMoveToSleep(CCharacter* pCCha, int x, int y) {
 
 //
 int GetChaSpawnPos_raw(lua_State* L) {
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
@@ -329,9 +334,14 @@ int GetChaSpawnPos_raw(lua_State* L) {
 }
 
 int GetChaPatrolPos_raw(lua_State* L) {
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
@@ -360,14 +370,20 @@ int GetChaPatrolState(CCharacter* pCha) {
 //
 // Varargs: optional 4th param for immediate execution
 int ChaUseSkill_raw(lua_State* L) {
-	BOOL bValid = (lua_islightuserdata(L, 1) && lua_islightuserdata(L, 2) && lua_isnumber(L, 3));
-	if (!bValid) {
-		PARAM_ERROR
+	if (lua_isnil(L, 1) || lua_isnil(L, 2)) {
+		return 0;
+	}
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__) ||
+		!LuaCheckParamPtr(L, 2, __FUNCTION__) ||
+		!LuaCheckParam(L, 3, LUA_TNUMBER, __FUNCTION__)) {
 		return 0;
 	}
 	int nParamNum = lua_gettop(L);
 	if (nParamNum != 3 && !(nParamNum == 4 && lua_isnumber(L, 4))) {
-		PARAM_ERROR
+		if (!LuaCheckParamCountRange(L, 3, 4, __FUNCTION__)) {
+			return 0;
+		}
+		LuaCheckParam(L, 4, LUA_TNUMBER, __FUNCTION__);
 		return 0;
 	}
 	bool bExecNow = false;
@@ -376,14 +392,12 @@ int ChaUseSkill_raw(lua_State* L) {
 
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
 		return 0;
 	}
 	CCharacter* pCha = *pChaResult;
 
 	auto pTargetResult = luabridge::Stack<CCharacter*>::get(L, 2);
 	if (!pTargetResult) {
-		PARAM_ERROR
 		return 0;
 	}
 	CCharacter* pTarget = *pTargetResult;
@@ -408,15 +422,22 @@ int ChaUseSkill_raw(lua_State* L) {
 //
 // Varargs: optional 6th param for immediate execution
 int ChaUseSkill2_raw(lua_State* L) {
-	BOOL bValid = (lua_islightuserdata(L, 1) && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) &&
-		lua_isnumber(L, 5));
-	if (!bValid) {
-		PARAM_ERROR
+	if (lua_isnil(L, 1)) {
+		return 0;
+	}
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 3, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 4, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 5, LUA_TNUMBER, __FUNCTION__)) {
 		return 0;
 	}
 	int nParamNum = lua_gettop(L);
 	if (nParamNum != 5 && !(nParamNum == 6 && lua_isnumber(L, 6))) {
-		PARAM_ERROR
+		if (!LuaCheckParamCountRange(L, 5, 6, __FUNCTION__)) {
+			return 0;
+		}
+		LuaCheckParam(L, 6, LUA_TNUMBER, __FUNCTION__);
 		return 0;
 	}
 	bool bExecNow = false;
@@ -425,7 +446,7 @@ int ChaUseSkill2_raw(lua_State* L) {
 
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pCha = *pChaResult;
@@ -530,17 +551,27 @@ int GetChaSkillNum(CCharacter* pCha) {
 
 // ID
 int GetChaSkillInfo_raw(lua_State* L) {
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
 	}
 	CCharacter* pCha = *pChaResult;
+	if (!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto nLocResult = luabridge::Stack<int>::get(L, 2);
 	if (!nLocResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 2, "int", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
@@ -555,30 +586,38 @@ int GetChaSkillInfo_raw(lua_State* L) {
 //
 // Dynamic type checking on arg 2 (number = clear target, lightuserdata = set target)
 int SetChaTarget_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1));
-	if (!bValid) {
-		PARAM_ERROR
+	if (!LuaCheckParamCount(L, 2, __FUNCTION__)) {
+		return 0;
+	}
+	if (lua_isnil(L, 1)) {
+		return 0;
+	}
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
 		return 0;
 	}
 
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pCha = *pChaResult;
 
 	CCharacter* pTarget = nullptr;
-	if (lua_isnumber(L, 2)) {
+	if (lua_isnumber(L, 2) || lua_isnil(L, 2)) {
 		pTarget = nullptr;
 	}
-	else {
+	else if (LuaIsPtr(L, 2)) {
 		auto pTargetResult = luabridge::Stack<CCharacter*>::get(L, 2);
 		if (!pTargetResult) {
-			PARAM_ERROR
+			LuaLogCastFailed(L, 2, "CCharacter*", __FUNCTION__);
 			return 0;
 		}
 		pTarget = *pTargetResult;
+	}
+	else {
+		LuaCheckParamPtr(L, 2, __FUNCTION__);
+		return 0;
 	}
 	if (pCha) {
 		if (pTarget) {
@@ -617,30 +656,38 @@ CCharacter* GetChaHost(CCharacter* pCha) {
 //
 // Dynamic type checking on arg 2 (number = clear host, lightuserdata = set host)
 int SetChaHost_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1));
-	if (!bValid) {
-		PARAM_ERROR
+	if (!LuaCheckParamCount(L, 2, __FUNCTION__)) {
+		return 0;
+	}
+	if (lua_isnil(L, 1)) {
+		return 0;
+	}
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
 		return 0;
 	}
 
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pCha = *pChaResult;
 
 	CCharacter* pHost = nullptr;
-	if (lua_isnumber(L, 2)) {
+	if (lua_isnumber(L, 2) || lua_isnil(L, 2)) {
 		pHost = nullptr;
 	}
-	else {
+	else if (LuaIsPtr(L, 2)) {
 		auto pHostResult = luabridge::Stack<CCharacter*>::get(L, 2);
 		if (!pHostResult) {
-			PARAM_ERROR
+			LuaLogCastFailed(L, 2, "CCharacter*", __FUNCTION__);
 			return 0;
 		}
 		pHost = *pHostResult;
+	}
+	else {
+		LuaCheckParamPtr(L, 2, __FUNCTION__);
+		return 0;
 	}
 	if (pCha) {
 		pCha->m_HostCha = pHost;
@@ -693,15 +740,22 @@ CCharacter* GetFirstAtker(CCharacter* pCha) {
 // ,
 // Dynamic return: first value is either lightuserdata or number 0
 int GetChaHarmByNo_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if (!bValid) {
-		PARAM_ERROR
-		return 0;
+	if (lua_isnil(L, 1)) {
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+		return 2;
+	}
+	if (!LuaCheckParamCount(L, 2, __FUNCTION__) ||
+		!LuaCheckParamPtr(L, 1, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__)) {
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+		return 2;
 	}
 
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushnumber(L, 0);
 		lua_pushnumber(L, 0);
 		return 2;
@@ -727,15 +781,22 @@ int GetChaHarmByNo_raw(lua_State* L) {
 //
 // Dynamic return: first value is either lightuserdata or number 0
 int GetChaHateByNo_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 2 && lua_islightuserdata(L, 1) && lua_isnumber(L, 2));
-	if (!bValid) {
-		PARAM_ERROR
-		return 0;
+	if (lua_isnil(L, 1)) {
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+		return 2;
+	}
+	if (!LuaCheckParamCount(L, 2, __FUNCTION__) ||
+		!LuaCheckParamPtr(L, 1, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__)) {
+		lua_pushnumber(L, 0);
+		lua_pushnumber(L, 0);
+		return 2;
 	}
 
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushnumber(L, 0);
 		lua_pushnumber(L, 0);
 		return 2;
@@ -766,9 +827,14 @@ void AddHate(CCharacter* pTarget, CCharacter* pAtk, int sHate) {
 
 
 int GetChaPos_raw(lua_State* L) {
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
@@ -805,16 +871,17 @@ void ChaActEyeshot(CCharacter* pCha, int bActive) {
 //
 // First arg can be nil (pSelf=nullptr), uses global map fallback + complex search logic
 int GetChaByRange_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) &&
-		lua_isnumber(L, 5));
-	if (!bValid) {
-		PARAM_ERROR
+	if (!LuaCheckParamCount(L, 5, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 3, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 4, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 5, LUA_TNUMBER, __FUNCTION__)) {
 		return 0;
 	}
 
 	auto pSelfResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pSelfResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pSelf = *pSelfResult;
@@ -880,16 +947,17 @@ int GetChaByRange_raw(lua_State* L) {
 //
 // First arg can be nil (pSelf=nullptr), uses global map fallback
 int ClearHideChaByRange_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) &&
-		lua_isnumber(L, 5));
-	if (!bValid) {
-		PARAM_ERROR
+	if (!LuaCheckParamCount(L, 5, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 3, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 4, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 5, LUA_TNUMBER, __FUNCTION__)) {
 		return 0;
 	}
 
 	auto pSelfResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pSelfResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pSelf = *pSelfResult;
@@ -949,16 +1017,18 @@ int ClearHideChaByRange_raw(lua_State* L) {
 //
 // Variable number of returns (up to 12)
 int GetChaSetByRange_raw(lua_State* L) {
-	BOOL bValid = (lua_gettop(L) == 5 && lua_isnumber(L, 2) && lua_isnumber(L, 3) && lua_isnumber(L, 4) &&
-		lua_isnumber(L, 5));
-	if (!bValid) {
-		PARAM_ERROR
+	if (!LuaCheckParamCount(L, 5, __FUNCTION__) ||
+		!LuaCheckParamPtr(L, 1, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 3, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 4, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 5, LUA_TNUMBER, __FUNCTION__)) {
 		return 0;
 	}
 
 	auto pSelfResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pSelfResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pSelf = *pSelfResult;
@@ -1015,9 +1085,14 @@ void PickItem(CCharacter* pCha, CItem* pItem) {
 
 //
 int GetItemPos_raw(lua_State* L) {
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto pItemResult = luabridge::Stack<CItem*>::get(L, 1);
 	if (!pItemResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CItem*", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
@@ -1039,9 +1114,14 @@ int IsPosValid(CCharacter* pCha, int x, int y) {
 
 
 int GetChaFacePos_raw(lua_State* L) {
+	if (!LuaCheckParamPtr(L, 1, __FUNCTION__)) {
+		lua_pushinteger(L, 0);
+		lua_pushinteger(L, 0);
+		return 2;
+	}
 	auto pChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		lua_pushinteger(L, 0);
 		lua_pushinteger(L, 0);
 		return 2;
@@ -1223,7 +1303,7 @@ int PRINT_raw(lua_State* L) {
 int LG_raw(lua_State* L) {
 	int count = lua_gettop(L);
 	if (count <= 1) {
-		PARAM_ERROR;
+		ToLogService("lua", LogLevel::Error, "[{}] expected at least 2 params, got {}", __FUNCTION__, count);
 		return 0;
 	}
 	const char* pszFile = lua_tostring(L, 1);
@@ -1301,14 +1381,15 @@ int LG_raw(lua_State* L) {
 int EXLG_raw(lua_State* L) {
 	int nNumParam = lua_gettop(L);
 	if (nNumParam <= 1) {
-		PARAM_ERROR;
+		ToLogService("lua", LogLevel::Error, "[{}] expected at least 2 params, got {}", __FUNCTION__, nNumParam);
 		return 0;
 	}
 
 	const char* pszFile = lua_tostring(L, 1);
 	const char* pszTemp = lua_tostring(L, 2);
 	if (!pszFile || !pszTemp) {
-		PARAM_ERROR;
+		if (!pszFile) { LuaCheckParam(L, 1, LUA_TSTRING, __FUNCTION__); }
+		if (!pszTemp) { LuaCheckParam(L, 2, LUA_TSTRING, __FUNCTION__); }
 		return 0;
 	}
 	char szData[1024] = {0};
@@ -1472,12 +1553,16 @@ int GetChaAttrI_raw(lua_State* L) {
 //
 // Inlined version of SetChaAttr logic (original lua_SetChaAttr was removed)
 int SetChaAttrI_raw(lua_State* L) {
-	int nParaNum = lua_gettop(L);
-	if (nParaNum > 3) return 0;
+	if (!LuaCheckParamCount(L, 3, __FUNCTION__) ||
+		!LuaCheckParamPtr(L, 1, __FUNCTION__) ||
+		!LuaCheckParam(L, 2, LUA_TNUMBER, __FUNCTION__) ||
+		!LuaCheckParam(L, 3, LUA_TNUMBER, __FUNCTION__)) {
+		return 0;
+	}
 
 	auto pCChaResult = luabridge::Stack<CCharacter*>::get(L, 1);
 	if (!pCChaResult) {
-		PARAM_ERROR
+		LuaLogCastFailed(L, 1, "CCharacter*", __FUNCTION__);
 		return 0;
 	}
 	CCharacter* pCCha = *pCChaResult;
