@@ -1,6 +1,8 @@
 
 # TalesOfPirateDX9
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](LICENSE)
+
 ## About This Repository
 
 This repository contains the source code for **Tales of Pirate**, upgraded from DirectX 8 to DirectX 9. Over the past few years, we collaborated with several freelancers to modernize the engine and server infrastructure.
