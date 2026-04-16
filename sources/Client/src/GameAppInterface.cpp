@@ -23,6 +23,7 @@
 #include "PoseRecordStore.h"
 #include "CharacterActionStore.h"
 #include "CharacterModelStore.h"
+#include "AnimatedLightStore.h"
 #include "ChaCreateRecordStore.h"
 #include "MapRecordStore.h"
 #include "EventRecordStore.h"
@@ -1288,6 +1289,7 @@ void CGameApp::InitAllTable() {
 	PoseRecordStore::Instance()->Load(db);
 	CharacterActionStore::Instance()->Load(db);
 	CharacterModelStore::Instance()->Load(db);
+	AnimatedLightStore::Instance()->Load(db);
 	ChaCreateRecordStore::Instance()->Load(db);
 	MapRecordStore::Instance()->Load(db);
 	EventRecordStore::Instance()->Load(db);

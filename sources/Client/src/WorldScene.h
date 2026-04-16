@@ -51,7 +51,7 @@ public:
 
 	inline static bool _IsThrowItemHint{ true };
 protected:
-    BOOL			_LoadAnimLight(const char* file);
+    BOOL			_LoadAnimLight();
     void			_SceneCursor();
 	void			_RecordTeamAndGuild(CCharacter* pMain,CCharacter* pCha );
 	BOOL			_InitUI();

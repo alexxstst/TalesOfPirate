@@ -141,6 +141,7 @@
     <ClCompile Include="..\src\PoseRecordStore.cpp" />
     <ClCompile Include="..\src\CharacterActionStore.cpp" />
     <ClCompile Include="..\src\CharacterModelStore.cpp" />
+    <ClCompile Include="..\src\AnimatedLightStore.cpp" />
     <ClCompile Include="..\src\ChaCreateRecordStore.cpp" />
     <ClCompile Include="..\src\MapRecordStore.cpp" />
     <ClCompile Include="..\src\EventRecordStore.cpp" />
@@ -247,6 +248,8 @@
     <ClInclude Include="..\include\CharacterActionStore.h" />
     <ClInclude Include="..\include\CharacterModelRecord.h" />
     <ClInclude Include="..\include\CharacterModelStore.h" />
+    <ClInclude Include="..\include\AnimatedLightRecord.h" />
+    <ClInclude Include="..\include\AnimatedLightStore.h" />
     <ClInclude Include="..\include\ChaCreateRecord.h" />
     <ClInclude Include="..\include\ChaCreateRecordStore.h" />
     <ClInclude Include="..\include\MapRecord.h" />

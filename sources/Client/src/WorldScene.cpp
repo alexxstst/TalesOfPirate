@@ -22,6 +22,7 @@
 #include "GlobalVar.h"
 #include "UIFormMgr.h"
 #include "MapRecordStore.h"
+#include "AnimatedLightStore.h"
 #include "GameAppMsg.h"
 #include "UIChat.h"
 #include "UITeam.h"
@@ -106,47 +107,47 @@ CWorldScene::~CWorldScene()
 	_cFont.ReleaseFont();
 }
 
-BOOL CWorldScene::_LoadAnimLight(const char* file)
+BOOL CWorldScene::_LoadAnimLight()
 {
-
-    FILE* fp = fopen(file, "rt");
-    if(fp == NULL)
+    auto* store = AnimatedLightStore::Instance();
+    const int lightCount = static_cast<int>(store->GetMaxLightNo()) + 1;
+    if (lightCount <= 0) {
+        _dwAnimLightNum = 0;
         return 0;
-
-    fscanf(fp, "%d", &_dwAnimLightNum);
-    _pAnimLightSeq = new(AnimCtrlLight[_dwAnimLightNum]);
-
-    for(DWORD j = 0; j < _dwAnimLightNum; j++)
-    {
-        DWORD key_num;
-        fscanf(fp, "%d", &key_num);
-
-        IndexDataSceneLight* p;
-        IndexDataSceneLight* data_seq = new(IndexDataSceneLight[key_num]);
-
-        for(DWORD i = 0; i < key_num; i++)
-        {
-            p = &data_seq[i];
-            fscanf(fp, "%d, %d, %f %f %f, %f, %f %f %f\n", 
-                &p->id, &p->light.type,
-                &p->light.amb.r, &p->light.amb.g, &p->light.amb.b,
-                &p->light.range,
-                &p->light.attenuation0, &p->light.attenuation1, &p->light.attenuation2);
-
-            p->light.pos.x = p->light.pos.y = p->light.pos.z = 0.0f;
-            p->light.amb.r /= 255.0f;
-            p->light.amb.g /= 255.0f;
-            p->light.amb.b /= 255.0f;
-            p->light.amb.a = 1.0f;
-            p->light.dif = p->light.amb;
-        }
-
-        _pAnimLightSeq[j].SetData(data_seq, key_num);
-
-        delete[] data_seq;
     }
 
-    fclose(fp);
+    // Группируем ключевые кадры по light_no. Записи идут отсортированными по (light_no, key_no).
+    std::vector<std::vector<IndexDataSceneLight>> grouped(lightCount);
+    store->ForEach([&](const CAnimatedLightInfo& r) {
+        if (r._lightNo < 0 || r._lightNo >= lightCount) {
+            return;
+        }
+        IndexDataSceneLight entry{};
+        entry.id = static_cast<DWORD>(r._frameId);
+        entry.light.type = static_cast<DWORD>(r._type);
+        entry.light.pos.x = entry.light.pos.y = entry.light.pos.z = 0.0f;
+        entry.light.amb.r = static_cast<float>(r._r) / 255.0f;
+        entry.light.amb.g = static_cast<float>(r._g) / 255.0f;
+        entry.light.amb.b = static_cast<float>(r._b) / 255.0f;
+        entry.light.amb.a = 1.0f;
+        entry.light.dif = entry.light.amb;
+        entry.light.range = r._range;
+        entry.light.attenuation0 = r._attenuation0;
+        entry.light.attenuation1 = r._attenuation1;
+        entry.light.attenuation2 = r._attenuation2;
+        grouped[r._lightNo].push_back(entry);
+    });
+
+    _dwAnimLightNum = static_cast<DWORD>(lightCount);
+    _pAnimLightSeq = new AnimCtrlLight[_dwAnimLightNum];
+
+    for (int j = 0; j < lightCount; j++) {
+        auto& keys = grouped[j];
+        if (keys.empty()) {
+            continue;
+        }
+        _pAnimLightSeq[j].SetData(keys.data(), static_cast<DWORD>(keys.size()));
+    }
 
     return 1;
 }
@@ -226,7 +227,7 @@ bool CWorldScene::_Init()
 
 	CFormMgr::s_Mgr.SetEnabled( true );
 	
-    _LoadAnimLight(".\\scripts\\txt\\aaa.tx");
+    _LoadAnimLight();
 
 	_cSceenSign.Init( this );
 
