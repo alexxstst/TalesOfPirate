@@ -159,7 +159,6 @@
     <ClCompile Include="..\src\CameraCtrl.cpp" />
     <ClCompile Include="..\src\CryptoUtils.cpp" />
     <ClCompile Include="..\src\Character.cpp" />
-    <ClCompile Include="..\src\CharacterAction.cpp" />
     <ClCompile Include="..\src\CharacterModel.cpp" />
     <ClCompile Include="..\src\ChaScript.cpp" />
     <ClCompile Include="..\src\ChaState.cpp" />

@@ -505,9 +505,6 @@
     <ClCompile Include="..\src\Character.cpp">
       <Filter>Scene\SceneNode\Character</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\CharacterAction.cpp">
-      <Filter>Scene\SceneNode\Character</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\CharacterModel.cpp">
       <Filter>Scene\SceneNode\Character</Filter>
     </ClCompile>

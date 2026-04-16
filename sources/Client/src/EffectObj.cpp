@@ -920,40 +920,6 @@ BOOL	CMagicEff::CreateGroupMagic(int iIdxID)
 	}
 	Clear();
 
-#ifndef SCRIPT_TABLE
-	Group_Param		sGroupParam;
-	char pszID[10];
-	sprintf(pszID,"%d",iIdxID);
-	if(!CEffectScript::m_cEffScript.LoadParamFromName(&sGroupParam,pszID))
-		return FALSE;
-
-	int size = 0;
-	int n;
-	for ( n = 0; n < (int)sGroupParam.vecNum.size(); ++n)
-	{
-		size += sGroupParam.vecNum[n];
-	}
-	_pMagicCtrl.resize(size);
-
-	int idx = 0;
-	int id;
-	int m;
-	for (n = 0; n < sGroupParam.nClass; ++n )
-	{
-		for ( m = 0; m < sGroupParam.vecNum[n]; ++m)
-		{
-			_pMagicCtrl[idx] = new CMagicCtrl;
-			if(!_pMagicCtrl[idx]->Create(sGroupParam.vecParam[n],&ResMgr))
-				return FALSE;
-			id  =_pMagicCtrl[idx]->GetRenderIdx();
-			_pMagicCtrl[idx]->MagicUpdate = MagicList[id];
-			_pMagicCtrl[idx]->Reset();
-			idx++;
-		}
-	}
-	_iGroupIdx = sGroupParam.nRenderIdx;
-	GroupEmission = GroupList[_iGroupIdx];
-#else
 	Group_Param*		psGroupParam;
 	psGroupParam		= GetGroupParam(iIdxID - 2000);
 	if(!psGroupParam)
@@ -979,7 +945,6 @@ BOOL	CMagicEff::CreateGroupMagic(int iIdxID)
 	}
 	_iGroupIdx = psGroupParam->nRenderIdx;
 	GroupEmission = GroupList[_iGroupIdx];
-#endif
 
 	setTypeID(-1);
 	setIdxID(iIdxID);

@@ -45,5 +45,5 @@ enum UserShaderType
 	VSTU_MINIMAP_E6,
 };
 
-LW_RESULT MINDPOWER_API LoadShader0(lwISysGraphics* sys_graphics);
-LW_RESULT MINDPOWER_API LoadShader1(lwISysGraphics* sys_graphics);
+LW_RESULT LoadShader0(lwISysGraphics* sys_graphics);
+LW_RESULT LoadShader1(lwISysGraphics* sys_graphics);

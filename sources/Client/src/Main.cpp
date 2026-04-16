@@ -276,15 +276,6 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_pGameApp = new CGameApp();
 	g_lootFilter = new LootFilter();
 
-	if (strParam.find("table_bin") != std::string::npos) // If command line contains table_bin, generate binary tables
-	{
-		extern void MakeBinTable();
-		MakeBinTable();
-		return FALSE;
-	}
-
-	//  clu_bin
-
 	if (!g_stUISystem.m_isLoad) {
 		g_stUISystem.LoadCustomProp();
 	}
@@ -704,15 +695,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 	}
 
 	return DefWindowProc(hWnd, message, wParam, lParam);
-}
-
-void MakeBinTable() {
-	g_bBinaryTable = FALSE;
-
-	g_pGameApp->InitAllTable();
-
-
-	//	MessageBox( NULL, GetLanguageString(193), "Info", 0 );
 }
 
 // Display error message to debug output (formerly printf to edit control)

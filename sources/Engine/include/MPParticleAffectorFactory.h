@@ -3,7 +3,7 @@
 
 #include "MPEffPrerequisites.h"
 
-class MINDPOWER_API MPParticleAffectorFactory
+class MPParticleAffectorFactory
 {
 protected:
 	std::vector<MPParticleAffector*> m_Affectors;

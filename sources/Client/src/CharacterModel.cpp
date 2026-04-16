@@ -612,8 +612,6 @@ int CCharacterModel::LoadPose()
 #endif
 
     MPPoseInfo* buf;
-    MPPoseInfo* p;
-    SActionInfo* s;
     MPIPoseCtrl* pose_ctrl;
     DWORD num;
 
@@ -625,24 +623,21 @@ int CCharacterModel::LoadPose()
     if(pose_ctrl->GetPoseNum() > 1)
         return 1;
 
-    const SCharacterAction* pCharAct = GetCharacterAction(cha_type);
-    if (!pCharAct) {
+    const SChaAction* pAction = CCharacterActionCache::_cache.GetCharAction(cha_type);
+    if (!pAction) {
         ToLogService("common", "msgInvalid LoadPose call");
         return 0;
     }
 
-    num = pCharAct->GetMaxActionNum();
+    num = static_cast<DWORD>(pAction->_actions.size());
     buf = new MPPoseInfo[num];
 
     for (DWORD i = 0; i < num; i++) {
-        s = const_cast<SActionInfo*>(&pCharAct->m_actions[i]);
-
-        if (s->m_sActionNO < 1) {
+        const auto& action = pAction->_actions.at(i);
+        if (!action.IsValid()) {
             continue;
         }
-
-        p = &buf[i];
-        *p = s->info;
+        buf[i] = action.ToPoseInfo();
     }
 
     MPIPoseCtrl* c = GetPoseCtrl();

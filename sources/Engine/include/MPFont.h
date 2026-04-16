@@ -39,7 +39,7 @@ namespace ui
 #define UI_STATE_NOCLIP		0
 #define UI_STATE_CLIP		1
 
-	class MINDPOWER_API UIClip
+	class UIClip
 	{
 	public:
 		static UIClip* Instance() 
@@ -159,7 +159,7 @@ namespace ui
 #define  DRAWONCE	
 class   MPRender;
 
-class MINDPOWER_API CMPFont
+class CMPFont
 {
 public:
 	CMPFont();

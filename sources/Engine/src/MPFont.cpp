@@ -15,7 +15,7 @@ using namespace std;
 
 ui::UIClip* ui::UIClip::m_pClip = NULL;
 
-extern MINDPOWER_API CMPResManger        ResMgr;
+extern CMPResManger        ResMgr;
 
 namespace ui
 {

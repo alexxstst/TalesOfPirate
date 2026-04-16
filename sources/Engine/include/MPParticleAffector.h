@@ -22,7 +22,7 @@ ParticleSystemManageraddAffectorFactory,
 .,
 ,.
 */
-class MINDPOWER_API MPParticleAffector
+class MPParticleAffector
 {
 public:
 	MPParticleAffector(MPParticleSystem* mParticleSystem): m_ParticleSystem(mParticleSystem) {}

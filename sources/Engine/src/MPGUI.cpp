@@ -3,7 +3,7 @@
 #include <algorithm>
 
 
-MINDPOWER_API CGuiMgr g_GuiMgr;
+CGuiMgr g_GuiMgr;
 
 CGuiMgr::CGuiMgr()
 {

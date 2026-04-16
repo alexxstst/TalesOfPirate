@@ -139,6 +139,8 @@
     <ClCompile Include="..\src\ShadeRecordStore.cpp" />
     <ClCompile Include="..\src\SceneObjRecordStore.cpp" />
     <ClCompile Include="..\src\PoseRecordStore.cpp" />
+    <ClCompile Include="..\src\CharacterActionStore.cpp" />
+    <ClCompile Include="..\src\CharacterModelStore.cpp" />
     <ClCompile Include="..\src\ChaCreateRecordStore.cpp" />
     <ClCompile Include="..\src\MapRecordStore.cpp" />
     <ClCompile Include="..\src\EventRecordStore.cpp" />
@@ -155,7 +157,6 @@
     <ClCompile Include="..\src\MonsterListRecordStore.cpp" />
     <ClCompile Include="..\src\NPCListRecordStore.cpp" />
     <ClCompile Include="..\src\LanguageRecordStore.cpp" />
-    <ClCompile Include="..\src\PoseDataStore.cpp" />
     <ClCompile Include="..\src\AssetDatabase.cpp" />
     <ClCompile Include="..\..\sqlite3\sqlite3.c">
       <CompileAs>CompileAsC</CompileAs>
@@ -242,7 +243,10 @@
     <ClInclude Include="..\include\SceneObjRecordStore.h" />
     <ClInclude Include="..\include\PoseRecord.h" />
     <ClInclude Include="..\include\PoseRecordStore.h" />
-    <ClInclude Include="..\include\PoseDataStore.h" />
+    <ClInclude Include="..\include\CharacterActionRecord.h" />
+    <ClInclude Include="..\include\CharacterActionStore.h" />
+    <ClInclude Include="..\include\CharacterModelRecord.h" />
+    <ClInclude Include="..\include\CharacterModelStore.h" />
     <ClInclude Include="..\include\ChaCreateRecord.h" />
     <ClInclude Include="..\include\ChaCreateRecordStore.h" />
     <ClInclude Include="..\include\MapRecord.h" />

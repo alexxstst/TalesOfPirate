@@ -36,7 +36,7 @@ typedef long (CALLBACK* MAP_PROC)(int nFlag, int nSectionX,
 
 class ZRBlock;
 
-class MINDPOWER_API MPMap
+class MPMap
 {
 public:
 	

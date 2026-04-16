@@ -18,7 +18,7 @@ class  CMPModelEff;
 ///************************************************************************/
 ///* class CMPParticleCtrl*/ 
 ///************************************************************************/
-//class MINDPOWER_API CMPParticleCtrl: publ ic CEffectBase
+//class CMPParticleCtrl: publ ic CEffectBase
 //{
 //public:
 //	CMPParticleCtrl(void);
@@ -49,7 +49,7 @@ class  CMPModelEff;
 ///************************************************************************/
 ///* class CMPParticleTrace*/
 ///************************************************************************/
-//class MINDPOWER_API CMPParticleTrace :public CMPParticleCtrl
+//class CMPParticleTrace :public CMPParticleCtrl
 //{
 //public:
 //	CMPParticleTrace(void);
@@ -99,7 +99,7 @@ class  CMPModelEff;
 ///************************************************************************/
 ///* class CMPParticleRipple*/
 ///************************************************************************/
-//class MINDPOWER_API CMPParticleRipple :public CMPParticleCtrl
+//class CMPParticleRipple :public CMPParticleCtrl
 //{
 //public:
 //	CMPParticleRipple(void);
@@ -209,7 +209,7 @@ protected:
 //////////////////////////////////////////////////////////////////////////
 
 
-class MINDPOWER_API CChaModel : public MPCharacter
+class CChaModel : public MPCharacter
 {
 public:
 	CChaModel()
@@ -285,7 +285,7 @@ public:
 protected:
 	bool	LoadChaModel(MPChaLoadInfo& info);
 
-	bool	LoadPose(SChaAction& SCharAct);
+	bool	LoadPose(const SChaAction& SCharAct);
 
 	D3DXMATRIX								_matBone;
 	D3DXMATRIX								_matWorld;
@@ -310,7 +310,7 @@ private:
 /************************************************************************/
 /* class CMPPartCtrl*/
 /************************************************************************/
-class MINDPOWER_API CMPPartCtrl//: public CEffectBase
+class CMPPartCtrl//: public CEffectBase
 {
 public:
 	static const int ParVersion = 15;

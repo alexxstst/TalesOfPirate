@@ -11,7 +11,7 @@ LW_USING
 // Менеджер текстур — замена MPTexSet (без наследования от CRawDataSet).
 // Lazy loading: текстура загружается при первом обращении через GetTexture().
 // DynamicRelease(): периодически выгружает неиспользуемые текстуры.
-class MINDPOWER_API TextureManager {
+class TextureManager {
 public:
 	struct Entry {
 		std::string path;

@@ -56,7 +56,7 @@ struct MPCullInfo
 //class CD3DFont;
 struct MPTexRect;
 
-class MINDPOWER_API MPRender
+class MPRender
 {
 
 public:
@@ -694,7 +694,7 @@ inline void MPRender::SetD3DCreateParamAdjustInfo(MPD3DCreateParamAdjustInfo* in
     _d3dCPAdjustInfo = *info;
 }
 
-extern MINDPOWER_API MPRender g_Render;
-extern MINDPOWER_API int g_nTemp;
-extern MINDPOWER_API DWORD g_dwCurFrameTick;
-extern MINDPOWER_API float g_fFrameRate;
+extern MPRender g_Render;
+extern int g_nTemp;
+extern DWORD g_dwCurFrameTick;
+extern float g_fFrameRate;

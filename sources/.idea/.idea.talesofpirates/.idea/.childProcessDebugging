@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<DebuggingRules xmlns="https://jetbrains.com/schemas/cidr/debugger/child-proc-dbg/2024-10-14"
+              xsi:schemaLocation="https://jetbrains.com/schemas/cidr/debugger/child-proc-dbg/2024-10-14 child-process-debugging-2024-10-14.xsd"
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <!-- Default rule determines whether to attach to all child processes if no specific rules are matched -->
+  <DefaultRule attach="false"/>
+
+  <!-- Specific rules can override the default behavior.
+
+      Attribute 'processName' refers to the executable command, not the exact path to the executable file.
+      This is the command used to start the process. For example, if you use 'cmd', it will execute 'cmd.exe'.
+      Thus, if you specify 'cmd.exe', the rule will not match the created process because the invoked command was 'cmd'.
+
+      Attribute 'commandLine' refers to the arguments that follow the process name.
+
+      Values are case-insensitive. Wildcards (*) and '?' are supported in both 'processName' and 'commandLine' values.
+      Note: Both 'processName' and 'commandLine' are implicitly surrounded by '*' on both sides. This means that an empty string
+      for these attributes will match any value.
+  -->
+
+  <!-- This rule matches commands where the executable's path contains 'part_of_path' and the executable name starts with 'my_app'.
+      It will match:
+          CreateProcess("c:/Programs/part_of_path/bin/my_app.exe", "app_command -arg1 -arg2" ...)
+      But it will not match:
+          CreateProcess("c:/Programs/Game/bin/my_app.exe", "app_command -arg1 -arg2" ...)
+          CreateProcess("my_app", "app_command -arg1 -arg2" ...)
+  -->
+  <Rule processName="part_of_path*/my_app*" commandLine="-arg1" attach="true"/>
+  <Rule processName="cm?" attach="true"/>
+
+  <TabNameRules>
+    <!--
+      Tab naming and ordering rules
+
+      The <TabNameRules> section allows you to define custom tab names and ordering for debugger tabs
+      based on the launched executable and its command-line arguments.
+
+      Each <TabRule> can specify:
+           - 'executable': a regular expression matched against the process executable name.
+                          This can be a full path or just the executable name. Matching is case-insensitive.
+                          Note: The entire string must be matched — use `.*` to match substrings if needed.
+           - 'commandline': a regular expression matched against the command-line string as provided to the process.
+                          This includes the executable and all arguments.
+                          Note: The entire string must be matched — use `.*` if matching substrings.
+
+                          Example:
+                            CommandLine: cmd /k echo Hello
+                            ExecutablePath: C:\Windows\System32\cmd.exe
+                            Only cmd was typed, but full executable path differs.
+
+           - 'name': the custom name to display on the debugger tab.
+                    You can use captured groups from 'executable' and 'commandline' patterns as substitutions.
+           - 'order': optional integer value that defines the display order of debugger tabs.
+                     Lower values appear first.
+
+         Substitution:
+           If the 'executable' or 'commandline' regex contains capturing groups, you can use them in the 'name' attribute.
+           - Use ${exe1}, ${exe2}, ... for regex groups from 'executable' attribute
+           - Use ${arg1}, ${arg2}, ... for regex groups from 'commandline' attribute
+           - Use ${pid} to insert the numeric process ID
+           Group indices are 1-based, as in standard regular expressions
+
+      If both 'executable' and 'commandline' are omitted, the rule won't match anything.
+
+      Examples:
+
+        Match the editor mode of a game process:
+          <TabRule executable=".*game.*\.exe" commandline=".*-editor.*" name="Editor" order="1"/>
+
+        Match any child of 'mytool.exe' with dynamic argument:
+          <TabRule executable=".*mytool.*\.exe" commandline=".*-mode (\w+).*" name="Tool mode: ${arg1}"/>
+
+        Match a specific diagnostic tool by full path:
+          <TabRule executable="C:[\\/]tools[\\/]diagnostic\.exe" name="Diagnostics"/>
+
+        Match client/server and set display order:
+          <TabRule executable=".*game.*\.exe" commandline=".*-server.*" name="Server" order="2"/>
+          <TabRule executable=".*game.*\.exe" commandline=".*-client.*" name="Client" order="3"/>
+
+        Match a numeric argument and include PID:
+          <TabRule executable=".*calc.*\.exe" commandline=".*(\\d+).*" name="Calc PID ${pid} with ${arg1}"/>
+    -->
+
+    <TabRule executable=".*game.*\.exe" commandline=".*-editor.*" name="Editor" order="1"/>
+    <TabRule executable=".*game.*\.exe" commandline=".*-server.*" name="Server" order="2"/>
+    <TabRule executable=".*game.*\.exe" commandline=".*-client.*" name="Client" order="3"/>
+    <TabRule executable=".*tools.*\.exe" commandline=".*" name="Tools" order="4"/>
+  </TabNameRules>
+
+</DebuggingRules>

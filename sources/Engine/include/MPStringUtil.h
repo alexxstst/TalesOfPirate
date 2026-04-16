@@ -4,7 +4,7 @@
 #include "MPEffPrerequisites.h"
 #include "MPStringVector.h"
 
-class MINDPOWER_API MPStringUtil
+class MPStringUtil
 {
 public:
 	typedef std::stringstream StrStreamType;

@@ -922,8 +922,8 @@ void MPRender::_AddText(const char *pszText, DWORD dwColor)
 
 }
 
-MINDPOWER_API MPRender g_Render;
-MINDPOWER_API int g_nTemp = 0;
+MPRender g_Render;
+int g_nTemp = 0;
 
 /************************************************************************/
 /* state*/

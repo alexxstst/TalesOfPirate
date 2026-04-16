@@ -18,7 +18,7 @@
 #define ROLL2				10
 
 
-class MINDPOWER_API MPCameraNOLEECH
+class MPCameraNOLEECH
 { 
 public:
 	

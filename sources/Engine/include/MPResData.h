@@ -30,7 +30,7 @@
 #include <fstream>
 
 
-class MINDPOWER_API CRawDataInfo
+class CRawDataInfo
 {
 public:	
 	
@@ -61,7 +61,7 @@ public:
 
 
 
-class MINDPOWER_API CRawDataSet
+class CRawDataSet
 {
 
 protected:

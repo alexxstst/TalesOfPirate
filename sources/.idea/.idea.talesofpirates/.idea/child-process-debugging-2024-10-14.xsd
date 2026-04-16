@@ -1,0 +1,37 @@
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           targetNamespace="https://jetbrains.com/schemas/cidr/debugger/child-proc-dbg/2024-10-14"
+           xmlns="https://jetbrains.com/schemas/cidr/debugger/child-proc-dbg/2024-10-14"
+           elementFormDefault="qualified">
+  <xs:element name="DebuggingRules">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="DefaultRule" type="DefaultRuleType" minOccurs="1" maxOccurs="1" />
+        <xs:element name="Rule" type="RuleDetailType" maxOccurs="unbounded" minOccurs="0" />
+        <xs:element name="TabNameRules" minOccurs="0" maxOccurs="1">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TabRule" type="TabRuleType" maxOccurs="unbounded" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:complexType name="DefaultRuleType">
+    <xs:attribute name="attach" type="xs:boolean" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="RuleDetailType">
+    <xs:attribute name="processName" type="xs:string" use="optional" />
+    <xs:attribute name="commandLine" type="xs:string" use="optional" />
+    <xs:attribute name="attach" type="xs:boolean" use="required" />
+  </xs:complexType>
+
+  <xs:complexType name="TabRuleType">
+    <xs:attribute name="executable" type="xs:string" use="optional" />
+    <xs:attribute name="commandline" type="xs:string" use="optional" />
+    <xs:attribute name="name" type="xs:string" use="required" />
+    <xs:attribute name="order" type="xs:integer" use="optional" />
+  </xs:complexType>
+</xs:schema>

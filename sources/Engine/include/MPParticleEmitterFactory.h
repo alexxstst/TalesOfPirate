@@ -3,7 +3,7 @@
 
 #include "MPEffPrerequisites.h"
 
-class MINDPOWER_API MPParticleEmitterFactory
+class MPParticleEmitterFactory
 {
 protected:
 	std::vector<MPParticleEmitter*> m_Emitters;

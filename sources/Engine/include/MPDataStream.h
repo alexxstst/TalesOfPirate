@@ -20,7 +20,7 @@ ArchiveMPDataStream
 	
 
 */
-class MINDPOWER_API MPDataStream
+class MPDataStream
 {
 public:
 	/// 
@@ -106,7 +106,7 @@ typedef std::list<MPDataStreamPtr> MPDataStreamList;
 typedef MPSharedPtr<MPDataStreamList> MPDataStreamListPtr;
 
 /** DataStream.*/
-class MINDPOWER_API MPMemoryDataStream : public MPDataStream
+class MPMemoryDataStream : public MPDataStream
 {
 public:
 
@@ -202,7 +202,7 @@ protected:
 typedef MPSharedPtr<MPMemoryDataStream> MPMemoryDataStreamPtr;
 
 /** DataStream,std::basic_istream.*/
-class MINDPOWER_API MPFileStreamDataStream : public MPDataStream
+class MPFileStreamDataStream : public MPDataStream
 {
 public:
 	/** stl
@@ -254,7 +254,7 @@ protected:
 };
 
 /** DataStream,C.*/
-class MINDPOWER_API MPFileHandleDataStream : public MPDataStream
+class MPFileHandleDataStream : public MPDataStream
 {
 public:
 	/// c

@@ -23,7 +23,7 @@ enum MPParameterType
 };
 
 /// ,MPParameterInteface
-class MINDPOWER_API MPParameterDef
+class MPParameterDef
 {
 public:
 	String name;
@@ -35,7 +35,7 @@ public:
 typedef std::vector<MPParameterDef> MPParameterList;
 
 /** /.*/
-class MINDPOWER_API MPParamCommand
+class MPParamCommand
 {
 public:
 	virtual String doGet(const void* target) const = 0;
@@ -45,7 +45,7 @@ public:
 };
 typedef std::map<String, MPParamCommand* > ParamCommandMap;
 
-class MINDPOWER_API MPParamDictionary
+class MPParamDictionary
 {
 	friend class MPParameterInterface;
 protected:
@@ -111,7 +111,7 @@ typedef std::map<String, MPParamDictionary> MPParamDictionaryMap;
 	createParamDictionary
 	.
 */
-class MINDPOWER_API MPParameterInterface
+class MPParameterInterface
 {
 public:
 

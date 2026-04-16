@@ -1,4 +1,6 @@
-﻿#include "StdAfx.h"
+﻿#include <algorithm>
+
+#include "StdAfx.h"
 
 #include "GlobalInc.h"
 //#include "MPModelEff.h"
@@ -7,24 +9,24 @@
 #include "i_effect.h"
 #include "MPRender.h"
 #include "lwPredefinition.h"
+#include "CharacterActionStore.h"
 //#include "mpresmanger.h"
 
-extern MINDPOWER_API CMPResManger        ResMgr;
+extern CMPResManger ResMgr;
 
 
-I_Effect::I_Effect(void)
-{
-	m_pDev				 = NULL;
+I_Effect::I_Effect(void) {
+	m_pDev = NULL;
 
 	ReleaseAll();
 
-	_bBillBoard			= false;
-	_bSizeSame			= true;
-	_bAngleSame			= true;
-	_bPosSame			= true;
-	_bColorSame			= true;
+	_bBillBoard = false;
+	_bSizeSame = true;
+	_bAngleSame = true;
+	_bPosSame = true;
+	_bColorSame = true;
 
-	_eSrcBlend	= D3DBLEND_SRCALPHA;
+	_eSrcBlend = D3DBLEND_SRCALPHA;
 	_eDestBlend = D3DBLEND_INVSRCALPHA;
 
 	_iUseParam = 0;
@@ -32,21 +34,18 @@ I_Effect::I_Effect(void)
 	m_flerp = 0;
 
 	_bRotaLoop = false;
-	_vRotaLoop = D3DXVECTOR4(0,0,0,0);
+	_vRotaLoop = D3DXVECTOR4(0, 0, 0, 0);
 
 	_bAlpha = true;
 	_bRotaBoard = true;
 }
 
-I_Effect::~I_Effect(void)
-{
+I_Effect::~I_Effect(void) {
 	//ReleaseAll();
 }
 
-void I_Effect::DestroyTobMesh(CMPResManger* resMgr)
-{
-	if(m_pCModel)
-	{
+void I_Effect::DestroyTobMesh(CMPResManger* resMgr) {
+	if (m_pCModel) {
 		if (!IsTobMesh(m_strModelName))
 			resMgr->DeleteMesh(*m_pCModel);
 		else
@@ -57,15 +56,15 @@ void I_Effect::DestroyTobMesh(CMPResManger* resMgr)
 
 //
 #ifdef USE_RENDER
-void	I_Effect::Init(MPRender*	 pDev,EFFECT_TYPE  eType, WPARAM wParam, LPARAM lParam)	
+void I_Effect::Init(MPRender* pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lParam)
 #else
-void	I_Effect::Init(LPDIRECT3DDEVICE8	 pDev,EFFECT_TYPE  eType, WPARAM wParam, LPARAM lParam)	
+void I_Effect::Init(LPDIRECT3DDEVICE8 pDev, EFFECT_TYPE eType, WPARAM wParam, LPARAM lParam)
 #endif
-{ 
-	m_pDev = pDev; 
-	_eEffectType		= eType;
-	_fLength			= 5.0f;//!2
-	_wFrameCount		= (WORD)wParam;	//!
+{
+	m_pDev = pDev;
+	_eEffectType = eType;
+	_fLength = 5.0f; //!2
+	_wFrameCount = (WORD)wParam; //!
 
 	_vecFrameTime.resize(_wFrameCount);
 
@@ -77,25 +76,24 @@ void	I_Effect::Init(LPDIRECT3DDEVICE8	 pDev,EFFECT_TYPE  eType, WPARAM wParam, L
 	_iUseParam = 0;
 	_CylinderParam.resize(_wFrameCount);
 
-	for(WORD	n = 0; n < _wFrameCount; n++)
-	{
-		_vecFrameTime[n]	= _fLength / _wFrameCount;
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		_vecFrameTime[n] = _fLength / _wFrameCount;
 
-		_vecFrameSize[n]	=  //D3DXVECTOR3((rand()%100)/10,(rand()%100)/10,1.0f);//*/
-			D3DXVECTOR3(1.0f,1.0f,1.0f);
-		_vecFrameAngle[n]	= /*D3DXVECTOR4(0,1,1,(rand()%3));//*/
-			D3DXVECTOR3(0,0,0);
-		_vecFramePos[n]		= /*D3DXVECTOR3(0,(rand()%5),-(rand()%5));//*/
-			D3DXVECTOR3(0,0,0);
+		_vecFrameSize[n] = //D3DXVECTOR3((rand()%100)/10,(rand()%100)/10,1.0f);//*/
+			D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+		_vecFrameAngle[n] = /*D3DXVECTOR4(0,1,1,(rand()%3));//*/
+			D3DXVECTOR3(0, 0, 0);
+		_vecFramePos[n] = /*D3DXVECTOR3(0,(rand()%5),-(rand()%5));//*/
+			D3DXVECTOR3(0, 0, 0);
 
-		_vecFrameColor[n]	= /*D3DCOLOR_ARGB((int)(255 - 255/(n + 1)),255,255,255);
-		//*/D3DCOLOR_ARGB(255,255,255,255);
+		_vecFrameColor[n] = /*D3DCOLOR_ARGB((int)(255 - 255/(n + 1)),255,255,255);
+		//*/D3DCOLOR_ARGB(255, 255, 255, 255);
 	}
 	//!VS
 	_bBillBoard = (bool)lParam;
-	if(_bBillBoard)
+	if (_bBillBoard)
 		_iVSIndex = 2;
-	if(_eEffectType == EFFECT_MODEL)
+	if (_eEffectType == EFFECT_MODEL)
 		_iVSIndex = 1;
 
 	//_vecFrameTime[0]	= 1.75f;
@@ -116,17 +114,15 @@ void	I_Effect::Init(LPDIRECT3DDEVICE8	 pDev,EFFECT_TYPE  eType, WPARAM wParam, L
 	//m_CTextruelist.GetTextureFromModel(m_pCModel);
 }
 
-void	I_Effect::Reset()
-{
-	m_CTexCoordlist.Reset(); 
+void I_Effect::Reset() {
+	m_CTexCoordlist.Reset();
 	m_CTextruelist.Reset();
 }
 
-void	I_Effect::ReleaseAll()	
-{
-	_eEffectType		= EFFECT_NONE;
-	_fLength			= 0.0f;
-	_wFrameCount		= 0;
+void I_Effect::ReleaseAll() {
+	_eEffectType = EFFECT_NONE;
+	_fLength = 0.0f;
+	_wFrameCount = 0;
 
 	_vecFrameTime.clear();
 	_vecFrameSize.clear();
@@ -138,8 +134,8 @@ void	I_Effect::ReleaseAll()
 	m_CTextruelist.Clear();
 
 	_CylinderParam.clear();
-	m_pCModel	= NULL;
-	m_strModelName	= "";
+	m_pCModel = NULL;
+	m_strModelName = "";
 
 	m_strEffectName = "";
 	_SpmatBBoard = NULL;
@@ -148,21 +144,17 @@ void	I_Effect::ReleaseAll()
 
 	//SAFE_RELEASE(m_oldtex);
 }
-void	I_Effect::BindingResInit(CMPResManger	*m_CResMagr)
-{
-	if(_eEffectType == EFFECT_FRAMETEX)
-	{
 
-	}else if(m_pCModel)
-	{
+void I_Effect::BindingResInit(CMPResManger* m_CResMagr) {
+	if (_eEffectType == EFFECT_FRAMETEX) {
+	}
+	else if (m_pCModel) {
 		m_CTexCoordlist.GetCoordFromModel(m_pCModel);
 		m_CTextruelist.GetTextureFromModel(m_pCModel);
-		if(IsCylinderMesh(m_pCModel->m_strName))
-		{
+		if (IsCylinderMesh(m_pCModel->m_strName)) {
 			_iUseParam = 0;
 
-			for (int n = 0; n < _wFrameCount; ++n)
-			{
+			for (int n = 0; n < _wFrameCount; ++n) {
 				_CylinderParam[n].iSegments = m_nSegments;
 				_CylinderParam[n].fTopRadius = m_rRadius;
 				_CylinderParam[n].fBottomRadius = m_rBotRadius;
@@ -171,40 +163,34 @@ void	I_Effect::BindingResInit(CMPResManger	*m_CResMagr)
 			}
 		}
 	}
-	
 }
+
 //-----------------------------------------------------------------------------
-int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
-{
+int I_Effect::BoundingRes(CMPResManger* m_CResMagr, const char* pszParentName) {
 	//!0123shade
 	int t_iID = 0;
 
-	// 
-	if(_eEffectType == EFFECT_FRAMETEX)
-	{
-		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n)
-		{
-			m_CTexFrame.m_vecTexs[n] = 
+	//
+	if (_eEffectType == EFFECT_FRAMETEX) {
+		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n) {
+			m_CTexFrame.m_vecTexs[n] =
 				m_CResMagr->GetTextureByNamelw(m_CTexFrame.m_vecTexName[n]);
-			if(!m_CTexFrame.m_vecTexs[n])
-			{
+			if (!m_CTexFrame.m_vecTexs[n]) {
 				char pszMsg[64];
-				sprintf(pszMsg,"[%s][%s]",
-					pszParentName,m_CTextruelist.m_vecTexName.c_str());
+				sprintf(pszMsg, "[%s][%s]",
+						pszParentName, m_CTextruelist.m_vecTexName.c_str());
 				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 				return 1;
 			}
 		}
 	}
-	else
-	{
-		m_CTextruelist.m_pTex = 
+	else {
+		m_CTextruelist.m_pTex =
 			m_CResMagr->GetTextureByNamelw(m_CTextruelist.m_vecTexName);
-		if (!m_CTextruelist.m_pTex)
-		{
+		if (!m_CTextruelist.m_pTex) {
 			char pszMsg[64];
-			sprintf(pszMsg,"[%s][%s]",
-			pszParentName,m_CTextruelist.m_vecTexName.c_str());
+			sprintf(pszMsg, "[%s][%s]",
+					pszParentName, m_CTextruelist.m_vecTexName.c_str());
 			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 			return 1;
 		}
@@ -212,65 +198,52 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 	}
 
 
-	
 	_SpmatBBoard = m_CResMagr->GetBBoardMat();
 
-	// 
-	if (m_pCModel && m_pCModel->m_strName == m_strModelName)
-	{
+	//
+	if (m_pCModel && m_pCModel->m_strName == m_strModelName) {
 		return 0;
 	}
-	if(m_pCModel)
-	{
-		if (!IsTobMesh(m_strModelName))
-		{
+	if (m_pCModel) {
+		if (!IsTobMesh(m_strModelName)) {
 			m_CResMagr->DeleteMesh(*m_pCModel);
 			m_pCModel = 0;
 		}
-		else
-		{
+		else {
 			m_CResMagr->DeleteTobMesh(*m_pCModel);
 			m_pCModel = 0;
 		}
 	}
-	
 
-	if (!_bBillBoard && IsTobMesh(m_strModelName))
-	{
-		if(!m_pCModel)
-		{
+
+	if (!_bBillBoard && IsTobMesh(m_strModelName)) {
+		if (!m_pCModel) {
 			m_pCModel = m_CResMagr->NewTobMesh();
-			if(!m_pCModel->CreateTob(m_strModelName, m_nSegments,m_rHeight,m_rRadius,m_rBotRadius))
-			{
+			if (!m_pCModel->CreateTob(m_strModelName, m_nSegments, m_rHeight, m_rRadius, m_rBotRadius)) {
 				char pszMsg[64];
-				sprintf(pszMsg,"[%s][%s]",
-					pszParentName,m_strModelName.c_str());
+				sprintf(pszMsg, "[%s][%s]",
+						pszParentName, m_strModelName.c_str());
 				g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 				return 2;
 			}
 		}
 	}
-	else
-	{
+	else {
 		m_pCModel = m_CResMagr->GetMeshByName(m_strModelName);
-		if (!m_pCModel)
-		{
+		if (!m_pCModel) {
 			char pszMsg[64];
-			sprintf(pszMsg,"[%s][%s]",
-				pszParentName,m_CTextruelist.m_vecTexName.c_str());
+			sprintf(pszMsg, "[%s][%s]",
+					pszParentName, m_CTextruelist.m_vecTexName.c_str());
 			g_logManager.InternalLog(LogLevel::Error, "errors", pszMsg);
 			return 2;
 		}
 
-		if(_bBillBoard)
-		{
+		if (_bBillBoard) {
 			m_strModelName = MESH_PLANERECT;
 		}
-		else
-		{
-			if(_eEffectType == EFFECT_FRAMETEX)
+		else {
+			if (_eEffectType == EFFECT_FRAMETEX)
 				m_CTexFrame.GetCoordFromModel(m_pCModel);
-
 		}
 	}
 	//if(IsItem())
@@ -280,90 +253,75 @@ int I_Effect::BoundingRes(CMPResManger	*m_CResMagr, const char* pszParentName)
 	//		//m_pCModel->ResetItemTexture(pszn);
 	//}
 
-	// Success 
+	// Success
 	return 0;
 }
+
 //-----------------------------------------------------------------------------
-void I_Effect::SetModel(CEffectModel*	pCModel)
-{ 
-	if (m_pCModel && !IsTobMesh(m_pCModel->m_strName))
-	{
+void I_Effect::SetModel(CEffectModel* pCModel) {
+	if (m_pCModel && !IsTobMesh(m_pCModel->m_strName)) {
 		m_pCModel->SetUsing(false);
 		m_pCModel = 0;
 	}
 	m_pCModel = pCModel;
 	m_strModelName = m_pCModel->m_strName;
-}	
+}
+
 //-----------------------------------------------------------------------------
-void  I_Effect::ResetModel()
-{
-	if(m_pCModel->IsItem())
-	{
+void I_Effect::ResetModel() {
+	if (m_pCModel->IsItem()) {
 		m_pCModel->SetUsing(false);
 		m_pCModel = 0;
 	}
 }
 
-void I_Effect::DeleteItem(CMPResManger* pResMgr)
-{
-	if(m_pCModel)
-		if(!IsTobMesh(m_strModelName))
-		{
+void I_Effect::DeleteItem(CMPResManger* pResMgr) {
+	if (m_pCModel)
+		if (!IsTobMesh(m_strModelName)) {
 			pResMgr->DeleteMesh(*m_pCModel);
 			m_pCModel = 0;
 		}
-		else 
-		{
+		else {
 			pResMgr->DeleteTobMesh(*m_pCModel);
 			m_pCModel = 0;
 		}
 }
-void	I_Effect::GetRes(CMPResManger	*pCResMagr,std::vector<INT>& vecTex,std::vector<INT>& vecModel)
-{
-	int t_iID = 0;
-	std::vector<INT>::	iterator it;
 
-	if(_eEffectType == EFFECT_FRAMETEX)
-	{
-		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n)
-		{
+void I_Effect::GetRes(CMPResManger* pCResMagr, std::vector<INT>& vecTex, std::vector<INT>& vecModel) {
+	int t_iID = 0;
+	std::vector<INT>::iterator it;
+
+	if (_eEffectType == EFFECT_FRAMETEX) {
+		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n) {
 			t_iID = pCResMagr->GetTextureID(m_CTexFrame.m_vecTexName[n]);
-			if(t_iID != -1)
-			{
-				it = std::find( vecTex.begin(), vecTex.end(), t_iID );
-				if(it == vecTex.end())
-				{
+			if (t_iID != -1) {
+				it = std::find(vecTex.begin(), vecTex.end(), t_iID);
+				if (it == vecTex.end()) {
 					vecTex.push_back(t_iID);
 				}
 			}
 		}
-	}else
-	{
+	}
+	else {
 		t_iID = pCResMagr->GetTextureID(m_CTextruelist.m_vecTexName);
-		if(t_iID != -1)
-		{
-			it = std::find( vecTex.begin(), vecTex.end(), t_iID );
-			if(it == vecTex.end())
-			{
+		if (t_iID != -1) {
+			it = std::find(vecTex.begin(), vecTex.end(), t_iID);
+			if (it == vecTex.end()) {
 				vecTex.push_back(t_iID);
 			}
 		}
 	}
 
-	if(_bBillBoard)
-	{
+	if (_bBillBoard) {
 	}
-	else
-	{
-		if(IsTobMesh(m_strModelName))
-		{
-		}else{
+	else {
+		if (IsTobMesh(m_strModelName)) {
+		}
+		else {
 			t_iID = pCResMagr->GetMeshID(m_strModelName);
-			if(t_iID >= 7)
-			{
-				it = std::find( vecModel.begin(), vecModel.end(), t_iID );
-				if(it == vecModel.end())
-				{
+			if (t_iID >= 7) {
+				it = std::find(vecModel.begin(), vecModel.end(), t_iID);
+				if (it == vecModel.end()) {
 					vecModel.push_back(t_iID);
 				}
 			}
@@ -371,43 +329,37 @@ void	I_Effect::GetRes(CMPResManger	*pCResMagr,std::vector<INT>& vecTex,std::vect
 	}
 }
 
-void	I_Effect::ChangeModel(CEffectModel*	pCModel,CMPResManger	*pCResMagr)
-{
+void I_Effect::ChangeModel(CEffectModel* pCModel, CMPResManger* pCResMagr) {
 	if (!pCModel)
 		return;
 
-	if(_bBillBoard)
-	{
-		if(pCModel->m_strName != MESH_PLANERECT)
+	if (_bBillBoard) {
+		if (pCModel->m_strName != MESH_PLANERECT)
 			return;
 	}
-	if(m_pCModel && !IsTobMesh(m_pCModel->m_strName))
-	{
+	if (m_pCModel && !IsTobMesh(m_pCModel->m_strName)) {
 		pCResMagr->DeleteMesh(*m_pCModel);
 		m_pCModel = 0;
 	}
 
-	if(IsTobMesh(pCModel->m_strName))
-	{
+	if (IsTobMesh(pCModel->m_strName)) {
 		if (IsTobMesh(m_pCModel->m_strName))
 			pCResMagr->DeleteTobMesh(*pCModel);
 
 		m_pCModel = pCResMagr->NewTobMesh();
 		m_pCModel->CreateTob(pCModel->m_strName,
-			pCModel->m_nSegments,pCModel->m_rHeight,pCModel->m_rRadius,pCModel->m_rBotRadius);
+							 pCModel->m_nSegments, pCModel->m_rHeight, pCModel->m_rRadius, pCModel->m_rBotRadius);
 		m_strModelName = pCModel->m_strName;
 
 		m_nSegments = pCModel->m_nSegments;
 		m_rHeight = pCModel->m_rHeight;
 		m_rRadius = pCModel->m_rRadius;
 		m_rBotRadius = pCModel->m_rBotRadius;
-		if(IsCylinderMesh(pCModel->m_strName))
-		{
+		if (IsCylinderMesh(pCModel->m_strName)) {
 			_iUseParam = 0;
 			_CylinderParam.resize(_wFrameCount);
 
-			for (int n = 0; n < _wFrameCount; ++n)
-			{
+			for (int n = 0; n < _wFrameCount; ++n) {
 				_CylinderParam[n].iSegments = m_nSegments;
 				_CylinderParam[n].fTopRadius = m_rRadius;
 				_CylinderParam[n].fBottomRadius = m_rBotRadius;
@@ -417,227 +369,205 @@ void	I_Effect::ChangeModel(CEffectModel*	pCModel,CMPResManger	*pCResMagr)
 		}
 		return;
 	}
-	else
-	{
+	else {
 		m_pCModel = pCModel;
 		m_strModelName = pCModel->m_strName;
 		//SetModel(tpCModel);
-		if(_eEffectType == EFFECT_FRAMETEX)
-		{
+		if (_eEffectType == EFFECT_FRAMETEX) {
 			m_CTexFrame.GetCoordFromModel(m_pCModel);
-		}else
+		}
+		else
 			m_CTextruelist.GetTextureFromModel(m_pCModel);
-
 	}
-
 }
-//!
-bool	I_Effect::SaveToFile(FILE* pFile)	
-{
 
+//!
+bool I_Effect::SaveToFile(FILE* pFile) {
 	char t_pszName[32];
-	lstrcpy(t_pszName,m_strEffectName.c_str());
-	fwrite(t_pszName, sizeof(char),32,pFile);
+	lstrcpy(t_pszName, m_strEffectName.c_str());
+	fwrite(t_pszName, sizeof(char), 32, pFile);
 
 	int t_temp;
 	//!
 	t_temp = (int)_eEffectType;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 
 	t_temp = (int)_eSrcBlend;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 	t_temp = (int)_eDestBlend;
-	fwrite(&t_temp,sizeof(int),1,pFile);
+	fwrite(&t_temp, sizeof(int), 1, pFile);
 
 	///////////////!
 	//!
-	fwrite(&_fLength,sizeof(float),1,pFile);
+	fwrite(&_fLength, sizeof(float), 1, pFile);
 	//!
-	fwrite(&_wFrameCount,sizeof(WORD),1,pFile);
+	fwrite(&_wFrameCount, sizeof(WORD), 1, pFile);
 	//!
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fwrite(&_vecFrameTime[n],sizeof(float),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fwrite(&_vecFrameTime[n], sizeof(float), 1, pFile);
 	}
 	//!
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fwrite(&_vecFrameSize[n],sizeof(D3DXVECTOR3),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fwrite(&_vecFrameSize[n], sizeof(D3DXVECTOR3), 1, pFile);
 	}
 	//!
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fwrite(&_vecFrameAngle[n],sizeof(D3DXVECTOR3),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fwrite(&_vecFrameAngle[n], sizeof(D3DXVECTOR3), 1, pFile);
 	}
 	//!
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fwrite(&_vecFramePos[n],sizeof(D3DXVECTOR3),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fwrite(&_vecFramePos[n], sizeof(D3DXVECTOR3), 1, pFile);
 	}
 	//!
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fwrite(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fwrite(&_vecFrameColor[n], sizeof(D3DXCOLOR), 1, pFile);
 	}
 	///////////////!
 	//!
-	fwrite(&m_CTexCoordlist.m_wVerCount,  sizeof(WORD), 1, pFile);
-	fwrite(&m_CTexCoordlist.m_wCoordCount,sizeof(WORD), 1, pFile);
-	fwrite(&m_CTexCoordlist.m_fFrameTime, sizeof(float),1, pFile);
-	
-	for (WORD n = 0; n < m_CTexCoordlist.m_wCoordCount; ++n)
-	{
-		fwrite(&m_CTexCoordlist.m_vecCoordList[n].front(), 
-			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+	fwrite(&m_CTexCoordlist.m_wVerCount, sizeof(WORD), 1, pFile);
+	fwrite(&m_CTexCoordlist.m_wCoordCount, sizeof(WORD), 1, pFile);
+	fwrite(&m_CTexCoordlist.m_fFrameTime, sizeof(float), 1, pFile);
+
+	for (WORD n = 0; n < m_CTexCoordlist.m_wCoordCount; ++n) {
+		fwrite(&m_CTexCoordlist.m_vecCoordList[n].front(),
+			   sizeof(D3DXVECTOR2), m_CTexCoordlist.m_wVerCount, pFile);
 	}
 	///////////////!
 	//m_CTextruelist.GetTextureFromModel(m_pCModel);
 	//!				   ntn
-	fwrite(&m_CTextruelist.m_wTexCount,sizeof(WORD),1,pFile);
+	fwrite(&m_CTextruelist.m_wTexCount, sizeof(WORD), 1, pFile);
 	//!
-	fwrite(&m_CTextruelist.m_fFrameTime,sizeof(float),1,pFile);
+	fwrite(&m_CTextruelist.m_fFrameTime, sizeof(float), 1, pFile);
 
-	lstrcpy(t_pszName,m_CTextruelist.m_vecTexName.c_str());
-	fwrite(t_pszName, sizeof(char),32,pFile);
+	lstrcpy(t_pszName, m_CTextruelist.m_vecTexName.c_str());
+	fwrite(t_pszName, sizeof(char), 32, pFile);
 
-	for(WORD n = 0; n < m_CTextruelist.m_wTexCount; n++)
-	{
-		fwrite(&m_CTextruelist.m_vecTexList[n].front(), 
-			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+	for (WORD n = 0; n < m_CTextruelist.m_wTexCount; n++) {
+		fwrite(&m_CTextruelist.m_vecTexList[n].front(),
+			   sizeof(D3DXVECTOR2), m_CTexCoordlist.m_wVerCount, pFile);
 	}
 	//!
-	lstrcpy(t_pszName,m_pCModel->m_strName.c_str());
-	fwrite(t_pszName, sizeof(char),32,pFile);
+	lstrcpy(t_pszName, m_pCModel->m_strName.c_str());
+	fwrite(t_pszName, sizeof(char), 32, pFile);
 
-	fwrite(&_bBillBoard, sizeof(bool),1,pFile);
-	fwrite(&_iVSIndex, sizeof(int),1,pFile);
+	fwrite(&_bBillBoard, sizeof(bool), 1, pFile);
+	fwrite(&_iVSIndex, sizeof(int), 1, pFile);
 
 
 	//
-	fwrite(&m_pCModel->m_nSegments, sizeof(int),1,pFile);
-	fwrite(&m_pCModel->m_rHeight, sizeof(float),1,pFile);
-	fwrite(&m_pCModel->m_rRadius, sizeof(float),1,pFile);
-	fwrite(&m_pCModel->m_rBotRadius, sizeof(float),1,pFile);
+	fwrite(&m_pCModel->m_nSegments, sizeof(int), 1, pFile);
+	fwrite(&m_pCModel->m_rHeight, sizeof(float), 1, pFile);
+	fwrite(&m_pCModel->m_rRadius, sizeof(float), 1, pFile);
+	fwrite(&m_pCModel->m_rBotRadius, sizeof(float), 1, pFile);
 
-	fwrite(&m_CTexFrame.m_wTexCount, sizeof(WORD),1,pFile);
-	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float),1,pFile);
-	for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n)
-	{
-		lstrcpy(t_pszName,m_CTexFrame.m_vecTexName[n].c_str());
-		fwrite(t_pszName, sizeof(char),32,pFile);
+	fwrite(&m_CTexFrame.m_wTexCount, sizeof(WORD), 1, pFile);
+	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
+	for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n) {
+		lstrcpy(t_pszName, m_CTexFrame.m_vecTexName[n].c_str());
+		fwrite(t_pszName, sizeof(char), 32, pFile);
 	}
-	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float),1,pFile);
+	fwrite(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
 
-	fwrite(&_iUseParam, sizeof(int),1,pFile);
-	if(_iUseParam > 0)
-	{
-		for (int n = 0; n < _wFrameCount; ++n)
-		{
-			fwrite(&_CylinderParam[n].iSegments, sizeof(int),1,pFile);
-			fwrite(&_CylinderParam[n].fHei, sizeof(float),1,pFile);
-			fwrite(&_CylinderParam[n].fTopRadius, sizeof(float),1,pFile);
-			fwrite(&_CylinderParam[n].fBottomRadius, sizeof(float),1,pFile);
+	fwrite(&_iUseParam, sizeof(int), 1, pFile);
+	if (_iUseParam > 0) {
+		for (int n = 0; n < _wFrameCount; ++n) {
+			fwrite(&_CylinderParam[n].iSegments, sizeof(int), 1, pFile);
+			fwrite(&_CylinderParam[n].fHei, sizeof(float), 1, pFile);
+			fwrite(&_CylinderParam[n].fTopRadius, sizeof(float), 1, pFile);
+			fwrite(&_CylinderParam[n].fBottomRadius, sizeof(float), 1, pFile);
 		}
 	}
-	fwrite(&_bRotaLoop, sizeof(bool),1,pFile);
-	fwrite(&_vRotaLoop, sizeof(D3DXVECTOR4),1,pFile);
-	
-	fwrite(&_bAlpha, sizeof(bool),1,pFile);
+	fwrite(&_bRotaLoop, sizeof(bool), 1, pFile);
+	fwrite(&_vRotaLoop, sizeof(D3DXVECTOR4), 1, pFile);
 
-	fwrite(&_bRotaBoard, sizeof(bool),1,pFile);
+	fwrite(&_bAlpha, sizeof(bool), 1, pFile);
+
+	fwrite(&_bRotaBoard, sizeof(bool), 1, pFile);
 
 	return true;
 }
-//! 
-bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)	
-{
 
+//!
+bool I_Effect::LoadFromFile(FILE* pFile, DWORD dwVersion) {
 	ReleaseAll();
 
 	char t_pszName[32];
-	fread(t_pszName, sizeof(char),32,pFile);
+	fread(t_pszName, sizeof(char), 32, pFile);
 	m_strEffectName = t_pszName;
 
 	int t_temp;
 	//!
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eEffectType = (EFFECT_TYPE)t_temp;
 
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eSrcBlend = (D3DBLEND)t_temp;
-	fread(&t_temp,sizeof(int),1,pFile);
+	fread(&t_temp, sizeof(int), 1, pFile);
 	_eDestBlend = (D3DBLEND)t_temp;
 
 	///////////////!
 	//!
-	fread(&_fLength,sizeof(float),1,pFile);
+	fread(&_fLength, sizeof(float), 1, pFile);
 	//!
-	fread(&_wFrameCount,sizeof(WORD),1,pFile);
+	fread(&_wFrameCount, sizeof(WORD), 1, pFile);
 
 	//!
 	_vecFrameTime.resize(_wFrameCount);
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fread(&_vecFrameTime[n],sizeof(float),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fread(&_vecFrameTime[n], sizeof(float), 1, pFile);
 	}
 	//!
 	_vecFrameSize.resize(_wFrameCount);
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fread(&_vecFrameSize[n],sizeof(D3DXVECTOR3),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fread(&_vecFrameSize[n], sizeof(D3DXVECTOR3), 1, pFile);
 	}
 	//!
 	_vecFrameAngle.resize(_wFrameCount);
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fread(&_vecFrameAngle[n],sizeof(D3DXVECTOR3),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fread(&_vecFrameAngle[n], sizeof(D3DXVECTOR3), 1, pFile);
 	}
 	//!
 	_vecFramePos.resize(_wFrameCount);
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fread(&_vecFramePos[n],sizeof(D3DXVECTOR3),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fread(&_vecFramePos[n], sizeof(D3DXVECTOR3), 1, pFile);
 	}
 	//!
 	_vecFrameColor.resize(_wFrameCount);
-	for(WORD n = 0; n < _wFrameCount; n++)
-	{
-		fread(&_vecFrameColor[n],sizeof(D3DXCOLOR),1,pFile);
+	for (WORD n = 0; n < _wFrameCount; n++) {
+		fread(&_vecFrameColor[n], sizeof(D3DXCOLOR), 1, pFile);
 	}
 	///////////////!
 	//!
-	fread(&m_CTexCoordlist.m_wVerCount,sizeof(WORD),1,pFile);
+	fread(&m_CTexCoordlist.m_wVerCount, sizeof(WORD), 1, pFile);
 	//!
-	fread(&m_CTexCoordlist.m_wCoordCount,sizeof(WORD),1,pFile);
+	fread(&m_CTexCoordlist.m_wCoordCount, sizeof(WORD), 1, pFile);
 	//!
-	fread(&m_CTexCoordlist.m_fFrameTime,sizeof(float),1,pFile);
+	fread(&m_CTexCoordlist.m_fFrameTime, sizeof(float), 1, pFile);
 	m_CTexCoordlist.m_vecCoordList.resize(m_CTexCoordlist.m_wCoordCount);
-	for(WORD  n = 0; n < m_CTexCoordlist.m_wCoordCount; n++)
-	{
+	for (WORD n = 0; n < m_CTexCoordlist.m_wCoordCount; n++) {
 		m_CTexCoordlist.m_vecCoordList[n].resize(m_CTexCoordlist.m_wVerCount);
-		fread(&m_CTexCoordlist.m_vecCoordList[n].front(), 
-			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+		fread(&m_CTexCoordlist.m_vecCoordList[n].front(),
+			  sizeof(D3DXVECTOR2), m_CTexCoordlist.m_wVerCount, pFile);
 	}
 	///////////////!
 	//!
-	fread(&m_CTextruelist.m_wTexCount,sizeof(WORD),1,pFile);
+	fread(&m_CTextruelist.m_wTexCount, sizeof(WORD), 1, pFile);
 	//!
-	fread(&m_CTextruelist.m_fFrameTime,sizeof(float),1,pFile);
+	fread(&m_CTextruelist.m_fFrameTime, sizeof(float), 1, pFile);
 
-	fread(t_pszName, sizeof(char),32,pFile);
+	fread(t_pszName, sizeof(char), 32, pFile);
 	//s_string str = t_pszName;
 	//
 	char psname[32];
-	memset(psname,0,32);
-	char *pszDataName = _strlwr( _strdup( t_pszName ) );
+	memset(psname, 0, 32);
+	char* pszDataName = _strlwr(_strdup(t_pszName));
 
-	if((strstr(pszDataName,".dds")==NULL)&&strstr(pszDataName,".tga")==NULL)
-	{
+	if ((strstr(pszDataName, ".dds") == NULL) && strstr(pszDataName, ".tga") == NULL) {
 		m_CTextruelist.m_vecTexName = pszDataName;
-	}else
-	{
+	}
+	else {
 		int len = lstrlen(pszDataName);
-		memcpy(psname, pszDataName,len - 4); 
+		memcpy(psname, pszDataName, len - 4);
 		m_CTextruelist.m_vecTexName = psname;
 	}
 	SAFE_DELETE_ARRAY(pszDataName);
@@ -645,66 +575,57 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 
 	//m_CTextruelist.m_vecTexName.resize(m_CTextruelist.m_wTexCount);
 	m_CTextruelist.m_vecTexList.resize(m_CTextruelist.m_wTexCount);
-	for(WORD n = 0; n < m_CTextruelist.m_wTexCount; n++)
-	{
+	for (WORD n = 0; n < m_CTextruelist.m_wTexCount; n++) {
 		m_CTextruelist.m_vecTexList[n].resize(m_CTexCoordlist.m_wVerCount);
-				
-		fread(&m_CTextruelist.m_vecTexList[n].front(), 
-			sizeof(D3DXVECTOR2),m_CTexCoordlist.m_wVerCount,pFile);
+
+		fread(&m_CTextruelist.m_vecTexList[n].front(),
+			  sizeof(D3DXVECTOR2), m_CTexCoordlist.m_wVerCount, pFile);
 	}
 
-	fread(t_pszName, sizeof(char),32,pFile);
+	fread(t_pszName, sizeof(char), 32, pFile);
 	m_strModelName = t_pszName;
 
-	fread(&_bBillBoard, sizeof(bool),1,pFile);
-	fread(&_iVSIndex, sizeof(int),1,pFile);
+	fread(&_bBillBoard, sizeof(bool), 1, pFile);
+	fread(&_iVSIndex, sizeof(int), 1, pFile);
 
-	if(dwVersion > 1)
-	{
+	if (dwVersion > 1) {
 		//
-		fread(&m_nSegments, sizeof(int),1,pFile);
-		fread(&m_rHeight, sizeof(float),1,pFile);
-		fread(&m_rRadius, sizeof(float),1,pFile);
-		fread(&m_rBotRadius, sizeof(float),1,pFile);
+		fread(&m_nSegments, sizeof(int), 1, pFile);
+		fread(&m_rHeight, sizeof(float), 1, pFile);
+		fread(&m_rRadius, sizeof(float), 1, pFile);
+		fread(&m_rBotRadius, sizeof(float), 1, pFile);
 	}
-	if(dwVersion > 2)
-	{
-		fread(&m_CTexFrame.m_wTexCount, sizeof(WORD),1,pFile);
-		fread(&m_CTexFrame.m_fFrameTime, sizeof(float),1,pFile);
+	if (dwVersion > 2) {
+		fread(&m_CTexFrame.m_wTexCount, sizeof(WORD), 1, pFile);
+		fread(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
 
 		m_CTexFrame.m_vecTexName.resize(m_CTexFrame.m_wTexCount);
 		m_CTexFrame.m_vecTexs.resize(m_CTexFrame.m_wTexCount);
 
-		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n)
-		{
-			fread(t_pszName, sizeof(char),32,pFile);
+		for (WORD n = 0; n < m_CTexFrame.m_wTexCount; ++n) {
+			fread(t_pszName, sizeof(char), 32, pFile);
 			m_CTexFrame.m_vecTexName[n] = t_pszName;
 		}
-		fread(&m_CTexFrame.m_fFrameTime, sizeof(float),1,pFile);
+		fread(&m_CTexFrame.m_fFrameTime, sizeof(float), 1, pFile);
 	}
 	_iUseParam = 0;
 	_CylinderParam.resize(_wFrameCount);
 
-	if(dwVersion > 3)
-	{
-		fread(&_iUseParam, sizeof(int),1,pFile);
-		if(_iUseParam > 0)
-		{
-			for (int n = 0; n < _wFrameCount; ++n)
-			{
-				fread(&_CylinderParam[n].iSegments, sizeof(int),1,pFile);
-				fread(&_CylinderParam[n].fHei, sizeof(float),1,pFile);
-				fread(&_CylinderParam[n].fTopRadius, sizeof(float),1,pFile);
-				fread(&_CylinderParam[n].fBottomRadius, sizeof(float),1,pFile);
+	if (dwVersion > 3) {
+		fread(&_iUseParam, sizeof(int), 1, pFile);
+		if (_iUseParam > 0) {
+			for (int n = 0; n < _wFrameCount; ++n) {
+				fread(&_CylinderParam[n].iSegments, sizeof(int), 1, pFile);
+				fread(&_CylinderParam[n].fHei, sizeof(float), 1, pFile);
+				fread(&_CylinderParam[n].fTopRadius, sizeof(float), 1, pFile);
+				fread(&_CylinderParam[n].fBottomRadius, sizeof(float), 1, pFile);
 
 				_CylinderParam[n].Create();
 			}
-		}else
-		{
-			if(IsCylinderMesh(m_strModelName))
-			{
-				for (int n = 0; n < _wFrameCount; ++n)
-				{
+		}
+		else {
+			if (IsCylinderMesh(m_strModelName)) {
+				for (int n = 0; n < _wFrameCount; ++n) {
 					_CylinderParam[n].iSegments = m_nSegments;
 					_CylinderParam[n].fTopRadius = m_rRadius;
 					_CylinderParam[n].fBottomRadius = m_rBotRadius;
@@ -713,16 +634,14 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 				}
 			}
 		}
-	}else
-	{
+	}
+	else {
 		//_iUseParam = 0;
 		//_CylinderParam.resize(_wFrameCount);
-		if(IsCylinderMesh(m_strModelName))
-		{
+		if (IsCylinderMesh(m_strModelName)) {
 			_iUseParam = 0;
 
-			for (int n = 0; n < _wFrameCount; ++n)
-			{
+			for (int n = 0; n < _wFrameCount; ++n) {
 				_CylinderParam[n].iSegments = m_nSegments;
 				_CylinderParam[n].fTopRadius = m_rRadius;
 				_CylinderParam[n].fBottomRadius = m_rBotRadius;
@@ -731,21 +650,20 @@ bool	I_Effect::LoadFromFile(FILE* pFile,DWORD dwVersion)
 			}
 		}
 	}
-	if(dwVersion > 4)
-	{
-		fread(&_bRotaLoop, sizeof(bool),1,pFile);
-		fread(&_vRotaLoop, sizeof(D3DXVECTOR4),1,pFile);
+	if (dwVersion > 4) {
+		fread(&_bRotaLoop, sizeof(bool), 1, pFile);
+		fread(&_vRotaLoop, sizeof(D3DXVECTOR4), 1, pFile);
 	}
-	if(dwVersion > 5)
-		fread(&_bAlpha, sizeof(bool),1,pFile);
-	if(dwVersion > 6)
-		fread(&_bRotaBoard, sizeof(bool),1,pFile);
+	if (dwVersion > 5)
+		fread(&_bAlpha, sizeof(bool), 1, pFile);
+	if (dwVersion > 6)
+		fread(&_bRotaBoard, sizeof(bool), 1, pFile);
 
 	IsSame();
 	return true;
 }
-void	I_Effect::CopyEffect(I_Effect* pEff)
-{
+
+void I_Effect::CopyEffect(I_Effect* pEff) {
 	m_pDev = pEff->m_pDev;;
 
 	//!
@@ -755,8 +673,7 @@ void	I_Effect::CopyEffect(I_Effect* pEff)
 	//!
 	m_CTexFrame.Copy(&pEff->m_CTexFrame);
 
-	if (m_pCModel && !IsTobMesh(m_pCModel->m_strName))
-	{
+	if (m_pCModel && !IsTobMesh(m_pCModel->m_strName)) {
 		m_pCModel->SetUsing(false);
 		m_pCModel = 0;
 	}
@@ -787,19 +704,15 @@ void	I_Effect::CopyEffect(I_Effect* pEff)
 
 	_iUseParam = pEff->_iUseParam;
 	_CylinderParam.resize(_wFrameCount);
-	if(_iUseParam > 0)
-	{
+	if (_iUseParam > 0) {
 		_CylinderParam = pEff->_CylinderParam;
-		for (int n = 0; n < _wFrameCount; ++n)
-		{
+		for (int n = 0; n < _wFrameCount; ++n) {
 			_CylinderParam[n].Create();
 		}
-	}else
-	{
-		if(IsCylinderMesh(m_strModelName))
-		{
-			for (int n = 0; n < _wFrameCount; ++n)
-			{
+	}
+	else {
+		if (IsCylinderMesh(m_strModelName)) {
+			for (int n = 0; n < _wFrameCount; ++n) {
 				_CylinderParam[n].iSegments = m_nSegments;
 				_CylinderParam[n].fTopRadius = m_rRadius;
 				_CylinderParam[n].fBottomRadius = m_rBotRadius;
@@ -827,135 +740,122 @@ void	I_Effect::CopyEffect(I_Effect* pEff)
 	_eDestBlend = pEff->_eDestBlend;
 }
 
-bool	I_Effect::IsChangeably()			
-{
+bool I_Effect::IsChangeably() {
 	if (m_pCModel)
 		return m_pCModel->IsChangeably();
 	return true;
 }
 
-void	I_Effect::IsSame()
-{
-	_bSizeSame			= true;
-	_bAngleSame			= true;
-	_bPosSame			= true;
-	_bColorSame			= true;
+void I_Effect::IsSame() {
+	_bSizeSame = true;
+	_bAngleSame = true;
+	_bPosSame = true;
+	_bColorSame = true;
 
-	int	 m;
-	for( int n = 1; n < _wFrameCount; n++)
-	{
+	int m;
+	for (int n = 1; n < _wFrameCount; n++) {
 		m = n - 1;
-		if(_vecFrameSize[n] != _vecFrameSize[m])
+		if (_vecFrameSize[n] != _vecFrameSize[m])
 			_bSizeSame = false;
-		if(_vecFrameAngle[n] != _vecFrameAngle[m])
+		if (_vecFrameAngle[n] != _vecFrameAngle[m])
 			_bAngleSame = false;
-		if(_vecFramePos[n] != _vecFramePos[m])
+		if (_vecFramePos[n] != _vecFramePos[m])
 			_bPosSame = false;
-		if(_vecFrameColor[n] != _vecFrameColor[m])
+		if (_vecFrameColor[n] != _vecFrameColor[m])
 			_bColorSame = false;
 	}
 }
 
-void    I_Effect::SpliteTexture(int iRow, int iCol)
-{
-	if(_eEffectType == EFFECT_FRAMETEX)
-	{
-	}else
-		m_CTextruelist.CreateSpliteTexture(iRow,iCol);
+void I_Effect::SpliteTexture(int iRow, int iCol) {
+	if (_eEffectType == EFFECT_FRAMETEX) {
+	}
+	else
+		m_CTextruelist.CreateSpliteTexture(iRow, iCol);
 }
-void	I_Effect::SetTextureTime(float ftime)
-{
-	if(_eEffectType == EFFECT_FRAMETEX)
-	{
+
+void I_Effect::SetTextureTime(float ftime) {
+	if (_eEffectType == EFFECT_FRAMETEX) {
 		m_CTexFrame.m_fFrameTime = ftime;
-	}else
+	}
+	else
 		m_CTextruelist.m_fFrameTime = ftime;
 }
 
-void	I_Effect::SetTexture()			
-{ 
-	if(IsItem())
-	{
+void I_Effect::SetTexture() {
+	if (IsItem()) {
 		lwITex* tex = NULL;
 		lwITex* tex2 = NULL;
 
-//#ifdef	MULTITHREAD_LOADING_TEXTURE
-		if(_eEffectType == EFFECT_FRAMETEX)
-		{
-			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
-			{
-				m_pCModel->ResetItemTexture(0,m_CTexFrame.m_lpCurTex,&tex);
-				m_pCModel->ResetItemTexture(1,m_CTexFrame.m_lpCurTex,&tex2);
+		//#ifdef	MULTITHREAD_LOADING_TEXTURE
+		if (_eEffectType == EFFECT_FRAMETEX) {
+			if (m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK()) {
+				m_pCModel->ResetItemTexture(0, m_CTexFrame.m_lpCurTex, &tex);
+				m_pCModel->ResetItemTexture(1, m_CTexFrame.m_lpCurTex, &tex2);
 			}
-
-		}else
-		{
-			if(m_CTextruelist.m_pTex && m_CTextruelist.m_pTex->IsLoadingOK())
-			{
-				m_pCModel->ResetItemTexture(0,m_CTextruelist.m_pTex,&tex);
-				m_pCModel->ResetItemTexture(1,m_CTextruelist.m_pTex,&tex2);
+		}
+		else {
+			if (m_CTextruelist.m_pTex && m_CTextruelist.m_pTex->IsLoadingOK()) {
+				m_pCModel->ResetItemTexture(0, m_CTextruelist.m_pTex, &tex);
+				m_pCModel->ResetItemTexture(1, m_CTextruelist.m_pTex, &tex2);
 			}
 			else
 				return;
 		}
-//#else
-//		if(_eEffectType == EFFECT_FRAMETEX)
-//		{
-//			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
-//				m_pCModel->ResetItemTexture(m_CTexFrame.m_lpCurTex,&tex);
-//
-//		}else
-//		{
-//			if(m_CTextruelist.m_pTex)
-//				m_pCModel->ResetItemTexture(m_CTextruelist.m_pTex,&tex);
-//			else
-//				m_pCModel->ResetItemTexture(NULL,&tex);
-//		}
-//#endif
-
-	}else
-	{
-//#ifdef	MULTITHREAD_LOADING_TEXTURE
-		if(_eEffectType == EFFECT_FRAMETEX)
-		{
-			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
-				m_pDev->SetTexture(0,m_CTexFrame.m_lpCurTex->GetTex());
-		}else
-		{
-			if(m_CTextruelist.m_pTex && m_CTextruelist.m_pTex->IsLoadingOK())
+		//#else
+		//		if(_eEffectType == EFFECT_FRAMETEX)
+		//		{
+		//			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
+		//				m_pCModel->ResetItemTexture(m_CTexFrame.m_lpCurTex,&tex);
+		//
+		//		}else
+		//		{
+		//			if(m_CTextruelist.m_pTex)
+		//				m_pCModel->ResetItemTexture(m_CTextruelist.m_pTex,&tex);
+		//			else
+		//				m_pCModel->ResetItemTexture(NULL,&tex);
+		//		}
+		//#endif
+	}
+	else {
+		//#ifdef	MULTITHREAD_LOADING_TEXTURE
+		if (_eEffectType == EFFECT_FRAMETEX) {
+			if (m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
+				m_pDev->SetTexture(0, m_CTexFrame.m_lpCurTex->GetTex());
+		}
+		else {
+			if (m_CTextruelist.m_pTex && m_CTextruelist.m_pTex->IsLoadingOK())
 				m_pDev->SetTexture(0, m_CTextruelist.m_pTex->GetTex());
 			else
 				return;
 		}
-//#else
-//		if(_eEffectType == EFFECT_FRAMETEX)
-//		{
-//			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
-//				m_pDev->SetTexture(0,m_CTexFrame.m_lpCurTex->GetTex());
-//		}else
-//		{
-//			if(m_CTextruelist.m_pTex)
-//				m_pDev->SetTexture(0, m_CTextruelist.m_pTex->GetTex());
-//			else
-//				m_pDev->SetTexture(0, NULL);
-//		}
-//#endif
+		//#else
+		//		if(_eEffectType == EFFECT_FRAMETEX)
+		//		{
+		//			if(m_CTexFrame.m_lpCurTex && m_CTexFrame.m_lpCurTex->IsLoadingOK())
+		//				m_pDev->SetTexture(0,m_CTexFrame.m_lpCurTex->GetTex());
+		//		}else
+		//		{
+		//			if(m_CTextruelist.m_pTex)
+		//				m_pDev->SetTexture(0, m_CTextruelist.m_pTex->GetTex());
+		//			else
+		//				m_pDev->SetTexture(0, NULL);
+		//		}
+		//#endif
 	}
 }
-void	I_Effect::SetVertexShader()
-{
+
+void I_Effect::SetVertexShader() {
 	m_pDev->SetVertexShader(ResMgr.GetVShaderByID(_iVSIndex));
 	m_pDev->SetVertexDeclaration(ResMgr.GetVDeclByID(_iVSIndex));
 }
-void	I_Effect::Render()				
-{
-	m_pDev->SetRenderState( D3DRS_SRCBLEND,_eSrcBlend );
-	m_pDev->SetRenderState( D3DRS_DESTBLEND,_eDestBlend);
 
-	if (m_pCModel)
-	{
-		if(IsUseParam())
-			m_pCModel->RenderTob(&_CylinderParam[m_ilast],&_CylinderParam[m_inext],m_flerp);
+void I_Effect::Render() {
+	m_pDev->SetRenderState(D3DRS_SRCBLEND, _eSrcBlend);
+	m_pDev->SetRenderState(D3DRS_DESTBLEND, _eDestBlend);
+
+	if (m_pCModel) {
+		if (IsUseParam())
+			m_pCModel->RenderTob(&_CylinderParam[m_ilast], &_CylinderParam[m_inext], m_flerp);
 		else
 			m_pCModel->RenderModel();
 	}
@@ -964,10 +864,9 @@ void	I_Effect::Render()
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-CEffectModel::CEffectModel()
-{
+CEffectModel::CEffectModel() {
 	m_pDev = NULL;
-	m_strName			= "";
+	m_strName = "";
 
 #ifdef USE_MGR
 	_lwMesh = NULL;
@@ -979,16 +878,14 @@ CEffectModel::CEffectModel()
 	m_vEffVer = 0;
 
 	_dwVerCount = 0;
-	_dwFaceCount= 0;
+	_dwFaceCount = 0;
 
 	m_bChangeably = false;
 	m_oldtex = NULL;
 	m_bItem = false;
-
 }
 
-bool CEffectModel::Copy(const CEffectModel& rhs)
-{
+bool CEffectModel::Copy(const CEffectModel& rhs) {
 	ReleaseModel();
 
 	MPSceneItem::Copy(&rhs);
@@ -1003,13 +900,13 @@ bool CEffectModel::Copy(const CEffectModel& rhs)
 }
 
 #ifdef USE_RENDER
-CEffectModel::CEffectModel(MPRender*  pDev,lwIResourceMgr*	pRes)
+CEffectModel::CEffectModel(MPRender* pDev, lwIResourceMgr* pRes)
 #else
-CEffectModel::CEffectModel(LPDIRECT3DDEVICE8  pDev,lwIResourceMgr*	pRes)
+CEffectModel::CEffectModel(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes)
 #endif
 {
 	m_pDev = pDev;
-	m_strName			= "";
+	m_strName = "";
 
 #ifdef USE_MGR
 	_lwMesh = NULL;
@@ -1022,7 +919,7 @@ CEffectModel::CEffectModel(LPDIRECT3DDEVICE8  pDev,lwIResourceMgr*	pRes)
 	m_vEffVer = 0;
 
 	_dwVerCount = 0;
-	_dwFaceCount= 0;
+	_dwFaceCount = 0;
 	m_bChangeably = false;
 	m_oldtex = NULL;
 	m_oldtex2 = NULL;
@@ -1031,38 +928,35 @@ CEffectModel::CEffectModel(LPDIRECT3DDEVICE8  pDev,lwIResourceMgr*	pRes)
 
 	m_iID = -1;
 }
-CEffectModel::~CEffectModel()
-{
+
+CEffectModel::~CEffectModel() {
 	ReleaseModel();
 }
 #ifdef USE_RENDER
-void	CEffectModel::InitDevice(MPRender*	pDev,lwIResourceMgr*	pRes)
+void CEffectModel::InitDevice(MPRender* pDev, lwIResourceMgr* pRes)
 #else
-void	CEffectModel::InitDevice(LPDIRECT3DDEVICE8  pDev,lwIResourceMgr*	pRes)
+void CEffectModel::InitDevice(LPDIRECT3DDEVICE8 pDev, lwIResourceMgr* pRes)
 #endif
 {
 	m_pDev = pDev;
 	m_pRes = pRes;
 }
 #ifdef USE_RENDER
-MPRender*	CEffectModel::GetDev()
+MPRender* CEffectModel::GetDev()
 #else
-LPDIRECT3DDEVICE8	CEffectModel::GetDev()
+LPDIRECT3DDEVICE8 CEffectModel::GetDev()
 #endif
 {
 	return m_pDev;
 }
 
-void	CEffectModel::ReleaseModel()
-{
+void CEffectModel::ReleaseModel() {
 #ifdef USE_MGR
-	if(!_lwMesh)
-	{
-		if(m_bItem)
-		{
-			lwITex*	oldtex;
-			this->ResetItemTexture(0,m_oldtex,&oldtex);
-			this->ResetItemTexture(1,m_oldtex2,&oldtex);
+	if (!_lwMesh) {
+		if (m_bItem) {
+			lwITex* oldtex;
+			this->ResetItemTexture(0, m_oldtex, &oldtex);
+			this->ResetItemTexture(1, m_oldtex2, &oldtex);
 
 			//oldtex->Release();
 			Destroy();
@@ -1070,12 +964,11 @@ void	CEffectModel::ReleaseModel()
 	}
 	SAFE_RELEASE(_lwMesh);
 #else
-	if(!_lpVB)
-		if(m_bItem)
-		{
-			lwITex*	oldtex;
-			this->ResetItemTexture(0,m_oldtex,&oldtex);
-			this->ResetItemTexture(1,m_oldtex2,&oldtex);
+	if (!_lpVB)
+		if (m_bItem) {
+			lwITex* oldtex;
+			this->ResetItemTexture(0, m_oldtex, &oldtex);
+			this->ResetItemTexture(1, m_oldtex2, &oldtex);
 
 			Destroy();
 		}
@@ -1090,8 +983,7 @@ void	CEffectModel::ReleaseModel()
 }
 
 
-bool	CEffectModel::CreateTriangle()
-{
+bool CEffectModel::CreateTriangle() {
 	//ReleaseModel();
 
 	//// mesh
@@ -1104,13 +996,13 @@ bool	CEffectModel::CreateTriangle()
 	//lockg_mesh0->LoadVideoMemory();
 	//vbrender
 	_dwVerCount = 3;
-	_dwFaceCount= 1;
-	
+	_dwFaceCount = 1;
+
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
 #ifdef USE_MGR
-	
+
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
@@ -1120,10 +1012,10 @@ bool	CEffectModel::CreateTriangle()
 	mi.subset_num = 1;
 	mi.vertex_num = 3;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.vertex_seq[0] = lwVector3(-0.5f, 0, 0);
 	mi.vertex_seq[1] = lwVector3(0, 0, 0.5f);
 	mi.vertex_seq[2] = lwVector3(0.5f, 0, 0);
@@ -1138,11 +1030,11 @@ bool	CEffectModel::CreateTriangle()
 	mi.texcoord0_seq[2] = lwVector2(1.0f, 1.0f);
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 1, 0, 3, 0);
 
-	if(LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
-        return 0;
+	if (LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
+		return 0;
 
-	if(LW_FAILED(_lwMesh->LoadVideoMemory()))
-        return 0;
+	if (LW_FAILED(_lwMesh->LoadVideoMemory()))
+		return 0;
 
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
@@ -1150,63 +1042,62 @@ bool	CEffectModel::CreateTriangle()
 #else
 
 	SEFFECT_VERTEX t_SEffVer[3];
-	t_SEffVer[0].m_SPos			= D3DXVECTOR3(-0.5f, 0, 0);
-	t_SEffVer[0].m_fIdx			= 0;
-	t_SEffVer[0].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[0].m_SUV			= D3DXVECTOR2(0, 1.0f);
+	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, 0, 0);
+	t_SEffVer[0].m_fIdx = 0;
+	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
 
-	t_SEffVer[1].m_SPos			= D3DXVECTOR3(0, 0, 0.5f);
-	t_SEffVer[1].m_fIdx			= 1;
-	t_SEffVer[1].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[1].m_SUV			= D3DXVECTOR2(0.5f, 0);
+	t_SEffVer[1].m_SPos = D3DXVECTOR3(0, 0, 0.5f);
+	t_SEffVer[1].m_fIdx = 1;
+	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.5f, 0);
 
-	t_SEffVer[2].m_SPos			= D3DXVECTOR3(0.5f, 0, 0);
-	t_SEffVer[2].m_fIdx			= 2;
-	t_SEffVer[2].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[2].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
-	
+	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0, 0);
+	t_SEffVer[2].m_fIdx = 2;
+	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
+
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX)* _dwVerCount, 
-		D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
-	SEFFECT_VERTEX *pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
+	SEFFECT_VERTEX* pVertex;
+	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
 	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
 	_lpVB->Unlock();
 
-	hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)* _dwVerCount, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-		&_lpIB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * _dwVerCount,
+								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
+								   &_lpIB);
+	if (FAILED(hr))
 		return false;
 
-	WORD  t_wIndex[3] = 
+	WORD t_wIndex[3] =
 	{
-		0,1,2,
+		0, 1, 2,
 	};
-	WORD*  t_pwIndex;
+	WORD* t_pwIndex;
 	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
 	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * _dwVerCount);
 	_lpIB->Unlock();
 
 #endif
 
-	m_strName			= MESH_TRI;
+	m_strName = MESH_TRI;
 
 	return true;
 }
-	
-bool	CEffectModel::CreatePlaneTriangle()
-{
+
+bool CEffectModel::CreatePlaneTriangle() {
 	//ReleaseModel();
 
 	_dwVerCount = 3;
-	_dwFaceCount= 1;
-	
+	_dwFaceCount = 1;
+
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 #ifdef USE_MGR
@@ -1219,10 +1110,10 @@ bool	CEffectModel::CreatePlaneTriangle()
 	mi.subset_num = 1;
 	mi.vertex_num = 3;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.vertex_seq[0] = lwVector3(-0.5f, 0.5f, 0);
 	mi.vertex_seq[1] = lwVector3(0, -0.5f, 0);
 	mi.vertex_seq[2] = lwVector3(0.5f, 0.5f, 0);
@@ -1238,11 +1129,11 @@ bool	CEffectModel::CreatePlaneTriangle()
 	lwSubsetInfo_Construct(&mi.subset_seq[0], 1, 0, 3, 0);
 
 
-	if(LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
-        return 0;
+	if (LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
+		return 0;
 
-	if(LW_FAILED(_lwMesh->LoadVideoMemory()))
-        return 0;
+	if (LW_FAILED(_lwMesh->LoadVideoMemory()))
+		return 0;
 
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	_lpSIB = _lwMesh->GetLockableStreamIB();
@@ -1250,62 +1141,62 @@ bool	CEffectModel::CreatePlaneTriangle()
 #else
 
 	SEFFECT_VERTEX t_SEffVer[3];
-	t_SEffVer[0].m_SPos			= D3DXVECTOR3(-0.5f, 0.5f, 0);
-	t_SEffVer[0].m_fIdx			= 0;
-	t_SEffVer[0].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[0].m_SUV			= D3DXVECTOR2(0, 1.0f);
+	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, 0.5f, 0);
+	t_SEffVer[0].m_fIdx = 0;
+	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
 
-	t_SEffVer[1].m_SPos			= D3DXVECTOR3(0, -0.5f, 0);
-	t_SEffVer[1].m_fIdx			= 1;
-	t_SEffVer[1].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[1].m_SUV			= D3DXVECTOR2(0.5f, 0);
+	t_SEffVer[1].m_SPos = D3DXVECTOR3(0, -0.5f, 0);
+	t_SEffVer[1].m_fIdx = 1;
+	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.5f, 0);
 
-	t_SEffVer[2].m_SPos			= D3DXVECTOR3(0.5f, 0.5f, 0);
-	t_SEffVer[2].m_fIdx			= 2;
-	t_SEffVer[2].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[2].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
-	
+	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0.5f, 0);
+	t_SEffVer[2].m_fIdx = 2;
+	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
+
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX)* _dwVerCount, 
-		D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
-	SEFFECT_VERTEX *pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
+	SEFFECT_VERTEX* pVertex;
+	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
 	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
 	_lpVB->Unlock();
 
-	hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)* _dwVerCount, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-		&_lpIB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * _dwVerCount,
+								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
+								   &_lpIB);
+	if (FAILED(hr))
 		return false;
 
-	WORD  t_wIndex[3] = 
+	WORD t_wIndex[3] =
 	{
-		0,1,2,
+		0, 1, 2,
 	};
-	WORD*  t_pwIndex;
+	WORD* t_pwIndex;
 	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
 	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * _dwVerCount);
 	_lpIB->Unlock();
 #endif
-	m_strName			= MESH_PLANETRI;
+	m_strName = MESH_PLANETRI;
 	return true;
 }
-bool	CEffectModel::CreateRect()
-{
+
+bool CEffectModel::CreateRect() {
 	//ReleaseModel();
 
 	_dwVerCount = 4;
-	_dwFaceCount= 2;
-	
+	_dwFaceCount = 2;
+
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
-	
+
 #ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	_lwMesh->SetStreamType(STREAM_LOCKABLE);
@@ -1316,10 +1207,10 @@ bool	CEffectModel::CreateRect()
 	mi.subset_num = 1;
 	mi.vertex_num = 4;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.vertex_seq[0] = lwVector3(-0.5f, 0, 0);
 	mi.vertex_seq[1] = lwVector3(-0.5f, 0, 1.0f);
 	mi.vertex_seq[2] = lwVector3(0.5f, 0, 1.0f);
@@ -1350,67 +1241,66 @@ bool	CEffectModel::CreateRect()
 #else
 
 	SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos			= D3DXVECTOR3(-0.5f, 0, 0);
-	t_SEffVer[0].m_fIdx			= 0;
-	t_SEffVer[0].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[0].m_SUV			= D3DXVECTOR2(0, 1.0f);
+	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, 0, 0);
+	t_SEffVer[0].m_fIdx = 0;
+	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
 
-	t_SEffVer[1].m_SPos			= D3DXVECTOR3(-0.5f, 0, 1.0f);
-	t_SEffVer[1].m_fIdx			= 1;
-	t_SEffVer[1].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[1].m_SUV			= D3DXVECTOR2(0, 0);
+	t_SEffVer[1].m_SPos = D3DXVECTOR3(-0.5f, 0, 1.0f);
+	t_SEffVer[1].m_fIdx = 1;
+	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[1].m_SUV = D3DXVECTOR2(0, 0);
 
-	t_SEffVer[2].m_SPos			= D3DXVECTOR3(0.5f, 0, 1.0f);
-	t_SEffVer[2].m_fIdx			= 2;
-	t_SEffVer[2].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[2].m_SUV			= D3DXVECTOR2(1.0f, 0.0f);
+	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0, 1.0f);
+	t_SEffVer[2].m_fIdx = 2;
+	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
 
-	t_SEffVer[3].m_SPos			= D3DXVECTOR3(0.5f, 0, 0);
-	t_SEffVer[3].m_fIdx			= 3;
-	t_SEffVer[3].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[3].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
+	t_SEffVer[3].m_SPos = D3DXVECTOR3(0.5f, 0, 0);
+	t_SEffVer[3].m_fIdx = 3;
+	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
 
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount, 
-		D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
-	SEFFECT_VERTEX *pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
+	SEFFECT_VERTEX* pVertex;
+	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
 	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
 	_lpVB->Unlock();
 
-	hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)*4, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-		&_lpIB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * 4,
+								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
+								   &_lpIB);
+	if (FAILED(hr))
 		return false;
 
-	WORD  t_wIndex[4] = 
+	WORD t_wIndex[4] =
 	{
-		0,1,2,3,
+		0, 1, 2, 3,
 	};
-	WORD*  t_pwIndex;
+	WORD* t_pwIndex;
 	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD)*4);
+	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * 4);
 	_lpIB->Unlock();
 
 #endif
-	m_strName			= MESH_RECT;
+	m_strName = MESH_RECT;
 
 	return true;
 }
-	
-bool	CEffectModel::CreateRectZ()
-{
+
+bool CEffectModel::CreateRectZ() {
 	//ReleaseModel();
 
 	_dwVerCount = 4;
-	_dwFaceCount= 2;
-	
+	_dwFaceCount = 2;
+
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
@@ -1424,10 +1314,10 @@ bool	CEffectModel::CreateRectZ()
 	mi.subset_num = 1;
 	mi.vertex_num = 4;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.vertex_seq[0] = lwVector3(0, 0, 0);
 	mi.vertex_seq[1] = lwVector3(0, 0, 1);
 	mi.vertex_seq[2] = lwVector3(0, 1, 1);
@@ -1458,66 +1348,65 @@ bool	CEffectModel::CreateRectZ()
 #else
 
 	SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos			= D3DXVECTOR3(0, 0, 0);
-	t_SEffVer[0].m_fIdx			= 0;
-	t_SEffVer[0].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[0].m_SUV			= D3DXVECTOR2(0, 1.0f);
+	t_SEffVer[0].m_SPos = D3DXVECTOR3(0, 0, 0);
+	t_SEffVer[0].m_fIdx = 0;
+	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[0].m_SUV = D3DXVECTOR2(0, 1.0f);
 
-	t_SEffVer[1].m_SPos			= D3DXVECTOR3(0, 0, 1);
-	t_SEffVer[1].m_fIdx			= 1;
-	t_SEffVer[1].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[1].m_SUV			= D3DXVECTOR2(0, 0);
+	t_SEffVer[1].m_SPos = D3DXVECTOR3(0, 0, 1);
+	t_SEffVer[1].m_fIdx = 1;
+	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[1].m_SUV = D3DXVECTOR2(0, 0);
 
-	t_SEffVer[2].m_SPos			= D3DXVECTOR3(0, 1, 1);
-	t_SEffVer[2].m_fIdx			= 2;
-	t_SEffVer[2].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[2].m_SUV			= D3DXVECTOR2(1.0f, 0.0f);
+	t_SEffVer[2].m_SPos = D3DXVECTOR3(0, 1, 1);
+	t_SEffVer[2].m_fIdx = 2;
+	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
 
-	t_SEffVer[3].m_SPos			= D3DXVECTOR3(0, 1, 0);
-	t_SEffVer[3].m_fIdx			= 3;
-	t_SEffVer[3].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[3].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
+	t_SEffVer[3].m_SPos = D3DXVECTOR3(0, 1, 0);
+	t_SEffVer[3].m_fIdx = 3;
+	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
 
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount, 
-		D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
-	SEFFECT_VERTEX *pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
+	SEFFECT_VERTEX* pVertex;
+	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
 	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
 	_lpVB->Unlock();
 
-	hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)*4, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-		&_lpIB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * 4,
+								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
+								   &_lpIB);
+	if (FAILED(hr))
 		return false;
 
-	WORD  t_wIndex[4] = 
+	WORD t_wIndex[4] =
 	{
-		0,1,2,3,
+		0, 1, 2, 3,
 	};
-	WORD*  t_pwIndex;
+	WORD* t_pwIndex;
 	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD)*4);
+	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * 4);
 	_lpIB->Unlock();
 
 #endif
-	m_strName			= MESH_RECTZ;
+	m_strName = MESH_RECTZ;
 
 	return true;
 }
 
-bool	CEffectModel::CreatePlaneRect()
-{
+bool CEffectModel::CreatePlaneRect() {
 	//ReleaseModel();
 
 	_dwVerCount = 4;
-	_dwFaceCount= 2;
+	_dwFaceCount = 2;
 
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
@@ -1531,10 +1420,10 @@ bool	CEffectModel::CreatePlaneRect()
 	mi.subset_num = 1;
 	mi.vertex_num = 4;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.vertex_seq[0] = lwVector3(-0.5f, -0.5f, 0);
 	mi.vertex_seq[1] = lwVector3(-0.5f, 0.5f, 0);
 	mi.vertex_seq[2] = lwVector3(0.5f, 0.5f, 0);
@@ -1565,72 +1454,71 @@ bool	CEffectModel::CreatePlaneRect()
 #else
 
 	SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos			= D3DXVECTOR3(-0.5f, -0.5f, 0);
-	t_SEffVer[0].m_fIdx			= 0;
-	t_SEffVer[0].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[0].m_SUV			= D3DXVECTOR2(0.0f, 1.0f);
+	t_SEffVer[0].m_SPos = D3DXVECTOR3(-0.5f, -0.5f, 0);
+	t_SEffVer[0].m_fIdx = 0;
+	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[0].m_SUV = D3DXVECTOR2(0.0f, 1.0f);
 
-	t_SEffVer[1].m_SPos			= D3DXVECTOR3(-0.5f, 0.5f, 0);
-	t_SEffVer[1].m_fIdx			= 1;
-	t_SEffVer[1].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[1].m_SUV			= D3DXVECTOR2(0.0f, 0);
+	t_SEffVer[1].m_SPos = D3DXVECTOR3(-0.5f, 0.5f, 0);
+	t_SEffVer[1].m_fIdx = 1;
+	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.0f, 0);
 
-	t_SEffVer[2].m_SPos			= D3DXVECTOR3(0.5f, 0.5f, 0);
-	t_SEffVer[2].m_fIdx			= 2;
-	t_SEffVer[2].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[2].m_SUV			= D3DXVECTOR2(1.0f, 0.0f);
+	t_SEffVer[2].m_SPos = D3DXVECTOR3(0.5f, 0.5f, 0);
+	t_SEffVer[2].m_fIdx = 2;
+	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
 
-	t_SEffVer[3].m_SPos			= D3DXVECTOR3(0.5f, -0.5f, 0);
-	t_SEffVer[3].m_fIdx			= 3;
-	t_SEffVer[3].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[3].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
+	t_SEffVer[3].m_SPos = D3DXVECTOR3(0.5f, -0.5f, 0);
+	t_SEffVer[3].m_fIdx = 3;
+	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
 
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount, 
-		D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
-	SEFFECT_VERTEX *pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE   );
+	SEFFECT_VERTEX* pVertex;
+	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
 	memcpy(pVertex, t_SEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
 	_lpVB->Unlock();
 
-	hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)*4, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-		&_lpIB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateIndexBuffer(sizeof(WORD) * 4,
+								   D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
+								   &_lpIB);
+	if (FAILED(hr))
 		return false;
 
-	WORD  t_wIndex[4] = 
+	WORD t_wIndex[4] =
 	{
-		0,1,2,3,
+		0, 1, 2, 3,
 	};
-	WORD*  t_pwIndex;
+	WORD* t_pwIndex;
 	_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
-	memcpy(t_pwIndex, t_wIndex, sizeof(WORD)*4);
+	memcpy(t_pwIndex, t_wIndex, sizeof(WORD) * 4);
 	_lpIB->Unlock();
 #endif
-	m_strName			= MESH_PLANERECT;
+	m_strName = MESH_PLANERECT;
 
 	return true;
 }
 
 
-bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
-{
+bool CEffectModel::CreateCone(int nSeg, float fHei, float fRadius) {
 	//ReleaseModel();
 
 	m_nSegments = nSeg;
 	m_rHeight = fHei;
 	m_rRadius = 0;
-	m_rBotRadius	= fRadius;
+	m_rBotRadius = fRadius;
 
 	_dwVerCount = m_nSegments * 3;
 	_dwFaceCount = m_nSegments * 2;
-	
+
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
@@ -1644,10 +1532,10 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 	mi.subset_num = 1;
 	mi.vertex_num = _dwVerCount;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 
 	int nCurrentSegment;
 	//lwVector3* pVertex = mi.vertex_seq;
@@ -1657,8 +1545,7 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 	float rDeltaSegAngle = (2.0f * D3DX_PI / m_nSegments);
 	float rSegmentLength = 1.0f / (float)m_nSegments;
 	float ny0 = (90.0f - (float)D3DXToDegree(atan(m_rHeight / m_rBotRadius))) / 90.0f;
-	for(nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++)
-	{
+	for (nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++) {
 		float x0 = m_rBotRadius * sinf(nCurrentSegment * rDeltaSegAngle);
 		float z0 = m_rBotRadius * cosf(nCurrentSegment * rDeltaSegAngle);
 
@@ -1676,33 +1563,32 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 		mi.texcoord0_seq[idx].y = 1.5f;
 		idx++;
 	}
-	for (WORD n = 0; n < _dwVerCount; n++)
-	{
+	for (WORD n = 0; n < _dwVerCount; n++) {
 		mi.blend_seq[n].weight[0] = n;
 		mi.vercol_seq[n] = 0xffffffff;
 	}
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], _dwFaceCount, 0, _dwVerCount, 0);
 
-	if(LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
+	if (LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
 		return 0;
 
-	if(LW_FAILED(_lwMesh->LoadVideoMemory()))
+	if (LW_FAILED(_lwMesh->LoadVideoMemory()))
 		return 0;
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	//_lpSIB = _lwMesh->GetLockableStreamIB();
 
 #else
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX)*_dwVerCount, 
-		D3DUSAGE_WRITEONLY|D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
-	//hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)*_dwVerCount, 
-	//	D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
+	//hr	= m_pDev->CreateIndexBuffer(sizeof(WORD)*_dwVerCount,
+	//	D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
 	//	&_lpIB);
 	//if( FAILED(hr) )
 	//	return false;
@@ -1715,12 +1601,11 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 
 
 	//Lock the vertex buffer
-	if(FAILED(_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0)))
-	{
+	if (FAILED(_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0))) {
 		return false;
 	}
 
-	////Lock the index buffer 
+	////Lock the index buffer
 	//if(FAILED(_lpIB->Lock(0, 0, (BYTE**)&pIndices, 0)))
 	//{
 	//	return false;
@@ -1731,8 +1616,7 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 	float ny0 = (90.0f - (float)D3DXToDegree(atan(m_rHeight / m_rBotRadius))) / 90.0f;
 
 	//For each segment, add a triangle to the sides triangle list
-	for(nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++)
-	{
+	for (nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++) {
 		float x0 = m_rBotRadius * sinf(nCurrentSegment * rDeltaSegAngle);
 		float z0 = m_rBotRadius * cosf(nCurrentSegment * rDeltaSegAngle);
 
@@ -1753,25 +1637,25 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 		pVertex++;
 
 		////Set three indices (1 triangle) per segment
-		//*pIndices = wVertexIndex; 
+		//*pIndices = wVertexIndex;
 		//pIndices++;
 		//wVertexIndex++;
 
-		//*pIndices = wVertexIndex; 
+		//*pIndices = wVertexIndex;
 		//pIndices++;
 		//wVertexIndex += 2;
 
 		//if(nCurrentSegment == m_nSegments - 1)
 		//{
-		//	*pIndices = 1; 
+		//	*pIndices = 1;
 		//	pIndices++;
 		//	wVertexIndex--;
 		//}
 		//else
 		//{
-		//	*pIndices = wVertexIndex; 
+		//	*pIndices = wVertexIndex;
 		//	pIndices++;
-		//	wVertexIndex--; 
+		//	wVertexIndex--;
 		//}
 	}
 	//Create the bottom triangle fan: Center vertex
@@ -1803,8 +1687,7 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 	//	pVertex++;
 	//}
 
-	if(FAILED(_lpVB->Unlock()))
-	{
+	if (FAILED(_lpVB->Unlock())) {
 		return false;
 	}
 
@@ -1813,27 +1696,26 @@ bool	CEffectModel::CreateCone(int nSeg,float fHei,float fRadius)
 	//	return false;
 	//}
 #endif
-	m_strName			= MESH_CONE;
-	m_bChangeably		= true;
+	m_strName = MESH_CONE;
+	m_bChangeably = true;
 	return true;
 }
 
-bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBottomRadius)
-{
+bool CEffectModel::CreateCylinder(int nSeg, float fHei, float fTopRadius, float fBottomRadius) {
 	//ReleaseModel();
 
 	m_nSegments = nSeg;
 	m_rHeight = fHei;
-	m_rRadius	= fTopRadius;
+	m_rRadius = fTopRadius;
 	m_rBotRadius = fBottomRadius;
 
 	_dwVerCount = m_nSegments * 3;
 	_dwFaceCount = m_nSegments * 2;
-	
+
 	if (_lwMesh != NULL)
 		SAFE_RELEASE(_lwMesh);
 
-	if(m_vEffVer != NULL)
+	if (m_vEffVer != NULL)
 		SAFE_DELETE_ARRAY(m_vEffVer);
 
 	m_vEffVer = new SEFFECT_VERTEX[_dwVerCount];
@@ -1847,10 +1729,10 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 	mi.subset_num = 1;
 	mi.vertex_num = _dwVerCount;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 
 	int nCurrentSegment;
 	//lwVector3* pVertex = mi.vertex_seq;
@@ -1860,8 +1742,7 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 	float rDeltaSegAngle = (2.0f * D3DX_PI / m_nSegments);
 	float rSegmentLength = 1.0f / (float)m_nSegments;
 	float ny0 = (90.0f - (float)D3DXToDegree(atan(m_rHeight / m_rRadius))) / 90.0f;
-	for(nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++)
-	{
+	for (nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++) {
 		float x0 = m_rRadius * sinf(nCurrentSegment * rDeltaSegAngle);
 		float z0 = m_rRadius * cosf(nCurrentSegment * rDeltaSegAngle);
 
@@ -1893,8 +1774,7 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 
 		idx++;
 	}
-	for (WORD n = 0; n < _dwVerCount; n++)
-	{
+	for (WORD n = 0; n < _dwVerCount; n++) {
 		mi.blend_seq[n].weight[0] = n;
 		mi.vercol_seq[n] = 0xffffffff;
 
@@ -1904,21 +1784,21 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 
 	lwSubsetInfo_Construct(&mi.subset_seq[0], _dwFaceCount, 0, _dwVerCount, 0);
 
-	if(LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
+	if (LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
 		return 0;
 
-	if(LW_FAILED(_lwMesh->LoadVideoMemory()))
+	if (LW_FAILED(_lwMesh->LoadVideoMemory()))
 		return 0;
 	_lpSVB = _lwMesh->GetLockableStreamVB();
 	//_lpSIB = _lwMesh->GetLockableStreamIB();
 
 #else
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX)*_dwVerCount, 
-		D3DUSAGE_WRITEONLY|D3DUSAGE_DYNAMIC,
-		EFFECT_VER_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_VER_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
 
 
@@ -1927,8 +1807,7 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 
 
 	//Lock the vertex buffer
-	if(FAILED(_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0)))
-	{
+	if (FAILED(_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0))) {
 		return false;
 	}
 
@@ -1937,8 +1816,7 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 	float ny0 = (90.0f - (float)D3DXToDegree(atan(m_rHeight / m_rRadius))) / 90.0f;
 
 	//For each segment, add a triangle to the sides triangle list
-	for(nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++)
-	{
+	for (nCurrentSegment = 0; nCurrentSegment <= m_nSegments; nCurrentSegment++) {
 		float x0 = m_rRadius * sinf(nCurrentSegment * rDeltaSegAngle);
 		float z0 = m_rRadius * cosf(nCurrentSegment * rDeltaSegAngle);
 
@@ -1961,26 +1839,24 @@ bool	CEffectModel::CreateCylinder(int nSeg,float fHei,float fTopRadius,float fBo
 		pVertex++;
 	}
 
-	if(FAILED(_lpVB->Unlock()))
-	{
+	if (FAILED(_lpVB->Unlock())) {
 		return false;
 	}
 #endif
-	m_strName			= MESH_CYLINDER;
-	m_bChangeably		= true;
+	m_strName = MESH_CYLINDER;
+	m_bChangeably = true;
 	return true;
 }
 
-bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossNum,bool usesoft)
-{
+bool CEffectModel::CreateShadeModel(WORD wVerNum, WORD wFaceNum, int iGridCrossNum, bool usesoft) {
 	//ReleaseModel();
 	_dwVerCount = wVerNum;
-	_dwFaceCount= wFaceNum;
+	_dwFaceCount = wFaceNum;
 
 #ifdef USE_MGR
 	m_pRes->CreateMesh(&_lwMesh);
 	//if(usesoft)
-		_lwMesh->SetStreamType(STREAM_LOCKABLE);
+	_lwMesh->SetStreamType(STREAM_LOCKABLE);
 
 	lwMeshInfo mi;
 	mi.fvf = EFFECT_SHADE_FVF;
@@ -1988,19 +1864,18 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
 	mi.subset_num = 1;
 	mi.vertex_num = wVerNum;
 	mi.vertex_seq = LW_NEW(lwVector3[mi.vertex_num]);
-	mi.blend_seq =  LW_NEW(lwBlendInfo[mi.vertex_num]);
+	mi.blend_seq = LW_NEW(lwBlendInfo[mi.vertex_num]);
 	mi.vercol_seq = LW_NEW(DWORD[mi.vertex_num]);
 	mi.texcoord0_seq = LW_NEW(lwVector2[mi.vertex_num]);
 	mi.texcoord1_seq = LW_NEW(lwVector2[mi.vertex_num]);
-    mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
+	mi.subset_seq = LW_NEW(lwSubsetInfo[mi.subset_num]);
 	mi.index_num = wFaceNum * 6;
 	mi.index_seq = LW_NEW(DWORD[mi.index_num ]);
-	int nIndex = 9;//!VS9
-	for( DWORD n = 0; n < mi.vertex_num; n++)
-	{
+	int nIndex = 9; //!VS9
+	for (DWORD n = 0; n < mi.vertex_num; n++) {
 		mi.vercol_seq[n] = 0xffffffff;
-		mi.vertex_seq[n] = lwVector3(0,0,0);//!
-		mi.texcoord0_seq[n]  = lwVector2(0,0);
+		mi.vertex_seq[n] = lwVector3(0, 0, 0); //!
+		mi.texcoord0_seq[n] = lwVector2(0, 0);
 		mi.texcoord1_seq[n].x = (float)nIndex;
 		nIndex++;
 		mi.texcoord1_seq[n].y = (float)nIndex;
@@ -2024,54 +1899,50 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
 	//	}
 	//}
 	nIndex = 0;
-	for( int nY = 0; nY < iGridCrossNum; nY++ )
-	{
-		for( int nX = 0; nX < iGridCrossNum; nX++ )
-		{
+	for (int nY = 0; nY < iGridCrossNum; nY++) {
+		for (int nX = 0; nX < iGridCrossNum; nX++) {
 			mi.index_seq[nIndex++] = nX + nY * (iGridCrossNum + 1);
-			mi.index_seq[nIndex++] = (nX+1) + nY * (iGridCrossNum + 1);
-			mi.index_seq[nIndex++] = nX + (nY+1) * (iGridCrossNum + 1);
+			mi.index_seq[nIndex++] = (nX + 1) + nY * (iGridCrossNum + 1);
+			mi.index_seq[nIndex++] = nX + (nY + 1) * (iGridCrossNum + 1);
 
-			mi.index_seq[nIndex++] = nX + (nY+1) * (iGridCrossNum + 1);
-			mi.index_seq[nIndex++] = (nX+1) + nY * (iGridCrossNum + 1);
-			mi.index_seq[nIndex++] = (nX+1) + (nY+1) * (iGridCrossNum + 1);
+			mi.index_seq[nIndex++] = nX + (nY + 1) * (iGridCrossNum + 1);
+			mi.index_seq[nIndex++] = (nX + 1) + nY * (iGridCrossNum + 1);
+			mi.index_seq[nIndex++] = (nX + 1) + (nY + 1) * (iGridCrossNum + 1);
 		}
 	}
 	lwSubsetInfo_Construct(&mi.subset_seq[0], wFaceNum, 0, wVerNum, 0);
 
-	if(LW_FAILED( _lwMesh->LoadSystemMemory(&mi)))
+	if (LW_FAILED(_lwMesh->LoadSystemMemory(&mi)))
 		g_logManager.InternalLog(LogLevel::Error, "errors", "Shadow model load system memory failed");
-	if(LW_FAILED( _lwMesh->LoadVideoMemory()))
+	if (LW_FAILED(_lwMesh->LoadVideoMemory()))
 		g_logManager.InternalLog(LogLevel::Error, "errors", "Shadow model load video memory failed");
 
-	if(usesoft)
-	{
+	if (usesoft) {
 		_lpSVB = _lwMesh->GetLockableStreamVB();
 		_lpSIB = _lwMesh->GetLockableStreamIB();
-	}else
-	{
+	}
+	else {
 		_lpSVB = NULL;
 		_lpSIB = NULL;
 	}
 #else
 	HRESULT hr;
-	hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_SHADE_VERTEX) * MAX_SHADER_VERNUM, 
-		D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-		EFFECT_SHADE_FVF, 
-		D3DPOOL_DEFAULT, &_lpVB);
-	if( FAILED(hr) )
+	hr = m_pDev->CreateVertexBuffer(sizeof(SEFFECT_SHADE_VERTEX) * MAX_SHADER_VERNUM,
+									D3DUSAGE_WRITEONLY | D3DUSAGE_DYNAMIC,
+									EFFECT_SHADE_FVF,
+									D3DPOOL_DEFAULT, &_lpVB);
+	if (FAILED(hr))
 		return false;
-	
-	SEFFECT_SHADE_VERTEX *pVertex;
-	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE  );
+
+	SEFFECT_SHADE_VERTEX* pVertex;
+	_lpVB->Lock(0, 0, (BYTE**)&pVertex, D3DLOCK_NOOVERWRITE);
 
 
-	int nIndex = 9;//!VS9
-	for( int n = 0; n < MAX_SHADER_VERNUM; n++)
-	{
+	int nIndex = 9; //!VS9
+	for (int n = 0; n < MAX_SHADER_VERNUM; n++) {
 		pVertex[n].m_dwDiffuse = 0xffffffff;
-		pVertex[n].m_SPos = D3DXVECTOR3(0,0,0);//!
-		pVertex[n].m_SUV  = D3DXVECTOR2(0,0);
+		pVertex[n].m_SPos = D3DXVECTOR3(0, 0, 0); //!
+		pVertex[n].m_SUV = D3DXVECTOR2(0, 0);
 		pVertex[n].m_SUV2.x = (float)nIndex;
 		nIndex++;
 		pVertex[n].m_SUV2.y = (float)nIndex;
@@ -2080,11 +1951,11 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
 
 	_lpVB->Unlock();
 
-	//m_pDev->CreateIndexBuffer(sizeof(WORD)*600, 
-	//	D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
+	//m_pDev->CreateIndexBuffer(sizeof(WORD)*600,
+	//	D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED,
 	//	&_lpIB);
 	//WORD*  t_pwIndex;
-	//_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0); 
+	//_lpIB->Lock(0, 0, (BYTE**)&t_pwIndex, 0);
 	//nIndex = 0;
 	//for( int nY = 0; nY < 10; nY++ )
 	//{
@@ -2104,150 +1975,132 @@ bool	CEffectModel::CreateShadeModel(WORD wVerNum , WORD wFaceNum,int iGridCrossN
 	return true;
 }
 
-bool	CEffectModel::LoadModel(const char* pszName)
-{
+bool CEffectModel::LoadModel(const char* pszName) {
 	//ReleaseModel();
-	m_strName			= pszName;
+	m_strName = pszName;
 
 	//m_pModel = new MPSceneItem;
 
-    // begin by lsh
+	// begin by lsh
 	//Load(pszName,1);
-    if(Load(pszName,1)==0)
-	{
+	if (Load(pszName, 1) == 0) {
 		m_oldtex = this->GetPrimitive()->GetMtlTexAgent(0)->GetTex(0);
-		if(this->GetPrimitive()->GetMtlTexAgent(1))
+		if (this->GetPrimitive()->GetMtlTexAgent(1))
 			m_oldtex2 = this->GetPrimitive()->GetMtlTexAgent(1)->GetTex(0);
 		else
 			m_oldtex2 = NULL;
 		//PlayDefaultAnimation();
 		m_bItem = true;
 	}
-	else
-	{
+	else {
 		m_oldtex = NULL;
 		m_oldtex2 = NULL;
 		m_bItem = false;
 	}
-    // end
+	// end
 
 
 	return true;
 }
 
 
-void	CEffectModel::FrameMove(DWORD dwDailTime)
-{
+void CEffectModel::FrameMove(DWORD dwDailTime) {
 #ifdef USE_MGR
-	if(!_lwMesh)
+	if (!_lwMesh)
 		MPSceneItem::FrameMove();
 #else
-	if(!_lpVB)
+	if (!_lpVB)
 		MPSceneItem::FrameMove();
 #endif
 }
 
-void	CEffectModel::Begin()
-{
+void CEffectModel::Begin() {
 	//vs
 	//m_pDev->SetVertexShader(EFFECT_VER_FVF);
 #ifdef USE_MGR
-	if(_lwMesh)
+	if (_lwMesh)
 		_lwMesh->BeginSet();
 #endif
-
 }
-void	CEffectModel::SetRenderNum(WORD wVer,WORD wFace)
-{
+
+void CEffectModel::SetRenderNum(WORD wVer, WORD wFace) {
 #ifdef USE_MGR
 	lwMeshInfo* mi = _lwMesh->GetMeshInfo();
 	lwSubsetInfo_Construct(&mi->subset_seq[0], wFace, 0, wVer, 0);
 #endif
 }
 
-void	CEffectModel::RenderModel()
-{
+void CEffectModel::RenderModel() {
 #ifdef USE_MGR
-	if(!_lwMesh)
-	{
+	if (!_lwMesh) {
 		this->GetPrimitive()->RenderSubset(0);
-		if(this->GetPrimitive()->GetMtlTexAgent(1))
-		{
+		if (this->GetPrimitive()->GetMtlTexAgent(1)) {
 			m_pDev->SetRenderStateForced(D3DRS_ALPHABLENDENABLE, TRUE);
 			this->GetPrimitive()->RenderSubset(1);
 		}
 		//MPSceneItem::Render();
 	}
 #else
-	if(!_lpVB)
+	if (!_lpVB)
 		MPSceneItem::Render();
 #endif
-	else
-	{
-
+	else {
 #ifdef USE_MGR
-        //g_Render.GetInterfaceMgr()->dev_obj->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
-        //g_Render.GetInterfaceMgr()->dev_obj->SetTextureStageState(2, D3DTSS_TEXCOORDINDEX, 2);
+		//g_Render.GetInterfaceMgr()->dev_obj->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
+		//g_Render.GetInterfaceMgr()->dev_obj->SetTextureStageState(2, D3DTSS_TEXCOORDINDEX, 2);
 
 		//m_pDev->SetTextureStageState(1, D3DTSS_TEXCOORDINDEX, 1);
 
-        if(LW_FAILED(_lwMesh->DrawSubset(0)))
+		if (LW_FAILED(_lwMesh->DrawSubset(0)))
 			g_logManager.LogError("errors", "CEffectModel {}", (TCHAR*)m_strName.c_str());
 #else
 
-		m_pDev->SetStreamSource(0,_lpVB,sizeof(SEFFECT_VERTEX));
+		m_pDev->SetStreamSource(0, _lpVB, sizeof(SEFFECT_VERTEX));
 
-		if(m_strName == MESH_CONE) 
-		{
+		if (m_strName == MESH_CONE) {
 			//m_pDev->SetIndices(_lpIB,0);
 			//m_pDev->DrawIndexedPrimitive( D3DPT_TRIANGLELIST, 0, _dwVerCount, 0,  _dwFaceCount);
 			//m_pDev->DrawPrimitive( D3DPT_TRIANGLEFAN, m_nSegments * 2,  _dwFaceCount);
-			m_pDev->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0,  _dwFaceCount);
+			m_pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, _dwFaceCount);
 			return;
 		}
-		if(m_strName == MESH_CYLINDER) 
-		{
-			m_pDev->DrawPrimitive( D3DPT_TRIANGLESTRIP, 0,  _dwFaceCount);
+		if (m_strName == MESH_CYLINDER) {
+			m_pDev->DrawPrimitive(D3DPT_TRIANGLESTRIP, 0, _dwFaceCount);
 			return;
 		}
-		m_pDev->SetIndices(_lpIB,0);
-		m_pDev->DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, _dwVerCount, 0,  _dwFaceCount);
+		m_pDev->SetIndices(_lpIB, 0);
+		m_pDev->DrawIndexedPrimitive(D3DPT_TRIANGLEFAN, 0, _dwVerCount, 0, _dwFaceCount);
 #endif
-
 	}
 }
 
-void CEffectModel::End()  {
+void CEffectModel::End() {
 	//this been added when we fixed circle shadow not sure 100% of it but so far it works
 	//@moth
 	m_pDev->SetVertexShader(nullptr);
 	m_pDev->SetFVF(EFFECT_VER_FVF);
-	//end 
+	//end
 #ifdef USE_MGR
 	if (_lwMesh)
 		_lwMesh->EndSet();
 #endif
-	//same as commit before 
+	//same as commit before
 	m_pDev->SetRenderState(D3DRS_ZENABLE, TRUE);
 	m_pDev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
 	m_pDev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
 }
 
-void	CEffectModel::RenderTob(ModelParam* last, ModelParam* next, float lerp)
-{
-	for(WORD n = 0; n < _dwVerCount; ++n )
-	{
-		D3DXVec3Lerp(&m_vEffVer[n].m_SPos,&last->vecVer[n], &next->vecVer[n],lerp);
+void CEffectModel::RenderTob(ModelParam* last, ModelParam* next, float lerp) {
+	for (WORD n = 0; n < _dwVerCount; ++n) {
+		D3DXVec3Lerp(&m_vEffVer[n].m_SPos, &last->vecVer[n], &next->vecVer[n], lerp);
 	}
 	m_pDev->SetVertexShader(NULL);
 	m_pDev->SetFVF(EFFECT_VER_FVF);
 
 	m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLESTRIP, _dwFaceCount, m_vEffVer, sizeof(SEFFECT_VERTEX));
-
 }
 
-void	ModelParam::Create()
-{
+void ModelParam::Create() {
 	DWORD dwVerCount = iSegments * 3;
 
 	vecVer.resize(dwVerCount);
@@ -2259,8 +2112,7 @@ void	ModelParam::Create()
 	float rDeltaSegAngle = (2.0f * D3DX_PI / iSegments);
 	float rSegmentLength = 1.0f / (float)iSegments;
 	float ny0 = (90.0f - (float)D3DXToDegree(atan(fHei / fTopRadius))) / 90.0f;
-	for(nCurrentSegment = 0; nCurrentSegment <= iSegments; nCurrentSegment++)
-	{
+	for (nCurrentSegment = 0; nCurrentSegment <= iSegments; nCurrentSegment++) {
 		float x0 = fTopRadius * sinf(nCurrentSegment * rDeltaSegAngle);
 		float z0 = fTopRadius * cosf(nCurrentSegment * rDeltaSegAngle);
 
@@ -2283,22 +2135,19 @@ void	ModelParam::Create()
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-CTexCoordList::CTexCoordList()
-{
+CTexCoordList::CTexCoordList() {
 	Clear();
 }
 
-CTexCoordList::~CTexCoordList()
-{
+CTexCoordList::~CTexCoordList() {
 }
 
-void	CTexCoordList::Clear()
-{
-	m_wVerCount		= 0;
+void CTexCoordList::Clear() {
+	m_wVerCount = 0;
 	//
-	m_wCoordCount	= 0;
+	m_wCoordCount = 0;
 	//
-	m_fFrameTime	= 0.0f;
+	m_fFrameTime = 0.0f;
 	//
 	m_vecCoordList.clear();
 
@@ -2309,12 +2158,11 @@ void	CTexCoordList::Clear()
 }
 
 
-void	CTexCoordList::CreateTranslateCoord()
-{
-	m_fFrameTime	= 4.0f;
+void CTexCoordList::CreateTranslateCoord() {
+	m_fFrameTime = 4.0f;
 
-	m_wVerCount		= 4;
-	m_wCoordCount	= 2;
+	m_wVerCount = 4;
+	m_wCoordCount = 2;
 	m_vecCoordList.resize(m_wCoordCount);
 	D3DXVECTOR2 t_SVer[4];
 	m_vecCoordList[0].resize(m_wVerCount);
@@ -2323,130 +2171,113 @@ void	CTexCoordList::CreateTranslateCoord()
 	//t_SVer[1]			= D3DXVECTOR2(0, 1.0f);
 	//t_SVer[2]			= D3DXVECTOR2(1.0f, 1.0f);
 	//t_SVer[3]			= D3DXVECTOR2(1.0f, 0.0f);
-	t_SVer[0]			= D3DXVECTOR2(0, 0.1f);
-	t_SVer[1]			= D3DXVECTOR2(0, 0.0f);
-	t_SVer[2]			= D3DXVECTOR2(1.0f, 0.0f);
-	t_SVer[3]			= D3DXVECTOR2(1.0f, 0.1f);
+	t_SVer[0] = D3DXVECTOR2(0, 0.1f);
+	t_SVer[1] = D3DXVECTOR2(0, 0.0f);
+	t_SVer[2] = D3DXVECTOR2(1.0f, 0.0f);
+	t_SVer[3] = D3DXVECTOR2(1.0f, 0.1f);
 
-	for(WORD i = 0; i < m_wVerCount; ++i)
-	{
+	for (WORD i = 0; i < m_wVerCount; ++i) {
 		m_vecCoordList[0][i] = t_SVer[i];
 	}
 	//t_SVer[0]			= D3DXVECTOR2(0, 0.1f);
 	//t_SVer[1]			= D3DXVECTOR2(0, 0.1f);
 	//t_SVer[2]			= D3DXVECTOR2(1.0f, 0.1f);
 	//t_SVer[3]			= D3DXVECTOR2(1.0f, 0.1f);
-	t_SVer[0]			= D3DXVECTOR2(0, 1.2f);
-	t_SVer[1]			= D3DXVECTOR2(0, 0.0f);
-	t_SVer[2]			= D3DXVECTOR2(1.0f, 0.0f);
-	t_SVer[3]			= D3DXVECTOR2(1.0f, 1.2f);
+	t_SVer[0] = D3DXVECTOR2(0, 1.2f);
+	t_SVer[1] = D3DXVECTOR2(0, 0.0f);
+	t_SVer[2] = D3DXVECTOR2(1.0f, 0.0f);
+	t_SVer[3] = D3DXVECTOR2(1.0f, 1.2f);
 
-	for(WORD i = 0; i < m_wVerCount; ++i)
-	{
+	for (WORD i = 0; i < m_wVerCount; ++i) {
 		m_vecCoordList[1][i] = t_SVer[i];
 	}
 }
 
-void	CTexCoordList::GetCoordFromModel(CEffectModel *pCModel)
-{
-	if(!pCModel->IsBoard())
+void CTexCoordList::GetCoordFromModel(CEffectModel* pCModel) {
+	if (!pCModel->IsBoard())
 		return;
-	m_wVerCount		= (WORD)pCModel->GetVerCount();
-	m_wCoordCount	= 1;
-	m_fFrameTime	= 3.0f;
+	m_wVerCount = (WORD)pCModel->GetVerCount();
+	m_wCoordCount = 1;
+	m_fFrameTime = 3.0f;
 	m_vecCoordList.clear();
 	m_vecCoordList.resize(m_wCoordCount);
-	
-	SEFFECT_VERTEX *pVertex;
+
+	SEFFECT_VERTEX* pVertex;
 	pCModel->Lock((BYTE**)&pVertex);
 
-	for(WORD i = 0; i < m_wCoordCount; i++)
-	{
+	for (WORD i = 0; i < m_wCoordCount; i++) {
 		m_vecCoordList[i].resize(m_wVerCount);
-		for(DWORD n = 0; n < m_wVerCount; n++)
-		{
-			 m_vecCoordList[i][n] = pVertex[n].m_SUV;
+		for (DWORD n = 0; n < m_wVerCount; n++) {
+			m_vecCoordList[i][n] = pVertex[n].m_SUV;
 		}
 	}
-	
+
 	pCModel->Unlock();
 }
 
-void	CTexCoordList::Reset()
-{
+void CTexCoordList::Reset() {
 	////!
 	//m_wCurIndex = 0;
 	////!
 	//m_fCurTime = 0.0f;
-	
+
 	//for(WORD i = 0; i < m_wVerCount; ++i)
 	//{
 	//	m_vecCurCoord[i] = m_vecCoordList[0][i];
 	//}
 }
 
-void	CTexCoordList::GetCurCoord(S_BVECTOR<D3DXVECTOR2>& vecOutCoord, WORD& wCurIndex,float &fCurTime, float fDailTime)
-{
-	
-	if(m_wCoordCount == 1)
-	{
+void CTexCoordList::GetCurCoord(S_BVECTOR<D3DXVECTOR2>& vecOutCoord, WORD& wCurIndex, float& fCurTime,
+								float fDailTime) {
+	if (m_wCoordCount == 1) {
 		//vecOutCoord = m_vecCoordList[0];
 		vecOutCoord.clear();
-		for(int n = 0; n< m_wVerCount; ++n)
-		{
+		for (int n = 0; n < m_wVerCount; ++n) {
 			vecOutCoord.push_back(m_vecCoordList[0][n]);
 		}
 		return;
 	}
-	WORD	t_wNextIndex;
-	float   t_fLerp;
+	WORD t_wNextIndex;
+	float t_fLerp;
 	fCurTime += fDailTime;
-	if(fCurTime > m_fFrameTime)
-	{
+	if (fCurTime > m_fFrameTime) {
 		wCurIndex++;
 		fCurTime = 0.0f;
 	}
-	if(wCurIndex >= m_wCoordCount)
-	{
+	if (wCurIndex >= m_wCoordCount) {
 		wCurIndex = 0;
 	}
-	if(wCurIndex == m_wCoordCount - 1)
-	{
+	if (wCurIndex == m_wCoordCount - 1) {
 		t_wNextIndex = wCurIndex;
 	}
-	else
-	{
+	else {
 		t_wNextIndex = wCurIndex + 1;
 	}
 	t_fLerp = fCurTime / m_fFrameTime;
 
 	//vecOutCoord.setsize(m_wVerCount);
-	for(WORD n = 0; n < m_wVerCount; ++n)
-	{
+	for (WORD n = 0; n < m_wVerCount; ++n) {
 		D3DXVec2Lerp(vecOutCoord[n],
-			&m_vecCoordList[wCurIndex][n],
-			&m_vecCoordList[t_wNextIndex][n],t_fLerp);
+					 &m_vecCoordList[wCurIndex][n],
+					 &m_vecCoordList[t_wNextIndex][n], t_fLerp);
 	}
 }
 
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-CTexList::CTexList()
-{
+CTexList::CTexList() {
 	Clear();
 }
 
-CTexList::~CTexList()
-{
+CTexList::~CTexList() {
 	//for( DWORD i = 0; i < m_vecTexList.size(); ++i )
 	//{
 	//	SAFE_RELEASE(m_vecTexList[i]);
 	//}
 }
 
-void	CTexList::Clear()
-{
+void CTexList::Clear() {
 	m_wTexCount = 0;
 	m_fFrameTime = 0.1f;
 
@@ -2455,48 +2286,44 @@ void	CTexList::Clear()
 
 	//m_wCurIndex = 0;
 	//m_fCurTime	= 0.0f;
-	m_lpCurTex	= NULL;
+	m_lpCurTex = NULL;
 }
 
-void	CTexList::SetTextureName(const s_string&  pszName)
-{
+void CTexList::SetTextureName(const s_string& pszName) {
 	m_vecTexName = pszName;
 }
 
-void	CTexList::Reset()
-{
+void CTexList::Reset() {
 	////!
 	//m_wCurIndex = 0;
 	////!
 	//m_fCurTime = 0.0f;
-	
+
 	//m_lpCurTex = m_vecTexList[0];
 }
+
 //!
-void	CTexList::CreateSpliteTexture(int iRow, int iColnum)
-{
+void CTexList::CreateSpliteTexture(int iRow, int iColnum) {
 	m_wTexCount = iRow * iColnum;
 	float fw = 1.0f / iRow;
 	float fh = 1.0f / iColnum;
 
 	D3DXVECTOR2 suv[4];
-	suv[0]		= D3DXVECTOR2(0, 1.0f);
-	suv[1]		= D3DXVECTOR2(0, 0);
-	suv[2]		= D3DXVECTOR2(1.0f, 0.0f);
-	suv[3]		= D3DXVECTOR2(1.0f, 1.0f);
+	suv[0] = D3DXVECTOR2(0, 1.0f);
+	suv[1] = D3DXVECTOR2(0, 0);
+	suv[2] = D3DXVECTOR2(1.0f, 0.0f);
+	suv[3] = D3DXVECTOR2(1.0f, 1.0f);
 
 	m_vecTexList.clear();
 	m_vecTexList.resize(m_wTexCount);
-	for(WORD h = 0;h < iColnum; h++)
-	{
-		for(WORD  w = 0; w < iRow; w++)
-		{
+	for (WORD h = 0; h < iColnum; h++) {
+		for (WORD w = 0; w < iRow; w++) {
 			m_vecTexList[w + h * iRow].resize(4);
-			
-			m_vecTexList[w + h * iRow][0].x = w * fw + suv[0].x ;
+
+			m_vecTexList[w + h * iRow][0].x = w * fw + suv[0].x;
 			m_vecTexList[w + h * iRow][0].y = h * fh + fh;
 
-			m_vecTexList[w + h * iRow][1].x = w * fw + suv[1].x ;
+			m_vecTexList[w + h * iRow][1].x = w * fw + suv[1].x;
 			m_vecTexList[w + h * iRow][1].y = h * fh;
 
 			m_vecTexList[w + h * iRow][2].x = m_vecTexList[w + h * iRow][1].x + fw;
@@ -2508,154 +2335,134 @@ void	CTexList::CreateSpliteTexture(int iRow, int iColnum)
 	}
 }
 
-void	CTexList::GetTextureFromModel(CEffectModel *pCModel)
-{
-	if(!pCModel->IsBoard())
+void CTexList::GetTextureFromModel(CEffectModel* pCModel) {
+	if (!pCModel->IsBoard())
 		return;
 	//if(m_wTexCount != 0)
 	//	return;
 
-	WORD t_wVerCount		= (WORD)pCModel->GetVerCount();
-	m_wTexCount	= 1;
+	WORD t_wVerCount = (WORD)pCModel->GetVerCount();
+	m_wTexCount = 1;
 	//m_fFrameTime	= 3.0f;
 	m_vecTexList.clear();
 	m_vecTexList.resize(m_wTexCount);
-	
-	SEFFECT_VERTEX *pVertex;
+
+	SEFFECT_VERTEX* pVertex;
 	pCModel->Lock((BYTE**)&pVertex);
 
-	for(WORD i = 0; i < m_wTexCount; i++)
-	{
+	for (WORD i = 0; i < m_wTexCount; i++) {
 		m_vecTexList[i].resize(t_wVerCount);
-		for(WORD n = 0; n < t_wVerCount; n++)
-		{
-			 m_vecTexList[i][n] = pVertex[n].m_SUV;
+		for (WORD n = 0; n < t_wVerCount; n++) {
+			m_vecTexList[i][n] = pVertex[n].m_SUV;
 		}
 	}
-	
+
 	pCModel->Unlock();
 }
 
-void  CTexList::GetCurTexture(S_BVECTOR<D3DXVECTOR2>& coord, WORD&  wCurIndex,float& fCurTime, float fDailTime)
-{
-	if(m_wTexCount == 1)
-	{
+void CTexList::GetCurTexture(S_BVECTOR<D3DXVECTOR2>& coord, WORD& wCurIndex, float& fCurTime, float fDailTime) {
+	if (m_wTexCount == 1) {
 		//coord =  m_vecTexList[0];
 		//coord.clear();
-		for(WORD i = 0; i < (WORD)coord.size(); ++i)
-		{
+		for (WORD i = 0; i < (WORD)coord.size(); ++i) {
 			//coord.push_back( m_vecTexList[0][i]);
 			*coord[i] = m_vecTexList[0][i];
 		}
 		return;
 	}
 	fCurTime += fDailTime;
-	if(fCurTime > m_fFrameTime)
-	{
+	if (fCurTime > m_fFrameTime) {
 		wCurIndex++;
 		fCurTime = 0.0f;
 	}
-	if(wCurIndex >= m_wTexCount)
-	{
+	if (wCurIndex >= m_wTexCount) {
 		wCurIndex = 0;
 	}
 	//coord =   m_vecTexList[wCurIndex];
 	//coord.clear();
-	for(WORD i = 0; i < coord.size(); ++i)
-	{
+	for (WORD i = 0; i < coord.size(); ++i) {
 		//coord.push_back( m_vecTexList[wCurIndex][i]);
 		*coord[i] = m_vecTexList[wCurIndex][i];
 	}
 }
 
-void	CTexList::Remove()
-{
-	if(m_wTexCount <= 1)
-	{
+void CTexList::Remove() {
+	if (m_wTexCount <= 1) {
 		return;
 	}
 	m_vecTexList.pop_back();
 	m_wTexCount--;
 }
 
-CTexFrame::CTexFrame()
-{
+CTexFrame::CTexFrame() {
 	m_wTexCount = 0;
 	m_fFrameTime = 0.1f;
 
 	m_vecTexName.clear();
 	m_vecTexs.clear();
 
-	m_lpCurTex	= NULL;
+	m_lpCurTex = NULL;
 }
-CTexFrame::~CTexFrame()
-{
+
+CTexFrame::~CTexFrame() {
 	m_vecTexName.clear();
 	m_vecTexs.clear();
 }
-void	CTexFrame::GetCoordFromModel(CEffectModel *pCModel)
-{
-	if(!pCModel->IsBoard())
+
+void CTexFrame::GetCoordFromModel(CEffectModel* pCModel) {
+	if (!pCModel->IsBoard())
 		return;
 
-	WORD t_wVerCount		= (WORD)pCModel->GetVerCount();
+	WORD t_wVerCount = (WORD)pCModel->GetVerCount();
 	m_vecCoord.clear();
 	m_vecCoord.resize(t_wVerCount);
 
-	SEFFECT_VERTEX *pVertex;
+	SEFFECT_VERTEX* pVertex;
 	pCModel->Lock((BYTE**)&pVertex);
-	for(WORD n = 0; n < t_wVerCount; n++)
-	{
+	for (WORD n = 0; n < t_wVerCount; n++) {
 		m_vecCoord[n] = pVertex[n].m_SUV;
 	}
 	pCModel->Unlock();
 }
 
-void	CTexFrame::AddTexture(const s_string&  pszName)
-{
+void CTexFrame::AddTexture(const s_string& pszName) {
 	m_vecTexName.push_back(pszName);
 	m_wTexCount++;
 	m_vecTexs.resize(m_wTexCount);
 }
 
-lwITex*	CTexFrame::GetCurTexture(WORD&  wCurIndex,float& fCurTime, float fDailTime)
-{
-	if(m_wTexCount == 0)
-	{
-		return m_lpCurTex =NULL;
+lwITex* CTexFrame::GetCurTexture(WORD& wCurIndex, float& fCurTime, float fDailTime) {
+	if (m_wTexCount == 0) {
+		return m_lpCurTex = NULL;
 	}
-	if(m_wTexCount == 1)
-	{
+	if (m_wTexCount == 1) {
 		return m_lpCurTex = m_vecTexs[0];
 	}
 	fCurTime += fDailTime;
-	if(fCurTime > m_fFrameTime)
-	{
+	if (fCurTime > m_fFrameTime) {
 		wCurIndex++;
 		fCurTime = 0.0f;
 	}
-	if(wCurIndex >= m_wTexCount)
-	{
+	if (wCurIndex >= m_wTexCount) {
 		wCurIndex = 0;
 	}
 	return m_lpCurTex = m_vecTexs[wCurIndex];
 }
-void	CTexFrame::Remove()
-{
+
+void CTexFrame::Remove() {
 	m_wTexCount = 0;
 	m_fFrameTime = 0.1f;
 
 	m_vecTexName.clear();
 	m_vecTexs.clear();
 
-	m_lpCurTex	= NULL;
+	m_lpCurTex = NULL;
 }
 
 /************************************************************************/
 /*CEffectFont*/
 /************************************************************************/
-CEffectFont::CEffectFont()
-{
+CEffectFont::CEffectFont() {
 	_strText = "0123456789+-";
 	_iTextNum = 12;
 	m_vecTexName = "number";
@@ -2670,8 +2477,8 @@ CEffectFont::CEffectFont()
 	//_lpBackVB = NULL;
 #endif
 }
-CEffectFont::~CEffectFont()
-{
+
+CEffectFont::~CEffectFont() {
 	//ReleaseModel();
 #ifdef USE_MGR
 	//SAFE_RELEASE(_lwBackMesh);
@@ -2680,12 +2487,12 @@ CEffectFont::~CEffectFont()
 #endif
 }
 
-#ifdef USE_RENDER 
-bool	CEffectFont::CreateEffectFont(MPRender*  pDev,
-									  CMPResManger*pCResMagr,int iTexID,D3DXCOLOR dwColor, bool bUseBack,bool bmain)
+#ifdef USE_RENDER
+bool CEffectFont::CreateEffectFont(MPRender* pDev,
+								   CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack, bool bmain)
 #else
-bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
-									  CMPResManger*pCResMagr,int iTexID,D3DXCOLOR dwColor, bool bUseBack,bool bmain)
+bool CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8 pDev,
+								   CMPResManger* pCResMagr, int iTexID, D3DXCOLOR dwColor, bool bUseBack, bool bmain)
 #endif
 {
 	//if(!pDev)
@@ -2696,28 +2503,26 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	_bUseBack = bUseBack;
 	_dwColor = dwColor;
 	_iTextureID = iTexID;
-	s_string str[] = 
+	s_string str[] =
 	{
 		"addblood",
-			"subblood",
-			"addsp",
-			"subsp",
-			"addblood",
-			"subblood",
-			 "bao",
-			 "submiss",
+		"subblood",
+		"addsp",
+		"subsp",
+		"addblood",
+		"subblood",
+		"bao",
+		"submiss",
 	};
 	char psName[64];
-	if(!bmain)
-	{
-		sprintf(psName,"%s",str[_iTextureID].c_str());
+	if (!bmain) {
+		sprintf(psName, "%s", str[_iTextureID].c_str());
 	}
-	else
-	{
+	else {
 		//if(_iTextureID == 6)
 		//	sprintf(psName,"%s.tga",str[_iTextureID].c_str());
 		//else
-			sprintf(psName,"%s2",str[_iTextureID].c_str());
+		sprintf(psName, "%s2", str[_iTextureID].c_str());
 	}
 
 	m_vecTexName = psName;
@@ -2746,13 +2551,12 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	//	break;
 	//}
 	int id = pCResMagr->GetTextureID(m_vecTexName);
-	if(id < 0)
-	{
+	if (id < 0) {
 		g_logManager.LogError("errors", "CEffectFont texture {} not found", m_vecTexName.c_str());
 		m_lpCurTex = NULL;
 		m_pTex = NULL;
-	}else
-	{
+	}
+	else {
 		//m_lpCurTex = pCResMagr->GetTextureByID(id);
 		m_pTex = pCResMagr->GetTextureByIDlw(id);
 
@@ -2760,12 +2564,11 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	}
 
 	id = pCResMagr->GetTextureID(_strBackBmp);
-	if(id < 0)
-	{
+	if (id < 0) {
 		g_logManager.LogError("errors", "CEffectFont texture {} not found", _strBackBmp.c_str());
 		_lpBackTex = NULL;
-	}else
-	{
+	}
+	else {
 #ifdef USE_RENDER
 		//pCResMagr->GetTextureByID(id);
 		_lpBackTex = pCResMagr->GetTextureByIDlw(id);
@@ -2776,8 +2579,7 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 
 	float fx = 0.5f;
 	float fy = 0.7f;
-	if(_iTextureID == 7)
-	{
+	if (_iTextureID == 7) {
 		_iTextNum = 1;
 		_vecCurText.push_back(0);
 		fx = 2.0f;
@@ -2789,35 +2591,35 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	CreateSpliteTexture(_iTextNum, 1);
 
 	//ReleaseModel();
-	_dwVerCount = _iTextNum * 2  * 3;
-	_dwFaceCount= _iTextNum * 2;
+	_dwVerCount = _iTextNum * 2 * 3;
+	_dwFaceCount = _iTextNum * 2;
 
 
 	//SEFFECT_VERTEX t_SEffVer[4];
-	t_SEffVer[0].m_SPos			= D3DXVECTOR3(-fx, -fy, 0);
-	t_SEffVer[0].m_fIdx			= 0;
-	t_SEffVer[0].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[0].m_SUV			= D3DXVECTOR2(0.0f, 1.0f);
+	t_SEffVer[0].m_SPos = D3DXVECTOR3(-fx, -fy, 0);
+	t_SEffVer[0].m_fIdx = 0;
+	t_SEffVer[0].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[0].m_SUV = D3DXVECTOR2(0.0f, 1.0f);
 
-	t_SEffVer[1].m_SPos			= D3DXVECTOR3(-fx, fy, 0);
-	t_SEffVer[1].m_fIdx			= 1;
-	t_SEffVer[1].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[1].m_SUV			= D3DXVECTOR2(0.0f, 0);
+	t_SEffVer[1].m_SPos = D3DXVECTOR3(-fx, fy, 0);
+	t_SEffVer[1].m_fIdx = 1;
+	t_SEffVer[1].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[1].m_SUV = D3DXVECTOR2(0.0f, 0);
 
-	t_SEffVer[2].m_SPos			= D3DXVECTOR3(fx, fy, 0);
-	t_SEffVer[2].m_fIdx			= 2;
-	t_SEffVer[2].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[2].m_SUV			= D3DXVECTOR2(1.0f, 0.0f);
+	t_SEffVer[2].m_SPos = D3DXVECTOR3(fx, fy, 0);
+	t_SEffVer[2].m_fIdx = 2;
+	t_SEffVer[2].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[2].m_SUV = D3DXVECTOR2(1.0f, 0.0f);
 
-	t_SEffVer[3].m_SPos			= D3DXVECTOR3(fx, -fy, 0);
-	t_SEffVer[3].m_fIdx			= 3;
-	t_SEffVer[3].m_dwDiffuse	= 0xffffffff;
-	t_SEffVer[3].m_SUV			= D3DXVECTOR2(1.0f, 1.0f);
+	t_SEffVer[3].m_SPos = D3DXVECTOR3(fx, -fy, 0);
+	t_SEffVer[3].m_fIdx = 3;
+	t_SEffVer[3].m_dwDiffuse = 0xffffffff;
+	t_SEffVer[3].m_SUV = D3DXVECTOR2(1.0f, 1.0f);
 
 	//HRESULT hr;
-	//hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * 4, 
+	//hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * 4,
 	//	D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-	//	EFFECT_VER_FVF, 
+	//	EFFECT_VER_FVF,
 	//	D3DPOOL_DEFAULT, &_lpBackVB);
 	//if( FAILED(hr) )
 	//	return false;
@@ -2829,22 +2631,20 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 
 
 	m_vEffVer = new SEFFECT_VERTEX[_dwVerCount];
-	for (int m = 0; m < _iTextNum; m++)
-	{
-		for (int n = 0; n < 4; n++)
-		{
+	for (int m = 0; m < _iTextNum; m++) {
+		for (int n = 0; n < 4; n++) {
 			m_vEffVer[m * 4 + n].m_SPos.x = t_SEffVer[n].m_SPos.x + m;
 			m_vEffVer[m * 4 + n].m_SPos.y = t_SEffVer[n].m_SPos.y;
 			m_vEffVer[m * 4 + n].m_SPos.z = 0;
-			m_vEffVer[m * 4 + n].m_fIdx	= float(n);
-			m_vEffVer[m * 4 + n].m_dwDiffuse	= 0xffffffff;
-			m_vEffVer[m * 4 + n].m_SUV			= m_vecTexList[m][n];
+			m_vEffVer[m * 4 + n].m_fIdx = float(n);
+			m_vEffVer[m * 4 + n].m_dwDiffuse = 0xffffffff;
+			m_vEffVer[m * 4 + n].m_SUV = m_vecTexList[m][n];
 		}
 	}
 
-	//hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount, 
+	//hr	= m_pDev->CreateVertexBuffer(sizeof(SEFFECT_VERTEX) * _dwVerCount,
 	//	D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-	//	EFFECT_VER_FVF, 
+	//	EFFECT_VER_FVF,
 	//	D3DPOOL_DEFAULT, &_lpVB);
 	//if( FAILED(hr) )
 	//	return false;
@@ -2854,13 +2654,12 @@ bool	CEffectFont::CreateEffectFont(LPDIRECT3DDEVICE8  pDev,
 	//memcpy(pVertex, t_pSEffVer, sizeof(SEFFECT_VERTEX) * _dwVerCount);
 	//_lpVB->Unlock();
 	//SAFE_DELETE_ARRAY(t_pSEffVer);
-	m_strName			= "FONTEFFECT";
+	m_strName = "FONTEFFECT";
 	return true;
 }
 
-void	CEffectFont::SetRenderText(char* pszText)
-{ 
-	if(_iTextureID == 7)
+void CEffectFont::SetRenderText(char* pszText) {
+	if (_iTextureID == 7)
 		return;
 
 	int pos;
@@ -2870,31 +2669,26 @@ void	CEffectFont::SetRenderText(char* pszText)
 	//SEFFECT_VERTEX *pVertex;
 	//_lpVB->Lock(0, 0, (BYTE**)&pVertex, 0   );
 
-	for(int m = 0; m < len; m++)
-	{
-		if(pszText[m] & 0x80)
-		{
+	for (int m = 0; m < len; m++) {
+		if (pszText[m] & 0x80) {
 			pszt[0] = pszText[m];
-			pszt[1] = pszText[m+1];
+			pszt[1] = pszText[m + 1];
 			pszt[2] = '\0';
 		}
-		else
-		{
+		else {
 			pszt[0] = pszText[m];
 			pszt[1] = '\0';
 			pszt[2] = '\0';
 		}
 		pos = (int)_strText.find(pszt);
-		if(pos != -1)
-		{
+		if (pos != -1) {
 			_vecCurText.push_back(pos);
-			for (int n = 0; n < 4; n++)
-			{
-				m_vEffVer[m * 4 + n].m_SUV			= m_vecTexList[pos][n];
+			for (int n = 0; n < 4; n++) {
+				m_vEffVer[m * 4 + n].m_SUV = m_vecTexList[pos][n];
 			}
 		}
 	}
-	
+
 	//_lpVB->Unlock();
 
 	//_lpBackVB->Lock(0, 0, (BYTE**)&pVertex, 0   );
@@ -2908,30 +2702,29 @@ void	CEffectFont::SetRenderText(char* pszText)
 	t_SEffVer[3].m_SPos.y -= 2.0f;
 
 	//_lpBackVB->Unlock();
-
 }
-void	CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat)
-{
+
+void CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat) {
 	//m_pDev->SetRenderState( D3DRS_TEXTUREFACTOR,
 	//	0xffffffff );
 	m_pDev->SetVertexShader(NULL);
 	m_pDev->SetFVF(EFFECT_VER_FVF);
 #ifdef USE_RENDER
 
-//#ifdef	MULTITHREAD_LOADING_TEXTURE
-	if(_lpBackTex && _lpBackTex->IsLoadingOK())
-		m_pDev->SetTexture(0,_lpBackTex->GetTex());
+	//#ifdef	MULTITHREAD_LOADING_TEXTURE
+	if (_lpBackTex && _lpBackTex->IsLoadingOK())
+		m_pDev->SetTexture(0, _lpBackTex->GetTex());
 	else
 		return;
-//#else
-//	if(_lpBackTex)
-//		m_pDev->SetTexture(0,_lpBackTex->GetTex());
-//	else
-//		m_pDev->SetTexture(0,NULL);
-//#endif
+	//#else
+	//	if(_lpBackTex)
+	//		m_pDev->SetTexture(0,_lpBackTex->GetTex());
+	//	else
+	//		m_pDev->SetTexture(0,NULL);
+	//#endif
 
 #else
-	m_pDev->SetTexture(0,_lpBackTex);
+	m_pDev->SetTexture(0, _lpBackTex);
 #endif
 
 	//m_pDev->SetStreamSource(0,_lpBackVB,sizeof(SEFFECT_VERTEX));
@@ -2944,20 +2737,17 @@ void	CEffectFont::RenderEffectFontBack(D3DXMATRIX* pmat)
 #ifdef USE_RENDER
 	m_pDev->SetTransformWorld(pmat);
 
-	if(FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&t_SEffVer,sizeof(SEFFECT_VERTEX))))
+	if (FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&t_SEffVer,sizeof(SEFFECT_VERTEX))))
 		g_logManager.InternalLog(LogLevel::Error, "errors", "CEffectFont draw failed");
 #else
 	m_pDev->SetTransform(D3DTS_WORLDMATRIX(0), pmat);
 
-	m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&t_SEffVer,sizeof(SEFFECT_VERTEX));
+	m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &t_SEffVer, sizeof(SEFFECT_VERTEX));
 #endif
-
 }
- 
-void	CEffectFont::RenderEffectFont(D3DXMATRIX* pmat)
-{
-	if(_bUseBack)
-	{
+
+void CEffectFont::RenderEffectFont(D3DXMATRIX* pmat) {
+	if (_bUseBack) {
 		RenderEffectFontBack(pmat);
 	}
 	//m_pDev->SetRenderState( D3DRS_TEXTUREFACTOR,_dwColor );
@@ -2968,30 +2758,28 @@ void	CEffectFont::RenderEffectFont(D3DXMATRIX* pmat)
 #endif
 
 
-//#ifdef	MULTITHREAD_LOADING_TEXTURE
-	if(m_pTex && m_pTex->IsLoadingOK())
-		m_pDev->SetTexture(0,m_pTex->GetTex());
+	//#ifdef	MULTITHREAD_LOADING_TEXTURE
+	if (m_pTex && m_pTex->IsLoadingOK())
+		m_pDev->SetTexture(0, m_pTex->GetTex());
 	else
 		return;
-//#else
-//	if(m_pTex)
-//		m_pDev->SetTexture(0,m_pTex->GetTex());
-//	else
-//		m_pDev->SetTexture(0,NULL);
-//#endif
+	//#else
+	//	if(m_pTex)
+	//		m_pDev->SetTexture(0,m_pTex->GetTex());
+	//	else
+	//		m_pDev->SetTexture(0,NULL);
+	//#endif
 
 
 	//m_pDev->SetStreamSource(0,_lpVB,sizeof(SEFFECT_VERTEX));
-	for (int n = 0; n < (WORD)_vecCurText.size(); n++)
-	{
+	for (int n = 0; n < (WORD)_vecCurText.size(); n++) {
 		//m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, n * 4, 2);
 #ifdef USE_RENDER
-		if(FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX))))
+		if (FAILED(m_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX))))
 			g_logManager.InternalLog(LogLevel::Error, "errors", "CEffectFont draw2 failed");
 #else
-		m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN,2,&m_vEffVer[n * 4],sizeof(SEFFECT_VERTEX));
+		m_pDev->DrawPrimitiveUP(D3DPT_TRIANGLEFAN, 2, &m_vEffVer[n * 4], sizeof(SEFFECT_VERTEX));
 #endif
-
 	}
 }
 
@@ -2999,641 +2787,120 @@ void	CEffectFont::RenderEffectFont(D3DXMATRIX* pmat)
 /************************************************************************/
 /*                                                                      */
 /************************************************************************/
-CScriptFile		CScriptFile::m_ctScript;
-CScriptFile::CScriptFile()
-{
-	// 
-	m_fp = NULL;
-	// 
-	m_bRead = true;
-	m_bOpen = false;
-	m_SCharacterAction = NULL;
-	InitAction(_TEXT("scripts/txt/CharacterAction.tx"));
-}
-CScriptFile::~CScriptFile()
-{
-	if( m_fp != NULL )
-	{
-		CloseFile();
-	}
+CCharacterActionCache CCharacterActionCache::_cache;
+
+bool CCharacterActionCache::LoadActionDataFromStore() {
 	Free();
-}
 
-////////////////////
-bool CScriptFile::OpenFileRead( const char *filename )
-{
-	char msg[_MAX_STRING];
-
-	m_fp = fopen( filename, "rt" );
-
-	if( m_fp == NULL )
-	{
-		sprintf( msg, "CIniFile::OpenFileRead() Error (0) : Could not open file for read : <%s>\n", filename );
-		OutputDebugString( msg );
+	auto* store = CharacterActionStore::Instance();
+	short maxType = store->GetMaxCharacterType();
+	if (maxType < 1) {
+		g_logManager.LogError("errors", "CCharacterActionCache::LoadActionDataFromStore: store пуст");
 		return false;
 	}
-	m_bRead = true;
 
-	m_bReadMem = false;
+	_characterActions.resize(maxType);
+	_maxCharacterType = maxType;
 
-	m_bOpen = true;
-
-	return true;
-}
-// 
-void CScriptFile::CloseFile()
-{
-	if(m_bOpen)
-	{
-		if( !this->m_bReadMem )
-		{
-			fclose( m_fp );
-			m_fp = NULL;
-			m_bRead = true;
-		}
-		m_bOpen = false;
-	}
-}
-bool CScriptFile::ReadSection(  char *section )
-{
-	char msg[_MAX_STRING];
-	char rval;
-	int nCount;
-	bool bFound;
-	bool bBegin;
-	char Section[_MAX_STRING];
-
-	if( !m_bReadMem )
-	{
-		if ( m_fp == NULL )
-			return false;
+	for (short t = 0; t < maxType; t++) {
+		_characterActions[t]._characterType = t + 1;
 	}
 
-	if( this->m_bReadMem )
-	{
-		this->m_iP = 0;
-	}
-	else
-	{
-		if( fseek( m_fp,0,SEEK_SET ) )
-			return false;
-	}
-
-
-	bFound = false;
-	bBegin = false;
-	nCount = 0;
-	if( m_bReadMem )
-	{
-
-		while( bFound == false )
-		{
-			if( m_iP == this->m_iSize )
-			{
-				return false;
-			}
-
-			rval = this->m_pData[m_iP];
-
-			m_iP++;                     
-
-			if( rval == '[' )
-			{
-				bBegin = true;
-
-				continue;
-			}
-			if( rval == ']' )
-			{
-				Section[nCount] = 0;
-				nCount = 0;
-				bBegin = false;
-				if ( stricmp(section,"")==0)
-				{
-					strcpy( section,Section);
-					bFound = true;
-				}
-				else
-				{
-					if( strcmp( Section, section ) == 0 )
-					{	
-						bFound = true;
-					}
-				}
-				continue;
-			}
-
-			if( bBegin == true && nCount < _MAX_STRING )
-			{
-				Section[nCount] = rval;
-				nCount++;
-			}
-
-
+	// Первый проход: определяем максимальный actionNo по каждому типу.
+	std::vector<short> maxActionPerType(maxType, 0);
+	store->ForEach([&](const CCharacterActionInfo& r) {
+		int t = r._characterType - 1;
+		if (t < 0 || t >= _maxCharacterType) {
+			return;
 		}
 
-		return true;
-	}
-	while( bFound == false )
-	{
-		if( (rval = (char)fgetc(m_fp)) == EOF )
-		{
-			sprintf( msg, "CIniFile::ReadSection() Error(0) : Reach the end of the file in reading section <%s>\n", section );
-			OutputDebugString( msg );
-			return false;
-		}
+		maxActionPerType[t] = (std::max)(r._actionNo, maxActionPerType[t]);
+	});
 
-		if( rval == '[' )
-		{
-			bBegin = true;
+	// Резервируем слоты под actions каждого типа.
+	for (short t = 0; t < _maxCharacterType; t++) {
+		short maxAct = maxActionPerType[t];
+		if (maxAct < 1) {
 			continue;
 		}
-		if( rval == ']' )
-		{
-			Section[nCount] = 0;
-			nCount = 0;
-			bBegin = false;
-			if ( stricmp(section,"")==0)
-			{
-				strcpy( section,Section);
-				bFound = true;
-			}
-			else
-			{
-				if( stricmp( Section, section ) == 0 )
-				{
-					bFound = true;
-				}
-			}
-			continue;
+		_characterActions[t]._actions.resize(maxAct);
+	}
+
+	// Второй проход: заполнение данных.
+	store->ForEach([&](const CCharacterActionInfo& r) {
+		int t = r._characterType - 1;
+		if (t < 0 || t >= _maxCharacterType) {
+			return;
+		}
+		SChaAction& block = _characterActions[t];
+		if (r._actionNo < 1 || static_cast<size_t>(r._actionNo) > block._actions.size()) {
+			return;
 		}
 
-		if( bBegin == true && nCount < _MAX_STRING )
-		{
-			Section[nCount] = rval;
-			nCount++;
+		ActionInfo& info = block._actions.at(r._actionNo - 1);
+		info._actionNo = r._actionNo;
+		info._startFrame = r._startFrame;
+		info._endFrame = r._endFrame;
+		info._keyFrames = r._keyFrames;
+		block._validCount++;
+	});
+
+	// Подсчёт типов, в которых есть хотя бы одно действие.
+	_actualCharacterType = 0;
+	for (short t = 0; t < _maxCharacterType; t++) {
+		if (_characterActions[t]._validCount > 0) {
+			_actualCharacterType++;
 		}
 	}
 
 	return true;
 }
 
-bool CScriptFile::ReadLine( const char *name, char *value, int nSize )
-{
-	char msg[_MAX_STRING];
-	int rval;
-	int nCount;
-	bool bFound;
-	char Name[_MAX_STRING];
-
-	if( !this->m_bReadMem )
-	{
-	}
-
-	nCount = 0;
-	bFound = false;
-	bool bno=false;
-
-	if( this->m_bReadMem )
-	{
-		while( bFound == false )
-		{
-			if( m_iP == this->m_iSize )
-			{
-				OutputDebugString( "Reach the end of file " );
-				return false;
-			}
-
-			rval = this->m_pData[m_iP];
-
-			m_iP++;                     
-
-			if( rval == '=' )
-			{
-				Name[nCount] = 0;
-				nCount = 0;
-				if( strcmp( Name, name ) == 0 )
-				{
-					bFound = true;
-				}
-				else
-				{
-					nCount = 0;
-					bno=true;
-				}
-				continue;
-			}
-			if( rval == 13 )
-			{
-				continue;
-			}
-			if( rval == '\n' )
-			{
-				if (bno == true)
-					nCount=0;
-				continue;
-			}
-			if( nCount < _MAX_STRING )
-			{
-				Name[nCount] = (char)rval;
-				nCount++;
-			}
-		}
-
-		nCount=0;
-		bFound = false;
-		while( bFound == false )
-		{
-			rval = this->m_pData[m_iP];
-			m_iP++;
-
-			if( rval == EOF || rval == '\n' || rval == 13 )
-			{
-				value[nCount] = 0;
-				bFound = true;
-				continue;
-			}
-			if( nCount < nSize-1 )
-			{
-				value[nCount] = (char)rval;
-				nCount++;
-			}
-		}
-
-		return true;
-
-	}
-	while( bFound == false )
-	{
-		if( (rval = fgetc(m_fp)) == EOF )
-		{
-			sprintf( msg, "CIniFile::ReadLine() Error(0) : Reach the end of the file in reading named <%s>\n", name );
-			OutputDebugString( msg );
-			return false;
-		}
-
-		if( rval == '=' )
-		{
-			Name[nCount] = 0;
-			nCount = 0;
-			if( stricmp( Name, name ) == 0 )
-			{
-				bFound = true;
-			}
-			else
-			{
-				nCount = 0;
-				bno=true;
-			}
-			continue;
-		}
-		if( rval == '\n' )
-		{
-			if (bno == true)
-				nCount=0;
-			continue;
-		}
-		if( nCount < _MAX_STRING )
-		{
-			Name[nCount] = (char)rval;
-			nCount++;
-		}
-	}
-	nCount=0;
-	bFound = false;
-	while( bFound == false )
-	{
-		rval = fgetc(m_fp);
-		if( rval == EOF || rval == '\n' )
-		{
-			value[nCount] = 0;
-			bFound = true;
-			continue;
-		}
-		if( nCount < nSize-1 )
-		{
-			value[nCount] = (char)rval;
-			nCount++;
-		}
-	}
-
-	return true;
-}
-bool CScriptFile::ReadLine( const char *name, char* value )
-{
-	char Value[_MAX_STRING];
-	if( ReadLine( name, Value, _MAX_STRING ) == false )
-		return false;
-	*value = Value[0];
-	return true;
+void CCharacterActionCache::Free() {
+	_characterActions.clear();
+	_maxCharacterType = 0;
+	_actualCharacterType = 0;
 }
 
-
-bool CScriptFile::ReadLine( const char *name, int *value )
-{
-	char Value[_MAX_STRING];
-	if( ReadLine( name, Value, _MAX_STRING ) == false )
-		return false;
-	*value = atoi( Value );
-	return true;
-}
-bool CScriptFile::ReadLine( const char *name, float *value )
-{
-	char Value[_MAX_STRING];
-	if( ReadLine( name, Value, _MAX_STRING ) == false )
-		return false;
-	*value = (float)atof( Value );
-	return true;
-}
-bool CScriptFile::ReadLine( const char *name, double *value )
-{
-	char Value[_MAX_STRING];
-	if( ReadLine( name, Value, _MAX_STRING ) == false )
-		return false;
-	*value = atof( Value );
-	return true;
+const SChaAction* CCharacterActionCache::GetCharAction(int characterType) const {
+	if (characterType < 1 || static_cast<size_t>(characterType) > _characterActions.size()) {
+		return nullptr;
+	}
+	const SChaAction& block = _characterActions[characterType - 1];
+	return block.IsValid() ? &block : nullptr;
 }
 
-bool	CScriptFile::InitAction(const char *ptcsFileName)
-{
-	bool		bRet = true;
-	_TCHAR		tcsLine[1024], tcsTemp[1024];
-	short		iCurType, iCurActNO, iCurKeyFrame;
-	long		lIndex, lOldIndex, lFilePos;
-	FILE		*fFile = NULL;
+long StringGetT(char* out, long out_max, const char* in, long* in_from, const char* end_list, long end_len) {
+	long offset = -1; // set offset of get string to -1 for the first do process
+	long i; // temp variable
 
-	m_iMaxCharacterType = 0;
-	m_iActualCharacterType = 0;
-	m_SCharacterAction = NULL;
-
-	fFile = _tfopen(ptcsFileName, _TEXT("rb"));
-	if (fFile == NULL)
-	{
-		g_logManager.LogError("errors", "Load Txt File [{}] Fail!", ptcsFileName);
-		bRet = false;
-		goto end;
-	}
-
-	// ""(m_iMaxCharacterType),""(m_iActualCharacterType);
-	while (!feof(fFile))
-	{
-		lIndex = 0;
-		_fgetts(tcsLine, 1023, fFile);
-		StringSkipCompartmentT(tcsLine, &lIndex, " ", 1);
-		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
-			continue;
-		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
-			continue;
-		if (tcsLine[lIndex] == _TEXT('\t')) // tab ("")
-			continue;
-
-		m_iActualCharacterType ++;
-
-		StringGetT(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5);
-		if (m_iMaxCharacterType < _ttoi(tcsTemp))
-			m_iMaxCharacterType = _ttoi(tcsTemp);
-	}
-	//
-
-	if (m_iActualCharacterType < 1)
-	{
-		bRet = true;
-		goto end;
-	}
-
-	m_SCharacterAction = new (SChaAction[m_iMaxCharacterType]);
-	if (m_SCharacterAction == NULL)
-	{
-		m_iMaxCharacterType = 0;
-		bRet = false;
-		goto end;
-	}
-	memset((void *)m_SCharacterAction, 0, sizeof(SChaAction) * m_iMaxCharacterType);
-
-	// 
-	fseek(fFile, 0, SEEK_SET);
-	while (!feof(fFile))
-	{
-		lIndex = 0;
-		_fgetts(tcsLine, 1023, fFile);
-		StringSkipCompartmentT(tcsLine, &lIndex, _TEXT(" "), 1);
-		if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
-			continue;
-		if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
-			continue;
-		if (tcsLine[lIndex] == _TEXT('\t')) // tab (")
-			continue;
-
-		StringGetT(tcsTemp, 1023, tcsLine, &lIndex, _TEXT(" ,\x09\x0a\x0d"), 5);
-		iCurType = _ttoi(tcsTemp) - 1;
-		if (iCurType < 0)
-			continue;
-		// 
-		m_SCharacterAction[iCurType].m_SActionInfo = NULL;
-		m_SCharacterAction[iCurType].m_iActualActionNum = 0;
-		m_SCharacterAction[iCurType].m_iCharacterType = iCurType + 1;
-		m_SCharacterAction[iCurType].m_iMaxActionNum = 0;
-		lFilePos = ftell(fFile);
-		while (!feof(fFile))
-		{
-			lIndex = 0;
-			_fgetts(tcsLine, 1023, fFile);
-			StringSkipCompartmentT(tcsLine, &lIndex, " ", 1);
-			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
-				continue;
-			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
-				continue;
-			if (tcsLine[lIndex] == _TEXT('\t')) // tab
-			{
-				m_SCharacterAction[iCurType].m_iActualActionNum ++;
-
-				StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
-				StringGetT(tcsTemp, 1023, tcsLine, &lIndex, " ,\x09\x0a\x0d", 5);
-
-				//  
-				if (_ttoi(tcsTemp) < 1)
-				{
-					MessageBox(NULL, _TEXT(" .\\scripts\\CharacterAction.tx"), _TEXT(""), 0);
-					goto end;
-				}
-				//
-
-				if (m_SCharacterAction[iCurType].m_iMaxActionNum < _ttoi(tcsTemp))
-					m_SCharacterAction[iCurType].m_iMaxActionNum = _ttoi(tcsTemp);
-			}
-			else
-				break;
-		}
-		if (m_SCharacterAction[iCurType].m_iActualActionNum < 1)
-			continue;
-
-		m_SCharacterAction[iCurType].m_SActionInfo = new (ActionInfo[m_SCharacterAction[iCurType].m_iMaxActionNum]);
-		if (m_SCharacterAction[iCurType].m_SActionInfo == NULL)
-		{
-			m_SCharacterAction[iCurType].m_iMaxActionNum = 0;
-			bRet = false;
-			goto end;
-		}
-		memset((void *)(m_SCharacterAction[iCurType].m_SActionInfo), 0, sizeof(ActionInfo) * m_SCharacterAction[iCurType].m_iMaxActionNum);
-
-		// 
-		fseek(fFile, lFilePos, SEEK_SET);
-		while (!feof(fFile))
-		{
-			lFilePos = ftell(fFile);
-			lIndex = 0;
-			_fgetts(tcsLine, 1023, fFile);
-			StringSkipCompartmentT(tcsLine, &lIndex, " ", 1);
-			if (tcsLine[lIndex] == 0x0a || tcsLine[lIndex] == 0x0d) //, 
-				continue;
-			if (tcsLine[lIndex] == _TEXT('/') && tcsLine[lIndex + 1] == _TEXT('/')) // 
-				continue;
-			if (tcsLine[lIndex] == _TEXT('\t')) // tab
-			{
-				StringSkipCompartmentT(tcsLine, &lIndex, "\x09", 1);
-				StringGetT(tcsTemp, 1023, tcsLine, &lIndex, " ,\x09\x0a\x0d", 5);
-
-				iCurActNO = _ttoi(tcsTemp);
-				if (iCurActNO < 1)
-					continue;
-				m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sActionNO = iCurActNO;
-
-				StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
-				StringGetT(tcsTemp, 1023, tcsLine, &lIndex, " ,\x09\x0a\x0d", 5);
-				m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sStartFrame = _ttoi(tcsTemp);
-
-				StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
-				StringGetT(tcsTemp, 1023, tcsLine, &lIndex, " ,\x09\x0a\x0d", 5);
-				m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sEndFrame = _ttoi(tcsTemp);
-
-				StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
-				lOldIndex = lIndex;
-				// 
-				iCurKeyFrame = 0;
-				while (StringGetT(tcsTemp, 1023, tcsLine, &lIndex," ,\x09\x0a\x0d", 5))
-				{
-					iCurKeyFrame ++;
-					StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
-				}
-				if (iCurKeyFrame < 1)
-					continue;
-
-				m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sKeyFrameNum = iCurKeyFrame;
-				m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sKeyFrame
-					= new (short[m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sKeyFrameNum]);
-				if (m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sKeyFrame == NULL)
-				{
-					m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sKeyFrameNum = 0;
-					bRet = false;
-					goto end;
-				}
-
-				lIndex = lOldIndex;
-				// 
-				iCurKeyFrame = 0;
-				while (StringGetT(tcsTemp, 1023, tcsLine, &lIndex," ,\x09\x0a\x0d", 5))
-				{
-					m_SCharacterAction[iCurType].m_SActionInfo[iCurActNO - 1].m_sKeyFrame[iCurKeyFrame] = _ttoi(tcsTemp);
-					iCurKeyFrame ++;
-					StringSkipCompartmentT(tcsLine, &lIndex, " ,\x09", 3);
-				}
-			}
-			else
-			{
-				fseek(fFile, lFilePos, SEEK_SET);
+	--(*in_from); // dec (*in_from) for the first do process
+	do {
+		out[++offset] = in[++(*in_from)];
+		for (i = end_len - 1; i >= 0; --i) {
+			if (out[offset] == end_list[i]) {
+				out[offset] = 0x00;
 				break;
 			}
 		}
 	}
-	//
-
-end:
-	if (fFile)
-		fclose(fFile);
-	if (!bRet)
-		Free();
-
-	return bRet;
-}
-
-void	CScriptFile::Free(void)
-{
-	short	i, j;
-
-	if (m_SCharacterAction)
-	{
-		for (i = 0; i < m_iMaxCharacterType; i ++)
-		{
-			for (j = 0; j < m_SCharacterAction[i].m_iMaxActionNum; j ++)
-			{
-				if (m_SCharacterAction[i].m_SActionInfo[j].m_sKeyFrame)
-				{
-					delete [] m_SCharacterAction[i].m_SActionInfo[j].m_sKeyFrame;
-					m_SCharacterAction[i].m_SActionInfo[j].m_sKeyFrame = NULL;
-				}
-			}
-			delete [] m_SCharacterAction[i].m_SActionInfo;
-			m_SCharacterAction[i].m_SActionInfo = NULL;
-		}
-		delete [] m_SCharacterAction;
-		m_SCharacterAction = NULL;
-	}
-}
-
-long StringGetT(char* out, long out_max, const char* in, long* in_from, const char* end_list, long end_len)
-{
-	long offset=-1;    // set offset of get string to -1 for the first do process
-	long i;    // temp variable
-
-	--(*in_from);   // dec (*in_from) for the first do process
-	do
-	{
-		out[++offset]=in[++(*in_from)];
-		for(i=end_len-1;i>=0;--i)
-		{
-			if(out[offset]==end_list[i])
-			{
-				out[offset]=0x00;
-				break;
-			}
-		}
-	}while(out[offset] && offset<out_max);
+	while (out[offset] && offset < out_max);
 	return offset;
 }
 
-void StringSkipCompartmentT(const char* in, long* in_from, const char* skip_list, long skip_len)
-{
-	long i;    // temp variable
+void StringSkipCompartmentT(const char* in, long* in_from, const char* skip_list, long skip_len) {
+	long i; // temp variable
 
-	while(in[(*in_from)])
-	{
-		for(i=skip_len-1;i>=0;--i)
-		{
-			if(in[(*in_from)]==skip_list[i])    
+	while (in[(*in_from)]) {
+		for (i = skip_len - 1; i >= 0; --i) {
+			if (in[(*in_from)] == skip_list[i])
 				break;
 		}
-		if(i<0) break;  // dismatch skip conditions, finished
-		else ++(*in_from);  // match skip conditions, skip it
+		if (i < 0) break; // dismatch skip conditions, finished
+		else ++(*in_from); // match skip conditions, skip it
 	}
 }
 
-bool	CScriptFile::GetCharAction(int iCharType, SChaAction *SCharAct)
-{
-	if (m_SCharacterAction == NULL || SCharAct == NULL)
-		return false;
-	if (iCharType < 1 || iCharType > m_iMaxCharacterType)
-		return false;
-	if (m_SCharacterAction[iCharType - 1].m_iCharacterType < 1)
-		return false;
-
-	memcpy((void *)SCharAct, (void *)(m_SCharacterAction + iCharType - 1), sizeof(SChaAction));
-
-	return true;
+s_string& I_Effect::getEffectModelName() {
+	return m_strModelName;
 }
-
-s_string& I_Effect::getEffectModelName()						
-{ 
-	return m_strModelName; 
-}
-
-

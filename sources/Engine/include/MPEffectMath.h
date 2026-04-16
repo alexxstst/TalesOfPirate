@@ -121,7 +121,7 @@ C
 <br>MgcMath.h
 <a href="http://www.magic-software.com">Wild Magic</a>.
 */
-class MINDPOWER_API MPEffectMath
+class MPEffectMath
 {
 public:
 	/** . .

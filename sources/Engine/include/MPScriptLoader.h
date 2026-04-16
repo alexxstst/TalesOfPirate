@@ -3,7 +3,7 @@
 
 #include "MPEffPrerequisites.h"
 
-class MINDPOWER_API MPScriptLoader
+class MPScriptLoader
 {
 public:
 	virtual ~ScriptLoader();

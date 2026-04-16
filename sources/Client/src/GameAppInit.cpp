@@ -275,11 +275,9 @@ BOOL CGameApp::_Init() {
 	_pCamTrack = new CPointTrack;
 
 	InitAllTable();
+	CCharacterActionCache::_cache.LoadActionDataFromStore();
 
 	GetCursor()->InitMemory();
-
-	extern void InitPoseData();
-	InitPoseData();
 
 #if 1
 	// by lsh

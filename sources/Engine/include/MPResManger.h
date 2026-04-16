@@ -88,7 +88,7 @@ inline bool fEquat( float f1, float f2)
 
 //////////////////////////////////////////////////////////////////////////
 
-class  MINDPOWER_API CMPResManger
+class  CMPResManger
 {
 public:
 	CMPResManger(void);
@@ -401,6 +401,6 @@ inline void	CMPResManger::SendResMessage(const s_string& strPartName, D3DXVECTOR
 }
 
 
-extern MINDPOWER_API CMPResManger     ResMgr;
+extern CMPResManger     ResMgr;
 extern LW_RESULT	g_OnLostDevice();
 extern LW_RESULT	g_OnResetDevice();

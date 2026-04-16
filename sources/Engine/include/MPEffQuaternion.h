@@ -7,7 +7,7 @@
 class MPEffVector3;
 class MPRadian;
 
-class MINDPOWER_API MPEffQuaternion
+class MPEffQuaternion
 {
 public:
 	D3DXQUATERNION m_qSelf;

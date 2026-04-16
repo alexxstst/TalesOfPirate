@@ -7,7 +7,7 @@
 
 typedef const char* (*CMD_FN)(const char *pszCmd);
 
-class MINDPOWER_API MPConsole
+class MPConsole
 {
 
 public:

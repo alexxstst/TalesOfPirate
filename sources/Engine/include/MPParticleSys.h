@@ -293,7 +293,7 @@ void			_FrameMoveLineSingle(CMPPartSys* pPart, DWORD dwDailTime);
 bool			_CreateLineRound(CMPPartSys* pPart, CMPParticle* pCtrl);
 void			_FrameMoveLineRound(CMPPartSys* pPart, DWORD dwDailTime);
 
-class MINDPOWER_API CMPPartSys//: public CEffectBase
+class CMPPartSys//: public CEffectBase
 {
 public:
 	CMPPartSys();
@@ -746,7 +746,7 @@ inline void		RotatingXZ(D3DXMATRIX* pmat,float fAngleX, float fAngleZ)
 //#define	 PARTTYPE_STRIP		4
 //
 //
-//class MINDPOWER_API CMPMagrPart: public CEffectBase
+//class CMPMagrPart: public CEffectBase
 //{
 //public:
 //	CMPMagrPart(void){}

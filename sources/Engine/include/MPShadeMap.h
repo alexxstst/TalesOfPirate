@@ -12,7 +12,7 @@ class   CMPResManger;
 #define  MAXRADIUS	9.0f;//!,7vs,7soft
 #define	 MAXTILE	5 //!
 
-class MINDPOWER_API  CMPShadeMap// : public CEffectBase
+class  CMPShadeMap// : public CEffectBase
 {
 public:
 	CMPShadeMap(void);
@@ -119,7 +119,7 @@ protected:
 ///////////////////////////////////////////////////////////
 //class CMPShadeEX
 ///////////////////////////////////////////////////////////
-class MINDPOWER_API CMPShadeEX :	public CMPShadeMap
+class CMPShadeEX :	public CMPShadeMap
 {
 public:
 	CMPShadeEX(int iFrameCount = 4);
@@ -186,7 +186,7 @@ protected:
 ///////////////////////////////////////////////////////////
 //class CMPShadeCtrl
 ///////////////////////////////////////////////////////////
-class MINDPOWER_API CMPShadeCtrl
+class CMPShadeCtrl
 {
 public:
 	CMPShadeCtrl(void);

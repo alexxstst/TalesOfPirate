@@ -15,7 +15,7 @@
 
 #define CLAMP(A, MIN, MAX)		( (A) > (MAX) ) ? (MAX) :  ( ( (A) < (MIN) ) ? (MIN) : (A) )
 
-extern MINDPOWER_API CMPResManger        ResMgr;
+extern CMPResManger        ResMgr;
 
 CMPShadeMap::CMPShadeMap(void)
 {

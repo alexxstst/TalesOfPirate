@@ -41,7 +41,7 @@ class MPConsole;
 #define M_MClick	0x1000
 #define M_RClick	0x2000
 
-class MINDPOWER_API MPGameApp
+class MPGameApp
 {
 public:
 

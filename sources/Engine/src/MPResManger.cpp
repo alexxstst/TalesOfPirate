@@ -16,7 +16,7 @@
 
 using namespace std;
 
-MINDPOWER_API CMPResManger        ResMgr;
+CMPResManger        ResMgr;
 
 CMPResManger::CMPResManger(void)
 {
@@ -166,15 +166,6 @@ CMPResManger::~CMPResManger(void)
 
 void	CMPResManger::ReleaseTotalRes()
 {
-#ifndef SCRIPT_TABLE
-	CEffectScript::m_cEffScript.ReleaseScript();
-#else
-	//CEff_ParamSet* pSingleSet = CEff_ParamSet::I();
-	//SAFE_DELETE( pSingleSet );
-	//CGroup_ParamSet* pGroupSet = CGroup_ParamSet::I();
-	//SAFE_DELETE( pGroupSet );
-#endif
-
 	int iw;
 
 //#ifndef USE_GAME
@@ -329,12 +320,6 @@ bool	CMPResManger::InitRes(LPDIRECT3DDEVICE8		pDev, D3DXMATRIX* pmat, D3DXMATRIX
 		m_bUseSoft = false;
 	}
 
-
-	if(!CScriptFile::m_ctScript.OpenFileRead("effect/model.txt"))
-	{
-		ToLogService("errors", LogLevel::Error, " effect/model.txt");
-		return false;
-	}
 
 	_CEffectFile.InitDev(pDev);
 	#if (defined LW_USE_DX9)

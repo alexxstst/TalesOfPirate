@@ -1,7 +1,5 @@
 #pragma once
 
-#include <vector>
-
 enum EActionNumber
 {
     POSE_WAITING =       01,//	waiting
@@ -59,23 +57,3 @@ enum EActionNumber
     POSE_SKILL19 =       53,
     POSE_SKILL20 =       54,
 };
-
-struct SActionInfo
-{
-	short      m_sActionNO{};
-	lwPoseInfo info{};
-};
-
-struct SCharacterAction
-{
-	short                      m_iCharacterType{};
-	std::vector<SActionInfo>   m_actions{};         // индекс = actionId - 1
-
-	int GetMaxActionNum() const { return static_cast<int>(m_actions.size()); }
-};
-
-extern void InitPoseData();
-
-// Возвращает указатель на SCharacterAction для данного типа, nullptr если не найден.
-// Указатель валиден до следующего вызова InitPoseData().
-extern const SCharacterAction* GetCharacterAction(int nTypeID);

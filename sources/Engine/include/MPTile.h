@@ -89,7 +89,7 @@ inline BYTE _setObjHeight(BYTE btOldValue, float fHeight, int no)
 }
 
 
-struct MINDPOWER_API MPTile
+struct MPTile
 {
 	static	int		Offset[4][2];
 

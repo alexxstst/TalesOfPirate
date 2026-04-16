@@ -8,61 +8,12 @@ class  CMPEffectCtrl;
 
 #pragma warning(disable: 4275)
 
-#define  SCRIPT_TABLE
-
-#ifndef SCRIPT_TABLE
-struct MINDPOWER_API EFF_Param 
-{
-	int  m_iModelNum;
-	std::vector<s_string> m_vecModelName;
-	int	 m_iPartNum;
-	float	m_fvel;
-	std::vector<s_string>	m_vecParName;
-	std::vector<int>		m_vecDummyIdx;
-	int						m_iRenderIdx;
-	int						m_iLightID;
-	s_string				m_strResult;
-};
-struct MINDPOWER_API Group_Param
-{
-	int nClass;
-	std::vector<int> vecParam;
-	std::vector<int> vecNum;
-	int nRenderIdx;
-};
-
-class  MINDPOWER_API CEffectScript
-{
-public:
-
-	CEffectScript();
-	~CEffectScript();
-
-	bool	InitScript();
-	void	ReleaseScript();
-
-	bool LoadParamFromName( EFF_Param* pParam, const s_string& strName );
-
-	bool LoadParamFromName( Group_Param* pParam, const s_string& strName );
-
-
-public:
-	CScriptFile		m_cScript;
-	static	CEffectScript	m_cEffScript;
-};
-#else
-
 #include "EffParamRecord.h"
 #include "EffParamRecordStore.h"
 #include "GroupParamRecord.h"
 #include "GroupParamRecordStore.h"
 #include "AssetDatabase.h"
 #include "TableData.h"
-
-
-//////////////////////////////////////////////////////////////////////////
-
-//////////////////////////////////////////////////////////////////////////
 
 inline EFF_Param* GetEFFParam(int nTypeID)
 {
@@ -73,9 +24,7 @@ inline Group_Param* GetGroupParam(int nTypeID)
 	return GroupParamRecordStore::Instance()->Get(nTypeID);
 }
 
-#endif
-
-class MINDPOWER_API CMPEffectCtrl
+class CMPEffectCtrl
 {
 public:
 	CMPEffectCtrl(void);
@@ -142,7 +91,7 @@ inline  void	Part_dirlight(CMagicCtrl* pEffCtrl, void*	pParam);
 inline  void	Part_dist(CMagicCtrl* pEffCtrl, void*	pParam);
 inline  void	Part_dist2(CMagicCtrl* pEffCtrl, void*	pParam);
 
-class MINDPOWER_API CMagicCtrl// : public CMPEffectCtrl
+class CMagicCtrl// : public CMPEffectCtrl
 {
 public:
 	CMagicCtrl(void);

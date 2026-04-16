@@ -170,7 +170,7 @@ public:
 };
 
 
-class MINDPOWER_API CEffPath
+class CEffPath
 {
 public:
 	CEffPath(){	
@@ -328,7 +328,7 @@ public:
 	D3DXVECTOR3	m_SVerRota;
 };
 
-class  MINDPOWER_API  CMPModelEff// : public CEffectBase
+class   CMPModelEff// : public CEffectBase
 {
 public:
 	CMPModelEff(void);
@@ -741,7 +741,7 @@ struct Strip_Vertex
 };
 #define		STRIP_FVF	(D3DFVF_XYZ | D3DFVF_DIFFUSE | D3DFVF_TEX1)
 
-class MINDPOWER_API CMPStrip
+class CMPStrip
 {
 public:
 	CMPStrip();

@@ -12,7 +12,7 @@ typedef unsigned int ABGR;
 @remarks
 	40.01.0
 */
-class MINDPOWER_API MPColorValue
+class MPColorValue
 {
 public:
 	static MPColorValue Black;

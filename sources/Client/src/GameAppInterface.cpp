@@ -21,6 +21,8 @@
 #include "EventSoundRecordStore.h"
 #include "MusicRecordStore.h"
 #include "PoseRecordStore.h"
+#include "CharacterActionStore.h"
+#include "CharacterModelStore.h"
 #include "ChaCreateRecordStore.h"
 #include "MapRecordStore.h"
 #include "EventRecordStore.h"
@@ -40,6 +42,8 @@
 #include "ElfSkillRecordStore.h"
 #include "HelpInfoRecordStore.h"
 #include "AssetDatabase.h"
+
+#include "i_effect.h"
 
 #include "Character.h"
 #include "MPEditor.h"
@@ -99,7 +103,6 @@
 // add by mdr
 #include "NPCHelper.h"
 #include "MountRecordStore.h"
-#include "PoseDataStore.h"
 
 using namespace std;
 
@@ -1283,6 +1286,8 @@ void CGameApp::InitAllTable() {
 	EventSoundRecordStore::Instance()->Load(db);
 	MusicRecordStore::Instance()->Load(db);
 	PoseRecordStore::Instance()->Load(db);
+	CharacterActionStore::Instance()->Load(db);
+	CharacterModelStore::Instance()->Load(db);
 	ChaCreateRecordStore::Instance()->Load(db);
 	MapRecordStore::Instance()->Load(db);
 	EventRecordStore::Instance()->Load(db);
@@ -1315,7 +1320,6 @@ void CGameApp::InitAllTable() {
 	StoneRecordStore::Instance()->Load(db);
 	ElfSkillRecordStore::Instance()->Load(db);
 	HelpInfoRecordStore::Instance()->Load(db);
-	PoseDataStore::Instance()->Load(db);
 }
 
 void CGameApp::ReleaseAllTable() {

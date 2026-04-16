@@ -7,7 +7,7 @@
 #include "MPEffectMath.h"
 #include "MPEffQuaternion.h"
 
-class MINDPOWER_API MPEffVector3
+class MPEffVector3
 {
 public:
 	D3DXVECTOR3 m_vSelf;
