@@ -4,11 +4,7 @@
 #include "lwSysGraphics.h"
 #include <logutil.h>
 
-#include <cryptlib.h>
-#include <aes.h>
-#include <filters.h>
-#include <gcm.h>
-#include <files.h>
+#include "crypto_facade.h"
 
 #include <sys/stat.h>
 
@@ -200,15 +196,10 @@ std::string TextureManager::ResolveTexturePath(const char* filename) {
 		if (stat(path.c_str(), &st) == 0) {
 			const unsigned char key[] = {0x48,0x73,0x29,0xCA,0xBB,0x54,0xCF,0xB0,0xF4,0xBF,0x70,0xA0,0xAA,0x4B,0x12,0xF5};
 			const unsigned char iv[]  = {0x43,0x2a,0x46,0x29,0x4a,0x40,0x4e,0x63,0x52,0x66,0x55,0x6a,0x58,0x6e,0x32,0x72};
-			try {
-				CryptoPP::GCM<CryptoPP::AES>::Decryption d;
-				d.SetKeyWithIV(key, 16, iv, 16);
-				CryptoPP::FileSource(path.c_str(), true,
-					new CryptoPP::AuthenticatedDecryptionFilter(d,
-						new CryptoPP::FileSink(decPath.c_str())));
+			if (crypto::AesGcmDecryptFile(path, decPath, key, iv)) {
 				remove(path.c_str());
 				return decPath;
-			} catch (...) {}
+			}
 		}
 	}
 

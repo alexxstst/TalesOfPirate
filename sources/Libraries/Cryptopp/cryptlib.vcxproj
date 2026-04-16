@@ -161,6 +161,7 @@
     <ClCompile Include="bfinit.cpp" />
     <ClCompile Include="blake2.cpp" />
     <ClCompile Include="blake2s_simd.cpp" />
+    <ClCompile Include="crypto_facade.cpp" />
     <ClCompile Include="blake2b_simd.cpp" />
     <ClCompile Include="blowfish.cpp" />
     <ClCompile Include="blumshub.cpp" />
@@ -387,6 +388,7 @@
     <ClInclude Include="base64.h" />
     <ClInclude Include="basecode.h" />
     <ClInclude Include="blake2.h" />
+    <ClInclude Include="crypto_facade.h" />
     <ClInclude Include="blowfish.h" />
     <ClInclude Include="blumshub.h" />
     <ClInclude Include="camellia.h" />

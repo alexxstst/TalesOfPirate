@@ -43,12 +43,7 @@
 #include "uiequipform.h"
 #include "uirichedit.h"
 
-// Crypto++   UI  (AES-128-GCM)
-#include "cryptlib.h"
-#include "filters.h"
-#include "files.h"
-#include "gcm.h"
-#include "aes.h"
+#include "crypto_facade.h"
 #include <fstream>
 
 #include <Windows.h>  //Lark.li
@@ -222,20 +217,14 @@ static std::string ResolveImagePath(const std::string& originalPath) {
 	const unsigned char imgTableKey[] = { 0x48, 0x73, 0x29, 0xCA, 0xBB, 0x54, 0xCF, 0xB0, 0xF4, 0xBF, 0x70, 0xA0, 0xAA, 0x4B, 0x12, 0xF5 };
 	const unsigned char imgTableIV[] = { 0x43, 0x2a, 0x46, 0x29, 0x4a, 0x40, 0x4e, 0x63, 0x52, 0x66, 0x55, 0x6a, 0x58, 0x6e, 0x32, 0x72 };
 
-	try {
-		CryptoPP::GCM<CryptoPP::AES>::Decryption d;
-		d.SetKeyWithIV(imgTableKey, 16, imgTableIV, 16);
-		CryptoPP::FileSource(wsdPath.c_str(), true,
-			new CryptoPP::AuthenticatedDecryptionFilter(d,
-				new CryptoPP::FileSink(decPath.c_str())));
-
-		// Delete encrypted .wsd after successful decryption
-		remove(wsdPath.c_str());
-		return decPath;
-	} catch (...) {
+	if (!crypto::AesGcmDecryptFile(wsdPath, decPath, imgTableKey, imgTableIV)) {
 		ToLogService("lua", LogLevel::Error, "Failed to decrypt '{}'", wsdPath);
 		return originalPath;
 	}
+
+	// Delete encrypted .wsd after successful decryption
+	remove(wsdPath.c_str());
+	return decPath;
 }
 
 int UI_AddAllFormTemplete( int form_id )

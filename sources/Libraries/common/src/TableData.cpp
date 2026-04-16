@@ -1,5 +1,7 @@
 ﻿#include <TableData.h>
 
+#include "crypto_facade.h"
+
 BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 {
 
@@ -42,17 +44,8 @@ BOOL CRawDataSet::_LoadRawDataInfo_Bin(const char* pszFileName)
 	}
 	*/
 	
-	std::string sink;
-	CryptoPP::GCM<CryptoPP::AES>::Decryption d;
-	d.SetKeyWithIV(cluTableKey, 16, cluTableIV, 16);
+	std::string sink = crypto::AesGcmDecrypt(pbtResInfo, nSize, cluTableKey, cluTableIV);
 
-	
-	CryptoPP::AuthenticatedDecryptionFilter df(d, new CryptoPP::StringSink(sink), CryptoPP::AuthenticatedDecryptionFilter::DEFAULT_FLAGS, 12);
-	CryptoPP::StringSource ss(pbtResInfo, nSize, true, new CryptoPP::Redirector(df));
-
-	//if (sink.size() != nSize - 12) {
-	//	MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
-	//}
 	memset(pbtResInfo, 0, nSize);
 	memcpy(pbtResInfo, sink.c_str(), sink.size());
 
@@ -102,13 +95,9 @@ void CRawDataSet::_WriteRawDataInfo_Bin(const char* pszFileName)
 
 	}
 
-	CryptoPP::GCM<CryptoPP::AES>::Encryption e;
-	std::string sink;
-	std::string base64;
-	e.SetKeyWithIV(cluTableKey, 16, cluTableIV, 16);
-	CryptoPP::StringSource ss(buffer.get(), (size_t)(dwInfoSize * _nIDCnt), true, new CryptoPP::AuthenticatedEncryptionFilter(e, new CryptoPP::StringSink(sink), false, 12));
-	//CryptoPP::StringSource(sink, true, new CryptoPP::Base64Encoder(new CryptoPP::StringSink(base64), false));
-	fwrite(sink.c_str(), sizeof(char), (dwInfoSize*_nIDCnt) + 12, fp);
+	std::string sink = crypto::AesGcmEncrypt(buffer.get(), static_cast<size_t>(dwInfoSize) * _nIDCnt,
+											 cluTableKey, cluTableIV);
+	fwrite(sink.c_str(), sizeof(char), (dwInfoSize * _nIDCnt) + 12, fp);
 
 	//if (sink.size() != (dwInfoSize * _nIDCnt) + 12) {
 	//	MessageBox(NULL, szMsg, "Error", MB_OK | MB_ICONERROR);
