@@ -1,0 +1,19 @@
+Microsoft DirectX 9.0 SDK
+=========================
+
+Клиент использует компоненты DirectX 9 (Direct3D 9, DirectSound, DirectInput)
+от Microsoft. Runtime-компоненты DirectX распространяются по условиям
+Microsoft Software License Terms (EULA), поставляемого вместе с DirectX SDK /
+DirectX End-User Runtime Web Installer.
+
+Заголовки и библиотеки импорта (dxguid.lib, ddraw.lib, d3d9.lib и т.д.)
+входят в состав Windows SDK и DirectX SDK и могут использоваться для
+разработки приложений под Windows на условиях соответствующих лицензий
+Microsoft.
+
+End-User Runtime лицензия и условия распространения:
+https://www.microsoft.com/en-us/download/details.aspx?id=35
+
+В клиенте линковка статическая только для импортных заглушек; исполняемый
+код Direct3D поставляется системой Windows и/или пакетом DirectX End-User
+Runtime, устанавливаемым пользователем.

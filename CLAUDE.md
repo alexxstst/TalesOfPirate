@@ -150,6 +150,7 @@ Client: NetActorSkillRep → state->ServerEnd(sState) / NetFailedAction → Fail
 - **Platform**: Win32 only for C++ (no x64 configuration). .NET targets `net10.0`
 - **Client launch**: `Game.exe pKcfT0PcaX` (password argument required)
 - **F# compilation order**: File order matters in .fsproj — new files must be added in dependency order
+- **Лицензии сторонних компонентов**: при добавлении новой библиотеки, шрифта или иного стороннего ресурса в клиент — обязательно положить текст лицензии в `Client/licenses/` (шрифты — в `Client/licenses/fonts/`) и добавить запись в `Client/licenses/README.md`. Аналогично — при удалении компонента убрать соответствующий файл и строку из README.
 
 <!-- rtk-instructions v2 -->
 # RTK (Rust Token Killer) - Token-Optimized Commands

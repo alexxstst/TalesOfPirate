@@ -22,7 +22,7 @@
 | LuaBridge3 | header-only | MIT | [LuaBridge.txt](LuaBridge.txt) | https://github.com/kunitoki/LuaBridge3 |
 | Crypto++ | 8.4+ | Boost Software License 1.0 | [Cryptopp.txt](Cryptopp.txt) | https://www.cryptopp.com |
 | SDL | 1.2.7 | LGPL v2 | [SDL.txt](SDL.txt) | https://www.libsdl.org |
-| SDL_mixer | 1.2.x | LGPL v2 | [SDL_mixer.txt](SDL_mixer.txt) | https://www.libsdl.org/projects/SDL_mixer |
+| SDL_mixer | 1.2.x | zlib License | [SDL_mixer.txt](SDL_mixer.txt) | https://www.libsdl.org/projects/SDL_mixer |
 | Discord RPC | — | MIT | [Discord-RPC.txt](Discord-RPC.txt) | https://github.com/discord/discord-rpc |
 | DirectX (D3D9) | DX9 SDK | Microsoft EULA (редистрибутив) | [DirectX.txt](DirectX.txt) | Microsoft DirectX SDK |
 
@@ -34,12 +34,13 @@
 | Noto Sans | SIL OFL 1.1 | [fonts/NotoSans.txt](fonts/NotoSans.txt) | https://fonts.google.com/noto/specimen/Noto+Sans |
 | Open Sans | SIL OFL 1.1 | [fonts/OpenSans.txt](fonts/OpenSans.txt) | https://fonts.google.com/specimen/Open+Sans |
 | PT Sans | SIL OFL 1.1 | [fonts/PTSans.txt](fonts/PTSans.txt) | https://www.paratype.com/public/ |
-| Roboto | Apache License 2.0 | [fonts/Roboto.txt](fonts/Roboto.txt) | https://fonts.google.com/specimen/Roboto |
+| Roboto | Apache License 2.0 | [fonts/Roboto.txt](fonts/Roboto.txt) | https://github.com/googlefonts/roboto-2 |
 | Source Sans 3 | SIL OFL 1.1 | [fonts/SourceSans3.txt](fonts/SourceSans3.txt) | https://github.com/adobe-fonts/source-sans |
 
-## Важно про LGPL (SDL / SDL_mixer)
+## Важно про LGPL (SDL 1.2)
 
-SDL 1.2 и SDL_mixer распространяются по LGPL v2. Конечному пользователю должна
-быть обеспечена возможность заменить библиотеку на свою сборку — поэтому
-линковка выполняется динамически (через `SDL.dll` / `SDL_mixer.dll`) и
-лицензионный текст поставляется вместе с клиентом в этой папке.
+SDL 1.2 распространяется по LGPL v2. Конечному пользователю должна быть
+обеспечена возможность заменить библиотеку на свою сборку — поэтому линковка
+выполняется динамически (через `SDL.dll`), и полный текст LGPL поставляется
+вместе с клиентом в этой папке (`SDL.txt`). SDL_mixer 1.2 с официального
+репозитория libsdl-org — под zlib License (менее строгой, чем LGPL).
