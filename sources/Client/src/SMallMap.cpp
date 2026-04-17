@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "smallmap.h"
 #include "EffectObj.h"
 #include "SceneObj.h"
@@ -6,6 +7,8 @@
 #include "Character.h"
 #include "SceneObjRecordStore.h"
 #include "GameApp.h"
+#include "FontManager.h"
+#include "MPFont.h"
 #include "NetProtocol.h"
 #include "CharacterModel.h"
 #include "ChaClientAttr.h"
@@ -492,11 +495,11 @@ void	CSMallMap2D::InitScene()
 
 #ifdef MGR
 	//MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
-	if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A4R4G4B4)))
+	if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A8R8G8B8)))
 	{
 		ToLogService("errors", LogLevel::Error, "msgmapmask.bmp");
 	}
-	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\minimap\\mapsea.bmp", 0, D3DFMT_A4R4G4B4)))
+	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\minimap\\mapsea.bmp", 0, D3DFMT_A8R8G8B8)))
 	{
 		ToLogService("errors", LogLevel::Error, "msgmapsea.bmp");
 	}
@@ -653,7 +656,7 @@ void	CSMallMap2D::RenderScene()
 
 #ifdef MGR
 					lwLoadTex(&_pTex[n][m].pTex,g_Render.GetInterfaceMgr()->res_mgr, 
-						filename, 0, D3DFMT_A4R4G4B4);
+						filename, 0, D3DFMT_A8R8G8B8);
 #else
 					D3DXCreateTextureFromFileEx(m_pDev,
 						filename, //
@@ -1759,7 +1762,7 @@ void	CBigMap::Create()
 		{
 			sprintf(filename,"texture\\bigmap\\%d%d.bmp",m , n+1);
 			lwLoadTex(&_pTex[m * 4 + n],g_Render.GetInterfaceMgr()->res_mgr, 
-				filename, 0, D3DFMT_A4R4G4B4);
+				filename, 0, D3DFMT_A8R8G8B8);
 		}
 	}
 }
@@ -1870,10 +1873,10 @@ void	Ctemp::Render()
 {
 	if(!_pTex)
 	{
-		//_pTex = CGuiFont::s_Font.GetFont(0)->GetTexture(); //g_pGameApp->GetFont()->GetTexture();
+		//_pTex = ui::GetFont(0)->GetTexture(); //FontManager::Instance().Get(FontSlot::TipText)->GetTexture();
 
 		lwLoadTex(&_pTex,g_Render.GetInterfaceMgr()->res_mgr, 
-			"texture\\ui\\minimap\\mapmask.bmp", 0, D3DFMT_A4R4G4B4);
+			"texture\\ui\\minimap\\mapmask.bmp", 0, D3DFMT_A8R8G8B8);
 	}
 		
 
@@ -1917,11 +1920,11 @@ void	CMinimap::InitScene()
 {
 	MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 
-	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A4R4G4B4)))
+	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\minimap\\mapmask.bmp", 0, D3DFMT_A8R8G8B8)))
 	//{
 	//	LG("ERROR","msgmapmask.bmp");
 	//}
-	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A4R4G4B4)))
+	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A8R8G8B8)))
 	{
 		ToLogService("errors", LogLevel::Error, "msgmapsea.bmp");
 	}
@@ -2115,7 +2118,7 @@ void	CMinimap::RenderScene()
 //					_pTex[n][m].ReleaseTex();
 //
 //					lwLoadTex(&_pTex[n][m].pTex,g_Render.GetInterfaceMgr()->res_mgr, 
-//						filename, 0, D3DFMT_A4R4G4B4);
+//						filename, 0, D3DFMT_A8R8G8B8);
 //					if(_pTex[n][m].pTex)
 //					{
 //						_pTex[n][m].x	= _sx + n;
@@ -2185,7 +2188,7 @@ void	CMinimap::RenderScene()
 							_pTex[n][m].ReleaseTex();
 
 							lwLoadTex(&_pTex[n][m].pTex,g_Render.GetInterfaceMgr()->res_mgr, 
-								filename, 0, D3DFMT_A4R4G4B4);
+								filename, 0, D3DFMT_A8R8G8B8);
 							if(_pTex[n][m].pTex)
 							{
 								_pTex[n][m].x	= _sx + n;
@@ -2433,11 +2436,11 @@ void	CLargerMap::InitScene()
 {
 	MPIResourceMgr* res_mgr = g_Render.GetInterfaceMgr()->res_mgr;
 
-	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A4R4G4B4)))
+	if(FAILED(lwLoadTex(&_pTexDefault,res_mgr, "texture\\ui\\minimap\\mapsea.bmp", 0, D3DFMT_A8R8G8B8)))
 	{
 		ToLogService("errors", LogLevel::Error, "msgmapsea.bmp");
 	}
-	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\ui\\minimap\\mask.tga", 0, D3DFMT_A4R4G4B4)))
+	//if(FAILED(lwLoadTex(&_pTexMask,res_mgr, "texture\\ui\\minimap\\mask.tga", 0, D3DFMT_A8R8G8B8)))
 	//{
 	//	LG("ERROR","msgmask.tga");
 	//}
@@ -2718,7 +2721,7 @@ void	CLargerMap::Update( int x, int y )
 								SAFE_RELEASE( _pTex[idx] );
 							}
 							lwLoadTex(&_pTex[idx],g_Render.GetInterfaceMgr()->res_mgr, 
-								filename, 0, D3DFMT_A4R4G4B4);
+								filename, 0, D3DFMT_A8R8G8B8);
 						}
 					}
 				}
@@ -2981,7 +2984,7 @@ void	CLargerMap::RenderScene()
 	_cSmNpc.setColor(0xffffffff);
 	_cSmNpc.Render();
 
-	CMPFont* pfont = g_pGameApp->GetFont();
+	CMPFont* pfont = FontManager::Instance().Get(FontSlot::TipText);
 	if(pfont)
 	{
 		pfont->DrawTextShadow((char*)strMapName.c_str(),_rcWnd.left + 60,_rcWnd.top + 30,

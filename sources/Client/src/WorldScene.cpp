@@ -103,7 +103,6 @@ CWorldScene::~CWorldScene()
     {
         delete[] _pAnimLightSeq;
     }
-	_cFont.ReleaseFont();
 }
 
 BOOL CWorldScene::_LoadAnimLight()
@@ -216,13 +215,6 @@ bool CWorldScene::_Init()
             }
 		}
 	}
-
-#ifdef USE_RENDER
-	_cFont.CreateFont(&g_Render,const_cast<char*>(GetLanguageString(66).c_str()));
-#else
-	_cFont.CreateFont(g_Render.GetDevice(),const_cast<char*>(GetLanguageString(66).c_str()));
-#endif
-	_cFont.BindingRes(&ResMgr);
 
 	CFormMgr::s_Mgr.SetEnabled( true );
 	

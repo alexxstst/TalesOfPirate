@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uiitemcommand.h"
 #include "ItemRecord.h"
 #include "uicompent.h"
@@ -147,9 +148,9 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 		item.Convert(_ItemData, _pItem);
 		sprintf(buf, "Lv%d", item.sEnergy[1]);
 		static int w, h;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 		GetRender().FillFrame(x + xOffset, y + h + 8 + yOffset, x + w + xOffset, y + h + h + 8 + yOffset, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, x + xOffset, y + h + 8 + yOffset, COLOR_BLACK);
+		ui::Render(buf, x + xOffset, y + h + 8 + yOffset, COLOR_BLACK);
 	}
 
 	bool renderText = false;
@@ -197,15 +198,15 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 	if (renderText) {
 		static int w, h;
 		static int xNum, yNum;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 		xNum = nX + ITEM_WIDTH - w;
 		yNum = nY + ITEM_HEIGHT - h;
 		GetRender().FillFrame(xNum, yNum, xNum + w, yNum + h, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, xNum, yNum, COLOR_BLACK);
+		ui::Render(buf, xNum, yNum, COLOR_BLACK);
 	}
 
 
-	CGuiFont::s_Font.GetSize(_pItem->szName.c_str(), w, h);
+	ui::GetSize(_pItem->szName.c_str(), w, h);
 	if (w > nWidth) {
 		static char szBuf1[128] = {0};
 		static char szBuf2[128] = {0};
@@ -221,14 +222,14 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 		szBuf1[nEnter] = '\0';
 		strncpy(szBuf2, _pItem->szName.c_str() + nEnter, sizeof(szBuf2));
 
-		CGuiFont::s_Font.GetSize(szBuf1, w, h);
-		CGuiFont::s_Font.Render(szBuf1, x + (nWidth - w) / 2, nY - h - h - 2, COLOR_BLACK);
+		ui::GetSize(szBuf1, w, h);
+		ui::Render(szBuf1, x + (nWidth - w) / 2, nY - h - h - 2, COLOR_BLACK);
 
-		CGuiFont::s_Font.GetSize(szBuf2, w, h);
-		CGuiFont::s_Font.Render(szBuf2, x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
+		ui::GetSize(szBuf2, w, h);
+		ui::Render(szBuf2, x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
 	}
 	else {
-		CGuiFont::s_Font.Render(_pItem->szName.c_str(), x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
+		ui::Render(_pItem->szName.c_str(), x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
 	}
 
 	if (_nPrice > 2000000000) {
@@ -246,8 +247,8 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 	else {
 		sprintf(buf, "$%s", StringSplitNum(_nPrice));
 	}
-	CGuiFont::s_Font.GetSize(buf, w, h);
-	CGuiFont::s_Font.Render(buf, x + (nWidth - w) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK);
+	ui::GetSize(buf, w, h);
+	ui::Render(buf, x + (nWidth - w) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK);
 }
 
 void CItemCommand::Render(int x, int y) {
@@ -274,30 +275,30 @@ void CItemCommand::Render(int x, int y) {
 
 		sprintf(buf, "Lv%d", item.sEnergy[1]);
 		static int w, h;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 
 		GetRender().FillFrame(x, y + h + 8, x + w, y + h + h + 8, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, x, y + h + 8, COLOR_BLACK);
+		ui::Render(buf, x, y + h + 8, COLOR_BLACK);
 	}
 
 	if (_ItemData.dwDBID) {
 		sprintf(buf, "Lock");
 		static int w, h;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 
 		GetRender().FillFrame(x, y, x + w, y + h, 0xAA000000);
-		CGuiFont::s_Font.Render(buf, x, y, 0xFFFFA500);
+		ui::Render(buf, x, y, 0xFFFFA500);
 	}
 
 	if (_ItemData.sNum > 1) {
 		sprintf(buf, "%d", _ItemData.sNum);
 		static int w, h;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 
 		x += ITEM_WIDTH - w;
 		y += ITEM_HEIGHT - h;
 		GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, x, y, COLOR_BLACK);
+		ui::Render(buf, x, y, COLOR_BLACK);
 	}
 
 	// rendering forge level on icons
@@ -308,12 +309,12 @@ void CItemCommand::Render(int x, int y) {
 			if (Forge.nLevel > 0) {
 				sType != 26 && sType != 25 ? sprintf(buf, "EQP+%d", Forge.nLevel) : sprintf(buf, "+%d", Forge.nLevel);
 				static int w, h;
-				CGuiFont::s_Font.GetSize(buf, w, h);
+				ui::GetSize(buf, w, h);
 
 				x += ITEM_WIDTH - w;
 				y += ITEM_HEIGHT - h;
 				GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-				CGuiFont::s_Font.Render(buf, x, y, COLOR_BLACK);
+				ui::Render(buf, x, y, COLOR_BLACK);
 			}
 		}
 		/*
@@ -328,11 +329,11 @@ void CItemCommand::Render(int x, int y) {
 			sType != 26 && Forge.nLevel == 0) {
 			sprintf(buf, "EQP");
 			static int w, h;
-			CGuiFont::s_Font.GetSize(buf, w, h);
+			ui::GetSize(buf, w, h);
 			x += ITEM_WIDTH - w;
 			y += ITEM_HEIGHT - h;
 			GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-			CGuiFont::s_Font.Render(buf, x, y, COLOR_BLACK);
+			ui::Render(buf, x, y, COLOR_BLACK);
 		}
 	}
 
@@ -350,23 +351,23 @@ void CItemCommand::Render(int x, int y) {
 
 		sprintf(buf, "Lv%d", nLevel);
 		static int w, h;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 
 		x += ITEM_WIDTH - w;
 		y += ITEM_HEIGHT - h;
 		GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, x, y, COLOR_BLACK);
+		ui::Render(buf, x, y, COLOR_BLACK);
 	}
 
 	//render "App" on apparels.
 	if (_ItemData.sEndure[1] == 25000 && _ItemData.sEnergy[1] == 0) {
 		sprintf(buf, "App");
 		static int w, h;
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 		x += ITEM_WIDTH - w;
 		y += ITEM_HEIGHT - h;
 		GetRender().FillFrame(x, y, x + w, y + h, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, x, y, COLOR_BLACK);
+		ui::Render(buf, x, y, COLOR_BLACK);
 	}
 }
 
@@ -381,15 +382,15 @@ void CItemCommand::OwnDefRender(int x, int y, int nWidth, int nHeight) {
 	if (_ItemData.sNum >= 0) {
 		static int xNum, yNum;
 		sprintf(buf, "%d", _ItemData.sNum);
-		CGuiFont::s_Font.GetSize(buf, w, h);
+		ui::GetSize(buf, w, h);
 
 		xNum = nX + ITEM_WIDTH - w;
 		yNum = nY + ITEM_HEIGHT - h;
 		GetRender().FillFrame(xNum, yNum, xNum + w, yNum + h, 0xE0ADF6F7);
-		CGuiFont::s_Font.Render(buf, xNum, yNum, COLOR_BLACK);
+		ui::Render(buf, xNum, yNum, COLOR_BLACK);
 	}
 
-	CGuiFont::s_Font.GetSize(_pItem->szName.c_str(), w, h);
+	ui::GetSize(_pItem->szName.c_str(), w, h);
 	if (w > nWidth) {
 		static char szBuf1[128] = {0};
 		static char szBuf2[128] = {0};
@@ -405,18 +406,18 @@ void CItemCommand::OwnDefRender(int x, int y, int nWidth, int nHeight) {
 		szBuf1[nEnter] = '\0';
 		strncpy(szBuf2, _pItem->szName.c_str() + nEnter, sizeof(szBuf2));
 
-		CGuiFont::s_Font.GetSize(szBuf1, w, h);
-		CGuiFont::s_Font.Render(szBuf1, x + (nWidth - w) / 2, nY - h - h - 2, COLOR_BLACK);
+		ui::GetSize(szBuf1, w, h);
+		ui::Render(szBuf1, x + (nWidth - w) / 2, nY - h - h - 2, COLOR_BLACK);
 
-		CGuiFont::s_Font.GetSize(szBuf2, w, h);
-		CGuiFont::s_Font.Render(szBuf2, x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
+		ui::GetSize(szBuf2, w, h);
+		ui::Render(szBuf2, x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
 	}
 	else {
-		CGuiFont::s_Font.Render(_pItem->szName.c_str(), x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
+		ui::Render(_pItem->szName.c_str(), x + (nWidth - w) / 2, nY - h - 2, COLOR_BLACK);
 	}
 
-	CGuiFont::s_Font.GetSize(_OwnDefText.c_str(), w, h);
-	CGuiFont::s_Font.Render(_OwnDefText.c_str(), x + (nWidth - w) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK);
+	ui::GetSize(_OwnDefText.c_str(), w, h);
+	ui::Render(_OwnDefText.c_str(), x + (nWidth - w) / 2, nY + ITEM_HEIGHT + 2, COLOR_BLACK);
 }
 
 void CItemCommand::RenderEnergy(int x, int y) {

@@ -1,5 +1,6 @@
 ﻿#include "StdAfx.h"
 
+#include "UIText.h"
 #include "StringLib.h"
 #include "uiformmgr.h"
 #include "uiedit.h"
@@ -868,7 +869,7 @@ void CFormMgr::ShowDebugInfo()
 		if (_IsDrawFrameInDebugMode)
 		{
 			GetRender().LineFrame((*it)->GetLeft(),(*it)->GetTop(),(*it)->GetRight(),(*it)->GetBottom(),frameColor);
-			CGuiFont::s_Font.Render((*it)->GetName(),(*it)->GetLeft(),(*it)->GetTop(),~frameColor);
+			ui::Render((*it)->GetName(),(*it)->GetLeft(),(*it)->GetTop(),~frameColor);
 		}
 	}
 
@@ -891,8 +892,8 @@ void CFormMgr::ShowDebugInfo()
 	}
 
 	GetRender().FillFrame(0,16,600,27);
-	//CGuiFont::s_Font.Render("ID                                                 ",0,16,COLOR_WHITE);
-	CGuiFont::s_Font.Render(GetLanguageString(575).c_str(),0,16,COLOR_WHITE);
+	//ui::Render("ID                                                 ",0,16,COLOR_WHITE);
+	ui::Render(GetLanguageString(575).c_str(),0,16,COLOR_WHITE);
 	for( i=0;i<(int)_forms->size();i++ )
 	{
 		//pForm = *it;
@@ -924,7 +925,7 @@ void CFormMgr::ShowDebugInfo()
 		{
 			GetRender().FillFrame(0,30+i*11,600,41+i*11);
 		}
-		CGuiFont::s_Font.Render(buf,0,30+i*11,color);
+		ui::Render(buf,0,30+i*11,color);
 	}
 	//delete[] pInfo;
 	SAFE_DELETE_ARRAY(pInfo); // UI
@@ -945,15 +946,15 @@ void CFormMgr::ShowDebugInfo()
 	data6=(int)_modal.size();					//
 	data7=(int)CGuiTime::_times.size();
 	FmtLang(buf, sizeof(buf), GetLanguageString(576), data0, data1, data2, data3, data4, data5, data6, data7, totalTick);
-	GetRender().FillFrame(0,0,CGuiFont::s_Font.GetWidth(buf),11);
-	CGuiFont::s_Font.Render(buf,0,0,COLOR_WHITE);
+	GetRender().FillFrame(0,0,ui::GetWidth(buf),11);
+	ui::Render(buf,0,0,COLOR_WHITE);
 	int help_sx=620;
 	int help_sy=160;
 	if (_IsDrawBackgroundInDebugMode)
 	{
 		GetRender().FillFrame(help_sx,help_sy,785,511);
 	}
-	CGuiFont::s_Font.Render("      UI\n1.:\n  show \n2.:\n  hide \n3./\n  frame 1 //\n  frame 0 //\n3.\n  background 1 //\n  background 0 //",help_sx,help_sy,COLOR_WHITE);
+	ui::Render("      UI\n1.:\n  show \n2.:\n  hide \n3./\n  frame 1 //\n  frame 0 //\n3.\n  background 1 //\n  background 0 //",help_sx,help_sy,COLOR_WHITE);
 }
 
 

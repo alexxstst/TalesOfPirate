@@ -304,7 +304,7 @@ CMiniPack::CMiniPack()
 	texInfo.type = TEX_TYPE_DATA;
 	texInfo.usage = 0;
 	texInfo.level = 1;
-	texInfo.format = D3DFMT_A4R4G4B4;
+	texInfo.format = D3DFMT_A8R8G8B8;
 	texInfo.pool = D3DPOOL_MANAGED;
 }
 

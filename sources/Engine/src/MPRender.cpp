@@ -345,35 +345,25 @@ int MPRender::ToggleFullScreen()
 
 int MPRender::InitMPTextureSetFormat()
 {
-    // begin init texture format which was used in MPTextureSet.cpp
+    // Форматы текстур для TextureManager:
+    //   _TexSetFmt[0] — без альфы (сцена/мир, .tga без альфа-канала)
+    //   _TexSetFmt[1] — с альфой (UI, .tga с альфой)
+    //
+    // На всех современных GPU A8R8G8B8/X8R8G8B8 поддерживаются нативно.
+    // Раньше был fallback на A4R4G4B4/R5G6B5 для старых видеокарт —
+    // удалён, так как 16-bit форматы дают ступенчатую альфу и, как правило,
+    // всё равно эмулируются через 32-bit драйвером.
+    if(LW_FAILED(_IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_A8R8G8B8)))
     {
-        D3DFORMAT alpha_fmt = D3DFMT_A8R8G8B8;
-
-__check_it:
-        LW_RESULT ret = _IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, alpha_fmt);
-        if(LW_FAILED(ret))
-        {
-            if(ret == ERR_INVALID_PARAM)
-            {
-                return 0;
-            }
-            else
-            {
-                if(alpha_fmt == D3DFMT_A4R4G4B4)
-                {
-                    return 0;
-                }
-
-                alpha_fmt = D3DFMT_A4R4G4B4;
-                goto __check_it;
-            }
-        }
-
-        _TexSetFmt[0] = D3DFMT_R5G6B5;
-        _TexSetFmt[1] = alpha_fmt;
+        return 0;
     }
-    // end
+    if(LW_FAILED(_IMgr.dev_obj->CheckCurrentDeviceFormat(BBFI_TEXTURE, D3DFMT_X8R8G8B8)))
+    {
+        return 0;
+    }
 
+    _TexSetFmt[0] = D3DFMT_X8R8G8B8; // 32-bit без альфы
+    _TexSetFmt[1] = D3DFMT_A8R8G8B8; // 32-bit с альфой
     return 1;
 }
 

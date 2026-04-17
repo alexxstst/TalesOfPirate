@@ -1,5 +1,6 @@
 ﻿#include "stdafx.h"
 
+#include "UIText.h"
 #include "SelectChaScene.h"
 
 #include "GameApp.h"
@@ -446,7 +447,7 @@ void CSelectChaScene::_RenderUI()
 			name = std::string(blanks, ' ') + name;
 		}
 
-		CGuiFont::s_Font.TipRender((name + "\n" + description).c_str(),
+		ui::TipRender((name + "\n" + description).c_str(),
 			cha.iFontX, cha.iFontY);
 	}
 }

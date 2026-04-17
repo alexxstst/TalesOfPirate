@@ -33,6 +33,12 @@ namespace ui
 #define  HLSIZE 0
 #define  ASSIZE 0
 
+void CMPFont::_ApplyFontSampler()
+{
+	_pDev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_POINT);
+	_pDev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_POINT);
+}
+
 CMPFont::CMPFont() : _hDc(NULL), _hBmp(NULL), _hFont(NULL),_hBmpOld(NULL),_hFontOld(NULL),
 _Max(0), _RowNum(0), _pBits(NULL), 
 _TextSize(0), _TextureSize(0),
@@ -87,20 +93,11 @@ bool CMPFont::CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char szFontName[], int n
 	}
 	::SetMapMode( _hDc, MM_TEXT );
 
-	_bWidthEqual = true;
-	SIZE size1, size2;
-	::GetTextExtentPoint(_hDc,"a",1,&size1);
-	::GetTextExtentPoint(_hDc,"i",1,&size2);
-	if( size1.cx != size2.cx )
-	{
-		_bWidthEqual = false;
-	}
-
 	SIZE size;
 	::GetTextExtentPoint(_hDc,"",1,&size);
 
 	_TextSize	 = /*size.cy;//*/	nSize;//
-	_TextureSize = 32 << nLevel;		
+	_TextureSize = 32 << nLevel;
 
 	_RowNum = _TextureSize / _TextSize;	
 	_Max = _RowNum * _RowNum;
@@ -115,7 +112,10 @@ bool CMPFont::CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char szFontName[], int n
 
 	LOGFONT LogFont;
 	ZeroMemory( &LogFont, sizeof(LogFont) );
-	LogFont.lfHeight			= -_TextSize;
+	// Положительное lfHeight = cell height (включает ascent+descent).
+	// Отрицательное даёт character height = только capitals, и descender (g/p/y/j)
+	// выходит за DIB размером _TextSize и срезается.
+	LogFont.lfHeight			= _TextSize;
 	LogFont.lfWidth				= 0;
 	LogFont.lfEscapement		= 0;
 	LogFont.lfOrientation		= 0;
@@ -164,6 +164,15 @@ bool CMPFont::CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char szFontName[], int n
 	SetBkColor( _hDc, 0x00000000 );
 	SetTextAlign( _hDc, TA_TOP );
 
+	// Детектируем пропорциональный шрифт через TEXTMETRIC. Сравнение "a" vs "i"
+	// через GetTextExtentPoint давало false-positive на некоторых шрифтах из-за
+	// round-off в MM_TEXT.
+	{
+		TEXTMETRIC tm;
+		::GetTextMetrics(_hDc, &tm);
+		_bWidthEqual = (tm.tmAveCharWidth == tm.tmMaxCharWidth);
+	}
+
 	lwIResourceMgr* res_mgr = _pDev->GetInterfaceMgr()->res_mgr;
 
 	// begin
@@ -201,7 +210,7 @@ bool CMPFont::CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char szFontName[], int n
 	info.type = TEX_TYPE_SIZE;
 	info.level = 1;
 	info.usage = 0;
-	info.format = D3DFMT_A4R4G4B4;
+	info.format = D3DFMT_A8L8;
 	info.pool = D3DPOOL_MANAGED;
 	info.colorkey_type = COLORKEY_TYPE_NONE;
 	info.width = _TextureSize;
@@ -227,7 +236,7 @@ bool CMPFont::CreateFont( LPDIRECT3DDEVICE8 pd3dDevice, char szFontName[], int n
 	info.type = TEX_TYPE_SIZE;
 	info.level = 1;
 	info.usage = 0;
-	info.format = D3DFMT_A4R4G4B4;
+	info.format = D3DFMT_A8L8;
 	info.pool = D3DPOOL_MANAGED;
 	info.colorkey_type = COLORKEY_TYPE_NONE;
 	info.width = _TextureSizeFast;
@@ -378,23 +387,21 @@ bool CMPFont::TextToTexture( char c1, char c2, float & tX, float & tY )
 		D3DLOCKED_RECT d3dlr;
 
 		_pTex->GetTex()->LockRect(0, &d3dlr, NULL, 0);
-		BYTE * pDstRow = (BYTE*)( (WORD *)d3dlr.pBits + (int)tY * _TextureSize + (int)tX );
+		// D3DFMT_A8L8 — 2 байта/пиксель: младший байт = luminance (white=0xFF),
+		// старший = alpha (полные 8 бит без квантования).
+		BYTE * pDstRow = (BYTE*)d3dlr.pBits + (int)tY * d3dlr.Pitch + (int)tX * 2;
 
 		for (WORD y=0; y < _TextSize; y++)
 		{
-			WORD * pDst16 = (WORD*)pDstRow;
+			WORD * pDst16 = reinterpret_cast<WORD*>(pDstRow);
 
 			for (WORD x=0; x<_TextSize; x++)
 			{
-				BYTE bAlpha = (BYTE)((_pBits[_TextSize * y + x] & 0xff) >> 4);
-				if (bAlpha > 0)
-				{
-					*pDst16 = (bAlpha << 12) | 0x0fff;
-				}
-				else
-					*pDst16 = 0x0000;
-
-				pDst16++;
+				// GDI DIB 32-bit: BGRA, текст белый на чёрном — B = intensity.
+				const BYTE bAlpha = (BYTE)(_pBits[_TextSize * y + x] & 0xff);
+				*pDst16++ = bAlpha > 0
+					? static_cast<WORD>((bAlpha << 8) | 0xFF)
+					: 0u;
 			}
 			pDstRow += d3dlr.Pitch;
 		}
@@ -410,6 +417,8 @@ bool CMPFont::TextToTexture( char c1, char c2, float & tX, float & tY )
 }
 void CMPFont::DrawTextClipOnce(char* szText, int nLen, LPRECT psrc, LPRECT pclip,D3DXCOLOR color)
 {
+	_ApplyFontSampler();
+
 	int x,y;
 	float sx = 0, sy = 0,
 		offset=0, w=0, h=0, tx1=0, ty1=0, tx2=0, ty2=0;
@@ -782,6 +791,8 @@ bool CMPFont::DrawText( char* szText, int x, int y, D3DXCOLOR color,  float fSca
 	if(!_pTexFast || !_pTexFast->IsLoadingOK())
 		return false;
 
+	_ApplyFontSampler();
+
 	ui::UIClip* pCliper = ui::UIClip::Instance();
 	if(pCliper->GetClipState())
 	{
@@ -995,6 +1006,8 @@ void  CMPFont::RenderOptimize(int iIdx)
 }
 void CMPFont::RenderDrawOptimize(int iIdx)
 {
+	_ApplyFontSampler();
+
 	MPFontRect *prc = &_vecFontRect[iIdx];
 	_pDev->SetVertexShader(NULL);
 	_pDev->SetFVF( D3DFVF_FONT );
@@ -1005,7 +1018,7 @@ void CMPFont::RenderDrawOptimize(int iIdx)
 		_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, prc->iAshNum, &prc->_vecAsh.front(),sizeof(FONT_VER));
 	}
 	if(prc->iHslNum)
-	{	
+	{
 		_pDev->SetTexture( 0, _pTex->GetTex() );
 		_pDev->GetDevice()->DrawPrimitiveUP(D3DPT_TRIANGLELIST, prc->iHslNum, &prc->_vecHsl.front(),sizeof(FONT_VER));
 	}
@@ -1092,6 +1105,8 @@ void  CMPFont::RenderOptimize(int iIdx)
 
 void CMPFont::RenderDrawOptimize(int iIdx)
 {
+	_ApplyFontSampler();
+
 	MPFontRect *prc = &_vecFontRect[iIdx];
 	D3DXCOLOR color = prc->dwColor;
 	_pDev->SetVertexShaderConstant(8, &color, 1);
@@ -1193,7 +1208,7 @@ void CMPFont::EndClip()
 
 void CMPFont::Draw(char* szText, int x, int y, D3DXCOLOR color)
 {
-	
+
 	int nLen = lstrlen( szText );
 	if( !szText||nLen == 0)
 		return;
@@ -1201,6 +1216,8 @@ void CMPFont::Draw(char* szText, int x, int y, D3DXCOLOR color)
 		return;
 	if(!_pTexFast || !_pTexFast->IsLoadingOK())
 		return;
+
+	_ApplyFontSampler();
 	ui::UIClip* pCliper = ui::UIClip::Instance();
 	if(pCliper->GetClipState())
 	{
@@ -1389,12 +1406,14 @@ bool CMPFont::DrawTextShadow( char* szText, int x1, int y1, int x2, int y2,
 
 bool CMPFont::Draw3DText(char* szText,D3DXVECTOR3& vPos, D3DXCOLOR color,float fScale)
 {
-	if( !szText) 
+	if( !szText)
 		return false;
 	if(!_pTex || !_pTex->IsLoadingOK())
 		return false;
 	if(!_pTexFast || !_pTexFast->IsLoadingOK())
 		return false;
+
+	_ApplyFontSampler();
 
 #ifdef USE_RENDER
 	if( _lpCurTex )
@@ -1689,18 +1708,17 @@ skip:
 #else
 			_pTexFast->LockRect(0, &d3dlr, NULL, D3DLOCK_NOSYSLOCK);
 #endif
-			BYTE * pDstRow = (BYTE*)( (WORD *)d3dlr.pBits + (int)tY * _TextureSizeFast + (int)tX );
+			BYTE * pDstRow = (BYTE*)d3dlr.pBits + (int)tY * d3dlr.Pitch + (int)tX * 2;
 
 			for (WORD y=0; y < _TextSize; y++)
 			{
-				WORD * pDst16 = (WORD*)pDstRow;
+				WORD * pDst16 = reinterpret_cast<WORD*>(pDstRow);
 				for (WORD x=0; x<_TextSize; x++)
 				{
-					BYTE bAlpha = (BYTE)((_pBits[_TextSize * y + x] & 0xff) >> 4);
-					if (bAlpha > 0)
-						*pDst16++ = (bAlpha << 12) | 0x0fff;
-					else
-						*pDst16++ = 0x0000;
+					const BYTE bAlpha = (BYTE)(_pBits[_TextSize * y + x] & 0xff);
+					*pDst16++ = bAlpha > 0
+						? static_cast<WORD>((bAlpha << 8) | 0xFF)
+						: 0u;
 				}
 				pDstRow += d3dlr.Pitch;
 			}

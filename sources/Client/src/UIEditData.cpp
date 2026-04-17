@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uieditdata.h"
 #include "uieditstrategy.h"
 #include "uifont.h"
@@ -31,7 +32,7 @@ void CEditTextObj::Parse( CEditStrategy* pParse )
 //---------------------------------------------------------------------------
 void CEditChar::InvertRedner( int x, int y )
 {
-	CGuiFont::s_Font.Render( GetFont(), _szChar, x, y, COLOR_RED );
+	ui::Render( GetFont(), _szChar, x, y, COLOR_RED );
 }
 
 void CEditChar::SetWord( char c1,char c2 )
@@ -39,7 +40,7 @@ void CEditChar::SetWord( char c1,char c2 )
 	_szChar[0]=c1; 
 	_szChar[1]=c2;		
 	int nHeight;
-	CGuiFont::s_Font.GetSize( GetFont(), _szChar, _nWidth, nHeight );
+	ui::GetSize( GetFont(), _szChar, _nWidth, nHeight );
 }
 
 //---------------------------------------------------------------------------
@@ -60,12 +61,12 @@ CEditSentence::CEditSentence()
 
 void CEditSentence::Render()
 {
-	CGuiFont::s_Font.Render( GetFont(), _szString.c_str(), _nX, _nY, GetColor() );
+	ui::Render( GetFont(), _szString.c_str(), _nX, _nY, GetColor() );
 }
 
 void CEditSentence::GetSize( int& w, int& h )
 {
-	CGuiFont::s_Font.GetSize( GetFont(), _szString.c_str(), w, h );
+	ui::GetSize( GetFont(), _szString.c_str(), w, h );
 }
 //---------------------------------------------------------------------------
 // class CEditArticle
@@ -113,7 +114,7 @@ void CEditArticle::Render()
 
 	char szBuf[10];
 	sprintf( szBuf, "%d, %d, %d", _nCursor, _nSelStart, _nSelEnd );
-	CGuiFont::s_Font.Render( szBuf, 100, 100, COLOR_BLACK );
+	ui::Render( szBuf, 100, 100, COLOR_BLACK );
 }
 
 bool CEditArticle::_AddObj( CEditObj* pObj )

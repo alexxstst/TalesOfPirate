@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uiimeinput.h"
 #include "GameApp.h"
 #include "GameConfig.h"
@@ -129,12 +130,12 @@ void CImeInput::Render()
     }
 
 	_pImage->Render( _nShowX, _nShowY );
-	CGuiFont::s_Font.Render( _strImmName, _nShowX + 7, _nShowY + 7, _ImmNameColor );
-    CGuiFont::s_Font.Render( _strInput, _nShowX + 40, _nShowY + 7, _ImmNameColor );
-    CGuiFont::s_Font.Render( _strSBC, _nShowX + 61, _nShowY + 7, _ImmNameColor );
-    CGuiFont::s_Font.Render( _strInterpunction, _nShowX + 82, _nShowY + 7, _ImmNameColor );
-	CGuiFont::s_Font.Render( _strComposition, _nShowX + 7, _nShowY + 25, _ImmNameColor );
-	CGuiFont::s_Font.Render( _strCandidate, _nShowX, _nShowY + 50, _ImmNameColor );
+	ui::Render( _strImmName, _nShowX + 7, _nShowY + 7, _ImmNameColor );
+    ui::Render( _strInput, _nShowX + 40, _nShowY + 7, _ImmNameColor );
+    ui::Render( _strSBC, _nShowX + 61, _nShowY + 7, _ImmNameColor );
+    ui::Render( _strInterpunction, _nShowX + 82, _nShowY + 7, _ImmNameColor );
+	ui::Render( _strComposition, _nShowX + 7, _nShowY + 25, _ImmNameColor );
+	ui::Render( _strCandidate, _nShowX, _nShowY + 50, _ImmNameColor );
 }
 
 bool CImeInput::_GetCompositionString( char* str, DWORD ImeValue )

@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uititle.h"
 #include "gameapp.h"
 using namespace std;
@@ -52,7 +53,7 @@ void CTitle::Render()
 		_pImage->FrameRender( enumLeft, _posx[enumLeft], _posy );
 		_pImage->FrameRender( enumRight, _posx[enumRight], _posy );
 
-	    CGuiFont::s_Font.Render( _nFontIndex, (char*)_strCaption.c_str(), _posx[enumCenter], _posfonty, ( _alpha << 24 ) | (_dwColor &  0x00FFFFFF) );
+	    ui::Render( _nFontIndex, (char*)_strCaption.c_str(), _posx[enumCenter], _posfonty, ( _alpha << 24 ) | (_dwColor &  0x00FFFFFF) );
 	}
 }
 
@@ -64,7 +65,7 @@ void CTitle::SetCaption( const char * str )
 	_alpha = 255;
 
 	int w, h;
-	CGuiFont::s_Font.GetSize( _nFontIndex, _strCaption.c_str(), w, h );   
+	ui::GetSize( _nFontIndex, _strCaption.c_str(), w, h );   
 
 	int picWidth = _pImage->GetWidth();
 	_posx[enumLeft] = ( g_pGameApp->GetWindowWidth() - w ) / 2 - picWidth;

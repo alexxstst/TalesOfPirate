@@ -426,7 +426,7 @@ LW_RESULT lwTex::LoadTexInfo(const lwTexInfo* info, const char* tex_path)
     // format
     if(_format == D3DFMT_UNKNOWN)
     {
-        _format = D3DFMT_A1R5G5B5;
+        _format = D3DFMT_A8R8G8B8;
     }
 
     _state |= RES_STATE_INIT;
@@ -866,8 +866,11 @@ __load_it:
     }
     else if(_tex_type == TEX_TYPE_SIZE)
     {
-		//if(LW_FAILED(dev_obj->CreateTexture(&_tex, _data_info.width, _data_info.height, _level, _usage, _format, _pool)))
-        if(LW_FAILED(dev_obj->CreateTexture(&_tex, _data_info.width, _data_info.height, _level, _usage, (D3DFORMAT)D3DFMT_A4R4G4B4, _pool)))
+        // Используем запрошенный формат из lwTexInfo (_format). Раньше здесь
+        // был хардкод D3DFMT_A4R4G4B4 — он ломал FontRender, который пишет в
+        // атлас D3DFMT_A8R8G8B8. Для шрифтов A4 (16 уровней альфы) даёт
+        // заметные ступеньки на кеглях 12-13px.
+        if(LW_FAILED(dev_obj->CreateTexture(&_tex, _data_info.width, _data_info.height, _level, _usage, (D3DFORMAT)_format, _pool)))
             goto __ret;
     }
 

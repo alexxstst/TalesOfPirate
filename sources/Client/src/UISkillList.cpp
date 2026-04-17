@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "SkillRecordStore.h"
 #include "UISkillList.h"
 #include "uiform.h"
@@ -87,7 +88,7 @@ void CSkillList::Init()
 
     _ResetPageNum();
 
-    _nFontYOff = ( _nRowHeight - CGuiFont::s_Font.GetHeight("\n") ) / 2;
+    _nFontYOff = ( _nRowHeight - ui::GetHeight("\n") ) / 2;
 
     _pSelect->SetScale( GetWidth()-_nLeftMargin-_nRightMargin-_nUnitWidth - _pScroll->GetWidth(), _nUnitHeight );
 
@@ -120,7 +121,7 @@ void CSkillList::Render()
     {
         pSkill = _skills[i];
         pSkill->Render( x, y );
-        CGuiFont::s_Font.Render( pSkill->GetSkillName(), x + _nFontStart, y + _nFontYOff, _dwFontColor );
+        ui::Render( pSkill->GetSkillName(), x + _nFontStart, y + _nFontYOff, _dwFontColor );
 
         y += _nRowHeight;
     }

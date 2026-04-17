@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uigraph.h"
 #include "uifont.h"
 
@@ -18,7 +19,7 @@ CHintGraph::CHintGraph(unsigned int maxframe)
 
 void CHintGraph::RenderHint( int x, int y )
 {
-    CGuiFont::s_Font.FrameRender( _strHint.c_str(), x + 32, y );
+    ui::FrameRender( _strHint.c_str(), x + 32, y );
 }
 
 //---------------------------------------------------------------------------
@@ -43,8 +44,8 @@ CTextGraph::~CTextGraph()
 void CTextGraph::Render( int x, int y )	
 { 
     _pImage->Render(x, y);	    
-    static int nOffY = ( 16 - CGuiFont::s_Font.GetHeight( GetLanguageString(489).c_str() ) ) / 2;
-    CGuiFont::s_Font.Render( _strName.c_str(), x + 20, y + nOffY, _color );
+    static int nOffY = ( 16 - ui::GetHeight( GetLanguageString(489).c_str() ) ) / 2;
+    ui::Render( _strName.c_str(), x + 20, y + nOffY, _color );
 }
 
 //---------------------------------------------------------------------------
@@ -58,5 +59,5 @@ CNoteGraph::CNoteGraph( unsigned int maxframe )
 void CNoteGraph::Render( int x, int y )	
 { 
     _pImage->Render(x, y);	    
-    CGuiFont::s_Font.Render( _strName.c_str(), x + _nTextX, y + _nTextY, _color );
+    ui::Render( _strName.c_str(), x + _nTextX, y + _nTextY, _color );
 }

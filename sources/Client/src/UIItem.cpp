@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uiitem.h"
 #include "uitextparse.h"
 
@@ -10,7 +11,7 @@ using namespace GUI;
 //---------------------------------------------------------------------------
 void CItem::Render( int x, int y )			
 { 	
-   CGuiFont::s_Font.Render( (char*)_str.c_str(), x, y, _dwColor );
+   ui::Render( (char*)_str.c_str(), x, y, _dwColor );
 }
 
 //---------------------------------------------------------------------------
@@ -33,7 +34,7 @@ void CItemBar::Render( int x, int y )
 	_pBar->SetScaleW( 1, _fScale );
 	_pBar->RenderAll( x, y );
 
-	CGuiFont::s_Font.Render( (char*)_str.c_str(), x, y, _dwColor );	
+	ui::Render( (char*)_str.c_str(), x, y, _dwColor );	
 }
 
 // class CColorItem impletement
@@ -53,19 +54,19 @@ void CColorItem::SetString( const char* str )
 		_str += (*pos).strData;
 	}
 
-	CGuiFont::s_Font.GetSize( _str.c_str(), _nWidth, _nHeight );
+	ui::GetSize( _str.c_str(), _nWidth, _nHeight );
 }
 
 void CColorItem::Render( int x, int y )
 {
-	USHORT sWidth = CGuiFont::s_Font.GetHeight("a")/2;
+	USHORT sWidth = ui::GetHeight("a")/2;
 
 	ITEM_TEXT_ARRAY::iterator pos;
 	for( pos = m_TextArray.begin(); pos != m_TextArray.end(); pos++ )
 	{
 		int v = (*pos).sxPos;
 		int xPos = (*pos).sxPos*sWidth + x;
-		CGuiFont::s_Font.Render( (*pos).strData.c_str(), xPos, y, (*pos).dwColor );
+		ui::Render( (*pos).strData.c_str(), xPos, y, (*pos).dwColor );
 	}
 }
 
@@ -365,7 +366,7 @@ void CItemEx::ProcessString( int length ) //
 	if ( (int)_strLine[0].size() < (int)_strLine[1].size() )
 		maxStr = _strLine[1];
 
-	CGuiFont::s_Font.GetSize( (char*) maxStr.c_str(), _nMaxWidth, _nHeight );	
+	ui::GetSize( (char*) maxStr.c_str(), _nMaxWidth, _nHeight );	
 
 }
 
@@ -421,7 +422,7 @@ void CItemEx::renderHighlighted(int x, int y){
 			int leng = highlights[vectorIndex].len + highlights[vectorIndex].start - strIndex;
 			string strHead = _str.substr(strIndex, leng);
 			g_TextParse.Render( (char*)strHead.c_str(), x, y, highlights[vectorIndex].colour, m_Allign, _nHeight );
-			x+=CGuiFont::s_Font.GetWidth(strHead.c_str());
+			x+=ui::GetWidth(strHead.c_str());
 			strIndex += leng;
 			vectorIndex++;
 		}
@@ -432,7 +433,7 @@ void CItemEx::renderHighlighted(int x, int y){
 			}
 			string strHead = _str.substr(strIndex, leng);
 			g_TextParse.Render( (char*)strHead.c_str(), x, y, _dwColor, m_Allign, _nHeight );
-			x+=CGuiFont::s_Font.GetWidth(strHead.c_str());
+			x+=ui::GetWidth(strHead.c_str());
 			strIndex += leng;
 		}
 	}
@@ -443,11 +444,11 @@ void CItemEx::Render( int x, int y )
 	int sy=0;
 	if (m_Allign==eAlignCenter)
 	{
-		sy=(_nHeight-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str()))/2;
+		sy=(_nHeight-ui::GetHeight(GetLanguageString(623).c_str()))/2;
 	}
 	else if (m_Allign==eAlignBottom)
 	{
-		sy=_nHeight-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str());
+		sy=_nHeight-ui::GetHeight(GetLanguageString(623).c_str());
 	}
 	if( _bParseText ) 
 	{
@@ -463,7 +464,7 @@ void CItemEx::Render( int x, int y )
 				string strHead=_str.substr(0,GetHeadLength());
 				string strTail=_str.substr(GetHeadLength(),_str.length()-GetHeadLength());
 				g_TextParse.Render( (char*)strHead.c_str(), x, y, GetHeadColor(), m_Allign, _nHeight );
-				g_TextParse.Render( (char*)strTail.c_str(), x+CGuiFont::s_Font.GetWidth(strHead.c_str()), y, _dwColor, m_Allign, _nHeight );
+				g_TextParse.Render( (char*)strTail.c_str(), x+ui::GetWidth(strHead.c_str()), y, _dwColor, m_Allign, _nHeight );
 			}
 			else
 			{
@@ -481,13 +482,13 @@ void CItemEx::Render( int x, int y )
 	{
 		if (!_bMultiLine )
 		{
-			CGuiFont::s_Font.Render( (char*)_str.c_str(), x, y+sy, _dwColor );	
+			ui::Render( (char*)_str.c_str(), x, y+sy, _dwColor );	
 		}
 		else
 		{
-			CGuiFont::s_Font.Render( (char*)_strLine[0].c_str(), x, y+sy, _dwColor );
-			CGuiFont::s_Font.Render( (char*)_strLine[1].c_str(), x, y + _nHeight + sy, _dwColor );
-			CGuiFont::s_Font.Render( (char*)_strLine[2].c_str(), x, y + 2* _nHeight + sy, _dwColor );
+			ui::Render( (char*)_strLine[0].c_str(), x, y+sy, _dwColor );
+			ui::Render( (char*)_strLine[1].c_str(), x, y + _nHeight + sy, _dwColor );
+			ui::Render( (char*)_strLine[2].c_str(), x, y + 2* _nHeight + sy, _dwColor );
 		}
 	}
 }
@@ -502,7 +503,7 @@ void CItemEx::RenderEx( int x, int y ,int height ,float scale)
 			g_TextParse.RenderEx( (char*)_str.c_str(), x, y  , _dwColor ,scale);			
 			auto p = _str.find(":");
 			if (p != std::string::npos)
-				CGuiFont::s_Font.RenderScale( (char*)_str.substr(0,p).c_str(), x, y, 0xFFFFFFFF, scale );				
+				ui::RenderScale( (char*)_str.substr(0,p).c_str(), x, y, 0xFFFFFFFF, scale );				
 				
 		}
 		else
@@ -517,19 +518,19 @@ void CItemEx::RenderEx( int x, int y ,int height ,float scale)
 		y  = y+ 3;
 		if (!_bMultiLine )
 		{
-			CGuiFont::s_Font.RenderScale((char*)_str.c_str(), x , y, _dwColor, scale );				
+			ui::RenderScale((char*)_str.c_str(), x , y, _dwColor, scale );				
 			auto p = _str.find(":");
 			if (p != std::string::npos)
 			{
-				CGuiFont::s_Font.RenderScale( (char*)_str.substr(0,p).c_str(), x, y, 0xFFFFFFFF, scale );	
+				ui::RenderScale( (char*)_str.substr(0,p).c_str(), x, y, 0xFFFFFFFF, scale );	
 			
 			}
 		}
 		else
 		{
-			CGuiFont::s_Font.RenderScale( (char*)_strLine[0].c_str(), x, y , 0xFFFFFFFF , scale );
-			CGuiFont::s_Font.RenderScale( (char*)_strLine[1].c_str(), x, y + height + 3 , _dwColor ,scale );
-			CGuiFont::s_Font.RenderScale( (char*)_strLine[2].c_str(), x, y + 2 *height + 6 , _dwColor ,scale );
+			ui::RenderScale( (char*)_strLine[0].c_str(), x, y , 0xFFFFFFFF , scale );
+			ui::RenderScale( (char*)_strLine[1].c_str(), x, y + height + 3 , _dwColor ,scale );
+			ui::RenderScale( (char*)_strLine[2].c_str(), x, y + 2 *height + 6 , _dwColor ,scale );
 		}
 	}
 }

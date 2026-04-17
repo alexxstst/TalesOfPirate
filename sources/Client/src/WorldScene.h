@@ -61,7 +61,6 @@ private:
     xShipMgr*		_pShipMgr;
     AnimCtrlLight*	_pAnimLightSeq;
     DWORD			_dwAnimLightNum;
-	CMPFont			_cFont;
 
 private:
 	static BYTE		_bAttackRed, _bAttackGreen, _bAttackBlue;

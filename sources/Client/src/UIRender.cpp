@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "script.h"
 #include "UIRender.h"
 //#include <typeinfo>
@@ -677,7 +678,6 @@ void UIRender::SetScreen( int w, int h, bool isFull )
 	_fOldDrawScaleX = _fDrawScaleX; 
 	_fOldDrawScaleY = _fDrawScaleY;
 
-	CGuiFont::s_Font.SetScreen( w, h );
 	CGuiData::SetScreen( _fDrawScaleX, _fDrawScaleY, _fScreenScaleX, _fScreenScaleY );
 	CImeInput::s_Ime.SetScreen( isFull, _nGuiWidth, _nGuiHeight );
 
@@ -994,81 +994,6 @@ bool CFramePic::LoadImage( const char* client, int cw, int ch, int tx, int ty, c
 }
 
 //---------------------------------------------------------------------------
-// class CGuiFont
-//---------------------------------------------------------------------------
-CGuiFont::CGuiFont()
-: _pFont(NULL)
-{
-}
-
-CGuiFont::~CGuiFont()
-{
-	Clear();
-}
-
-bool CGuiFont::Clear()
-{
-	for( fonts::iterator it=_fonts.begin(); it!=_fonts.end(); ++it ) 
-	{
-		(*it)->ReleaseFont();
-		//delete (*it);
-		SAFE_DELETE(*it); // UI font cleanup
-	}
-
-	_fonts.clear();
-
-	_pFont		= NULL;
-	_nMaxFont	= 0;
-	return true;
-}
-
-void CGuiFont::SetScreen( int nScrWidth, int nScrHeight )
-{
-	Clear();
-
-	CMPFont* p = NULL;
-	if( nScrWidth==TINY_RES_X )
-	{
-		for( stfont::iterator it=_stfonts.begin(); it!=_stfonts.end(); ++it )
-		{
-			p =  new CMPFont;
-#ifdef USE_RENDER
-			if(!p->CreateFont(&g_Render, (char*)it->strFont.c_str(), it->size800, FONTLEVEN, it->dwStyle ))
-				ToLogService("errors", LogLevel::Error, "msgCreateFont");
-#else
-			p->CreateFont(g_Render.GetDevice(), (char*)it->strFont.c_str(), it->size800, FONTLEVEN, it->dwStyle );
-#endif
-
-			p->BindingRes( &ResMgr );
-
-			_fonts.push_back(p);
-			_nMaxFont++;
-		}		
-	}
-	else
-	{
-		for( stfont::iterator it=_stfonts.begin(); it!=_stfonts.end(); ++it )
-		{
-			p =  new CMPFont;
-#ifdef USE_RENDER
-			if(!p->CreateFont(&g_Render, (char*)it->strFont.c_str(), it->size1024, FONTLEVEN, it->dwStyle ))
-				ToLogService("errors", LogLevel::Error, "msgCreateFont2");
-
-#else
-			p->CreateFont(g_Render.GetDevice(), (char*)it->strFont.c_str(), it->size1024, FONTLEVEN, it->dwStyle );
-#endif
-
-			p->BindingRes( &ResMgr );
-
-			_fonts.push_back(p);
-			_nMaxFont++;
-		}
-
-	}
-
-    _pFont = _fonts[0];
-}
-//---------------------------------------------------------------------------
 // class CTextButton
 //---------------------------------------------------------------------------
 bool CTextButton::LoadImage( const char* file, int w, int h, int tx, int ty, bool isHorizontal )
@@ -1315,7 +1240,7 @@ void CGrid::Init()
 	_pSelectImage->SetSize( _nUnitWidth, _nUnitHeight );
 
 	sprintf( _strPage, "0/0" );
-	_nStrWidth = CGuiFont::s_Font.GetWidth(_strPage);
+	_nStrWidth = ui::GetWidth(_strPage);
 
     _nTotalW = _nSpaceX + _nUnitWidth;
     _nTotalH = _nSpaceY + _nUnitHeight;
@@ -1408,12 +1333,7 @@ bool CFormMgr::Init(HWND hWnd)
 		CEdit::InitCursor( "texture/ui/editcursor.tga" );
 
 		FontManager::Instance().PushToLua(g_LuaState);
-		LoadLuaScript(g_LuaState, "scripts/lua/font.lua");
-		if( !CGuiFont::s_Font.Init() )
-		{
-			g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(747).c_str());
-			return false;
-		}
+		LoadLuaScript(g_LuaState, "scripts/lua/font_bootstrap.lua");
 
 		GetRender().SetScreen( g_Render.GetScrWidth(), g_Render.GetScrHeight(), (g_Render.IsFullScreen()!=0 ? true: false) );
 
@@ -1468,7 +1388,7 @@ void CFormMgr::Clear()
 	_modal.clear();
 
 	CImeInput::s_Ime.Clear();
-	CGuiFont::s_Font.Clear();
+	ui::Clear();
 	_bInit = false;
 }
 

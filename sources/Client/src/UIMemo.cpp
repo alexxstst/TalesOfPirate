@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uimemo.h"
 #include "uigraph.h"
 #include "uitextparse.h"
@@ -358,7 +359,7 @@ void CMemo::AddIcon(int index ,CGraph *pGraph)
 inline void CMemo::RenderRowAsMessage(int row) {
 	const int nPosX = GetX() + _nLeftMargin;
 	const int nPosY = GetY() + _nTopMargin + _nRowHeight * (row - _nFirstRow);
-	CGuiFont::s_Font.Render((char*)_str[row].c_str(), nPosX, nPosY, 0xFF000000); // 0xFFFFFFFF );
+	ui::Render((char*)_str[row].c_str(), nPosX, nPosY, 0xFF000000); // 0xFFFFFFFF );
 }
 
 inline void CMemo::RenderRowAsSelectedQuest(int row) {
@@ -367,7 +368,7 @@ inline void CMemo::RenderRowAsSelectedQuest(int row) {
 	if (_files[row - _nRowInfo[1][0]].pGraph && _str[row].length() > 0) {
 		_files[row - _nRowInfo[1][0]].pGraph->Render(nPosX, nPosY - 3);
 	}
-	CGuiFont::s_Font.Render((char*)_str[row].c_str(), nPosX + 24, nPosY, 0xFFFF00FF);
+	ui::Render((char*)_str[row].c_str(), nPosX + 24, nPosY, 0xFFFF00FF);
 }
 
 inline void CMemo::RenderRowAsQuest(int row) {
@@ -376,17 +377,17 @@ inline void CMemo::RenderRowAsQuest(int row) {
 	if (_files[row - _nRowInfo[1][0]].pGraph && _str[row].length() > 0) {
 		_files[row - _nRowInfo[1][0]].pGraph->Render(nPosX, nPosY - 2);
 	}
-	CGuiFont::s_Font.Render((char*)_str[row].c_str(), nPosX + 24, nPosY + 1, 0xFFcF00cF);
+	ui::Render((char*)_str[row].c_str(), nPosX + 24, nPosY + 1, 0xFFcF00cF);
 }
 
 inline void CMemo::RenderRowAsFunction(int row) {
 	const int nPosX = GetX() + _nLeftMargin;
 	const int nPosY = GetY() + _nTopMargin + _nRowHeight * (row - _nFirstRow);
 	if (row == _nSelectItem + _nRowInfo[2][0]) {
-		CGuiFont::s_Font.Render((char*)_str[row].c_str(), nPosX + 24, nPosY, 0xFF0000FF);
+		ui::Render((char*)_str[row].c_str(), nPosX + 24, nPosY, 0xFF0000FF);
 	}
 	else {
-		CGuiFont::s_Font.Render((char*)_str[row].c_str(), nPosX + 24, nPosY + 1, 0xFF0000aF);
+		ui::Render((char*)_str[row].c_str(), nPosX + 24, nPosY + 1, 0xFF0000aF);
 	}
 }
 
@@ -683,7 +684,7 @@ BOOL CMemoEx::SelPrizeItem( int nxPos, int nyPos, DWORD dwKey )
 
 	// 
 	int nHeight = _nRowHeight;
-	int nWidth = CGuiFont::s_Font.GetWidth("a");	
+	int nWidth = ui::GetWidth("a");	
 	int x, y;
 	int nInterval = 0;
 	BYTE bySelID = 0;
@@ -702,12 +703,12 @@ BOOL CMemoEx::SelPrizeItem( int nxPos, int nyPos, DWORD dwKey )
 		y = (m_MemoInfo[i].syPos - _nFirst) * _nRowHeight + nPosY + nInterval*2;
 		if( m_MemoInfo[i].byType == MEMO_LINE_TITLE )
 		{
-			//CGuiFont::s_Font.Render( 2, m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
+			//ui::Render( 2, m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
 			nInterval++;
 		}
 		else if( m_MemoInfo[i].byType == MEMO_LINE_DESP )
 		{
-			//CGuiFont::s_Font.Render( m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
+			//ui::Render( m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
 		}
 		else if( m_MemoInfo[i].byType == MEMO_LINE_INTERVAL )
 		{
@@ -747,7 +748,7 @@ int CMemoEx::SelMemInfo(int x, int y, DWORD key)
 
 	// 
 	int nHeight = _nRowHeight;
-	int nWidth = CGuiFont::s_Font.GetWidth("a");	
+	int nWidth = ui::GetWidth("a");	
 	int startX, startY;
 	
 	int nInterval = 0;
@@ -803,7 +804,7 @@ void CMemoEx::Render()
 
 	// 
 	int nHeight = _nRowHeight;
-	int nWidth = CGuiFont::s_Font.GetWidth("a");	
+	int nWidth = ui::GetWidth("a");	
 	int x, y;
 	int nInterval = 0;
 	BYTE bySelID = 0;
@@ -811,7 +812,7 @@ void CMemoEx::Render()
 	// 
 	GetRender().SetClipRect( nPosX, nPosY, 32 * nWidth, (_nPageShowNum + 1) * nHeight );
 
-	//CGuiFont::s_Font.Begin();
+	//ui::Begin();
 	for( int i = 0; i < m_sNumInfo; i++ )
 	{
 		if( m_MemoInfo[i].byType != MEMO_LINE_ICON )
@@ -826,21 +827,21 @@ void CMemoEx::Render()
 		y = (m_MemoInfo[i].syPos - _nFirst) * _nRowHeight + nPosY + nInterval*2;
 		if( m_MemoInfo[i].byType == MEMO_LINE_TITLE )
 		{
-			//CGuiFont::s_Font.End();
+			//ui::End();
 
-			CGuiFont::s_Font.Render( 2, m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
+			ui::Render( 2, m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
 			nInterval++;
 
-			//CGuiFont::s_Font.Begin();
+			//ui::Begin();
 		}
 		else if( m_MemoInfo[i].byType == MEMO_LINE_DESP )
 		{
 			//if( this->m_SelMem == i)
-			//	CGuiFont::s_Font.Render( m_MemoInfo[i].strDesp.c_str(), x, y, 0xFF0000FF );
+			//	ui::Render( m_MemoInfo[i].strDesp.c_str(), x, y, 0xFF0000FF );
 			//else
-				CGuiFont::s_Font.Render( m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
+				ui::Render( m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
 
-			//CGuiFont::s_Font.Draw( m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
+			//ui::Draw( m_MemoInfo[i].strDesp.c_str(), x, y, m_MemoInfo[i].dwColor );
 		}
 		else if( m_MemoInfo[i].byType == MEMO_LINE_INTERVAL )
 		{
@@ -848,7 +849,7 @@ void CMemoEx::Render()
 		}
 		else if( m_MemoInfo[i].byType == MEMO_LINE_ICON )
 		{
-			//CGuiFont::s_Font.End();
+			//ui::End();
 
 			if( m_bySelPrize == bySelID ) 
 			{
@@ -861,14 +862,14 @@ void CMemoEx::Render()
 			m_MemoInfo[i].pIcon->Render( x, y );
 			bySelID++;
 
-			//CGuiFont::s_Font.Begin();
+			//ui::Begin();
 		}
 		else
 		{
 			// 
 		}
 	}
-	//CGuiFont::s_Font.End();
+	//ui::End();
 
 	GetRender().Reset();
 	if( _pScroll->GetIsShow() ) _pScroll->Render();
@@ -1720,7 +1721,7 @@ void CRichMemo::Render()
 						continue;
 					}
 					nyPos += nPosY;
-					CGuiFont::s_Font.Render( pInfo->byFontType, colpos.strDesp.c_str(), nxPos, nyPos, colpos.dwColor );
+					ui::Render( pInfo->byFontType, colpos.strDesp.c_str(), nxPos, nyPos, colpos.dwColor );
 				}
 				break;
 			case COL_ICON:
@@ -1901,7 +1902,7 @@ void CRichMemo::ParseScript( const char szInfo[], DWORD dwDefColor, BYTE byFont,
 
 	// 
 	int nWidth, nHeight;
-	CGuiFont::s_Font.GetSize( byFont, "a", nWidth, nHeight );
+	ui::GetSize( byFont, "a", nWidth, nHeight );
 
 	string strDesp = "";
 	USHORT sCurHeight = (USHORT)nHeight;

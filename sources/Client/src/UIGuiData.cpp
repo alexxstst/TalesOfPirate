@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uiGuidata.h"
 #include "uiForm.h"
 #include "uicompent.h"
@@ -181,7 +182,7 @@ bool CGuiData::IsAllowActive()
 
 void CGuiData::RenderHint( int x, int y )
 {
-    CGuiFont::s_Font.FrameRender( _strHint.c_str(), x + 40, y );
+    ui::FrameRender( _strHint.c_str(), x + 40, y );
 }
 CItemObj* pLastObj = NULL;
 DWORD dwLastObjColor = 0;

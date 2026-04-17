@@ -4,6 +4,7 @@
 // :2004-10-09
 //----------------------------------------------------------------------
 #pragma once
+#include "UIText.h"
 #include "uiguidata.h"
 #include <vector>
 #include <algorithm>
@@ -58,7 +59,7 @@ class CItem : public CItemObj
 {
 public:
 	CItem() : _dwColor(COLOR_RED), _nWidth(0), _nHeight(0) {}
-	CItem( const char* str, DWORD c=COLOR_WHITE ) : _str(str), _dwColor(c) { CGuiFont::s_Font.GetSize( str, _nWidth, _nHeight ); }
+	CItem( const char* str, DWORD c=COLOR_WHITE ) : _str(str), _dwColor(c) { ui::GetSize( str, _nWidth, _nHeight ); }
 	CItem( const CItem& rhs ) : _str(rhs._str),_dwColor(rhs._dwColor), _nWidth(rhs._nWidth), _nHeight(rhs._nHeight) {}
 	CItem& operator=( const CItem& rhs ) { _str=rhs._str; _dwColor=rhs._dwColor; return *this; }
 	ITEM_CLONE(CItem)
@@ -69,7 +70,7 @@ public:
 	virtual void    SetHeight(int n)                { _nHeight = n;    }
 	virtual void    SetWidth(int v)                 { _nWidth  = v;    }
 
-	virtual void		SetString( const char* str )	{ _str=str; CGuiFont::s_Font.GetSize( str, _nWidth, _nHeight );		}
+	virtual void		SetString( const char* str )	{ _str=str; ui::GetSize( str, _nWidth, _nHeight );		}
 	virtual const char* GetString()						{ return _str.c_str();		}
 
 	void		SetColor( DWORD c )				{ _dwColor = c;				}
@@ -137,7 +138,7 @@ class CItemEx : public CItemObj
 public:
 
 	CItemEx() :_highlightColour (0x80FF0000),_isHighlighted(false),_isHighlightText(false), _dwColor(COLOR_WHITE), _bParseText(false), _nWidth(0), _nHeight(0),_bMultiLine(false) , _nLineNum(1) ,m_Allign(eAlignTop) ,	_HeadLen(0), _HeadColor(0){}
-	CItemEx( const char* str, DWORD c ) :_highlightColour(0x80FF0000),_isHighlighted(false),_isHighlightText(false), _str(str), _dwColor(c),_bParseText(false),_bMultiLine(false), _nLineNum(1) ,m_Allign(eAlignTop) { CGuiFont::s_Font.GetSize( str, _nWidth, _nHeight ); }
+	CItemEx( const char* str, DWORD c ) :_highlightColour(0x80FF0000),_isHighlighted(false),_isHighlightText(false), _str(str), _dwColor(c),_bParseText(false),_bMultiLine(false), _nLineNum(1) ,m_Allign(eAlignTop) { ui::GetSize( str, _nWidth, _nHeight ); }
 	CItemEx( const CItemEx& rhs ) :_highlightColour(rhs._highlightColour),_isHighlighted(rhs._isHighlighted),_isHighlightText(rhs._isHighlightText), _str(rhs._str), _dwColor(rhs._dwColor), _nWidth(rhs._nWidth), _nHeight(rhs._nHeight), _bParseText(rhs._bParseText) , _bMultiLine(rhs._bMultiLine ) , _nLineNum(rhs._nLineNum),m_Allign(rhs.m_Allign){}
 	CItemEx& operator=( const CItemEx& rhs ) {_highlightColour=rhs._highlightColour; _isHighlighted=rhs._isHighlighted;_isHighlightText=rhs._isHighlightText;_str=rhs._str; _dwColor=rhs._dwColor; m_Allign=rhs.m_Allign; return *this; }
 	~CItemEx(){}
@@ -151,7 +152,7 @@ public:
 	int			GetWidth();
 	int			GetHeight()						{ return _nHeight;			}
 
-	void		SetString( const char* str )	{ _str=str; CGuiFont::s_Font.GetSize( str, _nWidth, _nHeight );		}
+	void		SetString( const char* str )	{ _str=str; ui::GetSize( str, _nWidth, _nHeight );		}
 	const char* GetString()						{ return _str.c_str();		}
 
 	void		SetColor( DWORD c )				{ _dwColor = c;				}

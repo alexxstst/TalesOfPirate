@@ -1,4 +1,5 @@
 ﻿#include "Stdafx.h"
+#include "UIText.h"
 #include "UIEdit.h"
 #include "uiimeinput.h"
 #include "uitextparse.h"
@@ -617,7 +618,7 @@ void CEdit::CorrectCursor()
 {
 	if (_bIsWrap)
 	{
-		int cursorPos=CGuiFont::s_Font.GetWidth("S")*_nCursorCol;
+		int cursorPos=ui::GetWidth("S")*_nCursorCol;
 		if (_nOffset+GetWidth()-5<cursorPos)
 		{
 			_nOffset=cursorPos-GetWidth()+5;
@@ -626,9 +627,9 @@ void CEdit::CorrectCursor()
 		{
 			_nOffset=cursorPos;
 		}
-		else if ( _nOffset>0 && _nOffset+GetWidth()-5>CGuiFont::s_Font.GetWidth("S")*(int)(_str.length()) )
+		else if ( _nOffset>0 && _nOffset+GetWidth()-5>ui::GetWidth("S")*(int)(_str.length()) )
 		{
-			_nOffset=CGuiFont::s_Font.GetWidth("S")*(int)(_str.length()) - GetWidth() +5;
+			_nOffset=ui::GetWidth("S")*(int)(_str.length()) - GetWidth() +5;
 			if ( _nOffset< 0 ) _nOffset=0;
 		}
 	}
@@ -666,7 +667,7 @@ void CEdit::Render()
 
 			if ( (int) _str.size() >_nMaxNumVisible ) 
 			{
-				CGuiFont::s_Font.Render( (char*)_strVisible.c_str(), GetX() - _nOffset ,GetY(), _color);
+				ui::Render( (char*)_strVisible.c_str(), GetX() - _nOffset ,GetY(), _color);
 			}
 			else
 			{
@@ -678,13 +679,13 @@ void CEdit::Render()
 					char temp[15] = "";
 					
 					_str.copy(temp, 15, i*15);
-					CGuiFont::s_Font.Render(temp, GetX() - _nOffset, GetY() + CGuiFont::s_Font.GetHeight("a")*i, _color);
+					ui::Render(temp, GetX() - _nOffset, GetY() + ui::GetHeight("a")*i, _color);
 					
 				}}
 				catch(...){
 				}
 				}else{
-				CGuiFont::s_Font.Render( (char*)_str.c_str(), GetX()- _nOffset ,GetY(), _color);		
+				ui::Render( (char*)_str.c_str(), GetX()- _nOffset ,GetY(), _color);		
 				}
 			}
 		}	
@@ -699,7 +700,7 @@ void CEdit::Render()
 		for (int i = 0 ; i<length ; i++)
 			cPassWord[i] =	'*';
 
-		CGuiFont::s_Font.Render( (char*)cPassWord, GetX() - _nOffset, GetY(), _color );
+		ui::Render( (char*)cPassWord, GetX() - _nOffset, GetY(), _color );
 	//	_pImage->Render( GetX(), GetY() );
 
 		//delete [] cPassWord;
@@ -712,7 +713,7 @@ void CEdit::Render()
 
 void CEdit::Init()
 {
-	_nCursorHeight = CGuiFont::s_Font.GetHeight( "" ) - 2;
+	_nCursorHeight = ui::GetHeight( "" ) - 2;
 
 	if( _pEnterButton && _pEnterButton->GetForm()!=GetForm() )
 	{
@@ -742,7 +743,7 @@ void CEdit::Refresh()
 //	else
 //	{
 //		_nCursorY = GetY() + _nTopMargin;
-//		cx = CGuiFont::s_Font.GetWidth( _str.c_str() );	
+//		cx = ui::GetWidth( _str.c_str() );	
 //	}
 //	_nCursorX =  (int)GetRender().DrawConvertX2((float)cx) + GetX() ;  //added by billy 
 //
@@ -756,14 +757,14 @@ void CEdit::_GetCursorPos(int nCurPos)
 	if( GetIsMulti() )
 	{
 		
-		_nCursorY = GetY() + _nCursorRow*CGuiFont::s_Font.GetHeight("a");
-		cx = CGuiFont::s_Font.GetWidth( _str.substr(0, nCurPos%15).c_str() );	
+		_nCursorY = GetY() + _nCursorRow*ui::GetHeight("a");
+		cx = ui::GetWidth( _str.substr(0, nCurPos%15).c_str() );	
 		cx-=_nOffset;
 	}
 	else
 	{
 		_nCursorY = GetY() + _nTopMargin;
-		cx = CGuiFont::s_Font.GetWidth( _str.substr(0, nCurPos).c_str() );	
+		cx = ui::GetWidth( _str.substr(0, nCurPos).c_str() );	
 		cx-=_nOffset;
 	}
 	_nCursorX =  (int)GetRender().DrawConvertX2((float)cx) + GetX();  //added by billy

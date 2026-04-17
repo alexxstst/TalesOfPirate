@@ -642,7 +642,7 @@ LW_RESULT LoadResBuf(lwIResourceMgr* res_mgr, const char* file)
 
                 smti.colorkey = tex_info->colorkey.color;
                 smti.level = tex_info->level;
-                smti.format = tex_info->format == D3DFMT_UNKNOWN ? D3DFMT_A1R5G5B5 : tex_info->format;
+                smti.format = tex_info->format == D3DFMT_UNKNOWN ? D3DFMT_A8R8G8B8 : tex_info->format;
                 smti.filter = D3DX_DEFAULT;
                 smti.mip_filter = D3DX_DEFAULT;
                 sprintf(smti.file_name, "%s%s", path_info->GetPath(PATH_TYPE_TEXTURE_SCENE), tex_info->file_name);

@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uitextparse.h"
 #include "UIGuiData.h"
 #include "uigraph.h"
@@ -27,11 +28,11 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 	int sy=0;
 	if (allign==eAlignCenter)
 	{
-		sy=(height-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str()))/2;
+		sy=(height-ui::GetHeight(GetLanguageString(623).c_str()))/2;
 	}
 	else if (allign==eAlignBottom)
 	{
-		sy=height-CGuiFont::s_Font.GetHeight(GetLanguageString(623).c_str());
+		sy=height-ui::GetHeight(GetLanguageString(623).c_str());
 	}
 
 	string strLine;
@@ -57,7 +58,7 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 			if (pGraph) //(index >=0 && index < iPicNum && _files[index].pGraph ) 
 			{
 				pGraph->GetImage()->SetScale( _scaleX, _scaleY);
-				int nX =  CGuiFont::s_Font.GetWidth( str.substr(0, i).c_str() );
+				int nX =  ui::GetWidth( str.substr(0, i).c_str() );
 				int nX2 =(int) GetRender().DrawConvertX2((float) nX );
 		
 				strLine += "   "; //123//added by billy			
@@ -81,8 +82,8 @@ void CTextParse::Render( string str, int x, int y,  DWORD color, ALLIGN allign, 
 	//{
 	//	int tt = 0;
 	//}
-	CGuiFont::s_Font.Render( (char*)strLine.c_str(), iPosX,iPosY+sy , color);	
-	//CGuiFont::s_Font.Render( "ddyy", iPosX,iPosY+sy , color);	
+	ui::Render( (char*)strLine.c_str(), iPosX,iPosY+sy , color);	
+	//ui::Render( "ddyy", iPosX,iPosY+sy , color);	
 }
 
 void CTextParse::RenderEx( string str, int x, int y, DWORD color, float scale )
@@ -116,7 +117,7 @@ void CTextParse::RenderEx( string str, int x, int y, DWORD color, float scale )
 			if (pGraph) //index >=0 && index <= iPicNum && _files[index].pGraph ) 
 			{
 				pGraph->GetImage()->SetScale( _scaleX, _scaleY);
-				int nX =  CGuiFont::s_Font.GetWidth(str.substr(0, i).c_str() );
+				int nX =  ui::GetWidth(str.substr(0, i).c_str() );
 				int nX2 =(int) GetRender().DrawConvertX2((float) nX );
 		
 				strLine += "   "; //123//added by billy
@@ -137,7 +138,7 @@ void CTextParse::RenderEx( string str, int x, int y, DWORD color, float scale )
 			i +=1;
 		}
 	}
-	CGuiFont::s_Font.RenderScale( (char*)strLine.c_str(), iPosX,iPosY , color ,scale);		
+	ui::RenderScale( (char*)strLine.c_str(), iPosX,iPosY , color ,scale);		
 }
 
 bool CTextParse::Init()

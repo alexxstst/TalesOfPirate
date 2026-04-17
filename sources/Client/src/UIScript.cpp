@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "script.h"
 #include <LuaBridge.h>
+#include "FontManager.h"
+#include "MPFont.h"
 #include "uiguidata.h"
 #include "UIScript.h"
 #include "UIEdit.h"
@@ -1446,9 +1448,46 @@ int UI_AddCompent( int container_id, int compent_id )
 	return R_OK;
 }
 
-int UI_CreateFont( const std::string& font, int size800, int size1024, int nStyle )
-{	
-	return CGuiFont::s_Font.CreateFont( const_cast<char*>(font.c_str()), size800, size1024, (DWORD)nStyle );
+int UI_CreateFont( const std::string& name, const std::string& family,
+				   int size800, int size1024, int nLevel, int nStyle )
+{
+	return FontManager::Instance().CreateFont(name, family,
+											   size800, size1024, nLevel,
+											   static_cast<unsigned long>(nStyle));
+}
+
+int UI_InstallFontFile( const std::string& path )
+{
+	return FontManager::Instance().InstallFontFile(path) ? R_OK : R_FAIL;
+}
+
+int UI_InstallFontDir( const std::string& dir )
+{
+	return FontManager::Instance().InstallFontsFromDir(dir);
+}
+
+int UI_DumpFonts( const std::string& dir )
+{
+	FontManager::Instance().DumpAllSlots(dir);
+	return R_OK;
+}
+
+int UI_DumpFontAtlases( const std::string& dir )
+{
+	FontManager::Instance().DumpAllAtlases(dir);
+	return R_OK;
+}
+
+int UI_SetFontDumpEnabled( int enabled )
+{
+	FontRender::SetTextDumpEnabled(enabled != 0);
+	return R_OK;
+}
+
+int UI_SetFontShadowEnabled( int enabled )
+{
+	FontRender::SetShadowEnabled(enabled != 0);
+	return R_OK;
 }
 
 int UI_SetLabelExShadowColor( int label_id, unsigned int color )
@@ -1923,6 +1962,12 @@ void MPInitLua_Gui(lua_State* L)
 		LUABRIDGE_REGISTER_FUNC(UI_SetFormStyleEx)
 		// font
 		LUABRIDGE_REGISTER_FUNC(UI_CreateFont)
+		LUABRIDGE_REGISTER_FUNC(UI_InstallFontFile)
+		LUABRIDGE_REGISTER_FUNC(UI_InstallFontDir)
+		LUABRIDGE_REGISTER_FUNC(UI_DumpFonts)
+		LUABRIDGE_REGISTER_FUNC(UI_DumpFontAtlases)
+		LUABRIDGE_REGISTER_FUNC(UI_SetFontDumpEnabled)
+		LUABRIDGE_REGISTER_FUNC(UI_SetFontShadowEnabled)
 		// text parse
 		LUABRIDGE_REGISTER_FUNC(UI_SetTextParse)
 		// memo
@@ -1945,6 +1990,11 @@ void MPInitLua_Gui(lua_State* L)
 		LUABRIDGE_REGISTER_FUNC(UI_AddFilterTextToDialogTable)
 		// title
 		LUABRIDGE_REGISTER_FUNC(UI_SetTitleFont);
+
+	// Font style constants exposed as Lua globals.
+	lua_pushinteger(L, MPFONT_BOLD);   lua_setglobal(L, "MPFONT_BOLD");
+	lua_pushinteger(L, MPFONT_ITALIC); lua_setglobal(L, "MPFONT_ITALIC");
+	lua_pushinteger(L, MPFONT_UNLINE); lua_setglobal(L, "MPFONT_UNLINE");
 }
 
 

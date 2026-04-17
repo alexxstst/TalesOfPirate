@@ -10,6 +10,7 @@
 //--------------------------------------------------------------
 
 #pragma once
+#include "UIText.h"
 #include <assert.h>
 #include <vector>
 #include <deque>
@@ -646,7 +647,7 @@ public:							\
 	}
 
 	inline void CGuiData::_RenderHint(const char* str, int x, int y) {
-		CGuiFont::s_Font.FrameRender(str, x + 40, y);
+		ui::FrameRender(str, x + 40, y);
 	}
 
 	inline void CGuiTime::OnTime(DWORD dwTime) {

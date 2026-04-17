@@ -136,6 +136,7 @@
     <ClInclude Include="..\include\MPEffVector3.h" />
     <ClInclude Include="..\include\MPFactoryObj.h" />
     <ClInclude Include="..\include\MPFont.h" />
+    <ClInclude Include="..\include\FontRender.h" />
     <ClInclude Include="..\include\MPGameApp.h" />
     <ClInclude Include="..\include\MPInterface.h" />
     <ClInclude Include="..\include\MPIteratorWrappers.h" />
@@ -291,7 +292,8 @@
     <ClCompile Include="..\src\MPEffectMath.cpp" />
     <ClCompile Include="..\src\MPEffQuaternion.cpp" />
     <ClCompile Include="..\src\MPEffVector3.cpp" />
-    <ClCompile Include="..\src\MPFont.cpp" />
+    <ClCompile Include="..\src\FontRender.cpp" />
+    <ClCompile Include="..\src\UIClip.cpp" />
     <ClCompile Include="..\src\MPGameApp.cpp" />
     <ClCompile Include="..\src\TextureManager.cpp" />
     <ClCompile Include="..\src\MPMap.cpp" />

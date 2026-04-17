@@ -8,49 +8,9 @@
 using namespace std;
 
 using namespace GUI;
-//---------------------------------------------------------------------------
-// class CGuiFont
-//---------------------------------------------------------------------------
-CGuiFont	CGuiFont::s_Font;
-
-int CGuiFont::CreateFont( char* font, int size800, int size1024, DWORD dwStyle )
-{
-	stFont ft;
-	ft.strFont	= font;
-	ft.size800	= size800;
-	ft.size1024 = size1024;
-	ft.dwStyle	= dwStyle;
-
-	_stfonts.push_back( ft );
-	return (int)_stfonts.size() - 1;
-}
-
-void CGuiFont::FrameRender( const char* str, int x, int y )
-{
-	static int w, h, offx;
-
-	GetSize( str, w, h );
-	offx = GetRender().GetScreenWidth() - x - w - 10; // original: -10
-	if( offx < 0 )
-	{
-		x += offx;
-	}
-	GetRender().FillFrame( x - 5, y - 3, x + w + 10, y + h + 5, 0x90000000 );
-	CGuiFont::s_Font.Render( str, x - 1, y - 1, 0xffffffff );
-}
-
-void CGuiFont::TipRender( const char* str, int x, int y )
-{
-	static int w, h;
-
-	GetSize( str, w, h );
-	x -=  w / 2;
-	GetRender().FillFrame( x - 2, y - 1, x + w + 2, y + h + 1, 0x90000000 );
-	CGuiFont::s_Font.Render( str, x - 1, y - 1, 0xffffffff );
-}
 
 //---------------------------------------------------------------------------
-// class CGuiFont
+// class CTextHint
 //---------------------------------------------------------------------------
 CTextHint::CTextHint()
 {
@@ -91,7 +51,7 @@ void CTextHint::Render()
 		{
 			DWORD color = (*it)->color;
 			color = ( 0xff000000 & color ) | ~color;
-			CGuiFont::s_Font.BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, color );
+			ui::BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, color );
 			yy += (*it)->height;
 			++it;
 		}
@@ -103,7 +63,7 @@ void CTextHint::Render()
 			else
 				sh = ( sh & 0xFF000000 ) | ~sh;
 
-			CGuiFont::s_Font.BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, sh );
+			ui::BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, sh );
 		}
 	}
     for( ; it!=_hint.end(); ++it )
@@ -116,11 +76,11 @@ void CTextHint::Render()
 			else
 				sh = ( sh & 0xFF000000 ) | ~sh;
 
-			CGuiFont::s_Font.BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, sh );
+			ui::BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, sh );
 		}
 		else
 		{
-			CGuiFont::s_Font.Render( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color );
+			ui::Render( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color );
 		}
         yy += (*it)->height;
     }
@@ -162,7 +122,7 @@ void CTextHint::Render()
 		{
 			DWORD color = ( *it )->color;
 			color = ( 0xff000000 & color ) | ~color;
-			CGuiFont::s_Font.BRender( (*it)->font, (*it)->hint.c_str(), nStartX + (*it)->offx, yy, (*it)->color, color );
+			ui::BRender( (*it)->font, (*it)->hint.c_str(), nStartX + (*it)->offx, yy, (*it)->color, color );
 			yy += (*it)->height;
 			++it;
 		}
@@ -177,11 +137,11 @@ void CTextHint::Render()
 				else
 					sh = ~sh | sh & 0xFF000000;
 
-				CGuiFont::s_Font.BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, sh );
+				ui::BRender( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color, sh );
 			}
 			else
 			{
-				CGuiFont::s_Font.Render( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color );
+				ui::Render( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color );
 			}
 			yy += (*it)->height;
 		}
@@ -214,7 +174,7 @@ void CTextHint::ReadyForHint( int x, int y )
 
     for( hints::iterator it=_hint.begin(); it!=_hint.end(); ++it )
     {
-		CGuiFont::s_Font.GetSize( (*it)->font, (*it)->hint.c_str(), w, h );
+		ui::GetSize( (*it)->font, (*it)->hint.c_str(), w, h );
         if( _nHintW<w ) _nHintW=w;
         (*it)->width = w;
         (*it)->height += h;
@@ -263,7 +223,7 @@ void CTextHint::ReadyForHintGM(int x, int y)
 
     for( hints::iterator it=_hint.begin(); it!=_hint.end(); ++it )
     {
-		CGuiFont::s_Font.GetSize( (*it)->font, (*it)->hint.c_str(), w, h );
+		ui::GetSize( (*it)->font, (*it)->hint.c_str(), w, h );
         if( _nHintW<w ) _nHintW=w;
         (*it)->width = w;
         (*it)->height += h;
@@ -435,7 +395,7 @@ void CTextScrollHint::Render()
 				index = 0;
 			}
 			num++;
-			CGuiFont::s_Font.Render( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color );
+			ui::Render( (*it)->font, (*it)->hint.c_str(), _nStartX + (*it)->offx, yy, (*it)->color );
 			index++;	
 			//End
 			if( _IsShowFrame )
@@ -480,7 +440,7 @@ void CTextScrollHint::ReadyForHint( int x, int y ,int SetNum )
 
 	for( hints::iterator it=_hint.begin(); it!=_hint.end(); ++it )
 	{
-		CGuiFont::s_Font.GetSize( (*it)->font, (*it)->hint.c_str(), w, h );
+		ui::GetSize( (*it)->font, (*it)->hint.c_str(), w, h );
 		if( _nHintW<w ) _nHintW=w;
 		(*it)->width = w;
 		(*it)->height += h;

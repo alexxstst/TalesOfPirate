@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "UICheckBox.h"
 using namespace GUI;
 
@@ -40,19 +41,19 @@ void CCheckBox::Render()
 {
 	_pImage->Render( GetX(), GetY() );
 
-	if( !_strCaption.empty() )	CGuiFont::s_Font.Render( _strCaption.c_str(), GetX() + _nTextOffsetX, GetY() + _nTextOffsetY, _TextColor );
+	if( !_strCaption.empty() )	ui::Render( _strCaption.c_str(), GetX() + _nTextOffsetX, GetY() + _nTextOffsetY, _TextColor );
 }
 
 void CCheckBox::Refresh()
 {
 	CCompent::Refresh();
 
-	_nTextOffsetY = (int)( (_pImage->GetImage()->nTexH * _pImage->GetImage()->fScaleY - CGuiFont::s_Font.GetHeight("S") ) / 2.0 );
+	_nTextOffsetY = (int)( (_pImage->GetImage()->nTexH * _pImage->GetImage()->fScaleY - ui::GetHeight("S") ) / 2.0 );
 
 	if( !_strCaption.empty() )
 	{
 		_nTextOffsetX = (int)( _pImage->GetImage()->nTexW * _pImage->GetImage()->fScaleX + s_nMarginLeft );
-		_nX2 = _nX1 + _nTextOffsetX + CGuiFont::s_Font.GetWidth( _strCaption.c_str() );
+		_nX2 = _nX1 + _nTextOffsetX + ui::GetWidth( _strCaption.c_str() );
 	}
 	else
 	{

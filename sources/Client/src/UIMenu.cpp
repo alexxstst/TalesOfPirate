@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uimenu.h"
 #include "UIForm.h"
 
@@ -7,12 +8,12 @@ using namespace GUI;
 CMenuItem::CMenuItem( const char* str, DWORD v ) 
 : _IsCheck(false), _IsEnabled(true), _IsHide(false), _strText(str), _nTag(0), _dwIndex(v)
 {
-	CGuiFont::s_Font.GetSize( str, _nWidth, _nHeight );	
+	ui::GetSize( str, _nWidth, _nHeight );	
 }
 
 void CMenuItem::Render( int x, int y )	
 {
-	CGuiFont::s_Font.Render( _strText.c_str(), x, y, _IsEnabled ? COLOR_BLACK : 0xffa0a0a0 );
+	ui::Render( _strText.c_str(), x, y, _IsEnabled ? COLOR_BLACK : 0xffa0a0a0 );
 }
 
 //---------------------------------------------------------------------------

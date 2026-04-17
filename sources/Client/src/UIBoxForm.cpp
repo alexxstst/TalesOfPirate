@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uiboxform.h"
 #include "uiform.h"
 #include "uiedit.h"
@@ -191,7 +192,7 @@ stSelectBox* CBoxMgr::ShowSelectBox( FormMouseEvent evtForm, const char* szTitle
 	frm->evtEntrustMouseEvent = evtForm;
 	frm->SetIsEscClose(false);
 
-	//frm->SetSize( CGuiFont::s_Font.GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
+	//frm->SetSize( ui::GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
     frm->SetPos( (GetRender().GetScreenWidth() - frm->GetWidth() )/2
         , ( GetRender().GetScreenHeight() - frm->GetHeight())/2 );
     frm->Refresh();
@@ -239,7 +240,7 @@ stNumBox* CBoxMgr::ShowNumberBox( FormMouseEvent evtForm, int nTotalNum, const c
 	}
 	t->pointer = NULL;
 
-	//frm->SetSize( CGuiFont::s_Font.GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
+	//frm->SetSize( ui::GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
     frm->SetPos( (GetRender().GetScreenWidth() - frm->GetWidth() )/2
         , ( GetRender().GetScreenHeight() - frm->GetHeight())/2 );
     frm->Refresh();
@@ -264,7 +265,7 @@ stMsgTimeBox* CBoxMgr::ShowMsgTime(  FormMouseEvent evtForm, const char* szTitle
 	}
 	if( szTitle ) t->labInfo->SetCaption( szTitle );
 
-	_cfrmError->SetSize( CGuiFont::s_Font.GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, _cfrmError->GetHeight() );
+	_cfrmError->SetSize( ui::GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, _cfrmError->GetHeight() );
     _cfrmError->SetPos( (GetRender().GetScreenWidth() - _cfrmError->GetWidth() )/2
         , ( GetRender().GetScreenHeight() - _cfrmError->GetHeight())/2 );
     _cfrmError->Refresh();
@@ -291,7 +292,7 @@ stMsgBox* CBoxMgr::ShowMsgBox( FormMouseEvent evtForm, const char* szTitle, bool
 	}
 	if( szTitle ) t->labInfo->SetCaption( szTitle );
 
-	frm->SetSize( CGuiFont::s_Font.GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
+	frm->SetSize( ui::GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
     frm->SetPos( (GetRender().GetScreenWidth() - frm->GetWidth() )/2
         , ( GetRender().GetScreenHeight() - frm->GetHeight())/2 );
     frm->Refresh();
@@ -321,7 +322,7 @@ stPasswordBox* CBoxMgr::ShowPasswordBox( FormMouseEvent evtForm, const char* szT
 
 	t->edtPassword->SetIsPassWord(true);
 
-	//frm->SetSize( CGuiFont::s_Font.GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
+	//frm->SetSize( ui::GetWidth( t->labInfo->GetCaption() ) + t->labInfo->GetLeft() * 2, frm->GetHeight() );
 	frm->SetPos( (GetRender().GetScreenWidth() - frm->GetWidth() )/2
 		, ( GetRender().GetScreenHeight() - frm->GetHeight())/2 );
 	frm->Refresh();

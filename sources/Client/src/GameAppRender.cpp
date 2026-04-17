@@ -1,5 +1,7 @@
 ﻿#include "Stdafx.h"
 #include "GameApp.h"
+#include "FontManager.h"
+#include "MPFont.h"
 #include "MPEditor.h"
 #include "Scene.h"
 #include "FindPath.h"
@@ -167,8 +169,9 @@ void CGameApp::_Render()
 		DWORD dwColor = dwAlpha | 0x00f01000; 
 
 		SIZE size;
-		_MidFont.GetTextSize( _stMidFont.szText, &size );        
-		_MidFont.DrawText(_stMidFont.szText, (GetWindowWidth() - size.cx) / 2, (GetWindowHeight() - size.cy) / 3, dwColor);
+		CMPFont* pMidFont = FontManager::Instance().Get(FontSlot::MidAnnounce);
+		pMidFont->GetTextSize( _stMidFont.szText, &size );
+		pMidFont->DrawText(_stMidFont.szText, (GetWindowWidth() - size.cx) / 2, (GetWindowHeight() - size.cy) / 3, dwColor);
 	}
 
 	//, -------------------------------------------------------------

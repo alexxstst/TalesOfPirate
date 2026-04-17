@@ -506,6 +506,7 @@
     <ClInclude Include="..\src\UIFastCommand.h" />
     <ClInclude Include="..\src\UIFindTeamForm.h" />
     <ClInclude Include="..\src\UIFont.h" />
+    <ClInclude Include="..\src\UIText.h" />
     <ClInclude Include="..\src\UIForgeForm.h" />
     <ClInclude Include="..\src\UIForm.h" />
     <ClInclude Include="..\src\UIFormMgr.h" />

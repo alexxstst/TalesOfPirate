@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "SkillStateRecordStore.h"
 #include "uiheadsay.h"
 #include "GameApp.h"
@@ -85,7 +86,7 @@ bool CHeadSay::Init()
 	_pImgShopHidden->LoadImage( "texture/ui/hidestall.tga", 25, 32, 0, 0, 0, 1.0, 1.0 );
 
 	_nShopFrameWidth = _ImgShop[0].GetWidth() - 1;
-	_nShopFontYOff = (_ImgShop[0].GetHeight() - CGuiFont::s_Font.GetHeight( GetLanguageString(489).c_str() ))/2;
+	_nShopFontYOff = (_ImgShop[0].GetHeight() - ui::GetHeight( GetLanguageString(489).c_str() ))/2;
 
 	for (int i = 0; i < EVIL_MAX; i++)
 	{
@@ -164,7 +165,7 @@ void CHeadSay::AddItem( CItemEx* obj )
 
 void CHeadSay::SetName( const std::string& name )
 {
-    _nChaNameOffX = 0 - CGuiFont::s_Font.GetWidth( name )/2;
+    _nChaNameOffX = 0 - ui::GetWidth( name )/2;
 }
 
 void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, float spacing, int rowSize, bool Rendertimer) {
@@ -217,8 +218,8 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 							sprintf(szTime, "%dm", minutes);
 							centeredX = (xi + (32 * scale) / 2) - 5;
 						}
-						GetRender().FillFrame(xi, yi + (32 * scale), xi + (32 * scale) + 1, yi + (32 * scale) + CGuiFont::s_Font.GetHeight("3"));
-						CGuiFont::s_Font.Render(0, szTime, centeredX, yi + (32 * scale), COLOR_WHITE, 1.0f); //szTime
+						GetRender().FillFrame(xi, yi + (32 * scale), xi + (32 * scale) + 1, yi + (32 * scale) + ui::GetHeight("3"));
+						ui::Render(0, szTime, centeredX, yi + (32 * scale), COLOR_WHITE, 1.0f); //szTime
 					}
 
                     stateCount++;
@@ -256,7 +257,7 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
 void CHeadSay::Render( D3DXVECTOR3& pos )
 {
     static int x=0, y=0;
-    static int nSayTotalWidth =  32 * CGuiFont::s_Font.GetWidth("a") ; //32
+    static int nSayTotalWidth =  32 * ui::GetWidth("a") ; //32
     g_Render.WorldToScreen( pos.x, pos.y, pos.z + _pOwn->GetDefaultChaInfo()->fHeight, &x, &y );    
 
 	/*
@@ -321,12 +322,12 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 		      } else {
 		        sprintf(spInfo, "%d/%d", _fCurSp, _fMxSp);
 		      }
-		      CGuiFont::s_Font.BRender(spInfo, x - nOffset - (CGuiFont::s_Font.GetWidth(spInfo) / 2), y1 + 32, spcolour, COLOR_BLACK);
+		      ui::BRender(spInfo, x - nOffset - (ui::GetWidth(spInfo) / 2), y1 + 32, spcolour, COLOR_BLACK);
 		    }
 		  }
 		}
 			
-		CGuiFont::s_Font.BRender( hpInfo, x  - nOffset - (CGuiFont::s_Font.GetWidth(hpInfo)/2), y1 + 8, hpcolour, COLOR_BLACK );
+		ui::BRender( hpInfo, x  - nOffset - (ui::GetWidth(hpInfo)/2), y1 + 8, hpcolour, COLOR_BLACK );
 		
 		
     }
@@ -389,8 +390,8 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 		// 
         if( CCharacter::IsShowLogName )
         {
-            int  nNameLength =  0 - CGuiFont::s_Font.GetWidth( _pOwn->getLogName() )/2;
-            CGuiFont::s_Font.BRender( _pOwn->getLogName(), x +  nNameLength  , y - iNameHeightStep, _dwNameColor, COLOR_BLACK );
+            int  nNameLength =  0 - ui::GetWidth( _pOwn->getLogName() )/2;
+            ui::BRender( _pOwn->getLogName(), x +  nNameLength  , y - iNameHeightStep, _dwNameColor, COLOR_BLACK );
 //_dwNameColor
 
         }
@@ -432,8 +433,8 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				{
 					strncat( s_szConsortiaName, s_szConsortiaNamePart[i], NAME_LENGTH );
 				}
-				int nNameLength = 0 - CGuiFont::s_Font.GetWidth(s_szConsortiaName)/2;
-				int iStartPosX = 0 - CGuiFont::s_Font.GetWidth(s_szConsortiaName)/2;
+				int nNameLength = 0 - ui::GetWidth(s_szConsortiaName)/2;
+				int iStartPosX = 0 - ui::GetWidth(s_szConsortiaName)/2;
 
 				// render
 				int perm = (_pOwn->getGuildPermission()&emGldPermLeader);
@@ -444,8 +445,8 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 			
 				for (int i(0); i<4; i++)
 				{
-					CGuiFont::s_Font.BRender(s_szConsortiaNamePart[i], x + iStartPosX, y - iGuildNameHeightStep, _pOwn->getGuildColor(), COLOR_BLACK );
-					iStartPosX += CGuiFont::s_Font.GetWidth(s_szConsortiaNamePart[i]);
+					ui::BRender(s_szConsortiaNamePart[i], x + iStartPosX, y - iGuildNameHeightStep, _pOwn->getGuildColor(), COLOR_BLACK );
+					iStartPosX += ui::GetWidth(s_szConsortiaNamePart[i]);
 				}
 
 			}
@@ -563,8 +564,8 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 			{
 				strncat( s_szName, s_sNamePart[i], NAME_LENGTH );
 			}
-			int nNameLength = 0 - CGuiFont::s_Font.GetWidth(s_szName)/2;
-			int iStartPosX = 0 - CGuiFont::s_Font.GetWidth(s_szName)/2;
+			int nNameLength = 0 - ui::GetWidth(s_szName)/2;
+			int iStartPosX = 0 - ui::GetWidth(s_szName)/2;
 
 			if (_IsShowEvil)
 			{
@@ -585,13 +586,13 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 			{
 				if( s_dwNamePartsColors[i][1] )
 				{
-					CGuiFont::s_Font.BRender(s_sNamePart[i], x + iStartPosX, y - iNameHeightStep, s_dwNamePartsColors[i][0], s_dwNamePartsColors[i][1] );
+					ui::BRender(s_sNamePart[i], x + iStartPosX, y - iNameHeightStep, s_dwNamePartsColors[i][0], s_dwNamePartsColors[i][1] );
 				}
 				else
 				{
-					CGuiFont::s_Font.Render(s_sNamePart[i], x + iStartPosX, y - iNameHeightStep, s_dwNamePartsColors[i][0] );
+					ui::Render(s_sNamePart[i], x + iStartPosX, y - iNameHeightStep, s_dwNamePartsColors[i][0] );
 				}
-				iStartPosX += CGuiFont::s_Font.GetWidth(s_sNamePart[i]);
+				iStartPosX += ui::GetWidth(s_sNamePart[i]);
 			}
 
 	   }
@@ -605,8 +606,8 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 				sNameBuf += "--";
 				sNameBuf += _pOwn->getName();
 
-				int nNameLength = 0 - CGuiFont::s_Font.GetWidth(sNameBuf.c_str())/2;
-				CGuiFont::s_Font.BRender(sNameBuf.c_str(), x + nNameLength, y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
+				int nNameLength = 0 - ui::GetWidth(sNameBuf.c_str())/2;
+				ui::BRender(sNameBuf.c_str(), x + nNameLength, y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
 				if (_pOwn->IsShowSecondName())
 				{
 					if (strlen(_pOwn->getSecondName()) > 0)
@@ -614,14 +615,14 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 						string strSec = "(";
 						strSec+=_pOwn->getSecondName(); 
 						strSec+=")";
-						CGuiFont::s_Font.Render( strSec.c_str(), x - nNameLength ,  y - LINE_HEIGHT_STEP, COLOR_BLACK);
+						ui::Render( strSec.c_str(), x - nNameLength ,  y - LINE_HEIGHT_STEP, COLOR_BLACK);
 					}
 				}
 			}
 			else	//
 			{
-				int  nNameLength =  0 - CGuiFont::s_Font.GetWidth( _pOwn->getName() )/2;
-				CGuiFont::s_Font.BRender( _pOwn->getName().c_str(), x +  nNameLength ,   y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
+				int  nNameLength =  0 - ui::GetWidth( _pOwn->getName() )/2;
+				ui::BRender( _pOwn->getName().c_str(), x +  nNameLength ,   y - LINE_HEIGHT_STEP, _dwNameColor, COLOR_BLACK );
 				if(_pOwn->IsShowSecondName())
 				{
 					if(strlen(_pOwn->getSecondName()) > 0)
@@ -629,7 +630,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 						string strSec = "(";
 						strSec+=_pOwn->getSecondName(); 
 						strSec+=")";
-						CGuiFont::s_Font.Render( strSec.c_str(), x - nNameLength ,  y - LINE_HEIGHT_STEP, COLOR_BLACK);
+						ui::Render( strSec.c_str(), x - nNameLength ,  y - LINE_HEIGHT_STEP, COLOR_BLACK);
 					}
 				}
 
@@ -727,7 +728,7 @@ void CHeadSay::Render( D3DXVECTOR3& pos )
 		for( int i=0; i<nCount; i++ )
 		{
 			y -= 20;
-			CGuiFont::s_Font.Render( pState->GetSkillState(i)->szName.c_str(), x, y, COLOR_WHITE );
+			ui::Render( pState->GetSkillState(i)->szName.c_str(), x, y, COLOR_WHITE );
 		}
     }
 #endif
@@ -781,7 +782,7 @@ void CHeadSay::_RenderShop( const char* szShopName, int x, int y )
 	y -= nImageHeight;
 
 	static int nFontWidth = 0;
-	nFontWidth = CGuiFont::s_Font.GetWidth( szShopName );	
+	nFontWidth = ui::GetWidth( szShopName );	
 	const DWORD dwImgColor = 0xffffffff;
 
 
@@ -808,8 +809,8 @@ void CHeadSay::_RenderShop( const char* szShopName, int x, int y )
 
 		_ImgShop[1].SetScaleW( nFontWidth );
 		_ImgShop[1].Render( x, y, dwImgColor );
-		//CGuiFont::s_Font.BRender( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
-		CGuiFont::s_Font.Render( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK );
+		//ui::BRender( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
+		ui::Render( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK );
 	}
 	else
 	{
@@ -827,8 +828,8 @@ void CHeadSay::_RenderShop( const char* szShopName, int x, int y )
 
 		_ImgShop[1].SetScaleW( nFontWidth );
 		_ImgShop[1].Render( x, y, dwImgColor );
-		//CGuiFont::s_Font.BRender( szShopName, x, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
-		CGuiFont::s_Font.Render( szShopName, x, y+_nShopFontYOff, COLOR_BLACK );
+		//ui::BRender( szShopName, x, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
+		ui::Render( szShopName, x, y+_nShopFontYOff, COLOR_BLACK );
 	}
 }
 
@@ -839,7 +840,7 @@ void CHeadSay::_RenderShop2( const char* szShopName, int x, int y )
 	y -= nImageHeight;
 
 	static int nFontWidth = 0;
-	nFontWidth = CGuiFont::s_Font.GetWidth( szShopName );	
+	nFontWidth = ui::GetWidth( szShopName );	
 	const DWORD dwImgColor = 0xffffffff;
 	if( nFontWidth < 40 ) 
 	{
@@ -861,8 +862,8 @@ void CHeadSay::_RenderShop2( const char* szShopName, int x, int y )
 
 		_ImgShop2[1].SetScaleW( nFontWidth );
 		_ImgShop2[1].Render( x, y, dwImgColor );
-		//CGuiFont::s_Font.BRender( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
-		CGuiFont::s_Font.Render( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK );
+		//ui::BRender( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
+		ui::Render( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK );
 	}
 	else
 	{
@@ -880,8 +881,8 @@ void CHeadSay::_RenderShop2( const char* szShopName, int x, int y )
 
 		_ImgShop2[1].SetScaleW( nFontWidth );
 		_ImgShop2[1].Render( x, y, dwImgColor );
-		//CGuiFont::s_Font.BRender( szShopName, x, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
-		CGuiFont::s_Font.Render( szShopName, x, y+_nShopFontYOff, COLOR_BLACK );
+		//ui::BRender( szShopName, x, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
+		ui::Render( szShopName, x, y+_nShopFontYOff, COLOR_BLACK );
 	}
 }
 
@@ -893,7 +894,7 @@ void CHeadSay::RenderText( const char* szShopName, int x, int y )
 	y -= 100;
 	
 	static int nFontWidth = 0;
-	nFontWidth = CGuiFont::s_Font.GetWidth( szShopName );	
+	nFontWidth = ui::GetWidth( szShopName );	
 	const DWORD dwImgColor = 0xffffffff;
 
 	if( nFontWidth < 40 ) 
@@ -911,7 +912,7 @@ void CHeadSay::RenderText( const char* szShopName, int x, int y )
 
 		_ImgShop[1].SetScaleW( nFontWidth );
 		_ImgShop[1].Render( x, y, dwImgColor );
-		CGuiFont::s_Font.BRender( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
+		ui::BRender( szShopName, x + (nFontWidth - nFontTrueWidth) / 2, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
 	}
 	else
 	{
@@ -924,7 +925,7 @@ void CHeadSay::RenderText( const char* szShopName, int x, int y )
 
 		_ImgShop[1].SetScaleW( nFontWidth );
 		_ImgShop[1].Render( x, y, dwImgColor );
-		CGuiFont::s_Font.BRender( szShopName, x, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
+		ui::BRender( szShopName, x, y+_nShopFontYOff, COLOR_BLACK, COLOR_WHITE );
 	}
 }
 

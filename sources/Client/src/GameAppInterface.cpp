@@ -51,6 +51,7 @@
 #include "Scene.h"
 
 #include "MPFont.h"
+#include "FontManager.h"
 #include "SmallMap.h"
 #include "LoginScene.h"
 #include "WorldScene.h"
@@ -625,8 +626,9 @@ void CGameApp::_RenderTipText() {
 			}
 			DWORD const dwAlpha = tipText->btAlpha << 24;
 			DWORD const dwColor = dwAlpha | 0x00f01000;
-			g_CFont.GetTextSize(tipText->szText, &sz);
-			g_CFont.DrawText(tipText->szText, (GetWindowWidth() - sz.cx) / 2, nTextY, dwColor);
+			CMPFont* pTipFont = FontManager::Instance().Get(FontSlot::TipText);
+			pTipFont->GetTextSize(tipText->szText, &sz);
+			pTipFont->DrawText(tipText->szText, (GetWindowWidth() - sz.cx) / 2, nTextY, dwColor);
 			nTextY += 24;
 		}
 
@@ -830,16 +832,12 @@ void CGameApp::RenderColourQueue() {
 				DWORD dwColor = dwAlpha | curpair.second;
 
 				SIZE size;
-				_BottomFont.GetTextSize(tmp->szText, &size);
-				/*_BottomFont.DrawText(tmp->szText,
-									(GetWindowWidth()-size.cx) / 2,
-									((floor(GetWindowHeight() * 2.2)) - size.cy) / 3 - 18 * i,
-									//18 * i + ((GetWindowHeight() * 2) - size.cy) / 3,
-									dwColor);*/
+				CMPFont* pBottomFont = FontManager::Instance().Get(FontSlot::BottomShadow);
+				pBottomFont->GetTextSize(tmp->szText, &size);
 
 				int x = (GetWindowWidth() - size.cx) / 2;
 				int y = (floor(GetWindowHeight() * 2.025) - size.cy) / 3 + 18 * i;
-				_BottomFont.DrawTextShadow(tmp->szText, x + 1, y + 1, x, y, D3DXCOLOR(0, 0, 0, 1), (DWORD)dwColor);
+				pBottomFont->DrawTextShadow(tmp->szText, x + 1, y + 1, x, y, D3DXCOLOR(0, 0, 0, 1), (DWORD)dwColor);
 				//0xff808000
 			}
 			else {

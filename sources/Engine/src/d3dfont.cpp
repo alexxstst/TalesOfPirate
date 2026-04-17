@@ -115,7 +115,7 @@ HRESULT CD3DFont::InitDeviceObjects( LPDIRECT3DDEVICE8 pd3dDevice )
 
     // Create a new texture for the font
     hr = m_pd3dDevice->CreateTexture( m_dwTexWidth, m_dwTexHeight, 1,
-                                      0, D3DFMT_A4R4G4B4,
+                                      0, D3DFMT_A8R8G8B8,
                                       D3DPOOL_MANAGED, &m_pTexture );
     if( FAILED(hr) )
         return hr;

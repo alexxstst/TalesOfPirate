@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uieditkey.h"
 #include "gameapp.h"
 #include "uirender.h"
@@ -139,7 +140,7 @@ void CEditKey::Render()
 
 bool CEditKey::SetFont( DWORD dwFont )
 {
-	if( !CGuiFont::s_Font.GetFont( dwFont ) ) return false;
+	if( !ui::GetFont( dwFont ) ) return false;
 
 	_dwFontIndex = dwFont;
 	Init();
@@ -149,7 +150,7 @@ bool CEditKey::SetFont( DWORD dwFont )
 void CEditKey::Init()
 {	
 	int w, h;
-	CGuiFont::s_Font.GetSize( _dwFontIndex, GetLanguageString(489).c_str(), w, h );
+	ui::GetSize( _dwFontIndex, GetLanguageString(489).c_str(), w, h );
 	_dwCursorHeight = h;
 }
 

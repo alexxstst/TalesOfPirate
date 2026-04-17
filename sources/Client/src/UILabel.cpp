@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uilabel.h"
 
 using namespace GUI;
@@ -21,7 +22,7 @@ CLabel::~CLabel(void)
 
 void CLabel::Render()
 {	
-	CGuiFont::s_Font.Render( (char*)_caption.c_str(), GetX(), GetY(), _color );
+	ui::Render( (char*)_caption.c_str(), GetX(), GetY(), _color );
 }
 
 //---------------------------------------------------------------------------
@@ -81,38 +82,38 @@ void CLabelEx::Render()
 		if ( _IsCenter == 0 )
 		{
 			//if(_caption == "")
-			//	CGuiFont::s_Font.BRender( _nFontIndex, "", GetX(), GetY(), _color, _clShadow );
+			//	ui::BRender( _nFontIndex, "", GetX(), GetY(), _color, _clShadow );
 			//else
-				CGuiFont::s_Font.BRender( _nFontIndex, (const char*)_caption.c_str(), GetX(), GetY(), _color, _clShadow );
+				ui::BRender( _nFontIndex, (const char*)_caption.c_str(), GetX(), GetY(), _color, _clShadow );
 		}
 		else if (_IsCenter == 2)
 		{
-			int textWidth = CGuiFont::s_Font.GetWidth(_caption.c_str());
+			int textWidth = ui::GetWidth(_caption.c_str());
 			int posX = GetWidth() - textWidth;
-			CGuiFont::s_Font.BRender(_nFontIndex, (const char*)_caption.c_str(), GetX() + posX, GetY(), _color, _clShadow);
+			ui::BRender(_nFontIndex, (const char*)_caption.c_str(), GetX() + posX, GetY(), _color, _clShadow);
 		}
 		else
 		{
-			int posX =  (GetWidth() - CGuiFont::s_Font.GetWidth( _caption.c_str() ))/2;
-			CGuiFont::s_Font.BRender( _nFontIndex, (const char*)_caption.c_str(), GetX() + posX, GetY(), _color, _clShadow );
+			int posX =  (GetWidth() - ui::GetWidth( _caption.c_str() ))/2;
+			ui::BRender( _nFontIndex, (const char*)_caption.c_str(), GetX() + posX, GetY(), _color, _clShadow );
 		}
 	}
 	else
 	{
 		if ( _IsCenter == 0 )
 		{
-            CGuiFont::s_Font.Render( _nFontIndex, (char*)_caption.c_str(), GetX(), GetY(), _color );
+            ui::Render( _nFontIndex, (char*)_caption.c_str(), GetX(), GetY(), _color );
 		}
 		else if ( _IsCenter == 2 )
 		{
             
-			int posX =  (GetWidth() - CGuiFont::s_Font.GetWidth( _caption.c_str() )*2);
-			CGuiFont::s_Font.Render( _nFontIndex, (char*)_caption.c_str(), GetX() + posX, GetY(), _color );
+			int posX =  (GetWidth() - ui::GetWidth( _caption.c_str() )*2);
+			ui::Render( _nFontIndex, (char*)_caption.c_str(), GetX() + posX, GetY(), _color );
 		}
 		else
 		{
-			int posX =  (GetWidth() - CGuiFont::s_Font.GetWidth( _caption.c_str() ))/2;
-			CGuiFont::s_Font.Render( _nFontIndex, (char*)_caption.c_str(), GetX() + posX, GetY(), _color );
+			int posX =  (GetWidth() - ui::GetWidth( _caption.c_str() ))/2;
+			ui::Render( _nFontIndex, (char*)_caption.c_str(), GetX() + posX, GetY(), _color );
 		}
 	}
 

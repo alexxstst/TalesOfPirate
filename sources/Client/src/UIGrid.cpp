@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uigrid.h"
 
 using namespace GUI;
@@ -155,7 +156,7 @@ void CGrid::Render()
 	}
 
 	if( _pPriorPage->GetIsShow() ) _pPriorPage->Render();
-	CGuiFont::s_Font.Render( _strPage, _nStrX, _nStrY, _clPageTextColor );
+	ui::Render( _strPage, _nStrX, _nStrY, _clPageTextColor );
 	if( _pNextPage->GetIsShow() ) _pNextPage->Render();
     if( _pSizeImg->GetIsShow() ) _pSizeImg->Render();
 }
@@ -175,7 +176,7 @@ void CGrid::Refresh()
 	_pPriorPage->Refresh();
 
 	_nStrX = _pPriorPage->GetX2() + _nMargin;
-	_nStrY = _pPriorPage->GetY() + (_pPriorPage->GetHeight() - CGuiFont::s_Font.GetHeight("S")) / 2;
+	_nStrY = _pPriorPage->GetY() + (_pPriorPage->GetHeight() - ui::GetHeight("S")) / 2;
 
 	_pNextPage->SetPos( _pPriorPage->GetWidth()+_nMargin*3+_nStrWidth, _pPriorPage->GetTop() );
 	_pNextPage->Refresh();

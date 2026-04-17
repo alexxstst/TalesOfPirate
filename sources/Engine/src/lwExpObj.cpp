@@ -195,10 +195,12 @@ LW_RESULT lwMtlTexInfo_Load(lwMtlTexInfo* info, FILE* fp, DWORD version)
                 t->tss_set[j].value1 = rsv->value;
             }
         }
-        //
-        if(info->tex_seq[0].format == D3DFMT_A4R4G4B4)
+        // Legacy данные мог указывать 16-bit форматы. Upgrade до A8R8G8B8
+        // (A1R5G5B5 / A4R4G4B4 → 8-bit альфа без потерь, память ×2).
+        if(info->tex_seq[0].format == D3DFMT_A4R4G4B4 ||
+           info->tex_seq[0].format == D3DFMT_A1R5G5B5)
         {
-            info->tex_seq[0].format = D3DFMT_A1R5G5B5;
+            info->tex_seq[0].format = D3DFMT_A8R8G8B8;
         }
     }
     else

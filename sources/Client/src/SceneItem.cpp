@@ -1,4 +1,5 @@
 ﻿#include "stdafx.h"
+#include "UIText.h"
 #include "SceneItem.h"
 #include "SceneItemSet.h"
 #include "Scene.h"
@@ -322,7 +323,7 @@ void CSceneItem::setAlpla(float alpha) {
 void CSceneItem::setIsShowName(bool v) {
 	_IsShowName = v;
 	if (v) {
-		CGuiFont::s_Font.GetSize(_pItemInfo->szName.c_str(), _nNameW, _nNameH);
+		ui::GetSize(_pItemInfo->szName.c_str(), _nNameW, _nNameH);
 	}
 }
 
@@ -344,7 +345,7 @@ void CSceneItem::RenderUI() {
 
 		nX -= _nNameW / 2;
 		GetRender().FillFrame(nX, nY, nX + _nNameW, nY + _nNameH, 0x90000000);
-		CGuiFont::s_Font.Render(_pItemInfo->szName.c_str(), nX, nY, 0xffffffff);
+		ui::Render(_pItemInfo->szName.c_str(), nX, nY, 0xffffffff);
 	}
 }
 

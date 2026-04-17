@@ -247,10 +247,6 @@ public:
 		return _IsMusicSystemValid;
 	}
 
-	CMPFont* GetFont() {
-		return &g_CFont;
-	}
-
 	RenderStateMgr* GetRenderStateMgr() {
 		return _rsm;
 	}
@@ -383,10 +379,7 @@ private: //
 
 	static char _szOutBuf[256];
 
-	CMPFont g_CFont;
-	CMPFont _MidFont; //
 	STipText _stMidFont;
-	CMPFont _BottomFont;
 
 	//int					_nCQueueIndex;
 	//STipText*			_sCQueue[MAX_CQUEUE];

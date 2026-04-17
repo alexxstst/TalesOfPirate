@@ -2,6 +2,8 @@
 #include "stmove.h"
 #include "actor.h"
 #include "GameApp.h"
+#include "FontManager.h"
+#include "MPFont.h"
 #include "NetProtocol.h"
 #include "Character.h"
 #include "DrawPointList.h"
@@ -81,7 +83,7 @@ void CWaitMoveState::RenderPing()
 	//  CTRL + ALT + SHIFT + K 
 
 	//static char szBuf[128] = { 0 };
-	//g_pGameApp->GetFont()->DrawText( szBuf, 5, 55, D3DCOLOR_ARGB(255,255,255,255));
+	//FontManager::Instance().Get(FontSlot::TipText)->DrawText( szBuf, 5, 55, D3DCOLOR_ARGB(255,255,255,255));
 }
 
 void CWaitMoveState::RenderCameraInfo()
@@ -95,23 +97,23 @@ void CWaitMoveState::RenderCameraInfo()
 	GetRender().FillFrame(0, y - 5, 160, y + 5 + step * line);	// 
 
 	sprintf( szBuf, " CameraRangeXY  = %.2f ", pCam->m_fxy);
-	g_pGameApp->GetFont()->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
+	FontManager::Instance().Get(FontSlot::TipText)->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
 	y += step;
 
 	sprintf( szBuf, " CameraRangeZ   = %.2f ", pCam->m_fz);
-	g_pGameApp->GetFont()->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
+	FontManager::Instance().Get(FontSlot::TipText)->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
 	y += step;
 
 	sprintf( szBuf, " CameraRangeFOV = %.2f ", pCam->m_ffov);
-	g_pGameApp->GetFont()->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
+	FontManager::Instance().Get(FontSlot::TipText)->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
 	y += step;
 
 	sprintf( szBuf, " CameraRotate   = %.2f ", pCam->m_fAngle);
-	g_pGameApp->GetFont()->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
+	FontManager::Instance().Get(FontSlot::TipText)->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
 	y += step;
 
 	sprintf( szBuf, " CameraShowSize = %d ", pCam->m_iShowWidth);
-	g_pGameApp->GetFont()->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
+	FontManager::Instance().Get(FontSlot::TipText)->DrawText( szBuf, 5, y, D3DCOLOR_ARGB(255,255,255,255));
 	y += step;
 #endif
 }

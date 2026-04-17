@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 
+#include "UIText.h"
 #include "GameApp.h"
 #include "cameractrl.h"
 #include "Character.h"
@@ -13,6 +14,7 @@
 #include "EffectObj.h"
 #include "Track.h"
 #include "MPFont.h"
+#include "FontManager.h"
 #include "SmallMap.h"
 #include "UIFormMgr.h"
 #include "script.h"
@@ -159,14 +161,10 @@ void CGameApp::End() {
 
 	SAFE_DELETE(_pMainCam);
 
-	g_CFont.ReleaseFont();
-	_MidFont.ReleaseFont();
-	_BottomFont.ReleaseFont();
+	FontManager::Instance().ClearFonts();
 
 	g_CEffBox.ReleaseBox();
 	CPathBox.ReleaseBox();
-
-	CGuiFont::s_Font.Clear();
 
 	SAFE_DELETE(_rsm);
 
@@ -239,22 +237,9 @@ BOOL CGameApp::_Init() {
 
 	g_Render.EnablePrint(INFO_GAME, TRUE);
 
-	// #define MPFONT_BOLD        0x0001
-	// #define MPFONT_ITALIC      0x0002
-	// #define MPFONT_UNLINE      0x0004
-
-#ifdef USE_RENDER
-	g_CFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(66).c_str()), 12);
-	_MidFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 16, 3, MPFONT_BOLD);
-	_BottomFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 12, 3, MPFONT_BOLD);
-#else
-	g_CFont.CreateFont(g_Render.GetDevice(), const_cast<char*>(GetLanguageString(66).c_str()), 12);
-	_MidFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 16, 3, MPFONT_BOLD);
-	_BottomFont.CreateFont(&g_Render, const_cast<char*>(GetLanguageString(67).c_str()), 12, 3, MPFONT_BOLD);
-#endif
-	g_CFont.BindingRes(&ResMgr);
-	_MidFont.BindingRes(&ResMgr);
-	_BottomFont.BindingRes(&ResMgr);
+	// Шрифты создаются в font_bootstrap.lua (вызывается из CFormMgr::Init).
+	// FontSlot::TipText / MidAnnounce / BottomShadow соответствуют бывшим
+	// g_CFont / _MidFont / _BottomFont. Доступ — FontManager::Instance().Get(...).
 
 	//SIZE sizes;
 	//g_CFont.GetTextSize("IDE\nokdote\n ",&sizes);
@@ -702,13 +687,13 @@ void CAniClock::Render(int x, int y) {
 	sprintf(txt, "%.0f%", RemainingTime());
 	const int check = int(RemainingTime());
 	if (check < 10) {
-		CGuiFont::s_Font.BRender(2, txt, x + 10, y + 10, COLOR_WHITE, COLOR_BLACK);
+		ui::BRender(2, txt, x + 10, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 	else if (check > 100) {
-		CGuiFont::s_Font.BRender(2, txt, x + 5, y + 10, COLOR_WHITE, COLOR_BLACK);
+		ui::BRender(2, txt, x + 5, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 	else {
-		CGuiFont::s_Font.BRender(2, txt, x + 9, y + 10, COLOR_WHITE, COLOR_BLACK);
+		ui::BRender(2, txt, x + 9, y + 10, COLOR_WHITE, COLOR_BLACK);
 	}
 }
 

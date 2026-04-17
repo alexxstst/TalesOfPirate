@@ -1,4 +1,5 @@
 ﻿#include "StdAfx.h"
+#include "UIText.h"
 #include "uitextbutton.h"
 #include "GameApp.h"
 #include "eventsoundset.h"
@@ -59,7 +60,7 @@ void CTextButton::Render()
 
 	//_pImage->Render( GetX(), GetY() );
 
-	if( !_strCaption.empty() )	CGuiFont::s_Font.Render( _strCaption.c_str(), GetX(), GetY(), _textColor );
+	if( !_strCaption.empty() )	ui::Render( _strCaption.c_str(), GetX(), GetY(), _textColor );
 }
 
 bool CTextButton::MouseRun( int x, int y, DWORD key )

@@ -441,7 +441,7 @@ lwITex*		CMPResManger::GetTextureByIDlw( int iID)
 #endif
 		lwITex* tex;
 
-		if(LW_FAILED(lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, 0, D3DFMT_A4R4G4B4)))
+		if(LW_FAILED(lwLoadTex(&tex, m_pSysGraphics->GetResourceMgr(), t_pszFile, 0, D3DFMT_A8R8G8B8)))
 		{
 			char szMsg[64];
 			sprintf(szMsg, "[id=%d]", iID);

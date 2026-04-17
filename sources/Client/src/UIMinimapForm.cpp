@@ -1,5 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "uiminimapform.h"
+#include "FontManager.h"
+#include "MPFont.h"
 #include "uiForm.h"
 #include "uicompent.h"
 #include "uilabel.h"
@@ -621,7 +623,7 @@ bool CMiniMapMgr::IsGuildWar()
 //Begin
 void CMiniMapMgr::_RenderBigMapHint(void)
 {
-	//FontModule::Font* pfont = g_pGameApp->GetFont();
+	//FontModule::Font* pfont = FontManager::Instance().Get(FontSlot::TipText);
 	//CMPFont				g_CFont
 	if(/*!pfont ||*/ !CGameApp::GetCurScene() || !CGameApp::GetCurScene()->GetLargerMap()) return;
 
@@ -806,7 +808,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
                 //ptRender.x -= size.cx >> 1;
                 //ptRender.y -= size.cy >> 1;
 
-               g_pGameApp->GetFont()->DrawText(pInfo->szDataName, ptRender.x, ptRender.y);
+               FontManager::Instance().Get(FontSlot::TipText)->DrawText(pInfo->szDataName, ptRender.x, ptRender.y);
             }
         }
     }
@@ -828,10 +830,10 @@ void CMiniMapMgr::_RenderBigMapHint(void)
         sprintf(szBuf, " Point: %d, %d ", ptCurMouse.x, ptCurMouse.y);
 
         SIZE size;
-        g_pGameApp->GetFont()->GetTextSize(szBuf, &size);
+        FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(szBuf, &size);
 
         GetRender().FillFrame(ptMouse.x + 32, ptMouse.y, ptMouse.x + 32 + size.cx, ptMouse.y + size.cy);
-       g_pGameApp->GetFont()->DrawText(szBuf, ptMouse.x + 32, ptMouse.y);
+       FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, ptMouse.x + 32, ptMouse.y);
 
 */
  		CMonsterInfo* pInfo = 0;
@@ -890,7 +892,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
                 strMonsterName[i] = szBuf;
 
                 SIZE size;
-                g_pGameApp->GetFont()->GetTextSize(szBuf, &size);
+                FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(szBuf, &size);
                 if(size.cx > sizeNameMax.cx) sizeNameMax.cx = size.cx;
             	 if(size.cy > sizeNameMax.cy) sizeNameMax.cy = size.cy;
             }
@@ -919,7 +921,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
                 GetRender().FillFrame(rcBigMap.left, rcRender.top, rcRender.left + sizeNameMax.cx, rcRender.top + (sizeNameMax.cy *nMonCount)); //*nMonCount
                 for(int i = 0; i < nMonCount; ++i)
                 {
-                   g_pGameApp->GetFont()->DrawText(const_cast<char*>(strMonsterName[i].c_str()), rcRender.left + 35, rcRender.top + 50);
+                   FontManager::Instance().Get(FontSlot::TipText)->DrawText(const_cast<char*>(strMonsterName[i].c_str()), rcRender.left + 35, rcRender.top + 50);
                    rcRender.top += sizeNameMax.cy;
                 }
             }
@@ -930,10 +932,10 @@ void CMiniMapMgr::_RenderBigMapHint(void)
        sprintf( szBuf," Point: %d, %d ", mouse_map_coordinate.x, mouse_map_coordinate.y);
 
         SIZE size;
-        g_pGameApp->GetFont()->GetTextSize(szBuf, &size);
+        FontManager::Instance().Get(FontSlot::TipText)->GetTextSize(szBuf, &size);
 
         GetRender().FillFrame(ptMouse.x + 32, ptMouse.y, ptMouse.x + 32 + size.cx, ptMouse.y + size.cy);
-       g_pGameApp->GetFont()->DrawText(szBuf, ptMouse.x + 32, ptMouse.y);
+       FontManager::Instance().Get(FontSlot::TipText)->DrawText(szBuf, ptMouse.x + 32, ptMouse.y);
 
 
 
