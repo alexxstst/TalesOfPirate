@@ -37,7 +37,11 @@
 
 #include "LootFilter.h"
 #include "AssetDatabase.h"
+#include "RenderAssetDatabase.h"
 #include "LanguageRecordStore.h"
+#include "LitEntryStore.h"
+#include "ItemLitStore.h"
+#include "FontManager.h"
 
 
 dbc::IniFile g_SystemIni;
@@ -57,7 +61,6 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 HBRUSH g_bk_brush;
 
 void StdoutRedirect();
-int InstallFont(const char* pszPath); // Font installation
 void CenterWindow(HWND hWnd); // Center window on screen
 
 
@@ -126,9 +129,13 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_Config.Load();
 
 	const auto assetDbPath = g_SystemIni["Assets"].GetString("StringAssetPack", "gamedata.sqlite");
+	const auto renderDbPath = g_SystemIni["Assets"].GetString("RenderAssetPack", "./render.sqlite");
 	const auto language = g_SystemIni["Main"].GetString("language", "english");
 	AssetDatabase::Instance()->Open(assetDbPath);
+	RenderAssetDatabase::Instance()->Open(renderDbPath);
 	LanguageRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb(), language, LanguageTarget::Client);
+	LitEntryStore::Instance()->Load(RenderAssetDatabase::Instance()->GetDb());
+	ItemLitStore::Instance()->Load(RenderAssetDatabase::Instance()->GetDb());
 	CCharMsg::InitChannelNames();
 
 	if (strParam.find("editor") != std::string::npos) // Launch game editor
@@ -158,7 +165,7 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	setlocale(LC_CTYPE, GetLanguageString(0).c_str());
 	// Set locale from language resource file  Add by Philip.Wu  2006-07-19
 
-	InstallFont(".\\Font"); // Auto-install fonts  Add by Philip.Wu  2006-08-07
+	FontManager::Instance().Init(g_SystemIni);
 
 	if (CheckDxVersion(dx_ver) == 0) {
 		MessageBox(NULL, GetLanguageString(187).c_str(), "error", MB_OK);
@@ -770,54 +777,6 @@ void StdoutRedirect() {
 	DWORD ThreadID;
 	HANDLE hThread = ::CreateThread(NULL, 0, ReadStdout, // Create reader thread
 									0, 0, &ThreadID);
-}
-
-
-// Install fonts
-int InstallFont(const char* pszPath) {
-	int nRet = 0;
-	char szWindow[256] = {0};
-	char szBuffer[256] = {0};
-
-	// Check if the font is already installed; if not, install automatically
-	GetWindowsDirectory(szWindow, sizeof(szWindow) / sizeof(szWindow[0])); // Get Windows directory full path
-	sprintf(szBuffer, "%s\\fonts\\simsun.ttc", szWindow);
-	if (-1 != access(szBuffer, 0)) {
-		return nRet;
-	}
-	else {
-		sprintf(szBuffer, "%s\\simsun.ttc", pszPath);
-		nRet += AddFontResource(szBuffer);
-	}
-
-
-	//WIN32_FIND_DATA oFinder;
-
-	//HANDLE hFind = FindFirstFile(szBuffer, &oFinder);
-
-	//if(hFind == INVALID_HANDLE_VALUE)
-	//{
-	//	return 0;
-	//}
-
-	//// Iterate over font directory
-	//while(FindNextFile(hFind, &oFinder) != 0)
-	//{
-	//	if(oFinder.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
-	//	{
-	//		continue;
-	//	}
-
-	//	nRet += AddFontResource(szBuffer);	//AddFontResourceEx(szBuffer, FR_NOT_ENUM, 0);
-	//}
-
-	//FindClose(hFind);
-
-	if (nRet) {
-		SendMessage(HWND_BROADCAST,WM_FONTCHANGE, 0, 0); // Broadcast font change to the system
-	}
-
-	return nRet;
 }
 
 

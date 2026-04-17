@@ -1196,12 +1196,6 @@
 					<File
 						RelativePath="..\src\ChaState.h">
 					</File>
-					<File
-						RelativePath="..\src\LitLoad.cpp">
-					</File>
-					<File
-						RelativePath="..\src\LitLoad.h">
-					</File>
 					<Filter
 						Name="State"
 						Filter="">
@@ -1280,12 +1274,6 @@
 				<Filter
 					Name="SceneItem"
 					Filter="">
-					<File
-						RelativePath="..\src\ItemLit.cpp">
-					</File>
-					<File
-						RelativePath="..\src\ItemLit.h">
-					</File>
 					<File
 						RelativePath="..\src\ItemLitAnim.cpp">
 					</File>
@@ -1574,6 +1562,12 @@
 			</File>
 			<File
 				RelativePath="..\src\FindPath.h">
+			</File>
+			<File
+				RelativePath="..\src\FontManager.cpp">
+			</File>
+			<File
+				RelativePath="..\src\FontManager.h">
 			</File>
 			<File
 				RelativePath="..\src\HairTool.cpp">

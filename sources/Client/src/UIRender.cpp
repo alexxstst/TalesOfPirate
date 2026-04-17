@@ -29,6 +29,7 @@
 #include "uitextparse.h"
 
 #include "GlobalVar.h"
+#include "FontManager.h"
 
 CUIPanel::CUIPanel()
 {
@@ -1406,6 +1407,7 @@ bool CFormMgr::Init(HWND hWnd)
 	{
 		CEdit::InitCursor( "texture/ui/editcursor.tga" );
 
+		FontManager::Instance().PushToLua(g_LuaState);
 		LoadLuaScript(g_LuaState, "scripts/lua/font.lua");
 		if( !CGuiFont::s_Font.Init() )
 		{

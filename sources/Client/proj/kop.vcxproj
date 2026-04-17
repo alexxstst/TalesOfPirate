@@ -175,6 +175,7 @@
     <ClCompile Include="..\src\EffectObj.cpp" />
     <ClCompile Include="..\src\Event.cpp" />
     <ClCompile Include="..\src\FindPath.cpp" />
+    <ClCompile Include="..\src\FontManager.cpp" />
     <ClCompile Include="..\src\FrndInviteFormMgr.cpp" />
     <ClCompile Include="..\src\GameAppFrameMove.cpp" />
     <ClCompile Include="..\src\GameAppInit.cpp" />
@@ -198,10 +199,8 @@
     <ClCompile Include="..\src\HMManage.cpp" />
     <ClCompile Include="..\src\HMSynchroObj.cpp" />
     <ClCompile Include="..\src\IsSkillUse.cpp" />
-    <ClCompile Include="..\src\ItemLit.cpp" />
     <ClCompile Include="..\src\ItemLitAnim.cpp" />
     <ClCompile Include="..\src\Language.cpp" />
-    <ClCompile Include="..\src\LitLoad.cpp" />
     <ClCompile Include="..\src\LoginScene.cpp" />
     <ClCompile Include="..\src\LootFilter.cpp" />
     <ClCompile Include="..\src\lua_platform.cpp" />
@@ -384,6 +383,7 @@
     <ClInclude Include="..\src\EffDelay.h" />
     <ClInclude Include="..\src\EffectObj.h" />
     <ClInclude Include="..\src\EffectSet.h" />
+    <ClInclude Include="..\src\FontManager.h" />
     <ClInclude Include="..\src\ElfSkillSet.h" />
     <ClInclude Include="..\src\Event.h" />
     <ClInclude Include="..\src\EventSoundSet.h" />
@@ -407,14 +407,12 @@
     <ClInclude Include="..\src\HMSynchroObj.h" />
     <ClInclude Include="..\src\InputBox.h" />
     <ClInclude Include="..\src\IsSkillUse.h" />
-    <ClInclude Include="..\src\ItemLit.h" />
     <ClInclude Include="..\src\ItemLitAnim.h" />
     <ClInclude Include="..\src\ItemPreSet.h" />
     <ClInclude Include="..\src\ItemRefineEffectSet.h" />
     <ClInclude Include="..\src\ItemRefineSet.h" />
     <ClInclude Include="..\src\ItemTypeSet.h" />
     <ClInclude Include="..\src\Language.h" />
-    <ClInclude Include="..\src\LitLoad.h" />
     <ClInclude Include="..\src\LoginScene.h" />
     <ClInclude Include="..\src\LootFilter.h" />
     <ClInclude Include="..\src\LuaInterface.h" />

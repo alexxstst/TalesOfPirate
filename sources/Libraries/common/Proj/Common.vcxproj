@@ -166,6 +166,9 @@
     <ClCompile Include="..\src\NPCListRecordStore.cpp" />
     <ClCompile Include="..\src\LanguageRecordStore.cpp" />
     <ClCompile Include="..\src\AssetDatabase.cpp" />
+    <ClCompile Include="..\src\RenderAssetDatabase.cpp" />
+    <ClCompile Include="..\src\LitEntryStore.cpp" />
+    <ClCompile Include="..\src\ItemLitStore.cpp" />
     <ClCompile Include="..\..\sqlite3\sqlite3.c">
       <CompileAs>CompileAsC</CompileAs>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
@@ -288,6 +291,11 @@
     <ClInclude Include="..\include\NPCListRecordStore.h" />
     <ClInclude Include="..\include\LanguageRecordStore.h" />
     <ClInclude Include="..\include\AssetDatabase.h" />
+    <ClInclude Include="..\include\RenderAssetDatabase.h" />
+    <ClInclude Include="..\include\LitEntryRecord.h" />
+    <ClInclude Include="..\include\LitEntryStore.h" />
+    <ClInclude Include="..\include\ItemLitRecord.h" />
+    <ClInclude Include="..\include\ItemLitStore.h" />
     <ClInclude Include="..\..\sqlite3\sqlite3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

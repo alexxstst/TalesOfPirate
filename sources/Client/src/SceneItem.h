@@ -8,12 +8,8 @@ class CGameScene;
 class CArcTrack;
 class CEvent;
 class CSceneHeight;
-class lwItemLit;
 class CEffectObj;
 class CCharacterModel;
-
-extern BOOL InitItemLit(const char* file);
-BOOL ClearItemLit();
 
 class CSceneItem : public MPSceneItem, public CSceneNode
 {

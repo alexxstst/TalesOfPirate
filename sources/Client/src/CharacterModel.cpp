@@ -7,7 +7,7 @@
 #include "EffectObj.h"
 #include "ItemRecord.h"
 #include "CharacterRecord.h"
-#include "LitLoad.h"
+#include "LitEntryStore.h"
 #include "RenderStateMgr.h"
 #include "GameApp.h"
 
@@ -416,39 +416,6 @@ int CCharacterModel::LoadPart(DWORD part_id, const char* file)
         return 0;
 
     Lit(part_id, 0);
-
-    /*
-    extern LitMgr g_lit_mgr;
-
-    if(_ModelType == MODEL_CHARACTER)
-    {
-        D3DCAPSX* caps = g_Render.GetInterfaceMgr()->dev_obj->GetDeviceCaps();
-        if(caps->MaxTextureBlendStages < 4 || caps->MaxSimultaneousTextures < 4)
-            return 1;
-
-        LitInfo* l = g_lit_mgr.Lit(0, 0, file);
-        if(l == 0)
-            return 1;
-
-        MPIPrimitive* p = MPCharacter::GetPhysique()->GetPrimitive(part_id);
-        lwPrimitiveTexLitA(p, l->str_buf[0], l->str_buf[1], ".\\texture\\lit\\", l->anim_type);
-        //lwPrimitiveTexLit(p, l->str_buf[0], ".\\texture\\lit\\");
-        DWORD vst = p->GetRenderCtrlAgent()->GetVertexShader();
-        DWORD new_vst;
-        switch(vst)
-        {
-        case VST_PU4NT0_LD:
-            new_vst = VSTU_SKINMESH0_TT3;
-            break;
-        case VST_PB1U4NT0_LD:
-            new_vst = VSTU_SKINMESH1_TT3;
-            break;
-        default:
-            MessageBox(NULL,"Crash, call jack", 0, 0);
-        }
-
-        lwPrimitiveSetVertexShader(p, new_vst);
-    }*/
 
     return 1;
 }
@@ -1382,8 +1349,6 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id)
     if(_PartFile[part_id] == 0)
         return 0;
 
-    extern LitMgr g_lit_mgr;
-
     if(_ModelType == MODEL_CHARACTER)
     {
         D3DCAPSX* caps = g_Render.GetInterfaceMgr()->dev_obj->GetDeviceCaps();
@@ -1393,14 +1358,15 @@ int CCharacterModel::Lit(DWORD part_id, DWORD lit_id)
         char file[260];
 		sprintf(file, "%s.lgo", _PartFile[part_id]);
 
-        LitInfo* l = g_lit_mgr.Lit(0, 0, file);
-        if(l == 0)
+        const LitEntryRecord* l = LitEntryStore::Instance()->Find(0, file);
+        if(l == nullptr)
             return 0;
 
-        if(lit_id >= l->str_num)
+        if(static_cast<size_t>(lit_id) >= l->_textures.size())
             return 0;
 
-        lwPrimitiveTexLitA(p, l->mask, l->str_buf[lit_id], ".\\texture\\lit\\", l->anim_type);
+        lwPrimitiveTexLitA(p, l->_mask.c_str(), l->_textures[lit_id].c_str(),
+                           ".\\texture\\lit\\", static_cast<DWORD>(l->_anim_type));
         DWORD vst = p->GetRenderCtrlAgent()->GetVertexShader();
 
 		// Modified by clp bug

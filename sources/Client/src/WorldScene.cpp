@@ -33,7 +33,6 @@
 #include "PacketCmd.h"
 #include "SkillRecord.h"
 #include "SceneLight.h"
-#include "LitLoad.h"
 #include "STAttack.h"
 #include "Actor.h"
 #include "UIHeadSay.h"

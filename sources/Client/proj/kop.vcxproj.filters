@@ -508,9 +508,6 @@
     <ClCompile Include="..\src\ChaState.cpp">
       <Filter>Scene\SceneNode\Character</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\LitLoad.cpp">
-      <Filter>Scene\SceneNode\Character</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\state_reading.cpp">
       <Filter>Scene\SceneNode\Character\State</Filter>
     </ClCompile>
@@ -543,9 +540,6 @@
     </ClCompile>
     <ClCompile Include="..\src\HMSynchroObj.cpp">
       <Filter>Scene\SceneNode\Character\ServerHarm</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ItemLit.cpp">
-      <Filter>Scene\SceneNode\SceneItem</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ItemLitAnim.cpp">
       <Filter>Scene\SceneNode\SceneItem</Filter>
@@ -644,6 +638,9 @@
       <Filter>Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\src\FindPath.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\FontManager.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
     <ClCompile Include="..\src\HairTool.cpp">
@@ -1084,9 +1081,6 @@
     <ClInclude Include="..\src\ChaState.h">
       <Filter>Scene\SceneNode\Character</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\LitLoad.h">
-      <Filter>Scene\SceneNode\Character</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\state_reading.h">
       <Filter>Scene\SceneNode\Character\State</Filter>
     </ClInclude>
@@ -1120,9 +1114,6 @@
     <ClInclude Include="..\src\HMSynchroObj.h">
       <Filter>Scene\SceneNode\Character\ServerHarm</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\ItemLit.h">
-      <Filter>Scene\SceneNode\SceneItem</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\ItemLitAnim.h">
       <Filter>Scene\SceneNode\SceneItem</Filter>
     </ClInclude>
@@ -1137,6 +1128,9 @@
     </ClInclude>
     <ClInclude Include="..\src\EffectObj.h">
       <Filter>Scene\SceneNode\Effect</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\FontManager.h">
+      <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\src\SceneArea.h">
       <Filter>Scene\SceneNode\SceneObj</Filter>

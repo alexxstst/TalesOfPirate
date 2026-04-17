@@ -8,7 +8,7 @@
 #include "SceneItem.h"
 #include "worldscene.h"
 #include "scenelight.h"
-#include "LitLoad.h"
+#include "LitEntryStore.h"
 #include "UISystemForm.h"
 #include <fstream>
 #include <iostream>
@@ -72,19 +72,17 @@ BOOL CSceneObj::_Create(int nScriptID,int nType)
 
     setYaw(0);
 
-    // debug by lsh
-    extern LitMgr g_lit_mgr;
-    DWORD num = this->GetPrimitiveNum();
-    for(DWORD i = 0; i < num; i++)
+    if(const LitEntryRecord* l = LitEntryStore::Instance()->Find(1, pInfo->_dataName); l && !l->_textures.empty())
     {
-        LitInfo* l = g_lit_mgr.Lit(1, i, pInfo->_dataName.c_str());
-        if(l)
+        const DWORD num = this->GetPrimitiveNum();
+        for(DWORD i = 0; i < num; i++)
         {
             lwIPrimitive* p = GetPrimitive(i);
-            lwPrimitiveTexLit(p, l->str_buf[0], ".\\texture\\lit\\", l->color_op, l->anim_type);
+            lwPrimitiveTexLit(p, l->_textures[0].c_str(), ".\\texture\\lit\\",
+                              static_cast<DWORD>(l->_color_op),
+                              static_cast<DWORD>(l->_anim_type));
         }
     }
-    // end
 
     return TRUE;
 }
