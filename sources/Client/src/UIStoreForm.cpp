@@ -24,6 +24,7 @@
 #include <shellapi.h>
 
 #include "GlobalVar.h"
+#include "HelpEntryStore.h"
 
 using namespace std;
 
@@ -1376,28 +1377,21 @@ namespace GUI
 
 	void CStoreMgr::_LoadStoreHelpInfo()
 	{
-		// 
+		//
 		static bool IsFirst = true;
 		if( IsFirst )
 		{
 			IsFirst = false;
-			FILE* fp = fopen( "./scripts/txt/StoreHelp.tx", "rt" );
-			if( fp )
+			std::string help( HelpEntryStore::Instance()->GetPage( HelpEntryStore::CATEGORY_STORE ) );
+			if( !help.empty() )
 			{
-				if( fseek(fp, 0, SEEK_END) == 0 )
+				if( help.size() > HELPINFO_DESPSIZE - 1 )
 				{
-					long size = ftell( fp );
-					fseek(fp, 0, SEEK_SET);
-
-					NET_HELPINFO Info;
-					memset( &Info, 0, sizeof(NET_HELPINFO) );
-					fread(Info.szDesp, size > HELPINFO_DESPSIZE - 1 ? HELPINFO_DESPSIZE - 1 : size, 1, fp);
-
-					memStoreHelp->SetCaption(Info.szDesp);
-					memStoreHelp->ProcessCaption();
-					memStoreHelp->Refresh();
+					help.resize( HELPINFO_DESPSIZE - 1 );
 				}
-				fclose( fp );
+				memStoreHelp->SetCaption( help.c_str() );
+				memStoreHelp->ProcessCaption();
+				memStoreHelp->Refresh();
 			}
 			return;
 		}

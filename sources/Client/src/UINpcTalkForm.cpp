@@ -23,6 +23,7 @@
 #include "GlobalVar.h"
 #include "UILabel.h"
 #include "AreaRecord.h"
+#include "HelpEntryStore.h"
 
 using namespace std;
 using namespace GUI;
@@ -234,27 +235,21 @@ void CNpcTalkMgr::SwitchMap()
 {
 	if( !(dynamic_cast<CWorldScene*>( CGameApp::GetCurScene() )) ) return;
 
-	// 
+	//
 	static bool IsFirstWorldScene = true;
 	if( IsFirstWorldScene )
 	{
 		IsFirstWorldScene = false;
-		FILE* fp = fopen( "./scripts/txt/HelpInfo.tx", "rt" );
-		if( fp )
+		auto intro = HelpEntryStore::Instance()->GetPage( HelpEntryStore::CATEGORY_INTRO );
+		if( !intro.empty() )
 		{
-			if( fseek(fp, 0, SEEK_END) == 0 )
-			{
-				long size = ftell( fp );
-				fseek(fp, 0, SEEK_SET);
-
-				NET_HELPINFO Info;
-				memset( &Info, 0, sizeof(NET_HELPINFO) );
-				//fread(Info.szDesp, size > ROLE_MAXNUM_DESPSIZE - 1 ? ROLE_MAXNUM_DESPSIZE - 1 : size, 1, fp);
-				fread(Info.szDesp, size > HELPINFO_DESPSIZE - 1 ? HELPINFO_DESPSIZE - 1 : size, 1, fp);
-				Info.byType = mission::MIS_HELP_DESP;
-				AddHelpInfo( Info );			
-			}
-			fclose( fp );
+			NET_HELPINFO Info;
+			memset( &Info, 0, sizeof(NET_HELPINFO) );
+			const size_t cap = HELPINFO_DESPSIZE - 1;
+			const size_t len = intro.size() > cap ? cap : intro.size();
+			memcpy( Info.szDesp, intro.data(), len );
+			Info.byType = mission::MIS_HELP_DESP;
+			AddHelpInfo( Info );
 		}
 		return;
 	}

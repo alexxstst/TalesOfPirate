@@ -434,7 +434,7 @@
 					RelativePath="..\src\GameAppRender.cpp">
 				</File>
 				<File
-					RelativePath="..\src\GameAppÊ¹ÓÃÖ¸ÄÏ.txt">
+					RelativePath="..\src\GameAppÊ¹ï¿½ï¿½Ö¸ï¿½ï¿½.txt">
 				</File>
 				<File
 					RelativePath="..\src\GameLoading.cpp">
@@ -779,9 +779,6 @@
 					Name="Game"
 					Filter="">
 					<File
-						RelativePath="..\src\helpinfoset.h">
-					</File>
-					<File
 						RelativePath="..\src\MonsterSet.h">
 					</File>
 					<File
@@ -903,12 +900,6 @@
 					</File>
 					<File
 						RelativePath="..\src\UIHeadSay.h">
-					</File>
-					<File
-						RelativePath="..\src\UIHelpInfoForm.cpp">
-					</File>
-					<File
-						RelativePath="..\src\UIHelpInfoForm.h">
 					</File>
 					<File
 						RelativePath="..\src\UIMailForm.cpp">
@@ -1361,7 +1352,7 @@
 				</Filter>
 			</Filter>
 			<Filter
-				Name="ÓÎÏ·ÊÀ½çScene"
+				Name="ï¿½ï¿½Ï·ï¿½ï¿½ï¿½ï¿½Scene"
 				Filter="">
 				<File
 					RelativePath="..\src\CreateChaScene.cpp">
@@ -1389,7 +1380,7 @@
 				</File>
 			</Filter>
 			<Filter
-				Name="»ùÀàScene"
+				Name="ï¿½ï¿½ï¿½ï¿½Scene"
 				Filter="">
 				<File
 					RelativePath="..\src\RenderStateMgr.cpp">

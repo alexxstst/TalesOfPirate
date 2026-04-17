@@ -312,7 +312,6 @@
     <ClCompile Include="..\src\UIGuildMgr.cpp" />
     <ClCompile Include="..\src\UIHaircutForm.cpp" />
     <ClCompile Include="..\src\UIHeadSay.cpp" />
-    <ClCompile Include="..\src\UIHelpInfoForm.cpp" />
     <ClCompile Include="..\src\UIImage.cpp" />
     <ClCompile Include="..\src\UIImeInput.cpp" />
     <ClCompile Include="..\src\UIItem.cpp" />
@@ -403,7 +402,6 @@
     <ClInclude Include="..\src\GuildMemberData.h" />
     <ClInclude Include="..\src\GuildMembersMgr.h" />
     <ClInclude Include="..\src\HairTool.h" />
-    <ClInclude Include="..\src\helpinfoset.h" />
     <ClInclude Include="..\src\HMAttack.h" />
     <ClInclude Include="..\src\HMManage.h" />
     <ClInclude Include="..\src\HMSynchroObj.h" />
@@ -526,7 +524,6 @@
     <ClInclude Include="..\src\UIGuildMgr.h" />
     <ClInclude Include="..\src\UIHaircutForm.h" />
     <ClInclude Include="..\src\UIHeadSay.h" />
-    <ClInclude Include="..\src\UIHelpInfoForm.h" />
     <ClInclude Include="..\src\UIImage.h" />
     <ClInclude Include="..\src\UIImeInput.h" />
     <ClInclude Include="..\src\UIItem.h" />

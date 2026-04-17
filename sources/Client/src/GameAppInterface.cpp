@@ -41,7 +41,7 @@
 #include "ResourceRecordStore.h"
 #include "StoneRecordStore.h"
 #include "ElfSkillRecordStore.h"
-#include "HelpInfoRecordStore.h"
+#include "HelpEntryStore.h"
 #include "AssetDatabase.h"
 
 #include "i_effect.h"
@@ -1141,24 +1141,18 @@ void CGameApp::ResetCaption() {
 void CGameApp::Loading(int nFrame) {
 	_IsUserEnabled = false;
 
-	std::vector<std::string> lines;
 	static std::string tiptext;
-	std::string line;
 
-	ifstream file("./scripts/txt/tips.tx");
-	//count number of total lines in the file and store the lines in the string vector
-	int total_lines = 0;
-	while (getline(file, line)) {
-		total_lines++;
-		lines.push_back(line);
+	auto tips = HelpEntryStore::Instance()->GetCategory(HelpEntryStore::CATEGORY_TIP);
+	const int total_lines = static_cast<int>(tips.size());
+	const int random_number = total_lines > 0 ? (rand() % total_lines) : 0;
+
+	if (total_lines > 0) {
+		tiptext = tips[random_number]->_content;
 	}
-
-	//generate a random number between 0 and count of total lines
-	int random_number = rand();
-	random_number = rand() % total_lines;
-
-	//fetch the line where line index (starting from 0) matches with the random number
-	tiptext = lines[random_number];
+	else {
+		tiptext.clear();
+	}
 
 	//snd_enable( false );
 	_nSwitchScene = nFrame;
@@ -1321,7 +1315,7 @@ void CGameApp::InitAllTable() {
 	ResourceRecordStore::Instance()->Load(db);
 	StoneRecordStore::Instance()->Load(db);
 	ElfSkillRecordStore::Instance()->Load(db);
-	HelpInfoRecordStore::Instance()->Load(db);
+	HelpEntryStore::Instance()->Load(db);
 }
 
 void CGameApp::ReleaseAllTable() {

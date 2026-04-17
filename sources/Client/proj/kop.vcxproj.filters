@@ -385,9 +385,6 @@
     <ClCompile Include="..\src\UIHeadSay.cpp">
       <Filter>Gui\Interface\Game</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\UIHelpInfoForm.cpp">
-      <Filter>Gui\Interface\Game</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\UIMailForm.cpp">
       <Filter>Gui\Interface\Game</Filter>
     </ClCompile>
@@ -895,9 +892,6 @@
     <ClInclude Include="..\src\UIGuildApply.h">
       <Filter>Gui\Interface\Guild\GuildApply</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\helpinfoset.h">
-      <Filter>Gui\Interface\Game</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\MonsterSet.h">
       <Filter>Gui\Interface\Game</Filter>
     </ClInclude>
@@ -959,9 +953,6 @@
       <Filter>Gui\Interface\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\src\UIHeadSay.h">
-      <Filter>Gui\Interface\Game</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\UIHelpInfoForm.h">
       <Filter>Gui\Interface\Game</Filter>
     </ClInclude>
     <ClInclude Include="..\src\UIMailForm.h">

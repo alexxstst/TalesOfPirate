@@ -3,7 +3,7 @@
 // Хранилище языковых строк на базе SQLite.
 //
 // Единая таблица для двух типов строк:
-//   - По числовому ID (из StringSet.txt): GetString(42)
+//   - По числовому ID: GetString(42)
 //   - По строковому ключу (из .res ресурсов): GetKeyString("GM_WEATHER_CPP_00001")
 //
 // Использование:
@@ -13,8 +13,6 @@
 
 #include "GameRecordset.h"
 #include <string>
-#include <fstream>
-#include <functional>
 
 // Контекст использования языковых строк
 enum class LanguageTarget : int {
@@ -25,7 +23,7 @@ enum class LanguageTarget : int {
 // Запись таблицы языковых строк
 struct LanguageStringRecord {
 	int _id{0};
-	std::string _key{};         // Строковый ключ (для ресурсов из .res). Пустой для StringSet.
+	std::string _key{};         // Строковый ключ (для ресурсов из .res). Пустой для числовых ID.
 	std::string _text{};
 	std::string _language{};
 	LanguageTarget _target{LanguageTarget::Client};
@@ -67,16 +65,6 @@ public:
 	// Вставить/обновить запись
 	static void Insert(SqliteDatabase& db, const LanguageStringRecord& record);
 
-	// Импортировать строки из StringSet.txt в SQLite.
-	static int ImportFromTextFile(SqliteDatabase& db, const std::string& filePath,
-								  std::string_view language, LanguageTarget target);
-
-	// Импортировать ресурсы из CResourceBundleManage в SQLite.
-	// Принимает callback-итератор: fn(const char* key, const char* value).
-	static int ImportFromResourceBundle(SqliteDatabase& db, std::string_view language,
-										LanguageTarget target,
-										const std::function<void(std::function<void(const char*, const char*)>)>& forEach);
-
 	// Гарантировать создание таблицы
 	static void EnsureTable(SqliteDatabase& db) {
 		EnsureCreated(db, TABLE_NAME, CREATE_TABLE_SQL);
@@ -97,9 +85,6 @@ protected:
 private:
 	std::string _language{"english"};
 	LanguageTarget _target{LanguageTarget::Client};
-
-	// Обработка escape-последовательностей (\n, \t) в строке
-	static void ProcessEscapes(std::string& text);
 };
 
 // Глобальная функция-обёртка для совместимости с GetString()

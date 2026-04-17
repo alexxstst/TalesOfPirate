@@ -142,11 +142,11 @@
     <ClCompile Include="..\src\ResourceRecordStore.cpp" />
     <ClCompile Include="..\src\StoneRecordStore.cpp" />
     <ClCompile Include="..\src\ElfSkillRecordStore.cpp" />
-    <ClCompile Include="..\src\HelpInfoRecordStore.cpp" />
     <ClCompile Include="..\src\ShadeRecordStore.cpp" />
     <ClCompile Include="..\src\SceneObjRecordStore.cpp" />
     <ClCompile Include="..\src\PoseRecordStore.cpp" />
     <ClCompile Include="..\src\CharacterActionStore.cpp" />
+    <ClCompile Include="..\src\HelpEntryStore.cpp" />
     <ClCompile Include="..\src\CharacterModelStore.cpp" />
     <ClCompile Include="..\src\AnimatedLightStore.cpp" />
     <ClCompile Include="..\src\ChaCreateRecordStore.cpp" />
@@ -244,10 +244,10 @@
     <ClInclude Include="..\include\StoneRecordStore.h" />
     <ClInclude Include="..\include\ElfSkillRecord.h" />
     <ClInclude Include="..\include\ElfSkillRecordStore.h" />
-    <ClInclude Include="..\include\HelpInfoRecord.h" />
-    <ClInclude Include="..\include\HelpInfoRecordStore.h" />
     <ClInclude Include="..\include\ShadeRecord.h" />
     <ClInclude Include="..\include\ShadeRecordStore.h" />
+    <ClInclude Include="..\include\HelpEntryRecord.h" />
+    <ClInclude Include="..\include\HelpEntryStore.h" />
     <ClInclude Include="..\include\SceneObjRecord.h" />
     <ClInclude Include="..\include\SceneObjRecordStore.h" />
     <ClInclude Include="..\include\PoseRecord.h" />
