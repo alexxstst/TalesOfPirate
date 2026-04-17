@@ -179,3 +179,63 @@ LPDIRECT3DDEVICE8	CMPEffectFile::GetDev()
 	return m_pDev;
 }
 
+BOOL CMPEffectFile::SetTechnique(int iIdx)
+{
+	if (FAILED(m_pEffect->SetTechnique(_vecTechniques[iIdx])))
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CMPEffectFile::SetTexture(LPCSTR TextureValue, IDirect3DTextureX* pTexture)
+{
+	if (FAILED(m_pEffect->SetTexture(TextureValue, pTexture)))
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CMPEffectFile::SetDword(LPCSTR DwName, DWORD dwvalue)
+{
+#if defined(LW_USE_DX8)
+	if (FAILED(m_pEffect->SetDword(DwName, dwvalue)))
+	{
+		return FALSE;
+	}
+#endif
+	return TRUE;
+}
+
+BOOL CMPEffectFile::Begin(DWORD dwIsSave)
+{
+	if (FAILED(m_pEffect->Begin(&m_passes, dwIsSave)))
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CMPEffectFile::Pass(UINT ipass)
+{
+#if (defined LW_USE_DX9)
+	if (FAILED(m_pEffect->BeginPass(ipass)) || FAILED(m_pEffect->CommitChanges()))
+#elif (defined LW_USE_DX8)
+	if (FAILED(m_pEffect->Pass(ipass)))
+#endif
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+
+BOOL CMPEffectFile::End()
+{
+	if (FAILED(m_pEffect->EndPass()) || FAILED(m_pEffect->End()))
+	{
+		return FALSE;
+	}
+	return TRUE;
+}
+

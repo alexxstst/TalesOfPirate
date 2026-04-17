@@ -1621,3 +1621,52 @@ void CGameApp::AutoTest() {
 
 	g_pGameApp->HasLogFile("autotest");
 }
+
+void CGameApp::SendMessage(DWORD dwTypeID, DWORD dwParam1, DWORD dwParam2)
+{
+	int i = 0;
+	while (!::PostMessage(GetHWND(), dwTypeID, dwParam1, dwParam2) && i <= 10)
+	{
+		Sleep(50);
+		i++;
+	}
+}
+
+void CGameApp::SetStartMinimap(int ix, int iy, int destx, int desty)
+{
+	xp = (float)((ix / SHOWRSIZE) * SHOWRSIZE) + (SHOWRSIZE / 2);
+	yp = (float)((iy / SHOWRSIZE) * SHOWRSIZE) + (SHOWRSIZE / 2);
+
+	destxp = (float)xp + destx * SHOWRSIZE;
+	destyp = (float)yp + desty * SHOWRSIZE;
+
+	xp1 = xp;
+	yp1 = yp;
+}
+
+DWORD CGameApp::GetSkillClock(int skill_id)
+{
+	std::map<int, DWORD>::iterator it = m_mapSkillClock.find(skill_id);
+	if (it != m_mapSkillClock.end())
+	{
+		return m_mapSkillClock[skill_id];
+	}
+	return NULL;
+}
+
+void CGameApp::SetSkillClock(int skill_id, DWORD dwSkillTime)
+{
+	if (!GetSkillClock(skill_id))
+	{
+		m_mapSkillClock[skill_id] = dwSkillTime;
+	}
+}
+
+void CGameApp::DeleteSkillClock(int skill_id)
+{
+	std::map<int, DWORD>::iterator it = m_mapSkillClock.find(skill_id);
+	if (it != m_mapSkillClock.end())
+	{
+		m_mapSkillClock.erase(skill_id);
+	}
+}

@@ -80,7 +80,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <ExceptionHandling>Async</ExceptionHandling>
       <Optimization>MaxSpeed</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\DirectX\DX9\Include;$(ProjectDir)..\..\Libraries\CryptoPP\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;USE_MINDPOWER;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>

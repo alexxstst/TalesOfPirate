@@ -603,48 +603,6 @@ inline void CCharacter::setNameColor(DWORD dwColor)
 	_dwNameColor = dwColor;
 }
 
-inline void CCharacter::_UpdateYaw()
-{
-	SetYaw( Angle2Radian((float)_nYaw) );
-    UpdateYawPitchRoll();
-	_nTurnCnt = 0;
-
-    if( GetDrunkState() )
-    {
-        UpdateChaMatrix();
-    }
-
-}
-
-inline void CCharacter::_UpdatePitch()
-{
-	SetPitch(Angle2Radian((float)_nPitch));
-    if( GetDrunkState() )
-    {
-        UpdateChaMatrix();
-    }
-}
-
-inline void CCharacter::_UpdateRoll()
-{
-	SetRoll(Angle2Radian((float)_nRoll));
-    if( GetDrunkState() )
-    {
-        UpdateChaMatrix();
-    }
-}
-
-inline void CCharacter::_UpdatePos()
-{
-    _vPos.x = (float)_nCurX / 100.0f;
-    _vPos.y = (float)_nCurY / 100.0f;
-    SetPos((float*)&_vPos); // , _vPos.z
-    if( GetDrunkState() )
-    {
-        UpdateChaMatrix();
-    }
-}
-
 inline bool	CCharacter::IsPlayer()
 {
 	return _eChaCtrlType==enumCHACTRL_PLAYER;
@@ -691,30 +649,9 @@ inline const char* CCharacter::getLogName()
 #endif
 }
 
-inline void CCharacter::_CalPos(float fProgressRate)
-{
-    float fX = (float)_nLastPosX * (1.0f - fProgressRate) + (float)_nTargetX * fProgressRate;
-    float fY = (float)_nLastPosY * (1.0f - fProgressRate) + (float)_nTargetY * fProgressRate;
-
-
-
-
-
-    setPos((int)fX, (int)fY);
-}
-
 inline bool CCharacter::IsMainCha()
 {
     return this==GetScene()->GetMainCha();
-}
-
-inline void CCharacter::_DetachAllItem()
-{
-    DetachItem( LINK_ID_LEFTHAND );
-    DetachItem( LINK_ID_RIGHTHAND );
-    DetachItem( 21 );
-    DetachItem( 22 );
-    DetachItem( 23 );
 }
 
 inline int CCharacter::ReCreate( DWORD type_id )           
@@ -726,100 +663,6 @@ inline int CCharacter::ReCreate( DWORD type_id )
 inline void CCharacter::_SetReadySkill( CSkillRecord* p )
 {
 	_pReadySkillInfo = p;
-}
-
-inline void CCharacter::HitEffect( int nAngle )
-{
-	if( !_hits.empty() )
-    {
-		for( hits::iterator it=_hits.begin(); it!=_hits.end(); ++it )
-        {
-            SelfEffect( it->nEffectID, it->nDummy, false, -1, nAngle );
-        }
-    }
-}
-
-
-inline void CCharacter::MoveTo(int nTargetX, int nTargetY)
-{
-    ForceMove( nTargetX, nTargetY );
-    if( !_isArrive )  FaceTo(_GetTargetAngle(nTargetX, nTargetY));
-}
-
-inline void CCharacter::CheckIsFightArea()
-{
-    if( _pScene->GetTerrain() )
-    {
-		_InFight = !(_pScene->GetTerrain()->GetTile(GetCurX()/100, GetCurY()/100)->sRegion & enumAREA_TYPE_NOT_FIGHT );
-	}
-}
-
-inline int CCharacter::GetPose( int pose )
-{
-	if( _InFight )
-    {
-        switch( pose )
-        {
-        case POSE_WAITING:
-            return POSE_WAITING2;
-        case POSE_RUN:
-			return POSE_RUN2;
-        }
-    }
-    else
-    {
-        switch( pose )
-        {
-        case POSE_WAITING2:
-            return POSE_WAITING;
-        case POSE_RUN2:
-			//if(g_cFindPath.LongPathFinding())
-			//	return POSE_RUN2;
-			//else
-			//	return POSE_RUN;
-			return POSE_RUN2;
-		case POSE_RUN:
-			//if(g_cFindPath.LongPathFinding())
-			//	return POSE_RUN2;
-			//else
-			//	return POSE_RUN;
-			return POSE_RUN;
-        }
-    }
-    return pose;
-}
-
-inline void	CCharacter::StopMove()              
-{ 
-	if( _IsMoveTimeType ) 
-		_isArrive=true; 
-	else 
-		_isStopMove = true;   
-
-}
-
-inline void	CCharacter::RefreshShadow()
-{
-	if( _IsShowShadow && (GetDefaultChaInfo()->chTerritory!=defCHA_TERRITORY_SEA) && GetActor()->GetState()==enumNormal && !IsHide() )
-	{
-		SetShadeShow( SCENENODE_SHADOW, true );
-	}
-	else
-	{
-		SetShadeShow( SCENENODE_SHADOW, false );
-	}
-}
-
-
-inline void CCharacter::StopAni()
-{
-    _Special.AllFalse();
-	_nHeightOff = 0;
-	_fMapHeight = 0.0f;
-	_nPoseHeightOff = ERROR_POSE_HEIGHT;
-
-	_nCurX = _nHelixCenterX;
-	_nCurY = _nHelixCenterY;
 }
 
 inline bool CCharacter::IsResource()
@@ -840,25 +683,3 @@ inline int CCharacter::GetTargetDistance()
 	else return GetDistance( _nCurX, _nCurY, _nTargetX, _nTargetY );
 }
 
-inline void CCharacter::setChaCtrlType( int type )          
-{
-	_eChaCtrlType = (EChaCtrlType)type;
-	switch( type )
-	{
-	case enumCHACTRL_NONE: _nDanger = 0; break;
-	case enumCHACTRL_PLAYER: _nDanger = 1; break;
-	case enumCHACTRL_NPC: _nDanger = 2; break;
-
-	case enumCHACTRL_NPC_EVENT: _nDanger = 7; break;
-	case enumCHACTRL_MONS_TREE: _nDanger = 7; break;
-	case enumCHACTRL_MONS_MINE: _nDanger = 7; break;
-	case enumCHACTRL_MONS_FISH: _nDanger = 7; break;
-	case enumCHACTRL_MONS_DBOAT: _nDanger = 7; break;
-
-	case enumCHACTRL_PLAYER_PET: _nDanger = 8; break;
-	case enumCHACTRL_MONS_REPAIRABLE: _nDanger = 9; break;
-
-	case enumCHACTRL_MONS: _nDanger = 10; break;
-	default: _nDanger = 0; break;
-	}
-}

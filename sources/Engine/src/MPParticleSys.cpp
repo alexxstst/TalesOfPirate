@@ -9,6 +9,45 @@
 
 #include "MPMap.h"
 
+D3DXMATRIX* GetMatrixRotation(D3DXMATRIX* pout, const D3DXVECTOR3* Point, const D3DXVECTOR3* aixs, float angle) {
+	D3DXMATRIX r, r2;
+	D3DXMATRIX r1 = D3DXMATRIX(1, 0, 0, 0,
+							   0, 1, 0, 0,
+							   0, 0, 1, 0,
+							   -Point->x, -Point->y, -Point->z, 1);
+	D3DXMatrixRotationAxis(&r2, aixs, angle);
+	r = r1 * r2;
+	r1 = D3DXMATRIX(1, 0, 0, 0,
+					0, 1, 0, 0,
+					0, 0, 1, 0,
+					Point->x, Point->y, Point->z, 1);
+	r = r * r1;
+	*pout = r;
+	return pout;
+}
+
+void GetDirRotation(D3DXVECTOR2* pOut, D3DXVECTOR3* pDir) {
+	float fDist = D3DXVec3Length(pDir);
+	if (pDir->z == 0) {
+		pOut->x = 0;
+	}
+	else {
+		const auto v = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
+		pOut->x = asinf(D3DXVec3Dot(pDir, &v) / fDist);
+	}
+	if (pDir->x == 0 && pDir->y == 0) {
+		pOut->y = 0;
+	}
+	else {
+		const D3DXVECTOR3 v[] = { D3DXVECTOR3(pDir->x, pDir->y, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f) };
+		fDist = D3DXVec3Length(&v[0]);
+		pOut->y = acosf(D3DXVec3Dot(&v[0], &v[1]) / fDist);
+		if (pDir->x >= 0.0f) {
+			pOut->y = -pOut->y;
+		}
+	}
+}
+
 #include "mpfont.h"
 #include "MPRender.h"
 
@@ -4652,4 +4691,43 @@ float CMPPartSys::GetPathVel()
 void  CMPPartSys::DeletePath()
 {
 	SAFE_DELETE(_pcPath);
+}
+
+void CMPPartSys::SetSysNum(int iParNum)
+{
+	if (iParNum > 100)
+	{
+		_iParNum = 100;
+	}
+	else if (_iParNum <= 0)
+	{
+		_iParNum = 1;
+	}
+	else
+	{
+		_iParNum = iParNum;
+	}
+
+	_vecParticle.setsize(_iParNum);
+}
+
+void CMPPartSys::SetFrameSize(int iFrame, float fsize, CMPResManger* pCResMagr)
+{
+	if (iFrame < _wFrameCount)
+	{
+		*_vecFrameSize[iFrame] = fsize;
+	}
+
+	if (m_bShade)
+	{
+		m_cShade.Create(_strTexName, pCResMagr, *_vecFrameSize[0]);
+	}
+}
+
+void CMPPartSys::SetAlpha(float falpha)
+{
+	for (int n = 0; n < _wFrameCount; n++)
+	{
+		_vecFrameColor[n]->a = falpha;
+	}
 }

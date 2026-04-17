@@ -11,125 +11,22 @@ class   MPRender;
 class CEffectCortrol
 {
 public:
-	CEffectCortrol(void)
-	{
-		m_bPlay = false;
-
-		m_fCurTime = 0.0f;
-		m_wCurFrame		= 0;
-		m_dwCurColor		= D3DCOLOR_ARGB(0,255,255,255);
-
-		m_SCurSize			= D3DXVECTOR3(1.0f,1.0f,1.0f);
-		m_SCurAngle			= D3DXVECTOR3(0,0,0);
-		m_SCurPos			= D3DXVECTOR3(0,0,0);
-
-		m_vecCurCoord.clear();
-		m_wCurCoordIndex	= 0;
-		m_fCurCoordTime		= 0;
-		m_wCurTexIndex		= 0;
-		m_fCurTexTime		 =0;
-		m_lpCurTex.clear();
-
-		m_iCurTimes = 0;
-
-		m_vecCurCoord.resize(10);
-		m_lpCurTex.resize(10);
-	}
-	//~CEffectCortrol(void);
+	CEffectCortrol();
 public:
-	void	Reset()
-	{
-		m_bPlay = false;
-		m_fCurTime = 0.0f;
-		m_wCurFrame		= 0;
-		m_wCurCoordIndex	= 0;
-		m_fCurCoordTime		= 0;
-		m_wCurTexIndex		= 0;
-		m_fCurTexTime		 =0;
-
-		//m_SCurSize			= D3DXVECTOR3(1.0f,1.0f,1.0f);
-		//m_SCurAngle			= D3DXVECTOR3(0,0,0);
-		//m_SCurPos			= D3DXVECTOR3(0,0,0);
-
-	}
-	void    Play()
-	{
-		//Reset();
-		m_iCurTimes = 0;
-		m_bPlay = true;
-	}
-	void	Stop()						
-	{
-		Reset();
-		m_bPlay = false;
-	}
+	void	Reset();
+	void	Play();
+	void	Stop();
 	bool	IsPlay()
 	{
 		return m_bPlay;
 	}
 
-	void GetTransformMatrix(D3DXMATRIX* pSOut,D3DXMATRIX* pRota = NULL)
-	{
-		D3DXMATRIX t_SMat, t_SMatRot;
-		D3DXMatrixScaling(&t_SMat,m_SCurSize.x,m_SCurSize.y,m_SCurSize.z);
-		if(!pRota)
-		{
-			D3DXMatrixRotationYawPitchRoll(&t_SMatRot,
-											m_SCurAngle.y,m_SCurAngle.x,m_SCurAngle.z);
-			D3DXMatrixMultiply(pSOut, &t_SMat, &t_SMatRot);
-		}
-		else
-		{
-			D3DXMATRIX t_mat;
-			D3DXMatrixRotationYawPitchRoll(&t_SMatRot,
-				m_SCurAngle.y,m_SCurAngle.x,m_SCurAngle.z);
-
-			D3DXMatrixMultiply(&t_mat, &t_SMatRot, pRota);
-
-			D3DXMatrixMultiply(pSOut, &t_SMat, &t_mat);
-		}
-		pSOut->_41 = m_SCurPos.x ;
-		pSOut->_42 = m_SCurPos.y ;
-		pSOut->_43 = m_SCurPos.z ;
-	}
-	void FillModelUV(CEffectModel*	pCModel);
-	//{
-	//	for(WORD i = 0; i < pCModel->GetVerCount(); i++)
-	//	{
-	//		pCModel->GetDev()->SetVertexShaderConstant(9 + i, m_vecCurCoord[i], 1);
-	//	}
-	//}
-	void FillTextureUV(CEffectModel*	pCModel);
-	//{
-	//	for(WORD i = 0; i < pCModel->GetVerCount(); i++)
-	//	{
-	//		pCModel->GetDev()->SetVertexShaderConstant(9 + i, m_lpCurTex[i], 1);
-	//	}
-	//}
-
-	void FillDefaultUV(CEffectModel*	pCModel,TEXCOORD& coord);
-
-	void FillModelUVSoft(CEffectModel*	pCModel)
-	{
-		SEFFECT_VERTEX *pVertex;
-		pCModel->Lock((BYTE**)&pVertex);
-		for(WORD i = 0; i < pCModel->GetVerCount(); ++i)
-		{
-			pVertex[i].m_SUV = *m_vecCurCoord[i];
-		}
-		pCModel->Unlock();
-
-	}
-	void FillTextureUVSoft(CEffectModel*	pCModel)
-	{
-		SEFFECT_VERTEX *pVertex;
-		pCModel->Lock((BYTE**)&pVertex);
-		for(WORD i = 0; i < pCModel->GetVerCount(); ++i)
-		{
-			pVertex[i].m_SUV = *m_lpCurTex[i];
-		}
-		pCModel->Unlock();
-	}
+	void	GetTransformMatrix(D3DXMATRIX* pSOut, D3DXMATRIX* pRota = NULL);
+	void	FillModelUV(CEffectModel* pCModel);
+	void	FillTextureUV(CEffectModel* pCModel);
+	void	FillDefaultUV(CEffectModel* pCModel, TEXCOORD& coord);
+	void	FillModelUVSoft(CEffectModel* pCModel);
+	void	FillTextureUVSoft(CEffectModel* pCModel);
 	//////////////////////////////////////////////////////////////////////////
 	//!
 	float				m_fCurTime;
@@ -173,77 +70,38 @@ public:
 class CEffPath
 {
 public:
-	CEffPath(){	
-		//m_vecPath = NULL;
-		//m_vecDist = NULL;
-		//m_vecDir = NULL;
-		m_fVel = 1.f;m_iCurFrame = 0;m_fCurDist = 0;
+	CEffPath()
+	{
+		m_fVel = 1.f;
+		m_iCurFrame = 0;
+		m_fCurDist = 0;
 		m_bEnd = false;
 	}
-	~CEffPath(){		
-	//	SAFE_DELETE_ARRAY(m_vecPath);
-	//SAFE_DELETE_ARRAY(m_vecDist);
-	//SAFE_DELETE_ARRAY(m_vecDir);
-	}
-	void	Copy(CEffPath* pPath)
-	{
-		m_iFrameCount = pPath->m_iFrameCount;
-		//m_vecPath = new D3DXVECTOR3[m_iFrameCount];
-		//m_vecDist = new float[m_iFrameCount-1];
-		//m_vecDir = new D3DXVECTOR3[m_iFrameCount-1];
-		memcpy(m_vecPath,pPath->m_vecPath,sizeof(D3DXVECTOR3) * m_iFrameCount);
-		memcpy(m_vecDist,pPath->m_vecDist,sizeof(float) * (m_iFrameCount-1));
-		memcpy(m_vecDir,pPath->m_vecDir,sizeof(D3DXVECTOR3) * (m_iFrameCount-1));
-		m_fVel = pPath->m_fVel;
-		Reset();
-	}
+	~CEffPath() {}
 
-	void				Reset()		{ m_iCurFrame = 0;m_vCurPos = m_vecPath[0];m_fCurDist = 0;}
-	void				SetVel(float fvel)	{ m_fVel = fvel;}
-	float				GetVel()			{ return m_fVel;}
+	void				Copy(CEffPath* pPath);
+
+	void				Reset()		{ m_iCurFrame = 0; m_vCurPos = m_vecPath[0]; m_fCurDist = 0; }
+	void				SetVel(float fvel)	{ m_fVel = fvel; }
+	float				GetVel()			{ return m_fVel; }
 
 	bool				LoadPathFromFile(char* pszName);
-    bool                LoadPathFromFileLet(const char* file);
+	bool                LoadPathFromFileLet(const char* file);
 	void				SavePath(FILE* pf);
 	void				LoadPath(FILE* pf);
 
-	void				LoadPathFromMemory(CMemoryBuf*	pbuf);
+	void				LoadPathFromMemory(CMemoryBuf* pbuf);
 
+	void				FrameMove(float fDailTime);
 
-	void				FrameMove(float fDailTime)
-	{
-		if(m_iFrameCount<=0)
-			return;
-		m_bEnd = false;
+	D3DXVECTOR3*		GetCurPos()			{ return &m_vCurPos; }
+	D3DXVECTOR3*		GetNextPos();
 
-		float fvel = m_fVel * fDailTime;
-		m_fCurDist += fvel;
-		while (m_fCurDist >= m_vecDist[m_iCurFrame])
-		{
-			m_fCurDist -= m_vecDist[m_iCurFrame];
-			m_iCurFrame++;
-			if(m_iCurFrame >= m_iFrameCount-1)
-			{
-				m_iCurFrame = 0;
-				m_bEnd = true;
-			}
-		}
-		m_vCurPos = m_vecPath[m_iCurFrame] + (m_vecDir[m_iCurFrame] * m_fCurDist);
-	}
-	D3DXVECTOR3*		GetCurPos()			{ return &m_vCurPos;}
-	D3DXVECTOR3*		GetNextPos()		
-	{ 
-		if(m_iCurFrame >= m_iFrameCount - 1)
-			return &m_vCurPos;
-		return &m_vecPath[m_iCurFrame - 1];
-	}
+	D3DXVECTOR3*		GetCurDir()			{ return &m_vecDir[m_iCurFrame]; }
+	float				GetCurDist()		{ return m_vecDist[m_iCurFrame]; }
 
-
-	D3DXVECTOR3*		GetCurDir()			{ return &m_vecDir[m_iCurFrame];}
-	float				GetCurDist()		{ return m_vecDist[m_iCurFrame];}
-
-	D3DXVECTOR3*		GetStart()			{ return &m_vecPath[0];}
-	D3DXVECTOR3*		GetEnd()			{ return &m_vecPath[m_iFrameCount - 1];}
+	D3DXVECTOR3*		GetStart()			{ return &m_vecPath[0]; }
+	D3DXVECTOR3*		GetEnd()			{ return &m_vecPath[m_iFrameCount - 1]; }
 
 	bool				IsEnd()				{ return m_bEnd; }
 
@@ -363,151 +221,17 @@ public:
 
 	bool		 IsLoop()					{ return m_bLoop; }
 	bool		 IsPlaying()				{ return m_bPlay;}
-	bool		 IsPlay()				
-	{ 
-		for(int n = 0; n < m_iEffNum; n++)
-		{
-			if(m_vecCortrol[n]->IsPlay())
-				return true;
-		}
-		return false;
-	}
+	bool		 IsPlay();
 
 	//!
-	void		 Play(int iTime = 0)	/*iTime: 0 == loop, */	
-	{
-		//Reset();
-		m_bPlay = true;
-		if(iTime > 0)
-		{
-			m_bLoop = false;
-			m_iTimes = iTime;
-		}
-		else
-		{
-			m_bLoop = true;
-			m_iTimes = 0;
-		}
-		for(int n = 0; n < m_iEffNum; n++)
-		{
-			m_vecCortrol[n]->Play();
-			m_vecEffect[n]->PlayModel();
-		}
-	}
-	void		 Play2(int iTime = 0)	/*iTime: 0 == loop, */	
-	{
-		//Reset();
-		m_bPlay = true;
-		if(iTime > 0)
-		{
-			m_bLoop = false;
-			m_iTimes = iTime;
-		}
-		else
-		{
-			m_bLoop = true;
-			m_iTimes = 0;
-		}
-		for(int n = 0; n < m_iEffNum; n++)
-		{
-			m_vecCortrol[n]->Play();
-		}
-	}
-	void		 Stop()						
-	{
-		Reset();
-		m_bPlay = false;	
-		m_iTimes = 0;
-		//m_iCurTimes = 0;
-	}
+	void		 Play(int iTime = 0);
+	void		 Play2(int iTime = 0);
+	void		 Stop();
 
-	void		FreeEffect()
-	{
-		m_vecEffect.clear();
-		m_iEffNum = 0;
-	}
-	void		BindingEffect(I_Effect*	pCEffect)			
-	{
-		m_pCEffect = pCEffect;
-
-		m_iEffNum++;
-
-		m_vecEffect.resize(m_iEffNum);
-		m_vecEffect[m_iEffNum - 1] = pCEffect;
-
-		m_vecCortrol.setsize(m_iEffNum);
-		m_vecCortrol[m_iEffNum - 1]->m_vecCurCoord.setsize((WORD)pCEffect->m_pCModel->GetVerCount());
-		m_vecCortrol[m_iEffNum - 1]->m_lpCurTex.setsize((WORD)pCEffect->m_pCModel->GetVerCount());
-
-	}
-	
-	void		BindingEffect(std::vector<I_Effect>&	CEffectArray)			
-	{
-		ClearEffect();
-		int n;
-		m_bPlay = false;
-
-		m_iEffNum = (int)CEffectArray.size();
-		m_vecEffect.clear();
-
-		m_vecEffect.resize(m_iEffNum);
-		for( n = 0; n < m_iEffNum; n++)
-		{
-				m_vecEffect[n] = new I_Effect;
-				m_vecEffect[n]->CopyEffect(&CEffectArray[n]); 
-		}
-
-		m_vecCortrol.resize(m_iEffNum);
-		m_vecCortrol.setsize(m_iEffNum);
-		for(n = 0; n < m_iEffNum; n++)
-		{
-			m_vecCortrol[n]->m_vecCurCoord.setsize(CEffectArray[n].m_CTexCoordlist.m_wVerCount);
-			//m_vecCortrol[n]->m_lpCurTex.clear();
-			m_vecCortrol[n]->m_lpCurTex.setsize(CEffectArray[n].m_CTexCoordlist.m_wVerCount);
-		}
-	}
-	void	    BindingRes(CMPResManger* pResMagr)			
-	{ 
-		m_bPlay = false;	
-
-		m_pResMgr = pResMagr;
-		int n;
-		for( n = 0; n < m_iEffNum; n++)
-			m_vecEffect[n]->BoundingRes(pResMagr);
-
-		m_pfDailTime = pResMagr->GetDailTime();
-		m_pCEffectFile = pResMagr->GetEffectFile();
-		int idx = pResMagr->GetEffectID(m_vecEffect[0]->getEffectName());
-
-		if( idx == -1 )
-		{
-			char szData[128];
-			sprintf( szData, "(ID%d)", idx );
-			MessageBox( NULL, szData, "Error", MB_OK );
-		}
-
-		EffParameter *pParam = pResMagr->GetEffectParamByID(idx);
-		m_iIdxTech = pParam->m_iIdxTech;/*pResMagr->GetEffectTechByID(idx);*/
-
-		m_bUsePath = pParam->m_bUsePath;
-		m_bUseSound = pParam->m_bUseSound;
-		m_strPathName = pParam->m_szPathName;
-		m_strSoundName = pParam->m_szSoundName;
-
-		m_bRotating = pParam->m_bRotating;
-		m_fRotaVel  = pParam->m_fRotaVel;
-		m_SVerRota	= pParam->m_SVerRota;
-
-		if(m_bUsePath)
-		{
-			m_pPath = pResMagr->GetEffPath(pResMagr->GetEffPathID(m_strPathName));
-		}
-
-		m_pMatViewProj = pResMagr->GetViewProjMat();
-		m_bUseSoft = pResMagr->m_bUseSoft;
-
-		D3DXMatrixIdentity(&m_SMatTempRota);
-	}
+	void		 FreeEffect();
+	void		 BindingEffect(I_Effect* pCEffect);
+	void		 BindingEffect(std::vector<I_Effect>& CEffectArray);
+	void		 BindingRes(CMPResManger* pResMagr);
 
 	int			GetSubEffectFrameCount(int idx)				
 	{ 

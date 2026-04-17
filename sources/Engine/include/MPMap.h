@@ -266,29 +266,6 @@ private:
 	int							m_iRange{ 512 };
 };
 
-inline MPTile*	MPMap::GetTile(int nX, int nY)
-{
-	if(nX >= _nWidth || nY >= _nHeight || nX < 0 || nY < 0) 
-	{
-		return _pDefaultTile;
-	}
-
-	int nSectionX = nX / _nSectionWidth;
-	int nSectionY = nY / _nSectionHeight;
-
-	MPActiveMapSection *pSection = GetActiveSection(nSectionX, nSectionY);
-	if(pSection && pSection->pTileData) 
-	{
-		int nOffX = nX % _nSectionWidth;
-		int nOffY = nY % _nSectionHeight;
-		return pSection->pTileData + nOffY * _nSectionWidth + nOffX;
-		//return _pDefaultTile;
-	}
-	
-	return _pDefaultTile;
-}
-
-
 inline MPTile* MPMap::GetGroupTile(int nX, int nY, int nGroupNo)
 {
 	return GetTile(nX + MPTile::Offset[nGroupNo][0], nY + MPTile::Offset[nGroupNo][1]);
@@ -299,77 +276,10 @@ inline MPActiveMapSection*	MPMap::GetActiveSection(int nSectionX, int nSectionY)
 	return _ActiveSectionArray[nSectionY][nSectionX];
 }
 
-inline BOOL MPMap::IsPointVisible(float fX, float fY)
-{
-	float fStartX = _fShowCenterX - (float)_nShowWidth  / 2;
-	float fStartY = _fShowCenterY - (float)_nShowHeight / 2;
-        
-    float fEndX   = fStartX + (float)_nShowWidth;
-	float fEndY   = fStartY + (float)_nShowHeight;
-	
-    // fStartX-=3;
-    // fStartY-=3;
-    // fEndX+=3;
-    // fEndY+=3;
-	if(fX >= fStartX && fY >= fStartY && fX <= fEndX && fY <= fEndY) return TRUE;
-	return FALSE;
-}
-
 inline void CopyMapSection(MPActiveMapSection *pSource, MPActiveMapSection *pDest)
 {
    memcpy(pDest, pSource, sizeof(MPActiveMapSection));
    memcpy(pDest->pTileData, pSource->pTileData, sizeof(MPTile) * 64);
-}
-
-inline float MPMap::GetTileHeight(int x, int y) // 
-{
-    int offx = x - _nLastTileStartX;
-    int offy = y - _nLastTileStartY;
-
-    if(offx < 0 || offx >= 100) return 0.0f;
-    if(offy < 0 || offy >= 100) return 0.0f;
-
-    return _fTileHeightBuffer[offy][offx];
-}
-
-inline short MPMap::GetTileRegionAttr(int x, int y) // 
-{
-    int offx = x - _nLastTileStartX;
-    int offy = y - _nLastTileStartY;
-
-    if(offx < 0 || offx >= 100) return 0;
-    if(offy < 0 || offy >= 100) return 0;
-
-    return _sTileRegionAttr[offy][offx];
-}
-
-inline float MPMap::GetGridHeight(int x, int y) // Small grid coordinates
-{
-	try 
-	{
-		int offx = x - _nLastGridStartX;
-		int offy = y - _nLastGridStartY;
-		
-		if(offx < 0 || offx >= _nGridShowWidth) return 0.0f;
-		if(offy < 0 || offy >= _nGridShowHeight) return 0.0f;
-			
-		return _fHeightBuffer[offy][offx];
-	}
-	catch (...)
-	{
-		
-	}
-}
-
-inline BYTE MPMap::IsGridBlock(int x, int y) // 
-{
-    int offx = x - _nLastGridStartX;
-    int offy = y - _nLastGridStartY;
-	
-	if(offx < 0 || offx >= _nGridShowWidth)  return 1;
-    if(offy < 0 || offy >= _nGridShowHeight) return 1;
-
-    return _btBlockBuffer[offy][offx];
 }
 
 #endif

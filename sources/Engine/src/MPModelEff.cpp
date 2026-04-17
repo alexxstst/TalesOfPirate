@@ -1462,3 +1462,287 @@ void	CMPStrip::CopyStrip(CMPStrip* pstrip)
 	_eDestBlend =  pstrip->_eDestBlend;
 }
 
+CEffectCortrol::CEffectCortrol()
+{
+	m_bPlay = false;
+
+	m_fCurTime = 0.0f;
+	m_wCurFrame = 0;
+	m_dwCurColor = D3DCOLOR_ARGB(0, 255, 255, 255);
+
+	m_SCurSize = D3DXVECTOR3(1.0f, 1.0f, 1.0f);
+	m_SCurAngle = D3DXVECTOR3(0, 0, 0);
+	m_SCurPos = D3DXVECTOR3(0, 0, 0);
+
+	m_vecCurCoord.clear();
+	m_wCurCoordIndex = 0;
+	m_fCurCoordTime = 0;
+	m_wCurTexIndex = 0;
+	m_fCurTexTime = 0;
+	m_lpCurTex.clear();
+
+	m_iCurTimes = 0;
+
+	m_vecCurCoord.resize(10);
+	m_lpCurTex.resize(10);
+}
+
+void CEffectCortrol::Reset()
+{
+	m_bPlay = false;
+	m_fCurTime = 0.0f;
+	m_wCurFrame = 0;
+	m_wCurCoordIndex = 0;
+	m_fCurCoordTime = 0;
+	m_wCurTexIndex = 0;
+	m_fCurTexTime = 0;
+}
+
+void CEffectCortrol::Play()
+{
+	m_iCurTimes = 0;
+	m_bPlay = true;
+}
+
+void CEffectCortrol::Stop()
+{
+	Reset();
+	m_bPlay = false;
+}
+
+void CEffectCortrol::GetTransformMatrix(D3DXMATRIX* pSOut, D3DXMATRIX* pRota)
+{
+	D3DXMATRIX t_SMat, t_SMatRot;
+	D3DXMatrixScaling(&t_SMat, m_SCurSize.x, m_SCurSize.y, m_SCurSize.z);
+	if (!pRota)
+	{
+		D3DXMatrixRotationYawPitchRoll(&t_SMatRot,
+			m_SCurAngle.y, m_SCurAngle.x, m_SCurAngle.z);
+		D3DXMatrixMultiply(pSOut, &t_SMat, &t_SMatRot);
+	}
+	else
+	{
+		D3DXMATRIX t_mat;
+		D3DXMatrixRotationYawPitchRoll(&t_SMatRot,
+			m_SCurAngle.y, m_SCurAngle.x, m_SCurAngle.z);
+
+		D3DXMatrixMultiply(&t_mat, &t_SMatRot, pRota);
+		D3DXMatrixMultiply(pSOut, &t_SMat, &t_mat);
+	}
+	pSOut->_41 = m_SCurPos.x;
+	pSOut->_42 = m_SCurPos.y;
+	pSOut->_43 = m_SCurPos.z;
+}
+
+void CEffectCortrol::FillModelUVSoft(CEffectModel* pCModel)
+{
+	SEFFECT_VERTEX* pVertex;
+	pCModel->Lock((BYTE**)&pVertex);
+	for (WORD i = 0; i < pCModel->GetVerCount(); ++i)
+	{
+		pVertex[i].m_SUV = *m_vecCurCoord[i];
+	}
+	pCModel->Unlock();
+}
+
+void CEffectCortrol::FillTextureUVSoft(CEffectModel* pCModel)
+{
+	SEFFECT_VERTEX* pVertex;
+	pCModel->Lock((BYTE**)&pVertex);
+	for (WORD i = 0; i < pCModel->GetVerCount(); ++i)
+	{
+		pVertex[i].m_SUV = *m_lpCurTex[i];
+	}
+	pCModel->Unlock();
+}
+
+void CEffPath::Copy(CEffPath* pPath)
+{
+	m_iFrameCount = pPath->m_iFrameCount;
+	memcpy(m_vecPath, pPath->m_vecPath, sizeof(D3DXVECTOR3) * m_iFrameCount);
+	memcpy(m_vecDist, pPath->m_vecDist, sizeof(float) * (m_iFrameCount - 1));
+	memcpy(m_vecDir, pPath->m_vecDir, sizeof(D3DXVECTOR3) * (m_iFrameCount - 1));
+	m_fVel = pPath->m_fVel;
+	Reset();
+}
+
+void CEffPath::FrameMove(float fDailTime)
+{
+	if (m_iFrameCount <= 0)
+	{
+		return;
+	}
+	m_bEnd = false;
+
+	float fvel = m_fVel * fDailTime;
+	m_fCurDist += fvel;
+	while (m_fCurDist >= m_vecDist[m_iCurFrame])
+	{
+		m_fCurDist -= m_vecDist[m_iCurFrame];
+		m_iCurFrame++;
+		if (m_iCurFrame >= m_iFrameCount - 1)
+		{
+			m_iCurFrame = 0;
+			m_bEnd = true;
+		}
+	}
+	m_vCurPos = m_vecPath[m_iCurFrame] + (m_vecDir[m_iCurFrame] * m_fCurDist);
+}
+
+D3DXVECTOR3* CEffPath::GetNextPos()
+{
+	if (m_iCurFrame >= m_iFrameCount - 1)
+	{
+		return &m_vCurPos;
+	}
+	return &m_vecPath[m_iCurFrame - 1];
+}
+
+bool CMPModelEff::IsPlay()
+{
+	for (int n = 0; n < m_iEffNum; n++)
+	{
+		if (m_vecCortrol[n]->IsPlay())
+		{
+			return true;
+		}
+	}
+	return false;
+}
+
+void CMPModelEff::Play(int iTime)
+{
+	m_bPlay = true;
+	if (iTime > 0)
+	{
+		m_bLoop = false;
+		m_iTimes = iTime;
+	}
+	else
+	{
+		m_bLoop = true;
+		m_iTimes = 0;
+	}
+	for (int n = 0; n < m_iEffNum; n++)
+	{
+		m_vecCortrol[n]->Play();
+		m_vecEffect[n]->PlayModel();
+	}
+}
+
+void CMPModelEff::Play2(int iTime)
+{
+	m_bPlay = true;
+	if (iTime > 0)
+	{
+		m_bLoop = false;
+		m_iTimes = iTime;
+	}
+	else
+	{
+		m_bLoop = true;
+		m_iTimes = 0;
+	}
+	for (int n = 0; n < m_iEffNum; n++)
+	{
+		m_vecCortrol[n]->Play();
+	}
+}
+
+void CMPModelEff::Stop()
+{
+	Reset();
+	m_bPlay = false;
+	m_iTimes = 0;
+}
+
+void CMPModelEff::FreeEffect()
+{
+	m_vecEffect.clear();
+	m_iEffNum = 0;
+}
+
+void CMPModelEff::BindingEffect(I_Effect* pCEffect)
+{
+	m_pCEffect = pCEffect;
+
+	m_iEffNum++;
+
+	m_vecEffect.resize(m_iEffNum);
+	m_vecEffect[m_iEffNum - 1] = pCEffect;
+
+	m_vecCortrol.setsize(m_iEffNum);
+	m_vecCortrol[m_iEffNum - 1]->m_vecCurCoord.setsize((WORD)pCEffect->m_pCModel->GetVerCount());
+	m_vecCortrol[m_iEffNum - 1]->m_lpCurTex.setsize((WORD)pCEffect->m_pCModel->GetVerCount());
+}
+
+void CMPModelEff::BindingEffect(std::vector<I_Effect>& CEffectArray)
+{
+	ClearEffect();
+	int n;
+	m_bPlay = false;
+
+	m_iEffNum = (int)CEffectArray.size();
+	m_vecEffect.clear();
+
+	m_vecEffect.resize(m_iEffNum);
+	for (n = 0; n < m_iEffNum; n++)
+	{
+		m_vecEffect[n] = new I_Effect;
+		m_vecEffect[n]->CopyEffect(&CEffectArray[n]);
+	}
+
+	m_vecCortrol.resize(m_iEffNum);
+	m_vecCortrol.setsize(m_iEffNum);
+	for (n = 0; n < m_iEffNum; n++)
+	{
+		m_vecCortrol[n]->m_vecCurCoord.setsize(CEffectArray[n].m_CTexCoordlist.m_wVerCount);
+		m_vecCortrol[n]->m_lpCurTex.setsize(CEffectArray[n].m_CTexCoordlist.m_wVerCount);
+	}
+}
+
+void CMPModelEff::BindingRes(CMPResManger* pResMagr)
+{
+	m_bPlay = false;
+
+	m_pResMgr = pResMagr;
+	int n;
+	for (n = 0; n < m_iEffNum; n++)
+	{
+		m_vecEffect[n]->BoundingRes(pResMagr);
+	}
+
+	m_pfDailTime = pResMagr->GetDailTime();
+	m_pCEffectFile = pResMagr->GetEffectFile();
+	int idx = pResMagr->GetEffectID(m_vecEffect[0]->getEffectName());
+
+	if (idx == -1)
+	{
+		char szData[128];
+		sprintf(szData, "(ID%d)", idx);
+		MessageBox(NULL, szData, "Error", MB_OK);
+	}
+
+	EffParameter* pParam = pResMagr->GetEffectParamByID(idx);
+	m_iIdxTech = pParam->m_iIdxTech;
+
+	m_bUsePath = pParam->m_bUsePath;
+	m_bUseSound = pParam->m_bUseSound;
+	m_strPathName = pParam->m_szPathName;
+	m_strSoundName = pParam->m_szSoundName;
+
+	m_bRotating = pParam->m_bRotating;
+	m_fRotaVel = pParam->m_fRotaVel;
+	m_SVerRota = pParam->m_SVerRota;
+
+	if (m_bUsePath)
+	{
+		m_pPath = pResMagr->GetEffPath(pResMagr->GetEffPathID(m_strPathName));
+	}
+
+	m_pMatViewProj = pResMagr->GetViewProjMat();
+	m_bUseSoft = pResMagr->m_bUseSoft;
+
+	D3DXMatrixIdentity(&m_SMatTempRota);
+}
+

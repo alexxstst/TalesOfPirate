@@ -2314,3 +2314,67 @@ void CMPResManger::Render()
 	}
 }
 
+void CMPResManger::Clear()
+{
+	for (int i = 0; i < (int)_vecPartArray.size(); ++i)
+	{
+		CMPPartCtrl* part = _vecPartArray[i];
+		if (part)
+		{
+			part->Reset();
+		}
+	}
+}
+
+void CMPResManger::UpdateMatrix()
+{
+	D3DXMatrixInverse(&_MatBBoard, NULL, _pMatView);
+	_MatBBoard._41 = 0.0f;
+	_MatBBoard._42 = 0.0f;
+	_MatBBoard._43 = 0.0f;
+
+	D3DXMatrixTranspose(&_MatViewProjPose, _pMatViewProj);
+}
+
+void CMPResManger::BeginEffect(int iIdx)
+{
+	_CEffectFile.SetTechnique(iIdx);
+	_CEffectFile.Begin(D3DXFX_DONOTSAVESTATE);
+	_CEffectFile.Pass(0);
+}
+
+void CMPResManger::EndEffect()
+{
+	_CEffectFile.End();
+}
+
+void CMPResManger::SendResMessage(const s_string& strPartName, D3DXVECTOR3 vPos, MPMap* pMap)
+{
+	int id = GetPartCtrlID(strPartName);
+	if (id < 0)
+	{
+		return;
+	}
+	if (_vecValidID.empty())
+	{
+		return;
+	}
+
+	CMPPartCtrl* tctrl = GetPartCtrlByID(id);
+	if (!tctrl)
+	{
+		return;
+	}
+	WORD idx = *_vecValidID.front();
+
+	_vecPartArray[idx] = new CMPPartCtrl;
+	_vecPartArray[idx]->CopyPartCtrl(tctrl);
+	_vecPartArray[idx]->BindingRes(this);
+
+	_vecPartArray[idx]->Reset();
+	_vecPartArray[idx]->MoveTo(&vPos, pMap);
+	_vecPartArray[idx]->Play(1);
+
+	_vecValidID.pop_front();
+}
+

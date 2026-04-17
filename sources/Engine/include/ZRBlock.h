@@ -2,11 +2,12 @@
 #define _ZRBLOCK_H_
 
 #include "MPMap.h"
-#include "assert.h" 
+#include "assert.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include "MPMapDef.h"
-#include <array>
+#include <memory>
+#include <vector>
 
 #define MAX_BLOCK_SECTION 512
 #define MAX_BLOCK_RANGE 1024
@@ -15,13 +16,13 @@
 class ZRBlockData
 {
 public:
-	short           sRegion{};     // 
+	short           sRegion{};     //
 	BYTE btBlock[4] = {}; // 4
 public:
 	ZRBlockData() {}
 	~ZRBlockData(){}
 
-    BYTE	IsBlock(BYTE no) const 
+    BYTE	IsBlock(BYTE no) const
     {
         if(btBlock[no] & 128) return 1;
         return 0;
@@ -39,11 +40,11 @@ public:
         }
     }
 
-    BOOL    IsRegion(int nRegionNo) const 
+    BOOL    IsRegion(int nRegionNo) const
     {
         short s = 1;
         s<<=(nRegionNo - 1);
-        return sRegion & s; 
+        return sRegion & s;
     }
 
     short	GetRegionValue() const { return sRegion; }
@@ -56,17 +57,20 @@ public:
 	std::unique_ptr<ZRBlockData[]> blockData{};
 	int			 nX{};									// MapSection
 	int			 nY{};
-	DWORD		 dwDataOffset{};						//  = 0, 
+	DWORD		 dwDataOffset{};						//  = 0,
 public:
 	ZRBlockSection() = default;
 	~ZRBlockSection() = default;
 };
 
+// <iosfwd> даёт forward-декларацию std::fstream без тяжёлого <fstream>
+#include <iosfwd>
+
 class ZRBlock
 {
 public:
-	ZRBlock() = default;
-	~ZRBlock() = default;
+	ZRBlock();
+	~ZRBlock();
 	BOOL                Load(const char *pszMapName, BOOL bEdit);
 	void				GetBlockByRange(int CenterX, int CenterY, int range); //Block
 	ZRBlockData*		GetBlock(int nX, int nY); //Block
@@ -85,12 +89,13 @@ public:
 	BYTE                m_btBlockBuffer[MAX_BLOCK_RANGE][MAX_BLOCK_RANGE] = {};
 	short				m_sTileRegionAttr[MAX_BLOCK_SECTION][MAX_BLOCK_SECTION] = {};
 private:
-	std::array<std::array<std::unique_ptr<ZRBlockSection>, MAX_BLOCK_SECTION>, MAX_BLOCK_SECTION> m_BlockSectionArray{};
+	// Flat layout: [sectionX * MAX_BLOCK_SECTION + sectionY]
+	std::vector<std::unique_ptr<ZRBlockSection>> m_BlockSectionArray;
 
-	std::unique_ptr<ZRBlockData>        m_pDefaultBlock = std::make_unique<ZRBlockData>();     //block
-	std::fstream fs;
+	std::unique_ptr<ZRBlockData>        m_pDefaultBlock;     //block
+	std::unique_ptr<std::fstream>		m_fs;                 // definition in .cpp (uses <fstream>)
 
-	int					m_fShowCenterX{}; // 
+	int					m_fShowCenterX{}; //
 	int					m_fShowCenterY{};
 	int					m_nSectionWidth{};// Section
 	int					m_nSectionHeight{};
@@ -110,18 +115,18 @@ private:
 	std::unique_ptr<DWORD[]> m_pOffsetIdx{};
 };
 
-inline BYTE ZRBlock::IsGridBlock(int x, int y) const // 
+inline BYTE ZRBlock::IsGridBlock(int x, int y) const //
 {
     int offx = x - m_nLastGridStartX;
     int offy = y - m_nLastGridStartY;
-	
+
 	if(offx < 0 || offx >= m_nGridShowWidth)  return 1;
     if(offy < 0 || offy >= m_nGridShowHeight) return 1;
 
     return m_btBlockBuffer[offy][offx];
 }
 
-inline short ZRBlock::GetTileRegionAttr(int x, int y) const // 
+inline short ZRBlock::GetTileRegionAttr(int x, int y) const //
 {
     int offx = x - m_nLastGridStartX/2;
     int offy = y - m_nLastGridStartY/2;

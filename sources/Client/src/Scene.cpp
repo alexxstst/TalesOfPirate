@@ -2463,3 +2463,47 @@ CSceneItem* CGameScene::FilterItemsByItemID(unsigned long id, bool shouldHide) {
 
 	return NULL;
 }
+
+void CGameScene::PlayEnvSound(int nSoundNo, int nX, int nY)
+{
+	if (nSoundNo == -1)
+	{
+		return;
+	}
+
+	CMusicInfo* pInfo = GetMusicInfo(nSoundNo);
+	if (!pInfo || pInfo->nType != 1)
+	{
+		return;
+	}
+
+	PlayEnvSound(pInfo->szDataName, nX, nY);
+}
+
+float CGameScene::GetGridHeight(float fX, float fY)
+{
+	if (!_pTerrain)
+	{
+		return 0.0f;
+	}
+	return _pTerrain->GetGridHeight(static_cast<int>(fX * 2.0f), static_cast<int>(fY * 2.0f));
+}
+
+float CGameScene::GetTerrainHeight(float fX, float fY)
+{
+	if (!_pTerrain)
+	{
+		return 0.0f;
+	}
+	float h = _pTerrain->GetHeight(fX, fY);
+	return h < SEA_LEVEL ? SEA_LEVEL : h;
+}
+
+int CGameScene::GetGridRegion(int x, int y)
+{
+	if (!_pTerrain)
+	{
+		return 0;
+	}
+	return _pTerrain->GetTile(x, y)->sRegion;
+}

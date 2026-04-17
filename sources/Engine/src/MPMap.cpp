@@ -1665,3 +1665,114 @@ void MPMap::SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float 
         g_Render.GetDevice()->SetRenderState(D3DRS_FOGDENSITY, *(DWORD *)(&Density));
     }
 }
+
+MPTile* MPMap::GetTile(int nX, int nY)
+{
+	if (nX >= _nWidth || nY >= _nHeight || nX < 0 || nY < 0)
+	{
+		return _pDefaultTile;
+	}
+
+	int nSectionX = nX / _nSectionWidth;
+	int nSectionY = nY / _nSectionHeight;
+
+	MPActiveMapSection* pSection = GetActiveSection(nSectionX, nSectionY);
+	if (pSection && pSection->pTileData)
+	{
+		int nOffX = nX % _nSectionWidth;
+		int nOffY = nY % _nSectionHeight;
+		return pSection->pTileData + nOffY * _nSectionWidth + nOffX;
+	}
+
+	return _pDefaultTile;
+}
+
+BOOL MPMap::IsPointVisible(float fX, float fY)
+{
+	float fStartX = _fShowCenterX - (float)_nShowWidth / 2;
+	float fStartY = _fShowCenterY - (float)_nShowHeight / 2;
+
+	float fEndX = fStartX + (float)_nShowWidth;
+	float fEndY = fStartY + (float)_nShowHeight;
+
+	if (fX >= fStartX && fY >= fStartY && fX <= fEndX && fY <= fEndY)
+	{
+		return TRUE;
+	}
+	return FALSE;
+}
+
+float MPMap::GetTileHeight(int x, int y)
+{
+	int offx = x - _nLastTileStartX;
+	int offy = y - _nLastTileStartY;
+
+	if (offx < 0 || offx >= 100)
+	{
+		return 0.0f;
+	}
+	if (offy < 0 || offy >= 100)
+	{
+		return 0.0f;
+	}
+
+	return _fTileHeightBuffer[offy][offx];
+}
+
+short MPMap::GetTileRegionAttr(int x, int y)
+{
+	int offx = x - _nLastTileStartX;
+	int offy = y - _nLastTileStartY;
+
+	if (offx < 0 || offx >= 100)
+	{
+		return 0;
+	}
+	if (offy < 0 || offy >= 100)
+	{
+		return 0;
+	}
+
+	return _sTileRegionAttr[offy][offx];
+}
+
+float MPMap::GetGridHeight(int x, int y)
+{
+	try
+	{
+		int offx = x - _nLastGridStartX;
+		int offy = y - _nLastGridStartY;
+
+		if (offx < 0 || offx >= _nGridShowWidth)
+		{
+			return 0.0f;
+		}
+		if (offy < 0 || offy >= _nGridShowHeight)
+		{
+			return 0.0f;
+		}
+
+		return _fHeightBuffer[offy][offx];
+	}
+	catch (...)
+	{
+	}
+	return 0.0f;
+}
+
+BYTE MPMap::IsGridBlock(int x, int y)
+{
+	int offx = x - _nLastGridStartX;
+	int offy = y - _nLastGridStartY;
+
+	if (offx < 0 || offx >= _nGridShowWidth)
+	{
+		return 1;
+	}
+	if (offy < 0 || offy >= _nGridShowHeight)
+	{
+		return 1;
+	}
+
+	return _btBlockBuffer[offy][offx];
+}

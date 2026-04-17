@@ -1225,3 +1225,99 @@ void CMPLink::Render() {
 
 	_pCEffFile->End();
 }
+
+void CMPPartCtrl::SetSkillCtrl(SkillCtrl* pCtrl)
+{
+	for (int n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->SetSkillCtrl(pCtrl);
+		}
+	}
+}
+
+void CMPPartCtrl::SetAlpha(float falpha)
+{
+	for (int n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->SetAlpha(falpha);
+		}
+	}
+}
+
+void CMPPartCtrl::Reset()
+{
+	m_fCurTime = 0;
+	const auto v = D3DXVECTOR3(0, 0, 0);
+	MoveTo(&v);
+	for (int n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->Reset(false);
+			m_vecPartSys[n]->unFontEffCom();
+		}
+	}
+}
+
+void CMPPartCtrl::Stop()
+{
+	Reset();
+	for (int n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->Stop();
+		}
+	}
+}
+
+void CMPPartCtrl::End()
+{
+	for (int n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->End();
+		}
+	}
+}
+
+void CMPPartCtrl::MoveTo(const D3DXVECTOR3* vPos, MPMap* pmap)
+{
+	for (auto n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->MoveTo(vPos, pmap);
+		}
+	}
+	for (auto n = 0; n < m_iModelNum; n++)
+	{
+		if (m_vecModel[n]->IsPlaying())
+		{
+			m_vecModel[n]->MoveTo(vPos);
+		}
+	}
+}
+
+void CMPPartCtrl::BindingBone(D3DXMATRIX* pMatBone)
+{
+	for (auto n = 0; n < m_iPartNum; ++n)
+	{
+		if (m_vecPartSys[n])
+		{
+			m_vecPartSys[n]->BindingBone(pMatBone);
+		}
+	}
+	for (auto n = 0; n < m_iModelNum; n++)
+	{
+		if (m_vecModel[n]->IsPlaying())
+		{
+			m_vecModel[n]->BindingBone(pMatBone);
+		}
+	}
+}

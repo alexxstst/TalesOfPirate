@@ -449,3 +449,82 @@ void CMissionTrigger::Exec()
 	g_pGameApp->ShowMidText( "%s", SafeVFormat(GetLanguageString(3), std::string_view(szData), static_cast<int>(_pData->sCount), static_cast<int>(_pData->sNum)).c_str() );
 }
 
+void CActor::ActionEnd(DWORD pose_id)
+{
+	if (_pCurState)
+	{
+		_pCurState->ActionEnd(pose_id);
+	}
+	else if (_eState == enumNormal && (pose_id == POSE_SHOW || pose_id == POSE_FLY_SHOW))
+	{
+		IdleState();
+	}
+}
+
+CActionState* CActor::GetServerState()
+{
+	if (_pCurState)
+	{
+		if (!_pCurState->GetIsOver())
+		{
+			return _pCurState;
+		}
+
+		for (states::iterator it = _statelist.begin(); it != _statelist.end(); ++it)
+		{
+			if (!(*it)->GetIsOver())
+			{
+				return *it;
+			}
+		}
+	}
+	return NULL;
+}
+
+CActionState* CActor::GetServerStateByID(int id)
+{
+	if (_pCurState)
+	{
+		if (_pCurState->GetServerID() == id)
+		{
+			return _pCurState;
+		}
+
+		for (states::iterator it = _statelist.begin(); it != _statelist.end(); ++it)
+		{
+			if ((*it)->GetServerID() == id)
+			{
+				return *it;
+			}
+		}
+	}
+	return NULL;
+}
+
+void CActor::_ExecSynchro(synchro& s)
+{
+	for (synchro::iterator it = s.begin(); it != s.end(); ++it)
+	{
+		(*it)->Exec();
+	}
+	s.clear();
+}
+
+void CActor::_ClearSynchro(synchro& s)
+{
+	for (synchro::iterator it = s.begin(); it != s.end(); ++it)
+	{
+		SAFE_DELETE(*it);
+	}
+	s.clear();
+}
+
+void CActor::InitState()
+{
+	ClearQueueState();
+	SAFE_DELETE(_pCurState);
+
+	_eState = enumNormal;
+	IdleState();
+}
+

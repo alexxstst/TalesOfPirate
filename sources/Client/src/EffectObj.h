@@ -52,63 +52,7 @@ public:
 
 	~CEffectBox(){ SAFE_RELEASE(_lpIB); SAFE_RELEASE(_lpVB);SAFE_RELEASE(_lpIBLine); }
 
-	void		Create(IDirect3DDeviceX*	pDev,  float fRadius = 0.5f)
-	{
-		SAFE_RELEASE(_lpIB); SAFE_RELEASE(_lpVB);SAFE_RELEASE(_lpIBLine);
-		_pDev = pDev;
-		BoxVer  ver[8] = {
-			{ -fRadius,-fRadius,fRadius * 2,0xffff0000},
-			{ -fRadius, fRadius,fRadius * 2,0xffff0000},
-			{  fRadius, fRadius,fRadius * 2,0xffff0000},
-			{  fRadius,-fRadius,fRadius * 2,0xffff0000},
-
-			{ -fRadius,-fRadius,0,0xffff0000},
-			{ -fRadius, fRadius,0,0xffff0000},
-			{  fRadius, fRadius,0,0xffff0000},
-			{  fRadius,-fRadius,0,0xffff0000},
-		};
-		pDev->CreateVertexBuffer(sizeof(BoxVer) * 8, 
-					D3DUSAGE_WRITEONLY |D3DUSAGE_DYNAMIC,
-					D3DFVF_XYZ | D3DFVF_DIFFUSE, 
-					D3DPOOL_DEFAULT, &_lpVB, NULL);
-		BoxVer *pVertex;
-		_lpVB->Lock(0, 0, (void**)&pVertex, D3DLOCK_NOOVERWRITE   );
-		memcpy(pVertex, ver, sizeof(BoxVer) * 8);
-		_lpVB->Unlock();
-		WORD wIndex[24] = {
-			0,1,2,3,//top
-			5,4,7,6,//bottom
-			5,1,0,4,//left
-			7,3,2,6,//right
-			6,2,1,5,//front
-			4,0,3,7,//back
-		};
-		pDev->CreateIndexBuffer(sizeof(WORD)*24, 
-		D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-		&_lpIB, NULL);
-		WORD*  t_pwIndex;
-		_lpIB->Lock(0, 0, (void**)&t_pwIndex, 0);
-		memcpy(t_pwIndex, wIndex, sizeof(WORD)*24);
-		_lpIB->Unlock();
-
-		////////
-
-		WORD wIndexLine[24] = {
-			0,1,1,2,//top
-				2,3,3,0,//bottom
-				4,5,5,6,//left
-				6,7,7,4,//right
-				0,4,1,5,//front
-				2,6,3,7,//back
-		};
-		pDev->CreateIndexBuffer(sizeof(WORD)*24, 
-			D3DUSAGE_WRITEONLY, D3DFMT_INDEX16, D3DPOOL_MANAGED, 
-			&_lpIBLine, NULL);
-		WORD*  t_Index;
-		_lpIBLine->Lock(0, 0, (void**)&t_Index, 0);
-		memcpy(t_Index, wIndexLine, sizeof(WORD)*24);
-		_lpIBLine->Unlock();
-	}
+	void		Create(IDirect3DDeviceX* pDev, float fRadius = 0.5f);
 	void	setPos(D3DXVECTOR3 vPos)
 	{
 		D3DXMatrixTranslation(&_matWorld,vPos.x, vPos.y, vPos.z);
@@ -129,65 +73,7 @@ public:
 	void	ShowLine(bool	bShow){ _bShowLine = bShow;}
 	void	ShowBox(bool	bShow){ _bShowBox = bShow;}
 
-	void	Render()
-	{
-		if(!_bShow)return;
-		g_Render.SetTexture(0,NULL);
-		g_Render.SetVertexShader(NULL);
-		g_Render.SetFVF(D3DFVF_XYZ | D3DFVF_DIFFUSE);
-
-		const auto matrix = _matScale * _matWorld;
-		g_Render.SetTransformWorld(&matrix);
-		g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE );
-		g_Render.SetRenderState(D3DRS_TEXTUREFACTOR, _dwColor );
-		g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TFACTOR); 
-		g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1); 
-		g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TFACTOR); 
-		g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1); 
-
-
-		g_Render.SetRenderState(D3DRS_ZENABLE, TRUE);
-		g_Render.SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
-
-		g_Render.SetRenderState( D3DRS_LIGHTING, FALSE );
-		g_Render.SetRenderState(D3DRS_ALPHABLENDENABLE, FALSE);
-
-		g_Render.SetStreamSource(0,_lpVB,0, sizeof(BoxVer));
-
-		if(_bShowBox)
-		{
-			if(_bWriteFrame)
-				g_Render.SetRenderState(D3DRS_FILLMODE , D3DFILL_WIREFRAME  );
-			else
-				g_Render.SetRenderState(D3DRS_FILLMODE , D3DFILL_SOLID   );
-
-			g_Render.SetIndices(_lpIB,0);
-
-			g_Render.DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, 0, 8, 0,  2);
-			g_Render.DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, 0, 8, 4,  2);
-			g_Render.DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, 0, 8, 8,  2);
-			g_Render.DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, 0, 8, 12,  2);
-			g_Render.DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, 0, 8, 16,  2);
-			g_Render.DrawIndexedPrimitive( D3DPT_TRIANGLEFAN, 0, 0, 8, 20,  2);
-
-			g_Render.SetRenderState(D3DRS_FILLMODE , D3DFILL_SOLID   );
-			g_Render.SetRenderState(D3DRS_CULLMODE, D3DCULL_CCW );
-
-		}
-		if(_bShowLine)
-		{
-			g_Render.SetRenderState(D3DRS_TEXTUREFACTOR, 0xffffffff );
-			g_Render.SetIndices(_lpIBLine,0);
-			g_Render.DrawIndexedPrimitive( D3DPT_LINELIST, 0, 0, 8, 0,  12);
-		}
-		g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_TEXTURE); 
-		g_Render.SetTextureStageState(0, D3DTSS_ALPHAARG2, D3DTA_DIFFUSE);
-		g_Render.SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_MODULATE);
-
-		g_Render.SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_TEXTURE);  
-		g_Render.SetTextureStageState(0, D3DTSS_COLORARG2, D3DTA_DIFFUSE);  
-		g_Render.SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_MODULATE);  
-	}
+	void	Render();
 public:
 	void	ReleaseBox()
 	{

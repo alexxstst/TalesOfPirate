@@ -554,29 +554,6 @@ inline bool SGRender::WorldToScreen(float fX, float fY, float fZ, int *pnX, int 
     return false;    
 }*/
 
-inline BOOL MPRender::WorldToScreen(float fX, float fY, float fZ, int *pnX, int *pnY)
-{
-	D3DXVECTOR3	vTemp, vPosTrans, vecPos;
-	vecPos.x = fX;
-	vecPos.y = fY;
-	vecPos.z = fZ;
-	D3DXVec3TransformCoord( &vTemp, &vecPos, &_matViewWorld );
-	D3DXVec3TransformCoord( &vPosTrans, &vTemp, &_matProjWorld );	
-	if ( vPosTrans.z >= 0.0f && vPosTrans.z < 1.0f )
-	{		
-		int nPosX = ( INT ) ((   vPosTrans.x + 1 ) * (float)( _nWorldViewWidth )  / 2.0f + 0.5f); 
-		int nPosY = ( INT ) (( - vPosTrans.y + 1 ) * (float)( _nWorldViewHeight)  / 2.0f + 0.5f); 
-		
-        if(pnX) *pnX = nPosX - _nWorldViewStartX;
-        if(pnY) *pnY = nPosY - _nWorldViewStartY;
-        
-        if( nPosX >= 0 && nPosX < _nWorldViewWidth && nPosY >= 0 && nPosY < _nWorldViewHeight)
-        {
-            return TRUE;
-        }
-	}
-    return FALSE;
-}
 
 
 inline void MPRender::SetClip(float fNearClip, float fFarClip)
@@ -643,40 +620,6 @@ inline void MPRender::SetDirectLIghtAmbient(float r, float g, float b, float a)
     _Light.Ambient.b   = b;
     _Light.Ambient.a   = a;
 	_pD3DDevice->SetLight(0, &_Light);
-}
-inline void MPRender::UpdateCullInfo( ) 
-{
-	D3DXMATRIX mat;
-
-    D3DXMatrixMultiply( &mat,& _matViewWorld,& _matProjWorld );
-    D3DXMatrixInverse( &mat, NULL, &mat );
-
-    _CullInfo.vecFrustum[0] = D3DXVECTOR3(-1.0f, -1.0f,  0.0f); // xyz
-    _CullInfo.vecFrustum[1] = D3DXVECTOR3( 1.0f, -1.0f,  0.0f); // Xyz
-    _CullInfo.vecFrustum[2] = D3DXVECTOR3(-1.0f,  1.0f,  0.0f); // xYz
-    _CullInfo.vecFrustum[3] = D3DXVECTOR3( 1.0f,  1.0f,  0.0f); // XYz
-    _CullInfo.vecFrustum[4] = D3DXVECTOR3(-1.0f, -1.0f,  1.0f); // xyZ
-    _CullInfo.vecFrustum[5] = D3DXVECTOR3( 1.0f, -1.0f,  1.0f); // XyZ
-    _CullInfo.vecFrustum[6] = D3DXVECTOR3(-1.0f,  1.0f,  1.0f); // xYZ
-    _CullInfo.vecFrustum[7] = D3DXVECTOR3( 1.0f,  1.0f,  1.0f); // XYZ
-
-    for( INT i = 0; i < 8; i++ )
-	{
-        D3DXVec3TransformCoord( &_CullInfo.vecFrustum[i], &_CullInfo.vecFrustum[i], &mat );
-	}
-
-    D3DXPlaneFromPoints( &_CullInfo.planeFrustum[0], &_CullInfo.vecFrustum[0], 
-        &_CullInfo.vecFrustum[1], &_CullInfo.vecFrustum[2] ); // Near
-    D3DXPlaneFromPoints( &_CullInfo.planeFrustum[1], &_CullInfo.vecFrustum[6], 
-        &_CullInfo.vecFrustum[7], &_CullInfo.vecFrustum[5] ); // Far
-    D3DXPlaneFromPoints( &_CullInfo.planeFrustum[2], &_CullInfo.vecFrustum[2], 
-        &_CullInfo.vecFrustum[6], &_CullInfo.vecFrustum[4] ); // Left
-    D3DXPlaneFromPoints( &_CullInfo.planeFrustum[3], &_CullInfo.vecFrustum[7], 
-        &_CullInfo.vecFrustum[3], &_CullInfo.vecFrustum[5] ); // Right
-    D3DXPlaneFromPoints( &_CullInfo.planeFrustum[4], &_CullInfo.vecFrustum[2], 
-        &_CullInfo.vecFrustum[3], &_CullInfo.vecFrustum[6] ); // Top
-    D3DXPlaneFromPoints( &_CullInfo.planeFrustum[5], &_CullInfo.vecFrustum[1], 
-        &_CullInfo.vecFrustum[0], &_CullInfo.vecFrustum[4] ); // Bottom
 }
 inline	void MPRender::GetRenderState(RENDER_STATE renState, DWORD* nValue)
 {

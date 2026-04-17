@@ -2904,3 +2904,223 @@ void StringSkipCompartmentT(const char* in, long* in_from, const char* skip_list
 s_string& I_Effect::getEffectModelName() {
 	return m_strModelName;
 }
+
+bool I_Effect::IsItem() {
+	if (m_pCModel) {
+		return m_pCModel->IsItem();
+	}
+	if (strstr(m_strModelName.c_str(), ".lgo")) {
+		return true;
+	}
+	return false;
+}
+
+void I_Effect::GetLerpSize(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
+	if (_wFrameCount == 1 || _bSizeSame) {
+		*pSOut = _vecFrameSize[0];
+		return;
+	}
+	D3DXVec3Lerp(pSOut, &_vecFrameSize[wIdx1], &_vecFrameSize[wIdx2], fLerp);
+}
+
+void I_Effect::GetLerpAngle(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
+	if (_wFrameCount == 1 || _bAngleSame) {
+		*pSOut = _vecFrameAngle[0];
+		return;
+	}
+	D3DXVec3Lerp(pSOut, &_vecFrameAngle[wIdx1], &_vecFrameAngle[wIdx2], fLerp);
+}
+
+void I_Effect::GetLerpPos(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
+	if (_wFrameCount == 1 || _bPosSame) {
+		*pSOut = _vecFramePos[0];
+		return;
+	}
+	D3DXVec3Lerp(pSOut, &_vecFramePos[wIdx1], &_vecFramePos[wIdx2], fLerp);
+}
+
+void I_Effect::GetLerpColor(D3DXCOLOR* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
+	if (_wFrameCount == 1 || _bColorSame) {
+		*pSOut = _vecFrameColor[0];
+		return;
+	}
+	D3DXColorLerp(pSOut, &_vecFrameColor[wIdx1], &_vecFrameColor[wIdx2], fLerp);
+}
+
+void CTexCoordList::Copy(CTexCoordList* pList) {
+	m_wVerCount = pList->m_wVerCount;
+	m_wCoordCount = pList->m_wCoordCount;
+	m_fFrameTime = pList->m_fFrameTime;
+	m_vecCoordList.resize(m_wCoordCount);
+	for (int n = 0; n < m_wCoordCount; ++n) {
+		m_vecCoordList[n].resize(m_wVerCount);
+		m_vecCoordList[n] = pList->m_vecCoordList[n];
+	}
+}
+
+void CTexList::Copy(CTexList* pList) {
+	m_wTexCount = pList->m_wTexCount;
+	m_fFrameTime = pList->m_fFrameTime;
+	m_vecTexList.resize(m_wTexCount);
+	for (int n = 0; n < m_wTexCount; ++n) {
+		m_vecTexList[n].resize(4);
+		m_vecTexList[n] = pList->m_vecTexList[n];
+	}
+	m_vecTexName = pList->m_vecTexName;
+	m_lpCurTex = NULL;
+	m_pTex = NULL;
+}
+
+void CTexFrame::Copy(CTexFrame* pList) {
+	m_wTexCount = pList->m_wTexCount;
+	m_fFrameTime = pList->m_fFrameTime;
+	m_vecTexName.resize(m_wTexCount);
+	m_vecTexs.resize(m_wTexCount);
+	for (int n = 0; n < m_wTexCount; ++n) {
+		m_vecTexName[n] = pList->m_vecTexName[n];
+	}
+	m_vecCoord.resize(pList->m_vecCoord.size());
+	m_vecCoord = pList->m_vecCoord;
+}
+
+void CEffectModel::Lock(BYTE** pvEffVer) {
+#ifdef USE_MGR
+	if (_lpSVB == 0) {
+		*pvEffVer = 0;
+		return;
+	}
+
+	if (LW_FAILED(_lpSVB->Lock(0, 0, (void**)pvEffVer, 0))) {
+		MessageBox(NULL, "lock error msglock error", "error", 0);
+		*pvEffVer = 0;
+		assert(false);
+	}
+#else
+	_lpVB->Lock(0, 0, pvEffVer, 0);
+#endif
+}
+
+void CEffectModel::Unlock() {
+#ifdef USE_MGR
+	_lpSVB->Unlock();
+#else
+	_lpVB->Unlock();
+#endif
+}
+
+void CEffectModel::LockIB(BYTE** pIdx) {
+#ifdef USE_MGR
+	if (LW_FAILED(_lpSIB->Lock(0, 0, (void**)pIdx, 0))) {
+		MessageBox(NULL, "lock error msglock error", "error", 0);
+		assert(false);
+	}
+#else
+	_lpIB->Lock(0, 0, pIdx, 0);
+#endif
+}
+
+void CEffectModel::UnlockIB() {
+#ifdef USE_MGR
+	_lpSIB->Unlock();
+#else
+	_lpIB->Unlock();
+#endif
+}
+
+void I_Effect::SetTobParam(int nFrame, int nSegments, float rHeight, float rRadius, float rBotRadius) {
+	_iUseParam = 0;
+	_CylinderParam[nFrame].iSegments = nSegments;
+	_CylinderParam[nFrame].fTopRadius = rRadius;
+	_CylinderParam[nFrame].fBottomRadius = rBotRadius;
+	_CylinderParam[nFrame].fHei = rHeight;
+	_CylinderParam[nFrame].Create();
+
+	_iUseParam = 1;
+}
+
+void I_Effect::GetTobParam(int nFrame, int& nSegments, float& rHeight, float& rRadius, float& rBotRadius) {
+	nSegments = _CylinderParam[nFrame].iSegments;
+	rRadius = _CylinderParam[nFrame].fTopRadius;
+	rBotRadius = _CylinderParam[nFrame].fBottomRadius;
+	rHeight = _CylinderParam[nFrame].fHei;
+}
+
+void I_Effect::GetRotaLoopMatrix(D3DXMATRIX* pmat, float& pCurRota, float fTime) {
+	pCurRota += _vRotaLoop.w * fTime;
+	if (pCurRota >= 6.283185f) {
+		pCurRota = pCurRota - 6.283185f;
+	}
+	const auto v = D3DXVECTOR3(_vRotaLoop.x, _vRotaLoop.y, _vRotaLoop.z);
+	D3DXMatrixRotationAxis(pmat, &v, pCurRota);
+}
+
+void Transpose(D3DMATRIX& result, D3DMATRIX& m) {
+	result.m[0][0] = m.m[0][0];
+	result.m[0][1] = m.m[1][0];
+	result.m[0][2] = m.m[2][0];
+	result.m[0][3] = m.m[3][0];
+	result.m[1][0] = m.m[0][1];
+	result.m[1][1] = m.m[1][1];
+	result.m[1][2] = m.m[2][1];
+	result.m[1][3] = m.m[3][1];
+	result.m[2][0] = m.m[0][2];
+	result.m[2][1] = m.m[1][2];
+	result.m[2][2] = m.m[2][2];
+	result.m[2][3] = m.m[3][2];
+	result.m[3][0] = m.m[0][3];
+	result.m[3][1] = m.m[1][3];
+	result.m[3][2] = m.m[2][3];
+	result.m[3][3] = m.m[3][3];
+}
+
+CMemoryBuf::CMemoryBuf()
+{
+	_pData = NULL;
+	_lpos = 0;
+	_size = 0;
+}
+
+CMemoryBuf::~CMemoryBuf()
+{
+	SAFE_DELETE_ARRAY(_pData);
+}
+
+bool CMemoryBuf::LoadFile(char* pszName)
+{
+	FILE* t_pFile = fopen(pszName, "rb");
+	if (!t_pFile)
+	{
+		return false;
+	}
+	fseek(t_pFile, 0, SEEK_END);
+	_size = ftell(t_pFile);
+	SAFE_DELETE_ARRAY(_pData);
+	_pData = new BYTE[_size];
+	fseek(t_pFile, 0, SEEK_SET);
+	fread(_pData, sizeof(BYTE), _size, t_pFile);
+	fclose(t_pFile);
+	_lpos = 0;
+	return true;
+}
+
+void CMemoryBuf::mseek(long ioffset, int ipos)
+{
+	if (ipos == SEEK_CUR)
+	{
+		_lpos += ioffset;
+	}
+	if (ipos == SEEK_SET)
+	{
+		_lpos = ioffset;
+	}
+	if (ipos == SEEK_END)
+	{
+		_lpos = _size;
+	}
+}
+
+void CMemoryBuf::mread(void* pmem, size_t psize, size_t pcount)
+{
+	memcpy(pmem, &_pData[_lpos], pcount * psize);
+	_lpos += (long)pcount * (long)psize;
+}

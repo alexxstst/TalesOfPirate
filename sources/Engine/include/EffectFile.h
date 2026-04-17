@@ -50,7 +50,7 @@ public:
 	BOOL SetDword(LPCSTR DwName, DWORD dwvalue);
 
 	BOOL Begin(DWORD  dwIsSave = 0);
-	BOOL Pass(UINT ipass);
+	BOOL Pass(UINT ipass = 0);
 	BOOL End();
 
 	int	 GetTechCount()						{ return _iTechNum;}
@@ -73,88 +73,4 @@ protected:
 
 	DWORD								_dwVShader;
 };
-inline BOOL CMPEffectFile::SetTechnique(int iIdx)
-{
-	//if(iIdx >= _iTechNum)
-	//	return false;
-    if(FAILED(m_pEffect->SetTechnique(_vecTechniques[iIdx])))
-		return FALSE;
-	return  TRUE;
-}
-
-//inline  BOOL CMPEffectFile::CreateVertexShader()
-//{
-//	LPD3DXBUFFER pCode;   //!
-//	DWORD dwEffVerDecl[] =
-//    {
-//        D3DVSD_STREAM( 0 ),
-//        D3DVSD_REG( D3DVSDE_POSITION , D3DVSDT_FLOAT3 ), // Position of first mesh
-//		D3DVSD_REG( D3DVSDE_BLENDINDICES,D3DVSDT_FLOAT1),
-//        D3DVSD_REG( D3DVSDE_DIFFUSE, D3DVSDT_D3DCOLOR ), // diffuse
-//        D3DVSD_REG( D3DVSDE_TEXCOORD0, D3DVSDT_FLOAT2 ), // Tex coords
-//        D3DVSD_END()
-//    };
-//
-//	if(FAILED(D3DXAssembleShaderFromFile( "shader\\eff.vsh", NULL, 0, &pCode, NULL ) ) )
-//	{
-//		return FALSE;
-//	}
-//    if( FAILED(m_pDev->CreateVertexShader( dwEffVerDecl, 
-//                                          (DWORD*)pCode->GetBufferPointer(),
-//                                          &_dwVShader , FALSE ) ) )
-//    {
-//         return FALSE;
-//    }
-//
-//    pCode->Release();
-//	return TRUE;
-//}
-
-//inline BOOL CMPEffectFile::SetVertexShader()
-//{
-//	m_pDev->SetVertexShader(_dwVShader);
-//	return  TRUE;
-//}
-inline BOOL CMPEffectFile::SetTexture(LPCSTR TextureValue, IDirect3DTextureX* pTexture)
-{
-    if(FAILED(m_pEffect->SetTexture(TextureValue,pTexture)))
-		return FALSE;
-	return TRUE;
-}
-inline BOOL CMPEffectFile::SetDword(LPCSTR DwName, DWORD dwvalue)
-{
-#if defined(LW_USE_DX8)
-    if(FAILED(m_pEffect->SetDword(DwName,dwvalue)))
-		return FALSE;
-#endif
-	return TRUE;
-}
-
-inline BOOL CMPEffectFile::Begin(DWORD dwIsSave)
-{
-    if(FAILED(m_pEffect->Begin(&m_passes,dwIsSave)))
-		return FALSE;
-	return TRUE;
-}
-
-inline BOOL CMPEffectFile::Pass(UINT ipass = 0)
-{
-#if (defined LW_USE_DX9)
-	if (FAILED(m_pEffect->BeginPass(ipass)) || FAILED(m_pEffect->CommitChanges()))
-#elif (defined LW_USE_DX8)
-	if (FAILED(m_pEffect->Pass(ipass)))
-#endif
-		return FALSE;
-	return TRUE;
-}
-inline BOOL CMPEffectFile::End()
-{
-	//m_pEffect->Pass(1);
-
-    if(FAILED(m_pEffect->EndPass()) || FAILED(m_pEffect->End()))
-		return FALSE;
-
-	return TRUE;
-}
-
 #endif // !defined(AFX_DXEFFECTFILE_H__F7B73B81_55EE_11BD_AC67_0008C720ECD1__INCLUDED_)

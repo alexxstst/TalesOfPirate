@@ -8,7 +8,8 @@
       "Glob(*)",
       "Grep(*)",
       "PowerShell(*)",
-      "WebFetch(domain:kunitoki.github.io)"
+      "WebFetch(domain:kunitoki.github.io)",
+      "Read(//tmp/**)"
     ],
     "defaultMode": "auto"
   }

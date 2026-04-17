@@ -172,49 +172,18 @@ public:
 
 class CMemoryBuf {
 public:
-	CMemoryBuf() {
-		_pData = NULL;
-		_lpos = 0;
-		_size = 0;
-	}
+	CMemoryBuf();
+	~CMemoryBuf();
 
-	~CMemoryBuf() {
-		SAFE_DELETE_ARRAY(_pData);
-	}
+	bool LoadFile(char* pszName);
+	void mseek(long ioffset, int ipos);
 
-	bool LoadFile(char* pszName) {
-		FILE* t_pFile;
-		t_pFile = fopen(pszName, "rb");
-		if (!t_pFile)
-			return false;
-		fseek(t_pFile, 0,SEEK_END);
-		_size = ftell(t_pFile);
-		SAFE_DELETE_ARRAY(_pData);
-		_pData = new BYTE[_size];
-		fseek(t_pFile, 0,SEEK_SET);
-		fread(_pData, sizeof(BYTE), _size, t_pFile);
-		fclose(t_pFile);
-		_lpos = 0;
-		return true;
-	}
-
-	void mseek(long ioffset, int ipos) {
-		if (ipos == SEEK_CUR)
-			_lpos += ioffset;
-		if (ipos == SEEK_SET)
-			_lpos = ioffset;
-		if (ipos == SEEK_END)
-			_lpos = _size;
-	}
-
-	long mtell() {
+	long mtell()
+	{
 		return _lpos;
 	}
 
-	void mread(void* pmem, size_t psize, size_t pcount) {
-		memcpy(pmem, &_pData[_lpos], pcount * psize);
-		_lpos += (long)pcount * (long)psize;
-	}
+	void mread(void* pmem, size_t psize, size_t pcount);
 
 protected:
 	long _size;
@@ -499,49 +468,10 @@ public:
 	}
 #endif
 
-	void Lock(BYTE** pvEffVer) {
-#ifdef USE_MGR
-		if (_lpSVB == 0) {
-			*pvEffVer = 0;
-			return;
-		}
-
-		if (LW_FAILED(_lpSVB->Lock(0, 0, (void**)pvEffVer, 0))) {
-			MessageBox(NULL, "lock error msglock error", "error", 0);
-			*pvEffVer = 0;
-			assert(false);
-		}
-#else
-		_lpVB->Lock(0, 0, pvEffVer, 0);
-#endif
-	}
-
-	void Unlock() {
-#ifdef USE_MGR
-		_lpSVB->Unlock();
-#else
-		_lpVB->Unlock();
-#endif
-	}
-
-	void LockIB(BYTE** pIdx) {
-#ifdef USE_MGR
-		if (LW_FAILED(_lpSIB->Lock(0, 0, (void**)pIdx, 0))) {
-			MessageBox(NULL, "lock error msglock error", "error", 0);
-			assert(false);
-		}
-#else
-		_lpIB->Lock(0, 0, pIdx, 0);
-#endif
-	}
-
-	void UnlockIB() {
-#ifdef USE_MGR
-		_lpSIB->Unlock();
-#else
-		_lpIB->Unlock();
-#endif
-	}
+	void Lock(BYTE** pvEffVer);
+	void Unlock();
+	void LockIB(BYTE** pIdx);
+	void UnlockIB();
 
 	void SetRenderNum(WORD wVer, WORD wFace);
 
@@ -628,22 +558,7 @@ public:
 
 	void Clear();
 
-	void Copy(CTexCoordList* pList) {
-		m_wVerCount = pList->m_wVerCount;
-		//.
-		m_wCoordCount = pList->m_wCoordCount;
-		//
-		m_fFrameTime = pList->m_fFrameTime;
-
-		m_vecCoordList.resize(m_wCoordCount);
-
-		//
-		int n;
-		for (n = 0; n < m_wCoordCount; ++n) {
-			m_vecCoordList[n].resize(m_wVerCount);
-			m_vecCoordList[n] = pList->m_vecCoordList[n];
-		}
-	}
+	void Copy(CTexCoordList* pList);
 
 public:
 	//!
@@ -685,25 +600,7 @@ public:
 
 	void Remove();
 
-	void Copy(CTexList* pList) {
-		m_wTexCount = pList->m_wTexCount;
-		//
-		m_fFrameTime = pList->m_fFrameTime;
-		//
-		m_vecTexList.resize(m_wTexCount);
-		int n;
-		for (n = 0; n < m_wTexCount; ++n) {
-			m_vecTexList[n].resize(4);
-			m_vecTexList[n] = pList->m_vecTexList[n];
-		}
-
-		//!
-		m_vecTexName = pList->m_vecTexName;
-		//!
-		m_lpCurTex = NULL;
-
-		m_pTex = NULL;
-	}
+	void Copy(CTexList* pList);
 
 public:
 	//
@@ -738,20 +635,7 @@ public:
 
 	void Remove();
 
-	void Copy(CTexFrame* pList) {
-		m_wTexCount = pList->m_wTexCount;
-		m_fFrameTime = pList->m_fFrameTime;
-		m_fFrameTime = pList->m_fFrameTime;
-
-		m_vecTexName.resize(m_wTexCount);
-		m_vecTexs.resize(m_wTexCount);
-		int n;
-		for (n = 0; n < m_wTexCount; ++n) {
-			m_vecTexName[n] = pList->m_vecTexName[n];
-		}
-		m_vecCoord.resize(pList->m_vecCoord.size());
-		m_vecCoord = pList->m_vecCoord;
-	}
+	void Copy(CTexFrame* pList);
 
 public:
 	//
@@ -1010,54 +894,14 @@ public:
 		return m_strModelName == MESH_TRI;
 	}
 
-	bool IsItem() {
-		if (m_pCModel)
-			return m_pCModel->IsItem();
-		if (strstr(m_strModelName.c_str(), ".lgo"))
-			return true;
-		return false;
-	}
-
-	//{ return m_pCModel->IsItem();}
+	bool IsItem();
 
 	bool IsChangeably();
 
-	//////////////////////////////////////////////////////////////////////////
-	//!
-	void GetLerpSize(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
-		if (_wFrameCount == 1 || _bSizeSame) {
-			*pSOut = _vecFrameSize[0];
-			return;
-		}
-		D3DXVec3Lerp(pSOut, &_vecFrameSize[wIdx1], &_vecFrameSize[wIdx2], fLerp);
-	}
-
-	//!
-	void GetLerpAngle(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
-		if (_wFrameCount == 1 || _bAngleSame) {
-			*pSOut = _vecFrameAngle[0];
-			return;
-		}
-		D3DXVec3Lerp(pSOut, &_vecFrameAngle[wIdx1], &_vecFrameAngle[wIdx2], fLerp);
-	}
-
-	//!
-	void GetLerpPos(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
-		if (_wFrameCount == 1 || _bPosSame) {
-			*pSOut = _vecFramePos[0];
-			return;
-		}
-		D3DXVec3Lerp(pSOut, &_vecFramePos[wIdx1], &_vecFramePos[wIdx2], fLerp);
-	}
-
-	//!
-	void GetLerpColor(D3DXCOLOR* pSOut, WORD wIdx1, WORD wIdx2, float fLerp) {
-		if (_wFrameCount == 1 || _bColorSame) {
-			*pSOut = _vecFrameColor[0];
-			return;
-		}
-		D3DXColorLerp(pSOut, &_vecFrameColor[wIdx1], &_vecFrameColor[wIdx2], fLerp);
-	}
+	void GetLerpSize(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp);
+	void GetLerpAngle(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp);
+	void GetLerpPos(D3DXVECTOR3* pSOut, WORD wIdx1, WORD wIdx2, float fLerp);
+	void GetLerpColor(D3DXCOLOR* pSOut, WORD wIdx1, WORD wIdx2, float fLerp);
 
 	//!
 	void GetLerpCoord(S_BVECTOR<D3DXVECTOR2>& vecOutCoord, WORD& wCurIndex, float& fCurTime, float fDailTime) {
@@ -1078,14 +922,7 @@ public:
 		m_flerp = fLerp;
 	}
 
-	void GetRotaLoopMatrix(D3DXMATRIX* pmat, float& pCurRota, float fTime) {
-		pCurRota += _vRotaLoop.w * fTime;
-		if (pCurRota >= 6.283185f) {
-			pCurRota = pCurRota - 6.283185f;
-		}
-		const auto v = D3DXVECTOR3(_vRotaLoop.x, _vRotaLoop.y, _vRotaLoop.z);
-		D3DXMatrixRotationAxis(pmat, &v, pCurRota);
-	}
+	void GetRotaLoopMatrix(D3DXMATRIX* pmat, float& pCurRota, float fTime);
 
 	//////////////////////////////////////////////////////////////////////////
 	//!
@@ -1217,23 +1054,8 @@ public:
 		_iUseParam = 0;
 	}
 
-	void SetTobParam(int nFrame, int nSegments, float rHeight, float rRadius, float rBotRadius) {
-		_iUseParam = 0;
-		_CylinderParam[nFrame].iSegments = nSegments;
-		_CylinderParam[nFrame].fTopRadius = rRadius;
-		_CylinderParam[nFrame].fBottomRadius = rBotRadius;
-		_CylinderParam[nFrame].fHei = rHeight;
-		_CylinderParam[nFrame].Create();
-
-		_iUseParam = 1;
-	}
-
-	void GetTobParam(int nFrame, int& nSegments, float& rHeight, float& rRadius, float& rBotRadius) {
-		nSegments = _CylinderParam[nFrame].iSegments;
-		rRadius = _CylinderParam[nFrame].fTopRadius;
-		rBotRadius = _CylinderParam[nFrame].fBottomRadius;
-		rHeight = _CylinderParam[nFrame].fHei;
-	}
+	void SetTobParam(int nFrame, int nSegments, float rHeight, float rRadius, float rBotRadius);
+	void GetTobParam(int nFrame, int& nSegments, float& rHeight, float& rRadius, float& rBotRadius);
 
 	int IsUseParam() {
 		return _iUseParam;
@@ -1354,21 +1176,4 @@ protected:
 //private:
 //};
 
-inline void Transpose(D3DMATRIX& result, D3DMATRIX& m) {
-	result.m[0][0] = m.m[0][0];
-	result.m[0][1] = m.m[1][0];
-	result.m[0][2] = m.m[2][0];
-	result.m[0][3] = m.m[3][0];
-	result.m[1][0] = m.m[0][1];
-	result.m[1][1] = m.m[1][1];
-	result.m[1][2] = m.m[2][1];
-	result.m[1][3] = m.m[3][1];
-	result.m[2][0] = m.m[0][2];
-	result.m[2][1] = m.m[1][2];
-	result.m[2][2] = m.m[2][2];
-	result.m[2][3] = m.m[3][2];
-	result.m[3][0] = m.m[0][3];
-	result.m[3][1] = m.m[1][3];
-	result.m[3][2] = m.m[2][3];
-	result.m[3][3] = m.m[3][3];
-}
+void Transpose(D3DMATRIX& result, D3DMATRIX& m);

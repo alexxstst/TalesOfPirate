@@ -57,52 +57,8 @@ inline	 bool	PointPointRange(D3DXVECTOR3* vPoint1, D3DXVECTOR3* vPoint2, float f
 			(fabs(vPoint1->y - vPoint2->y) < fRange) &&
 			(fabs(vPoint1->z - vPoint2->z) < fRange));
 }
-inline D3DXMATRIX * GetMatrixRotation( D3DXMATRIX *pout,const D3DXVECTOR3 *Point,\
-								const D3DXVECTOR3 *aixs,float angle)
-{
-	D3DXMATRIX r, r2;
-	D3DXMATRIX r1 = D3DXMATRIX(1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		-Point->x, -Point->y, -Point->z, 1);
-	D3DXMatrixRotationAxis(&r2,aixs,angle);
-	r = r1 * r2;
-	r1 = D3DXMATRIX(1, 0, 0, 0,
-		0, 1, 0, 0,
-		0, 0, 1, 0,
-		Point->x, Point->y, Point->z, 1);
-	r = r * r1;
-	*pout = r;
-	return pout;
-}
-inline void	 GetDirRotation(D3DXVECTOR2* pOut, D3DXVECTOR3* pDir)
-{
-	float fDist = D3DXVec3Length(pDir);
-	if(pDir->z == 0)
-	{
-		pOut->x = 0;
-	}
-	else
-	{
-		const auto v = D3DXVECTOR3(0.0f, 0.0f, 1.0f);
-		pOut->x = asinf(D3DXVec3Dot(pDir, &v) / fDist);
-	}
-	//X
-	if(pDir->x == 0 && pDir->y == 0)
-	{
-		pOut->y = 0;
-	}
-	else
-	{
-		const D3DXVECTOR3 v[] = { D3DXVECTOR3(pDir->x, pDir->y, 0.0f), D3DXVECTOR3(0.0f, 1.0f, 0.0f) };
-		fDist = D3DXVec3Length(&v[0]);
-		pOut->y = acosf(D3DXVec3Dot(&v[0], &v[1]) / fDist);
-		if( pDir->x >= 0.0f )
-		{
-			pOut->y = -pOut->y;
-		}
-	}
-}
+D3DXMATRIX* GetMatrixRotation(D3DXMATRIX* pout, const D3DXVECTOR3* Point, const D3DXVECTOR3* aixs, float angle);
+void GetDirRotation(D3DXVECTOR2* pOut, D3DXVECTOR3* pDir);
 /************************************************************************/
 /*class CMPParticle*/
 /************************************************************************/
@@ -331,18 +287,7 @@ public:
 	void				SetSysVel(float fVecl){_fVecl = fVecl;}
 
 	int					GetSysNum(){return _iParNum;}
-	void				SetSysNum(int  iParNum)
-	{
-		// [1, 100]
-		if(iParNum> 100)
-			_iParNum = 100;
-		else if(_iParNum <= 0)
-			_iParNum = 1;
-		else
-			_iParNum = iParNum;
-
-		_vecParticle.setsize(_iParNum);
-	}
+	void				SetSysNum(int iParNum);
 
 	float				GetSysStep()		{ return _fStep;}
 	void				SetSysStep(float fstep){ _fStep = fstep;}	
@@ -372,14 +317,7 @@ public:
 			return *_vecFrameSize[iFrame];
 		return 0;
 	}
-	void				SetFrameSize(int iFrame, float fsize,CMPResManger	*pCResMagr)
-	{ 		
-		if(iFrame <_wFrameCount)
-			*_vecFrameSize[iFrame] = fsize;
-
-		if(m_bShade)
-			m_cShade.Create(_strTexName,pCResMagr,*_vecFrameSize[0]);
-	}
+	void				SetFrameSize(int iFrame, float fsize, CMPResManger* pCResMagr);
 
 	D3DXVECTOR3			GetFrameAngle(int iFrame)
 	{ 
@@ -408,13 +346,7 @@ public:
 		//	m_cShade.setColor(*_vecFrameColor[0]);
 	}
 
-	void				SetAlpha(float falpha)
-	{
-		for(int n = 0; n < _wFrameCount; n++)
-		{
-			_vecFrameColor[n]->a = falpha;
-		}
-	}
+	void				SetAlpha(float falpha);
 
 	bool				IsBillBoard(){return _bBillBoard;}
 	void				SetBillBoard(bool bBBoard){ _bBillBoard = bBBoard;}

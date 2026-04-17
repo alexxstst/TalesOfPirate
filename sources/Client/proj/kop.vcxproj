@@ -59,11 +59,10 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <AdditionalOptions>/GR /EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL-1.2.7\INCLUDE;$(ProjectDir)..\..\Libraries\DirectX\include;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_LUA_GAME;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
@@ -101,7 +100,6 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <AdditionalOptions>/GR /EHa %(AdditionalOptions)</AdditionalOptions>
       <Optimization>MaxSpeed</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -111,7 +109,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_LUA_GAME;NARROW;_WIN32_WINNT=0x0500;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <MinimalRebuild>false</MinimalRebuild>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>Default</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
@@ -225,6 +223,7 @@
     <ClCompile Include="..\src\PackFile.cpp" />
     <ClCompile Include="..\src\ProCirculateCC.cpp" />
     <ClCompile Include="..\src\ProCirculateCS.cpp" />
+    <ClCompile Include="..\src\publicfun.cpp" />
     <ClCompile Include="..\src\RecruitMemberData.cpp" />
     <ClCompile Include="..\src\RecruitMembersMgr.cpp" />
     <ClCompile Include="..\src\RenderStateMgr.cpp" />

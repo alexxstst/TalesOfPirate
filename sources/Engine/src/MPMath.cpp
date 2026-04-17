@@ -3,6 +3,81 @@
 
 using namespace std;
 
+BOOL EdgeIntersectsFace(D3DXVECTOR3* pEdges, D3DXVECTOR3* pFacePoints, D3DXPLANE* pPlane) {
+	FLOAT fDist1 = pPlane->a * pEdges[0].x + pPlane->b * pEdges[0].y +
+				   pPlane->c * pEdges[0].z + pPlane->d;
+	FLOAT fDist2 = pPlane->a * pEdges[1].x + pPlane->b * pEdges[1].y +
+				   pPlane->c * pEdges[1].z + pPlane->d;
+	if ((fDist1 > 0 && fDist2 > 0) || (fDist1 < 0 && fDist2 < 0)) {
+		return FALSE;
+	}
+
+	D3DXVECTOR3 ptIntersection;
+	if (NULL == D3DXPlaneIntersectLine(&ptIntersection, pPlane, &pEdges[0], &pEdges[1])) {
+		return FALSE;
+	}
+
+	FLOAT fAbsA = (pPlane->a > 0 ? pPlane->a : -pPlane->a);
+	FLOAT fAbsB = (pPlane->b > 0 ? pPlane->b : -pPlane->b);
+	FLOAT fAbsC = (pPlane->c > 0 ? pPlane->c : -pPlane->c);
+	D3DXVECTOR2 facePoints[4];
+	D3DXVECTOR2 point;
+	if (fAbsA > fAbsB && fAbsA > fAbsC) {
+		for (INT i = 0; i < 4; i++) {
+			facePoints[i].x = pFacePoints[i].y;
+			facePoints[i].y = pFacePoints[i].z;
+		}
+		point.x = ptIntersection.y;
+		point.y = ptIntersection.z;
+	}
+	else if (fAbsB > fAbsA && fAbsB > fAbsC) {
+		for (INT i = 0; i < 4; i++) {
+			facePoints[i].x = pFacePoints[i].x;
+			facePoints[i].y = pFacePoints[i].z;
+		}
+		point.x = ptIntersection.x;
+		point.y = ptIntersection.z;
+	}
+	else {
+		for (INT i = 0; i < 4; i++) {
+			facePoints[i].x = pFacePoints[i].x;
+			facePoints[i].y = pFacePoints[i].y;
+		}
+		point.x = ptIntersection.x;
+		point.y = ptIntersection.y;
+	}
+
+	FLOAT x0 = facePoints[0].x;
+	FLOAT y0 = facePoints[0].y;
+	FLOAT x1 = facePoints[1].x;
+	FLOAT y1 = facePoints[1].y;
+	FLOAT x2 = facePoints[2].x;
+	FLOAT y2 = facePoints[2].y;
+	BOOL bClockwise = FALSE;
+	if (x1 * y2 - y1 * x2 - x0 * y2 + y0 * x2 + x0 * y1 - y0 * x1 < 0) {
+		bClockwise = TRUE;
+	}
+	x2 = point.x;
+	y2 = point.y;
+	for (INT i = 0; i < 4; i++) {
+		x0 = facePoints[i].x;
+		y0 = facePoints[i].y;
+		if (i < 3) {
+			x1 = facePoints[i + 1].x;
+			y1 = facePoints[i + 1].y;
+		}
+		else {
+			x1 = facePoints[0].x;
+			y1 = facePoints[0].y;
+		}
+		if ((x1 * y2 - y1 * x2 - x0 * y2 + y0 * x2 + x0 * y1 - y0 * x1 > 0) == bClockwise) {
+			return FALSE;
+		}
+	}
+
+	return TRUE;
+}
+
 D3DXVECTOR3 ComputeNormalVector( D3DXVECTOR3 v1, D3DXVECTOR3 v2, D3DXVECTOR3 v3 )
 {
 	D3DXVECTOR3 vResult;
