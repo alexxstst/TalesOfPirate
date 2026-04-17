@@ -55,13 +55,15 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Release|Win32'">
     <ClCompile>
-      <AdditionalOptions>/EHa %(AdditionalOptions)</AdditionalOptions>
+      <ExceptionHandling>Async</ExceptionHandling>
       <Optimization>MaxSpeed</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <PrecompiledHeader />
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -74,12 +76,14 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
       <StructMemberAlignment>Default</StructMemberAlignment>
-      <PrecompiledHeader />
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -91,6 +95,9 @@
     <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\src\stdafx.cpp">
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
     <ClCompile Include="..\src\ChaAttr.cpp" />
     <ClCompile Include="..\src\ChaMask.cpp" />
     <ClCompile Include="..\src\CharacterRecord.cpp" />
@@ -162,6 +169,7 @@
     <ClCompile Include="..\..\sqlite3\sqlite3.c">
       <CompileAs>CompileAsC</CompileAs>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <ForcedIncludeFiles />
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
     </ClCompile>
   </ItemGroup>

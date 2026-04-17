@@ -54,7 +54,7 @@
     <OutDir>$(ProjectDir)..\bin\system\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
-    <LinkIncremental>true</LinkIncremental>
+    <LinkIncremental>false</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -79,6 +79,7 @@
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <SDLCheck>false</SDLCheck>
       <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <AdditionalDependencies>AudioSDL_D.lib;MindPower3D_D8D.lib;Ws2_32.lib;lua51.lib;CorsairsNet_D.lib;util_D.lib;Common_D.lib;dxguid.lib;ddraw.lib;atls.lib;SDL.lib;SDL_mixer.lib;SDLmain.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -124,6 +125,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <RegisterOutput>false</RegisterOutput>
@@ -133,7 +135,7 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib;$(ProjectDir)..\..\Libraries\Common\lib;$(ProjectDir)..\..\Libraries\Util\lib;$(ProjectDir)..\..\Libraries\CorsairsNet\lib;$(ProjectDir)..\..\Libraries\AudioSDL\lib;$(ProjectDir)..\..\Libraries\SDL-1.2.7\LIB;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\AudioDll\lib;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib;$(ProjectDir)..\..\Libraries\Discord\lib;$(ProjectDir)..\..\Libraries\Cryptopp\Win32\Output\Release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
-      <IgnoreSpecificDefaultLibraries>libc.lib;libcmt.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;LIBCI.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libc.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;LIBCI.LIB;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AssemblyDebug />
