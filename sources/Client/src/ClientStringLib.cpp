@@ -2,7 +2,7 @@
 // Перенесены из Common/StringLib.cpp — серверу эти функции не нужны.
 
 #include "StringLib.h"
-#include <mbstring.h>
+#include "EncodingUtil.h"
 
 using namespace std;
 
@@ -34,9 +34,18 @@ string CutFaceText(string &text, size_t cutLimitlen)
 		retStr = text.substr(0, cutLimitlen);
 	}
 
-	if (_ismbslead((unsigned char*)text.c_str(), (unsigned char*)&text[cutLimitlen - 1]))
+	// UTF-8: если позиция разреза попала внутрь multi-byte codepoint,
+	// отступаем назад до начала ближайшего codepoint (starter-байт).
+	if (cutLimitlen < text.size()
+		&& !encoding::IsUtf8StartByte(static_cast<unsigned char>(text[cutLimitlen])))
 	{
-		retStr = text.substr(0, cutLimitlen - 1);
+		size_t safe = cutLimitlen;
+		while (safe > 0
+			   && !encoding::IsUtf8StartByte(static_cast<unsigned char>(text[safe])))
+		{
+			--safe;
+		}
+		retStr = text.substr(0, safe);
 	}
 	if ((*--retStr.end()) == '#')
 	{

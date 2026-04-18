@@ -86,7 +86,9 @@ void CGameConfig::SetDefault()   //
 	strcpy(m_szMD5Pass, "");  // MD5
 	memset( m_szVerErrorHTTP, 0, sizeof(m_szVerErrorHTTP) ); 
 
-	m_IsShowConsole = false; // 
+	m_IsShowConsole = false; //
+	m_bConsoleEnabled = FALSE;
+	m_bConsoleRequireSuperKey = TRUE;
 	m_IsMoveClient = true;
 	m_IsBill = false; //  
 
@@ -220,6 +222,17 @@ void CGameConfig::Load()
 		m_bEnableLGMsg = static_cast<int>(sec.GetInt64("enable_lg_msg", 0));
 		m_IsShowConsole = sec.GetInt64("console", 0) != 0;
 	}
+
+	// [Console] — новая секция, гейт игровой консоли (замена `#ifdef DEBUG`).
+	{
+		auto& sec = g_SystemIni["Console"];
+		m_bConsoleEnabled         = static_cast<int>(sec.GetInt64("enabled", 0));
+		m_bConsoleRequireSuperKey = static_cast<int>(sec.GetInt64("requireSuperKey", 1));
+	}
+
+	// [Console Debug] — визуальные настройки читаются из Lua
+	// (console_bootstrap.lua через SystemIni:Section(...)), см. font_name /
+	// font_size / font_bold / width_percent / transparency_percent / lines.
 
 	// [Romance Setting]
 	{

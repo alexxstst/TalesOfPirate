@@ -6095,8 +6095,8 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		int nStatus = lua_pcall( g_pLuaState, 3, 1, 0 );
 		if( nStatus )
 		{
-			//SystemNotice( "[%s][BoatLevelUp]!", m_name );
-			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00094), m_name );
+			//SystemNotice( "[%s][BoatLevelUp]!", _name.c_str() );
+			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00094), _name.c_str() );
 			lua_settop(g_pLuaState, 0);
 			return FALSE;
 		}
@@ -6105,8 +6105,8 @@ BOOL CCharacter::BoatSelected( BYTE byType, BYTE byIndex )
 		lua_settop(g_pLuaState, 0);
 		if( dwResult != LUA_TRUE )
 		{
-			//SystemNotice( "[%s][BoatLevelUp]!", m_name );
-			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00095), m_name );
+			//SystemNotice( "[%s][BoatLevelUp]!", _name.c_str() );
+			SystemNotice( RES_STRING(GM_CHARACTER_CPP_00095), _name.c_str() );
 			return FALSE;
 		}
 
@@ -6368,8 +6368,8 @@ BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 	int nStatus = lua_pcall( g_pLuaState, 4, 1, 0 );
 	if( nStatus )
 	{
-		//SystemNotice( "[%s][PackBagGoods]!", m_name );
-		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00101), m_name );
+		//SystemNotice( "[%s][PackBagGoods]!", _name.c_str() );
+		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00101), _name.c_str() );
 		lua_callalert( g_pLuaState, nStatus );
 		lua_settop(g_pLuaState, 0);
 		return FALSE;
@@ -6379,8 +6379,8 @@ BOOL CCharacter::PackBag( CCharacter& boat, BYTE byType, BYTE byLevel )
 	lua_settop(g_pLuaState, 0);
 	if( dwResult != LUA_TRUE )
 	{
-		//SystemNotice( "[%s][PackBagGoods]!", m_name );
-		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00102), m_name );
+		//SystemNotice( "[%s][PackBagGoods]!", _name.c_str() );
+		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00102), _name.c_str() );
 		return FALSE;
 	}
 

@@ -221,7 +221,6 @@ public:
         GetDevice()->GetTransform( D3DTS_VIEW, mat );
         D3DXMatrixInverse( mat, NULL, mat );
     }
-	CMPFont*		GetDeviceFont()		{ return _pFont;}
     void            UpdateLight();
 public:    
     
@@ -265,10 +264,9 @@ protected:
     // Direct 3D
     IDirect3DX*             _pD3D;
     HWND                    _hWnd;
-	//CD3DFont*				_pFont; // FontD3DXMATRIXA16			_matWorld;
-	//{lemon modify@2004.9.3
-	CMPFont*				_pFont;
-	//@}
+	// Шрифт не хранится в поле MPRender: владение и выбор — через
+	// FontManager::Instance().Get(FontSlot::...) в клиенте.
+	// См. memory/font-api-refactor-todo.md.
 	IDirect3DDeviceX*		_pD3DDevice;
     D3DVIEWPORTX            _view;
     int                     _nScrWidth;         // 

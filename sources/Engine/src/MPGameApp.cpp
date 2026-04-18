@@ -12,7 +12,7 @@
 #include "MPCamera.h"
 #include "MPTextureSet.h"
 #include "MPTerrainSet.h"
-#include "MPConsole.h"
+#include "ConsoleProcessor.h"
 
 #include "lwGuidObj.h"
 #include "lwInterface.h"
@@ -36,7 +36,7 @@ MPGameApp::MPGameApp()
 	_pDIKeyboard = NULL;
 	_pDIMouse = NULL;
 
-	_pConsole = new MPConsole;
+	_pConsole = new ConsoleProcessor;
 	//_pMainCam = new MPCamera;
 
 	_nMousePosX = 0;
@@ -169,12 +169,9 @@ void MPGameApp::FrameMove(DWORD dwTimeParam) {
 	g_Render.UpdateCullInfo(); //added by billy
 
 	if (_pConsole->IsVisible()) {
-		g_Render.EnablePrint(INFO_CMD, TRUE);
-		_pConsole->FrameMove();
-		UpdateConsoleText(FALSE);
-	}
-	else {
-		g_Render.EnablePrint(INFO_CMD, FALSE);
+		// Tick — анимация мигающего курсора. Отрисовка текста — в клиенте
+		// (CGameApp::_RenderConsoleText) через FontManager::Get(FontSlot::Console).
+		_pConsole->Tick();
 	}
 
 	lwISceneMgr* sm = g_Render.GetInterfaceMgr()->sys_graphics->GetSceneMgr();
@@ -205,6 +202,45 @@ void MPGameApp::Render() {
 	sm->BeginRender();
 	sm->Render();
 
+	// Фон консоли — сплошной colored quad (без текстуры) через D3D. Рисуем
+	// ДО _Render(), чтобы UI и текст консоли (CGameApp::_RenderConsoleText)
+	// ложились поверх. Раньше использовалась лого-текстура с tint'ом, но у
+	// неё неоднородная alpha → фон казался "пропавшим" в местах prozrachnosti.
+	if (_pConsole->IsVisible()) {
+		const DWORD argb = _pConsole->GetBackdropColor();
+		const float w = static_cast<float>(_pConsole->GetWidth());
+		const float h = static_cast<float>(_pConsole->GetHeight() + 14);
+
+		struct CV { float x, y, z, rhw; DWORD color; };
+		const CV verts[6] = {
+			{ 0.0f, 0.0f, 0.0f, 1.0f, argb },
+			{    w, 0.0f, 0.0f, 1.0f, argb },
+			{ 0.0f,    h, 0.0f, 1.0f, argb },
+			{    w, 0.0f, 0.0f, 1.0f, argb },
+			{    w,    h, 0.0f, 1.0f, argb },
+			{ 0.0f,    h, 0.0f, 1.0f, argb },
+		};
+
+		auto* dev = g_Render.GetDevice();
+		if (dev) {
+			dev->SetTexture(0, nullptr);
+			dev->SetVertexShader(nullptr);
+			dev->SetPixelShader(nullptr);
+			dev->SetFVF(D3DFVF_XYZRHW | D3DFVF_DIFFUSE);
+			dev->SetRenderState(D3DRS_ALPHABLENDENABLE, TRUE);
+			dev->SetRenderState(D3DRS_SRCBLEND, D3DBLEND_SRCALPHA);
+			dev->SetRenderState(D3DRS_DESTBLEND, D3DBLEND_INVSRCALPHA);
+			dev->SetRenderState(D3DRS_LIGHTING, FALSE);
+			dev->SetRenderState(D3DRS_ZENABLE, FALSE);
+			dev->SetRenderState(D3DRS_CULLMODE, D3DCULL_NONE);
+			dev->SetTextureStageState(0, D3DTSS_COLOROP,   D3DTOP_SELECTARG1);
+			dev->SetTextureStageState(0, D3DTSS_COLORARG1, D3DTA_DIFFUSE);
+			dev->SetTextureStageState(0, D3DTSS_ALPHAOP,   D3DTOP_SELECTARG1);
+			dev->SetTextureStageState(0, D3DTSS_ALPHAARG1, D3DTA_DIFFUSE);
+			dev->DrawPrimitiveUP(D3DPT_TRIANGLELIST, 2, verts, sizeof(CV));
+		}
+	}
+
 	_Render(); //
 
 	sm->EndRender();
@@ -215,23 +251,9 @@ void MPGameApp::Render() {
 	//
 	//   g_Render.SetCurrentView(MPRender::VIEW_WORLD);
 
-#ifdef DEBUG
-	g_Render.RenderDebugInfo();
-#endif
-
-	if (_pConsole->IsVisible()) {
-		auto* pTexInfo = GetTextureInfo(_nLogoTexID);
-		if (pTexInfo) {
-			MPTexRect TexRect;
-			TexRect.nTexW = 128;
-			TexRect.nTexH = 64;
-			TexRect.fScaleX = (float)g_Render.GetScrWidth() / 128.0f / 1.76f;
-			TexRect.fScaleY = 2.4f;
-			TexRect.dwColor = 0x2FFFFFFF;
-			TexRect.nTextureNo = _nLogoTexID;
-			g_Render.RenderTextureRect(0, 0, &TexRect);
-		}
-	}
+	// INFO_CMD / INFO_FPS текст рисует клиент напрямую (через FontManager
+	// в CGameApp::_Render). Прежний RenderDebugInfo использовал _pFont,
+	// который никогда не инициализировался — вызывал AV.
 
 	// Del by lark.l i20080611
 	// Draw font
@@ -242,17 +264,9 @@ void MPGameApp::Render() {
 	_dwRenderUseTime = tRenderUse.End();
 }
 
-void MPGameApp::UpdateConsoleText(BOOL bClear) {
-	list<string>* pTextList = _pConsole->GetTextList();
-	int y = 4; // g_Render.GetScrHeight() - _pConsole->GetHeight() - 40;
-	for (list<string>::iterator it = pTextList->begin(); it != pTextList->end(); it++, y += 16) {
-		string& str = (*it);
-		if (str.size() > 0 || bClear) {
-			g_Render.Print(INFO_CMD, 2, y, "%s", str.c_str());
-		}
-	}
-	g_Render.Print(INFO_CMD, 4, _pConsole->GetHeight() - 10, "%s", _pConsole->GetInputText());
-}
+// UpdateConsoleText удалён — отрисовка текста консоли перенесена в клиент:
+// CGameApp::_RenderConsoleText (sources/Client/src/GameAppRender.cpp)
+// использует FontManager::Get(FontSlot::Console).
 
 void MPGameApp::_RenderUI() {
 }

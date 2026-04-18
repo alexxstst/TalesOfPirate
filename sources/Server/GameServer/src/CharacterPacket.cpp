@@ -53,7 +53,7 @@ void CCharacter::WriteBaseInfo(net::WPacket &pkret, Char chLookType)
 	{
 		pkret.WriteInt64(GetHandle());
 		pkret.WriteInt64((Char)m_CChaAttr.GetAttr(ATTR_CHATYPE));
-		pkret.WriteString(m_name);
+		pkret.WriteString(_name);
 		pkret.WriteString(GetMotto());
 		pkret.WriteInt64(GetPlyMainCha()->GetIcon());
 		pkret.WriteInt64(GetValidGuildID());
@@ -626,7 +626,7 @@ void CCharacter::FillBaseInfo(net::msg::ChaBaseInfo &b, Char chLookType)
 	{
 		b.handle = GetHandle();
 		b.ctrlType = (Char)m_CChaAttr.GetAttr(ATTR_CHATYPE);
-		b.name = m_name;
+		b.name = _name;
 		b.motto = GetMotto();
 		b.icon = GetPlyMainCha()->GetIcon();
 		b.guildId = GetValidGuildID();

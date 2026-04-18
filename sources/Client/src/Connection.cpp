@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "Connection.h"
 #include "NetIF.h"
+#include "CrushSystem.h"
 
 Connection::Connection(NetIF* netif)
 	: m_netif(netif), m_status(CNST_INVALID),
@@ -36,6 +37,8 @@ bool Connection::Connect(const char* hostname, uint16_t port, uint32_t timeout)
 
 	//     (TcpClient::Connect )
 	m_connectThread = std::thread([this]() {
+		::SetThreadName("net-connect");
+		TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 		bool ok = m_netif->GetClient().Connect(m_hostname, m_port, m_timeout);
 
 		std::lock_guard<std::mutex> lock(m_mtx);

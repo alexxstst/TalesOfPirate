@@ -2,6 +2,7 @@
 #include "uirichedit.h"
 #include "gameapp.h"
 #include "uieditkey.h"
+#include "EncodingUtil.h"
 
 using namespace GUI;
 //---------------------------------------------------------------------------
@@ -100,58 +101,43 @@ bool CRichEdit::OnChar( char c )
 {
 	if( _IsReadyOnly ) return false;
 
-	// 
 	switch( c )
 	{
-	case '\r':		// 
+	case '\r':
 		_cArticle.AddControl( c );
 		break;
-	case '\b':		// 
-		break;
+	case '\b':
 	case '\t':
-		break;
-	case 3:			// copy
-		break;
-	case 22:		// paste
-		break;
-	case 24:		// cut
-		break;
-	case 27:		// ESC
+	case 3:   // copy
+	case 22:  // paste
+	case 24:  // cut
+	case 27:  // ESC
 		break;
 	default:
 		{
-			_szEnter[_nEnterPos++] = c;
-			bool	IsError = false;
-			if( _nEnterPos==1 )
-			{
-				IsError = false;
-				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 
-					&& _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 )
-				{
-					// 
-					_nEnterPos = 0;
-
-					_cArticle.AddChar( c );
-				}
-			}
-			else if( _nEnterPos==2 )
-			{
-				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==-1 && _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[1] )==-1 )
-				{
-					// 
-					_cArticle.AddChar(_szEnter[0], _szEnter[1] );
-
-					IsError = false;
-					_nEnterPos = 0;
-					_szEnter[1] = 0;
-				}
-			}
-
-			if( IsError )
-			{
-				// 
+			// Аналогично CEditKey::OnChar: CP_ACP → UTF-8 через EncodingUtil,
+			// порционно в CArticle::AddChar (1 или 2 байта UTF-8).
+			const unsigned char byte = static_cast<unsigned char>(c);
+			std::string utf8;
+			if (_nEnterPos == 1) {
+				_szEnter[1] = c;
+				utf8 = encoding::AnsiToUtf8(std::string_view(_szEnter, 2));
 				_nEnterPos = 0;
-				_szEnter[1] = 0;
+				_szEnter[0] = _szEnter[1] = 0;
+			}
+			else if (byte >= 0x80 && ::IsDBCSLeadByteEx(CP_ACP, byte)) {
+				_szEnter[0] = c;
+				_nEnterPos = 1;
+				return false;
+			}
+			else {
+				encoding::AppendAnsiByteAsUtf8(byte, utf8);
+			}
+			if (utf8.size() == 1) {
+				_cArticle.AddChar( utf8[0] );
+			}
+			else if (utf8.size() == 2) {
+				_cArticle.AddChar( utf8[0], utf8[1] );
 			}
 		}
 	}

@@ -1,6 +1,7 @@
 ﻿#include "stdafx.h"
 
 #include "createchascene.h"
+#include "EncodingUtil.h"
 
 #include "CameraCtrl.h"
 #include "GameApp.h"
@@ -1181,7 +1182,7 @@ void CCreateChaScene::_ChaFoundFrmMouseEvent(CCompent* pSender, int nMsgType,
 											 int x, int y, DWORD dwKey) {
 	string strName = pSender->GetName();
 
-	if (stricmp("frmFound", pSender->GetForm()->GetName()) != 0) {
+	if (!encoding::EqualsIgnoreCaseAscii(pSender->GetForm()->GetName(), "frmFound")) {
 		return;
 	}
 
@@ -1226,7 +1227,7 @@ void CCreateChaScene::_ChaCityFrmMouseEvent(CCompent* pSender, int nMsgType,
 	string strName = pSender->GetName();
 
 
-	if (stricmp("frmCity", pSender->GetForm()->GetName()) != 0) {
+	if (!encoding::EqualsIgnoreCaseAscii(pSender->GetForm()->GetName(), "frmCity")) {
 		return;
 	}
 
@@ -1266,7 +1267,7 @@ void CCreateChaScene::_QuitFrmMouseEvent(CCompent* pSender, int nMsgType,
 										 int x, int y, DWORD dwKey) {
 	string strName = pSender->GetName();
 
-	if (stricmp("frmQuit", pSender->GetForm()->GetName()) != 0) {
+	if (!encoding::EqualsIgnoreCaseAscii(pSender->GetForm()->GetName(), "frmQuit")) {
 		return;
 	}
 
@@ -1533,26 +1534,28 @@ void CCreateChaScene::InitChaData() {
 
 
 //-----------------------------------------------------------------------
-bool CCreateChaScene::IsValidCheckChaName(const char* name) {
+bool CCreateChaScene::IsValidCheckChaName(const std::string& name) {
 	/* Copy from LoginScene.cpp */
-	if (_stricmp(name, GetLanguageString(49).c_str()) == 0) {
+	// Обе стороны в UTF-8 после этапа A — побайтовое сравнение корректно для
+	// проверки "юзер не ввёл ничего и оставил placeholder".
+	if (name == GetLanguageString(49)) {
 		g_pGameApp->MsgBox("%s", GetLanguageString(49).c_str());
 		return false;
 	}
 
-	if (strlen(name) <= 0) {
+	if (name.empty()) {
 		g_pGameApp->MsgBox("%s", GetLanguageString(50).c_str());
 		return false;
 	}
 
-	if (!::IsValidName(name)) {
+	if (!::IsValidName(name.c_str())) {
 		g_pGameApp->MsgBox("%s", GetLanguageString(51).c_str());
 		return false;
 	}
 	//return true;
 
-	const char* s = name;
-	int len = (int)strlen(s);
+	const char* s = name.c_str();
+	int len = static_cast<int>(name.size());
 	bool bOk = true;
 
 	for (int i = 0; i < len; i++) {

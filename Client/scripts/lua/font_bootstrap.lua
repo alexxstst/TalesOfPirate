@@ -25,6 +25,7 @@ local family = g_SystemFont or "Arial"
 UI_CreateFont("TipText",      family, 12, 12, 1, 0)
 UI_CreateFont("MidAnnounce",  family, 16, 16, 3, MPFONT_BOLD)
 UI_CreateFont("BottomShadow", family, 12, 12, 3, MPFONT_BOLD)
+UI_CreateFont("Console",      family, 16, 18, 1, 0)
 
 -- 4) Lua-шрифты (handle — int, совместимо со старым API).
 DEFAULT_FONT = UI_CreateFont("DEFAULT_FONT", family,  12, 12, 1, 0)

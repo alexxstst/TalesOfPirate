@@ -1,5 +1,6 @@
 ﻿#pragma once
 #include "UISystemForm.h"
+#include "CrushSystem.h"
 // ,
 // :
 class CSteadyFrame
@@ -45,6 +46,8 @@ public:
 
 private:
 	static DWORD WINAPI _SleepThreadProc( LPVOID lpParameter ){
+		::SetThreadName("steady-frame");
+		TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 		((CSteadyFrame*)lpParameter)->_Sleep();
 		return 0;
 	}

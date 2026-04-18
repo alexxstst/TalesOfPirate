@@ -109,6 +109,7 @@
     <ClCompile Include="newlogutil.cpp" />
     <ClCompile Include="CrushSystem.cpp" />
     <ClCompile Include="ConsoleColor.cpp" />
+    <ClCompile Include="EncodingUtil.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\include\algo.h" />
@@ -128,6 +129,7 @@
     <ClInclude Include="..\include\logutil.h" />
     <ClInclude Include="..\include\ConsoleColor.h" />
     <ClInclude Include="..\include\CrushSystem.h" />
+    <ClInclude Include="..\include\EncodingUtil.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -6,6 +6,7 @@
 #include "GameConfig.h"
 #include "UIsystemform.h"
 #include "GlobalVar.h"
+#include "CrushSystem.h"
 
 using namespace std;
 
@@ -109,6 +110,8 @@ ATOM MyRegisterClass(HINSTANCE hInstance)
 
 unsigned __stdcall LoadingThread(void* param)
 {
+    ::SetThreadName("loading");
+    TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
     GameLoading* load = (GameLoading*)param;
     ATOM ret = MyRegisterClass(g_hInstance);
 

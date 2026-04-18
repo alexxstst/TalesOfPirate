@@ -40,11 +40,11 @@ namespace mission
 
 		if( szName )
 		{
-			strncpy( m_name, szName, 32 - 1 );
+			_name = (szName) ? (szName) : "";
 		}
 		else
 		{
-			strncpy( m_name, pRec->szName.c_str(), 32 - 1 );
+			_name = (pRec->szName.c_str()) ? (pRec->szName.c_str()) : "";
 		}
 
 		m_ID = g_pGameApp->m_Ident.GetID();

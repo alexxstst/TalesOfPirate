@@ -36,7 +36,7 @@ LW_USING
 #include "MPMap.h"
 #include "MPModelEff.h"
 #include "MPTerrainSet.h"
-#include "MPConsole.h"
+#include "ConsoleProcessor.h"
 
 #include "MPMath.h"
 

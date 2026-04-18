@@ -164,6 +164,7 @@
     <ClCompile Include="..\src\ChaState.cpp" />
     <ClCompile Include="..\src\ChatRecord.cpp" />
     <ClCompile Include="..\src\Connection.cpp" />
+    <ClCompile Include="..\src\ConsoleBridge.cpp" />
     <ClCompile Include="..\src\CRCircle.cpp" />
     <ClCompile Include="..\src\CRCursor.cpp" />
     <ClCompile Include="..\src\CRCursorObj.cpp" />
@@ -373,6 +374,7 @@
     <ClInclude Include="..\src\ChatIconSet.h" />
     <ClInclude Include="..\src\ChatRecord.h" />
     <ClInclude Include="..\src\Connection.h" />
+    <ClInclude Include="..\src\ConsoleBridge.h" />
     <ClInclude Include="..\src\CRCircle.h" />
     <ClInclude Include="..\src\CRCursor.h" />
     <ClInclude Include="..\src\CRCursorObj.h" />

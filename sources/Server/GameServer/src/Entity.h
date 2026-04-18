@@ -78,8 +78,14 @@ public:
 	void			NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn = true);
 	void			SetLogName(const char *szName) {strncpy(m_szLogName, szName, defLOG_NAME_LEN - 1); m_szLogName[defLOG_NAME_LEN - 1] = '\0';}
 	const char*		GetLogName() { return m_szLogName; }
-	void			SetName(dbc::cChar *cszName) {strncpy(m_name, cszName, defENTITY_NAME_LEN - 1); m_name[defENTITY_NAME_LEN -1] = '\0';}
-	const char*     GetName() { return m_name; }
+	// _name — std::string в UTF-8 (сервер и клиент мигрированы на UTF-8).
+	// GetName() возвращает const char* для C-совместимости (strcmp/strncpy/
+	// printf и т.п. работают как раньше). Для std::string-кода —
+	// GetNameStr() возвращает const std::string&.
+	void SetName(const std::string& name) { _name = name; }
+	void SetName(const char* name)        { _name = name ? name : ""; }
+	const char* GetName() const           { return _name.c_str(); }
+	const std::string& GetNameStr() const { return _name; }
 	void			SetBirthCity(dbc::cChar *cszName) {strncpy(m_szBirthCity, cszName, MAX_MAPNAME_LENGTH - 1); m_szBirthCity[MAX_MAPNAME_LENGTH -1] = '\0';}
 	const char*     GetBirthCity() { return m_szBirthCity; }
 	void			SetBirthMap(dbc::cChar *cszName) {strncpy(m_szBirthMap, cszName, MAX_MAPNAME_LENGTH - 1); m_szBirthMap[MAX_MAPNAME_LENGTH -1] = '\0';}
@@ -199,7 +205,7 @@ public:
 		//
 	};
 
-	char			m_name[defENTITY_NAME_LEN];
+	std::string		_name;  // UTF-8
 	SExistCtrl		m_SExistCtrl;
 	bool			m_bActiveEyeshot;
 

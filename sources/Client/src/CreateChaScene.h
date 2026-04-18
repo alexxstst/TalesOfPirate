@@ -178,7 +178,7 @@ protected:
     void            ChangeHair(eDirectType enumDirect = LEFT);
     void            ChangeCity(eDirectType enumDirect = LEFT);
     void            RotateChar(eDirectType enumDirect = LEFT);
-    bool            IsValidCheckChaName(const char *name);
+    bool            IsValidCheckChaName(const std::string& name);
     void            DarkScene(bool isDark = true);
 
     void            InitChaFoundFrm();

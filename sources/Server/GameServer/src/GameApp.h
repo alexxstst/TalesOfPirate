@@ -503,7 +503,7 @@ inline CCharacter* CGameApp::FindPlayerChaByName(const char* cszChaName)
 			pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetName(), cszChaName)) // 
+			if (!strcmp(pCha->GetName(), cszChaName)) //
 				return pCha;
 		}
 	}
@@ -534,7 +534,7 @@ inline CCharacter* CGameApp::FindPlayerChaByNameLua(const char* cszChaName)
 
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName)) // 
+			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName)) //
 				return pCha;
 		}
 	}

@@ -436,7 +436,7 @@ VOID DXUtil_ConvertAnsiStringToWide( WCHAR* wstrDestination, const CHAR* strSour
     if( cchDestChar == -1 )
         cchDestChar = strlen(strSource)+1;
 
-    MultiByteToWideChar( CP_ACP, 0, strSource, -1, 
+    MultiByteToWideChar( CP_UTF8, 0, strSource, -1,
                          wstrDestination, cchDestChar-1 );
 
     wstrDestination[cchDestChar-1] = 0;
@@ -460,7 +460,7 @@ VOID DXUtil_ConvertWideStringToAnsi( CHAR* strDestination, const WCHAR* wstrSour
     if( cchDestChar == -1 )
         cchDestChar = wcslen(wstrSource)+1;
 
-    WideCharToMultiByte( CP_ACP, 0, wstrSource, -1, strDestination, 
+    WideCharToMultiByte( CP_UTF8, 0, wstrSource, -1, strDestination,
                          cchDestChar-1, NULL, NULL );
 
     strDestination[cchDestChar-1] = 0;

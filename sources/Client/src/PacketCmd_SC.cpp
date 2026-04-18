@@ -13,6 +13,7 @@
 #include "NetGuild.h"
 #include "CommFunc.h"
 #include "ShipSet.h"
+#include "EncodingUtil.h"
 #include "GameConfig.h"
 #include "GameWG.h"
 #include "UIEquipForm.h"
@@ -672,6 +673,15 @@ BOOL SC_Say(LPRPACKET pk) {
 	stNetSay l_netsay;
 	l_netsay.m_srcid = msg.sourceId;
 	l_netsay.m_content = msg.content.c_str();
+
+	// [UTF-8 migration] Hex-дамп входящего содержимого для определения
+	// формата сервера (CP1251/GBK vs UTF-8). Смотреть канал "net" в log.
+	ToLogService("net", "SC_Say src={} bytes[{}]={} text='{}'",
+				 msg.sourceId,
+				 static_cast<int>(msg.content.size()),
+				 encoding::HexDump(msg.content),
+				 msg.content);
+
 	NetSay(l_netsay, msg.color);
 
 	return TRUE;

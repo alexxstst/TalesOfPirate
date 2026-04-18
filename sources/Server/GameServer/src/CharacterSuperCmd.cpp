@@ -718,7 +718,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			
 			
 			ToLogService("commands", "atorNome = {},sID = {},sNum = {},sTo = {},chSpawnType = {}",
-				m_name,sID,sNum,sTo,chSpawnType);
+				_name,sID,sNum,sTo,chSpawnType);
 
 			if (sTo == 1)
 			{

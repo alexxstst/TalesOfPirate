@@ -58,7 +58,7 @@ void Entity::Initially()
 	m_SExistCtrl.ulTick = GetTickCount();
 	m_SExistCtrl.lWitherTime = 10 * 1000;
 	m_SExistCtrl.lResumeTime = 10 * 1000;
-	m_name[0]	='\0';
+	_name.clear();
 	m_bActiveEyeshot = true;
 
 	m_usAreaAttr[0] = m_usAreaAttr[1] = 0;

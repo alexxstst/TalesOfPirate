@@ -6,6 +6,7 @@
 
 #include "lua_platform.h"
 #include "UISystemForm.h"
+#include "ConsoleBridge.h"
 
 using namespace std;
 
@@ -154,6 +155,12 @@ bool CScriptMgr::Init() {
 
 	// Load Lua scripts (debug.lua first — defines utility functions)
 	LoadLuaScript(g_LuaState, "scripts/lua/debug.lua");
+
+	// Консоль: регистрируем namespace console.* и грузим каркас команд
+	// (scripts/lua/console/helpers.lua + init.lua). Делаем до прочих скриптов,
+	// чтобы gameplay-скрипты могли вызывать console.register(...).
+	ConsoleBridge::Get().InitLuaAPI();
+
 	LoadLuaScript(g_LuaState, "scripts/lua/scene.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/scene/face.lua");
 	LoadLuaScript(g_LuaState, "scripts/lua/CameraConf.lua");

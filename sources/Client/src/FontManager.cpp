@@ -220,6 +220,7 @@ std::string_view FontManager::SlotName(FontSlot slot) {
 	case FontSlot::TipText:      return "TipText";
 	case FontSlot::MidAnnounce:  return "MidAnnounce";
 	case FontSlot::BottomShadow: return "BottomShadow";
+	case FontSlot::Console:      return "Console";
 	default:                     return "Unknown";
 	}
 }
@@ -275,6 +276,14 @@ void FontManager::ClearFonts() {
 	_fonts.clear();
 	_fontNames.clear();
 	_byName.clear();
+}
+
+void FontManager::SetAllCodepage(unsigned int codepage) {
+	for (auto& fp : _fonts) {
+		if (fp) {
+			fp->SetCodepage(static_cast<UINT>(codepage));
+		}
+	}
 }
 
 FontManager::~FontManager() {

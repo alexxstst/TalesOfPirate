@@ -1,5 +1,6 @@
 ﻿#include "Stdafx.h"
 #include "IMusicThread.h"
+#include "CrushSystem.h"
 
 #define  WIN32_LEAN_AND_MEAN
 #include <windows.h>
@@ -42,6 +43,8 @@ private:
 
 DWORD WINAPI ThreadStartRoutine( LPVOID lpThreadParameter )
 {
+	::SetThreadName("music");
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 	return ( ( CMusicThread* ) lpThreadParameter )->Run();
 }
 

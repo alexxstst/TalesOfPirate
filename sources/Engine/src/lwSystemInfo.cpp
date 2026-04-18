@@ -102,7 +102,7 @@ HRESULT GetDirectXVersionViaDxDiag( DWORD* pdwDirectXVersionMajor,
                         *pcDirectXVersionLetter = var.bstrVal[0]; 
 #else
                         char strDestination[10];
-                        WideCharToMultiByte( CP_ACP, 0, var.bstrVal, -1, strDestination, 10*sizeof(CHAR), NULL, NULL );
+                        WideCharToMultiByte( CP_UTF8, 0, var.bstrVal, -1, strDestination, 10*sizeof(CHAR), NULL, NULL );
                         if( pcDirectXVersionLetter )
                             *pcDirectXVersionLetter = strDestination[0]; 
 #endif

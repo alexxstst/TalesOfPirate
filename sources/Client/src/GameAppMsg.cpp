@@ -965,10 +965,20 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 		{
             if( !_IsUserEnabled ) return false;
 
-			if( g_Config.IsPower() || ( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv() ) )
-			{
-				GetConsole()->OnKeyDownEvent(dwParam1);
+			// Backtick (VK_OEM_3) — toggle консоли. Ловим на WM_KEYDOWN ДО
+			// UI-форм, чтобы переключение работало даже когда активен чат или
+			// другое поле ввода (оно съедало бы последующий WM_CHAR '`' через
+			// IME/Edit-hook раньше нашего WndProc).
+			if (dwParam1 == VK_OEM_3) {
+				GetConsole()->HandleChar('`');
+				return false;
 			}
+
+			// Прежний legacy-гейт (IsPower()/GMLv) убран — разрешение теперь
+			// целиком внутри ConsoleProcessor (HandleKeyDown игнорирует события
+			// когда консоль невидима, а backtick/permission проверяется в
+			// ConsoleBridge::CanOpen через SetCanOpenCheck).
+			GetConsole()->HandleKeyDown(static_cast<int>(dwParam1));
 			//g_InputBox.HandleWindowMsg(dwMsg, dwParam1, dwParam2);
 			ToLogService("common", "keydown:{}, {}", dwParam1, dwParam2);
 			
@@ -984,12 +994,13 @@ bool CGameApp::HandleWindowMsg(DWORD dwMsg, DWORD dwParam1, DWORD dwParam2)
 		}
 		case WM_CHAR:
 		{
-            if( !_IsUserEnabled ) return false; 			
-			
-			if( g_Config.IsPower() || ( CGameScene::GetMainCha() && CGameScene::GetMainCha()->getGMLv() ) )
-			{
-				if( GetConsole()->OnCharEvent((TCHAR)dwParam1, dwParam2) ) return false;
-			}
+            if( !_IsUserEnabled ) return false;
+
+			// Убран legacy-гейт IsPower()/GMLv — он блокировал backtick на
+			// SelectChaScene. Разрешение на открытие консоли теперь проверяется
+			// внутри ConsoleProcessor::HandleChar через ConsoleBridge::CanOpen
+			// (конфиг + тип сцены). Backtick всегда доходит до консоли.
+			if (GetConsole()->HandleChar(static_cast<char>(dwParam1))) return false;
 			//g_InputBox.HandleWindowMsg(dwMsg, dwParam1, dwParam2);
 			ToLogService("common", "keychar:{}, {}", dwParam1, dwParam2);
 			
@@ -1679,7 +1690,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	else if( strCmd=="autotest" )
 	{
-		g_pGameApp->GetConsole()->Show( FALSE );
+		g_pGameApp->GetConsole()->SetVisible(false);
 
 		g_pGameApp->AutoTestInfo( "%s", GetLanguageString(130).c_str() );
 		g_pGameApp->AutoTest();
@@ -1687,7 +1698,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	else if( strCmd=="testeffect" )
 	{
-		g_pGameApp->GetConsole()->Show( FALSE );
+		g_pGameApp->GetConsole()->SetVisible(false);
 
 		CGameScene* pScene = g_pGameApp->GetCurScene();
 		if( !pScene ) return "";
@@ -1806,7 +1817,7 @@ const char* ConsoleCallback(const char *pszCmd)
 		}
 
 		// Test skill table effects
-		g_pGameApp->GetConsole()->Show( FALSE );
+		g_pGameApp->GetConsole()->SetVisible(false);
 
 		CGameScene* pScene = g_pGameApp->GetCurScene();
 		if( !pScene ) return "";

@@ -103,6 +103,15 @@ public:
 
 	bool	m_IsShowConsole;	//
 
+	// [Console] — гейт игровой консоли (ранее `#ifdef DEBUG`).
+	// enabled          — консоль разрешена (доступна через backtick)
+	// requireSuperKey  — дополнительно требуется permission PowerUser/GM
+	// Визуальные настройки [Console Debug] (font/ширина/прозрачность/строки)
+	// читаются напрямую из Lua-скрипта console_bootstrap.lua через
+	// LuaBridge-тип IniFile (SystemIni:Section("Console Debug"):GetInt64(...)).
+	BOOL	m_bConsoleEnabled;
+	BOOL	m_bConsoleRequireSuperKey;
+
 	bool	m_IsMoveClient;		//
 
 	char	m_szVerErrorHTTP[256];	// 

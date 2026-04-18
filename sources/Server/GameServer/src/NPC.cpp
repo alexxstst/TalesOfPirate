@@ -187,7 +187,7 @@ namespace mission
 		m_sNpcID = recNpc.nID;
 
 		// 
-		strncpy( m_name, recNpc.szName, 32 - 1 );
+		_name = (recNpc.szName) ? (recNpc.szName) : "";
 		strncpy( m_szMsgProc, recNpc.szMsgProc, ROLE_MAXSIZE_MSGPROC - 1 );
 
 		m_ID = g_pGameApp->m_Ident.GetID();
@@ -283,8 +283,8 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 4, 0, 0 );
 		if( nStatus )
 		{
-			//character.SystemNotice( "npc[%s][NpcProc]!", m_name );
-			character.SystemNotice( RES_STRING(GM_NPC_CPP_00009), m_name );
+			//character.SystemNotice( "npc[%s][NpcProc]!", _name.c_str() );
+			character.SystemNotice( RES_STRING(GM_NPC_CPP_00009), _name.c_str() );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
 			return EN_FAILER;
@@ -314,8 +314,8 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 3, 1, 0 );
 		if( nStatus )
 		{
-			//character.SystemNotice( "npc[%s][NpcState]!", m_name );
-			character.SystemNotice( RES_STRING(GM_NPC_CPP_00010), m_name );
+			//character.SystemNotice( "npc[%s][NpcState]!", _name.c_str() );
+			character.SystemNotice( RES_STRING(GM_NPC_CPP_00010), _name.c_str() );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
 			return FALSE;
@@ -325,8 +325,8 @@ namespace mission
 		lua_settop(g_pLuaState, 0);
 		if( dwResult != LUA_TRUE )
 		{
-			//character.SystemNotice( "npc[%s][NpcState]!", m_name );
-			character.SystemNotice( RES_STRING(GM_NPC_CPP_00011), m_name );
+			//character.SystemNotice( "npc[%s][NpcState]!", _name.c_str() );
+			character.SystemNotice( RES_STRING(GM_NPC_CPP_00011), _name.c_str() );
 			return FALSE;
 		}
 

@@ -71,7 +71,7 @@ bool CGameMovie::Play(HWND hWnd, const char* pszFileName)
 	_hResult = _pGraph->RenderFile(pszFileName, 0);
 #else
 	WCHAR szFileNameW[MAX_PATH + 1] = {0};
-    MultiByteToWideChar(CP_ACP, 0, pszFileName, -1, szFileNameW, MAX_PATH);
+    MultiByteToWideChar(CP_UTF8, 0, pszFileName, -1, szFileNameW, MAX_PATH);
 	_hResult = _pGraph->RenderFile(szFileNameW, 0);
 #endif
 	if(FAILED(_hResult))

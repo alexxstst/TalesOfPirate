@@ -175,8 +175,44 @@ void CGameApp::_Render()
 	}
 
 	//, -------------------------------------------------------------
-	if(IsEnableSpAvi())  
+	if(IsEnableSpAvi())
 		_CreateAviScreen();
-	
+
+	// Текст консоли рисуется ПОСЛЕ всего остального UI, чтобы лежать поверх
+	// собственного тёмного фона (который рисуется в MPGameApp::Render до _Render).
+	_RenderConsoleText();
+
 	//app->core->run_callbacks(app->core);
+}
+
+void CGameApp::_RenderConsoleText()
+{
+	ConsoleProcessor* pConsole = GetConsole();
+	if (!pConsole || !pConsole->IsVisible()) {
+		return;
+	}
+	CMPFont* pFont = FontManager::Instance().Get(FontSlot::Console);
+	if (!pFont) {
+		return;
+	}
+
+	constexpr DWORD kTextColor = 0xFFF0F0F0;  // светло-серый, видимый на тёмном фоне
+	constexpr int   kLineStep  = 22;          // согласован с размером FontSlot::Console
+	constexpr int   kStartY    = 6;
+	constexpr int   kStartX    = 6;
+
+	int y = kStartY;
+	for (const auto& str : pConsole->TextList()) {
+		if (!str.empty()) {
+			pFont->DrawText(const_cast<char*>(str.c_str()), kStartX, y, kTextColor);
+		}
+		y += kLineStep;
+	}
+
+	// Строка ввода с мигающим курсором (ConsoleProcessor::Tick переключает _showCursor).
+	std::string display = pConsole->GetDisplayLine();
+	if (!display.empty()) {
+		pFont->DrawText(const_cast<char*>(display.c_str()), kStartX,
+						pConsole->GetHeight() - 10, kTextColor);
+	}
 }

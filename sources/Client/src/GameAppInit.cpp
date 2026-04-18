@@ -11,6 +11,7 @@
 #include "MPEditor.h"
 #include "Scene.h"
 #include "GameConfig.h"
+#include "ConsoleBridge.h"
 #include "EffectObj.h"
 #include "Track.h"
 #include "MPFont.h"
@@ -231,9 +232,14 @@ BOOL CGameApp::_Init() {
 
 	_bConnected = FALSE;
 
-	// Console system callback function
-	extern const char* ConsoleCallback(const char* pszCmd);
-	_pConsole->SetCmdFN(ConsoleCallback);
+	// Console handlers: диспатч команд и проверка разрешения — через
+	// ConsoleBridge. Передаём лямбды (ConsoleProcessor принимает std::function).
+	_pConsole->SetCmdHandler([](std::string_view cmd) -> std::string {
+		return ConsoleBridge::Get().Dispatch(cmd);
+	});
+	_pConsole->SetCanOpenCheck([]() -> bool {
+		return ConsoleBridge::Get().CanOpen();
+	});
 
 	g_Render.EnablePrint(INFO_GAME, TRUE);
 

@@ -1334,6 +1334,11 @@ bool CFormMgr::Init(HWND hWnd)
 
 		FontManager::Instance().PushToLua(g_LuaState);
 		LoadLuaScript(g_LuaState, "scripts/lua/font_bootstrap.lua");
+		// Все шрифты — CP_UTF8 (дефолт FontRender). Костыль SetAllCodepage(CP_ACP)
+		// снят: сервер .NET шлёт UTF-8, UI-edit компоненты (CEditKey/CRichEdit)
+		// накапливают UTF-8 через encoding::AppendAnsiByteAsUtf8, IME — через
+		// ImmGetCompositionStringW. См. план миграции в memory.
+		LoadLuaScript(g_LuaState, "scripts/lua/console_bootstrap.lua");
 
 		GetRender().SetScreen( g_Render.GetScrWidth(), g_Render.GetScrHeight(), (g_Render.IsFullScreen()!=0 ? true: false) );
 

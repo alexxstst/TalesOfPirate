@@ -643,6 +643,9 @@
     <ClCompile Include="..\src\FontManager.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ConsoleBridge.cpp">
+      <Filter>Tools</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\HairTool.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
@@ -1130,6 +1133,9 @@
       <Filter>Scene\SceneNode\Effect</Filter>
     </ClInclude>
     <ClInclude Include="..\src\FontManager.h">
+      <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\ConsoleBridge.h">
       <Filter>Tools</Filter>
     </ClInclude>
     <ClInclude Include="..\src\SceneArea.h">

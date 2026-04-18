@@ -70,7 +70,7 @@
     <ClInclude Include="..\include\MPCamera.h">
       <Filter>Source Files\Render\GameApp</Filter>
     </ClInclude>
-    <ClInclude Include="..\include\MPConsole.h">
+    <ClInclude Include="..\include\ConsoleProcessor.h">
       <Filter>Source Files\Render\GameApp</Filter>
     </ClInclude>
     <ClInclude Include="..\include\MPGameApp.h">
@@ -428,7 +428,7 @@
     <ClCompile Include="..\src\MPCamera.cpp">
       <Filter>Source Files\Render\GameApp</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MPConsole.cpp">
+    <ClCompile Include="..\src\ConsoleProcessor.cpp">
       <Filter>Source Files\Render\GameApp</Filter>
     </ClCompile>
     <ClCompile Include="..\src\MPGameApp.cpp">

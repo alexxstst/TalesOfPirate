@@ -24,7 +24,7 @@
 
 class MPCameraNOLEECH;
 class MPRender;
-class MPConsole;
+class ConsoleProcessor;
 
 #define M_LDown		0x0001
 #define M_MDown		0x0002
@@ -100,8 +100,7 @@ public:
     void                EnableCheckInputWnd(BOOL bEnable)   { _bCheckInputWnd = bEnable;}
 	
 	// Console
-	MPConsole*			GetConsole() { return _pConsole; } 
-	void				UpdateConsoleText(BOOL bClear);
+	ConsoleProcessor*	GetConsole() { return _pConsole; }
 
 	//MPCamera*			GetMainCam()  { return _pMainCam; } 
 
@@ -172,7 +171,7 @@ protected:
 	int						_nLogoTexID;
 
 	// Console
-	MPConsole*				_pConsole;
+	ConsoleProcessor*		_pConsole;
 
 
 	//MPCamera*				_pMainCam;

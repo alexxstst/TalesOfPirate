@@ -6,6 +6,7 @@
 #include "uifont.h"
 #include "uieditstrategy.h"
 #include "uieditdata.h"
+#include "EncodingUtil.h"
 
 using namespace GUI;
 //---------------------------------------------------------------------------
@@ -65,59 +66,49 @@ bool CEditKey::OnChar( char c )
 {
 	if( _IsReadyOnly ) return false;
 
-	// 
 	switch( c )
 	{
-	case '\r':		// 
+	case '\r':
 		AddChar( new CEditControl( c ) );
 		break;
-	case '\b':		// 
-		break;
+	case '\b':
 	case '\t':
-		break;
-	case 3:			// copy
-		break;
-	case 22:		// paste
-		break;
-	case 24:		// cut
-		break;
-	case 27:		// ESC
+	case 3:   // copy
+	case 22:  // paste
+	case 24:  // cut
+	case 27:  // ESC
 		break;
 	default:
 		{
-			_szEnter[_nEnterPos++] = c;
-			bool	IsError = false;
-			if( _nEnterPos==1 )
-			{
-				IsError = false;
-				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 
-					&& _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==0 )
-				{
-					// 
-					_nEnterPos = 0;
-
-					AddChar( new CEditChar( c ) );
-				}
-			}
-			else if( _nEnterPos==2 )
-			{
-				if( _ismbslead( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[0] )==-1 && _ismbstrail( (unsigned char*)_szEnter, (unsigned char*)&_szEnter[1] )==-1 )
-				{
-					// 
-					AddChar( new CEditChar( _szEnter[0], _szEnter[1] ) );
-
-
-					IsError = false;
-					_nEnterPos = 0;
-					_szEnter[1] = 0;
-				}
-			}
-
-			if( IsError )
-			{
-				// 
+			// WM_CHAR отдаёт байт CP_ACP. Переводим в UTF-8 (1-2 байта для
+			// ASCII/кириллицы). Для DBCS lead-байта (CJK) накапливаем пару
+			// байт, затем конвертируем два байта CP_ACP → UTF-8. Хранение
+			// в CEditChar остаётся побайтовое (1-2 байт на символ UTF-8).
+			const unsigned char byte = static_cast<unsigned char>(c);
+			std::string utf8;
+			if (_nEnterPos == 1) {
+				_szEnter[1] = c;
+				const std::string_view pair(_szEnter, 2);
+				utf8 = encoding::AnsiToUtf8(pair);
 				_nEnterPos = 0;
-				_szEnter[1] = 0;
+				_szEnter[0] = _szEnter[1] = 0;
+			}
+			else if (byte >= 0x80 && ::IsDBCSLeadByteEx(CP_ACP, byte)) {
+				_szEnter[0] = c;
+				_nEnterPos = 1;
+				return false;  // ждём trail-байт
+			}
+			else {
+				encoding::AppendAnsiByteAsUtf8(byte, utf8);
+			}
+			// Порционно разложить UTF-8 в CEditChar: 1 byte → CEditChar(b0),
+			// 2 byte → CEditChar(b0, b1). 3+ byte (CJK UTF-8) пока не
+			// влезает в CEditChar — ограничение побайтного хранения.
+			if (utf8.size() == 1) {
+				AddChar( new CEditChar( utf8[0] ) );
+			}
+			else if (utf8.size() == 2) {
+				AddChar( new CEditChar( utf8[0], utf8[1] ) );
 			}
 		}
 	}

@@ -324,6 +324,7 @@ protected:
 
 	BOOL _CreateSmMap(MPTerrain* pTerr);
 	void _RenderTipText();
+	void _RenderConsoleText();
 	void _ShowLoading(int percent);
 
 protected:

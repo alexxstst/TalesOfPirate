@@ -87,6 +87,13 @@ public:
 
 	void SetRenderIdx(int iIdx) { _renderIdx = iIdx; }
 
+	// Кодовая страница для MultiByteToWideChar при DrawText. По умолчанию
+	// CP_ACP (legacy GBK/Windows-1251). Для шрифтов, принимающих UTF-8
+	// напрямую (например FontSlot::Console из Lua-скриптов), устанавливать
+	// 65001 = CP_UTF8.
+	void SetCodepage(UINT codepage) { _codepage = codepage; }
+	UINT GetCodepage() const        { return _codepage; }
+
 	// Диагностический дамп: рендерит набор глифов (0-9, A-Z, a-z, А-Я, а-я)
 	// в отдельный DIB через GDI и сохраняет 32bpp BMP. Фон белый, текст чёрный.
 	bool DumpGlyphPreview(const std::string& path);
@@ -161,7 +168,7 @@ private:
 
 	std::string _fontName;
 
-	UINT _codepage{CP_ACP};
+	UINT _codepage{CP_UTF8};
 	bool _useSoft{false};
 
 	CMPEffectFile* _pEffect{nullptr};

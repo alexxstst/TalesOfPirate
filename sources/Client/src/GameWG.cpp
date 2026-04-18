@@ -2,6 +2,7 @@
 #include "stdafx.h"
 #include "GameWG.h"
 #include "PacketCmd.h"
+#include "CrushSystem.h"
 
 #include <windows.h>
 #include <process.h>
@@ -97,14 +98,16 @@ void CGameWG::SafeTerminateThread()
 }
 
 
-// 
+//
 UINT CALLBACK CGameWG::Run(void* param)
 {
+	::SetThreadName("game-wg");
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 	CGameWG* pGameWG = (CGameWG*)(param);
 
 	for(;;)
 	{
-		Sleep(60 * 1000);	// 
+		Sleep(60 * 1000);	//
 
 		if(! g_NetIF || ! g_NetIF->IsConnected())
 		{

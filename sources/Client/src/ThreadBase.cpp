@@ -2,12 +2,15 @@
 
 #include "stdafx.h"
 #include "ThreadBase.h"
+#include "CrushSystem.h"
 #include <process.h>
 
 
 
 unsigned int __stdcall ThreadFunc(void* param)
 {
+    ::SetThreadName("thread-base");
+    TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
     return ((CThreadBase*)param)->Run();
 }
 

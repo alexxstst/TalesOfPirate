@@ -47,7 +47,7 @@ void MPRender::End()
 {
 	SAFE_RELEASE(_p2DSprite);
 
-	SAFE_DELETE(_pFont);
+	// _pFont убран: шрифт не хранится в MPRender (см. FontManager в клиенте).
     ResMgr.ReleaseTotalRes();
 
 
@@ -805,18 +805,15 @@ void MPRender::RenderAllLines()
 
 void MPRender::RenderDebugInfo()
 {
-    for(int i = 0; i < MAX_INFO_TYPE; i++)
-    {
-        if(!_PrintInfoMask[i]) continue;
-        for(map<int, string>::iterator it = _InfoIdx[i].begin(); it!=_InfoIdx[i].end(); it++)
-        {
-            int  nIdx = (*it).first;
-            string &str = (*it).second;
-            int nPosY = nIdx / 2000;
-            int nPosX = nIdx % 2000;
-			_pFont->DrawText((TCHAR*)str.c_str(),nPosX, nPosY, 0xffffffff);
-    	}
-	}
+    // No-op. Ранее метод рисовал накопленный INFO_* текст через _pFont,
+    // но _pFont никогда не инициализировался и вызывал AV. Шрифт хранить
+    // в поле MPRender некорректно — owner это FontManager в клиенте.
+    // Отрисовка INFO_CMD (консоль) перенесена в CGameApp::_Render через
+    // FontManager::Instance().Get(FontSlot::TipText). INFO_FPS / INFO_GAME
+    // можно вернуть аналогично — в клиенте, если понадобится.
+    // Метод оставлен для обратной совместимости: внешний код может
+    // продолжать вызывать Print(INFO_*) — данные накапливаются в _InfoIdx
+    // без отрисовки.
 }
 
 void MPRender::Print(int nInfoType, int x, int y, const char *szFormat, ...)

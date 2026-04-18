@@ -112,7 +112,7 @@ namespace mission
 		m_sNpcID = 0;
 
 		// 
-		strncpy( m_name, szName, 32 - 1 );
+		_name = (szName) ? (szName) : "";
 		strncpy( m_szMsgProc, szMsgProc, ROLE_MAXSIZE_MSGPROC - 1 );
 
 		m_ID = ulID;
@@ -149,8 +149,8 @@ namespace mission
 		int nStatus = lua_pcall( g_pLuaState, 4, 0, 0 );
 		if( nStatus )
 		{
-			//character.SystemNotice( "npc[%s][NpcProc]!", m_name );
-			character.SystemNotice( RES_STRING(GM_WORLDEUDEMON_CPP_00004), m_name );
+			//character.SystemNotice( "npc[%s][NpcProc]!", _name.c_str() );
+			character.SystemNotice( RES_STRING(GM_WORLDEUDEMON_CPP_00004), _name.c_str() );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
 			return EN_FAILER;

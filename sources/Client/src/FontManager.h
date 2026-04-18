@@ -37,6 +37,7 @@ enum class FontSlot {
 	TipText = 0,
 	MidAnnounce,
 	BottomShadow,
+	Console,
 	_Count
 };
 
@@ -83,6 +84,11 @@ public:
 
 	// Уничтожить все CMPFont (AddFontResourceEx-регистрации остаются).
 	void ClearFonts();
+
+	// Установить кодовую страницу DrawText для всех зарегистрированных шрифтов.
+	// Используется как миграционный костыль: UI-текст пока ANSI (CP_ACP/CP1251),
+	// Console-слот перенастраивается отдельно на CP_UTF8 в console_bootstrap.
+	void SetAllCodepage(unsigned int codepage);
 
 	~FontManager();
 

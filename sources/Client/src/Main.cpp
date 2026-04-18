@@ -717,6 +717,8 @@ HANDLE hOutputReadTmp = 0;
 HANDLE hOutputWrite = 0;
 
 DWORD WINAPI ReadStdout(LPVOID lpvThreadParam) {
+	::SetThreadName("read-stdout");
+	TalesOfPirate::Utils::Crush::SetPerThreadCRTExceptionBehavior();
 	CHAR lpBuffer[256];
 	DWORD nBytesRead;
 

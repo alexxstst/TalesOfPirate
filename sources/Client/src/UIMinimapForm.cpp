@@ -2,6 +2,7 @@
 #include "uiminimapform.h"
 #include "FontManager.h"
 #include "MPFont.h"
+#include "EncodingUtil.h"
 #include "uiForm.h"
 #include "uicompent.h"
 #include "uilabel.h"
@@ -406,7 +407,7 @@ void CMiniMapMgr::_RadarFormBeforeShowEvent(CForm* pForm, bool& IsShow)
 			CItemRow* pItemRow = cboAddr->GetList()->GetItems()->GetItem(i);
 			if (pItemRow)
 			{
-				if (strcmp(pMapInfo->szName, pItemRow->GetBegin()->GetString()) == 0)
+				if (std::string_view(pMapInfo->szName) == pItemRow->GetBegin()->GetString())
 					break;
 			}
 
@@ -480,24 +481,22 @@ void CMiniMapMgr::ShowRadar(const char * szX, const char * szY)
 	int x = atoi(szX), y = atoi(szY);
 	D3DXVECTOR3 target((float)x, (float)y, 0);
 
-	const char* _strName = g_pGameApp->GetCurScene()->GetTerrainName();
-	if(strcmp(_strName,"garner") == 0)
-		_strName = GetLanguageString(56).c_str();
-	else if(strcmp(_strName,"magicsea") == 0)
-		_strName = GetLanguageString(58).c_str();
-	else if(strcmp(_strName,"darkblue") == 0)
-		_strName = GetLanguageString(59).c_str();
-	else if( strcmp( _strName, "winterland" ) == 0 )
-		_strName = "Winter Isle Archipelago";
-	else if( strcmp( _strName, "jialebi" ) == 0 )
-		_strName = "Pirate\'s Base";
-
+	// Имя территории — ASCII-код из сцены (garner/magicsea/...). Разрешаем в
+	// локализованное имя карты. Храним результат в std::string (раньше здесь
+	// был UB: указатель на .c_str() временной std::string из GetLanguageString).
+	const std::string_view terrain(g_pGameApp->GetCurScene()->GetTerrainName());
+	std::string displayName(terrain);
+	if      (terrain == "garner")     displayName = GetLanguageString(56);
+	else if (terrain == "magicsea")   displayName = GetLanguageString(58);
+	else if (terrain == "darkblue")   displayName = GetLanguageString(59);
+	else if (terrain == "winterland") displayName = "Winter Isle Archipelago";
+	else if (terrain == "jialebi")    displayName = "Pirate's Base";
 
 	CWorldScene* pScene = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
 	if( !pScene ) return;
-	const char* curMap = pScene->GetCurMapInfo()->szName;
-	
-	if ((strcmp(curMap, _strName) == 0) && (!pScene->GetMainCha()->IsBoat()))
+	const std::string_view curMap(pScene->GetCurMapInfo()->szName);
+
+	if ((curMap == displayName) && (!pScene->GetMainCha()->IsBoat()))
 	{
 		if(g_stUIStart.chkID->GetIsChecked())
 		{
@@ -518,7 +517,7 @@ void CMiniMapMgr::ShowRadar(const char * szX, const char * szY)
 			g_stUIBox.ShowMsgBox(nullptr,  "Not on the same map.");	
 		}
 	}
-	CNavigationBar::g_cNaviBar.SetTarget((char*)_strName, target);
+	CNavigationBar::g_cNaviBar.SetTarget(const_cast<char*>(displayName.c_str()), target);
 	CNavigationBar::g_cNaviBar.Show(true);
 }
 void CMiniMapMgr::ShowRadar()
@@ -544,13 +543,13 @@ void CMiniMapMgr::ShowRadar()
 	int x = atoi(szX), y = atoi(szY);
 	D3DXVECTOR3 target((float)x, (float)y, 0);
 
-	const char* szAddress = cboAddr->GetText();
+	const std::string_view szAddress(cboAddr->GetText());
 
 	CWorldScene* pScene = dynamic_cast<CWorldScene*>(CGameApp::GetCurScene());
 	if( !pScene ) return;
-	const char* curMap = pScene->GetCurMapInfo()->szName;
+	const std::string_view curMap(pScene->GetCurMapInfo()->szName);
 
-	if((strcmp(curMap,szAddress) == 0) && (!pScene->GetMainCha()->IsBoat()))
+	if ((curMap == szAddress) && (!pScene->GetMainCha()->IsBoat()))
 	{
 		if(g_stUIMap.chkID->GetIsChecked())
 		{
@@ -571,7 +570,7 @@ void CMiniMapMgr::ShowRadar()
 			g_stUIBox.ShowMsgBox(nullptr, "Not on the same map.");	
 		}
 	}
-	CNavigationBar::g_cNaviBar.SetTarget((char*)szAddress, target);
+	CNavigationBar::g_cNaviBar.SetTarget(const_cast<char*>(szAddress.data()), target);
 	CNavigationBar::g_cNaviBar.Show(true);
 	frmRadar->Hide();
 }
@@ -605,19 +604,19 @@ void CMiniMapMgr::CloseRadar()
 
 bool CMiniMapMgr::IsPKSilver()
 {
-	return false; // Disables blind CA.
-	if(0 == strcmp(GetMapName(), GetLanguageString(900).c_str())) //  //""))
-		return true;
-
+	// Feature отключена ("Disables blind CA."). Прежняя проверка
+	// `strcmp(GetMapName(), GetLanguageString(900))` удалена как dead code:
+	// return выше делал её недостижимой, а кодировки сторон не совпадали.
 	return false;
 }
 
 bool CMiniMapMgr::IsGuildWar()
 {
-	if(0 == strcmp(GetMapName(), GetLanguageString(934).c_str()) || 0 == strcmp(GetMapName(), GetLanguageString(934).c_str()))	// "" ""
-		return true;
-
-	return false;
+	// Карта "Guild War" — сравниваем имя из UI-label с локализованной
+	// строкой. В legacy-коде оба операнда `||` ссылались на один и тот же
+	// GetLanguageString(934) — дубликат-баг; сейчас одно сравнение.
+	// TODO: если появится вторая разновидность Guild War карты — добавить.
+	return std::string_view(GetMapName()) == GetLanguageString(934);
 }
 //Add by sunny.sun 20080904
 //Begin
@@ -649,9 +648,10 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 	const auto map_scale_modifier = CGameApp::GetCurScene()->GetLargerMap()->GetScale();
 
     // 
-    if(0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "garner") 
-		||0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "magicsea")
-		||0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "darkblue"))
+    const std::string_view terrain(CGameApp::GetCurScene()->GetTerrainName());
+    if (encoding::EqualsIgnoreCaseAscii(terrain, "garner")
+        || encoding::EqualsIgnoreCaseAscii(terrain, "magicsea")
+        || encoding::EqualsIgnoreCaseAscii(terrain, "darkblue"))
     {
         struct SApplyInfo
         {
@@ -680,7 +680,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 			//{	54,	611,	2097	},	//
    //     };
 
-		if(0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "garner"))
+		if (encoding::EqualsIgnoreCaseAscii(terrain, "garner"))
 		{
 			stApply[0].nAreaID = 1;
 			stApply[0].x = 2218;
@@ -714,7 +714,7 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 			stApply[7].x = 611;
 			stApply[7].y = 2097;
 		}
-		if(0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "magicsea"))
+		if (encoding::EqualsIgnoreCaseAscii(terrain, "magicsea"))
 		{
 			stApply[0].nAreaID = 57;
 			stApply[0].x = 781;
@@ -749,8 +749,8 @@ void CMiniMapMgr::_RenderBigMapHint(void)
 			stApply[7].y = 0;
 
 		}
-		if(0 == stricmp(CGameApp::GetCurScene()->GetTerrainName(), "darkblue"))
-		{	
+		if (encoding::EqualsIgnoreCaseAscii(terrain, "darkblue"))
+		{
 			stApply[0].nAreaID = 20;
 			stApply[0].x = 1319;
 			stApply[0].y = 521;

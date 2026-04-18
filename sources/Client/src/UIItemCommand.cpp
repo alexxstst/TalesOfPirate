@@ -1,6 +1,7 @@
 ﻿#include "StdAfx.h"
 #include "UIText.h"
 #include "uiitemcommand.h"
+#include "EncodingUtil.h"
 #include "ItemRecord.h"
 #include "uicompent.h"
 #include "uigoodsgrid.h"
@@ -213,8 +214,11 @@ void CItemCommand::SaleRender(int x, int y, int nWidth, int nHeight) {
 		static int nEnter = 0;
 		strncpy(szBuf1, _pItem->szName.c_str(), sizeof(szBuf1));
 		nEnter = (int)strlen(szBuf1) / 2;
-		if (_ismbslead((unsigned char*)szBuf1, (unsigned char*)&szBuf1[nEnter])) {
-			nEnter--;
+		// UTF-8: не разрываем codepoint — если szBuf1[nEnter] — continuation-
+		// байт (10xxxxxx), отступаем назад до starter-байта включительно.
+		while (nEnter > 0
+			   && !encoding::IsUtf8StartByte(static_cast<unsigned char>(szBuf1[nEnter]))) {
+			--nEnter;
 		}
 		if (nEnter < 0) return;
 
@@ -397,8 +401,11 @@ void CItemCommand::OwnDefRender(int x, int y, int nWidth, int nHeight) {
 		static int nEnter = 0;
 		strncpy(szBuf1, _pItem->szName.c_str(), sizeof(szBuf1));
 		nEnter = (int)strlen(szBuf1) / 2;
-		if (_ismbslead((unsigned char*)szBuf1, (unsigned char*)&szBuf1[nEnter])) {
-			nEnter--;
+		// UTF-8: не разрываем codepoint — если szBuf1[nEnter] — continuation-
+		// байт (10xxxxxx), отступаем назад до starter-байта включительно.
+		while (nEnter > 0
+			   && !encoding::IsUtf8StartByte(static_cast<unsigned char>(szBuf1[nEnter]))) {
+			--nEnter;
 		}
 		if (nEnter < 0) return;
 

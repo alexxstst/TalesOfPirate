@@ -126,7 +126,7 @@
     <ClInclude Include="..\include\MPCamera.h" />
     <ClInclude Include="..\include\MPCharacter.h" />
     <ClInclude Include="..\include\MPColorValue.h" />
-    <ClInclude Include="..\include\MPConsole.h" />
+    <ClInclude Include="..\include\ConsoleProcessor.h" />
     <ClInclude Include="..\include\MPDataStream.h" />
     <ClInclude Include="..\include\MPEffectAsmMath.h" />
     <ClInclude Include="..\include\MPEffectCtrl.h" />
@@ -286,7 +286,7 @@
     <ClCompile Include="..\src\MPCamera.cpp" />
     <ClCompile Include="..\src\MPCharacter.cpp" />
     <ClCompile Include="..\src\MPColorValue.cpp" />
-    <ClCompile Include="..\src\MPConsole.cpp" />
+    <ClCompile Include="..\src\ConsoleProcessor.cpp" />
     <ClCompile Include="..\src\MPDataStream.cpp" />
     <ClCompile Include="..\src\MPEffectCtrl.cpp" />
     <ClCompile Include="..\src\MPEffectMath.cpp" />
