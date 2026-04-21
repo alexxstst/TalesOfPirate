@@ -1,5 +1,6 @@
 ﻿#include "StdAfx.h"
 #include "SceneLight.h"
+#include "lwPoseCtrl.h"
 
 int SceneLight::UpdateAnimLight()
 {
@@ -77,7 +78,7 @@ void AnimCtrlLight::SetData(IndexDataSceneLight* buf, DWORD num)
     pi.end = _data_seq[_data_num-1].id;
 
     SAFE_RELEASE(_pose_ctrl);
-    MPGUIDCreateObject((LW_VOID**)&_pose_ctrl, LW_GUID_POSECTRL);
+    _pose_ctrl = LW_NEW(lwPoseCtrl);
     _pose_ctrl->InsertPose(0, &pi, 1);
 
 }
@@ -129,7 +130,7 @@ int AnimCtrlLight::Load(const char* file)
     pi.end = _data_seq[_data_num-1].id;
 
     SAFE_RELEASE(_pose_ctrl);
-    MPGUIDCreateObject((LW_VOID**)&_pose_ctrl, LW_GUID_POSECTRL);
+    _pose_ctrl = LW_NEW(lwPoseCtrl);
     _pose_ctrl->InsertPose(0, &pi, 1);
 
     fclose(fp);

@@ -33,10 +33,9 @@ GameRecordset<CCharacterModelInfo>::RecordEntry CharacterModelStore::ReadRecord(
 		record._skins[i] = stmt.GetText(col++);
 	}
 
-	record.bExist = TRUE;
-	record.nID = static_cast<int>(record._characterType);
+	record.Id = static_cast<int>(record._characterType);
 
-	return {record.nID, std::string{}, std::move(record)};
+	return {record.Id, std::string{}, std::move(record)};
 }
 
 bool CharacterModelStore::Load(SqliteDatabase& db) {

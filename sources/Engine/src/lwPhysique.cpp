@@ -13,6 +13,7 @@
 #include "lwShaderMgr.h"
 #include "lwItem.h"
 #include "lwPredefinition.h"
+#include "lwExpObj.h"
 
 using namespace std;
 LW_BEGIN
@@ -113,8 +114,7 @@ bool lwGeomManager::LoadBoneData( const char file[] )
 {
 	static char path[ LW_MAX_PATH ];
 	sprintf( path, "%s%s", "animation\\", file );
-	lwIAnimDataBone* i_data;
-	lwCreateObjectGUID((LW_VOID**)&i_data, LW_GUID_ANIMDATABONE);
+	lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
 	if( LW_FAILED( i_data->Load( path ) ) )
 	{
 		i_data->Release();
@@ -316,8 +316,7 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
         if (LW_FAILED(_res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_bone, ANIM_CTRL_TYPE_BONE)))
             goto __ret;
 
-        lwIAnimDataBone* i_data;
-        lwCreateObjectGUID((LW_VOID**)&i_data, LW_GUID_ANIMDATABONE);
+        lwIAnimDataBone* i_data = LW_NEW(lwAnimDataBone);
 
         lwPhysiqueBoneInfo* bi = new lwPhysiqueBoneInfo;
         bi->p = this;
@@ -344,7 +343,7 @@ LW_RESULT lwPhysique::LoadBone( const char* file )
         lwIAnimDataBone* i_data = g_GeomManager.GetBoneData(file);
         if (i_data == NULL)
         {
-            lwCreateObjectGUID((LW_VOID**)&i_data, LW_GUID_ANIMDATABONE);
+            i_data = LW_NEW(lwAnimDataBone);
             if (LW_FAILED(i_data->Load(path)))
                 goto __addr_1;
         }
@@ -718,7 +717,7 @@ LW_RESULT lwPhysique::Update()
             if(pri_ctrl == 0)
             {
                 LG_MSGBOX("crash!!!, call jack");
-                __asm int 3;
+                __debugbreak();
             }
 
             if(LW_FAILED(ctrl_obj->UpdateObject(pri_ctrl, pri->GetMeshAgent()->GetMesh())))

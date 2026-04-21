@@ -1,28 +1,14 @@
-﻿//
+// GUID-константы для lwI*::GetInterface.
+// Фабричная функция lwGUIDCreateObject и таблица __guid_proc_buf удалены —
+// конкретные типы создаются напрямую через LW_NEW(type).
 #pragma once
 
 #include "lwHeader.h"
 #include "lwErrorCode.h"
 
-#include "lwFrontAPI.h"
-
 LW_BEGIN
 
-//struct lwGUID
-//{
-//    union {
-//        struct {
-//            LW_DWORD id;
-//            LW_DWORD data;
-//        };
-//
-//        LW_INT64 guid;
-//    };
-//};
 typedef LW_INT64 lwGUID;
-
-LW_FRONT_API LW_RESULT lwGUIDCreateObject(LW_VOID** obj, lwGUID guid);
-#define lwCreateObjectGUID lwGUIDCreateObject
 
 const lwGUID LW_GUID_SYSTEM =               LW_MAKEINT64(0, 1);
 const lwGUID LW_GUID_SYSGRAPHICS =          LW_MAKEINT64(1, 0);
@@ -62,9 +48,5 @@ const lwGUID LW_GUID_MODELOBJINFO =         LW_MAKEINT64(41, 0);
 const lwGUID LW_GUID_SYSTEMINFO =           LW_MAKEINT64(42, 0);
 const lwGUID LW_GUID_BUFFER =               LW_MAKEINT64(43, 0);
 const lwGUID LW_GUID_HEAP =                 LW_MAKEINT64(44, 0);
-
-
-
-const LW_DWORD LW_GUID_NUM = 99;
 
 LW_END

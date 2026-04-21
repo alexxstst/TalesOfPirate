@@ -4,7 +4,7 @@
 #define REFINE_EFFECT_NUM     4
 #define REFINE_EFFECT_CHA_NUM 4
 
-class CItemRefineEffectInfo : public CRawDataInfo {
+class CItemRefineEffectInfo : public EntityData {
 	friend class CItemRefineEffectSet;
 	friend class ItemRefineEffectRecordStore;
 public:

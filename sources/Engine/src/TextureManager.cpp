@@ -159,11 +159,8 @@ void TextureManager::ReleaseTexture(Entry& entry) {
 
 	ToLogService("common", "Release Texture [{}], size = {} {}", entry.path, entry.sWidth, entry.sHeight);
 
-	lwTexInfo tex_info;
-	entry.pTex->GetTexInfo(&tex_info);
-
 	if (entry.path.ends_with(".wsd")) {
-		auto p = reinterpret_cast<char*>(tex_info.data);
+		auto p = reinterpret_cast<char*>(entry.pTex->GetUserData());
 		if (p) delete[] p;
 	}
 

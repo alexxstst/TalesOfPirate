@@ -177,7 +177,7 @@ void CHeadSay::RenderStateIcons(CCharacter* cha, int x, int y, float scale, floa
     bool IsStatesPerLevel = false;
     bool RenderIcon = false;
     SkillStateRecordStore::Instance()->ForEach([&](const CSkillStateRecord& state) {
-        int i = state.nID;
+        int i = state.Id;
         if (cha->GetStateMgr()->HasSkillState(i)) {
             auto* pState = &state;
             if (pState) {

@@ -97,8 +97,6 @@ void CPlayer::Initially()
 
 void CPlayer::Finally()
 {
-	GetNextPlayer() = NULL;
-
 	m_pMainCha->TradeClear( *this );
 	m_pMainCha->Free();
 	CCharMission::Finally();
@@ -136,7 +134,8 @@ void CPlayer::Finally()
 
 void CPlayer::Free()
 {
-	g_pGameApp->m_pCPlySpace->ReturnPly(m_lHandle);
+	Finally();
+	GamePool::Instance().ReleasePlayer(this);
 }
 
 void CPlayer::SetIMP(long imp,bool sync) {

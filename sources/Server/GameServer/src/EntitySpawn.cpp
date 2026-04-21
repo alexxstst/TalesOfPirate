@@ -15,139 +15,108 @@
 #include "GameApp.h"
 #include "NPC.h"
 
-extern BOOL LoadTable(CRawDataSet *pTable, const char*);
+#include <string>
+
+extern const char* GetResPath(const char* pszRes);
 
 _DBC_USING
 
 //=============================================================================
-CChaSpawn::CChaSpawn()
-{
-	m_lRegionNum = 0;
-	m_pSMonInfo = 0;
-	m_pCMonRefRecordSet = 0;
-}
+CChaSpawn::CChaSpawn() = default;
 
-CChaSpawn::~CChaSpawn()
-{
-	m_lRegionNum = 0;
-	if (m_pSMonInfo)
-		delete [] m_pSMonInfo;
-	if (m_pCMonRefRecordSet)
-		delete m_pCMonRefRecordSet;
-}
+CChaSpawn::~CChaSpawn() = default;
 
-bool CChaSpawn::Init(char *szSpawnTable, long lRegionNum)
+bool CChaSpawn::Init(const char *szMapName, const char *szSpawnTable)
 {
-	m_pCMap = 0;
+	m_pCMap = nullptr;
 
-	if (lRegionNum <= 0)
-		//THROW_EXCP(excpArr, "");
+	if (szMapName == nullptr || szMapName[0] == '\0' || szSpawnTable == nullptr) {
 		THROW_EXCP(excpArr, RES_STRING(GM_ENTITYSPAWN_CPP_00001));
-	strcpy(m_szSpawnTable, szSpawnTable);
-	m_lRecordNum = lRegionNum;
+	}
 
-	m_pCMonRefRecordSet = new CMonRefRecordSet(0, lRegionNum);
-	if (!m_pCMonRefRecordSet)
-		//THROW_EXCP(excpMem,"");
-		THROW_EXCP(excpMem,RES_STRING(GM_ENTITYSPAWN_CPP_00002));
-	if (!LoadTable(m_pCMonRefRecordSet, m_szSpawnTable))
-		return false;
-
-	m_lRegionNum = lRegionNum;
-	m_pSMonInfo = new SMonInfo[m_lRegionNum];
-	if (!m_pSMonInfo)
-		//THROW_EXCP(excpMem,"");
-		THROW_EXCP(excpMem,RES_STRING(GM_ENTITYSPAWN_CPP_00003));
-
-	memset(m_pSMonInfo, 0, sizeof(SMonInfo) * m_lRegionNum);
+	m_strMapName = szMapName;
 	m_lCount = 0;
 
-	return true;
+	m_pStore = std::make_unique<MonRefRecordStore>();
+
+	std::string txtPath = std::string(GetResPath(szSpawnTable)) + ".txt";
+	return m_pStore->Load(txtPath.c_str());
 }
 
 long CChaSpawn::Load(SubMap *pCMap)
 {
 	m_pCMap = pCMap;
-
-	long	lRet = 1;
-	CMonRefRecord	*pMonRefRecord;
-
 	m_lCount = 0;
-	
-	//Char	szSpawnError[512] = "";
-	Char szSpawnError[512] = "Cha born error";
 
-	Char	szMap[512];
-	sprintf(szMap, "spawn mum %s", pCMap->GetName());
-	Long	lNum;
-	const Rect	&area = pCMap->GetRange();
-	//LG(szSpawnError, "123120\n\n\n");
-	for (int i = 0; i < m_lRegionNum; i++)
-	{
-		pMonRefRecord = GetMonRefRecordInfo(i + 1);
-		if (pMonRefRecord == NULL)
-			continue;
-		lNum = 0;
-		for (int j = 0; j < defMAX_REGION_MONSTER_TYPE; j++)
-		{
-			for (int k = 0; k < pMonRefRecord->lMonster[j][1]; k++)
-			{
+	if (!m_pStore) {
+		ToLogService("errors", LogLevel::Error,
+					 "CChaSpawn::Load: store is null (map='{}')", m_strMapName);
+		return 0;
+	}
+
+	const Rect& area = pCMap->GetRange();
+	bool reachedCap = false;
+
+	m_pStore->ForEach([&](CMonRefRecord& rec) {
+		if (reachedCap) return;
+
+		CMonRefRecord* pMonRefRecord = &rec;
+		long lNum = 0;
+
+		for (int j = 0; j < defMAX_REGION_MONSTER_TYPE; j++) {
+			for (int k = 0; k < pMonRefRecord->lMonster[j][1]; k++) {
 				short sAngle = pMonRefRecord->sAngle;
-				if (sAngle == -1)
+				if (sAngle == -1) {
 					sAngle = rand() % 360;
+				}
+
 				long l_x, l_y;
-				long lSub;
-				long lRand;
-				long lBase;
-				if (pMonRefRecord->SRegion[0].x != pMonRefRecord->SRegion[1].x)
-				{
-					lRand = rand();
-					lSub = pMonRefRecord->SRegion[1].x - pMonRefRecord->SRegion[0].x;
-					if (lSub / RAND_MAX > 0)
-						lBase = lRand % (lSub / RAND_MAX + 1) * RAND_MAX;
-					else
-						lBase = 0;
-					l_x = (lBase +  lRand % (lSub - lBase) + pMonRefRecord->SRegion[0].x);
+				if (pMonRefRecord->SRegion[0].x != pMonRefRecord->SRegion[1].x) {
+					long lRand = rand();
+					long lSub  = pMonRefRecord->SRegion[1].x - pMonRefRecord->SRegion[0].x;
+					long lBase = (lSub / RAND_MAX > 0) ? (lRand % (lSub / RAND_MAX + 1) * RAND_MAX) : 0;
+					l_x = lBase + lRand % (lSub - lBase) + pMonRefRecord->SRegion[0].x;
 				}
-				else
+				else {
 					l_x = pMonRefRecord->SRegion[0].x;
-				if (pMonRefRecord->SRegion[0].y != pMonRefRecord->SRegion[1].y)
-				{
-					lRand = rand();
-					lSub = pMonRefRecord->SRegion[1].y - pMonRefRecord->SRegion[0].y;
-					if (lSub / RAND_MAX > 0)
-						lBase = lRand % (lSub / RAND_MAX + 1) * RAND_MAX;
-					else
-						lBase = 0;
-					l_y = (lBase +  lRand % (lSub - lBase) + pMonRefRecord->SRegion[0].y);
 				}
-				else
+				if (pMonRefRecord->SRegion[0].y != pMonRefRecord->SRegion[1].y) {
+					long lRand = rand();
+					long lSub  = pMonRefRecord->SRegion[1].y - pMonRefRecord->SRegion[0].y;
+					long lBase = (lSub / RAND_MAX > 0) ? (lRand % (lSub / RAND_MAX + 1) * RAND_MAX) : 0;
+					l_y = lBase + lRand % (lSub - lBase) + pMonRefRecord->SRegion[0].y;
+				}
+				else {
 					l_y = pMonRefRecord->SRegion[0].y;
+				}
 				Point l_pos = {l_x, l_y};
 
-				CCharacter	*pCCha;
-				if (pCCha = pCMap->ChaSpawn(pMonRefRecord->lMonster[j][0], enumCHACTRL_NONE, sAngle, &l_pos))
-				{
+				CCharacter* pCCha = pCMap->ChaSpawn(
+					pMonRefRecord->lMonster[j][0], enumCHACTRL_NONE, sAngle, &l_pos);
+				if (pCCha) {
 					pCCha->SetResumeTime(pMonRefRecord->lMonster[j][3] * 1000);
 					m_lCount++;
 					lNum++;
-					if(m_lCount >= g_Config.m_nMaxCha)
-					{
-						//LG(szMap, "msg\n");
-						ToLogService("common", LogLevel::Warning, "Character count reached maximum, stopping spawn");
-						return 1;
+					if (m_lCount >= g_Config.m_nMaxCha) {
+						ToLogService("common", LogLevel::Warning,
+									 "Character count reached maximum, stopping spawn");
+						reachedCap = true;
+						return;
 					}
 				}
-				else
-					//LG(szSpawnError, " %s[%d, %d] %d %d[%d, %d]\n", pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
-					ToLogService("errors", LogLevel::Error, "character born error, born information: map {}[{}, {}], character hatch list number {}, character list number {}, born position[{}, {}]",
-							pCMap->GetName(), area.width(), area.height(), i + 1, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
+				else {
+					ToLogService("errors", LogLevel::Error,
+						"character born error, born information: map {}[{}, {}], "
+						"character hatch list number {}, character list number {}, born position[{}, {}]",
+						pCMap->GetName(), area.width(), area.height(),
+						pMonRefRecord->Id, pMonRefRecord->lMonster[j][0], l_pos.x, l_pos.y);
+				}
 			}
 		}
-		//LG(szMap, " %d \t%d\n", i + 1, lNum);
-		ToLogService("common", "entry {} character number:\t{}", i + 1, lNum);
-	}
-	return lRet;
+		ToLogService("common", "entry {} character number:\t{}", pMonRefRecord->Id, lNum);
+	});
+
+	return 1;
 }
 
 long CChaSpawn::Reload()
@@ -157,71 +126,63 @@ long CChaSpawn::Reload()
 }
 
 //=============================================================================
-CMapSwitchEntitySpawn::CMapSwitchEntitySpawn()
-{
-	m_lRecordNum = 0;
-	m_pCSwitchMapRecSet = 0;
-}
+CMapSwitchEntitySpawn::CMapSwitchEntitySpawn() = default;
 
-CMapSwitchEntitySpawn::~CMapSwitchEntitySpawn()
-{
-	m_lRecordNum = 0;
-	if (m_pCSwitchMapRecSet)
-		delete m_pCSwitchMapRecSet;
-}
+CMapSwitchEntitySpawn::~CMapSwitchEntitySpawn() = default;
 
-bool CMapSwitchEntitySpawn::Init(char *szSpawnTable, long lRecordNum)
+bool CMapSwitchEntitySpawn::Init(const char *szMapName, const char *szSpawnTable)
 {
-	m_pCMap = 0;
+	m_pCMap = nullptr;
 
-	if (lRecordNum <= 0)
-		//THROW_EXCP(excpArr, "");
+	if (szMapName == nullptr || szMapName[0] == '\0' || szSpawnTable == nullptr) {
 		THROW_EXCP(excpArr, RES_STRING(GM_ENTITYSPAWN_CPP_00005));
-	strcpy(m_szSpawnTable, szSpawnTable);
-	m_lRecordNum = lRecordNum;
+	}
 
-	m_pCSwitchMapRecSet = new CSwitchMapRecordSet(0, lRecordNum);
-	if (!m_pCSwitchMapRecSet)
-		//THROW_EXCP(excpMem,"");
-		THROW_EXCP(excpMem,RES_STRING(GM_ENTITYSPAWN_CPP_00006));
-	if (!LoadTable(m_pCSwitchMapRecSet, m_szSpawnTable))
-		return false;
+	m_strMapName = szMapName;
+	m_pStore = std::make_unique<SwitchMapRecordStore>();
 
-	return true;
+	std::string txtPath = std::string(GetResPath(szSpawnTable)) + ".txt";
+	return m_pStore->Load(txtPath.c_str());
 }
 
 long CMapSwitchEntitySpawn::Load(SubMap *pCMap)
 {
 	m_pCMap = pCMap;
 
-	long	lRet = 1;
-	CSwitchMapRecord	*pCSwitchMapRecord;
-
-	{
-		SItemGrid	SItemCont;
-		CItem		*pCItem;
-		for (int i = 0; i < m_lRecordNum; i++)
- 		{
-			pCSwitchMapRecord = GetSwitchMapRecordInfo(i + 1);
-			if (pCSwitchMapRecord == NULL)
-				continue;
-			SItemCont.sID = (short)pCSwitchMapRecord->lEntityID;
-			SItemCont.sNum = 1;
-			SItemCont.SetDBParam(-1, 0);
-			SItemCont.chForgeLv = 0;
-			SItemCont.SetInstAttrInvalid();
-			CEvent	CEvtCont;
-			CEvtCont.SetID((short)pCSwitchMapRecord->lEventID);
-			CEvtCont.SetTouchType(enumEVENTT_RANGE);
-			CEvtCont.SetExecType(enumEVENTE_SMAP_ENTRY);
-			CEvtCont.SetTableRec(pCSwitchMapRecord);
-			pCItem = pCMap->ItemSpawn(&SItemCont, pCSwitchMapRecord->SEntityPos.x, pCSwitchMapRecord->SEntityPos.y, enumITEM_APPE_NATURAL, 0, g_pCSystemCha->GetID(), g_pCSystemCha->GetHandle(), -1, -1,
-				&CEvtCont);
-			if (pCItem)
-				pCItem->SetOnTick(0);
-		}
+	if (!m_pStore) {
+		ToLogService("errors", LogLevel::Error,
+					 "CMapSwitchEntitySpawn::Load: store is null (map='{}')", m_strMapName);
+		return 0;
 	}
-	return lRet;
+
+	SItemGrid SItemCont;
+	m_pStore->ForEach([&](CSwitchMapRecord& rec) {
+		CSwitchMapRecord* pCSwitchMapRecord = &rec;
+
+		SItemCont.sID = (short)pCSwitchMapRecord->lEntityID;
+		SItemCont.sNum = 1;
+		SItemCont.SetDBParam(-1, 0);
+		SItemCont.chForgeLv = 0;
+		SItemCont.SetInstAttrInvalid();
+
+		CEvent CEvtCont;
+		CEvtCont.SetID((short)pCSwitchMapRecord->lEventID);
+		CEvtCont.SetTouchType(enumEVENTT_RANGE);
+		CEvtCont.SetExecType(enumEVENTE_SMAP_ENTRY);
+		CEvtCont.SetTableRec(pCSwitchMapRecord);  // адрес стабилен: store не перевыделяет vector после Load
+
+		CItem* pCItem = pCMap->ItemSpawn(
+			&SItemCont,
+			pCSwitchMapRecord->SEntityPos.x, pCSwitchMapRecord->SEntityPos.y,
+			enumITEM_APPE_NATURAL, 0,
+			g_pCSystemCha->GetID(), g_pCSystemCha->GetHandle(),
+			-1, -1, &CEvtCont);
+		if (pCItem) {
+			pCItem->SetOnTick(0);
+		}
+	});
+
+	return 1;
 }
 
 long CMapSwitchEntitySpawn::Reload()
@@ -230,43 +191,32 @@ long CMapSwitchEntitySpawn::Reload()
 }
 
 //=============================================================================
-CNpcSpawn::CNpcSpawn()
-{
-	m_pNpcRecordSet = 0;
-}
+CNpcSpawn::CNpcSpawn() = default;
 
 CNpcSpawn::~CNpcSpawn()
 {
-	Clear();	
+	Clear();
 }
 
-bool CNpcSpawn::Init( char *szSpawnTable, long lRecordNum )
+bool CNpcSpawn::Init(const char *szMapName, const char *szSpawnTable)
 {
-	if( lRecordNum <= 0 || szSpawnTable == NULL ) 
-	{
+	if (szMapName == nullptr || szMapName[0] == '\0' || szSpawnTable == nullptr) {
 		char szTemp[128];
-		sprintf( szTemp, RES_STRING(GM_ENTITYSPAWN_CPP_00007), szSpawnTable, lRecordNum );
-		THROW_EXCP( excpArr, szTemp );
+		sprintf(szTemp, RES_STRING(GM_ENTITYSPAWN_CPP_00007), szSpawnTable ? szSpawnTable : "", 0);
+		THROW_EXCP(excpArr, szTemp);
 	}
 
-	strcpy( m_szSpawnTable, szSpawnTable );
-	m_lRecordNum = lRecordNum;
+	m_strMapName = szMapName;
 
-	m_pNpcRecordSet = new CNpcRecordSet( 0, lRecordNum );
-	if( !m_pNpcRecordSet )
-	{
-		//THROW_EXCP( excpMem, "NPC" );
-		THROW_EXCP( excpMem, RES_STRING(GM_ENTITYSPAWN_CPP_00008) );
-	}
-	if( !LoadTable(m_pNpcRecordSet, m_szSpawnTable ))
-		return false;
+	m_pNpcStore = std::make_unique<NpcRecordStore>();
 
-	return true;
+	std::string txtPath = std::string(GetResPath(szSpawnTable)) + ".txt";
+	return m_pNpcStore->Load(txtPath.c_str());
 }
 
 void CNpcSpawn::Clear()
 {
-	SAFE_DELETE( m_pNpcRecordSet );
+	m_pNpcStore.reset();
 }
 
 mission::CNpc* CNpcSpawn::FindNpc( const char szName[] )
@@ -285,63 +235,55 @@ long CNpcSpawn::Load( SubMap& submap )
 	memset( m_NpcList, 0, sizeof(mission::CNpc*)*ROLE_MAXNUM_MAPNPC );
 	m_sNumNpc = 0;
 
-	ToLogService("common", "Loading [{}] files... ", m_szSpawnTable );
+	ToLogService("common", "Loading NPCs for map '{}'... ", m_strMapName);
+
+	if (!m_pNpcStore) {
+		ToLogService("errors", LogLevel::Error, "CNpcSpawn::Load: store is null (map='{}')", m_strMapName);
+		return 0;
+	}
 
 	bool hasError = false;
-	for( int i = 0; i < m_lRecordNum; i++ )
-	{
-		CNpcRecord* pNpcRecord  = (CNpcRecord*)m_pNpcRecordSet->GetRawDataInfo( i );
-		if( pNpcRecord == NULL ) {
-			continue;
+	m_pNpcStore->ForEach([&](CNpcRecord& rec) {
+		CNpcRecord* pNpcRecord = &rec;
+
+		CChaRecord* pCharRecord = GetChaRecordInfo(pNpcRecord->sCharID);
+		if (pCharRecord == nullptr) {
+			hasError = true;
+			C_PRINT("\nerror: NPC %d model %d unfound!", (int)pNpcRecord->Id, pNpcRecord->sCharID);
+			ToLogService("errors", LogLevel::Error,
+						 "initialization map errornot find appoint ID roll attribute informationID = {}",
+						 pNpcRecord->sCharID);
+			return;
 		}
 
-		CChaRecord* pCharRecord = GetChaRecordInfo( pNpcRecord->sCharID );
-		if( pCharRecord == NULL ) {
-			hasError = true;
-			C_PRINT("\nerror: NPC %d model %d unfound!", i, pNpcRecord->sCharID );
-			//LG( "npcinit_error", "IDID = %d", pNpcRecord->sCharID );
-			ToLogService("errors", LogLevel::Error, "initialization map errornot find appoint ID roll attribute informationID = {}", pNpcRecord->sCharID );
-			continue;
-		}
-		
-		switch( pNpcRecord->sNpcType )
-		{
-		case mission::CNpc::TALK:
-			{
+		switch (pNpcRecord->sNpcType) {
+			case mission::CNpc::TALK: {
 				mission::CTalkNpc* pTalk = g_pGameApp->GetNewTNpc();
-				if( pTalk == NULL ) 
-				{
+				if (pTalk == nullptr) {
 					break;
 				}
-				if( pTalk->Load( *pNpcRecord, *pCharRecord ) == FALSE )
-				{
+				if (pTalk->Load(*pNpcRecord, *pCharRecord) == FALSE) {
 					pTalk->Free();
-					continue;
+					return;
 				}
-				// 
 				Square SShape = {{pNpcRecord->dwxPos0, pNpcRecord->dwyPos0}, pCharRecord->sRadii};
-				if( !submap.Enter( &SShape, pTalk ) )
-				{
+				if (!submap.Enter(&SShape, pTalk)) {
 					pTalk->Free();
-					continue;
+					return;
 				}
-				if( m_sNumNpc < ROLE_MAXNUM_MAPNPC )
-				{
+				if (m_sNumNpc < ROLE_MAXNUM_MAPNPC) {
 					m_NpcList[m_sNumNpc++] = pTalk;
 				}
-			}
-			break;
-		default:
-			break;
+			} break;
+			default:
+				break;
 		}
+	});
 
-	}
-	if (!hasError)
-	{
+	if (!hasError) {
 		C_PRINT("success!\n");
 	}
-	else
-	{
+	else {
 		ToLogService("common", "");
 	}
 	return 0;
@@ -354,12 +296,10 @@ long CNpcSpawn::Reload()
 
 CNpcRecord* CNpcSpawn::GetNpcInfo( USHORT sNpcID )
 {
-	if( m_pNpcRecordSet )
-	{
-		(CNpcRecord*)m_pNpcRecordSet->GetRawDataInfo( sNpcID );
+	if (m_pNpcStore) {
+		return m_pNpcStore->Get(static_cast<int>(sNpcID));
 	}
-
-	return NULL;
+	return nullptr;
 }
 
 BOOL CNpcSpawn::SummonNpc( const char szNpc[], USHORT sAreaID, USHORT sTime )

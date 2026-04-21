@@ -1,9 +1,8 @@
 ﻿#pragma once
 
 #include <windows.h>
-#include "lwFrontAPI.h"
 
-typedef struct LW_FRONT_API _TAGFILEHEADER{
+typedef struct _TAGFILEHEADER{
 	BYTE IDLength;
     BYTE ColormapType;
     BYTE ImageType;
@@ -22,7 +21,7 @@ typedef struct LW_FRONT_API _TAGFILEHEADER{
 	}
 }TGAFILEHEADER, FAR * LPTGAFILEHEADER;
 
-class LW_FRONT_API CGraphicsFileData
+class CGraphicsFileData
 {
 private:
 public:

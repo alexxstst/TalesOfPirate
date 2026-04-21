@@ -10,7 +10,7 @@ type PlayerId = PlayerId_ of uint32
 type CharacterId = CharacterId_ of uint32
 
 [<Struct>]
-type GameServerPlayerId = GameServerPlayerId_ of uint32
+type GameServerPlayerId = GameServerPlayerId_ of int64
 
 [<Struct>]
 type MapName = MapName_ of string

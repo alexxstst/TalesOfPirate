@@ -8,6 +8,7 @@
 #include "lwIUtil.h"
 #include "lwPrimitiveHelper.h"
 #include "lwHelperGeometry.h"
+#include "lwTreeNode.h"
 
 LW_BEGIN
 
@@ -114,8 +115,7 @@ static DWORD __tree_proc_loadmodel(lwITreeNode* node, void* param)
         assert(0);
     }
     {
-        lwITreeNode* model_tree;
-        lwGUIDCreateObject((LW_VOID**)&model_tree, LW_GUID_TREENODE);
+        lwITreeNode* model_tree = LW_NEW(lwTreeNode);
         model_tree->SetData(model_node);
 
         // set param
@@ -1688,7 +1688,7 @@ __ret:
 
 LW_RESULT lwNodeHelper::GetLinkMatrix(lwMatrix44* mat, DWORD link_id)
 {
-    __asm int 3;
+    __debugbreak();
     return 0;
 }
 LW_RESULT lwNodeHelper::Update()
@@ -1753,7 +1753,7 @@ static DWORD __tree_proc_cullprimitive(lwITreeNode* node, void* param)
 
     if(obj->GetType() == NODE_PRIMITIVE)
     {
-        __asm { int 3 }
+        __debugbreak();
         //BYTE v = LW_SUCCEEDED(scn_mgr->CullPrimitive(obj)) ? 1 : 0;
         //obj->GetStateCtrl()->SetState(STATE_FRAMECULLING, v);
     }
@@ -1855,7 +1855,7 @@ lwNodeObject::lwNodeObject(lwIResourceMgr* res_mgr)
 {
     _name[0] = '\0';
 
-    lwGUIDCreateObject((LW_VOID**)&_obj_root, LW_GUID_TREENODE);
+    _obj_root = LW_NEW(lwTreeNode);
     lwINode* node = 0;
     _res_mgr->CreateNode(&node, NODE_DUMMY);
     _obj_root->SetData(node);
@@ -2192,7 +2192,7 @@ DWORD __tree_proc_play_pose(lwITreeNode* node, void* param)
     case NODE_HELPER:
         break;
     default:
-        __asm int 3;
+        __debugbreak();
     }
 
     ret = TREENODE_PROC_RET_CONTINUE;

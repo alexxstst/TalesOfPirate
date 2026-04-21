@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы создания персонажа
-class CChaCreateInfo : public CRawDataInfo
+class CChaCreateInfo : public EntityData
 {
 public:
 	DWORD type{0};

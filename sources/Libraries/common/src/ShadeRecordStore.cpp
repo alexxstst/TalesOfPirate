@@ -4,14 +4,9 @@ GameRecordset<CShadeInfo>::RecordEntry ShadeRecordStore::ReadRecord(SqliteStatem
 	CShadeInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szName, name.data(), sizeof(record.szName) - 1);
@@ -30,7 +25,7 @@ GameRecordset<CShadeInfo>::RecordEntry ShadeRecordStore::ReadRecord(SqliteStatem
 	record.nColorA       = stmt.GetInt(col++);
 	record.nType         = stmt.GetInt(col++);
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void ShadeRecordStore::Insert(SqliteDatabase& db, const CShadeInfo& r) {
@@ -41,8 +36,8 @@ void ShadeRecordStore::Insert(SqliteDatabase& db, const CShadeInfo& r) {
 			"(id,data_name,name,size,ani,row,col,use_alpha_test,alpha_type,color_r,color_g,color_b,color_a,type) "
 			"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, std::string_view(r.szName));
 		stmt.Bind(p++, static_cast<double>(r.fsize));
 		stmt.Bind(p++, r.nAni);
@@ -57,7 +52,7 @@ void ShadeRecordStore::Insert(SqliteDatabase& db, const CShadeInfo& r) {
 		stmt.Bind(p++, r.nType);
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ShadeRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ShadeRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

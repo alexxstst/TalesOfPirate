@@ -41,7 +41,7 @@ void CWeather::RandLocation(SubMap *pMap)
 			
 			auto& weatherFmt = LanguageRecordStore::Instance()->GetKeyString("GM_WEATHER_CPP_00001");
 			snprintf(szText, sizeof(szText), "%s",
-				SafeVFormat(weatherFmt, SRange.ltop.x / 100, SRange.ltop.y / 100, pEff->szDataName).c_str());
+				SafeVFormat(weatherFmt, SRange.ltop.x / 100, SRange.ltop.y / 100, pEff->DataName.c_str()).c_str());
 
 			g_pGameApp->LocalNotice( szText );
 			//LG("weather", "[%s][%s], time = %d\n", pMap->GetName(), szText, dwCurTick / 1000);

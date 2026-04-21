@@ -1128,7 +1128,7 @@ BOOL SC_CharacterAction(LPRPACKET pk) {
 					char buff[234];
 					sprintf(buff, "ID = %d val = %s\r\n", SSkillInfo.SEffect[i].lAttrID,
 							_i64toa(SSkillInfo.SEffect[i].lVal, val, 10));
-					::OutputDebugStr(buff);
+					::OutputDebugStringA(buff);
 				}
 			}
 

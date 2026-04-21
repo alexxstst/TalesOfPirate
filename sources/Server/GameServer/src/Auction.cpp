@@ -82,19 +82,14 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 			else
 			{
 				BEGINGETGATE();
-				CPlayer	*pCPlayer;
-				CCharacter	*pChaOut = 0;
-				GateServer	*pGateServer;
-				while (pGateServer = GETNEXTGATE())
+				GateServer* pGateServer;
+				bool bFound = false;
+				while (!bFound && (pGateServer = GETNEXTGATE()))
 				{
-					bool bFound = false;
-
-					if (!BEGINGETPLAYER(pGateServer))
-						continue;
-					while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+					for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 					{
-						pChaOut = pCPlayer->GetMainCha();
-						if(pChaOut)
+						CCharacter* pChaOut = pCPlayer->GetMainCha();
+						if (pChaOut)
 						{
 							auto WtPk = net::msg::serialize(net::msg::MmAuctionMessage{pChaOut->GetID(), pAucItem->GetCurChaID()});
 							pChaOut->ReflectINFof(pChaOut, WtPk);
@@ -103,12 +98,7 @@ BOOL CAuctionSystem::EndAuction(short sItemID)
 							break;
 						}
 					}
-
-					if(bFound)
-					{
-						break;
-					}
-				}	
+				}
 			}
 		}
 	}

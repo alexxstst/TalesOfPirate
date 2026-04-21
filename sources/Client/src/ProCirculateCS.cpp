@@ -48,7 +48,7 @@ void CProCirculateCS::BeginAction(CCharacter* pCha, DWORD type, void* param, CAc
 				int nArea = pScene->_pTerrain->GetTile(pCha->GetCurX() / 100, pCha->GetCurY() / 100)->getIsland();
 				CAreaInfo* pArea = GetAreaInfo(nArea);
 
-				sprintf(buf, "In %s", pArea->szDataName);
+				sprintf(buf, "In %s", pArea->DataName.c_str());
 
 				sprintf(buffer, "%s Lv%d %s", pCha->getHumanName(), pCha->getLv(),
 						g_GetJobName((short)pCha->getGameAttr()->get(ATTR_JOB)));

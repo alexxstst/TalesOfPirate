@@ -1,4 +1,4 @@
-﻿----------------------------------------------------------------------------
+----------------------------------------------------------------------------
 -- Lua script to dump the bytecode of the library functions written in Lua.
 -- The resulting 'buildvm_libbc.h' is used for the build process of LuaJIT.
 ----------------------------------------------------------------------------

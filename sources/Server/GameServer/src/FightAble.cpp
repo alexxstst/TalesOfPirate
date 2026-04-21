@@ -1594,7 +1594,7 @@ inline bool CFightAble::IsTeammate(CFightAble *pCTar)
 	return val.value_or(0) != 0;
 }
 
-inline bool CFightAble::IsFriend(CFightAble *pCTar)
+bool CFightAble::IsFriend(CFightAble *pCTar)
 {
 	CPlayer	*pCPly1 = GetPlayer();
 	CPlayer	*pCPly2 = 0;

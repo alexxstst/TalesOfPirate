@@ -1602,7 +1602,7 @@ bool CGameScene::SwitchMap(int nMapID) {
 
 	_Clear();
 	_ClearMemory();
-	_stInit.strMapFile = pMapInfo->szDataName;
+	_stInit.strMapFile = pMapInfo->DataName.c_str();
 
 	_CreateMemory();
 	_Init();
@@ -1799,7 +1799,7 @@ int CGameScene::UpdateSceneAnimLight() {
 
 		// update lighting animation
 		if (s->type != SceneLight::SL_LIGHT) {
-			__asm int 3;
+			__debugbreak();
 		}
 
 		if (s->UpdateAnimLight()) {
@@ -1893,7 +1893,7 @@ int CGameScene::EndUpdateSceneObjLight(const CSceneObj* obj) {
 	return 1;
 }
 
-void CGameScene::PlayEnvSound(char* szFile, int nX, int nY) {
+void CGameScene::PlayEnvSound(const char* szFile, int nX, int nY) {
 	if (!CGameApp::IsMusicSystemValid() || !_IsUseSound) return;
 
 	static float& x = g_pGameApp->GetMainCam()->m_RefPos.x;
@@ -2202,7 +2202,7 @@ void CGameScene::PlayEnvSound(int nSoundNo, int nX, int nY) {
 		return;
 	}
 
-	PlayEnvSound(pInfo->szDataName, nX, nY);
+	PlayEnvSound(pInfo->DataName.c_str(), nX, nY);
 }
 
 float CGameScene::GetGridHeight(float fX, float fY) {

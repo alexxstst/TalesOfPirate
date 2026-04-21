@@ -18,6 +18,7 @@
 #include "SceneObjRecordStore.h"
 #include "EffectRecordStore.h"
 #include "ShadeRecordStore.h"
+#include "lwTimer.h"
 #include "EventSoundRecordStore.h"
 #include "MusicRecordStore.h"
 #include "PoseRecordStore.h"
@@ -172,8 +173,7 @@ int CGameApp::Run() {
 	_dwCurTick = 0;
 
 #if(defined USE_INDIVIDUAL_TIMER)
-	MPITimer* timer = 0;
-	MPGUIDCreateObject((LW_VOID**)&timer, LW_GUID_TIMER);
+	MPITimer* timer = LW_NEW(lwTimer);
 	timer->SetTimer(0, __timer_frame, 1.0 f / 30);
 	timer->SetTimer(1, __timer_render, 1.0 f / 30);
 #endif
@@ -401,7 +401,7 @@ void CGameApp::CreateCharImg() {
 		sprintf(szPath, "screenshot/cha");
 		Util_MakeDir(szPath);
 
-		sprintf(fileName, "%s/%s.bmp", szPath, pInfo->szDataName);
+		sprintf(fileName, "%s/%s.bmp", szPath, pInfo->DataName.c_str());
 
 		g_Render.CaptureScreen(fileName);
 
@@ -652,7 +652,7 @@ void CGameApp::PlayMusic(int nMusicNo) {
 	//    static g_dwPlayMusicNo = 0;
 	//    g_dwPlayMusicNo++;
 	//    CMusicInfo *pInfo = GetMusicInfo(g_dwPlayMusicNo);
-	//    if( !pInfo || strlen(pInfo->szDataName)==0 )
+	//    if( !pInfo || strlen(pInfo->DataName.c_str())==0 )
 	//    {
 	//        g_dwPlayMusicNo = 1; //
 	//    }
@@ -661,7 +661,7 @@ void CGameApp::PlayMusic(int nMusicNo) {
 	if (nMusicNo >= 1) //
 	{
 		pInfo = GetMusicInfo(nMusicNo);
-		if (pInfo && strlen(pInfo->szDataName) == 0) {
+		if (pInfo && strlen(pInfo->DataName.c_str()) == 0) {
 			pInfo = NULL;
 		}
 	}
@@ -674,7 +674,7 @@ void CGameApp::PlayMusic(int nMusicNo) {
 
 	switch (_eSwitchMusic) {
 	case enumNoMusic: {
-		strncpy(_szBkgMusic, pInfo->szDataName, sizeof(_szBkgMusic));
+		strncpy(_szBkgMusic, pInfo->DataName.c_str(), sizeof(_szBkgMusic));
 
 		_eSwitchMusic = enumNewMusic;
 		DWORD OldMusicID = g_dwCurMusicID;
@@ -691,13 +691,13 @@ void CGameApp::PlayMusic(int nMusicNo) {
 	}
 	break;
 	case enumOldMusic: {
-		strncpy(_szBkgMusic, pInfo->szDataName, sizeof(_szBkgMusic));
+		strncpy(_szBkgMusic, pInfo->DataName.c_str(), sizeof(_szBkgMusic));
 	}
 	break;
 	case enumNewMusic:
 	case enumMusicPlay:
-		if (strncmp(_szBkgMusic, pInfo->szDataName, sizeof(_szBkgMusic)) != 0) {
-			strncpy(_szBkgMusic, pInfo->szDataName, sizeof(_szBkgMusic));
+		if (strncmp(_szBkgMusic, pInfo->DataName.c_str(), sizeof(_szBkgMusic)) != 0) {
+			strncpy(_szBkgMusic, pInfo->DataName.c_str(), sizeof(_szBkgMusic));
 			_eSwitchMusic = enumOldMusic;
 		}
 		break;
@@ -713,9 +713,9 @@ void CGameApp::PlaySound(int nSoundNo) {
 	if (!pInfo || pInfo->nType != 1) return;
 
 #ifdef USE_DSOUND
-	PlaySample(pInfo->szDataName);
+	PlaySample(pInfo->DataName.c_str());
 #else
-	ulong musid = AudioSDL::get_instance()->get_resID(pInfo->szDataName, TYPE_WAV);
+	ulong musid = AudioSDL::get_instance()->get_resID(pInfo->DataName.c_str(), TYPE_WAV);
 	AudioSDL::get_instance()->volume(musid, (int)CGameScene::_fSoundSize);
 	g_AudioThread.play(musid, false);
 #endif
@@ -1436,8 +1436,8 @@ void CGameApp::AutoTest() {
 				auto* pEffect = pScene->GetFirstInvalidEffObj();
 				if (!pEffect) return;
 
-				if (!pEffect->Create(info.nID)) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.nID).c_str());
+				if (!pEffect->Create(info.Id)) {
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.Id).c_str());
 					return;
 				}
 
@@ -1453,9 +1453,9 @@ void CGameApp::AutoTest() {
 		AutoTestInfo("%s", GetLanguageString(82).c_str());
 
 		ChaRecordStore::Instance()->ForEach([&](const CChaRecord& info) {
-			auto* pCha = pScene->AddCharacter(info.nID);
+			auto* pCha = pScene->AddCharacter(info.Id);
 			if (!pCha) {
-				AutoTestInfo("%s", SafeVFormat(GetLanguageString(83), info.nID).c_str());
+				AutoTestInfo("%s", SafeVFormat(GetLanguageString(83), info.Id).c_str());
 				return;
 			}
 
@@ -1479,11 +1479,11 @@ void CGameApp::AutoTest() {
 			for (int j = 0; j < nMax; j++) {
 				if (hair.IsChaUse[j]) {
 					if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwItemID))
-						SysInfo("%s", SafeVFormat(GetLanguageString(85), hair.nID, j + 1, hair.dwItemID).c_str());
+						SysInfo("%s", SafeVFormat(GetLanguageString(85), hair.Id, j + 1, hair.dwItemID).c_str());
 
 					for (int k = 0; k < hair.GetFailItemNum(); k++) {
 						if (!pHairCha[j]->ChangePart(enumEQUIP_HEAD, hair.dwFailItemID[k]))
-							SysInfo("%s", SafeVFormat(GetLanguageString(86), hair.nID, j + 1, hair.dwFailItemID[k]).c_str());
+							SysInfo("%s", SafeVFormat(GetLanguageString(86), hair.Id, j + 1, hair.dwFailItemID[k]).c_str());
 					}
 					AutoTestUpdate();
 				}
@@ -1502,8 +1502,8 @@ void CGameApp::AutoTest() {
 			auto* pEffect = pScene->GetFirstInvalidEffObj();
 			if (!pEffect) return;
 
-			if (!pEffect->Create(info.nID)) {
-				AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.nID).c_str());
+			if (!pEffect->Create(info.Id)) {
+				AutoTestInfo("%s", SafeVFormat(GetLanguageString(81), info.Id).c_str());
 				return;
 			}
 
@@ -1578,7 +1578,7 @@ void CGameApp::AutoTest() {
 			for (int k = 0; k < ITEM_REFINE_NUM; k++) {
 				int effectID = refine.Value[k];
 				if (effectID > 0 && !GetItemRefineEffectInfo(effectID)) {
-					AutoTestInfo("%s", SafeVFormat(GetLanguageString(97), refine.nID, std::string_view(refine.szDataName), effectID).c_str());
+					AutoTestInfo("%s", SafeVFormat(GetLanguageString(97), refine.Id, std::string_view(refine.DataName.c_str()), effectID).c_str());
 				}
 			}
 		});
@@ -1596,7 +1596,7 @@ void CGameApp::AutoTest() {
 					for (int level = 0; level < 4; level++) {
 						int nEffectID = info.sEffectID[k][j] * 10 + level;
 						if (!GetMagicInfo(nEffectID)) {
-							AutoTestInfo("%s", SafeVFormat(GetLanguageString(99), info.nID, std::string_view(info.szDataName), nEffectID).c_str());
+							AutoTestInfo("%s", SafeVFormat(GetLanguageString(99), info.Id, std::string_view(info.DataName.c_str()), nEffectID).c_str());
 						}
 					}
 				}

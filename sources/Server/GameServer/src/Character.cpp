@@ -306,7 +306,7 @@ bool CCharacter::IsGMCha2()
 	return false;
 }
 
-inline bool CCharacter::IsPlayerFocusCha(void)
+bool CCharacter::IsPlayerFocusCha(void)
 {
 	return IsPlayerCha() && (m_pCPlayer->GetCtrlCha() == this);
 }

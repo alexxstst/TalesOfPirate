@@ -5,7 +5,7 @@
 #include <array>
 
 // Запись таблицы маунтов (mountinfo)
-class CMountInfo : public CRawDataInfo
+class CMountInfo : public EntityData
 {
 public:
 	CMountInfo() = default;

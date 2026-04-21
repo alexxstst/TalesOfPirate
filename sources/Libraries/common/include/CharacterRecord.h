@@ -64,7 +64,7 @@ const char cchChaRecordKeyValue = (char)0xff;
 #define defCHA_BIRTH_EFFECT_NUM	3		// 
 #define defCHA_HP_EFFECT_NUM    3
 
-class CChaRecord : public CRawDataInfo
+class CChaRecord : public EntityData
 {
 public:
 	//CChaRecord();

@@ -9,6 +9,14 @@
       <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{8661B70A-8D22-4082-9E71-00312294DF0F}</ProjectGuid>
@@ -28,6 +36,18 @@
     <CharacterSet>MultiByte</CharacterSet>
     <EnableASAN>false</EnableASAN>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <UseOfMfc>false</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <EnableASAN>false</EnableASAN>
+  </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
@@ -35,6 +55,12 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -50,6 +76,18 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)..\lib\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TargetName>$(ProjectName)_D8R</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)..\lib\x64\</OutDir>
+    <IntDir>$(ProjectDir)..\build\x64\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TargetName>$(ProjectName)_D8D</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)..\lib\x64\</OutDir>
+    <IntDir>$(ProjectDir)..\build\x64\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <TargetName>$(ProjectName)_D8R</TargetName>
   </PropertyGroup>
@@ -99,6 +137,52 @@
       <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\DirectX\DX9\Include;$(ProjectDir)..\..\Libraries\CryptoPP\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>_UNLOADRES;WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <SDLCheck>false</SDLCheck>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <MultiProcessorCompilation>false</MultiProcessorCompilation>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\DirectX\DX9\Include;$(ProjectDir)..\..\Libraries\CryptoPP\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;USE_MINDPOWER;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName).lib</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\include\d3dutil.h" />
     <ClInclude Include="..\include\dxutil.h" />
@@ -109,7 +193,6 @@
     <ClInclude Include="..\include\lwD3D.h" />
     <ClInclude Include="..\include\lwDirectX.h" />
     <ClInclude Include="..\include\lwErrorCode.h" />
-    <ClInclude Include="..\include\lwFrontAPI.h" />
     <ClInclude Include="..\include\lwGuidObj.h" />
     <ClInclude Include="..\include\lwHeader.h" />
     <ClInclude Include="..\include\lwIFunc.h" />
@@ -219,11 +302,11 @@
     <ClInclude Include="..\src\lwThreadPool.h" />
     <ClInclude Include="..\src\lwTimer.h" />
     <ClInclude Include="..\src\lwTreeNode.h" />
-    <ClInclude Include="..\src\lwutilsexp.h" />
     <ClInclude Include="..\src\lwViewFrustum.h" />
     <ClInclude Include="..\src\lwxRenderCtrlVS.h" />
     <ClInclude Include="..\src\stdafx.h" />
     <ClInclude Include="..\src\TgaCore.h" />
+    <ClInclude Include="..\include\Singleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\Blk.cpp" />
@@ -249,7 +332,6 @@
     <ClCompile Include="..\src\lwFileStream.cpp" />
     <ClCompile Include="..\src\lwFileutil.cpp" />
     <ClCompile Include="..\src\lwgraphicsutil.cpp" />
-    <ClCompile Include="..\src\lwGuidObj.cpp" />
     <ClCompile Include="..\src\lwHeap.cpp" />
     <ClCompile Include="..\src\lwHelperGeometry.cpp" />
     <ClCompile Include="..\src\lwIFunc.cpp" />
@@ -315,6 +397,8 @@
     <ClCompile Include="..\src\stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="..\src\TgaCore.cpp" />
     <ClCompile Include="..\src\ZRBlock.cpp" />

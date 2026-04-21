@@ -111,12 +111,7 @@ int main(int argc, char* argv[]) {
 
 //_DBC_USING
 
-#ifdef USE_IOCP
-
-#else
 // CorsairsNet: ThreadPool     TcpClient
-#endif
-
 
 extern DWORD WINAPI g_GameLogicProcess(LPVOID lpParameter);
 
@@ -133,19 +128,11 @@ BOOL GameServer_Begin() {
 		return FALSE;
 	}
 
-#ifdef USE_IOCP
-	cfl_iocpapp::startup();
-
-	g_mygmsvr = new myiocpclt();
-	g_mygmsvr->init_gtconn(&g_Config);
-
-#else
 	net::InitWinSock();
 
 	g_gmsvr = new GameServerApp();
 	// connect thread    GameServerApp
 	ToLogService("common", "startup Gate server connect thread...");
-#endif
 
 	//
 	//LG("init", "...\n");
@@ -181,19 +168,9 @@ void GameServer_End() {
 
 	SAFE_DELETE(g_pGameApp);
 
-#ifdef USE_IOCP
-	if (g_mygmsvr != NULL) {
-		g_mygmsvr->exit();
-		Sleep(3000);
-		delete g_mygmsvr;
-	}
-
-	cfl_iocpapp::cleanup();
-#else
 	delete g_gmsvr;
 
 	net::CleanupWinSock();
-#endif
 }
 
 typedef HWND (*LPGETCONSOLEWINDOW)(void);

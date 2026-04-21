@@ -8,7 +8,7 @@
 #include "lwRenderImp.h"
 
 LW_BEGIN
-LW_FRONT_API LW_RESULT lwLoadPrimitiveLineList(lwINodePrimitive* obj, const char* name, DWORD vert_num, const lwVector3* vert_buf, const DWORD* color_buf, const lwSubsetInfo* subset_seq, DWORD subset_num)
+LW_RESULT lwLoadPrimitiveLineList(lwINodePrimitive* obj, const char* name, DWORD vert_num, const lwVector3* vert_buf, const DWORD* color_buf, const lwSubsetInfo* subset_seq, DWORD subset_num)
 {
     lwMeshInfo info;
 
@@ -107,7 +107,7 @@ LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD ver
     return LW_RET_OK;
 }
 
-LW_FRONT_API LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD vert_num, const lwVector3* vert_buf, const DWORD* color_buf, const lwSubsetInfo* subset_seq, DWORD subset_num)
+LW_RESULT lwLoadPrimitiveLineList(lwIPrimitive* obj, const char* name, DWORD vert_num, const lwVector3* vert_buf, const DWORD* color_buf, const lwSubsetInfo* subset_seq, DWORD subset_num)
 {
     lwMeshInfo info;
 
@@ -316,7 +316,7 @@ LW_RESULT lwLoadPrimitiveLineSphere(lwIPrimitive* obj, const char* name, DWORD c
 
 }
 
-LW_FRONT_API LW_RESULT lwLoadPrimitiveLineCube(lwIPrimitive* obj, const char* name, DWORD color, const lwVector3* size)
+LW_RESULT lwLoadPrimitiveLineCube(lwIPrimitive* obj, const char* name, DWORD color, const lwVector3* size)
 {
     const DWORD vert_num = 24;
     lwVector3* vert_buf = LW_NEW(lwVector3[vert_num]);
@@ -347,7 +347,7 @@ LW_FRONT_API LW_RESULT lwLoadPrimitiveLineCube(lwIPrimitive* obj, const char* na
 }
 
 // use standard left-hand coord.
-LW_FRONT_API LW_RESULT lwLoadPrimitivePlane(lwIPrimitive* obj, const char* name, DWORD color, float width, float height, int seg_width, int seg_height, BOOL two_side, BOOL wire_frame)
+LW_RESULT lwLoadPrimitivePlane(lwIPrimitive* obj, const char* name, DWORD color, float width, float height, int seg_width, int seg_height, BOOL two_side, BOOL wire_frame)
 {
     float min_w = -width / 2;
     float max_w = -min_w;

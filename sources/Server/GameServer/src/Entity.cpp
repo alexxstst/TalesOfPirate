@@ -7,7 +7,7 @@
 #include "GameAppNet.h"
 #include "Character.h"
 #include "Config.h"
-#include "EntityAlloc.h"
+#include "GamePool.h"
 #include "GameApp.h"
 
 _DBC_USING
@@ -34,7 +34,8 @@ Entity::Entity():m_cat(0),m_ID(0)
 
 void Entity::Free()
 {
-	g_pGameApp->m_pCEntSpace->ReturnEntity(m_lHandle);
+	Finally();
+	GamePool::Instance().ReleaseEntity(this);
 }
 
 void Entity::Initially()
@@ -166,7 +167,7 @@ void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
 	Point l_pos1 = l_pos;
 	Rect l_rect = pCMap->GetEyeshot(l_pos);
 
-	CPlayer	*pHeadPlayer = 0, *pLastPlayer = 0;
+	std::vector<CPlayer*> recipients;
 	long	x = 0, y = 0;
 	long	lEntCount, lEntNum;
 	try
@@ -198,16 +199,7 @@ void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
 					{
 						if ((pCSrcCha && pCSrcCha->CanSeen(pCTarCha)) || !pCSrcCha)
 						{
-							if (!pHeadPlayer)
-							{
-								pHeadPlayer = pCTarCha->GetPlayer();
-								pLastPlayer = pHeadPlayer;
-							}
-							else
-							{
-								pLastPlayer->GetNextPlayer() = pCTarCha->GetPlayer();
-								pLastPlayer = (CPlayer *)pLastPlayer->GetNextPlayer();
-							}
+							recipients.push_back(pCTarCha->GetPlayer());
 
 							if (!pCTarCha->GetSubMap())
 								//LG("", " %s[%d,%d]  %s(%s)[%d,%d] \n",
@@ -231,9 +223,7 @@ void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
 		throw;
 	}
 
-	if (pLastPlayer)
-		pLastPlayer->GetNextPlayer() = NULL;
-	SENDTOCLIENT(chginf, pHeadPlayer);
+	SENDTOCLIENT(chginf, recipients);
 }
 
 bool Entity::overlap(long &xdist, long &ydist)

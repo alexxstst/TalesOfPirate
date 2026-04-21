@@ -128,7 +128,7 @@ enum ESkillPhaseType
 };
 
 
-class CSkillRecord : public CRawDataInfo
+class CSkillRecord : public EntityData
 {
 public:
 	CSkillRecord();

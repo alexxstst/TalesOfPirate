@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы карт
-class CMapInfo : public CRawDataInfo
+class CMapInfo : public EntityData
 {
 public:
 	char  szName[16]{};

@@ -233,7 +233,7 @@
     <ClInclude Include="..\src\Entity.h">
       <Filter>Entity\Base Class</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\EntityAlloc.h">
+    <ClInclude Include="..\src\GamePool.h">
       <Filter>Entity\Base Class</Filter>
     </ClInclude>
     <ClInclude Include="..\src\EntitySpawn.h">
@@ -259,9 +259,6 @@
     </ClInclude>
     <ClInclude Include="..\src\GameServerApp.h">
       <Filter>Network1</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\gmsvr.h">
-      <Filter>Network2</Filter>
     </ClInclude>
     <ClInclude Include="..\src\gtplayer.h">
       <Filter>Network2</Filter>
@@ -424,7 +421,7 @@
     <ClCompile Include="..\src\Entity.cpp">
       <Filter>Entity\Base Class</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\EntityAlloc.cpp">
+    <ClCompile Include="..\src\GamePool.cpp">
       <Filter>Entity\Base Class</Filter>
     </ClCompile>
     <ClCompile Include="..\src\EntitySpawn.cpp">
@@ -444,9 +441,6 @@
     </ClCompile>
     <ClCompile Include="..\src\GameServerApp.cpp">
       <Filter>Network1</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\gmsvr.cpp">
-      <Filter>Network2</Filter>
     </ClCompile>
     <ClCompile Include="..\src\Guild.cpp">
       <Filter>Guild</Filter>

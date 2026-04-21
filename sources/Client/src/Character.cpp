@@ -1225,7 +1225,7 @@ void CCharacter::SetDefaultChaInfo(CChaRecord* pInfo) {
 	if (_pDefaultChaInfo->sFootfall != -1) {
 		CMusicInfo* pInfo = GetMusicInfo(_pDefaultChaInfo->sFootfall);
 		if (pInfo) {
-			_pszFootMusic = pInfo->szDataName;
+			_pszFootMusic = pInfo->DataName.c_str();
 		}
 	}
 
@@ -1233,7 +1233,7 @@ void CCharacter::SetDefaultChaInfo(CChaRecord* pInfo) {
 	if (_pDefaultChaInfo->sWhoop != -1) {
 		CMusicInfo* pInfo = GetMusicInfo(_pDefaultChaInfo->sWhoop);
 		if (pInfo) {
-			_pszWhoopMusic = pInfo->szDataName;
+			_pszWhoopMusic = pInfo->DataName.c_str();
 		}
 	}
 
@@ -1277,7 +1277,7 @@ bool CCharacter::PlayPose(DWORD pose, DWORD type, int time, int fps, bool isBlen
 		if (!itemRec) {
 			return false;
 		}
-		CMountInfo* pMount = GetMountInfo(itemRec->szDataName);
+		CMountInfo* pMount = GetMountInfo(itemRec->DataName.c_str());
 		if (DWORD mountPose = GetMountPose(pose)) {
 			GetMount()->SetHide(false);
 			GetMount()->PlayPose(mountPose, type, time, fps, isBlend, IsGlitched);
@@ -2322,7 +2322,7 @@ bool CCharacter::GetIsFly() {
 void CCharacter::_computeLinkedMatrix() {
 	if (this->GetIsOnMount() && !GetIsPK() && this->GetIsMountEquipped() && !this->GetIsForUI()) {
 		CCharacter* mountCha = GetMount();
-		CMountInfo* pMount = GetMountInfo(GetItemRecordInfo(this->GetIsMountEquipped())->szDataName);
+		CMountInfo* pMount = GetMountInfo(GetItemRecordInfo(this->GetIsMountEquipped())->DataName.c_str());
 
 		if (mountCha && pMount) {
 			if (mountCha->IsHide()) {

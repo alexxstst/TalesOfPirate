@@ -1,7 +1,7 @@
 #pragma once
 #include "TableData.h"
 
-class Group_Param : public CRawDataInfo {
+class Group_Param : public EntityData {
 public:
 	char szName[32]{};
 	int  nTypeNum{0};

@@ -1,7 +1,7 @@
 #pragma once
 #include "TableData.h"
 
-class EFF_Param : public CRawDataInfo {
+class EFF_Param : public EntityData {
 public:
 	char szName[32]{};
 	int  nModelNum{0};

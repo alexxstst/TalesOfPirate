@@ -217,7 +217,7 @@ bool CSkillCommand::IsAtOnce()
 
 bool CSkillCommand::ReadyUse()
 {
-    return CGameScene::GetMainCha()->ChangeReadySkill( _pSkill->nID );
+    return CGameScene::GetMainCha()->ChangeReadySkill( _pSkill->Id );
 }
 
 void CSkillCommand::Error()
@@ -300,7 +300,7 @@ bool CSkillCommand::_WriteNeed( int nType, int nValue, const char* szStr )
 		CItemTypeInfo* pInfo = GetItemTypeInfo( nValue );
 		if( pInfo )
 		{
-			sprintf( szBuf, "%s %s", szStr, pInfo->szDataName );
+			sprintf( szBuf, "%s %s", szStr, pInfo->DataName.c_str() );
 			PushHint( szBuf, COLOR_RED );
 		}
 	}
@@ -309,7 +309,7 @@ bool CSkillCommand::_WriteNeed( int nType, int nValue, const char* szStr )
 		CItemRecord* pInfo = GetItemRecordInfo( nValue );
 		if( pInfo )
 		{
-			sprintf( szBuf, "%s %s", szStr, pInfo->szDataName );
+			sprintf( szBuf, "%s %s", szStr, pInfo->DataName.c_str() );
 			PushHint( szBuf, COLOR_RED );
 		}
 	}
@@ -337,7 +337,7 @@ const char* CSkillCommand::GetSkillName()
 
 bool CSkillCommand::GetIsSpecial(eSpecialType SpecialType)
 {
-	int nID = GetSkillRecord()->nID;
+	int nID = GetSkillRecord()->Id;
 
 	switch(SpecialType)
 	{

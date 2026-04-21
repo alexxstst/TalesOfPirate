@@ -6,7 +6,7 @@
 // Запись таблицы действий персонажа.
 // Одна строка = одно действие (ActionNo) внутри типа персонажа (CharacterType).
 // _keyFrames — массив ключевых кадров (может быть пустым).
-class CCharacterActionInfo : public CRawDataInfo
+class CCharacterActionInfo : public EntityData
 {
 public:
 	short _characterType{};

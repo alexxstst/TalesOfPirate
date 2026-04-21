@@ -5,14 +5,9 @@ GameRecordset<CItemRefineEffectInfo>::RecordEntry ItemRefineEffectRecordStore::R
 	CItemRefineEffectInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto name = stmt.GetText(col++);
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 
 	record.nLightID = stmt.GetInt(col++);
 
@@ -47,8 +42,8 @@ GameRecordset<CItemRefineEffectInfo>::RecordEntry ItemRefineEffectRecordStore::R
 		}
 	}
 
-	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	std::string name(record.DataName);
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 void ItemRefineEffectRecordStore::Insert(SqliteDatabase& db, const CItemRefineEffectInfo& r) {
@@ -59,8 +54,8 @@ void ItemRefineEffectRecordStore::Insert(SqliteDatabase& db, const CItemRefineEf
 			"(id,name,light_id,effect_ids,dummies) "
 			"VALUES (?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, r.nLightID);
 
 		// effect_ids — row-major
@@ -87,7 +82,7 @@ void ItemRefineEffectRecordStore::Insert(SqliteDatabase& db, const CItemRefineEf
 
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ItemRefineEffectRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ItemRefineEffectRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

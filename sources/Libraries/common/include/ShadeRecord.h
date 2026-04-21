@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы шейдовых эффектов
-class CShadeInfo : public CRawDataInfo
+class CShadeInfo : public EntityData
 {
 public:
 	char    szName[16]{};

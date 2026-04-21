@@ -35,7 +35,7 @@ public:
 
 		m_regionGroups.clear();
 		ForEach([this](const CServerGroupInfo& info) {
-			m_regionGroups[info.region].push_back(info.nID);
+			m_regionGroups[info.region].push_back(info.Id);
 		});
 
 		return true;

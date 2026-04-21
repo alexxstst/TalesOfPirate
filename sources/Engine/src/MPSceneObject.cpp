@@ -319,7 +319,7 @@ DWORD MPSceneObject::GetTransparentFlag() const
 }
 
 // lwSceneObjectChair
-LW_FRONT_API LW_RESULT lwLoadPrimitiveLineList( lwIPrimitive* obj, const char* name, DWORD vert_num, const lwVector3* vert_buf, const DWORD* color_buf );
+LW_RESULT lwLoadPrimitiveLineList( lwIPrimitive* obj, const char* name, DWORD vert_num, const lwVector3* vert_buf, const DWORD* color_buf );
 
 lwSceneObjectChair::lwSceneObjectChair()
 : _obj( 0 )

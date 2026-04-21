@@ -1,7 +1,7 @@
 #pragma once
 #include "TableData.h"
 
-// Запись таблицы префиксов предметов (только имя из szDataName)
-class CItemPreInfo : public CRawDataInfo {
+// Запись таблицы префиксов предметов (только имя из DataName)
+class CItemPreInfo : public EntityData {
 public:
 };

@@ -21,8 +21,9 @@
 | LuaJIT (+ Lua 5.1) | 2.1 | MIT | [LuaJIT.txt](LuaJIT.txt) | https://luajit.org |
 | LuaBridge3 | header-only | MIT | [LuaBridge.txt](LuaBridge.txt) | https://github.com/kunitoki/LuaBridge3 |
 | Crypto++ | 8.4+ | Boost Software License 1.0 | [Cryptopp.txt](Cryptopp.txt) | https://www.cryptopp.com |
-| SDL | 1.2.7 | LGPL v2 | [SDL.txt](SDL.txt) | https://www.libsdl.org |
-| SDL_mixer | 1.2.x | zlib License | [SDL_mixer.txt](SDL_mixer.txt) | https://www.libsdl.org/projects/SDL_mixer |
+| SDL2 | 2.32.10 | zlib License | [SDL2.txt](SDL2.txt) | https://github.com/libsdl-org/SDL |
+| SDL2_mixer | 2.8.1 | zlib License | [SDL2_mixer.txt](SDL2_mixer.txt) | https://github.com/libsdl-org/SDL_mixer |
+| libogg | 1.3.x | BSD-3-Clause (Xiph) | [libogg.txt](libogg.txt) | https://xiph.org/ogg/ |
 | Discord RPC | — | MIT | [Discord-RPC.txt](Discord-RPC.txt) | https://github.com/discord/discord-rpc |
 | DirectX (D3D9) | DX9 SDK | Microsoft EULA (редистрибутив) | [DirectX.txt](DirectX.txt) | Microsoft DirectX SDK |
 
@@ -37,10 +38,10 @@
 | Roboto | Apache License 2.0 | [fonts/Roboto.txt](fonts/Roboto.txt) | https://github.com/googlefonts/roboto-2 |
 | Source Sans 3 | SIL OFL 1.1 | [fonts/SourceSans3.txt](fonts/SourceSans3.txt) | https://github.com/adobe-fonts/source-sans |
 
-## Важно про LGPL (SDL 1.2)
+## Про SDL2 и динамическую линковку
 
-SDL 1.2 распространяется по LGPL v2. Конечному пользователю должна быть
-обеспечена возможность заменить библиотеку на свою сборку — поэтому линковка
-выполняется динамически (через `SDL.dll`), и полный текст LGPL поставляется
-вместе с клиентом в этой папке (`SDL.txt`). SDL_mixer 1.2 с официального
-репозитория libsdl-org — под zlib License (менее строгой, чем LGPL).
+SDL2 и SDL2_mixer распространяются под zlib License (MIT-подобная, атрибуция в
+бинарных дистрибутивах). Линкуются **динамически** — `SDL2.dll` и
+`SDL2_mixer.dll` лежат рядом с `Game.exe` в `Client/system/`. Для поддержки
+Ogg Vorbis (фоновая музыка `Client/music/*.ogg`) дополнительно поставляется
+`libogg-0.dll` под Xiph BSD-3-Clause.

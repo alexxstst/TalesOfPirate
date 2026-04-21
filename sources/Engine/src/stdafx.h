@@ -32,7 +32,6 @@
 
 #include "lwHeader.h"       //  ,  (LW_BEGIN/LW_END, LW_SAFE_DELETE  ..)
 #include "lwStdInc.h"       //  includes (mmsystem.h, lmaccess.h)
-#include "lwFrontAPI.h"     // LW_FRONT_API 
 #include "lwDirectX.h"      // DirectX 8/9   typedef'
 #include "lwErrorCode.h"    //  , LW_FAILED/LW_SUCCEEDED
 #include "lwMath.h"         // lwVector3, lwMatrix44, lwQuaternion, 

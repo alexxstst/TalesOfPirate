@@ -536,7 +536,7 @@ void CItemCommand::AddHint(int x, int y) {
 
 
 		//if ( _ItemData.GetItemLevel() > 0 ){
-		if (_pItem->nID != 1034) {
+		if (_pItem->Id != 1034) {
 			sprintf(buf, "Effectiveness (%d%%)", _ItemData.GetItemLevel());
 			PushHint(buf, GENERIC_COLOR);
 		}
@@ -611,7 +611,7 @@ void CItemCommand::AddHint(int x, int y) {
 		for (int i = 0; i < 3; i++) {
 			pInfo = GetElfSkillInfo(array[i][0], array[i][1]);
 			if (pInfo) {
-				PushHint(pInfo->szDataName);
+				PushHint(pInfo->DataName.c_str());
 			}
 		}
 		_AddDescriptor();
@@ -683,7 +683,7 @@ void CItemCommand::AddHint(int x, int y) {
 	{
 		PushHint(_pItem->szName.c_str(), COLOR_WHITE, 5, 1);
 
-		if (_pItem->nID == 3908 || _pItem->nID == 3108) // 3108 add by Philip  2005-05-30
+		if (_pItem->Id == 3908 || _pItem->Id == 3108) // 3108 add by Philip  2005-05-30
 		{
 			FmtLang(buf, sizeof(buf), GetLanguageString(626), item.sEndure[0], item.sEndure[1]);
 			PushHint(buf, GENERIC_COLOR);
@@ -882,7 +882,7 @@ void CItemCommand::AddHint(int x, int y) {
 
 				p = GetSkillRecordInfo(pSkill->sPremissSkill[i][0]);
 				if (p) {
-					pSelfSkill = g_stUIEquip.FindSkill(p->nID);
+					pSelfSkill = g_stUIEquip.FindSkill(p->Id);
 					FmtLang(buf, sizeof(buf), GetLanguageString(649), p->szName.c_str(), pSkill->sPremissSkill[i][1]);
 					if (pSelfSkill && pSelfSkill->GetSkillGrid().chLv >= pSkill->sPremissSkill[i][1])
 						PushHint(buf);
@@ -931,7 +931,7 @@ void CItemCommand::AddHint(int x, int y) {
 	else if (_pItem->sType == 49) {
 		DWORD color = -1;
 		StoneRecordStore::Instance()->ForEach([&](const CStoneInfo& stone) {
-			if (color == (DWORD)-1 && stone.nItemID == _pItem->nID)
+			if (color == (DWORD)-1 && stone.nItemID == _pItem->Id)
 				color = (DWORD)stone.nItemRgb;
 		});
 
@@ -1066,11 +1066,11 @@ void CItemCommand::AddHint(int x, int y) {
 		}
 		//Add by sunny.sun 20080528
 		//Begin
-		else if (_pItem->nID == 5803 || _pItem->nID == 6373) {
-			if (_pItem->nID == 5803) {
+		else if (_pItem->Id == 5803 || _pItem->Id == 6373) {
+			if (_pItem->Id == 5803) {
 				sprintf(buf, "%s:%d", GetLanguageString(651).c_str(), item.sInstAttr[ITEMATTR_VAL_STR]);
 			}
-			if (_pItem->nID == 6373) {
+			if (_pItem->Id == 6373) {
 				int nCount = 0;
 				for (int i = 0; i < 5; ++i) {
 					if (GetData().sInstAttr[i][0] == ITEMATTR_VAL_STR) {
@@ -1450,13 +1450,13 @@ void CItemCommand::AddHint(int x, int y) {
 		}
 
 		CItemPreInfo* pInfo = GetItemPreInfo(nTen);
-		if (pInfo && strcmp(pInfo->szDataName, "0") != 0) {
+		if (pInfo && strcmp(pInfo->DataName.c_str(), "0") != 0) {
 			//if (_pItem->lID >= CItemRecord::enumItemFusionStart && _pItem->lID < CItemRecord::enumItemFusionEnd)
 			//{
 			//if ( CItemRecord::IsVaildFusionID(_pItem)
 			//&& _ItemData.GetFusionItemID() > 0 ){
 			if (_ItemData.GetItemLevel() > 0) {
-				sprintf(buf, "Lv%d %s%s", _ItemData.GetItemLevel(), pInfo->szDataName, GetName());
+				sprintf(buf, "Lv%d %s%s", _ItemData.GetItemLevel(), pInfo->DataName.c_str(), GetName());
 
 				//if (_ItemData.dwDBID)
 				//_hints.GetHint(1)->hint = buf;
@@ -1465,9 +1465,9 @@ void CItemCommand::AddHint(int x, int y) {
 			}
 			else {
 				//if (_ItemData.dwDBID)
-				//_hints.GetHint(1)->hint = pInfo->szDataName + _hints.GetHint(1)->hint;
+				//_hints.GetHint(1)->hint = pInfo->DataName.c_str() + _hints.GetHint(1)->hint;
 				//else
-				_hints.GetHint(0)->hint = pInfo->szDataName + _hints.GetHint(0)->hint;
+				_hints.GetHint(0)->hint = pInfo->DataName.c_str() + _hints.GetHint(0)->hint;
 			}
 		}
 
@@ -1487,7 +1487,7 @@ void CItemCommand::AddHint(int x, int y) {
 
 		for (int i = 0; i < Forge.nStoneNum && i < Forge.nHoleNum; i++) {
 			FmtLang(buf, sizeof(buf), GetLanguageString(656), ConvertNumToChinese(Forge.nStoneLevel[i]).c_str(),
-					Forge.pStoneInfo[i]->szDataName);
+					Forge.pStoneInfo[i]->DataName.c_str());
 			//PushHint( buf, (DWORD)((Forge.pStoneInfo[i]->nItemRgb) ^ 0xFF000000) );
 			PushHint(buf, (DWORD)((Forge.pStoneInfo[i]->nItemRgb) ^ 0xFF000000), 5, 1, -1, true, -16777216);
 		} //COLOR_RED
@@ -1583,7 +1583,7 @@ string CItemCommand::GetStoneHint(int nLevel) {
 	if (_pItem->sType == 49) {
 		StoneRecordStore::Instance()->ForEach([&](const CStoneInfo& stone) {
 			if (hint != "error") return;
-			if (stone.nItemID != _pItem->nID) return;
+			if (stone.nItemID != _pItem->Id) return;
 
 			if (nLevel < 0)
 				g_pGameApp->GetScriptMgr()->DoString(stone.szHintFunc, "u-s", _ItemData.sEnergy[1], &hint);
@@ -2070,7 +2070,7 @@ bool CItemCommand::ReadyUse() {
 		return false;
 
 	if (_pSkill->GetDistance() > 0) {
-		return pCha->ChangeReadySkill(_pSkill->nID);
+		return pCha->ChangeReadySkill(_pSkill->Id);
 	}
 	else {
 		CAttackState* attack = new CAttackState(pCha->GetActor());

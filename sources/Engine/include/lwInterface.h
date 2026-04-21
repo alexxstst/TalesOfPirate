@@ -311,7 +311,7 @@ public:
 };
 
 
-class LW_FRONT_API LW_DECLSPEC_NOVTABLE lwIPhysique : public lwInterface
+class LW_DECLSPEC_NOVTABLE lwIPhysique : public lwInterface
 {
 public:
     virtual lwIResourceMgr* GetResourceMgr() PURE_METHOD;
@@ -716,6 +716,11 @@ public:
     virtual int GetRef() PURE_METHOD;
 
     virtual LW_RESULT LoadTexInfo(const lwTexInfo* info, const char* tex_path) PURE_METHOD;
+    // User-defined texture data (TEX_TYPE_DATA). Раньше пробрасывалось через
+    // `lwTexInfo::data`, но это поле было `void*` разного размера на x86/x64
+    // и ломало бинарный формат `.lgo/.lmo`. Теперь — отдельный API.
+    virtual void SetUserData(void* data) PURE_METHOD;
+    virtual void* GetUserData() const PURE_METHOD;
     virtual LW_RESULT LoadSystemMemory() PURE_METHOD;
     virtual LW_RESULT LoadVideoMemory() PURE_METHOD;
     virtual LW_RESULT LoadVideoMemoryMT() PURE_METHOD;

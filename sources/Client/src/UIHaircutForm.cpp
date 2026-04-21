@@ -220,14 +220,14 @@ namespace GUI
 
 		char szBuf[16];
 		lblHairColor->SetCaption(pHairRecord->szColor.c_str());
-		lblHairType->SetCaption(pHairRecord->szDataName);
+		lblHairType->SetCaption(pHairRecord->DataName.c_str());
 		sprintf(szBuf, "%d", pHairRecord->dwMoney);
 		lblHairFare->SetCaption(szBuf);
 
 		CGoodsGrid* pGrid = g_stUIEquip.GetGoodsGrid();
 		if (!pGrid) return;
 
-		m_sScriptID = pHairRecord->nID;
+		m_sScriptID = pHairRecord->Id;
 		m_dwHairTypeIndex = dwHairType;
 		m_dwHairColorIndex = dwHairColor;
 
@@ -263,7 +263,7 @@ namespace GUI
 
 				if( !pItem->GetIsValid() ) continue;
 
-				if( pItem->GetItemInfo()->nID==pHairRecord->dwNeedItem[i][0])
+				if( pItem->GetItemInfo()->Id==pHairRecord->dwNeedItem[i][0])
 				{
 					if( pItem->GetTotalNum()>=(int)pHairRecord->dwNeedItem[i][1] )
 						break;

@@ -12,7 +12,7 @@
 //---------------------------------------------------------
 #define FORGE_MAXNUM_ITEM				6 //
 
-class CForgeRecord : public CRawDataInfo
+class CForgeRecord : public EntityData
 {
 public:
 	BYTE byLevel;	//

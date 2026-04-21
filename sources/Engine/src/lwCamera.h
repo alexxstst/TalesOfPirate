@@ -3,14 +3,13 @@
 
 #include "lwHeader.h"
 #include "lwMath.h"
-#include "lwFrontAPI.h"
 #include "lwDirectX.h"
 
 LW_BEGIN
 
 
 
-class LW_FRONT_API lwCamera
+class lwCamera
 {
 public:
 	static void GetMatrixCameraToView( lwMatrix44* mat, const lwMatrix44* cam_mat );

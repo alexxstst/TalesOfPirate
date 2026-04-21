@@ -804,11 +804,11 @@ void CMiniMapMgr::_RenderBigMapHint(void)
                 ptRender.y = rcBigMap.top  +(LONG)((stApply[i].y - rcBigMapArea.top)  / MAP_SCALE);
 
                 //SIZE size;    // 
-                //pfont->GetTextSize(pInfo->szDataName, &size);
+                //pfont->GetTextSize(pInfo->DataName.c_str(), &size);
                 //ptRender.x -= size.cx >> 1;
                 //ptRender.y -= size.cy >> 1;
 
-               FontManager::Instance().Get(FontSlot::TipText)->DrawText(pInfo->szDataName, ptRender.x, ptRender.y);
+               FontManager::Instance().Get(FontSlot::TipText)->DrawText(const_cast<char*>(pInfo->DataName.c_str()), ptRender.x, ptRender.y);
             }
         }
     }

@@ -21,7 +21,7 @@ public:
 
 		// Вычислить nTextureID для каждой записи
 		ForEach([&](MPTerrainInfo& info) {
-			info.nTextureID = getTexId(info.szDataName);
+			info.nTextureID = getTexId(info.DataName.c_str());
 		});
 
 		// Инициализация текстур water/alpha

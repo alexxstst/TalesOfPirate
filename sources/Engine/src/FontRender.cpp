@@ -386,7 +386,9 @@ void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 	verts.reserve(wtext.size() * 6);
 
 	float pen = static_cast<float>(x);
-	const float baseY = static_cast<float>(y);
+	// lineY сдвигается на _lineHeight при каждом '\n'; baseY менять нельзя,
+	// чтобы не сломать рассчитанный OffsetY глифа (Y-координата baseline строки).
+	float lineY = static_cast<float>(y);
 
 	for (wchar_t ch : wtext) {
 		if (ch == L'\r') {
@@ -394,8 +396,7 @@ void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 		}
 		if (ch == L'\n') {
 			pen = static_cast<float>(x);
-			const float newY = baseY + static_cast<float>(_lineHeight) * fScale;
-			y = static_cast<int>(newY);
+			lineY += static_cast<float>(_lineHeight) * fScale;
 			continue;
 		}
 		if (ch == L' ') {
@@ -417,7 +418,7 @@ void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 			// Смещение на -0.5 попадает центром пикселя → LINEAR семплит
 			// ровно один тексель.
 			const float qx = pen + static_cast<float>(g->OffsetX) * fScale - 0.5f;
-			const float qy = baseY + static_cast<float>(g->OffsetY) * fScale - 0.5f;
+			const float qy = lineY + static_cast<float>(g->OffsetY) * fScale - 0.5f;
 			const float qw = static_cast<float>(g->Width)  * fScale;
 			const float qh = static_cast<float>(g->Height) * fScale;
 

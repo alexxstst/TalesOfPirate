@@ -35,10 +35,9 @@ public:
 	template <typename T>
 	static void InsertFrom(SqliteDatabase& db, const T& src) {
 		CResourceInfo r{};
-		r.nID = src.nID;
-		r.bExist = src.bExist;
-		strncpy(r.szDataName, src.szDataName, sizeof(r.szDataName) - 1);
-		r.szDataName[sizeof(r.szDataName) - 1] = '\0';
+		r.Id = src.nID;
+		strncpy(r.DataName, src.DataName, sizeof(r.DataName) - 1);
+		r.DataName[sizeof(r.DataName) - 1] = '\0';
 		r.m_iType = src.m_iType;
 		Insert(db, r);
 	}

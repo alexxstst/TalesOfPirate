@@ -4,13 +4,12 @@ GameRecordset<NPCData>::RecordEntry NPCListRecordStore::ReadRecord(SqliteStateme
 	NPCData record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szName, name.data(), NPC_MAXSIZE_NAME - 1);
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
+		record.DataName = name;
 	}
 	{
 		auto text = stmt.GetText(col++);
@@ -25,7 +24,7 @@ GameRecordset<NPCData>::RecordEntry NPCListRecordStore::ReadRecord(SqliteStateme
 		strncpy(record.szMapName, text.data(), NPC_MAXSIZE_NAME - 1);
 	}
 
-	return {record.nID, std::string(record.szName), std::move(record)};
+	return {record.Id, std::string(record.szName), std::move(record)};
 }
 
 void NPCListRecordStore::Insert(SqliteDatabase& db, const NPCData& r) {
@@ -34,7 +33,7 @@ void NPCListRecordStore::Insert(SqliteDatabase& db, const NPCData& r) {
 		auto stmt = db.Prepare(
 			"INSERT OR REPLACE INTO npc_list (id,name,area,x_pos,y_pos,map_name) VALUES (?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
+		stmt.Bind(p++, r.Id);
 		stmt.Bind(p++, std::string_view(r.szName));
 		stmt.Bind(p++, std::string_view(r.szArea));
 		stmt.Bind(p++, static_cast<int>(r.dwxPos0));
@@ -42,6 +41,6 @@ void NPCListRecordStore::Insert(SqliteDatabase& db, const NPCData& r) {
 		stmt.Bind(p++, std::string_view(r.szMapName));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "NPCListRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "NPCListRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }

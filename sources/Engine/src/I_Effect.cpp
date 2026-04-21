@@ -560,17 +560,17 @@ bool I_Effect::LoadFromFile(FILE* pFile, DWORD dwVersion) {
 	//
 	char psname[32];
 	memset(psname, 0, 32);
-	char* pszDataName = _strlwr(_strdup(t_pszName));
+	char* pDataName = _strlwr(_strdup(t_pszName));
 
-	if ((strstr(pszDataName, ".dds") == NULL) && strstr(pszDataName, ".tga") == NULL) {
-		m_CTextruelist.m_vecTexName = pszDataName;
+	if ((strstr(pDataName, ".dds") == NULL) && strstr(pDataName, ".tga") == NULL) {
+		m_CTextruelist.m_vecTexName = pDataName;
 	}
 	else {
-		int len = lstrlen(pszDataName);
-		memcpy(psname, pszDataName, len - 4);
+		int len = lstrlen(pDataName);
+		memcpy(psname, pDataName, len - 4);
 		m_CTextruelist.m_vecTexName = psname;
 	}
-	SAFE_DELETE_ARRAY(pszDataName);
+	SAFE_DELETE_ARRAY(pDataName);
 
 
 	//m_CTextruelist.m_vecTexName.resize(m_CTextruelist.m_wTexCount);

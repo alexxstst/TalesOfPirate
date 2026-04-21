@@ -2,12 +2,12 @@
 #include "stdafx.h"
 
 #include "lwIUtil.h"
-#include "lwGUIDObj.h"
 #include "lwNodeObject.h"
+#include "lwAnimKeySetPRS.h"
 
 LW_BEGIN
 
-LW_FRONT_API LW_RESULT lwResetDevice(lwISysGraphics* sys_graphics, const D3DPRESENT_PARAMETERS* d3dpp)
+LW_RESULT lwResetDevice(lwISysGraphics* sys_graphics, const D3DPRESENT_PARAMETERS* d3dpp)
 {
     return 0;
 }
@@ -47,12 +47,23 @@ __ret:
 
 LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info)
 {
+    return lwLoadTex(out, res_mgr, info, nullptr);
+}
+
+LW_RESULT lwLoadTex(lwITex** out, lwIResourceMgr* res_mgr, const lwTexInfo* info, void* user_data)
+{
     LW_RESULT ret = LW_RET_FAILED;
 
     lwITex* tex;
 
     if(LW_FAILED(res_mgr->CreateTex(&tex)))
         goto __ret;
+
+    // Для TEX_TYPE_DATA пользовательский буфер пробрасывается через отдельный
+    // API (а не через поле `lwTexInfo::data`, которое убрано из-за
+    // несовместимости размера `void*` между x86 и x64).
+    if(user_data)
+        tex->SetUserData(user_data);
 
     if(LW_FAILED(tex->LoadTexInfo(info, 0)))
         goto __ret;
@@ -80,7 +91,7 @@ void lwPhysiqueSetMaterial(lwIPhysique* phy, const lwMaterial* mtl)
     }
 }
 
-LW_FRONT_API lwIAnimCtrl* lwItemGetAnimCtrl(lwIItem* item, DWORD ctrl_type)
+lwIAnimCtrl* lwItemGetAnimCtrl(lwIItem* item, DWORD ctrl_type)
 {
     lwIAnimCtrl* ret = 0;
 
@@ -114,7 +125,7 @@ __ret:
     return ret;
 }
 
-LW_FRONT_API lwPlayPoseInfo* lwItemGetPlayPoseInfo(lwIItem* item, DWORD ctrl_type)
+lwPlayPoseInfo* lwItemGetPlayPoseInfo(lwIItem* item, DWORD ctrl_type)
 {
 	lwPlayPoseInfo* ret = 0;
 
@@ -224,7 +235,7 @@ typedef LW_RESULT (*lwTexUVAnimProc)(lwIAnimCtrlTexUV* ctrl_texuv);
 LW_RESULT lwTexUVAnim0(lwIAnimCtrlTexUV* ctrl_texuv)
 {
     lwIAnimKeySetPRS* keyset_prs;
-    lwGUIDCreateObject((LW_VOID**)&keyset_prs, LW_GUID_ANIMKEYSETPRS);
+    keyset_prs = LW_NEW(lwAnimKeySetPRS2);
 
     // position
     {
@@ -262,7 +273,7 @@ LW_RESULT lwTexUVAnim0(lwIAnimCtrlTexUV* ctrl_texuv)
 LW_RESULT lwTexUVAnim1(lwIAnimCtrlTexUV* ctrl_texuv)
 {
     lwIAnimKeySetPRS* keyset_prs;
-    lwGUIDCreateObject((LW_VOID**)&keyset_prs, LW_GUID_ANIMKEYSETPRS);
+    keyset_prs = LW_NEW(lwAnimKeySetPRS2);
 
     // rotation
     {
@@ -310,7 +321,7 @@ LW_RESULT lwTexUVAnim1(lwIAnimCtrlTexUV* ctrl_texuv)
 LW_RESULT lwTexUVAnim2(lwIAnimCtrlTexUV* ctrl_texuv)
 {
     lwIAnimKeySetPRS* keyset_prs;
-    lwGUIDCreateObject((LW_VOID**)&keyset_prs, LW_GUID_ANIMKEYSETPRS);
+    keyset_prs = LW_NEW(lwAnimKeySetPRS2);
 
     // position
     {
@@ -373,7 +384,7 @@ LW_RESULT lwTexUVAnim2(lwIAnimCtrlTexUV* ctrl_texuv)
 LW_RESULT lwTexUVAnim3(lwIAnimCtrlTexUV* ctrl_texuv)
 {
     lwIAnimKeySetPRS* keyset_prs;
-    lwGUIDCreateObject((LW_VOID**)&keyset_prs, LW_GUID_ANIMKEYSETPRS);
+    keyset_prs = LW_NEW(lwAnimKeySetPRS2);
 
     // rotation
     lwVector3 axis(0.0f, 0.0f, 1.0f);
@@ -419,7 +430,7 @@ LW_RESULT lwTexUVAnim3(lwIAnimCtrlTexUV* ctrl_texuv)
 LW_RESULT lwTexUVAnim4(lwIAnimCtrlTexUV* ctrl_texuv)
 {
     lwIAnimKeySetPRS* keyset_prs;
-    lwGUIDCreateObject((LW_VOID**)&keyset_prs, LW_GUID_ANIMKEYSETPRS);
+    keyset_prs = LW_NEW(lwAnimKeySetPRS2);
 
     lwKeyVector3 buf[2];
     buf[0].key = 0;

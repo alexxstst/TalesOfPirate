@@ -18,6 +18,7 @@
 #include "EffectObj.h"
 #include "UIItemCommand.h"
 #include "LootFilter.h"
+#include "lwAnimKeySetPRS.h"
 
 CSceneItem::CSceneItem()
 	: CSceneNode(), _nCharacterID(-1), _fTerrainHeight(0.0f), _IsSystem(false), _IsShowName(false)
@@ -160,7 +161,7 @@ HRESULT CSceneItem::LitResetTexture(DWORD item_id, DWORD lit_id) {
 		}
 		res_mgr->CreateAnimCtrlObj((lwIAnimCtrlObj**)&ctrlobj_tc, ANIM_CTRL_TYPE_TEXCOORD);
 		res_mgr->CreateAnimCtrl((lwIAnimCtrl**)&ctrl_tc, ANIM_CTRL_TYPE_TEXCOORD);
-		lwGUIDCreateObject((lxvoid**)&aks, LW_GUID_ANIMKEYSETPRS);
+		aks = LW_NEW(lwAnimKeySetPRS2);
 
 		(*__lit_proc[lit_info->AnimType])(aks);
 
@@ -361,7 +362,7 @@ void CSceneItem::SetForgeEffect(DWORD value, int nCharID) {
 	if (nCharID < 0 || nCharID > 3)
 		return;
 
-	SItemForge& Forge = SItemForge::Convert(value, _pItemInfo->nID);
+	SItemForge& Forge = SItemForge::Convert(value, _pItemInfo->Id);
 	if (!Forge.IsForge || !Forge.pEffectInfo) {
 		LitUnresetTexture();
 

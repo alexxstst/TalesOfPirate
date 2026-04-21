@@ -17,7 +17,7 @@
 #define defHAIR_MAX_ITEM		4
 #define defHAIR_MAX_FAIL_ITEM	3
 
-class CHairRecord : public CRawDataInfo
+class CHairRecord : public EntityData
 {
 public:
 	CHairRecord();

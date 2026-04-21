@@ -184,7 +184,7 @@ namespace mission
 		InitScript( recNpc.szMsgProc, recNpc.szName );
 		
 		// npc
-		m_sNpcID = recNpc.nID;
+		m_sNpcID = recNpc.Id;
 
 		// 
 		_name = (recNpc.szName) ? (recNpc.szName) : "";

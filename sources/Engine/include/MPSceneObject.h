@@ -5,14 +5,13 @@
 #include "lwMath.h"
 #include "lwInterface.h"
 #include "lwObjectMethod.h"
-#include "lwFrontAPI.h"
 #include "MPSceneItem.h"
 #include "MPCharacter.h"
 
 LW_BEGIN
 
 
-class LW_FRONT_API MPSceneObject : public lwMatrixCtrl
+class MPSceneObject : public lwMatrixCtrl
 {
 private:
     lwIModel* _model;
@@ -74,7 +73,7 @@ public:
 
 typedef MPSceneObject MPSceneObject;
 
-class LW_FRONT_API lwSceneObjectChair : public lwMatrixCtrl
+class lwSceneObjectChair : public lwMatrixCtrl
 {
 private:
     lwMatrix44 _mat;

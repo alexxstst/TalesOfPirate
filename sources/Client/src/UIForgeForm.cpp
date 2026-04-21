@@ -637,7 +637,7 @@ void CForgeMgr::SetForgeUI()
 				{
 					sEquipState += itoa(rItemForgeInfo.nStoneLevel[0], szBuf, 10);
 					sEquipState += GetLanguageString(837);
-					sEquipState += rItemForgeInfo.pStoneInfo[0]->szDataName;
+					sEquipState += rItemForgeInfo.pStoneInfo[0]->DataName.c_str();
 					sEquipState += "\n";
 				}
 			}
@@ -661,7 +661,7 @@ void CForgeMgr::SetForgeUI()
 				{
 					sEquipState += itoa(rItemForgeInfo.nStoneLevel[1], szBuf, 10);
 					sEquipState += GetLanguageString(837);
-					sEquipState += rItemForgeInfo.pStoneInfo[1]->szDataName;
+					sEquipState += rItemForgeInfo.pStoneInfo[1]->DataName.c_str();
 					sEquipState += "\n";
 				}
 			}
@@ -685,7 +685,7 @@ void CForgeMgr::SetForgeUI()
 				{
 					sEquipState += itoa(rItemForgeInfo.nStoneLevel[2], szBuf, 10);
 					sEquipState += GetLanguageString(837);
-					sEquipState += rItemForgeInfo.pStoneInfo[2]->szDataName;
+					sEquipState += rItemForgeInfo.pStoneInfo[2]->DataName.c_str();
 					sEquipState += "\n";
 				}
 			}

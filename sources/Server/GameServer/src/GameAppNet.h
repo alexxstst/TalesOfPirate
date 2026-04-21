@@ -36,42 +36,7 @@ inline const char* g_GameGateConnError( int error_code )
 
 
 
-// 
-
-#ifdef USE_IOCP
-
-#define USE_NBO
-#include "cfl_pkt.h"
-#include "gmsvr.h"
-
-#define GETGMSVRNAME() g_mygmsvr->getname()
-#define ADDPLAYER(ply, pGate, gtaddr) g_mygmsvr->addplayer(ply, pGate, gtaddr)
-#define DELPLAYER(ply) g_mygmsvr->delplayer(ply)
-#define KICKPLAYER(ply, time) g_mygmsvr->kickplayer(ply, time)
-#define PEEKPACKET(ms) g_mygmsvr->peekpkt(ms)
-#define DISCONNECT(sk) g_mygmsvr->disconnect(sk)
-#define ISVALIDGATE(i) g_mygmsvr->isvalidgt(i)
-#define BEGINGETPLAYER(pGate) g_mygmsvr->begingetplayer(pGate)
-#define GETNEXTPLAYER(pGate) g_mygmsvr->getnextplayer(pGate)
-
-#define SENDTOWORLD(pkt) g_mygmsvr->sendtoworld(pkt)
-#define SENDTOCLIENT(pkt, l) g_mygmsvr->sendtoclient(pkt, l)
-#define SENDTOCLIENT2(pkt, n, a) g_mygmsvr->sendtoclient(pkt, n, a)
-#define SENDTOGAME(pkt, p) g_gmsvr->sendtogame(pkt, p)
-
-#define WPACKET Packet*
-#define RPACKET Packet*
-#define VALIDRPACKET(pkt) (pkt != NULL) ? true : false
-
-#define GETWPACKET() g_mygmsvr->getpkt()
-#define RETRPACKET(pkt) pkt->free()
-
-#define BEGINGETGATE() g_mygmsvr->begingetgate()
-#define GETNEXTGATE() g_mygmsvr->getnextgate()
-
-
-#else
-
+//
 
 #include "GameServerApp.h"
 
@@ -82,8 +47,6 @@ inline const char* g_GameGateConnError( int error_code )
 #define PEEKPACKET(ms) g_gmsvr->PeekPacket(ms)
 #define DISCONNECT(pGate) g_gmsvr->DisconnectGate(pGate)
 #define ISVALIDGATE(i) g_gmsvr->IsValidGate(i)
-#define BEGINGETPLAYER(pGate) g_gmsvr->BeginGetplayer(pGate)
-#define GETNEXTPLAYER(pGate) g_gmsvr->GetNextPlayer(pGate)
 #define GETPLAYERCOUNT(pGate) pGate->GetPlayerCount()
 
 #define SENDTOWORLD(pkt) g_gmsvr->SendToWorld(pkt)
@@ -95,9 +58,6 @@ inline const char* g_GameGateConnError( int error_code )
 
 #define BEGINGETGATE() g_gmsvr->BeginGetGate()
 #define GETNEXTGATE() g_gmsvr->GetNextGate()
-
-
-#endif // USE_IOCP
 
 
 

@@ -267,7 +267,7 @@ DWORD lwGetTexFlexibleSize(DWORD size)
     return ret;
 }
 
-LW_FRONT_API LW_RESULT lwLoadTexture(IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD usage, D3DFORMAT fmt, D3DPOOL pool)
+LW_RESULT lwLoadTexture(IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD usage, D3DFORMAT fmt, D3DPOOL pool)
 {
     LW_RESULT ret = LW_RET_FAILED;
 

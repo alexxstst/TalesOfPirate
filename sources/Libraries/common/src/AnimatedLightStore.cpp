@@ -18,11 +18,10 @@ GameRecordset<CAnimatedLightInfo>::RecordEntry AnimatedLightStore::ReadRecord(Sq
 	record._attenuation1 = static_cast<float>(stmt.GetDouble(col++));
 	record._attenuation2 = static_cast<float>(stmt.GetDouble(col++));
 
-	record.bExist = TRUE;
 
 	// Синтетический ID: light_no * 1000 + key_no.
 	int id = static_cast<int>(record._lightNo) * 1000 + static_cast<int>(record._keyNo);
-	record.nID = id;
+	record.Id = id;
 
 	_maxLightNo = (std::max)(record._lightNo, _maxLightNo);
 

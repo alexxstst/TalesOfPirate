@@ -3,7 +3,6 @@
 
 #include "lwHeader.h"
 #include "lwDirectX.h"
-#include "lwFrontAPI.h"
 #include "lwExpObj.h"
 #include "lwObjectPool.h"
 #include "lwInterfaceExt.h"

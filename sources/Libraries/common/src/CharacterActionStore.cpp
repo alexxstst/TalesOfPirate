@@ -39,11 +39,10 @@ GameRecordset<CCharacterActionInfo>::RecordEntry CharacterActionStore::ReadRecor
 	record._endFrame = static_cast<short>(stmt.GetInt(col++));
 	record._keyFrames = ParseKeyFramesCsv(stmt.GetText(col++));
 
-	record.bExist = TRUE;
 
 	// Синтетический ID: уникален при action_no < 10000 (гарантировано коротким типом).
 	int id = static_cast<int>(record._characterType) * 10000 + static_cast<int>(record._actionNo);
-	record.nID = id;
+	record.Id = id;
 
 	_maxCharacterType = (std::max)(record._characterType, _maxCharacterType);
 

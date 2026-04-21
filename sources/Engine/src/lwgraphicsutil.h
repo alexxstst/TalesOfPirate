@@ -3,7 +3,6 @@
 
 #include "lwHeader.h"
 #include "lwExpObj.h"
-#include "lwFrontAPI.h"
 #include "lwITypes.h"
 
 class CGraphicsFileData;
@@ -75,7 +74,7 @@ inline void lwMeshDataInfo_Destruct(lwMeshDataInfo* obj)
 
 /////////////////
 #ifndef USE_MINDPOWER
-LW_FRONT_API void lwMessageBox( const char* fmt, ... );
+void lwMessageBox( const char* fmt, ... );
 #define LG_MSGBOX lwMessageBox
 #else
 #ifndef USE_LG_MSGBOX
@@ -101,36 +100,36 @@ inline void __cdecl LGX(const char* format, ...)
 
 #endif
 
-LW_FRONT_API float lwGetFPS();
+float lwGetFPS();
 
-LW_FRONT_API void lwConvertTgaDataToColorValue(lwColorValue4b* dst_data,const CGraphicsFileData* tga, DWORD colorkey_type, lwColorValue4b* colorkey );
-LW_FRONT_API int lwLoadColorValue( lwColorValue4b** buf, int* width, int* height, const char* file );
-LW_FRONT_API void lwFreeColorValue( lwColorValue4b* buf );
+void lwConvertTgaDataToColorValue(lwColorValue4b* dst_data,const CGraphicsFileData* tga, DWORD colorkey_type, lwColorValue4b* colorkey );
+int lwLoadColorValue( lwColorValue4b** buf, int* width, int* height, const char* file );
+void lwFreeColorValue( lwColorValue4b* buf );
 //int lwLoadTexture( IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD level, DWORD usage, D3DFORMAT fmt, D3DPOOL pool );
 
-LW_FRONT_API LW_RESULT lwLoadTexture( IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD usage, D3DFORMAT fmt, D3DPOOL pool );
-LW_FRONT_API LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type, lwColorValue4b* colorkey, int use_power_size);
-LW_FRONT_API LW_RESULT lwLoadMeshDataInfo( lwMeshDataInfo* info, const lwMeshInfo* mi );
-LW_FRONT_API DWORD lwGetTexFlexibleSize( DWORD size );
+LW_RESULT lwLoadTexture( IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD usage, D3DFORMAT fmt, D3DPOOL pool );
+LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type, lwColorValue4b* colorkey, int use_power_size);
+LW_RESULT lwLoadMeshDataInfo( lwMeshDataInfo* info, const lwMeshInfo* mi );
+DWORD lwGetTexFlexibleSize( DWORD size );
 
-LW_FRONT_API void lwScreenToWorld( lwVector3* org, lwVector3* ray, int x, int y, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view );
-LW_FRONT_API void lwWorldToScreen( int* x, int* y, float* z, const lwVector3* vec, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view );
+void lwScreenToWorld( lwVector3* org, lwVector3* ray, int x, int y, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view );
+void lwWorldToScreen( int* x, int* y, float* z, const lwVector3* vec, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view );
 
-LW_FRONT_API void lwGetBoxVertLineList( lwVector3* vert_seq, const lwBox* box );
-LW_FRONT_API void lwGetBoxTriangleList( lwVector3* vert_seq, DWORD* index_seq, const lwBox* box );
-LW_FRONT_API void lwGetBoxTriangleList(lwVector3* vert36_seq, lwVector3* normal36_seq, const lwVector3* size);
-LW_FRONT_API void lwBuildVertexNormalWithTriangleList(lwVector3* normal_seq, const lwVector3* vert_seq, const DWORD* index_seq, DWORD vert_num, DWORD index_num);
+void lwGetBoxVertLineList( lwVector3* vert_seq, const lwBox* box );
+void lwGetBoxTriangleList( lwVector3* vert_seq, DWORD* index_seq, const lwBox* box );
+void lwGetBoxTriangleList(lwVector3* vert36_seq, lwVector3* normal36_seq, const lwVector3* size);
+void lwBuildVertexNormalWithTriangleList(lwVector3* normal_seq, const lwVector3* vert_seq, const DWORD* index_seq, DWORD vert_num, DWORD index_num);
 
-LW_FRONT_API void lwGetCubeMapViewMatrix(lwMatrix44* mat, DWORD face);
+void lwGetCubeMapViewMatrix(lwMatrix44* mat, DWORD face);
 
-LW_FRONT_API LW_RESULT lwHitTestBox( lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwBox* box, const lwMatrix44* mat );
+LW_RESULT lwHitTestBox( lwPickInfo* info, const lwVector3* org, const lwVector3* ray, const lwBox* box, const lwMatrix44* mat );
 
-LW_FRONT_API LW_RESULT lwSetRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state, DWORD value );
-LW_FRONT_API LW_RESULT lwClearRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state );
+LW_RESULT lwSetRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state, DWORD value );
+LW_RESULT lwClearRenderState( lwRenderStateValue* rs_seq, DWORD rs_num, DWORD state );
 
 
-LW_FRONT_API LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num, D3DFORMAT vb_fvf, D3DFORMAT ib_fvf);
-LW_FRONT_API DWORD lwGetSurfaceSize(UINT width, UINT height, D3DFORMAT format);
-LW_FRONT_API LW_RESULT lwGetDirectXVersion(char* o_buf, DWORD version);
+LW_RESULT lwExtractMeshData(lwMeshInfo* info, void* vb_data, void* ib_data, DWORD vert_num, DWORD index_num, D3DFORMAT vb_fvf, D3DFORMAT ib_fvf);
+DWORD lwGetSurfaceSize(UINT width, UINT height, D3DFORMAT format);
+LW_RESULT lwGetDirectXVersion(char* o_buf, DWORD version);
 //
 LW_END

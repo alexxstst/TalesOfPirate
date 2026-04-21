@@ -7,7 +7,7 @@
 LW_BEGIN
 
 
-class LW_FRONT_API lwBitmap
+class lwBitmap
 {
 public:
 	BITMAPINFOHEADER _bmih;

@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы эффектов (магия)
-class CMagicInfo : public CRawDataInfo
+class CMagicInfo : public EntityData
 {
 public:
 	char    szName[16]{};

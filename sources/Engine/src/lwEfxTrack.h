@@ -8,7 +8,7 @@
 
 LW_BEGIN
 
-class LW_FRONT_API lwEfxTrack
+class lwEfxTrack
 {
 private:
     lwAnimDataMatrix* _data;

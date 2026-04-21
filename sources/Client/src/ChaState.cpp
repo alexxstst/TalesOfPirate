@@ -34,8 +34,8 @@ void CChaStateMgr::ChaDestroy() {
 void CChaStateMgr::_ResetStates() {
 	_sChaState.fill({});
 	SkillStateRecordStore::Instance()->ForEach([this](CSkillStateRecord& rec) {
-		if (rec.nID > 0 && rec.nID < static_cast<int>(_sChaState.size()))
-			_sChaState[rec.nID].pInfo = &rec;
+		if (rec.Id > 0 && rec.Id < static_cast<int>(_sChaState.size()))
+			_sChaState[rec.Id].pInfo = &rec;
 	});
 }
 
@@ -53,7 +53,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 	for (const auto& _state : _states) {
 		_state->IsDel = true;
 
-		nID = _state->pInfo->nID;
+		nID = _state->pInfo->Id;
 		if (!IsExist[nID]) {
 			IsExist[nID] = true;
 
@@ -92,7 +92,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 	for (unsigned int i = 0; i < nTmpCount; i++) {
 		pChaState = stTmp[i];
 		if (pChaState->IsDel) {
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(30), pChaState->pInfo->nID, pChaState->pInfo->szName, static_cast<int>(pChaState->pInfo->sEffect)));
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(30), pChaState->pInfo->Id, pChaState->pInfo->szName, static_cast<int>(pChaState->pInfo->sEffect)));
 
 			// Existing delete
 			if (pChaState->pEffect) {
@@ -106,7 +106,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 		else {
 			// increase
 			_states.push_back(pChaState);
-			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(32), pChaState->pInfo->nID, pChaState->pInfo->szName, static_cast<int>(pChaState->pInfo->sEffect)));
+			g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(32), pChaState->pInfo->Id, pChaState->pInfo->szName, static_cast<int>(pChaState->pInfo->sEffect)));
 
 			pInfo = pChaState->pInfo;
 			if (pInfo->sBitEffect > 0) {
@@ -132,7 +132,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateNoAni);
 			}
 
-			if (pInfo->nID == 96) //@mothannakh dw 1 boss freeze stun fix
+			if (pInfo->Id == 96) //@mothannakh dw 1 boss freeze stun fix
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -143,7 +143,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateNoDizzy);
 				_pCha->_isArrive = true;
 			}
-			else if (pInfo->nID == 159) // flash stun bug
+			else if (pInfo->Id == 159) // flash stun bug
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -154,7 +154,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateNoDizzy);
 				_pCha->_isArrive = true;
 			}
-			else if (pInfo->nID == 45) // Primal Rage/ stun bug
+			else if (pInfo->Id == 45) // Primal Rage/ stun bug
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -163,7 +163,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateUseItem);
 				_pCha->_isArrive = true;
 			}
-			else if (pInfo->nID == 98) // death night
+			else if (pInfo->Id == 98) // death night
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -172,7 +172,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateUseItem);
 				_pCha->_isArrive = true;
 			}
-			else if (pInfo->nID == 116) //  Black Dragon Terror
+			else if (pInfo->Id == 116) //  Black Dragon Terror
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -181,7 +181,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateUseItem);
 				_pCha->_isArrive = true;
 			}
-			else if (pInfo->nID == 87) // Algae Entanglement
+			else if (pInfo->Id == 87) // Algae Entanglement
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -190,7 +190,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_ChaState.SetFalse(enumChaStateUseItem);
 				_pCha->_isArrive = true;
 			}
-			else if (pInfo->nID == 86) // Tornado
+			else if (pInfo->Id == 86) // Tornado
 			{
 				_ChaState.SetFalse(enumChaStateMove);
 				_ChaState.SetFalse(enumChaStateAttack);
@@ -200,7 +200,7 @@ CBoolSet& CChaStateMgr::Synchro(const stSkillState* pState, int nCount) {
 				_pCha->_isArrive = true;
 			}
 
-			if (pInfo->nID == 99) {
+			if (pInfo->Id == 99) {
 				_nShopLevel = pChaState->chStateLv;
 				_ChaState.SetFalse(enumChaStateNoShop);
 			}

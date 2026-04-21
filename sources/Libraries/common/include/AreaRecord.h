@@ -4,7 +4,7 @@
 
 
 //  ID
-class CAreaInfo : public CRawDataInfo
+class CAreaInfo : public EntityData
 {
 public:
 

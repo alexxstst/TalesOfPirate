@@ -4,18 +4,13 @@ GameRecordset<CResourceInfo>::RecordEntry ResourceRecordStore::ReadRecord(Sqlite
 	CResourceInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 
 	record.m_iType = stmt.GetInt(col++);
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void ResourceRecordStore::Insert(SqliteDatabase& db, const CResourceInfo& r) {
@@ -25,12 +20,12 @@ void ResourceRecordStore::Insert(SqliteDatabase& db, const CResourceInfo& r) {
 			"INSERT OR REPLACE INTO resource_info "
 			"(id,data_name,type) VALUES (?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, r.m_iType);
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ResourceRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ResourceRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

@@ -6,12 +6,11 @@
 #include "lwInterface.h"
 #include "lwObjectMethod.h"
 
-#include "lwFrontAPI.h"
 
 LW_BEGIN
 
 
-class LW_FRONT_API MPSceneItem : public lwMatrixCtrl
+class MPSceneItem : public lwMatrixCtrl
 {
 private:
     lwIItem* _obj;

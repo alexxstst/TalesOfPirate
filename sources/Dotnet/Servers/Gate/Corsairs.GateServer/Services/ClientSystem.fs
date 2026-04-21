@@ -368,7 +368,7 @@ type ClientSystem
 
                 let tpMsg : CommandMessages.TpUserLoginRequest =
                     { AcctName = msg.AcctName; AcctPassword = msg.PasswordHash; AcctMac = msg.Mac
-                      ClientIp = player.ClientIp; GateAddr = uint32 rawId
+                      ClientIp = player.ClientIp; GateAddr = int64 rawId
                       CheatMarker = if bCheat then 0L else 911L }
                 let w = CommandMessages.Serialize.tpUserLoginRequest tpMsg
 
@@ -473,7 +473,7 @@ type ClientSystem
             let chaIndex = packet.ReadInt64()
             let (ChannelId_ rawId) = player.Id
             let w = CommandMessages.Serialize.tpBgnPlayRequest
-                        { ChaIndex = chaIndex; GateAddr = uint32 rawId; GpAddr = player.GpAddr }
+                        { ChaIndex = chaIndex; GateAddr = int64 rawId; GpAddr = player.GpAddr }
 
             this.SyncCallGroup(
                 w,
@@ -543,7 +543,7 @@ type ClientSystem
                                                       MapCopyNo = -1
                                                       X = 0u; Y = 0u
                                                       IsSwitch = false
-                                                      GateAddr = uint32 gateAddr
+                                                      GateAddr = int64 gateAddr
                                                       GarnerWinner = garnerWinner }
                                     game.SendPacket(enter)
 
@@ -885,7 +885,7 @@ type ClientSystem
             // Только игроки без установленного GroupServerPlayerId
             let players =
                 _players.Values
-                |> Seq.filter (fun p -> p.IsAuthorized && p.GpAddr = 0u)
+                |> Seq.filter (fun p -> p.IsAuthorized && p.GpAddr = 0L)
                 |> Seq.toArray
 
             if players.Length = 0 then
@@ -933,7 +933,7 @@ type ClientSystem
                                 else
                                     for i in 0 .. num - 1 do
                                         if int16 (rpkt.ReadInt64()) = 1s then
-                                            let gpAddr = uint32 (rpkt.ReadInt64())
+                                            let gpAddr = rpkt.ReadInt64()
 
                                             match players[i].State with
                                             | Authorized_ auth ->
@@ -999,11 +999,11 @@ type ClientSystem
 
             for player in _players.Values do
                 match player.State with
-                | Authorized_ auth when auth.GroupServerPlayerId <> 0u ->
-                    player.State <- Authorized_ { auth with GroupServerPlayerId = 0u }
+                | Authorized_ auth when auth.GroupServerPlayerId <> 0L ->
+                    player.State <- Authorized_ { auth with GroupServerPlayerId = 0L }
                     count <- count + 1
-                | Playing_ playing when playing.GroupServerPlayerId <> 0u ->
-                    playing.GroupServerPlayerId <- 0u
+                | Playing_ playing when playing.GroupServerPlayerId <> 0L ->
+                    playing.GroupServerPlayerId <- 0L
                     count <- count + 1
                 | _ -> ()
 

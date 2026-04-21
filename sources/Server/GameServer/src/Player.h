@@ -43,8 +43,6 @@ public:
 		SetGate(pGate);
 		SetGateAddr(ulGtAddr);
 		SetDBChaId(0);
-		Next = NULL;
-		Prev = NULL;
 	}
 
 	bool IsValidFlag() {
@@ -77,14 +75,6 @@ public:
 
 	dbc::Long GetHandle(void) {
 		return m_lHandle;
-	}
-
-	void SetHoldID(dbc::Long lID) {
-		m_lHoldID = lID;
-	}
-
-	dbc::Long GetHoldID(void) {
-		return m_lHoldID;
 	}
 
 	bool IsPlayer(void) {
@@ -547,12 +537,8 @@ protected:
 	DWORD _dwTeamLeaderID;
 
 private:
-	struct // CEntityAlloc
-	{
-		dbc::Long m_lID;
-		dbc::Long m_lHandle;
-		dbc::Long m_lHoldID;
-	};
+	dbc::Long m_lID;
+	dbc::Long m_lHandle;
 
 	bool bReceiveRequests{true};
 	bool bIsValid;

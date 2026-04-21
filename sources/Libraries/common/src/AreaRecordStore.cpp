@@ -11,15 +11,10 @@ GameRecordset<CAreaInfo>::RecordEntry AreaRecordStore::ReadRecord(SqliteStatemen
 	int col = 0;
 
 	// id
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	// name → szDataName
-	{
-		auto name = stmt.GetText(col++);
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	// name → DataName
+	record.DataName = stmt.GetText(col++);
 
 	// color (RGB)
 	record.dwColor = static_cast<DWORD>(stmt.GetInt(col++));
@@ -48,8 +43,8 @@ GameRecordset<CAreaInfo>::RecordEntry AreaRecordStore::ReadRecord(SqliteStatemen
 	// type
 	record.chType = static_cast<char>(stmt.GetInt(col++));
 
-	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	std::string name(record.DataName);
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 // ============================================================================
@@ -62,8 +57,8 @@ void AreaRecordStore::Insert(SqliteDatabase& db, const CAreaInfo& record) {
 		auto stmt = db.Prepare(
 			"INSERT OR REPLACE INTO areas (id, name, color, music, env_color, light_color, light_dir, type) "
 			"VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
-		stmt.Bind(1, record.nID);
-		stmt.Bind(2, std::string_view(record.szDataName));
+		stmt.Bind(1, record.Id);
+		stmt.Bind(2, std::string_view(record.DataName));
 		stmt.Bind(3, static_cast<int>(record.dwColor));
 		stmt.Bind(4, record.nMusic);
 		stmt.Bind(5, static_cast<int>(record.dwEnvColor));
@@ -72,7 +67,7 @@ void AreaRecordStore::Insert(SqliteDatabase& db, const CAreaInfo& record) {
 		stmt.Bind(8, static_cast<int>(record.chType));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "AreaRecordStore::Insert(id={}) failed: {}", record.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "AreaRecordStore::Insert(id={}) failed: {}", record.Id, e.what());
 	}
 }
 

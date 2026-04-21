@@ -44,8 +44,7 @@ GameRecordset<CSkillStateRecord>::RecordEntry SkillStateRecordStore::ReadRecord(
 	int col = 0;
 
 	// id
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	// ch_id, name
 	record.chID = static_cast<char>(stmt.GetInt(col++));
@@ -111,7 +110,7 @@ GameRecordset<CSkillStateRecord>::RecordEntry SkillStateRecordStore::ReadRecord(
 	// Пересчитать приватные данные (_nActNum)
 	record.RefreshPrivateData();
 
-	return {record.nID, {}, std::move(record)};
+	return {record.Id, {}, std::move(record)};
 }
 
 // ============================================================================

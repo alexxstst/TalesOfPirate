@@ -124,6 +124,9 @@
   </ItemDefinitionGroup>
   <!-- X64 Configurations -->
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'" Label="X64 Configuration">
+    <ClCompile>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+    </ClCompile>
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>
     </Lib>

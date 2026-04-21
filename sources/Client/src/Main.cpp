@@ -42,6 +42,7 @@
 #include "LitEntryStore.h"
 #include "ItemLitStore.h"
 #include "FontManager.h"
+#include "lwSystemInfo.h"
 
 
 dbc::IniFile g_SystemIni;
@@ -67,9 +68,7 @@ void CenterWindow(HWND hWnd); // Center window on screen
 BOOL CheckDxVersion(DWORD& ver) //
 {
 	BOOL ret = 1;
-	MPISystemInfo* sys_info = 0;
-
-	MPGUIDCreateObject((LW_VOID**)&sys_info, LW_GUID_SYSTEMINFO);
+	MPISystemInfo* sys_info = LW_NEW(lwSystemInfo);
 	if (SUCCEEDED(sys_info->CheckDirectXVersion())) //
 	{
 		ver = sys_info->GetDirectXVersion();
@@ -606,7 +605,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 								   ((LPCREATESTRUCT) lParam)->hInstance,
 								   NULL);
 
-		g_wpOrigEditProc = (WNDPROC)(LONG64)SetWindowLong(g_InputEdit, GWL_WNDPROC, (LONG)(LONG64)EditSubclassProc);
+		g_wpOrigEditProc = (WNDPROC)SetWindowLongPtr(g_InputEdit, GWLP_WNDPROC, (LONG_PTR)EditSubclassProc);
 
 		extern CInputBox g_InputBox;
 		g_InputBox.SetEditWindow(g_InputEdit);
@@ -670,7 +669,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) 
 		CS_Logout();
 		CS_Disconnect(DS_DISCONN);
 
-		SetWindowLong(g_InputEdit, GWL_WNDPROC, (LONG)(LONG64)g_wpOrigEditProc);
+		SetWindowLongPtr(g_InputEdit, GWLP_WNDPROC, (LONG_PTR)g_wpOrigEditProc);
 
 		PostQuitMessage(0);
 		if (g_pGameApp) g_pGameApp->SetIsRun(false);

@@ -120,19 +120,19 @@ bool CMapRes::Init()
 	m_sEyeshotCellLin = (nMapHeight * 100 + m_csEyeshotCellHeight - 1) / m_csEyeshotCellHeight;
 
 	m_pCMonsterSpawn = new CChaSpawn();
-	if (!m_pCMonsterSpawn->Init(m_szMonsterSpawnFile, 200))
+	if (!m_pCMonsterSpawn->Init(GetName(), m_szMonsterSpawnFile))
 	{
 		//THROW_EXCP( excpMem, "!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00003) );
 	}
 	m_pCMapSwitchEntitySpawn = new CMapSwitchEntitySpawn();
-	if (!m_pCMapSwitchEntitySpawn->Init(m_szMapSwitchFile, 100))
+	if (!m_pCMapSwitchEntitySpawn->Init(GetName(), m_szMapSwitchFile))
 	{
 		//THROW_EXCP( excpMem, "!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00004) );
 	}
 	m_pNpcSpawn = new CNpcSpawn();
-	if (!m_pNpcSpawn->Init(m_szNpcSpawnFile, 200))
+	if (!m_pNpcSpawn->Init(GetName(), m_szNpcSpawnFile))
 	{
 		//THROW_EXCP( excpMem, "NPC!" );
 		THROW_EXCP( excpMem, RES_STRING(GM_MAPRES_CPP_00005) );

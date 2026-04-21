@@ -5,12 +5,11 @@ GameRecordset<CPoseInfo>::RecordEntry PoseRecordStore::ReadRecord(SqliteStatemen
 	CPoseInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	{
 		auto name = stmt.GetText(col++);
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
+		record.DataName = name;
 	}
 
 	// pose_ids — "p0,p1,p2,p3,p4,p5,p6"
@@ -25,8 +24,8 @@ GameRecordset<CPoseInfo>::RecordEntry PoseRecordStore::ReadRecord(SqliteStatemen
 		}
 	}
 
-	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	std::string name(record.DataName);
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 void PoseRecordStore::Insert(SqliteDatabase& db, const CPoseInfo& r) {
@@ -38,12 +37,12 @@ void PoseRecordStore::Insert(SqliteDatabase& db, const CPoseInfo& r) {
 			ids += std::to_string(r.sRealPoseID[i]);
 		}
 		auto stmt = db.Prepare("INSERT OR REPLACE INTO poses (id, name, pose_ids) VALUES (?, ?, ?)");
-		stmt.Bind(1, r.nID);
-		stmt.Bind(2, std::string_view(r.szDataName));
+		stmt.Bind(1, r.Id);
+		stmt.Bind(2, std::string_view(r.DataName));
 		stmt.Bind(3, ids);
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "PoseRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "PoseRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

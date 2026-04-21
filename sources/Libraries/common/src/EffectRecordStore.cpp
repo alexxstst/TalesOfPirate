@@ -5,14 +5,9 @@ GameRecordset<CMagicInfo>::RecordEntry EffectRecordStore::ReadRecord(SqliteState
 	CMagicInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szName, name.data(), sizeof(record.szName) - 1);
@@ -49,7 +44,7 @@ GameRecordset<CMagicInfo>::RecordEntry EffectRecordStore::ReadRecord(SqliteState
 	record.LightID    = stmt.GetInt(col++);
 	record.fBaseSize  = static_cast<float>(stmt.GetDouble(col++));
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void EffectRecordStore::Insert(SqliteDatabase& db, const CMagicInfo& r) {
@@ -60,8 +55,8 @@ void EffectRecordStore::Insert(SqliteDatabase& db, const CMagicInfo& r) {
 			"(id,data_name,name,photo_name,eff_type,obj_type,dummies,dummy2,height_off,play_time,light_id,base_size) "
 			"VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, std::string_view(r.szName));
 		stmt.Bind(p++, std::string_view(r.szPhotoName));
 		stmt.Bind(p++, r.nEffType);
@@ -81,7 +76,7 @@ void EffectRecordStore::Insert(SqliteDatabase& db, const CMagicInfo& r) {
 		stmt.Bind(p++, static_cast<double>(r.fBaseSize));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "EffectRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "EffectRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

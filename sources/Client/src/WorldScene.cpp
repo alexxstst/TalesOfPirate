@@ -289,9 +289,9 @@ void CWorldScene::_FrameMove( DWORD dwTimeParam )
 					pArea = GetAreaInfo( nArea );
 					if( pArea )
 					{
-						g_pGameApp->ShowBigText( "%s", pArea->szDataName );
+						g_pGameApp->ShowBigText( "%s", pArea->DataName.c_str() );
 						g_pGameApp->PlayMusic( pArea->nMusic );
-						g_stUIMap.RefreshMapName( pArea->szDataName );
+						g_stUIMap.RefreshMapName( pArea->DataName.c_str() );
 					}
 					else if( _pMapInfo )
 					{
@@ -2018,7 +2018,7 @@ void CWorldScene::LoadingCall()
 			auto szMap = g_SystemIni["Editor"].GetString("MapName");
 
 			CMapInfo* pMap = GetMapInfo(szMap.c_str());
-			if(pMap && SwitchMap(pMap->nID))
+			if(pMap && SwitchMap(pMap->Id))
 			{
 				GetMainCha()->setPos(pMap->nInitX * 100, pMap->nInitX * 100);
 			}

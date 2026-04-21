@@ -66,7 +66,7 @@ extern bool g_IsRealItemID(int nItemID);
 inline int g_IsUseSkill(stNetChangeChaPart* pSEquip, CSkillRecord* p) {
 	if (!p) return -1;
 
-	return g_IsUseSkill(pSEquip, p->nID);
+	return g_IsUseSkill(pSEquip, p->Id);
 }
 
 inline int g_IsUseSeaLiveSkill(long lFitNo, CSkillRecord* p) {

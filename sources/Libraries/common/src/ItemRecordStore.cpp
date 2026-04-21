@@ -55,10 +55,9 @@ GameRecordset<CItemRecord>::RecordEntry ItemRecordStore::ReadRecord(SqliteStatem
 
 	// id, name, icon
 	record.lID   = stmt.GetInt(col++);
-	record.nID   = static_cast<int>(record.lID);
-	record.bExist = TRUE;
+	record.Id   = static_cast<int>(record.lID);
 	record.szName = stmt.GetText(col++);
-	strncpy(record.szDataName, record.szName.c_str(), sizeof(record.szDataName) - 1);
+	record.DataName = record.szName;
 	record.szICON = stmt.GetText(col++);
 
 	// module_0..4

@@ -3109,15 +3109,15 @@ function CheckItem_pirate(Player)
     local hand = GetChaItem(Player, 1, 3)
     local foot = GetChaItem(Player, 1, 4)
 
-    local Body_ID = GetItemID(body)
-    local Hand_ID = GetItemID(hand)
-    local Foot_ID = GetItemID(foot)
-    local body_gem_id = GetItemAttr(body, ITEMATTR_VAL_FUSIONID)
-    local hand_gem_id = GetItemAttr(hand, ITEMATTR_VAL_FUSIONID)
-    local foot_gem_id = GetItemAttr(foot, ITEMATTR_VAL_FUSIONID)
+    local Body_ID = body and GetItemID(body) or 0
+    local Hand_ID = hand and GetItemID(hand) or 0
+    local Foot_ID = foot and GetItemID(foot) or 0
     if Body_ID < 5000 or Hand_ID < 5000 or Foot_ID < 5000 then
         return 0
     end
+    local body_gem_id = GetItemAttr(body, ITEMATTR_VAL_FUSIONID)
+    local hand_gem_id = GetItemAttr(hand, ITEMATTR_VAL_FUSIONID)
+    local foot_gem_id = GetItemAttr(foot, ITEMATTR_VAL_FUSIONID)
     if
         body_gem_id ~= 2530 and body_gem_id ~= 2533 and body_gem_id ~= 2536 and body_gem_id ~= 2539 and
             body_gem_id ~= 2542 and
@@ -3150,59 +3150,41 @@ function CheckItem_Death(Player)
     local hand = GetChaItem(Player, 1, 3)
     local foot = GetChaItem(Player, 1, 4)
 
-    local Body_ID = GetItemID(body)
-    local Hand_ID = GetItemID(hand)
-    local Foot_ID = GetItemID(foot)
-    local body_gem_id = GetItemAttr(body, ITEMATTR_VAL_FUSIONID)
-    local hand_gem_id = GetItemAttr(hand, ITEMATTR_VAL_FUSIONID)
-    local foot_gem_id = GetItemAttr(foot, ITEMATTR_VAL_FUSIONID)
+    local Body_ID = body and GetItemID(body) or 0
+    local Hand_ID = hand and GetItemID(hand) or 0
+    local Foot_ID = foot and GetItemID(foot) or 0
+    local body_gem_id
+    local hand_gem_id
+    local foot_gem_id
     if Body_ID < 5000 or Hand_ID < 5000 or Foot_ID < 5000 then
         body_gem_id = Body_ID
         hand_gem_id = Hand_ID
         foot_gem_id = Foot_ID
-        if
-            body_gem_id ~= 2817 and body_gem_id ~= 2820 and body_gem_id ~= 2823 and body_gem_id ~= 2826 and
-                body_gem_id ~= 2829 and
-                body_gem_id ~= 2832
-         then
-            return 0
-        end
-        if
-            hand_gem_id ~= 2818 and hand_gem_id ~= 2821 and hand_gem_id ~= 2824 and hand_gem_id ~= 2827 and
-                hand_gem_id ~= 2830 and
-                hand_gem_id ~= 2833
-         then
-            return 0
-        end
-        if
-            foot_gem_id ~= 2819 and foot_gem_id ~= 2822 and foot_gem_id ~= 2825 and foot_gem_id ~= 2828 and
-                foot_gem_id ~= 2831 and
-                foot_gem_id ~= 2834
-         then
-            return 0
-        end
     else
-        if
-            body_gem_id ~= 2817 and body_gem_id ~= 2820 and body_gem_id ~= 2823 and body_gem_id ~= 2826 and
-                body_gem_id ~= 2829 and
-                body_gem_id ~= 2832
-         then
-            return 0
-        end
-        if
-            hand_gem_id ~= 2818 and hand_gem_id ~= 2821 and hand_gem_id ~= 2824 and hand_gem_id ~= 2827 and
-                hand_gem_id ~= 2830 and
-                hand_gem_id ~= 2833
-         then
-            return 0
-        end
-        if
-            foot_gem_id ~= 2819 and foot_gem_id ~= 2822 and foot_gem_id ~= 2825 and foot_gem_id ~= 2828 and
-                foot_gem_id ~= 2831 and
-                foot_gem_id ~= 2834
-         then
-            return 0
-        end
+        body_gem_id = GetItemAttr(body, ITEMATTR_VAL_FUSIONID)
+        hand_gem_id = GetItemAttr(hand, ITEMATTR_VAL_FUSIONID)
+        foot_gem_id = GetItemAttr(foot, ITEMATTR_VAL_FUSIONID)
+    end
+    if
+        body_gem_id ~= 2817 and body_gem_id ~= 2820 and body_gem_id ~= 2823 and body_gem_id ~= 2826 and
+            body_gem_id ~= 2829 and
+            body_gem_id ~= 2832
+     then
+        return 0
+    end
+    if
+        hand_gem_id ~= 2818 and hand_gem_id ~= 2821 and hand_gem_id ~= 2824 and hand_gem_id ~= 2827 and
+            hand_gem_id ~= 2830 and
+            hand_gem_id ~= 2833
+     then
+        return 0
+    end
+    if
+        foot_gem_id ~= 2819 and foot_gem_id ~= 2822 and foot_gem_id ~= 2825 and foot_gem_id ~= 2828 and
+            foot_gem_id ~= 2831 and
+            foot_gem_id ~= 2834
+     then
+        return 0
     end
     return 1
 end
@@ -3215,15 +3197,15 @@ function CheckItem_fighting(Player)
     local hand = GetChaItem(Player, 1, 3)
     local foot = GetChaItem(Player, 1, 4)
 
-    local Body_ID = GetItemID(body)
-    local Hand_ID = GetItemID(hand)
-    local Foot_ID = GetItemID(foot)
-    local body_gem_id = GetItemAttr(body, ITEMATTR_VAL_FUSIONID)
-    local hand_gem_id = GetItemAttr(hand, ITEMATTR_VAL_FUSIONID)
-    local foot_gem_id = GetItemAttr(foot, ITEMATTR_VAL_FUSIONID)
+    local Body_ID = body and GetItemID(body) or 0
+    local Hand_ID = hand and GetItemID(hand) or 0
+    local Foot_ID = foot and GetItemID(foot) or 0
     if Body_ID < 5000 or Hand_ID < 5000 or Foot_ID < 5000 then
         return 0
     end
+    local body_gem_id = GetItemAttr(body, ITEMATTR_VAL_FUSIONID)
+    local hand_gem_id = GetItemAttr(hand, ITEMATTR_VAL_FUSIONID)
+    local foot_gem_id = GetItemAttr(foot, ITEMATTR_VAL_FUSIONID)
     if body_gem_id ~= 1124 then
         return 0
     end

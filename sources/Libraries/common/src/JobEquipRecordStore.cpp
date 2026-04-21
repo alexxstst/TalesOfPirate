@@ -23,9 +23,8 @@ GameRecordset<CJobEquipRecord>::RecordEntry JobEquipRecordStore::ReadRecord(Sqli
 	int col = 0;
 
 	// id
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
-	record.chID   = static_cast<char>(record.nID);
+	record.Id    = stmt.GetInt(col++);
+	record.chID   = static_cast<char>(record.Id);
 
 	// job
 	record.chJob = static_cast<char>(stmt.GetInt(col++));
@@ -42,7 +41,7 @@ GameRecordset<CJobEquipRecord>::RecordEntry JobEquipRecordStore::ReadRecord(Sqli
 		}
 	}
 
-	return {record.nID, {}, std::move(record)};
+	return {record.Id, {}, std::move(record)};
 }
 
 // ============================================================================

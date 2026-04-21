@@ -120,9 +120,10 @@ public:
 		fread(_pTData.get(), 1,_pFile->length,_pPackFile);
 
 		texInfo.width = _pFile->length;
-		texInfo.data = _pTData.get();
 
-		lwLoadTex(pTex,g_Render.GetInterfaceMgr()->res_mgr, &texInfo);
+		// Буфер данных текстуры теперь передаётся отдельным параметром —
+		// поле `lwTexInfo::data` убрано из-за разного размера `void*` на x86/x64.
+		lwLoadTex(pTex, g_Render.GetInterfaceMgr()->res_mgr, &texInfo, _pTData.get());
 	}
 public:
 	s_string	strMapName;

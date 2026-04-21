@@ -205,7 +205,7 @@ void SubMap::Notice(const char *szString)
 	//  :   
 	auto WtPk = net::msg::serialize(net::msg::McSysInfoMessage{szString});
 
-	CPlayer	*pHeadPlayer = 0, *pLastPlayer = 0;
+	std::vector<CPlayer*> recipients;
 	CEyeshotCell	*pCEyeCell;
 	CCharacter		*pCCha;
 	Long			lChaCount, lChaNum;
@@ -226,16 +226,7 @@ void SubMap::Notice(const char *szString)
 
 			if(pCCha->IsPlayerFocusCha())
 			{
-				if (!pHeadPlayer)
-				{
-					pHeadPlayer = pCCha->GetPlayer();
-					pLastPlayer = pHeadPlayer;
-				}
-				else
-				{
-					pLastPlayer->GetNextPlayer() = pCCha->GetPlayer();
-					pLastPlayer = (CPlayer *)pLastPlayer->GetNextPlayer();
-				}
+				recipients.push_back(pCCha->GetPlayer());
 
 				if (!pCCha->GetSubMap())
 					//LG("", " %s(%s)[%d,%d] \n",
@@ -250,9 +241,7 @@ void SubMap::Notice(const char *szString)
 		}
 	}
 
-	if (pLastPlayer)
-		pLastPlayer->GetNextPlayer() = NULL;
-	SENDTOCLIENT(WtPk, pHeadPlayer);
+	SENDTOCLIENT(WtPk, recipients);
 }
 
 dbc::Long SubMap::CountEyeshotPlyActiveNum(dbc::Long lCellX, dbc::Long lCellY)
@@ -1195,7 +1184,7 @@ void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
 	Rect	l_rect = GetEyeshot(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
 	Entity		*pCEnt;
 	CCharacter	*pCCha;
-	CPlayer	*pHeadPlayer = 0, *pLastPlayer = 0;
+	std::vector<CPlayer*> recipients;
 	for (long y = l_rect.ltop.y; y <= l_rect.rbtm.y; y++)
 	{
 		for (long x = l_rect.ltop.x; x <= l_rect.rbtm.x; x++)
@@ -1206,24 +1195,13 @@ void SubMap::NotiStateCellToEyeshot(Short sCellX, Short sCellY)
 				pCCha = pCEnt->IsCharacter();
 				if(pCCha->IsPlayerFocusCha())
 				{
-					if (!pHeadPlayer)
-					{
-						pHeadPlayer = pCCha->GetPlayer();
-						pLastPlayer = pHeadPlayer;
-					}
-					else
-					{
-						pLastPlayer->GetNextPlayer() = pCCha->GetPlayer();
-						pLastPlayer = (CPlayer *)pLastPlayer->GetNextPlayer();
-					}
+					recipients.push_back(pCCha->GetPlayer());
 				}
 				pCEnt = pCEnt->m_pCEyeshotCellNext;
 			}
 		}
 	}
-	if (pLastPlayer)
-		pLastPlayer->GetNextPlayer() = NULL;
-	SENDTOCLIENT(pk, pHeadPlayer);
+	SENDTOCLIENT(pk, recipients);
 }
 
 //=============================================================================

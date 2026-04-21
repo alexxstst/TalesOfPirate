@@ -7,7 +7,7 @@
 
 LW_BEGIN
 
-class LW_FRONT_API lwMatrixCtrl
+class lwMatrixCtrl
 {
 protected:
     float _angle_yaw;

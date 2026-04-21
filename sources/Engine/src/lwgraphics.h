@@ -6,7 +6,6 @@
 #include "lwDirectX.h"
 
 
-#include "lwFrontAPI.h"
 
 LW_BEGIN
 
@@ -19,28 +18,28 @@ LW_BEGIN
 
 
 
-struct LW_FRONT_API D3DFVF_XyzNormalTex1
+struct D3DFVF_XyzNormalTex1
 {
     float x, y, z;
     float nx, ny, nz;
     float tu, tv;
 };
 
-struct LW_FRONT_API D3DFVF_XyzDif
+struct D3DFVF_XyzDif
 {
 	float x, y, z;
 	DWORD dif;
 };
 
 
-struct LW_FRONT_API D3DFVF_XyzDifTex1
+struct D3DFVF_XyzDifTex1
 {
 	float x, y, z;
 	DWORD dif;
 	float tu, tv;
 };
 
-struct LW_FRONT_API D3DFVF_XyzwDifTex1
+struct D3DFVF_XyzwDifTex1
 {
 	float x, y, z, w;
 	DWORD dif;
@@ -49,24 +48,24 @@ struct LW_FRONT_API D3DFVF_XyzwDifTex1
 
 
 
-//LW_FRONT_API inline lwColorValue4f lwMakeColorValue4f( float r, float g, float b, float a ) {
+//inline lwColorValue4f lwMakeColorValue4f( float r, float g, float b, float a ) {
 //    lwColorValue4f c = { r, g, b, a };
 //    return c;
 //}
 //
-//LW_FRONT_API inline lwColorValue4b lwMakeColorValue4b( BYTE r, BYTE g, BYTE b, BYTE a ) {
+//inline lwColorValue4b lwMakeColorValue4b( BYTE r, BYTE g, BYTE b, BYTE a ) {
 //    lwColorValue4b c = { r, g, b, a };
 //    return c;
 //}
 
-struct LW_FRONT_API lwTexParam
+struct lwTexParam
 {
 	DWORD usage;
 	D3DFORMAT fmt;
 	D3DPOOL pool;
 };
 
-struct LW_FRONT_API lwVerParam
+struct lwVerParam
 {
     DWORD usage;
     D3DFORMAT ind_fmt;

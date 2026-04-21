@@ -14,7 +14,7 @@
 
 #include "TradeLogDB.h" //Add by lark.li 20080324
 
-#include "EntityAlloc.h"
+#include "GamePool.h"
 #include "Character.h"
 #include "Player.h"
 #include "AttachManage.h"
@@ -301,8 +301,6 @@ CGameApp::CGameApp()
 	m_lMapMgrUnitHeapNum = 0;
 	m_lEntityListHeapNum = 0;
 	m_lMgrNodeHeapNum = 0;
-	m_pCEntSpace = 0;
-	m_pCPlySpace = 0;
 	m_PicSet = NULL;
 	m_fGlobalDropRate = 0;
 	m_fGlobalExpRate = 0;
@@ -322,9 +320,6 @@ CGameApp::~CGameApp() {
 	CloseLuaScript();
 	//g_CParser.Free();
 
-	SAFE_DELETE(m_pCEntSpace);
-	SAFE_DELETE(m_pCPlySpace);
-
 	SAFE_DELETE(m_PicSet);
 
 	m_vecVolunteerList.clear();
@@ -341,22 +336,6 @@ const char* GetResPath(const char* pszRes) {
 	strcpy(g_szTableName, str.c_str());
 	return g_szTableName;
 }
-
-BOOL LoadTable(CRawDataSet* pTable, const char* pszTableName) {
-	g_bBinaryTable = FALSE;
-	string str = GetResPath(pszTableName);
-	if (pTable->LoadRawDataInfo(str.c_str()) == FALSE) {
-		//LG("error", "msg[%s]\n", str.c_str());
-		{
-			char _buf[256];
-			sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00003), str.c_str());
-			g_logManager.InternalLog(LogLevel::Error, "errors", _buf);
-		}
-		return FALSE;
-	}
-	return TRUE;
-}
-
 
 BOOL CGameApp::Init() {
 	//LG("init", "GameApp\n");
@@ -398,19 +377,7 @@ BOOL CGameApp::Init() {
 		ToLogService("common", "error ID base!!!");
 	m_ItemIdent.m_maxID = 1;
 
-	m_pCPlySpace = new CPlayerAlloc(g_Config.m_nMaxPly);
-	if (!m_pCPlySpace) {
-		//LG("init", "msg!, !\n");
-		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00005));
-		return FALSE;
-	}
-	m_pCEntSpace = new CEntityAlloc(g_Config.m_nMaxCha + g_Config.m_nMaxPly * 3, g_Config.m_nMaxItem,
-									g_Config.m_nMaxTNpc);
-	if (!m_pCEntSpace) {
-		//LG("init", "msg!, !\n");
-		g_logManager.InternalLog(LogLevel::Debug, "common", RES_STRING(GM_GAMEAPP_CPP_00017));
-		return FALSE;
-	}
+	// GamePool::Instance() инициализируется лениво, память выделяется по запросу через TrackedPool.
 	g_pCSystemCha = GetNewCharacter();
 	g_pCSystemCha->SetID(m_Ident.GetID());
 	//g_pCSystemCha->SetName("");
@@ -591,12 +558,12 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime) {
 	static DWORD dwTick = 0;
 	if (dwCurTime - dwTick >= 1 * 60 * 1000) {
 		dwTick = dwCurTime;
-		ToLogService("common", "Ply[{:5d} {:5d} {:5d}],\tCha[{:5d} {:5d} {:5d}],\tItem[{:5d} {:5d} {:5d}],\tTNpc[{:5d} {:5d} {:5d}]",
-					 m_pCPlySpace->GetHoldPlyNum(), m_pCPlySpace->GetMaxHoldPlyNum(), m_pCPlySpace->GetAllocPlyNum(),
-					 m_pCEntSpace->GetHoldChaNum(), m_pCEntSpace->GetMaxHoldChaNum(), m_pCEntSpace->GetAllocChaNum(),
-					 m_pCEntSpace->GetHoldItemNum(), m_pCEntSpace->GetMaxHoldItemNum(), m_pCEntSpace->GetAllocItemNum(),
-					 m_pCEntSpace->GetHoldTNpcNum(), m_pCEntSpace->GetMaxHoldTNpcNum(),
-					 m_pCEntSpace->GetAllocTNpcNum());
+		auto& pool = GamePool::Instance();
+		ToLogService("common", "Ply[{}], Cha[{}], Item[{}], TNpc[{}]",
+					 pool.GetPlayerCount(),
+					 pool.GetCharacterCount(),
+					 pool.GetItemCount(),
+					 pool.GetTalkNpcCount());
 	}
 
 	CEyeshotCell* pCMgrUnit;
@@ -747,10 +714,9 @@ void CGameApp::GameItemRun(DWORD dwCurTime) {
 	if (!m_CTimerItem.IsOK(dwCurTime))
 		return;
 
-	m_pCEntSpace->BeginGetItem();
-	CItem* pCCur;
-	while (pCCur = m_pCEntSpace->GetNextItem())
+	GamePool::Instance().ForEachItem([dwCurTime](CItem* pCCur) {
 		pCCur->Run(dwCurTime);
+	});
 }
 
 void CGameApp::MapMgrRun(DWORD dwCurTime) {
@@ -800,16 +766,16 @@ void CGameApp::SetEntityEnableLog(bool bValid) {
 
 //
 CPlayer* CGameApp::GetNewPlayer() {
-	return m_pCPlySpace->GetNewPly();
+	return GamePool::Instance().AcquirePlayer();
 }
 
 //
 CPlayer* CGameApp::GetPlayer(long lHandle) {
-	return m_pCPlySpace->GetPly(lHandle);
+	return GamePool::Instance().FindPlayer(lHandle);
 }
 
 CPlayer* CGameApp::IsValidPlayer(long lID, long lHandle) {
-	CPlayer* pCPly = m_pCPlySpace->GetPly(lHandle);
+	CPlayer* pCPly = GamePool::Instance().FindPlayer(lHandle);
 	if (!pCPly)
 		return 0;
 	if (pCPly->GetID() != lID)
@@ -896,7 +862,8 @@ CPlayer* CGameApp::CreateGamePlayer(const char szPassword[], uLong ulChaDBId, uL
 
 //
 void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer) {
-	//
+	assert(GamePool::Instance().IsValidPlayerPtr(pPlayer));
+
 	if (pPlayer && pPlayer->IsValid()) {
 		CCharacter* pCCha = pPlayer->GetCtrlCha();
 		if (!pCCha)
@@ -1004,21 +971,21 @@ void CGameApp::AfterPlayerLogin(const char* cszPlyName) {
 
 //
 CCharacter* CGameApp::GetNewCharacter() {
-	return m_pCEntSpace->GetNewCha();
+	return GamePool::Instance().AcquireCharacter();
 }
 
 //
 CItem* CGameApp::GetNewItem() {
-	return m_pCEntSpace->GetNewItem();
+	return GamePool::Instance().AcquireItem();
 }
 
 // NPC
 mission::CTalkNpc* CGameApp::GetNewTNpc() {
-	return m_pCEntSpace->GetNewTNpc();
+	return GamePool::Instance().AcquireTalkNpc();
 }
 
 Entity* CGameApp::GetEntity(long lHandle) {
-	return m_pCEntSpace->GetEntity(lHandle);
+	return GamePool::Instance().FindEntity(lHandle);
 }
 
 //
@@ -1196,14 +1163,11 @@ void CGameApp::LoadItemInfo() {
 }
 
 BOOL CGameApp::ReloadNpcInfo(CCharacter& character) {
-	g_pGameApp->BeginGetTNpc();
-	mission::CTalkNpc* pTalkNpc = NULL;
-	while ((pTalkNpc = g_pGameApp->GetNextTNpc())) {
+	GamePool::Instance().ForEachTalkNpc([&character](mission::CTalkNpc* pTalkNpc) {
 		if (!pTalkNpc->InitScript(pTalkNpc->GetInitFunc(), pTalkNpc->GetName())) {
-			//character.SystemNotice( "NPC[%s][%s]!", pTalkNpc->GetInitFunc(), pTalkNpc->GetName() );
 			character.SystemNotice(RES_STRING(GM_GAMEAPP_CPP_00001), pTalkNpc->GetInitFunc(), pTalkNpc->GetName());
 		}
-	}
+	});
 
 	//mission::g_WorldEudemon.Load( "Eudemon", "", -1 );
 	mission::g_WorldEudemon.Load("Eudemon", "Eudemon", -1);
@@ -1230,30 +1194,12 @@ void CGameApp::NotiGameReset(unsigned long ulLeftSec) {
 	NotiPkToWorld(wpk);
 }
 
-void CGameApp::BeginGetTNpc(void) {
-	m_pCEntSpace->BeginGetTNpc();
-}
-
-mission::CTalkNpc* CGameApp::GetNextTNpc(void) {
-	return m_pCEntSpace->GetNextTNpc();
-}
-
 void CGameApp::SaveAllPlayer(void) {
 	BEGINGETGATE();
-	CPlayer* pCPlayer;
 	GateServer* pGateServer;
 	ToLogService("map", "Begin SaveAllPlayer==============================================================");
 	while (pGateServer = GETNEXTGATE()) {
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
-			if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "SaveAllPlayer");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer),
-							 "SaveAllPlayer");
-				break;
-			}
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
 			ToLogService("map", "SaveAllPlayer");
 			game_db.SavePlayer(*pCPlayer, enumSAVE_TYPE_OFFLINE);
 			ToLogService("map", "");

@@ -42,7 +42,7 @@ const char cchEventRecordKeyValue = (char)0xff;
 
 #define defEVENT_NAME_LEN	18
 
-class CEventRecord : public CRawDataInfo
+class CEventRecord : public EntityData
 {
 public:
 	long	lID;						//

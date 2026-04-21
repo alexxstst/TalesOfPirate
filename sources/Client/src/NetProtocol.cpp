@@ -1113,7 +1113,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 	if (!s) // Enter game scene
 	{
 		stSceneInitParam init;
-		init.strMapFile = pInfo->szDataName;
+		init.strMapFile = pInfo->DataName.c_str();
 
 		init.nMaxCha = g_Config.m_dwMaxCha;
 		init.nMaxEff = g_Config.m_dwMaxEff;
@@ -1155,7 +1155,7 @@ void NetSwitchMap(stNetSwitchMap& switchmap) {
 			}
 		}
 
-		if (!s->SwitchMap(pInfo->nID)) {
+		if (!s->SwitchMap(pInfo->Id)) {
 			ToLogService("map", LogLevel::Error, "msgNetSwitchMap({}) SwitchMap Failed", switchmap.szMapName);
 			return;
 		}
@@ -2509,7 +2509,7 @@ void stNetTeamFightAsk::Exec() {
 		//}
 
 		CMapInfo* pInfo = pScene->GetCurMapInfo();
-		if (pInfo && (stricmp(pInfo->szDataName, "garner") == 0)) {
+		if (pInfo && (stricmp(pInfo->DataName.c_str(), "garner") == 0)) {
 			int x = pMain->GetCurX() / 100;
 			int y = pMain->GetCurY() / 100;
 			if (x < 2194 || x > 2239 || y < 2872 || y > 2902)

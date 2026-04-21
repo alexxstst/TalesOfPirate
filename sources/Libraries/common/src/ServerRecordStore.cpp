@@ -8,14 +8,9 @@ GameRecordset<CServerGroupInfo>::RecordEntry ServerRecordStore::ReadRecord(Sqlit
 	CServerGroupInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto name = stmt.GetText(col++);
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 
 	record.region = std::string(stmt.GetText(col++));
 
@@ -32,7 +27,7 @@ GameRecordset<CServerGroupInfo>::RecordEntry ServerRecordStore::ReadRecord(Sqlit
 
 	col++; // valid_gate_cnt — вычисляется из gateIPs.size()
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void ServerRecordStore::Insert(SqliteDatabase& db, const CServerGroupInfo& r) {
@@ -48,14 +43,14 @@ void ServerRecordStore::Insert(SqliteDatabase& db, const CServerGroupInfo& r) {
 		auto stmt = db.Prepare(
 			"INSERT OR REPLACE INTO servers (id,name,region,gate_ips,valid_gate_cnt) VALUES (?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, r.region);
 		stmt.Bind(p++, ips);
 		stmt.Bind(p++, static_cast<int>(r.gateIPs.size()));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ServerRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ServerRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 
@@ -93,7 +88,7 @@ const std::string& GetCurServerGroupName(int nRegionNo, int nGroupNo) {
 	auto* info = GetServerGroupInfo(it->second[nGroupNo]);
 	if (!info) return s_empty;
 	static thread_local std::string result;
-	result = info->szDataName;
+	result = info->DataName;
 	return result;
 }
 

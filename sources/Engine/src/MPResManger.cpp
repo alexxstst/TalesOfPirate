@@ -637,8 +637,8 @@ int		CMPResManger::GetEffectID(const s_string &pszName)
 		_mapEffect.insert(pszName);
 #endif
 
-	//char *pszDataName = _strlwr( _strdup( pszName.c_str() ) );
-	//s_string strName = pszDataName;
+	//char *pDataName = _strlwr( _strdup( pszName.c_str() ) );
+	//s_string strName = pDataName;
 	//transform(pszName.begin(), pszName.end(), //source
 	//		  pszName.begin(), //destination
 	//		  tolower);
@@ -661,10 +661,10 @@ int		CMPResManger::GetEffectID(const s_string &pszName)
 	//}
 	//if ( it != _vecEffectName.end() )
 	//{
-	//	//SAFE_DELETE_ARRAY(pszDataName);
+	//	//SAFE_DELETE_ARRAY(pDataName);
 	//	return (int)(it - _vecEffectName.begin());
 	//}
-	////SAFE_DELETE_ARRAY(pszDataName);
+	////SAFE_DELETE_ARRAY(pDataName);
 #if RESOURCE_SCRIPT == 2
 	ToLogService("errors", LogLevel::Error, ": CMPResManger::GetEffectID(),EffectName={}",pszName.c_str());
 #endif
@@ -817,7 +817,7 @@ bool	CMPResManger::LoadTotalTexture()
 					//SAFE_RELEASE(t_lptex);
 					_mapTexture[sFileName] = (int)_vecTexName.size();
 					_vecTexName.push_back(sFileName.c_str());
-					//SAFE_DELETE_ARRAY(pszDataName);
+					//SAFE_DELETE_ARRAY(pDataName);
 				}
 			}
 		}while(FindNextFile(t_hFind,&t_sfd));
@@ -1153,8 +1153,8 @@ bool	CMPResManger::LoadTotalMesh()
 // 				continue;
 // 			if (pResInfo->GetType() == MPResourceInfo::RT_MESH)
 // 			{
-// 				_mapMesh[pResInfo->szDataName] = (int)_vecMeshName.size();
-// 				_vecMeshName.push_back(pResInfo->szDataName);
+// 				_mapMesh[pResInfo->DataName.c_str()] = (int)_vecMeshName.size();
+// 				_vecMeshName.push_back(pResInfo->DataName.c_str());
 // 				_iMeshNum++;
 // 			}
 // 		}
@@ -1911,8 +1911,8 @@ int		CMPResManger::GetPartCtrlID(const s_string& pszName)
 	// _strdupmallocdelete,
 	//pszName.lo
 
-	//char *pszDataName = _strlwr( _strdup( pszName.c_str() ) );
-	//s_string strName = pszDataName;
+	//char *pDataName = _strlwr( _strdup( pszName.c_str() ) );
+	//s_string strName = pDataName;
 
 	//transform (pszName.begin(), pszName.end(), //source
 	//		   pszName.begin(), //destination
@@ -1930,11 +1930,11 @@ int		CMPResManger::GetPartCtrlID(const s_string& pszName)
 	{
 		if(stricmp(_vecPartName[n].c_str(), pszName.c_str()) == 0)
 		{
-			//SAFE_DELETE_ARRAY(pszDataName);
+			//SAFE_DELETE_ARRAY(pDataName);
 			return (int)n;
 		}
 	}
-	//SAFE_DELETE_ARRAY(pszDataName);
+	//SAFE_DELETE_ARRAY(pDataName);
 #if RESOURCE_SCRIPT == 2
 	ToLogService("errors", LogLevel::Error, ": CMPResManger::GetPartCtrlID(),PartCtrlName={}",pszName.c_str());
 #endif

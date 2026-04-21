@@ -20,6 +20,12 @@ bool AudioSDL::init()
 	{
 		return false;
 	}
+	const int wantedMixFlags = MIX_INIT_OGG;
+	const int gotMixFlags = Mix_Init(wantedMixFlags);
+	if((gotMixFlags & wantedMixFlags) != wantedMixFlags)
+	{
+		// OGG support failed to initialize — SDL_GetError() имеет подробности
+	}
 	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, CHUNK_SIZE) < 0)
 	{
 		return false;
@@ -30,6 +36,7 @@ bool AudioSDL::init()
 void AudioSDL::release()
 {
 	Mix_CloseAudio();
+	Mix_Quit();
 	SDL_Quit();
     g_sdl_audio_valid = false;
 }

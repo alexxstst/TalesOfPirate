@@ -516,8 +516,8 @@ public:
 
 private:
 	float			_fMoveSpeed;
-	char*			_pszFootMusic;
-	char*			_pszWhoopMusic;
+	const char*		_pszFootMusic;
+	const char*		_pszWhoopMusic;
     float           _fMaxOpacity;       // ?,1.0f
 
     bool            _IsFightPose;

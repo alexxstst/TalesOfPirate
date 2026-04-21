@@ -5,7 +5,6 @@
 #include "lwHeader.h"
 #include "lwStdInc.h"
 
-#include "lwFrontAPI.h"
 //
 
 // =============================
@@ -777,86 +776,86 @@ LW_INLINE int lwVector2iCross(const lwVector2i* v1, const lwVector2i* v2)
 // ---------------------------------------
 // non-inline method
 // ---------------------------------------
-LW_FRONT_API lwVector2* lwVec2Mat33Mul(lwVector2* vec, const lwMatrix33* mat);
+lwVector2* lwVec2Mat33Mul(lwVector2* vec, const lwMatrix33* mat);
 
 // lwMatrix33 method
-LW_FRONT_API lwMatrix33* _lwMatrix33Multiply(lwMatrix33* out, const lwMatrix33* m1,const lwMatrix33* m2);
-LW_FRONT_API lwMatrix33* _lwMatrix33Transpose( lwMatrix33* out, const lwMatrix33* m );
-LW_FRONT_API lwMatrix33* _lwMatrix33Inverse(lwMatrix33* out, float* determinant, const lwMatrix33* m);
-LW_FRONT_API lwMatrix33* lwMatrix33Adjoint(lwMatrix33* out, const lwMatrix33* m);
+lwMatrix33* _lwMatrix33Multiply(lwMatrix33* out, const lwMatrix33* m1,const lwMatrix33* m2);
+lwMatrix33* _lwMatrix33Transpose( lwMatrix33* out, const lwMatrix33* m );
+lwMatrix33* _lwMatrix33Inverse(lwMatrix33* out, float* determinant, const lwMatrix33* m);
+lwMatrix33* lwMatrix33Adjoint(lwMatrix33* out, const lwMatrix33* m);
 
 
-LW_FRONT_API lwMatrix33* lwMatrix33Translate(lwMatrix33* mat, float x, float y, DWORD op);
-LW_FRONT_API lwMatrix33* lwMatrix33Rotate(lwMatrix33* mat, float radian, DWORD op);
-LW_FRONT_API lwMatrix33* lwMatrix33Scale(lwMatrix33* mat, float x, float y, DWORD op);
+lwMatrix33* lwMatrix33Translate(lwMatrix33* mat, float x, float y, DWORD op);
+lwMatrix33* lwMatrix33Rotate(lwMatrix33* mat, float radian, DWORD op);
+lwMatrix33* lwMatrix33Scale(lwMatrix33* mat, float x, float y, DWORD op);
 
-LW_FRONT_API lwMatrix33* lwMatrix33ReflectWithPoint(lwMatrix33* mat, const lwVector2* pt);
-LW_FRONT_API lwMatrix33* lwMatrix33ReflectWithAxis(lwMatrix33* mat, const lwVector2* axis);
-LW_FRONT_API lwMatrix33* lwMatrix33ReflectWithAxis(lwMatrix33* mat, const lwVector2* v1, const lwVector2* v2);
+lwMatrix33* lwMatrix33ReflectWithPoint(lwMatrix33* mat, const lwVector2* pt);
+lwMatrix33* lwMatrix33ReflectWithAxis(lwMatrix33* mat, const lwVector2* axis);
+lwMatrix33* lwMatrix33ReflectWithAxis(lwMatrix33* mat, const lwVector2* v1, const lwVector2* v2);
 
 // lwMatrix44
-LW_FRONT_API lwMatrix44* _lwMatrix44Multiply(lwMatrix44* out,const lwMatrix44* m1,const lwMatrix44* m2);
-LW_FRONT_API lwMatrix44* lwMatrix44MultiplyScale(lwMatrix44* ret,const lwMatrix44* mat_scale,const lwMatrix44* mat);
+lwMatrix44* _lwMatrix44Multiply(lwMatrix44* out,const lwMatrix44* m1,const lwMatrix44* m2);
+lwMatrix44* lwMatrix44MultiplyScale(lwMatrix44* ret,const lwMatrix44* mat_scale,const lwMatrix44* mat);
 
-LW_FRONT_API lwMatrix44* _lwMatrix44Inverse(lwMatrix44* ret, float* determinant, const lwMatrix44* m);
-LW_FRONT_API lwMatrix44* _lwMatrix44InverseNoScaleFactor(lwMatrix44* ret,const lwMatrix44* m);
-LW_FRONT_API lwMatrix44* _lwMatrix44Transpose(lwMatrix44* ret, const lwMatrix44* m);
+lwMatrix44* _lwMatrix44Inverse(lwMatrix44* ret, float* determinant, const lwMatrix44* m);
+lwMatrix44* _lwMatrix44InverseNoScaleFactor(lwMatrix44* ret,const lwMatrix44* m);
+lwMatrix44* _lwMatrix44Transpose(lwMatrix44* ret, const lwMatrix44* m);
 
-LW_FRONT_API lwMatrix44* lwMatrix44Translate(lwMatrix44* matrix,float x,float y,float z,DWORD op);
-LW_FRONT_API lwMatrix44* lwMatrix44RotateAxis(lwMatrix44* matrix,DWORD axis,float angle,DWORD op);
-LW_FRONT_API lwMatrix44* lwMatrix44Scale(lwMatrix44* matrix,float x,float y,float z,DWORD op);
+lwMatrix44* lwMatrix44Translate(lwMatrix44* matrix,float x,float y,float z,DWORD op);
+lwMatrix44* lwMatrix44RotateAxis(lwMatrix44* matrix,DWORD axis,float angle,DWORD op);
+lwMatrix44* lwMatrix44Scale(lwMatrix44* matrix,float x,float y,float z,DWORD op);
 
-LW_FRONT_API lwMatrix44* lwMatrix44Adjoint(lwMatrix44* out, const lwMatrix44* m);
+lwMatrix44* lwMatrix44Adjoint(lwMatrix44* out, const lwMatrix44* m);
 
-LW_FRONT_API lwMatrix44* lwMatrix44Compose(lwMatrix44* matrix,const lwVector3* pos,const lwVector3* face,const lwVector3* up);
-LW_FRONT_API lwMatrix44* lwMatrix44MetathesisYZ(lwMatrix44* mat_lh, const lwMatrix44* mat_rh);
-LW_FRONT_API lwMatrix44* lwMatrix44MetathesisMindPower(lwMatrix44* dst, const lwMatrix44* src);
+lwMatrix44* lwMatrix44Compose(lwMatrix44* matrix,const lwVector3* pos,const lwVector3* face,const lwVector3* up);
+lwMatrix44* lwMatrix44MetathesisYZ(lwMatrix44* mat_lh, const lwMatrix44* mat_rh);
+lwMatrix44* lwMatrix44MetathesisMindPower(lwMatrix44* dst, const lwMatrix44* src);
 
-LW_FRONT_API lwMatrix43* lwMatrix43MetathesisYZ(lwMatrix43* mat_lh, const lwMatrix43* mat_rh);
-LW_FRONT_API lwMatrix43* lwMatrix43MetathesisMindPower(lwMatrix43* dst, const lwMatrix43* src);
+lwMatrix43* lwMatrix43MetathesisYZ(lwMatrix43* mat_lh, const lwMatrix43* mat_rh);
+lwMatrix43* lwMatrix43MetathesisMindPower(lwMatrix43* dst, const lwMatrix43* src);
 
-LW_FRONT_API lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwMatrix33* mat);
-LW_FRONT_API lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwQuaternion* nrm_q);
-LW_FRONT_API lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwVector3* nrm_axis, float angle);
-LW_FRONT_API lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwMatrix44* mat);
-LW_FRONT_API lwVector3* lwVector3RotateAxisAngle(lwVector3* out, const lwVector3* v, const lwVector3* axis_v0, const lwVector3* axis_v1, float angle);
-LW_FRONT_API lwVector3* lwVec3Mat44Mul(lwVector3* vec,const lwMatrix44* mat);
-LW_FRONT_API lwVector3* lwVec3Mat44MulNormal(lwVector3* vec,const lwMatrix44* mat);
+lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwMatrix33* mat);
+lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwQuaternion* nrm_q);
+lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwVector3* nrm_axis, float angle);
+lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwMatrix44* mat);
+lwVector3* lwVector3RotateAxisAngle(lwVector3* out, const lwVector3* v, const lwVector3* axis_v0, const lwVector3* axis_v1, float angle);
+lwVector3* lwVec3Mat44Mul(lwVector3* vec,const lwMatrix44* mat);
+lwVector3* lwVec3Mat44MulNormal(lwVector3* vec,const lwMatrix44* mat);
 
-LW_FRONT_API lwMatrix44* lwMat44ReflectWithPoint(lwMatrix44* mat, const lwVector3* pt);
-LW_FRONT_API lwMatrix44* lwMat44ReflectWithAxis(lwMatrix44* mat, const lwVector3* axis);
-LW_FRONT_API lwMatrix44* lwMat44ReflectWithPlane(lwMatrix44* mat, const lwPlane* plane);
-LW_FRONT_API lwMatrix44* lwMat44Slerp(lwMatrix44* ret, const lwMatrix44* m1, const lwMatrix44* m2, float v);
-LW_FRONT_API lwMatrix44* lwMatrix44Slerp(const lwMatrix44* m0, const lwMatrix44* m1, float t, lwMatrix44* mat);
-LW_FRONT_API lwMatrix44* lwMatrix44Slerp(const lwVector3* p0, const lwVector3* p1, const lwVector3* s0, const lwVector3* s1, const lwQuaternion* r0, const lwQuaternion* r1, float t, lwMatrix44* mat);
-LW_FRONT_API LW_RESULT lwMatrix44ConvertPRS(const lwMatrix44* mat, lwVector3* pos, lwQuaternion* rotation, lwVector3* scale);
+lwMatrix44* lwMat44ReflectWithPoint(lwMatrix44* mat, const lwVector3* pt);
+lwMatrix44* lwMat44ReflectWithAxis(lwMatrix44* mat, const lwVector3* axis);
+lwMatrix44* lwMat44ReflectWithPlane(lwMatrix44* mat, const lwPlane* plane);
+lwMatrix44* lwMat44Slerp(lwMatrix44* ret, const lwMatrix44* m1, const lwMatrix44* m2, float v);
+lwMatrix44* lwMatrix44Slerp(const lwMatrix44* m0, const lwMatrix44* m1, float t, lwMatrix44* mat);
+lwMatrix44* lwMatrix44Slerp(const lwVector3* p0, const lwVector3* p1, const lwVector3* s0, const lwVector3* s1, const lwQuaternion* r0, const lwQuaternion* r1, float t, lwMatrix44* mat);
+LW_RESULT lwMatrix44ConvertPRS(const lwMatrix44* mat, lwVector3* pos, lwQuaternion* rotation, lwVector3* scale);
 
 // quaternion
-LW_FRONT_API lwMatrix44* lwQuaternionToMatrix44(lwMatrix44* matrix,lwQuaternion* quat);
-LW_FRONT_API lwMatrix44* lwQuaternionToMatrix44Inv(lwMatrix44* matrix,lwQuaternion* quat);
-LW_FRONT_API lwQuaternion* lwMatrix44ToQuaternion(lwQuaternion* quat,const lwMatrix44* matrix);
-LW_FRONT_API lwQuaternion* lwEulerAngleToQuaternion(lwQuaternion* quat,float roll,float pitch,float yaw);
-LW_FRONT_API lwQuaternion* _lwQuaternionMultiply(lwQuaternion* ret, const lwQuaternion* q1, const lwQuaternion* q2);
-LW_FRONT_API lwQuaternion* lwQuaternionSlerp(lwQuaternion* res, const lwQuaternion* from, const lwQuaternion* to, float t);
-LW_FRONT_API lwQuaternion* lwQuaternionRotationAxis(lwQuaternion* quat, const lwVector3* std_axis, float angle);
-LW_FRONT_API void lwQuaternionToAxisAngle(lwVector3* axis, float* angle, const lwQuaternion* quat);
-LW_FRONT_API lwQuaternion* lwQuaternionRotationSpherical(lwQuaternion* quat, float longitude, float latitude, float angle);
+lwMatrix44* lwQuaternionToMatrix44(lwMatrix44* matrix,lwQuaternion* quat);
+lwMatrix44* lwQuaternionToMatrix44Inv(lwMatrix44* matrix,lwQuaternion* quat);
+lwQuaternion* lwMatrix44ToQuaternion(lwQuaternion* quat,const lwMatrix44* matrix);
+lwQuaternion* lwEulerAngleToQuaternion(lwQuaternion* quat,float roll,float pitch,float yaw);
+lwQuaternion* _lwQuaternionMultiply(lwQuaternion* ret, const lwQuaternion* q1, const lwQuaternion* q2);
+lwQuaternion* lwQuaternionSlerp(lwQuaternion* res, const lwQuaternion* from, const lwQuaternion* to, float t);
+lwQuaternion* lwQuaternionRotationAxis(lwQuaternion* quat, const lwVector3* std_axis, float angle);
+void lwQuaternionToAxisAngle(lwVector3* axis, float* angle, const lwQuaternion* quat);
+lwQuaternion* lwQuaternionRotationSpherical(lwQuaternion* quat, float longitude, float latitude, float angle);
 
-LW_FRONT_API int lwCheckVectorInBox(const lwVector3* v, const lwBox* b);
+int lwCheckVectorInBox(const lwVector3* v, const lwBox* b);
 // mat_box[in]: scale factor forbidden
-LW_FRONT_API int lwCheckVectorInBox(const lwVector3* v, const lwBox* b, const lwMatrix44* mat_box);
+int lwCheckVectorInBox(const lwVector3* v, const lwBox* b, const lwMatrix44* mat_box);
 
 // vp[in]: checked vector;
 // v1, v2, v3[in]: triangle vector
-LW_FRONT_API int lwCheckVectorInTriangle2D(const lwVector2* vp,const lwVector2* v1,const lwVector2* v2,const lwVector2* v3);
+int lwCheckVectorInTriangle2D(const lwVector2* vp,const lwVector2* v1,const lwVector2* v2,const lwVector2* v3);
 
 // extension above functoin 
 // return: 3: the same vertices; 2: in the sides; 1: in it; 0:outside it
 // flag represents index of vertices or sides
-LW_FRONT_API int lwCheckVectorInTriangle2D2(int* flag, const lwVector2* vp, const lwVector2* v1, const lwVector2* v2, const lwVector2* v3);
+int lwCheckVectorInTriangle2D2(int* flag, const lwVector2* vp, const lwVector2* v1, const lwVector2* v2, const lwVector2* v3);
 
 // check vector in triangle
-LW_FRONT_API int lwCheckVectorInTriangle3D(const lwVector3* v, const lwVector3* v0, const lwVector3* v1, const lwVector3* v2, const lwVector3* n);
+int lwCheckVectorInTriangle3D(const lwVector3* v, const lwVector3* v0, const lwVector3* v1, const lwVector3* v2, const lwVector3* n);
 inline int lwCheckVectorInTriangle3D(const lwVector3* v, const lwTriangle* t)
 {
 	return lwCheckVectorInTriangle3D(v, &t->v0, &t->v1, &t->v2, &t->n);
@@ -864,7 +863,7 @@ inline int lwCheckVectorInTriangle3D(const lwVector3* v, const lwTriangle* t)
 
 // return: 2: in vertices; 3: in sides; 1: in it; 0: outside
 // flag: which vertix or side vp is in
-LW_FRONT_API int lwCheckVectorInTriangle3D2(int* flag, const lwVector3* v, const lwVector3* v0, const lwVector3* v1, const lwVector3* v2, const lwVector3* n);
+int lwCheckVectorInTriangle3D2(int* flag, const lwVector3* v, const lwVector3* v0, const lwVector3* v1, const lwVector3* v2, const lwVector3* n);
 inline int lwCheckVectorInTriangle3D2(int* flag, const lwVector3* v, const lwTriangle* t)
 {
 	return lwCheckVectorInTriangle3D2(flag, v, &t->v0, &t->v1, &t->v2, &t->n);
@@ -887,14 +886,14 @@ inline int lwCheckVectorInSphere(const lwVector3* v, const lwSphere* s)
     return ((xo * xo + yo * yo + zo * zo) < (s->r * s->r));
 }
 
-LW_FRONT_API int lwIntersectLineLine2D(lwVector2* v, const lwVector2* u1, const lwVector2* u2, const lwVector2* v1, const lwVector2* v2, int be_ray);
-LW_FRONT_API int lwIntersectLineLine3D(lwVector3* v, const lwVector3* u1, const lwVector3* u2, const lwVector3* v1, const lwVector3* v2, int be_ray);
+int lwIntersectLineLine2D(lwVector2* v, const lwVector2* u1, const lwVector2* u2, const lwVector2* v1, const lwVector2* v2, int be_ray);
+int lwIntersectLineLine3D(lwVector3* v, const lwVector3* u1, const lwVector3* u2, const lwVector3* v1, const lwVector3* v2, int be_ray);
 
-LW_FRONT_API int lwIntersectBoxBoxAABB(const lwBox* b1, const lwBox* b2);
-LW_FRONT_API int lwIntersectBoxBoxOBB(const lwBox* b1, const lwBox* b2, const lwMatrix44* mat);
-LW_FRONT_API LW_RESULT lwIntersectLineRect(lwVector2* o_v, int* o_n, const lwVector2* u1, const lwVector2* u2, const lwVector2* rc_v1, const lwVector2* rc_v2, int is_segment);
-LW_FRONT_API int lwIntersectRaySphere(lwVector3* ret, const lwSphere* sphere, const lwVector3* org, const lwVector3* ray);
-LW_FRONT_API int lwIntersectSphereSphere(lwVector3* ret, const lwSphere* s1, const lwSphere* s2);
+int lwIntersectBoxBoxAABB(const lwBox* b1, const lwBox* b2);
+int lwIntersectBoxBoxOBB(const lwBox* b1, const lwBox* b2, const lwMatrix44* mat);
+LW_RESULT lwIntersectLineRect(lwVector2* o_v, int* o_n, const lwVector2* u1, const lwVector2* u2, const lwVector2* rc_v1, const lwVector2* rc_v2, int is_segment);
+int lwIntersectRaySphere(lwVector3* ret, const lwSphere* sphere, const lwVector3* org, const lwVector3* ray);
+int lwIntersectSphereSphere(lwVector3* ret, const lwSphere* s1, const lwSphere* s2);
 
 // ray intersect with triangle
 // v[out]: intersect point
@@ -902,15 +901,15 @@ LW_FRONT_API int lwIntersectSphereSphere(lwVector3* ret, const lwSphere* s1, con
 // ray[in]: ray dir
 // org[in]: orginal point
 // t[in]: triangle 
-LW_FRONT_API int lwIntersectRayTriangle(lwVector3* v, float* d, const lwVector3* org,const lwVector3* ray, const lwTriangle* tri);
+int lwIntersectRayTriangle(lwVector3* v, float* d, const lwVector3* org,const lwVector3* ray, const lwTriangle* tri);
 
 ////////////
 //////////////////////////////////
-LW_FRONT_API lwVector3* lwGetTriangleNormal(lwVector3* n,const lwVector3* v0,const lwVector3* v1,const lwVector3* v2);
+lwVector3* lwGetTriangleNormal(lwVector3* n,const lwVector3* v0,const lwVector3* v1,const lwVector3* v2);
 
 //
 // i1,i2: mapping axis, ret: exclude axis , vec: donot need normalized
-LW_FRONT_API int lwGetVecNormalAxisMapping(int* i1,int* i2,const lwVector3* vec); 
+int lwGetVecNormalAxisMapping(int* i1,int* i2,const lwVector3* vec); 
 
 
 // get a vector 's weight by another normal vector
@@ -924,21 +923,21 @@ LW_FRONT_API int lwGetVecNormalAxisMapping(int* i1,int* i2,const lwVector3* vec)
 // understand? ^_^
 // return value: if vec-normal angle < 90 return 1, 90-180 return 0
 // remarks: vec and normal must be normalized first
-LW_FRONT_API int lwGetVec3WeightWithNormal(lwVector3* face,lwVector3* up,const lwVector3* vec,const lwVector3* normal);
+int lwGetVec3WeightWithNormal(lwVector3* face,lwVector3* up,const lwVector3* vec,const lwVector3* normal);
 
 // lwGetEquation2  lwGetEquation2f
 // ret[out]: x, y
 // e1,e2[in]: coefficient x, y and equation result
-LW_FRONT_API void lwGetEquation2(float* ret, const float* e1, const float* e2);
+void lwGetEquation2(float* ret, const float* e1, const float* e2);
 
 // ret[out]: x1, x2
 // equation: a1 * x1 + b1 * x2 = c1
 // e1: (a1, b1, c1); e2: (a2, b2, c2)
-LW_FRONT_API void lwGetEquation2f(float* ret, const float* e1, const float* e2);
+void lwGetEquation2f(float* ret, const float* e1, const float* e2);
 
 // ret[out]: x, y, z
 // e1,e2,e3[in]: coefficient x, y, z and equation result
-LW_FRONT_API void lwGetEquation3(float* ret, const float* e1, const float* e2, const float* e3);
+void lwGetEquation3(float* ret, const float* e1, const float* e2, const float* e3);
 
 inline int lwFloatRoundDec(float f) { return static_cast<int>(f); }
 inline int lwFloatRoundInc(float f) { return lwFloatRoundDec(f) + 1; }
@@ -955,34 +954,34 @@ inline lwVector3 lwConvertDWORDToColor3f(DWORD c)
 }
 
 
-LW_FRONT_API float lwGetLineOriginDistance2(const lwVector2* v1, const lwVector2* v2);
+float lwGetLineOriginDistance2(const lwVector2* v1, const lwVector2* v2);
 
 // [in]: src_dir, dst_dir must be unit-vector
-LW_FRONT_API float lwGetDirTurnAngle(const lwVector2* src_dir, const lwVector2* dst_dir);
+float lwGetDirTurnAngle(const lwVector2* src_dir, const lwVector2* dst_dir);
 
 // linear transform: y = A * x + B
 // x range: (x_var[0], x_var[1])
 // y range: (y_var[0], y_var[1])
 // ret_param[out]: coefficient A, B
 // x_var, y_var,[in]: transform range
-LW_FRONT_API void lwGetLinearTransformParam(float* ret_param, const float* x_var, const float* y_var);
+void lwGetLinearTransformParam(float* ret_param, const float* x_var, const float* y_var);
 
 // lwPlane
 // Normalize plane (so that |a,b,c| == 1)
-LW_FRONT_API lwPlane* WINAPI lwPlaneNormalize(lwPlane *p_out, const lwPlane *p);
+lwPlane* WINAPI lwPlaneNormalize(lwPlane *p_out, const lwPlane *p);
 
 // Find the intersection between a plane and a line.  If the line is
 // parallel to the plane, NULL is returned.
-LW_FRONT_API lwVector3* WINAPI lwPlaneIntersectLine(lwVector3 *p_out, const lwPlane *p, const lwVector3 *v1, const lwVector3 *v2);
+lwVector3* WINAPI lwPlaneIntersectLine(lwVector3 *p_out, const lwPlane *p, const lwVector3 *v1, const lwVector3 *v2);
 
 // Construct a plane from a point and a normal
-LW_FRONT_API lwPlane* WINAPI lwPlaneFromPointNormal(lwPlane *p_out, const lwVector3 *v, const lwVector3 *n);
+lwPlane* WINAPI lwPlaneFromPointNormal(lwPlane *p_out, const lwVector3 *v, const lwVector3 *n);
 
 // Construct a plane from 3 points
-LW_FRONT_API lwPlane* WINAPI lwPlaneFromPoints(lwPlane *p_out, const lwVector3 *v1, const lwVector3 *v2, const lwVector3 *v3);
+lwPlane* WINAPI lwPlaneFromPoints(lwPlane *p_out, const lwVector3 *v1, const lwVector3 *v2, const lwVector3 *v3);
 
-LW_FRONT_API DWORD WINAPI lwPlaneClassifyBox(const lwPlane* p, const lwBox* b);
-LW_FRONT_API DWORD WINAPI lwPlaneClassifyBox(const lwPlane* p, const lwBox* b, const lwMatrix44* b_mat);
+DWORD WINAPI lwPlaneClassifyBox(const lwPlane* p, const lwBox* b);
+DWORD WINAPI lwPlaneClassifyBox(const lwPlane* p, const lwBox* b, const lwMatrix44* b_mat);
 // extension class
 
 //class lwMatrix44X : public lwMatrix44

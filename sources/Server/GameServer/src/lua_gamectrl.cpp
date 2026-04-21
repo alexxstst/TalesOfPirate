@@ -111,7 +111,7 @@ void AddMonsterHelp(int nScriptID, int x, int y) {
 	char szHelp[255];
 	sprintf(szHelp, RES_STRING(GM_LUA_GAMECTRL_CPP_00019), x / 100, y / 100);
 
-	AddHelpInfo(pCChaRecord->szDataName, szHelp);
+	AddHelpInfo(pCChaRecord->DataName.c_str(), szHelp);
 }
 
 void AddHelpNPC(CCharacter* pNPC) {
@@ -122,13 +122,11 @@ void AddHelpNPC(CCharacter* pNPC) {
 
 // NPC
 void AddHelpNPC_typed(const std::string& name) {
-	// NPC
-	g_pGameApp->BeginGetTNpc();
-	mission::CTalkNpc* pCTNpc;
-	while (pCTNpc = g_pGameApp->GetNextTNpc()) {
-		if (!strcmp(pCTNpc->GetName(), name.c_str()))
+	GamePool::Instance().ForEachTalkNpc([&name](mission::CTalkNpc* pCTNpc) {
+		if (!strcmp(pCTNpc->GetName(), name.c_str())) {
 			AddHelpNPC(pCTNpc);
-	}
+		}
+	});
 }
 
 void ClearHelpNPC() {
@@ -481,7 +479,7 @@ int QueryChaAttr(CCharacter* pCha, int nAttr) {
 // ID
 int GetChaType(CCharacter* pCha) {
 	if (pCha)
-		return pCha->m_pCChaRecord->nID;
+		return pCha->m_pCChaRecord->Id;
 	return 0;
 }
 

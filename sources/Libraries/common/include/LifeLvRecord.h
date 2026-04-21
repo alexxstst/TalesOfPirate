@@ -4,7 +4,7 @@
 #include "util.h"
 #include "TableData.h"
 
-class CLifeLvRecord : public CRawDataInfo
+class CLifeLvRecord : public EntityData
 {
 public:
 	long	lID;			//

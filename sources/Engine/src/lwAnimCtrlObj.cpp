@@ -960,7 +960,7 @@ LW_RESULT lwAnimCtrlAgent::Clone(lwIAnimCtrlAgent** ret_obj)
             ret = ((lwIAnimCtrlObjMtlOpacity*)_obj_seq[i])->Clone((lwIAnimCtrlObjMtlOpacity**)&obj);
             break;
         default:
-            __asm int 3;
+            __debugbreak();
         }
 
         if(LW_FAILED(ret))

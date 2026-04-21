@@ -5,7 +5,7 @@
 #define TERRAIN_TYPE_UNDERWATER 1
 #define MAX_WATER_LOOP          30
 
-class MPTerrainInfo : public CRawDataInfo {
+class MPTerrainInfo : public EntityData {
 public:
 	BYTE btType{TERRAIN_TYPE_NORMAL};
 	int  nTextureID{0};

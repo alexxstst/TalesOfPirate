@@ -432,7 +432,7 @@ public:
 	void SetFrameMove(DWORD dwTime);
 
 	void PlayEnvSound(int nX, int nY); // x,y,
-	static void PlayEnvSound(char* szFile, int nX, int nY); //
+	static void PlayEnvSound(const char* szFile, int nX, int nY); //
 	static void PlayEnvSound(int nSoundNo, int nX, int nY); //
 
 	static void SetSoundSize(float fVol); // 0~1,0,1

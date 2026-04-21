@@ -80,11 +80,9 @@ GameRecordset<CChaRecord>::RecordEntry ChaRecordStore::ReadRecord(SqliteStatemen
 
 	// id, name
 	record.lID = stmt.GetInt(col++);
-	record.nID = static_cast<int>(record.lID);
-	record.bExist = TRUE;
+	record.Id = static_cast<int>(record.lID);
 	record.szName = stmt.GetText(col++);
-	_tcsncpy(record.szDataName, record.szName.c_str(), sizeof(record.szDataName) - 1);
-	record.szDataName[sizeof(record.szDataName) - 1] = _TEXT('\0');
+	record.DataName = record.szName;
 
 	// icon_name
 	record.szIconName = stmt.GetText(col++);
@@ -311,5 +309,5 @@ GameRecordset<CChaRecord>::RecordEntry ChaRecordStore::ReadRecord(SqliteStatemen
 
 	record.RefreshPrivateData();
 
-	return {record.nID, record.szName, std::move(record)};
+	return {record.Id, record.szName, std::move(record)};
 }

@@ -25,9 +25,8 @@ GameRecordset<CForgeRecord>::RecordEntry ForgeRecordStore::ReadRecord(SqliteStat
 	int col = 0;
 
 	// id = byLevel
-	record.nID     = stmt.GetInt(col++);
-	record.bExist  = TRUE;
-	record.byLevel = static_cast<BYTE>(record.nID);
+	record.Id     = stmt.GetInt(col++);
+	record.byLevel = static_cast<BYTE>(record.Id);
 
 	// failure
 	record.byFailure = static_cast<BYTE>(stmt.GetInt(col++));
@@ -54,10 +53,10 @@ GameRecordset<CForgeRecord>::RecordEntry ForgeRecordStore::ReadRecord(SqliteStat
 		}
 	}
 
-	// szDataName для совместимости со старым хранилищем
-	sprintf(record.szDataName, "%d", record.byFailure);
+	// DataName для совместимости со старым хранилищем
+	record.DataName = std::to_string(record.byFailure);
 
-	return {record.nID, {}, std::move(record)};
+	return {record.Id, {}, std::move(record)};
 }
 
 // ============================================================================

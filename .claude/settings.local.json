@@ -9,7 +9,10 @@
       "Grep(*)",
       "PowerShell(*)",
       "WebFetch(domain:kunitoki.github.io)",
-      "Read(//tmp/**)"
+      "Read(//tmp/**)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(cmd /c \"D:\\\\Projects\\\\MMORPG\\\\TalesOfPirate\\\\sources\\\\Libraries\\\\LuaJIT\\\\src\\\\build_x64.bat\" 2>&1 | Select-Object -Last 60)",
+      "PowerShell(cmd /c \"D:\\\\Projects\\\\MMORPG\\\\TalesOfPirate\\\\sources\\\\Libraries\\\\LuaJIT\\\\src\\\\build_x64.bat\" 2>&1 | Select-Object -Last 30)"
     ],
     "defaultMode": "auto"
   }

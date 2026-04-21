@@ -40,8 +40,7 @@ GameRecordset<CHairRecord>::RecordEntry HairRecordStore::ReadRecord(SqliteStatem
 	int col = 0;
 
 	// id
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	// color
 	record.szColor = stmt.GetText(col++);
@@ -70,7 +69,7 @@ GameRecordset<CHairRecord>::RecordEntry HairRecordStore::ReadRecord(SqliteStatem
 
 	record.RefreshPrivateData();
 
-	return {record.nID, {}, std::move(record)};
+	return {record.Id, {}, std::move(record)};
 }
 
 // ============================================================================

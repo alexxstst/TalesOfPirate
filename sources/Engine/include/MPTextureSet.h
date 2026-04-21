@@ -30,10 +30,10 @@ inline SIZE GetTextureSizeByID(int nID)
 	return TextureManager::I()->GetSize(nID);
 }
 
-inline int GetTextureID(const char *pszDataName)
+inline int GetTextureID(const char *pDataName)
 {
 	if (TextureManager::I())
-		return TextureManager::I()->GetOrCreateID(pszDataName);
+		return TextureManager::I()->GetOrCreateID(pDataName);
 	return 0;
 }
 
@@ -49,9 +49,9 @@ inline BOOL IsAlphaTexture(int nID)
 	return TextureManager::I() && TextureManager::I()->IsAlpha(nID);
 }
 
-inline BOOL IsTextureExist(const char *pszDataName)
+inline BOOL IsTextureExist(const char *pDataName)
 {
-	return Util_IsFileExist((char*)pszDataName);
+	return Util_IsFileExist((char*)pDataName);
 }
 
 #pragma warning(default: 4275)

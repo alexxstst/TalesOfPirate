@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы ресурсов (ResourceInfo)
-class CResourceInfo : public CRawDataInfo {
+class CResourceInfo : public EntityData {
 public:
 	enum {
 		RT_PAR     = 0,

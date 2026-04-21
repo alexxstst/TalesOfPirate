@@ -144,7 +144,7 @@ struct xShipAttrInfo
 	// 
 };
 
-struct xShipInfo: public CRawDataInfo
+struct xShipInfo: public EntityData
 {
 	char szName[BOAT_MAXSIZE_NAME];	// 
 	char szDesp[BOAT_MAXSIZE_DESP];	// 
@@ -221,7 +221,7 @@ struct xShipInfo: public CRawDataInfo
 	}
 };
 
-struct xShipPartInfo: public CRawDataInfo
+struct xShipPartInfo: public EntityData
 {
 	char szName[BOAT_MAXSIZE_NAME];	// 
 	char szDesp[BOAT_MAXSIZE_DESP];	// 

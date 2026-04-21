@@ -5,12 +5,11 @@ GameRecordset<CLevelRecord>::RecordEntry LevelRecordStore::ReadRecord(SqliteStat
 	int col = 0;
 
 	record.lID    = stmt.GetInt(col++);
-	record.nID    = static_cast<int>(record.lID);
-	record.bExist = TRUE;
+	record.Id    = static_cast<int>(record.lID);
 	record.sLevel = static_cast<short>(stmt.GetInt(col++));
 	record.ulExp  = static_cast<unsigned int>(stmt.GetInt64(col++));
 
-	return {record.nID, {}, std::move(record)};
+	return {record.Id, {}, std::move(record)};
 }
 
 CLevelRecord* GetLevelRecordInfo(int nTypeID, const std::source_location& loc) {

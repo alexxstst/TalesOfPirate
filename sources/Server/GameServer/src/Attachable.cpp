@@ -6,6 +6,7 @@
 //=============================================================================
 #include "stdafx.h"
 #include "Attachable.h"
+#include "GamePool.h"
 #include <iostream>
 #include <fstream>
 #include <ostream>
@@ -47,4 +48,10 @@ void CAttachable::Finally()
 {
 	Entity::Finally();
 	m_pCPlayer = 0;
+}
+
+void CAttachable::SetPlayer(CPlayer* pCPlayer)
+{
+	assert(!pCPlayer || GamePool::Instance().IsValidPlayerPtr(pCPlayer));
+	m_pCPlayer = pCPlayer;
 }

@@ -46,22 +46,17 @@ void CGameApp::OnGateConnected(GateServer* pGate, net::RPacket& pkt) {
 	pGate->SendData(wpk);
 }
 
-// ??Gate???????????????
+// Gate
 void CGameApp::OnGateDisconnect(GateServer* pGate, net::RPacket& pkt) {
-	bool ret = static_cast<bool>(pkt);
-	if (!ret) return; // ?????packet
+	if (!static_cast<bool>(pkt)) return;
 
-
-	//NOTE(Ogge): Weird that we first cast to GatePlayer(base class) and then in while loop to CPlayer(derived class)
-	auto tmp = ToPointer<GatePlayer>(pkt.ReadInt64());
-
-	while (tmp != NULL) {
-		if (static_cast<CPlayer*>(tmp)->IsValid()) {
-			GoOutGame((CPlayer*)tmp, true);
-			tmp->OnLogoff();
+	//  snapshot, ..  GoOutGame   DelPlayer   m_playerlist
+	std::vector<CPlayer*> snapshot(pGate->m_playerlist.begin(), pGate->m_playerlist.end());
+	for (CPlayer* p : snapshot) {
+		if (p->IsValid()) {
+			GoOutGame(p, true);
+			p->OnLogoff();
 		}
-
-		tmp = tmp->Next;
 	}
 
 	pGate->Invalid();
@@ -482,40 +477,31 @@ void CGameApp::ProcessPacket(GateServer* pGate, net::RPacket& pkt) {
 		}
 		else {
 			l_player = ToPointer<CPlayer>(pkt.ReverseReadInt64());
+			assert(GamePool::Instance().IsValidPlayerPtr(l_player));
+
 			if (cmd / 500 == CMD_PM_BASE / 500 && !l_player) {
 				ProcessGroupBroadcast(cmd, pGate, pkt);
 			}
 			else {
-				if (!l_player)
-					break;
-				try {
-					DWORD l_gateaddr = pkt.ReverseReadInt64();
-					if (l_player->GetGateAddr() != l_gateaddr) {
-						/*ToLogService("errors", LogLevel::Error, "?????ID:{}, ????????????:{}, gate:{},cmd={}, ?????({})", l_player->GetDBChaId(), l_player->GetGateAddr(),
-							l_gateaddr,cmd, l_player->IsValidFlag() );*/
-						ToLogService("errors", LogLevel::Error,
-									 "DB ID:{}, address not matching??local :{}, gate:{},cmd={}, validity ({})",
-									 l_player->GetDBChaId(), l_player->GetGateAddr(),
-									 l_gateaddr, cmd, l_player->IsValidFlag());
-						break;
-					}
-				}
-				catch (...) {
-					//ToLogService("errors", LogLevel::Error, "===========================??Gate?????????????{},cmd ={}", l_player, cmd);
+				DWORD l_gateaddr = pkt.ReverseReadInt64();
+				if (l_player->GetGateAddr() != l_gateaddr) {
 					ToLogService("errors", LogLevel::Error,
-								 "===========================Player address error that come from Gate {},cmd ={}",
-								 static_cast<void*>(l_player), static_cast<int>(cmd));
+								 "DB ID:{}, address not matching??local :{}, gate:{},cmd={}, validity ({})",
+								 l_player->GetDBChaId(), l_player->GetGateAddr(),
+								 l_gateaddr, cmd, l_player->IsValidFlag());
 					break;
 				}
+
 				if (!l_player->IsValid())
 					break;
+
 				if (l_player->GetMainCha()->GetPlayer() != l_player) {
-					//ToLogService("errors", LogLevel::Error, "????player????????????{}??Gate???[????{}, ????{}]????cmd={}", l_player->GetMainCha()->GetLogName(), l_player->GetMainCha()->GetPlayer(), l_player, cmd);
 					ToLogService("errors", LogLevel::Error,
 								 "two player not matching, character name: {}, Gate address [local {}, guest {}], cmd={}",
 								 l_player->GetMainCha()->GetLogName(),
 								 static_cast<void*>(l_player->GetMainCha()->GetPlayer()), static_cast<void*>(l_player),
 								 static_cast<int>(cmd));
+					break;
 				}
 
 				CCharacter* pCCha = l_player->GetCtrlCha();
@@ -931,26 +917,20 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 		net::msg::MmUpdateGuildBankMessage m;
 		net::msg::deserialize(pkt, m);
 		int guildID = static_cast<int>(m.guildId);
-		BEGINGETGATE();
-		CPlayer* pCPlayer;
-		CCharacter* pCha = 0;
-		GateServer* pGateServer;
 
 		CKitbag bag;
 		if (!game_db.GetGuildBank(guildID, &bag)) {
 			return;
 		}
 
+		BEGINGETGATE();
+		GateServer* pGateServer;
 		while (pGateServer = GETNEXTGATE()) {
-			if (!BEGINGETPLAYER(pGateServer))
-				continue;
-			int nCount = 0;
-			while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
-				pCha = pCPlayer->GetMainCha();
+			for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+				CCharacter* pCha = pCPlayer->GetMainCha();
 				if (!pCha)
 					continue;
 				if (pCha->GetGuildID() == guildID) {
-					//&& pCPlayer->GetBankType() == 2){
 					pCPlayer->SynGuildBank(&bag, 0);
 				}
 			}
@@ -961,22 +941,17 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 		net::msg::MmUpdateGuildBankGoldMessage m;
 		net::msg::deserialize(pkt, m);
 		int guildID = static_cast<int>(m.guildId);
-		BEGINGETGATE();
-		CPlayer* pCPlayer;
-		CCharacter* pCha = 0;
-		GateServer* pGateServer;
 
 		unsigned long long gold = game_db.GetGuildBankGold(guildID);
 
-		//  :    
+		//  :
 		auto WtPk = net::msg::serialize(net::msg::McUpdateGuildGoldMessage{to_string(gold).c_str()});
 
+		BEGINGETGATE();
+		GateServer* pGateServer;
 		while (pGateServer = GETNEXTGATE()) {
-			if (!BEGINGETPLAYER(pGateServer))
-				continue;
-			int nCount = 0;
-			while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
-				pCha = pCPlayer->GetMainCha();
+			for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+				CCharacter* pCha = pCPlayer->GetMainCha();
 				if (!pCha)
 					continue;
 				pCPlayer->GetGuildGold();
@@ -995,31 +970,18 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 		uLong l_gldid = static_cast<uLong>(mottoMsg.guildId);
 		const std::string& pszMotto = mottoMsg.motto;
 		{
-			//??????FindPlayerChaByID
+			//  FindPlayerChaByID
 			BEGINGETGATE();
-			CPlayer* pCPlayer;
-			CCharacter* pCha = 0;
 			GateServer* pGateServer;
 			while (pGateServer = GETNEXTGATE()) {
-				if (!BEGINGETPLAYER(pGateServer))
-					continue;
-				int nCount = 0;
-				while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
-					if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-						//LG("???????????", "??????:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
-						ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer),
-									 "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
-						break;
-					}
-					pCha = pCPlayer->GetMainCha();
+				for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+					CCharacter* pCha = pCPlayer->GetMainCha();
 					if (!pCha)
 						continue;
-					if (pCha->GetGuildID() == l_gldid) // ??????
+					if (pCha->GetGuildID() == l_gldid)
 					{
 						pCha->SetGuildMotto(pszMotto.c_str());
 						pCha->SyncGuildInfo();
-						//pCha->SystemNotice("????????????????");
-						//pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00012));
 					}
 				}
 			}
@@ -1029,26 +991,15 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 	case CMD_MM_GUILD_DISBAND: {
 		uLong l_gldid = lSrcID;
 		{
-			//??????FindPlayerChaByID
+			//  FindPlayerChaByID
 			BEGINGETGATE();
-			CPlayer* pCPlayer;
-			CCharacter* pCha = 0;
 			GateServer* pGateServer;
 			while (pGateServer = GETNEXTGATE()) {
-				if (!BEGINGETPLAYER(pGateServer))
-					continue;
-				int nCount = 0;
-				while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer)) {
-					if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-						//LG("???????????", "??????:%u, %s\n", GETPLAYERCOUNT(pGateServer), "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
-						ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer),
-									 "ProcessInterGameMsg::CMD_MM_GUILD_DISBAND");
-						break;
-					}
-					pCha = pCPlayer->GetMainCha();
+				for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+					CCharacter* pCha = pCPlayer->GetMainCha();
 					if (!pCha)
 						continue;
-					if (pCha->GetGuildID() == l_gldid) // ??????
+					if (pCha->GetGuildID() == l_gldid)
 					{
 						pCha->m_CChaAttr.ResetChangeFlag();
 						pCha->guildPermission = 0;
@@ -1059,7 +1010,6 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 						pCha->SetGuildName("");
 						pCha->SetGuildMotto("");
 						pCha->SyncGuildInfo();
-						//pCha->SystemNotice("??????????????");
 						pCha->SystemNotice(RES_STRING(GM_GAMEAPPNET_CPP_00013));
 					}
 				}
@@ -1121,7 +1071,7 @@ void CGameApp::ProcessInterGameMsg(unsigned short usCmd, GateServer* pGate, net:
 
 		//  :  +  trailer
 		auto WtPk = net::msg::serialize(net::msg::McPingMessage{
-			(int64_t)GetTickCount(), ToAddress(pGate), lSrcID, lGatePlayerID, lGatePlayerAddr
+			(int64_t)GetTickCount(), (int64_t)ToAddress(pGate), lSrcID, lGatePlayerID, lGatePlayerAddr
 		});
 		WtPk.WriteInt64(1);
 		pCCha->ReflectINFof(pCCha, WtPk);
@@ -1322,7 +1272,8 @@ void CGameApp::Handle_KickCha(const net::msg::MmKickChaMessage& msg) {
 	g_pGameApp->GoOutGame(pCCha->GetPlayer(), true);
 }
 
-void CGameApp::Handle_GotoCha(GateServer* pGate, long lGatePlayerID, long lGatePlayerAddr, const net::msg::MmGotoChaMessage& msg) {
+void CGameApp::Handle_GotoCha(GateServer* pGate, long lGatePlayerID, long lGatePlayerAddr,
+							  const net::msg::MmGotoChaMessage& msg) {
 	CCharacter* pCCha = FindPlayerChaByName(msg.targetName.c_str());
 	if (!pCCha || !pCCha->GetSubMap())
 		return;
@@ -1342,7 +1293,8 @@ void CGameApp::Handle_GotoCha(GateServer* pGate, long lGatePlayerID, long lGateP
 		if ((msg.isBoat != 0) != pCCha->IsBoat())
 			break;
 		pCCha->SwitchMap(pCCha->GetSubMap(), msg.mapName.c_str(),
-			static_cast<Long>(msg.posX), static_cast<Long>(msg.posY), true, enumSWITCHMAP_CARRY, static_cast<Long>(msg.copyNo));
+						 static_cast<Long>(msg.posX), static_cast<Long>(msg.posY), true, enumSWITCHMAP_CARRY,
+						 static_cast<Long>(msg.copyNo));
 		break;
 	}
 	}
@@ -1355,7 +1307,8 @@ void CGameApp::Handle_CallCha(const net::msg::MmCallChaMessage& msg) {
 	if ((msg.isBoat != 0) != pCCha->IsBoat())
 		return;
 	pCCha->SwitchMap(pCCha->GetSubMap(), msg.mapName.c_str(),
-		static_cast<Long>(msg.posX), static_cast<Long>(msg.posY), true, enumSWITCHMAP_CARRY, static_cast<Long>(msg.copyNo));
+					 static_cast<Long>(msg.posX), static_cast<Long>(msg.posY), true, enumSWITCHMAP_CARRY,
+					 static_cast<Long>(msg.copyNo));
 }
 
 void CGameApp::Handle_GuildApprove(const net::msg::MmGuildApproveMessage& msg) {
@@ -1370,8 +1323,7 @@ void CGameApp::Handle_GuildApprove(const net::msg::MmGuildApproveMessage& msg) {
 	}
 }
 
-void CGameApp::ProcessGarner2Update(const net::msg::PmGarner2UpdateLegacyMessage& msg)
-{
+void CGameApp::ProcessGarner2Update(const net::msg::PmGarner2UpdateLegacyMessage& msg) {
 	long chaid[6];
 	CPlayer* pplay;
 	for (int i = 0; i < 6; ++i) chaid[i] = static_cast<long>(msg.chaIds[i]);

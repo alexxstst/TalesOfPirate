@@ -36,16 +36,10 @@
     <ClCompile Include="..\src\CharacterRecord.cpp">
       <Filter>Data Tables</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\ForgeRecord.cpp">
-      <Filter>Data Tables</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\HairRecord.cpp">
       <Filter>Data Tables</Filter>
     </ClCompile>
     <ClCompile Include="..\src\ItemRecord.cpp">
-      <Filter>Data Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\JobInitEquip.cpp">
       <Filter>Data Tables</Filter>
     </ClCompile>
     <ClCompile Include="..\src\LevelRecord.cpp">
@@ -54,16 +48,7 @@
     <ClCompile Include="..\src\LifeLvRecord.cpp">
       <Filter>Data Tables</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\MonRefRecord.cpp">
-      <Filter>Data Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\NpcRecord.cpp">
-      <Filter>Data Tables</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\SailLvRecord.cpp">
-      <Filter>Data Tables</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\ShipSet.cpp">
       <Filter>Data Tables</Filter>
     </ClCompile>
     <ClCompile Include="..\src\SkillRecord.cpp">
@@ -84,9 +69,6 @@
     <ClCompile Include="..\src\EventRecord.cpp">
       <Filter>EventData</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\SwitchMapRecord.cpp">
-      <Filter>EventData</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\ChaMask.cpp">
       <Filter>Structures</Filter>
     </ClCompile>
@@ -99,8 +81,170 @@
     <ClCompile Include="..\src\StringLib.cpp">
       <Filter>Tools</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\TableData.cpp">
-      <Filter>Data Tables</Filter>
+    <ClCompile Include="..\src\stdafx.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\KitbagMsgpack.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SqliteDatabase.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LevelRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SailLvRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LifeLvRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ChaRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SkillRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SkillStateRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HairRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ForgeRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\JobEquipRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AreaRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShipRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShipPartRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MusicRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EventSoundRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EffectRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MonsterInfoRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MountRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ResourceRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\StoneRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ElfSkillRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ShadeRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SceneObjRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PoseRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CharacterActionStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\HelpEntryStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NpcRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MonRefRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SwitchMapRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\CharacterModelStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AnimatedLightStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ChaCreateRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MapRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EventRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ServerRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NotifyRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ChatIconRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemTypeRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemPreRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TerrainRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EffParamRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GroupParamRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemRefineRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemRefineEffectRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MonsterListRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\NPCListRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LanguageRecordStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AssetDatabase.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RenderAssetDatabase.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\LitEntryStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ItemLitStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\sqlite3\sqlite3.c">
+      <Filter>Network Protocol</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -223,6 +367,255 @@
     </ClInclude>
     <ClInclude Include="..\include\ToolClass.h">
       <Filter>Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SqliteDatabase.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GameRecordset.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LevelRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SailLvRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LifeLvRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChaRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SkillRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SkillStateRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\HairRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ForgeRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\JobEquipRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AreaRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ShipRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ShipPartRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MusicRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MusicRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EventSoundRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EventSoundRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EffectRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EffectRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MonsterInfoRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MonsterInfoRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MountRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ResourceRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ResourceRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\StoneRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\StoneRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ElfSkillRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ElfSkillRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ShadeRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ShadeRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\HelpEntryRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\HelpEntryStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NpcRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MonRefRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SwitchMapRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SceneObjRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SceneObjRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PoseRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PoseRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CharacterActionRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CharacterActionStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CharacterModelRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\CharacterModelStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AnimatedLightRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AnimatedLightStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChaCreateRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChaCreateRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MapRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MapRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EventRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ServerRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ServerRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NotifyRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NotifyRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChatIconRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChatIconRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemTypeRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemTypeRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemPreRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemPreRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TerrainRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TerrainRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EffParamRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EffParamRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GroupParamRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GroupParamRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemRefineRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemRefineRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemRefineEffectRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemRefineEffectRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NPCDataRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MonsterListRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\NPCListRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LanguageRecordStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AssetDatabase.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\RenderAssetDatabase.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LitEntryRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LitEntryStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemLitRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ItemLitStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\sqlite3\sqlite3.h">
+      <Filter>Data Tables</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

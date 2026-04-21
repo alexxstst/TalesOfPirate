@@ -7,7 +7,7 @@
 // Запись таблицы моделей персонажей (character_models).
 // Одна строка = описание ассетов одного character_type: файл скелета + до 5 частей (скинов).
 // Источник: `effect/model.txt` (INI-секции вида `[N] / bone=... / skin1..5=...`).
-class CCharacterModelInfo : public CRawDataInfo
+class CCharacterModelInfo : public EntityData
 {
 public:
 	short _characterType{};

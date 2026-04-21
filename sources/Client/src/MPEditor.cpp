@@ -728,7 +728,7 @@ void MPEditor::FrameMove(DWORD dwTimeParam)
 				if(sMonsterStatus[i] > 0)
 				{
 					CChaRecord* pInfo = GetChaRecordInfo(i);
-					g_Render.Print(INFO_DEBUG, x, y, "[%d] %s %d", i, pInfo->szDataName, sMonsterStatus[i] );
+					g_Render.Print(INFO_DEBUG, x, y, "[%d] %s %d", i, pInfo->DataName.c_str(), sMonsterStatus[i] );
 					y = y + 20;
 					nTotal+=sMonsterStatus[i];
 				}

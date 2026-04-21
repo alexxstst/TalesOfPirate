@@ -28,12 +28,11 @@ GameRecordset<CChaCreateInfo>::RecordEntry ChaCreateRecordStore::ReadRecord(Sqli
 	CChaCreateInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	{
 		auto name = stmt.GetText(col++);
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
+		record.DataName = name;
 	}
 
 	record.bone = static_cast<DWORD>(stmt.GetInt(col++));
@@ -51,8 +50,8 @@ GameRecordset<CChaCreateInfo>::RecordEntry ChaCreateRecordStore::ReadRecord(Sqli
 		strncpy(record.description, text.data(), sizeof(record.description) - 1);
 	}
 
-	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	std::string name(record.DataName);
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 void ChaCreateRecordStore::Insert(SqliteDatabase& db, const CChaCreateInfo& r) {
@@ -63,8 +62,8 @@ void ChaCreateRecordStore::Insert(SqliteDatabase& db, const CChaCreateInfo& r) {
 			"(id,name,bone,faces,hairs,bodies,hands,feet,profession,description) "
 			"VALUES (?,?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, static_cast<int>(r.bone));
 		stmt.Bind(p++, SerializeDwordArray(r.face, r.face_num));
 		stmt.Bind(p++, SerializeDwordArray(r.hair, r.hair_num));
@@ -75,7 +74,7 @@ void ChaCreateRecordStore::Insert(SqliteDatabase& db, const CChaCreateInfo& r) {
 		stmt.Bind(p++, std::string_view(r.description));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ChaCreateRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ChaCreateRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

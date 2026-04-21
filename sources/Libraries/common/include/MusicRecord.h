@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы музыки/звуков
-class CMusicInfo : public CRawDataInfo
+class CMusicInfo : public EntityData
 {
 public:
 	int nType{0};

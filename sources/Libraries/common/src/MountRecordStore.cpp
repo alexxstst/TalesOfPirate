@@ -5,14 +5,9 @@ GameRecordset<CMountInfo>::RecordEntry MountRecordStore::ReadRecord(SqliteStatem
 	CMountInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 
 	record.mountID = static_cast<short>(stmt.GetInt(col++));
 	record.boneID  = static_cast<short>(stmt.GetInt(col++));
@@ -42,7 +37,7 @@ GameRecordset<CMountInfo>::RecordEntry MountRecordStore::ReadRecord(SqliteStatem
 		}
 	}
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void MountRecordStore::Insert(SqliteDatabase& db, const CMountInfo& r) {
@@ -53,8 +48,8 @@ void MountRecordStore::Insert(SqliteDatabase& db, const CMountInfo& r) {
 			"(id,data_name,mount_id,bone_id,heights,offset_x,offset_y,pose_ids) "
 			"VALUES (?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, static_cast<int>(r.mountID));
 		stmt.Bind(p++, static_cast<int>(r.boneID));
 
@@ -77,7 +72,7 @@ void MountRecordStore::Insert(SqliteDatabase& db, const CMountInfo& r) {
 
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "MountRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "MountRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

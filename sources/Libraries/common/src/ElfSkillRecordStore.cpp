@@ -4,19 +4,14 @@ GameRecordset<CElfSkillInfo>::RecordEntry ElfSkillRecordStore::ReadRecord(Sqlite
 	CElfSkillInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	{
-		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
-	}
+	record.DataName = stmt.GetText(col++);
 
 	record.nIndex  = stmt.GetInt(col++);
 	record.nTypeID = stmt.GetInt(col++);
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void ElfSkillRecordStore::Insert(SqliteDatabase& db, const CElfSkillInfo& r) {
@@ -27,13 +22,13 @@ void ElfSkillRecordStore::Insert(SqliteDatabase& db, const CElfSkillInfo& r) {
 			"(id,data_name,skill_index,type_id) "
 			"VALUES (?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, r.nIndex);
 		stmt.Bind(p++, r.nTypeID);
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ElfSkillRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ElfSkillRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

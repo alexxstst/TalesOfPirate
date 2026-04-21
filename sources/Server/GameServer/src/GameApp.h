@@ -27,7 +27,7 @@
 #include "StateCell.h"
 #include "LuaAPI.h"
 #include "CommFunc.h"
-#include "EntityAlloc.h"
+#include "GamePool.h"
 #include "MapRes.h"
 #include "PicSet.h"
 
@@ -163,8 +163,6 @@ public:
 	Entity*		IsLiveingEntity(unsigned long ulID, long lHandle);
 	Entity*		IsMapEntity(unsigned long ulID, long lHandle);
 	Entity*		IsLifeEntity(unsigned long ulID, long lHandle);
-	void		BeginGetTNpc(void);
-	mission::CTalkNpc*	GetNextTNpc(void);
 	void		AddPlayerIdx(DWORD dwDBID, CPlayer* pPlayer);
 	void		DelPlayerIdx(DWORD dwDBID);
 	CPlayer*    GetPlayerByDBID(DWORD dwDBID);
@@ -188,8 +186,8 @@ public:
 	// NPC
 	BOOL		SummonNpc( BYTE byMapID, USHORT sAreaID, const char szNpc[], USHORT sTime );
 
-	// 
-	mission::CEventEntity* CreateEntity( BYTE byType ) { return m_pCEntSpace->GetEventEntity( byType ); }
+	//
+	mission::CEventEntity* CreateEntity( BYTE byType ) { return GamePool::Instance().AcquireEventEntity( byType ); }
 	
 	void		NotiGameReset(unsigned long ulLeftSec);
 	void		SaveAllPlayer(void);
@@ -272,9 +270,6 @@ public:
 		unsigned long	m_ulLeftSec;
 	    CTimer			m_CTimerReset;
 	};
-
-	CEntityAlloc		*m_pCEntSpace;
-	CPlayerAlloc		*m_pCPlySpace;
 
 protected:
 	void	MgrUnitRun(DWORD dwCurTime);
@@ -459,18 +454,18 @@ inline void CGameApp::InitSStateTraOnTime()
 {
 	memset(m_lSStateTraOnTime, 0, sizeof(m_lSStateTraOnTime));
 	SkillStateRecordStore::Instance()->ForEach([this](CSkillStateRecord& rec) {
-		if (rec.nID < 1 || rec.nID > AREA_STATE_MAXID)
+		if (rec.Id < 1 || rec.Id > AREA_STATE_MAXID)
 			return;
 		if (rec.szOnTransfer == "0")
 			return;
 		if (!g_luaAPI.HasFunction(rec.szOnTransfer.c_str()))
 		{
-			ToLogService("lua", LogLevel::Warning, "Skill state {} has szOnTransfer='{}' but function not found", rec.nID, rec.szOnTransfer);
+			ToLogService("lua", LogLevel::Warning, "Skill state {} has szOnTransfer='{}' but function not found", rec.Id, rec.szOnTransfer);
 			return;
 		}
 		for (int j = 1; j <= SKILL_STATE_LEVEL; j++)
 		{
-			m_lSStateTraOnTime[rec.nID][j] = g_luaAPI.CallR<int>(rec.szOnTransfer.c_str(), (int)j).value_or(0);
+			m_lSStateTraOnTime[rec.Id][j] = g_luaAPI.CallR<int>(rec.szOnTransfer.c_str(), (int)j).value_or(0);
 		}
 	});
 }
@@ -484,26 +479,15 @@ inline long CGameApp::GetSStateTraOnTime(unsigned char uchStateID, unsigned char
 inline CCharacter* CGameApp::FindPlayerChaByName(const char* cszChaName)
 {
 	BEGINGETGATE();
-	CPlayer	*pCPlayer;
-	CCharacter	*pCha = 0;
-	GateServer	*pGateServer;
+	GateServer* pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer))
-			{
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				break;
-			}
-			pCha = pCPlayer->GetCtrlCha();
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetName(), cszChaName)) //
+			if (!strcmp(pCha->GetName(), cszChaName))
 				return pCha;
 		}
 	}
@@ -514,27 +498,15 @@ inline CCharacter* CGameApp::FindPlayerChaByName(const char* cszChaName)
 inline CCharacter* CGameApp::FindPlayerChaByNameLua(const char* cszChaName)
 {
 	BEGINGETGATE();
-	CPlayer	*pCPlayer;
-	CCharacter	*pCha = 0;
-	GateServer	*pGateServer;
+	GateServer* pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer))
-			{
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				break;
-			}
-			pCha = pCPlayer->GetCtrlCha();
-
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName)) //
+			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName))
 				return pCha;
 		}
 	}
@@ -546,30 +518,17 @@ inline CCharacter* CGameApp::FindPlayerChaByNameLua(const char* cszChaName)
 inline int CGameApp::FindPlayerChaByActNameLua(const char* cszChaName, CCharacter* chas[3])
 {
 	BEGINGETGATE();
-	CPlayer	*pCPlayer;
-	CCharacter	*pCha = 0;
-	GateServer	*pGateServer;
-
+	GateServer* pGateServer;
 	int count = 0;
 
 	while (pGateServer = GETNEXTGATE())
 	{
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer))
-			{
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByName");
-				break;
-			}
-			pCha = pCPlayer->GetCtrlCha();
-
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
-			if (!strcmp(pCha->GetPlayer()->GetActName(), cszChaName)) // 
+			if (!strcmp(pCPlayer->GetActName(), cszChaName))
 				chas[count++] = pCha;
 		}
 	}
@@ -578,21 +537,11 @@ inline int CGameApp::FindPlayerChaByActNameLua(const char* cszChaName, CCharacte
 }
 inline bool CGameApp::DealAllInGuild(int guildID, const char* luaFunc, const char* luaParam) {
 	BEGINGETGATE();
-	CPlayer* pCPlayer;
-	CCharacter* pCha = 0;
 	GateServer* pGateServer;
 	while (pGateServer = GETNEXTGATE()) {
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer*)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer)) {
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "DealAllInGuild");
-				break;
-			}
-			pCha = pCPlayer->GetCtrlCha();
-
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
 			if (pCha->GetPlayer()->GetMainCha()->GetValidGuildID() == guildID) {
@@ -612,26 +561,15 @@ inline bool CGameApp::DealAllInGuild(int guildID, const char* luaFunc, const cha
 inline CCharacter* CGameApp::FindPlayerChaByID(unsigned long ulChaID)
 {
 	BEGINGETGATE();
-	CPlayer	*pCPlayer;
-	CCharacter	*pCha = 0;
-	GateServer	*pGateServer;
+	GateServer* pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer))
-			{
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				break;
-			}
-			pCha = pCPlayer->GetCtrlCha();
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
 			if (!pCha)
 				continue;
-			if (pCha->GetID() == ulChaID) // 
+			if (pCha->GetID() == ulChaID)
 				return pCha;
 		}
 	}
@@ -643,22 +581,12 @@ inline CCharacter* CGameApp::FindPlayerChaByID(unsigned long ulChaID)
 inline CPlayer* CGameApp::FindPlayerByDBChaID(unsigned long ulDBChaID)
 {
 	BEGINGETGATE();
-	CPlayer	*pCPlayer;
-	GateServer	*pGateServer;
+	GateServer* pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer))
-			{
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				break;
-			}
-			if (pCPlayer->GetDBChaId() == ulDBChaID) // 
+			if (pCPlayer->GetDBChaId() == ulDBChaID)
 				return pCPlayer;
 		}
 	}
@@ -670,26 +598,15 @@ inline CPlayer* CGameApp::FindPlayerByDBChaID(unsigned long ulDBChaID)
 inline CCharacter* CGameApp::FindMainPlayerChaByID(unsigned long ulChaID)
 {
 	BEGINGETGATE();
-	CPlayer	*pCPlayer;
-	CCharacter	*pCha = 0;
-	GateServer	*pGateServer;
+	GateServer* pGateServer;
 	while (pGateServer = GETNEXTGATE())
 	{
-		if (!BEGINGETPLAYER(pGateServer))
-			continue;
-		int nCount = 0;
-		while (pCPlayer = (CPlayer *)GETNEXTPLAYER(pGateServer))
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist)
 		{
-			if (++nCount > GETPLAYERCOUNT(pGateServer))
-			{
-				//LG("", ":%u, %s\n", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				ToLogService("errors", LogLevel::Error, "player number:{}, {}", GETPLAYERCOUNT(pGateServer), "FindPlayerChaByID");
-				break;
-			}
-			pCha = pCPlayer->GetMainCha();
+			CCharacter* pCha = pCPlayer->GetMainCha();
 			if (!pCha)
 				continue;
-			if (pCha->GetID() == ulChaID) // 
+			if (pCha->GetID() == ulChaID)
 				return pCha;
 		}
 	}
@@ -700,28 +617,26 @@ inline CCharacter* CGameApp::FindMainPlayerChaByID(unsigned long ulChaID)
 // WorldID
 inline CCharacter* CGameApp::FindChaByID(unsigned long ulChaID)
 {
-	CCharacter	*pCCha;
-	m_pCEntSpace->BeginGetCha();
-	while (pCCha = m_pCEntSpace->GetNextCha())
-	{
-		if (pCCha->GetID() == ulChaID)
-			return pCCha;
-	}
-
-	return 0;
+	CCharacter* pResult = nullptr;
+	GamePool::Instance().ForEachCharacter([ulChaID, &pResult](CCharacter* pCCha) {
+		if (!pResult && pCCha->GetID() == ulChaID)
+		{
+			pResult = pCCha;
+		}
+	});
+	return pResult;
 }
 
 inline CCharacter* CGameApp::FindChaByName(const char* cszChaName)
 {
-	CCharacter	*pCCha;
-	m_pCEntSpace->BeginGetCha();
-	while (pCCha = m_pCEntSpace->GetNextCha())
-	{
-		if (!strcmp(pCCha->GetName(), cszChaName))
-			return pCCha;
-	}
-
-	return 0;
+	CCharacter* pResult = nullptr;
+	GamePool::Instance().ForEachCharacter([cszChaName, &pResult](CCharacter* pCCha) {
+		if (!pResult && !strcmp(pCCha->GetName(), cszChaName))
+		{
+			pResult = pCCha;
+		}
+	});
+	return pResult;
 }
 
 enum EChaTimerAction

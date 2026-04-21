@@ -3,7 +3,6 @@
 
 #include "lwHeader.h"
 #include "lwDirectX.h"
-#include "lwFrontAPI.h"
 #include "lwStreamObj.h"
 #include "lwExpObj.h"
 #include "lwITypes.h"

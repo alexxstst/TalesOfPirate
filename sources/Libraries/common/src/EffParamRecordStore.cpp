@@ -5,16 +5,14 @@ GameRecordset<EFF_Param>::RecordEntry EffParamRecordStore::ReadRecord(SqliteStat
 	EFF_Param record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	// name → szName и szDataName
+	// name → szName и DataName
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szName, name.data(), sizeof(record.szName) - 1);
 		record.szName[sizeof(record.szName) - 1] = '\0';
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
+		record.DataName = name;
 	}
 
 	// models — "model0,model1,..."
@@ -77,7 +75,7 @@ GameRecordset<EFF_Param>::RecordEntry EffParamRecordStore::ReadRecord(SqliteStat
 	}
 
 	std::string name(record.szName);
-	return {record.nID, std::move(name), std::move(record)};
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 void EffParamRecordStore::Insert(SqliteDatabase& db, const EFF_Param& r) {
@@ -88,7 +86,7 @@ void EffParamRecordStore::Insert(SqliteDatabase& db, const EFF_Param& r) {
 			"(id,name,models,vel,parts,dummies,render_idx,light_id,result) "
 			"VALUES (?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
+		stmt.Bind(p++, r.Id);
 		stmt.Bind(p++, std::string_view(r.szName));
 
 		// models
@@ -128,6 +126,6 @@ void EffParamRecordStore::Insert(SqliteDatabase& db, const EFF_Param& r) {
 		stmt.Bind(p++, std::string_view(r.strResult));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "EffParamRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "EffParamRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }

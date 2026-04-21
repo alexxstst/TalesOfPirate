@@ -21,7 +21,7 @@ const char cchSkillStateRecordKeyValue = (char)0xff;
 #define defSKILLSTATE_ACT_NUM		3
 #define defSKILLSTATE_DESC_NAME_LEN	255
 
-class CSkillStateRecord : public CRawDataInfo {
+class CSkillStateRecord : public EntityData {
 public:
 	// CSkillStateRecord();
 

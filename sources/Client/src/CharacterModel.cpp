@@ -295,7 +295,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
         {
-            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->DataName.c_str())));
             return NULL;
         }
 #endif
@@ -316,7 +316,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( &load_info ) == 0 )
         {
-            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->DataName.c_str())));
             return NULL;
         }
 #endif
@@ -332,7 +332,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
         {
-            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->DataName.c_str())));
             return NULL;
         }
     }
@@ -348,7 +348,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadTower( pInfo->chModalType, part_buf ) == 0 )
         {
-            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->DataName.c_str())));
             return NULL;
         }
     }
@@ -370,7 +370,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
         if( LoadCha( &load_info ) == 0 )
         {
-            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->szDataName)));
+            g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), type_id, std::string_view(pInfo->DataName.c_str())));
             return NULL;
         }
     }
@@ -380,7 +380,7 @@ int CCharacterModel::ReCreate( DWORD type_id )
 
     if( LoadPose( type_id ) == 0 )
     {
-       g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), type_id, std::string_view(pInfo->szDataName)));
+       g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), type_id, std::string_view(pInfo->DataName.c_str())));
        return NULL;
     }
     
@@ -1285,7 +1285,7 @@ MPIPoseCtrl* CCharacterModel::GetPoseCtrl()
         c = MPCharacter::GetObjImpPoseCtrl(1, ANIM_CTRL_TYPE_MAT);
         break;
     default:
-        __asm int 3;
+        __debugbreak();
         break;
     }
 

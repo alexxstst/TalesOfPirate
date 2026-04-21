@@ -69,10 +69,6 @@ typedef lwITimerPeriod MPITimerPeriod;
 
 // method
 
-#ifndef MPGUIDCreateObject
-#define MPGUIDCreateObject lwGUIDCreateObject
-#endif
-
 #ifndef MPMatrix44Multiply
 #define MPMatrix44Multiply lwMatrix44Multiply
 #endif

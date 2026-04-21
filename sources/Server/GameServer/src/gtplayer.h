@@ -14,59 +14,63 @@
 #define GTPLAYER_H_
 
 class GateServer;
+
 // Unique Player structure
-struct uplayer
-{
-    uplayer() {}
-    uplayer(char const* gt_name, unsigned long gt_addr, DWORD atorID)
-    {Init(gt_name, gt_addr, atorID);}
+struct uplayer {
+	uplayer() {
+	}
 
-    void Init(char const* gt_name, unsigned long gt_addr, DWORD atorID);
+	uplayer(char const* gt_name, std::int64_t gt_addr, DWORD atorID) {
+		Init(gt_name, gt_addr, atorID);
+	}
 
-    uplayer& operator =(uplayer const& up)
-    {
-        this->m_dwDBChaId = up.m_dwDBChaId;
-        this->pGate = up.pGate;
-        this->m_ulGateAddr = up.m_ulGateAddr;
-        return *this;
-    }
+	void Init(char const* gt_name, std::int64_t gt_addr, DWORD atorID);
 
-    DWORD m_dwDBChaId; // ID
+	DWORD m_dwDBChaId{}; // ID
 
-    // Player
-    GateServer* pGate;
-    unsigned long m_ulGateAddr; //  GateServer 
+	// Player
+	GateServer* pGate{};
+	std::int64_t m_ulGateAddr{}; //  GateServer
 };
 
-struct GatePlayer
-{
+struct GatePlayer {
 protected:
-    GatePlayer() : ply(), Next(NULL), Prev(NULL), m_tmplist(NULL) {}
-    ~GatePlayer() {Next = NULL; Prev = NULL;}
+	GatePlayer() = default;
+	~GatePlayer() = default;
 
 public:
-    void SetGate(GateServer* gt) {ply.pGate = gt;}
-    GateServer* GetGate() const {return ply.pGate;}
+	void SetGate(GateServer* gt) {
+		ply.pGate = gt;
+	}
 
-    void SetGateAddr(unsigned long gt_addr) {ply.m_ulGateAddr = gt_addr;}    
-    unsigned long GetGateAddr() const {return ply.m_ulGateAddr;}
+	GateServer* GetGate() const {
+		return ply.pGate;
+	}
 
-    void SetDBChaId(DWORD dwDBChaId) {ply.m_dwDBChaId = dwDBChaId;}
-    DWORD GetDBChaId(void) {return ply.m_dwDBChaId;}
+	void SetGateAddr(unsigned long gt_addr) {
+		ply.m_ulGateAddr = gt_addr;
+	}
 
-    GatePlayer*& GetNextPlayer() {return m_tmplist;}
+	unsigned long GetGateAddr() const {
+		return ply.m_ulGateAddr;
+	}
 
-    virtual void OnLogin() {}
-    virtual void OnLogoff() {}
+	void SetDBChaId(DWORD dwDBChaId) {
+		ply.m_dwDBChaId = dwDBChaId;
+	}
 
-    GatePlayer* Next;
-    GatePlayer* Prev;
+	DWORD GetDBChaId(void) {
+		return ply.m_dwDBChaId;
+	}
+
+	virtual void OnLogin() {
+	}
+
+	virtual void OnLogoff() {
+	}
 
 private:
-
-    uplayer ply;
-
-    GatePlayer* m_tmplist; // 
+	uplayer ply;
 };
 
 

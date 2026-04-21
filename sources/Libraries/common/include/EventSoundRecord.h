@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы звуков событий
-class CEventSoundInfo : public CRawDataInfo
+class CEventSoundInfo : public EntityData
 {
 public:
 	int nSoundID{-1};

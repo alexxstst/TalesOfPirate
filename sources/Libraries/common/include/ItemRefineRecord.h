@@ -3,7 +3,7 @@
 
 #define ITEM_REFINE_NUM 14
 
-class CItemRefineInfo : public CRawDataInfo {
+class CItemRefineInfo : public EntityData {
 public:
 	short Value[ITEM_REFINE_NUM]{};
 	float fChaEffectScale[4]{};

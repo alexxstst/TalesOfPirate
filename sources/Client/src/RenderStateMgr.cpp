@@ -1,6 +1,7 @@
 ﻿//
 #include "stdafx.h"
 #include "RenderStateMgr.h"
+#include "lwMisc.h"
 
 RenderStateMgr::RenderStateMgr()
 :_dev_obj(0), _rsa_scene(0), _rsa_cha(0), _rsa_sceneobj(0), 
@@ -28,7 +29,7 @@ HRESULT RenderStateMgr::Init(MPIDeviceObject* dev_obj)
 
     //begin scene
     {
-        MPGUIDCreateObject((LW_VOID**)&_rsa_scene, LW_GUID_RENDERSTATEATOMSET);
+        _rsa_scene = LW_NEW(lwRenderStateAtomSet);
         _rsa_scene->Allocate(20);
 
         rs_id = 0;
@@ -43,7 +44,7 @@ HRESULT RenderStateMgr::Init(MPIDeviceObject* dev_obj)
 
     { // begin rsa_scnobj
 
-        MPGUIDCreateObject((LW_VOID**)&_rsa_sceneobj, LW_GUID_RENDERSTATEATOMSET);
+        _rsa_sceneobj = LW_NEW(lwRenderStateAtomSet);
         _rsa_sceneobj->Allocate(20);
 
         rs_id = 0;
@@ -88,7 +89,7 @@ HRESULT RenderStateMgr::Init(MPIDeviceObject* dev_obj)
     
     // begin _rsa_cha
     {
-        MPGUIDCreateObject((LW_VOID**)&_rsa_cha, LW_GUID_RENDERSTATEATOMSET);
+        _rsa_cha = LW_NEW(lwRenderStateAtomSet);
         _rsa_cha->Allocate(20);
 
         rs_id = 0;
@@ -129,7 +130,7 @@ HRESULT RenderStateMgr::Init(MPIDeviceObject* dev_obj)
 
     // begin _rsa_transpobj
     {
-        MPGUIDCreateObject((LW_VOID**)&_rsa_transpobj, LW_GUID_RENDERSTATEATOMSET);
+        _rsa_transpobj = LW_NEW(lwRenderStateAtomSet);
         _rsa_transpobj->Allocate(20);
 
         rs_id = 0;

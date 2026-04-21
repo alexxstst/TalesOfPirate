@@ -9,7 +9,7 @@
 #define MAX_REGION       20
 
 // Запись таблицы серверов (группа шлюзов)
-class CServerGroupInfo : public CRawDataInfo {
+class CServerGroupInfo : public EntityData {
 public:
 	std::string region{};
 	std::vector<std::string> gateIPs{};

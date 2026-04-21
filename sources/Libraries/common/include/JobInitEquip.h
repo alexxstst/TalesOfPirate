@@ -14,7 +14,7 @@
 
 #define defJOB_INIT_EQUIP_MAX	6
 
-class CJobEquipRecord : public CRawDataInfo
+class CJobEquipRecord : public EntityData
 {
 public:
 	char	chID;			//

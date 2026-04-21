@@ -138,7 +138,7 @@ let handleTpUserLogin (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (p
                       GmLevel = gmLevel
                       ClientIp = clientIp
                       Gate = ch
-                      GateAddr = gtAddr
+                      GateAddr = uint32 gtAddr
                       Password2 = password2
                       Characters = characters
                       CurrentCha = -1
@@ -162,7 +162,7 @@ let handleTpUserLogin (ctx: HandlerContext) (ch: GateServerIO) (sess: uint32) (p
                                   HasPassword2 = password2.Length > 0
                                   AcctId = int64 acctId
                                   AcctLoginId = int64 acctLoginId
-                                  GpAddr = gpAddr })
+                                  GpAddr = int64 gpAddr })
                 ctx.SendRpcResponse ch sess w
                 ctx.Logger.LogInformation("TP_USER_LOGIN: {Name} авторизован, {Count} персонажей, hasPassword2={Pw2}",
                     acctName, characters.Length, password2.Length > 0))

@@ -90,7 +90,7 @@ enum EItemPickTo {
 	enumITEM_PICKTO_CABIN,
 };
 
-class CItemRecord : public CRawDataInfo {
+class CItemRecord : public EntityData {
 public:
 	enum EItemExtendInfo {
 		enumItemNormalStart = 0, //

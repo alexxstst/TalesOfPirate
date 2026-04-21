@@ -293,7 +293,7 @@ lwMatrix44* _lwMatrix44Multiply( lwMatrix44* ret,const lwMatrix44* m1,const lwMa
 
 }
 
-LW_FRONT_API lwMatrix44* lwMatrix44MultiplyScale(lwMatrix44* ret,const lwMatrix44* mat_scale,const lwMatrix44* mat)
+lwMatrix44* lwMatrix44MultiplyScale(lwMatrix44* ret,const lwMatrix44* mat_scale,const lwMatrix44* mat)
 {
    ret->_11 = mat_scale->_11 * mat->_11;
    ret->_12 = mat_scale->_11 * mat->_12;
@@ -1251,7 +1251,7 @@ lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwVector
 
     return out;
 }
-LW_FRONT_API lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwMatrix44* mat)
+lwVector3* lwVector3Transform(lwVector3* out, const lwVector3* v, const lwMatrix44* mat)
 {
 
 	out->x = v->x * mat->_11 + v->y * mat->_21 + v->z * mat->_31 + mat->_41;

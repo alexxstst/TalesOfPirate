@@ -196,7 +196,7 @@ type GroupServerSystem
             ch.SendPacket(w)
 
     /// Найти Playing-игрока по playerId и проверить gpAddr.
-    member private _.ValidatePlayer(playerId: uint32, gpAddr: uint32) =
+    member private _.ValidatePlayer(playerId: uint32, gpAddr: int64) =
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player when player.IsPlaying && player.GpAddr = gpAddr -> Some player
         | _ -> None
@@ -276,7 +276,7 @@ type GroupServerSystem
     member private _.PT_KICKUSER(packet: IRPacket) =
         let _aimnum = uint16 (packet.ReverseReadInt64())
         let playerId = uint32 (packet.ReverseReadInt64())
-        let gpAddr = uint32 (packet.ReverseReadInt64())
+        let gpAddr = packet.ReverseReadInt64()
 
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player when player.GpAddr = gpAddr ->
@@ -291,7 +291,7 @@ type GroupServerSystem
     member private _.PT_ESTOP(packet: IRPacket, value: bool) =
         let _aimnum = uint16 (packet.ReverseReadInt64())
         let playerId = uint32 (packet.ReverseReadInt64())
-        let gpAddr = uint32 (packet.ReverseReadInt64())
+        let gpAddr = packet.ReverseReadInt64()
 
         match _clientSystem.GetPlayerById(PlayerId_ playerId) with
         | Some player when player.GpAddr = gpAddr ->
@@ -319,7 +319,7 @@ type GroupServerSystem
         let targets =
             Array.init aimnum (fun _ ->
                 let playerId = uint32 (packet.ReverseReadInt64())
-                let gpAddr = uint32 (packet.ReverseReadInt64())
+                let gpAddr = packet.ReverseReadInt64()
 
                 match _clientSystem.GetPlayerById(PlayerId_ playerId) with
                 | Some player when player.GpAddr = gpAddr -> Some player
@@ -379,7 +379,7 @@ type GroupServerSystem
             let targets =
                 Array.init aimnum (fun _ ->
                     let playerId = uint32 (packet.ReverseReadInt64())
-                    let gpAddr = uint32 (packet.ReverseReadInt64())
+                    let gpAddr = packet.ReverseReadInt64()
                     struct (playerId, gpAddr))
 
             // Обрезать trailer

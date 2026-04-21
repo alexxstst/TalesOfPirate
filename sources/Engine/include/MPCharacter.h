@@ -7,7 +7,6 @@
 #include "lwObjectMethod.h"
 #include "MPSceneItem.h"
 
-#include "lwFrontAPI.h"
 
 LW_BEGIN
 
@@ -50,7 +49,7 @@ struct MPChaLoadInfo
 
 typedef MPChaLoadInfo mpChaLoadInfo;
 
-class LW_FRONT_API MPCharacter : public lwMatrixCtrl
+class MPCharacter : public lwMatrixCtrl
 {
     struct MPLinkInfo
     {

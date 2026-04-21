@@ -1,7 +1,7 @@
 ﻿//
 #include "stdafx.h"
 #include "lwFileStream.h"
-#include "lwGuidObj.h"
+#include "lwFile.h"
 
 LW_BEGIN
 
@@ -27,8 +27,10 @@ LW_RESULT lwFileStream::Open(const char* file, const lwFileStreamOpenInfo* info)
 
     if(info->adapter_type == FS_ADAPTER_FILE)
     {
-        if(LW_FAILED(lwGUIDCreateObject((lxvoid**)&_adapter_file, LW_GUID_FILE)))
+        _adapter_file = LW_NEW(lwFile);
+        if(!_adapter_file) {
             goto __ret;
+        }
 
         if(LW_FAILED(_adapter_file->CreateFile(file, info->access_flag, NULL, 0, info->create_flag, info->attributes_flag)))
             goto __ret;

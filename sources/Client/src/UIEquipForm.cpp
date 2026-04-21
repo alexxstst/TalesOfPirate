@@ -726,7 +726,7 @@ void CEquipMgr::SynSkillBag(DWORD dwCharID, stNetSkillBag *pSSkillBag)
 CSkillRecord* CEquipMgr::FindSkill( int nID )
 {
 	for( vskill::iterator it=_skills.begin(); it!=_skills.end(); it++ )
-		if( (*it)->nID==nID )
+		if( (*it)->Id==nID )
 			return *it;
 
 	return NULL;
@@ -1429,7 +1429,7 @@ void CEquipMgr::evtSwapItemEvent(CGuiData *pSender,int nFirst, int nSecond, bool
 	{
 		if( pItem && pItem->GetTotalNum()>1 )
 		{
-			if( !pTarget || pTarget->GetItemInfo()->nID==pItem->GetItemInfo()->nID )
+			if( !pTarget || pTarget->GetItemInfo()->Id==pItem->GetItemInfo()->Id )
 			{
 				SSplit.nFirst = nFirst;
 				SSplit.nSecond = nSecond;

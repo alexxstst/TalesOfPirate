@@ -910,7 +910,7 @@ BOOL	CMagicEff::Create(int iIdxID)
 		return FALSE;
 	}
 
-	Property.m_strName = pInfo->szDataName;
+	Property.m_strName = pInfo->DataName.c_str();
 	if(!Create(&Property,&ResMgr))
 	{
 		Clear();
@@ -1429,7 +1429,7 @@ void	CMagicEff::Emission(int iID, D3DXVECTOR3* vBegin, D3DXVECTOR3* vEnd, int iT
 	}
 	catch(...)
 	{
-		__asm int 3;
+		__debugbreak();
 	}
 }
  
@@ -1561,7 +1561,7 @@ bool	CShadeEff::Create( CShadeInfo* pInfo)
 		return false;
 	if(pInfo->fsize>9)
 		pInfo->fsize = 9;
-    std::string str = pInfo->szDataName;
+    std::string str = pInfo->DataName.c_str();
 	if(!CMPShadeCtrl::Create(str,  &ResMgr,  pInfo->fsize, 
 		pInfo->nAni!=0, pInfo->nRow,  pInfo->nCol))
 		return false;
@@ -1605,7 +1605,7 @@ bool	CShadeEff::CreateAttachLight(int iIdxID, float fRange,D3DXCOLOR dwcolor)
 	CShadeInfo* pInfo = GetShadeInfo(iIdxID);
 	if(!pInfo)
 		return false;
-    std::string str = pInfo->szDataName;
+    std::string str = pInfo->DataName.c_str();
 	if(!CMPShadeCtrl::Create(str,  &ResMgr,  fRange, 
 		pInfo->nAni!=0, pInfo->nRow,  pInfo->nCol))
 		return false;

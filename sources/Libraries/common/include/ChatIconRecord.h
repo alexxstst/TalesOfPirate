@@ -1,7 +1,7 @@
 #pragma once
 #include "TableData.h"
 
-class CChatIconInfo : public CRawDataInfo {
+class CChatIconInfo : public EntityData {
 public:
 	char szSmall[16]{};
 	int  nSmallX{0};

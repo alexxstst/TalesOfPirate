@@ -1,4 +1,4 @@
-module Corsairs.Platform.Network.Tests.CommandMessagesTests
+﻿module Corsairs.Platform.Network.Tests.CommandMessagesTests
 
 open Xunit
 open Corsairs.Platform.Network.Protocol
@@ -33,7 +33,7 @@ let ``TpLoginResponse roundtrip`` () =
 let ``TpUserLoginRequest roundtrip`` () =
     let original =
         { AcctName = "player1"; AcctPassword = "pass123"; AcctMac = "AA:BB:CC"
-          ClientIp = 0x7F000001u; GateAddr = 42u; CheatMarker = 911L }
+          ClientIp = 0x7F000001u; GateAddr = 42L; CheatMarker = 911L }
     let restored = roundtrip Serialize.tpUserLoginRequest Deserialize.tpUserLoginRequest original
     Assert.Equal(original.AcctName, restored.AcctName)
     Assert.Equal(original.AcctPassword, restored.AcctPassword)
@@ -54,7 +54,7 @@ let ``TpUserLoginResponse success roundtrip`` () =
             { Valid = false; ChaName = ""; Job = ""; Degree = 0L; TypeId = 0L
               EquipIds = Array.empty }
           |]
-          HasPassword2 = true; AcctId = 100L; AcctLoginId = 200L; GpAddr = 300u }
+          HasPassword2 = true; AcctId = 100L; AcctLoginId = 200L; GpAddr = 300L }
     let original = TpUserLoginSuccess data
     let restored = roundtrip Serialize.tpUserLoginResponse Deserialize.tpUserLoginResponse original
     match restored with
@@ -70,7 +70,7 @@ let ``TpUserLoginResponse success roundtrip`` () =
         Assert.False(d.Characters[2].Valid)
         Assert.True(d.HasPassword2)
         Assert.Equal(100L, d.AcctId)
-        Assert.Equal(300u, d.GpAddr)
+        Assert.Equal(300L, d.GpAddr)
     | TpUserLoginError _ -> failwith "Expected TpUserLoginSuccess"
 
 [<Fact>]
@@ -83,7 +83,7 @@ let ``TpUserLoginResponse error roundtrip`` () =
 
 [<Fact>]
 let ``TpUserLogoutRequest roundtrip`` () =
-    let original = { TpUserLogoutRequest.GateAddr = 10u; GpAddr = 20u }
+    let original = { TpUserLogoutRequest.GateAddr = 10L; GpAddr = 20L }
     let restored = roundtrip Serialize.tpUserLogoutRequest Deserialize.tpUserLogoutRequest original
     Assert.Equal(original.GateAddr, restored.GateAddr)
     Assert.Equal(original.GpAddr, restored.GpAddr)
@@ -96,7 +96,7 @@ let ``TpUserLogoutResponse roundtrip`` () =
 
 [<Fact>]
 let ``TpBgnPlayRequest roundtrip`` () =
-    let original = { ChaIndex = 2L; GateAddr = 10u; GpAddr = 20u }
+    let original = { ChaIndex = 2L; GateAddr = 10L; GpAddr = 20L }
     let restored = roundtrip Serialize.tpBgnPlayRequest Deserialize.tpBgnPlayRequest original
     Assert.Equal(original.ChaIndex, restored.ChaIndex)
     Assert.Equal(original.GateAddr, restored.GateAddr)
@@ -113,7 +113,7 @@ let ``TpBgnPlayResponse success roundtrip`` () =
 
 [<Fact>]
 let ``TpEndPlayRequest roundtrip`` () =
-    let original = { TpEndPlayRequest.GateAddr = 5u; GpAddr = 15u }
+    let original = { TpEndPlayRequest.GateAddr = 5L; GpAddr = 15L }
     let restored = roundtrip Serialize.tpEndPlayRequest Deserialize.tpEndPlayRequest original
     Assert.Equal(original.GateAddr, restored.GateAddr)
 
@@ -138,7 +138,7 @@ let ``TpEndPlayResponse success roundtrip`` () =
 let ``TpNewChaRequest roundtrip`` () =
     let original =
         { ChaName = "NewHero"; Birth = "warrior"; TypeId = 1L; HairId = 3L; FaceId = 5L
-          GateAddr = 42u; GpAddr = 100u }
+          GateAddr = 42L; GpAddr = 100L }
     let restored = roundtrip Serialize.tpNewChaRequest Deserialize.tpNewChaRequest original
     Assert.Equal(original.ChaName, restored.ChaName)
     Assert.Equal(original.Birth, restored.Birth)
@@ -153,7 +153,7 @@ let ``TpNewChaResponse roundtrip`` () =
 
 [<Fact>]
 let ``TpDelChaRequest roundtrip`` () =
-    let original = { ChaIndex = 1L; Password2 = "pin"; GateAddr = 10u; GpAddr = 20u }
+    let original = { ChaIndex = 1L; Password2 = "pin"; GateAddr = 10L; GpAddr = 20L }
     let restored = roundtrip Serialize.tpDelChaRequest Deserialize.tpDelChaRequest original
     Assert.Equal(original.ChaIndex, restored.ChaIndex)
     Assert.Equal(original.Password2, restored.Password2)
@@ -166,7 +166,7 @@ let ``TpDelChaResponse roundtrip`` () =
 
 [<Fact>]
 let ``TpChangePassRequest roundtrip`` () =
-    let original = { TpChangePassRequest.NewPass = "new123"; Pin = "pin456"; GateAddr = 1u; GpAddr = 2u }
+    let original = { TpChangePassRequest.NewPass = "new123"; Pin = "pin456"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.tpChangePassRequest Deserialize.tpChangePassRequest original
     Assert.Equal(original.NewPass, restored.NewPass)
     Assert.Equal(original.Pin, restored.Pin)
@@ -187,13 +187,13 @@ let ``TpRegisterResponse roundtrip`` () =
 
 [<Fact>]
 let ``TpCreatePassword2Request roundtrip`` () =
-    let original = { TpCreatePassword2Request.Password2 = "pw2"; GateAddr = 1u; GpAddr = 2u }
+    let original = { TpCreatePassword2Request.Password2 = "pw2"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.tpCreatePassword2Request Deserialize.tpCreatePassword2Request original
     Assert.Equal(original.Password2, restored.Password2)
 
 [<Fact>]
 let ``TpUpdatePassword2Request roundtrip`` () =
-    let original = { OldPassword2 = "old"; NewPassword2 = "new"; GateAddr = 1u; GpAddr = 2u }
+    let original = { OldPassword2 = "old"; NewPassword2 = "new"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.tpUpdatePassword2Request Deserialize.tpUpdatePassword2Request original
     Assert.Equal(original.OldPassword2, restored.OldPassword2)
     Assert.Equal(original.NewPassword2, restored.NewPassword2)
@@ -367,7 +367,7 @@ let ``ApExpScaleMessage roundtrip`` () =
 
 [<Fact>]
 let ``CpTeamInviteMessage roundtrip`` () =
-    let original = { CpTeamInviteMessage.InvitedName = "friend1"; GateAddr = 10u; GpAddr = 200u }
+    let original = { CpTeamInviteMessage.InvitedName = "friend1"; GateAddr = 10L; GpAddr = 200L }
     let restored = roundtrip Serialize.cpTeamInviteMessage Deserialize.cpTeamInviteMessage original
     Assert.Equal(original.InvitedName, restored.InvitedName)
     Assert.Equal(original.GateAddr, restored.GateAddr)
@@ -375,25 +375,25 @@ let ``CpTeamInviteMessage roundtrip`` () =
 
 [<Fact>]
 let ``CpTeamAcceptMessage roundtrip`` () =
-    let original = { CpTeamAcceptMessage.InviterChaId = 5L; GateAddr = 1u; GpAddr = 2u }
+    let original = { CpTeamAcceptMessage.InviterChaId = 5L; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpTeamAcceptMessage Deserialize.cpTeamAcceptMessage original
     Assert.Equal(original.InviterChaId, restored.InviterChaId)
 
 [<Fact>]
 let ``CpTeamLeaveMessage roundtrip`` () =
-    let original = { CpTeamLeaveMessage.GateAddr = 1u; GpAddr = 2u }
+    let original = { CpTeamLeaveMessage.GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpTeamLeaveMessage Deserialize.cpTeamLeaveMessage original
     Assert.Equal(original.GateAddr, restored.GateAddr)
 
 [<Fact>]
 let ``CpSay2AllMessage roundtrip`` () =
-    let original = { CpSay2AllMessage.Content = "Hello!"; GateAddr = 1u; GpAddr = 2u }
+    let original = { CpSay2AllMessage.Content = "Hello!"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpSay2AllMessage Deserialize.cpSay2AllMessage original
     Assert.Equal(original.Content, restored.Content)
 
 [<Fact>]
 let ``CpSay2YouMessage roundtrip`` () =
-    let original = { TargetName = "Bob"; Content = "Hi Bob!"; GateAddr = 1u; GpAddr = 2u }
+    let original = { TargetName = "Bob"; Content = "Hi Bob!"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpSay2YouMessage Deserialize.cpSay2YouMessage original
     Assert.Equal(original.TargetName, restored.TargetName)
     Assert.Equal(original.Content, restored.Content)
@@ -401,7 +401,7 @@ let ``CpSay2YouMessage roundtrip`` () =
 [<Fact>]
 let ``CpSessCreateMessage roundtrip`` () =
     let original =
-        { ChaNum = 2L; ChaNames = [| "Alice"; "Bob" |]; GateAddr = 1u; GpAddr = 2u }
+        { ChaNum = 2L; ChaNames = [| "Alice"; "Bob" |]; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpSessCreateMessage Deserialize.cpSessCreateMessage original
     Assert.Equal(original.ChaNum, restored.ChaNum)
     Assert.Equal(2, restored.ChaNames.Length)
@@ -410,20 +410,20 @@ let ``CpSessCreateMessage roundtrip`` () =
 
 [<Fact>]
 let ``CpChangePersonInfoMessage roundtrip`` () =
-    let original = { Motto = "YOLO"; Icon = 3L; RefuseSess = 1L; GateAddr = 1u; GpAddr = 2u }
+    let original = { Motto = "YOLO"; Icon = 3L; RefuseSess = 1L; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpChangePersonInfoMessage Deserialize.cpChangePersonInfoMessage original
     Assert.Equal(original.Motto, restored.Motto)
     Assert.Equal(original.Icon, restored.Icon)
 
 [<Fact>]
 let ``CpPingMessage roundtrip`` () =
-    let original = { CpPingMessage.PingValue = 12345L; GateAddr = 1u; GpAddr = 2u }
+    let original = { CpPingMessage.PingValue = 12345L; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpPingMessage Deserialize.cpPingMessage original
     Assert.Equal(original.PingValue, restored.PingValue)
 
 [<Fact>]
 let ``CpChangePassMessage roundtrip`` () =
-    let original = { CpChangePassMessage.NewPass = "np"; Pin = "pp"; GateAddr = 1u; GpAddr = 2u }
+    let original = { CpChangePassMessage.NewPass = "np"; Pin = "pp"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.cpChangePassMessage Deserialize.cpChangePassMessage original
     Assert.Equal(original.NewPass, restored.NewPass)
     Assert.Equal(original.Pin, restored.Pin)
@@ -434,7 +434,7 @@ let ``CpChangePassMessage roundtrip`` () =
 
 [<Fact>]
 let ``MpEnterMapMessage roundtrip`` () =
-    let original = { MpEnterMapMessage.IsSwitch = 1L; GateAddr = 10u; GpAddr = 20u }
+    let original = { MpEnterMapMessage.IsSwitch = 1L; GateAddr = 10L; GpAddr = 20L }
     let restored = roundtrip Serialize.mpEnterMapMessage Deserialize.mpEnterMapMessage original
     Assert.Equal(original.IsSwitch, restored.IsSwitch)
     Assert.Equal(original.GateAddr, restored.GateAddr)
@@ -443,7 +443,7 @@ let ``MpEnterMapMessage roundtrip`` () =
 let ``MpGuildCreateMessage roundtrip`` () =
     let original =
         { GuildId = 100L; GldName = "Pirates"; Job = "Captain"; Degree = 50L
-          GateAddr = 1u; GpAddr = 2u }
+          GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.mpGuildCreateMessage Deserialize.mpGuildCreateMessage original
     Assert.Equal(original.GuildId, restored.GuildId)
     Assert.Equal(original.GldName, restored.GldName)
@@ -461,7 +461,7 @@ let ``MpMasterCreateMessage roundtrip`` () =
 [<Fact>]
 let ``MpSay2AllMessage roundtrip`` () =
     let original =
-        { MpSay2AllMessage.Succ = 1L; ChaName = "Hero"; Content = "Hi all!"; GateAddr = 1u; GpAddr = 2u }
+        { MpSay2AllMessage.Succ = 1L; ChaName = "Hero"; Content = "Hi all!"; GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.mpSay2AllMessage Deserialize.mpSay2AllMessage original
     Assert.Equal(original.Succ, restored.Succ)
     Assert.Equal(original.ChaName, restored.ChaName)
@@ -471,7 +471,7 @@ let ``MpSay2AllMessage roundtrip`` () =
 let ``MpGuildChallMoneyMessage roundtrip`` () =
     let original =
         { GuildId = 1L; Money = 10000L; GuildName1 = "G1"; GuildName2 = "G2"
-          GateAddr = 1u; GpAddr = 2u }
+          GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.mpGuildChallMoneyMessage Deserialize.mpGuildChallMoneyMessage original
     Assert.Equal(original.GuildName1, restored.GuildName1)
     Assert.Equal(original.Money, restored.Money)
@@ -480,7 +480,7 @@ let ``MpGuildChallMoneyMessage roundtrip`` () =
 let ``MpGarner2UpdateMessage roundtrip`` () =
     let original =
         { Nid = 1L; ChaName = "X"; Level = 50L; Job = "Mage"; Fightpoint = 9999L
-          GateAddr = 1u; GpAddr = 2u }
+          GateAddr = 1L; GpAddr = 2L }
     let restored = roundtrip Serialize.mpGarner2UpdateMessage Deserialize.mpGarner2UpdateMessage original
     Assert.Equal(original.ChaName, restored.ChaName)
     Assert.Equal(original.Level, restored.Level)

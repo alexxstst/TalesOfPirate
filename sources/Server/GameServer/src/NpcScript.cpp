@@ -148,7 +148,7 @@ std::string GetAreaName(int sAreaID)
 	CAreaInfo* pInfo = AreaRecordStore::Instance()->Get(static_cast<int>(sAreaID));
 	if (pInfo)
 	{
-		strncpy(szArea, pInfo->szDataName, 128 - 1);
+		strncpy(szArea, pInfo->DataName.c_str(), 128 - 1);
 	}
 
 	return szArea;

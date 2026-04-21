@@ -36,7 +36,7 @@ int  UNIT_SCALE =  1;
 #define UNIT_DRAW_SIZE (UNIT_SCALE * 8)
 
 
-BOOL CALLBACK DlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK DlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
@@ -112,7 +112,7 @@ BOOL CALLBACK DlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 	return FALSE;
 }
 
-BOOL CALLBACK ReportDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK ReportDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {
@@ -328,7 +328,7 @@ static long  g_lLastViewAtMapX = 0;
 static long  g_lLastViewAtMapY = 0;
 static BOOL	 g_bDragMap         = FALSE;
 
-BOOL CALLBACK MapDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK MapDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
     switch(uMsg)
     {

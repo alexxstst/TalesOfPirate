@@ -14,7 +14,6 @@
 #include "MPTerrainSet.h"
 #include "ConsoleProcessor.h"
 
-#include "lwGuidObj.h"
 #include "lwInterface.h"
 #include "lwIFunc.h"
 #include "MPCharacter.h"

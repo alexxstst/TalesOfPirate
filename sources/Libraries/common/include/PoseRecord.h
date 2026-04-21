@@ -3,7 +3,7 @@
 #include "TableData.h"
 
 // Запись таблицы поз персонажа
-class CPoseInfo : public CRawDataInfo
+class CPoseInfo : public EntityData
 {
 public:
 	short sRealPoseID[7]{};

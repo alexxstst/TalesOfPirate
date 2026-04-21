@@ -4,16 +4,14 @@ GameRecordset<CChatIconInfo>::RecordEntry ChatIconRecordStore::ReadRecord(Sqlite
 	CChatIconInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
-	// name → szSmall и szDataName
+	// name → szSmall и DataName
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szSmall, name.data(), sizeof(record.szSmall) - 1);
 		record.szSmall[sizeof(record.szSmall) - 1] = '\0';
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
+		record.DataName = name;
 	}
 
 	record.nSmallX = stmt.GetInt(col++);
@@ -43,8 +41,8 @@ GameRecordset<CChatIconInfo>::RecordEntry ChatIconRecordStore::ReadRecord(Sqlite
 		record.szHint[sizeof(record.szHint) - 1] = '\0';
 	}
 
-	std::string name(record.szDataName);
-	return {record.nID, std::move(name), std::move(record)};
+	std::string name(record.DataName);
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 void ChatIconRecordStore::Insert(SqliteDatabase& db, const CChatIconInfo& r) {
@@ -55,7 +53,7 @@ void ChatIconRecordStore::Insert(SqliteDatabase& db, const CChatIconInfo& r) {
 			"(id,name,small_x,small_y,small_off,small_off_x,small_off_y,big,big_x,big_y,hint) "
 			"VALUES (?,?,?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
+		stmt.Bind(p++, r.Id);
 		stmt.Bind(p++, std::string_view(r.szSmall));
 		stmt.Bind(p++, r.nSmallX);
 		stmt.Bind(p++, r.nSmallY);
@@ -68,7 +66,7 @@ void ChatIconRecordStore::Insert(SqliteDatabase& db, const CChatIconInfo& r) {
 		stmt.Bind(p++, std::string_view(r.szHint));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ChatIconRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ChatIconRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

@@ -66,8 +66,6 @@ public:
 	void			SetCat(short sCat)		{m_cat = sCat;}
 	void			SetHandle(dbc::Long lHandle) {m_lHandle = lHandle;}
 	dbc::Long		GetHandle(void) {return m_lHandle;}
-	void			SetHoldID(dbc::Long lID) {m_lHoldID = lID;}
-	dbc::Long		GetHoldID(void) {return m_lHoldID;}
 	SubMap		*	GetSubMap()const{return m_submap;}
 	SubMap*			GetSubMapFar();
 	void			SetSubMap(SubMap *pCMap) {m_submap = pCMap;}
@@ -164,11 +162,7 @@ private:
 public:
 	bool		m_bValid;
 
-	struct // CEntityAlloc
-	{
-		dbc::Long	m_lHandle;
-		dbc::Long	m_lHoldID;
-	};
+	dbc::Long	m_lHandle;
 
 	short		m_cat;
 	

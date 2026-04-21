@@ -1,4 +1,4 @@
-﻿-- This is a generated file. DO NOT EDIT!
+-- This is a generated file. DO NOT EDIT!
 
 assert(require("jit").version == "LuaJIT 2.1.1700008891", "LuaJIT core/library version mismatch")
 

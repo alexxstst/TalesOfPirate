@@ -4,6 +4,8 @@
 #include "lwSystem.h"
 #include "lwSysGraphics.h"
 #include "lwPathInfo.h"
+#include "lwSystemInfo.h"
+#include "lwTimer.h"
 
 LW_BEGIN
 
@@ -63,8 +65,8 @@ LW_RESULT lwSystem::Initialize()
     _path_info = LW_NEW(lwPathInfo);
     _option_mgr = LW_NEW(lwOptionMgr);
 
-    lwGUIDCreateObject((LW_VOID**)&_system_info, LW_GUID_SYSTEMINFO);
-    lwGUIDCreateObject((LW_VOID**)&_internal_timer, LW_GUID_TIMER);
+    _system_info = LW_NEW(lwSystemInfo);
+    _internal_timer = LW_NEW(lwTimer);
 
     if(LW_FAILED(_system_info->CheckDirectXVersion()))
         goto __ret;

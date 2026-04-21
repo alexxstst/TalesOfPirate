@@ -5,13 +5,11 @@ GameRecordset<CMonsterInfo>::RecordEntry MonsterInfoRecordStore::ReadRecord(Sqli
 	CMonsterInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	{
 		auto dn = stmt.GetText(col++);
-		strncpy(record.szDataName, dn.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
+		record.DataName = dn;
 		strncpy(record.szName, dn.data(), sizeof(record.szName) - 1);
 		record.szName[sizeof(record.szName) - 1] = '\0';
 	}
@@ -38,7 +36,7 @@ GameRecordset<CMonsterInfo>::RecordEntry MonsterInfoRecordStore::ReadRecord(Sqli
 		record.szArea[sizeof(record.szArea) - 1] = '\0';
 	}
 
-	return {record.nID, std::string(record.szDataName), std::move(record)};
+	return {record.Id, std::string(record.DataName), std::move(record)};
 }
 
 void MonsterInfoRecordStore::Insert(SqliteDatabase& db, const CMonsterInfo& r) {
@@ -49,8 +47,8 @@ void MonsterInfoRecordStore::Insert(SqliteDatabase& db, const CMonsterInfo& r) {
 			"(id,data_name,start_x,start_y,end_x,end_y,monster_list,area) "
 			"VALUES (?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
-		stmt.Bind(p++, std::string_view(r.szDataName));
+		stmt.Bind(p++, r.Id);
+		stmt.Bind(p++, std::string_view(r.DataName));
 		stmt.Bind(p++, static_cast<int>(r.ptStart.x));
 		stmt.Bind(p++, static_cast<int>(r.ptStart.y));
 		stmt.Bind(p++, static_cast<int>(r.ptEnd.x));
@@ -66,7 +64,7 @@ void MonsterInfoRecordStore::Insert(SqliteDatabase& db, const CMonsterInfo& r) {
 		stmt.Bind(p++, std::string_view(r.szArea));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "MonsterInfoRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "MonsterInfoRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

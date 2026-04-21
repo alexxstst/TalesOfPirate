@@ -6,7 +6,7 @@
 #define MONSTER_LIST_MAX 8
 
 // Запись таблицы зон монстров (MonsterInfo)
-class CMonsterInfo : public CRawDataInfo {
+class CMonsterInfo : public EntityData {
 public:
 	char  szName[32]{};
 	POINT ptStart{};

@@ -1,13 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Long_Struct_Debug|Win32">
-      <Configuration>Long_Struct_Debug</Configuration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-    <ProjectConfiguration Include="Long_Struct_Release|Win32">
-      <Configuration>Long_Struct_Release</Configuration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
       <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -17,13 +25,24 @@
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
     <EnableASAN>false</EnableASAN>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Release|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <EnableASAN>false</EnableASAN>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>StaticLibrary</ConfigurationType>
     <PlatformToolset>v145</PlatformToolset>
     <CharacterSet>MultiByte</CharacterSet>
@@ -31,29 +50,46 @@
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Release|Win32'" Label="PropertySheets">
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>16.0.30427.251</_ProjectFileVersion>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <OutDir>$(ProjectDir)..\lib\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\</IntDir>
     <ExtensionsToDeleteOnClean>*.obj%3b*.ilk%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>$(ProjectDir)..\lib\</OutDir>
     <IntDir>$(ProjectDir)..\build\$(Configuration)\</IntDir>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <TargetName>$(ProjectName)_D</TargetName>
   </PropertyGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Release|Win32'">
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)..\lib\x64\</OutDir>
+    <IntDir>$(ProjectDir)..\build\x64\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <TargetName>$(ProjectName)_D</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)..\lib\x64\</OutDir>
+    <IntDir>$(ProjectDir)..\build\x64\$(Configuration)\</IntDir>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
       <ExceptionHandling>Async</ExceptionHandling>
       <Optimization>MaxSpeed</Optimization>
@@ -73,7 +109,7 @@
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Long_Struct_Debug|Win32'">
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
@@ -91,6 +127,49 @@
       <DiagnosticsFormat>Caret</DiagnosticsFormat>
       <SDLCheck>false</SDLCheck>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;_LIB;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Lib />
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\src;$(ProjectDir)..\include;$(ProjectDir)..\..\caLua\include;$(ProjectDir)..\..\util\include;$(ProjectDir)..\..\cryptopp\;$(ProjectDir)..\..\sqlite3;$(ProjectDir)..\..\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+      <SDLCheck>false</SDLCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
     </ClCompile>
     <Lib />
   </ItemDefinitionGroup>
@@ -111,14 +190,10 @@
     <ClCompile Include="..\src\KitbagMsgpack.cpp" />
     <ClCompile Include="..\src\LevelRecord.cpp" />
     <ClCompile Include="..\src\LifeLvRecord.cpp" />
-    <ClCompile Include="..\src\MonRefRecord.cpp" />
-    <ClCompile Include="..\src\NpcRecord.cpp" />
     <ClCompile Include="..\src\SailLvRecord.cpp" />
     <ClCompile Include="..\src\SkillRecord.cpp" />
     <ClCompile Include="..\src\SkillStateRecord.cpp" />
     <ClCompile Include="..\src\StringLib.cpp" />
-    <ClCompile Include="..\src\SwitchMapRecord.cpp" />
-    <ClCompile Include="..\src\TableData.cpp" />
     <ClCompile Include="..\src\TerrainAttrib.cpp" />
     <ClCompile Include="..\src\SqliteDatabase.cpp" />
     <ClCompile Include="..\src\ItemRecordStore.cpp" />
@@ -147,6 +222,9 @@
     <ClCompile Include="..\src\PoseRecordStore.cpp" />
     <ClCompile Include="..\src\CharacterActionStore.cpp" />
     <ClCompile Include="..\src\HelpEntryStore.cpp" />
+    <ClCompile Include="..\src\NpcRecordStore.cpp" />
+    <ClCompile Include="..\src\MonRefRecordStore.cpp" />
+    <ClCompile Include="..\src\SwitchMapRecordStore.cpp" />
     <ClCompile Include="..\src\CharacterModelStore.cpp" />
     <ClCompile Include="..\src\AnimatedLightStore.cpp" />
     <ClCompile Include="..\src\ChaCreateRecordStore.cpp" />
@@ -251,6 +329,9 @@
     <ClInclude Include="..\include\ShadeRecordStore.h" />
     <ClInclude Include="..\include\HelpEntryRecord.h" />
     <ClInclude Include="..\include\HelpEntryStore.h" />
+    <ClInclude Include="..\include\NpcRecordStore.h" />
+    <ClInclude Include="..\include\MonRefRecordStore.h" />
+    <ClInclude Include="..\include\SwitchMapRecordStore.h" />
     <ClInclude Include="..\include\SceneObjRecord.h" />
     <ClInclude Include="..\include\SceneObjRecordStore.h" />
     <ClInclude Include="..\include\PoseRecord.h" />
@@ -296,6 +377,8 @@
     <ClInclude Include="..\include\LitEntryStore.h" />
     <ClInclude Include="..\include\ItemLitRecord.h" />
     <ClInclude Include="..\include\ItemLitStore.h" />
+    <ClInclude Include="..\include\KitbagEnCode.h" />
+    <ClInclude Include="..\include\i18n.h" />
     <ClInclude Include="..\..\sqlite3\sqlite3.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

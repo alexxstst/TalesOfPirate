@@ -345,9 +345,10 @@ void lwTex::GetTexInfo(lwTexInfo* info)
         break;
     case TEX_TYPE_DATA:
 
+        // info->data удалено (было `void*` разного размера на x86/x64).
+        // Пользовательский указатель теперь получают через `lwITex::GetUserData()`.
         if(_data_info.data)
         {
-             info->data = _data_info.data;
              info->width = _data_info.width;
              info->height = _data_info.height;
         }
@@ -395,13 +396,16 @@ LW_RESULT lwTex::LoadTexInfo(const lwTexInfo* info, const char* tex_path)
         break;
     case TEX_TYPE_DATA:
 
-        if(info->data == 0)
+        // Ранее пользовательский указатель брался из `info->data`, но это поле
+        // убрано из `lwTexInfo` (x86/x64 binary-format mismatch). Теперь
+        // пользователь должен выставить указатель через `SetUserData()`
+        // ДО вызова `LoadTexInfo`.
+        if(_data == 0)
             goto __ret;
 
-        _data = info->data;
         _data_size = info->width;
 
-        _data_info.data = info->data;
+        _data_info.data = _data;
         _data_info.width = info->width;
         _data_info.height = info->height;
         _data_info.size = _data_info.width * _data_info.height;
@@ -1231,7 +1235,7 @@ LW_RESULT lwMesh::LoadSystemMemory()
     else if((_state & RES_STATE_INIT) == 0)
         goto __ret;
 
-    __asm { int 3 };
+    __debugbreak();
 
     //if(LW_FAILED(lwLoadMeshInfoFromResFile(&_mesh_info, &_res_file)))
     //    goto __ret;
@@ -2440,7 +2444,7 @@ __ret:
 }
 LW_RESULT lwMeshAgent::LoadMesh(const lwResFileMesh* info)
 {
-    __asm { int 3 }
+    __debugbreak();
 
     LW_RESULT ret = LW_RET_FAILED;
 
@@ -2671,7 +2675,7 @@ LW_RESULT lwResBufMgr::RegisterSysMemTex(LW_HANDLE* handle, const lwSysMemTexInf
 #if(defined USE_D3DX_LOAD_TEXTURE_CREATEFROMMEMORY)
 
 
-    lwGUIDCreateObject((LW_VOID**)&o->buf, LW_GUID_BUFFER);
+    o->buf = LW_NEW(lwBuffer);
     if(LW_FAILED(LoadFileInMemory(o->buf, info->file_name, "rb")))
         goto __ret;
 
@@ -2970,8 +2974,10 @@ LW_RESULT lwThreadPoolMgr::Create()
 
     for(DWORD i = 0; i < THREAD_POOL_SIZE; i++)
     {
-        if(LW_FAILED(lwGUIDCreateObject((LW_VOID**)&_pool_seq[i], LW_GUID_THREADPOOL)))
+        _pool_seq[i] = LW_NEW(lwThreadPool);
+        if(!_pool_seq[i]) {
             goto __ret;
+        }
 
         if(LW_FAILED(_pool_seq[i]->Create(ci[i][0], ci[i][1], 0)))
             goto __ret;
@@ -3708,7 +3714,7 @@ LW_RESULT lwResourceMgr::QueryMesh(DWORD* ret_id, const lwResFileMesh* rfm)
 			}
 			catch(...)
 			{
-				__asm int 3;
+				__debugbreak();
 			}
             obj_num -= 1;
         }

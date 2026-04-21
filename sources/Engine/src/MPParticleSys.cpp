@@ -3777,7 +3777,7 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 
 	fread(t_pszName, sizeof(char), 32, t_pFile);
 	//
-	//char *pszDataName = _strlwr( _strdup( t_pszName ) );
+	//char *pDataName = _strlwr( _strdup( t_pszName ) );
 
 	s_string sFileName = t_pszName;
 	transform(sFileName.begin(), sFileName.end(),
@@ -3788,16 +3788,16 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 	memset(psname, 0, 32);
 
 
-	//if((strstr(pszDataName,".dds")==NULL)&&strstr(pszDataName,".tga")==NULL)
+	//if((strstr(pDataName,".dds")==NULL)&&strstr(pDataName,".tga")==NULL)
 	if (sFileName.rfind(".dds") == std::string::npos && sFileName.rfind(".tga") == std::string::npos) {
 		_strTexName = sFileName;
 	}
 	else {
-		//int len = lstrlen(pszDataName);
-		//memcpy(psname, pszDataName,len - 4);
+		//int len = lstrlen(pDataName);
+		//memcpy(psname, pDataName,len - 4);
 		_strTexName = sFileName.substr(0, sFileName.rfind('.'));
 	}
-	//SAFE_DELETE_ARRAY(pszDataName);
+	//SAFE_DELETE_ARRAY(pDataName);
 
 
 	fread(t_pszName, sizeof(char), 32, t_pFile);
@@ -3808,9 +3808,9 @@ bool CMPPartSys::LoadFromFile(FILE* t_pFile, DWORD dwVersion) {
 		transform(sFileName.begin(), sFileName.end(),
 				  sFileName.begin(),
 				  tolower);
-		//pszDataName = _strlwr( _strdup( t_pszName ) );
+		//pDataName = _strlwr( _strdup( t_pszName ) );
 		_strModelName = sFileName;
-		//SAFE_DELETE_ARRAY(pszDataName);
+		//SAFE_DELETE_ARRAY(pDataName);
 	}
 	fread(&_fRange[0], sizeof(float), 1, t_pFile);
 	fread(&_fRange[1], sizeof(float), 1, t_pFile);
@@ -3922,7 +3922,7 @@ bool CMPPartSys::LoadFromMemory(CMemoryBuf* pbuf, DWORD dwVersion) {
 
 	pbuf->mread(t_pszName, sizeof(char), 32);
 	//
-	//char *pszDataName = _strlwr( _strdup( t_pszName ) );
+	//char *pDataName = _strlwr( _strdup( t_pszName ) );
 	s_string sFileName = t_pszName;
 	transform(sFileName.begin(), sFileName.end(),
 			  sFileName.begin(),
@@ -3931,29 +3931,29 @@ bool CMPPartSys::LoadFromMemory(CMemoryBuf* pbuf, DWORD dwVersion) {
 	char psname[32];
 	memset(psname, 0, 32);
 
-	//if((strstr(pszDataName,".dds")==NULL)&&strstr(pszDataName,".tga")==NULL)
+	//if((strstr(pDataName,".dds")==NULL)&&strstr(pDataName,".tga")==NULL)
 	if (sFileName.rfind(".dds") == std::string::npos && sFileName.rfind(".tga") == std::string::npos) {
 		_strTexName = sFileName;
 	}
 	else {
-		//int len = lstrlen(pszDataName);
-		//memcpy(psname, pszDataName,len - 4);
+		//int len = lstrlen(pDataName);
+		//memcpy(psname, pDataName,len - 4);
 		_strTexName = sFileName.substr(0, sFileName.length() - 4);
 	}
-	//SAFE_DELETE_ARRAY(pszDataName);
+	//SAFE_DELETE_ARRAY(pDataName);
 
 
 	pbuf->mread(t_pszName, sizeof(char), 32);
 	if (IsDefaultMesh(t_pszName))
 		_strModelName = t_pszName;
 	else {
-		//pszDataName = _strlwr( _strdup( t_pszName ) );
+		//pDataName = _strlwr( _strdup( t_pszName ) );
 		sFileName = t_pszName;
 		transform(sFileName.begin(), sFileName.end(),
 				  sFileName.begin(),
 				  tolower);
 		_strModelName = sFileName;
-		//SAFE_DELETE_ARRAY(pszDataName);
+		//SAFE_DELETE_ARRAY(pDataName);
 	}
 	pbuf->mread(&_fRange[0], sizeof(float), 1);
 	pbuf->mread(&_fRange[1], sizeof(float), 1);

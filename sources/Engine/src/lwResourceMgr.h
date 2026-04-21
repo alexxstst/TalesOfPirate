@@ -330,6 +330,11 @@ public:
     lwColorValue4b GetColorKey() const { return _colorkey; }
     void GetTexInfo(lwTexInfo* info);
 
+    // Runtime-only указатель на пользовательские данные текстуры
+    // (используется только для TEX_TYPE_DATA). См. комментарий в lwITex.
+    void  SetUserData(void* data) { _data = data; }
+    void* GetUserData() const { return _data; }
+
     void SetFileName( const char* file ) { _tcscpy( _file_name, file ); }
     void SetState( DWORD state ) { _state = state; }
     void SetStage( DWORD stage ) { _stage = stage; }

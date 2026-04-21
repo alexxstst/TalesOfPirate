@@ -35,16 +35,14 @@ GameRecordset<xShipPartInfo>::RecordEntry ShipPartRecordStore::ReadRecord(Sqlite
 	xShipPartInfo record{};
 	int col = 0;
 
-	record.nID    = stmt.GetInt(col++);
-	record.bExist = TRUE;
+	record.Id    = stmt.GetInt(col++);
 
 	// name
 	{
 		auto name = stmt.GetText(col++);
 		strncpy(record.szName, name.data(), BOAT_MAXSIZE_NAME - 1);
 		record.szName[BOAT_MAXSIZE_NAME - 1] = '\0';
-		strncpy(record.szDataName, name.data(), sizeof(record.szDataName) - 1);
-		record.szDataName[sizeof(record.szDataName) - 1] = '\0';
+		record.DataName = name;
 	}
 
 	record.dwModel = static_cast<DWORD>(stmt.GetInt(col++));
@@ -83,7 +81,7 @@ GameRecordset<xShipPartInfo>::RecordEntry ShipPartRecordStore::ReadRecord(Sqlite
 	record.sParam = static_cast<USHORT>(stmt.GetInt(col++));
 
 	std::string name(record.szName);
-	return {record.nID, std::move(name), std::move(record)};
+	return {record.Id, std::move(name), std::move(record)};
 }
 
 // ============================================================================
@@ -101,7 +99,7 @@ void ShipPartRecordStore::Insert(SqliteDatabase& db, const xShipPartInfo& r) {
 			"desp,param) "
 			"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 		int p = 1;
-		stmt.Bind(p++, r.nID);
+		stmt.Bind(p++, r.Id);
 		stmt.Bind(p++, std::string_view(r.szName));
 		stmt.Bind(p++, static_cast<int>(r.dwModel));
 		stmt.Bind(p++, SerializeUShortArray(r.sMotor, BOAT_MAXNUM_MOTOR));
@@ -124,7 +122,7 @@ void ShipPartRecordStore::Insert(SqliteDatabase& db, const xShipPartInfo& r) {
 		stmt.Bind(p++, static_cast<int>(r.sParam));
 		stmt.Step();
 	} catch (const std::exception& e) {
-		ToLogService("errors", LogLevel::Error, "ShipPartRecordStore::Insert(id={}) failed: {}", r.nID, e.what());
+		ToLogService("errors", LogLevel::Error, "ShipPartRecordStore::Insert(id={}) failed: {}", r.Id, e.what());
 	}
 }
 

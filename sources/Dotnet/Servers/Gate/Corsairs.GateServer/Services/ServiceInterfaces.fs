@@ -61,7 +61,7 @@ type PlayerAuthorized =
     { ActId: uint32
       LoginId: uint32
       Password: string
-      GroupServerPlayerId: uint32
+      GroupServerPlayerId: int64
       Channel: PlayerChannelIO }
 
 /// Режим выхода игрока.
@@ -79,7 +79,7 @@ type PlayerPlaying =
       mutable WorldId: uint32
       mutable GameServer: GameServerIO
       mutable GameServerPlayerId: GameServerPlayerId option
-      mutable GroupServerPlayerId: uint32
+      mutable GroupServerPlayerId: int64
       mutable MapName: string
       mutable GarnerWinner: int16
       mutable ExitStatus: PlayerExitMode }
@@ -238,7 +238,7 @@ type PlayerChannelIO(socket, ioHandler) =
         match _state with
         | Playing_ p -> p.GroupServerPlayerId
         | Authorized_ a -> a.GroupServerPlayerId
-        | _ -> 0u
+        | _ -> 0L
 
     /// Имя текущей карты (только Playing_).
     member _.MapName =

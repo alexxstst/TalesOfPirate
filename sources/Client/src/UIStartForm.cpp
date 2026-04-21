@@ -1061,9 +1061,9 @@ void CStartMgr::MainChaDied()
 					if( CMapInfo *pInfo = pScene->GetCurMapInfo() )
 					{
 						// Modify by lark.li 20080719 begin
-						//if( stricmp( pInfo->szDataName, "teampk" )==0 )
-						if( stricmp( pInfo->szDataName, "teampk" )==0 || stricmp( pInfo->szDataName,"starena1") == 0 
-							|| stricmp( pInfo->szDataName,"starena2") == 0 || stricmp( pInfo->szDataName,"starena3") == 0)
+						//if( stricmp( pInfo->DataName.c_str(), "teampk" )==0 )
+						if( stricmp( pInfo->DataName.c_str(), "teampk" )==0 || stricmp( pInfo->DataName.c_str(),"starena1") == 0 
+							|| stricmp( pInfo->DataName.c_str(),"starena2") == 0 || stricmp( pInfo->DataName.c_str(),"starena3") == 0)
 							IsShow = false;
 						// End
 					}

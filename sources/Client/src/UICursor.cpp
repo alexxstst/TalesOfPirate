@@ -22,7 +22,7 @@ void CCursor::_ShowCursor()
 { 
     if( _hCursor[_eActive] ) 
     {
-        ::SetClassLong( CGuiData::GetHWND(), GCL_HCURSOR, (LONG)((char*)(_hCursor[_eActive])-(char*)0) );
+        ::SetClassLongPtr( CGuiData::GetHWND(), GCLP_HCURSOR, (LONG_PTR)(_hCursor[_eActive]) );
         ::SetCursor( _hCursor[_eActive] ); 
     }
 }

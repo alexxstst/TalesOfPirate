@@ -55,23 +55,23 @@ module CommandMessages =
 
     type TpUserLoginRequest =
         { AcctName: string; AcctPassword: string; AcctMac: string
-          ClientIp: uint32; GateAddr: uint32; CheatMarker: int64 }
+          ClientIp: uint32; GateAddr: int64; CheatMarker: int64 }
 
     type TpUserLoginResponseData =
         { MaxChaNum: int64; Characters: ChaSlotData[]
-          HasPassword2: bool; AcctId: int64; AcctLoginId: int64; GpAddr: uint32 }
+          HasPassword2: bool; AcctId: int64; AcctLoginId: int64; GpAddr: int64 }
 
     type TpUserLoginResponse =
         | TpUserLoginSuccess of TpUserLoginResponseData
         | TpUserLoginError of errCode: int16
 
     [<Struct>]
-    type TpUserLogoutRequest = { GateAddr: uint32; GpAddr: uint32 }
+    type TpUserLogoutRequest = { GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
     type TpUserLogoutResponse = { ErrCode: int16 }
 
-    type TpBgnPlayRequest = { ChaIndex: int64; GateAddr: uint32; GpAddr: uint32 }
+    type TpBgnPlayRequest = { ChaIndex: int64; GateAddr: int64; GpAddr: int64 }
 
     type TpBgnPlayResponseData =
         { Password2: string; ChaId: int64; WorldId: int64; MapName: string; Swiner: int64 }
@@ -80,7 +80,7 @@ module CommandMessages =
         { ErrCode: int16; Data: TpBgnPlayResponseData voption }
 
     [<Struct>]
-    type TpEndPlayRequest = { GateAddr: uint32; GpAddr: uint32 }
+    type TpEndPlayRequest = { GateAddr: int64; GpAddr: int64 }
 
     type TpEndPlayResponseData =
         { MaxChaNum: int64; ChaNum: int64; Characters: ChaSlotData[] }
@@ -90,29 +90,29 @@ module CommandMessages =
 
     type TpNewChaRequest =
         { ChaName: string; Birth: string; TypeId: int64; HairId: int64; FaceId: int64
-          GateAddr: uint32; GpAddr: uint32 }
+          GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
     type TpNewChaResponse = { ErrCode: int16 }
 
     type TpDelChaRequest =
-        { ChaIndex: int64; Password2: string; GateAddr: uint32; GpAddr: uint32 }
+        { ChaIndex: int64; Password2: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
     type TpDelChaResponse = { ErrCode: int16 }
 
     type TpChangePassRequest =
-        { NewPass: string; Pin: string; GateAddr: uint32; GpAddr: uint32 }
+        { NewPass: string; Pin: string; GateAddr: int64; GpAddr: int64 }
 
     type TpRegisterRequest = { Username: string; Password: string; Email: string }
 
     type TpRegisterResponse = { Result: int64; Message: string }
 
     type TpCreatePassword2Request =
-        { Password2: string; GateAddr: uint32; GpAddr: uint32 }
+        { Password2: string; GateAddr: int64; GpAddr: int64 }
 
     type TpUpdatePassword2Request =
-        { OldPassword2: string; NewPassword2: string; GateAddr: uint32; GpAddr: uint32 }
+        { OldPassword2: string; NewPassword2: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
     type TpPassword2Response = { ErrCode: int16 }
@@ -183,121 +183,121 @@ module CommandMessages =
     //  Группа C: Client → GroupServer (CP) — async
     // ═══════════════════════════════════════════════════════════════
 
-    type CpTeamInviteMessage = { InvitedName: string; GateAddr: uint32; GpAddr: uint32 }
+    type CpTeamInviteMessage = { InvitedName: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpTeamAcceptMessage = { InviterChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpTeamAcceptMessage = { InviterChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpTeamRefuseMessage = { InviterChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpTeamRefuseMessage = { InviterChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpTeamLeaveMessage = { GateAddr: uint32; GpAddr: uint32 }
+    type CpTeamLeaveMessage = { GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpTeamKickMessage = { KickedChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpTeamKickMessage = { KickedChaId: int64; GateAddr: int64; GpAddr: int64 }
 
-    type CpFrndInviteMessage = { InvitedName: string; GateAddr: uint32; GpAddr: uint32 }
-
-    [<Struct>]
-    type CpFrndAcceptMessage = { InviterChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpFrndInviteMessage = { InvitedName: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpFrndRefuseMessage = { InviterChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpFrndAcceptMessage = { InviterChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpFrndDeleteMessage = { DeletedChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpFrndRefuseMessage = { InviterChaId: int64; GateAddr: int64; GpAddr: int64 }
+
+    [<Struct>]
+    type CpFrndDeleteMessage = { DeletedChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     type CpFrndChangeGroupMessage =
-        { FriendChaId: int64; GroupName: string; GateAddr: uint32; GpAddr: uint32 }
+        { FriendChaId: int64; GroupName: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpFrndRefreshInfoMessage = { FriendChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpFrndRefreshInfoMessage = { FriendChaId: int64; GateAddr: int64; GpAddr: int64 }
 
-    type CpSay2AllMessage = { Content: string; GateAddr: uint32; GpAddr: uint32 }
+    type CpSay2AllMessage = { Content: string; GateAddr: int64; GpAddr: int64 }
 
-    type CpSay2TradeMessage = { Content: string; GateAddr: uint32; GpAddr: uint32 }
+    type CpSay2TradeMessage = { Content: string; GateAddr: int64; GpAddr: int64 }
 
     type CpSay2YouMessage =
-        { TargetName: string; Content: string; GateAddr: uint32; GpAddr: uint32 }
+        { TargetName: string; Content: string; GateAddr: int64; GpAddr: int64 }
 
-    type CpSay2TemMessage = { Content: string; GateAddr: uint32; GpAddr: uint32 }
+    type CpSay2TemMessage = { Content: string; GateAddr: int64; GpAddr: int64 }
 
-    type CpSay2GudMessage = { Content: string; GateAddr: uint32; GpAddr: uint32 }
+    type CpSay2GudMessage = { Content: string; GateAddr: int64; GpAddr: int64 }
 
-    type CpGm1SayMessage = { Content: string; GateAddr: uint32; GpAddr: uint32 }
+    type CpGm1SayMessage = { Content: string; GateAddr: int64; GpAddr: int64 }
 
     type CpGm1Say1Message =
-        { Content: string; Color: int64; GateAddr: uint32; GpAddr: uint32 }
+        { Content: string; Color: int64; GateAddr: int64; GpAddr: int64 }
 
     type CpSessCreateMessage =
-        { ChaNum: int64; ChaNames: string[]; GateAddr: uint32; GpAddr: uint32 }
+        { ChaNum: int64; ChaNames: string[]; GateAddr: int64; GpAddr: int64 }
 
     type CpSessAddMessage =
-        { SessId: int64; ChaName: string; GateAddr: uint32; GpAddr: uint32 }
+        { SessId: int64; ChaName: string; GateAddr: int64; GpAddr: int64 }
 
     type CpSessSayMessage =
-        { SessId: int64; Content: string; GateAddr: uint32; GpAddr: uint32 }
+        { SessId: int64; Content: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpSessLeaveMessage = { SessId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpSessLeaveMessage = { SessId: int64; GateAddr: int64; GpAddr: int64 }
 
     type CpChangePersonInfoMessage =
-        { Motto: string; Icon: int64; RefuseSess: int64; GateAddr: uint32; GpAddr: uint32 }
+        { Motto: string; Icon: int64; RefuseSess: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpPingMessage = { PingValue: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpPingMessage = { PingValue: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpRefuseToMeMessage = { RefuseFlag: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpRefuseToMeMessage = { RefuseFlag: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpReportWgMessage = { GateAddr: uint32; GpAddr: uint32 }
+    type CpReportWgMessage = { GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpMasterRefreshInfoMessage = { MasterChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpMasterRefreshInfoMessage = { MasterChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type CpPrenticeRefreshInfoMessage = { PrenticeChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type CpPrenticeRefreshInfoMessage = { PrenticeChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     type CpChangePassMessage =
-        { NewPass: string; Pin: string; GateAddr: uint32; GpAddr: uint32 }
+        { NewPass: string; Pin: string; GateAddr: int64; GpAddr: int64 }
 
     // ═══════════════════════════════════════════════════════════════
     //  Группа D: GameServer → GroupServer (MP) — async
     // ═══════════════════════════════════════════════════════════════
 
     [<Struct>]
-    type MpEnterMapMessage = { IsSwitch: int64; GateAddr: uint32; GpAddr: uint32 }
+    type MpEnterMapMessage = { IsSwitch: int64; GateAddr: int64; GpAddr: int64 }
 
     type MpTeamCreateMessage =
-        { MemberName: string; LeaderName: string; GateAddr: uint32; GpAddr: uint32 }
+        { MemberName: string; LeaderName: string; GateAddr: int64; GpAddr: int64 }
 
     type MpGuildCreateMessage =
         { GuildId: int64; GldName: string; Job: string; Degree: int64
-          GateAddr: uint32; GpAddr: uint32 }
+          GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type MpGuildApproveMessage = { NewMemberChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type MpGuildApproveMessage = { NewMemberChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type MpGuildKickMessage = { KickedChaId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type MpGuildKickMessage = { KickedChaId: int64; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type MpGuildLeaveMessage = { GateAddr: uint32; GpAddr: uint32 }
+    type MpGuildLeaveMessage = { GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type MpGuildDisbandMessage = { GateAddr: uint32; GpAddr: uint32 }
+    type MpGuildDisbandMessage = { GateAddr: int64; GpAddr: int64 }
 
-    type MpGuildMottoMessage = { Motto: string; GateAddr: uint32; GpAddr: uint32 }
+    type MpGuildMottoMessage = { Motto: string; GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
     type MpGuildPermMessage =
-        { TargetChaId: int64; Permission: int64; GateAddr: uint32; GpAddr: uint32 }
+        { TargetChaId: int64; Permission: int64; GateAddr: int64; GpAddr: int64 }
 
     type MpGuildChallMoneyMessage =
         { GuildId: int64; Money: int64; GuildName1: string; GuildName2: string
-          GateAddr: uint32; GpAddr: uint32 }
+          GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
     type MpGuildChallPrizeMoneyMessage = { GuildId: int64; Money: int64 }
@@ -312,18 +312,18 @@ module CommandMessages =
     type MpMasterFinishMessage = { PrenticeChaid: int64 }
 
     type MpSay2AllMessage =
-        { Succ: int64; ChaName: string; Content: string; GateAddr: uint32; GpAddr: uint32 }
+        { Succ: int64; ChaName: string; Content: string; GateAddr: int64; GpAddr: int64 }
 
     type MpSay2TradeMessage =
-        { Succ: int64; ChaName: string; Content: string; GateAddr: uint32; GpAddr: uint32 }
+        { Succ: int64; ChaName: string; Content: string; GateAddr: int64; GpAddr: int64 }
 
-    type MpGm1SayMessage = { Content: string; GateAddr: uint32; GpAddr: uint32 }
+    type MpGm1SayMessage = { Content: string; GateAddr: int64; GpAddr: int64 }
 
     type MpGm1Say1Message = { Content: string; SetNum: int64; Color: int64 }
 
-    type MpGmBanMessage = { ActName: string; GateAddr: uint32; GpAddr: uint32 }
+    type MpGmBanMessage = { ActName: string; GateAddr: int64; GpAddr: int64 }
 
-    type MpGmUnbanMessage = { ActName: string; GateAddr: uint32; GpAddr: uint32 }
+    type MpGmUnbanMessage = { ActName: string; GateAddr: int64; GpAddr: int64 }
 
     type MpGuildNoticeMessage = { GuildId: int64; Content: string }
 
@@ -331,17 +331,17 @@ module CommandMessages =
     type MpCanReceiveRequestsMessage = { ChaId: int64; CanSend: int64 }
 
     type MpMutePlayerMessage =
-        { ChaName: string; Time: int64; GateAddr: uint32; GpAddr: uint32 }
+        { ChaName: string; Time: int64; GateAddr: int64; GpAddr: int64 }
 
     type MpGarner2UpdateMessage =
         { Nid: int64; ChaName: string; Level: int64; Job: string; Fightpoint: int64
-          GateAddr: uint32; GpAddr: uint32 }
+          GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type MpGarner2GetOrderMessage = { GateAddr: uint32; GpAddr: uint32 }
+    type MpGarner2GetOrderMessage = { GateAddr: int64; GpAddr: int64 }
 
     [<Struct>]
-    type MpGuildBankAckMessage = { GuildId: int64; GateAddr: uint32; GpAddr: uint32 }
+    type MpGuildBankAckMessage = { GuildId: int64; GateAddr: int64; GpAddr: int64 }
 
     // ═══════════════════════════════════════════════════════════════
     //  Группа E: GroupServer → Client (PC) — async
@@ -550,7 +550,7 @@ module CommandMessages =
     type TmEnterMapMessage =
         { ActId: uint32; Password: string; DatabaseId: uint32; WorldId: uint32
           MapName: string; MapCopyNo: int; X: uint32; Y: uint32; IsSwitch: bool
-          GateAddr: uint32; GarnerWinner: int16 }
+          GateAddr: int64; GarnerWinner: int16 }
 
     // ═══════════════════════════════════════════════════════════════
     //  Группа: Геймплейные команды Client ↔ GameServer
@@ -1498,7 +1498,7 @@ module CommandMessages =
             w.WriteString(msg.AcctPassword)
             w.WriteString(msg.AcctMac)
             w.WriteInt64(int64 msg.ClientIp)
-            w.WriteInt64(int64 msg.GateAddr)
+            w.WriteInt64(msg.GateAddr)
             w.WriteInt64(msg.CheatMarker)
             w
 
@@ -1521,7 +1521,7 @@ module CommandMessages =
                 w.WriteInt64(if data.HasPassword2 then 1L else 0L)
                 w.WriteInt64(data.AcctId)
                 w.WriteInt64(data.AcctLoginId)
-                w.WriteInt64(int64 data.GpAddr)
+                w.WriteInt64(data.GpAddr)
             | TpUserLoginError errCode ->
                 w.WriteInt64(int64 errCode)
             w
@@ -1529,8 +1529,8 @@ module CommandMessages =
         let tpUserLogoutRequest (msg: TpUserLogoutRequest) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_TP_USER_LOGOUT)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpUserLogoutResponse (msg: TpUserLogoutResponse) =
@@ -1543,8 +1543,8 @@ module CommandMessages =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_TP_BGNPLAY)
             w.WriteInt64(msg.ChaIndex)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpBgnPlayResponse (msg: TpBgnPlayResponse) =
@@ -1564,8 +1564,8 @@ module CommandMessages =
         let tpEndPlayRequest (msg: TpEndPlayRequest) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_TP_ENDPLAY)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpEndPlayResponse (msg: TpEndPlayResponse) =
@@ -1596,8 +1596,8 @@ module CommandMessages =
             w.WriteInt64(msg.TypeId)
             w.WriteInt64(msg.HairId)
             w.WriteInt64(msg.FaceId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpNewChaResponse (msg: TpNewChaResponse) =
@@ -1611,8 +1611,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_TP_DELCHA)
             w.WriteInt64(msg.ChaIndex)
             w.WriteString(msg.Password2)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpDelChaResponse (msg: TpDelChaResponse) =
@@ -1626,8 +1626,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_TP_CHANGEPASS)
             w.WriteString(msg.NewPass)
             w.WriteString(msg.Pin)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpRegisterRequest (msg: TpRegisterRequest) =
@@ -1649,8 +1649,8 @@ module CommandMessages =
             let mutable w = WPacket(64)
             w.WriteCmd(Commands.CMD_TP_CREATE_PASSWORD2)
             w.WriteString(msg.Password2)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpUpdatePassword2Request (msg: TpUpdatePassword2Request) =
@@ -1658,8 +1658,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_TP_UPDATE_PASSWORD2)
             w.WriteString(msg.OldPassword2)
             w.WriteString(msg.NewPassword2)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let tpPassword2Response (msg: TpPassword2Response) =
@@ -1830,71 +1830,71 @@ module CommandMessages =
             let mutable w = WPacket(64)
             w.WriteCmd(Commands.CMD_CP_TEAM_INVITE)
             w.WriteString(msg.InvitedName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpTeamAcceptMessage (msg: CpTeamAcceptMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_TEAM_ACCEPT)
             w.WriteInt64(msg.InviterChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpTeamRefuseMessage (msg: CpTeamRefuseMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_TEAM_REFUSE)
             w.WriteInt64(msg.InviterChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpTeamLeaveMessage (msg: CpTeamLeaveMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_TEAM_LEAVE)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpTeamKickMessage (msg: CpTeamKickMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_TEAM_KICK)
             w.WriteInt64(msg.KickedChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpFrndInviteMessage (msg: CpFrndInviteMessage) =
             let mutable w = WPacket(64)
             w.WriteCmd(Commands.CMD_CP_FRND_INVITE)
             w.WriteString(msg.InvitedName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpFrndAcceptMessage (msg: CpFrndAcceptMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_FRND_ACCEPT)
             w.WriteInt64(msg.InviterChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpFrndRefuseMessage (msg: CpFrndRefuseMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_FRND_REFUSE)
             w.WriteInt64(msg.InviterChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpFrndDeleteMessage (msg: CpFrndDeleteMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_FRND_DELETE)
             w.WriteInt64(msg.DeletedChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpFrndChangeGroupMessage (msg: CpFrndChangeGroupMessage) =
@@ -1902,32 +1902,32 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_CP_FRND_CHANGE_GROUP)
             w.WriteInt64(msg.FriendChaId)
             w.WriteString(msg.GroupName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpFrndRefreshInfoMessage (msg: CpFrndRefreshInfoMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_FRND_REFRESH_INFO)
             w.WriteInt64(msg.FriendChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSay2AllMessage (msg: CpSay2AllMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_CP_SAY2ALL)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSay2TradeMessage (msg: CpSay2TradeMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_CP_SAY2TRADE)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSay2YouMessage (msg: CpSay2YouMessage) =
@@ -1935,32 +1935,32 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_CP_SAY2YOU)
             w.WriteString(msg.TargetName)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSay2TemMessage (msg: CpSay2TemMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_CP_SAY2TEM)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSay2GudMessage (msg: CpSay2GudMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_CP_SAY2GUD)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpGm1SayMessage (msg: CpGm1SayMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_CP_GM1SAY)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpGm1Say1Message (msg: CpGm1Say1Message) =
@@ -1968,8 +1968,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_CP_GM1SAY1)
             w.WriteString(msg.Content)
             w.WriteInt64(msg.Color)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSessCreateMessage (msg: CpSessCreateMessage) =
@@ -1978,8 +1978,8 @@ module CommandMessages =
             w.WriteInt64(msg.ChaNum)
             for name in msg.ChaNames do
                 w.WriteString(name)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSessAddMessage (msg: CpSessAddMessage) =
@@ -1987,8 +1987,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_CP_SESS_ADD)
             w.WriteInt64(msg.SessId)
             w.WriteString(msg.ChaName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSessSayMessage (msg: CpSessSayMessage) =
@@ -1996,16 +1996,16 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_CP_SESS_SAY)
             w.WriteInt64(msg.SessId)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpSessLeaveMessage (msg: CpSessLeaveMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_SESS_LEAVE)
             w.WriteInt64(msg.SessId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpChangePersonInfoMessage (msg: CpChangePersonInfoMessage) =
@@ -2014,47 +2014,47 @@ module CommandMessages =
             w.WriteString(msg.Motto)
             w.WriteInt64(msg.Icon)
             w.WriteInt64(msg.RefuseSess)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpPingMessage (msg: CpPingMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_PING)
             w.WriteInt64(msg.PingValue)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpRefuseToMeMessage (msg: CpRefuseToMeMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_REFUSETOME)
             w.WriteInt64(msg.RefuseFlag)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpReportWgMessage (msg: CpReportWgMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_REPORT_WG)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpMasterRefreshInfoMessage (msg: CpMasterRefreshInfoMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_MASTER_REFRESH_INFO)
             w.WriteInt64(msg.MasterChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpPrenticeRefreshInfoMessage (msg: CpPrenticeRefreshInfoMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_CP_PRENTICE_REFRESH_INFO)
             w.WriteInt64(msg.PrenticeChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let cpChangePassMessage (msg: CpChangePassMessage) =
@@ -2062,8 +2062,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_CP_CHANGEPASS)
             w.WriteString(msg.NewPass)
             w.WriteString(msg.Pin)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         // ─── Группа D: MP ────────────────────────────────────
@@ -2072,8 +2072,8 @@ module CommandMessages =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_ENTERMAP)
             w.WriteInt64(msg.IsSwitch)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpTeamCreateMessage (msg: MpTeamCreateMessage) =
@@ -2081,8 +2081,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_MP_TEAM_CREATE)
             w.WriteString(msg.MemberName)
             w.WriteString(msg.LeaderName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildCreateMessage (msg: MpGuildCreateMessage) =
@@ -2092,46 +2092,46 @@ module CommandMessages =
             w.WriteString(msg.GldName)
             w.WriteString(msg.Job)
             w.WriteInt64(msg.Degree)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildApproveMessage (msg: MpGuildApproveMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_GUILD_APPROVE)
             w.WriteInt64(msg.NewMemberChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildKickMessage (msg: MpGuildKickMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_GUILD_KICK)
             w.WriteInt64(msg.KickedChaId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildLeaveMessage (msg: MpGuildLeaveMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_GUILD_LEAVE)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildDisbandMessage (msg: MpGuildDisbandMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_GUILD_DISBAND)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildMottoMessage (msg: MpGuildMottoMessage) =
             let mutable w = WPacket(128)
             w.WriteCmd(Commands.CMD_MP_GUILD_MOTTO)
             w.WriteString(msg.Motto)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildPermMessage (msg: MpGuildPermMessage) =
@@ -2139,8 +2139,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_MP_GUILD_PERM)
             w.WriteInt64(msg.TargetChaId)
             w.WriteInt64(msg.Permission)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildChallMoneyMessage (msg: MpGuildChallMoneyMessage) =
@@ -2150,8 +2150,8 @@ module CommandMessages =
             w.WriteInt64(msg.Money)
             w.WriteString(msg.GuildName1)
             w.WriteString(msg.GuildName2)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildChallPrizeMoneyMessage (msg: MpGuildChallPrizeMoneyMessage) =
@@ -2191,8 +2191,8 @@ module CommandMessages =
             w.WriteInt64(msg.Succ)
             w.WriteString(msg.ChaName)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpSay2TradeMessage (msg: MpSay2TradeMessage) =
@@ -2201,16 +2201,16 @@ module CommandMessages =
             w.WriteInt64(msg.Succ)
             w.WriteString(msg.ChaName)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGm1SayMessage (msg: MpGm1SayMessage) =
             let mutable w = WPacket(256)
             w.WriteCmd(Commands.CMD_MP_GM1SAY)
             w.WriteString(msg.Content)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGm1Say1Message (msg: MpGm1Say1Message) =
@@ -2225,16 +2225,16 @@ module CommandMessages =
             let mutable w = WPacket(64)
             w.WriteCmd(Commands.CMD_MP_GMBANACCOUNT)
             w.WriteString(msg.ActName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGmUnbanMessage (msg: MpGmUnbanMessage) =
             let mutable w = WPacket(64)
             w.WriteCmd(Commands.CMD_MP_GMUNBANACCOUNT)
             w.WriteString(msg.ActName)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildNoticeMessage (msg: MpGuildNoticeMessage) =
@@ -2256,8 +2256,8 @@ module CommandMessages =
             w.WriteCmd(Commands.CMD_MP_MUTE_PLAYER)
             w.WriteString(msg.ChaName)
             w.WriteInt64(msg.Time)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGarner2UpdateMessage (msg: MpGarner2UpdateMessage) =
@@ -2268,23 +2268,23 @@ module CommandMessages =
             w.WriteInt64(msg.Level)
             w.WriteString(msg.Job)
             w.WriteInt64(msg.Fightpoint)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGarner2GetOrderMessage (msg: MpGarner2GetOrderMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_GARNER2_CGETORDER)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         let mpGuildBankAckMessage (msg: MpGuildBankAckMessage) =
             let mutable w = WPacket(32)
             w.WriteCmd(Commands.CMD_MP_GUILDBANK)
             w.WriteInt64(msg.GuildId)
-            w.WriteInt64(int64 msg.GateAddr)
-            w.WriteInt64(int64 msg.GpAddr)
+            w.WriteInt64(msg.GateAddr)
+            w.WriteInt64(msg.GpAddr)
             w
 
         // ─── Группа E: PC ────────────────────────────────────
@@ -2784,7 +2784,7 @@ module CommandMessages =
             w.WriteInt64(int64 msg.X)
             w.WriteInt64(int64 msg.Y)
             w.WriteInt64(if msg.IsSwitch then 1L else 0L)
-            w.WriteInt64(int64 msg.GateAddr)
+            w.WriteInt64(msg.GateAddr)
             w.WriteInt64(int64 msg.GarnerWinner)
             w
 
@@ -4782,7 +4782,7 @@ module CommandMessages =
 
         let tpUserLoginRequest (pk: IRPacket) : TpUserLoginRequest =
             { AcctName = pk.ReadString(); AcctPassword = pk.ReadString(); AcctMac = pk.ReadString()
-              ClientIp = uint32 (pk.ReadInt64()); GateAddr = uint32 (pk.ReadInt64())
+              ClientIp = uint32 (pk.ReadInt64()); GateAddr = pk.ReadInt64()
               CheatMarker = pk.ReadInt64() }
 
         let tpUserLoginResponse (pk: IRPacket) : TpUserLoginResponse =
@@ -4801,21 +4801,21 @@ module CommandMessages =
                 let hasPassword2 = pk.ReadInt64() <> 0L
                 let acctId = pk.ReadInt64()
                 let acctLoginId = pk.ReadInt64()
-                let gpAddr = uint32 (pk.ReadInt64())
+                let gpAddr = pk.ReadInt64()
                 TpUserLoginSuccess { MaxChaNum = maxChaNum; Characters = chars
                                      HasPassword2 = hasPassword2; AcctId = acctId
                                      AcctLoginId = acctLoginId; GpAddr = gpAddr }
             else TpUserLoginError errCode
 
         let tpUserLogoutRequest (pk: IRPacket) : TpUserLogoutRequest =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpUserLogoutResponse (pk: IRPacket) : TpUserLogoutResponse =
             { ErrCode = int16 (pk.ReadInt64()) }
 
         let tpBgnPlayRequest (pk: IRPacket) : TpBgnPlayRequest =
             { ChaIndex = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpBgnPlayResponse (pk: IRPacket) : TpBgnPlayResponse =
             let errCode = int16 (pk.ReadInt64())
@@ -4828,7 +4828,7 @@ module CommandMessages =
             { ErrCode = errCode; Data = data }
 
         let tpEndPlayRequest (pk: IRPacket) : TpEndPlayRequest =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpEndPlayResponse (pk: IRPacket) : TpEndPlayResponse =
             let errCode = int16 (pk.ReadInt64())
@@ -4852,21 +4852,21 @@ module CommandMessages =
         let tpNewChaRequest (pk: IRPacket) : TpNewChaRequest =
             { ChaName = pk.ReadString(); Birth = pk.ReadString()
               TypeId = pk.ReadInt64(); HairId = pk.ReadInt64(); FaceId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpNewChaResponse (pk: IRPacket) : TpNewChaResponse =
             { ErrCode = int16 (pk.ReadInt64()) }
 
         let tpDelChaRequest (pk: IRPacket) : TpDelChaRequest =
             { ChaIndex = pk.ReadInt64(); Password2 = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpDelChaResponse (pk: IRPacket) : TpDelChaResponse =
             { ErrCode = int16 (pk.ReadInt64()) }
 
         let tpChangePassRequest (pk: IRPacket) : TpChangePassRequest =
             { NewPass = pk.ReadString(); Pin = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpRegisterRequest (pk: IRPacket) : TpRegisterRequest =
             { Username = pk.ReadString(); Password = pk.ReadString(); Email = pk.ReadString() }
@@ -4876,11 +4876,11 @@ module CommandMessages =
 
         let tpCreatePassword2Request (pk: IRPacket) : TpCreatePassword2Request =
             { Password2 = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpUpdatePassword2Request (pk: IRPacket) : TpUpdatePassword2Request =
             { OldPassword2 = pk.ReadString(); NewPassword2 = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let tpPassword2Response (pk: IRPacket) : TpPassword2Response =
             { ErrCode = int16 (pk.ReadInt64()) }
@@ -4966,161 +4966,161 @@ module CommandMessages =
 
         let cpTeamInviteMessage (pk: IRPacket) : CpTeamInviteMessage =
             { InvitedName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpTeamAcceptMessage (pk: IRPacket) : CpTeamAcceptMessage =
             { InviterChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpTeamRefuseMessage (pk: IRPacket) : CpTeamRefuseMessage =
             { InviterChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpTeamLeaveMessage (pk: IRPacket) : CpTeamLeaveMessage =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpTeamKickMessage (pk: IRPacket) : CpTeamKickMessage =
             { KickedChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpFrndInviteMessage (pk: IRPacket) : CpFrndInviteMessage =
             { InvitedName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpFrndAcceptMessage (pk: IRPacket) : CpFrndAcceptMessage =
             { InviterChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpFrndRefuseMessage (pk: IRPacket) : CpFrndRefuseMessage =
             { InviterChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpFrndDeleteMessage (pk: IRPacket) : CpFrndDeleteMessage =
             { DeletedChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpFrndChangeGroupMessage (pk: IRPacket) : CpFrndChangeGroupMessage =
             { FriendChaId = pk.ReadInt64(); GroupName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpFrndRefreshInfoMessage (pk: IRPacket) : CpFrndRefreshInfoMessage =
             { FriendChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSay2AllMessage (pk: IRPacket) : CpSay2AllMessage =
             { Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSay2TradeMessage (pk: IRPacket) : CpSay2TradeMessage =
             { Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSay2YouMessage (pk: IRPacket) : CpSay2YouMessage =
             { TargetName = pk.ReadString(); Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSay2TemMessage (pk: IRPacket) : CpSay2TemMessage =
             { Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSay2GudMessage (pk: IRPacket) : CpSay2GudMessage =
             { Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpGm1SayMessage (pk: IRPacket) : CpGm1SayMessage =
             { Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpGm1Say1Message (pk: IRPacket) : CpGm1Say1Message =
             { Content = pk.ReadString(); Color = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSessCreateMessage (pk: IRPacket) : CpSessCreateMessage =
             let chaNum = pk.ReadInt64()
             let names = Array.init (int chaNum) (fun _ -> pk.ReadString())
             { ChaNum = chaNum; ChaNames = names
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSessAddMessage (pk: IRPacket) : CpSessAddMessage =
             { SessId = pk.ReadInt64(); ChaName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSessSayMessage (pk: IRPacket) : CpSessSayMessage =
             { SessId = pk.ReadInt64(); Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpSessLeaveMessage (pk: IRPacket) : CpSessLeaveMessage =
             { SessId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpChangePersonInfoMessage (pk: IRPacket) : CpChangePersonInfoMessage =
             { Motto = pk.ReadString(); Icon = pk.ReadInt64(); RefuseSess = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpPingMessage (pk: IRPacket) : CpPingMessage =
             { PingValue = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpRefuseToMeMessage (pk: IRPacket) : CpRefuseToMeMessage =
             { RefuseFlag = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpReportWgMessage (pk: IRPacket) : CpReportWgMessage =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpMasterRefreshInfoMessage (pk: IRPacket) : CpMasterRefreshInfoMessage =
             { MasterChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpPrenticeRefreshInfoMessage (pk: IRPacket) : CpPrenticeRefreshInfoMessage =
             { PrenticeChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let cpChangePassMessage (pk: IRPacket) : CpChangePassMessage =
             { NewPass = pk.ReadString(); Pin = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         // ─── Группа D: MP ────────────────────────────────────
 
         let mpEnterMapMessage (pk: IRPacket) : MpEnterMapMessage =
             { IsSwitch = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpTeamCreateMessage (pk: IRPacket) : MpTeamCreateMessage =
             { MemberName = pk.ReadString(); LeaderName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildCreateMessage (pk: IRPacket) : MpGuildCreateMessage =
             { GuildId = pk.ReadInt64(); GldName = pk.ReadString(); Job = pk.ReadString()
               Degree = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildApproveMessage (pk: IRPacket) : MpGuildApproveMessage =
             { NewMemberChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildKickMessage (pk: IRPacket) : MpGuildKickMessage =
             { KickedChaId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildLeaveMessage (pk: IRPacket) : MpGuildLeaveMessage =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildDisbandMessage (pk: IRPacket) : MpGuildDisbandMessage =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildMottoMessage (pk: IRPacket) : MpGuildMottoMessage =
             { Motto = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildPermMessage (pk: IRPacket) : MpGuildPermMessage =
             { TargetChaId = pk.ReadInt64(); Permission = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildChallMoneyMessage (pk: IRPacket) : MpGuildChallMoneyMessage =
             { GuildId = pk.ReadInt64(); Money = pk.ReadInt64()
               GuildName1 = pk.ReadString(); GuildName2 = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildChallPrizeMoneyMessage (pk: IRPacket) : MpGuildChallPrizeMoneyMessage =
             { GuildId = pk.ReadInt64(); Money = pk.ReadInt64() }
@@ -5138,26 +5138,26 @@ module CommandMessages =
 
         let mpSay2AllMessage (pk: IRPacket) : MpSay2AllMessage =
             { Succ = pk.ReadInt64(); ChaName = pk.ReadString(); Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpSay2TradeMessage (pk: IRPacket) : MpSay2TradeMessage =
             { Succ = pk.ReadInt64(); ChaName = pk.ReadString(); Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGm1SayMessage (pk: IRPacket) : MpGm1SayMessage =
             { Content = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGm1Say1Message (pk: IRPacket) : MpGm1Say1Message =
             { Content = pk.ReadString(); SetNum = pk.ReadInt64(); Color = pk.ReadInt64() }
 
         let mpGmBanMessage (pk: IRPacket) : MpGmBanMessage =
             { ActName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGmUnbanMessage (pk: IRPacket) : MpGmUnbanMessage =
             { ActName = pk.ReadString()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildNoticeMessage (pk: IRPacket) : MpGuildNoticeMessage =
             { GuildId = pk.ReadInt64(); Content = pk.ReadString() }
@@ -5167,19 +5167,19 @@ module CommandMessages =
 
         let mpMutePlayerMessage (pk: IRPacket) : MpMutePlayerMessage =
             { ChaName = pk.ReadString(); Time = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGarner2UpdateMessage (pk: IRPacket) : MpGarner2UpdateMessage =
             { Nid = pk.ReadInt64(); ChaName = pk.ReadString(); Level = pk.ReadInt64()
               Job = pk.ReadString(); Fightpoint = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGarner2GetOrderMessage (pk: IRPacket) : MpGarner2GetOrderMessage =
-            { GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+            { GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         let mpGuildBankAckMessage (pk: IRPacket) : MpGuildBankAckMessage =
             { GuildId = pk.ReadInt64()
-              GateAddr = uint32 (pk.ReadInt64()); GpAddr = uint32 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GpAddr = pk.ReadInt64() }
 
         // ─── Группа E: PC ────────────────────────────────────
 
@@ -5442,7 +5442,7 @@ module CommandMessages =
               MapName = pk.ReadString(); MapCopyNo = int (pk.ReadInt64())
               X = uint32 (pk.ReadInt64()); Y = uint32 (pk.ReadInt64())
               IsSwitch = pk.ReadInt64() <> 0L
-              GateAddr = uint32 (pk.ReadInt64()); GarnerWinner = int16 (pk.ReadInt64()) }
+              GateAddr = pk.ReadInt64(); GarnerWinner = int16 (pk.ReadInt64()) }
 
         // ─── Группа: Геймплейные CM (с полями) ────────────────────
 

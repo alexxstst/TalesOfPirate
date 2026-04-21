@@ -167,7 +167,7 @@ void NetPCTeam(stNetPCTeam  &pcteam)
 			char buf[64] = {};
 			if (CAreaInfo* pArea = GetAreaInfo(nArea); pArea)
 			{
-				sprintf_s(buf, "In %s", pArea->szDataName);
+				sprintf_s(buf, "In %s", pArea->DataName.c_str());
 			}
 			
 			updateDiscordPresence(buffer, buf);

@@ -230,7 +230,7 @@ void CWaitAttackState::ActionFrame( DWORD pose_id, int key_frame )
 	if( key_frame>0 ) key_frame=0;
 
 	// 
-	if( _pSkillInfo->nID==83 && key_frame>=0 )
+	if( _pSkillInfo->Id==83 && key_frame>=0 )
 	{
 		g_pGameApp->GetMainCam()->SetCameraDither( TRUE );
 	}

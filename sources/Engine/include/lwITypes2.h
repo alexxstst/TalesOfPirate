@@ -175,7 +175,11 @@ struct lwTexInfo
     DWORD colorkey_type;
     lwColorValue4b colorkey;
     char file_name[LW_MAX_NAME];
-    void* data;
+    // Было `void* data;` — размер указателя отличается на x86/x64 и ломал
+    // разбор бинарных файлов моделей (.lgo/.lmo), сохранённых с x86-раскладкой.
+    // Поле не использовалось как реальный указатель (ставилось только в 0),
+    // поэтому заменено на 4-байтный плейсхолдер, фиксирующий бинарный формат.
+    DWORD _reserved_data;
 
     lwRenderStateAtom tss_set[LW_TEX_TSS_NUM];
 };
@@ -196,7 +200,7 @@ inline void lwTexInfo_Construct(lwTexInfo* obj)
     obj->colorkey_type = COLORKEY_TYPE_NONE;
     obj->colorkey.color = 0;
     obj->file_name[0] = '\0';
-    obj->data = 0;
+    obj->_reserved_data = 0;
 
     //lwRenderStateSetTemplate_Construct(&obj->tss_set);
     lwRenderStateAtom_Construct_A(obj->tss_set, LW_TEX_TSS_NUM);

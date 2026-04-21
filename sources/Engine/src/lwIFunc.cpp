@@ -185,8 +185,10 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
     lwISysGraphics* sys_graphics = 0;
     lwIDeviceObject* dev_obj = 0;
 
-    if(LW_FAILED(lwCreateObjectGUID((LW_VOID**)&sys, LW_GUID_SYSTEM)))
+    sys = LW_NEW(lwSystem);
+    if(!sys) {
         goto __ret;
+    }
 
     if(LW_FAILED(sys->Initialize()))
         goto __ret;
@@ -267,8 +269,10 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
     lwISysGraphics* sys_graphics = 0;
     lwIDeviceObject* dev_obj = 0;
 
-    if(LW_FAILED(lwCreateObjectGUID((LW_VOID**)&sys, LW_GUID_SYSTEM)))
+    sys = LW_NEW(lwSystem);
+    if(!sys) {
         goto __ret;
+    }
 
     if(LW_FAILED(sys->Initialize()))
         goto __ret;
@@ -382,8 +386,10 @@ LW_RESULT lwInitMeshLibSystem(lwISystem** ret_sys, lwISysGraphics** ret_sys_grap
     lwISysGraphics* sys_graphics = 0;
     lwIDeviceObject* dev_obj = 0;
 
-    if(LW_FAILED(lwCreateObjectGUID((LW_VOID**)&sys, LW_GUID_SYSTEM)))
+    sys = LW_NEW(lwSystem);
+    if(!sys) {
         goto __ret;
+    }
 
     if(LW_FAILED(sys->Initialize()))
         goto __ret;

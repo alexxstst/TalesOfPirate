@@ -193,7 +193,7 @@ type GameServerSystem
                       MapCopyNo = mapCopyNo
                       X = x; Y = y
                       IsSwitch = isSwitch
-                      GateAddr = uint32 rawId
+                      GateAddr = int64 rawId
                       GarnerWinner = player.GarnerWinner }
         game.SendPacket(w)
 
@@ -325,7 +325,7 @@ type GameServerSystem
                 )
             else
                 // Успех: считать доп. поля из trailer
-                let gameServerPlayerId = uint32 (packet.ReverseReadInt64())
+                let gameServerPlayerId = packet.ReverseReadInt64()
                 let plyNum = uint32 (packet.ReverseReadInt64())
                 let isSwitch = byte (packet.ReverseReadInt64())
 
@@ -343,7 +343,7 @@ type GameServerSystem
                 let (ChannelId_ rawId) = playing.Channel.Id
                 let enterMapPkt = Serialize.mpEnterMapMessage
                                     { IsSwitch = int64 isSwitch
-                                      GateAddr = uint32 rawId
+                                      GateAddr = int64 rawId
                                       GpAddr = playing.GroupServerPlayerId }
                 this.SendToGroup(enterMapPkt)
         | _ ->

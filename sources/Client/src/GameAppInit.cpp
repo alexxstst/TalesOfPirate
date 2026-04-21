@@ -27,6 +27,7 @@
 #include "SteadyFrame.h"
 #include "UICozeForm.h"
 #include "GameMovie.h"
+#include "lwTimer.h"
 
 using namespace std;
 
@@ -336,7 +337,7 @@ BOOL CGameApp::_Init() {
 	//DWORD fps = (DWORD)((1.0f / 30.0f) * 1000);
 	DWORD fps = _dwFPSInterval;
 	HWND hwnd = g_pGameApp->GetHWND();
-	MPGUIDCreateObject((LW_VOID**)&_TimerPeriod, LW_GUID_TIMERPERIOD);
+	_TimerPeriod = LW_NEW(lwTimerPeriod);
 	_TimerPeriod->SetEvent(fps, fps, __timer_period_proc, (DWORD_PTR)hwnd, TIME_PERIODIC | TIME_CALLBACK_FUNCTION);
 #endif
 

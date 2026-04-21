@@ -99,7 +99,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadCha(pInfo->chModalType, pInfo->sModel, part_buf) == 0)
 		{
-			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -116,7 +116,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadShip(pInfo->chModalType, pInfo->sModel, part_buf) == 0)
 		{
-			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -134,7 +134,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadTower(pInfo->chModalType, part_buf) == 0)
 		{
-			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -160,7 +160,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 		if (((CCharacterModel*)pCha)->LoadCha(&load_info) == 0)
 		{
-			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+			g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 			pCha = NULL;
 			goto __ret;
 		}
@@ -168,7 +168,7 @@ CCharacter* CGameScene::AddCharacter(int nScriptID)
 
 	if (((CCharacterModel*)pCha)->LoadPose(pInfo->sActionID) == 0)
 	{
-		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), nScriptID, std::string_view(pInfo->szDataName)));
+		g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), nScriptID, std::string_view(pInfo->DataName.c_str())));
 		pCha = NULL;
 		goto __ret;
 	}

@@ -1172,7 +1172,7 @@ const char* HandleMonsterCommand(string& strCmd, string &p1, string &p2)
 				if (pCha!=pScene->GetMainCha() && pCha->getTypeID() > 4 )
 				{
 					CChaRecord* pInfo = GetChaRecordInfo( pCha->getTypeID() );
-					if((pInfo && p1==pInfo->szDataName) || nScriptID==pCha->getTypeID())
+					if((pInfo && p1==pInfo->DataName.c_str()) || nScriptID==pCha->getTypeID())
 					{
 						// Move camera to found monster
 						int x = pCha->GetCurX();
@@ -1233,14 +1233,14 @@ void CheckSkillEffect( CSkillRecord* pSkill, int nEffectID )
 
 	if( name.empty() )
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(117), pSkill->nID, pSkill->szName, nEffectID));
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(117), pSkill->Id, pSkill->szName, nEffectID));
 		return;
 	}
 
 	int n = (int)name.find( GetLanguageString(118) );
 	if( n >= 0 )
 	{
-		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(119), pSkill->nID, pSkill->szName, nEffectID));
+		g_logManager.InternalLog(LogLevel::Debug, "common", SafeVFormat(GetLanguageString(119), pSkill->Id, pSkill->szName, nEffectID));
 	}
 }
 
@@ -1455,7 +1455,7 @@ const char* ConsoleCallback(const char *pszCmd)
 	}
 	else if( strCmd=="th2" )
 	{
-		_asm int 3;
+		__debugbreak();
 	}
 	else if( strCmd=="th3" )
 	{
@@ -1992,7 +1992,7 @@ const char* ConsoleCallback(const char *pszCmd)
 				pItem = pMain->GetHandItem( enumEQUIP_LHAND );
 				if( pItem )
 				{
-					pCha->UpdataItem( pItem->GetItemInfo()->nID, LINK_ID_LEFTHAND );
+					pCha->UpdataItem( pItem->GetItemInfo()->Id, LINK_ID_LEFTHAND );
 					pChaItem = pCha->GetHandItem( enumEQUIP_LHAND );
 					if( pChaItem )
 					{
@@ -2049,7 +2049,7 @@ const char* ConsoleCallback(const char *pszCmd)
 				pItem = pMain->GetHandItem( enumEQUIP_RHAND );
 				if( pItem )
 				{
-					pCha->UpdataItem( pItem->GetItemInfo()->nID, LINK_ID_RIGHTHAND );
+					pCha->UpdataItem( pItem->GetItemInfo()->Id, LINK_ID_RIGHTHAND );
 					pChaItem = pCha->GetHandItem( LINK_ID_RIGHTHAND );
 					if( pChaItem )
 					{
@@ -2249,7 +2249,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadCha( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 					continue;
 				}
 			}
@@ -2264,7 +2264,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadShip( pInfo->chModalType, pInfo->sModel, part_buf ) == 0 )
 				{
-					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 					continue;
 				}
 			}
@@ -2280,7 +2280,7 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadTower( pInfo->chModalType, part_buf ) == 0 )
 				{
-					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 					continue;
 				}
 			}
@@ -2302,13 +2302,13 @@ const char* ConsoleCallback(const char *pszCmd)
 
 				if( ((CCharacterModel*)pCha)->LoadCha( &load_info ) == 0 )
 				{
-					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->szDataName)));
+					g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(26), nScriptID, std::string_view(pInfo->DataName.c_str())));
 					continue;
 				}  
 			}
 			if( ((CCharacterModel*)pCha)->LoadPose( pInfo->sActionID ) == 0 )
 			{
-				g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), nScriptID, std::string_view(pInfo->szDataName)));
+				g_logManager.InternalLog(LogLevel::Error, "errors", SafeVFormat(GetLanguageString(27), nScriptID, std::string_view(pInfo->DataName.c_str())));
 					continue;
 			} 
 		    pCha->SetValid(TRUE); 

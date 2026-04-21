@@ -5,7 +5,7 @@
 #define STONE_EQUIP_MAX 3
 
 // Запись таблицы камней (StoneInfo)
-class CStoneInfo : public CRawDataInfo {
+class CStoneInfo : public EntityData {
 public:
 	int   nItemID{};
 	int   nEquipPos[STONE_EQUIP_MAX]{};

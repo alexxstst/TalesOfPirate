@@ -111,12 +111,10 @@ GameRecordset<CSkillRecord>::RecordEntry SkillRecordStore::ReadRecord(SqliteStat
 
 	// id, name
 	record.sID  = static_cast<short>(stmt.GetInt(col++));
-	record.nID  = static_cast<int>(record.sID);
-	record.bExist = TRUE;
+	record.Id  = static_cast<int>(record.sID);
 
 	record.szName = stmt.GetText(col++);
-	strncpy(record.szDataName, record.szName.c_str(), sizeof(record.szDataName) - 1);
-	record.szDataName[sizeof(record.szDataName) - 1] = '\0';
+	record.DataName = record.szName;
 
 	// fight_type
 	record.chFightType = static_cast<char>(stmt.GetInt(col++));
@@ -227,5 +225,5 @@ GameRecordset<CSkillRecord>::RecordEntry SkillRecordStore::ReadRecord(SqliteStat
 	// Обновить приватные данные (eSelectCha, nPoseNum, ...)
 	record.RefreshPrivateData();
 
-	return {record.nID, record.szName, std::move(record)};
+	return {record.Id, record.szName, std::move(record)};
 }
