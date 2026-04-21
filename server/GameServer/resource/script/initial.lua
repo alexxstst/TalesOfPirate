@@ -208,11 +208,8 @@ do
 		if string.len(text) > 150 then
 			PopupNotice(role,"<PopupNotice> Message too long!")
 			return
-		end	
-        local packet = GetPacket()
-        WriteCmd(packet, 503)
-        WriteString(packet, text)
-        SendPacket(role, packet)
+		end
+        ShowMapCrash(role, text)
     end
 	
     Say = function(character, text)
@@ -234,12 +231,8 @@ do
     end
 	
     ChaSay = function(role, target, text)
-        local pkt = GetPacket()
         local tid = GetCharID(target)
-        WriteCmd(pkt, 501)
-        WriteDword(pkt, tid)
-        WriteString(pkt, text)
-        SendPacket(role, pkt)
+        ShowSay(role, tid, text, 0)
     end
 	
     AddComma = function(amount)

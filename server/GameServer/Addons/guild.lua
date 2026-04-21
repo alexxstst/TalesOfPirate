@@ -16,12 +16,8 @@ emGldPermMax = 0xFFFFFFFF
 emGldPermDefault = 1
 emGldPermNum = 14
 
-function PushToGuildBank(role, item)
-    local pkt = GetPacket()
-    WriteCmd(pkt, 5531)
-    WriteString(pkt, CreateItemString(item))
-    SendPacket(role, pkt)
-end
+--   Lua- PushToGuildBank .
+--   C++ Handle_PushToGuildBank       .
 
 function hasGuildPerm(role, ...)
     local perms = {...}

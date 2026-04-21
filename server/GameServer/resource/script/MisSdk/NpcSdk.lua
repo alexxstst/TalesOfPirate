@@ -91,178 +91,64 @@ MIS_HELP_SOUND = 2
 MIS_HELP_BICKER = 3
 
 function SendTalkPage(character, npc, pageid, desp)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_TALKPAGE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, pageid)
-    WriteString(packet, desp)
-    SendPacket(character, packet)
+    ShowTalkPage(character, npc, pageid, desp or "")
 end
 
 function SendExchangeData(character, npc)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_BLACKMARKET_EXCHANGEDATA)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-
-    if Exchange.count ~= nil then
-        WriteWord(packet, Exchange.count)
-
-        for n = 1, Exchange.count, 1 do
-            WriteWord(packet, Exchange.srcid[n])
-            WriteWord(packet, Exchange.srcnum[n])
-            WriteWord(packet, Exchange.tarid[n])
-            WriteWord(packet, Exchange.tarnum[n])
-            WriteWord(packet, Exchange.timenum[n])
-        end
-    else
-        WriteWord(packet, 0)
-    end
-
-    SendPacket(character, packet)
+    ShowBlackMarketExchange(character, npc, Exchange or {})
 end
 
 function SendExchangeXData(character, npc, exchangeData)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_EXCHANGEDATA)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-
-    if exchangeData.count ~= nil then
-        WriteWord(packet, exchangeData.count)
-
-        for n = 1, exchangeData.count, 1 do
-            WriteWord(packet, exchangeData.srcid[n])
-            WriteWord(packet, exchangeData.srcnum[n])
-            WriteWord(packet, exchangeData.tarid[n])
-            WriteWord(packet, exchangeData.tarnum[n])
-        end
-    else
-        WriteWord(packet, 0)
-    end
-
-    SendPacket(character, packet)
+    ShowExchangeData(character, npc, exchangeData or {})
 end
 
 function SendExchangeUpdateData(character, npc)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_BLACKMARKET_EXCHANGEUPDATE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-
-    if Exchange.count ~= nil then
-        WriteWord(packet, Exchange.count)
-
-        for n = 1, Exchange.count, 1 do
-            WriteWord(packet, Exchange.srcid[n])
-            WriteWord(packet, Exchange.srcnum[n])
-            WriteWord(packet, Exchange.tarid[n])
-            WriteWord(packet, Exchange.tarnum[n])
-            WriteWord(packet, Exchange.timenum[n])
-        end
-    else
-        WriteWord(packet, 0)
-    end
-
-    SynPacket(npc, packet)
+    SyncBlackMarketExchangeUpdate(npc, Exchange or {})
 end
 
 function SendDebugPage(character, npc, info)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_TALKPAGE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, ROLE_CLOSEPAGE)
-    WriteString(packet, info)
-    SendPacket(character, packet)
+    ShowTalkPage(character, npc, ROLE_CLOSEPAGE, info or "")
 end
 
-function HelpInfoX(character, tp, info)
-    PRINT("HelpInfoX")
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_HELPINFO)
-    WriteByte(packet, tp)
-
-    if tp == MIS_HELP_SOUND then
-        WriteWord(packet, info)
-    else
-        WriteString(packet, info)
-    end
-
-    SendPacket(character, packet)
-end
+--   HelpInfoX     Addons/packet.lua
+--   (    ).
 
 function SendFuncPage(character, npc, pageid, item, count)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_FUNCPAGE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, pageid)
-    WriteByte(packet, count)
-
-    for i = 1, count, 1 do
-        if item[i] ~= nil then
-            WriteString(packet, item[i])
-        else
-            WriteString(packet, "Incorrect notice option!")
-        end
+    --      FuncItem.
+    --       ( C++   "");
+    --         — .
+    local items = {}
+    for i = 1, count or 0, 1 do
+        items[i] = item[i] or "Incorrect notice option!"
     end
-    SendPacket(character, packet)
+    ShowFuncPage(character, npc, pageid, "", items)
 end
 
 function SendPage(character, npc, pageid, talk, item, count)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_FUNCPAGE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, pageid)
-    WriteString(packet, talk)
-    WriteByte(packet, count)
-
-    for i = 1, count, 1 do
-        if item[i] ~= nil then
-            WriteString(packet, item[i])
-        else
-            WriteString(packet, "Incorrect notice option!")
-        end
+    local items = {}
+    for i = 1, count or 0, 1 do
+        items[i] = item[i] or "Incorrect notice option!"
     end
-    SendPacket(character, packet)
+    ShowFuncPage(character, npc, pageid, talk or "", items)
 end
 
 function SendMissionPage(character, npc, pageid, talk, item, count, misitem, misnum)
     PRINT("SendMissionPage")
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_FUNCPAGE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, pageid)
-    WriteString(packet, talk)
-    WriteByte(packet, count)
-
-    for i = 1, count, 1 do
-        if item[i] ~= nil then
-            WriteString(packet, item[i])
-        else
-            WriteString(packet, "Incorrect notice option!")
+    local items = {}
+    for i = 1, count or 0, 1 do
+        items[i] = item[i] or "Incorrect notice option!"
+    end
+    local missions = {}
+    for n = 1, misnum or 0, 1 do
+        if misitem[n] then
+            missions[n] = {name = misitem[n].name, state = misitem[n].state}
         end
     end
-    WriteByte(packet, misnum)
-    PRINT("Send quest list notice, count =" .. misnum)
-    for n = 1, misnum, 1 do
-        PRINT("Name: Status: ", misitem[n].name, misitem[n].state)
-        WriteString(packet, misitem[n].name)
-        WriteByte(packet, misitem[n].state)
-    end
-    SendPacket(character, packet)
+    ShowMissionPage(character, npc, pageid, talk or "", items, missions)
 end
 
 function SendClosePage(character, npc)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_CLOSETALK)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    SendPacket(character, packet)
+    ShowClosePage(character, npc)
 end
 
 function SendMissionList(character, npc, missionlist, itemid, optype, listtype)
@@ -327,41 +213,28 @@ function SendMissionList(character, npc, missionlist, itemid, optype, listtype)
     previd = previd - 1
     nextid = nextid - 1
     PRINT("SendMissionList:previd = %d, nextid = %d, count = %d", previd, nextid, count)
-    PRINT("SendMissionList:sendpacket")
 
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_MISSION)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, listtype)
-    WriteByte(packet, previd)
-    WriteByte(packet, nextid)
-
-    PRINT("SendMissionList: fill page notice!, previd, nextid ", previd, nextid)
-
+    local prevCmd
     if previd == 0 then
-        PRINT("SendMissionList: fill page notice!prev = end")
-        WriteByte(packet, MIS_PREV_END)
+        prevCmd = MIS_PREV_END
     else
-        PRINT("SendMissionList: add page notice!prev = prev")
-        WriteByte(packet, MIS_PREV)
+        prevCmd = MIS_PREV
     end
+    local nextCmd
     local endid = num - 1
     if nextid == endid then
-        PRINT("SendMissionList: fill page notice! next = end")
-        WriteByte(packet, MIS_NEXT_END)
+        nextCmd = MIS_NEXT_END
     else
-        PRINT("SendMissionList: fill page notice! next = next")
-        WriteByte(packet, MIS_NEXT)
+        nextCmd = MIS_NEXT
     end
 
-    WriteByte(packet, count - 1)
+    --      "count - 1" .
+    local items = {}
     for i = 1, count - 1, 1 do
-        PRINT(item[i])
-        WriteString(packet, item[i])
+        items[i] = item[i]
     end
-    PRINT("SendMissionPage")
-    SendPacket(character, packet)
+
+    ShowMissionList(character, npc, listtype, previd, nextid, prevCmd, nextCmd, items)
     SetMissionPage(character, npcid, previd, nextid, listtype)
     return LUA_TRUE
 end
@@ -661,211 +534,31 @@ function RandFunction(character, npc, page, funclist, count)
     end
 end
 
+--     . CMD  :
+--   CMD_MC_BLACKMARKET_TRADEUPDATE →  ShowTradeUpdate,  → ShowTradePage.
 function SendTradePage(character, npc, cmd, trade, tradetype, p1)
     if cmd == nil or trade == nil or tradetype == nil then
-        return SystemNotic(character, "TradePage:Function parameter error!")
+        return SystemNotice(character, "TradePage:Function parameter error!")
     end
-
-    PRINT("SendTradePage: send start. tradetype = ", tradetype)
-    local packet = GetPacket()
-    WriteCmd(packet, cmd)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, tradetype)
-    WriteDword(packet, p1)
-
-    local typecount = 0
-    for i = 1, 4, 1 do
-        if trade[i] ~= nil then
-            typecount = typecount + 1
-        else
-            break
-        end
+    if cmd == CMD_MC_BLACKMARKET_TRADEUPDATE then
+        ShowTradeUpdate(character, npc, trade, tradetype, p1 or 0)
+    else
+        ShowTradePage(character, npc, trade, tradetype, p1 or 0)
     end
-    WriteByte(packet, typecount)
-    PRINT("SendTradePage: typecount = ", typecount)
-
-    for i = 1, typecount, 1 do
-        if trade[i].itemtype ~= nil and trade[i].count ~= nil and trade[i].item ~= nil then
-            if trade[i].count > 120 then
-                trade[i].count = 120
-            end
-            PRINT("SendTradePage: itemtype =, count = ", trade[i].itemtype, trade[i].count)
-            WriteByte(packet, trade[i].itemtype)
-            WriteByte(packet, trade[i].count)
-
-            for n = 1, trade[i].count, 1 do
-                if trade[i].item[n] ~= nil then
-                    if tradetype == TRADE_GOODS then
-                        PRINT(
-                            "SendTradePage:writedword : id =, count =, price =, tradetp ",
-                            trade[i].item[n].id,
-                            trade[i].item[n].count,
-                            trade[i].price[n].curprice,
-                            tradetype
-                        )
-                        WriteWord(packet, trade[i].item[n].id)
-                        WriteWord(packet, trade[i].item[n].count)
-                        WriteDword(packet, trade[i].price[n].curprice)
-                        WriteByte(packet, trade[i].item[n].level)
-                    else
-                        WriteWord(packet, trade[i].item[n])
-                    end
-                else
-                    WriteWord(packet, ROLE_INVALID_ID)
-                    if tradetype == TRADE_GOODS then
-                        WriteDword(packet, 0)
-                    end
-                end
-            end
-        else
-            EXLG("NpcSdk_error", "npc trade item quantity or type error, please check! NpcName = %s", GetCharName(npc))
-            return SystemNotice(character, "npc trade item value or type error, please check!")
-        end
-    end
-
-    PRINT("SendTradePage: SendPacket")
-    SendPacket(character, packet)
 end
 
 function SendTradeUpdate(character, npc, trade, tradetype, p1)
     if trade == nil or tradetype == nil then
-        return SystemNotic(character, "SendTradeUpdate: Function parameter error!")
+        return SystemNotice(character, "SendTradeUpdate: Function parameter error!")
     end
-
-    PRINT("SendTradeUpdate: send start. tradetype = ", tradetype)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_BLACKMARKET_TRADEUPDATE)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, tradetype)
-    WriteDword(packet, p1)
-
-    local typecount = 0
-    for i = 1, 4, 1 do
-        if trade[i] ~= nil then
-            typecount = typecount + 1
-        else
-            break
-        end
-    end
-    WriteByte(packet, typecount)
-    PRINT("SendTradeUpdate: typecount = ", typecount)
-
-    for i = 1, typecount, 1 do
-        if trade[i].itemtype ~= nil and trade[i].count ~= nil and trade[i].item ~= nil then
-            if trade[i].count > 120 then
-                trade[i].count = 120
-            end
-            PRINT("SendTradeUpdate: itemtype =, count = ", trade[i].itemtype, trade[i].count)
-            WriteByte(packet, trade[i].itemtype)
-            WriteByte(packet, trade[i].count)
-
-            for n = 1, trade[i].count, 1 do
-                if trade[i].item[n] ~= nil then
-                    if tradetype == TRADE_GOODS then
-                        PRINT(
-                            "SendTradeUpdate:writedword : id =, count =, price =, tradetp ",
-                            trade[i].item[n].id,
-                            trade[i].item[n].count,
-                            trade[i].price[n].curprice,
-                            tradetype
-                        )
-                        WriteWord(packet, trade[i].item[n].id)
-                        WriteWord(packet, trade[i].item[n].count)
-                        WriteDword(packet, trade[i].price[n].curprice)
-                        WriteByte(packet, trade[i].item[n].level)
-                    else
-                        WriteWord(packet, trade[i].item[n])
-                    end
-                else
-                    WriteWord(packet, ROLE_INVALID_ID)
-                    if tradetype == TRADE_GOODS then
-                        WriteDword(packet, 0)
-                    end
-                end
-            end
-        else
-            EXLG("NpcSdk_error", "npc trade item quantity or type error, please check! NpcName = %s", GetCharName(npc))
-            return SystemNotice(character, "npc trade item value or type error, please check!")
-        end
-    end
-
-    PRINT("SendTradeUpdate: SendPacket")
-    SynPacket(npc, packet)
+    SyncTradeUpdate(npc, trade, tradetype, p1 or 0)
 end
 
 function SendUpdateTradePage(character, npc, cmd, trade, tradetype, p1)
     if cmd == nil or trade == nil or tradetype == nil then
-        return SystemNotic(character, "SendUpdateTradePage:Function parameter error!")
+        return SystemNotice(character, "SendUpdateTradePage:Function parameter error!")
     end
-
-    PRINT("SendUpdateTradePage: send start. tradetype = ", tradetype)
-    local packet = GetPacket()
-    WriteCmd(packet, cmd)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, tradetype)
-    WriteDword(packet, p1)
-
-    local typecount = 0
-    for i = 1, 4, 1 do
-        if trade[i] ~= nil then
-            typecount = typecount + 1
-        else
-            break
-        end
-    end
-    WriteByte(packet, typecount)
-    PRINT("SendUpdateTradePage: typecount = ", typecount)
-
-    for i = 1, typecount, 1 do
-        if trade[i].itemtype ~= nil and trade[i].count ~= nil and trade[i].item ~= nil then
-            if trade[i].count > 120 then
-                trade[i].count = 120
-            end
-            PRINT("SendUpdateTradePage: itemtype =, count = ", trade[i].itemtype, trade[i].count)
-            WriteByte(packet, trade[i].itemtype)
-            WriteByte(packet, trade[i].count)
-
-            for n = 1, trade[i].count, 1 do
-                if trade[i].item[n] ~= nil then
-                    if tradetype == TRADE_GOODS then
-                        PRINT(
-                            "SendUpdateTradePage:writedword : id =, count =, price =, tradetp ",
-                            trade[i].item[n].id,
-                            trade[i].item[n].count,
-                            trade[i].price[n].curprice,
-                            tradetype
-                        )
-                        WriteWord(packet, trade[i].item[n].id)
-                        WriteWord(packet, trade[i].item[n].count)
-                        WriteDword(packet, trade[i].price[n].curprice)
-                        WriteByte(packet, trade[i].item[n].level)
-                    else
-                        WriteWord(packet, trade[i].item[n])
-                    end
-                else
-                    WriteWord(packet, ROLE_INVALID_ID)
-                    if tradetype == TRADE_GOODS then
-                        WriteWord(packet, 0)
-                        WriteDword(packet, 0)
-                        WriteByte(packet, 0)
-                    end
-                end
-            end
-        else
-            EXLG(
-                "NpcSdk_error",
-                "SendUpdateTradePage:npc trade quantity or type error, please check!NpcName = %s",
-                GetCharName(npc)
-            )
-            return SystemNotice(character, "SendUpdateTradePage:npc trade item quantity or type error, please check!")
-        end
-    end
-
-    PRINT("SendUpdateTradePage: SendPacket")
-    SynPacket(character, packet)
+    ShowTradeUpdate(character, npc, trade, tradetype, p1 or 0)
 end
 
 function TradePage(character, npc, trade, tradetype, p1)
@@ -1125,19 +818,7 @@ function SendGoodsData(npc, index, id, count, price)
         )
         return
     end
-
-    PRINT("SendGoodsData: npc, index, id, count, price", npc, index, id, count, price)
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_TRADE_DATA)
-    local npcid = GetCharID(npc)
-    WriteDword(packet, npcid)
-    WriteByte(packet, 0)
-    WriteByte(packet, index)
-    WriteWord(packet, id)
-    WriteWord(packet, count)
-    WriteDword(packet, price)
-
-    SynPacket(npc, packet)
+    SyncGoodsData(npc, index, id, count, price)
     return LUA_TRUE
 end
 
@@ -1359,17 +1040,17 @@ function BoatLevelUp(character, boat, levelup)
     return LUA_TRUE
 end
 
-function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
-    if character == nil or npc == nil or rpk == nil then
+function MsgProc(character, npc, action, page, trade, missionlist, exchangeData)
+    if character == nil or npc == nil or action == nil then
         PRINT("MsgProc:Function parameter error!")
         EXLG("NpcSdk_error", "MsgProc:Function parameter error!")
         return
     end
     PRINT("MsgProc:Net message process.")
-    local usCmd = ReadWord(rpk)
+    local usCmd = action.usCmd
     LogTrade("MsgProc npc=" .. tostring(GetCharName(npc)) .. " usCmd=" .. tostring(usCmd) .. " trade=" .. tostring(trade))
     if usCmd == CMD_CM_TALKPAGE then
-        local byTalkID = ReadByte(rpk)
+        local byTalkID = action.talkId
 
         if byTalkID == ROLE_FIRSTPAGE then
             RefreshMissionState(character, npc)
@@ -1428,8 +1109,8 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
         end
         return
     elseif usCmd == CMD_CM_FUNCITEM then
-        local byPage = ReadByte(rpk)
-        local byItem = ReadByte(rpk)
+        local byPage = action.page
+        local byItem = action.item
         PRINT("MsgProc: pageid =, itemid = ", byPage, byItem)
         LogTrade("MsgProc FUNCITEM npc=" .. tostring(GetCharName(npc)) .. " byPage=" .. tostring(byPage) .. " byItem=" .. tostring(byItem))
         if page[byPage] == nil or page[byPage][1] == nil then
@@ -1714,12 +1395,12 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
             return SystemNotice(character, "MsgProc: function option unknown function!")
         end
     elseif usCmd == CMD_CM_BLACKMARKET_EXCHANGE_REQ then
-        local timeNum = ReadWord(rpk)
-        local srcID = ReadWord(rpk)
-        local srcNum = ReadWord(rpk)
-        local tarID = ReadWord(rpk)
-        local tarNum = ReadWord(rpk)
-        local byIndex = ReadWord(rpk)
+        local timeNum = action.timeNum
+        local srcID = action.srcId
+        local srcNum = action.srcNum
+        local tarID = action.tarId
+        local tarNum = action.tarNum
+        local byIndex = action.idx
 
         local ret = KitbagLock(character, 0)
         if ret ~= LUA_TRUE then
@@ -1735,7 +1416,7 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
 
         ExchangeReq(character, npc, srcID, srcNum, tarID, tarNum, timeNum)
     elseif usCmd == CMD_CM_TRADEITEM then
-        local tradetype = ReadByte(rpk)
+        local tradetype = action.tradeType
         if tradetype == ROLE_TRADE_SALE then
             if trade.tp ~= TRADE_NOMAL then
                 SystemNotice(character, "Trade mode error!tp =", trade.tp)
@@ -1743,8 +1424,8 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
                 return
             end
 
-            local index = ReadByte(rpk)
-            local count = ReadByte(rpk)
+            local index = action.index
+            local count = action.count
             if count == 0 then
                 return
             end
@@ -1757,10 +1438,10 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
                 return
             end
 
-            local itemtype = ReadByte(rpk)
-            local index1 = ReadByte(rpk)
-            local index2 = ReadByte(rpk)
-            local count = ReadByte(rpk)
+            local itemtype = action.itemType
+            local index1 = action.index1
+            local index2 = action.index2
+            local count = action.count
             if count == 0 then
                 return
             end
@@ -1773,9 +1454,9 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
                 return
             end
 
-            local boatid = ReadDword(rpk)
-            local index = ReadByte(rpk)
-            local count = ReadByte(rpk)
+            local boatid = action.boatId
+            local index = action.index
+            local count = action.count
             if count == 0 then
                 return
             end
@@ -1788,11 +1469,11 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
                 return
             end
 
-            local boatid = ReadDword(rpk)
-            local itemtype = ReadByte(rpk)
-            local index1 = ReadByte(rpk)
-            local index2 = ReadByte(rpk)
-            local count = ReadByte(rpk)
+            local boatid = action.boatId
+            local itemtype = action.itemType
+            local index1 = action.index1
+            local index2 = action.index2
+            local count = action.count
 
             if count == 0 then
                 return
@@ -1807,14 +1488,14 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
             )
             BuyGoods(character, npc, trade, boatid, itemtype, index1, index2, count)
         elseif tradetype == ROLE_TRADE_SELECT_BOAT then
-            local index = ReadByte(rpk)
+            local index = action.index
             PRINT("MsgProc:index = ", index)
             TradeGoods(character, npc, trade, index)
         else
             return SystemNotice(character, "MsgProc: trade request command error!")
         end
     elseif usCmd == CMD_CM_MISSION then
-        return MissionProc(character, npc, rpk, missionlist)
+        return MissionProc(character, npc, action, missionlist)
     else
         EXLG("NpcSdk_error", "MsgProc:unknown internet command! CMD = %d", usCmd)
         return SystemNotice(character, "MsgProc: Unknown internet command!")

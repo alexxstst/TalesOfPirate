@@ -275,9 +275,14 @@ namespace mission
 			return FALSE;
 		}
 
+		//      Lua-  packet.
+		//     net::RPacket  Lua.
+		extern luabridge::LuaRef BuildNpcActionTable(lua_State*, net::RPacket&);
+		luabridge::LuaRef action = BuildNpcActionTable(g_pLuaState, packet);
+
 		luabridge::push( g_pLuaState, &character );
 		luabridge::push( g_pLuaState, static_cast<mission::CNpc*>(this) );
-		luabridge::push( g_pLuaState, &packet );
+		action.push(g_pLuaState);
 		lua_pushnumber( g_pLuaState, m_sScriptID );
 
 		ToLogService("trade", "CTalkNpc::MsgProc cha={} npc={} scriptID={} -> NpcProc()",

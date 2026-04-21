@@ -1225,9 +1225,12 @@ void CCharacter::Handle_RequestTalk(uLong npcId, net::RPacket& pk) {
 		ToLogService("trade", "Handle_RequestTalk cha={} npcId={} -> lua extNpcNpcProc ({})",
 			GetLogName(), npcId, pCha->GetLogName());
 
+		extern luabridge::LuaRef BuildNpcActionTable(lua_State*, net::RPacket&);
+		luabridge::LuaRef action = BuildNpcActionTable(g_pLuaState, pk);
+
 		luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 		luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCha));
-		luabridge::push(g_pLuaState, &pk);
+		action.push(g_pLuaState);
 
 		int nStatus = lua_pcall(g_pLuaState, 3, 0, 0);
 		if (nStatus != 0) {
@@ -1420,8 +1423,11 @@ void CCharacter::Handle_StoreCommand(uShort usCmd, net::RPacket& pk) {
 		return;
 	}
 
+	extern luabridge::LuaRef BuildStoreActionTable(lua_State*, net::RPacket&);
+	luabridge::LuaRef action = BuildStoreActionTable(g_pLuaState, pk);
+
 	luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
-	luabridge::push(g_pLuaState, &pk);
+	action.push(g_pLuaState);
 	int nStatus = lua_pcall(g_pLuaState, 2, 0, 0);
 	lua_settop(g_pLuaState, 0);
 

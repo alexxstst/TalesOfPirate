@@ -1775,15 +1775,15 @@ function SelMissionList(character, npc, selindex, missionlist)
     end
 end
 
-function MissionProc(character, npc, rpk, missionlist)
+function MissionProc(character, npc, action, missionlist)
     if missionlist == nil then
         SystemNotice(character, "MissionProc:parameter error!")
         return LUA_FALSE
     end
 
-    local byCmd = ReadByte(rpk)
+    local byCmd = action.misCmd
     if byCmd == MIS_SEL then
-        local selindex = ReadByte(rpk)
+        local selindex = action.selIndex
         return SelMissionList(character, npc, selindex, missionlist)
     elseif byCmd == MIS_BTNACCEPT then
         local ret = IsMissionFull(character)
@@ -1792,8 +1792,8 @@ function MissionProc(character, npc, rpk, missionlist)
         end
         return AcceptMission(character, npc, missionlist)
     elseif byCmd == MIS_BTNDELIVERY then
-        local byParam1 = ReadByte(rpk)
-        local byParam2 = ReadByte(rpk)
+        local byParam1 = action.param1
+        local byParam2 = action.param2
         local ret = CompleteMission(character, npc, missionlist, byParam1, byParam2)
     else
         PRINT("MissionProc:incorrect quest page command type!")
@@ -1833,122 +1833,58 @@ function MissionLog(character, sid)
     end
 end
 
+--    Lua-  need[]    p3=progress
+--   ShowMis*
+local function BuildNeeds(character, id, needSrc, computeProgress)
+    local needs = { count = needSrc.count }
+    for n = 1, needSrc.count, 1 do
+        local s = needSrc[n]
+        local dst = { tp = s.tp }
+        if s.tp == MIS_NEED_ITEM then
+            dst.p1 = s.p1
+            dst.p2 = s.p2
+            if computeProgress then
+                local ret, num = GetNeedItemCount(character, id, s.p1)
+                if ret ~= LUA_TRUE then
+                    LG("mislog_error", "BuildNeeds:GetNeedItemCount error, id, itemid", id, s.p1)
+                    num = 0
+                end
+                dst.p3 = num
+            else
+                dst.p3 = 0
+            end
+        elseif s.tp == MIS_NEED_KILL then
+            dst.p1 = s.p1
+            dst.p2 = s.p2
+            if computeProgress then
+                dst.p3 = GetNumFlag(character, id, s.p3, s.p2)
+            else
+                dst.p3 = 0
+            end
+        elseif s.tp == MIS_NEED_DESP then
+            dst.p1 = s.p1 --  string
+        end
+        needs[n] = dst
+    end
+    return needs
+end
+
 function SendMissionLog(character, mission, id, name)
     PRINT("SendMissionLog")
     if id == nil or mission == nil then
         return SystemNotice(character, "Have not found target quest log notice,ID = " .. id)
     end
 
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_MISLOGINFO)
-    WriteWord(packet, id)
-
-    WriteString(packet, name)
-    PRINT("SendMissionLog:misname = ", name)
-    WriteByte(packet, mission.need.count)
-    PRINT("SendMissionLog:need count = " .. mission.need.count)
-    for n = 1, mission.need.count, 1 do
-        PRINT(
-            "SendMissionLog:need n = , tp, p1, p2, p3 ",
-            n,
-            mission.need[n].tp,
-            mission.need[n].p1,
-            mission.need[n].p2,
-            mission.need[n].p3
-        )
-        WriteByte(packet, mission.need[n].tp)
-        if mission.need[n].tp == MIS_NEED_ITEM then
-            WriteWord(packet, mission.need[n].p1)
-            WriteWord(packet, mission.need[n].p2)
-
-            local ret, num = GetNeedItemCount(character, id, mission.need[n].p1)
-            PRINT("SendMissionLog:GetNeedItemCount, num = ", num)
-            if ret ~= LUA_TRUE then
-                PRINT(
-                    "SendMissionLog:GetNeedItemCount,errormisid = , itemid = , num = ",
-                    id,
-                    mission.need[n].p1,
-                    mission.need[n].p2
-                )
-                SystemNotice(character, "SendMissionLog:GetNeedItemCount,error")
-                LG(
-                    "mislog_error",
-                    "SendMissionLog:GetNeedItemCount,errormisid = , itemid = , num = ",
-                    id,
-                    mission.need[n].p1,
-                    mission.need[n].p2
-                )
-                num = 0
-            end
-            WriteByte(packet, num)
-        elseif mission.need[n].tp == MIS_NEED_KILL then
-            WriteWord(packet, mission.need[n].p1)
-            WriteWord(packet, mission.need[n].p2)
-
-            PRINT("SendMissionLog:GetNumFlag:GetNumFalg, id, p1, p2", id, mission.need[n].p3, mission.need[n].p2)
-            WriteByte(packet, GetNumFlag(character, id, mission.need[n].p3, mission.need[n].p2))
-        elseif mission.need[n].tp == MIS_NEED_DESP then
-            WriteString(packet, mission.need[n].p1)
-        else
-            PRINT("SendMissionLog:unknown quest required type!mission id = ", id)
-            SystemNotice(character, "SendMissionLog:unknown quest required type!mission id = ", id)
-            return
-        end
-    end
-
-    WriteByte(packet, mission.prize.seltp)
-    WriteByte(packet, mission.prize.count)
-    PRINT("SendMissionLog:prize count = , seltype =", mission.prize.count, mission.prize.seltp)
-    for i = 1, mission.prize.count, 1 do
-        PRINT(
-            "SendMissionLog:prize i = , tp, p1, p2 ",
-            i,
-            mission.prize[i].tp,
-            mission.prize[i].p1,
-            mission.prize[i].p2
-        )
-        WriteByte(packet, mission.prize[i].tp)
-        WriteWord(packet, mission.prize[i].p1)
-        WriteWord(packet, mission.prize[i].p2)
-    end
-
-    PRINT("SendMissionLog:begin talk = " .. mission.begin.talk)
-    WriteString(packet, mission.begin.talk)
-    SendPacket(character, packet)
+    local needs = BuildNeeds(character, id, mission.need, true)
+    ShowMisLogInfo(character, id, name, needs, mission.prize, mission.begin.talk)
 end
 
 function SendDeliveryPage(character, npcid, mission, id)
     PRINT("SendDeliveryPage")
-
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_MISPAGE)
-    WriteByte(packet, MIS_BTNDELIVERY)
-    WriteDword(packet, npcid)
-    WriteString(packet, mission.name)
-    PRINT("SenddeliveryPage:missionname = ", mission.name)
-    PRINT("SendDeliveryPage:need = ", mission.need)
-
-    WriteByte(packet, 0)
-
-    WriteByte(packet, mission.prize.seltp)
-    WriteByte(packet, mission.prize.count)
-    PRINT("SendDeliveryPage:prize count = , seltype =", mission.prize.count, mission.prize.seltp)
-    for i = 1, mission.prize.count, 1 do
-        PRINT(
-            "SendDeliveryPage:prize i = , tp, p1, p2 ",
-            i,
-            mission.prize[i].tp,
-            mission.prize[i].p1,
-            mission.prize[i].p2
-        )
-        WriteByte(packet, mission.prize[i].tp)
-        WriteWord(packet, mission.prize[i].p1)
-        WriteWord(packet, mission.prize[i].p2)
-    end
-
-    PRINT("SendDeliveryPage:result talk = " .. mission.result.talk)
-    WriteString(packet, mission.result.talk)
-    SendPacket(character, packet)
+    --   Delivery-    (count = 0)
+    local emptyNeeds = { count = 0 }
+    ShowMisPage(character, MIS_BTNDELIVERY, npcid, mission.name,
+                emptyNeeds, mission.prize, mission.result.talk)
 end
 
 function GiveMission(character, id)
@@ -2057,134 +1993,18 @@ end
 
 function SendAcceptPage(character, npcid, mission, id)
     PRINT("SendAcceptPage")
-
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_MISPAGE)
-    WriteByte(packet, MIS_BTNACCEPT)
-    WriteDword(packet, npcid)
-    WriteString(packet, mission.name)
-    PRINT("SendAcceptPage: name = ", mission.name)
-
-    WriteByte(packet, mission.need.count)
-    PRINT("SendAcceptPage:need count = " .. mission.need.count)
-    for n = 1, mission.need.count, 1 do
-        PRINT(
-            "SendAcceptPage:need n = , tp, p1, p2, p3 ",
-            n,
-            mission.need[n].tp,
-            mission.need[n].p1,
-            mission.need[n].p2,
-            mission.need[n].p3
-        )
-        WriteByte(packet, mission.need[n].tp)
-        if mission.need[n].tp == MIS_NEED_ITEM or mission.need[n].tp == MIS_NEED_KILL then
-            WriteWord(packet, mission.need[n].p1)
-            WriteWord(packet, mission.need[n].p2)
-
-            WriteByte(packet, 0)
-        elseif mission.need[n].tp == MIS_NEED_DESP then
-            WriteString(packet, mission.need[n].p1)
-        else
-            PRINT("SendAcceptPage:unknown quest required type!mission id = ", id)
-            SystemNotice(character, "SendAcceptPage:unknown quest required type!mission id = ", id)
-            return
-        end
-    end
-
-    WriteByte(packet, mission.prize.seltp)
-    WriteByte(packet, mission.prize.count)
-    PRINT("SendAcceptPage:prize count = , seltype =", mission.prize.count, mission.prize.seltp)
-    for i = 1, mission.prize.count, 1 do
-        PRINT(
-            "SendAcceptPage:prize i = , tp, p1, p2 ",
-            i,
-            mission.prize[i].tp,
-            mission.prize[i].p1,
-            mission.prize[i].p2
-        )
-        WriteByte(packet, mission.prize[i].tp)
-        WriteWord(packet, mission.prize[i].p1)
-        WriteWord(packet, mission.prize[i].p2)
-    end
-
-    PRINT("SendAcceptPage:begin talk = " .. mission.begin.talk)
-    WriteString(packet, mission.begin.talk)
-    SendPacket(character, packet)
+    --   Accept-   p3=0
+    local needs = BuildNeeds(character, id, mission.need, false)
+    ShowMisPage(character, MIS_BTNACCEPT, npcid, mission.name,
+                needs, mission.prize, mission.begin.talk)
 end
 
 function SendPendingPage(character, npcid, mission, id)
     PRINT("SendPendingPage")
-
-    local packet = GetPacket()
-    WriteCmd(packet, CMD_MC_MISPAGE)
-    WriteByte(packet, MIS_BTNPENDING)
-    WriteDword(packet, npcid)
-    WriteString(packet, mission.name)
-    PRINT("SendPendingPage: name = ", mission.name)
-
-    WriteByte(packet, mission.need.count)
-    PRINT("SendPendingPage:need count = " .. mission.need.count)
-    for n = 1, mission.need.count, 1 do
-        PRINT(
-            "SendPendingPage:need n = , tp, p1, p2, p3 ",
-            n,
-            mission.need[n].tp,
-            mission.need[n].p1,
-            mission.need[n].p2,
-            mission.need[n].p3
-        )
-        WriteByte(packet, mission.need[n].tp)
-        if mission.need[n].tp == MIS_NEED_ITEM then
-            WriteWord(packet, mission.need[n].p1)
-            WriteWord(packet, mission.need[n].p2)
-
-            local ret, num = GetNeedItemCount(character, id, mission.need[n].p1)
-            PRINT("SendPendingPage:GetNeedItemCount, num = ", num)
-            if ret ~= LUA_TRUE then
-                PRINT(
-                    "SendPendingPage:GetNeedItemCount,erroritemid = , num = ",
-                    mission.need[n].p1,
-                    mission.need[n].p2
-                )
-                SystemNotice(character, "SendPendingPage:GetNeedItemCount,error")
-                num = 0
-            end
-            WriteByte(packet, num)
-        elseif mission.need[n].tp == MIS_NEED_KILL then
-            WriteWord(packet, mission.need[n].p1)
-            WriteWord(packet, mission.need[n].p2)
-
-            local numflag = GetNumFlag(character, id, mission.need[n].p3, mission.need[n].p2)
-            PRINT("SendPendingPage:GetNumFlag, numflag = ", numflag)
-            WriteByte(packet, numflag)
-        elseif mission.need[n].tp == MIS_NEED_DESP then
-            WriteString(packet, mission.need[n].p1)
-        else
-            PRINT("SendPendingPage:unknown quest required type!mission id = ", id)
-            SystemNotice(character, "SendPendingPage:unknown quest required type!mission id = " .. id)
-            return
-        end
-    end
-
-    WriteByte(packet, mission.prize.seltp)
-    WriteByte(packet, mission.prize.count)
-    PRINT("SendPendingPage:prize count = , seltype =", mission.prize.count, mission.prize.seltp)
-    for i = 1, mission.prize.count, 1 do
-        PRINT(
-            "SendPendingPage:prize i = , tp, p1, p2 ",
-            i,
-            mission.prize[i].tp,
-            mission.prize[i].p1,
-            mission.prize[i].p2
-        )
-        WriteByte(packet, mission.prize[i].tp)
-        WriteWord(packet, mission.prize[i].p1)
-        WriteWord(packet, mission.prize[i].p2)
-    end
-
-    PRINT("SendPendingPage:help = ", mission.result.help)
-    WriteString(packet, mission.result.help)
-    SendPacket(character, packet)
+    --  Pending-     (help)
+    local needs = BuildNeeds(character, id, mission.need, true)
+    ShowMisPage(character, MIS_BTNPENDING, npcid, mission.name,
+                needs, mission.prize, mission.result.help)
 end
 
 function MisPrizeProc(character, npc, mission, selitem, param)

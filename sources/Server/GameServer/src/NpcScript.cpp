@@ -15,95 +15,6 @@
 _DBC_USING
 using namespace mission;
 
-net::WPacket g_WritePacket;
-
-// Packet I/O
-
-net::WPacket* GetPacket()
-{
-	g_WritePacket = g_gmsvr->GetWPacket();
-	return &g_WritePacket;
-}
-
-int ReadByte(net::RPacket* pPacket)
-{
-	if (!pPacket) return -1;
-	return static_cast<BYTE>((*pPacket).ReadInt64());
-}
-
-int ReadWord(net::RPacket* pPacket)
-{
-	if (!pPacket) return -1;
-	return static_cast<WORD>((*pPacket).ReadInt64());
-}
-
-int ReadDword(net::RPacket* pPacket)
-{
-	if (!pPacket) return -1;
-	return static_cast<int>((*pPacket).ReadInt64());
-}
-
-std::string ReadString(net::RPacket* pPacket)
-{
-	if (!pPacket) return "Ineffective char pointer";
-	std::string pszData = (*pPacket).ReadString();
-	return (!pszData.empty()) ? pszData : "Ineffective char pointer";
-}
-
-int ReadCmd(net::RPacket* pPacket)
-{
-	if (!pPacket) return -1;
-	return static_cast<WORD>((*pPacket).ReadCmd());
-}
-
-void WriteByte(net::WPacket* pPacket, int byData)
-{
-	if (!pPacket) return;
-	(*pPacket).WriteInt64(static_cast<BYTE>(byData));
-}
-
-void WriteWord(net::WPacket* pPacket, int wData)
-{
-	if (!pPacket) return;
-	(*pPacket).WriteInt64(static_cast<WORD>(wData));
-}
-
-void WriteDword(net::WPacket* pPacket, int dwData)
-{
-	if (!pPacket) return;
-	(*pPacket).WriteInt64(static_cast<DWORD>(dwData));
-}
-
-void WriteString(net::WPacket* pPacket, const std::string& pszData)
-{
-	if (!pPacket) return;
-	(*pPacket).WriteString(pszData.c_str());
-}
-
-void WriteCmd(net::WPacket* pPacket, int wData)
-{
-	if (!pPacket) return;
-	(*pPacket).WriteCmd(static_cast<WORD>(wData));
-}
-
-void SendPacket(CCharacter* pChar, net::WPacket* pPacket)
-{
-	if (!pChar || !pPacket) {
-		ToLogService("trade", LogLevel::Error, "SendPacket(): null arg pChar={}, pPacket={}",
-			static_cast<void*>(pChar), static_cast<void*>(pPacket));
-		return;
-	}
-	ToLogService("trade", "SendPacket() cha={} cmd={} size={}",
-		pChar->GetLogName(), pPacket->GetCmd(), pPacket->GetPacketSize());
-	pChar->ReflectINFof(pChar, *pPacket);
-}
-
-void SynPacket(CCharacter* pChar, net::WPacket* pPacket)
-{
-	if (!pChar || !pPacket) return;
-	pChar->NotiChgToEyeshot(*pPacket);
-}
-
 //   trade- (   MsgProc )
 void LogTrade(const std::string& msg)
 {
@@ -111,104 +22,790 @@ void LogTrade(const std::string& msg)
 }
 
 // ============================================================
+//       Lua-
+// ============================================================
+
+//      NPC  (CTalkNpc::MsgProc).
+//   Lua    .
+//    action:
+//    usCmd                ( 1: 1 )
+//   (CMD_CM_TALKPAGE)      talkId
+//   (CMD_CM_FUNCITEM)      page, item
+//   (BLACKMARKET_EXCHANGE_REQ) timeNum, srcId, srcNum, tarId, tarNum, idx
+//   (CMD_CM_TRADEITEM)     tradeType, +  :
+//        SALE (0)         → index, count
+//        BUY (1)          → itemType, index1, index2, count
+//        SALE_GOODS (2)   → boatId, index, count
+//        BUY_GOODS (3)    → boatId, itemType, index1, index2, count
+//        SELECT_BOAT (4)  → index
+//   (CMD_CM_MISSION)       misCmd, +  :
+//        MIS_SEL (4)           → selIndex
+//        MIS_BTNDELIVERY (7)   → param1, param2
+luabridge::LuaRef BuildNpcActionTable(lua_State* L, net::RPacket& pk)
+{
+	luabridge::LuaRef a = luabridge::newTable(L);
+	const int64_t usCmd = pk.ReadInt64();
+	a["usCmd"] = usCmd;
+
+	constexpr int CMD_CM_TALKPAGE_              = 302;
+	constexpr int CMD_CM_FUNCITEM_              = 303;
+	constexpr int CMD_CM_TRADEITEM_             = 309;
+	constexpr int CMD_CM_MISSION_               = 322;
+	constexpr int CMD_CM_BLACKMARKET_EXCHANGE_REQ_ = 51;
+
+	switch (static_cast<int>(usCmd)) {
+	case CMD_CM_TALKPAGE_: {
+		a["talkId"] = pk.ReadInt64();
+		break;
+	}
+	case CMD_CM_FUNCITEM_: {
+		a["page"] = pk.ReadInt64();
+		a["item"] = pk.ReadInt64();
+		break;
+	}
+	case CMD_CM_BLACKMARKET_EXCHANGE_REQ_: {
+		a["timeNum"] = pk.ReadInt64();
+		a["srcId"]   = pk.ReadInt64();
+		a["srcNum"]  = pk.ReadInt64();
+		a["tarId"]   = pk.ReadInt64();
+		a["tarNum"]  = pk.ReadInt64();
+		a["idx"]     = pk.ReadInt64();
+		break;
+	}
+	case CMD_CM_TRADEITEM_: {
+		const int64_t tradeType = pk.ReadInt64();
+		a["tradeType"] = tradeType;
+		switch (static_cast<int>(tradeType)) {
+		case 0: // ROLE_TRADE_SALE
+			a["index"] = pk.ReadInt64();
+			a["count"] = pk.ReadInt64();
+			break;
+		case 1: // ROLE_TRADE_BUY
+			a["itemType"] = pk.ReadInt64();
+			a["index1"]   = pk.ReadInt64();
+			a["index2"]   = pk.ReadInt64();
+			a["count"]    = pk.ReadInt64();
+			break;
+		case 2: // ROLE_TRADE_SALE_GOODS
+			a["boatId"] = pk.ReadInt64();
+			a["index"]  = pk.ReadInt64();
+			a["count"]  = pk.ReadInt64();
+			break;
+		case 3: // ROLE_TRADE_BUY_GOODS
+			a["boatId"]   = pk.ReadInt64();
+			a["itemType"] = pk.ReadInt64();
+			a["index1"]   = pk.ReadInt64();
+			a["index2"]   = pk.ReadInt64();
+			a["count"]    = pk.ReadInt64();
+			break;
+		case 4: // ROLE_TRADE_SELECT_BOAT
+			a["index"] = pk.ReadInt64();
+			break;
+		default:
+			break;
+		}
+		break;
+	}
+	case CMD_CM_MISSION_: {
+		const int64_t misCmd = pk.ReadInt64();
+		a["misCmd"] = misCmd;
+		switch (static_cast<int>(misCmd)) {
+		case 4: // ROLE_MIS_SEL
+			a["selIndex"] = pk.ReadInt64();
+			break;
+		case 7: // ROLE_MIS_BTNDELIVERY
+			a["param1"] = pk.ReadInt64();
+			a["param2"] = pk.ReadInt64();
+			break;
+		default:
+			break;
+		}
+		break;
+	}
+	default:
+		break;
+	}
+
+	return a;
+}
+
+//      Store-   Lua-.
+//    :
+//    cmd          (STORE_OPEN_ASK, STORE_BUY_ASK, STORE_LIST_ASK, STORE_CLOSE)
+//    STORE_BUY_ASK     → id
+//    STORE_LIST_ASK    → clsId, page, num
+luabridge::LuaRef BuildStoreActionTable(lua_State* L, net::RPacket& pk)
+{
+	luabridge::LuaRef a = luabridge::newTable(L);
+	const int64_t cmd = static_cast<int64_t>(pk.ReadCmd());
+	a["cmd"] = cmd;
+
+	constexpr int CMD_CM_STORE_BUY_ASK_  = 43;
+	constexpr int CMD_CM_STORE_LIST_ASK_ = 42;
+
+	switch (static_cast<int>(cmd)) {
+	case CMD_CM_STORE_BUY_ASK_:
+		a["id"] = pk.ReadInt64();
+		break;
+	case CMD_CM_STORE_LIST_ASK_:
+		a["clsId"] = pk.ReadInt64();
+		a["page"]  = pk.ReadInt64();
+		a["num"]   = pk.ReadInt64();
+		break;
+	default:
+		break;
+	}
+	return a;
+}
+
+// ============================================================
 //     NPC ( Lua)
 // ============================================================
 
-//  Lua-  trade   CMD_MC_TRADEPAGE
-//   trade :
-//    trade[1..N].itemtype (Byte)
-//    trade[i].count (Byte)
-//    trade[i].item[1..count]    trade[i].item[n]  table  {id, count, level}
-//                                             number ( id)
-//    trade[i].price[1..count].curprice (  tradetype == TRADE_GOODS)
-void ShowTradePage(CCharacter* cha, CCharacter* npc, luabridge::LuaRef trade, int tradeType, int p1)
+namespace {
+//  :  LuaRef
+int64_t lua_as_int(luabridge::LuaRef ref, int64_t defaultValue = 0) {
+	if (!ref.isNumber()) return defaultValue;
+	return ref.cast<int64_t>().valueOr(defaultValue);
+}
+std::string lua_as_string(luabridge::LuaRef ref, const char* defaultValue = "") {
+	if (!ref.isString()) return defaultValue;
+	return ref.cast<std::string>().valueOr(defaultValue);
+}
+} //  anonymous
+
+// -----------------------------------------------------------
+//  CMD_MC_TALKPAGE    (  SendTalkPage / SendDebugPage)
+// -----------------------------------------------------------
+void ShowTalkPage(CCharacter* cha, CCharacter* npc, int pageId, const std::string& text)
 {
-	if (!cha || !npc) {
-		ToLogService("trade", LogLevel::Error, "ShowTradePage: null character/npc");
-		return;
+	if (!cha || !npc) return;
+	net::msg::McTalkInfoMessage msg;
+	msg.npcId = static_cast<int64_t>(npc->GetID());
+	msg.cmd   = static_cast<int64_t>(pageId);
+	msg.text  = text;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_CLOSETALK
+// -----------------------------------------------------------
+void ShowClosePage(CCharacter* cha, CCharacter* npc)
+{
+	if (!cha || !npc) return;
+	net::msg::McCloseTalkMessage msg;
+	msg.npcId = static_cast<int64_t>(npc->GetID());
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_FUNCPAGE —   NPC
+//   (McFuncInfoMessage):
+//   npcId, page, talkText, funcItems[name], missionItems[name, state]
+// -----------------------------------------------------------
+void ShowFuncPage(CCharacter* cha, CCharacter* npc, int pageId,
+                  const std::string& talk, luabridge::LuaRef items)
+{
+	if (!cha || !npc) return;
+	net::msg::McFuncInfoMessage msg;
+	msg.npcId    = static_cast<int64_t>(npc->GetID());
+	msg.page     = static_cast<int64_t>(pageId);
+	msg.talkText = talk;
+
+	if (items.isTable()) {
+		for (int i = 1;; ++i) {
+			luabridge::LuaRef it = items[i];
+			if (it.isNil()) break;
+			net::msg::FuncInfoFuncItem f;
+			f.name = it.isString() ? it.cast<std::string>().valueOr("") : "Incorrect notice option!";
+			msg.funcItems.push_back(std::move(f));
+		}
 	}
-	if (!trade.isTable()) {
-		ToLogService("trade", LogLevel::Error, "ShowTradePage: trade is not a table (cha={})", cha->GetLogName());
-		return;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+//     (  SendMissionPage).
+//   Lua: { [1]={name=..., state=...}, ... }
+void ShowMissionPage(CCharacter* cha, CCharacter* npc, int pageId,
+                     const std::string& talk,
+                     luabridge::LuaRef items, luabridge::LuaRef missions)
+{
+	if (!cha || !npc) return;
+	net::msg::McFuncInfoMessage msg;
+	msg.npcId    = static_cast<int64_t>(npc->GetID());
+	msg.page     = static_cast<int64_t>(pageId);
+	msg.talkText = talk;
+
+	if (items.isTable()) {
+		for (int i = 1;; ++i) {
+			luabridge::LuaRef it = items[i];
+			if (it.isNil()) break;
+			net::msg::FuncInfoFuncItem f;
+			f.name = it.isString() ? it.cast<std::string>().valueOr("") : "Incorrect notice option!";
+			msg.funcItems.push_back(std::move(f));
+		}
 	}
 
-	net::WPacket packet;
-	packet.WriteCmd(CMD_MC_TRADEPAGE);
-	packet.WriteInt64(static_cast<int64_t>(npc->GetID()));
-	packet.WriteInt64(static_cast<int64_t>(tradeType));
-	packet.WriteInt64(static_cast<int64_t>(p1));
+	if (missions.isTable()) {
+		for (int i = 1;; ++i) {
+			luabridge::LuaRef m = missions[i];
+			if (m.isNil()) break;
+			if (!m.isTable()) continue;
+			net::msg::FuncInfoMissionItem mi;
+			mi.name  = lua_as_string(m["name"]);
+			mi.state = lua_as_int(m["state"]);
+			msg.missionItems.push_back(std::move(mi));
+		}
+	}
 
-	//   itemtype-   (.. 4)
-	int typeCount = 0;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_HELPINFO  (text)
+//   serialize( McHelpInfoMessage)    —
+// -----------------------------------------------------------
+void ShowHelpDesc(CCharacter* cha, int type, const std::string& info)
+{
+	if (!cha) return;
+	net::WPacket pkt;
+	pkt.WriteCmd(CMD_MC_HELPINFO);
+	pkt.WriteInt64(static_cast<int64_t>(type));
+	pkt.WriteString(info.c_str());
+	cha->ReflectINFof(cha, pkt);
+}
+
+void ShowHelpSound(CCharacter* cha, int type, int soundId)
+{
+	if (!cha) return;
+	net::WPacket pkt;
+	pkt.WriteCmd(CMD_MC_HELPINFO);
+	pkt.WriteInt64(static_cast<int64_t>(type));
+	pkt.WriteInt64(static_cast<int64_t>(soundId));
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  Exchange-  ( BlackMarket / )
+//   Lua:
+//   ex.count
+//   ex.srcid[n], ex.srcnum[n], ex.tarid[n], ex.tarnum[n] [,ex.timenum[n]]
+// -----------------------------------------------------------
+namespace {
+int read_exchange_count(luabridge::LuaRef ex) {
+	if (!ex.isTable()) return 0;
+	luabridge::LuaRef c = ex["count"];
+	if (!c.isNumber()) return 0;
+	return c.cast<int>().valueOr(0);
+}
+template <typename Entry>
+std::vector<Entry> read_exchange_entries(luabridge::LuaRef ex, bool withTime)
+{
+	std::vector<Entry> out;
+	int n = read_exchange_count(ex);
+	if (n <= 0) return out;
+	luabridge::LuaRef srcid  = ex["srcid"];
+	luabridge::LuaRef srcnum = ex["srcnum"];
+	luabridge::LuaRef tarid  = ex["tarid"];
+	luabridge::LuaRef tarnum = ex["tarnum"];
+	luabridge::LuaRef tnum   = ex["timenum"];
+	out.resize(static_cast<size_t>(n));
+	for (int i = 0; i < n; ++i) {
+		Entry& e = out[static_cast<size_t>(i)];
+		e.srcId    = lua_as_int(srcid[i + 1]);
+		e.srcCount = lua_as_int(srcnum[i + 1]);
+		e.tarId    = lua_as_int(tarid[i + 1]);
+		e.tarCount = lua_as_int(tarnum[i + 1]);
+		if constexpr (requires { e.timeValue; }) {
+			if (withTime) e.timeValue = lua_as_int(tnum[i + 1]);
+		}
+	}
+	return out;
+}
+} //  anonymous
+
+//  SendExchangeData:   (   Exchange)
+void ShowBlackMarketExchange(CCharacter* cha, CCharacter* npc, luabridge::LuaRef ex)
+{
+	if (!cha || !npc) return;
+	net::msg::McBlackMarketExchangeDataMessage msg;
+	msg.npcId = static_cast<int64_t>(npc->GetID());
+	msg.exchanges = read_exchange_entries<net::msg::BlackMarketExchangeEntry>(ex, /*withTime=*/true);
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+//  SendExchangeXData: ,    exchangeData  timenum
+void ShowExchangeData(CCharacter* cha, CCharacter* npc, luabridge::LuaRef ex)
+{
+	if (!cha || !npc) return;
+	net::msg::McExchangeDataMessage msg;
+	msg.npcId = static_cast<int64_t>(npc->GetID());
+	msg.exchanges = read_exchange_entries<net::msg::ExchangeEntry>(ex, /*withTime=*/false);
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_MISPAGE / CMD_MC_MISLOGINFO —
+//
+//    Lua "mission":
+//   mission.need.count
+//   mission.need[n].tp            (MIS_NEED_ITEM/KILL/DESP)
+//   mission.need[n].p1            ( param1 ,    DESP — desp-string)
+//   mission.need[n].p2
+//   mission.need[n].p3            ( MIS_NEED_ITEM  KILL)
+//   mission.prize.seltp
+//   mission.prize.count
+//   mission.prize[i].tp
+//   mission.prize[i].p1, p2
+// -----------------------------------------------------------
+namespace {
+std::vector<net::msg::MisNeedEntry> read_mis_needs(luabridge::LuaRef needT)
+{
+	std::vector<net::msg::MisNeedEntry> out;
+	if (!needT.isTable()) return out;
+	int count = static_cast<int>(lua_as_int(needT["count"]));
+	out.reserve(static_cast<size_t>(count));
+	for (int n = 1; n <= count; ++n) {
+		luabridge::LuaRef r = needT[n];
+		if (!r.isTable()) continue;
+		net::msg::MisNeedEntry e{};
+		e.needType = lua_as_int(r["tp"]);
+		if (e.needType == mission::MIS_NEED_DESP) {
+			e.desp = lua_as_string(r["p1"]);
+		}
+		else { // MIS_NEED_ITEM / MIS_NEED_KILL
+			e.param1 = lua_as_int(r["p1"]);
+			e.param2 = lua_as_int(r["p2"]);
+			e.param3 = lua_as_int(r["p3"]);
+		}
+		out.push_back(std::move(e));
+	}
+	return out;
+}
+
+std::vector<net::msg::MisPrizeEntry> read_mis_prizes(luabridge::LuaRef prizeT, int64_t& outSelType)
+{
+	std::vector<net::msg::MisPrizeEntry> out;
+	outSelType = 0;
+	if (!prizeT.isTable()) return out;
+	outSelType = lua_as_int(prizeT["seltp"]);
+	int count = static_cast<int>(lua_as_int(prizeT["count"]));
+	out.reserve(static_cast<size_t>(count));
+	for (int i = 1; i <= count; ++i) {
+		luabridge::LuaRef r = prizeT[i];
+		if (!r.isTable()) continue;
+		net::msg::MisPrizeEntry p{};
+		p.type   = lua_as_int(r["tp"]);
+		p.param1 = lua_as_int(r["p1"]);
+		p.param2 = lua_as_int(r["p2"]);
+		out.push_back(p);
+	}
+	return out;
+}
+} //  anonymous
+
+void ShowMisPage(CCharacter* cha, int cmd, int npcId, const std::string& name,
+                 luabridge::LuaRef needs, luabridge::LuaRef prize,
+                 const std::string& description)
+{
+	if (!cha) return;
+	net::msg::McMisPageMessage msg;
+	msg.cmd   = static_cast<int64_t>(cmd);
+	msg.npcId = static_cast<int64_t>(npcId);
+	msg.name  = name;
+	msg.needs = read_mis_needs(needs);
+	msg.prizes = read_mis_prizes(prize, msg.prizeSelType);
+	msg.description = description;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+void ShowMisLogInfo(CCharacter* cha, int misId, const std::string& name,
+                    luabridge::LuaRef needs, luabridge::LuaRef prize,
+                    const std::string& description)
+{
+	if (!cha) return;
+	net::msg::McMisLogInfoMessage msg;
+	msg.misId = static_cast<int64_t>(misId);
+	msg.name  = name;
+	msg.needs = read_mis_needs(needs);
+	msg.prizes = read_mis_prizes(prize, msg.prizeSelType);
+	msg.description = description;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_MISSION —
+// -----------------------------------------------------------
+void ShowMissionList(CCharacter* cha, CCharacter* npc, int listType,
+                     int prev, int next, int prevCmd, int nextCmd,
+                     luabridge::LuaRef items)
+{
+	if (!cha || !npc) return;
+	net::msg::McMissionInfoMessage msg;
+	msg.npcId    = static_cast<int64_t>(npc->GetID());
+	msg.listType = static_cast<int64_t>(listType);
+	msg.prev     = static_cast<int64_t>(prev);
+	msg.next     = static_cast<int64_t>(next);
+	msg.prevCmd  = static_cast<int64_t>(prevCmd);
+	msg.nextCmd  = static_cast<int64_t>(nextCmd);
+	if (items.isTable()) {
+		for (int i = 1;; ++i) {
+			luabridge::LuaRef it = items[i];
+			if (it.isNil()) break;
+			msg.items.push_back(it.isString() ? it.cast<std::string>().valueOr("") : "");
+		}
+	}
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_TRADE_DATA — broadcast      ( )
+// -----------------------------------------------------------
+// -----------------------------------------------------------
+//  CMD_MC_UPDATEIMP —  IMP
+// -----------------------------------------------------------
+void ShowUpdateImp(CCharacter* cha, int imp)
+{
+	if (!cha) return;
+	net::msg::McUpdateImpMessage msg;
+	msg.imp = static_cast<int64_t>(imp);
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_STORE_BUY_ASR —
+// -----------------------------------------------------------
+void ShowStoreBuyResult(CCharacter* cha, bool success, int newMoney)
+{
+	if (!cha) return;
+	net::msg::McStoreBuyAnswerMessage msg;
+	msg.success  = success ? 1 : 0;
+	msg.newMoney = static_cast<int64_t>(newMoney);
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_STORE_OPEN_ASR —    (, , , tabs)
+//   tabs Lua: { {id=..., title=..., parent=...}, ... }
+// -----------------------------------------------------------
+void ShowStoreOpen(CCharacter* cha, int vip, int moBean, int replMoney, luabridge::LuaRef tabs)
+{
+	if (!cha) return;
+	net::msg::McStoreOpenAnswerMessage msg;
+	msg.isValid   = true;
+	msg.vip       = static_cast<int64_t>(vip);
+	msg.moBean    = static_cast<int64_t>(moBean);
+	msg.replMoney = static_cast<int64_t>(replMoney);
+	if (tabs.isTable()) {
+		for (int i = 1;; ++i) {
+			luabridge::LuaRef t = tabs[i];
+			if (t.isNil()) break;
+			if (!t.isTable()) continue;
+			net::msg::StoreClassEntry c;
+			c.classId   = lua_as_int(t["id"], i);
+			c.className = lua_as_string(t["title"]);
+			c.parentId  = lua_as_int(t["parent"]);
+			msg.classes.push_back(std::move(c));
+		}
+	}
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_STORE_LIST_ASR —
+//   products Lua:
+//   { comId=..., title=..., price=..., remark=..., hot=..., time=...,
+//     quantity=..., expire=..., items={ {id=..., num=..., flute=...,
+//     attrs={ {id=..., val=...}, ... }}, ... } }
+// -----------------------------------------------------------
+void ShowStoreList(CCharacter* cha, int pageTotal, int pageCurrent, luabridge::LuaRef products)
+{
+	if (!cha) return;
+	net::msg::McStoreListAnswerMessage msg;
+	msg.pageTotal   = static_cast<int64_t>(pageTotal);
+	msg.pageCurrent = static_cast<int64_t>(pageCurrent);
+	if (products.isTable()) {
+		for (int i = 1;; ++i) {
+			luabridge::LuaRef p = products[i];
+			if (p.isNil()) break;
+			if (!p.isTable()) continue;
+			net::msg::StoreProductEntry entry;
+			entry.comId    = lua_as_int(p["comId"]);
+			entry.comName  = lua_as_string(p["title"]);
+			entry.price    = lua_as_int(p["price"]);
+			entry.remark   = lua_as_string(p["remark"]);
+			entry.isHot    = (lua_as_int(p["hot"]) != 0);
+			entry.time     = lua_as_int(p["time"]);
+			entry.quantity = lua_as_int(p["quantity"]);
+			entry.expire   = lua_as_int(p["expire"]);
+
+			luabridge::LuaRef items = p["items"];
+			if (items.isTable()) {
+				for (int j = 1;; ++j) {
+					luabridge::LuaRef it = items[j];
+					if (it.isNil()) break;
+					net::msg::StoreVariantEntry v{};
+					if (it.isTable()) {
+						v.itemId  = lua_as_int(it["id"]);
+						v.itemNum = lua_as_int(it["num"], 1);
+						v.flute   = lua_as_int(it["flute"]);
+						luabridge::LuaRef attrs = it["attrs"];
+						if (attrs.isTable()) {
+							for (int k = 1; k <= 5; ++k) {
+								luabridge::LuaRef a = attrs[k];
+								if (a.isTable()) {
+									v.attrs[k - 1].attrId  = lua_as_int(a["id"]);
+									v.attrs[k - 1].attrVal = lua_as_int(a["val"]);
+								}
+							}
+						}
+					}
+					else if (it.isNumber()) {
+						v.itemId  = it.cast<int64_t>().valueOr(0);
+						v.itemNum = 1;
+					}
+					entry.variants.push_back(v);
+				}
+			}
+
+			msg.products.push_back(std::move(entry));
+		}
+	}
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_TALKPAGE  id  ( Lua   npc-  id)
+// -----------------------------------------------------------
+void ShowTalkPageById(CCharacter* cha, int npcId, int pageId, const std::string& text)
+{
+	if (!cha) return;
+	net::msg::McTalkInfoMessage msg;
+	msg.npcId = static_cast<int64_t>(npcId);
+	msg.cmd   = static_cast<int64_t>(pageId);
+	msg.text  = text;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MM_DO_STRING    Lua-  .
+//    gate  master-.
+// -----------------------------------------------------------
+void SendDoStringBroadcast(CCharacter* cha, int64_t srcId, const std::string& luaCode)
+{
+	if (!cha) return;
+	net::msg::MmDoStringMessage msg;
+	msg.srcId   = srcId;
+	msg.luaCode = luaCode;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MT_KICKUSER (1505) —  Gate  .
+//        Lua- (   ).
+// -----------------------------------------------------------
+void SendKickUser(CCharacter* cha)
+{
+	if (!cha) return;
+	net::WPacket pkt;
+	pkt.WriteCmd(CMD_MT_KICKUSER);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  cmd=935   .  legacy   CloseClient
+// -----------------------------------------------------------
+void SendCloseClient(CCharacter* cha)
+{
+	if (!cha) return;
+	net::WPacket pkt;
+	pkt.WriteCmd(935);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_MAPCRASH — popup
+// -----------------------------------------------------------
+void ShowMapCrash(CCharacter* cha, const std::string& text)
+{
+	if (!cha) return;
+	net::msg::McMapCrashMessage msg;
+	msg.text = text;
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+// -----------------------------------------------------------
+//  CMD_MC_SAY —  (    Lua)
+// -----------------------------------------------------------
+void ShowSay(CCharacter* cha, int sourceId, const std::string& content, int color)
+{
+	if (!cha) return;
+	net::msg::McSayMessage msg;
+	msg.sourceId = static_cast<int64_t>(sourceId);
+	msg.content  = content;
+	msg.color    = static_cast<int64_t>(color);
+	auto pkt = net::msg::serialize(msg);
+	cha->ReflectINFof(cha, pkt);
+}
+
+void SyncGoodsData(CCharacter* npc, int index, int itemId, int count, int price)
+{
+	if (!npc) return;
+	net::msg::McTradeDataMessage msg;
+	msg.npcId  = static_cast<int64_t>(npc->GetID());
+	msg.page   = 0;
+	msg.index  = static_cast<int64_t>(index);
+	msg.itemId = static_cast<int64_t>(itemId);
+	msg.count  = static_cast<int64_t>(count);
+	msg.price  = static_cast<int64_t>(price);
+	auto pkt = net::msg::serialize(msg);
+	npc->NotiChgToEyeshot(pkt);
+}
+
+//  SendExchangeUpdateData: broadcast    ( SynPacket)
+void SyncBlackMarketExchangeUpdate(CCharacter* npc, luabridge::LuaRef ex)
+{
+	if (!npc) return;
+	net::msg::McBlackMarketExchangeUpdateMessage msg;
+	msg.npcId = static_cast<int64_t>(npc->GetID());
+	msg.exchanges = read_exchange_entries<net::msg::BlackMarketExchangeEntry>(ex, /*withTime=*/true);
+	auto pkt = net::msg::serialize(msg);
+	npc->NotiChgToEyeshot(pkt);
+}
+
+//   Lua    McTradeAllDataMessage.
+//   trade :
+//   trade[1..N].itemtype,  count,  item[],  price[]
+namespace {
+bool build_trade_message(luabridge::LuaRef trade, int tradeType,
+                         CCharacter* npc, int p1,
+                         net::msg::McTradeAllDataMessage& msg)
+{
+	if (!trade.isTable() || !npc) return false;
+	const bool isGoods = (tradeType == static_cast<int>(mission::TRADE_GOODS));
+
+	msg.npcId     = static_cast<int64_t>(npc->GetID());
+	msg.tradeType = static_cast<int64_t>(tradeType);
+	msg.param     = static_cast<int64_t>(p1);
+
 	for (int i = 1; i <= 4; ++i) {
 		luabridge::LuaRef entry = trade[i];
 		if (entry.isNil()) break;
-		++typeCount;
-	}
-	packet.WriteInt64(static_cast<int64_t>(typeCount));
+		if (!entry.isTable()) return false;
 
-	for (int i = 1; i <= typeCount; ++i) {
-		luabridge::LuaRef entry = trade[i];
-		if (!entry.isTable()) {
-			ToLogService("trade", LogLevel::Error, "ShowTradePage: trade[{}] not a table", i);
-			return;
-		}
 		luabridge::LuaRef refItemType = entry["itemtype"];
 		luabridge::LuaRef refCount    = entry["count"];
 		luabridge::LuaRef refItems    = entry["item"];
-		if (!refItemType.isNumber() || !refCount.isNumber() || !refItems.isTable()) {
-			ToLogService("trade", LogLevel::Error,
-				"ShowTradePage: malformed trade[{}] (itemtype={}, count={}, item={})",
-				i, refItemType.isNumber(), refCount.isNumber(), refItems.isTable());
-			return;
-		}
+		if (!refItemType.isNumber() || !refCount.isNumber() || !refItems.isTable()) return false;
+
 		int count = refCount.cast<int>().valueOr(0);
 		if (count > 120) count = 120;
-		packet.WriteInt64(refItemType.cast<int>().valueOr(0));
-		packet.WriteInt64(count);
 
-		//  TRADE_GOODS    price-
+		net::msg::TradePage page;
+		page.itemType = refItemType.cast<int64_t>().valueOr(0);
+		page.items.resize(static_cast<size_t>(count));
+
 		luabridge::LuaRef refPrices = entry["price"];
-		const bool isGoods = (tradeType == 2 /*TRADE_GOODS*/);
-
 		for (int n = 1; n <= count; ++n) {
+			auto& dst = page.items[static_cast<size_t>(n - 1)];
 			luabridge::LuaRef item = refItems[n];
-			if (isGoods) {
-				if (item.isTable()) {
-					int64_t id    = item["id"].cast<int64_t>().valueOr(-1);
-					int64_t cnt   = item["count"].cast<int64_t>().valueOr(0);
-					int64_t level = item["level"].cast<int64_t>().valueOr(0);
-					int64_t price = 0;
-					if (refPrices.isTable()) {
-						luabridge::LuaRef p = refPrices[n];
-						if (p.isTable())
-							price = p["curprice"].cast<int64_t>().valueOr(0);
-					}
-					packet.WriteInt64(id);
-					packet.WriteInt64(cnt);
-					packet.WriteInt64(price);
-					packet.WriteInt64(level);
-				}
-				else {
-					packet.WriteInt64(-1); // ROLE_INVALID_ID
-					packet.WriteInt64(0);
-					packet.WriteInt64(0);
-					packet.WriteInt64(0);
+			if (isGoods && item.isTable()) {
+				dst.itemId = item["id"].cast<int64_t>().valueOr(-1);
+				dst.count  = item["count"].cast<int64_t>().valueOr(0);
+				dst.level  = item["level"].cast<int64_t>().valueOr(0);
+				if (refPrices.isTable()) {
+					luabridge::LuaRef p = refPrices[n];
+					if (p.isTable()) dst.price = p["curprice"].cast<int64_t>().valueOr(0);
 				}
 			}
+			else if (item.isNumber()) {
+				dst.itemId = item.cast<int64_t>().valueOr(-1);
+			}
 			else {
-				if (item.isNumber())
-					packet.WriteInt64(item.cast<int64_t>().valueOr(-1));
-				else
-					packet.WriteInt64(-1); // ROLE_INVALID_ID
+				dst.itemId = -1; // ROLE_INVALID_ID
+			}
+		}
+		msg.pages.push_back(std::move(page));
+	}
+	return true;
+}
+
+//    McTradeAllDataMessage    CMD.
+//     SC_TradeInfo / SC_TradeAllData / SC_TradeUpdate.
+net::WPacket trade_message_to_packet(const net::msg::McTradeAllDataMessage& msg, uint16_t cmd)
+{
+	net::WPacket packet;
+	packet.WriteCmd(cmd);
+	packet.WriteInt64(msg.npcId);
+	packet.WriteInt64(msg.tradeType);
+	packet.WriteInt64(msg.param);
+	packet.WriteInt64(static_cast<int64_t>(msg.pages.size()));
+	for (const auto& page : msg.pages) {
+		packet.WriteInt64(page.itemType);
+		packet.WriteInt64(static_cast<int64_t>(page.items.size()));
+		for (const auto& it : page.items) packet.WriteInt64(it.itemId);
+		//   CommandMessages.h:   count/price/level   tradeType==1.
+		if (msg.tradeType == 1) {
+			for (const auto& it : page.items) {
+				packet.WriteInt64(it.count);
+				packet.WriteInt64(it.price);
+				packet.WriteInt64(it.level);
 			}
 		}
 	}
+	return packet;
+}
+} //  anonymous
 
-	ToLogService("trade", "ShowTradePage cha={} npc={} tradeType={} typeCount={} size={}",
-		cha->GetLogName(), npc->GetLogName(), tradeType, typeCount, packet.GetPacketSize());
+//     CMD_MC_TRADEPAGE (   ).
+void ShowTradePage(CCharacter* cha, CCharacter* npc, luabridge::LuaRef trade, int tradeType, int p1)
+{
+	if (!cha || !npc) return;
+	net::msg::McTradeAllDataMessage msg;
+	if (!build_trade_message(trade, tradeType, npc, p1, msg)) {
+		ToLogService("trade", LogLevel::Error, "ShowTradePage: bad trade table (cha={})", cha->GetLogName());
+		return;
+	}
+	auto pkt = trade_message_to_packet(msg, CMD_MC_TRADEPAGE);
+	ToLogService("trade", "ShowTradePage cha={} npc={} tradeType={} pages={} size={}",
+		cha->GetLogName(), npc->GetLogName(), tradeType, msg.pages.size(), pkt.GetPacketSize());
+	cha->ReflectINFof(cha, pkt);
+}
 
-	cha->ReflectINFof(cha, packet);
+//  (  ):   CMD_MC_BLACKMARKET_TRADEUPDATE .
+void ShowTradeUpdate(CCharacter* cha, CCharacter* npc, luabridge::LuaRef trade, int tradeType, int p1)
+{
+	if (!cha || !npc) return;
+	net::msg::McTradeAllDataMessage msg;
+	if (!build_trade_message(trade, tradeType, npc, p1, msg)) return;
+	auto pkt = trade_message_to_packet(msg, CMD_MC_BLACKMARKET_TRADEUPDATE);
+	cha->ReflectINFof(cha, pkt);
+}
+
+//  broadcast  NPC eyeshot.
+void SyncTradeUpdate(CCharacter* npc, luabridge::LuaRef trade, int tradeType, int p1)
+{
+	if (!npc) return;
+	net::msg::McTradeAllDataMessage msg;
+	if (!build_trade_message(trade, tradeType, npc, p1, msg)) return;
+	auto pkt = trade_message_to_packet(msg, CMD_MC_BLACKMARKET_TRADEUPDATE);
+	npc->NotiChgToEyeshot(pkt);
 }
 
 // Character info
@@ -536,27 +1133,36 @@ inline int RegisterNpcScript()
 		LUABRIDGE_REGISTER_FUNC(ReloadNpcInfo)
 		LUABRIDGE_REGISTER_FUNC(FindNpc)
 
-		// Packet read
-		LUABRIDGE_REGISTER_FUNC(ReadCmd)
-		LUABRIDGE_REGISTER_FUNC(ReadByte)
-		LUABRIDGE_REGISTER_FUNC(ReadWord)
-		LUABRIDGE_REGISTER_FUNC(ReadDword)
-		LUABRIDGE_REGISTER_FUNC(ReadString)
-
-		// Packet write
-		LUABRIDGE_REGISTER_FUNC(WriteCmd)
-		LUABRIDGE_REGISTER_FUNC(WriteByte)
-		LUABRIDGE_REGISTER_FUNC(WriteWord)
-		LUABRIDGE_REGISTER_FUNC(WriteDword)
-		LUABRIDGE_REGISTER_FUNC(WriteString)
-
-		// Packet send
-		LUABRIDGE_REGISTER_FUNC(GetPacket)
-		LUABRIDGE_REGISTER_FUNC(SendPacket)
-		LUABRIDGE_REGISTER_FUNC(SynPacket)
+		//     Lua .
+		//    Show* / Sync*   .
 
 		//   (   Lua)
 		LUABRIDGE_REGISTER_FUNC(ShowTradePage)
+		LUABRIDGE_REGISTER_FUNC(ShowTradeUpdate)
+		LUABRIDGE_REGISTER_FUNC(SyncTradeUpdate)
+		LUABRIDGE_REGISTER_FUNC(ShowTalkPage)
+		LUABRIDGE_REGISTER_FUNC(ShowClosePage)
+		LUABRIDGE_REGISTER_FUNC(ShowFuncPage)
+		LUABRIDGE_REGISTER_FUNC(ShowMissionPage)
+		LUABRIDGE_REGISTER_FUNC(ShowHelpDesc)
+		LUABRIDGE_REGISTER_FUNC(ShowHelpSound)
+		LUABRIDGE_REGISTER_FUNC(ShowMissionList)
+		LUABRIDGE_REGISTER_FUNC(ShowMisPage)
+		LUABRIDGE_REGISTER_FUNC(ShowMisLogInfo)
+		LUABRIDGE_REGISTER_FUNC(SyncGoodsData)
+		LUABRIDGE_REGISTER_FUNC(ShowMapCrash)
+		LUABRIDGE_REGISTER_FUNC(ShowSay)
+		LUABRIDGE_REGISTER_FUNC(ShowUpdateImp)
+		LUABRIDGE_REGISTER_FUNC(ShowStoreBuyResult)
+		LUABRIDGE_REGISTER_FUNC(ShowStoreOpen)
+		LUABRIDGE_REGISTER_FUNC(ShowStoreList)
+		LUABRIDGE_REGISTER_FUNC(ShowTalkPageById)
+		LUABRIDGE_REGISTER_FUNC(SendDoStringBroadcast)
+		LUABRIDGE_REGISTER_FUNC(SendKickUser)
+		LUABRIDGE_REGISTER_FUNC(SendCloseClient)
+		LUABRIDGE_REGISTER_FUNC(ShowBlackMarketExchange)
+		LUABRIDGE_REGISTER_FUNC(ShowExchangeData)
+		LUABRIDGE_REGISTER_FUNC(SyncBlackMarketExchangeUpdate)
 		LUABRIDGE_REGISTER_FUNC(LogTrade)
 
 		// Character info

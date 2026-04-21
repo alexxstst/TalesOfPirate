@@ -70,18 +70,18 @@ function AddPackToTab(tab, item)
 	IGS.Packs[item].Enabled = true
 end
 
-function operateIGS(Player, Packet)
-	local cmd = ReadCmd(Packet)
+--      C++-   action-table:
+--   action.cmd   (STORE_OPEN_ASK, STORE_BUY_ASK, STORE_LIST_ASK, STORE_CLOSE)
+--   action.id    (STORE_BUY_ASK)
+--   action.clsId, page, num (STORE_LIST_ASK)
+function operateIGS(Player, action)
+	local cmd = action.cmd
 	if cmd == CMD_CM_STORE_OPEN_ASK then
 		openIGS(Player)
 	elseif cmd == CMD_CM_STORE_BUY_ASK then
-		local ID = ReadDword(Packet)
-		IGS.BuyPackage(Player, ID)
+		IGS.BuyPackage(Player, action.id)
 	elseif cmd == CMD_CM_STORE_LIST_ASK then
-		local lClsID = ReadDword(Packet)
-		local sPage = ReadWord(Packet)
-		local sNum = ReadWord(Packet)
-		openIGSTab(Player,lClsID,sPage)
+		openIGSTab(Player, action.clsId, action.page)
 	elseif cmd == CMD_CM_STORE_CLOSE then
 		IGS.Users[Player] = nil
 	end
@@ -97,52 +97,46 @@ function limitchange(Player,ID,limit)
 	Lua_All(cmd,Player)
 end
 
-function WritePackage(Packet, ID)
+--    Package       .
+local function BuildProduct(ID)
 	local Package = IGS.Packs[ID]
-	local qty = Package.Quantity
 	local stock = Package.Stock
-	-- Create stock tables
 	if stock == nil then
-		-- Store Stocks IDs and Qty of it
 		stock = -1
 	else
-		-- Create table for each pack
 		if IGS.Stock[ID] == nil then
 			IGS.Stock[ID] = { Stocks = Package.Stock }
 		end
 	end
-	-- End of stock tables
-	WriteDword(Packet,ID) 							-- ComID
-	WriteString(Packet, Package.Title) 				-- Package Name
-	WriteDword(Packet, Package.Price) 				-- Price
-	WriteString(Packet, Package.Description) 		-- Description
-	WriteByte(Packet,  Package.Hot) 				-- Hot 0:1
-	WriteDword(Packet, 0x80000000) 					-- Time (??)
-	WriteDword(Packet, IGS.Stock[ID].Stocks) 		-- Stock Quantity
-	WriteDword(Packet, 0x80000000) 					-- Time Remaining
-	WriteWord(Packet, #Package.Items)				-- Number of items in a package
-	for _, Item in pairs(Package.Items) do
-		if type(Item) == 'table' then
-			WriteItem(Packet, Item.ID, Item.Qty, Item.Attr)
-		else
-			WriteItem(Packet, Item)
-		end
-	end
-end
 
-function WriteItem(Packet, ItemID, Quantity, Attributes)
-	WriteWord(Packet, ItemID)
-	WriteWord(Packet, Quantity or 1)
-	WriteWord(Packet, 0)
-	for i = 1, 5, 1 do
-		if Attributes and Attributes[i] then
-			WriteWord(Packet, Attributes[i].ID)
-			WriteWord(Packet, Attributes[i].Num)
+	local items = {}
+	for idx, Item in ipairs(Package.Items) do
+		if type(Item) == 'table' then
+			local attrs = {}
+			if Item.Attr then
+				for i = 1, 5, 1 do
+					if Item.Attr[i] then
+						attrs[i] = { id = Item.Attr[i].ID, val = Item.Attr[i].Num }
+					end
+				end
+			end
+			items[idx] = { id = Item.ID, num = Item.Qty or 1, flute = 0, attrs = attrs }
 		else
-			WriteWord(Packet, 0)
-			WriteWord(Packet, 0)
+			items[idx] = { id = Item, num = 1, flute = 0 }
 		end
 	end
+
+	return {
+		comId    = ID,
+		title    = Package.Title,
+		price    = Package.Price,
+		remark   = Package.Description,
+		hot      = Package.Hot,
+		time     = 0x80000000,
+		quantity = (IGS.Stock[ID] and IGS.Stock[ID].Stocks) or stock,
+		expire   = 0x80000000,
+		items    = items,
+	}
 end
 
 function openIGSTab(Player, Tab, Page)
@@ -151,38 +145,22 @@ function openIGSTab(Player, Tab, Page)
 	if not IGS.Tabs[Tab] or not Player then
 		return
 	end
-	
+
 	IGS.Users[Player] = {Tab, Page}
-	local Packet = GetPacket()
-	WriteCmd(Packet, CMD_MC_STORE_LIST_ASR)
-	
+
 	local TotalPackages = #IGS.Tabs[Tab].Packs
 	local maxPage = math.ceil(TotalPackages / PACK_PER_PAGE)
-	
-	-- Max page (calc this)
-	WriteWord(Packet, maxPage)
-	
-	-- Current page
-	WriteWord(Packet, Page)
-	
-	-- Add <= if want to fill empty slots
-	if Page < maxPage or TotalPackages == PACK_PER_PAGE then
-		-- Number of item packages
-		WriteWord(Packet,PACK_PER_PAGE)
-	else
-		-- Number of item packages
-		WriteWord(Packet, (TotalPackages % PACK_PER_PAGE))
-	end
-	
+
+	local products = {}
 	for i = 1, PACK_PER_PAGE, 1 do
 		local index = i + (Page - 1) * PACK_PER_PAGE
 		local packID = IGS.Tabs[Tab].Packs[index]
 		if packID then
-			WritePackage(Packet, packID)
+			products[#products + 1] = BuildProduct(packID)
 		end
 	end
-	
-	SendPacket(Player, Packet)
+
+	ShowStoreList(Player, maxPage, Page, products)
 end
 
 function openIGS(Player)
@@ -190,20 +168,11 @@ function openIGS(Player)
 		return
 	end
 	IGS.Users[Player] = true
-	local Packet = GetPacket()
-	WriteCmd(Packet, CMD_MC_STORE_OPEN_ASR)
-	WriteByte(Packet, 1)
-	WriteDword(Packet, 0)
-	WriteDword(Packet, 0)
-	WriteDword(Packet, GetIMP(Player))
-	WriteDword(Packet, 0)
-	WriteDword(Packet, #IGS.Tabs)
-	for i,v in ipairs(IGS.Tabs) do
-		WriteWord(Packet, i)
-		WriteString(Packet, v.Title)
-		WriteWord(Packet, v.Parent or 0)
+	local tabs = {}
+	for i, v in ipairs(IGS.Tabs) do
+		tabs[i] = { id = i, title = v.Title, parent = v.Parent or 0 }
 	end
-	SendPacket(Player,Packet)
+	ShowStoreOpen(Player, 0, 0, GetIMP(Player), tabs)
 end
 
 function UpdateIGS()
@@ -222,9 +191,7 @@ UpdateIGS()
 function IGS.BuyPackage(Player, ID)
 	if IGS.Packs[ID] and IGS.Packs[ID].Enabled then
 		local Package = IGS.Packs[ID]
-		local Packet = GetPacket()
-		WriteCmd(Packet, CMD_MC_STORE_BUY_ASR)
-		
+
 		-- Initiate cooldown table for player
 		if IGS.Cooldown == nil then
 			IGS.Cooldown = {}
@@ -260,8 +227,7 @@ function IGS.BuyPackage(Player, ID)
 		-- Check if player has enough crystals to buy package, if not, then exit transaction.
 		if not HasIMP(Player, Package.Price) then
 			IGS.Cooldown.Attempt = IGS.Cooldown.Attempt + 1
-			WriteByte(Packet, 0)
-			SendPacket(Player, Packet)
+			ShowStoreBuyResult(Player, false, GetIMP(Player))
 			return
 		end
 			
@@ -312,9 +278,7 @@ function IGS.BuyPackage(Player, ID)
 		local File = Path..GetChaDefaultName(TurnToCha(Player))..".txt"
 		LogFile(Path, File, string.format("Bought [%s] for [%d], [%d] remaining.", Package.Title, Package.Price, GetIMP(Player)))
 		
-		WriteByte(Packet, 1)
-		WriteDword(Packet, GetIMP(Player))
-		SendPacket(Player, Packet)
+		ShowStoreBuyResult(Player, true, GetIMP(Player))
 	end
 end
 
@@ -342,10 +306,7 @@ function HasIMP(Player, Amount)
 end
 
 function UpdateIMP(Player)
-	local Packet = GetPacket()
-	WriteCmd(Packet, CMD_MC_UPDATEIMP)
-	WriteDword(Packet, GetIMP(Player))
-	SendPacket(Player, Packet)
+	ShowUpdateImp(Player, GetIMP(Player))
 end
 
 -- Load item list table

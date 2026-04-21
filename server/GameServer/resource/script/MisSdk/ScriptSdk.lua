@@ -434,8 +434,10 @@ function ModifyNpcInfo(npc, name, id)
     LG("npcinit", str)
 end
 
-function NpcProc(character, npc, rpk, id)
-    LG("trade", "NpcProc:character, npc, rpk, id", character, npc, rpk, id)
+--         C++ action-table
+--   .   action.usCmd   .
+function NpcProc(character, npc, action, id)
+    LG("trade", "NpcProc:character, npc, action, id", character, npc, action, id)
     if NpcInfoList[id] == nil then
         LG("trade", "NpcProc:: unable to obtain NPC script notice!ID = ", id)
         local npcname = GetCharName(npc)
@@ -446,7 +448,7 @@ function NpcProc(character, npc, rpk, id)
     MsgProc(
         character,
         npc,
-        rpk,
+        action,
         NpcInfoList[id].page,
         NpcInfoList[id].trade,
         NpcInfoList[id].missionlist,

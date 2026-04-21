@@ -20,12 +20,8 @@ function GetChaTrueName(role)
 	return GetChaDefaultName(TurnToCha(role))
 end
 
-function Lua_All(cmd,role)
-	local packet = GetPacket()
-	WriteCmd(packet, 4015)
-	WriteDword(packet, 0)
-	WriteString(packet,cmd)
-	SendPacket(role, packet)
+function Lua_All(cmd, role)
+	SendDoStringBroadcast(role, 0, cmd)
 end
 
 function CheckDuper(role)
@@ -71,13 +67,5 @@ for i,v in pairs(ADmaps) do
 	end
 end
 
-function CreateClone(role) 
-	if type(role) == "string" then
-		role = GetPlayerByName(role)
-	end
-	local packet = GetPacket() 
-	WriteCmd(packet, 516)
-	WriteString(packet, 'e')
-	WriteString(packet, 'e')
-	SendPacket(role, packet) 
-end 
+--     CreateClone (debug-).
+--      C++  .
