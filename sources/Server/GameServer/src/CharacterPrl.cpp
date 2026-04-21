@@ -108,12 +108,21 @@ void CCharacter::ProcessPacket(unsigned short usCmd, net::RPacket& pk) {
 	}
 	case CMD_CM_REQUESTTALK:
 	case CMD_CM_REQUESTTRADE: {
-		if (GetTradeData() || GetBoat() || GetStallData() || !GetActControl(enumACTCONTROL_TALKTO_NPC) || m_CKitbag.
-			IsLock() || !GetActControl(enumACTCONTROL_ITEM_OPT)) {
+		const bool bTradeData  = GetTradeData() != nullptr;
+		const bool bBoat       = GetBoat() != nullptr;
+		const bool bStallData  = GetStallData() != nullptr;
+		const bool bTalkCtrl   = GetActControl(enumACTCONTROL_TALKTO_NPC);
+		const bool bKitbagLock = m_CKitbag.IsLock();
+		const bool bItemCtrl   = GetActControl(enumACTCONTROL_ITEM_OPT);
+		if (bTradeData || bBoat || bStallData || !bTalkCtrl || bKitbagLock || !bItemCtrl) {
+			ToLogService("trade", LogLevel::Error,
+				"REQUESTTALK/TRADE rejected for cha={} cmd={}: trade={}, boat={}, stall={}, talkCtrl={}, kitbagLock={}, itemCtrl={}",
+				GetLogName(), usCmd, bTradeData, bBoat, bStallData, bTalkCtrl, bKitbagLock, bItemCtrl);
 			return;
 		}
 
 		uLong ulID = pk.ReadInt64();
+		ToLogService("trade", "REQUESTTALK/TRADE cha={} cmd={} npcId={}", GetLogName(), usCmd, ulID);
 		Handle_RequestTalk(ulID, pk);
 	}
 	break;
@@ -1185,28 +1194,48 @@ void CCharacter::Handle_Say(const net::msg::CmSayMessage& sayMsg) {
 
 void CCharacter::Handle_RequestTalk(uLong npcId, net::RPacket& pk) {
 	if (npcId == mission::g_WorldEudemon.GetID()) {
+		ToLogService("trade", "Handle_RequestTalk cha={} npcId={} -> WorldEudemon", GetLogName(), npcId);
 		mission::g_WorldEudemon.MsgProc(*this, pk);
 		return;
 	}
 	CCharacter* pCha = m_submap->FindCharacter(npcId, GetShape().centre);
-	if (pCha == NULL) return;
+	if (pCha == NULL) {
+		ToLogService("trade", LogLevel::Error,
+			"Handle_RequestTalk cha={} npcId={} -> NPC not found on submap (pos {},{})",
+			GetLogName(), npcId, GetShape().centre.x, GetShape().centre.y);
+		return;
+	}
 	mission::CNpc* pNpc = pCha->IsNpc();
 	if (pNpc) {
+		ToLogService("trade", "Handle_RequestTalk cha={} npcId={} -> CNpc::MsgProc [{}] packet={}",
+			GetLogName(), npcId, pCha->GetLogName(), pk.PrintCommand());
 		pNpc->MsgProc(*this, pk);
 		return;
 	}
 	else {
 		lua_getglobal(g_pLuaState, "extNpcNpcProc");
 		if (!lua_isfunction(g_pLuaState, -1)) {
+			ToLogService("trade", LogLevel::Error,
+				"Handle_RequestTalk cha={} npcId={} -> lua fallback extNpcNpcProc NOT FOUND ({})",
+				GetLogName(), npcId, pCha->GetLogName());
 			lua_pop(g_pLuaState, 1);
 			return;
 		}
+
+		ToLogService("trade", "Handle_RequestTalk cha={} npcId={} -> lua extNpcNpcProc ({})",
+			GetLogName(), npcId, pCha->GetLogName());
 
 		luabridge::push(g_pLuaState, static_cast<CCharacter*>(this));
 		luabridge::push(g_pLuaState, static_cast<CCharacter*>(pCha));
 		luabridge::push(g_pLuaState, &pk);
 
 		int nStatus = lua_pcall(g_pLuaState, 3, 0, 0);
+		if (nStatus != 0) {
+			const char* err = lua_tostring(g_pLuaState, -1);
+			ToLogService("trade", LogLevel::Error,
+				"Handle_RequestTalk cha={} npcId={} -> lua extNpcNpcProc FAILED: {}",
+				GetLogName(), npcId, err ? err : "<null>");
+		}
 		lua_settop(g_pLuaState, 0);
 	}
 }

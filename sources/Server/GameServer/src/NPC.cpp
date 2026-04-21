@@ -280,15 +280,24 @@ namespace mission
 		luabridge::push( g_pLuaState, &packet );
 		lua_pushnumber( g_pLuaState, m_sScriptID );
 
+		ToLogService("trade", "CTalkNpc::MsgProc cha={} npc={} scriptID={} -> NpcProc()",
+			character.GetLogName(), GetLogName(), m_sScriptID);
+
 		int nStatus = lua_pcall( g_pLuaState, 4, 0, 0 );
 		if( nStatus )
 		{
+			const char* err = lua_tostring(g_pLuaState, -1);
+			ToLogService("trade", LogLevel::Error,
+				"CTalkNpc::MsgProc cha={} npc={} -> NpcProc() FAILED status={}: {}",
+				character.GetLogName(), GetLogName(), nStatus, err ? err : "<null>");
 			//character.SystemNotice( "npc[%s][NpcProc]!", _name.c_str() );
 			character.SystemNotice( RES_STRING(GM_NPC_CPP_00009), _name.c_str() );
 			lua_callalert( g_pLuaState, nStatus );
 			lua_settop(g_pLuaState, 0);
 			return EN_FAILER;
 		}
+		ToLogService("trade", "CTalkNpc::MsgProc cha={} npc={} -> NpcProc() OK",
+			character.GetLogName(), GetLogName());
 		lua_settop(g_pLuaState, 0);
 
 		return EN_OK;

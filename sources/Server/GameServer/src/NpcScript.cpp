@@ -88,7 +88,13 @@ void WriteCmd(net::WPacket* pPacket, int wData)
 
 void SendPacket(CCharacter* pChar, net::WPacket* pPacket)
 {
-	if (!pChar || !pPacket) return;
+	if (!pChar || !pPacket) {
+		ToLogService("trade", LogLevel::Error, "SendPacket(): null arg pChar={}, pPacket={}",
+			static_cast<void*>(pChar), static_cast<void*>(pPacket));
+		return;
+	}
+	ToLogService("trade", "SendPacket() cha={} cmd={} size={}",
+		pChar->GetLogName(), pPacket->GetCmd(), pPacket->GetPacketSize());
 	pChar->ReflectINFof(pChar, *pPacket);
 }
 
@@ -96,6 +102,113 @@ void SynPacket(CCharacter* pChar, net::WPacket* pPacket)
 {
 	if (!pChar || !pPacket) return;
 	pChar->NotiChgToEyeshot(*pPacket);
+}
+
+//   trade- (   MsgProc )
+void LogTrade(const std::string& msg)
+{
+	ToLogService("trade", "{}", msg);
+}
+
+// ============================================================
+//     NPC ( Lua)
+// ============================================================
+
+//  Lua-  trade   CMD_MC_TRADEPAGE
+//   trade :
+//    trade[1..N].itemtype (Byte)
+//    trade[i].count (Byte)
+//    trade[i].item[1..count]    trade[i].item[n]  table  {id, count, level}
+//                                             number ( id)
+//    trade[i].price[1..count].curprice (  tradetype == TRADE_GOODS)
+void ShowTradePage(CCharacter* cha, CCharacter* npc, luabridge::LuaRef trade, int tradeType, int p1)
+{
+	if (!cha || !npc) {
+		ToLogService("trade", LogLevel::Error, "ShowTradePage: null character/npc");
+		return;
+	}
+	if (!trade.isTable()) {
+		ToLogService("trade", LogLevel::Error, "ShowTradePage: trade is not a table (cha={})", cha->GetLogName());
+		return;
+	}
+
+	net::WPacket packet;
+	packet.WriteCmd(CMD_MC_TRADEPAGE);
+	packet.WriteInt64(static_cast<int64_t>(npc->GetID()));
+	packet.WriteInt64(static_cast<int64_t>(tradeType));
+	packet.WriteInt64(static_cast<int64_t>(p1));
+
+	//   itemtype-   (.. 4)
+	int typeCount = 0;
+	for (int i = 1; i <= 4; ++i) {
+		luabridge::LuaRef entry = trade[i];
+		if (entry.isNil()) break;
+		++typeCount;
+	}
+	packet.WriteInt64(static_cast<int64_t>(typeCount));
+
+	for (int i = 1; i <= typeCount; ++i) {
+		luabridge::LuaRef entry = trade[i];
+		if (!entry.isTable()) {
+			ToLogService("trade", LogLevel::Error, "ShowTradePage: trade[{}] not a table", i);
+			return;
+		}
+		luabridge::LuaRef refItemType = entry["itemtype"];
+		luabridge::LuaRef refCount    = entry["count"];
+		luabridge::LuaRef refItems    = entry["item"];
+		if (!refItemType.isNumber() || !refCount.isNumber() || !refItems.isTable()) {
+			ToLogService("trade", LogLevel::Error,
+				"ShowTradePage: malformed trade[{}] (itemtype={}, count={}, item={})",
+				i, refItemType.isNumber(), refCount.isNumber(), refItems.isTable());
+			return;
+		}
+		int count = refCount.cast<int>().valueOr(0);
+		if (count > 120) count = 120;
+		packet.WriteInt64(refItemType.cast<int>().valueOr(0));
+		packet.WriteInt64(count);
+
+		//  TRADE_GOODS    price-
+		luabridge::LuaRef refPrices = entry["price"];
+		const bool isGoods = (tradeType == 2 /*TRADE_GOODS*/);
+
+		for (int n = 1; n <= count; ++n) {
+			luabridge::LuaRef item = refItems[n];
+			if (isGoods) {
+				if (item.isTable()) {
+					int64_t id    = item["id"].cast<int64_t>().valueOr(-1);
+					int64_t cnt   = item["count"].cast<int64_t>().valueOr(0);
+					int64_t level = item["level"].cast<int64_t>().valueOr(0);
+					int64_t price = 0;
+					if (refPrices.isTable()) {
+						luabridge::LuaRef p = refPrices[n];
+						if (p.isTable())
+							price = p["curprice"].cast<int64_t>().valueOr(0);
+					}
+					packet.WriteInt64(id);
+					packet.WriteInt64(cnt);
+					packet.WriteInt64(price);
+					packet.WriteInt64(level);
+				}
+				else {
+					packet.WriteInt64(-1); // ROLE_INVALID_ID
+					packet.WriteInt64(0);
+					packet.WriteInt64(0);
+					packet.WriteInt64(0);
+				}
+			}
+			else {
+				if (item.isNumber())
+					packet.WriteInt64(item.cast<int64_t>().valueOr(-1));
+				else
+					packet.WriteInt64(-1); // ROLE_INVALID_ID
+			}
+		}
+	}
+
+	ToLogService("trade", "ShowTradePage cha={} npc={} tradeType={} typeCount={} size={}",
+		cha->GetLogName(), npc->GetLogName(), tradeType, typeCount, packet.GetPacketSize());
+
+	cha->ReflectINFof(cha, packet);
 }
 
 // Character info
@@ -441,6 +554,10 @@ inline int RegisterNpcScript()
 		LUABRIDGE_REGISTER_FUNC(GetPacket)
 		LUABRIDGE_REGISTER_FUNC(SendPacket)
 		LUABRIDGE_REGISTER_FUNC(SynPacket)
+
+		//   (   Lua)
+		LUABRIDGE_REGISTER_FUNC(ShowTradePage)
+		LUABRIDGE_REGISTER_FUNC(LogTrade)
 
 		// Character info
 		LUABRIDGE_REGISTER_FUNC(GetCharID)

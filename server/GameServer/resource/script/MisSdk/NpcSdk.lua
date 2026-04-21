@@ -869,8 +869,12 @@ function SendUpdateTradePage(character, npc, cmd, trade, tradetype, p1)
 end
 
 function TradePage(character, npc, trade, tradetype, p1)
-    PRINT("TradePage")
-    SendTradePage(character, npc, CMD_MC_TRADEPAGE, trade, tradetype, p1)
+    PRINT("TradePage (via ShowTradePage)")
+    if trade == nil then
+        EXLG("NpcSdk_error", "TradePage: trade table is nil! NpcName = %s", GetCharName(npc))
+        return SystemNotice(character, "TradePage: npc has no trade data!")
+    end
+    ShowTradePage(character, npc, trade, tradetype, p1)
 end
 
 function SalePage(character, npc, trade)
@@ -1363,6 +1367,7 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
     end
     PRINT("MsgProc:Net message process.")
     local usCmd = ReadWord(rpk)
+    LogTrade("MsgProc npc=" .. tostring(GetCharName(npc)) .. " usCmd=" .. tostring(usCmd) .. " trade=" .. tostring(trade))
     if usCmd == CMD_CM_TALKPAGE then
         local byTalkID = ReadByte(rpk)
 
@@ -1426,6 +1431,7 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
         local byPage = ReadByte(rpk)
         local byItem = ReadByte(rpk)
         PRINT("MsgProc: pageid =, itemid = ", byPage, byItem)
+        LogTrade("MsgProc FUNCITEM npc=" .. tostring(GetCharName(npc)) .. " byPage=" .. tostring(byPage) .. " byItem=" .. tostring(byItem))
         if page[byPage] == nil or page[byPage][1] == nil then
             EXLG(
                 "NpcSdk_error",
@@ -1465,6 +1471,12 @@ function MsgProc(character, npc, rpk, page, trade, missionlist, exchangeData)
                 "MsgProc: Target page does not have function page notice nor function notice!"
             )
         end
+
+        LogTrade("MsgProc FUNCITEM resolved byItem=" .. tostring(byItem) .. " text=" .. tostring(item.text)
+            .. " func=" .. tostring(item.func)
+            .. " (BuyPage=" .. tostring(BuyPage) .. " SalePage=" .. tostring(SalePage)
+            .. " JumpPage=" .. tostring(JumpPage) .. " CloseTalk=" .. tostring(CloseTalk)
+            .. " FuncPage=" .. tostring(FuncPage) .. ")")
 
         if item.func == JumpPage then
             return JumpPage(character, npc, page, item.p1)

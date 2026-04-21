@@ -435,9 +435,9 @@ function ModifyNpcInfo(npc, name, id)
 end
 
 function NpcProc(character, npc, rpk, id)
-    PRINT("NpcProc:character, npc, rpk, id", character, npc, rpk, id)
+    LG("trade", "NpcProc:character, npc, rpk, id", character, npc, rpk, id)
     if NpcInfoList[id] == nil then
-        PRINT("unable to obtain NPC script notice!ID = ", id)
+        LG("trade", "NpcProc:: unable to obtain NPC script notice!ID = ", id)
         local npcname = GetCharName(npc)
         local str = npcname .. ": Hi! You are looking for me? I am quite busy right now._......."
         SendPage(character, npc, 0, str, nil, 0)
