@@ -23,11 +23,7 @@ using namespace std;
 
 #define MAX_RENDER_TILE		160000
 #define SEA_TILE_SIZE       4
-#define SKYDOOM_TILE_SIZE   6
 
-#define FVF_SKYDOOM          D3DFVF_XYZ|D3DFVF_TEX1 
-
- 
 MPMap::MPMap()
 :_bEdit(FALSE),
  _bSeaVisible(TRUE),
@@ -52,10 +48,7 @@ MPMap::MPMap()
  m_bCullTile(FALSE),
   _pOffsetIdx(NULL),
   m_dwMapDataSize(0),
-  m_dwMapPos(0),
-  m_txMoveSpeed(0),
-  m_bSkyDoom(TRUE),
-  m_pSkyDoomVB(NULL)
+  m_dwMapPos(0)
 {
 	_fShowCenterX = 0;
 	_fShowCenterY = 0;
@@ -84,9 +77,6 @@ MPMap::MPMap()
 #endif
     
     _dwSeaDefaultColor = D3DCOLOR_ARGB(0xcf, 140, 140, 220);
-
-	m_SkyDoomVertexShaderHandle = 0;
-	m_SkyDoomPixelShaderHandle = 0;
 
 	m_iRange = 512;
 }
@@ -327,9 +317,6 @@ void MPMap::Render()
     g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_DISABLE);  
 
     m_dwTerrainRenderTime = t.End();
-
-	//SetSkyDoom(true);
-	//CreateSkyDoom(D3DXVECTOR3(_fShowCenterX,_fShowCenterY,0),76,"texture/terrain/clouds.jpg",false);
 }
 
 void MPMap::RenderSmMap()
@@ -1363,286 +1350,6 @@ void MPMap::_RenderVB(BOOL bWireframe)
 	//g_Render.SetTextureStageState(1, D3DTSS_COLOROP,   D3DTOP_MODULATE);
 }
 
-//jze
-BOOL MPMap::UseShader()
-{
-	if( (g_Render.GetOrgCap().VertexShaderVersion < D3DVS_VERSION(1,1)) || (g_Render.GetOrgCap().PixelShaderVersion < D3DPS_VERSION(1,1)) )
-	{
-		return false;
-	}
-	else
-	{
-		return true;
-	}
-}
-
-void MPMap::CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool hemisphere)
-{
-	if(!m_bSkyDoom) return;
-
-	int phi_begin = 0;
-	int phi_end = 90;
-	int theta_begin = 0;
-	int theta_end = 360;
-
-	int dphi = 15;
-	int dtheta = 15;
-
-	int VertNum;
-	if(hemisphere)
-	{
-		VertNum = 6*abs(((phi_end-phi_begin)/dphi)*((theta_end-theta_begin)/dtheta));
-	}
-	else
-	{
-		VertNum = 12*abs(((phi_end-phi_begin)/dphi)*((theta_end-theta_begin)/dtheta));	
-	}
-
-	if(m_pSkyDoomVB == NULL)
-	{
-		m_pSkyDoomVB = new MPSkyDoomVertex[VertNum];
-	}
-
-	MPSkyDoomVertex* ptVB = m_pSkyDoomVB;	
-
-	for(int i=phi_begin; i<phi_end; i+=dphi)
-	{
-		for(int j=theta_begin; j<theta_end; j+=dtheta)
-		{
-				ptVB->p.x = center.x + float(radius) * sinf(float(i)/180*PI) * cosf(float(j)/180*PI);
-				ptVB->p.y = center.y + float(radius) * sinf(float(i)/180*PI) * sinf(float(j)/180*PI);
-				ptVB->p.z = float(radius) * cosf(float(i)/180*PI);
-				ptVB->tu = SKYDOOM_TILE_SIZE*float(i)/abs(phi_end-phi_begin);
-				ptVB->tv = SKYDOOM_TILE_SIZE*float(j)/abs(theta_end-theta_begin);
-				ptVB++;
-
-				ptVB->p.x = center.x + float(radius) * sinf(float(i)/180*PI) * cosf(float(j+dtheta)/180*PI);
-				ptVB->p.y = center.y + float(radius) * sinf(float(i)/180*PI) * sinf(float(j+dtheta)/180*PI);
-				ptVB->p.z = float(radius) * cosf(float(i)/180*PI);
-				ptVB->tu = SKYDOOM_TILE_SIZE*float(i)/abs(phi_end-phi_begin);
-				ptVB->tv = SKYDOOM_TILE_SIZE*float(j+dtheta)/abs(theta_end-theta_begin);
-				ptVB++;
-
-				ptVB->p.x = center.x + float(radius) * sinf(float(i+dphi)/180*PI) * cosf(float(j+dtheta)/180*PI);
-				ptVB->p.y = center.y + float(radius) * sinf(float(i+dphi)/180*PI) * sinf(float(j+dtheta)/180*PI);
-				ptVB->p.z = float(radius) * cosf(float(i+dphi)/180*PI);
-				ptVB->tu = SKYDOOM_TILE_SIZE*float(i+dphi)/abs(phi_end-phi_begin);
-				ptVB->tv = SKYDOOM_TILE_SIZE*float(j+dtheta)/abs(theta_end-theta_begin);
-				ptVB++;
-
-				ptVB->p.x = center.x + float(radius) * sinf(float(i)/180*PI) * cosf(float(j)/180*PI);
-				ptVB->p.y = center.y + float(radius) * sinf(float(i)/180*PI) * sinf(float(j)/180*PI);
-				ptVB->p.z = float(radius) * cosf(float(i)/180*PI);
-				ptVB->tu = SKYDOOM_TILE_SIZE*float(i)/abs(phi_end-phi_begin);
-				ptVB->tv = SKYDOOM_TILE_SIZE*float(j)/abs(theta_end-theta_begin);
-				ptVB++;
-
-				ptVB->p.x = center.x + float(radius) * sinf(float(i+dphi)/180*PI) * cosf(float(j+dtheta)/180*PI);
-				ptVB->p.y = center.y + float(radius) * sinf(float(i+dphi)/180*PI) * sinf(float(j+dtheta)/180*PI);
-				ptVB->p.z = float(radius) * cosf(float(i+dphi)/180*PI);
-				ptVB->tu = SKYDOOM_TILE_SIZE*float(i+dphi)/abs(phi_end-phi_begin);
-				ptVB->tv = SKYDOOM_TILE_SIZE*float(j+dtheta)/abs(theta_end-theta_begin);
-				ptVB++;
-
-				ptVB->p.x = center.x + float(radius) * sinf(float(i+dphi)/180*PI) * cosf(float(j)/180*PI);
-				ptVB->p.y = center.y + float(radius) * sinf(float(i+dphi)/180*PI) * sinf(float(j)/180*PI);
-				ptVB->p.z = float(radius) * cosf(float(i+dphi)/180*PI);
-				ptVB->tu = SKYDOOM_TILE_SIZE*float(i+dphi)/abs(phi_end-phi_begin);
-				ptVB->tv = SKYDOOM_TILE_SIZE*float(j)/abs(theta_end-theta_begin);
-				ptVB++;
-		}
-	} 
-
-	if(!hemisphere)
-	{
-		for(int i=phi_begin; i<phi_end; i+=dphi)
-		{
-			for(int j=theta_begin; j<theta_end; j+=dtheta)
-			{
-					ptVB->p.x = center.x + float(radius) * sinf(float(i)/180*PI) * cosf(float(j)/180*PI);
-					ptVB->p.y = center.y + float(radius) * sinf(float(i)/180*PI) * sinf(float(j)/180*PI);
-					ptVB->p.z = -float(radius) * cosf(float(i)/180*PI);
-					ptVB->tu = SKYDOOM_TILE_SIZE*float(i)/abs(phi_end-phi_begin);
-					ptVB->tv = SKYDOOM_TILE_SIZE*float(j)/abs(theta_end-theta_begin);
-					ptVB++;
-
-					ptVB->p.x = center.x + float(radius) * sinf(float(i)/180*PI) * cosf(float(j+dtheta)/180*PI);
-					ptVB->p.y = center.y + float(radius) * sinf(float(i)/180*PI) * sinf(float(j+dtheta)/180*PI);
-					ptVB->p.z = -float(radius) * cosf(float(i)/180*PI);
-					ptVB->tu = SKYDOOM_TILE_SIZE*float(i)/abs(phi_end-phi_begin);
-					ptVB->tv = SKYDOOM_TILE_SIZE*float(j+dtheta)/abs(theta_end-theta_begin);
-					ptVB++;
-
-					ptVB->p.x = center.x + float(radius) * sinf(float(i+dphi)/180*PI) * cosf(float(j+dtheta)/180*PI);
-					ptVB->p.y = center.y + float(radius) * sinf(float(i+dphi)/180*PI) * sinf(float(j+dtheta)/180*PI);
-					ptVB->p.z = -float(radius) * cosf(float(i+dphi)/180*PI);
-					ptVB->tu = SKYDOOM_TILE_SIZE*float(i+dphi)/abs(phi_end-phi_begin);
-					ptVB->tv = SKYDOOM_TILE_SIZE*float(j+dtheta)/abs(theta_end-theta_begin);
-					ptVB++;
-
-					ptVB->p.x = center.x + float(radius) * sinf(float(i)/180*PI) * cosf(float(j)/180*PI);
-					ptVB->p.y = center.y + float(radius) * sinf(float(i)/180*PI) * sinf(float(j)/180*PI);
-					ptVB->p.z = -float(radius) * cosf(float(i)/180*PI);
-					ptVB->tu = SKYDOOM_TILE_SIZE*float(i)/abs(phi_end-phi_begin);
-					ptVB->tv = SKYDOOM_TILE_SIZE*float(j)/abs(theta_end-theta_begin);
-					ptVB++;
-
-					ptVB->p.x = center.x + float(radius) * sinf(float(i+dphi)/180*PI) * cosf(float(j+dtheta)/180*PI);
-					ptVB->p.y = center.y + float(radius) * sinf(float(i+dphi)/180*PI) * sinf(float(j+dtheta)/180*PI);
-					ptVB->p.z = -float(radius) * cosf(float(i+dphi)/180*PI);
-					ptVB->tu = SKYDOOM_TILE_SIZE*float(i+dphi)/abs(phi_end-phi_begin);
-					ptVB->tv = SKYDOOM_TILE_SIZE*float(j+dtheta)/abs(theta_end-theta_begin);
-					ptVB++;
-
-					ptVB->p.x = center.x + float(radius) * sinf(float(i+dphi)/180*PI) * cosf(float(j)/180*PI);
-					ptVB->p.y = center.y + float(radius) * sinf(float(i+dphi)/180*PI) * sinf(float(j)/180*PI);
-					ptVB->p.z = -float(radius) * cosf(float(i+dphi)/180*PI);
-					ptVB->tu = SKYDOOM_TILE_SIZE*float(i+dphi)/abs(phi_end-phi_begin);
-					ptVB->tv = SKYDOOM_TILE_SIZE*float(j)/abs(theta_end-theta_begin);
-					ptVB++;
-			}
-		} 			
-	}
-
-
-	if(UseShader())
-	{
-		lwInterfaceMgr* imgr = g_Render.GetInterfaceMgr();
-		IDirect3DDeviceX* dev = imgr->dev_obj->GetDevice();
-
-		/* DWORD dwDecl[] =
-		{
-			D3DVSD_STREAM(0),
-			D3DVSD_REG(D3DVSDE_POSITION,  D3DVSDT_FLOAT3),
-			D3DVSD_REG(D3DVSDE_TEXCOORD1, D3DVSDT_FLOAT2),
-			D3DVSD_END()
-		}; */
-
-		char Path[MAX_PATH];
-		LPD3DXBUFFER pCode = 0;   
-		LPD3DXBUFFER pError = 0;
-		if(m_SkyDoomVertexShaderHandle == NULL)
-		{
-			sprintf(Path,"shader\\vs_skydoom.vsh");
-			if(SUCCEEDED(D3DXAssembleShaderFromFile( Path, NULL, NULL, 0, &pCode, &pError )))
-			{
-				if(FAILED(dev->CreateVertexShader((DWORD*)pCode->GetBufferPointer(),(IDirect3DVertexShaderX**)&m_SkyDoomVertexShaderHandle)))
-				{
-					m_SkyDoomVertexShaderHandle = 0;			
-					MessageBox( 0,"Failed To Create Vertex Shader","D3DXAssembleShaderFromFile For Vertex Shader Failed",0);
-				}
-			}
-			else
-			{		
-				m_SkyDoomVertexShaderHandle = 0;
-				if(pError != NULL)
-				{
-					const char* str = (const char*)pError->GetBufferPointer();
-					MessageBox( 0,str,"D3DXAssembleShaderFromFile For Vertex Shader Failed", 0 );
-				}
-				else
-				{
-					MessageBox( 0, "File Of Vertex Shader Not Exist","D3DXAssembleShaderFromFile For Vertex Shader Failed",0);			
-				}
-			}
-			if( pError )
-			{
-				pError->Release();
-				pError = 0;
-			}
-			if( pCode )
-			{
-				pCode->Release();
-				pCode = 0;
-			}
-		}
-		//create pixel shader
-		if(m_SkyDoomPixelShaderHandle == NULL)
-		{
-			sprintf(Path,"shader\\ps_skydoom.psh");
-			if(SUCCEEDED(D3DXAssembleShaderFromFile(Path, NULL, NULL, 0, &pCode, &pError )))
-			{
-				if(FAILED(dev->CreatePixelShader((DWORD*)pCode->GetBufferPointer(),(IDirect3DPixelShaderX**)&m_SkyDoomPixelShaderHandle)))
-				{
-					m_SkyDoomPixelShaderHandle = 0;			
-					MessageBox( 0,"Failed To Create Pixel Shader","D3DXAssembleShaderFromFile For Pixel Shader Failed",0);
-				}
-			}
-			else
-			{
-				m_SkyDoomPixelShaderHandle = 0;
-				if(pError != NULL)
-				{
-					const char* str = (const char*)pError->GetBufferPointer();
-					MessageBox( 0, str,"D3DXAssembleShaderFromFile For Pixel Shader Failed",0);
-				}
-				else
-				{
-					MessageBox( 0, "File Of Pixel Shader Not Exist","D3DXAssembleShaderFromFile For Pixel Shader Failed",0);
-				}
-			}
-			if( pError )
-			{
-				pError->Release();
-				pError = 0;
-			}
-			if( pCode )
-			{
-				pCode->Release();
-				pCode = 0;
-			}
-		}	
-
-		g_Render.ResetWorldTransform();
-		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
-		g_Render.SetTexture(0, GetTextureByID(GetTextureID(txPath))); /*"texture/terrain/xingkong01.bmp"*/ 
-		//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-		g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-		//
-		//render 
-		// i remark these code for close the shader
-		D3DXMATRIX mat;  
-		D3DXMatrixMultiply(&mat,&g_Render.GetWorldViewMatrix(),&g_Render.GetWorldProjMatrix());
-		D3DXMatrixTranspose( &mat, &mat );
-		dev->SetVertexShaderConstantF(0,mat,4);
-		dev->SetVertexShaderConstantF(4,D3DXVECTOR4(0,(m_txMoveSpeed-=1.0f)/10000*SKYDOOM_TEXTURE_MOVESPEED,0,0),1); //add by jze pass current frame number to vertex shader 
-		dev->SetVertexShader((IDirect3DVertexShaderX*)m_SkyDoomVertexShaderHandle);
-		dev->SetPixelShader((IDirect3DPixelShaderX*)m_SkyDoomPixelShaderHandle);
-
-		lwIDynamicStreamMgr* dsm = g_Render.GetInterfaceMgr()->res_mgr->GetDynamicStreamMgr();
-		dsm->BindDataVB(0, m_pSkyDoomVB, sizeof(MPSkyDoomVertex)*VertNum, sizeof(MPSkyDoomVertex));
-		if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLELIST, 0, VertNum/3)))
-			ToLogService("errors", LogLevel::Error, " render sky box");
-
-		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
-		dev->SetPixelShader(0);
-	}
-	else
-	{
-		g_Render.ResetWorldTransform();
-		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_NONE);
-		g_Render.SetTexture(0, GetTextureByID(GetTextureID(txPath))); /*"texture/terrain/xingkong01.bmp"*/ 
-		//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSU, D3DTADDRESS_WRAP);
-		//g_Render.SetTextureStageState(0, D3DTSS_ADDRESSV, D3DTADDRESS_WRAP);
-		g_Render.SetSamplerState(0, D3DSAMP_ADDRESSU, D3DTADDRESS_WRAP);
-		g_Render.SetSamplerState(0, D3DSAMP_ADDRESSV, D3DTADDRESS_WRAP);
-		//
-		//render 
-		// i remark these code for close the shader
-		g_Render.SetVertexShader(NULL);
-		g_Render.SetFVF(FVF_SKYDOOM);
-
-
-		lwIDynamicStreamMgr* dsm = g_Render.GetInterfaceMgr()->res_mgr->GetDynamicStreamMgr();
-		dsm->BindDataVB(0, m_pSkyDoomVB, sizeof(MPSkyDoomVertex)*VertNum, sizeof(MPSkyDoomVertex));
-		if(LW_FAILED(dsm->DrawPrimitive(D3DPT_TRIANGLELIST, 0, VertNum/3)))
-			ToLogService("errors", LogLevel::Error, " render sky box");
-
-		g_Render.SetRenderState(D3DRS_CULLMODE,D3DCULL_CCW);
-	}
-}
 
 void MPMap::SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float Density)
 {

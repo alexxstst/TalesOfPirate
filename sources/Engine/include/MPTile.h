@@ -23,12 +23,6 @@ struct MPSeaTileVertex
 	float		tu, tv;
 };
 
-struct MPSkyDoomVertex
-{
-	D3DXVECTOR3 p;
-	float       tu,tv;
-};
-
 struct MPLineVertex
 {
 	D3DXVECTOR3	p;

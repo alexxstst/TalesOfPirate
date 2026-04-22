@@ -375,7 +375,7 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
                 NULL,
                 NULL,
                 "main",
-                "vs_1_1",
+                "vs_3_0",
                 compile_flag,
                 &buf_code,
                 &buf_error,
@@ -395,14 +395,20 @@ LW_RESULT lwShaderMgr9::RegisterVertexShader(DWORD type, const char* file, DWORD
         else if(file_flag == VS_FILE_HLSL)
         {
             DWORD compile_flag = 0;
-			D3DXMACRO macro = {defines->Name, defines->Definition};
+            // defines — указатель на массив D3DXMACRO, терминированный
+            // {NULL, NULL}. Может быть nullptr (без макросов). Пропускаем
+            // напрямую в D3DXCompileShader — он корректно обрабатывает оба случая.
+            const D3DXMACRO* macro_ptr = nullptr;
+            if (defines && defines->Name) {
+                macro_ptr = defines;
+            }
             if(FAILED(D3DXCompileShader(
-                (LPCSTR)data, 
-                size, 
-                &macro, 
-                NULL, 
+                (LPCSTR)data,
+                size,
+                macro_ptr,
+                NULL,
                 "main",
-                "vs_2_0",
+                "vs_3_0",
                 compile_flag,
                 &buf_code,
                 &buf_error,

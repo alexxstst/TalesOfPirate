@@ -43,7 +43,6 @@ CMPResManger::CMPResManger(void)
 
 	_vecVShader.clear();
 	_dwShadeMapVS = 0L;
-	_dwFontVS	 = 0L;
 	_bMagr = false;
 	_dwMinimapVS = 0L;
 	
@@ -194,7 +193,6 @@ void	CMPResManger::ReleaseTotalRes()
 	_CEffectFile.free();
 
 	_dwShadeMapVS	= 0L;
-	_dwFontVS		= 0L;
 	_dwMinimapVS = 0L;
 
 	_vecVShader.clear();
@@ -718,7 +716,7 @@ IDirect3DVertexShaderX*	CMPResManger::GetShadeVS()
 }
 IDirect3DVertexDeclarationX* CMPResManger::GetShadeVDecl()
 {
-	return _vecVDecl[5];
+	return _vecVDecl[4];
 }
 
 CEffectModel*	CMPResManger::GetShadeMesh()
@@ -726,14 +724,6 @@ CEffectModel*	CMPResManger::GetShadeMesh()
 	return _CShadeModel;
 }
 
-IDirect3DVertexShaderX*	CMPResManger::GetFontVS()
-{
-	return _dwFontVS;
-}
-IDirect3DVertexDeclarationX* CMPResManger::GetFontVDecl()
-{
-	return _vecVDecl[4];
-}
 
 //int		CMPResManger::GetEffectTechByID(int iID)
 //{
@@ -747,7 +737,7 @@ EffParameter*   CMPResManger::GetEffectParamByID(int iID)
 
 IDirect3DVertexDeclarationX* CMPResManger::GetMinimapVDecl()
 {
-	return _vecVDecl[6];
+	return _vecVDecl[5];
 }
 
 
@@ -1369,47 +1359,6 @@ bool	CMPResManger::LoadTotalVShader()
 		}
 
 		// TODO
-		//DWORD dwFontDecl[] =
-		//{
-		//	D3DVSD_STREAM( 0 ),
-		//		D3DVSD_REG( D3DVSDE_POSITION ,		D3DVSDT_FLOAT3 ), // Position of first mesh
-		//		D3DVSD_REG( D3DVSDE_BLENDWEIGHT,	D3DVSDT_FLOAT1),
-		//		D3DVSD_REG( D3DVSDE_DIFFUSE,		D3DVSDT_D3DCOLOR ), // diffuse
-		//		D3DVSD_REG( D3DVSDE_TEXCOORD0,		D3DVSDT_FLOAT2 ), // Tex coords
-		//		D3DVSD_END()
-		//};
-#if (defined LW_USE_DX9)
-		sprintf(t_Path, "shader\\dx9\\font.vsh");
-#else
-		sprintf(t_Path,"shader\\font.vsh");
-#endif
-		//_dwFontVS = new DWORD;
-		if(SUCCEEDED(D3DXAssembleShaderFromFile( t_Path, NULL, NULL, 0, &pCode, NULL )))
-		{
-
-#ifdef USE_RENDER
-			if( FAILED(m_pDev->GetDevice()->CreateVertexShader( 
-				(DWORD*)pCode->GetBufferPointer(),
-				(IDirect3DVertexShaderX**)&_dwFontVS ) ) )
-#else
-			if( FAILED(m_pDev->CreateVertexShader( dwFontDecl, 
-				(DWORD*)pCode->GetBufferPointer(),
-				&_dwFontVS , FALSE ) ) )
-#endif
-		 {
-			 MessageBox(NULL,"shader\\font.vsh","ERROR",0);
-			 return false;
-		 }
-		 pCode->Release();
-		 pCode = NULL;
-		}
-		else
-		{
-			MessageBox(NULL,"shader\\font.vsh","ERROR",0);
-			return false;
-		}
-
-		// TODO
 		//DWORD dwEffShadeDecl[] =
 		//{
 		//	D3DVSD_STREAM( 0 ),
@@ -1527,7 +1476,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		VSTU_EFFECT_E2,
 		VSTU_EFFECT_E3,
 		VSTU_EFFECT_E4,
-		VSTU_FONT_E5,
 		VSTU_SHADE_E6,
 		VSTU_MINIMAP_E6,
 	};
@@ -1561,16 +1509,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		return true;
 	}
 
-	DWORD dwDecFont[] =
-	{
-		D3DVSD_STREAM( 0 ),
-			D3DVSD_REG( D3DVSDE_POSITION ,		D3DVSDT_FLOAT3 ), // Position of first mesh
-			D3DVSD_REG( D3DVSDE_BLENDWEIGHT,	D3DVSDT_FLOAT1),
-			D3DVSD_REG( D3DVSDE_DIFFUSE,		D3DVSDT_D3DCOLOR ), // diffuse
-			D3DVSD_REG( D3DVSDE_TEXCOORD0,		D3DVSDT_FLOAT2 ), // Tex coords
-			D3DVSD_END()
-	};
-
 	DWORD dwDecShade[] =
 	{
 		D3DVSD_STREAM( 0 ),
@@ -1598,7 +1536,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		dwDecEff,
 		dwDecEff,
 		dwDecEff,
-		dwDecFont,
 		dwDecShade,
 		dwMapDecl,
 	};
@@ -1608,48 +1545,45 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		sizeof(dwDecEff),
 		sizeof(dwDecEff),
 		sizeof(dwDecEff),
-		sizeof(dwDecFont),
 		sizeof(dwDecShade),
 		sizeof(dwMapDecl),
 	};
 
-	const char* shader_file[] = 
+	const char* shader_file[] =
 	{
 		"eff1.vso",
 		"eff2.vso",
 		"eff3.vso",
 		"eff4.vso",
-		"font.vso",
 		"shadeeff.vso",
 		"minimap.vso",
 	};
-	for( int i = 0; i < 7; i++ )
+	constexpr int total = sizeof(shader_file) / sizeof(shader_file[0]);
+	for (int i = 0; i < total; i++)
 	{
-		sprintf( path, "%s%s", path_info->GetPath( PATH_TYPE_SHADER ), shader_file[i] );
+		sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
 
-		if( LW_FAILED( shader_mgr->RegisterVertexShader( shader_type[i], path, 0, decl_tab[i], decl_size[i],1 )))
+		if (LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, 0, decl_tab[i], decl_size[i], 1)))
 		{
-			MessageBox(NULL,shader_file[i],"ERROR",0);
-
+			MessageBox(NULL, shader_file[i], "ERROR", 0);
 			return false;
 		}
-		if(i< 4)
+		if (i < 4)
 		{
 			_iVShaderNum++;
 			_vecVShader.resize(_iVShaderNum);
 			_vecVShader[_iVShaderNum - 1] = 0;
-			shader_mgr->QueryVertexShader(&_vecVShader[_iVShaderNum - 1],shader_type[i]);
-		}else
-		{
-			if(i==4)
-				shader_mgr->QueryVertexShader(&_dwFontVS,shader_type[i]);
-			if(i==5)
-				shader_mgr->QueryVertexShader(&_dwShadeMapVS,shader_type[i]);
-			if(i==6)
-				shader_mgr->QueryVertexShader(&_dwMinimapVS,shader_type[i]);
+			shader_mgr->QueryVertexShader(&_vecVShader[_iVShaderNum - 1], shader_type[i]);
 		}
-
-	} 
+		else if (i == 4)
+		{
+			shader_mgr->QueryVertexShader(&_dwShadeMapVS, shader_type[i]);
+		}
+		else if (i == 5)
+		{
+			shader_mgr->QueryVertexShader(&_dwMinimapVS, shader_type[i]);
+		}
+	}
 #endif
 
 #if(defined LW_USE_DX9)
@@ -1670,15 +1604,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		{0, 12, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDINDICES, 0},
 		{0, 16, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR,  0},
 		{0, 20, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD,  0},
-		{0xFF, 0, D3DDECLTYPE_UNUSED, 0, 0, 0},
-	};
-
-	D3DVERTEXELEMENT9 ve_dec_font[] =
-	{
-		{0, 0, D3DDECLTYPE_FLOAT3, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_POSITION, 0},
-		{0, 12, D3DDECLTYPE_FLOAT1, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_BLENDWEIGHT, 0},
-		{0, 16, D3DDECLTYPE_D3DCOLOR, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_COLOR, 0},
-		{0, 20, D3DDECLTYPE_FLOAT2, D3DDECLMETHOD_DEFAULT, D3DDECLUSAGE_TEXCOORD, 0},
 		{0xFF, 0, D3DDECLTYPE_UNUSED, 0, 0, 0},
 	};
 
@@ -1703,15 +1628,20 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 	};
 
 
-	const char* shader_file[] = 
+	const char* shader_file[] =
 	{
-		"eff1.vsh",
-		"eff2.vsh",
-		"eff3.vsh",
-		"eff4.vsh",
-		"font.vsh",
-		"shadeeff.vsh",
-		"minimap.vsh",
+		"eff1.hlsl",
+		"eff2.hlsl",
+		"eff3.hlsl",
+		"eff4.hlsl",
+		"shadeeff.hlsl",
+		"minimap.hlsl",
+	};
+	// Все шейдеры HLSL после полного рефакторинга (vs_2_0).
+	const DWORD shader_compile_flag[] =
+	{
+		VS_FILE_HLSL, VS_FILE_HLSL, VS_FILE_HLSL,
+		VS_FILE_HLSL, VS_FILE_HLSL, VS_FILE_HLSL,
 	};
 
 	D3DVERTEXELEMENT9* decl_tab[] =
@@ -1720,7 +1650,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		ve_dec_effect2,
 		ve_dec_effect1,
 		ve_dec_effect1,
-		ve_dec_font,
 		ve_dec_shade,
 		ve_dec_map,
 	};
@@ -1731,7 +1660,6 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 		VDT_EFF_2,
 		VDT_EFF_134,
 		VDT_EFF_134,
-		VDT_EFF_FONT,
 		VDT_EFF_SHADE,
 		VDT_EFF_MINIMAP,
 	};
@@ -1757,7 +1685,7 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
     for(int i = 0; i < decl_num; i++)
     {
         sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-        if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_ASM)))
+        if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, shader_compile_flag[i])))
             return false;
 
 		if (i < 4) {
@@ -1767,18 +1695,12 @@ bool	CMPResManger::LoadTotalVShader(lwISysGraphics* sys_graphics)
 
 			shader_mgr->QueryVertexShader(&_vecVShader[_iVShaderNum - 1], shader_type[i]);
 		}
-		else {
-			if (i == 4) {
-				shader_mgr->QueryVertexShader(&_dwFontVS, shader_type[i]);
-			}
-			if (i == 5) {
-				shader_mgr->QueryVertexShader(&_dwShadeMapVS, shader_type[i]);
-			}
-			if (i == 6) {
-				shader_mgr->QueryVertexShader(&_dwMinimapVS, shader_type[i]);
-			}
+		else if (i == 4) {
+			shader_mgr->QueryVertexShader(&_dwShadeMapVS, shader_type[i]);
 		}
-
+		else if (i == 5) {
+			shader_mgr->QueryVertexShader(&_dwMinimapVS, shader_type[i]);
+		}
     }
 
 #endif
@@ -2113,51 +2035,51 @@ BOOL CMPResManger::OnResetDevice()
 	DWORD shader_type[] =
 	{
 		VSTU_EFFECT_E1,
-			VSTU_EFFECT_E2,
-			VSTU_EFFECT_E3,
-			VSTU_EFFECT_E4,
-			VSTU_FONT_E5,
-			VSTU_SHADE_E6,
-			VSTU_MINIMAP_E6,
+		VSTU_EFFECT_E2,
+		VSTU_EFFECT_E3,
+		VSTU_EFFECT_E4,
+		VSTU_SHADE_E6,
+		VSTU_MINIMAP_E6,
 	};
-	
+
 	DWORD decl_type[] =
 	{
 		VDT_EFF_134,
 		VDT_EFF_2,
 		VDT_EFF_134,
 		VDT_EFF_134,
-		VDT_EFF_FONT,
 		VDT_EFF_SHADE,
 		VDT_EFF_MINIMAP,
 	};
 	lwIShaderMgr* shader_mgr;
 	lwIResourceMgr* res_mgr;
 
-	m_pSysGraphics->GetInterface( (LW_VOID**)&res_mgr, LW_GUID_RESOURCEMGR );
+	m_pSysGraphics->GetInterface((LW_VOID**)&res_mgr, LW_GUID_RESOURCEMGR);
 	shader_mgr = res_mgr->GetShaderMgr();
 
-	if(m_bUseSoft)
+	if (m_bUseSoft)
 	{
-		shader_mgr->QueryVertexShader(&_vecVShader[0],shader_type[1]);
-	}else
+		shader_mgr->QueryVertexShader(&_vecVShader[0], shader_type[1]);
+	}
+	else
 	{
-		for( int i = 0; i < 7; i++ )
+		constexpr int total = sizeof(shader_type) / sizeof(shader_type[0]);
+		for (int i = 0; i < total; i++)
 		{
-			if(i< 4)
+			if (i < 4)
 			{
-				shader_mgr->QueryVertexShader(&_vecVShader[i],shader_type[i]);
-			}else
+				shader_mgr->QueryVertexShader(&_vecVShader[i], shader_type[i]);
+			}
+			else if (i == 4)
 			{
-				if(i==4)
-					shader_mgr->QueryVertexShader(&_dwFontVS,shader_type[i]);
-				if(i==5)
-					shader_mgr->QueryVertexShader(&_dwShadeMapVS,shader_type[i]);
-				if(i==6)
-					shader_mgr->QueryVertexShader(&_dwMinimapVS,shader_type[i]);
+				shader_mgr->QueryVertexShader(&_dwShadeMapVS, shader_type[i]);
+			}
+			else if (i == 5)
+			{
+				shader_mgr->QueryVertexShader(&_dwMinimapVS, shader_type[i]);
 			}
 			shader_mgr->QueryVertexDeclaration(&_vecVDecl[i], decl_type[i]);
-		} 
+		}
 	}
 
 	IDirect3DSurfaceX* pBackBuffer;

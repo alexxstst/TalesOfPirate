@@ -151,8 +151,6 @@ public:
 	IDirect3DVertexDeclarationX* GetVDeclByID(int iID);
 	IDirect3DVertexShaderX*	GetShadeVS();
 	IDirect3DVertexDeclarationX* GetShadeVDecl();
-	IDirect3DVertexShaderX*	GetFontVS();
-	IDirect3DVertexDeclarationX* GetFontVDecl();
 	IDirect3DVertexShaderX*	GetMinimapVS(){return _dwMinimapVS;}
 	IDirect3DVertexDeclarationX* GetMinimapVDecl();
 
@@ -282,7 +280,6 @@ protected:
 	std::vector<IDirect3DVertexShaderX*>	_vecVShader;
 	std::vector<IDirect3DVertexDeclarationX*>	_vecVDecl;
 	IDirect3DVertexShaderX*					_dwShadeMapVS;
-	IDirect3DVertexShaderX*					_dwFontVS;
 
 	IDirect3DVertexShaderX*					_dwMinimapVS;
 	bool									_bMagr;//

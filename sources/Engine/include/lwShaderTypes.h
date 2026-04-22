@@ -51,7 +51,6 @@ enum lwVertexDeclarationTypesEnum
 	
 	VDT_EFF_134,
     VDT_EFF_2,
-    VDT_EFF_FONT,
     VDT_EFF_SHADE,
     VDT_EFF_MINIMAP,
 

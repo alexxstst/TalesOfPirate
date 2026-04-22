@@ -115,27 +115,42 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
 #if defined(LW_USE_DX9)
 
     // ======== DX9: Vertex Shaders ========
+    //
+    // Все 11 static-mesh VS сведены к двум HLSL-мастерам:
+    //
+    //   static_skin.hlsl — 4 permutations via NUM_EXPLICIT_WEIGHTS:
+    //     0 → pu4nt0_ld    (single-bone, no blend)
+    //     1 → pb1u4nt0_ld  (2-bone blend)
+    //     2 → pb2u4nt0_ld  (3-bone blend)
+    //     3 → pb3u4nt0_ld  (4-bone blend)
+    //
+    //   vs_pndt0.hlsl — 7 permutations via NO_LIGHTING/NO_DIFFUSE/USE_TEX_TRANSFORM.
     static const DWORD shader_type[] = {
         VST_PU4NT0_LD, VST_PB1U4NT0_LD, VST_PB2U4NT0_LD, VST_PB3U4NT0_LD,
         VST_PNT0_LD_TT0, VST_PNT0_TT0, VST_PNDT0_LD_TT0,
         VST_PNT0_LD, VST_PNDT0, VST_PNDT0_LD, VST_PNDT0_TT0,
     };
     static const char* shader_file[] = {
-        "pu4nt0_ld.vsh", "pb1u4nt0_ld.vsh", "pb2u4nt0_ld.vsh", "pb3u4nt0_ld.vsh",
-        "vs_pnt0_ld_t0uvmat.vsh", "vs_pnt0_t0uvmat.vsh", "vs_pndt0_ld_t0uvmat.vsh",
-        "vs_pnt0_ld.vsh", "vs_pndt0.vsh", "vs_pndt0_ld.vsh", "vs_pndt0_t0uvmat.vsh",
+        "static_skin.hlsl", "static_skin.hlsl", "static_skin.hlsl", "static_skin.hlsl",
+        "vs_pndt0.hlsl", "vs_pndt0.hlsl", "vs_pndt0.hlsl",
+        "vs_pndt0.hlsl", "vs_pndt0.hlsl", "vs_pndt0.hlsl", "vs_pndt0.hlsl",
     };
-    static const DWORD file_types[] = {
-        VS_FILE_ASM, VS_FILE_ASM, VS_FILE_ASM, VS_FILE_ASM,
-        VS_FILE_ASM, VS_FILE_ASM, VS_FILE_ASM,
-        VS_FILE_ASM, VS_FILE_ASM, VS_FILE_ASM, VS_FILE_ASM,
-    };
-    static D3DXMACRO defines[] = {
-        { "NUM_SKIN_WEIGHTS", "1"},
-        { "NUM_SKIN_WEIGHTS", "2"},
-        { "NUM_SKIN_WEIGHTS", "3"},
-        { "NUM_SKIN_WEIGHTS", "4"},
-        {"",""}, {"",""}, {"",""}, {"",""}, {"",""}, {"",""}, {"",""},
+    // Все шейдеры HLSL после рефакторинга.
+    static const D3DXMACRO defs_skin0[]         = {{"NUM_EXPLICIT_WEIGHTS","0"}, {NULL,NULL}};
+    static const D3DXMACRO defs_skin1[]         = {{"NUM_EXPLICIT_WEIGHTS","1"}, {NULL,NULL}};
+    static const D3DXMACRO defs_skin2[]         = {{"NUM_EXPLICIT_WEIGHTS","2"}, {NULL,NULL}};
+    static const D3DXMACRO defs_skin3[]         = {{"NUM_EXPLICIT_WEIGHTS","3"}, {NULL,NULL}};
+    static const D3DXMACRO defs_pnt0_ld_tt0[]   = {{"USE_TEX_TRANSFORM",""}, {"NO_DIFFUSE",""}, {NULL,NULL}};
+    static const D3DXMACRO defs_pnt0_tt0[]      = {{"NO_LIGHTING",""}, {"USE_TEX_TRANSFORM",""}, {"NO_DIFFUSE",""}, {NULL,NULL}};
+    static const D3DXMACRO defs_pndt0_ld_tt0[]  = {{"USE_TEX_TRANSFORM",""}, {NULL,NULL}};
+    static const D3DXMACRO defs_pnt0_ld[]       = {{"NO_DIFFUSE",""}, {NULL,NULL}};
+    static const D3DXMACRO defs_pndt0[]         = {{"NO_LIGHTING",""}, {NULL,NULL}};
+    static const D3DXMACRO defs_pndt0_ld[]      = {{NULL,NULL}};
+    static const D3DXMACRO defs_pndt0_tt0[]     = {{"NO_LIGHTING",""}, {"USE_TEX_TRANSFORM",""}, {NULL,NULL}};
+    static const D3DXMACRO* defines_tab[] = {
+        defs_skin0, defs_skin1, defs_skin2, defs_skin3,
+        defs_pnt0_ld_tt0, defs_pnt0_tt0, defs_pndt0_ld_tt0,
+        defs_pnt0_ld, defs_pndt0, defs_pndt0_ld, defs_pndt0_tt0,
     };
     static const int shader_num = (int)(sizeof(shader_type) / sizeof(shader_type[0]));
 
@@ -144,7 +159,7 @@ LW_RESULT LoadShader0(lwISysGraphics* sys_graphics)
         for (i = 0; i < shader_num; ++i)
         {
             sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-            if (LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, file_types[i], &defines[i])))
+            if (LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_HLSL, defines_tab[i])))
                 goto __ret;
         }
     }
@@ -320,20 +335,32 @@ LW_RESULT LoadShader1(lwISysGraphics* sys_graphics)
     //    "skinmesh9_4.vsh",
     //};
 
-	const char* shader_file[] = 
+	// Skinmesh8 VS (1-weight + 2-weight, 3 texture-transform modes) — все 6
+	// permutations через общий мастер-HLSL skinmesh.hlsl с defines
+	// NUM_SKIN_WEIGHTS (1|2) и TT_MODE (1|2|3).
+	const char* shader_file[] =
     {
-        "skinmesh8_1_tt1.vsh",
-        "skinmesh8_2_tt1.vsh",
-        "skinmesh8_1_tt2.vsh",
-        "skinmesh8_2_tt2.vsh",
-        "skinmesh8_1_tt3.vsh",
-        "skinmesh8_2_tt3.vsh",
+        "skinmesh.hlsl", "skinmesh.hlsl",  // TT1: 1w / 2w
+        "skinmesh.hlsl", "skinmesh.hlsl",  // TT2: 1w / 2w
+        "skinmesh.hlsl", "skinmesh.hlsl",  // TT3: 1w / 2w
     };
+	static const D3DXMACRO defs_1w_tt1[] = {{"NUM_SKIN_WEIGHTS","1"}, {"TT_MODE","1"}, {NULL,NULL}};
+	static const D3DXMACRO defs_2w_tt1[] = {{"NUM_SKIN_WEIGHTS","2"}, {"TT_MODE","1"}, {NULL,NULL}};
+	static const D3DXMACRO defs_1w_tt2[] = {{"NUM_SKIN_WEIGHTS","1"}, {"TT_MODE","2"}, {NULL,NULL}};
+	static const D3DXMACRO defs_2w_tt2[] = {{"NUM_SKIN_WEIGHTS","2"}, {"TT_MODE","2"}, {NULL,NULL}};
+	static const D3DXMACRO defs_1w_tt3[] = {{"NUM_SKIN_WEIGHTS","1"}, {"TT_MODE","3"}, {NULL,NULL}};
+	static const D3DXMACRO defs_2w_tt3[] = {{"NUM_SKIN_WEIGHTS","2"}, {"TT_MODE","3"}, {NULL,NULL}};
+	const D3DXMACRO* defs_tab[] =
+	{
+		defs_1w_tt1, defs_2w_tt1,
+		defs_1w_tt2, defs_2w_tt2,
+		defs_1w_tt3, defs_2w_tt3,
+	};
 
     for(int i = 0; i < 6; i++)
     {
         sprintf(path, "%s%s", path_info->GetPath(PATH_TYPE_SHADER), shader_file[i]);
-        if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_ASM)))
+        if(LW_FAILED(shader_mgr->RegisterVertexShader(shader_type[i], path, VS_FILE_HLSL, defs_tab[i])))
             goto __ret;
     }
 

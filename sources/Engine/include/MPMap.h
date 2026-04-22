@@ -10,8 +10,7 @@
 #define UNDERWATER_HEIGHT		 -2.0f
 #define UNDERWATER_TEXNO			22
 #define MAX_OTHER_DATA              40
-#define SKYDOOM_TEXTURE_MOVESPEED   10  
-#define PI                          3.1415926535897932384626433832795f 
+#define PI                          3.1415926535897932384626433832795f
 
 struct MPActiveMapSection
 {
@@ -239,29 +238,15 @@ protected:
 	std::unique_ptr<std::byte[]> m_pMapData{ nullptr };
 	DWORD						m_dwMapDataSize{ 0 };
 	DWORD						m_dwMapPos{ 0 };
-//jze
 public:
-	void        CreateSkyDoom(D3DXVECTOR3 center, float radius, char* txPath, bool hemisphere = true); //add by jze 2008.6.27
-	void		SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float Density); //add by jze 2008.7.3
+	void		SetupPixelFog(DWORD Color, DWORD Mode,float Start, float End, float Density);
 	void        CloseFog(){g_Render.GetDevice()->SetRenderState(D3DRS_FOGENABLE,FALSE);}
-	BOOL        IsSkyDoom(){return m_bSkyDoom;}
-	void        SetSkyDoom(bool bSkyDoom){m_bSkyDoom = bSkyDoom;}
 
 	void		SetPathFindingRange(int val){ m_iRange = val;}
 	ZRBlock* GetBlock() { return m_pBlock.get(); }
 	int			GetPathFindingRange(){ return m_iRange; }
-private:
-	BOOL        UseShader();
 
 private:
-	DWORD       m_SkyDoomVertexShaderHandle;
-	DWORD       m_SkyDoomPixelShaderHandle;
-
-	BOOL						m_bSkyDoom{ FALSE };
-	float                       m_txMoveSpeed{ 0 };
-
-	MPSkyDoomVertex*            m_pSkyDoomVB{ nullptr };
-
 	std::unique_ptr<ZRBlock> m_pBlock{ std::make_unique<ZRBlock>() };
 	int							m_iRange{ 512 };
 };
