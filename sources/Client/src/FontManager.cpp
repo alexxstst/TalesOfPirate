@@ -13,6 +13,15 @@
 #include <filesystem>
 #include <format>
 
+#include <ft2build.h>
+#include FT_FREETYPE_H
+
+#include "fontstash.h"
+#include "FonsDx9Backend.h"
+#include "MPResManger.h"
+
+#include <fstream>
+
 extern "C" {
 #include "lua.h"
 }
@@ -55,6 +64,21 @@ namespace {
 		}
 		return lower == ".ttf" || lower == ".ttc" || lower == ".otf";
 	}
+
+	// Общий FT_Library на процесс. Инициализируется при первом InstallFontFile.
+	// Явного FT_Done_FreeType нет — leak на shutdown безвреден и безопаснее, чем
+	// состязания с FontRender, который может держать FT_Face дольше FontManager.
+	FT_Library& FtLibrary() {
+		static FT_Library lib = nullptr;
+		if (!lib) {
+			if (FT_Init_FreeType(&lib) != 0) {
+				ToLogService("errors", LogLevel::Error,
+							 "FontManager: FT_Init_FreeType failed");
+				lib = nullptr;
+			}
+		}
+		return lib;
+	}
 } // namespace
 
 FontManager& FontManager::Instance() {
@@ -89,17 +113,152 @@ bool FontManager::InstallFontFile(const std::filesystem::path& ttf) {
 	}
 	const std::string path = ttf.string();
 	const int added = AddFontResourceExA(path.c_str(), FR_PRIVATE, nullptr);
-	if (added > 0) {
-		_registeredPaths.push_back(path);
-		ToLogService("common",
-					 "FontManager: '{}' зарегистрирован ({} фейсов)",
-					 path, added);
-		return true;
+	if (added <= 0) {
+		ToLogService("errors", LogLevel::Warning,
+					 "FontManager::InstallFontFile: AddFontResourceExA('{}') вернул 0",
+					 path);
+		return false;
 	}
-	ToLogService("errors", LogLevel::Warning,
-				 "FontManager::InstallFontFile: AddFontResourceExA('{}') вернул 0",
-				 path);
-	return false;
+	_registeredPaths.push_back(path);
+
+	// Читаем family_name через FreeType — чтобы FontRender потом открыл тот же
+	// TTF напрямую. TTC/коллекции содержат несколько фейсов; регистрируем все.
+	FT_Library lib = FtLibrary();
+	if (lib) {
+		FT_Long numFaces = 1;
+		for (FT_Long i = 0; i < numFaces; ++i) {
+			FT_Face face = nullptr;
+			if (FT_New_Face(lib, path.c_str(), i, &face) != 0) {
+				break;
+			}
+			if (i == 0) {
+				numFaces = face->num_faces;
+			}
+			if (face->family_name && *face->family_name) {
+				_familyToPath.emplace(std::string{face->family_name}, path);
+			}
+			FT_Done_Face(face);
+		}
+	}
+
+	ToLogService("common",
+				 "FontManager: '{}' зарегистрирован ({} фейсов)",
+				 path, added);
+	return true;
+}
+
+const std::string* FontManager::GetFontFilePath(const std::string& family) const {
+	const auto it = _familyToPath.find(family);
+	return (it == _familyToPath.end()) ? nullptr : &it->second;
+}
+
+FONScontext* FontManager::GetFonsContext() {
+	if (_fons) {
+		return _fons;
+	}
+	// fontstash-бэкенд использует fixed-function DX9 (без Effect'а), поэтому
+	// достаточно валидного g_Render. Effect/Technique оставлены в структуре
+	// как задел, но на рендер не влияют.
+	_fonsBackend = std::make_unique<fons::Dx9Backend>();
+	_fonsBackend->Dev       = &g_Render;
+	_fonsBackend->Effect    = nullptr;
+	_fonsBackend->Technique = 0;
+	// Стартовый размер атласа. fontstash сам расширяет при переполнении через
+	// fonsExpandAtlas → renderResize.
+	_fons = fons::CreateContext(_fonsBackend.get(), 512, 512);
+	if (!_fons) {
+		ToLogService("errors", LogLevel::Error,
+					 "FontManager::GetFonsContext: fons::CreateContext failed");
+		_fonsBackend.reset();
+		return nullptr;
+	}
+	ToLogService("common",
+				 "FontManager: FONScontext создан (512x512, DX9-бэкенд, fixed-function)");
+	return _fons;
+}
+
+int FontManager::GetOrRegisterFonsFont(const std::string& ttfPath) {
+	if (ttfPath.empty()) {
+		return -1;
+	}
+	const auto it = _pathToFonsFontId.find(ttfPath);
+	if (it != _pathToFonsFontId.end()) {
+		return it->second;
+	}
+	FONScontext* fons = GetFonsContext();
+	if (!fons) {
+		return -1;
+	}
+	// Читаем TTF целиком в буфер. fontstash хранит указатель — буфер должен
+	// жить, пока жив FONScontext. _fontBuffers хранит владение.
+	std::ifstream f(ttfPath, std::ios::binary | std::ios::ate);
+	if (!f) {
+		ToLogService("errors", LogLevel::Warning,
+					 "FontManager::GetOrRegisterFonsFont: не открыт '{}'",
+					 ttfPath);
+		return -1;
+	}
+	const auto size = static_cast<std::streamsize>(f.tellg());
+	if (size <= 0) {
+		return -1;
+	}
+	std::vector<unsigned char> buf(static_cast<size_t>(size));
+	f.seekg(0, std::ios::beg);
+	f.read(reinterpret_cast<char*>(buf.data()), size);
+	if (!f) {
+		ToLogService("errors", LogLevel::Warning,
+					 "FontManager::GetOrRegisterFonsFont: чтение '{}' failed",
+					 ttfPath);
+		return -1;
+	}
+
+	// Имя в fontstash — путь к файлу (уникален). freeData=0: fontstash не
+	// владеет буфером, FontManager держит его сам.
+	_fontBuffers.emplace_back(std::move(buf));
+	auto& stored = _fontBuffers.back();
+	const int id = fonsAddFontMem(fons, ttfPath.c_str(),
+								  stored.data(),
+								  static_cast<int>(stored.size()), 0);
+	if (id == FONS_INVALID) {
+		ToLogService("errors", LogLevel::Warning,
+					 "FontManager::GetOrRegisterFonsFont: fonsAddFontMem('{}') failed",
+					 ttfPath);
+		_fontBuffers.pop_back();
+		return -1;
+	}
+	_pathToFonsFontId.emplace(ttfPath, id);
+
+	// Вычисление SizeScale = (ascender - descender) / units_per_EM.
+	// Открываем face отдельно через FreeType (fontstash не экспонирует).
+	float sizeScale = 1.0f;
+	FT_Library lib = FtLibrary();
+	if (lib) {
+		FT_Face face = nullptr;
+		if (FT_New_Memory_Face(lib, stored.data(),
+							   static_cast<FT_Long>(stored.size()),
+							   0, &face) == 0) {
+			if (face->units_per_EM > 0) {
+				const float fh = static_cast<float>(
+					face->ascender - face->descender);
+				const float em = static_cast<float>(face->units_per_EM);
+				if (em > 0.0f) {
+					sizeScale = fh / em;
+				}
+			}
+			FT_Done_Face(face);
+		}
+	}
+	_fonsIdToSizeScale.emplace(id, sizeScale);
+
+	ToLogService("common",
+				 "FontManager: '{}' → fontstash id={} (sizeScale={:.4f})",
+				 ttfPath, id, sizeScale);
+	return id;
+}
+
+float FontManager::GetFonsSizeScale(int fonsFontId) const {
+	const auto it = _fonsIdToSizeScale.find(fonsFontId);
+	return (it == _fonsIdToSizeScale.end()) ? 1.0f : it->second;
 }
 
 int FontManager::InstallFontsFromDir(const std::filesystem::path& dir) {
@@ -144,9 +303,19 @@ int FontManager::CreateFont(std::string name, const std::string& family,
 
 	const int size = _CurrentSize(size800, size1024);
 	auto font = std::make_unique<CMPFont>();
+	// Если family зарегистрирован через InstallFontFile — получаем путь к TTF
+	// и регистрируем его в общем fontstash → FontRender рисует через fonsDrawText.
+	// Иначе — пустой путь + FONS_INVALID, FontRender откатится на прямой FreeType
+	// или GDI-путь.
+	const std::string* ttfPath    = GetFontFilePath(family);
+	const std::string  path       = ttfPath ? *ttfPath : std::string{};
+	FONScontext*       fons       = path.empty() ? nullptr : GetFonsContext();
+	const int          fonsFontId = path.empty() ? -1 : GetOrRegisterFonsFont(path);
+	const float        sizeScale  = GetFonsSizeScale(fonsFontId);
 	const bool ok = font->CreateFont(&g_Render,
 									 const_cast<char*>(family.c_str()),
-									 size, level, static_cast<DWORD>(flags));
+									 size, level, static_cast<DWORD>(flags),
+									 path, fons, fonsFontId, sizeScale);
 	if (!ok) {
 		ToLogService("errors", LogLevel::Error,
 					 "FontManager::CreateFont('{}', family='{}', size={}): CreateFont failed",
@@ -287,9 +456,18 @@ void FontManager::SetAllCodepage(unsigned int codepage) {
 }
 
 FontManager::~FontManager() {
+	// Порядок: сначала CMPFont'ы (они могут ссылаться на FONScontext), потом
+	// удаляем FONScontext, только затем освобождаем буферы TTF.
 	_fonts.clear();
 	_fontNames.clear();
 	_byName.clear();
+	if (_fons) {
+		fonsDeleteInternal(_fons);
+		_fons = nullptr;
+	}
+	_fonsBackend.reset();
+	_pathToFonsFontId.clear();
+	_fontBuffers.clear();
 	for (const auto& path : _registeredPaths) {
 		RemoveFontResourceExA(path.c_str(), FR_PRIVATE, nullptr);
 	}

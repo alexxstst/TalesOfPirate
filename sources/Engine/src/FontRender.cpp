@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "FontRender.h"
 
-#include "EffectFile.h"
-#include "MPResManger.h"
 #include "MPRender.h"
 #include "lwIUtil.h"
 #include "lwInterface.h"
@@ -10,48 +8,25 @@
 
 #include <algorithm>
 #include <cctype>
-#include <chrono>
 #include <cstdio>
 #include <cstring>
-#include <filesystem>
 #include <format>
 #include <stdexcept>
+#include <vector>
+
+#include "fontstash.h"
 
 namespace {
-	struct FontVertex {
-		float X, Y, Z, Rhw;
-		DWORD Color;
-		float U, V;
-	};
-
-	constexpr DWORD kFontFVF = D3DFVF_XYZRHW | D3DFVF_DIFFUSE | D3DFVF_TEX1;
-
-	// Боковой отступ в DIB для отрицательных abcA (italic/caligraphy).
-	constexpr int kDibPadLeft = 8;
-
-	DWORD ColorToDword(const D3DXCOLOR& c) {
-		return static_cast<DWORD>(c);
-	}
-
-	// ANTIALIASED_QUALITY пишет одинаковое значение в R=G=B (грейскейл AA),
-	// так что любой канал даёт правильную интенсивность. Берём G как
-	// "естественный" центральный канал (на случай если quality-флаг поменяют).
-	BYTE PixelIntensity(DWORD p) {
-		return static_cast<BYTE>((p >> 8) & 0xFF);
-	}
-
-	// Timestamp "YYYYMMDD_HHMMSS_mmm" для уникальных имён BMP-дампов.
-	std::string TimestampMs() {
-		const auto now = std::chrono::system_clock::now();
-		const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(
-			now.time_since_epoch()) % 1000;
-		const auto t = std::chrono::system_clock::to_time_t(now);
-		std::tm lt{};
-		::localtime_s(&lt, &t);
-		return std::format("{:04}{:02}{:02}_{:02}{:02}{:02}_{:03}",
-						   lt.tm_year + 1900, lt.tm_mon + 1, lt.tm_mday,
-						   lt.tm_hour, lt.tm_min, lt.tm_sec,
-						   static_cast<int>(ms.count()));
+	unsigned int ColorToRgba(const D3DXCOLOR& c) {
+		const DWORD argb = static_cast<DWORD>(c);
+		const unsigned a = (argb >> 24) & 0xFFu;
+		const unsigned r = (argb >> 16) & 0xFFu;
+		const unsigned g = (argb >>  8) & 0xFFu;
+		const unsigned b = (argb      ) & 0xFFu;
+		// fontstash передаёт цвет как uint32 в FontVertex.Diffuse. DX9 ожидает
+		// ARGB little-endian. Оставляем ARGB — цвет корректно интерпретируется
+		// D3DFVF_DIFFUSE сразу, без swap'а каналов.
+		return (a << 24) | (r << 16) | (g << 8) | b;
 	}
 } // namespace
 
@@ -64,15 +39,16 @@ FontRender::~FontRender() {
 	ReleaseFont();
 }
 
-void FontRender::BindingRes(CMPResManger* pResMagr) {
-	if (pResMagr) {
-		_pEffect = pResMagr->GetEffectFile();
-	}
-}
-
 bool FontRender::CreateFont(MPRender* pd3dDevice, char* szFontName,
-							int nSize, int nLevel, DWORD dwFlag) {
-	if (_hdc || _hfont || _atlas) {
+							int nSize, int nLevel, DWORD dwFlag,
+							const std::string& ttfPath,
+							FONScontext* fons, int fonsFontId,
+							float sizeScale) {
+	(void)nLevel; // атлас теперь общий и сам ресайзится — уровень не нужен.
+	(void)dwFlag; // bold/italic/underline пока не применяются (fonstash не имеет API).
+	(void)ttfPath; // фактическая загрузка TTF — в FontManager.
+
+	if (_fons) {
 		const std::string msg = std::format(
 			"FontRender::CreateFont called twice (existing='{}' size={}, new='{}' size={})",
 			_fontName, _textSize,
@@ -81,149 +57,75 @@ bool FontRender::CreateFont(MPRender* pd3dDevice, char* szFontName,
 		throw std::logic_error(msg);
 	}
 
-	if (nLevel < 1 || nLevel > 5 || !pd3dDevice || !szFontName) {
+	if (!pd3dDevice || !szFontName || nSize <= 0) {
+		return false;
+	}
+	if (!fons || fonsFontId < 0) {
+		ToLogService("errors", LogLevel::Error,
+					 "FontRender::CreateFont('{}', size={}): fontstash не передан — "
+					 "шрифт не зарегистрирован через FontManager::InstallFontFile?",
+					 szFontName, nSize);
 		return false;
 	}
 
 	_dev         = pd3dDevice;
 	_textSize    = nSize;
-	// Размер атласа: nLevel=1 → 128, nLevel=2 → 256, nLevel=3 → 512, ...
-	// 64 — слишком тесно для полной латиницы при 12pt (после упаковки
-	// остаётся места ≤ 40 глифов, остальные идут в "atlas full skip").
-	_textureSize = 64 << nLevel;
+	_fons        = fons;
+	_fonsFontId  = fonsFontId;
+	_sizeScale   = sizeScale > 0.0f ? sizeScale : 1.0f;
 	_fontName.assign(szFontName);
 
-	_hdc = ::CreateCompatibleDC(nullptr);
-	if (!_hdc) {
-		return false;
-	}
-	::SetMapMode(_hdc, MM_TEXT);
+	// Метрики строки через fontstash. Передаём size с учётом _sizeScale.
+	fonsSetFont(_fons, _fonsFontId);
+	fonsSetSize(_fons, static_cast<float>(_textSize) * _sizeScale);
+	fonsSetAlign(_fons, FONS_ALIGN_LEFT | FONS_ALIGN_TOP);
+	fonsSetSpacing(_fons, 0.0f);
+	fonsSetBlur(_fons, 0.0f);
 
-	LOGFONTA lf{};
-	lf.lfHeight         = -_textSize;
-	lf.lfWeight         = (dwFlag & MPFONT_BOLD)   ? FW_BOLD : FW_NORMAL;
-	lf.lfItalic         = (dwFlag & MPFONT_ITALIC) ? TRUE    : FALSE;
-	lf.lfUnderline      = (dwFlag & MPFONT_UNLINE) ? TRUE    : FALSE;
-	lf.lfCharSet        = DEFAULT_CHARSET;
-	lf.lfOutPrecision   = OUT_DEFAULT_PRECIS;
-	lf.lfClipPrecision  = CLIP_DEFAULT_PRECIS;
-	// CLEARTYPE_QUALITY — влияет только на TextOutW (debug-дампы в DIB).
-	// Rasterize-путь использует GetGlyphOutline(GGO_GRAY8_BITMAP) — тот
-	// всегда возвращает монохромный 65-уровневый grayscale независимо
-	// от lfQuality.
-	lf.lfQuality        = CLEARTYPE_QUALITY;
-	lf.lfPitchAndFamily = VARIABLE_PITCH | FF_DONTCARE;
-	std::strncpy(lf.lfFaceName, szFontName, LF_FACESIZE - 1);
+	float ascender = 0.0f, descender = 0.0f, lineH = 0.0f;
+	fonsVertMetrics(_fons, &ascender, &descender, &lineH);
+	// descender у fontstash возвращается отрицательный (от baseline вниз).
+	// std::max конфликтует с макросом `max` из <windows.h>, поэтому условные выражения.
+	_lineHeight = static_cast<int>(lineH > 1.0f ? lineH : 1.0f);
+	_baseline   = static_cast<int>(ascender > 0.0f ? ascender : 0.0f);
 
-	_hfont = ::CreateFontIndirectA(&lf);
-	if (!_hfont) {
-		::DeleteDC(_hdc);
-		_hdc = nullptr;
-		return false;
-	}
-
-	TEXTMETRICA tm{};
-	HFONT hOld = (HFONT)::SelectObject(_hdc, _hfont);
-	::GetTextMetricsA(_hdc, &tm);
-	::SelectObject(_hdc, hOld);
-
-	_lineHeight = tm.tmHeight;
-	_baseline   = tm.tmAscent;
-	_avgCharW   = tm.tmAveCharWidth;
-
-	// Advance для пробела (ABC-метрики не всегда включают пробел).
+	// Advance для пробела и "M". end=nullptr → fontstash сам вычислит через
+	// strlen(str) (см. fontstash.h:1520-1521). Передавать `" " + 1` НЕЛЬЗЯ:
+	// два литерала `" "` в двух выражениях компилятор не обязан пулить в один
+	// объект — диапазон [start, end) может охватывать разные объекты памяти,
+	// это UB. В fontstash приводит к access violation в fons__decutf8
+	// (строка 1524: *(const unsigned char*)str читает за пределами литерала).
 	{
-		SIZE sz{};
-		HFONT hOld2 = (HFONT)::SelectObject(_hdc, _hfont);
-		::GetTextExtentPoint32A(_hdc, " ", 1, &sz);
-		::SelectObject(_hdc, hOld2);
-		_spaceAdvance = sz.cx > 0 ? sz.cx : (_avgCharW > 0 ? _avgCharW : _textSize / 2);
+		float bounds[4]{};
+		const float advance = fonsTextBounds(_fons, 0, 0, " ", nullptr, bounds);
+		_spaceAdvance = static_cast<int>(advance > 1.0f ? advance : 1.0f);
+	}
+	{
+		float bounds[4]{};
+		const float advance = fonsTextBounds(_fons, 0, 0, "M", nullptr, bounds);
+		_avgCharW = static_cast<int>(advance > 1.0f ? advance : 1.0f);
 	}
 
-	_dibW = _textSize * 2 + kDibPadLeft * 2;
-	_dibH = _lineHeight + 4;
-
-	BITMAPINFO bmi{};
-	bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
-	bmi.bmiHeader.biWidth       = _dibW;
-	bmi.bmiHeader.biHeight      = -_dibH; // top-down
-	bmi.bmiHeader.biPlanes      = 1;
-	bmi.bmiHeader.biBitCount    = 32;
-	bmi.bmiHeader.biCompression = BI_RGB;
-
-	_hBmp = ::CreateDIBSection(_hdc, &bmi, DIB_RGB_COLORS,
-								reinterpret_cast<void**>(&_pBits), nullptr, 0);
-	if (!_hBmp || !_pBits) {
-		::DeleteObject(_hfont);
-		::DeleteDC(_hdc);
-		_hfont = nullptr;
-		_hdc   = nullptr;
-		return false;
-	}
-
-	_hBmpOld  = ::SelectObject(_hdc, _hBmp);
-	_hFontOld = (HFONT)::SelectObject(_hdc, _hfont);
-
-	::SetTextColor(_hdc, RGB(255, 255, 255));
-	::SetBkColor(_hdc, 0x00000000);
-	::SetBkMode(_hdc, TRANSPARENT);
-	::SetTextAlign(_hdc, TA_TOP | TA_LEFT);
-
-	// Атлас строго D3DFMT_A8R8G8B8 (после fix'а в lwResourceMgr формат уважается).
-	lwTexInfo info{};
-	info.stage         = 0;
-	info.type          = TEX_TYPE_SIZE;
-	info.level         = 1;
-	info.usage         = 0;
-	info.format        = D3DFMT_A8R8G8B8;
-	info.pool          = D3DPOOL_MANAGED;
-	info.colorkey_type = COLORKEY_TYPE_NONE;
-	info.width         = _textureSize;
-	info.height        = _textureSize;
-
-	lwIResourceMgr* resMgr = _dev->GetInterfaceMgr()->res_mgr;
-	if (LW_FAILED(lwLoadTex(&_atlas, resMgr, &info))) {
-		ToLogService("errors", LogLevel::Error,
-					 "FontRender[{}]: atlas create failed (size={})",
-					 _fontName, _textureSize);
-		ReleaseFont();
-		return false;
-	}
-
-	_packX = _packY = _packRowH = 0;
+	ToLogService("common",
+				 "FontRender[{}]: fontstash fontId={} size={}px "
+				 "(line={}, baseline={}, advance_space={})",
+				 _fontName, _fonsFontId, _textSize,
+				 _lineHeight, _baseline, _spaceAdvance);
 	return true;
 }
 
 void FontRender::ReleaseFont() {
-	if (_atlas) {
-		SAFE_RELEASE(_atlas);
-	}
-	_glyphs.clear();
-
-	if (_hdc && _hFontOld) {
-		::SelectObject(_hdc, _hFontOld);
-		_hFontOld = nullptr;
-	}
-	if (_hdc && _hBmpOld) {
-		::SelectObject(_hdc, _hBmpOld);
-		_hBmpOld = nullptr;
-	}
-	if (_hBmp) {
-		::DeleteObject(_hBmp);
-		_hBmp  = nullptr;
-		_pBits = nullptr;
-	}
-	if (_hfont) {
-		::DeleteObject(_hfont);
-		_hfont = nullptr;
-	}
-	if (_hdc) {
-		::DeleteDC(_hdc);
-		_hdc = nullptr;
-	}
-
-	_packX = _packY = _packRowH = 0;
-	_dev = nullptr;
+	// FONScontext владеет FontManager — не удаляем здесь, только забываем.
+	_fons        = nullptr;
+	_fonsFontId  = -1;
+	_sizeScale   = 1.0f;
+	_dev         = nullptr;
+	_textSize    = 0;
+	_lineHeight  = 0;
+	_baseline    = 0;
+	_avgCharW    = 0;
+	_spaceAdvance = 0;
+	_dumpedTexts.clear();
 }
 
 std::wstring FontRender::_ToWide(const char* mbstr) const {
@@ -239,241 +141,63 @@ std::wstring FontRender::_ToWide(const char* mbstr) const {
 	return out;
 }
 
-const FontRender::Glyph* FontRender::_GetOrRasterize(wchar_t ch) {
-	auto it = _glyphs.find(ch);
-	if (it != _glyphs.end()) {
-		return &it->second;
+std::string FontRender::_ToUtf8(const std::wstring& w) const {
+	if (w.empty()) {
+		return {};
 	}
-	Glyph g{};
-	if (!_RasterizeGlyph(ch, g)) {
-		return nullptr;
+	const int u8len = ::WideCharToMultiByte(
+		CP_UTF8, 0, w.data(), static_cast<int>(w.size()),
+		nullptr, 0, nullptr, nullptr);
+	if (u8len <= 0) {
+		return {};
 	}
-	auto [ins, _] = _glyphs.emplace(ch, g);
-	return &ins->second;
-}
-
-bool FontRender::_RasterizeGlyph(wchar_t ch, Glyph& out) {
-	out = {};
-	if (!_hdc || !_atlas) {
-		return false;
-	}
-
-	// GetGlyphOutlineW(GGO_GRAY8_BITMAP) даёт чистый монохромный AA:
-	// 65 уровней серого (0..64), без субпиксельного разложения по RGB.
-	// Метрики глифа берём прямо из GLYPHMETRICS — точнее и быстрее
-	// чем TextOutW в DIB + поиск bbox сканом.
-	static const MAT2 matIdentity = { {0,1}, {0,0}, {0,0}, {0,1} };
-
-	HFONT hOldFont = (HFONT)::SelectObject(_hdc, _hfont);
-
-	GLYPHMETRICS gm{};
-	const DWORD bufSize = ::GetGlyphOutlineW(
-		_hdc, ch, GGO_GRAY8_BITMAP, &gm, 0, nullptr, &matIdentity);
-
-	if (bufSize == GDI_ERROR) {
-		::SelectObject(_hdc, hOldFont);
-		// Fallback: используем средние метрики.
-		out.Width    = 0;
-		out.Height   = 0;
-		out.OffsetX  = 0;
-		out.OffsetY  = 0;
-		out.AdvanceX = _avgCharW;
-		out.Valid    = true;
-		return true;
-	}
-
-	std::vector<BYTE> glyphBits;
-	if (bufSize > 0) {
-		glyphBits.resize(bufSize);
-		const DWORD ret = ::GetGlyphOutlineW(
-			_hdc, ch, GGO_GRAY8_BITMAP, &gm, bufSize,
-			glyphBits.data(), &matIdentity);
-		if (ret == GDI_ERROR) {
-			::SelectObject(_hdc, hOldFont);
-			return false;
-		}
-	}
-
-	::SelectObject(_hdc, hOldFont);
-
-	const int gw      = static_cast<int>(gm.gmBlackBoxX);
-	const int gh      = static_cast<int>(gm.gmBlackBoxY);
-	const int originX = gm.gmptGlyphOrigin.x;
-	const int originY = gm.gmptGlyphOrigin.y;
-	const int advance = gm.gmCellIncX;
-
-	// Shelf-packer. ВАЖНО: _packRowH сбрасываем только ПОСЛЕ подтверждённой
-	// записи (секция ниже). Если сбросить при wrap до проверки overflow —
-	// и overflow сработает (return false), _packRowH останется 0 и следующий
-	// wrap уйдёт на ay + 0 + 1 вместо ay + prevRowH + 1, перезатирая строку.
-	int ax = _packX;
-	int ay = _packY;
-	bool wrapped = false;
-	if (gw > 0) {
-		if (ax + gw > _textureSize) {
-			ax = 0;
-			ay += _packRowH + 1;
-			wrapped = true;
-		}
-		if (ay + gh > _textureSize) {
-			ToLogService("errors", LogLevel::Warning,
-						 "FontRender[{}]: atlas full, glyph U+{:04X} skipped",
-						 _fontName, static_cast<unsigned>(ch));
-			return false;
-		}
-	}
-
-	// Записываем bitmap в атлас. GGO_GRAY8_BITMAP — строки выровнены на
-	// 4-байтовую границу, значения 0..64 → scale до 0..255.
-	if (gw > 0 && gh > 0) {
-		const int rowStride = (gw + 3) & ~3;
-
-		D3DLOCKED_RECT lr{};
-		if (FAILED(_atlas->GetTex()->LockRect(0, &lr, nullptr, 0))) {
-			return false;
-		}
-
-		BYTE* dstBase = static_cast<BYTE*>(lr.pBits) + ay * lr.Pitch + ax * 4;
-		for (int y = 0; y < gh; ++y) {
-			DWORD* d = reinterpret_cast<DWORD*>(dstBase + y * lr.Pitch);
-			const BYTE* srcRow = glyphBits.data() + y * rowStride;
-			for (int x = 0; x < gw; ++x) {
-				// 0..64 → 0..255: умножаем на 4, max 64 → 255.
-				const BYTE v = srcRow[x];
-				const BYTE a = (v >= 64) ? 255 : static_cast<BYTE>(v * 4);
-				d[x] = a > 0 ? ((static_cast<DWORD>(a) << 24) | 0x00FFFFFF) : 0u;
-			}
-		}
-		_atlas->GetTex()->UnlockRect(0);
-
-		_packX = ax + gw + 1;
-		_packY = ay;
-		if (wrapped) {
-			_packRowH = gh;
-		} else if (gh > _packRowH) {
-			_packRowH = gh;
-		}
-	}
-
-	out.Width    = gw;
-	out.Height   = gh;
-	out.u1       = static_cast<float>(ax)      / static_cast<float>(_textureSize);
-	out.v1       = static_cast<float>(ay)      / static_cast<float>(_textureSize);
-	out.u2       = static_cast<float>(ax + gw) / static_cast<float>(_textureSize);
-	out.v2       = static_cast<float>(ay + gh) / static_cast<float>(_textureSize);
-	// originX ≈ abcA — горизонтальный отступ от pen до левого края глифа.
-	// originY > 0 — glyph top выше baseline; baseline = _baseline от top-of-line.
-	// → offset от top-of-line до glyph-top = _baseline - originY.
-	out.OffsetX  = originX;
-	out.OffsetY  = _baseline - originY;
-	out.AdvanceX = advance;
-	out.Valid    = true;
-	return true;
+	std::string out(static_cast<size_t>(u8len), '\0');
+	::WideCharToMultiByte(CP_UTF8, 0,
+						  w.data(), static_cast<int>(w.size()),
+						  out.data(), u8len, nullptr, nullptr);
+	return out;
 }
 
 void FontRender::_DrawWide(const std::wstring& wtext, int x, int y,
 						   D3DXCOLOR color, float fScale,
 						   const RECT* clipRect) {
-	if (wtext.empty() || !_dev || !_atlas) {
+	if (wtext.empty() || !_dev || !_fons || _fonsFontId < 0) {
 		return;
 	}
 
-	_DumpTextRender(wtext);
-
-	const DWORD dwColor = ColorToDword(color);
-
-	std::vector<FontVertex> verts;
-	verts.reserve(wtext.size() * 6);
-
-	float pen = static_cast<float>(x);
-	// lineY сдвигается на _lineHeight при каждом '\n'; baseY менять нельзя,
-	// чтобы не сломать рассчитанный OffsetY глифа (Y-координата baseline строки).
-	float lineY = static_cast<float>(y);
-
-	for (wchar_t ch : wtext) {
-		if (ch == L'\r') {
-			continue;
-		}
-		if (ch == L'\n') {
-			pen = static_cast<float>(x);
-			lineY += static_cast<float>(_lineHeight) * fScale;
-			continue;
-		}
-		if (ch == L' ') {
-			pen += static_cast<float>(_spaceAdvance) * fScale;
-			continue;
-		}
-
-		const Glyph* g = _GetOrRasterize(ch);
-		if (!g || !g->Valid) {
-			pen += static_cast<float>(_avgCharW) * fScale;
-			continue;
-		}
-
-		if (g->Width > 0 && g->Height > 0) {
-			// Half-pixel offset для D3DFVF_XYZRHW + LINEAR filter.
-			// Без этого вершины лежат на целочисленных границах пикселей,
-			// и bilinear семплит по 50/50 между соседними текселями → глиф
-			// размазывается на 1 пиксель в каждую сторону (визуально жирнее).
-			// Смещение на -0.5 попадает центром пикселя → LINEAR семплит
-			// ровно один тексель.
-			const float qx = pen + static_cast<float>(g->OffsetX) * fScale - 0.5f;
-			const float qy = lineY + static_cast<float>(g->OffsetY) * fScale - 0.5f;
-			const float qw = static_cast<float>(g->Width)  * fScale;
-			const float qh = static_cast<float>(g->Height) * fScale;
-
-			if (clipRect) {
-				if (qx + qw < clipRect->left || qx > clipRect->right ||
-					qy + qh < clipRect->top  || qy > clipRect->bottom) {
-					pen += static_cast<float>(g->AdvanceX) * fScale;
-					continue;
-				}
-			}
-
-			verts.push_back({qx,      qy,      0.0f, 1.0f, dwColor, g->u1, g->v1});
-			verts.push_back({qx + qw, qy,      0.0f, 1.0f, dwColor, g->u2, g->v1});
-			verts.push_back({qx,      qy + qh, 0.0f, 1.0f, dwColor, g->u1, g->v2});
-
-			verts.push_back({qx + qw, qy,      0.0f, 1.0f, dwColor, g->u2, g->v1});
-			verts.push_back({qx + qw, qy + qh, 0.0f, 1.0f, dwColor, g->u2, g->v2});
-			verts.push_back({qx,      qy + qh, 0.0f, 1.0f, dwColor, g->u1, g->v2});
-		}
-
-		pen += static_cast<float>(g->AdvanceX) * fScale;
-	}
-
-	if (verts.empty()) {
+	const std::string utf8 = _ToUtf8(wtext);
+	if (utf8.empty()) {
 		return;
 	}
 
-	// Render-state выставляет HLSL-техника t5: alpha-blend SrcAlpha/InvSrcAlpha,
-	// texstage MODULATE texture×diffuse, sampler POINT, Z off.
-	if (!_pEffect) {
-		ToLogService("errors", LogLevel::Error,
-					 "FontRender[{}]: BindingRes не вызван до первого DrawText",
-					 _fontName);
-		return;
+	fonsSetFont(_fons, _fonsFontId);
+	fonsSetSize(_fons, static_cast<float>(_textSize) * fScale * _sizeScale);
+	fonsSetColor(_fons, ColorToRgba(color));
+	fonsSetAlign(_fons, FONS_ALIGN_LEFT | FONS_ALIGN_TOP);
+	fonsSetSpacing(_fons, 0.0f);
+	fonsSetBlur(_fons, 0.0f);
+
+	// Поддержка '\n': fontstash не ломает строки сам. Разбиваем вручную.
+	const char* p    = utf8.c_str();
+	const char* pend = utf8.c_str() + utf8.size();
+	float       penY = static_cast<float>(y);
+	const float lineH = static_cast<float>(_lineHeight) * fScale;
+
+	while (p < pend) {
+		const char* nl = p;
+		while (nl < pend && *nl != '\n') {
+			++nl;
+		}
+		// clipRect: грубый отсев по y-строке. fontstash не клипит — частично
+		// видимые строки рисуются целиком; для UI-контейнеров приемлемо.
+		if (!clipRect ||
+			(penY + lineH >= static_cast<float>(clipRect->top) &&
+			 penY <= static_cast<float>(clipRect->bottom))) {
+			fonsDrawText(_fons, static_cast<float>(x), penY, p, nl);
+		}
+		penY += lineH;
+		p = (nl < pend) ? nl + 1 : pend;
 	}
-
-	_pEffect->SetTechnique(_renderIdx);
-	_pEffect->Begin(D3DXFX_DONOTSAVESTATE);
-	_pEffect->Pass(0);
-
-	_dev->SetVertexShader(nullptr);
-	_dev->SetFVF(kFontFVF);
-	// LINEAR filter — bilinear sampling размазывает AA-края на 1px, визуально
-	// смягчает "слипание" соседних букв на малых кеглях без native-hinting.
-	_dev->SetSamplerState(0, D3DSAMP_MAGFILTER, D3DTEXF_LINEAR);
-	_dev->SetSamplerState(0, D3DSAMP_MINFILTER, D3DTEXF_LINEAR);
-	_dev->SetTexture(0, _atlas->GetTex());
-
-	_dev->GetDevice()->DrawPrimitiveUP(
-		D3DPT_TRIANGLELIST,
-		static_cast<UINT>(verts.size() / 3),
-		verts.data(),
-		sizeof(FontVertex));
-
-	_pEffect->End();
 }
 
 void FontRender::Draw(char* szText, int x, int y, D3DXCOLOR color) {
@@ -507,7 +231,7 @@ bool FontRender::DrawTextShadow(char* szText, int x1, int y1, int x2, int y2,
 
 bool FontRender::Draw3DText(char* /*szText*/, D3DXVECTOR3& /*vPos*/,
 							D3DXCOLOR /*color*/, float /*fScale*/) {
-	// TODO: проект 3D-точки на экран и отрисовка. Пока заглушка.
+	// TODO: проекция 3D-точки на экран + 2D-рендер. Пока заглушка.
 	return false;
 }
 
@@ -522,31 +246,49 @@ SIZE* FontRender::GetTextSize(const std::string& szText, SIZE* pSize, float fSca
 	pSize->cx = 0;
 	pSize->cy = static_cast<long>(_lineHeight * fScale);
 
-	if (szText.empty()) return pSize;
-
-	const std::wstring w = _ToWide(szText.c_str());
-	float pen     = 0;
-	long  maxPen  = 0;
-	long  lines   = 1;
-	for (wchar_t ch : w) {
-		if (ch == L'\r') continue;
-		if (ch == L'\n') {
-			++lines;
-			if (static_cast<long>(pen) > maxPen) maxPen = static_cast<long>(pen);
-			pen = 0;
-			continue;
-		}
-		if (ch == L' ') {
-			pen += static_cast<float>(_spaceAdvance) * fScale;
-			continue;
-		}
-		const Glyph* g = _GetOrRasterize(ch);
-		pen += (g && g->Valid ? static_cast<float>(g->AdvanceX) : static_cast<float>(_avgCharW)) * fScale;
+	if (szText.empty() || !_fons || _fonsFontId < 0) {
+		return pSize;
 	}
-	if (static_cast<long>(pen) > maxPen) maxPen = static_cast<long>(pen);
 
-	pSize->cx = maxPen;
-	pSize->cy = static_cast<long>(_lineHeight * fScale * lines);
+	// Конверсия в UTF-8, если codepage не UTF-8.
+	std::string utf8;
+	if (_codepage == CP_UTF8) {
+		utf8 = szText;
+	} else {
+		utf8 = _ToUtf8(_ToWide(szText.c_str()));
+	}
+	if (utf8.empty()) {
+		return pSize;
+	}
+
+	fonsSetFont(_fons, _fonsFontId);
+	fonsSetSize(_fons, static_cast<float>(_textSize) * fScale * _sizeScale);
+	fonsSetAlign(_fons, FONS_ALIGN_LEFT | FONS_ALIGN_TOP);
+	fonsSetSpacing(_fons, 0.0f);
+	fonsSetBlur(_fons, 0.0f);
+
+	long maxWidth = 0;
+	long lines    = 1;
+	const char* p    = utf8.c_str();
+	const char* pend = utf8.c_str() + utf8.size();
+	while (p < pend) {
+		const char* nl = p;
+		while (nl < pend && *nl != '\n') {
+			++nl;
+		}
+		float bounds[4]{};
+		fonsTextBounds(_fons, 0, 0, p, nl, bounds);
+		const long w = static_cast<long>(bounds[2] - bounds[0]);
+		if (w > maxWidth) {
+			maxWidth = w;
+		}
+		if (nl < pend) {
+			++lines;
+		}
+		p = (nl < pend) ? nl + 1 : pend;
+	}
+	pSize->cx = maxWidth;
+	pSize->cy = static_cast<long>(_lineHeight * fScale) * lines;
 	return pSize;
 }
 
@@ -558,164 +300,32 @@ int FontRender::GetAscLength(float fscale) {
 	return static_cast<int>((_avgCharW > 0 ? _avgCharW : _textSize / 2) * fscale);
 }
 
-bool FontRender::DumpGlyphPreview(const std::string& path) {
-	if (!_hdc || !_hfont) {
-		return false;
-	}
-
-	// Кириллица через \u-escape (не зависит от source-encoding).
-	std::wstring ruUpper;
-	ruUpper.push_back(L'\u0401'); // Ё
-	for (wchar_t c = L'\u0410'; c <= L'\u042F'; ++c) {
-		ruUpper.push_back(c);
-	}
-	std::wstring ruLower;
-	ruLower.push_back(L'\u0451'); // ё
-	for (wchar_t c = L'\u0430'; c <= L'\u044F'; ++c) {
-		ruLower.push_back(c);
-	}
-
-	const std::wstring lines[] = {
-		L"0123456789",
-		L"ABCDEFGHIJKLMNOPQRSTUVWXYZ",
-		L"abcdefghijklmnopqrstuvwxyz",
-		std::move(ruUpper),
-		std::move(ruLower),
-	};
-	constexpr int lineCount = sizeof(lines) / sizeof(lines[0]);
-
-	// Измеряем ширину самой длинной строки.
-	int maxW = 0;
-	for (int i = 0; i < lineCount; ++i) {
-		SIZE sz{};
-		::GetTextExtentPoint32W(_hdc, lines[i].c_str(),
-								static_cast<int>(lines[i].size()), &sz);
-		if (sz.cx > maxW) {
-			maxW = sz.cx;
-		}
-	}
-
-	constexpr int pad = 8;
-	const int w = maxW + pad * 2;
-	const int h = _lineHeight * lineCount + pad * 2;
-	if (w <= 0 || h <= 0) {
-		return false;
-	}
-
-	BITMAPINFO bmi{};
-	bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
-	bmi.bmiHeader.biWidth       = w;
-	bmi.bmiHeader.biHeight      = -h; // top-down
-	bmi.bmiHeader.biPlanes      = 1;
-	bmi.bmiHeader.biBitCount    = 32;
-	bmi.bmiHeader.biCompression = BI_RGB;
-
-	DWORD* pBits = nullptr;
-	HBITMAP hBmp = ::CreateDIBSection(_hdc, &bmi, DIB_RGB_COLORS,
-									   reinterpret_cast<void**>(&pBits),
-									   nullptr, 0);
-	if (!hBmp || !pBits) {
-		if (hBmp) {
-			::DeleteObject(hBmp);
-		}
-		return false;
-	}
-
-	// Подменяем DIB в _hdc — шрифт уже выбран, не трогаем.
-	HGDIOBJ oldBmp = ::SelectObject(_hdc, hBmp);
-
-	// Белый фон, чёрный текст.
-	const RECT rc{ 0, 0, w, h };
-	::FillRect(_hdc, &rc, static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH)));
-
-	::SetTextColor(_hdc, RGB(0, 0, 0));
-	::SetBkColor(_hdc, RGB(255, 255, 255));
-	::SetBkMode(_hdc, TRANSPARENT);
-
-	for (int i = 0; i < lineCount; ++i) {
-		::TextOutW(_hdc, pad, pad + i * _lineHeight,
-				   lines[i].c_str(), static_cast<int>(lines[i].size()));
-	}
-	::GdiFlush();
-
-	// Пишем BMP как есть — GDI в 32bpp DIB записал BGRA, альфа = 0 (игнорируем).
-	// Для просмотра в стандартных вьюверах перезаполняем альфу = 255.
-	const int rowBytes = w * 4;
-	std::vector<BYTE> pixels(static_cast<size_t>(rowBytes) * h);
-	for (int y = 0; y < h; ++y) {
-		const BYTE* src = reinterpret_cast<const BYTE*>(pBits)
-						+ static_cast<size_t>(y) * rowBytes;
-		BYTE* dst = pixels.data() + static_cast<size_t>(y) * rowBytes;
-		for (int x = 0; x < w; ++x) {
-			dst[x * 4 + 0] = src[x * 4 + 0]; // B
-			dst[x * 4 + 1] = src[x * 4 + 1]; // G
-			dst[x * 4 + 2] = src[x * 4 + 2]; // R
-			dst[x * 4 + 3] = 255;            // A
-		}
-	}
-
-	bool ok = false;
-	FILE* f = nullptr;
-	if (fopen_s(&f, path.c_str(), "wb") == 0 && f) {
-		BITMAPFILEHEADER fh{};
-		BITMAPINFOHEADER ih{};
-		fh.bfType    = 0x4D42; // 'BM'
-		fh.bfOffBits = sizeof(fh) + sizeof(ih);
-		fh.bfSize    = fh.bfOffBits + rowBytes * h;
-
-		ih.biSize        = sizeof(ih);
-		ih.biWidth       = w;
-		ih.biHeight      = -h;
-		ih.biPlanes      = 1;
-		ih.biBitCount    = 32;
-		ih.biCompression = BI_RGB;
-		ih.biSizeImage   = rowBytes * h;
-
-		std::fwrite(&fh, sizeof(fh), 1, f);
-		std::fwrite(&ih, sizeof(ih), 1, f);
-		std::fwrite(pixels.data(), 1, pixels.size(), f);
-		std::fclose(f);
-		ok = true;
-	}
-
-	::SelectObject(_hdc, oldBmp);
-	::DeleteObject(hBmp);
-	return ok;
-}
-
 bool FontRender::DumpAtlas(const std::string& path) {
-	if (!_atlas || !_atlas->GetTex()) {
+	if (!_fons) {
 		return false;
 	}
-	D3DLOCKED_RECT lr{};
-	if (FAILED(_atlas->GetTex()->LockRect(0, &lr, nullptr, D3DLOCK_READONLY))) {
+	int w = 0, h = 0;
+	const unsigned char* data = fonsGetTextureData(_fons, &w, &h);
+	if (!data || w <= 0 || h <= 0) {
 		return false;
 	}
 
-	const int w = _textureSize;
-	const int h = _textureSize;
 	const int rowBytes = w * 4;
 	std::vector<BYTE> pixels(static_cast<size_t>(rowBytes) * h);
-
-	// Шахматный фон (чтобы было видно прозрачные области); поверх —
-	// глифы (A из альфы, RGB из атласа = белый).
+	// Чекерборд-фон + альфа из атласа (glyph visible как тёмные пятна).
 	for (int y = 0; y < h; ++y) {
-		const BYTE* src = static_cast<const BYTE*>(lr.pBits) + y * lr.Pitch;
+		const unsigned char* src = data + y * w;
 		BYTE* dst = pixels.data() + static_cast<size_t>(y) * rowBytes;
 		for (int x = 0; x < w; ++x) {
-			const BYTE a = src[x * 4 + 3]; // A
-			// Чекерборд: светлый/тёмный серый клетки 8×8.
+			const BYTE a  = src[x];
 			const BYTE bg = ((x / 8 + y / 8) & 1) ? 200 : 230;
-			// Альфа=alpha глифа → чёрные пиксели поверх шахматки.
-			const BYTE r = static_cast<BYTE>((bg * (255 - a)) / 255);
-			dst[x * 4 + 0] = r; // B
-			dst[x * 4 + 1] = r; // G
-			dst[x * 4 + 2] = r; // R
+			const BYTE v  = static_cast<BYTE>((bg * (255 - a)) / 255);
+			dst[x * 4 + 0] = v; // B
+			dst[x * 4 + 1] = v; // G
+			dst[x * 4 + 2] = v; // R
 			dst[x * 4 + 3] = 255;
 		}
 	}
-
-	_atlas->GetTex()->UnlockRect(0);
 
 	bool ok = false;
 	FILE* f = nullptr;
@@ -728,7 +338,7 @@ bool FontRender::DumpAtlas(const std::string& path) {
 
 		ih.biSize        = sizeof(ih);
 		ih.biWidth       = w;
-		ih.biHeight      = -h;
+		ih.biHeight      = -h; // top-down
 		ih.biPlanes      = 1;
 		ih.biBitCount    = 32;
 		ih.biCompression = BI_RGB;
@@ -743,117 +353,8 @@ bool FontRender::DumpAtlas(const std::string& path) {
 	return ok;
 }
 
-void FontRender::_DumpTextRender(const std::wstring& wtext) {
-	if (!s_textDumpEnabled) {
-		return;
-	}
-	if (wtext.empty() || !_hdc || !_hfont) {
-		return;
-	}
-	// Дедуп — один BMP на уникальный текст per-instance.
-	if (_dumpedTexts.find(wtext) != _dumpedTexts.end()) {
-		return;
-	}
-	_dumpedTexts.insert(wtext);
-
-	namespace fs = std::filesystem;
-	const fs::path dir = "./font/debug";
-	std::error_code ec;
-	fs::create_directories(dir, ec);
-
-	SIZE sz{};
-	::GetTextExtentPoint32W(_hdc, wtext.c_str(),
-							static_cast<int>(wtext.size()), &sz);
-	constexpr int pad = 8;
-	const int w = sz.cx + pad * 2;
-	const int h = _lineHeight + pad * 2;
-	if (w <= 0 || h <= 0) {
-		return;
-	}
-
-	BITMAPINFO bmi{};
-	bmi.bmiHeader.biSize        = sizeof(BITMAPINFOHEADER);
-	bmi.bmiHeader.biWidth       = w;
-	bmi.bmiHeader.biHeight      = -h;
-	bmi.bmiHeader.biPlanes      = 1;
-	bmi.bmiHeader.biBitCount    = 32;
-	bmi.bmiHeader.biCompression = BI_RGB;
-
-	DWORD* pBits = nullptr;
-	HBITMAP hBmp = ::CreateDIBSection(_hdc, &bmi, DIB_RGB_COLORS,
-									   reinterpret_cast<void**>(&pBits),
-									   nullptr, 0);
-	if (!hBmp || !pBits) {
-		if (hBmp) {
-			::DeleteObject(hBmp);
-		}
-		return;
-	}
-
-	HGDIOBJ oldBmp = ::SelectObject(_hdc, hBmp);
-
-	const RECT rc{ 0, 0, w, h };
-	::FillRect(_hdc, &rc, static_cast<HBRUSH>(::GetStockObject(WHITE_BRUSH)));
-
-	::SetTextColor(_hdc, RGB(0, 0, 0));
-	::SetBkColor(_hdc, RGB(255, 255, 255));
-	::SetBkMode(_hdc, TRANSPARENT);
-
-	::TextOutW(_hdc, pad, pad, wtext.c_str(),
-			   static_cast<int>(wtext.size()));
-	::GdiFlush();
-
-	// 32bpp BGRA, дополняем alpha=255 для совместимости с просмотрщиками.
-	const int rowBytes = w * 4;
-	std::vector<BYTE> pixels(static_cast<size_t>(rowBytes) * h);
-	for (int y = 0; y < h; ++y) {
-		const BYTE* src = reinterpret_cast<const BYTE*>(pBits)
-						+ static_cast<size_t>(y) * rowBytes;
-		BYTE* dst = pixels.data() + static_cast<size_t>(y) * rowBytes;
-		for (int x = 0; x < w; ++x) {
-			dst[x * 4 + 0] = src[x * 4 + 0];
-			dst[x * 4 + 1] = src[x * 4 + 1];
-			dst[x * 4 + 2] = src[x * 4 + 2];
-			dst[x * 4 + 3] = 255;
-		}
-	}
-
-	// Санитизация имени шрифта (пробелы и т.п. → _) для filename.
-	std::string fontSan;
-	fontSan.reserve(_fontName.size());
-	for (char c : _fontName) {
-		const bool ok = std::isalnum(static_cast<unsigned char>(c)) != 0
-					 || c == '-' || c == '_';
-		fontSan += ok ? c : '_';
-	}
-	if (fontSan.empty()) {
-		fontSan = "unknown";
-	}
-
-	const fs::path path = dir / std::format("render.{}.{}.bmp",
-											 fontSan, TimestampMs());
-	FILE* f = nullptr;
-	if (fopen_s(&f, path.string().c_str(), "wb") == 0 && f) {
-		BITMAPFILEHEADER fh{};
-		BITMAPINFOHEADER ih{};
-		fh.bfType    = 0x4D42;
-		fh.bfOffBits = sizeof(fh) + sizeof(ih);
-		fh.bfSize    = fh.bfOffBits + rowBytes * h;
-
-		ih.biSize        = sizeof(ih);
-		ih.biWidth       = w;
-		ih.biHeight      = -h;
-		ih.biPlanes      = 1;
-		ih.biBitCount    = 32;
-		ih.biCompression = BI_RGB;
-		ih.biSizeImage   = rowBytes * h;
-
-		std::fwrite(&fh, sizeof(fh), 1, f);
-		std::fwrite(&ih, sizeof(ih), 1, f);
-		std::fwrite(pixels.data(), 1, pixels.size(), f);
-		std::fclose(f);
-	}
-
-	::SelectObject(_hdc, oldBmp);
-	::DeleteObject(hBmp);
+bool FontRender::DumpGlyphPreview(const std::string& path) {
+	// Переиспользуем DumpAtlas — в fontstash все растеризованные глифы лежат
+	// в общем атласе, отдельное превью per-font недоступно через публичный API.
+	return DumpAtlas(path);
 }

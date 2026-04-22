@@ -33,6 +33,10 @@ class CMPFont;
 namespace dbc { class IniFile; }
 struct lua_State;
 
+// Forward — чтобы не тянуть fontstash.h / FonsDx9Backend.h в публичный хедер.
+struct FONScontext;
+namespace fons { struct Dx9Backend; }
+
 enum class FontSlot {
 	TipText = 0,
 	MidAnnounce,
@@ -57,9 +61,32 @@ public:
 
 	const std::string& GetResolvedFamily() const { return _resolvedFamily; }
 
-	// Регистрация TTF через AddFontResourceExA(FR_PRIVATE).
+	// Регистрация TTF через AddFontResourceExA(FR_PRIVATE). Параллельно читает
+	// family_name из файла через FreeType и сохраняет в _familyToPath, чтобы
+	// FontRender мог открыть тот же TTF напрямую (без поиска через GDI).
 	bool InstallFontFile(const std::filesystem::path& ttf);
 	int  InstallFontsFromDir(const std::filesystem::path& dir);
+
+	// Путь к TTF по имени семейства (как его вернул FreeType при регистрации).
+	// nullptr — если семейство не зарегистрировано через InstallFontFile*.
+	const std::string* GetFontFilePath(const std::string& family) const;
+
+	// Общий FONScontext процесса — владеет картой атласных страниц fontstash и
+	// DX9-бэкендом. Lazy-init при первом вызове (требует g_Render + ResMgr
+	// инициализированными). nullptr — если создание провалилось.
+	FONScontext* GetFonsContext();
+
+	// Регистрация TTF в fontstash через fonsAddFontMem. Возвращает fonsFontId
+	// (совместим с fonsSetFont) либо -1 при ошибке. Результат кешируется по пути
+	// файла, повторные вызовы возвращают тот же id.
+	int GetOrRegisterFonsFont(const std::string& ttfPath);
+
+	// Коэффициент коррекции размера per-font для fonsSetSize.
+	// fontstash интерпретирует size как "высоту строки" (asc-desc) и делает
+	// FT_Set_Pixel_Sizes(0, size * em / (asc-desc)). Чтобы получить em-size=S
+	// (как GDI CreateFontA lfHeight=-S), в fonsSetSize нужно передавать
+	// S * (asc-desc)/em = S * SizeScale. Возвращает 1.0f, если fontId не знаком.
+	float GetFonsSizeScale(int fonsFontId) const;
 
 	// Создание именованного шрифта. Дубль имени → замена + warning.
 	// Возвращает int-handle (индекс в _fonts). -1 при ошибке.
@@ -106,5 +133,17 @@ private:
 	std::unordered_map<std::string, int>    _byName;
 
 	std::vector<std::string>                _registeredPaths;
+	// Family name (как читает FreeType, напр. "PT Sans") → полный путь к TTF.
+	std::unordered_map<std::string, std::string> _familyToPath;
 	std::string                             _resolvedFamily{"Arial"};
+
+	// Общий fontstash (создаётся лениво в GetFonsContext).
+	std::unique_ptr<fons::Dx9Backend>       _fonsBackend;
+	FONScontext*                            _fons{nullptr};
+	// Path → fonsFontId. Буфер TTF на шрифт (fontstash хранит указатель,
+	// память должна жить, пока жив FONScontext).
+	std::unordered_map<std::string, int>    _pathToFonsFontId;
+	std::vector<std::vector<unsigned char>> _fontBuffers;
+	// fontId → (asc-desc)/em (см. GetFonsSizeScale).
+	std::unordered_map<int, float>          _fonsIdToSizeScale;
 };

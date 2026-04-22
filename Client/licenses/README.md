@@ -26,6 +26,8 @@
 | libogg | 1.3.x | BSD-3-Clause (Xiph) | [libogg.txt](libogg.txt) | https://xiph.org/ogg/ |
 | Discord RPC | — | MIT | [Discord-RPC.txt](Discord-RPC.txt) | https://github.com/discord/discord-rpc |
 | DirectX (D3D9) | DX9 SDK | Microsoft EULA (редистрибутив) | [DirectX.txt](DirectX.txt) | Microsoft DirectX SDK |
+| FreeType | 2.x | FTL (BSD-подобная, по выбору) / GPLv2 | [FreeType.txt](FreeType.txt), [FreeType_FTL.txt](FreeType_FTL.txt), [FreeType_GPLv2.txt](FreeType_GPLv2.txt) | https://freetype.org |
+| fontstash | header-only | zlib-style (Mikko Mononen) | [fontstash.txt](fontstash.txt) | https://github.com/memononen/fontstash |
 
 ## Шрифты
 

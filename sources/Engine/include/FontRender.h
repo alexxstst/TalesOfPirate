@@ -1,36 +1,29 @@
 #pragma once
 
-// FontRender — per-glyph атлас-рендер замена CMPFont.
+// FontRender — тонкая обёртка над общим fontstash-контекстом.
 //
 // Пайплайн:
-//   - GDI рендерит глиф в DIB 32bpp (CLEARTYPE_QUALITY для 256-уровневой AA).
-//   - Ищется tight bbox в DIB (max по RGB — ClearType распределяет intensity
-//     по каналам).
-//   - Глиф копируется в атлас D3DFMT_A8R8G8B8 (RGB=white, A=intensity).
-//   - ABC-ширины через GetCharABCWidthsW дают точный advance per-glyph.
-//   - Рендер — fullscreen triangles через CMPEffectFile::SetTechnique(5)
-//     (alpha blend + modulate с diffuse, настраивается HLSL-техникой).
+//   - Регистрация шрифта и FONScontext — в FontManager (lazy init).
+//   - FontRender хранит только fonsFontId + указатель на FONScontext.
+//   - DrawText/GetTextSize идут через fonsDrawText/fonsTextBounds; атлас,
+//     растеризация (FreeType через FONS_USE_FREETYPE) и draw-call — внутри
+//     fontstash + DX9-бэкенда (см. fons::Dx9Backend).
 //
-// Публичный API совместим с CMPFont — callsite'ы не меняются.
+// Метрики строки (_lineHeight, _baseline, _avgCharW, _spaceAdvance) берутся
+// из fontstash через fonsVertMetrics / fonsTextBounds при CreateFont.
 
 #include <d3d9.h>
 #include <d3dx9math.h>
-#include <windows.h>
 #include <string>
-#include <unordered_map>
 #include <unordered_set>
-#include <vector>
 
 #include "lwHeader.h"
 
 class MPRender;
 class CMPResManger;
-class CMPEffectFile;
 
-LW_BEGIN
-class lwITex;
-LW_END
-using MindPower::lwITex;
+// Forward для fontstash (owned by FontManager).
+struct FONScontext;
 
 #ifndef MPFONT_BOLD
 #define MPFONT_BOLD   0x0001
@@ -46,15 +39,23 @@ public:
 	FontRender(const FontRender&) = delete;
 	FontRender& operator=(const FontRender&) = delete;
 
+	// Инициализация: запоминает размер, путь TTF (для логов), FONScontext +
+	// fonsFontId от FontManager. sizeScale = (asc-desc)/em данного шрифта —
+	// множитель, который нужно применить к nSize перед fonsSetSize, чтобы
+	// получить em-size=nSize (GDI-совместимая интерпретация).
+	// Возвращает false при невалидных аргументах или отсутствии fontstash.
 	bool CreateFont(MPRender* pd3dDevice, char* szFontName,
-					int nSize = 16, int nLevel = 3, DWORD dwFlag = 0);
-	// Сохраняет CMPEffectFile — используется для настройки render-state
-	// (blend/texstage/sampler) через HLSL-технику.
-	void BindingRes(CMPResManger* pResMagr);
+					int nSize = 16, int nLevel = 3, DWORD dwFlag = 0,
+					const std::string& ttfPath = {},
+					FONScontext* fons = nullptr, int fonsFontId = -1,
+					float sizeScale = 1.0f);
+
+	// Legacy-заглушка: в старом GDI/Effect-пути здесь сохранялся CMPEffectFile.
+	// Теперь Effect владеет fons::Dx9Backend (создан FontManager), метод no-op.
+	void BindingRes(CMPResManger*) {}
 
 	void Begin() {}
 	void End() {}
-
 	void BeginClip() {}
 	void EndClip() {}
 
@@ -80,99 +81,55 @@ public:
 
 	void ReleaseFont();
 
-	void UseSoft(bool bUseSoft) { _useSoft = bUseSoft; }
-	bool IsUseSoft()            { return _useSoft; }
-
-	lwITex* GetTexture() { return _atlas; }
-
-	void SetRenderIdx(int iIdx) { _renderIdx = iIdx; }
-
 	// Кодовая страница для MultiByteToWideChar при DrawText. По умолчанию
-	// CP_ACP (legacy GBK/Windows-1251). Для шрифтов, принимающих UTF-8
-	// напрямую (например FontSlot::Console из Lua-скриптов), устанавливать
-	// 65001 = CP_UTF8.
+	// CP_UTF8; оставлена для Console-слота и legacy call-sites.
 	void SetCodepage(UINT codepage) { _codepage = codepage; }
 	UINT GetCodepage() const        { return _codepage; }
 
-	// Диагностический дамп: рендерит набор глифов (0-9, A-Z, a-z, А-Я, а-я)
-	// в отдельный DIB через GDI и сохраняет 32bpp BMP. Фон белый, текст чёрный.
+	// Диагностический дамп атласа fontstash: чекерборд + альфа из атласа
+	// (glyph-cache). Один BMP на весь FONScontext.
 	bool DumpGlyphPreview(const std::string& path);
-
-	// Сохраняет содержимое D3D-атласа в BMP: альфа отображается поверх
-	// серой шахматной сетки (чекерборд 8×8). Чёрный текст на светлом фоне.
 	bool DumpAtlas(const std::string& path);
 
-	// Глобальный toggle для дампа каждого рендеренного текста в
-	// ./font/debug/render.<timestamp>.bmp. Dедупликация — per-instance
-	// (каждый FontRender ведёт свой set уже задампленных wstring).
+	// Toggle'ы, управляющие Lua-скриптами через UIScript биндинги.
 	static void SetTextDumpEnabled(bool enabled) { s_textDumpEnabled = enabled; }
 	static bool IsTextDumpEnabled() { return s_textDumpEnabled; }
 
-	// Toggle для shadow-режима. DrawTextShadow по умолчанию рендерит текст
-	// дважды (shadow за главным). При false — одиночный рендер (только main).
-	// Используется для диагностики "жирности" текста.
+	// DrawTextShadow по умолчанию рендерит текст дважды (shadow+main). При
+	// false — только main. Используется для диагностики "жирности" текста.
 	static void SetShadowEnabled(bool enabled) { s_shadowEnabled = enabled; }
 	static bool IsShadowEnabled() { return s_shadowEnabled; }
 
 private:
-	struct Glyph {
-		float u1{0}, v1{0}, u2{0}, v2{0};
-		int   OffsetX{0};   // от pen-позиции до левого края глифа
-		int   OffsetY{0};   // от top-of-line до верха глифа
-		int   Width{0};     // ширина глифа в пикселях
-		int   Height{0};    // высота глифа в пикселях
-		int   AdvanceX{0};  // шаг до следующего глифа
-		bool  Valid{false};
-	};
-
-	const Glyph* _GetOrRasterize(wchar_t ch);
-	bool         _RasterizeGlyph(wchar_t ch, Glyph& out);
 	std::wstring _ToWide(const char* mbstr) const;
+	std::string  _ToUtf8(const std::wstring& w) const;
 	void         _DrawWide(const std::wstring& wtext, int x, int y,
 						   D3DXCOLOR color, float fScale,
 						   const RECT* clipRect = nullptr);
-	// DEBUG: рендер каждого текста в BMP ./font/debug/render.<timestamp>.bmp
-	// через GDI (белый фон, чёрный текст).
-	void         _DumpTextRender(const std::wstring& wtext);
 
 private:
 	MPRender* _dev{nullptr};
 
-	HDC     _hdc{nullptr};
-	HFONT   _hfont{nullptr};
-	HFONT   _hFontOld{nullptr};
-	HBITMAP _hBmp{nullptr};
-	HGDIOBJ _hBmpOld{nullptr};
-	DWORD*  _pBits{nullptr};
+	// fontstash-путь (единственный). FONScontext владеет FontManager.
+	FONScontext* _fons{nullptr};
+	int          _fonsFontId{-1};
+	// Множитель для fonsSetSize = (asc-desc)/em шрифта, чтобы em-size совпадал
+	// с GDI-интерпретацией lfHeight. Для шрифтов с em==fh (редкость) = 1.0f.
+	float        _sizeScale{1.0f};
 
 	int _textSize{0};
-	int _textureSize{0};
 
+	// Метрики строки, вычисленные через fonsVertMetrics / fonsTextBounds.
 	int _lineHeight{0};
 	int _baseline{0};
 	int _avgCharW{0};
 	int _spaceAdvance{0};
 
-	int _dibW{0};
-	int _dibH{0};
-
-	lwITex* _atlas{nullptr};
-
-	// Shelf-packer state.
-	int _packX{0}, _packY{0}, _packRowH{0};
-
-	std::unordered_map<wchar_t, Glyph> _glyphs;
-
-	// Дедуп для _DumpTextRender — один BMP на уникальный wstring.
-	std::unordered_set<std::wstring> _dumpedTexts;
-
 	std::string _fontName;
+	UINT        _codepage{CP_UTF8};
 
-	UINT _codepage{CP_UTF8};
-	bool _useSoft{false};
-
-	CMPEffectFile* _pEffect{nullptr};
-	int            _renderIdx{5}; // индекс HLSL-техники в шейдере
+	// Дедуп для debug-дампа (оставлен как no-op в будущих режимах).
+	std::unordered_set<std::wstring> _dumpedTexts;
 
 	static bool s_textDumpEnabled;
 	static bool s_shadowEnabled;
