@@ -212,7 +212,7 @@ int AddSkill(CCharacter* pChar, CTalkNpc* pTalk, int wSkillID, int byLevel)
 		}
 
 		char szData[128];
-		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00003), szNpc, szSkill);
+		std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00003), szNpc, szSkill);
 		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
@@ -248,7 +248,7 @@ int AddSailExp(CCharacter* pChar, CTalkNpc* pTalk, int dwMinExp, int dwMaxExp)
 
 	pChar->GetPlyMainCha()->AddAttr(ATTR_CSAILEXP, dwValue);
 	char szData[128];
-	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue);
+	std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue);
 	pChar->SystemNotice(szData);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
@@ -278,7 +278,7 @@ int AddLifeExp(CCharacter* pChar, CTalkNpc* pTalk, int dwMinExp, int dwMaxExp)
 
 	pChar->GetPlyMainCha()->AddAttr(ATTR_CLIFEEXP, dwValue);
 	char szData[128];
-	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue);
+	std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue);
 	pChar->SystemNotice(szData);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
@@ -308,7 +308,7 @@ int AddExp(CCharacter* pChar, CTalkNpc* pTalk, int dwMinExp, int dwMaxExp)
 
 	BOOL bRet = pChar->GetPlyMainCha()->AddExpAndNotic(dwValue);
 	char szData[128];
-	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue);
+	std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue);
 	pChar->SystemNotice(szData);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
@@ -341,7 +341,7 @@ int AddExpAndType(CCharacter* pChar, CTalkNpc* pTalk, int byType, int dwMinExp, 
 	{
 		bRet = pChar->GetPlyMainCha()->AddExpAndNotic(dwValue);
 		char szData[128];
-		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue);
+		std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00006), szNpc, dwValue);
 		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
@@ -349,7 +349,7 @@ int AddExpAndType(CCharacter* pChar, CTalkNpc* pTalk, int byType, int dwMinExp, 
 	{
 		bRet = pChar->GetPlyMainCha()->AddAttr(ATTR_CSAILEXP, dwValue);
 		char szData[128];
-		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue);
+		std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00004), szNpc, dwValue);
 		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
@@ -357,7 +357,7 @@ int AddExpAndType(CCharacter* pChar, CTalkNpc* pTalk, int byType, int dwMinExp, 
 	{
 		bRet = pChar->GetPlyMainCha()->AddAttr(ATTR_CLIFEEXP, dwValue);
 		char szData[128];
-		sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue);
+		std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00005), szNpc, dwValue);
 		pChar->SystemNotice(szData);
 		ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	}
@@ -383,7 +383,7 @@ int AddMoney(CCharacter* pChar, CTalkNpc* pTalk, int dwMoney)
 
 	pChar->GetPlyMainCha()->AddMoney(szNpc, (DWORD)dwMoney);
 	char szData[128];
-	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00008), szNpc, (DWORD)dwMoney);
+	std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00008), szNpc, (DWORD)dwMoney);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 
 	return LUA_TRUE;
@@ -402,7 +402,7 @@ int TakeMoney(CCharacter* pChar, CTalkNpc* pTalk, int dwMoney)
 
 	BOOL bRet = pChar->GetPlyMainCha()->TakeMoney(szNpc, (DWORD)dwMoney);
 	char szData[128];
-	sprintf(szData, RES_STRING(GM_CHARSCRIPT_CPP_00009), szNpc, (DWORD)dwMoney);
+	std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARSCRIPT_CPP_00009), szNpc, (DWORD)dwMoney);
 	ToLogService("trade", "[CHA_MIS] {} : {}", pChar->GetName(), szData);
 	return bRet ? LUA_TRUE : LUA_FALSE;
 }
@@ -482,7 +482,11 @@ int GetTicketItemno_raw(lua_State* L)
 			short c6 = pItem1->sInstAttr[4][1] % 100;
 
 			char buffer[7];
-			sprintf(buffer, "%c%c%c%c%c%c", c1, c2, c3, c4, c5, c6);
+			{
+				auto _s = std::format("{:c}{:c}{:c}{:c}{:c}{:c}", (char)c1, (char)c2, (char)c3, (char)c4, (char)c5, (char)c6);
+				std::strncpy(buffer, _s.c_str(), sizeof(buffer) - 1);
+				buffer[sizeof(buffer) - 1] = 0;
+			}
 			string Ticketno = buffer;
 
 			if (index == 0)
@@ -1704,7 +1708,7 @@ int OpenHair(CCharacter* pChar, CTalkNpc* pTalk)
 
 	if (pChar->HasTradeAction())
 	{
-		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_CHARSCRIPT_CPP_00011), pChar->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
+		{ char _buf[256]; std::snprintf(_buf, sizeof(_buf), RES_STRING(GM_CHARSCRIPT_CPP_00011), pChar->GetName()); g_logManager.InternalLog(LogLevel::Debug, "common", _buf); }
 		return LUA_FALSE;
 	}
 

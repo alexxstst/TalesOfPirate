@@ -6,6 +6,7 @@
 #include "NpcScript.h"
 #include "CharScript.h"
 #include "EntityScript.h"
+#include "RecordScript.h"
 
 //---------------------------------------------------------
 extern const char* GetResPath(const char *pszRes);
@@ -77,6 +78,9 @@ BOOL RegisterScript()
 		return FALSE;
 
 	if( !RegisterEntityScript() )
+		return FALSE;
+
+	if( !RegisterRecordScript() )
 		return FALSE;
 
 	return TRUE;

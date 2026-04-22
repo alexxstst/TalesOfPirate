@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+﻿Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "AudioSDL", "AudioSDL.vcproj", "{3A1C94CD-CCBA-4F62-9AF1-919B10C582E6}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection

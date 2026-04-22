@@ -392,3 +392,72 @@ void CStateCell::StateEndSeen(Entity *pCEnt)
 
 	pCCha->ReflectINFof(pCCha, pk);
 }
+
+// ============================================================================
+// Ранее inline-методы из StateCell.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+long CStateCell::GetChaNum(void)   { return m_lChaNum; }
+long CStateCell::GetStateNum(void) { return m_CSkillState.m_uchStateNum; }
+
+bool CStateCell::HasState(unsigned char uchStateID) { return m_CSkillState.HasState(uchStateID); }
+bool CStateCell::HasState(unsigned char uchStateID, unsigned char uchStateLv) {
+	return m_CSkillState.HasState(uchStateID, uchStateLv);
+}
+
+CActStateCell::CActStateCell()
+	: m_pHead(nullptr), m_pCur(nullptr), m_lCount(0)
+{}
+
+void CActStateCell::Add(CStateCell *pObj)
+{
+	if (pObj->m_pCLast || pObj->m_pCNext)
+	{
+		ToLogService("errors", LogLevel::Error, "when add entity[{},{}] to state cell, find it is not break away foregone manage cell", pObj->m_sPosX, pObj->m_sPosY);
+		return;
+	}
+
+	pObj->m_pCLast = 0;
+	if (pObj->m_pCNext = m_pHead)
+		m_pHead->m_pCLast = pObj;
+	m_pHead = pObj;
+
+	m_lCount++;
+}
+
+void CActStateCell::Del(CStateCell *pObj)
+{
+	if (!pObj)
+		return;
+	if (m_pCur == pObj)
+		m_pCur = pObj->m_pCNext;
+
+	if (pObj->m_pCLast)
+		pObj->m_pCLast->m_pCNext = pObj->m_pCNext;
+	if (pObj->m_pCNext)
+		pObj->m_pCNext->m_pCLast = pObj->m_pCLast;
+	if (m_pHead == pObj)
+		if (m_pHead = pObj->m_pCNext)
+			m_pHead->m_pCLast = 0;
+	pObj->m_pCNext = 0;
+	pObj->m_pCLast = 0;
+
+	m_lCount--;
+}
+
+void CActStateCell::BeginGet()
+{
+	m_pCur = m_pHead;
+}
+
+CStateCell* CActStateCell::GetNext()
+{
+	CStateCell *pRet = m_pCur;
+
+	if (m_pCur)
+		m_pCur = m_pCur->m_pCNext;
+
+	return pRet;
+}
+
+long CActStateCell::GetActiveNum(void) { return m_lCount; }

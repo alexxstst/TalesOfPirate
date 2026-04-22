@@ -499,27 +499,26 @@ inline const char* g_GetUseItemFailedInfo(short sErrorID) {
 
 class CTextFilter {
 public:
-#define eTableMax 5
-
+	static constexpr int eTableMax = 5;
 	enum eFilterTable { NAME_TABLE = 0, DIALOG_TABLE = 1, MAX_TABLE = eTableMax };
 
 	/*
-	* Warning : Do not use MAX_TABLE enum value, it just use for the maximum limit definition,
-	*			If you want to expand this enum table value more than the default number eTableMax(5),
-	*			please increase the eTableMax definition
-	*/
+	 * Warning : не использовать MAX_TABLE — это sentinel-значение. Чтобы расширить
+	 * enum выше eTableMax(5), увеличить константу eTableMax.
+	 */
 
 	CTextFilter();
-	~CTextFilter();
-	static bool Add(const eFilterTable eTable, const char* szFilterText);
-	static bool IsLegalText(const eFilterTable eTable, const std::string strText);
-	static bool Filter(const eFilterTable eTable, std::string& strText);
-	static bool LoadFile(const char* szFileName, const eFilterTable eTable = NAME_TABLE);
-	static BYTE* GetNowSign(const eFilterTable eTable);
+	~CTextFilter() = default;
+
+	static bool  Add(eFilterTable eTable, std::string_view filterText);
+	static bool  IsLegalText(eFilterTable eTable, std::string_view text);
+	static bool  Filter(eFilterTable eTable, std::string& text);
+	static bool  LoadFile(std::string_view fileName, eFilterTable eTable = NAME_TABLE);
+	static const BYTE* GetNowSign(eFilterTable eTable);
 
 private:
-	static bool ReplaceText(std::string& strText, const std::string* pstrFilterText);
-	static bool bCheckLegalText(const std::string& strText, const std::string* pstrIllegalText);
+	static bool  ReplaceText(std::string& text, std::string_view filterText);
+	static bool  CheckLegalText(std::string_view text, std::string_view illegalText);
 
 	static std::vector<std::string> m_FilterTable[eTableMax];
 	static BYTE m_NowSign[eTableMax][8];

@@ -1904,7 +1904,7 @@ void CCharacter::BickerNotice( const char szData[], ... )
 	memset(szTemp, 0, sizeof(szTemp));
 	va_list list;
 	va_start( list, szData );
-	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
+	std::vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	// End
 	va_end( list );
 
@@ -1919,7 +1919,7 @@ void CCharacter::ColourNotice( DWORD rgb, const char szData[], ... )
 	memset(szTemp, 0, sizeof(szTemp));
 	va_list list;
 	va_start( list, szData );
-	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
+	std::vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	va_end( list );
 
 	//  :  
@@ -1934,7 +1934,7 @@ void CCharacter::SystemNotice( const char szData[], ... )
 	memset(szTemp, 0, sizeof(szTemp));
 	va_list list;
 	va_start( list, szData );
-	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
+	std::vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	// End
 	va_end( list );
 
@@ -1950,7 +1950,7 @@ void CCharacter::PopupNotice( const char szData[], ... )
 	memset(szTemp, 0, sizeof(szTemp));
 	va_list list;
 	va_start( list, szData );
-	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
+	std::vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	// End
 	va_end( list );
 
@@ -2649,7 +2649,7 @@ BOOL CCharacter::SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwM
 	//SystemNotice( "%d%s(%d)(%d)!", byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );
 	char szLog[128] = "";
-	sprintf( szLog, "%d%s", byCount, pItem->szName.c_str() );
+	{ auto _s = std::format("{}{}", byCount, pItem->szName.c_str()); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 	ToLogService("trade", "[CHA_SELL] {} : {}", GetName(), szLog);
 
 	// 
@@ -2857,7 +2857,7 @@ BOOL CCharacter::SafeBuy( WORD wItemID, BYTE byCount, BYTE byIndex, DWORD& dwMon
 	//SystemNotice( "You have purchased% d "% s" and spent (% d) money! Balance (%d)", sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
 	char szLog[128] = "";
-	sprintf( szLog, "%d??%s", sNum, pItem->szName.c_str() );
+	{ auto _s = std::format("{}??{}", sNum, pItem->szName.c_str()); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 	ToLogService("trade", "[CHA_BUY] {} : {}", GetName(), szLog);
 
 	// Database save
@@ -3025,7 +3025,7 @@ BOOL CCharacter::SafeSaleGoods( DWORD dwBoatID, BYTE byIndex, BYTE byCount, WORD
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00011), byCount, pItem->szName.c_str(), dwMoney, dwCharMoney );				
 				
 				char szLog[128] = "";
-				sprintf( szLog, "%d??%s", byCount, pItem->szName.c_str() );
+				{ auto _s = std::format("{}??{}", byCount, pItem->szName.c_str()); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 				ToLogService("trade", "[BOAT_SYS] {} : {}", GetName(), szLog);
 				return TRUE;
 			}
@@ -3165,7 +3165,7 @@ BOOL CCharacter::SafeBuyGoods( DWORD dwBoatID, WORD wItemID, BYTE byCount, BYTE 
 				SystemNotice( RES_STRING(GM_CHARACTER_CPP_00020), sNum, pItem->szName.c_str(), dwMoney, dwCharMoney );
 				
 				char szLog[128] = "";
-				sprintf( szLog, "%d??%s", sNum, pItem->szName.c_str() );
+				{ auto _s = std::format("{}??{}", sNum, pItem->szName.c_str()); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 				ToLogService("trade", "[SYS_BOAT] {} : {}", GetName(), szLog);
 
 				return TRUE;
@@ -3274,7 +3274,7 @@ BOOL CCharacter::MakeItem( USHORT sItemID, USHORT sCount, USHORT& sItemPos, BYTE
 	//SystemNotice( "%s%d%s!", "", sCount, pItem->szName.c_str() );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), RES_STRING(GM_CHARACTER_CPP_00012), sCount, pItem->szName.c_str() );
 	char szLog[128] = "";
-	sprintf( szLog, "%d%s", sCount, pItem->szName.c_str() );
+	{ auto _s = std::format("{}{}", sCount, pItem->szName.c_str()); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 	ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 
 	return TRUE;
@@ -3442,7 +3442,7 @@ BOOL CCharacter::AddItem( USHORT sItemID, USHORT sCount, const char szName[], BY
 		//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 		SystemNotice( RES_STRING(GM_CHARACTER_CPP_00026), szName, sCount, szItem );
 		char szLog[128] = "";
-		sprintf( szLog, RES_STRING(GM_CHARACTER_CPP_00096), sCount, szItem );
+		std::snprintf( szLog, sizeof(szLog), RES_STRING(GM_CHARACTER_CPP_00096), sCount, szItem );
 		ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 
 		return TRUE;
@@ -3505,7 +3505,7 @@ BOOL CCharacter::AddItem2KitbagTemp(USHORT sItemID, USHORT sCount, const char sz
 		//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 		SystemNotice(RES_STRING(GM_CHARACTER_CPP_00026), szName, sCount, szItem.c_str());
 		char szLog[255] = "";
-		sprintf(szLog, "%d %s", sCount, szItem.c_str());
+		{ auto _s = std::format("{} {}", sCount, szItem.c_str()); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 		ToLogService("trade", "[CHA_MIS] {} : {}", GetName(), szLog);
 		return TRUE;
 	}
@@ -3635,7 +3635,7 @@ BOOL CCharacter::TakeItemBagTemp(USHORT sItemID, USHORT sCount, const char szNam
 	//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00038), szName, sCount, szItem );
 	char szLog[128] = "";
-	sprintf( szLog, "%d%s", sCount, szItem );
+	{ auto _s = std::format("{}{}", sCount, szItem); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 	ToLogService("trade", "[MIS_CHA] {} : {}", GetName(), szLog);
 
 	// 
@@ -3724,7 +3724,7 @@ BOOL CCharacter::TakeItem( USHORT sItemID, USHORT sCount, const char szName[] )
 	//SystemNotice( "%s%d%s!", szName, sCount, szItem );
 	SystemNotice( RES_STRING(GM_CHARACTER_CPP_00038), szName, sCount, szItem );
 	char szLog[128] = "";
-	sprintf( szLog, "%d%s", sCount, szItem );
+	{ auto _s = std::format("{}{}", sCount, szItem); std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1); szLog[sizeof(szLog) - 1] = 0; }
 	ToLogService("trade", "[MIS_CHA] {} : {}", GetName(), szLog);
 
 	// 
@@ -5493,7 +5493,7 @@ void CCharacter::BoatDie( CCharacter& Attacker, CCharacter& Boat )
 		if( !GetPlayer()->ClearBoat( dwBoatID ) )
 		{
 			char szData[128];
-			sprintf( szData, RES_STRING(GM_CHARACTER_CPP_00061), Boat.GetName(), Boat.getAttr( ATTR_BOAT_DBID ) );
+			std::snprintf( szData, sizeof(szData), RES_STRING(GM_CHARACTER_CPP_00061), Boat.GetName(), Boat.getAttr( ATTR_BOAT_DBID ) );
 			SystemNotice( szData );
 			g_logManager.InternalLog(LogLevel::Error, "errors", szData );
 		}
@@ -7004,8 +7004,9 @@ void CCharacter::LogAssets(Char chLType)
     short   sItemTmpNum = m_pCKitbagTmp->GetUseGridNum();
 	g_kitbag[0] = '\0';
     g_kitbagTmp[0] = '\0';
-	sprintf(g_kitbag, "%d@", sItemNum);
-    sprintf(g_kitbagTmp, "%d@", sItemTmpNum);
+	constexpr size_t _KITBAG_LEN = 8192;
+	std::snprintf(g_kitbag, _KITBAG_LEN, "%d@", sItemNum);
+    std::snprintf(g_kitbagTmp, _KITBAG_LEN, "%d@", sItemTmpNum);
 	SItemGrid *pGridCont;
 	CItemRecord *pCItem;
 	for (short i = 0; i < sItemNum; i++)
@@ -7016,7 +7017,7 @@ void CCharacter::LogAssets(Char chLType)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+		{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, _KITBAG_LEN > _n ? _KITBAG_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 	}
     for (short i = 0; i < sItemTmpNum; i++)
 	{
@@ -7026,7 +7027,7 @@ void CCharacter::LogAssets(Char chLType)
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+		{ size_t _n = strlen(g_kitbagTmp); std::snprintf(g_kitbagTmp + _n, _KITBAG_LEN > _n ? _KITBAG_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 	}
 	//LG("", "%s(%s)%s %u%s, %s.\n", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), g_kitbag, g_kitbagTmp);
 	ToLogService("common", "player {}({}), {} operator; coin {}, kitbag {}, Tempkitbag {}.", GetLogName(), GetPlyMainCha()->GetLogName(), szLTypeStr[chLType], GetPlyMainCha()->getAttr(ATTR_GD), static_cast<const char*>(g_kitbag), static_cast<const char*>(g_kitbagTmp));
@@ -7326,7 +7327,7 @@ char* SStateData2String(CCharacter *pCCha, char *szSStateBuf, int nLen, char chS
 	int		nBufLen = 0, nDataLen;
 	szSStateBuf[0] = '\0';
 
-	sprintf(szData, "%d", pSState->GetStateNum());
+	{ auto _s = std::format("{}", pSState->GetStateNum()); std::strncpy(szData, _s.c_str(), sizeof(szData) - 1); szData[sizeof(szData) - 1] = 0; }
 	nDataLen = (int)strlen(szData);
 	if (nBufLen + nDataLen >= nLen) return NULL;
 	strcat(szSStateBuf, szData);
@@ -7357,7 +7358,7 @@ char* SStateData2String(CCharacter *pCCha, char *szSStateBuf, int nLen, char chS
 				continue;
         }
 
-		sprintf(szData, ";%d,%d,%d", pStateUnit->GetStateID(), pStateUnit->GetStateLv(), lOnTick);
+		{ auto _s = std::format(";{},{},{}", pStateUnit->GetStateID(), pStateUnit->GetStateLv(), lOnTick); std::strncpy(szData, _s.c_str(), sizeof(szData) - 1); szData[sizeof(szData) - 1] = 0; }
 		nDataLen = (int)strlen(szData);
 		if (nBufLen + nDataLen >= nLen) return NULL;
 		strcat(szSStateBuf, szData);
@@ -7429,10 +7430,10 @@ char*	ChaExtendAttr2String(CCharacter *pCCha, char *szAttrBuf, int nLen)
 	if (!pCCha || !szAttrBuf)
 		return NULL;
 
-	sprintf(szAttrBuf, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
-						(int)pCCha->getAttr(ATTR_EXTEND0), (int)pCCha->getAttr(ATTR_EXTEND1), (int)pCCha->getAttr(ATTR_EXTEND2), 
-						(int)pCCha->getAttr(ATTR_EXTEND3), (int)pCCha->getAttr(ATTR_EXTEND4), (int)pCCha->getAttr(ATTR_EXTEND5), 
-						(int)pCCha->getAttr(ATTR_EXTEND6), (int)pCCha->getAttr(ATTR_EXTEND7), (int)pCCha->getAttr(ATTR_EXTEND8), 
+	std::snprintf(szAttrBuf, nLen, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d",
+						(int)pCCha->getAttr(ATTR_EXTEND0), (int)pCCha->getAttr(ATTR_EXTEND1), (int)pCCha->getAttr(ATTR_EXTEND2),
+						(int)pCCha->getAttr(ATTR_EXTEND3), (int)pCCha->getAttr(ATTR_EXTEND4), (int)pCCha->getAttr(ATTR_EXTEND5),
+						(int)pCCha->getAttr(ATTR_EXTEND6), (int)pCCha->getAttr(ATTR_EXTEND7), (int)pCCha->getAttr(ATTR_EXTEND8),
 						(int)pCCha->getAttr(ATTR_EXTEND9));
 	return szAttrBuf;
 }
@@ -7704,5 +7705,139 @@ float CCharacter::GetExpRate() {
 	case 3: return ampBonus * fairyBonus * globalRate * 0.80;
 	case 4: return ampBonus * fairyBonus * globalRate * 0.75;
 	}
+}
+
+// ============================================================================
+// Ранее inline-методы из Character.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+int CCharacter::GetIMP() { return chaIMP; }
+
+void CCharacter::Cmd_SetInPK(bool bInPK) {
+	if (m_chPKCtrl[1])
+		return;
+	m_chPKCtrl[0] = bInPK;
+}
+void CCharacter::Cmd_SetInGymkhana(bool bInGymkhana) { m_chPKCtrl[1] = bInGymkhana; }
+void CCharacter::Cmd_SetPKGuild(bool v)              { m_chPKCtrl[2] = v; }
+
+CCharacter* CCharacter::IsCharacter() { return this; }
+
+bool CCharacter::TradeAction(bool bLock)  { return SetNarmalSkillState(bLock, SSTATE_TRADE, 1); }
+bool CCharacter::HairAction(bool bLock)   { return SetNarmalSkillState(bLock, SSTATE_HAIR, 1); }
+bool CCharacter::RepairAction(bool bLock) { return SetNarmalSkillState(bLock, SSTATE_FORGE, 1); }
+bool CCharacter::ForgeAction(bool bLock)  { return SetNarmalSkillState(bLock, SSTATE_FORGE, 1); }
+
+void                 CCharacter::SetTradeData(mission::CTradeData* pData) { m_pTradeData = pData; }
+mission::CTradeData* CCharacter::GetTradeData()                           { return m_pTradeData; }
+
+bool CCharacter::IsBoat(void)         { return m_pCChaRecord->chModalType == enumMODAL_BOAT; }
+bool CCharacter::HasTradeAction(void) { return m_CSkillState.HasState(85); }
+
+bool      CCharacter::GetActControl(dbc::Char chCtrlType) { return m_ActContrl[chCtrlType]; }
+void      CCharacter::SetActControl(dbc::Char chCtrlType, bool bSet) { m_ActContrl[chCtrlType] = bSet; }
+
+bool      CCharacter::IsInPK(void)                 { return m_chPKCtrl[0]; }
+bool      CCharacter::IsInGymkhana(void)           { return m_chPKCtrl[1]; }
+void      CCharacter::SetPKCtrl(dbc::Char chCtrl)  { m_chPKCtrl = chCtrl; }
+dbc::Char CCharacter::GetPKCtrl(void)              { return static_cast<dbc::Char>(m_chPKCtrl.to_ulong()); }
+bool      CCharacter::CanPK(void)                  { return IsInPK() || IsInGymkhana(); }
+bool      CCharacter::IsInArea(dbc::Short sAreaMask) { return (GetAreaAttr() & sAreaMask) != 0; }
+
+void CCharacter::SetBoatLook(const stNetChangeChaPart& Info) {
+	memcpy(&m_SChaPart, &Info, sizeof(stNetChangeChaPart));
+}
+
+void CCharacter::SetMotto(dbc::cChar* szMotto) {
+	if (szMotto) strncpy(m_szMotto, szMotto, defMOTTO_LEN - 1);
+}
+dbc::cChar* CCharacter::GetMotto(void)                 { return m_szMotto; }
+void        CCharacter::SetIcon(dbc::uShort usIcon)    { m_usIcon = usIcon; }
+dbc::uShort CCharacter::GetIcon(void)                  { return m_usIcon; }
+
+void CCharacter::AddBlockCnt()               { _btBlockCnt++; }
+BYTE CCharacter::GetBlockCnt()               { return _btBlockCnt; }
+void CCharacter::SetBlockCnt(BYTE cnt)       { _btBlockCnt = cnt; }
+
+bool CCharacter::IsHide() {
+	return !GetActControl(enumACTCONTROL_NOHIDE) && GetActControl(enumACTCONTROL_NOSHOW);
+}
+
+dbc::Long CCharacter::GetSideID()            { return m_lSideID; }
+
+void CCharacter::SetInOutMapQueue(bool bOutMap) { m_bInOutMapQueue = bOutMap; }
+bool CCharacter::InOutMapQueue(void)            { return m_bInOutMapQueue; }
+
+void      CCharacter::ResetScriptParam(void) { memset(m_lScriptParam, 0, sizeof(m_lScriptParam)); }
+dbc::Long CCharacter::GetScriptParam(dbc::Char chID) {
+	if (chID >= 0 && chID < defCHA_SCRIPT_PARAM_NUM) return m_lScriptParam[chID];
+	return -1;
+}
+bool CCharacter::SetScriptParam(dbc::Char chID, dbc::Long lVal) {
+	if (chID >= 0 && chID < defCHA_SCRIPT_PARAM_NUM) {
+		m_lScriptParam[chID] = lVal;
+		return true;
+	}
+	return false;
+}
+
+void CCharacter::SetKitbagRecDBID(long lDBID)    { m_lKbRecDBID = lDBID; }
+long CCharacter::GetKitbagRecDBID(void)          { return m_lKbRecDBID; }
+void CCharacter::SetKitbagTmpRecDBID(long lDBID) { m_lKbTmpRecDBID = lDBID; }
+long CCharacter::GetKitbagTmpRecDBID(void)       { return m_lKbTmpRecDBID; }
+
+bool CCharacter::IsRangePoint(const Point& SPos, dbc::Long lDist)   { return IsRangePoint(SPos.x, SPos.y, lDist); }
+bool CCharacter::IsRangePoint2(const Point& SPos, dbc::Long lDist2) { return IsRangePoint2(SPos.x, SPos.y, lDist2); }
+
+void CCharacter::SetDBSaveInterval(long lIntl) { m_timerDBUpdate.Begin(lIntl); }
+long CCharacter::GetDBSaveInterval(void)       { return m_timerDBUpdate.GetInterval(); }
+void CCharacter::ResetPosState(void)           { m_sPoseState = enumPoseStand; m_SSeat.chIsSeat = 0; }
+
+BOOL CCharacter::GetChaRelive()   { return m_bRelive; }
+void CCharacter::SetChaRelive()   { m_bRelive = true; }
+void CCharacter::ResetChaRelive() { m_bRelive = false; }
+
+void CCharacter::SetVolunteer(BOOL bVol)     { m_bVol = bVol; }
+BOOL CCharacter::IsVolunteer()               { return m_bVol; }
+void CCharacter::SetInvited(BOOL bInvited)   { m_bInvited = bInvited; }
+BOOL CCharacter::IsInvited()                 { return m_bInvited; }
+
+void      CCharacter::SetCredit(long lCredit) { setAttr(ATTR_FAME, lCredit); }
+dbc::Long CCharacter::GetCredit()             { return getAttr(ATTR_FAME); }
+
+long CCharacter::GetStoreItemID()              { return m_lStoreItemID; }
+void CCharacter::SetStoreItemID(long lStoreItemID) { m_lStoreItemID = lStoreItemID; }
+bool CCharacter::IsStoreBuy()                  { return m_bStoreBuy; }
+void CCharacter::SetStoreBuy(bool bValue)      { m_bStoreBuy = bValue; }
+int  CCharacter::GetPetNum()                   { return m_nPetNum; }
+void CCharacter::SetPetNum(int nPetNum)        { m_nPetNum = nPetNum; }
+
+bool CCharacter::CheckStoreTime(DWORD dwInterval) { return (GetTickCount() - m_dwStoreTime) > dwInterval; }
+void CCharacter::ResetStoreTime()              { m_dwStoreTime = GetTickCount(); }
+
+bool CCharacter::IsStoreEnable()               { return m_bStoreEnable; }
+void CCharacter::SetStoreEnable(bool bStoreEnable) { m_bStoreEnable = bStoreEnable; }
+
+bool  CCharacter::IsScaleFlag()             { return m_expFlag; }
+void  CCharacter::SetScaleFlag()            { m_expFlag = true; }
+void  CCharacter::SetExpScale(DWORD scale)  { m_ExpScale = scale; }
+DWORD CCharacter::GetExpScale()             { return m_ExpScale; }
+
+void CCharacter::ResetLifeTime(DWORD dwTime) {
+	_dwLifeTime     = dwTime;
+	_dwLifeTimeTick = GetTickCount();
+}
+BOOL CCharacter::CheckLifeTime() {
+	if (_dwLifeTime == 0) return FALSE;
+	if ((GetTickCount() - _dwLifeTimeTick) > _dwLifeTime) return TRUE;
+	return FALSE;
+}
+DWORD CCharacter::GetLifeTime()             { return _dwLifeTime; }
+
+bool CCharacter::IsOfflineMode() const      { return _dwStallTick > 0; }
+
+bool CCharacter::IsReqPosEqualRealPos() {
+	return (requestPos.centre.x == GetShape().centre.x &&
+			requestPos.centre.y == GetShape().centre.y);
 }
 

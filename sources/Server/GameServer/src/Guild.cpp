@@ -102,9 +102,12 @@ void Guild::cmd_CreateGuild(CCharacter* pCha, bool confirm, cChar *guildname, cC
 	pCha->SystemNotice(RES_STRING(GM_GUILD_CPP_00006));
 
 	char l_str[512];
-	sprintf(l_str, "Player [%s] has founded [%s] guild. All Pirates may now apply!", 
-			pCha->GetName(), 
-			l_guildname);
+	{
+		auto _s = std::format("Player [{}] has founded [{}] guild. All Pirates may now apply!",
+			pCha->GetName(), l_guildname);
+		std::strncpy(l_str, _s.c_str(), sizeof(l_str) - 1);
+		l_str[sizeof(l_str) - 1] = 0;
+	}
 	
 	g_pGameApp->ScrollNotice(l_str, 2);
 }

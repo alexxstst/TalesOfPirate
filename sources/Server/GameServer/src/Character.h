@@ -143,7 +143,7 @@ public:
 	CCharacter	*GetPlyMainCha(void);
 
 	void		SetIMP(int x, bool sync = true);
-	int			GetIMP() { return chaIMP; }
+	int			GetIMP();
 
 	float		GetDropRate();
 	float       GetExpRate();
@@ -218,24 +218,9 @@ public:
     //(sSrcGrid:   sSrcNum:   sTarGrid:)
     dbc::Short  Cmd_DragItem(dbc::Short sSrcGrid, dbc::Short sSrcNum, dbc::Short sTarGrid);
     
-	void Cmd_SetInPK(bool bInPK = true)
-	{
-		if (m_chPKCtrl[1])
-		{
-			return;
-		}
-
-		m_chPKCtrl[0] = bInPK;
-	}
-	void Cmd_SetInGymkhana(bool bInGymkhana = true) 
-	{
-		m_chPKCtrl[1] = bInGymkhana;
-	}
-
-	void Cmd_SetPKGuild(bool v)
-	{
-		m_chPKCtrl[2] = v;
-	}
+	void Cmd_SetInPK(bool bInPK = true);
+	void Cmd_SetInGymkhana(bool bInGymkhana = true);
+	void Cmd_SetPKGuild(bool v);
 
 	void		Cmd_ReassignAttr(const net::msg::CmSynAttrMessage& msg);
 	dbc::Short	Cmd_RemoveItem(dbc::Long lItemID, dbc::Long lItemNum, dbc::Char chFromType, dbc::Short sFromID, dbc::Char chToType, dbc::Short sToID, bool bRefresh = true, bool bForcible = true);
@@ -276,18 +261,18 @@ public:
 	CCharacter	*FindVolunteer(const char *szName);
 	
 	virtual void	ReflectINFof(Entity *srcent, net::WPacket chginf);
-	virtual CCharacter *IsCharacter(){return this;}
+	virtual CCharacter *IsCharacter();
 
 
 
 
 
 	void	TradeClear( CPlayer& player );
-	bool	TradeAction(bool bLock = true) {return SetNarmalSkillState(bLock, SSTATE_TRADE, 1);}
+	bool	TradeAction(bool bLock = true);
 	bool	StallAction(bool bLock = true);
-	bool	HairAction(bool bLock = true) {return SetNarmalSkillState(bLock, SSTATE_HAIR, 1);}
-	bool	RepairAction(bool bLock = true) {return SetNarmalSkillState(bLock, SSTATE_FORGE, 1);}
-	bool	ForgeAction(bool bLock = true) {return SetNarmalSkillState(bLock, SSTATE_FORGE, 1);}
+	bool	HairAction(bool bLock = true);
+	bool	RepairAction(bool bLock = true);
+	bool	ForgeAction(bool bLock = true);
 
 	void	BickerNotice( const char szData[], ... );
 	void	SystemNotice( const char szData[], ... );
@@ -295,14 +280,14 @@ public:
 	void	ColourNotice( DWORD rgb, const char szData[], ... );
 	bool	IsPKSilver();
 
-	// 
-	void	SetTradeData( mission::CTradeData* pData ) { m_pTradeData = pData; }
-	mission::CTradeData* GetTradeData() { return m_pTradeData; }
-	
-	// 
+	//
+	void	SetTradeData( mission::CTradeData* pData );
+	mission::CTradeData* GetTradeData();
+
+	//
 	void	SetBoat( CCharacter* pBoat );
 	CCharacter* GetBoat();
-	bool	IsBoat(void) {return m_pCChaRecord->chModalType == enumMODAL_BOAT;}
+	bool	IsBoat(void);
 	
 	// npc
 	BOOL	SafeSale( BYTE byIndex, BYTE byCount, WORD& wItemID, DWORD& dwMoney );
@@ -314,7 +299,7 @@ public:
 	BOOL	ExchangeReq(short sSrcID, short sSrcNum, short sTarID, short sTarNum);
 
 	bool	SetNarmalSkillState(bool bAdd = true, dbc::uChar uchStateID = 1, dbc::uChar uchStateLv = 1);
-	bool	HasTradeAction(void) {return m_CSkillState.HasState(85);}
+	bool	HasTradeAction(void);
 	//
 	BOOL	SetMissionPage( DWORD dwNpcID, BYTE byPrev, BYTE byNext, BYTE byState );
 	BOOL	GetMissionPage( DWORD dwNpcID, BYTE& byPrev, BYTE& byNext, BYTE& byState );
@@ -439,8 +424,8 @@ public:
 			dbc::uChar uchStateID, dbc::uChar uchStateLv, dbc::Long lOnTick, dbc::Char chType = enumSSTATE_ADD_UNDEFINED, bool bNotice = true); // 
 	bool	DelSkillState(dbc::uChar uchStateID, bool bNotice = true); // 
 
-	// 
-	bool	GetActControl(dbc::Char chCtrlType) {return m_ActContrl[chCtrlType];}
+	//
+	bool	GetActControl(dbc::Char chCtrlType);
 	void	Hide();
 	void	Show();
 
@@ -456,12 +441,12 @@ public:
 	BOOL	AddAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK ); // ATTR_CEXPCFightAble::AddExp
 	BOOL	TakeAttr( int nIndex, DWORD dwValue, dbc::Short sNotiType = enumATTRSYN_TASK );
 
-	bool	IsInPK(void) { return m_chPKCtrl[0]; }
-	bool	IsInGymkhana(void) { return m_chPKCtrl[1]; }
-	void	SetPKCtrl(dbc::Char chCtrl) {m_chPKCtrl = chCtrl;}
-	dbc::Char	GetPKCtrl(void) { return m_chPKCtrl.to_ulong(); }
-	bool	CanPK(void) {return IsInPK() || IsInGymkhana();}
-	bool	IsInArea(dbc::Short sAreaMask) {return GetAreaAttr() & sAreaMask ? true : false;}
+	bool	    IsInPK(void);
+	bool	    IsInGymkhana(void);
+	void	    SetPKCtrl(dbc::Char chCtrl);
+	dbc::Char   GetPKCtrl(void);
+	bool	    CanPK(void);
+	bool	    IsInArea(dbc::Short sAreaMask);
 	void	SetRelive(Char chType = enumEPLAYER_RELIVE_ORIGIN, Char chLv = 0, cChar *szInfo = 0);
 	void	Reset(void);
 
@@ -506,7 +491,7 @@ public:
 	BOOL	HasAllBoatInBerth( USHORT sBerthID );
 	BOOL	HasBoatInBerth( USHORT sBerthID );
 	BOOL	HasDeadBoatInBerth( USHORT sBerthID );
-	void	SetBoatLook( const stNetChangeChaPart& Info ) { memcpy( &m_SChaPart, &Info, sizeof(stNetChangeChaPart) ); }
+	void	SetBoatLook( const stNetChangeChaPart& Info );
 	BOOL	BoatPackBagList( USHORT sBerthID, BYTE byType, BYTE byLevel );
 	BOOL	BoatPackBag( BYTE byIndex );
 	BOOL	PackBag( CCharacter& boat, BYTE byType, BYTE byLevel );
@@ -615,10 +600,10 @@ public:
 	// 
 	void	ItemOprateFailed(dbc::Short sFailedID);
 
-	void		SetMotto(dbc::cChar *szMotto) {if (szMotto) strncpy(m_szMotto, szMotto, defMOTTO_LEN - 1);}
-	dbc::cChar*	GetMotto(void) {return m_szMotto;}
-	void		SetIcon(dbc::uShort usIcon) {m_usIcon = usIcon;}
-	dbc::uShort	GetIcon(void) {return m_usIcon;}
+	void		SetMotto(dbc::cChar *szMotto);
+	dbc::cChar*	GetMotto(void);
+	void		SetIcon(dbc::uShort usIcon);
+	dbc::uShort	GetIcon(void);
 	void		SetGuildName(dbc::cChar *szGuildName);
 	dbc::cChar*	GetGuildName(void);
 	dbc::cChar*	GetValidGuildName(void);
@@ -636,9 +621,9 @@ public:
 	dbc::cChar*	GetStallName(void);
 	void		SynStallName(void);
 
-	void			AddBlockCnt()						{   _btBlockCnt++;					}
-	BYTE			GetBlockCnt()						{   return _btBlockCnt;				}
-	void			SetBlockCnt(BYTE cnt)				{   _btBlockCnt = cnt;				}
+	void			AddBlockCnt();
+	BYTE			GetBlockCnt();
+	void			SetBlockCnt(BYTE cnt);
 
 	virtual void	AfterAttrChange(int nIdx, dbc::Long lOldVal, dbc::Long lNewVal);
 	virtual void	Die();	// 
@@ -649,11 +634,11 @@ public:
 	void			SetToMainCha(bool bBoatDie = false);
 	bool			CanSeen(CCharacter *pCCha);
 	bool			CanSeen(CCharacter *pCCha, bool bThisEyeshot, bool bThisNoHide, bool bThisNoShow);
-	bool			IsHide() {return !GetActControl(enumACTCONTROL_NOHIDE) && GetActControl(enumACTCONTROL_NOSHOW);}
+	bool			IsHide();
 	SItemGrid*		GetEquipItem(dbc::Char chPart);
 	DWORD			GetTeamID();
 	bool			IsTeamLeader();
-	dbc::Long		GetSideID() {return m_lSideID;}
+	dbc::Long		GetSideID();
 	void			SetSideID(dbc::Long lSideID);
 	SItemGrid*		GetItem(dbc::Char chPosType, dbc::Long lItemID);
 	SItemGrid*		GetItem2(dbc::Char chPosType, dbc::Long lPosID);
@@ -668,8 +653,8 @@ public:
 	bool			DoForgeLikeScript(dbc::cChar *cszFunc, dbc::Long &lRet);
 	bool			DoLifeSkillcript(dbc::cChar *cszFunc, dbc::Long &lRet);
 	bool			DoTigerScript(dbc::cChar *cszFunc);
-	void			SetInOutMapQueue(bool bOutMap = true) {m_bInOutMapQueue = bOutMap;}
-	bool			InOutMapQueue(void) {return m_bInOutMapQueue;}
+	void			SetInOutMapQueue(bool bOutMap = true);
+	bool			InOutMapQueue(void);
 	bool			AddKitbagCapacity(dbc::Short sAddVal);
 	void			CheckItemValid(SItemGrid* pCItem);
 	void			CheckEspeItemGrid(void);
@@ -678,9 +663,9 @@ public:
 	dbc::Short		KbClearItem(bool bRecheckAttr, bool bSynAttr, dbc::Short sPosID, dbc::Short sType = 0);
 	dbc::Short		KbClearItem(bool bRecheckAttr, bool bSynAttr, SItemGrid *pGrid, dbc::Short sNum = 0);
 	dbc::Short		KbRegroupItem(bool bRecheckAttr, bool bSynAttr, dbc::Short sSrcPosID, dbc::Short sSrcNum, dbc::Short sTarPosID, dbc::Short sType = 0);
-	void			ResetScriptParam(void) {memset(m_lScriptParam, 0, sizeof(m_lScriptParam));}
-	dbc::Long		GetScriptParam(dbc::Char chID) {if (chID >= 0 && chID < defCHA_SCRIPT_PARAM_NUM) return m_lScriptParam[chID]; else return -1;}
-	bool			SetScriptParam(dbc::Char chID, dbc::Long lVal) {if (chID >= 0 && chID < defCHA_SCRIPT_PARAM_NUM) {m_lScriptParam[chID] = lVal; return true;} else return false;}
+	void			ResetScriptParam(void);
+	dbc::Long		GetScriptParam(dbc::Char chID);
+	bool			SetScriptParam(dbc::Char chID, dbc::Long lVal);
 	void			CheckBagItemValid(CKitbag* pCBag);
 	void			CheckLookItemValid(void);
 	bool			String2LookDate(std::string &strData);
@@ -688,22 +673,22 @@ public:
     bool            String2KitbagTmpData(std::string &strData);
 
 
-	void	SetKitbagRecDBID(long lDBID) {m_lKbRecDBID = lDBID;}
-	long	GetKitbagRecDBID(void) {return m_lKbRecDBID;}
+	void	SetKitbagRecDBID(long lDBID);
+	long	GetKitbagRecDBID(void);
 
     //ID
-    void	SetKitbagTmpRecDBID(long lDBID) {m_lKbTmpRecDBID = lDBID;}
-	long	GetKitbagTmpRecDBID(void) {return m_lKbTmpRecDBID;}
+    void	SetKitbagTmpRecDBID(long lDBID);
+	long	GetKitbagTmpRecDBID(void);
 
 	void	LogAssets(dbc::Char chLType);
 	bool	SaveAssets(void);
 	bool	IsRangePoint(dbc::Long lPosX, dbc::Long lPosY, dbc::Long lDist);
-	bool	IsRangePoint(const Point &SPos, dbc::Long lDist) {return IsRangePoint(SPos.x, SPos.y, lDist);}
+	bool	IsRangePoint(const Point &SPos, dbc::Long lDist);
 	bool	IsRangePoint2(dbc::Long lPosX, dbc::Long lPosY, dbc::Long lDist2);
-	bool	IsRangePoint2(const Point &SPos, dbc::Long lDist2) {return IsRangePoint2(SPos.x, SPos.y, lDist2);}
-	void	SetDBSaveInterval(long lIntl) {m_timerDBUpdate.Begin(lIntl);}
-	long	GetDBSaveInterval(void) {return m_timerDBUpdate.GetInterval();}
-	void	ResetPosState(void) {m_sPoseState = enumPoseStand; m_SSeat.chIsSeat = 0;}
+	bool	IsRangePoint2(const Point &SPos, dbc::Long lDist2);
+	void	SetDBSaveInterval(long lIntl);
+	long	GetDBSaveInterval(void);
+	void	ResetPosState(void);
 
 	int		GetLotteryIssue();
 
@@ -725,38 +710,38 @@ public:
 
 	void	ResetAIState();				  // AI, 
 
-	BOOL		GetChaRelive() { return m_bRelive; }
-	void		SetChaRelive() { m_bRelive = true; }
-	void		ResetChaRelive() { m_bRelive = false; }
+	BOOL		GetChaRelive();
+	void		SetChaRelive();
+	void		ResetChaRelive();
 
-	void		SetVolunteer(BOOL bVol) { m_bVol = bVol; }
-	BOOL		IsVolunteer() { return m_bVol; }
-	void		SetInvited(BOOL bInvited) { m_bInvited = bInvited; }
-	BOOL		IsInvited() { return m_bInvited; }
+	void		SetVolunteer(BOOL bVol);
+	BOOL		IsVolunteer();
+	void		SetInvited(BOOL bInvited);
+	BOOL		IsInvited();
 
-	void			SetCredit(long lCredit) { setAttr(ATTR_FAME, lCredit); }
-	dbc::Long			GetCredit() { return getAttr(ATTR_FAME); }
+	void		SetCredit(long lCredit);
+	dbc::Long	GetCredit();
 	void			AddMasterCredit(long lCredit);
 	unsigned long	GetMasterDBID();
 
-	long			GetStoreItemID() { return m_lStoreItemID; }
-	void			SetStoreItemID(long lStoreItemID) { m_lStoreItemID = lStoreItemID; }
-	bool			IsStoreBuy() { return m_bStoreBuy; }
-	void			SetStoreBuy(bool bValue) { m_bStoreBuy = bValue; }
-	int				GetPetNum() { return m_nPetNum; }
-	void			SetPetNum(int nPetNum) { m_nPetNum = nPetNum; }
+	long			GetStoreItemID();
+	void			SetStoreItemID(long lStoreItemID);
+	bool			IsStoreBuy();
+	void			SetStoreBuy(bool bValue);
+	int				GetPetNum();
+	void			SetPetNum(int nPetNum);
 
-	bool			CheckStoreTime(DWORD dwInterval) { return (GetTickCount() - m_dwStoreTime > dwInterval) ? true : false; }
-	void			ResetStoreTime() { m_dwStoreTime = GetTickCount(); }
+	bool			CheckStoreTime(DWORD dwInterval);
+	void			ResetStoreTime();
 
-	bool			IsStoreEnable() { return m_bStoreEnable; }
-	void			SetStoreEnable(bool bStoreEnable) { m_bStoreEnable = bStoreEnable; }
+	bool			IsStoreEnable();
+	void			SetStoreEnable(bool bStoreEnable);
 
-    //  
-    bool IsScaleFlag(){return m_expFlag;}
-    void SetScaleFlag(){m_expFlag = true;}
-    void SetExpScale(DWORD scale){ m_ExpScale = scale; }
-    DWORD GetExpScale(){ return m_ExpScale; }
+    //
+    bool            IsScaleFlag();
+    void            SetScaleFlag();
+    void            SetExpScale(DWORD scale);
+    DWORD           GetExpScale();
     int m_noticeState;//
 	int m_retry3;
 	int m_retry4;
@@ -796,7 +781,7 @@ public:
 
 	long	ExecuteEvent(Entity *pCObj, dbc::uShort usEventID);
 
-	void	SetActControl(dbc::Char chCtrlType, bool bSet = true) {m_ActContrl[chCtrlType] = bSet;}
+	void	SetActControl(dbc::Char chCtrlType, bool bSet = true);
 
 	bool		CanLearnSkill(CSkillRecord *pCSkill, dbc::Char chToLv);
 	dbc::Short	CanEquipItem(dbc::Short sItemID);
@@ -933,29 +918,14 @@ protected:
 	
 
 public:
-	void	ResetLifeTime(DWORD dwTime)
-	{
-		_dwLifeTime = dwTime;
-		_dwLifeTimeTick = GetTickCount();
-	}
+	void    ResetLifeTime(DWORD dwTime);
+	BOOL    CheckLifeTime();
+	DWORD   GetLifeTime();
 
-	BOOL	CheckLifeTime()
-	{
-		if(_dwLifeTime==0) return FALSE; // 
-		
-		if((GetTickCount() - _dwLifeTimeTick) > _dwLifeTime) // 
-		{
-			return TRUE;
-		}
-		return FALSE;
-	}
-
-	DWORD GetLifeTime() { return _dwLifeTime; }
-	
 	DWORD	_dwLifeTime;
 	DWORD	_dwLifeTimeTick;
 
-	bool IsOfflineMode() const { return _dwStallTick > 0; }
+	bool    IsOfflineMode() const;
 	DWORD	_dwStallTick;
 
 	bool	appCheck[enumEQUIP_NUM];
@@ -963,10 +933,7 @@ public:
 	BYTE	requestType;
 	Square	requestPos; // must check if player is in same position
 
-	bool IsReqPosEqualRealPos() {
-		return (requestPos.centre.x == GetShape().centre.x &&
-				requestPos.centre.y == GetShape().centre.y);
-	}
+	bool    IsReqPosEqualRealPos();
 };
 
 // 

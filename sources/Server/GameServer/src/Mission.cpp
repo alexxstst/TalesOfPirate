@@ -201,21 +201,21 @@ namespace mission
 
 	BOOL CCharMission::MisGetData( char* pszBuf, DWORD dwSize )
 	{
-		sprintf( pszBuf, "%d,", ROLE_MIS_MISINFO_EDITION );
+		std::snprintf( pszBuf, dwSize, "%d,", ROLE_MIS_MISINFO_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:GetData: MisInfo edition code = {}", ROLE_MIS_TRIGGER_EDITION );
 #endif
 
-		sprintf( pszBuf + strlen( pszBuf ), "%d,", m_byNumMission );
+		{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,", m_byNumMission ); }
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:GetData: m_byNumMission = {}\nMission start!", m_byNumMission );
 #endif
 		for( int i = 0; i < m_byNumMission; i++ )
 		{
-			sprintf( pszBuf + strlen( pszBuf ), "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,", 
+			{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,%d,",
 				m_Mission[i].wRoleID,
 				m_Mission[i].byState,
-				m_Mission[i].byMisType, 
+				m_Mission[i].byMisType,
 				m_Mission[i].byType,
 				m_Mission[i].byLevel,
 				m_Mission[i].wItem,
@@ -224,7 +224,7 @@ namespace mission
 				m_Mission[i].dwExp,
 				m_Mission[i].dwMoney,
 				m_Mission[i].byNumData
-				);
+				); }
 #ifdef ROLE_DEBUG_INFO
 			ToLogService("common", "\nRole:ID[{}],State[{}], MisType[{}], Type[{}], Level[{}], Item[{}], Param[{}], Param[{}], Exp[{}], Money[{}], NumData[{}]",
 				m_Mission[i].wRoleID, m_Mission[i].byState, m_Mission[i].byMisType, m_Mission[i].byType, m_Mission[i].byLevel, m_Mission[i].wItem, 
@@ -234,13 +234,13 @@ namespace mission
 			// 
 			for( int j = 0; j < ROLE_MAXNUM_RAND_DATA; j++ )
 			{
-				sprintf( pszBuf + strlen( pszBuf ), "%d,%d,%d,%d,%d,%d,", 
-					m_Mission[i].RandData[j].wParam1, 
+				{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,%d,%d,%d,%d,%d,",
+					m_Mission[i].RandData[j].wParam1,
 					m_Mission[i].RandData[j].wParam2,
 					m_Mission[i].RandData[j].wParam3,
 					m_Mission[i].RandData[j].wParam4,
 					m_Mission[i].RandData[j].wParam5,
-					m_Mission[i].RandData[j].wParam6 );
+					m_Mission[i].RandData[j].wParam6 ); }
 #ifdef ROLE_DEBUG_INFO
 				ToLogService("common", "\n[RandData{}] {} {} {} {} {} {}", j,
 					m_Mission[i].RandData[j].wParam1, 
@@ -256,7 +256,7 @@ namespace mission
 #endif
 			for( int j = 0; j < ROLE_MAXNUM_FLAGSIZE; j++ )
 			{
-				sprintf( pszBuf + strlen( pszBuf ), "%d,", m_Mission[i].RoleInfo.szFlag[j] );
+				{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,", m_Mission[i].RoleInfo.szFlag[j] ); }
 #ifdef ROLE_DEBUG_INFO
 				ToLogService("common", "{} ", m_Mission[i].RoleInfo.szFlag[j] );
 #endif
@@ -324,7 +324,7 @@ namespace mission
 
 	BOOL CCharMission::MisGetRecord( char* pszBuf, DWORD dwSize )
 	{
-		sprintf( pszBuf, "%d,", ROLE_MIS_RECORD_EDITION );
+		std::snprintf( pszBuf, dwSize, "%d,", ROLE_MIS_RECORD_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:MisGetRecord: MisInfo record edition code = {}", ROLE_MIS_RECORD_EDITION );
 #endif
@@ -334,7 +334,7 @@ namespace mission
 #endif
 		for( int i = 0; i < ROLE_MAXNUM_RECORDSIZE; i++ )
 		{
-			sprintf( pszBuf + strlen( pszBuf ), "%d,", m_RoleRecord.szID[i] );
+			{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,", m_RoleRecord.szID[i] ); }
 #ifdef ROLE_DEBUG_INFO
 			ToLogService("common", "{} ", m_RoleRecord.szID[i] );
 #endif
@@ -428,20 +428,20 @@ namespace mission
 
 	BOOL CCharMission::MisGetTrigger( char* pszBuf, DWORD dwSize )
 	{
-		sprintf( pszBuf, "%d,", ROLE_MIS_TRIGGER_EDITION );
+		std::snprintf( pszBuf, dwSize, "%d,", ROLE_MIS_TRIGGER_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:GetTrigger: Trigger edition code = {}", ROLE_MIS_TRIGGER_EDITION );
 #endif
 
-		sprintf( pszBuf + strlen( pszBuf ), "%d,", m_byNumTrigger );
+		{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,", m_byNumTrigger ); }
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:GetTrigger: m_byNumTrigger = {}", m_byNumTrigger );
 #endif
 		for( int i = 0; i < m_byNumTrigger; i++ )
 		{
-			sprintf( pszBuf + strlen( pszBuf ), "%d,%d,%d,%d,%d,%d,%d,%d,%d,", m_Trigger[i].wTriggerID, 
-				m_Trigger[i].wMissionID, m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2, 
-				m_Trigger[i].wParam3, m_Trigger[i].wParam4, m_Trigger[i].wParam5, m_Trigger[i].wParam6 );
+			{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,%d,%d,%d,%d,%d,%d,%d,%d,", m_Trigger[i].wTriggerID,
+				m_Trigger[i].wMissionID, m_Trigger[i].byType, m_Trigger[i].wParam1, m_Trigger[i].wParam2,
+				m_Trigger[i].wParam3, m_Trigger[i].wParam4, m_Trigger[i].wParam5, m_Trigger[i].wParam6 ); }
 #ifdef ROLE_DEBUG_INFO
 			ToLogService("common", "\nTriggerID[{}], MisID[{}], Type[{}], p1[{}], p2[{}], p3[{}], p4[{}], p5[{}], p6[{}]", 
 				m_Trigger[i].wTriggerID, m_Trigger[i].wMissionID, m_Trigger[i].byType, 
@@ -527,19 +527,19 @@ namespace mission
 		//if( m_byOnline == 0 )
 		//	return TRUE;
 
-		sprintf( pszBuf, "%d,", ROLE_MIS_MISCOUNT_EDITION );
+		std::snprintf( pszBuf, dwSize, "%d,", ROLE_MIS_MISCOUNT_EDITION );
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:GetMissionCount: MisCount edition code = {}", ROLE_MIS_TRIGGER_EDITION );
 #endif
 
-		sprintf( pszBuf + strlen( pszBuf ), "%d,", m_byNumMisCount );
+		{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,", m_byNumMisCount ); }
 #ifdef ROLE_DEBUG_INFO
 		ToLogService("common", "\nCCharMission:GetMissionCount: m_byNumMisCount = {}", m_byNumMisCount );
 #endif
 		for( int i = 0; i < m_byNumMisCount; i++ )
 		{
-			sprintf( pszBuf + strlen( pszBuf ), "%d,%d,%d,", m_MissionCount[i].wRoleID, m_MissionCount[i].wCount, 
-				m_MissionCount[i].wNum );
+			{ size_t _n = strlen(pszBuf); std::snprintf( pszBuf + _n, dwSize > _n ? dwSize - _n : 0, "%d,%d,%d,", m_MissionCount[i].wRoleID, m_MissionCount[i].wCount,
+				m_MissionCount[i].wNum ); }
 #ifdef ROLE_DEBUG_INFO
 			ToLogService("common", "\nCCharMission:GetMissionCount: wRoleID[{}], wCount[{}], wNum[{}]", m_MissionCount[i].wRoleID, 
 				m_MissionCount[i].wCount, m_MissionCount[i].wNum );
@@ -2606,7 +2606,7 @@ namespace mission
 				//const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : "";
 				const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : RES_STRING(GM_MISSION_CPP_00037);
 				char szData[128];
-				sprintf( szData, RES_STRING(GM_MISSION_CPP_00038), pszMap, pMain->GetPos().x, pMain->GetPos().y );
+				std::snprintf( szData, sizeof(szData), RES_STRING(GM_MISSION_CPP_00038), pszMap, pMain->GetPos().x, pMain->GetPos().y );
 				ToLogService("trade", "[CHA_ENTER] {} : {}", m_pRoleChar->GetName(), szData);
 
 				// npc
@@ -2643,7 +2643,7 @@ namespace mission
 		CCharacter* pMain = m_pRoleChar->GetPlyCtrlCha();
 		const char* pszMap = (pMain->GetSubMap()) ? pMain->GetSubMap()->GetName() : "";
 		char szData[128];
-		sprintf( szData, RES_STRING(GM_MISSION_CPP_00040), pszMap, pMain->GetPos().x, pMain->GetPos().y );
+		std::snprintf( szData, sizeof(szData), RES_STRING(GM_MISSION_CPP_00040), pszMap, pMain->GetPos().x, pMain->GetPos().y );
 		ToLogService("trade", "[CHA_OUT] {} : {}", m_pRoleChar->GetName(), szData);
 
 		// npc

@@ -1,4 +1,4 @@
-﻿/********************************************************************
+/********************************************************************
 	created:	2005/02/28
 	created:	28:2:2005   9:23
 	filename: 	d:\project\Server\GameServer\src\gtplayer.h
@@ -6,8 +6,8 @@
 	file base:	gtplayer
 	file ext:	h
 	author:		claude
-	
-	purpose:	
+
+	purpose:
 *********************************************************************/
 
 #ifndef GTPLAYER_H_
@@ -17,12 +17,8 @@ class GateServer;
 
 // Unique Player structure
 struct uplayer {
-	uplayer() {
-	}
-
-	uplayer(char const* gt_name, std::int64_t gt_addr, DWORD atorID) {
-		Init(gt_name, gt_addr, atorID);
-	}
+	uplayer();
+	uplayer(char const* gt_name, std::int64_t gt_addr, DWORD atorID);
 
 	void Init(char const* gt_name, std::int64_t gt_addr, DWORD atorID);
 
@@ -39,35 +35,17 @@ protected:
 	~GatePlayer() = default;
 
 public:
-	void SetGate(GateServer* gt) {
-		ply.pGate = gt;
-	}
+	void          SetGate(GateServer* gt);
+	GateServer*   GetGate() const;
 
-	GateServer* GetGate() const {
-		return ply.pGate;
-	}
+	void          SetGateAddr(unsigned long gt_addr);
+	unsigned long GetGateAddr() const;
 
-	void SetGateAddr(unsigned long gt_addr) {
-		ply.m_ulGateAddr = gt_addr;
-	}
+	void          SetDBChaId(DWORD dwDBChaId);
+	DWORD         GetDBChaId(void);
 
-	unsigned long GetGateAddr() const {
-		return ply.m_ulGateAddr;
-	}
-
-	void SetDBChaId(DWORD dwDBChaId) {
-		ply.m_dwDBChaId = dwDBChaId;
-	}
-
-	DWORD GetDBChaId(void) {
-		return ply.m_dwDBChaId;
-	}
-
-	virtual void OnLogin() {
-	}
-
-	virtual void OnLogoff() {
-	}
+	virtual void  OnLogin();
+	virtual void  OnLogoff();
 
 private:
 	uplayer ply;

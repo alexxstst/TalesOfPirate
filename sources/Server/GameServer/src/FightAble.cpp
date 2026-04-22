@@ -2524,3 +2524,47 @@ void CFightAble::FillMonsAttr(net::msg::ChaAttrInfo &a, Short sSynType)
 	}
 }
 
+// ============================================================================
+// Ранее inline-методы из FightAble.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+dbc::Short CFightAble::GetFightState(void)      { return m_SFightProc.sState; }
+dbc::Short CFightAble::GetFightStopState(void)  { return m_SFightInit.sStopState; }
+void       CFightAble::DesireFightEnd(void)     { EndFight(); }
+
+dbc::Long  CFightAble::GetLevel(void) { return (long)m_CChaAttr.GetAttr(ATTR_LV); }
+
+void       CFightAble::AfterObjDie(CCharacter*, CCharacter*) {}
+void       CFightAble::OnLevelUp(USHORT)    {}
+void       CFightAble::OnSailLvUp(USHORT)   {}
+void       CFightAble::OnLifeLvUp(USHORT)   {}
+
+dbc::uLong CFightAble::GetSkillDist(Entity* pTarEnt, CSkillRecord* pRec) {
+	if (!pRec) return 0;
+	if (pTarEnt) return GetRadius() + pTarEnt->GetRadius() + pRec->sApplyDistance;
+	return GetRadius() + pRec->sApplyDistance;
+}
+bool CFightAble::SkillTarIsEntity(CSkillRecord* pRec) {
+	return pRec && (pRec->chApplyType == 1 || pRec->chApplyType == 3);
+}
+
+bool CFightAble::AddSkillState(dbc::uChar, dbc::uLong, dbc::Long, dbc::Char, dbc::Char, dbc::Char,
+							   dbc::uChar, dbc::uChar, dbc::Long, dbc::Char, bool) { return false; }
+bool CFightAble::DelSkillState(dbc::uChar, bool) { return false; }
+
+void CFightAble::SetItemHostObj(CFightAble* pCObj) { m_pCItemHostObj = pCObj; }
+
+dbc::Long CFightAble::getAttr(int nIdx) { return m_CChaAttr.GetAttr(nIdx); }
+
+void CFightAble::AfterAttrChange(int, dbc::Long, dbc::Long) {}
+void CFightAble::Die() {}
+
+CFightAble* CFightAble::IsFightAble() { return this; }
+
+void CFightAble::OnFightBegin(void) { m_bOnFight = true; }
+void CFightAble::OnFightEnd(void)   { m_bOnFight = false; }
+
+void CFightAble::SubsequenceFight() {}
+
+void CFightAble::BreakAction(net::RPacket*) {}
+void CFightAble::EndAction(net::RPacket*)   {}

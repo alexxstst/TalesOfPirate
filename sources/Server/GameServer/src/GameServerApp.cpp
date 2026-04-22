@@ -575,3 +575,54 @@ bool GameServerApp::SendToGame(net::WPacket& pkt, uplayer* uplyr)
 
 
 GameServerApp* g_gmsvr;
+
+// ============================================================================
+// Ранее inline-методы из GameServerApp.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+GateServer::GateServer()  : m_pClient(nullptr), m_usPort(0), m_gtname("") {}
+GateServer::~GateServer() { m_pClient = nullptr; m_gtname = ""; }
+
+void  GateServer::SetClient(net::TcpClient* client) { m_pClient = client; }
+void  GateServer::Invalid()                         { m_pClient = nullptr; }
+bool  GateServer::IsValid() {
+	return m_pClient != nullptr && m_pClient->IsConnected();
+}
+
+std::string&    GateServer::GetIP()   { return m_strIp; }
+unsigned short& GateServer::GetPort() { return m_usPort; }
+std::string&    GateServer::GetName() { return m_gtname; }
+
+bool GateServer::SendData(net::WPacket& pkt) {
+	if (IsValid()) {
+		return m_pClient->Send(pkt);
+	}
+	return false;
+}
+
+int  GateServer::GetPlayerCount() const {
+	return static_cast<int>(m_playerlist.size());
+}
+
+GateHandler::GateHandler() : _gateIndex(-1), _app(nullptr) {}
+
+void GateHandler::Init(int gateIndex, GameServerApp* app) {
+	_gateIndex = gateIndex;
+	_app       = app;
+}
+
+char const*  GameServerApp::GetName() const { return m_strGameName.c_str(); }
+
+net::WPacket GameServerApp::GetWPacket()    { return net::WPacket(256); }
+
+void GameServerApp::BeginGetGate(void) {
+	m_listcurgt = 0;
+}
+
+GateServer* GameServerApp::GetNextGate(void) {
+	while (m_listcurgt < m_gtnum) {
+		if (m_gtarray[m_listcurgt++].IsValid())
+			return m_gtarray + (m_listcurgt - 1);
+	}
+	return nullptr;
+}

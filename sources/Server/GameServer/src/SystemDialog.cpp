@@ -120,19 +120,35 @@ INT_PTR CALLBACK ReportDlgProc(HWND hwndDlg, UINT uMsg, WPARAM wParam, LPARAM lP
         {
 			char szRes[255];
 			HWND hPID = GetDlgItem(hwndDlg, IDC_PID);
-			sprintf(szRes, "%d", GetCurrentProcessId());
+			{
+				auto _s = std::format("{}", GetCurrentProcessId());
+				std::strncpy(szRes, _s.c_str(), sizeof(szRes) - 1);
+				szRes[sizeof(szRes) - 1] = 0;
+			}
 			SetWindowText(hPID, szRes);
 
 			HWND hConfigDir = GetDlgItem(hwndDlg, IDC_RES_DIR);
-			sprintf(szRes, "[%s]", szConfigFileN);
+			{
+				auto _s = std::format("[{}]", szConfigFileN);
+				std::strncpy(szRes, _s.c_str(), sizeof(szRes) - 1);
+				szRes[sizeof(szRes) - 1] = 0;
+			}
 			SetWindowText(hConfigDir, szRes);
 
 			HWND hResDir = GetDlgItem(hwndDlg, IDC_RES_DIR3);
-			sprintf(szRes, "[%s]", g_Config.m_szResDir);
+			{
+				auto _s = std::format("[{}]", g_Config.m_szResDir);
+				std::strncpy(szRes, _s.c_str(), sizeof(szRes) - 1);
+				szRes[sizeof(szRes) - 1] = 0;
+			}
 			SetWindowText(hResDir, szRes);
 
 			HWND hLogDir = GetDlgItem(hwndDlg, IDC_RES_DIR2);
-			sprintf(szRes, "[%s]", g_Config.m_szLogDir);
+			{
+				auto _s = std::format("[{}]", g_Config.m_szLogDir);
+				std::strncpy(szRes, _s.c_str(), sizeof(szRes) - 1);
+				szRes[sizeof(szRes) - 1] = 0;
+			}
 			SetWindowText(hLogDir, szRes);
 
 			// Add by lark.li 20080330 Begin
@@ -419,7 +435,7 @@ void SystemReport(DWORD dwTimeParam)
 
 	HWND hRunFlag   = GetDlgItem(g_ReportView, IDC_RUNFLAG);
 	char szInfo[64];
-	sprintf(szInfo, "%d", g_pGameApp->m_dwRunStep.load());
+	{ auto _s = std::format("{}", g_pGameApp->m_dwRunStep.load()); std::strncpy(szInfo, _s.c_str(), sizeof(szInfo) - 1); szInfo[sizeof(szInfo) - 1] = 0; }
 	if(hRunFlag) SetWindowText(hRunFlag, szInfo);
 
 	if(dwTimeParam - dwLastReportTime < 1000) return;	
@@ -438,11 +454,15 @@ void SystemReport(DWORD dwTimeParam)
 		{
 			if(g_Config.m_mapOK[i])
 			{
-				sprintf(szText, "%-12s   ok", g_Config.m_mapList[i].c_str());
+				auto _s = std::format("{:<12}   ok", g_Config.m_mapList[i].c_str());
+				std::strncpy(szText, _s.c_str(), sizeof(szText) - 1);
+				szText[sizeof(szText) - 1] = 0;
 			}
 			else
 			{
-				sprintf(szText, "%-12s fail", g_Config.m_mapList[i].c_str());
+				auto _s = std::format("{:<12} fail", g_Config.m_mapList[i].c_str());
+				std::strncpy(szText, _s.c_str(), sizeof(szText) - 1);
+				szText[sizeof(szText) - 1] = 0;
 			}
 			SendMessage(hMapList, LB_ADDSTRING, 0, (LPARAM)szText);  
 		}
@@ -459,22 +479,27 @@ void SystemReport(DWORD dwTimeParam)
 	HWND hDBLogLeft = GetDlgItem(g_ReportView, IDC_DBLOG_LEFT);
 	HWND hPerLogCnt = GetDlgItem(g_ReportView, IDC_PERLOGCNT);
 
-	char szFPS[64]; 
-	sprintf(szFPS, "%d", g_pGameApp->m_dwFPS);
+	char szFPS[64];
+	auto _setFPS = [&](auto v) {
+		auto _s = std::format("{}", v);
+		std::strncpy(szFPS, _s.c_str(), sizeof(szFPS) - 1);
+		szFPS[sizeof(szFPS) - 1] = 0;
+	};
+	_setFPS(g_pGameApp->m_dwFPS);
 	if(hFPS) SetWindowText(hFPS, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->m_dwRunCnt);
+	_setFPS(g_pGameApp->m_dwRunCnt);
 	if(hLoop) SetWindowText(hLoop, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->m_dwChaCnt);
+	_setFPS(g_pGameApp->m_dwChaCnt);
 	if(hChaCnt) SetWindowText(hChaCnt, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->m_dwPlayerCnt);
+	_setFPS(g_pGameApp->m_dwPlayerCnt);
 	if(hPlayerCnt) SetWindowText(hPlayerCnt, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->m_dwActiveMgrUnit);
+	_setFPS(g_pGameApp->m_dwActiveMgrUnit);
 	if(hActiveUnit) SetWindowText(hActiveUnit, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->m_dwRunStep.load());
+	_setFPS(g_pGameApp->m_dwRunStep.load());
 	if(hRunFlag) SetWindowText(hRunFlag, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->GetLogLeft());
+	_setFPS(g_pGameApp->GetLogLeft());
 	if(hDBLogLeft) SetWindowText(hDBLogLeft, szFPS);
-	sprintf(szFPS, "%d", g_pGameApp->GetPerLogCnt());
+	_setFPS(g_pGameApp->GetPerLogCnt());
 	if(hPerLogCnt) SetWindowText(hPerLogCnt, szFPS);
 
 	
@@ -488,7 +513,7 @@ void SystemReport(DWORD dwTimeParam)
 			// 
 			HWND hPKList = GetDlgItem(g_ReportView, IDC_PK_LIST);
 			SendMessage(hPKList, LB_RESETCONTENT, 0, 0);
-			sprintf(szText, RES_STRING(GM_SYSTEMDIALOG_CPP_00001));
+			std::snprintf(szText, sizeof(szText), "%s", RES_STRING(GM_SYSTEMDIALOG_CPP_00001));
 			SendMessage(hPKList, LB_ADDSTRING, 0, (LPARAM)szText);  
 			
 			// 
@@ -499,12 +524,12 @@ void SystemReport(DWORD dwTimeParam)
 			while (pCMapCopy = pCMap->GetNextUsedCopy())
 			{
 				int nNum = pCMapCopy->GetPlayerNum();
-				sprintf(szText, "[%d]     %d", pCMapCopy->GetCopyNO(), nNum);
+				{ auto _s = std::format("[{}]     {}", pCMapCopy->GetCopyNO(), nNum); std::strncpy(szText, _s.c_str(), sizeof(szText) - 1); szText[sizeof(szText) - 1] = 0; }
 				SendMessage(hPKList, LB_ADDSTRING, 0, (LPARAM)szText);  
 				nPKCnt++;
 				nPlayerCnt+=nNum;
 			}
-			sprintf(szFPS, "%d :%d", nPKCnt, nPlayerCnt);
+			{ auto _s = std::format("{} :{}", nPKCnt, nPlayerCnt); std::strncpy(szFPS, _s.c_str(), sizeof(szFPS) - 1); szFPS[sizeof(szFPS) - 1] = 0; }
 			if(hPKCnt) SetWindowText(hPKCnt, szFPS); // 
 		}
 	}
@@ -515,17 +540,17 @@ void SystemReport(DWORD dwTimeParam)
 	{
 		if(ISVALIDGATE(i))
 		{
-			sprintf(szText, "%-16sconnected", g_Config.m_szGateIP[i]);
+			{ auto _s = std::format("{:<16}connected", g_Config.m_szGateIP[i]); std::strncpy(szText, _s.c_str(), sizeof(szText) - 1); szText[sizeof(szText) - 1] = 0; }
 		}
 		else
 		{
-			sprintf(szText, "%-16stry......", g_Config.m_szGateIP[i]);
+			{ auto _s = std::format("{:<16}try......", g_Config.m_szGateIP[i]); std::strncpy(szText, _s.c_str(), sizeof(szText) - 1); szText[sizeof(szText) - 1] = 0; }
 		}
 		SendMessage(hGateList, LB_ADDSTRING, 0, (LPARAM)szText);  
 	}
 
 	HWND hMapXY = GetDlgItem(g_SysDlg, IDC_MAPXY);
-	sprintf(szFPS, "%d  %d", g_lViewAtMapX, g_lViewAtMapY);
+	{ auto _s = std::format("{}  {}", g_lViewAtMapX, g_lViewAtMapY); std::strncpy(szFPS, _s.c_str(), sizeof(szFPS) - 1); szFPS[sizeof(szFPS) - 1] = 0; }
 	SetWindowText(hMapXY, szFPS);
 	
 	POINT p; GetCursorPos(&p);
@@ -537,7 +562,7 @@ void SystemReport(DWORD dwTimeParam)
 	if(g_lMouseAtMapY < 0) g_lMouseAtMapY = 0;
 
 	HWND hMouseXY = GetDlgItem(g_SysDlg, IDC_MOUSEXY);
-	sprintf(szFPS, "%d  %d", g_lMouseAtMapX, g_lMouseAtMapY);
+	{ auto _s = std::format("{}  {}", g_lMouseAtMapX, g_lMouseAtMapY); std::strncpy(szFPS, _s.c_str(), sizeof(szFPS) - 1); szFPS[sizeof(szFPS) - 1] = 0; }
 	SetWindowText(hMouseXY, szFPS);
 
 }

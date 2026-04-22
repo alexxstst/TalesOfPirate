@@ -138,7 +138,11 @@ CItem* SubMap::ItemSpawn(const SItemGrid *pItemInfo, Long lPosX, Long lPosY, Cha
 
 
 	Char szLogName[defLOG_NAME_LEN] = "";
-	sprintf(szLogName, "%s+%u", pCItem->GetName(), pCItem->GetID());
+	{
+		auto _s = std::format("{}+{}", pCItem->GetName(), pCItem->GetID());
+		std::strncpy(szLogName, _s.c_str(), sizeof(szLogName) - 1);
+		szLogName[sizeof(szLogName) - 1] = 0;
+	}
 	pCItem->SetLogName(szLogName);
 
 	return pCItem;
@@ -191,7 +195,11 @@ CCharacter* SubMap::ChaSpawn(Long lChaInfoID, Char chCtrlType, Short sAngle, Poi
 	pCCha->EnrichSkillBag();
 
 	Char szLogName[defLOG_NAME_LEN] = "";
-	sprintf(szLogName, "Cha-%s+%u", pCCha->GetName(), pCCha->GetID());
+	{
+		auto _s = std::format("Cha-{}+{}", pCCha->GetName(), pCCha->GetID());
+		std::strncpy(szLogName, _s.c_str(), sizeof(szLogName) - 1);
+		szLogName[sizeof(szLogName) - 1] = 0;
+	}
 	pCCha->SetLogName(szLogName);
 
 	// pCCha->ResetLifeTime(5000);
@@ -289,7 +297,11 @@ BOOL SubMap::LoadEventEntity()
 {
 	g_pScriptMap = this;
 	char szMapEntity[256];
-	sprintf( szMapEntity, "%s\\%s%s", GetName(), GetName(), "entity.lua" );
+	{
+		auto _s = std::format("{}\\{}{}", GetName(), GetName(), "entity.lua");
+		std::strncpy(szMapEntity, _s.c_str(), sizeof(szMapEntity) - 1);
+		szMapEntity[sizeof(szMapEntity) - 1] = 0;
+	}
 	ReloadEntity( GetResPath(szMapEntity) );
 	return TRUE;
 }
@@ -1212,8 +1224,12 @@ void SubMap::MoveTo(Entity *pCEnt, const Point &STar)
 	if (pCEnt->GetPos() != pCEnt->m_lastpos)
 	{
 		Char	szMess[512];
-		sprintf(szMess, "character %s move originality coordinate errorlast time position[%d, %d]current position[%d, %d]aim position[%d, %d]",
-			pCEnt->GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
+		{
+			auto _s = std::format("character {} move originality coordinate errorlast time position[{}, {}]current position[{}, {}]aim position[{}, {}]",
+				pCEnt->GetLogName(), pCEnt->m_lastpos.x, pCEnt->m_lastpos.y, pCEnt->GetPos().x, pCEnt->GetPos().y, STar.x, STar.y);
+			std::strncpy(szMess, _s.c_str(), sizeof(szMess) - 1);
+			szMess[sizeof(szMess) - 1] = 0;
+		}
 		//::MessageBox(0,szMess,"!",MB_OK);
 		//LG("", "%s\n", szMess);
 		ToLogService("errors", LogLevel::Error, "{}", szMess);
@@ -2054,6 +2070,202 @@ void COutMapCha::ExecTimeCha(SMgrUnit *pChaInfo)
 			break;
 		}
 		pChaInfo->chStep++;
+	}
+}
+
+// ============================================================================
+// Ранее inline-методы из SubMap.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+bool        SubMap::IsRun(void)       { return m_bIsRun; }
+const char* SubMap::GetName(void)     { return m_pCMapRes->GetName(); }
+
+bool SubMap::IsValidPos(dbc::Long lPosX, dbc::Long lPosY) {
+	const Rect& MapRange = GetRange();
+	if (lPosX < MapRange.ltop.x || lPosX >= MapRange.rbtm.x
+		|| lPosY < MapRange.ltop.y || lPosY >= MapRange.rbtm.y)
+		return false;
+	return true;
+}
+
+dbc::uShort SubMap::GetAreaAttr(dbc::Long lPosX, dbc::Long lPosY) {
+	dbc::Short sUnitWidth, sUnitHeight;
+	dbc::Short sUnitX, sUnitY;
+	dbc::uShort usAreaAttr;
+
+	m_pCMapRes->m_CTerrain.GetUnitSize(&sUnitWidth, &sUnitHeight);
+	sUnitX = Short(lPosX / sUnitWidth);
+	sUnitY = Short(lPosY / sUnitHeight);
+	m_pCMapRes->m_CTerrain.GetUnitAttr(sUnitX, sUnitY, usAreaAttr);
+	return usAreaAttr;
+}
+
+dbc::uShort SubMap::GetAreaAttr(const Point& Pos) { return GetAreaAttr(Pos.x, Pos.y); }
+
+dbc::Short SubMap::GetEyeshotCellWidth(void) const  { return m_pCMapRes->m_csEyeshotCellWidth; }
+dbc::Short SubMap::GetEyeshotCellHeight(void) const { return m_pCMapRes->m_csEyeshotCellHeight; }
+dbc::Short SubMap::GetEyeshotCellLin(void) const    { return m_pCMapRes->m_sEyeshotCellLin; }
+dbc::Short SubMap::GetEyeshotCellCol(void) const    { return m_pCMapRes->m_sEyeshotCellCol; }
+
+dbc::Short SubMap::GetStateCellWidth(void) const    { return m_pCMapRes->m_csStateCellWidth; }
+dbc::Short SubMap::GetStateCellHeight(void) const   { return m_pCMapRes->m_csStateCellHeight; }
+dbc::Short SubMap::GetStateCellLin(void) const      { return m_pCMapRes->m_sStateCellLin; }
+dbc::Short SubMap::GetStateCellCol(void) const      { return m_pCMapRes->m_sStateCellCol; }
+
+dbc::Short SubMap::GetBlockCellWidth(void) const    { return m_pCMapRes->m_csBlockUnitWidth; }
+dbc::Short SubMap::GetBlockCellHeight(void) const   { return m_pCMapRes->m_csBlockUnitHeight; }
+
+bool SubMap::GetTerrainCellSize(dbc::Short* psWidth, dbc::Short* psHeight) {
+	return m_pCMapRes->m_CTerrain.GetUnitSize(psWidth, psHeight);
+}
+bool SubMap::GetTerrainCellAttr(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uShort& usAttribute) {
+	return m_pCMapRes->m_CTerrain.GetUnitAttr(sUnitX, sUnitY, usAttribute);
+}
+bool SubMap::GetTerrainCellIsland(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uChar& uchIsland) {
+	return m_pCMapRes->m_CTerrain.GetUnitIsland(sUnitX, sUnitY, uchIsland);
+}
+
+BYTE SubMap::IsBlock(dbc::Long lCellX, dbc::Long lCellY) { return m_pCMapRes->m_CBlock.IsBlock(lCellX, lCellY); }
+
+const Rect& SubMap::GetRange(void) const { return m_pCMapRes->GetRange(); }
+
+BYTE       SubMap::GetMapID()                  { return m_pCMapRes->GetMapID(); }
+dbc::Short SubMap::GetEyeshotWidth(void) const { return m_pCMapRes->m_eyeshotwidth; }
+
+bool       SubMap::CanPK(void)                 { return m_pCMapRes->CanPK(); }
+bool       SubMap::CanSavePos(void)            { return m_pCMapRes->CanSavePos(); }
+
+dbc::Long  SubMap::GetMonsterNum(void)         { return m_pCMapRes->m_pCMonsterSpawn->GetChaCount(); }
+
+CMapRes*   SubMap::GetMapRes(void)             { return m_pCMapRes; }
+
+void       SubMap::SetCopyNO(dbc::Short sCopyNO) { m_sCopyNO = sCopyNO; }
+dbc::Short SubMap::GetCopyNO(void)             { return m_sCopyNO; }
+
+dbc::Long  SubMap::GetPlayerNum(void)          { return m_lPlayerNum; }
+
+dbc::Long SubMap::GetInfoParam(dbc::Char chParamID) {
+	if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return 0;
+	return m_lInfoParam[chParamID];
+}
+bool SubMap::SetInfoParam(dbc::Char chParamID, dbc::Long lParamVal) {
+	if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return false;
+	m_lInfoParam[chParamID] = lParamVal;
+	return true;
+}
+
+void SubMap::SetSpecialInter(int interva) { m_timeSpecialRun.SetInterval(interva); }
+
+dbc::Long SubMap::GetActivePlayer() {
+	CCharacter* pCha;
+	long lActivePlayerNum = 0;
+	BeginGetPlyCha();
+
+	while (pCha = GetNextPlyCha()) {
+		if (pCha->IsPlayerCha() && pCha->IsLiveing()) {
+			lActivePlayerNum++;
+		}
+	}
+	return lActivePlayerNum;
+}
+
+void SubMap::ActiveEyeshotCell(dbc::Long lCellX, dbc::Long lCellY) {
+	if (m_pCEyeshotCell[lCellY][lCellX].m_lActNum == 0)
+		m_CEyeshotCellL.Add(&m_pCEyeshotCell[lCellY][lCellX]);
+	m_pCEyeshotCell[lCellY][lCellX].m_lActNum++;
+}
+
+void SubMap::InactiveEyeshotCell(dbc::Long lCellX, dbc::Long lCellY) {
+	m_pCEyeshotCell[lCellY][lCellX].m_lActNum--;
+	if (m_pCEyeshotCell[lCellY][lCellX].m_lActNum == 0) {
+		if (CountEyeshotPlyActiveNum(lCellX, lCellY) > 0) {
+			m_pCEyeshotCell[lCellY][lCellX].m_lActNum++;
+			ToLogService("errors", LogLevel::Error,
+						 "when eyeshot cell[{},{}] stop activation, find the character player who has eyeshot ability.",
+						 lCellX, lCellY);
+		}
+		else
+			m_CEyeshotCellL.Del(&m_pCEyeshotCell[lCellY][lCellX]);
+	}
+}
+
+bool SubMap::IsValidStateCell(dbc::Long x, dbc::Long y) {
+	return _stateCellGrid.Get(static_cast<short>(x), static_cast<short>(y)) != nullptr;
+}
+
+CChaListNode* SubMap::StateCellAddCha(dbc::Long lCellX, dbc::Long lCellY, CCharacter* pCCha, bool bIn) {
+	CheckStateCell(lCellX, lCellY);
+	return _stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY))->AddCharacter(pCCha, bIn);
+}
+
+void SubMap::StateCellDelCha(dbc::Long lCellX, dbc::Long lCellY, CChaListNode* pCChaNode) {
+	_stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY))->DelCharacter(pCChaNode);
+	ReleaseStateCell(lCellX, lCellY);
+}
+
+void SubMap::ActiveStateCell(dbc::Long lCellX, dbc::Long lCellY) {
+	auto* cell = _stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY));
+	if (cell->m_lActNum == 0) {
+		m_CStateCellL.Add(cell);
+	}
+	cell->m_lActNum++;
+	ActiveEyeshotCell(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
+}
+
+void SubMap::InactiveStateCell(dbc::Long lCellX, dbc::Long lCellY) {
+	auto* cell = _stateCellGrid.Get(static_cast<short>(lCellX), static_cast<short>(lCellY));
+	InactiveEyeshotCell(cell->m_pCEyeshotCell->m_sPosX, cell->m_pCEyeshotCell->m_sPosY);
+	cell->m_lActNum--;
+	if (cell->m_lActNum == 0) {
+		m_CStateCellL.Del(cell);
+		ReleaseStateCell(lCellX, lCellY);
+	}
+}
+
+bool SubMap::AddCellState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle, dbc::Char chObjType,
+						  dbc::Char chObjHabitat, dbc::Char chEffType,
+						  dbc::Long lCellX, dbc::Long lCellY, dbc::uChar uchStateID, dbc::uChar uchStateLv,
+						  dbc::uLong ulStartTick, dbc::Long lOnTick, dbc::Char chType, dbc::Char chWithCenter) {
+	auto sx = static_cast<short>(lCellX);
+	auto sy = static_cast<short>(lCellY);
+	bool bValid = _stateCellGrid.Get(sx, sy) != nullptr;
+	if (!bValid) {
+		CheckStateCell(lCellX, lCellY);
+	}
+	auto* cell = _stateCellGrid.Get(sx, sy);
+	bool bHasState = cell->HasState(uchStateID);
+	bool bAddSuc = cell->AddState(uchFightID, ulSrcWorldID, lSrcHandle, chObjType,
+								  chObjHabitat, chEffType, uchStateID, uchStateLv,
+								  ulStartTick, lOnTick, chType, chWithCenter);
+	if (!bValid && !bAddSuc) {
+		ReleaseStateCell(lCellX, lCellY);
+	}
+	if (!bHasState && bAddSuc) {
+		ActiveStateCell(lCellX, lCellY);
+	}
+	return bAddSuc;
+}
+
+void SubMap::ReleaseStateCell(dbc::Long x, dbc::Long y) {
+	auto sx = static_cast<short>(x);
+	auto sy = static_cast<short>(y);
+	auto* cell = _stateCellGrid.Get(sx, sy);
+	if (cell && cell->GetChaNum() == 0 && cell->GetStateNum() == 0) {
+		g_pGameApp->m_MapStateCellPool.Release(cell);
+		_stateCellGrid.Set(sx, sy, nullptr);
+	}
+}
+
+void SubMap::CheckStateCell(dbc::Long x, dbc::Long y) {
+	auto sx = static_cast<short>(x);
+	auto sy = static_cast<short>(y);
+	if (!_stateCellGrid.Get(sx, sy)) {
+		auto* cell = g_pGameApp->m_MapStateCellPool.Get();
+		cell->m_sPosX = sx;
+		cell->m_sPosY = sy;
+		cell->m_pCEyeshotCell = &m_pCEyeshotCell[y * GetStateCellWidth() / GetEyeshotCellWidth()][x *
+			GetStateCellWidth() / GetEyeshotCellHeight()];
+		_stateCellGrid.Set(sx, sy, cell);
 	}
 }
 

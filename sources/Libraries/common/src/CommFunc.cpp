@@ -520,127 +520,116 @@ int	g_IsRightSkillTar(int nTChaCtrlType, bool bTIsDie, bool bTChaBeSkilled, int 
 //	CTextFilter 
 //------------------------------------------------------------------------
 
-BYTE CTextFilter::m_NowSign[eTableMax][8];
+BYTE           CTextFilter::m_NowSign[eTableMax][8];
 vector<string> CTextFilter::m_FilterTable[eTableMax];
-static CTextFilter bin;
+static CTextFilter g_textFilterBin;
+
+namespace {
+// UTF-8: позиция `pos` в `text` — начало символа (не continuation-байт)?
+inline bool IsUtf8CharStart(std::string_view text, size_t pos)
+{
+	if (pos >= text.size()) return false;
+	return (static_cast<unsigned char>(text[pos]) & 0xC0) != 0x80;
+}
+} // namespace
 
 CTextFilter::CTextFilter()
 {
-	setlocale(LC_CTYPE,"chs");
-	ZeroMemory(m_NowSign,sizeof(m_NowSign));
+	ZeroMemory(m_NowSign, sizeof(m_NowSign));
 }
 
-CTextFilter::~CTextFilter()
+bool CTextFilter::Add(const eFilterTable eTable, std::string_view filterText)
 {
-}
+	if (filterText.empty()) return false;
 
-bool CTextFilter::Add(const eFilterTable eTable, const char *szFilterText)
-{
-	if (!szFilterText) return false;
-	if ( strlen(szFilterText)<=0 ) return false;
-	m_FilterTable[eTable].push_back(*(new string(szFilterText)));
-	for (int i=0;i<(int)strlen(szFilterText);i++)
-	{
-		BYTE j=szFilterText[i]/32;
-		int n=(i+j)%8;
-		m_NowSign[eTable][n]+=j+i;
+	m_FilterTable[eTable].emplace_back(filterText);
+
+	for (size_t i = 0; i < filterText.size(); i++) {
+		BYTE j = static_cast<BYTE>(filterText[i]) / 32;
+		int  n = (static_cast<int>(i) + j) % 8;
+		m_NowSign[eTable][n] += static_cast<BYTE>(j + i);
 	}
 	return true;
 }
 
-bool CTextFilter::IsLegalText(const eFilterTable eTable, const string strText)
+bool CTextFilter::IsLegalText(const eFilterTable eTable, std::string_view text)
 {
-	vector <string>::iterator iter;
-	for (iter=m_FilterTable[eTable].begin();iter!=m_FilterTable[eTable].end();iter++)
-	{
-		if (!bCheckLegalText(strText, &(*iter)))
-		{
+	for (const auto& pattern : m_FilterTable[eTable]) {
+		if (!CheckLegalText(text, pattern)) {
 			return false;
 		}
 	}
 	return true;
 }
 
-bool CTextFilter::Filter(const eFilterTable eTable, string &strText)
+bool CTextFilter::Filter(const eFilterTable eTable, std::string& text)
 {
-	bool ret=false;
-	vector <string>::iterator iter;
-	for (iter=m_FilterTable[eTable].begin();iter!=m_FilterTable[eTable].end();iter++)
-	{
-		if (ReplaceText(strText, &(*iter)))
-		{
-			ret=true;
+	bool ret = false;
+	for (const auto& pattern : m_FilterTable[eTable]) {
+		if (ReplaceText(text, pattern)) {
+			ret = true;
 		}
 	}
 	return ret;
 }
 
-bool CTextFilter::ReplaceText(string &strText, const string *pstrFilterText)
+bool CTextFilter::ReplaceText(std::string& text, std::string_view filterText)
 {
-	bool ret=false;
-	size_t nPos=strText.find(*pstrFilterText);
-	static const basic_string <char>::size_type errPos = std::string::npos;
-	while (nPos!=errPos)
-	{
+	if (filterText.empty()) return false;
 
-		if ( _ismbslead((unsigned char*)pstrFilterText->c_str(),(unsigned char*)pstrFilterText->c_str()) ==
-			_ismbslead((unsigned char*)strText.c_str(),(unsigned char*)&strText[nPos]))
-		{
-			strText.replace(nPos,pstrFilterText->length(),pstrFilterText->length(),'*');
-			ret=true;
+	bool       ret       = false;
+	const bool leadStart = IsUtf8CharStart(filterText, 0);
+	size_t     pos       = text.find(filterText);
+
+	while (pos != std::string::npos) {
+		if (leadStart == IsUtf8CharStart(text, pos)) {
+			text.replace(pos, filterText.size(), filterText.size(), '*');
+			ret = true;
+			pos = text.find(filterText, pos + filterText.size());
 		}
-		else
-		{
-			nPos++;
+		else {
+			pos = text.find(filterText, pos + 1);
 		}
-		nPos=strText.find(*pstrFilterText,nPos+pstrFilterText->length());
 	}
 	return ret;
 }
 
-bool CTextFilter::bCheckLegalText(const string &strText, const string *pstrIllegalText)
+bool CTextFilter::CheckLegalText(std::string_view text, std::string_view illegalText)
 {
-	size_t nPos=strText.find(*pstrIllegalText);
-	static const basic_string <char>::size_type errPos = std::string::npos;
-	while (nPos!=errPos)
-	{
-		if (  _ismbslead((unsigned char*)pstrIllegalText->c_str(),(unsigned char*)pstrIllegalText->c_str()) ==
-			_ismbslead((unsigned char*)strText.c_str(),(unsigned char*)&strText[nPos]))
-		{
+	if (illegalText.empty()) return true;
+
+	const bool leadStart = IsUtf8CharStart(illegalText, 0);
+	size_t     pos       = text.find(illegalText);
+
+	while (pos != std::string::npos) {
+		if (leadStart == IsUtf8CharStart(text, pos)) {
 			return false;
 		}
-		else
-		{
-			nPos++;
-		}
-		nPos=strText.find(*pstrIllegalText,nPos+pstrIllegalText->length());
+		pos = text.find(illegalText, pos + 1);
 	}
 	return true;
 }
 
-bool CTextFilter::LoadFile(const char *szFileName, const eFilterTable eTable)
+bool CTextFilter::LoadFile(std::string_view fileName, const eFilterTable eTable)
 {
-	if (!szFileName) return false;
-	ifstream filterTxt(szFileName,ios::in);
+	if (fileName.empty()) return false;
+
+	std::ifstream filterTxt(std::string(fileName), std::ios::in);
 	if (!filterTxt.is_open()) return false;
-	char buf[500]={0};
-	filterTxt.getline(buf,500);
-	while (!filterTxt.fail())
-	{
-		char *pText=new char[strlen(buf)+2];
-		// modify by lark.li 20080424 begin
-		//TODO
-		strcpy(pText,buf);
-		//strcpy(pText,ConvertResString(buf));
-		// End
-		m_FilterTable[eTable].push_back(pText);
-		filterTxt.getline(buf,500);
+
+	std::string line;
+	while (std::getline(filterTxt, line)) {
+		if (!line.empty() && line.back() == '\r') {
+			line.pop_back();
+		}
+		if (!line.empty()) {
+			m_FilterTable[eTable].emplace_back(std::move(line));
+		}
 	}
-	filterTxt.close();
 	return true;
 }
 
-BYTE* CTextFilter::GetNowSign(const eFilterTable eTable)
+const BYTE* CTextFilter::GetNowSign(const eFilterTable eTable)
 {
 	return m_NowSign[eTable];
 }

@@ -64,7 +64,7 @@ bool PlayerStorage::Init(void) {
 	}
 	catch (const OdbcException& e) {
 		char buffer[255];
-		sprintf(buffer, RES_STRING(GM_GAMEDB_CPP_00001), "character");
+		std::snprintf(buffer, sizeof(buffer), RES_STRING(GM_GAMEDB_CPP_00001), "character");
 		MessageBox(0, buffer, RES_STRING(GM_GAMEDB_CPP_00002), MB_OK);
 		ToLogService("db", LogLevel::Error, "PlayerStorage::Init failed: {}", e.what());
 		return false;
@@ -1323,7 +1323,7 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 	CCharacter* pCMainC = pPlayer.GetMainCha();
 	short sItemNum = pCMainC->m_CKitbag.GetUseGridNum();
 	g_kitbag[0] = '\0';
-	sprintf(g_kitbag, RES_STRING(GM_GAMEDB_CPP_00021), pCMainC->getAttr(ATTR_GD), sItemNum);
+	std::snprintf(g_kitbag, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00021), pCMainC->getAttr(ATTR_GD), sItemNum);
 	SItemGrid* pGridCont;
 	CItemRecord* pCItem;
 	pCKb = &(pCMainC->m_CKitbag);
@@ -1334,13 +1334,13 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+		{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 	}
 	ToLogService("trade", "[CHA_ENTER] {} : {}", pCMainC->GetName(), g_kitbag);
 
 	short sItemTmpNum = pCMainC->m_pCKitbagTmp->GetUseGridNum();
 	g_kitbagTmp[0] = '\0';
-	sprintf(g_kitbagTmp, RES_STRING(GM_GAMEDB_CPP_00022), sItemTmpNum);
+	std::snprintf(g_kitbagTmp, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00022), sItemTmpNum);
 	pCKb = pCMainC->m_pCKitbagTmp;
 	for (short i = 0; i < sItemTmpNum; i++) {
 		pGridCont = pCKb->GetGridContByNum(i);
@@ -1349,17 +1349,17 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID,
-				pGridCont->sNum);
+		{ size_t _n = strlen(g_kitbagTmp); std::snprintf(g_kitbagTmp + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID,
+				pGridCont->sNum); }
 	}
 	ToLogService("trade", "[CHA_ENTER] {} : {}", pCMainC->GetName(), g_kitbagTmp);
 
 	char chStart = 0, chEnd = pPlayer.GetCurBankNum() - 1;
 	for (char i = chStart; i <= chEnd; i++) {
-		sprintf(g_kitbag, RES_STRING(GM_GAMEDB_CPP_00023), i + 1);
+		std::snprintf(g_kitbag, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00023), i + 1);
 		pCKb = pPlayer.GetBank(i);
 		sItemNum = pCKb->GetUseGridNum();
-		sprintf(g_kitbag + strlen(g_kitbag), "[%d]%d@;", i + 1, sItemNum);
+		{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "[%d]%d@;", i + 1, sItemNum); }
 		for (short i = 0; i < sItemNum; i++) {
 			pGridCont = pCKb->GetGridContByNum(i);
 			if (!pGridCont)
@@ -1367,13 +1367,13 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+			{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 		}
 		ToLogService("trade", "[CHA_ENTER] {} : {}", pCMainC->GetName(), g_kitbag);
 	}
 
 	g_equip[0] = '\0';
-	sprintf(g_equip, RES_STRING(GM_GAMEDB_CPP_00024), enumEQUIP_NUM);
+	std::snprintf(g_equip, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00024), enumEQUIP_NUM);
 	for (short i = 0; i < enumEQUIP_NUM; i++) {
 		pGridCont = &pCMainC->m_SChaPart.SLink[i];
 		if (!pGridCont || pGridCont->sID <= 0)
@@ -1381,7 +1381,7 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 		pCItem = GetItemRecordInfo(pGridCont->sID);
 		if (!pCItem)
 			continue;
-		sprintf(g_equip + strlen(g_equip), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+		{ size_t _n = strlen(g_equip); std::snprintf(g_equip + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 	}
 	ToLogService("trade", "[CHA_EQUIP] {} : {}", pCMainC->GetName(), g_equip);
 
@@ -1461,7 +1461,7 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 		CCharacter* pCMainC = pPlayer.GetMainCha();
 		short sItemNum = pCMainC->m_CKitbag.GetUseGridNum();
 		g_kitbag[0] = '\0';
-		sprintf(g_kitbag, RES_STRING(GM_GAMEDB_CPP_00026), pCMainC->getAttr(ATTR_GD), sItemNum);
+		std::snprintf(g_kitbag, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00026), pCMainC->getAttr(ATTR_GD), sItemNum);
 		SItemGrid* pGridCont;
 		CItemRecord* pCItem;
 		pCKb = &(pCMainC->m_CKitbag);
@@ -1472,13 +1472,13 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+			{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 		}
 		ToLogService("trade", "[CHA_OUT] {} : {}", pCMainC->GetName(), g_kitbag);
 
 		short sItemTmpNum = pCMainC->m_pCKitbagTmp->GetUseGridNum();
 		g_kitbagTmp[0] = '\0';
-		sprintf(g_kitbagTmp, RES_STRING(GM_GAMEDB_CPP_00022), sItemTmpNum);
+		std::snprintf(g_kitbagTmp, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00022), sItemTmpNum);
 		pCKb = pCMainC->m_pCKitbagTmp;
 		for (short i = 0; i < sItemTmpNum; i++) {
 			pGridCont = pCKb->GetGridContByNum(i);
@@ -1487,13 +1487,13 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_kitbagTmp + strlen(g_kitbagTmp), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID,
-					pGridCont->sNum);
+			{ size_t _n = strlen(g_kitbagTmp); std::snprintf(g_kitbagTmp + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID,
+					pGridCont->sNum); }
 		}
 		ToLogService("trade", "[CHA_OUT] {} : {}", pCMainC->GetName(), g_kitbagTmp);
 
 		g_equip[0] = '\0';
-		sprintf(g_equip, RES_STRING(GM_GAMEDB_CPP_00024), enumEQUIP_NUM);
+		std::snprintf(g_equip, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00024), enumEQUIP_NUM);
 		for (short i = 0; i < enumEQUIP_NUM; i++) {
 			pGridCont = &pCMainC->m_SChaPart.SLink[i];
 			if (!pGridCont || pGridCont->sID <= 0)
@@ -1501,16 +1501,16 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 			pCItem = GetItemRecordInfo(pGridCont->sID);
 			if (!pCItem)
 				continue;
-			sprintf(g_equip + strlen(g_equip), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum);
+			{ size_t _n = strlen(g_equip); std::snprintf(g_equip + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID, pGridCont->sNum); }
 		}
 		ToLogService("trade", "[CHA_EQUIP] {} : {}", pCMainC->GetName(), g_equip);
 
 		char chStart = 0, chEnd = pPlayer.GetCurBankNum() - 1;
-		sprintf(g_kitbag, RES_STRING(GM_GAMEDB_CPP_00023), pPlayer.GetCurBankNum());
+		std::snprintf(g_kitbag, defKITBAG_DATA_STRING_LEN, RES_STRING(GM_GAMEDB_CPP_00023), pPlayer.GetCurBankNum());
 		for (char i = chStart; i <= chEnd; i++) {
 			pCKb = pPlayer.GetBank(i);
 			sItemNum = pCKb->GetUseGridNum();
-			sprintf(g_kitbag + strlen(g_kitbag), "[%d]%d@;", i + 1, sItemNum);
+			{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "[%d]%d@;", i + 1, sItemNum); }
 			for (short i = 0; i < sItemNum; i++) {
 				pGridCont = pCKb->GetGridContByNum(i);
 				if (!pGridCont)
@@ -1518,8 +1518,8 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 				pCItem = GetItemRecordInfo(pGridCont->sID);
 				if (!pCItem)
 					continue;
-				sprintf(g_kitbag + strlen(g_kitbag), "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID,
-						pGridCont->sNum);
+				{ size_t _n = strlen(g_kitbag); std::snprintf(g_kitbag + _n, defKITBAG_DATA_STRING_LEN > _n ? defKITBAG_DATA_STRING_LEN - _n : 0, "%s[%d],%d;", pCItem->szName.c_str(), pGridCont->sID,
+						pGridCont->sNum); }
 			}
 		}
 		ToLogService("trade", "[CHA_BANK] {} : {}", pCMainC->GetName(), g_kitbag);
@@ -1543,8 +1543,12 @@ void CGameDB::Log(const char *type, const char *c1, const char *c2, const char *
 
 	char szSQL[8192];
 
-	sprintf(szSQL, "insert gamelog (action, c1, c2, c3, c4, content) \
-				   values('%s', '%s', '%s', '%s', '%s', '%s')", type, c1, c2, c3, c4, p);
+	{
+		auto _s = std::format("insert gamelog (action, c1, c2, c3, c4, content) "
+			"values('{}', '{}', '{}', '{}', '{}', '{}')", type, c1, c2, c3, c4, p);
+		std::strncpy(szSQL, _s.c_str(), sizeof(szSQL) - 1);
+		szSQL[sizeof(szSQL) - 1] = 0;
+	}
 
 	//if(bAddToList)
 	{

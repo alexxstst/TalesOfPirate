@@ -1064,7 +1064,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 	char buf2[50];
 	char buf3[1024];
 	char buf4[300];
-	sprintf(buf2, "%s.txt", charname);
+	{ auto _s = std::format("{}.txt", charname); std::strncpy(buf2, _s.c_str(), sizeof(buf2) - 1); buf2[sizeof(buf2) - 1] = 0; }
 	ofstream myfile;
 	myfile.open(buf2, ios::out | ios::app);
 	if (myfile.is_open())
@@ -1079,51 +1079,51 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			for (int i = 0; i < inventory[p].GetCapacity(); i++) {
 				if (inventory[p].GetGridContByID(i)) {
 					
-					sprintf(buf3, "Item Name: %s; Item ID: %d; Position ID: %d\n;", GetItemRecordInfo(inventory[p].GetGridContByID(i)->sID)->szName.c_str(), inventory[p].GetGridContByID(i)->sID, i);
+					std::snprintf(buf3, sizeof(buf3), "Item Name: %s; Item ID: %d; Position ID: %d\n;", GetItemRecordInfo(inventory[p].GetGridContByID(i)->sID)->szName.c_str(), inventory[p].GetGridContByID(i)->sID, i);
 					myfile << buf3;
-					sprintf(buf4, "STR (raw): %d. STR (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(26), inventory[p].GetGridContByID(i)->GetInstAttr(1));
+					std::snprintf(buf4, sizeof(buf4),"STR (raw): %d. STR (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(26), inventory[p].GetGridContByID(i)->GetInstAttr(1));
 					myfile << buf4;
-					sprintf(buf4, "AGI (raw): %d. AGI (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(27), inventory[p].GetGridContByID(i)->GetInstAttr(2));
+					std::snprintf(buf4, sizeof(buf4),"AGI (raw): %d. AGI (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(27), inventory[p].GetGridContByID(i)->GetInstAttr(2));
 					myfile << buf4;
-					sprintf(buf4, "DEX (raw): %d. DEX (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(28), inventory[p].GetGridContByID(i)->GetInstAttr(3));
+					std::snprintf(buf4, sizeof(buf4),"DEX (raw): %d. DEX (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(28), inventory[p].GetGridContByID(i)->GetInstAttr(3));
 					myfile << buf4;
-					sprintf(buf4, "CON (raw): %d. CON (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(29), inventory[p].GetGridContByID(i)->GetInstAttr(4));
+					std::snprintf(buf4, sizeof(buf4),"CON (raw): %d. CON (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(29), inventory[p].GetGridContByID(i)->GetInstAttr(4));
 					myfile << buf4;
-					sprintf(buf4, "STA (raw): %d. STA (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(30), inventory[p].GetGridContByID(i)->GetInstAttr(5));
+					std::snprintf(buf4, sizeof(buf4),"STA (raw): %d. STA (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(30), inventory[p].GetGridContByID(i)->GetInstAttr(5));
 					myfile << buf4;
-					sprintf(buf4, "LUCK (raw): %d. LUCK (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(31), inventory[p].GetGridContByID(i)->GetInstAttr(6));
+					std::snprintf(buf4, sizeof(buf4),"LUCK (raw): %d. LUCK (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(31), inventory[p].GetGridContByID(i)->GetInstAttr(6));
 					myfile << buf4;
-					sprintf(buf4, "ASPD (raw): %d. ASPD(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(32), inventory[p].GetGridContByID(i)->GetInstAttr(7));
+					std::snprintf(buf4, sizeof(buf4),"ASPD (raw): %d. ASPD(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(32), inventory[p].GetGridContByID(i)->GetInstAttr(7));
 					myfile << buf4;
-					sprintf(buf4, "ADIS (raw): %d. ADIS (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(33), inventory[p].GetGridContByID(i)->GetInstAttr(8));
+					std::snprintf(buf4, sizeof(buf4),"ADIS (raw): %d. ADIS (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(33), inventory[p].GetGridContByID(i)->GetInstAttr(8));
 					myfile << buf4;
-					sprintf(buf4, "MNATK (raw): %d. MNATK (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(34), inventory[p].GetGridContByID(i)->GetInstAttr(9));
+					std::snprintf(buf4, sizeof(buf4),"MNATK (raw): %d. MNATK (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(34), inventory[p].GetGridContByID(i)->GetInstAttr(9));
 					myfile << buf4;
-					sprintf(buf4, "MXATK (raw): %d. MXATK (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(35), inventory[p].GetGridContByID(i)->GetInstAttr(10));
+					std::snprintf(buf4, sizeof(buf4),"MXATK (raw): %d. MXATK (%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(35), inventory[p].GetGridContByID(i)->GetInstAttr(10));
 					myfile << buf4;
-					sprintf(buf4, "DEF (raw): %d. DEF(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(36), inventory[p].GetGridContByID(i)->GetInstAttr(11));
+					std::snprintf(buf4, sizeof(buf4),"DEF (raw): %d. DEF(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(36), inventory[p].GetGridContByID(i)->GetInstAttr(11));
 					myfile << buf4;
-					sprintf(buf4, "MXHP (raw): %d. MXHP(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(37), inventory[p].GetGridContByID(i)->GetInstAttr(12));
+					std::snprintf(buf4, sizeof(buf4),"MXHP (raw): %d. MXHP(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(37), inventory[p].GetGridContByID(i)->GetInstAttr(12));
 					myfile << buf4;
-					sprintf(buf4, "MXSP (raw): %d. MXSP(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(38), inventory[p].GetGridContByID(i)->GetInstAttr(13));
+					std::snprintf(buf4, sizeof(buf4),"MXSP (raw): %d. MXSP(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(38), inventory[p].GetGridContByID(i)->GetInstAttr(13));
 					myfile << buf4;
-					sprintf(buf4, "FLEE (raw): %d. FLEE(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(39), inventory[p].GetGridContByID(i)->GetInstAttr(14));
+					std::snprintf(buf4, sizeof(buf4),"FLEE (raw): %d. FLEE(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(39), inventory[p].GetGridContByID(i)->GetInstAttr(14));
 					myfile << buf4;
-					sprintf(buf4, "HIT (raw): %d. HIT(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(40), inventory[p].GetGridContByID(i)->GetInstAttr(15));
+					std::snprintf(buf4, sizeof(buf4),"HIT (raw): %d. HIT(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(40), inventory[p].GetGridContByID(i)->GetInstAttr(15));
 					myfile << buf4;
-					sprintf(buf4, "CRT (raw): %d. CRT(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(41), inventory[p].GetGridContByID(i)->GetInstAttr(16));
+					std::snprintf(buf4, sizeof(buf4),"CRT (raw): %d. CRT(%%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(41), inventory[p].GetGridContByID(i)->GetInstAttr(16));
 					myfile << buf4;
-					sprintf(buf4, "MF (raw): %d. MF(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(42), inventory[p].GetGridContByID(i)->GetInstAttr(17));
+					std::snprintf(buf4, sizeof(buf4),"MF (raw): %d. MF(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(42), inventory[p].GetGridContByID(i)->GetInstAttr(17));
 					myfile << buf4;
-					sprintf(buf4, "HREC (raw): %d. HREC(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(43), inventory[p].GetGridContByID(i)->GetInstAttr(18));
+					std::snprintf(buf4, sizeof(buf4),"HREC (raw): %d. HREC(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(43), inventory[p].GetGridContByID(i)->GetInstAttr(18));
 					myfile << buf4;
-					sprintf(buf4, "SREC (raw): %d. SREC(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(44), inventory[p].GetGridContByID(i)->GetInstAttr(19));
+					std::snprintf(buf4, sizeof(buf4),"SREC (raw): %d. SREC(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(44), inventory[p].GetGridContByID(i)->GetInstAttr(19));
 					myfile << buf4;
-					sprintf(buf4, "MSPD (raw): %d. MSPD(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(45), inventory[p].GetGridContByID(i)->GetInstAttr(20));
+					std::snprintf(buf4, sizeof(buf4),"MSPD (raw): %d. MSPD(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(45), inventory[p].GetGridContByID(i)->GetInstAttr(20));
 					myfile << buf4;
-					sprintf(buf4, "COL (raw): %d. COL(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(46), inventory[p].GetGridContByID(i)->GetInstAttr(21));
+					std::snprintf(buf4, sizeof(buf4),"COL (raw): %d. COL(%): %2.2f\n", inventory[p].GetGridContByID(i)->GetInstAttr(46), inventory[p].GetGridContByID(i)->GetInstAttr(21));
 					myfile << buf4;
-					sprintf(buf4, "PDEF (raw): %d. PDEF(%): %2.2f\n\n", inventory[p].GetGridContByID(i)->GetInstAttr(47), inventory[p].GetGridContByID(i)->GetInstAttr(22));
+					std::snprintf(buf4, sizeof(buf4),"PDEF (raw): %d. PDEF(%): %2.2f\n\n", inventory[p].GetGridContByID(i)->GetInstAttr(47), inventory[p].GetGridContByID(i)->GetInstAttr(22));
 					myfile << buf4;
 
 				}
@@ -1133,51 +1133,51 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 		myfile << "EQUIPMENTS: \n";
 		for (int i = 0; i < 34; i++) {
 			if (player->m_SChaPart.SLink[i].sID) {
-				sprintf(buf3, "Item ID: %d; SLink (position) ID: %d\n;", player->m_SChaPart.SLink[i].sID, i);
+				std::snprintf(buf3, sizeof(buf3), "Item ID: %d; SLink (position) ID: %d\n;", player->m_SChaPart.SLink[i].sID, i);
 				myfile << buf3;
-				sprintf(buf4, "STR (raw): %d. STR (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(26), player->m_SChaPart.SLink[i].GetInstAttr(1));
+				std::snprintf(buf4, sizeof(buf4),"STR (raw): %d. STR (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(26), player->m_SChaPart.SLink[i].GetInstAttr(1));
 				myfile << buf4;
-				sprintf(buf4, "AGI (raw): %d. AGI (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(27), player->m_SChaPart.SLink[i].GetInstAttr(2));
+				std::snprintf(buf4, sizeof(buf4),"AGI (raw): %d. AGI (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(27), player->m_SChaPart.SLink[i].GetInstAttr(2));
 				myfile << buf4;
-				sprintf(buf4, "DEX (raw): %d. DEX (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(28), player->m_SChaPart.SLink[i].GetInstAttr(3));
+				std::snprintf(buf4, sizeof(buf4),"DEX (raw): %d. DEX (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(28), player->m_SChaPart.SLink[i].GetInstAttr(3));
 				myfile << buf4;
-				sprintf(buf4, "CON (raw): %d. CON (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(29), player->m_SChaPart.SLink[i].GetInstAttr(4));
+				std::snprintf(buf4, sizeof(buf4),"CON (raw): %d. CON (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(29), player->m_SChaPart.SLink[i].GetInstAttr(4));
 				myfile << buf4;
-				sprintf(buf4, "STA (raw): %d. STA (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(30), player->m_SChaPart.SLink[i].GetInstAttr(5));
+				std::snprintf(buf4, sizeof(buf4),"STA (raw): %d. STA (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(30), player->m_SChaPart.SLink[i].GetInstAttr(5));
 				myfile << buf4;
-				sprintf(buf4, "LUCK (raw): %d. LUCK (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(31), player->m_SChaPart.SLink[i].GetInstAttr(6));
+				std::snprintf(buf4, sizeof(buf4),"LUCK (raw): %d. LUCK (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(31), player->m_SChaPart.SLink[i].GetInstAttr(6));
 				myfile << buf4;
-				sprintf(buf4, "ASPD (raw): %d. ASPD(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(32), player->m_SChaPart.SLink[i].GetInstAttr(7));
+				std::snprintf(buf4, sizeof(buf4),"ASPD (raw): %d. ASPD(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(32), player->m_SChaPart.SLink[i].GetInstAttr(7));
 				myfile << buf4;
-				sprintf(buf4, "ADIS (raw): %d. ADIS (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(33), player->m_SChaPart.SLink[i].GetInstAttr(8));
+				std::snprintf(buf4, sizeof(buf4),"ADIS (raw): %d. ADIS (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(33), player->m_SChaPart.SLink[i].GetInstAttr(8));
 				myfile << buf4;
-				sprintf(buf4, "MNATK (raw): %d. MNATK (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(34), player->m_SChaPart.SLink[i].GetInstAttr(9));
+				std::snprintf(buf4, sizeof(buf4),"MNATK (raw): %d. MNATK (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(34), player->m_SChaPart.SLink[i].GetInstAttr(9));
 				myfile << buf4;
-				sprintf(buf4, "MXATK (raw): %d. MXATK (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(35), player->m_SChaPart.SLink[i].GetInstAttr(10));
+				std::snprintf(buf4, sizeof(buf4),"MXATK (raw): %d. MXATK (%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(35), player->m_SChaPart.SLink[i].GetInstAttr(10));
 				myfile << buf4;
-				sprintf(buf4, "DEF (raw): %d. DEF(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(36), player->m_SChaPart.SLink[i].GetInstAttr(11));
+				std::snprintf(buf4, sizeof(buf4),"DEF (raw): %d. DEF(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(36), player->m_SChaPart.SLink[i].GetInstAttr(11));
 				myfile << buf4;
-				sprintf(buf4, "MXHP (raw): %d. MXHP(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(37), player->m_SChaPart.SLink[i].GetInstAttr(12));
+				std::snprintf(buf4, sizeof(buf4),"MXHP (raw): %d. MXHP(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(37), player->m_SChaPart.SLink[i].GetInstAttr(12));
 				myfile << buf4;
-				sprintf(buf4, "MXSP (raw): %d. MXSP(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(38), player->m_SChaPart.SLink[i].GetInstAttr(13));
+				std::snprintf(buf4, sizeof(buf4),"MXSP (raw): %d. MXSP(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(38), player->m_SChaPart.SLink[i].GetInstAttr(13));
 				myfile << buf4;
-				sprintf(buf4, "FLEE (raw): %d. FLEE(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(39), player->m_SChaPart.SLink[i].GetInstAttr(14));
+				std::snprintf(buf4, sizeof(buf4),"FLEE (raw): %d. FLEE(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(39), player->m_SChaPart.SLink[i].GetInstAttr(14));
 				myfile << buf4;
-				sprintf(buf4, "HIT (raw): %d. HIT(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(40), player->m_SChaPart.SLink[i].GetInstAttr(15));
+				std::snprintf(buf4, sizeof(buf4),"HIT (raw): %d. HIT(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(40), player->m_SChaPart.SLink[i].GetInstAttr(15));
 				myfile << buf4;
-				sprintf(buf4, "CRT (raw): %d. CRT(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(41), player->m_SChaPart.SLink[i].GetInstAttr(16));
+				std::snprintf(buf4, sizeof(buf4),"CRT (raw): %d. CRT(%%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(41), player->m_SChaPart.SLink[i].GetInstAttr(16));
 				myfile << buf4;
-				sprintf(buf4, "MF (raw): %d. MF(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(42), player->m_SChaPart.SLink[i].GetInstAttr(17));
+				std::snprintf(buf4, sizeof(buf4),"MF (raw): %d. MF(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(42), player->m_SChaPart.SLink[i].GetInstAttr(17));
 				myfile << buf4;
-				sprintf(buf4, "HREC (raw): %d. HREC(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(43), player->m_SChaPart.SLink[i].GetInstAttr(18));
+				std::snprintf(buf4, sizeof(buf4),"HREC (raw): %d. HREC(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(43), player->m_SChaPart.SLink[i].GetInstAttr(18));
 				myfile << buf4;
-				sprintf(buf4, "SREC (raw): %d. SREC(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(44), player->m_SChaPart.SLink[i].GetInstAttr(19));
+				std::snprintf(buf4, sizeof(buf4),"SREC (raw): %d. SREC(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(44), player->m_SChaPart.SLink[i].GetInstAttr(19));
 				myfile << buf4;
-				sprintf(buf4, "MSPD (raw): %d. MSPD(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(45), player->m_SChaPart.SLink[i].GetInstAttr(20));
+				std::snprintf(buf4, sizeof(buf4),"MSPD (raw): %d. MSPD(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(45), player->m_SChaPart.SLink[i].GetInstAttr(20));
 				myfile << buf4;
-				sprintf(buf4, "COL (raw): %d. COL(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(46), player->m_SChaPart.SLink[i].GetInstAttr(21));
+				std::snprintf(buf4, sizeof(buf4),"COL (raw): %d. COL(%): %2.2f\n", player->m_SChaPart.SLink[i].GetInstAttr(46), player->m_SChaPart.SLink[i].GetInstAttr(21));
 				myfile << buf4;
-				sprintf(buf4, "PDEF (raw): %d. PDEF(%): %2.2f\n\n", player->m_SChaPart.SLink[i].GetInstAttr(47), player->m_SChaPart.SLink[i].GetInstAttr(22));
+				std::snprintf(buf4, sizeof(buf4),"PDEF (raw): %d. PDEF(%): %2.2f\n\n", player->m_SChaPart.SLink[i].GetInstAttr(47), player->m_SChaPart.SLink[i].GetInstAttr(22));
 				myfile << buf4;
 			}
 	
@@ -1208,7 +1208,7 @@ BOOL CCharacter::DoGMCommand(const char *pszCmd, const char *pszParam)
 			p = player->GetPlayer()->GetBank()->GetGridContByID(positionID)->SetInstAttr(ATTR_TYPE, ATTR_VALUE);
 		}
 		
-		sprintf(buffer, "Attribute updated (1 is ok, 0 is not ok) =  %d", p);
+		{ auto _s = std::format("Attribute updated (1 is ok, 0 is not ok) =  {}", p); std::strncpy(buffer, _s.c_str(), sizeof(buffer) - 1); buffer[sizeof(buffer) - 1] = 0; }
 		SystemNotice(buffer);
 		player->SynKitbagNew(enumSYN_KITBAG_PICK);
 		return TRUE;
@@ -1237,9 +1237,10 @@ void CCharacter::DoCommand_CheckStatus(cChar *pszCommand, uLong ulLen)
 	if(strCmd=="game_status")	 // gameserver
 	{
 		char szInfo[255];
-		sprintf(szInfo, "fps:%d tick:%d player:%d mgr:%d\n", g_pGameApp->m_dwFPS, 
-			                     g_pGameApp->m_dwRunCnt, g_pGameApp->m_dwPlayerCnt,
-								 g_pGameApp->m_dwActiveMgrUnit);
+		{ auto _s = std::format("fps:{} tick:{} player:{} mgr:{}\n", g_pGameApp->m_dwFPS,
+			g_pGameApp->m_dwRunCnt, g_pGameApp->m_dwPlayerCnt,
+			g_pGameApp->m_dwActiveMgrUnit);
+		  std::strncpy(szInfo, _s.c_str(), sizeof(szInfo) - 1); szInfo[sizeof(szInfo) - 1] = 0; }
 		SystemNotice(szInfo);
 	}
 	else if (strCmd=="ping_game") // GameServerping
@@ -1303,7 +1304,7 @@ void CCharacter::HandleHelp(cChar *pszCommand, uLong ulLen)
 	
 	
 	char szTip[128]; 
-	sprintf(szTip, RES_STRING(GM_CHARACTERSUPERCMD_CPP_00042), strList[0].c_str()); 
+	std::snprintf(szTip, sizeof(szTip), RES_STRING(GM_CHARACTERSUPERCMD_CPP_00042), strList[0].c_str()); 
 	if(strList[0]=="time")	// 
 	{
 		//SystemNotice( szTip );

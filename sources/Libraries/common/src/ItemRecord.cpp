@@ -64,9 +64,9 @@ void CItemRecord::RefreshData() {
 			const char* slotName = (slot >= 0 && slot < 10 && slotNames[slot]) ? slotNames[slot] : "Unknown";
 			for (int i = 1; i < 5; i++) {
 				if (_IsBody[i] && !hasChaModel[i]) {
-					ToLogService("common", LogLevel::Warning,
-						"Item '{}' (ID:{}, type:{}) equip slot '{}' — missing model for class {}",
-						szName, lID, sType, slotName, i);
+					// ToLogService("common", LogLevel::Warning,
+					// 	"Item '{}' (ID:{}, type:{}) equip slot '{}' — missing model for class {}",
+					// 	szName, lID, sType, slotName, i);
 				}
 			}
 			break;

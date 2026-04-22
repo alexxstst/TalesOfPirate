@@ -142,7 +142,11 @@ void CPlayer::SetIMP(long imp,bool sync) {
 	m_lIMP = imp<2000000000 ? imp : 2000000000; 
 	if (sync){
 		char cmd[64];
-		sprintf(cmd, "SetIMPAcc('%s',%d)",GetActName(),GetIMP());
+		{
+			auto _s = std::format("SetIMPAcc('{}',{})", GetActName(), GetIMP());
+			std::strncpy(cmd, _s.c_str(), sizeof(cmd) - 1);
+			cmd[sizeof(cmd) - 1] = 0;
+		}
 		//  :  IMP  Lua
 		auto WtPk = net::msg::serialize(net::msg::MmDoStringMessage{(int64_t)GetID(), cmd});
 		GetMainCha()->ReflectINFof(GetMainCha(), WtPk);
@@ -726,7 +730,7 @@ void CPlayer::SystemNotice( const char szData[], ... )
 	memset(szTemp, 0, sizeof(szTemp));
 	va_list list;
 	va_start( list, szData );
-	_vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
+	std::vsnprintf(szTemp, sizeof(szTemp) - 1, szData, list );
 	// End
 	va_end( list );
 
@@ -1075,7 +1079,11 @@ char* CPlayer::BankDBIDData2String(char *szSStateBuf, int nLen)
 
 	for (char i = 0; i < m_chBankNum; i++)
 	{
-		sprintf(szData, "%d", m_lBankDBID[i]);
+		{
+			auto _s = std::format("{}", m_lBankDBID[i]);
+			std::strncpy(szData, _s.c_str(), sizeof(szData) - 1);
+			szData[sizeof(szData) - 1] = 0;
+		}
 		nDataLen = (int)strlen(szData);
 		if (nBufLen + nDataLen >= nLen) return NULL;
 		strcat(szSStateBuf, szData);
@@ -1083,7 +1091,8 @@ char* CPlayer::BankDBIDData2String(char *szSStateBuf, int nLen)
 
 		if (i < m_chBankNum - 1)
 		{
-			sprintf(szData, ",", m_lBankDBID[i]);
+			std::strncpy(szData, ",", sizeof(szData) - 1);
+			szData[sizeof(szData) - 1] = 0;
 			nDataLen = (int)strlen(szData);
 			if (nBufLen + nDataLen >= nLen) return NULL;
 			strcat(szSStateBuf, szData);
@@ -1189,3 +1198,172 @@ void CPlayer::Run(DWORD dwCurTime)
 			ClearChallengeObj(false);
 		}
 }
+
+// ============================================================================
+// Ранее inline-методы из Player.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+void CPlayer::Init(GateServer* pGate, dbc::uLong ulGtAddr) {
+	SetGate(pGate);
+	SetGateAddr(ulGtAddr);
+	SetDBChaId(0);
+}
+
+bool        CPlayer::IsValidFlag()          { return m_dwValidFlag == PLAYER_INVALID_FLAG; }
+
+void CPlayer::SetPassword(const char szPassword[]) {
+	strncpy(m_szPassword, szPassword, ROLE_MAXSIZE_PASSWORD2);
+}
+const char* CPlayer::GetPassword()          { return m_szPassword; }
+
+void        CPlayer::SetID(dbc::Long lID)   { m_lID = lID; }
+dbc::Long   CPlayer::GetID(void)            { return m_lID; }
+
+void        CPlayer::SetHandle(dbc::Long lHandle) { m_lHandle = lHandle; }
+dbc::Long   CPlayer::GetHandle(void)              { return m_lHandle; }
+
+bool        CPlayer::IsPlayer(void)         { return bIsValid && (GetGate() != nullptr); }
+
+void        CPlayer::OnLogoff()             { /* player hook */ }
+
+bool        CPlayer::IsValid(void)          { return bIsValid; }
+
+void        CPlayer::SetActLoginID(DWORD id){ m_dwLoginID = id; }
+DWORD       CPlayer::GetActLoginID()        { return m_dwLoginID; }
+
+void        CPlayer::SetDBActId(DWORD v)    { m_dwDBActId = v; }
+DWORD       CPlayer::GetDBActId(void)       { return m_dwDBActId; }
+
+void CPlayer::SetActName(dbc::cChar* szActName) {
+	strncpy(m_chActName, szActName, ACT_NAME_LEN - 1);
+	m_chActName[ACT_NAME_LEN - 1] = 0;
+}
+dbc::cChar* CPlayer::GetActName(void)       { return m_chActName; }
+
+void        CPlayer::SetGMLev(dbc::Char v)  { m_chGMLev = v; }
+dbc::uChar  CPlayer::GetGMLev(void)         { return static_cast<dbc::uChar>(m_chGMLev); }
+
+void        CPlayer::SetMapMaskDBID(long v) { m_lMapMaskDBID = v; }
+long        CPlayer::GetMapMaskDBID(void)   { return m_lMapMaskDBID; }
+
+void        CPlayer::SetBankDBID(long lID, char chBankNO) { m_lBankDBID[chBankNO] = lID; }
+long        CPlayer::GetBankDBID(char chBankNO)           { return m_lBankDBID[chBankNO]; }
+
+long        CPlayer::GetIMP()               { return m_lIMP; }
+
+void CPlayer::SetLoginCha(dbc::uLong ulType, dbc::uLong ulID) {
+	m_ulLoginCha[0] = ulType;
+	m_ulLoginCha[1] = ulID;
+}
+dbc::uLong  CPlayer::GetLoginChaType(void)  { return m_ulLoginCha[0]; }
+dbc::uLong  CPlayer::GetLoginChaID(void)    { return m_ulLoginCha[1]; }
+
+bool        CPlayer::CanReceiveRequests()          { return bReceiveRequests; }
+void        CPlayer::SetCanReceiveRequests(bool x) { bReceiveRequests = x; }
+int         CPlayer::GetTeamMemberCnt()            { return _nTeamMemberCnt; }
+
+DWORD       CPlayer::GetTeamMemberDBID(int nNo)    { return _Team[nNo].m_dwDBChaId; }
+DWORD       CPlayer::getTeamLeaderID()             { return _dwTeamLeaderID; }
+void        CPlayer::setTeamLeaderID(DWORD dwID)   { _dwTeamLeaderID = dwID; }
+
+bool        CPlayer::IsTeamLeader(void)     { return getTeamLeaderID() == GetID(); }
+bool        CPlayer::HasTeam(void)          { return getTeamLeaderID() != 0; }
+void        CPlayer::BeginGetTeamPly(void)  { m_sGetTeamPlyCount = 0; }
+
+void        CPlayer::SetChallengeType(dbc::Char chType) { m_chChallengeType = chType; }
+dbc::Char   CPlayer::GetChallengeType(void)             { return m_chChallengeType; }
+
+void        CPlayer::StartChallengeTimer(void) { m_timerChallenge.Begin(30 * 1000); }
+
+CCharacter* CPlayer::GetRepairman(void)     { return m_pCRepairman; }
+SItemGrid*  CPlayer::GetRepairItem(void)    { return m_pSRepairItem; }
+bool        CPlayer::CheckRepairItem(void)  { return m_SRepairItem == *m_pSRepairItem; }
+bool        CPlayer::IsRepairEquipPos(void) { return m_chRepairPosType == 1; }
+dbc::Char   CPlayer::GetRepairPosID(void)   { return m_chRepairPosID; }
+bool        CPlayer::IsInRepair(void)       { return m_bInRepair; }
+void        CPlayer::SetInRepair(bool bInR) { m_bInRepair = bInR; }
+
+CCharacter* CPlayer::GetForgeman(void)      { return m_pCForgeman; }
+bool        CPlayer::IsInForge(void)        { return m_bInForge; }
+bool        CPlayer::IsInLifeSkill(void)    { return m_bInLiftSkill; }
+void        CPlayer::SetInForge(bool v)     { m_bInForge = v; }
+void        CPlayer::SetInLifeSkill(bool v) { m_bInLiftSkill = v; }
+
+void CPlayer::SetForgeInfo(dbc::Char chType, SForgeItem* pSItem) {
+	m_chForgeType = chType;
+	m_SForgeItem  = *pSItem;
+}
+void CPlayer::SetLifeSkillInfo(long lType, SLifeSkillItem* pLifeSkill) {
+	m_lLifeSkillType  = lType;
+	m_pSLifeSkillItem = *pLifeSkill;
+}
+dbc::Char       CPlayer::GetForgeType(void)    { return m_chForgeType; }
+SForgeItem*     CPlayer::GetForgeItem(void)    { return &m_SForgeItem; }
+SLifeSkillItem* CPlayer::GetLifeSkillItem()    { return &m_pSLifeSkillItem; }
+
+void        CPlayer::SetMainCha(CCharacter* v) { m_pMainCha = v; }
+void        CPlayer::SetCtrlCha(CCharacter* v) { m_pCtrlCha = v; }
+CCharacter* CPlayer::GetMainCha(void)          { return m_pMainCha; }
+CCharacter* CPlayer::GetCtrlCha(void)          { return m_pCtrlCha; }
+
+CCharacter* CPlayer::GetMakingBoat()                   { return m_pMakingBoat; }
+void        CPlayer::SetMakingBoat(CCharacter* pBoat)  { m_pMakingBoat = pBoat; }
+
+BYTE        CPlayer::GetNumBoat()              { return m_byNumBoat; }
+
+BOOL        CPlayer::IsBoatFull()              { return m_byNumBoat >= MAX_CHAR_BOAT; }
+BOOL        CPlayer::IsLuanchOut()             { return m_dwLaunchID != static_cast<DWORD>(-1); }
+void        CPlayer::SetLuanchOut(DWORD dwID)  { m_dwLaunchID = dwID; }
+DWORD       CPlayer::GetLuanchID()             { return m_dwLaunchID; }
+
+CCharacter* CPlayer::GetBoat(BYTE byIndex) {
+	return (byIndex >= MAX_CHAR_BOAT) ? nullptr : m_Boat[byIndex];
+}
+
+mission::CStallData* CPlayer::GetStallData()                           { return m_pStallData; }
+void                 CPlayer::SetStallData(mission::CStallData* pData) { m_pStallData = pData; }
+
+void        CPlayer::SetMMaskLightSize(long lSize) { m_lLightSize = lSize; }
+long        CPlayer::GetMMaskLightSize(void)       { return m_lLightSize; }
+
+bool        CPlayer::SetMapMaskBase64(const char* pMask) { return m_CMapMask.InitMaskData(m_szMaskMapName, pMask); }
+const char* CPlayer::GetMapMaskBase64()                  { return m_CMapMask.GetResultOneMask(m_szMaskMapName); }
+BYTE*       CPlayer::GetMapMask(long& lLen)              { return m_CMapMask.GetMapMask(m_szMaskMapName, lLen); }
+
+void CPlayer::SetMaskMapName(const char* szMapName) {
+	strncpy(m_szMaskMapName, szMapName, MAX_MAPNAME_LENGTH - 1);
+	m_szMaskMapName[MAX_MAPNAME_LENGTH - 1] = '\0';
+}
+const char* CPlayer::GetMaskMapName(void)      { return m_szMaskMapName; }
+
+bool        CPlayer::IsMapMaskChange(void)     { return m_chMapMaskChange >= 3; }
+void        CPlayer::SetMapMaskChange(void)    { m_chMapMaskChange++; }
+void        CPlayer::ResetMapMaskChange(void)  { m_chMapMaskChange = 0; }
+float       CPlayer::GetMapMaskOpenScale(const char* szMapName) {
+	return m_CMapMask.GetMapMaskOpenScale(szMapName);
+}
+
+char        CPlayer::GetCurBankNum(void)       { return m_chBankNum; }
+bool        CPlayer::AddBankDBID(long lDBID) {
+	if (m_chBankNum >= MAX_BANK_NUM) return false;
+	m_lBankDBID[m_chBankNum] = lDBID;
+	m_chBankNum++;
+	return true;
+}
+CKitbag*    CPlayer::GetBank(char chBankNO) {
+	if (chBankNO < 0 || chBankNO >= m_chBankNum) return nullptr;
+	return m_CBank + chBankNO;
+}
+
+CCharacter* CPlayer::GetBankNpc(void)          { return m_pCBankNpc; }
+
+long        CPlayer::GetMoBean()               { return m_lMoBean; }
+void        CPlayer::SetMoBean(long v)         { m_lMoBean = v; }
+long        CPlayer::GetRplMoney()             { return m_lRplMoney; }
+void        CPlayer::SetRplMoney(long v)       { m_lRplMoney = v; }
+long        CPlayer::GetVipType()              { return m_lVipID; }
+void        CPlayer::SetVipType(long v)        { m_lVipID = v; }
+short       CPlayer::IsGarnerWiner()           { return m_sGarnerWiner; }
+void        CPlayer::SetGarnerWiner(short v)   { m_sGarnerWiner = v; }
+
+std::string& CPlayer::GetLifeSkillinfo()       { return m_strLifeSkillinfo; }

@@ -8,6 +8,86 @@
 #include "Expand.h"
 #include "HarmRec.h"
 
+// ============================================================================
+// Ранее inline-методы из lua_gamectrl.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+const char* LuaTypeName(int type) {
+	switch (type) {
+		case LUA_TNIL:            return "nil";
+		case LUA_TBOOLEAN:        return "boolean";
+		case LUA_TLIGHTUSERDATA:  return "lightuserdata";
+		case LUA_TNUMBER:         return "number";
+		case LUA_TSTRING:         return "string";
+		case LUA_TTABLE:          return "table";
+		case LUA_TFUNCTION:       return "function";
+		case LUA_TUSERDATA:       return "userdata";
+		case LUA_TTHREAD:         return "thread";
+		default:                  return "unknown";
+	}
+}
+
+bool LuaCheckParam(lua_State* L, int idx, int expectedType, const char* funcName,
+				   const std::source_location& loc) {
+	int actualType = lua_type(L, idx);
+	if (actualType != expectedType) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] param #{}: expected {}, got {} at {}:{}",
+			funcName, idx, LuaTypeName(expectedType), LuaTypeName(actualType),
+			loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+bool LuaIsPtr(lua_State* L, int idx) {
+	int t = lua_type(L, idx);
+	return t == LUA_TLIGHTUSERDATA || t == LUA_TUSERDATA;
+}
+
+bool LuaCheckParamPtr(lua_State* L, int idx, const char* funcName,
+					  const std::source_location& loc) {
+	int actualType = lua_type(L, idx);
+	if (actualType != LUA_TLIGHTUSERDATA && actualType != LUA_TUSERDATA) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] param #{}: expected lightuserdata/userdata, got {} at {}:{}",
+			funcName, idx, LuaTypeName(actualType), loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+bool LuaCheckParamCount(lua_State* L, int expected, const char* funcName,
+						const std::source_location& loc) {
+	int actual = lua_gettop(L);
+	if (actual != expected) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] expected {} params, got {} at {}:{}",
+			funcName, expected, actual, loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+bool LuaCheckParamCountRange(lua_State* L, int minCount, int maxCount, const char* funcName,
+							 const std::source_location& loc) {
+	int actual = lua_gettop(L);
+	if (actual < minCount || actual > maxCount) {
+		ToLogService("lua", LogLevel::Error,
+			"[{}] expected {}-{} params, got {} at {}:{}",
+			funcName, minCount, maxCount, actual, loc.file_name(), loc.line());
+		return false;
+	}
+	return true;
+}
+
+void LuaLogCastFailed(lua_State* /*L*/, int idx, const char* targetType, const char* funcName,
+					  const std::source_location& loc) {
+	ToLogService("lua", LogLevel::Error,
+		"[{}] param #{}: lightuserdata failed cast to {} at {}:{}",
+		funcName, idx, targetType, loc.file_name(), loc.line());
+}
+
 using namespace std;
 
 std::list<CCharacter*> g_HelpNPCList;
@@ -65,7 +145,11 @@ void TL(int nType, const char* pszCha1, const char* pszCha2, const char* pszTrad
 				SYSTEMTIME st;
 				GetLocalTime(&st);
 				char szData[128];
-				sprintf(szData, "%d-%d-%d-%d", st.wYear, st.wMonth, st.wDay, st.wHour);
+				{
+					auto _s = std::format("{}-{}-{}-{}", st.wYear, st.wMonth, st.wDay, st.wHour);
+					std::strncpy(szData, _s.c_str(), sizeof(szData) - 1);
+					szData[sizeof(szData) - 1] = 0;
+				}
 				strName += szData;
 			}
 		}
@@ -109,7 +193,7 @@ void AddMonsterHelp(int nScriptID, int x, int y) {
 	if (pCChaRecord == NULL) return;
 
 	char szHelp[255];
-	sprintf(szHelp, RES_STRING(GM_LUA_GAMECTRL_CPP_00019), x / 100, y / 100);
+	std::snprintf(szHelp, sizeof(szHelp), RES_STRING(GM_LUA_GAMECTRL_CPP_00019), x / 100, y / 100);
 
 	AddHelpInfo(pCChaRecord->DataName.c_str(), szHelp);
 }

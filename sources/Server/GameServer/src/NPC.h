@@ -29,11 +29,11 @@ namespace mission
 		CNpc();
 		virtual ~CNpc();
 
-		// 
-		virtual CNpc* IsNpc() { return this; }
-		virtual void SetType() { m_byType = NPC; }
-		BYTE GetType() { return m_byType; }
-		BYTE GetShowType() { return m_byShowType; }
+		//
+		virtual CNpc* IsNpc() override;
+		virtual void SetType();
+		BYTE GetType();
+		BYTE GetShowType();
 		
 		// npc
 		virtual BOOL Load( const CNpcRecord& recNpc, const CChaRecord& recChar );
@@ -54,16 +54,16 @@ namespace mission
 		virtual BOOL EventProc( TRIGGER_EVENT e, WPARAM wParam, LPARAM lParam );
 
 		//npcID
-		virtual void	SetScriptID( USHORT sID ) { m_sScriptID = sID; }
-		virtual USHORT	GetScriptID() { return m_sScriptID; }
-		virtual void	SetNpcHasMission( BOOL bHasMission ) { m_bHasMission = bHasMission; }
-		virtual BOOL	GetNpcHasMission() { return m_bHasMission; }
-		virtual const char* GetInitFunc() { return m_szMsgProc; }
+		virtual void        SetScriptID(USHORT sID);
+		virtual USHORT      GetScriptID();
+		virtual void        SetNpcHasMission(BOOL bHasMission);
+		virtual BOOL        GetNpcHasMission();
+		virtual const char* GetInitFunc();
 
 		// NPC
-		virtual void	Summoned( USHORT sTime ) {};
-		
-		const char* GetNpcName() { return m_szName; }
+		virtual void        Summoned(USHORT sTime);
+
+		const char*         GetNpcName();
 
 	protected:
 		//
@@ -97,8 +97,8 @@ namespace mission
 		CTalkNpc();
 		virtual ~CTalkNpc();
 
-		// 
-		virtual void SetType() { m_byType = TALK; }
+		//
+		virtual void SetType() override;
 
 		// npc
 		virtual BOOL Load( const CNpcRecord& recNpc, const CChaRecord& recChar );
@@ -153,7 +153,7 @@ namespace mission
 		CTradeNpc();
 		virtual ~CTradeNpc();
 
-		virtual void SetType() { m_byType = TRADE; }
+		virtual void SetType() override;
 
 		// 
 		virtual BOOL Sale( CCharacter& character, net::RPacket& packet );
@@ -169,7 +169,7 @@ namespace mission
 		CTradeAgencyNpc();
 		virtual ~CTradeAgencyNpc();
 
-		virtual void SetType() { m_byType = TRADE_AGENCY; }
+		virtual void SetType() override;
 
 	private:
 		// fixed me to remove
@@ -192,7 +192,7 @@ namespace mission
 		CRoleNpc();
 		virtual ~CRoleNpc();
 
-		virtual void SetType() { m_byType = ROLE; }
+		virtual void SetType() override;
 		
 	private:
 		// 

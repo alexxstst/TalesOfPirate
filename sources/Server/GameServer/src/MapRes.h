@@ -38,9 +38,9 @@ public:
 	bool	GetUnitAttr(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uShort &usAttribute);
 	bool	GetUnitSize(dbc::Short *psWidth, dbc::Short *psHeight);
 	bool	GetUnitIsland(dbc::Short sUnitX, dbc::Short sUnitY, dbc::uChar &uchIsland);
-	dbc::Short	GetWidth() {return m_sUnitCountX;}
-	dbc::Short	GetHeight() {return m_sUnitCountY;}
-	bool	IsValidPos(dbc::Short sUnitX, dbc::Short sUnitY) {if (sUnitX < 0 || sUnitX >= GetWidth() || sUnitY < 0 || sUnitY >= GetHeight()) return false; return true;}
+	dbc::Short	GetWidth();
+	dbc::Short	GetHeight();
+	bool	    IsValidPos(dbc::Short sUnitX, dbc::Short sUnitY);
 
 protected:
 
@@ -121,13 +121,13 @@ public:
 	virtual ~CMapRes();
 
 	bool		Init(void);
-	bool		IsValid(void) {return m_bValid;}
-	bool		IsOpen(void) {return m_bValid && m_chState == enumMAP_STATE_OPEN;}
+	bool		IsValid(void);
+	bool		IsOpen(void);
 	bool		SetCopyNum(dbc::Short sCpyNum);
-	dbc::Short	GetCopyNum(void) {return m_sMapCpyNum;}
+	dbc::Short	GetCopyNum(void);
 	SubMap*		GetCopy(dbc::Short sCpyNO = -1);
-	void		SetCopyPlyNum(dbc::Short sPlyNum) {m_sCopyPlyNum = sPlyNum;}
-	dbc::Short	GetCopyPlyNum(void) {return m_sCopyPlyNum;}
+	void		SetCopyPlyNum(dbc::Short sPlyNum);
+	dbc::Short	GetCopyPlyNum(void);
 	bool		InitCtrl(void);
 
 	bool		Open(void);
@@ -145,37 +145,37 @@ public:
 	void		CheckEntryState(dbc::Char chState);
 	bool		SubEntryPlayer(dbc::Short sCopyNO);
 	bool		SubEntryCopy(dbc::Short sCopyNO);
-	bool		HasDynEntry(void) {return strcmp(m_szEntryMapName, "") != 0 ? true : false;}
-	void		SetCanSavePos(bool bCan = true) {m_bCanSavePos = bCan;}
-	bool		CanSavePos(void) {return m_bCanSavePos;}
-	void		SetCanPK(bool bCan = true) {m_bCanPK = bCan;}
-	bool		CanPK(void) {return m_bCanPK;}
-	void		SetCanTeam(bool bCan = true) {m_bCanTeam = bCan;}
-	void		SetCanStall(bool bCan = true){m_bCanStall = bCan;}//
-	void		SetCanGuild(bool bCan = true) { m_bCanGuild = bCan; }
-	void		SetGuildWar(bool bGuildWar) { m_bGuildWar = bGuildWar; }
-	bool		CanGuildWar() { return m_bGuildWar; }
-	bool		CanTeam(void) {return m_bCanTeam;}
-	bool		CanStall(void) {return m_bCanStall;}//
-	bool		CanGuild(void) { return m_bCanGuild; }
-	void		SetType(dbc::Char chType = enumMAPTYPE_NORMAL) {m_chType = chType;}
-	dbc::Char	GetType(void) {return m_chType;}
-	void		SetCopyStartType(dbc::Char chStartType = enumMAPCOPY_START_PLAYER) {m_chCopyStartType = chStartType;}
-	dbc::Char	GetCopyStartType(void) {return m_chCopyStartType;}
-	void		SetCopyStartCondition(dbc::Char chType, dbc::Long lVal) {m_chCopyStartCdtType = chType; m_lCopyStartCdtVal = lVal;}
-	dbc::Char	GetCopyStartCdtType(void) {return m_chCopyStartCdtType;}
-	dbc::Long	GetCopyStartCdtVal(void) {return m_lCopyStartCdtVal;}
+	bool		HasDynEntry(void);
+	void		SetCanSavePos(bool bCan = true);
+	bool		CanSavePos(void);
+	void		SetCanPK(bool bCan = true);
+	bool		CanPK(void);
+	void		SetCanTeam(bool bCan = true);
+	void		SetCanStall(bool bCan = true);
+	void		SetCanGuild(bool bCan = true);
+	void		SetGuildWar(bool bGuildWar);
+	bool		CanGuildWar();
+	bool		CanTeam(void);
+	bool		CanStall(void);
+	bool		CanGuild(void);
+	void		SetType(dbc::Char chType = enumMAPTYPE_NORMAL);
+	dbc::Char	GetType(void);
+	void		SetCopyStartType(dbc::Char chStartType = enumMAPCOPY_START_PLAYER);
+	dbc::Char	GetCopyStartType(void);
+	void		SetCopyStartCondition(dbc::Char chType, dbc::Long lVal);
+	dbc::Char	GetCopyStartCdtType(void);
+	dbc::Long	GetCopyStartCdtVal(void);
 
-	void		SetName(dbc::cChar *cszName) {m_strMapName = cszName;}
-	const char*	GetName(void) {return m_strMapName.c_str();}
-	const Rect&	GetRange(void) {return m_SRange;}
-	BYTE		GetMapID() {return m_byMapID;}
+	void		SetName(dbc::cChar *cszName);
+	const char*	GetName(void);
+	const Rect&	GetRange(void);
+	BYTE		GetMapID();
 
 	BOOL		SummonNpc( USHORT sAreaID, const char szNpc[], USHORT sTime );
-	void		SetRepatriateDie(bool bRepatriate = true) {m_bRepatriateDie = bRepatriate;}
-	bool		IsRepatriateDie(void) {return m_bRepatriateDie;}
+	void		SetRepatriateDie(bool bRepatriate = true);
+	bool		IsRepatriateDie(void);
 
-	void		BeginGetUsedCopy(void) {m_sUsedCopySearch = 0;}
+	void		BeginGetUsedCopy(void);
 	SubMap*		GetNextUsedCopy(void);
 
 	mission::CNpc*		FindNpc( const char szName[] );

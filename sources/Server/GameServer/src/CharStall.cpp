@@ -209,7 +209,7 @@ namespace mission
 		//-------------------------------------------------------------
 		
 		strncpy( pData->m_szName, pszName.c_str(), ROLE_MAXNUM_STALL_NUM );
-		sprintf( szLog, RES_STRING(GM_CHARSTALL_CPP_00013), staller.GetName() );
+		std::snprintf( szLog, sizeof(szLog), RES_STRING(GM_CHARSTALL_CPP_00013), staller.GetName() );
 		pData->m_byNum = static_cast<BYTE>(msg.num);
 		if( pData->m_byNum == 0 || pData->m_byNum > byStallNum )
 		{
@@ -221,7 +221,7 @@ namespace mission
 			return;
 		}
 
-		sprintf( szTemp, RES_STRING(GM_CHARSTALL_CPP_00015), pData->m_byNum );
+		std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARSTALL_CPP_00015), pData->m_byNum );
 		strcat( szLog, szTemp );
 
 		for( BYTE i = 0;i < pData->m_byNum; i++ )
@@ -365,12 +365,12 @@ return;
 				}
 				else
 				{
-					sprintf(szTemp, RES_STRING(GM_CHARSTALL_CPP_00024), pData->m_Goods[i].byCount, pBoat->GetName(), pData->m_Goods[i].byCount, dwBoatID);
+					std::snprintf(szTemp, sizeof(szTemp), RES_STRING(GM_CHARSTALL_CPP_00024), pData->m_Goods[i].byCount, pBoat->GetName(), pData->m_Goods[i].byCount, dwBoatID);
 				}
 			}
 			else
 			{
-				sprintf(szTemp, RES_STRING(GM_CHARSTALL_CPP_00025), pData->m_Goods[i].byCount, pItem->szName.c_str(), pData->m_Goods[i].dwMoney);
+				std::snprintf(szTemp, sizeof(szTemp), RES_STRING(GM_CHARSTALL_CPP_00025), pData->m_Goods[i].byCount, pItem->szName.c_str(), pData->m_Goods[i].dwMoney);
 			}
 			strcat(szLog, szTemp);
 		}
@@ -474,7 +474,11 @@ return;
 							StallResult r;
 							r.name = pCha->GetName();
 							r.stallName = pCha->GetStallName();
-							sprintf(r.location, "%d,%d", (int)pCha->GetPos().x/100, (int)pCha->GetPos().y/100);
+							{
+								auto _s = std::format("{},{}", (int)pCha->GetPos().x/100, (int)pCha->GetPos().y/100);
+								std::strncpy(r.location, _s.c_str(), sizeof(r.location) - 1);
+								r.location[sizeof(r.location) - 1] = 0;
+							}
 							r.count = pData->m_Goods[i].byCount;
 							r.cost = pData->m_Goods[i].dwMoney;
 							results.push_back(r);
@@ -793,11 +797,11 @@ return;
 					pStaller->SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00046), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					character.SystemNotice(RES_STRING(GM_CHARSTALL_CPP_00046), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 					ToLogService("store", LogLevel::Error, "Stall:it cannot find boat information that captain confirm in tradeID[0x{:X}]", (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
-					sprintf(szLog, RES_STRING(GM_CHARSTALL_CPP_00047), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
+					std::snprintf(szLog, sizeof(szLog), RES_STRING(GM_CHARSTALL_CPP_00047), character.GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 				}
 				else
 				{
-					sprintf(szLog, RES_STRING(GM_CHARSTALL_CPP_00048), pBoat->GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
+					std::snprintf(szLog, sizeof(szLog), RES_STRING(GM_CHARSTALL_CPP_00048), pBoat->GetName(), (DWORD)Grid.GetDBParam(enumITEMDBP_INST_ID));
 				}
 
 				if (!game_db.SaveBoat(*pBoat, enumSAVE_TYPE_OFFLINE))
@@ -826,7 +830,7 @@ return;
 			}
 			else
 			{
-				sprintf(szLog, RES_STRING(GM_CHARSTALL_CPP_00051), pItem->szName.c_str());
+				std::snprintf(szLog, sizeof(szLog), RES_STRING(GM_CHARSTALL_CPP_00051), pItem->szName.c_str());
 			}
 			Bag.Lock();
 
@@ -878,7 +882,7 @@ return;
 			character.SynKitbagNew(enumSYN_KITBAG_TRADE);
 
 			char szTemp[1024] = "";
-			sprintf(szTemp, RES_STRING(GM_CHARSTALL_CPP_00055),
+			std::snprintf(szTemp, sizeof(szTemp), RES_STRING(GM_CHARSTALL_CPP_00055),
 				szLog, pData->m_Goods[byIndex].dwMoney, byCount, pData->m_Goods[byIndex].dwMoney * byCount,
 				pStaller->getAttr(ATTR_GD), character.getAttr(ATTR_GD));
 			ToLogService("trade", "[CHA_VENDOR] {} -> {} : {}", pStaller->GetName(), character.GetName(), szTemp);

@@ -490,7 +490,7 @@ namespace mission
 		if( !pTradeData2 )
 		{
 			char szData[128];
-			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00032), pMain->GetName() );
+			std::snprintf( szData, sizeof(szData), RES_STRING(GM_CHARTRADE_CPP_00032), pMain->GetName() );
 			g_logManager.InternalLog(LogLevel::Error, "trade", szData );
 			return FALSE;
 		}
@@ -640,7 +640,7 @@ namespace mission
 		if (!pTradeData)
 		{
 			char szData[128];
-			sprintf(szData, RES_STRING(GM_CHARTRADE_CPP_00035), pMain->GetName());
+			std::snprintf(szData, sizeof(szData), RES_STRING(GM_CHARTRADE_CPP_00035), pMain->GetName());
 			g_logManager.InternalLog(LogLevel::Error, "trade", szData);
 			return FALSE;
 		}
@@ -724,7 +724,7 @@ namespace mission
 		if( !pTradeData )
 		{
 			char szData[128];
-			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00035), pMain->GetName() );
+			std::snprintf( szData, sizeof(szData), RES_STRING(GM_CHARTRADE_CPP_00035), pMain->GetName() );
 			g_logManager.InternalLog(LogLevel::Error, "trade", szData );
 			return FALSE;
 		}
@@ -822,7 +822,7 @@ namespace mission
 		if( !pTradeData )
 		{
 			char szData[128];
-			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00040), pMain->GetName() );
+			std::snprintf( szData, sizeof(szData), RES_STRING(GM_CHARTRADE_CPP_00040), pMain->GetName() );
 			g_logManager.InternalLog(LogLevel::Error, "trade", szData );
 			return FALSE;
 		}
@@ -1178,7 +1178,7 @@ namespace mission
 		if( !pTradeData )
 		{
 			char szData[128];
-			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00055), pMain->GetName() );
+			std::snprintf( szData, sizeof(szData), RES_STRING(GM_CHARTRADE_CPP_00055), pMain->GetName() );
 			g_logManager.InternalLog(LogLevel::Error, "trade", szData );
 			return FALSE;
 		}
@@ -1263,7 +1263,7 @@ namespace mission
 		if( !pTradeData )
 		{
 			char szData[128];
-			sprintf( szData, RES_STRING(GM_CHARTRADE_CPP_00057), pMain->GetName() );
+			std::snprintf( szData, sizeof(szData), RES_STRING(GM_CHARTRADE_CPP_00057), pMain->GetName() );
 			g_logManager.InternalLog(LogLevel::Error, "trade", szData );
 			return FALSE;
 		}
@@ -1393,7 +1393,7 @@ namespace mission
 			// 
 			char szTemp[128] = "";
 			char szTrade[2046] = "";
-			sprintf( szTrade, RES_STRING(GM_CHARTRADE_CPP_00059), pAccept->GetName() );
+			std::snprintf( szTrade, sizeof(szTrade), RES_STRING(GM_CHARTRADE_CPP_00059), pAccept->GetName() );
 
 			//
 			BOOL bBagSucc = true;
@@ -1471,13 +1471,13 @@ namespace mission
 							CCharacter* pBoat = pAccept->GetPlayer()->GetBoat( (DWORD)AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 							if( pBoat )
 							{
-								sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00063), AcpGrid[i].sNum, pBoat->GetName(),
+								std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00063), AcpGrid[i].sNum, pBoat->GetName(),
 									AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								strcat( szTrade, szTemp );
 							}
 							else
 							{
-								sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00064), AcpGrid[i].sNum, 
+								std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00064), AcpGrid[i].sNum,
 									AcpGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								strcat( szTrade, szTemp );
 							}
@@ -1499,7 +1499,7 @@ namespace mission
 						}
 						else
 						{
-							sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00096), AcpGrid[i].sNum, pItem->szName.c_str() );
+							std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00096), AcpGrid[i].sNum, pItem->szName.c_str() );
 							strcat( szTrade, szTemp );
 						}
 					}
@@ -1507,7 +1507,7 @@ namespace mission
 			}
 
 			
-			sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00066), pRequest->GetName() );
+			std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00066), pRequest->GetName() );
 			strcat( szTrade, szTemp );
 			for( int i = 0; i < ROLE_MAXNUM_TRADEDATA; i++ )
 			{
@@ -1548,7 +1548,7 @@ namespace mission
 							{
 								/*sprintf( szTemp, "%d%sID[0x%X]", ReqGrid[i].sNum, pBoat->GetName(),
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );*/
-								sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00063), ReqGrid[i].sNum, pBoat->GetName(),
+								std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00063), ReqGrid[i].sNum, pBoat->GetName(),
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								strcat( szTrade, szTemp );
 							}
@@ -1556,7 +1556,7 @@ namespace mission
 							{
 								/*sprintf( szTemp, "%dID[0x%X]", ReqGrid[i].sNum, 
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );*/
-								sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00063), ReqGrid[i].sNum, 
+								std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00063), ReqGrid[i].sNum,
 									ReqGrid[i].GetDBParam( enumITEMDBP_INST_ID ) );
 								strcat( szTrade, szTemp );
 							}
@@ -1578,7 +1578,7 @@ namespace mission
 						}
 						else
 						{
-							sprintf( szTemp, "%d%s", ReqGrid[i].sNum, pItem->szName.c_str() );
+							{ auto _s = std::format("{}{}", ReqGrid[i].sNum, pItem->szName.c_str()); std::strncpy(szTemp, _s.c_str(), sizeof(szTemp) - 1); szTemp[sizeof(szTemp) - 1] = 0; }
 							strcat( szTrade, szTemp );
 						}
 					}
@@ -1786,7 +1786,7 @@ namespace mission
 				pRequest->SetIMP(pRequest->GetIMP() + pTradeData->AcpTradeData.dwIMP);
 			}
 
-			sprintf( szTemp, RES_STRING(GM_CHARTRADE_CPP_00073), pTradeData->AcpTradeData.dwMoney, 
+			std::snprintf( szTemp, sizeof(szTemp), RES_STRING(GM_CHARTRADE_CPP_00073), pTradeData->AcpTradeData.dwMoney,
 				pTradeData->ReqTradeData.dwMoney );
 			strcat( szTrade, szTemp );
 
@@ -1951,8 +1951,8 @@ namespace mission
 				{
 					char szBoat1[64] = "";
 					char szBoat2[64] = "";
-					sprintf( szBoat1, RES_STRING(GM_CHARTRADE_CPP_00075), pAccept->GetPlyMainCha()->GetName(), pAccept->GetName() );
-					sprintf( szBoat2, RES_STRING(GM_CHARTRADE_CPP_00075), pRequest->GetPlyMainCha()->GetName(), pRequest->GetName() );
+					std::snprintf( szBoat1, sizeof(szBoat1), RES_STRING(GM_CHARTRADE_CPP_00075), pAccept->GetPlyMainCha()->GetName(), pAccept->GetName() );
+					std::snprintf( szBoat2, sizeof(szBoat2), RES_STRING(GM_CHARTRADE_CPP_00075), pRequest->GetPlyMainCha()->GetName(), pRequest->GetName() );
 					ToLogService("trade", "[CHA_CHA] {} -> {} : {}", szBoat1, szBoat2, szTrade);
 				}
 				else
@@ -2009,14 +2009,14 @@ namespace mission
 
 			if (pTradeData->AcpTradeData.dwIMP)
 			{
-				sprintf(szNotice, "You have received [%d] IMPs from (%s).", pTradeData->AcpTradeData.dwIMP, pAccept->GetName());
+				{ auto _s = std::format("You have received [{}] IMPs from ({}).", pTradeData->AcpTradeData.dwIMP, pAccept->GetName()); std::strncpy(szNotice, _s.c_str(), sizeof(szNotice) - 1); szNotice[sizeof(szNotice) - 1] = 0; }
 				pRequest->SystemNotice(szNotice);
 
 			}
 
 			if (pTradeData->ReqTradeData.dwIMP)
 			{
-				sprintf(szNotice, "You have received [%d] IMPs from (%s).", pTradeData->ReqTradeData.dwIMP, pRequest->GetName());
+				{ auto _s = std::format("You have received [{}] IMPs from ({}).", pTradeData->ReqTradeData.dwIMP, pRequest->GetName()); std::strncpy(szNotice, _s.c_str(), sizeof(szNotice) - 1); szNotice[sizeof(szNotice) - 1] = 0; }
 				pAccept->SystemNotice(szNotice);
 			}
 

@@ -168,6 +168,9 @@
     <ClCompile Include="..\src\HelpEntryStore.cpp">
       <Filter>Network Protocol</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\ChaNameFilterStore.cpp">
+      <Filter>Network Protocol</Filter>
+    </ClCompile>
     <ClCompile Include="..\src\NpcRecordStore.cpp">
       <Filter>Network Protocol</Filter>
     </ClCompile>
@@ -468,6 +471,12 @@
       <Filter>Data Tables</Filter>
     </ClInclude>
     <ClInclude Include="..\include\HelpEntryStore.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChaNameFilterRecord.h">
+      <Filter>Data Tables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ChaNameFilterStore.h">
       <Filter>Data Tables</Filter>
     </ClInclude>
     <ClInclude Include="..\include\NpcRecordStore.h">

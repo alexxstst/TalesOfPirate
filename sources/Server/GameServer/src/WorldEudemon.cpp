@@ -117,7 +117,11 @@ namespace mission
 
 		m_ID = ulID;
 		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
+		{
+			auto _s = std::format("Cha-{}+{}", GetName(), GetID());
+			std::strncpy(szLogName, _s.c_str(), sizeof(szLogName) - 1);
+			szLogName[sizeof(szLogName) - 1] = 0;
+		}
 		SetLogName(szLogName);
 
 		// 

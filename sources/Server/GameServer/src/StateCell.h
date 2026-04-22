@@ -1,4 +1,4 @@
-﻿//=============================================================================
+//=============================================================================
 // FileName: StateCell.h
 // Creater: ZhangXuedong
 // Date: 2005.04.29
@@ -25,21 +25,21 @@ public:
 
 class CEyeshotCell;
 
-// 
+//
 class CStateCell
 {
 public:
 	CStateCell() = default;
 
-	long			GetChaNum(void) {return m_lChaNum;}
-	long			GetStateNum(void) {return m_CSkillState.m_uchStateNum;}
+	long            GetChaNum(void);
+	long            GetStateNum(void);
 
 	CChaListNode*	AddCharacter(CCharacter *pCCha, bool bIn);
 	void			DelCharacter(CChaListNode *pCEntNode);
 	void			SetCharacterIn(CChaListNode *pCEntNode, bool bIn = true);
 
-	bool			HasState(unsigned char uchStateID) {return m_CSkillState.HasState(uchStateID);}
-	bool			HasState(unsigned char uchStateID, unsigned char uchStateLv) {return m_CSkillState.HasState(uchStateID, uchStateLv);}
+	bool            HasState(unsigned char uchStateID);
+	bool            HasState(unsigned char uchStateID, unsigned char uchStateLv);
 	bool			AddState(unsigned char uchFightID, unsigned long ulSrcWorldID, long lSrcHandle, char chObjType, char chObjHabitat, char chEffType,
 						unsigned char uchStateID, unsigned char uchStateLv, unsigned long ulStartTick, long lOnTick, char chType, char chWithCenter);
 	void			DelState(unsigned char uchStateID);
@@ -63,7 +63,7 @@ public:
 	CChaListNode	*m_pCChaIn{ nullptr };
 	CChaListNode	*m_pCChaCross{ nullptr };
 
-	CSkillState		m_CSkillState;	// 
+	CSkillState		m_CSkillState;	//
 
 	CEyeshotCell	*m_pCEyeshotCell{ nullptr };
 
@@ -71,14 +71,10 @@ public:
 	CStateCell		*m_pCLast{ nullptr };
 };
 
-class CActStateCell // 
+class CActStateCell //
 {
 public:
-	CActStateCell()
-	{
-		m_pHead  = 0;
-		m_lCount = 0;
-	}
+	CActStateCell();
 
 	void		Add(CStateCell *pObj);
 	void		Del(CStateCell *pObj);
@@ -86,70 +82,13 @@ public:
 	void		BeginGet(void);
 	CStateCell*	GetNext(void);
 
-	long		GetActiveNum(void) {return m_lCount;}
-
-protected:
+	long        GetActiveNum(void);
 
 private:
 	CStateCell	*m_pHead;
-
 	CStateCell	*m_pCur;
-
 	long		m_lCount;
-
 };
-
-inline void CActStateCell::Add(CStateCell *pObj)
-{
-	if (pObj->m_pCLast || pObj->m_pCNext)
-	{
-		//LG("", " [%d,%d] ", pObj->m_sPosX, pObj->m_sPosY);
-		ToLogService("errors", LogLevel::Error, "when add entity[{},{}] to state cell, find it is not break away foregone manage cell", pObj->m_sPosX, pObj->m_sPosY);
-		return;
-	}
-
-	pObj->m_pCLast = 0;
-	if (pObj->m_pCNext = m_pHead)
-		m_pHead->m_pCLast = pObj;
-	m_pHead = pObj;
-
-	m_lCount++;
-}
-
-inline void CActStateCell::Del(CStateCell *pObj)
-{
-	if (!pObj)
-		return;
-	if (m_pCur == pObj)
-		m_pCur = pObj->m_pCNext;
-
-	if (pObj->m_pCLast)
-		pObj->m_pCLast->m_pCNext = pObj->m_pCNext;
-	if (pObj->m_pCNext)
-		pObj->m_pCNext->m_pCLast = pObj->m_pCLast;
-	if (m_pHead == pObj)
-		if (m_pHead = pObj->m_pCNext)
-			m_pHead->m_pCLast = 0;
-	pObj->m_pCNext = 0;
-	pObj->m_pCLast = 0;
-
-	m_lCount--;
-}
-
-inline void CActStateCell::BeginGet()
-{
-	m_pCur = m_pHead;
-}
-
-inline CStateCell* CActStateCell::GetNext()
-{
-	CStateCell	*pRet = m_pCur;
-
-	if (m_pCur)
-		m_pCur = m_pCur->m_pCNext;
-
-	return pRet;
-}
 
 class CStateCellNode
 {

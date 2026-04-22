@@ -97,11 +97,11 @@ public:
 		long		lERangeBParam[defSKILL_RANGE_BASEP_NUM];	// 
 	};
 
-	dbc::Short	GetFightState(void) {return m_SFightProc.sState;}
-	dbc::Short	GetFightStopState(void) {return m_SFightInit.sStopState;}
+	dbc::Short	GetFightState(void);
+	dbc::Short	GetFightStopState(void);
 
 	bool	DesireFightBegin(SFightInit *);
-	void	DesireFightEnd(void) {EndFight();}
+	void	DesireFightEnd(void);
 	void	OnFight(dbc::uLong ulCurTick);
 
 	void	RangeEffect(SFireUnit *pSFireSrc, SubMap *pCMap, dbc::Long *plRangeBParam);
@@ -140,7 +140,7 @@ public:
 	void	ResetFight();
 	bool	RectifyAttr();
 
-	dbc::Long	GetLevel(void) {return (long)m_CChaAttr.GetAttr(ATTR_LV);}
+	dbc::Long	GetLevel(void);
 	void		AddExp(dbc::uLong);
 	bool		AddExpAndNotic(dbc::Long lAddExp, dbc::Short sNotiType = enumATTRSYN_TASK);
 
@@ -148,11 +148,11 @@ public:
 	void	CountSailLevel(void);
 	void	CountLifeLevel(void);
 
-	// 
-	virtual void AfterObjDie(CCharacter *pCAtk, CCharacter *pCDead) {}
-	virtual void OnLevelUp( USHORT sLevel ) {};
-	virtual void OnSailLvUp( USHORT sLevel ) {};
-	virtual void OnLifeLvUp( USHORT sLevel ) {};
+	//
+	virtual void AfterObjDie(CCharacter *pCAtk, CCharacter *pCDead);
+	virtual void OnLevelUp(USHORT sLevel);
+	virtual void OnSailLvUp(USHORT sLevel);
+	virtual void OnLifeLvUp(USHORT sLevel);
 
 	// 	
 	void	SpawnResource( CCharacter *pCAtk, dbc::Long lSkillLv );
@@ -161,32 +161,23 @@ public:
 	bool	GetTrowItemPos(dbc::Long *plPosX, dbc::Long *plPosY);
 	bool	SkillExpend(dbc::Short sExecTime = 1);
 
-	dbc::uLong	GetSkillDist(Entity *pTarEnt, CSkillRecord *pRec)
-	{
-		if (!pRec) return 0;
-		if (pTarEnt) return GetRadius() + pTarEnt->GetRadius() + pRec->sApplyDistance;
-		else return GetRadius() + pRec->sApplyDistance;
-	}
-	bool	SkillTarIsEntity(CSkillRecord *pRec)
-	{
-		if (pRec && (pRec->chApplyType == 1 || pRec->chApplyType == 3)) return true;
-		else return false;
-	}
+	dbc::uLong	GetSkillDist(Entity *pTarEnt, CSkillRecord *pRec);
+	bool        SkillTarIsEntity(CSkillRecord *pRec);
 
 	void			BeUseSkill(dbc::Long lPreHp, dbc::Long lNowHp, CCharacter *pCSrcCha, dbc::Char chSkillEffType);
 	void			SetMonsterFightObj(dbc::uLong ulObjWorldID, dbc::Long lObjHandle);
 	dbc::Long		GetSkillTime(CSkillTempData *pCSkillTData);
 	void			EnrichSkillBag(bool bActive = true);
 	virtual bool	AddSkillState(dbc::uChar uchFightID, dbc::uLong ulSrcWorldID, dbc::Long lSrcHandle, dbc::Char chObjType, dbc::Char chObjHabitat, dbc::Char chEffType,
-					dbc::uChar uchStateID, dbc::uChar uchStateLv, dbc::Long lOnTick, dbc::Char chType = enumSSTATE_ADD_UNDEFINED, bool bNotice = true){return false;}
-	virtual bool	DelSkillState(dbc::uChar uchStateID, bool bNotice = true){return false;}
-	void			SetItemHostObj(CFightAble *pCObj) {m_pCItemHostObj = pCObj;}
+					dbc::uChar uchStateID, dbc::uChar uchStateLv, dbc::Long lOnTick, dbc::Char chType = enumSSTATE_ADD_UNDEFINED, bool bNotice = true);
+	virtual bool	DelSkillState(dbc::uChar uchStateID, bool bNotice = true);
+	void			SetItemHostObj(CFightAble *pCObj);
 
 	dbc::Long		setAttr(int nIdx, LONG32 lValue, int nType = 0);
-	dbc::Long		getAttr(int nIdx) {return m_CChaAttr.GetAttr(nIdx);}
-	virtual void	AfterAttrChange(int nIdx, dbc::Long lOldVal, dbc::Long lNewVal) {};
+	dbc::Long		getAttr(int nIdx);
+	virtual void	AfterAttrChange(int nIdx, dbc::Long lOldVal, dbc::Long lNewVal);
 	void			SetDie(CCharacter *pCSkillSrcCha);
-	virtual void	Die(){};
+	virtual void	Die();
 
 	CCharacter* SkillPopBoat(dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// 
 	bool SkillPopBoat(CCharacter *pCBoat, dbc::Long lPosX, dbc::Long lPosY, dbc::Short sDir = -1);	// 
@@ -214,7 +205,7 @@ protected:
 	void	Initially();
 	void	Finally();
 
-	CFightAble	*	IsFightAble(){return this;}
+	CFightAble*	IsFightAble();
 	bool	GetFightTargetShape(Square *pSTarShape);
 
 	
@@ -225,13 +216,13 @@ protected:
 private:
 	virtual void BeginFight();
 	virtual void EndFight();
-	void OnFightBegin(void) {m_bOnFight = true;}
-	void OnFightEnd(void) {m_bOnFight = false;}
+	void         OnFightBegin(void);
+	void         OnFightEnd(void);
 
-	virtual void SubsequenceFight(){};
+	virtual void SubsequenceFight();
 
-	virtual void BreakAction(net::RPacket* pk = nullptr) {};
-	virtual void EndAction(net::RPacket* pk = nullptr) {}
+	virtual void BreakAction(net::RPacket* pk = nullptr);
+	virtual void EndAction(net::RPacket* pk = nullptr);
 
 	bool SkillGeneral(dbc::Long lDistance, dbc::Short sExecTime = 1); // 
 

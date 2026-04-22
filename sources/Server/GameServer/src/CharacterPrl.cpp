@@ -2401,14 +2401,14 @@ void CCharacter::Cmd_ChangeHair(net::RPacket& pk) {
 	}
 
 	if (m_CKitbag.IsPwdLocked()) {
-		sprintf(szRes, RES_STRING(GM_CHARACTERPRL_CPP_00042));
+		std::snprintf(szRes, sizeof(szRes), "%s", RES_STRING(GM_CHARACTERPRL_CPP_00042));
 		Prl_ChangeHairResult(0, szRes);
 		return;
 	}
 
 	CHairRecord* pHair = GetHairRecordInfo(sScriptID);
 	if (!pHair) {
-		sprintf(szRes, RES_STRING(GM_CHARACTERPRL_CPP_00043), sScriptID);
+		std::snprintf(szRes, sizeof(szRes), RES_STRING(GM_CHARACTERPRL_CPP_00043), sScriptID);
 		Prl_ChangeHairResult(0, szRes);
 		return;
 	}
@@ -2433,7 +2433,7 @@ void CCharacter::Cmd_ChangeHair(net::RPacket& pk) {
 			}
 
 			if (!bOK) {
-				sprintf(szRes, RES_STRING(GM_CHARACTERPRL_CPP_00044));
+				std::snprintf(szRes, sizeof(szRes), "%s", RES_STRING(GM_CHARACTERPRL_CPP_00044));
 				Prl_ChangeHairResult(0, szRes);
 				return;
 			}

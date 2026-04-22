@@ -39,9 +39,13 @@ void CTradeLogDB::ExecLogSQL(const char* gameServerName, const char* action,
 	tm* ttm = localtime(&ltime);
 
 	char timeBuf[20];
-	sprintf(timeBuf, "%04i/%02i/%02i %02i:%02i:%02i",
-		ttm->tm_year + 1900, ttm->tm_mon + 1, ttm->tm_mday,
-		ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
+	{
+		auto _s = std::format("{:04}/{:02}/{:02} {:02}:{:02}:{:02}",
+			ttm->tm_year + 1900, ttm->tm_mon + 1, ttm->tm_mday,
+			ttm->tm_hour, ttm->tm_min, ttm->tm_sec);
+		std::strncpy(timeBuf, _s.c_str(), sizeof(timeBuf) - 1);
+		timeBuf[sizeof(timeBuf) - 1] = 0;
+	}
 
 	try {
 		auto cmd = _db.CreateCommand(

@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 8.00
+﻿Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Common", "Common.vcproj", "{58B6753C-75DA-449A-97F9-3B26DA4B6FB5}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection

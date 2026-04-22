@@ -209,14 +209,22 @@ void CDBLogMgr::Log(const char* type, const char* c1, const char* c2, const char
 		if (_nPoolUseLoc >= MAX_DBLOG_POOL) {
 			_nPoolUseLoc = 0;
 		}
-		sprintf(pData->szLog, "insert gamelog (action, c1, c2, c3, c4, content) \
-			   values('%s', '%s', '%s', '%s', '%s', '%s')", type, c1, c2, c3, c4, p);
+		{
+			auto _s = std::format("insert gamelog (action, c1, c2, c3, c4, content) "
+				"values('{}', '{}', '{}', '{}', '{}', '{}')", type, c1, c2, c3, c4, p);
+			std::strncpy(pData->szLog, _s.c_str(), sizeof(pData->szLog) - 1);
+			pData->szLog[sizeof(pData->szLog) - 1] = 0;
+		}
 		_LogList.push_back(pData);
 	}
 	else {
 		char szLog[8192];
-		sprintf(szLog, "insert gamelog (action, c1, c2, c3, c4, content) \
-			   values('%s', '%s', '%s', '%s', '%s', '%s')", type, c1, c2, c3, c4, p);
+		{
+			auto _s = std::format("insert gamelog (action, c1, c2, c3, c4, content) "
+				"values('{}', '{}', '{}', '{}', '{}', '{}')", type, c1, c2, c3, c4, p);
+			std::strncpy(szLog, _s.c_str(), sizeof(szLog) - 1);
+			szLog[sizeof(szLog) - 1] = 0;
+		}
 		game_db.ExecLogSQL(szLog);
 	}
 }
@@ -618,7 +626,8 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime) {
 			pCSubMap->m_CEyeshotCellL.BeginGet();
 			while (pCMgrUnit = pCSubMap->m_CEyeshotCellL.GetNext()) {
 				pCEnt = pCMgrUnit->m_pCChaL;
-				while (pCEnt) {
+				assert(!pCEnt || GamePool::Instance().IsValidEntityPtr(pCEnt));
+				while (pCEnt && GamePool::Instance().IsValidEntityPtr(pCEnt)) {
 					g_ulCurID = pCEnt->GetID();
 					g_lCurHandle = pCEnt->GetHandle();
 
@@ -632,6 +641,7 @@ void CGameApp::MgrUnitRun(DWORD dwCurTime) {
 
 					pCFlagEnt = pCEnt;
 					pCEnt = pCEnt->m_pCEyeshotCellNext;
+					assert(!pCEnt || GamePool::Instance().IsValidEntityPtr(pCEnt));
 					((CCharacter*)pCFlagEnt)->RunEnd(dwCurTime);
 				}
 
@@ -871,18 +881,33 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer) {
 		bool bIsDie = !pCCha->IsLiveing();
 		bool bSavePos = false;
 		SubMap* pSrcMap = pCCha->GetSubMap();
-		Point SSrcPos;
 
 		if (pSrcMap)
 			pSrcMap->BeforePlyOutMap(pCCha);
 		if (pSrcMap)
 			bSavePos = pCCha->GetSubMap()->CanSavePos();
+
+		// Снимаем CtrlCha и (если отличается) MainCha с их eyeshot-клеток ДО любых
+		// манипуляций с координатами/submap (ResetBirthInfo, SetToMainCha и т.д.).
+		// Иначе m_pCEyeshotHost и позиция/карта рассинхронизируются, и финальный
+		// Free()→Character::Finally→SubMap::Delete уйдёт в early-return, оставив в
+		// m_pCChaL клетки dangling-указатель на возвращённую в GamePool сущность —
+		// именно это ловит assert в MgrUnitRun.
+		CCharacter* pMainCha = pPlayer->GetMainCha();
+		if (pSrcMap) {
+			pSrcMap->GoOut(pCCha);
+		}
+		if (pMainCha && pMainCha != pCCha) {
+			if (SubMap* pMainMap = pMainCha->GetSubMap()) {
+				pMainMap->GoOut(pMainCha);
+			}
+		}
+
 		if (bIsDie || !bSavePos) //
 		{
 			if (bIsDie)
 				g_luaAPI.Call("Relive", pCCha);
 
-			SSrcPos = pCCha->GetPos();
 			if (pCCha->IsBoat()) //
 			{
 				pCCha->SetToMainCha(bIsDie);
@@ -904,21 +929,23 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer) {
 		if (bIsDie || !bSavePos) //
 		{
 			game_db.SavePlayerPos(*pPlayer);
-			pCCha->SetSubMap(pSrcMap);
-			pCCha->SetPos(SSrcPos);
+			// SetSubMap/SetPos восстановление больше не нужно: персонажи уже сняты
+			// с карты выше, Free()→Character::Finally увидит m_submap == nullptr
+			// и корректно пропустит повторный GoOut.
 		}
 
 		DelPlayerIdx(pPlayer->GetDBChaId());
 		g_pGameApp->m_dwPlayerCnt--;
-		pPlayer->Free();
 
-		//////////////////////////////////////////////////////////////////////////
-		// gate server
+		// gate server — на валидном объекте (до Free).
 		pPlayer->OnLogoff();
 		DELPLAYER(pPlayer);
-		//////////////////////////////////////////////////////////////////////////
-
 		ToLogService("map", "atorID = {}, goout", pPlayer->GetDBChaId());
+
+		// Free в конце: Finally() освобождает MainCha/лодки и возвращает CPlayer
+		// в GamePool. Character::Finally увидит m_submap == nullptr (мы уже сняли
+		// с карты) и не будет пытаться повторно снять — ни ошибок, ни утечек.
+		pPlayer->Free();
 	}
 }
 
@@ -1187,7 +1214,7 @@ mission::CNpc* CGameApp::FindNpc(const char szName[]) {
 void CGameApp::NotiGameReset(unsigned long ulLeftSec) {
 	char szNotiMsg[1024];
 
-	sprintf(szNotiMsg, RES_STRING(GM_GAMEAPP_CPP_00002), g_Config.m_szName, ulLeftSec, m_strMapNameList.c_str());
+	std::snprintf(szNotiMsg, sizeof(szNotiMsg), RES_STRING(GM_GAMEAPP_CPP_00002), g_Config.m_szName, ulLeftSec, m_strMapNameList.c_str());
 
 	//  :
 	auto wpk = net::msg::serialize(net::msg::McSysInfoMessage{szNotiMsg});
@@ -1338,4 +1365,280 @@ void CGameApp::CanReceiveRequests(uLong chaID, bool CanSend) {
 	//  :    (GameServerGroup)
 	auto WtPk = net::msg::serialize(net::msg::GmCanReceiveRequestsMessage{(int64_t)chaID, (int64_t)CanSend});
 	SENDTOGROUP(WtPk);
+}
+
+// ============================================================================
+// Ранее inline-методы из GameApp.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+CDBLogMgr::CDBLogMgr()
+	: _nPerLogCnt(5), _nLogLeft(0), _nPoolUseLoc(0)
+{
+	for (int i = 0; i < MAX_DBLOG_POOL; i++) {
+		_LogPool[i].nLoc = i;
+	}
+}
+
+int CDBLogMgr::GetLogLeft()              { return _nLogLeft; }
+int CDBLogMgr::SetPerLogCnt(int nCnt)    { _nPerLogCnt = nCnt; return _nPerLogCnt; }
+int CDBLogMgr::GetPerLogCnt()            { return _nPerLogCnt; }
+
+void  CGameApp::SetGlobalRates(float droprate, float exprate) {
+	m_fGlobalDropRate = droprate;
+	m_fGlobalExpRate  = exprate;
+}
+float CGameApp::GetGlobalDropRate()      { return m_fGlobalDropRate; }
+float CGameApp::GetGlobalExpRate()       { return m_fGlobalExpRate; }
+
+mission::CEventEntity* CGameApp::CreateEntity(BYTE byType) {
+	return GamePool::Instance().AcquireEventEntity(byType);
+}
+
+bool  CGameApp::IsChaAttrMaxValInit(void)          { return m_bChaAttrMaxValInit; }
+void  CGameApp::ChaAttrMaxValInit(bool bSet)       { m_bChaAttrMaxValInit = bSet; }
+
+short CGameApp::GetMapNum()                        { return m_mapnum; }
+
+CMapRes* CGameApp::GetMap(int no) {
+	return m_MapList[no];
+}
+
+void CGameApp::AddPlayerIdx(DWORD dwDBID, CPlayer* pPlayer) {
+	_PlayerIdx[dwDBID] = pPlayer;
+}
+
+void CGameApp::DelPlayerIdx(DWORD dwDBID) {
+	std::map<DWORD, CPlayer*>::iterator it = _PlayerIdx.find(dwDBID);
+	if (it != _PlayerIdx.end()) {
+		_PlayerIdx.erase(it);
+	}
+	else {
+		ToLogService("errors", LogLevel::Error, "when delete PlayerIdx it appear error, DB ID = {} no find index", dwDBID);
+	}
+}
+
+CPlayer* CGameApp::GetPlayerByDBID(DWORD dwDBID) {
+	return _PlayerIdx[dwDBID];
+}
+
+CPlayer* CGameApp::GetPlayerByMainChaName(const char* sMainChaName) {
+	if (!sMainChaName) {
+		return nullptr;
+	}
+	for (auto it = _PlayerIdx.begin(); it != _PlayerIdx.end(); ++it) {
+		if (it->second && it->second->GetMainCha()) {
+			if (!strcmp(it->second->GetMainCha()->GetName(), sMainChaName)) {
+				return it->second;
+			}
+		}
+	}
+	return nullptr;
+}
+
+CSkillTempData* CGameApp::GetSkillTData(short sSkillNo, char chSkillLv) {
+	if (!m_pCSkillTData[sSkillNo][chSkillLv]) {
+		m_pCSkillTData[sSkillNo][chSkillLv] = m_SkillTDataPool.Get();
+		if (!m_pCSkillTData[sSkillNo][chSkillLv])
+			return 0;
+		CSkillRecord* pCSkillRec = GetSkillRecordInfo(sSkillNo);
+		if (!pCSkillRec)
+			return 0;
+
+		m_sSkillSetNo  = sSkillNo;
+		m_chSkillSetLv = chSkillLv;
+		// SP
+		if (pCSkillRec->szUseSP != "0")
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseSP, (int)chSkillLv).value_or(0);
+		else
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseSP = 0;
+
+		if (pCSkillRec->szUseEndure != "0")
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEndure, (int)chSkillLv).value_or(0);
+		else
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEndure = 0;
+
+		if (pCSkillRec->szUseEnergy != "0")
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = (Short)g_luaAPI.CallR<int>(pCSkillRec->szUseEnergy, (int)chSkillLv).value_or(0);
+		else
+			m_pCSkillTData[sSkillNo][chSkillLv]->sUseEnergy = 0;
+
+		m_pCSkillTData[sSkillNo][chSkillLv]->sRange[0] = enumRANGE_TYPE_NONE;
+		if (pCSkillRec->szSetRange != "0")
+			g_luaAPI.Call(pCSkillRec->szSetRange, (int)chSkillLv);
+
+		m_pCSkillTData[sSkillNo][chSkillLv]->sStateParam[0] = SSTATE_NONE;
+		if (pCSkillRec->szRangeState != "0")
+			g_luaAPI.Call(pCSkillRec->szRangeState, (int)chSkillLv);
+
+		if (pCSkillRec->szFireSpeed != "0")
+			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = g_luaAPI.CallR<int>(pCSkillRec->szFireSpeed.c_str(), (int)chSkillLv).value_or(0);
+		else
+			m_pCSkillTData[sSkillNo][chSkillLv]->lResumeTime = 0;
+	}
+
+	return m_pCSkillTData[sSkillNo][chSkillLv];
+}
+
+void CGameApp::SetSkillTDataRange(short* psRange) {
+	if (m_sSkillSetNo < 0 || m_sSkillSetNo > defMAX_SKILL_NO) return;
+	if (m_chSkillSetLv < 0 || m_chSkillSetLv > defMAX_SKILL_LV) return;
+	memcpy(m_pCSkillTData[m_sSkillSetNo][m_chSkillSetLv]->sRange, psRange, sizeof(short) * defSKILL_RANGE_EXTEP_NUM);
+}
+
+void CGameApp::SetSkillTDataState(short* psState) {
+	if (m_sSkillSetNo < 0 || m_sSkillSetNo > defMAX_SKILL_NO) return;
+	if (m_chSkillSetLv < 0 || m_chSkillSetLv > defMAX_SKILL_LV) return;
+	memcpy(m_pCSkillTData[m_sSkillSetNo][m_chSkillSetLv]->sStateParam, psState, sizeof(short) * defSKILL_STATE_PARAM_NUM);
+}
+
+void CGameApp::InitSStateTraOnTime() {
+	memset(m_lSStateTraOnTime, 0, sizeof(m_lSStateTraOnTime));
+	SkillStateRecordStore::Instance()->ForEach([this](CSkillStateRecord& rec) {
+		if (rec.Id < 1 || rec.Id > AREA_STATE_MAXID)
+			return;
+		if (rec.szOnTransfer == "0")
+			return;
+		if (!g_luaAPI.HasFunction(rec.szOnTransfer.c_str())) {
+			ToLogService("lua", LogLevel::Warning,
+						 "Skill state {} has szOnTransfer='{}' but function not found",
+						 rec.Id, rec.szOnTransfer);
+			return;
+		}
+		for (int j = 1; j <= SKILL_STATE_LEVEL; j++) {
+			m_lSStateTraOnTime[rec.Id][j] = g_luaAPI.CallR<int>(rec.szOnTransfer.c_str(), (int)j).value_or(0);
+		}
+	});
+}
+
+long CGameApp::GetSStateTraOnTime(unsigned char uchStateID, unsigned char uchStateLv) {
+	return m_lSStateTraOnTime[uchStateID][uchStateLv];
+}
+
+CCharacter* CGameApp::FindPlayerChaByName(const char* cszChaName) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
+			if (!pCha)
+				continue;
+			if (!strcmp(pCha->GetName(), cszChaName))
+				return pCha;
+		}
+	}
+	return nullptr;
+}
+
+CCharacter* CGameApp::FindPlayerChaByNameLua(const char* cszChaName) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
+			if (!pCha)
+				continue;
+			if (!strcmp(pCha->GetPlayer()->GetMainCha()->GetName(), cszChaName))
+				return pCha;
+		}
+	}
+	return nullptr;
+}
+
+int CGameApp::FindPlayerChaByActNameLua(const char* cszChaName, CCharacter* chas[3]) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	int count = 0;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
+			if (!pCha)
+				continue;
+			if (!strcmp(pCPlayer->GetActName(), cszChaName))
+				chas[count++] = pCha;
+		}
+	}
+	return count;
+}
+
+bool CGameApp::DealAllInGuild(int guildID, const char* luaFunc, const char* luaParam) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
+			if (!pCha)
+				continue;
+			if (pCha->GetPlayer()->GetMainCha()->GetValidGuildID() == guildID) {
+				if (luaParam != nullptr && luaParam[0] != '\0') {
+					g_luaAPI.Call(luaFunc, pCha, luaParam);
+				}
+				else {
+					g_luaAPI.Call(luaFunc, pCha);
+				}
+			}
+		}
+	}
+	return true;
+}
+
+CCharacter* CGameApp::FindPlayerChaByID(unsigned long ulChaID) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			CCharacter* pCha = pCPlayer->GetCtrlCha();
+			if (!pCha)
+				continue;
+			if (pCha->GetID() == ulChaID)
+				return pCha;
+		}
+	}
+	return nullptr;
+}
+
+CPlayer* CGameApp::FindPlayerByDBChaID(unsigned long ulDBChaID) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			if (pCPlayer->GetDBChaId() == ulDBChaID)
+				return pCPlayer;
+		}
+	}
+	return nullptr;
+}
+
+CCharacter* CGameApp::FindMainPlayerChaByID(unsigned long ulChaID) {
+	BEGINGETGATE();
+	GateServer* pGateServer;
+	while (pGateServer = GETNEXTGATE()) {
+		for (CPlayer* pCPlayer : pGateServer->m_playerlist) {
+			CCharacter* pCha = pCPlayer->GetMainCha();
+			if (!pCha)
+				continue;
+			if (pCha->GetID() == ulChaID)
+				return pCha;
+		}
+	}
+	return nullptr;
+}
+
+CCharacter* CGameApp::FindChaByID(unsigned long ulChaID) {
+	CCharacter* pResult = nullptr;
+	GamePool::Instance().ForEachCharacter([ulChaID, &pResult](CCharacter* pCCha) {
+		if (!pResult && pCCha->GetID() == ulChaID) {
+			pResult = pCCha;
+		}
+	});
+	return pResult;
+}
+
+CCharacter* CGameApp::FindChaByName(const char* cszChaName) {
+	CCharacter* pResult = nullptr;
+	GamePool::Instance().ForEachCharacter([cszChaName, &pResult](CCharacter* pCCha) {
+		if (!pResult && !strcmp(pCCha->GetName(), cszChaName)) {
+			pResult = pCCha;
+		}
+	});
+	return pResult;
 }

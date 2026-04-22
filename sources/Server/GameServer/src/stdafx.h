@@ -21,6 +21,7 @@
 #include <atomic>
 #include <charconv>
 #include <deque>
+#include <format>
 #include <fstream>
 #include <functional>
 #include <iostream>

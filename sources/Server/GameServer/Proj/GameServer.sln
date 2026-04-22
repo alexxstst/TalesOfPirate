@@ -1,4 +1,4 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
 VisualStudioVersion = 12.0.40629.0
 MinimumVisualStudioVersion = 10.0.40219.1
@@ -6,17 +6,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GameServer", "GameServer.vc
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
-		Debug|Win32 = Debug|Win32
-		IOCP_Release|Win32 = IOCP_Release|Win32
-		Release|Win32 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}.Debug|Win32.Build.0 = Debug|Win32
-		{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}.IOCP_Release|Win32.ActiveCfg = IOCP_Release|Win32
-		{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}.IOCP_Release|Win32.Build.0 = IOCP_Release|Win32
-		{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}.Release|Win32.ActiveCfg = Release|Win32
-		{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

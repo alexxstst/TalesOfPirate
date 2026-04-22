@@ -885,7 +885,11 @@ namespace mission {
 		owner.SetBoat(NULL);
 
 		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", pBoat->GetName(), pBoat->GetID());
+		{
+			auto _s = std::format("Cha-{}+{}", pBoat->GetName(), pBoat->GetID());
+			std::strncpy(szLogName, _s.c_str(), sizeof(szLogName) - 1);
+			szLogName[sizeof(szLogName) - 1] = 0;
+		}
 		pBoat->SetLogName(szLogName);
 
 		return TRUE;
@@ -1221,7 +1225,11 @@ namespace mission {
 						   pBoat->GetName());
 
 		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", pBoat->GetName(), pBoat->GetID());
+		{
+			auto _s = std::format("Cha-{}+{}", pBoat->GetName(), pBoat->GetID());
+			std::strncpy(szLogName, _s.c_str(), sizeof(szLogName) - 1);
+			szLogName[sizeof(szLogName) - 1] = 0;
+		}
 		pBoat->SetLogName(szLogName);
 
 		return TRUE;

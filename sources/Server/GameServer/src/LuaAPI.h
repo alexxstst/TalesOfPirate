@@ -15,35 +15,16 @@ struct LuaCallSite {
 	std::string fn;
 	std::source_location loc;
 
-	LuaCallSite(const char* fn, std::source_location loc = std::source_location::current())
-		: fn(fn), loc(loc) {
-	}
-
-	LuaCallSite(const std::string& fn, std::source_location loc = std::source_location::current())
-		: fn(fn), loc(loc) {
-	}
-
-	LuaCallSite(std::string_view fn, std::source_location loc = std::source_location::current())
-		: fn(fn), loc(loc) {
-	}
+	LuaCallSite(const char* fn, std::source_location loc = std::source_location::current());
+	LuaCallSite(const std::string& fn, std::source_location loc = std::source_location::current());
+	LuaCallSite(std::string_view fn, std::source_location loc = std::source_location::current());
 };
 
 class LuaAPI {
 public:
-	void Init(lua_State* L) {
-		m_L = L;
-	}
-
-	lua_State* State() const {
-		return m_L;
-	}
-
-	bool HasFunction(std::string_view fn) const {
-		lua_getglobal(m_L, fn.data());
-		bool isFunc = lua_isfunction(m_L, -1);
-		lua_pop(m_L, 1);
-		return isFunc;
-	}
+	void       Init(lua_State* L);
+	lua_State* State() const;
+	bool       HasFunction(std::string_view fn) const;
 
 	// Call Lua function, no return value. Returns true on success.
 	template <typename... Args>

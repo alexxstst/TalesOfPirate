@@ -28,7 +28,7 @@ void CDynMapEntryCell::SetCopyNum(dbc::Short sCopyNum)
 	if (sCopyNum > defMAX_MAP_COPY_NUM)
 	{
 		//LG("", "msg %d  %d!\n", sCopyNum, defMAX_MAP_COPY_NUM);
-		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00008), sCopyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		{ char _buf[256]; std::snprintf(_buf, sizeof(_buf), RES_STRING(GM_GAMEAPP_CPP_00008), sCopyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return;
 	}
 
@@ -195,3 +195,106 @@ void	g_SetTeamFightMapName(const char *cszMapName)
 		g_szTFightMapName[0] = '\0';
 	}
 }
+
+// ============================================================================
+// Ранее inline-методы из MapEntry.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+CMapEntryCopyCell::CMapEntryCopyCell(dbc::Short sMaxPlyNum, dbc::Short sCurPlyNum) {
+	m_sMaxPlyNum = sMaxPlyNum;
+	m_sCurPlyNum = sCurPlyNum;
+	m_sPosID = -1;
+}
+
+void       CMapEntryCopyCell::SetMaxPlyNum(dbc::Short sPlyNum) { m_sMaxPlyNum = sPlyNum; }
+dbc::Short CMapEntryCopyCell::GetMaxPlyNum(void)               { return m_sMaxPlyNum; }
+void       CMapEntryCopyCell::SetCurPlyNum(dbc::Short sPlyNum) { m_sCurPlyNum = sPlyNum; }
+dbc::Short CMapEntryCopyCell::GetCurPlyNum(void)               { return m_sCurPlyNum; }
+
+bool CMapEntryCopyCell::AddCurPlyNum(dbc::Short sAddNum) {
+	dbc::Short sNum = m_sCurPlyNum + sAddNum;
+	if (sNum < 0 || sNum > m_sMaxPlyNum) return false;
+	m_sCurPlyNum = sNum;
+	return true;
+}
+bool CMapEntryCopyCell::HasFreePlyCount(dbc::Short sRequestNum) {
+	return GetMaxPlyNum() - GetCurPlyNum() >= sRequestNum;
+}
+
+dbc::Long CMapEntryCopyCell::GetParam(dbc::Char chParamID) {
+	if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return 0;
+	return m_lParam[chParamID];
+}
+bool CMapEntryCopyCell::SetParam(dbc::Char chParamID, dbc::Long lParamVal) {
+	if (chParamID < 0 || chParamID >= defMAPCOPY_INFO_PARAM_NUM) return false;
+	m_lParam[chParamID] = lParamVal;
+	return true;
+}
+
+void       CMapEntryCopyCell::SetPosID(dbc::Long lPosID) { m_sPosID = (dbc::Short)lPosID; }
+dbc::Long  CMapEntryCopyCell::GetPosID(void)             { return m_sPosID; }
+
+// --- CDynMapEntryCell ---
+
+CDynMapEntryCell::CDynMapEntryCell() {
+	m_lEntiID       = 0;
+	m_szMapName[0]  = '\0';
+	m_szTMapName[0] = '\0';
+	m_pCEnt         = nullptr;
+
+	m_CEvtObj.Init();
+	m_CEvtObj.SetTouchType(enumEVENTT_RANGE);
+	m_CEvtObj.SetExecType(enumEVENTE_DMAP_ENTRY);
+
+	m_pPos = nullptr;
+}
+
+void  CDynMapEntryCell::SetPos(void* pPos) { m_pPos = pPos; }
+void* CDynMapEntryCell::GetPos(void)       { return m_pPos; }
+
+void CDynMapEntryCell::SetMapName(dbc::cChar* cszMapName) {
+	if (!cszMapName) return;
+	strncpy(m_szMapName, cszMapName, MAX_MAPNAME_LENGTH - 1);
+	m_szMapName[MAX_MAPNAME_LENGTH - 1] = '\0';
+}
+dbc::cChar* CDynMapEntryCell::GetMapName(void) const { return m_szMapName; }
+
+void CDynMapEntryCell::SetTMapName(dbc::cChar* cszTMapName) {
+	if (!cszTMapName) return;
+	strncpy(m_szTMapName, cszTMapName, MAX_MAPNAME_LENGTH - 1);
+	m_szTMapName[MAX_MAPNAME_LENGTH - 1] = '\0';
+}
+dbc::cChar* CDynMapEntryCell::GetTMapName(void) const     { return m_szTMapName; }
+
+const Point* CDynMapEntryCell::GetEntiPos(void) const     { return &m_SEntiPos; }
+void         CDynMapEntryCell::SetEntiPos(const Point* p) { m_SEntiPos = *p; }
+void         CDynMapEntryCell::SetEntiPos(dbc::Long x, dbc::Long y) { m_SEntiPos.x = x; m_SEntiPos.y = y; }
+void         CDynMapEntryCell::SetEntiID(dbc::Long lEntiID)         { m_lEntiID = lEntiID; }
+dbc::Long    CDynMapEntryCell::GetEntiID(void)                      { return m_lEntiID; }
+
+void         CDynMapEntryCell::SetEventID(dbc::Long lEventID)       { m_CEvtObj.SetID((dbc::uShort)lEventID); }
+dbc::Long    CDynMapEntryCell::GetEventID(void)                     { return m_CEvtObj.GetID(); }
+
+void CDynMapEntryCell::SetEnti(Entity* pCEnt) { m_pCEnt = pCEnt; }
+
+void CDynMapEntryCell::GetPosInfo(const char** pMapN, dbc::Long* lpPosX, dbc::Long* lpPosY, const char** pTMapN) {
+	*pMapN  = m_szMapName;
+	*lpPosX = m_SEntiPos.x;
+	*lpPosY = m_SEntiPos.y;
+	*pTMapN = m_szTMapName;
+}
+
+CEvent*     CDynMapEntryCell::GetEvent(void)                   { return &m_CEvtObj; }
+dbc::Short  CDynMapEntryCell::GetCopyNum(void)                 { return m_sMapCopyNum; }
+void        CDynMapEntryCell::SetCopyPlyNum(dbc::Short sCopyNum) { m_sCopyPlyNum = sCopyNum; }
+dbc::Short  CDynMapEntryCell::GetCopyPlyNum(void)              { return m_sCopyPlyNum; }
+
+CMapEntryCopyCell* CDynMapEntryCell::AddCopy(CMapEntryCopyCell* pCCpyCell) { return m_LCopyInfo.Add(pCCpyCell); }
+CMapEntryCopyCell* CDynMapEntryCell::GetCopy(dbc::Short sCopyID)           { return m_LCopyInfo.Get(sCopyID); }
+bool               CDynMapEntryCell::ReleaseCopy(CMapEntryCopyCell* p)     { return m_LCopyInfo.Del(p); }
+bool               CDynMapEntryCell::ReleaseCopy(dbc::Long lCopyNO)        { return m_LCopyInfo.Del(lCopyNO); }
+
+// --- CDynMapEntry ---
+
+CDynMapEntry::CDynMapEntry()  { m_LEntryList.Init(); }
+CDynMapEntry::~CDynMapEntry() { m_LEntryList.Free(); }

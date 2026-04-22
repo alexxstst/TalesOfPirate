@@ -192,7 +192,11 @@ namespace mission
 
 		m_ID = g_pGameApp->m_Ident.GetID();
 		Char szLogName[defLOG_NAME_LEN] = "";
-		sprintf(szLogName, "Cha-%s+%u", GetName(), GetID());
+		{
+			auto _s = std::format("Cha-{}+{}", GetName(), GetID());
+			std::strncpy(szLogName, _s.c_str(), sizeof(szLogName) - 1);
+			szLogName[sizeof(szLogName) - 1] = 0;
+		}
 		SetLogName(szLogName);
 
 		m_pCChaRecord = (CChaRecord*)&recChar;
@@ -555,6 +559,34 @@ namespace mission
 	{
 
 	}
-	
+
 }
+
+// ============================================================================
+// Ранее inline-методы из NPC.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+namespace mission {
+
+CNpc*       CNpc::IsNpc()                  { return this; }
+void        CNpc::SetType()                { m_byType = NPC; }
+BYTE        CNpc::GetType()                { return m_byType; }
+BYTE        CNpc::GetShowType()            { return m_byShowType; }
+
+void        CNpc::SetScriptID(USHORT sID)  { m_sScriptID = sID; }
+USHORT      CNpc::GetScriptID()            { return m_sScriptID; }
+void        CNpc::SetNpcHasMission(BOOL b) { m_bHasMission = b; }
+BOOL        CNpc::GetNpcHasMission()       { return m_bHasMission; }
+const char* CNpc::GetInitFunc()            { return m_szMsgProc; }
+
+void        CNpc::Summoned(USHORT)         { /* виртуальный hook */ }
+
+const char* CNpc::GetNpcName()             { return m_szName; }
+
+void        CTalkNpc::SetType()            { m_byType = TALK; }
+void        CTradeNpc::SetType()           { m_byType = TRADE; }
+void        CTradeAgencyNpc::SetType()     { m_byType = TRADE_AGENCY; }
+void        CRoleNpc::SetType()            { m_byType = ROLE; }
+
+} // namespace mission
 

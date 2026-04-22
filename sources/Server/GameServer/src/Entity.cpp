@@ -740,3 +740,120 @@ void NotiPkToWorld(net::WPacket chginf)
 {
     SENDTOWORLD(chginf);
 }
+
+// ============================================================================
+// Ранее inline-методы из Entity.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+void          Entity::SetInitShape(const Square& shape) { m_shape = shape; }
+const Square& Entity::GetShape() const                  { return m_shape; }
+
+void          Entity::SetPos(const Point& pos) { m_shape.centre = pos; }
+void          Entity::SetPos(dbc::Long lPosX, dbc::Long lPosY) {
+	m_shape.centre.x = lPosX;
+	m_shape.centre.y = lPosY;
+}
+const Point&  Entity::GetPos() const           { return m_shape.centre; }
+
+void          Entity::SetRadius(const long& lRadius) { m_shape.radius = lRadius; }
+const long&   Entity::GetRadius() const              { return m_shape.radius; }
+
+dbc::uLong    Entity::GetID() const            { return m_ID; }
+short         Entity::GetCat() const           { return m_cat; }
+void          Entity::SetID(dbc::uLong ulID)   { m_ID = ulID; }
+void          Entity::SetCat(short sCat)       { m_cat = sCat; }
+
+void          Entity::SetHandle(dbc::Long lHandle) { m_lHandle = lHandle; }
+dbc::Long     Entity::GetHandle(void)              { return m_lHandle; }
+
+SubMap*       Entity::GetSubMap() const        { return m_submap; }
+void          Entity::SetSubMap(SubMap* pCMap) { m_submap = pCMap; }
+
+short         Entity::GetAngle() const         { return m_sAngle; }
+void          Entity::SetAngle(short sAngle)   { m_sAngle = sAngle; }
+
+const Circle& Entity::GetTerritory()           { return m_STerritory; }
+void          Entity::SetTerritory(Circle& STerritory) { m_STerritory = STerritory; }
+
+void Entity::SetLogName(const char* szName) {
+	strncpy(m_szLogName, szName, defLOG_NAME_LEN - 1);
+	m_szLogName[defLOG_NAME_LEN - 1] = '\0';
+}
+const char* Entity::GetLogName() { return m_szLogName; }
+
+void               Entity::SetName(const std::string& name) { _name = name; }
+void               Entity::SetName(const char* name)        { _name = name ? name : ""; }
+const char*        Entity::GetName() const                  { return _name.c_str(); }
+const std::string& Entity::GetNameStr() const               { return _name; }
+
+void Entity::SetBirthCity(dbc::cChar* cszName) {
+	strncpy(m_szBirthCity, cszName, MAX_MAPNAME_LENGTH - 1);
+	m_szBirthCity[MAX_MAPNAME_LENGTH - 1] = '\0';
+}
+const char* Entity::GetBirthCity() { return m_szBirthCity; }
+
+void Entity::SetBirthMap(dbc::cChar* cszName) {
+	strncpy(m_szBirthMap, cszName, MAX_MAPNAME_LENGTH - 1);
+	m_szBirthMap[MAX_MAPNAME_LENGTH - 1] = '\0';
+}
+const char* Entity::GetBirthMap() { return m_szBirthMap; }
+
+void          Entity::SetWitherTime(dbc::Long lWitherTime) { m_SExistCtrl.lWitherTime = lWitherTime; }
+void          Entity::SetResumeTime(dbc::Long lResumeTime) { m_SExistCtrl.lResumeTime = lResumeTime; }
+
+void          Entity::SetEvent(CEvent& CEvt)   { m_CEvent = CEvt; }
+CEvent&       Entity::GetEvent(void)           { return m_CEvent; }
+
+void          Entity::Run(dbc::uLong /*ulCurTick*/) {}
+
+dbc::Short    Entity::GetExistState(void)              { return m_SExistCtrl.sState; }
+void          Entity::SetExistState(dbc::Short sState) { m_SExistCtrl.sState = sState; }
+
+dbc::Short    Entity::GetStopState(void)               { return m_SExistCtrl.sStopState; }
+void          Entity::SetStopState(dbc::Short sState)  { m_SExistCtrl.sStopState = sState; }
+
+bool          Entity::GetEyeshotAbility(void)          { return m_bActiveEyeshot; }
+void          Entity::SetEyeshotAbility(bool bEyeshot) { m_bActiveEyeshot = bEyeshot; }
+
+bool          Entity::IsValid(void)                    { return m_bValid; }
+void          Entity::SetValid(bool bValid)            { m_bValid = bValid; }
+
+dbc::uShort   Entity::GetAreaAttr(void)                { return m_usAreaAttr[1]; }
+void          Entity::SetAreaAttr(dbc::uShort usAreaAttr) {
+	m_usAreaAttr[0] = m_usAreaAttr[1];
+	m_usAreaAttr[1] = usAreaAttr;
+}
+
+dbc::uChar    Entity::GetIslandID(void)                { return m_ucIslandID[1]; }
+void          Entity::SetIslandID(dbc::uChar uchIsland) {
+	m_ucIslandID[0] = m_ucIslandID[1];
+	m_ucIslandID[1] = uchIsland;
+}
+
+bool          Entity::IsInSafeArea(void) {
+	return (GetAreaAttr() & enumAREA_TYPE_NOT_FIGHT) != 0;
+}
+
+dbc::Short    Entity::GetEyeshotHeight(void) { return GetEyeshotWidth(); }
+
+void          Entity::GotoMapUnit() {}
+
+CFightAble*            Entity::IsFightAble()  { return nullptr; }
+CMoveAble*             Entity::IsMoveAble()   { return nullptr; }
+CItem*                 Entity::IsItem()       { return nullptr; }
+Monster*               Entity::IsMonster()    { return nullptr; }
+CCharacter*            Entity::IsCharacter()  { return nullptr; }
+CAttachable*           Entity::IsAttachable() { return nullptr; }
+mission::CNpc*         Entity::IsNpc()        { return nullptr; }
+mission::CEventEntity* Entity::IsEvent()      { return nullptr; }
+
+void          Entity::BeginSee(Entity* obj)   { OnBeginSee(obj); }
+void          Entity::EndSee(Entity* obj)     { OnEndSee(obj); }
+
+void          Entity::ReflectINFof(Entity* /*srcent*/, net::WPacket /*chginf*/) {}
+
+const Square& Entity::GetLapChkShape() { return m_shape; }
+
+void          Entity::OnBeginSee(Entity*) {}
+void          Entity::OnEndSee(Entity*)   {}
+void          Entity::AreaChange(void)    {}

@@ -75,7 +75,7 @@ bool CMapRes::Init()
 		//LG("initmap", "%sID!", m_strMapName.c_str() );
 		ToLogService("common", "configure map({})ID info error", m_strMapName.c_str() );
 		char szData[128];
-		sprintf( szData, RES_STRING(GM_MAPRES_CPP_00001), m_strMapName.c_str() );
+		std::snprintf( szData, sizeof(szData), RES_STRING(GM_MAPRES_CPP_00001), m_strMapName.c_str() );
 		//MessageBox( NULL, szData, "", IDOK );
 		MessageBox( NULL, szData, RES_STRING(GM_MAPRES_CPP_00002), IDOK );
 		return false;
@@ -156,7 +156,7 @@ bool CMapRes::SetCopyNum(dbc::Short sCpyNum)
 	if (m_pCMapCopy || sCpyNum < 1 || sCpyNum > defMAX_MAP_COPY_NUM)
 	{
 		//LG("", "msg %d  %d!\n", sCpyNum, defMAX_MAP_COPY_NUM);
-		{ char _buf[256]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00008), sCpyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+		{ char _buf[256]; std::snprintf(_buf, sizeof(_buf), RES_STRING(GM_GAMEAPP_CPP_00008), sCpyNum, defMAX_MAP_COPY_NUM); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 		return false;
 	}
 	m_sMapCpyNum = sCpyNum;
@@ -264,7 +264,7 @@ bool CMapRes::CreateEntry(void)
 		{
 			if (!feof(m_pfEntryFile))
 			{
-				{ char _buf[512]; sprintf(_buf, RES_STRING(GM_GAMEAPP_CPP_00009), GetName(), csLineCharNum, szLine); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
+				{ char _buf[512]; std::snprintf(_buf, sizeof(_buf), RES_STRING(GM_GAMEAPP_CPP_00009), GetName(), csLineCharNum, szLine); g_logManager.InternalLog(LogLevel::Error, "errors", _buf); }
 				return false;
 			}
 		}
@@ -493,7 +493,7 @@ void CMapRes::Run(DWORD dwCurTime)
 	if (m_chState == enumMAP_STATE_OPEN && tBeepT > 0 && tBeepT < 50)
 	{
 		Char szInfo[128];
-		sprintf(szInfo, RES_STRING(GM_MAPRES_CPP_00008), tBeepT);
+		std::snprintf(szInfo, sizeof(szInfo), RES_STRING(GM_MAPRES_CPP_00008), tBeepT);
 		CopyNotice(szInfo);
 	}
 
@@ -776,3 +776,59 @@ BOOL CMapID::SetMap( BYTE byID, CMapRes* pMap )
 	}
 	return FALSE;
 }
+
+// ============================================================================
+// Ранее inline-методы из MapRes.h, вынесены в .cpp 2026-04-22.
+// ============================================================================
+
+dbc::Short CAreaData::GetWidth()  { return m_sUnitCountX; }
+dbc::Short CAreaData::GetHeight() { return m_sUnitCountY; }
+
+bool CAreaData::IsValidPos(dbc::Short sUnitX, dbc::Short sUnitY) {
+	if (sUnitX < 0 || sUnitX >= GetWidth() || sUnitY < 0 || sUnitY >= GetHeight()) return false;
+	return true;
+}
+
+bool       CMapRes::IsValid(void) { return m_bValid; }
+bool       CMapRes::IsOpen(void)  { return m_bValid && m_chState == enumMAP_STATE_OPEN; }
+dbc::Short CMapRes::GetCopyNum(void)                 { return m_sMapCpyNum; }
+void       CMapRes::SetCopyPlyNum(dbc::Short sPlyNum) { m_sCopyPlyNum = sPlyNum; }
+dbc::Short CMapRes::GetCopyPlyNum(void)              { return m_sCopyPlyNum; }
+
+bool       CMapRes::HasDynEntry(void)                { return strcmp(m_szEntryMapName, "") != 0; }
+
+void       CMapRes::SetCanSavePos(bool bCan)         { m_bCanSavePos = bCan; }
+bool       CMapRes::CanSavePos(void)                 { return m_bCanSavePos; }
+void       CMapRes::SetCanPK(bool bCan)              { m_bCanPK = bCan; }
+bool       CMapRes::CanPK(void)                      { return m_bCanPK; }
+void       CMapRes::SetCanTeam(bool bCan)            { m_bCanTeam = bCan; }
+void       CMapRes::SetCanStall(bool bCan)           { m_bCanStall = bCan; }
+void       CMapRes::SetCanGuild(bool bCan)           { m_bCanGuild = bCan; }
+void       CMapRes::SetGuildWar(bool bGuildWar)      { m_bGuildWar = bGuildWar; }
+bool       CMapRes::CanGuildWar()                    { return m_bGuildWar; }
+bool       CMapRes::CanTeam(void)                    { return m_bCanTeam; }
+bool       CMapRes::CanStall(void)                   { return m_bCanStall; }
+bool       CMapRes::CanGuild(void)                   { return m_bCanGuild; }
+
+void       CMapRes::SetType(dbc::Char chType)        { m_chType = chType; }
+dbc::Char  CMapRes::GetType(void)                    { return m_chType; }
+
+void       CMapRes::SetCopyStartType(dbc::Char chStartType) { m_chCopyStartType = chStartType; }
+dbc::Char  CMapRes::GetCopyStartType(void)           { return m_chCopyStartType; }
+
+void       CMapRes::SetCopyStartCondition(dbc::Char chType, dbc::Long lVal) {
+	m_chCopyStartCdtType = chType;
+	m_lCopyStartCdtVal = lVal;
+}
+dbc::Char  CMapRes::GetCopyStartCdtType(void)        { return m_chCopyStartCdtType; }
+dbc::Long  CMapRes::GetCopyStartCdtVal(void)         { return m_lCopyStartCdtVal; }
+
+void        CMapRes::SetName(dbc::cChar* cszName)    { m_strMapName = cszName; }
+const char* CMapRes::GetName(void)                   { return m_strMapName.c_str(); }
+const Rect& CMapRes::GetRange(void)                  { return m_SRange; }
+BYTE        CMapRes::GetMapID()                      { return m_byMapID; }
+
+void       CMapRes::SetRepatriateDie(bool bRepatriate) { m_bRepatriateDie = bRepatriate; }
+bool       CMapRes::IsRepatriateDie(void)            { return m_bRepatriateDie; }
+
+void       CMapRes::BeginGetUsedCopy(void)           { m_sUsedCopySearch = 0; }

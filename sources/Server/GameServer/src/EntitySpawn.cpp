@@ -202,7 +202,7 @@ bool CNpcSpawn::Init(const char *szMapName, const char *szSpawnTable)
 {
 	if (szMapName == nullptr || szMapName[0] == '\0' || szSpawnTable == nullptr) {
 		char szTemp[128];
-		sprintf(szTemp, RES_STRING(GM_ENTITYSPAWN_CPP_00007), szSpawnTable ? szSpawnTable : "", 0);
+		std::snprintf(szTemp, sizeof(szTemp), RES_STRING(GM_ENTITYSPAWN_CPP_00007), szSpawnTable ? szSpawnTable : "", 0);
 		THROW_EXCP(excpArr, szTemp);
 	}
 

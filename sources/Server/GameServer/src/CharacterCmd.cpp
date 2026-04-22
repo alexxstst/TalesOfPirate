@@ -1022,12 +1022,17 @@ Short CCharacter::Cmd_UseExpendItem(Short sKbPage, Short sKbGrid, Short sTarKbPa
 	RefreshNeedItem( SGridCont.sID );
 
 	char	szPlyName[100];
-	if (IsBoat())
-		sprintf(szPlyName, "%s%s%s%s", GetName(), "(", GetPlyMainCha()->GetName(), ")");
-	else
-		sprintf(szPlyName, "%s", GetName());
+	if (IsBoat()) {
+		auto _s = std::format("{}({})", GetName(), GetPlyMainCha()->GetName());
+		std::strncpy(szPlyName, _s.c_str(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
+	else {
+		std::strncpy(szPlyName, GetName(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00001), pCItemRec->szName.c_str(), SGridCont.sID, SGridCont.sNum);
+	std::snprintf(szMsg, sizeof(szMsg), RES_STRING(GM_CHARACTERCMD_CPP_00001), pCItemRec->szName.c_str(), SGridCont.sID, SGridCont.sNum);
 	ToLogService("trade", "[CHA_EXPEND] {} : {}", szPlyName, szMsg);
 
 	if (bRefresh)
@@ -1172,12 +1177,17 @@ Short CCharacter::Cmd_UnfixItem(Char chLinkID, Short *psItemNum, Char chDir, Lon
 		pCMap->ItemSpawn(&SUnfixCont, lParam1, lParam2, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle());
 
 		char	szPlyName[100];
-		if (IsBoat())
-			sprintf(szPlyName, "%s%s%s%s", GetName(), "(", GetPlyMainCha()->GetName(), ")");
-		else
-			sprintf(szPlyName, "%s", GetName());
+		if (IsBoat()) {
+			auto _s = std::format("{}({})", GetName(), GetPlyMainCha()->GetName());
+			std::strncpy(szPlyName, _s.c_str(), sizeof(szPlyName) - 1);
+			szPlyName[sizeof(szPlyName) - 1] = 0;
+		}
+		else {
+			std::strncpy(szPlyName, GetName(), sizeof(szPlyName) - 1);
+			szPlyName[sizeof(szPlyName) - 1] = 0;
+		}
 		char	szMsg[128];
-		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00002), pCItemRec->szName.c_str(), SUnfixCont.sID, *psItemNum);
+		std::snprintf(szMsg, sizeof(szMsg), RES_STRING(GM_CHARACTERCMD_CPP_00002), pCItemRec->szName.c_str(), SUnfixCont.sID, *psItemNum);
 		ToLogService("trade", "[CHA_SYS] {} : {}", szPlyName, szMsg);
 	}
 	else // 
@@ -1391,12 +1401,17 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 		AfterPeekItem(pCItem->m_SGridContent.sID, sPickupNum);
 
 	char	szPlyName[100];
-	if (IsBoat())
-		sprintf(szPlyName, "%s%s%s%s", GetName(), "(", GetPlyMainCha()->GetName(), ")");
-	else
-		sprintf(szPlyName, "%s", GetName());
+	if (IsBoat()) {
+		auto _s = std::format("{}({})", GetName(), GetPlyMainCha()->GetName());
+		std::strncpy(szPlyName, _s.c_str(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
+	else {
+		std::strncpy(szPlyName, GetName(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00005), pItem->szName.c_str(), pCItem->m_SGridContent.sID, sPickupNum);
+	std::snprintf(szMsg, sizeof(szMsg), RES_STRING(GM_CHARACTERCMD_CPP_00005), pItem->szName.c_str(), pCItem->m_SGridContent.sID, sPickupNum);
 	ToLogService("trade", "[SYS_CHA] {} : {}", szPlyName, szMsg);
 
 	//ColourNotice(0xb5eb8e, "Picked up x%d %s", sPickupNum, pItem->szName);
@@ -1557,12 +1572,17 @@ Short CCharacter::Cmd_ThrowItem(Short sKbPage, Short sKbGrid, Short *psThrowNum,
 		SynKitbagNew(enumSYN_KITBAG_THROW);
 
 	char	szPlyName[100];
-	if (IsBoat())
-		sprintf(szPlyName, "%s%s%s%s", GetName(), "(", GetPlyMainCha()->GetName(), ")");
-	else
-		sprintf(szPlyName, "%s", GetName());
+	if (IsBoat()) {
+		auto _s = std::format("{}({})", GetName(), GetPlyMainCha()->GetName());
+		std::strncpy(szPlyName, _s.c_str(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
+	else {
+		std::strncpy(szPlyName, GetName(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00009), pItem->szName.c_str(), GridCont.sID, GridCont.sNum);
+	std::snprintf(szMsg, sizeof(szMsg), RES_STRING(GM_CHARACTERCMD_CPP_00009), pItem->szName.c_str(), GridCont.sID, GridCont.sNum);
 	ToLogService("trade", "[CHA_SYS] {} : {}", szPlyName, szMsg);
 
 	pCMap->ItemSpawn(&GridCont, lPosX, lPosY, enumITEM_APPE_THROW, pCCtrlCha->GetID(), pCMainCha->GetID(), pCMainCha->GetHandle(), 10 * 1000); // 10
@@ -1702,12 +1722,17 @@ Short CCharacter::Cmd_DelItem(Short sKbPage, Short sKbGrid, dbc::Short *psThrowN
 	}
 
 	char	szPlyName[100];
-	if (IsBoat())
-		sprintf(szPlyName, "%s%s%s%s", GetName(), "(", GetPlyMainCha()->GetName(), ")");
-	else
-		sprintf(szPlyName, "%s", GetName());
+	if (IsBoat()) {
+		auto _s = std::format("{}({})", GetName(), GetPlyMainCha()->GetName());
+		std::strncpy(szPlyName, _s.c_str(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
+	else {
+		std::strncpy(szPlyName, GetName(), sizeof(szPlyName) - 1);
+		szPlyName[sizeof(szPlyName) - 1] = 0;
+	}
 	char	szMsg[128];
-	sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00011), pItem->szName.c_str(), sItemID, GridCont.sNum);
+	std::snprintf(szMsg, sizeof(szMsg), RES_STRING(GM_CHARACTERCMD_CPP_00011), pItem->szName.c_str(), sItemID, GridCont.sNum);
 	ToLogService("trade", "[CHA_DELETE] {} : {}", szPlyName, szMsg);
 
 	LogAssets(enumLASSETS_DELETE);
@@ -1967,12 +1992,17 @@ Short CCharacter::Cmd_BankOper(Char chSrcType, Short sSrcGridID, Short sSrcNum, 
 		}
 
 		char	szPlyName[100];
-		if (IsBoat())
-			sprintf(szPlyName, "%s%s%s%s", GetName(), "(", pCMainCha->GetName(), ")");
-		else
-			sprintf(szPlyName, "%s", GetName());
+		if (IsBoat()) {
+			auto _s = std::format("{}({})", GetName(), pCMainCha->GetName());
+			std::strncpy(szPlyName, _s.c_str(), sizeof(szPlyName) - 1);
+			szPlyName[sizeof(szPlyName) - 1] = 0;
+		}
+		else {
+			std::strncpy(szPlyName, GetName(), sizeof(szPlyName) - 1);
+			szPlyName[sizeof(szPlyName) - 1] = 0;
+		}
 		char	szMsg[128];
-		sprintf(szMsg, RES_STRING(GM_CHARACTERCMD_CPP_00012), chSrcType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), chTarType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), pItem->szName.c_str(), sSrcItemID, sLeftNum);
+		std::snprintf(szMsg, sizeof(szMsg), RES_STRING(GM_CHARACTERCMD_CPP_00012), chSrcType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), chTarType == 0 ? RES_STRING(GM_CHARACTERCMD_CPP_00013) : RES_STRING(GM_CHARACTERCMD_CPP_00014), pItem->szName.c_str(), sSrcItemID, sLeftNum);
 		ToLogService("trade", "[CHA_BANK] {} : {}", szPlyName, szMsg);
 	}
 
