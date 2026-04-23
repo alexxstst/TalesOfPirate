@@ -9,10 +9,6 @@ Global
 		Long_Struct_Release = Long_Struct_Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{58B6753C-75DA-449A-97F9-3B26DA4B6FB5}.Long_Struct_Debug.ActiveCfg = Long_Struct_Debug|Win32
-		{58B6753C-75DA-449A-97F9-3B26DA4B6FB5}.Long_Struct_Debug.Build.0 = Long_Struct_Debug|Win32
-		{58B6753C-75DA-449A-97F9-3B26DA4B6FB5}.Long_Struct_Release.ActiveCfg = Long_Struct_Release|Win32
-		{58B6753C-75DA-449A-97F9-3B26DA4B6FB5}.Long_Struct_Release.Build.0 = Long_Struct_Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

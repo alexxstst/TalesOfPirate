@@ -9,10 +9,6 @@ Global
 		Release = Release
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
-		{3A1C94CD-CCBA-4F62-9AF1-919B10C582E6}.Debug.ActiveCfg = Debug|Win32
-		{3A1C94CD-CCBA-4F62-9AF1-919B10C582E6}.Debug.Build.0 = Debug|Win32
-		{3A1C94CD-CCBA-4F62-9AF1-919B10C582E6}.Release.ActiveCfg = Release|Win32
-		{3A1C94CD-CCBA-4F62-9AF1-919B10C582E6}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
