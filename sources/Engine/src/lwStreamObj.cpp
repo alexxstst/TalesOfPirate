@@ -1585,80 +1585,55 @@ __ret:
 
 LW_RESULT lwLockableStreamMgr::LoseDevice()
 {
-    LW_RESULT ret = LW_RET_FAILED;
+    LW_RESULT ret = LW_RET_OK;
 
-    DWORD obj_num;
-    lwLockableStreamVB* obj_vb;
-    lwLockableStreamIB* obj_ib;
-
-    // vertex buffer stream
-    obj_num = _pool_vb.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_vb.GetObj((lwPoolEntity*)&obj_vb, i)))
-        {
-            obj_num -= 1;
-            if(LW_FAILED(obj_vb->LoseDevice()))
-                goto __ret;
+    _pool_vb.ForEach([&](DWORD, void* raw) -> bool {
+        auto* vb = static_cast<lwLockableStreamVB*>(raw);
+        if (LW_FAILED(vb->LoseDevice())) {
+            ret = LW_RET_FAILED;
+            return false;
         }
+        return true;
+    });
+    if (LW_FAILED(ret)) {
+        return ret;
     }
 
-    // index buffer stream
-    obj_num = _pool_ib.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_ib.GetObj((lwPoolEntity*)&obj_ib, i)))
-        {
-            obj_num -= 1;
-            if(LW_FAILED(obj_ib->LoseDevice()))
-                goto __ret;
+    _pool_ib.ForEach([&](DWORD, void* raw) -> bool {
+        auto* ib = static_cast<lwLockableStreamIB*>(raw);
+        if (LW_FAILED(ib->LoseDevice())) {
+            ret = LW_RET_FAILED;
+            return false;
         }
-    }
-
-    ret = LW_RET_OK;
-__ret:
+        return true;
+    });
     return ret;
 }
 LW_RESULT lwLockableStreamMgr::ResetDevice()
 {
-    LW_RESULT ret = LW_RET_FAILED;
+    LW_RESULT ret = LW_RET_OK;
 
-    DWORD obj_num;
-    lwLockableStreamVB* obj_vb;
-    lwLockableStreamIB* obj_ib;
-
-    // vertex buffer stream
-    obj_num = _pool_vb.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_vb.GetObj((lwPoolEntity*)&obj_vb, i)))
-        {
-            obj_num -= 1;
-            if(LW_FAILED(obj_vb->ResetDevice()))
-                goto __ret;
+    _pool_vb.ForEach([&](DWORD, void* raw) -> bool {
+        auto* vb = static_cast<lwLockableStreamVB*>(raw);
+        if (LW_FAILED(vb->ResetDevice())) {
+            ret = LW_RET_FAILED;
+            return false;
         }
+        return true;
+    });
+    if (LW_FAILED(ret)) {
+        return ret;
     }
 
-    // index buffer stream
-    obj_num = _pool_ib.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_ib.GetObj((lwPoolEntity*)&obj_ib, i)))
-        {
-            obj_num -= 1;
-            if(LW_FAILED(obj_ib->ResetDevice()))
-                goto __ret;
+    _pool_ib.ForEach([&](DWORD, void* raw) -> bool {
+        auto* ib = static_cast<lwLockableStreamIB*>(raw);
+        if (LW_FAILED(ib->ResetDevice())) {
+            ret = LW_RET_FAILED;
+            return false;
         }
-    }
-
-    ret = LW_RET_OK;
-__ret:
+        return true;
+    });
     return ret;
-
 }
 
 lwILockableStreamVB* lwLockableStreamMgr::GetStreamVB(LW_HANDLE handle)
@@ -1796,52 +1771,29 @@ lwSurfaceStreamMgr::~lwSurfaceStreamMgr()
 
 LW_RESULT lwSurfaceStreamMgr::LoseDevice()
 {
-    LW_RESULT ret = LW_RET_FAILED;
-
-    DWORD obj_num;
-    lwISurfaceStream* obj_surface;
-
-    // surface stream
-    obj_num = _pool_surface.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_surface.GetObj((void**)&obj_surface, i)))
-        {
-            obj_num -= 1;
-            if(LW_FAILED(obj_surface->LoseDevice()))
-                goto __ret;
+    LW_RESULT ret = LW_RET_OK;
+    _pool_surface.ForEach([&](DWORD, void* raw) -> bool {
+        auto* s = static_cast<lwISurfaceStream*>(raw);
+        if (LW_FAILED(s->LoseDevice())) {
+            ret = LW_RET_FAILED;
+            return false;
         }
-    }
-
-    ret = LW_RET_OK;
-__ret:
+        return true;
+    });
     return ret;
 }
 LW_RESULT lwSurfaceStreamMgr::ResetDevice()
 {
-    LW_RESULT ret = LW_RET_FAILED;
-
-    DWORD obj_num;
-    lwISurfaceStream* obj_surface;
-
-    // surface stream
-    obj_num = _pool_surface.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_surface.GetObj((void**)&obj_surface, i)))
-        {
-            obj_num -= 1;
-            if(LW_FAILED(obj_surface->ResetDevice()))
-                goto __ret;
+    LW_RESULT ret = LW_RET_OK;
+    _pool_surface.ForEach([&](DWORD, void* raw) -> bool {
+        auto* s = static_cast<lwISurfaceStream*>(raw);
+        if (LW_FAILED(s->ResetDevice())) {
+            ret = LW_RET_FAILED;
+            return false;
         }
-    }
-
-    ret = LW_RET_OK;
-__ret:
+        return true;
+    });
     return ret;
-
 }
 
 LW_RESULT lwSurfaceStreamMgr::CreateRenderTarget(LW_HANDLE* ret_handle, UINT width, UINT height, D3DFORMAT format, D3DMULTISAMPLE_TYPE multi_sample, DWORD multi_sample_quality, BOOL lockable, HANDLE* handle)

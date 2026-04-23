@@ -197,7 +197,7 @@
     <ClInclude Include="..\src\lwMisc.h" />
     <ClInclude Include="..\src\lwModel.h" />
     <ClInclude Include="..\src\lwNodeObject.h" />
-    <ClInclude Include="..\src\lwObjectPool.h" />
+    <ClInclude Include="..\src\lwSlotMap.h" />
     <ClInclude Include="..\src\lwPathInfo.h" />
     <ClInclude Include="..\src\lwPhysique.h" />
     <ClInclude Include="..\src\lwPoseCtrl.h" />
@@ -260,7 +260,6 @@
     <ClCompile Include="..\src\lwModel.cpp" />
     <ClCompile Include="..\src\lwNodeObject.cpp" />
     <ClCompile Include="..\src\lwObjectMethod.cpp" />
-    <ClCompile Include="..\src\lwObjectPool.cpp" />
     <ClCompile Include="..\src\lwPathInfo.cpp" />
     <ClCompile Include="..\src\lwPhysique.cpp" />
     <ClCompile Include="..\src\lwPoseCtrl.cpp" />

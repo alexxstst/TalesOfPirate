@@ -23,6 +23,8 @@
 #include "lwAnimCtrlObj.h"
 #include "lwFileEncode.h"
 #include "GlobalInc.h"
+
+#include <vector>
 #include "lwThreadPool.h"
 
 using namespace std;
@@ -2549,6 +2551,11 @@ lwResBufMgr::lwResBufMgr(lwIResourceMgr* res_mgr)
 {
     _lock_sysmemtex.Create();
 
+    // auto-handle нумеруется от 0x80000000, чтобы не пересекаться с внешними
+    // model_id (приходят из SceneObjRecordStore и по факту укладываются в DWORD
+    // куда меньше этого значения).
+    _next_modelobj_auto_handle = 0x80000000u;
+
     _modelobj_data_size = 0;
     _sysmemtex_data_size = 0;
 
@@ -2564,24 +2571,32 @@ lwResBufMgr::~lwResBufMgr()
 
 LW_RESULT lwResBufMgr::Destroy()
 {
-    DWORD obj_num;
-
-    // sys_mem_tex
-    obj_num = _pool_sysmemtex.POOL_SIZE;
-    for(DWORD i = 0; i < obj_num; i++)
+    // sys_mem_tex — собираем handles в вектор, чтобы не модифицировать slot-map
+    // во время итерации (UnregisterSysMemTex зовёт _pool_sysmemtex.Unregister).
     {
-        UnregisterSysMemTex(i);
+        std::vector<DWORD> handles;
+        handles.reserve(_pool_sysmemtex.GetObjNum());
+        _pool_sysmemtex.ForEach([&](DWORD h, void*) {
+            handles.push_back(h);
+        });
+        for (DWORD h : handles) {
+            UnregisterSysMemTex(h);
+        }
+        _pool_sysmemtex.Clear();
     }
-    _pool_sysmemtex.Clear();
 
-    // model_obj
-    obj_num = _pool_modelobj.POOL_SIZE;
-    for(DWORD i = 0; i < obj_num; i++)
+    // model_obj — тоже снимаем пачкой ключей, UnregisterModelObjInfo удаляет запись.
     {
-        UnregisterModelObjInfo(i);
+        std::vector<DWORD> handles;
+        handles.reserve(_pool_modelobj.size());
+        for (const auto& kv : _pool_modelobj) {
+            handles.push_back(kv.first);
+        }
+        for (DWORD h : handles) {
+            UnregisterModelObjInfo(h);
+        }
+        _pool_modelobj.clear();
     }
-    _pool_modelobj.Clear();
-
 
     return LW_RET_OK;
 }
@@ -2693,51 +2708,40 @@ __ret:
 }
 LW_RESULT lwResBufMgr::QuerySysMemTex(lwSysMemTexInfo** info, const char* file)
 {
-    lwSysMemTexInfo* obj = 0;
-    DWORD obj_num = _pool_sysmemtex.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_sysmemtex.GetObj((void**)&obj, i)))
-            continue;
-
-        obj_num -= 1;
-
-        if(_tcscmp(obj->file_name, file) == 0)
-        {
-            *info = obj;
-            return LW_RET_OK;
+    lwSysMemTexInfo* found = nullptr;
+    _pool_sysmemtex.ForEach([&](DWORD, void* raw) -> bool {
+        auto* obj = static_cast<lwSysMemTexInfo*>(raw);
+        if (_tcscmp(obj->file_name, file) == 0) {
+            found = obj;
+            return false;
         }
-
+        return true;
+    });
+    if (found) {
+        *info = found;
+        return LW_RET_OK;
     }
-
     return LW_RET_FAILED;
-
 }
 
 LW_RESULT lwResBufMgr::QuerySysMemTex(lwSysMemTexInfo* info)
 {
-    lwSysMemTexInfo* obj = 0;
-    DWORD obj_num = _pool_sysmemtex.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_sysmemtex.GetObj((void**)&obj, i)))
-            continue;
-
-        obj_num -= 1;
-
-        if(_tcscmp(obj->file_name, info->file_name) == 0
+    lwSysMemTexInfo* found = nullptr;
+    _pool_sysmemtex.ForEach([&](DWORD, void* raw) -> bool {
+        auto* obj = static_cast<lwSysMemTexInfo*>(raw);
+        if (_tcscmp(obj->file_name, info->file_name) == 0
             && obj->format == info->format
             && obj->level == info->level
-            && obj->colorkey == info->colorkey)
-        {
-            *info = *obj;
-            return LW_RET_OK;
+            && obj->colorkey == info->colorkey) {
+            found = obj;
+            return false;
         }
-
+        return true;
+    });
+    if (found) {
+        *info = *found;
+        return LW_RET_OK;
     }
-
     return LW_RET_FAILED;
 }
 LW_RESULT lwResBufMgr::GetSysMemTex(lwSysMemTexInfo** info, LW_HANDLE handle)
@@ -2763,21 +2767,21 @@ LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE* handle, const char* file)
     LW_RESULT ret = LW_RET_FAILED;
 
     lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
-    
-    if(LW_FAILED(moim->info.Load(file)))
+
+    if (LW_FAILED(moim->info.Load(file)))
         goto __ret;
 
-    //int x = sizeof(moim->info.helper_data);
-    //x = sizeof(moim->info.geom_obj_seq[0]->anim_data);
-    //x = sizeof(moim->info.geom_obj_seq[0]->mtl_seq);
-    //x = sizeof(moim->info.geom_obj_seq[0]->mesh);
-    //x = sizeof(lwAnimDataTexUV);
-    //x = sizeof(lwAnimDataBone);
-    //x = sizeof(moim->info.geom_obj_seq[0]->anim_data.anim_img);
-    //x = sizeof(moim->info.geom_obj_seq[0]->anim_data.anim_tex);
+    // Берём свободный auto-handle в пространстве 0x80000000+ (не пересекается
+    // с внешними model_id, которые приходят ниже).
+    while (_pool_modelobj.count(_next_modelobj_auto_handle) != 0) {
+        ++_next_modelobj_auto_handle;
+        if (_next_modelobj_auto_handle == 0) {
+            _next_modelobj_auto_handle = 0x80000000u;
+        }
+    }
+    *handle = _next_modelobj_auto_handle++;
+    _pool_modelobj.emplace(*handle, moim);
 
-    if(LW_FAILED(_pool_modelobj.Register(handle, moim)))
-        goto __ret;
     {
         lwITimer* tm = 0;
         _res_mgr->GetSysGraphics()->GetSystem()->GetInterface((LW_VOID**)&tm, LW_GUID_TIMER);
@@ -2800,11 +2804,11 @@ LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE handle, const char* file)
     LW_RESULT ret = LW_RET_FAILED;
 
     lwModelObjInfoMap* moim = LW_NEW(lwModelObjInfoMap);
-    
-    if(LW_FAILED(moim->info.Load(file)))
+
+    if (LW_FAILED(moim->info.Load(file)))
         goto __ret;
 
-    if(LW_FAILED(_pool_modelobj.Register(moim, handle)))
+    if (!_pool_modelobj.emplace(handle, moim).second)
         goto __ret;
 
     {
@@ -2823,49 +2827,37 @@ LW_RESULT lwResBufMgr::RegisterModelObjInfo(LW_HANDLE handle, const char* file)
 __ret:
     LW_IF_DELETE(moim);
     return ret;
-
 }
 
 LW_RESULT lwResBufMgr::QueryModelObjInfo(lwIModelObjInfo** info, const char* file)
 {
-    lwModelObjInfoMap* obj = 0;
-    DWORD obj_num = _pool_modelobj.GetObjNum();
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_modelobj.GetObj((void**)&obj, i)))
-            continue;
-
-        obj_num -= 1;
-
-        if(_tcscmp(obj->file, file) == 0)
-        {
-            *info = &obj->info;
+    for (const auto& kv : _pool_modelobj) {
+        if (_tcscmp(kv.second->file, file) == 0) {
+            *info = &kv.second->info;
             return LW_RET_OK;
         }
-
     }
-
     return LW_RET_FAILED;
-
 }
 LW_RESULT lwResBufMgr::GetModelObjInfo(lwIModelObjInfo** info, LW_HANDLE handle)
 {
-    lwModelObjInfoMap* obj = 0;
-    LW_RESULT ret = _pool_modelobj.GetObj((void**)&obj, handle);
-    if(LW_SUCCEEDED(ret))
-    {
-        *info = &obj->info;
+    auto it = _pool_modelobj.find(handle);
+    if (it == _pool_modelobj.end()) {
+        return LW_RET_FAILED;
     }
-    return ret;
+    *info = &it->second->info;
+    return LW_RET_OK;
 }
 LW_RESULT lwResBufMgr::UnregisterModelObjInfo(LW_HANDLE handle)
 {
-    lwModelObjInfoMap* obj = 0;
-    if(LW_FAILED(_pool_modelobj.Unregister((void**)&obj, handle)))
+    auto it = _pool_modelobj.find(handle);
+    if (it == _pool_modelobj.end()) {
         return LW_RET_FAILED;
+    }
 
+    lwModelObjInfoMap* obj = it->second;
     _modelobj_data_size -= obj->size;
+    _pool_modelobj.erase(it);
 
     LW_DELETE(obj);
     return LW_RET_OK;
@@ -2873,38 +2865,27 @@ LW_RESULT lwResBufMgr::UnregisterModelObjInfo(LW_HANDLE handle)
 
 LW_RESULT lwResBufMgr::FilterModelObjInfoSize()
 {
-    LW_RESULT ret = LW_RET_FAILED;
+    if (_lmt_modelobj_data_size >= _modelobj_data_size) {
+        return LW_RET_OK;
+    }
 
-    if(_lmt_modelobj_data_size >= _modelobj_data_size)
-        goto __ret_ok;
+    lwITimer* tm = 0;
+    _res_mgr->GetSysGraphics()->GetSystem()->GetInterface((LW_VOID**)&tm, LW_GUID_TIMER);
+    const DWORD this_time = tm->GetTickCount();
 
-    {
-        lwITimer* tm = 0;
-        _res_mgr->GetSysGraphics()->GetSystem()->GetInterface((LW_VOID**)&tm, LW_GUID_TIMER);
-
-        DWORD this_time = tm->GetTickCount();
-
-        lwModelObjInfoMap* obj;
-        DWORD num = _pool_modelobj.GetObjNum();
-        for (DWORD i = 0; num > 0; i++)
-        {
-            if (LW_FAILED(_pool_modelobj.GetObj((void**)&obj, i)))
-                continue;
-
-            if ((this_time - obj->hit_time) > _lmt_modelobj_data_time)
-            {
-                if (LW_FAILED(UnregisterModelObjInfo(i)))
-                    goto __ret;
-            }
-
-            num -= 1;
+    std::vector<DWORD> to_erase;
+    to_erase.reserve(_pool_modelobj.size());
+    for (const auto& kv : _pool_modelobj) {
+        if ((this_time - kv.second->hit_time) > _lmt_modelobj_data_time) {
+            to_erase.push_back(kv.first);
         }
-
-	}
-__ret_ok:
-    ret = LW_RET_OK;
-__ret:
-    return ret;
+    }
+    for (DWORD h : to_erase) {
+        if (LW_FAILED(UnregisterModelObjInfo(h))) {
+            return LW_RET_FAILED;
+        }
+    }
+    return LW_RET_OK;
 }
 
 // lwThreadPoolMgr
@@ -3104,58 +3085,24 @@ LW_RESULT lwResourceMgr::SetAssObjInfo(DWORD mask, const lwAssObjInfo* info)
 
 LW_RESULT lwResourceMgr::ClearAllMesh()
 {
-    DWORD obj_num = _pool_mesh.GetObjNum();
-
-    lwIMesh* obj;
-
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(_pool_mesh.GetRef(i) > 0)
-        {            
-            _pool_mesh.GetObj((void**)&obj, i);
-            LW_RELEASE(obj);
-            //UnregisterMesh(obj);
-            obj_num -= 1;
-        }
-    }
-
+    _pool_mesh.ForEach([](DWORD, void* obj) {
+        LW_RELEASE(static_cast<lwIMesh*>(obj));
+    });
     return LW_RET_OK;
 }
 LW_RESULT lwResourceMgr::ClearAllTex()
 {
-    DWORD obj_num = _pool_tex.GetObjNum();
-
-    lwITex* obj;
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(_pool_tex.GetRef(i) > 0)
-        {
-            _pool_tex.GetObj((void**)&obj, i);
-            LW_RELEASE(obj);
-            //UnregisterTex(obj);
-            obj_num -= 1;
-        }
-    }
-
+    _pool_tex.ForEach([](DWORD, void* obj) {
+        LW_RELEASE(static_cast<lwITex*>(obj));
+    });
     return LW_RET_OK;
 }
 
 LW_RESULT lwResourceMgr::ClearAllAnimCtrl()
 {
-    DWORD obj_num = _pool_animctrl.GetObjNum();
-
-    lwIAnimCtrl* obj;
-    for(DWORD i = 0; obj_num > 0; i++)
-    {
-        if(_pool_animctrl.GetRef(i) > 0)
-        {
-            _pool_animctrl.GetObj((void**)&obj, i);
-            obj->Release();
-            //UnregisterAnimCtrl(obj);
-            obj_num -= 1;
-        }
-    }
-
+    _pool_animctrl.ForEach([](DWORD, void* obj) {
+        static_cast<lwIAnimCtrl*>(obj)->Release();
+    });
     return LW_RET_OK;
 }
 
@@ -3628,97 +3575,67 @@ __ret:
 //
 LW_RESULT lwResourceMgr::QueryTex(DWORD* ret_id, const char* file_name)
 {
-    DWORD i;
-    DWORD obj_num;
-    lwTex* obj_tex;
-
-    obj_num = _pool_tex.GetObjNum();
-
-    for(i = 0;  obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_tex.GetObj((void**)&obj_tex, i)))
-        {
-            if(_tcscmp(obj_tex->GetFileName(), file_name) == 0)
-                break;
-
-            obj_num -= 1;
+    DWORD found = LW_INVALID_INDEX;
+    _pool_tex.ForEach([&](DWORD handle, void* raw) -> bool {
+        auto* obj_tex = static_cast<lwTex*>(raw);
+        if (_tcscmp(obj_tex->GetFileName(), file_name) == 0) {
+            found = handle;
+            return false;
         }
-    }
+        return true;
+    });
 
-    if(obj_num > 0)
-    {
-        *ret_id = i;
+    if (found != LW_INVALID_INDEX) {
+        *ret_id = found;
         return LW_RET_OK;
     }
-
     return LW_RET_FAILED;
 }
 
 LW_RESULT lwResourceMgr::QueryMesh(DWORD* ret_id, const lwResFileMesh* rfm)
 {
-    DWORD i;
-    DWORD obj_num;
-    lwMesh* obj;
-    
-    obj_num = _pool_mesh.GetObjNum();
-
-    for(i = 0;  obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_mesh.GetObj((void**)&obj, i)))
-        {
-			try
-			{
-            if((obj->GetState() & RES_STATE_INIT) && (obj->GetResFileMesh()->Compare(rfm) == 1))
-                break;
-			}
-			catch(...)
-			{
-				__debugbreak();
-			}
-            obj_num -= 1;
+    DWORD found = LW_INVALID_INDEX;
+    _pool_mesh.ForEach([&](DWORD handle, void* raw) -> bool {
+        auto* obj = static_cast<lwMesh*>(raw);
+        try {
+            if ((obj->GetState() & RES_STATE_INIT) && (obj->GetResFileMesh()->Compare(rfm) == 1)) {
+                found = handle;
+                return false;
+            }
         }
-    }
+        catch (...) {
+            __debugbreak();
+        }
+        return true;
+    });
 
-    if(obj_num > 0)
-    {
-        *ret_id = i;
+    if (found != LW_INVALID_INDEX) {
+        *ret_id = found;
         return LW_RET_OK;
     }
-
     return LW_RET_FAILED;
 }
 
 LW_RESULT lwResourceMgr::QueryAnimCtrl(DWORD* ret_id, const lwResFileAnimData* info)
 {
-    DWORD i;
-    DWORD obj_num;
-    lwIAnimCtrl* obj;
-    lwResFileAnimData* r;
-
-    obj_num = _pool_animctrl.GetObjNum();
-
-    for(i = 0;  obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_animctrl.GetObj((void**)&obj, i)))
-        {
-            obj_num -= 1;
-
-            r = obj->GetResFileInfo();
-            if(r->res_type == RES_FILE_TYPE_INVALID)
-                continue;
-
-            if(r->Compare(info) == 1)
-                break;
-
+    DWORD found = LW_INVALID_INDEX;
+    _pool_animctrl.ForEach([&](DWORD handle, void* raw) -> bool {
+        auto* obj = static_cast<lwIAnimCtrl*>(raw);
+        lwResFileAnimData* r = obj->GetResFileInfo();
+        if (r->res_type == RES_FILE_TYPE_INVALID) {
+            return true;
         }
-    }
+        if (r->Compare(info) == 1) {
+            found = handle;
+            return false;
+        }
+        return true;
+    });
 
-    if(obj_num > 0)
-    {
-        *ret_id = i;
+    if (found != LW_INVALID_INDEX) {
+        *ret_id = found;
         return LW_RET_OK;
     }
-
     return LW_RET_FAILED;
 }
 
@@ -3862,27 +3779,15 @@ __ret:
 
 void lwResourceMgr::ReleaseObject()
 {
-    DWORD i;
-    DWORD obj_num;
-
-    // model object
-    lwModel* obj_model;
-    obj_num = _pool_model.GetObjNum();
-
-    for(i = 0;  obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_model.GetObj((void**)&obj_model, i)))
-        {
-            obj_model->Release();
-            obj_num -= 1;
-        }
-    }
+    _pool_model.ForEach([](DWORD, void* raw) {
+        static_cast<lwModel*>(raw)->Release();
+    });
 }
 
 LW_RESULT lwResourceMgr::RegisterObject(DWORD* ret_id, void* obj, DWORD type)
 {
 
-    lwObjectPoolVoidPtr1024* pool_obj;
+    lwSlotMapVoidPtr1024* pool_obj;
     
     switch(type)
     {
@@ -3904,7 +3809,7 @@ LW_RESULT lwResourceMgr::RegisterObject(DWORD* ret_id, void* obj, DWORD type)
 
 LW_RESULT lwResourceMgr::UnregisterObject(void** ret_obj, DWORD id, DWORD type)
 {
-    lwObjectPoolVoidPtr1024* pool_obj;
+    lwSlotMapVoidPtr1024* pool_obj;
     
     switch(type)
     {
@@ -3926,73 +3831,46 @@ LW_RESULT lwResourceMgr::UnregisterObject(void** ret_obj, DWORD id, DWORD type)
 
 LW_RESULT lwResourceMgr::QueryModelObject(void** ret_obj, DWORD model_id)
 {
-    DWORD i;
-    DWORD obj_num;
-    lwModel* obj_model;    
-    
-
-    obj_num = _pool_model.GetObjNum();
-
-    for(i = 0;  obj_num > 0; i++)
-    {
-        if(LW_SUCCEEDED(_pool_model.GetObj((void**)&obj_model, i)))
-        {
-            if(obj_model->GetModelID() == model_id)
-                break;
-
-            obj_num -= 1;
+    lwModel* found = nullptr;
+    _pool_model.ForEach([&](DWORD, void* raw) -> bool {
+        auto* m = static_cast<lwModel*>(raw);
+        if (m->GetModelID() == model_id) {
+            found = m;
+            return false;
         }
+        return true;
+    });
+    if (found) {
+        *ret_obj = static_cast<void*>(found);
     }
-
-    if(obj_num > 0)
-    {
-        *ret_obj = (void*)obj_model;
-    }
-
-
     return LW_RET_OK;
-
 }
 
 LW_RESULT lwResourceMgr::QueryObject(void** ret_obj, DWORD type, const char* file_name)
 {
-    DWORD i;
-    DWORD obj_num;
-    lwModel* obj_model;    
-    
-    switch(type)
-    {
-    case OBJ_TYPE_MODEL:
-
-        obj_num = _pool_model.GetObjNum();
-
-        for(i = 0;  obj_num > 0; i++)
-        {
-            if(LW_SUCCEEDED(_pool_model.GetObj((void**)&obj_model, i)))
-            {
-                if(_tcscmp(obj_model->GetFileName(), file_name) == 0)
-                    break;
-
-                obj_num -= 1;
+    switch (type) {
+    case OBJ_TYPE_MODEL: {
+        lwModel* found = nullptr;
+        _pool_model.ForEach([&](DWORD, void* raw) -> bool {
+            auto* m = static_cast<lwModel*>(raw);
+            if (_tcscmp(m->GetFileName(), file_name) == 0) {
+                found = m;
+                return false;
             }
+            return true;
+        });
+        if (found) {
+            *ret_obj = static_cast<void*>(found);
         }
-
-        if(obj_num > 0)
-        {
-            *ret_obj = (void*)obj_model;
-        }
-
         break;
+    }
     case OBJ_TYPE_CHARACTER:
-
         break;
     case OBJ_TYPE_ITEM:
-
         break;
     default:
         assert(0 && "invaild type");
     }
-
     return LW_RET_OK;
 }
 
@@ -4000,32 +3878,13 @@ LW_RESULT lwResourceMgr::LoseDevice()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    DWORD i;
-    DWORD obj_num;
-    lwIMesh* mesh_obj;
-    lwITex* tex_obj;
-    
-    // mesh object
-    obj_num = _pool_mesh.GetObjNum();
-    for(i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_mesh.GetObj((void**)&mesh_obj, i)))
-            continue;
+    _pool_mesh.ForEach([](DWORD, void* raw) {
+        static_cast<lwIMesh*>(raw)->LoseDevice();
+    });
 
-        mesh_obj->LoseDevice();
-        obj_num -= 1;
-    }
-
-    // texture object
-    obj_num = _pool_tex.GetObjNum();
-    for(i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_tex.GetObj((void**)&tex_obj, i)))
-            continue;
-
-        tex_obj->LoseDevice();
-        obj_num -= 1;
-    }
+    _pool_tex.ForEach([](DWORD, void* raw) {
+        static_cast<lwITex*>(raw)->LoseDevice();
+    });
 
     // stream manager object
     if(LW_FAILED(_static_stream_mgr->LoseDevice()))
@@ -4053,11 +3912,6 @@ LW_RESULT lwResourceMgr::ResetDevice()
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-    DWORD i;
-    DWORD obj_num;
-    lwIMesh* mesh_obj;
-    lwITex* tex_obj;
-    
     // stream manager object
     if(LW_FAILED(_static_stream_mgr->ResetDevice()))
         goto __ret;
@@ -4075,27 +3929,13 @@ LW_RESULT lwResourceMgr::ResetDevice()
     if(LW_FAILED(_shader_mgr->ResetDevice()))
         goto __ret;
 
-    // mesh object
-    obj_num = _pool_mesh.GetObjNum();
-    for(i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_mesh.GetObj((void**)&mesh_obj, i)))
-            continue;
+    _pool_mesh.ForEach([](DWORD, void* raw) {
+        static_cast<lwIMesh*>(raw)->ResetDevice();
+    });
 
-        mesh_obj->ResetDevice();
-        obj_num -= 1;
-    }
-
-    // texture object
-    obj_num = _pool_tex.GetObjNum();
-    for(i = 0; obj_num > 0; i++)
-    {
-        if(LW_FAILED(_pool_tex.GetObj((void**)&tex_obj, i)))
-            continue;
-
-        tex_obj->ResetDevice();
-        obj_num -= 1;
-    }
+    _pool_tex.ForEach([](DWORD, void* raw) {
+        static_cast<lwITex*>(raw)->ResetDevice();
+    });
 
     //
     ret = LW_RET_OK;

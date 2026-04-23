@@ -163,7 +163,7 @@
     <ClInclude Include="..\src\lwNodeObject.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lwObjectPool.h">
+    <ClInclude Include="..\src\lwSlotMap.h">
       <Filter>Source Files\Mesh</Filter>
     </ClInclude>
     <ClInclude Include="..\src\lwPathInfo.h">
@@ -519,9 +519,6 @@
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\src\lwObjectMethod.cpp">
-      <Filter>Source Files\Mesh</Filter>
-    </ClCompile>
-    <ClCompile Include="..\src\lwObjectPool.cpp">
       <Filter>Source Files\Mesh</Filter>
     </ClCompile>
     <ClCompile Include="..\src\lwPathInfo.cpp">

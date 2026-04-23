@@ -4,7 +4,7 @@
 #include "lwHeader.h"
 #include "lwDirectX.h"
 #include "lwExpObj.h"
-#include "lwObjectPool.h"
+#include "lwSlotMap.h"
 #include "lwInterfaceExt.h"
 
 LW_BEGIN
@@ -355,8 +355,8 @@ class lwLockableStreamMgr : public lwILockableStreamMgr
 {
     LW_STD_DECLARATION()
 
-    typedef lwObjectPoolVoidPtr1024 lwPoolStreamVB;
-    typedef lwObjectPoolVoidPtr1024 lwPoolStreamIB;
+    typedef lwSlotMapVoidPtr1024 lwPoolStreamVB;
+    typedef lwSlotMapVoidPtr1024 lwPoolStreamIB;
     typedef void* lwPoolEntity;
 
 private:
@@ -428,7 +428,7 @@ class lwSurfaceStreamMgr : public lwISurfaceStreamMgr
 {
     LW_STD_DECLARATION()
 
-    typedef lwObjectPoolVoidPtr1024 lwPoolSurface;
+    typedef lwSlotMapVoidPtr1024 lwPoolSurface;
 private:
     lwIResourceMgr* _res_mgr;
     lwPoolSurface _pool_surface;

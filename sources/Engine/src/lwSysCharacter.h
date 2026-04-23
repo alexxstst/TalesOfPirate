@@ -1,11 +1,11 @@
 ﻿//
 #include "lwHeader.h"
-#include "lwObjectPool.h"
+#include "lwSlotMap.h"
 
 LW_BEGIN
 
-typedef lwObjectPoolVoidPtr1024 lwObjectPoolSkeleton;
-typedef lwObjectPoolVoidPtr1024 lwObjectPoolSkin;
+typedef lwSlotMapVoidPtr1024 lwObjectPoolSkeleton;
+typedef lwSlotMapVoidPtr1024 lwObjectPoolSkin;
 
 
 class lwSysCharacter
