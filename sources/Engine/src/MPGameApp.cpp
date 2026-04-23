@@ -31,10 +31,6 @@ MPGameApp::MPGameApp()
 	: _dwRenderUseTime(0),
 	  _dwFrameMoveUseTime(0),
 	  _bCheckInputWnd(TRUE) {
-	_pDI = NULL;
-	_pDIKeyboard = NULL;
-	_pDIMouse = NULL;
-
 	_pConsole = new ConsoleProcessor;
 	//_pMainCam = new MPCamera;
 
@@ -43,12 +39,6 @@ MPGameApp::MPGameApp()
 
 	memset(_btButtonState, 0, 3);
 	memset(_btLastButtonState, 0, 3);
-
-	// ----- Added by CLP ----- //
-	memset(mASCKeysState, KEY_FREE, sizeof (mASCKeysState));
-	memset(mKeyState, KEY_FREE, sizeof (mKeyState));
-	// ----- Added by CLP ----- //
-
 
 	_bLastDBClick = false;
 	_bCanDB = false;
@@ -315,56 +305,10 @@ void MPGameApp::_RenderAxis() {
 }
 
 BOOL MPGameApp::_InitInput() {
-	if (FAILED(DirectInput8Create(_hInst, DIRECTINPUT_VERSION,
-		IID_IDirectInput8,
-		(VOID**)&_pDI,
-		NULL))) {
-		ToLogService("common", "Create DirectInput 8 Error!");
+	if (!Corsairs::Engine::Input::InputSystem::Instance().Init(_hWnd)) {
+		ToLogService("common", "Init InputSystem failed!");
 		return FALSE;
 	}
-
-	_KeyboardLayout = GetKeyboardLayout(0);
-
-	if (FAILED(_pDI->CreateDevice(GUID_SysKeyboard, &_pDIKeyboard, NULL))) {
-		if (_pDI) SAFE_RELEASE(_pDI);
-		ToLogService("common", "Create Keyboard Device Error");
-		return FALSE;
-	}
-
-	DIPROPDWORD dipdw;
-
-	// Create buffer to hold keyboard data
-	ZeroMemory(&dipdw, sizeof(DIPROPDWORD));
-	dipdw.diph.dwSize = sizeof(DIPROPDWORD);
-	dipdw.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-	dipdw.diph.dwObj = 0;
-	dipdw.diph.dwHow = DIPH_DEVICE;
-	dipdw.dwData = KEYBOARD_BUFFERSIZE; // Buffer Size
-
-	HRESULT hr;
-	// Set the format of the keyboard
-	if (FAILED(hr = _pDIKeyboard->SetDataFormat(&c_dfDIKeyboard)))
-		return FALSE; //DisplayErrorMsg(hr, MSGERR_APPMUSTEXIT);
-
-	// Set the co-operative level to exclusive access
-	if (FAILED(hr = _pDIKeyboard->SetCooperativeLevel(_hWnd, DISCL_NONEXCLUSIVE|DISCL_FOREGROUND)))
-		return FALSE; //DisplayErrorMsg(hr, MSGERR_APPMUSTEXIT);
-
-	// Set the size of the buffer
-	if (FAILED(hr = _pDIKeyboard->SetProperty( DIPROP_BUFFERSIZE, &dipdw.diph)))
-		return FALSE; // DisplayErrorMsg(hr, MSGERR_APPMUSTEXIT);
-
-
-	// Acquire the keyboard device
-	_pDIKeyboard->Acquire();
-
-	if (FAILED(hr = _pDI->CreateDevice( GUID_SysMouse, &_pDIMouse, NULL )))return FALSE;
-
-	if (FAILED(hr = _pDIMouse->SetDataFormat( &c_dfDIMouse2 ))) return FALSE;
-
-	_pDIMouse->SetCooperativeLevel(_hWnd, DISCL_NONEXCLUSIVE | DISCL_BACKGROUND);
-
-	_pDIMouse->Acquire();
 
 	_nDBClickTime = ::GetDoubleClickTime();
 	_nLastClickTime = timeGetTime();
@@ -373,153 +317,42 @@ BOOL MPGameApp::_InitInput() {
 }
 
 void MPGameApp::SetInputActive(bool bActive) {
-	// Added by CLP
-	memset(mASCKeysState, KEY_FREE, sizeof (mASCKeysState));
-	memset(mKeyState, KEY_FREE, sizeof (mKeyState));
-	// Added by CLP
-
-	if (!bActive) {
-		_pDIKeyboard->Unacquire();
-		_pDIMouse->Unacquire();
-	}
-	else {
-		_pDIKeyboard->Acquire();
-		_pDIMouse->Acquire();
-	}
+	Corsairs::Engine::Input::InputSystem::Instance().Reset();
 	_bActive = bActive;
 }
 
 void MPGameApp::_ReadKeyboardInput() {
-	// set the single key strokes to 0 each time, so it just records changes between frames
-	ZeroMemory(_btButtonState, sizeof(_btButtonState)); // 0 is no action
+	using Corsairs::Engine::Input::InputSystem;
+	using Corsairs::Engine::Input::MouseButton;
+
+	ZeroMemory(_btButtonState, sizeof(_btButtonState));
 	_dwMouseKey = 0;
 
-	if (!_bActive)
+	if (!_bActive) {
 		return;
-
-	if (!_CanInput())
-		return;
-
-	// Don't read the keyboard if the devices are invalid
-	if (!_pDIKeyboard || !_pDI) {
-		ToLogService("errors", LogLevel::Error, "Keyboard interface is NULL!");
+	}
+	if (!_CanInput()) {
 		return;
 	}
 
-	HRESULT hr = S_OK;
+	//  Обновить edge-фазы клавиш/мыши. Оконные сообщения уже прокинуты в InputSystem из WndProc.
+	auto& input = InputSystem::Instance();
+	input.Update();
 
-	//getdata:
-
-	// GetDeviceData version
-	static DIDEVICEOBJECTDATA keyDataBuffer[KEYBOARD_BUFFERSIZE];
-	DWORD dwItems = KEYBOARD_BUFFERSIZE;
-
-	// Read the buffered data
-	hr = _pDIKeyboard->GetDeviceData(
-		sizeof(DIDEVICEOBJECTDATA), keyDataBuffer, &dwItems, 0);
-	if (FAILED(hr)) {
-		// Keyboard may have been lost, reacquire it
-		_pDIKeyboard->Acquire();
-		return;
-	}
-
-	// Added by CLP
-	// Proces the data if there is any
-	if (dwItems) {
-		// Process the buffered data
-		for (DWORD i = 0; i < dwItems; ++i) {
-			// Map scan-code to ASCII code
-			UINT codeScan = keyDataBuffer[i].dwOfs;
-			UINT codeASCII = MapVirtualKeyEx(codeScan, 1, _KeyboardLayout);
-
-			if (keyDataBuffer[i].dwData & 0x80) {
-				// The key was pressed
-				switch (mKeyState[codeScan]) {
-				case KEY_POP:
-				case KEY_FREE:
-					mKeyState[codeScan] = mASCKeysState[codeASCII] = KEY_PUSH;
-					HandleKeyDown(codeScan);
-					break;
-				}
-			}
-			else {
-				// The key was released
-				switch (mKeyState[codeScan]) {
-				case KEY_HOLD:
-				case KEY_PUSH:
-					mKeyState[codeScan] = mASCKeysState[codeASCII] = KEY_POP;
-					break;
-				}
-			}
-		}
-	}
-	else {
-		// There isn't any buffered data, so keys state were not changed.
-		for (DWORD i = 0; i < 256; ++i) {
-			switch (mKeyState[i]) {
-			case KEY_PUSH:
-				mKeyState[i] = mASCKeysState[i] = KEY_HOLD;
-				break;
-			case KEY_POP:
-				mKeyState[i] = mASCKeysState[i] = KEY_FREE;
-				break;
-			}
+	//  HandleKeyDown — для клавиш, только что нажатых в этом кадре.
+	for (DWORD codeScan = 0; codeScan < 256; ++codeScan) {
+		if (input.GetKeyPhase(static_cast<std::uint8_t>(codeScan)) == Corsairs::Engine::Input::KeyPush) {
+			HandleKeyDown(codeScan);
 		}
 	}
 
-	/*
-		// GetDeviceState version
-		memcpy ( _lastKeyState, _curKeyState, sizeof ( _lastKeyState ) );
+	const int nOffsetX = input.GetMouseDeltaX();
+	const int nOffsetY = input.GetMouseDeltaY();
+	const int nScroll  = input.GetMouseWheelDelta();
 
-		// Get the immediate state of the keyboard
-		hr = _pDIKeyboard->GetDeviceState ( sizeof ( _curKeyState ), _curKeyState );
-		if ( FAILED ( hr ) )
-		{
-			// Keyboard may have been lost, reacquire it
-			_pDIKeyboard->Acquire();
-			return;
-		}
-
-		for ( size_t i = 0; i < 256; ++i )
-		{
-			if ( _curKeyState[ i ] & 0x80 && _lastKeyState[ i ] & 0x80 )
-			{
-				// The key has been hold yet.
-				mKeyState[ i ] = keyHold;
-				continue;
-			} else if ( _curKeyState[ i ] & 0x80 ) {
-				// The key was just pressed.
-				mKeyState[ i ] = keyDown;
-				continue;
-			} else if ( _lastKeyState[ i ] & 0x80 ) {
-				// The key was just released.
-				mKeyState[ i ] = keyUp;
-				continue;
-			} else {
-				// The key has been released yet.
-				mKeyState[ i ] = keyReleased;
-			}
-		}
-		// ----- Added by CLP ----- //
-	*/
-
-	DIMOUSESTATE2 dims2;
-
-	// Get the input's device state, and put the state in dims
-	ZeroMemory(&dims2, sizeof(dims2));
-	hr = _pDIMouse->GetDeviceState(sizeof(DIMOUSESTATE2), &dims2);
-	if (FAILED(hr)) {
-		_pDIMouse->Acquire();
-		return;
-	}
-
-	int nOffsetX = dims2.lX;
-	int nOffsetY = dims2.lY;
-	int nScroll = dims2.lZ; //
-
-	_btButtonState[0] = dims2.rgbButtons[0] & 0x80;
-	_btButtonState[1] = dims2.rgbButtons[1] & 0x80;
-	_btButtonState[2] = dims2.rgbButtons[2] & 0x80;
+	_btButtonState[0] = input.IsMouseButtonDown(MouseButton::Left)   ? 0x80 : 0;
+	_btButtonState[1] = input.IsMouseButtonDown(MouseButton::Right)  ? 0x80 : 0;
+	_btButtonState[2] = input.IsMouseButtonDown(MouseButton::Middle) ? 0x80 : 0;
 
 	if (nOffsetX || nOffsetY) //
 	{
@@ -645,10 +478,7 @@ void MPGameApp::End() {
 	SAFE_DELETE(_pConsole);
 
 
-	SAFE_RELEASE(_pDIKeyboard);
-	SAFE_RELEASE(_pDIMouse);
-
-	SAFE_RELEASE(_pDI);
+	Corsairs::Engine::Input::InputSystem::Instance().Release();
 
 	g_Render.End();
 

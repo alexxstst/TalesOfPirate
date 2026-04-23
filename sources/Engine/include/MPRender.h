@@ -163,15 +163,10 @@ public:
     void SetTransformView(const D3DXMATRIX* mat);
     void SetTransformProj(const D3DXMATRIX* mat);
     void SetTransformWorld(const D3DXMATRIX* mat);
-#if ( defined LW_USE_DX9 )
     void SetFVF( DWORD fvf );
     void SetVertexShader( IDirect3DVertexShaderX* shader );
     void SetVertexDeclaration( IDirect3DVertexDeclarationX* decl );
     void SetVertexShaderConstantF( UINT reg_id, const float* data, UINT v_num );
-#elif ( defined LW_USE_DX8 )
-    void SetVertexShader( IDirect3DVertexShaderX shader );
-    void SetVertexShaderConstant( UINT reg_id, const void* data, UINT v_num );
-#endif
 
     HRESULT SetStreamSource(UINT stream_num, IDirect3DVertexBufferX* stream_data, UINT offset_byte, UINT stride);
     HRESULT SetIndices(IDirect3DIndexBufferX* index_data, UINT base_vert_index);
@@ -343,7 +338,6 @@ inline void MPRender::SetTransformWorld(const D3DXMATRIX* mat)
     _IMgr.dev_obj->SetTransformWorld((lwMatrix44*)mat);
 }
 
-#if ( defined LW_USE_DX9 )
 inline void MPRender::SetFVF( DWORD fvf )
 {
     _IMgr.dev_obj->SetFVF(fvf);
@@ -360,16 +354,6 @@ inline void MPRender::SetVertexShaderConstantF( UINT reg_id, const float* data, 
 {
     _IMgr.dev_obj->SetVertexShaderConstantF(reg_id, data, v_num);
 }
-#elif ( defined LW_USE_DX8 )
-inline void MPRender::SetVertexShader( IDirect3DVertexShaderX shader )
-{
-    _IMgr.dev_obj->SetVertexShader(shader);
-}
-inline void MPRender::SetVertexShaderConstant( UINT reg_id, const void* data, UINT v_num )
-{
-    _IMgr.dev_obj->SetVertexShaderConstantF(reg_id, data, v_num);
-}
-#endif
 
 inline HRESULT MPRender::SetStreamSource(UINT stream_num, IDirect3DVertexBufferX* stream_data, UINT offset_byte, UINT stride)
 {

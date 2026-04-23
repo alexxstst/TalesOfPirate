@@ -75,11 +75,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
     IDirect3DVertexDeclarationX* decl = 0;
 #endif
 
-    // DX8: id do VS
-#if defined(LW_USE_DX8)
-    DWORD                        vs_id = 0;
-#endif
-
     // ===== validaes bsicas =====
     if (!agent)
         goto __ret;
@@ -232,14 +227,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
         if (!shader_mgr)
             goto __ret;
 
-    #if defined(LW_USE_DX8)
-        if (LW_FAILED(shader_mgr->QueryVertexShader(&vs_id, agent->GetVertexShader())))
-            goto __ret;
-
-        dev_obj->SetVertexShader(vs_id);
-    #endif
-
-    #if defined(LW_USE_DX9)
         if (LW_FAILED(shader_mgr->QueryVertexShader(&vs, agent->GetVertexShader())))
             goto __ret;
 
@@ -248,7 +235,6 @@ LW_RESULT lwxRenderCtrlVSVertexBlend_dx8::BeginSet(lwIRenderCtrlAgent* agent)
 
         dev_obj->SetVertexDeclarationForced(decl);
         dev_obj->SetVertexShader(vs);
-    #endif
     }
 
     ret = LW_RET_OK;

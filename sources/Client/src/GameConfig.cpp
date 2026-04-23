@@ -25,7 +25,7 @@ void CGameConfig::SetDefault()   //
 	m_bAutoLogin	    = FALSE; 
 	
 	m_bFullScreen       = FALSE;
-    m_bEnableMusic      = TRUE;
+	MusicEnabled        = true;
 	
 	m_nChaCnt			= 0;  // 
 
@@ -190,8 +190,9 @@ void CGameConfig::Load()
 	// [Activate Scene]
 	m_nCreateScene = static_cast<int>(g_SystemIni["Activate Scene"].GetInt64("CreateScene", 1));
 
-	// [Sound]
-	m_bEnableMusic = static_cast<int>(g_SystemIni["Sound"].GetInt64("music", 1));
+	//  [audio] musicEnabled — глобальный переключатель звука (музыка + SFX).
+	//  Громкости (musicSound / musicEffect) в той же секции регулируются отдельно через UI.
+	MusicEnabled = g_SystemIni["audio"].GetInt64("musicEnabled", 1) != 0;
 
 	// [Camera Speed]
 	{

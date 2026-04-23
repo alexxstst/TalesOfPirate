@@ -219,16 +219,19 @@ BOOL CGameApp::_Init() {
 		opt_mgr->SetByteFlag(OPTION_FLAG_CREATEHELPERPRIMITIVE, g_Config.m_bEditor);
 	}
 
-	//_IsMusicSystemValid = ::mus_mgr_init( g_Config.m_bEnableMusic!=0 );	// music
 #ifdef USE_DSOUND
-	if (mSoundManager == NULL)
+	if (mSoundManager == NULL) {
 		mSoundManager = new DSoundManager(GetHWND());
+	}
 #endif
-	Corsairs::Client::Audio::AudioSDL::Instance().Init();
 
-	_IsMusicSystemValid = true;
-	if (!_IsMusicSystemValid && g_Config.m_bEnableMusic != 0) {
-		g_logManager.InternalLog(LogLevel::Debug, "common", GetLanguageString(65));
+	//  Звук включён глобально — поднимаем AudioSDL. Иначе ни музыка, ни SFX не играют
+	//  (все колсайты защищены проверкой IsMusicSystemValid()).
+	if (g_Config.MusicEnabled) {
+		_IsMusicSystemValid = Corsairs::Client::Audio::AudioSDL::Instance().Init();
+	} else {
+		_IsMusicSystemValid = false;
+		g_logManager.InternalLog(LogLevel::Info, "common", "Audio disabled by config ([audio] musicEnabled=0)");
 	}
 
 	_bConnected = FALSE;
@@ -422,7 +425,9 @@ void CGameApp::_End() {
 	}
 #endif
 
-	Corsairs::Client::Audio::AudioSDL::Instance().Release();
+	if (_IsMusicSystemValid) {
+		Corsairs::Client::Audio::AudioSDL::Instance().Release();
+	}
 
 #if(defined USE_TIMERPERIOD)
 	if (_TimerPeriod) {

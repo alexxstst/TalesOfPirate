@@ -639,30 +639,19 @@ public:
     virtual LW_RESULT SetTextureForced(DWORD stage, IDirect3DTextureX* tex) PURE_METHOD;
     virtual LW_RESULT SetRenderStateForced(D3DRENDERSTATETYPE state, DWORD value) PURE_METHOD;
     virtual LW_RESULT SetTextureStageStateForced(DWORD stage, D3DTEXTURESTAGESTATETYPE type, DWORD value) PURE_METHOD;
-#if(defined LW_USE_DX9)
     virtual LW_RESULT SetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value) PURE_METHOD;
     virtual LW_RESULT SetSamplerStateForced(DWORD sampler, D3DSAMPLERSTATETYPE type, DWORD value) PURE_METHOD;
-#endif
 
-#if (defined LW_USE_DX9)
     virtual LW_RESULT SetFVF(DWORD fvf) PURE_METHOD;
     virtual LW_RESULT SetVertexShader(IDirect3DVertexShaderX* shader) PURE_METHOD;
     virtual LW_RESULT SetVertexShaderForced(IDirect3DVertexShaderX* shader) PURE_METHOD;
     virtual LW_RESULT SetVertexDeclaration(IDirect3DVertexDeclarationX* decl);
     virtual LW_RESULT SetVertexDeclarationForced(IDirect3DVertexDeclarationX* decl);
     virtual LW_RESULT SetVertexShaderConstantF(UINT reg_id, const float* data, UINT v_num) PURE_METHOD;
-#elif (defined LW_USE_DX8)
-
-    virtual LW_RESULT SetVertexShader(IDirect3DVertexShaderX shader) PURE_METHOD;
-    virtual LW_RESULT SetVertexShaderConstant(UINT reg_id, const void* data, UINT v_num) PURE_METHOD;
-
-#endif
 
     virtual LW_RESULT GetRenderState(DWORD state, DWORD* value) PURE_METHOD;
     virtual LW_RESULT GetTextureStageState(DWORD stage, DWORD state, DWORD* value) PURE_METHOD;
-#if(defined LW_USE_DX9)
     virtual LW_RESULT GetSamplerState(DWORD sampler, D3DSAMPLERSTATETYPE state, DWORD* value) PURE_METHOD;
-#endif
     virtual LW_RESULT GetTexture(DWORD stage, IDirect3DBaseTextureX** tex) PURE_METHOD;
     virtual const lwMatrix44* GetMatView() PURE_METHOD;
     virtual const lwMatrix44* GetMatProj() PURE_METHOD;
@@ -994,19 +983,6 @@ public:
 class LW_DECLSPEC_NOVTABLE lwIShaderMgr : public lwInterface
 {
 public:
-#if (defined LW_USE_DX8)
-    virtual lwIShaderDeclMgr* GetShaderDeclMgr() PURE_METHOD;
-    virtual LW_RESULT Init(DWORD vs_buf_size, DWORD ps_buf_size) PURE_METHOD;
-    virtual LW_RESULT RegisterVertexShader(DWORD type, DWORD* data, DWORD size, DWORD usage, DWORD* decl, DWORD decl_size) PURE_METHOD;
-    virtual LW_RESULT RegisterVertexShader(DWORD type, const char* file, DWORD usage, DWORD* decl, DWORD decl_size, DWORD binary_flag) PURE_METHOD;
-    virtual LW_RESULT UnregisterVertexShader(DWORD type) PURE_METHOD;
-    virtual LW_RESULT QueryVertexShader(DWORD* ret_obj, DWORD type) PURE_METHOD;
-    virtual LW_RESULT LoseDevice() PURE_METHOD;
-    virtual LW_RESULT ResetDevice() PURE_METHOD;
-
-#endif
-
-#if (defined LW_USE_DX9)
     virtual lwIShaderDeclMgr* GetShaderDeclMgr() PURE_METHOD;
     virtual LW_RESULT Init(DWORD vs_buf_size, DWORD decl_buf_size, DWORD ps_buf_size) PURE_METHOD;
     virtual LW_RESULT RegisterVertexShader(DWORD type, BYTE* data, DWORD size) PURE_METHOD;
@@ -1017,7 +993,6 @@ public:
     virtual LW_RESULT LoseDevice() PURE_METHOD;
     virtual LW_RESULT ResetDevice() PURE_METHOD;
     virtual lwVertexShaderInfo* GetVertexShaderInfo(DWORD type) PURE_METHOD;
-#endif
 };
 
 class LW_DECLSPEC_NOVTABLE lwIResBufMgr : public lwInterface

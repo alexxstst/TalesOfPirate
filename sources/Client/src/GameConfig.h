@@ -43,7 +43,9 @@ public:
     int         m_nMaxEffectType;
 	int			m_nMaxResourceNum;
     int         m_nMaxItemType;
-    BOOL        m_bEnableMusic;
+	//  Глобальный выключатель звука: музыка + эффекты. 0 — AudioSDL не инициализируется.
+	//  Читается из [audio] musicEnabled в user/system.ini (default 1).
+	bool        MusicEnabled;
 	BOOL		m_bCheckOvermax;
 
 	// 

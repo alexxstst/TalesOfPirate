@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <Filter Include="Source Files">
@@ -14,33 +14,24 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AudioResource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\src\AudioSDL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\lock.cpp">
+    <ClCompile Include="..\src\AudioCache.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\src\SDL_Wrapper.cpp">
+    <ClCompile Include="..\src\WrapperSDLAudio.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\AudioResource.h">
+    <ClInclude Include="..\src\AudioCache.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\lock.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\SDL_Wrapper.h">
+    <ClInclude Include="..\src\WrapperSDLAudio.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\inc\AudioSDL.h">
-      <Filter>Include</Filter>
-    </ClInclude>
-    <ClInclude Include="..\inc\datatype.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

@@ -58,9 +58,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
 	SetRenderState(D3DRS_ZENABLE, D3DZB_FALSE);
 	SetRenderState(D3DRS_FILLMODE, D3DFILL_SOLID);
 	SetRenderState(D3DRS_SHADEMODE, D3DSHADE_GOURAUD);
-#if(defined LW_USE_DX8)
-    SetRenderState(D3DRS_LINEPATTERN, 0);
-#endif
 	SetRenderState(D3DRS_ZWRITEENABLE, TRUE);
 	SetRenderState(D3DRS_ALPHATESTENABLE, FALSE);
 	SetRenderState(D3DRS_LASTPIXEL, TRUE);
@@ -79,10 +76,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
 	SetRenderState(D3DRS_FOGSTART, 0);
 	SetRenderState(D3DRS_FOGEND, 0);
 	SetRenderState(D3DRS_FOGDENSITY, FTODW(1.0f));
-#if(defined LW_USE_DX8)
-	SetRenderState(D3DRS_EDGEANTIALIAS, FALSE);
-	SetRenderState(D3DRS_ZBIAS, 0);
-#endif
 	SetRenderState(D3DRS_RANGEFOGENABLE, FALSE);
 
 	SetRenderState(D3DRS_STENCILENABLE, FALSE);
@@ -117,9 +110,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
 	SetRenderState(D3DRS_VERTEXBLEND, D3DVBF_DISABLE);
 	SetRenderState(D3DRS_CLIPPLANEENABLE, 0);
 
-#if(defined LW_USE_DX8)
-	SetRenderState(D3DRS_SOFTWAREVERTEXPROCESSING, FALSE);
-#endif
 
 	SetRenderState(D3DRS_POINTSIZE , FTODW(1.0f));
 	SetRenderState(D3DRS_POINTSIZE_MIN , FTODW(1.0f));
@@ -200,14 +190,6 @@ LW_RESULT lwDeviceObject::InitStateCache()
 			SetTextureStageState(i, D3DTSS_ALPHAARG2, D3DTA_CURRENT);
 		}
 
-#if(defined LW_USE_DX8)
-		SetTextureStageState(i, D3DTSS_ADDRESSU,	D3DTADDRESS_WRAP	);
-		SetTextureStageState(i, D3DTSS_ADDRESSV,	D3DTADDRESS_WRAP	);
-		SetTextureStageState(i, D3DTSS_MAXANISOTROPY, 1);
-		SetTextureStageState(i, D3DTSS_MINFILTER, D3DTEXF_LINEAR);
-		SetTextureStageState(i, D3DTSS_MAGFILTER, D3DTEXF_LINEAR);
-		SetTextureStageState(i, D3DTSS_MIPFILTER,	D3DTEXF_NONE);
-#endif
 
         SetTextureStageState(i, D3DTSS_TEXCOORDINDEX, i);
     }
@@ -412,8 +394,6 @@ lwDeviceObject::lwDeviceObject(lwSysGraphics* sys_graphics)
 : _sys_graphics(sys_graphics), _d3d(0), _dev(0), 
 #if (defined LW_USE_DX9)
   _fvf_value(D3DFMT_UNKNOWN), _shader_value(0)
-#elif (defined LW_USE_DX8)
-  _shader_value(D3DFMT_UNKNOWN)
 #endif
 {
 
@@ -793,9 +773,6 @@ LW_RESULT lwDeviceObject::CreateCubeTexture(IDirect3DCubeTextureX** o_tex, UINT 
 }
 LW_RESULT lwDeviceObject::CreateOffscreenPlainSurface(IDirect3DSurfaceX** surface, UINT width, UINT height, D3DFORMAT format, DWORD pool, HANDLE* handle)
 {
-#if(defined LW_USE_DX8)
-    return _dev->CreateImageSurface(width, height, format, surface);
-#endif
 #if(defined LW_USE_DX9)
     return _dev->CreateOffscreenPlainSurface(width, height, format, (D3DPOOL)pool, surface, handle);
 #endif
@@ -931,23 +908,6 @@ LW_RESULT lwDeviceObject::SetVertexDeclarationForced(IDirect3DVertexDeclarationX
 LW_RESULT lwDeviceObject::SetVertexShaderConstantF(UINT reg_id, const float* data, UINT v_num)
 {
     return _dev->SetVertexShaderConstantF(reg_id, data, v_num);
-}
-
-#elif (defined LW_USE_DX8)
-
-LW_RESULT lwDeviceObject::SetVertexShader(IDirect3DVertexShaderX shader)
-{
-    if(_shader_value != shader)
-    {
-        _shader_value = shader;
-        return _dev->SetVertexShader(shader);
-    }
-    return LW_RET_OK;
-}
-
-LW_RESULT lwDeviceObject::SetVertexShaderConstant(UINT reg_id, const void* data, UINT v_num)
-{
-    return _dev->SetVertexShaderConstant(reg_id, data, v_num);
 }
 
 #endif

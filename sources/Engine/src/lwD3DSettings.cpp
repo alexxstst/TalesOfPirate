@@ -30,9 +30,7 @@ LW_RESULT lwInitDefaultD3DCreateParam( lwD3DCreateParam* param, HWND hwnd )
     param->present_param.SwapEffect = D3DSWAPEFFECT_DISCARD;
     param->present_param.Windowed = 1;
 
-#if ( defined LW_USE_DX8 )
-    param->present_param.FullScreen_PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
-#elif ( defined LW_USE_DX9 )
+#if ( defined LW_USE_DX9 )
     param->present_param.PresentationInterval = D3DPRESENT_INTERVAL_DEFAULT;
 #endif
 
@@ -87,9 +85,7 @@ LW_RESULT lwLoadD3DSettings( lwD3DCreateParam* param, const char* file )
     param->present_param.FullScreen_RefreshRateInHz = atoi( buf );
 
     GetPrivateProfileString( "PRESENT_PARAM", "present_interval", "", buf, LW_MAX_NAME, file );
-#if ( defined LW_USE_DX8 )
-    param->present_param.FullScreen_PresentationInterval = atoi( buf );
-#elif ( defined LW_USE_DX9 )
+#if ( defined LW_USE_DX9 )
     param->present_param.PresentationInterval = atoi( buf );
 #endif
 
@@ -116,9 +112,7 @@ LW_RESULT lwSaveD3DSettings( const char* file, const lwD3DCreateParam* param )
     WritePrivateProfileString( "PRESENT_PARAM", "multisample_type", itoa( param->present_param.MultiSampleType, buf, 10 ), file );
     WritePrivateProfileString( "PRESENT_PARAM", "refresh_rate", itoa( param->present_param.FullScreen_RefreshRateInHz, buf, 10 ), file );
 
-#if ( defined LW_USE_DX8 )
-    WritePrivateProfileString( "PRESENT_PARAM", "present_interval", itoa( param->present_param.FullScreen_PresentationInterval, buf, 10 ), file );
-#elif ( defined LW_USE_DX9 )
+#if ( defined LW_USE_DX9 )
     WritePrivateProfileString( "PRESENT_PARAM", "present_interval", itoa( param->present_param.PresentationInterval, buf, 10 ), file );
 #endif
 

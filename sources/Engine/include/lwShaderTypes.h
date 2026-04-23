@@ -148,9 +148,4 @@ inline lwShaderDeclCreateInfo SDCI_VALUE( DWORD shader, DWORD decl, DWORD light,
     return i;
 }
 
-#if ( defined LW_USE_DX8 )
-#endif
-
-
-
 LW_END

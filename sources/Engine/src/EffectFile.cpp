@@ -199,12 +199,6 @@ BOOL CMPEffectFile::SetTexture(LPCSTR TextureValue, IDirect3DTextureX* pTexture)
 
 BOOL CMPEffectFile::SetDword(LPCSTR DwName, DWORD dwvalue)
 {
-#if defined(LW_USE_DX8)
-	if (FAILED(m_pEffect->SetDword(DwName, dwvalue)))
-	{
-		return FALSE;
-	}
-#endif
 	return TRUE;
 }
 
@@ -219,11 +213,7 @@ BOOL CMPEffectFile::Begin(DWORD dwIsSave)
 
 BOOL CMPEffectFile::Pass(UINT ipass)
 {
-#if (defined LW_USE_DX9)
 	if (FAILED(m_pEffect->BeginPass(ipass)) || FAILED(m_pEffect->CommitChanges()))
-#elif (defined LW_USE_DX8)
-	if (FAILED(m_pEffect->Pass(ipass)))
-#endif
 	{
 		return FALSE;
 	}

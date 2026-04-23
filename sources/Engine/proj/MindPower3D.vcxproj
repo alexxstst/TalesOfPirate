@@ -137,6 +137,7 @@
     <ClInclude Include="..\include\MPFont.h" />
     <ClInclude Include="..\include\FontRender.h" />
     <ClInclude Include="..\include\FonsDx9Backend.h" />
+    <ClInclude Include="..\include\InputSystem.h" />
     <ClInclude Include="..\include\MPGameApp.h" />
     <ClInclude Include="..\include\MPInterface.h" />
     <ClInclude Include="..\include\MPIteratorWrappers.h" />
@@ -298,6 +299,7 @@
       </ForcedIncludeFiles>
     </ClCompile>
     <ClCompile Include="..\src\UIClip.cpp" />
+    <ClCompile Include="..\src\InputSystem.cpp" />
     <ClCompile Include="..\src\MPGameApp.cpp" />
     <ClCompile Include="..\src\TextureManager.cpp" />
     <ClCompile Include="..\src\MPMap.cpp" />

@@ -105,15 +105,6 @@ void	CMPShadeMap::BoundingRes(CMPResManger	*m_CResMagr)
 
 	m_bUseSoft = m_CResMagr->m_bUseSoftOrg;
 
-#if(defined LW_USE_DX8)
-	DWORD	BOL = 0;
-	_pModel->GetDev()->GetRenderState( D3DRS_SOFTWAREVERTEXPROCESSING , &BOL );
-	if (BOL == 1)
-	{
-		m_bUseSoft = TRUE;
-		//LG("debug","msgUsesoft");
-	}
-#endif
 
 	//m_bUseSoft = TRUE;
 

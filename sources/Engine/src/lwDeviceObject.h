@@ -33,8 +33,6 @@ private:
     DWORD _fvf_value;
     IDirect3DVertexShaderX* _shader_value;
     IDirect3DVertexDeclarationX* _decl_value;
-#elif ( defined LW_USE_DX8 )
-    IDirect3DVertexShaderX _shader_value;
 #endif
 
     IDirect3DVertexBufferX* _vb_value[LW_MAX_STREAM_NUM];
@@ -120,9 +118,6 @@ public:
     LW_RESULT SetVertexDeclaration( IDirect3DVertexDeclarationX* decl );
     LW_RESULT SetVertexDeclarationForced( IDirect3DVertexDeclarationX* decl );
     LW_RESULT SetVertexShaderConstantF( UINT reg_id, const float* data, UINT v_num );
-#elif ( defined LW_USE_DX8 )
-    LW_RESULT SetVertexShader( IDirect3DVertexShaderX shader );
-    LW_RESULT SetVertexShaderConstant( UINT reg_id, const void* data, UINT v_num );
 #endif
 
     LW_RESULT SetStreamSource(UINT stream_num, IDirect3DVertexBufferX* stream_data, UINT offset_byte, UINT stride);

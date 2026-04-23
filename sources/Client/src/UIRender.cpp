@@ -91,9 +91,6 @@ void	CUIPanel::Draw( IDirect3DTextureX*  pSrcTexture,
 	m_pDev->SetRenderState( D3DRS_CULLMODE,   D3DCULL_CCW );
 	m_pDev->SetRenderState( D3DRS_STENCILENABLE,    FALSE );
 	m_pDev->SetRenderState( D3DRS_CLIPPING,         TRUE );
-#if (defined LW_USE_DX8)
-	m_pDev->SetRenderState( D3DRS_EDGEANTIALIAS,    FALSE );
-#endif
 	m_pDev->SetRenderState( D3DRS_CLIPPLANEENABLE,  FALSE );
 	m_pDev->SetRenderState( D3DRS_VERTEXBLEND,      FALSE );
 	m_pDev->SetRenderState( D3DRS_INDEXEDVERTEXBLENDENABLE, FALSE );

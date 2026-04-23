@@ -544,6 +544,12 @@ HWND g_InputEdit = NULL;
 #include "inputbox.h"
 
 LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+	//  Прокидываем ввод в InputSystem до любых обработчиков клиента.
+	Corsairs::Engine::Input::InputSystem::Instance().OnWmMessage(
+		static_cast<std::uint32_t>(message),
+		static_cast<std::uintptr_t>(wParam),
+		static_cast<std::intptr_t>(lParam));
+
 	//switch (message)
 	//{
 	//case WM_ACTIVATE:

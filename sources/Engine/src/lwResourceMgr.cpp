@@ -528,9 +528,6 @@ LW_RESULT lwTex::LoadVideoMemory()
         _data_info.width = desc.Width;
         _data_info.height = desc.Height;
         _data_info.size = lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-#if(defined LW_USE_DX8)
-        _data_info.size = desc.Size;
-#endif
 
 #if(defined USE_TEXLOG_MGR)
         ((lwResourceMgr*)_res_mgr)->_texlog_mgr.Log(
@@ -688,9 +685,6 @@ __load_check_dds:
         _data_info.width = desc.Width;
         _data_info.height = desc.Height;
         _data_info.size = lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-#if(defined LW_USE_DX8)
-        _data_info.size = desc.Size;
-#endif
 
 #if(defined USE_TEXLOG_MGR)
         ((lwResourceMgr*)_res_mgr)->_texlog_mgr.Log(
@@ -772,9 +766,6 @@ __load_it:
             _data_info.width = desc.Width;
             _data_info.height = desc.Height;
             _data_info.size = lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-#if(defined LW_USE_DX8)
-            _data_info.size = desc.Size;
-#endif
 
 #if(defined USE_TEXLOG_MGR)
             ((lwResourceMgr*)_res_mgr)->_texlog_mgr.Log(
@@ -941,9 +932,6 @@ LW_RESULT lwTex::LoadVideoMemoryDirect()
         _data_info.width = desc.Width;
         _data_info.height = desc.Height;
         _data_info.size = lwGetSurfaceSize(desc.Width, desc.Height, desc.Format);
-#if(defined LW_USE_DX8)
-        _data_info.size = desc.Size;
-#endif
 
 #if(defined USE_TEXLOG_MGR)
         ((lwResourceMgr*)_res_mgr)->_texlog_mgr.Log(
@@ -2983,9 +2971,7 @@ lwResourceMgr::lwResourceMgr(lwISysGraphics* sys)
 
     _shader_mgr = LW_NEW(lwShaderMgr(_dev_obj));
 
-#if(defined LW_USE_DX8)
-    _shader_mgr->Init(1024, 0);
-#elif(defined LW_USE_DX9)
+#if(defined LW_USE_DX9)
     _shader_mgr->Init(1024, 1024, 0);
 #endif
 

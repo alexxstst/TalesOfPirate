@@ -7,6 +7,8 @@
 //#################################
 #pragma once
 
+#include "InputSystem.h"
+
 #define KEYBOARD_BUFFERSIZE		10
 #define MOUSE_BUFFERSIZE		10
 
@@ -15,12 +17,12 @@
 #define DI_KEY_PRESSED  1
 #define DI_KEY_RELEASED 2
 
-// Added by CLP
+//  Совместимость: phase-маска клавиши (was KEY_FREE/PUSH/HOLD/POP).
+//  Значения зеркалят Corsairs::Engine::Input::KeyPhaseBits.
 #define KEY_FREE 0x0001
 #define KEY_PUSH 0x0002
 #define KEY_HOLD 0x0004
 #define KEY_POP  0x0008
-// Added by CLP
 
 class MPCameraNOLEECH;
 class MPRender;
@@ -143,14 +145,8 @@ protected:
 	
 	// Texture Management
 
-	// Direct Input
-	LPDIRECTINPUT8			_pDI;					
-	LPDIRECTINPUTDEVICE8	_pDIKeyboard;			// Keyboard
-	LPDIRECTINPUTDEVICE8	_pDIMouse;
-
 	BYTE					_bCanDB;
 
-	HKL						_KeyboardLayout;
 	BYTE					_btButtonState[3];
 	BYTE					_btLastButtonState[3];
 
@@ -193,7 +189,7 @@ protected:
 	DIMOUSESTATE2			_sDims2;
 
 public:
-	// ----- Added by CLP ----- //
+	//  Phase-аксессоры — тонкие редиректы на InputSystem (совместимость с legacy API).
 	inline BYTE getKeyState ( BYTE dikey );
 	inline BYTE getASCIIKeyState ( BYTE codeASCII );
 	inline BOOL isKeyFree ( BYTE dikey );
@@ -204,14 +200,8 @@ public:
 
 	inline BOOL isKeyStateDown ( BYTE dikey );
 	inline BOOL isKeyStateUp ( BYTE dikey );
-
-protected:
-	BYTE mASCKeysState[ 256 ];
-	BYTE mKeyState[ 256 ];
-	// ----- Added by CLP ----- //
 };
 
-// 
 inline BOOL MPGameApp::IsKeyContinue(BYTE dikey)
 {
 	return isKeyHold ( dikey );
@@ -227,49 +217,32 @@ inline BOOL MPGameApp::IsMouseButtonPress(int nButtonNo)
 	return _btButtonState[nButtonNo];
 }
 
-// Added by CLP
-inline BOOL	MPGameApp::isKeyFree ( BYTE dikey )
+inline BYTE MPGameApp::getKeyState(BYTE dikey)
 {
-	return mKeyState[ dikey ] & KEY_FREE;
+	return Corsairs::Engine::Input::InputSystem::Instance().GetKeyPhase(dikey);
 }
 
-inline BOOL	MPGameApp::isKeyPush ( BYTE dikey )
+inline BYTE MPGameApp::getASCIIKeyState(BYTE codeASCII)
 {
-	return mKeyState[ dikey ] & KEY_PUSH;
+	return Corsairs::Engine::Input::InputSystem::Instance().GetAsciiPhase(codeASCII);
 }
 
-inline BOOL	MPGameApp::isKeyHold ( BYTE dikey )
-{
-	return mKeyState[ dikey ] & KEY_HOLD;
-}
+inline BOOL MPGameApp::isKeyFree(BYTE dikey)  { return getKeyState(dikey) & KEY_FREE; }
+inline BOOL MPGameApp::isKeyPush(BYTE dikey)  { return getKeyState(dikey) & KEY_PUSH; }
+inline BOOL MPGameApp::isKeyHold(BYTE dikey)  { return getKeyState(dikey) & KEY_HOLD; }
+inline BOOL MPGameApp::isKeyPop(BYTE dikey)   { return getKeyState(dikey) & KEY_POP;  }
 
-inline BOOL	MPGameApp::isKeyPop ( BYTE dikey )
-{
-	return mKeyState[ dikey ] & KEY_POP;
-}
-
-inline BOOL MPGameApp::isKeyChange ( BYTE dikey )
+inline BOOL MPGameApp::isKeyChange(BYTE dikey)
 {
 	return ( isKeyPush ( dikey ) || isKeyPop ( dikey ) );
 }
 
-inline BOOL MPGameApp::isKeyStateDown ( BYTE dikey )
+inline BOOL MPGameApp::isKeyStateDown(BYTE dikey)
 {
 	return ( isKeyPush ( dikey ) || isKeyHold ( dikey ) );
 }
 
-inline BOOL MPGameApp::isKeyStateUp ( BYTE dikey )
+inline BOOL MPGameApp::isKeyStateUp(BYTE dikey)
 {
 	return ( isKeyFree ( dikey ) || isKeyPop ( dikey ) );
 }
-
-inline BYTE MPGameApp::getKeyState ( BYTE dikey )
-{
-	return mKeyState[ dikey ];
-}
-
-inline BYTE MPGameApp::getASCIIKeyState ( BYTE codeASCII )
-{
-	return mASCKeysState[ codeASCII ];
-}
-// Added by CLP

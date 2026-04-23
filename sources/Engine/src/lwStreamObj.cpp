@@ -656,9 +656,6 @@ LW_RESULT lwStaticStreamMgr::BindVertexBuffer(LW_HANDLE handle, UINT channel)
         }
 
 
-#if(defined LW_USE_DX8)
-        _dev_obj->SetStreamSource(channel, s->_buf, e->offset, e->stride);
-#endif
 
 #if(defined LW_USE_DX9)
 
