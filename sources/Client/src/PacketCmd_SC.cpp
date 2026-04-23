@@ -3162,7 +3162,7 @@ void ReadChaKitbagFromMsg(const net::msg::ChaKitbagInfo& info, stNetKitbag& SKit
 				MessageBox(0, _str315.c_str(), "Error", 0);
 #ifdef USE_DSOUND
 				if (g_dwCurMusicID) {
-					AudioSDL::get_instance()->stop(g_dwCurMusicID);
+					Corsairs::Client::Audio::AudioSDL::Instance().Stop(g_dwCurMusicID);
 					g_dwCurMusicID = 0;
 					Sleep(60);
 				}

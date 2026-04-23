@@ -1,88 +1,42 @@
-﻿
-//---------------------------
-//
-//  
-//  by Jampe
-//  2007/03/28
-//
-//---------------------------
+#pragma once
+
+#include <cstdint>
+#include <memory>
+#include <string_view>
 
 
-#if !defined __AUDIO_SDL_H__
-#define __AUDIO_SDL_H__
+namespace Corsairs::Client::Audio {
+	enum class AudioType : std::uint8_t {
+		Sfx = 1,    //  Короткий эффект, предекодированный в память (WAV).
+		Stream = 2, //  Стриминговая музыка (OGG/MP3).
+	};
 
 
-#include "datatype.h"
+	class AudioSDL {
+	public:
+		static AudioSDL& Instance();
 
+		bool Init();
+		void Release();
+		bool IsValid() const;
 
+		//  Возвращает id ресурса (0 при ошибке).
+		std::uint32_t GetResourceId(std::string_view resource, AudioType type);
 
-class AudioSDL : public _singleton<AudioSDL>
-{
-    SINGLETON_OBJECT(AudioSDL);
-public:
-    ~AudioSDL();
+		bool Play(std::uint32_t id, bool loop = false);
+		bool Stop(std::uint32_t id);
+		bool IsStopped(std::uint32_t id);
 
-    //  
-    bool init();
+		//  Громкость в [0.0f, 1.0f].
+		bool SetVolume(std::uint32_t id, float vol);
 
-    //  
-    void release();
+	private:
+		AudioSDL();
+		~AudioSDL();
+		AudioSDL(const AudioSDL&) = delete;
+		AudioSDL& operator=(const AudioSDL&) = delete;
 
-    //  
-    bool is_valid();
-
-    //  
-    ulong get_resID(const char* resource, int type);
-
-    //  
-    bool play(ulong id, bool loop = false);
-
-    //  
-    bool fadeIn(ulong id, int ms, bool loop = false);
-
-    //  
-    bool fadeOut(ulong id, int ms);
-
-    //  
-    bool stop(ulong id);
-
-    //  
-    bool pause(ulong id);
-
-    //  
-    bool resume(ulong id);
-
-    //  (.MP3,OGG)
-    bool rewind(ulong id);
-
-    //  
-    bool is_playing(ulong id);
-
-    //  
-    bool is_paused(ulong id);
-
-    //  
-    bool is_stopped(ulong id);
-
-    //  
-    bool volume(ulong id, int vol);
-
-    //  ()()
-    void checkRes(ulong timeout = 300);
-
-protected:
-    AudioSDL();
-};
-
-
-#define GetAudioDevice()            AudioSDL::get_instance()
-
-
-#ifdef _DEBUG
-    #pragma comment(lib, "AudioSDL_D.lib")
-#else
-    #pragma comment(lib, "AudioSDL.lib")
-#endif
-
-
-#endif
+		struct Impl;
+		std::unique_ptr<Impl> _impl;
+	};
+} // namespace Corsairs::Client::Audio

@@ -58,7 +58,6 @@
 #include "WorldScene.h"
 
 #include "GlobalVar.h"
-#include "PlaySound.h"
 #include "PacketCmd.h"
 #include "Track.h"
 #include "STStateObj.h"
@@ -116,7 +115,9 @@ extern CGameMovie g_GameMovie;
 extern CAudioThread g_AudioThread;
 #endif
 
-extern DWORD g_dwCurMusicID;
+extern std::uint32_t g_dwCurMusicID;
+
+using namespace Corsairs::Client::Audio;
 
 
 static bool IsExistFile(const std::string& file) {
@@ -677,15 +678,15 @@ void CGameApp::PlayMusic(int nMusicNo) {
 		strncpy(_szBkgMusic, pInfo->DataName.c_str(), sizeof(_szBkgMusic));
 
 		_eSwitchMusic = enumNewMusic;
-		DWORD OldMusicID = g_dwCurMusicID;
-		g_dwCurMusicID = AudioSDL::get_instance()->get_resID(_szBkgMusic, TYPE_MP3);
-		AudioSDL::get_instance()->volume(g_dwCurMusicID, _nCurMusicSize);
+		std::uint32_t OldMusicID = g_dwCurMusicID;
+		g_dwCurMusicID = AudioSDL::Instance().GetResourceId(_szBkgMusic, AudioType::Stream);
+		AudioSDL::Instance().SetVolume(g_dwCurMusicID, float(_nCurMusicSize) / 128.0f);
 #ifndef USE_DSOUND
 		g_AudioThread.play(g_dwCurMusicID, true);
 #else
 		if (g_dwCurMusicID && (OldMusicID != g_dwCurMusicID)) {
-			AudioSDL::get_instance()->stop(OldMusicID);
-			AudioSDL::get_instance()->play(g_dwCurMusicID, true);
+			AudioSDL::Instance().Stop(OldMusicID);
+			AudioSDL::Instance().Play(g_dwCurMusicID, true);
 		}
 #endif
 	}
@@ -715,8 +716,8 @@ void CGameApp::PlaySound(int nSoundNo) {
 #ifdef USE_DSOUND
 	PlaySample(pInfo->DataName.c_str());
 #else
-	ulong musid = AudioSDL::get_instance()->get_resID(pInfo->DataName.c_str(), TYPE_WAV);
-	AudioSDL::get_instance()->volume(musid, (int)CGameScene::_fSoundSize);
+	std::uint32_t musid = AudioSDL::Instance().GetResourceId(pInfo->DataName, AudioType::Sfx);
+	AudioSDL::Instance().SetVolume(musid, CGameScene::_fSoundSize / 128.0f);
 	g_AudioThread.play(musid, false);
 #endif
 }
@@ -728,7 +729,7 @@ void CGameApp::SetMusicSize(float fVol) {
 		_nMusicSize = (int)(fVol * 128.0f);
 
 		//::bkg_snd_vol( _nMusicSize );
-		AudioSDL::get_instance()->volume(g_dwCurMusicID, _nMusicSize);
+		AudioSDL::Instance().SetVolume(g_dwCurMusicID, float(_nMusicSize) / 128.0f);
 	}
 }
 

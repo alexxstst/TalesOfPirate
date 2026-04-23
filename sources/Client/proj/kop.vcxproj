@@ -44,14 +44,14 @@
     <_ProjectFileVersion>16.0.30427.251</_ProjectFileVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>D:\Projects\MMORPG\TalesOfPirate\Client\system\x64\</OutDir>
+    <OutDir>D:\Projects\MMORPG\TalesOfPirate\Client\system\</OutDir>
     <IntDir>$(ProjectDir)..\build\x64\$(Configuration)\</IntDir>
     <LinkIncremental>true</LinkIncremental>
     <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
     <TargetName>Game</TargetName>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(ProjectDir)..\bin\system\x64\</OutDir>
+    <OutDir>$(ProjectDir)..\bin\system\</OutDir>
     <IntDir>$(ProjectDir)..\build\x64\$(Configuration)\</IntDir>
     <IgnoreImportLibrary>false</IgnoreImportLibrary>
     <LinkIncremental>false</LinkIncremental>
@@ -61,7 +61,7 @@
     <ClCompile>
       <AdditionalOptions>/bigobj %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Engine\src;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL2\include;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;$(ProjectDir)..\..\Libraries\FreeType\include;$(ProjectDir)..\..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Engine\src;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL3\include;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;$(ProjectDir)..\..\Libraries\FreeType\include;$(ProjectDir)..\..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_DEBUG;_WINDOWS;_LUA_GAME;_WIN32_WINNT=0x0601;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
@@ -82,10 +82,10 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>AudioSDL_D.lib;MindPower3D_D8D.lib;Ws2_32.lib;lua51.lib;CorsairsNet_D.lib;util_D.lib;Common_D.lib;dxguid.lib;ddraw.lib;SDL2.lib;SDL2_mixer.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AudioSDL_D.lib;MindPower3D_D8D.lib;Ws2_32.lib;lua51.lib;CorsairsNet_D.lib;util_D.lib;Common_D.lib;dxguid.lib;ddraw.lib;SDL3.lib;SDL3_mixer.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib\x64;$(ProjectDir)..\..\Libraries\Common\lib\x64;$(ProjectDir)..\..\Libraries\Util\lib\x64;$(ProjectDir)..\..\Libraries\CorsairsNet\lib\x64;$(ProjectDir)..\..\Libraries\AudioSDL\lib\x64;$(ProjectDir)..\..\Libraries\SDL2\lib\x64;$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib\x64;$(ProjectDir)..\..\Libraries\Discord\lib\x64;$(ProjectDir)..\..\Libraries\Cryptopp\x64\Output\Debug\;$(ProjectDir)..\..\Libraries\FreeType\lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib\x64;$(ProjectDir)..\..\Libraries\Common\lib\x64;$(ProjectDir)..\..\Libraries\Util\lib\x64;$(ProjectDir)..\..\Libraries\CorsairsNet\lib\x64;$(ProjectDir)..\..\Libraries\AudioSDL\lib\x64;$(ProjectDir)..\..\Libraries\SDL3\lib\x64;$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib\x64;$(ProjectDir)..\..\Libraries\Discord\lib\x64;$(ProjectDir)..\..\Libraries\Cryptopp\x64\Output\Debug\;$(ProjectDir)..\..\Libraries\FreeType\lib\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreSpecificDefaultLibraries>MSVCRT.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -106,7 +106,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Engine\src;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL2\include;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;$(ProjectDir)..\..\Libraries\FreeType\include;$(ProjectDir)..\..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)..\..\Engine\include;$(ProjectDir)..\..\Engine\src;$(ProjectDir)..\..\Libraries\CorsairsNet\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\AudioSDL\inc;$(ProjectDir)..\..\Libraries\SDL3\include;$(ProjectDir)..\..\Libraries\Discord\Include;$(ProjectDir)..\..\Libraries\Cryptopp;$(ProjectDir)..\..\Libraries\DirectX\DX9\include;$(ProjectDir)..\..\Libraries\FreeType\include;$(ProjectDir)..\..\Libraries\fontstash;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_WINDOWS;_LUA_GAME;NARROW;_WIN32_WINNT=0x0601;USE_DX_VERSION;LW_USE_DX9;DIRECT3D_VERSION=0x0900;RSA_AES;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <IgnoreStandardIncludePath>false</IgnoreStandardIncludePath>
       <MinimalRebuild>false</MinimalRebuild>
@@ -129,11 +129,11 @@
     </ClCompile>
     <Link>
       <RegisterOutput>false</RegisterOutput>
-      <AdditionalDependencies>AudioSDL.lib;MindPower3D_D8R.lib;lua51.lib;Ws2_32.lib;CorsairsNet.lib;util.lib;Common.lib;dxguid.lib;SDL2.lib;SDL2_mixer.lib;ddraw.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>AudioSDL.lib;MindPower3D_D8R.lib;lua51.lib;Ws2_32.lib;CorsairsNet.lib;util.lib;Common.lib;dxguid.lib;SDL3.lib;SDL3_mixer.lib;ddraw.lib;Psapi.lib;discord-rpc.lib;legacy_stdio_definitions.lib;cryptlib.lib;bcrypt.lib;crypt32.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
       <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib\x64;$(ProjectDir)..\..\Libraries\Common\lib\x64;$(ProjectDir)..\..\Libraries\Util\lib\x64;$(ProjectDir)..\..\Libraries\CorsairsNet\lib\x64;$(ProjectDir)..\..\Libraries\AudioSDL\lib\x64;$(ProjectDir)..\..\Libraries\SDL2\lib\x64;$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib\x64;$(ProjectDir)..\..\Libraries\Discord\lib\x64;$(ProjectDir)..\..\Libraries\Cryptopp\x64\Output\Release\;$(ProjectDir)..\..\Libraries\FreeType\lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)..\..\Engine\lib\x64;$(ProjectDir)..\..\Libraries\Common\lib\x64;$(ProjectDir)..\..\Libraries\Util\lib\x64;$(ProjectDir)..\..\Libraries\CorsairsNet\lib\x64;$(ProjectDir)..\..\Libraries\AudioSDL\lib\x64;$(ProjectDir)..\..\Libraries\SDL3\lib\x64;$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;$(ProjectDir)..\..\Libraries\DirectX\DX9\Lib\x64;$(ProjectDir)..\..\Libraries\Discord\lib\x64;$(ProjectDir)..\..\Libraries\Cryptopp\x64\Output\Release\;$(ProjectDir)..\..\Libraries\FreeType\lib\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
       <IgnoreSpecificDefaultLibraries>libc.lib;msvcrt.lib;libcd.lib;msvcrtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
       <DelayLoadDLLs>%(DelayLoadDLLs)</DelayLoadDLLs>

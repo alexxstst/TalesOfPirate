@@ -27,6 +27,8 @@ extern CAudioThread g_AudioThread;
 
 #include "state_reading.h"
 
+using namespace Corsairs::Client::Audio;
+
 void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 {
 	for (int i = 0; i < MAX_ANI_CLOCK; i++)
@@ -184,7 +186,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 		if( _nCurMusicSize<=1 )
 		{
 			//::bkg_snd_stop();
-			AudioSDL::get_instance()->stop(::g_dwCurMusicID);
+			AudioSDL::Instance().Stop(::g_dwCurMusicID);
 			if( _szBkgMusic[0]=='\0' )
 			{
 				_eSwitchMusic=enumNoMusic;
@@ -192,17 +194,17 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 			else
 			{
 				//::bkg_snd_play( _szBkgMusic, true );
-				DWORD OldMusicID = g_dwCurMusicID;
-				g_dwCurMusicID = AudioSDL::get_instance()->get_resID(_szBkgMusic, TYPE_MP3);
+				std::uint32_t OldMusicID = g_dwCurMusicID;
+				g_dwCurMusicID = AudioSDL::Instance().GetResourceId(_szBkgMusic, AudioType::Stream);
 
-				//AudioSDL::get_instance()->play(g_dwCurMusicID, true);
+				//AudioSDL::Instance().Play(g_dwCurMusicID, true);
 
-				// 
+				//
 #ifndef USE_DSOUND
 				g_AudioThread.play(g_dwCurMusicID, true);
 #else
 				if( g_dwCurMusicID && ( OldMusicID != g_dwCurMusicID ) )
-					AudioSDL::get_instance()->play( g_dwCurMusicID, true );
+					AudioSDL::Instance().Play( g_dwCurMusicID, true );
 #endif
 				_eSwitchMusic=enumNewMusic;
 			}
@@ -210,7 +212,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 		else
 		{
 			//::bkg_snd_vol( _nCurMusicSize );
-			AudioSDL::get_instance()->volume(g_dwCurMusicID, _nCurMusicSize);
+			AudioSDL::Instance().SetVolume(g_dwCurMusicID, float(_nCurMusicSize) / 128.0f);
 		}
 		break;
 
@@ -223,7 +225,7 @@ void CGameApp::_FrameMove(DWORD dwTimeParam, bool camMove)		//Vim
 		else
 		{
 			//::bkg_snd_vol( _nCurMusicSize );
-			AudioSDL::get_instance()->volume(g_dwCurMusicID, _nCurMusicSize);
+			AudioSDL::Instance().SetVolume(g_dwCurMusicID, float(_nCurMusicSize) / 128.0f);
 		}
 		break;
 	}

@@ -21,9 +21,8 @@
 | LuaJIT (+ Lua 5.1) | 2.1 | MIT | [LuaJIT.txt](LuaJIT.txt) | https://luajit.org |
 | LuaBridge3 | header-only | MIT | [LuaBridge.txt](LuaBridge.txt) | https://github.com/kunitoki/LuaBridge3 |
 | Crypto++ | 8.4+ | Boost Software License 1.0 | [Cryptopp.txt](Cryptopp.txt) | https://www.cryptopp.com |
-| SDL2 | 2.32.10 | zlib License | [SDL2.txt](SDL2.txt) | https://github.com/libsdl-org/SDL |
-| SDL2_mixer | 2.8.1 | zlib License | [SDL2_mixer.txt](SDL2_mixer.txt) | https://github.com/libsdl-org/SDL_mixer |
-| libogg | 1.3.x | BSD-3-Clause (Xiph) | [libogg.txt](libogg.txt) | https://xiph.org/ogg/ |
+| SDL3 | 3.4.4 | zlib License | [SDL3.txt](SDL3.txt) | https://github.com/libsdl-org/SDL |
+| SDL3_mixer | 3.2.0 | zlib License | [SDL3_mixer.txt](SDL3_mixer.txt) | https://github.com/libsdl-org/SDL_mixer |
 | Discord RPC | — | MIT | [Discord-RPC.txt](Discord-RPC.txt) | https://github.com/discord/discord-rpc |
 | DirectX (D3D9) | DX9 SDK | Microsoft EULA (редистрибутив) | [DirectX.txt](DirectX.txt) | Microsoft DirectX SDK |
 | FreeType | 2.x | FTL (BSD-подобная, по выбору) / GPLv2 | [FreeType.txt](FreeType.txt), [FreeType_FTL.txt](FreeType_FTL.txt), [FreeType_GPLv2.txt](FreeType_GPLv2.txt) | https://freetype.org |
@@ -40,10 +39,10 @@
 | Roboto | Apache License 2.0 | [fonts/Roboto.txt](fonts/Roboto.txt) | https://github.com/googlefonts/roboto-2 |
 | Source Sans 3 | SIL OFL 1.1 | [fonts/SourceSans3.txt](fonts/SourceSans3.txt) | https://github.com/adobe-fonts/source-sans |
 
-## Про SDL2 и динамическую линковку
+## Про SDL3 и динамическую линковку
 
-SDL2 и SDL2_mixer распространяются под zlib License (MIT-подобная, атрибуция в
-бинарных дистрибутивах). Линкуются **динамически** — `SDL2.dll` и
-`SDL2_mixer.dll` лежат рядом с `Game.exe` в `Client/system/`. Для поддержки
-Ogg Vorbis (фоновая музыка `Client/music/*.ogg`) дополнительно поставляется
-`libogg-0.dll` под Xiph BSD-3-Clause.
+SDL3 и SDL3_mixer распространяются под zlib License (MIT-подобная, атрибуция в
+бинарных дистрибутивах). Линкуются **динамически** — `SDL3.dll` и
+`SDL3_mixer.dll` лежат рядом с `Game.exe` в `Client/system/`. Ogg Vorbis для
+фоновой музыки (`Client/music/*.ogg`) декодируется встроенным `stb_vorbis`
+внутри `SDL3_mixer.dll` — внешний `libogg` не нужен.

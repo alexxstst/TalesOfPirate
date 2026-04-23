@@ -1,169 +1,100 @@
-﻿
 #include "../inc/AudioSDL.h"
-#include "AudioResource.h"
-#include "SDL_Wrapper.h"
+#include "AudioCache.h"
+#include "WrapperSDLAudio.h"
+
+#include <SDL3/SDL.h>
+#include <SDL3_mixer/SDL_mixer.h>
 
 
-bool g_sdl_audio_valid = false;
+namespace Corsairs::Client::Audio {
+	struct AudioSDL::Impl {
+		MIX_Mixer* Mixer = nullptr;
+		bool IsValid = false;
+		AudioCache Cache;
+	};
 
-AudioSDL::AudioSDL()
-{
-}
-
-AudioSDL::~AudioSDL()
-{
-}
-
-bool AudioSDL::init()
-{
-	if(SDL_Init(SDL_INIT_AUDIO) < 0)
-	{
-		return false;
+	AudioSDL::AudioSDL()
+		: _impl(std::make_unique<Impl>()) {
 	}
-	const int wantedMixFlags = MIX_INIT_OGG;
-	const int gotMixFlags = Mix_Init(wantedMixFlags);
-	if((gotMixFlags & wantedMixFlags) != wantedMixFlags)
-	{
-		// OGG support failed to initialize — SDL_GetError() имеет подробности
+
+	AudioSDL::~AudioSDL() = default;
+
+	AudioSDL& AudioSDL::Instance() {
+		static AudioSDL instance;
+		return instance;
 	}
-	if(Mix_OpenAudio(MIX_DEFAULT_FREQUENCY, MIX_DEFAULT_FORMAT, MIX_DEFAULT_CHANNELS, CHUNK_SIZE) < 0)
-	{
-		return false;
+
+	bool AudioSDL::Init() {
+		if (!SDL_Init(SDL_INIT_AUDIO)) {
+			return false;
+		}
+		if (!MIX_Init()) {
+			SDL_Quit();
+			return false;
+		}
+		//  nullptr spec — mixer подхватит формат устройства по умолчанию.
+		_impl->Mixer = MIX_CreateMixerDevice(SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK, nullptr);
+		if (!_impl->Mixer) {
+			MIX_Quit();
+			SDL_Quit();
+			return false;
+		}
+		_impl->IsValid = true;
+		return true;
 	}
-	return (g_sdl_audio_valid = true);
-}
 
-void AudioSDL::release()
-{
-	Mix_CloseAudio();
-	Mix_Quit();
-	SDL_Quit();
-    g_sdl_audio_valid = false;
-}
+	void AudioSDL::Release() {
+		_impl->Cache.Release();
+		if (_impl->Mixer) {
+			MIX_DestroyMixer(_impl->Mixer);
+			_impl->Mixer = nullptr;
+		}
+		MIX_Quit();
+		SDL_Quit();
+		_impl->IsValid = false;
+	}
 
-bool AudioSDL::is_valid()
-{
-    return g_sdl_audio_valid;
-}
+	bool AudioSDL::IsValid() const {
+		return _impl->IsValid;
+	}
 
-ulong AudioSDL::get_resID(const char* resource, int type)
-{
-    return AudioRes::get_instance()->get_resID(resource, type);
-}
+	std::uint32_t AudioSDL::GetResourceId(std::string_view resource, AudioType type) {
+		if (!_impl->IsValid) {
+			return 0;
+		}
+		return _impl->Cache.GetResourceId(resource, type, _impl->Mixer);
+	}
 
-bool AudioSDL::play(ulong id, bool loop /* = false */)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->play(loop);
-}
+	bool AudioSDL::Play(std::uint32_t id, bool loop) {
+		AudioInfo* info = _impl->Cache.GetResource(id);
+		if (!info) {
+			return false;
+		}
+		return info->Audio->Play(loop);
+	}
 
-bool AudioSDL::fadeIn(ulong id, int ms, bool loop /* = false */)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->fadeIn(ms, loop);
-}
+	bool AudioSDL::Stop(std::uint32_t id) {
+		AudioInfo* info = _impl->Cache.GetResource(id);
+		if (!info) {
+			return false;
+		}
+		return info->Audio->Stop();
+	}
 
-bool AudioSDL::fadeOut(ulong id, int ms)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->fadeOut(ms);
-}
+	bool AudioSDL::IsStopped(std::uint32_t id) {
+		AudioInfo* info = _impl->Cache.GetResource(id);
+		if (!info) {
+			return false;
+		}
+		return info->Audio->IsStopped();
+	}
 
-bool AudioSDL::stop(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->stop();
-}
-
-bool AudioSDL::pause(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->pause();
-}
-
-bool AudioSDL::resume(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->resume();
-}
-
-bool AudioSDL::rewind(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->rewind();
-}
-
-bool AudioSDL::is_playing(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->is_playing();
-}
-
-bool AudioSDL::is_paused(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->is_paused();
-}
-
-bool AudioSDL::is_stopped(ulong id)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    return audio->audio->is_stopped();
-}
-
-bool AudioSDL::volume(ulong id, int vol)
-{
-    AudioInfo* audio = AudioRes::get_instance()->get_res(id);
-    if(!audio)
-    {
-        return false;
-    }
-    audio->audio->set_volume(vol);
-    return true;
-}
-
-void AudioSDL::checkRes(ulong timeout /* = 300 */)
-{
-    AudioRes::get_instance()->checkResValid(timeout);
-}
-
+	bool AudioSDL::SetVolume(std::uint32_t id, float vol) {
+		AudioInfo* info = _impl->Cache.GetResource(id);
+		if (!info) {
+			return false;
+		}
+		info->Audio->SetVolume(vol);
+		return true;
+	}
+} // namespace Corsairs::Client::Audio

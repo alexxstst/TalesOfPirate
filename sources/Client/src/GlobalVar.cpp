@@ -47,6 +47,6 @@ short g_sKeyData = short(g_sClientVer * g_sClientVer * 0x93828311); // 0x1232222
 char g_szSendKey[4];
 char g_szRecvKey[4];
 
-DWORD g_dwCurMusicID = 0;
+std::uint32_t g_dwCurMusicID = 0;
 
 // CLightEff plight;

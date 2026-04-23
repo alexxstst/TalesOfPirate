@@ -18,7 +18,9 @@
 #include "chastate.h"
 #include "UIPicture.h"
 
-extern DWORD g_dwCurMusicID;
+#include <cstdint>
+
+extern std::uint32_t g_dwCurMusicID;
 
 const DWORD MAX_ANI_CLOCK = 10; //
 

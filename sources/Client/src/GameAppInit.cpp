@@ -224,7 +224,7 @@ BOOL CGameApp::_Init() {
 	if (mSoundManager == NULL)
 		mSoundManager = new DSoundManager(GetHWND());
 #endif
-	AudioSDL::get_instance()->init();
+	Corsairs::Client::Audio::AudioSDL::Instance().Init();
 
 	_IsMusicSystemValid = true;
 	if (!_IsMusicSystemValid && g_Config.m_bEnableMusic != 0) {
@@ -416,13 +416,13 @@ void CGameApp::_End() {
 	//::mus_mgr_exit();	// music
 #ifdef USE_DSOUND
 	if (g_dwCurMusicID) {
-		AudioSDL::get_instance()->stop(g_dwCurMusicID);
+		Corsairs::Client::Audio::AudioSDL::Instance().Stop(g_dwCurMusicID);
 		g_dwCurMusicID = 0;
 		Sleep(60);
 	}
 #endif
 
-	AudioSDL::get_instance()->release();
+	Corsairs::Client::Audio::AudioSDL::Instance().Release();
 
 #if(defined USE_TIMERPERIOD)
 	if (_TimerPeriod) {

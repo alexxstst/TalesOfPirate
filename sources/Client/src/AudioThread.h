@@ -4,6 +4,8 @@
 
 #include "ThreadBase.h"
 
+#include <cstdint>
+
 
 class CAudioThread : public CThreadBase
 {
@@ -13,11 +15,11 @@ public:
 
     unsigned int Run();
 
-    void play(DWORD musID, bool loop = false);
+    void play(std::uint32_t musID, bool loop = false);
     void FrameMove();
 
 private:
-    DWORD   _nCurMusicID;
-    bool    _bLoop;
-    DWORD   _nLastTime;
+    std::uint32_t  _nCurMusicID;
+    bool           _bLoop;
+    DWORD          _nLastTime;
 };

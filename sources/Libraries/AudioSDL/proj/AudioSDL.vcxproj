@@ -55,7 +55,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;_DEBUG;_LIB;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
@@ -72,7 +72,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>..\..\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\SDL3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN64;NDEBUG;_LIB;SDL_MAIN_HANDLED;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
       <PrecompiledHeader />
@@ -85,18 +85,14 @@
     <Lib />
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\src\AudioResource.cpp" />
     <ClCompile Include="..\src\AudioSDL.cpp" />
-    <ClCompile Include="..\src\lock.cpp" />
-    <ClCompile Include="..\src\SDL_Wrapper.cpp" />
+    <ClCompile Include="..\src\AudioCache.cpp" />
+    <ClCompile Include="..\src\WrapperSDLAudio.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\inc\AudioSDL.h" />
-    <ClInclude Include="..\inc\datatype.h" />
-    <ClInclude Include="..\inc\playsound.h" />
-    <ClInclude Include="..\src\AudioResource.h" />
-    <ClInclude Include="..\src\lock.h" />
-    <ClInclude Include="..\src\SDL_Wrapper.h" />
+    <ClInclude Include="..\src\AudioCache.h" />
+    <ClInclude Include="..\src\WrapperSDLAudio.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

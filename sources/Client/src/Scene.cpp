@@ -44,6 +44,8 @@
 #include "uiboxform.h"
 #include "LootFilter.h"
 
+using namespace Corsairs::Client::Audio;
+
 using namespace std;
 
 #ifndef USE_DSOUND
@@ -1915,9 +1917,9 @@ void CGameScene::PlayEnvSound(const char* szFile, int nX, int nY) {
 #else
 		dis = (int)(_fSoundSize * (1.0f - (float)dis / (float)VOICE_DIS));
 		//::cmn_snd_play(szFile, dis);
-		ulong musid = AudioSDL::get_instance()->get_resID(szFile, TYPE_WAV);
-		AudioSDL::get_instance()->volume(musid, dis);
-		//AudioSDL::get_instance()->play(musid);
+		std::uint32_t musid = AudioSDL::Instance().GetResourceId(szFile, AudioType::Sfx);
+		AudioSDL::Instance().SetVolume(musid, float(dis) / 128.0f);
+		//AudioSDL::Instance().Play(musid);
 
 		//
 		g_AudioThread.play(musid, false);
@@ -1954,9 +1956,9 @@ void CGameScene::PlayEnvSound(int nX, int nY) {
 
 #ifdef USE_AUDIODLL
 					//g_pGameApp->m_pAudioPlayer->CreateInstance( szSoundName );
-					ulong m = GetAudioDevice()->get_resID(szSoundName, TYPE_WAV);
+					std::uint32_t m = AudioSDL::Instance().GetResourceId(szSoundName, AudioType::Sfx);
 #else
-					ulong m = GetAudioDevice()->get_resID(szSoundName, TYPE_WAV);
+					std::uint32_t m = AudioSDL::Instance().GetResourceId(szSoundName, AudioType::Sfx);
 #endif
 					continue;
 				}

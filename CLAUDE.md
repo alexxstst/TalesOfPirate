@@ -14,7 +14,42 @@ Tales of Pirate — MMORPG with two codebases:
 
 **C++ standard: C++23.** Prefer modern C++ constructs: `std::string`/`std::string_view` over `char*`, `std::format` over `sprintf`, `std::filesystem` over Win32 file API, structured bindings, `auto`, range-based for, `std::optional`, `std::span`, smart pointers. Avoid raw `new`/`delete` where possible.
 
-**Именование полей классов:** при рефакторинге поля класса начинать с префикса `_`, без венгерской нотации. Например: `_id`, `_name`, `_type` вместо `nID`, `szName`, `m_nType`.
+**Именование полей:**
+- **Поля класса (class)** — всегда начинаются с `_`, далее `camelCase`: `_id`, `_name`, `_currentTrack`, `_isPlaying`. Это инкапсулированное состояние с приватным/protected доступом. Никакой венгерской нотации (`nID`, `szName`, `m_nType`).
+- **Открытые поля структуры (struct)** — в `PascalCase`, без `_`. struct в нашем коде — это data bag / DTO / POD, поля публичные по умолчанию и читаются как данные, а не состояние объекта. Правильно: `struct Point { int X; int Y; };`, `struct AudioInfo { AudioType Type; std::uint32_t Code; };`. Неправильно: `struct Point { int x; int y; }` или `struct Point { int _x; int _y; }`.
+- Приватные поля внутри `struct` (если они есть) — так же как у класса: `_camelCase`. Но если появляются приватные поля — скорее всего это уже класс, а не структура.
+
+**Имена методов:** методы класса/интерфейса и свободные функции — в `PascalCase`. Это распространяется и на виртуальные методы, и на перегрузки, и на static helper'ы в namespace.
+- Правильно: `Init()`, `Instance()`, `GetResourceId()`, `IsValid()`, `SetVolume(float)`.
+- Неправильно: `init()`, `get_instance()`, `get_resID()`, `is_valid()`, `set_volume(int)`.
+- Аббревиатуры из 2+ букв — первая заглавная, остальные строчные (`GetResId`, а не `GetResID`; `ParseUrl`, а не `ParseURL`; `HttpClient`, а не `HTTPClient`). Так же, как в .NET-части `Corsairs.*`.
+- Локальные переменные, параметры функций — `camelCase` (`const int maxValue = ...`); поля — `_camelCase` (см. правило выше).
+- Исключения: сигнатуры, диктуемые сторонним API (WinAPI-колбэки с `WndProc`/`LRESULT CALLBACK`; STL customization-point'ы вроде `begin()`/`end()`/`size()`/`swap()` для совместимости с range-based for и `std::swap`). Только там — остаётся snake_case/CamelCase как требует API.
+
+**Singleton:** у всех классов-одиночек в проекте стандартизированный аксессор — `static T& Instance()` (не `GetInstance()`, не `get_instance()`, не `Get()`). Реализация — Meyers' singleton через `static T instance;` внутри функции; конструктор `private`, copy/assign — `delete`. Пример — `AssetDatabase::Instance()`, `AudioSDL::Instance()`. При рефакторинге legacy-singleton'ов (`_singleton<T>::get_instance()`, `SomeClass::getInstance()`) — приводить к `Instance()`.
+
+**Namespace'ы:** новые классы и код при рефакторинге обязательно оборачивать в namespace с корнем `Corsairs::` — согласовано с .NET-частью проекта (`Corsairs.*`). Схема: `Corsairs::<Раздел>[::<Подраздел>]`.
+- `Corsairs::Client::*` — клиент (`sources/Client/`, `sources/Libraries/AudioSDL/`, и т.п.): `Corsairs::Client::Audio`, `Corsairs::Client::Net`, `Corsairs::Client::Ui`, `Corsairs::Client::Lua`.
+- `Corsairs::Engine::*` — движок MindPower3D (`sources/Engine/`): `Corsairs::Engine::Render`, `Corsairs::Engine::Dx10`, `Corsairs::Engine::Animation`, `Corsairs::Engine::Font`, `Corsairs::Engine::Particle`.
+- `Corsairs::Server::<Name>` — серверы (`sources/Server/<Name>Server/`): `Corsairs::Server::Game`, `Corsairs::Server::Gate`, `Corsairs::Server::Group`, `Corsairs::Server::Account`.
+- `Corsairs::Common::*`, `Corsairs::Util::*` — общие библиотеки (`sources/Libraries/Common/`, `sources/Libraries/Util/`).
+
+Пример: `sources/Libraries/AudioSDL/` → `Corsairs::Client::Audio`.
+
+Стиль (C++23):
+- Nested-namespace: `namespace Corsairs::Client::Audio { ... }`.
+- Закрывающую скобку комментировать: `} // namespace Corsairs::Client::Audio`.
+- В `.h` и соответствующем `.cpp` — один и тот же namespace, оба файла обёрнуты.
+- **Никаких `using namespace ...` в глобальной области** `.h`-файлов. В `.cpp` — допустимо, но лучше квалификация по месту или локальный `using` внутри функции.
+
+Исключения (не оборачивать):
+- Сторонние библиотеки (`LuaJIT`, `LuaBridge`, `SDL3`, `FreeType`, `Crypto++`, `ICUHelper`, `fontstash`, `discord-rpc`, `InfoNet`) — их заголовки и реализации остаются как есть, namespace не навязываем.
+- Чистые C API (WinAPI, DirectX, ODBC, OpenSSL) — без обёртки.
+- Legacy-код, не затронутый текущим рефакторингом, — не переносить массово в namespace; только при касании соседнего кода, согласованно с правилом про поля `_` и фиксированные типы.
+
+**Защита заголовков:** в новых `.h` и при рефакторинге старых — использовать `#pragma once` в самом верху файла. C-style include guards (`#ifndef __FOO_H__ / #define __FOO_H__ / #endif`) — не применять.
+- `#pragma once` поддерживается всеми актуальными компиляторами проекта (MSVC, clang, gcc), короче, и нельзя сломать опечаткой в символе guard'а или коллизией имён при копипасте.
+- Исключение — сторонние заголовки (их не трогаем в принципе).
 
 **Рефакторинг C-строк:** при рефакторинге и исправлении ошибок заменять C-функции на C++ аналоги:
 - `strcpy`/`strncpy` → `std::string` присваивание или `.assign()`
@@ -23,6 +58,23 @@ Tales of Pirate — MMORPG with two codebases:
 - `strlen` → `.size()` / `.length()`
 - `strcat` → `+=` или `std::string::append()`
 - `atoi`/`atof` → `std::stoi`/`std::stof` или `std::from_chars`
+
+**Целочисленные типы:** при рефакторинге и в новом коде — фиксированной ширины из `<cstdint>` вместо платформно-зависимых и Windows-typedef'ов.
+- `int`, `long`, `short`, `unsigned int`, `unsigned long` → `std::int32_t` / `std::uint32_t` / `std::int64_t` / `std::uint64_t` / `std::int16_t` / `std::uint16_t` / `std::int8_t` / `std::uint8_t`
+- `DWORD`, `ULONG`, `UINT` → `std::uint32_t`
+- `LONG`, `INT` → `std::int32_t`
+- `WORD`, `USHORT` → `std::uint16_t`
+- `BYTE`, `UCHAR` → `std::uint8_t`
+- `QWORD`, `ULONGLONG` → `std::uint64_t`
+- `LONGLONG` → `std::int64_t`
+- `size_t` → `std::size_t`, `ptrdiff_t` → `std::ptrdiff_t`, `intptr_t`/`uintptr_t` → `std::intptr_t`/`std::uintptr_t`
+- Для handles и typed IDs предпочитать явные `std::uint32_t`/`std::uint64_t` вместо `DWORD`/`ULONGLONG` — скрытая ширина `DWORD` уже один раз привела к багу усечения указателя на x64 (см. `x64-playerptr-fix`).
+
+Исключения (оставлять как есть):
+- `bool`, `char` в `char*`/`std::string`, `wchar_t`, `float`, `double`;
+- счётчики `for`-циклов без сохранения;
+- **параметры и возвращаемые значения WinAPI** — передавать и принимать то, что требует API (`WPARAM`/`LPARAM`/`HRESULT`/`DWORD` в колбэках), но собственные поля класса и внутренние переменные — фиксированной ширины;
+- legacy-места, не затронутые текущим рефакторингом, — не менять массово, только при касании соседнего кода.
 
 **Форматирование:** Однострочные `if` без фигурных скобок запрещены. Всегда использовать скобки и переносы:
 ```cpp

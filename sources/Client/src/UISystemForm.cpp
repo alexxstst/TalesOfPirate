@@ -1177,7 +1177,7 @@ void CChaExitOnTime::ChangeCha()
 #ifdef USE_DSOUND
 	if( g_dwCurMusicID )
 	{
-		AudioSDL::get_instance()->stop( g_dwCurMusicID );
+		Corsairs::Client::Audio::AudioSDL::Instance().Stop( g_dwCurMusicID );
 		g_dwCurMusicID = 0;
 		Sleep( 60 );
 	}
@@ -1237,7 +1237,7 @@ void CChaExitOnTime::Relogin()
 #ifdef USE_DSOUND
 	if( g_dwCurMusicID )
 	{
-		AudioSDL::get_instance()->stop( g_dwCurMusicID );
+		Corsairs::Client::Audio::AudioSDL::Instance().Stop( g_dwCurMusicID );
 		g_dwCurMusicID = 0;
 		Sleep( 60 );
 	}

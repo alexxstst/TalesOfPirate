@@ -1,7 +1,9 @@
-﻿
+
 #include "stdafx.h"
 #include "audiothread.h"
 #include "audiosdl.h"
+
+using namespace Corsairs::Client::Audio;
 
 
 CAudioThread::CAudioThread(void)
@@ -14,7 +16,7 @@ CAudioThread::~CAudioThread(void)
 }
 
 
-void CAudioThread::play(DWORD musID, bool loop)
+void CAudioThread::play(std::uint32_t musID, bool loop)
 {
     _nCurMusicID = musID;
     _bLoop = loop;
@@ -29,7 +31,7 @@ unsigned int CAudioThread::Run()
         {
             try
             {
-                AudioSDL::get_instance()->play(_nCurMusicID, _bLoop);
+                AudioSDL::Instance().Play(_nCurMusicID, _bLoop);
             }
             catch(...)
             {

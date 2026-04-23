@@ -6,12 +6,9 @@
 #include <windows.h>
 #include <time.h>
 #include <audiosdl.h>
+#include <cstdint>
 
-#ifdef _DEBUG
-#pragma comment(lib, "AudioSDL_D.lib")
-#else
-#pragma comment(lib, "AudioSDL.lib")
-#endif
+using namespace Corsairs::Client::Audio;
 
 BOOL GThreadLoopEnd = FALSE;
 
@@ -36,7 +33,7 @@ private:
 	HANDLE			m_hThread;
 	DWORD			m_dwThreadID;
 	EThreadPriority	m_ThreadPriority;
-	DWORD			m_dwMusicID;
+	std::uint32_t	m_dwMusicID;
 	bool			m_bLoop;
 	DWORD			m_dwLastTime;
 };
@@ -149,7 +146,7 @@ void CMusicThread::Play( unsigned long MusicID, bool Loop )
 
 bool CMusicThread::Stop()
 {
-	AudioSDL::get_instance()->stop( m_dwMusicID );
+	AudioSDL::Instance().Stop( m_dwMusicID );
 	m_dwMusicID = 0;
 
 	return true;
@@ -162,7 +159,7 @@ UINT CMusicThread::Run()
 
 	try
 	{
-		AudioSDL::get_instance()->play( m_dwMusicID, m_bLoop );
+		AudioSDL::Instance().Play( m_dwMusicID, m_bLoop );
 	}
 	catch(...)
 	{
@@ -180,7 +177,7 @@ UINT CMusicThread::Run()
 		}
 
 		if( m_dwMusicID )
-			LoopEnd = AudioSDL::get_instance()->is_stopped( m_dwMusicID ) && ( !m_bLoop );
+			LoopEnd = AudioSDL::Instance().IsStopped( m_dwMusicID ) && ( !m_bLoop );
 	}*/
 
 	return 0;
