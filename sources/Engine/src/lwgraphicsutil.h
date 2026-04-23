@@ -105,9 +105,7 @@ float lwGetFPS();
 void lwConvertTgaDataToColorValue(lwColorValue4b* dst_data,const CGraphicsFileData* tga, DWORD colorkey_type, lwColorValue4b* colorkey );
 int lwLoadColorValue( lwColorValue4b** buf, int* width, int* height, const char* file );
 void lwFreeColorValue( lwColorValue4b* buf );
-//int lwLoadTexture( IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD level, DWORD usage, D3DFORMAT fmt, D3DPOOL pool );
 
-LW_RESULT lwLoadTexture( IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD usage, D3DFORMAT fmt, D3DPOOL pool );
 LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type, lwColorValue4b* colorkey, int use_power_size);
 LW_RESULT lwLoadMeshDataInfo( lwMeshDataInfo* info, const lwMeshInfo* mi );
 DWORD lwGetTexFlexibleSize( DWORD size );

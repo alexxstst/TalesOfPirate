@@ -807,33 +807,6 @@ __load_it:
             }
 
         }
-#if 0
-        IDirect3DTextureX* t;
-        if(FAILED(D3DXCreateTextureFromFileEx(dev_obj->GetDevice(),
-            this->_file_name, //
-            0, //
-            0, //
-            _level, //mipmap1
-            0, //
-            (D3DFORMAT)_format, //
-             D3DPOOL_SYSTEMMEM, //D3DPOOL_MANAGED, //DXGraphics
-            D3DX_DEFAULT, //D3DX_FILTER_TRIANGLE|D3DX_FILTER_MIRROR, //
-            D3DX_DEFAULT,//D3DX_DEFAULT,//D3DX_FILTER_NONE, //mipmap
-            _colorkey.color,//0xffff00ff, //
-            NULL, //
-            NULL, //
-            &t)))//
-        {
-            goto __ret;
-        }
-
-        D3DSURFACE_DESC desc;
-        t->GetLevelDesc(0, &desc);
-        dev_obj->CreateTexture(&_tex, desc.Width, desc.Height, _level, 0, (D3DFORMAT)_format, D3DPOOL_DEFAULT);
-        IDirect3DDeviceX* dev = dev_obj->GetDevice();
-        HRESULT hr = dev->UpdateTexture(t, _tex);
-        t->Release();
-#endif
 
 #else
         if(FAILED(D3DXCreateTextureFromFileEx(dev_obj->GetDevice(),
@@ -1718,12 +1691,6 @@ __ret:
 
 LW_RESULT lwMesh::LoseDevice()
 {
-#if 0
-    _vb_id = LW_INVALID_INDEX;
-    _ib_id = LW_INVALID_INDEX;
-    _state &= ~RES_STATE_VIDEOMEMORY;
-    return LW_RET_OK;
-#else
     LW_RESULT ret = LW_RET_FAILED;
 
     switch(_stream_type)
@@ -1742,9 +1709,6 @@ LW_RESULT lwMesh::LoseDevice()
     ret = LW_RET_OK;
 __ret:
     return ret;
-
-#endif
-
 }
 LW_RESULT lwMesh::ResetDevice()
 {
@@ -2404,13 +2368,8 @@ lwMeshAgent::~lwMeshAgent()
     Destroy();
 }
 
-// @@
-extern LW_RESULT lwDumpMeshInfo(const char* file, const lwMeshInfo* info);
-
 LW_RESULT lwMeshAgent::LoadMesh(const lwMeshInfo* info)
 {
-    //lwDumpMeshInfo("ok.txt", info);
-
     LW_RESULT ret = LW_RET_FAILED;
 
     lwIMesh* obj = 0;

@@ -43,7 +43,6 @@ LW_RESULT lwRegisterOutputResetDeviceProc(lwOutputResetDeviceProc proc);
 LW_RESULT lwUnregisterOutputLoseDeviceProc(lwOutputLoseDeviceProc proc);
 LW_RESULT lwUnregisterOutputResetDeviceProc(lwOutputResetDeviceProc proc);
 
-LW_RESULT LoadResBuf(lwIResourceMgr* res_mgr, const char* file);
 LW_RESULT LoadResModelBuf(lwIResourceMgr* res_mgr, const char* file);
 
 struct lwInterfaceMgr
@@ -54,7 +53,5 @@ struct lwInterfaceMgr
     lwIResourceMgr* res_mgr;
     lwIThreadPool* tp_loadres;
 };
-
-LW_RESULT lwDumpMeshInfo(const char* file, const lwMeshInfo* info);
 
 LW_END

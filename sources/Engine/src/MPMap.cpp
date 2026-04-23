@@ -796,35 +796,11 @@ BOOL MPMap::GetPickPos(int nPosX, int nPosY, D3DXVECTOR3 &vPickPos)
         float fY = (float)nY;
         
 		float fHeight[4] = { SEA_LEVEL, SEA_LEVEL, SEA_LEVEL, SEA_LEVEL };
-#if 0
-		MPTile *pTile = GetTile(nX, nY);
-		if(pTile) 
-		{
-			for(int i = 0; i < 4; i++)
-			{
-				MPTile *pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
-				if(!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
-			}
-		}
-
-		//MPTile *pTile = GetTile(nX, nY);
-		//if(pTile) 
-		//{
-		//	for(int i = 0; i < 4; i++)
-		//	{
-		//		MPTile *pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
-		//		if(!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
-		//	}
-		//}
-#else
 		for(int i = 0; i < 4; i++)
 		{
-			//MPTile *pCurTile = GetTile(nX + MPTile::Offset[i][0], nY + MPTile::Offset[i][1]);
-			//if(!pCurTile->IsDefault()) fHeight[i] = pCurTile->fHeight;
 			fHeight[i] = GetGridHeight((nX + MPTile::Offset[i][0])* 2,\
 				(nY + MPTile::Offset[i][1])* 2);
 		}
-#endif
 		float fx1 = (float)nX;
 		float fx2 = (float)nX + 1;
 		float fy1 = (float)nY;

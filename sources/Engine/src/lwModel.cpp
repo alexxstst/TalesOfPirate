@@ -346,42 +346,9 @@ __ret:
 }
 
 LW_RESULT lwModel::Render()
-{    
+{
     if(_state_ctrl.GetState(STATE_VISIBLE) == 0)
         return LW_RET_OK;
-
-#if 0
-    lwISysGraphics* sys_grh = _res_mgr->GetSysGraphics();
-    lwISceneMgr* scn_mgr = sys_grh->GetSceneMgr();
-    lwIOptionMgr* opt_mgr = sys_grh->GetSystem()->GetOptionMgr();
-    BOOL cull_flag = opt_mgr->GetByteFlag(OPTION_FLAG_CULLPRIMITIVE_MODEL);
-
-    //cull_flag = 0;
-
-    lwIPrimitive* p;
-
-    for(DWORD i = 0; i < _obj_num; i++)
-    {
-        p = _obj_seq[i];
-
-        if(cull_flag)
-        {
-            if(LW_SUCCEEDED(scn_mgr->CullPrimitive(p)))
-            {
-                continue;
-            }
-        }
-
-        if(_scene_mgr && p->GetState(STATE_TRANSPARENT))
-        {
-            _scene_mgr->AddTransparentPrimitive(p);
-        }
-        else
-        {
-            p->Render();
-        }
-    }
-#endif
 
     lwISysGraphics* sys_grh = _res_mgr->GetSysGraphics();
     lwISceneMgr* scn_mgr = sys_grh->GetSceneMgr();
@@ -614,20 +581,6 @@ LW_RESULT lwModel::HitTestHelperMesh(lwPickInfo* info, const lwVector3* org, con
         goto __ret;
     }
 
-    // first check bounding object
-#if 0
-    if(_helper_object->GetBoundingBox() == 0
-        && _helper_object->GetBoundingSphere() == 0)
-    {
-        return LW_RET_FAILED_2;
-    }
-
-    if(LW_FAILED(HitTest(&u, org, ray)))
-    {
-        return LW_RET_FAILED_2;
-    }
-#endif
-    // end
     {
         lwHelperMesh* obj = (lwHelperMesh*)_helper_object->GetHelperMesh();
 

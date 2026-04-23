@@ -32,111 +32,6 @@ enum lwResStateEnum
     RES_STATE_LOADING_VM =         0x1000,
 };
 
-#if 0
-struct lwTexLogInfo
-{
-    char file[LW_MAX_PATH];
-    DWORD width;
-    DWORD height;
-    D3DFORMAT fmt;
-    DWORD devmem_size;
-
-    void Save(FILE* fp)
-    {
-        char buf[512];
-        sprintf(buf, "file:%s\nwidth: %d\theight: %d\tformat: %d\tmem_size:%d\n\n",
-            file, width, height, fmt, devmem_size);
-
-        fwrite(buf, strlen(buf), 1, fp);
-    }
-};
-
-class lwTexLogMgr
-{
-    typedef list<lwTexLogInfo*> lwListTexLog;
-private:
-    lwListTexLog _list_texlog;
-
-public:
-    lwTexLogMgr()
-    {};
-    ~lwTexLogMgr()
-    {
-        lwListTexLog::iterator it = _list_texlog.begin();
-        for(; it != _list_texlog.end(); ++it)
-        {
-            LW_DELETE((*it));
-        }
-    }
-
-    void Add(const char* file, DWORD width, DWORD height, D3DFORMAT fmt, DWORD devmem_size)
-    {
-        lwTexLogInfo* info = LW_NEW(lwTexLogInfo);
-        _tcscpy(info->file, file);
-        info->width = width;
-        info->height = height;
-        info->fmt = fmt;
-        info->devmem_size = devmem_size;
-
-        _list_texlog.push_back(info);
-    }
-
-    void Save(const char* file)
-    {
-        lwListTexLog::iterator it;
-        FILE* fp = fopen(file, "wt");
-        if(fp == 0)
-            goto __ret;
-
-        it = _list_texlog.begin();
-        for(; it != _list_texlog.end(); ++it)
-        {
-            (*it)->Save(fp);
-        }
-
-        DWORD total_size = 0;
-        DWORD scene_size = 0;
-        DWORD terrain_size = 0;
-        DWORD ui_size = 0;
-        DWORD mini_map = 0;
-
-        it = _list_texlog.begin();
-        for(; it != _list_texlog.end(); ++it)
-        {
-            total_size += (*it)->devmem_size;
-
-            if(_tcsstr((*it)->file, "scene"))
-            {
-                scene_size += (*it)->devmem_size;
-            }
-            else if(_tcsstr((*it)->file, "terrain"))
-            {
-                terrain_size += (*it)->devmem_size;
-            }
-            else if(_tcsstr((*it)->file, "ui"))
-            {
-                ui_size += (*it)->devmem_size;
-            }
-            else if(_tcsstr((*it)->file, "minimap"))
-            {
-                mini_map += (*it)->devmem_size;
-            }
-        }
-
-        char buf[256];
-        sprintf(buf, "total: %d, scene: %d, terrain: %d, ui: %d, map: %d\n",
-            total_size, scene_size, terrain_size, ui_size, mini_map);
-        fwrite(buf, strlen(buf), 1, fp);
-
-__ret:
-        if(fp)
-        {
-            fclose(fp);
-        }
-    }
-};
-#else
-
 struct lwTexLogFilterInfo
 {
     char filter_str[LW_MAX_PATH];
@@ -260,8 +155,6 @@ public:
         return LW_RET_OK;
     }
 };
-
-#endif
 
 
 class lwTex : public lwITex

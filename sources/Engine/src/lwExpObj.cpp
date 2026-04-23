@@ -966,45 +966,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 					//max_f = _frame_num - 1;
 				}
 
-#if 0
-				lwMatrix44 mat_0;
-				lwMatrix44 mat_1;
-
-				switch (_key_type) {
-				case BONE_KEY_TYPE_MAT43:
-					lwConvertMat43ToMat44(&mat_0, &key->mat43_seq[min_f]);
-					lwConvertMat43ToMat44(&mat_1, &key->mat43_seq[max_f]);
-					break;
-				case BONE_KEY_TYPE_MAT44:
-					mat_0 = key->mat44_seq[min_f];
-					mat_1 = key->mat44_seq[max_f];
-					break;
-				case BONE_KEY_TYPE_QUAT:
-					lwQuaternionToMatrix44(&mat_0, &key->quat_seq[min_f]);
-					*(lwVector3*)&mat_0._41 = key->pos_seq[min_f];
-					lwQuaternionToMatrix44(&mat_1, &key->quat_seq[max_f]);
-					*(lwVector3*)&mat_1._41 = key->pos_seq[max_f];
-					break;
-				default:
-					assert(0);
-					goto __ret;
-				}
-
-				lwMat44Slerp(mat, &mat_0, &mat_1, t);
-
-				//lwVector3 vv;
-				//lwQuaternion q, q0, q1;
-				//lwMatrix44ToQuaternion(&q0, &mat_0);
-				//lwMatrix44ToQuaternion(&q1, &mat_1);
-
-				//lwVector3Slerp(&vv, (lwVector3*)&mat_0._41, (lwVector3*)&mat_1._41, t);
-				//lwQuaternionSlerp(&q, &q0, &q1, t);
-				//lwQuaternionToMatrix44(mat, &q);
-				//mat->_41 = vv.x;
-				//mat->_42 = vv.y;
-				//mat->_43 = vv.z;
-
-#else
 				lwMatrix44 mat_0;
 				lwMatrix44 mat_1;
 
@@ -1022,10 +983,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 					lwMatrix44Slerp(&mat_0, &mat_1, t, mat);
 					break;
 				case BONE_KEY_TYPE_QUAT:
-					//lwQuaternionToMatrix44(&mat_0, &key->quat_seq[min_f]);
-					//*(lwVector3*)&mat_0._41 = key->pos_seq[min_f];
-					//lwQuaternionToMatrix44(&mat_1, &key->quat_seq[max_f]);
-					//*(lwVector3*)&mat_1._41 = key->pos_seq[max_f];
 					lwMatrix44Slerp(&key->pos_seq[min_f], &key->pos_seq[max_f], NULL, NULL, &key->quat_seq[min_f],
 									&key->quat_seq[max_f], t, mat);
 					break;
@@ -1033,8 +990,6 @@ static_assert(sizeof(lwPoseInfo)             == 48,   "lwPoseInfo layout changed
 					assert(0);
 					goto __ret;
 				}
-
-#endif
 			}
 		}
 		ret = LW_RET_OK;

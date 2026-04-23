@@ -1042,19 +1042,8 @@ bool CMPLink::Create(MPCharacter* pChaMain, int iDummy1, MPCharacter* pChaTag, i
 	_fDailTime = pResMgr->GetDailTime();
 	_pEyePos = pEyePos;
 
-#if 0
-	lwMatrix44 mat1, mat2;
-	if (pChaMain->GetObjDummyRunTimeMatrix(&mat1, iDummy1) != 0)
-		return false;
-	if (pChaTag->GetObjDummyRunTimeMatrix(&mat2, iDummy2) != 0)
-		return false;
-
-	_vStart = (*(D3DXVECTOR3*)&mat1._41);
-	_vEnd = (*(D3DXVECTOR3*)&mat2._41);
-#else
 	_vStart = D3DXVECTOR3(0, 0, 0);
 	_vEnd = D3DXVECTOR3(10, 0, 0);
-#endif
 	_vdir = _vEnd - _vStart;
 	_fdist = D3DXVec3Length(&_vdir);
 	D3DXVec3Normalize(&_vdir, &_vdir);

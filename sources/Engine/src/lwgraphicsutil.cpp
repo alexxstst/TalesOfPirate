@@ -102,14 +102,6 @@ void lwConvertTgaDataToColorValue(lwColorValue4b* dst_data, const CGraphicsFileD
 	}
 }
 
-int lwLoadTexture(IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD level, DWORD usage, D3DFORMAT fmt, D3DPOOL pool)
-{
-    assert(0);
-
-    return 1;
-}
-
-
 int lwLoadColorValue(lwColorValue4b** buf, int* width, int* height, const char* file, DWORD colorkey_type, lwColorValue4b* colorkey)
 {
 	int img_height, img_width;
@@ -265,44 +257,6 @@ DWORD lwGetTexFlexibleSize(DWORD size)
         ret = 2;
 
     return ret;
-}
-
-LW_RESULT lwLoadTexture(IDirect3DTextureX** tex, IDirect3DDeviceX* dev, const char* file, DWORD usage, D3DFORMAT fmt, D3DPOOL pool)
-{
-    LW_RESULT ret = LW_RET_FAILED;
-
-    lwTexDataInfo info;
-
-    IDirect3DTextureX* t;
-	D3DLOCKED_RECT lock_rc;
-	IDirect3DSurfaceX* surface;
-
-    if(LW_FAILED(lwLoadTexDataInfo(&info, file, fmt, COLORKEY_TYPE_NONE, NULL, 0)))
-        goto __ret;
-
-    if(FAILED(dev->CreateTextureX(info.width, info.height, D3DX_DEFAULT, usage, (D3DFORMAT)fmt, pool, &t, 0)))
-        goto __ret;
-
-
-    if(FAILED(t->GetSurfaceLevel(0, &surface))) 
-		goto __ret;
-
-    if(FAILED(surface->LockRect(&lock_rc, 0, 0))) 
-		goto __ret;
-    
-
-    memcpy(lock_rc.pBits, info.data, info.size);
-
-    surface->UnlockRect();
-    surface->Release();
-
-    *tex = t;
-
-    ret = LW_RET_OK;
-
-__ret:
-    return ret;
-
 }
 
 LW_RESULT lwLoadTexDataInfo(lwTexDataInfo* info, const char* file, DWORD format, DWORD colorkey_type, lwColorValue4b* colorkey, int use_power_size)
@@ -1372,28 +1326,6 @@ void lwScreenToWorld(lwVector3* org, lwVector3* ray, int x, int y, int width, in
 	org->x = mat_inv._41;
 	org->y = mat_inv._42;
 	org->z = mat_inv._43;
-
-#if 0
-	lwVector3 v;
-	lwMatrix44 mat_inv;
-
-
-	v.x = ((2.0f * x / width) - 1.0f) / mat_proj->_11;
-	v.y = -((2.0f * y / height) - 1.0f) / mat_proj->_22;
-	v.z = 1.0f;
-
-	lwMatrix44Inverse(&mat_inv, mat_view);
-    //lwMatrix44InverseNoScaleFactor(&mat_inv, mat_view);
-
-	ray->x = v.x * mat_inv._11 + v.y * mat_inv._21 + v.z * mat_inv._31;
-	ray->y = v.x * mat_inv._12 + v.y * mat_inv._22 + v.z * mat_inv._32;
-	ray->z = v.x * mat_inv._13 + v.y * mat_inv._23 + v.z * mat_inv._33;
-    lwVector3Normalize(ray);
-
-	org->x = mat_inv._41;
-	org->y = mat_inv._42;
-	org->z = mat_inv._43;
-#endif
 }
 
 void lwWorldToScreen(int* x, int* y, float* z, const lwVector3* vec, int width, int height, const lwMatrix44* mat_proj, const lwMatrix44* mat_view)

@@ -166,49 +166,6 @@ LW_BEGIN
 			}
 		}
 
-#if 0
-		float l;
-		float cur_frame;
-		float next_frame;
-
-		cur_frame = info->frame;
-
-		lwPoseInfo* pi = &_pose_seq[info->pose];
-
-		l = (float)(pi->end - pi->start);
-		assert(l > 0);
-
-		if (info->type == PLAY_ONCE) {
-			if (cur_frame >= l) {
-				cur_frame = l;
-			}
-			else if (cur_frame < 0.0f) {
-				cur_frame = 0.0f;
-			}
-		}
-		else if (info->type == PLAY_LOOP) {
-			if (cur_frame > l) {
-				cur_frame = fmodf(cur_frame, l + 1);
-			}
-			else if (cur_frame < 0.0f) {
-				while (cur_frame < 0.0f) {
-					cur_frame += l;
-				}
-			}
-		}
-
-		if ((info->type == PLAY_ONCE) || (info->type == PLAY_LOOP)) {
-			next_frame = cur_frame + info->velocity;
-		}
-		else if (info->type == PLAY_FRAME) {
-			next_frame = cur_frame;
-		}
-
-
-		info->ret_frame = cur_frame + pi->start;
-		info->frame = next_frame;
-#endif
-
 		ret = LW_RET_OK;
 	__ret:
 		return ret;

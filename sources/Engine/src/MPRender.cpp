@@ -671,21 +671,6 @@ BOOL MPRender::BeginRender(bool clear)//vim
         UpdateLight();
     }
 
-#if 0
-	HRESULT hr;
-    if( FAILED( hr = _pD3DDevice->TestCooperativeLevel() ) ) // ...
-    {
-        // If the device was lost, do not render until we get it back
-        if (D3DERR_DEVICELOST == hr) return FALSE;
-		
-        if (D3DERR_DEVICENOTRESET == hr)
-        {
-			return FALSE;
-			// if (FAILED(_pD3DDevice->Reset(&g_pDevice->m_d3dpp))) return false;
-		}
-    }
-#endif
-    
     _dwClearFlag = 0;
     if(_bClearTarget)	_dwClearFlag|=D3DCLEAR_TARGET;
     if(_bClearZBuffer)  _dwClearFlag|=D3DCLEAR_ZBUFFER;

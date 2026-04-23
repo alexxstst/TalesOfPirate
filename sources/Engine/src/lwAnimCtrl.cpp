@@ -653,29 +653,6 @@ LW_RESULT lwAnimCtrlBone::UpdatePose(lwPlayPoseInfo* info)
     //if(LW_FAILED(SetFrame(info->ret_frame, pi->start, pi->end)))
     //    goto __ret;
 
-#if 0
-    // frame type cannot invoke CallBack proc
-    if(info->type == PLAY_FRAME)
-        goto __addr_ret_ok;
-
-    if(LW_FAILED(_pose_ctrl.CallBack(info)))
-        goto __ret;
-#endif
-
-            
-
-    //int x = 0;
-    //if(x == 1)
-    //{
-    //    g_x = 1;
-    //    g_fp = fopen("A.txt", "wt");
-    //}
-    //else if(x == 2)
-    //{
-    //    g_x = 0;
-    //    fclose(g_fp);
-    //}
-
 __addr_ret_ok:
     ret = LW_RET_OK;
 __ret:
@@ -686,9 +663,8 @@ LW_RESULT lwAnimCtrlBone::UpdateAnimData(const lwPlayPoseInfo* info)
 {
     LW_RESULT ret = LW_RET_FAILED;
 
-#if 1
     lwPoseInfo* pi = _pose_ctrl.GetPoseInfo(info->pose);
-    
+
     if(LW_FAILED(_UpdateFrameDataBone(&_rtmat_ptr, _bone_rtmat_seq, info->ret_frame, pi->start, pi->end, info->type == PLAY_LOOP ? 1 : 0)))
         goto __ret;
 
@@ -708,20 +684,12 @@ LW_RESULT lwAnimCtrlBone::UpdateAnimData(const lwPlayPoseInfo* info)
 
         if(LW_FAILED(_BlendBoneData(_bone_rtmat_seq, rtmat_blend_ptr, _rtmat_ptr, info->blend_info.weight)))
             goto __ret;
-        
+
         _rtmat_ptr = _bone_rtmat_seq;
     }
 
     if(LW_FAILED(_UpdateFrameDataBoneDummy()))
         goto __ret;
-#endif
-
-#if 0
-    lwPoseInfo* pi = _pose_ctrl.GetPoseInfo(info->pose);
-
-    if(LW_FAILED(SetFrame(info->ret_frame, pi->start, pi->end)))
-        goto __ret;
-#endif
 
     ret = LW_RET_OK;
 __ret:
