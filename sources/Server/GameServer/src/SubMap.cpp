@@ -327,9 +327,10 @@ CNpcRecord* SubMap::GetNpcInfo( USHORT sNpcID )
 	return NULL;
 }
 
-// 
+//
 void SubMap::Add(Entity* pCEnt)
 {
+	DBG_ASSERT_ENTITY(pCEnt);
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	CItem		*pCItem;
 	Point		l_pt = pCEnt->GetPos();
@@ -391,6 +392,10 @@ void SubMap::Add(Entity* pCEnt)
 
 void SubMap::Delete(Entity* pCEnt)
 {
+	// pCEnt здесь иногда уже отвязан от карты (asymm с Add), но указатель
+	// должен всё ещё указывать на живой пул-объект. Исключение —
+	// shutdown / Free, где мы намеренно идём по edges_after_release.
+	DBG_ASSERT_ENTITY(pCEnt);
 	CCharacter	*pCCha = pCEnt->IsCharacter();
 	Point		l_pt = pCEnt->GetPos();
 	//const Rect	&m_area = GetRange();
@@ -813,6 +818,11 @@ bool SubMap::EnsurePos(Square* pSEntShape, Entity * ent, cLong clSearchRadius)
 //=============================================================================
 void SubMap::GoOut(Entity * ent)
 {
+	DBG_ASSERT_ENTITY(ent);
+#if defined(_DEBUG)
+	const void* l_dbgEnt = static_cast<const void*>(ent);
+	const char* l_dbgName = ent->GetLogName();
+#endif
 	Point l_pt =ent->GetShape().centre;
 	Rect l_rect =GetEyeshot(l_pt);
 	//
@@ -831,6 +841,46 @@ void SubMap::GoOut(Entity * ent)
 			m_pCEyeshotCell[y][x].OutEyeshot(ent);
 		}
 	}
+
+#if defined(_DEBUG)
+	// Форензик-скан: пробегаем ВСЕ клетки карты — ent должен быть
+	// нигде (ни в m_pCChaL, ни в m_pCItemL, ни в next/last-связях).
+	// Если найден — это root-cause "item остался после pickup":
+	// Delete удалил его только из одного cell, а он был ещё где-то.
+	const long l_lins = GetEyeshotCellLin();
+	const long l_cols = GetEyeshotCellCol();
+	for (long cy = 0; cy < l_lins; ++cy)
+	{
+		for (long cx = 0; cx < l_cols; ++cx)
+		{
+			CEyeshotCell& l_cell = m_pCEyeshotCell[cy][cx];
+			for (const Entity* p = l_cell.m_pCChaL; p; p = p->m_pCEyeshotCellNext)
+			{
+				if (p == ent)
+				{
+					ToLogService("errors", LogLevel::Error,
+						"SubMap::GoOut LEAK: ent={} name='{}' still in cell[{}][{}].m_pCChaL after Delete+OutEyeshot. "
+						"Initial pos=[{},{}] eyeshot-rect=[{},{}..{},{}].",
+						l_dbgEnt, l_dbgName, cy, cx, l_pt.x, l_pt.y,
+						l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y);
+					break;
+				}
+			}
+			for (const Entity* p = l_cell.m_pCItemL; p; p = p->m_pCEyeshotCellNext)
+			{
+				if (p == ent)
+				{
+					ToLogService("errors", LogLevel::Error,
+						"SubMap::GoOut LEAK: ent={} name='{}' still in cell[{}][{}].m_pCItemL after Delete+OutEyeshot. "
+						"Initial pos=[{},{}] eyeshot-rect=[{},{}..{},{}].",
+						l_dbgEnt, l_dbgName, cy, cx, l_pt.x, l_pt.y,
+						l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y);
+					break;
+				}
+			}
+		}
+	}
+#endif
 
 	ent->m_submap =0;
 }

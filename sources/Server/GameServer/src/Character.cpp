@@ -451,7 +451,9 @@ void CCharacter::SwitchMap(SubMap *pCSrcMap, cChar *szTarMapName, Long lTarX, Lo
 
 void CCharacter::OnBeginSee(Entity *obj)
 {
-	if(!IsPlayerFocusCha()) // 
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(obj);
+	if(!IsPlayerFocusCha()) //
 		return;
 
 	obj->OnBeginSeen(this);	//ToDo:
@@ -459,7 +461,9 @@ void CCharacter::OnBeginSee(Entity *obj)
 
 void CCharacter::OnEndSee(Entity *obj)
 {
-	if(!IsPlayerFocusCha()) // 
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(obj);
+	if(!IsPlayerFocusCha()) //
 		return;
 
 	obj->OnEndSeen(this);	//ToDo:
@@ -467,7 +471,9 @@ void CCharacter::OnEndSee(Entity *obj)
 
 void CCharacter::ReflectINFof(Entity *srcent, net::WPacket chginf)
 {
-	if (!IsPlayerCha()) // 
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(srcent);
+	if (!IsPlayerCha()) //
 		return;
 
 	if(srcent ==this)
@@ -490,7 +496,9 @@ bool CCharacter::IsPKSilver()
 
 void CCharacter::OnBeginSeen(CCharacter *pCCha)
 {
-	if (!pCCha->IsPlayerCha()) // 
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(pCCha);
+	if (!pCCha->IsPlayerCha()) //
 		return;
 
 	MPTimer tt;
@@ -558,7 +566,9 @@ void CCharacter::OnBeginSeen(CCharacter *pCCha)
 
 void CCharacter::OnEndSeen(CCharacter *pCCha)
 {
-	if (!pCCha->IsPlayerCha()) // 
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(pCCha);
+	if (!pCCha->IsPlayerCha()) //
 		return;
 
 	if (m_pCPlayer && pCCha->m_pCPlayer && (GetID() == pCCha->GetID()))

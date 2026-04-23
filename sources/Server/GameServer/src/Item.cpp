@@ -10,6 +10,7 @@
 #include "GameAppNet.h"
 #include "SubMap.h"
 #include "gamedb.h"
+#include "GamePool.h"
 
 _DBC_USING
 
@@ -47,7 +48,9 @@ void CItem::Finally()
 
 void CItem::OnBeginSeen(CCharacter *pCMainCha)
 {
-	//  :     
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(pCMainCha);
+	//  :
 	auto pk = net::msg::serialize(net::msg::McItemCreateMessage{
 		m_ID, static_cast<int64_t>(m_lHandle), static_cast<int64_t>(m_pCItemRecord->lID),
 		static_cast<int64_t>(GetShape().centre.x), static_cast<int64_t>(GetShape().centre.y),
@@ -61,7 +64,9 @@ void CItem::OnBeginSeen(CCharacter *pCMainCha)
 
 void CItem::OnEndSeen(CCharacter *pCMainCha)
 {
-	//  :     
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(pCMainCha);
+	//  :
 	auto pk = net::msg::serialize(net::msg::McItemDestroyMessage{m_ID});
 	pCMainCha->ReflectINFof(this,pk);
 }

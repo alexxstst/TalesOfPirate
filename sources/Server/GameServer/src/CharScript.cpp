@@ -756,7 +756,11 @@ std::tuple<int, int> GetNeedItemCount(CCharacter* pChar, int wRoleID, int sItemI
 	return std::make_tuple(bRet ? LUA_TRUE : LUA_FALSE, (int)sCount);
 }
 
-int AddMissionState(CCharacter* pChar, int dwNpcID, int byID, int byState)
+// npcid приходит из CTalkNpc::MissionProc (NPC.cpp) — это Entity handle (unsigned long),
+// с тэгом в старших 8 битах. В x64-сборке handle может вылазить за INT_MAX (signed int),
+// и LuaBridge-биндинг с `int` падает: "integer can't fit inside a lua integer".
+// Принимаем `unsigned int` — 32-битный беззнаковый покрывает весь диапазон handle.
+int AddMissionState(CCharacter* pChar, unsigned int dwNpcID, int byID, int byState)
 {
 	if (!pChar) return LUA_FALSE;
 	BOOL bRet = pChar->AddMissionState((DWORD)dwNpcID, (BYTE)byID, (BYTE)byState);

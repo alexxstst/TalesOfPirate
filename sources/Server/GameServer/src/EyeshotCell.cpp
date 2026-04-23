@@ -6,6 +6,9 @@
 //=============================================================================
 #include "stdafx.h"
 #include "EyeshotCell.h"
+#include "GamePool.h"
+#include "Character.h"
+#include "Item.h"
 
 CEyeshotCell::CEyeshotCell()
 {
@@ -46,6 +49,7 @@ CEyeshotCell::~CEyeshotCell()
 // pCEnt
 void CEyeshotCell::EnterEyeshot(Entity *pCEnt)
 {
+	DBG_ASSERT_ENTITY(pCEnt);
 	for (auto* slot : _stateCellSlots) {
 		if (auto* cell = *slot) {
 			cell->StateBeginSeen(pCEnt);
@@ -89,6 +93,60 @@ void CEyeshotCell::EnterEyeshot(Entity *pCEnt)
 
 void CEyeshotCell::OutEyeshot(Entity *pCEnt)
 {
+	DBG_ASSERT_ENTITY(pCEnt);
+#if defined(_DEBUG)
+	// Перед тем как разослать EndSee всем соседям по клетке — проверим,
+	// что и сами соседи ещё живы. Раньше мы ловили краши именно здесь:
+	// лут освобождался без снятия из eyeshot, и затем EndSee уходил по
+	// висячему указателю.
+	//
+	// Если нашли stale — сразу дампим всё состояние клетки: адрес cell,
+	// позицию, все указатели в linked-list (чтобы увидеть ВЕСЬ порядок
+	// элементов, а не только stale).
+	const auto dumpCellItems = [this]() {
+		ToLogService("errors", LogLevel::Error,
+			"CELL DUMP cell={} pos=[{},{}] chaCount={} itemCount={} chaHead={} itemHead={}",
+			static_cast<const void*>(this), m_sPosX, m_sPosY,
+			m_lChaCount, m_lItemCount,
+			static_cast<const void*>(m_pCChaL),
+			static_cast<const void*>(m_pCItemL));
+		int idx = 0;
+		for (const Entity* p = m_pCItemL; p && idx < 16;
+			 p = p->m_pCEyeshotCellNext, ++idx)
+		{
+			const bool alive = GamePool::Instance().IsValidEntityPtr(p);
+			ToLogService("errors", LogLevel::Error,
+				"  item[{}] ptr={} alive={} next={} last={}",
+				idx, static_cast<const void*>(p), alive,
+				static_cast<const void*>(p->m_pCEyeshotCellNext),
+				static_cast<const void*>(p->m_pCEyeshotCellLast));
+		}
+	};
+	for (const CCharacter* pDbg = m_pCChaL; pDbg; )
+	{
+		if (pDbg && !GamePool::Instance().IsValidEntityPtr(pDbg))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"OutEyeshot stale CHARACTER in cell ptr={}", static_cast<const void*>(pDbg));
+			dumpCellItems();
+			assert(!"OutEyeshot: stale character in m_pCChaL");
+			break;
+		}
+		pDbg = pDbg->m_pCEyeshotCellNext ? pDbg->m_pCEyeshotCellNext->IsCharacter() : nullptr;
+	}
+	for (const CItem* pDbg = m_pCItemL; pDbg; )
+	{
+		if (pDbg && !GamePool::Instance().IsValidEntityPtr(pDbg))
+		{
+			ToLogService("errors", LogLevel::Error,
+				"OutEyeshot stale ITEM in cell ptr={}", static_cast<const void*>(pDbg));
+			dumpCellItems();
+			assert(!"OutEyeshot: stale item in m_pCItemL");
+			break;
+		}
+		pDbg = pDbg->m_pCEyeshotCellNext ? pDbg->m_pCEyeshotCellNext->IsItem() : nullptr;
+	}
+#endif
 	for (auto* slot : _stateCellSlots) {
 		if (auto* cell = *slot) {
 			cell->StateEndSeen(pCEnt);
@@ -183,6 +241,7 @@ void CEyeshotCell::BeginGetCha(void)  { m_pCChaSearch = m_pCChaL; }
 
 void CEyeshotCell::AddEntity(CCharacter *pCCha)
 {
+	DBG_ASSERT_ENTITY(pCCha);
 	if (!pCCha)
 		return;
 	if (pCCha->m_pCEyeshotCellLast || pCCha->m_pCEyeshotCellNext)
@@ -204,6 +263,7 @@ void CEyeshotCell::AddEntity(CCharacter *pCCha)
 
 void CEyeshotCell::AddEntity(CItem *pCItem)
 {
+	DBG_ASSERT_ENTITY(pCItem);
 	if (!pCItem)
 		return;
 	if (pCItem->m_pCEyeshotCellLast || pCItem->m_pCEyeshotCellNext)
@@ -211,6 +271,14 @@ void CEyeshotCell::AddEntity(CItem *pCItem)
 		ToLogService("errors", LogLevel::Error, "when add item entity to {}, find it is not break away foregone manage cell", pCItem->GetLogName());
 		return;
 	}
+
+#if defined(_DEBUG)
+	ToLogService("common", LogLevel::Debug,
+		"CEyeshotCell::AddEntity(Item) cell={} item={} name='{}' prevHead={}",
+		static_cast<const void*>(this),
+		static_cast<const void*>(pCItem), pCItem->GetLogName(),
+		static_cast<const void*>(m_pCItemL));
+#endif
 
 	pCItem->m_pCEyeshotCellLast = 0;
 	pCItem->m_pCEyeshotCellNext = m_pCItemL;
@@ -225,8 +293,26 @@ void CEyeshotCell::AddEntity(CItem *pCItem)
 
 void CEyeshotCell::DelEntity(Entity *pCEnt)
 {
+	// ВАЖНО: Del может вызываться и во время Free() entity, когда GamePool
+	// его уже могли снять. Не ассертим pCEnt здесь — только в Add/путях,
+	// куда entity должен приходить живым.
 	if (!pCEnt)
 		return;
+
+#if defined(_DEBUG)
+	// Логируем только items (характеры шумят слишком сильно).
+	if (pCEnt->IsItem())
+	{
+		ToLogService("common", LogLevel::Debug,
+			"CEyeshotCell::DelEntity(Item) cell={} item={} name='{}' head_before={} next={} last={}",
+			static_cast<const void*>(this),
+			static_cast<const void*>(pCEnt), pCEnt->GetLogName(),
+			static_cast<const void*>(m_pCItemL),
+			static_cast<const void*>(pCEnt->m_pCEyeshotCellNext),
+			static_cast<const void*>(pCEnt->m_pCEyeshotCellLast));
+	}
+#endif
+
 	if (pCEnt->IsCharacter())
 	{
 		if (m_pCChaSearch == pCEnt)

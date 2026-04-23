@@ -7,6 +7,8 @@
 #include "Event.h"
 #include "CompCommand.h"
 
+#include <source_location>
+
 class CCharacter;
 class CMoveAble;
 class CFightAble;
@@ -46,9 +48,16 @@ class Entity {
 	friend class CMapSwitchEntitySpawn;
 
 public:
-	void Free();
+	// DEBUG-сборка логирует каждый Free с адресом+именем+call-site (source_location).
+	// Помогает ловить двойные освобождения, висячие entity в eyeshot и т.п.
+	void Free(std::source_location loc = std::source_location::current());
 	void Initially();
-	void Finally();
+	// ВАЖНО: Finally virtual — Free() живёт в Entity и вызывает Finally()
+	// через this; без virtual диспатч уходит в Entity::Finally, минуя
+	// CItem::Finally/CCharacter::Finally (а именно они снимают entity
+	// с карты через SubMap::GoOut). Если забыть virtual — item после
+	// Free() остаётся в eyeshot-cell как dangling.
+	virtual void Finally();
 
 	void          SetInitShape(const Square& shape);
 	const Square& GetShape() const;

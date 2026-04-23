@@ -132,8 +132,20 @@ void CPlayer::Finally()
 	bIsValid = false;
 }
 
-void CPlayer::Free()
+void CPlayer::Free(std::source_location loc)
 {
+#if defined(_DEBUG)
+	// См. Entity::Free — трассируем call-site для ловли висячих указателей
+	// в Mission/Team/eyeshot-связях, где CPlayer* мог быть кэширован.
+	const char* act = GetActName();
+	ToLogService("common", LogLevel::Debug,
+		"CPlayer::Free ptr={} act='{}' id={:#x} handle={:#x} from {}:{} ({})",
+		static_cast<const void*>(this), act ? act : "",
+		static_cast<unsigned long>(GetID()), static_cast<unsigned long>(GetHandle()),
+		loc.file_name(), loc.line(), loc.function_name());
+#else
+	(void)loc;
+#endif
 	Finally();
 	GamePool::Instance().ReleasePlayer(this);
 }

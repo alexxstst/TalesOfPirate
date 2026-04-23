@@ -1265,12 +1265,14 @@ Short CCharacter::Cmd_UnfixItem(Char chLinkID, Short *psItemNum, Char chDir, Lon
 //=================================================================================================
 Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 {
+	DBG_ASSERT_ENTITY(this);
 	if (!GetActControl(enumACTCONTROL_ITEM_OPT))
 		return enumITEMOPT_ERROR_STATE;
 
 	Entity	*pCEnt = g_pGameApp->IsLiveingEntity(ulID, lHandle);
 	if (!pCEnt)
 		return enumITEMOPT_ERROR_NONE;
+	DBG_ASSERT_ENTITY(pCEnt);
 	CItem	*pCItem = pCEnt->IsItem();
 	if (!pCItem)
 		return enumITEMOPT_ERROR_NONE;
@@ -1428,7 +1430,23 @@ Short CCharacter::Cmd_PickupItem(uLong ulID, Long lHandle)
 	SENDTOCLIENT2(WtPk, GetPlayer()->GetTeamMemberCnt(), GetPlayer()->_Team);
 
 	if (sPushRet == enumKBACT_SUCCESS)
+	{
+		// Перед Free проверяем: item всё ещё живой в пуле и висит на карте.
+		// Если m_submap уже nullptr — GoOut не выполнится, item застрянет
+		// в чужих eyeshot-списках → UB при следующем EndSee.
+		DBG_ASSERT_ENTITY(pCItem);
+#if defined(_DEBUG)
+		if (!pCItem->m_submap)
+		{
+			ToLogService("errors", LogLevel::Error,
+				"Cmd_PickupItem: item {} ulID={:#x} handle={:#x} has no submap at Free — "
+				"will leak in eyeshot-cells and crash OnEndSee later",
+				pCItem->GetLogName(), ulID, lHandle);
+			assert(!"Cmd_PickupItem: CItem::Free without submap");
+		}
+#endif
 		pCItem->Free();
+	}
 
 	pKitbagCha->SynKitbagNew(enumSYN_KITBAG_PICK);
 

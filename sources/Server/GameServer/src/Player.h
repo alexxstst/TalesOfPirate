@@ -17,6 +17,8 @@
 #include "ChaMask.h"
 #include "Timer.h"
 
+#include <source_location>
+
 namespace mission {
 	class CStallData;
 }
@@ -44,7 +46,8 @@ public:
 	void         SetPassword(const char szPassword[]);
 	const char*  GetPassword();
 
-	void Free();
+	// DEBUG-сборка логирует каждый Free с адресом+именем+call-site (source_location).
+	void Free(std::source_location loc = std::source_location::current());
 	void Initially();
 	void Finally();
 

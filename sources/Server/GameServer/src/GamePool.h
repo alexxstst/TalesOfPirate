@@ -71,6 +71,13 @@ public:
     bool    IsValidPlayerPtr(const CPlayer* player) const;
     bool    IsValidEntityPtr(const Entity* entity) const;
 
+    // Полиморфные перегрузки — позволяют ассертам не различать тип:
+    // `IsValidPtr(any_entity_or_player_ptr)`. Перегрузка разрешается
+    // компилятором: Entity* и CPlayer* — разные несвязанные иерархии,
+    // поэтому никаких неоднозначностей.
+    bool    IsValidPtr(const Entity* entity) const   { return IsValidEntityPtr(entity); }
+    bool    IsValidPtr(const CPlayer* player) const  { return IsValidPlayerPtr(player); }
+
     // Итерация (snapshot): копируем указатели под локом, вызываем лямбду
     // уже без лока — внутри можно свободно вызывать Acquire/Release.
     void    ForEachPlayer(const std::function<void(CPlayer*)>& fn);
@@ -112,5 +119,36 @@ private:
 
     std::array<std::atomic<uint32_t>, 256>      _nextSerial{};
 };
+
+// --- Диагностические ассерты (только DEBUG) --------------------------------
+// Вызываются во входах методов, принимающих Entity*/CPlayer*. Ловят
+// висячие/только что освобождённые указатели, когда объект всё ещё лежит в
+// чьём-то eyeshot-списке или прочей агрегации. В RELEASE — no-op, нулевая
+// стоимость. Реализация через IsValidPtr (O(1), под shared-локом).
+//
+// Полиморфно: один макрос на оба типа, диспатч через перегрузку
+// GamePool::IsValidPtr. Старые алиасы (DBG_ASSERT_ENTITY/DBG_ASSERT_PLAYER)
+// оставлены — местами читаемее показать намерение.
+//
+// Пропускаем nullptr: вызывающий код часто ветвится на nullptr сам, и
+// отстрел на null тут только спамил бы лог.
+#if defined(_DEBUG)
+#  define DBG_ASSERT_VALID(p) \
+    do { \
+        const auto* _dbg_p = (p); \
+        if (_dbg_p && !GamePool::Instance().IsValidPtr(_dbg_p)) { \
+            ToLogService("errors", LogLevel::Error, \
+                "DBG_ASSERT_VALID failed: stale ptr {} at {}:{}", \
+                static_cast<const void*>(_dbg_p), __FILE__, __LINE__); \
+            assert(!"DBG_ASSERT_VALID: dangling Entity*/CPlayer*"); \
+        } \
+    } while (0)
+#else
+#  define DBG_ASSERT_VALID(p) ((void)0)
+#endif
+
+// Алиасы для совместимости/читаемости — оба раскрываются в одно и то же.
+#define DBG_ASSERT_ENTITY(obj) DBG_ASSERT_VALID(obj)
+#define DBG_ASSERT_PLAYER(p)   DBG_ASSERT_VALID(p)
 
 #endif // GAMEPOOL_H

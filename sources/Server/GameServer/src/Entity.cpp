@@ -12,12 +12,11 @@
 
 _DBC_USING
 
-Entity::Entity():m_cat(0),m_ID(0)
-{
-	m_pCStateCellHead	=0;
+Entity::Entity() : m_cat(0), m_ID(0) {
+	m_pCStateCellHead = 0;
 	m_pCStateCellTail = 0;
-	m_submap	=0;
-	m_sAngle	=0;
+	m_submap = 0;
+	m_sAngle = 0;
 	memset(&m_STerritory, 0, sizeof(Circle));
 
 	m_SExistCtrl.sState = enumEXISTS_WAITING;
@@ -32,27 +31,64 @@ Entity::Entity():m_cat(0),m_ID(0)
 	SetLogName("Unnamed Log");
 }
 
-void Entity::Free()
+void Entity::Free(std::source_location loc)
 {
+#if defined(_DEBUG)
+	// Трассируем каждый Free, чтобы по логам потом сопоставить
+	// "кто освободил, когда, откуда" с последующим крашем в OnEndSee
+	// по висячему указателю.
+	ToLogService("common", LogLevel::Debug,
+		"Entity::Free ptr={} name='{}' id={:#x} handle={:#x} host={} next={} last={} from {}:{} ({})",
+		static_cast<const void*>(this), GetLogName(), m_ID, m_lHandle,
+		static_cast<const void*>(m_pCEyeshotHost),
+		static_cast<const void*>(m_pCEyeshotCellNext),
+		static_cast<const void*>(m_pCEyeshotCellLast),
+		loc.file_name(), loc.line(), loc.function_name());
+#else
+	(void)loc;
+#endif
 	Finally();
+
+#if defined(_DEBUG)
+	// Форензик: после Finally() (который внутри делает GoOut → Delete →
+	// cell.DelEntity) все linked-list-поля eyeshot-cell должны быть
+	// занулены. Если next/last или host остались — entity всё ещё
+	// в чьём-то m_pCItemL/m_pCChaL, и при следующем EndSee-broadcast
+	// мы прочитаем stale-указатель (crash или наш DBG_ASSERT_VALID).
+	//
+	// Это даёт сигнал РОВНО в момент leak'а — до того, как адрес вернулся
+	// в пул и стал нечитаем.
+	if (m_pCEyeshotHost || m_pCEyeshotCellNext || m_pCEyeshotCellLast)
+	{
+		ToLogService("errors", LogLevel::Error,
+			"Entity::Free LEAK: after Finally ptr={} name='{}' host={} next={} last={} — "
+			"entity остался в eyeshot-cell linked-list, stale при следующем EndSee. Free-caller: {}:{} ({})",
+			static_cast<const void*>(this), GetLogName(),
+			static_cast<const void*>(m_pCEyeshotHost),
+			static_cast<const void*>(m_pCEyeshotCellNext),
+			static_cast<const void*>(m_pCEyeshotCellLast),
+			loc.file_name(), loc.line(), loc.function_name());
+		assert(!"Entity::Free: entity still linked in eyeshot cell after Finally");
+	}
+#endif
+
 	GamePool::Instance().ReleaseEntity(this);
 }
 
-void Entity::Initially()
-{
+void Entity::Initially() {
 	SetLogName("Unnamed Log");
 	m_bValid = true;
 	memset(&m_shape, 0, sizeof(Square));
 	memset(&m_STerritory, 0, sizeof(Circle));
 	m_sAngle = 0;
-	m_submap	=0;
-	m_pCStateCellHead	=0;
+	m_submap = 0;
+	m_pCStateCellHead = 0;
 	m_pCStateCellTail = 0;
 	m_pCEyeshotCellNext = 0;
 	m_pCEyeshotCellLast = 0;
 	SetBirthCity("");
 	SetBirthMap("");
-	m_sAngle	=0;
+	m_sAngle = 0;
 	m_CEvent.Init();
 	m_SExistCtrl.sState = enumEXISTS_WAITING;
 	m_SExistCtrl.sStopState = enumEXISTS_WAITING;
@@ -66,31 +102,25 @@ void Entity::Initially()
 	m_ucIslandID[0] = m_ucIslandID[1] = 0;
 
 	m_pCEyeshotHost = 0;
-
 }
 
-void Entity::Finally()
-{
-	m_cat		=0;
-	m_ID		=0;
+void Entity::Finally() {
+	m_cat = 0;
+	m_ID = 0;
 	m_SExistCtrl.sState = enumEXISTS_WITHERING;
 	m_bValid = false;
 	m_pCEyeshotHost = 0;
 }
 
-Entity	*Entity::SearchByIDInEyeshot(cuLong culID)
-{
-	Point	l_pos = GetShape().centre;
-	Rect	l_rect = m_submap->GetEyeshot(l_pos);
+Entity* Entity::SearchByIDInEyeshot(cuLong culID) {
+	Point l_pos = GetShape().centre;
+	Rect l_rect = m_submap->GetEyeshot(l_pos);
 
-	Entity	*pCEnt =0;
-	for(long y =l_rect.ltop.y;y <=l_rect.rbtm.y;y++)
-	{
-		for(long x =l_rect.ltop.x;x <=l_rect.rbtm.x;x++)
-		{
+	Entity* pCEnt = 0;
+	for (long y = l_rect.ltop.y; y <= l_rect.rbtm.y; y++) {
+		for (long x = l_rect.ltop.x; x <= l_rect.rbtm.x; x++) {
 			pCEnt = m_submap->m_pCEyeshotCell[y][x].m_pCChaL;
-			while (pCEnt)
-			{
+			while (pCEnt) {
 				if (pCEnt->m_ID == culID)
 					goto End;
 
@@ -98,8 +128,7 @@ Entity	*Entity::SearchByIDInEyeshot(cuLong culID)
 			}
 
 			pCEnt = m_submap->m_pCEyeshotCell[y][x].m_pCItemL;
-			while (pCEnt)
-			{
+			while (pCEnt) {
 				if (pCEnt->m_ID == culID)
 					goto End;
 
@@ -112,24 +141,21 @@ End:
 	return pCEnt;
 }
 
-void Entity::ActiveEyeshot(bool bActive)
-{
+void Entity::ActiveEyeshot(bool bActive) {
 	if (m_bActiveEyeshot == bActive)
 		return;
 	if (!m_submap)
 		return;
 
 	m_bActiveEyeshot = bActive;
-	Long	lNum = -1;
+	Long lNum = -1;
 	if (bActive)
 		lNum = 1;
 
 	Point l_pt = GetPos();
 	Rect l_rect = m_submap->GetEyeshot(l_pt);
-	for(long y =l_rect.ltop.y;y <=l_rect.rbtm.y;y++)
-	{
-		for(long x =l_rect.ltop.x;x <=l_rect.rbtm.x;x++)
-		{
+	for (long y = l_rect.ltop.y; y <= l_rect.rbtm.y; y++) {
+		for (long x = l_rect.ltop.x; x <= l_rect.rbtm.x; x++) {
 			if (bActive)
 				m_submap->ActiveEyeshotCell(x, y);
 			else
@@ -138,24 +164,21 @@ void Entity::ActiveEyeshot(bool bActive)
 	}
 }
 
-void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
-{
-	SubMap		*pCMap = GetSubMap();
-	Entity		*pCTarEnt;
-	CCharacter	*pCTarCha;
-	CCharacter	*pCSrcCha;
+void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn) {
+	SubMap* pCMap = GetSubMap();
+	Entity* pCTarEnt;
+	CCharacter* pCTarCha;
+	CCharacter* pCSrcCha;
 	pCSrcCha = this->IsCharacter();
-	if (pCSrcCha && pCSrcCha->GetPlayer())
-	{
+	if (pCSrcCha && pCSrcCha->GetPlayer()) {
 		pCSrcCha = pCSrcCha->GetPlayer()->GetCtrlCha();
 		pCMap = pCSrcCha->GetSubMap();
 	}
 
-	cChar		*cszSrcLogName = GetLogName();
+	cChar* cszSrcLogName = GetLogName();
 	if (pCSrcCha)
 		cszSrcLogName = pCSrcCha->GetLogName();
-	if (!pCMap)
-	{
+	if (!pCMap) {
 		//LG("", " %s \n", GetLogName());
 		ToLogService("errors", LogLevel::Error, "when entity {} is doing eye shot notifythe map is null", GetLogName());
 		return;
@@ -168,44 +191,39 @@ void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
 	Rect l_rect = pCMap->GetEyeshot(l_pos);
 
 	std::vector<CPlayer*> recipients;
-	long	x = 0, y = 0;
-	long	lEntCount, lEntNum;
-	try
-	{
-		for(y =l_rect.ltop.y;y <=l_rect.rbtm.y;y++)
-		{
-			for(x =l_rect.ltop.x;x <=l_rect.rbtm.x;x++)
-			{
+	long x = 0, y = 0;
+	long lEntCount, lEntNum;
+	try {
+		for (y = l_rect.ltop.y; y <= l_rect.rbtm.y; y++) {
+			for (x = l_rect.ltop.x; x <= l_rect.rbtm.x; x++) {
 				lEntCount = 0;
 				pCTarEnt = pCMap->m_pCEyeshotCell[y][x].m_pCChaL;
 				lEntNum = pCMap->m_pCEyeshotCell[y][x].GetChaNum();
-				while (pCTarEnt)
-				{
-					if (++lEntCount > lEntNum)
-					{
+				while (pCTarEnt) {
+					if (++lEntCount > lEntNum) {
 						//LG("", "[%d,%d] %d\n", x, y, lEntNum);
-						ToLogService("errors", LogLevel::Error, "eye shot cell [{},{}] the fact entity number {}", x, y, lEntNum);
+						ToLogService("errors", LogLevel::Error, "eye shot cell [{},{}] the fact entity number {}", x, y,
+									 lEntNum);
 						break;
 					}
 
 					pCTarCha = pCTarEnt->IsCharacter();
-					if (!pCTarCha || (!bIncludeOwn && pCTarEnt == this))
-					{
+					if (!pCTarCha || (!bIncludeOwn && pCTarEnt == this)) {
 						pCTarEnt = pCTarEnt->m_pCEyeshotCellNext;
 						continue;
 					}
 
-					if(pCTarCha->IsPlayerFocusCha())
-					{
-						if ((pCSrcCha && pCSrcCha->CanSeen(pCTarCha)) || !pCSrcCha)
-						{
+					if (pCTarCha->IsPlayerFocusCha()) {
+						if ((pCSrcCha && pCSrcCha->CanSeen(pCTarCha)) || !pCSrcCha) {
 							recipients.push_back(pCTarCha->GetPlayer());
 
 							if (!pCTarCha->GetSubMap())
 								//LG("", " %s[%d,%d]  %s(%s)[%d,%d] \n",
-								ToLogService("errors", LogLevel::Error, "when entity {}[{},{}] is doing eye shot notify, the aim player {}({})[{},{}] map is null",
-									cszSrcLogName, l_pos1.x, l_pos1.y,
-									pCTarCha->GetLogName(), pCTarCha->GetPlyCtrlCha()->GetLogName(), pCTarCha->GetPos().x, pCTarCha->GetPos().y);
+								ToLogService("errors", LogLevel::Error,
+											 "when entity {}[{},{}] is doing eye shot notify, the aim player {}({})[{},{}] map is null",
+											 cszSrcLogName, l_pos1.x, l_pos1.y,
+											 pCTarCha->GetLogName(), pCTarCha->GetPlyCtrlCha()->GetLogName(),
+											 pCTarCha->GetPos().x, pCTarCha->GetPos().y);
 						}
 					}
 
@@ -214,21 +232,21 @@ void Entity::NotiChgToEyeshot(net::WPacket chginf, bool bIncludeOwn)
 			}
 		}
 	}
-	catch (...)
-	{
+	catch (...) {
 		//LG("", " %s ([%d,%d][%d,%d;%d,%d])[%d,%d]\n", cszSrcLogName,
 		//	l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
-		ToLogService("errors", LogLevel::Error, "entity {} eye shot notify error(coordnate [{},{}]eye shot [{},{};{},{}])currently eye shot cell[{},{}]", cszSrcLogName,
-			l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
+		ToLogService("errors", LogLevel::Error,
+					 "entity {} eye shot notify error(coordnate [{},{}]eye shot [{},{};{},{}])currently eye shot cell[{},{}]",
+					 cszSrcLogName,
+					 l_pos1.x, l_pos1.y, l_rect.ltop.x, l_rect.ltop.y, l_rect.rbtm.x, l_rect.rbtm.y, x, y);
 		throw;
 	}
 
 	SENDTOCLIENT(chginf, recipients);
 }
 
-bool Entity::overlap(long &xdist, long &ydist)
-{
-	bool	b_retval	= false;
+bool Entity::overlap(long& xdist, long& ydist) {
+	bool b_retval = false;
 
 	if (!m_submap || !m_submap->IsValidPos(m_shape.centre.x + xdist, m_shape.centre.y + ydist))
 		return true;
@@ -243,9 +261,8 @@ bool Entity::overlap(long &xdist, long &ydist)
 	return b_retval;
 }
 
-bool Entity::EdgeOverlap(long& xdist, long& ydist)
-{
-	bool	l_retval = false;
+bool Entity::EdgeOverlap(long& xdist, long& ydist) {
+	bool l_retval = false;
 
 	//
 	const long lc_xdist = xdist;
@@ -256,29 +273,24 @@ bool Entity::EdgeOverlap(long& xdist, long& ydist)
 
 	l_shape.radius = SSrcShape.radius;
 	//x
-	const Rect	&area = m_submap->GetRange();
-	bool	l_flag = false;
+	const Rect& area = m_submap->GetRange();
+	bool l_flag = false;
 	l_shape.centre.x = SSrcShape.centre.x + xdist;
 	long l_xdlt = (l_shape.centre.x - l_shape.radius) - area.ltop.x;
-	if (l_xdlt < 0)
-	{
+	if (l_xdlt < 0) {
 		l_flag = true;
 		xdist -= l_xdlt;
 	}
-	else
-	{
+	else {
 		l_xdlt = (l_shape.centre.x + l_shape.radius) - area.rbtm.x;
-		if (l_xdlt > 0)
-		{
+		if (l_xdlt > 0) {
 			l_flag = true;
 			xdist -= l_xdlt;
 		}
 	}
-	if (l_flag)
-	{
+	if (l_flag) {
 		l_retval = true;
-		if (lc_xdist != 0)
-		{
+		if (lc_xdist != 0) {
 			ydist = (lc_ydist * xdist) / lc_xdist;
 		}
 	}
@@ -286,25 +298,20 @@ bool Entity::EdgeOverlap(long& xdist, long& ydist)
 	l_flag = false;
 	l_shape.centre.y = SSrcShape.centre.y + ydist;
 	long l_ydlt = (l_shape.centre.y - l_shape.radius) - area.ltop.y;
-	if (l_ydlt < 0)
-	{
+	if (l_ydlt < 0) {
 		l_flag = true;
 		ydist -= l_ydlt;
 	}
-	else
-	{
+	else {
 		l_ydlt = (l_shape.centre.y + l_shape.radius) - area.rbtm.y;
-		if (l_ydlt > 0)
-		{
+		if (l_ydlt > 0) {
 			l_flag = true;
 			ydist -= l_ydlt;
 		}
 	}
-	if (l_flag)
-	{
+	if (l_flag) {
 		l_retval = true;
-		if (lc_ydist != 0)
-		{
+		if (lc_ydist != 0) {
 			xdist = (lc_xdist * ydist) / lc_ydist;
 		}
 	}
@@ -441,11 +448,10 @@ bool Entity::EdgeOverlap(long& xdist, long& ydist)
 //	return false;
 //}
 
-bool Entity::ObstacleOverlap(long &xdist, long &ydist)
-{
-	Short	sUnitSX, sUnitEX, sUnitSY, sUnitEY;
-	Short	sUnitWidth, sUnitHeight;
-	Point	SPos = GetPos();
+bool Entity::ObstacleOverlap(long& xdist, long& ydist) {
+	Short sUnitSX, sUnitEX, sUnitSY, sUnitEY;
+	Short sUnitWidth, sUnitHeight;
+	Point SPos = GetPos();
 
 	sUnitWidth = m_submap->GetBlockCellWidth();
 	sUnitHeight = m_submap->GetBlockCellHeight();
@@ -455,80 +461,69 @@ bool Entity::ObstacleOverlap(long &xdist, long &ydist)
 	sUnitSY = Short(SPos.y / sUnitHeight);
 	sUnitEY = Short((SPos.y + ydist) / sUnitHeight);
 
-	if (sUnitSX == sUnitEX && sUnitSY == sUnitEY)
-	{
-		if (m_submap->IsBlock(sUnitSX, sUnitSY))
-		{
+	if (sUnitSX == sUnitEX && sUnitSY == sUnitEY) {
+		if (m_submap->IsBlock(sUnitSX, sUnitSY)) {
 			xdist = 0, ydist = 0;
 			return true;
 		}
 	}
 
-	bool	bIs45Dir = false;
-	if (xdist == ydist)
-	{
-		Short	sModelX = Short(SPos.x % sUnitWidth);
-		Short	sModelY = Short(SPos.y % sUnitHeight);
+	bool bIs45Dir = false;
+	if (xdist == ydist) {
+		Short sModelX = Short(SPos.x % sUnitWidth);
+		Short sModelY = Short(SPos.y % sUnitHeight);
 		if (sModelX == sModelY)
 			bIs45Dir = true;
 	}
-	else if (-1 * xdist == ydist)
-	{
-		Short	sModelX = Short(SPos.x % sUnitWidth);
-		Short	sModelY = Short(SPos.y % sUnitHeight);
+	else if (-1 * xdist == ydist) {
+		Short sModelX = Short(SPos.x % sUnitWidth);
+		Short sModelY = Short(SPos.y % sUnitHeight);
 		if (sUnitWidth - sModelX == sModelY || sModelX == sUnitHeight - sModelY)
 			bIs45Dir = true;
 	}
 
-	if (bIs45Dir)
-	{
-		Char	chXDir = 1;
-		Char	chYDir = 1;
+	if (bIs45Dir) {
+		Char chXDir = 1;
+		Char chYDir = 1;
 		if (sUnitSX > sUnitEX)
 			chXDir = -1;
 		if (sUnitSY > sUnitEY)
 			chYDir = -1;
 
-		Short	sLoop = (sUnitEX - sUnitSX) * chXDir;
+		Short sLoop = (sUnitEX - sUnitSX) * chXDir;
 		for (Short i = 0; i <= sLoop; i++)
-			if (m_submap->IsBlock(sUnitSX + i * chXDir, sUnitSY + i * chYDir))
-			{
+			if (m_submap->IsBlock(sUnitSX + i * chXDir, sUnitSY + i * chYDir)) {
 				xdist = 0, ydist = 0;
 				return true;
 			}
 	}
-	else
-	{
-		if (sUnitSX > sUnitEX)
-		{
-			Short	sTemp = sUnitSX;
+	else {
+		if (sUnitSX > sUnitEX) {
+			Short sTemp = sUnitSX;
 			sUnitSX = sUnitEX;
 			sUnitEX = sTemp;
 		}
-		if (sUnitSY > sUnitEY)
-		{
-			Short	sTemp = sUnitSY;
+		if (sUnitSY > sUnitEY) {
+			Short sTemp = sUnitSY;
 			sUnitSY = sUnitEY;
 			sUnitEY = sTemp;
 		}
 
-		float v0[2]; v0[0] = (float)SPos.x, v0[1] = (float)SPos.y;
-		float v1[2]; v1[0] = (float)(SPos.x + xdist), v1[1] = (float)(SPos.y + ydist);
+		float v0[2];
+		v0[0] = (float)SPos.x, v0[1] = (float)SPos.y;
+		float v1[2];
+		v1[0] = (float)(SPos.x + xdist), v1[1] = (float)(SPos.y + ydist);
 		float p1[2], p2[2], p3[2], p4[2];
-		for (Short x = sUnitSX; x <= sUnitEX; x++)
-		{
-			for (Short y = sUnitSY; y <= sUnitEY; y++)
-			{
-				if (m_submap->IsBlock(x, y))
-				{
+		for (Short x = sUnitSX; x <= sUnitEX; x++) {
+			for (Short y = sUnitSY; y <= sUnitEY; y++) {
+				if (m_submap->IsBlock(x, y)) {
 					p1[0] = (float)(x * sUnitWidth), p1[1] = (float)(y * sUnitHeight);
 					p2[0] = (float)(p1[0] + sUnitWidth - 1), p2[1] = p1[1];
 					p3[0] = p2[0], p3[1] = (float)(p2[1] + sUnitHeight - 1);
 					p4[0] = p1[0], p4[1] = p3[1];
 
-					if(LineIntersection(v0, v1, p1, p2, FALSE) || LineIntersection(v0, v1, p2, p3, FALSE)
-						|| LineIntersection(v0, v1, p3, p4, FALSE) || LineIntersection(v0, v1, p4, p1, FALSE))
-					{
+					if (LineIntersection(v0, v1, p1, p2, FALSE) || LineIntersection(v0, v1, p2, p3, FALSE)
+						|| LineIntersection(v0, v1, p3, p4, FALSE) || LineIntersection(v0, v1, p4, p1, FALSE)) {
 						xdist = 0, ydist = 0;
 						return true;
 					}
@@ -540,9 +535,8 @@ bool Entity::ObstacleOverlap(long &xdist, long &ydist)
 	return false;
 }
 
-bool Entity::IsLiveing(void)
-{
-	CFightAble	*pCObj = IsFightAble();
+bool Entity::IsLiveing(void) {
+	CFightAble* pCObj = IsFightAble();
 	if (!pCObj)
 		return true;
 	else if (pCObj->m_CChaAttr.GetAttr(ATTR_HP) > 0)
@@ -551,12 +545,11 @@ bool Entity::IsLiveing(void)
 	return false;
 }
 
-CStateCellNode* Entity::EnterStateCell(CStateCell *pStateCell, CChaListNode *pEntiNode, bool bIsIn)
-{
-	CStateCellNode	*pCMgrNode = g_pGameApp->m_StateCellNodePool.Get();
+CStateCellNode* Entity::EnterStateCell(CStateCell* pStateCell, CChaListNode* pEntiNode, bool bIsIn) {
+	CStateCellNode* pCMgrNode = g_pGameApp->m_StateCellNodePool.Get();
 	pCMgrNode->m_pCStateCell = pStateCell;
 	pCMgrNode->m_pCChaNode = pEntiNode;
-	if (bIsIn) // 
+	if (bIsIn) //
 	{
 		pCMgrNode->m_pCLast = 0;
 		if (pCMgrNode->m_pCNext = m_pCStateCellHead)
@@ -565,8 +558,7 @@ CStateCellNode* Entity::EnterStateCell(CStateCell *pStateCell, CChaListNode *pEn
 			m_pCStateCellTail = pCMgrNode;
 		m_pCStateCellHead = pCMgrNode;
 	}
-	else
-	{
+	else {
 		pCMgrNode->m_pCNext = 0;
 		if (pCMgrNode->m_pCLast = m_pCStateCellTail)
 			m_pCStateCellTail->m_pCNext = pCMgrNode;
@@ -578,8 +570,7 @@ CStateCellNode* Entity::EnterStateCell(CStateCell *pStateCell, CChaListNode *pEn
 	return pCMgrNode;
 }
 
-void Entity::OutMgrUnit(CStateCellNode *pCMgrNode)
-{
+void Entity::OutMgrUnit(CStateCellNode* pCMgrNode) {
 	if (pCMgrNode->m_pCLast)
 		pCMgrNode->m_pCLast->m_pCNext = pCMgrNode->m_pCNext;
 	if (pCMgrNode->m_pCNext)
@@ -595,8 +586,7 @@ void Entity::OutMgrUnit(CStateCellNode *pCMgrNode)
 	g_pGameApp->m_StateCellNodePool.Release(pCMgrNode);
 }
 
-void Entity::SetCenterMgrNode(CStateCellNode *pCMgrNode)
-{
+void Entity::SetCenterMgrNode(CStateCellNode* pCMgrNode) {
 	if (pCMgrNode == m_pCStateCellHead)
 		return;
 
@@ -617,19 +607,17 @@ void Entity::SetCenterMgrNode(CStateCellNode *pCMgrNode)
 	m_pCStateCellHead = pCMgrNode;
 }
 
-SSkillStateUnit* Entity::GetAreaState(dbc::uChar uchStateID)
-{
+SSkillStateUnit* Entity::GetAreaState(dbc::uChar uchStateID) {
 	if (!m_pCStateCellHead || !m_pCStateCellHead->m_pCStateCell)
 		return 0;
 	return m_pCStateCellHead->m_pCStateCell->m_CSkillState.GetSStateByID(uchStateID);
 }
 
-void Entity::RefreshArea(void)
-{
-	uShort	usAreaAttr;
-	uChar	uchIsland;
-	Short	sUnitWidth, sUnitHeight;
-	Short	sUnitX, sUnitY;
+void Entity::RefreshArea(void) {
+	uShort usAreaAttr;
+	uChar uchIsland;
+	Short sUnitWidth, sUnitHeight;
+	Short sUnitX, sUnitY;
 	m_submap->GetTerrainCellSize(&sUnitWidth, &sUnitHeight);
 	sUnitX = Short(m_shape.centre.x / sUnitWidth);
 	sUnitY = Short(m_shape.centre.y / sUnitHeight);
@@ -645,19 +633,18 @@ void Entity::RefreshArea(void)
 	m_ucIslandID[1] = uchIsland;
 }
 
-void Entity::RefreshArea(Point *pSrcPos)
-{
-	Short	sUnitWidth, sUnitHeight;
+void Entity::RefreshArea(Point* pSrcPos) {
+	Short sUnitWidth, sUnitHeight;
 	m_submap->GetTerrainCellSize(&sUnitWidth, &sUnitHeight);
-	Short	sUnitX, sUnitY;
+	Short sUnitX, sUnitY;
 	sUnitX = Short(m_shape.centre.x / sUnitWidth);
 	sUnitY = Short(m_shape.centre.y / sUnitHeight);
 
 	if ((pSrcPos->x / sUnitWidth == sUnitX) && (pSrcPos->y / sUnitHeight == sUnitY))
 		return;
 
-	uShort	usAreaAttr;
-	uChar	uchIsland;
+	uShort usAreaAttr;
+	uChar uchIsland;
 	m_submap->GetTerrainCellAttr(sUnitX, sUnitY, usAreaAttr);
 	m_submap->GetTerrainCellIsland(sUnitX, sUnitY, uchIsland);
 
@@ -670,33 +657,30 @@ void Entity::RefreshArea(Point *pSrcPos)
 	m_ucIslandID[1] = uchIsland;
 }
 
-dbc::Short Entity::GetEyeshotWidth(void)
-{
+dbc::Short Entity::GetEyeshotWidth(void) {
 	if (!GetSubMap()) return 0;
 	return GetSubMap()->GetEyeshotWidth();
 }
 
-bool Entity::IsInEyeshot(Entity *pCTarEnti)
-{
+bool Entity::IsInEyeshot(Entity* pCTarEnti) {
 	if (!pCTarEnti)
 		return false;
 	if (!GetSubMap())
 		return false;
 	if (GetSubMap() != pCTarEnti->GetSubMap())
 		return false;
-	Point	SEyeshotC = GetPos(), STarEyeshotC = pCTarEnti->GetPos();
+	Point SEyeshotC = GetPos(), STarEyeshotC = pCTarEnti->GetPos();
 	GetSubMap()->GetEyeshotCenter(SEyeshotC);
 	GetSubMap()->GetEyeshotCenter(STarEyeshotC);
-	dbc::Short	sEyeshotW = GetEyeshotWidth();
-	dbc::Short	sEyeshotH = GetEyeshotHeight();
+	dbc::Short sEyeshotW = GetEyeshotWidth();
+	dbc::Short sEyeshotH = GetEyeshotHeight();
 	if (abs(SEyeshotC.x - STarEyeshotC.x) <= sEyeshotW && abs(SEyeshotC.y - STarEyeshotC.y) <= sEyeshotH)
 		return true;
 
 	return false;
 }
 
-void Entity::WriteEventInfo(net::WPacket &pk)
-{
+void Entity::WriteEventInfo(net::WPacket& pk) {
 	pk.WriteInt64(GetID());
 	if (IsCharacter())
 		pk.WriteInt64(1);
@@ -705,9 +689,8 @@ void Entity::WriteEventInfo(net::WPacket &pk)
 	GetEvent().WriteInfo(pk);
 }
 
-void Entity::SynEventInfo(void)
-{
-	//  :    
+void Entity::SynEventInfo(void) {
+	//  :
 	auto WtPk = net::msg::serialize(net::msg::McSynEventInfoMessage{
 		static_cast<int64_t>(GetID()),
 		IsCharacter() ? 1LL : 2LL,
@@ -717,17 +700,14 @@ void Entity::SynEventInfo(void)
 	NotiChgToEyeshot(WtPk, false);
 }
 
-SubMap* Entity::GetSubMapFar(void)
-{
-	SubMap	*pCMap = GetSubMap();
-	if (!pCMap)
-	{
-		CCharacter	*pCMainCha;
-		CCharacter	*pCCha = this->IsCharacter();
-		if (pCCha)
-		{
+SubMap* Entity::GetSubMapFar(void) {
+	SubMap* pCMap = GetSubMap();
+	if (!pCMap) {
+		CCharacter* pCMainCha;
+		CCharacter* pCCha = this->IsCharacter();
+		if (pCCha) {
 			pCMainCha = pCCha->GetPlyMainCha();
-			CMapRes	*pCMapRes = g_pGameApp->FindMapByName(pCMainCha->GetBirthMap(), true);
+			CMapRes* pCMapRes = g_pGameApp->FindMapByName(pCMainCha->GetBirthMap(), true);
 			if (pCMapRes)
 				pCMap = pCMapRes->GetCopy();
 		}
@@ -736,124 +716,270 @@ SubMap* Entity::GetSubMapFar(void)
 	return pCMap;
 }
 
-void NotiPkToWorld(net::WPacket chginf)
-{
-    SENDTOWORLD(chginf);
+void NotiPkToWorld(net::WPacket chginf) {
+	SENDTOWORLD(chginf);
 }
 
 // ============================================================================
 // Ранее inline-методы из Entity.h, вынесены в .cpp 2026-04-22.
 // ============================================================================
 
-void          Entity::SetInitShape(const Square& shape) { m_shape = shape; }
-const Square& Entity::GetShape() const                  { return m_shape; }
+void Entity::SetInitShape(const Square& shape) {
+	m_shape = shape;
+}
 
-void          Entity::SetPos(const Point& pos) { m_shape.centre = pos; }
-void          Entity::SetPos(dbc::Long lPosX, dbc::Long lPosY) {
+const Square& Entity::GetShape() const {
+	return m_shape;
+}
+
+void Entity::SetPos(const Point& pos) {
+	m_shape.centre = pos;
+}
+
+void Entity::SetPos(dbc::Long lPosX, dbc::Long lPosY) {
 	m_shape.centre.x = lPosX;
 	m_shape.centre.y = lPosY;
 }
-const Point&  Entity::GetPos() const           { return m_shape.centre; }
 
-void          Entity::SetRadius(const long& lRadius) { m_shape.radius = lRadius; }
-const long&   Entity::GetRadius() const              { return m_shape.radius; }
+const Point& Entity::GetPos() const {
+	return m_shape.centre;
+}
 
-dbc::uLong    Entity::GetID() const            { return m_ID; }
-short         Entity::GetCat() const           { return m_cat; }
-void          Entity::SetID(dbc::uLong ulID)   { m_ID = ulID; }
-void          Entity::SetCat(short sCat)       { m_cat = sCat; }
+void Entity::SetRadius(const long& lRadius) {
+	m_shape.radius = lRadius;
+}
 
-void          Entity::SetHandle(dbc::Long lHandle) { m_lHandle = lHandle; }
-dbc::Long     Entity::GetHandle(void)              { return m_lHandle; }
+const long& Entity::GetRadius() const {
+	return m_shape.radius;
+}
 
-SubMap*       Entity::GetSubMap() const        { return m_submap; }
-void          Entity::SetSubMap(SubMap* pCMap) { m_submap = pCMap; }
+dbc::uLong Entity::GetID() const {
+	return m_ID;
+}
 
-short         Entity::GetAngle() const         { return m_sAngle; }
-void          Entity::SetAngle(short sAngle)   { m_sAngle = sAngle; }
+short Entity::GetCat() const {
+	return m_cat;
+}
 
-const Circle& Entity::GetTerritory()           { return m_STerritory; }
-void          Entity::SetTerritory(Circle& STerritory) { m_STerritory = STerritory; }
+void Entity::SetID(dbc::uLong ulID) {
+	m_ID = ulID;
+}
+
+void Entity::SetCat(short sCat) {
+	m_cat = sCat;
+}
+
+void Entity::SetHandle(dbc::Long lHandle) {
+	m_lHandle = lHandle;
+}
+
+dbc::Long Entity::GetHandle(void) {
+	return m_lHandle;
+}
+
+SubMap* Entity::GetSubMap() const {
+	return m_submap;
+}
+
+void Entity::SetSubMap(SubMap* pCMap) {
+	m_submap = pCMap;
+}
+
+short Entity::GetAngle() const {
+	return m_sAngle;
+}
+
+void Entity::SetAngle(short sAngle) {
+	m_sAngle = sAngle;
+}
+
+const Circle& Entity::GetTerritory() {
+	return m_STerritory;
+}
+
+void Entity::SetTerritory(Circle& STerritory) {
+	m_STerritory = STerritory;
+}
 
 void Entity::SetLogName(const char* szName) {
 	strncpy(m_szLogName, szName, defLOG_NAME_LEN - 1);
 	m_szLogName[defLOG_NAME_LEN - 1] = '\0';
 }
-const char* Entity::GetLogName() { return m_szLogName; }
 
-void               Entity::SetName(const std::string& name) { _name = name; }
-void               Entity::SetName(const char* name)        { _name = name ? name : ""; }
-const char*        Entity::GetName() const                  { return _name.c_str(); }
-const std::string& Entity::GetNameStr() const               { return _name; }
+const char* Entity::GetLogName() {
+	return m_szLogName;
+}
+
+void Entity::SetName(const std::string& name) {
+	_name = name;
+}
+
+void Entity::SetName(const char* name) {
+	_name = name ? name : "";
+}
+
+const char* Entity::GetName() const {
+	return _name.c_str();
+}
+
+const std::string& Entity::GetNameStr() const {
+	return _name;
+}
 
 void Entity::SetBirthCity(dbc::cChar* cszName) {
 	strncpy(m_szBirthCity, cszName, MAX_MAPNAME_LENGTH - 1);
 	m_szBirthCity[MAX_MAPNAME_LENGTH - 1] = '\0';
 }
-const char* Entity::GetBirthCity() { return m_szBirthCity; }
+
+const char* Entity::GetBirthCity() {
+	return m_szBirthCity;
+}
 
 void Entity::SetBirthMap(dbc::cChar* cszName) {
 	strncpy(m_szBirthMap, cszName, MAX_MAPNAME_LENGTH - 1);
 	m_szBirthMap[MAX_MAPNAME_LENGTH - 1] = '\0';
 }
-const char* Entity::GetBirthMap() { return m_szBirthMap; }
 
-void          Entity::SetWitherTime(dbc::Long lWitherTime) { m_SExistCtrl.lWitherTime = lWitherTime; }
-void          Entity::SetResumeTime(dbc::Long lResumeTime) { m_SExistCtrl.lResumeTime = lResumeTime; }
+const char* Entity::GetBirthMap() {
+	return m_szBirthMap;
+}
 
-void          Entity::SetEvent(CEvent& CEvt)   { m_CEvent = CEvt; }
-CEvent&       Entity::GetEvent(void)           { return m_CEvent; }
+void Entity::SetWitherTime(dbc::Long lWitherTime) {
+	m_SExistCtrl.lWitherTime = lWitherTime;
+}
 
-void          Entity::Run(dbc::uLong /*ulCurTick*/) {}
+void Entity::SetResumeTime(dbc::Long lResumeTime) {
+	m_SExistCtrl.lResumeTime = lResumeTime;
+}
 
-dbc::Short    Entity::GetExistState(void)              { return m_SExistCtrl.sState; }
-void          Entity::SetExistState(dbc::Short sState) { m_SExistCtrl.sState = sState; }
+void Entity::SetEvent(CEvent& CEvt) {
+	m_CEvent = CEvt;
+}
 
-dbc::Short    Entity::GetStopState(void)               { return m_SExistCtrl.sStopState; }
-void          Entity::SetStopState(dbc::Short sState)  { m_SExistCtrl.sStopState = sState; }
+CEvent& Entity::GetEvent(void) {
+	return m_CEvent;
+}
 
-bool          Entity::GetEyeshotAbility(void)          { return m_bActiveEyeshot; }
-void          Entity::SetEyeshotAbility(bool bEyeshot) { m_bActiveEyeshot = bEyeshot; }
+void Entity::Run(dbc::uLong /*ulCurTick*/) {
+}
 
-bool          Entity::IsValid(void)                    { return m_bValid; }
-void          Entity::SetValid(bool bValid)            { m_bValid = bValid; }
+dbc::Short Entity::GetExistState(void) {
+	return m_SExistCtrl.sState;
+}
 
-dbc::uShort   Entity::GetAreaAttr(void)                { return m_usAreaAttr[1]; }
-void          Entity::SetAreaAttr(dbc::uShort usAreaAttr) {
+void Entity::SetExistState(dbc::Short sState) {
+	m_SExistCtrl.sState = sState;
+}
+
+dbc::Short Entity::GetStopState(void) {
+	return m_SExistCtrl.sStopState;
+}
+
+void Entity::SetStopState(dbc::Short sState) {
+	m_SExistCtrl.sStopState = sState;
+}
+
+bool Entity::GetEyeshotAbility(void) {
+	return m_bActiveEyeshot;
+}
+
+void Entity::SetEyeshotAbility(bool bEyeshot) {
+	m_bActiveEyeshot = bEyeshot;
+}
+
+bool Entity::IsValid(void) {
+	return m_bValid;
+}
+
+void Entity::SetValid(bool bValid) {
+	m_bValid = bValid;
+}
+
+dbc::uShort Entity::GetAreaAttr(void) {
+	return m_usAreaAttr[1];
+}
+
+void Entity::SetAreaAttr(dbc::uShort usAreaAttr) {
 	m_usAreaAttr[0] = m_usAreaAttr[1];
 	m_usAreaAttr[1] = usAreaAttr;
 }
 
-dbc::uChar    Entity::GetIslandID(void)                { return m_ucIslandID[1]; }
-void          Entity::SetIslandID(dbc::uChar uchIsland) {
+dbc::uChar Entity::GetIslandID(void) {
+	return m_ucIslandID[1];
+}
+
+void Entity::SetIslandID(dbc::uChar uchIsland) {
 	m_ucIslandID[0] = m_ucIslandID[1];
 	m_ucIslandID[1] = uchIsland;
 }
 
-bool          Entity::IsInSafeArea(void) {
+bool Entity::IsInSafeArea(void) {
 	return (GetAreaAttr() & enumAREA_TYPE_NOT_FIGHT) != 0;
 }
 
-dbc::Short    Entity::GetEyeshotHeight(void) { return GetEyeshotWidth(); }
+dbc::Short Entity::GetEyeshotHeight(void) {
+	return GetEyeshotWidth();
+}
 
-void          Entity::GotoMapUnit() {}
+void Entity::GotoMapUnit() {
+}
 
-CFightAble*            Entity::IsFightAble()  { return nullptr; }
-CMoveAble*             Entity::IsMoveAble()   { return nullptr; }
-CItem*                 Entity::IsItem()       { return nullptr; }
-Monster*               Entity::IsMonster()    { return nullptr; }
-CCharacter*            Entity::IsCharacter()  { return nullptr; }
-CAttachable*           Entity::IsAttachable() { return nullptr; }
-mission::CNpc*         Entity::IsNpc()        { return nullptr; }
-mission::CEventEntity* Entity::IsEvent()      { return nullptr; }
+CFightAble* Entity::IsFightAble() {
+	return nullptr;
+}
 
-void          Entity::BeginSee(Entity* obj)   { OnBeginSee(obj); }
-void          Entity::EndSee(Entity* obj)     { OnEndSee(obj); }
+CMoveAble* Entity::IsMoveAble() {
+	return nullptr;
+}
 
-void          Entity::ReflectINFof(Entity* /*srcent*/, net::WPacket /*chginf*/) {}
+CItem* Entity::IsItem() {
+	return nullptr;
+}
 
-const Square& Entity::GetLapChkShape() { return m_shape; }
+Monster* Entity::IsMonster() {
+	return nullptr;
+}
 
-void          Entity::OnBeginSee(Entity*) {}
-void          Entity::OnEndSee(Entity*)   {}
-void          Entity::AreaChange(void)    {}
+CCharacter* Entity::IsCharacter() {
+	return nullptr;
+}
+
+CAttachable* Entity::IsAttachable() {
+	return nullptr;
+}
+
+mission::CNpc* Entity::IsNpc() {
+	return nullptr;
+}
+
+mission::CEventEntity* Entity::IsEvent() {
+	return nullptr;
+}
+
+void Entity::BeginSee(Entity* obj) {
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(obj);
+	OnBeginSee(obj);
+}
+
+void Entity::EndSee(Entity* obj) {
+	DBG_ASSERT_ENTITY(this);
+	DBG_ASSERT_ENTITY(obj);
+	OnEndSee(obj);
+}
+
+void Entity::ReflectINFof(Entity* /*srcent*/, net::WPacket /*chginf*/) {
+}
+
+const Square& Entity::GetLapChkShape() {
+	return m_shape;
+}
+
+void Entity::OnBeginSee(Entity*) {
+}
+
+void Entity::OnEndSee(Entity*) {
+}
+
+void Entity::AreaChange(void) {
+}
