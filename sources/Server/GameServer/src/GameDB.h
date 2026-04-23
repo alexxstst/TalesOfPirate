@@ -805,7 +805,11 @@ public:
 	bool ShowExpRank(CCharacter& pCha, std::int32_t count);
 	bool Init(void);
 	bool ReadAllData(CPlayer& player, std::uint32_t atorID);
-	bool SaveAllData(CPlayer& pPlayer, char chSaveType); //
+	// bForceWithPos=true — сохранять map/main_map/map_x/map_y даже если
+	// pCCtrlCha->GetSubMap() уже nullptr. Нужно для offline-save в
+	// CGameApp::ReleaseGamePlayer, где мы снимаем персонажа с карты
+	// (GoOut) ДО сохранения, чтобы избежать dangling в eyeshot.
+	bool SaveAllData(CPlayer& pPlayer, char chSaveType, bool bForceWithPos = false); //
 	bool SavePos(CPlayer& pPlayer); //
 	bool SaveMoney(CPlayer& pPlayer);
 	bool SaveKBagDBID(CPlayer& pPlayer);
@@ -995,7 +999,8 @@ public:
 	bool CommitTran();
 
 	bool ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID);
-	bool SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType);
+	// bForceWithPos — см. PlayerStorage::SaveAllData.
+	bool SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType, bool bForceWithPos = false);
 
 	bool SavePlayerKitbag(CPlayer& pPlayer, std::int8_t chSaveType = enumSAVE_TYPE_TRADE);
 	bool SaveChaAssets(CCharacter& pCCha);

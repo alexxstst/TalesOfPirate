@@ -255,7 +255,7 @@ bool PlayerStorage::ReadAllData(CPlayer& player, std::uint32_t atorID) {
 //-----------------
 //
 //-----------------
-bool PlayerStorage::SaveAllData(CPlayer& pPlayer, char chSaveType) {
+bool PlayerStorage::SaveAllData(CPlayer& pPlayer, char chSaveType, bool bForceWithPos) {
 	if (!pPlayer.IsValid()) {
 		return false;
 	}
@@ -348,8 +348,13 @@ bool PlayerStorage::SaveAllData(CPlayer& pPlayer, char chSaveType) {
 		return false;
 	}
 
-	// Позиция — сохраняем только если карта позволяет
-	bool bWithPos = pCCtrlCha->GetSubMap() && pCCtrlCha->GetSubMap()->CanSavePos();
+	// Позиция — сохраняем только если карта позволяет.
+	// Вызывающая сторона может запросить сохранение через bForceWithPos —
+	// нужно для offline-save после GoOut, когда GetSubMap() уже nullptr,
+	// но мы хотим сохранить актуальные координаты (иначе при следующем входе
+	// персонаж появится в старом месте).
+	bool bWithPos = bForceWithPos
+		|| (pCCtrlCha->GetSubMap() && pCCtrlCha->GetSubMap()->CanSavePos());
 
 	// Читаем текущую строку из БД, чтобы сохранить неизменяемые поля
 	auto existing = _characters.FindOne("atorID = ?", static_cast<int>(atorID));
@@ -1389,7 +1394,7 @@ bool CGameDB::ReadPlayer(CPlayer& pPlayer, std::uint32_t atorID) {
 	return true;
 }
 
-bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
+bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType, bool bForceWithPos) {
 	if (!pPlayer.GetMainCha())
 		return false;
 
@@ -1411,7 +1416,7 @@ bool CGameDB::SavePlayer(CPlayer& pPlayer, std::int8_t chSaveType) {
 	try {
 		DWORD dwStartTick = GetTickCount();
 
-		bSaveMainCha = _tab_cha.SaveAllData(pPlayer, chSaveType); //
+		bSaveMainCha = _tab_cha.SaveAllData(pPlayer, chSaveType, bForceWithPos); //
 		DWORD dwSaveMainTick = GetTickCount();
 		bSaveKitBag = _tab_res.SaveKitbagData(*pPlayer.GetMainCha());
 		//

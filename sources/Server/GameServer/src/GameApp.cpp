@@ -921,7 +921,13 @@ void CGameApp::ReleaseGamePlayer(CPlayer* pPlayer) {
 
 		ToLogService("map", "atorID = {}, begin goout", pPlayer->GetDBChaId());
 
-		if (game_db.SavePlayer(*pPlayer, enumSAVE_TYPE_OFFLINE) == false) {
+		// Персонаж УЖЕ снят с карты (GoOut выше), поэтому внутри SaveAllData
+		// pCCtrlCha->GetSubMap() == nullptr и по-умолчанию позиция не пишется.
+		// Форсируем сохранение позиции если карта её позволяла до снятия
+		// (bSavePos, вычислено до GoOut) и персонаж жив. Иначе — позицию
+		// перепишет отдельный SavePlayerPos ниже (birth-point после ResetBirthInfo).
+		const bool bForceWithPos = !bIsDie && bSavePos;
+		if (game_db.SavePlayer(*pPlayer, enumSAVE_TYPE_OFFLINE, bForceWithPos) == false) {
 			//LG("enter_map", "SavePlayer[%s]", pPlayer->GetMainCha()->GetName());
 			ToLogService("map", "SavePlayer[{}] failed", pPlayer->GetMainCha()->GetName());
 		}
