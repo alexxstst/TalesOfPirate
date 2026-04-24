@@ -57,9 +57,6 @@
 
 #include <shellapi.h>
 
-
-#pragma comment( lib, "shell32.lib" )
-
 #include "xmlwriter.h"
 
 using namespace std;

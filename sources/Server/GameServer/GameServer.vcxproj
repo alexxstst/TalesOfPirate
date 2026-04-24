@@ -1,0 +1,281 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{525C57F1-D1F3-4AD2-B31D-F63CEEBA8BA6}</ProjectGuid>
+    <RootNamespace>GameServer</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v145</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <EnableASAN>false</EnableASAN>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(VCTargetsPath)Microsoft.CPP.UpgradeFromVC71.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>16.0.30427.251</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(ProjectDir)..\..\..\server\GameServer\</OutDir>
+    <IntDir>$(ProjectDir)build\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\server\GameServer</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(ProjectDir)..\..\..\server\GameServer\</OutDir>
+    <IntDir>$(ProjectDir)build\$(Configuration)\</IntDir>
+    <LinkIncremental>true</LinkIncremental>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <LocalDebuggerWorkingDirectory>$(ProjectDir)..\..\..\server\GameServer</LocalDebuggerWorkingDirectory>
+    <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\cryptopp\;$(ProjectDir)..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <SDLCheck>false</SDLCheck>
+      <DiagnosticsFormat>Caret</DiagnosticsFormat>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <LanguageStandard_C>stdclatest</LanguageStandard_C>
+      <RuntimeTypeInfo>true</RuntimeTypeInfo>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Ws2_32.lib;winmm.lib;Utils.lib;Common.lib;Psapi.lib;lua51.lib;CorsairsNet.lib;cryptlib.lib;Iphlpapi.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration);$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+      <SubSystem>Console</SubSystem>
+      <TargetMachine>MachineX64</TargetMachine>
+      <ShowProgress>NotSet</ShowProgress>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <ExceptionHandling>Async</ExceptionHandling>
+      <Optimization>MaxSpeed</Optimization>
+      <AdditionalIncludeDirectories>$(ProjectDir)src;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\Common\include;$(ProjectDir)..\..\Libraries\Util\include;$(ProjectDir)..\..\Libraries\LuaJIT\src;$(ProjectDir)..\..\Libraries\LuaBridge\include;$(ProjectDir)..\..\Libraries\icu\include;$(ProjectDir)..\..\Libraries\cryptopp\;$(ProjectDir)..\..\Libraries\CorsairsNet\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN64;NDEBUG;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <StructMemberAlignment>Default</StructMemberAlignment>
+      <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <ForcedIncludeFiles>stdafx.h</ForcedIncludeFiles>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <ProgramDataBaseFileName>$(OutDir)$(TargetName).pdb</ProgramDataBaseFileName>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>Ws2_32.lib;winmm.lib;Utils.lib;Common.lib;Psapi.lib;lua51.lib;CorsairsNet.lib;cryptlib.lib;Iphlpapi.lib;dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+      <AdditionalLibraryDirectories>$(SolutionDir)Libs\$(Configuration);$(ProjectDir)..\..\Libraries\LuaJIT\src\x64;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <IgnoreAllDefaultLibraries>false</IgnoreAllDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>libcmtd.lib;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <SubSystem>Console</SubSystem>
+      <OptimizeReferences />
+      <EnableCOMDATFolding />
+      <TargetMachine>MachineX64</TargetMachine>
+      <ProgramDatabaseFile>$(OutDir)$(TargetName).pdb</ProgramDatabaseFile>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClInclude Include="src\Action.h" />
+    <ClInclude Include="src\Attachable.h" />
+    <ClInclude Include="src\AttachManage.h" />
+    <ClInclude Include="src\Auction.h" />
+    <ClInclude Include="src\AuctionItem.h" />
+    <ClInclude Include="src\Birthplace.h" />
+    <ClInclude Include="src\Character.h" />
+    <ClInclude Include="src\CharBoat.h" />
+    <ClInclude Include="src\CharForge.h" />
+    <ClInclude Include="src\CharScript.h" />
+    <ClInclude Include="src\CharStall.h" />
+    <ClInclude Include="src\CharTrade.h" />
+    <ClInclude Include="src\Config.h" />
+    <ClInclude Include="src\Entity.h" />
+    <ClInclude Include="src\EntityScript.h" />
+    <ClInclude Include="src\EntitySpawn.h" />
+    <ClInclude Include="src\Event.h" />
+    <ClInclude Include="src\EventEntity.h" />
+    <ClInclude Include="src\EventHandler.h" />
+    <ClInclude Include="src\Expand.h" />
+    <ClInclude Include="src\EyeshotCell.h" />
+    <ClInclude Include="src\FightAble.h" />
+    <ClInclude Include="src\FindPath.h" />
+    <ClInclude Include="src\GameApp.h" />
+    <ClInclude Include="src\GameAppNet.h" />
+    <ClInclude Include="src\GamePool.h" />
+    <ClInclude Include="src\GameDB.h" />
+    <ClInclude Include="src\GameServerApp.h" />
+    <ClInclude Include="src\gtplayer.h" />
+    <ClInclude Include="src\Guild.h" />
+    <ClInclude Include="src\HarmRec.h" />
+    <ClInclude Include="src\Identity.h" />
+    <ClInclude Include="src\Item.h" />
+    <ClInclude Include="src\lua_gamectrl.h" />
+    <ClInclude Include="src\lua_gamectrl2.h" />
+    <ClInclude Include="src\MapEntry.h" />
+    <ClInclude Include="src\MapRes.h" />
+    <ClInclude Include="src\MapTrigger.h" />
+    <ClInclude Include="src\Mission.h" />
+    <ClInclude Include="src\MoveAble.h" />
+    <ClInclude Include="src\MsgQueue.h" />
+    <ClInclude Include="src\NPC.h" />
+    <ClInclude Include="src\NpcScript.h" />
+    <ClInclude Include="src\LuaAPI.h" />
+    <ClInclude Include="src\PicSet.h" />
+    <ClInclude Include="src\Picture.h" />
+    <ClInclude Include="src\Player.h" />
+    <ClInclude Include="src\Range.h" />
+    <ClInclude Include="src\RecordScript.h" />
+    <ClInclude Include="src\RoleData.h" />
+    <ClInclude Include="src\Script.h" />
+    <ClInclude Include="src\SkillState.h" />
+    <ClInclude Include="src\SkillTemp.h" />
+    <ClInclude Include="src\StateCell.h" />
+    <ClInclude Include="src\StateCellGrid.h" />
+    <ClInclude Include="src\stdafx.h" />
+    <ClInclude Include="src\SubMap.h" />
+    <ClInclude Include="src\SystemDialog.h" />
+    <ClInclude Include="src\Timer.h" />
+    <ClInclude Include="src\TradeLogDB.h" />
+    <ClInclude Include="src\Usage.h" />
+    <ClInclude Include="src\Weather.h" />
+    <ClInclude Include="src\WorldEudemon.h" />
+    <ClInclude Include="src\xString.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Action.cpp" />
+    <ClCompile Include="src\Attachable.cpp" />
+    <ClCompile Include="src\AttachManage.cpp" />
+    <ClCompile Include="src\Auction.cpp" />
+    <ClCompile Include="src\AuctionItem.cpp" />
+    <ClCompile Include="src\Birthplace.cpp" />
+    <ClCompile Include="src\Character.cpp" />
+    <ClCompile Include="src\CharacterAI.cpp" />
+    <ClCompile Include="src\CharacterAIState.cpp" />
+    <ClCompile Include="src\CharacterCmd.cpp" />
+    <ClCompile Include="src\CharacterPacket.cpp" />
+    <ClCompile Include="src\CharacterPrl.cpp" />
+    <ClCompile Include="src\CharacterRun.cpp" />
+    <ClCompile Include="src\CharacterSuperCmd.cpp" />
+    <ClCompile Include="src\CharBoat.cpp" />
+    <ClCompile Include="src\CharForge.cpp" />
+    <ClCompile Include="src\CharScript.cpp" />
+    <ClCompile Include="src\CharStall.cpp" />
+    <ClCompile Include="src\CharTrade.cpp" />
+    <ClCompile Include="src\Config.cpp" />
+    <ClCompile Include="src\Entity.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\Expand.cpp" />
+    <ClCompile Include="src\EntityScript.cpp" />
+    <ClCompile Include="src\EntitySpawn.cpp" />
+    <ClCompile Include="src\EventCalculate.cpp" />
+    <ClCompile Include="src\EventEntity.cpp" />
+    <ClCompile Include="src\EventHandler.cpp" />
+    <ClCompile Include="src\EyeshotCell.cpp" />
+    <ClCompile Include="src\FightAble.cpp" />
+    <ClCompile Include="src\FindPath.cpp" />
+    <ClCompile Include="src\GameApp.cpp" />
+    <ClCompile Include="src\GameAppNet.cpp" />
+    <ClCompile Include="src\GamePool.cpp" />
+    <ClCompile Include="src\GameDB.cpp" />
+    <ClCompile Include="src\GameServerApp.cpp" />
+    <ClCompile Include="src\GameSMain.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\Guild.cpp" />
+    <ClCompile Include="src\HarmRec.cpp" />
+    <ClCompile Include="src\Item.cpp" />
+    <ClCompile Include="src\lua_gamectrl.cpp" />
+    <ClCompile Include="src\MapEntry.cpp" />
+    <ClCompile Include="src\MapRes.cpp" />
+    <ClCompile Include="src\MapTrigger.cpp" />
+    <ClCompile Include="src\Mission.cpp" />
+    <ClCompile Include="src\MoveAble.cpp" />
+    <ClCompile Include="src\NPC.cpp" />
+    <ClCompile Include="src\NpcScript.cpp" />
+    <ClCompile Include="src\LuaAPI.cpp" />
+    <ClCompile Include="src\PicSet.cpp" />
+    <ClCompile Include="src\Picture.cpp" />
+    <ClCompile Include="src\Player.cpp" />
+    <ClCompile Include="src\RecordScript.cpp" />
+    <ClCompile Include="src\Script.cpp" />
+    <ClCompile Include="src\gtplayer.cpp" />
+    <ClCompile Include="src\StateCellGrid.cpp" />
+    <ClCompile Include="src\Range.cpp" />
+    <ClCompile Include="src\SkillState.cpp" />
+    <ClCompile Include="src\StateCell.cpp" />
+    <ClCompile Include="src\stdafx.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <PrecompiledHeader>Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="src\SubMap.cpp">
+      <ObjectFileName>$(IntDir)%(Filename)1.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="src\SystemDialog.cpp" />
+    <ClCompile Include="src\TradeLogDB.cpp" />
+    <ClCompile Include="src\Weather.cpp" />
+    <ClCompile Include="src\WorldEudemon.cpp" />
+    <ClCompile Include="src\xString.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GameServer.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

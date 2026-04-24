@@ -5,16 +5,9 @@
 #error "Proj configuration must define USE_DX_VERSION and LW_USE_DX9. DX8 and other DX versions are no longer supported."
 #endif
 
-#pragma comment(lib, "dxguid.lib")
-#pragma comment(lib, "amstrmid.lib")
-#pragma comment(lib, "winmm.lib")
-
 #include <d3d9.h>
 #include <d3dx9.h>
 #include <d3d9types.h>
-
-#pragma comment(lib, "d3d9.lib")
-#pragma comment(lib, "d3dx9.lib")
 
 typedef IDirect3D9                 IDirect3DX;
 typedef IDirect3DDevice9           IDirect3DDeviceX;

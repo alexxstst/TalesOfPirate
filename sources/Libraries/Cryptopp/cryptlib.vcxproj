@@ -4,17 +4,9 @@
   <!-- the following URL. The documentation leaves a lot to be desired. -->
   <!-- https://msdn.microsoft.com/en-us/library/2208a1f2.aspx -->
   <ItemGroup Label="ProjectConfigurations">
-    <ProjectConfiguration Include="Debug|Win32">
-      <Configuration>Debug</Configuration>
-      <Platform>Win32</Platform>
-    </ProjectConfiguration>
     <ProjectConfiguration Include="Debug|x64">
       <Configuration>Debug</Configuration>
       <Platform>x64</Platform>
-    </ProjectConfiguration>
-    <ProjectConfiguration Include="Release|Win32">
-      <Configuration>Release</Configuration>
-      <Platform>Win32</Platform>
     </ProjectConfiguration>
     <ProjectConfiguration Include="Release|x64">
       <Configuration>Release</Configuration>
@@ -60,8 +52,8 @@
   <!-- Intermediate and Output directories -->
   <!-- Cryptlib and Cryptest need extra care due to Non-DLL/DLL configs -->
   <PropertyGroup Condition="'$(Configuration)'=='Debug' Or '$(Configuration)'=='Release'" Label="Non-DLL Directories">
-    <OutDir>$(Platform)\Output\$(Configuration)\</OutDir>
-    <IntDir>$(Platform)\$(ProjectName)\$(Configuration)\</IntDir>
+    <OutDir>$(SolutionDir)Libs\$(Configuration)\</OutDir>
+    <IntDir>build\$(Configuration)\</IntDir>
   </PropertyGroup>
   <!-- All Configurations -->
   <ItemDefinitionGroup Label="All Configurations">
@@ -111,17 +103,6 @@
       <Culture>0x0409</Culture>
     </ResourceCompile>
   </ItemDefinitionGroup>
-  <!-- DLL-Import Overrides for Preprocessor -->
-  <!-- X86 Configurations -->
-  <ItemDefinitionGroup Condition="'$(Platform)'=='Win32'" Label="X86 Configuration">
-    <ClCompile>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
-    </ClCompile>
-    <Lib>
-      <TargetMachine>MachineX86</TargetMachine>
-      <ImageHasSafeExceptionHandlers>true</ImageHasSafeExceptionHandlers>
-    </Lib>
-  </ItemDefinitionGroup>
   <!-- X64 Configurations -->
   <ItemDefinitionGroup Condition="'$(Platform)'=='x64'" Label="X64 Configuration">
     <ClCompile>
@@ -130,16 +111,6 @@
     <Lib>
       <TargetMachine>MachineX64</TargetMachine>
     </Lib>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <ClCompile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-    </ClCompile>
-  </ItemDefinitionGroup>
-  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <ClCompile>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
-    </ClCompile>
   </ItemDefinitionGroup>
   <!-- Original File with special treatment -->
   <!-- Source Files -->
@@ -344,22 +315,12 @@
     <None Include="Readme.txt" />
   </ItemGroup>
   <ItemGroup>
-    <CustomBuild Condition="'$(Platform)'=='Win32'" Include="rdrand.asm">
-      <Message>Building and assembling rdrand.asm</Message>
-      <Command>ml.exe /c /nologo /D_M_X86 /W3 /Cx /Zi /safeseh /Fo"$(IntDir)rdrand-x86.obj" "%(FullPath)"</Command>
-      <Outputs>$(IntDir)\rdrand-x86.obj;%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Condition="'$(Platform)'=='x64'" Include="rdrand.asm">
+    <CustomBuild Include="rdrand.asm">
       <Message>Building and assembling rdrand.asm</Message>
       <Command>ml64.exe /c /nologo /D_M_X64 /W3 /Cx /Zi /Fo"$(IntDir)rdrand-x64.obj" "%(FullPath)"</Command>
       <Outputs>$(IntDir)\rdrand-x64.obj;%(Outputs)</Outputs>
     </CustomBuild>
-    <CustomBuild Condition="'$(Platform)'=='Win32'" Include="rdseed.asm">
-      <Message>Building and assembling rdseed.asm</Message>
-      <Command>ml.exe /c /nologo /D_M_X86 /W3 /Cx /Zi /safeseh /Fo"$(IntDir)rdseed-x86.obj" "%(FullPath)"</Command>
-      <Outputs>$(IntDir)\rdseed-x86.obj;%(Outputs)</Outputs>
-    </CustomBuild>
-    <CustomBuild Condition="'$(Platform)'=='x64'" Include="rdseed.asm">
+    <CustomBuild Include="rdseed.asm">
       <Message>Building and assembling rdseed.asm</Message>
       <Command>ml64.exe /c /nologo /D_M_X64 /W3 /Cx /Zi /Fo"$(IntDir)rdseed-x64.obj" "%(FullPath)"</Command>
       <Outputs>$(IntDir)\rdseed-x64.obj;%(Outputs)</Outputs>

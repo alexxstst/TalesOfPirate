@@ -1,0 +1,659 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Source Files\Map">
+      <UniqueIdentifier>{fc6f65fe-03de-46d2-ae28-e09f5fc59671}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render">
+      <UniqueIdentifier>{f6a1451f-f1cf-453c-be9c-3eeb6a296a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Render\GameApp">
+      <UniqueIdentifier>{0e5aebab-4489-4f12-aec8-a2ffb044bd98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh">
+      <UniqueIdentifier>{7ba2f292-54cc-4638-97f7-47ccccc118d2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Mesh\include">
+      <UniqueIdentifier>{3e9ca868-c336-439d-97bf-1115a30e9ebf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Math">
+      <UniqueIdentifier>{bb3344f5-afc1-4048-b09a-d87da89d7635}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\VIM">
+      <UniqueIdentifier>{aaf642ae-c683-42d0-9a14-46085f806675}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Font">
+      <UniqueIdentifier>{f93b149e-d6db-46ec-b712-4e29d70c1cf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="effect">
+      <UniqueIdentifier>{57338a9a-ad20-4ea3-a087-e97cd3b51c2d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="include\GlobalInc.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stdafx.h">
+      <Filter>Source Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPMap.h">
+      <Filter>Source Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPTerrainSet.h">
+      <Filter>Source Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPTile.h">
+      <Filter>Source Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ZRBlock.h">
+      <Filter>Source Files\Map</Filter>
+    </ClInclude>
+    <ClInclude Include="include\d3dutil.h">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\dxutil.h">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPRender.h">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPTextureSet.h">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\mygraph.h">
+      <Filter>Source Files\Render</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPCamera.h">
+      <Filter>Source Files\Render\GameApp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ConsoleProcessor.h">
+      <Filter>Source Files\Render\GameApp</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPGameApp.h">
+      <Filter>Source Files\Render\GameApp</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Blk.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwAnimCtrl.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwAnimCtrlObj.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwAnimKeySetPRS.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwBitmap.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwCamera.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwConsole.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwCoordinateSys.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwD3DSettings.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwDDS.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwDDSFile.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwDeviceObject.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwDirectoryBrowser.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwEfxTrack.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwExpObj.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwFile.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwFileEncode.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwFileStream.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwFileutil.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwgraphics.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwgraphicsutil.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwHeap.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwHelperGeometry.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwInterfaceExt.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwItem.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwLinkCtrl.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwMisc.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwModel.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwNodeObject.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSlotMap.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwPathInfo.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwPhysique.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwPoseCtrl.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwPreDefinition.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwPrimitive.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwPrimitiveHelper.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwRenderCtrlEmb.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwRenderImp.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwResourceMgr.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSceneMgr.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwShaderDeclMgr.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwShaderMgr.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwStreamObj.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSyncObj.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSysCharacter.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSysGraphics.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSystem.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwSystemInfo.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwThreadPool.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwTimer.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwTreeNode.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwViewFrustum.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\lwxRenderCtrlVS.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="src\TgaCore.h">
+      <Filter>Source Files\Mesh</Filter>
+    </ClInclude>
+    <ClInclude Include="include\EffectFile.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwClassDecl.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwD3D.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwDirectX.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwErrorCode.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwGuidObj.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwHeader.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwIFunc.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwInterface.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwITypes.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwITypes2.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwIUtil.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwMath.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwObjectMethod.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwShaderTypes.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\lwStdInc.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPCharacter.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPInterface.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPSceneItem.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPSceneObject.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ShaderLoad.h">
+      <Filter>Source Files\Mesh\include</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPMath.h">
+      <Filter>Source Files\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPFont.h">
+      <Filter>Source Files\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\STLprerequisite.h">
+      <Filter>Source Files\Font</Filter>
+    </ClInclude>
+    <ClInclude Include="include\I_Effect.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPColorValue.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPDataStream.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPEffectAsmMath.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPEffectCtrl.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPEffectMath.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPEffPrerequisites.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPEffQuaternion.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPEffVector3.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPFactoryObj.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPIteratorWrappers.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPModelEff.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPParameterInterface.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPParticleAffector.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPParticleAffectorFactory.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPParticleCtrl.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPParticleEmitterFactory.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPParticleSys.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPResManger.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPResourceSet.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPScriptLoader.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPShadeMap.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPSharedPtr.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPSingleton.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPStringUtil.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MPStringVector.h">
+      <Filter>effect</Filter>
+    </ClInclude>
+    <ClInclude Include="include\MindPower.h" />
+    <ClInclude Include="include\MindPowerAPI.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\stdafx.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPMap.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPMapData.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPTile.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ZRBlock.cpp">
+      <Filter>Source Files\Map</Filter>
+    </ClCompile>
+    <ClCompile Include="src\d3dutil.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\dxutil.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPRender.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\mygraph.cpp">
+      <Filter>Source Files\Render</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPCamera.cpp">
+      <Filter>Source Files\Render\GameApp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ConsoleProcessor.cpp">
+      <Filter>Source Files\Render\GameApp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPGameApp.cpp">
+      <Filter>Source Files\Render\GameApp</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Blk.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwAnimCtrl.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwAnimCtrlObj.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwAnimKeySetPRS.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwBitmap.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwCamera.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwConsole.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwCoordinateSys.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwD3DSettings.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwDDSFile.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwDeviceObject.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwDirectoryBrowser.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwEfxTrack.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwExpObj.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwFile.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwFileEncode.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwFileStream.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwFileutil.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwgraphicsutil.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwGuidObj.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwHeap.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwHelperGeometry.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwIFunc.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwInterface.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwItem.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwIUtil.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwmath.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwMisc.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwModel.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwNodeObject.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwObjectMethod.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwPathInfo.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwPhysique.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwPoseCtrl.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwPrimitive.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwPrimitiveHelper.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwRenderCtrlEmb.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwRenderImp.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwResourceMgr.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwSceneMgr.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwShaderDeclMgr.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwShaderMgr.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwStreamObj.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwSysCharacter.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwSysGraphics.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwSystem.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwSystemInfo.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwThreadPool.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwTimer.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwTreeNode.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwViewFrustum.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\lwxRenderCtrVS.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPCharacter.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPSceneItem.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPSceneObject.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\ShaderLoad.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\TgaCore.cpp">
+      <Filter>Source Files\Mesh</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPMath.cpp">
+      <Filter>Source Files\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPFont.cpp">
+      <Filter>Source Files\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Singleton.cpp">
+      <Filter>Source Files\Font</Filter>
+    </ClCompile>
+    <ClCompile Include="src\EffectFile.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\I_Effect.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPColorValue.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPDataStream.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPEffectCtrl.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPEffectMath.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPEffQuaternion.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPEffVector3.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPModelEff.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPParticleCtrl.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPParticleSys.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPResManger.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPShadeMap.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+    <ClCompile Include="src\MPStringUtil.cpp">
+      <Filter>effect</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="include\lwMath.inl">
+      <Filter>Source Files\Mesh\include</Filter>
+    </None>
+  </ItemGroup>
+</Project>

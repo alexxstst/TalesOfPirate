@@ -4,8 +4,6 @@
 #include <ostream>
 #include <algorithm>
 
-#pragma comment(lib, "ws2_32.lib")
-
 // Отключить verbose-логи TcpClient в stdout.
 // Раскомментировать для отладки сетевого слоя.
 // #define TCPCLIENT_VERBOSE

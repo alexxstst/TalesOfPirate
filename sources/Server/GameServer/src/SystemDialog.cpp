@@ -1,7 +1,7 @@
 ﻿
 #include "Stdafx.h"
 #include "GameApp.h"
-#include "../proj/resource.h"
+#include "../resource.h"
 #include "SystemDialog.h"
 #include "lua_gamectrl.h"
 #include "CharScript.h"

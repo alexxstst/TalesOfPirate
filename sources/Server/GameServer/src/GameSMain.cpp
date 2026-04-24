@@ -57,9 +57,6 @@ int main(int argc, char* argv[]) {
 	g_logManager.InitLogger("log\\game_server");
 	g_logManager.EnableGlobalConsole(true);
 
-	AssetDatabase::Instance()->Open("D:/Projects/MMORPG/TalesOfPirate/server/GameServer/gamedata.sqlite");
-	LanguageRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb(), "english", LanguageTarget::Server);
-
 	DisableCloseButton();
 
 	// SEHTranslator translator;
@@ -72,6 +69,10 @@ int main(int argc, char* argv[]) {
 		ToLogService("common", "config init...Fail!");
 		return FALSE;
 	}
+
+	AssetDatabase::Instance()->Open(g_Config._assetDbPath);
+	LanguageRecordStore::Instance()->Load(AssetDatabase::Instance()->GetDb(), "english", LanguageTarget::Server);
+
 	if (!g_Command.Load("cmd.cfg")) {
 		g_Command.SetDefault();
 	}

@@ -10,9 +10,6 @@
 #include <windows.h>
 #endif
 
-#pragma comment(lib, "version.lib")
-#pragma message("====automation link version.lib====")
-
 LW_BEGIN
 
 

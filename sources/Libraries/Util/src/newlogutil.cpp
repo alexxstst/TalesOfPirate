@@ -13,8 +13,6 @@
 #include <cstdio>
 #include "CrushSystem.h"
 
-#pragma comment(lib, "dbghelp.lib")
-
 namespace TalesOfPirate::Utils::Logs {
 	//         
 	std::mutex _consoleLock{};

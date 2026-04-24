@@ -1,8 +1,8 @@
 /********************************************************************
 	created:	2005/02/28
 	created:	28:2:2005   9:23
-	filename: 	d:\project\Server\GameServer\src\gtplayer.h
-	file path:	d:\project\Server\GameServer\src
+	filename: 	sources\Server\GameServer\src\gtplayer.h
+	file path:	sources\Server\GameServer\src
 	file base:	gtplayer
 	file ext:	h
 	author:		claude

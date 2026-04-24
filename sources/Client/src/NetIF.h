@@ -5,8 +5,6 @@
 #include "Connection.h"
 #include <bcrypt.h>
 #include <wincrypt.h>
-#pragma comment(lib, "bcrypt.lib")
-#pragma comment(lib, "crypt32.lib")
 
 class CProCirculate;
 

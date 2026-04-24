@@ -656,19 +656,6 @@ function Sale(character, npc, index, count)
     return LUA_TRUE
 end
 
-ItemIdFlag = {}
-local fp = assert(io.open(GetResPath("ItemInfo.txt")))
-for line in fp:lines() do
-    local position = string.find(line, "[ \t]*//")
-    if position ~= 1 then
-        local data = split(line, "\t")
-        local id, cash, max = tonumber(data[1]), tonumber(data[23]), tonumber(data[21])
-        if id ~= nil then
-            ItemIdFlag[id] = {price = cash, stack = max}
-        end
-    end
-end
-
 function Buy(character, npc, trade, itemtype, index1, index2, count)
 	PRINT("Buy")
 	itemtype = itemtype + 1

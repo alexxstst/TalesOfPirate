@@ -4,7 +4,6 @@
 
 #include <windows.h>
 #include <dshow.h>
-#pragma comment (lib,"Strmiids.lib")
 
 #ifndef SAFE_RELEASE
 #define SAFE_RELEASE(p)			\

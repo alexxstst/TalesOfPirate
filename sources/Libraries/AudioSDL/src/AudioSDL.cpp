@@ -1,4 +1,4 @@
-#include "../inc/AudioSDL.h"
+#include "../include/AudioSDL.h"
 #include "AudioCache.h"
 #include "WrapperSDLAudio.h"
 

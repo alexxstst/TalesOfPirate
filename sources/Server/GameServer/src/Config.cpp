@@ -67,7 +67,7 @@ void CGameConfig::SetDefault()
 	m_lWeather = 120;
 	m_dwStallTime = 48;
 	m_cSaveState[32] = {0};
-	_assetDbPath = "gamedata.sqlite";
+	_assetDbPath = "../../databases/gamedata.sqlite";
 }
 
 bool CGameConfig::Load(char *pszFileName)
@@ -99,7 +99,7 @@ bool CGameConfig::Load(char *pszFileName)
 	strncpy_s(m_szDBUsr, sizeof(m_szDBUsr), db.GetString("db_usr", m_szDBUsr).c_str(), _TRUNCATE);
 	strncpy_s(m_szDBPass, sizeof(m_szDBPass), db.GetString("db_pass", m_szDBPass).c_str(), _TRUNCATE);
 
-	_assetDbPath = cfg["Assets"].GetString("StringAssetPack", "gamedata.sqlite");
+	_assetDbPath = cfg["Assets"].GetString("StringAssetPack", "../../databases/gamedata.sqlite");
 
 	// [Socket]
 	m_lSocketAlive = static_cast<long>(cfg["Socket"].GetInt64("keep_alive", m_lSocketAlive));

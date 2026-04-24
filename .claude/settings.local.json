@@ -15,5 +15,9 @@
       "PowerShell(cmd /c \"D:\\\\Projects\\\\MMORPG\\\\TalesOfPirate\\\\sources\\\\Libraries\\\\LuaJIT\\\\src\\\\build_x64.bat\" 2>&1 | Select-Object -Last 30)"
     ],
     "defaultMode": "auto"
-  }
+  },
+  "enabledMcpjsonServers": [
+    "github"
+  ],
+  "enableAllProjectMcpServers": true
 }

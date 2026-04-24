@@ -8,8 +8,6 @@
 #include <format>
 #include <vector>
 
-#pragma comment( lib, "Imm32.lib" )
-
 using namespace GUI;
 
 CImeInput  CImeInput::s_Ime;

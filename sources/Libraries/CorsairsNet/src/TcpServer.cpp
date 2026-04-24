@@ -2,8 +2,6 @@
 #include <iostream>
 #include <algorithm>
 
-#pragma comment(lib, "ws2_32.lib")
-
 // #define TCPSERVER_VERBOSE
 
 #ifdef TCPSERVER_VERBOSE

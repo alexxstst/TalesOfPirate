@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../inc/AudioSDL.h"
+#include "../include/AudioSDL.h"
 #include "WrapperSDLAudio.h"
 
 #include <cstdint>

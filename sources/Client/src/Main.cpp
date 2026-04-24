@@ -127,8 +127,8 @@ int APIENTRY _tWinMain(HINSTANCE hInstance,
 	g_SystemIni = dbc::IniFile("./user/system.ini");
 	g_Config.Load();
 
-	const auto assetDbPath = g_SystemIni["Assets"].GetString("StringAssetPack", "gamedata.sqlite");
-	const auto renderDbPath = g_SystemIni["Assets"].GetString("RenderAssetPack", "./render.sqlite");
+	const auto assetDbPath = g_SystemIni["Assets"].GetString("StringAssetPack", "../databases/gamedata.sqlite");
+	const auto renderDbPath = g_SystemIni["Assets"].GetString("RenderAssetPack", "../databases/render.sqlite");
 	const auto language = g_SystemIni["Main"].GetString("language", "english");
 	AssetDatabase::Instance()->Open(assetDbPath);
 	RenderAssetDatabase::Instance()->Open(renderDbPath);

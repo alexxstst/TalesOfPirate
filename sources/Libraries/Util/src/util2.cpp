@@ -5,8 +5,6 @@
 #include <list>
 #include "Iphlpapi.h"
 
-#pragma comment(lib, "Iphlpapi.lib")
-
 #ifdef _DEBUG
 #ifdef _GAMECORE
 	#include "new.h"

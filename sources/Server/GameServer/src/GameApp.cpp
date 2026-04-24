@@ -398,7 +398,6 @@ BOOL CGameApp::Init() {
 
 	//LG("init", "...\n");
 	ToLogService("common", "initialization every form...");
-	AssetDatabase::Instance()->Open(g_Config._assetDbPath);
 	auto& db = AssetDatabase::Instance()->GetDb();
 
 	ItemRecordStore::Instance()->Load(db);
